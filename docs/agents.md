@@ -1,6 +1,6 @@
 # ScholarChain agent ownership and routing
 
-This is the proposed authoritative one-writer map for ScholarChain. It takes effect only after human ratification and a fresh session. The human architect owns phase gates and constitutional ratification. The orchestrator delegates, assembles reports, and never uses one agent's tools to evade another agent's fence. Subagents never invoke one another.
+This is the proposed authoritative one-writer map for ScholarChain. It takes effect only after human ratification and a fresh active-tool session. The human architect owns phase gates and constitutional ratification. Codex and Cursor are the student's active tools; their orchestrator routes by this map, assembles reports, and keeps review independent. The `.claude/agents/` definitions are assignment/Claude artifacts and do not automatically create Codex or Cursor subagents or enforce their tool fields.
 
 ## Artifact ownership
 
@@ -68,4 +68,4 @@ The local hook prerequisites are Bash, `jq`, and Python 3. Their presence and th
 
 ## Platform boundary
 
-Claude Code loads `CLAUDE.md`, these agent definitions, project settings and hooks. Codex and Cursor chiefly use `AGENTS.md`; Claude hooks and permission rules do not constrain their tool calls. Use their native approvals and the same one-writer and human gates. The course README specifies a Claude Code orchestrator, so using Codex or Cursor as the main orchestrator is a disclosed workflow deviation until the instructor accepts it. All required `.claude/` artifacts remain in the repository.
+Codex and Cursor use root `AGENTS.md` as their shared instruction file and are the active workflow. Cursor may also load `CLAUDE.md`, so its Claude-only directions are explicitly conditional. Neither tool automatically registers `.claude/agents/` roles or enforces `.claude/settings.json` hooks and tool fences. Route owners explicitly and use native approvals, sandboxing and human gates. If Claude Code is ever used, it can load `CLAUDE.md`, the agent definitions, project settings and hooks, and the Claude-specific probes apply then. The course README specifies a Claude Code orchestrator; the Codex/Cursor workflow is a disclosed deviation until the instructor accepts it. All required `.claude/` artifacts remain in the repository.
