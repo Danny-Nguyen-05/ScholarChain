@@ -1,6 +1,6 @@
 # ScholarChain agent ownership and routing
 
-This is the proposed authoritative one-writer map for ScholarChain. It takes effect only after human ratification and a fresh active-tool session. The human architect owns phase gates and constitutional ratification. Codex and Cursor are the student's active tools; their orchestrator routes by this map, assembles reports, and keeps review independent. The `.claude/agents/` definitions are assignment/Claude artifacts and do not automatically create Codex or Cursor subagents or enforce their tool fields.
+This is the proposed authoritative one-writer map for ScholarChain. It takes effect only after human ratification and a fresh session in the chosen tool. The human architect owns phase gates and constitutional ratification. Codex and Cursor are the student's main tools; their orchestrator routes by this map, assembles reports, and keeps review independent. Claude Code remains optional and compatible. The `.claude/agents/` definitions are assignment/Claude artifacts and do not automatically create Codex or Cursor subagents or enforce their tool fields.
 
 ## Artifact ownership
 
@@ -68,4 +68,4 @@ The local hook prerequisites are Bash, `jq`, and Python 3. Their presence and th
 
 ## Platform boundary
 
-Codex and Cursor use root `AGENTS.md` as their shared instruction file and are the active workflow. Cursor may also load `CLAUDE.md`, so its Claude-only directions are explicitly conditional. Neither tool automatically registers `.claude/agents/` roles or enforces `.claude/settings.json` hooks and tool fences. Route owners explicitly and use native approvals, sandboxing and human gates. If Claude Code is ever used, it can load `CLAUDE.md`, the agent definitions, project settings and hooks, and the Claude-specific probes apply then. The course README specifies a Claude Code orchestrator; the Codex/Cursor workflow is a disclosed deviation until the instructor accepts it. All required `.claude/` artifacts remain in the repository.
+Codex and Cursor use root `AGENTS.md` as their shared instruction file and are the main workflow. Cursor may also load `CLAUDE.md`, so its Claude-only directions are explicitly conditional. Neither tool automatically registers `.claude/agents/` roles or enforces `.claude/settings.json` hooks and tool fences. Route owners explicitly and use native approvals, sandboxing and human gates. When Claude Code is used, it can load `CLAUDE.md`, the agent definitions, project settings and hooks, and the Claude-specific probes apply then. The course README specifies a Claude Code orchestrator; a Codex/Cursor-led workflow is a disclosed deviation until the instructor accepts it. All required `.claude/` artifacts remain in the repository.

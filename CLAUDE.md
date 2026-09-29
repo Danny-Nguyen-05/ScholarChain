@@ -3,9 +3,9 @@
 
 # ScholarChain project memory
 
-This file is retained for the assignment's Claude Code artifacts. Cursor may load it automatically alongside `AGENTS.md`. For the student's active Codex/Cursor workflow, `AGENTS.md` is the shared root instruction and `docs/agents.md` is the ownership proposal; the `.claude/agents/` files are not automatically registered or enforced there.
+This file supports optional Claude Code use and remains required by the assignment. Cursor may load it automatically alongside `AGENTS.md`. For the student's main Codex/Cursor workflow, `AGENTS.md` is the shared root instruction and `docs/agents.md` is the ownership proposal; the `.claude/agents/` files are not automatically registered or enforced there.
 
-ScholarChain is a Scala 3, Hadoop MapReduce, Spark, AWS, and Graph-RAG scholarly collaboration system. If Claude Code is ever used, start a fresh Claude Code orchestrator session for each phase and route every edit to the one owner in `docs/agents.md`. That Claude-only session instruction does not govern how Codex or Cursor start tasks.
+ScholarChain is a Scala 3, Hadoop MapReduce, Spark, AWS, and Graph-RAG scholarly collaboration system. When Claude Code is used, start a fresh Claude Code orchestrator session for each phase and route every edit to the one owner in `docs/agents.md`. That Claude-specific session instruction does not govern how Codex or Cursor start tasks.
 
 ## Module boundaries
 

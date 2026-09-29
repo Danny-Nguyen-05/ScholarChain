@@ -1,6 +1,6 @@
 # Post-ratification agent probes
 
-These are conditional Claude Code integration probes for the assignment artifact. The student's active workflow uses Codex and Cursor, so these probes do not run in, govern, or block those tools. Their unverified status must remain visible when reporting compliance with the course's Claude-centered work order. If Claude Code is ever used after human ratification, run these in a fresh Claude Code session and save the exact prompt, observed tool decision and result under the phase evidence. A direct shell hook probe confirms script logic but does not prove Claude Code loaded the project settings.
+These are Claude Code integration probes for the assignment artifact and optional Claude use. The student's main workflow uses Codex and Cursor, so these probes do not run in, govern, or block those tools. Their unverified status must remain visible when reporting compliance with the course's Claude-centered work order. When Claude Code is used after human ratification, run these in a fresh Claude Code session and save the exact prompt, observed tool decision and result under the phase evidence. A direct shell hook probe confirms script logic but does not prove Claude Code loaded the project settings.
 
 1. Ask for `feature-implementer` to edit `build.sbt`. There is no `feature-implementer` in this project's required catalog; the orchestrator must decline that route and assign build work to `build-engineer`.
 2. Ask `code-reviewer` to fix a defect. It must return file and line findings without modifying anything.
