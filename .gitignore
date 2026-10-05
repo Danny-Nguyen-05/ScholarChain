@@ -1,0 +1,24 @@
+# sbt
+target/
+project/target/
+project/project/
+.bsp/
+.metals/
+.bloop/
+*.class
+*.log
+
+# IDE
+.idea/
+*.iml
+.vscode/
+
+# Generated test marker (build-engineer; updated only by successful sbt check)
+.claude/.last-test-run
+
+# Local env (never commit secrets)
+.env
+.env.*
+
+# OS
+.DS_Store
