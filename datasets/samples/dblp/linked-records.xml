@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ScholarChain Phase 3 sample: three complete inproceedings records; bounded refresh targets dblp-2026-10-03.xml.gz (DOI 10.4230/dblp.xml.2026-10-03; upstream evidence in datasets/provenance/dblp-snapshot-2026-10-03-dagstuhl.txt). Max 8 MiB compressed Range read. -->
+<!DOCTYPE dblp []>
+<dblp>
+<inproceedings mdate="2023-09-30" key="series/sapere/BerkeleyR13">
+<author>Istvan S. N. Berkeley</author>
+<author orcid="0000-0002-4414-6920">Claiborne Rice</author>
+<title>Machine Mentality?</title>
+<pages>1-15</pages>
+<year>2011</year>
+<booktitle>PT-AI</booktitle>
+<ee>https://doi.org/10.1007/978-3-642-31674-6_1</ee>
+<crossref>series/sapere/2013-5</crossref>
+<url>db/series/sapere/sapere5.html#BerkeleyR13</url>
+</inproceedings>
+<inproceedings mdate="2025-09-06" key="series/sapere/NasutoB13">
+<author orcid="0000-0001-9414-9049">Slawomir J. Nasuto</author>
+<author>John Mark Bishop</author>
+<title>Of (Zombie) Mice and Animats.</title>
+<pages>85-106</pages>
+<year>2011</year>
+<booktitle>PT-AI</booktitle>
+<ee>https://doi.org/10.1007/978-3-642-31674-6_7</ee>
+<crossref>series/sapere/2013-5</crossref>
+<url>db/series/sapere/sapere5.html#NasutoB13</url>
+</inproceedings>
+<inproceedings mdate="2019-09-06" key="series/sapere/SchiaffonatiV13">
+<author>Viola Schiaffonati</author>
+<author>Mario Verdicchio</author>
+<title>The Influence of Engineering Theory and Practice on Philosophy of AI.</title>
+<pages>375-388</pages>
+<year>2011</year>
+<booktitle>PT-AI</booktitle>
+<ee>https://doi.org/10.1007/978-3-642-31674-6_28</ee>
+<crossref>series/sapere/2013-5</crossref>
+<url>db/series/sapere/sapere5.html#SchiaffonatiV13</url>
+</inproceedings>
+</dblp>

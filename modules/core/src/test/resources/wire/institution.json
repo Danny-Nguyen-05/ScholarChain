@@ -1,0 +1,21 @@
+{
+  "institutionId": "institution:ror:01x8rc503",
+  "schemaVersion": "scholarchain.domain.v1",
+  "name": "University of Louisiana at Lafayette",
+  "ror": "https://ror.org/01x8rc503",
+  "ringgold": null,
+  "uncertainty": "ROR is the OpenAlex institution ror on the sample authorship. It is not merged with ORCID employment disambiguation RINGGOLD 4365.",
+  "provenance": {
+    "schemaVersion": "scholarchain.domain.v1",
+    "source": "OPENALEX",
+    "sourceRecordId": "https://openalex.org/I79516672",
+    "sourceUri": "https://ror.org/01x8rc503",
+    "datasetSnapshot": "unknown",
+    "retrievalDate": "2026-10-05",
+    "licenseEvidenceUri": "https://github.com/ourresearch/openalex-docs/blob/main/license.md",
+    "runId": "run:00112233-4455-4677-8899-aabbccddeeff",
+    "uncertaintyNotes": [
+      "OpenAlex bulk snapshot date is unknown. Retrieval date is 2026-10-05."
+    ]
+  }
+}

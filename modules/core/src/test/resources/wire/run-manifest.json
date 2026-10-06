@@ -1,0 +1,42 @@
+{
+  "runId": "run:00112233-4455-4677-8899-aabbccddeeff",
+  "schemaVersion": "scholarchain.domain.v1",
+  "pipelineName": "phase3-contract-fixture",
+  "datasetSnapshots": [
+    {
+      "source": "DBLP",
+      "snapshot": "dblp-2026-10-03",
+      "retrievalDate": "2026-10-05"
+    },
+    {
+      "source": "OPENALEX",
+      "snapshot": "unknown",
+      "retrievalDate": "2026-10-05"
+    },
+    {
+      "source": "ORCID",
+      "snapshot": "unknown",
+      "retrievalDate": "2026-10-05"
+    },
+    {
+      "source": "CROSSREF",
+      "snapshot": "unknown",
+      "retrievalDate": "2026-10-05"
+    }
+  ],
+  "configSchemaVersion": "scholarchain.config.v1",
+  "configFingerprint": "a2db2f299d1c708bb6b5e7ab5d4b858c8d94c34131e8c31dd4eb45351b7eecaa",
+  "provenance": {
+    "schemaVersion": "scholarchain.domain.v1",
+    "source": "SCHOLARCHAIN",
+    "sourceRecordId": "run:00112233-4455-4677-8899-aabbccddeeff",
+    "sourceUri": null,
+    "datasetSnapshot": "dblp-2026-10-03",
+    "retrievalDate": "2026-10-05",
+    "licenseEvidenceUri": null,
+    "runId": "run:00112233-4455-4677-8899-aabbccddeeff",
+    "uncertaintyNotes": [
+      "OpenAlex, ORCID, and Crossref bulk snapshot dates are unknown."
+    ]
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "edgeId": "coauthor-edge:aec73376772c67c733c1b4e9d9714503f80092526376cca0b51e51edbb29bd56",
+  "schemaVersion": "scholarchain.domain.v1",
+  "researcherA": "researcher:scholarchain:identity-v1:3b92b364bf792bb6c60f4564a88a74c89e47e6305f7ec3d5e00dbdc7098a9577",
+  "researcherB": "researcher:scholarchain:identity-v1:69d5a3c38c2ff7e7c3eb63a35791dd6675031e1c15807df20ac240fc47ec598f",
+  "windowStartYear": 2011,
+  "windowEndYear": 2011,
+  "policyVersion": "graph-policy-v1",
+  "jointPublicationCount": 1,
+  "firstCollaborationYear": 2011,
+  "lastCollaborationYear": 2011,
+  "representativeWorkIds": [
+    "work:doi:10.1007/978-3-642-31674-6_1"
+  ],
+  "uncertainty": "Endpoints are provisional mention-scoped ids for one DBLP paper, not confirmed researchers. The count is a hand count of series/sapere/BerkeleyR13, not a Spark aggregation.",
+  "provenance": {
+    "schemaVersion": "scholarchain.domain.v1",
+    "source": "DBLP",
+    "sourceRecordId": "series/sapere/BerkeleyR13",
+    "sourceUri": "https://doi.org/10.1007/978-3-642-31674-6_1",
+    "datasetSnapshot": "dblp-2026-10-03",
+    "retrievalDate": "2026-10-05",
+    "licenseEvidenceUri": "https://dblp.org/faq/Under+what+license+is+the+data+from+dblp+released",
+    "runId": "run:00112233-4455-4677-8899-aabbccddeeff",
+    "uncertaintyNotes": [
+      "Author name text is a mention, not a confirmed researcher identity.",
+      "ORCID 0000-0002-4414-6920 on the second author is observed, not a match decision.",
+      "DBLP year is 2011, OpenAlex publication_year is 2012, and Crossref published-print date-parts is 2013 for DOI 10.1007/978-3-642-31674-6_1. This record keeps its source year."
+    ]
+  }
+}

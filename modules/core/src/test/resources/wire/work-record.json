@@ -1,0 +1,91 @@
+{
+  "schemaVersion": "scholarchain.domain.v1",
+  "workId": "work:doi:10.1007/978-3-642-31674-6_1",
+  "source": "DBLP",
+  "sourceRecordId": "series/sapere/BerkeleyR13",
+  "sourceRecordType": "inproceedings",
+  "title": "Machine Mentality?",
+  "normalizedTitle": "machine mentality?",
+  "year": 2011,
+  "venueId": "venue:dblp-booktitle:pt-ai",
+  "doi": "10.1007/978-3-642-31674-6_1",
+  "arxivId": null,
+  "pages": "1-15",
+  "externalUrl": "https://doi.org/10.1007/978-3-642-31674-6_1",
+  "authors": [
+    {
+      "mentionId": "mention:dblp:series/sapere/BerkeleyR13#1",
+      "schemaVersion": "scholarchain.domain.v1",
+      "source": "DBLP",
+      "sourceRecordId": "series/sapere/BerkeleyR13",
+      "ordinal": 1,
+      "nameText": "Istvan S. N. Berkeley",
+      "normalizedName": "istvan s. n. berkeley",
+      "observedOrcid": null,
+      "observedOpenAlexAuthorId": null,
+      "identityStatus": "NAME_ONLY_UNCONFIRMED",
+      "resolvedResearcherId": null,
+      "uncertainty": "The author string is not a confirmed researcher identity.",
+      "provenance": {
+        "schemaVersion": "scholarchain.domain.v1",
+        "source": "DBLP",
+        "sourceRecordId": "series/sapere/BerkeleyR13",
+        "sourceUri": "https://doi.org/10.1007/978-3-642-31674-6_1",
+        "datasetSnapshot": "dblp-2026-10-03",
+        "retrievalDate": "2026-10-05",
+        "licenseEvidenceUri": "https://dblp.org/faq/Under+what+license+is+the+data+from+dblp+released",
+        "runId": "run:00112233-4455-4677-8899-aabbccddeeff",
+        "uncertaintyNotes": [
+          "Author name text is a mention, not a confirmed researcher identity.",
+          "ORCID 0000-0002-4414-6920 on the second author is observed, not a match decision.",
+          "DBLP year is 2011, OpenAlex publication_year is 2012, and Crossref published-print date-parts is 2013 for DOI 10.1007/978-3-642-31674-6_1. This record keeps its source year."
+        ]
+      }
+    },
+    {
+      "mentionId": "mention:dblp:series/sapere/BerkeleyR13#2",
+      "schemaVersion": "scholarchain.domain.v1",
+      "source": "DBLP",
+      "sourceRecordId": "series/sapere/BerkeleyR13",
+      "ordinal": 2,
+      "nameText": "Claiborne Rice",
+      "normalizedName": "claiborne rice",
+      "observedOrcid": "0000-0002-4414-6920",
+      "observedOpenAlexAuthorId": null,
+      "identityStatus": "EXTERNAL_IDENTIFIER_OBSERVED",
+      "resolvedResearcherId": null,
+      "uncertainty": "The ORCID is present on the dblp author tag and is not a ScholarChain match decision.",
+      "provenance": {
+        "schemaVersion": "scholarchain.domain.v1",
+        "source": "DBLP",
+        "sourceRecordId": "series/sapere/BerkeleyR13",
+        "sourceUri": "https://doi.org/10.1007/978-3-642-31674-6_1",
+        "datasetSnapshot": "dblp-2026-10-03",
+        "retrievalDate": "2026-10-05",
+        "licenseEvidenceUri": "https://dblp.org/faq/Under+what+license+is+the+data+from+dblp+released",
+        "runId": "run:00112233-4455-4677-8899-aabbccddeeff",
+        "uncertaintyNotes": [
+          "Author name text is a mention, not a confirmed researcher identity.",
+          "ORCID 0000-0002-4414-6920 on the second author is observed, not a match decision.",
+          "DBLP year is 2011, OpenAlex publication_year is 2012, and Crossref published-print date-parts is 2013 for DOI 10.1007/978-3-642-31674-6_1. This record keeps its source year."
+        ]
+      }
+    }
+  ],
+  "abstractTextRef": null,
+  "provenance": {
+    "schemaVersion": "scholarchain.domain.v1",
+    "source": "DBLP",
+    "sourceRecordId": "series/sapere/BerkeleyR13",
+    "sourceUri": "https://doi.org/10.1007/978-3-642-31674-6_1",
+    "datasetSnapshot": "dblp-2026-10-03",
+    "retrievalDate": "2026-10-05",
+    "licenseEvidenceUri": "https://dblp.org/faq/Under+what+license+is+the+data+from+dblp+released",
+    "runId": "run:00112233-4455-4677-8899-aabbccddeeff",
+    "uncertaintyNotes": [
+      "Author name text is a mention, not a confirmed researcher identity.",
+      "ORCID 0000-0002-4414-6920 on the second author is observed, not a match decision.",
+      "DBLP year is 2011, OpenAlex publication_year is 2012, and Crossref published-print date-parts is 2013 for DOI 10.1007/978-3-642-31674-6_1. This record keeps its source year."
+    ]
+  }
+}

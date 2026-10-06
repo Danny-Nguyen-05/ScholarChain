@@ -1,0 +1,29 @@
+{
+  "edgeId": "graph-edge:e83e6f654405e7213551f990a2a08382edc2a681f03594c1bf29f0006bd62dea",
+  "schemaVersion": "scholarchain.domain.v1",
+  "fromId": "researcher:orcid:0000-0002-4414-6920",
+  "edgeType": "AFFILIATED_WITH",
+  "toId": "institution:ringgold:4365",
+  "policyVersion": "graph-policy-v1",
+  "sourceEvidence": {
+    "$type": "SourceRecord",
+    "source": "ORCID",
+    "sourceRecordId": "/0000-0002-4414-6920/employment/19198978",
+    "datasetSnapshot": "unknown"
+  },
+  "properties": [],
+  "coauthorship": null,
+  "provenance": {
+    "schemaVersion": "scholarchain.domain.v1",
+    "source": "ORCID",
+    "sourceRecordId": "/0000-0002-4414-6920/employment/19198978",
+    "sourceUri": null,
+    "datasetSnapshot": "unknown",
+    "retrievalDate": "2026-10-05",
+    "licenseEvidenceUri": "https://info.orcid.org/public-data-file-use-policy/",
+    "runId": "run:00112233-4455-4677-8899-aabbccddeeff",
+    "uncertaintyNotes": [
+      "Bulk public-data-file version is unknown."
+    ]
+  }
+}

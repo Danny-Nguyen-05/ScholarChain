@@ -1,0 +1,21 @@
+{
+  "topicId": "topic:openalex:T12090",
+  "schemaVersion": "scholarchain.domain.v1",
+  "name": "Language and cultural evolution",
+  "sourceTopicId": "https://openalex.org/T12090",
+  "sourceScore": 0.9937000274658203,
+  "uncertainty": "sourceScore is the OpenAlex topic score, not a ScholarChain confidence.",
+  "provenance": {
+    "schemaVersion": "scholarchain.domain.v1",
+    "source": "OPENALEX",
+    "sourceRecordId": "https://openalex.org/T12090",
+    "sourceUri": "https://openalex.org/T12090",
+    "datasetSnapshot": "unknown",
+    "retrievalDate": "2026-10-05",
+    "licenseEvidenceUri": "https://github.com/ourresearch/openalex-docs/blob/main/license.md",
+    "runId": "run:00112233-4455-4677-8899-aabbccddeeff",
+    "uncertaintyNotes": [
+      "OpenAlex bulk snapshot date is unknown."
+    ]
+  }
+}

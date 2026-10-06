@@ -1,0 +1,28 @@
+{
+  "evidenceId": "evidence:edge:05be3b0f2b2b89677e6bbafdbd206ee77be8611f90e2f78d8bb45d4292825eed",
+  "schemaVersion": "scholarchain.domain.v1",
+  "evidenceType": "COAUTHOR_EDGE",
+  "workId": "work:doi:10.1007/978-3-642-31674-6_1",
+  "sourceUri": "https://doi.org/10.1007/978-3-642-31674-6_1",
+  "chunkId": null,
+  "graphPath": null,
+  "edgeLocatorId": "graph-edge:719a19d4f05ff6916a7d3767cac877760d5871a7fd65af7ce24e7adecf59447a",
+  "score": 0,
+  "text": null,
+  "provenance": {
+    "schemaVersion": "scholarchain.domain.v1",
+    "source": "DBLP",
+    "sourceRecordId": "series/sapere/BerkeleyR13",
+    "sourceUri": "https://doi.org/10.1007/978-3-642-31674-6_1",
+    "datasetSnapshot": "dblp-2026-10-03",
+    "retrievalDate": "2026-10-05",
+    "licenseEvidenceUri": "https://dblp.org/faq/Under+what+license+is+the+data+from+dblp+released",
+    "runId": "run:00112233-4455-4677-8899-aabbccddeeff",
+    "uncertaintyNotes": [
+      "Author name text is a mention, not a confirmed researcher identity.",
+      "ORCID 0000-0002-4414-6920 on the second author is observed, not a match decision.",
+      "DBLP year is 2011, OpenAlex publication_year is 2012, and Crossref published-print date-parts is 2013 for DOI 10.1007/978-3-642-31674-6_1. This record keeps its source year.",
+      "score 0.0 is not a calibrated retrieval score."
+    ]
+  }
+}

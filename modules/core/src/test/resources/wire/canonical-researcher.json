@@ -1,0 +1,27 @@
+{
+  "researcherId": "researcher:orcid:0000-0002-4414-6920",
+  "schemaVersion": "scholarchain.domain.v1",
+  "displayName": "Charles Claiborne Rice",
+  "externalIds": [
+    {
+      "namespace": "orcid",
+      "value": "0000-0002-4414-6920",
+      "interpretation": "VALIDATED_EXTERNAL"
+    }
+  ],
+  "identityConfidence": null,
+  "uncertainty": "Display name concatenates ORCID given-names 'Charles Claiborne' and family-name 'Rice'. It is not a merge with the dblp author string 'Claiborne Rice'. The public ORCID record lists DOI 10.1007/978-3-642-31674-6_1, and that co-occurrence is not an accepted match decision.",
+  "provenance": {
+    "schemaVersion": "scholarchain.domain.v1",
+    "source": "ORCID",
+    "sourceRecordId": "0000-0002-4414-6920",
+    "sourceUri": "https://orcid.org/0000-0002-4414-6920",
+    "datasetSnapshot": "unknown",
+    "retrievalDate": "2026-10-05",
+    "licenseEvidenceUri": "https://info.orcid.org/public-data-file-use-policy/",
+    "runId": "run:00112233-4455-4677-8899-aabbccddeeff",
+    "uncertaintyNotes": [
+      "Bulk public-data-file version is unknown. Retrieval date is 2026-10-05."
+    ]
+  }
+}

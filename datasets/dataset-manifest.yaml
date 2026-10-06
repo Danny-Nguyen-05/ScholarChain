@@ -1,0 +1,216 @@
+# ScholarChain dataset manifest (Phase 3). Placeholder S3 prefixes only — not live buckets.
+manifest_version: "2026-10-05"
+portfolio_summary: >
+  DBLP is the seed bibliographic graph. OpenAlex supplies canonical work and author
+  identifiers, institutions, and topics. ORCID supplies public researcher identity
+  and affiliation evidence. Crossref supplies DOI-centric metadata, funders, and
+  reference edges for work matching.
+
+datasets:
+  dblp:
+    name: DBLP XML
+    required: true
+    purpose: >
+      Seed computer-science publications, author mentions, venues, years, and DOI
+      links for coauthorship pair generation and temporal graph construction.
+    source_url: https://dblp.org/xml/
+    documentation_url: https://dblp.org/xml/README.txt
+    license: CC0 1.0 Universal (metadata); ODC-BY 1.0 secondary
+    license_evidence_url: https://dblp.org/faq/Under+what+license+is+the+data+from+dblp+released
+    snapshot_or_version: >
+      monthly full XML snapshot dblp-2026-10-03 (DOI 10.4230/dblp.xml.2026-10-03); upstream
+      filename, MD5, and HEAD Content-Length recorded in provenance/dblp-snapshot-2026-10-03-dagstuhl.txt
+    retrieval_date: "2026-10-05"
+    format: "full dblp.xml gzip snapshot upstream; committed sample is plain UTF-8 XML excerpt with DOCTYPE"
+    size_estimate: "1107081001 bytes compressed for dblp-2026-10-03.xml.gz (HEAD Content-Length in provenance note); committed sample 1708 bytes"
+    size_estimate_source: >
+      datasets/provenance/dblp-snapshot-2026-10-03-dagstuhl.txt (quotes Dagstuhl artifact page File
+      section and HEAD https://drops.dagstuhl.de/storage/artifacts/dblp/xml/2026/dblp-2026-10-03.xml.gz);
+      https://drops.dagstuhl.de/entities/artifact/10.4230/dblp.xml.2026-10-03
+    raw_prefix: s3://scholarchain-raw/dblp/snapshot_date=2026-10-03/
+    committed_sample: samples/dblp/linked-records.xml
+    committed_sample_sha256: e23d50c04b2cadcc01ff719ea1841157f2d865dd0e2657b27d3bd4931fe2a935
+    committed_sample_covers: "Exact bytes of samples/dblp/linked-records.xml (three complete inproceedings records)"
+    upstream_full_checksum: >
+      MD5 cbd329100ea1bbb2873fa2f6d414ea00 for dblp-2026-10-03.xml.gz per
+      provenance/dblp-snapshot-2026-10-03-dagstuhl.txt (matches Dagstuhl artifact page and .md5 sidecar;
+      not the committed sample)
+    bounded_subset_rule: >
+      Default acquisition verifies committed XML only. Optional refresh downloads
+      at most 8388608 compressed bytes via HTTP Range from the monthly full-snapshot
+      gzip URL (206 Partial Content required; rejects HTTP 200) and extracts up to
+      three multi-author inproceedings/article records with DBLP DTD entity declarations.
+    schema: schemas/dblp-xml.md
+    linkage_keys:
+      - dblp_key
+      - doi
+      - normalized_title
+      - author_name_sequence
+      - year
+      - venue
+      - orcid_on_author_tag_when_present
+    update_method: >
+      Track monthly snapshot DOIs at https://drops.dagstuhl.de/entities/collection/10.4230/dblp.xml;
+      full dblp.xml.gz releases remain listed at https://dblp.org/xml/.
+    limitations:
+      - "A matching author name is not sufficient evidence of researcher identity."
+      - "Author strings on one publication do not confirm the same person across publications."
+      - "dblp.org web/API endpoints may block automated clients; Dagstuhl artifact URLs used for bounded gzip range reads."
+      - "Monthly full-snapshot gzip files are large; never download the full gzip in default workflows."
+    privacy_considerations: >
+      Bibliographic metadata only in committed sample; no private contact fields.
+      ORCID values appear only when present on public dblp author tags.
+    validation_commands:
+      - "python3 datasets/scripts/acquire_samples.py --mode regenerate"
+      - "python3 datasets/scripts/validate_datasets.py"
+      - "cd datasets && shasum -a 256 -c samples/SHA256SUMS"
+    owning_agent: dataset-engineer
+    acquisition_script: scripts/acquire_samples.py
+    default_download_bounded: true
+    max_download_bound: "8388608 compressed bytes (DBLP_MAX_COMPRESSED_BYTES); 0 bytes in default regenerate mode"
+
+  openalex:
+    name: OpenAlex
+    required: false
+    purpose: >
+      Canonical OpenAlex work and author IDs, authorships with institutions and
+      topics, citation and open-access context for enrichment and cross-dataset joins.
+    source_url: https://openalex.org/
+    documentation_url: https://help.openalex.org/data/works/
+    license: CC0 1.0 Universal (OpenAlex data)
+    license_evidence_url: https://github.com/ourresearch/openalex-docs/blob/main/license.md
+    snapshot_or_version: "live REST API at retrieval; bulk snapshot date not pinned in repo"
+    retrieval_date: "2026-10-05"
+    format: json (API); jsonl committed sample (one work object per line)
+    size_estimate: "unknown full snapshot size in this repo; committed sample 11576 bytes; one API work response"
+    size_estimate_source: "local wc -c on samples/openalex/works.jsonl; API fetch 2026-10-05"
+    raw_prefix: s3://scholarchain-raw/openalex/snapshot_date=unknown/
+    committed_sample: samples/openalex/works.jsonl
+    committed_sample_sha256: 6cff12f2ec1439acc66b89a9c30c54aa90bec8e3e11c317561f3e4a0f9a65d8c
+    committed_sample_covers: "Exact bytes of samples/openalex/works.jsonl (single Work JSON object)"
+    upstream_full_checksum: "unavailable in repository; OpenAlex publishes monthly S3 snapshots without a checksum recorded here"
+    bounded_subset_rule: >
+      Default regenerate mode performs no network I/O. Refresh mode fetches exactly
+      one work by DOI (10.1007/978-3-642-31674-6_1) from api.openalex.org.
+    schema: schemas/openalex-works.md
+    linkage_keys:
+      - openalex_work_id
+      - doi
+      - openalex_author_id
+      - orcid
+      - title
+      - publication_year
+      - institution_ror
+    update_method: >
+      Prefer OpenAlex REST API with mailto User-Agent for small pulls; bulk
+      snapshots via documented S3/OpenAlex snapshot instructions when scale requires.
+    limitations:
+      - "OpenAlex author IDs are disambiguation hypotheses, not ground-truth identity."
+      - "Coverage gaps remain for works absent from OpenAlex or missing DOIs."
+      - "MAG-format OpenAlex snapshots use ODC-BY, not CC0 (not used in this portfolio)."
+    privacy_considerations: >
+      Committed sample contains public scholarly metadata only; no user secrets.
+    validation_commands:
+      - "python3 datasets/scripts/acquire_samples.py --mode regenerate"
+      - "python3 datasets/scripts/validate_datasets.py"
+    owning_agent: dataset-engineer
+    acquisition_script: scripts/acquire_samples.py
+    default_download_bounded: true
+    max_download_bound: "1 work record (OPENALEX_MAX_WORKS); 0 bytes in default regenerate mode"
+
+  orcid:
+    name: ORCID Public Registry
+    required: false
+    purpose: >
+      Public researcher identifiers, names, and employment/affiliation evidence to
+      strengthen identity resolution when ORCID iDs appear in other sources.
+    source_url: https://orcid.org/
+    documentation_url: https://info.orcid.org/documentation/api-tutorials/api-tutorial-read-data-on-a-record/
+    license: "Public Data File under CC0 1.0; public API records subject to ORCID terms and record visibility"
+    license_evidence_url: https://info.orcid.org/public-data-file-use-policy/
+    snapshot_or_version: "live public API record 0000-0002-4414-6920 at retrieval; annual Public Data File date not pinned"
+    retrieval_date: "2026-10-05"
+    format: json (ORCID record API); jsonl committed sample
+    size_estimate: "unknown full public data file size in repo; committed sample 28652 bytes"
+    size_estimate_source: "local wc -c on samples/orcid/records.jsonl"
+    raw_prefix: s3://scholarchain-raw/orcid/snapshot_date=unknown/
+    committed_sample: samples/orcid/records.jsonl
+    committed_sample_sha256: 5000694a8e93f5ff2393f7f25f9a908d139e7ba20d26c0d98141e5ce1e070325
+    committed_sample_covers: "Exact bytes of samples/orcid/records.jsonl (single public ORCID record JSON object)"
+    upstream_full_checksum: "unavailable in repository for full Public Data File"
+    bounded_subset_rule: >
+      Default regenerate mode performs no network I/O. Refresh mode fetches one
+      public record via GET /v3.0/{orcid}/record for ORCID 0000-0002-4414-6920.
+    schema: schemas/orcid-record.md
+    linkage_keys:
+      - orcid
+      - given_and_family_name
+      - employment_organization_name
+      - ror_when_present
+      - work_external_ids_when_public
+    update_method: >
+      Use ORCID public API for targeted record pulls; use annual Public Data File
+      for bulk offline processing per https://info.orcid.org/public-data-file-use-policy/
+    limitations:
+      - "Only public ORCID fields are available; most records expose partial profiles."
+      - "ORCID iD presence does not prove authorship on a specific external work without evidence."
+      - "Name on ORCID record is not sufficient alone to merge dblp author mentions."
+    privacy_considerations: >
+      Respect ORCID community norms; do not use public emails for unsolicited contact.
+      Committed sample excludes email values (none public in this record).
+    validation_commands:
+      - "python3 datasets/scripts/acquire_samples.py --mode regenerate"
+      - "python3 datasets/scripts/validate_datasets.py"
+    owning_agent: dataset-engineer
+    acquisition_script: scripts/acquire_samples.py
+    default_download_bounded: true
+    max_download_bound: "1 public record (ORCID_MAX_RECORDS); 0 bytes in default regenerate mode"
+
+  crossref:
+    name: Crossref REST Metadata
+    required: false
+    purpose: >
+      DOI-authoritative bibliographic metadata, funders, licenses, and reference
+      lists to validate work matches and enrich publication records linked from DBLP.
+    source_url: https://www.crossref.org/services/metadata-retrieval/rest-api/
+    documentation_url: https://www.crossref.org/documentation/retrieve-metadata/rest-api/
+    license: "Crossref site/documentation CC BY 4.0; REST metadata largely free of copyright per Crossref documentation, with possible copyright on some abstracts"
+    license_evidence_url: https://www.crossref.org/documentation/retrieve-metadata/rest-api/
+    snapshot_or_version: "live REST API at retrieval; public data file snapshot not pinned"
+    retrieval_date: "2026-10-05"
+    format: json (Crossref API message wrapper); jsonl committed sample
+    size_estimate: "unknown full public data file size in repo; committed sample 9405 bytes"
+    size_estimate_source: "local wc -c on samples/crossref/works.jsonl"
+    raw_prefix: s3://scholarchain-raw/crossref/snapshot_date=unknown/
+    committed_sample: samples/crossref/works.jsonl
+    committed_sample_sha256: a6e3c40e178b7ce7f74ed870a48b4a2951de1705e7a0ed8f8fd40838bc4d39cc
+    committed_sample_covers: "Exact bytes of samples/crossref/works.jsonl (single API response object for one DOI)"
+    upstream_full_checksum: "unavailable in repository for Crossref public data file"
+    bounded_subset_rule: >
+      Default regenerate mode performs no network I/O. Refresh mode fetches one
+      work via GET /works/10.1007/978-3-642-31674-6_1 with polite User-Agent.
+    schema: schemas/crossref-works.md
+    linkage_keys:
+      - doi
+      - title
+      - author_given_and_family
+      - published_date_parts
+      - issn_or_container_when_present
+      - funder_doi
+      - orcid_in_author_when_deposited
+    update_method: >
+      Incremental DOI lookups via REST API; optional public data file for bulk
+      processing per https://www.crossref.org/services/metadata-retrieval/public-data-file/
+    limitations:
+      - "Crossref metadata quality depends on publisher deposits; ORCID on authors is often missing."
+      - "Reference lists may be incomplete or noisy for matching."
+      - "Abstract text may be copyright-restricted even when metadata is usable."
+    privacy_considerations: >
+      Metadata only; no authentication secrets in committed sample.
+    validation_commands:
+      - "python3 datasets/scripts/acquire_samples.py --mode regenerate"
+      - "python3 datasets/scripts/validate_datasets.py"
+    owning_agent: dataset-engineer
+    acquisition_script: scripts/acquire_samples.py
+    default_download_bounded: true
+    max_download_bound: "1 work record (CROSSREF_MAX_WORKS); 0 bytes in default regenerate mode"

@@ -1,0 +1,48 @@
+ScholarChain DBLP upstream snapshot provenance (independently reproducible evidence)
+Recorded: 2026-10-05 (dataset-engineer repair session; third independent review finding 1)
+Client User-Agent: ScholarChainPhase3/1.0 (mailto:student@uic.edu)
+
+Pinned release
+  Artifact DOI: 10.4230/dblp.xml.2026-10-03
+  Gzip filename: dblp-2026-10-03.xml.gz
+  Storage URL: https://drops.dagstuhl.de/storage/artifacts/dblp/xml/2026/dblp-2026-10-03.xml.gz
+
+--- GET artifact HTML page ---
+Request: GET https://drops.dagstuhl.de/entities/artifact/10.4230/dblp.xml.2026-10-03
+Observed HTTP status: 200
+Final URL: https://drops.dagstuhl.de/entities/artifact/10.4230/dblp.xml.2026-10-03
+Response Content-Type: text/html; charset=utf-8
+
+Quoted visible File section text from the official artifact page (HTML body, File metadata):
+  dblp-2026-10-03.xml.gz
+  (Filesize: 1.03 GB)
+  MD5 Sum: cbd329100ea1bbb2873fa2f6d414ea00
+
+--- HEAD storage gzip ---
+Request: HEAD https://drops.dagstuhl.de/storage/artifacts/dblp/xml/2026/dblp-2026-10-03.xml.gz
+Observed HTTP status: 200
+Final URL: https://drops.dagstuhl.de/storage/artifacts/dblp/xml/2026/dblp-2026-10-03.xml.gz
+Content-Type: application/x-gzip
+Content-Length: 1107081001
+
+--- GET official MD5 sidecar ---
+Request: GET https://drops.dagstuhl.de/storage/artifacts/dblp/xml/2026/dblp-2026-10-03.xml.gz.md5
+Observed HTTP status: 200
+Response body (exact line):
+  cbd329100ea1bbb2873fa2f6d414ea00  dblp-2026-10-03.xml.gz
+
+--- GET collection page (release ordering note) ---
+Request: GET https://drops.dagstuhl.de/entities/collection/10.4230/dblp.xml
+Observed HTTP status: 200
+Final URL: https://drops.dagstuhl.de/entities/collection/10.4230/dblp.xml
+Response Content-Type: text/html; charset=utf-8
+
+In this session the first snapshot artifact card in the HTML entity list used
+data-permanent-id="artifact/10.4230/dblp.xml.2026-10-03" with link text
+"DOI: 10.4230/dblp.xml.2026-10-03". Collection ordering may differ when other
+releases are published or when the page is cached; use the artifact page and
+this file for filename, MD5, and Content-Length, not collection sort order alone.
+
+Manifest fields that must match this file
+  upstream_full_checksum MD5: cbd329100ea1bbb2873fa2f6d414ea00
+  size_estimate compressed bytes: 1107081001
