@@ -1,0 +1,54 @@
+[info] welcome to sbt 1.10.7 (Homebrew Java 17.0.20.1)
+[info] loading settings for project scholarchain-build from plugins.sbt...
+[info] loading project definition from /Users/danny/Documents/UIC/CS441/ScholarChain/project
+[info] loading settings for project root from build.sbt...
+[info] set current project to root (in build file:/Users/danny/Documents/UIC/CS441/ScholarChain/)
+[info] scalafmt: Formatting 1 Scala sources (/Users/danny/Documents/UIC/CS441/ScholarChain/modules/hadoop)...
+[success] Total time: 1 s, completed Oct 7, 2026, 3:17:38 PM
+[info] scalafmt: Formatting 1 Scala sources (/Users/danny/Documents/UIC/CS441/ScholarChain/tests)...
+[success] Total time: 0 s, completed Oct 7, 2026, 3:17:38 PM
+[info] compiling 1 Scala source to /Users/danny/Documents/UIC/CS441/ScholarChain/modules/hadoop/target/scala-3.3.4/test-classes ...
+[info] done compiling
+WARN org.apache.hadoop.util.NativeCodeLoader - Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+[info] DblpXmlRegressionSpec:
+[info] - opening names are capped before record framing and launch sample scanning
+[info] - CDATA title and author references stay literal while active text expands
+[info] - single quoted identifiers and whitespace closing tags retain author evidence
+[info] - unmatched mismatched and malformed closing tags reject and preserve the next record
+[info] Run completed in 328 milliseconds.
+[info] Total number of tests run: 4
+[info] Suites: completed 1, aborted 0
+[info] Tests: succeeded 4, failed 0, canceled 0, ignored 0, pending 0
+[info] All tests passed.
+[success] Total time: 3 s, completed Oct 7, 2026, 3:17:41 PM
+[info] compiling 5 Scala sources to /Users/danny/Documents/UIC/CS441/ScholarChain/tests/target/scala-3.3.4/test-classes ...
+[info] done compiling
+WARN org.apache.hadoop.util.NativeCodeLoader - Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+WARN org.apache.hadoop.metrics2.impl.MetricsConfig - Cannot locate configuration: tried hadoop-metrics2-jobtracker.properties,hadoop-metrics2.properties
+WARN org.apache.hadoop.mapreduce.JobResourceUploader - Hadoop command-line option parsing not performed. Implement the Tool interface and execute your application with ToolRunner to remedy this.
+WARN org.apache.hadoop.mapreduce.JobResourceUploader - No job jar file set.  User classes may not be found. See Job or Job#setJar(String).
+WARN org.apache.hadoop.metrics2.impl.MetricsSystemImpl - JobTracker metrics system already initialized!
+[info] IndependentDblpXmlRepairSpec:
+[info] - nextOpen retains a bounded opening name before any record byte limit applies
+[info] - actual InputFormat drains an oversized opening name and retains the following work
+[info] - launch sample scanning counts and drains the oversized opener under a bounded cutoff
+[info] - title and author CDATA preserve bare ampersands literally
+[info] - entity-shaped CDATA stays literal while adjacent active XML references expand
+[info] - combined active and CDATA character data still obeys the expansion byte limit
+[info] - single quoted publication key and ORCID retain supplied author evidence
+[info] - closing tag whitespace preserves valid title and author text
+[info] - direct extraction explicitly rejects unmatched closing tags
+[info] - direct extraction explicitly rejects mismatched closing tags
+[info] - direct extraction explicitly rejects crossed closing tags
+[info] - direct extraction explicitly rejects closing attributes closing tags
+[info] - direct extraction explicitly rejects closing extra name closing tags
+[info] - direct extraction explicitly rejects closing slash closing tags
+[info] - direct extraction explicitly rejects closing doubled slash closing tags
+[info] - direct extraction explicitly rejects empty closing name closing tags
+[info] - LocalJobRunner emits explicit rejects for oversized openers and malformed closing tags
+[info] Run completed in 1 second, 634 milliseconds.
+[info] Total number of tests run: 17
+[info] Suites: completed 1, aborted 0
+[info] Tests: succeeded 17, failed 0, canceled 0, ignored 0, pending 0
+[info] All tests passed.
+[success] Total time: 3 s, completed Oct 7, 2026, 3:17:44 PM

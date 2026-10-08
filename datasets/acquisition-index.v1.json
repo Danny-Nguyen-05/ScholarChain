@@ -1,0 +1,35 @@
+{
+  "version": "scholarchain.acquisition-index.v1",
+  "dblp": {
+    "snapshotId": "dblp-2026-10-03",
+    "retrievalDate": "2026-10-05",
+    "snapshotKind": "monthly-xml",
+    "committedSample": "samples/dblp/linked-records.xml",
+    "sha256": "e23d50c04b2cadcc01ff719ea1841157f2d865dd0e2657b27d3bd4931fe2a935",
+    "licenseEvidenceUri": "https://dblp.org/faq/Under+what+license+is+the+data+from+dblp+released"
+  },
+  "openalex": {
+    "snapshotId": "openalex-rest-2026-10-05",
+    "retrievalDate": "2026-10-05",
+    "snapshotKind": "live-api",
+    "committedSample": "samples/openalex/works.jsonl",
+    "sha256": "6cff12f2ec1439acc66b89a9c30c54aa90bec8e3e11c317561f3e4a0f9a65d8c",
+    "licenseEvidenceUri": "https://github.com/ourresearch/openalex-docs/blob/main/license.md"
+  },
+  "crossref": {
+    "snapshotId": "crossref-rest-2026-10-05",
+    "retrievalDate": "2026-10-05",
+    "snapshotKind": "live-api",
+    "committedSample": "samples/crossref/works.jsonl",
+    "sha256": "a6e3c40e178b7ce7f74ed870a48b4a2951de1705e7a0ed8f8fd40838bc4d39cc",
+    "licenseEvidenceUri": "https://www.crossref.org/documentation/retrieve-metadata/rest-api/"
+  },
+  "orcid": {
+    "snapshotId": "orcid-public-api-2026-10-05",
+    "retrievalDate": "2026-10-05",
+    "snapshotKind": "live-api",
+    "committedSample": "samples/orcid/records.jsonl",
+    "sha256": "5000694a8e93f5ff2393f7f25f9a908d139e7ba20d26c0d98141e5ce1e070325",
+    "licenseEvidenceUri": "https://info.orcid.org/public-data-file-use-policy/"
+  }
+}

@@ -4,6 +4,7 @@ object Versions {
   val sbtVersion = "1.10.7"
 
   val sbtScalafmt = "2.5.2"
+  val sbtAssembly = "2.3.0"
   val scalafmtCore = "3.8.3"
 
   val upickle = "4.0.2"

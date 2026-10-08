@@ -339,6 +339,13 @@ object Fixtures {
       Some("https://ror.org/01x8rc503"),
       Some("https://github.com/ourresearch/openalex-docs/blob/main/license.md"),
       Vector("OpenAlex bulk snapshot date is unknown. Retrieval date is 2026-10-05.")
+    ),
+    observedSourceIds = Vector(
+      ObservedIdentifier(
+        IdentifierNamespace.OpenAlexInstitution.wire,
+        "https://openalex.org/I79516672",
+        IdentifierInterpretation.SourceObservation
+      )
     )
   )
 

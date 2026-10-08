@@ -1,0 +1,309 @@
+[info] welcome to sbt 1.10.7 (Homebrew Java 17.0.20.1)
+[info] loading settings for project scholarchain-build from plugins.sbt...
+[info] loading project definition from /Users/danny/Documents/UIC/CS441/ScholarChain/project
+[info] loading settings for project root from build.sbt...
+[info] set current project to root (in build file:/Users/danny/Documents/UIC/CS441/ScholarChain/)
+[info] scalafmt: Formatting 8 Scala sources (/Users/danny/Documents/UIC/CS441/ScholarChain/modules/hadoop)...
+[info] scalafmt: Reformatted 8 Scala sources
+[success] Total time: 3 s, completed Oct 7, 2026, 9:31:39 PM
+[info] scalafmt: Formatting 1 Scala sources (/Users/danny/Documents/UIC/CS441/ScholarChain/modules/hadoop)...
+[info] scalafmt: Reformatted 1 Scala sources
+[success] Total time: 0 s, completed Oct 7, 2026, 9:31:39 PM
+[info] compiling 9 Scala sources to /Users/danny/Documents/UIC/CS441/ScholarChain/modules/hadoop/target/scala-3.3.4/classes ...
+[warn] -- Deprecation Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/hadoop/src/main/scala/edu/uic/cs441/scholarchain/hadoop/HadoopIO.scala:84:9 
+[warn] 84 |      fs.isFile(path)
+[warn]    |      ^^^^^^^^^
+[warn]    |method isFile in class FileSystem is deprecated: see corresponding Javadoc for more information.
+[warn] -- [E194] Potential Issue Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/hadoop/src/main/scala/edu/uic/cs441/scholarchain/hadoop/JsonSources.scala:1510:8 
+[warn] 1510 |    def objOpt: Option[ujson.Obj] = value match {
+[warn]      |        ^
+[warn]      |Extension method objOpt will never be selected
+[warn]      |because Value already has a member with the same name and compatible parameter types.
+[warn]      |
+[warn]      | longer explanation available when compiling with `-explain`
+[warn] -- [E194] Potential Issue Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/hadoop/src/main/scala/edu/uic/cs441/scholarchain/hadoop/JsonSources.scala:1514:8 
+[warn] 1514 |    def arrOpt: Option[ujson.Arr] = value match {
+[warn]      |        ^
+[warn]      |Extension method arrOpt will never be selected
+[warn]      |because Value already has a member with the same name and compatible parameter types.
+[warn]      |
+[warn]      | longer explanation available when compiling with `-explain`
+[warn] -- [E194] Potential Issue Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/hadoop/src/main/scala/edu/uic/cs441/scholarchain/hadoop/JsonSources.scala:1518:8 
+[warn] 1518 |    def strOpt: Option[String] = value match {
+[warn]      |        ^
+[warn]      |Extension method strOpt will never be selected
+[warn]      |because Value already has a member with the same name and compatible parameter types.
+[warn]      |
+[warn]      | longer explanation available when compiling with `-explain`
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/hadoop/src/main/scala/edu/uic/cs441/scholarchain/hadoop/JsonSources.scala:112:6 
+[warn] 112 |      return Vector(malformed(locator, snapshot, runId, RejectReasonCode.MalformedRecord, "object"))
+[warn]     |      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[warn]     |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/hadoop/src/main/scala/edu/uic/cs441/scholarchain/hadoop/JsonSources.scala:237:8 
+[warn] 237 |        return Vector(
+[warn]     |        ^
+[warn]     |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] 238 |          fieldReject(
+[warn] 239 |            SourceType.OpenAlex,
+[warn] 240 |            locator,
+[warn] 241 |            snapshot,
+[warn] 242 |            runId,
+[warn] 243 |            RejectReasonCode.MissingRequiredField,
+[warn] 244 |            "author"
+[warn] 245 |          )
+[warn] 246 |        )
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/hadoop/src/main/scala/edu/uic/cs441/scholarchain/hadoop/JsonSources.scala:251:8 
+[warn] 251 |        return Vector(
+[warn]     |        ^
+[warn]     |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] 252 |          fieldReject(
+[warn] 253 |            SourceType.OpenAlex,
+[warn] 254 |            locator,
+[warn] 255 |            snapshot,
+[warn] 256 |            runId,
+[warn] 257 |            RejectReasonCode.InvalidIdentifier,
+[warn] 258 |            orcidRaw.get
+[warn] 259 |          )
+[warn] 260 |        )
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/hadoop/src/main/scala/edu/uic/cs441/scholarchain/hadoop/JsonSources.scala:264:8 
+[warn] 264 |        return Vector(
+[warn]     |        ^
+[warn]     |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] 265 |          fieldReject(
+[warn] 266 |            SourceType.OpenAlex,
+[warn] 267 |            locator,
+[warn] 268 |            snapshot,
+[warn] 269 |            runId,
+[warn] 270 |            RejectReasonCode.InvalidIdentifier,
+[warn] 271 |            authorIdRaw.get
+[warn] 272 |          )
+[warn] 273 |        )
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/hadoop/src/main/scala/edu/uic/cs441/scholarchain/hadoop/JsonSources.scala:497:6 
+[warn] 497 |      return Vector(malformed(locator, snapshot, runId, RejectReasonCode.MalformedRecord, "object"))
+[warn]     |      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[warn]     |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/hadoop/src/main/scala/edu/uic/cs441/scholarchain/hadoop/JsonSources.scala:555:8 
+[warn] 555 |        return Vector(
+[warn]     |        ^
+[warn]     |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] 556 |          fieldReject(
+[warn] 557 |            SourceType.Crossref,
+[warn] 558 |            locator,
+[warn] 559 |            snapshot,
+[warn] 560 |            runId,
+[warn] 561 |            RejectReasonCode.MissingRequiredField,
+[warn] 562 |            "author"
+[warn] 563 |          )
+[warn] 564 |        )
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/hadoop/src/main/scala/edu/uic/cs441/scholarchain/hadoop/JsonSources.scala:569:8 
+[warn] 569 |        return Vector(
+[warn]     |        ^
+[warn]     |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] 570 |          fieldReject(
+[warn] 571 |            SourceType.Crossref,
+[warn] 572 |            locator,
+[warn] 573 |            snapshot,
+[warn] 574 |            runId,
+[warn] 575 |            RejectReasonCode.InvalidIdentifier,
+[warn] 576 |            orcidRaw.getOrElse("")
+[warn] 577 |          )
+[warn] 578 |        )
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/hadoop/src/main/scala/edu/uic/cs441/scholarchain/hadoop/JsonSources.scala:599:29 
+[warn] 599 |        case Left(reject) => return Vector(reject)
+[warn]     |                             ^^^^^^^^^^^^^^^^^^^^^
+[warn]     |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/hadoop/src/main/scala/edu/uic/cs441/scholarchain/hadoop/JsonSources.scala:768:8 
+[warn] 768 |        return Left(
+[warn]     |        ^
+[warn]     |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] 769 |          fieldReject(
+[warn] 770 |            SourceType.Crossref,
+[warn] 771 |            provenance.sourceRecordId,
+[warn] 772 |            snapshot,
+[warn] 773 |            provenance.runId,
+[warn] 774 |            RejectReasonCode.SchemaFailure,
+[warn] 775 |            MentionAffiliation.rejectedOrganizationName
+[warn] 776 |          )
+[warn] 777 |        )
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/hadoop/src/main/scala/edu/uic/cs441/scholarchain/hadoop/JsonSources.scala:783:8 
+[warn] 783 |        return Left(
+[warn]     |        ^
+[warn]     |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] 784 |          fieldReject(
+[warn] 785 |            SourceType.Crossref,
+[warn] 786 |            provenance.sourceRecordId,
+[warn] 787 |            snapshot,
+[warn] 788 |            provenance.runId,
+[warn] 789 |            RejectReasonCode.InvalidIdentifier,
+[warn] 790 |            rorRaw.orElse(ringRaw).getOrElse("affiliation")
+[warn] 791 |          )
+[warn] 792 |        )
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/hadoop/src/main/scala/edu/uic/cs441/scholarchain/hadoop/JsonSources.scala:834:6 
+[warn] 834 |      return Vector(malformed(locator, snapshot, runId, RejectReasonCode.MalformedRecord, "object"))
+[warn]     |      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[warn]     |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/hadoop/src/main/scala/edu/uic/cs441/scholarchain/hadoop/JsonSources.scala:1009:12 
+[warn] 1009 |            return Some(
+[warn]      |            ^
+[warn]      |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] 1010 |              Left(
+[warn] 1011 |                fieldReject(
+[warn] 1012 |                  SourceType.Orcid,
+[warn] 1013 |                  sourceRecordId,
+[warn] 1014 |                  snapshot,
+[warn] 1015 |                  runId,
+[warn] 1016 |                  RejectReasonCode.InvalidIdentifier,
+[warn] 1017 |                  "doi"
+[warn] 1018 |                )
+[warn] 1019 |              )
+[warn] 1020 |            )
+[warn] 16 warnings found
+[info] done compiling
+[info] compiling 4 Scala sources to /Users/danny/Documents/UIC/CS441/ScholarChain/modules/hadoop/target/scala-3.3.4/test-classes ...
+[info] done compiling
+WARN org.apache.hadoop.util.NativeCodeLoader - Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+WARN org.apache.hadoop.metrics2.impl.MetricsConfig - Cannot locate configuration: tried hadoop-metrics2-jobtracker.properties,hadoop-metrics2.properties
+WARN org.apache.hadoop.mapreduce.JobResourceUploader - Hadoop command-line option parsing not performed. Implement the Tool interface and execute your application with ToolRunner to remedy this.
+WARN org.apache.hadoop.mapreduce.JobResourceUploader - No job jar file set.  User classes may not be found. See Job or Job#setJar(String).
+WARN org.apache.hadoop.metrics2.impl.MetricsSystemImpl - JobTracker metrics system already initialized!
+WARN org.apache.hadoop.metrics2.impl.MetricsSystemImpl - JobTracker metrics system already initialized!
+WARN org.apache.hadoop.mapreduce.JobResourceUploader - Hadoop command-line option parsing not performed. Implement the Tool interface and execute your application with ToolRunner to remedy this.
+WARN org.apache.hadoop.mapreduce.JobResourceUploader - No job jar file set.  User classes may not be found. See Job or Job#setJar(String).
+WARN org.apache.hadoop.metrics2.impl.MetricsSystemImpl - JobTracker metrics system already initialized!
+WARN org.apache.hadoop.metrics2.impl.MetricsSystemImpl - JobTracker metrics system already initialized!
+WARN org.apache.hadoop.mapreduce.JobResourceUploader - Hadoop command-line option parsing not performed. Implement the Tool interface and execute your application with ToolRunner to remedy this.
+WARN org.apache.hadoop.mapreduce.JobResourceUploader - No job jar file set.  User classes may not be found. See Job or Job#setJar(String).
+WARN org.apache.hadoop.metrics2.impl.MetricsSystemImpl - JobTracker metrics system already initialized!
+WARN org.apache.hadoop.metrics2.impl.MetricsSystemImpl - JobTracker metrics system already initialized!
+WARN org.apache.hadoop.mapreduce.JobResourceUploader - Hadoop command-line option parsing not performed. Implement the Tool interface and execute your application with ToolRunner to remedy this.
+WARN org.apache.hadoop.mapreduce.JobResourceUploader - No job jar file set.  User classes may not be found. See Job or Job#setJar(String).
+WARN org.apache.hadoop.metrics2.impl.MetricsSystemImpl - JobTracker metrics system already initialized!
+[info] SourceEvidenceRegressionSpec:
+[info] - OpenAlex retains both DOI field roles and validates the secondary value
+[info] - DBLP preserves repeated electronic editions and URLs by their declared field
+[info] - overflow lineage survives compressed input and distinct part-file offsets
+[info] - valid 600k DBLP title expansion exports rejects with original source lineage
+[info] - snapshot metadata beyond its fixed budget fails before filesystem or job work
+[info] Run completed in 5 seconds, 28 milliseconds.
+[info] Total number of tests run: 5
+[info] Suites: completed 1, aborted 0
+[info] Tests: succeeded 5, failed 0, canceled 0, ignored 0, pending 0
+[info] All tests passed.
+[success] Total time: 12 s, completed Oct 7, 2026, 9:31:51 PM
+[info] compiling 7 Scala sources to /Users/danny/Documents/UIC/CS441/ScholarChain/tests/target/scala-3.3.4/test-classes ...
+[info] done compiling
+WARN org.apache.hadoop.util.NativeCodeLoader - Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+WARN org.apache.hadoop.metrics2.impl.MetricsConfig - Cannot locate configuration: tried hadoop-metrics2-jobtracker.properties,hadoop-metrics2.properties
+WARN org.apache.hadoop.metrics2.util.MBeans - Failed to register MBean "Hadoop:service=JobTracker,name=MetricsSystem,sub=Stats": Instance already exists.
+WARN org.apache.hadoop.metrics2.util.MBeans - Failed to register MBean "Hadoop:service=JobTracker,name=UgiMetrics": Instance already exists.
+WARN org.apache.hadoop.metrics2.util.MBeans - Failed to register MBean "Hadoop:service=JobTracker,name=MetricsSystem,sub=Control": Instance already exists.
+WARN org.apache.hadoop.mapreduce.JobResourceUploader - Hadoop command-line option parsing not performed. Implement the Tool interface and execute your application with ToolRunner to remedy this.
+WARN org.apache.hadoop.mapreduce.JobResourceUploader - No job jar file set.  User classes may not be found. See Job or Job#setJar(String).
+WARN org.apache.hadoop.metrics2.impl.MetricsSystemImpl - JobTracker metrics system already initialized!
+WARN org.apache.hadoop.metrics2.impl.MetricsSystemImpl - JobTracker metrics system already initialized!
+WARN org.apache.hadoop.mapreduce.JobResourceUploader - Hadoop command-line option parsing not performed. Implement the Tool interface and execute your application with ToolRunner to remedy this.
+WARN org.apache.hadoop.mapreduce.JobResourceUploader - No job jar file set.  User classes may not be found. See Job or Job#setJar(String).
+WARN org.apache.hadoop.metrics2.impl.MetricsSystemImpl - JobTracker metrics system already initialized!
+WARN org.apache.hadoop.metrics2.impl.MetricsSystemImpl - JobTracker metrics system already initialized!
+WARN org.apache.hadoop.mapreduce.JobResourceUploader - Hadoop command-line option parsing not performed. Implement the Tool interface and execute your application with ToolRunner to remedy this.
+WARN org.apache.hadoop.mapreduce.JobResourceUploader - No job jar file set.  User classes may not be found. See Job or Job#setJar(String).
+WARN org.apache.hadoop.metrics2.impl.MetricsSystemImpl - JobTracker metrics system already initialized!
+WARN org.apache.hadoop.metrics2.impl.MetricsSystemImpl - JobTracker metrics system already initialized!
+WARN org.apache.hadoop.mapreduce.JobResourceUploader - Hadoop command-line option parsing not performed. Implement the Tool interface and execute your application with ToolRunner to remedy this.
+WARN org.apache.hadoop.mapreduce.JobResourceUploader - No job jar file set.  User classes may not be found. See Job or Job#setJar(String).
+WARN org.apache.hadoop.metrics2.impl.MetricsSystemImpl - JobTracker metrics system already initialized!
+WARN org.apache.hadoop.metrics2.impl.MetricsSystemImpl - JobTracker metrics system already initialized!
+WARN org.apache.hadoop.mapreduce.JobResourceUploader - Hadoop command-line option parsing not performed. Implement the Tool interface and execute your application with ToolRunner to remedy this.
+WARN org.apache.hadoop.mapreduce.JobResourceUploader - No job jar file set.  User classes may not be found. See Job or Job#setJar(String).
+WARN org.apache.hadoop.metrics2.impl.MetricsSystemImpl - JobTracker metrics system already initialized!
+WARN org.apache.hadoop.metrics2.impl.MetricsSystemImpl - JobTracker metrics system already initialized!
+WARN org.apache.hadoop.mapreduce.JobResourceUploader - Hadoop command-line option parsing not performed. Implement the Tool interface and execute your application with ToolRunner to remedy this.
+WARN org.apache.hadoop.mapreduce.JobResourceUploader - No job jar file set.  User classes may not be found. See Job or Job#setJar(String).
+WARN org.apache.hadoop.metrics2.impl.MetricsSystemImpl - JobTracker metrics system already initialized!
+WARN org.apache.hadoop.metrics2.impl.MetricsSystemImpl - JobTracker metrics system already initialized!
+WARN org.apache.hadoop.mapreduce.JobResourceUploader - Hadoop command-line option parsing not performed. Implement the Tool interface and execute your application with ToolRunner to remedy this.
+WARN org.apache.hadoop.mapreduce.JobResourceUploader - No job jar file set.  User classes may not be found. See Job or Job#setJar(String).
+WARN org.apache.hadoop.metrics2.impl.MetricsSystemImpl - JobTracker metrics system already initialized!
+WARN org.apache.hadoop.metrics2.impl.MetricsSystemImpl - JobTracker metrics system already initialized!
+WARN org.apache.hadoop.mapreduce.JobResourceUploader - Hadoop command-line option parsing not performed. Implement the Tool interface and execute your application with ToolRunner to remedy this.
+WARN org.apache.hadoop.mapreduce.JobResourceUploader - No job jar file set.  User classes may not be found. See Job or Job#setJar(String).
+WARN org.apache.hadoop.metrics2.impl.MetricsSystemImpl - JobTracker metrics system already initialized!
+WARN org.apache.hadoop.metrics2.impl.MetricsSystemImpl - JobTracker metrics system already initialized!
+WARN org.apache.hadoop.mapreduce.JobResourceUploader - Hadoop command-line option parsing not performed. Implement the Tool interface and execute your application with ToolRunner to remedy this.
+WARN org.apache.hadoop.mapreduce.JobResourceUploader - No job jar file set.  User classes may not be found. See Job or Job#setJar(String).
+WARN org.apache.hadoop.metrics2.impl.MetricsSystemImpl - JobTracker metrics system already initialized!
+WARN org.apache.hadoop.metrics2.impl.MetricsSystemImpl - JobTracker metrics system already initialized!
+WARN org.apache.hadoop.mapreduce.JobResourceUploader - Hadoop command-line option parsing not performed. Implement the Tool interface and execute your application with ToolRunner to remedy this.
+WARN org.apache.hadoop.mapreduce.JobResourceUploader - No job jar file set.  User classes may not be found. See Job or Job#setJar(String).
+WARN org.apache.hadoop.metrics2.impl.MetricsSystemImpl - JobTracker metrics system already initialized!
+WARN org.apache.hadoop.metrics2.impl.MetricsSystemImpl - JobTracker metrics system already initialized!
+WARN org.apache.hadoop.metrics2.impl.MetricsSystemImpl - JobTracker metrics system already initialized!
+WARN org.apache.hadoop.metrics2.impl.MetricsSystemImpl - JobTracker metrics system already initialized!
+WARN org.apache.hadoop.metrics2.impl.MetricsSystemImpl - JobTracker metrics system already initialized!
+WARN org.apache.hadoop.mapreduce.JobResourceUploader - Hadoop command-line option parsing not performed. Implement the Tool interface and execute your application with ToolRunner to remedy this.
+WARN org.apache.hadoop.mapreduce.JobResourceUploader - No job jar file set.  User classes may not be found. See Job or Job#setJar(String).
+WARN org.apache.hadoop.metrics2.impl.MetricsSystemImpl - JobTracker metrics system already initialized!
+WARN org.apache.hadoop.metrics2.impl.MetricsSystemImpl - JobTracker metrics system already initialized!
+WARN org.apache.hadoop.metrics2.impl.MetricsSystemImpl - JobTracker metrics system already initialized!
+WARN org.apache.hadoop.metrics2.impl.MetricsSystemImpl - JobTracker metrics system already initialized!
+WARN org.apache.hadoop.metrics2.impl.MetricsSystemImpl - JobTracker metrics system already initialized!
+WARN org.apache.hadoop.mapreduce.JobResourceUploader - Hadoop command-line option parsing not performed. Implement the Tool interface and execute your application with ToolRunner to remedy this.
+WARN org.apache.hadoop.mapreduce.JobResourceUploader - No job jar file set.  User classes may not be found. See Job or Job#setJar(String).
+WARN org.apache.hadoop.metrics2.impl.MetricsSystemImpl - JobTracker metrics system already initialized!
+WARN org.apache.hadoop.metrics2.impl.MetricsSystemImpl - JobTracker metrics system already initialized!
+WARN org.apache.hadoop.metrics2.impl.MetricsSystemImpl - JobTracker metrics system already initialized!
+WARN org.apache.hadoop.metrics2.impl.MetricsSystemImpl - JobTracker metrics system already initialized!
+WARN org.apache.hadoop.metrics2.impl.MetricsSystemImpl - JobTracker metrics system already initialized!
+WARN org.apache.hadoop.mapreduce.JobResourceUploader - Hadoop command-line option parsing not performed. Implement the Tool interface and execute your application with ToolRunner to remedy this.
+WARN org.apache.hadoop.mapreduce.JobResourceUploader - No job jar file set.  User classes may not be found. See Job or Job#setJar(String).
+WARN org.apache.hadoop.metrics2.impl.MetricsSystemImpl - JobTracker metrics system already initialized!
+WARN org.apache.hadoop.metrics2.impl.MetricsSystemImpl - JobTracker metrics system already initialized!
+WARN org.apache.hadoop.metrics2.impl.MetricsSystemImpl - JobTracker metrics system already initialized!
+WARN org.apache.hadoop.metrics2.impl.MetricsSystemImpl - JobTracker metrics system already initialized!
+WARN org.apache.hadoop.metrics2.impl.MetricsSystemImpl - JobTracker metrics system already initialized!
+WARN org.apache.hadoop.mapreduce.JobResourceUploader - Hadoop command-line option parsing not performed. Implement the Tool interface and execute your application with ToolRunner to remedy this.
+WARN org.apache.hadoop.mapreduce.JobResourceUploader - No job jar file set.  User classes may not be found. See Job or Job#setJar(String).
+WARN org.apache.hadoop.metrics2.impl.MetricsSystemImpl - JobTracker metrics system already initialized!
+WARN org.apache.hadoop.metrics2.impl.MetricsSystemImpl - JobTracker metrics system already initialized!
+WARN org.apache.hadoop.metrics2.impl.MetricsSystemImpl - JobTracker metrics system already initialized!
+WARN org.apache.hadoop.metrics2.impl.MetricsSystemImpl - JobTracker metrics system already initialized!
+WARN org.apache.hadoop.metrics2.impl.MetricsSystemImpl - JobTracker metrics system already initialized!
+WARN org.apache.hadoop.mapreduce.JobResourceUploader - Hadoop command-line option parsing not performed. Implement the Tool interface and execute your application with ToolRunner to remedy this.
+WARN org.apache.hadoop.mapreduce.JobResourceUploader - No job jar file set.  User classes may not be found. See Job or Job#setJar(String).
+WARN org.apache.hadoop.metrics2.impl.MetricsSystemImpl - JobTracker metrics system already initialized!
+WARN org.apache.hadoop.metrics2.impl.MetricsSystemImpl - JobTracker metrics system already initialized!
+WARN org.apache.hadoop.metrics2.impl.MetricsSystemImpl - JobTracker metrics system already initialized!
+WARN org.apache.hadoop.metrics2.impl.MetricsSystemImpl - JobTracker metrics system already initialized!
+WARN org.apache.hadoop.metrics2.impl.MetricsSystemImpl - JobTracker metrics system already initialized!
+WARN org.apache.hadoop.mapreduce.JobResourceUploader - Hadoop command-line option parsing not performed. Implement the Tool interface and execute your application with ToolRunner to remedy this.
+WARN org.apache.hadoop.mapreduce.JobResourceUploader - No job jar file set.  User classes may not be found. See Job or Job#setJar(String).
+WARN org.apache.hadoop.metrics2.impl.MetricsSystemImpl - JobTracker metrics system already initialized!
+WARN org.apache.hadoop.metrics2.impl.MetricsSystemImpl - JobTracker metrics system already initialized!
+WARN org.apache.hadoop.metrics2.impl.MetricsSystemImpl - JobTracker metrics system already initialized!
+WARN org.apache.hadoop.metrics2.impl.MetricsSystemImpl - JobTracker metrics system already initialized!
+WARN org.apache.hadoop.metrics2.impl.MetricsSystemImpl - JobTracker metrics system already initialized!
+WARN org.apache.hadoop.mapreduce.JobResourceUploader - Hadoop command-line option parsing not performed. Implement the Tool interface and execute your application with ToolRunner to remedy this.
+WARN org.apache.hadoop.mapreduce.JobResourceUploader - No job jar file set.  User classes may not be found. See Job or Job#setJar(String).
+WARN org.apache.hadoop.metrics2.impl.MetricsSystemImpl - JobTracker metrics system already initialized!
+WARN org.apache.hadoop.metrics2.impl.MetricsSystemImpl - JobTracker metrics system already initialized!
+WARN org.apache.hadoop.metrics2.impl.MetricsSystemImpl - JobTracker metrics system already initialized!
+WARN org.apache.hadoop.metrics2.impl.MetricsSystemImpl - JobTracker metrics system already initialized!
+WARN org.apache.hadoop.metrics2.impl.MetricsSystemImpl - JobTracker metrics system already initialized!
+WARN org.apache.hadoop.mapreduce.JobResourceUploader - Hadoop command-line option parsing not performed. Implement the Tool interface and execute your application with ToolRunner to remedy this.
+WARN org.apache.hadoop.mapreduce.JobResourceUploader - No job jar file set.  User classes may not be found. See Job or Job#setJar(String).
+WARN org.apache.hadoop.metrics2.impl.MetricsSystemImpl - JobTracker metrics system already initialized!
+WARN org.apache.hadoop.metrics2.impl.MetricsSystemImpl - JobTracker metrics system already initialized!
+WARN org.apache.hadoop.metrics2.impl.MetricsSystemImpl - JobTracker metrics system already initialized!
+WARN org.apache.hadoop.metrics2.impl.MetricsSystemImpl - JobTracker metrics system already initialized!
+[info] IndependentPhase4EvidenceSpec:
+[info] - final OpenAlex work retains both declared DOI fields separately from preferred DOI
+[info] - changing only ids.doi is a conflicting observation rather than an identical duplicate
+[info] - valid top-level DOI does not hide a malformed secondary ids.doi
+[info] - all DBLP electronic-edition and URL links survive final export with decoded values
+[info] - valid DBLP expansion overflow retains source snapshot and qualified distinct file locators
+[info] Run completed in 21 seconds, 4 milliseconds.
+[info] Total number of tests run: 5
+[info] Suites: completed 1, aborted 0
+[info] Tests: succeeded 5, failed 0, canceled 0, ignored 0, pending 0
+[info] All tests passed.
+[success] Total time: 22 s, completed Oct 7, 2026, 9:32:13 PM

@@ -39,8 +39,16 @@ final case class ParsedMentionId(sourceWire: String, sourceRecordId: String, ord
   * Run ID: `run:{uuid version 4}` from a caller-supplied UUID. The id does not contain a timestamp.
   * Store it on an immutable [[RunManifest]].
   *
+  * Match candidate ID: `match-candidate:{sha256}` of the block key and the two observation order
+  * keys, after canonical order. Each order key is source wire, source record id, dataset snapshot,
+  * and work id or an empty field, joined by a single LF. The lesser key, compared with
+  * `String.compareTo`, is hashed first. Swapping the observations does not change the id.
+  * Observation identity is source, source record id, and dataset snapshot. Equal identities are not
+  * a candidate, whether the work ids agree or conflict.
+  *
   * Undirected pair order: Scala `String.compareTo` (UTF-16 code units). The lesser id is endpoint
-  * A. Equal ids are rejected.
+  * A. Equal ids are rejected. Coauthor pair endpoints use that string order on mention ids, and
+  * each endpoint's ordinal stays the ordinal embedded in its mention id.
   */
 object StableIds {
   private val doiPattern: Regex = "^10\\.\\d{4,9}/\\S+$".r
@@ -539,6 +547,104 @@ object StableIds {
     if (runPattern.matches(value)) Right(value)
     else Left(malformed("run id", value))
 
+  def parsePolicyVersion(policyVersion: String): Either[DomainViolation, String] =
+    requirePolicy(policyVersion).map(_ => policyVersion)
+
+  def parseMatchCandidateId(value: String): Either[DomainViolation, String] =
+    value.stripPrefix("match-candidate:") match {
+      case hash if value.startsWith("match-candidate:") && hex64.matches(hash) => Right(value)
+      case _ => Left(malformed("match candidate id", value))
+    }
+
+  /** LF-joined order key. Lesser `String.compareTo` sorts first in [[matchCandidateId]]. */
+  def candidateObservationOrderKey(observation: CandidateObservation): String =
+    Seq(
+      observation.source.wire,
+      observation.sourceRecordId,
+      observation.datasetSnapshot,
+      observation.workId.getOrElse("")
+    ).mkString("\n")
+
+  /** Canonical side order for a candidate. Equal observation identities are rejected. */
+  def canonicalCandidateObservations(
+      left: CandidateObservation,
+      right: CandidateObservation
+  ): Either[DomainViolation, (CandidateObservation, CandidateObservation)] =
+    for {
+      _ <- validateCandidateObservation(left)
+      _ <- validateCandidateObservation(right)
+      ordered <- orderCandidateObservations(left, right)
+    } yield ordered
+
+  /** Stable id of an unordered pair in one block. Input order does not change the result. */
+  def matchCandidateId(
+      left: CandidateObservation,
+      right: CandidateObservation,
+      blockKey: String
+  ): Either[DomainViolation, String] =
+    for {
+      _ <- requireBlockKey(blockKey)
+      ordered <- canonicalCandidateObservations(left, right)
+    } yield {
+      val (first, second) = ordered
+      val hash = sha256Hex(
+        Seq(
+          blockKey,
+          first.source.wire,
+          first.sourceRecordId,
+          first.datasetSnapshot,
+          first.workId.getOrElse(""),
+          second.source.wire,
+          second.sourceRecordId,
+          second.datasetSnapshot,
+          second.workId.getOrElse("")
+        ).mkString("\n")
+      )
+      s"match-candidate:$hash"
+    }
+
+  /** Normalized identifier text, or a malformed-id error. The error is not a work id. */
+  def normalizeIndexedIdentifier(
+      namespace: IdentifierNamespace,
+      raw: String
+  ): Either[DomainViolation, String] =
+    namespace match {
+      case IdentifierNamespace.Doi   => normalizeDoi(raw)
+      case IdentifierNamespace.Arxiv => workIdFromArxiv(raw).map(_.stripPrefix("work:arxiv:"))
+      case IdentifierNamespace.Dblp  => workIdFromDblpKey(raw).map(_.stripPrefix("work:dblp:"))
+      case IdentifierNamespace.OpenAlexWork =>
+        workIdFromOpenAlex(raw).map(_.stripPrefix("work:openalex:"))
+      case IdentifierNamespace.OpenAlexAuthor => openAlexAuthorToken(raw)
+      case IdentifierNamespace.Orcid =>
+        researcherIdFromValidatedOrcid(raw).map(_.stripPrefix("researcher:orcid:"))
+      case IdentifierNamespace.Ror =>
+        institutionIdFromRor(raw).map(_.stripPrefix("institution:ror:"))
+      case IdentifierNamespace.Ringgold =>
+        institutionIdFromRinggold(raw.trim).map(_.stripPrefix("institution:ringgold:"))
+      case IdentifierNamespace.OpenAlexInstitution =>
+        institutionIdFromOpenAlex(raw).map(_.stripPrefix("institution:openalex:"))
+    }
+
+  /** Preferred work id for an index row. Non-work namespaces return `None` after they parse.
+    * Malformed input returns an error and no work id.
+    */
+  def identifierPreferredWorkId(
+      namespace: IdentifierNamespace,
+      raw: String
+  ): Either[DomainViolation, Option[String]] =
+    normalizeIndexedIdentifier(namespace, raw).flatMap { normalized =>
+      namespace match {
+        case IdentifierNamespace.Doi          => workIdFromDoi(normalized).map(Some(_))
+        case IdentifierNamespace.Arxiv        => workIdFromArxiv(normalized).map(Some(_))
+        case IdentifierNamespace.Dblp         => workIdFromDblpKey(normalized).map(Some(_))
+        case IdentifierNamespace.OpenAlexWork => workIdFromOpenAlex(normalized).map(Some(_))
+        case IdentifierNamespace.OpenAlexAuthor | IdentifierNamespace.Orcid |
+            IdentifierNamespace.Ror | IdentifierNamespace.Ringgold |
+            IdentifierNamespace.OpenAlexInstitution =>
+          Right(None)
+      }
+    }
+
   def parseMentionId(value: String): Either[DomainViolation, String] = {
     val hashIndex = value.lastIndexOf('#')
     if (hashIndex <= 0) Left(malformed("mention id", value))
@@ -640,6 +746,62 @@ object StableIds {
   private def parseYear(text: String): Either[DomainViolation, Int] =
     if (text.matches("[1-9]\\d{0,3}")) Right(text.toInt)
     else Left(malformed("window year", text))
+
+  private def validateCandidateObservation(
+      observation: CandidateObservation
+  ): Either[DomainViolation, Unit] =
+    for {
+      _ <- parseSourceRecordId(observation.source, observation.sourceRecordId)
+      _ <- snapshotId(observation.source, observation.datasetSnapshot)
+      _ <- observation.workId match {
+        case Some(workId) => parseWorkId(workId).map(_ => ())
+        case None         => Right(())
+      }
+    } yield ()
+
+  private def orderCandidateObservations(
+      left: CandidateObservation,
+      right: CandidateObservation
+  ): Either[DomainViolation, (CandidateObservation, CandidateObservation)] = {
+    val sameIdentity =
+      left.source == right.source &&
+        left.sourceRecordId == right.sourceRecordId &&
+        left.datasetSnapshot == right.datasetSnapshot
+    if (sameIdentity && left.workId == right.workId)
+      Left(
+        DomainViolation(
+          ViolationCode.InconsistentRecord,
+          "identical observations are not a match candidate"
+        )
+      )
+    else if (sameIdentity)
+      Left(
+        DomainViolation(
+          ViolationCode.InconsistentRecord,
+          "conflicting work ids on one observation are not a match candidate"
+        )
+      )
+    else {
+      val comparison =
+        candidateObservationOrderKey(left).compareTo(candidateObservationOrderKey(right))
+      if (comparison < 0) Right((left, right))
+      else if (comparison > 0) Right((right, left))
+      else
+        Left(
+          DomainViolation(
+            ViolationCode.InvalidPairOrder,
+            "candidate observations did not order"
+          )
+        )
+    }
+  }
+
+  private def requireBlockKey(blockKey: String): Either[DomainViolation, Unit] =
+    if (blockKey.trim.isEmpty || blockKey != blockKey.trim)
+      Left(malformed("block key", blockKey))
+    else if (blockKey.length > 512 || blockKey.exists(ch => ch == '\n' || ch == '\r'))
+      Left(malformed("block key", blockKey))
+    else Right(())
 
   private def requirePolicy(policyVersion: String): Either[DomainViolation, Unit] =
     if (policyPattern.matches(policyVersion)) Right(())

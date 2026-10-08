@@ -13,6 +13,14 @@ not replace per-entry fields in `dataset-manifest.yaml`.
 Committed samples were retrieved on **2026-10-05** except where upstream pages
 only provide ongoing live API access (OpenAlex, ORCID public API, Crossref REST).
 
+`acquisition-index.v1.json` is the processing snapshot identity for loaders. It
+is derived from `dataset-manifest.yaml` and `provenance/dblp-snapshot-2026-10-03-dagstuhl.txt`.
+Every source records retrieval date `2026-10-05`. That date is a bulk snapshot
+date only for DBLP (`dblp-2026-10-03`, monthly XML). OpenAlex, Crossref, and
+ORCID are live API retrievals (`openalex-rest-2026-10-05`,
+`crossref-rest-2026-10-05`, `orcid-public-api-2026-10-05`). API retrieval dates
+are not bulk snapshot dates.
+
 Redistribution of committed samples is intended to align with the licenses above.
 Downstream pipelines must still respect publisher copyright on abstracts and PDFs
 when those appear in future pulls.

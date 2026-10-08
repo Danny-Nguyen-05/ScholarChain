@@ -1,0 +1,185 @@
+[info] welcome to sbt 1.10.7 (Homebrew Java 17.0.20.1)
+[info] loading settings for project scholarchain-build from plugins.sbt...
+[info] loading project definition from /Users/danny/Documents/UIC/CS441/ScholarChain/project
+[info] loading settings for project root from build.sbt...
+[info] set current project to root (in build file:/Users/danny/Documents/UIC/CS441/ScholarChain/)
+[info] scalafmt: Formatting 4 Scala sources (/Users/danny/Documents/UIC/CS441/ScholarChain/modules/hadoop)...
+[info] scalafmt: Reformatted 2 Scala sources
+[success] Total time: 1 s, completed Oct 7, 2026, 3:15:07 PM
+[info] scalafmt: Formatting 1 Scala sources (/Users/danny/Documents/UIC/CS441/ScholarChain/modules/hadoop)...
+[info] scalafmt: Reformatted 1 Scala sources
+[success] Total time: 0 s, completed Oct 7, 2026, 3:15:07 PM
+[info] scalafmt: Formatting 1 Scala sources (/Users/danny/Documents/UIC/CS441/ScholarChain/tests)...
+[info] scalafmt: Reformatted 1 Scala sources
+[success] Total time: 0 s, completed Oct 7, 2026, 3:15:07 PM
+[info] compiling 4 Scala sources to /Users/danny/Documents/UIC/CS441/ScholarChain/modules/hadoop/target/scala-3.3.4/classes ...
+[warn] -- Deprecation Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/hadoop/src/main/scala/edu/uic/cs441/scholarchain/hadoop/HadoopIO.scala:76:9 
+[warn] 76 |      fs.isFile(path)
+[warn]    |      ^^^^^^^^^
+[warn]    |method isFile in class FileSystem is deprecated: see corresponding Javadoc for more information.
+[warn] one warning found
+[info] done compiling
+[info] compiling 3 Scala sources to /Users/danny/Documents/UIC/CS441/ScholarChain/modules/hadoop/target/scala-3.3.4/test-classes ...
+[info] done compiling
+15:15:12.553 [pool-10-thread-6-ScalaTest-running-DblpXmlRegressionSpec] DEBUG org.apache.hadoop.util.Shell -- Failed to detect a valid hadoop home directory
+java.io.FileNotFoundException: HADOOP_HOME and hadoop.home.dir are unset.
+	at org.apache.hadoop.util.Shell.checkHadoopHomeInner(Shell.java:520)
+	at org.apache.hadoop.util.Shell.checkHadoopHome(Shell.java:491)
+	at org.apache.hadoop.util.Shell.<clinit>(Shell.java:568)
+	at org.apache.hadoop.util.StringUtils.<clinit>(StringUtils.java:79)
+	at org.apache.hadoop.fs.FileSystem$Cache$Key.<init>(FileSystem.java:3879)
+	at org.apache.hadoop.fs.FileSystem$Cache$Key.<init>(FileSystem.java:3874)
+	at org.apache.hadoop.fs.FileSystem$Cache.get(FileSystem.java:3662)
+	at org.apache.hadoop.fs.FileSystem.get(FileSystem.java:557)
+	at org.apache.hadoop.fs.Path.getFileSystem(Path.java:365)
+	at edu.uic.cs441.scholarchain.hadoop.SampleBound$.install$$anonfun$1(HadoopIO.scala:273)
+	at scala.runtime.function.JProcedure1.apply(JProcedure1.java:15)
+	at scala.runtime.function.JProcedure1.apply(JProcedure1.java:10)
+	at scala.collection.immutable.List.foreach(List.scala:334)
+	at edu.uic.cs441.scholarchain.hadoop.SampleBound$.install(HadoopIO.scala:272)
+	at edu.uic.cs441.scholarchain.hadoop.DblpXmlRegressionSpec.testFun$proxy1$1(DblpXmlRegressionSpec.scala:54)
+	at edu.uic.cs441.scholarchain.hadoop.DblpXmlRegressionSpec.$init$$$anonfun$1(DblpXmlRegressionSpec.scala:32)
+	at org.scalatest.Transformer.apply$$anonfun$1(Transformer.scala:22)
+	at org.scalatest.OutcomeOf.outcomeOf(OutcomeOf.scala:85)
+	at org.scalatest.OutcomeOf.outcomeOf$(OutcomeOf.scala:31)
+	at org.scalatest.OutcomeOf$.outcomeOf(OutcomeOf.scala:104)
+	at org.scalatest.Transformer.apply(Transformer.scala:22)
+	at org.scalatest.Transformer.apply(Transformer.scala:21)
+	at org.scalatest.funsuite.AnyFunSuiteLike$$anon$1.apply(AnyFunSuiteLike.scala:206)
+	at org.scalatest.TestSuite.withFixture(TestSuite.scala:196)
+	at org.scalatest.TestSuite.withFixture$(TestSuite.scala:138)
+	at org.scalatest.funsuite.AnyFunSuite.withFixture(AnyFunSuite.scala:1563)
+	at org.scalatest.funsuite.AnyFunSuiteLike.invokeWithFixture$1(AnyFunSuiteLike.scala:212)
+	at org.scalatest.funsuite.AnyFunSuiteLike.runTest$$anonfun$1(AnyFunSuiteLike.scala:216)
+	at org.scalatest.SuperEngine.runTestImpl(Engine.scala:306)
+	at org.scalatest.funsuite.AnyFunSuiteLike.runTest(AnyFunSuiteLike.scala:216)
+	at org.scalatest.funsuite.AnyFunSuiteLike.runTest$(AnyFunSuiteLike.scala:47)
+	at org.scalatest.funsuite.AnyFunSuite.runTest(AnyFunSuite.scala:1563)
+	at org.scalatest.funsuite.AnyFunSuiteLike.runTests$$anonfun$1(AnyFunSuiteLike.scala:249)
+	at org.scalatest.SuperEngine.traverseSubNodes$1$$anonfun$1(Engine.scala:413)
+	at scala.runtime.function.JProcedure1.apply(JProcedure1.java:15)
+	at scala.runtime.function.JProcedure1.apply(JProcedure1.java:10)
+	at scala.collection.immutable.List.foreach(List.scala:334)
+	at org.scalatest.SuperEngine.traverseSubNodes$1(Engine.scala:429)
+	at org.scalatest.SuperEngine.runTestsInBranch(Engine.scala:396)
+	at org.scalatest.SuperEngine.runTestsImpl(Engine.scala:475)
+	at org.scalatest.funsuite.AnyFunSuiteLike.runTests(AnyFunSuiteLike.scala:249)
+	at org.scalatest.funsuite.AnyFunSuiteLike.runTests$(AnyFunSuiteLike.scala:47)
+	at org.scalatest.funsuite.AnyFunSuite.runTests(AnyFunSuite.scala:1563)
+	at org.scalatest.Suite.run(Suite.scala:1114)
+	at org.scalatest.Suite.run$(Suite.scala:564)
+	at org.scalatest.funsuite.AnyFunSuite.org$scalatest$funsuite$AnyFunSuiteLike$$super$run(AnyFunSuite.scala:1563)
+	at org.scalatest.funsuite.AnyFunSuiteLike.run$$anonfun$1(AnyFunSuiteLike.scala:253)
+	at org.scalatest.SuperEngine.runImpl(Engine.scala:535)
+	at org.scalatest.funsuite.AnyFunSuiteLike.run(AnyFunSuiteLike.scala:253)
+	at org.scalatest.funsuite.AnyFunSuiteLike.run$(AnyFunSuiteLike.scala:47)
+	at org.scalatest.funsuite.AnyFunSuite.run(AnyFunSuite.scala:1563)
+	at org.scalatest.tools.Framework.org$scalatest$tools$Framework$$runSuite(Framework.scala:321)
+	at org.scalatest.tools.Framework$ScalaTestTask.execute(Framework.scala:517)
+	at sbt.TestRunner.runTest$1(TestFramework.scala:153)
+	at sbt.TestRunner.run(TestFramework.scala:168)
+	at sbt.TestFramework$$anon$3$$anonfun$$lessinit$greater$1.$anonfun$apply$1(TestFramework.scala:336)
+	at sbt.TestFramework$.sbt$TestFramework$$withContextLoader(TestFramework.scala:296)
+	at sbt.TestFramework$$anon$3$$anonfun$$lessinit$greater$1.apply(TestFramework.scala:336)
+	at sbt.TestFramework$$anon$3$$anonfun$$lessinit$greater$1.apply(TestFramework.scala:336)
+	at sbt.TestFunction.apply(TestFramework.scala:348)
+	at sbt.Tests$.processRunnable$1(Tests.scala:475)
+	at sbt.Tests$.$anonfun$makeSerial$1(Tests.scala:481)
+	at sbt.std.Transform$$anon$3.$anonfun$apply$2(Transform.scala:47)
+	at sbt.std.Transform$$anon$4.work(Transform.scala:69)
+	at sbt.Execute.$anonfun$submit$2(Execute.scala:283)
+	at sbt.internal.util.ErrorHandling$.wideConvert(ErrorHandling.scala:24)
+	at sbt.Execute.work(Execute.scala:292)
+	at sbt.Execute.$anonfun$submit$1(Execute.scala:283)
+	at sbt.ConcurrentRestrictions$$anon$4.$anonfun$submitValid$1(ConcurrentRestrictions.scala:265)
+	at sbt.CompletionService$$anon$2.call(CompletionService.scala:65)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:539)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+15:15:12.558 [pool-10-thread-6-ScalaTest-running-DblpXmlRegressionSpec] DEBUG org.apache.hadoop.util.Shell -- setsid is not available on this machine. So not using it.
+15:15:12.558 [pool-10-thread-6-ScalaTest-running-DblpXmlRegressionSpec] DEBUG org.apache.hadoop.util.Shell -- setsid exited with exit code 0
+15:15:12.569 [pool-10-thread-6-ScalaTest-running-DblpXmlRegressionSpec] DEBUG org.apache.hadoop.metrics2.lib.MutableMetricsFactory -- field org.apache.hadoop.metrics2.lib.MutableRate org.apache.hadoop.security.UserGroupInformation$UgiMetrics.getGroups with annotation @org.apache.hadoop.metrics2.annotation.Metric(always=false, sampleName="Ops", valueName="Time", about="", interval=10, type=DEFAULT, value={"GetGroups"})
+15:15:12.572 [pool-10-thread-6-ScalaTest-running-DblpXmlRegressionSpec] DEBUG org.apache.hadoop.metrics2.lib.MutableMetricsFactory -- field org.apache.hadoop.metrics2.lib.MutableRate org.apache.hadoop.security.UserGroupInformation$UgiMetrics.loginFailure with annotation @org.apache.hadoop.metrics2.annotation.Metric(always=false, sampleName="Ops", valueName="Time", about="", interval=10, type=DEFAULT, value={"Rate of failed kerberos logins and latency (milliseconds)"})
+15:15:12.572 [pool-10-thread-6-ScalaTest-running-DblpXmlRegressionSpec] DEBUG org.apache.hadoop.metrics2.lib.MutableMetricsFactory -- field org.apache.hadoop.metrics2.lib.MutableRate org.apache.hadoop.security.UserGroupInformation$UgiMetrics.loginSuccess with annotation @org.apache.hadoop.metrics2.annotation.Metric(always=false, sampleName="Ops", valueName="Time", about="", interval=10, type=DEFAULT, value={"Rate of successful kerberos logins and latency (milliseconds)"})
+15:15:12.572 [pool-10-thread-6-ScalaTest-running-DblpXmlRegressionSpec] DEBUG org.apache.hadoop.metrics2.lib.MutableMetricsFactory -- field private org.apache.hadoop.metrics2.lib.MutableGaugeInt org.apache.hadoop.security.UserGroupInformation$UgiMetrics.renewalFailures with annotation @org.apache.hadoop.metrics2.annotation.Metric(always=false, sampleName="Ops", valueName="Time", about="", interval=10, type=DEFAULT, value={"Renewal failures since last successful login"})
+15:15:12.572 [pool-10-thread-6-ScalaTest-running-DblpXmlRegressionSpec] DEBUG org.apache.hadoop.metrics2.lib.MutableMetricsFactory -- field private org.apache.hadoop.metrics2.lib.MutableGaugeLong org.apache.hadoop.security.UserGroupInformation$UgiMetrics.renewalFailuresTotal with annotation @org.apache.hadoop.metrics2.annotation.Metric(always=false, sampleName="Ops", valueName="Time", about="", interval=10, type=DEFAULT, value={"Renewal failures since startup"})
+15:15:12.573 [pool-10-thread-6-ScalaTest-running-DblpXmlRegressionSpec] DEBUG org.apache.hadoop.metrics2.impl.MetricsSystemImpl -- UgiMetrics, User and group related metrics
+15:15:12.576 [pool-10-thread-6-ScalaTest-running-DblpXmlRegressionSpec] DEBUG org.apache.hadoop.security.SecurityUtil -- Setting hadoop.security.token.service.use_ip to true
+15:15:12.592 [pool-10-thread-6-ScalaTest-running-DblpXmlRegressionSpec] DEBUG org.apache.hadoop.security.Groups --  Creating new Groups object
+15:15:12.593 [pool-10-thread-6-ScalaTest-running-DblpXmlRegressionSpec] DEBUG org.apache.hadoop.util.NativeCodeLoader -- Trying to load the custom-built native-hadoop library...
+15:15:12.594 [pool-10-thread-6-ScalaTest-running-DblpXmlRegressionSpec] DEBUG org.apache.hadoop.util.NativeCodeLoader -- Failed to load native-hadoop with error: java.lang.UnsatisfiedLinkError: no hadoop in java.library.path: /Users/danny/Library/Java/Extensions:/Library/Java/Extensions:/Network/Library/Java/Extensions:/System/Library/Java/Extensions:/usr/lib/java:.
+15:15:12.594 [pool-10-thread-6-ScalaTest-running-DblpXmlRegressionSpec] DEBUG org.apache.hadoop.util.NativeCodeLoader -- java.library.path=/Users/danny/Library/Java/Extensions:/Library/Java/Extensions:/Network/Library/Java/Extensions:/System/Library/Java/Extensions:/usr/lib/java:.
+15:15:12.594 [pool-10-thread-6-ScalaTest-running-DblpXmlRegressionSpec] WARN org.apache.hadoop.util.NativeCodeLoader -- Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+15:15:12.594 [pool-10-thread-6-ScalaTest-running-DblpXmlRegressionSpec] DEBUG org.apache.hadoop.util.PerformanceAdvisory -- Falling back to shell based
+15:15:12.594 [pool-10-thread-6-ScalaTest-running-DblpXmlRegressionSpec] DEBUG org.apache.hadoop.security.JniBasedUnixGroupsMappingWithFallback -- Group mapping impl=org.apache.hadoop.security.ShellBasedUnixGroupsMapping
+15:15:12.600 [pool-10-thread-6-ScalaTest-running-DblpXmlRegressionSpec] DEBUG org.apache.hadoop.security.Groups -- Group mapping impl=org.apache.hadoop.security.JniBasedUnixGroupsMappingWithFallback; cacheTimeout=300000; warningDeltaMs=5000
+15:15:12.611 [pool-10-thread-6-ScalaTest-running-DblpXmlRegressionSpec] DEBUG org.apache.hadoop.security.UserGroupInformation -- Hadoop login
+15:15:12.611 [pool-10-thread-6-ScalaTest-running-DblpXmlRegressionSpec] DEBUG org.apache.hadoop.security.UserGroupInformation -- hadoop login commit
+15:15:12.611 [pool-10-thread-6-ScalaTest-running-DblpXmlRegressionSpec] DEBUG org.apache.hadoop.security.UserGroupInformation -- Using local user: UnixPrincipal: danny
+15:15:12.612 [pool-10-thread-6-ScalaTest-running-DblpXmlRegressionSpec] DEBUG org.apache.hadoop.security.UserGroupInformation -- Using user: "UnixPrincipal: danny" with name: danny
+15:15:12.612 [pool-10-thread-6-ScalaTest-running-DblpXmlRegressionSpec] DEBUG org.apache.hadoop.security.UserGroupInformation -- User entry: "danny"
+15:15:12.612 [pool-10-thread-6-ScalaTest-running-DblpXmlRegressionSpec] DEBUG org.apache.hadoop.security.UserGroupInformation -- UGI loginUser: danny (auth:SIMPLE)
+15:15:12.613 [pool-10-thread-6-ScalaTest-running-DblpXmlRegressionSpec] DEBUG org.apache.hadoop.fs.FileSystem -- Starting: Acquiring creator semaphore for file:///var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/dblp-opening-name6227598881339813696.xml
+15:15:12.613 [pool-10-thread-6-ScalaTest-running-DblpXmlRegressionSpec] DEBUG org.apache.hadoop.fs.FileSystem -- Acquiring creator semaphore for file:///var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/dblp-opening-name6227598881339813696.xml: duration 0:00.000s
+15:15:12.613 [pool-10-thread-6-ScalaTest-running-DblpXmlRegressionSpec] DEBUG org.apache.hadoop.fs.FileSystem -- Starting: Creating FS file:///var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/dblp-opening-name6227598881339813696.xml
+15:15:12.613 [pool-10-thread-6-ScalaTest-running-DblpXmlRegressionSpec] DEBUG org.apache.hadoop.fs.FileSystem -- Loading filesystems
+15:15:12.616 [pool-10-thread-6-ScalaTest-running-DblpXmlRegressionSpec] DEBUG org.apache.hadoop.fs.FileSystem -- file:// = class org.apache.hadoop.fs.LocalFileSystem from /Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/apache/hadoop/hadoop-common/3.3.6/hadoop-common-3.3.6.jar
+15:15:12.617 [pool-10-thread-6-ScalaTest-running-DblpXmlRegressionSpec] DEBUG org.apache.hadoop.fs.FileSystem -- viewfs:// = class org.apache.hadoop.fs.viewfs.ViewFileSystem from /Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/apache/hadoop/hadoop-common/3.3.6/hadoop-common-3.3.6.jar
+15:15:12.618 [pool-10-thread-6-ScalaTest-running-DblpXmlRegressionSpec] DEBUG org.apache.hadoop.fs.FileSystem -- har:// = class org.apache.hadoop.fs.HarFileSystem from /Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/apache/hadoop/hadoop-common/3.3.6/hadoop-common-3.3.6.jar
+15:15:12.618 [pool-10-thread-6-ScalaTest-running-DblpXmlRegressionSpec] DEBUG org.apache.hadoop.fs.FileSystem -- http:// = class org.apache.hadoop.fs.http.HttpFileSystem from /Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/apache/hadoop/hadoop-common/3.3.6/hadoop-common-3.3.6.jar
+15:15:12.618 [pool-10-thread-6-ScalaTest-running-DblpXmlRegressionSpec] DEBUG org.apache.hadoop.fs.FileSystem -- https:// = class org.apache.hadoop.fs.http.HttpsFileSystem from /Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/apache/hadoop/hadoop-common/3.3.6/hadoop-common-3.3.6.jar
+15:15:12.620 [pool-10-thread-6-ScalaTest-running-DblpXmlRegressionSpec] DEBUG org.apache.hadoop.fs.FileSystem -- hdfs:// = class org.apache.hadoop.hdfs.DistributedFileSystem from /Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/apache/hadoop/hadoop-hdfs-client/3.3.6/hadoop-hdfs-client-3.3.6.jar
+15:15:12.625 [pool-10-thread-6-ScalaTest-running-DblpXmlRegressionSpec] DEBUG org.apache.hadoop.fs.FileSystem -- webhdfs:// = class org.apache.hadoop.hdfs.web.WebHdfsFileSystem from /Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/apache/hadoop/hadoop-hdfs-client/3.3.6/hadoop-hdfs-client-3.3.6.jar
+15:15:12.625 [pool-10-thread-6-ScalaTest-running-DblpXmlRegressionSpec] DEBUG org.apache.hadoop.fs.FileSystem -- swebhdfs:// = class org.apache.hadoop.hdfs.web.SWebHdfsFileSystem from /Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/apache/hadoop/hadoop-hdfs-client/3.3.6/hadoop-hdfs-client-3.3.6.jar
+15:15:12.625 [pool-10-thread-6-ScalaTest-running-DblpXmlRegressionSpec] DEBUG org.apache.hadoop.fs.FileSystem -- Looking for FS supporting file
+15:15:12.625 [pool-10-thread-6-ScalaTest-running-DblpXmlRegressionSpec] DEBUG org.apache.hadoop.fs.FileSystem -- looking for configuration option fs.file.impl
+15:15:12.630 [pool-10-thread-6-ScalaTest-running-DblpXmlRegressionSpec] DEBUG org.apache.hadoop.fs.FileSystem -- Looking in service filesystems for implementation class
+15:15:12.630 [pool-10-thread-6-ScalaTest-running-DblpXmlRegressionSpec] DEBUG org.apache.hadoop.fs.FileSystem -- FS for file is class org.apache.hadoop.fs.LocalFileSystem
+15:15:12.631 [pool-10-thread-6-ScalaTest-running-DblpXmlRegressionSpec] DEBUG org.apache.hadoop.fs.FileSystem -- Creating FS file:///var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/dblp-opening-name6227598881339813696.xml: duration 0:00.018s
+15:15:12.639 [pool-10-thread-6-ScalaTest-running-DblpXmlRegressionSpec] DEBUG org.apache.hadoop.fs.statistics.impl.IOStatisticsContextIntegration -- Created instance IOStatisticsContextImpl{id=1, threadId=119, ioStatistics=counters=();
+gauges=();
+minimums=();
+maximums=();
+means=();
+}
+15:15:12.671 [pool-10-thread-6-ScalaTest-running-DblpXmlRegressionSpec] DEBUG org.apache.hadoop.fs.statistics.impl.IOStatisticsContextIntegration -- Reference lost for threadID for the context: 119
+15:15:12.671 [pool-10-thread-6-ScalaTest-running-DblpXmlRegressionSpec] DEBUG org.apache.hadoop.fs.statistics.impl.IOStatisticsContextIntegration -- Created instance IOStatisticsContextImpl{id=2, threadId=119, ioStatistics=counters=();
+gauges=();
+minimums=();
+maximums=();
+means=();
+}
+[info] DblpXmlRegressionSpec:
+[info] - opening names are capped before record framing and launch sample scanning *** FAILED ***
+[info]   ujson.Value$InvalidData: Expected ujson.Num (data: "100003")
+[info]   at ujson.Value$InvalidData$.apply(Value.scala:202)
+[info]   at ujson.Value.num(Value.scala:66)
+[info]   at ujson.Value.num$(Value.scala:9)
+[info]   at ujson.Str.num(Value.scala:206)
+[info]   at edu.uic.cs441.scholarchain.hadoop.DblpXmlRegressionSpec.testFun$proxy1$1(DblpXmlRegressionSpec.scala:65)
+[info]   at edu.uic.cs441.scholarchain.hadoop.DblpXmlRegressionSpec.$init$$$anonfun$1(DblpXmlRegressionSpec.scala:32)
+[info]   at org.scalatest.Transformer.apply$$anonfun$1(Transformer.scala:22)
+[info]   at org.scalatest.OutcomeOf.outcomeOf(OutcomeOf.scala:85)
+[info]   at org.scalatest.OutcomeOf.outcomeOf$(OutcomeOf.scala:31)
+[info]   at org.scalatest.OutcomeOf$.outcomeOf(OutcomeOf.scala:104)
+[info]   ...
+[info] - CDATA title and author references stay literal while active text expands *** FAILED ***
+[info]   Vector(MissingRequiredField) did not contain OversizeXmlEntityExpansion (DblpXmlRegressionSpec.scala:91)
+[info] - single quoted identifiers and whitespace closing tags retain author evidence
+[info] - unmatched mismatched and malformed closing tags reject and preserve the next record
+[info] Run completed in 338 milliseconds.
+[info] Total number of tests run: 4
+[info] Suites: completed 1, aborted 0
+[info] Tests: succeeded 2, failed 2, canceled 0, ignored 0, pending 0
+[info] *** 2 TESTS FAILED ***
+[error] Failed tests:
+[error] 	edu.uic.cs441.scholarchain.hadoop.DblpXmlRegressionSpec
+[error] (hadoop / Test / testOnly) sbt.TestsFailedException: Tests unsuccessful
+[error] Total time: 5 s, completed Oct 7, 2026, 3:15:12 PM
+15:15:12.761 [shutdown-hook-0] DEBUG org.apache.hadoop.fs.FileSystem -- FileSystem.close() by method: org.apache.hadoop.fs.FilterFileSystem.close(FilterFileSystem.java:529)); Key: (danny (auth:SIMPLE))@file://; URI: file:///; Object Identity Hash: 2e83fe02
+15:15:12.761 [shutdown-hook-0] DEBUG org.apache.hadoop.fs.FileSystem -- FileSystem.close() by method: org.apache.hadoop.fs.RawLocalFileSystem.close(RawLocalFileSystem.java:895)); Key: null; URI: file:///; Object Identity Hash: 204405a2
+15:15:12.762 [Thread-5] DEBUG org.apache.hadoop.util.ShutdownHookManager -- Completed shutdown in 0.001 seconds; Timeouts: 0
+15:15:12.764 [Thread-5] DEBUG org.apache.hadoop.util.ShutdownHookManager -- ShutdownHookManager completed shutdown.

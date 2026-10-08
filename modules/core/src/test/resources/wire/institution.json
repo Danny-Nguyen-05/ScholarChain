@@ -17,5 +17,12 @@
     "uncertaintyNotes": [
       "OpenAlex bulk snapshot date is unknown. Retrieval date is 2026-10-05."
     ]
-  }
+  },
+  "observedSourceIds": [
+    {
+      "namespace": "openalex-institution",
+      "value": "https://openalex.org/I79516672",
+      "interpretation": "SOURCE_OBSERVATION"
+    }
+  ]
 }

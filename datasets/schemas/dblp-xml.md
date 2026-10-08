@@ -13,6 +13,15 @@ extracted records contain DTD named entities (for example `&eacute;`), `acquire_
 adds an internal `<!DOCTYPE dblp [ ... ]>` subset with the ISO Latin-1 entity declarations
 from the official DBLP DTD; otherwise it uses an empty internal subset `<!DOCTYPE dblp []>`.
 
+## Approved local character-entity catalogue
+
+`datasets/schemas/dblp/dblp-named-entities.v1.tsv` is the approved character-entity list
+(the pairs in `datasets/scripts/dblp_entities.py` `DBLP_NAMED_ENTITIES`). Approved SYSTEM
+basenames for the local catalogue are `dblp.dtd` and `dblp-YYYY-MM-DD.dtd` only. A SYSTEM
+id with a scheme, `//`, backslash, `..`, or any other basename is not approved and must
+not be retrieved. Entities absent from the catalogue stay unresolved; they are not fetched.
+Predefined XML entities (`amp`, `lt`, `gt`, `quot`, `apos`) are not catalogue rows.
+
 ## Record types in committed sample
 
 All three committed records are `inproceedings` elements.

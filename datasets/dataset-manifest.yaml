@@ -1,4 +1,5 @@
 # ScholarChain dataset manifest (Phase 3). Placeholder S3 prefixes only — not live buckets.
+# Processing snapshot identity: acquisition-index.v1.json
 manifest_version: "2026-10-05"
 portfolio_summary: >
   DBLP is the seed bibliographic graph. OpenAlex supplies canonical work and author

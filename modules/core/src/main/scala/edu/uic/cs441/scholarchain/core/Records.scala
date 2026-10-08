@@ -29,7 +29,17 @@ final case class ObservedIdentifier(
 
 /** One source's observation of a work. `year` is that source's year and is not reconciled when
   * DBLP, OpenAlex, and Crossref disagree. A DOI in `doi` makes `workId` the DOI id. Author names
-  * inside `authors` are mentions, not confirmed researchers.
+  * inside `authors` are mentions, not confirmed researchers. This record has no affiliation field.
+  * A name-only publisher affiliation is a [[MentionAffiliation]]. `abstractTextRef`, when present,
+  * is a `chunk:` or `profile:` id produced by [[StableIds.chunkOrProfileId]] and must name an
+  * [[EmittedTextDocument]] the pipeline emits, or a chunk or profile id already emitted for a
+  * documented source version. A supplied Crossref or OpenAlex abstract is an
+  * [[EmittedTextDocument]] with `documentType` `abstract`, `entityId` equal to this work id, and
+  * `sourceVersion` equal to the dataset snapshot. `abstractTextRef` is that document's chunk id. A
+  * URL, inverted index, or raw abstract is not a text reference. `observedIdentifiers` retains
+  * declared field roles and raw source values independently of the preferred identifier.
+  * `sourceLinks` retains supplied links with their source field names and within-field order,
+  * including repetitions. Neither field resolves a disagreement.
   */
 final case class WorkRecord(
     schemaVersion: String,
@@ -47,7 +57,9 @@ final case class WorkRecord(
     externalUrl: Option[String],
     authors: Vector[AuthorMention],
     abstractTextRef: Option[String],
-    provenance: Provenance
+    provenance: Provenance,
+    observedIdentifiers: Vector[ObservedIdentifier] = Vector.empty,
+    sourceLinks: Vector[NamedText] = Vector.empty
 ) derives ReadWriter
 
 final case class AuthorMention(
@@ -164,6 +176,10 @@ final case class Venue(
     provenance: Provenance
 ) derives ReadWriter
 
+/** Preferred `institutionId` may be a ROR id while `observedSourceIds` still carries another source
+  * institution id, including `openalex-institution`. Those observations do not create a researcher
+  * id or a work id.
+  */
 final case class Institution(
     institutionId: String,
     schemaVersion: String,
@@ -171,7 +187,8 @@ final case class Institution(
     ror: Option[String],
     ringgold: Option[String],
     uncertainty: String,
-    provenance: Provenance
+    provenance: Provenance,
+    observedSourceIds: Vector[ObservedIdentifier] = Vector.empty
 ) derives ReadWriter
 
 final case class Topic(
@@ -312,6 +329,10 @@ final case class AnswerResponse(
     provenance: Provenance
 ) derives ReadWriter
 
+/** Pointer to one source snapshot. Fields stay `source`, `snapshot`, and `retrievalDate`.
+  * Processing identity is this snapshot id, `retrievalDate`, and the checksum of the acquired
+  * bytes. A live API retrieval date is not a bulk snapshot date.
+  */
 final case class DatasetSnapshotRef(
     source: SourceType,
     snapshot: String,
@@ -328,3 +349,192 @@ final case class RunManifest(
     configFingerprint: String,
     provenance: Provenance
 ) derives ReadWriter
+
+/** One side of a [[MatchCandidate]]. Identity is source, source record, and snapshot. `workId` is
+  * present only when that observation already has a validated work id. It is not a merge key.
+  */
+final case class CandidateObservation(
+    source: SourceType,
+    sourceRecordId: String,
+    datasetSnapshot: String,
+    workId: Option[String]
+) derives ReadWriter
+
+/** Phase 4 evidence that two observations fell in one block. This is not a [[MatchDecision]]: there
+  * is no [[MatchOutcome]], threshold, or claimed identity merge. `candidateId` is
+  * [[StableIds.matchCandidateId]]. Stored sides are already in that canonical order. Features stay
+  * sorted distinct [[NamedNumber]] values. [[PreparationFeatures.policyV1]] keeps the previous
+  * names. [[PreparationFeatures.policyV2]] uses only [[PreparationFeatures.names]].
+  */
+final case class MatchCandidate(
+    candidateId: String,
+    schemaVersion: String,
+    blockKey: String,
+    left: CandidateObservation,
+    right: CandidateObservation,
+    features: Vector[NamedNumber],
+    featurePolicyVersion: String,
+    runId: String,
+    uncertainty: String,
+    provenance: Provenance
+) derives ReadWriter
+
+/** A source row that did not become a valid domain record. `source` is empty when the failure is
+  * byte-level and the source system is not known; validation does not invent one. At least one of
+  * `diagnosticExcerpt` and `diagnosticHash` is required. The excerpt is at most
+  * [[RejectRecord.maxDiagnosticExcerptLength]] UTF-16 code units.
+  */
+final case class RejectRecord(
+    schemaVersion: String,
+    source: Option[SourceType],
+    sourceLocator: String,
+    datasetSnapshot: Option[String],
+    runId: String,
+    stage: PreparationStage,
+    reasonCode: RejectReasonCode,
+    diagnosticExcerpt: Option[String],
+    diagnosticHash: Option[String]
+) derives ReadWriter
+
+object RejectRecord {
+  val maxDiagnosticExcerptLength: Int = 256
+  val maxSourceLocatorLength: Int = 1024
+}
+
+/** One observation of one normalized identifier. Rows are not collapsed when several sources share
+  * a value. `preferredWorkId` is set only for a work namespace whose value parsed. ORCID, ROR,
+  * Ringgold, OpenAlex author ids, and OpenAlex institution ids parse to a row with
+  * `preferredWorkId` empty. Malformed values are not rows; they are [[RejectRecord]]s with
+  * [[RejectReasonCode.InvalidIdentifier]].
+  */
+final case class IdentifierIndexEntry(
+    schemaVersion: String,
+    namespace: IdentifierNamespace,
+    normalizedValue: String,
+    preferredWorkId: Option[String],
+    source: SourceType,
+    sourceRecordId: String,
+    datasetSnapshot: String,
+    runId: String,
+    provenance: Provenance
+) derives ReadWriter
+
+/** Text the pipeline emits so a work `abstractTextRef` or profile chunk id has a target.
+  * `documentType` `abstract` uses a `chunk:` id. A supplied Crossref or OpenAlex abstract uses that
+  * document type, `entityId` equal to the work id, and `sourceVersion` equal to the dataset
+  * snapshot. `WorkRecord.abstractTextRef` is that chunk id. A URL is not a text reference.
+  * `documentType` `researcher-profile` uses the existing `profile:` prefix. `textId` is
+  * [[StableIds.chunkOrProfileId]] over `entityId`, `sourceVersion`, `documentType`, `ordinal`, and
+  * `text`.
+  */
+final case class EmittedTextDocument(
+    textId: String,
+    schemaVersion: String,
+    documentType: String,
+    entityId: String,
+    sourceVersion: String,
+    ordinal: Option[Int],
+    text: String,
+    provenance: Provenance
+) derives ReadWriter
+
+object EmittedTextDocument {
+  val abstractDocumentType: String = "abstract"
+  val researcherProfileDocumentType: String = "researcher-profile"
+}
+
+/** Public ORCID person record. [[CanonicalResearcher]] is an identity record and has no place for
+  * this profile's declared names and external ids without looking like a match decision.
+  * [[WorkRecord]] would fabricate a publication. Activities are separate [[OrcidActivityRecord]]s.
+  */
+final case class OrcidProfileRecord(
+    schemaVersion: String,
+    orcid: String,
+    displayName: Option[String],
+    otherNames: Vector[String],
+    externalIds: Vector[ObservedIdentifier],
+    uncertainty: String,
+    provenance: Provenance
+) derives ReadWriter
+
+/** One declared ORCID external identifier. `externalIdType` and `value` are required.
+  * `relationship` is the source `external-id-relationship` when the source supplied one. This is
+  * evidence beside the preferred DOI fields. It is not a preferred work id and not a merge.
+  */
+final case class OrcidWorkReference(
+    externalIdType: String,
+    value: String,
+    relationship: Option[String]
+) derives ReadWriter
+
+/** One ORCID activity path. A work summary is not a [[WorkRecord]]: it has no author list and a
+  * linked DOI is not authorship or a cross-dataset merge. ROR and Ringgold stay in their own
+  * fields. `institutionId`, when set, matches exactly one of those fields and does not copy one
+  * namespace into the other. `observedDoi` and `observedWorkId` stay the preferred DOI fields.
+  * `workReferences` keeps every declared external id, including the DOI, `other-id`, ISBN, and
+  * ISSN, plus the relationship when the source supplied one.
+  */
+final case class OrcidActivityRecord(
+    schemaVersion: String,
+    orcid: String,
+    activityKind: OrcidActivityKind,
+    sourceRecordId: String,
+    title: Option[String],
+    startYear: Option[Int],
+    publicationYear: Option[Int],
+    organizationName: Option[String],
+    ror: Option[String],
+    ringgold: Option[String],
+    institutionId: Option[String],
+    observedDoi: Option[String],
+    observedWorkId: Option[String],
+    uncertainty: String,
+    provenance: Provenance,
+    workReferences: Vector[OrcidWorkReference] = Vector.empty
+) derives ReadWriter
+
+/** Venue, institution, or topic evidence attached to a work or an unresolved mention. [[GraphEdge]]
+  * `AFFILIATED_WITH` requires a researcher id, so a mention-scoped affiliation cannot use it
+  * without an identity decision. ROR and Ringgold remain distinct fields. `targetId` is required,
+  * so a publisher affiliation name with no ROR or Ringgold is a [[MentionAffiliation]] instead.
+  */
+final case class EnrichmentLink(
+    schemaVersion: String,
+    source: SourceType,
+    sourceRecordId: String,
+    datasetSnapshot: String,
+    workId: Option[String],
+    mentionId: Option[String],
+    targetKind: EnrichmentTargetKind,
+    targetId: String,
+    ror: Option[String],
+    ringgold: Option[String],
+    score: Option[Double],
+    uncertainty: String,
+    runId: String,
+    provenance: Provenance
+) derives ReadWriter
+
+/** Affiliation evidence for one [[AuthorMention]] when no institution target id exists.
+  * [[AuthorMention]] has no affiliation field. An empty `organizationName` means the name is
+  * absent; a blank string is invalid, and the literal placeholder `institution` is rejected.
+  * `institutionId` is set only when it is exactly the ROR or Ringgold institution id of a populated
+  * field. A name does not invent an institution id.
+  */
+final case class MentionAffiliation(
+    schemaVersion: String,
+    mentionId: String,
+    source: SourceType,
+    sourceRecordId: String,
+    datasetSnapshot: String,
+    organizationName: Option[String],
+    ror: Option[String],
+    ringgold: Option[String],
+    institutionId: Option[String],
+    uncertainty: String,
+    provenance: Provenance
+) derives ReadWriter
+
+object MentionAffiliation {
+  val rejectedOrganizationName: String = "institution"
+}

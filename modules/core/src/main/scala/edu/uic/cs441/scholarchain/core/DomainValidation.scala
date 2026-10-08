@@ -62,6 +62,26 @@ object DomainValidation {
     if (value.source == SourceType.Crossref)
       validateCrossrefSourceRecordId(value.doi, value.sourceRecordId, acc)
     requireWorkSourceLinks(value, acc)
+    value.observedIdentifiers.foreach { id =>
+      requireNonBlank(id.namespace, "observed identifier namespace", acc)
+      requireNonBlank(id.value, "observed identifier value", acc)
+      if (id.interpretation != IdentifierInterpretation.SourceObservation)
+        acc.add(
+          ViolationCode.InconsistentRecord,
+          "work declared identifiers must be source observations"
+        )
+      id.namespace match {
+        case "openalex.doi" | "openalex.ids.doi" =>
+          if (value.source != SourceType.OpenAlex)
+            acc.add(ViolationCode.InconsistentRecord, "OpenAlex declared DOI must cite OpenAlex")
+          parse(StableIds.normalizeDoi(id.value), acc)
+        case _ => ()
+      }
+    }
+    value.sourceLinks.foreach { link =>
+      requireNonBlank(link.name, "source link field", acc)
+      requireNonBlank(link.value, "source link value", acc)
+    }
     value.venueId.foreach(id => parse(StableIds.parseVenueId(id), acc))
     if (value.authors.map(_.ordinal).distinct.size != value.authors.size)
       acc.add(ViolationCode.InconsistentRecord, "author ordinals must be unique")
@@ -397,6 +417,7 @@ object DomainValidation {
     }
     requireNonBlank(value.name, "name", acc)
     requireNonBlank(value.uncertainty, "uncertainty", acc)
+    value.observedSourceIds.foreach(requireObservedSourceId(_, acc))
     done(acc, value)
   }
 
@@ -591,7 +612,7 @@ object DomainValidation {
     if (value.runId != value.provenance.runId)
       acc.add(ViolationCode.InconsistentRecord, "runId must match provenance.runId")
     requireNonBlank(value.pipelineName, "pipelineName", acc)
-    if (!SchemaVersions.supportedConfig.contains(value.configSchemaVersion))
+    if (!SchemaVersions.supportedManifestConfig.contains(value.configSchemaVersion))
       acc.add(
         ViolationCode.UnsupportedSchemaVersion,
         s"unsupported config schema ${value.configSchemaVersion}"
@@ -604,6 +625,481 @@ object DomainValidation {
       requireNonBlank(snapshot.snapshot, "dataset snapshot", acc)
     }
     done(acc, value)
+  }
+
+  def check(value: MatchCandidate): Either[Vector[DomainViolation], MatchCandidate] = {
+    val acc = Acc()
+    requireSchema(value.schemaVersion, acc)
+    validateProvenance(value.provenance, value.schemaVersion, acc)
+    if (value.provenance.source != SourceType.ScholarChain)
+      acc.add(
+        ViolationCode.InconsistentRecord,
+        "match candidate provenance source must be SCHOLARCHAIN"
+      )
+    if (value.provenance.sourceRecordId != value.candidateId)
+      acc.add(
+        ViolationCode.InconsistentRecord,
+        "match candidate provenance sourceRecordId must be the candidate id"
+      )
+    parse(StableIds.parseRunId(value.runId), acc)
+    if (value.runId != value.provenance.runId)
+      acc.add(ViolationCode.InconsistentRecord, "runId must match provenance.runId")
+    parse(StableIds.parsePolicyVersion(value.featurePolicyVersion), acc)
+    requireCandidateFeatures(value.features, value.featurePolicyVersion, acc)
+    requireNonBlank(value.uncertainty, "uncertainty", acc)
+    val ordered = StableIds.canonicalCandidateObservations(value.left, value.right)
+    ordered match {
+      case Right((first, second)) if first != value.left || second != value.right =>
+        acc.add(
+          ViolationCode.InvalidPairOrder,
+          "match candidate observations must be in canonical order"
+        )
+      case Left(violation) => acc.add(violation)
+      case _               => ()
+    }
+    if (ordered.isRight)
+      StableIds.matchCandidateId(value.left, value.right, value.blockKey) match {
+        case Right(expected) if expected != value.candidateId =>
+          acc.add(
+            ViolationCode.MalformedId,
+            "match candidate id does not match the stable formula"
+          )
+        case Left(violation) => acc.add(violation)
+        case _               => ()
+      }
+    done(acc, value)
+  }
+
+  def check(value: RejectRecord): Either[Vector[DomainViolation], RejectRecord] = {
+    val acc = Acc()
+    requireSchema(value.schemaVersion, acc)
+    parse(StableIds.parseRunId(value.runId), acc)
+    if (
+      value.sourceLocator.trim.isEmpty || value.sourceLocator != value.sourceLocator.trim ||
+      value.sourceLocator.exists(ch => ch == '\n' || ch == '\r')
+    )
+      acc.add(ViolationCode.MissingProvenance, "sourceLocator must be a non-blank single line")
+    else if (value.sourceLocator.length > RejectRecord.maxSourceLocatorLength)
+      acc.add(ViolationCode.InconsistentRecord, "sourceLocator exceeds the bounded length")
+    value.datasetSnapshot.foreach { snapshot =>
+      if (!snapshot.matches("[A-Za-z0-9._:-]+"))
+        acc.add(ViolationCode.MalformedId, s"malformed snapshot: $snapshot")
+    }
+    if (value.diagnosticExcerpt.isEmpty && value.diagnosticHash.isEmpty)
+      acc.add(
+        ViolationCode.InconsistentRecord,
+        "reject diagnostic excerpt or hash is required"
+      )
+    value.diagnosticExcerpt.foreach { text =>
+      if (text.trim.isEmpty)
+        acc.add(
+          ViolationCode.InconsistentRecord,
+          "diagnosticExcerpt must be non-blank when present"
+        )
+      else if (text.length > RejectRecord.maxDiagnosticExcerptLength)
+        acc.add(
+          ViolationCode.InconsistentRecord,
+          "diagnosticExcerpt exceeds the bounded length"
+        )
+    }
+    value.diagnosticHash.foreach { text =>
+      if (!text.matches("[0-9a-f]{64}"))
+        acc.add(ViolationCode.MalformedId, "diagnosticHash must be sha256 hex")
+    }
+    done(acc, value)
+  }
+
+  def check(value: IdentifierIndexEntry): Either[Vector[DomainViolation], IdentifierIndexEntry] = {
+    val acc = Acc()
+    requireSchema(value.schemaVersion, acc)
+    validateProvenance(value.provenance, value.schemaVersion, acc)
+    requireRecordProvenance(value.source, value.sourceRecordId, value.provenance, acc)
+    if (value.provenance.datasetSnapshot != value.datasetSnapshot)
+      acc.add(
+        ViolationCode.InconsistentRecord,
+        "identifier index snapshot must match provenance"
+      )
+    parse(StableIds.parseRunId(value.runId), acc)
+    if (value.runId != value.provenance.runId)
+      acc.add(ViolationCode.InconsistentRecord, "runId must match provenance.runId")
+    parse(StableIds.snapshotId(value.source, value.datasetSnapshot), acc)
+    parse(StableIds.parseSourceRecordId(value.source, value.sourceRecordId), acc)
+    StableIds.normalizeIndexedIdentifier(value.namespace, value.normalizedValue) match {
+      case Right(normalized) if normalized == value.normalizedValue =>
+        StableIds.identifierPreferredWorkId(value.namespace, value.normalizedValue) match {
+          case Right(preferred) if preferred == value.preferredWorkId => ()
+          case Right(_) =>
+            acc.add(
+              ViolationCode.InconsistentRecord,
+              "preferredWorkId does not match the identifier namespace"
+            )
+          case Left(violation) => acc.add(violation)
+        }
+      case Right(_) =>
+        acc.add(ViolationCode.InconsistentRecord, "normalizedValue is not in canonical form")
+      case Left(violation) => acc.add(violation)
+    }
+    done(acc, value)
+  }
+
+  def check(value: EmittedTextDocument): Either[Vector[DomainViolation], EmittedTextDocument] = {
+    val acc = Acc()
+    requireSchema(value.schemaVersion, acc)
+    validateProvenance(value.provenance, value.schemaVersion, acc)
+    requireNonBlank(value.documentType, "documentType", acc)
+    requireNonBlank(value.text, "text", acc)
+    requireNonBlank(value.entityId, "entityId", acc)
+    if (value.sourceVersion != value.provenance.datasetSnapshot)
+      acc.add(
+        ViolationCode.InconsistentRecord,
+        "sourceVersion must match provenance datasetSnapshot"
+      )
+    if (value.documentType.exists(ch => ch == '\n' || ch == '\r'))
+      acc.add(ViolationCode.InconsistentRecord, "documentType must be a single line")
+    value.ordinal.foreach { ordinal =>
+      if (ordinal < 0)
+        acc.add(ViolationCode.InconsistentRecord, "text ordinal must be >= 0")
+    }
+    if (value.documentType == EmittedTextDocument.abstractDocumentType)
+      parse(StableIds.parseWorkId(value.entityId), acc)
+    else if (value.documentType == EmittedTextDocument.researcherProfileDocumentType)
+      parse(StableIds.parseResearcherId(value.entityId), acc)
+    StableIds.chunkOrProfileId(
+      value.entityId,
+      value.sourceVersion,
+      value.documentType,
+      value.ordinal,
+      value.text
+    ) match {
+      case Right(expected) if expected != value.textId =>
+        acc.add(ViolationCode.MalformedId, "text id does not match the stable formula")
+      case Left(violation) => acc.add(violation)
+      case _               => ()
+    }
+    done(acc, value)
+  }
+
+  def check(value: OrcidProfileRecord): Either[Vector[DomainViolation], OrcidProfileRecord] = {
+    val acc = Acc()
+    requireSchema(value.schemaVersion, acc)
+    validateProvenance(value.provenance, value.schemaVersion, acc)
+    if (value.provenance.source != SourceType.Orcid)
+      acc.add(ViolationCode.InconsistentRecord, "ORCID profile provenance source must be ORCID")
+    val bare = value.provenance.sourceRecordId.stripPrefix("/")
+    if (bare != value.orcid || bare.contains("/"))
+      acc.add(
+        ViolationCode.InconsistentRecord,
+        "ORCID profile source record must be the bare ORCID"
+      )
+    parse(StableIds.parseSourceRecordId(SourceType.Orcid, value.provenance.sourceRecordId), acc)
+    requireCanonicalOrcid(value.orcid, acc)
+    value.displayName.foreach(name => requireNonBlank(name, "displayName", acc))
+    if (value.otherNames.distinct.size != value.otherNames.size)
+      acc.add(ViolationCode.InconsistentRecord, "ORCID other names must be distinct")
+    value.otherNames.foreach(name => requireNonBlank(name, "otherName", acc))
+    if (
+      !value.externalIds.exists(id =>
+        id.namespace == "orcid" && id.value == value.orcid &&
+          id.interpretation == IdentifierInterpretation.ValidatedExternal
+      )
+    )
+      acc.add(
+        ViolationCode.InconsistentRecord,
+        "ORCID profile must repeat its ORCID as a validated external id"
+      )
+    if (
+      value.externalIds.map(id => (id.namespace, id.value)).distinct.size != value.externalIds.size
+    )
+      acc.add(ViolationCode.InconsistentRecord, "ORCID external ids must be distinct")
+    value.externalIds.foreach { id =>
+      requireNonBlank(id.namespace, "external id namespace", acc)
+      requireNonBlank(id.value, "external id value", acc)
+      if (id.namespace == "openalex" || id.namespace == "openalex-author")
+        if (id.interpretation != IdentifierInterpretation.DisambiguationHypothesis)
+          acc.add(
+            ViolationCode.UnconfirmedIdentity,
+            "OpenAlex author IDs must stay disambiguation hypotheses"
+          )
+      if (
+        id.interpretation == IdentifierInterpretation.ValidatedExternal &&
+        (id.namespace != "orcid" || id.value != value.orcid)
+      )
+        acc.add(
+          ViolationCode.UnconfirmedIdentity,
+          "only this profile's ORCID may be a validated external id"
+        )
+    }
+    requireNonBlank(value.uncertainty, "uncertainty", acc)
+    done(acc, value)
+  }
+
+  def check(value: OrcidWorkReference): Either[Vector[DomainViolation], OrcidWorkReference] = {
+    val acc = Acc()
+    requireTrimmed(value.externalIdType, "externalIdType", acc)
+    requireTrimmed(value.value, "value", acc)
+    value.relationship.foreach(relationship => requireTrimmed(relationship, "relationship", acc))
+    done(acc, value)
+  }
+
+  def check(value: OrcidActivityRecord): Either[Vector[DomainViolation], OrcidActivityRecord] = {
+    val acc = Acc()
+    requireSchema(value.schemaVersion, acc)
+    validateProvenance(value.provenance, value.schemaVersion, acc)
+    if (
+      value.provenance.source != SourceType.Orcid ||
+      value.provenance.sourceRecordId != value.sourceRecordId
+    )
+      acc.add(
+        ViolationCode.InconsistentRecord,
+        "ORCID activity provenance must match the activity path"
+      )
+    requireCanonicalOrcid(value.orcid, acc)
+    parse(StableIds.parseSourceRecordId(SourceType.Orcid, value.sourceRecordId), acc)
+    val parts = value.sourceRecordId.stripPrefix("/").split("/", -1)
+    if (parts.length != 3 || parts(0) != value.orcid || parts(1) != value.activityKind.wire)
+      acc.add(
+        ViolationCode.InconsistentRecord,
+        "ORCID activity path must be {orcid}/{kind}/{put-code}"
+      )
+    value.title.foreach(title => requireNonBlank(title, "title", acc))
+    value.organizationName.foreach(name => requireNonBlank(name, "organizationName", acc))
+    value.startYear.foreach(year => requireYear(year, "startYear", acc))
+    value.publicationYear.foreach(year => requireYear(year, "publicationYear", acc))
+    if (value.activityKind == OrcidActivityKind.Work) {
+      if (value.startYear.nonEmpty)
+        acc.add(ViolationCode.InconsistentRecord, "an ORCID work has no affiliation start year")
+      requireObservedDoi(value.observedDoi, value.observedWorkId, acc)
+    } else {
+      if (
+        value.publicationYear.nonEmpty || value.observedDoi.nonEmpty ||
+        value.observedWorkId.nonEmpty
+      )
+        acc.add(
+          ViolationCode.InconsistentRecord,
+          "only an ORCID work activity may carry a publication year or DOI"
+        )
+    }
+    requireOrganizationIds(value.ror, value.ringgold, value.institutionId, acc)
+    value.workReferences.foreach { reference =>
+      check(reference).left.foreach(_.foreach(acc.add))
+    }
+    requireNonBlank(value.uncertainty, "uncertainty", acc)
+    done(acc, value)
+  }
+
+  def check(value: EnrichmentLink): Either[Vector[DomainViolation], EnrichmentLink] = {
+    val acc = Acc()
+    requireSchema(value.schemaVersion, acc)
+    validateProvenance(value.provenance, value.schemaVersion, acc)
+    requireRecordProvenance(value.source, value.sourceRecordId, value.provenance, acc)
+    if (value.provenance.datasetSnapshot != value.datasetSnapshot)
+      acc.add(ViolationCode.InconsistentRecord, "enrichment snapshot must match provenance")
+    parse(StableIds.parseRunId(value.runId), acc)
+    if (value.runId != value.provenance.runId)
+      acc.add(ViolationCode.InconsistentRecord, "runId must match provenance.runId")
+    parse(StableIds.parseSourceRecordId(value.source, value.sourceRecordId), acc)
+    parse(StableIds.snapshotId(value.source, value.datasetSnapshot), acc)
+    if (value.workId.isEmpty && value.mentionId.isEmpty)
+      acc.add(
+        ViolationCode.InconsistentRecord,
+        "enrichment link needs a work id or a mention id"
+      )
+    value.workId.foreach(id => parse(StableIds.parseWorkId(id), acc))
+    value.mentionId.foreach { mentionId =>
+      parse(StableIds.parseMentionId(mentionId), acc)
+      StableIds.parseMentionIdParts(mentionId).foreach { mention =>
+        val sourceWire = value.source.wire.toLowerCase(java.util.Locale.ROOT)
+        if (mention.sourceWire != sourceWire || mention.sourceRecordId != value.sourceRecordId)
+          acc.add(
+            ViolationCode.InconsistentRecord,
+            "enrichment mention must cite the link source record"
+          )
+      }
+    }
+    value.targetKind match {
+      case EnrichmentTargetKind.Venue =>
+        parse(StableIds.parseVenueId(value.targetId), acc)
+        requireNoOrgIds(value, acc)
+      case EnrichmentTargetKind.Topic =>
+        parse(StableIds.parseTopicId(value.targetId), acc)
+        requireNoOrgIds(value, acc)
+      case EnrichmentTargetKind.Institution =>
+        requireEnrichmentInstitution(value, acc)
+    }
+    value.score.foreach(score => requireFinite(score, "score", acc))
+    requireNonBlank(value.uncertainty, "uncertainty", acc)
+    done(acc, value)
+  }
+
+  def check(value: MentionAffiliation): Either[Vector[DomainViolation], MentionAffiliation] = {
+    val acc = Acc()
+    requireSchema(value.schemaVersion, acc)
+    validateProvenance(value.provenance, value.schemaVersion, acc)
+    requireRecordProvenance(value.source, value.sourceRecordId, value.provenance, acc)
+    if (value.provenance.datasetSnapshot != value.datasetSnapshot)
+      acc.add(
+        ViolationCode.InconsistentRecord,
+        "mention affiliation snapshot must match provenance"
+      )
+    parse(StableIds.parseSourceRecordId(value.source, value.sourceRecordId), acc)
+    parse(StableIds.snapshotId(value.source, value.datasetSnapshot), acc)
+    parse(StableIds.parseMentionId(value.mentionId), acc)
+    StableIds.parseMentionIdParts(value.mentionId).foreach { mention =>
+      val sourceWire = value.source.wire.toLowerCase(java.util.Locale.ROOT)
+      if (mention.sourceWire != sourceWire || mention.sourceRecordId != value.sourceRecordId)
+        acc.add(
+          ViolationCode.InconsistentRecord,
+          "mention affiliation must cite the same source record as the mention"
+        )
+    }
+    value.organizationName.foreach { name =>
+      requireNonBlank(name, "organizationName", acc)
+      if (name.trim == MentionAffiliation.rejectedOrganizationName)
+        acc.add(
+          ViolationCode.InconsistentRecord,
+          "organizationName must not be the placeholder institution"
+        )
+    }
+    if (value.organizationName.isEmpty && value.ror.isEmpty && value.ringgold.isEmpty)
+      acc.add(
+        ViolationCode.InconsistentRecord,
+        "mention affiliation needs an organization name, ror, or ringgold"
+      )
+    requireOrganizationIds(value.ror, value.ringgold, value.institutionId, acc)
+    requireNonBlank(value.uncertainty, "uncertainty", acc)
+    done(acc, value)
+  }
+
+  private def requireCanonicalOrcid(orcid: String, acc: Acc): Unit =
+    StableIds.researcherIdFromValidatedOrcid(orcid) match {
+      case Right(id) if id == s"researcher:orcid:$orcid" => ()
+      case Right(_) =>
+        acc.add(ViolationCode.InconsistentRecord, "orcid must be the normalized checksum form")
+      case Left(violation) => acc.add(violation)
+    }
+
+  private def requireCandidateFeatures(
+      features: Vector[NamedNumber],
+      policyVersion: String,
+      acc: Acc
+  ): Unit = {
+    val forbidden = MatchOutcome.values.map(_.wire).toSet
+    val names = features.map(_.name)
+    if (names.distinct.size != names.size)
+      acc.add(ViolationCode.InconsistentRecord, "feature names must be distinct")
+    if (names != names.sorted)
+      acc.add(ViolationCode.InconsistentRecord, "features must be sorted by name")
+    val closedV2 = policyVersion == PreparationFeatures.policyV2
+    features.foreach { feature =>
+      requireNonBlank(feature.name, "feature name", acc)
+      requireFinite(feature.value, feature.name, acc)
+      if (forbidden.contains(feature.name))
+        acc.add(
+          ViolationCode.UnconfirmedIdentity,
+          "match candidate features cannot encode a match outcome"
+        )
+      if (closedV2 && !PreparationFeatures.nameSet.contains(feature.name))
+        acc.add(
+          ViolationCode.InconsistentRecord,
+          s"feature name is outside ${PreparationFeatures.policyV2}: ${feature.name}"
+        )
+    }
+  }
+
+  private def requireObservedDoi(
+      doi: Option[String],
+      workId: Option[String],
+      acc: Acc
+  ): Unit =
+    (doi, workId) match {
+      case (None, None) => ()
+      case (Some(raw), Some(id)) =>
+        StableIds.normalizeDoi(raw) match {
+          case Right(normalized) if normalized == raw && id == s"work:doi:$normalized" => ()
+          case Right(_) =>
+            acc.add(
+              ViolationCode.InconsistentRecord,
+              "observedWorkId must be the DOI work id of the normalized observed DOI"
+            )
+          case Left(violation) => acc.add(violation)
+        }
+      case _ =>
+        acc.add(
+          ViolationCode.InconsistentRecord,
+          "observed DOI and DOI work id must both be present or both be absent"
+        )
+    }
+
+  private def requireOrganizationIds(
+      ror: Option[String],
+      ringgold: Option[String],
+      institutionId: Option[String],
+      acc: Acc
+  ): Unit = {
+    val rorId = ror.map(StableIds.institutionIdFromRor)
+    val ringId = ringgold.map(StableIds.institutionIdFromRinggold)
+    rorId.foreach(parse(_, acc))
+    ringId.foreach(parse(_, acc))
+    institutionId.foreach(id => parse(StableIds.parseInstitutionId(id), acc))
+    (rorId, ringId) match {
+      case (Some(Right(fromRor)), Some(Right(fromRing))) =>
+        if (!institutionId.contains(fromRor) && !institutionId.contains(fromRing))
+          acc.add(
+            ViolationCode.InconsistentRecord,
+            "institutionId must match exactly one of ror or ringgold"
+          )
+        else if (fromRor == fromRing)
+          acc.add(ViolationCode.InconsistentRecord, "ror and ringgold must stay distinct")
+      case (Some(Right(fromRor)), None) =>
+        if (institutionId != Some(fromRor))
+          acc.add(ViolationCode.InconsistentRecord, "institutionId must match ror")
+      case (None, Some(Right(fromRing))) =>
+        if (institutionId != Some(fromRing))
+          acc.add(ViolationCode.InconsistentRecord, "institutionId must match ringgold")
+      case (None, None) =>
+        if (institutionId.nonEmpty)
+          acc.add(
+            ViolationCode.InconsistentRecord,
+            "institutionId requires a ror or ringgold field"
+          )
+      case _ => ()
+    }
+  }
+
+  private def requireNoOrgIds(value: EnrichmentLink, acc: Acc): Unit =
+    if (value.ror.nonEmpty || value.ringgold.nonEmpty)
+      acc.add(
+        ViolationCode.InconsistentRecord,
+        "ror and ringgold are only valid on an institution enrichment target"
+      )
+
+  private def requireEnrichmentInstitution(value: EnrichmentLink, acc: Acc): Unit = {
+    parse(StableIds.parseInstitutionId(value.targetId), acc)
+    val rorId = value.ror.map(StableIds.institutionIdFromRor)
+    val ringId = value.ringgold.map(StableIds.institutionIdFromRinggold)
+    rorId.foreach(parse(_, acc))
+    ringId.foreach(parse(_, acc))
+    (rorId, ringId) match {
+      case (Some(Right(fromRor)), Some(Right(fromRing))) =>
+        if (value.targetId != fromRor && value.targetId != fromRing)
+          acc.add(
+            ViolationCode.InconsistentRecord,
+            "institution target must match exactly one of ror or ringgold"
+          )
+      case (Some(Right(fromRor)), None) =>
+        if (value.targetId != fromRor)
+          acc.add(ViolationCode.InconsistentRecord, "institution target must match ror")
+      case (None, Some(Right(fromRing))) =>
+        if (value.targetId != fromRing)
+          acc.add(ViolationCode.InconsistentRecord, "institution target must match ringgold")
+      case (None, None) =>
+        if (!value.targetId.startsWith("institution:openalex:"))
+          acc.add(
+            ViolationCode.InconsistentRecord,
+            "an institution target without ror or ringgold must be an OpenAlex institution id"
+          )
+      case _ => ()
+    }
   }
 
   private def checkMention(value: AuthorMention, acc: Acc): Unit = {
@@ -1160,6 +1656,24 @@ object DomainValidation {
   private def requireNonBlank(value: String, field: String, acc: Acc): Unit =
     if (value.trim.isEmpty)
       acc.add(ViolationCode.MissingProvenance, s"$field must be non-blank")
+
+  private def requireTrimmed(value: String, field: String, acc: Acc): Unit =
+    if (value.isEmpty || value != value.trim)
+      acc.add(ViolationCode.InconsistentRecord, s"$field must be trimmed and non-empty")
+
+  /** Known namespace wire and a non-blank value. This does not derive a researcher or work id. */
+  private def requireObservedSourceId(id: ObservedIdentifier, acc: Acc): Unit = {
+    requireTrimmed(id.namespace, "observedSourceId namespace", acc)
+    requireTrimmed(id.value, "observedSourceId value", acc)
+    if (
+      id.namespace.nonEmpty && id.namespace == id.namespace.trim &&
+      !IdentifierNamespace.values.exists(_.wire == id.namespace)
+    )
+      acc.add(
+        ViolationCode.MalformedId,
+        "observed source id namespace is not a known identifier namespace"
+      )
+  }
 
   private def parse(result: Either[DomainViolation, ?], acc: Acc): Unit =
     result.left.foreach(acc.add)

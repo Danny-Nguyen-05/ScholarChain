@@ -1,0 +1,339 @@
+{
+  "origin": "HadoopPrepMain local two-run gate, 2026-10-07 15:23:04 America/Chicago",
+  "gateLog": "xml-repair-full-gate.txt",
+  "runs": [
+    {
+      "directory": "target/phase4-runs/c262d529-8693-4d5a-afe8-e5caf8e3d709",
+      "manifest": {
+        "runId": "run:c262d529-8693-4d5a-afe8-e5caf8e3d709",
+        "schemaVersion": "scholarchain.domain.v1",
+        "pipelineName": "hadoop-prep",
+        "datasetSnapshots": [
+          {
+            "source": "CROSSREF",
+            "snapshot": "crossref-rest-2026-10-05",
+            "retrievalDate": "2026-10-05"
+          },
+          {
+            "source": "DBLP",
+            "snapshot": "dblp-2026-10-03",
+            "retrievalDate": "2026-10-05"
+          },
+          {
+            "source": "OPENALEX",
+            "snapshot": "openalex-rest-2026-10-05",
+            "retrievalDate": "2026-10-05"
+          },
+          {
+            "source": "ORCID",
+            "snapshot": "orcid-public-api-2026-10-05",
+            "retrievalDate": "2026-10-05"
+          }
+        ],
+        "configSchemaVersion": "scholarchain.hadoop-prep.v1",
+        "configFingerprint": "c2327b5bc94a4af943c003cb1d65830d9a15bd7a0cb8caca7d1587038941af1a",
+        "provenance": {
+          "schemaVersion": "scholarchain.domain.v1",
+          "source": "SCHOLARCHAIN",
+          "sourceRecordId": "run:c262d529-8693-4d5a-afe8-e5caf8e3d709",
+          "sourceUri": null,
+          "datasetSnapshot": "hadoop-prep",
+          "retrievalDate": null,
+          "licenseEvidenceUri": null,
+          "runId": "run:c262d529-8693-4d5a-afe8-e5caf8e3d709",
+          "uncertaintyNotes": [
+            "hadoopPrepSchema=scholarchain.hadoop-prep.v1",
+            "hadoopPrepFingerprint=c2327b5bc94a4af943c003cb1d65830d9a15bd7a0cb8caca7d1587038941af1a",
+            "transformationVersion=hadoop-prep-j01-j09-v1",
+            "domainSchema=scholarchain.domain.v1",
+            "inputChecksum:CROSSREF=a6e3c40e178b7ce7f74ed870a48b4a2951de1705e7a0ed8f8fd40838bc4d39cc",
+            "inputChecksum:DBLP=e23d50c04b2cadcc01ff719ea1841157f2d865dd0e2657b27d3bd4931fe2a935",
+            "inputChecksum:OPENALEX=6cff12f2ec1439acc66b89a9c30c54aa90bec8e3e11c317561f3e4a0f9a65d8c",
+            "inputChecksum:ORCID=5000694a8e93f5ff2393f7f25f9a908d139e7ba20d26c0d98141e5ce1e070325"
+          ]
+        }
+      },
+      "counters": {
+        "OVERSIZE_TEAM": 0,
+        "DUPLICATE": 0,
+        "REJECTED": 0,
+        "CONFLICT": 0,
+        "OVERSIZE_BLOCK": 0,
+        "ACCEPTED": 239,
+        "INPUT": 193,
+        "MISSING_KEY": 0,
+        "EMITTED_PAIR": 45,
+        "SCHEMA_FAILURE": 0
+      },
+      "complete": true,
+      "successfulJobOutputs": [
+        "export/_SUCCESS",
+        "intermediate/j01/_SUCCESS",
+        "intermediate/j02/_SUCCESS",
+        "intermediate/j03/_SUCCESS",
+        "intermediate/j04/_SUCCESS",
+        "intermediate/j05/_SUCCESS",
+        "intermediate/j06/_SUCCESS",
+        "intermediate/j07/_SUCCESS",
+        "intermediate/j08/_SUCCESS"
+      ],
+      "statistics": {
+        "j05-attempt_local588112906_0005_r_000000_0.txt": "largestBlock=4\nlargestBlockPairs=6\n",
+        "j07-attempt_local881398666_0007_m_000000_0.txt": "largestTeam=2\n",
+        "j08-attempt_local66574001_0008_m_000000_0.txt": "largestPairExpansion=1\n"
+      },
+      "exportCounts": {
+        "author-mention": 10,
+        "authorship": 10,
+        "enrichment": 10,
+        "graph-edge": 18,
+        "index": 26,
+        "pair": 5,
+        "team": 5,
+        "venue": 5,
+        "work": 5,
+        "match-candidate": 40,
+        "institution": 2,
+        "topic": 3,
+        "orcid-activity": 16,
+        "orcid-profile": 1
+      },
+      "representativeRecords": {
+        "author-mention": {
+          "sourcePath": "target/phase4-runs/c262d529-8693-4d5a-afe8-e5caf8e3d709/export/snapshot=dblp-2026-10-03/run=c262d529-8693-4d5a-afe8-e5caf8e3d709/author-mention/part-r-00000",
+          "record": {
+            "mentionId": "mention:dblp:series/sapere/NasutoB13#1",
+            "schemaVersion": "scholarchain.domain.v1",
+            "source": "DBLP",
+            "sourceRecordId": "series/sapere/NasutoB13",
+            "ordinal": 1,
+            "nameText": "Slawomir J. Nasuto",
+            "normalizedName": "slawomir j. nasuto",
+            "observedOrcid": "0000-0001-9414-9049",
+            "observedOpenAlexAuthorId": null,
+            "identityStatus": "EXTERNAL_IDENTIFIER_OBSERVED",
+            "resolvedResearcherId": null,
+            "uncertainty": "DBLP author string is not a resolved researcher",
+            "provenance": {
+              "schemaVersion": "scholarchain.domain.v1",
+              "source": "DBLP",
+              "sourceRecordId": "series/sapere/NasutoB13",
+              "sourceUri": "https://dblp.org/rec/series/sapere/NasutoB13",
+              "datasetSnapshot": "dblp-2026-10-03",
+              "retrievalDate": "2026-10-05",
+              "licenseEvidenceUri": null,
+              "runId": "run:c262d529-8693-4d5a-afe8-e5caf8e3d709",
+              "uncertaintyNotes": []
+            }
+          }
+        },
+        "pair": {
+          "sourcePath": "target/phase4-runs/c262d529-8693-4d5a-afe8-e5caf8e3d709/export/snapshot=dblp-2026-10-03/run=c262d529-8693-4d5a-afe8-e5caf8e3d709/pair/part-r-00000",
+          "record": {
+            "schemaVersion": "scholarchain.domain.v1",
+            "workId": "work:doi:10.1007/978-3-642-31674-6_1",
+            "doi": "10.1007/978-3-642-31674-6_1",
+            "arxivId": null,
+            "leftMentionId": "mention:dblp:series/sapere/BerkeleyR13#1",
+            "rightMentionId": "mention:dblp:series/sapere/BerkeleyR13#2",
+            "leftOrdinal": 1,
+            "rightOrdinal": 2,
+            "year": 2011,
+            "uncertainty": "undirected pair from one work; mention order is String.compareTo",
+            "provenance": {
+              "schemaVersion": "scholarchain.domain.v1",
+              "source": "DBLP",
+              "sourceRecordId": "series/sapere/BerkeleyR13",
+              "sourceUri": "https://dblp.org/rec/series/sapere/BerkeleyR13",
+              "datasetSnapshot": "dblp-2026-10-03",
+              "retrievalDate": "2026-10-05",
+              "licenseEvidenceUri": null,
+              "runId": "run:c262d529-8693-4d5a-afe8-e5caf8e3d709",
+              "uncertaintyNotes": []
+            }
+          }
+        },
+        "work": {
+          "sourcePath": "target/phase4-runs/c262d529-8693-4d5a-afe8-e5caf8e3d709/export/snapshot=dblp-2026-10-03/run=c262d529-8693-4d5a-afe8-e5caf8e3d709/work/part-r-00000",
+          "record": {
+            "schemaVersion": "scholarchain.domain.v1",
+            "workId": "work:doi:10.1007/978-3-642-31674-6_7",
+            "source": "DBLP",
+            "sourceRecordId": "series/sapere/NasutoB13",
+            "sourceRecordType": "inproceedings",
+            "title": "Of (Zombie) Mice and Animats.",
+            "normalizedTitle": "of (zombie) mice and animats",
+            "year": 2011,
+            "venueId": "venue:dblp-booktitle:pt-ai",
+            "doi": "10.1007/978-3-642-31674-6_7",
+            "arxivId": null,
+            "pages": "85-106",
+            "externalUrl": "https://dblp.org/db/series/sapere/sapere5.html#NasutoB13",
+            "authors": [
+              {
+                "mentionId": "mention:dblp:series/sapere/NasutoB13#1",
+                "schemaVersion": "scholarchain.domain.v1",
+                "source": "DBLP",
+                "sourceRecordId": "series/sapere/NasutoB13",
+                "ordinal": 1,
+                "nameText": "Slawomir J. Nasuto",
+                "normalizedName": "slawomir j. nasuto",
+                "observedOrcid": "0000-0001-9414-9049",
+                "observedOpenAlexAuthorId": null,
+                "identityStatus": "EXTERNAL_IDENTIFIER_OBSERVED",
+                "resolvedResearcherId": null,
+                "uncertainty": "DBLP author string is not a resolved researcher",
+                "provenance": {
+                  "schemaVersion": "scholarchain.domain.v1",
+                  "source": "DBLP",
+                  "sourceRecordId": "series/sapere/NasutoB13",
+                  "sourceUri": "https://dblp.org/rec/series/sapere/NasutoB13",
+                  "datasetSnapshot": "dblp-2026-10-03",
+                  "retrievalDate": "2026-10-05",
+                  "licenseEvidenceUri": null,
+                  "runId": "run:c262d529-8693-4d5a-afe8-e5caf8e3d709",
+                  "uncertaintyNotes": []
+                }
+              },
+              {
+                "mentionId": "mention:dblp:series/sapere/NasutoB13#2",
+                "schemaVersion": "scholarchain.domain.v1",
+                "source": "DBLP",
+                "sourceRecordId": "series/sapere/NasutoB13",
+                "ordinal": 2,
+                "nameText": "John Mark Bishop",
+                "normalizedName": "john mark bishop",
+                "observedOrcid": null,
+                "observedOpenAlexAuthorId": null,
+                "identityStatus": "NAME_ONLY_UNCONFIRMED",
+                "resolvedResearcherId": null,
+                "uncertainty": "DBLP author string is not a resolved researcher",
+                "provenance": {
+                  "schemaVersion": "scholarchain.domain.v1",
+                  "source": "DBLP",
+                  "sourceRecordId": "series/sapere/NasutoB13",
+                  "sourceUri": "https://dblp.org/rec/series/sapere/NasutoB13",
+                  "datasetSnapshot": "dblp-2026-10-03",
+                  "retrievalDate": "2026-10-05",
+                  "licenseEvidenceUri": null,
+                  "runId": "run:c262d529-8693-4d5a-afe8-e5caf8e3d709",
+                  "uncertaintyNotes": []
+                }
+              }
+            ],
+            "abstractTextRef": null,
+            "provenance": {
+              "schemaVersion": "scholarchain.domain.v1",
+              "source": "DBLP",
+              "sourceRecordId": "series/sapere/NasutoB13",
+              "sourceUri": "https://dblp.org/rec/series/sapere/NasutoB13",
+              "datasetSnapshot": "dblp-2026-10-03",
+              "retrievalDate": "2026-10-05",
+              "licenseEvidenceUri": null,
+              "runId": "run:c262d529-8693-4d5a-afe8-e5caf8e3d709",
+              "uncertaintyNotes": []
+            }
+          }
+        }
+      }
+    },
+    {
+      "directory": "target/phase4-runs/029ab928-55d5-4f9a-894f-33b3f42a9587",
+      "manifest": {
+        "runId": "run:029ab928-55d5-4f9a-894f-33b3f42a9587",
+        "schemaVersion": "scholarchain.domain.v1",
+        "pipelineName": "hadoop-prep",
+        "datasetSnapshots": [
+          {
+            "source": "CROSSREF",
+            "snapshot": "crossref-rest-2026-10-05",
+            "retrievalDate": "2026-10-05"
+          },
+          {
+            "source": "DBLP",
+            "snapshot": "dblp-2026-10-03",
+            "retrievalDate": "2026-10-05"
+          },
+          {
+            "source": "OPENALEX",
+            "snapshot": "openalex-rest-2026-10-05",
+            "retrievalDate": "2026-10-05"
+          },
+          {
+            "source": "ORCID",
+            "snapshot": "orcid-public-api-2026-10-05",
+            "retrievalDate": "2026-10-05"
+          }
+        ],
+        "configSchemaVersion": "scholarchain.hadoop-prep.v1",
+        "configFingerprint": "c2327b5bc94a4af943c003cb1d65830d9a15bd7a0cb8caca7d1587038941af1a",
+        "provenance": {
+          "schemaVersion": "scholarchain.domain.v1",
+          "source": "SCHOLARCHAIN",
+          "sourceRecordId": "run:029ab928-55d5-4f9a-894f-33b3f42a9587",
+          "sourceUri": null,
+          "datasetSnapshot": "hadoop-prep",
+          "retrievalDate": null,
+          "licenseEvidenceUri": null,
+          "runId": "run:029ab928-55d5-4f9a-894f-33b3f42a9587",
+          "uncertaintyNotes": [
+            "hadoopPrepSchema=scholarchain.hadoop-prep.v1",
+            "hadoopPrepFingerprint=c2327b5bc94a4af943c003cb1d65830d9a15bd7a0cb8caca7d1587038941af1a",
+            "transformationVersion=hadoop-prep-j01-j09-v1",
+            "domainSchema=scholarchain.domain.v1",
+            "inputChecksum:CROSSREF=a6e3c40e178b7ce7f74ed870a48b4a2951de1705e7a0ed8f8fd40838bc4d39cc",
+            "inputChecksum:DBLP=e23d50c04b2cadcc01ff719ea1841157f2d865dd0e2657b27d3bd4931fe2a935",
+            "inputChecksum:OPENALEX=6cff12f2ec1439acc66b89a9c30c54aa90bec8e3e11c317561f3e4a0f9a65d8c",
+            "inputChecksum:ORCID=5000694a8e93f5ff2393f7f25f9a908d139e7ba20d26c0d98141e5ce1e070325"
+          ]
+        }
+      },
+      "counters": {
+        "OVERSIZE_TEAM": 0,
+        "DUPLICATE": 0,
+        "REJECTED": 0,
+        "CONFLICT": 0,
+        "OVERSIZE_BLOCK": 0,
+        "ACCEPTED": 239,
+        "INPUT": 193,
+        "MISSING_KEY": 0,
+        "EMITTED_PAIR": 45,
+        "SCHEMA_FAILURE": 0
+      },
+      "complete": true,
+      "successfulJobOutputs": [
+        "export/_SUCCESS",
+        "intermediate/j01/_SUCCESS",
+        "intermediate/j02/_SUCCESS",
+        "intermediate/j03/_SUCCESS",
+        "intermediate/j04/_SUCCESS",
+        "intermediate/j05/_SUCCESS",
+        "intermediate/j06/_SUCCESS",
+        "intermediate/j07/_SUCCESS",
+        "intermediate/j08/_SUCCESS"
+      ],
+      "statistics": {
+        "j05-attempt_local1745035068_0014_r_000000_0.txt": "largestBlock=4\nlargestBlockPairs=6\n",
+        "j07-attempt_local829891903_0016_m_000000_0.txt": "largestTeam=2\n",
+        "j08-attempt_local1768954010_0017_m_000000_0.txt": "largestPairExpansion=1\n"
+      },
+      "exportCounts": {
+        "author-mention": 10,
+        "authorship": 10,
+        "enrichment": 10,
+        "graph-edge": 18,
+        "index": 26,
+        "pair": 5,
+        "team": 5,
+        "venue": 5,
+        "work": 5,
+        "match-candidate": 40,
+        "institution": 2,
+        "topic": 3,
+        "orcid-activity": 16,
+        "orcid-profile": 1
+      },
+      "representativeRecords": {}
+    }
+  ]
+}

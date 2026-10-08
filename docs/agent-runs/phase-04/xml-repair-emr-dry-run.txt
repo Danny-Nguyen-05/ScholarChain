@@ -1,0 +1,24 @@
+=== ScholarChain Phase 4 EMR smoke (trace) ===
+stepName=ScholarChain-Phase4-HadoopPrep-smoke-once
+clusterId=j-PHASE4-PLACEHOLDER
+region=us-east-1
+submitJar=s3://phase4-placeholder/artifacts/hadoop-submit_3-0.1.0-SNAPSHOT.jar
+dependencyBundle=s3://phase4-placeholder/artifacts/hadoop-dependency-bundle_3-0.1.0-SNAPSHOT.jar
+configPath=s3://phase4-placeholder/artifacts/prep.json
+driverBootstrap=HADOOP_CLASSPATH
+taskClasspath=libjars
+configScope=local-file
+localization=step localizes submitJar, dependencyBundle, and configPath on the cluster master before hadoop jar
+inputPrefix=s3://phase4-placeholder/input
+sampleDblp=s3://phase4-placeholder/input/datasets/samples/dblp/linked-records.xml
+sampleOpenalex=s3://phase4-placeholder/input/datasets/samples/openalex/works.jsonl
+sampleCrossref=s3://phase4-placeholder/input/datasets/samples/crossref/works.jsonl
+sampleOrcid=s3://phase4-placeholder/input/datasets/samples/orcid/records.jsonl
+outputPrefix=s3://phase4-placeholder/output
+stepOutputRoot=s3://phase4-placeholder/output
+executionMode=cluster
+mode=dry-run
+==============================================
+Exact command (replay):
+ aws emr add-steps --region us-east-1 --cluster-id j-PHASE4-PLACEHOLDER --steps \[\{\"Name\":\"ScholarChain-Phase4-HadoopPrep-smoke-once\"\,\"ActionOnFailure\":\"CONTINUE\"\,\"HadoopJarStep\":\{\"Jar\":\"command-runner.jar\"\,\"Args\":\[\"bash\"\,\"-c\"\,\"set\ -euo\ pipefail\\nwork=\\\"\$\(mktemp\ -d\ \\\"\$\{TMPDIR:-/tmp\}/scholarchain-phase4.XXXXXX\\\"\)\\\"\\nlocalize\(\)\ \{\\n\ \ local\ src=\\\"\$1\\\"\\n\ \ local\ dest=\\\"\$2\\\"\\n\ \ case\ \\\"\$\{src\}\\\"\ in\\n\ \ \ \ s3://\*\|s3a://\*\|s3n://\*\|hdfs://\*\)\\n\ \ \ \ \ \ hadoop\ fs\ -copyToLocal\ \\\"\$\{src\}\\\"\ \\\"\$\{dest\}\\\"\\n\ \ \ \ \ \ \;\;\\n\ \ \ \ \*\)\\n\ \ \ \ \ \ if\ \[\[\ -f\ \\\"\$\{src\}\\\"\ \]\]\;\ then\\n\ \ \ \ \ \ \ \ cp\ --\ \\\"\$\{src\}\\\"\ \\\"\$\{dest\}\\\"\\n\ \ \ \ \ \ else\\n\ \ \ \ \ \ \ \ echo\ \\\"phase4-emr-smoke:\ source\ is\ not\ a\ regular\ file:\ \$\{src\}\\\"\ \>\&2\\n\ \ \ \ \ \ \ \ exit\ 1\\n\ \ \ \ \ \ fi\\n\ \ \ \ \ \ \;\;\\n\ \ esac\\n\}\\nsrc_jar=s3://phase4-placeholder/artifacts/hadoop-submit_3-0.1.0-SNAPSHOT.jar\\nsrc_bundle=s3://phase4-placeholder/artifacts/hadoop-dependency-bundle_3-0.1.0-SNAPSHOT.jar\\nsrc_config=s3://phase4-placeholder/artifacts/prep.json\\nlocal_jar=\\\"\$\{work\}/job.jar\\\"\\nlocal_bundle=\\\"\$\{work\}/bundle.jar\\\"\\nlocal_config=\\\"\$\{work\}/prep-config.json\\\"\\nlocalize\ \\\"\$\{src_jar\}\\\"\ \\\"\$\{local_jar\}\\\"\\nlocalize\ \\\"\$\{src_bundle\}\\\"\ \\\"\$\{local_bundle\}\\\"\\nlocalize\ \\\"\$\{src_config\}\\\"\ \\\"\$\{local_config\}\\\"\\nexport\ HADOOP_CLASSPATH=\\\"\$\{local_bundle\}\$\{HADOOP_CLASSPATH:+:\$HADOOP_CLASSPATH\}\\\"\\nexec\ hadoop\ jar\ \\\"\$\{local_jar\}\\\"\ edu.uic.cs441.scholarchain.hadoop.HadoopPrepMain\ -libjars\ \\\"\$\{local_bundle\}\\\"\ --once\ --execution-mode\ cluster\ --output-root\ s3://phase4-placeholder/output\ --config\ \\\"\$\{local_config\}\\\"\ --dblp\ s3://phase4-placeholder/input/datasets/samples/dblp/linked-records.xml\ --dblp-snapshot\ dblp-2026-10-03\ --dblp-retrieval\ 2026-10-05\ --openalex\ s3://phase4-placeholder/input/datasets/samples/openalex/works.jsonl\ --openalex-snapshot\ openalex-rest-2026-10-05\ --openalex-retrieval\ 2026-10-05\ --crossref\ s3://phase4-placeholder/input/datasets/samples/crossref/works.jsonl\ --crossref-snapshot\ crossref-rest-2026-10-05\ --crossref-retrieval\ 2026-10-05\ --orcid\ s3://phase4-placeholder/input/datasets/samples/orcid/records.jsonl\ --orcid-snapshot\ orcid-public-api-2026-10-05\ --orcid-retrieval\ 2026-10-05\\n\"\]\}\}\]
+Dry-run complete; no EMR step submitted. hadoop and aws were not invoked.

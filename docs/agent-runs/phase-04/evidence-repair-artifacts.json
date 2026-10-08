@@ -1,0 +1,2870 @@
+{
+  "origin": "Observed final frozen-source command exit 0. Two deliberate interrupted attempts retained separately.",
+  "fullGateLog": {
+    "path": "docs/agent-runs/phase-04/evidence-repair-full-gate.txt",
+    "sha256": "b382cba3db3eab4134d5609d85099e24316881ed6225f6a60fe365d49396da2f",
+    "bytes": 232922,
+    "mtimeNs": 1791429572267626689,
+    "exitCode": 0
+  },
+  "toolchain": {
+    "java": "17.0.20.1",
+    "sbt": "1.10.7",
+    "scala": "3.3.4",
+    "hadoop": "3.3.6 Provided"
+  },
+  "testReports": {
+    "modules/core": {
+      "tests": 99,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "reports": [
+        {
+          "file": "modules/core/target/test-reports/TEST-edu.uic.cs441.scholarchain.core.ConfigLoaderSpec.xml",
+          "suite": "edu.uic.cs441.scholarchain.core.ConfigLoaderSpec",
+          "tests": 8,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "sha256": "06bf725135a1acea2a6538672a12c8fa35f216ebcc947076f1a55e14d1dd0e16",
+          "mtimeNs": 1791429153777797938
+        },
+        {
+          "file": "modules/core/target/test-reports/TEST-edu.uic.cs441.scholarchain.core.ContractRepairSpec.xml",
+          "suite": "edu.uic.cs441.scholarchain.core.ContractRepairSpec",
+          "tests": 27,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "sha256": "7499d8a54c87a0bb25aa1c1a286f517565f1c7233344dc03f3f9386a297033a0",
+          "mtimeNs": 1791429153713560537
+        },
+        {
+          "file": "modules/core/target/test-reports/TEST-edu.uic.cs441.scholarchain.core.Phase4ContractSpec.xml",
+          "suite": "edu.uic.cs441.scholarchain.core.Phase4ContractSpec",
+          "tests": 16,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "sha256": "16d48d9d0e598e527c66a44d26be40507f8abf6866aee852832a123abce6beae",
+          "mtimeNs": 1791429153761669805
+        },
+        {
+          "file": "modules/core/target/test-reports/TEST-edu.uic.cs441.scholarchain.core.SerializationContractSpec.xml",
+          "suite": "edu.uic.cs441.scholarchain.core.SerializationContractSpec",
+          "tests": 5,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "sha256": "3923bb1cfab73e0d1369b0318841390841875cc09ed02b3463914ccdfd19752e",
+          "mtimeNs": 1791429153665173432
+        },
+        {
+          "file": "modules/core/target/test-reports/TEST-edu.uic.cs441.scholarchain.core.StableIdSpec.xml",
+          "suite": "edu.uic.cs441.scholarchain.core.StableIdSpec",
+          "tests": 10,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "sha256": "19d123004ce1bd04befac0681c38fef79dd613f1c1d55f94cb41f8c9e074b958",
+          "mtimeNs": 1791429153769954540
+        },
+        {
+          "file": "modules/core/target/test-reports/TEST-edu.uic.cs441.scholarchain.core.ValidationSpec.xml",
+          "suite": "edu.uic.cs441.scholarchain.core.ValidationSpec",
+          "tests": 31,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "sha256": "649343e396345d0615260f9228ac454c1804eba6793901f7e3d1f97aeef56dcc",
+          "mtimeNs": 1791429153802363055
+        },
+        {
+          "file": "modules/core/target/test-reports/TEST-edu.uic.cs441.scholarchain.core.WorkSourceEvidenceSpec.xml",
+          "suite": "edu.uic.cs441.scholarchain.core.WorkSourceEvidenceSpec",
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "sha256": "142b1d87443a61e207cd3d2162923362bd399f6402860e052915e2310b17eeb5",
+          "mtimeNs": 1791429153764545870
+        }
+      ]
+    },
+    "modules/hadoop": {
+      "tests": 64,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "reports": [
+        {
+          "file": "modules/hadoop/target/test-reports/TEST-edu.uic.cs441.scholarchain.hadoop.DblpXmlRegressionSpec.xml",
+          "suite": "edu.uic.cs441.scholarchain.hadoop.DblpXmlRegressionSpec",
+          "tests": 6,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "sha256": "4a7f9ed240167a9b735194a60566b8c99bccf7afed9a2771653d4ce6afd0615d",
+          "mtimeNs": 1791429340189601176
+        },
+        {
+          "file": "modules/hadoop/target/test-reports/TEST-edu.uic.cs441.scholarchain.hadoop.HadoopPrepReviewSpec.xml",
+          "suite": "edu.uic.cs441.scholarchain.hadoop.HadoopPrepReviewSpec",
+          "tests": 30,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "sha256": "0183543e546bfdfee15fa3ac38901f24a989f9f601b8cee2e4818e371338100b",
+          "mtimeNs": 1791429314352026779
+        },
+        {
+          "file": "modules/hadoop/target/test-reports/TEST-edu.uic.cs441.scholarchain.hadoop.HadoopPrepSpec.xml",
+          "suite": "edu.uic.cs441.scholarchain.hadoop.HadoopPrepSpec",
+          "tests": 19,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "sha256": "4ff35ba2987f52eb30cce8282449a528ac36609b0634d5bc84a75a0a2a373495",
+          "mtimeNs": 1791429259824662680
+        },
+        {
+          "file": "modules/hadoop/target/test-reports/TEST-edu.uic.cs441.scholarchain.hadoop.SourceEvidenceRegressionSpec.xml",
+          "suite": "edu.uic.cs441.scholarchain.hadoop.SourceEvidenceRegressionSpec",
+          "tests": 9,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "sha256": "e79f3d76a454b6f224c7a0b610ae97b7b8916713a4f3c948c8b453f497226fa2",
+          "mtimeNs": 1791429340135704442
+        }
+      ]
+    },
+    "tests": {
+      "tests": 53,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "reports": [
+        {
+          "file": "tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentDblpJsonSpec.xml",
+          "suite": "edu.uic.cs441.scholarchain.independent.IndependentDblpJsonSpec",
+          "tests": 9,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "sha256": "9c719b085e21134790984d72d13c8db3c774bb20ac274fe48fae9754cf848464",
+          "mtimeNs": 1791429340266497182
+        },
+        {
+          "file": "tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentDblpXmlAdversarialSpec.xml",
+          "suite": "edu.uic.cs441.scholarchain.independent.IndependentDblpXmlAdversarialSpec",
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "sha256": "7306fac43a9ac65551f536ebb8606ea29eb004260ef217ade682fcdbd23f87a0",
+          "mtimeNs": 1791429372464845276
+        },
+        {
+          "file": "tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentDblpXmlRepairSpec.xml",
+          "suite": "edu.uic.cs441.scholarchain.independent.IndependentDblpXmlRepairSpec",
+          "tests": 17,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "sha256": "b8fb98efec247ceb22c61b1238f2181cd76ea85c0bf5a8982a7b552a5738bb03",
+          "mtimeNs": 1791429372443256349
+        },
+        {
+          "file": "tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentHadoopPipelineSpec.xml",
+          "suite": "edu.uic.cs441.scholarchain.independent.IndependentHadoopPipelineSpec",
+          "tests": 11,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "sha256": "21ca4c8d4426a9ad8dc6286110f300821065e07395fce0ce10903d4c8b2e772e",
+          "mtimeNs": 1791429516140021803
+        },
+        {
+          "file": "tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentPhase4BlockerSpec.xml",
+          "suite": "edu.uic.cs441.scholarchain.independent.IndependentPhase4BlockerSpec",
+          "tests": 7,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "sha256": "8e7a4680a87601941fb7e0063fb25abccdb0044f7cb721e20e59430a7dd8e9f1",
+          "mtimeNs": 1791429547620434844
+        },
+        {
+          "file": "tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentPhase4EvidenceSpec.xml",
+          "suite": "edu.uic.cs441.scholarchain.independent.IndependentPhase4EvidenceSpec",
+          "tests": 5,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "sha256": "014ba6af36547d4e0373d187ae26320ee6ccd980c280f1f5901d102040745c86",
+          "mtimeNs": 1791429371208341307
+        }
+      ]
+    },
+    "build-verification": {
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "reports": [
+        {
+          "file": "build-verification/target/test-reports/TEST-scholarchain.build.CheckFailurePathSpec.xml",
+          "suite": "scholarchain.build.CheckFailurePathSpec",
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "sha256": "7913ecd46c3ebfb39e8ed0b056bfde69c4cbf4b3aa66a340e64be3c5b35ba305",
+          "mtimeNs": 1791429550395888018
+        },
+        {
+          "file": "build-verification/target/test-reports/TEST-scholarchain.build.HadoopBundleMergeSpec.xml",
+          "suite": "scholarchain.build.HadoopBundleMergeSpec",
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "sha256": "9612837f59b5826302bbe06f7d6aef03c7a2bc4dc83a51ceb4d35da76ae4f3ae",
+          "mtimeNs": 1791429550407365154
+        },
+        {
+          "file": "build-verification/target/test-reports/TEST-scholarchain.build.TestRunMarkerSpec.xml",
+          "suite": "scholarchain.build.TestRunMarkerSpec",
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "sha256": "1a71a52651c0301d9724070443b546af05725c06be4afd4661d4733a85138b34",
+          "mtimeNs": 1791429550398139078
+        }
+      ]
+    }
+  },
+  "totalPassingTests": 220,
+  "marker": {
+    "success": "true",
+    "timestamp": "1791429550481"
+  },
+  "sourceStability": {
+    "scopedFiles": 92,
+    "changed": [],
+    "files": {
+      "build.sbt": {
+        "sha256": "ac1e0a69e3feeb92d08d535dd59b94b9dc9c610a684fa792cf554bae36204b8e",
+        "mtimeNs": 1791428806054181594
+      },
+      "datasets/acquisition-index.v1.json": {
+        "sha256": "14cccd5cb774ba6cbb4574ef818fd41d8551e163408daab48e2bab47468a4c69",
+        "mtimeNs": 1791324391834449609
+      },
+      "datasets/dataset-manifest.yaml": {
+        "sha256": "cf1cba59e3fe8e7f2553a46cf4b27894b8409343082e766531b3ba1951e8a1b3",
+        "mtimeNs": 1791324391895163926
+      },
+      "datasets/schemas/crossref-works.md": {
+        "sha256": "d2ee09f01741e19bac84d4c5cd1868873e42273c2954689497f13c0ec5ad25b2",
+        "mtimeNs": 1791232173511709636
+      },
+      "datasets/schemas/dblp-xml.md": {
+        "sha256": "5ba158b8d56347e97fb5c9cf9ab9237c3f2dbc6f4ac78d20b2830ca03e3a8cb9",
+        "mtimeNs": 1791395022389026488
+      },
+      "datasets/schemas/openalex-works.md": {
+        "sha256": "739ace988ce9e695a1a7f948f57b6d2c59388ef911bcc551ae385ede6df1ea1b",
+        "mtimeNs": 1791232164613942103
+      },
+      "datasets/schemas/orcid-record.md": {
+        "sha256": "5ba897fae83162d1ecee56ddfa9f4194193ede4bf5e1cff147173c7961fe6ed8",
+        "mtimeNs": 1791259550148123530
+      },
+      "modules/core/README.md": {
+        "sha256": "8f5a71d115804252f445b4ba00b8c2828f4141af3d2480ebdf690791c918e41d",
+        "mtimeNs": 1791412728560860834
+      },
+      "modules/core/src/main/resources/scholarchain.config.v1.json": {
+        "sha256": "c3c3b1d58c5129740b27dce458078e5c74661400f7cb76be88795130f0516ab1",
+        "mtimeNs": 1791238551375648059
+      },
+      "modules/core/src/main/resources/scholarchain.hadoop-prep.v1.json": {
+        "sha256": "4455a0b6fd9ddc12088c8203c562bfa6348a895a09f3dc5e427ff3793b308e41",
+        "mtimeNs": 1791324618912188080
+      },
+      "modules/core/src/main/scala/edu/uic/cs441/scholarchain/core/ConfigLoader.scala": {
+        "sha256": "8681b4db21e86b3d40729121eda3ea161869351b15aac7fcaeacede089819262",
+        "mtimeNs": 1791254128017179856
+      },
+      "modules/core/src/main/scala/edu/uic/cs441/scholarchain/core/CoreJson.scala": {
+        "sha256": "7c4d873837216417d507f2dccf03c760344ecad630e321d408b3e98b18568ba2",
+        "mtimeNs": 1791233181550495022
+      },
+      "modules/core/src/main/scala/edu/uic/cs441/scholarchain/core/DomainValidation.scala": {
+        "sha256": "f0e1d032b790e079858f0a0e97a8905bac1bde746c2e1f10328910550ca57f54",
+        "mtimeNs": 1791426420201949745
+      },
+      "modules/core/src/main/scala/edu/uic/cs441/scholarchain/core/Enums.scala": {
+        "sha256": "f8db8f686294d337255cff5b6b19ef445c837a4eb5c7e034789d4906c44f98d8",
+        "mtimeNs": 1791412669483828058
+      },
+      "modules/core/src/main/scala/edu/uic/cs441/scholarchain/core/HadoopPrepConfig.scala": {
+        "sha256": "895bafab6a8fd5160dccc45e5426243bdd3901e8459d4d00cdbf1e3d616cad43",
+        "mtimeNs": 1791324613377936596
+      },
+      "modules/core/src/main/scala/edu/uic/cs441/scholarchain/core/HadoopPrepConfigLoader.scala": {
+        "sha256": "0afdf745d62427b7f1ac65ad686d2defe3aa874fcbdfa4e3e003a0bd67dc5d1e",
+        "mtimeNs": 1791324858632828051
+      },
+      "modules/core/src/main/scala/edu/uic/cs441/scholarchain/core/PreparationFeatures.scala": {
+        "sha256": "5c8c028afc45bcd12a2c8f317112e33ea4a803360c842754c980e6ad350ae241",
+        "mtimeNs": 1791324605029970585
+      },
+      "modules/core/src/main/scala/edu/uic/cs441/scholarchain/core/Records.scala": {
+        "sha256": "a4458baf20a8914518c1ab96d9dc58e22e5c562f34a7060885c41d3ecf0fb6b9",
+        "mtimeNs": 1791426420307021657
+      },
+      "modules/core/src/main/scala/edu/uic/cs441/scholarchain/core/SchemaVersions.scala": {
+        "sha256": "73ca77f4b9d8904287a764e3661f495dddce3877972162fb911356b03565a412",
+        "mtimeNs": 1791316652976885252
+      },
+      "modules/core/src/main/scala/edu/uic/cs441/scholarchain/core/ScholarChainConfig.scala": {
+        "sha256": "59c4db13056926b9ae6bba96d981cdacf572cab66556d48b3d8085804c1e065f",
+        "mtimeNs": 1791233201108748511
+      },
+      "modules/core/src/main/scala/edu/uic/cs441/scholarchain/core/StableIds.scala": {
+        "sha256": "59ad9510d575552943d6fa1fa2923c7a48cee94a3b67d4c1cb94f1f340c9d769",
+        "mtimeNs": 1791412686328792383
+      },
+      "modules/core/src/main/scala/edu/uic/cs441/scholarchain/core/TextNorm.scala": {
+        "sha256": "2f2502f30591a729983323a8ccee2e520e5c05122352036c50be9631e07e507a",
+        "mtimeNs": 1791233074781328732
+      },
+      "modules/core/src/main/scala/edu/uic/cs441/scholarchain/core/Violations.scala": {
+        "sha256": "da929d3cecc825b19f0e6d385359008021fe9fb12dd339944dbb43ec4dcfce2a",
+        "mtimeNs": 1791253963315731033
+      },
+      "modules/core/src/main/scala/edu/uic/cs441/scholarchain/core/WorkValidationContext.scala": {
+        "sha256": "715dbdb1dafe7fb261489092874e8ae2ce12f5242f0c2509a967d28e16d0809b",
+        "mtimeNs": 1791254128455418002
+      },
+      "modules/core/src/test/resources/wire/answer-claim-graph-path.json": {
+        "sha256": "2c87bb42a045c346164ca410123c91a2e222d98d1673031b664bdb0fc398625d",
+        "mtimeNs": 1791234819198107210
+      },
+      "modules/core/src/test/resources/wire/answer-claim.json": {
+        "sha256": "86e894c7f6c47f298a0caa900b5aaf794a023e4336fd4da17631ef310db5209b",
+        "mtimeNs": 1791233628003327382
+      },
+      "modules/core/src/test/resources/wire/answer-response.json": {
+        "sha256": "11eac6fa8058b4fb80bc48698e0d1bfac7cbdd8884e6c4c32cb4e0d85c4ab922",
+        "mtimeNs": 1791233628004198643
+      },
+      "modules/core/src/test/resources/wire/author-mention.json": {
+        "sha256": "d917e90838d7c8aaed0b3e2865b4f8224a58a42e86fe77f6a8495bd5d9a2c782",
+        "mtimeNs": 1791233628006141084
+      },
+      "modules/core/src/test/resources/wire/authorship-record.json": {
+        "sha256": "a2b5f7d0abe004851b0c62efab319a542e79223e314d553fa0fac1c25e454bec",
+        "mtimeNs": 1791233627985445073
+      },
+      "modules/core/src/test/resources/wire/canonical-researcher.json": {
+        "sha256": "7f5bc80063bbc346092c8762cf2361c078c927bb6018c0df615499f31a91631e",
+        "mtimeNs": 1791233627981865819
+      },
+      "modules/core/src/test/resources/wire/coauthor-edge.json": {
+        "sha256": "e3f816843e4e34f2a7f4a5bfbbd21214d304b15a039e61134e733ee5726f8601",
+        "mtimeNs": 1791233627987439598
+      },
+      "modules/core/src/test/resources/wire/coauthor-pair-candidate.json": {
+        "sha256": "5504c2fab16bcb166a81ddc312dac04dfc951afd29a5a9d4888ad862b41aa46e",
+        "mtimeNs": 1791237785754945986
+      },
+      "modules/core/src/test/resources/wire/evidence-bundle.json": {
+        "sha256": "3ed522c9dab1196078f03e4af7e3f8cd3436825de7cf37a91094bfa0b262d5d1",
+        "mtimeNs": 1791233627999990548
+      },
+      "modules/core/src/test/resources/wire/evidence-item-edge.json": {
+        "sha256": "281a770fe5c2517fc23c192fd0c2c66b548a4044e11bb7fe388fd0b6d5c6dfda",
+        "mtimeNs": 1791238542791649224
+      },
+      "modules/core/src/test/resources/wire/evidence-item-graph-path.json": {
+        "sha256": "afa8b135f26d821d39d5403eb9f33c8bf5650441cf89d263329f12f0be72a87a",
+        "mtimeNs": 1791234810428520480
+      },
+      "modules/core/src/test/resources/wire/evidence-item-metric.json": {
+        "sha256": "6e2e0da48896be4dad14949770ff626baddd2bd1e418b91091c02ef08e25ab77",
+        "mtimeNs": 1791238542316550553
+      },
+      "modules/core/src/test/resources/wire/evidence-item.json": {
+        "sha256": "08ad09de1b96bddcfa51b4f41165674390c6928357a6efd54e5d771445c55ceb",
+        "mtimeNs": 1791233627998961952
+      },
+      "modules/core/src/test/resources/wire/graph-edge-orcid-employment.json": {
+        "sha256": "f3690de4f3b23ce6e15f8f72a4df2a19dfb8eec938b9d5882609fd0177cacf25",
+        "mtimeNs": 1791254420454863654
+      },
+      "modules/core/src/test/resources/wire/graph-edge.json": {
+        "sha256": "629fcdd9124ec8bd6adfb2c0f5f937b57c991c59e444f8cb7ea2e7360547326b",
+        "mtimeNs": 1791254420454713321
+      },
+      "modules/core/src/test/resources/wire/graph-node.json": {
+        "sha256": "e8e0dfbf4dd6feb8ec88e0bbe23d11a29fea55a45a43f4ac52cd9cd74ebb77dc",
+        "mtimeNs": 1791233627996271335
+      },
+      "modules/core/src/test/resources/wire/institution.json": {
+        "sha256": "0a89d5c444528a7d6fe24f95c04104d391545dc1d0b48f7b0118ae3bc848672b",
+        "mtimeNs": 1791412734995081838
+      },
+      "modules/core/src/test/resources/wire/match-decision-conflict.json": {
+        "sha256": "aabe6b7b772cb3a9b72784b7bccd8e53a145430448582b6869fe7f0f2c5a7f55",
+        "mtimeNs": 1791234807574727434
+      },
+      "modules/core/src/test/resources/wire/match-decision.json": {
+        "sha256": "18cc1a0b63b033cf46338b262b56e2137367c2ccbb75721b2f35a200faced748",
+        "mtimeNs": 1791233627983344213
+      },
+      "modules/core/src/test/resources/wire/publication-team.json": {
+        "sha256": "70841b3cf533ea528b14c4386d6b8fc7a2ace99096a6fdeee53b011588f570a9",
+        "mtimeNs": 1791233627984536353
+      },
+      "modules/core/src/test/resources/wire/query-plan.json": {
+        "sha256": "895272bf7487838bef3048e932840860b04960ca4e34afde64a84166ad06bf7b",
+        "mtimeNs": 1791233628002112283
+      },
+      "modules/core/src/test/resources/wire/researcher-metrics.json": {
+        "sha256": "297735932ed3e06db4e14079662dacf463f2b488d43a8a8bf89e54c1a3160ac6",
+        "mtimeNs": 1791238501378233513
+      },
+      "modules/core/src/test/resources/wire/run-manifest.json": {
+        "sha256": "5421ce327a6f7fa9a4e0b33512cb6812225c2583157b00b9fab0e27db9edd55f",
+        "mtimeNs": 1791233628005272865
+      },
+      "modules/core/src/test/resources/wire/topic.json": {
+        "sha256": "f65f2ef8288319156d3f84210bf7398c9e3141074eb328ac12b99056bb2c0579",
+        "mtimeNs": 1791233627994993610
+      },
+      "modules/core/src/test/resources/wire/venue.json": {
+        "sha256": "4cca05aaa2b5b8115791ae2db84645d66c872e21863dbe5e0769e8043ed2ce7c",
+        "mtimeNs": 1791233627992898042
+      },
+      "modules/core/src/test/resources/wire/work-record.json": {
+        "sha256": "f7a3233e480294cc91310befe8f9d029c64581aaac32fc409736ae3e209e4470",
+        "mtimeNs": 1791233627972338282
+      },
+      "modules/core/src/test/scala/edu/uic/cs441/scholarchain/core/ConfigLoaderSpec.scala": {
+        "sha256": "d5ee7f7c1ae9a43b6ba91bafce1b462c0d01641c75614e2bcf1ca781880a71ec",
+        "mtimeNs": 1791254297898217998
+      },
+      "modules/core/src/test/scala/edu/uic/cs441/scholarchain/core/ContractRepairSpec.scala": {
+        "sha256": "9bfef81f173aa6651189f9a8e9c8d13006efa8e3b4ebfea2ca93a13cf1e51efc",
+        "mtimeNs": 1791254820142359006
+      },
+      "modules/core/src/test/scala/edu/uic/cs441/scholarchain/core/Fixtures.scala": {
+        "sha256": "bd4540e1269cb84665f3f98eedae3ecba33330bd6a151974017a67f94995426a",
+        "mtimeNs": 1791412734026105366
+      },
+      "modules/core/src/test/scala/edu/uic/cs441/scholarchain/core/Phase4ContractSpec.scala": {
+        "sha256": "6c6468d4e4655f0e9d3cfdf15aec972547be245cce3d95bf4c692e2163e937d1",
+        "mtimeNs": 1791412760268957478
+      },
+      "modules/core/src/test/scala/edu/uic/cs441/scholarchain/core/SerializationContractSpec.scala": {
+        "sha256": "bb565deef3e94e30de11ccc983a05cfd8db057e1e798da712cc346f6764cbde7",
+        "mtimeNs": 1791254392693889159
+      },
+      "modules/core/src/test/scala/edu/uic/cs441/scholarchain/core/StableIdSpec.scala": {
+        "sha256": "815d5b37408445c2fb045f70b3bc839116e6f0370c66227eebf0eb5691410246",
+        "mtimeNs": 1791234775803504293
+      },
+      "modules/core/src/test/scala/edu/uic/cs441/scholarchain/core/ValidationSpec.scala": {
+        "sha256": "79b0d3dc193beed1bd77009750ad8f6660ecdfffd37be5831bc66b9bf028dbb0",
+        "mtimeNs": 1791254128587572640
+      },
+      "modules/core/src/test/scala/edu/uic/cs441/scholarchain/core/WorkSourceEvidenceSpec.scala": {
+        "sha256": "f08e43143b78c6eeb55a06b17fbefc4ea1ada170b0f3292692acb88970cdca97",
+        "mtimeNs": 1791426420343223719
+      },
+      "modules/hadoop/README.md": {
+        "sha256": "6b2bddd613af7842a32edd8e6e89e1008cb6b33c950241749dac3d86b64cbaf0",
+        "mtimeNs": 1791427853862278132
+      },
+      "modules/hadoop/src/main/scala/edu/uic/cs441/scholarchain/hadoop/DblpExtract.scala": {
+        "sha256": "6cff411496dfea14dc6f71841aa66a2bfce130dfa2ebbcb0eb0eb8e9bef16b49",
+        "mtimeNs": 1791426698650937362
+      },
+      "modules/hadoop/src/main/scala/edu/uic/cs441/scholarchain/hadoop/DblpInput.scala": {
+        "sha256": "8a142528a7837da29b59aeebd923d3586c5004bf4547b0af99070e1754a2b486",
+        "mtimeNs": 1791426698921897531
+      },
+      "modules/hadoop/src/main/scala/edu/uic/cs441/scholarchain/hadoop/DerivedRecords.scala": {
+        "sha256": "c3976267c9dbfa5c14a743b1e96293ce66844db3a1bd6ee4b43cf57a3ba683ba",
+        "mtimeNs": 1791413539399542165
+      },
+      "modules/hadoop/src/main/scala/edu/uic/cs441/scholarchain/hadoop/HadoopIO.scala": {
+        "sha256": "63be9cff272df5b5c9d55bf5bd1afa17fb40cd2ba03fe2dde35ca463c868f0e2",
+        "mtimeNs": 1791427548741468174
+      },
+      "modules/hadoop/src/main/scala/edu/uic/cs441/scholarchain/hadoop/HadoopPrepMain.scala": {
+        "sha256": "3a6cdb070439ecf9cf4feef000beae560084ea8bdacef15c19b47b611587792b",
+        "mtimeNs": 1791426699743102172
+      },
+      "modules/hadoop/src/main/scala/edu/uic/cs441/scholarchain/hadoop/HadoopPrepPipeline.scala": {
+        "sha256": "e6bc9cc8fcf3ffe91fcd7189d23cf6dbc30729b9e4403b25fbd6fc68d951831c",
+        "mtimeNs": 1791426699002330830
+      },
+      "modules/hadoop/src/main/scala/edu/uic/cs441/scholarchain/hadoop/JsonSources.scala": {
+        "sha256": "2cf381a93ae633ad2d97e5051fe4bdb8a8cf8c35e096058876275eac6ea2ab36",
+        "mtimeNs": 1791426699411758872
+      },
+      "modules/hadoop/src/main/scala/edu/uic/cs441/scholarchain/hadoop/PrepJobs.scala": {
+        "sha256": "bb629adf80a5f3109d92aa4fcdd90be7f5c224d6005d639cb4d8c1ee5c9e7292",
+        "mtimeNs": 1791427047458452398
+      },
+      "modules/hadoop/src/main/scala/edu/uic/cs441/scholarchain/hadoop/PrepSupport.scala": {
+        "sha256": "12e1a48bb23a7395880fa915955e6687ade4e2d1cc08a532af4a88ce074a3ac0",
+        "mtimeNs": 1791427881048991610
+      },
+      "modules/hadoop/src/test/scala/edu/uic/cs441/scholarchain/hadoop/DblpXmlRegressionSpec.scala": {
+        "sha256": "98663d11f1b2f567460ba0221d3d886ed88085dd01e1516e356e26b4a392e669",
+        "mtimeNs": 1791413641830857957
+      },
+      "modules/hadoop/src/test/scala/edu/uic/cs441/scholarchain/hadoop/HadoopPrepReviewSpec.scala": {
+        "sha256": "b86385391494bb635ca12294b6d86e970a2e948e2562360a6b878397eee6eaa5",
+        "mtimeNs": 1791414473657938349
+      },
+      "modules/hadoop/src/test/scala/edu/uic/cs441/scholarchain/hadoop/HadoopPrepSpec.scala": {
+        "sha256": "04adc91a1eb25d6e5d39809181334b46f142b1996ae244ccd6a51f3239a96624",
+        "mtimeNs": 1791396070355006517
+      },
+      "modules/hadoop/src/test/scala/edu/uic/cs441/scholarchain/hadoop/SourceEvidenceRegressionSpec.scala": {
+        "sha256": "a367bfd99ce7d49d497dcf6aebb95e1f5d8556c22935df3f0873b91fe72ca5c2",
+        "mtimeNs": 1791427881168870236
+      },
+      "project/Dependencies.scala": {
+        "sha256": "81d42c3977e2e82c41df524dd9f900cec4b28c17342f3a1ad2271cfe4d843012",
+        "mtimeNs": 1791161409447025582
+      },
+      "project/HadoopBundleMerge.scala": {
+        "sha256": "e799e65289a5d1ee93e0c3aeac458ffb7b77dac16d25909d771aba6c6ba5e81a",
+        "mtimeNs": 1791428922758807192
+      },
+      "project/HadoopPackaging.md": {
+        "sha256": "b5c78ef1c5078dd3cc11ec1ad97ee6e4b0da097f562b89229985681b5b20857f",
+        "mtimeNs": 1791395412335864825
+      },
+      "project/ScholarChainBuild.scala": {
+        "sha256": "303b5d00cf6f715ec7dd8f272844993b219ab3e89e1370f72182e2da39eff619",
+        "mtimeNs": 1791428922685969053
+      },
+      "project/Versions.scala": {
+        "sha256": "84af70f8155455a3f09f9f480d22c4250cfce35836ca0af806049dc7e98ad10b",
+        "mtimeNs": 1791324345187993329
+      },
+      "project/plugins.sbt": {
+        "sha256": "2666d3154bd5281ed03915e8d7501636b9784b85417a7ed4c9abc6cd885f5601",
+        "mtimeNs": 1791324345188014996
+      },
+      "project/verification/src/main/scala/scholarchain/build/TestRunMarker.scala": {
+        "sha256": "d06d4cbaa07dc193c964aaee889a13ec57e21751c81f0909add695338a9f925d",
+        "mtimeNs": 1791160546345293373
+      },
+      "project/verification/src/main/scala/scholarchain/build/TestRunMarkerPolicy.scala": {
+        "sha256": "6d47415966d8e9e5f6fc84b0d2a7d797f4ddd422a5b0ac3433c9d840c46076e8",
+        "mtimeNs": 1791159737714514224
+      },
+      "project/verification/src/test/scala/scholarchain/build/CheckFailurePathSpec.scala": {
+        "sha256": "b8fe74a900e799d260931efea5262252d1e4daa85c5a8641333d164e5a0ad87e",
+        "mtimeNs": 1791169987861963171
+      },
+      "project/verification/src/test/scala/scholarchain/build/HadoopBundleMergeSpec.scala": {
+        "sha256": "a4a7455336fe41cebb58a64431a62ea111ec47c7cf397536a3c3e0000d781be7",
+        "mtimeNs": 1791428922821957668
+      },
+      "project/verification/src/test/scala/scholarchain/build/TestRunMarkerSpec.scala": {
+        "sha256": "d8dc14d4dcf59e2aefa74fe167984863453116fd378c7d4e48b7306b1390bdb0",
+        "mtimeNs": 1791169988777458611
+      },
+      "scripts/README.md": {
+        "sha256": "07c0d23e4391212cc34a0149658a174540fad3cf3038f70828accd1dc4da7aa3",
+        "mtimeNs": 1791412711753271477
+      },
+      "scripts/phase4-emr-smoke.sh": {
+        "sha256": "03e11fc6b77360ee705c816185fab5b492041d70b72c58d1307f900e815f3036",
+        "mtimeNs": 1791412757962372162
+      },
+      "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentDblpJsonSpec.scala": {
+        "sha256": "de3fa0e8868e57c0e86c97beed9a1b537e1bd9e4d4ba8b1bbdb95ee7b986139b",
+        "mtimeNs": 1791383259949996887
+      },
+      "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentDblpXmlAdversarialSpec.scala": {
+        "sha256": "e62c58defaa07ccef02cd56b49458aa9927ea09722dc2c780051e006c7fa2cd4",
+        "mtimeNs": 1791395572497047775
+      },
+      "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentDblpXmlRepairSpec.scala": {
+        "sha256": "9db455d1469b84853ff42402ca78df7aa52b613827ecc645b8e582da03b21a9b",
+        "mtimeNs": 1791404157487912277
+      },
+      "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentHadoopPipelineSpec.scala": {
+        "sha256": "d522a7fcdbd595e86170ea180de89f8b524ac9a5eab72253cd2902ea89f02382",
+        "mtimeNs": 1791384748353151847
+      },
+      "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentPhase4BlockerSpec.scala": {
+        "sha256": "ab1fea1ab7fb9bd1169c437e13a6e374dcc1a8600db008e368254cfd37c38f67",
+        "mtimeNs": 1791413350609871777
+      },
+      "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentPhase4EvidenceSpec.scala": {
+        "sha256": "6274c2eb50f4a313b8725491c2465f0ca2830f8cbc5d4e1cca047558ae3471d3",
+        "mtimeNs": 1791427736924556295
+      },
+      "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentTestSupport.scala": {
+        "sha256": "b41a9c88a8dc7b6cd1bef435c57b64d3288f2f948b0c491c166c8787ffd76f0f",
+        "mtimeNs": 1791383052018584265
+      }
+    }
+  },
+  "runs": [
+    {
+      "directory": "target/phase4-runs/fda6168a-d4e6-4c20-bf73-42a1c3724f7f",
+      "synthetic": false,
+      "manifest": {
+        "runId": "run:fda6168a-d4e6-4c20-bf73-42a1c3724f7f",
+        "schemaVersion": "scholarchain.domain.v1",
+        "pipelineName": "hadoop-prep",
+        "datasetSnapshots": [
+          {
+            "source": "CROSSREF",
+            "snapshot": "crossref-rest-2026-10-05",
+            "retrievalDate": "2026-10-05"
+          },
+          {
+            "source": "DBLP",
+            "snapshot": "dblp-2026-10-03",
+            "retrievalDate": "2026-10-05"
+          },
+          {
+            "source": "OPENALEX",
+            "snapshot": "openalex-rest-2026-10-05",
+            "retrievalDate": "2026-10-05"
+          },
+          {
+            "source": "ORCID",
+            "snapshot": "orcid-public-api-2026-10-05",
+            "retrievalDate": "2026-10-05"
+          }
+        ],
+        "configSchemaVersion": "scholarchain.hadoop-prep.v1",
+        "configFingerprint": "c2327b5bc94a4af943c003cb1d65830d9a15bd7a0cb8caca7d1587038941af1a",
+        "provenance": {
+          "schemaVersion": "scholarchain.domain.v1",
+          "source": "SCHOLARCHAIN",
+          "sourceRecordId": "run:fda6168a-d4e6-4c20-bf73-42a1c3724f7f",
+          "sourceUri": null,
+          "datasetSnapshot": "hadoop-prep",
+          "retrievalDate": null,
+          "licenseEvidenceUri": null,
+          "runId": "run:fda6168a-d4e6-4c20-bf73-42a1c3724f7f",
+          "uncertaintyNotes": [
+            "hadoopPrepSchema=scholarchain.hadoop-prep.v1",
+            "hadoopPrepFingerprint=c2327b5bc94a4af943c003cb1d65830d9a15bd7a0cb8caca7d1587038941af1a",
+            "transformationVersion=hadoop-prep-j01-j09-v3-stable-overflow-lineage",
+            "domainSchema=scholarchain.domain.v1",
+            "inputChecksum:CROSSREF=a6e3c40e178b7ce7f74ed870a48b4a2951de1705e7a0ed8f8fd40838bc4d39cc",
+            "inputChecksum:DBLP=e23d50c04b2cadcc01ff719ea1841157f2d865dd0e2657b27d3bd4931fe2a935",
+            "inputChecksum:OPENALEX=6cff12f2ec1439acc66b89a9c30c54aa90bec8e3e11c317561f3e4a0f9a65d8c",
+            "inputChecksum:ORCID=5000694a8e93f5ff2393f7f25f9a908d139e7ba20d26c0d98141e5ce1e070325"
+          ]
+        }
+      },
+      "counters": {
+        "OVERSIZE_TEAM": 0,
+        "DUPLICATE": 0,
+        "REJECTED": 0,
+        "CONFLICT": 0,
+        "OVERSIZE_BLOCK": 0,
+        "ACCEPTED": 242,
+        "INPUT": 195,
+        "MISSING_KEY": 0,
+        "EMITTED_PAIR": 45,
+        "SCHEMA_FAILURE": 0
+      },
+      "complete": {
+        "complete": true,
+        "runId": "run:fda6168a-d4e6-4c20-bf73-42a1c3724f7f",
+        "configFingerprint": "c2327b5bc94a4af943c003cb1d65830d9a15bd7a0cb8caca7d1587038941af1a",
+        "inputChecksums": {
+          "CROSSREF": "a6e3c40e178b7ce7f74ed870a48b4a2951de1705e7a0ed8f8fd40838bc4d39cc",
+          "DBLP": "e23d50c04b2cadcc01ff719ea1841157f2d865dd0e2657b27d3bd4931fe2a935",
+          "OPENALEX": "6cff12f2ec1439acc66b89a9c30c54aa90bec8e3e11c317561f3e4a0f9a65d8c",
+          "ORCID": "5000694a8e93f5ff2393f7f25f9a908d139e7ba20d26c0d98141e5ce1e070325"
+        },
+        "snapshots": {
+          "CROSSREF": "crossref-rest-2026-10-05",
+          "DBLP": "dblp-2026-10-03",
+          "OPENALEX": "openalex-rest-2026-10-05",
+          "ORCID": "orcid-public-api-2026-10-05"
+        },
+        "retrievalDates": {
+          "CROSSREF": "2026-10-05",
+          "DBLP": "2026-10-05",
+          "OPENALEX": "2026-10-05",
+          "ORCID": "2026-10-05"
+        },
+        "partitions": [
+          "snapshot=crossref-rest-2026-10-05/run=fda6168a-d4e6-4c20-bf73-42a1c3724f7f/author-mention",
+          "snapshot=crossref-rest-2026-10-05/run=fda6168a-d4e6-4c20-bf73-42a1c3724f7f/authorship",
+          "snapshot=crossref-rest-2026-10-05/run=fda6168a-d4e6-4c20-bf73-42a1c3724f7f/enrichment",
+          "snapshot=crossref-rest-2026-10-05/run=fda6168a-d4e6-4c20-bf73-42a1c3724f7f/graph-edge",
+          "snapshot=crossref-rest-2026-10-05/run=fda6168a-d4e6-4c20-bf73-42a1c3724f7f/index",
+          "snapshot=crossref-rest-2026-10-05/run=fda6168a-d4e6-4c20-bf73-42a1c3724f7f/pair",
+          "snapshot=crossref-rest-2026-10-05/run=fda6168a-d4e6-4c20-bf73-42a1c3724f7f/team",
+          "snapshot=crossref-rest-2026-10-05/run=fda6168a-d4e6-4c20-bf73-42a1c3724f7f/venue",
+          "snapshot=crossref-rest-2026-10-05/run=fda6168a-d4e6-4c20-bf73-42a1c3724f7f/work",
+          "snapshot=dblp-2026-10-03/run=fda6168a-d4e6-4c20-bf73-42a1c3724f7f/author-mention",
+          "snapshot=dblp-2026-10-03/run=fda6168a-d4e6-4c20-bf73-42a1c3724f7f/authorship",
+          "snapshot=dblp-2026-10-03/run=fda6168a-d4e6-4c20-bf73-42a1c3724f7f/enrichment",
+          "snapshot=dblp-2026-10-03/run=fda6168a-d4e6-4c20-bf73-42a1c3724f7f/graph-edge",
+          "snapshot=dblp-2026-10-03/run=fda6168a-d4e6-4c20-bf73-42a1c3724f7f/index",
+          "snapshot=dblp-2026-10-03/run=fda6168a-d4e6-4c20-bf73-42a1c3724f7f/pair",
+          "snapshot=dblp-2026-10-03/run=fda6168a-d4e6-4c20-bf73-42a1c3724f7f/team",
+          "snapshot=dblp-2026-10-03/run=fda6168a-d4e6-4c20-bf73-42a1c3724f7f/venue",
+          "snapshot=dblp-2026-10-03/run=fda6168a-d4e6-4c20-bf73-42a1c3724f7f/work",
+          "snapshot=hadoop-prep/run=fda6168a-d4e6-4c20-bf73-42a1c3724f7f/match-candidate",
+          "snapshot=openalex-rest-2026-10-05/run=fda6168a-d4e6-4c20-bf73-42a1c3724f7f/author-mention",
+          "snapshot=openalex-rest-2026-10-05/run=fda6168a-d4e6-4c20-bf73-42a1c3724f7f/authorship",
+          "snapshot=openalex-rest-2026-10-05/run=fda6168a-d4e6-4c20-bf73-42a1c3724f7f/enrichment",
+          "snapshot=openalex-rest-2026-10-05/run=fda6168a-d4e6-4c20-bf73-42a1c3724f7f/graph-edge",
+          "snapshot=openalex-rest-2026-10-05/run=fda6168a-d4e6-4c20-bf73-42a1c3724f7f/index",
+          "snapshot=openalex-rest-2026-10-05/run=fda6168a-d4e6-4c20-bf73-42a1c3724f7f/institution",
+          "snapshot=openalex-rest-2026-10-05/run=fda6168a-d4e6-4c20-bf73-42a1c3724f7f/pair",
+          "snapshot=openalex-rest-2026-10-05/run=fda6168a-d4e6-4c20-bf73-42a1c3724f7f/team",
+          "snapshot=openalex-rest-2026-10-05/run=fda6168a-d4e6-4c20-bf73-42a1c3724f7f/topic",
+          "snapshot=openalex-rest-2026-10-05/run=fda6168a-d4e6-4c20-bf73-42a1c3724f7f/venue",
+          "snapshot=openalex-rest-2026-10-05/run=fda6168a-d4e6-4c20-bf73-42a1c3724f7f/work",
+          "snapshot=orcid-public-api-2026-10-05/run=fda6168a-d4e6-4c20-bf73-42a1c3724f7f/index",
+          "snapshot=orcid-public-api-2026-10-05/run=fda6168a-d4e6-4c20-bf73-42a1c3724f7f/orcid-activity",
+          "snapshot=orcid-public-api-2026-10-05/run=fda6168a-d4e6-4c20-bf73-42a1c3724f7f/orcid-profile"
+        ],
+        "exportParts": [
+          {
+            "path": "part-r-00000",
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "path": "snapshot=crossref-rest-2026-10-05/run=fda6168a-d4e6-4c20-bf73-42a1c3724f7f/author-mention/part-r-00000",
+            "bytes": 1592,
+            "sha256": "9bafb3062f6b52d5cc0c77dabbb768d0c559b65f85e1cb875936368552bfb234"
+          },
+          {
+            "path": "snapshot=crossref-rest-2026-10-05/run=fda6168a-d4e6-4c20-bf73-42a1c3724f7f/authorship/part-r-00000",
+            "bytes": 1274,
+            "sha256": "bf45ebad340c9912546f1e46c26cb6a6e92c9cde8db9c3f68b16562d3336c101"
+          },
+          {
+            "path": "snapshot=crossref-rest-2026-10-05/run=fda6168a-d4e6-4c20-bf73-42a1c3724f7f/enrichment/part-r-00000",
+            "bytes": 763,
+            "sha256": "40f788664beed0d7513d9b05a7c27e09803e0e13a291e9c38acec6254bc02f43"
+          },
+          {
+            "path": "snapshot=crossref-rest-2026-10-05/run=fda6168a-d4e6-4c20-bf73-42a1c3724f7f/graph-edge/part-r-00000",
+            "bytes": 2267,
+            "sha256": "bef10b28448877531dc03b7ec010023b9d4d67098efbda72bd0e66114237e41c"
+          },
+          {
+            "path": "snapshot=crossref-rest-2026-10-05/run=fda6168a-d4e6-4c20-bf73-42a1c3724f7f/index/part-r-00000",
+            "bytes": 683,
+            "sha256": "57f54426be679a30351161a10725fd1a2d0f61a6d044887e1cc5704d6ca89793"
+          },
+          {
+            "path": "snapshot=crossref-rest-2026-10-05/run=fda6168a-d4e6-4c20-bf73-42a1c3724f7f/pair/part-r-00000",
+            "bytes": 753,
+            "sha256": "2f52f76a1d002ab38e96e9adeb017baf0f29b90676be6995a3f44b60c5522ab1"
+          },
+          {
+            "path": "snapshot=crossref-rest-2026-10-05/run=fda6168a-d4e6-4c20-bf73-42a1c3724f7f/team/part-r-00000",
+            "bytes": 645,
+            "sha256": "5c15f6a0869a28d4f569a0a71e88f9a166a320986799a8721064426463bc1d24"
+          },
+          {
+            "path": "snapshot=crossref-rest-2026-10-05/run=fda6168a-d4e6-4c20-bf73-42a1c3724f7f/venue/part-r-00000",
+            "bytes": 582,
+            "sha256": "3ac43319eab1654b74779d70cf5b5693ccd5768d54878a504e94fd7f33247537"
+          },
+          {
+            "path": "snapshot=crossref-rest-2026-10-05/run=fda6168a-d4e6-4c20-bf73-42a1c3724f7f/work/part-r-00000",
+            "bytes": 2412,
+            "sha256": "439f8083c322da1d9ab65950916e3b1e4ad5654f0394b0c8f1742fbd5f2e2395"
+          },
+          {
+            "path": "snapshot=dblp-2026-10-03/run=fda6168a-d4e6-4c20-bf73-42a1c3724f7f/author-mention/part-r-00000",
+            "bytes": 4668,
+            "sha256": "fdd355d04ddc2ff0a59421f15095a089e2f39b27571f9af47a84972f134bae29"
+          },
+          {
+            "path": "snapshot=dblp-2026-10-03/run=fda6168a-d4e6-4c20-bf73-42a1c3724f7f/authorship/part-r-00000",
+            "bytes": 3728,
+            "sha256": "7370abe3260198fe9b2552b444d4bd714f01ed58cf52d6fa48d1ef0b8ac1fe65"
+          },
+          {
+            "path": "snapshot=dblp-2026-10-03/run=fda6168a-d4e6-4c20-bf73-42a1c3724f7f/enrichment/part-r-00000",
+            "bytes": 2251,
+            "sha256": "7283f707b8395ddd7a0c67ef5585600e4245bea090e54b6fb34110d3eca4d3cd"
+          },
+          {
+            "path": "snapshot=dblp-2026-10-03/run=fda6168a-d4e6-4c20-bf73-42a1c3724f7f/graph-edge/part-r-00000",
+            "bytes": 6697,
+            "sha256": "9eb9f7ac0c1b2a73f79b1ffa7ee34b3ac52c5d3135cfa67f20ab9de5131a295c"
+          },
+          {
+            "path": "snapshot=dblp-2026-10-03/run=fda6168a-d4e6-4c20-bf73-42a1c3724f7f/index/part-r-00000",
+            "bytes": 5174,
+            "sha256": "7aa3677ef6584055658710e21c752793582193a6ae15135849f88c9c412c27c0"
+          },
+          {
+            "path": "snapshot=dblp-2026-10-03/run=fda6168a-d4e6-4c20-bf73-42a1c3724f7f/pair/part-r-00000",
+            "bytes": 2197,
+            "sha256": "756983722fbd01dc26a3fbcba32a2fb8d46027e8e2a67eeeceb4bc8e491beab4"
+          },
+          {
+            "path": "snapshot=dblp-2026-10-03/run=fda6168a-d4e6-4c20-bf73-42a1c3724f7f/team/part-r-00000",
+            "bytes": 1872,
+            "sha256": "83b3a6e45bc1739a4de924ab35f1a08f38757931aed426a80f2aaff96c2b849d"
+          },
+          {
+            "path": "snapshot=dblp-2026-10-03/run=fda6168a-d4e6-4c20-bf73-42a1c3724f7f/venue/part-r-00000",
+            "bytes": 1594,
+            "sha256": "38a4b6e424f1e379615f63ee60dd2167279d0bdc8f321b706876a087192f0dd2"
+          },
+          {
+            "path": "snapshot=dblp-2026-10-03/run=fda6168a-d4e6-4c20-bf73-42a1c3724f7f/work/part-r-00000",
+            "bytes": 7733,
+            "sha256": "5f5c2370a965fd199be57d5c34688af165065e0590fe69e98080fb1cccf2e232"
+          },
+          {
+            "path": "snapshot=hadoop-prep/run=fda6168a-d4e6-4c20-bf73-42a1c3724f7f/match-candidate/part-r-00000",
+            "bytes": 57675,
+            "sha256": "06a7c3f223a91a14d7006cf3e2ad6732f600d7364c67d37d69b99ac6ca22d9bc"
+          },
+          {
+            "path": "snapshot=openalex-rest-2026-10-05/run=fda6168a-d4e6-4c20-bf73-42a1c3724f7f/author-mention/part-r-00000",
+            "bytes": 1517,
+            "sha256": "794029750fe6cfc27a4379d7aa779c516eccb13268a256347133ca28fe63903e"
+          },
+          {
+            "path": "snapshot=openalex-rest-2026-10-05/run=fda6168a-d4e6-4c20-bf73-42a1c3724f7f/authorship/part-r-00000",
+            "bytes": 1188,
+            "sha256": "55eda0c9ea4fec22a7a64ec77031722968295e8e3695a9c87b505c0d3c567569"
+          },
+          {
+            "path": "snapshot=openalex-rest-2026-10-05/run=fda6168a-d4e6-4c20-bf73-42a1c3724f7f/enrichment/part-r-00000",
+            "bytes": 4425,
+            "sha256": "7816d8885ab59884009faeb034e9062c581c364c6c97c2fef0b1849d96293ee1"
+          },
+          {
+            "path": "snapshot=openalex-rest-2026-10-05/run=fda6168a-d4e6-4c20-bf73-42a1c3724f7f/graph-edge/part-r-00000",
+            "bytes": 4296,
+            "sha256": "b19ef991ffeeb03a35f654c9991fcdb1cf7198cdcd3bd6c2b712733e9ddb3631"
+          },
+          {
+            "path": "snapshot=openalex-rest-2026-10-05/run=fda6168a-d4e6-4c20-bf73-42a1c3724f7f/index/part-r-00000",
+            "bytes": 4260,
+            "sha256": "b1f08985fe947f391f4e49912302a29b2463d9189b8c85eb6485b3b501390550"
+          },
+          {
+            "path": "snapshot=openalex-rest-2026-10-05/run=fda6168a-d4e6-4c20-bf73-42a1c3724f7f/institution/part-r-00000",
+            "bytes": 1362,
+            "sha256": "68f98607cd6c62cddb0684774708e8246680d675591130c9ac417c7c0d13a45e"
+          },
+          {
+            "path": "snapshot=openalex-rest-2026-10-05/run=fda6168a-d4e6-4c20-bf73-42a1c3724f7f/pair/part-r-00000",
+            "bytes": 694,
+            "sha256": "0939bd00db6dc89a11a1c1c2012f209adb0dd03b875aa3abed687f952d669654"
+          },
+          {
+            "path": "snapshot=openalex-rest-2026-10-05/run=fda6168a-d4e6-4c20-bf73-42a1c3724f7f/team/part-r-00000",
+            "bytes": 586,
+            "sha256": "c8e4b3dfb846e09f654bd515ffc6b2d7eb0a42cd32a31de541a25ee8202228ba"
+          },
+          {
+            "path": "snapshot=openalex-rest-2026-10-05/run=fda6168a-d4e6-4c20-bf73-42a1c3724f7f/topic/part-r-00000",
+            "bytes": 1670,
+            "sha256": "6e4eb5d368999ad293a08274f8a3bab7cb704105800b1e3345d257fc2d366488"
+          },
+          {
+            "path": "snapshot=openalex-rest-2026-10-05/run=fda6168a-d4e6-4c20-bf73-42a1c3724f7f/venue/part-r-00000",
+            "bytes": 558,
+            "sha256": "141f1fd991b04e27762feaa82d7781d1974d7dccd82f193f0ad82f29357b4a62"
+          },
+          {
+            "path": "snapshot=openalex-rest-2026-10-05/run=fda6168a-d4e6-4c20-bf73-42a1c3724f7f/work/part-r-00000",
+            "bytes": 2570,
+            "sha256": "679caf3e91db9980f092e6542fabe3018ff93635405a4cfb792ebba065f434ba"
+          },
+          {
+            "path": "snapshot=orcid-public-api-2026-10-05/run=fda6168a-d4e6-4c20-bf73-42a1c3724f7f/index/part-r-00000",
+            "bytes": 7498,
+            "sha256": "05d03c5d71b49adb33811ad1e008341a3398188dec717806d69376ba735a674a"
+          },
+          {
+            "path": "snapshot=orcid-public-api-2026-10-05/run=fda6168a-d4e6-4c20-bf73-42a1c3724f7f/orcid-activity/part-r-00000",
+            "bytes": 14774,
+            "sha256": "7109733a9bb8472a2d1f3fa7ac9d39ad020e7e0099619b926157dc9b3399a916"
+          },
+          {
+            "path": "snapshot=orcid-public-api-2026-10-05/run=fda6168a-d4e6-4c20-bf73-42a1c3724f7f/orcid-profile/part-r-00000",
+            "bytes": 739,
+            "sha256": "88bacf0d0605bded4de54415afc699546811617b53e7ef2b3bc8eb2a55ceb9ec"
+          }
+        ],
+        "schemaVersion": "scholarchain.domain.v1",
+        "hadoopPrepSchema": "scholarchain.hadoop-prep.v1",
+        "transformationVersion": "hadoop-prep-j01-j09-v3-stable-overflow-lineage"
+      },
+      "successfulJobOutputs": [
+        "export/_SUCCESS",
+        "intermediate/j01/_SUCCESS",
+        "intermediate/j02/_SUCCESS",
+        "intermediate/j03/_SUCCESS",
+        "intermediate/j04/_SUCCESS",
+        "intermediate/j05/_SUCCESS",
+        "intermediate/j06/_SUCCESS",
+        "intermediate/j07/_SUCCESS",
+        "intermediate/j08/_SUCCESS"
+      ],
+      "exportCounts": {
+        "author-mention": 10,
+        "authorship": 10,
+        "enrichment": 10,
+        "graph-edge": 18,
+        "index": 27,
+        "institution": 2,
+        "match-candidate": 40,
+        "orcid-activity": 16,
+        "orcid-profile": 1,
+        "pair": 5,
+        "team": 5,
+        "topic": 3,
+        "venue": 5,
+        "work": 5
+      },
+      "exports": [
+        {
+          "file": "export/part-r-00000",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "records": 0
+        },
+        {
+          "file": "export/snapshot=crossref-rest-2026-10-05/run=fda6168a-d4e6-4c20-bf73-42a1c3724f7f/author-mention/part-r-00000",
+          "bytes": 1592,
+          "sha256": "9bafb3062f6b52d5cc0c77dabbb768d0c559b65f85e1cb875936368552bfb234",
+          "records": 2
+        },
+        {
+          "file": "export/snapshot=crossref-rest-2026-10-05/run=fda6168a-d4e6-4c20-bf73-42a1c3724f7f/authorship/part-r-00000",
+          "bytes": 1274,
+          "sha256": "bf45ebad340c9912546f1e46c26cb6a6e92c9cde8db9c3f68b16562d3336c101",
+          "records": 2
+        },
+        {
+          "file": "export/snapshot=crossref-rest-2026-10-05/run=fda6168a-d4e6-4c20-bf73-42a1c3724f7f/enrichment/part-r-00000",
+          "bytes": 763,
+          "sha256": "40f788664beed0d7513d9b05a7c27e09803e0e13a291e9c38acec6254bc02f43",
+          "records": 1
+        },
+        {
+          "file": "export/snapshot=crossref-rest-2026-10-05/run=fda6168a-d4e6-4c20-bf73-42a1c3724f7f/graph-edge/part-r-00000",
+          "bytes": 2267,
+          "sha256": "bef10b28448877531dc03b7ec010023b9d4d67098efbda72bd0e66114237e41c",
+          "records": 3
+        },
+        {
+          "file": "export/snapshot=crossref-rest-2026-10-05/run=fda6168a-d4e6-4c20-bf73-42a1c3724f7f/index/part-r-00000",
+          "bytes": 683,
+          "sha256": "57f54426be679a30351161a10725fd1a2d0f61a6d044887e1cc5704d6ca89793",
+          "records": 1
+        },
+        {
+          "file": "export/snapshot=crossref-rest-2026-10-05/run=fda6168a-d4e6-4c20-bf73-42a1c3724f7f/pair/part-r-00000",
+          "bytes": 753,
+          "sha256": "2f52f76a1d002ab38e96e9adeb017baf0f29b90676be6995a3f44b60c5522ab1",
+          "records": 1
+        },
+        {
+          "file": "export/snapshot=crossref-rest-2026-10-05/run=fda6168a-d4e6-4c20-bf73-42a1c3724f7f/team/part-r-00000",
+          "bytes": 645,
+          "sha256": "5c15f6a0869a28d4f569a0a71e88f9a166a320986799a8721064426463bc1d24",
+          "records": 1
+        },
+        {
+          "file": "export/snapshot=crossref-rest-2026-10-05/run=fda6168a-d4e6-4c20-bf73-42a1c3724f7f/venue/part-r-00000",
+          "bytes": 582,
+          "sha256": "3ac43319eab1654b74779d70cf5b5693ccd5768d54878a504e94fd7f33247537",
+          "records": 1
+        },
+        {
+          "file": "export/snapshot=crossref-rest-2026-10-05/run=fda6168a-d4e6-4c20-bf73-42a1c3724f7f/work/part-r-00000",
+          "bytes": 2412,
+          "sha256": "439f8083c322da1d9ab65950916e3b1e4ad5654f0394b0c8f1742fbd5f2e2395",
+          "records": 1
+        },
+        {
+          "file": "export/snapshot=dblp-2026-10-03/run=fda6168a-d4e6-4c20-bf73-42a1c3724f7f/author-mention/part-r-00000",
+          "bytes": 4668,
+          "sha256": "fdd355d04ddc2ff0a59421f15095a089e2f39b27571f9af47a84972f134bae29",
+          "records": 6
+        },
+        {
+          "file": "export/snapshot=dblp-2026-10-03/run=fda6168a-d4e6-4c20-bf73-42a1c3724f7f/authorship/part-r-00000",
+          "bytes": 3728,
+          "sha256": "7370abe3260198fe9b2552b444d4bd714f01ed58cf52d6fa48d1ef0b8ac1fe65",
+          "records": 6
+        },
+        {
+          "file": "export/snapshot=dblp-2026-10-03/run=fda6168a-d4e6-4c20-bf73-42a1c3724f7f/enrichment/part-r-00000",
+          "bytes": 2251,
+          "sha256": "7283f707b8395ddd7a0c67ef5585600e4245bea090e54b6fb34110d3eca4d3cd",
+          "records": 3
+        },
+        {
+          "file": "export/snapshot=dblp-2026-10-03/run=fda6168a-d4e6-4c20-bf73-42a1c3724f7f/graph-edge/part-r-00000",
+          "bytes": 6697,
+          "sha256": "9eb9f7ac0c1b2a73f79b1ffa7ee34b3ac52c5d3135cfa67f20ab9de5131a295c",
+          "records": 9
+        },
+        {
+          "file": "export/snapshot=dblp-2026-10-03/run=fda6168a-d4e6-4c20-bf73-42a1c3724f7f/index/part-r-00000",
+          "bytes": 5174,
+          "sha256": "7aa3677ef6584055658710e21c752793582193a6ae15135849f88c9c412c27c0",
+          "records": 8
+        },
+        {
+          "file": "export/snapshot=dblp-2026-10-03/run=fda6168a-d4e6-4c20-bf73-42a1c3724f7f/pair/part-r-00000",
+          "bytes": 2197,
+          "sha256": "756983722fbd01dc26a3fbcba32a2fb8d46027e8e2a67eeeceb4bc8e491beab4",
+          "records": 3
+        },
+        {
+          "file": "export/snapshot=dblp-2026-10-03/run=fda6168a-d4e6-4c20-bf73-42a1c3724f7f/team/part-r-00000",
+          "bytes": 1872,
+          "sha256": "83b3a6e45bc1739a4de924ab35f1a08f38757931aed426a80f2aaff96c2b849d",
+          "records": 3
+        },
+        {
+          "file": "export/snapshot=dblp-2026-10-03/run=fda6168a-d4e6-4c20-bf73-42a1c3724f7f/venue/part-r-00000",
+          "bytes": 1594,
+          "sha256": "38a4b6e424f1e379615f63ee60dd2167279d0bdc8f321b706876a087192f0dd2",
+          "records": 3
+        },
+        {
+          "file": "export/snapshot=dblp-2026-10-03/run=fda6168a-d4e6-4c20-bf73-42a1c3724f7f/work/part-r-00000",
+          "bytes": 7733,
+          "sha256": "5f5c2370a965fd199be57d5c34688af165065e0590fe69e98080fb1cccf2e232",
+          "records": 3
+        },
+        {
+          "file": "export/snapshot=hadoop-prep/run=fda6168a-d4e6-4c20-bf73-42a1c3724f7f/match-candidate/part-r-00000",
+          "bytes": 57675,
+          "sha256": "06a7c3f223a91a14d7006cf3e2ad6732f600d7364c67d37d69b99ac6ca22d9bc",
+          "records": 40
+        },
+        {
+          "file": "export/snapshot=openalex-rest-2026-10-05/run=fda6168a-d4e6-4c20-bf73-42a1c3724f7f/author-mention/part-r-00000",
+          "bytes": 1517,
+          "sha256": "794029750fe6cfc27a4379d7aa779c516eccb13268a256347133ca28fe63903e",
+          "records": 2
+        },
+        {
+          "file": "export/snapshot=openalex-rest-2026-10-05/run=fda6168a-d4e6-4c20-bf73-42a1c3724f7f/authorship/part-r-00000",
+          "bytes": 1188,
+          "sha256": "55eda0c9ea4fec22a7a64ec77031722968295e8e3695a9c87b505c0d3c567569",
+          "records": 2
+        },
+        {
+          "file": "export/snapshot=openalex-rest-2026-10-05/run=fda6168a-d4e6-4c20-bf73-42a1c3724f7f/enrichment/part-r-00000",
+          "bytes": 4425,
+          "sha256": "7816d8885ab59884009faeb034e9062c581c364c6c97c2fef0b1849d96293ee1",
+          "records": 6
+        },
+        {
+          "file": "export/snapshot=openalex-rest-2026-10-05/run=fda6168a-d4e6-4c20-bf73-42a1c3724f7f/graph-edge/part-r-00000",
+          "bytes": 4296,
+          "sha256": "b19ef991ffeeb03a35f654c9991fcdb1cf7198cdcd3bd6c2b712733e9ddb3631",
+          "records": 6
+        },
+        {
+          "file": "export/snapshot=openalex-rest-2026-10-05/run=fda6168a-d4e6-4c20-bf73-42a1c3724f7f/index/part-r-00000",
+          "bytes": 4260,
+          "sha256": "b1f08985fe947f391f4e49912302a29b2463d9189b8c85eb6485b3b501390550",
+          "records": 7
+        },
+        {
+          "file": "export/snapshot=openalex-rest-2026-10-05/run=fda6168a-d4e6-4c20-bf73-42a1c3724f7f/institution/part-r-00000",
+          "bytes": 1362,
+          "sha256": "68f98607cd6c62cddb0684774708e8246680d675591130c9ac417c7c0d13a45e",
+          "records": 2
+        },
+        {
+          "file": "export/snapshot=openalex-rest-2026-10-05/run=fda6168a-d4e6-4c20-bf73-42a1c3724f7f/pair/part-r-00000",
+          "bytes": 694,
+          "sha256": "0939bd00db6dc89a11a1c1c2012f209adb0dd03b875aa3abed687f952d669654",
+          "records": 1
+        },
+        {
+          "file": "export/snapshot=openalex-rest-2026-10-05/run=fda6168a-d4e6-4c20-bf73-42a1c3724f7f/team/part-r-00000",
+          "bytes": 586,
+          "sha256": "c8e4b3dfb846e09f654bd515ffc6b2d7eb0a42cd32a31de541a25ee8202228ba",
+          "records": 1
+        },
+        {
+          "file": "export/snapshot=openalex-rest-2026-10-05/run=fda6168a-d4e6-4c20-bf73-42a1c3724f7f/topic/part-r-00000",
+          "bytes": 1670,
+          "sha256": "6e4eb5d368999ad293a08274f8a3bab7cb704105800b1e3345d257fc2d366488",
+          "records": 3
+        },
+        {
+          "file": "export/snapshot=openalex-rest-2026-10-05/run=fda6168a-d4e6-4c20-bf73-42a1c3724f7f/venue/part-r-00000",
+          "bytes": 558,
+          "sha256": "141f1fd991b04e27762feaa82d7781d1974d7dccd82f193f0ad82f29357b4a62",
+          "records": 1
+        },
+        {
+          "file": "export/snapshot=openalex-rest-2026-10-05/run=fda6168a-d4e6-4c20-bf73-42a1c3724f7f/work/part-r-00000",
+          "bytes": 2570,
+          "sha256": "679caf3e91db9980f092e6542fabe3018ff93635405a4cfb792ebba065f434ba",
+          "records": 1
+        },
+        {
+          "file": "export/snapshot=orcid-public-api-2026-10-05/run=fda6168a-d4e6-4c20-bf73-42a1c3724f7f/index/part-r-00000",
+          "bytes": 7498,
+          "sha256": "05d03c5d71b49adb33811ad1e008341a3398188dec717806d69376ba735a674a",
+          "records": 11
+        },
+        {
+          "file": "export/snapshot=orcid-public-api-2026-10-05/run=fda6168a-d4e6-4c20-bf73-42a1c3724f7f/orcid-activity/part-r-00000",
+          "bytes": 14774,
+          "sha256": "7109733a9bb8472a2d1f3fa7ac9d39ad020e7e0099619b926157dc9b3399a916",
+          "records": 16
+        },
+        {
+          "file": "export/snapshot=orcid-public-api-2026-10-05/run=fda6168a-d4e6-4c20-bf73-42a1c3724f7f/orcid-profile/part-r-00000",
+          "bytes": 739,
+          "sha256": "88bacf0d0605bded4de54415afc699546811617b53e7ef2b3bc8eb2a55ceb9ec",
+          "records": 1
+        }
+      ],
+      "representativeEvidence": [
+        {
+          "source": "CROSSREF",
+          "sourceRecordId": "10.1007/978-3-642-31674-6_1",
+          "title": "Machine Mentality?",
+          "doi": "10.1007/978-3-642-31674-6_1",
+          "observedIdentifiers": null,
+          "sourceLinks": null,
+          "provenance": {
+            "schemaVersion": "scholarchain.domain.v1",
+            "source": "CROSSREF",
+            "sourceRecordId": "10.1007/978-3-642-31674-6_1",
+            "sourceUri": "https://doi.org/10.1007/978-3-642-31674-6_1",
+            "datasetSnapshot": "crossref-rest-2026-10-05",
+            "retrievalDate": "2026-10-05",
+            "licenseEvidenceUri": null,
+            "runId": "run:fda6168a-d4e6-4c20-bf73-42a1c3724f7f",
+            "uncertaintyNotes": []
+          }
+        },
+        {
+          "source": "DBLP",
+          "sourceRecordId": "series/sapere/NasutoB13",
+          "title": "Of (Zombie) Mice and Animats.",
+          "doi": "10.1007/978-3-642-31674-6_7",
+          "observedIdentifiers": null,
+          "sourceLinks": [
+            {
+              "name": "ee",
+              "value": "https://doi.org/10.1007/978-3-642-31674-6_7"
+            },
+            {
+              "name": "url",
+              "value": "db/series/sapere/sapere5.html#NasutoB13"
+            }
+          ],
+          "provenance": {
+            "schemaVersion": "scholarchain.domain.v1",
+            "source": "DBLP",
+            "sourceRecordId": "series/sapere/NasutoB13",
+            "sourceUri": "https://dblp.org/rec/series/sapere/NasutoB13",
+            "datasetSnapshot": "dblp-2026-10-03",
+            "retrievalDate": "2026-10-05",
+            "licenseEvidenceUri": null,
+            "runId": "run:fda6168a-d4e6-4c20-bf73-42a1c3724f7f",
+            "uncertaintyNotes": []
+          }
+        },
+        {
+          "source": "DBLP",
+          "sourceRecordId": "series/sapere/BerkeleyR13",
+          "title": "Machine Mentality?",
+          "doi": "10.1007/978-3-642-31674-6_1",
+          "observedIdentifiers": null,
+          "sourceLinks": [
+            {
+              "name": "ee",
+              "value": "https://doi.org/10.1007/978-3-642-31674-6_1"
+            },
+            {
+              "name": "url",
+              "value": "db/series/sapere/sapere5.html#BerkeleyR13"
+            }
+          ],
+          "provenance": {
+            "schemaVersion": "scholarchain.domain.v1",
+            "source": "DBLP",
+            "sourceRecordId": "series/sapere/BerkeleyR13",
+            "sourceUri": "https://dblp.org/rec/series/sapere/BerkeleyR13",
+            "datasetSnapshot": "dblp-2026-10-03",
+            "retrievalDate": "2026-10-05",
+            "licenseEvidenceUri": null,
+            "runId": "run:fda6168a-d4e6-4c20-bf73-42a1c3724f7f",
+            "uncertaintyNotes": []
+          }
+        },
+        {
+          "source": "DBLP",
+          "sourceRecordId": "series/sapere/SchiaffonatiV13",
+          "title": "The Influence of Engineering Theory and Practice on Philosophy of AI.",
+          "doi": "10.1007/978-3-642-31674-6_28",
+          "observedIdentifiers": null,
+          "sourceLinks": [
+            {
+              "name": "ee",
+              "value": "https://doi.org/10.1007/978-3-642-31674-6_28"
+            },
+            {
+              "name": "url",
+              "value": "db/series/sapere/sapere5.html#SchiaffonatiV13"
+            }
+          ],
+          "provenance": {
+            "schemaVersion": "scholarchain.domain.v1",
+            "source": "DBLP",
+            "sourceRecordId": "series/sapere/SchiaffonatiV13",
+            "sourceUri": "https://dblp.org/rec/series/sapere/SchiaffonatiV13",
+            "datasetSnapshot": "dblp-2026-10-03",
+            "retrievalDate": "2026-10-05",
+            "licenseEvidenceUri": null,
+            "runId": "run:fda6168a-d4e6-4c20-bf73-42a1c3724f7f",
+            "uncertaintyNotes": []
+          }
+        },
+        {
+          "source": "OPENALEX",
+          "sourceRecordId": "W4254447616",
+          "title": "Machine Mentality?",
+          "doi": "10.1007/978-3-642-31674-6_1",
+          "observedIdentifiers": [
+            {
+              "namespace": "openalex.doi",
+              "value": "https://doi.org/10.1007/978-3-642-31674-6_1",
+              "interpretation": "SOURCE_OBSERVATION"
+            },
+            {
+              "namespace": "openalex.ids.doi",
+              "value": "https://doi.org/10.1007/978-3-642-31674-6_1",
+              "interpretation": "SOURCE_OBSERVATION"
+            }
+          ],
+          "sourceLinks": null,
+          "provenance": {
+            "schemaVersion": "scholarchain.domain.v1",
+            "source": "OPENALEX",
+            "sourceRecordId": "W4254447616",
+            "sourceUri": "https://openalex.org/W4254447616",
+            "datasetSnapshot": "openalex-rest-2026-10-05",
+            "retrievalDate": "2026-10-05",
+            "licenseEvidenceUri": null,
+            "runId": "run:fda6168a-d4e6-4c20-bf73-42a1c3724f7f",
+            "uncertaintyNotes": []
+          }
+        }
+      ]
+    },
+    {
+      "directory": "target/phase4-runs/ccd26111-d26d-4783-bc0f-e7106e4e617d",
+      "synthetic": false,
+      "manifest": {
+        "runId": "run:ccd26111-d26d-4783-bc0f-e7106e4e617d",
+        "schemaVersion": "scholarchain.domain.v1",
+        "pipelineName": "hadoop-prep",
+        "datasetSnapshots": [
+          {
+            "source": "CROSSREF",
+            "snapshot": "crossref-rest-2026-10-05",
+            "retrievalDate": "2026-10-05"
+          },
+          {
+            "source": "DBLP",
+            "snapshot": "dblp-2026-10-03",
+            "retrievalDate": "2026-10-05"
+          },
+          {
+            "source": "OPENALEX",
+            "snapshot": "openalex-rest-2026-10-05",
+            "retrievalDate": "2026-10-05"
+          },
+          {
+            "source": "ORCID",
+            "snapshot": "orcid-public-api-2026-10-05",
+            "retrievalDate": "2026-10-05"
+          }
+        ],
+        "configSchemaVersion": "scholarchain.hadoop-prep.v1",
+        "configFingerprint": "c2327b5bc94a4af943c003cb1d65830d9a15bd7a0cb8caca7d1587038941af1a",
+        "provenance": {
+          "schemaVersion": "scholarchain.domain.v1",
+          "source": "SCHOLARCHAIN",
+          "sourceRecordId": "run:ccd26111-d26d-4783-bc0f-e7106e4e617d",
+          "sourceUri": null,
+          "datasetSnapshot": "hadoop-prep",
+          "retrievalDate": null,
+          "licenseEvidenceUri": null,
+          "runId": "run:ccd26111-d26d-4783-bc0f-e7106e4e617d",
+          "uncertaintyNotes": [
+            "hadoopPrepSchema=scholarchain.hadoop-prep.v1",
+            "hadoopPrepFingerprint=c2327b5bc94a4af943c003cb1d65830d9a15bd7a0cb8caca7d1587038941af1a",
+            "transformationVersion=hadoop-prep-j01-j09-v3-stable-overflow-lineage",
+            "domainSchema=scholarchain.domain.v1",
+            "inputChecksum:CROSSREF=a6e3c40e178b7ce7f74ed870a48b4a2951de1705e7a0ed8f8fd40838bc4d39cc",
+            "inputChecksum:DBLP=e23d50c04b2cadcc01ff719ea1841157f2d865dd0e2657b27d3bd4931fe2a935",
+            "inputChecksum:OPENALEX=6cff12f2ec1439acc66b89a9c30c54aa90bec8e3e11c317561f3e4a0f9a65d8c",
+            "inputChecksum:ORCID=5000694a8e93f5ff2393f7f25f9a908d139e7ba20d26c0d98141e5ce1e070325"
+          ]
+        }
+      },
+      "counters": {
+        "OVERSIZE_TEAM": 0,
+        "DUPLICATE": 0,
+        "REJECTED": 0,
+        "CONFLICT": 0,
+        "OVERSIZE_BLOCK": 0,
+        "ACCEPTED": 242,
+        "INPUT": 195,
+        "MISSING_KEY": 0,
+        "EMITTED_PAIR": 45,
+        "SCHEMA_FAILURE": 0
+      },
+      "complete": {
+        "complete": true,
+        "runId": "run:ccd26111-d26d-4783-bc0f-e7106e4e617d",
+        "configFingerprint": "c2327b5bc94a4af943c003cb1d65830d9a15bd7a0cb8caca7d1587038941af1a",
+        "inputChecksums": {
+          "CROSSREF": "a6e3c40e178b7ce7f74ed870a48b4a2951de1705e7a0ed8f8fd40838bc4d39cc",
+          "DBLP": "e23d50c04b2cadcc01ff719ea1841157f2d865dd0e2657b27d3bd4931fe2a935",
+          "OPENALEX": "6cff12f2ec1439acc66b89a9c30c54aa90bec8e3e11c317561f3e4a0f9a65d8c",
+          "ORCID": "5000694a8e93f5ff2393f7f25f9a908d139e7ba20d26c0d98141e5ce1e070325"
+        },
+        "snapshots": {
+          "CROSSREF": "crossref-rest-2026-10-05",
+          "DBLP": "dblp-2026-10-03",
+          "OPENALEX": "openalex-rest-2026-10-05",
+          "ORCID": "orcid-public-api-2026-10-05"
+        },
+        "retrievalDates": {
+          "CROSSREF": "2026-10-05",
+          "DBLP": "2026-10-05",
+          "OPENALEX": "2026-10-05",
+          "ORCID": "2026-10-05"
+        },
+        "partitions": [
+          "snapshot=crossref-rest-2026-10-05/run=ccd26111-d26d-4783-bc0f-e7106e4e617d/author-mention",
+          "snapshot=crossref-rest-2026-10-05/run=ccd26111-d26d-4783-bc0f-e7106e4e617d/authorship",
+          "snapshot=crossref-rest-2026-10-05/run=ccd26111-d26d-4783-bc0f-e7106e4e617d/enrichment",
+          "snapshot=crossref-rest-2026-10-05/run=ccd26111-d26d-4783-bc0f-e7106e4e617d/graph-edge",
+          "snapshot=crossref-rest-2026-10-05/run=ccd26111-d26d-4783-bc0f-e7106e4e617d/index",
+          "snapshot=crossref-rest-2026-10-05/run=ccd26111-d26d-4783-bc0f-e7106e4e617d/pair",
+          "snapshot=crossref-rest-2026-10-05/run=ccd26111-d26d-4783-bc0f-e7106e4e617d/team",
+          "snapshot=crossref-rest-2026-10-05/run=ccd26111-d26d-4783-bc0f-e7106e4e617d/venue",
+          "snapshot=crossref-rest-2026-10-05/run=ccd26111-d26d-4783-bc0f-e7106e4e617d/work",
+          "snapshot=dblp-2026-10-03/run=ccd26111-d26d-4783-bc0f-e7106e4e617d/author-mention",
+          "snapshot=dblp-2026-10-03/run=ccd26111-d26d-4783-bc0f-e7106e4e617d/authorship",
+          "snapshot=dblp-2026-10-03/run=ccd26111-d26d-4783-bc0f-e7106e4e617d/enrichment",
+          "snapshot=dblp-2026-10-03/run=ccd26111-d26d-4783-bc0f-e7106e4e617d/graph-edge",
+          "snapshot=dblp-2026-10-03/run=ccd26111-d26d-4783-bc0f-e7106e4e617d/index",
+          "snapshot=dblp-2026-10-03/run=ccd26111-d26d-4783-bc0f-e7106e4e617d/pair",
+          "snapshot=dblp-2026-10-03/run=ccd26111-d26d-4783-bc0f-e7106e4e617d/team",
+          "snapshot=dblp-2026-10-03/run=ccd26111-d26d-4783-bc0f-e7106e4e617d/venue",
+          "snapshot=dblp-2026-10-03/run=ccd26111-d26d-4783-bc0f-e7106e4e617d/work",
+          "snapshot=hadoop-prep/run=ccd26111-d26d-4783-bc0f-e7106e4e617d/match-candidate",
+          "snapshot=openalex-rest-2026-10-05/run=ccd26111-d26d-4783-bc0f-e7106e4e617d/author-mention",
+          "snapshot=openalex-rest-2026-10-05/run=ccd26111-d26d-4783-bc0f-e7106e4e617d/authorship",
+          "snapshot=openalex-rest-2026-10-05/run=ccd26111-d26d-4783-bc0f-e7106e4e617d/enrichment",
+          "snapshot=openalex-rest-2026-10-05/run=ccd26111-d26d-4783-bc0f-e7106e4e617d/graph-edge",
+          "snapshot=openalex-rest-2026-10-05/run=ccd26111-d26d-4783-bc0f-e7106e4e617d/index",
+          "snapshot=openalex-rest-2026-10-05/run=ccd26111-d26d-4783-bc0f-e7106e4e617d/institution",
+          "snapshot=openalex-rest-2026-10-05/run=ccd26111-d26d-4783-bc0f-e7106e4e617d/pair",
+          "snapshot=openalex-rest-2026-10-05/run=ccd26111-d26d-4783-bc0f-e7106e4e617d/team",
+          "snapshot=openalex-rest-2026-10-05/run=ccd26111-d26d-4783-bc0f-e7106e4e617d/topic",
+          "snapshot=openalex-rest-2026-10-05/run=ccd26111-d26d-4783-bc0f-e7106e4e617d/venue",
+          "snapshot=openalex-rest-2026-10-05/run=ccd26111-d26d-4783-bc0f-e7106e4e617d/work",
+          "snapshot=orcid-public-api-2026-10-05/run=ccd26111-d26d-4783-bc0f-e7106e4e617d/index",
+          "snapshot=orcid-public-api-2026-10-05/run=ccd26111-d26d-4783-bc0f-e7106e4e617d/orcid-activity",
+          "snapshot=orcid-public-api-2026-10-05/run=ccd26111-d26d-4783-bc0f-e7106e4e617d/orcid-profile"
+        ],
+        "exportParts": [
+          {
+            "path": "part-r-00000",
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "path": "snapshot=crossref-rest-2026-10-05/run=ccd26111-d26d-4783-bc0f-e7106e4e617d/author-mention/part-r-00000",
+            "bytes": 1592,
+            "sha256": "9626fc345191b5eafa560add2124e5250e6ea833c3c88f35ce111432b24647d6"
+          },
+          {
+            "path": "snapshot=crossref-rest-2026-10-05/run=ccd26111-d26d-4783-bc0f-e7106e4e617d/authorship/part-r-00000",
+            "bytes": 1274,
+            "sha256": "2254997268ef548d22ed8301d19b17c2d716799024d24079d11297de1bb0d69f"
+          },
+          {
+            "path": "snapshot=crossref-rest-2026-10-05/run=ccd26111-d26d-4783-bc0f-e7106e4e617d/enrichment/part-r-00000",
+            "bytes": 763,
+            "sha256": "3584d7762c51c9b8b041c824ffaa63c12d41323de461081845ae8c588a092f92"
+          },
+          {
+            "path": "snapshot=crossref-rest-2026-10-05/run=ccd26111-d26d-4783-bc0f-e7106e4e617d/graph-edge/part-r-00000",
+            "bytes": 2267,
+            "sha256": "9115a19bd43ebefb57d074c5f9b91e80e2c543d914079ca45d86bcfc06e0b033"
+          },
+          {
+            "path": "snapshot=crossref-rest-2026-10-05/run=ccd26111-d26d-4783-bc0f-e7106e4e617d/index/part-r-00000",
+            "bytes": 683,
+            "sha256": "accfbc89a5e88ea38ef9ddc375254ca55c897d4ec34688cc4a2e3f179dc1bedd"
+          },
+          {
+            "path": "snapshot=crossref-rest-2026-10-05/run=ccd26111-d26d-4783-bc0f-e7106e4e617d/pair/part-r-00000",
+            "bytes": 753,
+            "sha256": "c2b116424de4ff688e5cdbaf0dc436b28e823eb87b89f8feca63fc875ea7ea70"
+          },
+          {
+            "path": "snapshot=crossref-rest-2026-10-05/run=ccd26111-d26d-4783-bc0f-e7106e4e617d/team/part-r-00000",
+            "bytes": 645,
+            "sha256": "37597d084f73480e5e92981c739ddf7197d9c25156a14d61c1857b19ce6f3e4b"
+          },
+          {
+            "path": "snapshot=crossref-rest-2026-10-05/run=ccd26111-d26d-4783-bc0f-e7106e4e617d/venue/part-r-00000",
+            "bytes": 582,
+            "sha256": "3074f66f23be032ce2fa81b89d6df7e60ae7c270dc9de03ed740ba20d999beef"
+          },
+          {
+            "path": "snapshot=crossref-rest-2026-10-05/run=ccd26111-d26d-4783-bc0f-e7106e4e617d/work/part-r-00000",
+            "bytes": 2412,
+            "sha256": "708b576089d7cf67576f439dce6d879450693452e2f157f629201ec0e9d412dc"
+          },
+          {
+            "path": "snapshot=dblp-2026-10-03/run=ccd26111-d26d-4783-bc0f-e7106e4e617d/author-mention/part-r-00000",
+            "bytes": 4668,
+            "sha256": "06b7a34298f6b126494d803283d626b1496d0003a2a7c7501ad1359785859177"
+          },
+          {
+            "path": "snapshot=dblp-2026-10-03/run=ccd26111-d26d-4783-bc0f-e7106e4e617d/authorship/part-r-00000",
+            "bytes": 3728,
+            "sha256": "5c531ef40e94113c0adc5aa00d448ac9e669279183ff4fb72b0a79d6146f8a47"
+          },
+          {
+            "path": "snapshot=dblp-2026-10-03/run=ccd26111-d26d-4783-bc0f-e7106e4e617d/enrichment/part-r-00000",
+            "bytes": 2251,
+            "sha256": "0f3f89adf8cc194d3ff189da7cb00c6e798e08f067286fac90aba68e15f47809"
+          },
+          {
+            "path": "snapshot=dblp-2026-10-03/run=ccd26111-d26d-4783-bc0f-e7106e4e617d/graph-edge/part-r-00000",
+            "bytes": 6697,
+            "sha256": "5e2264416059b187fa7bad280d751085e17358727ea27f318bb4671813a43d80"
+          },
+          {
+            "path": "snapshot=dblp-2026-10-03/run=ccd26111-d26d-4783-bc0f-e7106e4e617d/index/part-r-00000",
+            "bytes": 5174,
+            "sha256": "7751ce0f411b4b3cd98371282ca631dde0de8c87eac4fda74e0e57b3b2d4bcb9"
+          },
+          {
+            "path": "snapshot=dblp-2026-10-03/run=ccd26111-d26d-4783-bc0f-e7106e4e617d/pair/part-r-00000",
+            "bytes": 2197,
+            "sha256": "f68a2b4f17c5060acc782e7e2d93dd1b84d006bf27f4774f2354779ccc413317"
+          },
+          {
+            "path": "snapshot=dblp-2026-10-03/run=ccd26111-d26d-4783-bc0f-e7106e4e617d/team/part-r-00000",
+            "bytes": 1872,
+            "sha256": "a79f9aada2d43fb3809a09a90b0bbdd61f7beeb3667058f90120f5286f2d4a49"
+          },
+          {
+            "path": "snapshot=dblp-2026-10-03/run=ccd26111-d26d-4783-bc0f-e7106e4e617d/venue/part-r-00000",
+            "bytes": 1594,
+            "sha256": "b40764509c21877ad2aad441f1da01101d62d79768808472da66df429adae836"
+          },
+          {
+            "path": "snapshot=dblp-2026-10-03/run=ccd26111-d26d-4783-bc0f-e7106e4e617d/work/part-r-00000",
+            "bytes": 7733,
+            "sha256": "4919eb565aa5e707c58016085a95acc40db348e690cff742fe8fdb2a296857ee"
+          },
+          {
+            "path": "snapshot=hadoop-prep/run=ccd26111-d26d-4783-bc0f-e7106e4e617d/match-candidate/part-r-00000",
+            "bytes": 57675,
+            "sha256": "74d598dea4a60bc70b7d532ec0115bcffffe654cd52e4e1a5dbf433cd3c86908"
+          },
+          {
+            "path": "snapshot=openalex-rest-2026-10-05/run=ccd26111-d26d-4783-bc0f-e7106e4e617d/author-mention/part-r-00000",
+            "bytes": 1517,
+            "sha256": "0e750f75d987319f2d4f668c215a9220ce69887c5c62a5f194e4ea44ee14e10b"
+          },
+          {
+            "path": "snapshot=openalex-rest-2026-10-05/run=ccd26111-d26d-4783-bc0f-e7106e4e617d/authorship/part-r-00000",
+            "bytes": 1188,
+            "sha256": "19d43f25cf9eca056f589844dbd145f3745d55f1bd820986485dedc2cc910bd0"
+          },
+          {
+            "path": "snapshot=openalex-rest-2026-10-05/run=ccd26111-d26d-4783-bc0f-e7106e4e617d/enrichment/part-r-00000",
+            "bytes": 4425,
+            "sha256": "c83782eedb6592dd4b29f2f9a7ab10efea569b16aee422a18d99a0f50435125f"
+          },
+          {
+            "path": "snapshot=openalex-rest-2026-10-05/run=ccd26111-d26d-4783-bc0f-e7106e4e617d/graph-edge/part-r-00000",
+            "bytes": 4296,
+            "sha256": "b63e41eda0d49a6b8190ba2014b97115a926fc0bafccc9285aefe4d240bd1e8b"
+          },
+          {
+            "path": "snapshot=openalex-rest-2026-10-05/run=ccd26111-d26d-4783-bc0f-e7106e4e617d/index/part-r-00000",
+            "bytes": 4260,
+            "sha256": "7d23e740907e6fad9a52658949ee21463777772284aa1115b381dc447d5e40c4"
+          },
+          {
+            "path": "snapshot=openalex-rest-2026-10-05/run=ccd26111-d26d-4783-bc0f-e7106e4e617d/institution/part-r-00000",
+            "bytes": 1362,
+            "sha256": "4e7126d8097358c429327d2e2b95f7df22323d52c4943feb1f11f35a18378c81"
+          },
+          {
+            "path": "snapshot=openalex-rest-2026-10-05/run=ccd26111-d26d-4783-bc0f-e7106e4e617d/pair/part-r-00000",
+            "bytes": 694,
+            "sha256": "083995234cb3c802b277c5755b691e21996a23fb51820c837fcbfeac4d932ff3"
+          },
+          {
+            "path": "snapshot=openalex-rest-2026-10-05/run=ccd26111-d26d-4783-bc0f-e7106e4e617d/team/part-r-00000",
+            "bytes": 586,
+            "sha256": "87c205942d0b2ff419ae23dd2e832b7b849defc45f7f614bc7bb92603c579d11"
+          },
+          {
+            "path": "snapshot=openalex-rest-2026-10-05/run=ccd26111-d26d-4783-bc0f-e7106e4e617d/topic/part-r-00000",
+            "bytes": 1670,
+            "sha256": "95368296b99328ce21113993b3e34a5de81e84e4f8df2ced57ab2f959b66f765"
+          },
+          {
+            "path": "snapshot=openalex-rest-2026-10-05/run=ccd26111-d26d-4783-bc0f-e7106e4e617d/venue/part-r-00000",
+            "bytes": 558,
+            "sha256": "a06004e8a3e9efc90b5f2a27f4c7f381163a5652dee8ecf488bb56ee0fa0df69"
+          },
+          {
+            "path": "snapshot=openalex-rest-2026-10-05/run=ccd26111-d26d-4783-bc0f-e7106e4e617d/work/part-r-00000",
+            "bytes": 2570,
+            "sha256": "02f223cb579702ca8be9630fbac049c46b1b1f69005b147896fe4638466680ee"
+          },
+          {
+            "path": "snapshot=orcid-public-api-2026-10-05/run=ccd26111-d26d-4783-bc0f-e7106e4e617d/index/part-r-00000",
+            "bytes": 7498,
+            "sha256": "709588f1018357775e2e0ea7b8d29d457cb41dfaae2707bcc871704a91c951a2"
+          },
+          {
+            "path": "snapshot=orcid-public-api-2026-10-05/run=ccd26111-d26d-4783-bc0f-e7106e4e617d/orcid-activity/part-r-00000",
+            "bytes": 14774,
+            "sha256": "4cb1c313cde67f63c0577c344f678d8183d5a1093139a7e60a7476410d2e590c"
+          },
+          {
+            "path": "snapshot=orcid-public-api-2026-10-05/run=ccd26111-d26d-4783-bc0f-e7106e4e617d/orcid-profile/part-r-00000",
+            "bytes": 739,
+            "sha256": "15ceb4c3ba0d493bc9122c6864e8691fb49a27c3ed3131b4a9443b1f83bf4095"
+          }
+        ],
+        "schemaVersion": "scholarchain.domain.v1",
+        "hadoopPrepSchema": "scholarchain.hadoop-prep.v1",
+        "transformationVersion": "hadoop-prep-j01-j09-v3-stable-overflow-lineage"
+      },
+      "successfulJobOutputs": [
+        "export/_SUCCESS",
+        "intermediate/j01/_SUCCESS",
+        "intermediate/j02/_SUCCESS",
+        "intermediate/j03/_SUCCESS",
+        "intermediate/j04/_SUCCESS",
+        "intermediate/j05/_SUCCESS",
+        "intermediate/j06/_SUCCESS",
+        "intermediate/j07/_SUCCESS",
+        "intermediate/j08/_SUCCESS"
+      ],
+      "exportCounts": {
+        "author-mention": 10,
+        "authorship": 10,
+        "enrichment": 10,
+        "graph-edge": 18,
+        "index": 27,
+        "institution": 2,
+        "match-candidate": 40,
+        "orcid-activity": 16,
+        "orcid-profile": 1,
+        "pair": 5,
+        "team": 5,
+        "topic": 3,
+        "venue": 5,
+        "work": 5
+      },
+      "exports": [
+        {
+          "file": "export/part-r-00000",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "records": 0
+        },
+        {
+          "file": "export/snapshot=crossref-rest-2026-10-05/run=ccd26111-d26d-4783-bc0f-e7106e4e617d/author-mention/part-r-00000",
+          "bytes": 1592,
+          "sha256": "9626fc345191b5eafa560add2124e5250e6ea833c3c88f35ce111432b24647d6",
+          "records": 2
+        },
+        {
+          "file": "export/snapshot=crossref-rest-2026-10-05/run=ccd26111-d26d-4783-bc0f-e7106e4e617d/authorship/part-r-00000",
+          "bytes": 1274,
+          "sha256": "2254997268ef548d22ed8301d19b17c2d716799024d24079d11297de1bb0d69f",
+          "records": 2
+        },
+        {
+          "file": "export/snapshot=crossref-rest-2026-10-05/run=ccd26111-d26d-4783-bc0f-e7106e4e617d/enrichment/part-r-00000",
+          "bytes": 763,
+          "sha256": "3584d7762c51c9b8b041c824ffaa63c12d41323de461081845ae8c588a092f92",
+          "records": 1
+        },
+        {
+          "file": "export/snapshot=crossref-rest-2026-10-05/run=ccd26111-d26d-4783-bc0f-e7106e4e617d/graph-edge/part-r-00000",
+          "bytes": 2267,
+          "sha256": "9115a19bd43ebefb57d074c5f9b91e80e2c543d914079ca45d86bcfc06e0b033",
+          "records": 3
+        },
+        {
+          "file": "export/snapshot=crossref-rest-2026-10-05/run=ccd26111-d26d-4783-bc0f-e7106e4e617d/index/part-r-00000",
+          "bytes": 683,
+          "sha256": "accfbc89a5e88ea38ef9ddc375254ca55c897d4ec34688cc4a2e3f179dc1bedd",
+          "records": 1
+        },
+        {
+          "file": "export/snapshot=crossref-rest-2026-10-05/run=ccd26111-d26d-4783-bc0f-e7106e4e617d/pair/part-r-00000",
+          "bytes": 753,
+          "sha256": "c2b116424de4ff688e5cdbaf0dc436b28e823eb87b89f8feca63fc875ea7ea70",
+          "records": 1
+        },
+        {
+          "file": "export/snapshot=crossref-rest-2026-10-05/run=ccd26111-d26d-4783-bc0f-e7106e4e617d/team/part-r-00000",
+          "bytes": 645,
+          "sha256": "37597d084f73480e5e92981c739ddf7197d9c25156a14d61c1857b19ce6f3e4b",
+          "records": 1
+        },
+        {
+          "file": "export/snapshot=crossref-rest-2026-10-05/run=ccd26111-d26d-4783-bc0f-e7106e4e617d/venue/part-r-00000",
+          "bytes": 582,
+          "sha256": "3074f66f23be032ce2fa81b89d6df7e60ae7c270dc9de03ed740ba20d999beef",
+          "records": 1
+        },
+        {
+          "file": "export/snapshot=crossref-rest-2026-10-05/run=ccd26111-d26d-4783-bc0f-e7106e4e617d/work/part-r-00000",
+          "bytes": 2412,
+          "sha256": "708b576089d7cf67576f439dce6d879450693452e2f157f629201ec0e9d412dc",
+          "records": 1
+        },
+        {
+          "file": "export/snapshot=dblp-2026-10-03/run=ccd26111-d26d-4783-bc0f-e7106e4e617d/author-mention/part-r-00000",
+          "bytes": 4668,
+          "sha256": "06b7a34298f6b126494d803283d626b1496d0003a2a7c7501ad1359785859177",
+          "records": 6
+        },
+        {
+          "file": "export/snapshot=dblp-2026-10-03/run=ccd26111-d26d-4783-bc0f-e7106e4e617d/authorship/part-r-00000",
+          "bytes": 3728,
+          "sha256": "5c531ef40e94113c0adc5aa00d448ac9e669279183ff4fb72b0a79d6146f8a47",
+          "records": 6
+        },
+        {
+          "file": "export/snapshot=dblp-2026-10-03/run=ccd26111-d26d-4783-bc0f-e7106e4e617d/enrichment/part-r-00000",
+          "bytes": 2251,
+          "sha256": "0f3f89adf8cc194d3ff189da7cb00c6e798e08f067286fac90aba68e15f47809",
+          "records": 3
+        },
+        {
+          "file": "export/snapshot=dblp-2026-10-03/run=ccd26111-d26d-4783-bc0f-e7106e4e617d/graph-edge/part-r-00000",
+          "bytes": 6697,
+          "sha256": "5e2264416059b187fa7bad280d751085e17358727ea27f318bb4671813a43d80",
+          "records": 9
+        },
+        {
+          "file": "export/snapshot=dblp-2026-10-03/run=ccd26111-d26d-4783-bc0f-e7106e4e617d/index/part-r-00000",
+          "bytes": 5174,
+          "sha256": "7751ce0f411b4b3cd98371282ca631dde0de8c87eac4fda74e0e57b3b2d4bcb9",
+          "records": 8
+        },
+        {
+          "file": "export/snapshot=dblp-2026-10-03/run=ccd26111-d26d-4783-bc0f-e7106e4e617d/pair/part-r-00000",
+          "bytes": 2197,
+          "sha256": "f68a2b4f17c5060acc782e7e2d93dd1b84d006bf27f4774f2354779ccc413317",
+          "records": 3
+        },
+        {
+          "file": "export/snapshot=dblp-2026-10-03/run=ccd26111-d26d-4783-bc0f-e7106e4e617d/team/part-r-00000",
+          "bytes": 1872,
+          "sha256": "a79f9aada2d43fb3809a09a90b0bbdd61f7beeb3667058f90120f5286f2d4a49",
+          "records": 3
+        },
+        {
+          "file": "export/snapshot=dblp-2026-10-03/run=ccd26111-d26d-4783-bc0f-e7106e4e617d/venue/part-r-00000",
+          "bytes": 1594,
+          "sha256": "b40764509c21877ad2aad441f1da01101d62d79768808472da66df429adae836",
+          "records": 3
+        },
+        {
+          "file": "export/snapshot=dblp-2026-10-03/run=ccd26111-d26d-4783-bc0f-e7106e4e617d/work/part-r-00000",
+          "bytes": 7733,
+          "sha256": "4919eb565aa5e707c58016085a95acc40db348e690cff742fe8fdb2a296857ee",
+          "records": 3
+        },
+        {
+          "file": "export/snapshot=hadoop-prep/run=ccd26111-d26d-4783-bc0f-e7106e4e617d/match-candidate/part-r-00000",
+          "bytes": 57675,
+          "sha256": "74d598dea4a60bc70b7d532ec0115bcffffe654cd52e4e1a5dbf433cd3c86908",
+          "records": 40
+        },
+        {
+          "file": "export/snapshot=openalex-rest-2026-10-05/run=ccd26111-d26d-4783-bc0f-e7106e4e617d/author-mention/part-r-00000",
+          "bytes": 1517,
+          "sha256": "0e750f75d987319f2d4f668c215a9220ce69887c5c62a5f194e4ea44ee14e10b",
+          "records": 2
+        },
+        {
+          "file": "export/snapshot=openalex-rest-2026-10-05/run=ccd26111-d26d-4783-bc0f-e7106e4e617d/authorship/part-r-00000",
+          "bytes": 1188,
+          "sha256": "19d43f25cf9eca056f589844dbd145f3745d55f1bd820986485dedc2cc910bd0",
+          "records": 2
+        },
+        {
+          "file": "export/snapshot=openalex-rest-2026-10-05/run=ccd26111-d26d-4783-bc0f-e7106e4e617d/enrichment/part-r-00000",
+          "bytes": 4425,
+          "sha256": "c83782eedb6592dd4b29f2f9a7ab10efea569b16aee422a18d99a0f50435125f",
+          "records": 6
+        },
+        {
+          "file": "export/snapshot=openalex-rest-2026-10-05/run=ccd26111-d26d-4783-bc0f-e7106e4e617d/graph-edge/part-r-00000",
+          "bytes": 4296,
+          "sha256": "b63e41eda0d49a6b8190ba2014b97115a926fc0bafccc9285aefe4d240bd1e8b",
+          "records": 6
+        },
+        {
+          "file": "export/snapshot=openalex-rest-2026-10-05/run=ccd26111-d26d-4783-bc0f-e7106e4e617d/index/part-r-00000",
+          "bytes": 4260,
+          "sha256": "7d23e740907e6fad9a52658949ee21463777772284aa1115b381dc447d5e40c4",
+          "records": 7
+        },
+        {
+          "file": "export/snapshot=openalex-rest-2026-10-05/run=ccd26111-d26d-4783-bc0f-e7106e4e617d/institution/part-r-00000",
+          "bytes": 1362,
+          "sha256": "4e7126d8097358c429327d2e2b95f7df22323d52c4943feb1f11f35a18378c81",
+          "records": 2
+        },
+        {
+          "file": "export/snapshot=openalex-rest-2026-10-05/run=ccd26111-d26d-4783-bc0f-e7106e4e617d/pair/part-r-00000",
+          "bytes": 694,
+          "sha256": "083995234cb3c802b277c5755b691e21996a23fb51820c837fcbfeac4d932ff3",
+          "records": 1
+        },
+        {
+          "file": "export/snapshot=openalex-rest-2026-10-05/run=ccd26111-d26d-4783-bc0f-e7106e4e617d/team/part-r-00000",
+          "bytes": 586,
+          "sha256": "87c205942d0b2ff419ae23dd2e832b7b849defc45f7f614bc7bb92603c579d11",
+          "records": 1
+        },
+        {
+          "file": "export/snapshot=openalex-rest-2026-10-05/run=ccd26111-d26d-4783-bc0f-e7106e4e617d/topic/part-r-00000",
+          "bytes": 1670,
+          "sha256": "95368296b99328ce21113993b3e34a5de81e84e4f8df2ced57ab2f959b66f765",
+          "records": 3
+        },
+        {
+          "file": "export/snapshot=openalex-rest-2026-10-05/run=ccd26111-d26d-4783-bc0f-e7106e4e617d/venue/part-r-00000",
+          "bytes": 558,
+          "sha256": "a06004e8a3e9efc90b5f2a27f4c7f381163a5652dee8ecf488bb56ee0fa0df69",
+          "records": 1
+        },
+        {
+          "file": "export/snapshot=openalex-rest-2026-10-05/run=ccd26111-d26d-4783-bc0f-e7106e4e617d/work/part-r-00000",
+          "bytes": 2570,
+          "sha256": "02f223cb579702ca8be9630fbac049c46b1b1f69005b147896fe4638466680ee",
+          "records": 1
+        },
+        {
+          "file": "export/snapshot=orcid-public-api-2026-10-05/run=ccd26111-d26d-4783-bc0f-e7106e4e617d/index/part-r-00000",
+          "bytes": 7498,
+          "sha256": "709588f1018357775e2e0ea7b8d29d457cb41dfaae2707bcc871704a91c951a2",
+          "records": 11
+        },
+        {
+          "file": "export/snapshot=orcid-public-api-2026-10-05/run=ccd26111-d26d-4783-bc0f-e7106e4e617d/orcid-activity/part-r-00000",
+          "bytes": 14774,
+          "sha256": "4cb1c313cde67f63c0577c344f678d8183d5a1093139a7e60a7476410d2e590c",
+          "records": 16
+        },
+        {
+          "file": "export/snapshot=orcid-public-api-2026-10-05/run=ccd26111-d26d-4783-bc0f-e7106e4e617d/orcid-profile/part-r-00000",
+          "bytes": 739,
+          "sha256": "15ceb4c3ba0d493bc9122c6864e8691fb49a27c3ed3131b4a9443b1f83bf4095",
+          "records": 1
+        }
+      ],
+      "representativeEvidence": [
+        {
+          "source": "CROSSREF",
+          "sourceRecordId": "10.1007/978-3-642-31674-6_1",
+          "title": "Machine Mentality?",
+          "doi": "10.1007/978-3-642-31674-6_1",
+          "observedIdentifiers": null,
+          "sourceLinks": null,
+          "provenance": {
+            "schemaVersion": "scholarchain.domain.v1",
+            "source": "CROSSREF",
+            "sourceRecordId": "10.1007/978-3-642-31674-6_1",
+            "sourceUri": "https://doi.org/10.1007/978-3-642-31674-6_1",
+            "datasetSnapshot": "crossref-rest-2026-10-05",
+            "retrievalDate": "2026-10-05",
+            "licenseEvidenceUri": null,
+            "runId": "run:ccd26111-d26d-4783-bc0f-e7106e4e617d",
+            "uncertaintyNotes": []
+          }
+        },
+        {
+          "source": "DBLP",
+          "sourceRecordId": "series/sapere/NasutoB13",
+          "title": "Of (Zombie) Mice and Animats.",
+          "doi": "10.1007/978-3-642-31674-6_7",
+          "observedIdentifiers": null,
+          "sourceLinks": [
+            {
+              "name": "ee",
+              "value": "https://doi.org/10.1007/978-3-642-31674-6_7"
+            },
+            {
+              "name": "url",
+              "value": "db/series/sapere/sapere5.html#NasutoB13"
+            }
+          ],
+          "provenance": {
+            "schemaVersion": "scholarchain.domain.v1",
+            "source": "DBLP",
+            "sourceRecordId": "series/sapere/NasutoB13",
+            "sourceUri": "https://dblp.org/rec/series/sapere/NasutoB13",
+            "datasetSnapshot": "dblp-2026-10-03",
+            "retrievalDate": "2026-10-05",
+            "licenseEvidenceUri": null,
+            "runId": "run:ccd26111-d26d-4783-bc0f-e7106e4e617d",
+            "uncertaintyNotes": []
+          }
+        },
+        {
+          "source": "DBLP",
+          "sourceRecordId": "series/sapere/BerkeleyR13",
+          "title": "Machine Mentality?",
+          "doi": "10.1007/978-3-642-31674-6_1",
+          "observedIdentifiers": null,
+          "sourceLinks": [
+            {
+              "name": "ee",
+              "value": "https://doi.org/10.1007/978-3-642-31674-6_1"
+            },
+            {
+              "name": "url",
+              "value": "db/series/sapere/sapere5.html#BerkeleyR13"
+            }
+          ],
+          "provenance": {
+            "schemaVersion": "scholarchain.domain.v1",
+            "source": "DBLP",
+            "sourceRecordId": "series/sapere/BerkeleyR13",
+            "sourceUri": "https://dblp.org/rec/series/sapere/BerkeleyR13",
+            "datasetSnapshot": "dblp-2026-10-03",
+            "retrievalDate": "2026-10-05",
+            "licenseEvidenceUri": null,
+            "runId": "run:ccd26111-d26d-4783-bc0f-e7106e4e617d",
+            "uncertaintyNotes": []
+          }
+        },
+        {
+          "source": "DBLP",
+          "sourceRecordId": "series/sapere/SchiaffonatiV13",
+          "title": "The Influence of Engineering Theory and Practice on Philosophy of AI.",
+          "doi": "10.1007/978-3-642-31674-6_28",
+          "observedIdentifiers": null,
+          "sourceLinks": [
+            {
+              "name": "ee",
+              "value": "https://doi.org/10.1007/978-3-642-31674-6_28"
+            },
+            {
+              "name": "url",
+              "value": "db/series/sapere/sapere5.html#SchiaffonatiV13"
+            }
+          ],
+          "provenance": {
+            "schemaVersion": "scholarchain.domain.v1",
+            "source": "DBLP",
+            "sourceRecordId": "series/sapere/SchiaffonatiV13",
+            "sourceUri": "https://dblp.org/rec/series/sapere/SchiaffonatiV13",
+            "datasetSnapshot": "dblp-2026-10-03",
+            "retrievalDate": "2026-10-05",
+            "licenseEvidenceUri": null,
+            "runId": "run:ccd26111-d26d-4783-bc0f-e7106e4e617d",
+            "uncertaintyNotes": []
+          }
+        },
+        {
+          "source": "OPENALEX",
+          "sourceRecordId": "W4254447616",
+          "title": "Machine Mentality?",
+          "doi": "10.1007/978-3-642-31674-6_1",
+          "observedIdentifiers": [
+            {
+              "namespace": "openalex.doi",
+              "value": "https://doi.org/10.1007/978-3-642-31674-6_1",
+              "interpretation": "SOURCE_OBSERVATION"
+            },
+            {
+              "namespace": "openalex.ids.doi",
+              "value": "https://doi.org/10.1007/978-3-642-31674-6_1",
+              "interpretation": "SOURCE_OBSERVATION"
+            }
+          ],
+          "sourceLinks": null,
+          "provenance": {
+            "schemaVersion": "scholarchain.domain.v1",
+            "source": "OPENALEX",
+            "sourceRecordId": "W4254447616",
+            "sourceUri": "https://openalex.org/W4254447616",
+            "datasetSnapshot": "openalex-rest-2026-10-05",
+            "retrievalDate": "2026-10-05",
+            "licenseEvidenceUri": null,
+            "runId": "run:ccd26111-d26d-4783-bc0f-e7106e4e617d",
+            "uncertaintyNotes": []
+          }
+        }
+      ]
+    }
+  ],
+  "logicalRecordsEqual": true,
+  "packaging": {
+    "submit": "modules/hadoop/target/scala-3.3.4/hadoop-submit_3-0.1.0-SNAPSHOT.jar",
+    "submitSha256": "d50140e057231375602557424c9b3989a0021554e1e33d93c0b8e9b8216e4159",
+    "bundle": "modules/hadoop/target/scala-3.3.4/hadoop-dependency-bundle_3-0.1.0-SNAPSHOT.jar",
+    "bundleSha256": "950898ffeb4221729c663513b8fbffd1cc9e1daec1dd7b9640d5444b46b12387",
+    "embeddedBundle": "lib/hadoop-dependency-bundle_3-0.1.0-SNAPSHOT.jar",
+    "embeddedBundleSha256": "950898ffeb4221729c663513b8fbffd1cc9e1daec1dd7b9640d5444b46b12387",
+    "namespaceEntryCounts": {
+      "edu/uic/cs441/scholarchain/core/": 474,
+      "edu/uic/cs441/scholarchain/hadoop/": 0,
+      "org/apache/hadoop/": 0,
+      "scala/": 3549,
+      "upickle/": 346,
+      "ujson/": 107
+    },
+    "currentCoreVerification": {
+      "currentCoreEntries": 478,
+      "mismatches": [],
+      "extraCoreEntries": [],
+      "inventoryMatches": true,
+      "workRecordClassSha256": "2d4499e38b59488b4bb47aa6b12a682376d0fdad6887624e0e15c0ede4c1125e",
+      "workRecordClassBytes": 14386
+    }
+  },
+  "syntheticFeatureArtifacts": {
+    "independent-retained-source-evidence": {
+      "fixtureDirectory": "target/phase4-runs/independent-retained-source-evidence-28933a53-21e5-4ba3-8276-31f286e7818b",
+      "completedRuns": [
+        {
+          "directory": "target/phase4-runs/independent-retained-source-evidence-28933a53-21e5-4ba3-8276-31f286e7818b/output/f883f35f-9c2a-4c26-946a-35b69d63e1b2",
+          "synthetic": true,
+          "manifest": {
+            "runId": "run:f883f35f-9c2a-4c26-946a-35b69d63e1b2",
+            "schemaVersion": "scholarchain.domain.v1",
+            "pipelineName": "hadoop-prep",
+            "datasetSnapshots": [
+              {
+                "source": "CROSSREF",
+                "snapshot": "crossref-independent",
+                "retrievalDate": "2026-10-05"
+              },
+              {
+                "source": "DBLP",
+                "snapshot": "dblp-independent",
+                "retrievalDate": "2026-10-05"
+              },
+              {
+                "source": "OPENALEX",
+                "snapshot": "openalex-independent",
+                "retrievalDate": "2026-10-05"
+              },
+              {
+                "source": "ORCID",
+                "snapshot": "orcid-independent",
+                "retrievalDate": "2026-10-05"
+              }
+            ],
+            "configSchemaVersion": "scholarchain.hadoop-prep.v1",
+            "configFingerprint": "60c775c9467b38a09a7b8b73df7608fbc74eeb38d5e1055658b09d61a7efbf44",
+            "provenance": {
+              "schemaVersion": "scholarchain.domain.v1",
+              "source": "SCHOLARCHAIN",
+              "sourceRecordId": "run:f883f35f-9c2a-4c26-946a-35b69d63e1b2",
+              "sourceUri": null,
+              "datasetSnapshot": "hadoop-prep",
+              "retrievalDate": null,
+              "licenseEvidenceUri": null,
+              "runId": "run:f883f35f-9c2a-4c26-946a-35b69d63e1b2",
+              "uncertaintyNotes": [
+                "hadoopPrepSchema=scholarchain.hadoop-prep.v1",
+                "hadoopPrepFingerprint=60c775c9467b38a09a7b8b73df7608fbc74eeb38d5e1055658b09d61a7efbf44",
+                "transformationVersion=hadoop-prep-j01-j09-v3-stable-overflow-lineage",
+                "domainSchema=scholarchain.domain.v1",
+                "inputChecksum:CROSSREF=e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                "inputChecksum:DBLP=bc124f01274add70744b7ec8f4b4692ea4491bb6963b28ade3b02c44696a15b6",
+                "inputChecksum:OPENALEX=471e5f96c3bb61cc57e179a1f2430169277d29a35a16d30736da8731f1d10d1f",
+                "inputChecksum:ORCID=e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+              ]
+            }
+          },
+          "counters": {
+            "OVERSIZE_TEAM": 0,
+            "DUPLICATE": 0,
+            "REJECTED": 4,
+            "CONFLICT": 2,
+            "OVERSIZE_BLOCK": 0,
+            "ACCEPTED": 29,
+            "INPUT": 36,
+            "MISSING_KEY": 0,
+            "EMITTED_PAIR": 0,
+            "SCHEMA_FAILURE": 1
+          },
+          "complete": {
+            "complete": true,
+            "runId": "run:f883f35f-9c2a-4c26-946a-35b69d63e1b2",
+            "configFingerprint": "60c775c9467b38a09a7b8b73df7608fbc74eeb38d5e1055658b09d61a7efbf44",
+            "inputChecksums": {
+              "CROSSREF": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "DBLP": "bc124f01274add70744b7ec8f4b4692ea4491bb6963b28ade3b02c44696a15b6",
+              "OPENALEX": "471e5f96c3bb61cc57e179a1f2430169277d29a35a16d30736da8731f1d10d1f",
+              "ORCID": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            },
+            "snapshots": {
+              "CROSSREF": "crossref-independent",
+              "DBLP": "dblp-independent",
+              "OPENALEX": "openalex-independent",
+              "ORCID": "orcid-independent"
+            },
+            "retrievalDates": {
+              "CROSSREF": "2026-10-05",
+              "DBLP": "2026-10-05",
+              "OPENALEX": "2026-10-05",
+              "ORCID": "2026-10-05"
+            },
+            "partitions": [
+              "snapshot=dblp-independent/run=f883f35f-9c2a-4c26-946a-35b69d63e1b2/author-mention",
+              "snapshot=dblp-independent/run=f883f35f-9c2a-4c26-946a-35b69d63e1b2/authorship",
+              "snapshot=dblp-independent/run=f883f35f-9c2a-4c26-946a-35b69d63e1b2/graph-edge",
+              "snapshot=dblp-independent/run=f883f35f-9c2a-4c26-946a-35b69d63e1b2/index",
+              "snapshot=dblp-independent/run=f883f35f-9c2a-4c26-946a-35b69d63e1b2/team",
+              "snapshot=dblp-independent/run=f883f35f-9c2a-4c26-946a-35b69d63e1b2/work",
+              "snapshot=openalex-independent/run=f883f35f-9c2a-4c26-946a-35b69d63e1b2/index",
+              "snapshot=openalex-independent/run=f883f35f-9c2a-4c26-946a-35b69d63e1b2/reject",
+              "snapshot=openalex-independent/run=f883f35f-9c2a-4c26-946a-35b69d63e1b2/work"
+            ],
+            "exportParts": [
+              {
+                "path": "part-r-00000",
+                "bytes": 0,
+                "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+              },
+              {
+                "path": "snapshot=dblp-independent/run=f883f35f-9c2a-4c26-946a-35b69d63e1b2/author-mention/part-r-00000",
+                "bytes": 740,
+                "sha256": "80c8f8050ba3b988294fe3c44a50b1fd3860bc83d48591f52ae40d8e0eedcaca"
+              },
+              {
+                "path": "snapshot=dblp-independent/run=f883f35f-9c2a-4c26-946a-35b69d63e1b2/authorship/part-r-00000",
+                "bytes": 614,
+                "sha256": "c4f47f41d9761437b9d4ce78f14ffc7e6a05a60b6f855d16c88cdb6c8206be4e"
+              },
+              {
+                "path": "snapshot=dblp-independent/run=f883f35f-9c2a-4c26-946a-35b69d63e1b2/graph-edge/part-r-00000",
+                "bytes": 734,
+                "sha256": "baec064dac14a0fb72073039e68985fa43f68c202a3c246c77b4bfc9ee95bf54"
+              },
+              {
+                "path": "snapshot=dblp-independent/run=f883f35f-9c2a-4c26-946a-35b69d63e1b2/index/part-r-00000",
+                "bytes": 1930,
+                "sha256": "72df023691bedd064b4421572968a7da5b2340907f598a040b57af8f37dc9dab"
+              },
+              {
+                "path": "snapshot=dblp-independent/run=f883f35f-9c2a-4c26-946a-35b69d63e1b2/team/part-r-00000",
+                "bytes": 573,
+                "sha256": "32386212aab08745dc63b7d4248d85a93f62c3520fa37090e165d71bb44b212f"
+              },
+              {
+                "path": "snapshot=dblp-independent/run=f883f35f-9c2a-4c26-946a-35b69d63e1b2/work/part-r-00000",
+                "bytes": 1858,
+                "sha256": "5cd388208fcaf8be4b4b6dbf7149c283bc68eb4e6ef729ed7f209370d7d06943"
+              },
+              {
+                "path": "snapshot=openalex-independent/run=f883f35f-9c2a-4c26-946a-35b69d63e1b2/index/part-r-00000",
+                "bytes": 1245,
+                "sha256": "9c91aed56ac8a02cb9dc28bdc35e08506039ebfa701c2e21a950c66823171aa2"
+              },
+              {
+                "path": "snapshot=openalex-independent/run=f883f35f-9c2a-4c26-946a-35b69d63e1b2/reject/part-r-00000",
+                "bytes": 1523,
+                "sha256": "1d69a5cf2c1302f49c1e04ce6d8ddd2d43f2aab48b1303b7e0cc1a9f8e41c961"
+              },
+              {
+                "path": "snapshot=openalex-independent/run=f883f35f-9c2a-4c26-946a-35b69d63e1b2/work/part-r-00000",
+                "bytes": 964,
+                "sha256": "a75062fce71cea09698fb0db9bc29ab2490d70121500786b0e6fce43552f8e91"
+              }
+            ],
+            "schemaVersion": "scholarchain.domain.v1",
+            "hadoopPrepSchema": "scholarchain.hadoop-prep.v1",
+            "transformationVersion": "hadoop-prep-j01-j09-v3-stable-overflow-lineage"
+          },
+          "successfulJobOutputs": [
+            "export/_SUCCESS",
+            "intermediate/j01/_SUCCESS",
+            "intermediate/j02/_SUCCESS",
+            "intermediate/j03/_SUCCESS",
+            "intermediate/j04/_SUCCESS",
+            "intermediate/j05/_SUCCESS",
+            "intermediate/j06/_SUCCESS",
+            "intermediate/j07/_SUCCESS",
+            "intermediate/j08/_SUCCESS"
+          ],
+          "exportCounts": {
+            "author-mention": 1,
+            "authorship": 1,
+            "graph-edge": 1,
+            "index": 5,
+            "reject": 4,
+            "team": 1,
+            "work": 2
+          },
+          "exports": [
+            {
+              "file": "export/part-r-00000",
+              "bytes": 0,
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "records": 0
+            },
+            {
+              "file": "export/snapshot=dblp-independent/run=f883f35f-9c2a-4c26-946a-35b69d63e1b2/author-mention/part-r-00000",
+              "bytes": 740,
+              "sha256": "80c8f8050ba3b988294fe3c44a50b1fd3860bc83d48591f52ae40d8e0eedcaca",
+              "records": 1
+            },
+            {
+              "file": "export/snapshot=dblp-independent/run=f883f35f-9c2a-4c26-946a-35b69d63e1b2/authorship/part-r-00000",
+              "bytes": 614,
+              "sha256": "c4f47f41d9761437b9d4ce78f14ffc7e6a05a60b6f855d16c88cdb6c8206be4e",
+              "records": 1
+            },
+            {
+              "file": "export/snapshot=dblp-independent/run=f883f35f-9c2a-4c26-946a-35b69d63e1b2/graph-edge/part-r-00000",
+              "bytes": 734,
+              "sha256": "baec064dac14a0fb72073039e68985fa43f68c202a3c246c77b4bfc9ee95bf54",
+              "records": 1
+            },
+            {
+              "file": "export/snapshot=dblp-independent/run=f883f35f-9c2a-4c26-946a-35b69d63e1b2/index/part-r-00000",
+              "bytes": 1930,
+              "sha256": "72df023691bedd064b4421572968a7da5b2340907f598a040b57af8f37dc9dab",
+              "records": 3
+            },
+            {
+              "file": "export/snapshot=dblp-independent/run=f883f35f-9c2a-4c26-946a-35b69d63e1b2/team/part-r-00000",
+              "bytes": 573,
+              "sha256": "32386212aab08745dc63b7d4248d85a93f62c3520fa37090e165d71bb44b212f",
+              "records": 1
+            },
+            {
+              "file": "export/snapshot=dblp-independent/run=f883f35f-9c2a-4c26-946a-35b69d63e1b2/work/part-r-00000",
+              "bytes": 1858,
+              "sha256": "5cd388208fcaf8be4b4b6dbf7149c283bc68eb4e6ef729ed7f209370d7d06943",
+              "records": 1
+            },
+            {
+              "file": "export/snapshot=openalex-independent/run=f883f35f-9c2a-4c26-946a-35b69d63e1b2/index/part-r-00000",
+              "bytes": 1245,
+              "sha256": "9c91aed56ac8a02cb9dc28bdc35e08506039ebfa701c2e21a950c66823171aa2",
+              "records": 2
+            },
+            {
+              "file": "export/snapshot=openalex-independent/run=f883f35f-9c2a-4c26-946a-35b69d63e1b2/reject/part-r-00000",
+              "bytes": 1523,
+              "sha256": "1d69a5cf2c1302f49c1e04ce6d8ddd2d43f2aab48b1303b7e0cc1a9f8e41c961",
+              "records": 4
+            },
+            {
+              "file": "export/snapshot=openalex-independent/run=f883f35f-9c2a-4c26-946a-35b69d63e1b2/work/part-r-00000",
+              "bytes": 964,
+              "sha256": "a75062fce71cea09698fb0db9bc29ab2490d70121500786b0e6fce43552f8e91",
+              "records": 1
+            }
+          ],
+          "representativeEvidence": [
+            {
+              "source": "DBLP",
+              "sourceRecordId": "conf/indep-evidence/Links",
+              "title": "Linked publication",
+              "doi": "10.1000/evidence.dblp",
+              "observedIdentifiers": null,
+              "sourceLinks": [
+                {
+                  "name": "ee",
+                  "value": "https://publisher.example/paper?x=1&y=2"
+                },
+                {
+                  "name": "ee",
+                  "value": "https://repository.example/paper"
+                },
+                {
+                  "name": "ee",
+                  "value": "https://doi.org/10.1000/evidence.dblp"
+                },
+                {
+                  "name": "ee",
+                  "value": "https://arxiv.org/abs/2101.00001"
+                },
+                {
+                  "name": "url",
+                  "value": "https://dblp.example/first"
+                },
+                {
+                  "name": "url",
+                  "value": "https://dblp.example/second"
+                }
+              ],
+              "provenance": {
+                "schemaVersion": "scholarchain.domain.v1",
+                "source": "DBLP",
+                "sourceRecordId": "conf/indep-evidence/Links",
+                "sourceUri": "https://dblp.org/rec/conf/indep-evidence/Links",
+                "datasetSnapshot": "dblp-independent",
+                "retrievalDate": "2026-10-05",
+                "licenseEvidenceUri": null,
+                "runId": "run:f883f35f-9c2a-4c26-946a-35b69d63e1b2",
+                "uncertaintyNotes": []
+              }
+            },
+            {
+              "schemaVersion": "scholarchain.domain.v1",
+              "source": "OPENALEX",
+              "sourceLocator": "OPENALEX@449",
+              "datasetSnapshot": "openalex-independent",
+              "runId": "run:f883f35f-9c2a-4c26-946a-35b69d63e1b2",
+              "stage": "NORMALIZE",
+              "reasonCode": "INVALID_IDENTIFIER",
+              "diagnosticExcerpt": "not-a-secondary-doi",
+              "diagnosticHash": "ab12b3ba12c35bee8b22d66d4e908aab39463cf41598a4c81bdd2c37de7c9bd1"
+            },
+            {
+              "schemaVersion": "scholarchain.domain.v1",
+              "source": "OPENALEX",
+              "sourceLocator": "W9100000802",
+              "datasetSnapshot": "openalex-independent",
+              "runId": "run:f883f35f-9c2a-4c26-946a-35b69d63e1b2",
+              "stage": "IDENTIFIER_INDEX",
+              "reasonCode": "CONFLICTING_OBSERVATION",
+              "diagnosticExcerpt": "conflicting payload",
+              "diagnosticHash": "a4c7003925a2a1f5ea9d964008821e92a2dfbdf2e5bbc60eecf68b02f840c597"
+            },
+            {
+              "schemaVersion": "scholarchain.domain.v1",
+              "source": "OPENALEX",
+              "sourceLocator": "W9100000802",
+              "datasetSnapshot": "openalex-independent",
+              "runId": "run:f883f35f-9c2a-4c26-946a-35b69d63e1b2",
+              "stage": "IDENTIFIER_INDEX",
+              "reasonCode": "CONFLICTING_OBSERVATION",
+              "diagnosticExcerpt": "conflicting payload",
+              "diagnosticHash": "a4c7003925a2a1f5ea9d964008821e92a2dfbdf2e5bbc60eecf68b02f840c597"
+            },
+            {
+              "schemaVersion": "scholarchain.domain.v1",
+              "source": "OPENALEX",
+              "sourceLocator": "W9100000801",
+              "datasetSnapshot": "openalex-independent",
+              "runId": "run:f883f35f-9c2a-4c26-946a-35b69d63e1b2",
+              "stage": "PUBLICATION_TEAM",
+              "reasonCode": "SCHEMA_FAILURE",
+              "diagnosticExcerpt": "publication team mentions must belong to the same work",
+              "diagnosticHash": "7e54ff75a4cf47000fe107d901006e495968b5b50bdab5d6e0e616d25e943418"
+            },
+            {
+              "source": "OPENALEX",
+              "sourceRecordId": "W9100000801",
+              "title": "Observed DOI evidence",
+              "doi": "10.1000/evidence.preferred",
+              "observedIdentifiers": [
+                {
+                  "namespace": "openalex.doi",
+                  "value": "https://doi.org/10.1000/evidence.preferred",
+                  "interpretation": "SOURCE_OBSERVATION"
+                },
+                {
+                  "namespace": "openalex.ids.doi",
+                  "value": "10.1000/evidence.secondary",
+                  "interpretation": "SOURCE_OBSERVATION"
+                }
+              ],
+              "sourceLinks": null,
+              "provenance": {
+                "schemaVersion": "scholarchain.domain.v1",
+                "source": "OPENALEX",
+                "sourceRecordId": "W9100000801",
+                "sourceUri": "https://openalex.org/W9100000801",
+                "datasetSnapshot": "openalex-independent",
+                "retrievalDate": "2026-10-05",
+                "licenseEvidenceUri": null,
+                "runId": "run:f883f35f-9c2a-4c26-946a-35b69d63e1b2",
+                "uncertaintyNotes": []
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "independent-overflow-lineage": {
+      "fixtureDirectory": "target/phase4-runs/independent-overflow-lineage-ae4fdeaa-f67c-4c05-b396-09ac5b9e091b",
+      "completedRuns": [
+        {
+          "directory": "target/phase4-runs/independent-overflow-lineage-ae4fdeaa-f67c-4c05-b396-09ac5b9e091b/output/4e51311b-54d2-4e7a-bb69-19493a9ec8ac",
+          "synthetic": true,
+          "manifest": {
+            "runId": "run:4e51311b-54d2-4e7a-bb69-19493a9ec8ac",
+            "schemaVersion": "scholarchain.domain.v1",
+            "pipelineName": "hadoop-prep",
+            "datasetSnapshots": [
+              {
+                "source": "CROSSREF",
+                "snapshot": "crossref-independent",
+                "retrievalDate": "2026-10-05"
+              },
+              {
+                "source": "DBLP",
+                "snapshot": "dblp-independent",
+                "retrievalDate": "2026-10-05"
+              },
+              {
+                "source": "OPENALEX",
+                "snapshot": "openalex-independent",
+                "retrievalDate": "2026-10-05"
+              },
+              {
+                "source": "ORCID",
+                "snapshot": "orcid-independent",
+                "retrievalDate": "2026-10-05"
+              }
+            ],
+            "configSchemaVersion": "scholarchain.hadoop-prep.v1",
+            "configFingerprint": "42d94c134b429f874db7dc3f1c718a054b4a7c77f22fe0ae11020a2766ba0a07",
+            "provenance": {
+              "schemaVersion": "scholarchain.domain.v1",
+              "source": "SCHOLARCHAIN",
+              "sourceRecordId": "run:4e51311b-54d2-4e7a-bb69-19493a9ec8ac",
+              "sourceUri": null,
+              "datasetSnapshot": "hadoop-prep",
+              "retrievalDate": null,
+              "licenseEvidenceUri": null,
+              "runId": "run:4e51311b-54d2-4e7a-bb69-19493a9ec8ac",
+              "uncertaintyNotes": [
+                "hadoopPrepSchema=scholarchain.hadoop-prep.v1",
+                "hadoopPrepFingerprint=42d94c134b429f874db7dc3f1c718a054b4a7c77f22fe0ae11020a2766ba0a07",
+                "transformationVersion=hadoop-prep-j01-j09-v3-stable-overflow-lineage",
+                "domainSchema=scholarchain.domain.v1",
+                "inputChecksum:CROSSREF=e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                "inputChecksum:DBLP=9db1f81b517c9f4160dd07a4edbf12a8aa1fd56849b418d03ec646b925aac477",
+                "inputChecksum:OPENALEX=e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                "inputChecksum:ORCID=e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+              ]
+            }
+          },
+          "counters": {
+            "OVERSIZE_TEAM": 0,
+            "DUPLICATE": 0,
+            "REJECTED": 8,
+            "CONFLICT": 0,
+            "OVERSIZE_BLOCK": 0,
+            "ACCEPTED": 4,
+            "INPUT": 8,
+            "MISSING_KEY": 0,
+            "EMITTED_PAIR": 0,
+            "SCHEMA_FAILURE": 0
+          },
+          "complete": {
+            "complete": true,
+            "runId": "run:4e51311b-54d2-4e7a-bb69-19493a9ec8ac",
+            "configFingerprint": "42d94c134b429f874db7dc3f1c718a054b4a7c77f22fe0ae11020a2766ba0a07",
+            "inputChecksums": {
+              "CROSSREF": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "DBLP": "9db1f81b517c9f4160dd07a4edbf12a8aa1fd56849b418d03ec646b925aac477",
+              "OPENALEX": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "ORCID": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            },
+            "snapshots": {
+              "CROSSREF": "crossref-independent",
+              "DBLP": "dblp-independent",
+              "OPENALEX": "openalex-independent",
+              "ORCID": "orcid-independent"
+            },
+            "retrievalDates": {
+              "CROSSREF": "2026-10-05",
+              "DBLP": "2026-10-05",
+              "OPENALEX": "2026-10-05",
+              "ORCID": "2026-10-05"
+            },
+            "partitions": [
+              "snapshot=dblp-independent/run=4e51311b-54d2-4e7a-bb69-19493a9ec8ac/reject"
+            ],
+            "exportParts": [
+              {
+                "path": "part-r-00000",
+                "bytes": 0,
+                "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+              },
+              {
+                "path": "part-r-00001",
+                "bytes": 0,
+                "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+              },
+              {
+                "path": "part-r-00002",
+                "bytes": 0,
+                "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+              },
+              {
+                "path": "part-r-00003",
+                "bytes": 0,
+                "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+              },
+              {
+                "path": "snapshot=dblp-independent/run=4e51311b-54d2-4e7a-bb69-19493a9ec8ac/reject/part-r-00003",
+                "bytes": 7692,
+                "sha256": "8b69fef835939780cbf837d02ec0116ecadc7f9fe63d5b671971d79490df6969"
+              }
+            ],
+            "schemaVersion": "scholarchain.domain.v1",
+            "hadoopPrepSchema": "scholarchain.hadoop-prep.v1",
+            "transformationVersion": "hadoop-prep-j01-j09-v3-stable-overflow-lineage"
+          },
+          "successfulJobOutputs": [
+            "export/_SUCCESS",
+            "intermediate/j01/_SUCCESS",
+            "intermediate/j02/_SUCCESS",
+            "intermediate/j03/_SUCCESS",
+            "intermediate/j04/_SUCCESS",
+            "intermediate/j05/_SUCCESS",
+            "intermediate/j06/_SUCCESS",
+            "intermediate/j07/_SUCCESS",
+            "intermediate/j08/_SUCCESS"
+          ],
+          "exportCounts": {
+            "reject": 8
+          },
+          "exports": [
+            {
+              "file": "export/part-r-00000",
+              "bytes": 0,
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "records": 0
+            },
+            {
+              "file": "export/part-r-00001",
+              "bytes": 0,
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "records": 0
+            },
+            {
+              "file": "export/part-r-00002",
+              "bytes": 0,
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "records": 0
+            },
+            {
+              "file": "export/part-r-00003",
+              "bytes": 0,
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "records": 0
+            },
+            {
+              "file": "export/snapshot=dblp-independent/run=4e51311b-54d2-4e7a-bb69-19493a9ec8ac/reject/part-r-00003",
+              "bytes": 7692,
+              "sha256": "8b69fef835939780cbf837d02ec0116ecadc7f9fe63d5b671971d79490df6969",
+              "records": 8
+            }
+          ],
+          "representativeEvidence": [
+            {
+              "schemaVersion": "scholarchain.domain.v1",
+              "source": "DBLP",
+              "sourceLocator": "file:/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase4-runs/independent-overflow-lineage-ae4fdeaa-f67c-4c05-b396-09ac5b9e091b/output/4e51311b-54d2-4e7a-bb69-19493a9ec8ac/intermediate/j01/part-r-00000#processing-file-sha256=5e1a7c30b7e2b574d3324488e212694d7e6c05d166a47a039299c6ecc24c8fce#processing-file-stable-sha256=b2520ec5fa6ec15dd4385ca0dad94b335532b0a82285b55bc9277a2ef303af1a@2401648#record=conf/indep-evidence/Overflow2",
+              "datasetSnapshot": "dblp-independent",
+              "runId": "run:4e51311b-54d2-4e7a-bb69-19493a9ec8ac",
+              "stage": "IDENTIFIER_INDEX",
+              "reasonCode": "OVERSIZE_RECORD",
+              "diagnosticExcerpt": "work\u0001600136\u0002eyJzb3VyY2UiOiJEQkxQIiwic25hcHNob3QiOiJkYmxwLWluZGVwZW5kZW50IiwicmVjb3JkIjoiY29uZi9pbmRlcC1ldmlkZW5jZS9PdmVyZmxvdzIifQ\t{\"schemaVersion\":\"scholarchain.domain.v1\",\"workId",
+              "diagnosticHash": "eccd380223ab9349b72fed4cd264f4c4ea5b9809aa3c994336ea4544439e0f32"
+            },
+            {
+              "schemaVersion": "scholarchain.domain.v1",
+              "source": "DBLP",
+              "sourceLocator": "file:/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase4-runs/independent-overflow-lineage-ae4fdeaa-f67c-4c05-b396-09ac5b9e091b/output/4e51311b-54d2-4e7a-bb69-19493a9ec8ac/intermediate/j01/part-r-00000#processing-file-sha256=5e1a7c30b7e2b574d3324488e212694d7e6c05d166a47a039299c6ecc24c8fce#processing-file-stable-sha256=b2520ec5fa6ec15dd4385ca0dad94b335532b0a82285b55bc9277a2ef303af1a@1200824#record=conf/indep-evidence/Overflow4",
+              "datasetSnapshot": "dblp-independent",
+              "runId": "run:4e51311b-54d2-4e7a-bb69-19493a9ec8ac",
+              "stage": "IDENTIFIER_INDEX",
+              "reasonCode": "OVERSIZE_RECORD",
+              "diagnosticExcerpt": "work\u00011800278\u0002eyJzb3VyY2UiOiJEQkxQIiwic25hcHNob3QiOiJkYmxwLWluZGVwZW5kZW50IiwicmVjb3JkIjoiY29uZi9pbmRlcC1ldmlkZW5jZS9PdmVyZmxvdzQifQ\t{\"schemaVersion\":\"scholarchain.domain.v1\",\"workI",
+              "diagnosticHash": "40d584250300f6514485dce3536b46b6d35c194b9b895799ffe301362cf773e6"
+            },
+            {
+              "schemaVersion": "scholarchain.domain.v1",
+              "source": "DBLP",
+              "sourceLocator": "file:/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase4-runs/independent-overflow-lineage-ae4fdeaa-f67c-4c05-b396-09ac5b9e091b/output/4e51311b-54d2-4e7a-bb69-19493a9ec8ac/intermediate/j01/part-r-00000#processing-file-sha256=5e1a7c30b7e2b574d3324488e212694d7e6c05d166a47a039299c6ecc24c8fce#processing-file-stable-sha256=b2520ec5fa6ec15dd4385ca0dad94b335532b0a82285b55bc9277a2ef303af1a@0#record=conf/indep-evidence/Overflow3",
+              "datasetSnapshot": "dblp-independent",
+              "runId": "run:4e51311b-54d2-4e7a-bb69-19493a9ec8ac",
+              "stage": "IDENTIFIER_INDEX",
+              "reasonCode": "OVERSIZE_RECORD",
+              "diagnosticExcerpt": "work\u00011200207\u0002eyJzb3VyY2UiOiJEQkxQIiwic25hcHNob3QiOiJkYmxwLWluZGVwZW5kZW50IiwicmVjb3JkIjoiY29uZi9pbmRlcC1ldmlkZW5jZS9PdmVyZmxvdzMifQ\t{\"schemaVersion\":\"scholarchain.domain.v1\",\"workI",
+              "diagnosticHash": "ada6c2d0092812b700a8cfe78e37a9946a7fe2375f5a888ed8c7b6c7ab826469"
+            },
+            {
+              "schemaVersion": "scholarchain.domain.v1",
+              "source": "DBLP",
+              "sourceLocator": "file:/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase4-runs/independent-overflow-lineage-ae4fdeaa-f67c-4c05-b396-09ac5b9e091b/output/4e51311b-54d2-4e7a-bb69-19493a9ec8ac/intermediate/j01/part-r-00003#processing-file-sha256=09c99be2b3afbab727ccf9ec5bd0e018c6113c3120487172d6105fa91bd50bb7#processing-file-stable-sha256=a7eb0f4338148c1384330b91b245a2c1ac09524dbf824a099caf4c5f7694bdfa@0#record=conf/indep-evidence/Overflow1",
+              "datasetSnapshot": "dblp-independent",
+              "runId": "run:4e51311b-54d2-4e7a-bb69-19493a9ec8ac",
+              "stage": "IDENTIFIER_INDEX",
+              "reasonCode": "OVERSIZE_RECORD",
+              "diagnosticExcerpt": "work\u000165\u0002eyJzb3VyY2UiOiJEQkxQIiwic25hcHNob3QiOiJkYmxwLWluZGVwZW5kZW50IiwicmVjb3JkIjoiY29uZi9pbmRlcC1ldmlkZW5jZS9PdmVyZmxvdzEifQ\t{\"schemaVersion\":\"scholarchain.domain.v1\",\"workId\":\"w",
+              "diagnosticHash": "e024e8e653d1e69252188533d45bc2bac8df95a2f60188cf80e3d08e414a1bdb"
+            },
+            {
+              "schemaVersion": "scholarchain.domain.v1",
+              "source": "DBLP",
+              "sourceLocator": "file:/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase4-runs/independent-overflow-lineage-ae4fdeaa-f67c-4c05-b396-09ac5b9e091b/output/4e51311b-54d2-4e7a-bb69-19493a9ec8ac/intermediate/j01/part-r-00000#processing-file-sha256=5e1a7c30b7e2b574d3324488e212694d7e6c05d166a47a039299c6ecc24c8fce#processing-file-stable-sha256=b2520ec5fa6ec15dd4385ca0dad94b335532b0a82285b55bc9277a2ef303af1a@0#record=conf/indep-evidence/Overflow3",
+              "datasetSnapshot": "dblp-independent",
+              "runId": "run:4e51311b-54d2-4e7a-bb69-19493a9ec8ac",
+              "stage": "IDENTIFIER_INDEX",
+              "reasonCode": "OVERSIZE_RECORD",
+              "diagnosticExcerpt": "work\u00011200207\u0002eyJzb3VyY2UiOiJEQkxQIiwic25hcHNob3QiOiJkYmxwLWluZGVwZW5kZW50IiwicmVjb3JkIjoiY29uZi9pbmRlcC1ldmlkZW5jZS9PdmVyZmxvdzMifQ\t{\"schemaVersion\":\"scholarchain.domain.v1\",\"workI",
+              "diagnosticHash": "ada6c2d0092812b700a8cfe78e37a9946a7fe2375f5a888ed8c7b6c7ab826469"
+            },
+            {
+              "schemaVersion": "scholarchain.domain.v1",
+              "source": "DBLP",
+              "sourceLocator": "file:/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase4-runs/independent-overflow-lineage-ae4fdeaa-f67c-4c05-b396-09ac5b9e091b/output/4e51311b-54d2-4e7a-bb69-19493a9ec8ac/intermediate/j01/part-r-00000#processing-file-sha256=5e1a7c30b7e2b574d3324488e212694d7e6c05d166a47a039299c6ecc24c8fce#processing-file-stable-sha256=b2520ec5fa6ec15dd4385ca0dad94b335532b0a82285b55bc9277a2ef303af1a@1200824#record=conf/indep-evidence/Overflow4",
+              "datasetSnapshot": "dblp-independent",
+              "runId": "run:4e51311b-54d2-4e7a-bb69-19493a9ec8ac",
+              "stage": "IDENTIFIER_INDEX",
+              "reasonCode": "OVERSIZE_RECORD",
+              "diagnosticExcerpt": "work\u00011800278\u0002eyJzb3VyY2UiOiJEQkxQIiwic25hcHNob3QiOiJkYmxwLWluZGVwZW5kZW50IiwicmVjb3JkIjoiY29uZi9pbmRlcC1ldmlkZW5jZS9PdmVyZmxvdzQifQ\t{\"schemaVersion\":\"scholarchain.domain.v1\",\"workI",
+              "diagnosticHash": "40d584250300f6514485dce3536b46b6d35c194b9b895799ffe301362cf773e6"
+            },
+            {
+              "schemaVersion": "scholarchain.domain.v1",
+              "source": "DBLP",
+              "sourceLocator": "file:/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase4-runs/independent-overflow-lineage-ae4fdeaa-f67c-4c05-b396-09ac5b9e091b/output/4e51311b-54d2-4e7a-bb69-19493a9ec8ac/intermediate/j01/part-r-00000#processing-file-sha256=5e1a7c30b7e2b574d3324488e212694d7e6c05d166a47a039299c6ecc24c8fce#processing-file-stable-sha256=b2520ec5fa6ec15dd4385ca0dad94b335532b0a82285b55bc9277a2ef303af1a@2401648#record=conf/indep-evidence/Overflow2",
+              "datasetSnapshot": "dblp-independent",
+              "runId": "run:4e51311b-54d2-4e7a-bb69-19493a9ec8ac",
+              "stage": "IDENTIFIER_INDEX",
+              "reasonCode": "OVERSIZE_RECORD",
+              "diagnosticExcerpt": "work\u0001600136\u0002eyJzb3VyY2UiOiJEQkxQIiwic25hcHNob3QiOiJkYmxwLWluZGVwZW5kZW50IiwicmVjb3JkIjoiY29uZi9pbmRlcC1ldmlkZW5jZS9PdmVyZmxvdzIifQ\t{\"schemaVersion\":\"scholarchain.domain.v1\",\"workId",
+              "diagnosticHash": "eccd380223ab9349b72fed4cd264f4c4ea5b9809aa3c994336ea4544439e0f32"
+            },
+            {
+              "schemaVersion": "scholarchain.domain.v1",
+              "source": "DBLP",
+              "sourceLocator": "file:/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase4-runs/independent-overflow-lineage-ae4fdeaa-f67c-4c05-b396-09ac5b9e091b/output/4e51311b-54d2-4e7a-bb69-19493a9ec8ac/intermediate/j01/part-r-00003#processing-file-sha256=09c99be2b3afbab727ccf9ec5bd0e018c6113c3120487172d6105fa91bd50bb7#processing-file-stable-sha256=a7eb0f4338148c1384330b91b245a2c1ac09524dbf824a099caf4c5f7694bdfa@0#record=conf/indep-evidence/Overflow1",
+              "datasetSnapshot": "dblp-independent",
+              "runId": "run:4e51311b-54d2-4e7a-bb69-19493a9ec8ac",
+              "stage": "IDENTIFIER_INDEX",
+              "reasonCode": "OVERSIZE_RECORD",
+              "diagnosticExcerpt": "work\u000165\u0002eyJzb3VyY2UiOiJEQkxQIiwic25hcHNob3QiOiJkYmxwLWluZGVwZW5kZW50IiwicmVjb3JkIjoiY29uZi9pbmRlcC1ldmlkZW5jZS9PdmVyZmxvdzEifQ\t{\"schemaVersion\":\"scholarchain.domain.v1\",\"workId\":\"w",
+              "diagnosticHash": "e024e8e653d1e69252188533d45bc2bac8df95a2f60188cf80e3d08e414a1bdb"
+            }
+          ]
+        },
+        {
+          "directory": "target/phase4-runs/independent-overflow-lineage-ae4fdeaa-f67c-4c05-b396-09ac5b9e091b/output/67887343-7b08-4619-b678-655011f2d436",
+          "synthetic": true,
+          "manifest": {
+            "runId": "run:67887343-7b08-4619-b678-655011f2d436",
+            "schemaVersion": "scholarchain.domain.v1",
+            "pipelineName": "hadoop-prep",
+            "datasetSnapshots": [
+              {
+                "source": "CROSSREF",
+                "snapshot": "crossref-independent",
+                "retrievalDate": "2026-10-05"
+              },
+              {
+                "source": "DBLP",
+                "snapshot": "dblp-independent",
+                "retrievalDate": "2026-10-05"
+              },
+              {
+                "source": "OPENALEX",
+                "snapshot": "openalex-independent",
+                "retrievalDate": "2026-10-05"
+              },
+              {
+                "source": "ORCID",
+                "snapshot": "orcid-independent",
+                "retrievalDate": "2026-10-05"
+              }
+            ],
+            "configSchemaVersion": "scholarchain.hadoop-prep.v1",
+            "configFingerprint": "42d94c134b429f874db7dc3f1c718a054b4a7c77f22fe0ae11020a2766ba0a07",
+            "provenance": {
+              "schemaVersion": "scholarchain.domain.v1",
+              "source": "SCHOLARCHAIN",
+              "sourceRecordId": "run:67887343-7b08-4619-b678-655011f2d436",
+              "sourceUri": null,
+              "datasetSnapshot": "hadoop-prep",
+              "retrievalDate": null,
+              "licenseEvidenceUri": null,
+              "runId": "run:67887343-7b08-4619-b678-655011f2d436",
+              "uncertaintyNotes": [
+                "hadoopPrepSchema=scholarchain.hadoop-prep.v1",
+                "hadoopPrepFingerprint=42d94c134b429f874db7dc3f1c718a054b4a7c77f22fe0ae11020a2766ba0a07",
+                "transformationVersion=hadoop-prep-j01-j09-v3-stable-overflow-lineage",
+                "domainSchema=scholarchain.domain.v1",
+                "inputChecksum:CROSSREF=e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                "inputChecksum:DBLP=9db1f81b517c9f4160dd07a4edbf12a8aa1fd56849b418d03ec646b925aac477",
+                "inputChecksum:OPENALEX=e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                "inputChecksum:ORCID=e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+              ]
+            }
+          },
+          "counters": {
+            "OVERSIZE_TEAM": 0,
+            "DUPLICATE": 0,
+            "REJECTED": 8,
+            "CONFLICT": 0,
+            "OVERSIZE_BLOCK": 0,
+            "ACCEPTED": 4,
+            "INPUT": 8,
+            "MISSING_KEY": 0,
+            "EMITTED_PAIR": 0,
+            "SCHEMA_FAILURE": 0
+          },
+          "complete": {
+            "complete": true,
+            "runId": "run:67887343-7b08-4619-b678-655011f2d436",
+            "configFingerprint": "42d94c134b429f874db7dc3f1c718a054b4a7c77f22fe0ae11020a2766ba0a07",
+            "inputChecksums": {
+              "CROSSREF": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "DBLP": "9db1f81b517c9f4160dd07a4edbf12a8aa1fd56849b418d03ec646b925aac477",
+              "OPENALEX": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "ORCID": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            },
+            "snapshots": {
+              "CROSSREF": "crossref-independent",
+              "DBLP": "dblp-independent",
+              "OPENALEX": "openalex-independent",
+              "ORCID": "orcid-independent"
+            },
+            "retrievalDates": {
+              "CROSSREF": "2026-10-05",
+              "DBLP": "2026-10-05",
+              "OPENALEX": "2026-10-05",
+              "ORCID": "2026-10-05"
+            },
+            "partitions": [
+              "snapshot=dblp-independent/run=67887343-7b08-4619-b678-655011f2d436/reject"
+            ],
+            "exportParts": [
+              {
+                "path": "part-r-00000",
+                "bytes": 0,
+                "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+              },
+              {
+                "path": "part-r-00001",
+                "bytes": 0,
+                "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+              },
+              {
+                "path": "part-r-00002",
+                "bytes": 0,
+                "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+              },
+              {
+                "path": "part-r-00003",
+                "bytes": 0,
+                "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+              },
+              {
+                "path": "snapshot=dblp-independent/run=67887343-7b08-4619-b678-655011f2d436/reject/part-r-00003",
+                "bytes": 7692,
+                "sha256": "b45929190cf5f8b3609ab5d79eb0068eac8301e18ac6522a80c0942134e50d24"
+              }
+            ],
+            "schemaVersion": "scholarchain.domain.v1",
+            "hadoopPrepSchema": "scholarchain.hadoop-prep.v1",
+            "transformationVersion": "hadoop-prep-j01-j09-v3-stable-overflow-lineage"
+          },
+          "successfulJobOutputs": [
+            "export/_SUCCESS",
+            "intermediate/j01/_SUCCESS",
+            "intermediate/j02/_SUCCESS",
+            "intermediate/j03/_SUCCESS",
+            "intermediate/j04/_SUCCESS",
+            "intermediate/j05/_SUCCESS",
+            "intermediate/j06/_SUCCESS",
+            "intermediate/j07/_SUCCESS",
+            "intermediate/j08/_SUCCESS"
+          ],
+          "exportCounts": {
+            "reject": 8
+          },
+          "exports": [
+            {
+              "file": "export/part-r-00000",
+              "bytes": 0,
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "records": 0
+            },
+            {
+              "file": "export/part-r-00001",
+              "bytes": 0,
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "records": 0
+            },
+            {
+              "file": "export/part-r-00002",
+              "bytes": 0,
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "records": 0
+            },
+            {
+              "file": "export/part-r-00003",
+              "bytes": 0,
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "records": 0
+            },
+            {
+              "file": "export/snapshot=dblp-independent/run=67887343-7b08-4619-b678-655011f2d436/reject/part-r-00003",
+              "bytes": 7692,
+              "sha256": "b45929190cf5f8b3609ab5d79eb0068eac8301e18ac6522a80c0942134e50d24",
+              "records": 8
+            }
+          ],
+          "representativeEvidence": [
+            {
+              "schemaVersion": "scholarchain.domain.v1",
+              "source": "DBLP",
+              "sourceLocator": "file:/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase4-runs/independent-overflow-lineage-ae4fdeaa-f67c-4c05-b396-09ac5b9e091b/output/67887343-7b08-4619-b678-655011f2d436/intermediate/j01/part-r-00003#processing-file-sha256=04152eceab5865ade237c0600c288a762db1605d0d0c6cedb6a0030882e3dfef#processing-file-stable-sha256=a7eb0f4338148c1384330b91b245a2c1ac09524dbf824a099caf4c5f7694bdfa@0#record=conf/indep-evidence/Overflow1",
+              "datasetSnapshot": "dblp-independent",
+              "runId": "run:67887343-7b08-4619-b678-655011f2d436",
+              "stage": "IDENTIFIER_INDEX",
+              "reasonCode": "OVERSIZE_RECORD",
+              "diagnosticExcerpt": "work\u000165\u0002eyJzb3VyY2UiOiJEQkxQIiwic25hcHNob3QiOiJkYmxwLWluZGVwZW5kZW50IiwicmVjb3JkIjoiY29uZi9pbmRlcC1ldmlkZW5jZS9PdmVyZmxvdzEifQ\t{\"schemaVersion\":\"scholarchain.domain.v1\",\"workId\":\"w",
+              "diagnosticHash": "e024e8e653d1e69252188533d45bc2bac8df95a2f60188cf80e3d08e414a1bdb"
+            },
+            {
+              "schemaVersion": "scholarchain.domain.v1",
+              "source": "DBLP",
+              "sourceLocator": "file:/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase4-runs/independent-overflow-lineage-ae4fdeaa-f67c-4c05-b396-09ac5b9e091b/output/67887343-7b08-4619-b678-655011f2d436/intermediate/j01/part-r-00000#processing-file-sha256=bdba1acaaf7026b6341a9319a41d29eab4b0f18c4abaa304b9d1fe67ff042d88#processing-file-stable-sha256=b2520ec5fa6ec15dd4385ca0dad94b335532b0a82285b55bc9277a2ef303af1a@1200824#record=conf/indep-evidence/Overflow4",
+              "datasetSnapshot": "dblp-independent",
+              "runId": "run:67887343-7b08-4619-b678-655011f2d436",
+              "stage": "IDENTIFIER_INDEX",
+              "reasonCode": "OVERSIZE_RECORD",
+              "diagnosticExcerpt": "work\u00011800278\u0002eyJzb3VyY2UiOiJEQkxQIiwic25hcHNob3QiOiJkYmxwLWluZGVwZW5kZW50IiwicmVjb3JkIjoiY29uZi9pbmRlcC1ldmlkZW5jZS9PdmVyZmxvdzQifQ\t{\"schemaVersion\":\"scholarchain.domain.v1\",\"workI",
+              "diagnosticHash": "40d584250300f6514485dce3536b46b6d35c194b9b895799ffe301362cf773e6"
+            },
+            {
+              "schemaVersion": "scholarchain.domain.v1",
+              "source": "DBLP",
+              "sourceLocator": "file:/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase4-runs/independent-overflow-lineage-ae4fdeaa-f67c-4c05-b396-09ac5b9e091b/output/67887343-7b08-4619-b678-655011f2d436/intermediate/j01/part-r-00000#processing-file-sha256=bdba1acaaf7026b6341a9319a41d29eab4b0f18c4abaa304b9d1fe67ff042d88#processing-file-stable-sha256=b2520ec5fa6ec15dd4385ca0dad94b335532b0a82285b55bc9277a2ef303af1a@0#record=conf/indep-evidence/Overflow3",
+              "datasetSnapshot": "dblp-independent",
+              "runId": "run:67887343-7b08-4619-b678-655011f2d436",
+              "stage": "IDENTIFIER_INDEX",
+              "reasonCode": "OVERSIZE_RECORD",
+              "diagnosticExcerpt": "work\u00011200207\u0002eyJzb3VyY2UiOiJEQkxQIiwic25hcHNob3QiOiJkYmxwLWluZGVwZW5kZW50IiwicmVjb3JkIjoiY29uZi9pbmRlcC1ldmlkZW5jZS9PdmVyZmxvdzMifQ\t{\"schemaVersion\":\"scholarchain.domain.v1\",\"workI",
+              "diagnosticHash": "ada6c2d0092812b700a8cfe78e37a9946a7fe2375f5a888ed8c7b6c7ab826469"
+            },
+            {
+              "schemaVersion": "scholarchain.domain.v1",
+              "source": "DBLP",
+              "sourceLocator": "file:/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase4-runs/independent-overflow-lineage-ae4fdeaa-f67c-4c05-b396-09ac5b9e091b/output/67887343-7b08-4619-b678-655011f2d436/intermediate/j01/part-r-00000#processing-file-sha256=bdba1acaaf7026b6341a9319a41d29eab4b0f18c4abaa304b9d1fe67ff042d88#processing-file-stable-sha256=b2520ec5fa6ec15dd4385ca0dad94b335532b0a82285b55bc9277a2ef303af1a@0#record=conf/indep-evidence/Overflow3",
+              "datasetSnapshot": "dblp-independent",
+              "runId": "run:67887343-7b08-4619-b678-655011f2d436",
+              "stage": "IDENTIFIER_INDEX",
+              "reasonCode": "OVERSIZE_RECORD",
+              "diagnosticExcerpt": "work\u00011200207\u0002eyJzb3VyY2UiOiJEQkxQIiwic25hcHNob3QiOiJkYmxwLWluZGVwZW5kZW50IiwicmVjb3JkIjoiY29uZi9pbmRlcC1ldmlkZW5jZS9PdmVyZmxvdzMifQ\t{\"schemaVersion\":\"scholarchain.domain.v1\",\"workI",
+              "diagnosticHash": "ada6c2d0092812b700a8cfe78e37a9946a7fe2375f5a888ed8c7b6c7ab826469"
+            },
+            {
+              "schemaVersion": "scholarchain.domain.v1",
+              "source": "DBLP",
+              "sourceLocator": "file:/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase4-runs/independent-overflow-lineage-ae4fdeaa-f67c-4c05-b396-09ac5b9e091b/output/67887343-7b08-4619-b678-655011f2d436/intermediate/j01/part-r-00000#processing-file-sha256=bdba1acaaf7026b6341a9319a41d29eab4b0f18c4abaa304b9d1fe67ff042d88#processing-file-stable-sha256=b2520ec5fa6ec15dd4385ca0dad94b335532b0a82285b55bc9277a2ef303af1a@1200824#record=conf/indep-evidence/Overflow4",
+              "datasetSnapshot": "dblp-independent",
+              "runId": "run:67887343-7b08-4619-b678-655011f2d436",
+              "stage": "IDENTIFIER_INDEX",
+              "reasonCode": "OVERSIZE_RECORD",
+              "diagnosticExcerpt": "work\u00011800278\u0002eyJzb3VyY2UiOiJEQkxQIiwic25hcHNob3QiOiJkYmxwLWluZGVwZW5kZW50IiwicmVjb3JkIjoiY29uZi9pbmRlcC1ldmlkZW5jZS9PdmVyZmxvdzQifQ\t{\"schemaVersion\":\"scholarchain.domain.v1\",\"workI",
+              "diagnosticHash": "40d584250300f6514485dce3536b46b6d35c194b9b895799ffe301362cf773e6"
+            },
+            {
+              "schemaVersion": "scholarchain.domain.v1",
+              "source": "DBLP",
+              "sourceLocator": "file:/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase4-runs/independent-overflow-lineage-ae4fdeaa-f67c-4c05-b396-09ac5b9e091b/output/67887343-7b08-4619-b678-655011f2d436/intermediate/j01/part-r-00000#processing-file-sha256=bdba1acaaf7026b6341a9319a41d29eab4b0f18c4abaa304b9d1fe67ff042d88#processing-file-stable-sha256=b2520ec5fa6ec15dd4385ca0dad94b335532b0a82285b55bc9277a2ef303af1a@2401648#record=conf/indep-evidence/Overflow2",
+              "datasetSnapshot": "dblp-independent",
+              "runId": "run:67887343-7b08-4619-b678-655011f2d436",
+              "stage": "IDENTIFIER_INDEX",
+              "reasonCode": "OVERSIZE_RECORD",
+              "diagnosticExcerpt": "work\u0001600136\u0002eyJzb3VyY2UiOiJEQkxQIiwic25hcHNob3QiOiJkYmxwLWluZGVwZW5kZW50IiwicmVjb3JkIjoiY29uZi9pbmRlcC1ldmlkZW5jZS9PdmVyZmxvdzIifQ\t{\"schemaVersion\":\"scholarchain.domain.v1\",\"workId",
+              "diagnosticHash": "eccd380223ab9349b72fed4cd264f4c4ea5b9809aa3c994336ea4544439e0f32"
+            },
+            {
+              "schemaVersion": "scholarchain.domain.v1",
+              "source": "DBLP",
+              "sourceLocator": "file:/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase4-runs/independent-overflow-lineage-ae4fdeaa-f67c-4c05-b396-09ac5b9e091b/output/67887343-7b08-4619-b678-655011f2d436/intermediate/j01/part-r-00003#processing-file-sha256=04152eceab5865ade237c0600c288a762db1605d0d0c6cedb6a0030882e3dfef#processing-file-stable-sha256=a7eb0f4338148c1384330b91b245a2c1ac09524dbf824a099caf4c5f7694bdfa@0#record=conf/indep-evidence/Overflow1",
+              "datasetSnapshot": "dblp-independent",
+              "runId": "run:67887343-7b08-4619-b678-655011f2d436",
+              "stage": "IDENTIFIER_INDEX",
+              "reasonCode": "OVERSIZE_RECORD",
+              "diagnosticExcerpt": "work\u000165\u0002eyJzb3VyY2UiOiJEQkxQIiwic25hcHNob3QiOiJkYmxwLWluZGVwZW5kZW50IiwicmVjb3JkIjoiY29uZi9pbmRlcC1ldmlkZW5jZS9PdmVyZmxvdzEifQ\t{\"schemaVersion\":\"scholarchain.domain.v1\",\"workId\":\"w",
+              "diagnosticHash": "e024e8e653d1e69252188533d45bc2bac8df95a2f60188cf80e3d08e414a1bdb"
+            },
+            {
+              "schemaVersion": "scholarchain.domain.v1",
+              "source": "DBLP",
+              "sourceLocator": "file:/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase4-runs/independent-overflow-lineage-ae4fdeaa-f67c-4c05-b396-09ac5b9e091b/output/67887343-7b08-4619-b678-655011f2d436/intermediate/j01/part-r-00000#processing-file-sha256=bdba1acaaf7026b6341a9319a41d29eab4b0f18c4abaa304b9d1fe67ff042d88#processing-file-stable-sha256=b2520ec5fa6ec15dd4385ca0dad94b335532b0a82285b55bc9277a2ef303af1a@2401648#record=conf/indep-evidence/Overflow2",
+              "datasetSnapshot": "dblp-independent",
+              "runId": "run:67887343-7b08-4619-b678-655011f2d436",
+              "stage": "IDENTIFIER_INDEX",
+              "reasonCode": "OVERSIZE_RECORD",
+              "diagnosticExcerpt": "work\u0001600136\u0002eyJzb3VyY2UiOiJEQkxQIiwic25hcHNob3QiOiJkYmxwLWluZGVwZW5kZW50IiwicmVjb3JkIjoiY29uZi9pbmRlcC1ldmlkZW5jZS9PdmVyZmxvdzIifQ\t{\"schemaVersion\":\"scholarchain.domain.v1\",\"workId",
+              "diagnosticHash": "eccd380223ab9349b72fed4cd264f4c4ea5b9809aa3c994336ea4544439e0f32"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

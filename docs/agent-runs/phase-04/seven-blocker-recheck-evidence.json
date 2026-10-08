@@ -1,0 +1,316 @@
+{
+  "origin": "Existing generated JUnit and stdout retained during fresh independent recheck; tests/sample runs were not rerun by coordinator",
+  "testLog": "/tmp/scholarchain-check10.log",
+  "sampleLog": "/tmp/scholarchain-sample10.log",
+  "testReports": {
+    "modules/core": {
+      "totals": {
+        "tests": 97,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "reports": [
+        {
+          "path": "modules/core/target/test-reports/TEST-edu.uic.cs441.scholarchain.core.ConfigLoaderSpec.xml",
+          "mtime": 1791414525.6552253,
+          "sha256": "2088e8fdbbc8a7c1fc6f58e528d679b2ca485e657ee1c6ea6618e8e6f940c08a"
+        },
+        {
+          "path": "modules/core/target/test-reports/TEST-edu.uic.cs441.scholarchain.core.ContractRepairSpec.xml",
+          "mtime": 1791414525.590238,
+          "sha256": "61f69a461c4b3571f314711fad9d20f39d03c0b61165067e4f292ec6a2741721"
+        },
+        {
+          "path": "modules/core/target/test-reports/TEST-edu.uic.cs441.scholarchain.core.Phase4ContractSpec.xml",
+          "mtime": 1791414525.643348,
+          "sha256": "06f59f9a88f46982832cc63f432305554c3e2d9f0a968b238ad4ab7e5bc391e5"
+        },
+        {
+          "path": "modules/core/target/test-reports/TEST-edu.uic.cs441.scholarchain.core.SerializationContractSpec.xml",
+          "mtime": 1791414525.5404499,
+          "sha256": "a37b1fff00ed65f307d413181de8b59a2b929d3a1877d3ced9c0c071c0491d89"
+        },
+        {
+          "path": "modules/core/target/test-reports/TEST-edu.uic.cs441.scholarchain.core.StableIdSpec.xml",
+          "mtime": 1791414525.6472473,
+          "sha256": "7b615f9f66ae1176b4794ec056e74a6283cfea57b9203a2216e85e13d2fa41f1"
+        },
+        {
+          "path": "modules/core/target/test-reports/TEST-edu.uic.cs441.scholarchain.core.ValidationSpec.xml",
+          "mtime": 1791414525.671254,
+          "sha256": "a0224fc5ddf1e2fff3f3a9fabdfb7bbc948bce90d274d446bba036ed2f5400d4"
+        }
+      ]
+    },
+    "modules/hadoop": {
+      "totals": {
+        "tests": 55,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "reports": [
+        {
+          "path": "modules/hadoop/target/test-reports/TEST-edu.uic.cs441.scholarchain.hadoop.DblpXmlRegressionSpec.xml",
+          "mtime": 1791414685.5450482,
+          "sha256": "113024af7dc85e02052700cae0783b9db5a20430715d5c25468bdf13ea8ed10a"
+        },
+        {
+          "path": "modules/hadoop/target/test-reports/TEST-edu.uic.cs441.scholarchain.hadoop.HadoopPrepReviewSpec.xml",
+          "mtime": 1791414685.4927342,
+          "sha256": "315c94862f918b6919a369c9c39d44d42d4a7709054e78e188191986f2a4246d"
+        },
+        {
+          "path": "modules/hadoop/target/test-reports/TEST-edu.uic.cs441.scholarchain.hadoop.HadoopPrepSpec.xml",
+          "mtime": 1791414631.1406922,
+          "sha256": "04fd28adb9a5f935258066286658b8b113b4df778898206dfa800fafc33279ad"
+        }
+      ]
+    },
+    "tests": {
+      "totals": {
+        "tests": 48,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "reports": [
+        {
+          "path": "tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentDblpJsonSpec.xml",
+          "mtime": 1791414685.6195042,
+          "sha256": "27ebe1ebbb5edc6658b7627fa7e366dc5430fa1012788df707c27511f86ec91c"
+        },
+        {
+          "path": "tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentDblpXmlAdversarialSpec.xml",
+          "mtime": 1791414687.0625648,
+          "sha256": "10d29021674c3f2c652337aa106123549cd6b49d51f6876221e59741ae2e8416"
+        },
+        {
+          "path": "tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentDblpXmlRepairSpec.xml",
+          "mtime": 1791414687.041478,
+          "sha256": "992f1afea0ad1a26ede8e3d615f97bca3bc7e2d6cc377c6aae00bb2a79573944"
+        },
+        {
+          "path": "tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentHadoopPipelineSpec.xml",
+          "mtime": 1791414830.1175327,
+          "sha256": "809aa0296309ca13ed6f0197067b7a067ba7526351d8ffdbc0a873543bc0a810"
+        },
+        {
+          "path": "tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentPhase4BlockerSpec.xml",
+          "mtime": 1791414861.425148,
+          "sha256": "18ad520a78dcc7e49a6eb0b5a9f8d27fce5d07b0d5878e9390f3ab4372b8cd62"
+        }
+      ]
+    },
+    "build-verification": {
+      "totals": {
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "reports": [
+        {
+          "path": "build-verification/target/test-reports/TEST-scholarchain.build.CheckFailurePathSpec.xml",
+          "mtime": 1791414863.3533618,
+          "sha256": "85ea103de0817691e965ce0f9ad91b5cb855390161f18811406b5f8ea3a62e4a"
+        },
+        {
+          "path": "build-verification/target/test-reports/TEST-scholarchain.build.TestRunMarkerSpec.xml",
+          "mtime": 1791414863.3556576,
+          "sha256": "41f8ba92b7cfe6bb338a11855c1fd4f40ba46e059b100f3340d268db707c9c7b"
+        }
+      ]
+    }
+  },
+  "marker": "success=true\ntimestamp=1791414863422\n",
+  "runs": [
+    {
+      "directory": "target/phase4-runs/e9fd8b3b-2af3-4b65-909a-be0c8e4dee6b",
+      "manifest": {
+        "runId": "run:e9fd8b3b-2af3-4b65-909a-be0c8e4dee6b",
+        "schemaVersion": "scholarchain.domain.v1",
+        "pipelineName": "hadoop-prep",
+        "datasetSnapshots": [
+          {
+            "source": "CROSSREF",
+            "snapshot": "crossref-rest-2026-10-05",
+            "retrievalDate": "2026-10-05"
+          },
+          {
+            "source": "DBLP",
+            "snapshot": "dblp-2026-10-03",
+            "retrievalDate": "2026-10-05"
+          },
+          {
+            "source": "OPENALEX",
+            "snapshot": "openalex-rest-2026-10-05",
+            "retrievalDate": "2026-10-05"
+          },
+          {
+            "source": "ORCID",
+            "snapshot": "orcid-public-api-2026-10-05",
+            "retrievalDate": "2026-10-05"
+          }
+        ],
+        "configSchemaVersion": "scholarchain.hadoop-prep.v1",
+        "configFingerprint": "c2327b5bc94a4af943c003cb1d65830d9a15bd7a0cb8caca7d1587038941af1a",
+        "provenance": {
+          "schemaVersion": "scholarchain.domain.v1",
+          "source": "SCHOLARCHAIN",
+          "sourceRecordId": "run:e9fd8b3b-2af3-4b65-909a-be0c8e4dee6b",
+          "sourceUri": null,
+          "datasetSnapshot": "hadoop-prep",
+          "retrievalDate": null,
+          "licenseEvidenceUri": null,
+          "runId": "run:e9fd8b3b-2af3-4b65-909a-be0c8e4dee6b",
+          "uncertaintyNotes": [
+            "hadoopPrepSchema=scholarchain.hadoop-prep.v1",
+            "hadoopPrepFingerprint=c2327b5bc94a4af943c003cb1d65830d9a15bd7a0cb8caca7d1587038941af1a",
+            "transformationVersion=hadoop-prep-j01-j09-v1",
+            "domainSchema=scholarchain.domain.v1",
+            "inputChecksum:CROSSREF=a6e3c40e178b7ce7f74ed870a48b4a2951de1705e7a0ed8f8fd40838bc4d39cc",
+            "inputChecksum:DBLP=e23d50c04b2cadcc01ff719ea1841157f2d865dd0e2657b27d3bd4931fe2a935",
+            "inputChecksum:OPENALEX=6cff12f2ec1439acc66b89a9c30c54aa90bec8e3e11c317561f3e4a0f9a65d8c",
+            "inputChecksum:ORCID=5000694a8e93f5ff2393f7f25f9a908d139e7ba20d26c0d98141e5ce1e070325"
+          ]
+        }
+      },
+      "counters": {
+        "OVERSIZE_TEAM": 0,
+        "DUPLICATE": 0,
+        "REJECTED": 0,
+        "CONFLICT": 0,
+        "OVERSIZE_BLOCK": 0,
+        "ACCEPTED": 242,
+        "INPUT": 195,
+        "MISSING_KEY": 0,
+        "EMITTED_PAIR": 45,
+        "SCHEMA_FAILURE": 0
+      },
+      "complete": true,
+      "successfulJobOutputs": [
+        "export/_SUCCESS",
+        "intermediate/j01/_SUCCESS",
+        "intermediate/j02/_SUCCESS",
+        "intermediate/j03/_SUCCESS",
+        "intermediate/j04/_SUCCESS",
+        "intermediate/j05/_SUCCESS",
+        "intermediate/j06/_SUCCESS",
+        "intermediate/j07/_SUCCESS",
+        "intermediate/j08/_SUCCESS"
+      ],
+      "exportCounts": {
+        "author-mention": 10,
+        "authorship": 10,
+        "enrichment": 10,
+        "graph-edge": 18,
+        "index": 27,
+        "pair": 5,
+        "team": 5,
+        "venue": 5,
+        "work": 5,
+        "match-candidate": 40,
+        "institution": 2,
+        "topic": 3,
+        "orcid-activity": 16,
+        "orcid-profile": 1
+      }
+    },
+    {
+      "directory": "target/phase4-runs/335c5a33-489b-4056-8ece-b3d8863eaef9",
+      "manifest": {
+        "runId": "run:335c5a33-489b-4056-8ece-b3d8863eaef9",
+        "schemaVersion": "scholarchain.domain.v1",
+        "pipelineName": "hadoop-prep",
+        "datasetSnapshots": [
+          {
+            "source": "CROSSREF",
+            "snapshot": "crossref-rest-2026-10-05",
+            "retrievalDate": "2026-10-05"
+          },
+          {
+            "source": "DBLP",
+            "snapshot": "dblp-2026-10-03",
+            "retrievalDate": "2026-10-05"
+          },
+          {
+            "source": "OPENALEX",
+            "snapshot": "openalex-rest-2026-10-05",
+            "retrievalDate": "2026-10-05"
+          },
+          {
+            "source": "ORCID",
+            "snapshot": "orcid-public-api-2026-10-05",
+            "retrievalDate": "2026-10-05"
+          }
+        ],
+        "configSchemaVersion": "scholarchain.hadoop-prep.v1",
+        "configFingerprint": "c2327b5bc94a4af943c003cb1d65830d9a15bd7a0cb8caca7d1587038941af1a",
+        "provenance": {
+          "schemaVersion": "scholarchain.domain.v1",
+          "source": "SCHOLARCHAIN",
+          "sourceRecordId": "run:335c5a33-489b-4056-8ece-b3d8863eaef9",
+          "sourceUri": null,
+          "datasetSnapshot": "hadoop-prep",
+          "retrievalDate": null,
+          "licenseEvidenceUri": null,
+          "runId": "run:335c5a33-489b-4056-8ece-b3d8863eaef9",
+          "uncertaintyNotes": [
+            "hadoopPrepSchema=scholarchain.hadoop-prep.v1",
+            "hadoopPrepFingerprint=c2327b5bc94a4af943c003cb1d65830d9a15bd7a0cb8caca7d1587038941af1a",
+            "transformationVersion=hadoop-prep-j01-j09-v1",
+            "domainSchema=scholarchain.domain.v1",
+            "inputChecksum:CROSSREF=a6e3c40e178b7ce7f74ed870a48b4a2951de1705e7a0ed8f8fd40838bc4d39cc",
+            "inputChecksum:DBLP=e23d50c04b2cadcc01ff719ea1841157f2d865dd0e2657b27d3bd4931fe2a935",
+            "inputChecksum:OPENALEX=6cff12f2ec1439acc66b89a9c30c54aa90bec8e3e11c317561f3e4a0f9a65d8c",
+            "inputChecksum:ORCID=5000694a8e93f5ff2393f7f25f9a908d139e7ba20d26c0d98141e5ce1e070325"
+          ]
+        }
+      },
+      "counters": {
+        "OVERSIZE_TEAM": 0,
+        "DUPLICATE": 0,
+        "REJECTED": 0,
+        "CONFLICT": 0,
+        "OVERSIZE_BLOCK": 0,
+        "ACCEPTED": 242,
+        "INPUT": 195,
+        "MISSING_KEY": 0,
+        "EMITTED_PAIR": 45,
+        "SCHEMA_FAILURE": 0
+      },
+      "complete": true,
+      "successfulJobOutputs": [
+        "export/_SUCCESS",
+        "intermediate/j01/_SUCCESS",
+        "intermediate/j02/_SUCCESS",
+        "intermediate/j03/_SUCCESS",
+        "intermediate/j04/_SUCCESS",
+        "intermediate/j05/_SUCCESS",
+        "intermediate/j06/_SUCCESS",
+        "intermediate/j07/_SUCCESS",
+        "intermediate/j08/_SUCCESS"
+      ],
+      "exportCounts": {
+        "author-mention": 10,
+        "authorship": 10,
+        "enrichment": 10,
+        "graph-edge": 18,
+        "index": 27,
+        "pair": 5,
+        "team": 5,
+        "venue": 5,
+        "work": 5,
+        "match-candidate": 40,
+        "institution": 2,
+        "topic": 3,
+        "orcid-activity": 16,
+        "orcid-profile": 1
+      }
+    }
+  ],
+  "testLogSha256": "2ac664c1fc9f6ce5a19c219d79fc8c5216253f69c9229df0511a9e43b0d518c4",
+  "sampleLogSha256": "7dbe32a7452f6e992c4e0894120110be49daaf9d36c481195a11ccf60be740ad"
+}

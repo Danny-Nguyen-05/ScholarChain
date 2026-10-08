@@ -1,5 +1,6 @@
 import ScholarChainBuild._
 import sbt.Keys._
+import sbtassembly.AssemblyPlugin
 
 ThisBuild / organization := "edu.uic.cs441.scholarchain"
 ThisBuild / version := "0.1.0-SNAPSHOT"
@@ -13,6 +14,8 @@ lazy val buildVerification =
       publish / skip := true,
       Compile / scalaSource :=
         (ThisBuild / baseDirectory).value / "project/verification/src/main/scala",
+      Compile / unmanagedSources +=
+        (ThisBuild / baseDirectory).value / "project/HadoopBundleMerge.scala",
       Test / scalaSource :=
         (ThisBuild / baseDirectory).value / "project/verification/src/test/scala"
     )
@@ -25,10 +28,30 @@ lazy val core =
 lazy val hadoop =
   project
     .in(file("modules/hadoop"))
+    .enablePlugins(AssemblyPlugin)
     .dependsOn(core)
     .settings(
       ScholarChainBuild.moduleSettings(Seq(Dependencies.hadoopClientLib)),
-      name := "hadoop"
+      ScholarChainBuild.hadoopDependencyBundleSettings(core),
+      name := "hadoop",
+      Compile / run / fork := true,
+      Compile / run / baseDirectory := (ThisBuild / baseDirectory).value,
+      ScholarChainBuild.hadoopRunMain := (Compile / fgRunMain).evaluated,
+      ScholarChainBuild.hadoopLocalClasspath := {
+        val cp = (Compile / fullClasspath).value
+        val line = cp.files.map(_.getAbsolutePath).mkString(java.io.File.pathSeparator)
+        streams.value.log.info(line)
+      }
+    )
+
+lazy val independentTests =
+  project
+    .in(file("tests"))
+    .dependsOn(core, hadoop)
+    .settings(
+      ScholarChainBuild.moduleSettings(Seq(Dependencies.hadoopClientLib)),
+      name := "independentTests",
+      publish / skip := true
     )
 
 lazy val entityResolution =
@@ -65,7 +88,17 @@ lazy val services =
     .settings(ScholarChainBuild.moduleSettings(), name := "services")
 
 lazy val applicationModules =
-  Seq(core, hadoop, entityResolution, sparkAnalytics, storage, rag, services, buildVerification)
+  Seq(
+    core,
+    hadoop,
+    entityResolution,
+    sparkAnalytics,
+    storage,
+    rag,
+    services,
+    buildVerification,
+    independentTests
+  )
 
 lazy val root =
   project
@@ -108,6 +141,8 @@ lazy val root =
             services / Test / scalafmtCheck,
             buildVerification / Compile / scalafmtCheck,
             buildVerification / Test / scalafmtCheck,
+            independentTests / Compile / scalafmtCheck,
+            independentTests / Test / scalafmtCheck,
             Compile / scalafmtSbtCheck
           ),
           Def.sequential(
@@ -118,7 +153,8 @@ lazy val root =
             storage / Test / Keys.compile,
             rag / Test / Keys.compile,
             services / Test / Keys.compile,
-            buildVerification / Test / Keys.compile
+            buildVerification / Test / Keys.compile,
+            independentTests / Test / Keys.compile
           ),
           Def.sequential(
             core / Test / test,
@@ -127,7 +163,8 @@ lazy val root =
             sparkAnalytics / Test / test,
             storage / Test / test,
             rag / Test / test,
-            services / Test / test
+            services / Test / test,
+            independentTests / Test / test
           ),
           contractTest,
           markTestRun
@@ -144,5 +181,12 @@ lazy val root =
 
 addCommandAlias("fmt", ";all scalafmtAll; scalafmtSbt")
 addCommandAlias("check", "checkTask")
-addCommandAlias("packageJobs", ";hadoop/package; sparkAnalytics/package")
+addCommandAlias(
+  "packageJobs",
+  ";hadoop/package; hadoop/hadoopDependencyBundle; sparkAnalytics/package"
+)
 addCommandAlias("dockerLocal", "dockerLocalImage")
+addCommandAlias("hadoopLocalClasspath", "hadoop/hadoopLocalClasspath")
+addCommandAlias("hadoopRunMain", "hadoop/hadoopRunMain")
+addCommandAlias("hadoopDependencyBundle", "hadoop/hadoopDependencyBundle")
+addCommandAlias("hadoopSubmitJar", "hadoop/hadoopSubmitJar")
