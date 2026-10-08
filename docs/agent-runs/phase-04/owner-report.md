@@ -1,10 +1,10 @@
 # Phase 4 owner report
 
-Current status: source-evidence and cached-core packaging repairs complete; final frozen gate passes 220 tests, exact core content verification and two fresh equivalent sample runs. Independent final reviewer APPROVE; human Phase4 acceptance pending. Latest review section is authoritative for current status; older findings/results remain historical.
+Current status: **Phase 4 accepted by the human**, recorded in human-gate.md. Source-evidence and cached-core packaging repairs are complete; the final gate passes 220 tests, exact core content verification and two fresh equivalent sample runs. Independent final reviewer APPROVE. Older findings/results remain historical.
 
-STATUS: COMPLETE — implementation, local gates and independent review complete; human Phase4 acceptance pending.
+STATUS: COMPLETE — implementation, local gates, independent review and human Phase 4 acceptance complete.
 
-OWNER: Phase 4 orchestrator, assembling reports from the named owners. Human acceptance is not recorded.
+OWNER: Phase 4 orchestrator, assembling reports from the named owners. The human's acceptance is transcribed verbatim in human-gate.md.
 
 WORK ORDER: `docs/agent-runs/phase-04/prompt.md`
 

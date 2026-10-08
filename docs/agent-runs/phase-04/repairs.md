@@ -204,3 +204,7 @@ RISKS: XMLprefix replay performance, AWS/largecorpus execution unverified; revie
 MANUAL ACTION REQUIRED: Human Phase4 complete-diff review and acceptance.
 BLOCKED-ON OWNER / EVIDENCE: None for reviewed implementation.
 NEXT GATE: Human Phase4 decision. No commit/push/deployment/Phase5.
+
+## Human acceptance recorded — 2026-10-07
+
+STATUS: COMPLETE — the human accepted Phase 4 with the statement `human accept`. The exact decision is transcribed in [human-gate.md](human-gate.md); the existing implementation SHA is recorded in [accepted-commit.md](accepted-commit.md). All 92 reviewed source/config hashes still match the final 220-test gate. No new commit, push, AWS execution or Phase 5 work was performed while recording acceptance.
