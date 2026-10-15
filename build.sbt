@@ -47,7 +47,7 @@ lazy val hadoop =
 lazy val independentTests =
   project
     .in(file("tests"))
-    .dependsOn(core, hadoop)
+    .dependsOn(core, hadoop, entityResolution)
     .settings(
       ScholarChainBuild.moduleSettings(Seq(Dependencies.hadoopClientLib)),
       name := "independentTests",

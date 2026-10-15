@@ -1,0 +1,24 @@
+{
+  "schema": "scholarchain.phase5a.baseline.v1",
+  "recordedAtUtc": "2026-10-15T15:15:05.147013+00:00",
+  "branch": "main",
+  "head": "099e303311be7a1b2e2cf5655e0c7ce9fa710474",
+  "wholePhaseBase": "099e303311be7a1b2e2cf5655e0c7ce9fa710474",
+  "phase4Implementation": "3ccd61c071d8080dda04d5e9cf73e9ed19dd75a7",
+  "observedBeforeAny5AWriter": true,
+  "gitStatusPorcelain": "",
+  "dirtyTracked": [],
+  "untracked": [],
+  "retainedStartingDiff": "empty: clean tracked and untracked status observed before specialist launches",
+  "externalPlan": {
+    "path": "/Users/danny/Documents/plan/phase5.md",
+    "sha256": "5dfddeb2cf5719249ddfa42b23ad906e9230a073b0b3cc5704d5611d54926f55"
+  },
+  "userRefinements": [
+    "distributed systems/data engineering CS sample",
+    "40 development + 200 held-out human reviews",
+    "existing repository material only; no assumed external data",
+    "include ER owner in5A interface agreement",
+    "5A only; user runs reviewer and approves next subphase"
+  ]
+}

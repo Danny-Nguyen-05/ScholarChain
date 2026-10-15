@@ -1,0 +1,359 @@
+{
+  "schema": "scholarchain.phase5a.review-inventory.v1",
+  "checkpoint": "5A B1 external-review repair",
+  "capturedAtUtc": "2026-10-15T16:34:25.768860+00:00",
+  "branch": "main",
+  "head": "099e303311be7a1b2e2cf5655e0c7ce9fa710474",
+  "baseline": "baseline.json: clean before initial5A; b1-repair-start.json: dirtysource beforeB1",
+  "originalHandoff": "history/5a-initial-handoff/",
+  "repairDelta": "b1-repair-source-delta.json",
+  "sourceFreeze": "source-freeze.json",
+  "sourceFreezeSha256": "af669a977e5e87a4040feff1f9cebc54c83ec79528875bc444e08d4397f08e01",
+  "files": [
+    {
+      "path": "build.sbt",
+      "status": "modified",
+      "bytes": 6422,
+      "sha256": "4bcc18708434b759a2450eb0736cbdd2f18e991c2e64c1d02da5d48e6cf4eb15"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/b1-repair-source-delta.json",
+      "status": "untracked",
+      "bytes": 2470,
+      "sha256": "870876ab45bd382456633d450add69552543ca1963bd935ccc2ae048ac174216"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/b1-repair-start.json",
+      "status": "untracked",
+      "bytes": 27725,
+      "sha256": "25ddc3b910e751e4b7307b0c3ec1db55c0ad325aa3257cfa67fe615229fc8797"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/baseline.json",
+      "status": "untracked",
+      "bytes": 996,
+      "sha256": "a7e1d043fadff887e2076382c60c6bbcf3ae7fcd3ba7cf92d0f7890ee222747c"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/data-readiness.json",
+      "status": "untracked",
+      "bytes": 29379,
+      "sha256": "9944dc928e876eec83f4b30e47322a3ef30a0dfc6aa23a64b472ef60915fb4b7"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5a-b1/before-fix-summary.json",
+      "status": "untracked",
+      "bytes": 1367,
+      "sha256": "7efeb958fe7b0f28cfde2cdda584f93fa4c19d7d60a6f5a3d2bb2c163622786e"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5a-b1/collect-postgate.py.txt",
+      "status": "untracked",
+      "bytes": 5068,
+      "sha256": "a980972c27f59de37c9e8a5beb2aebc0021ebe2235b7ab681437858c4401780d"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5a-b1/core-targeted.txt",
+      "status": "untracked",
+      "bytes": 2683,
+      "sha256": "027bc5d5c73cd22e3e37dd914a787793dc73ceb5706986440072d9c415f02caf"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5a-b1/full-check-summary.json",
+      "status": "untracked",
+      "bytes": 11437,
+      "sha256": "7e9596ec58c2d9cad724c7617da9395db9479a6bfc75f28f2d9e1dd649b9e031"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5a-b1/full-check.txt",
+      "status": "untracked",
+      "bytes": 224874,
+      "sha256": "05b6da15a90dd355e20bfbe7eb8b8f730f0e2e1fd161eff3a1d2d902e130d0b0"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5a-b1/independent-before-fix-sandbox-attempt.txt",
+      "status": "untracked",
+      "bytes": 1367,
+      "sha256": "d16be90ad6ceee140d204f7d2c7212ffec5e2251c56f7f849d9c6b4e81218f05"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5a-b1/independent-before-fix.txt",
+      "status": "untracked",
+      "bytes": 2778,
+      "sha256": "977f5cedf1826baf7791f2a4206b5a9e1f768e2e1ca5809693c344153670186f"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5a-b1/independent-targeted.txt",
+      "status": "untracked",
+      "bytes": 2111,
+      "sha256": "3e0d5f514cd741e2a3416799041645f262658dc122f2d7d55508fb423feb36e1"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5a-b1/targeted-summary.json",
+      "status": "untracked",
+      "bytes": 1906,
+      "sha256": "c8b74416052989e876b2faf359ae919f42631788681fe0edc20bc00de38214ed"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5a/core-targeted-sandbox-attempt.txt",
+      "status": "untracked",
+      "bytes": 1367,
+      "sha256": "d16be90ad6ceee140d204f7d2c7212ffec5e2251c56f7f849d9c6b4e81218f05"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5a/core-targeted.txt",
+      "status": "untracked",
+      "bytes": 2234,
+      "sha256": "ea23d2787728aa0215189cf36e76a8662feb184da0409113fedd79f9358a0029"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5a/datasets-dependency-prep.txt",
+      "status": "untracked",
+      "bytes": 2959,
+      "sha256": "4cae1930bb3ba1ec274e63853ca51e87375b605491cf741841318288b78fd14e"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5a/datasets-validation.txt",
+      "status": "untracked",
+      "bytes": 64,
+      "sha256": "7e6a9d4295fbf4b736776828edb7e79f2b3093f5422dc1295020850fda826363"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5a/full-check-sandbox-attempt.txt",
+      "status": "untracked",
+      "bytes": 1367,
+      "sha256": "d16be90ad6ceee140d204f7d2c7212ffec5e2251c56f7f849d9c6b4e81218f05"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5a/full-check-summary-initial-parser-path-error.json",
+      "status": "untracked",
+      "bytes": 10711,
+      "sha256": "49ee7c1e87029f205ca264a11113c5467a2be373e07843c9c70a768f6ee98db7"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5a/full-check-summary.json",
+      "status": "untracked",
+      "bytes": 11759,
+      "sha256": "4ac982b68309d5425354596da6b2ef3cff20c358b771b32add340e59323088f8"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5a/full-check.txt",
+      "status": "untracked",
+      "bytes": 224094,
+      "sha256": "5c3178a6cad4781001b29370f9ee707850a1abc72f5286c831880c0396f44998"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5a/independent-targeted-compile-failure.txt",
+      "status": "untracked",
+      "bytes": 4462,
+      "sha256": "9632882f135740aeb999dc5195ee9687e81682a0c5fd370ae1d200b11c3fa3ef"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5a/independent-targeted-sandbox-attempt.txt",
+      "status": "untracked",
+      "bytes": 1367,
+      "sha256": "d16be90ad6ceee140d204f7d2c7212ffec5e2251c56f7f849d9c6b4e81218f05"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5a/independent-targeted.txt",
+      "status": "untracked",
+      "bytes": 2180,
+      "sha256": "f2d5debd66297cfb6b0f0e7a3f42ceca6d74b0850f3776c06eecdbadf4671a42"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/history/5a-initial-handoff/implementation.diff",
+      "status": "untracked",
+      "bytes": 110705,
+      "sha256": "7832ceb261b064a184400d6a6c9430f5077f9c9650968295e6a89816ad56c3e8"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/history/5a-initial-handoff/review-inventory.json",
+      "status": "untracked",
+      "bytes": 9824,
+      "sha256": "1e7e63d9409672ec2a095615f5c53661382e85abdb4c8eb5ad5fa1c749e9352f"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/history/5a-initial-handoff/reviewer-prompt.txt",
+      "status": "untracked",
+      "bytes": 10343,
+      "sha256": "eeb8c462ce22aa8434bc40bd3ebe26fd6ce04a4ce7c8e892c83de666502d12fa"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/history/5a-initial-handoff/source-freeze.json",
+      "status": "untracked",
+      "bytes": 27677,
+      "sha256": "76b6cd0f8136402a66688623626b7ed47ff55107e7978c1ef474c62e485bedc8"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/implementation.diff",
+      "status": "untracked",
+      "bytes": 129385,
+      "sha256": "f71e5f608622d639a83d1beb210f60243242ef72ffaa33ff91155e78e75bb806"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/owner-report.md",
+      "status": "untracked",
+      "bytes": 22972,
+      "sha256": "0c9a690d3bdecdd99340ef7b9c02965443d49e0db4c14bbe9681115ab05573e0"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/prompt.md",
+      "status": "untracked",
+      "bytes": 65670,
+      "sha256": "db773feb6139c1492213c3272f9981c4d87d13eb119539e1f4b2527fdee3a978"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/repairs.md",
+      "status": "untracked",
+      "bytes": 12702,
+      "sha256": "93abf819cb9475c330c33c17d2ba1ee4dbff2d0f42061fffba177bf5415c26bd"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/review-inventory.json",
+      "status": "untracked",
+      "sha256": null,
+      "hashExclusion": "inventory self-reference only"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/review.md",
+      "status": "untracked",
+      "bytes": 15598,
+      "sha256": "2d38ca42bc08fc2c9d927eca4b740f7a538a14f8fd9a1eaa7878d407874736f5"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/reviewer-prompt.txt",
+      "status": "untracked",
+      "bytes": 12932,
+      "sha256": "8da392249a2e3af498303e944819bcca24d1d4c9c445e1803139ec58a5de36a9"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/source-freeze.json",
+      "status": "untracked",
+      "bytes": 30523,
+      "sha256": "af669a977e5e87a4040feff1f9cebc54c83ec79528875bc444e08d4397f08e01"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/test-report.md",
+      "status": "untracked",
+      "bytes": 16347,
+      "sha256": "bfa653684c3ac4f1478d5e46e9376fcb0a5369a5d9e3acc65b60867d8cbd1939"
+    },
+    {
+      "path": "modules/core/README.md",
+      "status": "modified",
+      "bytes": 24269,
+      "sha256": "1f2684ec1da4d309f55b62da697b1db597db6b0010fbe7a8451ecd1cb9aac3e1"
+    },
+    {
+      "path": "modules/core/src/main/scala/edu/uic/cs441/scholarchain/core/ResolutionContracts.scala",
+      "status": "untracked",
+      "bytes": 9091,
+      "sha256": "d37ce018c3d890a73ff129bb053c633a715f33772c23e396d91d8e5e308d4e2d"
+    },
+    {
+      "path": "modules/core/src/main/scala/edu/uic/cs441/scholarchain/core/ResolutionValidation.scala",
+      "status": "untracked",
+      "bytes": 14649,
+      "sha256": "c9f61fb28a08855b99362ff680b64b1ebe12485318f46963535f3196cfe519ba"
+    },
+    {
+      "path": "modules/core/src/main/scala/edu/uic/cs441/scholarchain/core/ResolutionValidationContext.scala",
+      "status": "untracked",
+      "bytes": 2828,
+      "sha256": "8f4d2a0fc168fb07994002f24c289ca1ead6083b4249b7a5bff92fbe2a1d9c3e"
+    },
+    {
+      "path": "modules/core/src/test/resources/wire/resolution-accepted-link.json",
+      "status": "untracked",
+      "bytes": 1628,
+      "sha256": "94e8b99548ba68383f7eb53ba5ee714f123352753332e5fa87fcd5588bed6771"
+    },
+    {
+      "path": "modules/core/src/test/resources/wire/resolution-grouping-constraints.json",
+      "status": "untracked",
+      "bytes": 1625,
+      "sha256": "86f3d22ed906457570b453d36bf20d4d1e87ca5262e270d6454f3fe7d5bde070"
+    },
+    {
+      "path": "modules/core/src/test/resources/wire/resolution-researcher-decision.json",
+      "status": "untracked",
+      "bytes": 3042,
+      "sha256": "ec27dd884b48e6ed4b6e663b68baf922202f94219e7e4fdb7376ac5b4f902303"
+    },
+    {
+      "path": "modules/core/src/test/resources/wire/resolution-researcher-pair.json",
+      "status": "untracked",
+      "bytes": 644,
+      "sha256": "e16875fe11ff0c2180c39e7c7388567222e54f2878d32e1440a596593cc26ed1"
+    },
+    {
+      "path": "modules/core/src/test/resources/wire/resolution-work-decision.json",
+      "status": "untracked",
+      "bytes": 3045,
+      "sha256": "12fbdb195a7d1b27df0872fd7675785fe77dc34982b269ed649277848fb2f39d"
+    },
+    {
+      "path": "modules/core/src/test/resources/wire/resolution-work-pair.json",
+      "status": "untracked",
+      "bytes": 649,
+      "sha256": "dd204c6ad7711c627b5fd522ccf7588496cbdd9072e42b0c44a490b97a6c09c9"
+    },
+    {
+      "path": "modules/core/src/test/scala/edu/uic/cs441/scholarchain/core/ResolutionAuthoritySpec.scala",
+      "status": "untracked",
+      "bytes": 6580,
+      "sha256": "ebb0211a3220fa71aba81b23318dd8cc54785cb2713783a993af178f67506088"
+    },
+    {
+      "path": "modules/core/src/test/scala/edu/uic/cs441/scholarchain/core/ResolutionContractFixtures.scala",
+      "status": "untracked",
+      "bytes": 5752,
+      "sha256": "d6269027b1332cc3658001039f6916315a197d4a22b1fc80c72f26302ff5fa22"
+    },
+    {
+      "path": "modules/core/src/test/scala/edu/uic/cs441/scholarchain/core/ResolutionContractSpec.scala",
+      "status": "untracked",
+      "bytes": 11962,
+      "sha256": "0ce98ab57077383b3a251ef076aa79de7369ec4fc7f01799254c6795a927ca69"
+    },
+    {
+      "path": "modules/entity-resolution/README.md",
+      "status": "untracked",
+      "bytes": 19632,
+      "sha256": "66397d440abe20ffb5723b2398a930d2cc839e6a3400d53336cb6b5e0e63ae62"
+    },
+    {
+      "path": "modules/entity-resolution/contracts/config.example.v1.json",
+      "status": "untracked",
+      "bytes": 1562,
+      "sha256": "4040704d334fa0c30c867466b09978591e1b83ab9bc95051616f1632f70b87dc"
+    },
+    {
+      "path": "modules/entity-resolution/contracts/labels.example.v1.json",
+      "status": "untracked",
+      "bytes": 2721,
+      "sha256": "b01a27b983aee30b77e921cfe315335ae29cf6add8275bf21ccd58a48d30e4ef"
+    },
+    {
+      "path": "modules/entity-resolution/contracts/policy.example.v1.json",
+      "status": "untracked",
+      "bytes": 2974,
+      "sha256": "73186dad84529a0c3c681b344f27ee70be6d3b1e040b7c04f782004e86e59052"
+    },
+    {
+      "path": "modules/entity-resolution/contracts/sampling.example.v1.json",
+      "status": "untracked",
+      "bytes": 2699,
+      "sha256": "a71c24bd117ef32dde4509f675a202a3c70ea7df36fc3f3471951a655905f279"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentResolutionContractSpec.scala",
+      "status": "untracked",
+      "bytes": 20295,
+      "sha256": "072161c34eb7952ca2bd1c0e0237de18c80e0648f1aa20a60e6132476fdf30f1"
+    }
+  ],
+  "externalReview": "Original user-supplied REQUEST-CHANGES retained; new recheck NOT RUN bymanager, no verdictinferred.",
+  "allWorkersAndBuildsStopped": true,
+  "ignoredGeneratedArtifacts": "target outputs, .claude/.last-test-run. Durable logs and summaries retained under evidence/5a-b1."
+}

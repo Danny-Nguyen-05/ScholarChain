@@ -1,0 +1,88 @@
+{
+  "schemaVersion": "scholarchain.resolution.v1",
+  "decisionId": "resolution-decision:8feff09cb07ee68eef11c679e139e135a75e3e69950585b68598ea9f3fef8b33",
+  "pair": {
+    "schemaVersion": "scholarchain.resolution.v1",
+    "pairId": "resolution-pair:32c83838c7bcf409215f65a5e256dd8535fe0e7bdbef5f9aa28f469d07d06138",
+    "entityType": "Researcher",
+    "left": {
+      "$type": "Mention",
+      "observation": {
+        "source": "DBLP",
+        "sourceRecordId": "series/sapere/BerkeleyR13",
+        "datasetSnapshot": "dblp-2026-10-03"
+      },
+      "mentionId": "mention:dblp:series/sapere/BerkeleyR13#2"
+    },
+    "right": {
+      "$type": "OrcidProfile",
+      "observation": {
+        "source": "ORCID",
+        "sourceRecordId": "0000-0002-4414-6920",
+        "datasetSnapshot": "unknown"
+      },
+      "orcid": "0000-0002-4414-6920"
+    }
+  },
+  "decision": {
+    "schemaVersion": "scholarchain.domain.v1",
+    "sourceId": "resolution-endpoint:0a83bdd7525c69901177a4343bcbd4da1f7666b9cac7617cb8abc1fd668bddcd",
+    "targetId": "resolution-endpoint:915990649c2f82379df598628a2a28c71920e1b65dc5c78071c773c249d594a3",
+    "features": [
+      {
+        "name": "synthetic_similarity",
+        "value": 0.8
+      }
+    ],
+    "decision": "UNRESOLVED",
+    "confidence": 0.8,
+    "reasonCodes": [
+      "SYNTHETIC_CONTRACT_EXAMPLE"
+    ],
+    "policyVersion": "synthetic-contract-v1",
+    "runId": "run:00112233-4455-4677-8899-aabbccddeeff",
+    "uncertainty": "Synthetic contract example; no identity decision has been run.",
+    "provenance": {
+      "schemaVersion": "scholarchain.domain.v1",
+      "source": "SCHOLARCHAIN",
+      "sourceRecordId": "resolution-pair:32c83838c7bcf409215f65a5e256dd8535fe0e7bdbef5f9aa28f469d07d06138",
+      "sourceUri": null,
+      "datasetSnapshot": "synthetic-contract-2026-10-15",
+      "retrievalDate": "2026-10-05",
+      "licenseEvidenceUri": "https://dblp.org/faq/Under+what+license+is+the+data+from+dblp+released",
+      "runId": "run:00112233-4455-4677-8899-aabbccddeeff",
+      "uncertaintyNotes": [
+        "Synthetic contract example; not a model result or human annotation."
+      ]
+    }
+  },
+  "contributingCandidates": [],
+  "featurePolicyVersion": "synthetic-features-v1",
+  "featureEvidence": [
+    {
+      "name": "synthetic_similarity",
+      "value": 0.8,
+      "missingReason": null,
+      "evidenceRefs": [
+        "source:fixture"
+      ]
+    },
+    {
+      "name": "year_distance",
+      "value": null,
+      "missingReason": "NOT_COMPUTED_IN_CONTRACT_EXAMPLE",
+      "evidenceRefs": []
+    }
+  ],
+  "decisionPath": "Scored",
+  "confidenceSemantics": "UncalibratedScore",
+  "scoreUnavailableReason": null,
+  "policyHash": "ea9d777c44aef42aa906bf610bccf1734f6ce5fa7f3a05c43cad7ebaaaba6b49",
+  "configHash": "ea9d777c44aef42aa906bf610bccf1734f6ce5fa7f3a05c43cad7ebaaaba6b49",
+  "inputEvidenceHash": "ea9d777c44aef42aa906bf610bccf1734f6ce5fa7f3a05c43cad7ebaaaba6b49",
+  "evidenceRefs": [
+    "source:fixture"
+  ],
+  "decidedAtUtc": "2026-10-15T12:00:00Z",
+  "adjudication": null
+}

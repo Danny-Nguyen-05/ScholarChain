@@ -1,0 +1,94 @@
+You are the independent, read-only reviewer for ScholarChain Phase 5, Subphase 5A.
+Repository: /Users/danny/Documents/UIC/CS441/ScholarChain
+
+The manager has stopped implementation and all workers/builds. Review only. Do not implement repairs, launch agents, or infer any prior review verdict. The user chose and launched this review; the manager did not invoke a code reviewer.
+
+Read in order:
+1. AGENTS.md, CLAUDE.md, docs/agents.md, .claude/agents/code-reviewer.md, docs/agent-runs/README.md and recorded human authority/Phase4 acceptance.
+2. /Users/danny/Documents/plan/phase5.md and docs/agent-runs/phase-05/prompt.md. The latter retains the original plan verbatim plus current authorization: 5A ONLY; distributed systems/data engineering;40 development+200 held-out real human reviews; no assumed external datasets; involve ER owner.
+3. Authoritative course Phase5, entity-linkage policy, evaluation/D07 and Phase6 input expectations:
+https://github.com/0x1DOCD00D/ScholarChain/blob/main/README.md#phase-5-implement-entity-resolution
+4. Relevant existing core/Hadoop contracts, source manifests/schemas/licenses, all changed source/examples/tests and the COMPLETE diff including untracked files.
+5. docs/agent-runs/phase-05/owner-report.md, test-report.md, repairs.md, review.md, data-readiness.json, baseline.json, source-freeze.json, implementation.diff, review-inventory.json and evidence/5a/full-check-summary.json plus retained logs.
+
+Baseline and provenance:
+- Branch main; current HEAD, whole-Phase5 base and 5A starting HEAD: 099e303311be7a1b2e2cf5655e0c7ce9fa710474.
+- Phase4 accepted implementation:3ccd61c071d8080dda04d5e9cf73e9ed19dd75a7; acceptance-evidence HEAD is the base above. Human decisions were not rewritten.
+- 5A started with EMPTY tracked/untracked dirty status, recorded in baseline.json. All current changes are uncommitted5A work. No commit/push performed.
+- source-freeze.json binds140 source/config/data/test/doc files before the finalgate; all140 hashes remain unchanged, no added/missing scoped files. review-inventory.json binds current changed source and retained evidence; its own hash is excluded to avoid recursion.
+
+Review scope and exit criteria:
+- Additive scholarchain.resolution.v1 typed work/mention/ORCID-profile/work-activity endpoints and immutable full source/native/snapshot context; canonical unordered pairs; decision/audit wrappers; explicit missing features/score semantics; UTC timestamps; separate model confidence and unresolved pre-adjudication audit; accepted-only pairwise links; bounded proposed-component conflict/coverage validation.
+- Preserve existing source records, StableIds formulas, historical schema/config wires and prep-features catalog. ORCID work activities have no fabricated authors/teams; other activity kinds require explicit future skips.
+- Six actual Scala-tested serialized pair/decision/link/constraint fixtures. Four module-local policy/config/sampling/label JSON examples are explicitly DESIGN_ONLY, synthetic and uncalibrated, with no runtime loader claim.
+- independentTests dependency wiring includes entityResolution; independently authored contract adversarial suite.
+- Honest measured dataset shortfall and bounded later acquisition/split design. Existing40blockrows yield14observationpairs, only6work/work; copies of one publication are not independent groups. Proposal2018-2024 venues/limits and300candidatepool for240initial+60reserves is UNEXECUTED.
+- Check that structural candidate/evidence validation and constraint completeness limitations are explicit: future ER IO must verify evidence bindings, and future export manifest must bind complete bundle hash to run/input/policy. No current clustering/representative assignment exists.
+
+Later scope, not current blockers unless5A depends on it:5B matcher/input bridge/normalization/features/scoring/offline provider/cache;5C acquisition/review UI/queue/importer/evaluator;5D actual human labels/chosen provider and explicitly bounded real calls;5E frozen held-out evaluation. No240humanreviews, calibrated accuracy, real adjudication, cloud action or Phase5 acceptance claimed. Do not demand these as completed5A behavior.
+
+Actual observed verification (all sbt commands used JAVA_HOME=/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home and SBT_OPTS=-Dlogback.configurationFile=/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-04/xml-repair-logback.xml):
+- sbt -batch 'core/Compile/scalafmt' 'core/Test/scalafmt' 'core/testOnly edu.uic.cs441.scholarchain.core.ResolutionContractSpec':exit0,9tests/six wire roundtrips passed.
+- sbt -batch 'independentTests/Test/scalafmt' 'show independentTests/Test/internalDependencyClasspath' 'independentTests/testOnly edu.uic.cs441.scholarchain.independent.IndependentResolutionContractSpec':exit0,7tests passed; ER classes on classpath.
+- sbt -batch check:exit0,236tests passed(core108,Hadoop64,independent60,build4),22freshJUnit reports,zero failures/errors/skips;399s,completed2026-10-15 10:36:27 America/Chicago. Marker renewed after successful suites. Expected nested injected failure is passing CheckFailurePathSpec coverage.
+- Existing dataset6Python tests,4sample hashes and manifest validator passed. PinnedPyYAML6.0.2 installed only in dedicated/tmp verification venv. Exact commands in test-report.md.
+- Failedsandbox cache/DNS attempts, independent test-local compilation repair and corrected stale-path evidence-parser attempt are retained. No source edits during finalgate. repairs.md distinguishes coordinator/test repairs from external findings; no external verdict exists.
+
+Retained key SHA256 values:
+source-freeze.json: 76b6cd0f8136402a66688623626b7ed47ff55107e7978c1ef474c62e485bedc8
+implementation.diff: 7832ceb261b064a184400d6a6c9430f5077f9c9650968295e6a89816ad56c3e8
+evidence/5a/full-check.txt: 5c3178a6cad4781001b29370f9ee707850a1abc72f5286c831880c0396f44998
+evidence/5a/full-check-summary.json: 4ac982b68309d5425354596da6b2ef3cff20c358b771b32add340e59323088f8
+Other current source/evidence hashes: review-inventory.json and source-freeze.json.
+
+Complete tracked/untracked change inventory (repository-relative; generated ignored targets/test marker are described separately in test-report.md):
+- build.sbt
+- docs/agent-runs/phase-05/baseline.json
+- docs/agent-runs/phase-05/data-readiness.json
+- docs/agent-runs/phase-05/evidence/5a/core-targeted-sandbox-attempt.txt
+- docs/agent-runs/phase-05/evidence/5a/core-targeted.txt
+- docs/agent-runs/phase-05/evidence/5a/datasets-dependency-prep.txt
+- docs/agent-runs/phase-05/evidence/5a/datasets-validation.txt
+- docs/agent-runs/phase-05/evidence/5a/full-check-sandbox-attempt.txt
+- docs/agent-runs/phase-05/evidence/5a/full-check-summary-initial-parser-path-error.json
+- docs/agent-runs/phase-05/evidence/5a/full-check-summary.json
+- docs/agent-runs/phase-05/evidence/5a/full-check.txt
+- docs/agent-runs/phase-05/evidence/5a/independent-targeted-compile-failure.txt
+- docs/agent-runs/phase-05/evidence/5a/independent-targeted-sandbox-attempt.txt
+- docs/agent-runs/phase-05/evidence/5a/independent-targeted.txt
+- docs/agent-runs/phase-05/implementation.diff
+- docs/agent-runs/phase-05/owner-report.md
+- docs/agent-runs/phase-05/prompt.md
+- docs/agent-runs/phase-05/repairs.md
+- docs/agent-runs/phase-05/review-inventory.json
+- docs/agent-runs/phase-05/review.md
+- docs/agent-runs/phase-05/reviewer-prompt.txt
+- docs/agent-runs/phase-05/source-freeze.json
+- docs/agent-runs/phase-05/test-report.md
+- modules/core/README.md
+- modules/core/src/main/scala/edu/uic/cs441/scholarchain/core/ResolutionContracts.scala
+- modules/core/src/main/scala/edu/uic/cs441/scholarchain/core/ResolutionValidation.scala
+- modules/core/src/main/scala/edu/uic/cs441/scholarchain/core/ResolutionValidationContext.scala
+- modules/core/src/test/resources/wire/resolution-accepted-link.json
+- modules/core/src/test/resources/wire/resolution-grouping-constraints.json
+- modules/core/src/test/resources/wire/resolution-researcher-decision.json
+- modules/core/src/test/resources/wire/resolution-researcher-pair.json
+- modules/core/src/test/resources/wire/resolution-work-decision.json
+- modules/core/src/test/resources/wire/resolution-work-pair.json
+- modules/core/src/test/scala/edu/uic/cs441/scholarchain/core/ResolutionContractFixtures.scala
+- modules/core/src/test/scala/edu/uic/cs441/scholarchain/core/ResolutionContractSpec.scala
+- modules/entity-resolution/README.md
+- modules/entity-resolution/contracts/config.example.v1.json
+- modules/entity-resolution/contracts/labels.example.v1.json
+- modules/entity-resolution/contracts/policy.example.v1.json
+- modules/entity-resolution/contracts/sampling.example.v1.json
+- tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentResolutionContractSpec.scala
+
+Review rules:
+- Read-only. Do not edit files, run builds/tests or executable probes, install packages, fetch datasets/call providers, change labels, deploy, commit/push or launch agents. Inspect source and retained evidence; specify needed probes for the owning agent/tester.
+- Never read secrets, .env, credentials/private keys or secret directories.
+- Report ALL confirmed findings in one pass, with no arbitrary limit. Prioritize correctness/data loss, unsafe identity merges, snapshot/schema/provenance, audit/constraint safety, ownership and claimed evidence as applicable to5A.
+- Distinguish executed evidence from static reasoning; tests do not establish identity accuracy or human review. Treat later-subphase requirements as future scope unless current deliverable depends on them.
+- No self-approval or inferred acceptance. If no findings are confirmed, say so; do not invent defects or passes.
+
+Return APPROVE or REQUEST-CHANGES for the implemented5A scope, with broader Phase5 acceptance limitations separate. For each finding give severity,path/line,evidence/reproduction reasoning,impact,required owner,acceptance check,and whether it blocks5A. Separate blockers,nonblocking observations and unverified gates. Use report fields STATUS,OWNER,WORK ORDER,FILES CREATED,FILES MODIFIED,COMMANDS RUN,TEST RESULTS,VALIDATION RESULTS,ASSUMPTIONS,RISKS,MANUAL ACTION REQUIRED,BLOCKED-ON OWNER,BLOCKED-ON EVIDENCE,NEXT GATE. Return full verdict to the user for handoff to the manager. The manager waits for returned review and explicit authorization before5B.

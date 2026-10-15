@@ -1,0 +1,313 @@
+{
+  "schema": "scholarchain.phase5a.b2-verification.v1",
+  "capturedAtUtc": "2026-10-15T17:08:53.396978+00:00",
+  "gateExitCode": 0,
+  "sourceFreezeSha256": "cba054febf408a19e421c7eef060b48372c4037fedffa107a6893eadfdba8202",
+  "sourceVerification": {
+    "frozenFileCount": 142,
+    "hashMismatchPaths": [],
+    "unexpectedPaths": [],
+    "missingPaths": []
+  },
+  "stdoutTestCounts": [
+    119,
+    64,
+    70,
+    4
+  ],
+  "stdoutTestTotal": 257,
+  "junitGroups": {
+    "buildVerification": {
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "core": {
+      "tests": 119,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "hadoop": {
+      "tests": 64,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "independentTests": {
+      "tests": 70,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  },
+  "junitTestTotal": 257,
+  "junitReports": [
+    {
+      "path": "build-verification/target/test-reports/TEST-scholarchain.build.CheckFailurePathSpec.xml",
+      "name": "scholarchain.build.CheckFailurePathSpec",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "96c9bc260a27c1477171c3f844123443a122c6727e8d22a77edded963a5117bc",
+      "freshAfterSourceFreeze": true
+    },
+    {
+      "path": "build-verification/target/test-reports/TEST-scholarchain.build.HadoopBundleMergeSpec.xml",
+      "name": "scholarchain.build.HadoopBundleMergeSpec",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "6902433a7c219c75039151fc5ac24d57041c64d36a9fb58e81407769d4e2f089",
+      "freshAfterSourceFreeze": true
+    },
+    {
+      "path": "build-verification/target/test-reports/TEST-scholarchain.build.TestRunMarkerSpec.xml",
+      "name": "scholarchain.build.TestRunMarkerSpec",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "1169bb41ef764ee43cad4b7f13bd9998b3d239f031fb796d01edb060fb76a291",
+      "freshAfterSourceFreeze": true
+    },
+    {
+      "path": "modules/core/target/test-reports/TEST-edu.uic.cs441.scholarchain.core.ConfigLoaderSpec.xml",
+      "name": "edu.uic.cs441.scholarchain.core.ConfigLoaderSpec",
+      "tests": 8,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "ed6b3e66e80805eb771df95a2679ecbde1b0f51b4ddf410581978836a65ddf4b",
+      "freshAfterSourceFreeze": true
+    },
+    {
+      "path": "modules/core/target/test-reports/TEST-edu.uic.cs441.scholarchain.core.ContractRepairSpec.xml",
+      "name": "edu.uic.cs441.scholarchain.core.ContractRepairSpec",
+      "tests": 27,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "7c6fd8de10e834df56dbbb3ba0491b56b06db1f1a11f43647864a2bb1983a118",
+      "freshAfterSourceFreeze": true
+    },
+    {
+      "path": "modules/core/target/test-reports/TEST-edu.uic.cs441.scholarchain.core.Phase4ContractSpec.xml",
+      "name": "edu.uic.cs441.scholarchain.core.Phase4ContractSpec",
+      "tests": 16,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "1248b26a68d54d7e3ab7f11befcb56cf07c80e370e5d41b19f2430c0b37f02d3",
+      "freshAfterSourceFreeze": true
+    },
+    {
+      "path": "modules/core/target/test-reports/TEST-edu.uic.cs441.scholarchain.core.ResolutionAuthoritySpec.xml",
+      "name": "edu.uic.cs441.scholarchain.core.ResolutionAuthoritySpec",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "0d2f4a8b791879557bf0d569a7c0bce395b938f382d1b408cd8c0563b5ec7eec",
+      "freshAfterSourceFreeze": true
+    },
+    {
+      "path": "modules/core/target/test-reports/TEST-edu.uic.cs441.scholarchain.core.ResolutionContractSpec.xml",
+      "name": "edu.uic.cs441.scholarchain.core.ResolutionContractSpec",
+      "tests": 9,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "a036d9e72bd8169653a6fc7d21a346436d63a20aa966081a80aecd5a71b4de44",
+      "freshAfterSourceFreeze": true
+    },
+    {
+      "path": "modules/core/target/test-reports/TEST-edu.uic.cs441.scholarchain.core.ResolutionGroundingSpec.xml",
+      "name": "edu.uic.cs441.scholarchain.core.ResolutionGroundingSpec",
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "547487503477ccbc50f35ac553965558fc8480e765db580b6665ec4704728be6",
+      "freshAfterSourceFreeze": true
+    },
+    {
+      "path": "modules/core/target/test-reports/TEST-edu.uic.cs441.scholarchain.core.SerializationContractSpec.xml",
+      "name": "edu.uic.cs441.scholarchain.core.SerializationContractSpec",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "91f33fe55e3a8a1ec13a83524d53832d508195739328eb40cb998ce1c140db1e",
+      "freshAfterSourceFreeze": true
+    },
+    {
+      "path": "modules/core/target/test-reports/TEST-edu.uic.cs441.scholarchain.core.StableIdSpec.xml",
+      "name": "edu.uic.cs441.scholarchain.core.StableIdSpec",
+      "tests": 10,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "efaf34ab92c03c11817a7bb303ff26cdc1c24835b66174a3b95992c62a774c05",
+      "freshAfterSourceFreeze": true
+    },
+    {
+      "path": "modules/core/target/test-reports/TEST-edu.uic.cs441.scholarchain.core.ValidationSpec.xml",
+      "name": "edu.uic.cs441.scholarchain.core.ValidationSpec",
+      "tests": 31,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "3c72ea4ddb41dcd96b2e9f81fbe4157c5baeac8b01af1d24e07d48e0f44bf5b9",
+      "freshAfterSourceFreeze": true
+    },
+    {
+      "path": "modules/core/target/test-reports/TEST-edu.uic.cs441.scholarchain.core.WorkSourceEvidenceSpec.xml",
+      "name": "edu.uic.cs441.scholarchain.core.WorkSourceEvidenceSpec",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "40f4ae2722a4070e433a92393000c8e923907eb074f19e2e390319cf6bf3d4cf",
+      "freshAfterSourceFreeze": true
+    },
+    {
+      "path": "modules/hadoop/target/test-reports/TEST-edu.uic.cs441.scholarchain.hadoop.DblpXmlRegressionSpec.xml",
+      "name": "edu.uic.cs441.scholarchain.hadoop.DblpXmlRegressionSpec",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "27f2b1bf1c0ac1c90e20c98a10cf938770cdeb0ab8279ec18b1c5cb5b6892788",
+      "freshAfterSourceFreeze": true
+    },
+    {
+      "path": "modules/hadoop/target/test-reports/TEST-edu.uic.cs441.scholarchain.hadoop.HadoopPrepReviewSpec.xml",
+      "name": "edu.uic.cs441.scholarchain.hadoop.HadoopPrepReviewSpec",
+      "tests": 30,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "bc6f0eee51b0fcd847175be345e33721596d15285c8613b574b52c45b85d6bc5",
+      "freshAfterSourceFreeze": true
+    },
+    {
+      "path": "modules/hadoop/target/test-reports/TEST-edu.uic.cs441.scholarchain.hadoop.HadoopPrepSpec.xml",
+      "name": "edu.uic.cs441.scholarchain.hadoop.HadoopPrepSpec",
+      "tests": 19,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "70eb512ec2c83e1401d4df7d6bb8cd5a9f1b510f34aaf779b344a24a9ce7bc90",
+      "freshAfterSourceFreeze": true
+    },
+    {
+      "path": "modules/hadoop/target/test-reports/TEST-edu.uic.cs441.scholarchain.hadoop.SourceEvidenceRegressionSpec.xml",
+      "name": "edu.uic.cs441.scholarchain.hadoop.SourceEvidenceRegressionSpec",
+      "tests": 9,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "eb8781c547f86d9239c5b77b811d68c8b0e154c537d3d2e93382a85a847134ee",
+      "freshAfterSourceFreeze": true
+    },
+    {
+      "path": "tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentDblpJsonSpec.xml",
+      "name": "edu.uic.cs441.scholarchain.independent.IndependentDblpJsonSpec",
+      "tests": 9,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "1da75f152d7a40255532d27d95005b8fc35e429c314435b9aa04d443d09a6fa7",
+      "freshAfterSourceFreeze": true
+    },
+    {
+      "path": "tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentDblpXmlAdversarialSpec.xml",
+      "name": "edu.uic.cs441.scholarchain.independent.IndependentDblpXmlAdversarialSpec",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "8606a1636f605bc8a9be6f45a268a0414cec0fa46febaa4cb6c21c2a79624bf9",
+      "freshAfterSourceFreeze": true
+    },
+    {
+      "path": "tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentDblpXmlRepairSpec.xml",
+      "name": "edu.uic.cs441.scholarchain.independent.IndependentDblpXmlRepairSpec",
+      "tests": 17,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "31866f50a811a9f638b641056a56d0103b8c60c4e89d767f5e9490062d66a789",
+      "freshAfterSourceFreeze": true
+    },
+    {
+      "path": "tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentHadoopPipelineSpec.xml",
+      "name": "edu.uic.cs441.scholarchain.independent.IndependentHadoopPipelineSpec",
+      "tests": 11,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "05efed75ad49b97f25d8d16be124dba611a3ccbd21b3ee69d21b7e1af845b471",
+      "freshAfterSourceFreeze": true
+    },
+    {
+      "path": "tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentPhase4BlockerSpec.xml",
+      "name": "edu.uic.cs441.scholarchain.independent.IndependentPhase4BlockerSpec",
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "dd92d3717e0dae7f26e9a86b7b63747e0b9db8745da50c0e4657a489a64b4b45",
+      "freshAfterSourceFreeze": true
+    },
+    {
+      "path": "tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentPhase4EvidenceSpec.xml",
+      "name": "edu.uic.cs441.scholarchain.independent.IndependentPhase4EvidenceSpec",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "1292a397fa0bae13258895885bda7d7024abce966c006e88941fbbd1923fdb81",
+      "freshAfterSourceFreeze": true
+    },
+    {
+      "path": "tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentResolutionContractSpec.xml",
+      "name": "edu.uic.cs441.scholarchain.independent.IndependentResolutionContractSpec",
+      "tests": 17,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "28cd25788018938f0318670009cd0564fbadb5f6f54f8f7d9740461d282a5f4d",
+      "freshAfterSourceFreeze": true
+    }
+  ],
+  "markerVerification": {
+    "path": ".claude/.last-test-run",
+    "content": "success=true\ntimestamp=1792084086514\n",
+    "previousTimestamp": 1792081918395,
+    "renewed": true,
+    "afterSourceFreeze": true,
+    "loggedInvocationAfterAllPassingSuites": true
+  },
+  "toolchain": {
+    "javaVersionOutput": "openjdk version \"17.0.20.1\" 2026-08-18\nOpenJDK Runtime Environment Homebrew (build 17.0.20.1+0)\nOpenJDK 64-Bit Server VM Homebrew (build 17.0.20.1+0, mixed mode, sharing)\n",
+    "sbt": "1.10.7 (full-check startup)",
+    "scala": "3.3.4 (frozen Versions.scala)"
+  },
+  "logSha256": {
+    "core-targeted.log": "e292d5ef5a79557ec4f2d7106ccbdd0c08b0eab7e14dd54edd1d1ef5ef9d43c0",
+    "full-check.log": "0901d882e688b8ca235e8a717678777407d040184efa98569e416b16454eaad5",
+    "independent-before-fix.log": "1ff70fedda4638149d18d04cf3074849c182bbfb6c97e9c6426bdc4932e46010",
+    "independent-targeted-fixture-failure.log": "40ac951b22208a0b6d68187079de8bdb7a6803f05bb7f7ad45210d52b6d4cbb7",
+    "independent-targeted.log": "20c85fcc7be38a3c1928b6bb144e22738009b566e8088158f9e321b4094ea0c1"
+  },
+  "limitations": [
+    "B2/N10 Subphase 5A repair; no independent reviewer approval inferred.",
+    "Synthetic fixtures are not human labels or model accuracy evidence."
+  ],
+  "valid": true
+}

@@ -1,0 +1,19 @@
+{
+  "schema": "scholarchain.phase5a.b1-prefixed-regression.v1",
+  "command": "JAVA_HOME=/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home SBT_OPTS=-Dlogback.configurationFile=/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-04/xml-repair-logback.xml sbt -batch 'independentTests/Test/scalafmt' 'independentTests/testOnly edu.uic.cs441.scholarchain.independent.IndependentResolutionContractSpec' > target/phase5/5a-b1-verification/independent-before-fix.log 2>&1",
+  "executor": "coordinator/root after tester authored independent regression",
+  "exitCode": 1,
+  "tests": 10,
+  "passed": 7,
+  "failed": 3,
+  "failures": [
+    "mixed namespace ORCID/orcid transitive component conflict bypass",
+    "unsupported namespace spelling ORCID accepted",
+    "noncanonical ORCID URL value accepted"
+  ],
+  "productionFilesUnmodifiedDuringRegression": true,
+  "logSha256": "977f5cedf1826baf7791f2a4206b5a9e1f768e2e1ca5809693c344153670186f",
+  "sandboxAttemptExitCode": 1,
+  "delegatedApprovalAttempt": "native escalated request aborted after351.5s by coordinator interrupt; no confirmed process/session/result returned. Read-only lsof found no sbtbootlock holder; no pre-fix log existed before root explicit native approved retry.",
+  "coordinatorNativeRetry": "started session76830, terminal exit1; slot released before domain write goahead"
+}

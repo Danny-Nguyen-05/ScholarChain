@@ -1,0 +1,49 @@
+{
+  "schemaVersion": "scholarchain.er-config.example.v1",
+  "artifactRole": "DESIGN_ONLY_NOT_RUNTIME_CONFIG",
+  "evidenceStatus": "SYNTHETIC_UNCALIBRATED_EXAMPLE",
+  "policyFile": "modules/entity-resolution/contracts/policy.example.v1.json",
+  "policySchema": "scholarchain.er-policy.example.v1",
+  "globalEntityResolutionSettings": "SUPERSEDED_REJECT_IF_EXPLICITLY_SUPPLIED",
+  "input": {
+    "requireCompletedPrepRun": true,
+    "verifyEveryExportDigest": true,
+    "maxInputBytes": 268435456,
+    "maxInputRecords": 100000,
+    "maxRecordBytes": 1048576,
+    "maxLookupObservations": 50000
+  },
+  "output": {
+    "existingDirectory": "ERROR",
+    "atomicCompletion": true,
+    "maxDiagnosticTextBytes": 4096
+  },
+  "adjudication": {
+    "mode": "disabled",
+    "provider": null,
+    "model": null,
+    "modelVersion": null,
+    "credentialVariableName": null,
+    "maxRequestBytes": 32768,
+    "maxResponseBytes": 8192,
+    "timeoutMs": 10000,
+    "maxRetries": 0,
+    "maxConcurrentCalls": 1,
+    "maxFakeRequests": 10,
+    "maxLiveRequests": 0,
+    "maxLiveInputTokens": 0,
+    "maxLiveOutputTokens": 0,
+    "maxLiveSpendUsd": 0,
+    "liveAuthorizationRecord": null,
+    "cacheModeIsolation": true,
+    "cacheDirectory": "target/phase5/cache"
+  },
+  "reviewImport": {
+    "maxAnnotationFileBytes": 16777216,
+    "maxNoteCharacters": 1000,
+    "preserveOriginalExports": true,
+    "acceptSyntheticAsHuman": false
+  },
+  "groupValidation": {"maxMembers": 1000, "maxConstraints": 10000},
+  "limitsMeaning": "ILLUSTRATIVE_LOCAL_BOUNDS_NOT_LIVE_AUTHORIZATION"
+}

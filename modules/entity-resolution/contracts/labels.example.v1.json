@@ -1,0 +1,50 @@
+{
+  "schemaVersion": "scholarchain.er-label-export.example.v1",
+  "artifactRole": "DESIGN_ONLY_SYNTHETIC_LABEL_CHECKPOINT",
+  "evidenceStatus": "NOT_HUMAN_REVIEW_NOT_GOLD",
+  "queueId": "synthetic-contract-queue-v1",
+  "queueSchemaVersion": "scholarchain.er-review-queue.example.v1",
+  "queueHash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "sourcePopulationHash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  "reviewerId": "synthetic-example-only",
+  "exportedAtUtc": "2026-10-15T00:03:00Z",
+  "annotations": [
+    {
+      "pairFixture": "modules/core/src/test/resources/wire/resolution-work-pair.json",
+      "pairId": "resolution-pair:1b7b4ccf905e261f162fd9167241ae2acb6c6379821f225322dea43c82b1fff6",
+      "entityType": "Work",
+      "pairEvidenceHash": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "revisionId": "synthetic-revision-1",
+      "revision": 1,
+      "supersedesRevisionId": null,
+      "label": "same",
+      "note": "Synthetic serialization example; no researcher made this annotation.",
+      "annotatedAtUtc": "2026-10-15T00:01:00Z"
+    },
+    {
+      "pairFixture": "modules/core/src/test/resources/wire/resolution-researcher-pair.json",
+      "pairId": "resolution-pair:32c83838c7bcf409215f65a5e256dd8535fe0e7bdbef5f9aa28f469d07d06138",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+      "revisionId": "synthetic-revision-2",
+      "revision": 1,
+      "supersedesRevisionId": null,
+      "label": "different",
+      "note": "Synthetic initial revision illustrating a later uncertainty correction.",
+      "annotatedAtUtc": "2026-10-15T00:01:30Z"
+    },
+    {
+      "pairFixture": "modules/core/src/test/resources/wire/resolution-researcher-pair.json",
+      "pairId": "resolution-pair:32c83838c7bcf409215f65a5e256dd8535fe0e7bdbef5f9aa28f469d07d06138",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+      "revisionId": "synthetic-revision-3",
+      "revision": 2,
+      "supersedesRevisionId": "synthetic-revision-2",
+      "label": "uncertain",
+      "note": "Synthetic correction; preserve both revisions and report uncertain separately.",
+      "annotatedAtUtc": "2026-10-15T00:02:00Z"
+    }
+  ],
+  "runtimeCompletionRequiredIn5C": "Pair IDs bind shared contract fixtures; repeated-letter queue/source/evidence hashes are synthetic placeholders, not digests of real evidence. pairFixture is explanatory example metadata only. Implement closed schema, actual frozen evidence hash binding and revision/import tests before accepting human labels."
+}

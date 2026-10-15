@@ -1,0 +1,299 @@
+{
+  "schema": "scholarchain.phase5a.verification.v1",
+  "capturedAtUtc": "2026-10-15T15:37:31.587358+00:00",
+  "gateExitCode": 0,
+  "sourceFreezeSha256": "76b6cd0f8136402a66688623626b7ed47ff55107e7978c1ef474c62e485bedc8",
+  "sourceVerification": {
+    "frozenFileCount": 140,
+    "hashMismatchPaths": [],
+    "unexpectedPaths": [],
+    "missingPaths": []
+  },
+  "stdoutTestCounts": [
+    108,
+    64,
+    60,
+    4
+  ],
+  "stdoutTestTotal": 236,
+  "junitGroups": {
+    "buildVerification": {
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "core": {
+      "tests": 108,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "hadoop": {
+      "tests": 64,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "independentTests": {
+      "tests": 60,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  },
+  "junitTestTotal": 236,
+  "junitReports": [
+    {
+      "path": "build-verification/target/test-reports/TEST-scholarchain.build.CheckFailurePathSpec.xml",
+      "name": "scholarchain.build.CheckFailurePathSpec",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "01fa2b5e0e8f15ebe48b0498b3872711b9f2371e6d355cf502900c7e02fcf54d",
+      "freshAfterSourceFreeze": true
+    },
+    {
+      "path": "build-verification/target/test-reports/TEST-scholarchain.build.HadoopBundleMergeSpec.xml",
+      "name": "scholarchain.build.HadoopBundleMergeSpec",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "b12dab10bd10213ccfeadb9facec9f483bcfc54295d6bb4ccf49d9cae60de093",
+      "freshAfterSourceFreeze": true
+    },
+    {
+      "path": "build-verification/target/test-reports/TEST-scholarchain.build.TestRunMarkerSpec.xml",
+      "name": "scholarchain.build.TestRunMarkerSpec",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "36dc7f3e6aaa6078b701847eafe1604b3ec36d25cd2458f982247aa7acca4987",
+      "freshAfterSourceFreeze": true
+    },
+    {
+      "path": "modules/core/target/test-reports/TEST-edu.uic.cs441.scholarchain.core.ConfigLoaderSpec.xml",
+      "name": "edu.uic.cs441.scholarchain.core.ConfigLoaderSpec",
+      "tests": 8,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "37bcc427be2c822a051f54417935b3bab6d2ff63d048780c4b67bdefb9876d03",
+      "freshAfterSourceFreeze": true
+    },
+    {
+      "path": "modules/core/target/test-reports/TEST-edu.uic.cs441.scholarchain.core.ContractRepairSpec.xml",
+      "name": "edu.uic.cs441.scholarchain.core.ContractRepairSpec",
+      "tests": 27,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "dc2482e400918c4985c2e4dd02e82c0b95c775fb2001e8fcad2ef248a3912b7f",
+      "freshAfterSourceFreeze": true
+    },
+    {
+      "path": "modules/core/target/test-reports/TEST-edu.uic.cs441.scholarchain.core.Phase4ContractSpec.xml",
+      "name": "edu.uic.cs441.scholarchain.core.Phase4ContractSpec",
+      "tests": 16,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "30b00433881d4ae4a4f92570141321aeb5ebce8eb9bc7a1f78a5dcdcab88026b",
+      "freshAfterSourceFreeze": true
+    },
+    {
+      "path": "modules/core/target/test-reports/TEST-edu.uic.cs441.scholarchain.core.ResolutionContractSpec.xml",
+      "name": "edu.uic.cs441.scholarchain.core.ResolutionContractSpec",
+      "tests": 9,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "8d51d13eb2bafb97ee3bd19f50853430d0a5ca157b4a29519174c009141266ce",
+      "freshAfterSourceFreeze": true
+    },
+    {
+      "path": "modules/core/target/test-reports/TEST-edu.uic.cs441.scholarchain.core.SerializationContractSpec.xml",
+      "name": "edu.uic.cs441.scholarchain.core.SerializationContractSpec",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "358bbfa782be1c000c741ff491a1360a9bb0f0c895e0e190ba2a5355a2107f03",
+      "freshAfterSourceFreeze": true
+    },
+    {
+      "path": "modules/core/target/test-reports/TEST-edu.uic.cs441.scholarchain.core.StableIdSpec.xml",
+      "name": "edu.uic.cs441.scholarchain.core.StableIdSpec",
+      "tests": 10,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "02a9fad269ff81d0b9edb6966a98b7308aac9d5af1761684b7472f07f6103055",
+      "freshAfterSourceFreeze": true
+    },
+    {
+      "path": "modules/core/target/test-reports/TEST-edu.uic.cs441.scholarchain.core.ValidationSpec.xml",
+      "name": "edu.uic.cs441.scholarchain.core.ValidationSpec",
+      "tests": 31,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "b6f56b3d264366bb7affa30ec8fd3a51c2d3e3bb98c0c1024c6d80fd008a4a26",
+      "freshAfterSourceFreeze": true
+    },
+    {
+      "path": "modules/core/target/test-reports/TEST-edu.uic.cs441.scholarchain.core.WorkSourceEvidenceSpec.xml",
+      "name": "edu.uic.cs441.scholarchain.core.WorkSourceEvidenceSpec",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "5661c328aa5dff56b590dc02feb08852ab2f1ded6516887e95b4b9f57933264e",
+      "freshAfterSourceFreeze": true
+    },
+    {
+      "path": "modules/hadoop/target/test-reports/TEST-edu.uic.cs441.scholarchain.hadoop.DblpXmlRegressionSpec.xml",
+      "name": "edu.uic.cs441.scholarchain.hadoop.DblpXmlRegressionSpec",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "5e2f769adba8b9bc74c8bb217910d7ec6f6dff378b1fe883823696a0fd091996",
+      "freshAfterSourceFreeze": true
+    },
+    {
+      "path": "modules/hadoop/target/test-reports/TEST-edu.uic.cs441.scholarchain.hadoop.HadoopPrepReviewSpec.xml",
+      "name": "edu.uic.cs441.scholarchain.hadoop.HadoopPrepReviewSpec",
+      "tests": 30,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "19ee9c89c48ca31ca544adc2a6110fa9dd441b625e5899145ad68e27d27d15ec",
+      "freshAfterSourceFreeze": true
+    },
+    {
+      "path": "modules/hadoop/target/test-reports/TEST-edu.uic.cs441.scholarchain.hadoop.HadoopPrepSpec.xml",
+      "name": "edu.uic.cs441.scholarchain.hadoop.HadoopPrepSpec",
+      "tests": 19,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "5ebd804d5d3530490ca8cdeda58ead1a9037f09d3720cc51baa97c8b36d56f47",
+      "freshAfterSourceFreeze": true
+    },
+    {
+      "path": "modules/hadoop/target/test-reports/TEST-edu.uic.cs441.scholarchain.hadoop.SourceEvidenceRegressionSpec.xml",
+      "name": "edu.uic.cs441.scholarchain.hadoop.SourceEvidenceRegressionSpec",
+      "tests": 9,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "80fc3c36beb2cdb6b70c73cb9b84f1bf62f23f7431857d1b0db640e48f5bfc25",
+      "freshAfterSourceFreeze": true
+    },
+    {
+      "path": "tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentDblpJsonSpec.xml",
+      "name": "edu.uic.cs441.scholarchain.independent.IndependentDblpJsonSpec",
+      "tests": 9,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "0fdbef0df71507c5ae1bfec1c0d8c39cc0d65402dbe6a48f191fda1343b14810",
+      "freshAfterSourceFreeze": true
+    },
+    {
+      "path": "tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentDblpXmlAdversarialSpec.xml",
+      "name": "edu.uic.cs441.scholarchain.independent.IndependentDblpXmlAdversarialSpec",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "a158e08568e48773bae2dcda499b8adfffcf24631cc71208baa5d6b9057f7bd7",
+      "freshAfterSourceFreeze": true
+    },
+    {
+      "path": "tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentDblpXmlRepairSpec.xml",
+      "name": "edu.uic.cs441.scholarchain.independent.IndependentDblpXmlRepairSpec",
+      "tests": 17,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "de4d63db9235e51d9059dd291f1eb5fcb1b3b7ca6a6f7be4acfa0a15d4a21ccb",
+      "freshAfterSourceFreeze": true
+    },
+    {
+      "path": "tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentHadoopPipelineSpec.xml",
+      "name": "edu.uic.cs441.scholarchain.independent.IndependentHadoopPipelineSpec",
+      "tests": 11,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "ba91a393de477588d95e546f5c474396b64dd45b1e7a104f7b1331ef46e172cb",
+      "freshAfterSourceFreeze": true
+    },
+    {
+      "path": "tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentPhase4BlockerSpec.xml",
+      "name": "edu.uic.cs441.scholarchain.independent.IndependentPhase4BlockerSpec",
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "366594c4f446851c028e278a64b8f068de9abf2954e8975e1facaf228a6d5cbf",
+      "freshAfterSourceFreeze": true
+    },
+    {
+      "path": "tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentPhase4EvidenceSpec.xml",
+      "name": "edu.uic.cs441.scholarchain.independent.IndependentPhase4EvidenceSpec",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "e6e0ec6a6b61f7c942ab3d6ebf3e17769a2d1fc41d3f0ed32e1a2dd18c5a3ead",
+      "freshAfterSourceFreeze": true
+    },
+    {
+      "path": "tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentResolutionContractSpec.xml",
+      "name": "edu.uic.cs441.scholarchain.independent.IndependentResolutionContractSpec",
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "sha256": "e15c2fff047ee0a7272ea21dc9e057ea9addeee81c1e2d9a053375fdd5c3ba83",
+      "freshAfterSourceFreeze": true
+    }
+  ],
+  "markerVerification": {
+    "path": ".claude/.last-test-run",
+    "content": "success=true\ntimestamp=1792078587114\n",
+    "previousTimestampObservedDuringGate": 1791429550481,
+    "renewed": true,
+    "afterSourceFreeze": true,
+    "loggedInvocationAfterAllPassingSuites": true
+  },
+  "toolchain": {
+    "java": "17.0.20.1 Homebrew (actual java -version probe)",
+    "sbt": "1.10.7 (full-check.log startup)",
+    "scala": "3.3.4 (build Versions.scala and dependency classpath)"
+  },
+  "logSha256": {
+    "core-targeted-sandbox-attempt.log": "d16be90ad6ceee140d204f7d2c7212ffec5e2251c56f7f849d9c6b4e81218f05",
+    "core-targeted.log": "ea23d2787728aa0215189cf36e76a8662feb184da0409113fedd79f9358a0029",
+    "datasets-dependency-prep.log": "4cae1930bb3ba1ec274e63853ca51e87375b605491cf741841318288b78fd14e",
+    "datasets-validation.log": "7e6a9d4295fbf4b736776828edb7e79f2b3093f5422dc1295020850fda826363",
+    "full-check-sandbox-attempt.log": "d16be90ad6ceee140d204f7d2c7212ffec5e2251c56f7f849d9c6b4e81218f05",
+    "full-check.log": "5c3178a6cad4781001b29370f9ee707850a1abc72f5286c831880c0396f44998",
+    "independent-targeted-compile-failure.log": "9632882f135740aeb999dc5195ee9687e81682a0c5fd370ae1d200b11c3fa3ef",
+    "independent-targeted-sandbox-attempt.log": "d16be90ad6ceee140d204f7d2c7212ffec5e2251c56f7f849d9c6b4e81218f05",
+    "independent-targeted.log": "f2d5debd66297cfb6b0f0e7a3f42ceca6d74b0850f3776c06eecdbadf4671a42"
+  },
+  "limitations": [
+    "Only 5A shared contracts/data readiness were implemented.",
+    "Synthetic tests are not human labels or model accuracy evidence.",
+    "No provider, acquisition, browser, matching, clustering or evaluation implementation was executed."
+  ],
+  "valid": true,
+  "evidenceParserCorrection": "Initial parser exit1 included stale legacy project/verification/target JUnit path. Actual buildVerification output is build-verification/target as build.sbt:10 declares. Initial parser JSON retained; this changes evidence inspection only, not gate execution or source."
+}

@@ -1,0 +1,788 @@
+{
+  "schema": "scholarchain.phase5a.source-freeze.v1",
+  "checkpoint": "5A B2sourcegrounding+N10repair",
+  "capturedAtUtc": "2026-10-15T17:01:21.109532+00:00",
+  "head": "099e303311be7a1b2e2cf5655e0c7ce9fa710474",
+  "branch": "main",
+  "scopes": [
+    "build.sbt",
+    "project",
+    "modules",
+    "tests",
+    "datasets",
+    ".scalafmt.conf",
+    ".gitignore"
+  ],
+  "files": [
+    {
+      "path": ".gitignore",
+      "bytes": 318,
+      "sha256": "9c6a0a262b731749bf04a0334de33946ca65f6a71a15652033730c1fa98afb26"
+    },
+    {
+      "path": ".scalafmt.conf",
+      "bytes": 58,
+      "sha256": "aadd5693d3895ae8aac1b329e71ff6e5da5be653460a971a56403ebac831efed"
+    },
+    {
+      "path": "build.sbt",
+      "bytes": 6422,
+      "sha256": "4bcc18708434b759a2450eb0736cbdd2f18e991c2e64c1d02da5d48e6cf4eb15"
+    },
+    {
+      "path": "datasets/acquisition-index.v1.json",
+      "bytes": 1497,
+      "sha256": "14cccd5cb774ba6cbb4574ef818fd41d8551e163408daab48e2bab47468a4c69"
+    },
+    {
+      "path": "datasets/dataset-manifest.yaml",
+      "bytes": 12446,
+      "sha256": "cf1cba59e3fe8e7f2553a46cf4b27894b8409343082e766531b3ba1951e8a1b3"
+    },
+    {
+      "path": "datasets/licenses/PORTFOLIO-NOTES.md",
+      "bytes": 1642,
+      "sha256": "f7e6f134c8ee080fde1f2987bbd6e23819998aaa82db5f005de0781b8e343b23"
+    },
+    {
+      "path": "datasets/provenance/dblp-snapshot-2026-10-03-dagstuhl.txt",
+      "bytes": 2259,
+      "sha256": "412ffcae3cbd9953d3516a4622041c37e12867ca8d34d6a6628c33a027554c2d"
+    },
+    {
+      "path": "datasets/samples/SHA256SUMS",
+      "bytes": 382,
+      "sha256": "deef0c58a1ce191cc31bed6c43fb7677c102d952dc3836a4b47e1bf46bcd7d51"
+    },
+    {
+      "path": "datasets/samples/crossref/works.jsonl",
+      "bytes": 9405,
+      "sha256": "a6e3c40e178b7ce7f74ed870a48b4a2951de1705e7a0ed8f8fd40838bc4d39cc"
+    },
+    {
+      "path": "datasets/samples/dblp/linked-records.xml",
+      "bytes": 1682,
+      "sha256": "e23d50c04b2cadcc01ff719ea1841157f2d865dd0e2657b27d3bd4931fe2a935"
+    },
+    {
+      "path": "datasets/samples/openalex/works.jsonl",
+      "bytes": 11576,
+      "sha256": "6cff12f2ec1439acc66b89a9c30c54aa90bec8e3e11c317561f3e4a0f9a65d8c"
+    },
+    {
+      "path": "datasets/samples/orcid/records.jsonl",
+      "bytes": 28652,
+      "sha256": "5000694a8e93f5ff2393f7f25f9a908d139e7ba20d26c0d98141e5ce1e070325"
+    },
+    {
+      "path": "datasets/schemas/crossref-works.md",
+      "bytes": 1085,
+      "sha256": "d2ee09f01741e19bac84d4c5cd1868873e42273c2954689497f13c0ec5ad25b2"
+    },
+    {
+      "path": "datasets/schemas/dblp-xml.md",
+      "bytes": 2683,
+      "sha256": "5ba158b8d56347e97fb5c9cf9ab9237c3f2dbc6f4ac78d20b2830ca03e3a8cb9"
+    },
+    {
+      "path": "datasets/schemas/dblp/dblp-named-entities.v1.tsv",
+      "bytes": 998,
+      "sha256": "23d60a7e511183b931afcdb7a7b3bb213dc7d42fa6e21e525f499db244ef99e8"
+    },
+    {
+      "path": "datasets/schemas/openalex-works.md",
+      "bytes": 1280,
+      "sha256": "739ace988ce9e695a1a7f948f57b6d2c59388ef911bcc551ae385ede6df1ea1b"
+    },
+    {
+      "path": "datasets/schemas/orcid-record.md",
+      "bytes": 2876,
+      "sha256": "5ba897fae83162d1ecee56ddfa9f4194193ede4bf5e1cff147173c7961fe6ed8"
+    },
+    {
+      "path": "datasets/scripts/README.md",
+      "bytes": 974,
+      "sha256": "01d0e7e2d9110c598efa02942705af621aec1200654e5f82d50137d5af547c08"
+    },
+    {
+      "path": "datasets/scripts/acquire_samples.py",
+      "bytes": 10903,
+      "sha256": "e98dfe9b66de5a04ac29db85d14121ea7cf5825d33bc315ad7b3d6a124747ccc"
+    },
+    {
+      "path": "datasets/scripts/dblp_entities.py",
+      "bytes": 3037,
+      "sha256": "44448be2d9175dee11835bc148c39ca732c2d3b415d8f32906e4aa2f4b85f03f"
+    },
+    {
+      "path": "datasets/scripts/requirements.txt",
+      "bytes": 14,
+      "sha256": "01e08410080741c1f164e3b7459ea15db5966cef6629bfeb2691175f269efd00"
+    },
+    {
+      "path": "datasets/scripts/test_acquire_bounds.py",
+      "bytes": 3860,
+      "sha256": "0489ddb354f6a1a3888773414216de0f085dbf0c88f56764534a815596a77590"
+    },
+    {
+      "path": "datasets/scripts/validate_datasets.py",
+      "bytes": 6981,
+      "sha256": "1960a6d8bdfd8ae8fe38399ae21476830d42665b4c4df5b9c3f45d09d9d0efd1"
+    },
+    {
+      "path": "modules/core/README.md",
+      "bytes": 26602,
+      "sha256": "ab1924f93b206db0c61ae74154f81a66ef284a33853367a2d98f36161fb93d4e"
+    },
+    {
+      "path": "modules/core/src/main/resources/scholarchain.config.v1.conf",
+      "bytes": 1567,
+      "sha256": "c3c3b1d58c5129740b27dce458078e5c74661400f7cb76be88795130f0516ab1"
+    },
+    {
+      "path": "modules/core/src/main/resources/scholarchain.config.v1.json",
+      "bytes": 1567,
+      "sha256": "c3c3b1d58c5129740b27dce458078e5c74661400f7cb76be88795130f0516ab1"
+    },
+    {
+      "path": "modules/core/src/main/resources/scholarchain.hadoop-prep.v1.json",
+      "bytes": 410,
+      "sha256": "4455a0b6fd9ddc12088c8203c562bfa6348a895a09f3dc5e427ff3793b308e41"
+    },
+    {
+      "path": "modules/core/src/main/scala/edu/uic/cs441/scholarchain/core/ConfigLoader.scala",
+      "bytes": 21134,
+      "sha256": "8681b4db21e86b3d40729121eda3ea161869351b15aac7fcaeacede089819262"
+    },
+    {
+      "path": "modules/core/src/main/scala/edu/uic/cs441/scholarchain/core/CoreJson.scala",
+      "bytes": 855,
+      "sha256": "7c4d873837216417d507f2dccf03c760344ecad630e321d408b3e98b18568ba2"
+    },
+    {
+      "path": "modules/core/src/main/scala/edu/uic/cs441/scholarchain/core/DomainValidation.scala",
+      "bytes": 73655,
+      "sha256": "f0e1d032b790e079858f0a0e97a8905bac1bde746c2e1f10328910550ca57f54"
+    },
+    {
+      "path": "modules/core/src/main/scala/edu/uic/cs441/scholarchain/core/Enums.scala",
+      "bytes": 11756,
+      "sha256": "f8db8f686294d337255cff5b6b19ef445c837a4eb5c7e034789d4906c44f98d8"
+    },
+    {
+      "path": "modules/core/src/main/scala/edu/uic/cs441/scholarchain/core/HadoopPrepConfig.scala",
+      "bytes": 1655,
+      "sha256": "895bafab6a8fd5160dccc45e5426243bdd3901e8459d4d00cdbf1e3d616cad43"
+    },
+    {
+      "path": "modules/core/src/main/scala/edu/uic/cs441/scholarchain/core/HadoopPrepConfigLoader.scala",
+      "bytes": 10362,
+      "sha256": "0afdf745d62427b7f1ac65ad686d2defe3aa874fcbdfa4e3e003a0bd67dc5d1e"
+    },
+    {
+      "path": "modules/core/src/main/scala/edu/uic/cs441/scholarchain/core/PreparationFeatures.scala",
+      "bytes": 3007,
+      "sha256": "5c8c028afc45bcd12a2c8f317112e33ea4a803360c842754c980e6ad350ae241"
+    },
+    {
+      "path": "modules/core/src/main/scala/edu/uic/cs441/scholarchain/core/Records.scala",
+      "bytes": 18615,
+      "sha256": "a4458baf20a8914518c1ab96d9dc58e22e5c562f34a7060885c41d3ecf0fb6b9"
+    },
+    {
+      "path": "modules/core/src/main/scala/edu/uic/cs441/scholarchain/core/ResolutionContracts.scala",
+      "bytes": 9091,
+      "sha256": "d37ce018c3d890a73ff129bb053c633a715f33772c23e396d91d8e5e308d4e2d"
+    },
+    {
+      "path": "modules/core/src/main/scala/edu/uic/cs441/scholarchain/core/ResolutionValidation.scala",
+      "bytes": 15495,
+      "sha256": "f4a72e84a3dfcdc94549e264916bbd2f31d36d5a832499709066d95fe8a4c4d1"
+    },
+    {
+      "path": "modules/core/src/main/scala/edu/uic/cs441/scholarchain/core/ResolutionValidationContext.scala",
+      "bytes": 7436,
+      "sha256": "38688366a7d747b49c02455cbe236944ee97bb1f52196e4222bad1b315382cda"
+    },
+    {
+      "path": "modules/core/src/main/scala/edu/uic/cs441/scholarchain/core/SchemaVersions.scala",
+      "bytes": 890,
+      "sha256": "73ca77f4b9d8904287a764e3661f495dddce3877972162fb911356b03565a412"
+    },
+    {
+      "path": "modules/core/src/main/scala/edu/uic/cs441/scholarchain/core/ScholarChainConfig.scala",
+      "bytes": 2438,
+      "sha256": "59c4db13056926b9ae6bba96d981cdacf572cab66556d48b3d8085804c1e065f"
+    },
+    {
+      "path": "modules/core/src/main/scala/edu/uic/cs441/scholarchain/core/StableIds.scala",
+      "bytes": 34054,
+      "sha256": "59ad9510d575552943d6fa1fa2923c7a48cee94a3b67d4c1cb94f1f340c9d769"
+    },
+    {
+      "path": "modules/core/src/main/scala/edu/uic/cs441/scholarchain/core/TextNorm.scala",
+      "bytes": 592,
+      "sha256": "2f2502f30591a729983323a8ccee2e520e5c05122352036c50be9631e07e507a"
+    },
+    {
+      "path": "modules/core/src/main/scala/edu/uic/cs441/scholarchain/core/Violations.scala",
+      "bytes": 394,
+      "sha256": "da929d3cecc825b19f0e6d385359008021fe9fb12dd339944dbb43ec4dcfce2a"
+    },
+    {
+      "path": "modules/core/src/main/scala/edu/uic/cs441/scholarchain/core/WorkValidationContext.scala",
+      "bytes": 1631,
+      "sha256": "715dbdb1dafe7fb261489092874e8ae2ce12f5242f0c2509a967d28e16d0809b"
+    },
+    {
+      "path": "modules/core/src/test/resources/wire/answer-claim-graph-path.json",
+      "bytes": 1326,
+      "sha256": "2c87bb42a045c346164ca410123c91a2e222d98d1673031b664bdb0fc398625d"
+    },
+    {
+      "path": "modules/core/src/test/resources/wire/answer-claim.json",
+      "bytes": 1290,
+      "sha256": "86e894c7f6c47f298a0caa900b5aaf794a023e4336fd4da17631ef310db5209b"
+    },
+    {
+      "path": "modules/core/src/test/resources/wire/answer-response.json",
+      "bytes": 2716,
+      "sha256": "11eac6fa8058b4fb80bc48698e0d1bfac7cbdd8884e6c4c32cb4e0d85c4ab922"
+    },
+    {
+      "path": "modules/core/src/test/resources/wire/author-mention.json",
+      "bytes": 1315,
+      "sha256": "d917e90838d7c8aaed0b3e2865b4f8224a58a42e86fe77f6a8495bd5d9a2c782"
+    },
+    {
+      "path": "modules/core/src/test/resources/wire/authorship-record.json",
+      "bytes": 1117,
+      "sha256": "a2b5f7d0abe004851b0c62efab319a542e79223e314d553fa0fac1c25e454bec"
+    },
+    {
+      "path": "modules/core/src/test/resources/wire/canonical-researcher.json",
+      "bytes": 1134,
+      "sha256": "7f5bc80063bbc346092c8762cf2361c078c927bb6018c0df615499f31a91631e"
+    },
+    {
+      "path": "modules/core/src/test/resources/wire/coauthor-edge.json",
+      "bytes": 1664,
+      "sha256": "e3f816843e4e34f2a7f4a5bfbbd21214d304b15a039e61134e733ee5726f8601"
+    },
+    {
+      "path": "modules/core/src/test/resources/wire/coauthor-pair-candidate.json",
+      "bytes": 1249,
+      "sha256": "5504c2fab16bcb166a81ddc312dac04dfc951afd29a5a9d4888ad862b41aa46e"
+    },
+    {
+      "path": "modules/core/src/test/resources/wire/evidence-bundle.json",
+      "bytes": 2836,
+      "sha256": "3ed522c9dab1196078f03e4af7e3f8cd3436825de7cf37a91094bfa0b262d5d1"
+    },
+    {
+      "path": "modules/core/src/test/resources/wire/evidence-item-edge.json",
+      "bytes": 1342,
+      "sha256": "281a770fe5c2517fc23c192fd0c2c66b548a4044e11bb7fe388fd0b6d5c6dfda"
+    },
+    {
+      "path": "modules/core/src/test/resources/wire/evidence-item-graph-path.json",
+      "bytes": 1463,
+      "sha256": "afa8b135f26d821d39d5403eb9f33c8bf5650441cf89d263329f12f0be72a87a"
+    },
+    {
+      "path": "modules/core/src/test/resources/wire/evidence-item-metric.json",
+      "bytes": 1485,
+      "sha256": "6e2e0da48896be4dad14949770ff626baddd2bd1e418b91091c02ef08e25ab77"
+    },
+    {
+      "path": "modules/core/src/test/resources/wire/evidence-item.json",
+      "bytes": 1320,
+      "sha256": "08ad09de1b96bddcfa51b4f41165674390c6928357a6efd54e5d771445c55ceb"
+    },
+    {
+      "path": "modules/core/src/test/resources/wire/graph-edge-orcid-employment.json",
+      "bytes": 994,
+      "sha256": "f3690de4f3b23ce6e15f8f72a4df2a19dfb8eec938b9d5882609fd0177cacf25"
+    },
+    {
+      "path": "modules/core/src/test/resources/wire/graph-edge.json",
+      "bytes": 1594,
+      "sha256": "629fcdd9124ec8bd6adfb2c0f5f937b57c991c59e444f8cb7ea2e7360547326b"
+    },
+    {
+      "path": "modules/core/src/test/resources/wire/graph-node.json",
+      "bytes": 1082,
+      "sha256": "e8e0dfbf4dd6feb8ec88e0bbe23d11a29fea55a45a43f4ac52cd9cd74ebb77dc"
+    },
+    {
+      "path": "modules/core/src/test/resources/wire/institution.json",
+      "bytes": 1063,
+      "sha256": "0a89d5c444528a7d6fe24f95c04104d391545dc1d0b48f7b0118ae3bc848672b"
+    },
+    {
+      "path": "modules/core/src/test/resources/wire/match-decision-conflict.json",
+      "bytes": 1411,
+      "sha256": "aabe6b7b772cb3a9b72784b7bccd8e53a145430448582b6869fe7f0f2c5a7f55"
+    },
+    {
+      "path": "modules/core/src/test/resources/wire/match-decision.json",
+      "bytes": 1332,
+      "sha256": "18cc1a0b63b033cf46338b262b56e2137367c2ccbb75721b2f35a200faced748"
+    },
+    {
+      "path": "modules/core/src/test/resources/wire/publication-team.json",
+      "bytes": 1145,
+      "sha256": "70841b3cf533ea528b14c4386d6b8fc7a2ace99096a6fdeee53b011588f570a9"
+    },
+    {
+      "path": "modules/core/src/test/resources/wire/query-plan.json",
+      "bytes": 1067,
+      "sha256": "895272bf7487838bef3048e932840860b04960ca4e34afde64a84166ad06bf7b"
+    },
+    {
+      "path": "modules/core/src/test/resources/wire/researcher-metrics.json",
+      "bytes": 1613,
+      "sha256": "297735932ed3e06db4e14079662dacf463f2b488d43a8a8bf89e54c1a3160ac6"
+    },
+    {
+      "path": "modules/core/src/test/resources/wire/resolution-accepted-link.json",
+      "bytes": 1628,
+      "sha256": "94e8b99548ba68383f7eb53ba5ee714f123352753332e5fa87fcd5588bed6771"
+    },
+    {
+      "path": "modules/core/src/test/resources/wire/resolution-grouping-constraints.json",
+      "bytes": 1625,
+      "sha256": "86f3d22ed906457570b453d36bf20d4d1e87ca5262e270d6454f3fe7d5bde070"
+    },
+    {
+      "path": "modules/core/src/test/resources/wire/resolution-researcher-decision.json",
+      "bytes": 3042,
+      "sha256": "ec27dd884b48e6ed4b6e663b68baf922202f94219e7e4fdb7376ac5b4f902303"
+    },
+    {
+      "path": "modules/core/src/test/resources/wire/resolution-researcher-pair.json",
+      "bytes": 644,
+      "sha256": "e16875fe11ff0c2180c39e7c7388567222e54f2878d32e1440a596593cc26ed1"
+    },
+    {
+      "path": "modules/core/src/test/resources/wire/resolution-work-decision.json",
+      "bytes": 3045,
+      "sha256": "12fbdb195a7d1b27df0872fd7675785fe77dc34982b269ed649277848fb2f39d"
+    },
+    {
+      "path": "modules/core/src/test/resources/wire/resolution-work-pair.json",
+      "bytes": 649,
+      "sha256": "dd204c6ad7711c627b5fd522ccf7588496cbdd9072e42b0c44a490b97a6c09c9"
+    },
+    {
+      "path": "modules/core/src/test/resources/wire/run-manifest.json",
+      "bytes": 1201,
+      "sha256": "5421ce327a6f7fa9a4e0b33512cb6812225c2583157b00b9fab0e27db9edd55f"
+    },
+    {
+      "path": "modules/core/src/test/resources/wire/topic.json",
+      "bytes": 808,
+      "sha256": "f65f2ef8288319156d3f84210bf7398c9e3141074eb328ac12b99056bb2c0579"
+    },
+    {
+      "path": "modules/core/src/test/resources/wire/venue.json",
+      "bytes": 1089,
+      "sha256": "4cca05aaa2b5b8115791ae2db84645d66c872e21863dbe5e0769e8043ed2ce7c"
+    },
+    {
+      "path": "modules/core/src/test/resources/wire/work-record.json",
+      "bytes": 4256,
+      "sha256": "f7a3233e480294cc91310befe8f9d029c64581aaac32fc409736ae3e209e4470"
+    },
+    {
+      "path": "modules/core/src/test/scala/edu/uic/cs441/scholarchain/core/ConfigLoaderSpec.scala",
+      "bytes": 6639,
+      "sha256": "d5ee7f7c1ae9a43b6ba91bafce1b462c0d01641c75614e2bcf1ca781880a71ec"
+    },
+    {
+      "path": "modules/core/src/test/scala/edu/uic/cs441/scholarchain/core/ContractRepairSpec.scala",
+      "bytes": 28487,
+      "sha256": "9bfef81f173aa6651189f9a8e9c8d13006efa8e3b4ebfea2ca93a13cf1e51efc"
+    },
+    {
+      "path": "modules/core/src/test/scala/edu/uic/cs441/scholarchain/core/Fixtures.scala",
+      "bytes": 20997,
+      "sha256": "bd4540e1269cb84665f3f98eedae3ecba33330bd6a151974017a67f94995426a"
+    },
+    {
+      "path": "modules/core/src/test/scala/edu/uic/cs441/scholarchain/core/Phase4ContractSpec.scala",
+      "bytes": 39088,
+      "sha256": "6c6468d4e4655f0e9d3cfdf15aec972547be245cce3d95bf4c692e2163e937d1"
+    },
+    {
+      "path": "modules/core/src/test/scala/edu/uic/cs441/scholarchain/core/ResolutionAuthoritySpec.scala",
+      "bytes": 7497,
+      "sha256": "7682699c2fcbd12ec0a06ea786714906113dac7f9ecab99147b8d4a890a1dff6"
+    },
+    {
+      "path": "modules/core/src/test/scala/edu/uic/cs441/scholarchain/core/ResolutionContractFixtures.scala",
+      "bytes": 5752,
+      "sha256": "d6269027b1332cc3658001039f6916315a197d4a22b1fc80c72f26302ff5fa22"
+    },
+    {
+      "path": "modules/core/src/test/scala/edu/uic/cs441/scholarchain/core/ResolutionContractSpec.scala",
+      "bytes": 12194,
+      "sha256": "5f032ffde52a547d92cac981afd2589e67651c0ca3362373339e42b7ac788e1b"
+    },
+    {
+      "path": "modules/core/src/test/scala/edu/uic/cs441/scholarchain/core/ResolutionGroundingSpec.scala",
+      "bytes": 9752,
+      "sha256": "de1963c0b9520c4d5e9e76edae4a5901852c07361f654629d3f8b6375bef9f1f"
+    },
+    {
+      "path": "modules/core/src/test/scala/edu/uic/cs441/scholarchain/core/SerializationContractSpec.scala",
+      "bytes": 4000,
+      "sha256": "bb565deef3e94e30de11ccc983a05cfd8db057e1e798da712cc346f6764cbde7"
+    },
+    {
+      "path": "modules/core/src/test/scala/edu/uic/cs441/scholarchain/core/StableIdSpec.scala",
+      "bytes": 6495,
+      "sha256": "815d5b37408445c2fb045f70b3bc839116e6f0370c66227eebf0eb5691410246"
+    },
+    {
+      "path": "modules/core/src/test/scala/edu/uic/cs441/scholarchain/core/ValidationSpec.scala",
+      "bytes": 23117,
+      "sha256": "79b0d3dc193beed1bd77009750ad8f6660ecdfffd37be5831bc66b9bf028dbb0"
+    },
+    {
+      "path": "modules/core/src/test/scala/edu/uic/cs441/scholarchain/core/WorkSourceEvidenceSpec.scala",
+      "bytes": 1897,
+      "sha256": "f08e43143b78c6eeb55a06b17fbefc4ea1ada170b0f3292692acb88970cdca97"
+    },
+    {
+      "path": "modules/entity-resolution/README.md",
+      "bytes": 21615,
+      "sha256": "50b9b8531ba087d112a06d8f47857e17a6b6edc81a5abd18f944da704ca62381"
+    },
+    {
+      "path": "modules/entity-resolution/contracts/config.example.v1.json",
+      "bytes": 1562,
+      "sha256": "4040704d334fa0c30c867466b09978591e1b83ab9bc95051616f1632f70b87dc"
+    },
+    {
+      "path": "modules/entity-resolution/contracts/labels.example.v1.json",
+      "bytes": 2721,
+      "sha256": "b01a27b983aee30b77e921cfe315335ae29cf6add8275bf21ccd58a48d30e4ef"
+    },
+    {
+      "path": "modules/entity-resolution/contracts/policy.example.v1.json",
+      "bytes": 2974,
+      "sha256": "73186dad84529a0c3c681b344f27ee70be6d3b1e040b7c04f782004e86e59052"
+    },
+    {
+      "path": "modules/entity-resolution/contracts/sampling.example.v1.json",
+      "bytes": 2699,
+      "sha256": "a71c24bd117ef32dde4509f675a202a3c70ea7df36fc3f3471951a655905f279"
+    },
+    {
+      "path": "modules/entity-resolution/src/main/scala/.gitkeep",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "modules/entity-resolution/src/test/scala/.gitkeep",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "modules/hadoop/README.md",
+      "bytes": 10564,
+      "sha256": "6b2bddd613af7842a32edd8e6e89e1008cb6b33c950241749dac3d86b64cbaf0"
+    },
+    {
+      "path": "modules/hadoop/src/main/resources/dblp-named-entities.v1.tsv",
+      "bytes": 998,
+      "sha256": "23d60a7e511183b931afcdb7a7b3bb213dc7d42fa6e21e525f499db244ef99e8"
+    },
+    {
+      "path": "modules/hadoop/src/main/scala/.gitkeep",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "modules/hadoop/src/main/scala/edu/uic/cs441/scholarchain/hadoop/DblpExtract.scala",
+      "bytes": 34205,
+      "sha256": "6cff411496dfea14dc6f71841aa66a2bfce130dfa2ebbcb0eb0eb8e9bef16b49"
+    },
+    {
+      "path": "modules/hadoop/src/main/scala/edu/uic/cs441/scholarchain/hadoop/DblpInput.scala",
+      "bytes": 19759,
+      "sha256": "8a142528a7837da29b59aeebd923d3586c5004bf4547b0af99070e1754a2b486"
+    },
+    {
+      "path": "modules/hadoop/src/main/scala/edu/uic/cs441/scholarchain/hadoop/DerivedRecords.scala",
+      "bytes": 20780,
+      "sha256": "c3976267c9dbfa5c14a743b1e96293ce66844db3a1bd6ee4b43cf57a3ba683ba"
+    },
+    {
+      "path": "modules/hadoop/src/main/scala/edu/uic/cs441/scholarchain/hadoop/HadoopIO.scala",
+      "bytes": 18416,
+      "sha256": "63be9cff272df5b5c9d55bf5bd1afa17fb40cd2ba03fe2dde35ca463c868f0e2"
+    },
+    {
+      "path": "modules/hadoop/src/main/scala/edu/uic/cs441/scholarchain/hadoop/HadoopPrepMain.scala",
+      "bytes": 9732,
+      "sha256": "3a6cdb070439ecf9cf4feef000beae560084ea8bdacef15c19b47b611587792b"
+    },
+    {
+      "path": "modules/hadoop/src/main/scala/edu/uic/cs441/scholarchain/hadoop/HadoopPrepPipeline.scala",
+      "bytes": 16130,
+      "sha256": "e6bc9cc8fcf3ffe91fcd7189d23cf6dbc30729b9e4403b25fbd6fc68d951831c"
+    },
+    {
+      "path": "modules/hadoop/src/main/scala/edu/uic/cs441/scholarchain/hadoop/JsonSources.scala",
+      "bytes": 49079,
+      "sha256": "2cf381a93ae633ad2d97e5051fe4bdb8a8cf8c35e096058876275eac6ea2ab36"
+    },
+    {
+      "path": "modules/hadoop/src/main/scala/edu/uic/cs441/scholarchain/hadoop/PrepJobs.scala",
+      "bytes": 45928,
+      "sha256": "bb629adf80a5f3109d92aa4fcdd90be7f5c224d6005d639cb4d8c1ee5c9e7292"
+    },
+    {
+      "path": "modules/hadoop/src/main/scala/edu/uic/cs441/scholarchain/hadoop/PrepSupport.scala",
+      "bytes": 38944,
+      "sha256": "12e1a48bb23a7395880fa915955e6687ade4e2d1cc08a532af4a88ce074a3ac0"
+    },
+    {
+      "path": "modules/hadoop/src/test/resources/log4j.properties",
+      "bytes": 251,
+      "sha256": "9c9f26416bc76b405ec8010c2b25699890f3992d0792b1b2ac1d2694cc631d1c"
+    },
+    {
+      "path": "modules/hadoop/src/test/scala/.gitkeep",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "modules/hadoop/src/test/scala/edu/uic/cs441/scholarchain/hadoop/DblpXmlRegressionSpec.scala",
+      "bytes": 10158,
+      "sha256": "98663d11f1b2f567460ba0221d3d886ed88085dd01e1516e356e26b4a392e669"
+    },
+    {
+      "path": "modules/hadoop/src/test/scala/edu/uic/cs441/scholarchain/hadoop/HadoopPrepReviewSpec.scala",
+      "bytes": 42073,
+      "sha256": "b86385391494bb635ca12294b6d86e970a2e948e2562360a6b878397eee6eaa5"
+    },
+    {
+      "path": "modules/hadoop/src/test/scala/edu/uic/cs441/scholarchain/hadoop/HadoopPrepSpec.scala",
+      "bytes": 39060,
+      "sha256": "04adc91a1eb25d6e5d39809181334b46f142b1996ae244ccd6a51f3239a96624"
+    },
+    {
+      "path": "modules/hadoop/src/test/scala/edu/uic/cs441/scholarchain/hadoop/SourceEvidenceRegressionSpec.scala",
+      "bytes": 16837,
+      "sha256": "a367bfd99ce7d49d497dcf6aebb95e1f5d8556c22935df3f0873b91fe72ca5c2"
+    },
+    {
+      "path": "modules/rag/src/main/scala/.gitkeep",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "modules/rag/src/test/scala/.gitkeep",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "modules/services/src/main/scala/.gitkeep",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "modules/services/src/test/scala/.gitkeep",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "modules/spark/src/main/scala/.gitkeep",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "modules/spark/src/test/scala/.gitkeep",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "modules/storage/src/main/scala/.gitkeep",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "modules/storage/src/test/scala/.gitkeep",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "project/Dependencies.scala",
+      "bytes": 864,
+      "sha256": "81d42c3977e2e82c41df524dd9f900cec4b28c17342f3a1ad2271cfe4d843012"
+    },
+    {
+      "path": "project/HadoopBundleMerge.scala",
+      "bytes": 6376,
+      "sha256": "e799e65289a5d1ee93e0c3aeac458ffb7b77dac16d25909d771aba6c6ba5e81a"
+    },
+    {
+      "path": "project/HadoopPackaging.md",
+      "bytes": 7727,
+      "sha256": "b5c78ef1c5078dd3cc11ec1ad97ee6e4b0da097f562b89229985681b5b20857f"
+    },
+    {
+      "path": "project/ScholarChainBuild.scala",
+      "bytes": 12869,
+      "sha256": "303b5d00cf6f715ec7dd8f272844993b219ab3e89e1370f72182e2da39eff619"
+    },
+    {
+      "path": "project/Versions.scala",
+      "bytes": 980,
+      "sha256": "84af70f8155455a3f09f9f480d22c4250cfce35836ca0af806049dc7e98ad10b"
+    },
+    {
+      "path": "project/build.properties",
+      "bytes": 19,
+      "sha256": "84d1a08240c782d6691e9829ec54530a45d10809b0e5200db4035723d852928c"
+    },
+    {
+      "path": "project/plugins.sbt",
+      "bytes": 1352,
+      "sha256": "2666d3154bd5281ed03915e8d7501636b9784b85417a7ed4c9abc6cd885f5601"
+    },
+    {
+      "path": "project/verification/src/main/scala/scholarchain/build/TestRunMarker.scala",
+      "bytes": 815,
+      "sha256": "d06d4cbaa07dc193c964aaee889a13ec57e21751c81f0909add695338a9f925d"
+    },
+    {
+      "path": "project/verification/src/main/scala/scholarchain/build/TestRunMarkerPolicy.scala",
+      "bytes": 456,
+      "sha256": "6d47415966d8e9e5f6fc84b0d2a7d797f4ddd422a5b0ac3433c9d840c46076e8"
+    },
+    {
+      "path": "project/verification/src/test/scala/scholarchain/build/CheckFailurePathSpec.scala",
+      "bytes": 1598,
+      "sha256": "b8fe74a900e799d260931efea5262252d1e4daa85c5a8641333d164e5a0ad87e"
+    },
+    {
+      "path": "project/verification/src/test/scala/scholarchain/build/HadoopBundleMergeSpec.scala",
+      "bytes": 3862,
+      "sha256": "a4a7455336fe41cebb58a64431a62ea111ec47c7cf397536a3c3e0000d781be7"
+    },
+    {
+      "path": "project/verification/src/test/scala/scholarchain/build/TestRunMarkerSpec.scala",
+      "bytes": 771,
+      "sha256": "d8dc14d4dcf59e2aefa74fe167984863453116fd378c7d4e48b7306b1390bdb0"
+    },
+    {
+      "path": "tests/.gitkeep",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentDblpJsonSpec.scala",
+      "bytes": 9538,
+      "sha256": "de3fa0e8868e57c0e86c97beed9a1b537e1bd9e4d4ba8b1bbdb95ee7b986139b"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentDblpXmlAdversarialSpec.scala",
+      "bytes": 6473,
+      "sha256": "e62c58defaa07ccef02cd56b49458aa9927ea09722dc2c780051e006c7fa2cd4"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentDblpXmlRepairSpec.scala",
+      "bytes": 10450,
+      "sha256": "9db455d1469b84853ff42402ca78df7aa52b613827ecc645b8e582da03b21a9b"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentHadoopPipelineSpec.scala",
+      "bytes": 21173,
+      "sha256": "d522a7fcdbd595e86170ea180de89f8b524ac9a5eab72253cd2902ea89f02382"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentPhase4BlockerSpec.scala",
+      "bytes": 14132,
+      "sha256": "ab1fea1ab7fb9bd1169c437e13a6e374dcc1a8600db008e368254cfd37c38f67"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentPhase4EvidenceSpec.scala",
+      "bytes": 13137,
+      "sha256": "6274c2eb50f4a313b8725491c2465f0ca2830f8cbc5d4e1cca047558ae3471d3"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentResolutionContractSpec.scala",
+      "bytes": 27980,
+      "sha256": "813cd28f83bd3e030e9a162089b1f4077339a684bfed464e2912649c309570da"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentTestSupport.scala",
+      "bytes": 5173,
+      "sha256": "b41a9c88a8dc7b6cd1bef435c57b64d3288f2f948b0c491c166c8787ffd76f0f"
+    }
+  ],
+  "sourceWritersFrozen": true,
+  "coreTargetedTests": 20,
+  "independentTargetedTests": 17,
+  "beforeFixRegression": {
+    "tests": 14,
+    "passed": 11,
+    "failed": 3,
+    "exitCode": 1
+  },
+  "priorReviewedStart": "b2-repair-start.json",
+  "changesSinceExternalReview": [
+    {
+      "path": "modules/core/README.md",
+      "status": "modified",
+      "beforeSha256": "1f2684ec1da4d309f55b62da697b1db597db6b0010fbe7a8451ecd1cb9aac3e1",
+      "sha256": "ab1924f93b206db0c61ae74154f81a66ef284a33853367a2d98f36161fb93d4e"
+    },
+    {
+      "path": "modules/core/src/main/scala/edu/uic/cs441/scholarchain/core/ResolutionValidation.scala",
+      "status": "modified",
+      "beforeSha256": "c9f61fb28a08855b99362ff680b64b1ebe12485318f46963535f3196cfe519ba",
+      "sha256": "f4a72e84a3dfcdc94549e264916bbd2f31d36d5a832499709066d95fe8a4c4d1"
+    },
+    {
+      "path": "modules/core/src/main/scala/edu/uic/cs441/scholarchain/core/ResolutionValidationContext.scala",
+      "status": "modified",
+      "beforeSha256": "8f4d2a0fc168fb07994002f24c289ca1ead6083b4249b7a5bff92fbe2a1d9c3e",
+      "sha256": "38688366a7d747b49c02455cbe236944ee97bb1f52196e4222bad1b315382cda"
+    },
+    {
+      "path": "modules/core/src/test/scala/edu/uic/cs441/scholarchain/core/ResolutionAuthoritySpec.scala",
+      "status": "modified",
+      "beforeSha256": "ebb0211a3220fa71aba81b23318dd8cc54785cb2713783a993af178f67506088",
+      "sha256": "7682699c2fcbd12ec0a06ea786714906113dac7f9ecab99147b8d4a890a1dff6"
+    },
+    {
+      "path": "modules/core/src/test/scala/edu/uic/cs441/scholarchain/core/ResolutionContractSpec.scala",
+      "status": "modified",
+      "beforeSha256": "0ce98ab57077383b3a251ef076aa79de7369ec4fc7f01799254c6795a927ca69",
+      "sha256": "5f032ffde52a547d92cac981afd2589e67651c0ca3362373339e42b7ac788e1b"
+    },
+    {
+      "path": "modules/core/src/test/scala/edu/uic/cs441/scholarchain/core/ResolutionGroundingSpec.scala",
+      "status": "new",
+      "beforeSha256": null,
+      "sha256": "de1963c0b9520c4d5e9e76edae4a5901852c07361f654629d3f8b6375bef9f1f"
+    },
+    {
+      "path": "modules/entity-resolution/README.md",
+      "status": "modified",
+      "beforeSha256": "66397d440abe20ffb5723b2398a930d2cc839e6a3400d53336cb6b5e0e63ae62",
+      "sha256": "50b9b8531ba087d112a06d8f47857e17a6b6edc81a5abd18f944da704ca62381"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentResolutionContractSpec.scala",
+      "status": "modified",
+      "beforeSha256": "072161c34eb7952ca2bd1c0e0237de18c80e0648f1aa20a60e6132476fdf30f1",
+      "sha256": "813cd28f83bd3e030e9a162089b1f4077339a684bfed464e2912649c309570da"
+    }
+  ]
+}
