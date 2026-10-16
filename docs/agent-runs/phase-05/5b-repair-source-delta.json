@@ -1,0 +1,115 @@
+{
+  "schema": "scholarchain.phase5b.repair-source-delta.v1",
+  "reviewedFreezeSha256": "3cabd0018817bddcd1168d8f08d5d10367459073e9a9639f4e42509c5cff063d",
+  "added": [
+    {
+      "path": "modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/PathIsolation.scala",
+      "bytes": 1242,
+      "sha256": "4a9290709f4ed9731079ee2df818df7cb6743c0769abfcda4bebe12267840441"
+    },
+    {
+      "path": "modules/entity-resolution/src/test/scala/edu/uic/cs441/scholarchain/entityresolution/ComparableEvidenceSpec.scala",
+      "bytes": 9308,
+      "sha256": "819f9d6bd607177dd9c68b4385f1eedc94c6880111deb130cc280b4ea1d62d83"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentResolutionPrepBridgeRepairSpec.scala",
+      "bytes": 3876,
+      "sha256": "cb23a3caafdada7812180490204c979c84fc95d3182e25b003b3168f967ed3ed"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentResolutionRepairSpec.scala",
+      "bytes": 7606,
+      "sha256": "cd1c4e1c98e112333deaa1883c72b9ea0029ea5252a1866de36536cdb9ce52a4"
+    }
+  ],
+  "modified": [
+    {
+      "path": "modules/core/README.md",
+      "beforeSha256": "1f87d85e33ccfeb35f457842678da7a0d6c403ac5e1579fee1ea6134a5d1f3bc",
+      "afterSha256": "578a9460fe9d572fe9a41461d381aba49b08dff1c0ffd14c86dc71ff9487e593"
+    },
+    {
+      "path": "modules/core/src/main/scala/edu/uic/cs441/scholarchain/core/ResolutionValidationContext.scala",
+      "beforeSha256": "7a1ba60ada061b96d66ad41dead0ff43d7603bb964d66d28bf6596337b5a5f8a",
+      "afterSha256": "315b99fa3577a87e02b7d55655a74968e5a3cecaac8fbda4ee667c0fee5fc23b"
+    },
+    {
+      "path": "modules/core/src/test/scala/edu/uic/cs441/scholarchain/core/ResolutionAuthorityConsumerSpec.scala",
+      "beforeSha256": "fe89fd013f9f68e4ca23801bed6868636cb26a9692bd1a2b100ff6bcd89665cd",
+      "afterSha256": "854b4b1ba9e725e34af57615935476de86c9b928b118345a11d63f9ea5557ead"
+    },
+    {
+      "path": "modules/entity-resolution/README.md",
+      "beforeSha256": "2230ddc358978b2ef822c56bd53f89f8642594f67e81d4d5c66e0bc5fd4d05a4",
+      "afterSha256": "2eda4a026085a39c3db25e5bf9cd2cb714cf6bfe92af0821c362be5aa72bc8e4"
+    },
+    {
+      "path": "modules/entity-resolution/src/main/resources/adjudication/prompt.v1.txt",
+      "beforeSha256": "8dfcf6a95b1f7e10ede4bd74830c822f1b7a07c341f298fe8b7a4e191e13c7ef",
+      "afterSha256": "e9ef5f36238a29f2003f9e6404451aeca7fc54575989910edae2ce0ab7f71940"
+    },
+    {
+      "path": "modules/entity-resolution/src/main/resources/adjudication/response.schema.v1.json",
+      "beforeSha256": "cde92d0c5b61b9e13ac3f68c76b18d0ff01f6a02420289db8fb5a883f608e608",
+      "afterSha256": "b253e113841a2e02699097ae003c4a01fbbd2fcd28cf2e61ff48a7a46e06aacd"
+    },
+    {
+      "path": "modules/entity-resolution/src/main/resources/phase5-policy.v1.json",
+      "beforeSha256": "1f50bd9f66c580662565d2e6edfe50a56d6138bcec0dea323aeab45c8c160b11",
+      "afterSha256": "2d3d12e7489b18437f96b09754709100cbc3529ffd4fcfd0ff6807db87f2a93f"
+    },
+    {
+      "path": "modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/Adjudication.scala",
+      "beforeSha256": "991bd0d9a1ce051f09d6f981f1291fa3114dd4d8e3610eb30f93906d36b45bf2",
+      "afterSha256": "460138a21a90b75ae097c605ceccf8b923f2fc763d20fe59228ccccb06318602"
+    },
+    {
+      "path": "modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/FeatureExtractor.scala",
+      "beforeSha256": "b214bfb7db4ecc3fc7259025f4d7cfbb469efa53f3a56d19831ecd74228c1596",
+      "afterSha256": "1cfd25875ef20b71ae5b64eb172e81e94a94914ceaba592edefc324ec09b16b8"
+    },
+    {
+      "path": "modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/InputLoader.scala",
+      "beforeSha256": "b885a177925c199854d03bd3fcda0d3e7c3374efb22bd23bdaefff17350f2cd8",
+      "afterSha256": "69e01893f0f07cdb8ac995d099d8cce46ca5c1d77bc71c4d49dabcf61f9ea6cc"
+    },
+    {
+      "path": "modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/LinkExporter.scala",
+      "beforeSha256": "a42283cafd53813254a3f9d6836a57fb824b755bb3620bbf8f3d392948dd4309",
+      "afterSha256": "5852d9b4bee919bd0d6aa02c14cbb5b35237ea0a67ab58e3337023daa9ab3b66"
+    },
+    {
+      "path": "modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/Phase5Main.scala",
+      "beforeSha256": "016e1185c583cdc6c856abd31528a071227a317a7fef167aa36e578add693c48",
+      "afterSha256": "ee3832f27cc339553466c807d233307aaad3f86db94986dd8af2bbeec042f112"
+    },
+    {
+      "path": "modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/ResolutionEngine.scala",
+      "beforeSha256": "3758820df2409f21ce79cf0429663bb6be51163fd15422044d90d824eb1a6701",
+      "afterSha256": "6b6e3348e2c4db6e171d5211d6c940b2b748d02f4d932ef0cc82c5477ece4b87"
+    },
+    {
+      "path": "modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/ResolutionPolicy.scala",
+      "beforeSha256": "ff4dbfcb1084738fbc5aaf637dea5ccd4c42bc188e3aae3500c4a91a7e2fadca",
+      "afterSha256": "0a35cf1b8ebb8aeee4b1a417348abea08e6878985146d4f6522fa01bb1993684"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentOfflineAdjudicationSpec.scala",
+      "beforeSha256": "075b0941e9edd52566307d007862390e5b0acf9ffdc272d1c8f796e49811f5dc",
+      "afterSha256": "e4c1dc1f52f7c02466518b1a6f5a5bd296fc7b0295012dd3551c7c423bcf7668"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentResolutionEngineSpec.scala",
+      "beforeSha256": "46d5aa806001efc03014016e99e6140d454dc2865f077bf45c8449484fa29b12",
+      "afterSha256": "cda7cc0a553331d8cd6d5673db83f51403b376b7bd8d817bbc34e3dddae8b035"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentResolutionExportSpec.scala",
+      "beforeSha256": "9f0c533c1d2b4550a7baeb9de9fe545229d861e33887ec96a89f750980273d35",
+      "afterSha256": "fb8c7cf7d281dce426d156d8c7b109b897ba2b518d07c54d089df4e50fd53180"
+    }
+  ],
+  "removed": [],
+  "allOtherReviewedFilesUnchanged": true
+}

@@ -1,0 +1,56 @@
+[info] welcome to sbt 1.10.7 (Homebrew Java 17.0.20.1)
+[info] loading settings for project scholarchain-build from plugins.sbt...
+[info] loading project definition from /Users/danny/Documents/UIC/CS441/ScholarChain/project
+[info] loading settings for project root from build.sbt...
+[info] set current project to root (in build file:/Users/danny/Documents/UIC/CS441/ScholarChain/)
+[info] scalafmt: Formatting 8 Scala sources (/Users/danny/Documents/UIC/CS441/ScholarChain/modules/entity-resolution)...
+[info] scalafmt: Reformatted 7 Scala sources
+[success] Total time: 1 s, completed Oct 16, 2026, 3:17:36 PM
+[info] scalafmt: Formatting 1 Scala sources (/Users/danny/Documents/UIC/CS441/ScholarChain/modules/entity-resolution)...
+[info] scalafmt: Reformatted 1 Scala sources
+[success] Total time: 0 s, completed Oct 16, 2026, 3:17:36 PM
+[info] scalafmt: Formatting 4 Scala sources (/Users/danny/Documents/UIC/CS441/ScholarChain/tests)...
+[info] scalafmt: Reformatted 4 Scala sources
+[success] Total time: 0 s, completed Oct 16, 2026, 3:17:36 PM
+[info] compiling 11 Scala sources to /Users/danny/Documents/UIC/CS441/ScholarChain/modules/entity-resolution/target/scala-3.3.4/classes ...
+[info] done compiling
+[info] compiling 2 Scala sources to /Users/danny/Documents/UIC/CS441/ScholarChain/modules/entity-resolution/target/scala-3.3.4/test-classes ...
+[error] -- [E007] Type Mismatch Error: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/entity-resolution/src/test/scala/edu/uic/cs441/scholarchain/entityresolution/ComparableEvidenceSpec.scala:114:6 
+[error] 114 |      run,
+[error]     |      ^^^
+[error]     |Found:    (Option[String], org.scalatest.Args) => org.scalatest.Status
+[error]     |Required: String
+[error]     |
+[error]     |The following import might fix the problem:
+[error]     |
+[error]     |  import org.scalactic.Prettifier.default
+[error]     |
+[error]     |
+[error]     | longer explanation available when compiling with `-explain`
+[error] -- [E007] Type Mismatch Error: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/entity-resolution/src/test/scala/edu/uic/cs441/scholarchain/entityresolution/ComparableEvidenceSpec.scala:201:10 
+[error] 201 |          run,
+[error]     |          ^^^
+[error]     |Found:    (Option[String], org.scalatest.Args) => org.scalatest.Status
+[error]     |Required: String
+[error]     |
+[error]     |The following import might fix the problem:
+[error]     |
+[error]     |  import org.scalactic.Prettifier.default
+[error]     |
+[error]     |
+[error]     | longer explanation available when compiling with `-explain`
+[error] -- [E007] Type Mismatch Error: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/entity-resolution/src/test/scala/edu/uic/cs441/scholarchain/entityresolution/ComparableEvidenceSpec.scala:214:8 
+[error] 214 |        run,
+[error]     |        ^^^
+[error]     |Found:    (Option[String], org.scalatest.Args) => org.scalatest.Status
+[error]     |Required: String
+[error]     |
+[error]     |The following import might fix the problem:
+[error]     |
+[error]     |  import org.scalactic.Prettifier.default
+[error]     |
+[error]     |
+[error]     | longer explanation available when compiling with `-explain`
+[error] three errors found
+[error] (entityResolution / Test / compileIncremental) Compilation failed
+[error] Total time: 7 s, completed Oct 16, 2026, 3:17:43 PM

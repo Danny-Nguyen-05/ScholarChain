@@ -1,0 +1,14 @@
+[info] welcome to sbt 1.10.7 (Homebrew Java 17.0.20.1)
+[info] loading settings for project scholarchain-build from plugins.sbt...
+[info] loading project definition from /Users/danny/Documents/UIC/CS441/ScholarChain/project
+[info] loading settings for project root from build.sbt...
+[info] set current project to root (in build file:/Users/danny/Documents/UIC/CS441/ScholarChain/)
+[info] running edu.uic.cs441.scholarchain.entityresolution.Phase5Main resolve --input target/phase4-runs/fda6168a-d4e6-4c20-bf73-42a1c3724f7f --policy modules/entity-resolution/src/main/resources/phase5-policy.v1.json --config modules/entity-resolution/src/main/resources/phase5-config.v1.json --llm-mode disabled --output target/phase5/5b-repair-disabled-demo
+Resolved 18 comparisons; fake calls=0, live calls=0; output=target/phase5/5b-repair-disabled-demo; input=052d67d212c279c113363712056aa298ccb8720a1bae1d83d9171e676630628b. No human labels, accuracy or calibration is claimed.
+[success] Total time: 1 s, completed Oct 16, 2026, 3:21:57 PM
+[info] running edu.uic.cs441.scholarchain.entityresolution.Phase5Main resolve --input target/phase4-runs/fda6168a-d4e6-4c20-bf73-42a1c3724f7f --policy modules/entity-resolution/src/main/resources/phase5-policy.v1.json --config modules/entity-resolution/src/main/resources/phase5-config.v1.json --llm-mode disabled --output target/phase5/5b-repair-disabled-replay
+Resolved 18 comparisons; fake calls=0, live calls=0; output=target/phase5/5b-repair-disabled-replay; input=052d67d212c279c113363712056aa298ccb8720a1bae1d83d9171e676630628b. No human labels, accuracy or calibration is claimed.
+[success] Total time: 0 s, completed Oct 16, 2026, 3:21:58 PM
+[info] running edu.uic.cs441.scholarchain.entityresolution.Phase5Main resolve --input target/phase4-runs/fda6168a-d4e6-4c20-bf73-42a1c3724f7f --policy modules/entity-resolution/src/main/resources/phase5-policy.v1.json --config modules/entity-resolution/src/main/resources/phase5-config.v1.json --llm-mode fake --output target/phase5/5b-repair-fake-demo --cache target/phase5/5b-repair-fake-cache
+Resolved 18 comparisons; fake calls=0, live calls=0; output=target/phase5/5b-repair-fake-demo; input=052d67d212c279c113363712056aa298ccb8720a1bae1d83d9171e676630628b. No human labels, accuracy or calibration is claimed.
+[success] Total time: 0 s, completed Oct 16, 2026, 3:21:58 PM

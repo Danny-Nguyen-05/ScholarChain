@@ -1,5 +1,8 @@
 package edu.uic.cs441.scholarchain.core
 
+import java.net.URI
+import scala.util.Try
+
 /** Source truth only; does not resolve identities. Mentions must belong to a validated work. */
 final class ResolutionValidationContext private (
     private val works: Map[ResolutionObservationRef, WorkRecord],
@@ -7,11 +10,43 @@ final class ResolutionValidationContext private (
     private val activities: Map[ResolutionObservationRef, OrcidActivityRecord]
 ) {
 
-  /** All supported hard facts on this exact observation. This is source consistency, not a matching
-    * policy: unknown identifiers remain observations, and recognized malformed facts fail instead
-    * of vanishing. No evidence is borrowed from another member or source key.
+  /** Bound DBLP electronic-publication links with their raw field/value and canonical authority.
+    * Other endpoint kinds and link roles return no publication facts. DOI suffixes use the existing
+    * StableIds token semantics, without URI decoding or query/fragment stripping; arXiv retains its
+    * separate resolver rules and unversioned authority. Missing bindings and malformed recognized
+    * resolver identifiers return errors. Raw duplicate links and contradictory facts are retained.
     */
-  private[core] def groundedAuthority(
+  def groundedElectronicPublicationFacts(
+      endpoint: ResolutionEndpoint
+  ): Either[Vector[DomainViolation], Vector[(NamedText, ResolutionAuthorityNamespace, String)]] = {
+    val bindingErrors = ResolutionValidation.checkEndpointStructure(endpoint) ++ check(endpoint)
+    if (bindingErrors.nonEmpty) Left(bindingErrors)
+    else {
+      val links = endpoint match {
+        case ResolutionEndpoint.Work(ref, _) if works(ref).source == SourceType.Dblp =>
+          works(ref).sourceLinks.filter(_.name == "ee")
+        case _ => Vector.empty
+      }
+      val parsed = links.map { link =>
+        ResolutionValidationContext
+          .electronicPublicationFact(link.value)
+          .map(_.map { case (namespace, value) => (link, namespace, value) })
+      }
+      val errors = parsed.flatMap(_.left.toOption)
+      if (errors.nonEmpty) Left(errors.distinct)
+      else Right(parsed.flatMap(_.toOption.flatten))
+    }
+  }
+
+  /** Read-only canonical authority facts on this exact validated observation, shared with ER so
+    * constraint export and conflict checks use the same source-consistency rules. An empty set
+    * means this bound observation carries no supported hard facts; a missing/mismatched observation
+    * or a recognized malformed fact returns errors. Contradictory facts are retained, not
+    * adjudicated. This does not establish identity or external existence, assign evidence
+    * references, or promote unknown identifiers. No evidence is borrowed from another member or
+    * source key.
+    */
+  def groundedAuthority(
       endpoint: ResolutionEndpoint
   ): Either[Vector[DomainViolation], Set[(ResolutionAuthorityNamespace, String)]] = {
     val bindingErrors = ResolutionValidation.checkEndpointStructure(endpoint) ++ check(endpoint)
@@ -57,7 +92,13 @@ final class ResolutionValidationContext private (
               else Vector.empty
             val declared =
               work.observedIdentifiers.flatMap(id => role(id.namespace).map(_ -> id.value))
-            (preferred ++ crossref ++ declared, Vector.empty)
+            val linked = groundedElectronicPublicationFacts(endpoint)
+            (
+              preferred ++ crossref ++ declared ++ linked.toOption.toVector.flatten.map {
+                case (_, namespace, value) => namespace -> value
+              },
+              linked.left.toOption.toVector.flatten
+            )
           case ResolutionEndpoint.Mention(_, id) =>
             (
               works(ref).authors.find(_.mentionId == id).get.observedOrcid.toVector.map(Orcid -> _),
@@ -124,6 +165,51 @@ final class ResolutionValidationContext private (
 }
 
 object ResolutionValidationContext {
+  private def electronicPublicationFact(
+      raw: String
+  ): Either[DomainViolation, Option[(ResolutionAuthorityNamespace, String)]] = {
+    import ResolutionAuthorityNamespace.*
+    val value = raw.trim
+    // Phase 4 and preferred DOI fields use literal StableIds token semantics. URI parsing would
+    // reject SICI characters or reinterpret valid DOI suffix '?'/'#' and percent escapes.
+    if (value.matches("(?i)^https?://(?:dx\\.)?doi\\.org/.*"))
+      StableIds.normalizeDoi(value).map(v => Some(Doi -> v))
+    else {
+      val uri = Try(new URI(value)).toOption
+      val host = uri.flatMap(u => Option(u.getHost)).map(_.toLowerCase(java.util.Locale.ROOT))
+      val http = uri.exists(u =>
+        Option(u.getScheme).exists(s =>
+          Set("http", "https").contains(s.toLowerCase(java.util.Locale.ROOT))
+        )
+      )
+      val doi = http && host.exists(Set("doi.org", "dx.doi.org").contains)
+      val arxiv = http && host.contains("arxiv.org") && uri.exists(u =>
+        Option(u.getRawPath).exists(_.matches("(?i)^/(?:abs|pdf)/.*"))
+      )
+      val resolverPrefix = value.matches(
+        "(?i)^https?://(?:(?:dx\\.)?doi\\.org(?=[:/?#]|$)|arxiv\\.org(?::[^/]*)?/(?:abs|pdf)/).*"
+      )
+      if (!doi && !arxiv && !resolverPrefix) Right(None)
+      else {
+        val safeArxiv = uri.exists(u =>
+          arxiv && u.getRawUserInfo == null && u.getPort == -1 &&
+            u.getRawQuery == null && u.getRawFragment == null &&
+            Option(u.getRawPath).exists(path => path.nonEmpty && !path.contains("%"))
+        )
+        val invalid = DomainViolation(
+          ViolationCode.MalformedId,
+          "unsupported or malformed DBLP ee identifier resolver URL"
+        )
+        if (!safeArxiv) Left(invalid)
+        else
+          StableIds
+            .arxivFromSourceUri(Some(value))
+            .toRight(invalid)
+            .map(v => Some(Arxiv -> v.replaceFirst("v[0-9]+$", "")))
+      }
+    }
+  }
+
   def create(
       works: Vector[WorkRecord],
       profiles: Vector[OrcidProfileRecord],

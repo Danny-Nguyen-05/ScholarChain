@@ -1,0 +1,166 @@
+{
+  "schema": "scholarchain.phase5b.command-evidence.v1",
+  "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+  "environment": {
+    "JAVA_HOME": "/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home",
+    "SBT_OPTS": "-Dlogback.configurationFile=/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-04/xml-repair-logback.xml"
+  },
+  "calls": [
+    {
+      "executable": "sbt",
+      "argv": [
+        "-batch",
+        "core/Compile/scalafmt",
+        "core/Test/scalafmt",
+        "core/testOnly edu.uic.cs441.scholarchain.core.ResolutionContractSpec edu.uic.cs441.scholarchain.core.ResolutionAuthoritySpec edu.uic.cs441.scholarchain.core.ResolutionGroundingSpec edu.uic.cs441.scholarchain.consumer.ResolutionAuthorityConsumerSpec"
+      ],
+      "stdoutAndStderr": "docs/agent-runs/phase-05/evidence/5b/core-targeted-sandbox-attempt.txt",
+      "exitCode": 1,
+      "note": "workspace-sandbox failed before sbt loaded"
+    },
+    {
+      "executable": "sbt",
+      "argv": [
+        "-batch",
+        "core/Compile/scalafmt",
+        "core/Test/scalafmt",
+        "core/testOnly edu.uic.cs441.scholarchain.core.ResolutionContractSpec edu.uic.cs441.scholarchain.core.ResolutionAuthoritySpec edu.uic.cs441.scholarchain.core.ResolutionGroundingSpec edu.uic.cs441.scholarchain.resolutionconsumer.ResolutionAuthorityConsumerSpec"
+      ],
+      "stdoutAndStderr": "docs/agent-runs/phase-05/evidence/5b/core-targeted.txt",
+      "exitCode": 0,
+      "note": "native cache access"
+    },
+    {
+      "executable": "sbt",
+      "argv": [
+        "-batch",
+        "entityResolution/compile"
+      ],
+      "stdoutAndStderr": "docs/agent-runs/phase-05/evidence/5b/er-first-compile.txt",
+      "exitCode": 1,
+      "note": "Scala compile errors"
+    },
+    {
+      "executable": "sbt",
+      "argv": [
+        "-batch",
+        "entityResolution/compile"
+      ],
+      "stdoutAndStderr": "docs/agent-runs/phase-05/evidence/5b/er-second-compile.txt",
+      "exitCode": 0,
+      "note": "diagnostic compile, not final freeze"
+    },
+    {
+      "executable": "sbt",
+      "argv": [
+        "-batch",
+        "core/Compile/scalafmt",
+        "core/Test/scalafmt",
+        "entityResolution/Compile/scalafmt",
+        "entityResolution/Test/scalafmt",
+        "independentTests/Test/scalafmt",
+        "core/testOnly edu.uic.cs441.scholarchain.core.ResolutionContractSpec edu.uic.cs441.scholarchain.core.ResolutionAuthoritySpec edu.uic.cs441.scholarchain.core.ResolutionGroundingSpec edu.uic.cs441.scholarchain.resolutionconsumer.ResolutionAuthorityConsumerSpec",
+        "entityResolution/test",
+        "independentTests/test"
+      ],
+      "stdoutAndStderr": "docs/agent-runs/phase-05/evidence/5b/combined-targeted-initial.txt",
+      "exitCode": 1,
+      "note": "independent task not reached after module failure"
+    },
+    {
+      "executable": "sbt",
+      "argv": [
+        "-batch",
+        "independentTests/test"
+      ],
+      "stdoutAndStderr": "docs/agent-runs/phase-05/evidence/5b/independent-initial.txt",
+      "exitCode": 1,
+      "note": "test source compilation failure"
+    },
+    {
+      "executable": "sbt",
+      "argv": [
+        "-batch",
+        "entityResolution/Compile/scalafmt",
+        "entityResolution/Test/scalafmt",
+        "independentTests/Test/scalafmt",
+        "entityResolution/test"
+      ],
+      "stdoutAndStderr": "docs/agent-runs/phase-05/evidence/5b/er-targeted-second.txt",
+      "exitCode": 1,
+      "note": "one owner fixture failure"
+    },
+    {
+      "executable": "sbt",
+      "argv": [
+        "-batch",
+        "independentTests/test"
+      ],
+      "stdoutAndStderr": "docs/agent-runs/phase-05/evidence/5b/independent-second.txt",
+      "exitCode": 1,
+      "note": "128/130 passed"
+    },
+    {
+      "executable": "sbt",
+      "argv": [
+        "-batch",
+        "entityResolution/Compile/scalafmt",
+        "entityResolution/Test/scalafmt",
+        "independentTests/Test/scalafmt",
+        "entityResolution/test",
+        "independentTests/testOnly edu.uic.cs441.scholarchain.independent.IndependentIdentifierNormalizationSpec edu.uic.cs441.scholarchain.independent.IndependentResolutionPolicySpec edu.uic.cs441.scholarchain.independent.IndependentResolutionInputSpec edu.uic.cs441.scholarchain.independent.IndependentPrepReaderSpec edu.uic.cs441.scholarchain.independent.IndependentCandidateDerivationSpec edu.uic.cs441.scholarchain.independent.IndependentResolutionEngineSpec edu.uic.cs441.scholarchain.independent.IndependentResolutionFeaturesSpec edu.uic.cs441.scholarchain.independent.IndependentOfflineAdjudicationSpec edu.uic.cs441.scholarchain.independent.IndependentResolutionRunSpec edu.uic.cs441.scholarchain.independent.IndependentResolutionExportSpec"
+      ],
+      "stdoutAndStderr": "docs/agent-runs/phase-05/evidence/5b/targeted-third.txt",
+      "exitCode": 0,
+      "note": "13 module and 60 independent tests passed"
+    },
+    {
+      "executable": "sbt",
+      "argv": [
+        "-batch",
+        "entityResolution/runMain edu.uic.cs441.scholarchain.entityresolution.Phase5Main --help",
+        "entityResolution/runMain edu.uic.cs441.scholarchain.entityresolution.Phase5Main resolve --input target/phase4-runs/fda6168a-d4e6-4c20-bf73-42a1c3724f7f --policy modules/entity-resolution/src/main/resources/phase5-policy.v1.json --config modules/entity-resolution/src/main/resources/phase5-config.v1.json --llm-mode disabled --output target/phase5/5b-disabled-demo",
+        "entityResolution/runMain edu.uic.cs441.scholarchain.entityresolution.Phase5Main resolve --input target/phase4-runs/fda6168a-d4e6-4c20-bf73-42a1c3724f7f --policy modules/entity-resolution/src/main/resources/phase5-policy.v1.json --config modules/entity-resolution/src/main/resources/phase5-config.v1.json --llm-mode disabled --output target/phase5/5b-disabled-replay",
+        "entityResolution/runMain edu.uic.cs441.scholarchain.entityresolution.Phase5Main resolve --input target/phase4-runs/fda6168a-d4e6-4c20-bf73-42a1c3724f7f --policy modules/entity-resolution/src/main/resources/phase5-policy.v1.json --config modules/entity-resolution/src/main/resources/phase5-config.v1.json --llm-mode fake --output target/phase5/5b-fake-demo --cache target/phase5/5b-fake-cache"
+      ],
+      "stdoutAndStderr": "docs/agent-runs/phase-05/evidence/5b/real-input-cli.txt",
+      "exitCode": 2,
+      "note": "help succeeded; first resolve failed; later demos not executed"
+    },
+    {
+      "executable": "sbt",
+      "argv": [
+        "-batch",
+        "entityResolution/Compile/scalafmt",
+        "entityResolution/Test/scalafmt",
+        "independentTests/Test/scalafmt",
+        "entityResolution/test",
+        "independentTests/testOnly edu.uic.cs441.scholarchain.independent.IndependentResolutionInputSpec",
+        "entityResolution/runMain edu.uic.cs441.scholarchain.entityresolution.Phase5Main resolve --input target/phase4-runs/fda6168a-d4e6-4c20-bf73-42a1c3724f7f --policy modules/entity-resolution/src/main/resources/phase5-policy.v1.json --config modules/entity-resolution/src/main/resources/phase5-config.v1.json --llm-mode disabled --output target/phase5/5b-disabled-demo",
+        "entityResolution/runMain edu.uic.cs441.scholarchain.entityresolution.Phase5Main resolve --input target/phase4-runs/fda6168a-d4e6-4c20-bf73-42a1c3724f7f --policy modules/entity-resolution/src/main/resources/phase5-policy.v1.json --config modules/entity-resolution/src/main/resources/phase5-config.v1.json --llm-mode disabled --output target/phase5/5b-disabled-replay",
+        "entityResolution/runMain edu.uic.cs441.scholarchain.entityresolution.Phase5Main resolve --input target/phase4-runs/fda6168a-d4e6-4c20-bf73-42a1c3724f7f --policy modules/entity-resolution/src/main/resources/phase5-policy.v1.json --config modules/entity-resolution/src/main/resources/phase5-config.v1.json --llm-mode fake --output target/phase5/5b-fake-demo --cache target/phase5/5b-fake-cache"
+      ],
+      "stdoutAndStderr": "docs/agent-runs/phase-05/evidence/5b/optional-hint-and-real-cli.txt",
+      "exitCode": 0,
+      "note": "14 module, 6 independent input, 3 actual-input CLI runs succeeded"
+    },
+    {
+      "executable": "sbt",
+      "argv": [
+        "-batch",
+        "check"
+      ],
+      "stdoutAndStderr": "docs/agent-runs/phase-05/evidence/5b/full-check.txt",
+      "exitCode": 0,
+      "note": "339 tests passed; 36 fresh JUnit reports; 170 source hashes unchanged; marker renewed after all tests"
+    }
+  ],
+  "inspectionCommands": [
+    "python3 target/phase5/5b-verification/inspect-demo.py > docs/agent-runs/phase-05/evidence/5b/real-input-inspection.txt",
+    "python3 target/phase5/5b-verification/collect.py freeze",
+    "python3 target/phase5/5b-verification/collect.py verify",
+    "python3 target/phase5/5b-verification/collect.py postgate 0 1792179463233",
+    "python3 target/phase5/5b-verification/collect.py inventory"
+  ],
+  "limitations": "Past failed calls are preserved. sbt main sys.exit(2) ended initial multi-command actual-data invocation. No live provider or acquisition occurred."
+}

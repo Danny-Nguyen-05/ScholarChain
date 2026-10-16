@@ -80,6 +80,18 @@ profile external ID. Actual absence of supported identifiers is valid; omission 
 identifier is not. Contradictory same-namespace observations must all be retained: a complete
 bundle can describe them, but a proposed component containing them fails the conflict guard.
 
+`context.groundedAuthority(endpoint)` exposes those same canonical source facts as a read-only
+`Either[Vector[DomainViolation], Set[(ResolutionAuthorityNamespace, String)]]` for ER conflict
+checks and complete constraint export. A bound endpoint without supported IDs returns an empty
+set; an unknown/mismatched endpoint or malformed supported own-identity evidence returns errors.
+Contradictory facts are returned together. The accessor does not decide matches, prove external
+existence or produce evidence references: ER must attach references to the actual input evidence.
+`context.groundedElectronicPublicationFacts(endpoint)` additionally exposes each bound DBLP
+`ee` link as `(NamedText, ResolutionAuthorityNamespace, canonicalValue)` within the same error
+envelope. This preserves raw link roles and values for ER's identifier catalog without copying
+resolver rules. Unsupported roles/endpoints return an empty vector after endpoint validation;
+contradictory and repeated recognized links remain represented.
+
 The grounding roles are deliberately closed. Work observations use their DOI/arXiv fields,
 Crossref's DOI source-record key even when the optional DOI field is absent, and declared
 `observedIdentifiers` roles `doi`, `arxiv`, `openalex.doi`, `openalex.ids.doi`. Role names use
@@ -88,7 +100,18 @@ Raw supported values are normalized with existing `StableIds` rules; explicit ar
 URLs use the existing URI helper. Source arXiv versions that the existing parser accepts are
 reduced to their base only for grounding an unversioned assertion. This does not change work
 IDs or source records. Unsupported old-style version syntax fails closed rather than inventing
-a base identifier. Arbitrary `sourceLinks` are not authority facts.
+a base identifier. DBLP `sourceLinks` with exact field name `ee` additionally ground direct
+publication resolver identifiers: exact HTTP(S) `doi.org/`/`dx.doi.org/` prefixes, or `arxiv.org`
+and path `/abs/…` or `/pdf/…`. DOI values use `StableIds.normalizeDoi` on the entire original
+resolver string, exactly as preferred fields and Phase 4: literal percent escapes, `?`, `#` and
+SICI angle brackets in valid suffixes are preserved under the existing trim/lowercase rule.
+They are neither URI-decoded nor stripped as queries/fragments, and distinct literal suffixes
+remain distinct facts. arXiv keeps separate conservative resolver syntax: query strings,
+fragments and percent-encoded paths fail closed. Recognized malformed identifiers, user
+information and explicit ports fail closed. Every retained resolver identifier is included
+even when it contradicts the preferred field.
+Other source types, field names (including DBLP `url` table-of-contents links), hosts and arXiv
+nonpublication paths remain weak observations. Arbitrary `sourceLinks` are not authority facts.
 
 An ORCID work activity uses `observedDoi` and declared DOI/arXiv `workReferences` whose
 relationship is `self` (trimmed, case-insensitive type and relationship tokens). Related or

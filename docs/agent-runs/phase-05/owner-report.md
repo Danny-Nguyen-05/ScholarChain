@@ -1,3 +1,7 @@
+Current checkpoint: **5B B1/B2 repair verification complete; external recheck pending.** Fresh gate: 356 tests passed on 174 unchanged frozen files. Earlier status entries below are historical.
+
+Current checkpoint (2026-10-16): **5B implementation and technical verification complete; external review pending.** Fresh full gate: 339 tests passed on 170 unchanged frozen files. See the final 5B section below; earlier entries are historical.
+
 # Phase 5 owner report
 
 Current checkpoint:5A B2/N10repair and fresh257testverification complete; user-run externalrecheck pending. B1wasindependentlyclosed; earlierhandoffs/results preservedashistory. Lateststatus at end.
@@ -177,3 +181,122 @@ MANUAL ACTION REQUIRED: Userrunspreparedfreshrecheckpromptandreturnsfullverdict.
 BLOCKED-ON OWNER: User-selectedexternalreviewer/user.
 BLOCKED-ON EVIDENCE: ReturnedB2/N10recheckverdictpending; noobservedtechnicalgatefailure.
 NEXT GATE: External5Arecheck. STOP; nofurtherimplementation/backgroundjobs/commit/push/acquisition/provider/cloud/laterphasework.
+
+
+## Subphase 5B start — 2026-10-16
+
+STATUS: IN PROGRESS (not a completion or acceptance claim).
+OWNER: Coordinator with ER/domain/test native owners named in 5b-baseline.json.
+WORK ORDER: Implement 5B only under the user statements in prompt.md.
+FILES CREATED: 5b-baseline.json; immutable prior handoff copies in history/5a-final-handoff/.
+FILES MODIFIED: Coordinator appendices in prompt.md and owner-report.md; owner implementation pending.
+COMMANDS RUN: git status --short (empty), git branch --show-current (phase-5), git rev-parse HEAD (4ac236fcb01825b73635fa4c762a35bed4b362cd); read-only instruction/contract/plan/course inspection.
+TEST RESULTS: No 5B tests run yet. Previous 257-test gate is historical 5A evidence.
+VALIDATION RESULTS: All 142 prior frozen source hashes match committed start. Public API proposal agreed; minimal shared authority accessor approved.
+ASSUMPTIONS: Existing real Phase 4 sample runs must be reverified by reader; no additional datasets assumed.
+RISKS: Data population remains insufficient; thresholds uncalibrated; complete external B2 APPROVE text not supplied.
+MANUAL ACTION REQUIRED: User launches external review after 5B handoff; no action needed during implementation.
+BLOCKED-ON OWNER: None initially.
+BLOCKED-ON EVIDENCE: Current implementation and fresh gate pending.
+NEXT GATE: Frozen-source targeted/full verification, complete external reviewer prompt, STOP.
+
+
+### 5B domain-owner handoff
+
+STATUS: COMPLETE implementation and root-observed targeted verification.
+OWNER: `/root/phase5b_domain`.
+WORK ORDER: Public read-only `context.groundedAuthority(endpoint)` only.
+FILES CREATED: Core ResolutionAuthorityConsumerSpec.
+FILES MODIFIED: Core ResolutionValidationContext.scala and README.
+COMMANDS RUN: Owner inspected instructions/contracts/diff and `git diff --check` (exit 0); root ran serialized targeted core command recorded in test-report.md (exit 0).
+TEST RESULTS: 24/24 targeted tests pass including four external-package public-consumer tests.
+VALIDATION RESULTS: Production logic unchanged; only method visibility/documentation changed, identical B2/N10 grounding semantics and v1 IDs/wires.
+ASSUMPTIONS: ER uses actual evidence refs; the accessor establishes source consistency, not identity.
+RISKS: N1 component-index API deferred because 5B does not group components.
+MANUAL ACTION REQUIRED: None now.
+BLOCKED-ON OWNER: None for core implementation.
+BLOCKED-ON EVIDENCE: Eventual integrated full gate.
+NEXT GATE: Owner core writes stopped; ER consumes public API; user-run independent review after full 5B gate.
+
+
+### 5B execution interruption and resumption
+
+The ER implementation agent returned a platform usage-limit error during repair of the first targeted failures. No completed repair or test pass was inferred. The user then explicitly asked, “can you keep going?”; coordinator resumed the same owner/task from saved files. Existing ownership, subphase limits and user-run review gate remain unchanged. No model override, extra service purchase, reviewer invocation or later-subphase work was performed.
+
+
+## Subphase 5B owner/test handoff and real-data verification
+
+STATUS: COMPLETE implementation and targeted/demo verification; frozen full gate pending.
+OWNER: `/root/phase5b_er`, `/root/phase5b_test`, `/root/phase5b_domain`; coordinator collects evidence.
+WORK ORDER: Deterministic work/researcher resolution and offline fake/disabled adjudication only.
+FILES CREATED: ER10productionScala files,4runtime/prompt/schema resources,OfflineResolutionSpec; coreexternal-packageconsumer spec; tests12independentScala files (10suites+2helpers). Complete paths in finalinventory.
+FILES MODIFIED: Corecontext/README; ERREADME; coordinator phase reports/evidence. No build/dependency/Hadoop/dataset/constitution edit.
+COMMANDS RUN: Owners inspected instructions/contracts/source and owned diffs; no owner launched sbt. Root serialized all formatting/compilation/tests and CLI runs, with exact results/failed attempts in test-report.md and evidence/5b/.
+TEST RESULTS: Core27targeted pass; latestER14pass; independent60priorfocusedpass plus affectedInput6pass including61stnewcase. Previous full-independent run128/130 exposedone strict-JSONdefect andoneoverstricttransportassertion, bothrepaired/targetedverified. Final simultaneous fullgatepending.
+VALIDATION RESULTS: Real completedPhase4input nowproduces18traceablecomparisons withtypedfour-outcome files,9acceptedlinks,total3hardconflicts,completeconstraints andverifiedmanifestbindings. Two disabled runslogicalequivalent;fake-demo0eligiblecalls honestlyreported. All170frozenhashes currentlyunchanged.
+ASSUMPTIONS: Existingtinyrealportfolioonly; no additionaldataset assumed. RuntimepolicyexplicitlyUNCALIBRATED.
+RISKS: No240humanlabels/calibration/evaluation/accuracy/blockingrecall/liveprovider evidence; no grouping. Arbitraryinjected JVM adapter cannotbeforciblyterminated;ifitignoresinterrupt runnerfusesfuturecalls; providedfakebounded. Hashes establishinternalconsistency,notexternalauthenticity.
+MANUAL ACTION REQUIRED: User launches externalreviewafterpacket; fullB2APPROVEreportwasnotprovided, humanstatusapprovaland5Bauthorizationrecordedwithoutinventingreviewerwords.
+BLOCKED-ON OWNER: Coordinatorfullgate/evidence, thenuserexternalreview.
+BLOCKED-ON EVIDENCE: Finalfullgateexit/JUnit/marker/freezeverification.
+NEXT GATE: Complete5BpacketandSTOP;5Cnotauthorized.
+
+
+## Subphase 5B final technical verification — 2026-10-16
+
+STATUS: COMPLETE implementation and technical verification; external review pending.
+OWNER: Coordinator, with `/root/phase5b_domain`, `/root/phase5b_er` and `/root/phase5b_test`.
+WORK ORDER: User-authorized 5B only, based on committed 5A `4ac236fcb01825b73635fa4c762a35bed4b362cd`, branch `phase-5`, initially clean.
+FILES CREATED: 28 new source/test/resource files: one core consumer test, 15 ER files, and 12 independent test/helper files. Coordinator baseline, source delta, reports, diffs, inventories, command logs and retained demonstrations are under this phase directory.
+FILES MODIFIED: Three existing source/document paths: core validation context and README; ER README. No build, dependency, Hadoop, dataset or constitutional file changed. Complete paths and hashes are in review-inventory.json and 5b-source-delta.json.
+COMMANDS RUN: Exact sbt argv, Java/logback environment, logs and exit codes are in evidence/5b/commands.json. Root serialized all builds. Final `sbt -batch check` exited 0, reported 399 seconds, completed 2026-10-16 14:52:47 America/Chicago. Root post-gate collector exited 0 with valid=true. `git diff --check` passed. A read-only `ps` inspection was sandbox denied; it was not a build/test failure and was not needed to establish the terminal build result.
+TEST RESULTS: 339 passed: core 126, Hadoop 64, entityResolution 14, independent 131, build verification 4. Thirty-six fresh JUnit reports, zero failures/errors/skips. All 61 new independent 5B cases ran in that final gate. Earlier failures, fixes and targeted passes remain retained. The nested injected format-stage failure is expected passing CheckFailurePathSpec coverage.
+VALIDATION RESULTS: All 170 frozen source hashes unchanged, with no added or missing scoped files. The generated success marker was renewed after all suites (mtime 1792180367522). Three actual-input CLI runs completed: two disabled and one fake, each 18 comparisons, zero fake/live calls. Disabled outputs are logically equivalent under the explicitly listed processing-field exclusions; source evidence and complete constraint bytes remain significant. All retained demo file hashes, sizes, inventories, completion and constraint bindings verified.
+ASSUMPTIONS: Runtime settings are uncalibrated examples. Actual model calls were ineligible on this tiny real sample; injected synthetic tests establish offline adapter/cache mechanics. User approval and advancement statements are recorded without inventing an external B2 APPROVE report.
+RISKS: No human labels, calibrated accuracy, blocking recall, live provider evidence or full Phase 5 acceptance. Population remains insufficient for 40 development plus 200 held-out real human reviews. N1 scaling and existing N3 wire convention remain disclosed; generic CoreJson remains broader, while ER boundaries parse strictly. Arbitrary JVM adapters cannot be forcibly killed if they ignore interruption; the runner fuses subsequent calls, and the provided fake is bounded. Hashes establish internal consistency, not external authenticity.
+MANUAL ACTION REQUIRED: User runs the complete reviewer prompt and returns the full verdict. No commit or push was made.
+BLOCKED-ON OWNER: User-selected external reviewer.
+BLOCKED-ON EVIDENCE: Independent 5B verdict.
+NEXT GATE: External 5B review and any routed repairs; explicit user authorization required before 5C. All specialist workers and builds are stopped. No background acquisition, live calls or later-subphase work exists.
+
+
+## Subphase 5B external blocker repair — owner handoffs
+
+STATUS: COMPLETE implementation and targeted verification; full gate pending.
+OWNER: Same domain, ER and independent test owners; coordinator records this handoff.
+WORK ORDER: Repair external B1/B2 and bounded related observations, staying within 5B.
+FILES CREATED: ER PathIsolation.scala and ComparableEvidenceSpec.scala; independent IndependentResolutionRepairSpec.scala and IndependentResolutionPrepBridgeRepairSpec.scala.
+FILES MODIFIED: Seventeen reviewed source/document/resource paths, listed in 5b-repair-source-delta.json. Four new files; no removals.
+COMMANDS RUN: Owners inspected source/diffs and used owned edits; no owner launched sbt. Root ran pre-fix regressions, core formatting/tests, ER/independent formatting/tests and three v2 actual-input CLI runs. Exact commands and retained results are in test-report.md and evidence/5b-repair/.
+TEST RESULTS: Five pre-fix failures reproduced; post-fix core30/30, module19/19 and independent70/70 passed. One intermediate owner-test compilation failure was fixed by qualifying the run constant, without changing behavior.
+VALIDATION RESULTS: DOI suffix compatibility is source-grounded; incomparable feature representations are missing, not mismatches; versions/fingerprints changed. Physical paths are isolated, model reasons agree with outcomes, catalog authority matches core, and empty names remain unavailable. Actual real-data reruns preserve18comparisons and zero calls; two disabled outputs are logically equivalent.
+ASSUMPTIONS: Existing DOI token semantics remain authoritative; no new external DOI interpretation is claimed. Runtime policy stays uncalibrated.
+RISKS: N-1 remains partially mitigated but open; N-2/N-8/N-9 deferred. No identity accuracy, human review or live-provider evidence.
+MANUAL ACTION REQUIRED: User launches external recheck after the final packet.
+BLOCKED-ON OWNER: Coordinator verification, then user-selected reviewer.
+BLOCKED-ON EVIDENCE: Fresh full gate and external recheck verdict.
+NEXT GATE: Frozen full gate, new reviewer prompt, stop. All specialist writers stopped.
+
+
+## Subphase 5B B1/B2 repairs — final technical verification
+
+STATUS: COMPLETE repair implementation and verification; independent recheck pending.
+OWNER: Coordinator with `/root/phase5b_domain`, `/root/phase5b_er` and `/root/phase5b_test`.
+WORK ORDER: Repair the two external blockers within 5B; no 5C advancement.
+FILES CREATED: Four source/test files and coordinator repair evidence. Complete paths and hashes are in 5b-repair-source-delta.json and review-inventory.json.
+FILES MODIFIED: Seventeen reviewed source/document/resource paths; no removed source files. No Hadoop production, dataset, build/dependency, StableIds formula, source schema, constitutional or human-decision edits.
+COMMANDS RUN: Exact sbt arguments, environment, logs and exits are in evidence/5b-repair/commands.json. Final `sbt -batch check` exited 0, reported 409 seconds, completed 2026-10-16 15:29:06 America/Chicago. Post-gate collector exited 0 valid=true; `git diff --check` passed. No source changes or builds after that gate.
+TEST RESULTS: 356 passed: core 129, Hadoop 64, entityResolution 19, independent 140, build verification 4. Thirty-nine fresh JUnit reports; zero failures/errors/skips. All 70 new independent 5B cases ran simultaneously. The five originally failing regressions now pass. Expected injected nested format failure remains passing CheckFailurePathSpec coverage.
+VALIDATION RESULTS: All 174 frozen hashes unchanged, no added/missing scoped files; generated success marker renewed after all tests (mtime 1792182546329). B1 actual Hadoop bridge accepts and exports percent/query/SICI literal DOI suffixes before successful ER resolution, while conflicting values remain conflicts. B2 real-input same-DOI cross-source venues are unavailable; independent available-feature score is 1.0 instead of reproduced 0.9. Feature/policy versions are v2. Three actual-input runs succeed with 18 comparisons and 0 fake / 0 live calls; disabled logical replay and complete output inventories/hashes verify. Old initial handoff and evidence remain retained unchanged.
+ASSUMPTIONS: Existing DOI token semantics are preserved; runtime weights remain uncalibrated. Synthetic regressions are not acquired datasets or human labels.
+RISKS: External N-1 remains open despite default bibliographic shortcut being disabled: generic titles can still score-accept. N-2 scaling/indexing, N-8 dropped-pair quota and N-9 staging/rename follow-ups remain deferred nonblocking. N-7 same-publication researcher cases and OpenAlex-carried ORCID attribution require explicit future sampling/evaluation strata. No accuracy, blocking recall, calibration, live-model, human-review or final Phase 5 acceptance is claimed.
+MANUAL ACTION REQUIRED: User launches the saved/displayed external recheck prompt and returns the complete verdict. No reviewer was invoked by manager or workers. No commit/push, acquisition, live call or 5C work occurred.
+BLOCKED-ON OWNER: User-selected independent reviewer.
+BLOCKED-ON EVIDENCE: External repair recheck APPROVE or REQUEST-CHANGES.
+NEXT GATE: External 5B recheck and any routed repairs; explicit user authorization required before 5C. All workers and builds have stopped.
+
+## Subphase 5B — review and human approval received
+
+The user returned the independent APPROVE closing B1/B2, then explicitly stated: "alright I approve the change, now give me a one line commit message for this change". This supersedes the preceding pending-review status. The complete external verdict is retained in evidence/5b-repair/external-recheck-approval.txt; review.md records the separate human approval and its provenance.
+
+5B is complete with external review and explicit human approval. Remaining nonblocking findings stay documented and unfixed at the user's direction. This receipt changes documentation only; no new tests, implementation, commit or push were performed. Human-owned decision files remain unchanged. 5C and broader Phase 5 acceptance remain pending their respective explicit human decisions.

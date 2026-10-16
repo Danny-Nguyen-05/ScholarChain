@@ -189,3 +189,162 @@ MANUAL ACTION REQUIRED: User-runfreshrecheckandreturnverdict.
 BLOCKED-ON OWNER: User/externalreviewer.
 BLOCKED-ON EVIDENCE: Recheckapprovalpending.
 NEXT GATE: Returnfreshreviewpromptandstop;5Bnotauthorized.
+
+
+## Subphase 5B — core public source-fact API verification (2026-10-16)
+
+STATUS: COMPLETE targeted core verification; integrated 5B gate pending.
+OWNER: Coordinator executes serialized commands; domain-engineer authored core changes.
+WORK ORDER: Expose existing validated source authority facts to ER without changing semantics or wire contracts.
+FILES CREATED: `modules/core/src/test/scala/edu/uic/cs441/scholarchain/core/ResolutionAuthorityConsumerSpec.scala`; retained `evidence/5b/core-targeted-sandbox-attempt.txt`, `evidence/5b/core-targeted.txt`.
+FILES MODIFIED: `ResolutionValidationContext.scala` visibility/ScalaDoc and `modules/core/README.md`.
+COMMANDS RUN:
+```sh
+JAVA_HOME=/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home SBT_OPTS=-Dlogback.configurationFile=/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-04/xml-repair-logback.xml sbt -batch 'core/Compile/scalafmt' 'core/Test/scalafmt' 'core/testOnly edu.uic.cs441.scholarchain.core.ResolutionContractSpec edu.uic.cs441.scholarchain.core.ResolutionAuthoritySpec edu.uic.cs441.scholarchain.core.ResolutionGroundingSpec edu.uic.cs441.scholarchain.resolutionconsumer.ResolutionAuthorityConsumerSpec' > docs/agent-runs/phase-05/evidence/5b/core-targeted.txt 2>&1
+```
+Initial workspace-sandbox attempt exited 1 before loading sbt because `~/.sbt/boot/sbt.boot.lock` was not writable; its proposed consumer selector used `.consumer` instead of `.resolutionconsumer`, but no suite ran. Root confirmed actual package before native-approved retry. Native retry session 58851 exited 0.
+TEST RESULTS: 24 tests passed: ResolutionContractSpec 9, ResolutionAuthoritySpec 4, ResolutionGroundingSpec 7, external-package ResolutionAuthorityConsumerSpec 4. No failures/aborts. Completed 2026-10-16 14:12:32 America/Chicago. Both core formatting tasks passed.
+VALIDATION RESULTS: New consumer tests exercise each endpoint type, true absence, source/snapshot/member bindings, contradictory canonical facts, arbitrary-link exclusion and malformed/related-only facts. Existing 5A regressions pass.
+ASSUMPTIONS: No match accuracy or real-provider behavior is established by these synthetic contract tests.
+RISKS: Full integrated gate not yet run; remaining module owners still implementing.
+MANUAL ACTION REQUIRED: None during implementation.
+BLOCKED-ON OWNER: ER/test owners for dependent work.
+BLOCKED-ON EVIDENCE: Full 5B gate and real-data smoke pending.
+NEXT GATE: Module/independent tests and frozen full check.
+
+
+### 5B first module compilation — observed failure
+
+Root executed the same Java17/SBT_OPTS environment above with `sbt -batch 'entityResolution/compile' > docs/agent-runs/phase-05/evidence/5b/er-first-compile.txt 2>&1`, native approved cache access, session 76246. Exit 1; 10 Scala compile errors at 2026-10-16 14:19:32 America/Chicago. Root routed all errors together to ER owner: reserved Scala3 `export` variable/cascades in InputLoader, illegal bound variable in a pattern alternative, and unqualified `write` resolving to AdjudicationCache.write. No tests executed. This diagnostic run is not a final gate.
+
+Coordinator exploratory inspection also had two non-test failures: `rg` over absent optional .agents/.codex paths exited 2 (no such repository directories); a glob matching Hadoop `._SCHOLARCHAIN_COMPLETE.crc` attempted UTF-8 decode and failed. Root subsequently inspected the exact `_SCHOLARCHAIN_COMPLETE` JSON path. Neither failure changed source, dataset or test results.
+
+
+### 5B production compile and first combined verification
+
+Root ran `sbt -batch 'entityResolution/compile'` under the same Java17/SBT_OPTS environment, retained in `evidence/5b/er-second-compile.txt`; session24327 exit0, 6 seconds, completed14:22:40local. Ten ER sources compiled; two Scala non-local-return warnings were routed for cleanup. This diagnostic compile was not a frozen-source gate; domain source-link work was still underway.
+
+Then all owners paused writes. Root ran `sbt -batch 'core/Compile/scalafmt' 'core/Test/scalafmt' 'entityResolution/Compile/scalafmt' 'entityResolution/Test/scalafmt' 'independentTests/Test/scalafmt' 'core/testOnly edu.uic.cs441.scholarchain.core.ResolutionContractSpec edu.uic.cs441.scholarchain.core.ResolutionAuthoritySpec edu.uic.cs441.scholarchain.core.ResolutionGroundingSpec edu.uic.cs441.scholarchain.resolutionconsumer.ResolutionAuthorityConsumerSpec' 'entityResolution/test' 'independentTests/test'` with retained `evidence/5b/combined-targeted-initial.txt`; session38334 exit1. Formatting completed; core27/27 passed, including the three new source-link grounding cases; ER8/10 passed, two tests failed with hidden Left values at owner fixture/input/export call sites. sbt stopped before independent execution. Root routed failures; the owner identified an invalid synthetic observed-identifier interpretation in one fixture and changed failure reporting to retain actual causes. No production rule was relaxed from this diagnosis.
+
+Root separately ran `sbt -batch 'independentTests/test'` against the same paused production state, retained `evidence/5b/independent-initial.txt`; session80648 exit1 at14:25:54local, no tests executed. Three test-local symbol resolution errors: ExportSpec local `work` shadowed fixture helper (two errors); InputSpec `note` resolved to ScalaTest.Notifier instead of fixture String (one error). Test owner repaired only those names; behavioral expectations unchanged. Subsequent observed results below supersede these attempts without deleting them.
+
+
+### 5B second module and first executed independent results
+
+Root ran `sbt -batch 'entityResolution/Compile/scalafmt' 'entityResolution/Test/scalafmt' 'independentTests/Test/scalafmt' 'entityResolution/test'` in the same Java17/logback environment, `evidence/5b/er-targeted-second.txt`, session58089 exit1 at14:28:16local. ER9/10 pass; invalid identifier interpretation fixture repaired; remaining owner exporter test used noncanonical macOS temporary directory alias and hid the error with `.toOption.get`. Owner routed to canonicalize temporary root and report actual Left; production nonsymlink safeguard retained. Public adjudicator stale-request/config preflight was implemented before this run.
+
+Root ran `sbt -batch 'independentTests/test'`, `evidence/5b/independent-second.txt`, session87856 exit1 at14:31:57local, total213seconds. All130 tests executed,128passed,2failed,17suites,0aborts. Failures: (1) RunSpec compared full MatchDecision even though VALIDATED_FAKE vs CACHE_HIT are intentionally different audit transport statuses; test owner approved to normalize only those two explicitly asserted codes while comparing all substantive fields; (2) OfflineSpec rejected string-valued reportedConfidence but typed uPickle coerced the string into a number. This confirmed production strictness defect is routed to ER owner for recursive JSON primitive-kind/value preservation in strict parsing. The expectation remains strict. Both failed attempts are retained.
+
+Additional proven input-bridge dependency: retain and bind typed identifier-index observations and work abstractTextRef documents against exact source/native/snapshot context; missing references must fail, not pass structural validation alone. ER owner adds these checks and module feature tests before final verification.
+
+
+### 5B repaired focused tests and first actual-input CLI attempt
+
+Root executed formatting and `entityResolution/test` followed by `independentTests/testOnly` with all ten new suite names (full command retained in shell evidence/phase prompt), log `evidence/5b/targeted-third.txt`, session2553 exit0 at14:34:01local. ER13/13 and new independent60/60 passed; zero failures or aborts. New owner checks include primitive strictness plus identifier-index and abstract-text grounding. Test-only replay comparison now asserts actual cache differences and compares every substantive field; no production safeguard relaxed.
+
+Root executed `entityResolution/runMain ...Phase5Main --help` plus disabled demo/replay and fake demo against `target/phase4-runs/fda6168a-d4e6-4c20-bf73-42a1c3724f7f`, explicit policy/config resource paths, new output directories `target/phase5/5b-disabled-demo`, `5b-disabled-replay`, `5b-fake-demo` and fake cache `5b-fake-cache`; log `evidence/5b/real-input-cli.txt`, session18266 exit2. Help succeeded14:35:49local. The first actual resolve failed before completed output: `candidate carried workId differs from source observation`; later demo commands did not execute. Read-only diagnosis: actual ORCID work activity sourceRecordId `0000-0002-4414-6920/work/128060282` carries observedWorkId, while its Phase4CandidateObservation legitimately has optional workId=None. Full source/native/snapshot lookup exists. Owner routed to distinguish absent optional hints from explicitly conflicting carried IDs, with a regression and continued wrong-present-ID rejection. This failure is retained and not represented as a successful demo.
+
+
+### 5B optional-ID repair and observed actual-data demonstrations
+
+Root executed the same Java17/SBT_OPTS environment with ER production/test and independent test formatting, `entityResolution/test`, `independentTests/testOnly edu.uic.cs441.scholarchain.independent.IndependentResolutionInputSpec`, followed by three explicit `entityResolution/runMain edu.uic.cs441.scholarchain.entityresolution.Phase5Main resolve` invocations:
+
+```text
+--input target/phase4-runs/fda6168a-d4e6-4c20-bf73-42a1c3724f7f
+--policy modules/entity-resolution/src/main/resources/phase5-policy.v1.json
+--config modules/entity-resolution/src/main/resources/phase5-config.v1.json
+--llm-mode disabled --output target/phase5/5b-disabled-demo
+--llm-mode disabled --output target/phase5/5b-disabled-replay
+--llm-mode fake --output target/phase5/5b-fake-demo --cache target/phase5/5b-fake-cache
+```
+The first three lines apply to each invocation; the final three lines are separate mode/output arguments. Full sbt command arguments and output are retained in `evidence/5b/optional-hint-and-real-cli.txt`. Session64924 exit0, completed14:37:24local. ER14/14 and affected independent input6/6 passed. Correctly absent candidate hints are allowed; supplied wrong hints still fail exact source binding. Actual Phase4 candidates preserve the optional field contract; no Hadoop/source record was edited.
+
+Each of two disabled runs and one fake-mode run produced18comparisons: Work6ACCEPTED/3CONFLICT; Researcher3ACCEPTED/6UNRESOLVED; all other outcome counts0. Every run reported0fake calls and0live calls. Runtime fake mode did not force scores or evidence sufficiency to manufacture an eligible case. Synthetic independent tests, not this real sample, demonstrate fake accept/reject/abstain, failure handling and cache replay. These mechanical decisions are not real human labels or measured accuracy.
+
+Read-only root verified all34 actual Phase4 export files still match completion byte counts/SHA256 (150697bytes). The CLI verifies completion and input identities itself. Input evidence hash `052d67d212c279c113363712056aa298ccb8720a1bae1d83d9171e676630628b`. Source inputs were not rewritten.
+
+Root executed `python3 target/phase5/5b-verification/inspect-demo.py`, exit0, retained script at `evidence/5b/inspect-demo.py.txt`, output at `real-input-inspection.txt`, complete summary at `real-input-summary.json`. All three complete demo outputs are copied byte-for-byte under `evidence/5b/demo-outputs/`; exact file inventories, bytes, SHA256, completion-manifest digest and constraint bindings verified. Disabled runs match all substantive decisions, accepted links, complete constraints, evidence, diagnostics and effective config/policy. Only explicitly named processing run IDs/timestamps and their derived decision IDs are excluded; source text, snapshots, candidate IDs, features, reasons and evidence remain significant. Audit details compare after only removing their decisionId. Manifest hashes of processing-dependent files naturally differ.
+
+Diagnostics account for cross-entity profile/work8rows=3distinctpairs and nonwork2rows=2distinctpairs. Work constraints cover16endpoints/10assertions/3cannot-links; Researcher11endpoints/4assertions/0cannot-links. Researcher candidates are now derived by ER, unlike the historical 5A inventory. This does not create independent repeated-author evaluation groups or solve the240human-review population shortfall.
+
+### 5B final source freeze and full gate started
+
+All owners stopped writing before freeze. `python3 target/phase5/5b-verification/collect.py freeze` captured170source/config/data/test files; source-freeze SHA256 `3cabd0018817bddcd1168d8f08d5d10367459073e9a9639f4e42509c5cff063d`. Root started `sbt -batch check` under the same Java17/logback environment with output `evidence/5b/full-check.txt`. Start timestamp1792179463233ms UTC. Final exit/report verification pending at this entry; no full-pass claim yet. Collection script retained at `evidence/5b/collect.py.txt`.
+
+
+## Subphase 5B final technical verification — 2026-10-16
+
+STATUS: COMPLETE implementation and technical verification; external review pending.
+OWNER: Coordinator, with `/root/phase5b_domain`, `/root/phase5b_er` and `/root/phase5b_test`.
+WORK ORDER: User-authorized 5B only, based on committed 5A `4ac236fcb01825b73635fa4c762a35bed4b362cd`, branch `phase-5`, initially clean.
+FILES CREATED: 28 new source/test/resource files: one core consumer test, 15 ER files, and 12 independent test/helper files. Coordinator baseline, source delta, reports, diffs, inventories, command logs and retained demonstrations are under this phase directory.
+FILES MODIFIED: Three existing source/document paths: core validation context and README; ER README. No build, dependency, Hadoop, dataset or constitutional file changed. Complete paths and hashes are in review-inventory.json and 5b-source-delta.json.
+COMMANDS RUN: Exact sbt argv, Java/logback environment, logs and exit codes are in evidence/5b/commands.json. Root serialized all builds. Final `sbt -batch check` exited 0, reported 399 seconds, completed 2026-10-16 14:52:47 America/Chicago. Root post-gate collector exited 0 with valid=true. `git diff --check` passed. A read-only `ps` inspection was sandbox denied; it was not a build/test failure and was not needed to establish the terminal build result.
+TEST RESULTS: 339 passed: core 126, Hadoop 64, entityResolution 14, independent 131, build verification 4. Thirty-six fresh JUnit reports, zero failures/errors/skips. All 61 new independent 5B cases ran in that final gate. Earlier failures, fixes and targeted passes remain retained. The nested injected format-stage failure is expected passing CheckFailurePathSpec coverage.
+VALIDATION RESULTS: All 170 frozen source hashes unchanged, with no added or missing scoped files. The generated success marker was renewed after all suites (mtime 1792180367522). Three actual-input CLI runs completed: two disabled and one fake, each 18 comparisons, zero fake/live calls. Disabled outputs are logically equivalent under the explicitly listed processing-field exclusions; source evidence and complete constraint bytes remain significant. All retained demo file hashes, sizes, inventories, completion and constraint bindings verified.
+ASSUMPTIONS: Runtime settings are uncalibrated examples. Actual model calls were ineligible on this tiny real sample; injected synthetic tests establish offline adapter/cache mechanics. User approval and advancement statements are recorded without inventing an external B2 APPROVE report.
+RISKS: No human labels, calibrated accuracy, blocking recall, live provider evidence or full Phase 5 acceptance. Population remains insufficient for 40 development plus 200 held-out real human reviews. N1 scaling and existing N3 wire convention remain disclosed; generic CoreJson remains broader, while ER boundaries parse strictly. Arbitrary JVM adapters cannot be forcibly killed if they ignore interruption; the runner fuses subsequent calls, and the provided fake is bounded. Hashes establish internal consistency, not external authenticity.
+MANUAL ACTION REQUIRED: User runs the complete reviewer prompt and returns the full verdict. No commit or push was made.
+BLOCKED-ON OWNER: User-selected external reviewer.
+BLOCKED-ON EVIDENCE: Independent 5B verdict.
+NEXT GATE: External 5B review and any routed repairs; explicit user authorization required before 5C. All specialist workers and builds are stopped. No background acquisition, live calls or later-subphase work exists.
+
+
+## Subphase 5B external review repairs — reproduced failures
+
+STATUS: COMPLETE pre-fix reproduction; repairs and fresh gate pending.
+OWNER: Independent test author `/root/phase5b_test`; coordinator executes serialized builds.
+WORK ORDER: Reproduce external B1 and B2 before changing production.
+FILES CREATED: IndependentResolutionRepairSpec.scala and IndependentResolutionPrepBridgeRepairSpec.scala under tests/**; retained log, summary and two failing JUnit reports under evidence/5b-repair/.
+FILES MODIFIED: No production changes during reproduction.
+COMMANDS RUN: In the previously recorded Java17/logback environment, `sbt -batch 'independentTests/Test/scalafmt' 'independentTests/testOnly edu.uic.cs441.scholarchain.independent.IndependentResolutionRepairSpec edu.uic.cs441.scholarchain.independent.IndependentResolutionPrepBridgeRepairSpec' > docs/agent-runs/phase-05/evidence/5b-repair/before-fix.txt 2>&1`. Session21226 exited1.
+TEST RESULTS: Five tests executed in two suites; all five failed, no aborts. Completed 2026-10-16 15:11:17 America/Chicago; sbt reported13seconds.
+VALIDATION RESULTS: Actual local Hadoop jobs completed and exported all percent/query/SICI-style DOI fixtures; the subsequent ER loader failed on recognized resolver syntax. The four fast cases also reproduced source-grounding failure, incomparable venue/affiliation as0, and a hand-calculated score of.9 rather than1 when venue should be unavailable. Failing JUnit XML is preserved before reruns.
+ASSUMPTIONS: These are synthetic regression fixtures, not additional acquired data or human labels.
+RISKS: Both blockers remain open until repairs, new observed verification and user-launched recheck.
+MANUAL ACTION REQUIRED: None during owner repair.
+BLOCKED-ON OWNER: Domain and ER owners.
+BLOCKED-ON EVIDENCE: Passing regression runs, real-input rerun and fresh full gate.
+NEXT GATE: Implement bounded repairs, verify, then external recheck prompt and stop.
+
+
+### B1 core repair targeted verification
+
+Root ran the established Java17/logback environment with `sbt -batch 'core/Compile/scalafmt' 'core/Test/scalafmt' 'core/testOnly edu.uic.cs441.scholarchain.core.ResolutionContractSpec edu.uic.cs441.scholarchain.core.ResolutionAuthoritySpec edu.uic.cs441.scholarchain.core.ResolutionGroundingSpec edu.uic.cs441.scholarchain.resolutionconsumer.ResolutionAuthorityConsumerSpec' > docs/agent-runs/phase-05/evidence/5b-repair/core-targeted.txt 2>&1`. Session50873 exited0; 30 tests in four suites passed, no failures or aborts, completed 2026-10-16 15:13:31 America/Chicago. Core formatting passed.
+
+The new consumer tests retain percent sequences and literal query/fragment/SICI suffixes under existing DOI normalization, distinguish decoded or stripped alternatives as actual conflicting values, retain full constraint coverage, and validate raw field/catalog binding. The shared bound raw-link accessor avoids a second ER parser. ArXiv and unsafe authority-host checks remain separate. This is targeted evidence, not external closure or a fresh full gate.
+
+
+### Repair targeted pass and real-input v2 reruns
+
+The first combined repair run, evidence/5b-repair/targeted.txt, exited1 at 2026-10-16 15:17:43 America/Chicago: production compiled, but three references to an owner test's imported `run` constant resolved to ScalaTest.run. The owner qualified only those calls as ErTestData.run. No production rule or expected behavior was relaxed.
+
+Root then ran owner test formatting, `entityResolution/test` and the twelve explicitly named independent 5B suites, retained in evidence/5b-repair/targeted-second.txt. Session9987 exited0 at15:20:11local. Nineteen module tests and all70 independent tests passed, with no failures or aborted suites. The previously failing five cases now pass, including the actual completed-Hadoop bridge with percent, literal question-mark and SICI DOI forms.
+
+Root reran three actual-input commands with the same explicit completed Phase4 input, policy and config paths as the initial handoff, using new outputs `target/phase5/5b-repair-disabled-demo`, `5b-repair-disabled-replay`, and `5b-repair-fake-demo` (fake cache `5b-repair-fake-cache`). Session1852 exited0 at15:21:58local; evidence/5b-repair/real-input-cli.txt retains full command arguments and observed output. Each produced18comparisons and0fake/0live calls; no eligibility was forced.
+
+`python3 target/phase5/5b-verification/inspect-repair-demo.py` exited0, verified all output inventories, byte counts, hashes, completion digests and constraint bindings, and confirmed logical disabled replay under the same explicitly named processing-field exclusions as the original handoff. Complete output copies and real-input-summary.json are under evidence/5b-repair/. Initial evidence/5b/ artifacts were not overwritten.
+
+All three cross-source work/work copies of the same DOI now carry venue.value=None and missing reason UNAVAILABLE_INCOMPARABLE_VENUE_NAMESPACES. The independent weighted fixture yields1.0 instead of the reproduced0.9; raw source inputs remain unchanged. Runtime policy is er-offline-uncalibrated-v2 and feature policy er-features-v2. Exact old/new policy hashes and the three actual feature records are in feature-repair-proof.json. Outcomes remain Work6accepted/3conflict, Researcher3accepted/6unresolved. These are mechanical classifications, not human labels or accuracy evidence.
+
+All specialist source writes stopped. Root froze174files and started a fresh `sbt -batch check` using the established Java17/logback environment, retained at evidence/5b-repair/full-check.txt. Final result is pending at this entry. A repair-specific collector writes only repair evidence paths; old full-gate files and history remain unchanged.
+
+Execution interruptions: test and ER agents returned usage-limit errors after saving their edits. The user explicitly said “keep going”; the coordinator resumed the same owners. Reports distinguish saved edits from observed verification. No model override, purchase, extra provider call or reviewer invocation occurred.
+
+
+## Subphase 5B B1/B2 repairs — final technical verification
+
+STATUS: COMPLETE repair implementation and verification; independent recheck pending.
+OWNER: Coordinator with `/root/phase5b_domain`, `/root/phase5b_er` and `/root/phase5b_test`.
+WORK ORDER: Repair the two external blockers within 5B; no 5C advancement.
+FILES CREATED: Four source/test files and coordinator repair evidence. Complete paths and hashes are in 5b-repair-source-delta.json and review-inventory.json.
+FILES MODIFIED: Seventeen reviewed source/document/resource paths; no removed source files. No Hadoop production, dataset, build/dependency, StableIds formula, source schema, constitutional or human-decision edits.
+COMMANDS RUN: Exact sbt arguments, environment, logs and exits are in evidence/5b-repair/commands.json. Final `sbt -batch check` exited 0, reported 409 seconds, completed 2026-10-16 15:29:06 America/Chicago. Post-gate collector exited 0 valid=true; `git diff --check` passed. No source changes or builds after that gate.
+TEST RESULTS: 356 passed: core 129, Hadoop 64, entityResolution 19, independent 140, build verification 4. Thirty-nine fresh JUnit reports; zero failures/errors/skips. All 70 new independent 5B cases ran simultaneously. The five originally failing regressions now pass. Expected injected nested format failure remains passing CheckFailurePathSpec coverage.
+VALIDATION RESULTS: All 174 frozen hashes unchanged, no added/missing scoped files; generated success marker renewed after all tests (mtime 1792182546329). B1 actual Hadoop bridge accepts and exports percent/query/SICI literal DOI suffixes before successful ER resolution, while conflicting values remain conflicts. B2 real-input same-DOI cross-source venues are unavailable; independent available-feature score is 1.0 instead of reproduced 0.9. Feature/policy versions are v2. Three actual-input runs succeed with 18 comparisons and 0 fake / 0 live calls; disabled logical replay and complete output inventories/hashes verify. Old initial handoff and evidence remain retained unchanged.
+ASSUMPTIONS: Existing DOI token semantics are preserved; runtime weights remain uncalibrated. Synthetic regressions are not acquired datasets or human labels.
+RISKS: External N-1 remains open despite default bibliographic shortcut being disabled: generic titles can still score-accept. N-2 scaling/indexing, N-8 dropped-pair quota and N-9 staging/rename follow-ups remain deferred nonblocking. N-7 same-publication researcher cases and OpenAlex-carried ORCID attribution require explicit future sampling/evaluation strata. No accuracy, blocking recall, calibration, live-model, human-review or final Phase 5 acceptance is claimed.
+MANUAL ACTION REQUIRED: User launches the saved/displayed external recheck prompt and returns the complete verdict. No reviewer was invoked by manager or workers. No commit/push, acquisition, live call or 5C work occurred.
+BLOCKED-ON OWNER: User-selected independent reviewer.
+BLOCKED-ON EVIDENCE: External repair recheck APPROVE or REQUEST-CHANGES.
+NEXT GATE: External 5B recheck and any routed repairs; explicit user authorization required before 5C. All workers and builds have stopped.

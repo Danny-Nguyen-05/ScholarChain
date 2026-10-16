@@ -155,3 +155,65 @@ MANUAL ACTION REQUIRED: Userrunsfresh5AB2/N10recheckpromptandreturnsfullverdict.
 BLOCKED-ON OWNER: User-selectedreviewer/user.
 BLOCKED-ON EVIDENCE: Externalrecheckpending;owners/coordinatordonotselfapprove.
 NEXT GATE: ExternalrecheckthenSTOP;5Bstillunauthorized.
+
+
+### 5B demonstrated source-link grounding dependency — owner agreement
+
+The independent test owner found that preferred DOI X plus retained DBLP electronic-publication link to DOI Y could otherwise accept X while losing Y from downstream constraints. Original plan §8.1 explicitly requires retaining disagreements from original source links. Domain and ER owners agreed, and coordinator approved, a narrow extension: only Work.source DBLP and sourceLinks field name exactly `ee`; http(s) URLs on exact `doi.org`/`dx.doi.org`, or `arxiv.org` with `/abs/` or `/pdf/`, provide declared publication identifiers after existing StableIds normalization. Preserve all canonical values and contradictions; arXiv version-to-base behavior remains explicit. Recognized resolver links with malformed tokens, userinfo, port, query or fragment fail closed. Other fields (`url` may be a TOC/backlink), arbitrary hosts/names, author/provenance links remain weak observations. No generic URL becomes authoritative; no wire/StableIds formula changes. Domain owns core implementation and feature tests; ER consumes the same accessor; tester adds independent conflict/constraint cases. This is a proven 5B dependency beyond the initial visibility-only change; initial narrower scope statements above are historical.
+
+
+## Subphase 5B — owner/test findings and carried observations
+
+These are implementation/test findings, not a manager-launched external review. Allfailedcommandsremainintest-report/logs. Compileerrors, ownerfixtures, testnamecollisions, cachetransportassertion, primitiveJSONcoercion, danglingindex/textrefs andactualoptionalcandidatehintcompatibilitywere routedtoownwritersandtargetedverified. No userhumanlabelsordecisionsrewritten.
+
+- N1 remains nonblocking: no5Bcomponentgrouping; run-levelcompleteconstraintvalidatedonce; repeatedcomponent-indexworkbelongsdownstreambeforeat-scaleuse.
+- N2 runtimepolicyenforcesconflictpath,scoremissingness,sufficiency,uncalibratedconfidenceandeligiblepre-LLMscore; nocalibratedprobabilityclaim. Genericcorecontract remains intentionallybroader.
+- N3 existingv1enumcodes/pairformulasunchanged; existingfixturespinwires; noincidentalrename.
+- N4 bridge rejectsnoncanonicalsourceRecordIdaliasesbeforelookup/identity, withtests.
+- N5 ERStrictJsonrejectsunknown/duplicatekeys, wrongprimitivecoercions, malformedshapes; genericpreexistingCoreJsonremainsunchanged.
+- N6 approvedSparkownershipunchanged; noPhase6implementation.
+- N7 actualdiagnosticsreportallfiveunsupportedpairs (3profile/work,2nonwork), withrowseparatelycounted.
+- N8 moduleauditdetailsmaprulesFired+supportivegroups+separatemodelreason/rationale+validatedinputfieldJSONpointercitations; coreadjudicationretainssuppliedrecordrefsandmodelconfidence.
+- N9 implementedexportmanifestbindscompleteconstraintfiles/fullhashestorun/input/policy; exporterchecksacceptedlinkandconflictconstraintcompletenessandallknownsourcefacts. Authenticsource/exportertrustisnotestablishedbyhashesalone.
+- N10 knownsourceauthoritycoveragecontinuesfailclosed; narrowrecognizedDBLPeeconflictsnowincluded. N11historicalapprovalwordingalreadyclarified; nohumanrecordsmodified.
+
+5BactualdatafailurewasfixedbyhonoringoptionalcandidateworkIdabsence, notbyrelaxingexplicitconflictinghintvalidation. Source/native/snapshotidentityremainsmandatory. No5Cacquisition/review/evaluatoror5Dliveadapterwasimplemented.
+
+
+## Subphase 5B external findings: repair dispositions
+
+The user-supplied external review reports B1/B2 as blockers. Both are accepted for repair; their five executable failures are preserved in evidence/5b-repair/before-fix.txt and before-fix-summary.json. Historical reports and initial handoff artifacts remain unchanged in history/5b-initial-review/. The coordinator has not inferred closure.
+
+B1: domain owner will use the same literal DOI normalization already accepted by Hadoop/StableIds. Percent sequences, question marks and SICI punctuation remain literal identifier suffix content; no URL decoding or query stripping invents a different identifier. Real contradictory DOI values remain explicit constraints. This chooses the review's acceptance option(a); it does not introduce a general per-observation quarantine path. Truly malformed supported authority remains fail-closed.
+
+B2: ER owner will compare venue and affiliation only within shared representation namespaces, with explicit unavailable reasons. Affiliation combines available per-namespace comparisons using the documented minimum, preserving a known comparable disagreement. Runtime feature and policy versions change to v2. One clarification to the review's impact statement: the spurious venue penalty strands near-perfect cross-source scored pairs at.9, but does not make the entire LLM band unreachable for all other pairs. The missing-versus-mismatch defect itself is confirmed.
+
+Related fixes authorized within this repair: N-1 disables the unsafe default bibliographic shortcut, with the broader opt-in rule still an explicit policy follow-up; N-3 isolates input/output/cache paths; N-4 enforces outcome/reason agreement; N-5 makes the audit identifier catalog reuse bound core electronic-publication facts; N-6 retains empty normalized names as unavailable. N-2 indexing/performance work, N-8 quota release after dropped comparisons and N-9 staging/race handling remain disclosed nonblocking follow-ups. N-7 is an explicit same-publication researcher stratum and evaluation limitation. N-10 is addressed with readable new summaries while preserving historical text.
+
+The external reviewer disclosed that the course README and Phase1/4 gate files were not reopened. That reading limitation is preserved in the complete verdict; no claim of those checks is added. No manager-launched review or 5C work is authorized.
+
+
+### External 5B B1/B2 repair: targeted and actual-data verification complete
+
+B1 is implemented using acceptance option(a): recognized literal DOI resolver strings share StableIds normalization with preferred DOI fields and accepted Hadoop output. The actual Hadoop fixture first prepares percent/query/SICI identifiers, then ER loading and resolution succeeds. Contradictory literal values remain conflict facts and complete constraints still validate. No identifier decoding, source record rewrite, Hadoop change or broad quarantine mechanism was introduced.
+
+B2 is implemented in er-features-v2: venue compares the same venue namespace only; affiliation compares shared ROR/Ringgold/name/institution-ID namespaces and takes the minimum of those comparable scores. Incomparable representations are unavailable with explicit reasons. The independent weighted example now scores1.0; all three same-DOI cross-source pairs in the retained real-input rerun have unavailable venue instead of0. Runtime policy changed to er-offline-uncalibrated-v2; the old policy and outputs remain archived. This is a feature correction, not calibration or an accuracy claim.
+
+Related observations: N-3 physical path isolation, N-4 response outcome/reason consistency, N-5 source-bound authoritative publication-link catalog, and N-6 empty normalized name handling have owner and independent tests. N-1 remains open as a nonblocking policy concern: default bibliographic acceptance is disabled as a partial precaution, but generic-title records can still receive scored acceptance. No complete generic-title or uniqueness rule is claimed. N-2 indexing/scaling, N-8 per-mention quota release after a dropped comparison, and N-9 failed staging cleanup/rename race remain deferred nonblocking items. N-7 same-publication unresolved researcher cases remain an explicit sampling/evaluation stratum; OpenAlex-carried ORCID attribution should also receive separate evaluation. N-10 is addressed through readable forward summaries; historical text is preserved.
+
+Observed verification so far: pre-fix five tests failed; post-fix core30/30, ER19/19 and independent70/70 passed. Two disabled actual-input runs and one fake run each resolve18comparisons with no fake/live calls; disabled logical replay and output hashes verify. The new174file freeze and fresh full gate are in progress. External approval is not inferred. No 5C work, acquisition, live provider, commit or push occurred.
+
+
+### Repair verification final result
+
+The fresh full gate passed all 356 tests with 39 fresh JUnit reports and zero failures/errors/skips. All 174 frozen source hashes match. Actual-input v2 reruns and the completed-Hadoop regression pass. B1 and B2 are implemented and verified by owners/coordinator; independent closure is still pending. Related N-3/N-4/N-5/N-6 changes are tested, N-10 forward reports are readable, and N-7 remains a documented future stratum. N-1/N-2/N-8/N-9 remain explicitly nonblocking follow-ups; default bibliographic disablement does not close N-1. No external approval is invented and no next subphase has begun.
+
+### External approval and user disposition — 2026-10-16
+
+The user returned the independent APPROVE for the implemented 5B B1/B2 repair scope. Both blockers are CLOSED and no new finding blocks 5B. This supersedes the preceding pending-independent-closure statement. The complete supplied verdict, including its reading limitations, is retained in evidence/5b-repair/external-recheck-approval.txt; the original REQUEST-CHANGES report remains unchanged.
+
+The user's subsequent instruction was: "for the bug that is non-block just ignore them instead of fix it".
+
+Disposition: leave remaining nonblocking R-1/R-2/R-3, N-1/N-2/N-7/N-8/N-9 and carried 5A observations documented and unfixed. They are not classified as repaired or disproved. No additional repair, probe, agent assignment or review is initiated for them. Already completed related fixes remain as reviewed. The reviewer's suggested later timing is preserved as historical advice; the user's explicit disposition governs current work.
+
+This receipt changes phase evidence only. The reviewed source freeze, review inventory and reviewer prompt remain unchanged as the reviewed packet. No new test run is needed for this documentation-only receipt. No 5C work, acquisition, provider call, commit or push has begun. Explicit user authorization is still required before 5C.

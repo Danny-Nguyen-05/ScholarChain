@@ -1,7 +1,8 @@
-# Entity resolution — Phase 5A interface agreement
+# Entity resolution — Phase 5A contracts and Phase 5B offline runtime
 
-This module currently contains design artifacts only. Phase 5A adds shared resolution contracts in
-`core`; it does not implement a matcher, CLI, provider, review page, label importer, or evaluator.
+Phase 5A established shared resolution contracts in `core`. Phase 5B now implements the bounded
+local matcher and offline adjudication runtime described below. Review tooling, human labels,
+evaluation and live providers remain later-subphase work.
 The examples in [contracts/](contracts/) are proposed module-local JSON documents. Their numeric
 values are illustrative, uncalibrated, and not production defaults. No example is source evidence,
 a human annotation, or a live model result.
@@ -79,11 +80,11 @@ Only those exact lowercase wire codes are accepted. Values must already equal th
 corresponding existing `StableIds` canonicalizer: normalized bare DOI, unversioned bare arXiv ID,
 or bare checksum-valid ORCID. Namespace aliases/case variants, noncanonical values, incompatible
 entity types and version-bearing arXiv assertions fail validation. Raw arXiv versions remain source
-observations; a named version-comparison rule belongs to 5B, with no implicit suffix stripping here.
+observations; the explicit 5B base-comparison policy is documented in the runtime section below.
 DBLP and OpenAlex work native IDs remain source/endpoint bindings: different native records do
 not by themselves prove different scholarly works. OpenAlex author IDs remain hypotheses.
 Semantic Scholar IDs and repository URLs remain observed evidence; adding them to hard-authority
-constraints waits for validated namespace meanings and canonicalizers in 5B. This narrow assertion
+constraints requires a future authority-policy extension; they remain weak evidence in 5B. This narrow assertion
 set preserves existing source evidence and introduces no new source types or matching algorithms.
 Each assertion must also be grounded in the exact endpoint's validated source observation.
 Profiles support their own bare ORCID; mentions support only that actual member's `observedOrcid`.
@@ -98,7 +99,9 @@ grounding error.
 Source DOI/ORCID spellings are canonicalized with existing helpers for support checks. An actual
 versioned arXiv source ID supports its base only under this grounding rule; submitted assertions
 still require the strict canonical base form. Unknown free-text external identifiers and arbitrary
-source links remain observations, not hard-authority facts. Malformed recognized facts fail closed.
+source links remain observations, not hard-authority facts. Only DBLP `sourceLinks` named exactly
+`ee` gain DOI/arXiv authority through the strict recognized publication-resolver boundary described
+below. Malformed recognized facts fail closed.
 
 Every covered endpoint must have assertions for **all** its recognized canonical authority facts,
 including an ORCID profile's own ID. Conflicting source values remain present; selecting one
@@ -119,7 +122,11 @@ The `domain-engineer` owns any shared contract changes. Representative selection
 and preserve the existing stable-ID authority rules; this ownership decision authorizes no Phase 6
 implementation now.
 
-## Policy and configuration contract for 5B
+## Retained Phase 5A design agreement
+
+The following design sections preserve the 5A interface agreement and later-subphase proposals.
+The implemented **Phase 5B runtime** section below supersedes their preliminary API/settings
+descriptions. Review tooling, labels, evaluator and provider-selection commands remain future work.
 
 See [policy.example.v1.json](contracts/policy.example.v1.json) and
 [config.example.v1.json](contracts/config.example.v1.json). They specify separate work/researcher
@@ -264,3 +271,206 @@ Existing verification commands are `sbt -batch check` and `sbt -batch 'entityRes
 'independentTests/test'` under Java 17. The coordinator serializes gates against a frozen tree and
 reports observed results. Shared wire examples/tests belong to core; module-local runtime behavior
 and its tests remain 5B/5C work. Stop after the 5A external-review handoff and wait for authorization.
+
+## Phase 5B runtime
+
+`Phase5Main` implements only `resolve` and `--help`. Review queues, labels, evaluation, live
+providers and Spark grouping are later-subphase work. The matcher has no gold-label input or
+held-out membership argument. This implementation makes no accuracy, calibration or human-review
+claim. The original [contracts](contracts/) remain DESIGN_ONLY; the separate runtime examples in
+`src/main/resources/phase5-policy.v1.json` and `phase5-config.v1.json` are executable **uncalibrated**
+settings. Their numerical choices have not been fitted to labels.
+
+The current runtime policy is `er-offline-uncalibrated-v2`, using `er-features-v2`. The policy schema
+remains v1; v1 feature semantics are rejected at startup rather than silently reused. The feature
+version changed because namespace-incomparable venue/affiliation evidence is now unavailable and
+excluded from the available-weight denominator. Policy/config/request/cache hashes bind the changed
+settings. The `contracts/` examples retain their original historical design values.
+
+From the repository root, with Java 17:
+
+```bash
+sbt -batch 'entityResolution/runMain edu.uic.cs441.scholarchain.entityresolution.Phase5Main --help'
+sbt -batch 'entityResolution/runMain edu.uic.cs441.scholarchain.entityresolution.Phase5Main resolve --input target/phase4-runs/fda6168a-d4e6-4c20-bf73-42a1c3724f7f --policy modules/entity-resolution/src/main/resources/phase5-policy.v1.json --config modules/entity-resolution/src/main/resources/phase5-config.v1.json --llm-mode disabled --output target/phase5/5b-disabled-demo'
+```
+
+The input path above identifies the actual retained Phase 4 sample; it must exist and pass a fresh
+reader verification. Output paths must be new. Repeating the command requires another output path.
+Fake mode is selected explicitly with `--llm-mode fake`; optional `--cache PATH` uses a separate
+`fake/` cache namespace. The default fake adapter deterministically abstains. It never calls a model.
+No live mode or live adapter exists in 5B. Invalid config, partial inputs and existing outputs fail
+before calls or output writes. Policy explicitly supersedes `ScholarChainConfig.entityResolution`;
+this CLI accepts no legacy config argument, and unknown/duplicate CLI or JSON fields fail.
+Input, output and cache directories must be physically disjoint: equal paths or any ancestor/child
+relationship fail before calls or writes, including aliases resolved through existing real ancestors.
+The loaded input carries its source root only as local IO metadata, never as scholarly identity
+or scoring evidence. Public engine/cache and export boundaries also protect that source root.
+
+### Input and candidate integrity
+
+`InputLoader.load` verifies both completion/manifest schemas and identity, all input-checksum,
+snapshot and retrieval-date bindings, transformation version, all nine job success markers, the
+exact export-part inventory and partition paths, every length and SHA-256, strict UTF-8 and JSONL
+framing. Every known export kind is parsed with closed keys and domain validation. Authorship,
+team and coauthor rows are validated against actual works; standalone author rows must exactly
+match the nested mentions. Unknown kinds/schemas, missing candidates/lookups, dangling member
+refs, conflicting observation payloads and noncanonical source-record aliases fail. Input bytes,
+rows, row bytes, export files and lookup size have explicit limits. Source files are read only.
+
+`ResolutionInput.create` provides the same validated source context for deterministic test/adaptor
+use. It does not certify a human label or a completed Hadoop run; `completionHash=None` records that
+limit. Full source/native-record/snapshot keys keep equal DOI-based work IDs as separate observations.
+
+`CandidateBuilder.build` preserves all Phase 4 contributing candidate IDs/block keys. Known
+profile/work cross-entity rows and nonwork ORCID activities receive separate row and distinct-pair
+skip counts. Work activities become work comparisons without authors or teams. Researcher
+comparisons use bounded name/order-variant, surname-initial, ORCID and OpenAlex-author blocks over
+actual mentions/profiles; they include cross-observation publication contexts. The per-mention
+cross-publication cap conservatively also counts copies of one publication across observations.
+It never compares two members from the same source observation. Block membership, block size,
+block pairs, total attempted pairs, retained comparisons, per-mention pairs and aggregate evidence
+bytes are explicit bounds. Oversize blocks are skipped whole. A pair whose multiblock evidence
+would exceed its bound is removed whole with a diagnostic; contributing refs are never silently
+trimmed. Derived block evidence has a distinct `er-derived-candidate-v1` hashing formula and is
+retained only for retained pairs. Preparation candidates and their feature vocabulary are unchanged.
+
+### Normalization, identifiers and features
+
+Normalization v1 uses Unicode NFKC, Locale.ROOT lowercase, whitespace/punctuation tokenization and
+literal markup removal; it never executes text. Accents remain in title tokens. A separate NFD
+mark fold aids names while raw source strings remain in exported evidence. Name-order variants are
+comparison/blocking aids, not identities. Initials compatibility requires the same folded surname
+and equal ordered given-name initials; a single token is unavailable.
+
+DOIs and ORCIDs use core canonicalizers, including ORCID checksum validation. Ordinary arXiv fields
+retain versions in their raw/normalized catalog entries. Hard authority and exact comparison use
+the unversioned publication base, so versions of one arXiv publication are not conflicts. Distinct
+bases are conflicts. The DBLP `ee` catalog uses core's bound electronic-publication helper: its raw
+resolver spelling, namespace and canonical authority are retained together, including repetitions
+and disagreements. DOI resolver suffixes use existing StableIds literal-token semantics without URI
+decoding or query stripping: `%`, `?` and SICI punctuation remain literal DOI material. arXiv links
+retain the separate conservative URI boundary; raw URI versions remain visible while their authority
+catalog value is the unversioned base. OpenAlex work and author IDs use separate typed normalizers. Semantic Scholar
+work IDs are 40 hex digits and author IDs are positive decimal IDs (or their matching official URLs).
+These and OpenAlex author IDs remain hypotheses. Repository URLs accept HTTP(S), lowercase only
+scheme/host, remove default ports, preserve raw case-sensitive paths, percent escapes and queries,
+and reject credentials/fragments. They are never fetched; different paths or meaningful queries are
+not equated. Unsupported raw identifiers remain in the source evidence and errors are explicit in
+the catalog. No new SourceType is introduced.
+
+Hard authority is exactly core's `groundedAuthority`, memoized per endpoint: DOI/arXiv for works,
+ORCID for researchers, including recognized DBLP `ee` self-publication resolver links. That public
+source-consistency API preserves contradictions and rejects malformed declared hard facts. Arbitrary
+links and related ORCID work references never become self identifiers. Every known source authority
+fact is exported in complete constraints. Same-namespace conflicts are checked before exact-ID,
+bibliographic, scored or LLM acceptance and again before accepted-link creation. Missing IDs and
+different namespaces are not conflicts. Sharing a work never establishes author identity.
+
+Every feature has an explicit value or missing reason and actual source-record refs. Formulae:
+
+| Feature | Formula/range and availability |
+|---|---|
+| title | Token Jaccard [0,1]; work/activity titles required on both sides |
+| name | Accent-folded name-token Jaccard [0,1]; researcher names required |
+| initials | 1/0 under the surname/initial rule above; unavailable without sufficient name parts |
+| authorOverlap | Jaccard of folded complete author-name sets; full work author lists required |
+| coauthorOverlap | Jaccard of folded other-author names; missing empty sets or copies known to be the same publication |
+| authorOrder | `1/(1+abs(ordinalA-ordinalB))`; actual mention ordinals required |
+| affiliation | Compare ROR/ROR, Ringgold/Ringgold, OpenAlex-institution/OpenAlex-institution and folded-name/name sets separately; minimum Jaccard over shared namespaces; missing/incomparable evidence unavailable |
+| yearCompatibility | `max(0,1-abs(yearA-yearB)/yearToleranceYears)`; both years required |
+| venue | 1/0 only inside the same complete venue-ID namespace (`venue:issn`, `venue:openalex`, `venue:dblp-booktitle`); cross-namespace or missing values unavailable |
+| identifier | 1/0 for shared/no-shared values in at least one comparable namespace; distinct namespaces alone are unavailable |
+| citationNeighborhood | Unavailable: preparation exports no citation neighborhoods |
+| sourceReliability | Minimum configured source multiplier [0,1]; never contributes identity support |
+
+Work-only and researcher-only features are explicitly unavailable for the other entity. Scores are
+weighted averages over available configured features, multiplied by source reliability. Missing
+weights do not contribute to numerator or denominator; no available weighted evidence gives no
+score and UNRESOLVED. Preparation sentinel values are never used. Source reliability affects the
+score only; it is neither measured accuracy nor independent identity evidence.
+An incomparable venue has `UNAVAILABLE_INCOMPARABLE_VENUE_NAMESPACES`; disjoint nonempty affiliation
+namespaces have `UNAVAILABLE_INCOMPARABLE_AFFILIATION_NAMESPACES`. One-sided absent fields retain the
+generic missing-source reason. Organization names form a weak separate namespace; they never map
+ROR to Ringgold or OpenAlex. A one-sided optional name does not dilute matching RORs. When several
+namespaces are comparable, their minimum similarity conservatively retains any observed same-kind
+disagreement. Names empty after normalization are unavailable with `EMPTY_NORMALIZED_NAME`, not zero.
+
+Feature groups collapse correlated name/initial/order and title/venue evidence. Only actual feature
+values at least `supportiveFeatureMin` count toward supporting groups; availability alone does not.
+Acceptance requires configured minimum/required supporting groups. The runtime researcher policy
+requires name, coauthor context and a third group; name alone remains unresolved. Exact grounded
+shared IDs can accept after conflict checks. The supplied runtime policy disables the experimental
+work-only bibliographic shortcut: generic titles such as “Preface” plus a shared author/year do not
+establish uniqueness. Explicitly enabling that optional rule still requires policy review and remains
+a disclosed limitation until document-type/uniqueness evidence is designed. Tests explicitly enable
+it only to exercise the existing branch. When enabled, the rule requires
+configured title/complete-author-set similarity and actual year-distance bounds; it cannot run for
+activities without author lists. Disabling the shortcut is only a partial precaution: generic-title
+records with enough matching scored features can still be accepted by the scored path. N1's complete
+generic-title/document-type/uniqueness policy remains deferred for attention before the 5C policy
+freeze; this implementation makes no quality guarantee for that stratum.
+Scored rejection is `score <= rejectThreshold`; scored acceptance
+is `score >= acceptThreshold` after sufficiency; otherwise unresolved. The inclusive LLM band lies
+strictly inside the threshold gap. Exact/conflict/bibliographic rule paths have no numerical score;
+legacy confidence zero is explicitly marked unavailable.
+
+### Offline adjudication and cache
+
+Only sufficient unresolved comparisons in the configured band are eligible. Disabled mode invokes
+no adapter or cache and adds `LLM_DISABLED`. The provider seam is injectable for tests; the supplied
+adapter is an explicit deterministic abstention fixture. Budgets reserve UTF-8 byte counts as a
+conservative token allowance, not measured model usage. Every attempted call, including retries,
+consumes the request and response reservations. Calls are sequential, with configured timeout,
+retry, request/response bytes, rationale/reason/field citation sizes and total budgets. A failed,
+malformed, timed-out or exhausted adjudication stays unresolved. An adapter ignoring cancellation
+fuses the runner against retries/subsequent calls; arbitrary JVM code cannot be forcibly terminated,
+so the production fake is synchronous and bounded and that seam is not an untrusted plugin loader.
+
+Prompt and closed response schema are module resources. Response identity must echo all request IDs
+and hashes. Only accept/reject/abstain and closed reason codes are allowed. Decisive responses cite
+allowed evidence refs plus existing nonnull input fields as `evidenceRef#/JSON/pointer`; fabricated
+fields, array indices, refs, extra/duplicate keys and oversized text fail. Embedded dataset
+instructions are untrusted data. No tool/URL access occurs. Outcome/reason consistency is strict: accept has only `SUPPORTED_SAME_IDENTITY`, reject only
+`SUPPORTED_DIFFERENT_IDENTITY`, and abstain only `INSUFFICIENT_EVIDENCE`; contradictory or mixed codes
+fail closed. Separate model reason codes, rationale
+and field citations remain in `audit-details.jsonl`; core adjudication stores the allowed record
+refs and separate reported confidence. The final path is singular and preserves unresolved pre-LLM
+outcome/score/path. Model confidence never replaces the system score or becomes calibration.
+
+Requests/cache keys bind every supplied evidence payload/locator, feature, normalized identifier,
+input/policy/config hash, provider/model/version/settings, prompt content/version and response
+schema content/version, endpoint/pair identity and explicit fake mode. Cache hits revalidate exact
+request and closed response plus content hashes. Corruption fails closed. Fake entries live under
+`fake/`; live contexts are rejected. All cache ancestors must be nonsymlinks, writes are to unique
+partial files then atomic rename, and existing differing entries are never replaced. Interrupted
+partial files are not hits.
+
+### Outputs and downstream ownership
+
+A new output directory is published through a sibling partial directory and atomic rename after all
+files and the completion marker exist. Failure leaves an untrusted partial directory, never a
+completed output. Every entity has separate accepted/rejected/unresolved/conflict JSONL streams,
+accepted pairwise links and one complete grouping-constraint JSON. Evidence, decision details,
+diagnostics and effective settings are exported separately. Empty streams remain present.
+`resolution-manifest.json` binds run/input/policy/config, prompt/schema, outcome counts, every file's
+length/hash/count and the complete constraint bundle's full file hash for each entity. The completion
+marker binds the manifest bytes. `LinkExporter.verify` checks inventory/digests/settings/bundle
+bindings before downstream use. Hashes establish internal consistency, not external authenticity.
+
+No groups or canonical representative IDs are assigned here. Phase 6's spark-engineer owns work
+and researcher grouping and representative selection in `modules/spark/**`; the domain-engineer
+owns shared ID rules/conflict semantics. Phase 6 must fail closed on missing coverage, cannot-links
+and authoritative conflicts, including transitive A–B–C conflicts. The existing in-memory component
+validator still revalidates the full bundle (N1); 5B does not call it repeatedly or construct groups.
+An indexed/scalable consumer and shared conflict vectors remain required before Phase 6 scale use.
+
+Human labels (40 development + 200 held out), acquisition expansion, calibration, provider choice,
+real calls and measured evaluation remain later gates. The retained sample is too small for those
+claims; repeated copies and blocks do not create independent evaluation groups.
+
+
+The offline default and later review queue must preserve distinct reporting strata for exact-ID,
+scored, optional bibliographic and fake/live adjudication paths. Future human review should include
+common names, generic publication titles, missing fields and cross-source identifier representations;
+the present tiny portfolio supplies no calibrated per-stratum quality claim. Run-level performance
+optimization and cache disk quotas remain tracked follow-ups before wider acquisition/scale use.

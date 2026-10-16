@@ -516,3 +516,38 @@ Domainownsmodules/core/** sourcefactgrounding/contextchecks/ownfixtures/tests/do
 b2-repair-start.jsonandhistory/5a-b1-recheck/preserveprior141filefrozenstate/diff/inventory/prompt. Nooldreviewresult/logoverwritten; newlysuppliedreviewprovenanceuser-launched. Assertionsmustbeclosedcanonicalnamespace/valueandmatchactualvalidatedsourcefactsforeachendpoint. Contradictoryknownfactsarenotmadeconsistentbyinventingassertions; preserveallsourceobservations. Canonicalsourceformcomparisonisgroundingonly,notnewmatchingpolicy. Noarbitrarysourcefetchoridentityclaim.
 
 N6ownershipisalreadyexplicitlyapprovedanddocumented:Phase6spark-engineerownsgrouping/representativeselectionmodules/spark/**;domainownsIDrules/sharedcontracts. N11onlyclarifiessupersededcoordinatorpendingtext; no humangateorconstitutionalchanges.
+
+
+## Subphase 5B authorization and work order — 2026-10-16
+
+Human statements, transcribed without expanding the decision:
+
+> status approved. So now we're good to go to 5b, but before go on, give me a oneline commit message so I can push this change before we move on
+
+> alright now let move on phase 5b. Are you ready to implement phase 5b?
+
+The user created commit `4ac236fcb01825b73635fa4c762a35bed4b362cd` on `phase-5`; preflight observed a clean working tree and all 142 committed 5A source hashes match the prior freeze. The coordinator did not commit or push. This records human approval/advancement; no complete external B2/N10 APPROVE report was provided or invented. Earlier pending-review text remains historical.
+
+Authorized scope: 5B only, as original plan §§7–9 Stage A and §14 specify: actual completed Phase 4 input verification, bounded work/researcher candidates, normalization, source-grounded conflicts, features/scoring, typed four-outcome/link/complete-constraint exports, strict offline fake/disabled adjudication and cache, tests and fresh full gate. No 5C acquisition/review UI/evaluator, 5D provider/live calls or human-label import, 5E evaluation, Phase 6, cloud action or commit/push. Preserve the 40 development + 200 held-out review target and existing dataset shortfall.
+
+Native owners: `/root/phase5b_er` writes `modules/entity-resolution/**`; `/root/phase5b_test` writes `tests/**`; `/root/phase5b_domain` writes only demonstrated minimal core accessor and its tests under `modules/core/**`. Coordinator alone assembles phase evidence. Subagents cannot delegate. Public APIs agreed before dependent tests; all sbt builds serialized by coordinator. Agents inherit parent model/settings; prior model recommendations are not recorded as an executed override.
+
+Core dependency: expose existing validated `ResolutionValidationContext.groundedAuthority` read-only to ER, retaining identical B2/N10 semantics and v1 wires. N1 indexed component validator deferred because 5B validates whole constraints once and assigns no groups. N2/N4/N5/N7/N8/N9 are addressed as runtime policy/input/diagnostics/audit/manifest behavior where applicable; N3 existing v1 enum wires remain pinned. Full start source hashes and authority limitations in `5b-baseline.json`; previous handoff archived in `history/5a-final-handoff/`.
+
+Stop after complete 5B verification; give full copy-paste reviewer prompt. Never launch external reviewer. Wait for returned verdict and explicit 5C authorization.
+
+
+### 5B demonstrated source-link grounding dependency — owner agreement
+
+The independent test owner found that preferred DOI X plus retained DBLP electronic-publication link to DOI Y could otherwise accept X while losing Y from downstream constraints. Original plan §8.1 explicitly requires retaining disagreements from original source links. Domain and ER owners agreed, and coordinator approved, a narrow extension: only Work.source DBLP and sourceLinks field name exactly `ee`; http(s) URLs on exact `doi.org`/`dx.doi.org`, or `arxiv.org` with `/abs/` or `/pdf/`, provide declared publication identifiers after existing StableIds normalization. Preserve all canonical values and contradictions; arXiv version-to-base behavior remains explicit. Recognized resolver links with malformed tokens, userinfo, port, query or fragment fail closed. Other fields (`url` may be a TOC/backlink), arbitrary hosts/names, author/provenance links remain weak observations. No generic URL becomes authoritative; no wire/StableIds formula changes. Domain owns core implementation and feature tests; ER consumes the same accessor; tester adds independent conflict/constraint cases. This is a proven 5B dependency beyond the initial visibility-only change; initial narrower scope statements above are historical.
+
+
+## Subphase 5B repair work order after external review
+
+The user returned REQUEST-CHANGES with B1/B2 blockers and ten nonblocking findings. The complete report is preserved in review.md and evidence/5b-repair/external-review.txt. All 170 reviewed source hashes matched before repair; history/5b-initial-review retains the exact prior handoff. Current branch/HEAD remain phase-5 / 4ac236fcb01825b73635fa4c762a35bed4b362cd; changes remain uncommitted.
+
+Domain owner repairs B1 by grounding recognized literal DOI resolver suffixes with the same existing StableIds semantics Phase 4 accepted, without decoding or dropping suffix characters. Existing contradictory values remain explicit. A bound raw-link/fact accessor supplies ER audit catalog semantics without duplicating DOI parsing. ER owner repairs B2 by comparing venue/affiliation only within comparable representations, using explicit unavailable reasons; feature and policy versions change to v2. Independent tester first authors executable regressions against unchanged production, including a real Hadoop-prepared synthetic completed-run bridge. No original source schema, StableIds formula, Hadoop production or dataset acquisition changes are authorized.
+
+Related bounded fixes: disable the unsafe default bibliographic shortcut pending a fuller policy, isolate CLI input/output/cache paths, validate reason/outcome consistency, make the identifier catalog agree with grounded electronic-publication facts, and retain empty normalized names as unavailable. N-2 performance work, N-8 quota release and N-9 staging/race handling remain disclosed follow-ups. N-7 same-publication researcher limits become an explicit evaluation stratum. N-10 receives readable forward-looking summaries; earlier review/history is preserved.
+
+Owners remain /root/phase5b_domain (core), /root/phase5b_er (ER), /root/phase5b_test (tests). Coordinator alone assembles evidence. Tests/builds remain serialized, and production repair waits for captured red regressions. Stop after fresh targeted/full gates, real-input reruns and a complete external recheck prompt. No reviewer launch, 5C work, acquisition, live call, commit or push.

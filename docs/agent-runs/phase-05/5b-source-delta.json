@@ -1,0 +1,185 @@
+{
+  "schema": "scholarchain.phase5b.source-delta.v1",
+  "base": "4ac236fcb01825b73635fa4c762a35bed4b362cd",
+  "added": [
+    {
+      "path": "modules/core/src/test/scala/edu/uic/cs441/scholarchain/core/ResolutionAuthorityConsumerSpec.scala",
+      "bytes": 9827,
+      "sha256": "854b4b1ba9e725e34af57615935476de86c9b928b118345a11d63f9ea5557ead"
+    },
+    {
+      "path": "modules/entity-resolution/src/main/resources/adjudication/prompt.v1.txt",
+      "bytes": 1335,
+      "sha256": "e9ef5f36238a29f2003f9e6404451aeca7fc54575989910edae2ce0ab7f71940"
+    },
+    {
+      "path": "modules/entity-resolution/src/main/resources/adjudication/response.schema.v1.json",
+      "bytes": 2802,
+      "sha256": "b253e113841a2e02699097ae003c4a01fbbd2fcd28cf2e61ff48a7a46e06aacd"
+    },
+    {
+      "path": "modules/entity-resolution/src/main/resources/phase5-config.v1.json",
+      "bytes": 1001,
+      "sha256": "af72eae47d0894cd9cb55a189fa8f96c583dbe68ef418bbc77eb48a2951a6cd0"
+    },
+    {
+      "path": "modules/entity-resolution/src/main/resources/phase5-policy.v1.json",
+      "bytes": 1755,
+      "sha256": "2d3d12e7489b18437f96b09754709100cbc3529ffd4fcfd0ff6807db87f2a93f"
+    },
+    {
+      "path": "modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/Adjudication.scala",
+      "bytes": 15923,
+      "sha256": "460138a21a90b75ae097c605ceccf8b923f2fc763d20fe59228ccccb06318602"
+    },
+    {
+      "path": "modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/AdjudicationCache.scala",
+      "bytes": 3561,
+      "sha256": "6a700ce870f8024773287485f4038bee2eeb4382a75759ac27f833d8096c52cf"
+    },
+    {
+      "path": "modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/CandidateBuilder.scala",
+      "bytes": 10206,
+      "sha256": "e49332a9112ee1b9437eebb1b398a213f039eb92c1be711b528ab2cad6ac291e"
+    },
+    {
+      "path": "modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/FeatureExtractor.scala",
+      "bytes": 11024,
+      "sha256": "1cfd25875ef20b71ae5b64eb172e81e94a94914ceaba592edefc324ec09b16b8"
+    },
+    {
+      "path": "modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/InputLoader.scala",
+      "bytes": 23033,
+      "sha256": "69e01893f0f07cdb8ac995d099d8cce46ca5c1d77bc71c4d49dabcf61f9ea6cc"
+    },
+    {
+      "path": "modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/LinkExporter.scala",
+      "bytes": 14147,
+      "sha256": "5852d9b4bee919bd0d6aa02c14cbb5b35237ea0a67ab58e3337023daa9ab3b66"
+    },
+    {
+      "path": "modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/Normalization.scala",
+      "bytes": 5576,
+      "sha256": "32071a6d1b0ccef1a77c492da16594bb783e0546c28ca00a8a172465e0b9b7fe"
+    },
+    {
+      "path": "modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/PathIsolation.scala",
+      "bytes": 1242,
+      "sha256": "4a9290709f4ed9731079ee2df818df7cb6743c0769abfcda4bebe12267840441"
+    },
+    {
+      "path": "modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/Phase5Main.scala",
+      "bytes": 3842,
+      "sha256": "ee3832f27cc339553466c807d233307aaad3f86db94986dd8af2bbeec042f112"
+    },
+    {
+      "path": "modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/ResolutionEngine.scala",
+      "bytes": 16496,
+      "sha256": "6b6e3348e2c4db6e171d5211d6c940b2b748d02f4d932ef0cc82c5477ece4b87"
+    },
+    {
+      "path": "modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/ResolutionPolicy.scala",
+      "bytes": 12703,
+      "sha256": "0a35cf1b8ebb8aeee4b1a417348abea08e6878985146d4f6522fa01bb1993684"
+    },
+    {
+      "path": "modules/entity-resolution/src/test/scala/edu/uic/cs441/scholarchain/entityresolution/ComparableEvidenceSpec.scala",
+      "bytes": 9308,
+      "sha256": "819f9d6bd607177dd9c68b4385f1eedc94c6880111deb130cc280b4ea1d62d83"
+    },
+    {
+      "path": "modules/entity-resolution/src/test/scala/edu/uic/cs441/scholarchain/entityresolution/OfflineResolutionSpec.scala",
+      "bytes": 17650,
+      "sha256": "0d36ed8f0e8ef4fde2f9a3da991128dba0d677a7993173208449da14c0162ebc"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentCandidateDerivationSpec.scala",
+      "bytes": 6778,
+      "sha256": "2b1a69e44b1775c39253e8b32daebdcca933732609be9c6f3d6d8d7741662f2b"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentCompletedPrepFixture.scala",
+      "bytes": 4890,
+      "sha256": "45e5fc887d3b29514283611dc6b85a52cdfb4661a9b285bde1459cf16ca6f302"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentIdentifierNormalizationSpec.scala",
+      "bytes": 4034,
+      "sha256": "bd4ca2b0a5cb22b87dbbb7c0c84788f18b361bd6c895fc6cb5fc5c4e6cc119d7"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentOfflineAdjudicationSpec.scala",
+      "bytes": 12785,
+      "sha256": "e4c1dc1f52f7c02466518b1a6f5a5bd296fc7b0295012dd3551c7c423bcf7668"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentPrepReaderSpec.scala",
+      "bytes": 5286,
+      "sha256": "959916095d05e1ae04aaaddd88cef180f5249674d41630c06c56503de88d46fe"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentResolutionEngineSpec.scala",
+      "bytes": 10548,
+      "sha256": "cda7cc0a553331d8cd6d5673db83f51403b376b7bd8d817bbc34e3dddae8b035"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentResolutionExportSpec.scala",
+      "bytes": 10514,
+      "sha256": "fb8c7cf7d281dce426d156d8c7b109b897ba2b518d07c54d089df4e50fd53180"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentResolutionFeaturesSpec.scala",
+      "bytes": 3676,
+      "sha256": "337bea46a01ede76b7d41ef0ad8530e2ad46427375b512f3816a4ff3fc3a3044"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentResolutionFixtures.scala",
+      "bytes": 5114,
+      "sha256": "de6aafb3b8b9227ef1fb8dfa87988e83520ca1c6f673be8f842040c7ab0937bb"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentResolutionInputSpec.scala",
+      "bytes": 6033,
+      "sha256": "566ad57d213f4dff4e5a1bd1178c32b694dc29562569c5f75d258e6131cac1b0"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentResolutionPolicySpec.scala",
+      "bytes": 4209,
+      "sha256": "8508fdffb554254e112760fd272f9556d347449b7e730c7f08d0e6e9d075a9fe"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentResolutionPrepBridgeRepairSpec.scala",
+      "bytes": 3876,
+      "sha256": "cb23a3caafdada7812180490204c979c84fc95d3182e25b003b3168f967ed3ed"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentResolutionRepairSpec.scala",
+      "bytes": 7606,
+      "sha256": "cd1c4e1c98e112333deaa1883c72b9ea0029ea5252a1866de36536cdb9ce52a4"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentResolutionRunSpec.scala",
+      "bytes": 10607,
+      "sha256": "f8a8d5a7aa69992b7fa55a70476db02b4ad984cefe332a14aee91687cde9cb9e"
+    }
+  ],
+  "modified": [
+    {
+      "path": "modules/core/README.md",
+      "beforeSha256": "ab1924f93b206db0c61ae74154f81a66ef284a33853367a2d98f36161fb93d4e",
+      "afterSha256": "578a9460fe9d572fe9a41461d381aba49b08dff1c0ffd14c86dc71ff9487e593"
+    },
+    {
+      "path": "modules/core/src/main/scala/edu/uic/cs441/scholarchain/core/ResolutionValidationContext.scala",
+      "beforeSha256": "38688366a7d747b49c02455cbe236944ee97bb1f52196e4222bad1b315382cda",
+      "afterSha256": "315b99fa3577a87e02b7d55655a74968e5a3cecaac8fbda4ee667c0fee5fc23b"
+    },
+    {
+      "path": "modules/entity-resolution/README.md",
+      "beforeSha256": "50b9b8531ba087d112a06d8f47857e17a6b6edc81a5abd18f944da704ca62381",
+      "afterSha256": "2eda4a026085a39c3db25e5bf9cd2cb714cf6bfe92af0821c362be5aa72bc8e4"
+    }
+  ],
+  "removed": [],
+  "allOtherSourceHashesUnchanged": true
+}

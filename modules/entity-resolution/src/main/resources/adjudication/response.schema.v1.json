@@ -1,0 +1,146 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "scholarchain.adjudication-response.v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "requestHash",
+    "pairId",
+    "sourceId",
+    "targetId",
+    "inputEvidenceHash",
+    "policyHash",
+    "outcome",
+    "reasonCodes",
+    "evidenceRefs",
+    "rationale",
+    "reportedConfidence",
+    "fieldRefs"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": "scholarchain.adjudication-response.v1"
+    },
+    "requestHash": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "pairId": {
+      "type": "string"
+    },
+    "sourceId": {
+      "type": "string"
+    },
+    "targetId": {
+      "type": "string"
+    },
+    "inputEvidenceHash": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "policyHash": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "outcome": {
+      "enum": [
+        "accept",
+        "reject",
+        "abstain"
+      ]
+    },
+    "reasonCodes": {
+      "type": "array",
+      "uniqueItems": true,
+      "minItems": 1,
+      "items": {
+        "enum": [
+          "SUPPORTED_SAME_IDENTITY",
+          "SUPPORTED_DIFFERENT_IDENTITY",
+          "INSUFFICIENT_EVIDENCE"
+        ]
+      }
+    },
+    "evidenceRefs": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string"
+      }
+    },
+    "fieldRefs": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "description": "Allowed evidence record ref followed by # and a verified JSON pointer to a present input field"
+      }
+    },
+    "rationale": {
+      "type": "string",
+      "minLength": 1
+    },
+    "reportedConfidence": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "outcome": {
+            "const": "accept"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "reasonCodes": {
+            "const": [
+              "SUPPORTED_SAME_IDENTITY"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "outcome": {
+            "const": "reject"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "reasonCodes": {
+            "const": [
+              "SUPPORTED_DIFFERENT_IDENTITY"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "outcome": {
+            "const": "abstain"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "reasonCodes": {
+            "const": [
+              "INSUFFICIENT_EVIDENCE"
+            ]
+          }
+        }
+      }
+    }
+  ]
+}

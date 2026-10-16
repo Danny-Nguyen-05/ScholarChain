@@ -1,0 +1,115 @@
+[info] welcome to sbt 1.10.7 (Homebrew Java 17.0.20.1)
+[info] loading settings for project scholarchain-build from plugins.sbt...
+[info] loading project definition from /Users/danny/Documents/UIC/CS441/ScholarChain/project
+[info] loading settings for project root from build.sbt...
+[info] set current project to root (in build file:/Users/danny/Documents/UIC/CS441/ScholarChain/)
+[info] scalafmt: Formatting 2 Scala sources (/Users/danny/Documents/UIC/CS441/ScholarChain/modules/entity-resolution)...
+[info] scalafmt: Reformatted 1 Scala sources
+[success] Total time: 1 s, completed Oct 16, 2026, 2:33:54 PM
+[info] scalafmt: Formatting 1 Scala sources (/Users/danny/Documents/UIC/CS441/ScholarChain/modules/entity-resolution)...
+[info] scalafmt: Reformatted 1 Scala sources
+[success] Total time: 0 s, completed Oct 16, 2026, 2:33:54 PM
+[info] scalafmt: Formatting 1 Scala sources (/Users/danny/Documents/UIC/CS441/ScholarChain/tests)...
+[success] Total time: 0 s, completed Oct 16, 2026, 2:33:54 PM
+[info] compiling 2 Scala sources to /Users/danny/Documents/UIC/CS441/ScholarChain/modules/entity-resolution/target/scala-3.3.4/classes ...
+[info] done compiling
+[info] compiling 1 Scala source to /Users/danny/Documents/UIC/CS441/ScholarChain/modules/entity-resolution/target/scala-3.3.4/test-classes ...
+[info] done compiling
+[info] OfflineResolutionSpec:
+[info] - runtime resources are strict uncalibrated configs; duplicate/unknown keys fail
+[info] - normalization keeps raw accents separate and respects initials surname and repository escapes
+[info] - hard conflict dominates exact DOI and bibliographic similarity
+[info] - same publication copies cannot supply independent researcher coauthor support
+[info] - missing year remains unavailable and does not consume preparation sentinel
+[info] - oversize blocks and aggregate multiblock evidence are explicit diagnostics
+[info] - field citations must point to present supplied input fields; unknown JSON is rejected
+[info] - disabled run is source bound, exports complete constraints and refuses overwrite
+[info] - a fake adapter ignoring interruption fuses further calls instead of overlapping retries
+[info] - CLI help is honest and invalid options fail before creating output
+[info] - strict JSON refuses primitive coercions and fractional integral configuration
+[info] - a valid identifier-index row cannot cite a missing source observation
+[info] - a work abstract reference requires the actual matching text observation
+[info] Run completed in 511 milliseconds.
+[info] Total number of tests run: 13
+[info] Suites: completed 1, aborted 0
+[info] Tests: succeeded 13, failed 0, canceled 0, ignored 0, pending 0
+[info] All tests passed.
+[success] Total time: 5 s, completed Oct 16, 2026, 2:34:00 PM
+[info] compiling 1 Scala source to /Users/danny/Documents/UIC/CS441/ScholarChain/tests/target/scala-3.3.4/test-classes ...
+[info] done compiling
+[info] IndependentIdentifierNormalizationSpec:
+[info] - DOI and ORCID spelling normalizes without accepting an invalid checksum
+[info] - OpenAlex work and author identifiers cannot cross their entity namespace
+[info] - arXiv versions remain auditable and arbitrary URL hosts cannot masquerade as arXiv
+[info] - repository normalization preserves distinct path case and meaningful query identity
+[info] - Semantic Scholar syntax is covered without introducing a live source
+[info] IndependentResolutionPolicySpec:
+[info] - runtime policy and config reject unknown fields recursively and simultaneous legacy knobs
+[info] - threshold gap and entire uncertain band are validated before processing
+[info] - duplicate raw JSON keys cannot silently override policy or generation settings
+[info] - policy refuses to count correlated name or bibliography features as independent groups
+[info] - policy fingerprint ignores object key order but changes with every effective setting
+[info] - offline configuration rejects live provider and unbounded or monetary execution
+[info] IndependentResolutionInputSpec:
+[info] - same DOI source observations remain distinct while conflicting full lookup keys fail
+[info] - candidate lookup binds source native record and snapshot rather than shared work ID
+[info] - native source aliases are rejected before two identities can be assigned to one observation
+[info] - nested unknown schema, forged mention binding and invalid candidate IDs fail closed
+[info] - affiliation evidence cannot point to a missing member or wrong parent snapshot
+[info] IndependentPrepReaderSpec:
+[info] - independently framed completed run loads and partial stage or completion fails
+[info] - digest length and exact inventory are independently enforced
+[info] - completion traversal symlink duplicate inventory and mismatched provenance fail closed
+[info] - digest-valid unknown schema nested keys and incomplete JSONL remain invalid
+[info] - standalone author rows cannot borrow or omit members from a nested source observation
+[info] - input byte record and lookup bounds reject before trusting a population
+[info] IndependentCandidateDerivationSpec:
+[info] - multiple preparation blocks produce one unordered work comparison retaining every block
+[info] - cross-publication researcher candidates exist without a matching work candidate
+[info] - common-name giant blocks are skipped rather than expanded to all pairs
+[info] - per-mention and whole-run limits bound cross-publication candidate expansion
+[info] - aggregate multiblock evidence cannot evade the pair byte bound
+[info] - cross-entity profile work and nonwork activities have explicit distinct-pair diagnostics
+[info] IndependentResolutionEngineSpec:
+[info] - a conflicting declared DOI wins over equal preferred DOI and equal work ID
+[info] - different direct ORCIDs cannot merge through equal name and shared OpenAlex author hypothesis
+[info] - matching direct identifiers use exact path without treating work equality as author equality
+[info] - hand-computed 2/3 weighted score obeys inclusive accept and reject threshold boundaries
+[info] - missing evidence stays unavailable rather than zero, perfect similarity or prep sentinel
+[info] - bibliographic path requires authors and year evidence independently of exact title
+[info] - recognized DBLP publication links retain conflicting DOI and arXiv source facts
+[info] - backlinks and arbitrary hosts stay weak while malformed recognized publication resolvers fail
+[info] IndependentResolutionFeaturesSpec:
+[info] - author order uses the documented reciprocal distance rather than binary ordinal equality
+[info] - identical initial letters on unrelated surnames are not positive initials evidence
+[info] - identifiers in disjoint namespaces are unavailable rather than contradictory evidence
+[info] - raw names and titles remain source truth while normalized comparison handles Unicode and markup
+[info] - copies of one publication do not create independent coauthor context for researcher acceptance
+[info] IndependentOfflineAdjudicationSpec:
+[info] - strict responses bind requests candidate endpoints and evidence with a closed schema
+[info] - abstention is valid while decisive empty citations oversized rationale and response fail
+[info] - source prompt injection remains bounded evidence and cannot add tools or identifiers to response
+[info] - malformed replies retry only within configured attempts and all failures consume budget
+[info] - zero request or token allowance makes zero calls and timeout returns unresolved evidence
+[info] - validated fake cache replays without another adapter call and refuses corrupt entries
+[info] - cache key changes with all answer-affecting context and fake cannot satisfy live mode
+[info] - cache writes are complete and a symlinked fake-mode directory is rejected on read
+[info] IndependentResolutionRunSpec:
+[info] - disabled mode makes zero adapter calls and eligible pairs remain auditable unresolved
+[info] - fake accept reject and abstain keep pre-adjudication score and model confidence separate
+[info] - out-of-band and insufficient independent evidence cannot reach the adapter
+[info] - hard identifier conflicts never call the adapter and every known source fact is exported
+[info] - fake replay reuses only a verified cache while preserving substantive decisions
+[info] - missing forged or wrong-pair block evidence fails before adapter calls
+[info] IndependentResolutionExportSpec:
+[info] - typed exports bind all outcome files complete constraints run input and effective policy
+[info] - existing output is rejected without overwriting files and invalid CLI stops before input or cache access
+[info] - export corruption extra files and omitted constraint bindings cannot pass downstream verification
+[info] - export boundary rejects an unaccepted link and incomplete or misgrounded constraints
+[info] - equivalent disabled reruns preserve substantive typed decisions and constraint bytes
+[info] Run completed in 492 milliseconds.
+[info] Total number of tests run: 60
+[info] Suites: completed 10, aborted 0
+[info] Tests: succeeded 60, failed 0, canceled 0, ignored 0, pending 0
+[info] All tests passed.
+[success] Total time: 1 s, completed Oct 16, 2026, 2:34:01 PM
