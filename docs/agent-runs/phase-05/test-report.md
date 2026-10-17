@@ -348,3 +348,144 @@ MANUAL ACTION REQUIRED: User launches the saved/displayed external recheck promp
 BLOCKED-ON OWNER: User-selected independent reviewer.
 BLOCKED-ON EVIDENCE: External repair recheck APPROVE or REQUEST-CHANGES.
 NEXT GATE: External 5B recheck and any routed repairs; explicit user authorization required before 5C. All workers and builds have stopped.
+
+
+## Subphase 5C — targeted, source and browser checks
+
+STATUS: COMPLETE targeted/browser checks; frozen full gate pending.
+OWNER: Independent test-engineer `/root/phase5c_test`; coordinator runs serialized builds and retains outputs.
+WORK ORDER: 5C implementation verification only; no code-reviewer or actual human labels.
+FILES CREATED: Six independent Scala files and `tests/browser/phase5c-review-{cua.js,observed.json}`; all test data explicitly synthetic. Exact inventory in `5c-source-delta.json`.
+FILES MODIFIED: None pre-existing by the independent tester.
+COMMANDS RUN: `commands.json` contains exact coordinator commands, including first compile, independent 17-test run, ER 25 + independent 20 run, then ER 25 + independent 21 entity-coverage run; each exited 0. The initial sandbox Hadoop-classpath sbt command exited 1 on cache lock access, then authorized retry exited 0. Dataset scripts ran 18 unit tests, final 132-file population validation and the original manifest validator successfully. Python 3.14.5, Node v26.0.0, Java 17.0.20.1; sbt 1.10.7, Scala 3.3.4, pinned existing dependencies.
+TEST RESULTS: 25 ER owner tests and 21 new independent tests pass. Hand-computed independent cases include TP=1, FP=1, FN=4, TN=3 per entity, F1=2/7, decisive coverage=4/9; missing predictions remain in denominators, uncertainty remains separate. Actual browser checks passed all scenarios in the observed receipt. Synthetic checkpoint CLI import yielded Same 1, Different 1, Uncertain 1, missing 3 without modifying original bytes; synthetic evaluator CLI smoke passed with missing predictions and no real-gold claim.
+VALIDATION RESULTS: Actual completed Hadoop CS input generated 240 initial real review tasks +60 reserves. Initial queue exposed dev-only Work coverage; a new 5C selector adjustment and independent regression were followed by passing tests and the final 20/20 development and 100/100 held-out allocation. Final queue/split repeat outputs are byte-identical and selected leakage groups disjoint. Exported HTML/guide/sampling bytes exactly match production resources tested in browser. Both preliminary queue and original evidence are preserved.
+ASSUMPTIONS: Synthetic labels are tooling tests, not human evidence.
+RISKS: Browser native automation incident and limitations are recorded verbatim in the receipt and owner report. Old 5B nonblocking bugs remain unfixed. Tests establish implementation consistency, not identity accuracy.
+MANUAL ACTION REQUIRED: Full frozen gate then external user-selected reviewer; actual 240 human reviews are future work.
+BLOCKED-ON OWNER: Coordinator for gate; user for independent review.
+BLOCKED-ON EVIDENCE: Full-gate completion and external verdict.
+NEXT GATE: Frozen full check and source-hash verification; no 5D.
+
+
+## Subphase 5C — final frozen verification and review handoff
+
+STATUS: COMPLETE implementation and technical verification; external independent review pending. This supersedes the earlier running-gate status.
+OWNER: Coordinator; all three specialist owners have completed and stopped.
+WORK ORDER: Authorized 5C only; no 5D or final Phase 5 acceptance.
+FILES CREATED / FILES MODIFIED: Complete tracked/untracked inventory and hashes in review-inventory.json; implementation/data/test delta in 5c-source-delta.json.
+COMMANDS RUN: Exact commands, environments, timestamps and exits in evidence/5c/commands.json. The final `sbt -batch check` exited 0. No source changes occurred during or after that gate.
+TEST RESULTS: 383 tests passed: {'core': 129, 'hadoop': 64, 'entityResolution': 25, 'independent': 161, 'buildVerification': 4}. 44 fresh JUnit reports, zero failures/errors/skips. Source freeze verifies all 509 files unchanged, no added/missing scoped files. Generated success marker renewed after all suites. Expected nested injected failure remains passing CheckFailurePathSpec coverage, not a failed full gate. Eighteen Python tests and both dataset validators also passed.
+VALIDATION RESULTS: Real 40-development/200-held-out queue plus 60 reserves; entity allocations 20/20 and 100/100; byte-identical queue/split replay; disjoint selected evidence groups; all exported tool bytes match browser-tested resources. Actual browser save/refresh/resume and strict synthetic checkpoint CLI import/evaluator smoke checks passed. All 28 retained final Hadoop export part hashes remain unchanged. Historical 5B packet matches its committed versions. All 509 source hashes match final gate.
+ASSUMPTIONS: Tests establish behavior only; source metadata and synthetic annotations are not human labels.
+RISKS: Public-source access limits, convenience sampling, unknown-identity leakage, unmeasured blocking recall, browser automation incident and user-deferred 5B nonblocking findings remain disclosed.
+MANUAL ACTION REQUIRED: User launches the saved/displayed read-only 5C reviewer prompt and returns full verdict. Human reviews remain 0/240; labels, provider choice/budget/live calls and final held-out evaluation remain later gates.
+BLOCKED-ON OWNER: User-selected independent reviewer.
+BLOCKED-ON EVIDENCE: Independent 5C verdict; no technical implementation gate remains unverified.
+NEXT GATE: External 5C review, any required repairs, and explicit user advancement authorization before 5D. No reviewer was triggered. No commit/push occurred. All workers/builds/acquisition/browser actions have stopped.
+
+Final gate timing: sbt reported 412 seconds, completed 2026-10-16 16:31:44 America/Chicago. Code/source freeze remained unchanged. `prepare-evaluation-predictions` has adapter binding/cache adversarial tests; it was not executed end-to-end on the expanded real population in 5C. No real prediction-versus-gold evaluation was run.
+
+Final whitespace check: implementation source, datasets, tests and phase Markdown reports pass `git diff --check` when checked directly. The broad check flags line 20 of the generated whole-Phase-5 `implementation.diff`: a literal blank patch-context line contains one space. This is retained patch syntax from the faithful generated diff, not whitespace in changed implementation source; the patch is not altered to hide it. Final path/hash inventory was rechecked after documentation finalization.
+
+
+## Subphase 5C B1/B2 repair verification
+
+STATUS: COMPLETE blocker implementation and targeted verification; fresh frozen full gate pending.
+OWNER: Coordinator with native ER, dataset and independent test owners; all specialist writes stopped.
+WORK ORDER: User instruction "fix the blockings bugs first for me" after independent REQUEST-CHANGES. Full report preserved in review.md and evidence/5c-repair/external-review.txt. No nonblocking fixes or later-subphase work authorized.
+FILES CREATED: Durable exact prepared population (68 files), sibling retention manifest, retention script/tests/README, three independent Scala repair/probe files, coordinator evidence. Exact repair scope is 5c-repair-source-delta.json (75 added, 11 modified, 0 removed).
+FILES MODIFIED: ER queue/evaluation/CLI and binding-only page/guide/README/test adaptations; existing dataset docs and independent evaluation tests. Core/Hadoop/build/StableIds/formulas/originalsamples/constitutional/human-decision files remain untouched.
+COMMANDS RUN: Exact args/environment/exits in evidence/5c-repair/commands.json; all sbt builds serialized. B1 red tests ran before ER production changes; actual durable replay ran through the compiled Scala loader/candidate builder, not just Python hashing.
+TEST RESULTS: Before repair, two B1 tests failed as intended against unchanged reviewed production. After repair, 25 owner tests passed; first independent run: 27/28 passed with one invalid new synthetic snapshot fixture, then the corrected run: 28/28 passed. Negative retention tests now prove valid initial loading and real byte mutations. New cases demonstrate P0 checkpoints and queue identity surviving real offline P1 policy/model/adjudication config/code transitions, while changed source/candidate/task evidence remains rejected/invalid. Dataset owner reports eight new retention tests and 26 total Python tests passed; coordinator retains fresh verification separately.
+VALIDATION RESULTS: Exact durable input reproduces original inputEvidenceHash 57efd81957e5eec9194d4b5c42f6ef170213640f148b56bf8b99a51d1d09d1fe and candidatePopulationHash 9381588e35a418a84a22e9a680db4ab7886a8d33cf9463166edc1222cd8a5581, 11,412 pairs; typed 456 works / 8 profiles / 465 activities identical. Required input is datasets/entity-resolution/prepared/bd424a86-0a1b-4e44-bbdb-4a9b8c8a20e3, 49,547,452 bytes / 68 files, none ignored by Git. A regenerated queue from this durable root succeeds with 240 initial + 60 reserve tasks; final replay/allocation proof follows. New sourcefreeze binds 584 files.
+ASSUMPTIONS: Mutable model/policy/code metadata describes prediction runs and does not redefine human annotation identity. Dataset retention follows existing datasets/** ownership, not a constitutional change or invented human ratification. Hashes prove consistency, not authenticity.
+RISKS: Required exact retention adds 47.3 MiB. Nonblocking N1–N8, including size and old acquisition-script/command-ledger limitations, remain documented/unfixed. Original browser evidence is historical; no browser actions or real-queue load were added in this blocker-only round. No real labels, calibration or live evidence exist.
+MANUAL ACTION REQUIRED: Wait for fresh full gate and user-selected external recheck before labeling or advancement. Preserve durable inputs and future original annotations.
+BLOCKED-ON OWNER: Coordinator full gate; then user-selected external reviewer.
+BLOCKED-ON EVIDENCE: Final queue replay/hash/allocation, frozen full gate and returned external verdict.
+NEXT GATE: Complete current 5C repair packet, display recheck prompt and stop. No reviewer launch, acquisition, 5D/provider work, commit/push or human labeling occurred.
+
+
+## Subphase 5C B1/B2 — final technical repair gate
+
+STATUS: COMPLETE blocker repairs and fresh technical verification; independent external recheck pending. This supersedes the preceding pending-gate status.
+OWNER: Coordinator; ER, dataset and independent test owners have completed and stopped.
+WORK ORDER: Repair only external 5C B1/B2 under the user's explicit instruction.
+FILES CREATED / FILES MODIFIED: 5c-repair-source-delta.json binds 75 additions, 11 modifications and no removals against the exact reviewed 509-file freeze. The new freeze binds 584 files. Complete tracked/untracked inventory is review-inventory.json; old packet remains in history/5c-initial-review/.
+COMMANDS RUN: Exact commands, environment, timestamps and exits are retained in evidence/5c-repair/commands.json; independent dataset checks in dataset-checks.json. Final `sbt -batch check` exited 0. All builds serialized; no source edits during final gate.
+TEST RESULTS: 390 tests passed: core 129, Hadoop 64, ER 25, independent 168, build verification 4; 46 fresh JUnit reports; zero failures/errors/skips. All 584 source hashes and scoped path membership remain unchanged; generated success marker renewed after all suites. Expected nested injected failure is passing CheckFailurePathSpec coverage. Two original B1 failures are now green; post-fix target 25 ER +28 independent passed after one disclosed synthetic-fixture correction. All 26 Python tests and 68-file durable validator passed.
+VALIDATION RESULTS: B1 queue identity excludes mutable matcher settings; unchanged P0 annotations survive later P1 policy/model/adjudication config/code, and evaluation records actual P1 run provenance. Changed input/candidates/task evidence remains rejected/invalid. Rebuilt real queue reads the durable input; all 300 tasks and task evidence plus split are unchanged from initial 5C, while queuehash appropriately changed before any real labeling. Two runs produce byte-identical queue/split/generation audit. Allocation 40 development (20 Work /20 Researcher), 200 held-out (100 Work /100 Researcher), 60 reserves; 568 groups /100 selected; 777 cross-partition skips. B2 retains 68 byte-identical files /49,547,452 bytes outside target and reproduces original input 57efd819... and candidates 9381588e... over 11,412 pairs; actual full hashes in durable-input-proof.json. No UUID normalization or original-payload rewrite occurred.
+ASSUMPTIONS: Population/evidence/split define annotation identity; prediction-run metadata defines actual execution provenance. Dataset retention follows existing datasets/** ownership; no constitutional amendment or separate human ratification is inferred.
+RISKS: All eight new nonblocking findings and prior deferred observations remain unchanged. Required exact input retention adds 47.3 MiB. Initial manual browser test evidence is historical; no browser actions or new real-queue load were performed in this blocker-only round. No accuracy, real labels, calibration or live-model result is claimed.
+MANUAL ACTION REQUIRED: User launches external repair recheck and returns full verdict; no reviewer has been triggered. Do not label until recheck/human gate. Include durable input and manifest in any later approved commit.
+BLOCKED-ON OWNER: User-selected independent reviewer.
+BLOCKED-ON EVIDENCE: External 5C repair verdict.
+NEXT GATE: External recheck, any necessary repairs, then explicit human advancement before 5D. No acquisition, provider/live calls, actual labels, commit/push or later-subphase work occurred. All workers and builds have stopped.
+
+Final repair gate timing: sbt reported 411 seconds, completed 2026-10-16 17:05:28 America/Chicago. Direct source/dataset/test/phase-Markdown whitespace checks pass; the previously disclosed literal blank context line in generated whole-phase implementation.diff is retained as faithful patch syntax. No new source changes or tests after the gate.
+
+
+## Approved 5C — bounded pre-commit cleanup
+
+STATUS: Cleanup and real-queue load-only check complete; single requested full gate running.
+OWNER: Coordinator; build-engineer owns newly assigned `.gitattributes`, test-engineer owns browser receipt, ER owner verifies optional guide line.
+WORK ORDER: User supplied external APPROVE closing B1/B2 and explicitly requested evidence compaction, prepared-input byte attributes/validator, load-only real queue, optional provider-hypothesis warning, then one sbt check and stop. No source/logic changes authorized or made.
+FILES CREATED: Four compact `.diff.manifest.json` replacements, exact regeneration/compaction evidence and 12 small historical compressed source versions; two test-owned real-load browser receipts; `.gitattributes` was already present and is preserved. Complete current inventory follows final gate.
+FILES MODIFIED: Four giant patches removed by explicit instruction only after exact replay verification; their original hashes, byte counts and path/source inventories are retained in sibling manifests. Phase evidence reports/freeze/inventory updated. The one-line OpenAlex warning already existed at task start; preserved byte-for-byte. No application logic changed.
+COMMANDS RUN: `compact-diffs.py.txt` reconstructed each original patch exactly before replacing it. `regenerate-diff.py.txt` independently recreated all four patches from Git and hash-verified source versions with original SHA-256/byte counts. Native tester loaded the exact repaired queue/page and made zero label/reviewer/checkpoint actions. Build owner checked all68 prepared-file `text` attributes unset; retention validator passed for68files/49,547,452bytes. Exact final sbt command/environment/status in evidence/5c-precommit/commands.json.
+TEST RESULTS: Actual page displayed "0 of 240 initial tasks answered; 240 remaining", Work task1of240, blank reviewer and No answer selected. No annotations exist. Browser details are tests/browser/phase5c-repaired-real-load-observed.json. Single fresh sbt check pending its final addendum.
+VALIDATION RESULTS: Four removed diffs total295,287,818bytes; replacement manifests930,048bytes plus51,672compressed historical bytes. Regeneration preserves exact historical patches. Required prepared data, v3 population and repaired queue/split/generation binding preserved; hashes in preserved-artifacts.json. Frozen scoped state now587files, including attributes and two load-only browser artifacts. Commit-candidate files currentlyabout125MB, largest22.3MB; final measurement follows final ledger.
+ASSUMPTIONS: Size is logical working-tree bytes that would be candidates for committing, excluding ignored target/cache and Git object history; no commit staged or created. User supplied only the short external approval verdict, recorded exactly without invented reviewer commands.
+RISKS: Earlier nonblocking findings remain except explicitly requested warning/load check. v1/v2 and old pre-repair queue/split remain untouched. optional-size-proposal.json recommends future archival with manifests and preserved provenance dependencies only after separate approval. Historical giant-diff hashes remain valid via exact regeneration; old reports/inventories remain historical.
+MANUAL ACTION REQUIRED: User handles future commit; any optional additional archival requires separate approval. No commit/push performed.
+BLOCKED-ON OWNER / BLOCKED-ON EVIDENCE: Coordinator's one full gate and final inventory measurement.
+NEXT GATE: Final one-line commit message, then stop. No reviewer launched, human labels made or 5D started.
+
+
+## Approved 5C pre-commit cleanup — final gate
+
+STATUS: COMPLETE. External 5C B1/B2 APPROVE is recorded as user-supplied; bounded cleanup complete.
+OWNER: Coordinator with build, ER and independent test owners. All worker actions stopped.
+WORK ORDER: Exact user cleanup instruction in evidence/5c-precommit/user-work-order.txt; no 5D advancement, source logic change, commit or push.
+FILES CREATED / FILES MODIFIED: Four authorized giant patches replaced with compact sibling manifests; original hashes/byte counts and exact Git regeneration verified for all four. Required prepared data, v3 population and repaired queue/split/generation-binding remain unchanged. `.gitattributes` already contained the user-assigned build-owner rule; all 68 prepared files verified text unset. The optional OpenAlex hypothesis guide line already existed; preserved once and copied exactly to exported guide. Two test-owned load-only browser artifacts added. No application logic or source data changed.
+COMMANDS RUN: One and only one `sbt -batch check` after the cleanup freeze, exit 0. Exact args/environment/timing in evidence/5c-precommit/commands.json. Four standalone exact historical patch regeneration checks passed; retention validator passed. Direct source/data/test/phase-Markdown whitespace checks passed.
+TEST RESULTS: 390 tests passed; {'core': 129, 'hadoop': 64, 'entityResolution': 25, 'independent': 168, 'buildVerification': 4}; 46 fresh JUnit reports, zero failures/errors/skips. All 587 frozen files unchanged, no scoped additions/missing files; generated success marker renewed after suites. Expected nested injected check failure is passing CheckFailurePathSpec coverage. Real repaired page loaded real repaired queue and displayed 0 of 240 initial tasks answered, with zero label clicks, annotations, reviewer entries or checkpoints.
+VALIDATION RESULTS: Original four diff bytes total 295,287,818 replaced by 930,048 manifest bytes and 51,672 compressed historical source bytes, plus small helper/proof files. Exact original patch hashes reproduced after deletion. Largest commit-candidate file 22,313,459 bytes, below 50,000,000. Final exact file totals and no-file-over-50-MB confirmation in evidence/5c-precommit/final-size.json; current path/hash inventory in review-inventory.json. This logical size excludes ignored target/cache and Git history.
+ASSUMPTIONS: No longer independent recheck report was provided beyond the exact supplied APPROVE (B1/B2 closed) text; no reviewer commands/findings invented. Historical report references to original giant patch hashes are preserved via manifests, not silently rewritten.
+RISKS: v1/v2 raw copies and old pre-repair queue/split remain untouched. Optional archival is only proposed, with parent/provenance references preserved; separate user approval required before any such removal or validator adaptation. No human review, model accuracy or live-provider evidence is claimed.
+MANUAL ACTION REQUIRED: User may commit the approved change; proposed message: Complete Phase 5C review tooling and preserve reproducible evaluation inputs.
+BLOCKED-ON OWNER / BLOCKED-ON EVIDENCE: None for this bounded cleanup.
+NEXT GATE: Stop; 5D remains unauthorized. No reviewer triggered and no commit/push performed.
+
+
+## Approved 5C lean archival packaging — work performed
+
+STATUS: Archival and non-sbt checks complete; single requested full gate running. Final result follows in a separate addendum.
+OWNER: Dataset-engineer owns dataset archival/manifests/README commands; build-engineer owns .gitattributes; ER owner owns README pointer audit; coordinator owns old queue/split archival and phase evidence.
+WORK ORDER: User explicitly authorized lean pre-commit packaging only: copy and verify before removing inactive v1/v2 payloads and old queue/split; preserve original parent manifests, v3, prepared input and current repaired queue. No application logic, data content, labels, commit/push or 5D change.
+FILES CREATED / FILES MODIFIED: Two dataset archive manifests, two old queue/split archive manifests, compact verification and command receipts, current human-handoff pointer, source freeze and current inventory. Removed 177 inactive dataset payload files (31,229,073 bytes) and two old evidence files (11,015,758 bytes), only after every external copy was byte/SHA-256 verified. The original population manifests remain verbatim. Owner README commands now distinguish manifest-only history from complete populations; historical reports and human decisions are preserved. Attributes cover all datasets/entity-resolution/** and evidence/**/review-artifacts/** as requested.
+COMMANDS RUN: Read-only dependency audit before deletion; archive copy and full per-file SHA-256 checks; external historical-population validation; current v3 validator; prepared-input retention validator; all Python dataset tests; git check-attr on all 215 applicable current files. Exactly one sbt -batch check started for this approved lean packaging task; evidence/5c-lean/commands.json records exact args, environment and outcome.
+TEST RESULTS: Both validators pass; all 26 Python tests pass. Full sbt result pending final addendum. No test/source logic changed.
+VALIDATION RESULTS: All 181 archived original files verified (179 dataset files plus queue/split), 42,271,794 bytes including retained parent manifests. Archive roots: /Users/danny/Documents/ScholarChain-archive/phase5c/dataset-history-20261017T005030Z and /Users/danny/Documents/ScholarChain-archive/phase5c/old-review-21978642c7. No active validator, test, evaluator CLI or current handoff requires removed payload paths. Current v3 and prepared input remain complete. All four previously compacted historical diffs regenerate exactly from external archive bytes and pinned historical README blobs; manifests now document this dependency. All 165 application/dataset-script/test source files match the prior freeze. New scoped freeze binds 412 current files. All 215 applicable text attributes are unset.
+ASSUMPTIONS: External archives are durable local historical storage; another machine needs transferred archives for exact historical reconstruction. Current runtime inputs and repaired queue remain in the repository.
+RISKS: External archives require separate preservation and backup. Old reports/inventories describe historical packets, whose removals are explained by appended notes and sibling manifests. No identity accuracy, labels or provider behavior is established.
+MANUAL ACTION REQUIRED: Preserve the external archives; user handles any future commit. Final size, fresh gate and one-line commit message follow after completion.
+BLOCKED-ON OWNER / BLOCKED-ON EVIDENCE: Coordinator's single integrated sbt gate and final freeze/inventory/size verification.
+NEXT GATE: Finish packaging report and stop. No reviewer launch, labeling, commit, push or 5D.
+
+
+## Approved 5C lean archival packaging — final gate
+
+STATUS: COMPLETE. This supersedes the running-gate lean note above. User-supplied external 5C B1/B2 APPROVE remains unchanged; no additional review or later phase is inferred.
+OWNER: Coordinator with dataset, build and ER owners; all writers and builds stopped.
+WORK ORDER: User-approved archival packaging only. No application logic, source-data content, labels, commit, push, provider calls or 5D change.
+FILES CREATED / FILES MODIFIED: Compact archive manifests and owner README/attribute updates; original historical population manifests preserved. Removed exactly 177 inactive dataset payload files and two old queue/split files after verifying their complete external copies. Current v3, durable prepared input, repaired queue/split/generation binding remain unchanged. Append-only reports, source-freeze.json and review-inventory.json bind current packaging. Historical packet reconstruction remains exact through the documented archive sources.
+COMMANDS RUN: Both current validators and all Python dataset tests passed after removals. Exactly one sbt -batch check for this lean task exited 0, wall duration 413.402 seconds; exact environment/args/timing in evidence/5c-lean/commands.json. git diff --check for changed packaging paths passed. Final archive and frozen-content verification passed.
+TEST RESULTS: 390 tests passed; module counts {"buildVerification": 4, "core": 129, "entityResolution": 25, "hadoop": 64, "independent": 168}. 46 fresh JUnit reports; 0 failures, 0 errors, 0 skipped. All 412 frozen scoped files unchanged, with no missing or added scoped files; generated success marker renewed after suites. All 26 Python dataset tests pass. Expected nested injected failure is passing CheckFailurePathSpec coverage.
+VALIDATION RESULTS: All 181 archived original files rechecked SHA-256 and byte counts, including both original parent manifests. Dataset archive root: /Users/danny/Documents/ScholarChain-archive/phase5c/dataset-history-20261017T005030Z. Old evidence archive root: /Users/danny/Documents/ScholarChain-archive/phase5c/old-review-21978642c7. All 215 current applicable files have text unset. 165 application/dataset-script/test source files are byte-identical to the pre-lean freeze. Complete inventories, exact final logical byte totals and largest-file/no-file-over-50-MB check are in evidence/5c-lean/final-size.json and review-inventory.json; ignored targets/caches and Git history are excluded from commit-candidate size.
+ASSUMPTIONS: External archives need separate preservation/transfer for exact historical reconstruction; current runtime inputs remain fully in-repository.
+RISKS: This packaging pass does not establish human labels, accuracy or live-provider behavior. Previously deferred nonblocking observations remain deferred.
+MANUAL ACTION REQUIRED: Preserve the external archive and manually commit if desired. Proposed one-line commit message: Complete Phase 5C review tooling with durable inputs and lean audit archives.
+BLOCKED-ON OWNER / BLOCKED-ON EVIDENCE: None for authorized packaging.
+NEXT GATE: Stop. No code reviewer triggered, commit/push performed or 5D started.

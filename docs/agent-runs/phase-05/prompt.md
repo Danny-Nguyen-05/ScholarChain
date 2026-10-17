@@ -551,3 +551,49 @@ Domain owner repairs B1 by grounding recognized literal DOI resolver suffixes wi
 Related bounded fixes: disable the unsafe default bibliographic shortcut pending a fuller policy, isolate CLI input/output/cache paths, validate reason/outcome consistency, make the identifier catalog agree with grounded electronic-publication facts, and retain empty normalized names as unavailable. N-2 performance work, N-8 quota release and N-9 staging/race handling remain disclosed follow-ups. N-7 same-publication researcher limits become an explicit evaluation stratum. N-10 receives readable forward-looking summaries; earlier review/history is preserved.
 
 Owners remain /root/phase5b_domain (core), /root/phase5b_er (ER), /root/phase5b_test (tests). Coordinator alone assembles evidence. Tests/builds remain serialized, and production repair waits for captured red regressions. Stop after fresh targeted/full gates, real-input reruns and a complete external recheck prompt. No reviewer launch, 5C work, acquisition, live call, commit or push.
+
+
+## Subphase 5C authorization and bounded work order — 2026-10-16
+
+Human advancement, verbatim:
+
+> alright let move to phase 5c
+
+The coordinator observed a clean working tree on `phase-5` at `c8342d25ba04dede26af10bedc5a76691824d1ca`, the user-created 5B commit. All 174 files in the reviewed 5B source freeze matched. `5c-baseline.json` binds committed starting inputs; `history/5b-final-handoff/` retains the previous diff/freeze/inventory/prompt. External 5B APPROVE and explicit human approval remain in the existing reports.
+
+Authorized scope is original plan §§10–14 Subphase 5C only: bounded source acquisition/provenance, real candidate population, score-blind grouped development/held-out split and review queue, self-contained local browser tool/guide, strict annotation/checkpoint import, evaluator implementation checked with synthetic hand-computable labels, deterministic replay, independent browser/integration tests and fresh `sbt check`. Target is 40 development + 200 held-out initial real reviews, 60 reserve candidates when feasible. No actual labels are fabricated or imported as human evidence, and final label-dependent evaluation remains future scope.
+
+The user explicitly instructed all remaining 5B nonblocking issues to remain unfixed. Preserve their historical descriptions, do not opportunistically repair or retune matching policy. If an issue prevents the authorized current deliverable, report exact evidence and route the dependency before widening repair scope.
+
+Native delegated owners: `/root/phase5c_dataset` writes only `datasets/**`; `/root/phase5c_er` writes only `modules/entity-resolution/**`; `/root/phase5c_test` writes only `tests/**`. Coordinator writes only phase-05 evidence and performs serialized existing CLI/build orchestration. Owners may not delegate. No reviewer is launched.
+
+Acquisition uses the original bounded proposal: DBLP ≤600, OpenAlex ≤800, Crossref ≤600, ORCID ≤60 ingestion records, aggregate ≤2060; ≤2400 HTTP attempts within per-source caps; ≤256 MiB transferred; ≤75 minutes; concurrency 1, at most 1 request/second, 20-second request timeout, at most 2 retries within budget. CS distributed systems/data engineering 2018–2024, repeated authors, difficult negatives and independent leakage groups; existing source portfolio only. No full corpus, paid service, credentials, AWS or live model calls. Actual shortfalls are reported rather than disguised as sufficient reviews.
+
+Stop after 5C gates and hand back complete external reviewer prompt. No 5D provider work, actual human labeling, final held-out evaluation, Phase 6, commit or push is authorized by this advancement. User runs the reviewer; returned verdict and explicit advancement required before 5D.
+
+
+## Subphase 5C B1/B2 repair authorization
+
+User returned external REQUEST-CHANGES (2 blockers, 8 nonblocking findings) and explicitly instructed:
+
+> fix the blockings bugs first for me
+
+Complete verdict is retained in review.md and evidence/5c-repair/external-review.txt. Before repair, all 509 reviewed source hashes matched; history/5c-initial-review/ preserves six prior handoff artifacts. 5c-repair-start.json binds the starting dirty5C tree at unchanged HEADc8342d25ba04dede26af10bedc5a76691824d1ca.
+
+Scope: B1 separates immutable annotation population/evidence/split bindings from mutable prediction policy/config/prompt/model/code metadata, with independent before/after tests. B2 retains exact required completed preparation bytes outside ignored target, manifest-bound, and proves Scala input/candidate replay. No nonblocking repair is authorized. Dataset engineering owns retained prepared population material in existing datasets/** territory; this routes within the established artifact class and does not amend the constitutional ownership map or invent a human ratification.
+
+Native owners remain /root/phase5c_er (ER), /root/phase5c_dataset (datasets), /root/phase5c_test (independent tests); coordinator owns phase evidence and serialized builds. No agent delegates or launches a reviewer. Capture two failing B1 regressions before ER production repair; then targeted gates, actual durable reload, regenerated real queue/replay, fresh sourcefreeze/fullcheck and user-launched recheck prompt. Preserve previous evidence and every original annotation; real human labels remainzero.
+
+No new acquisition, source normalization change, matcher threshold tuning, live provider call, 5D/5E work, commit or push. N1–N8 and earlier accepted nonblocking findings remain documented/unfixed; a minimal B1 adapter CLI acceptance check is part of blocker closure, not a general N4 repair. Stop after repair handoff; user returns verdict and explicitly authorizes later advancement.
+
+
+## Approved 5C bounded pre-commit cleanup
+
+The user supplied external APPROVE closing B1/B2 and requested the bounded work order preserved verbatim in evidence/5c-precommit/user-work-order.txt. No 5D authorization, source/logic change, reviewer launch, commit or push is included. .gitattributes is explicitly assigned to build-engineer. Coordinator replaces only the four named giant diffs with exact-regeneration manifests; v1/v2 and the pre-repair queue/split remain unchanged pending a separate decision. Test-engineer performs a real-queue load-only check with zero label clicks; ER owner verifies the optional one-line guide warning. One final sbt check runs on the updated frozen tree, then final size/commit-message handoff and stop.
+
+
+## Approved 5C lean packaging before commit
+
+User explicitly approved optional lean cleanup: archive v1/v2 duplicate payloads and the old pre-repair queue/split outside the repository and target, SHA-256 verify every archived file before removal, retain original v1/v2 population manifests and compact archive manifests, audit dependencies first, update active README validation commands, widen build-owned .gitattributes byte-preservation rules, run v3/prepared validators and all Python dataset tests, then one sbt check and updated freeze/inventory. No source logic, data-content, labels, commit/push or 5D changes.
+
+Dataset owner /root/phase5c_dataset owns dataset archival and dataset docs; coordinator owns historical evidence archival/current handoff/packaging recipes; build owner /root/phase5c_precommit_build owns .gitattributes; ER owner /root/phase5c_er audits runtime references and updates only its README. Original historical reports and human decisions remain unchanged; new notes identify archival. All archive writes use native sandbox authorization for the explicitly chosen durable Documents/ScholarChain-archive/phase5c location.

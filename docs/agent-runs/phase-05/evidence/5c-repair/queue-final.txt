@@ -1,0 +1,1 @@
+Blind queue exported: 240 initial reviews pending; 60 reserves; 777 cross-partition candidates excluded. No labels or predictions were read.

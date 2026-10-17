@@ -1,0 +1,25 @@
+{
+  "schema": "scholarchain.archive-verification.v1",
+  "archiveRoot": "/Users/danny/Documents/ScholarChain-archive/phase5c/old-review-21978642c7",
+  "files": [
+    {
+      "originalPath": "docs/agent-runs/phase-05/evidence/5c/review-artifacts/queue.json",
+      "bytes": 7205044,
+      "sha256": "6c14ed24c91ef68e164879a18d4ec35b7364c317662a4be29f7ddb2de1ddcec7",
+      "archiveFile": "/Users/danny/Documents/ScholarChain-archive/phase5c/old-review-21978642c7/docs/agent-runs/phase-05/evidence/5c/review-artifacts/queue.json",
+      "verifiedSha256": true
+    },
+    {
+      "originalPath": "docs/agent-runs/phase-05/evidence/5c/review-artifacts/split.json",
+      "bytes": 3810714,
+      "sha256": "9dee7738f41d646515eb7a6c77c025a935405f5bdfb34039fcb135021e9c4141",
+      "archiveFile": "/Users/danny/Documents/ScholarChain-archive/phase5c/old-review-21978642c7/docs/agent-runs/phase-05/evidence/5c/review-artifacts/split.json",
+      "verifiedSha256": true
+    }
+  ],
+  "allVerified": true,
+  "filesVerified": 2,
+  "bytes": 11015758,
+  "repositoryFilesDeleted": true,
+  "deletionScope": "Only the two explicitly authorized old queue/split files"
+}

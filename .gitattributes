@@ -1,0 +1,3 @@
+datasets/entity-resolution/prepared/** -text
+datasets/entity-resolution/** -text
+docs/agent-runs/phase-05/evidence/**/review-artifacts/** -text

@@ -1,0 +1,9 @@
+{
+  "schema": "scholarchain.phase5c.external-recheck-approval.v1",
+  "receivedAtUtc": "2026-10-17T00:36:17.262717+00:00",
+  "provenance": "User-supplied external review; no reviewer invoked by manager.",
+  "verbatimSuppliedVerdict": "5C external recheck verdict: APPROVE (B1 and B2 closed).",
+  "fullReportAvailability": "This message supplies the complete approval text available to the coordinator, but no longer reviewer report. No findings, checks or commands are inferred.",
+  "requestedRecordSection": "5C B1/B2 recheck",
+  "nextPhaseAuthorized": false
+}

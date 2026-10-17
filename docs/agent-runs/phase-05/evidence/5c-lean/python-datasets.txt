@@ -1,0 +1,31 @@
+test_amp_standard_xml_escape_succeeds (test_acquire_bounds.DblpEntityPrologTests.test_amp_standard_xml_escape_succeeds) ... ok
+test_eacute_entity_is_declared_for_well_formed_xml (test_acquire_bounds.DblpEntityPrologTests.test_eacute_entity_is_declared_for_well_formed_xml) ... ok
+test_rejects_body_larger_than_cap (test_acquire_bounds.HttpGetBoundedTests.test_rejects_body_larger_than_cap) ... ok
+test_rejects_declared_content_length_over_cap (test_acquire_bounds.HttpGetBoundedTests.test_rejects_declared_content_length_over_cap) ... ok
+test_hard_cap_stops_read_before_full_body (test_acquire_bounds.HttpGetRangeTests.test_hard_cap_stops_read_before_full_body) ... ok
+test_rejects_full_200_response (test_acquire_bounds.HttpGetRangeTests.test_rejects_full_200_response) ... ok
+test_corrupt_export_rejects_before_publish (test_prepared_retention.RetentionTests.test_corrupt_export_rejects_before_publish) ... ok
+test_existing_destination_never_overwritten (test_prepared_retention.RetentionTests.test_existing_destination_never_overwritten) ... ok
+test_frozen_real_copy_matches_original_without_rewriting (test_prepared_retention.RetentionTests.test_frozen_real_copy_matches_original_without_rewriting) ... ok
+test_missing_retention_manifest_is_not_verified_input (test_prepared_retention.RetentionTests.test_missing_retention_manifest_is_not_verified_input) ... ok
+test_missing_stage_success_rejects_before_publish (test_prepared_retention.RetentionTests.test_missing_stage_success_rejects_before_publish) ... ok
+test_mutated_retained_metadata_rejected (test_prepared_retention.RetentionTests.test_mutated_retained_metadata_rejected) ... ok
+test_retains_exact_bytes_and_nine_success_markers (test_prepared_retention.RetentionTests.test_retains_exact_bytes_and_nine_success_markers) ... ok
+test_unsafe_marker_path_rejected (test_prepared_retention.RetentionTests.test_unsafe_marker_path_rejected) ... ok
+test_challenge_not_ingested_and_disables_source (test_resolution_population.PopulationTests.test_challenge_not_ingested_and_disables_source) ... ok
+test_client_counts_real_bytes_and_retains_hash (test_resolution_population.PopulationTests.test_client_counts_real_bytes_and_retains_hash) ... ok
+test_doi_literal_normalization_preserves_suffix (test_resolution_population.PopulationTests.test_doi_literal_normalization_preserves_suffix) ... ok
+test_domain_filter_rejects_medical_and_accepts_distributed_data_venues (test_resolution_population.PopulationTests.test_domain_filter_rejects_medical_and_accepts_distributed_data_venues) ... ok
+test_final_real_population_integrity (test_resolution_population.PopulationTests.test_final_real_population_integrity) ... ok
+test_refuses_existing_output (test_resolution_population.PopulationTests.test_refuses_existing_output) ... ok
+test_response_cap_never_reads_past_allowance (test_resolution_population.PopulationTests.test_response_cap_never_reads_past_allowance) ... ok
+test_selection_is_deterministic_under_input_reordering (test_resolution_population.PopulationTests.test_selection_is_deterministic_under_input_reordering) ... ok
+test_selection_requires_venue_year_authors_title (test_resolution_population.PopulationTests.test_selection_requires_venue_year_authors_title) ... ok
+test_total_request_bound_prevents_dispatch (test_resolution_population.PopulationTests.test_total_request_bound_prevents_dispatch) ... ok
+test_validator_rejects_tampered_source_bytes (test_resolution_population.PopulationTests.test_validator_rejects_tampered_source_bytes) ... ok
+test_validator_rejects_unmanifested_file (test_resolution_population.PopulationTests.test_validator_rejects_unmanifested_file) ... ok
+
+----------------------------------------------------------------------
+Ran 26 tests in 0.390s
+
+OK

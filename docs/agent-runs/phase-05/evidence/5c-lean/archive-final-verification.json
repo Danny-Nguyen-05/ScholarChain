@@ -1,0 +1,18 @@
+{
+  "filesVerified": 181,
+  "datasetFiles": 179,
+  "evidenceFiles": 2,
+  "allSHA256Match": true,
+  "originalParentManifestsPreserved": true,
+  "remainingOriginalDirectories": "two regular files each: original population manifest and archive manifest",
+  "attributesFilesChecked": 215,
+  "allTextUnset": true,
+  "removedDatasetPayloadFiles": 177,
+  "removedDatasetPayloadBytes": 31229073,
+  "removedOldQueueSplitFiles": 2,
+  "removedOldQueueSplitBytes": 11015758,
+  "archiveRoots": [
+    "/Users/danny/Documents/ScholarChain-archive/phase5c/dataset-history-20261017T005030Z",
+    "/Users/danny/Documents/ScholarChain-archive/phase5c/old-review-21978642c7"
+  ]
+}

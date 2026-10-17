@@ -1,0 +1,1016 @@
+{
+  "schemaVersion": "scholarchain.review-queue.v1",
+  "queueId": "review-queue:2c2070cdd319597b7dc1a9bc204d828ee576975e5da0da4e70e7d87a40fc1f80",
+  "queueHash": "2c2070cdd319597b7dc1a9bc204d828ee576975e5da0da4e70e7d87a40fc1f80",
+  "sourcePopulationHash": "a72635613c0ace7e98f5273acd9d493973b8d7e08e1dd91c08509a7b7aafda5e",
+  "splitHash": "f0d6961088bcfac6bf3b5eb575320f7e73371694b230defa36bac14f87d78cd3",
+  "binding": {
+    "inputEvidenceHash": "47e063178c7ddcde0abcb7a1d631effd603992792f9eb602cae6adcda717b5d9",
+    "candidatePopulationHash": "ab7b88b62143cb860f36ed4570a0e92333cbeb3874c1b882de52cf5b0944f00d",
+    "policyHash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "configHash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "promptHash": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+    "responseSchemaHash": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+    "modelIdentity": "disabled/no-provider",
+    "codeRevision": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+    "sourceTreeHash": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+  },
+  "tasks": [
+    {
+      "pair": {
+        "schemaVersion": "scholarchain.resolution.v1",
+        "pairId": "resolution-pair:8a1439d3ecf80e6fd793a60d8cacd1cf298ad3c455de227fdaa49dfd8e4ada91",
+        "entityType": "Work",
+        "left": {
+          "$type": "Work",
+          "observation": {
+            "source": "DBLP",
+            "sourceRecordId": "conf/independent/review/6Left",
+            "datasetSnapshot": "independent-5b-synthetic"
+          },
+          "workId": "work:doi:10.5555/review-left-6"
+        },
+        "right": {
+          "$type": "Work",
+          "observation": {
+            "source": "DBLP",
+            "sourceRecordId": "conf/independent/review/6Right",
+            "datasetSnapshot": "independent-5b-synthetic"
+          },
+          "workId": "work:doi:10.5555/review-right-6"
+        }
+      },
+      "groupIds": [
+        "review-group:0f7617b92a62dc857df01e782fb100026e4cf822a37561eb3adcdff54ab2724f",
+        "review-group:cbb89b48977c3a40693a90dcb4c7cd9b44440d082d923df8adcbc11938abbbb3"
+      ],
+      "partition": "development",
+      "role": "initial",
+      "stratum": "observed-id-disagreement",
+      "evidenceHash": "9b2e570bcd71552b65cce07b253532cf9a0101dc85d55a117c0eea528db0eff1",
+      "leftEvidence": [
+        {
+          "ref": "er-evidence:daee1f6578cb89137a9aa0c8ed1e2b610212f0b142f397afb4ed0574832955e0",
+          "kind": "work",
+          "sha256": "1894b9b6d9efcca4dfa18e308a3a84cd9de0510ac99b3ab700f1b5d536dcd655",
+          "payload": {
+            "schemaVersion": "scholarchain.domain.v1",
+            "workId": "work:doi:10.5555/review-left-6",
+            "source": "DBLP",
+            "sourceRecordId": "conf/independent/review/6Left",
+            "sourceRecordType": null,
+            "title": "Synthetic browser observation 12 <img src=x onerror=alert('SOURCE_HTML_MUST_NOT_EXECUTE')>",
+            "normalizedTitle": "synthetic browser observation 12 <img src=x onerror=alert('source_html_must_not_execute')>",
+            "year": 2020,
+            "venueId": null,
+            "doi": "10.5555/review-left-6",
+            "arxivId": null,
+            "pages": null,
+            "externalUrl": null,
+            "authors": [
+              {
+                "mentionId": "mention:dblp:conf/independent/review/6Left#1",
+                "schemaVersion": "scholarchain.domain.v1",
+                "source": "DBLP",
+                "sourceRecordId": "conf/independent/review/6Left",
+                "ordinal": 1,
+                "nameText": "Independent Person 6",
+                "normalizedName": "independent person 6",
+                "observedOrcid": null,
+                "observedOpenAlexAuthorId": null,
+                "identityStatus": "NAME_ONLY_UNCONFIRMED",
+                "resolvedResearcherId": null,
+                "uncertainty": "Synthetic independent acceptance fixture; no confirmed researcher identity.",
+                "provenance": {
+                  "schemaVersion": "scholarchain.domain.v1",
+                  "source": "DBLP",
+                  "sourceRecordId": "conf/independent/review/6Left",
+                  "sourceUri": null,
+                  "datasetSnapshot": "independent-5b-synthetic",
+                  "retrievalDate": "2026-10-16",
+                  "licenseEvidenceUri": null,
+                  "runId": "run:22222222-2222-4222-8222-222222222222",
+                  "uncertaintyNotes": [
+                    "Synthetic independent acceptance fixture; no confirmed researcher identity."
+                  ]
+                }
+              }
+            ],
+            "abstractTextRef": null,
+            "provenance": {
+              "schemaVersion": "scholarchain.domain.v1",
+              "source": "DBLP",
+              "sourceRecordId": "conf/independent/review/6Left",
+              "sourceUri": null,
+              "datasetSnapshot": "independent-5b-synthetic",
+              "retrievalDate": "2026-10-16",
+              "licenseEvidenceUri": null,
+              "runId": "run:22222222-2222-4222-8222-222222222222",
+              "uncertaintyNotes": [
+                "Synthetic independent acceptance fixture; no confirmed researcher identity."
+              ]
+            }
+          },
+          "locator": "in-memory"
+        }
+      ],
+      "rightEvidence": [
+        {
+          "ref": "er-evidence:c93c96bf50a678c0e252258ab9add120c2c7f27410e934876bcad7b8d9bb8134",
+          "kind": "work",
+          "sha256": "fb427f6342ffeae3f5ae193df7dbd09c2ea3bb1f56c79150e3e8908df329bdea",
+          "payload": {
+            "schemaVersion": "scholarchain.domain.v1",
+            "workId": "work:doi:10.5555/review-right-6",
+            "source": "DBLP",
+            "sourceRecordId": "conf/independent/review/6Right",
+            "sourceRecordType": null,
+            "title": "Synthetic browser observation 13 <img src=x onerror=alert('SOURCE_HTML_MUST_NOT_EXECUTE')>",
+            "normalizedTitle": "synthetic browser observation 13 <img src=x onerror=alert('source_html_must_not_execute')>",
+            "year": 2020,
+            "venueId": null,
+            "doi": "10.5555/review-right-6",
+            "arxivId": null,
+            "pages": null,
+            "externalUrl": null,
+            "authors": [
+              {
+                "mentionId": "mention:dblp:conf/independent/review/6Right#1",
+                "schemaVersion": "scholarchain.domain.v1",
+                "source": "DBLP",
+                "sourceRecordId": "conf/independent/review/6Right",
+                "ordinal": 1,
+                "nameText": "Different Person 6",
+                "normalizedName": "different person 6",
+                "observedOrcid": null,
+                "observedOpenAlexAuthorId": null,
+                "identityStatus": "NAME_ONLY_UNCONFIRMED",
+                "resolvedResearcherId": null,
+                "uncertainty": "Synthetic independent acceptance fixture; no confirmed researcher identity.",
+                "provenance": {
+                  "schemaVersion": "scholarchain.domain.v1",
+                  "source": "DBLP",
+                  "sourceRecordId": "conf/independent/review/6Right",
+                  "sourceUri": null,
+                  "datasetSnapshot": "independent-5b-synthetic",
+                  "retrievalDate": "2026-10-16",
+                  "licenseEvidenceUri": null,
+                  "runId": "run:22222222-2222-4222-8222-222222222222",
+                  "uncertaintyNotes": [
+                    "Synthetic independent acceptance fixture; no confirmed researcher identity."
+                  ]
+                }
+              }
+            ],
+            "abstractTextRef": null,
+            "provenance": {
+              "schemaVersion": "scholarchain.domain.v1",
+              "source": "DBLP",
+              "sourceRecordId": "conf/independent/review/6Right",
+              "sourceUri": null,
+              "datasetSnapshot": "independent-5b-synthetic",
+              "retrievalDate": "2026-10-16",
+              "licenseEvidenceUri": null,
+              "runId": "run:22222222-2222-4222-8222-222222222222",
+              "uncertaintyNotes": [
+                "Synthetic independent acceptance fixture; no confirmed researcher identity."
+              ]
+            }
+          },
+          "locator": "in-memory"
+        }
+      ],
+      "candidateRefs": []
+    },
+    {
+      "pair": {
+        "schemaVersion": "scholarchain.resolution.v1",
+        "pairId": "resolution-pair:527f670ef4b5ab960126490e2ad2e4607b364012f6a8ba420122a8df6c37a3d4",
+        "entityType": "Work",
+        "left": {
+          "$type": "Work",
+          "observation": {
+            "source": "DBLP",
+            "sourceRecordId": "conf/independent/review/17Left",
+            "datasetSnapshot": "independent-5b-synthetic"
+          },
+          "workId": "work:doi:10.5555/review-left-17"
+        },
+        "right": {
+          "$type": "Work",
+          "observation": {
+            "source": "DBLP",
+            "sourceRecordId": "conf/independent/review/17Right",
+            "datasetSnapshot": "independent-5b-synthetic"
+          },
+          "workId": "work:doi:10.5555/review-right-17"
+        }
+      },
+      "groupIds": [
+        "review-group:0674bd9f017808e28a961129c7248439827610565ab200dfab4107d55f87f84f",
+        "review-group:3453e5c2007fd62a490c4f775d6423537372dbe21980c92a2df9db0de4c4bced"
+      ],
+      "partition": "held-out",
+      "role": "initial",
+      "stratum": "observed-id-disagreement",
+      "evidenceHash": "1678d6d395f6188ecb2cc9f9daf95ba982cfea1d4048b9b81720ce51858c70e9",
+      "leftEvidence": [
+        {
+          "ref": "er-evidence:5f0d660f5b17f434e122c52f85688fc9b9e7b55f324ea00147fb280d1da10d6c",
+          "kind": "work",
+          "sha256": "58dff4bcfa3a1b08bd1041df3fdb9748e43a6b8a33d0afe4664269645c32606a",
+          "payload": {
+            "schemaVersion": "scholarchain.domain.v1",
+            "workId": "work:doi:10.5555/review-left-17",
+            "source": "DBLP",
+            "sourceRecordId": "conf/independent/review/17Left",
+            "sourceRecordType": null,
+            "title": "Synthetic browser observation 34 <img src=x onerror=alert('SOURCE_HTML_MUST_NOT_EXECUTE')>",
+            "normalizedTitle": "synthetic browser observation 34 <img src=x onerror=alert('source_html_must_not_execute')>",
+            "year": 2020,
+            "venueId": null,
+            "doi": "10.5555/review-left-17",
+            "arxivId": null,
+            "pages": null,
+            "externalUrl": null,
+            "authors": [
+              {
+                "mentionId": "mention:dblp:conf/independent/review/17Left#1",
+                "schemaVersion": "scholarchain.domain.v1",
+                "source": "DBLP",
+                "sourceRecordId": "conf/independent/review/17Left",
+                "ordinal": 1,
+                "nameText": "Independent Person 17",
+                "normalizedName": "independent person 17",
+                "observedOrcid": null,
+                "observedOpenAlexAuthorId": null,
+                "identityStatus": "NAME_ONLY_UNCONFIRMED",
+                "resolvedResearcherId": null,
+                "uncertainty": "Synthetic independent acceptance fixture; no confirmed researcher identity.",
+                "provenance": {
+                  "schemaVersion": "scholarchain.domain.v1",
+                  "source": "DBLP",
+                  "sourceRecordId": "conf/independent/review/17Left",
+                  "sourceUri": null,
+                  "datasetSnapshot": "independent-5b-synthetic",
+                  "retrievalDate": "2026-10-16",
+                  "licenseEvidenceUri": null,
+                  "runId": "run:22222222-2222-4222-8222-222222222222",
+                  "uncertaintyNotes": [
+                    "Synthetic independent acceptance fixture; no confirmed researcher identity."
+                  ]
+                }
+              }
+            ],
+            "abstractTextRef": null,
+            "provenance": {
+              "schemaVersion": "scholarchain.domain.v1",
+              "source": "DBLP",
+              "sourceRecordId": "conf/independent/review/17Left",
+              "sourceUri": null,
+              "datasetSnapshot": "independent-5b-synthetic",
+              "retrievalDate": "2026-10-16",
+              "licenseEvidenceUri": null,
+              "runId": "run:22222222-2222-4222-8222-222222222222",
+              "uncertaintyNotes": [
+                "Synthetic independent acceptance fixture; no confirmed researcher identity."
+              ]
+            }
+          },
+          "locator": "in-memory"
+        }
+      ],
+      "rightEvidence": [
+        {
+          "ref": "er-evidence:38b6434f8306f174ecaf7b337d0cda009c695c4625676bd3332cd70e42b56746",
+          "kind": "work",
+          "sha256": "6be0c48583e021ac45f4d8b08b49f3789487197cca5d14fc62acf9c22a350110",
+          "payload": {
+            "schemaVersion": "scholarchain.domain.v1",
+            "workId": "work:doi:10.5555/review-right-17",
+            "source": "DBLP",
+            "sourceRecordId": "conf/independent/review/17Right",
+            "sourceRecordType": null,
+            "title": "Synthetic browser observation 35 <img src=x onerror=alert('SOURCE_HTML_MUST_NOT_EXECUTE')>",
+            "normalizedTitle": "synthetic browser observation 35 <img src=x onerror=alert('source_html_must_not_execute')>",
+            "year": 2020,
+            "venueId": null,
+            "doi": "10.5555/review-right-17",
+            "arxivId": null,
+            "pages": null,
+            "externalUrl": null,
+            "authors": [
+              {
+                "mentionId": "mention:dblp:conf/independent/review/17Right#1",
+                "schemaVersion": "scholarchain.domain.v1",
+                "source": "DBLP",
+                "sourceRecordId": "conf/independent/review/17Right",
+                "ordinal": 1,
+                "nameText": "Different Person 17",
+                "normalizedName": "different person 17",
+                "observedOrcid": null,
+                "observedOpenAlexAuthorId": null,
+                "identityStatus": "NAME_ONLY_UNCONFIRMED",
+                "resolvedResearcherId": null,
+                "uncertainty": "Synthetic independent acceptance fixture; no confirmed researcher identity.",
+                "provenance": {
+                  "schemaVersion": "scholarchain.domain.v1",
+                  "source": "DBLP",
+                  "sourceRecordId": "conf/independent/review/17Right",
+                  "sourceUri": null,
+                  "datasetSnapshot": "independent-5b-synthetic",
+                  "retrievalDate": "2026-10-16",
+                  "licenseEvidenceUri": null,
+                  "runId": "run:22222222-2222-4222-8222-222222222222",
+                  "uncertaintyNotes": [
+                    "Synthetic independent acceptance fixture; no confirmed researcher identity."
+                  ]
+                }
+              }
+            ],
+            "abstractTextRef": null,
+            "provenance": {
+              "schemaVersion": "scholarchain.domain.v1",
+              "source": "DBLP",
+              "sourceRecordId": "conf/independent/review/17Right",
+              "sourceUri": null,
+              "datasetSnapshot": "independent-5b-synthetic",
+              "retrievalDate": "2026-10-16",
+              "licenseEvidenceUri": null,
+              "runId": "run:22222222-2222-4222-8222-222222222222",
+              "uncertaintyNotes": [
+                "Synthetic independent acceptance fixture; no confirmed researcher identity."
+              ]
+            }
+          },
+          "locator": "in-memory"
+        }
+      ],
+      "candidateRefs": []
+    },
+    {
+      "pair": {
+        "schemaVersion": "scholarchain.resolution.v1",
+        "pairId": "resolution-pair:7696bc5c8c8a5f68c2adb7960903ce137cfc39d32fb2a8a8dd917a47d38b477b",
+        "entityType": "Work",
+        "left": {
+          "$type": "Work",
+          "observation": {
+            "source": "DBLP",
+            "sourceRecordId": "conf/independent/review/7Left",
+            "datasetSnapshot": "independent-5b-synthetic"
+          },
+          "workId": "work:doi:10.5555/review-left-7"
+        },
+        "right": {
+          "$type": "Work",
+          "observation": {
+            "source": "DBLP",
+            "sourceRecordId": "conf/independent/review/7Right",
+            "datasetSnapshot": "independent-5b-synthetic"
+          },
+          "workId": "work:doi:10.5555/review-right-7"
+        }
+      },
+      "groupIds": [
+        "review-group:4e6c9b75bf6887b4166e3baed15af679f8b3e3d2158a9694ba2fccbcf3e1275b",
+        "review-group:7dc24f0ce9fee891304cf3018492e29dbef96888382ddfc79bca25122777f185"
+      ],
+      "partition": "held-out",
+      "role": "initial",
+      "stratum": "observed-id-disagreement",
+      "evidenceHash": "4371391b8a7fa2837575e182e76da87655c746964b80934364c391a42eda24cf",
+      "leftEvidence": [
+        {
+          "ref": "er-evidence:bdff64a30095bfce0c0142b05ffb10c6ec1ef62c13ab2ddba0fa92107340ea17",
+          "kind": "work",
+          "sha256": "4bce62a17164b7ef4e12d04c20b6af3b5eb6f0801b38673b7c23c7edd8ce2f4a",
+          "payload": {
+            "schemaVersion": "scholarchain.domain.v1",
+            "workId": "work:doi:10.5555/review-left-7",
+            "source": "DBLP",
+            "sourceRecordId": "conf/independent/review/7Left",
+            "sourceRecordType": null,
+            "title": "Synthetic browser observation 14 <img src=x onerror=alert('SOURCE_HTML_MUST_NOT_EXECUTE')>",
+            "normalizedTitle": "synthetic browser observation 14 <img src=x onerror=alert('source_html_must_not_execute')>",
+            "year": 2020,
+            "venueId": null,
+            "doi": "10.5555/review-left-7",
+            "arxivId": null,
+            "pages": null,
+            "externalUrl": null,
+            "authors": [
+              {
+                "mentionId": "mention:dblp:conf/independent/review/7Left#1",
+                "schemaVersion": "scholarchain.domain.v1",
+                "source": "DBLP",
+                "sourceRecordId": "conf/independent/review/7Left",
+                "ordinal": 1,
+                "nameText": "Independent Person 7",
+                "normalizedName": "independent person 7",
+                "observedOrcid": null,
+                "observedOpenAlexAuthorId": null,
+                "identityStatus": "NAME_ONLY_UNCONFIRMED",
+                "resolvedResearcherId": null,
+                "uncertainty": "Synthetic independent acceptance fixture; no confirmed researcher identity.",
+                "provenance": {
+                  "schemaVersion": "scholarchain.domain.v1",
+                  "source": "DBLP",
+                  "sourceRecordId": "conf/independent/review/7Left",
+                  "sourceUri": null,
+                  "datasetSnapshot": "independent-5b-synthetic",
+                  "retrievalDate": "2026-10-16",
+                  "licenseEvidenceUri": null,
+                  "runId": "run:22222222-2222-4222-8222-222222222222",
+                  "uncertaintyNotes": [
+                    "Synthetic independent acceptance fixture; no confirmed researcher identity."
+                  ]
+                }
+              }
+            ],
+            "abstractTextRef": null,
+            "provenance": {
+              "schemaVersion": "scholarchain.domain.v1",
+              "source": "DBLP",
+              "sourceRecordId": "conf/independent/review/7Left",
+              "sourceUri": null,
+              "datasetSnapshot": "independent-5b-synthetic",
+              "retrievalDate": "2026-10-16",
+              "licenseEvidenceUri": null,
+              "runId": "run:22222222-2222-4222-8222-222222222222",
+              "uncertaintyNotes": [
+                "Synthetic independent acceptance fixture; no confirmed researcher identity."
+              ]
+            }
+          },
+          "locator": "in-memory"
+        }
+      ],
+      "rightEvidence": [
+        {
+          "ref": "er-evidence:ae12b6aec57af281af97ce1c96b57ba6f73ee293f20c92a1141449165fbeaac2",
+          "kind": "work",
+          "sha256": "a3930f28f3c480486d206209f3ba5cd8dda44fb2dd71b60abbb7c8e743752c02",
+          "payload": {
+            "schemaVersion": "scholarchain.domain.v1",
+            "workId": "work:doi:10.5555/review-right-7",
+            "source": "DBLP",
+            "sourceRecordId": "conf/independent/review/7Right",
+            "sourceRecordType": null,
+            "title": "Synthetic browser observation 15 <img src=x onerror=alert('SOURCE_HTML_MUST_NOT_EXECUTE')>",
+            "normalizedTitle": "synthetic browser observation 15 <img src=x onerror=alert('source_html_must_not_execute')>",
+            "year": 2020,
+            "venueId": null,
+            "doi": "10.5555/review-right-7",
+            "arxivId": null,
+            "pages": null,
+            "externalUrl": null,
+            "authors": [
+              {
+                "mentionId": "mention:dblp:conf/independent/review/7Right#1",
+                "schemaVersion": "scholarchain.domain.v1",
+                "source": "DBLP",
+                "sourceRecordId": "conf/independent/review/7Right",
+                "ordinal": 1,
+                "nameText": "Different Person 7",
+                "normalizedName": "different person 7",
+                "observedOrcid": null,
+                "observedOpenAlexAuthorId": null,
+                "identityStatus": "NAME_ONLY_UNCONFIRMED",
+                "resolvedResearcherId": null,
+                "uncertainty": "Synthetic independent acceptance fixture; no confirmed researcher identity.",
+                "provenance": {
+                  "schemaVersion": "scholarchain.domain.v1",
+                  "source": "DBLP",
+                  "sourceRecordId": "conf/independent/review/7Right",
+                  "sourceUri": null,
+                  "datasetSnapshot": "independent-5b-synthetic",
+                  "retrievalDate": "2026-10-16",
+                  "licenseEvidenceUri": null,
+                  "runId": "run:22222222-2222-4222-8222-222222222222",
+                  "uncertaintyNotes": [
+                    "Synthetic independent acceptance fixture; no confirmed researcher identity."
+                  ]
+                }
+              }
+            ],
+            "abstractTextRef": null,
+            "provenance": {
+              "schemaVersion": "scholarchain.domain.v1",
+              "source": "DBLP",
+              "sourceRecordId": "conf/independent/review/7Right",
+              "sourceUri": null,
+              "datasetSnapshot": "independent-5b-synthetic",
+              "retrievalDate": "2026-10-16",
+              "licenseEvidenceUri": null,
+              "runId": "run:22222222-2222-4222-8222-222222222222",
+              "uncertaintyNotes": [
+                "Synthetic independent acceptance fixture; no confirmed researcher identity."
+              ]
+            }
+          },
+          "locator": "in-memory"
+        }
+      ],
+      "candidateRefs": []
+    },
+    {
+      "pair": {
+        "schemaVersion": "scholarchain.resolution.v1",
+        "pairId": "resolution-pair:5300e170f2827f7338b488a81263a0a54cc0e9dbb4f1e64b4232cfe40eb1ce3d",
+        "entityType": "Researcher",
+        "left": {
+          "$type": "Mention",
+          "observation": {
+            "source": "DBLP",
+            "sourceRecordId": "conf/independent/review/8Left",
+            "datasetSnapshot": "independent-5b-synthetic"
+          },
+          "mentionId": "mention:dblp:conf/independent/review/8Left#1"
+        },
+        "right": {
+          "$type": "Mention",
+          "observation": {
+            "source": "DBLP",
+            "sourceRecordId": "conf/independent/review/8Right",
+            "datasetSnapshot": "independent-5b-synthetic"
+          },
+          "mentionId": "mention:dblp:conf/independent/review/8Right#1"
+        }
+      },
+      "groupIds": [
+        "review-group:0cdbb187a48b7c67c6597418dc94133d979070150d897386baf95186bc8f3d62",
+        "review-group:d3b42224a41385322426a7966e8d077f8ba0cbf6636e4a485109953caa821085"
+      ],
+      "partition": "held-out",
+      "role": "initial",
+      "stratum": "missing-authoritative-id",
+      "evidenceHash": "ca5d96d6aa9593ac27c68b26644cacec4db24ffe6777b40ca1a160e70b293381",
+      "leftEvidence": [
+        {
+          "ref": "er-evidence:7fc7eaf2c7e2cb0fd4c30332d3a6b6c3f8e9d9e7ea4da5148dd1b14a048fc7cf",
+          "kind": "work",
+          "sha256": "e02abc65537f5dfa49bd21ed2aeb31669a97e0ff44b53ce5f9c9a0c911a6b68b",
+          "payload": {
+            "schemaVersion": "scholarchain.domain.v1",
+            "workId": "work:doi:10.5555/review-left-8",
+            "source": "DBLP",
+            "sourceRecordId": "conf/independent/review/8Left",
+            "sourceRecordType": null,
+            "title": "Synthetic browser observation 16 <img src=x onerror=alert('SOURCE_HTML_MUST_NOT_EXECUTE')>",
+            "normalizedTitle": "synthetic browser observation 16 <img src=x onerror=alert('source_html_must_not_execute')>",
+            "year": 2020,
+            "venueId": null,
+            "doi": "10.5555/review-left-8",
+            "arxivId": null,
+            "pages": null,
+            "externalUrl": null,
+            "authors": [
+              {
+                "mentionId": "mention:dblp:conf/independent/review/8Left#1",
+                "schemaVersion": "scholarchain.domain.v1",
+                "source": "DBLP",
+                "sourceRecordId": "conf/independent/review/8Left",
+                "ordinal": 1,
+                "nameText": "Independent Person 8",
+                "normalizedName": "independent person 8",
+                "observedOrcid": null,
+                "observedOpenAlexAuthorId": null,
+                "identityStatus": "NAME_ONLY_UNCONFIRMED",
+                "resolvedResearcherId": null,
+                "uncertainty": "Synthetic independent acceptance fixture; no confirmed researcher identity.",
+                "provenance": {
+                  "schemaVersion": "scholarchain.domain.v1",
+                  "source": "DBLP",
+                  "sourceRecordId": "conf/independent/review/8Left",
+                  "sourceUri": null,
+                  "datasetSnapshot": "independent-5b-synthetic",
+                  "retrievalDate": "2026-10-16",
+                  "licenseEvidenceUri": null,
+                  "runId": "run:22222222-2222-4222-8222-222222222222",
+                  "uncertaintyNotes": [
+                    "Synthetic independent acceptance fixture; no confirmed researcher identity."
+                  ]
+                }
+              }
+            ],
+            "abstractTextRef": null,
+            "provenance": {
+              "schemaVersion": "scholarchain.domain.v1",
+              "source": "DBLP",
+              "sourceRecordId": "conf/independent/review/8Left",
+              "sourceUri": null,
+              "datasetSnapshot": "independent-5b-synthetic",
+              "retrievalDate": "2026-10-16",
+              "licenseEvidenceUri": null,
+              "runId": "run:22222222-2222-4222-8222-222222222222",
+              "uncertaintyNotes": [
+                "Synthetic independent acceptance fixture; no confirmed researcher identity."
+              ]
+            }
+          },
+          "locator": "in-memory"
+        }
+      ],
+      "rightEvidence": [
+        {
+          "ref": "er-evidence:f1ecb375b1926138757302d34b3a991102759b433d6280e5e1c76bbd7b360258",
+          "kind": "work",
+          "sha256": "ed223fe5d64d6c5a9add272253e667373d0270f22a9e3ce5a2bbc5ce8dd97169",
+          "payload": {
+            "schemaVersion": "scholarchain.domain.v1",
+            "workId": "work:doi:10.5555/review-right-8",
+            "source": "DBLP",
+            "sourceRecordId": "conf/independent/review/8Right",
+            "sourceRecordType": null,
+            "title": "Synthetic browser observation 17 <img src=x onerror=alert('SOURCE_HTML_MUST_NOT_EXECUTE')>",
+            "normalizedTitle": "synthetic browser observation 17 <img src=x onerror=alert('source_html_must_not_execute')>",
+            "year": 2020,
+            "venueId": null,
+            "doi": "10.5555/review-right-8",
+            "arxivId": null,
+            "pages": null,
+            "externalUrl": null,
+            "authors": [
+              {
+                "mentionId": "mention:dblp:conf/independent/review/8Right#1",
+                "schemaVersion": "scholarchain.domain.v1",
+                "source": "DBLP",
+                "sourceRecordId": "conf/independent/review/8Right",
+                "ordinal": 1,
+                "nameText": "Different Person 8",
+                "normalizedName": "different person 8",
+                "observedOrcid": null,
+                "observedOpenAlexAuthorId": null,
+                "identityStatus": "NAME_ONLY_UNCONFIRMED",
+                "resolvedResearcherId": null,
+                "uncertainty": "Synthetic independent acceptance fixture; no confirmed researcher identity.",
+                "provenance": {
+                  "schemaVersion": "scholarchain.domain.v1",
+                  "source": "DBLP",
+                  "sourceRecordId": "conf/independent/review/8Right",
+                  "sourceUri": null,
+                  "datasetSnapshot": "independent-5b-synthetic",
+                  "retrievalDate": "2026-10-16",
+                  "licenseEvidenceUri": null,
+                  "runId": "run:22222222-2222-4222-8222-222222222222",
+                  "uncertaintyNotes": [
+                    "Synthetic independent acceptance fixture; no confirmed researcher identity."
+                  ]
+                }
+              }
+            ],
+            "abstractTextRef": null,
+            "provenance": {
+              "schemaVersion": "scholarchain.domain.v1",
+              "source": "DBLP",
+              "sourceRecordId": "conf/independent/review/8Right",
+              "sourceUri": null,
+              "datasetSnapshot": "independent-5b-synthetic",
+              "retrievalDate": "2026-10-16",
+              "licenseEvidenceUri": null,
+              "runId": "run:22222222-2222-4222-8222-222222222222",
+              "uncertaintyNotes": [
+                "Synthetic independent acceptance fixture; no confirmed researcher identity."
+              ]
+            }
+          },
+          "locator": "in-memory"
+        }
+      ],
+      "candidateRefs": []
+    },
+    {
+      "pair": {
+        "schemaVersion": "scholarchain.resolution.v1",
+        "pairId": "resolution-pair:284b3264259c23100dad676a72746966bef6cb9752360bcffd4f6202f2453e10",
+        "entityType": "Researcher",
+        "left": {
+          "$type": "Mention",
+          "observation": {
+            "source": "DBLP",
+            "sourceRecordId": "conf/independent/review/0Left",
+            "datasetSnapshot": "independent-5b-synthetic"
+          },
+          "mentionId": "mention:dblp:conf/independent/review/0Left#1"
+        },
+        "right": {
+          "$type": "Mention",
+          "observation": {
+            "source": "DBLP",
+            "sourceRecordId": "conf/independent/review/0Right",
+            "datasetSnapshot": "independent-5b-synthetic"
+          },
+          "mentionId": "mention:dblp:conf/independent/review/0Right#1"
+        }
+      },
+      "groupIds": [
+        "review-group:a83176bec391475c7ccb053746a2db72e58fbe0f83b5ae94ffed822b4e4ea439",
+        "review-group:bb5e461b0240ee129d7b6c66d32337eb3b034fcd21b098412b6a978bae4c2643"
+      ],
+      "partition": "held-out",
+      "role": "initial",
+      "stratum": "missing-authoritative-id",
+      "evidenceHash": "3613f45c4fab96ca3c01444f04810c067a1691429286e5d34bdc83249ed53f5f",
+      "leftEvidence": [
+        {
+          "ref": "er-evidence:4f9ba6262f4f26dc32cada2f35d6eaa3a27bf163de401fcf6f0762c43ecf3654",
+          "kind": "work",
+          "sha256": "4e3f1da536765cdef63622dcf8ce68a16b4a5e3b92c9ecf3f4d3ae7bda185767",
+          "payload": {
+            "schemaVersion": "scholarchain.domain.v1",
+            "workId": "work:doi:10.5555/review-left-0",
+            "source": "DBLP",
+            "sourceRecordId": "conf/independent/review/0Left",
+            "sourceRecordType": null,
+            "title": "Synthetic browser observation 0 <img src=x onerror=alert('SOURCE_HTML_MUST_NOT_EXECUTE')>",
+            "normalizedTitle": "synthetic browser observation 0 <img src=x onerror=alert('source_html_must_not_execute')>",
+            "year": 2020,
+            "venueId": null,
+            "doi": "10.5555/review-left-0",
+            "arxivId": null,
+            "pages": null,
+            "externalUrl": null,
+            "authors": [
+              {
+                "mentionId": "mention:dblp:conf/independent/review/0Left#1",
+                "schemaVersion": "scholarchain.domain.v1",
+                "source": "DBLP",
+                "sourceRecordId": "conf/independent/review/0Left",
+                "ordinal": 1,
+                "nameText": "Independent Person 0",
+                "normalizedName": "independent person 0",
+                "observedOrcid": null,
+                "observedOpenAlexAuthorId": null,
+                "identityStatus": "NAME_ONLY_UNCONFIRMED",
+                "resolvedResearcherId": null,
+                "uncertainty": "Synthetic independent acceptance fixture; no confirmed researcher identity.",
+                "provenance": {
+                  "schemaVersion": "scholarchain.domain.v1",
+                  "source": "DBLP",
+                  "sourceRecordId": "conf/independent/review/0Left",
+                  "sourceUri": null,
+                  "datasetSnapshot": "independent-5b-synthetic",
+                  "retrievalDate": "2026-10-16",
+                  "licenseEvidenceUri": null,
+                  "runId": "run:22222222-2222-4222-8222-222222222222",
+                  "uncertaintyNotes": [
+                    "Synthetic independent acceptance fixture; no confirmed researcher identity."
+                  ]
+                }
+              }
+            ],
+            "abstractTextRef": null,
+            "provenance": {
+              "schemaVersion": "scholarchain.domain.v1",
+              "source": "DBLP",
+              "sourceRecordId": "conf/independent/review/0Left",
+              "sourceUri": null,
+              "datasetSnapshot": "independent-5b-synthetic",
+              "retrievalDate": "2026-10-16",
+              "licenseEvidenceUri": null,
+              "runId": "run:22222222-2222-4222-8222-222222222222",
+              "uncertaintyNotes": [
+                "Synthetic independent acceptance fixture; no confirmed researcher identity."
+              ]
+            }
+          },
+          "locator": "in-memory"
+        }
+      ],
+      "rightEvidence": [
+        {
+          "ref": "er-evidence:c1d60283eddd53e33dfdaffdd35fda56ce6e652365486b9230f64e84cb887dcb",
+          "kind": "work",
+          "sha256": "e3f9c2cdbacfdaa1083d1aa4702ddde1b67aac9c46650b63f9d08ece6ef7e15b",
+          "payload": {
+            "schemaVersion": "scholarchain.domain.v1",
+            "workId": "work:doi:10.5555/review-right-0",
+            "source": "DBLP",
+            "sourceRecordId": "conf/independent/review/0Right",
+            "sourceRecordType": null,
+            "title": "Synthetic browser observation 1 <img src=x onerror=alert('SOURCE_HTML_MUST_NOT_EXECUTE')>",
+            "normalizedTitle": "synthetic browser observation 1 <img src=x onerror=alert('source_html_must_not_execute')>",
+            "year": 2020,
+            "venueId": null,
+            "doi": "10.5555/review-right-0",
+            "arxivId": null,
+            "pages": null,
+            "externalUrl": null,
+            "authors": [
+              {
+                "mentionId": "mention:dblp:conf/independent/review/0Right#1",
+                "schemaVersion": "scholarchain.domain.v1",
+                "source": "DBLP",
+                "sourceRecordId": "conf/independent/review/0Right",
+                "ordinal": 1,
+                "nameText": "Different Person 0",
+                "normalizedName": "different person 0",
+                "observedOrcid": null,
+                "observedOpenAlexAuthorId": null,
+                "identityStatus": "NAME_ONLY_UNCONFIRMED",
+                "resolvedResearcherId": null,
+                "uncertainty": "Synthetic independent acceptance fixture; no confirmed researcher identity.",
+                "provenance": {
+                  "schemaVersion": "scholarchain.domain.v1",
+                  "source": "DBLP",
+                  "sourceRecordId": "conf/independent/review/0Right",
+                  "sourceUri": null,
+                  "datasetSnapshot": "independent-5b-synthetic",
+                  "retrievalDate": "2026-10-16",
+                  "licenseEvidenceUri": null,
+                  "runId": "run:22222222-2222-4222-8222-222222222222",
+                  "uncertaintyNotes": [
+                    "Synthetic independent acceptance fixture; no confirmed researcher identity."
+                  ]
+                }
+              }
+            ],
+            "abstractTextRef": null,
+            "provenance": {
+              "schemaVersion": "scholarchain.domain.v1",
+              "source": "DBLP",
+              "sourceRecordId": "conf/independent/review/0Right",
+              "sourceUri": null,
+              "datasetSnapshot": "independent-5b-synthetic",
+              "retrievalDate": "2026-10-16",
+              "licenseEvidenceUri": null,
+              "runId": "run:22222222-2222-4222-8222-222222222222",
+              "uncertaintyNotes": [
+                "Synthetic independent acceptance fixture; no confirmed researcher identity."
+              ]
+            }
+          },
+          "locator": "in-memory"
+        }
+      ],
+      "candidateRefs": []
+    },
+    {
+      "pair": {
+        "schemaVersion": "scholarchain.resolution.v1",
+        "pairId": "resolution-pair:8e7d37a8e8c764023bb6762f03ce3f11754c5eb333fd384acf69b39e44c2b3ea",
+        "entityType": "Researcher",
+        "left": {
+          "$type": "Mention",
+          "observation": {
+            "source": "DBLP",
+            "sourceRecordId": "conf/independent/review/6Left",
+            "datasetSnapshot": "independent-5b-synthetic"
+          },
+          "mentionId": "mention:dblp:conf/independent/review/6Left#1"
+        },
+        "right": {
+          "$type": "Mention",
+          "observation": {
+            "source": "DBLP",
+            "sourceRecordId": "conf/independent/review/6Right",
+            "datasetSnapshot": "independent-5b-synthetic"
+          },
+          "mentionId": "mention:dblp:conf/independent/review/6Right#1"
+        }
+      },
+      "groupIds": [
+        "review-group:0f7617b92a62dc857df01e782fb100026e4cf822a37561eb3adcdff54ab2724f",
+        "review-group:cbb89b48977c3a40693a90dcb4c7cd9b44440d082d923df8adcbc11938abbbb3"
+      ],
+      "partition": "development",
+      "role": "initial",
+      "stratum": "missing-authoritative-id",
+      "evidenceHash": "6edef35f238a10fb62bad14f8233f13413cd3462544c7bee6cc0669132a875bd",
+      "leftEvidence": [
+        {
+          "ref": "er-evidence:daee1f6578cb89137a9aa0c8ed1e2b610212f0b142f397afb4ed0574832955e0",
+          "kind": "work",
+          "sha256": "1894b9b6d9efcca4dfa18e308a3a84cd9de0510ac99b3ab700f1b5d536dcd655",
+          "payload": {
+            "schemaVersion": "scholarchain.domain.v1",
+            "workId": "work:doi:10.5555/review-left-6",
+            "source": "DBLP",
+            "sourceRecordId": "conf/independent/review/6Left",
+            "sourceRecordType": null,
+            "title": "Synthetic browser observation 12 <img src=x onerror=alert('SOURCE_HTML_MUST_NOT_EXECUTE')>",
+            "normalizedTitle": "synthetic browser observation 12 <img src=x onerror=alert('source_html_must_not_execute')>",
+            "year": 2020,
+            "venueId": null,
+            "doi": "10.5555/review-left-6",
+            "arxivId": null,
+            "pages": null,
+            "externalUrl": null,
+            "authors": [
+              {
+                "mentionId": "mention:dblp:conf/independent/review/6Left#1",
+                "schemaVersion": "scholarchain.domain.v1",
+                "source": "DBLP",
+                "sourceRecordId": "conf/independent/review/6Left",
+                "ordinal": 1,
+                "nameText": "Independent Person 6",
+                "normalizedName": "independent person 6",
+                "observedOrcid": null,
+                "observedOpenAlexAuthorId": null,
+                "identityStatus": "NAME_ONLY_UNCONFIRMED",
+                "resolvedResearcherId": null,
+                "uncertainty": "Synthetic independent acceptance fixture; no confirmed researcher identity.",
+                "provenance": {
+                  "schemaVersion": "scholarchain.domain.v1",
+                  "source": "DBLP",
+                  "sourceRecordId": "conf/independent/review/6Left",
+                  "sourceUri": null,
+                  "datasetSnapshot": "independent-5b-synthetic",
+                  "retrievalDate": "2026-10-16",
+                  "licenseEvidenceUri": null,
+                  "runId": "run:22222222-2222-4222-8222-222222222222",
+                  "uncertaintyNotes": [
+                    "Synthetic independent acceptance fixture; no confirmed researcher identity."
+                  ]
+                }
+              }
+            ],
+            "abstractTextRef": null,
+            "provenance": {
+              "schemaVersion": "scholarchain.domain.v1",
+              "source": "DBLP",
+              "sourceRecordId": "conf/independent/review/6Left",
+              "sourceUri": null,
+              "datasetSnapshot": "independent-5b-synthetic",
+              "retrievalDate": "2026-10-16",
+              "licenseEvidenceUri": null,
+              "runId": "run:22222222-2222-4222-8222-222222222222",
+              "uncertaintyNotes": [
+                "Synthetic independent acceptance fixture; no confirmed researcher identity."
+              ]
+            }
+          },
+          "locator": "in-memory"
+        }
+      ],
+      "rightEvidence": [
+        {
+          "ref": "er-evidence:c93c96bf50a678c0e252258ab9add120c2c7f27410e934876bcad7b8d9bb8134",
+          "kind": "work",
+          "sha256": "fb427f6342ffeae3f5ae193df7dbd09c2ea3bb1f56c79150e3e8908df329bdea",
+          "payload": {
+            "schemaVersion": "scholarchain.domain.v1",
+            "workId": "work:doi:10.5555/review-right-6",
+            "source": "DBLP",
+            "sourceRecordId": "conf/independent/review/6Right",
+            "sourceRecordType": null,
+            "title": "Synthetic browser observation 13 <img src=x onerror=alert('SOURCE_HTML_MUST_NOT_EXECUTE')>",
+            "normalizedTitle": "synthetic browser observation 13 <img src=x onerror=alert('source_html_must_not_execute')>",
+            "year": 2020,
+            "venueId": null,
+            "doi": "10.5555/review-right-6",
+            "arxivId": null,
+            "pages": null,
+            "externalUrl": null,
+            "authors": [
+              {
+                "mentionId": "mention:dblp:conf/independent/review/6Right#1",
+                "schemaVersion": "scholarchain.domain.v1",
+                "source": "DBLP",
+                "sourceRecordId": "conf/independent/review/6Right",
+                "ordinal": 1,
+                "nameText": "Different Person 6",
+                "normalizedName": "different person 6",
+                "observedOrcid": null,
+                "observedOpenAlexAuthorId": null,
+                "identityStatus": "NAME_ONLY_UNCONFIRMED",
+                "resolvedResearcherId": null,
+                "uncertainty": "Synthetic independent acceptance fixture; no confirmed researcher identity.",
+                "provenance": {
+                  "schemaVersion": "scholarchain.domain.v1",
+                  "source": "DBLP",
+                  "sourceRecordId": "conf/independent/review/6Right",
+                  "sourceUri": null,
+                  "datasetSnapshot": "independent-5b-synthetic",
+                  "retrievalDate": "2026-10-16",
+                  "licenseEvidenceUri": null,
+                  "runId": "run:22222222-2222-4222-8222-222222222222",
+                  "uncertaintyNotes": [
+                    "Synthetic independent acceptance fixture; no confirmed researcher identity."
+                  ]
+                }
+              }
+            ],
+            "abstractTextRef": null,
+            "provenance": {
+              "schemaVersion": "scholarchain.domain.v1",
+              "source": "DBLP",
+              "sourceRecordId": "conf/independent/review/6Right",
+              "sourceUri": null,
+              "datasetSnapshot": "independent-5b-synthetic",
+              "retrievalDate": "2026-10-16",
+              "licenseEvidenceUri": null,
+              "runId": "run:22222222-2222-4222-8222-222222222222",
+              "uncertaintyNotes": [
+                "Synthetic independent acceptance fixture; no confirmed researcher identity."
+              ]
+            }
+          },
+          "locator": "in-memory"
+        }
+      ],
+      "candidateRefs": []
+    }
+  ]
+}

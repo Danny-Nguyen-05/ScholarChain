@@ -1,0 +1,14 @@
+{
+  "owner": "build-engineer /root/phase5c_precommit_build",
+  "assignment": "User explicitly assigned .gitattributes to build-engineer",
+  "attributesFile": ".gitattributes",
+  "attributesLine": "datasets/entity-resolution/prepared/** -text",
+  "fileSha256": "40b2f04263923ba1277e7b2c839ec327dc5963cd99039e3bfd523cd95b92f301",
+  "fileAlreadyPresentAtTaskStart": true,
+  "bytesPreserved": true,
+  "checkedPreparedFiles": 68,
+  "allTextUnset": true,
+  "retentionValidatorExitCode": 0,
+  "retainedBytes": 49547452,
+  "noIgnoredPreparedFiles": true
+}

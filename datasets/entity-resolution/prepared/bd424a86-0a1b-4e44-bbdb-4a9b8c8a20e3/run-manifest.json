@@ -1,0 +1,49 @@
+{
+  "runId": "run:bd424a86-0a1b-4e44-bbdb-4a9b8c8a20e3",
+  "schemaVersion": "scholarchain.domain.v1",
+  "pipelineName": "hadoop-prep",
+  "datasetSnapshots": [
+    {
+      "source": "CROSSREF",
+      "snapshot": "crossref-er5c-live-api-2026-10-16",
+      "retrievalDate": "2026-10-16"
+    },
+    {
+      "source": "DBLP",
+      "snapshot": "dblp-er5c-live-api-2026-10-16",
+      "retrievalDate": "2026-10-16"
+    },
+    {
+      "source": "OPENALEX",
+      "snapshot": "openalex-er5c-live-api-2026-10-16",
+      "retrievalDate": "2026-10-16"
+    },
+    {
+      "source": "ORCID",
+      "snapshot": "orcid-er5c-live-api-2026-10-16",
+      "retrievalDate": "2026-10-16"
+    }
+  ],
+  "configSchemaVersion": "scholarchain.hadoop-prep.v1",
+  "configFingerprint": "055d9ec6835151a650fd01d33f4e62f0dce489a181f251dfb88ed5cfe493ad0e",
+  "provenance": {
+    "schemaVersion": "scholarchain.domain.v1",
+    "source": "SCHOLARCHAIN",
+    "sourceRecordId": "run:bd424a86-0a1b-4e44-bbdb-4a9b8c8a20e3",
+    "sourceUri": null,
+    "datasetSnapshot": "hadoop-prep",
+    "retrievalDate": null,
+    "licenseEvidenceUri": null,
+    "runId": "run:bd424a86-0a1b-4e44-bbdb-4a9b8c8a20e3",
+    "uncertaintyNotes": [
+      "hadoopPrepSchema=scholarchain.hadoop-prep.v1",
+      "hadoopPrepFingerprint=055d9ec6835151a650fd01d33f4e62f0dce489a181f251dfb88ed5cfe493ad0e",
+      "transformationVersion=hadoop-prep-j01-j09-v3-stable-overflow-lineage",
+      "domainSchema=scholarchain.domain.v1",
+      "inputChecksum:CROSSREF=033ec4a2abe2e08fb575c0ae2318bd2caa2db9ef1d5af3adc8789501d9855060",
+      "inputChecksum:DBLP=25d64b97056e679c3fab1c80b12342fd210e90e7846569811d0f825f488b9582",
+      "inputChecksum:OPENALEX=04dc34cb56a80cdea324246f294ce527d54806e7f993de7e03f252fec179015d",
+      "inputChecksum:ORCID=05549d30d63c83ff63dbfa27d93aa946e95d602b1fd391738926de5f85c8a4e9"
+    ]
+  }
+}

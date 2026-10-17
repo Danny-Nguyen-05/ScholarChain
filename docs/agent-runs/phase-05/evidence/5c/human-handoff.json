@@ -1,0 +1,22 @@
+{
+  "status": "READY_FOR_EXTERNAL_5C_REVIEW_AFTER_GATE",
+  "tool": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase5c-review-tool/index.html",
+  "guide": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase5c-review-tool/guide.txt",
+  "queue": "/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-05/evidence/5c/review-artifacts/queue.json",
+  "queueGeneratedCopy": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase5c-review-queue/queue.json",
+  "split": "/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-05/evidence/5c/review-artifacts/split.json",
+  "initialReviewsRemaining": 240,
+  "development": 40,
+  "heldOut": 200,
+  "reservesNotInitiallyRequired": 60,
+  "humanReviewsCompleted": 0,
+  "stepsAfterReviewAndAuthorization": [
+    "Open index.html in a browser.",
+    "Choose the retained review-artifacts/queue.json with Load queue.",
+    "Enter your own reviewer ID; compare source evidence and choose Same, Different or Uncertain.",
+    "Save checkpoints frequently to a durable folder outside target and keep a backup.",
+    "Preserve original downloaded JSON; resume by loading the same queue then saved checkpoint."
+  ],
+  "checkpointBoundary": "5C external review first. Actual human review and provider work belong to separately authorized 5D. No live calls or final evaluation have run.",
+  "uncertainty": "Uncertain is not negative. Additional reviews/adjudication will be reported after actual annotations; reserves are not automatically substituted."
+}

@@ -1,209 +1,149 @@
 You are the independent, read-only reviewer for ScholarChain Phase 5,
-Subphase 5B B1/B2 repair recheck.
-
+Subphase 5C B1/B2 repair recheck.
 Repository: /Users/danny/Documents/UIC/CS441/ScholarChain
-The manager and all workers/builds have stopped. The user selects and launches
-this reviewer; no manager-invoked reviewer or verdict exists. Review only.
 
-Read in order:
+All manager-owned implementation, workers/builds, acquisition and browser actions
+have stopped. The user selects and launches you; the manager did not invoke a
+reviewer. Do not repair, run behavior probes or launch agents.
+
+Read:
 1. AGENTS.md, CLAUDE.md, docs/agents.md, .claude/agents/code-reviewer.md,
-   docs/agent-runs/README.md and recorded Phase 1 authority / Phase 4 acceptance.
-2. /Users/danny/Documents/plan/phase5.md and phase-05/prompt.md, especially
-   5B and repair addenda. Only 5B repairs are authorized; 5C has not started.
-3. Authoritative course Phase 5, linkage policy, D07 and Phase 6 inputs:
+   docs/agent-runs/README.md, recorded Phase 1 authority and Phase 4 acceptance.
+2. /Users/danny/Documents/plan/phase5.md and phase-05/prompt.md including
+   the current B1/B2 repair authorization. Only 5C repairs authorized.
+3. Course Phase 5/entity-linkage/evaluation/D07/relevant Phase 6 inputs:
    https://github.com/0x1DOCD00D/ScholarChain/blob/main/README.md#phase-5-implement-entity-resolution
-4. docs/agent-runs/phase-05/review.md and
-   evidence/5b-repair/external-review.txt: complete user-supplied REQUEST-CHANGES,
-   two blockers and ten nonblocking findings, reported Claude Code Opus 5.5.
-   That reviewer disclosed not fetching course README or reopening Phase 1/4
-   gates. Preserve this limitation; do not infer checks or external approval.
-5. Current core/ER/Hadoop contracts, source provenance, all changed source,
-   resources/tests, READMEs and complete diff including untracked files.
-6. Under docs/agent-runs/phase-05/:
-   5b-baseline.json, 5b-repair-start.json, 5b-repair-source-delta.json,
-   5b-source-delta.json, owner-report.md, test-report.md, repairs.md,
-   source-freeze.json, implementation.diff, 5b-implementation.diff,
-   review-inventory.json, data-readiness.json, and evidence/5b-repair/:
-   commands.json, before-fix.txt, before-fix-summary.json, failing JUnit files,
-   core-targeted.txt, targeted.txt, targeted-second.txt, full-check.txt,
-   full-check-summary.json, real-input-cli.txt, real-input-summary.json,
-   feature-repair-proof.json, hadoop-bridge-input-proof.json, demo-outputs/,
-   retained inspection scripts. Prior handoffs remain in history/ and evidence/5b/.
+4. Full user-returned REQUEST-CHANGES at phase-05/review.md and
+   evidence/5c-repair/external-review.txt (all evidence paths below are
+   relative to docs/agent-runs/phase-05/).
+5. owner-report.md, test-report.md, repairs.md, 5c-repair-start.json,
+   5c-repair-source-delta.json, 5c-baseline.json, source-freeze.json,
+   review-inventory.json, implementation.diff, 5c-implementation.diff,
+   history/5c-initial-review/ and history/5b-final-handoff/.
+6. Current ER queue/evaluation/CLI/page contracts and owner tests; independent
+   IndependentReviewBindingRepairSpec, IndependentEvaluationAdapterSpec,
+   IndependentEvaluationSpec, IndependentRetainedReviewInputSpec and
+   IndependentRetainedReviewInputMain; related unchanged tests.
+7. datasets/entity-resolution/prepared/README.md, durable run and sibling
+   retention manifest, retain_prepared_population.py and its tests.
+8. evidence/5c-repair/: commands.json, dataset-checks.json, before-fix.txt,
+   before-fix-summary.json and JUnit, targeted.txt, targeted-second.txt,
+   durable-input-reload.txt, durable-input-proof.json, real-readiness-summary.json,
+   full-check.txt/full-check-summary.json, queue-source-hashes.json and
+   review-artifacts/queue.json, split.json and generation-binding.json.
+   Older evidence/5c/ and browser receipts are historical and preserved.
 
-Baseline and ownership:
-- Branch phase-5. Current HEAD and 5B start:
-  4ac236fcb01825b73635fa4c762a35bed4b362cd (user's committed 5A).
-- Whole Phase 5 base: 099e303311be7a1b2e2cf5655e0c7ce9fa710474.
-- Accepted Phase 4 implementation: 3ccd61c071d8080dda04d5e9cf73e9ed19dd75a7.
-- 5B started clean; all current changes are uncommitted 5B plus repairs.
-  Manager performed no commit/push. No human decision rewritten.
-- All 170 externally reviewed source hashes matched before repair. Exact prior
-  handoff copied to history/5b-initial-review/ before edits, without overwriting
-  earlier evidence. 5b-repair-start.json binds the dirty reviewed source state.
-- Current freeze: 174 files. Repair delta: 4 added, 17 modified, 0 removed;
-  all other reviewed source hashes unchanged. Whole 5B delta: 32 added,
-  3 existing files modified since committed 5A, no removals.
-- /root/phase5b_domain owns core; /root/phase5b_er owns ER;
-  /root/phase5b_test owns tests/**; coordinator alone assembles phase evidence.
-  No Hadoop production, datasets, build/dependencies, StableIds formulas,
-  source schemas, constitutional or human-gate changes.
-- User authorized distributed systems/data engineering sampling, 40 development
-  + 200 held-out real human reviews. Additional data is not assumed to exist.
+Baseline/ownership:
+- Branch phase-5; current HEAD and clean 5C starting HEAD:
+  c8342d25ba04dede26af10bedc5a76691824d1ca
+- Whole Phase 5 base: 099e303311be7a1b2e2cf5655e0c7ce9fa710474
+- Accepted Phase 4 implementation: 3ccd61c071d8080dda04d5e9cf73e9ed19dd75a7
+- 5B externally/human approved; 5C initial review REQUEST-CHANGES remains the last
+ independent 5C verdict. No repair approval is inferred.
+- Before repairs all 509 reviewed hashes matched. Six old handoff artifacts
+ preserved in history/5c-initial-review/. Repair delta 75 added /11 modified /0 removed;
+ new freeze 584 files, unchanged through final gate.
+- Full tracked/untracked inventory is review-inventory.json (515 paths,
+ its own recursive hash excluded). Include all durable/hidden/success files.
+- ER owner writes modules/entity-resolution/**; dataset owner writes datasets/**;
+ tester writes tests/**; coordinator writes phase-05 evidence. Retained prepared
+ population is routed under existing dataset territory, not a new ownership map
+ or invented human ratification. Core/Hadoop/build/original samples/constitutional/
+ human-owned decision files remain unchanged. No commit or push.
 
-Repairs to assess explicitly:
-B1: Core recognized DBLP ee DOI resolver strings now use existing
-StableIds.normalizeDoi semantics on the entire literal value BEFORE URI parsing.
-Percent sequences, literal question/fragment characters and SICI angle brackets
-retain the exact canonical suffix Phase 4 accepts. No decoding or suffix stripping
-invents agreement/conflict. Real distinct values remain hard conflicts and all
-known facts remain required by complete constraints. This selects acceptance
-option (a), not a new general per-observation quarantine. Truly malformed supported
-facts still fail closed. ArXiv has its separate rules; arbitrary URL roles/hosts
-are not promoted. New validated groundedElectronicPublicationFacts accessor shares
-one parser with core authority and returns bound raw role/value + canonical fact.
+B1 repair:
+- ReviewPopulationBinding stores only inputEvidenceHash/candidatePopulationHash.
+ Queue/checkpoint identity still binds source population, split/sampling and
+ complete tasks/evidence. Mutable policy/config/prompt/schema/model/code/source
+ metadata is stored separately as generation audit or prediction-run ReviewBinding.
+- Evaluation accepts P1 run metadata for the same immutable population/task evidence
+ and records P1 in its report; original P0 annotations remain unchanged.
+- fromDecisions now requires explicit actual run binding. Inconsistent decisions/
+ adjudication metadata fail against P1, rather than against old label-generation
+ settings. CLI prepare requires --binding and checks actual completed manifest,
+ config/model/source-bound decisions and recomputed candidate population.
+- Two independent pre-fix tests genuinely failed on unchanged production.
+ Post-fix actual offline P1 engine test changes policy/model/version/adjudication
+ timeout/config/code, reuses P0 checkpoint, preserves queue identity and reports P1.
+ Changed input/candidates/task evidence still fails or is counted INVALID.
+- Rebuilt real queue has 240 initial +60 reserves: 20 Work /20 Researcher development,
+ 100 Work /100 Researcher held-out. Same 300 tasks/task hashes and split as before;
+ only label-population wire/queue hash changed, before any real human labels.
+- Queue/split/generation audit files are byte-identical across two durable-input
+ generation runs. Separate generation metadata is excluded from label identity.
 
-B2: er-features-v2 compares venues only within a shared venue namespace. Affiliation
-compares like ROR/Ringgold/name/institution-ID namespaces only; no common namespace
-is explicitly unavailable, and the documented minimum combines shared-namespace
-similarities. Unrelated representations do not dilute comparable evidence.
-Missing reasons identify incomparable venue/affiliation and empty normalized names.
-Runtime policy is er-offline-uncalibrated-v2; schema format remains v1. Effective
-policy fingerprints and prompt/schema hashes changed; old outputs remain intact.
+B2 repair:
+- Durable exact completed input:
+ datasets/entity-resolution/prepared/bd424a86-0a1b-4e44-bbdb-4a9b8c8a20e3/
+- Sibling <UUID>.retention-manifest.v1.json binds 68 files /49,547,452 bytes:
+ entire export/** including CRC, original completion/run manifest and 8 intermediate
+ _SUCCESS files (plus export success). No ignored target input is needed for
+ future loading. Omitted intermediate data/counters are not claimed retained.
+- All retained bytes/UUIDs/source payloads unchanged. No new Hadoop regeneration
+ or logical-UUID normalization. No retained path is ignored by Git.
+- Actual Scala original-vs-durable replay reproduced:
+ input 57efd81957e5eec9194d4b5c42f6ef170213640f148b56bf8b99a51d1d09d1fe
+ candidates 9381588e35a418a84a22e9a680db4ab7886a8d33cf9463166edc1222cd8a5581
+ 11,412 pairs, 456 works, 8 profiles, 465 activities, complete candidate equality.
+- Independent copy tests prove valid initial loading, identical replay and
+ rejection of missing/corrupted retained parts. Retention validator checks all
+ files/hashes/completion framing/9 success markers with overwrite/size/path bounds.
 
-Related bounded changes:
-- N-3: input/output/cache physical paths must be mutually disjoint before IO;
-  public engine/export boundaries also protect the loaded source root.
-- N-4: adjudication reasons must agree with accept/reject/abstain.
-- N-5: audit identifier catalog consumes bound core publication-link facts;
-  raw DOI/arXiv link roles and authority flags now match constraint facts.
-- N-6: token-empty normalized names remain unavailable, not a zero mismatch.
-- N-10: readable forward summaries added; historical text/verdict preserved.
+Observed verification:
+- Fresh sbt -batch check: exit 0, 390 tests passed: core 129, Hadoop 64,
+ ER 25, independent 168, build 4; 46 fresh JUnit reports,
+ zero failures/errors/skips;584 source hashes/path set unchanged; success marker renewed.
+ Expected nested injected checkfailure is a passing CheckFailurePathSpec assertion.
+- Targeted 25 ER +28 independent passed. First post-fix attempt had 27/28 independent
+ passing: a new disposable B2 fixture snapshot was inconsistent. Fixed only that
+ fixture; meaningful positive-before-negative checks added; failed attempt retained.
+- 26 Python dataset tests and 68-file durable validator passed.
+- Java 17.0.20.1, sbt 1.10.7, Scala 3.3.4, Python 3.14.5; exact args/env/exits retained.
+- No new browser actions or real queue load in blocker-only round; browser evidence
+ is historical. Current HTML binding validator updated with B1 and Node syntax checked;
+ no claim that old browser tests prove new browser behavior.
 
-Explicitly NOT claimed closed:
-- N-1: default bibliographic shortcut disabled as a partial precaution only.
-  Generic-title records can still score-accept; broader uniqueness/generic-title
-  policy remains a nonblocking follow-up before the 5C policy freeze.
-- N-2: indexing/memoization and a timed large-input probe remain pending before scale.
-- N-8: dropped-pair per-mention quota release remains deferred.
-- N-9: staging cleanup / empty-directory rename race remains deferred.
-- N-7: same-publication researcher uncertainty is a future evaluation stratum;
-  OpenAlex-carried ORCID attribution also needs separate evaluation.
-- Older 5A component-validator scaling / enum-wire observations remain documented.
+Key SHA-256 values (relative to phase-05):
+- source-freeze.json: 13822f14ce35026b92d1ade5505fd3d2d2fcc7a33c28946a4ef29fea8c917080
+- implementation.diff: e4ff72fa7c36e1600c762db82fd5cbf15e1a99680db2702a4435aa304bbb81f9
+- 5c-implementation.diff: 20b3c9edb012781f4a863db7e9905ff13b8f5c6e1f089a02e93bad114f43a0ba
+- evidence/5c-repair/full-check.txt: 24cdaff8387d87ffaeeba6955bfd269922dadfc7c8b9053c52c54f0a2738fb64
+- evidence/5c-repair/full-check-summary.json: 93b3a7bfe0d47a99649722270e438080f81fd381f2bf1fc202f5a365c95397b8
+- evidence/5c-repair/real-readiness-summary.json: 5dcbf3baee2bc80ed3337f2fd8f6b5657dc3418ab53a186b2046c44c1b394f55
+- evidence/5c-repair/review-artifacts/queue.json: 39810621fe4b22113e3b11fe014ed3eaf2f6ed82b261a265044ce344a02e506f
+- evidence/5c-repair/review-artifacts/split.json: 9dee7738f41d646515eb7a6c77c025a935405f5bdfb34039fcb135021e9c4141
+- evidence/5c-repair/durable-input-proof.json: f8d707136c493cd052944afdb04a1547484acd8a3db81b3ddf9086abd18b56b3
+Durable retention manifest:
+c51963569827ceaba35d1f816a918afecd32a547725ba2b1bb63aa38d49e8556
 
-Observed evidence — inspect; do not rerun:
-- Before repair: 5 tests executed and all 5 FAILED on unchanged reviewed production.
-  Actual local Hadoop pipeline first completed and exported percent/query/SICI
-  DOI forms, then ER loading failed; fast cases reproduced B1 and false venue/
-  affiliation zeroes plus weighted score .9 instead of 1. Failing XML/log retained.
-- After repair: core 30/30, module 19/19, independent 70/70 across 12 suites pass.
-  Completed-Hadoop bridge now loads/resolves, unrelated observations still resolve,
-  true DOI conflicts survive and complete constraints validate. Hand-computed
-  comparable-evidence score is 1.0. Actual generated fixture manifests/source hashes
-  retained in hadoop-bridge-input-proof.json. These are synthetic tests, not acquisition.
-- Intermediate targeted.txt compile failure: three owner test references to run
-  resolved to ScalaTest.run. Qualified ErTestData.run; no production relaxation.
-- Fresh sbt -batch check: EXIT 0, 356 passed: core 129, Hadoop 64, ER 19,
-  independent 140, build verification 4. 39 fresh JUnit reports, zero failures/errors/
-  skips; 409 seconds, completed 2026-10-16 15:29:06 America/Chicago.
-  Nested injected format-stage failure is expected passing CheckFailurePathSpec.
-- Post-gate collector EXIT 0 valid=true; all 174 frozen hashes unchanged, no added/
-  missing scoped files. Success marker renewed after all suites; no source edits
-  or builds after final gate.
-- JAVA_HOME=/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home
-- SBT_OPTS=-Dlogback.configurationFile=/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-04/xml-repair-logback.xml
-  Exact argv/logs/exits in evidence/5b-repair/commands.json.
-- Existing actual input target/phase4-runs/fda6168a-d4e6-4c20-bf73-42a1c3724f7f:
-  two disabled runs and one fake run succeed, each 18 comparisons and 0 fake / 0 live
-  calls. No score/eligibility forced. Work 6 accepted / 3 conflict, Researcher 3 accepted /
-  6 unresolved; other counts 0. Same input hash as initial run:
-  052d67d212c279c113363712056aa298ccb8720a1bae1d83d9171e676630628b.
-- feature-repair-proof.json confirms ALL THREE cross-source work/work copies of
-  the same DOI now have venue unavailable with explicit incomparable-namespace
-  reason; initial evidence/5b/ outputs retain the old zeros.
-- New complete outputs under evidence/5b-repair/demo-outputs/ verify exact file
-  inventory, length, SHA256, completion and full constraint bindings. Disabled
-  reruns logically equivalent using only explicitly named processing-field exclusions;
-  source text, IDs, snapshots, features/reasons and evidence remain significant.
-- No live calls, network acquisition, installation, cloud action or commit/push.
-  Agent usage interruptions were resumed from saved files at the user's instruction;
-  no purchase/model override or fabricated pass. All writers/builds now stopped.
+Scope/limitations:
+- User requested BLOCKERS ONLY. N1–N8 and earlier nonblocking findings remain
+ documented and unchanged. No blanket N4 completion/sensitivity CLI repair,
+ real queue browser probe, clock fix, ID guide warning, reserve-count fix,
+ old ledger rewrite, acquisition-script recovery or repository deduplication.
+- Necessary B2 retention adds 47.3 MiB; size observation remains open before commit.
+- No real human labels: all 240 reviews pending. Synthetic P0/P1 annotations and
+ fake calls establish tests only. No acquisition/live calls/provider implementation,
+ calibration/final gold measurement, 5D/5E, cloud, Phase 6 or final Phase 5 acceptance.
+- Convenience selection/residual leakage, provider hypothesis risks and blocking
+ recall limitations remain as in the initial report. Do not invent accuracy.
 
-SHA-256:
-source-freeze.json: 2edad728cd786d2b5abce6839dd0d46232b190e8e3a51c6700159609ca7e2909
-implementation.diff: 87e25f71a140608b2bbab8062b11a8f142ac3570cb041232b24cf75f7ede703f
-5b-implementation.diff: 6aa7e709f25c586591f3979e96cb607f4fc4a6f0b1753e870d94b560fcae62c9
-evidence/5b-repair/full-check.txt: 693587cb0f589bba2031e966e4ed603c9038b17ecc5519b82c7c46cc0e9481a2
-evidence/5b-repair/full-check-summary.json: d41a0fa326622b093b58eb449b52633c71a4458852ba5001dafb96539416116a
-evidence/5b-repair/real-input-summary.json: 6c81687e5127ec5ed5591c84f936676112dbd92a5f78f7186d5f923fcf20584b
-All other current file hashes in review-inventory.json; only its recursive self-hash
-is excluded. Prior reviewed evidence hashes remain in the archived prompt/inventory.
+Review rules:
+Read-only: no edits, builds/tests, executable behavior probes, installs, network
+source/provider calls, label changes, deploys, commits/pushes or agent launches.
+Read-only hashes/inventory comparison permitted. Never read .env/private keys/
+credentials or secret directories. Specify necessary executable checks for owners.
+Report ALL confirmed findings in one pass. Prioritize B1 label/prediction separation,
+actual-run provenance, changed-evidence rejection, B2 durable completeness/replay,
+schema/UI compatibility and regression/evidence integrity. Distinguish static
+reasoning from executed evidence; tests do not prove identity accuracy or labels.
+Later subphases remain future scope unless this repair deliverable depends on them.
 
-Scope limits:
-The existing 18 comparisons do not supply 240 independent human reviews/groups.
-Runtime settings remain uncalibrated. No human labels, measured accuracy/blocking
-recall, real provider evidence or final Phase 5 acceptance. Hashes show internal
-consistency, not authenticity. An injected arbitrary JVM adapter cannot be force-
-killed if it ignores interruption; the runner fuses further calls, supplied fake bounded.
-5C acquisition/review page/queue/import/evaluator, 5D provider/human labeling, 5E
-frozen evaluation and code-revision/source binding are later scope. Spark grouping/
-representatives remain Phase 6; source contracts and approved ownership unchanged.
-Do not require later work as completed 5B unless this deliverable depends on it.
-
-Complete current tracked/untracked inventory (211 files):
-Each line lists an exact repository-relative directory prefix and EVERY filename
-in that directory. Concatenate to obtain exact paths; no glob or omitted files.
-  docs/agent-runs/phase-05/: 5b-baseline.json, 5b-implementation.diff, 5b-repair-source-delta.json, 5b-repair-start.json, 5b-source-delta.json, implementation.diff, owner-report.md, prompt.md, repairs.md, review-inventory.json, review.md, reviewer-prompt.txt, source-freeze.json, test-report.md
-  docs/agent-runs/phase-05/evidence/5b/: collect.py.txt, combined-targeted-initial.txt, commands.json, core-targeted-sandbox-attempt.txt, core-targeted.txt, er-first-compile.txt, er-second-compile.txt, er-targeted-second.txt, full-check-summary.json, full-check.txt, independent-initial.txt, independent-second.txt, inspect-demo.py.txt, optional-hint-and-real-cli.txt, postgate-inspection.txt, real-input-cli.txt, real-input-inspection.txt, real-input-summary.json, targeted-third.txt
-  docs/agent-runs/phase-05/evidence/5b-repair/: before-fix-IndependentResolutionPrepBridgeRepairSpec.xml, before-fix-IndependentResolutionRepairSpec.xml, before-fix-summary.json, before-fix.txt, collect-repair.py.txt, commands.json, core-targeted.txt, external-review.txt, feature-repair-proof.json, full-check-summary.json, full-check.txt, hadoop-bridge-input-proof.json, inspect-repair-demo.py.txt, postgate-inspection.txt, real-input-cli.txt, real-input-inspection.txt, real-input-summary.json, targeted-second.txt, targeted.txt
-  docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-disabled-demo/: _SCHOLARCHAIN_RESOLUTION_COMPLETE, audit-details.jsonl, diagnostics.jsonl, effective-config.json, effective-policy.json, evidence.jsonl, resolution-manifest.json
-  docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-disabled-demo/researcher/: accepted-links.jsonl, accepted.jsonl, conflict.jsonl, grouping-constraints.json, rejected.jsonl, unresolved.jsonl
-  docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-disabled-demo/work/: accepted-links.jsonl, accepted.jsonl, conflict.jsonl, grouping-constraints.json, rejected.jsonl, unresolved.jsonl
-  docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-disabled-replay/: _SCHOLARCHAIN_RESOLUTION_COMPLETE, audit-details.jsonl, diagnostics.jsonl, effective-config.json, effective-policy.json, evidence.jsonl, resolution-manifest.json
-  docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-disabled-replay/researcher/: accepted-links.jsonl, accepted.jsonl, conflict.jsonl, grouping-constraints.json, rejected.jsonl, unresolved.jsonl
-  docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-disabled-replay/work/: accepted-links.jsonl, accepted.jsonl, conflict.jsonl, grouping-constraints.json, rejected.jsonl, unresolved.jsonl
-  docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-fake-demo/: _SCHOLARCHAIN_RESOLUTION_COMPLETE, audit-details.jsonl, diagnostics.jsonl, effective-config.json, effective-policy.json, evidence.jsonl, resolution-manifest.json
-  docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-fake-demo/researcher/: accepted-links.jsonl, accepted.jsonl, conflict.jsonl, grouping-constraints.json, rejected.jsonl, unresolved.jsonl
-  docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-fake-demo/work/: accepted-links.jsonl, accepted.jsonl, conflict.jsonl, grouping-constraints.json, rejected.jsonl, unresolved.jsonl
-  docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-disabled-demo/: _SCHOLARCHAIN_RESOLUTION_COMPLETE, audit-details.jsonl, diagnostics.jsonl, effective-config.json, effective-policy.json, evidence.jsonl, resolution-manifest.json
-  docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-disabled-demo/researcher/: accepted-links.jsonl, accepted.jsonl, conflict.jsonl, grouping-constraints.json, rejected.jsonl, unresolved.jsonl
-  docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-disabled-demo/work/: accepted-links.jsonl, accepted.jsonl, conflict.jsonl, grouping-constraints.json, rejected.jsonl, unresolved.jsonl
-  docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-disabled-replay/: _SCHOLARCHAIN_RESOLUTION_COMPLETE, audit-details.jsonl, diagnostics.jsonl, effective-config.json, effective-policy.json, evidence.jsonl, resolution-manifest.json
-  docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-disabled-replay/researcher/: accepted-links.jsonl, accepted.jsonl, conflict.jsonl, grouping-constraints.json, rejected.jsonl, unresolved.jsonl
-  docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-disabled-replay/work/: accepted-links.jsonl, accepted.jsonl, conflict.jsonl, grouping-constraints.json, rejected.jsonl, unresolved.jsonl
-  docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-fake-demo/: _SCHOLARCHAIN_RESOLUTION_COMPLETE, audit-details.jsonl, diagnostics.jsonl, effective-config.json, effective-policy.json, evidence.jsonl, resolution-manifest.json
-  docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-fake-demo/researcher/: accepted-links.jsonl, accepted.jsonl, conflict.jsonl, grouping-constraints.json, rejected.jsonl, unresolved.jsonl
-  docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-fake-demo/work/: accepted-links.jsonl, accepted.jsonl, conflict.jsonl, grouping-constraints.json, rejected.jsonl, unresolved.jsonl
-  docs/agent-runs/phase-05/history/5a-final-handoff/: implementation.diff, review-inventory.json, reviewer-prompt.txt, source-freeze.json
-  docs/agent-runs/phase-05/history/5b-initial-review/: 5b-implementation.diff, 5b-source-delta.json, implementation.diff, review-inventory.json, reviewer-prompt.txt, source-freeze.json
-  modules/core/: README.md
-  modules/core/src/main/scala/edu/uic/cs441/scholarchain/core/: ResolutionValidationContext.scala
-  modules/core/src/test/scala/edu/uic/cs441/scholarchain/core/: ResolutionAuthorityConsumerSpec.scala
-  modules/entity-resolution/: README.md
-  modules/entity-resolution/src/main/resources/: phase5-config.v1.json, phase5-policy.v1.json
-  modules/entity-resolution/src/main/resources/adjudication/: prompt.v1.txt, response.schema.v1.json
-  modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/: Adjudication.scala, AdjudicationCache.scala, CandidateBuilder.scala, FeatureExtractor.scala, InputLoader.scala, LinkExporter.scala, Normalization.scala, PathIsolation.scala, Phase5Main.scala, ResolutionEngine.scala, ResolutionPolicy.scala
-  modules/entity-resolution/src/test/scala/edu/uic/cs441/scholarchain/entityresolution/: ComparableEvidenceSpec.scala, OfflineResolutionSpec.scala
-  tests/src/test/scala/edu/uic/cs441/scholarchain/independent/: IndependentCandidateDerivationSpec.scala, IndependentCompletedPrepFixture.scala, IndependentIdentifierNormalizationSpec.scala, IndependentOfflineAdjudicationSpec.scala, IndependentPrepReaderSpec.scala, IndependentResolutionEngineSpec.scala, IndependentResolutionExportSpec.scala, IndependentResolutionFeaturesSpec.scala, IndependentResolutionFixtures.scala, IndependentResolutionInputSpec.scala, IndependentResolutionPolicySpec.scala, IndependentResolutionPrepBridgeRepairSpec.scala, IndependentResolutionRepairSpec.scala, IndependentResolutionRunSpec.scala
-
-Rules:
-- Read-only; no edits, builds/tests, behavioral probes, installs, dataset/provider
-  calls, label changes, deploys, commits/pushes or agent launches. Read-only git
-  inventory and file hash calculations are permitted. Specify needed executable
-  behavioral probes for the owners/tester instead of running them.
-- Never read secrets, .env, credentials, private keys or secret directories.
-- Report ALL confirmed findings in one pass, no arbitrary cap. Prioritize B1/B2
-  closure, source/schema/identity/conflict integrity, missing/comparable features,
-  policy boundaries, bounded offline/cache behavior, complete export and ownership.
-- Distinguish executed evidence from static reasoning and later requirements.
-  Tests do not establish human review, calibration, accuracy or live provider use.
-- Assess B1 and B2 explicitly. Separate blockers, nonblocking observations and
-  unverified gates. Do not invent findings, passes or approvals.
-
-Return APPROVE or REQUEST-CHANGES for implemented 5B repair scope, broader Phase 5
-acceptance limitations separately. For every finding provide severity, path/line,
-evidence/reproduction reasoning, impact, owner, acceptance check and whether it
-blocks 5B. Use STATUS, OWNER, WORK ORDER, FILES CREATED, FILES MODIFIED, COMMANDS RUN,
-TEST RESULTS, VALIDATION RESULTS, ASSUMPTIONS, RISKS, MANUAL ACTION REQUIRED,
-BLOCKED-ON OWNER, BLOCKED-ON EVIDENCE, NEXT GATE.
-Return the COMPLETE verdict to the user for handoff. Even APPROVE needs explicit
-user authorization before 5C. The manager has stopped.
+Return APPROVE or REQUEST-CHANGES for implemented 5C/B1/B2 repairs. Explicitly assess
+both blockers and distinguish carried nonblocking notes/unverified future gates.
+For each finding provide severity, path/line, evidence/reproduction reasoning, impact,
+owner, acceptance check, and whether it blocks 5C. Use required report fields STATUS, OWNER,
+WORK ORDER, FILES CREATED, FILES MODIFIED, COMMANDS RUN, TEST RESULTS, VALIDATION RESULTS,
+ASSUMPTIONS, RISKS, MANUAL ACTION REQUIRED, BLOCKED-ON OWNER, BLOCKED-ON EVIDENCE, NEXT GATE.
+Return complete verdict to user for handoff. The manager has stopped. Even APPROVE still
+requires explicit user authorization before 5D.

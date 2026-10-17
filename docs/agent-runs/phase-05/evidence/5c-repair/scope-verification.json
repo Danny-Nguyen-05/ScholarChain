@@ -1,0 +1,7 @@
+{
+  "durableFilesVisibleInGitStatus": 68,
+  "ignored": false,
+  "sourceFreezeFiles": 584,
+  "nonblockingScope": "N1-N8 and earlier nonblocking findings remain unchanged. Only required retention and B1 binding changes were implemented.",
+  "fullGateStatus": "complete: exit 0,390 tests passed,584 frozen files unchanged"
+}

@@ -1,0 +1,28 @@
+{
+  "schemaVersion": "scholarchain.browser-load-only-receipt.v1",
+  "mode": "real-queue-load-only-no-annotations",
+  "browser": "Microsoft Edge native macOS accessibility through cua_repl",
+  "page": "target/phase5c-repair-review-tool/index.html",
+  "pageFileSha256": "9e24abe10fce335b0b53f099a25ad7138617281017383d412c70bb772abffe26",
+  "queue": "docs/agent-runs/phase-05/evidence/5c-repair/review-artifacts/queue.json",
+  "queueFileSha256": "39810621fe4b22113e3b11fe014ed3eaf2f6ed82b261a265044ce344a02e506f",
+  "queueId": "review-queue:05c5817f62a70d378829be361b9c9169fc9af18448f7c83c245f1d65bbca6175",
+  "queueHash": "05c5817f62a70d378829be361b9c9169fc9af18448f7c83c245f1d65bbca6175",
+  "queueTasks": 300,
+  "initialTasks": 240,
+  "reserveTasks": 60,
+  "observedStatus": "0 of 240 initial tasks answered; 240 remaining. Uncertain counts as a review, not a negative label.",
+  "observedTaskHeading": "Work task 1 of 240",
+  "observedCurrentLabel": "No answer selected.",
+  "reviewerIdEntered": false,
+  "labelButtonsClicked": 0,
+  "checkpointImported": false,
+  "checkpointExported": false,
+  "annotationsCreated": 0,
+  "loadValidation": "The repaired page accepted the selected queue and rendered tasks after its local queue/task/evidence SHA-256 checks. No DOM hash introspection was performed; queue identity and file hashes above were independently read from the exact local input after loading.",
+  "limitations": [
+    "Load-only check; no human identity decisions or evaluation accuracy is established.",
+    "First native chooser attempt returned to the blank page with no selected file. A coordinate attempt failed with noWindowsAvailable before acting. Fresh accessible controls selected the exact same file on retry, which loaded successfully.",
+    "A separate new tab was created using the observed New Tab button and address field. No global new-tab/type-text shortcut or action in another conversation was used."
+  ]
+}

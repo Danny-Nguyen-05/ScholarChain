@@ -1,0 +1,9 @@
+{
+  "schemaVersion": "scholarchain.review-sampling.v1",
+  "seed": "scholarchain-5c-2026",
+  "development": 40,
+  "heldOut": 200,
+  "developmentReserve": 10,
+  "heldOutReserve": 50,
+  "maxPopulationPairs": 100000
+}

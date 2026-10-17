@@ -1,0 +1,67 @@
+{
+  "schema": "scholarchain.phase5c.real-readiness.v1",
+  "sourcePopulationManifest": {
+    "path": "datasets/entity-resolution/5c-2026-10-16-v3/population-manifest.v1.json",
+    "bytes": 19918,
+    "sha256": "6625a645675341c57bff8186d5cf16a4585e91c03eb7528da5bbacacf9b4d608"
+  },
+  "phase4Run": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase5c-prep-runs/bd424a86-0a1b-4e44-bbdb-4a9b8c8a20e3",
+  "candidatePairs": 11412,
+  "allLeakageGroups": 568,
+  "selectedLeakageGroups": 100,
+  "selectedPartitionGroupsDisjoint": true,
+  "excludedCrossPartition": 777,
+  "allocation": {
+    "held-out:initial": 200,
+    "held-out:reserve": 50,
+    "development:initial": 40,
+    "development:reserve": 10
+  },
+  "initialEntities": {
+    "held-out:Work": 100,
+    "held-out:Researcher": 100,
+    "development:Work": 20,
+    "development:Researcher": 20
+  },
+  "strataAll300": {
+    "observed-id-disagreement": 117,
+    "shared-observed-id": 78,
+    "missing-authoritative-id": 105
+  },
+  "queue": {
+    "path": "target/phase5c-review-queue/queue.json",
+    "bytes": 7205044,
+    "sha256": "6c14ed24c91ef68e164879a18d4ec35b7364c317662a4be29f7ddb2de1ddcec7"
+  },
+  "split": {
+    "path": "target/phase5c-review-queue/split.json",
+    "bytes": 3810714,
+    "sha256": "9dee7738f41d646515eb7a6c77c025a935405f5bdfb34039fcb135021e9c4141"
+  },
+  "queueHash": "d9e8bf4e7f7c29413c9d87fe4b46510dfa0606a1181fd44a2a80e9ee0d8f7074",
+  "splitHash": "06e444624a43ddb1c8cb1f4a23ab9e099356c5d00a1e78879deb9830facf265d",
+  "binding": {
+    "inputEvidenceHash": "57efd81957e5eec9194d4b5c42f6ef170213640f148b56bf8b99a51d1d09d1fe",
+    "candidatePopulationHash": "9381588e35a418a84a22e9a680db4ab7886a8d33cf9463166edc1222cd8a5581",
+    "policyHash": "ad8c520fd8ff2e3697e15b2895852ca23e04c8d93f677acea3b366fcc101ef9f",
+    "configHash": "b31c3a77e2815f486b4da76c33d0283d91dba553af91178832ca6d7a0c87f37d",
+    "promptHash": "e9ef5f36238a29f2003f9e6404451aeca7fc54575989910edae2ce0ab7f71940",
+    "responseSchemaHash": "b253e113841a2e02699097ae003c4a01fbbd2fcd28cf2e61ff48a7a46e06aacd",
+    "modelIdentity": "deterministic-fake/abstain-fixture/v1",
+    "codeRevision": "c8342d25ba04dede26af10bedc5a76691824d1ca",
+    "sourceTreeHash": "79a54bdec76deabacc41e99f2fc4d2e723647e38aa9797b69f9d9db9d8182897"
+  },
+  "replayByteIdentical": {
+    "queue.json": true,
+    "split.json": true
+  },
+  "exportedToolByteMatches": {
+    "index.html": true,
+    "guide.txt": true,
+    "sampling.v1.json": true
+  },
+  "humanReviews": 0,
+  "binaryGold": 0,
+  "blockingRecallMeasured": false,
+  "labelEvidence": "Browser and evaluator test artifacts prefixed synthetic; no actual review completion."
+}

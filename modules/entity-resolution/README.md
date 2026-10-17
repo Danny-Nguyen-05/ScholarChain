@@ -1,8 +1,9 @@
-# Entity resolution — Phase 5A contracts and Phase 5B offline runtime
+# Entity resolution — shared contracts, offline runtime and Phase 5C review readiness
 
 Phase 5A established shared resolution contracts in `core`. Phase 5B now implements the bounded
-local matcher and offline adjudication runtime described below. Review tooling, human labels,
-evaluation and live providers remain later-subphase work.
+local matcher and offline adjudication runtime described below. Phase 5C adds the offline review
+page, leakage-aware queue/split generator, label importer and evaluator readiness. Actual human
+labels, live providers and final frozen evaluation remain later checkpoints.
 The examples in [contracts/](contracts/) are proposed module-local JSON documents. Their numeric
 values are illustrative, uncalibrated, and not production defaults. No example is source evidence,
 a human annotation, or a live model result.
@@ -239,9 +240,10 @@ histories. Reviewer ID is self-entered provenance, not authentication. Preserve 
 exports; write a derived validated dataset without rewriting annotations. Save original exports
 to a durable user-chosen path outside disposable `target/` and back them up.
 
-## Proposed CLI and output layout — not implemented or runnable
+## Historical 5A CLI proposal — superseded by the 5B and 5C runtime sections
 
-One future `edu.uic.cs441.scholarchain.entityresolution.Phase5Main` will expose:
+The following table records the earlier design proposal; use `Phase5Main --help` and the implemented
+5B/5C sections below for current flags and paths:
 
 | Subcommand | Explicit inputs | Outputs / stage |
 | --- | --- | --- |
@@ -464,9 +466,9 @@ and authoritative conflicts, including transitive A–B–C conflicts. The exist
 validator still revalidates the full bundle (N1); 5B does not call it repeatedly or construct groups.
 An indexed/scalable consumer and shared conflict vectors remain required before Phase 6 scale use.
 
-Human labels (40 development + 200 held out), acquisition expansion, calibration, provider choice,
-real calls and measured evaluation remain later gates. The retained sample is too small for those
-claims; repeated copies and blocks do not create independent evaluation groups.
+Human labels (40 development + 200 held out), calibration, provider choice, real calls and final
+measured evaluation remain later gates. Phase 5C acquisition and queue evidence is reported in the
+phase handoff; source record counts alone do not establish independent review-group sufficiency.
 
 
 The offline default and later review queue must preserve distinct reporting strata for exact-ID,
@@ -474,3 +476,175 @@ scored, optional bibliographic and fake/live adjudication paths. Future human re
 common names, generic publication titles, missing fields and cross-source identifier representations;
 the present tiny portfolio supplies no calibrated per-stratum quality claim. Run-level performance
 optimization and cache disk quotas remain tracked follow-ups before wider acquisition/scale use.
+
+
+## Phase 5C implemented review readiness
+
+`ReviewQueue.build` consumes only validated source observations and `CandidatePopulation`, with
+explicit `ReviewSampling` and `ReviewBinding`. It never invokes the matcher or reads predictions,
+labels, a gold set or LLM results. The runtime sampling resource is
+`src/main/resources/review/sampling.v1.json`: **40 development + 200 held-out initial tasks**, with
+**10 development + 50 held-out reserves**. Reserves are available evidence, not extra reviews
+silently substituted for uncertain answers. A replacement requires a separately recorded reason
+and decision, and must preserve the original uncertain annotation and partition.
+
+Leakage components contain endpoints sharing a source/native observation (snapshot omitted), a
+preferred underlying work ID, grounded authoritative DOI/arXiv/ORCID, directly observed OpenAlex
+author hypothesis, or normalized title tokens. Work observations and their attached mentions
+share their publication/identity anchors. Near-title anchors omit one sorted title token for
+six-or-more-token titles (up to 256 tokens); this conservatively groups one-token variants.
+Conflicting identifiers and OpenAlex author IDs are leakage evidence only, never merge authority.
+Ambiguous names alone do not create identity components. Candidate comparison edges also do not
+union components: a hard negative is not evidence that two people/publications are identical.
+
+A fixed seed and degree/hash ordering select whole components for development; per-entity
+coverage targets keep low-degree work pairs from exhausting development allocation before
+researcher groups are considered. Evidence strata are round-robin within each entity, then entity
+types are round-robin. Component connectivity can prevent balance, so actual counts and target
+shortfalls remain reported. At least one held-out candidate per entity is preserved when its
+source population permits. The remaining components stay held out. Only candidates whose endpoint components share a partition are eligible; cross-partition
+candidates are counted and excluded. Entity/evidence strata are sampled round-robin within each
+partition. The split retains all component endpoint IDs, hashed anchors, candidate-to-component
+assignments, partition assignments, selected initial/reserve roles and excluded-edge count.
+There is no random pair fallback. Insufficient source population, giant components or a conservative
+selection failure returns an explicit `INFEASIBLE_*` error. The indexed search has a five-million
+incident-edge work bound; a bounded greedy failure does not prove that every possible allocation is
+impossible. Expand the population or record a revised sampling decision, rather than weakening
+leakage grouping silently. Unknown identities, title paraphrases and other unobserved links can
+still cause residual leakage; candidate recall is not global or blocking recall.
+
+Queue and split hashes bind the complete sampled evidence and selection. The queue's
+`ReviewPopulationBinding` contains only input and candidate population hashes; source population,
+sampling, split, endpoint/task evidence and initial/reserve roles are also fixed by the queue/split
+hashes. Human labels therefore remain usable when later development calibration or a provider
+checkpoint legitimately changes the prediction policy, config, prompt, schema, model or code.
+Those matcher settings are not human annotation identity. Changing source observations, candidate
+population, task evidence or split still requires a newly bound queue and cannot relabel old exports.
+
+`ReviewBinding` is a separate full **prediction-run** binding: input/candidates plus policy, config,
+prompt/schema, configured model, code revision and source-tree hashes. Queue generation writes its
+then-current metadata separately to `generation-binding.json`; that file is audit context and is
+excluded from the label queue hash. It does not freeze later predictions to the generation policy.
+An evaluation report records the actual P1 prediction-run binding alongside the unchanged population,
+queue, split and label hashes. `--code-revision` and `--source-hash` remain explicit declared freeze
+metadata, which the coordinator must independently verify against the frozen tree; they are not
+authentication. A configured offline fake model identity does not claim it ran.
+
+Before later held-out evaluation, freeze the actual prediction policy/prompt/model/code as its own
+run binding after development calibration. A changed prediction run may reuse unchanged human
+labels, but it cannot use held-out labels for tuning without a new holdout or an explicit exploratory
+qualification. Population stability does not imply that every model/policy comparison is an
+independent final evaluation.
+
+### Offline review page and original annotations
+
+`export-review-tool` copies `index.html`, `guide.txt` and `sampling.v1.json` from the bundled review
+resources. Open the page locally and select `queue.json`. The default view contains initial tasks;
+reserves require an explicit separate selector. Both observations show the indicated mention or
+publication plus raw source records, author context, IDs, affiliations and source/snapshot/locator
+refs. Missing values remain missing. No prediction, score, LLM judgment or suggested label is in
+the queue. Source text is rendered with `textContent`; the page uses no external scripts, link
+fetching, analytics or server, and its CSP forbids network connections.
+
+Enter a reviewer ID, choose Same / Different / Uncertain and optionally enter a note. Navigate or
+skip without assigning a label. Notes are committed only with an explicit answer/undo action.
+Every answer and correction creates a bounded linear revision with a unique revision ID, previous
+revision ID and UTC timestamp. Undo adds the internal `unlabeled` revision without deleting prior
+annotations; it is not a fourth identity judgment or a binary negative. The importer preserves all
+history and reports current uncertain/unlabeled/missing counts separately. Reviewer IDs are
+self-entered provenance, not authentication.
+
+Save checkpoints frequently to a durable folder **outside `target/`**, verify the downloaded file
+exists, and keep a backup. A browser download request is not proof of persistence. Unsaved browser
+state is not durable; refresh requires loading the same queue and saved checkpoint. The page rejects
+mixed queues, altered hashes, duplicate revisions, unknown pairs and incompatible histories. It
+never silently merges divergent checkpoints. `GoldLabels` also applies closed typed JSON validation,
+source/pair/entity/evidence binding, revision-chain and UTC checks before producing a separate
+`ValidatedLabels` derivation. Original checkpoint bytes are never rewritten, and their SHA-256 and
+full original annotation history remain in the derivation. New validated label files refuse target
+paths, symlink ancestors, input overlap and overwrites. Preserve the original user exports even
+after successful import.
+
+### Evaluation semantics and access boundaries
+
+The matching runtime has no label/split loader. `Evaluation` is a separate consumer of queue, split,
+validated annotations and an explicitly frozen prediction dataset. It rejects duplicate prediction
+pairs and mismatched population bindings; the separate complete prediction-run binding remains
+validated and recorded even when it legitimately differs from queue-generation settings. Wrong pair/entity/evidence, unsupported outcomes/paths and
+nonfinite scores become counted invalid predictions; absent rows are counted missing predictions.
+Neither disappears from binary denominators. Initial tasks only are evaluated; reserves are not
+automatically counted. Unknown prediction pairs outside the sampled queue are counted separately.
+
+Positive prediction means `ACCEPTED`; every other outcome, including missing/invalid, is
+nonacceptance. TP/FP/FN/TN therefore count unresolved/conflict true matches as false negatives.
+Manual `uncertain` and `unlabeled` annotations are excluded from binary gold and reported separately.
+Reports retain gold-by-four-outcome tables (with explicit MISSING/INVALID columns), researcher/work,
+path and fake/live/cache breakdowns, binary precision/recall/F1/accuracy, decisive-only metrics,
+decisive coverage, unresolved/conflict rates, denominators and null metrics for empty denominators.
+Up to ten actual false positives and false negatives retain evidence refs and concise interpretations.
+Uncertain plus unreviewed initial tasks are reported as additional reviews/adjudications needed;
+useful binary class/entity coverage still requires human assessment.
+
+`fromDecisions` preserves fake/live/cache provenance and verifies pair/audit identity and frozen
+metadata against an explicit full prediction-run binding. `prepare-evaluation-predictions` requires
+`--binding PREDICTION_RUN_BINDING_JSON` and verifies that binding against the actual completed
+resolution marker/manifest, all listed file digests, the actual config/model, and each typed decision
+against the completed Phase 4 input context. It recomputes `CandidateBuilder` using the verified
+input and actual run config; a blocking change that alters the candidate population is refused,
+while an adjudication-only config change with identical candidates can retain the labels.
+Its explicit code/source arguments must match the prediction run binding; old resolution manifests
+do not independently authenticate those declarations. Reports bind labels/predictions/input/candidates/split,
+code/source/policy/config/prompt/schema/model, seed, invocation, observed Java/Scala-library versions
+and actual UTC time. The phase evidence records the actual sbt/Scala compiler toolchain as well.
+A report is readiness evidence, not final Phase 5E acceptance.
+
+Sensitivity accepts development only and makes no provider calls. It is a hypothetical acceptance
+cutoff table over existing scored rows; exact/conflict/LLM and missing/invalid rows remain fixed.
+It does not replay evidence-sufficiency rules or establish a calibrated production policy. Held-out
+sensitivity/tuning is rejected. Actual held-out measurement waits for human labels and the later
+frozen 5E gate; 5C tests use explicitly synthetic labels only.
+
+### Current CLI contract
+
+Run `sbt -batch 'entityResolution/runMain edu.uic.cs441.scholarchain.entityresolution.Phase5Main --help'`
+for all current flags. Subcommands use new output paths and refuse existing outputs; fatal failures
+exit 2. Queue and prediction JSON readers are UTF-8, closed-schema and bounded to 64 MiB at review
+boundaries. Outputs must be physically disjoint from their input files/runs. The phase handoff supplies
+actual verified source-run, tool, queue and evidence paths; these commands show argument roles:
+
+```text
+build-review-queue --input COMPLETED_PHASE4_RUN --policy POLICY_JSON --config CONFIG_JSON --sampling SAMPLING_JSON --code-revision GIT_SHA40 --source-hash FROZEN_SOURCE_SHA256 --output NEW_DIRECTORY
+export-review-tool --output NEW_DIRECTORY
+import-labels --queue QUEUE_JSON --labels ORIGINAL_CHECKPOINT_JSON --output NEW_DURABLE_VALIDATED_JSON
+prepare-evaluation-predictions --input COMPLETED_PHASE4_RUN --config CONFIG_JSON --queue QUEUE_JSON --predictions COMPLETED_RESOLUTION_RUN --binding PREDICTION_RUN_BINDING_JSON --code-revision GIT_SHA40 --source-hash FROZEN_SOURCE_SHA256 --output NEW_JSON
+evaluate --queue QUEUE_JSON --split SPLIT_JSON --gold VALIDATED_LABELS_JSON --predictions EVALUATION_PREDICTIONS_JSON --partition development|held-out --output NEW_DIRECTORY
+sensitivity --queue QUEUE_JSON --split SPLIT_JSON --gold VALIDATED_LABELS_JSON --predictions EVALUATION_PREDICTIONS_JSON --partition development --thresholds 0.8,0.9 --output NEW_JSON
+```
+
+The queue command writes `queue.json`, `split.json` and separate `generation-binding.json`; the evaluation command writes
+`evaluation.json`. Import writes one derived file at the explicit durable output path. The independent
+browser tests exercise a separate synthetic queue/checkpoint and never count as human labels.
+No 5B nonblocking findings are repaired by this subphase: those matching/scaling/IO limitations
+remain documented under the user's instruction to leave them unfixed.
+
+
+### Durable completed-input replay (5C B2 repair)
+
+The dataset-owned `datasets/entity-resolution/prepared/` handoff retains the exact completed Hadoop
+export, completion marker, run manifest and required success markers used by the real queue. The
+original run UUID, source payloads and snapshots remain unchanged: copying this verified run changes
+its physical path without changing its input evidence or candidate hashes. The CLI accepts that
+completed durable directory through the existing strict loader; no source normalization or new UUID
+is needed. Per-file dataset replay manifests and phase evidence establish which original bytes were
+retained. Re-running Hadoop from raw samples is a separate transformation run and is not a substitute
+for retaining the reviewed queue's exact observation provenance.
+
+### Current review handoff and archived acquisition attempts
+
+Use `docs/agent-runs/phase-05/evidence/5c-repair/review-artifacts/queue.json` and its sibling
+`split.json` for the repaired review population, backed by the durable completed input at
+`datasets/entity-resolution/prepared/bd424a86-0a1b-4e44-bbdb-4a9b8c8a20e3/`.
+Earlier v1/v2 acquisition payloads and the pre-repair `evidence/5c/review-artifacts/` queue/split
+are historical archive material, not CLI or test dependencies. Their retained manifests and
+historical reports describe the original attempts; use the packaging archive inventory to locate
+archived payloads rather than treating an old path as the current human-review handoff.

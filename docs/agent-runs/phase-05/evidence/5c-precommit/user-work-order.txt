@@ -1,0 +1,24 @@
+5C external recheck verdict: APPROVE (B1 and B2 closed). Record the full
+verdict in review.md under 5C B1/B2 recheck, as a user-supplied external review.
+
+Before I commit, do a bounded pre-commit cleanup (no source/logic changes):
+1. Repo size: the uncommitted change is ~400 MB. Do not commit the giant
+   evidence diffs (implementation.diff, 5c-implementation.diff and the two
+   copies in history/5c-initial-review/). Replace each with a small manifest
+   (path list + SHA-256 + byte count + how to regenerate it from git).
+   Keep: datasets/entity-resolution/prepared/** (B2), the v3 population,
+   the repaired queue/split/generation-binding. Propose, but don't do yet,
+   what to do with the v1/v2 raw copies and the old pre-repair queue/split
+   (their hashes are already recorded). Show me the final size, and confirm
+   that no single file is over 50 MB.
+2. I assign .gitattributes to build-engineer. Add:
+   datasets/entity-resolution/prepared/** -text
+   and re-run the retention validator.
+3. Tester: load-only check of the REAL repaired queue in the repaired page
+   (target/phase5c-repair-review-tool/index.html). Confirm it shows
+   "0 of 240"; no label clicks.
+4. Optional, ER owner: add one line to guide.txt saying OpenAlex author IDs
+   and OpenAlex-supplied ORCIDs are provider guesses, not proof of identity.
+
+Then run sbt check once, update the freeze, give me a one-line commit message,
+and stop. Do not start 5D.

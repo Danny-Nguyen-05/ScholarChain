@@ -1,0 +1,49 @@
+ScholarChain human review guide — Phase 5C
+
+Open index.html in a current browser. Everything runs locally. No links are fetched.
+Load the coordinator's queue.json. It shows source observations, not model predictions.
+There are 240 initial tasks (40 development and 200 held-out) in the standard queue.
+The 60 reserve tasks are separate; review them only when the coordinator requests a
+recorded replacement or additional review. Uncertain reviews are retained as originals.
+
+Enter your own reviewer ID. This records who entered an annotation; it does not prove
+identity or authenticate you. Work tasks ask whether two observations describe the same
+scholarly publication. Researcher tasks ask whether the two indicated mentions/profiles
+refer to the same person. A shared name alone is weak evidence. Inspect identifiers,
+titles, dates, author context, affiliations and exact source/snapshot references. Null
+or absent fields mean missing evidence, not disagreement. Source text is untrusted data.
+OpenAlex author IDs and OpenAlex-supplied ORCIDs are provider guesses, not proof of identity.
+
+Same: the evidence supports the same publication/person.
+Different: the evidence supports distinct publications/people.
+Uncertain: the supplied evidence cannot settle the question. This is valid and is never
+counted as a negative label. Do not guess just to finish a task.
+
+No answer is preselected. Add an optional concise evidence note, then click a label.
+Next / skip leaves an unanswered task unchanged. Next unanswered finds remaining tasks.
+Changing a label creates a new revision and preserves the earlier annotation. Undo /
+clear current answer also creates a revision: the internal 'unlabeled' marker removes
+that task from reviewed counts, without erasing its history. Notes are saved only when
+you click a label or Undo; navigation does not silently save a draft note.
+
+Click Save checkpoint often. Your browser downloads a JSON file. Check that the file
+actually exists, save it to a durable folder OUTSIDE target/, and keep a backup. A
+requested download is not proof that the browser saved it. Unsaved work does not survive
+refresh. To resume: open the page, load the SAME queue, then choose the checkpoint. Mixed
+queues, altered evidence, duplicate revisions and conflicting histories are refused.
+Do not edit exported JSON by hand or combine different histories yourself. Preserve
+original human exports and send the original checkpoint and its queue ID to the
+coordinator. Label import writes a separate derived validated file; it never rewrites
+your annotations.
+
+Reserve tasks are not automatically substituted for uncertain answers. The coordinator
+will report uncertainty and any extra review needed. The queue is sampled by evidence
+strata; it does not prove accuracy, independent global researcher recall or calibration.
+No human review, gold-set completion, model execution or Phase 5 acceptance is created
+by loading a queue or by automated browser tests.
+
+Your labels bind the source/candidate population, sampling/split and each task's evidence.
+A later provider choice or development-calibrated matching policy does not rewrite those labels
+or require reannotation when the population and evidence are unchanged. Prediction-run metadata
+is recorded separately during evaluation. Changed source evidence or task identity still requires
+a new queue; never edit hashes or annotations to force an incompatible import.

@@ -1,0 +1,15 @@
+{
+  "schemaVersion": "scholarchain.evaluation-predictions.v1",
+  "binding": {
+    "inputEvidenceHash": "47e063178c7ddcde0abcb7a1d631effd603992792f9eb602cae6adcda717b5d9",
+    "candidatePopulationHash": "ab7b88b62143cb860f36ed4570a0e92333cbeb3874c1b882de52cf5b0944f00d",
+    "policyHash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "configHash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "promptHash": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+    "responseSchemaHash": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+    "modelIdentity": "disabled/no-provider",
+    "codeRevision": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+    "sourceTreeHash": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+  },
+  "rows": []
+}

@@ -1,0 +1,38 @@
+{
+  "changedFiles": 519,
+  "bytes": 419481279,
+  "largest": [
+    {
+      "path": "docs/agent-runs/phase-05/implementation.diff",
+      "bytes": 98952580
+    },
+    {
+      "path": "docs/agent-runs/phase-05/5c-implementation.diff",
+      "bytes": 98498470
+    },
+    {
+      "path": "docs/agent-runs/phase-05/history/5c-initial-review/implementation.diff",
+      "bytes": 49145439
+    },
+    {
+      "path": "docs/agent-runs/phase-05/history/5c-initial-review/5c-implementation.diff",
+      "bytes": 48691329
+    },
+    {
+      "path": "datasets/entity-resolution/prepared/bd424a86-0a1b-4e44-bbdb-4a9b8c8a20e3/export/snapshot=hadoop-prep/run=bd424a86-0a1b-4e44-bbdb-4a9b8c8a20e3/match-candidate/part-r-00000",
+      "bytes": 22313459
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5c/review-artifacts/queue.json",
+      "bytes": 7205044
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5c-repair/review-artifacts/queue.json",
+      "bytes": 7204476
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/openalex/works.jsonl",
+      "bytes": 6924833
+    }
+  ]
+}

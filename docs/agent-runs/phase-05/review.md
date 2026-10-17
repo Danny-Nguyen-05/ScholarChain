@@ -583,3 +583,251 @@ MANUAL ACTION REQUIRED: User handles the requested commit/push; no accepted comm
 BLOCKED-ON OWNER: None for 5B approval.
 BLOCKED-ON EVIDENCE: None for 5B approval.
 NEXT GATE: Explicit user authorization before starting 5C.
+
+
+## Subphase 5C — external review pending
+
+STATUS: Implementation and targeted/browser verification complete; full-gate result follows in final addendum. Independent 5C review is PENDING.
+OWNER: Coordinator preparing handoff; independent reviewer remains user-selected and user-launched.
+WORK ORDER: 5C only, authorized at clean `phase-5` HEAD `c8342d25ba04dede26af10bedc5a76691824d1ca`.
+FILES CREATED / FILES MODIFIED: See `5c-source-delta.json`, final source freeze and review inventory.
+COMMANDS RUN / TEST RESULTS: Retained in `test-report.md` and `evidence/5c/commands.json`. No reviewer was invoked.
+VALIDATION RESULTS: Real queue/split 40 development +200 held out +60 reserves; 20/20 and 100/100 entity allocation; deterministic replay and actual synthetic browser resume verified. Source population limitations remain explicit.
+ASSUMPTIONS / RISKS: Tests and queues are not human labels, calibrated accuracy or live-provider evidence; remaining 5B nonblocking issues remain unfixed.
+MANUAL ACTION REQUIRED: User copies the final reviewer prompt into a read-only independent reviewer and returns the complete verdict.
+BLOCKED-ON OWNER: User-selected independent reviewer after final gate.
+BLOCKED-ON EVIDENCE: Observed full gate and external 5C verdict.
+NEXT GATE: External review and any required current-subphase repairs; explicit authorization before 5D. No 5C acceptance is inferred.
+
+
+## Subphase 5C — final frozen verification and review handoff
+
+STATUS: COMPLETE implementation and technical verification; external independent review pending. This supersedes the earlier running-gate status.
+OWNER: Coordinator; all three specialist owners have completed and stopped.
+WORK ORDER: Authorized 5C only; no 5D or final Phase 5 acceptance.
+FILES CREATED / FILES MODIFIED: Complete tracked/untracked inventory and hashes in review-inventory.json; implementation/data/test delta in 5c-source-delta.json.
+COMMANDS RUN: Exact commands, environments, timestamps and exits in evidence/5c/commands.json. The final `sbt -batch check` exited 0. No source changes occurred during or after that gate.
+TEST RESULTS: 383 tests passed: {'core': 129, 'hadoop': 64, 'entityResolution': 25, 'independent': 161, 'buildVerification': 4}. 44 fresh JUnit reports, zero failures/errors/skips. Source freeze verifies all 509 files unchanged, no added/missing scoped files. Generated success marker renewed after all suites. Expected nested injected failure remains passing CheckFailurePathSpec coverage, not a failed full gate. Eighteen Python tests and both dataset validators also passed.
+VALIDATION RESULTS: Real 40-development/200-held-out queue plus 60 reserves; entity allocations 20/20 and 100/100; byte-identical queue/split replay; disjoint selected evidence groups; all exported tool bytes match browser-tested resources. Actual browser save/refresh/resume and strict synthetic checkpoint CLI import/evaluator smoke checks passed. All 28 retained final Hadoop export part hashes remain unchanged. Historical 5B packet matches its committed versions. All 509 source hashes match final gate.
+ASSUMPTIONS: Tests establish behavior only; source metadata and synthetic annotations are not human labels.
+RISKS: Public-source access limits, convenience sampling, unknown-identity leakage, unmeasured blocking recall, browser automation incident and user-deferred 5B nonblocking findings remain disclosed.
+MANUAL ACTION REQUIRED: User launches the saved/displayed read-only 5C reviewer prompt and returns full verdict. Human reviews remain 0/240; labels, provider choice/budget/live calls and final held-out evaluation remain later gates.
+BLOCKED-ON OWNER: User-selected independent reviewer.
+BLOCKED-ON EVIDENCE: Independent 5C verdict; no technical implementation gate remains unverified.
+NEXT GATE: External 5C review, any required repairs, and explicit user advancement authorization before 5D. No reviewer was triggered. No commit/push occurred. All workers/builds/acquisition/browser actions have stopped.
+
+Final gate timing: sbt reported 412 seconds, completed 2026-10-16 16:31:44 America/Chicago. Code/source freeze remained unchanged. `prepare-evaluation-predictions` has adapter binding/cache adversarial tests; it was not executed end-to-end on the expanded real population in 5C. No real prediction-versus-gold evaluation was run.
+
+
+## Subphase 5C — user-supplied external REQUEST-CHANGES
+
+Provenance: full user-returned independent read-only verdict, not a manager-launched review. The reviewer did not fetch the course README live. The user then instructed: "fix the blockings bugs first for me". This supersedes the earlier pending external-review status; no acceptance is inferred.
+
+STATUS: REQUEST-CHANGES (2 blockers, 8 nonblocking findings)
+
+The 5C work is mostly sound. The claimed hashes, test counts, allocation and blinding all checked out. But two defects should be fixed before you start labeling. Both are cheap to fix now and expensive once 240 human labels exist.
+
+OWNER: code-reviewer (independent, read-only; launched by the user)
+
+WORK ORDER: Phase 5, Subphase 5C readiness review. Sources: docs/agent-runs/phase-05/prompt.md (5C authorization, lines 556–572), /Users/danny/Documents/plan/phase5.md §§10–14 and the pasted reviewer prompt. I read the course README section only as it is summarized in the plan and prompt. I did not fetch it live.
+
+FILES CREATED: none
+FILES MODIFIED: none
+
+---
+
+Blocking findings
+
+B1 — High — Human labels are tied to matcher settings that 5D and 5E must change
+
+- Where:
+  - ReviewQueue.scala:45-55, 363-366: the queue hash covers ReviewBinding, which includes the policy hash, config hash, prompt hash, model identity, code revision and source hash.
+  - ReviewCommands.scala:133-143: the real queue binds modelIdentity = deterministic-fake/abstain-fixture/v1 and the full config fingerprint, which includes the provider, model and spend settings (ResolutionPolicy.scala:255-282).
+  - GoldLabels.scala:56-59 and index.html:29: a saved checkpoint must match the exact queueHash.
+  - ReviewCommands.scala:155-160, 176-179, Evaluation.scala:157, 293, 313: predictions are refused unless policy, config, prompt, model, code and source all equal the queue's values.
+  - modules/entity-resolution/README.md:522 says it outright: a changed policy, prompt, model or code "requires a new binding and a new review/evaluation cycle or an explicit exploratory qualification."
+  - IndependentEvaluationAdapterSpec.scala:117-135 tests this behavior as intended.
+- Why it breaks: the plan's order is queue → labels → 5D provider/model selection → development calibration (new thresholds) → 5E frozen held-out evaluation. Choosing a real provider changes the model identity and config hash. Calibration changes the policy hash. After either change, prepare-evaluation-predictions and evaluate reject the predictions. Rebuilding the queue with new values changes queueHash, and then both the importer and the page reject your existing checkpoints.
+- Impact: the 240 human reviews could never be scored against the calibrated policy or real LLM output. 5E could only report them as "exploratory" or redo them. This contradicts plan §10, which says to freeze the population before scoring and the policy after development calibration.
+- Owner: entity-resolution-engineer for the code; test-engineer for the changed independent expectation.
+- Acceptance check:
+  a. The queue/checkpoint identity binds only what labels depend on: source population, input evidence, candidate population, split, sampling and each task's evidence hash.
+  b. Evaluation binds predictions to those same hashes and records the policy, config, prompt, model and code in its own manifest (verified at 5E).
+  c. New tests: label a synthetic queue built under policy P0 with the fake model, then evaluate predictions made under P1, a different model identity and a different adjudication config section, with the same input and candidates. This must succeed and record P1 and the new model. A changed input, candidate population or task evidence must be rejected. Replace the expectation at IndependentEvaluationAdapterSpec.scala:117-135.
+  d. Regenerate the real queue before any labeling, and re-show byte-identical replay and the 40/200/60 allocation with 20/20 and 100/100 by entity.
+- Blocks 5C: yes. Zero labels exist, so this is the cheapest moment to fix it.
+
+B2 — Medium — The input the queue is bound to lives only in ignored target/ and cannot be regenerated
+
+- Where: the queue's inputEvidenceHash 57efd819… is computed over a completion hash (marker plus run manifest) and evidence payloads (InputLoader.scala:236-245, 514). Those payloads embed runId: run:bd424a86-…, which appears 5,299 times in queue.json. The only matching copy is target/phase5c-prep-runs/bd424a86-… (132 MB, of which the export is 47 MB). That directory is gitignored (.gitignore:2) and is the root sbt project's target, so sbt clean would remove it (I did not run that).
+- Why it breaks: re-running Hadoop gives a new run UUID, which changes the input hash, the evidence references and the task evidence hashes. prepare-evaluation-predictions (ReviewCommands.scala:161-165) then refuses the input. Phase 4 only promised "logically equivalent" reruns, not byte-identical ones.
+- Impact: if target/ is cleaned, 5E cannot produce predictions for the labeled queue. The labels survive, but they become unusable for scoring.
+- Owner: needs a human ownership decision. dataset-engineer (datasets/**) is the natural owner for retention; entity-resolution-engineer if it is solved by making the binding independent of the run ID.
+- Acceptance check: either keep the exact completed run (export/**, _SCHOLARCHAIN_COMPLETE, run-manifest.json) in a durable, hash-manifested location outside target/, or make the binding independent of the run UUID. Then show that loading from the durable copy reproduces inputEvidenceHash and candidatePopulationHash 9381588e…. Coordinate with B1, since the queue gets rebuilt anyway.
+- Blocks 5C: yes.
+
+Nonblocking findings
+
+N1 — Medium — The guide doesn't warn that OpenAlex author IDs and OpenAlex-supplied ORCIDs are provider guesses
+- Where: guide.txt:9-14.
+- Evidence: 38 of the 120 initial researcher tasks show equal OpenAlex author IDs and equal ORCIDs (from OpenAlex). Five more show only equal OpenAlex IDs. Mention payloads display identityStatus: EXTERNAL_IDENTIFIER_OBSERVED. Meanwhile datasets/entity-resolution/README.md:13-15 records that OpenAlex author neighborhoods contained medical records, i.e. OpenAlex merged unrelated people. The 5B review also asked for OpenAlex-supplied ORCIDs to be evaluated separately.
+- Impact: human gold labels may copy provider errors and inflate agreement.
+- Owner: entity-resolution-engineer.
+- Acceptance check: the guide and page text say these IDs are provider hypotheses, not verified identity.
+
+N2 — Medium-low — A backward clock change can permanently block saving
+- Where: index.html:33 stamps each answer with new Date() and doesn't enforce increasing times. index.html:29 (also run on save, line 36) rejects a revision older than the previous one, or any annotation later than the export time.
+- Impact: if the system clock steps back between two revisions of the same task, the bad revision stays in history. Every later Save fails, and refreshing loses all unsaved work.
+- Owner: entity-resolution-engineer; test-engineer adds a test with a mocked clock.
+- Acceptance check: answers keep timestamps in order and a clock regression never blocks Save.
+
+N3 — Low-medium — The real queue has never been loaded in the page
+- Evidence: only a 6-task synthetic queue was tested in a browser. A browser-side load depends on JS and Scala hashing the JSON identically. My static scan of the real queue found nothing likely to break that: no floats, large integers, integer-like keys, surrogates or control characters. It does contain 145 non-ASCII strings, which both sides render as raw UTF-8.
+- Impact: if the hashes disagree, the page rejects the real queue as altered and labeling can't start. No labels would be lost.
+- Owner: test-engineer.
+- Acceptance check: a load-only browser probe of the real (rebuilt) queue shows "0 of 240 initial tasks answered", with zero label clicks.
+
+N4 — Low-medium — Two CLI paths have never been executed
+- Evidence: prepare-evaluation-predictions and the sensitivity CLI have no test or run. The completion marker, manifest, file-hash and path-traversal checks at ReviewCommands.scala:166-219 are unexercised. Only fromDecisions and an evaluate run with empty predictions are covered.
+- Owner: entity-resolution-engineer and test-engineer.
+- Acceptance check: CLI tests cover a complete run and the corrupt, partial and traversal cases, before 5E.
+
+N5 — Low — Reserves are counted as "missing" labels
+- Where: GoldLabels.scala:107-109 computes missing against all 300 tasks.
+- Impact: it reports 60 "missing" even when all 240 initial reviews are done.
+- Owner: entity-resolution-engineer.
+- Acceptance check: separate counts for initial and reserve tasks.
+
+N6 — Low — One command in the evidence ledger has no exit code
+- Where: evidence/5c/commands.json, entry independent-first-target.
+- Evidence: the entry still says status: running with no exitCode, but its log shows 17/17 tests passed. The reports don't disclose this.
+- Owner: coordinator.
+- Acceptance check: record the observed outcome or add an explicit note.
+
+N7 — Low — The script that actually ran the acquisition isn't kept
+- Evidence: the v2/v3 manifests bind acquisitionScriptSha256 2c2ad01e…, but no file in datasets/ or docs/ has that hash. The current script is 5861fc79…, and the initial attempt has no script hash at all. The later script changes are disclosed.
+- Owner: dataset-engineer.
+- Acceptance check: retain those bytes, or state that they can't be recovered.
+
+N8 — Low — Repository size
+- Evidence: datasets/entity-resolution is 47 MB, including identical 12 MB response copies in both v2 and v3. The queue and split add another 11 MB of evidence.
+- Owner: you decide before committing; then dataset-engineer and coordinator.
+
+---
+
+COMMANDS RUN (all read-only):
+- git rev-parse / status / diff, plus sed, cat, grep, find, du, cmp
+- shasum -a 256 on the 8 claimed artifacts
+- python3 -I scripts that only read JSON, to recompute freeze and inventory hashes and to count queue composition, blinding fields, ID agreement and names/titles recurring across partitions
+- No builds, tests, browser, network or writes.
+
+TEST RESULTS: I ran no tests. What I observed in the retained logs:
+- full-check.txt ends [success], and full-check-summary.json shows 383 tests, 0 failures/errors/skips, 44 reports.
+- The browser-downloaded checkpoint is byte-identical to synthetic-browser-checkpoint.json, which was imported via the CLI with exit 0.
+
+VALIDATION RESULTS (my own read-only checks):
+- All 8 claimed SHA-256 values match.
+- All 509 freeze files match the current tree, and the queue's sourceTreeHash 79a54bde… equals that freeze.
+- The 402 inventory paths equal git status -uall, with no hash mismatches.
+- The real queue has 300 tasks: 40/200/60, with 20/20 and 100/100 by entity.
+- No prediction, score or label fields appear (the 285 enrichment score fields are all null), and no abstracts are retained.
+- All v3 venues are CS venues, years 2018–2024.
+- No 5C changes touch core, Hadoop, build or constitutional files.
+- From reading the code: the page renders with textContent under a CSP with connect-src 'none', reserves are hidden by default, the importer enforces linear revisions, and the evaluator's denominators follow plan §12.
+
+ASSUMPTIONS: that sbt clean on the root project removes ./target (standard sbt behavior; not executed).
+
+RISKS:
+- Process: the disclosed incident where browser automation typed the local HTML path into a ChatGPT conversation. Future runs should use an isolated browser profile.
+- The browser test is a manual, agent-driven script (tests/browser/phase5c-review-cua.js), not an automated regression, so future page changes have no automated guard.
+
+MANUAL ACTION REQUIRED:
+- Don't start labeling until B1 and B2 are resolved and a new queue is issued.
+- Assign an owner for B2 retention.
+- Decide on N8 before any commit.
+
+BLOCKED-ON OWNER: entity-resolution-engineer (B1); human ownership decision, then dataset-engineer or entity-resolution-engineer (B2); test-engineer (B1 test change)
+
+BLOCKED-ON EVIDENCE: a rebuilt queue with the decoupled binding, the policy/model-change acceptance tests, proof that the input can be reloaded from durable storage, a fresh sbt check, and an updated freeze and inventory.
+
+NEXT GATE: owners repair → fresh gates → a new reviewer prompt for a recheck. Even after an APPROVE, 5D needs your explicit authorization.
+
+Broader Phase 5 limitations (not 5C defects)
+
+- There are zero human labels; all 240 are pending.
+- This is a convenience sample: blocking recall and global identity recall are unmeasured, and nothing is calibrated.
+- About 64% of initial tasks (77/120 work, 77/120 researcher) are effectively decided by IDs shown on screen. Per-path metrics for the scored matcher will therefore rest on roughly 86 initial tasks across both partitions.
+- Researcher coverage is 110/120 OpenAlex–OpenAlex pairs.
+- The queue has no same-publication researcher pairs, so the deferred 5B finding N-7 stays unmeasured; per your instruction it was left unfixed.
+- Two common names ("yang wang", "yong wang") appear in both development and held-out tasks. This is residual leakage risk that grouping can't prevent.
+- No real provider adapter, live calls, calibration, held-out scoring, 5D/5E or Phase 5 acceptance exists yet.
+
+
+## Subphase 5C B1/B2 — final technical repair gate
+
+STATUS: COMPLETE blocker repairs and fresh technical verification; independent external recheck pending. This supersedes the preceding pending-gate status.
+OWNER: Coordinator; ER, dataset and independent test owners have completed and stopped.
+WORK ORDER: Repair only external 5C B1/B2 under the user's explicit instruction.
+FILES CREATED / FILES MODIFIED: 5c-repair-source-delta.json binds 75 additions, 11 modifications and no removals against the exact reviewed 509-file freeze. The new freeze binds 584 files. Complete tracked/untracked inventory is review-inventory.json; old packet remains in history/5c-initial-review/.
+COMMANDS RUN: Exact commands, environment, timestamps and exits are retained in evidence/5c-repair/commands.json; independent dataset checks in dataset-checks.json. Final `sbt -batch check` exited 0. All builds serialized; no source edits during final gate.
+TEST RESULTS: 390 tests passed: core 129, Hadoop 64, ER 25, independent 168, build verification 4; 46 fresh JUnit reports; zero failures/errors/skips. All 584 source hashes and scoped path membership remain unchanged; generated success marker renewed after all suites. Expected nested injected failure is passing CheckFailurePathSpec coverage. Two original B1 failures are now green; post-fix target 25 ER +28 independent passed after one disclosed synthetic-fixture correction. All 26 Python tests and 68-file durable validator passed.
+VALIDATION RESULTS: B1 queue identity excludes mutable matcher settings; unchanged P0 annotations survive later P1 policy/model/adjudication config/code, and evaluation records actual P1 run provenance. Changed input/candidates/task evidence remains rejected/invalid. Rebuilt real queue reads the durable input; all 300 tasks and task evidence plus split are unchanged from initial 5C, while queuehash appropriately changed before any real labeling. Two runs produce byte-identical queue/split/generation audit. Allocation 40 development (20 Work /20 Researcher), 200 held-out (100 Work /100 Researcher), 60 reserves; 568 groups /100 selected; 777 cross-partition skips. B2 retains 68 byte-identical files /49,547,452 bytes outside target and reproduces original input 57efd819... and candidates 9381588e... over 11,412 pairs; actual full hashes in durable-input-proof.json. No UUID normalization or original-payload rewrite occurred.
+ASSUMPTIONS: Population/evidence/split define annotation identity; prediction-run metadata defines actual execution provenance. Dataset retention follows existing datasets/** ownership; no constitutional amendment or separate human ratification is inferred.
+RISKS: All eight new nonblocking findings and prior deferred observations remain unchanged. Required exact input retention adds 47.3 MiB. Initial manual browser test evidence is historical; no browser actions or new real-queue load were performed in this blocker-only round. No accuracy, real labels, calibration or live-model result is claimed.
+MANUAL ACTION REQUIRED: User launches external repair recheck and returns full verdict; no reviewer has been triggered. Do not label until recheck/human gate. Include durable input and manifest in any later approved commit.
+BLOCKED-ON OWNER: User-selected independent reviewer.
+BLOCKED-ON EVIDENCE: External 5C repair verdict.
+NEXT GATE: External recheck, any necessary repairs, then explicit human advancement before 5D. No acquisition, provider/live calls, actual labels, commit/push or later-subphase work occurred. All workers and builds have stopped.
+
+Final repair gate timing: sbt reported 411 seconds, completed 2026-10-16 17:05:28 America/Chicago. Direct source/dataset/test/phase-Markdown whitespace checks pass; the previously disclosed literal blank context line in generated whole-phase implementation.diff is retained as faithful patch syntax. No new source changes or tests after the gate.
+
+
+## 5C B1/B2 recheck — user-supplied external review
+
+STATUS: APPROVE (B1 and B2 closed).
+OWNER: Independent external reviewer, as reported by the user; coordinator transcribes only.
+WORK ORDER: User supplied: "5C external recheck verdict: APPROVE (B1 and B2 closed). Record the full verdict in review.md under 5C B1/B2 recheck, as a user-supplied external review."
+FILES CREATED / FILES MODIFIED: No reviewer-created or reviewer-modified files were specified.
+COMMANDS RUN / TEST RESULTS / VALIDATION RESULTS: No additional reviewer commands, tests or validation narrative were supplied; do not infer them. The complete verdict text received is preserved verbatim above and in evidence/5c-precommit/external-approval.json. No longer report was attached. This supersedes the preceding pending repair recheck status.
+ASSUMPTIONS: User is relaying the external review.
+RISKS: Previously documented nonblocking findings remain unless explicitly covered by the new bounded cleanup.
+MANUAL ACTION REQUIRED: Complete the user's bounded pre-commit cleanup; user handles any eventual commit.
+BLOCKED-ON OWNER / BLOCKED-ON EVIDENCE: None for the supplied external APPROVE; no broader reviewer narrative available.
+NEXT GATE: One fresh sbt check after authorized cleanup; stop before 5D. No commit/push or next-subphase authorization inferred.
+
+
+### Approved cleanup completion
+
+The user-supplied external APPROVE for 5C B1/B2 remains recorded above. The separately authorized pre-commit cleanup and one fresh full gate completed: 390 tests passed with zero failures, all 587 frozen files unchanged. The real repaired queue load-only browser check displayed 0 of 240 answered with zero labels. Evidence and final size are in evidence/5c-precommit/. No new reviewer verdict is inferred or requested; no commit/push or 5D start.
+
+
+## Approved 5C lean archival packaging — work performed
+
+STATUS: Archival and non-sbt checks complete; single requested full gate running. Final result follows in a separate addendum.
+OWNER: Dataset-engineer owns dataset archival/manifests/README commands; build-engineer owns .gitattributes; ER owner owns README pointer audit; coordinator owns old queue/split archival and phase evidence.
+WORK ORDER: User explicitly authorized lean pre-commit packaging only: copy and verify before removing inactive v1/v2 payloads and old queue/split; preserve original parent manifests, v3, prepared input and current repaired queue. No application logic, data content, labels, commit/push or 5D change.
+FILES CREATED / FILES MODIFIED: Two dataset archive manifests, two old queue/split archive manifests, compact verification and command receipts, current human-handoff pointer, source freeze and current inventory. Removed 177 inactive dataset payload files (31,229,073 bytes) and two old evidence files (11,015,758 bytes), only after every external copy was byte/SHA-256 verified. The original population manifests remain verbatim. Owner README commands now distinguish manifest-only history from complete populations; historical reports and human decisions are preserved. Attributes cover all datasets/entity-resolution/** and evidence/**/review-artifacts/** as requested.
+COMMANDS RUN: Read-only dependency audit before deletion; archive copy and full per-file SHA-256 checks; external historical-population validation; current v3 validator; prepared-input retention validator; all Python dataset tests; git check-attr on all 215 applicable current files. Exactly one sbt -batch check started for this approved lean packaging task; evidence/5c-lean/commands.json records exact args, environment and outcome.
+TEST RESULTS: Both validators pass; all 26 Python tests pass. Full sbt result pending final addendum. No test/source logic changed.
+VALIDATION RESULTS: All 181 archived original files verified (179 dataset files plus queue/split), 42,271,794 bytes including retained parent manifests. Archive roots: /Users/danny/Documents/ScholarChain-archive/phase5c/dataset-history-20261017T005030Z and /Users/danny/Documents/ScholarChain-archive/phase5c/old-review-21978642c7. No active validator, test, evaluator CLI or current handoff requires removed payload paths. Current v3 and prepared input remain complete. All four previously compacted historical diffs regenerate exactly from external archive bytes and pinned historical README blobs; manifests now document this dependency. All 165 application/dataset-script/test source files match the prior freeze. New scoped freeze binds 412 current files. All 215 applicable text attributes are unset.
+ASSUMPTIONS: External archives are durable local historical storage; another machine needs transferred archives for exact historical reconstruction. Current runtime inputs and repaired queue remain in the repository.
+RISKS: External archives require separate preservation and backup. Old reports/inventories describe historical packets, whose removals are explained by appended notes and sibling manifests. No identity accuracy, labels or provider behavior is established.
+MANUAL ACTION REQUIRED: Preserve the external archives; user handles any future commit. Final size, fresh gate and one-line commit message follow after completion.
+BLOCKED-ON OWNER / BLOCKED-ON EVIDENCE: Coordinator's single integrated sbt gate and final freeze/inventory/size verification.
+NEXT GATE: Finish packaging report and stop. No reviewer launch, labeling, commit, push or 5D.
+
+
+## Approved 5C lean archival packaging — final gate
+
+STATUS: COMPLETE. This supersedes the running-gate lean note above. User-supplied external 5C B1/B2 APPROVE remains unchanged; no additional review or later phase is inferred.
+OWNER: Coordinator with dataset, build and ER owners; all writers and builds stopped.
+WORK ORDER: User-approved archival packaging only. No application logic, source-data content, labels, commit, push, provider calls or 5D change.
+FILES CREATED / FILES MODIFIED: Compact archive manifests and owner README/attribute updates; original historical population manifests preserved. Removed exactly 177 inactive dataset payload files and two old queue/split files after verifying their complete external copies. Current v3, durable prepared input, repaired queue/split/generation binding remain unchanged. Append-only reports, source-freeze.json and review-inventory.json bind current packaging. Historical packet reconstruction remains exact through the documented archive sources.
+COMMANDS RUN: Both current validators and all Python dataset tests passed after removals. Exactly one sbt -batch check for this lean task exited 0, wall duration 413.402 seconds; exact environment/args/timing in evidence/5c-lean/commands.json. git diff --check for changed packaging paths passed. Final archive and frozen-content verification passed.
+TEST RESULTS: 390 tests passed; module counts {"buildVerification": 4, "core": 129, "entityResolution": 25, "hadoop": 64, "independent": 168}. 46 fresh JUnit reports; 0 failures, 0 errors, 0 skipped. All 412 frozen scoped files unchanged, with no missing or added scoped files; generated success marker renewed after suites. All 26 Python dataset tests pass. Expected nested injected failure is passing CheckFailurePathSpec coverage.
+VALIDATION RESULTS: All 181 archived original files rechecked SHA-256 and byte counts, including both original parent manifests. Dataset archive root: /Users/danny/Documents/ScholarChain-archive/phase5c/dataset-history-20261017T005030Z. Old evidence archive root: /Users/danny/Documents/ScholarChain-archive/phase5c/old-review-21978642c7. All 215 current applicable files have text unset. 165 application/dataset-script/test source files are byte-identical to the pre-lean freeze. Complete inventories, exact final logical byte totals and largest-file/no-file-over-50-MB check are in evidence/5c-lean/final-size.json and review-inventory.json; ignored targets/caches and Git history are excluded from commit-candidate size.
+ASSUMPTIONS: External archives need separate preservation/transfer for exact historical reconstruction; current runtime inputs remain fully in-repository.
+RISKS: This packaging pass does not establish human labels, accuracy or live-provider behavior. Previously deferred nonblocking observations remain deferred.
+MANUAL ACTION REQUIRED: Preserve the external archive and manually commit if desired. Proposed one-line commit message: Complete Phase 5C review tooling with durable inputs and lean audit archives.
+BLOCKED-ON OWNER / BLOCKED-ON EVIDENCE: None for authorized packaging.
+NEXT GATE: Stop. No code reviewer triggered, commit/push performed or 5D started.

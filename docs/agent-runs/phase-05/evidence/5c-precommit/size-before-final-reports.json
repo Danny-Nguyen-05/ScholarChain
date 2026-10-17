@@ -1,0 +1,11 @@
+{
+  "changedExistingFiles": 544,
+  "changedExistingFileBytes": 125228182,
+  "entireNonignoredTreeFileBytes": 134196049,
+  "largestChangedFile": {
+    "path": "datasets/entity-resolution/prepared/bd424a86-0a1b-4e44-bbdb-4a9b8c8a20e3/export/snapshot=hadoop-prep/run=bd424a86-0a1b-4e44-bbdb-4a9b8c8a20e3/match-candidate/part-r-00000",
+    "bytes": 22313459
+  },
+  "filesOver50000000Bytes": [],
+  "note": "Logical byte totals of files that would be candidates for committing; exclude Git object history and ignored target/cache outputs. Final ledger/inventory adds a small metadata amount; final size receipt follows."
+}

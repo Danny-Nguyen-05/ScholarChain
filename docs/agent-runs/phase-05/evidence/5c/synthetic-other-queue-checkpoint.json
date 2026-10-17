@@ -1,0 +1,10 @@
+{
+  "schemaVersion": "scholarchain.review-checkpoint.v1",
+  "queueId": "review-queue:fea79e99a71e42ef60c04733cbe42e65095fd206328497d7b6ed7f06d69e8d06",
+  "queueSchemaVersion": "scholarchain.review-queue.v1",
+  "queueHash": "fea79e99a71e42ef60c04733cbe42e65095fd206328497d7b6ed7f06d69e8d06",
+  "sourcePopulationHash": "a72635613c0ace7e98f5273acd9d493973b8d7e08e1dd91c08509a7b7aafda5e",
+  "splitHash": "643a03f570fb62abc7988b3d904dc508f388afaa32dc1e9a2e90da67ecc1e861",
+  "exportedAtUtc": "2026-10-16T17:00:00Z",
+  "annotations": []
+}

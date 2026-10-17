@@ -1,0 +1,23 @@
+{
+  "semanticReplay": {
+    "probe": "independent-5c-b2-exact-retention",
+    "original": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase5c-prep-runs/bd424a86-0a1b-4e44-bbdb-4a9b8c8a20e3",
+    "retained": "/Users/danny/Documents/UIC/CS441/ScholarChain/datasets/entity-resolution/prepared/bd424a86-0a1b-4e44-bbdb-4a9b8c8a20e3",
+    "inputEvidenceHash": "57efd81957e5eec9194d4b5c42f6ef170213640f148b56bf8b99a51d1d09d1fe",
+    "candidatePopulationHash": "9381588e35a418a84a22e9a680db4ab7886a8d33cf9463166edc1222cd8a5581",
+    "pairs": 11412,
+    "works": 456,
+    "profiles": 8,
+    "activities": 465,
+    "allAssertionsPassed": true,
+    "humanLabelsRead": false
+  },
+  "retentionManifest": "datasets/entity-resolution/prepared/bd424a86-0a1b-4e44-bbdb-4a9b8c8a20e3.retention-manifest.v1.json",
+  "retainedRoot": "datasets/entity-resolution/prepared/bd424a86-0a1b-4e44-bbdb-4a9b8c8a20e3",
+  "retainedFiles": 68,
+  "retainedBytes": 49547452,
+  "freshHadoopRunRequired": false,
+  "originalTargetRequiredForFutureLoading": false,
+  "ownership": "dataset-engineer under existing datasets/** artifact map",
+  "noUuidOrPayloadRewrites": true
+}

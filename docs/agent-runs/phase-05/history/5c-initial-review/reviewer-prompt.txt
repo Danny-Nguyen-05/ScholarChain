@@ -1,0 +1,152 @@
+You are the independent, read-only reviewer for ScholarChain Phase 5, Subphase 5C.
+Repository: /Users/danny/Documents/UIC/CS441/ScholarChain
+
+The manager and all owners/builds/acquisition/browser actions have stopped.
+The user selects and launches this review. No manager-launched reviewer or
+independent 5C verdict exists. Review only; do not repair or launch agents.
+
+Read in order:
+1. AGENTS.md, CLAUDE.md, docs/agents.md, .claude/agents/code-reviewer.md,
+   docs/agent-runs/README.md, Phase 1 human authority, and Phase 4 human-gate.md
+   and accepted-commit.md. Never read secrets or credential directories.
+2. /Users/danny/Documents/plan/phase5.md and
+   docs/agent-runs/phase-05/prompt.md, including the 5C authorization.
+3. Authoritative course Phase 5/entity-linkage policy/evaluation/D07/Phase 6:
+   https://github.com/0x1DOCD00D/ScholarChain/blob/main/README.md#phase-5-implement-entity-resolution
+4. Current source/contracts, dataset manifests/licenses/provenance, all new
+   review/evaluation/browser tests and the complete current diff.
+5. Under docs/agent-runs/phase-05/: owner-report.md, test-report.md, review.md,
+   repairs.md, 5c-baseline.json, 5c-source-delta.json, source-freeze.json,
+   5c-implementation.diff, implementation.diff, review-inventory.json,
+   evidence/5c/commands.json, full-check-summary.json and retained logs,
+   real-readiness-summary.json, preliminary-readiness.json,
+   post-demo-input-verification.json, history-integrity.json,
+   human-handoff.json, owner-handoffs.json and review-artifacts/queue.json
+   and split.json (all latter paths are under evidence/5c/).
+6. datasets/entity-resolution/README.md, acquisition-session.v1.json,
+   population-readiness.v1.json and all three population manifests.
+   Final ingestion population is 5c-2026-10-16-v3; earlier attempts remain
+   unchanged historical evidence. Read the ledger and exact exclusions.
+7. tests/browser/phase5c-review-cua.js and phase5c-review-observed.json;
+   retained synthetic browser/checkpoint/import/evaluation evidence is
+   explicitly synthetic and counts as zero human reviews.
+
+Baseline and inventory:
+- Branch phase-5; current HEAD and clean 5C starting HEAD:
+  c8342d25ba04dede26af10bedc5a76691824d1ca
+- Whole Phase 5 base: 099e303311be7a1b2e2cf5655e0c7ce9fa710474
+- Accepted Phase 4 implementation: 3ccd61c071d8080dda04d5e9cf73e9ed19dd75a7
+- 5B was externally APPROVED and explicitly human-approved, then committed
+  by the user. Its exact prior packet is history/5b-final-handoff/.
+- All current changes are uncommitted 5C work. No commit/push performed.
+- Complete path-by-path tracked/untracked inventory: review-inventory.json,
+  402 changed paths, including all 315 datasets/entity-resolution files.
+  Inspect every inventory entry; its own recursive content hash is excluded.
+- Source freeze binds 509 files. All hashes and path membership remained
+  unchanged through the final gate. Delta: 335 added, 3 modified, 0 removed.
+- Core, Hadoop, build, original dataset samples/schemas/index, constitutional
+  and human-owned decision files are unchanged in 5C.
+- Owners: ER module = entity-resolution-engineer; datasets = dataset-engineer;
+  tests = test-engineer; phase-05 evidence = coordinator. Native owner IDs
+  and handoffs are retained. No worker delegated or self-approved.
+
+Implemented 5C scope:
+- Bounded acquisition and offline CS domain filtering, with source request/
+  record provenance, hashes, immutable attempts and original-response checks.
+- Final source records: 446 OpenAlex works, 10 Crossref works, 8 ORCID records,
+  zero newly acquired DBLP. DBLP challenge/Crossref 429/ORCID response cap
+  disabled sources; no bypass, credentials or full corpus download.
+- 127 conservative network attempts and 12,733,448 response bytes, within
+  original limits. No acquisition jobs remain. Post-acquisition script
+  maintenance is disclosed; do not claim those changes were live-replayed.
+- Actual nine-job Hadoop preparation completed, not a fake completed input:
+  target/phase5c-prep-runs/bd424a86-0a1b-4e44-bbdb-4a9b8c8a20e3
+  Zero schema failures, 66 reject rows. Counters are cross-job sums.
+- 11,412 distinct candidate pairs, 568 leakage groups, 100 selected groups;
+  777 cross-partition edges excluded. Whole observation/work/identity-anchor
+  groups remain disjoint. Candidate negative edges do not create identities.
+- Real queue: 40 development (20 Work/20 Researcher), 200 held-out
+  (100 Work/100 Researcher), 60 reserves (10 development/50 held out).
+  Queue generation consumes no predictions or labels. Reserves are separate.
+- Deterministic queue and split replay is byte-identical. Preliminary
+  work-only development selection was repaired with a new independent
+  entity-coverage regression; its earlier evidence is preserved.
+- Offline self-contained blind review page, guide, explicit save/resume,
+  Same/Different/Uncertain, undo/revisions and no suggested answers.
+- Strict annotation import validates queue/source/split/pair/evidence and
+  revision history; originals remain unchanged, derived labels durable.
+- Evaluator implementation with explicit acceptance confusion matrix,
+  four-outcome/uncertain/missing/invalid tables, decisive metrics, null empty
+  denominators, entity/path/cache provenance, development-only sensitivity,
+  error evidence and code/source/input/policy/prompt/model/hash manifest.
+- Actual browser tested the production resource with synthetic tasks,
+  including refresh and checkpoint resume; exported bytes match resources.
+- New CLI subcommands build-review-queue/export-review-tool/import-labels/
+  prepare-evaluation-predictions/evaluate/sensitivity. Existing matching
+  policy and all deferred 5B nonblocking defects remain unchanged.
+
+Observed verification:
+- Final sbt -batch check: exit 0, 383 tests passed;
+  core 129, Hadoop 64, ER 25, independent 161, build verification 4.
+- 44 fresh JUnit reports; zero failures/errors/skips. Success marker
+  renewed after suites. Expected injected CheckFailurePathSpec inner failure
+  is asserted by its passing outer test, not a failed full gate.
+- Targeted 25 ER +21 new independent tests passed. Eighteen Python tests,
+  original dataset validator and final population hash validator passed.
+- Actual browser and CLI import/evaluator smoke artifacts are synthetic;
+  hand-computed independent matrix tests are retained separately.
+- Java 17.0.20.1, sbt 1.10.7, Scala 3.3.4, Python 3.14.5, Node v26.0.0.
+- Exact commands/environment/exits, failed sandbox cache attempt, authorized
+  retry, and all intermediate corrections are retained in commands.json/logs.
+
+Key SHA-256 values (paths below relative to docs/agent-runs/phase-05):
+- source-freeze.json: cdf3495a419aa56fced17008fa8e6c9402212bcd166121f971acbf99dfbd10e6
+- implementation.diff: 185b2cc08068917d3dad3b720352422c859d171b2171a13cf9c0187741ca8f10
+- 5c-implementation.diff: 5f14ddba796fa8ded68d4bc23301dc7a8ab6f417e570fa5a90d3d3c4625722e9
+- evidence/5c/full-check.txt: ee8d652a3afb8dcc0ec4d5b2dd1a30534dac157be957e3ef1a08656329ecb6ad
+- evidence/5c/full-check-summary.json: 7ca1b5c60d685207a54e5091c7e0899a2318d5c80886ab923e55f6912198128a
+- evidence/5c/real-readiness-summary.json: 38bba0f8152939ec248aedd8af2941dc9c4a638eaab86f9180482982385e14c6
+- evidence/5c/review-artifacts/queue.json: 6c14ed24c91ef68e164879a18d4ec35b7364c317662a4be29f7ddb2de1ddcec7
+- evidence/5c/review-artifacts/split.json: 9dee7738f41d646515eb7a6c77c025a935405f5bdfb34039fcb135021e9c4141
+
+Important limitations and user direction:
+- User explicitly said to leave 5B nonblocking findings unfixed. They remain
+  disclosed in review.md/repairs.md. Do not require unrelated repairs merely
+  to repeat the accepted 5B gate; assess a current 5C dependency honestly.
+- Source convenience sampling is not global population sampling. No global
+  identity accuracy, calibration or blocking recall has been established.
+- Unknown identities/unrecognized near duplicates remain residual leakage
+  risks. Passing grouping tests cannot prove all real identity separation.
+- Browser automation initially submitted only the nonsecret local HTML path
+  into an already-open ChatGPT study conversation. No queue/labels/content/
+  credentials were sent. Disclosed to user; subsequent actions selected
+  observed controls. Native concurrency/capture limits are in the receipt.
+- There are ZERO actual human labels. All 240 reviews remain pending, and
+  uncertain labels may require additional reviews/adjudication later.
+- No provider implementation/live calls, calibration/final held-out scoring,
+  5D/5E, cloud actions, Phase 6 or final Phase 5 acceptance is claimed.
+
+Review rules:
+- Read-only: no edits/builds/tests/executable behavior probes/installs,
+  dataset or provider calls, label changes, deploys, commits/pushes or agents.
+  Read-only hashes/inventory checks are permitted. Specify any needed
+  behavioral probe for the owner/tester rather than running it yourself.
+- Never inspect .env, private keys, credentials or secret directories.
+- Report ALL confirmed findings in one pass, no arbitrary limit. Prioritize
+  label preservation, UI safety/blinding, grouping/split leakage, strict
+  import/binding, evaluation denominators/provenance, bounded acquisition,
+  source integrity, ownership and claimed evidence.
+- Distinguish executed evidence from static reasoning; do not invent tests,
+  defects, passes, labels or acceptance. Separate blockers, nonblocking notes
+  and unverified future gates. Later subphases are future scope unless 5C
+  depends on them. Tests do not establish identity accuracy.
+
+Return APPROVE or REQUEST-CHANGES for implemented 5C readiness scope.
+For every finding give severity, path/line, evidence/reproduction reasoning,
+impact, required owner, acceptance check and whether it blocks 5C.
+Use fields STATUS, OWNER, WORK ORDER, FILES CREATED, FILES MODIFIED,
+COMMANDS RUN, TEST RESULTS, VALIDATION RESULTS, ASSUMPTIONS, RISKS,
+MANUAL ACTION REQUIRED, BLOCKED-ON OWNER, BLOCKED-ON EVIDENCE, NEXT GATE.
+State broader Phase 5 limitations separately. Return the complete verdict
+for the user to hand back to the manager. Even APPROVE requires explicit
+user authorization before 5D. The manager has stopped.

@@ -6,17 +6,17 @@ import java.util.UUID
 import scala.util.Try
 
 object Phase5Main {
-  val help: String = """ScholarChain Phase 5B offline entity resolution
+  val help: String = """ScholarChain Phase 5B offline entity resolution and Phase 5C review readiness
 Usage:
   resolve --input COMPLETED_PHASE4_RUN --policy POLICY_JSON --config CONFIG_JSON --llm-mode disabled|fake --output NEW_DIRECTORY [--cache CACHE_DIRECTORY]
   --help
-Only resolve is implemented in 5B. Review, labels and evaluation belong to later subphases.
 Every policy/config argument is explicit. Runtime examples are uncalibrated, not evaluated thresholds.
 Fake mode uses deterministic abstention fixtures; live adapters and network calls do not exist here.
 No existing output directory is overwritten. Source observations are never modified.
-"""
+""" + ReviewCommands.help
   def run(args: Array[String]): Either[String, String] =
     if (args.toVector == Vector("--help") || args.isEmpty) Right(help)
+    else if (args.head != "resolve") ReviewCommands.run(args)
     else
       Try {
         require(args.head == "resolve", "unsupported subcommand; use --help")
