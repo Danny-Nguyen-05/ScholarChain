@@ -1,0 +1,100 @@
+STATUS: COMPLETE (read-only recheck). Verdict for the 5D B1/B2 repair scope: APPROVE.
+
+OWNER: code-reviewer (user-launched, independent).
+
+WORK ORDER: Phase 5, Subphase 5D B1/B2 repair recheck. HEAD is 61d32a38eaad5b2fc352acf0b7f85f3815c2336d; all 5D work remains uncommitted. The authorization is recorded in prompt.md under "5D B1/B2 repair authorization".
+
+FILES CREATED: None. Temporary hash lists went only to the session scratchpad.
+
+FILES MODIFIED: None.
+
+COMMANDS RUN (all read-only inspection):
+- Git: git status --short, git rev-parse HEAD, git diff (retention script, its test, READMEs, prompt.md), git show HEAD:<report> compared with diff, git ls-files -co --exclude-standard.
+- diff between the current files and the originals preserved in history/5d-initial-review/, for the ER sources, three independent specs, the ER README and both demo retention manifests (via jq -S).
+- Reading files: sed, grep, cat, jq, find, stat, comm, wc.
+- Hash checks:
+  - shasum -a 256 on the listed key artifacts;
+  - shasum -a 256 -c over all 557 current freeze entries;
+  - shasum -a 256 -c over the 83 evidence/5d/ hashes bound by the preserved original inventory.
+- unzip -p on JDK 17 src.zip to read Utils.isValidValue / fieldvchar.
+- No builds, tests, Python, provider calls, credentials, .env, acquisition or agent launches.
+
+TEST RESULTS: I ran no tests. These are observed from the retained logs:
+- before-fix.txt: the new IndependentLiveCredentialPreflightSpec failed 0/7 against the unrepaired production code. The failure was behavioral: it got "TRANSPORT_FAILED" did not equal "CREDENTIAL_INVALID", not a compile error.
+- targeted.txt: 4 owner tests and 40 independent tests passed.
+- full-check.txt: core 129, Hadoop 64, ER 29, independent 208 and build 4 all passed, ending [success] Total time: 412 s … Oct 17, 2026, 1:21:56 PM. The nested [error] is the expected injected-failure probe.
+- full-check-summary.json: 434 tests, 0 failures/errors/skips, 54 fresh reports, 557 frozen files valid.
+- python-tests.txt: 37 tests OK.
+- input-integrity-gates.json: 6 validators, all exit 0. The 5C run reports frozen-5c-review; both 5D runs report development-demo.
+
+VALIDATION RESULTS (checked myself):
+- All four listed SHA-256 values match. The preserved original freeze hashes to 8396eb78…, the same as the reviewed baseline.
+- All 557 current freeze hashes match, and the freeze file set equals git's tracked plus untracked set.
+- Comparing the original and current freezes: exactly 15 paths changed, 1 was added (IndependentLiveCredentialPreflightSpec.scala) and none were removed. No retained payload, completion file, run manifest or raw data file is in the delta.
+- Retention-manifest hashes match the packet:
+  - demo seeds b413bc38…, OpenAlex supplement d9eec30b…;
+  - original 5C c5196356…, which is unmodified from HEAD;
+  - preserved pre-repair copies 484a3e34… and 7cf7df07…, matching my first review.
+- A jq -S diff of each demo manifest shows only purposeKind, purpose and ownership changed.
+- All 83 hash-bound evidence/5d/ files are unchanged, and live-state/ still does not exist.
+- owner-report.md, test-report.md, repairs.md and review.md remove no lines relative to HEAD.
+
+---
+
+Assessment of the original blockers
+
+B1 — CLOSED. A missing or malformed credential no longer consumes or fuses the approved budget.
+- Order of operations. LiveAdjudication.scala:180-203 now goes: render, check the cache, a non-mutating checkReservation, then Try(transport.prepare()), then reserve.
+  - A failed prepare, a thrown exception or a null result returns CREDENTIAL_INVALID / LIVE_CREDENTIAL_UNAVAILABLE_OR_INVALID with 0 attempts.
+  - It does this before reserve, so the ledger is not saved and not fused.
+- Credential handling. OpenAIResponses.scala:15-29:
+  - The supplier is read once.
+  - It runs the JDK's full header validation via HttpRequest.newBuilder…header(…).build(), which makes no network call.
+  - Every failure inside the Try maps to a constant string, so the value-bearing JDK exception message can't escape. This also closes N2: a direct post now throws only the constant.
+- No change between validation and dispatch. The prepared transport captures key in a closure, dispatch uses that same value, and retries reuse it (LiveAdjudication.scala:229). Per-pair credential re-reads happen only on later calls to adjudicate.
+- Exhausted budget stays lazy. checkReservation runs before prepare, and reserve still re-checks the limits (LiveProvider.scala:273-292). The unchanged test "budget exhaustion refuses dispatch before credential supplier access" passed.
+- Disabled, zero-eligible and unapproved paths are unchanged; their tests passed.
+- Uncertain post-dispatch failures still charge and fuse (LiveAdjudication.scala transport and termination branches unchanged). IndependentLiveAdjudicatorSpec is unchanged from the original and passed.
+- The full enabled LiveDemo path is covered. The wrapper forwards prepare (LiveDemo.scala:311), and the lazy factory is forced inside the adjudicator's Try, so factory exceptions are also contained. IndependentLiveDevelopmentSpec runs missing and NUL credentials through the full path, then recovers on the same persisted ledger.
+- Every requested case is tested. IndependentLiveCredentialPreflightSpec covers missing, empty, CRLF, NUL, DEL, non-Latin-1 and supplier-exception credentials. Each asserts a single read, the constant error, 0 attempts, an unchanged durable snapshot, no fuse, no credential text in the trace, and same-ledger recovery to VALIDATED_LIVE.
+
+B2 — CLOSED. The two demo inputs are now truthfully labelled demo-only.
+- Both corrected manifests are truthful: "Phase 5D development/demo evidence only; not frozen review, gold labels or held-out evaluation input", with purposeKind: development-demo.
+- There is no silent default. retain(…, *, purpose) is keyword-only with no default, and the CLI --purpose is required. check_purpose rejects any manifest without purposeKind unless its runId is the legacy 5C run.
+- Inconsistent metadata is rejected. The kind, description and ownership must agree. The known demo run IDs cannot claim the frozen purpose, and the 5C run cannot claim demo.
+- Each guarantee is tested: the missing-purpose API/CLI error (exit 2), the inconsistent-purpose rejection, known demo runs claiming frozen, and the legacy 5C manifest hash staying c5196356….
+- Payloads are unchanged. b2-metadata-proof.json and my freeze comparison agree.
+- Documentation now separates the purposes. prepared/REA embedded space passes preflight and is dispatched. The provider would most likely answer 401, which charges one attempt. It does not fuse and costs nothing, but LiveDemo then continues to the next eligible pair, charging one attempt per pair up to the cap.
+  - Impact: possible exhaustion of the attempt allowance with no spend, but only through a provider authentication failure. That is outside B1's "local failure" definition, and no secret is exposed.
+  - Owner: ER.
+  - Suggested check: restrict the bearer value to the RFC 6750 token charset and/or stop the run after the first 401/403. Add a test that a credential containing U+00A0 records zero attempts.
+- O2 (low): a credential-refused run still reports success. adjudicate-demo exits 0 and publishes a complete demo export. Its decisions are Unresolved and carry CREDENTIAL_INVALID, and the summary line shows live attempts=0. The output directory is used up, though the approval is not. Consider a non-zero exit or an explicit refusal message. Owner: ER.
+- O3 (info): frozen-5c-review can still be chosen for other runs. A new, unrelated run can be explicitly labelled frozen-5c-review. It is explicit and documented, not silent.
+- O4 (info): one original log was never hash-bound. evidence/5d/development-readiness-probe.log (365 bytes, modified Oct 16 21:38, before the first review) is not listed in the preserved original inventory. This predates the repair; no regression.
+- Deferred findings. N1 and N3–N8 remain as accepted deferrals, and N2 is closed incidentally by B1.
+
+3. Unverified external prerequisites
+
+- Real human labels: 0 of 240 (40 development + 200 held-out; the 60 reserves are separate).
+- Naturally eligible non-held-out pairs for a live demonstration: 0.
+- Actual model calls: 0; spend: $0.00. Runtime credential availability has not been checked.
+- Compatibility with the real OpenAI API is unverified: strict-schema keyword support, the response envelope and usage fields, and whether the server tolerates whitespace or 0x80–0xFF bytes in the key.
+- Passing tests establish neither identity accuracy nor calibration.
+
+---
+
+ASSUMPTIONS:
+- The unchanged tests named in the packet passed because they are counted in the full 434-test run.
+- I took the original bytes from history/5d-initial-review/, whose freeze hash matches the reviewed baseline. The original LiveDemoExportSpec was not preserved there, so I reviewed its added test as current content.
+
+RISKS: O1/O2 could waste the attempt allowance or confuse an operator during the eventual live run, without spending money. Provider compatibility is untested.
+
+MANUAL ACTION REQUIRED:
+- User: complete and export the human reviews from the unchanged blind page.
+- Optionally route O1/O2 to the ER owner before any live run.
+
+BLOCKED-ON OWNER: None for this repair scope. The user owns the human reviews; any future, separately authorized step owns obtaining a naturally eligible demo pair.
+
+BLOCKED-ON EVIDENCE: Actual human checkpoints; a naturally eligible non-held-out pair; an observed real-provider run.
+
+NEXT GATE: The human decision on this repaired 5D implementation checkpoint. The 5D exit still requires traceable human reviews and real LLM evidence, or an explicitly accepted blocked checkpoint. This APPROVE does not complete the human-review or real-provider gates, does not establish overall 5D or Phase 5 acceptance, and does not authorize 5E.

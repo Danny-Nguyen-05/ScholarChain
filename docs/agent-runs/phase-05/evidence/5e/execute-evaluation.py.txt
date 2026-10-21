@@ -1,0 +1,36 @@
+"""Coordinator executes existing offline CLIs, keeping large regenerable runs in target/."""
+import sys, subprocess, json, hashlib, shutil
+from pathlib import Path
+ROOT=Path.cwd(); B=ROOT/'docs/agent-runs/phase-05/evidence/5e'
+runner=B/'run-command.py.txt'
+sha=lambda p: hashlib.sha256(Path(p).read_bytes()).hexdigest()
+canonical=lambda x: json.dumps(x,sort_keys=True,separators=(',',':'),ensure_ascii=False)
+def dump(p,x): Path(p).write_text(json.dumps(x,indent=2,ensure_ascii=False)+'\n')
+def run(name,args): subprocess.run(['python3',str(runner),name,*map(str,args)],check=True)
+cp=str(ROOT/'modules/entity-resolution/target/scala-3.3.4/classes')+':'+(ROOT/'modules/entity-resolution/target/streams/compile/dependencyClasspath/_global/streams/export').read_text().strip()
+java=['/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home/bin/java','-Xmx4g','-cp',cp,'edu.uic.cs441.scholarchain.entityresolution.Phase5Main']
+Q=ROOT/'docs/agent-runs/phase-05/evidence/5c-repair/review-artifacts'
+G=ROOT/'datasets/entity-resolution/labels/2026-10-20-danny-ai-assisted-v1/validated-labels.json'
+I=ROOT/'datasets/entity-resolution/prepared/bd424a86-0a1b-4e44-bbdb-4a9b8c8a20e3'
+P=ROOT/'modules/entity-resolution/src/main/resources/phase5-policy.v1.json'
+C=ROOT/'modules/entity-resolution/src/main/resources/phase5-config.v1.json'
+source=ROOT/'docs/agent-runs/phase-05/source-freeze.json'
+binding=json.loads((Q/'generation-binding.json').read_text())
+binding.update(codeRevision=subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip(),sourceTreeHash=sha(source))
+dump(B/'prediction-binding.json',binding)
+gold=json.loads(G.read_text()); attribution=G.parent/'decision-attribution.v1.json'
+exclusions={'schemaVersion':'scholarchain.evaluation-exclusions.v1','queueHash':json.loads((Q/'queue.json').read_text())['queueHash'],'labelHash':hashlib.sha256(canonical(gold).encode()).hexdigest(),'reason':'Supplementary sensitivity: exclude all 22 self-attested externally AI-assisted source-check cases; preserve original human labels and primary analysis. Attribution file SHA-256 '+sha(attribution),'pairIds':sorted(x['pairId'] for x in json.loads(attribution.read_text())['tasks'])}
+dump(B/'exclude-assisted-pairs.json',exclusions)
+for name,mode in [('disabled-a','disabled'),('disabled-b','disabled'),('fake-a','fake')]:
+    output=ROOT/'target/phase5e'/name
+    run('resolve-'+name,java+['resolve','--input',I,'--policy',P,'--config',C,'--llm-mode',mode,'--output',output])
+    shutil.copyfile(output/'resolution-manifest.json',B/(name+'-resolution-manifest.json'))
+    run('prepare-'+name,java+['prepare-evaluation-predictions','--input',I,'--config',C,'--queue',Q/'queue.json','--predictions',output,'--binding',B/'prediction-binding.json','--code-revision',binding['codeRevision'],'--source-hash',binding['sourceTreeHash'],'--output',B/(name+'-predictions.json')])
+# All frozen predictions now exist before the first label-aware evaluation command.
+for name in ['disabled-a','fake-a']:
+    for part in ['development','held-out']:
+        common=['--queue',Q/'queue.json','--split',Q/'split.json','--gold',G,'--predictions',B/(name+'-predictions.json'),'--partition',part]
+        run('evaluate-'+name+'-'+part,java+['evaluate',*common,'--output',B/(name+'-'+part)])
+        run('evaluate-'+name+'-'+part+'-without-assisted',java+['evaluate',*common,'--exclude-pairs',B/'exclude-assisted-pairs.json','--output',B/(name+'-'+part+'-without-assisted')])
+    run('sensitivity-'+name,java+['sensitivity','--queue',Q/'queue.json','--split',Q/'split.json','--gold',G,'--predictions',B/(name+'-predictions.json'),'--partition','development','--thresholds','0.6,0.7,0.8,0.85,0.9,0.95,0.97,1.0','--output',B/(name+'-development-sensitivity.json')])
+print('All offline prediction preparation and evaluation commands passed; no provider CLI invoked.')

@@ -489,3 +489,148 @@ RISKS: This packaging pass does not establish human labels, accuracy or live-pro
 MANUAL ACTION REQUIRED: Preserve the external archive and manually commit if desired. Proposed one-line commit message: Complete Phase 5C review tooling with durable inputs and lean audit archives.
 BLOCKED-ON OWNER / BLOCKED-ON EVIDENCE: None for authorized packaging.
 NEXT GATE: Stop. No code reviewer triggered, commit/push performed or 5D started.
+
+
+## Subphase 5D — authorized start and readiness
+
+STATUS: IN PROGRESS; provider implementation/offline verification underway, live numerical budget and genuine human checkpoints pending.
+OWNER: Coordinator; entity-resolution engineer implements only modules/entity-resolution/**; independent tester owns tests/**; dataset owner completed read-only review-input verification.
+WORK ORDER: User authorized 5D and selected OpenAI GPT-6 Luna; exact user words and clean baseline recorded in prompt.md and evidence/5d/baseline.json. No live-call or numerical budget authorization inferred. No 5E, commit/push or reviewer launch authorized.
+FILES CREATED / FILES MODIFIED: Provider-independent readiness receipts under evidence/5d/. Production/test inventory will follow completed implementation. Existing 5C artifacts remain immutable inputs.
+COMMANDS RUN: Read-only Git/contract/plan/owner audit; official OpenAI model/pricing/structured-output documentation and authoritative course Phase5/6 fetched. Existing compiled API inspected development tasks only via ER-owned scratch probe, zero provider calls. Full exact commands and verification outcomes will be retained before handoff.
+TEST RESULTS: No new test execution claimed at this checkpoint. Prior 5C gates remain historical. Independent tester has defined 5D transport, budget, schema, cache and development-only admission matrix.
+VALIDATION RESULTS: Clean phase-5 starting HEAD61d32a38eaad5b2fc352acf0b7f85f3815c2336d. API IDgpt-6-luna verified in official docs; no dated snapshot invented. Blind page, guide, repaired queue/split/generation audit and prepared retention manifest hashes verified. All68prepared files/49,547,452bytes unchanged. No genuine human labels found in designated phase evidence;240initial reviews pending,60reserves separate. Selected50development tasks currently yield no naturally eligible LLM calls; full development-group demo eligibility is being checked separately without scoring held-out tasks.
+ASSUMPTIONS: User model selection concerns project adjudication, not implementation-agent model routing. Actual usage/account access cannot be inferred from docs or a subscription.
+RISKS: Live evidence may require additional development evidence if the existing admitted population has no eligible pair. No score/band manipulation or synthetic evidence substitution is allowed.
+MANUAL ACTION REQUIRED: User labels the approved blind queue and supplies original checkpoints; later approves explicit numerical live budget and configures a runtime credential without sharing the key in chat.
+BLOCKED-ON OWNER / BLOCKED-ON EVIDENCE: Numerical live approval, runtime credentials, actual human checkpoints, and naturally eligible development/demo evidence remain prerequisite gates; unaffected implementation continues.
+NEXT GATE: Passing offline adapter tests and concrete request/budget approval, then only explicitly authorized bounded development calls; eventual user-launched external5D review.
+
+
+## 5D targeted verification — observed results
+
+The coordinator's fourth-targeted command exited 0 at 2026-10-16 22:00:44 America/Chicago. LiveDemoExportSpec passed 3/3 cases; six independent live-provider suites passed 31/31 cases, with zero failures, cancellations, ignored or pending cases. The independent test-engineer read the retained output and verified that the four prior cache failures now pass without weakened assertions. Exact commands and all preceding failed attempts remain in evidence/5d/commands.json and their original logs.
+
+Tests exercise strict request/envelope/evidence validation, refusal/malformed response handling, numerical reservations and persistent locking, timeout/retry behavior, credential redaction, fake/live cache separation, held-out/transitive supplement exclusion and no-dispatch behavior. All transports are synthetic; no paid API call or credential value was used. Full repository verification is still pending at this checkpoint.
+
+The existing fourteen-record Crossref seed-only supplement passed unchanged Hadoop preparation. Its durable completed input has 36 files / 524,961 bytes. Exact canonical admission found 79 candidates, 79 admitted, zero eligible, zero excluded and zero held-out pairs scored. This executed result establishes the precondition for the separately approved bounded OpenAlex supplement; it establishes no identity accuracy or real-model result.
+
+
+## 5D fresh frozen full gate
+
+STATUS: COMPLETE (technical verification). Coordinator command full-check exited 0: **424 tests passed**, zero failures/errors/skips, 53 fresh JUnit reports. Counts: core 129, Hadoop 64, ER 28, independent 199, build verification 4. Sbt completed at 2026-10-16 22:14:50 America/Chicago with 411 seconds reported. All 556 frozen files matched before/after, with zero additions or missing scoped files; generated success marker renewed after the suites. Expected nested injected-failure output belongs to CheckFailurePathSpec and does not indicate a failing outer gate.
+
+All 33 Python tests and six offline population/retention validators passed. The durable supplement input loaded through the actual CLI, reproducing input hash 3dffec0a31f2cf29781bdbe6da4c1f9046cbec98bccde112b86cb7c101a1c055 and candidate hash 3fb51d1ac08d167ae142dbd7b64ca2dd31564bc5c05ec3c0552adbd8461d0b94. All nine demo export file hashes and its completion hash matched. Canonical admission excluded 70 of 93 pairs before scoring, admitted 23 and found zero eligible. No provider call, credential lookup, human-label import, threshold tuning or held-out evaluation occurred. User confirmed saved human checkpoints are not yet ready.
+
+Evidence: evidence/5d/full-check.txt, full-check-summary.json, dataset-python-all.txt, input-integrity-gates.json, durable-preview-proof.json, protected-review-assets-check.json and user-human-review-status.json. No independent review verdict is inferred.
+
+
+## 5D external B1/B2 repair — targeted evidence
+
+Coordinator ran the new IndependentLiveCredentialPreflightSpec against unchanged reviewed production. All seven cases executed and failed as expected (TRANSPORT_FAILED versus required CREDENTIAL_INVALID), with no build/compile failure substituted for reproduction. Original log and exact receipt: evidence/5d-repair/before-fix.txt and commands.json. Only afterward was the ER owner released to implement B1.
+
+Post-repair targeted command exited 0: 4 owner tests plus 40 independent tests across seven suites passed; zero failures/cancellations/ignored/pending. It completed 2026-10-17 13:14:17 America/Chicago. The independent test-engineer re-read the output and final assertions. Missing, empty, CRLF, NUL, DEL, non-Latin1 and throwing-supplier cases preserve zero/unfused durable budgets and recover on the same approval ledger. Enabled-demo missing/NUL tests verify service delegation; exhausted-budget no-credential-read and uncertain-dispatch fusing cases remain unchanged and passing. All credentials and responses are synthetic; no HTTP is dispatched.
+
+All 37 Python dataset tests and six population/retention validators passed. Metadata-only and protected-input proofs are in evidence/5d-repair/. The original 5C retention manifest hash remains c51963569827ceaba35d1f816a918afecd32a547725ba2b1bb63aa38d49e8556. Only purposeKind/purpose/ownership changed in the two demo manifests. Full frozen verification is still running at this checkpoint; no full-gate pass is claimed here.
+
+
+## 5D B1/B2 — fresh frozen full gate
+
+Final coordinator sbt -batch check exited 0: **434 tests passed**, zero failures/errors/skips, 54 fresh JUnit reports; core 129, Hadoop 64, ER 29, independent 208, build 4. Sbt reported 412 seconds, completed 2026-10-17 13:21:56 America/Chicago. All 557 frozen source/data/config/test files remained unchanged, with no added or missing scoped files; generated success marker renewed after suites. Expected nested injected failure belongs to CheckFailurePathSpec. Exact summary is evidence/5d-repair/full-check-summary.json.
+
+All 37 Python tests and six population/retention validators passed. Seven original B1 regression failures are now green without weakening assertions; same-ledger recovery, service delegation and preservation of uncertain-dispatch accounting are observed in targeted/full logs. B2 metadata-only correction and original payload/review-asset preservation are verified. No real credential, provider, acquisition, label or held-out evaluation evidence was generated. No external acceptance is inferred.
+
+
+## 5D actual label import checks — 2026-10-20
+
+STATUS: COMPLETE for import and initial dataset tests; final frozen full gate follows separately. OWNER: Coordinator executing existing CLI; dataset engineer owns conversion feature tests. WORK ORDER: Strictly convert the user's completed checkbox batches and import without changing label choices. FILES CREATED: evidence/5d-label-import/{commands.json,import-labels.txt,python-tests.txt,import-integrity.txt,import-proof.json} and execution/proof helpers. FILES MODIFIED: Append-only test report. COMMANDS RUN: Existing import-labels CLI exit 0; Python unittest discovery exit 0; import-integrity exit 0. TEST RESULTS: 48 Python tests passed, including 11 new conversion cases. VALIDATION RESULTS: 240 initial decisions imported, 60 reserves untouched; all 557 prior frozen files and all 16 original draft files remained byte-identical. See import-proof.json for hashes and partition counts. ASSUMPTIONS: Schema import does not authenticate the reviewer or establish independent blind gold. RISKS: AI assistance and 22 explicitly AI-attributed external checks are disclosed, not independently verified. MANUAL ACTION REQUIRED: At least eight additional definitive outcomes if a 40/200 binary-label target is required. BLOCKED-ON OWNER: None for import. BLOCKED-ON EVIDENCE: Final whole-tree gate and separate live demonstration. NEXT GATE: Final verification after the approved bounded search; no held-out prediction/evaluation.
+
+
+## 5D actual review import / bounded follow-up — final verification
+
+STATUS: COMPLETE — deterministic gates passed.
+OWNER: Coordinator, serialized execution; dataset owner wrote all four new Python implementation/test files.
+WORK ORDER: Verify the actual imported human choices and separately approved additional bounded search; no evaluation or 5E.
+FILES CREATED: evidence/5d-label-import/full-check.txt, full-check-summary.json, source-delta.json and handoff.json; final Python log under evidence/5d-followup-demo/python-tests-final.txt.
+FILES MODIFIED: Current source-freeze.json, review-inventory.json and append-only phase reports.
+COMMANDS RUN: JAVA_HOME=/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home; SBT_OPTS=-Dlogback.configurationFile=/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-04/xml-repair-logback.xml; sbt -batch check through the retained serialized runner. Exact command/env/start/end/exit are in evidence/5d-label-import/commands.json. Final Python discovery and actual acquisition command are in evidence/5d-followup-demo/commands.json; seven validator receipts are in evidence/5d-label-import/input-integrity-gates.json.
+TEST RESULTS: Fresh sbt check exit 0, 434 passing tests: core 129, Hadoop 64, ER 29, independent 208, build verification 4. Zero failures/errors/skips, 54 fresh JUnit reports, generated success marker renewed. Sbt reported 410 seconds and completed 2026-10-20 17:15:51 America/Chicago. Expected nested injected-failure log is CheckFailurePathSpec coverage. All 58 Python tests and seven population/prepared validators passed.
+VALIDATION RESULTS: Final scoped freeze validates all 615 files with no changed/added/missing paths. The only existing scoped changes against the accepted repaired 557-file checkpoint are the two dataset/script READMEs; 58 paths were added, no scoped path removed. Existing Scala, matching policy, frozen queue/split, prepared payloads and original human choices are unchanged. One documentation-only README correction arrived during sbt startup after the initial freeze-ready notice; startup-source-freeze.json and startup-doc-correction.json preserve this exception. The final freeze was refreshed; production/test/data bytes were unchanged throughout the complete build. Do not misstate this as every documentation byte unchanged from command launch.
+ASSUMPTIONS: Human review participation is user-confirmed and self-attributed; timestamps disclose conversion time. Existing canonical no-eligible proof applies to the source-equivalent unchanged context; no new prepared snapshot or canonical clearance is claimed.
+RISKS: AI assistance and 22 external AI-source comments are disclosed; no identity accuracy, calibration, independent blind gold or real-provider compatibility is established.
+MANUAL ACTION REQUIRED: Human checkpoint decision and user-selected external review as appropriate. Eight more definitive outcomes would be needed only if the target is 40/200 binary labels rather than completed reviews.
+BLOCKED-ON OWNER: None for import/verification.
+BLOCKED-ON EVIDENCE: Naturally eligible non-held-out real evidence and actual provider response.
+NEXT GATE: User decision. All workers and builds stopped. No model calls, spending, reviewer invocation, commit/push or 5E.
+
+
+## 5D B1/B2 search repair — fresh deterministic gate
+
+STATUS: COMPLETE — observed gates passed.
+OWNER: Coordinator for serialized execution; dataset engineer for regression cases.
+WORK ORDER: B2 ordering repair and explicit corrected rerun; include unchanged user-directed B1 attribution in freeze/recheck.
+FILES CREATED: evidence/5d-search-repair/commands.json, before-fix.txt, targeted-python.txt, python-tests.txt, input-integrity-gates.json, full-check.txt, full-check-summary.json, protected-proof.json, source-delta.json, query-behavior-proof.json and handoff.json.
+FILES MODIFIED: Current freeze/inventory and append-only test report.
+COMMANDS RUN: Retained runner invoked Python discovery, unchanged Hadoop, canonical target/durable admission and sbt -batch check. JAVA_HOME=/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home; SBT_OPTS=-Dlogback.configurationFile=/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-04/xml-repair-logback.xml. Exact argv, timing and exit codes are in commands.json.
+TEST RESULTS: Before-fix exit 1: 10 passed/1 behavioral ordering regression failed. Target after-fix: 15 passed. Full Python dataset suite: 63 passed. Nine offline integrity validators passed: prior seven plus corrected acquisition and new prepared retention. Fresh sbt exit 0, 434 passed (129+64+29+208+4), zero failures/errors/skips, 54 fresh JUnit reports. Sbt reported 410 seconds and finished 2026-10-20 20:45:46 America/Chicago. Generated marker renewed; nested injected failure is expected CheckFailurePathSpec coverage.
+VALIDATION RESULTS: All 742 source-freeze entries unchanged throughout this complete gate; no added/missing scoped paths. B1 label tree 23 files and original failed-search 32 files remain byte-identical to repair start. All 60 new durable prepared files match their source; target/durable admission and input/candidate hashes replay identically. Approval predates the new 3 requests. Canonical held-out exclusion precedes scoring: 101 candidates, 78 excluded, 23 admitted, zero eligible.
+ASSUMPTIONS: Tests establish URL/order/accounting and structural safety, not identity accuracy, calibration or real-provider compatibility. B1 attribution is user self-attestation with reviewer/implementer departure disclosed, not authenticated history.
+RISKS: Existing bounded-input zero eligibility is not global evidence exhaustion. External source-check evidence was not retained; AI assistance remains disclosed.
+MANUAL ACTION REQUIRED: Fresh independent B1/B2 recheck using chat prompt; no reviewer prompt file is created.
+BLOCKED-ON OWNER: None for deterministic verification.
+BLOCKED-ON EVIDENCE: External review; actual real-provider evidence remains a separate 5D gate.
+NEXT GATE: User-launched recheck. All workers/builds stopped. No model call, credential access, 5E, commit or push.
+
+
+## 5D focused-search final frozen verification
+
+STATUS: COMPLETE — observed deterministic gates passed; no real-provider evidence.
+OWNER: Coordinator serialized all actual build/CLI/HTTP execution; dataset engineer owns the four new helper/test files.
+WORK ORDER: User-approved focused Michael Benedikt metadata search, exact original seed reuse and held-out exclusion before scoring, with unchanged $1 model approval.
+FILES CREATED: evidence/5d-focused-demo/ command receipts, full-check.txt/full-check-summary.json, protected-proof.json, source-delta.json, outcome.json and handoff.json; source and data paths are in the updated inventory.
+FILES MODIFIED: Final source freeze/inventory and append-only phase reports; dataset/prepared README appended only.
+COMMANDS RUN: Exact argv, cwd, JAVA_HOME/SBT_OPTS, times and exits are in commands.json. Final command sbt -batch check uses Java 17 and existing Phase 4 logback config. Twelve validators and outputs are individually recorded in input-integrity-gates.json. Existing unchanged Hadoop completed for the raw intermediate and separate qualified CS input. Only the CS input was canonically screened/scored and retained.
+TEST RESULTS: All 84 Python tests passed, including 15 new acquisition and six domain-slice tests. All 12 integrity validators passed. Fresh sbt check exit 0, 434 tests passed: core 129, Hadoop 64, ER 29, independent 208, build verification 4; zero failures/errors/skips; 54 fresh JUnit reports. Sbt reported 410 seconds and completed 2026-10-20 21:28:34 America/Chicago. Generated success marker renewed; nested injected failure is expected CheckFailurePathSpec coverage. All 898 frozen files remained unchanged, with no added/missing scoped paths during the complete gate.
+VALIDATION RESULTS: All 23 label-tree files remain byte-identical, including attribution. Only two existing scoped files changed relative to the prior approved 742-file freeze (appended dataset/prepared README sections); 156 paths added, no removals. Target/durable admission, classification rows and scored-ID files are byte-identical. The actual scored-ID set equals admitted IDs, with excluded intersection zero. The retained 56 files /82,072 bytes exactly match their completed source run and purpose development-demo. Approval predates every HTTP request; all 26 profile/work rows including exclusions consume the cap. No additional request/refill occurred.
+ASSUMPTIONS: No provider-execution branch was called; the command ledger has no adjudicate-demo invocation and approval-scoped live-state is absent. Static no-label-access assertions are explicitly labelled rather than presented as runtime instrumentation. Official model documentation does not establish real account/schema compatibility.
+RISKS: Zero eligibility is measured for this bounded input, not a claim about global evidence availability. No identity accuracy, calibration, human-label independence or real-provider compatibility follows.
+MANUAL ACTION REQUIRED: User review of the new focused-search checkpoint; no further acquisition or policy change implied.
+BLOCKED-ON OWNER: None for the authorized implementation/execution.
+BLOCKED-ON EVIDENCE: Naturally eligible non-held-out evidence and actual model response for the overall 5D exit.
+NEXT GATE: Human checkpoint decision and user-launched independent review as appropriate. All workers/builds stopped. No credential access, model call, spend, reviewer invocation, 5E, commit or push.
+
+
+## 5E limited deterministic/fake evaluation — observed handoff
+
+STATUS: COMPLETE for authorized limited execution; external review pending, overall Phase 5 acceptance open.
+OWNER: Coordinator; ER engineer owns evaluation API/cohort support, test engineer owns six independent cases, dataset engineer supplied read-only provenance audit. Native IDs and results: evidence/5e/owner-handoffs.json.
+WORK ORDER: User-authorized limited 5E; preserve human labels and existing matcher/config/policy; real-provider requirement explicitly pending.
+FILES CREATED: evidence/5e/ observed commands, bindings, predictions, eight reports, development sensitivity, exclusion manifest, replay/protected proofs, summary, manifest and compact source inventory; two independent Scala specs.
+FILES MODIFIED: ER Evaluation/ReviewCommands/ReviewReadinessSpec/README; phase source freeze/inventory and append-only reports. No dataset/core/Hadoop/build/matcher/policy/config/label changes.
+COMMANDS RUN: Exact argv, cwd, JAVA_HOME/SBT_OPTS, start/end/exit in evidence/5e/commands.json and individual receipts. Three full offline resolution passes, three prediction preparations, eight evaluations, two development sensitivities, Python discovery, 12 validators and final sbt -batch check.
+TEST RESULTS: Final targeted 7 owner + 15 independent passed. Fresh full gate 441 passed, zero failures/errors/skips, 56 fresh reports. Core 129, Hadoop 64, ER 30, independent 214, build 4. Python 84 passed; 12 validators passed. Initial sandbox and synthetic fixture failures retained and explained in evaluation-report.md. Nested injected failure is expected CheckFailurePathSpec coverage.
+VALIDATION RESULTS: All 900 source files frozen throughout prediction/evaluation/full gate; 804 protected source/data files unchanged including complete label tree. 17 export parts replay; all 300 queue predictions agree; 8 reports independently recounted. Primary held-out 194 binary: TP 57, FP 0, FN 15, TN 122; precision 100%, recall 79.2%, F1 88.4%, decisive coverage 48.5%. Without 22 assisted: 181 held-out binary, TP 51, FP 0, FN 8, TN 122. Full results/evidence: evidence/5e/evaluation-report.md and evaluation-manifest.json.
+ASSUMPTIONS: Human choices/attribution are self-attested and AI-assisted, not independent blind gold. Observed matching behavior is only for the frozen convenience population.
+RISKS: 8 uncertain, unretained external source checks, no global/blocking recall, uncalibrated policy, residual leakage/common-name risk and no real-provider evidence. Empty LLM/bibliographic paths remain null/no-data.
+MANUAL ACTION REQUIRED: User-selected independent review and return of complete verdict.
+BLOCKED-ON OWNER: External reviewer selected/launched by user; no implementation owner blocker at this handoff.
+BLOCKED-ON EVIDENCE: External verdict; real-provider evidence remains open for overall 5D/Phase 5 rather than being silently waived.
+NEXT GATE: Stop for user-launched review. No commit, push, Phase 6 or reviewer invocation.
+
+
+## Final Rice-team bounded attempt — verified blocked provider checkpoint
+
+STATUS: COMPLETE for authorized bounded work; BLOCKED-ON real-provider evidence for overall 5D / Phase 5.
+OWNER: Coordinator for HTTP/Hadoop/canonical/CLI/build execution and reports; dataset-engineer for new datasets/scripts and retention; test-engineer for read-only independent counter/eligibility checks; ER owner supplied read-only feasibility advice.
+WORK ORDER: User-approved final targeted attempt: 30 returned rows, 20 HTTP attempts, 8 MiB and 300 seconds; no data credentials or paid data; original $1 model approval unchanged. No refill, fallback or nonblocking repairs.
+FILES CREATED: New Rice acquisition script and 13 tests; separately manifested 15-row response stage; 38-file durable preparation; evidence/5d-final-attempt/ receipts, proofs and report.
+FILES MODIFIED: Append-only dataset/prepared READMEs, phase reports and current freeze/inventory. No ER/core/Hadoop/build/policy/config/label/evaluation artifact changes.
+COMMANDS RUN: Exact argv/environment/start/end/exit in commands.json. Two public queries; unchanged Hadoop; target/durable canonical selection; prepare-live-demo (no network); 97 Python tests; 14 validators; sbt -batch check.
+TEST RESULTS: 441 sbt tests passed, zero failures/errors/skips, 56 fresh JUnit reports. Core 129, Hadoop 64, ER 30, independent 214, build 4. All 97 Python tests and 14 validators passed. All 959 frozen source files remained unchanged throughout the gate.
+VALIDATION RESULTS: Two HTTP 200 responses, 15 rows, 12 distinct works, 3 ingested, 112,270 bytes, 1.4782 seconds. Eleven admitted, zero excluded, zero eligible. Two unresolved Researcher scores of 0.6933333 are in-band but coauthor overlap of 0.2 fails the supportive threshold of 0.8; other candidates accept or conflict earlier. Target/durable proofs identical; 38 retained files / 204,212 bytes. All 1,261 runtime class/resource hashes unchanged. All 111 approved 5E artifacts and all human choices remain unchanged; historical 5E freeze retained exactly as before-source-freeze.json.
+ASSUMPTIONS: Runtime evidence establishes only this bounded population; no real account/model compatibility or identity accuracy.
+RISKS: Fixed catalog excludes an observed legitimate CACM record; no global absence claim. Provider requirement still open, credentials untested and no approval state initialized.
+MANUAL ACTION REQUIRED: Human checkpoint/continuation decision; independent reviewer only when user launches it.
+BLOCKED-ON OWNER: None for authorized bounded work. Human owns continuation and acceptance.
+BLOCKED-ON EVIDENCE: Naturally eligible non-held-out pair and observed real-provider response; current 0 attempts, $0.00 spent.
+NEXT GATE: Stop acquisition. No policy changes, commit, push, Phase 6 or reviewer launch. Explicit authorization needed before any further scope.

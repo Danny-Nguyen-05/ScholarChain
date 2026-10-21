@@ -1,0 +1,482 @@
+[
+  {
+    "threshold": 0.6,
+    "metrics": {
+      "tasks": 40,
+      "binaryGold": 38,
+      "uncertain": 2,
+      "unlabeled": 0,
+      "missingPredictions": 0,
+      "invalidPredictions": 0,
+      "tp": 11,
+      "fp": 0,
+      "fn": 0,
+      "tn": 27,
+      "precision": 1,
+      "recall": 1,
+      "f1": 1,
+      "accuracy": 1,
+      "decisiveCoverage": 0.5,
+      "decisiveAccuracy": 1,
+      "decisivePrecision": 1,
+      "decisiveRecall": 1,
+      "decisiveF1": 1,
+      "unresolvedRate": 0,
+      "conflictRate": 0.5,
+      "fourOutcomeTable": {
+        "same": {
+          "REJECTED": 0,
+          "CONFLICT": 0,
+          "INVALID": 0,
+          "MISSING": 0,
+          "UNRESOLVED": 0,
+          "ACCEPTED": 11
+        },
+        "different": {
+          "REJECTED": 8,
+          "CONFLICT": 19,
+          "INVALID": 0,
+          "MISSING": 0,
+          "UNRESOLVED": 0,
+          "ACCEPTED": 0
+        },
+        "uncertain": {
+          "REJECTED": 0,
+          "CONFLICT": 1,
+          "INVALID": 0,
+          "MISSING": 0,
+          "UNRESOLVED": 0,
+          "ACCEPTED": 1
+        },
+        "unlabeled": {
+          "REJECTED": 0,
+          "CONFLICT": 0,
+          "INVALID": 0,
+          "MISSING": 0,
+          "UNRESOLVED": 0,
+          "ACCEPTED": 0
+        }
+      }
+    }
+  },
+  {
+    "threshold": 0.7,
+    "metrics": {
+      "tasks": 40,
+      "binaryGold": 38,
+      "uncertain": 2,
+      "unlabeled": 0,
+      "missingPredictions": 0,
+      "invalidPredictions": 0,
+      "tp": 10,
+      "fp": 0,
+      "fn": 1,
+      "tn": 27,
+      "precision": 1,
+      "recall": 0.9090909090909091,
+      "f1": 0.9523809523809523,
+      "accuracy": 0.9736842105263158,
+      "decisiveCoverage": 0.5,
+      "decisiveAccuracy": 0.9473684210526315,
+      "decisivePrecision": 1,
+      "decisiveRecall": 0.9090909090909091,
+      "decisiveF1": 0.9523809523809523,
+      "unresolvedRate": 0,
+      "conflictRate": 0.5,
+      "fourOutcomeTable": {
+        "same": {
+          "REJECTED": 1,
+          "CONFLICT": 0,
+          "INVALID": 0,
+          "MISSING": 0,
+          "UNRESOLVED": 0,
+          "ACCEPTED": 10
+        },
+        "different": {
+          "REJECTED": 8,
+          "CONFLICT": 19,
+          "INVALID": 0,
+          "MISSING": 0,
+          "UNRESOLVED": 0,
+          "ACCEPTED": 0
+        },
+        "uncertain": {
+          "REJECTED": 0,
+          "CONFLICT": 1,
+          "INVALID": 0,
+          "MISSING": 0,
+          "UNRESOLVED": 0,
+          "ACCEPTED": 1
+        },
+        "unlabeled": {
+          "REJECTED": 0,
+          "CONFLICT": 0,
+          "INVALID": 0,
+          "MISSING": 0,
+          "UNRESOLVED": 0,
+          "ACCEPTED": 0
+        }
+      }
+    }
+  },
+  {
+    "threshold": 0.8,
+    "metrics": {
+      "tasks": 40,
+      "binaryGold": 38,
+      "uncertain": 2,
+      "unlabeled": 0,
+      "missingPredictions": 0,
+      "invalidPredictions": 0,
+      "tp": 10,
+      "fp": 0,
+      "fn": 1,
+      "tn": 27,
+      "precision": 1,
+      "recall": 0.9090909090909091,
+      "f1": 0.9523809523809523,
+      "accuracy": 0.9736842105263158,
+      "decisiveCoverage": 0.5,
+      "decisiveAccuracy": 0.9473684210526315,
+      "decisivePrecision": 1,
+      "decisiveRecall": 0.9090909090909091,
+      "decisiveF1": 0.9523809523809523,
+      "unresolvedRate": 0,
+      "conflictRate": 0.5,
+      "fourOutcomeTable": {
+        "same": {
+          "REJECTED": 1,
+          "CONFLICT": 0,
+          "INVALID": 0,
+          "MISSING": 0,
+          "UNRESOLVED": 0,
+          "ACCEPTED": 10
+        },
+        "different": {
+          "REJECTED": 8,
+          "CONFLICT": 19,
+          "INVALID": 0,
+          "MISSING": 0,
+          "UNRESOLVED": 0,
+          "ACCEPTED": 0
+        },
+        "uncertain": {
+          "REJECTED": 0,
+          "CONFLICT": 1,
+          "INVALID": 0,
+          "MISSING": 0,
+          "UNRESOLVED": 0,
+          "ACCEPTED": 1
+        },
+        "unlabeled": {
+          "REJECTED": 0,
+          "CONFLICT": 0,
+          "INVALID": 0,
+          "MISSING": 0,
+          "UNRESOLVED": 0,
+          "ACCEPTED": 0
+        }
+      }
+    }
+  },
+  {
+    "threshold": 0.85,
+    "metrics": {
+      "tasks": 40,
+      "binaryGold": 38,
+      "uncertain": 2,
+      "unlabeled": 0,
+      "missingPredictions": 0,
+      "invalidPredictions": 0,
+      "tp": 10,
+      "fp": 0,
+      "fn": 1,
+      "tn": 27,
+      "precision": 1,
+      "recall": 0.9090909090909091,
+      "f1": 0.9523809523809523,
+      "accuracy": 0.9736842105263158,
+      "decisiveCoverage": 0.5,
+      "decisiveAccuracy": 0.9473684210526315,
+      "decisivePrecision": 1,
+      "decisiveRecall": 0.9090909090909091,
+      "decisiveF1": 0.9523809523809523,
+      "unresolvedRate": 0,
+      "conflictRate": 0.5,
+      "fourOutcomeTable": {
+        "same": {
+          "REJECTED": 1,
+          "CONFLICT": 0,
+          "INVALID": 0,
+          "MISSING": 0,
+          "UNRESOLVED": 0,
+          "ACCEPTED": 10
+        },
+        "different": {
+          "REJECTED": 8,
+          "CONFLICT": 19,
+          "INVALID": 0,
+          "MISSING": 0,
+          "UNRESOLVED": 0,
+          "ACCEPTED": 0
+        },
+        "uncertain": {
+          "REJECTED": 0,
+          "CONFLICT": 1,
+          "INVALID": 0,
+          "MISSING": 0,
+          "UNRESOLVED": 0,
+          "ACCEPTED": 1
+        },
+        "unlabeled": {
+          "REJECTED": 0,
+          "CONFLICT": 0,
+          "INVALID": 0,
+          "MISSING": 0,
+          "UNRESOLVED": 0,
+          "ACCEPTED": 0
+        }
+      }
+    }
+  },
+  {
+    "threshold": 0.9,
+    "metrics": {
+      "tasks": 40,
+      "binaryGold": 38,
+      "uncertain": 2,
+      "unlabeled": 0,
+      "missingPredictions": 0,
+      "invalidPredictions": 0,
+      "tp": 9,
+      "fp": 0,
+      "fn": 2,
+      "tn": 27,
+      "precision": 1,
+      "recall": 0.8181818181818182,
+      "f1": 0.9,
+      "accuracy": 0.9473684210526315,
+      "decisiveCoverage": 0.5,
+      "decisiveAccuracy": 0.8947368421052632,
+      "decisivePrecision": 1,
+      "decisiveRecall": 0.8181818181818182,
+      "decisiveF1": 0.9,
+      "unresolvedRate": 0,
+      "conflictRate": 0.5,
+      "fourOutcomeTable": {
+        "same": {
+          "REJECTED": 2,
+          "CONFLICT": 0,
+          "INVALID": 0,
+          "MISSING": 0,
+          "UNRESOLVED": 0,
+          "ACCEPTED": 9
+        },
+        "different": {
+          "REJECTED": 8,
+          "CONFLICT": 19,
+          "INVALID": 0,
+          "MISSING": 0,
+          "UNRESOLVED": 0,
+          "ACCEPTED": 0
+        },
+        "uncertain": {
+          "REJECTED": 0,
+          "CONFLICT": 1,
+          "INVALID": 0,
+          "MISSING": 0,
+          "UNRESOLVED": 0,
+          "ACCEPTED": 1
+        },
+        "unlabeled": {
+          "REJECTED": 0,
+          "CONFLICT": 0,
+          "INVALID": 0,
+          "MISSING": 0,
+          "UNRESOLVED": 0,
+          "ACCEPTED": 0
+        }
+      }
+    }
+  },
+  {
+    "threshold": 0.95,
+    "metrics": {
+      "tasks": 40,
+      "binaryGold": 38,
+      "uncertain": 2,
+      "unlabeled": 0,
+      "missingPredictions": 0,
+      "invalidPredictions": 0,
+      "tp": 9,
+      "fp": 0,
+      "fn": 2,
+      "tn": 27,
+      "precision": 1,
+      "recall": 0.8181818181818182,
+      "f1": 0.9,
+      "accuracy": 0.9473684210526315,
+      "decisiveCoverage": 0.5,
+      "decisiveAccuracy": 0.8947368421052632,
+      "decisivePrecision": 1,
+      "decisiveRecall": 0.8181818181818182,
+      "decisiveF1": 0.9,
+      "unresolvedRate": 0,
+      "conflictRate": 0.5,
+      "fourOutcomeTable": {
+        "same": {
+          "REJECTED": 2,
+          "CONFLICT": 0,
+          "INVALID": 0,
+          "MISSING": 0,
+          "UNRESOLVED": 0,
+          "ACCEPTED": 9
+        },
+        "different": {
+          "REJECTED": 8,
+          "CONFLICT": 19,
+          "INVALID": 0,
+          "MISSING": 0,
+          "UNRESOLVED": 0,
+          "ACCEPTED": 0
+        },
+        "uncertain": {
+          "REJECTED": 0,
+          "CONFLICT": 1,
+          "INVALID": 0,
+          "MISSING": 0,
+          "UNRESOLVED": 0,
+          "ACCEPTED": 1
+        },
+        "unlabeled": {
+          "REJECTED": 0,
+          "CONFLICT": 0,
+          "INVALID": 0,
+          "MISSING": 0,
+          "UNRESOLVED": 0,
+          "ACCEPTED": 0
+        }
+      }
+    }
+  },
+  {
+    "threshold": 0.97,
+    "metrics": {
+      "tasks": 40,
+      "binaryGold": 38,
+      "uncertain": 2,
+      "unlabeled": 0,
+      "missingPredictions": 0,
+      "invalidPredictions": 0,
+      "tp": 9,
+      "fp": 0,
+      "fn": 2,
+      "tn": 27,
+      "precision": 1,
+      "recall": 0.8181818181818182,
+      "f1": 0.9,
+      "accuracy": 0.9473684210526315,
+      "decisiveCoverage": 0.5,
+      "decisiveAccuracy": 0.8947368421052632,
+      "decisivePrecision": 1,
+      "decisiveRecall": 0.8181818181818182,
+      "decisiveF1": 0.9,
+      "unresolvedRate": 0,
+      "conflictRate": 0.5,
+      "fourOutcomeTable": {
+        "same": {
+          "REJECTED": 2,
+          "CONFLICT": 0,
+          "INVALID": 0,
+          "MISSING": 0,
+          "UNRESOLVED": 0,
+          "ACCEPTED": 9
+        },
+        "different": {
+          "REJECTED": 8,
+          "CONFLICT": 19,
+          "INVALID": 0,
+          "MISSING": 0,
+          "UNRESOLVED": 0,
+          "ACCEPTED": 0
+        },
+        "uncertain": {
+          "REJECTED": 0,
+          "CONFLICT": 1,
+          "INVALID": 0,
+          "MISSING": 0,
+          "UNRESOLVED": 0,
+          "ACCEPTED": 1
+        },
+        "unlabeled": {
+          "REJECTED": 0,
+          "CONFLICT": 0,
+          "INVALID": 0,
+          "MISSING": 0,
+          "UNRESOLVED": 0,
+          "ACCEPTED": 0
+        }
+      }
+    }
+  },
+  {
+    "threshold": 1,
+    "metrics": {
+      "tasks": 40,
+      "binaryGold": 38,
+      "uncertain": 2,
+      "unlabeled": 0,
+      "missingPredictions": 0,
+      "invalidPredictions": 0,
+      "tp": 9,
+      "fp": 0,
+      "fn": 2,
+      "tn": 27,
+      "precision": 1,
+      "recall": 0.8181818181818182,
+      "f1": 0.9,
+      "accuracy": 0.9473684210526315,
+      "decisiveCoverage": 0.5,
+      "decisiveAccuracy": 0.8947368421052632,
+      "decisivePrecision": 1,
+      "decisiveRecall": 0.8181818181818182,
+      "decisiveF1": 0.9,
+      "unresolvedRate": 0,
+      "conflictRate": 0.5,
+      "fourOutcomeTable": {
+        "same": {
+          "REJECTED": 2,
+          "CONFLICT": 0,
+          "INVALID": 0,
+          "MISSING": 0,
+          "UNRESOLVED": 0,
+          "ACCEPTED": 9
+        },
+        "different": {
+          "REJECTED": 8,
+          "CONFLICT": 19,
+          "INVALID": 0,
+          "MISSING": 0,
+          "UNRESOLVED": 0,
+          "ACCEPTED": 0
+        },
+        "uncertain": {
+          "REJECTED": 0,
+          "CONFLICT": 1,
+          "INVALID": 0,
+          "MISSING": 0,
+          "UNRESOLVED": 0,
+          "ACCEPTED": 1
+        },
+        "unlabeled": {
+          "REJECTED": 0,
+          "CONFLICT": 0,
+          "INVALID": 0,
+          "MISSING": 0,
+          "UNRESOLVED": 0,
+          "ACCEPTED": 0
+        }
+      }
+    }
+  }
+]

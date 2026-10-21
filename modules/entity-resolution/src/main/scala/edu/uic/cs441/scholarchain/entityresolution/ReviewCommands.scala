@@ -29,7 +29,7 @@ object ReviewCommands {
   export-review-tool --output NEW_DIRECTORY
   import-labels --queue QUEUE_JSON --labels ORIGINAL_CHECKPOINT_JSON --output NEW_DURABLE_VALIDATED_JSON
   prepare-evaluation-predictions --input COMPLETED_PHASE4_RUN --config CONFIG_JSON --queue QUEUE_JSON --predictions COMPLETED_RESOLUTION_RUN --binding PREDICTION_RUN_BINDING_JSON --code-revision GIT_SHA40 --source-hash FROZEN_SOURCE_SHA256 --output NEW_JSON
-  evaluate --queue QUEUE_JSON --split SPLIT_JSON --gold VALIDATED_LABELS_JSON --predictions EVALUATION_PREDICTIONS_JSON --partition development|held-out --output NEW_DIRECTORY
+  evaluate --queue QUEUE_JSON --split SPLIT_JSON --gold VALIDATED_LABELS_JSON --predictions EVALUATION_PREDICTIONS_JSON --partition development|held-out [--exclude-pairs EXCLUSION_MANIFEST_JSON] --output NEW_DIRECTORY
   sensitivity --queue QUEUE_JSON --split SPLIT_JSON --gold VALIDATED_LABELS_JSON --predictions EVALUATION_PREDICTIONS_JSON --partition development --thresholds 0.8,0.9 --output NEW_JSON
 Standard sampling: 40 development + 200 held-out initial reviews, 10 + 50 reserves.
 Code/source hashes are explicit declared freeze metadata; the coordinator must verify them.
@@ -97,8 +97,11 @@ No labels, accuracy, live provider evidence or final Phase 5E acceptance is crea
     val rest = args.drop(1).toVector
     require(rest.size % 2 == 0, "each option requires one value")
     val pairs = rest.grouped(2).map(v => v.head -> v(1)).toVector
+    val optional = if (command == "evaluate") Set("--exclude-pairs") else Set.empty[String]
     require(
-      pairs.map(_._1).distinct.size == pairs.size && pairs.map(_._1).toSet == required,
+      pairs.map(_._1).distinct.size == pairs.size && required.subsetOf(
+        pairs.map(_._1).toSet
+      ) && pairs.map(_._1).toSet.subsetOf(required ++ optional),
       "unknown, duplicate or missing CLI options; use --help"
     )
     val options = pairs.toMap; val output = Path.of(options("--output"))
@@ -115,7 +118,8 @@ No labels, accuracy, live provider evidence or final Phase 5E acceptance is crea
             "--split",
             "--gold",
             "--predictions",
-            "--binding"
+            "--binding",
+            "--exclude-pairs"
           )(k)
         )
         .map(_._2),
@@ -242,7 +246,15 @@ No labels, accuracy, live provider evidence or final Phase 5E acceptance is crea
         val predictions = get[EvaluationPredictions](options("--predictions"))
         if (command == "evaluate") {
           val report = value(
-            Evaluation.evaluate(q, split, gold, predictions, options("--partition"), args.toVector)
+            Evaluation.evaluate(
+              q,
+              split,
+              gold,
+              predictions,
+              options("--partition"),
+              args.toVector,
+              options.get("--exclude-pairs").map(get[EvaluationExclusions])
+            )
           )
           Files.createDirectories(output); jsonNew(output.resolve("evaluation.json"), report)
           s"Evaluation readiness report saved. Binary gold=${report.overall.binaryGold}; uncertain/unlabeled requiring review=${report.additionalReviewsNeeded}. This does not establish final Phase 5E acceptance."

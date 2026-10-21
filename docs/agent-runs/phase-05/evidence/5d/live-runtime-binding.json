@@ -1,0 +1,8 @@
+{
+  "schemaVersion": "scholarchain.live-runtime-binding.v1",
+  "approvalId": "approval-1b66c9878075",
+  "approvalReceiptSha256": "1b66c9878075add28352073fe62070f635ccea4aed9b294ec4e69983c9266bb9",
+  "absoluteLedgerPath": "/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-05/evidence/5d/live-state/approval-1b66c9878075/budget.json",
+  "absoluteCachePath": "/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-05/evidence/5d/live-state/approval-1b66c9878075/cache",
+  "configHash": "fea364d4a4873b7e948059a2ad16909876bf27fc511e5f0995c13ad91924bf70"
+}

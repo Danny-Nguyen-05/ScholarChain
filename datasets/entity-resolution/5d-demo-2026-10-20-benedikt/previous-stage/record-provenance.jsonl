@@ -1,0 +1,17 @@
+{"nativeId":"https://openalex.org/W2604165918","origin":"existing-context","recordSha256":"1a69349a9cbb2742ab63b935c177ea226b5a83f77658c114666dd65dff89ff9e","sourcePath":"context/openalex/works.jsonl"}
+{"nativeId":"https://openalex.org/W2778141220","origin":"existing-context","recordSha256":"457ab0e2947e83b8c923aca5b602a428cd97183c121c43a11896b09e7555db5f","sourcePath":"context/openalex/works.jsonl"}
+{"nativeId":"https://openalex.org/W2791534191","origin":"existing-context","recordSha256":"7237a629d3f7f5de86d5255ed8a629c96c8d43b25e80e0b1c6355e175e4804f0","sourcePath":"context/openalex/works.jsonl"}
+{"nativeId":"https://openalex.org/W2792026792","origin":"existing-context","recordSha256":"b78ce4e584575f74d9046f1b3994a099dc5817051cf4aabefaa7b68fe09dc142","sourcePath":"context/openalex/works.jsonl"}
+{"nativeId":"https://openalex.org/W2792572948","origin":"existing-context","recordSha256":"28476ab40f24a5178c5fbded2890ab0e74d8a3e1b893acb791ee39224efebe48","sourcePath":"context/openalex/works.jsonl"}
+{"nativeId":"https://openalex.org/W2794060615","origin":"existing-context","recordSha256":"6f5a7dcfd6ff36202968d243e212508a655df1e7cd262ca24ad536fce1ba22d4","sourcePath":"context/openalex/works.jsonl"}
+{"nativeId":"https://openalex.org/W2799457717","origin":"existing-context","recordSha256":"e14e8a90075dc5daa26b7fb10c9b6cbdf41e59cb979880d986a036ec4d1a6ecf","sourcePath":"context/openalex/works.jsonl"}
+{"nativeId":"https://openalex.org/W2889897289","origin":"existing-context","recordSha256":"1f82621228709b4a0babe61ab541cf680acf3369228c0ee232bd0bac1ead1332","sourcePath":"context/openalex/works.jsonl"}
+{"nativeId":"https://openalex.org/W2951565607","origin":"existing-context","recordSha256":"2b920d00714b380ef9270616df8bbb4b68b3bf294b3b422e958158aa96e9a782","sourcePath":"context/openalex/works.jsonl"}
+{"nativeId":"https://openalex.org/W2976817320","origin":"existing-context","recordSha256":"499ca841568ab19933b9efc64c32cbe3e73745dbb7a78f3cf2e936cbed925b9e","sourcePath":"context/openalex/works.jsonl"}
+{"nativeId":"https://openalex.org/W3025940890","origin":"existing-context","recordSha256":"f1f36e62d241a01422faf5e7ba086f597f823674a51c0f7a60a5c883c39d60c8","sourcePath":"context/openalex/works.jsonl"}
+{"nativeId":"https://openalex.org/W4221144063","origin":"existing-context","recordSha256":"ea22dfee7b03b21d503aff4c4fa3deb2cb897fc1538ca88ec8e13086fbef7a4f","sourcePath":"context/openalex/works.jsonl"}
+{"authorId":"topic:distributed stream processing","nativeId":"https://openalex.org/W2586644251","origin":"new-response","recordSha256":"062849098a5ef707b4873666737d2080fdf0683c09c7b56d2166b451e43db280","requestAttempt":2}
+{"authorId":"https://openalex.org/A5100990313","nativeId":"https://openalex.org/W2771446712","origin":"new-response","recordSha256":"e9180da2dc4f24231a7a39c1c4c96b11810ddc75052bb3337fd2531aa082621d","requestAttempt":3}
+{"authorId":"https://openalex.org/A5100990313","nativeId":"https://openalex.org/W2891837479","origin":"new-response","recordSha256":"6276ef5722cb2cce968b017f6fd59475b246d78b7f890450f550eb6b6d32fbf3","requestAttempt":3}
+{"authorId":"topic:state machine replication","nativeId":"https://openalex.org/W2909748584","origin":"new-response","recordSha256":"b85e8a171f37d10aac080368dba5cdaf2be08a44057aa079a64b380a0ff31f2f","requestAttempt":1}
+{"authorId":"topic:distributed stream processing","nativeId":"https://openalex.org/W3028768478","origin":"new-response","recordSha256":"8e96b83f9e0a3dc76456df4c0b376dd233d8958ed8bed659ad770d694fde5700","requestAttempt":2}

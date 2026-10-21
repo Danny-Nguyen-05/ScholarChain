@@ -1,0 +1,811 @@
+[
+  {
+    "name": "python-tests",
+    "command": [
+      "python3",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "datasets/scripts",
+      "-p",
+      "test_*.py",
+      "-v"
+    ],
+    "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+    "startedMs": 1792550560746,
+    "environment": {
+      "JAVA_HOME": "/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home",
+      "SBT_OPTS": "-Dlogback.configurationFile=/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-04/xml-repair-logback.xml"
+    },
+    "status": "complete",
+    "log": "/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-05/evidence/5e/python-tests.txt",
+    "exitCode": 0,
+    "finishedMs": 1792550561491
+  },
+  {
+    "name": "integrity",
+    "command": [
+      "python3",
+      "docs/agent-runs/phase-05/evidence/5e/validate-inputs.py.txt"
+    ],
+    "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+    "startedMs": 1792550569605,
+    "environment": {
+      "JAVA_HOME": "/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home",
+      "SBT_OPTS": "-Dlogback.configurationFile=/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-04/xml-repair-logback.xml"
+    },
+    "status": "complete",
+    "log": "/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-05/evidence/5e/integrity.txt",
+    "exitCode": 0,
+    "finishedMs": 1792550570338
+  },
+  {
+    "name": "targeted",
+    "command": [
+      "sbt",
+      "-batch",
+      "entityResolution/Compile/scalafmt",
+      "entityResolution/Test/scalafmt",
+      "independentTests/Test/scalafmt",
+      "entityResolution/testOnly *ReviewReadinessSpec",
+      "independentTests/testOnly *IndependentEvaluationSpec *IndependentEvaluationAdapterSpec *IndependentEvaluationCliSpec *IndependentEvaluationCohortSpec"
+    ],
+    "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+    "startedMs": 1792550616136,
+    "environment": {
+      "JAVA_HOME": "/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home",
+      "SBT_OPTS": "-Dlogback.configurationFile=/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-04/xml-repair-logback.xml"
+    },
+    "status": "complete",
+    "log": "/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-05/evidence/5e/targeted.txt",
+    "exitCode": 1,
+    "finishedMs": 1792550616321
+  },
+  {
+    "name": "targeted-unsandboxed",
+    "command": [
+      "sbt",
+      "-batch",
+      "entityResolution/Compile/scalafmt",
+      "entityResolution/Test/scalafmt",
+      "independentTests/Test/scalafmt",
+      "entityResolution/testOnly *ReviewReadinessSpec",
+      "independentTests/testOnly *IndependentEvaluationSpec *IndependentEvaluationAdapterSpec *IndependentEvaluationCliSpec *IndependentEvaluationCohortSpec"
+    ],
+    "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+    "startedMs": 1792551303929,
+    "environment": {
+      "JAVA_HOME": "/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home",
+      "SBT_OPTS": "-Dlogback.configurationFile=/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-04/xml-repair-logback.xml"
+    },
+    "status": "complete",
+    "log": "/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-05/evidence/5e/targeted-unsandboxed.txt",
+    "exitCode": 1,
+    "finishedMs": 1792551313831
+  },
+  {
+    "name": "targeted-fixture-repair",
+    "command": [
+      "sbt",
+      "-batch",
+      "independentTests/Test/scalafmt",
+      "independentTests/testOnly *IndependentEvaluationCliSpec"
+    ],
+    "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+    "startedMs": 1792551389968,
+    "environment": {
+      "JAVA_HOME": "/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home",
+      "SBT_OPTS": "-Dlogback.configurationFile=/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-04/xml-repair-logback.xml"
+    },
+    "status": "complete",
+    "log": "/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-05/evidence/5e/targeted-fixture-repair.txt",
+    "exitCode": 1,
+    "finishedMs": 1792551395719
+  },
+  {
+    "name": "targeted-fixture-isolation",
+    "command": [
+      "sbt",
+      "-batch",
+      "independentTests/Test/scalafmt",
+      "independentTests/testOnly *IndependentEvaluationCliSpec"
+    ],
+    "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+    "startedMs": 1792551456093,
+    "environment": {
+      "JAVA_HOME": "/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home",
+      "SBT_OPTS": "-Dlogback.configurationFile=/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-04/xml-repair-logback.xml"
+    },
+    "status": "complete",
+    "log": "/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-05/evidence/5e/targeted-fixture-isolation.txt",
+    "exitCode": 1,
+    "finishedMs": 1792551462416
+  },
+  {
+    "name": "targeted-final",
+    "command": [
+      "sbt",
+      "-batch",
+      "independentTests/Test/scalafmt",
+      "entityResolution/testOnly *ReviewReadinessSpec",
+      "independentTests/testOnly *IndependentEvaluationSpec *IndependentEvaluationAdapterSpec *IndependentEvaluationCliSpec *IndependentEvaluationCohortSpec"
+    ],
+    "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+    "startedMs": 1792551543969,
+    "environment": {
+      "JAVA_HOME": "/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home",
+      "SBT_OPTS": "-Dlogback.configurationFile=/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-04/xml-repair-logback.xml"
+    },
+    "status": "complete",
+    "log": "/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-05/evidence/5e/targeted-final.txt",
+    "exitCode": 0,
+    "finishedMs": 1792551550985
+  },
+  {
+    "name": "resolve-disabled-a",
+    "command": [
+      "/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home/bin/java",
+      "-Xmx4g",
+      "-cp",
+      "/Users/danny/Documents/UIC/CS441/ScholarChain/modules/entity-resolution/target/scala-3.3.4/classes:/Users/danny/Documents/UIC/CS441/ScholarChain/modules/core/target/scala-3.3.4/classes:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/scala-lang/scala3-library_3/3.3.4/scala3-library_3-3.3.4.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/lihaoyi/upickle_3/4.0.2/upickle_3-4.0.2.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/slf4j/slf4j-api/2.0.16/slf4j-api-2.0.16.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/scala-lang/scala-library/2.13.14/scala-library-2.13.14.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/lihaoyi/ujson_3/4.0.2/ujson_3-4.0.2.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/lihaoyi/upack_3/4.0.2/upack_3-4.0.2.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/lihaoyi/upickle-implicits_3/4.0.2/upickle-implicits_3-4.0.2.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/lihaoyi/upickle-core_3/4.0.2/upickle-core_3-4.0.2.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/lihaoyi/geny_3/1.1.1/geny_3-1.1.1.jar",
+      "edu.uic.cs441.scholarchain.entityresolution.Phase5Main",
+      "resolve",
+      "--input",
+      "/Users/danny/Documents/UIC/CS441/ScholarChain/datasets/entity-resolution/prepared/bd424a86-0a1b-4e44-bbdb-4a9b8c8a20e3",
+      "--policy",
+      "/Users/danny/Documents/UIC/CS441/ScholarChain/modules/entity-resolution/src/main/resources/phase5-policy.v1.json",
+      "--config",
+      "/Users/danny/Documents/UIC/CS441/ScholarChain/modules/entity-resolution/src/main/resources/phase5-config.v1.json",
+      "--llm-mode",
+      "disabled",
+      "--output",
+      "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase5e/disabled-a"
+    ],
+    "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+    "startedMs": 1792551554141,
+    "environment": {
+      "JAVA_HOME": "/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home",
+      "SBT_OPTS": "-Dlogback.configurationFile=/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-04/xml-repair-logback.xml"
+    },
+    "status": "complete",
+    "log": "/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-05/evidence/5e/resolve-disabled-a.txt",
+    "exitCode": 0,
+    "finishedMs": 1792551580613
+  },
+  {
+    "name": "prepare-disabled-a",
+    "command": [
+      "/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home/bin/java",
+      "-Xmx4g",
+      "-cp",
+      "/Users/danny/Documents/UIC/CS441/ScholarChain/modules/entity-resolution/target/scala-3.3.4/classes:/Users/danny/Documents/UIC/CS441/ScholarChain/modules/core/target/scala-3.3.4/classes:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/scala-lang/scala3-library_3/3.3.4/scala3-library_3-3.3.4.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/lihaoyi/upickle_3/4.0.2/upickle_3-4.0.2.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/slf4j/slf4j-api/2.0.16/slf4j-api-2.0.16.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/scala-lang/scala-library/2.13.14/scala-library-2.13.14.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/lihaoyi/ujson_3/4.0.2/ujson_3-4.0.2.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/lihaoyi/upack_3/4.0.2/upack_3-4.0.2.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/lihaoyi/upickle-implicits_3/4.0.2/upickle-implicits_3-4.0.2.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/lihaoyi/upickle-core_3/4.0.2/upickle-core_3-4.0.2.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/lihaoyi/geny_3/1.1.1/geny_3-1.1.1.jar",
+      "edu.uic.cs441.scholarchain.entityresolution.Phase5Main",
+      "prepare-evaluation-predictions",
+      "--input",
+      "/Users/danny/Documents/UIC/CS441/ScholarChain/datasets/entity-resolution/prepared/bd424a86-0a1b-4e44-bbdb-4a9b8c8a20e3",
+      "--config",
+      "/Users/danny/Documents/UIC/CS441/ScholarChain/modules/entity-resolution/src/main/resources/phase5-config.v1.json",
+      "--queue",
+      "/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-05/evidence/5c-repair/review-artifacts/queue.json",
+      "--predictions",
+      "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase5e/disabled-a",
+      "--binding",
+      "/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-05/evidence/5e/prediction-binding.json",
+      "--code-revision",
+      "61d32a38eaad5b2fc352acf0b7f85f3815c2336d",
+      "--source-hash",
+      "52f24a88d8b4d3d802e8e53403428ad6d5e889afc7309ccd55a7f4f2fc91376f",
+      "--output",
+      "/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-05/evidence/5e/disabled-a-predictions.json"
+    ],
+    "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+    "startedMs": 1792551580637,
+    "environment": {
+      "JAVA_HOME": "/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home",
+      "SBT_OPTS": "-Dlogback.configurationFile=/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-04/xml-repair-logback.xml"
+    },
+    "status": "complete",
+    "log": "/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-05/evidence/5e/prepare-disabled-a.txt",
+    "exitCode": 0,
+    "finishedMs": 1792551595819
+  },
+  {
+    "name": "resolve-disabled-b",
+    "command": [
+      "/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home/bin/java",
+      "-Xmx4g",
+      "-cp",
+      "/Users/danny/Documents/UIC/CS441/ScholarChain/modules/entity-resolution/target/scala-3.3.4/classes:/Users/danny/Documents/UIC/CS441/ScholarChain/modules/core/target/scala-3.3.4/classes:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/scala-lang/scala3-library_3/3.3.4/scala3-library_3-3.3.4.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/lihaoyi/upickle_3/4.0.2/upickle_3-4.0.2.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/slf4j/slf4j-api/2.0.16/slf4j-api-2.0.16.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/scala-lang/scala-library/2.13.14/scala-library-2.13.14.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/lihaoyi/ujson_3/4.0.2/ujson_3-4.0.2.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/lihaoyi/upack_3/4.0.2/upack_3-4.0.2.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/lihaoyi/upickle-implicits_3/4.0.2/upickle-implicits_3-4.0.2.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/lihaoyi/upickle-core_3/4.0.2/upickle-core_3-4.0.2.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/lihaoyi/geny_3/1.1.1/geny_3-1.1.1.jar",
+      "edu.uic.cs441.scholarchain.entityresolution.Phase5Main",
+      "resolve",
+      "--input",
+      "/Users/danny/Documents/UIC/CS441/ScholarChain/datasets/entity-resolution/prepared/bd424a86-0a1b-4e44-bbdb-4a9b8c8a20e3",
+      "--policy",
+      "/Users/danny/Documents/UIC/CS441/ScholarChain/modules/entity-resolution/src/main/resources/phase5-policy.v1.json",
+      "--config",
+      "/Users/danny/Documents/UIC/CS441/ScholarChain/modules/entity-resolution/src/main/resources/phase5-config.v1.json",
+      "--llm-mode",
+      "disabled",
+      "--output",
+      "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase5e/disabled-b"
+    ],
+    "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+    "startedMs": 1792551595844,
+    "environment": {
+      "JAVA_HOME": "/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home",
+      "SBT_OPTS": "-Dlogback.configurationFile=/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-04/xml-repair-logback.xml"
+    },
+    "status": "complete",
+    "log": "/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-05/evidence/5e/resolve-disabled-b.txt",
+    "exitCode": 0,
+    "finishedMs": 1792551622786
+  },
+  {
+    "name": "prepare-disabled-b",
+    "command": [
+      "/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home/bin/java",
+      "-Xmx4g",
+      "-cp",
+      "/Users/danny/Documents/UIC/CS441/ScholarChain/modules/entity-resolution/target/scala-3.3.4/classes:/Users/danny/Documents/UIC/CS441/ScholarChain/modules/core/target/scala-3.3.4/classes:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/scala-lang/scala3-library_3/3.3.4/scala3-library_3-3.3.4.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/lihaoyi/upickle_3/4.0.2/upickle_3-4.0.2.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/slf4j/slf4j-api/2.0.16/slf4j-api-2.0.16.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/scala-lang/scala-library/2.13.14/scala-library-2.13.14.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/lihaoyi/ujson_3/4.0.2/ujson_3-4.0.2.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/lihaoyi/upack_3/4.0.2/upack_3-4.0.2.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/lihaoyi/upickle-implicits_3/4.0.2/upickle-implicits_3-4.0.2.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/lihaoyi/upickle-core_3/4.0.2/upickle-core_3-4.0.2.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/lihaoyi/geny_3/1.1.1/geny_3-1.1.1.jar",
+      "edu.uic.cs441.scholarchain.entityresolution.Phase5Main",
+      "prepare-evaluation-predictions",
+      "--input",
+      "/Users/danny/Documents/UIC/CS441/ScholarChain/datasets/entity-resolution/prepared/bd424a86-0a1b-4e44-bbdb-4a9b8c8a20e3",
+      "--config",
+      "/Users/danny/Documents/UIC/CS441/ScholarChain/modules/entity-resolution/src/main/resources/phase5-config.v1.json",
+      "--queue",
+      "/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-05/evidence/5c-repair/review-artifacts/queue.json",
+      "--predictions",
+      "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase5e/disabled-b",
+      "--binding",
+      "/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-05/evidence/5e/prediction-binding.json",
+      "--code-revision",
+      "61d32a38eaad5b2fc352acf0b7f85f3815c2336d",
+      "--source-hash",
+      "52f24a88d8b4d3d802e8e53403428ad6d5e889afc7309ccd55a7f4f2fc91376f",
+      "--output",
+      "/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-05/evidence/5e/disabled-b-predictions.json"
+    ],
+    "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+    "startedMs": 1792551622811,
+    "environment": {
+      "JAVA_HOME": "/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home",
+      "SBT_OPTS": "-Dlogback.configurationFile=/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-04/xml-repair-logback.xml"
+    },
+    "status": "complete",
+    "log": "/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-05/evidence/5e/prepare-disabled-b.txt",
+    "exitCode": 0,
+    "finishedMs": 1792551637854
+  },
+  {
+    "name": "resolve-fake-a",
+    "command": [
+      "/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home/bin/java",
+      "-Xmx4g",
+      "-cp",
+      "/Users/danny/Documents/UIC/CS441/ScholarChain/modules/entity-resolution/target/scala-3.3.4/classes:/Users/danny/Documents/UIC/CS441/ScholarChain/modules/core/target/scala-3.3.4/classes:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/scala-lang/scala3-library_3/3.3.4/scala3-library_3-3.3.4.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/lihaoyi/upickle_3/4.0.2/upickle_3-4.0.2.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/slf4j/slf4j-api/2.0.16/slf4j-api-2.0.16.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/scala-lang/scala-library/2.13.14/scala-library-2.13.14.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/lihaoyi/ujson_3/4.0.2/ujson_3-4.0.2.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/lihaoyi/upack_3/4.0.2/upack_3-4.0.2.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/lihaoyi/upickle-implicits_3/4.0.2/upickle-implicits_3-4.0.2.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/lihaoyi/upickle-core_3/4.0.2/upickle-core_3-4.0.2.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/lihaoyi/geny_3/1.1.1/geny_3-1.1.1.jar",
+      "edu.uic.cs441.scholarchain.entityresolution.Phase5Main",
+      "resolve",
+      "--input",
+      "/Users/danny/Documents/UIC/CS441/ScholarChain/datasets/entity-resolution/prepared/bd424a86-0a1b-4e44-bbdb-4a9b8c8a20e3",
+      "--policy",
+      "/Users/danny/Documents/UIC/CS441/ScholarChain/modules/entity-resolution/src/main/resources/phase5-policy.v1.json",
+      "--config",
+      "/Users/danny/Documents/UIC/CS441/ScholarChain/modules/entity-resolution/src/main/resources/phase5-config.v1.json",
+      "--llm-mode",
+      "fake",
+      "--output",
+      "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase5e/fake-a"
+    ],
+    "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+    "startedMs": 1792551637875,
+    "environment": {
+      "JAVA_HOME": "/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home",
+      "SBT_OPTS": "-Dlogback.configurationFile=/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-04/xml-repair-logback.xml"
+    },
+    "status": "complete",
+    "log": "/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-05/evidence/5e/resolve-fake-a.txt",
+    "exitCode": 0,
+    "finishedMs": 1792551664137
+  },
+  {
+    "name": "prepare-fake-a",
+    "command": [
+      "/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home/bin/java",
+      "-Xmx4g",
+      "-cp",
+      "/Users/danny/Documents/UIC/CS441/ScholarChain/modules/entity-resolution/target/scala-3.3.4/classes:/Users/danny/Documents/UIC/CS441/ScholarChain/modules/core/target/scala-3.3.4/classes:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/scala-lang/scala3-library_3/3.3.4/scala3-library_3-3.3.4.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/lihaoyi/upickle_3/4.0.2/upickle_3-4.0.2.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/slf4j/slf4j-api/2.0.16/slf4j-api-2.0.16.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/scala-lang/scala-library/2.13.14/scala-library-2.13.14.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/lihaoyi/ujson_3/4.0.2/ujson_3-4.0.2.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/lihaoyi/upack_3/4.0.2/upack_3-4.0.2.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/lihaoyi/upickle-implicits_3/4.0.2/upickle-implicits_3-4.0.2.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/lihaoyi/upickle-core_3/4.0.2/upickle-core_3-4.0.2.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/lihaoyi/geny_3/1.1.1/geny_3-1.1.1.jar",
+      "edu.uic.cs441.scholarchain.entityresolution.Phase5Main",
+      "prepare-evaluation-predictions",
+      "--input",
+      "/Users/danny/Documents/UIC/CS441/ScholarChain/datasets/entity-resolution/prepared/bd424a86-0a1b-4e44-bbdb-4a9b8c8a20e3",
+      "--config",
+      "/Users/danny/Documents/UIC/CS441/ScholarChain/modules/entity-resolution/src/main/resources/phase5-config.v1.json",
+      "--queue",
+      "/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-05/evidence/5c-repair/review-artifacts/queue.json",
+      "--predictions",
+      "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase5e/fake-a",
+      "--binding",
+      "/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-05/evidence/5e/prediction-binding.json",
+      "--code-revision",
+      "61d32a38eaad5b2fc352acf0b7f85f3815c2336d",
+      "--source-hash",
+      "52f24a88d8b4d3d802e8e53403428ad6d5e889afc7309ccd55a7f4f2fc91376f",
+      "--output",
+      "/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-05/evidence/5e/fake-a-predictions.json"
+    ],
+    "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+    "startedMs": 1792551664163,
+    "environment": {
+      "JAVA_HOME": "/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home",
+      "SBT_OPTS": "-Dlogback.configurationFile=/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-04/xml-repair-logback.xml"
+    },
+    "status": "complete",
+    "log": "/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-05/evidence/5e/prepare-fake-a.txt",
+    "exitCode": 0,
+    "finishedMs": 1792551679396
+  },
+  {
+    "name": "evaluate-disabled-a-development",
+    "command": [
+      "/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home/bin/java",
+      "-Xmx4g",
+      "-cp",
+      "/Users/danny/Documents/UIC/CS441/ScholarChain/modules/entity-resolution/target/scala-3.3.4/classes:/Users/danny/Documents/UIC/CS441/ScholarChain/modules/core/target/scala-3.3.4/classes:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/scala-lang/scala3-library_3/3.3.4/scala3-library_3-3.3.4.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/lihaoyi/upickle_3/4.0.2/upickle_3-4.0.2.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/slf4j/slf4j-api/2.0.16/slf4j-api-2.0.16.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/scala-lang/scala-library/2.13.14/scala-library-2.13.14.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/lihaoyi/ujson_3/4.0.2/ujson_3-4.0.2.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/lihaoyi/upack_3/4.0.2/upack_3-4.0.2.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/lihaoyi/upickle-implicits_3/4.0.2/upickle-implicits_3-4.0.2.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/lihaoyi/upickle-core_3/4.0.2/upickle-core_3-4.0.2.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/lihaoyi/geny_3/1.1.1/geny_3-1.1.1.jar",
+      "edu.uic.cs441.scholarchain.entityresolution.Phase5Main",
+      "evaluate",
+      "--queue",
+      "/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-05/evidence/5c-repair/review-artifacts/queue.json",
+      "--split",
+      "/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-05/evidence/5c-repair/review-artifacts/split.json",
+      "--gold",
+      "/Users/danny/Documents/UIC/CS441/ScholarChain/datasets/entity-resolution/labels/2026-10-20-danny-ai-assisted-v1/validated-labels.json",
+      "--predictions",
+      "/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-05/evidence/5e/disabled-a-predictions.json",
+      "--partition",
+      "development",
+      "--output",
+      "/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-05/evidence/5e/disabled-a-development"
+    ],
+    "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+    "startedMs": 1792551679426,
+    "environment": {
+      "JAVA_HOME": "/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home",
+      "SBT_OPTS": "-Dlogback.configurationFile=/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-04/xml-repair-logback.xml"
+    },
+    "status": "complete",
+    "log": "/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-05/evidence/5e/evaluate-disabled-a-development.txt",
+    "exitCode": 0,
+    "finishedMs": 1792551680853
+  },
+  {
+    "name": "evaluate-disabled-a-development-without-assisted",
+    "command": [
+      "/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home/bin/java",
+      "-Xmx4g",
+      "-cp",
+      "/Users/danny/Documents/UIC/CS441/ScholarChain/modules/entity-resolution/target/scala-3.3.4/classes:/Users/danny/Documents/UIC/CS441/ScholarChain/modules/core/target/scala-3.3.4/classes:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/scala-lang/scala3-library_3/3.3.4/scala3-library_3-3.3.4.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/lihaoyi/upickle_3/4.0.2/upickle_3-4.0.2.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/slf4j/slf4j-api/2.0.16/slf4j-api-2.0.16.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/scala-lang/scala-library/2.13.14/scala-library-2.13.14.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/lihaoyi/ujson_3/4.0.2/ujson_3-4.0.2.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/lihaoyi/upack_3/4.0.2/upack_3-4.0.2.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/lihaoyi/upickle-implicits_3/4.0.2/upickle-implicits_3-4.0.2.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/lihaoyi/upickle-core_3/4.0.2/upickle-core_3-4.0.2.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/lihaoyi/geny_3/1.1.1/geny_3-1.1.1.jar",
+      "edu.uic.cs441.scholarchain.entityresolution.Phase5Main",
+      "evaluate",
+      "--queue",
+      "/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-05/evidence/5c-repair/review-artifacts/queue.json",
+      "--split",
+      "/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-05/evidence/5c-repair/review-artifacts/split.json",
+      "--gold",
+      "/Users/danny/Documents/UIC/CS441/ScholarChain/datasets/entity-resolution/labels/2026-10-20-danny-ai-assisted-v1/validated-labels.json",
+      "--predictions",
+      "/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-05/evidence/5e/disabled-a-predictions.json",
+      "--partition",
+      "development",
+      "--exclude-pairs",
+      "/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-05/evidence/5e/exclude-assisted-pairs.json",
+      "--output",
+      "/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-05/evidence/5e/disabled-a-development-without-assisted"
+    ],
+    "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+    "startedMs": 1792551680874,
+    "environment": {
+      "JAVA_HOME": "/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home",
+      "SBT_OPTS": "-Dlogback.configurationFile=/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-04/xml-repair-logback.xml"
+    },
+    "status": "complete",
+    "log": "/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-05/evidence/5e/evaluate-disabled-a-development-without-assisted.txt",
+    "exitCode": 0,
+    "finishedMs": 1792551682142
+  },
+  {
+    "name": "evaluate-disabled-a-held-out",
+    "command": [
+      "/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home/bin/java",
+      "-Xmx4g",
+      "-cp",
+      "/Users/danny/Documents/UIC/CS441/ScholarChain/modules/entity-resolution/target/scala-3.3.4/classes:/Users/danny/Documents/UIC/CS441/ScholarChain/modules/core/target/scala-3.3.4/classes:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/scala-lang/scala3-library_3/3.3.4/scala3-library_3-3.3.4.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/lihaoyi/upickle_3/4.0.2/upickle_3-4.0.2.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/slf4j/slf4j-api/2.0.16/slf4j-api-2.0.16.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/scala-lang/scala-library/2.13.14/scala-library-2.13.14.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/lihaoyi/ujson_3/4.0.2/ujson_3-4.0.2.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/lihaoyi/upack_3/4.0.2/upack_3-4.0.2.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/lihaoyi/upickle-implicits_3/4.0.2/upickle-implicits_3-4.0.2.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/lihaoyi/upickle-core_3/4.0.2/upickle-core_3-4.0.2.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/lihaoyi/geny_3/1.1.1/geny_3-1.1.1.jar",
+      "edu.uic.cs441.scholarchain.entityresolution.Phase5Main",
+      "evaluate",
+      "--queue",
+      "/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-05/evidence/5c-repair/review-artifacts/queue.json",
+      "--split",
+      "/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-05/evidence/5c-repair/review-artifacts/split.json",
+      "--gold",
+      "/Users/danny/Documents/UIC/CS441/ScholarChain/datasets/entity-resolution/labels/2026-10-20-danny-ai-assisted-v1/validated-labels.json",
+      "--predictions",
+      "/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-05/evidence/5e/disabled-a-predictions.json",
+      "--partition",
+      "held-out",
+      "--output",
+      "/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-05/evidence/5e/disabled-a-held-out"
+    ],
+    "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+    "startedMs": 1792551682163,
+    "environment": {
+      "JAVA_HOME": "/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home",
+      "SBT_OPTS": "-Dlogback.configurationFile=/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-04/xml-repair-logback.xml"
+    },
+    "status": "complete",
+    "log": "/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-05/evidence/5e/evaluate-disabled-a-held-out.txt",
+    "exitCode": 0,
+    "finishedMs": 1792551683419
+  },
+  {
+    "name": "evaluate-disabled-a-held-out-without-assisted",
+    "command": [
+      "/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home/bin/java",
+      "-Xmx4g",
+      "-cp",
+      "/Users/danny/Documents/UIC/CS441/ScholarChain/modules/entity-resolution/target/scala-3.3.4/classes:/Users/danny/Documents/UIC/CS441/ScholarChain/modules/core/target/scala-3.3.4/classes:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/scala-lang/scala3-library_3/3.3.4/scala3-library_3-3.3.4.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/lihaoyi/upickle_3/4.0.2/upickle_3-4.0.2.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/slf4j/slf4j-api/2.0.16/slf4j-api-2.0.16.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/scala-lang/scala-library/2.13.14/scala-library-2.13.14.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/lihaoyi/ujson_3/4.0.2/ujson_3-4.0.2.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/lihaoyi/upack_3/4.0.2/upack_3-4.0.2.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/lihaoyi/upickle-implicits_3/4.0.2/upickle-implicits_3-4.0.2.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/lihaoyi/upickle-core_3/4.0.2/upickle-core_3-4.0.2.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/lihaoyi/geny_3/1.1.1/geny_3-1.1.1.jar",
+      "edu.uic.cs441.scholarchain.entityresolution.Phase5Main",
+      "evaluate",
+      "--queue",
+      "/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-05/evidence/5c-repair/review-artifacts/queue.json",
+      "--split",
+      "/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-05/evidence/5c-repair/review-artifacts/split.json",
+      "--gold",
+      "/Users/danny/Documents/UIC/CS441/ScholarChain/datasets/entity-resolution/labels/2026-10-20-danny-ai-assisted-v1/validated-labels.json",
+      "--predictions",
+      "/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-05/evidence/5e/disabled-a-predictions.json",
+      "--partition",
+      "held-out",
+      "--exclude-pairs",
+      "/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-05/evidence/5e/exclude-assisted-pairs.json",
+      "--output",
+      "/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-05/evidence/5e/disabled-a-held-out-without-assisted"
+    ],
+    "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+    "startedMs": 1792551683440,
+    "environment": {
+      "JAVA_HOME": "/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home",
+      "SBT_OPTS": "-Dlogback.configurationFile=/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-04/xml-repair-logback.xml"
+    },
+    "status": "complete",
+    "log": "/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-05/evidence/5e/evaluate-disabled-a-held-out-without-assisted.txt",
+    "exitCode": 0,
+    "finishedMs": 1792551684741
+  },
+  {
+    "name": "sensitivity-disabled-a",
+    "command": [
+      "/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home/bin/java",
+      "-Xmx4g",
+      "-cp",
+      "/Users/danny/Documents/UIC/CS441/ScholarChain/modules/entity-resolution/target/scala-3.3.4/classes:/Users/danny/Documents/UIC/CS441/ScholarChain/modules/core/target/scala-3.3.4/classes:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/scala-lang/scala3-library_3/3.3.4/scala3-library_3-3.3.4.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/lihaoyi/upickle_3/4.0.2/upickle_3-4.0.2.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/slf4j/slf4j-api/2.0.16/slf4j-api-2.0.16.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/scala-lang/scala-library/2.13.14/scala-library-2.13.14.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/lihaoyi/ujson_3/4.0.2/ujson_3-4.0.2.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/lihaoyi/upack_3/4.0.2/upack_3-4.0.2.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/lihaoyi/upickle-implicits_3/4.0.2/upickle-implicits_3-4.0.2.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/lihaoyi/upickle-core_3/4.0.2/upickle-core_3-4.0.2.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/lihaoyi/geny_3/1.1.1/geny_3-1.1.1.jar",
+      "edu.uic.cs441.scholarchain.entityresolution.Phase5Main",
+      "sensitivity",
+      "--queue",
+      "/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-05/evidence/5c-repair/review-artifacts/queue.json",
+      "--split",
+      "/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-05/evidence/5c-repair/review-artifacts/split.json",
+      "--gold",
+      "/Users/danny/Documents/UIC/CS441/ScholarChain/datasets/entity-resolution/labels/2026-10-20-danny-ai-assisted-v1/validated-labels.json",
+      "--predictions",
+      "/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-05/evidence/5e/disabled-a-predictions.json",
+      "--partition",
+      "development",
+      "--thresholds",
+      "0.6,0.7,0.8,0.85,0.9,0.95,0.97,1.0",
+      "--output",
+      "/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-05/evidence/5e/disabled-a-development-sensitivity.json"
+    ],
+    "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+    "startedMs": 1792551684762,
+    "environment": {
+      "JAVA_HOME": "/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home",
+      "SBT_OPTS": "-Dlogback.configurationFile=/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-04/xml-repair-logback.xml"
+    },
+    "status": "complete",
+    "log": "/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-05/evidence/5e/sensitivity-disabled-a.txt",
+    "exitCode": 0,
+    "finishedMs": 1792551686000
+  },
+  {
+    "name": "evaluate-fake-a-development",
+    "command": [
+      "/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home/bin/java",
+      "-Xmx4g",
+      "-cp",
+      "/Users/danny/Documents/UIC/CS441/ScholarChain/modules/entity-resolution/target/scala-3.3.4/classes:/Users/danny/Documents/UIC/CS441/ScholarChain/modules/core/target/scala-3.3.4/classes:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/scala-lang/scala3-library_3/3.3.4/scala3-library_3-3.3.4.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/lihaoyi/upickle_3/4.0.2/upickle_3-4.0.2.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/slf4j/slf4j-api/2.0.16/slf4j-api-2.0.16.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/scala-lang/scala-library/2.13.14/scala-library-2.13.14.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/lihaoyi/ujson_3/4.0.2/ujson_3-4.0.2.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/lihaoyi/upack_3/4.0.2/upack_3-4.0.2.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/lihaoyi/upickle-implicits_3/4.0.2/upickle-implicits_3-4.0.2.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/lihaoyi/upickle-core_3/4.0.2/upickle-core_3-4.0.2.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/lihaoyi/geny_3/1.1.1/geny_3-1.1.1.jar",
+      "edu.uic.cs441.scholarchain.entityresolution.Phase5Main",
+      "evaluate",
+      "--queue",
+      "/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-05/evidence/5c-repair/review-artifacts/queue.json",
+      "--split",
+      "/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-05/evidence/5c-repair/review-artifacts/split.json",
+      "--gold",
+      "/Users/danny/Documents/UIC/CS441/ScholarChain/datasets/entity-resolution/labels/2026-10-20-danny-ai-assisted-v1/validated-labels.json",
+      "--predictions",
+      "/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-05/evidence/5e/fake-a-predictions.json",
+      "--partition",
+      "development",
+      "--output",
+      "/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-05/evidence/5e/fake-a-development"
+    ],
+    "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+    "startedMs": 1792551686021,
+    "environment": {
+      "JAVA_HOME": "/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home",
+      "SBT_OPTS": "-Dlogback.configurationFile=/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-04/xml-repair-logback.xml"
+    },
+    "status": "complete",
+    "log": "/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-05/evidence/5e/evaluate-fake-a-development.txt",
+    "exitCode": 0,
+    "finishedMs": 1792551687290
+  },
+  {
+    "name": "evaluate-fake-a-development-without-assisted",
+    "command": [
+      "/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home/bin/java",
+      "-Xmx4g",
+      "-cp",
+      "/Users/danny/Documents/UIC/CS441/ScholarChain/modules/entity-resolution/target/scala-3.3.4/classes:/Users/danny/Documents/UIC/CS441/ScholarChain/modules/core/target/scala-3.3.4/classes:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/scala-lang/scala3-library_3/3.3.4/scala3-library_3-3.3.4.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/lihaoyi/upickle_3/4.0.2/upickle_3-4.0.2.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/slf4j/slf4j-api/2.0.16/slf4j-api-2.0.16.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/scala-lang/scala-library/2.13.14/scala-library-2.13.14.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/lihaoyi/ujson_3/4.0.2/ujson_3-4.0.2.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/lihaoyi/upack_3/4.0.2/upack_3-4.0.2.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/lihaoyi/upickle-implicits_3/4.0.2/upickle-implicits_3-4.0.2.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/lihaoyi/upickle-core_3/4.0.2/upickle-core_3-4.0.2.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/lihaoyi/geny_3/1.1.1/geny_3-1.1.1.jar",
+      "edu.uic.cs441.scholarchain.entityresolution.Phase5Main",
+      "evaluate",
+      "--queue",
+      "/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-05/evidence/5c-repair/review-artifacts/queue.json",
+      "--split",
+      "/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-05/evidence/5c-repair/review-artifacts/split.json",
+      "--gold",
+      "/Users/danny/Documents/UIC/CS441/ScholarChain/datasets/entity-resolution/labels/2026-10-20-danny-ai-assisted-v1/validated-labels.json",
+      "--predictions",
+      "/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-05/evidence/5e/fake-a-predictions.json",
+      "--partition",
+      "development",
+      "--exclude-pairs",
+      "/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-05/evidence/5e/exclude-assisted-pairs.json",
+      "--output",
+      "/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-05/evidence/5e/fake-a-development-without-assisted"
+    ],
+    "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+    "startedMs": 1792551687311,
+    "environment": {
+      "JAVA_HOME": "/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home",
+      "SBT_OPTS": "-Dlogback.configurationFile=/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-04/xml-repair-logback.xml"
+    },
+    "status": "complete",
+    "log": "/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-05/evidence/5e/evaluate-fake-a-development-without-assisted.txt",
+    "exitCode": 0,
+    "finishedMs": 1792551688564
+  },
+  {
+    "name": "evaluate-fake-a-held-out",
+    "command": [
+      "/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home/bin/java",
+      "-Xmx4g",
+      "-cp",
+      "/Users/danny/Documents/UIC/CS441/ScholarChain/modules/entity-resolution/target/scala-3.3.4/classes:/Users/danny/Documents/UIC/CS441/ScholarChain/modules/core/target/scala-3.3.4/classes:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/scala-lang/scala3-library_3/3.3.4/scala3-library_3-3.3.4.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/lihaoyi/upickle_3/4.0.2/upickle_3-4.0.2.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/slf4j/slf4j-api/2.0.16/slf4j-api-2.0.16.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/scala-lang/scala-library/2.13.14/scala-library-2.13.14.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/lihaoyi/ujson_3/4.0.2/ujson_3-4.0.2.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/lihaoyi/upack_3/4.0.2/upack_3-4.0.2.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/lihaoyi/upickle-implicits_3/4.0.2/upickle-implicits_3-4.0.2.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/lihaoyi/upickle-core_3/4.0.2/upickle-core_3-4.0.2.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/lihaoyi/geny_3/1.1.1/geny_3-1.1.1.jar",
+      "edu.uic.cs441.scholarchain.entityresolution.Phase5Main",
+      "evaluate",
+      "--queue",
+      "/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-05/evidence/5c-repair/review-artifacts/queue.json",
+      "--split",
+      "/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-05/evidence/5c-repair/review-artifacts/split.json",
+      "--gold",
+      "/Users/danny/Documents/UIC/CS441/ScholarChain/datasets/entity-resolution/labels/2026-10-20-danny-ai-assisted-v1/validated-labels.json",
+      "--predictions",
+      "/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-05/evidence/5e/fake-a-predictions.json",
+      "--partition",
+      "held-out",
+      "--output",
+      "/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-05/evidence/5e/fake-a-held-out"
+    ],
+    "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+    "startedMs": 1792551688585,
+    "environment": {
+      "JAVA_HOME": "/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home",
+      "SBT_OPTS": "-Dlogback.configurationFile=/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-04/xml-repair-logback.xml"
+    },
+    "status": "complete",
+    "log": "/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-05/evidence/5e/evaluate-fake-a-held-out.txt",
+    "exitCode": 0,
+    "finishedMs": 1792551689860
+  },
+  {
+    "name": "evaluate-fake-a-held-out-without-assisted",
+    "command": [
+      "/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home/bin/java",
+      "-Xmx4g",
+      "-cp",
+      "/Users/danny/Documents/UIC/CS441/ScholarChain/modules/entity-resolution/target/scala-3.3.4/classes:/Users/danny/Documents/UIC/CS441/ScholarChain/modules/core/target/scala-3.3.4/classes:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/scala-lang/scala3-library_3/3.3.4/scala3-library_3-3.3.4.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/lihaoyi/upickle_3/4.0.2/upickle_3-4.0.2.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/slf4j/slf4j-api/2.0.16/slf4j-api-2.0.16.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/scala-lang/scala-library/2.13.14/scala-library-2.13.14.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/lihaoyi/ujson_3/4.0.2/ujson_3-4.0.2.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/lihaoyi/upack_3/4.0.2/upack_3-4.0.2.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/lihaoyi/upickle-implicits_3/4.0.2/upickle-implicits_3-4.0.2.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/lihaoyi/upickle-core_3/4.0.2/upickle-core_3-4.0.2.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/lihaoyi/geny_3/1.1.1/geny_3-1.1.1.jar",
+      "edu.uic.cs441.scholarchain.entityresolution.Phase5Main",
+      "evaluate",
+      "--queue",
+      "/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-05/evidence/5c-repair/review-artifacts/queue.json",
+      "--split",
+      "/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-05/evidence/5c-repair/review-artifacts/split.json",
+      "--gold",
+      "/Users/danny/Documents/UIC/CS441/ScholarChain/datasets/entity-resolution/labels/2026-10-20-danny-ai-assisted-v1/validated-labels.json",
+      "--predictions",
+      "/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-05/evidence/5e/fake-a-predictions.json",
+      "--partition",
+      "held-out",
+      "--exclude-pairs",
+      "/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-05/evidence/5e/exclude-assisted-pairs.json",
+      "--output",
+      "/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-05/evidence/5e/fake-a-held-out-without-assisted"
+    ],
+    "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+    "startedMs": 1792551689881,
+    "environment": {
+      "JAVA_HOME": "/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home",
+      "SBT_OPTS": "-Dlogback.configurationFile=/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-04/xml-repair-logback.xml"
+    },
+    "status": "complete",
+    "log": "/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-05/evidence/5e/evaluate-fake-a-held-out-without-assisted.txt",
+    "exitCode": 0,
+    "finishedMs": 1792551691169
+  },
+  {
+    "name": "sensitivity-fake-a",
+    "command": [
+      "/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home/bin/java",
+      "-Xmx4g",
+      "-cp",
+      "/Users/danny/Documents/UIC/CS441/ScholarChain/modules/entity-resolution/target/scala-3.3.4/classes:/Users/danny/Documents/UIC/CS441/ScholarChain/modules/core/target/scala-3.3.4/classes:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/scala-lang/scala3-library_3/3.3.4/scala3-library_3-3.3.4.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/lihaoyi/upickle_3/4.0.2/upickle_3-4.0.2.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/slf4j/slf4j-api/2.0.16/slf4j-api-2.0.16.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/scala-lang/scala-library/2.13.14/scala-library-2.13.14.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/lihaoyi/ujson_3/4.0.2/ujson_3-4.0.2.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/lihaoyi/upack_3/4.0.2/upack_3-4.0.2.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/lihaoyi/upickle-implicits_3/4.0.2/upickle-implicits_3-4.0.2.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/lihaoyi/upickle-core_3/4.0.2/upickle-core_3-4.0.2.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/lihaoyi/geny_3/1.1.1/geny_3-1.1.1.jar",
+      "edu.uic.cs441.scholarchain.entityresolution.Phase5Main",
+      "sensitivity",
+      "--queue",
+      "/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-05/evidence/5c-repair/review-artifacts/queue.json",
+      "--split",
+      "/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-05/evidence/5c-repair/review-artifacts/split.json",
+      "--gold",
+      "/Users/danny/Documents/UIC/CS441/ScholarChain/datasets/entity-resolution/labels/2026-10-20-danny-ai-assisted-v1/validated-labels.json",
+      "--predictions",
+      "/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-05/evidence/5e/fake-a-predictions.json",
+      "--partition",
+      "development",
+      "--thresholds",
+      "0.6,0.7,0.8,0.85,0.9,0.95,0.97,1.0",
+      "--output",
+      "/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-05/evidence/5e/fake-a-development-sensitivity.json"
+    ],
+    "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+    "startedMs": 1792551691190,
+    "environment": {
+      "JAVA_HOME": "/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home",
+      "SBT_OPTS": "-Dlogback.configurationFile=/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-04/xml-repair-logback.xml"
+    },
+    "status": "complete",
+    "log": "/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-05/evidence/5e/sensitivity-fake-a.txt",
+    "exitCode": 0,
+    "finishedMs": 1792551692431
+  },
+  {
+    "name": "audit-results",
+    "command": [
+      "python3",
+      "docs/agent-runs/phase-05/evidence/5e/audit-results.py.txt"
+    ],
+    "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+    "startedMs": 1792551738609,
+    "environment": {
+      "JAVA_HOME": "/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home",
+      "SBT_OPTS": "-Dlogback.configurationFile=/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-04/xml-repair-logback.xml"
+    },
+    "status": "complete",
+    "log": "/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-05/evidence/5e/audit-results.txt",
+    "exitCode": 0,
+    "finishedMs": 1792551743204
+  },
+  {
+    "name": "full-check",
+    "command": [
+      "sbt",
+      "-batch",
+      "check"
+    ],
+    "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+    "startedMs": 1792551761059,
+    "environment": {
+      "JAVA_HOME": "/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home",
+      "SBT_OPTS": "-Dlogback.configurationFile=/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-04/xml-repair-logback.xml"
+    },
+    "status": "complete",
+    "log": "/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-05/evidence/5e/full-check.txt",
+    "exitCode": 0,
+    "finishedMs": 1792552173924
+  },
+  {
+    "name": "package-results",
+    "command": [
+      "python3",
+      "docs/agent-runs/phase-05/evidence/5e/package-results.py.txt"
+    ],
+    "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+    "startedMs": 1792551797571,
+    "environment": {
+      "JAVA_HOME": "/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home",
+      "SBT_OPTS": "-Dlogback.configurationFile=/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-04/xml-repair-logback.xml"
+    },
+    "status": "complete",
+    "log": "/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-05/evidence/5e/package-results.txt",
+    "exitCode": 0,
+    "finishedMs": 1792551797875
+  },
+  {
+    "name": "summarize-strata",
+    "command": [
+      "python3",
+      "docs/agent-runs/phase-05/evidence/5e/summarize-strata.py.txt"
+    ],
+    "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+    "startedMs": 1792551924113,
+    "environment": {
+      "JAVA_HOME": "/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home",
+      "SBT_OPTS": "-Dlogback.configurationFile=/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-04/xml-repair-logback.xml"
+    },
+    "status": "complete",
+    "log": "/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-05/evidence/5e/summarize-strata.txt",
+    "exitCode": 0,
+    "finishedMs": 1792551924162
+  },
+  {
+    "name": "package-final",
+    "command": [
+      "python3",
+      "docs/agent-runs/phase-05/evidence/5e/package-results.py.txt"
+    ],
+    "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+    "startedMs": 1792552232942,
+    "environment": {
+      "JAVA_HOME": "/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home",
+      "SBT_OPTS": "-Dlogback.configurationFile=/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-04/xml-repair-logback.xml"
+    },
+    "status": "complete",
+    "log": "/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-05/evidence/5e/package-final.txt",
+    "exitCode": 0,
+    "finishedMs": 1792552233246
+  },
+  {
+    "name": "finalize-report",
+    "command": [
+      "python3",
+      "docs/agent-runs/phase-05/evidence/5e/finalize-report.py.txt"
+    ],
+    "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+    "startedMs": 1792552233279,
+    "environment": {
+      "JAVA_HOME": "/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home",
+      "SBT_OPTS": "-Dlogback.configurationFile=/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-04/xml-repair-logback.xml"
+    },
+    "status": "complete",
+    "log": "/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-05/evidence/5e/finalize-report.txt",
+    "exitCode": 0,
+    "finishedMs": 1792552233299
+  },
+  {
+    "name": "package-complete",
+    "command": [
+      "python3",
+      "docs/agent-runs/phase-05/evidence/5e/package-results.py.txt"
+    ],
+    "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+    "startedMs": 1792552312505,
+    "environment": {
+      "JAVA_HOME": "/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home",
+      "SBT_OPTS": "-Dlogback.configurationFile=/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-04/xml-repair-logback.xml"
+    },
+    "status": "complete",
+    "log": "/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-05/evidence/5e/package-complete.txt",
+    "exitCode": 0,
+    "finishedMs": 1792552312810
+  }
+]

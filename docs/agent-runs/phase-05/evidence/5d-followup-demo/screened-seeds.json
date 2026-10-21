@@ -1,0 +1,9 @@
+{
+  "schemaVersion": "scholarchain.screened-demo-seeds.v1",
+  "screenReceiptSha256": "fedf49b50785ed864be882fd94a0311ee34a086bf5e3843b7accfb8543c10e1c",
+  "screenReceiptPath": "docs/agent-runs/phase-05/evidence/5d-followup-demo/seed-screen.json",
+  "sourcePopulationPath": "datasets/entity-resolution/5d-demo-2026-10-17-openalex",
+  "sourcePopulationSha256": "ff4154deda081832db8f0ca85bce33a96075d0c722b41bfcc4996ee056f4ea41",
+  "precedingStageReceiptPath": "docs/agent-runs/phase-05/evidence/5d/acquire-openalex-supplement.txt",
+  "authors": []
+}

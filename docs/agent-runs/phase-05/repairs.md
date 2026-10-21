@@ -269,3 +269,96 @@ RISKS: This packaging pass does not establish human labels, accuracy or live-pro
 MANUAL ACTION REQUIRED: Preserve the external archive and manually commit if desired. Proposed one-line commit message: Complete Phase 5C review tooling with durable inputs and lean audit archives.
 BLOCKED-ON OWNER / BLOCKED-ON EVIDENCE: None for authorized packaging.
 NEXT GATE: Stop. No code reviewer triggered, commit/push performed or 5D started.
+
+
+## 5D implementation verification repairs
+
+These are coordinator/owner repairs found during implementation tests, not external reviewer findings. The first targeted run failed compilation; the second ran 31 independent tests with 27 passing and four failures on live-cache writes/replay. The ER owner corrected reconstructed usage values to JSON numbers, with an explicit exact-integer range check, while keeping provider usage parsing strict. The third targeted run compiled and executed two newly added owner cases; both failed during setup because the live-config reader/writer roundtrip omitted explicit default response limits. Independent cases did not run in that attempt. The owner added class-local serialization of defaults and a regression retaining nested unknown-key refusal. Code/source metadata syntax is now checked before input loading and provider dispatch. Exact commands and original failed output remain under evidence/5d/. Fourth targeted verification is pending; no pass or external acceptance is inferred here. No provider calls occurred during these repairs.
+
+Fourth targeted verification completed successfully: three owner and 31 independent tests passed, including every prior cache failure. The seed-only real-input prepare-live-demo CLI and actual approval/runtime-binding probe also exited 0 without credentials or provider calls. Full frozen repository verification and real-provider evidence remain separate pending gates.
+
+
+## External 5D B1/B2 — authorized repairs
+
+External review returned REQUEST-CHANGES with two blockers. Original 556-file reviewed freeze and inventory are preserved in history/5d-initial-review/; selected original source/retention-manifest bytes were SHA-256 checked against that freeze. The initial coordinator archive capture needed corrections for a syntax error and concurrent authorized dataset edits; guards prevented modified files being mislabeled as original, and exact HEAD/owner pre-edit bytes were recovered and verified. Original final gate evidence under evidence/5d/ remains unchanged.
+
+B1 routes to ER and independent test owners: validate/capture local credentials before durable reservation, return a redacted non-reserving/non-fusing local failure, and prove later recovery on the same approval ledger. Unknown actual transport failures retain conservative reservation/fusing behavior. Seven independent regression cases ran against unchanged ER production and all seven failed as expected (TRANSPORT_FAILED instead of CREDENTIAL_INVALID); evidence/5d-repair/before-fix.txt retains the actual execution. ER implementation was released only afterward.
+
+B2 routes to dataset owner: require explicit review-versus-demo retention purpose, correct only descriptive metadata in the two demo manifests, retain legacy 5C manifest compatibility, and preserve every input/completion/run/payload byte. New retention tests and proof are retained under evidence/5d-repair/. Scope excludes unrelated nonblocking findings, new acquisition, real API calls and later phases. Repair verification remains pending here.
+
+
+5D targeted repair verification: coordinator observed exit 0 with 4 owner and 40 independent cases passing. All seven unchanged RED credential assertions now pass, as do enabled-demo missing/NUL recovery cases using the exact same durable approval ledger. The prior exhausted-budget no-credential-read and uncertain-dispatch failure/fusing tests passed unchanged. The required redacted credential error also protects the shared direct-transport boundary described in N2; no unrelated nonblocking work was undertaken.
+
+Dataset owner completed B2: explicit creation purpose, coherent closed purpose metadata, corrected two demo manifests and active documentation, with legacy 5C compatibility. Only purposeKind/purpose/ownership changed in those two manifests; all source/payload/completion/run bytes and original 5C manifest remained unchanged. All 37 Python tests and six offline population/retention validators passed. Source delta is 15 modifications, one new independent test file and zero removals; repaired freeze binds 557 files. Final full sbt gate is running; no final pass is inferred in this note.
+
+
+Final 5D B1/B2 technical verification passed: 434 sbt tests, 37 Python tests, six validators, all 557 frozen files unchanged. This supersedes the prior running-gate note. Both fixes are ready for user-launched recheck, not self-approved. No further source edits occurred after freeze. Original nonblocking deferrals and missing real human/provider prerequisites remain.
+
+
+## 5D human review import and approved follow-up search
+
+These are new authorized work items, not repairs of the accepted nonblocking observations. Existing deferred findings remain unfixed. The user's 240 checkbox choices were preserved and imported as human-reviewed AI-assisted labels; eight uncertain choices were not changed. Twenty-two explicitly AI-attributed external-source comments are retained and disclosed, not presented as frozen evidence or human-authored rationale.
+
+The additional public search stayed within its new approval and produced zero new admissible observations. Its fixed topic-query fallback after zero existing safe author seeds was an implementation strategy within the exact general search approval, recorded transparently in strategy-update.json. No repeated allowance, held-out scoring or policy weakening occurred. No live calls or spending followed.
+
+One documentation-only correction arrived immediately after the dataset owner's initial freeze-ready message, during sbt startup: datasets/entity-resolution/README.md narrowed an obsolete claim that no human labels exist anywhere under datasets/entity-resolution. The final freeze was refreshed; startup-source-freeze.json and startup-doc-correction.json retain the earlier bytes and exact delta. No production source, test, label or population payload changed during the full check. Do not claim all documentation bytes were frozen from command launch.
+
+
+## 5D B1 attribution gate and B2 discovery-ordering repair
+
+B1: The user clarified that the attribution record and label README were already changed at their direction during the reviewing session, with that separation departure disclosed. No additional label implementation was performed. The existing decision-attribution.v1.json and all 23 current label-tree files remain unchanged during this repair. The refreshed freeze includes them; the next independent reviewer must confirm B1. Full user statement: evidence/5d-search-repair/b1-user-clarification.json.
+
+B2: The coordinator accepts the query-design error. Explicit oldest-first sorting over broad topic matches displaced relevance; the old zero-ingestion result is real but cannot demonstrate that eligible CS evidence is absent. An append-only root-cause note is retained in evidence/5d-followup-demo/root-cause-b2.json, this phase's owner report and the dataset README. Original reports, outcome.json, responses, manifests and executed scripts remain unchanged.
+
+The owner changed only topic discovery ordering to relevance_score:desc, preserving query terms, date filter, field list, per-request count and caps. One executable URL regression failed on old production (10 other tests passed), then all 15 acquisition tests passed after repair. Historical date-sorted evidence validates only against its exact retained legacy script. The new version explicitly records relevance ordering. Optional title/abstract-only filtering was not needed for this minimal ordering repair; no fields or matching policy were changed.
+
+The user explicitly authorized the new corrected stage before its HTTP requests. Cumulative history is retained and deduplicated by manifest identity, so repeated copies of context cannot reset or double-count prior records/attempts/bytes/time. The corrected run made 3 HTTP 200 attempts, returned 14 distinct works, transferred 75,738 bytes in 2.2322 seconds, and added 5 records passing the unchanged CS venue filter. The actual query metadata and returned titles are retained in query-behavior-proof.json. Cumulative totals are 44 distinct returned works, 12 attempts, 291,082 bytes and 10.214 acquisition seconds.
+
+The unchanged Hadoop preparation completed and is retained under prepared/f22f1a12-c7be-43af-b470-d4f4e244ca9d, explicitly development-demo. Target and durable input admission proofs are byte-identical. Canonical selection finds 101 candidate pairs; 78 are excluded before scoring, 23 are admitted, and none is eligible. No model call, credential lookup, budget-state initialization, label change, calibration or 5E occurred. This is a measured result for the bounded population, not a claim of global evidence exhaustion.
+
+Current deterministic verification and source/inventory hashes are recorded in test-report.md and evidence/5d-search-repair/. B2 closure remains for the user-launched independent recheck; no reviewer was invoked by the coordinator.
+
+
+## Focused-search input qualification before ER
+
+This is a new explicitly approved focused acquisition, not a reopening of accepted B1/B2 or repair of N1–N4. The prior independent APPROVE is recorded as user supplied, not widened to the new code.
+
+The inherited substring venue selector admitted five IRDB repository records because the repository display name contains DataBase. Before any matching/scoring, source inspection identified them as particle-physics records. Original acquisition bytes remain immutable. The owner added a separate offline domain-slice helper with six tests, requiring conference/journal source type plus the existing CS venue rule, preserving exact retained record lines, source snapshot/date and parent provenance. The five excluded native IDs and reasons remain retained. No new HTTP, ID masking, label editing or matching-policy relaxation occurred.
+
+The first raw-input Hadoop run is an ignored local intermediate and was never passed to ER. Only the derived two-PODS-plus-one-Crossref input was canonically screened and scored. It yields six admitted candidates and zero eligible; detailed reasons and measured pair-ID intersections are retained. No model call was made to manufacture a demonstration from an ineligible pair. Original nonblocking findings remain deferred.
+
+
+## 5E limited deterministic/fake evaluation — observed handoff
+
+STATUS: COMPLETE for authorized limited execution; external review pending, overall Phase 5 acceptance open.
+OWNER: Coordinator; ER engineer owns evaluation API/cohort support, test engineer owns six independent cases, dataset engineer supplied read-only provenance audit. Native IDs and results: evidence/5e/owner-handoffs.json.
+WORK ORDER: User-authorized limited 5E; preserve human labels and existing matcher/config/policy; real-provider requirement explicitly pending.
+FILES CREATED: evidence/5e/ observed commands, bindings, predictions, eight reports, development sensitivity, exclusion manifest, replay/protected proofs, summary, manifest and compact source inventory; two independent Scala specs.
+FILES MODIFIED: ER Evaluation/ReviewCommands/ReviewReadinessSpec/README; phase source freeze/inventory and append-only reports. No dataset/core/Hadoop/build/matcher/policy/config/label changes.
+COMMANDS RUN: Exact argv, cwd, JAVA_HOME/SBT_OPTS, start/end/exit in evidence/5e/commands.json and individual receipts. Three full offline resolution passes, three prediction preparations, eight evaluations, two development sensitivities, Python discovery, 12 validators and final sbt -batch check.
+TEST RESULTS: Final targeted 7 owner + 15 independent passed. Fresh full gate 441 passed, zero failures/errors/skips, 56 fresh reports. Core 129, Hadoop 64, ER 30, independent 214, build 4. Python 84 passed; 12 validators passed. Initial sandbox and synthetic fixture failures retained and explained in evaluation-report.md. Nested injected failure is expected CheckFailurePathSpec coverage.
+VALIDATION RESULTS: All 900 source files frozen throughout prediction/evaluation/full gate; 804 protected source/data files unchanged including complete label tree. 17 export parts replay; all 300 queue predictions agree; 8 reports independently recounted. Primary held-out 194 binary: TP 57, FP 0, FN 15, TN 122; precision 100%, recall 79.2%, F1 88.4%, decisive coverage 48.5%. Without 22 assisted: 181 held-out binary, TP 51, FP 0, FN 8, TN 122. Full results/evidence: evidence/5e/evaluation-report.md and evaluation-manifest.json.
+ASSUMPTIONS: Human choices/attribution are self-attested and AI-assisted, not independent blind gold. Observed matching behavior is only for the frozen convenience population.
+RISKS: 8 uncertain, unretained external source checks, no global/blocking recall, uncalibrated policy, residual leakage/common-name risk and no real-provider evidence. Empty LLM/bibliographic paths remain null/no-data.
+MANUAL ACTION REQUIRED: User-selected independent review and return of complete verdict.
+BLOCKED-ON OWNER: External reviewer selected/launched by user; no implementation owner blocker at this handoff.
+BLOCKED-ON EVIDENCE: External verdict; real-provider evidence remains open for overall 5D/Phase 5 rather than being silently waived.
+NEXT GATE: Stop for user-launched review. No commit, push, Phase 6 or reviewer invocation.
+
+
+## Final Rice-team bounded attempt — verified blocked provider checkpoint
+
+STATUS: COMPLETE for authorized bounded work; BLOCKED-ON real-provider evidence for overall 5D / Phase 5.
+OWNER: Coordinator for HTTP/Hadoop/canonical/CLI/build execution and reports; dataset-engineer for new datasets/scripts and retention; test-engineer for read-only independent counter/eligibility checks; ER owner supplied read-only feasibility advice.
+WORK ORDER: User-approved final targeted attempt: 30 returned rows, 20 HTTP attempts, 8 MiB and 300 seconds; no data credentials or paid data; original $1 model approval unchanged. No refill, fallback or nonblocking repairs.
+FILES CREATED: New Rice acquisition script and 13 tests; separately manifested 15-row response stage; 38-file durable preparation; evidence/5d-final-attempt/ receipts, proofs and report.
+FILES MODIFIED: Append-only dataset/prepared READMEs, phase reports and current freeze/inventory. No ER/core/Hadoop/build/policy/config/label/evaluation artifact changes.
+COMMANDS RUN: Exact argv/environment/start/end/exit in commands.json. Two public queries; unchanged Hadoop; target/durable canonical selection; prepare-live-demo (no network); 97 Python tests; 14 validators; sbt -batch check.
+TEST RESULTS: 441 sbt tests passed, zero failures/errors/skips, 56 fresh JUnit reports. Core 129, Hadoop 64, ER 30, independent 214, build 4. All 97 Python tests and 14 validators passed. All 959 frozen source files remained unchanged throughout the gate.
+VALIDATION RESULTS: Two HTTP 200 responses, 15 rows, 12 distinct works, 3 ingested, 112,270 bytes, 1.4782 seconds. Eleven admitted, zero excluded, zero eligible. Two unresolved Researcher scores of 0.6933333 are in-band but coauthor overlap of 0.2 fails the supportive threshold of 0.8; other candidates accept or conflict earlier. Target/durable proofs identical; 38 retained files / 204,212 bytes. All 1,261 runtime class/resource hashes unchanged. All 111 approved 5E artifacts and all human choices remain unchanged; historical 5E freeze retained exactly as before-source-freeze.json.
+ASSUMPTIONS: Runtime evidence establishes only this bounded population; no real account/model compatibility or identity accuracy.
+RISKS: Fixed catalog excludes an observed legitimate CACM record; no global absence claim. Provider requirement still open, credentials untested and no approval state initialized.
+MANUAL ACTION REQUIRED: Human checkpoint/continuation decision; independent reviewer only when user launches it.
+BLOCKED-ON OWNER: None for authorized bounded work. Human owns continuation and acceptance.
+BLOCKED-ON EVIDENCE: Naturally eligible non-held-out pair and observed real-provider response; current 0 attempts, $0.00 spent.
+NEXT GATE: Stop acquisition. No policy changes, commit, push, Phase 6 or reviewer launch. Explicit authorization needed before any further scope.

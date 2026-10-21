@@ -1,0 +1,170 @@
+[
+  {
+    "command": [
+      "python3",
+      "datasets/scripts/validate_resolution_population.py",
+      "datasets/entity-resolution/5c-2026-10-16-v3"
+    ],
+    "startedMs": 1792549295415,
+    "finishedMs": 1792549295618,
+    "exitCode": 0,
+    "stdout": "{\n  \"status\": \"VALID\",\n  \"records\": {\n    \"crossref\": 10,\n    \"dblp\": 0,\n    \"openalex\": 446,\n    \"orcid\": 8\n  },\n  \"hashedFiles\": 132,\n  \"attempts\": 125,\n  \"responseBytes\": 12732948,\n  \"humanReviews\": 0,\n  \"candidateReadiness\": \"PAIR_AND_DISJOINT_GROUP_COUNTS_REQUIRE_COMPLETED_HADOOP_AND_ER_QUEUE\"\n}\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "python3",
+      "datasets/scripts/acquire_demo_supplement.py",
+      "validate",
+      "--population",
+      "datasets/entity-resolution/5d-demo-2026-10-17-seeds"
+    ],
+    "startedMs": 1792549295618,
+    "finishedMs": 1792549295661,
+    "exitCode": 0,
+    "stdout": "{\n  \"status\": \"VALID\",\n  \"records\": {\n    \"crossref\": 14,\n    \"dblp\": 0,\n    \"openalex\": 0,\n    \"orcid\": 0\n  },\n  \"files\": 9,\n  \"observed\": {\n    \"distinctNewOpenAlexWorksIncludingExcluded\": 0,\n    \"httpAttempts\": 0,\n    \"responseBytes\": 0,\n    \"seconds\": 0\n  },\n  \"admission\": \"PENDING_CANONICAL_ER_COMPONENT_CHECK_BEFORE_SCORING\"\n}\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "python3",
+      "datasets/scripts/acquire_demo_supplement.py",
+      "validate",
+      "--population",
+      "datasets/entity-resolution/5d-demo-2026-10-17-openalex"
+    ],
+    "startedMs": 1792549295661,
+    "finishedMs": 1792549295705,
+    "exitCode": 0,
+    "stdout": "{\n  \"status\": \"VALID\",\n  \"records\": {\n    \"crossref\": 14,\n    \"dblp\": 0,\n    \"openalex\": 12,\n    \"orcid\": 0\n  },\n  \"files\": 16,\n  \"observed\": {\n    \"distinctNewOpenAlexWorksIncludingExcluded\": 20,\n    \"httpAttempts\": 7,\n    \"responseBytes\": 171680,\n    \"seconds\": 6.6141\n  },\n  \"admission\": \"PENDING_CANONICAL_ER_COMPONENT_CHECK_BEFORE_SCORING\"\n}\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "python3",
+      "datasets/scripts/retain_prepared_population.py",
+      "validate",
+      "--population",
+      "datasets/entity-resolution/prepared/bd424a86-0a1b-4e44-bbdb-4a9b8c8a20e3"
+    ],
+    "startedMs": 1792549295705,
+    "finishedMs": 1792549295783,
+    "exitCode": 0,
+    "stdout": "{\n  \"status\": \"VALID\",\n  \"runId\": \"run:bd424a86-0a1b-4e44-bbdb-4a9b8c8a20e3\",\n  \"purposeKind\": \"frozen-5c-review\",\n  \"files\": 68,\n  \"bytes\": 49547452,\n  \"completionSha256\": \"ecb1744d591092f66fa57c87108497caf80349d183b79816f7607dcc7b21f399\",\n  \"runManifestSha256\": \"9d70503b9b3496eb2c39e2f61009a1614db755b783668fd452fb3777a0d48552\"\n}\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "python3",
+      "datasets/scripts/retain_prepared_population.py",
+      "validate",
+      "--population",
+      "datasets/entity-resolution/prepared/3bfbd651-5982-4f3d-b29b-246fb88d07a1"
+    ],
+    "startedMs": 1792549295783,
+    "finishedMs": 1792549295820,
+    "exitCode": 0,
+    "stdout": "{\n  \"status\": \"VALID\",\n  \"runId\": \"run:3bfbd651-5982-4f3d-b29b-246fb88d07a1\",\n  \"purposeKind\": \"development-demo\",\n  \"files\": 36,\n  \"bytes\": 524961,\n  \"completionSha256\": \"037ab3766408f3cb6dae85636b4b3c4cb0bd73c29251f21578bdbc828e58c65c\",\n  \"runManifestSha256\": \"a8f9fa0ea275f3725813d75ab7a272c9f4ed8ba9deaad36b93bcf5a43e586b1d\"\n}\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "python3",
+      "datasets/scripts/retain_prepared_population.py",
+      "validate",
+      "--population",
+      "datasets/entity-resolution/prepared/68c2b012-6d04-4eef-a7bf-5ca31706d895"
+    ],
+    "startedMs": 1792549295820,
+    "finishedMs": 1792549295863,
+    "exitCode": 0,
+    "stdout": "{\n  \"status\": \"VALID\",\n  \"runId\": \"run:68c2b012-6d04-4eef-a7bf-5ca31706d895\",\n  \"purposeKind\": \"development-demo\",\n  \"files\": 60,\n  \"bytes\": 1271664,\n  \"completionSha256\": \"4113b3f1a8a8c6e8a60d5fd759520ef53d3905d4d3e8ce4bed006fc8840a6c8b\",\n  \"runManifestSha256\": \"e0e9502cc2de173eca9ebcedbbd6108454d5fa3935db00ef1f95f64cabe0ed81\"\n}\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "python3",
+      "datasets/scripts/acquire_screened_demo.py",
+      "validate",
+      "--population",
+      "datasets/entity-resolution/5d-demo-2026-10-20-screened"
+    ],
+    "startedMs": 1792549295863,
+    "finishedMs": 1792549295908,
+    "exitCode": 0,
+    "stdout": "{\n  \"status\": \"VALID\",\n  \"schemaVersion\": \"scholarchain.screened-demo-population.v1\",\n  \"queryPlanVersion\": \"legacy-exact-executed-script\",\n  \"discoveryOrdering\": \"publication_date:asc\",\n  \"sources\": {\n    \"crossref\": 14,\n    \"dblp\": 0,\n    \"openalex\": 12,\n    \"orcid\": 0\n  },\n  \"observed\": {\n    \"distinctReturnedWorksIncludingExcluded\": 10,\n    \"httpAttempts\": 2,\n    \"newDistinctWorksNotObservedInPreviousStage\": 10,\n    \"newIngestionRecords\": 0,\n    \"responseBytes\": 43664,\n    \"seconds\": 1.3677\n  },\n  \"cumulative\": {\n    \"distinctReturnedWorksAcrossStages\": 30,\n    \"httpAttemptsAcrossStages\": 9,\n    \"previousStageDistinctReturnedWorks\": 20,\n    \"responseBytesAcrossStages\": 215344,\n    \"secondsAcrossStages\": 7.9818\n  },\n  \"files\": 31,\n  \"admission\": \"PENDING_CANONICAL_ER_COMPONENT_CHECK_BEFORE_SCORING\"\n}\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "python3",
+      "datasets/scripts/acquire_screened_demo.py",
+      "validate",
+      "--population",
+      "datasets/entity-resolution/5d-demo-2026-10-20-relevance-v2"
+    ],
+    "startedMs": 1792549295908,
+    "finishedMs": 1792549295957,
+    "exitCode": 0,
+    "stdout": "{\n  \"status\": \"VALID\",\n  \"schemaVersion\": \"scholarchain.screened-demo-population.v1\",\n  \"queryPlanVersion\": \"scholarchain.topic-discovery-order.v2\",\n  \"discoveryOrdering\": \"relevance_score:desc\",\n  \"sources\": {\n    \"crossref\": 14,\n    \"dblp\": 0,\n    \"openalex\": 17,\n    \"orcid\": 0\n  },\n  \"observed\": {\n    \"distinctReturnedWorksIncludingExcluded\": 14,\n    \"httpAttempts\": 3,\n    \"newDistinctWorksNotObservedInPreviousStage\": 14,\n    \"newIngestionRecords\": 5,\n    \"responseBytes\": 75738,\n    \"seconds\": 2.2322\n  },\n  \"cumulative\": {\n    \"distinctReturnedWorksAcrossStages\": 44,\n    \"httpAttemptsAcrossStages\": 12,\n    \"previousStageDistinctReturnedWorks\": 30,\n    \"responseBytesAcrossStages\": 291082,\n    \"secondsAcrossStages\": 10.214\n  },\n  \"files\": 64,\n  \"admission\": \"PENDING_CANONICAL_ER_COMPONENT_CHECK_BEFORE_SCORING\"\n}\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "python3",
+      "datasets/scripts/retain_prepared_population.py",
+      "validate",
+      "--population",
+      "datasets/entity-resolution/prepared/f22f1a12-c7be-43af-b470-d4f4e244ca9d"
+    ],
+    "startedMs": 1792549295957,
+    "finishedMs": 1792549296000,
+    "exitCode": 0,
+    "stdout": "{\n  \"status\": \"VALID\",\n  \"runId\": \"run:f22f1a12-c7be-43af-b470-d4f4e244ca9d\",\n  \"purposeKind\": \"development-demo\",\n  \"files\": 60,\n  \"bytes\": 1444292,\n  \"completionSha256\": \"421f1ba83af4eacdb49aced4be54377b4d0d9ea2ff85f900f2586ed915a81d42\",\n  \"runManifestSha256\": \"2888834b20b6b2087a5ab2c24823c61efc2ee33dc12dda15263e3a49b3ac2360\"\n}\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "python3",
+      "datasets/scripts/acquire_author_focused_demo.py",
+      "validate",
+      "--population",
+      "datasets/entity-resolution/5d-demo-2026-10-20-benedikt"
+    ],
+    "startedMs": 1792549296000,
+    "finishedMs": 1792549296051,
+    "exitCode": 0,
+    "stdout": "{\n  \"status\": \"VALID\",\n  \"schemaVersion\": \"scholarchain.author-focused-demo-population.v1\",\n  \"sources\": {\n    \"crossref\": 1,\n    \"dblp\": 0,\n    \"openalex\": 7,\n    \"orcid\": 0\n  },\n  \"observed\": {\n    \"distinctAuthorProfileIds\": 5,\n    \"distinctWorkIdsIncludingExcluded\": 21,\n    \"httpAttempts\": 6,\n    \"newIngestionWorks\": 7,\n    \"newWorkIdsNotObservedInPriorStages\": 21,\n    \"responseBytes\": 218664,\n    \"returnedAuthorProfileRecords\": 5,\n    \"returnedMetadataRecordsIncludingDuplicatesExcluded\": 26,\n    \"returnedWorkRecords\": 21,\n    \"seconds\": 5.3543\n  },\n  \"cumulative\": {\n    \"distinctAuthorProfileIdsAcrossStages\": 5,\n    \"distinctWorkIdsAcrossStages\": 65,\n    \"httpAttemptsAcrossStages\": 18,\n    \"responseBytesAcrossStages\": 509746,\n    \"returnedAuthorProfileRecordsAcrossStages\": 5,\n    \"returnedMetadataRecordsAcrossStages\": 75,\n    \"returnedWorkRecordsAcrossStages\": 70,\n    \"secondsAcrossStages\": 15.5683\n  },\n  \"files\": 85,\n  \"admission\": \"PENDING_CANONICAL_ER_COMPONENT_CHECK_BEFORE_SCORING\"\n}\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "python3",
+      "datasets/scripts/derive_focused_cs_population.py",
+      "validate",
+      "--parent",
+      "datasets/entity-resolution/5d-demo-2026-10-20-benedikt",
+      "--population",
+      "datasets/entity-resolution/5d-demo-2026-10-20-benedikt-cs"
+    ],
+    "startedMs": 1792549296051,
+    "finishedMs": 1792549296100,
+    "exitCode": 0,
+    "stdout": "{\n  \"status\": \"VALID\",\n  \"schemaVersion\": \"scholarchain.author-focused-cs-slice.v1\",\n  \"observed\": {\n    \"excludedOpenAlexRecords\": 5,\n    \"parentOpenAlexRecords\": 7,\n    \"selectedOpenAlexRecords\": 2\n  },\n  \"sources\": {\n    \"crossref\": 1,\n    \"dblp\": 0,\n    \"openalex\": 2,\n    \"orcid\": 0\n  },\n  \"newHttpAttempts\": 0,\n  \"cumulative\": {\n    \"distinctAuthorProfileIdsAcrossStages\": 5,\n    \"distinctWorkIdsAcrossStages\": 65,\n    \"httpAttemptsAcrossStages\": 18,\n    \"responseBytesAcrossStages\": 509746,\n    \"returnedAuthorProfileRecordsAcrossStages\": 5,\n    \"returnedMetadataRecordsAcrossStages\": 75,\n    \"returnedWorkRecordsAcrossStages\": 70,\n    \"secondsAcrossStages\": 15.5683\n  },\n  \"files\": 8\n}\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "python3",
+      "datasets/scripts/retain_prepared_population.py",
+      "validate",
+      "--population",
+      "datasets/entity-resolution/prepared/88e3a197-6155-4936-8cf5-e0357cd73208"
+    ],
+    "startedMs": 1792549296100,
+    "finishedMs": 1792549296141,
+    "exitCode": 0,
+    "stdout": "{\n  \"status\": \"VALID\",\n  \"runId\": \"run:88e3a197-6155-4936-8cf5-e0357cd73208\",\n  \"purposeKind\": \"development-demo\",\n  \"files\": 56,\n  \"bytes\": 82072,\n  \"completionSha256\": \"d59dfe49e3c38c44014774733029c6c21d083871904255ba9a5fff987422e5ef\",\n  \"runManifestSha256\": \"82d1008a627de5601a598582b7a8d9d16d22b86cd367113775e3048a36b9898a\"\n}\n",
+    "stderr": ""
+  }
+]

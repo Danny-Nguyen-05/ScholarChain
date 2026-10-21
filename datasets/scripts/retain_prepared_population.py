@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Retain the exact completed Hadoop input consumed by a frozen review queue.
+"""Retain exact completed Hadoop input with an explicitly declared purpose.
 
 No Hadoop re-execution, network, UUID rewriting or source fact transformation.
 The sibling retention manifest is mandatory for independent integrity checks.
@@ -17,6 +17,18 @@ from pathlib import Path
 VERSION = "scholarchain.prepared-population-retention.v1"
 MAX_FILES = 1000
 MAX_BYTES = 96 * 1024 * 1024
+FROZEN_PURPOSE = "frozen-5c-review"
+DEMO_PURPOSE = "development-demo"
+PURPOSES = {
+    FROZEN_PURPOSE: "Exact immutable completed preparation input for frozen Phase 5C review population and future human-label evaluation replay.",
+    DEMO_PURPOSE: "Exact immutable completed preparation input for Phase 5D development/demo evidence only; not frozen review, gold labels or held-out evaluation input."
+}
+FROZEN_RUN = "run:bd424a86-0a1b-4e44-bbdb-4a9b8c8a20e3"
+DEMO_RUNS = {"run:3bfbd651-5982-4f3d-b29b-246fb88d07a1", "run:68c2b012-6d04-4eef-a7bf-5ca31706d895"}
+OWNERSHIP = {
+    FROZEN_PURPOSE: "dataset-engineer owns datasets/** prepared evaluation population material; no constitutional ownership change.",
+    DEMO_PURPOSE: "dataset-engineer owns datasets/** prepared development/demo evidence material; no constitutional ownership change."
+}
 REQUIRED = ("_SCHOLARCHAIN_COMPLETE", "run-manifest.json", "export/_SUCCESS") + tuple(
     f"intermediate/j{n:02d}/_SUCCESS" for n in range(1, 9))
 
@@ -83,11 +95,27 @@ def manifest_path(root):
     return root.with_name(root.name + ".retention-manifest.v1.json")
 
 
+def check_purpose(manifest):
+    kind = manifest.get("purposeKind")
+    # Preserve the accepted original 5C manifest verbatim. No other untyped
+    # manifest may silently inherit its historical review/evaluation claim.
+    if kind is None and manifest.get("runId") == FROZEN_RUN:
+        kind = FROZEN_PURPOSE
+    if kind not in PURPOSES or manifest.get("purpose") != PURPOSES[kind] or manifest.get("ownership") != OWNERSHIP[kind]:
+        raise ValueError("missing, unsupported or inconsistent retention purpose")
+    if manifest.get("runId") in DEMO_RUNS and kind != DEMO_PURPOSE:
+        raise ValueError("known Phase 5D demo input cannot claim frozen review purpose")
+    if manifest.get("runId") == FROZEN_RUN and kind != FROZEN_PURPOSE:
+        raise ValueError("frozen Phase 5C review input cannot claim demo purpose")
+    return kind
+
+
 def validate(root):
     root = root.absolute()
     manifest = json.loads(manifest_path(root).read_bytes())
     if manifest.get("version") != VERSION or manifest.get("retainedDirectory") != root.name:
         raise ValueError("unsupported or mismatched retention manifest")
+    purpose = check_purpose(manifest)
     files, marker = framed_files(root)
     actual = {path.relative_to(root).as_posix() for path in root.rglob("*") if path.is_file()}
     if actual != set(files) or set(files) != set(manifest["files"]):
@@ -101,18 +129,22 @@ def validate(root):
     count, total = len(files), sum(fact["bytes"] for fact in manifest["files"].values())
     if count != manifest["fileCount"] or total != manifest["totalBytes"]:
         raise ValueError("retention totals mismatch")
-    return {"status": "VALID", "runId": marker["runId"], "files": count,
+    return {"status": "VALID", "runId": marker["runId"], "purposeKind": purpose, "files": count,
             "bytes": total, "completionSha256": sha256(root / "_SCHOLARCHAIN_COMPLETE"),
             "runManifestSha256": sha256(root / "run-manifest.json")}
 
 
-def retain(source, destination):
+def retain(source, destination, *, purpose):
+    if purpose not in PURPOSES:
+        raise ValueError("explicit supported retention purpose required")
     source, destination = source.absolute(), destination.absolute()
     if destination.exists() or manifest_path(destination).exists():
         raise ValueError("retention destination already exists; never overwrite")
     if destination.is_relative_to(source) or source.is_relative_to(destination):
         raise ValueError("retention source and destination must be disjoint")
     files, marker = framed_files(source)
+    check_purpose({"runId": marker["runId"], "purposeKind": purpose,
+                   "purpose": PURPOSES[purpose], "ownership": OWNERSHIP[purpose]})
     destination.parent.mkdir(parents=True, exist_ok=True)
     staging = Path(tempfile.mkdtemp(prefix=".prepared-retention-", dir=destination.parent))
     pending_manifest = None
@@ -131,8 +163,8 @@ def retain(source, destination):
             raise ValueError("prepared source changed during retention")
         document = {"version": VERSION, "retainedDirectory": destination.name,
                     "runId": marker["runId"], "sourceRunDirectoryName": source.name,
-                    "purpose": "Exact immutable completed preparation input for frozen Phase 5C review population and future human-label evaluation replay.",
-                    "ownership": "dataset-engineer owns datasets/** prepared evaluation population material; no constitutional ownership change.",
+                    "purposeKind": purpose, "purpose": PURPOSES[purpose],
+                    "ownership": OWNERSHIP[purpose],
                     "retentionScope": "entire export/**, original completion and run manifests, eight intermediate job success files; no source/run ID/path rewriting",
                     "omitted": "Intermediate data parts, stats and counter summary are not read by the ER InputLoader. They are not claimed retained.",
                     "bounds": {"maxFiles": MAX_FILES, "maxBytes": MAX_BYTES},
@@ -160,10 +192,12 @@ def main():
     create = sub.add_parser("retain")
     create.add_argument("--source", type=Path, required=True)
     create.add_argument("--destination", type=Path, required=True)
+    create.add_argument("--purpose", choices=tuple(PURPOSES), required=True,
+                        help="declare frozen review input or separate development/demo evidence")
     check = sub.add_parser("validate")
     check.add_argument("--population", type=Path, required=True)
     args = parser.parse_args()
-    result = retain(args.source, args.destination) if args.command == "retain" else validate(args.population)
+    result = retain(args.source, args.destination, purpose=args.purpose) if args.command == "retain" else validate(args.population)
     print(json.dumps(result, indent=2))
 
 

@@ -1,0 +1,1 @@
+{"metricsRows": 24, "representativeErrors": 14, "manifest": {"path": "docs/agent-runs/phase-05/evidence/5e/evaluation-manifest.json", "bytes": 12887, "sha256": "eb746edb5a6e3152f77659ab6bc294d3cc1949fe17ca8629a9d39346e0916f81"}}

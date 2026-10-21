@@ -1,0 +1,16 @@
+{
+  "schemaVersion": "scholarchain.phase5d.prior-b1b2-external-approval-summary.v1",
+  "recordedAtUtc": "2026-10-21T02:14:53.716743+00:00",
+  "provenance": "Summary of complete external verdict supplied in user message; not a new reviewer execution or substitute full transcript.",
+  "statusVerbatim": "STATUS: COMPLETE. Verdict for the implemented B1/B2 scope is APPROVE: no blockers, four nonblocking findings, and the gates I could not verify are listed below.",
+  "independence": "Reviewer states they did not author B1 or B2 and used read-only inspection.",
+  "findings": {
+    "B1": "PASS decision attribution",
+    "B2": "PASS relevance ordering and separate approved rerun",
+    "N1": "Literal line-number prefixes in earlier B1 phase sections; nonblocking",
+    "N2": "Old copied context dates/snapshots relabelled by screened script; nonblocking historical provenance limitation",
+    "N3": "Some historical proof fields are literal assertions, not measured; nonblocking",
+    "N4": "Informational script/hash test, author filter ordering, stale prepared wording, provider notice treated asdata"
+  },
+  "limitations": "Overall 5D real-provider evidence remains pending; no 5E or overall Phase5 acceptance implied. All nonblocking findings remain deferred; current work does not rewrite old evidence."
+}

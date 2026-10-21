@@ -597,3 +597,102 @@ The user supplied external APPROVE closing B1/B2 and requested the bounded work 
 User explicitly approved optional lean cleanup: archive v1/v2 duplicate payloads and the old pre-repair queue/split outside the repository and target, SHA-256 verify every archived file before removal, retain original v1/v2 population manifests and compact archive manifests, audit dependencies first, update active README validation commands, widen build-owned .gitattributes byte-preservation rules, run v3/prepared validators and all Python dataset tests, then one sbt check and updated freeze/inventory. No source logic, data-content, labels, commit/push or 5D changes.
 
 Dataset owner /root/phase5c_dataset owns dataset archival and dataset docs; coordinator owns historical evidence archival/current handoff/packaging recipes; build owner /root/phase5c_precommit_build owns .gitattributes; ER owner /root/phase5c_er audits runtime references and updates only its README. Original historical reports and human decisions remain unchanged; new notes identify archival. All archive writes use native sandbox authorization for the explicitly chosen durable Documents/ScholarChain-archive/phase5c location.
+
+
+## Authorized Subphase 5D — real-provider checkpoint and human review
+
+User work order, verbatim: “alright please do 5d for me. Ask me questions if you have any”
+
+User provider/model selection, verbatim: “Let use openAI gpt 6 luna”
+
+5D starts from clean branch phase-5 at commit 61d32a38eaad5b2fc352acf0b7f85f3815c2336d (completed 5C). This authorizes provider-specific OpenAI gpt-6-luna adapter implementation, offline owner/independent tests, human-review handoff and imports of user-provided annotation batches. Live calls still require concrete sanitized request, explicit numerical request/token/spend approval, runtime credentials and passing offline gates. No credentials may be read from files, printed or committed. The live development/demo run must exclude locked held-out tasks and leave the blind page unchanged. No policy calibration, held-out evaluation, additional acquisition, deferred unrelated repairs, reviewer launch, commit/push or 5E is authorized. Existing one-writer owners remain: ER modules/entity-resolution/**, independent tester tests/**, dataset datasets/** only when actual human batches exist, coordinator phase evidence. No actual human label or live-provider result is inferred.
+
+
+### 5D numerical live-call authorization
+
+User question, verbatim: “May ScholarChain make up to 10 GPT‑6 Luna API attempts for the 5D test, spending at most $1? This uses the token limits described above; it does not replace your human labeling.”
+
+User answer, verbatim: “Yes, approve the $1 test”
+
+Referenced numerical proposal is retained in evidence/5d/proposed-live-budget.json: 10 total attempts including retries, at most1 retry per pair, sequential concurrency1,1,000,000input tokens total,40,960output tokens total,4096output tokens per attempt,60seconds per attempt, standard OpenAI gpt-6-luna, maximum$1.00USD. This authorizes only the bounded development/demo pilot after passing offline checks, with naturally eligible real evidence and runtime credentials. It does not authorize held-out demo calls, new acquisition, policy tuning, later phases or substitute model output for human labels.
+
+
+### 5D bounded development/demo supplement authorization
+
+User question, verbatim: “To find a suitable live-test pair, may I reuse up to 14 already downloaded records and, if needed, fetch up to 30 additional public OpenAlex records? The fetch would stop at 20 web requests, 16 MB or 10 minutes, whichever comes first, with no paid data service. Your existing 240-review queue stays unchanged, and anything overlapping held-out groups is excluded before scoring.”
+
+User answer, verbatim: “Approve this bounded demo supplement”
+
+Exact proposed caps/provenance/admission constraints are retained in evidence/5d/demo-evidence-proposal.json and user-supplement-approval.json. This authorizes a separately manifested demo-only supplement, unchanged normalization and locked-held-out component exclusion before scoring. It does not authorize modifying the frozen v3 population, prepared input, queue/split, labels, thresholds or feature policy. Stop on bounds or access refusal; no credentials, paid fallback or silent expansion.
+
+
+### 5D human-review prerequisite status
+
+Asked whether any original human-review checkpoint JSON files had been saved, the user replied verbatim: “Not yet”. The coordinator records zero provided/imported real human annotations. The technical implementation checkpoint does not substitute synthetic tests, model output or browser fixtures for these reviews. No human acceptance is inferred.
+
+
+## 5D B1/B2 repair authorization
+
+User instruction, verbatim: “only fix all blockings bug for me ignore the non-blockings. Then return for me a reviewer prompt so I can copy and paste it to my reviewer”. The user subsequently supplied the missing blocker sections, preserved as received in evidence/5d-repair/external-review.txt and review.md. Only B1 credential preflight before reservation/dispatch and B2 correct demo-only retention provenance are authorized. N1–N8 are not a separate repair work order. B1's required no-credential-echo behavior necessarily shares the same credential validation boundary discussed in N2; this is not a separate nonblocking project.
+
+Owners: ER modules/entity-resolution/**, dataset datasets/**, independent tester tests/**, coordinator phase evidence. Capture executable credential failures on reviewed production before ER repair; preserve uncertain-dispatch accounting and all original approval limits; no real credentials, network/model calls, new acquisition, label/policy changes, reviewer launch, commit/push or 5E. All retained data and original 5C evaluation manifest must remain byte-identical. After targeted tests, validators and fresh frozen sbt check, paste the full read-only recheck prompt in chat and stop. No prompt text file is created or restored.
+
+
+## 5D actual human-reviewed batch import authorization
+
+User stated “alright I did all of them” after reviewing the twelve Markdown batches; coordinator read-only verification found 240 valid task selections, 83 Same /149 Different /8 Uncertain,17changes from AI drafts. User explicitly authorized the proposed next steps with “alright can you do that for me”: convert/import the confirmed decisions, preserve original batches and AI-assisted provenance, report uncertainty/remaining needs, and assess the live-demo prerequisite. This remains5D; no5E,held-out prediction/evaluation,policy tuning,newacquisition or modelcall is authorized by this import. Earlier paidpilotnumerical limits remain unchanged.
+
+Dataset owner creates an exact original-batch archive, conversion provenance and strict checkpoint under datasets/**; coordinator invokes the unchanged importer and records execution receipts. Source Markdown/AI drafts remain immutable; final notes may contain actual human comments and explicit AI-assistance disclosure, never AI rationale presented as Danny's own words. Original decision timestamps were not captured; conversion time is disclosed rather than invented as review time. ER owner assesses only existing live-readiness evidence without seeing label values; no source edits or newdatarequests. Original human gate/acceptance files are not rewritten.
+
+
+## 5D additional bounded demo search authorization
+
+User explicitly replied “Approve this additional bounded search” to the complete question retained in evidence/5d-followup-demo/user-approval.json: at most30newOpenAlexrecords,20HTTPattempts,8MiB,5minutes,no paiddata/credentials, no label-based selection, frozenreviewsetunchanged, exactheldoutoverlapexclusionbefore scoring. This is a separate bounded stage, not a reset of the prior search receipt. Original $1/10attempt model approval and5D-only stoppingboundary remainunchanged. Dataset owner implements source/provenance; rootsoleHTTP/Hadoopexecution; ERowner supplies read-only canonicaladmission strategy without readinghumanlabels. No5E,predictionevaluation,policychange orcommit/push.
+
+
+### Additional search implementation adjustment
+
+The two canonical metadata screens found no suitable existing author seeds, with zero new HTTP requests. The exact user approval allows one public OpenAlex search within the recorded bounds; the coordinator’s initially narrower existing-seed strategy is replaced by two fixed public CS topic queries (five works each), then at most four author-neighborhood queries (five works each). Selection uses observed metadata only, never labels or comparison scores. Provisional discovery selection is not canonical held-out clearance; final combined-input transitive held-out exclusion is mandatory before scoring. All requests share the same 30-record/20-attempt/8-MiB/300-second allowance, without pagination, refill or timer reset. Exact implementation rationale is in evidence/5d-followup-demo/strategy-update.json. No user decision or prior report was rewritten.
+     1	
+     2	
+     3	## 5D decision-attribution statement — 2026-10-20
+     4	
+     5	After an independent review noted that all 17 differences from the AI drafts coincide with "Source check by Claude ... not Danny" Comments, and that five such Comments say "Switched same -> uncertain", the user stated, verbatim: “it was actually from me but claude mistaken but under it decision, now I want you to change all of them under my decisions”. Asked to route the edit through the owners, the user replied, verbatim: “I want you to change it, that's fine”. The user thereby directed the reviewing session to record the attribution itself; this is a disclosed departure from reviewer/implementer separation. Scope: record that danny set all 22 final checkboxes and Claude performed only the external source checks. No label value, checkpoint, validated derivative, provenance file, conversion report or source byte may change. No 5E, evaluation, acquisition or search re-run is authorized by this statement.
+
+
+## 5D external B2 discovery-ordering repair and corrected search
+
+The user returned external blocker B2: topic discovery's explicit publication_date:asc displaced relevance, returning unrelated repository records and undermining the search checkpoint. Only this blocker repair, its regression tests, append-only root-cause disclosure and verification are authorized. Existing records/manifests/executed scripts and all human decisions/attribution remain unchanged. Dataset engineer owns datasets/**; coordinator owns phase evidence and serialized execution.
+
+The user explicitly answered “Approve this corrected bounded rerun” to the full question retained in evidence/5d-search-repair/user-rerun-approval.json. The new stage is capped at 30 returned records including exclusions, 20 HTTP attempts, 8 MiB and 300 seconds without credentials or paid data. Preserve cumulative counters from the earlier stages; apply canonical transitive held-out exclusion before scoring. Original $1/10-attempt model approval is unchanged, and no eligibility or provider evidence is guaranteed. No reviewer, label/policy/queue change, 5E, commit or push is authorized.
+
+The reviewer also refers to a B1 attribution record. Existing decision-attribution.v1.json and its self-attested attribution remain protected; the coordinator requested the missing B1 finding rather than inventing its acceptance conditions.
+
+
+### B1 attribution clarification for the B2 repair gate
+
+The user confirmed that B1 attribution changes were already applied at their direction in the reviewing session, a disclosed departure from reviewer/implementer separation. Their full clarification is retained in evidence/5d-search-repair/b1-user-clarification.json. No further B1 implementation is requested. Preserve the full current label tree unchanged; include its README and decision-attribution.v1.json in the refreshed freeze and fresh independent B1/B2 recheck. The future 5E with/without-22-pair analysis remains a documented nonblocking later requirement, not current implementation.
+
+
+## 5D focused Michael Benedikt public-metadata search authorization
+
+The user asked how to obtain the pending real-model demonstration and then explicitly replied “go ahead” to the complete focused-search proposal retained verbatim in evidence/5d-focused-demo/user-approval.json. They subsequently instructed “pleaes continue”. This authorizes reuse of the existing development publication DOI 10.1145/3299887.3299889 and one new public OpenAlex metadata search around its observed author name Michael Benedikt. Maximum 30 returned metadata records TOTAL, including author lookup profiles, publication rows, duplicates and exclusions; 20 HTTP attempts including retries, 8 MiB and 300 seconds, with no credentials or paid data. Prior cumulative acquisition history is preserved. No label-based selection or matching-policy/queue change. Canonical full-component held-out exclusion is required before any scoring.
+
+Dataset owner writes a new standalone script and tests in datasets/**; coordinator executes the bounded HTTP command, unchanged Hadoop, canonical admission, offline gates and any naturally eligible existing approved model pilot. The first dataset owner hit a usage limit before completing tests and stopped; /root/phase5d_focused_dataset replaces it as the sole writer for this new dataset work. Existing ER owner supplies read-only execution advice only, without label access. No ER production changes or nonblocking repairs are authorized.
+
+The existing $1/10-attempt numerical model approval, model/provider and approval-scoped budget/cache remain unchanged. No call occurs without eligibility, passing offline checks, sanitized request preview and runtime credential preflight. Runtime keys are never read from files, printed or stored. No 5E, policy calibration, reviewer invocation, commit or push. Stop at the stage bounds without fallback, refill, identity fabrication or masking observed IDs; a suitable pair is not guaranteed.
+
+
+## 5E limited evaluation authorization
+
+The user replied “yes” to proceeding with Phase 5E evaluation of the existing deterministic/fake configuration, explicitly keeping real-provider evidence pending and overall Phase 5 acceptance open. Exact scope and preceding message are retained in evidence/5e/user-authorization.json. Preserve completed AI-assisted human choices, frozen population/split and matcher/policy/config; no live calls, further acquisition, Phase 6, commit/push or manager-launched reviewer. Produce source-bound predictions before scoring, development-only sensitivity, held-out metrics, with/without 22 externally assisted pairs, replay evidence, fresh deterministic gate and a copy-paste external review prompt (no prompt text file).
+
+
+## Final targeted real-provider attempt after limited 5E review
+
+The user returned an independent APPROVE for limited 5E and the implemented changes (zero blockers, six nonblocking observations), explicitly leaving real-provider evidence and overall acceptance open. The user instructed that nonblocking findings need no repair. The user then replied “alright do it” to one final targeted attempt with unchanged rules and existing $1 budget. This does not authorize Phase 6, commit/push, changes to labels, policy or approved evaluation. Preparation starts offline; new public acquisition waits for explicit numerical limits. Summary-only review receipt: evidence/5d-final-attempt/prior-review-summary.json; start/protected snapshot: start.json.
+
+
+### Final Rice-team acquisition numerical approval
+
+The user explicitly answered “Approve this final bounded attempt” to the question retained in evidence/5d-final-attempt/user-approval.json: at most 30 public OpenAlex work rows including duplicates/exclusions, 20 HTTP attempts, 8 MiB and 300 seconds, no data credentials or paid data. Query only the two already observed author IDs for Luis Leopoldo Perez and Christopher Jermaine, fixed 15 rows each, citation-count descending, years 2018–2024, no refill/fallback. Exact old seed bytes are discovery proof only; ingestion uses fresh response observations with stage-specific snapshot/date. Preserve cumulative acquisition counters. Apply canonical transitive held-out exclusion before scoring. Existing $1/10-attempt model approval remains unchanged and requires natural eligibility, passing offline checks, sanitized preview and credential preflight. Preserve the approved 5E evidence and all labels/rules. No nonblocking repairs, Phase 6, commit/push or reviewer launch.

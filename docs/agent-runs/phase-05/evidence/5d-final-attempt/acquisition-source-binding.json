@@ -1,0 +1,13 @@
+{
+  "newScript": {
+    "path": "datasets/scripts/acquire_rice_team_demo.py",
+    "sha256": "a7231581202b072dfdc1c9ee4b0634faa90bf967477038c82c2d9a83b8e04175"
+  },
+  "historyHelper": {
+    "path": "datasets/scripts/acquire_author_focused_demo.py",
+    "sha256": "2606bec8606d02e6d85d37a62a157c6c5f1bce2df6888e5f2f7de01384cb5b03"
+  },
+  "approvalSha256": "97f3d0f0f1e81484cec4168ecc36bb3f563fc69900e3abb009ab1ffebcbb8f82",
+  "planSha256": "120abcb307aadb55a4122871ebdc2b5987360a363d8419904e7065e327f85f6c",
+  "requestsExecuted": 0
+}

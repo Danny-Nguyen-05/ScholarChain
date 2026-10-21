@@ -1,0 +1,243 @@
+{
+  "bounds": {
+    "maxBytes": 100663296,
+    "maxFiles": 1000
+  },
+  "fileCount": 56,
+  "files": {
+    "_SCHOLARCHAIN_COMPLETE": {
+      "bytes": 7514,
+      "sha256": "d59dfe49e3c38c44014774733029c6c21d083871904255ba9a5fff987422e5ef"
+    },
+    "export/._SUCCESS.crc": {
+      "bytes": 8,
+      "sha256": "1d44f510ec2ed7595badbec80583316defc14e8dd89130d719724149adfaa07d"
+    },
+    "export/.part-r-00000.crc": {
+      "bytes": 8,
+      "sha256": "1d44f510ec2ed7595badbec80583316defc14e8dd89130d719724149adfaa07d"
+    },
+    "export/_SUCCESS": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "export/part-r-00000": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "export/snapshot=crossref-er5c-live-api-2026-10-16/run=88e3a197-6155-4936-8cf5-e0357cd73208/author-mention/.part-r-00000.crc": {
+      "bytes": 16,
+      "sha256": "a399c44c31ba1a6e35c5bec9e2d3d71221c1054912971d4d400c0f61db928e8c"
+    },
+    "export/snapshot=crossref-er5c-live-api-2026-10-16/run=88e3a197-6155-4936-8cf5-e0357cd73208/author-mention/part-r-00000": {
+      "bytes": 786,
+      "sha256": "4e01397ef328e38876c87ba102f7a5a7287ea8a4f0932e65c5579b7f511cff0a"
+    },
+    "export/snapshot=crossref-er5c-live-api-2026-10-16/run=88e3a197-6155-4936-8cf5-e0357cd73208/authorship/.part-r-00000.crc": {
+      "bytes": 16,
+      "sha256": "445ca04f5a9b3a86a908821e4afb05413aeb47baebce528ad2354b1704ea8eee"
+    },
+    "export/snapshot=crossref-er5c-live-api-2026-10-16/run=88e3a197-6155-4936-8cf5-e0357cd73208/authorship/part-r-00000": {
+      "bytes": 630,
+      "sha256": "124aaf878e66b7de910da4df127a8feed4a1fe584fe0505847d3541fb76e07d5"
+    },
+    "export/snapshot=crossref-er5c-live-api-2026-10-16/run=88e3a197-6155-4936-8cf5-e0357cd73208/enrichment/.part-r-00000.crc": {
+      "bytes": 16,
+      "sha256": "41a6cec32f6b75111de0a7a37cc3a10bd73b4292d1462c2d0641c0df9dcb3523"
+    },
+    "export/snapshot=crossref-er5c-live-api-2026-10-16/run=88e3a197-6155-4936-8cf5-e0357cd73208/enrichment/part-r-00000": {
+      "bytes": 765,
+      "sha256": "7b7d08327a869ffc5f5a53deea7974b63eae47b7ad9396656b3f702196b58832"
+    },
+    "export/snapshot=crossref-er5c-live-api-2026-10-16/run=88e3a197-6155-4936-8cf5-e0357cd73208/graph-edge/.part-r-00000.crc": {
+      "bytes": 20,
+      "sha256": "537c61b76bcff4bd72a6eb0e32b77acda321de2918578020a5717dd47c0313be"
+    },
+    "export/snapshot=crossref-er5c-live-api-2026-10-16/run=88e3a197-6155-4936-8cf5-e0357cd73208/graph-edge/part-r-00000": {
+      "bytes": 1486,
+      "sha256": "6dfc64ed4b053bf0c049b60db2512c75b5b0969b9bcf6addec3c90a4f233d7d3"
+    },
+    "export/snapshot=crossref-er5c-live-api-2026-10-16/run=88e3a197-6155-4936-8cf5-e0357cd73208/index/.part-r-00000.crc": {
+      "bytes": 16,
+      "sha256": "2dc834b3f8e9c062bb1b07be98c74620a6fe112fce5eb2b32d785df24ce402dc"
+    },
+    "export/snapshot=crossref-er5c-live-api-2026-10-16/run=88e3a197-6155-4936-8cf5-e0357cd73208/index/part-r-00000": {
+      "bytes": 681,
+      "sha256": "b75421a713a78dc80153a8f903c87226caead1bd082eea8819d0d468bccdab9f"
+    },
+    "export/snapshot=crossref-er5c-live-api-2026-10-16/run=88e3a197-6155-4936-8cf5-e0357cd73208/mention-affiliation/.part-r-00000.crc": {
+      "bytes": 16,
+      "sha256": "63a17d0de6f60b38fb3fd51d61c418559ec445f1fd66f8bae285dd8752540957"
+    },
+    "export/snapshot=crossref-er5c-live-api-2026-10-16/run=88e3a197-6155-4936-8cf5-e0357cd73208/mention-affiliation/part-r-00000": {
+      "bytes": 766,
+      "sha256": "041a036c5eae039c0012f7b3dd1e8a662208dcfea188468ec23df5a729e8a55a"
+    },
+    "export/snapshot=crossref-er5c-live-api-2026-10-16/run=88e3a197-6155-4936-8cf5-e0357cd73208/team/.part-r-00000.crc": {
+      "bytes": 16,
+      "sha256": "d689ad25fea9b06412027565e6e617c57066be49ba52f2c689f7f8502353521a"
+    },
+    "export/snapshot=crossref-er5c-live-api-2026-10-16/run=88e3a197-6155-4936-8cf5-e0357cd73208/team/part-r-00000": {
+      "bytes": 589,
+      "sha256": "56cd51b7fd1a16e5bbdca327d02cf93b5e265ecdeaade6af8a3a68dca6142c36"
+    },
+    "export/snapshot=crossref-er5c-live-api-2026-10-16/run=88e3a197-6155-4936-8cf5-e0357cd73208/venue/.part-r-00000.crc": {
+      "bytes": 16,
+      "sha256": "1b73654426977503fac3d17a9301bfa0f243d2d73c2c349f2418923486907375"
+    },
+    "export/snapshot=crossref-er5c-live-api-2026-10-16/run=88e3a197-6155-4936-8cf5-e0357cd73208/venue/part-r-00000": {
+      "bytes": 537,
+      "sha256": "356fb0364259a02fcd02bfce5147f2fbeb505888498831cc1fec1c7f2e6676b4"
+    },
+    "export/snapshot=crossref-er5c-live-api-2026-10-16/run=88e3a197-6155-4936-8cf5-e0357cd73208/work/.part-r-00000.crc": {
+      "bytes": 24,
+      "sha256": "2ba1c02cc9c818a8a702be0a7242ef49c14faafbb2542eccaaee0b3d22a5a3d6"
+    },
+    "export/snapshot=crossref-er5c-live-api-2026-10-16/run=88e3a197-6155-4936-8cf5-e0357cd73208/work/part-r-00000": {
+      "bytes": 1704,
+      "sha256": "573f5040174dd483f2d3f2d176bfd7afc48d4d6a2208b6cbe9541337db2e6cab"
+    },
+    "export/snapshot=hadoop-prep/run=88e3a197-6155-4936-8cf5-e0357cd73208/match-candidate/.part-r-00000.crc": {
+      "bytes": 124,
+      "sha256": "a3248616d116db64a839828d1e7e83eabbac6b2ff164b7c5c63d1abcd176910c"
+    },
+    "export/snapshot=hadoop-prep/run=88e3a197-6155-4936-8cf5-e0357cd73208/match-candidate/part-r-00000": {
+      "bytes": 14666,
+      "sha256": "3fa284f9536a466380dd4ec035107420f89dc0dd3a26602849efd56049258d97"
+    },
+    "export/snapshot=openalex-5d-demo-2026-10-20-benedikt-cs/run=88e3a197-6155-4936-8cf5-e0357cd73208/author-mention/.part-r-00000.crc": {
+      "bytes": 28,
+      "sha256": "a2f551829fef56ef6f59a239eb3618079fa6a5c99d42385fc3caffbf1b3918dd"
+    },
+    "export/snapshot=openalex-5d-demo-2026-10-20-benedikt-cs/run=88e3a197-6155-4936-8cf5-e0357cd73208/author-mention/part-r-00000": {
+      "bytes": 2337,
+      "sha256": "5391badbbff562cd40339a6c0f501da9639a6f376f7dff29ce92defda39a42cd"
+    },
+    "export/snapshot=openalex-5d-demo-2026-10-20-benedikt-cs/run=88e3a197-6155-4936-8cf5-e0357cd73208/authorship/.part-r-00000.crc": {
+      "bytes": 24,
+      "sha256": "8d4e767095c58009269d509bf08841c040fd958993c44d9cff27ab4f9d238a5a"
+    },
+    "export/snapshot=openalex-5d-demo-2026-10-20-benedikt-cs/run=88e3a197-6155-4936-8cf5-e0357cd73208/authorship/part-r-00000": {
+      "bytes": 1815,
+      "sha256": "2e20db7173ebbbb75158033e9f91068b5bcbc6648401ce5d461bd1782874ca70"
+    },
+    "export/snapshot=openalex-5d-demo-2026-10-20-benedikt-cs/run=88e3a197-6155-4936-8cf5-e0357cd73208/enrichment/.part-r-00000.crc": {
+      "bytes": 88,
+      "sha256": "810490e06d3cf19bbdd3252ad38a1a98595de361b9a4c604b89e775f1777ed17"
+    },
+    "export/snapshot=openalex-5d-demo-2026-10-20-benedikt-cs/run=88e3a197-6155-4936-8cf5-e0357cd73208/enrichment/part-r-00000": {
+      "bytes": 9958,
+      "sha256": "03e21f89a0a1fdf2a2d444fb2dd7cb54b8e816a75d6fe410781e4f3fb9dc3823"
+    },
+    "export/snapshot=openalex-5d-demo-2026-10-20-benedikt-cs/run=88e3a197-6155-4936-8cf5-e0357cd73208/graph-edge/.part-r-00000.crc": {
+      "bytes": 72,
+      "sha256": "082329da906c4c38abec6dfa99d27bf247f960ab146af318c4527ae7dea5e3e5"
+    },
+    "export/snapshot=openalex-5d-demo-2026-10-20-benedikt-cs/run=88e3a197-6155-4936-8cf5-e0357cd73208/graph-edge/part-r-00000": {
+      "bytes": 7949,
+      "sha256": "eb5696e333fe7aa16d45705f3b5b7c714dec2e5cfe5cbfb5ee21836fe786cb08"
+    },
+    "export/snapshot=openalex-5d-demo-2026-10-20-benedikt-cs/run=88e3a197-6155-4936-8cf5-e0357cd73208/index/.part-r-00000.crc": {
+      "bytes": 108,
+      "sha256": "8aa67405d27e665c47582412c38162c7c7a09fcd4091e213db0c0608724684c4"
+    },
+    "export/snapshot=openalex-5d-demo-2026-10-20-benedikt-cs/run=88e3a197-6155-4936-8cf5-e0357cd73208/index/part-r-00000": {
+      "bytes": 12685,
+      "sha256": "94c4b43ce69e7887bf94540831c707a7da5fdaa222c0f51e03684554e6f0262e"
+    },
+    "export/snapshot=openalex-5d-demo-2026-10-20-benedikt-cs/run=88e3a197-6155-4936-8cf5-e0357cd73208/institution/.part-r-00000.crc": {
+      "bytes": 36,
+      "sha256": "701f303881ae3af188279d716450b23e5f0fef542786d2d8954de88e94f2b758"
+    },
+    "export/snapshot=openalex-5d-demo-2026-10-20-benedikt-cs/run=88e3a197-6155-4936-8cf5-e0357cd73208/institution/part-r-00000": {
+      "bytes": 3435,
+      "sha256": "8b9745eee76dab0176f5aef4045710dfc40f9be8a35b6702348bd42c0393f85a"
+    },
+    "export/snapshot=openalex-5d-demo-2026-10-20-benedikt-cs/run=88e3a197-6155-4936-8cf5-e0357cd73208/pair/.part-r-00000.crc": {
+      "bytes": 16,
+      "sha256": "27a851d4971eeb102f94ec2bce206cb3195dc71f7eb3e5200af4a8f8abd504ea"
+    },
+    "export/snapshot=openalex-5d-demo-2026-10-20-benedikt-cs/run=88e3a197-6155-4936-8cf5-e0357cd73208/pair/part-r-00000": {
+      "bytes": 701,
+      "sha256": "4fa03614b2caf45e1af1646ff6e6427e5606a622cdded40bc3e4696fb2597064"
+    },
+    "export/snapshot=openalex-5d-demo-2026-10-20-benedikt-cs/run=88e3a197-6155-4936-8cf5-e0357cd73208/team/.part-r-00000.crc": {
+      "bytes": 20,
+      "sha256": "bcb0c68c05eb38f99a8a37afb5c61db051b744aeba4d478446d08c705782b74d"
+    },
+    "export/snapshot=openalex-5d-demo-2026-10-20-benedikt-cs/run=88e3a197-6155-4936-8cf5-e0357cd73208/team/part-r-00000": {
+      "bytes": 1161,
+      "sha256": "0c52af13b0e5c957340c64f7e986ed6e52506fb327ca76615cccb20b5b7105ec"
+    },
+    "export/snapshot=openalex-5d-demo-2026-10-20-benedikt-cs/run=88e3a197-6155-4936-8cf5-e0357cd73208/topic/.part-r-00000.crc": {
+      "bytes": 36,
+      "sha256": "e348cd4b73c78833f1dbcc41ce8aba56e2b308007d13a72a379e53c89b9e4d61"
+    },
+    "export/snapshot=openalex-5d-demo-2026-10-20-benedikt-cs/run=88e3a197-6155-4936-8cf5-e0357cd73208/topic/part-r-00000": {
+      "bytes": 3437,
+      "sha256": "b8c5a3fb5570603b0e37d59ca52a22cff54f1a87ee42986bc147f66dd19232cb"
+    },
+    "export/snapshot=openalex-5d-demo-2026-10-20-benedikt-cs/run=88e3a197-6155-4936-8cf5-e0357cd73208/venue/.part-r-00000.crc": {
+      "bytes": 20,
+      "sha256": "d33d8b3ce2da175573e40151f2a32508334b8a8383c8e0d1225ee0d4ce2981c0"
+    },
+    "export/snapshot=openalex-5d-demo-2026-10-20-benedikt-cs/run=88e3a197-6155-4936-8cf5-e0357cd73208/venue/part-r-00000": {
+      "bytes": 1154,
+      "sha256": "8ddd780e65f96f573504ec985761b774cf3e192e8a2adfe5f9181a2e43d52387"
+    },
+    "export/snapshot=openalex-5d-demo-2026-10-20-benedikt-cs/run=88e3a197-6155-4936-8cf5-e0357cd73208/work/.part-r-00000.crc": {
+      "bytes": 48,
+      "sha256": "b3bec8564188b764d3c0c0dbbbac42a6b392710ef494e078b9235e431dc73f67"
+    },
+    "export/snapshot=openalex-5d-demo-2026-10-20-benedikt-cs/run=88e3a197-6155-4936-8cf5-e0357cd73208/work/part-r-00000": {
+      "bytes": 4660,
+      "sha256": "e6b8b46eff5b3c0248d7b2636c4a2c9e8968ef3bab0ea13ed152410362119a14"
+    },
+    "intermediate/j01/_SUCCESS": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "intermediate/j02/_SUCCESS": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "intermediate/j03/_SUCCESS": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "intermediate/j04/_SUCCESS": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "intermediate/j05/_SUCCESS": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "intermediate/j06/_SUCCESS": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "intermediate/j07/_SUCCESS": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "intermediate/j08/_SUCCESS": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "run-manifest.json": {
+      "bytes": 1864,
+      "sha256": "82d1008a627de5601a598582b7a8d9d16d22b86cd367113775e3048a36b9898a"
+    }
+  },
+  "omitted": "Intermediate data parts, stats and counter summary are not read by the ER InputLoader. They are not claimed retained.",
+  "ownership": "dataset-engineer owns datasets/** prepared development/demo evidence material; no constitutional ownership change.",
+  "purpose": "Exact immutable completed preparation input for Phase 5D development/demo evidence only; not frozen review, gold labels or held-out evaluation input.",
+  "purposeKind": "development-demo",
+  "retainedDirectory": "88e3a197-6155-4936-8cf5-e0357cd73208",
+  "retentionScope": "entire export/**, original completion and run manifests, eight intermediate job success files; no source/run ID/path rewriting",
+  "runId": "run:88e3a197-6155-4936-8cf5-e0357cd73208",
+  "sourceRunDirectoryName": "88e3a197-6155-4936-8cf5-e0357cd73208",
+  "totalBytes": 82072,
+  "version": "scholarchain.prepared-population-retention.v1"
+}

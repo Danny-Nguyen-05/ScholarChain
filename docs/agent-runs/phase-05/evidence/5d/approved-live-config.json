@@ -1,0 +1,35 @@
+{
+  "schemaVersion": "scholarchain.live-provider.v1",
+  "provider": "openai",
+  "model": "gpt-6-luna",
+  "modelVersion": "gpt-6-luna",
+  "reasoningEffort": "medium",
+  "apiKeyEnvironment": "OPENAI_API_KEY",
+  "approved": true,
+  "approvalId": "approval-1b66c9878075",
+  "budget": {
+    "maxAttempts": 10,
+    "maxInputTokens": 1000000,
+    "maxOutputTokens": 40960,
+    "maxSpendMicrousd": 1000000,
+    "maxOutputTokensPerCall": 4096,
+    "timeoutMs": 60000,
+    "maxRetries": 1,
+    "maxConcurrentCalls": 1,
+    "maxRequestBytes": 65536,
+    "maxResponseBytes": 65536
+  },
+  "rateCard": {
+    "inputMicrousdPerMillionTokens": 100000,
+    "cachedInputMicrousdPerMillionTokens": 10000,
+    "cacheWriteMicrousdPerMillionTokens": 125000,
+    "outputMicrousdPerMillionTokens": 500000,
+    "checkedAtUtc": "2026-10-16T00:00:00Z",
+    "sourceUrl": "https://developers.openai.com/api/docs/models/gpt-6-luna"
+  },
+  "responseLimits": {
+    "maxRationaleCharacters": 1000,
+    "maxReasonCodes": 8,
+    "maxFieldRefs": 16
+  }
+}

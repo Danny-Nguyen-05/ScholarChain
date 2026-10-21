@@ -1,0 +1,28 @@
+"""Coordinator verifies actual import against immutable source selections; no scoring."""
+from pathlib import Path
+import json,hashlib
+base=Path('docs/agent-runs/phase-05/evidence/5d-label-import')
+labels=Path('datasets/entity-resolution/labels/2026-10-20-danny-ai-assisted-v1')
+old=json.loads((base/'before-source-freeze.json').read_text())
+changed=[];missing=[]
+for f in old['files']:
+ p=Path(f['path'])
+ if not p.is_file():missing.append(str(p))
+ elif hashlib.sha256(p.read_bytes()).hexdigest()!=f['sha256']:changed.append(str(p))
+checkpoint=json.loads((labels/'checkpoint.json').read_text())
+validated=json.loads((labels/'validated-labels.json').read_text())
+report=json.loads((labels/'conversion-report.json').read_text())
+print('checkpoint fields:',list(checkpoint),'validated fields:',list(validated))
+assert not changed and not missing,(changed,missing)
+original=Path('/Users/danny/Documents/ScholarChain-review-drafts')
+archived=[]
+for p in sorted((labels/'source').iterdir()):
+ if not p.is_file():continue
+ assert p.read_bytes()==(original/p.name).read_bytes(),p.name
+ archived.append({'path':str(p),'sha256':hashlib.sha256(p.read_bytes()).hexdigest(),'bytes':p.stat().st_size})
+assert len(archived)==16
+assert report['initialTaskCount']==240 and report['reserveTasksAnnotated']==0
+assert report['counts']=={'same':83,'different':149,'uncertain':8}
+result={'schemaVersion':'scholarchain.phase5d.label-import-proof.v1','valid':True,'previousFrozenFilesUnchanged':len(old['files']),'previousFrozenFilesChanged':changed,'missing':missing,'originalFilesByteIdentical':archived,'initialReviews':240,'reserveReviews':0,'counts':report['counts'],'binaryDevelopment':38,'binaryHeldOut':194,'uncertainDevelopment':2,'uncertainHeldOut':6,'additionalDefinitiveReviewsIf40And200BinaryRequired':8,'aiAssisted':True,'externallyAssistedAiComments':22,'humanDecisionOverrides':17,'noPredictionOrEvaluationPerformed':True,'checkpointSha256':hashlib.sha256((labels/'checkpoint.json').read_bytes()).hexdigest(),'validatedSha256':hashlib.sha256((labels/'validated-labels.json').read_bytes()).hexdigest()}
+(base/'import-proof.json').write_text(json.dumps(result,indent=2)+'\n')
+print(json.dumps({k:v for k,v in result.items() if k!='originalFilesByteIdentical'}))

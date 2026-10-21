@@ -1,0 +1,9 @@
+{
+  "command": [
+    "python3",
+    "docs/agent-runs/phase-05/evidence/5d-search-repair/verify-protected.py.txt"
+  ],
+  "observedExitCode": 0,
+  "result": "protected-proof.json",
+  "recordedAtUtc": "2026-10-21T01:40:03.563194+00:00"
+}

@@ -1,0 +1,44 @@
+"""Coordinator verifies retained facts without labels, network or provider execution."""
+from pathlib import Path
+import json,hashlib,collections,datetime
+B=Path(__file__).resolve().parent;R=Path.cwd();load=lambda p:json.loads(Path(p).read_text());sha=lambda p:hashlib.sha256(Path(p).read_bytes()).hexdigest()
+start=load(B/'start.json');changed=[x['path'] for x in start['protectedSourceFiles'] if sha(x['path'])!=x['sha256']]
+assert changed==['datasets/entity-resolution/README.md','datasets/entity-resolution/prepared/README.md'],changed
+assert all(sha(x['path'])==x['sha256'] for x in start['protectedApproved5eArtifacts'])
+old={x['path']:x for x in load(B/'before-source-freeze.json')['files']};new={x['path']:x for x in load(R/'docs/agent-runs/phase-05/source-freeze.json')['files']}
+assert not old.keys()-new.keys()
+delta={'beforeFiles':len(old),'currentFiles':len(new),'changed':changed,'added':sorted(new.keys()-old.keys()),'removed':[]}
+(B/'source-delta.json').write_text(json.dumps(delta,indent=2)+'\n')
+stage=R/'datasets/entity-resolution/5d-demo-2026-10-20-rice-final';m=load(stage/'population-manifest.v1.json');events=[json.loads(x) for x in (stage/'request-ledger.jsonl').read_text().splitlines()]
+approval=load(B/'user-approval.json');assert all(x['retrievedAtUtc']>approval['recordedAtUtc'] for x in events)
+assert len(events)==2 and all(e['status']==200 and e['result']=='ok' for e in events)
+assert sum(e['returnedRecords'] for e in events)==15 and sum(e['bytesRead'] for e in events)==112270
+assert sha('datasets/scripts/acquire_rice_team_demo.py')==sha(B/'executed-acquisition.py.txt')==m['executedScripts']['acquire_rice_team_demo.py']['sha256']
+assert sha('datasets/scripts/acquire_author_focused_demo.py')==sha(B/'executed-history-helper.py.txt')==m['executedScripts']['acquire_author_focused_demo.py']['sha256']
+rows={}
+for e in events:
+ for row in load(stage/e['responsePath'])['results']:rows.setdefault(row['id'],row)
+ingested=[json.loads(x) for x in (stage/'input/openalex.jsonl').read_text().splitlines()]
+assert len(ingested)==3 and all(row==rows[row['id']] for row in ingested)
+names=['admission.json','summary.json','admitted-classifications.jsonl','scored-pair-ids.json']
+assert all((B/'target-readiness'/n).read_bytes()==(B/'durable-readiness'/n).read_bytes() for n in names)
+admission=load(B/'durable-readiness/admission.json');scored=load(B/'durable-readiness/scored-pair-ids.json');assert set(scored)==set(admission['admittedPairIds']) and not set(scored)&set(admission['excludedPairIds'])
+classifications=[json.loads(x) for x in (B/'durable-readiness/admitted-classifications.jsonl').read_text().splitlines()];assert len(classifications)==11 and not any(x['eligible'] for x in classifications)
+counts=collections.Counter((x['entityType'],x['classification']['outcome'],x['classification']['path']) for x in classifications)
+unresolved=[x for x in classifications if x['classification']['outcome']=='UNRESOLVED']
+assert len(unresolved)==2
+for x in unresolved:
+ c=x['classification'];f={f['name']:f['value'] for f in c['features']}
+ assert .65<=c['score']<=.88 and c['sufficient'] is False and f['coauthorOverlap']==.2 and c['supportiveGroups']==['affiliation','name']
+run=R/'datasets/entity-resolution/prepared/8d30085c-cb67-4d25-909f-5f2603ad4511';ret=load(run.with_name(run.name+'.retention-manifest.v1.json'));target=R/'target/phase5d-final-prep-runs'/run.name
+assert ret['purposeKind']=='development-demo'
+for rel,fact in ret['files'].items(): assert sha(run/rel)==fact['sha256'] and (run/rel).read_bytes()==(target/rel).read_bytes()
+preview=load(B/'preview/live-demo-manifest.json');assert preview['eligiblePairs']==0 and preview['liveAttemptsThisRun']==0 and preview['sourceTreeHash']==sha(R/'docs/agent-runs/phase-05/source-freeze.json')
+requests=load(B/'preview/PREVIEW-ONLY-NOT-EXECUTED-requests.json');assert not requests
+assert not (R/'docs/agent-runs/phase-05/evidence/5d/live-state').exists()
+assert not (R/'docs/agent-runs/phase-05/reviewer-prompt.txt').exists()
+runtime=load(B/'runtime-classes-before.json');assert all(sha(x['path'])==x['sha256'] for x in runtime['files'])
+ledger=load(B/'commands.json');assert not any('adjudicate-demo' in r['command'] for r in ledger)
+proof={'valid':True,'protectedPriorSourceFiles':len(old),'changedExistingSourceFiles':changed,'approved5eArtifactFilesUnchanged':len(start['protectedApproved5eArtifacts']),'old5eSourceFreezeExactCopy':{'path':str(B.relative_to(R)/'before-source-freeze.json'),'sha256':sha(B/'before-source-freeze.json')},'actualRequests':len(events),'returnedWorkRows':sum(e['returnedRecords'] for e in events),'bytes':sum(e['bytesRead'] for e in events),'approvalPredatesRequests':True,'selectedResponseObjectsUnchanged':len(ingested),'targetDurableProofsByteIdentical':names,'exactRetainedPreparedFiles':len(ret['files']),'scoredPairIdsEqualAdmittedPairIds':True,'scoredExcludedIntersection':0,'outcomes':[{'entityType':e,'outcome':o,'path':p,'count':n} for (e,o,p),n in sorted(counts.items())],'inBandButInsufficientPairs':2,'coauthorOverlapInThosePairs':.2,'supportiveContextThreshold':.8,'eligiblePairs':0,'runtimeClassResourceHashesUnchanged':len(runtime['files']),'livePreviewEligiblePairs':preview['eligiblePairs'],'previewRequests':len(requests),'liveStateExists':False,'providerCommandInvocationsInStageLedger':0,'credentialPreflight':'NOT_REACHED_NO_ELIGIBLE_PAIR','note':'Actual classifier and raw metadata checks only; no identity accuracy or global absence claim. Old evaluation artifacts remain byte-identical; its top-level freeze pointer has a preserved exact historical copy here.'}
+(B/'protected-proof.json').write_text(json.dumps(proof,indent=2)+'\n')
+print(json.dumps(proof))

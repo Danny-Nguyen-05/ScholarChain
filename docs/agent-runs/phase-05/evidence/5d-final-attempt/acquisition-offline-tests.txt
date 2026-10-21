@@ -1,0 +1,18 @@
+test_byte_cap_records_consumed_bytes (test_rice_team_demo.RiceTests.test_byte_cap_records_consumed_bytes) ... ok
+test_corrupt_response_extra_file_or_prior_history_rejected (test_rice_team_demo.RiceTests.test_corrupt_response_extra_file_or_prior_history_rejected) ... ok
+test_duplicate_and_excluded_rows_consume_all_thirty_without_refill (test_rice_team_demo.RiceTests.test_duplicate_and_excluded_rows_consume_all_thirty_without_refill) ... ok
+test_existing_output_never_overwritten (test_rice_team_demo.RiceTests.test_existing_output_never_overwritten) ... ok
+test_fixed_actual_author_queries_have_closed_fields_sort_and_years (test_rice_team_demo.RiceTests.test_fixed_actual_author_queries_have_closed_fields_sort_and_years) ... ok
+test_invalid_approval_rejected_before_output_or_http (test_rice_team_demo.RiceTests.test_invalid_approval_rejected_before_output_or_http) ... ok
+test_network_retries_once_without_adding_targets (test_rice_team_demo.RiceTests.test_network_retries_once_without_adding_targets) ... ok
+test_publish_fresh_only_preserves_seed_provenance_orcid_and_cumulative (test_rice_team_demo.RiceTests.test_publish_fresh_only_preserves_seed_provenance_orcid_and_cumulative) ... ok
+test_rate_limit_does_not_retry (test_rice_team_demo.RiceTests.test_rate_limit_does_not_retry) ... ok
+test_repository_oversized_team_and_non_cs_are_excluded_without_mutation (test_rice_team_demo.RiceTests.test_repository_oversized_team_and_non_cs_are_excluded_without_mutation) ... ok
+test_server_overdelivery_is_counted_then_refused (test_rice_team_demo.RiceTests.test_server_overdelivery_is_counted_then_refused) ... ok
+test_unexpected_fulltext_or_id_fails_closed (test_rice_team_demo.RiceTests.test_unexpected_fulltext_or_id_fails_closed) ... ok
+test_wall_and_attempt_limits_prevent_http (test_rice_team_demo.RiceTests.test_wall_and_attempt_limits_prevent_http) ... ok
+
+----------------------------------------------------------------------
+Ran 13 tests in 0.033s
+
+OK

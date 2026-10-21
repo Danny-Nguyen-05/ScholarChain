@@ -1,0 +1,171 @@
+{
+  "bounds": {
+    "maxBytes": 100663296,
+    "maxFiles": 1000
+  },
+  "fileCount": 38,
+  "files": {
+    "_SCHOLARCHAIN_COMPLETE": {
+      "bytes": 4785,
+      "sha256": "82e3ea89777fa5309f636d8b829ef934094b4eef78f6f5bd612aed81250fe261"
+    },
+    "export/._SUCCESS.crc": {
+      "bytes": 8,
+      "sha256": "1d44f510ec2ed7595badbec80583316defc14e8dd89130d719724149adfaa07d"
+    },
+    "export/.part-r-00000.crc": {
+      "bytes": 8,
+      "sha256": "1d44f510ec2ed7595badbec80583316defc14e8dd89130d719724149adfaa07d"
+    },
+    "export/_SUCCESS": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "export/part-r-00000": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "export/snapshot=hadoop-prep/run=8d30085c-cb67-4d25-909f-5f2603ad4511/match-candidate/.part-r-00000.crc": {
+      "bytes": 548,
+      "sha256": "8adaa787ae23e5177729e12aca850ef83eefb0fa99dbae372d63121a46f0e875"
+    },
+    "export/snapshot=hadoop-prep/run=8d30085c-cb67-4d25-909f-5f2603ad4511/match-candidate/part-r-00000": {
+      "bytes": 68775,
+      "sha256": "7e2454bb4b9b1ba3d0f4a2b76933cf4dad43189637153ee7f8ad1f0d920d061e"
+    },
+    "export/snapshot=openalex-5d-demo-2026-10-20-rice-final/run=8d30085c-cb67-4d25-909f-5f2603ad4511/author-mention/.part-r-00000.crc": {
+      "bytes": 88,
+      "sha256": "091cd09737d8cbc503af463e88446cb56771872837441e277b82388a3719078b"
+    },
+    "export/snapshot=openalex-5d-demo-2026-10-20-rice-final/run=8d30085c-cb67-4d25-909f-5f2603ad4511/author-mention/part-r-00000": {
+      "bytes": 9991,
+      "sha256": "88cf6dba380ebbcc144784871c581c4a9d0ec8996d79fdd2913bffae0d4612ff"
+    },
+    "export/snapshot=openalex-5d-demo-2026-10-20-rice-final/run=8d30085c-cb67-4d25-909f-5f2603ad4511/authorship/.part-r-00000.crc": {
+      "bytes": 72,
+      "sha256": "7e5ad571018d7f6ed5540d9d990c43b856166410c3082c989f71633ce165e690"
+    },
+    "export/snapshot=openalex-5d-demo-2026-10-20-rice-final/run=8d30085c-cb67-4d25-909f-5f2603ad4511/authorship/part-r-00000": {
+      "bytes": 7868,
+      "sha256": "2f1e77b54eba914a2752faf79ab6ab1f43a26ce5f40446e86ae5866fc015c0bd"
+    },
+    "export/snapshot=openalex-5d-demo-2026-10-20-rice-final/run=8d30085c-cb67-4d25-909f-5f2603ad4511/enrichment/.part-r-00000.crc": {
+      "bytes": 160,
+      "sha256": "c32e8b71e155799540fc91dbcc57a24b7082690179dddb8bc25fc18ea4b400c6"
+    },
+    "export/snapshot=openalex-5d-demo-2026-10-20-rice-final/run=8d30085c-cb67-4d25-909f-5f2603ad4511/enrichment/part-r-00000": {
+      "bytes": 19181,
+      "sha256": "62069ab4e99a3277a660c22d8f34414195fe1cdfeac0c4d2420c735797dd0e03"
+    },
+    "export/snapshot=openalex-5d-demo-2026-10-20-rice-final/run=8d30085c-cb67-4d25-909f-5f2603ad4511/graph-edge/.part-r-00000.crc": {
+      "bytes": 152,
+      "sha256": "25b860eb1b2ae3daaf37f1f1a8bdb3180d3bb6d83ba4d105e2e73df4f2e46a12"
+    },
+    "export/snapshot=openalex-5d-demo-2026-10-20-rice-final/run=8d30085c-cb67-4d25-909f-5f2603ad4511/graph-edge/part-r-00000": {
+      "bytes": 18136,
+      "sha256": "1188eeef5b0d0a29087b738cebc5a9a83824d0df3a971938e9d79e5d7871fa95"
+    },
+    "export/snapshot=openalex-5d-demo-2026-10-20-rice-final/run=8d30085c-cb67-4d25-909f-5f2603ad4511/index/.part-r-00000.crc": {
+      "bytes": 204,
+      "sha256": "618aa5ceb41ac7a44cbcbdbc68d502ebbe21176716bd7aeeb2b54cebaf4db46f"
+    },
+    "export/snapshot=openalex-5d-demo-2026-10-20-rice-final/run=8d30085c-cb67-4d25-909f-5f2603ad4511/index/part-r-00000": {
+      "bytes": 24651,
+      "sha256": "b22ee2c5d0deb3d5679c096ffc7b6ee8737291cb0a92bb8178f25bb5dfa29253"
+    },
+    "export/snapshot=openalex-5d-demo-2026-10-20-rice-final/run=8d30085c-cb67-4d25-909f-5f2603ad4511/institution/.part-r-00000.crc": {
+      "bytes": 80,
+      "sha256": "e28024b605499596b06d76a5bf39501410f84c8fcfceb8247585b469b3aa0b8e"
+    },
+    "export/snapshot=openalex-5d-demo-2026-10-20-rice-final/run=8d30085c-cb67-4d25-909f-5f2603ad4511/institution/part-r-00000": {
+      "bytes": 8817,
+      "sha256": "6bccdad3acb5d6ed20f08c0827fa91237589ffddfce8a9465a669292c0fe5f56"
+    },
+    "export/snapshot=openalex-5d-demo-2026-10-20-rice-final/run=8d30085c-cb67-4d25-909f-5f2603ad4511/pair/.part-r-00000.crc": {
+      "bytes": 136,
+      "sha256": "e36ac36468bc7d5250e6fcad062db8bc36dde027c8a3d3862c3ed2bb6ac97524"
+    },
+    "export/snapshot=openalex-5d-demo-2026-10-20-rice-final/run=8d30085c-cb67-4d25-909f-5f2603ad4511/pair/part-r-00000": {
+      "bytes": 16152,
+      "sha256": "6c3d36907061a394982614f4fe622aa56065a56d381a32f57131573dcb590642"
+    },
+    "export/snapshot=openalex-5d-demo-2026-10-20-rice-final/run=8d30085c-cb67-4d25-909f-5f2603ad4511/team/.part-r-00000.crc": {
+      "bytes": 24,
+      "sha256": "078d372c239f1888bf4a709597ca0a7b302935c414a7593e932f7b8238815818"
+    },
+    "export/snapshot=openalex-5d-demo-2026-10-20-rice-final/run=8d30085c-cb67-4d25-909f-5f2603ad4511/team/part-r-00000": {
+      "bytes": 2023,
+      "sha256": "4c438707aaaa803ad234007e7d5ae81de26d8b79e5b05c7046849ab8fe81305e"
+    },
+    "export/snapshot=openalex-5d-demo-2026-10-20-rice-final/run=8d30085c-cb67-4d25-909f-5f2603ad4511/topic/.part-r-00000.crc": {
+      "bytes": 52,
+      "sha256": "69e9d3c4a7b8fe3b1d45273bd3f5fbdb21904a52be4fabeeb526e1b0b4269328"
+    },
+    "export/snapshot=openalex-5d-demo-2026-10-20-rice-final/run=8d30085c-cb67-4d25-909f-5f2603ad4511/topic/part-r-00000": {
+      "bytes": 5185,
+      "sha256": "4bd725b37fd2b76954942654f19d6e32e8f1275792e703b37c52b2ad9be7b6d2"
+    },
+    "export/snapshot=openalex-5d-demo-2026-10-20-rice-final/run=8d30085c-cb67-4d25-909f-5f2603ad4511/venue/.part-r-00000.crc": {
+      "bytes": 24,
+      "sha256": "2e3b02bd5fd5940b5989a8be10b30aeb432384ef2bb6c5de6151652a4cab8c62"
+    },
+    "export/snapshot=openalex-5d-demo-2026-10-20-rice-final/run=8d30085c-cb67-4d25-909f-5f2603ad4511/venue/part-r-00000": {
+      "bytes": 1640,
+      "sha256": "570b29163db94563879dfa3c2d89e2a52482a989a2c36e7e751add04af861c1c"
+    },
+    "export/snapshot=openalex-5d-demo-2026-10-20-rice-final/run=8d30085c-cb67-4d25-909f-5f2603ad4511/work/.part-r-00000.crc": {
+      "bytes": 116,
+      "sha256": "faca46f245271f3880b2c0c974099082cf0bd7c756e8cca596327a61f317262a"
+    },
+    "export/snapshot=openalex-5d-demo-2026-10-20-rice-final/run=8d30085c-cb67-4d25-909f-5f2603ad4511/work/part-r-00000": {
+      "bytes": 13464,
+      "sha256": "4ce0c24e7810d8a7245417b54034e662618b8e468a9bbeb354b3bea096497bcc"
+    },
+    "intermediate/j01/_SUCCESS": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "intermediate/j02/_SUCCESS": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "intermediate/j03/_SUCCESS": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "intermediate/j04/_SUCCESS": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "intermediate/j05/_SUCCESS": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "intermediate/j06/_SUCCESS": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "intermediate/j07/_SUCCESS": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "intermediate/j08/_SUCCESS": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "run-manifest.json": {
+      "bytes": 1872,
+      "sha256": "664e4e602e220246343b10d25ef438ca05ead688ccb8c9ee1b6efdbac653691d"
+    }
+  },
+  "omitted": "Intermediate data parts, stats and counter summary are not read by the ER InputLoader. They are not claimed retained.",
+  "ownership": "dataset-engineer owns datasets/** prepared development/demo evidence material; no constitutional ownership change.",
+  "purpose": "Exact immutable completed preparation input for Phase 5D development/demo evidence only; not frozen review, gold labels or held-out evaluation input.",
+  "purposeKind": "development-demo",
+  "retainedDirectory": "8d30085c-cb67-4d25-909f-5f2603ad4511",
+  "retentionScope": "entire export/**, original completion and run manifests, eight intermediate job success files; no source/run ID/path rewriting",
+  "runId": "run:8d30085c-cb67-4d25-909f-5f2603ad4511",
+  "sourceRunDirectoryName": "8d30085c-cb67-4d25-909f-5f2603ad4511",
+  "totalBytes": 204212,
+  "version": "scholarchain.prepared-population-retention.v1"
+}

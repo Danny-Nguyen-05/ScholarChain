@@ -1,0 +1,14 @@
+{
+  "checkedAtUtc": "2026-10-21T02:56:57.656035+00:00",
+  "url": "https://github.com/0x1DOCD00D/ScholarChain/blob/main/README.md#phase-5-implement-entity-resolution",
+  "method": "web open/find course main README",
+  "observedSections": [
+    "Phase5 entity resolution",
+    "Entity linkage policy",
+    "D07",
+    "Phase6 inputs"
+  ],
+  "requirementsSummary": "Separate entity/path metrics, precision recall F1 coverage, at least200 human-reviewed pairs, available FP/FN examples, threshold sensitivity and no leakage. User-approved limited evaluation keeps real-provider evidence pending.",
+  "rawUrlFetch": "cache miss; GitHub HTML succeeded",
+  "notInstructorAcceptanceOfDeviation": true
+}

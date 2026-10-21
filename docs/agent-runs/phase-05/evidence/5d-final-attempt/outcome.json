@@ -1,0 +1,73 @@
+{
+  "schemaVersion": "scholarchain.phase5d.final-attempt-outcome.v1",
+  "status": "FINAL_BOUNDED_ATTEMPT_COMPLETE_PROVIDER_EXIT_STILL_BLOCKED",
+  "head": "61d32a38eaad5b2fc352acf0b7f85f3815c2336d",
+  "recordedAtUtc": "2026-10-21T04:57:37.906169+00:00",
+  "actualStage": {
+    "distinctWorkIdsIncludingExcluded": 12,
+    "httpAttempts": 2,
+    "newIngestionWorks": 3,
+    "newWorkIdsNotObservedInPriorStages": 8,
+    "responseBytes": 112270,
+    "returnedWorkRecordsIncludingDuplicatesExcluded": 15,
+    "seconds": 1.4782
+  },
+  "cumulative": {
+    "distinctAuthorProfileIdsAcrossStages": 5,
+    "distinctWorkIdsAcrossStages": 73,
+    "httpAttemptsAcrossStages": 20,
+    "responseBytesAcrossStages": 622016,
+    "returnedAuthorProfileRecordsAcrossStages": 5,
+    "returnedMetadataRecordsAcrossStages": 90,
+    "returnedWorkRecordsAcrossStages": 85,
+    "secondsAcrossStages": 17.0465
+  },
+  "candidatePairs": 11,
+  "admittedPairs": 11,
+  "excludedHeldOutPairs": 0,
+  "eligiblePairs": 0,
+  "outcomes": [
+    {
+      "entityType": "Researcher",
+      "outcome": "ACCEPTED",
+      "path": "ExactIdentifier",
+      "count": 5
+    },
+    {
+      "entityType": "Researcher",
+      "outcome": "ACCEPTED",
+      "path": "Scored",
+      "count": 2
+    },
+    {
+      "entityType": "Researcher",
+      "outcome": "UNRESOLVED",
+      "path": "Scored",
+      "count": 2
+    },
+    {
+      "entityType": "Work",
+      "outcome": "CONFLICT",
+      "path": "HardConflict",
+      "count": 2
+    }
+  ],
+  "whyNoCall": "The two unresolved Researcher pairs score 0.6933333333333332 within the [0.65,0.88] band but coauthor overlap0.2 fails the0.8 supportive-context requirement. Only name and affiliation groups are supportive. Other pairs are accepted or conflicting before the model gate.",
+  "liveModelAttempts": 0,
+  "spendUsd": "0.00",
+  "credentialPreflight": "NOT_REACHED_NO_ELIGIBLE_PAIR",
+  "additionalAcquisition": "STOPPED_NO_REFILL_NO_FALLBACK",
+  "matchingRulesChanged": false,
+  "humanReviewsChanged": false,
+  "approved5eArtifactsChanged": false,
+  "corpusLimit": "Fixed venue catalog excludes an observed legitimate Communications of the ACM record. No post-response catalog expansion or eligibility claim for excluded records. This result is only for the bounded admitted population, not global absence of eligible evidence.",
+  "observedGates": {
+    "sbtTests": 441,
+    "pythonTests": 97,
+    "inputValidators": 14,
+    "frozenFiles": 959
+  },
+  "overall5DOrPhase5Acceptance": false,
+  "phase6Authorized": false,
+  "nextGate": "User checkpoint decision; independent reviewer remains user-launched. No automatic further acquisition, policy changes, commit/push or Phase6."
+}

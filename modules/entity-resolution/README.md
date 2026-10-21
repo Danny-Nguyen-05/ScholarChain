@@ -648,3 +648,139 @@ Earlier v1/v2 acquisition payloads and the pre-repair `evidence/5c/review-artifa
 are historical archive material, not CLI or test dependencies. Their retained manifests and
 historical reports describe the original attempts; use the packaging archive inventory to locate
 archived payloads rather than treating an old path as the current human-review handoff.
+
+## Phase 5D bounded OpenAI development checkpoint
+
+The selected provider is OpenAI Responses with API model `gpt-6-luna`. The provider adapter uses
+JDK 17 HTTP APIs, so no SDK/build dependency is added. The official model page exposes that alias
+without a dated snapshot; the configured alias and the actual model identifier reported by each
+response are recorded separately. There is no model fallback. See the fetched official
+[model documentation](https://developers.openai.com/api/docs/models/gpt-6-luna),
+[Responses API reference](https://developers.openai.com/api/reference/typescript/resources/responses/methods/create)
+and [Structured Outputs guide](https://developers.openai.com/api/docs/guides/structured-outputs?api-mode=responses).
+
+The ordinary `resolve` command retains its disabled/fake behavior. Two separate commands implement
+the explicitly development-only checkpoint; neither imports labels:
+
+```text
+prepare-live-demo --input COMPLETED_DEMO_PHASE4_RUN --frozen-input FROZEN_REVIEW_PHASE4_RUN --queue QUEUE_JSON --split SPLIT_JSON --policy POLICY_JSON --config SOURCE_CONFIG_JSON --live-config LIVE_CONFIG_JSON --scope development|supplement --code-revision GIT_SHA40 --source-hash SOURCE_SHA256 --output NEW_DIRECTORY
+adjudicate-demo --input COMPLETED_DEMO_PHASE4_RUN --frozen-input FROZEN_REVIEW_PHASE4_RUN --queue QUEUE_JSON --split SPLIT_JSON --policy POLICY_JSON --config SOURCE_CONFIG_JSON --live-config APPROVED_LIVE_CONFIG_JSON --scope development|supplement --code-revision GIT_SHA40 --source-hash SOURCE_SHA256 --runtime-binding BINDING_JSON --approval USER_APPROVAL_RECEIPT_JSON --enable-live APPROVAL_ID --output NEW_DIRECTORY
+```
+
+`prepare-live-demo` performs no credential lookup or provider call. `LiveDemo.select` admits only
+candidates whose complete frozen leakage groups are development, including unselected demo pairs;
+held-out and unassigned components are excluded **before classification**. `selectSupplement`
+protects the same frozen holdout when separately authorized real demo evidence is introduced.
+It reuses the exact frozen source/identifier/title/attached-mention anchors, unions new observations
+transitively by those anchors, then excludes every new component touching a held-out anchor.
+Negative candidate edges never union identity components. Both endpoints must survive admission
+before the unchanged classifier runs. The admission artifact binds both source populations, candidate
+hash, original queue/split, protected-anchor hash, admitted and excluded pair IDs. The review queue,
+source population and human annotations are unchanged; unknown identities remain a leakage limit.
+
+A naturally eligible pair must remain unresolved, have sufficient independent evidence, lie inside
+the existing inclusive LLM band, and have no authoritative conflict. Request selection is deterministic.
+The initial frozen population supplies zero eligible candidates among its 50 selected development
+reviews/reserves and all 62 development-component candidate comparisons under the unchanged policy.
+That observed shortfall does not authorize changing scores, bands, sufficiency or source evidence.
+Any later supplement and its actual eligibility proof are documented in the phase evidence.
+No eligible pair means no provider, transport factory, runtime credential or budget-ledger access.
+
+### Provider protocol and credentials
+
+The existing typed `AdjudicationRequest`/`AdjudicationResponse` protocol remains the local contract.
+A separate live prompt and provider-compatible closed JSON schema are bundled under `adjudication/`.
+The OpenAI schema omits unsupported `allOf`/`if`/`then` and related composition keywords; the existing
+local validator still enforces outcome/reason agreement, exact request identity, allowed evidence
+refs, present JSON-pointer field citations, rationale bounds and finite reported confidence.
+Explicit live response limits must agree with the actual source config. Model confidence remains
+separate from the uncalibrated deterministic score and never bypasses authoritative conflicts.
+
+The fixed endpoint is `https://api.openai.com/v1/responses`; redirects, tools, streaming, storage,
+server-side truncation and alternate hosts are unavailable. The wire request explicitly selects
+standard service tier, the approved reasoning effort and bounded `max_output_tokens` (including
+reasoning tokens). Complete response bodies have a byte bound and deadline. Refusals, incomplete
+responses, unexpected tool outputs, wrong models, invalid JSON/citations, transport failures and
+missing usage fail closed. No raw provider error body or transport exception is stored as an error.
+
+Only the actual live transport resolves the named `OPENAI_API_KEY` environment variable, at
+credential preflight after admission, approval and a non-mutating budget check, before reservation.
+Preflight validates the complete JDK header-value character set and captures the credential once
+for dispatch and retries. Missing or malformed credentials produce only a constant redacted error,
+consume no allowance and do not fuse the ledger; a later valid credential can use the same approval.
+Never put its value in arguments,
+tracked configuration, logs or evidence. No `.env` or credential file is read. Disabled/preparation,
+zero-eligible and exhausted-budget paths do not resolve credentials. Tests inject a transport and
+use synthetic responses; those tests do not create real-provider evidence.
+
+### Approval-scoped persistent allowances
+
+`adjudication/openai-live.example.v1.json` remains `approved: false`; examples grant no live authority.
+The approved pilot allowance is recorded separately in coordinator-owned human evidence. The CLI
+checks the exact receipt bytes, provider/model/settings and numerical ceilings, then verifies a
+runtime binding to a single canonical ledger/cache directory under
+`docs/agent-runs/phase-05/evidence/5d/live-state/approval-<receipt-sha-prefix>/`.
+Changing the output directory cannot reset that allowance. A process-lifetime file lock refuses
+concurrent ledger writers. Each attempt, including a retry, reserves and durably records allowances
+before dispatch. Unknown failures retain reservations; they are not refunded. A timeout or ignored
+cancellation fuses further requests rather than allowing overlapping retries.
+
+Input reservation is wire UTF-8 bytes plus a 4,096-token framing allowance: a conservative estimate,
+not exact provider tokenization. Requests are capped at 64 KiB and exclude long-context pricing.
+Output reservation uses the provider-enforced maximum including reasoning tokens. Requests, total
+input/output allowance and integer USD-micro spend must all fit before dispatch. An observed usage
+overrun fuses subsequent calls. Reported input/output/total, reasoning and cached tokens are retained
+separately; absent cache-write details are zero **reported** writes, not evidence that caching never
+occurred. Unknown usage remains counted as unknown and fully reserved.
+
+The verified short-context standard rates are $0.10 input, $0.01 cached input, $0.125 cache writes
+and $0.50 output per million tokens. Reservations and observed-cost upper bounds charge all input at
+the higher cache-write rate, giving no speculative discount. These are conservative cost estimates,
+not an invoice or a claim that provider billing was verified. Fast/regional/long-context service is
+not selected. Actual usage, failures, abstentions, request IDs, selected/reported model identity and
+cache provenance remain auditable.
+
+Live cache entries have a distinct `live/openai/gpt-6-luna/` namespace and schema. Keys bind the
+complete live request, effective config, prompt/schema/model/settings and source evidence. Replay
+revalidates content, local response semantics and original provider provenance; it consumes no new
+provider attempt and cannot masquerade as a new call. Fake entries never satisfy a live request.
+
+### Demo outputs and remaining gate
+
+The demo publishes core-validated decisions, accepted pairwise links and complete source-authority
+constraints, plus admission, effective settings, provider traces/usage and a hash-bound completion
+manifest. These outputs explicitly cover a **development demo**, not a complete candidate-population
+matching run or final held-out evaluation. The full source coverage of a constraint bundle is not
+proof that all source candidate pairs were predicted. Source records and the review queue remain
+immutable. The actual provider-reported model is retained in traces and the manifest; core audit
+metadata records the explicitly configured alias without inventing a dated version.
+
+Real calls require the recorded numerical approval, passing offline checks, naturally eligible
+non-held-out evidence and runtime credential availability. The coordinator executes any authorized
+pilot; implementation agents do not initiate calls. Actual human reviews/import and later frozen
+5E evaluation remain separate prerequisites. Provider code, fake tests or a prepared request alone
+do not satisfy the real-provider or human-review gate.
+
+
+### Limited Phase 5E frozen evaluation and assistance-exclusion cohorts
+
+The user authorized evaluation of the existing deterministic/fake configuration while the real-provider
+requirement remains open. The matcher, policy weights, thresholds, candidate population, review queue and
+human labels are unchanged. These results are conditional candidate-pair measurements on AI-assisted,
+human-reviewed labels; they do not establish blind-gold accuracy, blocking recall, calibrated thresholds,
+real-provider compatibility or overall Phase 5 acceptance.
+
+`evaluate` accepts an optional `--exclude-pairs EXCLUSION_MANIFEST_JSON` for a separately reported
+sensitivity cohort. The manifest has schema version `scholarchain.evaluation-exclusions.v1`, the original
+`queueHash`, canonical `labelHash` (`StrictJson.hash` of the complete validated-label document), a bounded
+plain-text `reason`, and distinct initial-task `pairIds`. Unknown and reserve IDs, duplicate IDs, stale
+queue/label bindings and empty manifests are rejected. This filter never edits the queue, annotations,
+predictions or their hashes; metrics and representative errors use only retained tasks in the requested
+partition. The original full-cohort report must be retained alongside the exclusion report.
+
+Exclusion reports use `scholarchain.evaluation-report.v2` and include a `cohort` object recording the
+canonical exclusion-manifest hash, reason, sorted excluded pair IDs, original initial-task count in the
+requested partition and excluded count in that partition. Baseline reports retain the v1 version with
+`cohort: null`. The phase evidence separately binds the attribution source-file hash to the derived
+22-pair exclusion manifest; the evaluator does not claim to authenticate external source assistance.
+Development sensitivity remains a hypothetical score-cutoff analysis only; no held-out tuning occurs.

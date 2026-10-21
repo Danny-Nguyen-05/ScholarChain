@@ -1,0 +1,14 @@
+{
+  "schemaVersion": "scholarchain.author-focused-demo-plan.v1",
+  "stageId": "5d-demo-2026-10-20-benedikt",
+  "authorSearch": "Michael Benedikt",
+  "seedDoi": "10.1145/3299887.3299889",
+  "seedPopulationManifestSha256": "6625a645675341c57bff8186d5cf16a4585e91c03eb7528da5bbacacf9b4d608",
+  "previousStageSha256": "3a8668430843c219230b0a3072989a27d8511a5f9c6e2c4a77af49606414a428",
+  "authorSelect": "id,display_name,orcid,affiliations",
+  "recordsPerRequest": 5,
+  "maxReturnedRecordsIncludingAuthorLookups": 30,
+  "approvalReceiptSha256": "e874e3910f9dea9f2c90f630838be22bf853ab7097a1d75e48498690e2e47a10",
+  "seedLineSha256": "fba95c1a6f2b476d02aebd38a6292d21500b193f093e0f200da8d9a6be11f3d5",
+  "selection": "One fixed author-name search, relevance order, at most five actual returned author IDs in deterministic order, at most five 2018\u20132024 works each. No pagination/refill/fallback. Profiles are discovery hypotheses, not verified researcher identity or comparison evidence. No labels/scores used."
+}

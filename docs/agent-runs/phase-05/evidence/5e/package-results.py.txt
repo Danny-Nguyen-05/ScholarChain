@@ -1,0 +1,60 @@
+"""Coordinator packages observed offline evaluation, provenance and cited error evidence."""
+import json, hashlib, subprocess, datetime, collections
+from pathlib import Path
+B=Path(__file__).resolve().parent; ROOT=Path.cwd()
+load=lambda p:json.loads(Path(p).read_text())
+sha=lambda p:hashlib.sha256(Path(p).read_bytes()).hexdigest()
+def dump(p,x): Path(p).write_text(json.dumps(x,indent=2,ensure_ascii=False)+'\n')
+def info(p):
+    p=Path(p);return {'path':str(p.relative_to(ROOT)),'bytes':p.stat().st_size,'sha256':sha(p)}
+Q=ROOT/'docs/agent-runs/phase-05/evidence/5c-repair/review-artifacts'
+G=ROOT/'datasets/entity-resolution/labels/2026-10-20-danny-ai-assisted-v1'
+queue=load(Q/'queue.json');tasks={t['pair']['pairId']:(i+1,t) for i,t in enumerate(queue['tasks'])}
+commands=load(B/'commands.json'); predictions=[c for c in commands if c['name'].startswith('prepare-')]
+evaluations=[c for c in commands if c['name'].startswith('evaluate-')]
+assert len(predictions)==3 and len(evaluations)==8
+assert all(c['exitCode']==0 for c in predictions+evaluations)
+assert max(c['finishedMs'] for c in predictions)<min(c['startedMs'] for c in evaluations)
+# Retain actual source-bound decisions for queued tasks; omit unrelated population output duplication.
+decisions={}
+for entity in ['work','researcher']:
+    for outcome in ['accepted','rejected','unresolved','conflict']:
+        for line in (ROOT/'target/phase5e/disabled-a'/entity/(outcome+'.jsonl')).read_text().splitlines():
+            row=json.loads(line)
+            if row['pair']['pairId'] in tasks: decisions[row['pair']['pairId']]=row
+assert len(decisions)==300
+(B/'queued-source-decisions.jsonl').write_text(''.join(json.dumps(decisions[k],separators=(',',':'),ensure_ascii=False)+'\n' for k in sorted(decisions)))
+errors=[]
+for part in ['development','held-out']:
+    report=load(B/('disabled-a-'+part)/'evaluation.json')
+    for error in report['falsePositives']+report['falseNegatives']:
+        n,t=tasks[error['pairId']];d=decisions[error['pairId']]
+        reasons=d['decision']['reasonCodes']
+        interpretation='Authoritative identifiers disagree; policy preserves CONFLICT, while the human label is same. Version relationships/source identifier disagreement need human policy review; do not override the held-out label or identifiers.' if d['decisionPath']=='HardConflict' else 'Scored evidence did not satisfy the unchanged acceptance rule. Inspect available feature values and missing reasons; high name similarity alone cannot establish identity.' if d['decisionPath']=='Scored' else 'Exact observed identifier acceptance disagrees with the human different label; source identifiers are observations and may contain provider attribution errors.'
+        errors.append({'partition':part,'taskNumber':n,'entityType':t['pair']['entityType'],**error,'reasonCodes':reasons,'featureEvidence':d['featureEvidence'],'leftEndpoint':t['pair']['left'],'rightEndpoint':t['pair']['right'],'analysis':interpretation,'queueLocator':str(Q/'queue.json'),'analysisNotIndependentIdentityAdjudication':True})
+dump(B/'representative-errors.json',errors)
+rows=[]
+for name in ['disabled-a','fake-a']:
+    for part in ['development','held-out']:
+        for subset in ['', '-without-assisted']:
+            r=load(B/(name+'-'+part+subset)/'evaluation.json')
+            for entity,m in [('overall',r['overall']),*r['byEntity'].items()]:
+                rows.append({'run':name,'partition':part,'cohort':'without-22-assisted' if subset else 'all-initial','entity':entity,**{k:m[k] for k in ['tasks','binaryGold','uncertain','tp','fp','fn','tn','precision','recall','f1','decisiveCoverage','unresolvedRate','conflictRate','missingPredictions','invalidPredictions']}})
+dump(B/'metrics-summary.json',rows)
+frozen=ROOT/'docs/agent-runs/phase-05/source-freeze.json'
+manifest={'schemaVersion':'scholarchain.phase5e.limited-evaluation-manifest.v1','scope':'Existing unchanged deterministic/fake configuration. Real-provider evidence pending; not overall Phase5 acceptance.','createdAtUtc':datetime.datetime.now(datetime.timezone.utc).isoformat(),'head':subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip(),'branch':subprocess.check_output(['git','branch','--show-current'],text=True).strip(),'dirty':True,'trackedSourceDiffHeadSha256':hashlib.sha256(subprocess.check_output(['git','diff','--binary','HEAD','--',*load(frozen)['scopes']])).hexdigest(),'sourceFreeze':info(frozen),'predictionBinding':info(B/'prediction-binding.json'),'inputs':[info(Q/n) for n in ['queue.json','split.json','generation-binding.json']]+[info(G/n) for n in ['checkpoint.json','validated-labels.json','decision-attribution.v1.json','provenance.v1.json','conversion-report.json']],'retainedInput':info(ROOT/'datasets/entity-resolution/prepared/bd424a86-0a1b-4e44-bbdb-4a9b8c8a20e3.retention-manifest.v1.json'),'policy':info(ROOT/'modules/entity-resolution/src/main/resources/phase5-policy.v1.json'),'config':info(ROOT/'modules/entity-resolution/src/main/resources/phase5-config.v1.json'),'predictionFiles':[info(B/(n+'-predictions.json')) for n in ['disabled-a','disabled-b','fake-a']],'runManifests':[info(B/(n+'-resolution-manifest.json')) for n in ['disabled-a','disabled-b','fake-a']],'reports':[info(B/(n+'-'+p+s)/'evaluation.json') for n in ['disabled-a','fake-a'] for p in ['development','held-out'] for s in ['', '-without-assisted']],'exclusions':info(B/'exclude-assisted-pairs.json'),'replay':info(B/'replay-proof.json'),'errorExamples':info(B/'representative-errors.json'),'sourceBoundQueuedDecisions':info(B/'queued-source-decisions.jsonl'),'toolchain':{'java':load(B/'disabled-a-held-out/evaluation.json')['toolchain'],'scalaCompiler':'3.3.4','sbt':'1.10.7'},'predictionPreparationFinishedBeforeAnyEvaluation':True,'thresholdSelection':'None; no matcher, threshold, policy or config changes. Development sensitivity is hypothetical cutoff analysis only.','primaryBinaryLabels':{'development':38,'heldOut':194},'humanInitialReviews':240,'uncertainInitialReviews':8,'reserveReviewsUsed':0,'liveProviderAttempts':0,'liveProviderSpendUsd':'0.00','limitations':['Human-reviewed AI-assisted labels, not independent blind gold;22externally assisted cases are self-attested with external evidence unretained.','Convenience sample, unweighted strata; blocking recall and global identity recall unmeasured.','No threshold calibration or held-out tuning; repeated common names and unobserved leakage remain risks.','No real-provider evidence, real LLM path accuracy or compatibility established.','Large11412-comparison raw runs remain ignoredtarget artifacts; retained manifests, queue predictions and source decisions plus exact commands permit regeneration.'],'commandsLedger':str(B/'commands.json'),'reviewStatus':'PENDING_USER_LAUNCHED_INDEPENDENT_REVIEW'}
+manifest.update(
+    seed=load(Q/'split.json')['sampling']['seed'],
+    configuredAdjudication=load(ROOT/'modules/entity-resolution/src/main/resources/phase5-config.v1.json')['adjudication'],
+    offlinePrompt=info(ROOT/'modules/entity-resolution/src/main/resources/adjudication/prompt.v1.txt'),
+    offlineResponseSchema=info(ROOT/'modules/entity-resolution/src/main/resources/adjudication/response.schema.v1.json'),
+    developmentSensitivity=[info(B/(n+'-development-sensitivity.json')) for n in ['disabled-a','fake-a']],
+    descriptiveSlices=[info(B/n) for n in ['entity-path-summary.json','source-pair-summary.json','sampling-strata-summary.json']],
+    integrityProof=info(B/'protected-and-metrics-proof.json'),
+    fullGate=info(B/'full-check-summary.json'),
+    helperFiles=[info(B/n) for n in ['execute-evaluation.py.txt','audit-results.py.txt','package-results.py.txt','summarize-strata.py.txt','collect-evidence.py.txt','validate-inputs.py.txt','finalize-report.py.txt','run-command.py.txt']],
+    rawRunsRetention='Ignored target/phase5e contains all 11,412 comparison exports for each pass. Durable manifests, queued decisions and prediction files are retained separately.',
+    currentProviderObservation={'liveCalls':sum(load(B/(n+'-resolution-manifest.json'))['liveCalls'] for n in ['disabled-a','disabled-b','fake-a']), 'fakeCalls':sum(load(B/(n+'-resolution-manifest.json'))['fakeCalls'] for n in ['disabled-a','disabled-b','fake-a']), 'liveStateExists':(ROOT/'docs/agent-runs/phase-05/evidence/5d/live-state').exists()}
+)
+dump(B/'evaluation-manifest.json',manifest)
+print(json.dumps({'metricsRows':len(rows),'representativeErrors':len(errors),'manifest':info(B/'evaluation-manifest.json')}))

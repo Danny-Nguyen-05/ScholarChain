@@ -1,0 +1,48 @@
+{
+  "status": "FINAL_BOUNDED_ATTEMPT_COMPLETE_REAL_PROVIDER_EXIT_BLOCKED",
+  "head": "61d32a38eaad5b2fc352acf0b7f85f3815c2336d",
+  "sourceFiles": 959,
+  "keyArtifacts": [
+    {
+      "path": "docs/agent-runs/phase-05/source-freeze.json",
+      "bytes": 231767,
+      "sha256": "1c82d2f630a864a01af69f8d5940211c626f2701a7af3e5853b5a21222151668"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-final-attempt/full-check-summary.json",
+      "bytes": 20837,
+      "sha256": "788c9788eb13863f1e9f0c782f126e8d28465bcf0a4c3671e32216fe492e598f"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-final-attempt/protected-proof.json",
+      "bytes": 1955,
+      "sha256": "cdcd052aaf7ad97351b8a18b03047d75f404ef2e2da9f59ac183cc86c76995f2"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-final-attempt/outcome.json",
+      "bytes": 2674,
+      "sha256": "86d92d37e0def6cbe44d59a37c6f09379300a3129cfe785fd85e0b780b767ef8"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-final-attempt/report.md",
+      "bytes": 3151,
+      "sha256": "bc29a6bc27af2c3b6b1ac1598a37ddc22d8865e3fdca0a75d7e59da28f5cbd87"
+    }
+  ],
+  "gates": {
+    "sbt": 441,
+    "python": 97,
+    "integrityValidators": 14,
+    "failed": 0
+  },
+  "eligiblePairs": 0,
+  "liveAttempts": 0,
+  "spendUsd": "0.00",
+  "originalLabelsAndApproved5eArtifactsUnchanged": true,
+  "noMoreAcquisition": true,
+  "reviewerPromptFileCreated": false,
+  "reviewerLaunched": false,
+  "phase6Started": false,
+  "commitOrPush": false,
+  "nextGate": "Human checkpoint decision and user-launched independent recheck as appropriate; Phase6 needs explicit authorization with provider requirement carried forward."
+}

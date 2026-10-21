@@ -1,0 +1,39 @@
+{
+  "schemaVersion": "scholarchain.phase5d-demo-evidence-proposal.v1",
+  "status": "PROPOSED_NOT_AUTHORIZED",
+  "reason": "No naturally eligible pair in62existing frozen development/demo candidates; modelpilotcannotbypassevidencegates.",
+  "existingRepositoryFirst": {
+    "maxUnusedCrossrefRecords": 14,
+    "source": "Retained original Crossref discovery response in5C V3",
+    "noEligibilityClaim": true
+  },
+  "optionalNewOpenAlex": {
+    "maxRecordsIncludingExclusions": 30,
+    "maxSeedDoiMatches": 6,
+    "maxNeighborWorks": 24,
+    "maxHttpAttemptsIncludingRetries": 20,
+    "maxResponseBytesTotal": 16777216,
+    "maxResponseBytesEach": 2097152,
+    "maxRecordBytes": 1048576,
+    "maxWallSeconds": 600,
+    "timeoutSeconds": 20,
+    "concurrency": 1,
+    "maxStartsPerSecond": 1,
+    "maxTransientRetries": 1,
+    "credentials": false,
+    "paidServices": false,
+    "scope": "Distributed systems/data-engineering CS publications2018\u20132024, observedseed/authorneighborhoods only."
+  },
+  "safety": [
+    "No change to original v3/prepared input/queue/split/labels.",
+    "New separately manifested demo-only input; unchanged Hadoop normalization <=44records.",
+    "Before scoring reject any supplement component overlapping locked held-out anchors/endpoints, including transitive matches.",
+    "No threshold/score/evidence/ID manipulation;zeroeligibilitymeanszerolivecalls."
+  ],
+  "ownership": {
+    "datasets": "dataset-engineer",
+    "normalization": "existing Hadoop pipeline; no production change",
+    "admissionAndScoring": "entity-resolution-engineer",
+    "evidence": "coordinator"
+  }
+}

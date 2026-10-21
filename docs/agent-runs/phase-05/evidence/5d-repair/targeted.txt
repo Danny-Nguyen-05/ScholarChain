@@ -1,0 +1,84 @@
+[info] welcome to sbt 1.10.7 (Homebrew Java 17.0.20.1)
+[info] loading settings for project scholarchain-build from plugins.sbt...
+[info] loading project definition from /Users/danny/Documents/UIC/CS441/ScholarChain/project
+[info] loading settings for project root from build.sbt...
+[info] set current project to root (in build file:/Users/danny/Documents/UIC/CS441/ScholarChain/)
+[info] scalafmt: Formatting 4 Scala sources (/Users/danny/Documents/UIC/CS441/ScholarChain/modules/entity-resolution)...
+[info] scalafmt: Reformatted 2 Scala sources
+[success] Total time: 1 s, completed Oct 17, 2026, 1:14:11 PM
+[info] scalafmt: Formatting 1 Scala sources (/Users/danny/Documents/UIC/CS441/ScholarChain/modules/entity-resolution)...
+[info] scalafmt: Reformatted 1 Scala sources
+[success] Total time: 0 s, completed Oct 17, 2026, 1:14:11 PM
+[info] scalafmt: Formatting 2 Scala sources (/Users/danny/Documents/UIC/CS441/ScholarChain/tests)...
+[info] scalafmt: Reformatted 1 Scala sources
+[success] Total time: 0 s, completed Oct 17, 2026, 1:14:11 PM
+[info] compiling 4 Scala sources to /Users/danny/Documents/UIC/CS441/ScholarChain/modules/entity-resolution/target/scala-3.3.4/classes ...
+[info] done compiling
+[info] compiling 1 Scala source to /Users/danny/Documents/UIC/CS441/ScholarChain/modules/entity-resolution/target/scala-3.3.4/test-classes ...
+[info] done compiling
+[info] LiveDemoExportSpec:
+[info] - credential preflight captures once and uses the complete JDK header character set
+[info] - explicit default response limits roundtrip strictly and metadata fails before dispatch
+[info] - live demo export binds typed accepted links complete source constraints and all published files
+[info] - runtime binding refuses changed receipt paths and limits beyond the recorded approval
+[info] Run completed in 285 milliseconds.
+[info] Total number of tests run: 4
+[info] Suites: completed 1, aborted 0
+[info] Tests: succeeded 4, failed 0, canceled 0, ignored 0, pending 0
+[info] All tests passed.
+[success] Total time: 5 s, completed Oct 17, 2026, 1:14:16 PM
+[info] compiling 4 Scala sources to /Users/danny/Documents/UIC/CS441/ScholarChain/tests/target/scala-3.3.4/test-classes ...
+[info] done compiling
+[info] IndependentLiveCredentialPreflightSpec:
+[info] - missing local credential failure preserves the same approval ledger for recovery
+[info] - empty local credential failure preserves the same approval ledger for recovery
+[info] - CRLF local credential failure preserves the same approval ledger for recovery
+[info] - NUL local credential failure preserves the same approval ledger for recovery
+[info] - DEL local credential failure preserves the same approval ledger for recovery
+[info] - non-Latin1 local credential failure preserves the same approval ledger for recovery
+[info] - supplier exception local credential failure preserves the same approval ledger for recovery
+[info] IndependentOpenAIResponsesSpec:
+[info] - live wire request fixes selected model disables storage and tools and uses a strict supported schema
+[info] - completed provider envelope binds typed response and preserves measured reasoning and cached usage
+[info] - refusal incomplete malformed and missing usage envelopes cannot become decisive responses
+[info] - provider usage must be integral nonnegative consistent and bounded by its parent counters
+[info] - strict adjudication validation rejects wrong identity citations extra fields and contradictory reasons through live envelopes
+[info] - HTTP errors and oversized response bodies fail without reflecting sensitive provider body text
+[info] - live request identity settings and wire byte bound reject mutations before transport
+[info] - local response limits remain enforced independently of the provider wire schema subset
+[info] - unselected model and unavailable price assumptions are refused rather than falling back
+[info] IndependentLiveBudgetSpec:
+[info] - zero attempts token or spend allowance reserves nothing
+[info] - exact token and microdollar boundary allows one reservation and refuses the next
+[info] - unknown usage remains charged across restart and observed usage never refunds reservations
+[info] - approval scoped ledger refuses simultaneous writers and a changed configuration on restart
+[info] - provider usage above reservation fuses later attempts and invalid wire lengths do not reserve
+[info] IndependentLiveCredentialsSpec:
+[info] - constructing a live transport does not read credentials and missing credential fails locally
+[info] - invalid synthetic credential is rejected without exposing its value or making HTTP request
+[info] IndependentLiveDevelopmentSpec:
+[info] - live demo admission excludes every held-out group before eligibility classification
+[info] - a changed or held-out-only candidate population is refused rather than admitted as a demo
+[info] - zero eligible and explicitly disabled demo runs do not create ledger or inspect credentials
+[info] - supplemental admission excludes a whole transitive identity component linked to held-out evidence
+[info] - enabled synthetic demo dispatches only eligible development pairs and preserves independent pre-model scores
+[info] - disabled or wrong-approval enabled demo with eligible evidence never initializes transport
+[info] - enabled demo preserves its approval ledger after missing credential preflight
+[info] - enabled demo preserves its approval ledger after NUL credential preflight
+[info] IndependentLiveAdjudicatorSpec:
+[info] - budget exhaustion refuses dispatch before credential supplier access
+[info] - retries consume durable reservations and authentication errors are terminal
+[info] - a valid provider response records actual usage separately and replay never consumes another reservation
+[info] - missing usage and thrown transport details remain unknown charged failures without leaking contents
+[info] - interruption-resistant transport fuses later calls and never overlaps retries
+[info] - unapproved numerical configuration cannot construct an active adjudicator or budget ledger
+[info] IndependentLiveCacheSpec:
+[info] - fake cache cannot satisfy live request and live cache rejects fake mode
+[info] - live cache rejects corruption and context changes cannot reuse validated results
+[info] - invalid live results are never cached and a complete write leaves no partial readable files
+[info] Run completed in 754 milliseconds.
+[info] Total number of tests run: 40
+[info] Suites: completed 7, aborted 0
+[info] Tests: succeeded 40, failed 0, canceled 0, ignored 0, pending 0
+[info] All tests passed.
+[success] Total time: 2 s, completed Oct 17, 2026, 1:14:17 PM

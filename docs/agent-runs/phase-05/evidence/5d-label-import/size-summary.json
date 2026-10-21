@@ -1,0 +1,49 @@
+{
+  "schemaVersion": "scholarchain.phase5d.uncommitted-file-sizes.v1",
+  "scope": "Actual bytes of all currently modified/untracked files, not estimated git-pack size or diff expansion; deleted files contribute zero.",
+  "fileCount": 392,
+  "bytes": 17564964,
+  "largestFiles": [
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-followup-demo/frozen-development-anchor-metadata.json",
+      "bytes": 8861837
+    },
+    {
+      "path": "datasets/entity-resolution/labels/2026-10-20-danny-ai-assisted-v1/source/draft-labels.json",
+      "bytes": 515000
+    },
+    {
+      "path": "datasets/entity-resolution/prepared/68c2b012-6d04-4eef-a7bf-5ca31706d895/export/snapshot=hadoop-prep/run=68c2b012-6d04-4eef-a7bf-5ca31706d895/match-candidate/part-r-00000",
+      "bytes": 360990
+    },
+    {
+      "path": "datasets/entity-resolution/labels/2026-10-20-danny-ai-assisted-v1/validated-labels.json",
+      "bytes": 326475
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-followup-demo/anchor-metadata.json",
+      "bytes": 270602
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-repair/full-check.txt",
+      "bytes": 249140
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d/full-check.txt",
+      "bytes": 248200
+    },
+    {
+      "path": "docs/agent-runs/phase-05/history/5c-final-handoff/review-inventory.json",
+      "bytes": 171793
+    },
+    {
+      "path": "datasets/entity-resolution/labels/2026-10-20-danny-ai-assisted-v1/checkpoint.json",
+      "bytes": 160196
+    },
+    {
+      "path": "docs/agent-runs/phase-05/source-freeze.json",
+      "bytes": 142435
+    }
+  ],
+  "filesOver50MB": []
+}

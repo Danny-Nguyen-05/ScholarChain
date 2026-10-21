@@ -13,9 +13,10 @@ Usage:
 Every policy/config argument is explicit. Runtime examples are uncalibrated, not evaluated thresholds.
 Fake mode uses deterministic abstention fixtures; live adapters and network calls do not exist here.
 No existing output directory is overwritten. Source observations are never modified.
-""" + ReviewCommands.help
+""" + ReviewCommands.help + LiveDemoCommands.help
   def run(args: Array[String]): Either[String, String] =
     if (args.toVector == Vector("--help") || args.isEmpty) Right(help)
+    else if (Set("prepare-live-demo", "adjudicate-demo")(args.head)) LiveDemoCommands.run(args)
     else if (args.head != "resolve") ReviewCommands.run(args)
     else
       Try {

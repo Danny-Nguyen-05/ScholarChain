@@ -76,3 +76,16 @@ final v3, prepared input, tests and runtime inputs remain complete in the reposi
 See [archive verification commands and locations](../entity-resolution/README.md#replay-and-integrity)
 for existing `shasum` checks and optional population validation of complete archive
 copies. No acquisition/validation script logic changed for this packaging cleanup.
+
+
+Retention creation now requires an explicit purpose: `--purpose frozen-5c-review`
+for an authorized frozen review input, or `--purpose development-demo` for separate
+Phase 5D demo evidence. Validation enforces the documented distinction; the
+accepted legacy 5C manifest remains valid without a rewrite. See the prepared-input
+guide for the two metadata-only 5D corrections and unchanged payload identities.
+
+### Screened 5D topic follow-up
+
+`acquire_screened_demo.py` implements the separately approved fixed topic search after existing-author screens yielded no safe seeds. It does not read labels, scores or credentials. The create route performs network acquisition and must only be executed by the coordinator under the exact recorded approval; it has no pagination, refill or automatic widening. The executed script is retained before HTTP. The actual 2026-10-20 run returned ten records, excluded all ten by the CS venue filter and selected no authors; it added no ingestion records. Use the offline validator command in `datasets/entity-resolution/README.md` for the retained result. `test_screened_demo.py` covers caps, selection, HTTP errors, provenance and refusal behavior with injected responses only.
+
+`convert_review_batches.py` separately converts explicitly user-confirmed Markdown checkboxes into a strict checkpoint, retaining original bytes and AI-assistance provenance. It assigns no labels, authenticates no human identity, imports nothing and evaluates no predictions. See `datasets/entity-resolution/labels/2026-10-20-danny-ai-assisted-v1/README.md` for the observed import and uncertainty counts; tests use synthetic fixtures only.

@@ -1,0 +1,49 @@
+[info] welcome to sbt 1.10.7 (Homebrew Java 17.0.20.1)
+[info] loading settings for project scholarchain-build from plugins.sbt...
+[info] loading project definition from /Users/danny/Documents/UIC/CS441/ScholarChain/project
+[info] loading settings for project root from build.sbt...
+[info] set current project to root (in build file:/Users/danny/Documents/UIC/CS441/ScholarChain/)
+[info] scalafmt: Formatting 1 Scala sources (/Users/danny/Documents/UIC/CS441/ScholarChain/tests)...
+[info] scalafmt: Reformatted 1 Scala sources
+[success] Total time: 1 s, completed Oct 20, 2026, 9:59:06 PM
+[info] ReviewReadinessSpec:
+[info] - CLI help exposes implemented readiness commands and strict argument failures do not create output
+[info] - tool export creates a self-contained page and guide and refuses to overwrite an existing export
+[info] - label CLI preserves the original checkpoint byte-for-byte and writes a separate durable derivation
+[info] - validated human exports cannot be placed under target or through a symlink alias
+[info] - unlabeled undo preserves revision history and does not become a binary negative
+[info] - evaluation CLI writes explicit no-data denominators and frozen provenance without inventing labels
+[info] - explicit exclusion cohorts retain original labels and count only the remaining initial tasks
+[info] Run completed in 282 milliseconds.
+[info] Total number of tests run: 7
+[info] Suites: completed 1, aborted 0
+[info] Tests: succeeded 7, failed 0, canceled 0, ignored 0, pending 0
+[info] All tests passed.
+[success] Total time: 1 s, completed Oct 20, 2026, 9:59:07 PM
+[info] compiling 1 Scala source to /Users/danny/Documents/UIC/CS441/ScholarChain/tests/target/scala-3.3.4/test-classes ...
+[info] done compiling
+[info] IndependentEvaluationSpec:
+[info] - binary acceptance metrics include unresolved conflicts and missing predictions as nonacceptance
+[info] - gold by four-outcome tables preserve uncertain missing conflict and exact denominators
+[info] - no-data paths and unlabeled held-out metrics are null instead of manufactured accuracy
+[info] - invalid predictions stay in denominators and duplicate pairs or foreign bindings are refused
+[info] - development threshold sensitivity is hand-computable and held-out tuning is rejected
+[info] IndependentEvaluationAdapterSpec:
+[info] - evaluation retains genuine offline adapter versus verified cache provenance
+[info] - evaluation adapter refuses a decision whose endpoints or entity no longer match its frozen pair
+[info] - evaluation adapter refuses prompt or model inconsistent with the declared prediction run
+[info] - B1 actual later offline matcher and adjudication configuration reuse P0 labels and immutable queue
+[info] IndependentEvaluationCliSpec:
+[info] - prediction preparation CLI consumes a completed export without reading labels
+[info] - prediction preparation CLI refuses incomplete and corrupted exports before publishing
+[info] - prediction preparation CLI rejects a self-consistent manifest with parent traversal
+[info] - sensitivity CLI is development only and leaves reserve labels outside metric denominators
+[info] IndependentEvaluationCohortSpec:
+[info] - excluding an attributed review changes only that cohort denominator and preserves source labels
+[info] - cohort exclusions must bind the exact queue and labels and contain only unique initial pairs
+[info] Run completed in 1 second, 435 milliseconds.
+[info] Total number of tests run: 15
+[info] Suites: completed 4, aborted 0
+[info] Tests: succeeded 15, failed 0, canceled 0, ignored 0, pending 0
+[info] All tests passed.
+[success] Total time: 4 s, completed Oct 20, 2026, 9:59:10 PM

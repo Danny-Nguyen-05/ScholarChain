@@ -1,0 +1,29 @@
+{
+  "status": "VALID",
+  "schemaVersion": "scholarchain.screened-demo-population.v1",
+  "queryPlanVersion": "scholarchain.topic-discovery-order.v2",
+  "discoveryOrdering": "relevance_score:desc",
+  "sources": {
+    "crossref": 14,
+    "dblp": 0,
+    "openalex": 17,
+    "orcid": 0
+  },
+  "observed": {
+    "distinctReturnedWorksIncludingExcluded": 14,
+    "httpAttempts": 3,
+    "newDistinctWorksNotObservedInPreviousStage": 14,
+    "newIngestionRecords": 5,
+    "responseBytes": 75738,
+    "seconds": 2.2322
+  },
+  "cumulative": {
+    "distinctReturnedWorksAcrossStages": 44,
+    "httpAttemptsAcrossStages": 12,
+    "previousStageDistinctReturnedWorks": 30,
+    "responseBytesAcrossStages": 291082,
+    "secondsAcrossStages": 10.214
+  },
+  "files": 64,
+  "admission": "PENDING_CANONICAL_ER_COMPONENT_CHECK_BEFORE_SCORING"
+}

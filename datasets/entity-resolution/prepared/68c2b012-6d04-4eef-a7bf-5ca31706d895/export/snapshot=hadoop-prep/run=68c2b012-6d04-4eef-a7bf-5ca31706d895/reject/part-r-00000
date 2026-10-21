@@ -1,0 +1,1 @@
+{"schemaVersion":"scholarchain.domain.v1","source":null,"sourceLocator":"venue:acm sigmod record","datasetSnapshot":null,"runId":"run:68c2b012-6d04-4eef-a7bf-5ca31706d895","stage":"BLOCK","reasonCode":"OVERSIZE_CANDIDATE_PAIRS","diagnosticExcerpt":"block pairs 171 exceed 128","diagnosticHash":"6cfe356ca3ea48eb295631d9d1aa81d47256dd0185e4cfeda9f14d42ac9e625d"}

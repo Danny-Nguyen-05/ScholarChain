@@ -1,0 +1,35 @@
+"""Coordinator metadata-only canonical anchor screening; no labels or scoring."""
+from pathlib import Path
+from collections import defaultdict
+import json,hashlib,sys
+base=Path('docs/agent-runs/phase-05/evidence/5d-followup-demo')
+meta=base/'frozen-development-anchor-metadata.json'
+splitpath=Path('docs/agent-runs/phase-05/evidence/5c-repair/review-artifacts/split.json')
+d=json.loads(meta.read_text()); split=json.loads(splitpath.read_text());rows=d['endpointRecords']
+def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
+p=list(range(len(rows)))
+def find(a):
+ while p[a]!=a:p[a]=p[p[a]];a=p[a]
+ return a
+def union(a,b):p[find(a)]=find(b)
+seen={}
+for i,r in enumerate(rows):
+ for h in r['anchorHashes']:
+  if h in seen:union(i,seen[h])
+  else:seen[h]=i
+locked={h for g in split['groups'] if split['partitions'][g['groupId']]=='held-out' for h in g['anchorHashes']}
+forbidden={find(i) for i,r in enumerate(rows) if locked.intersection(r['anchorHashes'])}
+authors=defaultdict(list);forbidden_authors=set()
+for i,r in enumerate(rows):
+ m=r['mention']
+ if not m or m['source']!='OPENALEX' or not m['observedOpenAlexAuthorId']:continue
+ aid=m['observedOpenAlexAuthorId']
+ if find(i) in forbidden:forbidden_authors.add(aid)
+ elif m['observedOrcid'] is None and any(any(a.get(k) for k in ('organizationName','ror','ringgold','institutionId')) for a in r['affiliations']):authors[aid].append(r)
+cleared=set(authors)-forbidden_authors
+chosen=sorted(cleared,key=lambda a:(hashlib.sha256(('phase5d-demo2-seed-v1:'+a).encode()).hexdigest(),a))[:6]
+receipt={'schemaVersion':'scholarchain.screened-demo-seed-receipt.v1','status':'CLEAR_SEEDS' if chosen else 'NO_SAFE_SEED_AUTHORS','anchorMetadataSha256':sha(meta),'queueHash':d['queueHash'],'splitHash':d['splitHash'],'splitFileSha256':sha(splitpath),'frozenInputHash':d['frozenInputHash'],'demoInputHash':d['demoInputHash'],'endpointCount':len(rows),'components':len({find(i) for i in range(len(rows))}),'forbiddenComponents':len(forbidden),'clearCandidateAuthorIds':len(cleared),'selectedAuthors':chosen,'rule':'Union all canonical leakage anchor hashes; exclude entire components touching any held-out anchor and all author IDs occurring in any excluded component. Choose only OpenAlex mentions with missing observed ORCID and actual bound affiliation. Rank sha256(phase5d-demo2-seed-v1:+authorId), lexical tie; max6. No labels or scoring.','humanLabelsRead':False,'candidatePairsScored':0,'httpAttempts':0}
+out=base/'frozen-development-seed-screen.json';out.write_text(json.dumps(receipt,indent=2)+'\n')
+manifest=Path('datasets/entity-resolution/5c-2026-10-16-v3/population-manifest.v1.json')
+seed={'schemaVersion':'scholarchain.screened-demo-seeds.v1','screenReceiptSha256':sha(out),'screenReceiptPath':str(out),'sourcePopulationPath':str(manifest.parent),'sourcePopulationSha256':sha(manifest),'precedingStageReceiptPath':'docs/agent-runs/phase-05/evidence/5d/acquire-openalex-supplement.txt','authors':[{'authorId':a if a.startswith('https://') else 'https://openalex.org/'+a,'observedOrcid':None,'heldOutScreen':'CLEAR','sourceWorkIds':sorted({r['observation']['sourceRecordId'] for r in authors[a]}),'supportingEndpointIds':sorted({r['endpointId'] for r in authors[a]})} for a in sorted(chosen)]}
+(base/'frozen-development-screened-seeds.json').write_text(json.dumps(seed,indent=2)+'\n');print(json.dumps(receipt))

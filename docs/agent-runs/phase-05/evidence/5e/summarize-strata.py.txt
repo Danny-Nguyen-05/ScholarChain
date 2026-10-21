@@ -1,0 +1,31 @@
+"""Descriptive candidate-pair strata; no policy selection or population weighting."""
+from pathlib import Path
+import json,collections
+B=Path(__file__).resolve().parent
+q=json.loads(Path('docs/agent-runs/phase-05/evidence/5c-repair/review-artifacts/queue.json').read_text())
+gold=json.loads(Path('datasets/entity-resolution/labels/2026-10-20-danny-ai-assisted-v1/validated-labels.json').read_text())
+labels={x['pairId']:x['label'] for x in gold['current']}
+pred={x['pairId']:x for x in json.loads((B/'disabled-a-predictions.json').read_text())['rows']}
+def metrics(tasks):
+    binary=[t for t in tasks if labels[t['pair']['pairId']] in ['same','different']]
+    cells=collections.Counter()
+    for t in binary:
+        ident=t['pair']['pairId'];same=labels[ident]=='same';accepted=pred[ident]['outcome']=='ACCEPTED'
+        cells['tp' if same and accepted else 'fn' if same else 'fp' if accepted else 'tn']+=1
+    tp,fp,fn,tn=[cells[k] for k in ['tp','fp','fn','tn']]
+    return dict(tasks=len(tasks),binaryGold=len(binary),uncertain=len(tasks)-len(binary),tp=tp,fp=fp,fn=fn,tn=tn,precision=tp/(tp+fp) if tp+fp else None,recall=tp/(tp+fn) if tp+fn else None,f1=2*tp/(2*tp+fp+fn) if 2*tp+fp+fn else None)
+entity_path=[];sources=[];sampling=[]
+for part in ['development','held-out']:
+    for entity in ['Work','Researcher']:
+        ts=[t for t in q['tasks'] if t['role']=='initial' and t['partition']==part and t['pair']['entityType']==entity]
+        for path in ['ExactIdentifier','DeterministicBibliographic','Scored','HardConflict','LlmAdjudicated']:
+            entity_path.append(dict(partition=part,entityType=entity,path=path,**metrics([t for t in ts if pred[t['pair']['pairId']]['path']==path])))
+        by_source=collections.defaultdict(list);by_stratum=collections.defaultdict(list)
+        for t in ts:
+            key=' / '.join(sorted(t['pair'][side]['observation']['source'] for side in ['left','right']))
+            by_source[key].append(t);by_stratum[t['stratum']].append(t)
+        sources.extend(dict(partition=part,entityType=entity,sourcePair=key,**metrics(group)) for key,group in sorted(by_source.items()))
+        sampling.extend(dict(partition=part,entityType=entity,samplingStratum=key,**metrics(group)) for key,group in sorted(by_stratum.items()))
+for name,data in [('entity-path-summary.json',entity_path),('source-pair-summary.json',sources),('sampling-strata-summary.json',sampling)]:
+    (B/name).write_text(json.dumps(data,indent=2)+'\n')
+print(json.dumps({'entityPathSlices':len(entity_path),'sourcePairSlices':len(sources),'samplingSlices':len(sampling),'populationWeightsApplied':False}))

@@ -1,0 +1,50 @@
+{
+  "schemaVersion": "scholarchain.phase5d.search-repair-protected-proof.v1",
+  "valid": true,
+  "changedExistingDatasetFiles": [
+    "datasets/entity-resolution/README.md",
+    "datasets/entity-resolution/prepared/README.md",
+    "datasets/scripts/acquire_screened_demo.py",
+    "datasets/scripts/test_screened_demo.py"
+  ],
+  "removedExistingDatasetFiles": [],
+  "protectedLabelAndOriginalSearchFilesUnchanged": 55,
+  "protectedLabelTreeFiles": 23,
+  "protectedOriginalSearchFiles": 32,
+  "attributionSha256": "af88956efd996abf8ca6bd9f440d706bf5d651950ee0a02025a29358fa9b2e9b",
+  "originalResponsesManifestsExecutedScriptsAndLabelBytesUnchanged": true,
+  "approvalPredatesEveryNewHttp": true,
+  "targetAndDurableAdmissionByteIdentical": true,
+  "demoInputHash": "e53e6ffdc24ea2b5e95a2d8ed3a6f2e463279d924e914119282a651295a71ccd",
+  "demoCandidateHash": "1ffe273119adbd9d313a3c3cdccd68c2fb5032f802b8c87d2f6340debcc4c2d7",
+  "readiness": {
+    "candidatePairs": 101,
+    "admittedPairs": 23,
+    "eligiblePairs": 0,
+    "excludedPairs": 78,
+    "heldOutPairsScored": 0,
+    "providerCalls": 0,
+    "queueUnchanged": true,
+    "policyChanged": false
+  },
+  "stageObserved": {
+    "distinctReturnedWorksIncludingExcluded": 14,
+    "httpAttempts": 3,
+    "newDistinctWorksNotObservedInPreviousStage": 14,
+    "newIngestionRecords": 5,
+    "responseBytes": 75738,
+    "seconds": 2.2322
+  },
+  "cumulative": {
+    "distinctReturnedWorksAcrossStages": 44,
+    "httpAttemptsAcrossStages": 12,
+    "previousStageDistinctReturnedWorks": 30,
+    "responseBytesAcrossStages": 291082,
+    "secondsAcrossStages": 10.214
+  },
+  "modelCalls": 0,
+  "spendUsd": "0.00",
+  "runtimeCredentialsAccessed": false,
+  "liveStateAbsent": true,
+  "noHeldOutLabelsReadForSearchSelection": true
+}

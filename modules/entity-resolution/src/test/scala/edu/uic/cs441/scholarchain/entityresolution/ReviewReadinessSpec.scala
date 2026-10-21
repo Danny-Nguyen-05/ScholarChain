@@ -241,4 +241,107 @@ class ReviewReadinessSpec extends AnyFunSuite {
     )
     assert(report.evaluationStatus == "READINESS_REPORT_NOT_FINAL_PHASE_5E_ACCEPTANCE")
   }
+  test(
+    "explicit exclusion cohorts retain original labels and count only the remaining initial tasks"
+  ) {
+    val development = artifacts.queue.tasks.filter(_.partition == "development")
+    val annotations = development.zipWithIndex.map { (task, index) =>
+      ReviewAnnotation(
+        task.pair.pairId,
+        "Work",
+        task.evidenceHash,
+        "synthetic-owner-only",
+        s"cohort-$index",
+        1,
+        None,
+        if (index == 0) "same" else "different",
+        "",
+        "2026-10-16T17:00:00Z"
+      )
+    }
+    val labels = GoldLabels
+      .parse(artifacts.queue, write(checkpoint.copy(annotations = annotations)))
+      .toOption
+      .get
+    val predictions = EvaluationPredictions(
+      Evaluation.predictionVersion,
+      artifacts.generationBinding.get,
+      Vector.empty
+    )
+    val exclusions = EvaluationExclusions(
+      Evaluation.exclusionsVersion,
+      artifacts.queue.queueHash,
+      StrictJson.hash(labels),
+      "Synthetic source-assistance exclusion analysis",
+      Vector(development.head.pair.pairId)
+    )
+    val original = Evaluation
+      .evaluate(artifacts.queue, artifacts.split, labels, predictions, "development")
+      .toOption
+      .get
+    val subset = Evaluation
+      .evaluate(
+        artifacts.queue,
+        artifacts.split,
+        labels,
+        predictions,
+        "development",
+        exclusions = Some(exclusions)
+      )
+      .toOption
+      .get
+    assert(
+      original.overall.tasks == 2 && original.overall.binaryGold == 2 && original.overall.fn == 1
+    )
+    assert(
+      subset.overall.tasks == 1 && subset.overall.binaryGold == 1 && subset.overall.fn == 0 && subset.overall.tn == 1
+    )
+    assert(subset.overall.missingPredictions == 1 && subset.overall.unlabeled == 0)
+    assert(
+      subset.labelHash == original.labelHash && subset.queueHash == original.queueHash && subset.predictionHash == original.predictionHash
+    )
+    assert(labels.current == annotations.sortBy(_.pairId))
+    assert(subset.schemaVersion == Evaluation.cohortReportVersion)
+    assert(
+      subset.cohort.contains(
+        EvaluationCohort(StrictJson.hash(exclusions), exclusions.reason, exclusions.pairIds, 2, 1)
+      )
+    )
+    assert(original.cohort.isEmpty && original.schemaVersion == Evaluation.reportVersion)
+    val heldOut = Evaluation
+      .evaluate(
+        artifacts.queue,
+        artifacts.split,
+        labels,
+        predictions,
+        "held-out",
+        exclusions = Some(exclusions)
+      )
+      .toOption
+      .get
+    assert(heldOut.overall.tasks == 2 && heldOut.cohort.get.excludedInPartition == 0)
+    Vector(
+      exclusions.copy(queueHash = "0" * 64),
+      exclusions.copy(labelHash = "1" * 64),
+      exclusions.copy(schemaVersion = "unknown"),
+      exclusions.copy(pairIds = Vector.empty),
+      exclusions.copy(pairIds = exclusions.pairIds ++ exclusions.pairIds),
+      exclusions.copy(pairIds = Vector("unknown")),
+      exclusions.copy(reason = " untrimmed")
+    ).foreach { invalid =>
+      assert(
+        Evaluation
+          .evaluate(
+            artifacts.queue,
+            artifacts.split,
+            labels,
+            predictions,
+            "development",
+            exclusions = Some(invalid)
+          )
+          .isLeft
+      )
+    }
+  }
+
 }

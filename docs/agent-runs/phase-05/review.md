@@ -831,3 +831,348 @@ RISKS: This packaging pass does not establish human labels, accuracy or live-pro
 MANUAL ACTION REQUIRED: Preserve the external archive and manually commit if desired. Proposed one-line commit message: Complete Phase 5C review tooling with durable inputs and lean audit archives.
 BLOCKED-ON OWNER / BLOCKED-ON EVIDENCE: None for authorized packaging.
 NEXT GATE: Stop. No code reviewer triggered, commit/push performed or 5D started.
+
+
+## 5D implementation/readiness handoff — no external verdict yet
+
+STATUS: Awaiting user-launched independent review. Coordinator observed 424 passing sbt tests, 33 passing Python tests, six successful data-integrity validators and unchanged 556-file freeze. These are implementation verification results, not self-approval or a completed 5D human/provider gate. The approved supplement still produced zero naturally eligible admitted pairs; actual model attempts/spend remain zero. User replied “Not yet” regarding saved human annotation checkpoints. Human labels and real-provider evidence therefore remain pending external prerequisites under plan §5D.
+
+The full read-only reviewer prompt is reviewer-prompt.txt. No reviewer was invoked. Earlier user-supplied external verdicts and human decisions remain unchanged. An eventual implementation APPROVE cannot authorize 5E or invent real reviews/provider execution.
+
+
+## 5D user-supplied external review — REQUEST-CHANGES
+
+STATUS: COMPLETE (read-only review). Verdict for implemented 5D code/readiness: REQUEST-CHANGES.
+
+OWNER: code-reviewer (user-launched, independent). Repairs go to the entity-resolution-engineer and dataset-engineer through the coordinator.
+
+WORK ORDER: Phase 5, Subphase 5D implementation and blocked external-prerequisite checkpoint. Starting HEAD is 61d32a38eaad5b2fc352acf0b7f85f3815c2336d on phase-5, and all 5D work is uncommitted.
+
+FILES CREATED: None.
+
+FILES MODIFIED: None. I wrote two temporary hash lists, but only to the session scratchpad and nothing in the repository.
+
+COMMANDS RUN (all read-only inspection):
+- Git: git status --short, git rev-parse HEAD, git diff / git diff --stat on the modified ER sources, README and phase reports, git show HEAD:<history files> | shasum, git ls-files -co --exclude-standard, git check-ignore, git log -1.
+- File reading: cat, sed -n, grep, jq, wc, ls, du, find, diff on the two retained script copies, shasum -a 256 on the listed key files.
+- Freeze check: shasum -a 256 -c over all 556 source-freeze.json entries, plus a file-set comparison against git.
+- unzip -p on JDK 17 src.zip, to read the HttpRequestBuilderImpl header-validation message.
+- One python3 -I -c inline JSON reader for commands.json. It ran no repository code.
+- No builds, tests, sbt, acquisition, provider calls, credential or .env access, or agent launches.
+
+TEST RESULTS:
+- I executed no tests. What follows I observed in the retained logs.
+- full-check.txt: core 129, Hadoop 64, ER 28, independent 199 and build 4 all succeeded, ending [success] Total time: 411 s … Oct 16, 2026, 10:14:50 PM.
+- The injected checkProbeInjectFailure error in that log is expected CheckFailurePathSpec coverage.
+- full-check-summary.json matches: 424 tests, 0 failures/errors/skips, 53 reports.
+
+
+---
+
+BLOCKERS
+
+B1 — Medium — a missing or malformed credential permanently disables the approved pilot
+- Where:
+  - OpenAIResponses.scala:14-17: the credential is only looked up inside post.
+  - LiveAdjudication.scala:184-196: the budget is reserved and saved before dispatch.
+  - LiveAdjudication.scala:208-242: any exception becomes TRANSPORT_FAILED and calls ledger.fuse().
+  - LiveProvider.scala:282, 311: a fused ledger refuses all further reservations, and no code clears the flag.
+  - LiveDemoCommands.scala:71-80: the ledger path is fixed to the approval ID.
+- Reasoning: if adjudicate-demo runs without OPENAI_API_KEY, or with a CR/LF or other invalid header character, nothing is ever sent. Even so, one of the 10 attempts is recorded and the approval-scoped ledger is fused permanently. IndependentLiveAdjudicatorSpec:80-89 confirms that a throwing transport fuses the ledger. IndependentLiveCredentialsSpec only tests the transport on its own, not this path.
+- Impact: credential availability is a listed remaining gate (runtimeCredentialsChecked: false), so the first live run is exactly where this is likely to surface. It would destroy the user's one-shot $1 approval with zero spend. Recovery would need either a new human approval or editing the ledger, which defeats the budget-continuity design.
+- Owner: entity-resolution-engineer.
+- Acceptance check: validate that the credential is present and well-formed (full header character set, never logged) before reserving or dispatching. A local credential failure should return a non-fusing, non-reserving trace. Add tests through LiveDemo.run/LiveAdjudicator for missing and malformed credentials (including a non-CR/LF invalid character) that show:
+  - zero attempts recorded;
+  - the ledger is not fused;
+  - no credential text appears in any output;
+  - a later valid run can still proceed.
+- Blocks handoff: yes, for live-execution readiness. The offline safety properties are unaffected.
+
+B2 — Medium — the 5D demo inputs are labelled as frozen 5C evaluation inputs
+- Where:
+  - datasets/entity-resolution/prepared/3bfbd651-…retention-manifest.v1.json and 68c2b012-…retention-manifest.v1.json: both have "purpose": "Exact immutable completed preparation input for frozen Phase 5C review population and future human-label evaluation replay."
+  - The text is hard-coded at datasets/scripts/retain_prepared_population.py:134.
+  - prepared/README.md is unchanged and still describes the directory only as the frozen 5C queue input.
+- Impact: both inputs are demo-only. The supplement deliberately contains components overlapping held-out evidence (70 of 93 candidate pairs were excluded). The durable provenance nevertheless calls them evaluat
+NONBLOCKING OBSERVATIONS
+
+- N1 (low–medium): code revision and source hash are only format-checked.
+  - In LiveDemoCommands.scala:325-329 and LiveDemoExporter:132-135, any 40/64-hex value is accepted and written into the manifest as fact.
+  - The previews recorded codeRevision as 61d32a3, a commit that does not contain the 5D code. The coordinator compensated by passing the freeze hash 8396eb78…, which I verified.
+  - So "code and source metadata checks" overstates what the code does. Before the live run, either verify these values (HEAD plus freeze) or rename the fields as caller-asserted. Owner: ER.
+- N2 (low): possible credential echo when the transport is called directly.
+  - The Authorization header is built outside the try (OpenAIResponses.scala:23-29).
+  - JDK 17 HttpRequestBuilderImpl:113 throws invalid header value: "%s" with the full value for invalid characters other than CR/LF.
+  - In production LiveAdjudicator replaces the message (LiveAdjudication.scala:211) and LiveDemo filters "bearer", so I saw no leak in the CLI path. Fix alongside B1. Owner: ER.
+- N3 (low): demo cannotLinks are always empty by construction.
+  - They come only from demo decisions, and conflicts are never eligible, so they are always empty (LiveDemo.scala:243-247).
+  - Coverage and identifier assertions are complete and checked by the exporter, so conflicts remain derivable. Document that the demo cannotLinks are decision-scoped.
+  - Coverage also includes excluded held-out-overlapping supplement endpoints (26 works, 109 researchers). These are source facts with no predictions, which is acceptable.
+- N4 (low): stale help text. Phase5Main.scala:15 still says "live adapters and network calls do not exist here" right before the live command help.
+- N5 (low): no fsync. The ledger saves via write plus ATOMIC_MOVE without fsync (LiveProvider.scala:252-270), so a power loss could drop the latest reservation.
+- N6 (low): traces lost on mid-run failure. An exception during LiveDemo.run after dispatch throws away all traces from attempts already made. Failed attempts are not cached; only the ledger counts survive.
+- N7 (info): no backoff on 429. The retry is immediate and ignores Retry-After. At most one retry, so this is harmless.
+- N8 (info): report wording. The checkpoint report says it "modified … reviewer prompt", but the prompt was moved to history; I verified the copy is identical. The seed supplement was produced by an earlier script version whose only difference is a weaker validate(). Its executed copy is retained, so the provenance is accurate, but "unchanged dataset validator" is imprecise.
+
+Input-reservation assumption (explicit assessment)
+
+The reservation is wire bytes plus 4,096 tokens per attempt. I judge this an acceptable conservative heuristic for this approval, but not a guarantee:
+- Why it over-counts the visible text: a byte-level BPE tokenizer produces at most one token per byte, and JSON-escaping the input string makes the wire body larger than the text the model actually sees.
+- What is unverified:
+  - that gpt-6-luna's tokenizer is byte-level BPE;
+  - how the provider renders the structured-output schema;
+  - how large any hidden platform tokens are.
+- Why the slack still holds: the worst case is 10 × 69,632 = 696,320 input tokens against 1,000,000 approved. Output is capped exactly by the provider-enforced max_output_tokens (10 × 4,096 = 40,960). Worst-case cost is about $0.11 against $1.00, about 9× headroom. The overrun fuse stops after the first overrun.
+- What is not checked: observed totals are never compared against the approved totals, only per-attempt reservations. Given the slack, that is acceptable.
+
+Confirmed by static review (no defect)
+
+- Malformed output can't be accepted: a malformed, refused, incomplete, wrong-model or bad-citation response never produces an acceptance. An "accept" that conflicts with authoritative identifiers falls back to Unresolved.
+- Fake and live caches stay separate: live cache keys bind the approval and config, and a cached result is re-validated on read.
+- Retries and timeouts are bounded: at most 2 attempts per pair, sequential, with a timeout per attempt.
+- Held-out exclusion is sound: pairs touching held-out groups are excluded before scoring. The union-find runs over anchor sets that close over the whole frozen input, so the exclusion is transitive.
+- Credentials are not touched when nothing is eligible: with zero eligible pairs, no transport is created and no credential or ledger is accessed.
+- Dataset caps were respected: the acquisition request plan is capped at 30 works and 7–14 requests by construction.
+
+---
+
+ASSUMPTIONS:
+- I did not independently verify the official OpenAI facts: the alias, the rate card, strict-schema keyword support ($schema, $id, pattern, minItems, minLength, minimum/maximum) and usage field names. official-docs.json notes that the create-reference page returned an Internal Error.
+- Test passes come from the retained logs, not from my own runs.
+
+RISKS:
+- Compatibility with the real provider is unproven.
+- Leakage nobody has observed is still possible, and this is disclosed.
+- B1 could cost a human re-approval if it is not fixed before the live run.
+
+MANUAL ACTION REQUIRED:
+- User: label the 240 initial reviews (40 development + 200 held-out) with the unchanged blind page and return the original checkpoint files. The 60 reserves are separate.
+- Coordinator: route B1 and B2 (and N1/N2 if accepted), then request a fresh review of the repairs.
+
+BLOCKED-ON OWNER: entity-resolution-engineer (B1); dataset-engineer (B2); the user, for the human reviews.
+
+BLOCKED-ON EVIDENCE:
+- Real human labels: 0 of 240.
+- Naturally eligible non-held-out pairs: 0 in all three sources.
+- Actual model calls: 0; spend: $0.00.
+- Runtime credential availability has not been checked.
+
+NEXT GATE: owner repairs for B1 and B2, a new freeze, the affected validators and sbt check, then a user-launched re-review. Separately: real-provider evidence and human reviews remain pending. An implementation APPROVE would not satisfy them, and no overall 5D or Phase 5 acceptance, and no 5E advancement, can be inferred from this packet.
+
+
+Coordinator transcription note: B2 impact ends at “evaluat” in the received message; that truncation is retained. No missing finding wording or acceptance check is invented. The concrete described B2 provenance defect is sufficient for the narrow metadata/purpose repair.
+
+
+## 5D B1/B2 — repair verification, awaiting external recheck
+
+Coordinator observed successful blocker repairs and fresh verification: 434 sbt tests, 37 Python tests, six validators and an unchanged 557-file freeze. Source delta: 15 modifications, one new test, no removals. Exact reports and original external REQUEST-CHANGES remain retained; no new reviewer verdict exists. B1 recovery does not reset the same approval budget; B2 corrects demo-only provenance without changing data or the accepted 5C manifest. Nonblocking issues were not a separate repair work order. Reviewer prompt is provided only in chat at the user’s request. Actual human reviews, eligible real-model evidence and broader acceptance remain pending; 5E is not authorized.
+
+
+## 5D B1/B2 recheck — user-supplied external APPROVE
+
+STATUS: COMPLETE (read-only recheck). Verdict for the 5D B1/B2 repair scope: APPROVE.
+
+OWNER: code-reviewer (user-launched, independent).
+
+WORK ORDER: Phase 5, Subphase 5D B1/B2 repair recheck. HEAD is 61d32a38eaad5b2fc352acf0b7f85f3815c2336d; all 5D work remains uncommitted. The authorization is recorded in prompt.md under "5D B1/B2 repair authorization".
+
+FILES CREATED: None. Temporary hash lists went only to the session scratchpad.
+
+FILES MODIFIED: None.
+
+COMMANDS RUN (all read-only inspection):
+- Git: git status --short, git rev-parse HEAD, git diff (retention script, its test, READMEs, prompt.md), git show HEAD:<report> compared with diff, git ls-files -co --exclude-standard.
+- diff between the current files and the originals preserved in history/5d-initial-review/, for the ER sources, three independent specs, the ER README and both demo retention manifests (via jq -S).
+- Reading files: sed, grep, cat, jq, find, stat, comm, wc.
+- Hash checks:
+  - shasum -a 256 on the listed key artifacts;
+  - shasum -a 256 -c over all 557 current freeze entries;
+  - shasum -a 256 -c over the 83 evidence/5d/ hashes bound by the preserved original inventory.
+- unzip -p on JDK 17 src.zip to read Utils.isValidValue / fieldvchar.
+- No builds, tests, Python, provider calls, credentials, .env, acquisition or agent launches.
+
+TEST RESULTS: I ran no tests. These are observed from the retained logs:
+- before-fix.txt: the new IndependentLiveCredentialPreflightSpec failed 0/7 against the unrepaired production code. The failure was behavioral: it got "TRANSPORT_FAILED" did not equal "CREDENTIAL_INVALID", not a compile error.
+- targeted.txt: 4 owner tests and 40 independent tests passed.
+- full-check.txt: core 129, Hadoop 64, ER 29, independent 208 and build 4 all passed, ending [success] Total time: 412 s … Oct 17, 2026, 1:21:56 PM. The nested [error] is the expected injected-failure probe.
+- full-check-summary.json: 434 tests, 0 failures/errors/skips, 54 fresh reports, 557 frozen files valid.
+- python-tests.txt: 37 tests OK.
+- input-integrity-gates.json: 6 validators, all exit 0. The 5C run reports frozen-5c-review; both 5D runs report development-demo.
+
+VALIDATION RESULTS (checked myself):
+- All four listed SHA-256 values match. The preserved original freeze hashes to 8396eb78…, the same as the reviewed baseline.
+- All 557 current freeze hashes match, and the freeze file set equals git's tracked plus untracked set.
+- Comparing the original and current freezes: exactly 15 paths changed, 1 was added (IndependentLiveCredentialPreflightSpec.scala) and none were removed. No retained payload, completion file, run manifest or raw data file is in the delta.
+- Retention-manifest hashes match the packet:
+  - demo seeds b413bc38…, OpenAlex supplement d9eec30b…;
+  - original 5C c5196356…, which is unmodified from HEAD;
+  - preserved pre-repair copies 484a3e34… and 7cf7df07…, matching my first review.
+- A jq -S diff of each demo manifest shows only purposeKind, purpose and ownership changed.
+- All 83 hash-bound evidence/5d/ files are unchanged, and live-state/ still does not exist.
+- owner-report.md, test-report.md, repairs.md and review.md remove no lines relative to HEAD.
+
+---
+
+Assessment of the original blockers
+
+B1 — CLOSED. A missing or malformed credential no longer consumes or fuses the approved budget.
+- Order of operations. LiveAdjudication.scala:180-203 now goes: render, check the cache, a non-mutating checkReservation, then Try(transport.prepare()), then reserve.
+  - A failed prepare, a thrown exception or a null result returns CREDENTIAL_INVALID / LIVE_CREDENTIAL_UNAVAILABLE_OR_INVALID with 0 attempts.
+  - It does this before reserve, so the ledger is not saved and not fused.
+- Credential handling. OpenAIResponses.scala:15-29:
+  - The supplier is read once.
+  - It runs the JDK's full header validation via HttpRequest.newBuilder…header(…).build(), which makes no network call.
+  - Every failure inside the Try maps to a constant string, so the value-bearing JDK exception message can't escape. This also closes N2: a direct post now throws only the constant.
+- No change between validation and dispatch. The prepared transport captures key in a closure, dispatch uses that same value, and retries reuse it (LiveAdjudication.scala:229). Per-pair credential re-reads happen only on later calls to adjudicate.
+- Exhausted budget stays lazy. checkReservation runs before prepare, and reserve still re-checks the limits (LiveProvider.scala:273-292). The unchanged test "budget exhaustion refuses dispatch before credential supplier access" passed.
+- Disabled, zero-eligible and unapproved paths are unchanged; their tests passed.
+- Uncertain post-dispatch failures still charge and fuse (LiveAdjudication.scala transport and termination branches unchanged). IndependentLiveAdjudicatorSpec is unchanged from the original and passed.
+- The full enabled LiveDemo path is covered. The wrapper forwards prepare (LiveDemo.scala:311), and the lazy factory is forced inside the adjudicator's Try, so factory exceptions are also contained. IndependentLiveDevelopmentSpec runs missing and NUL credentials through the full path, then recovers on the same persisted ledger.
+- Every requested case is tested. IndependentLiveCredentialPreflightSpec covers missing, empty, CRLF, NUL, DEL, non-Latin-1 and supplier-exception credentials. Each asserts a single read, the constant error, 0 attempts, an unchanged durable snapshot, no fuse, no credential text in the trace, and same-ledger recovery to VALIDATED_LIVE.
+
+B2 — CLOSED. The two demo inputs are now truthfully labelled demo-only.
+- Both corrected manifests are truthful: "Phase 5D development/demo evidence only; not frozen review, gold labels or held-out evaluation input", with purposeKind: development-demo.
+- There is no silent default. retain(…, *, purpose) is keyword-only with no default, and the CLI --purpose is required. check_purpose rejects any manifest without purposeKind unless its runId is the legacy 5C run.
+- Inconsistent metadata is rejected. The kind, description and ownership must agree. The known demo run IDs cannot claim the frozen purpose, and the 5C run cannot claim demo.
+- Each guarantee is tested: the missing-purpose API/CLI error (exit 2), the inconsistent-purpose rejection, known demo runs claiming frozen, and the legacy 5C manifest hash staying c5196356….
+- Payloads are unchanged. b2-metadata-proof.json and my freeze comparison agree.
+- Documentation now separates the purposes. prepared/REA embedded space passes preflight and is dispatched. The provider would most likely answer 401, which charges one attempt. It does not fuse and costs nothing, but LiveDemo then continues to the next eligible pair, charging one attempt per pair up to the cap.
+  - Impact: possible exhaustion of the attempt allowance with no spend, but only through a provider authentication failure. That is outside B1's "local failure" definition, and no secret is exposed.
+  - Owner: ER.
+  - Suggested check: restrict the bearer value to the RFC 6750 token charset and/or stop the run after the first 401/403. Add a test that a credential containing U+00A0 records zero attempts.
+- O2 (low): a credential-refused run still reports success. adjudicate-demo exits 0 and publishes a complete demo export. Its decisions are Unresolved and carry CREDENTIAL_INVALID, and the summary line shows live attempts=0. The output directory is used up, though the approval is not. Consider a non-zero exit or an explicit refusal message. Owner: ER.
+- O3 (info): frozen-5c-review can still be chosen for other runs. A new, unrelated run can be explicitly labelled frozen-5c-review. It is explicit and documented, not silent.
+- O4 (info): one original log was never hash-bound. evidence/5d/development-readiness-probe.log (365 bytes, modified Oct 16 21:38, before the first review) is not listed in the preserved original inventory. This predates the repair; no regression.
+- Deferred findings. N1 and N3–N8 remain as accepted deferrals, and N2 is closed incidentally by B1.
+
+3. Unverified external prerequisites
+
+- Real human labels: 0 of 240 (40 development + 200 held-out; the 60 reserves are separate).
+- Naturally eligible non-held-out pairs for a live demonstration: 0.
+- Actual model calls: 0; spend: $0.00. Runtime credential availability has not been checked.
+- Compatibility with the real OpenAI API is unverified: strict-schema keyword support, the response envelope and usage fields, and whether the server tolerates whitespace or 0x80–0xFF bytes in the key.
+- Passing tests establish neither identity accuracy nor calibration.
+
+---
+
+ASSUMPTIONS:
+- The unchanged tests named in the packet passed because they are counted in the full 434-test run.
+- I took the original bytes from history/5d-initial-review/, whose freeze hash matches the reviewed baseline. The original LiveDemoExportSpec was not preserved there, so I reviewed its added test as current content.
+
+RISKS: O1/O2 could waste the attempt allowance or confuse an operator during the eventual live run, without spending money. Provider compatibility is untested.
+
+MANUAL ACTION REQUIRED:
+- User: complete and export the human reviews from the unchanged blind page.
+- Optionally route O1/O2 to the ER owner before any live run.
+
+BLOCKED-ON OWNER: None for this repair scope. The user owns the human reviews; any future, separately authorized step owns obtaining a naturally eligible demo pair.
+
+BLOCKED-ON EVIDENCE: Actual human checkpoints; a naturally eligible non-held-out pair; an observed real-provider run.
+
+NEXT GATE: The human decision on this repaired 5D implementation checkpoint. The 5D exit still requires traceable human reviews and real LLM evidence, or an explicitly accepted blocked checkpoint. This APPROVE does not complete the human-review or real-provider gates, does not establish overall 5D or Phase 5 acceptance, and does not authorize 5E.
+
+
+Coordinator transcription notes: the received text says “failed 0/7”; the retained before-fix log actually records 0 passed and 7 failed. The received B2 documentation paragraph runs directly into a partial O1 description; this truncation is preserved without inventing missing reviewer text. The explicit APPROVE and closure of B1/B2 are unambiguous. No human acceptance, accepted blocked checkpoint or 5E authorization is inferred from this external verdict. No source changes, tests, model calls or nonblocking repairs were triggered by recording it.
+
+
+## 5D actual label import and additional bounded search — review boundary
+
+STATUS: No new external verdict exists for the conversion helper, bounded topic-search helper, their tests or resulting new artifacts. The previously user-supplied APPROVE remains limited to the implemented 5D B1/B2 repair scope; it is not widened or rewritten.
+OWNER: User selects and launches any independent reviewer; coordinator records this boundary only.
+WORK ORDER: User confirmed all twelve batches and authorized import, then explicitly approved the additional bounded search.
+FILES CREATED / MODIFIED: Current source-delta.json and review-inventory.json provide the exact inventory. No reviewer prompt file was created or restored.
+COMMANDS RUN: Implementation owners and coordinator ran conversion, the unchanged importer, bounded acquisition, metadata-only canonical screens and deterministic tests. No independent reviewer was invoked. ER owner's read-only admission advice is engineering advice, not an external code-review verdict.
+TEST RESULTS: See test-report.md and retained execution receipts; test results do not imply review approval.
+VALIDATION RESULTS: 240 AI-assisted human-reviewed choices imported; 8 uncertain outcomes preserved; new bounded search added zero admissible observations. No model call or evaluation occurred.
+ASSUMPTIONS: User completion confirmation is retained as provenance, not authentication.
+RISKS: These are not independent blind gold labels; 22 external-source comments are explicitly AI-attributed and unverified. Provider compatibility remains unobserved.
+MANUAL ACTION REQUIRED: Human review of this checkpoint and user-selected external review as appropriate.
+BLOCKED-ON OWNER: No implementation owner; human controls further advancement.
+BLOCKED-ON EVIDENCE: Naturally eligible non-held-out real-provider evidence; no approval of 5E is inferred.
+NEXT GATE: User checkpoint decision. No reviewer launch, commit/push, further acquisition, calibration or 5E.
+
+
+## 5D label attribution / discovery ordering external findings
+
+User-supplied external B2 finding follows verbatim. No new APPROVE or complete external verdict is inferred from this partial finding. B1 procedural clarification is retained separately in evidence/5d-search-repair/b1-user-clarification.json: already applied at explicit user direction in the reviewing session, with the reviewer/implementer separation departure disclosed. The next reviewer must independently assess both B1 attribution and B2 repair. No reviewer was launched by the coordinator.
+
+```text
+B2: The topic-discovery query's sort order guaranteed irrelevant results
+
+Severity: High. Status: open; blocks the bounded-search checkpoint.
+
+Where: datasets/scripts/acquire_screened_demo.py:78-80. discovery_url() sends search=<topic> together with sort=publication_date:asc.
+
+Evidence:
+- The retained datasets/entity-resolution/5d-demo-2026-10-20-screened/responses/001-openalex.body and 002-openalex.body show OpenAlex reading the query as "with (…) in the full text, oldest first".
+- The two searches matched 323,411 and 467,092 works.
+- The first five results of each are unrelated 2018 repository records:
+  - "Neocosmicism: God and the Void"
+  - a New England groundwater-quality report
+  - "Spanish Orientalism: Washington Irving and the Romance of the Moors"
+  - "The Automotive Supply Chain: Global Trends and Asian Perspectives"
+- Sorting by date ascending throws away relevance ranking, so the CS venue filter rejecting all 10 records was close to inevitable.
+- datasets/scripts/test_screened_demo.py has no check of the discovery query's search or sort behavior, so the tests couldn't catch this.
+
+Impact:
+- The recorded result ("10 returned, all excluded by the CS venue filter, zero admissible, no author seeds") is real, but the query design caused it. It does not show that no eligible CS evidence exists.
+- These reports describe the result without saying why it happened:
+  - docs/agent-runs/phase-05/evidence/5d-followup-demo/outcome.json
+  - the 2026-10-20 follow-up section of datasets/entity-resolution/README.md
+  - docs/agent-runs/phase-05/owner-report.md:545-563
+- The one approved search was used up on off-topic results, with only 2 of 20 attempts and 10 of 30 records. That weakens the "blocked on naturally eligible evidence" conclusion for the $1 live demo.
+
+Required owners:
+- dataset-engineer:
+  - Fix discovery_url() by removing the date sort or using relevance ordering. Consider title_and_abstract.search instead of full-text search.
+  - Add an offline test that asserts the discovery URL's search and sort behavior.
+- coordinator: add an append-only root-cause note to the follow-up evidence, the dataset README section and the owner report.
+- human: decide whether to authorize a re-run of the corrected search. The recorded strategy forbids refill or re-run, so it needs a new explicit approval with stated limits.
+
+Acceptance checks:
+- [ ] The cause is disclosed in evidence/5d-followup-demo/, the dataset README and the owner report. Existing records are not rewritten.
+- [ ] The fix and its new test pass offline: python3 -m unittest discover -s datasets/scripts -p 'test_*.py'.
+- [ ] No new HTTP request is sent without a recorded user approval.
+- [ ] If a re-run happens, it gets a new separate stage manifest. Cumulative counters must not be reset, and canonical held-out exclusion must still run before any scoring.
+
+Next gate:
+1. Fix and test.
+2. Record your re-run decision.
+3. Refresh the source freeze.
+4. Run sbt -batch check, the Python tests and the 7 integrity validators.
+5. Run a fresh independent recheck. That recheck also confirms the B1 attribution record.
+```
+
+
+### B1 clarification and B2 implemented repair — external verdict pending
+
+The user confirmed that B1 implementation was already applied at their explicit direction in the reviewing session; the departure from reviewer/implementer separation is disclosed in b1-user-clarification.json. The coordinator preserved that label tree unchanged and included it in the new freeze. B2 has been implemented and exercised with a newly approved, separately manifested rerun. The original flawed run remains intact and is explicitly qualified by append-only root-cause notes.
+
+The source-level repair and passing tests do not constitute independent approval. The next user-selected reviewer must assess both B1 attribution and B2 query/history/evidence behavior. No new external verdict is inferred, no reviewer was launched, and the overall 5D real-provider exit remains unfulfilled. Current eligibility result is local to the measured population; it is not an exhaustion claim about CS evidence.
+
+
+## User-supplied independent B1/B2 recheck APPROVE
+
+The user returned the complete independent read-only recheck with the verdict: “STATUS: COMPLETE. Verdict for the implemented B1/B2 scope is APPROVE: no blockers, four nonblocking findings, and the gates I could not verify are listed below.” The reviewer states they did not author B1 or B2, verified the attribution, all 742 source hashes, counters/history, retention and retained gate evidence, and explicitly did not approve overall 5D or authorize 5E. A bounded summary is retained in evidence/5d-focused-demo/prior-external-approval-summary.json; it is labelled a summary rather than a verbatim full transcript.
+
+N1 (literal line-number prefixes in earlier B1 phase sections), N2 (historical copied-source date/snapshot relabelling), N3 (some asserted rather than measured proof fields), and N4 informational observations remain deferred. No historical report, decision or source artifact is rewritten to fix them. The next focused search is a new user-authorized work item, not an inferred permission from this review. No reviewer has been launched by the coordinator.
+
+
+## Focused-search implementation review boundary
+
+The prior user-supplied independent APPROVE covers B1/B2, not the newly authorized focused acquisition and offline CS slice. These new helpers/tests and their outputs have implementation-owner tests and coordinator gates; no independent verdict for them is inferred. The five raw repository false positives were disclosed and excluded through a separately manifested immutable-parent slice before ER. The user alone selects and launches any new reviewer. No reviewer prompt file was created or restored. No reviewer was launched by the coordinator. Overall 5D provider evidence remains pending; this checkpoint does not authorize 5E.
+
+
+## 5E limited deterministic/fake evaluation — observed handoff
+
+External verdict: PENDING. Coordinator engineering/test evidence is not independent approval. See evidence/5e/evaluation-report.md. User authorized limited offline evaluation with real-provider requirement still open; no overall Phase 5 acceptance or Phase 6 authorization is inferred.
+
+
+## Final targeted real-provider attempt after limited 5E review
+
+The user returned an independent APPROVE for limited 5E and the implemented changes (zero blockers, six nonblocking observations), explicitly leaving real-provider evidence and overall acceptance open. The user instructed that nonblocking findings need no repair. The user then replied “alright do it” to one final targeted attempt with unchanged rules and existing $1 budget. This does not authorize Phase 6, commit/push, changes to labels, policy or approved evaluation. Preparation starts offline; new public acquisition waits for explicit numerical limits. Summary-only review receipt: evidence/5d-final-attempt/prior-review-summary.json; start/protected snapshot: start.json.
+
+
+## Final Rice-team bounded attempt — verified blocked provider checkpoint
+
+External verdict for this new dataset/evidence checkpoint: PENDING. Earlier limited5E APPROVE remains scoped to its reviewed state. No new reviewer was launched or acceptance inferred. See evidence/5d-final-attempt/report.md.

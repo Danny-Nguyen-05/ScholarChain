@@ -1,0 +1,64 @@
+{
+  "valid": true,
+  "protectedPriorSourceFiles": 900,
+  "changedExistingSourceFiles": [
+    "datasets/entity-resolution/README.md",
+    "datasets/entity-resolution/prepared/README.md"
+  ],
+  "approved5eArtifactFilesUnchanged": 111,
+  "old5eSourceFreezeExactCopy": {
+    "path": "docs/agent-runs/phase-05/evidence/5d-final-attempt/before-source-freeze.json",
+    "sha256": "52f24a88d8b4d3d802e8e53403428ad6d5e889afc7309ccd55a7f4f2fc91376f"
+  },
+  "actualRequests": 2,
+  "returnedWorkRows": 15,
+  "bytes": 112270,
+  "approvalPredatesRequests": true,
+  "selectedResponseObjectsUnchanged": 3,
+  "targetDurableProofsByteIdentical": [
+    "admission.json",
+    "summary.json",
+    "admitted-classifications.jsonl",
+    "scored-pair-ids.json"
+  ],
+  "exactRetainedPreparedFiles": 38,
+  "scoredPairIdsEqualAdmittedPairIds": true,
+  "scoredExcludedIntersection": 0,
+  "outcomes": [
+    {
+      "entityType": "Researcher",
+      "outcome": "ACCEPTED",
+      "path": "ExactIdentifier",
+      "count": 5
+    },
+    {
+      "entityType": "Researcher",
+      "outcome": "ACCEPTED",
+      "path": "Scored",
+      "count": 2
+    },
+    {
+      "entityType": "Researcher",
+      "outcome": "UNRESOLVED",
+      "path": "Scored",
+      "count": 2
+    },
+    {
+      "entityType": "Work",
+      "outcome": "CONFLICT",
+      "path": "HardConflict",
+      "count": 2
+    }
+  ],
+  "inBandButInsufficientPairs": 2,
+  "coauthorOverlapInThosePairs": 0.2,
+  "supportiveContextThreshold": 0.8,
+  "eligiblePairs": 0,
+  "runtimeClassResourceHashesUnchanged": 1261,
+  "livePreviewEligiblePairs": 0,
+  "previewRequests": 0,
+  "liveStateExists": false,
+  "providerCommandInvocationsInStageLedger": 0,
+  "credentialPreflight": "NOT_REACHED_NO_ELIGIBLE_PAIR",
+  "note": "Actual classifier and raw metadata checks only; no identity accuracy or global absence claim. Old evaluation artifacts remain byte-identical; its top-level freeze pointer has a preserved exact historical copy here."
+}

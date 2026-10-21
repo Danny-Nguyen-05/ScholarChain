@@ -1,0 +1,21 @@
+{
+  "schemaVersion": "scholarchain.phase5d.attribution-source-delta.v1",
+  "recordedAtUtc": "2026-10-21T01:28:39Z",
+  "baselineFreezeSha256": "260350cbf09bbc0faa0886e85efc6edbad136fab72d35543f06172c3a1da979f",
+  "baselineFiles": 615,
+  "changedScopedFiles": {
+    "datasets/entity-resolution/labels/2026-10-20-danny-ai-assisted-v1/README.md": {
+      "before": "015c95e6150df00ec64198af8a4f753673b5bfad07d8827b7154a5d479d1e3f9",
+      "after": "f800014033169a3b4ca389d9c89330dd05015d75c448228ef93a3ef26e563d91"
+    }
+  },
+  "addedScopedFiles": {
+    "datasets/entity-resolution/labels/2026-10-20-danny-ai-assisted-v1/decision-attribution.v1.json": "af88956efd996abf8ca6bd9f440d706bf5d651950ee0a02025a29358fa9b2e9b"
+  },
+  "appendedPhaseEvidence": [
+    "docs/agent-runs/phase-05/prompt.md",
+    "docs/agent-runs/phase-05/owner-report.md"
+  ],
+  "protectedFilesVerifiedUnchanged": 21,
+  "note": "Provenance-only change at explicit user direction. No label value, checkpoint, validated derivative, provenance, conversion report or source byte changed. source-freeze.json is not rewritten; refresh at the next gate."
+}

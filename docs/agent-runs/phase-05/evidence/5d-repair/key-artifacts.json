@@ -1,0 +1,40 @@
+{
+  "schemaVersion": "scholarchain.phase5d.repair-key-artifacts.v1",
+  "files": [
+    {
+      "path": "docs/agent-runs/phase-05/source-freeze.json",
+      "bytes": 129863,
+      "sha256": "a14f42632137cd6b1da3957d514c5094d187f2d8ae6cf46892be167f2c38d1da"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-repair/full-check.txt",
+      "bytes": 249140,
+      "sha256": "9bb8295bf3a53217cd54d8d960a3f9a05f9104b9cca7c520086d4393030e1532"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-repair/full-check-summary.json",
+      "bytes": 20100,
+      "sha256": "a15ac66f86171ee9421d553a5f8eaf13f4c1510aaf2db343f979c3dd37d2da41"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-repair/before-after-summary.json",
+      "bytes": 1639,
+      "sha256": "1866c2dc5090e713c0e2c5810c4d0e96dff66e7a0f2f25797cf3a67eba228fb5"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-repair/source-delta.json",
+      "bytes": 9157,
+      "sha256": "a62e7fdf6a1e716b268627ed30c8bfa5e330860ce3dd5c21b42d23a7001dfe8f"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-repair/protected-inputs-proof.json",
+      "bytes": 1212,
+      "sha256": "1bb12a5f6367a20f07dddc671b8b8ca8f9e2051af27a3961e0fd1e73abf981a5"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-repair/external-review.txt",
+      "bytes": 10725,
+      "sha256": "1a5a9242b48a3f200317eb6ee43588ae50a16069cb2307f4909682ad073aa5ad"
+    }
+  ]
+}

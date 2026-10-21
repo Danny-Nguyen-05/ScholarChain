@@ -1,0 +1,19 @@
+{
+  "checkedAtUtc": "2026-10-21T04:40:00.024885+00:00",
+  "skill": "OpenAI Docs",
+  "model": "gpt-6-luna",
+  "officialModelUrl": "https://developers.openai.com/api/docs/models/gpt-6-luna",
+  "officialPricingUrl": "https://developers.openai.com/api/docs/pricing",
+  "modelPageFetched": true,
+  "pricingSearchConsistentWithApprovedRates": true,
+  "approvedRatesUnchanged": {
+    "inputUsdPerMillion": 0.1,
+    "outputUsdPerMillion": 0.5,
+    "cachedInputUsdPerMillion": 0.01,
+    "cacheWriteUsdPerMillion": 0.125
+  },
+  "responsesReferenceFetch": "Failed: content length above tool4MiBbound; actualprovidercompatibility remains unverified.",
+  "noProviderCallOrCredentialRead": true,
+  "apiKeySkillOrToolAvailable": false,
+  "note": "Official documentation is not evidence of current account access or a valid live response. Model and originalapproval are not changed."
+}

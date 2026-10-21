@@ -1,0 +1,17 @@
+{
+  "name": "finalize-report",
+  "command": [
+    "python3",
+    "docs/agent-runs/phase-05/evidence/5e/finalize-report.py.txt"
+  ],
+  "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+  "startedMs": 1792552233279,
+  "environment": {
+    "JAVA_HOME": "/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home",
+    "SBT_OPTS": "-Dlogback.configurationFile=/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-04/xml-repair-logback.xml"
+  },
+  "status": "complete",
+  "log": "/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-05/evidence/5e/finalize-report.txt",
+  "exitCode": 0,
+  "finishedMs": 1792552233299
+}

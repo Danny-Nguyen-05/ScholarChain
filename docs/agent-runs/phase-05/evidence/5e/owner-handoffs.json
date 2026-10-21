@@ -1,0 +1,50 @@
+{
+  "nativeDelegation": true,
+  "noReviewerLaunched": true,
+  "agents": [
+    {
+      "id": "/root/phase5e_er",
+      "role": "entity-resolution-engineer",
+      "ownedPaths": [
+        "modules/entity-resolution/**"
+      ],
+      "result": "Optional explicit analysis-cohort exclusions with queue/label binding; matcher/policy/config unchanged; one owner test. No builds or model calls."
+    },
+    {
+      "id": "/root/phase5e_test",
+      "role": "test-engineer",
+      "ownedPaths": [
+        "tests/**"
+      ],
+      "result": "Six independent CLI/cohort tests; read-only recomputation of all eight reports and two development sensitivities matched. Test fixture repairs retained in failing logs; no production changes."
+    },
+    {
+      "id": "/root/phase5e_dataset",
+      "role": "dataset-engineer",
+      "ownedPaths": [
+        "datasets/** (read-only in this task)"
+      ],
+      "result": "68 exact prepared files49,547,452bytes valid; label, queue and attribution provenance/denominators checked; no writes."
+    }
+  ],
+  "coordinator": "/root owns phase evidence and serialized actual build/CLI execution",
+  "independentArithmeticResult": {
+    "reports": 8,
+    "heldOut": {
+      "binaryGold": 194,
+      "uncertain": 6,
+      "tp": 57,
+      "fp": 0,
+      "fn": 15,
+      "tn": 122
+    },
+    "assistedExclusion": {
+      "development": 4,
+      "heldOut": 18
+    },
+    "all15HeldOutFalseNegatives": "Researcher Scored Unresolved",
+    "actualLlmPathRows": 0,
+    "allPredictionDocumentsEqual": true
+  },
+  "scope": "Engineering/test evidence, not independent code approval."
+}

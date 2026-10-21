@@ -1,0 +1,117 @@
+COMMAND ["python3", "-m", "unittest", "discover", "-s", "datasets/scripts", "-p", "test_*.py", "-v"]
+test_amp_standard_xml_escape_succeeds (test_acquire_bounds.DblpEntityPrologTests.test_amp_standard_xml_escape_succeeds) ... ok
+test_eacute_entity_is_declared_for_well_formed_xml (test_acquire_bounds.DblpEntityPrologTests.test_eacute_entity_is_declared_for_well_formed_xml) ... ok
+test_rejects_body_larger_than_cap (test_acquire_bounds.HttpGetBoundedTests.test_rejects_body_larger_than_cap) ... ok
+test_rejects_declared_content_length_over_cap (test_acquire_bounds.HttpGetBoundedTests.test_rejects_declared_content_length_over_cap) ... ok
+test_hard_cap_stops_read_before_full_body (test_acquire_bounds.HttpGetRangeTests.test_hard_cap_stops_read_before_full_body) ... ok
+test_rejects_full_200_response (test_acquire_bounds.HttpGetRangeTests.test_rejects_full_200_response) ... ok
+test_existing_output_refused (test_demo_supplement.DemoTests.test_existing_output_refused) ... ok
+test_foreign_host_refused_before_dispatch (test_demo_supplement.DemoTests.test_foreign_host_refused_before_dispatch) ... ok
+test_request_byte_and_record_counters (test_demo_supplement.DemoTests.test_request_byte_and_record_counters) ... ok
+test_request_cap_prevents_dispatch (test_demo_supplement.DemoTests.test_request_cap_prevents_dispatch) ... ok
+test_response_cap_counts_excluded_bytes (test_demo_supplement.DemoTests.test_response_cap_counts_excluded_bytes) ... ok
+test_seed_population_is_real_and_source_script_is_retained (test_demo_supplement.DemoTests.test_seed_population_is_real_and_source_script_is_retained) ... ok
+test_unexpected_record_count_rejected (test_demo_supplement.DemoTests.test_unexpected_record_count_rejected) ... ok
+test_corrupt_export_rejects_before_publish (test_prepared_retention.RetentionTests.test_corrupt_export_rejects_before_publish) ... ok
+test_demo_retention_has_demo_purpose_and_exact_original_bytes (test_prepared_retention.RetentionTests.test_demo_retention_has_demo_purpose_and_exact_original_bytes) ... ok
+test_existing_destination_never_overwritten (test_prepared_retention.RetentionTests.test_existing_destination_never_overwritten) ... ok
+test_frozen_real_copy_matches_original_without_rewriting (test_prepared_retention.RetentionTests.test_frozen_real_copy_matches_original_without_rewriting) ... ok
+test_known_demo_inputs_cannot_be_claimed_as_frozen_review (test_prepared_retention.RetentionTests.test_known_demo_inputs_cannot_be_claimed_as_frozen_review) ... ok
+test_legacy_5c_manifest_remains_identical_and_demo_payloads_validate (test_prepared_retention.RetentionTests.test_legacy_5c_manifest_remains_identical_and_demo_payloads_validate) ... ok
+test_missing_retention_manifest_is_not_verified_input (test_prepared_retention.RetentionTests.test_missing_retention_manifest_is_not_verified_input) ... ok
+test_missing_stage_success_rejects_before_publish (test_prepared_retention.RetentionTests.test_missing_stage_success_rejects_before_publish) ... ok
+test_mutated_retained_metadata_rejected (test_prepared_retention.RetentionTests.test_mutated_retained_metadata_rejected) ... ok
+test_new_retention_requires_explicit_purpose_in_api_and_cli (test_prepared_retention.RetentionTests.test_new_retention_requires_explicit_purpose_in_api_and_cli) ... ok
+test_retains_exact_bytes_and_nine_success_markers (test_prepared_retention.RetentionTests.test_retains_exact_bytes_and_nine_success_markers) ... ok
+test_unsafe_marker_path_rejected (test_prepared_retention.RetentionTests.test_unsafe_marker_path_rejected) ... ok
+test_challenge_not_ingested_and_disables_source (test_resolution_population.PopulationTests.test_challenge_not_ingested_and_disables_source) ... ok
+test_client_counts_real_bytes_and_retains_hash (test_resolution_population.PopulationTests.test_client_counts_real_bytes_and_retains_hash) ... ok
+test_doi_literal_normalization_preserves_suffix (test_resolution_population.PopulationTests.test_doi_literal_normalization_preserves_suffix) ... ok
+test_domain_filter_rejects_medical_and_accepts_distributed_data_venues (test_resolution_population.PopulationTests.test_domain_filter_rejects_medical_and_accepts_distributed_data_venues) ... ok
+test_final_real_population_integrity (test_resolution_population.PopulationTests.test_final_real_population_integrity) ... ok
+test_refuses_existing_output (test_resolution_population.PopulationTests.test_refuses_existing_output) ... ok
+test_response_cap_never_reads_past_allowance (test_resolution_population.PopulationTests.test_response_cap_never_reads_past_allowance) ... ok
+test_selection_is_deterministic_under_input_reordering (test_resolution_population.PopulationTests.test_selection_is_deterministic_under_input_reordering) ... ok
+test_selection_requires_venue_year_authors_title (test_resolution_population.PopulationTests.test_selection_requires_venue_year_authors_title) ... ok
+test_total_request_bound_prevents_dispatch (test_resolution_population.PopulationTests.test_total_request_bound_prevents_dispatch) ... ok
+test_validator_rejects_tampered_source_bytes (test_resolution_population.PopulationTests.test_validator_rejects_tampered_source_bytes) ... ok
+test_validator_rejects_unmanifested_file (test_resolution_population.PopulationTests.test_validator_rejects_unmanifested_file) ... ok
+
+----------------------------------------------------------------------
+Ran 37 tests in 0.490s
+
+OK
+EXIT 0
+COMMAND ["python3", "datasets/scripts/retain_prepared_population.py", "validate", "--population", "datasets/entity-resolution/prepared/bd424a86-0a1b-4e44-bbdb-4a9b8c8a20e3"]
+{
+  "status": "VALID",
+  "runId": "run:bd424a86-0a1b-4e44-bbdb-4a9b8c8a20e3",
+  "purposeKind": "frozen-5c-review",
+  "files": 68,
+  "bytes": 49547452,
+  "completionSha256": "ecb1744d591092f66fa57c87108497caf80349d183b79816f7607dcc7b21f399",
+  "runManifestSha256": "9d70503b9b3496eb2c39e2f61009a1614db755b783668fd452fb3777a0d48552"
+}
+EXIT 0
+COMMAND ["python3", "datasets/scripts/retain_prepared_population.py", "validate", "--population", "datasets/entity-resolution/prepared/3bfbd651-5982-4f3d-b29b-246fb88d07a1"]
+{
+  "status": "VALID",
+  "runId": "run:3bfbd651-5982-4f3d-b29b-246fb88d07a1",
+  "purposeKind": "development-demo",
+  "files": 36,
+  "bytes": 524961,
+  "completionSha256": "037ab3766408f3cb6dae85636b4b3c4cb0bd73c29251f21578bdbc828e58c65c",
+  "runManifestSha256": "a8f9fa0ea275f3725813d75ab7a272c9f4ed8ba9deaad36b93bcf5a43e586b1d"
+}
+EXIT 0
+COMMAND ["python3", "datasets/scripts/retain_prepared_population.py", "validate", "--population", "datasets/entity-resolution/prepared/68c2b012-6d04-4eef-a7bf-5ca31706d895"]
+{
+  "status": "VALID",
+  "runId": "run:68c2b012-6d04-4eef-a7bf-5ca31706d895",
+  "purposeKind": "development-demo",
+  "files": 60,
+  "bytes": 1271664,
+  "completionSha256": "4113b3f1a8a8c6e8a60d5fd759520ef53d3905d4d3e8ce4bed006fc8840a6c8b",
+  "runManifestSha256": "e0e9502cc2de173eca9ebcedbbd6108454d5fa3935db00ef1f95f64cabe0ed81"
+}
+EXIT 0
+COMMAND ["python3", "datasets/scripts/acquire_demo_supplement.py", "validate", "--population", "datasets/entity-resolution/5d-demo-2026-10-17-seeds"]
+{
+  "status": "VALID",
+  "records": {
+    "crossref": 14,
+    "dblp": 0,
+    "openalex": 0,
+    "orcid": 0
+  },
+  "files": 9,
+  "observed": {
+    "distinctNewOpenAlexWorksIncludingExcluded": 0,
+    "httpAttempts": 0,
+    "responseBytes": 0,
+    "seconds": 0
+  },
+  "admission": "PENDING_CANONICAL_ER_COMPONENT_CHECK_BEFORE_SCORING"
+}
+EXIT 0
+COMMAND ["python3", "datasets/scripts/acquire_demo_supplement.py", "validate", "--population", "datasets/entity-resolution/5d-demo-2026-10-17-openalex"]
+{
+  "status": "VALID",
+  "records": {
+    "crossref": 14,
+    "dblp": 0,
+    "openalex": 12,
+    "orcid": 0
+  },
+  "files": 16,
+  "observed": {
+    "distinctNewOpenAlexWorksIncludingExcluded": 20,
+    "httpAttempts": 7,
+    "responseBytes": 171680,
+    "seconds": 6.6141
+  },
+  "admission": "PENDING_CANONICAL_ER_COMPONENT_CHECK_BEFORE_SCORING"
+}
+EXIT 0
+COMMAND ["git", "diff", "--check", "--", "datasets"]
+EXIT 0

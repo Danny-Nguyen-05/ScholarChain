@@ -1,0 +1,16 @@
+{
+  "valid": true,
+  "manifestFileDescriptorsVerified": 48,
+  "trackedSourceDiffVerified": true,
+  "sourceFreezeMatchesPredictionBinding": true,
+  "completedCommandReceiptsVerified": 30,
+  "allRegeneratedResultsPassed": true,
+  "retainedFailureNames": [
+    "targeted",
+    "targeted-unsandboxed",
+    "targeted-fixture-repair",
+    "targeted-fixture-isolation"
+  ],
+  "noSourceChangesAfterFreeze": true,
+  "currentFrozenFilesRehashed": 900
+}

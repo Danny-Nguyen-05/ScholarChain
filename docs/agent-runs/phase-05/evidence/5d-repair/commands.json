@@ -1,0 +1,85 @@
+[
+  {
+    "name": "before-fix",
+    "command": [
+      "sbt",
+      "-batch",
+      "independentTests/Test/scalafmt",
+      "independentTests/testOnly edu.uic.cs441.scholarchain.independent.IndependentLiveCredentialPreflightSpec"
+    ],
+    "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+    "startedMs": 1792260512232,
+    "environment": {
+      "JAVA_HOME": "/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home",
+      "SBT_OPTS": "-Dlogback.configurationFile=/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-04/xml-repair-logback.xml"
+    },
+    "status": "complete",
+    "log": "docs/agent-runs/phase-05/evidence/5d-repair/before-fix.txt",
+    "exitCode": 1,
+    "finishedMs": 1792260521989
+  },
+  {
+    "name": "targeted",
+    "command": [
+      "sbt",
+      "-batch",
+      "entityResolution/Compile/scalafmt",
+      "entityResolution/Test/scalafmt",
+      "independentTests/Test/scalafmt",
+      "entityResolution/testOnly edu.uic.cs441.scholarchain.entityresolution.LiveDemoExportSpec",
+      "independentTests/testOnly edu.uic.cs441.scholarchain.independent.IndependentLiveCredentialPreflightSpec edu.uic.cs441.scholarchain.independent.IndependentOpenAIResponsesSpec edu.uic.cs441.scholarchain.independent.IndependentLiveBudgetSpec edu.uic.cs441.scholarchain.independent.IndependentLiveCredentialsSpec edu.uic.cs441.scholarchain.independent.IndependentLiveDevelopmentSpec edu.uic.cs441.scholarchain.independent.IndependentLiveAdjudicatorSpec edu.uic.cs441.scholarchain.independent.IndependentLiveCacheSpec"
+    ],
+    "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+    "startedMs": 1792260848161,
+    "environment": {
+      "JAVA_HOME": "/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home",
+      "SBT_OPTS": "-Dlogback.configurationFile=/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-04/xml-repair-logback.xml"
+    },
+    "status": "complete",
+    "log": "docs/agent-runs/phase-05/evidence/5d-repair/targeted.txt",
+    "exitCode": 0,
+    "finishedMs": 1792260857941
+  },
+  {
+    "name": "python-tests",
+    "command": [
+      "python3",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "datasets/scripts",
+      "-p",
+      "test_*.py",
+      "-v"
+    ],
+    "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+    "startedMs": 1792260884621,
+    "environment": {
+      "JAVA_HOME": "/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home",
+      "SBT_OPTS": "-Dlogback.configurationFile=/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-04/xml-repair-logback.xml"
+    },
+    "status": "complete",
+    "log": "docs/agent-runs/phase-05/evidence/5d-repair/python-tests.txt",
+    "exitCode": 0,
+    "finishedMs": 1792260885297
+  },
+  {
+    "name": "full-check",
+    "command": [
+      "sbt",
+      "-batch",
+      "check"
+    ],
+    "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+    "startedMs": 1792260902813,
+    "environment": {
+      "JAVA_HOME": "/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home",
+      "SBT_OPTS": "-Dlogback.configurationFile=/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-04/xml-repair-logback.xml"
+    },
+    "status": "complete",
+    "log": "docs/agent-runs/phase-05/evidence/5d-repair/full-check.txt",
+    "exitCode": 0,
+    "finishedMs": 1792261316960
+  }
+]

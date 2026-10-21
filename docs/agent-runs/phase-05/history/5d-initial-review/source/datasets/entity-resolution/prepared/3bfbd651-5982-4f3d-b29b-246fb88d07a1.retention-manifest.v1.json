@@ -1,0 +1,162 @@
+{
+  "bounds": {
+    "maxBytes": 100663296,
+    "maxFiles": 1000
+  },
+  "fileCount": 36,
+  "files": {
+    "_SCHOLARCHAIN_COMPLETE": {
+      "bytes": 4236,
+      "sha256": "037ab3766408f3cb6dae85636b4b3c4cb0bd73c29251f21578bdbc828e58c65c"
+    },
+    "export/._SUCCESS.crc": {
+      "bytes": 8,
+      "sha256": "1d44f510ec2ed7595badbec80583316defc14e8dd89130d719724149adfaa07d"
+    },
+    "export/.part-r-00000.crc": {
+      "bytes": 8,
+      "sha256": "1d44f510ec2ed7595badbec80583316defc14e8dd89130d719724149adfaa07d"
+    },
+    "export/_SUCCESS": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "export/part-r-00000": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "export/snapshot=crossref-5d-demo-2026-10-16/run=3bfbd651-5982-4f3d-b29b-246fb88d07a1/author-mention/.part-r-00000.crc": {
+      "bytes": 388,
+      "sha256": "1e006ac192829a49bcbfc49f20558b4da64f2ffefe18de44c064ccdb1472cae7"
+    },
+    "export/snapshot=crossref-5d-demo-2026-10-16/run=3bfbd651-5982-4f3d-b29b-246fb88d07a1/author-mention/part-r-00000": {
+      "bytes": 48152,
+      "sha256": "1b3766ed070ee7918382da1b06eaca3ad467f5931df34aa2cb1ec476baa0d73b"
+    },
+    "export/snapshot=crossref-5d-demo-2026-10-16/run=3bfbd651-5982-4f3d-b29b-246fb88d07a1/authorship/.part-r-00000.crc": {
+      "bytes": 312,
+      "sha256": "b9d6316fd1b66ef1eec920456cd0424a2d3d1de258d47f657836ea3c9051a039"
+    },
+    "export/snapshot=crossref-5d-demo-2026-10-16/run=3bfbd651-5982-4f3d-b29b-246fb88d07a1/authorship/part-r-00000": {
+      "bytes": 38690,
+      "sha256": "193f1ae40608f1ca209aa75ec6c015f64557187d8feac013ea719f4d1950b0d1"
+    },
+    "export/snapshot=crossref-5d-demo-2026-10-16/run=3bfbd651-5982-4f3d-b29b-246fb88d07a1/enrichment/.part-r-00000.crc": {
+      "bytes": 88,
+      "sha256": "b9fcadd08dd5e3008ab675ac23b09670a1e1047bc60f1cc367548ca5ee4ec7d0"
+    },
+    "export/snapshot=crossref-5d-demo-2026-10-16/run=3bfbd651-5982-4f3d-b29b-246fb88d07a1/enrichment/part-r-00000": {
+      "bytes": 9789,
+      "sha256": "70a032c7cf0764abccdce4cdbe3293662af7f1dff51cefbcfc0b065575c7374a"
+    },
+    "export/snapshot=crossref-5d-demo-2026-10-16/run=3bfbd651-5982-4f3d-b29b-246fb88d07a1/graph-edge/.part-r-00000.crc": {
+      "bytes": 444,
+      "sha256": "41cb5f5b5be29418fff563976ae05a2ad3de5230f7ca253a25c771a0ca622166"
+    },
+    "export/snapshot=crossref-5d-demo-2026-10-16/run=3bfbd651-5982-4f3d-b29b-246fb88d07a1/graph-edge/part-r-00000": {
+      "bytes": 55717,
+      "sha256": "462179b83aab72a104a5e380bb9dbf245d417db5ba476d8d43fc1b8b98648718"
+    },
+    "export/snapshot=crossref-5d-demo-2026-10-16/run=3bfbd651-5982-4f3d-b29b-246fb88d07a1/index/.part-r-00000.crc": {
+      "bytes": 84,
+      "sha256": "ac746c7222da1db7e72b506810ef6fb2da97416189ffdeca80dcae4d8ef6ff0e"
+    },
+    "export/snapshot=crossref-5d-demo-2026-10-16/run=3bfbd651-5982-4f3d-b29b-246fb88d07a1/index/part-r-00000": {
+      "bytes": 9366,
+      "sha256": "922dc484470ebebd118abe9f8e2318ec7eab7c552ce6cd001d8b64cddbed35cd"
+    },
+    "export/snapshot=crossref-5d-demo-2026-10-16/run=3bfbd651-5982-4f3d-b29b-246fb88d07a1/mention-affiliation/.part-r-00000.crc": {
+      "bytes": 372,
+      "sha256": "d8bca655de2bb29b8e9c73d1047da153f12d310a6d50be29104ca4769756a495"
+    },
+    "export/snapshot=crossref-5d-demo-2026-10-16/run=3bfbd651-5982-4f3d-b29b-246fb88d07a1/mention-affiliation/part-r-00000": {
+      "bytes": 46188,
+      "sha256": "40fdd271b7169cbcdd0ef732bd364e3d2d53db68b58b424525ba1b6f5e6dc74e"
+    },
+    "export/snapshot=crossref-5d-demo-2026-10-16/run=3bfbd651-5982-4f3d-b29b-246fb88d07a1/pair/.part-r-00000.crc": {
+      "bytes": 880,
+      "sha256": "153aaeb81c00a9fdbbbe44d06531f02a4d7b0e2782ae84c0e12c54bcb82cd15a"
+    },
+    "export/snapshot=crossref-5d-demo-2026-10-16/run=3bfbd651-5982-4f3d-b29b-246fb88d07a1/pair/part-r-00000": {
+      "bytes": 111282,
+      "sha256": "bece1df43971f7f8d58fe6aec5945474795c6811ebfbee869c521a977d6bb0f6"
+    },
+    "export/snapshot=crossref-5d-demo-2026-10-16/run=3bfbd651-5982-4f3d-b29b-246fb88d07a1/team/.part-r-00000.crc": {
+      "bytes": 92,
+      "sha256": "0cd3f9e6d553c6c764a243a03d7b39100c53b8075e7da8cae116a7eb59c65edc"
+    },
+    "export/snapshot=crossref-5d-demo-2026-10-16/run=3bfbd651-5982-4f3d-b29b-246fb88d07a1/team/part-r-00000": {
+      "bytes": 10324,
+      "sha256": "36746d2beeec719d9f5d329a394528ef513e9a82872a33b0d2f9446843ea44b4"
+    },
+    "export/snapshot=crossref-5d-demo-2026-10-16/run=3bfbd651-5982-4f3d-b29b-246fb88d07a1/venue/.part-r-00000.crc": {
+      "bytes": 64,
+      "sha256": "fc99222492181cf7d4d562ef4f48a4f923e10681ed24104fd04aa2e522dd8b2f"
+    },
+    "export/snapshot=crossref-5d-demo-2026-10-16/run=3bfbd651-5982-4f3d-b29b-246fb88d07a1/venue/part-r-00000": {
+      "bytes": 6903,
+      "sha256": "e02d79b79877c47a06eefa44e9f32d9a712bf02f221a90520eb98ede2ff7c137"
+    },
+    "export/snapshot=crossref-5d-demo-2026-10-16/run=3bfbd651-5982-4f3d-b29b-246fb88d07a1/work/.part-r-00000.crc": {
+      "bytes": 480,
+      "sha256": "d513582023e93e01426301c29a253a2df61804cccffc59b10b95760966f58775"
+    },
+    "export/snapshot=crossref-5d-demo-2026-10-16/run=3bfbd651-5982-4f3d-b29b-246fb88d07a1/work/part-r-00000": {
+      "bytes": 60028,
+      "sha256": "93fa5254c257e398db21ba1829e68bc8cf7eb2f03a4f13bc909ca7fa4b97c65d"
+    },
+    "export/snapshot=hadoop-prep/run=3bfbd651-5982-4f3d-b29b-246fb88d07a1/match-candidate/.part-r-00000.crc": {
+      "bytes": 936,
+      "sha256": "01d2e88c394c5dd492dac9faf37728d2b82d94cac3ec4e5435d81c88bd4f6704"
+    },
+    "export/snapshot=hadoop-prep/run=3bfbd651-5982-4f3d-b29b-246fb88d07a1/match-candidate/part-r-00000": {
+      "bytes": 118302,
+      "sha256": "53074a417e2ab27bfcd644992459bd78b6c07a9d1e5f5e977ba8d4f1f7683465"
+    },
+    "intermediate/j01/_SUCCESS": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "intermediate/j02/_SUCCESS": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "intermediate/j03/_SUCCESS": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "intermediate/j04/_SUCCESS": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "intermediate/j05/_SUCCESS": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "intermediate/j06/_SUCCESS": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "intermediate/j07/_SUCCESS": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "intermediate/j08/_SUCCESS": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "run-manifest.json": {
+      "bytes": 1828,
+      "sha256": "a8f9fa0ea275f3725813d75ab7a272c9f4ed8ba9deaad36b93bcf5a43e586b1d"
+    }
+  },
+  "omitted": "Intermediate data parts, stats and counter summary are not read by the ER InputLoader. They are not claimed retained.",
+  "ownership": "dataset-engineer owns datasets/** prepared evaluation population material; no constitutional ownership change.",
+  "purpose": "Exact immutable completed preparation input for frozen Phase 5C review population and future human-label evaluation replay.",
+  "retainedDirectory": "3bfbd651-5982-4f3d-b29b-246fb88d07a1",
+  "retentionScope": "entire export/**, original completion and run manifests, eight intermediate job success files; no source/run ID/path rewriting",
+  "runId": "run:3bfbd651-5982-4f3d-b29b-246fb88d07a1",
+  "sourceRunDirectoryName": "3bfbd651-5982-4f3d-b29b-246fb88d07a1",
+  "totalBytes": 524961,
+  "version": "scholarchain.prepared-population-retention.v1"
+}

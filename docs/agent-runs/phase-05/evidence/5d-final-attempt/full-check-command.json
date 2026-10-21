@@ -1,0 +1,18 @@
+{
+  "name": "full-check",
+  "command": [
+    "sbt",
+    "-batch",
+    "check"
+  ],
+  "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+  "startedMs": 1792558237516,
+  "environment": {
+    "JAVA_HOME": "/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home",
+    "SBT_OPTS": "-Dlogback.configurationFile=/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-04/xml-repair-logback.xml"
+  },
+  "status": "complete",
+  "log": "/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-05/evidence/5d-final-attempt/full-check.txt",
+  "exitCode": 0,
+  "finishedMs": 1792558652314
+}

@@ -144,6 +144,9 @@ object ReviewQueue {
     // Deliberately omit snapshot: copies at different retrievals are not independent evidence.
     s"observation:${r.source.wire}:${r.sourceRecordId}"
   }
+
+  /** Same anchors used by frozen splits; exposed for later development-demo admission. */
+  def leakageAnchors(e: ResolutionEndpoint, input: ResolutionInput): Set[String] = tokens(e, input)
   private def tokens(e: ResolutionEndpoint, input: ResolutionInput): Set[String] = {
     val w = input.parentWork(e)
     val base = Set(observationKey(e)) ++ input

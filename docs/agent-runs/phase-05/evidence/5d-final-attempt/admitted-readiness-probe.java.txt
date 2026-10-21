@@ -1,0 +1,37 @@
+import java.nio.file.*;
+import java.util.*;
+import edu.uic.cs441.scholarchain.entityresolution.*;
+import edu.uic.cs441.scholarchain.core.*;
+class ScholarChain5DFinalReadiness {
+ static <T>T value(scala.util.Either<String,T> e){if(e.isLeft())throw new IllegalArgumentException(e.left().get());return e.toOption().get();}
+ static <T>String json(T v,upickle.core.Types.Writer<T>rw){return upickle.default$.MODULE$.write(v,-1,false,false,rw);}
+ static String q(String s){return "\""+s.replace("\\","\\\\").replace("\"","\\\"")+"\"";}
+ public static void main(String[]a)throws Exception{
+  var config=value(ResolutionConfig$.MODULE$.load(Path.of("modules/entity-resolution/src/main/resources/phase5-config.v1.json")));
+  var policy=value(ResolutionPolicy$.MODULE$.load(Path.of("modules/entity-resolution/src/main/resources/phase5-policy.v1.json")));
+  var demo=value(InputLoader$.MODULE$.load(Path.of(a[0]),config));var frozen=value(InputLoader$.MODULE$.load(Path.of(a[1]),config));
+  var queue=value(ReviewQueue$.MODULE$.parseQueue(Files.readString(Path.of(a[2]))));
+  var split=value(StrictJson$.MODULE$.parse(Files.readString(Path.of(a[2]).resolveSibling("split.json")),ReviewSplit$.MODULE$.derived$ReadWriter()));
+  var population=value(CandidateBuilder$.MODULE$.build(demo,config));
+  var selection=value(LiveDemo$.MODULE$.selectSupplement(demo,population,frozen,queue,split,policy));
+  var out=Path.of(a[3]);Files.createDirectories(out);
+  Files.writeString(out.resolve("admission.json"),json(selection.admission(),LiveDemoAdmission$.MODULE$.derived$ReadWriter())+"\n",StandardOpenOption.CREATE_NEW);
+  var rows=new StringBuilder();var scored=new TreeSet<String>();var excluded=new HashSet<String>();
+  var eit=selection.admission().excludedPairIds().iterator();while(eit.hasNext())excluded.add(eit.next());
+  var it=selection.admittedPairs().iterator();int eligibility=0;
+  while(it.hasNext()){
+   var candidate=it.next();var pair=candidate.pair();var c=value(ResolutionEngine$.MODULE$.classify(candidate,demo,policy));
+   if(excluded.contains(pair.pairId()))throw new IllegalArgumentException("Excluded pair reached classification");
+   scored.add(pair.pairId());var p=policy.forEntity(pair.entityType());
+   boolean eligible=c.outcome().toString().equals("Unresolved")&&c.sufficient()&&c.score().isDefined()&&((Double)c.score().get())>=p.llmBandMin()&&((Double)c.score().get())<=p.llmBandMax();
+   if(eligible)eligibility++;
+   rows.append("{\"pairId\":").append(q(pair.pairId())).append(",\"entityType\":").append(q(pair.entityType().toString())).append(",\"eligible\":").append(eligible).append(",\"classification\":").append(json(c,ClassifiedPair$.MODULE$.derived$ReadWriter())).append("}\n");
+  }
+  if(eligibility!=selection.eligiblePairs().size())throw new IllegalArgumentException("Eligibility diagnostic mismatch");
+  Files.writeString(out.resolve("admitted-classifications.jsonl"),rows.toString(),StandardOpenOption.CREATE_NEW);
+  Files.writeString(out.resolve("scored-pair-ids.json"),"["+String.join(",",scored.stream().map(ScholarChain5DFinalReadiness::q).toList())+"]\n",StandardOpenOption.CREATE_NEW);
+  var overlap=new HashSet<>(scored);overlap.retainAll(excluded);
+  String summary="{\"candidatePairs\":"+population.pairs().size()+",\"admittedPairs\":"+selection.admittedPairs().size()+",\"excludedPairs\":"+selection.admission().excludedPairIds().size()+",\"eligiblePairs\":"+eligibility+",\"diagnosticallyClassifiedPairs\":"+scored.size()+",\"classifiedExcludedPairIntersection\":"+overlap.size()+",\"providerExecution\":\"NOT_INVOKED_BY_THIS_PROBE\",\"noLabelFilesRead\":\"STATIC_CODE_PATH_ASSERTION\",\"demoInputHash\":"+q(demo.inputEvidenceHash())+"}";
+  Files.writeString(out.resolve("summary.json"),summary+"\n",StandardOpenOption.CREATE_NEW);System.out.println(summary);
+ }
+}

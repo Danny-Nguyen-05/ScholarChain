@@ -1,0 +1,17 @@
+"""No-network verification of completed bounded search and unchanged context."""
+from pathlib import Path
+import json,hashlib
+root=Path('datasets/entity-resolution/5d-demo-2026-10-20-screened')
+context=Path('datasets/entity-resolution/5d-demo-2026-10-17-openalex')
+base=Path('docs/agent-runs/phase-05/evidence/5d-followup-demo')
+m=json.loads((root/'population-manifest.v1.json').read_text());o=json.loads((context/'population-manifest.v1.json').read_text())
+proof=json.loads((base/'outcome.json').read_text())
+assert m['observed']==proof['stageActual']
+assert m['observed']['newIngestionRecords']==0 and m['authorsRequested']==[]
+for s in m['sources']:
+ new=(root/m['sources'][s]['path']).read_bytes();old=(context/o['sources'][s]['path']).read_bytes()
+ if s=='openalex':assert {x['id']:x for x in map(json.loads,new.splitlines())}=={x['id']:x for x in map(json.loads,old.splitlines())}
+ else:assert new==old
+assert not Path('docs/agent-runs/phase-05/evidence/5d/live-state').exists()
+assert not Path('docs/agent-runs/phase-05/reviewer-prompt.txt').exists()
+print(json.dumps({'valid':True,'newIngestedObservations':0,'unchangedContextSourcePayloads':4,'noNewHadoopRunOrCanonicalClearanceClaim':True,'calls':0,'spendUsd':'0.00','noLiveState':True,'noReviewerPromptFile':True}))

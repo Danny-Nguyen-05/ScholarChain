@@ -1,0 +1,32 @@
+{
+  "schemaVersion": "scholarchain.phase5d.repair-protected-inputs.v1",
+  "demoManifestChanges": [
+    {
+      "path": "datasets/entity-resolution/prepared/3bfbd651-5982-4f3d-b29b-246fb88d07a1.retention-manifest.v1.json",
+      "changedSemanticFields": [
+        "ownership",
+        "purpose",
+        "purposeKind"
+      ],
+      "filesMapUnchanged": true,
+      "beforeSha256": "484a3e34acb60490b57133d090ec1864f2a3e1277182a5dd79fb6f2cdeb5dae3",
+      "afterSha256": "b413bc380845719b88f655ec5200ea1f6eb6bd4ae4744ec1b4fa1609031547b1"
+    },
+    {
+      "path": "datasets/entity-resolution/prepared/68c2b012-6d04-4eef-a7bf-5ca31706d895.retention-manifest.v1.json",
+      "changedSemanticFields": [
+        "ownership",
+        "purpose",
+        "purposeKind"
+      ],
+      "filesMapUnchanged": true,
+      "beforeSha256": "7cf7df07003a01c61a348a4d48168845fc8e9b057c48fb84d0c8ea8045b76d65",
+      "afterSha256": "d9eec30ba05026f1cd8078745a6b8646d40826551b473a9b7eae64044fd64685"
+    }
+  ],
+  "protectedReviewAssetsChecked": 6,
+  "protectedReviewAssetsChanged": [],
+  "original5CRetentionManifestUnchanged": true,
+  "actualLiveStateExists": false,
+  "noAcquisitionOrProviderCallsPerformedDuringRepair": true
+}

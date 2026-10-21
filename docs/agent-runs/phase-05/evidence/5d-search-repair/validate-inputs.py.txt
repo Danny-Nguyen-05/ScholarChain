@@ -1,0 +1,19 @@
+"""Offline data-integrity gates; no network and no shared build-command ledger writes."""
+from pathlib import Path
+import subprocess,json,time
+E=Path('docs/agent-runs/phase-05/evidence/5d-search-repair')
+cmds=[['python3','datasets/scripts/validate_resolution_population.py','datasets/entity-resolution/5c-2026-10-16-v3']]
+for n in ['5d-demo-2026-10-17-seeds','5d-demo-2026-10-17-openalex']:
+ cmds.append(['python3','datasets/scripts/acquire_demo_supplement.py','validate','--population','datasets/entity-resolution/'+n])
+for n in ['bd424a86-0a1b-4e44-bbdb-4a9b8c8a20e3','3bfbd651-5982-4f3d-b29b-246fb88d07a1','68c2b012-6d04-4eef-a7bf-5ca31706d895']:
+ cmds.append(['python3','datasets/scripts/retain_prepared_population.py','validate','--population','datasets/entity-resolution/prepared/'+n])
+cmds.append(['python3','datasets/scripts/acquire_screened_demo.py','validate','--population','datasets/entity-resolution/5d-demo-2026-10-20-screened'])
+cmds.append(['python3','datasets/scripts/acquire_screened_demo.py','validate','--population','datasets/entity-resolution/5d-demo-2026-10-20-relevance-v2'])
+cmds.append(['python3','datasets/scripts/retain_prepared_population.py','validate','--population','datasets/entity-resolution/prepared/f22f1a12-c7be-43af-b470-d4f4e244ca9d'])
+results=[]
+for cmd in cmds:
+ start=time.time_ns()//1000000;r=subprocess.run(cmd,text=True,capture_output=True)
+ results.append({'command':cmd,'startedMs':start,'finishedMs':time.time_ns()//1000000,'exitCode':r.returncode,'stdout':r.stdout,'stderr':r.stderr})
+(E/'input-integrity-gates.json').write_text(json.dumps(results,indent=2)+'\n')
+print(json.dumps({'checks':len(results),'exitCodes':[x['exitCode'] for x in results]}))
+raise SystemExit(0 if all(x['exitCode']==0 for x in results) else 1)

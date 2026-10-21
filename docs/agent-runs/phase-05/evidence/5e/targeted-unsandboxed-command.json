@@ -1,0 +1,22 @@
+{
+  "name": "targeted-unsandboxed",
+  "command": [
+    "sbt",
+    "-batch",
+    "entityResolution/Compile/scalafmt",
+    "entityResolution/Test/scalafmt",
+    "independentTests/Test/scalafmt",
+    "entityResolution/testOnly *ReviewReadinessSpec",
+    "independentTests/testOnly *IndependentEvaluationSpec *IndependentEvaluationAdapterSpec *IndependentEvaluationCliSpec *IndependentEvaluationCohortSpec"
+  ],
+  "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+  "startedMs": 1792551303929,
+  "environment": {
+    "JAVA_HOME": "/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home",
+    "SBT_OPTS": "-Dlogback.configurationFile=/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-04/xml-repair-logback.xml"
+  },
+  "status": "complete",
+  "log": "/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-05/evidence/5e/targeted-unsandboxed.txt",
+  "exitCode": 1,
+  "finishedMs": 1792551313831
+}

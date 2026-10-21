@@ -1,0 +1,19 @@
+{
+  "schemaVersion": "scholarchain.topic-demo-plan.v1",
+  "queries": [
+    "state machine replication",
+    "distributed stream processing"
+  ],
+  "screenReceiptSha256": "fedf49b50785ed864be882fd94a0311ee34a086bf5e3843b7accfb8543c10e1c",
+  "screenReceiptPath": "docs/agent-runs/phase-05/evidence/5d-followup-demo/seed-screen.json",
+  "frozenDevelopmentScreenSha256": "dd00340c9d72ca2357f43b9b2f40af17d0bf56601f8e318f3458620185a1d84b",
+  "contextPopulationSha256": "ff4154deda081832db8f0ca85bce33a96075d0c722b41bfcc4996ee056f4ea41",
+  "strategyUpdateSha256": "b41f576cdd6e969a04fdffdae1de4507d8728586528ba4f62a14c232cb79d3d7",
+  "authorSelection": "Hash-first four actual returned OpenAlex author IDs with absent observed ORCID and actual affiliation; provisional only. Final canonical component exclusion before scoring. No labels/scores read.",
+  "noPaginationOrRefill": true,
+  "newWorksCapIncludesDiscoveryAndExcluded": true,
+  "previousStageSha256": "444153bc918f104f8f44f82800a518bc5e709a377a6cb572865c9b2819c75a53",
+  "previousStagePath": "datasets/entity-resolution/5d-demo-2026-10-20-screened",
+  "repair": "External B2: topic discovery relevance_score:desc; old date-ascending stage preserved separately.",
+  "approvedRerunReceiptSha256": "6e5e00a097fcca8cb271621ce2d10b893c669816b446121982c189fdb9ca9997"
+}

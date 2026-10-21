@@ -1,0 +1,17 @@
+import java.nio.file.*;
+import edu.uic.cs441.scholarchain.entityresolution.*;
+class ScholarChain5DBinding {
+ static <T>T value(scala.util.Either<String,T> e){if(e.isLeft())throw new IllegalArgumentException(e.left().get());return e.toOption().get();}
+ public static void main(String[] args)throws Exception {
+  var root=Path.of("").toRealPath();var dir=root.resolve("docs/agent-runs/phase-05/evidence/5d");
+  var config=value(LiveProviderConfig$.MODULE$.load(dir.resolve("approved-live-config.json")));
+  var receipt=dir.resolve("user-live-approval.json");var text=Files.readString(receipt);
+  var hash=edu.uic.cs441.scholarchain.core.StableIds$.MODULE$.sha256Hex(text);
+  var state=dir.resolve("live-state").resolve(config.approvalId());
+  var binding=new LiveRuntimeBinding("scholarchain.live-runtime-binding.v1",config.approvalId(),hash,state.resolve("budget.json").toString(),state.resolve("cache").toString(),config.fingerprint());
+  value(LiveRuntimeBinding$.MODULE$.verify(binding,receipt,config,root));
+  var encoded=upickle.default$.MODULE$.write(binding,2,false,false,LiveRuntimeBinding$.MODULE$.derived$ReadWriter())+"\n";
+  Files.writeString(dir.resolve("live-runtime-binding.json"),encoded,StandardOpenOption.CREATE_NEW);
+  System.out.println("Approved binding verified; credential access=0; provider calls=0; configHash="+config.fingerprint());
+ }
+}

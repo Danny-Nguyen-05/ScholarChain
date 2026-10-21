@@ -1,0 +1,14 @@
+{
+  "status": "NO_ELIGIBLE_DEVELOPMENT_DEMO_PAIR",
+  "admittedCandidatePairs": 62,
+  "eligiblePairs": 0,
+  "liveCalls": 0,
+  "heldOutPairsScored": 0,
+  "policyChanged": false,
+  "previewFile": "INELIGIBLE-NOT-FOR-LIVE-preview-request.json",
+  "previewPurpose": "Shows actual bounded public bibliographic evidence and response contract. Not eligible; must never be submitted as a live pilot. Preview is offline fake-mode schema only.",
+  "previewCompactJsonBytes": 22175,
+  "promptUtf8Bytes": 1335,
+  "providerHttpEnvelopeNotYetMeasured": true,
+  "requiresAdditionalEvidenceOrExplicitBlockedCheckpoint": true
+}

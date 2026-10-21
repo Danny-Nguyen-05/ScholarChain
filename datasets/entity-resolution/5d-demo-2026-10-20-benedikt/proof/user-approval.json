@@ -1,0 +1,18 @@
+{
+  "schemaVersion": "scholarchain.phase5d.focused-search-approval.v1",
+  "recordedAtUtc": "2026-10-21T02:11:25.712081+00:00",
+  "provenance": "Explicit user chat reply to the complete focused-search proposal. Coordinator transcription only.",
+  "question": "Approve one focused search around Michael Benedikt, whose name appears in the existing development metadata? I would reuse that existing publication and fetch at most 30 public OpenAlex metadata records total, including author lookups and excluded results, within 20 HTTP attempts, 8 MiB and five minutes. No credentials or paid data; no changes to your reviews or matching rules; held-out overlaps excluded before scoring. The existing $1 model-test limit stays unchanged. A suitable pair is not guaranteed.",
+  "answer": "go ahead",
+  "limits": {
+    "returnedMetadataRecordsIncludingProfilesWorksDuplicatesAndExcluded": 30,
+    "httpAttemptsIncludingRetries": 20,
+    "responseBytes": 8388608,
+    "wallSeconds": 300,
+    "credentials": false,
+    "paidData": false
+  },
+  "originalLiveApprovalUnchanged": true,
+  "allowExistingBoundedLiveTestOnlyIfNaturallyEligibleAndOfflineGatesPass": true,
+  "no5ECalibrationCommitPushOrReviewerLaunch": true
+}

@@ -1,0 +1,136 @@
+{
+  "schemaVersion": "scholarchain.phase5d.repair-start.v1",
+  "head": "61d32a38eaad5b2fc352acf0b7f85f3815c2336d",
+  "branch": "phase-5",
+  "capturedAtUtc": "2026-10-17T18:09:52.131029+00:00",
+  "reviewedSourceFreezeSha256": "8396eb7875d13a080877530c9d517d9134519ca2ebdf0d94b863bc4e4a79133b",
+  "reviewedFiles": 556,
+  "files": [
+    {
+      "originalPath": "datasets/entity-resolution/prepared/3bfbd651-5982-4f3d-b29b-246fb88d07a1.retention-manifest.v1.json",
+      "retainedPath": "docs/agent-runs/phase-05/history/5d-initial-review/source/datasets/entity-resolution/prepared/3bfbd651-5982-4f3d-b29b-246fb88d07a1.retention-manifest.v1.json",
+      "bytes": 7942,
+      "sha256": "484a3e34acb60490b57133d090ec1864f2a3e1277182a5dd79fb6f2cdeb5dae3"
+    },
+    {
+      "originalPath": "datasets/entity-resolution/prepared/68c2b012-6d04-4eef-a7bf-5ca31706d895.retention-manifest.v1.json",
+      "retainedPath": "docs/agent-runs/phase-05/history/5d-initial-review/source/datasets/entity-resolution/prepared/68c2b012-6d04-4eef-a7bf-5ca31706d895.retention-manifest.v1.json",
+      "bytes": 13398,
+      "sha256": "7cf7df07003a01c61a348a4d48168845fc8e9b057c48fb84d0c8ea8045b76d65"
+    },
+    {
+      "originalPath": "datasets/entity-resolution/prepared/README.md",
+      "retainedPath": "docs/agent-runs/phase-05/history/5d-initial-review/source/datasets/entity-resolution/prepared/README.md",
+      "bytes": 6070,
+      "sha256": "8716f72eaa30da8d74c4c713a45bdc0c3da87df7bcbf7fa3e9a039bbe9e115d3"
+    },
+    {
+      "originalPath": "datasets/scripts/README.md",
+      "retainedPath": "docs/agent-runs/phase-05/history/5d-initial-review/source/datasets/scripts/README.md",
+      "bytes": 3689,
+      "sha256": "08ef27415c6ee5d8aed1dfc0e144a09691a30e076b06927fe8374c5babbc8ab1"
+    },
+    {
+      "originalPath": "datasets/scripts/retain_prepared_population.py",
+      "retainedPath": "docs/agent-runs/phase-05/history/5d-initial-review/source/datasets/scripts/retain_prepared_population.py",
+      "bytes": 8647,
+      "sha256": "308ef0fc8214a34b5b085ac21819973451bf29881fc1699318de05eaeb5fe24e"
+    },
+    {
+      "originalPath": "datasets/scripts/test_prepared_retention.py",
+      "retainedPath": "docs/agent-runs/phase-05/history/5d-initial-review/source/datasets/scripts/test_prepared_retention.py",
+      "bytes": 5828,
+      "sha256": "d46fe41673f52f3f29dfa5bfdb6b840a8c877a85578cd48f871fa1adc8e3351a"
+    },
+    {
+      "originalPath": "modules/entity-resolution/README.md",
+      "retainedPath": "docs/agent-runs/phase-05/history/5d-initial-review/source/modules/entity-resolution/README.md",
+      "bytes": 61475,
+      "sha256": "024e1dbc866bbecc270f114f507e32ebb7ab1ecafc5bb6e83813bba9b2a5f635"
+    },
+    {
+      "originalPath": "modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/LiveAdjudication.scala",
+      "retainedPath": "docs/agent-runs/phase-05/history/5d-initial-review/source/modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/LiveAdjudication.scala",
+      "bytes": 9764,
+      "sha256": "9e023dc3f26e216ef1261ab0b9ada7840063b1af68f1968b417182e649d761f2"
+    },
+    {
+      "originalPath": "modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/LiveDemo.scala",
+      "retainedPath": "docs/agent-runs/phase-05/history/5d-initial-review/source/modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/LiveDemo.scala",
+      "bytes": 16690,
+      "sha256": "ab621784b97aad7eb4b04fbec114e49296447cce8ba4701183cafc1c64ab09e7"
+    },
+    {
+      "originalPath": "modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/LiveDemoCommands.scala",
+      "retainedPath": "docs/agent-runs/phase-05/history/5d-initial-review/source/modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/LiveDemoCommands.scala",
+      "bytes": 17212,
+      "sha256": "272e37ae6bc1b8bd039501c71d8289db1887558382e4cd16d173ae136b4604af"
+    },
+    {
+      "originalPath": "modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/LiveProvider.scala",
+      "retainedPath": "docs/agent-runs/phase-05/history/5d-initial-review/source/modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/LiveProvider.scala",
+      "bytes": 12065,
+      "sha256": "03bdb55bb1ba080086968ca73435f8588304343e3b34f4d49e83c0a5a159b048"
+    },
+    {
+      "originalPath": "modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/OpenAIResponses.scala",
+      "retainedPath": "docs/agent-runs/phase-05/history/5d-initial-review/source/modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/OpenAIResponses.scala",
+      "bytes": 12909,
+      "sha256": "e6df10ccfc4d6744f8b7ed620ea9e7828b503e63b9a91e63bebd33d504c02169"
+    },
+    {
+      "originalPath": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentLiveAdjudicatorSpec.scala",
+      "retainedPath": "docs/agent-runs/phase-05/history/5d-initial-review/source/tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentLiveAdjudicatorSpec.scala",
+      "bytes": 5612,
+      "sha256": "f8843f5a1aae55da03069878140950654f38cac737a085fffc5781e1dcb68fdf"
+    },
+    {
+      "originalPath": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentLiveCredentialsSpec.scala",
+      "retainedPath": "docs/agent-runs/phase-05/history/5d-initial-review/source/tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentLiveCredentialsSpec.scala",
+      "bytes": 1304,
+      "sha256": "f9617c4549576afef77f1842c34f744e2d968582bcecbb737751ce61de7b7775"
+    },
+    {
+      "originalPath": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentLiveDevelopmentSpec.scala",
+      "retainedPath": "docs/agent-runs/phase-05/history/5d-initial-review/source/tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentLiveDevelopmentSpec.scala",
+      "bytes": 10974,
+      "sha256": "9ea6c1abda0e72d37ed61a319deeb80ea36975c8cf5a70d185df158891e9a065"
+    },
+    {
+      "retainedPath": "docs/agent-runs/phase-05/history/5d-initial-review/source-freeze.json",
+      "bytes": 129631,
+      "sha256": "8396eb7875d13a080877530c9d517d9134519ca2ebdf0d94b863bc4e4a79133b"
+    },
+    {
+      "retainedPath": "docs/agent-runs/phase-05/history/5d-initial-review/review-inventory.json",
+      "bytes": 112536,
+      "sha256": "5f035b05056d96ad9f2e19d2c844d944c2c6100b7dc0f1078f8f205ab6ac801e"
+    },
+    {
+      "retainedPath": "docs/agent-runs/phase-05/history/5d-initial-review/key-artifacts.json",
+      "bytes": 1438,
+      "sha256": "d2f48df3071f14e990464d4078ae4b9f5a7e7b32dc8196e4855a2b588da0dcc8"
+    },
+    {
+      "retainedPath": "docs/agent-runs/phase-05/history/5d-initial-review/change-manifest.json",
+      "bytes": 43178,
+      "sha256": "a51b48e7b6b0d49b6c10526efc8d2b96620ce9dd4ee8375d84818baae86e0423"
+    },
+    {
+      "retainedPath": "docs/agent-runs/phase-05/history/5d-initial-review/full-check-summary.json",
+      "bytes": 19711,
+      "sha256": "e73779efb344c8815a88110efc730a58e524d6a343471d80d716a7aa38a2aa16"
+    },
+    {
+      "retainedPath": "docs/agent-runs/phase-05/history/5d-initial-review/readiness.json",
+      "bytes": 1998,
+      "sha256": "3c2231b9442e5db3ed96993e4219c9829b7e05a40af853f0619b7dff2afe6fb3"
+    }
+  ],
+  "scope": "Selected exact reviewed source bytes plus original complete freeze/inventory; source delta will compare all556originalpaths.",
+  "reviewerPrompt": "Chat only by user instruction; deleted prompt file remains deleted.",
+  "captureNotes": [
+    "One pre-execution coordinator syntax error and two guarded archive attempts were corrected. Concurrent authorized dataset edits were never labeled original; original tracked bytes came from HEAD and untracked manifests from owner pre-edit backups, all SHA-256 verified."
+  ],
+  "captureMode": "Reviewed baseline bytes and hashes retained/recovered from the reviewed freeze, HEAD and verified owner pre-edit backups; not a simultaneous working-tree snapshot."
+}

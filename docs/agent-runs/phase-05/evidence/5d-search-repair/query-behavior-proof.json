@@ -1,0 +1,185 @@
+{
+  "schemaVersion": "scholarchain.phase5d.corrected-query-behavior-proof.v1",
+  "source": "Exact retained original response metadata; no new HTTP.",
+  "queries": [
+    {
+      "attempt": 1,
+      "category": "topic-discovery",
+      "requestUrl": "https://api.openalex.org/works?search=state+machine+replication&filter=from_publication_date%3A2018-01-01%2Cto_publication_date%3A2024-12-31&per-page=5&sort=relevance_score%3Adesc&select=id%2Cdoi%2Ctitle%2Cdisplay_name%2Cpublication_year%2Cpublication_date%2Ctype%2Cids%2Cauthorships%2Cprimary_location%2Cbiblio%2Ctopics",
+      "status": 200,
+      "serverCount": 323411,
+      "serverRenderedQuery": "get works from 2018-01-01 through 2024-12-31 with (state machine replication) in the full text",
+      "serverQuery": {
+        "get_rows": "works",
+        "filter_rows": [
+          {
+            "column_id": "from_publication_date",
+            "value": "2018-01-01"
+          },
+          {
+            "column_id": "fulltext.search",
+            "value": "state machine replication",
+            "operator": "has"
+          },
+          {
+            "column_id": "to_publication_date",
+            "value": "2024-12-31"
+          }
+        ]
+      },
+      "returned": [
+        {
+          "id": "https://openalex.org/W4220883364",
+          "title": "State machine replication scalability made simple",
+          "year": 2022,
+          "venue": null
+        },
+        {
+          "id": "https://openalex.org/W4400300841",
+          "title": "State Machine Replication",
+          "year": 2023,
+          "venue": "Springer eBooks"
+        },
+        {
+          "id": "https://openalex.org/W2909748584",
+          "title": "Geographic State Machine Replication",
+          "year": 2018,
+          "venue": "Proceedings/Proceedings - Symposium on Reliable Distributed Systems"
+        },
+        {
+          "id": "https://openalex.org/W3023117442",
+          "title": "State-machine replication for planet-scale systems",
+          "year": 2020,
+          "venue": null
+        },
+        {
+          "id": "https://openalex.org/W2952805156",
+          "title": "Clairvoyant state machine replication",
+          "year": 2021,
+          "venue": "Information and Computation"
+        }
+      ]
+    },
+    {
+      "attempt": 2,
+      "category": "topic-discovery",
+      "requestUrl": "https://api.openalex.org/works?search=distributed+stream+processing&filter=from_publication_date%3A2018-01-01%2Cto_publication_date%3A2024-12-31&per-page=5&sort=relevance_score%3Adesc&select=id%2Cdoi%2Ctitle%2Cdisplay_name%2Cpublication_year%2Cpublication_date%2Ctype%2Cids%2Cauthorships%2Cprimary_location%2Cbiblio%2Ctopics",
+      "status": 200,
+      "serverCount": 467092,
+      "serverRenderedQuery": "get works from 2018-01-01 through 2024-12-31 with (distributed stream processing) in the full text",
+      "serverQuery": {
+        "get_rows": "works",
+        "filter_rows": [
+          {
+            "column_id": "from_publication_date",
+            "value": "2018-01-01"
+          },
+          {
+            "column_id": "fulltext.search",
+            "value": "distributed stream processing",
+            "operator": "has"
+          },
+          {
+            "column_id": "to_publication_date",
+            "value": "2024-12-31"
+          }
+        ]
+      },
+      "returned": [
+        {
+          "id": "https://openalex.org/W2952604789",
+          "title": "Evaluation of distributed stream processing frameworks for IoT applications in Smart Cities",
+          "year": 2019,
+          "venue": "Journal Of Big Data"
+        },
+        {
+          "id": "https://openalex.org/W2586644251",
+          "title": "Model-driven scheduling for distributed stream processing systems",
+          "year": 2018,
+          "venue": "Journal of Parallel and Distributed Computing"
+        },
+        {
+          "id": "https://openalex.org/W3028768478",
+          "title": "Resource Management and Scheduling in Distributed Stream Processing Systems",
+          "year": 2020,
+          "venue": "ACM Computing Surveys"
+        },
+        {
+          "id": "https://openalex.org/W3187085860",
+          "title": "Influencing Factors in the Scalability of Distributed Stream Processing Jobs",
+          "year": 2021,
+          "venue": "IEEE Access"
+        },
+        {
+          "id": "https://openalex.org/W4382934039",
+          "title": "Bounding substreams in distributed stream processing",
+          "year": 2023,
+          "venue": "Information Systems"
+        }
+      ]
+    },
+    {
+      "attempt": 3,
+      "category": "observed-author-neighbor",
+      "requestUrl": "https://api.openalex.org/works?filter=author.id%3AA5100990313%2Cfrom_publication_date%3A2018-01-01%2Cto_publication_date%3A2024-12-31&per-page=5&sort=publication_date%3Aasc&select=id%2Cdoi%2Ctitle%2Cdisplay_name%2Cpublication_year%2Cpublication_date%2Ctype%2Cids%2Cauthorships%2Cprimary_location%2Cbiblio%2Ctopics",
+      "status": 200,
+      "serverCount": 14,
+      "serverRenderedQuery": "get (A5100990313)'s works from 2018-01-01 through 2024-12-31, oldest first",
+      "serverQuery": {
+        "get_rows": "works",
+        "filter_rows": [
+          {
+            "column_id": "authorships.author.id",
+            "value": "A5100990313"
+          },
+          {
+            "column_id": "from_publication_date",
+            "value": "2018-01-01"
+          },
+          {
+            "column_id": "to_publication_date",
+            "value": "2024-12-31"
+          }
+        ],
+        "sort_by": [
+          {
+            "column_id": "publication_date",
+            "direction": "asc"
+          }
+        ]
+      },
+      "returned": [
+        {
+          "id": "https://openalex.org/W2795060324",
+          "title": "Managing large-scale transient data in IoT systems",
+          "year": 2018,
+          "venue": "International Conference on Communication Systems & Networks (COMSNETS)"
+        },
+        {
+          "id": "https://openalex.org/W2586644251",
+          "title": "Model-driven scheduling for distributed stream processing systems",
+          "year": 2018,
+          "venue": "Journal of Parallel and Distributed Computing"
+        },
+        {
+          "id": "https://openalex.org/W2771446712",
+          "title": "Toward Reliable and Rapid Elasticity for Streaming Dataflows on Clouds",
+          "year": 2018,
+          "venue": "IEEE International Conference on Distributed Computing Systems (ICDCS)"
+        },
+        {
+          "id": "https://openalex.org/W2891837479",
+          "title": "Saranyu: Using Smart Contracts and Blockchain for Cloud Tenant Management",
+          "year": 2018,
+          "venue": "IEEE ... International Conference on Cloud Computing"
+        },
+        {
+          "id": "https://openalex.org/W2906556079",
+          "title": "Benchmarking and Scheduling Strategies for Distributed Stream Processing",
+          "year": 2018,
+          "venue": null
+        }
+      ]
+    }
+  ]
+}

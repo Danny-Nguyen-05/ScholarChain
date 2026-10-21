@@ -1,0 +1,20 @@
+test_abstract_and_bad_native_ids_are_not_ingested (test_author_focused_demo.FocusedTests.test_abstract_and_bad_native_ids_are_not_ingested) ... ok
+test_approval_hash_and_fixed_limits_checked_before_http (test_author_focused_demo.FocusedTests.test_approval_hash_and_fixed_limits_checked_before_http) ... ok
+test_author_lookup_preserves_relevance_and_closed_fields (test_author_focused_demo.FocusedTests.test_author_lookup_preserves_relevance_and_closed_fields) ... ok
+test_author_selection_is_observed_deterministic_and_does_not_mask_orcid (test_author_focused_demo.FocusedTests.test_author_selection_is_observed_deterministic_and_does_not_mask_orcid) ... ok
+test_changed_retained_response_or_extra_file_is_rejected (test_author_focused_demo.FocusedTests.test_changed_retained_response_or_extra_file_is_rejected) ... ok
+test_existing_output_is_not_overwritten (test_author_focused_demo.FocusedTests.test_existing_output_is_not_overwritten) ... ok
+test_full_thirty_row_budget_prevents_next_dispatch (test_author_focused_demo.FocusedTests.test_full_thirty_row_budget_prevents_next_dispatch) ... ok
+test_network_retry_is_only_one_and_attempts_are_counted (test_author_focused_demo.FocusedTests.test_network_retry_is_only_one_and_attempts_are_counted) ... ok
+test_oversized_server_results_fail_closed_and_are_counted (test_author_focused_demo.FocusedTests.test_oversized_server_results_fail_closed_and_are_counted) ... ok
+test_profiles_duplicates_and_exclusions_all_consume_rows (test_author_focused_demo.FocusedTests.test_profiles_duplicates_and_exclusions_all_consume_rows) ... ok
+test_publish_replays_exact_seed_and_preserves_cumulative_counts (test_author_focused_demo.FocusedTests.test_publish_replays_exact_seed_and_preserves_cumulative_counts) ... ok
+test_rate_limit_does_not_retry (test_author_focused_demo.FocusedTests.test_rate_limit_does_not_retry) ... ok
+test_response_limit_counts_bytes_and_records_stop (test_author_focused_demo.FocusedTests.test_response_limit_counts_bytes_and_records_stop) ... ok
+test_wall_and_attempt_limits_prevent_dispatch (test_author_focused_demo.FocusedTests.test_wall_and_attempt_limits_prevent_dispatch) ... ok
+test_work_filter_uses_actual_id_and_bounded_years (test_author_focused_demo.FocusedTests.test_work_filter_uses_actual_id_and_bounded_years) ... ok
+
+----------------------------------------------------------------------
+Ran 15 tests in 0.034s
+
+OK

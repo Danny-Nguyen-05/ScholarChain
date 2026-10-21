@@ -1,0 +1,9 @@
+{
+  "schemaVersion": "scholarchain.phase5d.user-review-checkpoint-status.v1",
+  "recordedAtUtc": "2026-10-17T03:10:16.117062+00:00",
+  "provenance": "user-supplied chat answer; coordinator transcription, not a human gate or acceptance",
+  "question": "Have you saved any human-review checkpoint JSON files yet? If yes, enter their local file paths so I can validate and import them. These are the reviews from the existing 240-task page.",
+  "answer": "Not yet",
+  "checkpointsProvided": 0,
+  "actualHumanLabelsImported": 0
+}

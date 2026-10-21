@@ -52,6 +52,22 @@ final case class EvaluationError(
     evidenceRefs: Vector[String],
     analysis: String
 ) derives ReadWriter
+
+/** A separately retained analysis cohort; never mutates labels, tasks or predictions. */
+final case class EvaluationExclusions(
+    schemaVersion: String,
+    queueHash: String,
+    labelHash: String,
+    reason: String,
+    pairIds: Vector[String]
+) derives ReadWriter
+final case class EvaluationCohort(
+    exclusionManifestHash: String,
+    reason: String,
+    excludedPairIds: Vector[String],
+    originalInitialTasks: Int,
+    excludedInPartition: Int
+) derives ReadWriter
 final case class EvaluationReport(
     schemaVersion: String,
     partition: String,
@@ -73,7 +89,8 @@ final case class EvaluationReport(
     command: Vector[String],
     toolchain: Map[String, String],
     evaluatedAtUtc: String,
-    evaluationStatus: String
+    evaluationStatus: String,
+    cohort: Option[EvaluationCohort] = None
 ) derives ReadWriter
 final case class ThresholdSensitivity(threshold: Double, metrics: EvaluationSlice)
     derives ReadWriter
@@ -82,6 +99,8 @@ final case class ThresholdSensitivity(threshold: Double, metrics: EvaluationSlic
 object Evaluation {
   val predictionVersion = "scholarchain.evaluation-predictions.v1"
   val reportVersion = "scholarchain.evaluation-report.v1"
+  val cohortReportVersion = "scholarchain.evaluation-report.v2"
+  val exclusionsVersion = "scholarchain.evaluation-exclusions.v1"
   val paths = Vector(
     "ExactIdentifier",
     "DeterministicBibliographic",
@@ -189,9 +208,41 @@ object Evaluation {
       gold: ValidatedLabels,
       predictions: EvaluationPredictions,
       partition: String,
-      command: Vector[String] = Vector("Evaluation.evaluate (pure API)")
+      command: Vector[String] = Vector("Evaluation.evaluate (pure API)"),
+      exclusions: Option[EvaluationExclusions] = None
   ): Either[String, EvaluationReport] = Try {
-    val rs = rows(queue, split, gold, predictions, partition)
+    val originalRows = rows(queue, split, gold, predictions, partition)
+    val excludedIds = exclusions
+      .map { manifest =>
+        require(
+          manifest.schemaVersion == exclusionsVersion && manifest.queueHash == queue.queueHash && manifest.labelHash == StrictJson
+            .hash(gold),
+          "exclusion manifest differs from frozen queue/labels"
+        )
+        require(
+          manifest.reason.nonEmpty && manifest.reason == manifest.reason.trim && manifest.reason.length <= 2000 && !manifest.reason
+            .exists(_.isControl),
+          "bounded exclusion reason required"
+        )
+        val initial = queue.tasks.filter(_.role == "initial").map(_.pair.pairId).toSet
+        require(
+          manifest.pairIds.nonEmpty && manifest.pairIds.size <= initial.size && manifest.pairIds.distinct.size == manifest.pairIds.size && manifest.pairIds
+            .forall(initial),
+          "exclusions must be distinct initial queue pair IDs; unknown and reserve IDs forbidden"
+        )
+        manifest.pairIds.toSet
+      }
+      .getOrElse(Set.empty[String])
+    val rs = originalRows.filterNot(r => excludedIds(r.task.pair.pairId))
+    val cohort = exclusions.map { manifest =>
+      EvaluationCohort(
+        StrictJson.hash(manifest),
+        manifest.reason,
+        manifest.pairIds.sorted,
+        originalRows.size,
+        originalRows.size - rs.size
+      )
+    }
     def error(r: Row, kind: String) = EvaluationError(
       r.task.pair.pairId,
       kind,
@@ -207,7 +258,7 @@ object Evaluation {
     )
     val all = metrics(rs)
     EvaluationReport(
-      reportVersion,
+      if (cohort.isDefined) cohortReportVersion else reportVersion,
       partition,
       predictions.binding,
       queue.queueHash,
@@ -251,7 +302,8 @@ object Evaluation {
         "scalaStandardLibraryVersion" -> scala.util.Properties.versionNumberString
       ),
       java.time.Instant.now().toString,
-      "READINESS_REPORT_NOT_FINAL_PHASE_5E_ACCEPTANCE"
+      "READINESS_REPORT_NOT_FINAL_PHASE_5E_ACCEPTANCE",
+      cohort
     )
   }.toEither.left.map(e => Option(e.getMessage).getOrElse(e.getClass.getSimpleName))
   def sensitivity(

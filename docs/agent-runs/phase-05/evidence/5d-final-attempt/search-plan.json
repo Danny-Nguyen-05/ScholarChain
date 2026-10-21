@@ -1,0 +1,17 @@
+{
+  "schemaVersion": "scholarchain.rice-team-demo-plan.v1",
+  "stageId": "5d-demo-2026-10-20-rice-final",
+  "authorIds": [
+    "https://openalex.org/A5085731856",
+    "https://openalex.org/A5109437922"
+  ],
+  "recordsPerRequest": 15,
+  "sort": "cited_by_count:desc",
+  "seedPopulationManifestSha256": "ff4154deda081832db8f0ca85bce33a96075d0c722b41bfcc4996ee056f4ea41",
+  "previousStageSha256": "6ba8fd5285b15c0b8bf702f06afae180ad8f4374e0c6ed1a03810d16c54fbc93",
+  "approvalReceiptSha256": "97f3d0f0f1e81484cec4168ecc36bb3f563fc69900e3abb009ab1ffebcbb8f82",
+  "seedLinesSha256": [
+    "61981549cce1fc5c0d9dad742bb4d537a61cddf26cfd363185eb7213ace663a1",
+    "fd138baafc82fef130f8d23cbb2f6118bcf0ab8ac0362b62492af2cdc2fbf761"
+  ]
+}
