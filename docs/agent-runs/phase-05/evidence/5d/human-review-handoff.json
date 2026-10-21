@@ -1,0 +1,36 @@
+{
+  "subphase": "5D",
+  "authorization": "User authorized5D; prior5C status strings remain historical",
+  "assets": {
+    "modules/entity-resolution/src/main/resources/review/index.html": {
+      "bytes": 14549,
+      "sha256": "9e24abe10fce335b0b53f099a25ad7138617281017383d412c70bb772abffe26"
+    },
+    "modules/entity-resolution/src/main/resources/review/guide.txt": {
+      "bytes": 3437,
+      "sha256": "58825ed915ee4185747679579f1105159daaa1cffdf8b4d4cfe24cd87d03bf48"
+    },
+    "docs/agent-runs/phase-05/evidence/5c-repair/review-artifacts/queue.json": {
+      "bytes": 7204476,
+      "sha256": "39810621fe4b22113e3b11fe014ed3eaf2f6ed82b261a265044ce344a02e506f"
+    },
+    "docs/agent-runs/phase-05/evidence/5c-repair/review-artifacts/split.json": {
+      "bytes": 3810714,
+      "sha256": "9dee7738f41d646515eb7a6c77c025a935405f5bdfb34039fcb135021e9c4141"
+    },
+    "docs/agent-runs/phase-05/evidence/5c-repair/review-artifacts/generation-binding.json": {
+      "bytes": 745,
+      "sha256": "ba43bff1867cfda71a35e94c8c5b53fed39b213e159d17712b17739f776be527"
+    },
+    "datasets/entity-resolution/prepared/bd424a86-0a1b-4e44-bbdb-4a9b8c8a20e3.retention-manifest.v1.json": {
+      "bytes": 15576,
+      "sha256": "c51963569827ceaba35d1f816a918afecd32a547725ba2b1bb63aa38d49e8556"
+    }
+  },
+  "initialDevelopment": 40,
+  "initialHeldOut": 200,
+  "reserveTasksSeparate": 60,
+  "knownActualHumanLabels": 0,
+  "checkpoints": "Save original downloaded JSON outside target/, retain a backup, resume using same repaired queue. Return original batch path for validation/import. Do not manually edit or combine checkpoints.",
+  "providerPredictionsShownInReviewPage": false
+}

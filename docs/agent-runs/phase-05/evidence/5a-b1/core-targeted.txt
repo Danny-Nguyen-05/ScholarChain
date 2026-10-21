@@ -1,0 +1,36 @@
+[info] welcome to sbt 1.10.7 (Homebrew Java 17.0.20.1)
+[info] loading settings for project scholarchain-build from plugins.sbt...
+[info] loading project definition from /Users/danny/Documents/UIC/CS441/ScholarChain/project
+[info] loading settings for project root from build.sbt...
+[info] set current project to root (in build file:/Users/danny/Documents/UIC/CS441/ScholarChain/)
+[info] scalafmt: Formatting 2 Scala sources (/Users/danny/Documents/UIC/CS441/ScholarChain/modules/core)...
+[info] scalafmt: Reformatted 2 Scala sources
+[success] Total time: 1 s, completed Oct 15, 2026, 11:24:23 AM
+[info] scalafmt: Formatting 3 Scala sources (/Users/danny/Documents/UIC/CS441/ScholarChain/modules/core)...
+[info] scalafmt: Reformatted 2 Scala sources
+[success] Total time: 0 s, completed Oct 15, 2026, 11:24:23 AM
+[info] compiling 2 Scala sources to /Users/danny/Documents/UIC/CS441/ScholarChain/modules/core/target/scala-3.3.4/classes ...
+[info] done compiling
+[info] compiling 3 Scala sources to /Users/danny/Documents/UIC/CS441/ScholarChain/modules/core/target/scala-3.3.4/test-classes ...
+[info] done compiling
+[info] ResolutionContractSpec:
+[info] - versioned work/researcher pairs, audits and accepted link freeze concrete wire contracts
+[info] - canonical pair identity ignores order and block but binds type, source, snapshot and mention
+[info] - context rejects conflicting duplicate keys while allowing identical duplicates and separate snapshots
+[info] - ORCID work activity is eligible without authors, other activities cannot masquerade as work
+[info] - audit validates timestamps, provenance, hashes, feature availability and finite values
+[info] - LLM audit retains pre-decision score and model confidence as separate values
+[info] - a single final LLM path requires metadata and cannot report conflict
+[info] - links require actual accepted audit, matching run/policy/provenance and endpoints
+[info] - component guard rejects transitive conflicts, missing coverage and explicit caller bounds
+[info] ResolutionAuthoritySpec:
+[info] - authority codec admits only explicit lowercase DOI arxiv and ORCID namespace wires
+[info] - canonical authority values validate and noncanonical representations fail before grouping
+[info] - authority namespaces cannot cross work and researcher entity meaning
+[info] - canonical conflicting ORCIDs block A-B-C while aliases and noncanonical values fail closed
+[info] Run completed in 224 milliseconds.
+[info] Total number of tests run: 13
+[info] Suites: completed 2, aborted 0
+[info] Tests: succeeded 13, failed 0, canceled 0, ignored 0, pending 0
+[info] All tests passed.
+[success] Total time: 5 s, completed Oct 15, 2026, 11:24:28 AM

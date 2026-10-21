@@ -1,0 +1,20 @@
+test_excluded_records_still_count (test_screened_demo.ScreenedTests.test_excluded_records_still_count) ... ok
+test_existing_output_refused (test_screened_demo.ScreenedTests.test_existing_output_refused) ... ok
+test_fixed_query_plan_and_screen_binding (test_screened_demo.ScreenedTests.test_fixed_query_plan_and_screen_binding) ... ok
+test_full_mock_acquisition_preserves_script_before_http_and_caps_all_records (test_screened_demo.ScreenedTests.test_full_mock_acquisition_preserves_script_before_http_and_caps_all_records) ... ok
+test_http_errors_count_bytes_and_retry_only_once (test_screened_demo.ScreenedTests.test_http_errors_count_bytes_and_retry_only_once) ... ok
+test_immutable_legacy_population_uses_exact_retained_script_order (test_screened_demo.ScreenedTests.test_immutable_legacy_population_uses_exact_retained_script_order) ... ok
+test_invalid_author_or_query_has_zero_attempts (test_screened_demo.ScreenedTests.test_invalid_author_or_query_has_zero_attempts) ... ok
+test_planned_previous_stage_cannot_be_omitted (test_screened_demo.ScreenedTests.test_planned_previous_stage_cannot_be_omitted) ... ok
+test_request_and_wall_caps_prevent_dispatch (test_screened_demo.ScreenedTests.test_request_and_wall_caps_prevent_dispatch) ... ok
+test_rerun_preserves_prior_failed_search_and_deduplicates_context_counters (test_screened_demo.ScreenedTests.test_rerun_preserves_prior_failed_search_and_deduplicates_context_counters) ... ok
+test_response_byte_limit_fails_closed_and_counts (test_screened_demo.ScreenedTests.test_response_byte_limit_fails_closed_and_counts) ... ok
+test_schema_and_requested_record_count_fail_closed (test_screened_demo.ScreenedTests.test_schema_and_requested_record_count_fail_closed) ... ok
+test_selection_uses_observed_missing_orcid_affiliation_and_domain (test_screened_demo.ScreenedTests.test_selection_uses_observed_missing_orcid_affiliation_and_domain) ... ok
+test_topic_discovery_keeps_relevance_order_without_changing_bounds (test_screened_demo.ScreenedTests.test_topic_discovery_keeps_relevance_order_without_changing_bounds) ... ok
+test_unknown_order_or_missing_new_version_is_rejected (test_screened_demo.ScreenedTests.test_unknown_order_or_missing_new_version_is_rejected) ... ok
+
+----------------------------------------------------------------------
+Ran 15 tests in 0.043s
+
+OK

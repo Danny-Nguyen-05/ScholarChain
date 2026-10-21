@@ -1,0 +1,20 @@
+{
+  "head": "61d32a38eaad5b2fc352acf0b7f85f3815c2336d",
+  "files": [
+    {
+      "path": "docs/agent-runs/phase-05/history/5c-final-handoff/source-freeze.json",
+      "bytes": 91316,
+      "sha256": "403fbf2f10fe6188ba05bd2c872456f320ce1edd488bbc3fcfe5b567954a26e7"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/history/5c-final-handoff/review-inventory.json",
+      "bytes": 171793,
+      "sha256": "a743bc5cbd33993933b6108ce9097955a1a3cdb46e8eccfdb2e75e5f5158e599"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/history/5c-final-handoff/reviewer-prompt.txt",
+      "bytes": 10291,
+      "sha256": "cdb89cd76af15382b1416e9c0c55b61c4cbe38015715537d2c68a51d652dde9d"
+    }
+  ]
+}

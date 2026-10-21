@@ -1,0 +1,30 @@
+{
+  "historicalIndexPinned": true,
+  "userIndexNotModified": true,
+  "verified": [
+    {
+      "output": "/private/tmp/scholarchain-pinned-index-replay-0-6c8112fd99.diff",
+      "bytes": 98952580,
+      "sha256": "e4ff72fa7c36e1600c762db82fd5cbf15e1a99680db2702a4435aa304bbb81f9",
+      "verified": true
+    },
+    {
+      "output": "/private/tmp/scholarchain-pinned-index-replay-1-f259a5c6c2.diff",
+      "bytes": 98498470,
+      "sha256": "20b3c9edb012781f4a863db7e9905ff13b8f5c6e1f089a02e93bad114f43a0ba",
+      "verified": true
+    },
+    {
+      "output": "/private/tmp/scholarchain-pinned-index-replay-2-292abdca21.diff",
+      "bytes": 49145439,
+      "sha256": "185b2cc08068917d3dad3b720352422c859d171b2171a13cf9c0187741ca8f10",
+      "verified": true
+    },
+    {
+      "output": "/private/tmp/scholarchain-pinned-index-replay-3-fe14671f28.diff",
+      "bytes": 48691329,
+      "sha256": "5f14ddba796fa8ded68d4bc23301dc7a8ab6f417e570fa5a90d3d3c4625722e9",
+      "verified": true
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "status": "VALID",
+  "baselineFilesChecked": 195,
+  "changedBaselinePaths": [
+    "datasets/entity-resolution/prepared/README.md",
+    "datasets/entity-resolution/prepared/3bfbd651-5982-4f3d-b29b-246fb88d07a1.retention-manifest.v1.json",
+    "datasets/entity-resolution/prepared/68c2b012-6d04-4eef-a7bf-5ca31706d895.retention-manifest.v1.json"
+  ],
+  "onlyManifestSemanticChanges": [
+    "purposeKind",
+    "purpose",
+    "ownership"
+  ],
+  "allRetainedPayloadsOriginal5CManifestAnd5DRawSourcesUnchanged": true
+}

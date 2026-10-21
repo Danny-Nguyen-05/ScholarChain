@@ -1,0 +1,44 @@
+"""Regenerate a compacted historical evidence diff from Git and verified source bytes."""
+import argparse,gzip,hashlib,io,json,os,subprocess,tarfile,tempfile
+from pathlib import Path
+p=argparse.ArgumentParser();p.add_argument('--manifest',required=True);p.add_argument('--target-ref',default='HEAD');p.add_argument('--output',required=True);a=p.parse_args()
+ROOT=Path(subprocess.check_output(['git','rev-parse','--show-toplevel'],text=True).strip());ENV=dict(os.environ,GIT_OPTIONAL_LOCKS='0')
+m=json.loads(Path(a.manifest).read_text());dest=Path(a.output);assert not dest.exists(),'Output already exists'
+def sha(b):return hashlib.sha256(b).hexdigest()
+def git(*args,**kw):return subprocess.check_output(['git',*args],env=ENV,**kw)
+with tempfile.TemporaryDirectory(prefix='scholarchain-regenerate-diff-') as directory:
+    tree=Path(directory);archive=git('archive',m['baseRef'],'--',*m['scopes'])
+    with tarfile.open(fileobj=io.BytesIO(archive)) as t:t.extractall(tree,filter='data')
+    names={e['path'] for e in m['targetFiles']}
+    for path in list(tree.rglob('*')):
+        if path.is_file() and path.relative_to(tree).as_posix() not in names:path.unlink()
+    for e in m['targetFiles']:
+        archive_source=next((v for v in m.get('archiveSources',[]) if e['path'].startswith(v['originalRepositoryDirectory'].rstrip('/')+'/')),None)
+        if archive_source:
+            # Packaging-only fallback: immutable archived history, still checked below.
+            relative=e['path'][len(archive_source['originalRepositoryDirectory'].rstrip('/'))+1:]
+            b=(Path(archive_source['archiveAbsoluteDirectory'])/relative).read_bytes()
+        elif 'historicalBlob' in e:
+            blob=ROOT/e['historicalBlob']
+            packed=blob.read_bytes() if blob.is_file() else git('show',a.target_ref+':'+e['historicalBlob'])
+            b=gzip.decompress(packed)
+        else:
+            found=subprocess.run(['git','show',a.target_ref+':'+e['path']],env=ENV,capture_output=True)
+            b=found.stdout if found.returncode==0 else b''
+            if sha(b)!=e['sha256']:
+                local=ROOT/e['path'];b=local.read_bytes() if local.is_file() else b''
+        assert len(b)==e['bytes'] and sha(b)==e['sha256'],'Missing or modified source: '+e['path']
+        path=tree/e['path'];path.parent.mkdir(parents=True,exist_ok=True);path.write_bytes(b);path.chmod(0o755 if e['executable'] else 0o644)
+    # Pin the historical index so newly committed files are not emitted twice.
+    # Only this disposable index is written; the user's real index stays untouched.
+    ENV['GIT_INDEX_FILE']=str(tree/'.historical-replay-index')
+    git('--git-dir='+str(ROOT/'.git'),'read-tree',m['captureHead'])
+    args=['--git-dir='+str(ROOT/'.git'),'--work-tree='+str(tree)]
+    diff=git(*args,'diff','--binary','--no-ext-diff',m['baseRef'],'--',*m['scopes'],cwd=tree)
+    for name in m['untrackedPathsAtCapture']:
+        result=subprocess.run(['git',*args,'diff','--binary','--no-ext-diff','--no-index','--','/dev/null',name],cwd=tree,env=ENV,capture_output=True)
+        assert result.returncode in (0,1),result.stderr.decode();diff+=result.stdout
+    assert len(diff)==m['originalDiff']['bytes'] and sha(diff)==m['originalDiff']['sha256'],'Historical patch mismatch'
+    dest.parent.mkdir(parents=True,exist_ok=True)
+    with dest.open('xb') as f:f.write(diff)
+print(json.dumps({'output':str(dest),'bytes':len(diff),'sha256':sha(diff),'verified':True}))

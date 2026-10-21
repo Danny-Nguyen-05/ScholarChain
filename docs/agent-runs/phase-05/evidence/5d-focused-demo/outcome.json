@@ -1,0 +1,71 @@
+{
+  "schemaVersion": "scholarchain.phase5d.focused-search-outcome.v1",
+  "recordedAtUtc": "2026-10-21T02:20:58.968522+00:00",
+  "status": "BOUNDED_SEARCH_COMPLETE_NO_NATURALLY_ELIGIBLE_PAIR",
+  "approvalPath": "docs/agent-runs/phase-05/evidence/5d-focused-demo/user-approval.json",
+  "rawPopulationManifestSha256": "6ba8fd5285b15c0b8bf702f06afae180ad8f4374e0c6ed1a03810d16c54fbc93",
+  "domainSliceManifestSha256": "2a3f5eb7c3fca17e7a6c29281a83e51950d45dae3c38f040a9819b2cd804254a",
+  "actualAcquisition": {
+    "distinctAuthorProfileIds": 5,
+    "distinctWorkIdsIncludingExcluded": 21,
+    "httpAttempts": 6,
+    "newIngestionWorks": 7,
+    "newWorkIdsNotObservedInPriorStages": 21,
+    "responseBytes": 218664,
+    "returnedAuthorProfileRecords": 5,
+    "returnedMetadataRecordsIncludingDuplicatesExcluded": 26,
+    "returnedWorkRecords": 21,
+    "seconds": 5.3543
+  },
+  "cumulativeAcquisition": {
+    "distinctAuthorProfileIdsAcrossStages": 5,
+    "distinctWorkIdsAcrossStages": 65,
+    "httpAttemptsAcrossStages": 18,
+    "responseBytesAcrossStages": 509746,
+    "returnedAuthorProfileRecordsAcrossStages": 5,
+    "returnedMetadataRecordsAcrossStages": 75,
+    "returnedWorkRecordsAcrossStages": 70,
+    "secondsAcrossStages": 15.5683
+  },
+  "domainInspection": {
+    "rawSubstringVenueFilterPassed": 7,
+    "repositoryFalsePositivesExcludedOffline": 5,
+    "actualCsConferenceWorksRetained": 2,
+    "existingCrossrefSeedRetained": 1,
+    "newHttpForDerivedSlice": 0,
+    "rawInputNeverScored": true
+  },
+  "canonicalReadiness": {
+    "candidatePairs": 6,
+    "admittedPairs": 6,
+    "excludedPairs": 0,
+    "eligiblePairs": 0,
+    "diagnosticallyClassifiedPairs": 6,
+    "classifiedExcludedPairIntersection": 0,
+    "providerExecution": "NOT_INVOKED_BY_THIS_PROBE",
+    "noLabelFilesRead": "STATIC_CODE_PATH_ASSERTION",
+    "demoInputHash": "c2ee7aa53308c1b1c38934347ca5f75f9cb9fe6bb7f3bce91525ddf5905e0779"
+  },
+  "classifiedPairIdsPath": "docs/agent-runs/phase-05/evidence/5d-focused-demo/target-cs-readiness/scored-pair-ids.json",
+  "admittedClassificationsPath": "docs/agent-runs/phase-05/evidence/5d-focused-demo/target-cs-readiness/admitted-classifications.jsonl",
+  "diagnosticCounts": {
+    "workHardIdentifierConflicts": 3,
+    "researcherExactOrcidAccept": 1,
+    "researcherUnresolvedInsufficientIndependentEvidence": 2
+  },
+  "limitsKept": "No matching policy, review label, threshold, evidence sufficiency or observed identifier was changed. No query fallback, refill, additional stage or count reset.",
+  "providerExecution": "NOT_INVOKED: no eligible pair; therefore no runtime credential preflight or API dispatch.",
+  "actualModelCalls": 0,
+  "actualModelSpendUsd": "0.00",
+  "liveStateAbsentAtOutcome": true,
+  "remainingGate": "An observed real-provider result remains unavailable for this bounded input. This is not global evidence exhaustion.",
+  "no5ECalibrationReviewLaunchCommitOrPush": true,
+  "durableReplayVerified": true,
+  "verification": {
+    "sbtTests": 434,
+    "pythonTests": 84,
+    "integrityValidators": 12,
+    "sourceFiles": 898,
+    "allSourceHashesUnchangedDuringGate": true
+  }
+}

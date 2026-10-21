@@ -1,0 +1,14 @@
+{
+  "status": "VALID",
+  "records": {
+    "crossref": 10,
+    "dblp": 0,
+    "openalex": 446,
+    "orcid": 8
+  },
+  "hashedFiles": 132,
+  "attempts": 125,
+  "responseBytes": 12732948,
+  "humanReviews": 0,
+  "candidateReadiness": "PAIR_AND_DISJOINT_GROUP_COUNTS_REQUIRE_COMPLETED_HADOOP_AND_ER_QUEUE"
+}

@@ -1,0 +1,46 @@
+{
+  "schemaVersion": "scholarchain.phase5d-supplement-approval.v1",
+  "provenance": "verbatim user-supplied reply transcribed by coordinator",
+  "question": "To find a suitable live-test pair, may I reuse up to 14 already downloaded records and, if needed, fetch up to 30 additional public OpenAlex records? The fetch would stop at 20 web requests, 16 MB or 10 minutes, whichever comes first, with no paid data service. Your existing 240-review queue stays unchanged, and anything overlapping held-out groups is excluded before scoring.",
+  "answer": "Approve this bounded demo supplement",
+  "recordedAtUtc": "2026-10-17T02:42:24.793298+00:00",
+  "approvedProposal": {
+    "schemaVersion": "scholarchain.phase5d-demo-evidence-proposal.v1",
+    "status": "USER_APPROVED_BOUNDED_DEVELOPMENT_SUPPLEMENT",
+    "reason": "No naturally eligible pair in62existing frozen development/demo candidates; modelpilotcannotbypassevidencegates.",
+    "existingRepositoryFirst": {
+      "maxUnusedCrossrefRecords": 14,
+      "source": "Retained original Crossref discovery response in5C V3",
+      "noEligibilityClaim": true
+    },
+    "optionalNewOpenAlex": {
+      "maxRecordsIncludingExclusions": 30,
+      "maxSeedDoiMatches": 6,
+      "maxNeighborWorks": 24,
+      "maxHttpAttemptsIncludingRetries": 20,
+      "maxResponseBytesTotal": 16777216,
+      "maxResponseBytesEach": 2097152,
+      "maxRecordBytes": 1048576,
+      "maxWallSeconds": 600,
+      "timeoutSeconds": 20,
+      "concurrency": 1,
+      "maxStartsPerSecond": 1,
+      "maxTransientRetries": 1,
+      "credentials": false,
+      "paidServices": false,
+      "scope": "Distributed systems/data-engineering CS publications2018\u20132024, observedseed/authorneighborhoods only."
+    },
+    "safety": [
+      "No change to original v3/prepared input/queue/split/labels.",
+      "New separately manifested demo-only input; unchanged Hadoop normalization <=44records.",
+      "Before scoring reject any supplement component overlapping locked held-out anchors/endpoints, including transitive matches.",
+      "No threshold/score/evidence/ID manipulation;zeroeligibilitymeanszerolivecalls."
+    ],
+    "ownership": {
+      "datasets": "dataset-engineer",
+      "normalization": "existing Hadoop pipeline; no production change",
+      "admissionAndScoring": "entity-resolution-engineer",
+      "evidence": "coordinator"
+    }
+  }
+}

@@ -1,0 +1,74 @@
+{
+  "schemaVersion": "scholarchain.phase5d.focused-domain-inspection.v1",
+  "recordedAtUtc": "2026-10-21T02:18:23.411405+00:00",
+  "originalPopulationManifestSha256": "6ba8fd5285b15c0b8bf702f06afae180ad8f4374e0c6ed1a03810d16c54fbc93",
+  "observedStage": {
+    "distinctAuthorProfileIds": 5,
+    "distinctWorkIdsIncludingExcluded": 21,
+    "httpAttempts": 6,
+    "newIngestionWorks": 7,
+    "newWorkIdsNotObservedInPriorStages": 21,
+    "responseBytes": 218664,
+    "returnedAuthorProfileRecords": 5,
+    "returnedMetadataRecordsIncludingDuplicatesExcluded": 26,
+    "returnedWorkRecords": 21,
+    "seconds": 5.3543
+  },
+  "cumulative": {
+    "distinctAuthorProfileIdsAcrossStages": 5,
+    "distinctWorkIdsAcrossStages": 65,
+    "httpAttemptsAcrossStages": 18,
+    "responseBytesAcrossStages": 509746,
+    "returnedAuthorProfileRecordsAcrossStages": 5,
+    "returnedMetadataRecordsAcrossStages": 75,
+    "returnedWorkRecordsAcrossStages": 70,
+    "secondsAcrossStages": 15.5683
+  },
+  "rawVenueFilterPassed": 7,
+  "offTopicRepositoryFalsePositives": [
+    {
+      "nativeId": "https://openalex.org/W7155110804",
+      "title": "High-Energy LHC design",
+      "sourceType": "repository",
+      "sourceName": "Institutional Repositories DataBase (IRDB)",
+      "reason": "Repository label contains DataBase; this is not CS venue evidence. Exclude source.type=repository before matching."
+    },
+    {
+      "nativeId": "https://openalex.org/W7155110895",
+      "title": "FCC-ee OPERATION MODEL, AVAILABILITY & PERFORMANCE",
+      "sourceType": "repository",
+      "sourceName": "Institutional Repositories DataBase (IRDB)",
+      "reason": "Repository label contains DataBase; this is not CS venue evidence. Exclude source.type=repository before matching."
+    },
+    {
+      "nativeId": "https://openalex.org/W7155118783",
+      "title": "HIGH-ENERGY LHC DESIGN",
+      "sourceType": "repository",
+      "sourceName": "Institutional Repositories DataBase (IRDB)",
+      "reason": "Repository label contains DataBase; this is not CS venue evidence. Exclude source.type=repository before matching."
+    },
+    {
+      "nativeId": "https://openalex.org/W7155119375",
+      "title": "MACHINE DETECTOR INTERFACE FOR THE e+e- FUTURE CIRCULAR COLLIDER",
+      "sourceType": "repository",
+      "sourceName": "Institutional Repositories DataBase (IRDB)",
+      "reason": "Repository label contains DataBase; this is not CS venue evidence. Exclude source.type=repository before matching."
+    },
+    {
+      "nativeId": "https://openalex.org/W7208538933",
+      "title": "UPDATED HIGH-ENERGY LHC DESIGN",
+      "sourceType": "repository",
+      "sourceName": "Institutional Repositories DataBase (IRDB)",
+      "reason": "Repository label contains DataBase; this is not CS venue evidence. Exclude source.type=repository before matching."
+    }
+  ],
+  "actualCsConferenceRecords": [
+    "https://openalex.org/W2659288104",
+    "https://openalex.org/W2803866544"
+  ],
+  "noMatchingOrScoringOnRawPopulation": true,
+  "rawHadoopRun": "target/phase5d-focused-prep-runs/22101f00-19ca-492e-94dc-1dcd017e52b8",
+  "next": "Owner creates a separate no-network subset population with hash-bound parent, explicit exclusions and original records unchanged. No refill or additional HTTP.",
+  "noCredentialOrProviderAccess": true,
+  "rawHadoopRunDisposition": "Completed ignored local intermediate, not retained as qualifying CS demo input and never passed to ER."
+}

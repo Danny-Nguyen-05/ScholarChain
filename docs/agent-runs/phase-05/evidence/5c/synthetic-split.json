@@ -1,0 +1,754 @@
+{
+  "schemaVersion": "scholarchain.review-split.v1",
+  "sourcePopulationHash": "a72635613c0ace7e98f5273acd9d493973b8d7e08e1dd91c08509a7b7aafda5e",
+  "candidatePopulationHash": "ab7b88b62143cb860f36ed4570a0e92333cbeb3874c1b882de52cf5b0944f00d",
+  "sampling": {
+    "schemaVersion": "scholarchain.review-sampling.v1",
+    "seed": "scholarchain-5c-2026",
+    "development": 2,
+    "heldOut": 4,
+    "developmentReserve": 0,
+    "heldOutReserve": 0,
+    "maxPopulationPairs": 100000
+  },
+  "groups": [
+    {
+      "groupId": "review-group:048c1c7db82513d8f2510883f6dc20b7c95aaeb65b3ee85a36634d1863862a56",
+      "endpointIds": [
+        "resolution-endpoint:01486992223bc5d00d95389a88d4b4ab9069cda0cbe60547ba0cee808bb85292",
+        "resolution-endpoint:7c3dd29cfbada63723fb7969f815f54d3db01ae5cc64f2f334c6c9b925172185"
+      ],
+      "anchorHashes": [
+        "eb154a717405591a47976a855cfcef0697654740a94af13addc994d005d09ffe",
+        "ff521e305cf5bf48a2618cd987c7a146bd3c780fed43acb79dafe92a4ed3fef1",
+        "7fb3bbb2e8192b02b74e5bbc1b92f8f00e1facffe8336ad13583e388c7caa40c",
+        "b4cd2d73fae5793642cc9a6e745cd02eb1ec29d13c10dbfda766f8575da49fb3"
+      ]
+    },
+    {
+      "groupId": "review-group:0674bd9f017808e28a961129c7248439827610565ab200dfab4107d55f87f84f",
+      "endpointIds": [
+        "resolution-endpoint:c6ea615593905a2f90a93999d28c5aa23027a97cdc04a31e53a6d37e46012b0b",
+        "resolution-endpoint:cdc2ff4fb004a7753942f83853a77062749d6b40ad713f96ee299fcd88036924"
+      ],
+      "anchorHashes": [
+        "395d78ce9124cfc98c0b938663f64da915e828e4ae3ce81db4cebe5edcf50bbc",
+        "591c00e98a64e209914a8745b31450490dcee2c5aa995182e321eb1d2679ec7c",
+        "9f6ff9ba25ab5689dc42d813a681ba97f65709984657b724a1d3cc13796b378d",
+        "c323057fc0af1ca4debfaee8e261e5a22c2dc86c23712206de4a44300330832c"
+      ]
+    },
+    {
+      "groupId": "review-group:085d2acd8948cc834ac4c2a9857ac5913a2fdc649487a8ecfc817d4b6554642f",
+      "endpointIds": [
+        "resolution-endpoint:211032edc121090816c8b40ca381437fba76611843b04fba68815615a586ac18",
+        "resolution-endpoint:923bfc6c4d765eea10ae931d2ef6659547c943f43bdfa9037bfc62c7747fa561"
+      ],
+      "anchorHashes": [
+        "db990cb43c3da19831a25d6df11cacb70571dbb0f249ff3e18cc82968c0dc353",
+        "fa45146a01705c5b2d365e10034c3f322605b5ee3fe6ca08bd068e3d6aaeefb2",
+        "e1e47d88741e6a01e73b3b674cca2cbb3cfd84c1c2b59a63346bbf04f1a59399",
+        "6c920c129a91a529226210b3993af46cb934a2ff70234f40e443bcda886a1e52"
+      ]
+    },
+    {
+      "groupId": "review-group:0cdbb187a48b7c67c6597418dc94133d979070150d897386baf95186bc8f3d62",
+      "endpointIds": [
+        "resolution-endpoint:3c0c0dbbcc7b5d52604b06a7aa650d7a71497bcdc9ba0a694609b7826ef544cb",
+        "resolution-endpoint:9c8b0bf67e3726c56a4bf312eaf7b7ab60f14d098e02575525d022185d1fc518"
+      ],
+      "anchorHashes": [
+        "aa4e9936e2e0880cb99516419778630c83740024ad69d284481bd395c28abed0",
+        "c6a6bcef0daee5772207af9fae160dd6b037036358c1aba1907ac453abb7ae69",
+        "2a6f8009911dd1f31976d26d3193a7f5279342e76e2ced22fcf956c0e6f3e81c",
+        "a728fd94a3d31831b3ffd191986ec18c5c93b5500878194315612f568c68490e"
+      ]
+    },
+    {
+      "groupId": "review-group:0f368a3c043c2d169badb80ff981bbc8d06d3c55609bf2df504033f0875dde21",
+      "endpointIds": [
+        "resolution-endpoint:226ca9e948a33a6e390cca23bde0d41a61b7850c2264784808334045381f1a45",
+        "resolution-endpoint:4c5470033bffb80dacaca803484931d544f4a4bf26561c5f2ee09fa6c706e81c"
+      ],
+      "anchorHashes": [
+        "4f57275a337b77917c63dcc324f2fbaf405397df532ab8b335a93aa7c722561a",
+        "8c978f7edf07bee7a9421076a91c4da57eb35fa66c214cc51ad5990540da8d55",
+        "c0b066eae96d4564129feb68d648dcab6626b9794d62b6c12251ee14ba61a6f6",
+        "de94e9e3975ea60a19ac602449f875b6ae88aecda8614b3521776a5e42817ebb"
+      ]
+    },
+    {
+      "groupId": "review-group:0f7617b92a62dc857df01e782fb100026e4cf822a37561eb3adcdff54ab2724f",
+      "endpointIds": [
+        "resolution-endpoint:941d21b81b2e74272fe1f62b61995bd5d8e2c9a53a65b36e35a01f430e489555",
+        "resolution-endpoint:dfbe42b513f97387e8c83fb81242b2caf1f8c9460ff7d9eb2e5cd3f945897f19"
+      ],
+      "anchorHashes": [
+        "10a74269ca5072ddf98196fdb274bd28160fe9b119c57623f3cd53b256aad832",
+        "92947b526873761d3198d71ef5a27028fe49f569c5ac95f46ecde7d4d0356f34",
+        "5601d7340c3785a8778e71b59ee345b592a0e794eebd49fb38d8916197642684",
+        "d4c2798e1d8af630b16d10ed55ff463704551296fcfac13f7940d32131233db7"
+      ]
+    },
+    {
+      "groupId": "review-group:1736b2cc106ff695b1a889dfbab756f912f0c47aa99756ea0fdd43ce8ae85d56",
+      "endpointIds": [
+        "resolution-endpoint:af359f395d4613e76fc124f9c375ae09132bec97e374d0b5e693048f286276a2",
+        "resolution-endpoint:d9f5d4dec343b6723e5f548c28880a37783d3d80450fedcc0ad52a674abd4daa"
+      ],
+      "anchorHashes": [
+        "8b3ce98e1e7e8d2d0155967c453fc646d45ce7eea01606ade2e42f4ac3250010",
+        "a6e14244defa73c275768bf0e049b6047461346b10ac070ef38c151dce451732",
+        "de12c5f7d5bf619844dfc03f45fb07fa08e96d22fe45e69f859d0b2a2ff03b1c",
+        "a01a78719c33f666f19391fc73da9de117e5b481be87a2cc2df8b44e01f2fcd3"
+      ]
+    },
+    {
+      "groupId": "review-group:24d701425aa65874969cac129aef4f60a2250b4ed44109b376b4c0a15abdd8bb",
+      "endpointIds": [
+        "resolution-endpoint:61438120946cf7ed7e9152bd1249319f6f056c34896f854fd7b0947303a1d601",
+        "resolution-endpoint:8e5388addd51688785e852b36fc3b91515731f49d1f1789b923aa4ba516408c5"
+      ],
+      "anchorHashes": [
+        "28a1a059b2dfee9421cfbfd4a080410f1770030a36bec9c697930c1f209d4505",
+        "c9f01d78f650d9f9720b0ac3adad6f6c35015266a73789578f25fe81231e02cc",
+        "820b7342d2ed2e332a369a446b7485a1a4dc68ee05bef0e37a1b263cd205644b",
+        "efccc866983f00b3f88ae29739417166158f2a34d6537ed60839f650131ca844"
+      ]
+    },
+    {
+      "groupId": "review-group:24fc8e934f292d4cd66b8453291db5154578f84bc099d3d4266b70907c4d6691",
+      "endpointIds": [
+        "resolution-endpoint:1013983b3eea246dee025d86daf1ca1d6ff21baa8a66f03cfbd69fd0498b89b9",
+        "resolution-endpoint:1bd37d6b32efb7475cc0135851275990f111316b8643f55af8458eecc0f32522"
+      ],
+      "anchorHashes": [
+        "ec253be8880933922b5d86f691d96aa1a70869222698b1ee071b9785b0127963",
+        "dbcd48e5129a65e73af52d2fc285041a3c19983cea3c124c73e9ffd640d7da18",
+        "4ff6e43d91fb5f123abb42f0a370827d16ca0f6f10b6aedb15cd1e572a214509",
+        "569c7f0c18a6ff3713f26f06c69b67f84a37c989a60c21a4866f77d5d18298ad"
+      ]
+    },
+    {
+      "groupId": "review-group:286fa64c5986ff8a7f92b4daeaf3e8303709f6d4604bb3eaadd6390e2679cef7",
+      "endpointIds": [
+        "resolution-endpoint:5ee7e4f492967ef5b085ef72a9e1c3d8433b1a1344c3cd720142bc22e29f0d14",
+        "resolution-endpoint:fe2761bd185e7cb4b22f70923189f004598c15cf06ed6a8954f0fdff3d6e9181"
+      ],
+      "anchorHashes": [
+        "d48aca24258f439623873ead900b8f52459ce96c6234d2d370c648296f2426b6",
+        "8fb668a5db48d4da7c3d0f65cf32f0d8df36868fbd6392be3c1740a6d5a0a5aa",
+        "a3d61bcb526d86c12548caed57622bcfb84cd7f9078f0ab25cce2b59bbd07aa3",
+        "1fcfb668fa1e724589d66e39365ad9288a8087686316c63bde9c090917fd040e"
+      ]
+    },
+    {
+      "groupId": "review-group:3453e5c2007fd62a490c4f775d6423537372dbe21980c92a2df9db0de4c4bced",
+      "endpointIds": [
+        "resolution-endpoint:7e431a97dff3968e0bf774dcfc2b62390580a786208fbf4b4f3f97dce17733c6",
+        "resolution-endpoint:bcf954c9242189500214270344cced6ea9917ac4b25434aaec44bec0172ae929"
+      ],
+      "anchorHashes": [
+        "9016767f456e5983eec5dc8f1931b67c6a2c3b451a1fdfaa141c424d561c22b6",
+        "e646a7d1c8dbc2162788e6dbbfe571d16bf0ba3123e5f514e21137127410fc42",
+        "684e3be3ae1a91d4e3ccf71b01ca5249fe4801128f20487a5f0539626fb382a0",
+        "6a7a2543ff1468cb7cbcdb57e0d0a42ed153118d6ca25b3a4dfa83a6df32a9bc"
+      ]
+    },
+    {
+      "groupId": "review-group:37590f7ef1febbf4aacab3d5f2bfa781cf89f7b1b6ca1bc7ebb1024922835eba",
+      "endpointIds": [
+        "resolution-endpoint:2e5f6ac7a1c49d7401a50bf35c9fa24e1c024b0a9c846ebdf0356648faef353c",
+        "resolution-endpoint:a5859cd86a50e350ac24a284ce1ce3244ffcd442d50989e490a563cc8c8c69c3"
+      ],
+      "anchorHashes": [
+        "bac68d70118fc2d54077482161fd0ebc9e85bc756acb0acd55cddb070609fb74",
+        "c75c3b26b989fa729c0d20b1dbbe2d396ef27d190b0b1370a9ccc4ee57f68d7b",
+        "4ed20fb6a1d1f9bc97d924398966218f80e86ea9435b4f2634377f7f5eac389b",
+        "6f8057782e7353f5f0aea7197e87e172108e78d9ebc05e302e6e389b8a46e206"
+      ]
+    },
+    {
+      "groupId": "review-group:376b0a142a22549db1ef3c19fcd6281a5dd29826b5edd888407e64ab269f095f",
+      "endpointIds": [
+        "resolution-endpoint:1896239fe989bdbbafd136a5285121b33dbdefaf1ae279a673be0a306f5a3ef4",
+        "resolution-endpoint:b59f3fbd5b70c78c73fd7c0c68feaa93f445b95b22a8051ccceda797ea45e83b"
+      ],
+      "anchorHashes": [
+        "f379b1083a92d66ef3bd6009e57306638ce499096d4b742a1361d1974ce69e7d",
+        "8cb197fcfcff725e3cc26690e8e57b7c77e0187d7979860cb76e7f01d4cf750f",
+        "d7c78e00d5c3b7ae961e99b6dbd0cea297849be55fb57e8183549b08b0cd114e",
+        "bcc5db2dd57ff43b9309c11072db363f49589cdfbf84e475312141a6710d494a"
+      ]
+    },
+    {
+      "groupId": "review-group:38db6f8285c8b4eacfc43205f2f0aba90b9cf3eefb35eba4e5a50203f7aab784",
+      "endpointIds": [
+        "resolution-endpoint:a3a6a498e36ed61c792e92712d8f3f3c4c2d62692df4db92368ed8a290bec98d",
+        "resolution-endpoint:c8718a122c91e21a87b73bb8b9c525a1143519e61acb36674bce316c53b731f2"
+      ],
+      "anchorHashes": [
+        "99f8689e4273161268328965c5bf67b8b41b03538811566d34e3b3af94f789c0",
+        "144fcdf31adf84596570a98cb1539846947892fbf9c421a580a6a76dfdc4d924",
+        "f00ea9dc0cbc766d3ed0bbd0805c82a025c33d22eefbb2d80216629307a2bc83",
+        "8cf658e3f9722cafc686edc54449c3b872eaba303ba12f9b8438a54e9cd6d108"
+      ]
+    },
+    {
+      "groupId": "review-group:49fd16f9d8a87759bd32f60a9b425ed0cdd459c0ca4d767e5debb077c429b3d2",
+      "endpointIds": [
+        "resolution-endpoint:9120d7fc15181245cc38f4d537b058ab1ede2e9876a4ac7b8520e19f9b4f19e3",
+        "resolution-endpoint:be9049b262ad801eaca7cc757afbb7970b1565360093c5e76ca8dc091c5eb20a"
+      ],
+      "anchorHashes": [
+        "591cb26011da5568beabbc3eb2065fe35e3247807e1fa8488abe08456e39136f",
+        "8708b978954d966bfc79383ce1a2a5290fc21dbd953e0e6bd34fe32de733ec7d",
+        "6e76e43a4758e2a1a60a38ec07f3831d22ce52772338a5d436d4a06e79f7a2d7",
+        "b71e0d3c69912a6308601174d6995497b4776c0451a19419e6ab8c753399e522"
+      ]
+    },
+    {
+      "groupId": "review-group:4e6c9b75bf6887b4166e3baed15af679f8b3e3d2158a9694ba2fccbcf3e1275b",
+      "endpointIds": [
+        "resolution-endpoint:cf4bdfcc9d8ecb6f1fd1246d88bb9dd10fb9084aa71b1300cb0cba75f26b61b0",
+        "resolution-endpoint:e538e0d2a0a24d22917f863ed4bd00a3d925879cdcf4e5e9c4931618da058280"
+      ],
+      "anchorHashes": [
+        "7a0ebe2bee79c3d616cff2324b14c13c86c32480cbd40e5f07d18c4c1ebc240e",
+        "801d53eb8bc62418968092daea133634d9c538a8eeaae250339cd373ee457d2a",
+        "9e68165ff52b20ed36279e7f51e18d6b3490f46f56785c3e4c619b253bc1f124",
+        "473c6f92399e465dbb9efea921f8b09474906310adaa13a0c49ed13055d34d2f"
+      ]
+    },
+    {
+      "groupId": "review-group:4fd7b0d79f02f757bafab954eeecf444b218ccc3515edef2d67bb451197e2051",
+      "endpointIds": [
+        "resolution-endpoint:222afc064a2219cdc1e5b26f60c04260b3d3a035474c6ad7c1846009d767c02e",
+        "resolution-endpoint:fb24e15f56ec009f8d70c8812f29cce02aa4313baace7c245c21828c026b438c"
+      ],
+      "anchorHashes": [
+        "cf97cc58291a56dbb8abb9c998375d2c0a598367578a9b7358679b3ecefc2156",
+        "484e652c548919995eb816dde867ee02d9047899d01b1813dd6ded514ee546c1",
+        "2c8169053182dbc698577597ad779aca4804196aaf0e8976abe9eef1842efe22",
+        "5dbd02338f364ecd6c4f60097ecaf4f29a95a0c040439d2b2164df7b228bd95a"
+      ]
+    },
+    {
+      "groupId": "review-group:507ff3e915594a99e3d5193040a303abb7f9e4db6ffa55f61c2d7924a8863dc4",
+      "endpointIds": [
+        "resolution-endpoint:de43c79b8eed5e5f6e7bd4ecf076e2943fb6f818e9defb64bf53ca10d775b5ef",
+        "resolution-endpoint:e588a3b20f61458ee99e4f1e293a88b5b20c5f22eaa1b76b1722730119438c16"
+      ],
+      "anchorHashes": [
+        "2f753a963eabf5ff99b3ce42e31ee824745ae8556a5322a7f693eab8513b807b",
+        "474f364ce7bdd4c183b08609c8a984fc36b6546944b7e0506e762e2fe519081e",
+        "a450e2546dce2290b9cc947edc0a69e574f712b02199feca6c40e96c2b7e0a3e",
+        "5ac97005be91fae0c5aaf908aae53e1f75440ede739b5d892aaa9dcda8ff6f94"
+      ]
+    },
+    {
+      "groupId": "review-group:751b18083b12b789dd1e45743bafc01a0e5fd97546e166fdf9fe893645e3a8f9",
+      "endpointIds": [
+        "resolution-endpoint:2e0eb1e69e1bdd7e0ccba5e3080c673170283cd2460b888f8fae97664c7e2af8",
+        "resolution-endpoint:a9b3a0d026c78de4b2c2550a08857c7c557858033439aef95ac6a00ffa523ef0"
+      ],
+      "anchorHashes": [
+        "57903db0fce3c6f857f9ecf507b7a0f7bb540c55bf48b2afc44ec9f2525c609d",
+        "3f54a724ec0035fe74e97529ebe1a3a887c69e55ce559bcb53a228a359588844",
+        "ab08bff6ec9b15b46c770a4613d4d140c3fcf7db6c4a4afc208ab8fed5ee1092",
+        "af89a618a6e9eb30f1c63ce729d7f30716aeaa10c5ccea31998fee7b37b11c2e"
+      ]
+    },
+    {
+      "groupId": "review-group:7dc24f0ce9fee891304cf3018492e29dbef96888382ddfc79bca25122777f185",
+      "endpointIds": [
+        "resolution-endpoint:159f2491a626e8e2396302286377e70b9c5188e0588e50208a11ad2b6346a6ba",
+        "resolution-endpoint:b6b4975c9af5a5aa84bbdddb167edab8450e6fcb7760fb84ab94ee45b30601ff"
+      ],
+      "anchorHashes": [
+        "d40a9f0011d88c7281763c6106defae3ac352c47e78044e48d81611f42061ea9",
+        "220955ee6f85013572408392ab5631d9803742d94186eafe5ac279914ac2bb2d",
+        "bc80c9c94e7f45854f186a8600c60328faa21e3b7dbaba39a7024681c925d470",
+        "b534029d1316a30e33d25cf5a2bf0033dd77067b610d196a79cb263bdbf4a6d8"
+      ]
+    },
+    {
+      "groupId": "review-group:892eb3fd7c54a23c8a58789df6d99c0388bd64b5a2089340b297f695306bb896",
+      "endpointIds": [
+        "resolution-endpoint:1f9824da8114741e1a9bd7c38e7aa78fbdf58b48b8ad99fe1b2625410fe33a43",
+        "resolution-endpoint:bfb6d1f752db574e900f11572a8a5948d2e7cb40e04e8ffd17c41420659381cf"
+      ],
+      "anchorHashes": [
+        "0a8537f3220a9362883d2366d531ba473ca17d72aac00afb0e73892fcc99acaa",
+        "3bdde1e39e4f43e7d9dead95ed40d3d6e35736fcaa9266e0abbcb0b347d9e119",
+        "8055994126232074dd6cea0760f6a44e7aa317cbb265636a52826bfc5362a206",
+        "b807660d8dafc91d69f532b844e3b911b621239751ea056318692edde5ab8752"
+      ]
+    },
+    {
+      "groupId": "review-group:8b18729de224d163c9cfc6ea8ccf4ec979916d38e857fa3475ff6591ad686055",
+      "endpointIds": [
+        "resolution-endpoint:75043586548adb900dccc7eec248af2938292c72357f92f8497ccc0187a1a5cb",
+        "resolution-endpoint:b288df9256cf3b1c7a46f6e5979f4450a3ed4e594a5b7bf6ffe641308c855d9c"
+      ],
+      "anchorHashes": [
+        "6406c7a7bd4a5e590cc362cf6227a0394118edc21fd8cbd8e3c88c1918f5b8b3",
+        "70315dea6d0511c5002e0b9b4d4f671f37b67088ac435901659152f275563d29",
+        "de78dcac5113b447930a540c4e9f6f585fbfe955420381fbc8dd5dff27e96136",
+        "9152897acd4eb289ce5f994f3169f2e06eb70d5340052ea760a4e91cc449021e"
+      ]
+    },
+    {
+      "groupId": "review-group:8d86ce1e6bb0e21d7491913d8a1123088038670e33e26a0fa790435b74f7148d",
+      "endpointIds": [
+        "resolution-endpoint:031193311cd1cdcb9ce2244cd0bd800dd021eff7cd37fc82482d0c3fbe6534b5",
+        "resolution-endpoint:4b0ae7a7ee064bd4d8af1d04db10828ef70cf7b7c150e4b331d92155b76446e5"
+      ],
+      "anchorHashes": [
+        "378bdc079a3b820c98a8c3b703cc7ee3eab004d053ac520c843f56cb9122e5ca",
+        "18cc517cdaf0b4d6cbe5b7cdecb8d8b23f57036f2600f2af35b19bf6c09420e3",
+        "b5ae6db64dee46fc6bebdd00bf239e2cfa95b34863a69e90f3e7cc29fab6e044",
+        "17dbe1fcb826dc4cc10ec4ad21fffc0bf140f465691e1f522102fb75a52117ee"
+      ]
+    },
+    {
+      "groupId": "review-group:9396a84082be8f9852c52c735aea68ebb493d1f78f62de1da43792291b6af0f8",
+      "endpointIds": [
+        "resolution-endpoint:55695842d8c586b63921bf2a9a2f6670fcc55602aedb4fd0c3d890404a1afb82",
+        "resolution-endpoint:681ea561868e9b315f45bbd349f6ae8fc94bf6aed32731fd72384d262dde0ca7"
+      ],
+      "anchorHashes": [
+        "2ea64d73c8e706e8cc353f8df50bb5847ae22cf7fe1315c0c60f5e61417b3789",
+        "44c98016a5603daa135e710425b313c032583aec36a78bcbe11d03836257c7dd",
+        "77ff691cfa0b9a74f99bb9749555bf627b257e31f267a61c1b9228eb2383b34c",
+        "4c0b6d9f0e0ad26fba8fc87fd4269c6003093a4d16e692b4998400fe0e32cbe5"
+      ]
+    },
+    {
+      "groupId": "review-group:9e4b7fc7f055b7764f54f774f8e044a3a72d2edf0eeeee8d9f0afddb7ce1500e",
+      "endpointIds": [
+        "resolution-endpoint:70ddf99bfb971e73eb242619f1169a77d2efdc1a824f0423ca33b7fc1354c9f1",
+        "resolution-endpoint:a167aa29d48862e8b11c334d87aae49ffe97fa748a9c64effb17e2deae23790b"
+      ],
+      "anchorHashes": [
+        "93555cea96239f1791e3a1c08c70916f6535bddcba4043b65ef024576f3a855a",
+        "55853e0eb1d9c52833c8b06902d38ed852ae3f9f82b2251fa4a1d7d8c02d95a6",
+        "b77251b84939a8065aec5c72f8b71c80154b2b6f1f32bc434708f743b046e653",
+        "389299dab1c525c19d30879090571f87d0508db584329d1822939cfd6cfe4671"
+      ]
+    },
+    {
+      "groupId": "review-group:a1ffd2b32e8529661d47edfd5e93d17c1142e09b29e4b46f9ec7c5fe8e364148",
+      "endpointIds": [
+        "resolution-endpoint:1d3adba4a7778909050c4e9295a52dfff84ffc072e9bf07e6a1b7ddd33bf9dc0",
+        "resolution-endpoint:773cf1c225765ceedfa6632707e9e950b6e1d53a343dfde28cb547e4f88ff2e7"
+      ],
+      "anchorHashes": [
+        "9c406f03635078d09a7e11ea01de3d97641bee2d39d7b7fd282e61b0a479e387",
+        "ff90716e7cbca1201fd35c4000cc65b8d216203f984e6a5940577396f314fd89",
+        "09831b0fbf1876b23922a7c2fdafbab1bbdf25f8aa4531bb5b72ec5a562c909a",
+        "e1827e804d73957db79b86c6163b531264cbd3b7ad575e426d030e90096fcb79"
+      ]
+    },
+    {
+      "groupId": "review-group:a259083adbfddaf508e3b417afd63c40135407294cff9bb01db3c24f3bf6b3fa",
+      "endpointIds": [
+        "resolution-endpoint:128b7eb9f84851f89dae7eaf2130b8852b0a6897d8184a69f803136a589ad2ab",
+        "resolution-endpoint:6dca58585fa5d5bfe86c3cb52ea1de500ef12746daadafcff1227aa6a7ce827a"
+      ],
+      "anchorHashes": [
+        "7481a49a957507942f0c8005110e7c3b84ac87d9d2f3e317d45675f71311bc32",
+        "545567e9cdef56a00237c3802d408ed8ce490c68e2feaa5313847df435e2a67d",
+        "015b402992af0b0a1ca2e49403ba86e7c3f96da7cad53f74b801eba2abecbe5c",
+        "0b947136aaafcb9451b52460b4cf28c83e98557fe3d12ed2b13b81d3640cd4c8"
+      ]
+    },
+    {
+      "groupId": "review-group:a83176bec391475c7ccb053746a2db72e58fbe0f83b5ae94ffed822b4e4ea439",
+      "endpointIds": [
+        "resolution-endpoint:03a90e9dca779168e202532d4c62e4a9c780ea3b06c477c5acb24daefee371da",
+        "resolution-endpoint:fcb9c27669324c03be186d93583456095b0424773e65e261633a9c470f2ccf6d"
+      ],
+      "anchorHashes": [
+        "6b4cdcf945608e4612634b7d2ff2ff13abee768ac8056cab1b1fd027655f337e",
+        "5950fd41cff3b7df41029f27cc791559fb60a122a6afe5ee46319ea5846c9660",
+        "d8525cc2447dca8e17ec37abb9f7e1a4c5f20b44048fe3c7a3bfa18753b892b0",
+        "e4081ae3cf743bb48837771dbd82ecc05fd7ce6aa17a0710ec3b2bc3b9359460"
+      ]
+    },
+    {
+      "groupId": "review-group:af24633c6f89d9aee497f855b07198f265eb864d9ec338f7cecda0769b07a721",
+      "endpointIds": [
+        "resolution-endpoint:4f3d66217023e13dcab3f919d7d728534d02699baf042948983d786c62340286",
+        "resolution-endpoint:97af019b92c2fc32e78293cc37486735574f1821170b66e3d0c532e2efae7996"
+      ],
+      "anchorHashes": [
+        "59e9a95123ab295b80007172e3d49b2b81c4c598fe586983be6d3f0bbe692906",
+        "00f6917f6c42b2264431f1fdc353dafb6af27453fd318c5a1f8e6d584bfcf739",
+        "7e97622ab3ed8befd0b227f267395ca91885e42f38cb18ce18be06ed64278ef0",
+        "f9b5a8af87cbb87ed95edd619dfb1f28b04809bdaae962ef1e99f79885493bb2"
+      ]
+    },
+    {
+      "groupId": "review-group:b1e3d085f341bc04b0f37bc0c070fd9b3ff82c006e6321294f59144064ae20ab",
+      "endpointIds": [
+        "resolution-endpoint:4c692e186a3b11c3455b7829288af33b0699dd7f176f836b6b882c27f22410c5",
+        "resolution-endpoint:e3605008b9a86eb6322d5dbbb540834739d1ee0b6b02b4f70a5bc9d8832004bc"
+      ],
+      "anchorHashes": [
+        "7c5611f9b530c05cd6bea8c10df56310760f50c1df28390c29e936a6af2bfdf6",
+        "f6787910db5558ac9dd81997c19a20fa7d054c129996ecfa2a689fc1e30d4af4",
+        "f3eb0549addb1ee16cdbce2d610a3950f884b6ac9078a0e3b7bfebfb35c3a2e2",
+        "39c71c4b361de33d77870772472690799955309a4a9ef7a26cd4a6204029fbf2"
+      ]
+    },
+    {
+      "groupId": "review-group:b413565008325f04e1adf0b5b6f4bafec480e2570f474aca023e675e4168f4b7",
+      "endpointIds": [
+        "resolution-endpoint:658d0b2a5e1a73fdad6f7afb7a33b8663d832e07dd3509df91d30a5b3216020c",
+        "resolution-endpoint:f72628d5b709829eca9682caf301c8b301160308a636b56534931deeff4f7898"
+      ],
+      "anchorHashes": [
+        "1e26a7f1a7059bf99f5d2ad51d922d549d5ed8a4bd552a3f580733eddd12294b",
+        "7241a346b646b433465cad5b2f59d33630924941d63552b11659e73c634be27e",
+        "f6d5a8eb81c1acda1efbe99fcd51bdbc7ff498f3d60f4df3b270e34ff51a15e4",
+        "ee0c1eabc5e291e9df329fcf66d86b5932a9fca02da13ffabb04fcc4d8ef69dd"
+      ]
+    },
+    {
+      "groupId": "review-group:bb5e461b0240ee129d7b6c66d32337eb3b034fcd21b098412b6a978bae4c2643",
+      "endpointIds": [
+        "resolution-endpoint:92d53f9dfeb7b2e41e83f691fa801f8c3fcde37a55ab4c776a3c104dafee9fb4",
+        "resolution-endpoint:dd9d31c9fc975ad3cd41f100ef94576981d46b88d96691cfb52c5d94b46795a0"
+      ],
+      "anchorHashes": [
+        "5232697b04ac6a40b099f31525042573512a4a9c385646d265755fa8321ef44c",
+        "6a94f677a394009d4eac2476fd51088f7fdb28436bd7eb01f7ff79da20cf3dae",
+        "13930e8e18e19d7dfc7ce380868931184dee209e4416ed24eb65f89374660379",
+        "c06216f0947dba67cb94193dd52dabf3d4f38796d2bde3dfd37d769b7ffa9db0"
+      ]
+    },
+    {
+      "groupId": "review-group:bc504704ea26910753cd1344d1601e38fe4830b2ab2b80fd0321ac471d28749c",
+      "endpointIds": [
+        "resolution-endpoint:846f7cdab4dd3e6b332abc9bf160ad1be11436a71fbd8abe925fdb4289d12a57",
+        "resolution-endpoint:97fa453b1d2de664b899ec0c1b650cb80eb6755f5fd944b2c6bceae0f2c81c6d"
+      ],
+      "anchorHashes": [
+        "b86040066aed261650e70d15799b8aabbba11a23f4e2d88c35225fe81b9b1093",
+        "d3fc62af6074b759a4cee67caee22511088894906a45df6bc94b893b1cd6af46",
+        "c87e4dc99e893e780758aa934f97719861b403d8aadcc4ef949cbf7e94b20d4c",
+        "d0efa7c0610dcc6fd7214ffd5c7388ef800964d1a944af76b1f6e2544fa4f5ac"
+      ]
+    },
+    {
+      "groupId": "review-group:cbb89b48977c3a40693a90dcb4c7cd9b44440d082d923df8adcbc11938abbbb3",
+      "endpointIds": [
+        "resolution-endpoint:5d11f99bc62d88b29c9271d10bcdd2f4a0d3dee2c91e93e34eb3ce13f85d5171",
+        "resolution-endpoint:713d271f8e80fdd4c14c3fe38cc7c7ae65eda185b7d9fc0f77d3bb5b2facf7fa"
+      ],
+      "anchorHashes": [
+        "b809911113626dcb2936dc765fff032880a3fd832841746d17f94107a63558af",
+        "392b6ffe78494e0e1afad33975b9f1a7fa58cd563f8071007b71394839bf035e",
+        "28a5749bddac978eb6d380fde0c5835fd86685807b7425555b419166c99f069b",
+        "e34a6af22b5ad12281888a24d95f8e8764bb0dc3b57af5e82136dc49fe573bac"
+      ]
+    },
+    {
+      "groupId": "review-group:d137ed7a208c9b62da382cd798967228fadbcef66c20a072dbaccb11790b1499",
+      "endpointIds": [
+        "resolution-endpoint:8eaf663fb60254f704726d55e754b7d293180f97db934a4b86c93e49d5fc71ea",
+        "resolution-endpoint:b4621e41897e45aff1a96a73ed80cb194ff5cdb851313bd73b7be35ffe049972"
+      ],
+      "anchorHashes": [
+        "977d46e19de9105a0870f0080c7b08a325e03f1e2b7285dad8c1a88d35a39264",
+        "1690395e9051c73b997e3f08778c7f514e943d2167a4dec48f033e5f8570a426",
+        "2044affd949510accfe8be0c9301420a68b5bbed84022ac3add86dfbb3e4cf36",
+        "d4a32742bcab027941ac47c2997b306fd26729985bebfdd875a6bf6bc1eff84d"
+      ]
+    },
+    {
+      "groupId": "review-group:d3b42224a41385322426a7966e8d077f8ba0cbf6636e4a485109953caa821085",
+      "endpointIds": [
+        "resolution-endpoint:066bd399f17e70abd5f5526d948e60af5cea9e96767a606f8f149cac9842ab74",
+        "resolution-endpoint:6c3062b5e3a72c13ba41a8101c1c2249deaf6e88c4ea54bffeb4ec271c408a64"
+      ],
+      "anchorHashes": [
+        "6e29930b458a8e62aa0c0e36b0e443cbefc071899ff75e153a513384f3107dec",
+        "2a9aeb5387f3ac54e6774a6b401d03847acadf2e8e306723f8a58e2ca03ba2be",
+        "bbba3c35b74cc2beca7e5f2ed4df9e2738b762590aa4e39bd6edee5113c6e50d",
+        "183a34cf18c9bf63bb57d73385f2cb3304e768c05b3de6c64b5980e437bdd172"
+      ]
+    },
+    {
+      "groupId": "review-group:dafcc625107dd7ba94e2a2cec4c9a7904b91675a66ed4cfbba6efe0bc9934b9d",
+      "endpointIds": [
+        "resolution-endpoint:1e9a80f8780aaa2aa7d5014c938d8f6089bacaf016a9371c7db16167a8fa1f3c",
+        "resolution-endpoint:7dac0534059fb42ec91ec8bb6e2d3fe742b4f6499a5b361bc70ec908f594cce6"
+      ],
+      "anchorHashes": [
+        "e6270fe8bd2771400a88da1b59f5094448d0b44ec4f6d1603c41215d63b1430c",
+        "1cca11ff553da7661755232e101c2f57a3a023d60a8bd4433b0e648341b94108",
+        "1904e438e88c20ae25f9bfff454d6b3f22bc117fc9302273baed185ed1c62f35",
+        "a9b76c3c6d1119b8b60aea2360868b23c7a1bd4b3529ae2dae206712ed0fa1d1"
+      ]
+    },
+    {
+      "groupId": "review-group:dc7d8bab40668dc99753228054339a37de338511ef0fac50224220b3ce5e480f",
+      "endpointIds": [
+        "resolution-endpoint:299df84a86686f1bdd3bff333f42bee2ac87621d56447a1afb6cd09b1083520b",
+        "resolution-endpoint:87d6a3ce35e65d4d73adda5a65ac6aabfeebb5a4f3e8e7379ad24ba2e43e7043"
+      ],
+      "anchorHashes": [
+        "bfe3d1f5a92d56ceb7bc2a7559c4d98761f6ffcadf893026eb2ddb8935add1e5",
+        "0a1ec2af36de4ae89441ded0506bd96f0788fd9e62ff8ad836583ffbfeff1a72",
+        "e0f217382ee6658038ab2167c94edfcc59039dcb5f644214a50d9a10c95c0bda",
+        "dba5e02b31d86b8fc65a8653abef0041e1f907e16e1673f0046b39009c12a27e"
+      ]
+    },
+    {
+      "groupId": "review-group:e842ce3e399f047eef64d2f624c8ca3ed1e35aa76e4b431e02b7fa05334366a1",
+      "endpointIds": [
+        "resolution-endpoint:c29ff1e8f4839ae31866f1cae6b299426f5ef31aa99870093f94e375ff26f59f",
+        "resolution-endpoint:ca7a1416a8cb68385e72c2d00d9a09d10eac4b02c19ef7de58fd3ec29f80b51c"
+      ],
+      "anchorHashes": [
+        "d2f070e5800c6567bdd7d744a68f6ae6dabbe5e1f05c4ecb68626a44f5708624",
+        "49e52c0bc56e7a7c616e8849bf8897faaf1b03e7142d5d3a250440f9ecb8b4f2",
+        "e5f803b10c6bbd0aa2274b6bea9f257c688a12f78349e7310e7e1764603e0e6b",
+        "62bde496d61aa752a762ec2fa4ac879b2ea294348b892f84167c7268d37f6711"
+      ]
+    },
+    {
+      "groupId": "review-group:f091644ee1baf838c199a95c541b1a72c3d2e8f95cf01955b644d18494bc1483",
+      "endpointIds": [
+        "resolution-endpoint:be24c07406581207e7f8a094d3423fa87b1e3f373aa086ab395078ef7964cad4",
+        "resolution-endpoint:c49bb8d93a79535fa0f31d9b826944b5a62d3cdccd35984b2d8ac35233d7d601"
+      ],
+      "anchorHashes": [
+        "124401253e06239ce223ea0a4a1e595facb599ff5cabb1542e151f813dc7cf10",
+        "0337912c39c95205954a29c3d827d93a3eef3b8da62585c2b0239dbabe6f6642",
+        "1848bdf7dbc6b68802a97425edccacf28278ecbed5783788f696b42d0ae5ef4b",
+        "43906d393774566fec8333634f2c15936277a94626e98e69f31e406905381df6"
+      ]
+    }
+  ],
+  "partitions": {
+    "review-group:b413565008325f04e1adf0b5b6f4bafec480e2570f474aca023e675e4168f4b7": "held-out",
+    "review-group:892eb3fd7c54a23c8a58789df6d99c0388bd64b5a2089340b297f695306bb896": "held-out",
+    "review-group:49fd16f9d8a87759bd32f60a9b425ed0cdd459c0ca4d767e5debb077c429b3d2": "held-out",
+    "review-group:e842ce3e399f047eef64d2f624c8ca3ed1e35aa76e4b431e02b7fa05334366a1": "held-out",
+    "review-group:1736b2cc106ff695b1a889dfbab756f912f0c47aa99756ea0fdd43ce8ae85d56": "held-out",
+    "review-group:9e4b7fc7f055b7764f54f774f8e044a3a72d2edf0eeeee8d9f0afddb7ce1500e": "held-out",
+    "review-group:a259083adbfddaf508e3b417afd63c40135407294cff9bb01db3c24f3bf6b3fa": "held-out",
+    "review-group:24d701425aa65874969cac129aef4f60a2250b4ed44109b376b4c0a15abdd8bb": "held-out",
+    "review-group:507ff3e915594a99e3d5193040a303abb7f9e4db6ffa55f61c2d7924a8863dc4": "held-out",
+    "review-group:a83176bec391475c7ccb053746a2db72e58fbe0f83b5ae94ffed822b4e4ea439": "held-out",
+    "review-group:376b0a142a22549db1ef3c19fcd6281a5dd29826b5edd888407e64ab269f095f": "held-out",
+    "review-group:3453e5c2007fd62a490c4f775d6423537372dbe21980c92a2df9db0de4c4bced": "held-out",
+    "review-group:d137ed7a208c9b62da382cd798967228fadbcef66c20a072dbaccb11790b1499": "held-out",
+    "review-group:8d86ce1e6bb0e21d7491913d8a1123088038670e33e26a0fa790435b74f7148d": "held-out",
+    "review-group:24fc8e934f292d4cd66b8453291db5154578f84bc099d3d4266b70907c4d6691": "held-out",
+    "review-group:085d2acd8948cc834ac4c2a9857ac5913a2fdc649487a8ecfc817d4b6554642f": "held-out",
+    "review-group:dc7d8bab40668dc99753228054339a37de338511ef0fac50224220b3ce5e480f": "held-out",
+    "review-group:cbb89b48977c3a40693a90dcb4c7cd9b44440d082d923df8adcbc11938abbbb3": "development",
+    "review-group:b1e3d085f341bc04b0f37bc0c070fd9b3ff82c006e6321294f59144064ae20ab": "held-out",
+    "review-group:38db6f8285c8b4eacfc43205f2f0aba90b9cf3eefb35eba4e5a50203f7aab784": "held-out",
+    "review-group:0f7617b92a62dc857df01e782fb100026e4cf822a37561eb3adcdff54ab2724f": "development",
+    "review-group:751b18083b12b789dd1e45743bafc01a0e5fd97546e166fdf9fe893645e3a8f9": "held-out",
+    "review-group:286fa64c5986ff8a7f92b4daeaf3e8303709f6d4604bb3eaadd6390e2679cef7": "held-out",
+    "review-group:8b18729de224d163c9cfc6ea8ccf4ec979916d38e857fa3475ff6591ad686055": "held-out",
+    "review-group:bc504704ea26910753cd1344d1601e38fe4830b2ab2b80fd0321ac471d28749c": "held-out",
+    "review-group:af24633c6f89d9aee497f855b07198f265eb864d9ec338f7cecda0769b07a721": "held-out",
+    "review-group:9396a84082be8f9852c52c735aea68ebb493d1f78f62de1da43792291b6af0f8": "held-out",
+    "review-group:a1ffd2b32e8529661d47edfd5e93d17c1142e09b29e4b46f9ec7c5fe8e364148": "held-out",
+    "review-group:0674bd9f017808e28a961129c7248439827610565ab200dfab4107d55f87f84f": "held-out",
+    "review-group:4fd7b0d79f02f757bafab954eeecf444b218ccc3515edef2d67bb451197e2051": "held-out",
+    "review-group:bb5e461b0240ee129d7b6c66d32337eb3b034fcd21b098412b6a978bae4c2643": "held-out",
+    "review-group:0f368a3c043c2d169badb80ff981bbc8d06d3c55609bf2df504033f0875dde21": "held-out",
+    "review-group:4e6c9b75bf6887b4166e3baed15af679f8b3e3d2158a9694ba2fccbcf3e1275b": "held-out",
+    "review-group:0cdbb187a48b7c67c6597418dc94133d979070150d897386baf95186bc8f3d62": "held-out",
+    "review-group:048c1c7db82513d8f2510883f6dc20b7c95aaeb65b3ee85a36634d1863862a56": "held-out",
+    "review-group:7dc24f0ce9fee891304cf3018492e29dbef96888382ddfc79bca25122777f185": "held-out",
+    "review-group:d3b42224a41385322426a7966e8d077f8ba0cbf6636e4a485109953caa821085": "held-out",
+    "review-group:37590f7ef1febbf4aacab3d5f2bfa781cf89f7b1b6ca1bc7ebb1024922835eba": "held-out",
+    "review-group:dafcc625107dd7ba94e2a2cec4c9a7904b91675a66ed4cfbba6efe0bc9934b9d": "held-out",
+    "review-group:f091644ee1baf838c199a95c541b1a72c3d2e8f95cf01955b644d18494bc1483": "held-out"
+  },
+  "pairGroups": {
+    "resolution-pair:6f43878f306ca31083135c90bbbdb4baf63d4a5be730cf623b148b8f9dc9791d": [
+      "review-group:37590f7ef1febbf4aacab3d5f2bfa781cf89f7b1b6ca1bc7ebb1024922835eba",
+      "review-group:4fd7b0d79f02f757bafab954eeecf444b218ccc3515edef2d67bb451197e2051"
+    ],
+    "resolution-pair:94e9d16e02e4e8893fcc660fdfcc3af6d25dbe33bacf644074a1a1373e0ee4c4": [
+      "review-group:048c1c7db82513d8f2510883f6dc20b7c95aaeb65b3ee85a36634d1863862a56",
+      "review-group:507ff3e915594a99e3d5193040a303abb7f9e4db6ffa55f61c2d7924a8863dc4"
+    ],
+    "resolution-pair:e3b2da5a450f97663d64f522332a8f00b7b69b90f21df793688185128a7d3d93": [
+      "review-group:24fc8e934f292d4cd66b8453291db5154578f84bc099d3d4266b70907c4d6691",
+      "review-group:f091644ee1baf838c199a95c541b1a72c3d2e8f95cf01955b644d18494bc1483"
+    ],
+    "resolution-pair:4d089cef2e79b182acaacd38c62d7950a34cedaeb4f3747b29bc84d2cc61d201": [
+      "review-group:048c1c7db82513d8f2510883f6dc20b7c95aaeb65b3ee85a36634d1863862a56",
+      "review-group:507ff3e915594a99e3d5193040a303abb7f9e4db6ffa55f61c2d7924a8863dc4"
+    ],
+    "resolution-pair:5300e170f2827f7338b488a81263a0a54cc0e9dbb4f1e64b4232cfe40eb1ce3d": [
+      "review-group:0cdbb187a48b7c67c6597418dc94133d979070150d897386baf95186bc8f3d62",
+      "review-group:d3b42224a41385322426a7966e8d077f8ba0cbf6636e4a485109953caa821085"
+    ],
+    "resolution-pair:620aca40fcd5a4e3ef0293cec07b57c552dda50a3debb925f3efaaa2e15d7f66": [
+      "review-group:1736b2cc106ff695b1a889dfbab756f912f0c47aa99756ea0fdd43ce8ae85d56",
+      "review-group:9e4b7fc7f055b7764f54f774f8e044a3a72d2edf0eeeee8d9f0afddb7ce1500e"
+    ],
+    "resolution-pair:12ab53a40ac40e0d393a5125a9067cd1bf06876ef33323c222a394f2b1bbb4d6": [
+      "review-group:a83176bec391475c7ccb053746a2db72e58fbe0f83b5ae94ffed822b4e4ea439",
+      "review-group:bb5e461b0240ee129d7b6c66d32337eb3b034fcd21b098412b6a978bae4c2643"
+    ],
+    "resolution-pair:a7a9b0d35b35f34bd225cfd1428b7df83fb0cefef0277a2b96ad4c0ec1a12529": [
+      "review-group:892eb3fd7c54a23c8a58789df6d99c0388bd64b5a2089340b297f695306bb896",
+      "review-group:dafcc625107dd7ba94e2a2cec4c9a7904b91675a66ed4cfbba6efe0bc9934b9d"
+    ],
+    "resolution-pair:600b6616d97b25f17836b14a1a0f45552a1b8406d613bab06cdfaa8e5001a294": [
+      "review-group:9396a84082be8f9852c52c735aea68ebb493d1f78f62de1da43792291b6af0f8",
+      "review-group:a1ffd2b32e8529661d47edfd5e93d17c1142e09b29e4b46f9ec7c5fe8e364148"
+    ],
+    "resolution-pair:7696bc5c8c8a5f68c2adb7960903ce137cfc39d32fb2a8a8dd917a47d38b477b": [
+      "review-group:4e6c9b75bf6887b4166e3baed15af679f8b3e3d2158a9694ba2fccbcf3e1275b",
+      "review-group:7dc24f0ce9fee891304cf3018492e29dbef96888382ddfc79bca25122777f185"
+    ],
+    "resolution-pair:64eab48b7076f7398b3eaf19f4526d10be24ed40a88b05eb08aec9dfcbb3bc31": [
+      "review-group:1736b2cc106ff695b1a889dfbab756f912f0c47aa99756ea0fdd43ce8ae85d56",
+      "review-group:9e4b7fc7f055b7764f54f774f8e044a3a72d2edf0eeeee8d9f0afddb7ce1500e"
+    ],
+    "resolution-pair:e3a426614d6696c45dc1a487a7405569d4a6a716d2bf8cb913ebf5761a8d0778": [
+      "review-group:24fc8e934f292d4cd66b8453291db5154578f84bc099d3d4266b70907c4d6691",
+      "review-group:f091644ee1baf838c199a95c541b1a72c3d2e8f95cf01955b644d18494bc1483"
+    ],
+    "resolution-pair:527f670ef4b5ab960126490e2ad2e4607b364012f6a8ba420122a8df6c37a3d4": [
+      "review-group:0674bd9f017808e28a961129c7248439827610565ab200dfab4107d55f87f84f",
+      "review-group:3453e5c2007fd62a490c4f775d6423537372dbe21980c92a2df9db0de4c4bced"
+    ],
+    "resolution-pair:8f5b1706a39e181ab4c1e675bc53a866ed80e72c71a8803e0f431721367015c6": [
+      "review-group:8d86ce1e6bb0e21d7491913d8a1123088038670e33e26a0fa790435b74f7148d",
+      "review-group:a259083adbfddaf508e3b417afd63c40135407294cff9bb01db3c24f3bf6b3fa"
+    ],
+    "resolution-pair:f86bb976ece3a37fb1367cf417b01b377b8d1ca04612c54196e75d502c2ae056": [
+      "review-group:0f368a3c043c2d169badb80ff981bbc8d06d3c55609bf2df504033f0875dde21",
+      "review-group:38db6f8285c8b4eacfc43205f2f0aba90b9cf3eefb35eba4e5a50203f7aab784"
+    ],
+    "resolution-pair:84d635316023bc2981fbd5aeaeb35ff99a7bcbb5cc8d6ca326aeedd211263e21": [
+      "review-group:085d2acd8948cc834ac4c2a9857ac5913a2fdc649487a8ecfc817d4b6554642f",
+      "review-group:b1e3d085f341bc04b0f37bc0c070fd9b3ff82c006e6321294f59144064ae20ab"
+    ],
+    "resolution-pair:c47636d8f03676e1ad9e4ddde81a81f9e3dc1324088bf6038d6972add137083b": [
+      "review-group:8b18729de224d163c9cfc6ea8ccf4ec979916d38e857fa3475ff6591ad686055",
+      "review-group:b413565008325f04e1adf0b5b6f4bafec480e2570f474aca023e675e4168f4b7"
+    ],
+    "resolution-pair:2fcd6d25f7239852e2b60bc98d9120b1d847eee006a361a9fd1b4814441f7259": [
+      "review-group:286fa64c5986ff8a7f92b4daeaf3e8303709f6d4604bb3eaadd6390e2679cef7",
+      "review-group:376b0a142a22549db1ef3c19fcd6281a5dd29826b5edd888407e64ab269f095f"
+    ],
+    "resolution-pair:1793cba17765db4da80793f32cd051f9c1280f5b6a0d9890b2d947d72c00a42f": [
+      "review-group:4e6c9b75bf6887b4166e3baed15af679f8b3e3d2158a9694ba2fccbcf3e1275b",
+      "review-group:7dc24f0ce9fee891304cf3018492e29dbef96888382ddfc79bca25122777f185"
+    ],
+    "resolution-pair:cb18174b609457fc4ffe45c94a6b73c9bbff3e956d8da523e9ee1485cb7ab547": [
+      "review-group:085d2acd8948cc834ac4c2a9857ac5913a2fdc649487a8ecfc817d4b6554642f",
+      "review-group:b1e3d085f341bc04b0f37bc0c070fd9b3ff82c006e6321294f59144064ae20ab"
+    ],
+    "resolution-pair:d665fb70beb410b930f71178a8d0197f8f448434dfc509e8a856662766bf046d": [
+      "review-group:8d86ce1e6bb0e21d7491913d8a1123088038670e33e26a0fa790435b74f7148d",
+      "review-group:a259083adbfddaf508e3b417afd63c40135407294cff9bb01db3c24f3bf6b3fa"
+    ],
+    "resolution-pair:da8a5e63e0472c4ce82057c25fc9065e11ba25b00f0226fb0d145aa38126b4ce": [
+      "review-group:24d701425aa65874969cac129aef4f60a2250b4ed44109b376b4c0a15abdd8bb",
+      "review-group:49fd16f9d8a87759bd32f60a9b425ed0cdd459c0ca4d767e5debb077c429b3d2"
+    ],
+    "resolution-pair:f684704eae9ebc80c3950712ccc4a533d52d66b7ad17197046eed22da080ec43": [
+      "review-group:751b18083b12b789dd1e45743bafc01a0e5fd97546e166fdf9fe893645e3a8f9",
+      "review-group:e842ce3e399f047eef64d2f624c8ca3ed1e35aa76e4b431e02b7fa05334366a1"
+    ],
+    "resolution-pair:4551d086d335ea216c87df26b4478bf189b487c0b16d11179467cf4f0b87ad9a": [
+      "review-group:0f368a3c043c2d169badb80ff981bbc8d06d3c55609bf2df504033f0875dde21",
+      "review-group:38db6f8285c8b4eacfc43205f2f0aba90b9cf3eefb35eba4e5a50203f7aab784"
+    ],
+    "resolution-pair:8e7d37a8e8c764023bb6762f03ce3f11754c5eb333fd384acf69b39e44c2b3ea": [
+      "review-group:0f7617b92a62dc857df01e782fb100026e4cf822a37561eb3adcdff54ab2724f",
+      "review-group:cbb89b48977c3a40693a90dcb4c7cd9b44440d082d923df8adcbc11938abbbb3"
+    ],
+    "resolution-pair:8a1439d3ecf80e6fd793a60d8cacd1cf298ad3c455de227fdaa49dfd8e4ada91": [
+      "review-group:0f7617b92a62dc857df01e782fb100026e4cf822a37561eb3adcdff54ab2724f",
+      "review-group:cbb89b48977c3a40693a90dcb4c7cd9b44440d082d923df8adcbc11938abbbb3"
+    ],
+    "resolution-pair:f42f82512a741dc505d598e00c72dcfe9b3d4e50a8deaa1064df002a6912fd05": [
+      "review-group:af24633c6f89d9aee497f855b07198f265eb864d9ec338f7cecda0769b07a721",
+      "review-group:d137ed7a208c9b62da382cd798967228fadbcef66c20a072dbaccb11790b1499"
+    ],
+    "resolution-pair:03176ef41d18b645d8030d55b7463b7f874558980c93b41e0ee0391e18ee31b8": [
+      "review-group:bc504704ea26910753cd1344d1601e38fe4830b2ab2b80fd0321ac471d28749c",
+      "review-group:dc7d8bab40668dc99753228054339a37de338511ef0fac50224220b3ce5e480f"
+    ],
+    "resolution-pair:648eaee1acb169a9489e6be8a74b1b9596205938901f23a9288fdfb57d830a0c": [
+      "review-group:37590f7ef1febbf4aacab3d5f2bfa781cf89f7b1b6ca1bc7ebb1024922835eba",
+      "review-group:4fd7b0d79f02f757bafab954eeecf444b218ccc3515edef2d67bb451197e2051"
+    ],
+    "resolution-pair:bdb00b60989e80f0800c0a8e800a66389297bc76a44c19ea3ccd5d7f93b09a32": [
+      "review-group:0cdbb187a48b7c67c6597418dc94133d979070150d897386baf95186bc8f3d62",
+      "review-group:d3b42224a41385322426a7966e8d077f8ba0cbf6636e4a485109953caa821085"
+    ],
+    "resolution-pair:bcca51e2ae1970a4e13b2d74b998959d2be8cba8a075126833fae14384ace0bf": [
+      "review-group:af24633c6f89d9aee497f855b07198f265eb864d9ec338f7cecda0769b07a721",
+      "review-group:d137ed7a208c9b62da382cd798967228fadbcef66c20a072dbaccb11790b1499"
+    ],
+    "resolution-pair:9f43a564aeb3ab87592814821bbb7368fb3a85865991182dd1ff1f7b796ba2cb": [
+      "review-group:751b18083b12b789dd1e45743bafc01a0e5fd97546e166fdf9fe893645e3a8f9",
+      "review-group:e842ce3e399f047eef64d2f624c8ca3ed1e35aa76e4b431e02b7fa05334366a1"
+    ],
+    "resolution-pair:0be043a702f47f8860227fc58c5f420e4c9cfdcf49eb9bf3b31fa0422b881b2e": [
+      "review-group:bc504704ea26910753cd1344d1601e38fe4830b2ab2b80fd0321ac471d28749c",
+      "review-group:dc7d8bab40668dc99753228054339a37de338511ef0fac50224220b3ce5e480f"
+    ],
+    "resolution-pair:5ef4126f6e0c436c591a34031dc0886c219a9699e847c45de5822b449d3bcc1b": [
+      "review-group:9396a84082be8f9852c52c735aea68ebb493d1f78f62de1da43792291b6af0f8",
+      "review-group:a1ffd2b32e8529661d47edfd5e93d17c1142e09b29e4b46f9ec7c5fe8e364148"
+    ],
+    "resolution-pair:e988ca4386c6da1e6d6cd1a5fe92122fe6b0cbc85c37d6d5825575d50fdc29c0": [
+      "review-group:892eb3fd7c54a23c8a58789df6d99c0388bd64b5a2089340b297f695306bb896",
+      "review-group:dafcc625107dd7ba94e2a2cec4c9a7904b91675a66ed4cfbba6efe0bc9934b9d"
+    ],
+    "resolution-pair:5cf363a6b1cfa283b42dcb0263494a71d9d4889dac7c64a73e995dcef10dba26": [
+      "review-group:24d701425aa65874969cac129aef4f60a2250b4ed44109b376b4c0a15abdd8bb",
+      "review-group:49fd16f9d8a87759bd32f60a9b425ed0cdd459c0ca4d767e5debb077c429b3d2"
+    ],
+    "resolution-pair:106cb224b18fb3a44bdea28cb10cc47a4fb4fdda458690af3d9d9c3cb013e2be": [
+      "review-group:8b18729de224d163c9cfc6ea8ccf4ec979916d38e857fa3475ff6591ad686055",
+      "review-group:b413565008325f04e1adf0b5b6f4bafec480e2570f474aca023e675e4168f4b7"
+    ],
+    "resolution-pair:22f1e2178fe720f8ff9f25dfc6cbb246e5e7739a490e5629f48ab40da85de7a8": [
+      "review-group:286fa64c5986ff8a7f92b4daeaf3e8303709f6d4604bb3eaadd6390e2679cef7",
+      "review-group:376b0a142a22549db1ef3c19fcd6281a5dd29826b5edd888407e64ab269f095f"
+    ],
+    "resolution-pair:284b3264259c23100dad676a72746966bef6cb9752360bcffd4f6202f2453e10": [
+      "review-group:a83176bec391475c7ccb053746a2db72e58fbe0f83b5ae94ffed822b4e4ea439",
+      "review-group:bb5e461b0240ee129d7b6c66d32337eb3b034fcd21b098412b6a978bae4c2643"
+    ],
+    "resolution-pair:9e2467babee07fd8cae08cf97959729445c697f94eb19913490b237337be2326": [
+      "review-group:0674bd9f017808e28a961129c7248439827610565ab200dfab4107d55f87f84f",
+      "review-group:3453e5c2007fd62a490c4f775d6423537372dbe21980c92a2df9db0de4c4bced"
+    ]
+  },
+  "excludedCrossPartition": 0,
+  "selected": {
+    "resolution-pair:7696bc5c8c8a5f68c2adb7960903ce137cfc39d32fb2a8a8dd917a47d38b477b": "initial",
+    "resolution-pair:527f670ef4b5ab960126490e2ad2e4607b364012f6a8ba420122a8df6c37a3d4": "initial",
+    "resolution-pair:5300e170f2827f7338b488a81263a0a54cc0e9dbb4f1e64b4232cfe40eb1ce3d": "initial",
+    "resolution-pair:284b3264259c23100dad676a72746966bef6cb9752360bcffd4f6202f2453e10": "initial",
+    "resolution-pair:8e7d37a8e8c764023bb6762f03ce3f11754c5eb333fd384acf69b39e44c2b3ea": "initial",
+    "resolution-pair:8a1439d3ecf80e6fd793a60d8cacd1cf298ad3c455de227fdaa49dfd8e4ada91": "initial"
+  },
+  "residualRisks": [
+    "Unobserved identities and title paraphrases may leak across partitions; known source/identifier/title anchors are grouped.",
+    "Metrics describe sampled candidate pairs; blocking recall and global identity recall are unmeasured.",
+    "Evidence strata are oversampled without population weights; no population accuracy claim is justified."
+  ]
+}

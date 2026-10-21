@@ -1,0 +1,138 @@
+STATUS: REQUEST-CHANGES (2 blockers, 8 nonblocking findings)
+
+The 5C work is mostly sound. The claimed hashes, test counts, allocation and blinding all checked out. But two defects should be fixed before you start labeling. Both are cheap to fix now and expensive once 240 human labels exist.
+
+OWNER: code-reviewer (independent, read-only; launched by the user)
+
+WORK ORDER: Phase 5, Subphase 5C readiness review. Sources: docs/agent-runs/phase-05/prompt.md (5C authorization, lines 556–572), /Users/danny/Documents/plan/phase5.md §§10–14 and the pasted reviewer prompt. I read the course README section only as it is summarized in the plan and prompt. I did not fetch it live.
+
+FILES CREATED: none
+FILES MODIFIED: none
+
+---
+
+Blocking findings
+
+B1 — High — Human labels are tied to matcher settings that 5D and 5E must change
+
+- Where:
+  - ReviewQueue.scala:45-55, 363-366: the queue hash covers ReviewBinding, which includes the policy hash, config hash, prompt hash, model identity, code revision and source hash.
+  - ReviewCommands.scala:133-143: the real queue binds modelIdentity = deterministic-fake/abstain-fixture/v1 and the full config fingerprint, which includes the provider, model and spend settings (ResolutionPolicy.scala:255-282).
+  - GoldLabels.scala:56-59 and index.html:29: a saved checkpoint must match the exact queueHash.
+  - ReviewCommands.scala:155-160, 176-179, Evaluation.scala:157, 293, 313: predictions are refused unless policy, config, prompt, model, code and source all equal the queue's values.
+  - modules/entity-resolution/README.md:522 says it outright: a changed policy, prompt, model or code "requires a new binding and a new review/evaluation cycle or an explicit exploratory qualification."
+  - IndependentEvaluationAdapterSpec.scala:117-135 tests this behavior as intended.
+- Why it breaks: the plan's order is queue → labels → 5D provider/model selection → development calibration (new thresholds) → 5E frozen held-out evaluation. Choosing a real provider changes the model identity and config hash. Calibration changes the policy hash. After either change, prepare-evaluation-predictions and evaluate reject the predictions. Rebuilding the queue with new values changes queueHash, and then both the importer and the page reject your existing checkpoints.
+- Impact: the 240 human reviews could never be scored against the calibrated policy or real LLM output. 5E could only report them as "exploratory" or redo them. This contradicts plan §10, which says to freeze the population before scoring and the policy after development calibration.
+- Owner: entity-resolution-engineer for the code; test-engineer for the changed independent expectation.
+- Acceptance check:
+  a. The queue/checkpoint identity binds only what labels depend on: source population, input evidence, candidate population, split, sampling and each task's evidence hash.
+  b. Evaluation binds predictions to those same hashes and records the policy, config, prompt, model and code in its own manifest (verified at 5E).
+  c. New tests: label a synthetic queue built under policy P0 with the fake model, then evaluate predictions made under P1, a different model identity and a different adjudication config section, with the same input and candidates. This must succeed and record P1 and the new model. A changed input, candidate population or task evidence must be rejected. Replace the expectation at IndependentEvaluationAdapterSpec.scala:117-135.
+  d. Regenerate the real queue before any labeling, and re-show byte-identical replay and the 40/200/60 allocation with 20/20 and 100/100 by entity.
+- Blocks 5C: yes. Zero labels exist, so this is the cheapest moment to fix it.
+
+B2 — Medium — The input the queue is bound to lives only in ignored target/ and cannot be regenerated
+
+- Where: the queue's inputEvidenceHash 57efd819… is computed over a completion hash (marker plus run manifest) and evidence payloads (InputLoader.scala:236-245, 514). Those payloads embed runId: run:bd424a86-…, which appears 5,299 times in queue.json. The only matching copy is target/phase5c-prep-runs/bd424a86-… (132 MB, of which the export is 47 MB). That directory is gitignored (.gitignore:2) and is the root sbt project's target, so sbt clean would remove it (I did not run that).
+- Why it breaks: re-running Hadoop gives a new run UUID, which changes the input hash, the evidence references and the task evidence hashes. prepare-evaluation-predictions (ReviewCommands.scala:161-165) then refuses the input. Phase 4 only promised "logically equivalent" reruns, not byte-identical ones.
+- Impact: if target/ is cleaned, 5E cannot produce predictions for the labeled queue. The labels survive, but they become unusable for scoring.
+- Owner: needs a human ownership decision. dataset-engineer (datasets/**) is the natural owner for retention; entity-resolution-engineer if it is solved by making the binding independent of the run ID.
+- Acceptance check: either keep the exact completed run (export/**, _SCHOLARCHAIN_COMPLETE, run-manifest.json) in a durable, hash-manifested location outside target/, or make the binding independent of the run UUID. Then show that loading from the durable copy reproduces inputEvidenceHash and candidatePopulationHash 9381588e…. Coordinate with B1, since the queue gets rebuilt anyway.
+- Blocks 5C: yes.
+
+Nonblocking findings
+
+N1 — Medium — The guide doesn't warn that OpenAlex author IDs and OpenAlex-supplied ORCIDs are provider guesses
+- Where: guide.txt:9-14.
+- Evidence: 38 of the 120 initial researcher tasks show equal OpenAlex author IDs and equal ORCIDs (from OpenAlex). Five more show only equal OpenAlex IDs. Mention payloads display identityStatus: EXTERNAL_IDENTIFIER_OBSERVED. Meanwhile datasets/entity-resolution/README.md:13-15 records that OpenAlex author neighborhoods contained medical records, i.e. OpenAlex merged unrelated people. The 5B review also asked for OpenAlex-supplied ORCIDs to be evaluated separately.
+- Impact: human gold labels may copy provider errors and inflate agreement.
+- Owner: entity-resolution-engineer.
+- Acceptance check: the guide and page text say these IDs are provider hypotheses, not verified identity.
+
+N2 — Medium-low — A backward clock change can permanently block saving
+- Where: index.html:33 stamps each answer with new Date() and doesn't enforce increasing times. index.html:29 (also run on save, line 36) rejects a revision older than the previous one, or any annotation later than the export time.
+- Impact: if the system clock steps back between two revisions of the same task, the bad revision stays in history. Every later Save fails, and refreshing loses all unsaved work.
+- Owner: entity-resolution-engineer; test-engineer adds a test with a mocked clock.
+- Acceptance check: answers keep timestamps in order and a clock regression never blocks Save.
+
+N3 — Low-medium — The real queue has never been loaded in the page
+- Evidence: only a 6-task synthetic queue was tested in a browser. A browser-side load depends on JS and Scala hashing the JSON identically. My static scan of the real queue found nothing likely to break that: no floats, large integers, integer-like keys, surrogates or control characters. It does contain 145 non-ASCII strings, which both sides render as raw UTF-8.
+- Impact: if the hashes disagree, the page rejects the real queue as altered and labeling can't start. No labels would be lost.
+- Owner: test-engineer.
+- Acceptance check: a load-only browser probe of the real (rebuilt) queue shows "0 of 240 initial tasks answered", with zero label clicks.
+
+N4 — Low-medium — Two CLI paths have never been executed
+- Evidence: prepare-evaluation-predictions and the sensitivity CLI have no test or run. The completion marker, manifest, file-hash and path-traversal checks at ReviewCommands.scala:166-219 are unexercised. Only fromDecisions and an evaluate run with empty predictions are covered.
+- Owner: entity-resolution-engineer and test-engineer.
+- Acceptance check: CLI tests cover a complete run and the corrupt, partial and traversal cases, before 5E.
+
+N5 — Low — Reserves are counted as "missing" labels
+- Where: GoldLabels.scala:107-109 computes missing against all 300 tasks.
+- Impact: it reports 60 "missing" even when all 240 initial reviews are done.
+- Owner: entity-resolution-engineer.
+- Acceptance check: separate counts for initial and reserve tasks.
+
+N6 — Low — One command in the evidence ledger has no exit code
+- Where: evidence/5c/commands.json, entry independent-first-target.
+- Evidence: the entry still says status: running with no exitCode, but its log shows 17/17 tests passed. The reports don't disclose this.
+- Owner: coordinator.
+- Acceptance check: record the observed outcome or add an explicit note.
+
+N7 — Low — The script that actually ran the acquisition isn't kept
+- Evidence: the v2/v3 manifests bind acquisitionScriptSha256 2c2ad01e…, but no file in datasets/ or docs/ has that hash. The current script is 5861fc79…, and the initial attempt has no script hash at all. The later script changes are disclosed.
+- Owner: dataset-engineer.
+- Acceptance check: retain those bytes, or state that they can't be recovered.
+
+N8 — Low — Repository size
+- Evidence: datasets/entity-resolution is 47 MB, including identical 12 MB response copies in both v2 and v3. The queue and split add another 11 MB of evidence.
+- Owner: you decide before committing; then dataset-engineer and coordinator.
+
+---
+
+COMMANDS RUN (all read-only):
+- git rev-parse / status / diff, plus sed, cat, grep, find, du, cmp
+- shasum -a 256 on the 8 claimed artifacts
+- python3 -I scripts that only read JSON, to recompute freeze and inventory hashes and to count queue composition, blinding fields, ID agreement and names/titles recurring across partitions
+- No builds, tests, browser, network or writes.
+
+TEST RESULTS: I ran no tests. What I observed in the retained logs:
+- full-check.txt ends [success], and full-check-summary.json shows 383 tests, 0 failures/errors/skips, 44 reports.
+- The browser-downloaded checkpoint is byte-identical to synthetic-browser-checkpoint.json, which was imported via the CLI with exit 0.
+
+VALIDATION RESULTS (my own read-only checks):
+- All 8 claimed SHA-256 values match.
+- All 509 freeze files match the current tree, and the queue's sourceTreeHash 79a54bde… equals that freeze.
+- The 402 inventory paths equal git status -uall, with no hash mismatches.
+- The real queue has 300 tasks: 40/200/60, with 20/20 and 100/100 by entity.
+- No prediction, score or label fields appear (the 285 enrichment score fields are all null), and no abstracts are retained.
+- All v3 venues are CS venues, years 2018–2024.
+- No 5C changes touch core, Hadoop, build or constitutional files.
+- From reading the code: the page renders with textContent under a CSP with connect-src 'none', reserves are hidden by default, the importer enforces linear revisions, and the evaluator's denominators follow plan §12.
+
+ASSUMPTIONS: that sbt clean on the root project removes ./target (standard sbt behavior; not executed).
+
+RISKS:
+- Process: the disclosed incident where browser automation typed the local HTML path into a ChatGPT conversation. Future runs should use an isolated browser profile.
+- The browser test is a manual, agent-driven script (tests/browser/phase5c-review-cua.js), not an automated regression, so future page changes have no automated guard.
+
+MANUAL ACTION REQUIRED:
+- Don't start labeling until B1 and B2 are resolved and a new queue is issued.
+- Assign an owner for B2 retention.
+- Decide on N8 before any commit.
+
+BLOCKED-ON OWNER: entity-resolution-engineer (B1); human ownership decision, then dataset-engineer or entity-resolution-engineer (B2); test-engineer (B1 test change)
+
+BLOCKED-ON EVIDENCE: a rebuilt queue with the decoupled binding, the policy/model-change acceptance tests, proof that the input can be reloaded from durable storage, a fresh sbt check, and an updated freeze and inventory.
+
+NEXT GATE: owners repair → fresh gates → a new reviewer prompt for a recheck. Even after an APPROVE, 5D needs your explicit authorization.
+
+Broader Phase 5 limitations (not 5C defects)
+
+- There are zero human labels; all 240 are pending.
+- This is a convenience sample: blocking recall and global identity recall are unmeasured, and nothing is calibrated.
+- About 64% of initial tasks (77/120 work, 77/120 researcher) are effectively decided by IDs shown on screen. Per-path metrics for the scored matcher will therefore rest on roughly 86 initial tasks across both partitions.
+- Researcher coverage is 110/120 OpenAlex–OpenAlex pairs.
+- The queue has no same-publication researcher pairs, so the deferred 5B finding N-7 stays unmeasured; per your instruction it was left unfixed.
+- Two common names ("yang wang", "yong wang") appear in both development and held-out tasks. This is residual leakage risk that grouping can't prevent.
+- No real provider adapter, live calls, calibration, held-out scoring, 5D/5E or Phase 5 acceptance exists yet.

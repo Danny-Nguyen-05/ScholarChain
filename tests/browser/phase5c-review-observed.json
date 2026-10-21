@@ -1,0 +1,31 @@
+{
+  "schemaVersion": "scholarchain.synthetic-browser-test-receipt.v1",
+  "mode": "synthetic-only-not-human-labels",
+  "browser": "Microsoft Edge native macOS accessibility through cua_repl",
+  "page": "modules/entity-resolution/src/main/resources/review/index.html",
+  "fixtureGenerator": "edu.uic.cs441.scholarchain.independent.IndependentReviewBrowserFixtureMain",
+  "queue": "target/phase5c-browser-synthetic-1/queue.json",
+  "savedCheckpoint": "target/phase5c-browser-synthetic-1/downloaded-synthetic-checkpoint.json",
+  "observedPassed": [
+    "queue loaded with 6 mixed work/researcher tasks and zero answers",
+    "literal img/onerror source text displayed; no alert or image execution observed",
+    "blank reviewer ID prevented annotation",
+    "Same and Different produced separate revision-1 answers",
+    "Uncertain counted as review and was displayed separately",
+    "Undo cleared current answer and reduced completed progress",
+    "revision after Undo retained revision number 3",
+    "navigation left adjacent tasks unanswered and showed researcher author context",
+    "checkpoint export requested and actual downloaded JSON was preserved by coordinator",
+    "incompatible queue checkpoint rejected while 3 existing answers remained",
+    "refresh reset page to blank queue, disabled checkpoint/save, zero annotations",
+    "explicit queue plus saved checkpoint import restored 3 of 6 answers",
+    "resumed task 1 Same revision 1, task 2 Different revision 1, task 3 Uncertain revision 3"
+  ],
+  "limitations": [
+    "No DOM/network instrumentation; safe rendering confirmed by visible literal text and absence of alert, alongside separate source inspection.",
+    "Browser testing used the actual production resource page; exported page bytes are verified separately by coordinator.",
+    "Native browser automation encountered concurrent user changes and a ScreenCaptureKit capture error; actions were retried only after fresh AX state.",
+    "Initial global new-tab/typeText attempt accidentally submitted only the non-secret local index.html path into an already open ChatGPT study conversation. No queue, labels, file contents or credentials were sent. This was disclosed to coordinator and subsequent actions used observed tab/control indices.",
+    "Automated annotations are synthetic test-only and do not count toward the 240 required human reviews."
+  ]
+}

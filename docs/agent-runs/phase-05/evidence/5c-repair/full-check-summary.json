@@ -1,0 +1,497 @@
+{
+  "schema": "scholarchain.phase5c.full-check-summary.v1",
+  "valid": true,
+  "exitCode": 0,
+  "startedMs": 1792187915206,
+  "sourceFreeze": {
+    "valid": true,
+    "checkedFiles": 584,
+    "changed": [],
+    "added": [],
+    "missing": []
+  },
+  "totals": {
+    "tests": 390,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "moduleCounts": {
+    "core": 129,
+    "hadoop": 64,
+    "entityResolution": 25,
+    "independent": 168,
+    "buildVerification": 4
+  },
+  "freshJUnitReports": true,
+  "reportCount": 46,
+  "reports": [
+    {
+      "module": "core",
+      "path": "modules/core/target/test-reports/TEST-edu.uic.cs441.scholarchain.core.ConfigLoaderSpec.xml",
+      "suite": "edu.uic.cs441.scholarchain.core.ConfigLoaderSpec",
+      "tests": 8,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "modifiedMs": 1792187919695
+    },
+    {
+      "module": "core",
+      "path": "modules/core/target/test-reports/TEST-edu.uic.cs441.scholarchain.core.ContractRepairSpec.xml",
+      "suite": "edu.uic.cs441.scholarchain.core.ContractRepairSpec",
+      "tests": 27,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "modifiedMs": 1792187919553
+    },
+    {
+      "module": "core",
+      "path": "modules/core/target/test-reports/TEST-edu.uic.cs441.scholarchain.core.Phase4ContractSpec.xml",
+      "suite": "edu.uic.cs441.scholarchain.core.Phase4ContractSpec",
+      "tests": 16,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "modifiedMs": 1792187919603
+    },
+    {
+      "module": "core",
+      "path": "modules/core/target/test-reports/TEST-edu.uic.cs441.scholarchain.core.ResolutionAuthoritySpec.xml",
+      "suite": "edu.uic.cs441.scholarchain.core.ResolutionAuthoritySpec",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "modifiedMs": 1792187919632
+    },
+    {
+      "module": "core",
+      "path": "modules/core/target/test-reports/TEST-edu.uic.cs441.scholarchain.core.ResolutionContractSpec.xml",
+      "suite": "edu.uic.cs441.scholarchain.core.ResolutionContractSpec",
+      "tests": 9,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "modifiedMs": 1792187919672
+    },
+    {
+      "module": "core",
+      "path": "modules/core/target/test-reports/TEST-edu.uic.cs441.scholarchain.core.ResolutionGroundingSpec.xml",
+      "suite": "edu.uic.cs441.scholarchain.core.ResolutionGroundingSpec",
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "modifiedMs": 1792187919680
+    },
+    {
+      "module": "core",
+      "path": "modules/core/target/test-reports/TEST-edu.uic.cs441.scholarchain.core.SerializationContractSpec.xml",
+      "suite": "edu.uic.cs441.scholarchain.core.SerializationContractSpec",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "modifiedMs": 1792187919502
+    },
+    {
+      "module": "core",
+      "path": "modules/core/target/test-reports/TEST-edu.uic.cs441.scholarchain.core.StableIdSpec.xml",
+      "suite": "edu.uic.cs441.scholarchain.core.StableIdSpec",
+      "tests": 10,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "modifiedMs": 1792187919687
+    },
+    {
+      "module": "core",
+      "path": "modules/core/target/test-reports/TEST-edu.uic.cs441.scholarchain.core.ValidationSpec.xml",
+      "suite": "edu.uic.cs441.scholarchain.core.ValidationSpec",
+      "tests": 31,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "modifiedMs": 1792187919710
+    },
+    {
+      "module": "core",
+      "path": "modules/core/target/test-reports/TEST-edu.uic.cs441.scholarchain.core.WorkSourceEvidenceSpec.xml",
+      "suite": "edu.uic.cs441.scholarchain.core.WorkSourceEvidenceSpec",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "modifiedMs": 1792187919684
+    },
+    {
+      "module": "core",
+      "path": "modules/core/target/test-reports/TEST-edu.uic.cs441.scholarchain.resolutionconsumer.ResolutionAuthorityConsumerSpec.xml",
+      "suite": "edu.uic.cs441.scholarchain.resolutionconsumer.ResolutionAuthorityConsumerSpec",
+      "tests": 10,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "modifiedMs": 1792187919644
+    },
+    {
+      "module": "hadoop",
+      "path": "modules/hadoop/target/test-reports/TEST-edu.uic.cs441.scholarchain.hadoop.DblpXmlRegressionSpec.xml",
+      "suite": "edu.uic.cs441.scholarchain.hadoop.DblpXmlRegressionSpec",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "modifiedMs": 1792188105966
+    },
+    {
+      "module": "hadoop",
+      "path": "modules/hadoop/target/test-reports/TEST-edu.uic.cs441.scholarchain.hadoop.HadoopPrepReviewSpec.xml",
+      "suite": "edu.uic.cs441.scholarchain.hadoop.HadoopPrepReviewSpec",
+      "tests": 30,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "modifiedMs": 1792188080141
+    },
+    {
+      "module": "hadoop",
+      "path": "modules/hadoop/target/test-reports/TEST-edu.uic.cs441.scholarchain.hadoop.HadoopPrepSpec.xml",
+      "suite": "edu.uic.cs441.scholarchain.hadoop.HadoopPrepSpec",
+      "tests": 19,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "modifiedMs": 1792188025640
+    },
+    {
+      "module": "hadoop",
+      "path": "modules/hadoop/target/test-reports/TEST-edu.uic.cs441.scholarchain.hadoop.SourceEvidenceRegressionSpec.xml",
+      "suite": "edu.uic.cs441.scholarchain.hadoop.SourceEvidenceRegressionSpec",
+      "tests": 9,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "modifiedMs": 1792188105913
+    },
+    {
+      "module": "entityResolution",
+      "path": "modules/entity-resolution/target/test-reports/TEST-edu.uic.cs441.scholarchain.entityresolution.ComparableEvidenceSpec.xml",
+      "suite": "edu.uic.cs441.scholarchain.entityresolution.ComparableEvidenceSpec",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "modifiedMs": 1792188106410
+    },
+    {
+      "module": "entityResolution",
+      "path": "modules/entity-resolution/target/test-reports/TEST-edu.uic.cs441.scholarchain.entityresolution.OfflineResolutionSpec.xml",
+      "suite": "edu.uic.cs441.scholarchain.entityresolution.OfflineResolutionSpec",
+      "tests": 14,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "modifiedMs": 1792188106379
+    },
+    {
+      "module": "entityResolution",
+      "path": "modules/entity-resolution/target/test-reports/TEST-edu.uic.cs441.scholarchain.entityresolution.ReviewReadinessSpec.xml",
+      "suite": "edu.uic.cs441.scholarchain.entityresolution.ReviewReadinessSpec",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "modifiedMs": 1792188106470
+    },
+    {
+      "module": "independent",
+      "path": "tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentCandidateDerivationSpec.xml",
+      "suite": "edu.uic.cs441.scholarchain.independent.IndependentCandidateDerivationSpec",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "modifiedMs": 1792188151280
+    },
+    {
+      "module": "independent",
+      "path": "tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentDblpJsonSpec.xml",
+      "suite": "edu.uic.cs441.scholarchain.independent.IndependentDblpJsonSpec",
+      "tests": 9,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "modifiedMs": 1792188106888
+    },
+    {
+      "module": "independent",
+      "path": "tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentDblpXmlAdversarialSpec.xml",
+      "suite": "edu.uic.cs441.scholarchain.independent.IndependentDblpXmlAdversarialSpec",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "modifiedMs": 1792188151270
+    },
+    {
+      "module": "independent",
+      "path": "tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentDblpXmlRepairSpec.xml",
+      "suite": "edu.uic.cs441.scholarchain.independent.IndependentDblpXmlRepairSpec",
+      "tests": 17,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "modifiedMs": 1792188149277
+    },
+    {
+      "module": "independent",
+      "path": "tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentEvaluationAdapterSpec.xml",
+      "suite": "edu.uic.cs441.scholarchain.independent.IndependentEvaluationAdapterSpec",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "modifiedMs": 1792188149367
+    },
+    {
+      "module": "independent",
+      "path": "tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentEvaluationSpec.xml",
+      "suite": "edu.uic.cs441.scholarchain.independent.IndependentEvaluationSpec",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "modifiedMs": 1792188149594
+    },
+    {
+      "module": "independent",
+      "path": "tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentGoldLabelsSpec.xml",
+      "suite": "edu.uic.cs441.scholarchain.independent.IndependentGoldLabelsSpec",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "modifiedMs": 1792188106855
+    },
+    {
+      "module": "independent",
+      "path": "tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentHadoopPipelineSpec.xml",
+      "suite": "edu.uic.cs441.scholarchain.independent.IndependentHadoopPipelineSpec",
+      "tests": 11,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "modifiedMs": 1792188294524
+    },
+    {
+      "module": "independent",
+      "path": "tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentIdentifierNormalizationSpec.xml",
+      "suite": "edu.uic.cs441.scholarchain.independent.IndependentIdentifierNormalizationSpec",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "modifiedMs": 1792188148054
+    },
+    {
+      "module": "independent",
+      "path": "tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentOfflineAdjudicationSpec.xml",
+      "suite": "edu.uic.cs441.scholarchain.independent.IndependentOfflineAdjudicationSpec",
+      "tests": 9,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "modifiedMs": 1792188294610
+    },
+    {
+      "module": "independent",
+      "path": "tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentPhase4BlockerSpec.xml",
+      "suite": "edu.uic.cs441.scholarchain.independent.IndependentPhase4BlockerSpec",
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "modifiedMs": 1792188325948
+    },
+    {
+      "module": "independent",
+      "path": "tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentPhase4EvidenceSpec.xml",
+      "suite": "edu.uic.cs441.scholarchain.independent.IndependentPhase4EvidenceSpec",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "modifiedMs": 1792188148027
+    },
+    {
+      "module": "independent",
+      "path": "tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentPrepReaderSpec.xml",
+      "suite": "edu.uic.cs441.scholarchain.independent.IndependentPrepReaderSpec",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "modifiedMs": 1792188106636
+    },
+    {
+      "module": "independent",
+      "path": "tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentResolutionContractSpec.xml",
+      "suite": "edu.uic.cs441.scholarchain.independent.IndependentResolutionContractSpec",
+      "tests": 17,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "modifiedMs": 1792188151193
+    },
+    {
+      "module": "independent",
+      "path": "tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentResolutionEngineSpec.xml",
+      "suite": "edu.uic.cs441.scholarchain.independent.IndependentResolutionEngineSpec",
+      "tests": 8,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "modifiedMs": 1792188149315
+    },
+    {
+      "module": "independent",
+      "path": "tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentResolutionExportSpec.xml",
+      "suite": "edu.uic.cs441.scholarchain.independent.IndependentResolutionExportSpec",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "modifiedMs": 1792188106750
+    },
+    {
+      "module": "independent",
+      "path": "tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentResolutionFeaturesSpec.xml",
+      "suite": "edu.uic.cs441.scholarchain.independent.IndependentResolutionFeaturesSpec",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "modifiedMs": 1792188148036
+    },
+    {
+      "module": "independent",
+      "path": "tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentResolutionInputSpec.xml",
+      "suite": "edu.uic.cs441.scholarchain.independent.IndependentResolutionInputSpec",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "modifiedMs": 1792188106866
+    },
+    {
+      "module": "independent",
+      "path": "tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentResolutionPolicySpec.xml",
+      "suite": "edu.uic.cs441.scholarchain.independent.IndependentResolutionPolicySpec",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "modifiedMs": 1792188148052
+    },
+    {
+      "module": "independent",
+      "path": "tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentResolutionPrepBridgeRepairSpec.xml",
+      "suite": "edu.uic.cs441.scholarchain.independent.IndependentResolutionPrepBridgeRepairSpec",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "modifiedMs": 1792188117266
+    },
+    {
+      "module": "independent",
+      "path": "tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentResolutionRepairSpec.xml",
+      "suite": "edu.uic.cs441.scholarchain.independent.IndependentResolutionRepairSpec",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "modifiedMs": 1792188148048
+    },
+    {
+      "module": "independent",
+      "path": "tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentResolutionRunSpec.xml",
+      "suite": "edu.uic.cs441.scholarchain.independent.IndependentResolutionRunSpec",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "modifiedMs": 1792188106919
+    },
+    {
+      "module": "independent",
+      "path": "tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentRetainedReviewInputSpec.xml",
+      "suite": "edu.uic.cs441.scholarchain.independent.IndependentRetainedReviewInputSpec",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "modifiedMs": 1792188294555
+    },
+    {
+      "module": "independent",
+      "path": "tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentReviewBindingRepairSpec.xml",
+      "suite": "edu.uic.cs441.scholarchain.independent.IndependentReviewBindingRepairSpec",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "modifiedMs": 1792188151261
+    },
+    {
+      "module": "independent",
+      "path": "tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentReviewQueueSpec.xml",
+      "suite": "edu.uic.cs441.scholarchain.independent.IndependentReviewQueueSpec",
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "modifiedMs": 1792188151179
+    },
+    {
+      "module": "buildVerification",
+      "path": "build-verification/target/test-reports/TEST-scholarchain.build.CheckFailurePathSpec.xml",
+      "suite": "scholarchain.build.CheckFailurePathSpec",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "modifiedMs": 1792188327945
+    },
+    {
+      "module": "buildVerification",
+      "path": "build-verification/target/test-reports/TEST-scholarchain.build.HadoopBundleMergeSpec.xml",
+      "suite": "scholarchain.build.HadoopBundleMergeSpec",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "modifiedMs": 1792188327955
+    },
+    {
+      "module": "buildVerification",
+      "path": "build-verification/target/test-reports/TEST-scholarchain.build.TestRunMarkerSpec.xml",
+      "suite": "scholarchain.build.TestRunMarkerSpec",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "modifiedMs": 1792188327947
+    }
+  ],
+  "markerSuccess": "true",
+  "markerModifiedMs": 1792188328026,
+  "log": {
+    "path": "docs/agent-runs/phase-05/evidence/5c-repair/full-check.txt",
+    "bytes": 244592,
+    "sha256": "24cdaff8387d87ffaeeba6955bfd269922dadfc7c8b9053c52c54f0a2738fb64"
+  }
+}

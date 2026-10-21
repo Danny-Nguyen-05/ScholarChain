@@ -1,0 +1,19 @@
+{
+  "schemaVersion": "scholarchain.followup-search-strategy.v1",
+  "recordedAtUtc": "2026-10-20T22:05:51.843384+00:00",
+  "authority": "Exact user question and answer in user-approval.json permit one new public OpenAlex search within numerical limits. The existing-observation seed restriction in the coordinator scope description was an initial implementation strategy, not a quoted user restriction. User approval is unchanged.",
+  "initialStrategyResult": "No safe missing-ORCID affiliated OpenAlex author seeds in prior supplement or frozen development input; both canonical metadata screens retained. Zero requests made.",
+  "replacementImplementation": "Two fixed CS topic discovery queries (state machine replication; distributed stream processing), at most5 works each. Deterministically select at most4 actually returned missing-ORCID affiliated author IDs using a fixed hash ordering; at most5 works each. Entire returned population then goes through unchanged Hadoop and canonical transitive held-out exclusion before ANY comparison scoring. Author seed selection is provisional, not held-out clearance.",
+  "caps": {
+    "newDistinctWorksIncludingExcluded": 30,
+    "httpAttemptsIncludingRetries": 20,
+    "responseBytes": 8388608,
+    "wallSeconds": 300,
+    "maxTransientRetries": 1,
+    "concurrency": 1
+  },
+  "noPaginationOrReplacementQueries": true,
+  "noLabelsScoresOrPolicyChanges": true,
+  "originalPilotUnchanged": true,
+  "noNewHttpYet": true
+}

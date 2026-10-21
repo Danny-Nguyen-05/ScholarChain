@@ -1,0 +1,11 @@
+{
+  "inputEvidenceHash": "57efd81957e5eec9194d4b5c42f6ef170213640f148b56bf8b99a51d1d09d1fe",
+  "candidatePopulationHash": "9381588e35a418a84a22e9a680db4ab7886a8d33cf9463166edc1222cd8a5581",
+  "policyHash": "ad8c520fd8ff2e3697e15b2895852ca23e04c8d93f677acea3b366fcc101ef9f",
+  "configHash": "b31c3a77e2815f486b4da76c33d0283d91dba553af91178832ca6d7a0c87f37d",
+  "promptHash": "e9ef5f36238a29f2003f9e6404451aeca7fc54575989910edae2ce0ab7f71940",
+  "responseSchemaHash": "b253e113841a2e02699097ae003c4a01fbbd2fcd28cf2e61ff48a7a46e06aacd",
+  "modelIdentity": "deterministic-fake/abstain-fixture/v1",
+  "codeRevision": "61d32a38eaad5b2fc352acf0b7f85f3815c2336d",
+  "sourceTreeHash": "52f24a88d8b4d3d802e8e53403428ad6d5e889afc7309ccd55a7f4f2fc91376f"
+}

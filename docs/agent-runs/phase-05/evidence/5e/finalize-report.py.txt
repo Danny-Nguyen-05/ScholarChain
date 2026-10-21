@@ -1,0 +1,60 @@
+"""Coordinator assembles reports only from completed observed gates and immutable results."""
+from pathlib import Path
+import json,hashlib
+B=Path(__file__).resolve().parent; phase=B.parent.parent
+load=lambda p:json.loads(Path(p).read_text())
+gate=load(B/'full-check-summary.json'); assert gate['valid'] and gate['exitCode']==0
+r=load(B/'disabled-a-held-out/evaluation.json');d=load(B/'disabled-a-development/evaluation.json');w=load(B/'disabled-a-held-out-without-assisted/evaluation.json')
+pct=lambda x:'N/A' if x is None else f'{100*x:.1f}%'
+table='| Held-out cohort/entity | Binary labels | Precision | Recall | F1 | Decisive coverage |\n| --- | ---: | ---: | ---: | ---: | ---: |\n'
+for title,m in [('Primary overall',r['overall']),('Primary Work',r['byEntity']['Work']),('Primary Researcher',r['byEntity']['Researcher']),('Without 22 assisted overall',w['overall'])]:
+    table+=f"| {title} | {m['binaryGold']} | {pct(m['precision'])} | {pct(m['recall'])} | {pct(m['f1'])} | {pct(m['decisiveCoverage'])} |\n"
+summary='''# Limited Phase 5E evaluation — pending external review
+
+This evaluates the unchanged deterministic/fake configuration against the frozen, human-reviewed AI-assisted labels. The user explicitly authorized proceeding while real-provider evidence remains open. It is not overall Phase 5 acceptance or real-provider validation.
+
+'''+table+'''
+Primary held-out matrix: TP 57, FP 0, FN 15, TN 122. Six uncertain labels remain outside the 194 binary denominator; all 200 initial held-out reviews are represented. Development: TP 7, FP 0, FN 4, TN 27, 38 binary + 2 uncertain. All 60 reserves remain untouched and outside initial metrics. Positive prediction means ACCEPTED; unresolved/conflict/rejected/missing/invalid are nonacceptance. Therefore true negatives include correctly withheld conflicts; they are not all explicit rejections. Decisive coverage counts only ACCEPTED/REJECTED.
+
+All 15 held-out misses are Scored Researcher UNRESOLVED: 14 score-gap and 1 insufficient-independent-evidence case. Fifty-five of 57 true-positive accepts are ExactIdentifier; two are Scored Researcher accepts. There are zero observed false-positive accepts in this reviewed sample. This does not guarantee zero false merges generally. representative-errors.json contains all 4 development FN and 10 of 15 held-out FN, with actual evidence refs/features/reasons; no false positives were invented. queued-source-decisions.jsonl retains all 300 source-bound queued decisions.
+
+The supplementary mask excludes exactly 22 self-attested externally assisted Researcher cases: 4 development, 18 held-out. Held-out then has 181 binary + 1 uncertain, TP 51/FP 0/FN 8/TN 122. Development has 34 binary + 2 uncertain. Original labels, queue and split remain unchanged. Excluding 22 does not remove the AI draft assistance from other labels and does not make the subset independent blind gold. External source-check evidence was not retained.
+
+Policy remains er-offline-uncalibrated-v2, features er-features-v2. No matcher, features, policy, configuration, thresholds or source observations changed. Eight hypothetical cutoff points were computed on development only. This sensitivity ignores full production evidence-sufficiency gating, does not select a new threshold and is not calibration. No held-out sensitivity or tuning occurred.
+
+Two fresh disabled full-population passes each emitted 11,412 decisions. All 17 export parts replay logically after only declared invocation metadata normalization; queue predictions are byte-identical. Fake-enabled run emitted identical queue predictions with zero fake calls. No LLM-adjudicated path has observations, so no LLM-path accuracy is claimed. Real-provider attempts 0, spend $0.00; credentials were not accessed by these offline commands.
+
+See evaluation-manifest.json for input/candidate/split/label/prediction/source hashes, actual dirty source binding and toolchain; commands.json for exact argv/environment/timing/exits; replay-proof.json, protected-and-metrics-proof.json and source-delta.json for checks. Large full-population exports remain under target/phase5e; retained manifests, 300 queue predictions and source-bound decisions plus exact commands support regeneration. No giant implementation patch was created. The whole-phase source inventory and git baseline enable comprehensive diff review including untracked files.
+
+Limits: convenience sample and unweighted strata; no blocking recall/global identity recall; common-name and unobserved leakage risk; OpenAlex identities/ORCIDs are provider hypotheses; AI-assisted, self-attested labels; 8 uncertain reviews; no real-provider compatibility, live LLM accuracy or calibration. Entity/path, source-pair and sampling-strata summaries are descriptive. No numerical accuracy acceptance target was invented.
+
+'''
+summary+=f"Observed final gate: {gate['totals']['tests']} tests, zero failures/errors/skips, {gate['reportCount']} fresh JUnit reports; all {gate['sourceFreeze']['checkedFiles']} frozen files unchanged. Python 84/84; all 12 input integrity validators passed.\n\n"
+summary+='''The initial targeted build was sandbox-blocked at the sbt lock. Subsequent independent CLI fixtures needed provenance/snapshot alignment, disjoint leakage anchors and order-independent complete-row comparison. All failed runs are retained; assertions and production split logic were not weakened. Final targeted 7 owner + 15 independent tests passed. A coordinator command-ledger snapshot preserves receipts from commands completed during the long full gate; final receipts are merged by name/start time rather than losing later entries.
+
+Next gate: user launches an independent read-only comprehensive review using the chat prompt and returns its full verdict. No reviewer was launched, no commit/push occurred and Phase 6 has not started. Real-provider evidence remains a separate open requirement; no overall 5D/Phase 5 acceptance is inferred.
+'''
+(B/'evaluation-report.md').write_text(summary)
+heading='## 5E limited deterministic/fake evaluation — observed handoff'
+common=f'''\n\n{heading}
+
+STATUS: COMPLETE for authorized limited execution; external review pending, overall Phase 5 acceptance open.
+OWNER: Coordinator; ER engineer owns evaluation API/cohort support, test engineer owns six independent cases, dataset engineer supplied read-only provenance audit. Native IDs and results: evidence/5e/owner-handoffs.json.
+WORK ORDER: User-authorized limited 5E; preserve human labels and existing matcher/config/policy; real-provider requirement explicitly pending.
+FILES CREATED: evidence/5e/ observed commands, bindings, predictions, eight reports, development sensitivity, exclusion manifest, replay/protected proofs, summary, manifest and compact source inventory; two independent Scala specs.
+FILES MODIFIED: ER Evaluation/ReviewCommands/ReviewReadinessSpec/README; phase source freeze/inventory and append-only reports. No dataset/core/Hadoop/build/matcher/policy/config/label changes.
+COMMANDS RUN: Exact argv, cwd, JAVA_HOME/SBT_OPTS, start/end/exit in evidence/5e/commands.json and individual receipts. Three full offline resolution passes, three prediction preparations, eight evaluations, two development sensitivities, Python discovery, 12 validators and final sbt -batch check.
+TEST RESULTS: Final targeted 7 owner + 15 independent passed. Fresh full gate{gate['totals']['tests']} passed, zero failures/errors/skips,{gate['reportCount']}fresh reports. Core 129, Hadoop 64, ER 30, independent 214, build 4. Python 84 passed; 12 validators passed. Initial sandbox and synthetic fixture failures retained and explained in evaluation-report.md. Nested injected failure is expected CheckFailurePathSpec coverage.
+VALIDATION RESULTS: All {gate['sourceFreeze']['checkedFiles']}source files frozen throughout prediction/evaluation/full gate; 804 protected source/data files unchanged including complete label tree. 17 export parts replay; all 300 queue predictions agree; 8 reports independently recounted. Primary held-out 194 binary: TP 57, FP 0, FN 15, TN 122; precision 100%, recall 79.2%, F1 88.4%, decisive coverage 48.5%. Without 22 assisted: 181 held-out binary, TP 51, FP 0, FN 8, TN 122. Full results/evidence: evidence/5e/evaluation-report.md and evaluation-manifest.json.
+ASSUMPTIONS: Human choices/attribution are self-attested and AI-assisted, not independent blind gold. Observed matching behavior is only for the frozen convenience population.
+RISKS: 8 uncertain, unretained external source checks, no global/blocking recall, uncalibrated policy, residual leakage/common-name risk and no real-provider evidence. Empty LLM/bibliographic paths remain null/no-data.
+MANUAL ACTION REQUIRED: User-selected independent review and return of complete verdict.
+BLOCKED-ON OWNER: External reviewer selected/launched by user; no implementation owner blocker at this handoff.
+BLOCKED-ON EVIDENCE: External verdict; real-provider evidence remains open for overall 5D/Phase 5 rather than being silently waived.
+NEXT GATE: Stop for user-launched review. No commit, push, Phase 6 or reviewer invocation.
+'''
+for name in ['owner-report.md','test-report.md','review.md','repairs.md']:
+    p=phase/name
+    if heading not in p.read_text():
+        with p.open('a') as f:f.write(common if name!='review.md' else '\n\n'+heading+'\n\nExternal verdict: PENDING. Coordinator engineering/test evidence is not independent approval. See evidence/5e/evaluation-report.md. User authorized limited offline evaluation with real-provider requirement still open; no overall Phase 5 acceptance or Phase 6 authorization is inferred.\n')
+print(json.dumps({'report':str(B/'evaluation-report.md'),'tests':gate['totals']['tests'],'review':'pending user-launched external review'}))

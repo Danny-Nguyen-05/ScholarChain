@@ -1,0 +1,7 @@
+{
+  "scriptSha256": "2606bec8606d02e6d85d37a62a157c6c5f1bce2df6888e5f2f7de01384cb5b03",
+  "scriptBytes": 31467,
+  "testSha256": "f16af7464abdf2d3e4e76396c583a84f1d0e0e3b67a93348b2d810f5a00e187b",
+  "testBytes": 11536,
+  "capture": "Before any HTTP. Exact source is also retained by the acquisition inside the population before dispatch."
+}

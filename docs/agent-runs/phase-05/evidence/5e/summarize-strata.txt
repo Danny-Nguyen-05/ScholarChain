@@ -1,0 +1,1 @@
+{"entityPathSlices": 20, "sourcePairSlices": 14, "samplingSlices": 12, "populationWeightsApplied": false}

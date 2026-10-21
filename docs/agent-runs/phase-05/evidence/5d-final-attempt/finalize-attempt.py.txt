@@ -1,0 +1,57 @@
+"""Record the final bounded result without converting a blocked provider gate into acceptance."""
+from pathlib import Path
+import json,hashlib,datetime,subprocess
+B=Path(__file__).resolve().parent;P=B.parent.parent;load=lambda p:json.loads(Path(p).read_text());sha=lambda p:hashlib.sha256(Path(p).read_bytes()).hexdigest()
+gate=load(B/'full-check-summary.json');assert gate['valid']
+proof=load(B/'protected-proof.json');m=load('datasets/entity-resolution/5d-demo-2026-10-20-rice-final/population-manifest.v1.json');assert proof['eligiblePairs']==0
+old=load(B/'before-source-freeze.json')
+for name in ['datasets/entity-resolution/README.md','datasets/entity-resolution/prepared/README.md']:
+ f=next(x for x in old['files'] if x['path']==name)
+ assert hashlib.sha256(Path(name).read_bytes()[:f['bytes']]).hexdigest()==f['sha256']
+outcome={'schemaVersion':'scholarchain.phase5d.final-attempt-outcome.v1','status':'FINAL_BOUNDED_ATTEMPT_COMPLETE_PROVIDER_EXIT_STILL_BLOCKED','head':subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip(),'recordedAtUtc':datetime.datetime.now(datetime.timezone.utc).isoformat(),'actualStage':m['observed'],'cumulative':m['cumulative'],'candidatePairs':11,'admittedPairs':11,'excludedHeldOutPairs':0,'eligiblePairs':0,'outcomes':proof['outcomes'],'whyNoCall':'The two unresolved Researcher pairs score 0.6933333333333332 within the [0.65,0.88] band but coauthor overlap0.2 fails the0.8 supportive-context requirement. Only name and affiliation groups are supportive. Other pairs are accepted or conflicting before the model gate.','liveModelAttempts':0,'spendUsd':'0.00','credentialPreflight':'NOT_REACHED_NO_ELIGIBLE_PAIR','additionalAcquisition':'STOPPED_NO_REFILL_NO_FALLBACK','matchingRulesChanged':False,'humanReviewsChanged':False,'approved5eArtifactsChanged':False,'corpusLimit':'Fixed venue catalog excludes an observed legitimate Communications of the ACM record. No post-response catalog expansion or eligibility claim for excluded records. This result is only for the bounded admitted population, not global absence of eligible evidence.','observedGates':{'sbtTests':gate['totals']['tests'],'pythonTests':97,'inputValidators':14,'frozenFiles':gate['sourceFreeze']['checkedFiles']},'overall5DOrPhase5Acceptance':False,'phase6Authorized':False,'nextGate':'User checkpoint decision; independent reviewer remains user-launched. No automatic further acquisition, policy changes, commit/push or Phase6.'}
+(B/'outcome.json').write_text(json.dumps(outcome,indent=2)+'\n')
+summary='''# Final bounded Rice-team attempt
+
+The approved final acquisition and verification are complete. The real-provider gate remains **blocked**: no naturally eligible pair was found, no API call was attempted and no model spending occurred. This is not overall Phase 5 acceptance.
+
+The two fixed queries returned15work rows,12distinct works, 112,270 bytes in 1.4782 seconds; all2HTTP responses were200. Three records passed the predefined publication filters. Canonical held-out component exclusion ran before classification:11candidates,11admitted,0excluded,0eligible. Exact durable input replay agrees byte-for-byte.
+
+Results:2Work hard conflicts;5Researcher exact-ID accepts;2Researcher scored accepts at1.0;2Researcher unresolved at0.6933333333333332. The unresolved pairs are in-band but have coauthor overlap0.2, below the 0.8 supportive-context threshold. Name/initials/affiliation agreement supplies only two groups. We did not remove IDs, alter names/teams, lower thresholds or use held-out labels to obtain a call. Existing no-network prepare-live-demo preview contains zero eligible requests; credential preflight and the approval ledger were never initialized.
+
+The exact2oldseed lines are discovery proof only. Ingestion uses unchanged fresh response objects with a stage-specific snapshot and actual retrieval date. Duplicates and exclusions consume the cap. The fixed catalog omits an observed legitimate Communications of the ACM article; this is disclosed without changing the parent selection or adding fallback queries. No claim of global evidence exhaustion is made.
+
+The completed preparation is durably retained under datasets/entity-resolution/prepared/8d30085c-cb67-4d25-909f-5f2603ad4511/:38files204,212bytes, purpose development-demo. Target/durable admission, classification rows and scored IDs are identical; the scored IDs exactly equal admitted IDs, with excluded intersectionzero.
+
+All111approved5Eartifactfiles remain unchanged, along with human labels, attribution, queue/split and matching logic. The old5Esource-freeze52f24a88… is preserved exactly as before-source-freeze.json here; the top-level source freeze now describes this later checkpoint. Do not rewrite historical evaluation manifests to pretend these newly added acquisition files were present during5E.
+
+'''
+summary+=f"Observed final gates: {gate['totals']['tests']} sbt tests passed, zero failures/errors/skips, {gate['reportCount']} fresh JUnit reports; 97 Python tests and all14integrityvalidators passed. All{gate['sourceFreeze']['checkedFiles']}source files remained frozen. Expected nested injected failure is CheckFailurePathSpec coverage. Actual module runtime class/resource hashes were recorded before the direct Java runs and remained identical.\n\n"
+summary+='''Exact commands, times and exits are in commands.json/individual receipts. Actual response/retention/counter checks are in protected-proof.json. No external reviewer was launched. No nonblocking finding was repaired. Further acquisition is stopped; no commit, push or Phase6 occurred. The human decides whether to authorize Phase6 with the missing provider demonstration explicitly carried forward; fullPhase5acceptance remains open.
+'''
+replacements={'returned15work':'returned 15 work',',12distinct':', 12 distinct','in 1.4782 seconds':'in 1.4782 seconds','all2HTTP':'all 2 HTTP','were200':'were 200','classification:11candidates,11admitted,0excluded,0eligible':'classification: 11 candidates, 11 admitted, 0 excluded, 0 eligible','Results:2Work':'Results: 2 Work',';5Researcher':'; 5 Researcher',';2Researcher':'; 2 Researcher','at1.0':'at 1.0','at0.693':'at 0.693','overlap0.2':'overlap 0.2','the0.8supportive':'the 0.8 supportive','exact2oldseed':'exact 2 old seed',':38files204,212bytes':': 38 files / 204,212 bytes','intersectionzero':'intersection zero','All111approved5Eartifactfiles':'All 111 approved 5E artifact files','old5Esource-freeze52f24a88':'old 5E source freeze 52f24a88','during5E':'during 5E','all14integrityvalidators':'all 14 integrity validators','All959source':'All 959 source','or Phase6':'or Phase 6','authorize Phase6':'authorize Phase 6','fullPhase5acceptance':'full Phase 5 acceptance'}
+for a,z in replacements.items():summary=summary.replace(a,z)
+(B/'report.md').write_text(summary)
+heading='## Final Rice-team bounded attempt — verified blocked provider checkpoint'
+report=f'''\n\n{heading}
+
+STATUS: COMPLETE for authorized bounded work; BLOCKED-ON real-provider evidence for overall 5D / Phase 5.
+OWNER: Coordinator for HTTP/Hadoop/canonical/CLI/build execution and reports; dataset-engineer for new datasets/scripts and retention; test-engineer for read-only independent counter/eligibility checks; ER owner supplied read-only feasibility advice.
+WORK ORDER: User-approved final targeted attempt: 30 returned rows, 20 HTTP attempts, 8 MiB and 300 seconds; no data credentials or paid data; original $1 model approval unchanged. No refill, fallback or nonblocking repairs.
+FILES CREATED: New Rice acquisition script and 13 tests; separately manifested 15-row response stage; 38-file durable preparation; evidence/5d-final-attempt/ receipts, proofs and report.
+FILES MODIFIED: Append-only dataset/prepared READMEs, phase reports and current freeze/inventory. No ER/core/Hadoop/build/policy/config/label/evaluation artifact changes.
+COMMANDS RUN: Exact argv/environment/start/end/exit in commands.json. Two public queries; unchanged Hadoop; target/durable canonical selection; prepare-live-demo (no network); 97 Python tests; 14 validators; sbt -batch check.
+TEST RESULTS: {gate['totals']['tests']} sbt tests passed, zero failures/errors/skips, {gate['reportCount']} fresh JUnit reports. Core 129, Hadoop 64, ER 30, independent 214, build 4. All 97 Python tests and 14 validators passed. All {gate['sourceFreeze']['checkedFiles']} frozen source files remained unchanged throughout the gate.
+VALIDATION RESULTS: Two HTTP 200 responses, 15 rows, 12 distinct works, 3 ingested, 112,270 bytes, 1.4782 seconds. Eleven admitted, zero excluded, zero eligible. Two unresolved Researcher scores of 0.6933333 are in-band but coauthor overlap of 0.2 fails the supportive threshold of 0.8; other candidates accept or conflict earlier. Target/durable proofs identical; 38 retained files / 204,212 bytes. All 1,261 runtime class/resource hashes unchanged. All 111 approved 5E artifacts and all human choices remain unchanged; historical 5E freeze retained exactly as before-source-freeze.json.
+ASSUMPTIONS: Runtime evidence establishes only this bounded population; no real account/model compatibility or identity accuracy.
+RISKS: Fixed catalog excludes an observed legitimate CACM record; no global absence claim. Provider requirement still open, credentials untested and no approval state initialized.
+MANUAL ACTION REQUIRED: Human checkpoint/continuation decision; independent reviewer only when user launches it.
+BLOCKED-ON OWNER: None for authorized bounded work. Human owns continuation and acceptance.
+BLOCKED-ON EVIDENCE: Naturally eligible non-held-out pair and observed real-provider response; current 0 attempts, $0.00 spent.
+NEXT GATE: Stop acquisition. No policy changes, commit, push, Phase 6 or reviewer launch. Explicit authorization needed before any further scope.
+'''
+for name in ['owner-report.md','test-report.md','repairs.md']:
+ p=P/name
+ if heading not in p.read_text():
+  with p.open('a') as f:f.write(report)
+with (P/'review.md').open('a') as f:f.write('\n\n'+heading+'\n\nExternal verdict for this new dataset/evidence checkpoint: PENDING. Earlier limited5E APPROVE remains scoped to its reviewed state. No new reviewer was launched or acceptance inferred. See evidence/5d-final-attempt/report.md.\n')
+print(json.dumps({'status':outcome['status'],'eligiblePairs':0,'liveAttempts':0,'sbtTests':gate['totals']['tests']}))

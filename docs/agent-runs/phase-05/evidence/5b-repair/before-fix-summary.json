@@ -1,0 +1,18 @@
+{
+  "schema": "scholarchain.phase5b.repair-before-fix.v1",
+  "exitCode": 1,
+  "tests": 5,
+  "passed": 0,
+  "failed": 5,
+  "suites": 2,
+  "completedLocal": "2026-10-16 15:11:17 America/Chicago",
+  "logSha256": "971215d598e6ef603c852d68a8f52ebc203c44b424e28d968b9af867744db4ab",
+  "source": "All previously reviewed production files remained unchanged during this regression run; only two independent test files were added.",
+  "confirmed": [
+    "Hadoop pipeline accepts and exports all three literal DOI suffix forms before ER loader fails",
+    "B1 pure source-grounding rejects accepted DOI values",
+    "B2 incomparable venue gives Some(0)",
+    "B2 incomparable affiliation gives Some(0)",
+    "B2 weighted score is .9 instead of1 when venue is incomparable"
+  ]
+}

@@ -1,0 +1,61 @@
+{
+  "schemaVersion": "scholarchain.resolution.v1",
+  "entityType": "Work",
+  "policyVersion": "synthetic-contract-v1",
+  "policyHash": "ea9d777c44aef42aa906bf610bccf1734f6ce5fa7f3a05c43cad7ebaaaba6b49",
+  "coveredEndpoints": [
+    {
+      "$type": "Work",
+      "observation": {
+        "source": "DBLP",
+        "sourceRecordId": "series/sapere/BerkeleyR13",
+        "datasetSnapshot": "dblp-2026-10-03"
+      },
+      "workId": "work:doi:10.1007/978-3-642-31674-6_1"
+    },
+    {
+      "$type": "Work",
+      "observation": {
+        "source": "CROSSREF",
+        "sourceRecordId": "10.1007/978-3-642-31674-6_1",
+        "datasetSnapshot": "unknown"
+      },
+      "workId": "work:doi:10.1007/978-3-642-31674-6_1"
+    }
+  ],
+  "cannotLinks": [],
+  "authoritativeIdentifiers": [
+    {
+      "endpoint": {
+        "$type": "Work",
+        "observation": {
+          "source": "DBLP",
+          "sourceRecordId": "series/sapere/BerkeleyR13",
+          "datasetSnapshot": "dblp-2026-10-03"
+        },
+        "workId": "work:doi:10.1007/978-3-642-31674-6_1"
+      },
+      "namespace": "doi",
+      "value": "10.1007/978-3-642-31674-6_1",
+      "evidenceRefs": [
+        "source:fixture"
+      ]
+    },
+    {
+      "endpoint": {
+        "$type": "Work",
+        "observation": {
+          "source": "CROSSREF",
+          "sourceRecordId": "10.1007/978-3-642-31674-6_1",
+          "datasetSnapshot": "unknown"
+        },
+        "workId": "work:doi:10.1007/978-3-642-31674-6_1"
+      },
+      "namespace": "doi",
+      "value": "10.1007/978-3-642-31674-6_1",
+      "evidenceRefs": [
+        "source:fixture"
+      ]
+    }
+  ]
+}

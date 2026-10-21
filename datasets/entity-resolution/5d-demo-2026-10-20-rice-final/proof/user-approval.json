@@ -1,0 +1,17 @@
+{
+  "schemaVersion": "scholarchain.phase5d.rice-final-approval.v1",
+  "recordedAtUtc": "2026-10-21T04:39:18.176886+00:00",
+  "question": "For this final attempt, approve fetching up to 30 public OpenAlex work records around the already observed Rice database researchers Luis Leopoldo Perez and Christopher Jermaine, capped at 20 HTTP attempts, 8 MiB and five minutes? Their existing records contain the coauthor and affiliation evidence missing from earlier attempts. No credentials or paid data, no review/rule changes, and held-out overlaps will be excluded before scoring. The existing $1 model-call limit stays unchanged; a qualifying pair is not guaranteed.",
+  "answer": "Approve this final bounded attempt",
+  "provenance": "Explicit user chat reply to presented bounded-acquisition question; coordinator transcription.",
+  "limits": {
+    "returnedWorkRowsIncludingDuplicatesAndExcluded": 30,
+    "httpAttemptsIncludingRetries": 20,
+    "responseBytes": 8388608,
+    "wallSeconds": 300,
+    "credentials": false,
+    "paidData": false
+  },
+  "originalLiveApprovalUnchanged": true,
+  "finalAttemptNoRefillOrFallback": true
+}

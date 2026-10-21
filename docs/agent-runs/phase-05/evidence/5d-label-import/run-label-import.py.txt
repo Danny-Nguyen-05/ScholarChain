@@ -1,0 +1,7 @@
+"""Run only the existing label importer, without model/prediction execution."""
+from pathlib import Path
+import json,subprocess,sys
+E=Path('docs/agent-runs/phase-05/evidence/5d-label-import')
+cp=json.loads(Path('docs/agent-runs/phase-05/evidence/5d/probe-classpath.json').read_text())['classpath']
+cmd=['/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home/bin/java','-cp',cp,'edu.uic.cs441.scholarchain.entityresolution.Phase5Main','import-labels','--queue','docs/agent-runs/phase-05/evidence/5c-repair/review-artifacts/queue.json','--labels',sys.argv[1],'--output',sys.argv[2]]
+sys.exit(subprocess.run(['python3',str(E/'run-command.py.txt'),'import-labels',*cmd]).returncode)

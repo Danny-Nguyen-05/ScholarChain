@@ -1,0 +1,29 @@
+"""Append observed lean-packaging gate results without rewriting prior reports."""
+from pathlib import Path
+import json
+R=Path('docs/agent-runs/phase-05');E=R/'evidence/5c-lean'
+s=json.loads((E/'full-check-summary.json').read_text());assert s['valid']
+c=json.loads((E/'commands.json').read_text());assert len(c)==1 and c[0]['exitCode']==0
+v=json.loads((E/'final-verification.json').read_text());assert v['allVerified']
+assert s['sourceFreeze']['checkedFiles']==412 and v['archivedFilesVerified']==181
+elapsed=round((c[0]['finishedMs']-c[0]['startedMs'])/1000,3)
+text=f"""
+
+## Approved 5C lean archival packaging — final gate
+
+STATUS: COMPLETE. This supersedes the running-gate lean note above. User-supplied external 5C B1/B2 APPROVE remains unchanged; no additional review or later phase is inferred.
+OWNER: Coordinator with dataset, build and ER owners; all writers and builds stopped.
+WORK ORDER: User-approved archival packaging only. No application logic, source-data content, labels, commit, push, provider calls or 5D change.
+FILES CREATED / FILES MODIFIED: Compact archive manifests and owner README/attribute updates; original historical population manifests preserved. Removed exactly 177 inactive dataset payload files and two old queue/split files after verifying their complete external copies. Current v3, durable prepared input, repaired queue/split/generation binding remain unchanged. Append-only reports, source-freeze.json and review-inventory.json bind current packaging. Historical packet reconstruction remains exact through the documented archive sources.
+COMMANDS RUN: Both current validators and all Python dataset tests passed after removals. Exactly one sbt -batch check for this lean task exited 0, wall duration {elapsed} seconds; exact environment/args/timing in evidence/5c-lean/commands.json. git diff --check for changed packaging paths passed. Final archive and frozen-content verification passed.
+TEST RESULTS: {s['totals']['tests']} tests passed; module counts {json.dumps(s['moduleCounts'],sort_keys=True)}. {s['reportCount']} fresh JUnit reports; {s['totals']['failures']} failures, {s['totals']['errors']} errors, {s['totals']['skipped']} skipped. All 412 frozen scoped files unchanged, with no missing or added scoped files; generated success marker renewed after suites. All 26 Python dataset tests pass. Expected nested injected failure is passing CheckFailurePathSpec coverage.
+VALIDATION RESULTS: All 181 archived original files rechecked SHA-256 and byte counts, including both original parent manifests. Dataset archive root: /Users/danny/Documents/ScholarChain-archive/phase5c/dataset-history-20261017T005030Z. Old evidence archive root: /Users/danny/Documents/ScholarChain-archive/phase5c/old-review-21978642c7. All 215 current applicable files have text unset. 165 application/dataset-script/test source files are byte-identical to the pre-lean freeze. Complete inventories, exact final logical byte totals and largest-file/no-file-over-50-MB check are in evidence/5c-lean/final-size.json and review-inventory.json; ignored targets/caches and Git history are excluded from commit-candidate size.
+ASSUMPTIONS: External archives need separate preservation/transfer for exact historical reconstruction; current runtime inputs remain fully in-repository.
+RISKS: This packaging pass does not establish human labels, accuracy or live-provider behavior. Previously deferred nonblocking observations remain deferred.
+MANUAL ACTION REQUIRED: Preserve the external archive and manually commit if desired. Proposed one-line commit message: Complete Phase 5C review tooling with durable inputs and lean audit archives.
+BLOCKED-ON OWNER / BLOCKED-ON EVIDENCE: None for authorized packaging.
+NEXT GATE: Stop. No code reviewer triggered, commit/push performed or 5D started.
+"""
+for name in ['owner-report.md','test-report.md','repairs.md','review.md']:
+ with (R/name).open('a') as f:f.write(text)
+print(json.dumps({'reportsAppended':4,'tests':s['totals']['tests'],'wallSeconds':elapsed}))

@@ -1,0 +1,51 @@
+{
+  "schemaVersion": "scholarchain.phase5d.b1b2-search-repair-handoff.v1",
+  "completedAtUtc": "2026-10-21T01:46:43.704898+00:00",
+  "status": "IMPLEMENTED_AND_VERIFIED_PENDING_USER_LAUNCHED_INDEPENDENT_RECHECK",
+  "head": "61d32a38eaad5b2fc352acf0b7f85f3815c2336d",
+  "b1": "Previously applied at explicit user direction in reviewing session; separation departure disclosed; current label tree preserved unchanged and included in fresh freeze.",
+  "b2": "Explicit relevance_score:desc topic discovery, behavioral regression, exact historical script compatibility, new separately approved stage with cumulative continuity and canonical admission.",
+  "sourceFiles": 742,
+  "sbtTests": 434,
+  "pythonTests": 63,
+  "integrityValidators": 9,
+  "beforeFix": {
+    "tests": 11,
+    "passed": 10,
+    "failed": 1,
+    "failure": "Behavioral discovery ordering assertion, not compilation."
+  },
+  "afterFixTargetedTests": 15,
+  "stage": {
+    "httpAttempts": 3,
+    "distinctReturnedWorks": 14,
+    "newIngestionRecords": 5,
+    "responseBytes": 75738,
+    "seconds": 2.2322
+  },
+  "cumulative": {
+    "distinctReturnedWorks": 44,
+    "httpAttempts": 12,
+    "responseBytes": 291082,
+    "seconds": 10.214
+  },
+  "admission": {
+    "candidatePairs": 101,
+    "excludedBeforeScoring": 78,
+    "admittedPairs": 23,
+    "eligiblePairs": 0
+  },
+  "preparedRun": "f22f1a12-c7be-43af-b470-d4f4e244ca9d",
+  "originalLabelChoicesUnchanged": true,
+  "protectedLabelTreeFiles": 23,
+  "protectedOriginalSearchFiles": 32,
+  "modelCalls": 0,
+  "modelSpendUsd": "0.00",
+  "runtimeCredentialsAccessed": false,
+  "no5E": true,
+  "noCommitOrPush": true,
+  "noReviewerInvoked": true,
+  "sourceFreezeSha256": "3af6fe4c00f7926d88d21a8c218de2dc20ef322afd2a618a43c4fd813c80bdd0",
+  "fullCheckSummarySha256": "e99946aaab288fbb69bdad7fb7de19868ba7de9a0f2d541d921bf80b4b316b81",
+  "attributionSha256": "af88956efd996abf8ca6bd9f440d706bf5d651950ee0a02025a29358fa9b2e9b"
+}

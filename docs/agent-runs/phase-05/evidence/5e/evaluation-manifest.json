@@ -1,0 +1,319 @@
+{
+  "schemaVersion": "scholarchain.phase5e.limited-evaluation-manifest.v1",
+  "scope": "Existing unchanged deterministic/fake configuration. Real-provider evidence pending; not overall Phase5 acceptance.",
+  "createdAtUtc": "2026-10-21T03:11:52.765930+00:00",
+  "head": "61d32a38eaad5b2fc352acf0b7f85f3815c2336d",
+  "branch": "phase-5",
+  "dirty": true,
+  "trackedSourceDiffHeadSha256": "a7648cee76cf83e060f2d6dac8a6472a68e99a8c78a4dd4ec79d8f649a672c68",
+  "sourceFreeze": {
+    "path": "docs/agent-runs/phase-05/source-freeze.json",
+    "bytes": 216288,
+    "sha256": "52f24a88d8b4d3d802e8e53403428ad6d5e889afc7309ccd55a7f4f2fc91376f"
+  },
+  "predictionBinding": {
+    "path": "docs/agent-runs/phase-05/evidence/5e/prediction-binding.json",
+    "bytes": 745,
+    "sha256": "5abfc63c12bf42053b12d7bc139de95e1a0f25df2532103c98af2587bf8736da"
+  },
+  "inputs": [
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5c-repair/review-artifacts/queue.json",
+      "bytes": 7204476,
+      "sha256": "39810621fe4b22113e3b11fe014ed3eaf2f6ed82b261a265044ce344a02e506f"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5c-repair/review-artifacts/split.json",
+      "bytes": 3810714,
+      "sha256": "9dee7738f41d646515eb7a6c77c025a935405f5bdfb34039fcb135021e9c4141"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5c-repair/review-artifacts/generation-binding.json",
+      "bytes": 745,
+      "sha256": "ba43bff1867cfda71a35e94c8c5b53fed39b213e159d17712b17739f776be527"
+    },
+    {
+      "path": "datasets/entity-resolution/labels/2026-10-20-danny-ai-assisted-v1/checkpoint.json",
+      "bytes": 160196,
+      "sha256": "69912290a289be76449a3b6514b4f2b0a240e26fcb40991a12b3850127fcbe08"
+    },
+    {
+      "path": "datasets/entity-resolution/labels/2026-10-20-danny-ai-assisted-v1/validated-labels.json",
+      "bytes": 326475,
+      "sha256": "5fbf6f5bdc1d34f7b79e910a07b964b60bdaaf1dfc825de7744b5f684e39e4a6"
+    },
+    {
+      "path": "datasets/entity-resolution/labels/2026-10-20-danny-ai-assisted-v1/decision-attribution.v1.json",
+      "bytes": 15124,
+      "sha256": "af88956efd996abf8ca6bd9f440d706bf5d651950ee0a02025a29358fa9b2e9b"
+    },
+    {
+      "path": "datasets/entity-resolution/labels/2026-10-20-danny-ai-assisted-v1/provenance.v1.json",
+      "bytes": 89735,
+      "sha256": "601a9b2d1db077ee5159e48455395b872b249fc62f473fe930df65838a10534d"
+    },
+    {
+      "path": "datasets/entity-resolution/labels/2026-10-20-danny-ai-assisted-v1/conversion-report.json",
+      "bytes": 3476,
+      "sha256": "73dca81082d971c774c048d2fcd159a4c6f912d38bde0badbad3fed9d1a34bbf"
+    }
+  ],
+  "retainedInput": {
+    "path": "datasets/entity-resolution/prepared/bd424a86-0a1b-4e44-bbdb-4a9b8c8a20e3.retention-manifest.v1.json",
+    "bytes": 15576,
+    "sha256": "c51963569827ceaba35d1f816a918afecd32a547725ba2b1bb63aa38d49e8556"
+  },
+  "policy": {
+    "path": "modules/entity-resolution/src/main/resources/phase5-policy.v1.json",
+    "bytes": 1755,
+    "sha256": "2d3d12e7489b18437f96b09754709100cbc3529ffd4fcfd0ff6807db87f2a93f"
+  },
+  "config": {
+    "path": "modules/entity-resolution/src/main/resources/phase5-config.v1.json",
+    "bytes": 1001,
+    "sha256": "af72eae47d0894cd9cb55a189fa8f96c583dbe68ef418bbc77eb48a2951a6cd0"
+  },
+  "predictionFiles": [
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5e/disabled-a-predictions.json",
+      "bytes": 106261,
+      "sha256": "5f95cd8211cbfb5d3430f8eb19f80d7840381f30652648a6275f7ef112505cdf"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5e/disabled-b-predictions.json",
+      "bytes": 106261,
+      "sha256": "5f95cd8211cbfb5d3430f8eb19f80d7840381f30652648a6275f7ef112505cdf"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5e/fake-a-predictions.json",
+      "bytes": 106261,
+      "sha256": "5f95cd8211cbfb5d3430f8eb19f80d7840381f30652648a6275f7ef112505cdf"
+    }
+  ],
+  "runManifests": [
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5e/disabled-a-resolution-manifest.json",
+      "bytes": 3821,
+      "sha256": "6dd99cd1f25586f0aaf37cabd159faf400e08a943a95bb7398fd622b42385593"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5e/disabled-b-resolution-manifest.json",
+      "bytes": 3821,
+      "sha256": "90f40cab1f289b88c93d8ae503bea71757cd2d29c3e9d9753db40d441fc71516"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5e/fake-a-resolution-manifest.json",
+      "bytes": 3817,
+      "sha256": "3a4c87b42babdd282faf0439c61f991e17681445e2ca44c13c5e299a2334433a"
+    }
+  ],
+  "reports": [
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5e/disabled-a-development/evaluation.json",
+      "bytes": 28935,
+      "sha256": "02564be525973ee6c58a1ec5053d31784e1329cc9724c14f3ac979edf247f48b"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5e/disabled-a-development-without-assisted/evaluation.json",
+      "bytes": 29960,
+      "sha256": "0d42c22443389f1b890db43aeff4fedbf1193bfe07584ed8a7a19a4d45eb548d"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5e/disabled-a-held-out/evaluation.json",
+      "bytes": 34088,
+      "sha256": "d4ead7a09aa37d948906d2ddf3426abf1dc1b91c53a3aade8b0a028f3345de3b"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5e/disabled-a-held-out-without-assisted/evaluation.json",
+      "bytes": 35107,
+      "sha256": "9c5fde0b4184ca8d0026590ff8e4babe0582c7edf53cbaecffaca09c230458bb"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5e/fake-a-development/evaluation.json",
+      "bytes": 28927,
+      "sha256": "1b06e9526c67b68b215c5da0e2b3156263afad83bd1f48369eab20e6f707994d"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5e/fake-a-development-without-assisted/evaluation.json",
+      "bytes": 29952,
+      "sha256": "54f69880b750de3268266b2bd671e37892f69fc1826db4560782d72d68681158"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5e/fake-a-held-out/evaluation.json",
+      "bytes": 34080,
+      "sha256": "33e67275a1232c85918c8d4ffcc49b34c734ce14db6237ff05d0d283c5accd66"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5e/fake-a-held-out-without-assisted/evaluation.json",
+      "bytes": 35099,
+      "sha256": "bd3891dfa5b8f44f7bb9bbee0db545223868065e7e9df00bb38805b4b0cb48cf"
+    }
+  ],
+  "exclusions": {
+    "path": "docs/agent-runs/phase-05/evidence/5e/exclude-assisted-pairs.json",
+    "bytes": 2441,
+    "sha256": "7b672067ceb0ba067cfe8be917dad753222db73989d6ff050a5cfa74684346c8"
+  },
+  "replay": {
+    "path": "docs/agent-runs/phase-05/evidence/5e/replay-proof.json",
+    "bytes": 3448,
+    "sha256": "45f5ec67dbe0f7795a8320518a63dfe332c378ee58b93a812f1eedb86faa5f46"
+  },
+  "errorExamples": {
+    "path": "docs/agent-runs/phase-05/evidence/5e/representative-errors.json",
+    "bytes": 86300,
+    "sha256": "adac057a234d7b1052fb946ccde44da023e38e1657026b4b0303d2cf851e1af2"
+  },
+  "sourceBoundQueuedDecisions": {
+    "path": "docs/agent-runs/phase-05/evidence/5e/queued-source-decisions.jsonl",
+    "bytes": 1810533,
+    "sha256": "3d5f0d438b290dde81292ec3df63ee82d5deed624dcf8c944408948ad77c6a46"
+  },
+  "toolchain": {
+    "java": {
+      "javaVersion": "17.0.20.1",
+      "scalaStandardLibraryVersion": "2.13.14"
+    },
+    "scalaCompiler": "3.3.4",
+    "sbt": "1.10.7"
+  },
+  "predictionPreparationFinishedBeforeAnyEvaluation": true,
+  "thresholdSelection": "None; no matcher, threshold, policy or config changes. Development sensitivity is hypothetical cutoff analysis only.",
+  "primaryBinaryLabels": {
+    "development": 38,
+    "heldOut": 194
+  },
+  "humanInitialReviews": 240,
+  "uncertainInitialReviews": 8,
+  "reserveReviewsUsed": 0,
+  "liveProviderAttempts": 0,
+  "liveProviderSpendUsd": "0.00",
+  "limitations": [
+    "Human-reviewed AI-assisted labels, not independent blind gold;22externally assisted cases are self-attested with external evidence unretained.",
+    "Convenience sample, unweighted strata; blocking recall and global identity recall unmeasured.",
+    "No threshold calibration or held-out tuning; repeated common names and unobserved leakage remain risks.",
+    "No real-provider evidence, real LLM path accuracy or compatibility established.",
+    "Large11412-comparison raw runs remain ignoredtarget artifacts; retained manifests, queue predictions and source decisions plus exact commands permit regeneration."
+  ],
+  "commandsLedger": "/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-05/evidence/5e/commands.json",
+  "reviewStatus": "PENDING_USER_LAUNCHED_INDEPENDENT_REVIEW",
+  "seed": "scholarchain-5c-2026",
+  "configuredAdjudication": {
+    "maxRequestBytes": 65536,
+    "maxResponseBytes": 8192,
+    "timeoutMs": 1000,
+    "maxRetries": 0,
+    "maxConcurrentCalls": 1,
+    "maxRequests": 10,
+    "maxInputTokens": 655360,
+    "maxOutputTokens": 81920,
+    "maxSpendUsd": 0.0,
+    "provider": "deterministic-fake",
+    "model": "abstain-fixture",
+    "modelVersion": "v1",
+    "generationSettings": {
+      "temperature": "0",
+      "seed": "0"
+    },
+    "maxRationaleCharacters": 1000,
+    "maxReasonCodes": 8,
+    "maxFieldRefs": 16
+  },
+  "offlinePrompt": {
+    "path": "modules/entity-resolution/src/main/resources/adjudication/prompt.v1.txt",
+    "bytes": 1335,
+    "sha256": "e9ef5f36238a29f2003f9e6404451aeca7fc54575989910edae2ce0ab7f71940"
+  },
+  "offlineResponseSchema": {
+    "path": "modules/entity-resolution/src/main/resources/adjudication/response.schema.v1.json",
+    "bytes": 2802,
+    "sha256": "b253e113841a2e02699097ae003c4a01fbbd2fcd28cf2e61ff48a7a46e06aacd"
+  },
+  "developmentSensitivity": [
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5e/disabled-a-development-sensitivity.json",
+      "bytes": 10990,
+      "sha256": "e8d359eb2c76f1cf8b0295bd55d5b8dfe3cf4817a55ff9344bab4cdf364476d4"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5e/fake-a-development-sensitivity.json",
+      "bytes": 10990,
+      "sha256": "e8d359eb2c76f1cf8b0295bd55d5b8dfe3cf4817a55ff9344bab4cdf364476d4"
+    }
+  ],
+  "descriptiveSlices": [
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5e/entity-path-summary.json",
+      "bytes": 5362,
+      "sha256": "f111019dab54e3ac31fb39267bc985d200805a38b362435d9a2fd77a45ab0182"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5e/source-pair-summary.json",
+      "bytes": 3890,
+      "sha256": "8d8d2a2f99193ea72c3f13ff506a43cf157f04a3f22938d8398239c75bf55e48"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5e/sampling-strata-summary.json",
+      "bytes": 3454,
+      "sha256": "09c2ee2b286df0cc53d4d5a06a8d7fd91fc90d55b4e222b7e7db68fa81ee169b"
+    }
+  ],
+  "integrityProof": {
+    "path": "docs/agent-runs/phase-05/evidence/5e/protected-and-metrics-proof.json",
+    "bytes": 2351,
+    "sha256": "380c2b615404c4e5b482f230a9297a2972b129d8f2cc976dc24e7870af2ba526"
+  },
+  "fullGate": {
+    "path": "docs/agent-runs/phase-05/evidence/5e/full-check-summary.json",
+    "bytes": 20823,
+    "sha256": "6a25078c938c1367b7a09975a331a137a41a9502fe44984ab040ee06a4972116"
+  },
+  "helperFiles": [
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5e/execute-evaluation.py.txt",
+      "bytes": 3855,
+      "sha256": "94bedc4787e1dd394682a68586ba0223fcf1edf573a2e6252f5df3a1b91b7d55"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5e/audit-results.py.txt",
+      "bytes": 6244,
+      "sha256": "858e7712095cbcadf316c8e3394d474a2ca684568f389136b2a54cdd81fcd892"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5e/package-results.py.txt",
+      "bytes": 8511,
+      "sha256": "c83a20c05e5eff852728a64fa64401ea0e263f995c6d0f11a7b028fbead3f8b3"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5e/summarize-strata.py.txt",
+      "bytes": 2625,
+      "sha256": "69832a29d17ca9450a8c688e6f48a8b5b05f276e46b2902cf949eac700875d9e"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5e/collect-evidence.py.txt",
+      "bytes": 6292,
+      "sha256": "056f041da81a22d149e28e5ad928776badffc07e22f96d32996007c72e2f3aa9"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5e/validate-inputs.py.txt",
+      "bytes": 2319,
+      "sha256": "1c540c7fd2dc4d6447424d4a5fe4151955a5cdde9c411f70101675921bbc7227"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5e/finalize-report.py.txt",
+      "bytes": 9771,
+      "sha256": "0194df66d757c6372309f6d55f4014da819873fe2a2d845e4ce8bb4b4bc8b6fe"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5e/run-command.py.txt",
+      "bytes": 1507,
+      "sha256": "ac8c6ccd2f8c85fe971797c7a158773f3e53839b9323ff8a26c9677d470e70b0"
+    }
+  ],
+  "rawRunsRetention": "Ignored target/phase5e contains all 11,412 comparison exports for each pass. Durable manifests, queued decisions and prediction files are retained separately.",
+  "currentProviderObservation": {
+    "liveCalls": 0,
+    "fakeCalls": 0,
+    "liveStateExists": false
+  }
+}

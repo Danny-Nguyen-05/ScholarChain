@@ -1,0 +1,35 @@
+{
+  "schemaVersion": "scholarchain.phase5d-user-live-approval.v1",
+  "provenance": "user-supplied chat reply; coordinator transcription, no expansion of authority",
+  "approvedAtRecordedUtc": "2026-10-17T02:40:06.666204+00:00",
+  "question": "May ScholarChain make up to 10 GPT\u20116 Luna API attempts for the 5D test, spending at most $1? This uses the token limits described above; it does not replace your human labeling.",
+  "answer": "Yes, approve the $1 test",
+  "scope": {
+    "schemaVersion": "scholarchain.phase5d-proposed-live-budget.v1",
+    "status": "USER_APPROVED_NUMERICAL_LIMITS",
+    "provider": "openai",
+    "model": "gpt-6-luna",
+    "api": "https://api.openai.com/v1/responses",
+    "serviceTier": "default",
+    "reasoningEffort": "medium",
+    "maxTotalAttemptsIncludingRetries": 10,
+    "maxRetriesPerPair": 1,
+    "maxConcurrentCalls": 1,
+    "maxInputTokensTotal": 1000000,
+    "maxOutputTokensTotal": 40960,
+    "maxOutputTokensPerAttempt": 4096,
+    "maxSpendUsd": "1.00",
+    "maxTimeoutMsPerAttempt": 60000,
+    "scope": "Only naturally eligible development/demo pairs outside all held-out groups. No eligible pair means zero calls.",
+    "approvalRequired": false,
+    "credentialVariableName": "OPENAI_API_KEY",
+    "credentialValuesRecorded": false,
+    "proposalDoesNotEnableLiveMode": true
+  },
+  "gatesRemaining": [
+    "Passing offline checks",
+    "Naturally eligible non-held-out real evidence",
+    "Runtime credential availability"
+  ],
+  "liveCallsExecuted": 0
+}

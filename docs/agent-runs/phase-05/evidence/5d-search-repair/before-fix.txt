@@ -1,0 +1,32 @@
+test_excluded_records_still_count (test_screened_demo.ScreenedTests.test_excluded_records_still_count) ... ok
+test_existing_output_refused (test_screened_demo.ScreenedTests.test_existing_output_refused) ... ok
+test_fixed_query_plan_and_screen_binding (test_screened_demo.ScreenedTests.test_fixed_query_plan_and_screen_binding) ... ok
+test_full_mock_acquisition_preserves_script_before_http_and_caps_all_records (test_screened_demo.ScreenedTests.test_full_mock_acquisition_preserves_script_before_http_and_caps_all_records) ... ok
+test_http_errors_count_bytes_and_retry_only_once (test_screened_demo.ScreenedTests.test_http_errors_count_bytes_and_retry_only_once) ... ok
+test_invalid_author_or_query_has_zero_attempts (test_screened_demo.ScreenedTests.test_invalid_author_or_query_has_zero_attempts) ... ok
+test_request_and_wall_caps_prevent_dispatch (test_screened_demo.ScreenedTests.test_request_and_wall_caps_prevent_dispatch) ... ok
+test_response_byte_limit_fails_closed_and_counts (test_screened_demo.ScreenedTests.test_response_byte_limit_fails_closed_and_counts) ... ok
+test_schema_and_requested_record_count_fail_closed (test_screened_demo.ScreenedTests.test_schema_and_requested_record_count_fail_closed) ... ok
+test_selection_uses_observed_missing_orcid_affiliation_and_domain (test_screened_demo.ScreenedTests.test_selection_uses_observed_missing_orcid_affiliation_and_domain) ... ok
+test_topic_discovery_keeps_relevance_order_without_changing_bounds (test_screened_demo.ScreenedTests.test_topic_discovery_keeps_relevance_order_without_changing_bounds) ... FAIL
+
+======================================================================
+FAIL: test_topic_discovery_keeps_relevance_order_without_changing_bounds (test_screened_demo.ScreenedTests.test_topic_discovery_keeps_relevance_order_without_changing_bounds)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/danny/Documents/UIC/CS441/ScholarChain/datasets/scripts/test_screened_demo.py", line 53, in test_topic_discovery_keeps_relevance_order_without_changing_bounds
+    self.assertEqual(params['sort'], ['relevance_score:desc'])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Lists differ: ['publication_date:asc'] != ['relevance_score:desc']
+
+First differing element 0:
+'publication_date:asc'
+'relevance_score:desc'
+
+- ['publication_date:asc']
++ ['relevance_score:desc']
+
+----------------------------------------------------------------------
+Ran 11 tests in 0.013s
+
+FAILED (failures=1)

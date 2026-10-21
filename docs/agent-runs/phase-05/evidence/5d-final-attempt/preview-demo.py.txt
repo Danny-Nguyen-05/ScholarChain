@@ -1,0 +1,16 @@
+"""Execute the existing no-network preview CLI; never enables live mode."""
+from pathlib import Path
+import json,subprocess,hashlib,sys
+B=Path(__file__).resolve().parent;R=Path.cwd();cp=json.loads((B/'runtime-classpath.json').read_text())
+source=R/'docs/agent-runs/phase-05/source-freeze.json'
+cmd=[cp['java'],'-Xmx4g','-cp',cp['classpath'],'edu.uic.cs441.scholarchain.entityresolution.Phase5Main','prepare-live-demo',
+     '--input','datasets/entity-resolution/prepared/8d30085c-cb67-4d25-909f-5f2603ad4511',
+     '--frozen-input','datasets/entity-resolution/prepared/bd424a86-0a1b-4e44-bbdb-4a9b8c8a20e3',
+     '--queue','docs/agent-runs/phase-05/evidence/5c-repair/review-artifacts/queue.json',
+     '--split','docs/agent-runs/phase-05/evidence/5c-repair/review-artifacts/split.json',
+     '--policy','modules/entity-resolution/src/main/resources/phase5-policy.v1.json',
+     '--config','modules/entity-resolution/src/main/resources/phase5-config.v1.json',
+     '--live-config','docs/agent-runs/phase-05/evidence/5d/approved-live-config.json',
+     '--scope','supplement','--code-revision',subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip(),
+     '--source-hash',hashlib.sha256(source.read_bytes()).hexdigest(),'--output',str(B/'preview')]
+sys.exit(subprocess.run(['python3',str(B/'run-command.py.txt'),'prepare-live-preview',*cmd]).returncode)

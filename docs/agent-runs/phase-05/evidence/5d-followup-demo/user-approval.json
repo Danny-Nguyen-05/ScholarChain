@@ -1,0 +1,20 @@
+{
+  "schemaVersion": "scholarchain.phase5d.followup-supplement-approval.v1",
+  "recordedAtUtc": "2026-10-20T22:00:34.157034+00:00",
+  "provenance": "User-supplied explicit answer; coordinator transcription only.",
+  "question": "The previous search found no eligible pair for the $1 demo. May I run one additional public OpenAlex search: up to 30 new records, 20 web requests, 8 MB and 5 minutes, using no paid data or credentials? It will target distinct-publication researcher evidence without using your labels, leave the review set unchanged, and exclude held-out overlaps before scoring. The existing $1 model-call limit stays unchanged; an eligible pair is not guaranteed.",
+  "answer": "Approve this additional bounded search",
+  "limits": {
+    "maxNewWorksIncludingExcluded": 30,
+    "maxHttpAttemptsIncludingRetries": 20,
+    "maxResponseBytes": 8388608,
+    "maxWallSeconds": 300,
+    "maxAuthors": 6,
+    "maxWorksPerAuthor": 5,
+    "credentials": false,
+    "paidData": false
+  },
+  "scope": "Separate demo-only missing-ORCID researcher contexts; deterministic seeds from existing observations after canonical held-out screening; unchanged source facts/policy/queue/labels; exclude whole held-out-overlapping components before scoring.",
+  "originalModelPilotApprovalUnchanged": true,
+  "no5EAuthorization": true
+}

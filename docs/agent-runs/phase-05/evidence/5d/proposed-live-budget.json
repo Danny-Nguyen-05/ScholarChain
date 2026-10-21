@@ -1,0 +1,22 @@
+{
+  "schemaVersion": "scholarchain.phase5d-proposed-live-budget.v1",
+  "status": "PROPOSED_NOT_AUTHORIZED",
+  "provider": "openai",
+  "model": "gpt-6-luna",
+  "api": "https://api.openai.com/v1/responses",
+  "serviceTier": "default",
+  "reasoningEffort": "medium",
+  "maxTotalAttemptsIncludingRetries": 10,
+  "maxRetriesPerPair": 1,
+  "maxConcurrentCalls": 1,
+  "maxInputTokensTotal": 1000000,
+  "maxOutputTokensTotal": 40960,
+  "maxOutputTokensPerAttempt": 4096,
+  "maxSpendUsd": "1.00",
+  "maxTimeoutMsPerAttempt": 60000,
+  "scope": "Only naturally eligible development/demo pairs outside all held-out groups. No eligible pair means zero calls.",
+  "approvalRequired": true,
+  "credentialVariableName": "OPENAI_API_KEY",
+  "credentialValuesRecorded": false,
+  "proposalDoesNotEnableLiveMode": true
+}

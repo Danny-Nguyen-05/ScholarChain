@@ -1,0 +1,6 @@
+{
+  "checkedFiles": 165,
+  "mismatches": [],
+  "scope": "All module src/**, dataset scripts and independent tests/browser artifacts from final pre-lean freeze; only packaging/docs/attributes/archive relocation authorized.",
+  "verifiedAtUtc": "2026-10-17T00:52:25.949174+00:00"
+}

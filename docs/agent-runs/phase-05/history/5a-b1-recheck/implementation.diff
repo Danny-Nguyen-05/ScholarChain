@@ -1,0 +1,2880 @@
+diff --git a/build.sbt b/build.sbt
+index 4bc59b6..1ca9266 100644
+--- a/build.sbt
++++ b/build.sbt
+@@ -47,7 +47,7 @@ lazy val hadoop =
+ lazy val independentTests =
+   project
+     .in(file("tests"))
+-    .dependsOn(core, hadoop)
++    .dependsOn(core, hadoop, entityResolution)
+     .settings(
+       ScholarChainBuild.moduleSettings(Seq(Dependencies.hadoopClientLib)),
+       name := "independentTests",
+diff --git a/modules/core/README.md b/modules/core/README.md
+index 607d7f9..775fd9b 100644
+--- a/modules/core/README.md
++++ b/modules/core/README.md
+@@ -1,5 +1,105 @@
+ # Core contract boundaries
+ 
++## Phase 5 identity contracts (Subphase 5A)
++
++`ResolutionContracts.schemaVersion` is `scholarchain.resolution.v1`. These additive types do
++not change `scholarchain.domain.v1`, existing stable IDs, preparation features or shared config.
++`ResolutionObservationRef` binds source, native record key and snapshot. `ResolutionEndpoint`
++distinguishes a work observation, a parent-work author mention, an ORCID profile, and an ORCID
++work activity. A work activity has no author list; employment, education and other nonwork
++activities are evidence only and require an explicit unsupported-pair skip in the future ER
++input bridge. A lookup hit on an unsupported kind must not be reported as a missing record.
++
++`ResolutionValidationContext.create(works, profiles, activities)` validates the supplied domain
++records before constructing immutable lookups. Identical duplicates are allowed, conflicting
++payloads for one full observation key fail, and separate snapshots remain separate. Mention
++endpoints must name an actual nested author in their parent work. Endpoint bindings (work ID,
++ORCID, activity kind and optional observed work ID) must agree with that source context.
++This checks consistency of supplied observations, not external existence or factual identity.
++
++`ResolutionIds.pair(entityType, first, second)` creates a canonical unordered pair. It checks
++endpoint syntax and type, while `ResolutionValidation.check(pair, context)` additionally binds
++the pair to source records. The endpoint identity tuple is compact JSON
++`[kind, sourceWire, sourceRecordId, datasetSnapshot, mentionIdOrEmpty]`, where kind is `work`,
++`mention`, `orcid-profile` or `orcid-work-activity`. Carried work/ORCID values are bindings,
++not extra identities. Canonical order is `String.compareTo` on these tuple strings. A self pair
++fails. `resolution-endpoint:` hashes that compact tuple with SHA-256 over UTF-8.
++`resolution-pair:` hashes the compact JSON array
++`[schemaVersion, entityType.toString, leftTuple, rightTuple]`. It does not depend on blocks,
++scores, policy, run IDs or timestamps. Duplicate blocks must be aggregated by the ER owner.
++uPickle uses `$type` for endpoint variants and strings `Work`/`Researcher` for entity types.
++
++`ResolutionDecision` wraps the unchanged `MatchDecision`. Its source/target IDs are snapshot
++endpoint hashes, its derived provenance source is `SCHOLARCHAIN`, and provenance source-record
++ID names the pair. The wrapper requires a UTC instant ending `Z`, policy/config/input-evidence
++hashes, evidence references, contributing candidate/block references, versioned feature
++availability, a decision path and explicit confidence semantics. Features have a finite value
++or a nonblank missing reason, never both. Available values must exactly repeat the legacy
++decision feature vector; missing values are excluded. `Unavailable` confidence requires a
++reason and compatibility value zero; that zero is not a score. `UncalibratedScore` does not
++claim probability calibration. Feature formulas, namespace rules, eligibility, evidence loading,
++policy validation and calibration remain ER responsibilities; core checks carried consistency.
++Candidate IDs/references and evidence references are structurally checked here; the future
++input bridge must verify their existence, content hashes, relationship to the pair and bounds.
++
++When present, `ResolutionAdjudication` requires the model's `reportedConfidence` separately
++from system confidence, hashes/versions/provider/model metadata, fake/live mode and cache status.
++Unknown model versions remain absent. `preAdjudication` retains the optional pre-LLM score,
++unresolved outcome and original scored/bibliographic path. It cannot claim an exact or conflict
++case was eligible. Adjudication metadata exists exactly when the final path is `LlmAdjudicated`;
++that final path cannot report `CONFLICT`. The ER policy must enforce the uncertainty band and
++conflict precedence.
++`resolution-decision:` hashes compact JSON of the full wrapper with only `decisionId` blanked;
++time and run therefore change audit identity while pair identity stays stable.
++
++`ResolutionValidation.check(link, audit, context)` requires the actual accepted decision and
++matching pair, decision ID, policy, run and provenance. `ResolutionAcceptedLink` exports
++pairwise acceptance only and assigns no canonical representative. Phase 6 must consume the
++complete `ResolutionGroupingConstraints` from the same policy/run population before grouping.
++`coveredEndpoints` explicitly includes members with no authoritative IDs: missing coverage
++fails closed. Cannot-link pairs and authoritative namespace/value assertions are explicit
++constraints, extracted by ER under its versioned authority policy.
++
++`ResolutionIdentifierAssertion.namespace` uses the closed `ResolutionAuthorityNamespace` set:
++explicit wire codes `doi` and `arxiv` for Work endpoints, and `orcid` for Researcher endpoints.
++Unknown codes, aliases, casing variants and entity-incompatible assertions fail closed. Values
++must already equal the output of the existing `StableIds.normalizeIndexedIdentifier` rule:
++DOIs are normalized lowercase bare tokens, ORCIDs are bare checksum-valid identifiers, and
++arXiv identifiers are canonical unversioned tokens. Version-bearing arXiv assertions fail
++rather than treating versions as conflicting works or stripping versions implicitly. Their
++original source values remain observations for the later version-aware matching policy.
++Ingestion must normalize supported raw spellings before constructing assertions; component
++validation rejects noncanonical values before comparing authoritative identifiers. This avoids
++treating an ORCID URL and its bare identifier, or DOI case variants, as separate authorities.
++
++The authority set is narrower than source observation identifiers. DBLP and OpenAlex work IDs
++remain source bindings: different native records may still describe the same work. OpenAlex
++author IDs remain disambiguation hypotheses. Semantic Scholar IDs and repository URLs remain
++comparison evidence for Phase 5B; they are excluded from this hard-conflict namespace because
++their entity/canonicalization semantics require later policy work. Scopus and other free-text
++external identifier namespaces remain original observations, never coerced into this set. No
++source record, existing identifier normalizer or source enum is changed by this restriction.
++
++`ResolutionValidation.checkComponent(members, constraints, context, maxMembers, maxConstraints)`
++checks an already proposed component. Both limits are caller-supplied positive bounds, checked
++before traversing the bundle; constraint size is covered endpoints plus cannot-links plus
++identifier assertions. It rejects duplicate/uncovered members, cannot-link endpoints in the
++same component, and distinct authoritative values in one namespace anywhere in the component.
++Thus accepting A–B and B–C does not authorize merging a conflicting A–C. The validator does
++not construct components, select representatives, infer absent constraints or prove constraint
++completeness. The future export manifest must bind the complete constraint-bundle content hash
++to its run, input population and policy hash; consumers must verify that binding before grouping.
++Structural validation alone does not establish a complete export.
++The user assigned Phase 6 grouping and deterministic representative selection to the
++`spark-engineer` under `modules/spark/**`; the `domain-engineer` owns shared contract changes.
++That ownership assignment does not begin Phase 6 implementation.
++
++Frozen wire examples live under `src/test/resources/wire/resolution-*.json`; tests roundtrip
++work/researcher pairs, both audit examples, a link and constraints. Their source facts reuse
++existing core fixtures, while decisions, scores, policy and grouping assertions are explicitly
++synthetic contract examples. They are not produced matches, human labels or evaluation results.
++Phase 5 policy, labels, provider behavior and the review tool remain module-local future work.
++
+ `DomainValidation.check(work)` validates one immutable source observation and never registers it globally. `WorkValidationContext.create(works)` validates all supplied works before creating an immutable lookup keyed by `(source, sourceRecordId, datasetSnapshot)`. Identical duplicates are allowed; conflicting records under the same key are rejected deterministically, including differing lineage metadata. Separate snapshots and separate contexts cannot overwrite each other.
+ 
+ Full validation of a `CoauthorPairCandidate`, `AuthorshipRecord`, or `PublicationTeam` requires `DomainValidation.check(record, work)` or `DomainValidation.check(record, context)`. The single argument `check` returns `MissingValidationContext`. `checkStructure(record)` checks the carried fields and their internal consistency only; it does not establish a relationship to a source work. A record's own DOI or URI cannot supply missing context.
+diff --git a/modules/core/src/main/scala/edu/uic/cs441/scholarchain/core/ResolutionContracts.scala b/modules/core/src/main/scala/edu/uic/cs441/scholarchain/core/ResolutionContracts.scala
+new file mode 100644
+index 0000000..b195d67
+--- /dev/null
++++ b/modules/core/src/main/scala/edu/uic/cs441/scholarchain/core/ResolutionContracts.scala
+@@ -0,0 +1,252 @@
++package edu.uic.cs441.scholarchain.core
++
++import upickle.default.ReadWriter
++
++/** Additive Phase 5 contracts. Existing domain records and stable-id formulas are unchanged. */
++object ResolutionContracts {
++  val schemaVersion: String = "scholarchain.resolution.v1"
++}
++
++final case class ResolutionObservationRef(
++    source: SourceType,
++    sourceRecordId: String,
++    datasetSnapshot: String
++) derives ReadWriter
++
++enum ResolutionEntityType derives ReadWriter {
++  case Work, Researcher
++}
++
++/** Activities never supply an author list. Only an actual ORCID work activity is a work endpoint.
++  */
++enum ResolutionEndpoint derives ReadWriter {
++  case Work(observation: ResolutionObservationRef, workId: String)
++  case Mention(observation: ResolutionObservationRef, mentionId: String)
++  case OrcidProfile(observation: ResolutionObservationRef, orcid: String)
++  case OrcidWorkActivity(observation: ResolutionObservationRef, observedWorkId: Option[String])
++}
++
++final case class ResolutionPair(
++    schemaVersion: String,
++    pairId: String,
++    entityType: ResolutionEntityType,
++    left: ResolutionEndpoint,
++    right: ResolutionEndpoint
++) derives ReadWriter
++
++final case class CandidateBlockRef(candidateId: String, blockKey: String) derives ReadWriter
++
++/** Missing is explicit; no numeric sentinel denotes unavailable evidence. Formulas live in ER. */
++final case class ResolutionFeature(
++    name: String,
++    value: Option[Double],
++    missingReason: Option[String],
++    evidenceRefs: Vector[String]
++) derives ReadWriter
++
++enum ResolutionDecisionPath derives ReadWriter {
++  case ExactIdentifier, DeterministicBibliographic, Scored, LlmAdjudicated, HardConflict
++}
++
++enum ResolutionConfidenceSemantics derives ReadWriter {
++  case Unavailable, UncalibratedScore, CalibratedProbability
++}
++
++enum ResolutionAdjudicationMode derives ReadWriter {
++  case Fake, Live
++}
++
++final case class ResolutionPreAdjudication(
++    score: Option[Double],
++    outcome: MatchOutcome,
++    decisionPath: ResolutionDecisionPath
++) derives ReadWriter
++
++/** Reported confidence is the model's assertion, never a calibrated system probability. */
++final case class ResolutionAdjudication(
++    requestHash: String,
++    promptVersion: String,
++    promptHash: String,
++    responseSchemaVersion: String,
++    provider: String,
++    model: String,
++    modelVersion: Option[String],
++    generationSettingsHash: String,
++    cacheKey: String,
++    mode: ResolutionAdjudicationMode,
++    cacheHit: Boolean,
++    reportedConfidence: Double,
++    evidenceRefs: Vector[String],
++    preAdjudication: ResolutionPreAdjudication
++) derives ReadWriter
++
++final case class ResolutionDecision(
++    schemaVersion: String,
++    decisionId: String,
++    pair: ResolutionPair,
++    decision: MatchDecision,
++    contributingCandidates: Vector[CandidateBlockRef],
++    featurePolicyVersion: String,
++    featureEvidence: Vector[ResolutionFeature],
++    decisionPath: ResolutionDecisionPath,
++    confidenceSemantics: ResolutionConfidenceSemantics,
++    scoreUnavailableReason: Option[String],
++    policyHash: String,
++    configHash: String,
++    inputEvidenceHash: String,
++    evidenceRefs: Vector[String],
++    decidedAtUtc: String,
++    adjudication: Option[ResolutionAdjudication]
++) derives ReadWriter
++
++/** Pairwise acceptance only. Consumers must apply the complete constraint bundle before grouping.
++  */
++final case class ResolutionAcceptedLink(
++    schemaVersion: String,
++    pair: ResolutionPair,
++    decisionId: String,
++    policyVersion: String,
++    policyHash: String,
++    runId: String,
++    provenance: Provenance
++) derives ReadWriter
++
++final case class ResolutionCannotLink(
++    pair: ResolutionPair,
++    reasonCode: String,
++    evidenceRefs: Vector[String]
++) derives ReadWriter
++
++/** Closed hard-conflict namespaces, narrower than identifiers used for observation lookup. Native
++  * source keys and author disambiguation hypotheses cannot assert hard identity conflicts.
++  */
++enum ResolutionAuthorityNamespace(
++    val wire: String,
++    val entityType: ResolutionEntityType,
++    private val indexedNamespace: IdentifierNamespace
++) {
++  case Doi
++      extends ResolutionAuthorityNamespace(
++        "doi",
++        ResolutionEntityType.Work,
++        IdentifierNamespace.Doi
++      )
++  case Arxiv
++      extends ResolutionAuthorityNamespace(
++        "arxiv",
++        ResolutionEntityType.Work,
++        IdentifierNamespace.Arxiv
++      )
++  case Orcid
++      extends ResolutionAuthorityNamespace(
++        "orcid",
++        ResolutionEntityType.Researcher,
++        IdentifierNamespace.Orcid
++      )
++
++  /** Ingestion must normalize before constructing assertions. Group validation never silently
++    * repairs spellings. Versioned arXiv observations remain evidence until version semantics are
++    * defined by a later matching policy; they are not hard-conflict assertions in this contract.
++    */
++  def acceptsCanonicalValue(value: String): Boolean =
++    StableIds.normalizeIndexedIdentifier(indexedNamespace, value).contains(value) &&
++      (this != ResolutionAuthorityNamespace.Arxiv || !value.matches(".*v[0-9]+$"))
++}
++
++object ResolutionAuthorityNamespace {
++  given ReadWriter[ResolutionAuthorityNamespace] =
++    EnumCodecs.wire(ResolutionAuthorityNamespace.values, _.wire)
++}
++
++/** ER supplies canonical authoritative identifiers under its versioned authority policy. */
++final case class ResolutionIdentifierAssertion(
++    endpoint: ResolutionEndpoint,
++    namespace: ResolutionAuthorityNamespace,
++    value: String,
++    evidenceRefs: Vector[String]
++) derives ReadWriter
++
++/** coveredEndpoints explicitly includes endpoints with no authoritative identifier. Omission is
++  * unknown coverage, never permission to group. This is a complete run-level bundle, not a
++  * pair-local subset.
++  */
++final case class ResolutionGroupingConstraints(
++    schemaVersion: String,
++    entityType: ResolutionEntityType,
++    policyVersion: String,
++    policyHash: String,
++    coveredEndpoints: Vector[ResolutionEndpoint],
++    cannotLinks: Vector[ResolutionCannotLink],
++    authoritativeIdentifiers: Vector[ResolutionIdentifierAssertion]
++) derives ReadWriter
++
++/** New identifiers hash compact JSON arrays (UTF-8 SHA-256); no old StableIds formula changes. */
++object ResolutionIds {
++  def observation(endpoint: ResolutionEndpoint): ResolutionObservationRef = endpoint match {
++    case ResolutionEndpoint.Work(ref, _)              => ref
++    case ResolutionEndpoint.Mention(ref, _)           => ref
++    case ResolutionEndpoint.OrcidProfile(ref, _)      => ref
++    case ResolutionEndpoint.OrcidWorkActivity(ref, _) => ref
++  }
++
++  def entityType(endpoint: ResolutionEndpoint): ResolutionEntityType = endpoint match {
++    case ResolutionEndpoint.Work(_, _) | ResolutionEndpoint.OrcidWorkActivity(_, _) =>
++      ResolutionEntityType.Work
++    case _ => ResolutionEntityType.Researcher
++  }
++
++  /** Carried work/orcid bindings are checked against source context, not hashed as identity. */
++  def endpointKey(endpoint: ResolutionEndpoint): String = {
++    val ref = observation(endpoint)
++    val (kind, member) = endpoint match {
++      case ResolutionEndpoint.Work(_, _)              => ("work", "")
++      case ResolutionEndpoint.Mention(_, mentionId)   => ("mention", mentionId)
++      case ResolutionEndpoint.OrcidProfile(_, _)      => ("orcid-profile", "")
++      case ResolutionEndpoint.OrcidWorkActivity(_, _) => ("orcid-work-activity", "")
++    }
++    ujson.Arr(kind, ref.source.wire, ref.sourceRecordId, ref.datasetSnapshot, member).render()
++  }
++
++  def endpointId(endpoint: ResolutionEndpoint): String =
++    "resolution-endpoint:" + StableIds.sha256Hex(endpointKey(endpoint))
++
++  def pair(
++      entityType: ResolutionEntityType,
++      first: ResolutionEndpoint,
++      second: ResolutionEndpoint
++  ): Either[Vector[DomainViolation], ResolutionPair] = {
++    val errors = ResolutionValidation.checkEndpointStructure(first) ++
++      ResolutionValidation.checkEndpointStructure(second)
++    if (errors.nonEmpty) Left(errors)
++    else if (entityType != this.entityType(first) || entityType != this.entityType(second))
++      Left(Vector(DomainViolation(ViolationCode.InconsistentRecord, "pair entity type mismatch")))
++    else if (endpointKey(first) == endpointKey(second))
++      Left(Vector(DomainViolation(ViolationCode.InvalidPairOrder, "self observation pair")))
++    else {
++      val (left, right) =
++        if (endpointKey(first).compareTo(endpointKey(second)) < 0) (first, second)
++        else (second, first)
++      val hashInput = ujson
++        .Arr(
++          ResolutionContracts.schemaVersion,
++          entityType.toString,
++          ujson.read(endpointKey(left)),
++          ujson.read(endpointKey(right))
++        )
++        .render()
++      Right(
++        ResolutionPair(
++          ResolutionContracts.schemaVersion,
++          "resolution-pair:" + StableIds.sha256Hex(hashInput),
++          entityType,
++          left,
++          right
++        )
++      )
++    }
++  }
++
++  /** Includes all audit fields including time/run. Blank only the derived id to avoid recursion. */
++  def decisionId(value: ResolutionDecision): String =
++    "resolution-decision:" + StableIds.sha256Hex(CoreJson.compact(value.copy(decisionId = "")))
++}
+diff --git a/modules/core/src/main/scala/edu/uic/cs441/scholarchain/core/ResolutionValidation.scala b/modules/core/src/main/scala/edu/uic/cs441/scholarchain/core/ResolutionValidation.scala
+new file mode 100644
+index 0000000..7236cd8
+--- /dev/null
++++ b/modules/core/src/main/scala/edu/uic/cs441/scholarchain/core/ResolutionValidation.scala
+@@ -0,0 +1,335 @@
++package edu.uic.cs441.scholarchain.core
++
++import java.time.Instant
++import scala.util.Try
++
++/** Contract validation only. ER owns scoring, authority extraction, policy loading and evidence IO.
++  */
++object ResolutionValidation {
++  private def error(message: String): DomainViolation =
++    DomainViolation(ViolationCode.InconsistentRecord, message)
++  private def requireThat(condition: Boolean, message: String): Vector[DomainViolation] =
++    if (condition) Vector.empty else Vector(error(message))
++  private def checked[A](
++      value: A,
++      errors: Vector[DomainViolation]
++  ): Either[Vector[DomainViolation], A] =
++    if (errors.isEmpty) Right(value) else Left(errors.distinct)
++  private def nonblank(value: String): Boolean = value.nonEmpty && value == value.trim
++  private def hash(value: String): Boolean = value.matches("[0-9a-f]{64}")
++  private def refs(values: Vector[String]): Boolean =
++    values.distinct == values && values.forall(nonblank)
++  private def schema(version: String): Vector[DomainViolation] =
++    if (version == ResolutionContracts.schemaVersion) Vector.empty
++    else
++      Vector(
++        DomainViolation(ViolationCode.UnsupportedSchemaVersion, "unsupported resolution schema")
++      )
++  private def failures[A](value: Either[Vector[DomainViolation], A]): Vector[DomainViolation] =
++    value.left.toOption.toVector.flatten
++
++  private[core] def checkEndpointStructure(
++      endpoint: ResolutionEndpoint
++  ): Vector[DomainViolation] = {
++    val ref = ResolutionIds.observation(endpoint)
++    val sourceErrors =
++      StableIds.parseSourceRecordId(ref.source, ref.sourceRecordId).left.toOption.toVector ++
++        StableIds.snapshotId(ref.source, ref.datasetSnapshot).left.toOption.toVector
++    val bindingErrors = endpoint match {
++      case ResolutionEndpoint.Work(_, id) =>
++        StableIds.parseWorkId(id).left.toOption.toVector
++      case ResolutionEndpoint.Mention(_, id) =>
++        StableIds.parseMentionIdParts(id) match {
++          case Left(e) => Vector(e)
++          case Right(parts) =>
++            requireThat(
++              parts.sourceWire.equalsIgnoreCase(
++                ref.source.wire
++              ) && parts.sourceRecordId == ref.sourceRecordId,
++              "mention endpoint must repeat source and parent source record"
++            )
++        }
++      case ResolutionEndpoint.OrcidProfile(_, orcid) =>
++        requireThat(
++          ref.source == SourceType.Orcid && ref.sourceRecordId.stripPrefix("/") == orcid &&
++            StableIds.researcherIdFromValidatedOrcid(orcid).isRight,
++          "profile endpoint must reference its bare ORCID source record"
++        )
++      case ResolutionEndpoint.OrcidWorkActivity(_, workId) =>
++        requireThat(
++          ref.source == SourceType.Orcid &&
++            ref.sourceRecordId.stripPrefix("/").split("/", -1).toVector.lift(1).contains("work"),
++          "work activity endpoint requires an ORCID work path"
++        ) ++ workId.toVector.flatMap(id => StableIds.parseWorkId(id).left.toOption)
++    }
++    sourceErrors ++ bindingErrors ++ requireThat(
++      ref.source != SourceType.ScholarChain,
++      "identity endpoints require original source observations"
++    )
++  }
++
++  def check(
++      value: ResolutionPair,
++      context: ResolutionValidationContext
++  ): Either[Vector[DomainViolation], ResolutionPair] = {
++    val expected = ResolutionIds.pair(value.entityType, value.left, value.right)
++    checked(
++      value,
++      schema(value.schemaVersion) ++ failures(expected) ++
++        requireThat(
++          expected.contains(value),
++          "pair must have canonical endpoints and its computed id"
++        ) ++
++        context.check(value.left) ++ context.check(value.right)
++    )
++  }
++
++  def check(
++      value: ResolutionDecision,
++      context: ResolutionValidationContext
++  ): Either[Vector[DomainViolation], ResolutionDecision] = {
++    val d = value.decision
++    val available = value.featureEvidence.flatMap(f => f.value.map(NamedNumber(f.name, _)))
++    val featureErrors = value.featureEvidence.flatMap { f =>
++      requireThat(nonblank(f.name), "feature name required") ++
++        requireThat(
++          f.value.isDefined != f.missingReason.isDefined,
++          "feature requires value XOR missing reason"
++        ) ++
++        requireThat(f.value.forall(_.isFinite), "feature value must be finite") ++
++        requireThat(f.missingReason.forall(nonblank), "missing reason cannot be blank") ++
++        requireThat(
++          refs(f.evidenceRefs) && f.evidenceRefs.forall(value.evidenceRefs.contains),
++          "feature evidence must use allowed refs"
++        )
++    }
++    val candidateErrors = value.contributingCandidates.flatMap { c =>
++      requireThat(
++        c.candidateId.matches("match-candidate:[0-9a-f]{64}"),
++        "invalid contributing candidate id"
++      ) ++
++        requireThat(
++          nonblank(c.blockKey) && c.blockKey.length <= 512 && !c.blockKey.exists(ch =>
++            ch == '\r' || ch == '\n'
++          ),
++          "invalid contributing block key"
++        )
++    }
++    val adjudicationErrors = value.adjudication.toVector.flatMap { a =>
++      requireThat(
++        Vector(a.requestHash, a.promptHash, a.generationSettingsHash, a.cacheKey).forall(hash),
++        "adjudication hashes required"
++      ) ++
++        requireThat(
++          Vector(a.promptVersion, a.responseSchemaVersion, a.provider, a.model)
++            .forall(nonblank) && a.modelVersion.forall(nonblank),
++          "adjudication versions/provider/model required"
++        ) ++
++        requireThat(
++          a.reportedConfidence.isFinite && a.reportedConfidence >= 0 && a.reportedConfidence <= 1,
++          "LLM reported confidence must be finite in [0,1]"
++        ) ++
++        requireThat(
++          refs(a.evidenceRefs) && a.evidenceRefs.forall(value.evidenceRefs.contains),
++          "adjudication evidence must use allowed refs"
++        ) ++ requireThat(
++          a.preAdjudication.score.forall(s => s.isFinite && s >= 0 && s <= 1),
++          "pre-adjudication score must be finite in [0,1] when present"
++        ) ++ requireThat(
++          a.preAdjudication.outcome == MatchOutcome.Unresolved &&
++            Set(ResolutionDecisionPath.Scored, ResolutionDecisionPath.DeterministicBibliographic)
++              .contains(a.preAdjudication.decisionPath),
++          "only unresolved scored/bibliographic cases may reach adjudication"
++        )
++    }
++    val timestampValid =
++      value.decidedAtUtc.endsWith("Z") && Try(Instant.parse(value.decidedAtUtc)).isSuccess
++    checked(
++      value,
++      schema(value.schemaVersion) ++ failures(check(value.pair, context)) ++
++        failures(
++          DomainValidation.check(d)
++        ) ++ featureErrors ++ candidateErrors ++ adjudicationErrors ++
++        requireThat(
++          d.sourceId == ResolutionIds.endpointId(value.pair.left) && d.targetId == ResolutionIds
++            .endpointId(value.pair.right),
++          "decision endpoints must bind snapshot endpoint ids"
++        ) ++
++        requireThat(
++          value.decisionId == ResolutionIds.decisionId(value),
++          "decision id must bind all audit fields"
++        ) ++
++        requireThat(timestampValid, "decision timestamp must be an ISO instant in UTC ending Z") ++
++        requireThat(
++          Vector(value.policyHash, value.configHash, value.inputEvidenceHash).forall(hash),
++          "policy/config/input evidence hashes required"
++        ) ++
++        requireThat(nonblank(value.featurePolicyVersion), "feature policy version required") ++
++        requireThat(
++          if (value.confidenceSemantics == ResolutionConfidenceSemantics.Unavailable)
++            d.confidence == 0 && value.scoreUnavailableReason.exists(nonblank)
++          else value.scoreUnavailableReason.isEmpty,
++          "unavailable score requires explicit reason and compatibility confidence zero"
++        ) ++
++        requireThat(
++          value.featureEvidence.map(_.name) == value.featureEvidence.map(_.name).distinct.sorted,
++          "feature evidence must be sorted and distinct"
++        ) ++
++        requireThat(
++          d.features == available,
++          "legacy decision features must equal available evidence values"
++        ) ++
++        requireThat(
++          refs(value.evidenceRefs) && value.evidenceRefs.nonEmpty,
++          "distinct nonempty evidence refs required"
++        ) ++
++        requireThat(
++          value.contributingCandidates.distinct == value.contributingCandidates && value.contributingCandidates
++            .map(_.candidateId)
++            .distinct
++            .size == value.contributingCandidates.size,
++          "contributing candidates must be distinct"
++        ) ++
++        requireThat(
++          (value.decisionPath == ResolutionDecisionPath.LlmAdjudicated) == value.adjudication.nonEmpty,
++          "LLM decision path and adjudication metadata must occur together"
++        ) ++
++        requireThat(
++          value.decisionPath != ResolutionDecisionPath.LlmAdjudicated || d.decision != MatchOutcome.Conflict,
++          "LLM adjudication cannot produce CONFLICT"
++        ) ++
++        requireThat(
++          value.decisionPath != ResolutionDecisionPath.HardConflict || d.decision == MatchOutcome.Conflict,
++          "hard conflict path requires CONFLICT"
++        ) ++
++        requireThat(
++          d.provenance.source == SourceType.ScholarChain && d.provenance.sourceRecordId == value.pair.pairId,
++          "decision provenance must identify its derived pair"
++        )
++    )
++  }
++
++  /** Full link validation requires the actual accepted audit decision; a naked link proves nothing.
++    */
++  def check(
++      value: ResolutionAcceptedLink,
++      audit: ResolutionDecision,
++      context: ResolutionValidationContext
++  ): Either[Vector[DomainViolation], ResolutionAcceptedLink] =
++    checked(
++      value,
++      schema(value.schemaVersion) ++ failures(check(audit, context)) ++
++        failures(DomainValidation.checkProvenance(value.provenance)) ++
++        requireThat(
++          audit.decision.decision == MatchOutcome.Accepted,
++          "link requires ACCEPTED audit"
++        ) ++
++        requireThat(
++          value.pair == audit.pair && value.decisionId == audit.decisionId && value.policyVersion == audit.decision.policyVersion && value.policyHash == audit.policyHash && value.runId == audit.decision.runId && value.provenance == audit.decision.provenance,
++          "link must bind accepted audit pair/policy/run/provenance"
++        )
++    )
++
++  def check(
++      value: ResolutionGroupingConstraints,
++      context: ResolutionValidationContext
++  ): Either[Vector[DomainViolation], ResolutionGroupingConstraints] = {
++    val endpointErrors =
++      value.coveredEndpoints.flatMap(e => checkEndpointStructure(e) ++ context.check(e))
++    val ids = value.coveredEndpoints.map(ResolutionIds.endpointId)
++    val constraintErrors = value.cannotLinks.flatMap { c =>
++      failures(check(c.pair, context)) ++
++        requireThat(
++          c.pair.entityType == value.entityType && Vector(c.pair.left, c.pair.right)
++            .forall(value.coveredEndpoints.contains),
++          "cannot-link endpoints require coverage and entity type"
++        ) ++
++        requireThat(
++          nonblank(c.reasonCode) && c.evidenceRefs.nonEmpty && refs(c.evidenceRefs),
++          "cannot-link reason/evidence required"
++        )
++    }
++    val assertionErrors = value.authoritativeIdentifiers.flatMap { a =>
++      requireThat(
++        value.coveredEndpoints.contains(a.endpoint),
++        "identifier assertion endpoint requires coverage"
++      ) ++
++        requireThat(
++          a.namespace.entityType == value.entityType &&
++            a.namespace.entityType == ResolutionIds.entityType(a.endpoint),
++          "authoritative identifier namespace must match entity type"
++        ) ++
++        requireThat(
++          a.namespace.acceptsCanonicalValue(a.value),
++          "authoritative identifier requires canonical value in its supported namespace"
++        ) ++
++        requireThat(
++          a.evidenceRefs.nonEmpty && refs(a.evidenceRefs),
++          "authoritative identifier evidence required"
++        )
++    }
++    checked(
++      value,
++      schema(value.schemaVersion) ++ endpointErrors ++ constraintErrors ++ assertionErrors ++
++        requireThat(
++          nonblank(value.policyVersion) && hash(value.policyHash),
++          "constraint policy version/hash required"
++        ) ++
++        requireThat(
++          ids.distinct == ids && value.coveredEndpoints.forall(
++            ResolutionIds.entityType(_) == value.entityType
++          ),
++          "constraint coverage must be distinct and typed"
++        ) ++
++        requireThat(
++          value.cannotLinks
++            .map(_.pair.pairId)
++            .distinct
++            .size == value.cannotLinks.size && value.authoritativeIdentifiers.distinct == value.authoritativeIdentifiers,
++          "constraints must not contain duplicate assertions/pairs"
++        )
++    )
++  }
++
++  /** Validates one proposed component, without constructing groups or selecting representatives.
++    * Limits are explicit caller policy, checked before traversing the supplied bundle.
++    */
++  def checkComponent(
++      members: Vector[ResolutionEndpoint],
++      constraints: ResolutionGroupingConstraints,
++      context: ResolutionValidationContext,
++      maxMembers: Int,
++      maxConstraints: Int
++  ): Either[Vector[DomainViolation], Vector[ResolutionEndpoint]] = {
++    val size =
++      constraints.coveredEndpoints.size.toLong + constraints.cannotLinks.size + constraints.authoritativeIdentifiers.size
++    if (
++      maxMembers <= 0 || maxConstraints <= 0 || members.isEmpty || members.size > maxMembers || size > maxConstraints
++    )
++      Left(Vector(error("component or constraint bounds invalid/exceeded")))
++    else
++      check(constraints, context).flatMap { _ =>
++        val ids = members.map(ResolutionIds.endpointId)
++        val memberSet = members.toSet
++        val conflicts =
++          constraints.cannotLinks.exists(c => memberSet(c.pair.left) && memberSet(c.pair.right))
++        val identifierConflict = constraints.authoritativeIdentifiers
++          .filter(a => memberSet(a.endpoint))
++          .groupBy(_.namespace)
++          .values
++          .exists(_.map(_.value).distinct.size > 1)
++        checked(
++          members,
++          requireThat(
++            ids.distinct == ids && members.forall(constraints.coveredEndpoints.contains),
++            "component members require distinct complete constraint coverage"
++          ) ++
++            requireThat(!conflicts, "component violates cannot-link constraint") ++
++            requireThat(
++              !identifierConflict,
++              "component has conflicting authoritative identifiers in one namespace"
++            )
++        )
++      }
++  }
++}
+diff --git a/modules/core/src/main/scala/edu/uic/cs441/scholarchain/core/ResolutionValidationContext.scala b/modules/core/src/main/scala/edu/uic/cs441/scholarchain/core/ResolutionValidationContext.scala
+new file mode 100644
+index 0000000..432dd0e
+--- /dev/null
++++ b/modules/core/src/main/scala/edu/uic/cs441/scholarchain/core/ResolutionValidationContext.scala
+@@ -0,0 +1,62 @@
++package edu.uic.cs441.scholarchain.core
++
++/** Source truth only; does not resolve identities. Mentions must belong to a validated work. */
++final class ResolutionValidationContext private (
++    private val works: Map[ResolutionObservationRef, WorkRecord],
++    private val profiles: Map[ResolutionObservationRef, OrcidProfileRecord],
++    private val activities: Map[ResolutionObservationRef, OrcidActivityRecord]
++) {
++  private[core] def check(endpoint: ResolutionEndpoint): Vector[DomainViolation] = {
++    val ref = ResolutionIds.observation(endpoint)
++    val bound = endpoint match {
++      case ResolutionEndpoint.Work(_, id) => works.get(ref).exists(_.workId == id)
++      case ResolutionEndpoint.Mention(_, id) =>
++        works.get(ref).exists(_.authors.exists(_.mentionId == id))
++      case ResolutionEndpoint.OrcidProfile(_, orcid) => profiles.get(ref).exists(_.orcid == orcid)
++      case ResolutionEndpoint.OrcidWorkActivity(_, workId) =>
++        activities
++          .get(ref)
++          .exists(a => a.activityKind == OrcidActivityKind.Work && a.observedWorkId == workId)
++    }
++    if (bound) Vector.empty
++    else
++      Vector(
++        DomainViolation(
++          ViolationCode.InconsistentRecord,
++          s"missing source observation or mismatched endpoint binding: ${ResolutionIds.endpointId(endpoint)}"
++        )
++      )
++  }
++}
++
++object ResolutionValidationContext {
++  def create(
++      works: Vector[WorkRecord],
++      profiles: Vector[OrcidProfileRecord],
++      activities: Vector[OrcidActivityRecord]
++  ): Either[Vector[DomainViolation], ResolutionValidationContext] = {
++    def ref(p: Provenance): ResolutionObservationRef =
++      ResolutionObservationRef(p.source, p.sourceRecordId, p.datasetSnapshot)
++    val errors = works.flatMap(w => DomainValidation.check(w).left.toOption.toVector.flatten) ++
++      profiles.flatMap(p => DomainValidation.check(p).left.toOption.toVector.flatten) ++
++      activities.flatMap(a => DomainValidation.check(a).left.toOption.toVector.flatten)
++    val keyed: Vector[(ResolutionObservationRef, Any)] =
++      works.map(w => ref(w.provenance) -> w) ++
++        profiles.map(p => ref(p.provenance) -> p) ++
++        activities.map(a => ref(a.provenance) -> a)
++    val collisions = keyed.groupBy(_._1).toVector.collect {
++      case (key, values) if values.map(_._2).distinct.size > 1 =>
++        DomainViolation(ViolationCode.InconsistentRecord, s"conflicting source observation: $key")
++    }
++    val allErrors = (errors ++ collisions).distinct.sortBy(e => (e.code.toString, e.message))
++    if (allErrors.nonEmpty) Left(allErrors)
++    else
++      Right(
++        new ResolutionValidationContext(
++          works.map(w => ref(w.provenance) -> w).toMap,
++          profiles.map(p => ref(p.provenance) -> p).toMap,
++          activities.map(a => ref(a.provenance) -> a).toMap
++        )
++      )
++  }
++}
+diff --git a/modules/core/src/test/resources/wire/resolution-accepted-link.json b/modules/core/src/test/resources/wire/resolution-accepted-link.json
+new file mode 100644
+index 0000000..a727900
+--- /dev/null
++++ b/modules/core/src/test/resources/wire/resolution-accepted-link.json
+@@ -0,0 +1,43 @@
++{
++  "schemaVersion": "scholarchain.resolution.v1",
++  "pair": {
++    "schemaVersion": "scholarchain.resolution.v1",
++    "pairId": "resolution-pair:1b7b4ccf905e261f162fd9167241ae2acb6c6379821f225322dea43c82b1fff6",
++    "entityType": "Work",
++    "left": {
++      "$type": "Work",
++      "observation": {
++        "source": "CROSSREF",
++        "sourceRecordId": "10.1007/978-3-642-31674-6_1",
++        "datasetSnapshot": "unknown"
++      },
++      "workId": "work:doi:10.1007/978-3-642-31674-6_1"
++    },
++    "right": {
++      "$type": "Work",
++      "observation": {
++        "source": "DBLP",
++        "sourceRecordId": "series/sapere/BerkeleyR13",
++        "datasetSnapshot": "dblp-2026-10-03"
++      },
++      "workId": "work:doi:10.1007/978-3-642-31674-6_1"
++    }
++  },
++  "decisionId": "resolution-decision:97e2d8457d8fecc5850d013acbdfe6c4501ad6fa970f2d45d33ed59b51c97b65",
++  "policyVersion": "synthetic-contract-v1",
++  "policyHash": "ea9d777c44aef42aa906bf610bccf1734f6ce5fa7f3a05c43cad7ebaaaba6b49",
++  "runId": "run:00112233-4455-4677-8899-aabbccddeeff",
++  "provenance": {
++    "schemaVersion": "scholarchain.domain.v1",
++    "source": "SCHOLARCHAIN",
++    "sourceRecordId": "resolution-pair:1b7b4ccf905e261f162fd9167241ae2acb6c6379821f225322dea43c82b1fff6",
++    "sourceUri": null,
++    "datasetSnapshot": "synthetic-contract-2026-10-15",
++    "retrievalDate": "2026-10-05",
++    "licenseEvidenceUri": "https://dblp.org/faq/Under+what+license+is+the+data+from+dblp+released",
++    "runId": "run:00112233-4455-4677-8899-aabbccddeeff",
++    "uncertaintyNotes": [
++      "Synthetic contract example; not a model result or human annotation."
++    ]
++  }
++}
+diff --git a/modules/core/src/test/resources/wire/resolution-grouping-constraints.json b/modules/core/src/test/resources/wire/resolution-grouping-constraints.json
+new file mode 100644
+index 0000000..b1fe6a7
+--- /dev/null
++++ b/modules/core/src/test/resources/wire/resolution-grouping-constraints.json
+@@ -0,0 +1,61 @@
++{
++  "schemaVersion": "scholarchain.resolution.v1",
++  "entityType": "Work",
++  "policyVersion": "synthetic-contract-v1",
++  "policyHash": "ea9d777c44aef42aa906bf610bccf1734f6ce5fa7f3a05c43cad7ebaaaba6b49",
++  "coveredEndpoints": [
++    {
++      "$type": "Work",
++      "observation": {
++        "source": "DBLP",
++        "sourceRecordId": "series/sapere/BerkeleyR13",
++        "datasetSnapshot": "dblp-2026-10-03"
++      },
++      "workId": "work:doi:10.1007/978-3-642-31674-6_1"
++    },
++    {
++      "$type": "Work",
++      "observation": {
++        "source": "CROSSREF",
++        "sourceRecordId": "10.1007/978-3-642-31674-6_1",
++        "datasetSnapshot": "unknown"
++      },
++      "workId": "work:doi:10.1007/978-3-642-31674-6_1"
++    }
++  ],
++  "cannotLinks": [],
++  "authoritativeIdentifiers": [
++    {
++      "endpoint": {
++        "$type": "Work",
++        "observation": {
++          "source": "DBLP",
++          "sourceRecordId": "series/sapere/BerkeleyR13",
++          "datasetSnapshot": "dblp-2026-10-03"
++        },
++        "workId": "work:doi:10.1007/978-3-642-31674-6_1"
++      },
++      "namespace": "doi",
++      "value": "10.1007/978-3-642-31674-6_1",
++      "evidenceRefs": [
++        "source:fixture"
++      ]
++    },
++    {
++      "endpoint": {
++        "$type": "Work",
++        "observation": {
++          "source": "CROSSREF",
++          "sourceRecordId": "10.1007/978-3-642-31674-6_1",
++          "datasetSnapshot": "unknown"
++        },
++        "workId": "work:doi:10.1007/978-3-642-31674-6_1"
++      },
++      "namespace": "doi",
++      "value": "10.1007/978-3-642-31674-6_1",
++      "evidenceRefs": [
++        "source:fixture"
++      ]
++    }
++  ]
++}
+diff --git a/modules/core/src/test/resources/wire/resolution-researcher-decision.json b/modules/core/src/test/resources/wire/resolution-researcher-decision.json
+new file mode 100644
+index 0000000..58a3aeb
+--- /dev/null
++++ b/modules/core/src/test/resources/wire/resolution-researcher-decision.json
+@@ -0,0 +1,88 @@
++{
++  "schemaVersion": "scholarchain.resolution.v1",
++  "decisionId": "resolution-decision:8feff09cb07ee68eef11c679e139e135a75e3e69950585b68598ea9f3fef8b33",
++  "pair": {
++    "schemaVersion": "scholarchain.resolution.v1",
++    "pairId": "resolution-pair:32c83838c7bcf409215f65a5e256dd8535fe0e7bdbef5f9aa28f469d07d06138",
++    "entityType": "Researcher",
++    "left": {
++      "$type": "Mention",
++      "observation": {
++        "source": "DBLP",
++        "sourceRecordId": "series/sapere/BerkeleyR13",
++        "datasetSnapshot": "dblp-2026-10-03"
++      },
++      "mentionId": "mention:dblp:series/sapere/BerkeleyR13#2"
++    },
++    "right": {
++      "$type": "OrcidProfile",
++      "observation": {
++        "source": "ORCID",
++        "sourceRecordId": "0000-0002-4414-6920",
++        "datasetSnapshot": "unknown"
++      },
++      "orcid": "0000-0002-4414-6920"
++    }
++  },
++  "decision": {
++    "schemaVersion": "scholarchain.domain.v1",
++    "sourceId": "resolution-endpoint:0a83bdd7525c69901177a4343bcbd4da1f7666b9cac7617cb8abc1fd668bddcd",
++    "targetId": "resolution-endpoint:915990649c2f82379df598628a2a28c71920e1b65dc5c78071c773c249d594a3",
++    "features": [
++      {
++        "name": "synthetic_similarity",
++        "value": 0.8
++      }
++    ],
++    "decision": "UNRESOLVED",
++    "confidence": 0.8,
++    "reasonCodes": [
++      "SYNTHETIC_CONTRACT_EXAMPLE"
++    ],
++    "policyVersion": "synthetic-contract-v1",
++    "runId": "run:00112233-4455-4677-8899-aabbccddeeff",
++    "uncertainty": "Synthetic contract example; no identity decision has been run.",
++    "provenance": {
++      "schemaVersion": "scholarchain.domain.v1",
++      "source": "SCHOLARCHAIN",
++      "sourceRecordId": "resolution-pair:32c83838c7bcf409215f65a5e256dd8535fe0e7bdbef5f9aa28f469d07d06138",
++      "sourceUri": null,
++      "datasetSnapshot": "synthetic-contract-2026-10-15",
++      "retrievalDate": "2026-10-05",
++      "licenseEvidenceUri": "https://dblp.org/faq/Under+what+license+is+the+data+from+dblp+released",
++      "runId": "run:00112233-4455-4677-8899-aabbccddeeff",
++      "uncertaintyNotes": [
++        "Synthetic contract example; not a model result or human annotation."
++      ]
++    }
++  },
++  "contributingCandidates": [],
++  "featurePolicyVersion": "synthetic-features-v1",
++  "featureEvidence": [
++    {
++      "name": "synthetic_similarity",
++      "value": 0.8,
++      "missingReason": null,
++      "evidenceRefs": [
++        "source:fixture"
++      ]
++    },
++    {
++      "name": "year_distance",
++      "value": null,
++      "missingReason": "NOT_COMPUTED_IN_CONTRACT_EXAMPLE",
++      "evidenceRefs": []
++    }
++  ],
++  "decisionPath": "Scored",
++  "confidenceSemantics": "UncalibratedScore",
++  "scoreUnavailableReason": null,
++  "policyHash": "ea9d777c44aef42aa906bf610bccf1734f6ce5fa7f3a05c43cad7ebaaaba6b49",
++  "configHash": "ea9d777c44aef42aa906bf610bccf1734f6ce5fa7f3a05c43cad7ebaaaba6b49",
++  "inputEvidenceHash": "ea9d777c44aef42aa906bf610bccf1734f6ce5fa7f3a05c43cad7ebaaaba6b49",
++  "evidenceRefs": [
++    "source:fixture"
++  ],
++  "decidedAtUtc": "2026-10-15T12:00:00Z",
++  "adjudication": null
++}
+diff --git a/modules/core/src/test/resources/wire/resolution-researcher-pair.json b/modules/core/src/test/resources/wire/resolution-researcher-pair.json
+new file mode 100644
+index 0000000..85a86ce
+--- /dev/null
++++ b/modules/core/src/test/resources/wire/resolution-researcher-pair.json
+@@ -0,0 +1,23 @@
++{
++  "schemaVersion": "scholarchain.resolution.v1",
++  "pairId": "resolution-pair:32c83838c7bcf409215f65a5e256dd8535fe0e7bdbef5f9aa28f469d07d06138",
++  "entityType": "Researcher",
++  "left": {
++    "$type": "Mention",
++    "observation": {
++      "source": "DBLP",
++      "sourceRecordId": "series/sapere/BerkeleyR13",
++      "datasetSnapshot": "dblp-2026-10-03"
++    },
++    "mentionId": "mention:dblp:series/sapere/BerkeleyR13#2"
++  },
++  "right": {
++    "$type": "OrcidProfile",
++    "observation": {
++      "source": "ORCID",
++      "sourceRecordId": "0000-0002-4414-6920",
++      "datasetSnapshot": "unknown"
++    },
++    "orcid": "0000-0002-4414-6920"
++  }
++}
+diff --git a/modules/core/src/test/resources/wire/resolution-work-decision.json b/modules/core/src/test/resources/wire/resolution-work-decision.json
+new file mode 100644
+index 0000000..f587668
+--- /dev/null
++++ b/modules/core/src/test/resources/wire/resolution-work-decision.json
+@@ -0,0 +1,88 @@
++{
++  "schemaVersion": "scholarchain.resolution.v1",
++  "decisionId": "resolution-decision:97e2d8457d8fecc5850d013acbdfe6c4501ad6fa970f2d45d33ed59b51c97b65",
++  "pair": {
++    "schemaVersion": "scholarchain.resolution.v1",
++    "pairId": "resolution-pair:1b7b4ccf905e261f162fd9167241ae2acb6c6379821f225322dea43c82b1fff6",
++    "entityType": "Work",
++    "left": {
++      "$type": "Work",
++      "observation": {
++        "source": "CROSSREF",
++        "sourceRecordId": "10.1007/978-3-642-31674-6_1",
++        "datasetSnapshot": "unknown"
++      },
++      "workId": "work:doi:10.1007/978-3-642-31674-6_1"
++    },
++    "right": {
++      "$type": "Work",
++      "observation": {
++        "source": "DBLP",
++        "sourceRecordId": "series/sapere/BerkeleyR13",
++        "datasetSnapshot": "dblp-2026-10-03"
++      },
++      "workId": "work:doi:10.1007/978-3-642-31674-6_1"
++    }
++  },
++  "decision": {
++    "schemaVersion": "scholarchain.domain.v1",
++    "sourceId": "resolution-endpoint:030cf535bc9fa1891748ddd226ffb51091ed3f0f49345487a381692523b57f5b",
++    "targetId": "resolution-endpoint:a389543a72b73fff9db901ab2d5536eddbf964b7f4779863d776c0f3ea42ccfe",
++    "features": [
++      {
++        "name": "synthetic_similarity",
++        "value": 0.8
++      }
++    ],
++    "decision": "ACCEPTED",
++    "confidence": 0.8,
++    "reasonCodes": [
++      "SYNTHETIC_CONTRACT_EXAMPLE"
++    ],
++    "policyVersion": "synthetic-contract-v1",
++    "runId": "run:00112233-4455-4677-8899-aabbccddeeff",
++    "uncertainty": "Synthetic contract example; no identity decision has been run.",
++    "provenance": {
++      "schemaVersion": "scholarchain.domain.v1",
++      "source": "SCHOLARCHAIN",
++      "sourceRecordId": "resolution-pair:1b7b4ccf905e261f162fd9167241ae2acb6c6379821f225322dea43c82b1fff6",
++      "sourceUri": null,
++      "datasetSnapshot": "synthetic-contract-2026-10-15",
++      "retrievalDate": "2026-10-05",
++      "licenseEvidenceUri": "https://dblp.org/faq/Under+what+license+is+the+data+from+dblp+released",
++      "runId": "run:00112233-4455-4677-8899-aabbccddeeff",
++      "uncertaintyNotes": [
++        "Synthetic contract example; not a model result or human annotation."
++      ]
++    }
++  },
++  "contributingCandidates": [],
++  "featurePolicyVersion": "synthetic-features-v1",
++  "featureEvidence": [
++    {
++      "name": "synthetic_similarity",
++      "value": 0.8,
++      "missingReason": null,
++      "evidenceRefs": [
++        "source:fixture"
++      ]
++    },
++    {
++      "name": "year_distance",
++      "value": null,
++      "missingReason": "NOT_COMPUTED_IN_CONTRACT_EXAMPLE",
++      "evidenceRefs": []
++    }
++  ],
++  "decisionPath": "Scored",
++  "confidenceSemantics": "UncalibratedScore",
++  "scoreUnavailableReason": null,
++  "policyHash": "ea9d777c44aef42aa906bf610bccf1734f6ce5fa7f3a05c43cad7ebaaaba6b49",
++  "configHash": "ea9d777c44aef42aa906bf610bccf1734f6ce5fa7f3a05c43cad7ebaaaba6b49",
++  "inputEvidenceHash": "ea9d777c44aef42aa906bf610bccf1734f6ce5fa7f3a05c43cad7ebaaaba6b49",
++  "evidenceRefs": [
++    "source:fixture"
++  ],
++  "decidedAtUtc": "2026-10-15T12:00:00Z",
++  "adjudication": null
++}
+diff --git a/modules/core/src/test/resources/wire/resolution-work-pair.json b/modules/core/src/test/resources/wire/resolution-work-pair.json
+new file mode 100644
+index 0000000..deaed4d
+--- /dev/null
++++ b/modules/core/src/test/resources/wire/resolution-work-pair.json
+@@ -0,0 +1,23 @@
++{
++  "schemaVersion": "scholarchain.resolution.v1",
++  "pairId": "resolution-pair:1b7b4ccf905e261f162fd9167241ae2acb6c6379821f225322dea43c82b1fff6",
++  "entityType": "Work",
++  "left": {
++    "$type": "Work",
++    "observation": {
++      "source": "CROSSREF",
++      "sourceRecordId": "10.1007/978-3-642-31674-6_1",
++      "datasetSnapshot": "unknown"
++    },
++    "workId": "work:doi:10.1007/978-3-642-31674-6_1"
++  },
++  "right": {
++    "$type": "Work",
++    "observation": {
++      "source": "DBLP",
++      "sourceRecordId": "series/sapere/BerkeleyR13",
++      "datasetSnapshot": "dblp-2026-10-03"
++    },
++    "workId": "work:doi:10.1007/978-3-642-31674-6_1"
++  }
++}
+diff --git a/modules/core/src/test/scala/edu/uic/cs441/scholarchain/core/ResolutionAuthoritySpec.scala b/modules/core/src/test/scala/edu/uic/cs441/scholarchain/core/ResolutionAuthoritySpec.scala
+new file mode 100644
+index 0000000..82e6e5b
+--- /dev/null
++++ b/modules/core/src/test/scala/edu/uic/cs441/scholarchain/core/ResolutionAuthoritySpec.scala
+@@ -0,0 +1,175 @@
++package edu.uic.cs441.scholarchain.core
++
++import org.scalatest.funsuite.AnyFunSuite
++
++/** Synthetic hard-authority contract cases, never source identity decisions or human labels. */
++class ResolutionAuthoritySpec extends AnyFunSuite {
++  import ResolutionContractFixtures.*
++
++  private def bundle(
++      entityType: ResolutionEntityType,
++      endpoints: Vector[ResolutionEndpoint],
++      assertions: Vector[ResolutionIdentifierAssertion]
++  ): ResolutionGroupingConstraints =
++    ResolutionGroupingConstraints(
++      schema,
++      entityType,
++      "synthetic-authority-v1",
++      hash,
++      endpoints,
++      Vector.empty,
++      assertions
++    )
++
++  private def assertion(
++      endpoint: ResolutionEndpoint,
++      namespace: ResolutionAuthorityNamespace,
++      value: String
++  ): ResolutionIdentifierAssertion =
++    ResolutionIdentifierAssertion(endpoint, namespace, value, Vector("synthetic:authority"))
++
++  test("authority codec admits only explicit lowercase DOI arxiv and ORCID namespace wires") {
++    val expected = Vector(
++      ResolutionAuthorityNamespace.Doi -> "doi",
++      ResolutionAuthorityNamespace.Arxiv -> "arxiv",
++      ResolutionAuthorityNamespace.Orcid -> "orcid"
++    )
++    assert(ResolutionAuthorityNamespace.values.toVector == expected.map(_._1))
++    expected.foreach { case (namespace, wire) =>
++      assert(CoreJson.compact(namespace) == s"\"$wire\"")
++      assert(CoreJson.parse[ResolutionAuthorityNamespace](s"\"$wire\"").contains(namespace))
++    }
++    Vector(
++      "DOI",
++      "ORCID",
++      "Orcid",
++      "orcid ",
++      "doi-id",
++      "openalex",
++      "openalex-author",
++      "openalex-work",
++      "dblp",
++      "Scopus Author ID",
++      "semantic-scholar",
++      "repository-url"
++    ).foreach { wire =>
++      assert(CoreJson.parse[ResolutionAuthorityNamespace](ujson.Str(wire).render()).isLeft)
++    }
++  }
++
++  test(
++    "canonical authority values validate and noncanonical representations fail before grouping"
++  ) {
++    val workMembers = Vector(workEndpoint, crossrefEndpoint)
++    val canonicalDoi = bundle(
++      ResolutionEntityType.Work,
++      workMembers,
++      workMembers.map(assertion(_, ResolutionAuthorityNamespace.Doi, Fixtures.doi))
++    )
++    assert(ResolutionValidation.checkComponent(workMembers, canonicalDoi, context, 3, 20).isRight)
++    val canonicalArxiv = canonicalDoi.copy(authoritativeIdentifiers =
++      workMembers.map(assertion(_, ResolutionAuthorityNamespace.Arxiv, "2301.01234"))
++    )
++    assert(ResolutionValidation.checkComponent(workMembers, canonicalArxiv, context, 3, 20).isRight)
++    val canonicalOrcid = bundle(
++      ResolutionEntityType.Researcher,
++      Vector(mentionEndpoint, profileEndpoint),
++      Vector(mentionEndpoint, profileEndpoint).map(
++        assertion(_, ResolutionAuthorityNamespace.Orcid, Fixtures.riceOrcid)
++      )
++    )
++    assert(
++      ResolutionValidation
++        .checkComponent(canonicalOrcid.coveredEndpoints, canonicalOrcid, context, 3, 20)
++        .isRight
++    )
++
++    Vector(
++      "https://doi.org/" + Fixtures.doi,
++      "DOI:" + Fixtures.doi,
++      "10.1234/CASE",
++      " " + Fixtures.doi,
++      "invalid-doi"
++    ).foreach { value =>
++      val bad = canonicalDoi.copy(authoritativeIdentifiers =
++        Vector(assertion(workEndpoint, ResolutionAuthorityNamespace.Doi, value))
++      )
++      assert(ResolutionValidation.check(bad, context).isLeft)
++      assert(ResolutionValidation.checkComponent(workMembers, bad, context, 3, 20).isLeft)
++    }
++    Vector(
++      "https://orcid.org/" + Fixtures.riceOrcid,
++      "orcid:" + Fixtures.riceOrcid,
++      " " + Fixtures.riceOrcid,
++      "0000-0002-4414-6921",
++      "not-an-orcid"
++    ).foreach { value =>
++      val bad = canonicalOrcid.copy(authoritativeIdentifiers =
++        Vector(assertion(mentionEndpoint, ResolutionAuthorityNamespace.Orcid, value))
++      )
++      assert(ResolutionValidation.checkComponent(bad.coveredEndpoints, bad, context, 3, 20).isLeft)
++    }
++    Vector("arXiv:2301.01234", "2301.01234v1", "2301.01234v2", "malformed").foreach { value =>
++      val bad = canonicalArxiv.copy(authoritativeIdentifiers =
++        Vector(assertion(workEndpoint, ResolutionAuthorityNamespace.Arxiv, value))
++      )
++      assert(ResolutionValidation.checkComponent(workMembers, bad, context, 3, 20).isLeft)
++    }
++  }
++
++  test("authority namespaces cannot cross work and researcher entity meaning") {
++    val work = bundle(
++      ResolutionEntityType.Work,
++      Vector(workEndpoint),
++      Vector(assertion(workEndpoint, ResolutionAuthorityNamespace.Orcid, Fixtures.riceOrcid))
++    )
++    assert(ResolutionValidation.check(work, context).isLeft)
++    Vector(
++      ResolutionAuthorityNamespace.Doi -> Fixtures.doi,
++      ResolutionAuthorityNamespace.Arxiv -> "2301.01234"
++    ).foreach { case (namespace, value) =>
++      val researcher = bundle(
++        ResolutionEntityType.Researcher,
++        Vector(mentionEndpoint),
++        Vector(assertion(mentionEndpoint, namespace, value))
++      )
++      assert(ResolutionValidation.check(researcher, context).isLeft)
++    }
++  }
++
++  test(
++    "canonical conflicting ORCIDs block A-B-C while aliases and noncanonical values fail closed"
++  ) {
++    val otherMention =
++      ResolutionEndpoint.Mention(ref(Fixtures.work.provenance), Fixtures.berkeleyMentionId)
++    val members = Vector(mentionEndpoint, otherMention, profileEndpoint)
++    val constraints = bundle(
++      ResolutionEntityType.Researcher,
++      members,
++      Vector(
++        assertion(mentionEndpoint, ResolutionAuthorityNamespace.Orcid, Fixtures.riceOrcid),
++        assertion(profileEndpoint, ResolutionAuthorityNamespace.Orcid, "0000-0002-1825-0097")
++      )
++    )
++    assert(
++      ResolutionValidation.checkComponent(members.take(2), constraints, context, 3, 20).isRight
++    )
++    assert(
++      ResolutionValidation.checkComponent(members.drop(1), constraints, context, 3, 20).isRight
++    )
++    assert(ResolutionValidation.check(constraints, context).isRight)
++    assert(ResolutionValidation.checkComponent(members, constraints, context, 3, 20).isLeft)
++    val json = ujson.read(CoreJson.compact(constraints))
++    json("authoritativeIdentifiers")(1)("namespace") = "ORCID"
++    assert(CoreJson.parse[ResolutionGroupingConstraints](json.render()).isLeft)
++    json("authoritativeIdentifiers")(1)("namespace") = "orcid"
++    json("authoritativeIdentifiers")(1)("value") = "https://orcid.org/0000-0002-1825-0097"
++    assert(
++      CoreJson
++        .parseAndValidate[ResolutionGroupingConstraints](json.render())(c =>
++          ResolutionValidation.checkComponent(members, c, context, 3, 20).map(_ => c)
++        )
++        .isLeft
++    )
++  }
++}
+diff --git a/modules/core/src/test/scala/edu/uic/cs441/scholarchain/core/ResolutionContractFixtures.scala b/modules/core/src/test/scala/edu/uic/cs441/scholarchain/core/ResolutionContractFixtures.scala
+new file mode 100644
+index 0000000..bc2c8d8
+--- /dev/null
++++ b/modules/core/src/test/scala/edu/uic/cs441/scholarchain/core/ResolutionContractFixtures.scala
+@@ -0,0 +1,162 @@
++package edu.uic.cs441.scholarchain.core
++
++/** Contract examples reuse source facts from Fixtures; decisions and scores are SYNTHETIC, not
++  * matching results, human labels or evaluation evidence.
++  */
++object ResolutionContractFixtures {
++  val schema: String = ResolutionContracts.schemaVersion
++  val hash: String = StableIds.sha256Hex("synthetic-contract-policy")
++  def ref(p: Provenance): ResolutionObservationRef =
++    ResolutionObservationRef(p.source, p.sourceRecordId, p.datasetSnapshot)
++
++  val crossref: WorkRecord =
++    Fixtures.sourceWork(SourceType.Crossref, Fixtures.doi, 2013, "book-chapter")
++  val profile: OrcidProfileRecord = OrcidProfileRecord(
++    SchemaVersions.domain,
++    Fixtures.riceOrcid,
++    Some("Charles Claiborne Rice"),
++    Vector.empty,
++    Vector(
++      ObservedIdentifier("orcid", Fixtures.riceOrcid, IdentifierInterpretation.ValidatedExternal)
++    ),
++    "Source profile does not itself decide an identity merge.",
++    Fixtures.orcidResearcher.provenance
++  )
++  val employment: OrcidActivityRecord = OrcidActivityRecord(
++    SchemaVersions.domain,
++    Fixtures.riceOrcid,
++    OrcidActivityKind.Employment,
++    s"/${Fixtures.riceOrcid}/employment/19198978",
++    Some("Associate Professor"),
++    Some(2010),
++    None,
++    Some("University of Louisiana at Lafayette"),
++    None,
++    Some("4365"),
++    Some(Fixtures.ringgoldInstitutionId),
++    None,
++    None,
++    "Public ORCID employment observation; no identity decision.",
++    Fixtures.orcidEmploymentEdge.provenance
++  )
++  val activity: OrcidActivityRecord = employment.copy(
++    activityKind = OrcidActivityKind.Work,
++    sourceRecordId = s"/${Fixtures.riceOrcid}/work/123",
++    title = Some(Fixtures.title),
++    startYear = None,
++    publicationYear = Some(2013),
++    organizationName = None,
++    ror = None,
++    ringgold = None,
++    institutionId = None,
++    observedDoi = Some(Fixtures.doi),
++    observedWorkId = Some(Fixtures.workId),
++    uncertainty = "Synthetic ORCID work activity fixture, no author list.",
++    provenance = employment.provenance.copy(sourceRecordId = s"/${Fixtures.riceOrcid}/work/123")
++  )
++  val workEndpoint: ResolutionEndpoint =
++    ResolutionEndpoint.Work(ref(Fixtures.work.provenance), Fixtures.workId)
++  val crossrefEndpoint: ResolutionEndpoint =
++    ResolutionEndpoint.Work(ref(crossref.provenance), crossref.workId)
++  val mentionEndpoint: ResolutionEndpoint =
++    ResolutionEndpoint.Mention(ref(Fixtures.work.provenance), Fixtures.riceMentionId)
++  val profileEndpoint: ResolutionEndpoint =
++    ResolutionEndpoint.OrcidProfile(ref(profile.provenance), profile.orcid)
++  val activityEndpoint: ResolutionEndpoint =
++    ResolutionEndpoint.OrcidWorkActivity(ref(activity.provenance), activity.observedWorkId)
++
++  val context: ResolutionValidationContext = ResolutionValidationContext
++    .create(
++      Vector(Fixtures.work, crossref),
++      Vector(profile),
++      Vector(activity, employment)
++    )
++    .toOption
++    .get
++  val workPair: ResolutionPair =
++    ResolutionIds.pair(ResolutionEntityType.Work, workEndpoint, crossrefEndpoint).toOption.get
++  val researcherPair: ResolutionPair = ResolutionIds
++    .pair(ResolutionEntityType.Researcher, mentionEndpoint, profileEndpoint)
++    .toOption
++    .get
++
++  def audit(pair: ResolutionPair, outcome: MatchOutcome): ResolutionDecision = {
++    val provenance = Fixtures.dblpProvenance.copy(
++      source = SourceType.ScholarChain,
++      sourceRecordId = pair.pairId,
++      sourceUri = None,
++      datasetSnapshot = "synthetic-contract-2026-10-15",
++      uncertaintyNotes =
++        Vector("Synthetic contract example; not a model result or human annotation.")
++    )
++    val value = ResolutionDecision(
++      schema,
++      "",
++      pair,
++      MatchDecision(
++        SchemaVersions.domain,
++        ResolutionIds.endpointId(pair.left),
++        ResolutionIds.endpointId(pair.right),
++        Vector(NamedNumber("synthetic_similarity", 0.8)),
++        outcome,
++        0.8,
++        Vector("SYNTHETIC_CONTRACT_EXAMPLE"),
++        "synthetic-contract-v1",
++        Fixtures.runId,
++        "Synthetic contract example; no identity decision has been run.",
++        provenance
++      ),
++      Vector.empty,
++      "synthetic-features-v1",
++      Vector(
++        ResolutionFeature("synthetic_similarity", Some(0.8), None, Vector("source:fixture")),
++        ResolutionFeature(
++          "year_distance",
++          None,
++          Some("NOT_COMPUTED_IN_CONTRACT_EXAMPLE"),
++          Vector.empty
++        )
++      ),
++      ResolutionDecisionPath.Scored,
++      ResolutionConfidenceSemantics.UncalibratedScore,
++      None,
++      hash,
++      hash,
++      hash,
++      Vector("source:fixture"),
++      "2026-10-15T12:00:00Z",
++      None
++    )
++    reidentify(value)
++  }
++  def reidentify(value: ResolutionDecision): ResolutionDecision =
++    value.copy(decisionId = ResolutionIds.decisionId(value))
++  val workDecision: ResolutionDecision = audit(workPair, MatchOutcome.Accepted)
++  val researcherDecision: ResolutionDecision = audit(researcherPair, MatchOutcome.Unresolved)
++  def link(audit: ResolutionDecision): ResolutionAcceptedLink = ResolutionAcceptedLink(
++    schema,
++    audit.pair,
++    audit.decisionId,
++    audit.decision.policyVersion,
++    audit.policyHash,
++    audit.decision.runId,
++    audit.decision.provenance
++  )
++  val acceptedLink: ResolutionAcceptedLink = link(workDecision)
++  val grouping: ResolutionGroupingConstraints = ResolutionGroupingConstraints(
++    schema,
++    ResolutionEntityType.Work,
++    "synthetic-contract-v1",
++    hash,
++    Vector(workEndpoint, crossrefEndpoint),
++    Vector.empty,
++    Vector(workEndpoint, crossrefEndpoint).map(e =>
++      ResolutionIdentifierAssertion(
++        e,
++        ResolutionAuthorityNamespace.Doi,
++        Fixtures.doi,
++        Vector("source:fixture")
++      )
++    )
++  )
++}
+diff --git a/modules/core/src/test/scala/edu/uic/cs441/scholarchain/core/ResolutionContractSpec.scala b/modules/core/src/test/scala/edu/uic/cs441/scholarchain/core/ResolutionContractSpec.scala
+new file mode 100644
+index 0000000..e9fe4f7
+--- /dev/null
++++ b/modules/core/src/test/scala/edu/uic/cs441/scholarchain/core/ResolutionContractSpec.scala
+@@ -0,0 +1,322 @@
++package edu.uic.cs441.scholarchain.core
++
++import org.scalatest.funsuite.AnyFunSuite
++import upickle.default.ReadWriter
++import scala.io.Source
++
++class ResolutionContractSpec extends AnyFunSuite {
++  import ResolutionContractFixtures.*
++
++  private def roundTrip[A: ReadWriter](name: String, value: A)(
++      validate: A => Either[Vector[DomainViolation], A]
++  ): Unit = {
++    assert(validate(value).isRight, validate(value).toString)
++    val stream = getClass.getClassLoader.getResourceAsStream(s"wire/$name")
++    assert(stream != null, s"missing $name")
++    val source = Source.fromInputStream(stream, "UTF-8")
++    val json =
++      try source.mkString
++      finally source.close()
++    assert(ujson.read(json) == ujson.read(CoreJson.compact(value)))
++    assert(CoreJson.parseAndValidate[A](json)(validate).contains(value))
++  }
++
++  test("versioned work/researcher pairs, audits and accepted link freeze concrete wire contracts") {
++    roundTrip("resolution-work-pair.json", workPair)(p => ResolutionValidation.check(p, context))
++    roundTrip("resolution-researcher-pair.json", researcherPair)(p =>
++      ResolutionValidation.check(p, context)
++    )
++    roundTrip("resolution-work-decision.json", workDecision)(d =>
++      ResolutionValidation.check(d, context)
++    )
++    roundTrip("resolution-researcher-decision.json", researcherDecision)(d =>
++      ResolutionValidation.check(d, context)
++    )
++    roundTrip("resolution-accepted-link.json", acceptedLink)(l =>
++      ResolutionValidation.check(l, workDecision, context)
++    )
++    roundTrip("resolution-grouping-constraints.json", grouping)(c =>
++      ResolutionValidation.check(c, context)
++    )
++  }
++
++  test(
++    "canonical pair identity ignores order and block but binds type, source, snapshot and mention"
++  ) {
++    assert(
++      ResolutionIds
++        .pair(ResolutionEntityType.Work, crossrefEndpoint, workEndpoint)
++        .contains(workPair)
++    )
++    assert(ResolutionIds.pair(ResolutionEntityType.Work, workEndpoint, workEndpoint).isLeft)
++    assert(ResolutionIds.pair(ResolutionEntityType.Work, mentionEndpoint, workEndpoint).isLeft)
++    val changed = ResolutionEndpoint.Work(
++      ref(Fixtures.work.provenance).copy(datasetSnapshot = "later-snapshot"),
++      Fixtures.workId
++    )
++    val pair = ResolutionIds.pair(ResolutionEntityType.Work, changed, crossrefEndpoint).toOption.get
++    assert(pair.pairId != workPair.pairId)
++    assert(ResolutionValidation.check(pair, context).isLeft)
++    assert(
++      ResolutionValidation
++        .check(workPair.copy(left = workPair.right, right = workPair.left), context)
++        .isLeft
++    )
++    assert(ResolutionValidation.check(workPair.copy(schemaVersion = "unsupported"), context).isLeft)
++    assert(ResolutionIds.endpointId(workEndpoint) != ResolutionIds.endpointId(crossrefEndpoint))
++  }
++
++  test(
++    "context rejects conflicting duplicate keys while allowing identical duplicates and separate snapshots"
++  ) {
++    assert(
++      ResolutionValidationContext
++        .create(Vector(Fixtures.work, Fixtures.work), Vector(profile), Vector.empty)
++        .isRight
++    )
++    assert(
++      ResolutionValidationContext
++        .create(
++          Vector(Fixtures.work, Fixtures.work.copy(year = Some(2010))),
++          Vector.empty,
++          Vector.empty
++        )
++        .isLeft
++    )
++    val nextProvenance = Fixtures.work.provenance.copy(datasetSnapshot = "later-snapshot")
++    val next = Fixtures.work.copy(
++      provenance = nextProvenance,
++      authors = Fixtures.work.authors.map(_.copy(provenance = nextProvenance))
++    )
++    val ctx = ResolutionValidationContext
++      .create(Vector(Fixtures.work, next, crossref), Vector.empty, Vector.empty)
++      .toOption
++      .get
++    val endpoint = ResolutionEndpoint.Work(ref(next.provenance), next.workId)
++    assert(
++      ResolutionValidation
++        .check(
++          ResolutionIds.pair(ResolutionEntityType.Work, endpoint, crossrefEndpoint).toOption.get,
++          ctx
++        )
++        .isRight
++    )
++    val wrong = ResolutionEndpoint.Mention(ref(crossref.provenance), Fixtures.riceMentionId)
++    assert(ResolutionIds.pair(ResolutionEntityType.Researcher, wrong, profileEndpoint).isLeft)
++  }
++
++  test(
++    "ORCID work activity is eligible without authors, other activities cannot masquerade as work"
++  ) {
++    val pair =
++      ResolutionIds.pair(ResolutionEntityType.Work, activityEndpoint, workEndpoint).toOption.get
++    assert(ResolutionValidation.check(pair, context).isRight)
++    val wrong = ResolutionEndpoint.OrcidWorkActivity(ref(employment.provenance), None)
++    assert(ResolutionIds.pair(ResolutionEntityType.Work, wrong, workEndpoint).isLeft)
++    val wrongBinding = ResolutionEndpoint.OrcidWorkActivity(ref(activity.provenance), None)
++    assert(
++      ResolutionValidation
++        .check(
++          ResolutionIds.pair(ResolutionEntityType.Work, wrongBinding, workEndpoint).toOption.get,
++          context
++        )
++        .isLeft
++    )
++  }
++
++  test("audit validates timestamps, provenance, hashes, feature availability and finite values") {
++    val invalids = Vector(
++      workDecision.copy(decidedAtUtc = "2026-10-15T12:00:00+00:00"),
++      workDecision.copy(policyHash = "not-a-hash"),
++      workDecision.copy(decision = workDecision.decision.copy(sourceId = Fixtures.workId)),
++      workDecision.copy(featureEvidence = Vector(ResolutionFeature("x", None, None, Vector.empty))),
++      workDecision.copy(featureEvidence =
++        Vector(ResolutionFeature("x", Some(1), Some("missing"), Vector.empty))
++      ),
++      workDecision.copy(featureEvidence =
++        Vector(ResolutionFeature("x", Some(Double.NaN), None, Vector.empty))
++      ),
++      workDecision.copy(featureEvidence =
++        Vector(ResolutionFeature("x", Some(1), None, Vector("invented")))
++      ),
++      workDecision.copy(confidenceSemantics = ResolutionConfidenceSemantics.Unavailable)
++    )
++    invalids.foreach(d => assert(ResolutionValidation.check(reidentify(d), context).isLeft))
++    val missing = reidentify(
++      workDecision.copy(
++        decision = workDecision.decision.copy(confidence = 0),
++        confidenceSemantics = ResolutionConfidenceSemantics.Unavailable,
++        scoreUnavailableReason = Some("NOT_SCORED")
++      )
++    )
++    assert(ResolutionValidation.check(missing, context).isRight)
++    assert(
++      ResolutionValidation
++        .check(workDecision.copy(decidedAtUtc = "2026-10-15T13:00:00Z"), context)
++        .isLeft
++    )
++  }
++
++  test("LLM audit retains pre-decision score and model confidence as separate values") {
++    val metadata = ResolutionAdjudication(
++      hash,
++      "synthetic-prompt-v1",
++      hash,
++      "synthetic-response-v1",
++      "fake",
++      "fixture-model",
++      None,
++      hash,
++      hash,
++      ResolutionAdjudicationMode.Fake,
++      false,
++      0.6,
++      Vector("source:fixture"),
++      ResolutionPreAdjudication(Some(0.8), MatchOutcome.Unresolved, ResolutionDecisionPath.Scored)
++    )
++    val llm = reidentify(
++      researcherDecision.copy(
++        decisionPath = ResolutionDecisionPath.LlmAdjudicated,
++        adjudication = Some(metadata)
++      )
++    )
++    assert(ResolutionValidation.check(llm, context).isRight)
++    assert(llm.decision.confidence != llm.adjudication.get.reportedConfidence)
++    assert(ResolutionValidation.check(reidentify(llm.copy(adjudication = None)), context).isLeft)
++    assert(
++      ResolutionValidation
++        .check(
++          reidentify(
++            llm.copy(adjudication =
++              Some(metadata.copy(reportedConfidence = Double.PositiveInfinity))
++            )
++          ),
++          context
++        )
++        .isLeft
++    )
++    assert(
++      ResolutionValidation
++        .check(
++          reidentify(
++            llm.copy(adjudication =
++              Some(
++                metadata.copy(preAdjudication =
++                  metadata.preAdjudication.copy(outcome = MatchOutcome.Conflict)
++                )
++              )
++            )
++          ),
++          context
++        )
++        .isLeft
++    )
++    val json = ujson.read(CoreJson.compact(llm))
++    json("adjudication").obj.remove("reportedConfidence")
++    assert(CoreJson.parse[ResolutionDecision](json.render()).isLeft)
++  }
++
++  test("a single final LLM path requires metadata and cannot report conflict") {
++    val metadata = ResolutionAdjudication(
++      hash,
++      "synthetic-prompt-v1",
++      hash,
++      "synthetic-response-v1",
++      "fake",
++      "fixture-model",
++      None,
++      hash,
++      hash,
++      ResolutionAdjudicationMode.Fake,
++      false,
++      0.6,
++      Vector("source:fixture"),
++      ResolutionPreAdjudication(Some(0.8), MatchOutcome.Unresolved, ResolutionDecisionPath.Scored)
++    )
++    val llm = researcherDecision.copy(
++      decisionPath = ResolutionDecisionPath.LlmAdjudicated,
++      adjudication = Some(metadata)
++    )
++    Vector(
++      ResolutionDecisionPath.Scored,
++      ResolutionDecisionPath.ExactIdentifier,
++      ResolutionDecisionPath.HardConflict
++    ).foreach { path =>
++      val outcome =
++        if (path == ResolutionDecisionPath.HardConflict) MatchOutcome.Conflict
++        else MatchOutcome.Unresolved
++      val wrongPath =
++        reidentify(llm.copy(decisionPath = path, decision = llm.decision.copy(decision = outcome)))
++      assert(ResolutionValidation.check(wrongPath, context).isLeft)
++    }
++    val conflict =
++      reidentify(llm.copy(decision = llm.decision.copy(decision = MatchOutcome.Conflict)))
++    assert(ResolutionValidation.check(conflict, context).isLeft)
++    Vector(MatchOutcome.Accepted, MatchOutcome.Rejected, MatchOutcome.Unresolved).foreach {
++      outcome =>
++        assert(
++          ResolutionValidation
++            .check(reidentify(llm.copy(decision = llm.decision.copy(decision = outcome))), context)
++            .isRight
++        )
++    }
++  }
++
++  test("links require actual accepted audit, matching run/policy/provenance and endpoints") {
++    assert(ResolutionValidation.check(acceptedLink, workDecision, context).isRight)
++    val rejected = audit(workPair, MatchOutcome.Rejected)
++    assert(ResolutionValidation.check(link(rejected), rejected, context).isLeft)
++    assert(
++      ResolutionValidation
++        .check(acceptedLink.copy(policyHash = "0" * 64), workDecision, context)
++        .isLeft
++    )
++    assert(
++      ResolutionValidation
++        .check(acceptedLink.copy(pair = researcherPair), workDecision, context)
++        .isLeft
++    )
++  }
++
++  test(
++    "component guard rejects transitive conflicts, missing coverage and explicit caller bounds"
++  ) {
++    val endpoints = Vector(workEndpoint, crossrefEndpoint, activityEndpoint)
++    val ac =
++      ResolutionIds.pair(ResolutionEntityType.Work, workEndpoint, activityEndpoint).toOption.get
++    val base = grouping.copy(
++      coveredEndpoints = endpoints,
++      cannotLinks =
++        Vector(ResolutionCannotLink(ac, "AUTHORITATIVE_CONFLICT", Vector("source:fixture")))
++    )
++    assert(
++      ResolutionValidation
++        .checkComponent(Vector(workEndpoint, crossrefEndpoint), base, context, 3, 20)
++        .isRight
++    )
++    assert(ResolutionValidation.checkComponent(endpoints, base, context, 3, 20).isLeft)
++    val different = base.copy(
++      cannotLinks = Vector.empty,
++      authoritativeIdentifiers = base.authoritativeIdentifiers :+ ResolutionIdentifierAssertion(
++        activityEndpoint,
++        ResolutionAuthorityNamespace.Doi,
++        "10.9999/different",
++        Vector("source:fixture")
++      )
++    )
++    assert(ResolutionValidation.checkComponent(endpoints, different, context, 3, 20).isLeft)
++    assert(ResolutionValidation.checkComponent(endpoints, grouping, context, 3, 20).isLeft)
++    assert(
++      ResolutionValidation.checkComponent(Vector(workEndpoint), grouping, context, 0, 20).isLeft
++    )
++    assert(
++      ResolutionValidation.checkComponent(Vector(workEndpoint), grouping, context, 3, 1).isLeft
++    )
++    val noIds = grouping.copy(authoritativeIdentifiers = Vector.empty)
++    assert(
++      ResolutionValidation
++        .checkComponent(Vector(workEndpoint, crossrefEndpoint), noIds, context, 3, 20)
++        .isRight
++    )
++  }
++}
+diff --git a/modules/entity-resolution/README.md b/modules/entity-resolution/README.md
+new file mode 100644
+index 0000000..4e49c2f
+--- /dev/null
++++ b/modules/entity-resolution/README.md
+@@ -0,0 +1,243 @@
++# Entity resolution — Phase 5A interface agreement
++
++This module currently contains design artifacts only. Phase 5A adds shared resolution contracts in
++`core`; it does not implement a matcher, CLI, provider, review page, label importer, or evaluator.
++The examples in [contracts/](contracts/) are proposed module-local JSON documents. Their numeric
++values are illustrative, uncalibrated, and not production defaults. No example is source evidence,
++a human annotation, or a live model result.
++
++The user authorized a distributed systems/data engineering population and **40 development plus
++200 held-out reviews**. Existing records do not supply that evaluation population. Dataset readiness
++and the bounded expansion proposal are recorded in the Phase 5 owner report. Future population
++artifacts belong to `datasets/entity-resolution/`; acquisition waits for 5C.
++Additional reviews may be needed when human labels are uncertain or per-type binary coverage is poor.
++The dataset owner's proposal targets 2018–2024 records from SIGMOD/PVLDB/VLDB/ICDE and
++SoCC/Middleware/ICDCS/OSDI/SOSP, with a 300-pair eligible pool to support 240 initial reviews and
++60 reserve pairs. Those are proposed acquisition/sampling targets, not observed dataset sufficiency.
++
++## Shared boundary
++
++The domain and entity-resolution owners agreed on `scholarchain.resolution.v1`. Use the actual
++`ResolutionContracts.scala`, `ResolutionValidation.scala`, their tests, and serialized core fixtures
++as the authoritative shared API; this module does not define competing endpoint or decision types.
++Existing `WorkRecord`, `AuthorMention`, `MatchCandidate`, `MatchDecision`, `StableIds`, and
++`prep-features-v1/v2` remain unchanged.
++
++Concrete shared serialized examples (synthetic contract fixtures, not resolution results):
++
++- [Work pair](../core/src/test/resources/wire/resolution-work-pair.json) and
++  [researcher pair](../core/src/test/resources/wire/resolution-researcher-pair.json).
++- [Work decision](../core/src/test/resources/wire/resolution-work-decision.json) and
++  [researcher decision](../core/src/test/resources/wire/resolution-researcher-decision.json).
++- [Accepted link](../core/src/test/resources/wire/resolution-accepted-link.json) and
++  [grouping constraints](../core/src/test/resources/wire/resolution-grouping-constraints.json).
++
++An observation is `(source, sourceRecordId, datasetSnapshot)`. Lookup by `workId` alone is forbidden:
++independent source records may already share a DOI-derived ID without any identity decision.
++The closed endpoint families are:
++
++| Endpoint | Compared entity | Required context |
++| --- | --- | --- |
++| `Work` | work | Exact source observation and its validated `WorkRecord` |
++| `OrcidWorkActivity` | work | Exact ORCID activity observation, with `activityKind=Work`; optional observed work ID must agree |
++| `Mention` | researcher | Exact parent work observation, containing the actual mention |
++| `OrcidProfile` | researcher | Exact ORCID profile observation and matching validated ORCID |
++
++An ORCID work activity supplies weak bibliographic evidence, never a complete author list or
++publication team. Employment, education, distinctions, and other nonwork activities remain evidence;
++a bibliographic candidate involving one receives an explicit unsupported-endpoint skip in 5B.
++Missing observations and dangling references are errors, distinct from a known unsupported kind.
++Identical duplicate payloads may collapse; conflicting payloads at one observation key must fail.
++
++`ResolutionIds` computes canonical endpoint and unordered pair IDs using versioned compact JSON
++identity tuples. A pair includes entity type and snapshots. Carried preferred work IDs and ORCIDs
++are checked against context, not used to collapse source observations. Reversed pairs and repeated
++blocks must not inflate comparisons or review counts. Every contributing candidate ID and block key
++remains attached. Researcher pairs must come from real mentions/profiles, including bounded
++cross-publication comparisons; a bibliographic candidate is never directly a researcher pair.
++
++`ResolutionDecision` wraps the unchanged `MatchDecision` with the typed pair, candidate/block refs,
++feature availability/evidence, final path, explicit confidence semantics, policy/config/input hashes,
++UTC decision timestamp, and optional adjudication audit. Legacy source/target IDs in this wrapper
++are snapshot endpoint IDs. `MatchDecision.confidence` is an uncalibrated score unless calibration
++evidence supports the other declared semantics. The required LLM `reportedConfidence` is separate.
++When no score was produced, `confidenceSemantics=Unavailable`, `scoreUnavailableReason` is
++required and the legacy required numeric confidence is `0` solely as a compatibility placeholder.
++It must never be interpreted as a score, rejection or calibrated probability. An LLM decision has
++one final `decisionPath=LlmAdjudicated` and preserves the unresolved pre-LLM outcome, optional
++score and scored/bibliographic path in `adjudication.preAdjudication`.
++Unknown versions, invalid IDs, nonfinite numbers, mismatched refs, or wrong entity families fail
++validation; parsing alone is insufficient. Shared contracts do not authenticate evidence or prove
++that a provider ran.
++
++`ResolutionAcceptedLink` exports pairwise accepted links and their decision/policy/run provenance.
++It assigns no canonical representative. Phase 6 must validate proposed components against
++`ResolutionGroupingConstraints`: cannot-link pairs and same-namespace authoritative assertions.
++`ResolutionIdentifierAssertion.namespace` uses the closed `ResolutionAuthorityNamespace` set:
++`doi` and `arxiv` apply only to work endpoints; `orcid` applies only to researcher endpoints.
++Only those exact lowercase wire codes are accepted. Values must already equal the output of the
++corresponding existing `StableIds` canonicalizer: normalized bare DOI, unversioned bare arXiv ID,
++or bare checksum-valid ORCID. Namespace aliases/case variants, noncanonical values, incompatible
++entity types and version-bearing arXiv assertions fail validation. Raw arXiv versions remain source
++observations; a named version-comparison rule belongs to 5B, with no implicit suffix stripping here.
++DBLP and OpenAlex work native IDs remain source/endpoint bindings: different native records do
++not by themselves prove different scholarly works. OpenAlex author IDs remain hypotheses.
++Semantic Scholar IDs and repository URLs remain observed evidence; adding them to hard-authority
++constraints waits for validated namespace meanings and canonicalizers in 5B. This narrow assertion
++set preserves existing source evidence and introduces no new source types or matching algorithms.
++Its explicit covered endpoints include members with no identifiers; missing member coverage fails
++closed rather than treating an absent constraint record as permission to merge.
++Callers must supply explicit member and constraint bounds to the component validator.
++The shared bounded component check is validation, not grouping. A–B plus B–C cannot override an
++A–C constraint or conflicting authoritative IDs. Unresolved mentions remain available downstream.
++The user assigned Phase 6 canonical group construction and deterministic representative selection
++to the `spark-engineer` in `modules/spark/**`, using Phase 5 accepted links and conflict constraints.
++The `domain-engineer` owns any shared contract changes. Representative selection must be versioned
++and preserve the existing stable-ID authority rules; this ownership decision authorizes no Phase 6
++implementation now.
++
++## Policy and configuration contract for 5B
++
++See [policy.example.v1.json](contracts/policy.example.v1.json) and
++[config.example.v1.json](contracts/config.example.v1.json). They specify separate work/researcher
++sections, explicit limits and evidence gates. They are not accepted runtime files yet.
++
++The Phase 5 policy will be the sole effective source of thresholds, weights, source reliability,
++conflict precedence, evidence gates, blocking bounds, and LLM bands. It **supersedes** the generic
++`ScholarChainConfig.entityResolution` placeholders. The Phase 5 runtime document contains no copy
++of those settings. The CLI will not silently load a global config or its ER environment overrides.
++Explicitly supplying legacy/shared ER settings alongside the new policy is a startup error, including
++any disagreement; do not choose one silently. Existing global config remains valid for other modules.
++If a global config hash is retained as provenance, that does not activate its ER settings.
++
++Future startup validation must finish before output writes or adapter calls:
++
++- Require a supported closed schema, all required values, no unknown fields, unique feature names,
++  finite positive weights, finite `[0,1]` thresholds, positive bounded resource limits, and no secrets.
++- Require `0 <= reject < bandMin <= bandMax < accept <= 1` separately for both entity types.
++  Reject at `score <= reject`, accept at `score >= accept` only after evidence gates; otherwise
++  unresolved. The LLM band includes its two endpoints and lies strictly inside the unresolved gap.
++- Apply hard identifier conflict checks before exact, bibliographic, scored, or LLM acceptance,
++  and again before exporting accepted links/components. Missing identifiers are not conflicts.
++- A scored decision requires available evidence. Available-feature weighted average is
++  `sum(weight * value) / sum(available weights)`; zero available weight yields unresolved,
++  not zero score/rejection. Missing values cannot become perfect similarities or negative facts.
++- Acceptance additionally requires the configured independent evidence groups; name/initial/order
++  signals are correlated and cannot count as three independent groups. A source reliability weight
++  is not an independent identity fact. Failed sufficiency leaves a high score unresolved.
++- Hash the complete effective policy and runtime config using an explicitly versioned canonical
++  serialization; include exact file hashes in the run manifest. No compiled numeric defaults or
++  implicit environment overrides. Freeze actual serialization/hash fixtures when the loader is
++  implemented in 5B; shared pair-ID serialization does not change.
++
++Proposed feature semantics for `er-features-v1` (implementation and fixtures are 5B):
++
++| Group / signal | Formula and range | Evidence / missing rule |
++| --- | --- | --- |
++| identifier agreement | Exact normalized namespace/entity equality, 0 or 1 | Present comparable IDs only; hypothesis IDs never outrank direct authority |
++| title | Jaccard of nonempty normalized title-token sets, `[0,1]` | Works or parent works; empty/absent input unavailable |
++| name | Maximum token-set Jaccard across documented name-order variants, `[0,1]` | Actual mention/profile names; normalization is not identity |
++| initials | Exact normalized surname plus compatible given initials, 0 or 1 | Missing surname/given component unavailable; correlated with name |
++| author order | `1 / (1 + abs(leftOrdinal-rightOrdinal))`, `(0,1]` | Actual parent authors only; absent author list unavailable |
++| author/coauthor overlap | Jaccard of observed normalized names after excluding focal mentions, `[0,1]` | Empty/incomplete evidence unavailable; never invent resolved neighbors |
++| affiliation | Exact normalized ROR or conservative normalized-name compatibility, 0 or 1 | Only attached affiliation observations; absence unavailable |
++| year compatibility | `max(0, 1-abs(yearA-yearB)/yearToleranceYears)`, `[0,1]` | Tolerance required in policy; absent year unavailable, not prep sentinel `-1` |
++| venue | Exact validated venue ID or normalized venue label, 0 or 1 | Same-kind comparable observations required; absent venue unavailable |
++| citation neighborhood | Jaccard of actual observed citation neighbors, `[0,1]` | Current preparation has no citation-neighborhood export; unavailable |
++| source reliability | Explicit policy lookup per source, `[0,1]` | Scoring modifier only; no invented accuracy claim |
++
++Missing features carry a missing reason and no value; present features carry finite values and
++input evidence refs. Features use their own catalog, never additions to closed prep-features-v2.
++The example policy lists only illustrative scored subsets; the full catalog, identifier authority,
++normalization rules, formulas, applicable entity types and minimum gates require tested completion
++in 5B before any real decision. Candidate-generation coverage is distinct from scorer accuracy.
++
++Identifier comparison will cover DOI, arXiv, ORCID, OpenAlex work/author distinction, Semantic Scholar
++work/author distinction and stable repository URLs, while preserving raw inputs and normalization
++versions. DOI prefix/case and valid ORCID checksum rules must be tested. arXiv versions remain
++preserved raw; comparison may ignore only a valid terminal version suffix under a named rule.
++Repository normalization may lowercase scheme/host and remove a default port; it must preserve
++path boundaries and identity-bearing queries. No arbitrary fetching, cross-host aliases or blanket
++path/query stripping. Semantic Scholar syntax fixtures do not imply acquisition or a new SourceType.
++Conflicting direct ORCIDs cannot merge through a shared OpenAlex hypothesis.
++
++## Offline and future provider boundary
++
++Disabled is the only proposed default mode. The example sets live request/token/spend allowances
++to zero and omits provider/model selection; it grants no live authority. Fake mode is explicit,
++test-only and isolated from live cache/output. Unresolved eligible cases stay unresolved when the
++adapter is disabled, budgets are exhausted or validation fails. Provider/model and numeric live
++limits are a 5D human decision after a representative request and passing offline checks exist.
++
++The later strict response schema must require request/pair/endpoint identity, accept/reject/abstain,
++reported confidence, bounded reasons/rationale, and citations restricted to supplied input fields.
++Unknown fields, wrong hashes/IDs, fabricated refs, oversized outputs, injection instructions and
++timeouts cannot accept a pair. The LLM cannot override a hard conflict or mint identifiers.
++Cache identity binds every relevant input field, prompt/version/content, provider/model/version,
++generation settings, policy/config and response schema. Atomic validated cache replay preserves
++Fake/Live and cache-hit provenance; replay cannot masquerade as a new live call.
++
++## Review, split and labels contract for 5C
++
++[sampling.example.v1.json](contracts/sampling.example.v1.json) fixes the requested review allocation
++and records a planning reserve rather than extra authorized reviews. Freeze the real source and
++candidate population before scoring. Partition whole leakage groups before labels are used: union
++shared source observations, underlying works/near duplicates, directly observed identity anchors,
++and their attached mentions/pairs. Repeated snapshots do not become independent review evidence.
++Conflicting identifier observations are grouping evidence for leakage prevention, not merge authority.
++If groups are too connected for a useful split, report infeasibility and expand sampling; never
++silently fall back to random pair splitting. Record residual undetectable identity leakage.
++
++Aim for balanced entity coverage and usable same/different labels in each partition, plus hard
++negatives, common names, missing fields and repeated authors across publications. Sampling uses
++evidence strata and a fixed seed, never predictions, LLM success or label outcomes. Reserve pairs
++must remain in their original group/partition. Any replacement review needs a recorded reason;
++retain uncertain originals and report all counts rather than deleting inconvenient cases.
++
++The matcher accepts neither labels nor a held-out membership file. The blind review queue shows
++evidence and source refs, never scores, predictions, LLM judgments or suggested/preselected labels.
++Development calibration receives only development annotations. Held-out annotations become
++accessible to the evaluator after source/policy/prompt/model freeze. A new tuning cycle needs a
++fresh holdout or an explicit exploratory-results qualification.
++
++[labels.example.v1.json](contracts/labels.example.v1.json) is a synthetic revision/checkpoint
++shape, not actual human work. Labels are `same`, `different`, `uncertain`; uncertain is not negative.
++The future importer binds queue ID/version/hash, source population and per-pair evidence hashes,
++pair/entity identity, human-entered reviewer ID, timestamps and monotonic revisions. It rejects
++unknown pairs, altered evidence, mixed queues, duplicate revision IDs and conflicting revision
++histories. Reviewer ID is self-entered provenance, not authentication. Preserve original human
++exports; write a derived validated dataset without rewriting annotations. Save original exports
++to a durable user-chosen path outside disposable `target/` and back them up.
++
++## Proposed CLI and output layout — not implemented or runnable
++
++One future `edu.uic.cs441.scholarchain.entityresolution.Phase5Main` will expose:
++
++| Subcommand | Explicit inputs | Outputs / stage |
++| --- | --- | --- |
++| `resolve` | `--input` completed Phase 4 run, `--policy`, `--config`, `--llm-mode`, `--output` new directory | Four typed decision streams by entity, pairwise links, constraints, diagnostics/summary/manifest; 5B |
++| `build-review-queue` | `--input`, `--sampling`, `--output` | Frozen blind queue, population/split manifests; 5C |
++| `export-review-tool` | `--output` | Self-contained local page and guide; 5C |
++| `import-labels` | `--queue`, `--labels`, `--output` | Validated derived annotations plus preserved-input hashes; 5C |
++| `evaluate` | `--predictions`, `--labels`, `--split`, `--manifest`, `--output` | Per-type/path matrices, coverage, errors and provenance; 5C implementation / 5E held-out run |
++
++Before trusting input, verify `_SCHOLARCHAIN_COMPLETE`, run manifest, schema/config/input identity,
++every listed export partition, byte length and SHA-256; reject partial, missing, corrupt or unexpected
++input. Use the documented snapshot/run/kind JSON framing and record resolved input hashes.
++No output overwrite/reuse without matching complete manifest; write new outputs atomically and
++mark complete last. Fatal config/input failures exit nonzero with explicit diagnostics. A completed
++run may contain unresolved/conflict/skipped records, but summary counts must account for all inputs.
++Output names are proposed: `decisions/{work,researcher}/{accepted,rejected,unresolved,conflict}.jsonl`,
++`accepted-links.jsonl`, `grouping-constraints.json`, `diagnostics.jsonl`, `summary.json`, `run-manifest.json`.
++
++The future evaluator treats ACCEPTED as positive and the other three outcomes as nonacceptance,
++reports TP/FP/FN/TN and the full gold-by-four-outcome table, decisive coverage and uncertainty,
++missing/invalid predictions, uncertain human labels, entity/path breakdowns and null denominators.
++Recall is conditional on the candidate population unless a separate blocking-recall check exists.
++Development threshold sensitivity must not tune the held-out result. No gold-set evaluation,
++240 human reviews or live model run has happened in 5A.
++
++Existing verification commands are `sbt -batch check` and `sbt -batch 'entityResolution/test'
++'independentTests/test'` under Java 17. The coordinator serializes gates against a frozen tree and
++reports observed results. Shared wire examples/tests belong to core; module-local runtime behavior
++and its tests remain 5B/5C work. Stop after the 5A external-review handoff and wait for authorization.
+diff --git a/modules/entity-resolution/contracts/config.example.v1.json b/modules/entity-resolution/contracts/config.example.v1.json
+new file mode 100644
+index 0000000..515de03
+--- /dev/null
++++ b/modules/entity-resolution/contracts/config.example.v1.json
+@@ -0,0 +1,49 @@
++{
++  "schemaVersion": "scholarchain.er-config.example.v1",
++  "artifactRole": "DESIGN_ONLY_NOT_RUNTIME_CONFIG",
++  "evidenceStatus": "SYNTHETIC_UNCALIBRATED_EXAMPLE",
++  "policyFile": "modules/entity-resolution/contracts/policy.example.v1.json",
++  "policySchema": "scholarchain.er-policy.example.v1",
++  "globalEntityResolutionSettings": "SUPERSEDED_REJECT_IF_EXPLICITLY_SUPPLIED",
++  "input": {
++    "requireCompletedPrepRun": true,
++    "verifyEveryExportDigest": true,
++    "maxInputBytes": 268435456,
++    "maxInputRecords": 100000,
++    "maxRecordBytes": 1048576,
++    "maxLookupObservations": 50000
++  },
++  "output": {
++    "existingDirectory": "ERROR",
++    "atomicCompletion": true,
++    "maxDiagnosticTextBytes": 4096
++  },
++  "adjudication": {
++    "mode": "disabled",
++    "provider": null,
++    "model": null,
++    "modelVersion": null,
++    "credentialVariableName": null,
++    "maxRequestBytes": 32768,
++    "maxResponseBytes": 8192,
++    "timeoutMs": 10000,
++    "maxRetries": 0,
++    "maxConcurrentCalls": 1,
++    "maxFakeRequests": 10,
++    "maxLiveRequests": 0,
++    "maxLiveInputTokens": 0,
++    "maxLiveOutputTokens": 0,
++    "maxLiveSpendUsd": 0,
++    "liveAuthorizationRecord": null,
++    "cacheModeIsolation": true,
++    "cacheDirectory": "target/phase5/cache"
++  },
++  "reviewImport": {
++    "maxAnnotationFileBytes": 16777216,
++    "maxNoteCharacters": 1000,
++    "preserveOriginalExports": true,
++    "acceptSyntheticAsHuman": false
++  },
++  "groupValidation": {"maxMembers": 1000, "maxConstraints": 10000},
++  "limitsMeaning": "ILLUSTRATIVE_LOCAL_BOUNDS_NOT_LIVE_AUTHORIZATION"
++}
+diff --git a/modules/entity-resolution/contracts/labels.example.v1.json b/modules/entity-resolution/contracts/labels.example.v1.json
+new file mode 100644
+index 0000000..3930b26
+--- /dev/null
++++ b/modules/entity-resolution/contracts/labels.example.v1.json
+@@ -0,0 +1,50 @@
++{
++  "schemaVersion": "scholarchain.er-label-export.example.v1",
++  "artifactRole": "DESIGN_ONLY_SYNTHETIC_LABEL_CHECKPOINT",
++  "evidenceStatus": "NOT_HUMAN_REVIEW_NOT_GOLD",
++  "queueId": "synthetic-contract-queue-v1",
++  "queueSchemaVersion": "scholarchain.er-review-queue.example.v1",
++  "queueHash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
++  "sourcePopulationHash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
++  "reviewerId": "synthetic-example-only",
++  "exportedAtUtc": "2026-10-15T00:03:00Z",
++  "annotations": [
++    {
++      "pairFixture": "modules/core/src/test/resources/wire/resolution-work-pair.json",
++      "pairId": "resolution-pair:1b7b4ccf905e261f162fd9167241ae2acb6c6379821f225322dea43c82b1fff6",
++      "entityType": "Work",
++      "pairEvidenceHash": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
++      "revisionId": "synthetic-revision-1",
++      "revision": 1,
++      "supersedesRevisionId": null,
++      "label": "same",
++      "note": "Synthetic serialization example; no researcher made this annotation.",
++      "annotatedAtUtc": "2026-10-15T00:01:00Z"
++    },
++    {
++      "pairFixture": "modules/core/src/test/resources/wire/resolution-researcher-pair.json",
++      "pairId": "resolution-pair:32c83838c7bcf409215f65a5e256dd8535fe0e7bdbef5f9aa28f469d07d06138",
++      "entityType": "Researcher",
++      "pairEvidenceHash": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
++      "revisionId": "synthetic-revision-2",
++      "revision": 1,
++      "supersedesRevisionId": null,
++      "label": "different",
++      "note": "Synthetic initial revision illustrating a later uncertainty correction.",
++      "annotatedAtUtc": "2026-10-15T00:01:30Z"
++    },
++    {
++      "pairFixture": "modules/core/src/test/resources/wire/resolution-researcher-pair.json",
++      "pairId": "resolution-pair:32c83838c7bcf409215f65a5e256dd8535fe0e7bdbef5f9aa28f469d07d06138",
++      "entityType": "Researcher",
++      "pairEvidenceHash": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
++      "revisionId": "synthetic-revision-3",
++      "revision": 2,
++      "supersedesRevisionId": "synthetic-revision-2",
++      "label": "uncertain",
++      "note": "Synthetic correction; preserve both revisions and report uncertain separately.",
++      "annotatedAtUtc": "2026-10-15T00:02:00Z"
++    }
++  ],
++  "runtimeCompletionRequiredIn5C": "Pair IDs bind shared contract fixtures; repeated-letter queue/source/evidence hashes are synthetic placeholders, not digests of real evidence. pairFixture is explanatory example metadata only. Implement closed schema, actual frozen evidence hash binding and revision/import tests before accepting human labels."
++}
+diff --git a/modules/entity-resolution/contracts/policy.example.v1.json b/modules/entity-resolution/contracts/policy.example.v1.json
+new file mode 100644
+index 0000000..1952d2c
+--- /dev/null
++++ b/modules/entity-resolution/contracts/policy.example.v1.json
+@@ -0,0 +1,66 @@
++{
++  "schemaVersion": "scholarchain.er-policy.example.v1",
++  "artifactRole": "DESIGN_ONLY_NOT_RUNTIME_CONFIG",
++  "evidenceStatus": "SYNTHETIC_UNCALIBRATED_EXAMPLE",
++  "policyVersion": "er-design-v1",
++  "featurePolicyVersion": "er-features-v1",
++  "normalizationVersion": "er-normalization-v1",
++  "supersedes": "ScholarChainConfig.entityResolution",
++  "simultaneousLegacySettings": "ERROR",
++  "conflictPrecedence": "BEFORE_ANY_ACCEPTANCE_AND_BEFORE_LINK_EXPORT",
++  "scoreSemantics": "UNCALIBRATED_AVAILABLE_FEATURE_WEIGHTED_AVERAGE",
++  "emptyAvailableWeightOutcome": "UNRESOLVED",
++  "boundaryConvention": "REJECT_LE_ACCEPT_GE_AFTER_SUFFICIENCY_LLM_BAND_INCLUSIVE",
++  "work": {
++    "rejectThreshold": 0.2,
++    "acceptThreshold": 0.95,
++    "llmBandMin": 0.6,
++    "llmBandMax": 0.85,
++    "yearToleranceYears": 5,
++    "minimumIndependentGroupsForScoredAccept": 3,
++    "requiredGroupsForScoredAccept": ["bibliography", "authorship"],
++    "scoredWeights": {"title": 0.5, "authorOverlap": 0.3, "yearCompatibility": 0.1, "venue": 0.1},
++    "featureGroups": {"title": "bibliography", "authorOverlap": "authorship", "yearCompatibility": "chronology", "venue": "bibliography"},
++    "orcidWorkActivity": "NO_AUTHOR_LIST_OR_TEAM_INFERENCE"
++  },
++  "researcher": {
++    "rejectThreshold": 0.15,
++    "acceptThreshold": 0.97,
++    "llmBandMin": 0.65,
++    "llmBandMax": 0.88,
++    "yearToleranceYears": 10,
++    "minimumIndependentGroupsForScoredAccept": 3,
++    "requiredGroupsForScoredAccept": ["name", "context"],
++    "scoredWeights": {"name": 0.35, "initials": 0.05, "coauthorOverlap": 0.3, "affiliation": 0.2, "authorOrder": 0.1},
++    "featureGroups": {"name": "name", "initials": "name", "authorOrder": "name", "coauthorOverlap": "context", "affiliation": "affiliation"},
++    "nameOnlyAcceptance": false,
++    "openAlexAuthorAuthority": "HYPOTHESIS_CANNOT_OVERRIDE_DIRECT_ORCID"
++  },
++  "sourceReliability": {"DBLP": 1.0, "OPENALEX": 1.0, "CROSSREF": 1.0, "ORCID": 1.0},
++  "sourceReliabilityMeaning": "NEUTRAL_ILLUSTRATION_NOT_MEASURED_SOURCE_ACCURACY",
++  "blocking": {
++    "maxMembersPerBlock": 100,
++    "maxPairsPerBlock": 2000,
++    "maxPairsPerRun": 20000,
++    "maxCrossPublicationPairsPerMention": 100,
++    "maxEvidenceBytesPerPair": 32768,
++    "oversizeAction": "SKIP_WHOLE_BLOCK_WITH_REASON_AND_COUNTS"
++  },
++  "llm": {
++    "defaultMode": "disabled",
++    "canOverrideConflict": false,
++    "canMintIdentifiers": false,
++    "requiresEvidenceSufficiency": true,
++    "allowedResponseOutcomes": ["accept", "reject", "abstain"],
++    "requiresReportedConfidence": true,
++    "reportedConfidenceIsSystemConfidence": false
++  },
++  "completionRequiredIn5B": [
++    "tested_namespace_and_entity_specific_identifier_authority",
++    "tested_normalization_and_complete_feature_catalog",
++    "strict_loader_and_canonical_policy_config_hash_fixtures",
++    "explicit_exact_and_bibliographic_rule_gates",
++    "tested_source_reliability_modifier_formula",
++    "development_calibration_before_policy_freeze"
++  ]
++}
+diff --git a/modules/entity-resolution/contracts/sampling.example.v1.json b/modules/entity-resolution/contracts/sampling.example.v1.json
+new file mode 100644
+index 0000000..dead5f4
+--- /dev/null
++++ b/modules/entity-resolution/contracts/sampling.example.v1.json
+@@ -0,0 +1,46 @@
++{
++  "schemaVersion": "scholarchain.er-sampling.example.v1",
++  "artifactRole": "DESIGN_ONLY_NOT_RUNTIME_CONFIG",
++  "evidenceStatus": "NO_REAL_QUEUE_OR_LABELS_CREATED",
++  "domain": "distributed systems and data engineering",
++  "sourcePortfolio": ["DBLP", "OPENALEX", "CROSSREF", "ORCID"],
++  "proposedYears": {"start": 2018, "end": 2024},
++  "proposedVenues": ["SIGMOD", "PVLDB", "VLDB", "ICDE", "SoCC", "Middleware", "ICDCS", "OSDI", "SOSP"],
++  "externalDatasetsAssumed": false,
++  "seed": 44105,
++  "requestedReviews": {"development": 40, "heldOut": 200, "total": 240},
++  "planningReservePairs": 60,
++  "targetEligiblePool": 300,
++  "suggestedMaxSelectedPairsPerGroup": 6,
++  "suggestedEntityAllocation": {"developmentWork": 20, "developmentResearcher": 20, "heldOutWork": 100, "heldOutResearcher": 100},
++  "suggestedEntityAllocationIsQuota": false,
++  "reserveIsAdditionalAuthorizedReview": false,
++  "entityBalance": "AIM_ROUGHLY_EQUAL_REPORT_ACTUAL_COUNTS",
++  "strata": ["exact_identifier_evidence", "bibliographic_variants", "common_name_hard_negatives", "repeated_authors_cross_publication", "missing_fields", "weak_orcid_work_reference"],
++  "selectionInputs": ["frozen_source_population", "canonical_unique_candidate_pairs", "evidence_strata", "seed"],
++  "forbiddenSelectionInputs": ["predictions", "gold_labels", "llm_success"],
++  "leakageGrouping": ["shared_source_observation", "same_underlying_work_or_near_duplicate", "directly_observed_identity_anchor", "attached_mentions_and_pairs", "repeat_snapshot_evidence"],
++  "partitionBeforeLabels": true,
++  "infeasibleGroupsAction": "REPORT_AND_EXPAND_POPULATION_NO_RANDOM_PAIR_FALLBACK",
++  "reserveRule": "PRESERVE_GROUP_AND_PARTITION_RETAIN_ORIGINAL_UNCERTAIN_LABELS",
++  "uncertainGold": "REPORT_SEPARATELY_REQUEST_MORE_REVIEWS_IF_BINARY_SUPPORT_INSUFFICIENT",
++  "matcherCanReadHeldOutMembership": false,
++  "matcherCanReadLabels": false,
++  "reviewQueueContainsPredictions": false,
++  "evaluationClaim": "CANDIDATE_CONDITIONAL_UNLESS_BLOCKING_RECALL_MEASURED",
++  "durableOriginalAnnotations": "USER_CHOSEN_BACKED_UP_PATH_OUTSIDE_TARGET",
++  "sourceYearsAndVenues": "DATASET_OWNER_READINESS_PROPOSAL_NOT_ACQUIRED",
++  "futureAcquisitionBounds": {
++    "totalIngestionRecords": 2060,
++    "ingestionRecordsBySource": {"DBLP": 600, "OPENALEX": 800, "CROSSREF": 600, "ORCID": 60},
++    "maxHttpAttempts": 2400,
++    "maxHttpAttemptsBySource": {"DBLP": 750, "OPENALEX": 850, "CROSSREF": 650, "ORCID": 100},
++    "maxBytes": 268435456,
++    "requestTimeoutSeconds": 20,
++    "maxWallMinutes": 75,
++    "maxConcurrency": 1,
++    "maxRequestsPerSecond": 1,
++    "maxRetriesPerRequestWithinTotalBudget": 2,
++    "authorization": "PROPOSAL_ONLY_ACQUISITION_WAITS_FOR_5C"
++  }
++}
+diff --git a/tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentResolutionContractSpec.scala b/tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentResolutionContractSpec.scala
+new file mode 100644
+index 0000000..cb3bfc6
+--- /dev/null
++++ b/tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentResolutionContractSpec.scala
+@@ -0,0 +1,561 @@
++package edu.uic.cs441.scholarchain.independent
++
++import edu.uic.cs441.scholarchain.core.*
++import org.scalatest.funsuite.AnyFunSuite
++
++/** Independently authored synthetic fixtures test shared 5A contracts only. These are neither
++  * matching results nor human labels, and do not establish dataset or model accuracy.
++  */
++class IndependentResolutionContractSpec extends AnyFunSuite {
++  private val schema = ResolutionContracts.schemaVersion
++  private val run = "run:11111111-1111-4111-8111-111111111111"
++  private val digest = "a" * 64
++  private val doi = "10.5555/independent-resolution"
++  private val workId = s"work:doi:$doi"
++  private val orcidA = "0000-0002-1825-0097"
++  private val orcidC = "0000-0001-5109-3700"
++  private val fixtureNote = "Synthetic independent contract fixture; identity remains unconfirmed."
++
++  private def provenance(source: SourceType, native: String, snapshot: String): Provenance =
++    Provenance(
++      SchemaVersions.domain,
++      source,
++      native,
++      None,
++      snapshot,
++      Some("2026-10-15"),
++      None,
++      run,
++      Vector(fixtureNote)
++    )
++
++  private def work(
++      source: SourceType,
++      native: String,
++      snapshot: String = "independent-snapshot-a",
++      withAuthor: Boolean = true
++  ): WorkRecord = {
++    val p = provenance(source, native, snapshot)
++    val name = "Alex Example"
++    val authors =
++      if (withAuthor)
++        Vector(
++          AuthorMention(
++            StableIds.mentionId(source, native, 1),
++            SchemaVersions.domain,
++            source,
++            native,
++            1,
++            name,
++            TextNorm.personName(name),
++            None,
++            None,
++            MentionIdentityStatus.NameOnlyUnconfirmed,
++            None,
++            fixtureNote,
++            p
++          )
++        )
++      else Vector.empty
++    WorkRecord(
++      SchemaVersions.domain,
++      workId,
++      source,
++      native,
++      None,
++      "Synthetic distributed storage study",
++      TextNorm.title("Synthetic distributed storage study"),
++      Some(2021),
++      None,
++      Some(doi),
++      None,
++      None,
++      None,
++      authors,
++      None,
++      p
++    )
++  }
++
++  private val dblp = work(SourceType.Dblp, "conf/independent/A")
++  private val openAlex = work(SourceType.OpenAlex, "W700000001")
++
++  private def ref(p: Provenance): ResolutionObservationRef =
++    ResolutionObservationRef(p.source, p.sourceRecordId, p.datasetSnapshot)
++  private def endpoint(w: WorkRecord): ResolutionEndpoint =
++    ResolutionEndpoint.Work(ref(w.provenance), w.workId)
++  private def mention(w: WorkRecord): ResolutionEndpoint =
++    ResolutionEndpoint.Mention(ref(w.provenance), w.authors.head.mentionId)
++  private def pair(a: ResolutionEndpoint, b: ResolutionEndpoint): ResolutionPair =
++    ResolutionIds.pair(ResolutionIds.entityType(a), a, b).toOption.get
++  private def context(
++      works: Vector[WorkRecord] = Vector(dblp, openAlex),
++      profiles: Vector[OrcidProfileRecord] = Vector.empty,
++      activities: Vector[OrcidActivityRecord] = Vector.empty
++  ): ResolutionValidationContext = {
++    val result = ResolutionValidationContext.create(works, profiles, activities)
++    assert(result.isRight, result.toString)
++    result.toOption.get
++  }
++
++  private def assertMissingBinding(
++      result: Either[Vector[DomainViolation], ResolutionPair]
++  ): Unit = {
++    assert(result.isLeft)
++    assert(result.left.toOption.get.exists(_.message.contains("missing source observation")))
++  }
++
++  test("same DOI observations stay distinct and cannot satisfy a missing native key or snapshot") {
++    val ctx = context()
++    val original = pair(endpoint(dblp), endpoint(openAlex))
++    assert(dblp.workId == openAlex.workId)
++    assert(ResolutionValidation.check(original, ctx).isRight)
++    assert(ResolutionIds.endpointId(original.left) != ResolutionIds.endpointId(original.right))
++
++    val absentNative = openAlex.copy(
++      sourceRecordId = "W700000002",
++      provenance = openAlex.provenance.copy(sourceRecordId = "W700000002")
++    )
++    assertMissingBinding(
++      ResolutionValidation.check(pair(endpoint(dblp), endpoint(absentNative)), ctx)
++    )
++    val absentSnapshot =
++      openAlex.copy(provenance = openAlex.provenance.copy(datasetSnapshot = "not-loaded"))
++    assertMissingBinding(
++      ResolutionValidation.check(pair(endpoint(dblp), endpoint(absentSnapshot)), ctx)
++    )
++  }
++
++  test("snapshot-free mention IDs cannot borrow authors from another snapshot or parent work") {
++    val later =
++      work(SourceType.Dblp, dblp.sourceRecordId, "independent-snapshot-b", withAuthor = false)
++    val ctx = context(Vector(dblp, later, openAlex))
++    val original = pair(mention(dblp), mention(openAlex))
++    assert(ResolutionValidation.check(original, ctx).isRight)
++
++    val reusedId = ResolutionEndpoint.Mention(ref(later.provenance), dblp.authors.head.mentionId)
++    assertMissingBinding(ResolutionValidation.check(pair(reusedId, mention(openAlex)), ctx))
++    val nonexistentOrdinal = ResolutionEndpoint.Mention(
++      ref(dblp.provenance),
++      StableIds.mentionId(dblp.source, dblp.sourceRecordId, 2)
++    )
++    assertMissingBinding(
++      ResolutionValidation.check(pair(nonexistentOrdinal, mention(openAlex)), ctx)
++    )
++    val wrongParent =
++      ResolutionEndpoint.Mention(ref(openAlex.provenance), dblp.authors.head.mentionId)
++    assert(ResolutionIds.pair(ResolutionEntityType.Researcher, wrongParent, mention(dblp)).isLeft)
++  }
++
++  test(
++    "an actual ORCID work activity without DOI is eligible but supplies no publication authors"
++  ) {
++    def activity(kind: OrcidActivityKind, code: Int): OrcidActivityRecord = {
++      val native = s"/$orcidA/${kind.wire}/$code"
++      OrcidActivityRecord(
++        SchemaVersions.domain,
++        orcidA,
++        kind,
++        native,
++        Some("Synthetic source activity"),
++        None,
++        None,
++        None,
++        None,
++        None,
++        None,
++        None,
++        None,
++        fixtureNote,
++        provenance(SourceType.Orcid, native, "independent-orcid")
++      )
++    }
++    val publication = activity(OrcidActivityKind.Work, 1)
++    val employment = activity(OrcidActivityKind.Employment, 2)
++    val ctx = context(activities = Vector(publication, employment))
++    val workActivity = ResolutionEndpoint.OrcidWorkActivity(ref(publication.provenance), None)
++    assert(ResolutionValidation.check(pair(workActivity, endpoint(dblp)), ctx).isRight)
++    val nonwork = ResolutionEndpoint.OrcidWorkActivity(ref(employment.provenance), None)
++    assert(ResolutionIds.pair(ResolutionEntityType.Work, nonwork, endpoint(dblp)).isLeft)
++
++    // A valid work-activity observation is still not a full WorkRecord.
++    val manufacturedWork = ResolutionEndpoint.Work(ref(publication.provenance), workId)
++    assertMissingBinding(ResolutionValidation.check(pair(manufacturedWork, endpoint(dblp)), ctx))
++    val missingActivity = ResolutionEndpoint.OrcidWorkActivity(
++      ref(publication.provenance).copy(sourceRecordId = s"/$orcidA/work/3"),
++      None
++    )
++    assertMissingBinding(ResolutionValidation.check(pair(missingActivity, endpoint(dblp)), ctx))
++  }
++
++  test(
++    "pair deduplication preserves changed snapshot identity even when all bibliographic IDs match"
++  ) {
++    val later = work(SourceType.OpenAlex, openAlex.sourceRecordId, "independent-snapshot-b")
++    val ctx = context(Vector(dblp, openAlex, later))
++    val original = pair(endpoint(dblp), endpoint(openAlex))
++    val reversed = pair(endpoint(openAlex), endpoint(dblp))
++    val changed = pair(endpoint(dblp), endpoint(later))
++    assert(original == reversed)
++    assert(original.pairId != changed.pairId)
++    assert(Vector(original, reversed, changed).map(_.pairId).distinct.size == 2)
++    assert(ResolutionValidation.check(changed, ctx).isRight)
++  }
++
++  private def identify(d: ResolutionDecision): ResolutionDecision =
++    d.copy(decisionId = ResolutionIds.decisionId(d))
++
++  private def audit(outcome: MatchOutcome): ResolutionDecision = {
++    val p = pair(endpoint(dblp), endpoint(openAlex))
++    identify(
++      ResolutionDecision(
++        schema,
++        "",
++        p,
++        MatchDecision(
++          SchemaVersions.domain,
++          ResolutionIds.endpointId(p.left),
++          ResolutionIds.endpointId(p.right),
++          Vector.empty,
++          outcome,
++          0.31,
++          Vector("SYNTHETIC_CONTRACT"),
++          "independent-policy-v1",
++          run,
++          fixtureNote,
++          provenance(SourceType.ScholarChain, p.pairId, "independent-derived")
++        ),
++        Vector.empty,
++        "independent-features-v1",
++        Vector.empty,
++        ResolutionDecisionPath.Scored,
++        ResolutionConfidenceSemantics.UncalibratedScore,
++        None,
++        digest,
++        digest,
++        digest,
++        Vector("synthetic:source"),
++        "2026-10-15T16:00:00Z",
++        None
++      )
++    )
++  }
++
++  test(
++    "only accepted audits authorize links and timestamp changes must renew the decision identity"
++  ) {
++    val ctx = context()
++    MatchOutcome.values.foreach { outcome =>
++      val d = audit(outcome)
++      assert(ResolutionValidation.check(d, ctx).isRight)
++      val link = ResolutionAcceptedLink(
++        schema,
++        d.pair,
++        d.decisionId,
++        d.decision.policyVersion,
++        d.policyHash,
++        run,
++        d.decision.provenance
++      )
++      assert(ResolutionValidation.check(link, d, ctx).isRight == (outcome == MatchOutcome.Accepted))
++    }
++    val d = audit(MatchOutcome.Accepted)
++    val later = d.copy(decidedAtUtc = "2026-10-15T16:01:00Z")
++    assert(ResolutionValidation.check(later, ctx).isLeft)
++    assert(ResolutionValidation.check(identify(later), ctx).isRight)
++    val localTime = identify(d.copy(decidedAtUtc = "2026-10-15T11:00:00"))
++    assert(ResolutionValidation.check(localTime, ctx).isLeft)
++  }
++
++  test("LLM reported confidence is required independently of the system score and UTC audit") {
++    val metadata = ResolutionAdjudication(
++      digest,
++      "synthetic-prompt-v1",
++      digest,
++      "synthetic-response-v1",
++      "synthetic-fake",
++      "synthetic-model",
++      None,
++      digest,
++      digest,
++      ResolutionAdjudicationMode.Fake,
++      false,
++      0.91,
++      Vector("synthetic:source"),
++      ResolutionPreAdjudication(Some(0.31), MatchOutcome.Unresolved, ResolutionDecisionPath.Scored)
++    )
++    val d = identify(
++      audit(MatchOutcome.Unresolved).copy(
++        decisionPath = ResolutionDecisionPath.LlmAdjudicated,
++        adjudication = Some(metadata)
++      )
++    )
++    assert(ResolutionValidation.check(d, context()).isRight)
++    val decoded = CoreJson.parse[ResolutionDecision](CoreJson.compact(d)).toOption.get
++    assert(decoded.decision.confidence == 0.31)
++    assert(decoded.adjudication.get.reportedConfidence == 0.91)
++    assert(decoded.confidenceSemantics == ResolutionConfidenceSemantics.UncalibratedScore)
++    val missing = ujson.read(CoreJson.compact(d))
++    missing("adjudication").obj.remove("reportedConfidence")
++    assert(CoreJson.parse[ResolutionDecision](missing.render()).isLeft)
++    val outOfRange = identify(d.copy(adjudication = Some(metadata.copy(reportedConfidence = 1.01))))
++    assert(ResolutionValidation.check(outOfRange, context()).isLeft)
++    Vector(
++      ResolutionDecisionPath.Scored,
++      ResolutionDecisionPath.ExactIdentifier,
++      ResolutionDecisionPath.HardConflict
++    ).foreach { path =>
++      val outcome =
++        if (path == ResolutionDecisionPath.HardConflict) MatchOutcome.Conflict
++        else MatchOutcome.Unresolved
++      val hiddenLlm = identify(
++        d.copy(
++          decisionPath = path,
++          decision = d.decision.copy(decision = outcome)
++        )
++      )
++      assert(ResolutionValidation.check(hiddenLlm, context()).isLeft)
++    }
++    Vector(MatchOutcome.Unresolved, MatchOutcome.Accepted, MatchOutcome.Rejected).foreach {
++      outcome =>
++        val finalLlm = identify(d.copy(decision = d.decision.copy(decision = outcome)))
++        assert(ResolutionValidation.check(finalLlm, context()).isRight)
++    }
++    val modelConflict =
++      identify(d.copy(decision = d.decision.copy(decision = MatchOutcome.Conflict)))
++    assert(ResolutionValidation.check(modelConflict, context()).isLeft)
++  }
++
++  private def profile(orcid: String): OrcidProfileRecord = OrcidProfileRecord(
++    SchemaVersions.domain,
++    orcid,
++    Some("Synthetic profile"),
++    Vector.empty,
++    Vector(ObservedIdentifier("orcid", orcid, IdentifierInterpretation.ValidatedExternal)),
++    fixtureNote,
++    provenance(SourceType.Orcid, orcid, "independent-orcid")
++  )
++
++  test("A-B and B-C admissibility cannot erase conflicting authoritative ORCIDs in A-B-C") {
++    val pa = profile(orcidA)
++    val pc = profile(orcidC)
++    val a = ResolutionEndpoint.OrcidProfile(ref(pa.provenance), orcidA)
++    val b = mention(dblp) // Explicitly covered despite having no authoritative identifier.
++    val c = ResolutionEndpoint.OrcidProfile(ref(pc.provenance), orcidC)
++    val ctx = context(profiles = Vector(pa, pc))
++    val bundle = ResolutionGroupingConstraints(
++      schema,
++      ResolutionEntityType.Researcher,
++      "independent-policy-v1",
++      digest,
++      Vector(a, b, c),
++      Vector.empty,
++      Vector(
++        ResolutionIdentifierAssertion(
++          a,
++          ResolutionAuthorityNamespace.Orcid,
++          orcidA,
++          Vector("synthetic:profile-a")
++        ),
++        ResolutionIdentifierAssertion(
++          c,
++          ResolutionAuthorityNamespace.Orcid,
++          orcidC,
++          Vector("synthetic:profile-c")
++        )
++      )
++    )
++    def check(
++        members: Vector[ResolutionEndpoint],
++        constraints: ResolutionGroupingConstraints = bundle
++    ) =
++      ResolutionValidation.checkComponent(
++        members,
++        constraints,
++        ctx,
++        maxMembers = 3,
++        maxConstraints = 10
++      )
++
++    assert(check(Vector(a, b)).isRight)
++    assert(check(Vector(b, c)).isRight)
++    assert(check(Vector(a, b, c)).isLeft)
++    assert(check(Vector(a, b), bundle.copy(coveredEndpoints = Vector(a, c))).isLeft)
++    val cannotLink = bundle.copy(
++      authoritativeIdentifiers = Vector.empty,
++      cannotLinks =
++        Vector(ResolutionCannotLink(pair(a, c), "SYNTHETIC_CONFLICT", Vector("synthetic:source")))
++    )
++    assert(check(Vector(a, b), cannotLink).isRight)
++    assert(check(Vector(b, c), cannotLink).isRight)
++    assert(check(Vector(a, b, c), cannotLink).isLeft)
++  }
++
++  private def researcherAuthorityBundle
++      : (ResolutionGroupingConstraints, ResolutionValidationContext) = {
++    val pa = profile(orcidA)
++    val pc = profile(orcidC)
++    val a = ResolutionEndpoint.OrcidProfile(ref(pa.provenance), orcidA)
++    val c = ResolutionEndpoint.OrcidProfile(ref(pc.provenance), orcidC)
++    val bundle = ResolutionGroupingConstraints(
++      schema,
++      ResolutionEntityType.Researcher,
++      "independent-policy-v1",
++      digest,
++      Vector(a, mention(dblp), c),
++      Vector.empty,
++      Vector(
++        ResolutionIdentifierAssertion(
++          a,
++          ResolutionAuthorityNamespace.Orcid,
++          orcidA,
++          Vector("synthetic:profile-a")
++        ),
++        ResolutionIdentifierAssertion(
++          c,
++          ResolutionAuthorityNamespace.Orcid,
++          orcidC,
++          Vector("synthetic:profile-c")
++        )
++      )
++    )
++    (bundle, context(profiles = Vector(pa, pc)))
++  }
++
++  private def validAuthorityJson(json: ujson.Value, ctx: ResolutionValidationContext): Boolean =
++    CoreJson.parse[ResolutionGroupingConstraints](json.render()) match {
++      case Left(_)       => false
++      case Right(bundle) => ResolutionValidation.check(bundle, ctx).isRight
++    }
++
++  test(
++    "B1 namespace aliases cannot split conflicting ORCID assertions across a transitive component"
++  ) {
++    val (bundle, ctx) = researcherAuthorityBundle
++    val json = ujson.read(CoreJson.compact(bundle))
++    json("authoritativeIdentifiers")(1)("namespace") = ujson.Str("ORCID")
++    val result = CoreJson.parse[ResolutionGroupingConstraints](json.render()) match {
++      case Left(_) => true
++      case Right(decoded) =>
++        ResolutionValidation.checkComponent(decoded.coveredEndpoints, decoded, ctx, 3, 10).isLeft
++    }
++    assert(result, "ORCID namespace casing must not bypass the canonical orcid conflict")
++  }
++
++  test("B1 authoritative namespaces are closed and entity typed at the serialized boundary") {
++    val (bundle, ctx) = researcherAuthorityBundle
++    assert(ResolutionValidation.check(bundle, ctx).isRight)
++    Vector(
++      "ORCID",
++      "Orcid",
++      "researcher:orcid",
++      "unknown-authority",
++      "openalex",
++      "openalex-author",
++      "openalex-work",
++      "dblp",
++      "semantic-scholar",
++      "repository-url"
++    ).foreach { namespace =>
++      val json = ujson.read(CoreJson.compact(bundle))
++      json("authoritativeIdentifiers")(0)("namespace") = ujson.Str(namespace)
++      assert(!validAuthorityJson(json, ctx), s"unsupported namespace accepted: $namespace")
++    }
++    val researcherDoi = ujson.read(CoreJson.compact(bundle))
++    researcherDoi("authoritativeIdentifiers")(0)("namespace") = ujson.Str("doi")
++    researcherDoi("authoritativeIdentifiers")(0)("value") = ujson.Str(doi)
++    assert(
++      !validAuthorityJson(researcherDoi, ctx),
++      "DOI cannot be authoritative researcher identity"
++    )
++
++    val workBundle = ResolutionGroupingConstraints(
++      schema,
++      ResolutionEntityType.Work,
++      "independent-policy-v1",
++      digest,
++      Vector(endpoint(dblp), endpoint(openAlex)),
++      Vector.empty,
++      Vector(
++        ResolutionIdentifierAssertion(
++          endpoint(dblp),
++          ResolutionAuthorityNamespace.Orcid,
++          orcidA,
++          Vector("synthetic:source")
++        )
++      )
++    )
++    assert(
++      ResolutionValidation.check(workBundle, context()).isLeft,
++      "ORCID cannot be authoritative work identity"
++    )
++  }
++
++  test("B1 authoritative values reject noncanonical ORCID and DOI spellings before grouping") {
++    val (bundle, ctx) = researcherAuthorityBundle
++    Vector(s"https://orcid.org/$orcidA", s" $orcidA", "0000-0002-1825-0098").foreach { value =>
++      val json = ujson.read(CoreJson.compact(bundle))
++      json("authoritativeIdentifiers")(0)("value") = ujson.Str(value)
++      assert(!validAuthorityJson(json, ctx), s"noncanonical or invalid ORCID accepted: $value")
++    }
++    val workBundle = ResolutionGroupingConstraints(
++      schema,
++      ResolutionEntityType.Work,
++      "independent-policy-v1",
++      digest,
++      Vector(endpoint(dblp), endpoint(openAlex)),
++      Vector.empty,
++      Vector(
++        ResolutionIdentifierAssertion(
++          endpoint(dblp),
++          ResolutionAuthorityNamespace.Doi,
++          doi,
++          Vector("synthetic:source")
++        )
++      )
++    )
++    assert(ResolutionValidation.check(workBundle, context()).isRight)
++    Vector(
++      s"https://doi.org/$doi",
++      "DOI:10.5555/INDEPENDENT-RESOLUTION",
++      "10.5555/INDEPENDENT-RESOLUTION",
++      "not-a-doi"
++    ).foreach { value =>
++      val json = ujson.read(CoreJson.compact(workBundle))
++      json("authoritativeIdentifiers")(0)("value") = ujson.Str(value)
++      assert(!validAuthorityJson(json, context()), s"noncanonical or invalid DOI accepted: $value")
++    }
++  }
++
++  test("B1 arXiv authority accepts canonical base tokens and rejects versions or URI spellings") {
++    val bundle = ResolutionGroupingConstraints(
++      schema,
++      ResolutionEntityType.Work,
++      "independent-policy-v1",
++      digest,
++      Vector(endpoint(dblp), endpoint(openAlex)),
++      Vector.empty,
++      Vector(
++        ResolutionIdentifierAssertion(
++          endpoint(dblp),
++          ResolutionAuthorityNamespace.Arxiv,
++          "2101.00001",
++          Vector("synthetic:source")
++        )
++      )
++    )
++    assert(ResolutionValidation.check(bundle, context()).isRight)
++    val canonical = ujson.read(CoreJson.compact(bundle))
++    assert(canonical("authoritativeIdentifiers")(0)("namespace").str == "arxiv")
++    assert(validAuthorityJson(canonical, context()))
++    Vector("2101.00001v1", "arXiv:2101.00001", "https://arxiv.org/abs/2101.00001", " 2101.00001")
++      .foreach { value =>
++        val json = ujson.read(CoreJson.compact(bundle))
++        json("authoritativeIdentifiers")(0)("value") = ujson.Str(value)
++        assert(
++          !validAuthorityJson(json, context()),
++          s"noncanonical arXiv authority accepted: $value"
++        )
++      }
++  }
++}

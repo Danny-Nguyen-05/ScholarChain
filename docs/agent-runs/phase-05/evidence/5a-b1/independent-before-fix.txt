@@ -1,0 +1,33 @@
+[info] welcome to sbt 1.10.7 (Homebrew Java 17.0.20.1)
+[info] loading settings for project scholarchain-build from plugins.sbt...
+[info] loading project definition from /Users/danny/Documents/UIC/CS441/ScholarChain/project
+[info] loading settings for project root from build.sbt...
+[info] set current project to root (in build file:/Users/danny/Documents/UIC/CS441/ScholarChain/)
+[info] scalafmt: Formatting 1 Scala sources (/Users/danny/Documents/UIC/CS441/ScholarChain/tests)...
+[info] scalafmt: Reformatted 1 Scala sources
+[success] Total time: 1 s, completed Oct 15, 2026, 11:22:21 AM
+[info] compiling 1 Scala source to /Users/danny/Documents/UIC/CS441/ScholarChain/tests/target/scala-3.3.4/test-classes ...
+[info] done compiling
+[info] IndependentResolutionContractSpec:
+[info] - same DOI observations stay distinct and cannot satisfy a missing native key or snapshot
+[info] - snapshot-free mention IDs cannot borrow authors from another snapshot or parent work
+[info] - an actual ORCID work activity without DOI is eligible but supplies no publication authors
+[info] - pair deduplication preserves changed snapshot identity even when all bibliographic IDs match
+[info] - only accepted audits authorize links and timestamp changes must renew the decision identity
+[info] - LLM reported confidence is required independently of the system score and UTC audit
+[info] - A-B and B-C admissibility cannot erase conflicting authoritative ORCIDs in A-B-C
+[info] - B1 namespace aliases cannot split conflicting ORCID assertions across a transitive component *** FAILED ***
+[info]   result was false ORCID namespace casing must not bypass the canonical orcid conflict (IndependentResolutionContractSpec.scala:422)
+[info] - B1 authoritative namespaces are closed and entity typed at the serialized boundary *** FAILED ***
+[info]   IndependentResolutionContractSpec.this.validAuthorityJson(json, ctx) was true unsupported namespace accepted: ORCID (IndependentResolutionContractSpec.scala:431)
+[info] - B1 authoritative values reject noncanonical ORCID and DOI spellings before grouping *** FAILED ***
+[info]   IndependentResolutionContractSpec.this.validAuthorityJson(json, ctx) was true noncanonical or invalid ORCID accepted: https://orcid.org/0000-0002-1825-0097 (IndependentResolutionContractSpec.scala:463)
+[info] Run completed in 209 milliseconds.
+[info] Total number of tests run: 10
+[info] Suites: completed 1, aborted 0
+[info] Tests: succeeded 7, failed 3, canceled 0, ignored 0, pending 0
+[info] *** 3 TESTS FAILED ***
+[error] Failed tests:
+[error] 	edu.uic.cs441.scholarchain.independent.IndependentResolutionContractSpec
+[error] (independentTests / Test / testOnly) sbt.TestsFailedException: Tests unsuccessful
+[error] Total time: 3 s, completed Oct 15, 2026, 11:22:24 AM

@@ -1,0 +1,18 @@
+[info] welcome to sbt 1.10.7 (Homebrew Java 17.0.20.1)
+[info] loading settings for project scholarchain-build from plugins.sbt...
+[info] loading project definition from /Users/danny/Documents/UIC/CS441/ScholarChain/project
+[info] loading settings for project root from build.sbt...
+[info] set current project to root (in build file:/Users/danny/Documents/UIC/CS441/ScholarChain/)
+[info] running edu.uic.cs441.scholarchain.entityresolution.Phase5Main --help
+ScholarChain Phase 5B offline entity resolution
+Usage:
+  resolve --input COMPLETED_PHASE4_RUN --policy POLICY_JSON --config CONFIG_JSON --llm-mode disabled|fake --output NEW_DIRECTORY [--cache CACHE_DIRECTORY]
+  --help
+Only resolve is implemented in 5B. Review, labels and evaluation belong to later subphases.
+Every policy/config argument is explicit. Runtime examples are uncalibrated, not evaluated thresholds.
+Fake mode uses deterministic abstention fixtures; live adapters and network calls do not exist here.
+No existing output directory is overwritten. Source observations are never modified.
+
+[success] Total time: 1 s, completed Oct 16, 2026, 2:35:49 PM
+[info] running edu.uic.cs441.scholarchain.entityresolution.Phase5Main resolve --input target/phase4-runs/fda6168a-d4e6-4c20-bf73-42a1c3724f7f --policy modules/entity-resolution/src/main/resources/phase5-policy.v1.json --config modules/entity-resolution/src/main/resources/phase5-config.v1.json --llm-mode disabled --output target/phase5/5b-disabled-demo
+Resolution failed: requirement failed: candidate carried workId differs from source observation

@@ -1,0 +1,30 @@
+{
+  "schema": "scholarchain.phase5c.repair-owner-handoffs.v1",
+  "scope": "B1/B2 only",
+  "owners": [
+    {
+      "nativeId": "/root/phase5c_er",
+      "territory": "modules/entity-resolution/**",
+      "status": "complete/stopped",
+      "summary": "Separated immutable annotation population binding from actual prediction-run metadata; original annotations reusable across P1 settings, strict evidence/provenance checks retained."
+    },
+    {
+      "nativeId": "/root/phase5c_dataset",
+      "territory": "datasets/**",
+      "status": "complete/stopped",
+      "summary": "Retained 68 exact trusted preparation files outside target with a sibling hash manifest; 8 new and 26 total Python tests passed."
+    },
+    {
+      "nativeId": "/root/phase5c_test",
+      "territory": "tests/**",
+      "status": "complete/stopped",
+      "summary": "Two B1 regressions failed before repair; 28 independent tests pass after repair and a disclosed B2 fixture correction. Actual durable input replay reproduced original hashes."
+    }
+  ],
+  "coordinator": "/root evidence and serialized gates",
+  "reviewerLaunched": false,
+  "realHumanLabels": 0,
+  "liveModelCalls": 0,
+  "nonblockingRepairsPerformed": false,
+  "note": "Full gate result is separate; owner completion is not independent approval."
+}

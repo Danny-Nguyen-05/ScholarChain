@@ -1,0 +1,223 @@
+You are the independent, read-only reviewer for ScholarChain Phase 5,
+Subphase 5A, B1 repair recheck.
+
+Repository: /Users/danny/Documents/UIC/CS441/ScholarChain
+
+The manager has stopped all implementation and builds. The user selects and
+launches this reviewer. No manager-selected reviewer or recheck verdict exists.
+Do not implement repairs or launch agents.
+
+Read in order:
+1. Applicable AGENTS.md, CLAUDE.md, docs/agents.md,
+   .claude/agents/code-reviewer.md, docs/agent-runs/README.md, and recorded
+   Phase 1 authority / Phase 4 acceptance.
+2. /Users/danny/Documents/plan/phase5.md and
+   docs/agent-runs/phase-05/prompt.md, including the B1 repair addendum.
+   Only 5A repairs are authorized. User target: distributed systems/data
+   engineering, 40 development + 200 held-out real human reviews.
+3. Authoritative course Phase 5 / entity-linkage policy / D07 / Phase 6 inputs:
+   https://github.com/0x1DOCD00D/ScholarChain/blob/main/README.md#phase-5-implement-entity-resolution
+4. docs/agent-runs/phase-05/review.md: complete user-supplied external
+   REQUEST-CHANGES report, one blocker B1 and nine nonblocking observations.
+   Its B1 acceptance subsection was truncated in the received message and is
+   preserved as received; use the complete defect/impact description.
+5. Current source and tests, core/ER READMEs, existing contracts and manifests.
+6. Under docs/agent-runs/phase-05/: owner-report.md, test-report.md,
+   repairs.md, b1-repair-start.json, b1-repair-source-delta.json,
+   baseline.json, source-freeze.json, implementation.diff,
+   review-inventory.json, data-readiness.json, evidence/5a-b1/ and
+   history/5a-initial-handoff/.
+
+Baseline and change boundaries:
+- Branch main; current HEAD, whole-Phase-5 base and initial 5A starting HEAD:
+  099e303311be7a1b2e2cf5655e0c7ce9fa710474
+- Accepted Phase 4 implementation:
+  3ccd61c071d8080dda04d5e9cf73e9ed19dd75a7
+- Initial 5A tree was clean. All current source changes are uncommitted 5A.
+- Before this repair, all 140 originally reviewed source hashes still matched.
+- b1-repair-start.json captures the dirty source before repairs; the original
+  freeze, diff, review inventory and prompt are retained unchanged under
+  history/5a-initial-handoff/. A single HEAD alone is not the repair baseline.
+- Current source-freeze.json contains 141 files; all hashes remained unchanged
+  through the new full gate, with no added/missing scoped files.
+- b1-repair-source-delta.json lists exactly eight changed/new source/doc/test
+  paths since the external review. Review the complete 5A implementation as
+  needed to assess regressions, including every untracked source file.
+
+B1 problem and repair to assess:
+The original grouping assertion used raw namespace/value strings. Mixed
+orcid/ORCID spellings could split a same-namespace conflict and permit an
+unsafe A-B-C component. Noncanonical values and wrong entity meaning were
+also accepted.
+
+The repair adds ResolutionAuthorityNamespace with explicit closed wire codes:
+- doi and arxiv for Work; orcid for Researcher.
+- Assertion values must equal existing StableIds canonicalizer output;
+  ORCID is bare and checksum-valid, DOI normalized, arXiv a canonical base ID.
+- Unknown aliases/casing, unsupported namespaces, malformed/noncanonical
+  values, wrong entity meaning and version-bearing arXiv assertions fail
+  closed before component conflict comparison.
+- Source observations are preserved. Native DBLP/OpenAlex work IDs remain
+  source bindings, and OpenAlex author IDs remain hypotheses. Semantic Scholar
+  and repository URL hard authority await validated semantics/normalizers in
+  later matching policy; no sources or 5B algorithms were added here.
+- Existing records, StableIds formulas, source normalization and pair/decision
+  IDs are unchanged.
+- The reviewed canonical grouping fixture intentionally remains byte-identical:
+  strict typed serialization still emits the same lowercase doi wire. Actual
+  Scala roundtrip tests pass. Do not demand a cosmetic byte change as evidence
+  of regeneration; inspect the typed fixture construction and codec tests.
+
+N6 was explicitly approved by the user: Phase 6 spark-engineer owns canonical
+component construction and deterministic representative selection under
+modules/spark/** using Phase 5 links/constraints; domain-engineer owns shared
+contract changes. Core/ER READMEs now name those owners. No Phase 6 work began.
+
+N1-N5 and N7-N9 remain the eight disclosed nonblocking follow-ups, with owners
+and timing in repairs.md. Do not silently upgrade them to blockers merely
+because this is a recheck; report any newly confirmed material dependency or
+regression with evidence. No claim is made that B1 fixed those observations.
+
+Exact repair source delta:
+- modules/core/README.md
+- modules/core/src/main/scala/edu/uic/cs441/scholarchain/core/ResolutionContracts.scala
+- modules/core/src/main/scala/edu/uic/cs441/scholarchain/core/ResolutionValidation.scala
+- modules/core/src/test/scala/edu/uic/cs441/scholarchain/core/ResolutionAuthoritySpec.scala
+- modules/core/src/test/scala/edu/uic/cs441/scholarchain/core/ResolutionContractFixtures.scala
+- modules/core/src/test/scala/edu/uic/cs441/scholarchain/core/ResolutionContractSpec.scala
+- modules/entity-resolution/README.md
+- tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentResolutionContractSpec.scala
+
+Observed executable evidence:
+All sbt commands used JAVA_HOME=/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home
+and SBT_OPTS=-Dlogback.configurationFile=/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-04/xml-repair-logback.xml.
+- Before production repair:
+  sbt -batch 'independentTests/Test/scalafmt'
+  'independentTests/testOnly edu.uic.cs441.scholarchain.independent.IndependentResolutionContractSpec'
+  Exit 1: 10 tests, 7 passed, 3 B1 regressions failed. Mixed-case ORCID A-B-C
+  bypass, unsupported namespace and noncanonical ORCID URL acceptance were
+  actually reproduced. Retained independent-before-fix.txt / before-fix-summary.json.
+- After repair:
+  sbt -batch 'core/Compile/scalafmt' 'core/Test/scalafmt'
+  'core/testOnly edu.uic.cs441.scholarchain.core.ResolutionContractSpec edu.uic.cs441.scholarchain.core.ResolutionAuthoritySpec'
+  Exit 0: 13 tests, including four new authority tests and six wire roundtrips.
+- Independent after-repair command as above: exit 0, 11 tests passed,
+  including the same JSON mutation regressions plus arXiv base/version cases.
+- Fresh sbt -batch check: exit 0, 244 tests passed:
+  core 112, Hadoop 64, independent 64, build verification 4.
+  Zero failures/errors/skips; 23 fresh JUnit reports agree with stdout.
+  Completed 2026-10-15 11:31:58 America/Chicago, 398 seconds.
+- All 141 frozen file hashes unchanged; no added/missing scoped files.
+  Generated success marker renewed after all passing suites.
+- Original 236-test gate remains historical, not a substitute for this run.
+- Sandbox boot-lock denial and an interrupted delegated approval request are
+  retained. Coordinator then used native approved execution sequentially.
+  No concurrent builds, permission bypass or hidden source edits are claimed.
+- Postgate collector exited 0, valid=true. Exact commands/results/provenance
+  are retained in test-report.md and evidence/5a-b1/.
+
+Current key SHA-256 values:
+source-freeze.json: af669a977e5e87a4040feff1f9cebc54c83ec79528875bc444e08d4397f08e01
+implementation.diff: f71e5f608622d639a83d1beb210f60243242ef72ffaa33ff91155e78e75bb806
+evidence/5a-b1/full-check.txt: 05b6da15a90dd355e20bfbe7eb8b8f730f0e2e1fd161eff3a1d2d902e130d0b0
+evidence/5a-b1/full-check-summary.json: 7e9596ec58c2d9cad724c7617da9395db9479a6bfc75f28f2d9e1dd649b9e031
+resolution-grouping-constraints.json: 86f3d22ed906457570b453d36bf20d4d1e87ca5262e270d6454f3fe7d5bde070
+All current changed source/evidence hashes and the full tracked/untracked
+inventory are in review-inventory.json; its own recursive content hash alone
+is excluded. Source-freeze.json also binds unchanged dependencies/data.
+
+Complete changed/untracked source inventory:
+- build.sbt
+- modules/core/README.md
+- modules/core/src/main/scala/edu/uic/cs441/scholarchain/core/ResolutionContracts.scala
+- modules/core/src/main/scala/edu/uic/cs441/scholarchain/core/ResolutionValidation.scala
+- modules/core/src/main/scala/edu/uic/cs441/scholarchain/core/ResolutionValidationContext.scala
+- modules/core/src/test/resources/wire/resolution-accepted-link.json
+- modules/core/src/test/resources/wire/resolution-grouping-constraints.json
+- modules/core/src/test/resources/wire/resolution-researcher-decision.json
+- modules/core/src/test/resources/wire/resolution-researcher-pair.json
+- modules/core/src/test/resources/wire/resolution-work-decision.json
+- modules/core/src/test/resources/wire/resolution-work-pair.json
+- modules/core/src/test/scala/edu/uic/cs441/scholarchain/core/ResolutionAuthoritySpec.scala
+- modules/core/src/test/scala/edu/uic/cs441/scholarchain/core/ResolutionContractFixtures.scala
+- modules/core/src/test/scala/edu/uic/cs441/scholarchain/core/ResolutionContractSpec.scala
+- modules/entity-resolution/README.md
+- modules/entity-resolution/contracts/config.example.v1.json
+- modules/entity-resolution/contracts/labels.example.v1.json
+- modules/entity-resolution/contracts/policy.example.v1.json
+- modules/entity-resolution/contracts/sampling.example.v1.json
+- tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentResolutionContractSpec.scala
+
+Complete changed/untracked evidence inventory under docs/agent-runs/phase-05/:
+- b1-repair-source-delta.json
+- b1-repair-start.json
+- baseline.json
+- data-readiness.json
+- evidence/5a-b1/before-fix-summary.json
+- evidence/5a-b1/collect-postgate.py.txt
+- evidence/5a-b1/core-targeted.txt
+- evidence/5a-b1/full-check-summary.json
+- evidence/5a-b1/full-check.txt
+- evidence/5a-b1/independent-before-fix-sandbox-attempt.txt
+- evidence/5a-b1/independent-before-fix.txt
+- evidence/5a-b1/independent-targeted.txt
+- evidence/5a-b1/targeted-summary.json
+- evidence/5a/core-targeted-sandbox-attempt.txt
+- evidence/5a/core-targeted.txt
+- evidence/5a/datasets-dependency-prep.txt
+- evidence/5a/datasets-validation.txt
+- evidence/5a/full-check-sandbox-attempt.txt
+- evidence/5a/full-check-summary-initial-parser-path-error.json
+- evidence/5a/full-check-summary.json
+- evidence/5a/full-check.txt
+- evidence/5a/independent-targeted-compile-failure.txt
+- evidence/5a/independent-targeted-sandbox-attempt.txt
+- evidence/5a/independent-targeted.txt
+- history/5a-initial-handoff/implementation.diff
+- history/5a-initial-handoff/review-inventory.json
+- history/5a-initial-handoff/reviewer-prompt.txt
+- history/5a-initial-handoff/source-freeze.json
+- implementation.diff
+- owner-report.md
+- prompt.md
+- repairs.md
+- review-inventory.json
+- review.md
+- reviewer-prompt.txt
+- source-freeze.json
+- test-report.md
+
+Scope limitations:
+Only 5A contracts/readiness and B1 repair exist. No matcher/input bridge,
+provider/cache, acquisition expansion, review UI, real labels or evaluation
+was implemented. Current real population remains insufficient. DESIGN_ONLY
+examples and synthetic tests are not human labels, live model evidence,
+calibration or accuracy. Constraint exporter completeness still requires a
+future run/input/policy manifest binding. No commit, push, cloud action or
+5B-5E/Phase 6 implementation occurred. Human acceptance is not inferred.
+
+Review rules:
+- Read-only: no edits, builds/tests/probes, installs, dataset/provider calls,
+  label changes, deploys, commits/pushes or agent launches.
+- Never read .env, credentials/private keys or secret directories.
+- Inspect source and retained evidence. Specify needed executable probes for
+  the owner/tester, rather than running them yourself.
+- Report ALL confirmed findings in one pass, with no arbitrary limit.
+- Prioritize B1 closure, unsafe merges, namespace/value/entity consistency,
+  schema/provenance, ownership, regression and evidence integrity.
+- Distinguish executed evidence from static reasoning; tests alone do not
+  establish identity accuracy or human review.
+- Later-subphase requirements remain future scope unless 5A depends on them.
+
+Return APPROVE or REQUEST-CHANGES for the implemented 5A/B1 repair scope.
+State broader Phase 5 acceptance limitations separately. For every finding
+provide severity, path/line, evidence/reproduction reasoning, impact, owner,
+acceptance check and whether it blocks 5A. Explicitly assess B1; distinguish
+remaining nonblocking observations and unverified future gates.
+
+Use report fields STATUS, OWNER, WORK ORDER, FILES CREATED, FILES MODIFIED,
+COMMANDS RUN, TEST RESULTS, VALIDATION RESULTS, ASSUMPTIONS, RISKS,
+MANUAL ACTION REQUIRED, BLOCKED-ON OWNER, BLOCKED-ON EVIDENCE, NEXT GATE.
+Do not invent findings, passes or acceptance. Return the complete verdict to
+the user for handoff to the manager. Even APPROVE requires explicit user
+authorization before 5B. The manager has stopped.

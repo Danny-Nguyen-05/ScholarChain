@@ -1,0 +1,19 @@
+{
+  "schemaVersion": "scholarchain.label-conversion-command.v1",
+  "convertedAtUtc": "2026-10-20T21:58:48Z",
+  "execution": "Coordinator-delegated dataset owner invoked convert() directly in Python; no Scala import or evaluation by dataset owner.",
+  "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+  "pythonCall": "convert(Path('/Users/danny/Documents/ScholarChain-review-drafts'), Path('docs/agent-runs/phase-05/evidence/5c-repair/review-artifacts/queue.json'), Path('datasets/entity-resolution/labels/2026-10-20-danny-ai-assisted-v1'), 'danny', '2026-10-20T21:58:48Z')",
+  "implementation": [
+    {
+      "path": "datasets/scripts/convert_review_batches.py",
+      "sha256": "d8ed6563d928c6b46ed745fbe1ef932a76c11ac012775652732ddf1146aa04fe",
+      "bytes": 11993
+    },
+    {
+      "path": "datasets/scripts/test_review_batch_conversion.py",
+      "sha256": "d44907b2dc7081c48d956efd72b0496e41acf8050b14bc1fa8ccec085a3bc311",
+      "bytes": 6165
+    }
+  ]
+}

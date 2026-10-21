@@ -1,0 +1,19 @@
+{
+  "schemaVersion": "scholarchain.screened-demo-seed-receipt.v1",
+  "status": "NO_SAFE_SEED_AUTHORS",
+  "anchorMetadataSha256": "702caaeb97295cb28d448da5cdef332a89ac1f46ddc4fe138dae11ab9913129b",
+  "queueHash": "05c5817f62a70d378829be361b9c9169fc9af18448f7c83c245f1d65bbca6175",
+  "splitHash": "06e444624a43ddb1c8cb1f4a23ab9e099356c5d00a1e78879deb9830facf265d",
+  "splitFileSha256": "9dee7738f41d646515eb7a6c77c025a935405f5bdfb34039fcb135021e9c4141",
+  "frozenInputHash": "57efd81957e5eec9194d4b5c42f6ef170213640f148b56bf8b99a51d1d09d1fe",
+  "demoInputHash": "57efd81957e5eec9194d4b5c42f6ef170213640f148b56bf8b99a51d1d09d1fe",
+  "endpointCount": 3780,
+  "components": 568,
+  "forbiddenComponents": 541,
+  "clearCandidateAuthorIds": 0,
+  "selectedAuthors": [],
+  "rule": "Union all canonical leakage anchor hashes; exclude entire components touching any held-out anchor and all author IDs occurring in any excluded component. Choose only OpenAlex mentions with missing observed ORCID and actual bound affiliation. Rank sha256(phase5d-demo2-seed-v1:+authorId), lexical tie; max6. No labels or scoring.",
+  "humanLabelsRead": false,
+  "candidatePairsScored": 0,
+  "httpAttempts": 0
+}

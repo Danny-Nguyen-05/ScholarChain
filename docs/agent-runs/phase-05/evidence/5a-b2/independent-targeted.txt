@@ -1,0 +1,33 @@
+[info] welcome to sbt 1.10.7 (Homebrew Java 17.0.20.1)
+[info] loading settings for project scholarchain-build from plugins.sbt...
+[info] loading project definition from /Users/danny/Documents/UIC/CS441/ScholarChain/project
+[info] loading settings for project root from build.sbt...
+[info] set current project to root (in build file:/Users/danny/Documents/UIC/CS441/ScholarChain/)
+[info] scalafmt: Formatting 1 Scala sources (/Users/danny/Documents/UIC/CS441/ScholarChain/tests)...
+[success] Total time: 1 s, completed Oct 15, 2026, 12:01:02 PM
+[info] compiling 1 Scala source to /Users/danny/Documents/UIC/CS441/ScholarChain/tests/target/scala-3.3.4/test-classes ...
+[info] done compiling
+[info] IndependentResolutionContractSpec:
+[info] - same DOI observations stay distinct and cannot satisfy a missing native key or snapshot
+[info] - snapshot-free mention IDs cannot borrow authors from another snapshot or parent work
+[info] - an actual ORCID work activity without DOI is eligible but supplies no publication authors
+[info] - pair deduplication preserves changed snapshot identity even when all bibliographic IDs match
+[info] - only accepted audits authorize links and timestamp changes must renew the decision identity
+[info] - LLM reported confidence is required independently of the system score and UTC audit
+[info] - A-B and B-C admissibility cannot erase conflicting authoritative ORCIDs in A-B-C
+[info] - B1 namespace aliases cannot split conflicting ORCID assertions across a transitive component
+[info] - B1 authoritative namespaces are closed and entity typed at the serialized boundary
+[info] - B1 authoritative values reject noncanonical ORCID and DOI spellings before grouping
+[info] - B1 arXiv authority accepts canonical base tokens and rejects versions or URI spellings
+[info] - B2 a canonical ORCID assertion must be grounded in its own profile observation
+[info] - B2 work authority cannot invent an absent identifier or substitute a contradictory DOI
+[info] - N10 covered profiles cannot omit their own ORCIDs to evade a component conflict
+[info] - B2 mention grounding uses the selected member and accepts its raw ORCID URL
+[info] - B2 all recognized work observations must be retained even when DOI values contradict
+[info] - B2 ORCID work references ground self identifiers while related works remain weak evidence
+[info] Run completed in 221 milliseconds.
+[info] Total number of tests run: 17
+[info] Suites: completed 1, aborted 0
+[info] Tests: succeeded 17, failed 0, canceled 0, ignored 0, pending 0
+[info] All tests passed.
+[success] Total time: 3 s, completed Oct 15, 2026, 12:01:05 PM

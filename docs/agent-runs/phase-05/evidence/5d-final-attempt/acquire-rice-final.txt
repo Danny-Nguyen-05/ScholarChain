@@ -1,0 +1,30 @@
+{
+  "status": "VALID",
+  "schemaVersion": "scholarchain.rice-team-demo-population.v1",
+  "sources": {
+    "crossref": 0,
+    "dblp": 0,
+    "openalex": 3,
+    "orcid": 0
+  },
+  "observed": {
+    "httpAttempts": 2,
+    "responseBytes": 112270,
+    "seconds": 1.4782,
+    "returnedWorkRecordsIncludingDuplicatesExcluded": 15,
+    "distinctWorkIdsIncludingExcluded": 12,
+    "newIngestionWorks": 3,
+    "newWorkIdsNotObservedInPriorStages": 8
+  },
+  "cumulative": {
+    "distinctAuthorProfileIdsAcrossStages": 5,
+    "distinctWorkIdsAcrossStages": 73,
+    "httpAttemptsAcrossStages": 20,
+    "responseBytesAcrossStages": 622016,
+    "returnedAuthorProfileRecordsAcrossStages": 5,
+    "returnedMetadataRecordsAcrossStages": 90,
+    "returnedWorkRecordsAcrossStages": 85,
+    "secondsAcrossStages": 17.0465
+  },
+  "files": 17
+}

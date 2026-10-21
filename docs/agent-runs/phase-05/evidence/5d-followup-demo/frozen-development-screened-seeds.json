@@ -1,0 +1,9 @@
+{
+  "schemaVersion": "scholarchain.screened-demo-seeds.v1",
+  "screenReceiptSha256": "dd00340c9d72ca2357f43b9b2f40af17d0bf56601f8e318f3458620185a1d84b",
+  "screenReceiptPath": "docs/agent-runs/phase-05/evidence/5d-followup-demo/frozen-development-seed-screen.json",
+  "sourcePopulationPath": "datasets/entity-resolution/5c-2026-10-16-v3",
+  "sourcePopulationSha256": "6625a645675341c57bff8186d5cf16a4585e91c03eb7528da5bbacacf9b4d608",
+  "precedingStageReceiptPath": "docs/agent-runs/phase-05/evidence/5d/acquire-openalex-supplement.txt",
+  "authors": []
+}

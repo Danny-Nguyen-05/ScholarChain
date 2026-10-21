@@ -1,0 +1,73 @@
+[info] welcome to sbt 1.10.7 (Homebrew Java 17.0.20.1)
+[info] loading settings for project scholarchain-build from plugins.sbt...
+[info] loading project definition from /Users/danny/Documents/UIC/CS441/ScholarChain/project
+[info] loading settings for project root from build.sbt...
+[info] set current project to root (in build file:/Users/danny/Documents/UIC/CS441/ScholarChain/)
+[info] compiling 8 Scala sources to /Users/danny/Documents/UIC/CS441/ScholarChain/modules/entity-resolution/target/scala-3.3.4/classes ...
+[error] -- [E040] Syntax Error: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/InputLoader.scala:134:8 
+[error] 134 |    val export=root.resolve("export");val walk=Files.walk(export)
+[error]     |        ^
+[error]     |        an identifier expected, but 'export' found
+[error]     |
+[error]     | longer explanation available when compiling with `-explain`
+[error] -- [E018] Syntax Error: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/InputLoader.scala:134:58 
+[error] 134 |    val export=root.resolve("export");val walk=Files.walk(export)
+[error]     |                                                          ^^^^^^
+[error]     |                                  expression expected but export found
+[error]     |
+[error]     | longer explanation available when compiling with `-explain`
+[error] -- [E018] Syntax Error: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/InputLoader.scala:138:13 
+[error] 138 |    }.map(p=>export.relativize(p).toString).sorted finally walk.close()
+[error]     |             ^^^^^^
+[error]     |             expression expected but export found
+[error]     |
+[error]     | longer explanation available when compiling with `-explain`
+[error] -- [E018] Syntax Error: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/InputLoader.scala:146:15 
+[error] 146 |      val file=export.resolve(part.path).normalize
+[error]     |               ^^^^^^
+[error]     |               expression expected but export found
+[error]     |
+[error]     | longer explanation available when compiling with `-explain`
+[error] -- [E018] Syntax Error: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/InputLoader.scala:147:30 
+[error] 147 |      require(file.startsWith(export) && !Path.of(part.path).isAbsolute && !part.path.split('/').contains(".."),"unsafe export path")
+[error]     |                              ^^^^^^
+[error]     |                              expression expected but export found
+[error]     |
+[error]     | longer explanation available when compiling with `-explain`
+[error] -- [E007] Type Mismatch Error: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/AdjudicationCache.scala:28:49 
+[error] 28 |      Some(Adjudication.validateResponse(write(c.response),request,config).fold(e=>throw new IllegalArgumentException(e),identity))
+[error]    |                                               ^^^^^^^^^^
+[error]    |Found:    (c.response : edu.uic.cs441.scholarchain.entityresolution.AdjudicationResponse)
+[error]    |Required: java.nio.file.Path
+[error]    |
+[error]    | longer explanation available when compiling with `-explain`
+[error] -- [E024] Syntax Error: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/InputLoader.scala:55:33 
+[error] 55 |    case ResolutionEndpoint.Work(ref,_)|ResolutionEndpoint.Mention(ref,_)=>workByRef.get(ref)
+[error]    |                                 ^^^
+[error]    |                             Illegal variable ref in pattern alternative
+[error]    |
+[error]    | longer explanation available when compiling with `-explain`
+[error] -- [E024] Syntax Error: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/InputLoader.scala:55:67 
+[error] 55 |    case ResolutionEndpoint.Work(ref,_)|ResolutionEndpoint.Mention(ref,_)=>workByRef.get(ref)
+[error]    |                                                                   ^^^
+[error]    |                             Illegal variable ref in pattern alternative
+[error]    |
+[error]    | longer explanation available when compiling with `-explain`
+[error] -- [E172] Type Error: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/InputLoader.scala:138:50 
+[error] 138 |    }.map(p=>export.relativize(p).toString).sorted finally walk.close()
+[error]     |                                                  ^
+[error]     |Ambiguous given instances: both object String in object Ordering and object BigDecimal in object Ordering match type Ordering[B] of parameter ord of method sorted in trait StrictOptimizedSeqOps
+[error] -- [E007] Type Mismatch Error: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/InputLoader.scala:147:14 
+[error] 147 |      require(file.startsWith(export) && !Path.of(part.path).isAbsolute && !part.path.split('/').contains(".."),"unsafe export path")
+[error]     |              ^^^^
+[error]     |Found:    (file : Nothing)
+[error]     |Required: ?{ startsWith: ? }
+[error]     |Note that implicit conversions were not tried because the result of an implicit conversion
+[error]     |must be more specific than ?{ startsWith: [applied to (_root_.scala.Predef.???) returning ?{ && :
+[error]     |  [applied to (! Path.of(part.path).isAbsolute) returning ?{ && : [applied to (
+[error]     |  ! part.path.split('/').contains("..")) returning Boolean] }] }] }
+[error]     |
+[error]     | longer explanation available when compiling with `-explain`
+[error] 10 errors found
+[error] (entityResolution / Compile / compileIncremental) Compilation failed
+[error] Total time: 2 s, completed Oct 16, 2026, 2:19:32 PM

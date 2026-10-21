@@ -1,0 +1,39 @@
+import java.nio.file.*;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
+import edu.uic.cs441.scholarchain.entityresolution.*;
+import edu.uic.cs441.scholarchain.core.*;
+
+class ScholarChain5DReadiness {
+ static <T> T value(scala.util.Either<String,T> e) { if(e.isLeft()) throw new IllegalArgumentException(e.left().get()); return e.toOption().get(); }
+ static <T> String json(T v, upickle.core.Types.Writer<T> rw) { return upickle.default$.MODULE$.write(v,-1,false,false,rw); }
+ public static void main(String[] args) throws Exception {
+  Path root=Path.of(args[0]), qpath=Path.of(args[1]), out=Path.of(args[2]); Files.createDirectories(out);
+  var config=ResolutionConfig$.MODULE$.example(); var policy=ResolutionPolicy$.MODULE$.example();
+  var queue=value(ReviewQueue$.MODULE$.parseQueue(Files.readString(qpath)));
+  var input=value(InputLoader$.MODULE$.load(root,config));
+  var pop=value(CandidateBuilder$.MODULE$.build(input,config));
+  if(!queue.binding().inputEvidenceHash().equals(input.inputEvidenceHash())||!queue.binding().candidatePopulationHash().equals(ReviewQueue$.MODULE$.populationHash(pop))) throw new IllegalArgumentException("population mismatch");
+  var split=value(StrictJson$.MODULE$.parse(Files.readString(qpath.resolveSibling("split.json")),ReviewSplit$.MODULE$.derived$ReadWriter()));
+  value(ReviewQueue$.MODULE$.validate(queue,split));
+  var dev=new HashSet<String>(); var groups=split.pairGroups().iterator();
+  while(groups.hasNext()){var row=groups.next(); var gs=row._2().iterator(); boolean admitted=true; while(gs.hasNext()){String g=gs.next(); if(!split.partitions().get(g).contains("development")) admitted=false;} if(admitted)dev.add(row._1());}
+  scala.collection.immutable.Map<String,EvidenceRecord> evidence=input.evidence(); var de=pop.derivedEvidence().iterator(); while(de.hasNext()){var e=de.next(); evidence=evidence.updated(e.ref(),e);}
+  int n=0,eligible=0; var records=new ArrayList<String>(); var it=pop.pairs().iterator();
+  while(it.hasNext()){ var c=it.next(); if(!dev.contains(c.pair().pairId())) continue;
+   n++; var classification=value(ResolutionEngine$.MODULE$.classify(c,input,policy)); var p=policy.forEntity(c.pair().entityType());
+   boolean ok=classification.outcome().toString().equals("Unresolved")&&classification.score().isDefined()&&((Double)classification.score().get())>=p.llmBandMin()&&((Double)classification.score().get())<=p.llmBandMax()&&classification.sufficient();
+   records.add("{\"pairId\":\""+c.pair().pairId()+"\",\"entityType\":\""+c.pair().entityType()+"\",\"outcome\":\""+classification.outcome()+"\",\"score\":"+(classification.score().isDefined()?classification.score().get():"null")+",\"sufficient\":"+classification.sufficient()+",\"eligible\":"+ok+"}");
+   if(c.pair().pairId().equals("resolution-pair:792b2026d8aae47057430bef742ceb54eb69300ec4949df7c916eaf075c2d5c3")){
+     var preview=value(Adjudication$.MODULE$.request(c,input,policy,config,classification.features(),evidence));
+     Files.writeString(out.resolve("INELIGIBLE-NOT-FOR-LIVE-preview-request.json"),json(preview,AdjudicationRequest$.MODULE$.derived$ReadWriter())+"\n");
+   }
+   if(ok){ eligible++; var request=value(Adjudication$.MODULE$.request(c,input,policy,config,classification.features(),evidence));
+    String text=json(request,AdjudicationRequest$.MODULE$.derived$ReadWriter());
+    Files.writeString(out.resolve(String.format("eligible-%02d-request.json",eligible)),text+"\n");
+   }
+  }
+  Files.writeString(out.resolve("development-readiness.json"),"{\"scope\":\"all candidate pairs whose complete frozen leakage components are development; no held-out scoring\",\"developmentTasks\":"+n+",\"eligible\":"+eligible+",\"adapterCalls\":0,\"rows\":["+String.join(",",records)+"]}\n");
+  System.out.println("development tasks="+n+"; naturally eligible="+eligible+"; adapter calls=0; held-out predictions=0");
+ }
+}

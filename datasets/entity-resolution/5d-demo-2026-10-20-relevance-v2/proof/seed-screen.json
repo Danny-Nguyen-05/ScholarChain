@@ -1,0 +1,19 @@
+{
+  "schemaVersion": "scholarchain.screened-demo-seed-receipt.v1",
+  "status": "NO_SAFE_SEED_AUTHORS",
+  "anchorMetadataSha256": "2bb9766c6de4ecdd7ccd20b81a8bddf712b0e915ab7fd16467ec35807f0511ca",
+  "queueHash": "05c5817f62a70d378829be361b9c9169fc9af18448f7c83c245f1d65bbca6175",
+  "splitHash": "06e444624a43ddb1c8cb1f4a23ab9e099356c5d00a1e78879deb9830facf265d",
+  "splitFileSha256": "9dee7738f41d646515eb7a6c77c025a935405f5bdfb34039fcb135021e9c4141",
+  "frozenInputHash": "57efd81957e5eec9194d4b5c42f6ef170213640f148b56bf8b99a51d1d09d1fe",
+  "demoInputHash": "3dffec0a31f2cf29781bdbe6da4c1f9046cbec98bccde112b86cb7c101a1c055",
+  "endpointCount": 135,
+  "components": 12,
+  "forbiddenComponents": 1,
+  "clearCandidateAuthorIds": 0,
+  "selectedAuthors": [],
+  "rule": "Exact canonical leakage anchor hash union over every existing demo endpoint; exclude entire transitive component touching any locked held-out anchor. OpenAlex mentions only, observed ORCID absent and at least one actual bound affiliation. Rank sha256(phase5d-demo2-seed-v1:+authorId), lexical tie; at most6. No labels, candidate scores, model calls or credentials.",
+  "humanLabelsRead": false,
+  "candidatePairsScored": 0,
+  "httpAttempts": 0
+}

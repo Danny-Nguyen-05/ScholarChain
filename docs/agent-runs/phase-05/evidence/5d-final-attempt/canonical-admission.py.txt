@@ -1,0 +1,14 @@
+"""Coordinator executes unchanged canonical selection; no labels or providers."""
+from pathlib import Path
+import json,subprocess,sys
+B=Path(__file__).resolve().parent;R=Path.cwd()
+cp=json.loads((B/'runtime-classpath.json').read_text())
+source=Path('/private/tmp/ScholarChain5DFinalReadiness.java')
+if source.exists():
+    assert source.read_bytes()==(B/'admitted-readiness-probe.java.txt').read_bytes()
+else:source.write_bytes((B/'admitted-readiness-probe.java.txt').read_bytes())
+name,input_path,out=sys.argv[1:]
+cmd=[cp['java'],'-Xmx4g','-cp',cp['classpath'],str(source),input_path,
+     'datasets/entity-resolution/prepared/bd424a86-0a1b-4e44-bbdb-4a9b8c8a20e3',
+     'docs/agent-runs/phase-05/evidence/5c-repair/review-artifacts/queue.json',out]
+sys.exit(subprocess.run(['python3',str(B/'run-command.py.txt'),name,*cmd]).returncode)

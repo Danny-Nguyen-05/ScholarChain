@@ -1,0 +1,27 @@
+{
+  "schemaVersion": "scholarchain.phase5d.repair-readiness.v1",
+  "implementationRepairs": "B1/B2 implemented; external recheck pending",
+  "fullGate": {
+    "exitCode": 0,
+    "passed": 434,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "freshReports": 54,
+    "frozenFilesUnchanged": 557
+  },
+  "pythonTestsPassed": 37,
+  "validatorsPassed": 6,
+  "actualModelCalls": 0,
+  "actualModelSpendUsd": "0.00",
+  "runtimeCredentialAvailabilityChecked": false,
+  "realHumanLabels": 0,
+  "requiredInitialReviews": 240,
+  "developmentReviews": 40,
+  "heldOutReviews": 200,
+  "reservesSeparate": 60,
+  "naturallyEligiblePairs": 0,
+  "no5EAuthorization": true,
+  "noReviewerLaunched": true,
+  "reviewerPrompt": "Chat only; no file."
+}

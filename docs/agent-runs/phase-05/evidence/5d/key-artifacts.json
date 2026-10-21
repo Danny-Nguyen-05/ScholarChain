@@ -1,0 +1,40 @@
+{
+  "schemaVersion": "scholarchain.phase5d.key-artifacts.v1",
+  "files": [
+    {
+      "path": "docs/agent-runs/phase-05/source-freeze.json",
+      "bytes": 129631,
+      "sha256": "8396eb7875d13a080877530c9d517d9134519ca2ebdf0d94b863bc4e4a79133b"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d/full-check.txt",
+      "bytes": 248200,
+      "sha256": "bd5aadb6555b965ff3d6be6c6c90d2828c6707acbef58ab0425d19a0a317605a"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d/full-check-summary.json",
+      "bytes": 19711,
+      "sha256": "e73779efb344c8815a88110efc730a58e524d6a343471d80d716a7aa38a2aa16"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d/readiness.json",
+      "bytes": 1998,
+      "sha256": "3c2231b9442e5db3ed96993e4219c9829b7e05a40af853f0619b7dff2afe6fb3"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d/change-manifest.json",
+      "bytes": 43178,
+      "sha256": "a51b48e7b6b0d49b6c10526efc8d2b96620ce9dd4ee8375d84818baae86e0423"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d/durable-preview-proof.json",
+      "bytes": 1159,
+      "sha256": "8e725d63721fcbb603abb0152e47c6fdf97644e4d1f06103247dfae9c35c6d84"
+    },
+    {
+      "path": "datasets/entity-resolution/5d-demo-2026-10-17-openalex/population-manifest.v1.json",
+      "bytes": 4155,
+      "sha256": "ff4154deda081832db8f0ca85bce33a96075d0c722b41bfcc4996ee056f4ea41"
+    }
+  ]
+}

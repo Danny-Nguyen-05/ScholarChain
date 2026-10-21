@@ -1,0 +1,31 @@
+{
+  "fetchedAtUtc": "2026-10-17T02:37:12.118505+00:00",
+  "sources": [
+    {
+      "topic": "selected model ID, reasoning settings, endpoints, public model resolution",
+      "url": "https://developers.openai.com/api/docs/models/gpt-6-luna",
+      "observed": "API model gpt-6-luna; Responses and structured outputs; no dated snapshot published; standard text input0.10/output0.50/cachewrite0.125 USD per1M; medium default reasoning."
+    },
+    {
+      "topic": "price card",
+      "url": "https://developers.openai.com/api/docs/pricing",
+      "observed": "Standard short-context pricing; limits and rates must be versioned in run evidence; do not assume subscription API credits."
+    },
+    {
+      "topic": "structured output constraints",
+      "url": "https://developers.openai.com/api/docs/guides/structured-outputs",
+      "observed": "Closed object; required fields; allOf/not/if/then/else unsupported; refuse incomplete/refusal responses and independently validate evidence refs."
+    },
+    {
+      "topic": "provider request contract",
+      "url": "https://developers.openai.com/api/reference/resources/responses/methods/create",
+      "observed": "Official search result describes max_output_tokens includes reasoning and visible output, explicit service_tier/store/text.format. Direct HTML open returned Internal Error; owner must verify actual page before implementation."
+    },
+    {
+      "topic": "course entity-resolution requirements",
+      "url": "https://github.com/0x1DOCD00D/ScholarChain/blob/main/README.md#phase-5-implement-entity-resolution",
+      "observed": "Fetched Phase5/6 lines1256\u20131327: bounded unresolved LLM band, JSONaccept/reject/abstain, preserve sources and IDs, caching, humanlabels, separatemetrics and no leakage."
+    }
+  ],
+  "noProviderCalls": true
+}

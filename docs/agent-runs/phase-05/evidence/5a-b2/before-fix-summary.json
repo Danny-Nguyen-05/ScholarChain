@@ -1,0 +1,18 @@
+{
+  "schema": "scholarchain.phase5a.b2-before-fix.v1",
+  "executor": "coordinator after independenttester authoredtests",
+  "command": "JAVA_HOME=/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home SBT_OPTS=-Dlogback.configurationFile=/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-04/xml-repair-logback.xml sbt -batch 'independentTests/Test/scalafmt' 'independentTests/testOnly edu.uic.cs441.scholarchain.independent.IndependentResolutionContractSpec' > target/phase5/5a-b2-verification/independent-before-fix.log 2>&1",
+  "exitCode": 1,
+  "tests": 14,
+  "passed": 11,
+  "failed": 3,
+  "failures": [
+    "B2wrongprofileORCIDassertion",
+    "B2contradictory/unobservedDOI",
+    "N10omittedcoveredprofileORCIDs"
+  ],
+  "productionUnchangedBeforeAndDuringRegression": true,
+  "completedLocal": "2026-10-15 11:57:01 America/Chicago",
+  "logSha256": "1ff70fedda4638149d18d04cf3074849c182bbfb6c97e9c6426bdc4932e46010",
+  "permissions": "Explicitnativeapprovedcacheaccess; exclusiveprocess45927 exitedbeforeproductionwritegoahead."
+}

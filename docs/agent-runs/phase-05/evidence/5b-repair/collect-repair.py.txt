@@ -1,0 +1,126 @@
+"""Coordinator evidence collection only; never builds, edits source, or changes labels."""
+from pathlib import Path
+import datetime
+import hashlib
+import json
+import subprocess
+import sys
+import xml.etree.ElementTree as ET
+
+ROOT = Path.cwd()
+EVIDENCE = ROOT / 'docs/agent-runs/phase-05'
+SCOPES = ['build.sbt', 'project', 'modules', 'tests', 'datasets', '.scalafmt.conf', '.gitignore']
+
+def git(*args):
+    return subprocess.check_output(['git', *args])
+
+def digest(path):
+    data = path.read_bytes()
+    return {'path': str(path.relative_to(ROOT)), 'bytes': len(data),
+            'sha256': hashlib.sha256(data).hexdigest()}
+
+def scoped_files():
+    names = git('ls-files', '--cached', '--others', '--exclude-standard', '-z', '--', *SCOPES)
+    return sorted(set(n.decode() for n in names.split(b'\0') if n))
+
+def freeze():
+    data = {'schema': 'scholarchain.phase5b.source-freeze.v1', 'checkpoint': '5B external-review B1/B2 repair',
+            'capturedAtUtc': datetime.datetime.now(datetime.timezone.utc).isoformat(),
+            'head': git('rev-parse', 'HEAD').decode().strip(),
+            'branch': git('branch', '--show-current').decode().strip(),
+            'scopes': SCOPES, 'sourceWritersFrozen': True,
+            'files': [digest(ROOT / n) for n in scoped_files()]}
+    (EVIDENCE / 'source-freeze.json').write_text(json.dumps(data, indent=2) + '\n')
+    print(json.dumps({'frozenFiles': len(data['files']), 'freeze': digest(EVIDENCE / 'source-freeze.json')}))
+
+def verify():
+    data = json.loads((EVIDENCE / 'source-freeze.json').read_text())
+    old = {e['path']: e for e in data['files']}
+    actual = {n: digest(ROOT / n) for n in scoped_files()}
+    changed = [n for n in old.keys() & actual.keys() if old[n] != actual[n]]
+    added = sorted(actual.keys() - old.keys())
+    missing = sorted(old.keys() - actual.keys())
+    return {'valid': not (changed or added or missing), 'checkedFiles': len(old),
+            'changed': sorted(changed), 'added': added, 'missing': missing}
+
+def postgate(exit_code, started_ms):
+    suites = []
+    paths = [('core', ROOT / 'modules/core/target/test-reports'),
+             ('hadoop', ROOT / 'modules/hadoop/target/test-reports'),
+             ('entityResolution', ROOT / 'modules/entity-resolution/target/test-reports'),
+             ('independent', ROOT / 'tests/target/test-reports'),
+             ('buildVerification', ROOT / 'build-verification/target/test-reports')]
+    for module, base in paths:
+        for p in sorted(base.glob('TEST-*.xml')):
+            tree = ET.parse(p).getroot()
+            suites.append({'module': module, 'path': str(p.relative_to(ROOT)),
+                           'suite': tree.attrib.get('name'),
+                           'tests': int(tree.attrib.get('tests', 0)),
+                           'failures': int(tree.attrib.get('failures', 0)),
+                           'errors': int(tree.attrib.get('errors', 0)),
+                           'skipped': int(tree.attrib.get('skipped', 0)),
+                           'modifiedMs': p.stat().st_mtime_ns // 1000000})
+    totals = {k: sum(s[k] for s in suites) for k in ['tests', 'failures', 'errors', 'skipped']}
+    counts = {module: sum(s['tests'] for s in suites if s['module'] == module) for module, _ in paths}
+    fresh = all(s['modifiedMs'] >= started_ms for s in suites)
+    marker_path = ROOT / '.claude/.last-test-run'
+    # Generated marker only, never inspect other .claude runtime or secret files.
+    marker = dict(line.split('=', 1) for line in marker_path.read_text().splitlines() if '=' in line)
+    source = verify()
+    marker_ms = marker_path.stat().st_mtime_ns // 1000000
+    valid = (exit_code == 0 and bool(suites) and fresh and source['valid']
+             and totals['failures'] == 0 and totals['errors'] == 0
+             and marker.get('success') == 'true' and marker_ms >= max(s['modifiedMs'] for s in suites))
+    result = {'schema': 'scholarchain.phase5b.full-check-summary.v1', 'valid': valid,
+              'exitCode': exit_code, 'startedMs': started_ms, 'sourceFreeze': source,
+              'totals': totals, 'moduleCounts': counts, 'freshJUnitReports': fresh,
+              'reportCount': len(suites), 'reports': suites,
+              'markerSuccess': marker.get('success'), 'markerModifiedMs': marker_ms,
+              'log': digest(EVIDENCE / 'evidence/5b-repair/full-check.txt')}
+    (EVIDENCE / 'evidence/5b-repair/full-check-summary.json').write_text(json.dumps(result, indent=2) + '\n')
+    print(json.dumps(result))
+    if not valid:
+        sys.exit(1)
+
+def diffs_and_inventory():
+    # Only implementation/config/data scopes; reports have their own inventory.
+    for base, filename in [('099e303311be7a1b2e2cf5655e0c7ce9fa710474', 'implementation.diff'),
+                           ('4ac236fcb01825b73635fa4c762a35bed4b362cd', '5b-implementation.diff')]:
+        diff = git('diff', '--binary', '--no-ext-diff', base, '--', *SCOPES)
+        untracked = git('ls-files', '--others', '--exclude-standard', '-z', '--', *SCOPES)
+        for name in sorted(n.decode() for n in untracked.split(b'\0') if n):
+            result = subprocess.run(['git', 'diff', '--binary', '--no-ext-diff', '--no-index',
+                                     '--', '/dev/null', name], capture_output=True)
+            if result.returncode not in (0, 1):
+                raise RuntimeError(result.stderr.decode())
+            diff += result.stdout
+        (EVIDENCE / filename).write_bytes(diff)
+    status = git('status', '--porcelain=v1', '-uall').decode().splitlines()
+    paths = []
+    for line in status:
+        name = line[3:]
+        if ' -> ' in name:
+            name = name.split(' -> ', 1)[1]
+        paths.append(name)
+    inventory_path = EVIDENCE / 'review-inventory.json'
+    inventory_rel = str(inventory_path.relative_to(ROOT))
+    paths = sorted(set(paths + [inventory_rel]))
+    files = [digest(ROOT / n) for n in paths if n != inventory_rel]
+    inventory = {'schema': 'scholarchain.phase5b.review-inventory.v1',
+                 'head': git('rev-parse', 'HEAD').decode().strip(),
+                 'branch': git('branch', '--show-current').decode().strip(),
+                 'subphaseBase': '4ac236fcb01825b73635fa4c762a35bed4b362cd',
+                 'wholePhaseBase': '099e303311be7a1b2e2cf5655e0c7ce9fa710474',
+                 'status': status, 'paths': paths, 'files': files,
+                 'recursiveSelfHashExcluded': inventory_rel}
+    inventory_path.write_text(json.dumps(inventory, indent=2) + '\n')
+    print(json.dumps({'paths': len(paths), 'hashedEntries': len(files),
+                      'inventory': digest(inventory_path), 'source': verify()}))
+
+if __name__ == '__main__':
+    mode = sys.argv[1]
+    if mode == 'freeze': freeze()
+    elif mode == 'verify': print(json.dumps(verify()))
+    elif mode == 'postgate': postgate(int(sys.argv[2]), int(sys.argv[3]))
+    elif mode == 'inventory': diffs_and_inventory()
+    else: raise ValueError(mode)

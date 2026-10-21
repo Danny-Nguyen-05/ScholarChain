@@ -1,0 +1,8 @@
+{
+  "owner": "entity-resolution-engineer /root/phase5c_er",
+  "requiredLine": "OpenAlex author IDs and OpenAlex-supplied ORCIDs are provider guesses, not proof of identity.",
+  "alreadyPresentAtTaskStart": true,
+  "noDuplicateAdded": true,
+  "sha256": "58825ed915ee4185747679579f1105159daaa1cffdf8b4d4cfe24cd87d03bf48",
+  "exportedGuideByteIdentical": true
+}

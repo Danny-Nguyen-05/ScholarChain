@@ -1,0 +1,44 @@
+B2: The topic-discovery query's sort order guaranteed irrelevant results
+
+Severity: High. Status: open; blocks the bounded-search checkpoint.
+
+Where: datasets/scripts/acquire_screened_demo.py:78-80. discovery_url() sends search=<topic> together with sort=publication_date:asc.
+
+Evidence:
+- The retained datasets/entity-resolution/5d-demo-2026-10-20-screened/responses/001-openalex.body and 002-openalex.body show OpenAlex reading the query as "with (…) in the full text, oldest first".
+- The two searches matched 323,411 and 467,092 works.
+- The first five results of each are unrelated 2018 repository records:
+  - "Neocosmicism: God and the Void"
+  - a New England groundwater-quality report
+  - "Spanish Orientalism: Washington Irving and the Romance of the Moors"
+  - "The Automotive Supply Chain: Global Trends and Asian Perspectives"
+- Sorting by date ascending throws away relevance ranking, so the CS venue filter rejecting all 10 records was close to inevitable.
+- datasets/scripts/test_screened_demo.py has no check of the discovery query's search or sort behavior, so the tests couldn't catch this.
+
+Impact:
+- The recorded result ("10 returned, all excluded by the CS venue filter, zero admissible, no author seeds") is real, but the query design caused it. It does not show that no eligible CS evidence exists.
+- These reports describe the result without saying why it happened:
+  - docs/agent-runs/phase-05/evidence/5d-followup-demo/outcome.json
+  - the 2026-10-20 follow-up section of datasets/entity-resolution/README.md
+  - docs/agent-runs/phase-05/owner-report.md:545-563
+- The one approved search was used up on off-topic results, with only 2 of 20 attempts and 10 of 30 records. That weakens the "blocked on naturally eligible evidence" conclusion for the $1 live demo.
+
+Required owners:
+- dataset-engineer:
+  - Fix discovery_url() by removing the date sort or using relevance ordering. Consider title_and_abstract.search instead of full-text search.
+  - Add an offline test that asserts the discovery URL's search and sort behavior.
+- coordinator: add an append-only root-cause note to the follow-up evidence, the dataset README section and the owner report.
+- human: decide whether to authorize a re-run of the corrected search. The recorded strategy forbids refill or re-run, so it needs a new explicit approval with stated limits.
+
+Acceptance checks:
+- [ ] The cause is disclosed in evidence/5d-followup-demo/, the dataset README and the owner report. Existing records are not rewritten.
+- [ ] The fix and its new test pass offline: python3 -m unittest discover -s datasets/scripts -p 'test_*.py'.
+- [ ] No new HTTP request is sent without a recorded user approval.
+- [ ] If a re-run happens, it gets a new separate stage manifest. Cumulative counters must not be reset, and canonical held-out exclusion must still run before any scoring.
+
+Next gate:
+1. Fix and test.
+2. Record your re-run decision.
+3. Refresh the source freeze.
+4. Run sbt -batch check, the Python tests and the 7 integrity validators.
+5. Run a fresh independent recheck. That recheck also confirms the B1 attribution record.

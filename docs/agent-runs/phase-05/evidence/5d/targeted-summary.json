@@ -1,0 +1,25 @@
+{
+  "schemaVersion": "scholarchain.phase5d.targeted-summary.v1",
+  "commandName": "fourth-targeted",
+  "exitCode": 0,
+  "owner": {
+    "tests": 3,
+    "failed": 0
+  },
+  "independent": {
+    "tests": 31,
+    "suites": 6,
+    "failed": 0
+  },
+  "totalPassed": 34,
+  "syntheticTransportOnly": true,
+  "credentialValuesRead": false,
+  "actualProviderCalls": 0,
+  "doesNotEstablish": [
+    "identity accuracy",
+    "calibration",
+    "human review",
+    "actual provider compatibility"
+  ],
+  "sourceFreezeFullGateStillPending": true
+}

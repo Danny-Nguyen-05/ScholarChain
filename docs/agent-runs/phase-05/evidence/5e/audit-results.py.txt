@@ -1,0 +1,73 @@
+"""Coordinator checks replay and independently recounts reported acceptance matrices."""
+import json, hashlib, math, subprocess, datetime, copy
+from pathlib import Path
+B=Path(__file__).resolve().parent; ROOT=Path.cwd()
+load=lambda p:json.loads(Path(p).read_text())
+canonical=lambda x:json.dumps(x,sort_keys=True,separators=(',',':'),ensure_ascii=False)
+sha=lambda p:hashlib.sha256(Path(p).read_bytes()).hexdigest()
+dump=lambda p,x:Path(p).write_text(json.dumps(x,indent=2,ensure_ascii=False)+'\n')
+qpath=Path('docs/agent-runs/phase-05/evidence/5c-repair/review-artifacts/queue.json')
+gpath=Path('datasets/entity-resolution/labels/2026-10-20-danny-ai-assisted-v1/validated-labels.json')
+q=load(qpath); gold=load(gpath); labels={x['pairId']:x['label'] for x in gold['current']}
+excluded=set(load(B/'exclude-assisted-pairs.json')['pairIds'])
+# Exact allowed invocation-only removals, never source observation provenance.
+def normalized(row,kind):
+    x=copy.deepcopy(row)
+    if kind=='decision':
+        x.pop('decisionId');x.pop('decidedAtUtc');x['decision'].pop('runId');x['decision']['provenance'].pop('runId')
+    elif kind=='link':
+        x.pop('decisionId');x.pop('runId');x['provenance'].pop('runId')
+    elif kind=='detail': x.pop('decisionId')
+    return x
+def logical(root,part):
+    if part.endswith('.jsonl'):
+        kind='decision' if part.split('/')[0] in ['work','researcher'] and part.split('/')[-1] in ['accepted.jsonl','rejected.jsonl','unresolved.jsonl','conflict.jsonl'] else 'link' if part.endswith('accepted-links.jsonl') else 'detail' if part=='audit-details.jsonl' else 'none'
+        rows=[canonical(normalized(json.loads(line),kind)) for line in (root/part).read_text().splitlines()]
+        return hashlib.sha256(('\n'.join(sorted(rows))+'\n').encode()).hexdigest(),len(rows)
+    return hashlib.sha256(canonical(load(root/part)).encode()).hexdigest(),None
+ma=load(B/'disabled-a-resolution-manifest.json');mb=load(B/'disabled-b-resolution-manifest.json')
+assert ma['runId']!=mb['runId'] and ma['inputEvidenceHash']==mb['inputEvidenceHash']
+assert {x['path'] for x in ma['files']}=={x['path'] for x in mb['files']}
+parts=[]
+for part in ma['files']:
+    name=part['path'];a=logical(ROOT/'target/phase5e/disabled-a',name);b=logical(ROOT/'target/phase5e/disabled-b',name)
+    assert a==b, name
+    parts.append({'path':name,'logicalSha256':a[0],'records':a[1]})
+assert (B/'disabled-a-predictions.json').read_bytes()==(B/'disabled-b-predictions.json').read_bytes()
+dump(B/'replay-proof.json',{'valid':True,'runs':[ma['runId'],mb['runId']],'comparedParts':parts,'queuedPredictionsByteIdentical':True,'normalization':'Only top-level decisionId/decidedAtUtc, decision.runId and decision.provenance.runId; accepted-link decisionId/runId/provenance.runId; audit-detail decisionId. JSON key/record ordering normalized. Source observation/snapshot/provenance, scores, features, outcomes, constraints and evidence are unchanged.','predictionsSha256':sha(B/'disabled-a-predictions.json')})
+audits=[]
+for mode in ['disabled-a','fake-a']:
+    predictions=load(B/(mode+'-predictions.json'));pred={x['pairId']:x for x in predictions['rows']}
+    assert len(pred)==300 and all(t['pair']['pairId'] in pred for t in q['tasks'])
+    for part in ['development','held-out']:
+        for omit in [False,True]:
+            name=mode+'-'+part+('-without-assisted' if omit else '')
+            report=load(B/name/'evaluation.json')
+            tasks=[t for t in q['tasks'] if t['role']=='initial' and t['partition']==part and (not omit or t['pair']['pairId'] not in excluded)]
+            def check(ts,m):
+                binary=[t for t in ts if labels[t['pair']['pairId']] in ['same','different']]
+                counts={k:0 for k in ['tp','fp','fn','tn']}
+                for t in binary:
+                    ident=t['pair']['pairId'];pos=pred[ident]['outcome']=='ACCEPTED';same=labels[ident]=='same'
+                    counts['tp' if same and pos else 'fn' if same else 'fp' if pos else 'tn']+=1
+                assert m['tasks']==len(ts) and m['binaryGold']==len(binary)
+                assert all(m[k]==v for k,v in counts.items())
+                assert m['missingPredictions']==0 and m['invalidPredictions']==0
+                tp,fp,fn=counts['tp'],counts['fp'],counts['fn']
+                for key,num,den in [('precision',tp,tp+fp),('recall',tp,tp+fn),('f1',2*tp,2*tp+fp+fn)]:
+                    actual=m[key];expected=num/den if den else None
+                    assert actual is None if expected is None else actual is not None and math.isclose(actual,expected,abs_tol=1e-12)
+                for label,row in m['fourOutcomeTable'].items():
+                    for outcome,n in row.items():assert n==sum(labels[t['pair']['pairId']]==label and pred[t['pair']['pairId']]['outcome']==outcome for t in ts)
+                return counts
+            counts=check(tasks,report['overall'])
+            for entity,m in report['byEntity'].items():check([t for t in tasks if t['pair']['entityType']==entity],m)
+            for path,m in report['byPath'].items():check([t for t in tasks if pred[t['pair']['pairId']]['path']==path],m)
+            assert report['labelHash']==load(B/'exclude-assisted-pairs.json')['labelHash']
+            audits.append({'report':name,'tasks':len(tasks),'binaryGold':report['overall']['binaryGold'],'independentlyRecounted':counts,'valid':True})
+start=load(B/'start.json');changed=[x['path'] for x in start['protectedFiles'] if sha(x['path'])!=x['sha256']]
+assert not changed,changed
+assert not Path('docs/agent-runs/phase-05/evidence/5d/live-state').exists()
+assert not Path('docs/agent-runs/phase-05/reviewer-prompt.txt').exists()
+dump(B/'protected-and-metrics-proof.json',{'valid':True,'independentRecounts':audits,'protectedFilesUnchanged':len(start['protectedFiles']),'labelFilesUnchanged':sum('/labels/' in x['path'] for x in start['protectedFiles']),'queueSha256':sha(qpath),'labelsSha256':sha(gpath),'liveStateExists':False,'interpretation':'Binary acceptance metrics only; AI-assisted human labels, convenience sample, no real-provider evidence, no held-out tuning.'})
+print(json.dumps({'valid':True,'replayParts':len(parts),'reportsAudited':len(audits),'protectedFiles':len(start['protectedFiles'])}))

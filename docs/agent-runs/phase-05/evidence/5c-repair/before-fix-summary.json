@@ -1,0 +1,12 @@
+{
+  "exitCode": 1,
+  "tests": 2,
+  "failures": 2,
+  "errors": 0,
+  "productionWasUnchangedReviewed5C": true,
+  "logSha256": "47eaef91146423ee575d96110a247ac5036b7bdb90ca3c94a9754231c034750c",
+  "reproduced": [
+    "queue identity changes with mutable run settings",
+    "P1 evaluation rejects P0 labels"
+  ]
+}

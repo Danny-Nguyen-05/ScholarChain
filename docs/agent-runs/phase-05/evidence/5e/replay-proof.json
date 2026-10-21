@@ -1,0 +1,97 @@
+{
+  "valid": true,
+  "runs": [
+    "run:b8b6b463-ebe1-4727-b986-9f673ed557e3",
+    "run:a0ac0536-33cc-4484-b14b-687b6d2114cf"
+  ],
+  "comparedParts": [
+    {
+      "path": "audit-details.jsonl",
+      "logicalSha256": "f1981d9c56ef668874c3205860436c421c62643135f5f946df4f579b7854de0c",
+      "records": 11412
+    },
+    {
+      "path": "diagnostics.jsonl",
+      "logicalSha256": "535103aab6595a82aec476e9f0c6e2bcb7fd2f50ea80be7a53fed47ed3600d60",
+      "records": 7
+    },
+    {
+      "path": "effective-config.json",
+      "logicalSha256": "b31c3a77e2815f486b4da76c33d0283d91dba553af91178832ca6d7a0c87f37d",
+      "records": null
+    },
+    {
+      "path": "effective-policy.json",
+      "logicalSha256": "ad8c520fd8ff2e3697e15b2895852ca23e04c8d93f677acea3b366fcc101ef9f",
+      "records": null
+    },
+    {
+      "path": "evidence.jsonl",
+      "logicalSha256": "bd7f486ab03d1671b606a04a11a40da9e9442a13829c80c0f403e450cbe692ba",
+      "records": 58903
+    },
+    {
+      "path": "researcher/accepted-links.jsonl",
+      "logicalSha256": "64fbd5d081ed73b3f05a57dd64191f66ed95d7270140ffec60fd4cd6ddcbf1c2",
+      "records": 1387
+    },
+    {
+      "path": "researcher/accepted.jsonl",
+      "logicalSha256": "9d8b956b69a67f26a7f5bb80c11ca46c6d96a34248c7448c270d3128da33e1c9",
+      "records": 1387
+    },
+    {
+      "path": "researcher/conflict.jsonl",
+      "logicalSha256": "6ddcb29fa3e8eba7e7b39105e101e94d2a8c51b3e61a9aa3b3ce3f3d6794cda2",
+      "records": 1800
+    },
+    {
+      "path": "researcher/grouping-constraints.json",
+      "logicalSha256": "a7553853798d2660b6b521702f7efefaa2cf9245fbc4ae27c0b7f338632f4b87",
+      "records": null
+    },
+    {
+      "path": "researcher/rejected.jsonl",
+      "logicalSha256": "7776ae13762aaf7b30cc07f62b98b987e2b8a706874f3095807d244a8d00c65c",
+      "records": 30
+    },
+    {
+      "path": "researcher/unresolved.jsonl",
+      "logicalSha256": "e5d6ebc61fe0dabacfd3876d947a5f6e18329692fd083b390450db24ca6eb4b0",
+      "records": 757
+    },
+    {
+      "path": "work/accepted-links.jsonl",
+      "logicalSha256": "12698a8c0f70d0cba03a8bb36a45dcad2706d41711b93d74e9b12d53ea96811d",
+      "records": 27
+    },
+    {
+      "path": "work/accepted.jsonl",
+      "logicalSha256": "29aedf66ea42fa73114d0448aad7efd35403ee3a16c92ce4b678cb674d2c75fe",
+      "records": 27
+    },
+    {
+      "path": "work/conflict.jsonl",
+      "logicalSha256": "979a2613e82fb152835d4e5460e4543bca8181ba9385c94c3508526bc46c3621",
+      "records": 6724
+    },
+    {
+      "path": "work/grouping-constraints.json",
+      "logicalSha256": "b049027ec24e4f6f78d0467532413be1ec2c36cd43ae82affd6b116e71c7c6e9",
+      "records": null
+    },
+    {
+      "path": "work/rejected.jsonl",
+      "logicalSha256": "5eae94b62554ace68ca461bb0e2f8f09ba9e1b033fda3362e2136c9183fc7a2f",
+      "records": 651
+    },
+    {
+      "path": "work/unresolved.jsonl",
+      "logicalSha256": "6338d83200cf1b58a98e38f1d813275dd2bdddf02fa0d2fb61b3e357811bf060",
+      "records": 36
+    }
+  ],
+  "queuedPredictionsByteIdentical": true,
+  "normalization": "Only top-level decisionId/decidedAtUtc, decision.runId and decision.provenance.runId; accepted-link decisionId/runId/provenance.runId; audit-detail decisionId. JSON key/record ordering normalized. Source observation/snapshot/provenance, scores, features, outcomes, constraints and evidence are unchanged.",
+  "predictionsSha256": "5f95cd8211cbfb5d3430f8eb19f80d7840381f30652648a6275f7ef112505cdf"
+}

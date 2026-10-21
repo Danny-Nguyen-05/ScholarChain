@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "scholarchain.resolution.v1",
+  "pair": {
+    "schemaVersion": "scholarchain.resolution.v1",
+    "pairId": "resolution-pair:1b7b4ccf905e261f162fd9167241ae2acb6c6379821f225322dea43c82b1fff6",
+    "entityType": "Work",
+    "left": {
+      "$type": "Work",
+      "observation": {
+        "source": "CROSSREF",
+        "sourceRecordId": "10.1007/978-3-642-31674-6_1",
+        "datasetSnapshot": "unknown"
+      },
+      "workId": "work:doi:10.1007/978-3-642-31674-6_1"
+    },
+    "right": {
+      "$type": "Work",
+      "observation": {
+        "source": "DBLP",
+        "sourceRecordId": "series/sapere/BerkeleyR13",
+        "datasetSnapshot": "dblp-2026-10-03"
+      },
+      "workId": "work:doi:10.1007/978-3-642-31674-6_1"
+    }
+  },
+  "decisionId": "resolution-decision:97e2d8457d8fecc5850d013acbdfe6c4501ad6fa970f2d45d33ed59b51c97b65",
+  "policyVersion": "synthetic-contract-v1",
+  "policyHash": "ea9d777c44aef42aa906bf610bccf1734f6ce5fa7f3a05c43cad7ebaaaba6b49",
+  "runId": "run:00112233-4455-4677-8899-aabbccddeeff",
+  "provenance": {
+    "schemaVersion": "scholarchain.domain.v1",
+    "source": "SCHOLARCHAIN",
+    "sourceRecordId": "resolution-pair:1b7b4ccf905e261f162fd9167241ae2acb6c6379821f225322dea43c82b1fff6",
+    "sourceUri": null,
+    "datasetSnapshot": "synthetic-contract-2026-10-15",
+    "retrievalDate": "2026-10-05",
+    "licenseEvidenceUri": "https://dblp.org/faq/Under+what+license+is+the+data+from+dblp+released",
+    "runId": "run:00112233-4455-4677-8899-aabbccddeeff",
+    "uncertaintyNotes": [
+      "Synthetic contract example; not a model result or human annotation."
+    ]
+  }
+}

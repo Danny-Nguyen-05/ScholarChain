@@ -1,0 +1,14 @@
+{
+  "configSchemaVersion": "scholarchain.hadoop-prep.v1",
+  "maxRecordBytes": 1048576,
+  "maxXmlEntityExpansion": 1048576,
+  "reducerCount": 1,
+  "maxCandidateBlockSize": 32,
+  "maxCandidatePairsPerBlock": 128,
+  "maxAuthorTeamSize": 16,
+  "maxLocalSampleRecords": 44,
+  "outputRoot": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase5d-seed-prep-runs",
+  "compressionCodec": "none",
+  "intermediateCompressionEnabled": false,
+  "executionMode": "local"
+}

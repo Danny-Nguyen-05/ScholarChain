@@ -1,0 +1,46 @@
+[
+  {
+    "name": "v3-validation",
+    "command": [
+      "python3",
+      "datasets/scripts/validate_resolution_population.py",
+      "datasets/entity-resolution/5c-2026-10-16-v3"
+    ],
+    "startedMs": 1792198417771,
+    "finishedMs": 1792198417973,
+    "exitCode": 0,
+    "log": "docs/agent-runs/phase-05/evidence/5c-lean/v3-validation.txt"
+  },
+  {
+    "name": "prepared-validation",
+    "command": [
+      "python3",
+      "datasets/scripts/retain_prepared_population.py",
+      "validate",
+      "--population",
+      "datasets/entity-resolution/prepared/bd424a86-0a1b-4e44-bbdb-4a9b8c8a20e3"
+    ],
+    "startedMs": 1792198417974,
+    "finishedMs": 1792198418051,
+    "exitCode": 0,
+    "log": "docs/agent-runs/phase-05/evidence/5c-lean/prepared-validation.txt"
+  },
+  {
+    "name": "python-datasets",
+    "command": [
+      "python3",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "datasets/scripts",
+      "-p",
+      "test_*.py",
+      "-v"
+    ],
+    "startedMs": 1792198418051,
+    "finishedMs": 1792198418495,
+    "exitCode": 0,
+    "log": "docs/agent-runs/phase-05/evidence/5c-lean/python-datasets.txt"
+  }
+]

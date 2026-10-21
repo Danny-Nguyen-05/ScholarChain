@@ -1,0 +1,13 @@
+# Approved lean archive packaging
+
+The user explicitly approved external archival/removal of v1/v2 duplicate payloads and the obsolete pre-repair queue/split before commit. This is 5C packaging only. No application logic, source data bytes, labels, commit, push or 5D work is authorized.
+
+Dependency checks ran before deletion. The v3 validator and Python tests read the complete v3 population; source data and manifests there are unchanged. Scala tests and the evaluator CLI use generated synthetic fixtures or the durable prepared input and repaired queue. The ER owner confirmed no runtime dependency on the old payloads. The original v1/v2 population manifests remain byte-identical provenance parents. Active documentation points at current repaired paths. Historical reports/decisions/handoffs are not rewritten; their obsolete paths are identified as archived by this new note and sibling manifests.
+
+One packaging dependency was found: exact reconstruction of historical giant diffs needs the old source bytes. Four compact diff manifests now contain archiveSources, and the evidence-only regeneration utility resolves those external archive bytes under the original hash checks. Small historical README versions are retained as compressed evidence blobs so current documentation changes cannot silently alter historical patches. All four original diff SHA-256/byte counts were recreated exactly from the archive copies before dataset deletion. This changes packaging reconstruction only, not application/dataset/test source logic. Archive availability is now required only to regenerate historical patches or inspect removed historical payloads.
+
+Datasets are archived under the root in dataset-archive-proof.json; both archived populations include every original file. The old queue/split external archive and checks are in old-queue-archive-proof.json. Every archived file was copied and independently hash-verified before removal. In-repo sibling archive manifests list the original paths, file inventories, byte counts, SHA-256, archive locations, and removal reason. Both original population manifests remain in the repository.
+
+The current human-handoff.json points to the repaired queue and prepared input. Use it rather than earlier historical handoff records. No annotations were created or changed. Required v3, prepared input and repaired queue/split/generation-binding are retained.
+
+The widened .gitattributes rules disable text conversion for all dataset population and review-artifact bytes. Final validation evidence and one fresh sbt check are recorded here. Historical evidence continues to describe its original state.

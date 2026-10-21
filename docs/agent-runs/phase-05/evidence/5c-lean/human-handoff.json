@@ -1,0 +1,24 @@
+{
+  "status": "EXTERNALLY_APPROVED_5C_LEAN_PACKAGING_ONLY_5D_NOT_STARTED",
+  "tool": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase5c-repair-review-tool/index.html",
+  "guide": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase5c-repair-review-tool/guide.txt",
+  "queue": "/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-05/evidence/5c-repair/review-artifacts/queue.json",
+  "split": "/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-05/evidence/5c-repair/review-artifacts/split.json",
+  "generationAudit": "/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-05/evidence/5c-repair/review-artifacts/generation-binding.json",
+  "durableCompletedInput": "/Users/danny/Documents/UIC/CS441/ScholarChain/datasets/entity-resolution/prepared/bd424a86-0a1b-4e44-bbdb-4a9b8c8a20e3",
+  "queueHash": "05c5817f62a70d378829be361b9c9169fc9af18448f7c83c245f1d65bbca6175",
+  "oldQueueIsHistorical": "docs/agent-runs/phase-05/evidence/5c/review-artifacts/queue.json",
+  "initialReviewsRemaining": 240,
+  "reservesSeparate": 60,
+  "humanReviewsCompleted": 0,
+  "stepsAfterExternalRecheckAndHumanAuthorization": [
+    "Use the repaired tool and queue paths above. The earlier 5C queue remains historical and must not be used for new labeling.",
+    "Enter your own reviewer ID; Same / Different / Uncertain annotations remain blind.",
+    "Save original checkpoints outside target and keep a backup. Use the same frozen queue to resume.",
+    "Future prediction preparation uses the durable completed input, the immutable queue, and an explicit actual P1 run-binding JSON."
+  ],
+  "boundary": "Do not begin labeling or 5D before external repair recheck and explicit user advancement. No human labels or provider calls have occurred.",
+  "historicalArchiveNote": "Old evidence/5c/review-artifacts queue/split archived with sibling manifests; use the repaired paths in this handoff. Earlier handoff records remain historical.",
+  "oldQueueArchiveManifest": "docs/agent-runs/phase-05/evidence/5c/review-artifacts/queue.json.archive-manifest.json",
+  "oldSplitArchiveManifest": "docs/agent-runs/phase-05/evidence/5c/review-artifacts/split.json.archive-manifest.json"
+}

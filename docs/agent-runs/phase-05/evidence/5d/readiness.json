@@ -1,0 +1,60 @@
+{
+  "schemaVersion": "scholarchain.phase5d.readiness.v1",
+  "status": "BLOCKED_ON_EXTERNAL_PREREQUISITES",
+  "implementation": "offline adapter and isolated development/demo CLI implemented",
+  "sourceFreeze": "docs/agent-runs/phase-05/source-freeze.json",
+  "knownActualHumanReviews": 0,
+  "requiredInitialHumanReviews": 240,
+  "developmentReviews": 40,
+  "heldOutReviews": 200,
+  "reservesNotCountedAsInitial": 60,
+  "existingDevelopment": {
+    "selectedTasks": 50,
+    "allDevelopmentGroupPairs": 62,
+    "eligiblePairs": 0
+  },
+  "seedOnly": {
+    "reusedCrossref": 14,
+    "candidatePairs": 79,
+    "admittedPairs": 79,
+    "excludedPairs": 0,
+    "eligiblePairs": 0
+  },
+  "supplement": {
+    "newOpenAlexObservedIncludingExcluded": 20,
+    "newOpenAlexIngested": 12,
+    "httpAttempts": 7,
+    "responseBytes": 171680,
+    "seconds": 6.6141,
+    "candidatePairs": 93,
+    "admittedPairs": 23,
+    "excludedPairs": 70,
+    "eligiblePairs": 0,
+    "durableInput": "datasets/entity-resolution/prepared/68c2b012-6d04-4eef-a7bf-5ca31706d895"
+  },
+  "heldOutPairsScored": 0,
+  "actualModelAttempts": 0,
+  "actualModelSpendUsd": "0.00",
+  "runtimeCredentialsChecked": false,
+  "credentialReason": "No naturally eligible pair, so credential lookup and dispatch were never initialized.",
+  "policyChangedForEligibility": false,
+  "reviewPopulationChanged": false,
+  "nextExternalPrerequisites": [
+    "Naturally eligible non-held-out real evidence under the frozen policy; any expanded acquisition requires a separately concrete approved scope",
+    "Actual user-exported human annotation checkpoints"
+  ],
+  "fullGate": {
+    "exitCode": 0,
+    "testsPassed": 424,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "freshJUnitReports": 53,
+    "frozenFilesUnchanged": 556,
+    "summary": "docs/agent-runs/phase-05/evidence/5d/full-check-summary.json"
+  },
+  "no5EAuthorization": true,
+  "noReviewerLaunched": true,
+  "noCommitOrPush": true,
+  "userConfirmedHumanReviewsNotYetSaved": true
+}

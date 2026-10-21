@@ -1,0 +1,60 @@
+{
+  "scope": "Limited Phase5E deterministic/fake evaluation ready for user-launched review; real-provider requirement open.",
+  "head": "61d32a38eaad5b2fc352acf0b7f85f3815c2336d",
+  "wholePhaseBase": "099e303311be7a1b2e2cf5655e0c7ce9fa710474",
+  "sourceFiles": 900,
+  "keyArtifacts": [
+    {
+      "path": "docs/agent-runs/phase-05/source-freeze.json",
+      "bytes": 216288,
+      "sha256": "52f24a88d8b4d3d802e8e53403428ad6d5e889afc7309ccd55a7f4f2fc91376f"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5e/evaluation-manifest.json",
+      "bytes": 12887,
+      "sha256": "eb746edb5a6e3152f77659ab6bc294d3cc1949fe17ca8629a9d39346e0916f81"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5e/full-check-summary.json",
+      "bytes": 20823,
+      "sha256": "6a25078c938c1367b7a09975a331a137a41a9502fe44984ab040ee06a4972116"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5e/protected-and-metrics-proof.json",
+      "bytes": 2351,
+      "sha256": "380c2b615404c4e5b482f230a9297a2972b129d8f2cc976dc24e7870af2ba526"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5e/replay-proof.json",
+      "bytes": 3448,
+      "sha256": "45f5ec67dbe0f7795a8320518a63dfe332c378ee58b93a812f1eedb86faa5f46"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5e/evaluation-report.md",
+      "bytes": 5182,
+      "sha256": "e9471b40dc7f00436cc68c4ed18a5f009064f739563408dea2628daf2a13b0e5"
+    }
+  ],
+  "tests": {
+    "sbt": 441,
+    "python": 84,
+    "integrityValidators": 12,
+    "failures": 0
+  },
+  "primaryHeldOut": {
+    "binaryLabels": 194,
+    "uncertain": 6,
+    "tp": 57,
+    "fp": 0,
+    "fn": 15,
+    "tn": 122
+  },
+  "reviewInventory": "docs/agent-runs/phase-05/review-inventory.json",
+  "reviewerPromptFileCreated": false,
+  "externalReviewerLaunched": false,
+  "liveAttempts": 0,
+  "spendUsd": "0.00",
+  "phase6Started": false,
+  "commitOrPush": false,
+  "nextGate": "User launches fresh independent read-only comprehensive review and returns full verdict. OverallPhase5acceptance remains open."
+}

@@ -1,0 +1,37 @@
+{
+  "schema": "scholarchain.phase5c.owner-handoffs.v1",
+  "capturedAtUtc": "2026-10-16T21:27:18.725158+00:00",
+  "baselineHead": "c8342d25ba04dede26af10bedc5a76691824d1ca",
+  "owners": [
+    {
+      "nativeId": "/root/phase5c_dataset",
+      "writes": [
+        "datasets/**"
+      ],
+      "status": "stopped",
+      "summary": "Bounded acquisition and CS filter complete; 18 Python tests and 132 final population hashes validated; 464 source records, 127 conservative attempts and 12,733,448 bytes; no label claim."
+    },
+    {
+      "nativeId": "/root/phase5c_er",
+      "writes": [
+        "modules/entity-resolution/**"
+      ],
+      "status": "stopped",
+      "summary": "Review queue/split, import, evaluator, offline browser page and CLI complete; 25 module tests observed passing; no 5B nonblocking fixes."
+    },
+    {
+      "nativeId": "/root/phase5c_test",
+      "writes": [
+        "tests/**"
+      ],
+      "status": "stopped",
+      "summary": "21 independent tests observed passing; synthetic native Edge save/refresh/resume and safe rendering verified; accidental local path submission disclosed in receipt."
+    }
+  ],
+  "coordinator": "/root owns docs/agent-runs/phase-05/** evidence and serialized gates",
+  "modelProvenance": "Agents inherit parent model/settings; no requested model override executed or claimed. Usage-limit interruption was reported; user authorized resumption via keep going.",
+  "reviewerLaunched": false,
+  "realHumanLabels": 0,
+  "liveModelCalls": 0,
+  "laterSubphaseStarted": false
+}

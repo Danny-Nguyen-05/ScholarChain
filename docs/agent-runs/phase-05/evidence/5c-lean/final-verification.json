@@ -1,0 +1,22 @@
+{
+  "allVerified": true,
+  "archivedFilesVerified": 181,
+  "retainedPopulationAndPreparedFilesUnchanged": 201,
+  "pinnedActiveManifestsAndQueueUnchanged": 5,
+  "sourceFreeze": {
+    "valid": true,
+    "checkedFiles": 412,
+    "changed": [],
+    "added": [],
+    "missing": []
+  },
+  "sbtInvocationsThisTask": 1,
+  "testTotals": {
+    "tests": 390,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "noCommitOrPush": true,
+  "phase5DStarted": false
+}

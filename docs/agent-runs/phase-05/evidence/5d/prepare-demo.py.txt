@@ -1,0 +1,13 @@
+"""Run the unchanged Hadoop pipeline over the separately manifested demo inputs."""
+from pathlib import Path
+import json,subprocess,sys
+R=Path.cwd();E=R/'docs/agent-runs/phase-05/evidence/5d'
+root=Path(sys.argv[1]).resolve();name=sys.argv[2];cfg=Path(sys.argv[3]).resolve()
+m=json.loads((root/'population-manifest.v1.json').read_text())
+old=json.loads((R/'docs/agent-runs/phase-05/evidence/5c/commands.json').read_text())
+reference=next(v['command'] for v in old if v['name']=='hadoop-expanded');cp=reference[reference.index('-cp')+1]
+assert all(Path(p).exists() for p in cp.split(':'))
+cmd=[reference[0],reference[1],'-cp',cp,'edu.uic.cs441.scholarchain.hadoop.HadoopPrepMain','--once','--config',str(cfg)]
+for source,meta in m['sources'].items():
+ cmd.extend(['--'+source,str(root/meta['path']),'--'+source+'-snapshot',meta['snapshotId'],'--'+source+'-retrieval',meta['retrievalDate']])
+sys.exit(subprocess.run(['python3',str(E/'run-command.py.txt'),name,*cmd]).returncode)

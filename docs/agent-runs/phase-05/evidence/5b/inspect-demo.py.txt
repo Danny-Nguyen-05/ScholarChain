@@ -1,0 +1,89 @@
+"""Read retained demo outputs, verify hashes, and compare explicitly named processing fields."""
+from pathlib import Path
+import copy
+import hashlib
+import json
+import shutil
+
+ROOT = Path.cwd()
+EVIDENCE = ROOT / 'docs/agent-runs/phase-05/evidence/5b'
+NAMES = ['5b-disabled-demo', '5b-disabled-replay', '5b-fake-demo']
+
+def sha(data): return hashlib.sha256(data).hexdigest()
+def rows(path): return [json.loads(line) for line in path.read_text().splitlines()]
+
+def normalized_decision(row):
+    value = copy.deepcopy(row)
+    del value['decisionId']
+    del value['decidedAtUtc']
+    del value['decision']['runId']
+    del value['decision']['provenance']['runId']
+    return value
+
+def normalized_link(row):
+    value = copy.deepcopy(row)
+    del value['decisionId']
+    del value['runId']
+    del value['provenance']['runId']
+    return value
+
+summaries = []
+for name in NAMES:
+    root = ROOT / 'target/phase5' / name
+    manifest_bytes = (root / 'resolution-manifest.json').read_bytes()
+    manifest = json.loads(manifest_bytes)
+    assert (root / '_SCHOLARCHAIN_RESOLUTION_COMPLETE').read_text() == sha(manifest_bytes) + '\n'
+    expected = {f['path'] for f in manifest['files']} | {'resolution-manifest.json', '_SCHOLARCHAIN_RESOLUTION_COMPLETE'}
+    actual = {str(p.relative_to(root)) for p in root.rglob('*') if p.is_file()}
+    assert actual == expected
+    for f in manifest['files']:
+        data = (root / f['path']).read_bytes()
+        assert len(data) == f['bytes'] and sha(data) == f['sha256']
+    for c in manifest['constraints']:
+        assert sha((root / c['path']).read_bytes()) == c['sha256']
+    summaries.append({'name': name, 'runId': manifest['runId'],
+                      'mode': manifest['llmMode'], 'fakeCalls': manifest['fakeCalls'],
+                      'liveCalls': manifest['liveCalls'], 'outcomeCounts': manifest['outcomeCounts'],
+                      'inputEvidenceHash': manifest['inputEvidenceHash'],
+                      'manifestSha256': sha(manifest_bytes), 'verifiedFiles': len(actual),
+                      'constraintBindings': manifest['constraints'],
+                      'diagnostics': rows(root / 'diagnostics.jsonl')})
+    destination = EVIDENCE / 'demo-outputs' / name
+    assert not destination.exists(), 'never overwrite retained demo evidence'
+    shutil.copytree(root, destination)
+
+left, right = [ROOT / 'target/phase5' / n for n in NAMES[:2]]
+checks = []
+for entity in ['work', 'researcher']:
+    for outcome in ['accepted', 'rejected', 'unresolved', 'conflict']:
+        path = entity + '/' + outcome + '.jsonl'
+        assert [normalized_decision(r) for r in rows(left / path)] == [normalized_decision(r) for r in rows(right / path)]
+        checks.append(path)
+    path = entity + '/accepted-links.jsonl'
+    assert [normalized_link(r) for r in rows(left / path)] == [normalized_link(r) for r in rows(right / path)]
+    checks.append(path)
+    path = entity + '/grouping-constraints.json'
+    assert (left / path).read_bytes() == (right / path).read_bytes()
+    checks.append(path)
+for path in ['evidence.jsonl', 'diagnostics.jsonl', 'effective-policy.json', 'effective-config.json']:
+    assert (left / path).read_bytes() == (right / path).read_bytes()
+    checks.append(path)
+details = []
+for root in [left, right]:
+    values = rows(root / 'audit-details.jsonl')
+    for row in values: del row['decisionId']
+    details.append(values)
+assert details[0] == details[1]
+checks.append('audit-details.jsonl')
+result = {'valid': True, 'runs': summaries, 'disabledLogicalReplay': True,
+          'comparedOutputFiles': checks,
+          'excludedProcessingFields': ['ResolutionDecision.decisionId', 'ResolutionDecision.decidedAtUtc',
+                                       'MatchDecision.runId', 'MatchDecision.provenance.runId',
+                                       'ResolutionAcceptedLink.decisionId', 'ResolutionAcceptedLink.runId',
+                                       'ResolutionAcceptedLink.provenance.runId', 'DecisionDetail.decisionId'],
+          'limitations': ['No source strings, snapshots, candidate IDs, features, outcomes, reasons or source evidence were normalized.',
+                          'Run manifest IDs/timestamps and hashes of processing-dependent files differ legitimately.',
+                          'No pair was eligible for a fake call; fake invocation/cache paths are established by synthetic tests only.',
+                          'Mechanical decisions are not human labels or measured identity accuracy.']}
+(EVIDENCE / 'real-input-summary.json').write_text(json.dumps(result, indent=2) + '\n')
+print(json.dumps({'valid': True, 'disabledLogicalReplay': True, 'runs': summaries}))

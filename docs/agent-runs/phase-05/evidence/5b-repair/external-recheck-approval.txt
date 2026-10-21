@@ -1,0 +1,156 @@
+User-supplied external recheck verdict, received 2026-10-16.
+The coordinator records this supplied verdict; no reviewer was invoked by the coordinator.
+
+STATUS: COMPLETE (read-only recheck). VERDICT for implemented 5B B1/B2 repair scope: APPROVE
+  (B1 and B2 closed against their stated acceptance checks; no new blocker. Nonblocking findings below.)
+  APPROVE does not authorize 5C. The user must explicitly authorize it.
+OWNER: Independent read-only code reviewer (user-launched Claude Code session, model Opus 5.5; same reviewer
+  as the initial 5B review). Not manager-invoked.
+WORK ORDER: Phase 5 Subphase 5B B1/B2 repair recheck per docs/agent-runs/phase-05/reviewer-prompt.txt;
+  HEAD 4ac236fcb01825b73635fa4c762a35bed4b362cd, branch phase-5.
+FILES CREATED (repository): None. Reviewer scratch only (outside repo, disposable):
+  /private/tmp/claude-501/-Users-danny-Documents-UIC-CS441-ScholarChain/213e21c8-3262-4629-9108-2066f0e89607/scratchpad/old5b
+FILES MODIFIED: None.
+COMMANDS RUN (read-only toward the repo; no sbt, tests, probes, installs or network):
+  git rev-parse HEAD; git diff --numstat HEAD; git status --short --ignored; git check-ignore
+  shasum -a 256 on the 6 key evidence files
+  python3 -I: recompute all 174 source-freeze.json hashes; compare history/5b-initial-review copies; summarize
+    full-check-summary, before-fix-summary, feature-repair-proof, hadoop-bridge-input-proof, real-input-summary
+  git archive HEAD modules tests | tar -x into scratch; git apply history/5b-initial-review/5b-implementation.diff
+    in scratch. Result: 135/135 reconstructed module/test files match the reviewed freeze (3cabd001…) exactly.
+    Then diff -u reviewed vs current for every changed source, resource and test file.
+  cat/sed/grep over the new and changed sources and tests, core StableIds/DomainValidation parsers,
+    Hadoop DblpExtract DOI/arXiv derivation, READMEs and phase reports.
+TEST RESULTS: Not run by reviewer (prohibited). Retained evidence inspected:
+  - before-fix-summary.json: exit 1, 5/5 tests FAILED on unchanged reviewed production (B1 bridge, B1 grounding,
+    B2 venue Some(0), B2 affiliation Some(0), B2 score 0.9).
+  - full-check-summary.json: exit 0, 356 tests (129+64+19+140+4 = 356), 0 failures/errors/skips,
+    39 fresh reports; full-check.txt ends "[success] Total time: 409 s ... 3:29:06 PM".
+  - real-input-summary.json: 3 runs (2 disabled + 1 fake), 18 comparisons each, outcome counts unchanged
+    (Work 6A/3C, Researcher 3A/6U), 0 fake / 0 live calls, same input hash 052d67d2…, disabledLogicalReplay=true
+    with exclusions limited to run/decision IDs and timestamps.
+  - Tests do not establish accuracy, calibration, blocking recall, human review or live-model behavior.
+VALIDATION RESULTS (reviewer re-verified):
+  - The 6 key SHA-256 values match. All 174 freeze entries match the current tree (0 changed/missing).
+  - history/5b-initial-review copies match the hashes from the initially reviewed handoff
+    (source-freeze 3cabd001…, implementation.diff 62dd95ec…, 5b-implementation.diff 5ea82b0a…);
+    phase reports are append-only (0 deleted lines). The user-supplied verdict is preserved in
+    evidence/5b-repair/external-review.txt and review.md, including its stated reading limitations.
+  - Repair delta matches the claim: 4 added (PathIsolation.scala, ComparableEvidenceSpec,
+    IndependentResolutionPrepBridgeRepairSpec, IndependentResolutionRepairSpec) plus modified core/ER/test files.
+    No Hadoop production, dataset, build, StableIds formula, schema, constitutional or human-gate change.
+    Ownership holds (core: domain; ER: ER; tests/**: test; evidence: coordinator).
+  - Untracked empty directory trees (modules/*/modules, modules/*/project, modules/*/tests, tests/tests,
+    tests/modules) are dated Oct 4–6, contain no files and predate 5B. Out of scope; noted only so they
+    are not mistaken for repair output.
+
+B1 ASSESSMENT: CLOSED for the stated acceptance check.
+  - ResolutionValidationContext.scala:168-210. Links matching (?i)^https?://(dx\.)?doi\.org/ go through
+    StableIds.normalizeDoi on the whole literal string, the same semantics as Hadoop
+    DblpExtract.normalizeDoiLink (DblpExtract.scala:725-726, 987-997). Percent, '?', '#' and SICI '<>' suffixes
+    ground to the exact canonical value Phase 4 stores in WorkRecord.doi; no decoding or stripping.
+  - A single parser feeds both groundedAuthority and the new groundedElectronicPublicationFacts (:19-39), so
+    constraints, conflicts and the audit catalog agree. Distinct literal suffixes stay distinct hard facts
+    (core test "literal DOI resolver differences cannot be erased…" checks a complete bundle and that the
+    contradictory component is refused).
+  - Executed proof: IndependentResolutionPrepBridgeRepairSpec runs the real Hadoop pipeline over the three DOI
+    forms, then loads and resolves; an unrelated OpenAlex–Crossref comparison still resolves; constraints validate.
+    The bridge proof records the fixture input hashes.
+  - Residual divergence for other link forms: see R-1 (nonblocking).
+B2 ASSESSMENT: CLOSED.
+  - FeatureExtractor.scala (v2): venue is compared only when both IDs share the namespace prefix
+    (venue:dblp-booktitle | venue:openalex | venue:issn); otherwise the value is None with
+    UNAVAILABLE_INCOMPARABLE_VENUE_NAMESPACES. Prefix parsing is safe because DomainValidation enforces
+    StableIds.parseVenueId / parseInstitutionId (colon-free tokens).
+  - Affiliations are split by namespace (ror/ringgold via StableIds canonical institution IDs; enrichment
+    targetIds keyed by their namespace, which matches the declared ROR/Ringgold form; folded names). Only shared
+    namespaces are compared. Disjoint namespaces give None with UNAVAILABLE_INCOMPARABLE_AFFILIATION_NAMESPACES.
+  - Executed proof: feature-repair-proof.json shows all 3 cross-source copies of the same DOI with venue=null
+    and the explicit reason; the independent hand-calculated score is 1.0 (was 0.9).
+    Policy is er-offline-uncalibrated-v2 / er-features-v2, and the validator requires er-features-v2.
+    Policy hash changed fc50c044… -> ad8c520f…; v1 outputs are retained untouched under evidence/5b/.
+RELATED FIXES VERIFIED (static + retained tests):
+  - N-3: PathIsolation resolves the real path of the nearest existing ancestor (handles macOS /tmp aliasing).
+    The CLI checks input/output/cache disjointness before any IO; the engine (cache vs source) and exporter
+    (output vs source) also check against the loaded real source root. CLOSED.
+  - N-4: Adjudication.scala requires reasonCodes == exactly one outcome-matching code. The schema has
+    if/then constraints and the prompt was updated (prompt hash changed, so old fake caches are invalidated). CLOSED.
+  - N-5: the audit catalog emits bound ee publication facts with role sourceLinks.ee and authority=true, drops
+    those links from repository-url, and limits workReferences authority to relationship self. CLOSED.
+  - N-6: an empty normalized name gives None with EMPTY_NORMALIZED_NAME. CLOSED.
+  - N-10: readable forward summaries; history preserved. CLOSED.
+
+BLOCKING FINDINGS: None.
+
+NONBLOCKING FINDINGS
+
+R-1 [MEDIUM, does not block 5B; close or prove absent before the 5C real-acquisition bridge run]
+  Leftover from B1: some ee forms are still accepted by Phase 4 but fatal to the whole Phase 5 run.
+  Paths: ResolutionValidationContext.scala:175-209 (URI branch: doi host with port/userinfo/no slash -> Left;
+    arXiv with query/fragment/'%'/unparseable token -> Left); InputLoader.scala:56-62 (any Left aborts the run);
+    DblpExtract.scala:758 (Phase 4 arXiv = first ee that parses; malformed arXiv ee is ignored, not rejected),
+    DblpExtract.scala:987-993 (looksLikeDoi omits http://dx.doi.org/, ports and userinfo, so such records are
+    accepted without a DOI and without a reject).
+  Evidence (static, and locked in by tests): ResolutionAuthorityConsumerSpec.scala still asserts Left for
+    "https://reader@doi.org/10.9999/value", "https://doi.org:443/10.9999/value", "https://doi.org" and
+    "https://arxiv.org/abs/2301.01234?version=2". IndependentResolutionEngineSpec now asserts
+    ResolutionInput.create(...).isLeft for "https://arxiv.org/abs/2301.01234?other=2301.99999".
+    Phase 4 emits such records normally. "http://dx.doi.org/<malformed>" is likewise accepted by Phase 4 and
+    rejected by core's normalizeDoi branch.
+  Impact: one such DBLP record stops the whole run with an explicit error (fails closed; no silent merge).
+    Likely rare in the planned 2018–2024 venues, but it is the same whole-run failure behind B1.
+  Owner: domain-engineer (make core and Phase 4 recognition agree, e.g. ignore what Phase 4 ignores, or have
+    Phase 4 reject via a hadoop-engineer work order); entity-resolution-engineer if per-observation handling is
+    chosen; test-engineer.
+  Acceptance check: a completed-Hadoop bridge test over these five forms either loads and resolves (with
+    unrelated pairs still resolving) or the record is rejected at Phase 4 with a recorded reason. No run aborts on
+    a record Phase 4 accepted. Alternatively, the 5C acquisition report proves zero such ee forms in the acquired slice.
+R-2 [LOW] The affiliation minimum lets weak name-string variation override agreeing IDs.
+  FeatureExtractor.scala affiliationSimilarity = min over shared namespaces; names are whole folded strings.
+  ROR equal (1.0) plus differently spelled organization names (0.0) gives affiliation 0.0. Conservative (no
+  false merge), documented in README:379-395, but it suppresses strong ID agreement.
+  Owner: entity-resolution-engineer (policy choice at the 5C freeze). Check: document or test the chosen precedence.
+R-3 [LOW, preexisting] LinkExporter.ensureNew (and AdjudicationCache.safe) reject any symlinked ancestor, so
+  outputs/caches under macOS /tmp or /var fail even though PathIsolation now handles real paths. Fails closed;
+  usability only. Owner: entity-resolution-engineer.
+CARRIED FORWARD (owner-acknowledged; not re-litigated):
+  N-1 [MEDIUM] Partially mitigated: bibliographicEnabled=false by default. Cross-source generic-title records
+    ("Preface." by the same editors in the same year, venue now unavailable) can still score-accept at 1.0 with all
+    three work groups. A uniqueness or generic-title rule is needed before the 5C policy freeze.
+  N-2 [MEDIUM] Superlinear hot paths are still present (InputLoader text/affiliation scans, refs()
+    re-serialization, CandidateBuilder evidence-map rebuild, now also groundedElectronicPublicationFacts recomputed
+    per identifiers() call). A timed large-input probe is required before scale.
+  N-7 Same-publication researcher copies have no non-ORCID accept path; OpenAlex-carried ORCID needs its own
+    evaluation stratum.
+  N-8 Per-mention quota is not released after an aggregate-bytes drop.
+  N-9 Staging-directory debris and the empty-directory rename race.
+  5A N1/N3 component-validator scaling and enum-wire observations remain as documented.
+
+ASSUMPTIONS:
+  - As in the initial review, the course README (GitHub) was NOT fetched, and the Phase 1 authority and Phase 4
+    acceptance files were NOT reopened in this recheck. Requirements come from plan phase5.md and prompt.md.
+    No finding or closure depends on them.
+  - Not every unchanged test body was re-read; changed and new tests were read in full or by diff.
+  - Claims about real DBLP link frequency are judgments, not measurements.
+RISKS:
+  - Policy v2 is uncalibrated; venue-unavailable cross-source pairs can now reach score 1.0, so N-1 and
+    generic-title stratum testing in 5C matter more than before.
+  - No human labels, accuracy, blocking recall or live-provider evidence; the 18-comparison sample cannot support
+    40 development + 200 held-out reviews.
+  - Hashes show internal consistency only. Injected JVM adapters cannot be force-killed (disclosed).
+MANUAL ACTION REQUIRED: User returns this verdict to the manager and decides whether to authorize 5C.
+  Recommended before or at the start of 5C: route R-1 (or include its proof in the acquisition bridge run) and
+  N-1 to their owners before the 5C policy/population freeze; N-2 before any population larger than a few
+  thousand records.
+BLOCKED-ON OWNER: None for 5B.
+BLOCKED-ON EVIDENCE: None for 5B. Future: R-1 bridge proof or acquisition scan; N-2 timed probe.
+NEXT GATE: Explicit user authorization for 5C (not implied by this APPROVE).
+
+Broader Phase 5 acceptance limitations (outside the 5B scope): 5C review tool/queue/split/import/evaluator and
+bounded acquisition; 40+200 real human reviews; 5D provider/model/budget selection and bounded live calls; 5E
+frozen evaluation (precision/recall/F1, confusion and four-outcome tables, coverage, path breakdowns, threshold
+sensitivity, representative errors) with a manifest binding code revision/source hashes; and the final human
+Phase 5 acceptance — all outstanding.
+
+Subsequent user instruction (verbatim):
+for the bug that is non-block just ignore them instead of fix it

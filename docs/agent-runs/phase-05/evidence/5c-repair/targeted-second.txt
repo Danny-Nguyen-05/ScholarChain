@@ -1,0 +1,50 @@
+[info] welcome to sbt 1.10.7 (Homebrew Java 17.0.20.1)
+[info] loading settings for project scholarchain-build from plugins.sbt...
+[info] loading project definition from /Users/danny/Documents/UIC/CS441/ScholarChain/project
+[info] loading settings for project root from build.sbt...
+[info] set current project to root (in build file:/Users/danny/Documents/UIC/CS441/ScholarChain/)
+[info] scalafmt: Formatting 1 Scala sources (/Users/danny/Documents/UIC/CS441/ScholarChain/tests)...
+[info] scalafmt: Reformatted 1 Scala sources
+[success] Total time: 1 s, completed Oct 16, 2026, 4:55:15 PM
+[info] compiling 1 Scala source to /Users/danny/Documents/UIC/CS441/ScholarChain/tests/target/scala-3.3.4/test-classes ...
+[info] done compiling
+[info] IndependentReviewQueueSpec:
+[info] - review allocation is exactly forty development, two hundred held out and sixty reserves
+[info] - selection and assignments replay deterministically and contain no predictions or suggested labels
+[info] - candidate duplicates and altered source or candidate bindings cannot create a review queue
+[info] - infeasible population reports a failure instead of silently reducing the human target
+[info] - queue parser rejects unknown keys and any evidence or queue identity mutation
+[info] - negative candidate edges never make one leakage group while shared publications and IDs stay together
+[info] - development retains both entities when disjoint work pairs have lower degree than researcher groups
+[info] IndependentGoldLabelsSpec:
+[info] - same different uncertain remain separate and missing pairs are counted
+[info] - revision and undo preserve history rather than silently editing the original annotation
+[info] - duplicate revisions branches gaps and reversed timestamps are rejected
+[info] - wrong queue source split entity pair and evidence cannot be imported
+[info] - unknown keys and unsupported automatic or binary aliases are rejected
+[info] - human-entered reviewer provenance notes timestamps and derived counts are validated
+[info] IndependentEvaluationSpec:
+[info] - binary acceptance metrics include unresolved conflicts and missing predictions as nonacceptance
+[info] - gold by four-outcome tables preserve uncertain missing conflict and exact denominators
+[info] - no-data paths and unlabeled held-out metrics are null instead of manufactured accuracy
+[info] - invalid predictions stay in denominators and duplicate pairs or foreign bindings are refused
+[info] - development threshold sensitivity is hand-computable and held-out tuning is rejected
+[info] IndependentEvaluationAdapterSpec:
+[info] - evaluation retains genuine offline adapter versus verified cache provenance
+[info] - evaluation adapter refuses a decision whose endpoints or entity no longer match its frozen pair
+[info] - evaluation adapter refuses prompt or model inconsistent with the declared prediction run
+[info] - B1 actual later offline matcher and adjudication configuration reuse P0 labels and immutable queue
+[info] IndependentReviewBindingRepairSpec:
+[info] - B1 identical population sampling and evidence retain queue identity across matcher and code changes
+[info] - B1 original synthetic labels evaluate predictions from a later run and report that later binding
+[info] - B1 changed input or candidate populations remain invalid despite allowing later matcher settings
+[info] IndependentRetainedReviewInputSpec:
+[info] - B2 exact completed input retention reloads with identical evidence candidate hashes and pair population
+[info] - B2 a missing retained export part cannot silently become a different replay population
+[info] - B2 corrupt retained observation bytes are rejected before queue reconstruction
+[info] Run completed in 2 seconds, 669 milliseconds.
+[info] Total number of tests run: 28
+[info] Suites: completed 6, aborted 0
+[info] Tests: succeeded 28, failed 0, canceled 0, ignored 0, pending 0
+[info] All tests passed.
+[success] Total time: 5 s, completed Oct 16, 2026, 4:55:20 PM

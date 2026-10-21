@@ -1,0 +1,27 @@
+{
+  "status": "VALID",
+  "schemaVersion": "scholarchain.screened-demo-population.v1",
+  "sources": {
+    "crossref": 14,
+    "dblp": 0,
+    "openalex": 12,
+    "orcid": 0
+  },
+  "observed": {
+    "distinctReturnedWorksIncludingExcluded": 10,
+    "httpAttempts": 2,
+    "newDistinctWorksNotObservedInPreviousStage": 10,
+    "newIngestionRecords": 0,
+    "responseBytes": 43664,
+    "seconds": 1.3677
+  },
+  "cumulative": {
+    "distinctReturnedWorksAcrossStages": 30,
+    "httpAttemptsAcrossStages": 9,
+    "previousStageDistinctReturnedWorks": 20,
+    "responseBytesAcrossStages": 215344,
+    "secondsAcrossStages": 7.9818
+  },
+  "files": 31,
+  "admission": "PENDING_CANONICAL_ER_COMPONENT_CHECK_BEFORE_SCORING"
+}

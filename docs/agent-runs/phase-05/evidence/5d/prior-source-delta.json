@@ -1,0 +1,11 @@
+{
+  "schemaVersion": "scholarchain.phase5d.prior-source-delta.v1",
+  "priorFrozenFiles": 412,
+  "priorPathsChanged": [
+    "modules/entity-resolution/README.md",
+    "modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/Phase5Main.scala",
+    "modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/ReviewQueue.scala"
+  ],
+  "currentFreeze": "docs/agent-runs/phase-05/source-freeze.json",
+  "note": "Additional new5D paths are listed in current freeze and review inventory; this verifies preservation of existing prior paths."
+}

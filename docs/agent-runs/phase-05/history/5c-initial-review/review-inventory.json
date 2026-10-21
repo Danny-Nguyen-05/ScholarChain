@@ -1,0 +1,2823 @@
+{
+  "schema": "scholarchain.phase5c.review-inventory.v1",
+  "head": "c8342d25ba04dede26af10bedc5a76691824d1ca",
+  "branch": "phase-5",
+  "subphaseBase": "c8342d25ba04dede26af10bedc5a76691824d1ca",
+  "wholePhaseBase": "099e303311be7a1b2e2cf5655e0c7ce9fa710474",
+  "status": [
+    " M datasets/scripts/README.md",
+    " M docs/agent-runs/phase-05/implementation.diff",
+    " M docs/agent-runs/phase-05/owner-report.md",
+    " M docs/agent-runs/phase-05/prompt.md",
+    " M docs/agent-runs/phase-05/repairs.md",
+    " M docs/agent-runs/phase-05/review-inventory.json",
+    " M docs/agent-runs/phase-05/review.md",
+    " M docs/agent-runs/phase-05/reviewer-prompt.txt",
+    " M docs/agent-runs/phase-05/source-freeze.json",
+    " M docs/agent-runs/phase-05/test-report.md",
+    " M modules/entity-resolution/README.md",
+    " M modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/Phase5Main.scala",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/crossref/works.jsonl",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/dblp/records.xml",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/diagnostics.json",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/openalex/works.jsonl",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/orcid/records.jsonl",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/population-manifest.v1.json",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/record-provenance.jsonl",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/request-ledger.jsonl",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/responses/0001-dblp.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/responses/0002-crossref.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/responses/0004-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/responses/0005-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/responses/0006-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/responses/0007-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/responses/0008-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/responses/0009-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/responses/0010-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/responses/0011-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/responses/0012-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/responses/0013-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/responses/0014-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/responses/0015-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/responses/0016-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/responses/0017-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/responses/0018-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/responses/0019-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/responses/0020-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/responses/0021-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/responses/0022-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/responses/0023-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/responses/0024-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/responses/0025-orcid.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/responses/0026-orcid.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/responses/0027-orcid.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/responses/0028-orcid.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/responses/0029-orcid.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/responses/0030-orcid.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/responses/0031-orcid.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/responses/0032-orcid.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/responses/0033-orcid.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/responses/0034-orcid.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/responses/0035-orcid.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/responses/0036-orcid.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/responses/0037-orcid.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/responses/0038-orcid.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/responses/0039-orcid.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/responses/0040-orcid.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/responses/0041-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/responses/0042-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/responses/0043-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/responses/0044-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/responses/0045-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/responses/0046-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/responses/0047-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/responses/0048-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/responses/0049-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/responses/0050-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/responses/0051-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/responses/0052-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/responses/0053-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/responses/0054-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/responses/0055-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/responses/0056-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/responses/0057-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/responses/0058-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/responses/0059-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/responses/0060-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/responses/0061-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/responses/0062-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/responses/0063-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/responses/0064-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/responses/0065-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/responses/0066-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/responses/0067-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/responses/0068-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/responses/0069-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/responses/0070-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/responses/0071-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/responses/0072-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/responses/0073-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/responses/0074-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/responses/0075-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/responses/0076-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/responses/0077-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/responses/0078-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/responses/0079-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/responses/0080-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/responses/0081-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/responses/0082-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/responses/0083-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/responses/0084-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/responses/0085-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/responses/0086-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/responses/0087-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/responses/0088-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/responses/0089-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/responses/0090-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/responses/0091-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/responses/0092-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/responses/0093-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/responses/0094-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/responses/0095-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/responses/0096-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/responses/0097-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/responses/0098-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/responses/0099-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/responses/0100-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/responses/0101-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/responses/0102-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/responses/0103-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/responses/0104-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/responses/0105-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/responses/0106-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/responses/0107-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/responses/0108-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/responses/0109-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/responses/0110-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/responses/0111-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/responses/0112-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/responses/0113-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/responses/0114-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/responses/0115-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/responses/0116-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/responses/0117-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/responses/0118-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/responses/0119-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/responses/0120-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/responses/0121-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/responses/0122-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/responses/0123-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/responses/0124-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v2/responses/0125-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/crossref/works.jsonl",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/dblp/records.xml",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/diagnostics.json",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/openalex/works.jsonl",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/orcid/records.jsonl",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/population-manifest.v1.json",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/record-provenance.jsonl",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/request-ledger.jsonl",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/responses/0001-dblp.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/responses/0002-crossref.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/responses/0004-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/responses/0005-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/responses/0006-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/responses/0007-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/responses/0008-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/responses/0009-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/responses/0010-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/responses/0011-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/responses/0012-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/responses/0013-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/responses/0014-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/responses/0015-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/responses/0016-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/responses/0017-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/responses/0018-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/responses/0019-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/responses/0020-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/responses/0021-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/responses/0022-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/responses/0023-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/responses/0024-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/responses/0025-orcid.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/responses/0026-orcid.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/responses/0027-orcid.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/responses/0028-orcid.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/responses/0029-orcid.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/responses/0030-orcid.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/responses/0031-orcid.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/responses/0032-orcid.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/responses/0033-orcid.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/responses/0034-orcid.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/responses/0035-orcid.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/responses/0036-orcid.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/responses/0037-orcid.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/responses/0038-orcid.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/responses/0039-orcid.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/responses/0040-orcid.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/responses/0041-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/responses/0042-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/responses/0043-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/responses/0044-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/responses/0045-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/responses/0046-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/responses/0047-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/responses/0048-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/responses/0049-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/responses/0050-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/responses/0051-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/responses/0052-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/responses/0053-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/responses/0054-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/responses/0055-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/responses/0056-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/responses/0057-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/responses/0058-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/responses/0059-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/responses/0060-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/responses/0061-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/responses/0062-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/responses/0063-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/responses/0064-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/responses/0065-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/responses/0066-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/responses/0067-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/responses/0068-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/responses/0069-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/responses/0070-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/responses/0071-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/responses/0072-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/responses/0073-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/responses/0074-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/responses/0075-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/responses/0076-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/responses/0077-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/responses/0078-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/responses/0079-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/responses/0080-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/responses/0081-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/responses/0082-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/responses/0083-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/responses/0084-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/responses/0085-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/responses/0086-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/responses/0087-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/responses/0088-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/responses/0089-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/responses/0090-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/responses/0091-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/responses/0092-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/responses/0093-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/responses/0094-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/responses/0095-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/responses/0096-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/responses/0097-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/responses/0098-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/responses/0099-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/responses/0100-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/responses/0101-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/responses/0102-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/responses/0103-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/responses/0104-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/responses/0105-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/responses/0106-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/responses/0107-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/responses/0108-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/responses/0109-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/responses/0110-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/responses/0111-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/responses/0112-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/responses/0113-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/responses/0114-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/responses/0115-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/responses/0116-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/responses/0117-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/responses/0118-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/responses/0119-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/responses/0120-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/responses/0121-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/responses/0122-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/responses/0123-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/responses/0124-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/responses/0125-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16-v3/selection-exclusions.json",
+    "?? datasets/entity-resolution/5c-2026-10-16/crossref/works.jsonl",
+    "?? datasets/entity-resolution/5c-2026-10-16/dblp/records.xml",
+    "?? datasets/entity-resolution/5c-2026-10-16/diagnostics.json",
+    "?? datasets/entity-resolution/5c-2026-10-16/openalex/works.jsonl",
+    "?? datasets/entity-resolution/5c-2026-10-16/orcid/records.jsonl",
+    "?? datasets/entity-resolution/5c-2026-10-16/population-manifest.v1.json",
+    "?? datasets/entity-resolution/5c-2026-10-16/record-provenance.jsonl",
+    "?? datasets/entity-resolution/5c-2026-10-16/request-ledger.jsonl",
+    "?? datasets/entity-resolution/5c-2026-10-16/responses/0001-dblp.body",
+    "?? datasets/entity-resolution/5c-2026-10-16/responses/0002-crossref.body",
+    "?? datasets/entity-resolution/5c-2026-10-16/responses/0004-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16/responses/0005-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16/responses/0006-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16/responses/0007-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16/responses/0008-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16/responses/0009-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16/responses/0010-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16/responses/0011-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16/responses/0012-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16/responses/0013-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16/responses/0014-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16/responses/0015-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16/responses/0016-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16/responses/0017-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16/responses/0018-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16/responses/0019-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16/responses/0020-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16/responses/0021-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16/responses/0022-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16/responses/0023-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16/responses/0024-openalex.body",
+    "?? datasets/entity-resolution/5c-2026-10-16/responses/0025-orcid.body",
+    "?? datasets/entity-resolution/5c-2026-10-16/responses/0026-orcid.body",
+    "?? datasets/entity-resolution/5c-2026-10-16/responses/0027-orcid.body",
+    "?? datasets/entity-resolution/5c-2026-10-16/responses/0028-orcid.body",
+    "?? datasets/entity-resolution/5c-2026-10-16/responses/0029-orcid.body",
+    "?? datasets/entity-resolution/5c-2026-10-16/responses/0030-orcid.body",
+    "?? datasets/entity-resolution/5c-2026-10-16/responses/0031-orcid.body",
+    "?? datasets/entity-resolution/5c-2026-10-16/responses/0032-orcid.body",
+    "?? datasets/entity-resolution/5c-2026-10-16/responses/0033-orcid.body",
+    "?? datasets/entity-resolution/5c-2026-10-16/responses/0034-orcid.body",
+    "?? datasets/entity-resolution/5c-2026-10-16/responses/0035-orcid.body",
+    "?? datasets/entity-resolution/5c-2026-10-16/responses/0036-orcid.body",
+    "?? datasets/entity-resolution/5c-2026-10-16/responses/0037-orcid.body",
+    "?? datasets/entity-resolution/5c-2026-10-16/responses/0038-orcid.body",
+    "?? datasets/entity-resolution/5c-2026-10-16/responses/0039-orcid.body",
+    "?? datasets/entity-resolution/5c-2026-10-16/responses/0040-orcid.body",
+    "?? datasets/entity-resolution/README.md",
+    "?? datasets/entity-resolution/acquisition-session.v1.json",
+    "?? datasets/entity-resolution/population-readiness.v1.json",
+    "?? datasets/scripts/acquire_resolution_population.py",
+    "?? datasets/scripts/filter_resolution_population.py",
+    "?? datasets/scripts/test_resolution_population.py",
+    "?? datasets/scripts/validate_resolution_population.py",
+    "?? docs/agent-runs/phase-05/5c-baseline.json",
+    "?? docs/agent-runs/phase-05/5c-implementation.diff",
+    "?? docs/agent-runs/phase-05/5c-source-delta.json",
+    "?? docs/agent-runs/phase-05/evidence/5c/browser-fixture.txt",
+    "?? docs/agent-runs/phase-05/evidence/5c/collect-5c.py.txt",
+    "?? docs/agent-runs/phase-05/evidence/5c/commands.json",
+    "?? docs/agent-runs/phase-05/evidence/5c/dataset-existing-validation.txt",
+    "?? docs/agent-runs/phase-05/evidence/5c/dataset-final-validation.txt",
+    "?? docs/agent-runs/phase-05/evidence/5c/datasets-unit.txt",
+    "?? docs/agent-runs/phase-05/evidence/5c/export-review-tool.txt",
+    "?? docs/agent-runs/phase-05/evidence/5c/final-readiness-source-hashes.json",
+    "?? docs/agent-runs/phase-05/evidence/5c/finalize-packet.py.txt",
+    "?? docs/agent-runs/phase-05/evidence/5c/first-compile.txt",
+    "?? docs/agent-runs/phase-05/evidence/5c/full-check-summary.json",
+    "?? docs/agent-runs/phase-05/evidence/5c/full-check.txt",
+    "?? docs/agent-runs/phase-05/evidence/5c/hadoop-classpath-authorized.txt",
+    "?? docs/agent-runs/phase-05/evidence/5c/hadoop-classpath.txt",
+    "?? docs/agent-runs/phase-05/evidence/5c/hadoop-cs.argv.json",
+    "?? docs/agent-runs/phase-05/evidence/5c/hadoop-cs.txt",
+    "?? docs/agent-runs/phase-05/evidence/5c/hadoop-expanded-config.json",
+    "?? docs/agent-runs/phase-05/evidence/5c/hadoop-expanded.argv.json",
+    "?? docs/agent-runs/phase-05/evidence/5c/hadoop-expanded.txt",
+    "?? docs/agent-runs/phase-05/evidence/5c/history-integrity.json",
+    "?? docs/agent-runs/phase-05/evidence/5c/human-handoff.json",
+    "?? docs/agent-runs/phase-05/evidence/5c/independent-first-target.txt",
+    "?? docs/agent-runs/phase-05/evidence/5c/owner-handoffs.json",
+    "?? docs/agent-runs/phase-05/evidence/5c/post-demo-input-verification.json",
+    "?? docs/agent-runs/phase-05/evidence/5c/preliminary-readiness.json",
+    "?? docs/agent-runs/phase-05/evidence/5c/queue-final.argv.json",
+    "?? docs/agent-runs/phase-05/evidence/5c/queue-final.txt",
+    "?? docs/agent-runs/phase-05/evidence/5c/queue-readiness.argv.json",
+    "?? docs/agent-runs/phase-05/evidence/5c/queue-readiness.txt",
+    "?? docs/agent-runs/phase-05/evidence/5c/queue-replay.txt",
+    "?? docs/agent-runs/phase-05/evidence/5c/readiness-source-hashes.json",
+    "?? docs/agent-runs/phase-05/evidence/5c/real-readiness-summary.json",
+    "?? docs/agent-runs/phase-05/evidence/5c/review-artifacts/queue.json",
+    "?? docs/agent-runs/phase-05/evidence/5c/review-artifacts/split.json",
+    "?? docs/agent-runs/phase-05/evidence/5c/run-command.py.txt",
+    "?? docs/agent-runs/phase-05/evidence/5c/split-repair-targeted.txt",
+    "?? docs/agent-runs/phase-05/evidence/5c/synthetic-browser-checkpoint.json",
+    "?? docs/agent-runs/phase-05/evidence/5c/synthetic-empty-predictions.json",
+    "?? docs/agent-runs/phase-05/evidence/5c/synthetic-evaluate-cli.txt",
+    "?? docs/agent-runs/phase-05/evidence/5c/synthetic-evaluation-missing-predictions/evaluation.json",
+    "?? docs/agent-runs/phase-05/evidence/5c/synthetic-import-labels.txt",
+    "?? docs/agent-runs/phase-05/evidence/5c/synthetic-other-queue-checkpoint.json",
+    "?? docs/agent-runs/phase-05/evidence/5c/synthetic-queue.json",
+    "?? docs/agent-runs/phase-05/evidence/5c/synthetic-split.json",
+    "?? docs/agent-runs/phase-05/evidence/5c/synthetic-validated-labels.json",
+    "?? docs/agent-runs/phase-05/evidence/5c/targeted-ready.txt",
+    "?? docs/agent-runs/phase-05/evidence/5c/toolchain.txt",
+    "?? docs/agent-runs/phase-05/history/5b-final-handoff/5b-implementation.diff",
+    "?? docs/agent-runs/phase-05/history/5b-final-handoff/implementation.diff",
+    "?? docs/agent-runs/phase-05/history/5b-final-handoff/review-inventory.json",
+    "?? docs/agent-runs/phase-05/history/5b-final-handoff/reviewer-prompt.txt",
+    "?? docs/agent-runs/phase-05/history/5b-final-handoff/source-freeze.json",
+    "?? modules/entity-resolution/src/main/resources/review/guide.txt",
+    "?? modules/entity-resolution/src/main/resources/review/index.html",
+    "?? modules/entity-resolution/src/main/resources/review/sampling.v1.json",
+    "?? modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/Evaluation.scala",
+    "?? modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/GoldLabels.scala",
+    "?? modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/ReviewCommands.scala",
+    "?? modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/ReviewQueue.scala",
+    "?? modules/entity-resolution/src/test/scala/edu/uic/cs441/scholarchain/entityresolution/ReviewReadinessSpec.scala",
+    "?? tests/browser/phase5c-review-cua.js",
+    "?? tests/browser/phase5c-review-observed.json",
+    "?? tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentEvaluationAdapterSpec.scala",
+    "?? tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentEvaluationSpec.scala",
+    "?? tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentGoldLabelsSpec.scala",
+    "?? tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentReviewBrowserFixtureMain.scala",
+    "?? tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentReviewFixtures.scala",
+    "?? tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentReviewQueueSpec.scala"
+  ],
+  "paths": [
+    "datasets/entity-resolution/5c-2026-10-16-v2/crossref/works.jsonl",
+    "datasets/entity-resolution/5c-2026-10-16-v2/dblp/records.xml",
+    "datasets/entity-resolution/5c-2026-10-16-v2/diagnostics.json",
+    "datasets/entity-resolution/5c-2026-10-16-v2/openalex/works.jsonl",
+    "datasets/entity-resolution/5c-2026-10-16-v2/orcid/records.jsonl",
+    "datasets/entity-resolution/5c-2026-10-16-v2/population-manifest.v1.json",
+    "datasets/entity-resolution/5c-2026-10-16-v2/record-provenance.jsonl",
+    "datasets/entity-resolution/5c-2026-10-16-v2/request-ledger.jsonl",
+    "datasets/entity-resolution/5c-2026-10-16-v2/responses/0001-dblp.body",
+    "datasets/entity-resolution/5c-2026-10-16-v2/responses/0002-crossref.body",
+    "datasets/entity-resolution/5c-2026-10-16-v2/responses/0004-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v2/responses/0005-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v2/responses/0006-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v2/responses/0007-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v2/responses/0008-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v2/responses/0009-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v2/responses/0010-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v2/responses/0011-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v2/responses/0012-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v2/responses/0013-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v2/responses/0014-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v2/responses/0015-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v2/responses/0016-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v2/responses/0017-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v2/responses/0018-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v2/responses/0019-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v2/responses/0020-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v2/responses/0021-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v2/responses/0022-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v2/responses/0023-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v2/responses/0024-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v2/responses/0025-orcid.body",
+    "datasets/entity-resolution/5c-2026-10-16-v2/responses/0026-orcid.body",
+    "datasets/entity-resolution/5c-2026-10-16-v2/responses/0027-orcid.body",
+    "datasets/entity-resolution/5c-2026-10-16-v2/responses/0028-orcid.body",
+    "datasets/entity-resolution/5c-2026-10-16-v2/responses/0029-orcid.body",
+    "datasets/entity-resolution/5c-2026-10-16-v2/responses/0030-orcid.body",
+    "datasets/entity-resolution/5c-2026-10-16-v2/responses/0031-orcid.body",
+    "datasets/entity-resolution/5c-2026-10-16-v2/responses/0032-orcid.body",
+    "datasets/entity-resolution/5c-2026-10-16-v2/responses/0033-orcid.body",
+    "datasets/entity-resolution/5c-2026-10-16-v2/responses/0034-orcid.body",
+    "datasets/entity-resolution/5c-2026-10-16-v2/responses/0035-orcid.body",
+    "datasets/entity-resolution/5c-2026-10-16-v2/responses/0036-orcid.body",
+    "datasets/entity-resolution/5c-2026-10-16-v2/responses/0037-orcid.body",
+    "datasets/entity-resolution/5c-2026-10-16-v2/responses/0038-orcid.body",
+    "datasets/entity-resolution/5c-2026-10-16-v2/responses/0039-orcid.body",
+    "datasets/entity-resolution/5c-2026-10-16-v2/responses/0040-orcid.body",
+    "datasets/entity-resolution/5c-2026-10-16-v2/responses/0041-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v2/responses/0042-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v2/responses/0043-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v2/responses/0044-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v2/responses/0045-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v2/responses/0046-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v2/responses/0047-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v2/responses/0048-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v2/responses/0049-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v2/responses/0050-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v2/responses/0051-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v2/responses/0052-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v2/responses/0053-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v2/responses/0054-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v2/responses/0055-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v2/responses/0056-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v2/responses/0057-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v2/responses/0058-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v2/responses/0059-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v2/responses/0060-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v2/responses/0061-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v2/responses/0062-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v2/responses/0063-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v2/responses/0064-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v2/responses/0065-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v2/responses/0066-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v2/responses/0067-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v2/responses/0068-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v2/responses/0069-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v2/responses/0070-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v2/responses/0071-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v2/responses/0072-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v2/responses/0073-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v2/responses/0074-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v2/responses/0075-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v2/responses/0076-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v2/responses/0077-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v2/responses/0078-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v2/responses/0079-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v2/responses/0080-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v2/responses/0081-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v2/responses/0082-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v2/responses/0083-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v2/responses/0084-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v2/responses/0085-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v2/responses/0086-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v2/responses/0087-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v2/responses/0088-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v2/responses/0089-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v2/responses/0090-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v2/responses/0091-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v2/responses/0092-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v2/responses/0093-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v2/responses/0094-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v2/responses/0095-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v2/responses/0096-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v2/responses/0097-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v2/responses/0098-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v2/responses/0099-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v2/responses/0100-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v2/responses/0101-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v2/responses/0102-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v2/responses/0103-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v2/responses/0104-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v2/responses/0105-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v2/responses/0106-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v2/responses/0107-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v2/responses/0108-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v2/responses/0109-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v2/responses/0110-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v2/responses/0111-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v2/responses/0112-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v2/responses/0113-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v2/responses/0114-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v2/responses/0115-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v2/responses/0116-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v2/responses/0117-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v2/responses/0118-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v2/responses/0119-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v2/responses/0120-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v2/responses/0121-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v2/responses/0122-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v2/responses/0123-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v2/responses/0124-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v2/responses/0125-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v3/crossref/works.jsonl",
+    "datasets/entity-resolution/5c-2026-10-16-v3/dblp/records.xml",
+    "datasets/entity-resolution/5c-2026-10-16-v3/diagnostics.json",
+    "datasets/entity-resolution/5c-2026-10-16-v3/openalex/works.jsonl",
+    "datasets/entity-resolution/5c-2026-10-16-v3/orcid/records.jsonl",
+    "datasets/entity-resolution/5c-2026-10-16-v3/population-manifest.v1.json",
+    "datasets/entity-resolution/5c-2026-10-16-v3/record-provenance.jsonl",
+    "datasets/entity-resolution/5c-2026-10-16-v3/request-ledger.jsonl",
+    "datasets/entity-resolution/5c-2026-10-16-v3/responses/0001-dblp.body",
+    "datasets/entity-resolution/5c-2026-10-16-v3/responses/0002-crossref.body",
+    "datasets/entity-resolution/5c-2026-10-16-v3/responses/0004-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v3/responses/0005-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v3/responses/0006-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v3/responses/0007-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v3/responses/0008-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v3/responses/0009-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v3/responses/0010-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v3/responses/0011-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v3/responses/0012-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v3/responses/0013-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v3/responses/0014-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v3/responses/0015-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v3/responses/0016-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v3/responses/0017-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v3/responses/0018-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v3/responses/0019-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v3/responses/0020-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v3/responses/0021-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v3/responses/0022-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v3/responses/0023-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v3/responses/0024-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v3/responses/0025-orcid.body",
+    "datasets/entity-resolution/5c-2026-10-16-v3/responses/0026-orcid.body",
+    "datasets/entity-resolution/5c-2026-10-16-v3/responses/0027-orcid.body",
+    "datasets/entity-resolution/5c-2026-10-16-v3/responses/0028-orcid.body",
+    "datasets/entity-resolution/5c-2026-10-16-v3/responses/0029-orcid.body",
+    "datasets/entity-resolution/5c-2026-10-16-v3/responses/0030-orcid.body",
+    "datasets/entity-resolution/5c-2026-10-16-v3/responses/0031-orcid.body",
+    "datasets/entity-resolution/5c-2026-10-16-v3/responses/0032-orcid.body",
+    "datasets/entity-resolution/5c-2026-10-16-v3/responses/0033-orcid.body",
+    "datasets/entity-resolution/5c-2026-10-16-v3/responses/0034-orcid.body",
+    "datasets/entity-resolution/5c-2026-10-16-v3/responses/0035-orcid.body",
+    "datasets/entity-resolution/5c-2026-10-16-v3/responses/0036-orcid.body",
+    "datasets/entity-resolution/5c-2026-10-16-v3/responses/0037-orcid.body",
+    "datasets/entity-resolution/5c-2026-10-16-v3/responses/0038-orcid.body",
+    "datasets/entity-resolution/5c-2026-10-16-v3/responses/0039-orcid.body",
+    "datasets/entity-resolution/5c-2026-10-16-v3/responses/0040-orcid.body",
+    "datasets/entity-resolution/5c-2026-10-16-v3/responses/0041-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v3/responses/0042-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v3/responses/0043-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v3/responses/0044-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v3/responses/0045-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v3/responses/0046-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v3/responses/0047-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v3/responses/0048-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v3/responses/0049-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v3/responses/0050-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v3/responses/0051-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v3/responses/0052-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v3/responses/0053-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v3/responses/0054-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v3/responses/0055-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v3/responses/0056-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v3/responses/0057-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v3/responses/0058-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v3/responses/0059-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v3/responses/0060-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v3/responses/0061-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v3/responses/0062-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v3/responses/0063-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v3/responses/0064-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v3/responses/0065-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v3/responses/0066-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v3/responses/0067-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v3/responses/0068-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v3/responses/0069-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v3/responses/0070-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v3/responses/0071-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v3/responses/0072-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v3/responses/0073-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v3/responses/0074-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v3/responses/0075-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v3/responses/0076-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v3/responses/0077-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v3/responses/0078-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v3/responses/0079-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v3/responses/0080-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v3/responses/0081-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v3/responses/0082-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v3/responses/0083-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v3/responses/0084-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v3/responses/0085-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v3/responses/0086-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v3/responses/0087-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v3/responses/0088-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v3/responses/0089-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v3/responses/0090-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v3/responses/0091-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v3/responses/0092-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v3/responses/0093-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v3/responses/0094-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v3/responses/0095-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v3/responses/0096-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v3/responses/0097-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v3/responses/0098-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v3/responses/0099-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v3/responses/0100-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v3/responses/0101-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v3/responses/0102-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v3/responses/0103-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v3/responses/0104-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v3/responses/0105-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v3/responses/0106-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v3/responses/0107-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v3/responses/0108-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v3/responses/0109-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v3/responses/0110-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v3/responses/0111-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v3/responses/0112-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v3/responses/0113-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v3/responses/0114-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v3/responses/0115-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v3/responses/0116-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v3/responses/0117-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v3/responses/0118-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v3/responses/0119-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v3/responses/0120-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v3/responses/0121-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v3/responses/0122-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v3/responses/0123-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v3/responses/0124-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v3/responses/0125-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16-v3/selection-exclusions.json",
+    "datasets/entity-resolution/5c-2026-10-16/crossref/works.jsonl",
+    "datasets/entity-resolution/5c-2026-10-16/dblp/records.xml",
+    "datasets/entity-resolution/5c-2026-10-16/diagnostics.json",
+    "datasets/entity-resolution/5c-2026-10-16/openalex/works.jsonl",
+    "datasets/entity-resolution/5c-2026-10-16/orcid/records.jsonl",
+    "datasets/entity-resolution/5c-2026-10-16/population-manifest.v1.json",
+    "datasets/entity-resolution/5c-2026-10-16/record-provenance.jsonl",
+    "datasets/entity-resolution/5c-2026-10-16/request-ledger.jsonl",
+    "datasets/entity-resolution/5c-2026-10-16/responses/0001-dblp.body",
+    "datasets/entity-resolution/5c-2026-10-16/responses/0002-crossref.body",
+    "datasets/entity-resolution/5c-2026-10-16/responses/0004-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16/responses/0005-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16/responses/0006-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16/responses/0007-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16/responses/0008-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16/responses/0009-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16/responses/0010-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16/responses/0011-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16/responses/0012-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16/responses/0013-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16/responses/0014-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16/responses/0015-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16/responses/0016-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16/responses/0017-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16/responses/0018-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16/responses/0019-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16/responses/0020-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16/responses/0021-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16/responses/0022-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16/responses/0023-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16/responses/0024-openalex.body",
+    "datasets/entity-resolution/5c-2026-10-16/responses/0025-orcid.body",
+    "datasets/entity-resolution/5c-2026-10-16/responses/0026-orcid.body",
+    "datasets/entity-resolution/5c-2026-10-16/responses/0027-orcid.body",
+    "datasets/entity-resolution/5c-2026-10-16/responses/0028-orcid.body",
+    "datasets/entity-resolution/5c-2026-10-16/responses/0029-orcid.body",
+    "datasets/entity-resolution/5c-2026-10-16/responses/0030-orcid.body",
+    "datasets/entity-resolution/5c-2026-10-16/responses/0031-orcid.body",
+    "datasets/entity-resolution/5c-2026-10-16/responses/0032-orcid.body",
+    "datasets/entity-resolution/5c-2026-10-16/responses/0033-orcid.body",
+    "datasets/entity-resolution/5c-2026-10-16/responses/0034-orcid.body",
+    "datasets/entity-resolution/5c-2026-10-16/responses/0035-orcid.body",
+    "datasets/entity-resolution/5c-2026-10-16/responses/0036-orcid.body",
+    "datasets/entity-resolution/5c-2026-10-16/responses/0037-orcid.body",
+    "datasets/entity-resolution/5c-2026-10-16/responses/0038-orcid.body",
+    "datasets/entity-resolution/5c-2026-10-16/responses/0039-orcid.body",
+    "datasets/entity-resolution/5c-2026-10-16/responses/0040-orcid.body",
+    "datasets/entity-resolution/README.md",
+    "datasets/entity-resolution/acquisition-session.v1.json",
+    "datasets/entity-resolution/population-readiness.v1.json",
+    "datasets/scripts/README.md",
+    "datasets/scripts/acquire_resolution_population.py",
+    "datasets/scripts/filter_resolution_population.py",
+    "datasets/scripts/test_resolution_population.py",
+    "datasets/scripts/validate_resolution_population.py",
+    "docs/agent-runs/phase-05/5c-baseline.json",
+    "docs/agent-runs/phase-05/5c-implementation.diff",
+    "docs/agent-runs/phase-05/5c-source-delta.json",
+    "docs/agent-runs/phase-05/evidence/5c/browser-fixture.txt",
+    "docs/agent-runs/phase-05/evidence/5c/collect-5c.py.txt",
+    "docs/agent-runs/phase-05/evidence/5c/commands.json",
+    "docs/agent-runs/phase-05/evidence/5c/dataset-existing-validation.txt",
+    "docs/agent-runs/phase-05/evidence/5c/dataset-final-validation.txt",
+    "docs/agent-runs/phase-05/evidence/5c/datasets-unit.txt",
+    "docs/agent-runs/phase-05/evidence/5c/export-review-tool.txt",
+    "docs/agent-runs/phase-05/evidence/5c/final-readiness-source-hashes.json",
+    "docs/agent-runs/phase-05/evidence/5c/finalize-packet.py.txt",
+    "docs/agent-runs/phase-05/evidence/5c/first-compile.txt",
+    "docs/agent-runs/phase-05/evidence/5c/full-check-summary.json",
+    "docs/agent-runs/phase-05/evidence/5c/full-check.txt",
+    "docs/agent-runs/phase-05/evidence/5c/hadoop-classpath-authorized.txt",
+    "docs/agent-runs/phase-05/evidence/5c/hadoop-classpath.txt",
+    "docs/agent-runs/phase-05/evidence/5c/hadoop-cs.argv.json",
+    "docs/agent-runs/phase-05/evidence/5c/hadoop-cs.txt",
+    "docs/agent-runs/phase-05/evidence/5c/hadoop-expanded-config.json",
+    "docs/agent-runs/phase-05/evidence/5c/hadoop-expanded.argv.json",
+    "docs/agent-runs/phase-05/evidence/5c/hadoop-expanded.txt",
+    "docs/agent-runs/phase-05/evidence/5c/history-integrity.json",
+    "docs/agent-runs/phase-05/evidence/5c/human-handoff.json",
+    "docs/agent-runs/phase-05/evidence/5c/independent-first-target.txt",
+    "docs/agent-runs/phase-05/evidence/5c/owner-handoffs.json",
+    "docs/agent-runs/phase-05/evidence/5c/post-demo-input-verification.json",
+    "docs/agent-runs/phase-05/evidence/5c/preliminary-readiness.json",
+    "docs/agent-runs/phase-05/evidence/5c/queue-final.argv.json",
+    "docs/agent-runs/phase-05/evidence/5c/queue-final.txt",
+    "docs/agent-runs/phase-05/evidence/5c/queue-readiness.argv.json",
+    "docs/agent-runs/phase-05/evidence/5c/queue-readiness.txt",
+    "docs/agent-runs/phase-05/evidence/5c/queue-replay.txt",
+    "docs/agent-runs/phase-05/evidence/5c/readiness-source-hashes.json",
+    "docs/agent-runs/phase-05/evidence/5c/real-readiness-summary.json",
+    "docs/agent-runs/phase-05/evidence/5c/review-artifacts/queue.json",
+    "docs/agent-runs/phase-05/evidence/5c/review-artifacts/split.json",
+    "docs/agent-runs/phase-05/evidence/5c/run-command.py.txt",
+    "docs/agent-runs/phase-05/evidence/5c/split-repair-targeted.txt",
+    "docs/agent-runs/phase-05/evidence/5c/synthetic-browser-checkpoint.json",
+    "docs/agent-runs/phase-05/evidence/5c/synthetic-empty-predictions.json",
+    "docs/agent-runs/phase-05/evidence/5c/synthetic-evaluate-cli.txt",
+    "docs/agent-runs/phase-05/evidence/5c/synthetic-evaluation-missing-predictions/evaluation.json",
+    "docs/agent-runs/phase-05/evidence/5c/synthetic-import-labels.txt",
+    "docs/agent-runs/phase-05/evidence/5c/synthetic-other-queue-checkpoint.json",
+    "docs/agent-runs/phase-05/evidence/5c/synthetic-queue.json",
+    "docs/agent-runs/phase-05/evidence/5c/synthetic-split.json",
+    "docs/agent-runs/phase-05/evidence/5c/synthetic-validated-labels.json",
+    "docs/agent-runs/phase-05/evidence/5c/targeted-ready.txt",
+    "docs/agent-runs/phase-05/evidence/5c/toolchain.txt",
+    "docs/agent-runs/phase-05/history/5b-final-handoff/5b-implementation.diff",
+    "docs/agent-runs/phase-05/history/5b-final-handoff/implementation.diff",
+    "docs/agent-runs/phase-05/history/5b-final-handoff/review-inventory.json",
+    "docs/agent-runs/phase-05/history/5b-final-handoff/reviewer-prompt.txt",
+    "docs/agent-runs/phase-05/history/5b-final-handoff/source-freeze.json",
+    "docs/agent-runs/phase-05/implementation.diff",
+    "docs/agent-runs/phase-05/owner-report.md",
+    "docs/agent-runs/phase-05/prompt.md",
+    "docs/agent-runs/phase-05/repairs.md",
+    "docs/agent-runs/phase-05/review-inventory.json",
+    "docs/agent-runs/phase-05/review.md",
+    "docs/agent-runs/phase-05/reviewer-prompt.txt",
+    "docs/agent-runs/phase-05/source-freeze.json",
+    "docs/agent-runs/phase-05/test-report.md",
+    "modules/entity-resolution/README.md",
+    "modules/entity-resolution/src/main/resources/review/guide.txt",
+    "modules/entity-resolution/src/main/resources/review/index.html",
+    "modules/entity-resolution/src/main/resources/review/sampling.v1.json",
+    "modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/Evaluation.scala",
+    "modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/GoldLabels.scala",
+    "modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/Phase5Main.scala",
+    "modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/ReviewCommands.scala",
+    "modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/ReviewQueue.scala",
+    "modules/entity-resolution/src/test/scala/edu/uic/cs441/scholarchain/entityresolution/ReviewReadinessSpec.scala",
+    "tests/browser/phase5c-review-cua.js",
+    "tests/browser/phase5c-review-observed.json",
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentEvaluationAdapterSpec.scala",
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentEvaluationSpec.scala",
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentGoldLabelsSpec.scala",
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentReviewBrowserFixtureMain.scala",
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentReviewFixtures.scala",
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentReviewQueueSpec.scala"
+  ],
+  "files": [
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/crossref/works.jsonl",
+      "bytes": 12947,
+      "sha256": "033ec4a2abe2e08fb575c0ae2318bd2caa2db9ef1d5af3adc8789501d9855060"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/dblp/records.xml",
+      "bytes": 54,
+      "sha256": "25d64b97056e679c3fab1c80b12342fd210e90e7846569811d0f825f488b9582"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/diagnostics.json",
+      "bytes": 300,
+      "sha256": "c45e769e1952f21dacfce0aa692ef222cf2b80e8f5fd7bc85ed0c0bbf69ff107"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/openalex/works.jsonl",
+      "bytes": 6924833,
+      "sha256": "5703cd664eac31fdf441a034a3561605646ee3f1f800837f3dec1a30c025e0ea"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/orcid/records.jsonl",
+      "bytes": 2136444,
+      "sha256": "9fa63f15a063609b21b8cbc77becf6ad8f2c3b81ef8ac6a3c137a8fa156fec0f"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/population-manifest.v1.json",
+      "bytes": 18800,
+      "sha256": "6b30ef3c4d175e0da49fb20499fbbf0f79cfd1c9c2f7579e581383b5d9ed9f84"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/record-provenance.jsonl",
+      "bytes": 137078,
+      "sha256": "e39e489c4f233ff77fb3048d56516d2adf16f687f52e2771f1eaa58048653ca5"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/request-ledger.jsonl",
+      "bytes": 69344,
+      "sha256": "60e9d576fe6c1fa5144390fec0f225991ec25363fb50295dd242b0a2825cf87e"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/responses/0001-dblp.body",
+      "bytes": 2954,
+      "sha256": "e0830a1501a88ca88632ea7566dcc07032f7d8749c6c5140d901136658065a1b"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/responses/0002-crossref.body",
+      "bytes": 33292,
+      "sha256": "73a27212459508e6c41df659c391603682e4a9e0afc0da21f4b5a01701263e4f"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/responses/0004-openalex.body",
+      "bytes": 65302,
+      "sha256": "2d1c400539fc2b231cb7c40f499fbe1159c48c78eda3b7cce331632d40367a10"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/responses/0005-openalex.body",
+      "bytes": 81064,
+      "sha256": "1db6240ed3216997c5e65669a16a4c4a2a55804387fa5f158fabfcfc961b71bc"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/responses/0006-openalex.body",
+      "bytes": 55323,
+      "sha256": "bc47cb7a8539936a4aab8daf8c33cc7e4e89e08db9404252b50bdeac9b2da5b7"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/responses/0007-openalex.body",
+      "bytes": 83023,
+      "sha256": "615d7f0c297204de30cbaae7abcbae360631dea21a4227387d903a3ac353f4a6"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/responses/0008-openalex.body",
+      "bytes": 165223,
+      "sha256": "62ee789b5bf10e9eb5a7e9cdface165a2371833397c3d01b6708ed48c954a779"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/responses/0009-openalex.body",
+      "bytes": 64683,
+      "sha256": "f379a5d4b1ae94ca50ecc9620ecc0b9c006ae1d54b416ec44a34c4fbd8057399"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/responses/0010-openalex.body",
+      "bytes": 42378,
+      "sha256": "1179d6b396a83f4689c03660814f84978c3d080d375ee3e46761c0f5b6c6ba68"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/responses/0011-openalex.body",
+      "bytes": 100473,
+      "sha256": "3d4e4ecd70ab520223eab7906e8c9fdc43668baebf07e2618c6e39fe40c89461"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/responses/0012-openalex.body",
+      "bytes": 85476,
+      "sha256": "c22d41139c5eed9e6a021efa2fa29123feb60a36b9ca6d8c7c37d334656172b2"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/responses/0013-openalex.body",
+      "bytes": 69492,
+      "sha256": "8a4de4c6dfb6f87e4b6c9f6d7acc3979fd32d288c820d2e1de1391c41717beb9"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/responses/0014-openalex.body",
+      "bytes": 63500,
+      "sha256": "2d05432ba41e59ed3ffcf0ab0408fe64538ad4d0817082f3eadf628c368d2b73"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/responses/0015-openalex.body",
+      "bytes": 454258,
+      "sha256": "3277e3c6e2ebe35a9193676a71c6ab3806235429ad6cb1d6de92f0a33f8bb2d9"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/responses/0016-openalex.body",
+      "bytes": 65937,
+      "sha256": "2306e6d01daf7c252213f2bd279f32f156a50fec61d40309d13e7bded8cc1123"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/responses/0017-openalex.body",
+      "bytes": 96700,
+      "sha256": "8a3ef1a858d758bb907c2b364dc74b8d0a076a96b7b3ede15bcdfee23118e61e"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/responses/0018-openalex.body",
+      "bytes": 91775,
+      "sha256": "722948a17fc2525c229e84279ed79bba4aee04833ed8e2b7478c5901e78f928b"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/responses/0019-openalex.body",
+      "bytes": 64214,
+      "sha256": "32e1f5099299e825f2b070ed79ad57161fe6aa7756ff9b9eecb2722ff99b5ced"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/responses/0020-openalex.body",
+      "bytes": 14547,
+      "sha256": "f865b7ba11629eabd5047304c69a5b0e6aa60e60c1a3522411fbf2ff678e98f3"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/responses/0021-openalex.body",
+      "bytes": 81775,
+      "sha256": "946541acbc449d9316c984ee8c87dc4d3d3dfe2f9fb0048f36db9b419057b11a"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/responses/0022-openalex.body",
+      "bytes": 122812,
+      "sha256": "3b1c2f9bdd4c3dfbcd34f71644e89142d7ed8590dbed7252b7b2bcc0914dca8e"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/responses/0023-openalex.body",
+      "bytes": 95789,
+      "sha256": "f88dbb6acbda48324975ff1d6b34315315d2e1218bf88afcf30b5b93173acc9a"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/responses/0024-openalex.body",
+      "bytes": 61188,
+      "sha256": "8d175248714844efa17eb4e9d7cd804ead1abd2cddc9ede918f52701df2442f7"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/responses/0025-orcid.body",
+      "bytes": 114056,
+      "sha256": "e2fbee482809ab5592e06498684b94aa7aec056e69e7825bcfc6142de6d6cd33"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/responses/0026-orcid.body",
+      "bytes": 137989,
+      "sha256": "f66bbf22a4236b6c5d39919e7f36778e7e50638d48141ddc2eea4b105f4833ea"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/responses/0027-orcid.body",
+      "bytes": 2600,
+      "sha256": "67373103bab4cefd21fca22d0ed0d8cf9edb8694a1ad0250ad66dd0d79206d2c"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/responses/0028-orcid.body",
+      "bytes": 504417,
+      "sha256": "738ec589988191d983328f3c3918d206b294fb6279b005bdec70d464bcc47199"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/responses/0029-orcid.body",
+      "bytes": 2607,
+      "sha256": "143799506b6fc59aa16b8ede64c92e6c220da52f8fbf358bb791dc3e4bd3a5ca"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/responses/0030-orcid.body",
+      "bytes": 60952,
+      "sha256": "56ac0e559a65032561f64a4980abdbec7387f2189c61049e7bdad61837036aae"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/responses/0031-orcid.body",
+      "bytes": 3478,
+      "sha256": "48bfdde1572bf74e5a9f41fe0c33cf58f82e649998391bcb5b28ddc5fafd0b01"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/responses/0032-orcid.body",
+      "bytes": 358421,
+      "sha256": "3846865a884f76791f42f402d40df630b850db221f0371d8e4a5b6493a17fbc5"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/responses/0033-orcid.body",
+      "bytes": 23892,
+      "sha256": "44a59d9e0d174ca3cf9f71a4a36a50e5c0ec9b2ada32006881b1c7de9a374b7e"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/responses/0034-orcid.body",
+      "bytes": 505832,
+      "sha256": "47efde7003c248758af4a108ec8b7e8981b64121a174f7eb90d63e710427aaae"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/responses/0035-orcid.body",
+      "bytes": 13141,
+      "sha256": "47fe048de0a0072579be4b3edf5d75f354fd94e5a3fd067d0ff98220fe73de6f"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/responses/0036-orcid.body",
+      "bytes": 258992,
+      "sha256": "56f3fcbb59704682f5933ebfb995e14bab131f610cd50ebd4c3fa676ef630df1"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/responses/0037-orcid.body",
+      "bytes": 32598,
+      "sha256": "83836eb63eb1a8447cf84f3e4284ef83a29d92a4b3afa730b62cdbfd48af3483"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/responses/0038-orcid.body",
+      "bytes": 29476,
+      "sha256": "3d42fe60ef237a60491428ceb96bb2780a06af7265ebc7082d3660a78c4efa87"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/responses/0039-orcid.body",
+      "bytes": 87994,
+      "sha256": "f62f9a7dba1f164126c2435fd885d2642a0281708e11986fb32528186afbf614"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/responses/0040-orcid.body",
+      "bytes": 1048576,
+      "sha256": "3ad4e015dd434c31e59e9c546daf34e646594591bc522ef477471027572d753d"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/responses/0041-openalex.body",
+      "bytes": 1650,
+      "sha256": "ff441bb16fb92cb96fbe3fee71b69548ed726416b33cf4b1f51f3a96c8073ab5"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/responses/0042-openalex.body",
+      "bytes": 91553,
+      "sha256": "fcd2241edea44d7a4712ff298d39d4c67abc2778e01a38bfd2385116f64eeaa0"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/responses/0043-openalex.body",
+      "bytes": 80419,
+      "sha256": "992a9ae55cc68918f2ea6989aafc2843d07223f7a0f0cefc7812df67d3546dd3"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/responses/0044-openalex.body",
+      "bytes": 81827,
+      "sha256": "b82304b99d0bab7d0ec5d26c8fad4ccc4645ba035da976b11191e7ab8b797019"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/responses/0045-openalex.body",
+      "bytes": 106214,
+      "sha256": "857aabcc006f2cc0006b395f9bde0bd7bbaeb43c77332073ec7f3b41b7ea733f"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/responses/0046-openalex.body",
+      "bytes": 103030,
+      "sha256": "dc7a44c24fd06f40b1d4b1aefbc89bf31ca51b7579e9cd072358898a5642b455"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/responses/0047-openalex.body",
+      "bytes": 105113,
+      "sha256": "764727f817f91463323d49de4551282d25bfa22cd66cc870847b9c52f7bf5d2b"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/responses/0048-openalex.body",
+      "bytes": 101179,
+      "sha256": "fcb47411bb9e3bbbf9df9a179a88cd610cda36fe4add5431397dd5c27202f2d5"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/responses/0049-openalex.body",
+      "bytes": 1249,
+      "sha256": "c38c7cd082bae5dd8a5efb890f25c7afd25613a07b107ea51933a84bf793f6f0"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/responses/0050-openalex.body",
+      "bytes": 75963,
+      "sha256": "4da69329c6880b8bd00369766ed212c90c61523139b6cadae9ca813f94fe96b4"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/responses/0051-openalex.body",
+      "bytes": 82851,
+      "sha256": "f6ff3fdb90f81ae925faa1cc0394b15c935efcb34c5d05c9cc8441de50dc69c7"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/responses/0052-openalex.body",
+      "bytes": 99350,
+      "sha256": "290160f22beab94dd43fde918821c6957a2c31a80db9736de84f3438fae8f5ed"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/responses/0053-openalex.body",
+      "bytes": 90419,
+      "sha256": "edb722f8f3b3e81e69c54baad6bc2d8abd5f9e5a9d71315ed23f69633cbb6d90"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/responses/0054-openalex.body",
+      "bytes": 87581,
+      "sha256": "2c081d03146bc00a39a7317ba0af4b49a92c0101e5d9546eddcef64ec3fae2d9"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/responses/0055-openalex.body",
+      "bytes": 99303,
+      "sha256": "48c803db7677ae3acf16cfa59e53f651e4b6bd49d7132444606c17abdc5f569b"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/responses/0056-openalex.body",
+      "bytes": 101512,
+      "sha256": "b92d547bdba127e1296f6a0f5edff48bd41de374a572b8cc62b168a7cc8902c6"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/responses/0057-openalex.body",
+      "bytes": 1829,
+      "sha256": "91990145c404d58a1add3cea19a8dea3ff10b7acc74a1ddbc814f042bcfa8399"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/responses/0058-openalex.body",
+      "bytes": 85800,
+      "sha256": "4abc66b19e15d6b570297b49d1991966ff13c8602d47e6561966c27853cf1cd8"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/responses/0059-openalex.body",
+      "bytes": 91266,
+      "sha256": "d483da2e9f9a6fe807e6e778180600be0585630d1b08b41b705cf5945e18d7e9"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/responses/0060-openalex.body",
+      "bytes": 83588,
+      "sha256": "c35e0f1df12e83ab6d6d6187cb5d0e39c1b3386141a7ac1a8f6be4bfa6383861"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/responses/0061-openalex.body",
+      "bytes": 96361,
+      "sha256": "c55a70c666eba7f1cfadd4af0e28db5d36b164587230c0497781b00462509a17"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/responses/0062-openalex.body",
+      "bytes": 109707,
+      "sha256": "e908afe6f0f3160db8b3887d3df5935e370e73966983aff08c3a470ce722ccd2"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/responses/0063-openalex.body",
+      "bytes": 106080,
+      "sha256": "8c7562e0628642e78c0a913e40c940c51b89e430746940c5f98602bc8a972d08"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/responses/0064-openalex.body",
+      "bytes": 105285,
+      "sha256": "2a42f195386a5daa93a82124c26f59c823cb27dc860be3922b57943f0c8c24f4"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/responses/0065-openalex.body",
+      "bytes": 1447,
+      "sha256": "4a6451987f6d917230f9479f7b55fc5ab5eca62bfd4416a97dcd4b1283b437af"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/responses/0066-openalex.body",
+      "bytes": 72867,
+      "sha256": "855e7c137e914e6b8721df3ae0f7851d6580ec3f3203425e27aa0b3bb95544ba"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/responses/0067-openalex.body",
+      "bytes": 83285,
+      "sha256": "333c45837e22a1497eb8af4cc10f9405fd5722864ea80850c7fb621ab5bdecd8"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/responses/0068-openalex.body",
+      "bytes": 82513,
+      "sha256": "b1c8a50db1e0113fa0b558c0e9d8e8737129c8e29a188cf193f242190c46600c"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/responses/0069-openalex.body",
+      "bytes": 96425,
+      "sha256": "e7a3d3ea500b1741a189523cc5cc6a376df3c7b4433483fe4fd23b9bf35d596a"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/responses/0070-openalex.body",
+      "bytes": 1030,
+      "sha256": "1c3d0ff62c736d77c476f7ab573ab72c8aa61ef48141e0a4784ca5fc348b1386"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/responses/0071-openalex.body",
+      "bytes": 101078,
+      "sha256": "69d950ba40f88c8bfebfa3e7105b96dda9f42f622f300f2af72bf3d9151e8ecb"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/responses/0072-openalex.body",
+      "bytes": 93558,
+      "sha256": "d9b572153f6b58a3048a3e9af97f0866b9483758a37133a5d5b70c3c45631fcd"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/responses/0073-openalex.body",
+      "bytes": 1270,
+      "sha256": "1584691f9e59360ae3c8a5b5bb8e0855ef2ad2578f04c536316e3ff0f72fe731"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/responses/0074-openalex.body",
+      "bytes": 1030,
+      "sha256": "16394f43844371ce33f0ff7d474cd268a0c5b653dcbc0481c0126edbf757ef9e"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/responses/0075-openalex.body",
+      "bytes": 1031,
+      "sha256": "2338dd174f1aeb19e1c9fdeb7a373d0502a838c7250a9268b8e9da406ae6dd96"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/responses/0076-openalex.body",
+      "bytes": 1030,
+      "sha256": "ff10d4e612fb1990a44968701a8c6069162069480ecfec473cbf533be9f498c1"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/responses/0077-openalex.body",
+      "bytes": 1030,
+      "sha256": "2b0305310c83947876fee24b982de378b8c7ccf58fe850272aef09293959773f"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/responses/0078-openalex.body",
+      "bytes": 1030,
+      "sha256": "67fe83dc3f6e81d207c5bdbb32963cfebd87a4a6e859d696666a0637b8648e1c"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/responses/0079-openalex.body",
+      "bytes": 1030,
+      "sha256": "37c4e483b48e0532e025c47f33c52306dc69d66469a67216787372e7b53a249a"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/responses/0080-openalex.body",
+      "bytes": 1030,
+      "sha256": "a9663d0948a68c9c7feeb50612f7f9d85b743ee0322b694184b7134dda87c5c9"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/responses/0081-openalex.body",
+      "bytes": 1853,
+      "sha256": "5cf072243e6670dc20ccf16b2383ca2b1ff45665db5e6cfcd082482950021dc2"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/responses/0082-openalex.body",
+      "bytes": 1030,
+      "sha256": "2ced802bafc5eaca2825bfd62dbf82748a21f0ad786c8899a364cef96ac2b967"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/responses/0083-openalex.body",
+      "bytes": 1030,
+      "sha256": "66de2cab2b4668d87f5024cb48f8213cfd4c331d8b02b04eada66ee024a12689"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/responses/0084-openalex.body",
+      "bytes": 1030,
+      "sha256": "8a7ae5eeb0b95ee56747155ceace48caddce19a5a995044774e5b7bb5b7b984f"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/responses/0085-openalex.body",
+      "bytes": 1030,
+      "sha256": "4eaf312ed08890e1ce93591cf19e3eb84c73a201ffb90c8334f785cd16e93b3c"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/responses/0086-openalex.body",
+      "bytes": 1030,
+      "sha256": "f77875d81f8fbce5bedc4d93459a41f6b42d6b9ef4c75e44d19a11d4839e9666"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/responses/0087-openalex.body",
+      "bytes": 1030,
+      "sha256": "cf90d5f164c71e56c22f945c6fbadb7cbecec2b34e0e249516b6ed629a314c6f"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/responses/0088-openalex.body",
+      "bytes": 1031,
+      "sha256": "c195c9e781fe7dac894a2582901a1dcf97944cc1ce37e5c11ae216befc7b6957"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/responses/0089-openalex.body",
+      "bytes": 1186,
+      "sha256": "205f99b00269b4e07f8cdddbcecceda177ba7e1cd06a349bc22553c459b590ff"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/responses/0090-openalex.body",
+      "bytes": 72860,
+      "sha256": "cab298d509bcbc95435dd725e49a10211a06242025e6811a91ba1ec84db8fe9b"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/responses/0091-openalex.body",
+      "bytes": 1031,
+      "sha256": "456272a392cf5b9d6a9e3cf18fabb46bc7134e16fded3e2c71ff5ea58a0e746c"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/responses/0092-openalex.body",
+      "bytes": 98241,
+      "sha256": "dca88544a8768f3765c8c7ded4053d9e1f7f5f6161b59153ddad97bd9da6f282"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/responses/0093-openalex.body",
+      "bytes": 64598,
+      "sha256": "f6b082a8c43a3e963e15524a09ebdf03145200dee818f48d1d06b02dcccedb7d"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/responses/0094-openalex.body",
+      "bytes": 1031,
+      "sha256": "c0585e93585beacfb3314b5c5fe73d861781dcd17ed59efac47b227a34910575"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/responses/0095-openalex.body",
+      "bytes": 1030,
+      "sha256": "761700f1058050a1f13a0aaea891235aeb56efe011a49ee76e7918c5715c252c"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/responses/0096-openalex.body",
+      "bytes": 1030,
+      "sha256": "90b26feee3922c3978ef2bbaf04a5b8e00a6da55156decefdad154c82142b968"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/responses/0097-openalex.body",
+      "bytes": 1436,
+      "sha256": "36fae7aa8f8153d1025046089320ff3944ed7c43572c7326abef6d97f5e8a716"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/responses/0098-openalex.body",
+      "bytes": 1030,
+      "sha256": "f3e10266c0a13b45bd0c0ed5f47211279230d0689e2e61f951427244fd9febf8"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/responses/0099-openalex.body",
+      "bytes": 1031,
+      "sha256": "c2ba50a09b775c174bb59e8870dac3389b61ce3dc9051f8ef9791cc79ce48149"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/responses/0100-openalex.body",
+      "bytes": 1030,
+      "sha256": "6346f8a8d9cf8f6a361e6c2ab62c94370ed5e2accfb5dcf3111b1c09e0ace41e"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/responses/0101-openalex.body",
+      "bytes": 1030,
+      "sha256": "97ca3e34897db5fe95331ee81a776dbfa07f1d805bc82dbddd15c8bf6fb0f40d"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/responses/0102-openalex.body",
+      "bytes": 1030,
+      "sha256": "dd328233c1efe2a41dbfff015f4dda5b1a91020c37070d4644535242771961f0"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/responses/0103-openalex.body",
+      "bytes": 108235,
+      "sha256": "690f8bb259fe112860274682b11214c55762ce77b029f84541cf86fb7eef13f2"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/responses/0104-openalex.body",
+      "bytes": 1030,
+      "sha256": "e7f2828637e54e30d597c2aa656fd9fae851749974476cf6f540558f5a792d0c"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/responses/0105-openalex.body",
+      "bytes": 65302,
+      "sha256": "353878bc0ac3e15c14b0468cf5d6975490b909f0030d8569442a9bec8cdfdb43"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/responses/0106-openalex.body",
+      "bytes": 111971,
+      "sha256": "b7d3c76f970b84ad2126befada66aa3c0977ebff8a9c1e91b7459f7ae48ec9e1"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/responses/0107-openalex.body",
+      "bytes": 85476,
+      "sha256": "c22d41139c5eed9e6a021efa2fa29123feb60a36b9ca6d8c7c37d334656172b2"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/responses/0108-openalex.body",
+      "bytes": 751956,
+      "sha256": "c2093af28ba04f9d4110bd6f876511f562832069c20786d464d94c425b402b94"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/responses/0109-openalex.body",
+      "bytes": 61188,
+      "sha256": "efa325914018cddebd065344edf8c6318bc35e0e36ed5ab5e5e463f753e8a47c"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/responses/0110-openalex.body",
+      "bytes": 81064,
+      "sha256": "1db6240ed3216997c5e65669a16a4c4a2a55804387fa5f158fabfcfc961b71bc"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/responses/0111-openalex.body",
+      "bytes": 81775,
+      "sha256": "ddaadcff1ad923bfdc658f38199c0f53d7d1d93b9df27fe4065b43d6cc7f0e93"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/responses/0112-openalex.body",
+      "bytes": 55323,
+      "sha256": "244f59ae2f34b3f9b6cb942b4c32c0af105f3d3d717510f8e3ff740a5c094d33"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/responses/0113-openalex.body",
+      "bytes": 83023,
+      "sha256": "615d7f0c297204de30cbaae7abcbae360631dea21a4227387d903a3ac353f4a6"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/responses/0114-openalex.body",
+      "bytes": 165223,
+      "sha256": "92c7df32634ce85ec67333abda4cd61626aaad9c0b236a3c899eee02694935f2"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/responses/0115-openalex.body",
+      "bytes": 64683,
+      "sha256": "493acd2e7735e312dcba310f8a88708049f8753502b6455a927b82c781d5037e"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/responses/0116-openalex.body",
+      "bytes": 42378,
+      "sha256": "c1ca5f4aa258307131d4cea808df7ae005ecdaadf6603299dd213b62eccae75e"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/responses/0117-openalex.body",
+      "bytes": 63500,
+      "sha256": "bb9534417261a1c9f10d15e3218f10a63199ce31a9e0022aeaeb481a63b4a92f"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/responses/0118-openalex.body",
+      "bytes": 65937,
+      "sha256": "2306e6d01daf7c252213f2bd279f32f156a50fec61d40309d13e7bded8cc1123"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/responses/0119-openalex.body",
+      "bytes": 384122,
+      "sha256": "6fd8fb4436c7f95c3d6edf6400c5df0d360ccc9d3dab9419ab0ac00d021d3bec"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/responses/0120-openalex.body",
+      "bytes": 843775,
+      "sha256": "18ee1805d6888f6047934074763b07a9f1f7395f2abedc78d503dc3304cb4756"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/responses/0121-openalex.body",
+      "bytes": 100473,
+      "sha256": "0081250051f8d8d45f3f3d7746244ed75aa9559177865c6daa33374d76cc6fc7"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/responses/0122-openalex.body",
+      "bytes": 84519,
+      "sha256": "1e13bbbc567bac1f7c5883e44b10bdd7d3b9683214fbaa88ede52c1a2bdd523c"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/responses/0123-openalex.body",
+      "bytes": 69492,
+      "sha256": "fdedc08ab2d917ff1825acf81d654f8d7aa99da98b8c78ff064accc49e78b100"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/responses/0124-openalex.body",
+      "bytes": 347372,
+      "sha256": "d289c3457a074faa42ab100931118d27220a7014f8dee2b26091d194acbd9418"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v2/responses/0125-openalex.body",
+      "bytes": 982461,
+      "sha256": "48ac7b2551048a78ea34e31eba0f1866d0925fef53d501e442b1a7ffe7f1307b"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/crossref/works.jsonl",
+      "bytes": 12947,
+      "sha256": "033ec4a2abe2e08fb575c0ae2318bd2caa2db9ef1d5af3adc8789501d9855060"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/dblp/records.xml",
+      "bytes": 54,
+      "sha256": "25d64b97056e679c3fab1c80b12342fd210e90e7846569811d0f825f488b9582"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/diagnostics.json",
+      "bytes": 300,
+      "sha256": "c45e769e1952f21dacfce0aa692ef222cf2b80e8f5fd7bc85ed0c0bbf69ff107"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/openalex/works.jsonl",
+      "bytes": 3277735,
+      "sha256": "04dc34cb56a80cdea324246f294ce527d54806e7f993de7e03f252fec179015d"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/orcid/records.jsonl",
+      "bytes": 894176,
+      "sha256": "05549d30d63c83ff63dbfa27d93aa946e95d602b1fd391738926de5f85c8a4e9"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/population-manifest.v1.json",
+      "bytes": 19918,
+      "sha256": "6625a645675341c57bff8186d5cf16a4585e91c03eb7528da5bbacacf9b4d608"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/record-provenance.jsonl",
+      "bytes": 97217,
+      "sha256": "06bbacdd7b2eb826093ffc0fb990761640f1f70dff1765ad91cf03cd90f0d91a"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/request-ledger.jsonl",
+      "bytes": 69344,
+      "sha256": "60e9d576fe6c1fa5144390fec0f225991ec25363fb50295dd242b0a2825cf87e"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/responses/0001-dblp.body",
+      "bytes": 2954,
+      "sha256": "e0830a1501a88ca88632ea7566dcc07032f7d8749c6c5140d901136658065a1b"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/responses/0002-crossref.body",
+      "bytes": 33292,
+      "sha256": "73a27212459508e6c41df659c391603682e4a9e0afc0da21f4b5a01701263e4f"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/responses/0004-openalex.body",
+      "bytes": 65302,
+      "sha256": "2d1c400539fc2b231cb7c40f499fbe1159c48c78eda3b7cce331632d40367a10"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/responses/0005-openalex.body",
+      "bytes": 81064,
+      "sha256": "1db6240ed3216997c5e65669a16a4c4a2a55804387fa5f158fabfcfc961b71bc"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/responses/0006-openalex.body",
+      "bytes": 55323,
+      "sha256": "bc47cb7a8539936a4aab8daf8c33cc7e4e89e08db9404252b50bdeac9b2da5b7"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/responses/0007-openalex.body",
+      "bytes": 83023,
+      "sha256": "615d7f0c297204de30cbaae7abcbae360631dea21a4227387d903a3ac353f4a6"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/responses/0008-openalex.body",
+      "bytes": 165223,
+      "sha256": "62ee789b5bf10e9eb5a7e9cdface165a2371833397c3d01b6708ed48c954a779"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/responses/0009-openalex.body",
+      "bytes": 64683,
+      "sha256": "f379a5d4b1ae94ca50ecc9620ecc0b9c006ae1d54b416ec44a34c4fbd8057399"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/responses/0010-openalex.body",
+      "bytes": 42378,
+      "sha256": "1179d6b396a83f4689c03660814f84978c3d080d375ee3e46761c0f5b6c6ba68"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/responses/0011-openalex.body",
+      "bytes": 100473,
+      "sha256": "3d4e4ecd70ab520223eab7906e8c9fdc43668baebf07e2618c6e39fe40c89461"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/responses/0012-openalex.body",
+      "bytes": 85476,
+      "sha256": "c22d41139c5eed9e6a021efa2fa29123feb60a36b9ca6d8c7c37d334656172b2"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/responses/0013-openalex.body",
+      "bytes": 69492,
+      "sha256": "8a4de4c6dfb6f87e4b6c9f6d7acc3979fd32d288c820d2e1de1391c41717beb9"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/responses/0014-openalex.body",
+      "bytes": 63500,
+      "sha256": "2d05432ba41e59ed3ffcf0ab0408fe64538ad4d0817082f3eadf628c368d2b73"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/responses/0015-openalex.body",
+      "bytes": 454258,
+      "sha256": "3277e3c6e2ebe35a9193676a71c6ab3806235429ad6cb1d6de92f0a33f8bb2d9"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/responses/0016-openalex.body",
+      "bytes": 65937,
+      "sha256": "2306e6d01daf7c252213f2bd279f32f156a50fec61d40309d13e7bded8cc1123"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/responses/0017-openalex.body",
+      "bytes": 96700,
+      "sha256": "8a3ef1a858d758bb907c2b364dc74b8d0a076a96b7b3ede15bcdfee23118e61e"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/responses/0018-openalex.body",
+      "bytes": 91775,
+      "sha256": "722948a17fc2525c229e84279ed79bba4aee04833ed8e2b7478c5901e78f928b"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/responses/0019-openalex.body",
+      "bytes": 64214,
+      "sha256": "32e1f5099299e825f2b070ed79ad57161fe6aa7756ff9b9eecb2722ff99b5ced"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/responses/0020-openalex.body",
+      "bytes": 14547,
+      "sha256": "f865b7ba11629eabd5047304c69a5b0e6aa60e60c1a3522411fbf2ff678e98f3"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/responses/0021-openalex.body",
+      "bytes": 81775,
+      "sha256": "946541acbc449d9316c984ee8c87dc4d3d3dfe2f9fb0048f36db9b419057b11a"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/responses/0022-openalex.body",
+      "bytes": 122812,
+      "sha256": "3b1c2f9bdd4c3dfbcd34f71644e89142d7ed8590dbed7252b7b2bcc0914dca8e"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/responses/0023-openalex.body",
+      "bytes": 95789,
+      "sha256": "f88dbb6acbda48324975ff1d6b34315315d2e1218bf88afcf30b5b93173acc9a"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/responses/0024-openalex.body",
+      "bytes": 61188,
+      "sha256": "8d175248714844efa17eb4e9d7cd804ead1abd2cddc9ede918f52701df2442f7"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/responses/0025-orcid.body",
+      "bytes": 114056,
+      "sha256": "e2fbee482809ab5592e06498684b94aa7aec056e69e7825bcfc6142de6d6cd33"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/responses/0026-orcid.body",
+      "bytes": 137989,
+      "sha256": "f66bbf22a4236b6c5d39919e7f36778e7e50638d48141ddc2eea4b105f4833ea"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/responses/0027-orcid.body",
+      "bytes": 2600,
+      "sha256": "67373103bab4cefd21fca22d0ed0d8cf9edb8694a1ad0250ad66dd0d79206d2c"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/responses/0028-orcid.body",
+      "bytes": 504417,
+      "sha256": "738ec589988191d983328f3c3918d206b294fb6279b005bdec70d464bcc47199"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/responses/0029-orcid.body",
+      "bytes": 2607,
+      "sha256": "143799506b6fc59aa16b8ede64c92e6c220da52f8fbf358bb791dc3e4bd3a5ca"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/responses/0030-orcid.body",
+      "bytes": 60952,
+      "sha256": "56ac0e559a65032561f64a4980abdbec7387f2189c61049e7bdad61837036aae"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/responses/0031-orcid.body",
+      "bytes": 3478,
+      "sha256": "48bfdde1572bf74e5a9f41fe0c33cf58f82e649998391bcb5b28ddc5fafd0b01"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/responses/0032-orcid.body",
+      "bytes": 358421,
+      "sha256": "3846865a884f76791f42f402d40df630b850db221f0371d8e4a5b6493a17fbc5"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/responses/0033-orcid.body",
+      "bytes": 23892,
+      "sha256": "44a59d9e0d174ca3cf9f71a4a36a50e5c0ec9b2ada32006881b1c7de9a374b7e"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/responses/0034-orcid.body",
+      "bytes": 505832,
+      "sha256": "47efde7003c248758af4a108ec8b7e8981b64121a174f7eb90d63e710427aaae"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/responses/0035-orcid.body",
+      "bytes": 13141,
+      "sha256": "47fe048de0a0072579be4b3edf5d75f354fd94e5a3fd067d0ff98220fe73de6f"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/responses/0036-orcid.body",
+      "bytes": 258992,
+      "sha256": "56f3fcbb59704682f5933ebfb995e14bab131f610cd50ebd4c3fa676ef630df1"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/responses/0037-orcid.body",
+      "bytes": 32598,
+      "sha256": "83836eb63eb1a8447cf84f3e4284ef83a29d92a4b3afa730b62cdbfd48af3483"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/responses/0038-orcid.body",
+      "bytes": 29476,
+      "sha256": "3d42fe60ef237a60491428ceb96bb2780a06af7265ebc7082d3660a78c4efa87"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/responses/0039-orcid.body",
+      "bytes": 87994,
+      "sha256": "f62f9a7dba1f164126c2435fd885d2642a0281708e11986fb32528186afbf614"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/responses/0040-orcid.body",
+      "bytes": 1048576,
+      "sha256": "3ad4e015dd434c31e59e9c546daf34e646594591bc522ef477471027572d753d"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/responses/0041-openalex.body",
+      "bytes": 1650,
+      "sha256": "ff441bb16fb92cb96fbe3fee71b69548ed726416b33cf4b1f51f3a96c8073ab5"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/responses/0042-openalex.body",
+      "bytes": 91553,
+      "sha256": "fcd2241edea44d7a4712ff298d39d4c67abc2778e01a38bfd2385116f64eeaa0"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/responses/0043-openalex.body",
+      "bytes": 80419,
+      "sha256": "992a9ae55cc68918f2ea6989aafc2843d07223f7a0f0cefc7812df67d3546dd3"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/responses/0044-openalex.body",
+      "bytes": 81827,
+      "sha256": "b82304b99d0bab7d0ec5d26c8fad4ccc4645ba035da976b11191e7ab8b797019"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/responses/0045-openalex.body",
+      "bytes": 106214,
+      "sha256": "857aabcc006f2cc0006b395f9bde0bd7bbaeb43c77332073ec7f3b41b7ea733f"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/responses/0046-openalex.body",
+      "bytes": 103030,
+      "sha256": "dc7a44c24fd06f40b1d4b1aefbc89bf31ca51b7579e9cd072358898a5642b455"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/responses/0047-openalex.body",
+      "bytes": 105113,
+      "sha256": "764727f817f91463323d49de4551282d25bfa22cd66cc870847b9c52f7bf5d2b"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/responses/0048-openalex.body",
+      "bytes": 101179,
+      "sha256": "fcb47411bb9e3bbbf9df9a179a88cd610cda36fe4add5431397dd5c27202f2d5"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/responses/0049-openalex.body",
+      "bytes": 1249,
+      "sha256": "c38c7cd082bae5dd8a5efb890f25c7afd25613a07b107ea51933a84bf793f6f0"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/responses/0050-openalex.body",
+      "bytes": 75963,
+      "sha256": "4da69329c6880b8bd00369766ed212c90c61523139b6cadae9ca813f94fe96b4"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/responses/0051-openalex.body",
+      "bytes": 82851,
+      "sha256": "f6ff3fdb90f81ae925faa1cc0394b15c935efcb34c5d05c9cc8441de50dc69c7"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/responses/0052-openalex.body",
+      "bytes": 99350,
+      "sha256": "290160f22beab94dd43fde918821c6957a2c31a80db9736de84f3438fae8f5ed"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/responses/0053-openalex.body",
+      "bytes": 90419,
+      "sha256": "edb722f8f3b3e81e69c54baad6bc2d8abd5f9e5a9d71315ed23f69633cbb6d90"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/responses/0054-openalex.body",
+      "bytes": 87581,
+      "sha256": "2c081d03146bc00a39a7317ba0af4b49a92c0101e5d9546eddcef64ec3fae2d9"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/responses/0055-openalex.body",
+      "bytes": 99303,
+      "sha256": "48c803db7677ae3acf16cfa59e53f651e4b6bd49d7132444606c17abdc5f569b"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/responses/0056-openalex.body",
+      "bytes": 101512,
+      "sha256": "b92d547bdba127e1296f6a0f5edff48bd41de374a572b8cc62b168a7cc8902c6"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/responses/0057-openalex.body",
+      "bytes": 1829,
+      "sha256": "91990145c404d58a1add3cea19a8dea3ff10b7acc74a1ddbc814f042bcfa8399"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/responses/0058-openalex.body",
+      "bytes": 85800,
+      "sha256": "4abc66b19e15d6b570297b49d1991966ff13c8602d47e6561966c27853cf1cd8"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/responses/0059-openalex.body",
+      "bytes": 91266,
+      "sha256": "d483da2e9f9a6fe807e6e778180600be0585630d1b08b41b705cf5945e18d7e9"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/responses/0060-openalex.body",
+      "bytes": 83588,
+      "sha256": "c35e0f1df12e83ab6d6d6187cb5d0e39c1b3386141a7ac1a8f6be4bfa6383861"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/responses/0061-openalex.body",
+      "bytes": 96361,
+      "sha256": "c55a70c666eba7f1cfadd4af0e28db5d36b164587230c0497781b00462509a17"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/responses/0062-openalex.body",
+      "bytes": 109707,
+      "sha256": "e908afe6f0f3160db8b3887d3df5935e370e73966983aff08c3a470ce722ccd2"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/responses/0063-openalex.body",
+      "bytes": 106080,
+      "sha256": "8c7562e0628642e78c0a913e40c940c51b89e430746940c5f98602bc8a972d08"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/responses/0064-openalex.body",
+      "bytes": 105285,
+      "sha256": "2a42f195386a5daa93a82124c26f59c823cb27dc860be3922b57943f0c8c24f4"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/responses/0065-openalex.body",
+      "bytes": 1447,
+      "sha256": "4a6451987f6d917230f9479f7b55fc5ab5eca62bfd4416a97dcd4b1283b437af"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/responses/0066-openalex.body",
+      "bytes": 72867,
+      "sha256": "855e7c137e914e6b8721df3ae0f7851d6580ec3f3203425e27aa0b3bb95544ba"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/responses/0067-openalex.body",
+      "bytes": 83285,
+      "sha256": "333c45837e22a1497eb8af4cc10f9405fd5722864ea80850c7fb621ab5bdecd8"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/responses/0068-openalex.body",
+      "bytes": 82513,
+      "sha256": "b1c8a50db1e0113fa0b558c0e9d8e8737129c8e29a188cf193f242190c46600c"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/responses/0069-openalex.body",
+      "bytes": 96425,
+      "sha256": "e7a3d3ea500b1741a189523cc5cc6a376df3c7b4433483fe4fd23b9bf35d596a"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/responses/0070-openalex.body",
+      "bytes": 1030,
+      "sha256": "1c3d0ff62c736d77c476f7ab573ab72c8aa61ef48141e0a4784ca5fc348b1386"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/responses/0071-openalex.body",
+      "bytes": 101078,
+      "sha256": "69d950ba40f88c8bfebfa3e7105b96dda9f42f622f300f2af72bf3d9151e8ecb"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/responses/0072-openalex.body",
+      "bytes": 93558,
+      "sha256": "d9b572153f6b58a3048a3e9af97f0866b9483758a37133a5d5b70c3c45631fcd"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/responses/0073-openalex.body",
+      "bytes": 1270,
+      "sha256": "1584691f9e59360ae3c8a5b5bb8e0855ef2ad2578f04c536316e3ff0f72fe731"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/responses/0074-openalex.body",
+      "bytes": 1030,
+      "sha256": "16394f43844371ce33f0ff7d474cd268a0c5b653dcbc0481c0126edbf757ef9e"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/responses/0075-openalex.body",
+      "bytes": 1031,
+      "sha256": "2338dd174f1aeb19e1c9fdeb7a373d0502a838c7250a9268b8e9da406ae6dd96"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/responses/0076-openalex.body",
+      "bytes": 1030,
+      "sha256": "ff10d4e612fb1990a44968701a8c6069162069480ecfec473cbf533be9f498c1"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/responses/0077-openalex.body",
+      "bytes": 1030,
+      "sha256": "2b0305310c83947876fee24b982de378b8c7ccf58fe850272aef09293959773f"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/responses/0078-openalex.body",
+      "bytes": 1030,
+      "sha256": "67fe83dc3f6e81d207c5bdbb32963cfebd87a4a6e859d696666a0637b8648e1c"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/responses/0079-openalex.body",
+      "bytes": 1030,
+      "sha256": "37c4e483b48e0532e025c47f33c52306dc69d66469a67216787372e7b53a249a"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/responses/0080-openalex.body",
+      "bytes": 1030,
+      "sha256": "a9663d0948a68c9c7feeb50612f7f9d85b743ee0322b694184b7134dda87c5c9"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/responses/0081-openalex.body",
+      "bytes": 1853,
+      "sha256": "5cf072243e6670dc20ccf16b2383ca2b1ff45665db5e6cfcd082482950021dc2"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/responses/0082-openalex.body",
+      "bytes": 1030,
+      "sha256": "2ced802bafc5eaca2825bfd62dbf82748a21f0ad786c8899a364cef96ac2b967"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/responses/0083-openalex.body",
+      "bytes": 1030,
+      "sha256": "66de2cab2b4668d87f5024cb48f8213cfd4c331d8b02b04eada66ee024a12689"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/responses/0084-openalex.body",
+      "bytes": 1030,
+      "sha256": "8a7ae5eeb0b95ee56747155ceace48caddce19a5a995044774e5b7bb5b7b984f"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/responses/0085-openalex.body",
+      "bytes": 1030,
+      "sha256": "4eaf312ed08890e1ce93591cf19e3eb84c73a201ffb90c8334f785cd16e93b3c"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/responses/0086-openalex.body",
+      "bytes": 1030,
+      "sha256": "f77875d81f8fbce5bedc4d93459a41f6b42d6b9ef4c75e44d19a11d4839e9666"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/responses/0087-openalex.body",
+      "bytes": 1030,
+      "sha256": "cf90d5f164c71e56c22f945c6fbadb7cbecec2b34e0e249516b6ed629a314c6f"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/responses/0088-openalex.body",
+      "bytes": 1031,
+      "sha256": "c195c9e781fe7dac894a2582901a1dcf97944cc1ce37e5c11ae216befc7b6957"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/responses/0089-openalex.body",
+      "bytes": 1186,
+      "sha256": "205f99b00269b4e07f8cdddbcecceda177ba7e1cd06a349bc22553c459b590ff"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/responses/0090-openalex.body",
+      "bytes": 72860,
+      "sha256": "cab298d509bcbc95435dd725e49a10211a06242025e6811a91ba1ec84db8fe9b"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/responses/0091-openalex.body",
+      "bytes": 1031,
+      "sha256": "456272a392cf5b9d6a9e3cf18fabb46bc7134e16fded3e2c71ff5ea58a0e746c"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/responses/0092-openalex.body",
+      "bytes": 98241,
+      "sha256": "dca88544a8768f3765c8c7ded4053d9e1f7f5f6161b59153ddad97bd9da6f282"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/responses/0093-openalex.body",
+      "bytes": 64598,
+      "sha256": "f6b082a8c43a3e963e15524a09ebdf03145200dee818f48d1d06b02dcccedb7d"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/responses/0094-openalex.body",
+      "bytes": 1031,
+      "sha256": "c0585e93585beacfb3314b5c5fe73d861781dcd17ed59efac47b227a34910575"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/responses/0095-openalex.body",
+      "bytes": 1030,
+      "sha256": "761700f1058050a1f13a0aaea891235aeb56efe011a49ee76e7918c5715c252c"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/responses/0096-openalex.body",
+      "bytes": 1030,
+      "sha256": "90b26feee3922c3978ef2bbaf04a5b8e00a6da55156decefdad154c82142b968"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/responses/0097-openalex.body",
+      "bytes": 1436,
+      "sha256": "36fae7aa8f8153d1025046089320ff3944ed7c43572c7326abef6d97f5e8a716"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/responses/0098-openalex.body",
+      "bytes": 1030,
+      "sha256": "f3e10266c0a13b45bd0c0ed5f47211279230d0689e2e61f951427244fd9febf8"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/responses/0099-openalex.body",
+      "bytes": 1031,
+      "sha256": "c2ba50a09b775c174bb59e8870dac3389b61ce3dc9051f8ef9791cc79ce48149"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/responses/0100-openalex.body",
+      "bytes": 1030,
+      "sha256": "6346f8a8d9cf8f6a361e6c2ab62c94370ed5e2accfb5dcf3111b1c09e0ace41e"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/responses/0101-openalex.body",
+      "bytes": 1030,
+      "sha256": "97ca3e34897db5fe95331ee81a776dbfa07f1d805bc82dbddd15c8bf6fb0f40d"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/responses/0102-openalex.body",
+      "bytes": 1030,
+      "sha256": "dd328233c1efe2a41dbfff015f4dda5b1a91020c37070d4644535242771961f0"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/responses/0103-openalex.body",
+      "bytes": 108235,
+      "sha256": "690f8bb259fe112860274682b11214c55762ce77b029f84541cf86fb7eef13f2"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/responses/0104-openalex.body",
+      "bytes": 1030,
+      "sha256": "e7f2828637e54e30d597c2aa656fd9fae851749974476cf6f540558f5a792d0c"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/responses/0105-openalex.body",
+      "bytes": 65302,
+      "sha256": "353878bc0ac3e15c14b0468cf5d6975490b909f0030d8569442a9bec8cdfdb43"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/responses/0106-openalex.body",
+      "bytes": 111971,
+      "sha256": "b7d3c76f970b84ad2126befada66aa3c0977ebff8a9c1e91b7459f7ae48ec9e1"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/responses/0107-openalex.body",
+      "bytes": 85476,
+      "sha256": "c22d41139c5eed9e6a021efa2fa29123feb60a36b9ca6d8c7c37d334656172b2"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/responses/0108-openalex.body",
+      "bytes": 751956,
+      "sha256": "c2093af28ba04f9d4110bd6f876511f562832069c20786d464d94c425b402b94"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/responses/0109-openalex.body",
+      "bytes": 61188,
+      "sha256": "efa325914018cddebd065344edf8c6318bc35e0e36ed5ab5e5e463f753e8a47c"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/responses/0110-openalex.body",
+      "bytes": 81064,
+      "sha256": "1db6240ed3216997c5e65669a16a4c4a2a55804387fa5f158fabfcfc961b71bc"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/responses/0111-openalex.body",
+      "bytes": 81775,
+      "sha256": "ddaadcff1ad923bfdc658f38199c0f53d7d1d93b9df27fe4065b43d6cc7f0e93"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/responses/0112-openalex.body",
+      "bytes": 55323,
+      "sha256": "244f59ae2f34b3f9b6cb942b4c32c0af105f3d3d717510f8e3ff740a5c094d33"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/responses/0113-openalex.body",
+      "bytes": 83023,
+      "sha256": "615d7f0c297204de30cbaae7abcbae360631dea21a4227387d903a3ac353f4a6"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/responses/0114-openalex.body",
+      "bytes": 165223,
+      "sha256": "92c7df32634ce85ec67333abda4cd61626aaad9c0b236a3c899eee02694935f2"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/responses/0115-openalex.body",
+      "bytes": 64683,
+      "sha256": "493acd2e7735e312dcba310f8a88708049f8753502b6455a927b82c781d5037e"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/responses/0116-openalex.body",
+      "bytes": 42378,
+      "sha256": "c1ca5f4aa258307131d4cea808df7ae005ecdaadf6603299dd213b62eccae75e"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/responses/0117-openalex.body",
+      "bytes": 63500,
+      "sha256": "bb9534417261a1c9f10d15e3218f10a63199ce31a9e0022aeaeb481a63b4a92f"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/responses/0118-openalex.body",
+      "bytes": 65937,
+      "sha256": "2306e6d01daf7c252213f2bd279f32f156a50fec61d40309d13e7bded8cc1123"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/responses/0119-openalex.body",
+      "bytes": 384122,
+      "sha256": "6fd8fb4436c7f95c3d6edf6400c5df0d360ccc9d3dab9419ab0ac00d021d3bec"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/responses/0120-openalex.body",
+      "bytes": 843775,
+      "sha256": "18ee1805d6888f6047934074763b07a9f1f7395f2abedc78d503dc3304cb4756"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/responses/0121-openalex.body",
+      "bytes": 100473,
+      "sha256": "0081250051f8d8d45f3f3d7746244ed75aa9559177865c6daa33374d76cc6fc7"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/responses/0122-openalex.body",
+      "bytes": 84519,
+      "sha256": "1e13bbbc567bac1f7c5883e44b10bdd7d3b9683214fbaa88ede52c1a2bdd523c"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/responses/0123-openalex.body",
+      "bytes": 69492,
+      "sha256": "fdedc08ab2d917ff1825acf81d654f8d7aa99da98b8c78ff064accc49e78b100"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/responses/0124-openalex.body",
+      "bytes": 347372,
+      "sha256": "d289c3457a074faa42ab100931118d27220a7014f8dee2b26091d194acbd9418"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/responses/0125-openalex.body",
+      "bytes": 982461,
+      "sha256": "48ac7b2551048a78ea34e31eba0f1866d0925fef53d501e442b1a7ffe7f1307b"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16-v3/selection-exclusions.json",
+      "bytes": 24900,
+      "sha256": "54041c865833cdfc5a6dcf3c8b3f7bc9aebee832ffd6010de476fe1d6db81383"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16/crossref/works.jsonl",
+      "bytes": 12947,
+      "sha256": "033ec4a2abe2e08fb575c0ae2318bd2caa2db9ef1d5af3adc8789501d9855060"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16/dblp/records.xml",
+      "bytes": 54,
+      "sha256": "25d64b97056e679c3fab1c80b12342fd210e90e7846569811d0f825f488b9582"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16/diagnostics.json",
+      "bytes": 188,
+      "sha256": "c7b5d54d4ca9e256dcee70e55d6cbf78f478fb393591966607f85c90089c4c0b"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16/openalex/works.jsonl",
+      "bytes": 1747657,
+      "sha256": "987554857462eaea1e4924bdb7a41ec8787bc77d362e000fefecb147988296d7"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16/orcid/records.jsonl",
+      "bytes": 2136444,
+      "sha256": "9fa63f15a063609b21b8cbc77becf6ad8f2c3b81ef8ac6a3c137a8fa156fec0f"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16/population-manifest.v1.json",
+      "bytes": 8163,
+      "sha256": "3eadfcd7a25e6728fb4b3e2e0df90594a6f6953fc929073d8638ca5dcf444110"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16/record-provenance.jsonl",
+      "bytes": 50920,
+      "sha256": "60abbe2f84e4f0fbb8e825a6995d7302e885e62e6f06fd3cf84882ad05eb2a48"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16/request-ledger.jsonl",
+      "bytes": 20716,
+      "sha256": "4e907a587e7e03f3b04d60cfe3aeac17f252492a6cd2ec8628c5a7033e3baf95"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16/responses/0001-dblp.body",
+      "bytes": 2954,
+      "sha256": "e0830a1501a88ca88632ea7566dcc07032f7d8749c6c5140d901136658065a1b"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16/responses/0002-crossref.body",
+      "bytes": 33292,
+      "sha256": "73a27212459508e6c41df659c391603682e4a9e0afc0da21f4b5a01701263e4f"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16/responses/0004-openalex.body",
+      "bytes": 65302,
+      "sha256": "2d1c400539fc2b231cb7c40f499fbe1159c48c78eda3b7cce331632d40367a10"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16/responses/0005-openalex.body",
+      "bytes": 81064,
+      "sha256": "1db6240ed3216997c5e65669a16a4c4a2a55804387fa5f158fabfcfc961b71bc"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16/responses/0006-openalex.body",
+      "bytes": 55323,
+      "sha256": "bc47cb7a8539936a4aab8daf8c33cc7e4e89e08db9404252b50bdeac9b2da5b7"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16/responses/0007-openalex.body",
+      "bytes": 83023,
+      "sha256": "615d7f0c297204de30cbaae7abcbae360631dea21a4227387d903a3ac353f4a6"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16/responses/0008-openalex.body",
+      "bytes": 165223,
+      "sha256": "62ee789b5bf10e9eb5a7e9cdface165a2371833397c3d01b6708ed48c954a779"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16/responses/0009-openalex.body",
+      "bytes": 64683,
+      "sha256": "f379a5d4b1ae94ca50ecc9620ecc0b9c006ae1d54b416ec44a34c4fbd8057399"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16/responses/0010-openalex.body",
+      "bytes": 42378,
+      "sha256": "1179d6b396a83f4689c03660814f84978c3d080d375ee3e46761c0f5b6c6ba68"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16/responses/0011-openalex.body",
+      "bytes": 100473,
+      "sha256": "3d4e4ecd70ab520223eab7906e8c9fdc43668baebf07e2618c6e39fe40c89461"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16/responses/0012-openalex.body",
+      "bytes": 85476,
+      "sha256": "c22d41139c5eed9e6a021efa2fa29123feb60a36b9ca6d8c7c37d334656172b2"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16/responses/0013-openalex.body",
+      "bytes": 69492,
+      "sha256": "8a4de4c6dfb6f87e4b6c9f6d7acc3979fd32d288c820d2e1de1391c41717beb9"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16/responses/0014-openalex.body",
+      "bytes": 63500,
+      "sha256": "2d05432ba41e59ed3ffcf0ab0408fe64538ad4d0817082f3eadf628c368d2b73"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16/responses/0015-openalex.body",
+      "bytes": 454258,
+      "sha256": "3277e3c6e2ebe35a9193676a71c6ab3806235429ad6cb1d6de92f0a33f8bb2d9"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16/responses/0016-openalex.body",
+      "bytes": 65937,
+      "sha256": "2306e6d01daf7c252213f2bd279f32f156a50fec61d40309d13e7bded8cc1123"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16/responses/0017-openalex.body",
+      "bytes": 96700,
+      "sha256": "8a3ef1a858d758bb907c2b364dc74b8d0a076a96b7b3ede15bcdfee23118e61e"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16/responses/0018-openalex.body",
+      "bytes": 91775,
+      "sha256": "722948a17fc2525c229e84279ed79bba4aee04833ed8e2b7478c5901e78f928b"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16/responses/0019-openalex.body",
+      "bytes": 64214,
+      "sha256": "32e1f5099299e825f2b070ed79ad57161fe6aa7756ff9b9eecb2722ff99b5ced"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16/responses/0020-openalex.body",
+      "bytes": 14547,
+      "sha256": "f865b7ba11629eabd5047304c69a5b0e6aa60e60c1a3522411fbf2ff678e98f3"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16/responses/0021-openalex.body",
+      "bytes": 81775,
+      "sha256": "946541acbc449d9316c984ee8c87dc4d3d3dfe2f9fb0048f36db9b419057b11a"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16/responses/0022-openalex.body",
+      "bytes": 122812,
+      "sha256": "3b1c2f9bdd4c3dfbcd34f71644e89142d7ed8590dbed7252b7b2bcc0914dca8e"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16/responses/0023-openalex.body",
+      "bytes": 95789,
+      "sha256": "f88dbb6acbda48324975ff1d6b34315315d2e1218bf88afcf30b5b93173acc9a"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16/responses/0024-openalex.body",
+      "bytes": 61188,
+      "sha256": "8d175248714844efa17eb4e9d7cd804ead1abd2cddc9ede918f52701df2442f7"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16/responses/0025-orcid.body",
+      "bytes": 114056,
+      "sha256": "e2fbee482809ab5592e06498684b94aa7aec056e69e7825bcfc6142de6d6cd33"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16/responses/0026-orcid.body",
+      "bytes": 137989,
+      "sha256": "f66bbf22a4236b6c5d39919e7f36778e7e50638d48141ddc2eea4b105f4833ea"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16/responses/0027-orcid.body",
+      "bytes": 2600,
+      "sha256": "67373103bab4cefd21fca22d0ed0d8cf9edb8694a1ad0250ad66dd0d79206d2c"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16/responses/0028-orcid.body",
+      "bytes": 504417,
+      "sha256": "738ec589988191d983328f3c3918d206b294fb6279b005bdec70d464bcc47199"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16/responses/0029-orcid.body",
+      "bytes": 2607,
+      "sha256": "143799506b6fc59aa16b8ede64c92e6c220da52f8fbf358bb791dc3e4bd3a5ca"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16/responses/0030-orcid.body",
+      "bytes": 60952,
+      "sha256": "56ac0e559a65032561f64a4980abdbec7387f2189c61049e7bdad61837036aae"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16/responses/0031-orcid.body",
+      "bytes": 3478,
+      "sha256": "48bfdde1572bf74e5a9f41fe0c33cf58f82e649998391bcb5b28ddc5fafd0b01"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16/responses/0032-orcid.body",
+      "bytes": 358421,
+      "sha256": "3846865a884f76791f42f402d40df630b850db221f0371d8e4a5b6493a17fbc5"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16/responses/0033-orcid.body",
+      "bytes": 23892,
+      "sha256": "44a59d9e0d174ca3cf9f71a4a36a50e5c0ec9b2ada32006881b1c7de9a374b7e"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16/responses/0034-orcid.body",
+      "bytes": 505832,
+      "sha256": "47efde7003c248758af4a108ec8b7e8981b64121a174f7eb90d63e710427aaae"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16/responses/0035-orcid.body",
+      "bytes": 13141,
+      "sha256": "47fe048de0a0072579be4b3edf5d75f354fd94e5a3fd067d0ff98220fe73de6f"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16/responses/0036-orcid.body",
+      "bytes": 258992,
+      "sha256": "56f3fcbb59704682f5933ebfb995e14bab131f610cd50ebd4c3fa676ef630df1"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16/responses/0037-orcid.body",
+      "bytes": 32598,
+      "sha256": "83836eb63eb1a8447cf84f3e4284ef83a29d92a4b3afa730b62cdbfd48af3483"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16/responses/0038-orcid.body",
+      "bytes": 29476,
+      "sha256": "3d42fe60ef237a60491428ceb96bb2780a06af7265ebc7082d3660a78c4efa87"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16/responses/0039-orcid.body",
+      "bytes": 87994,
+      "sha256": "f62f9a7dba1f164126c2435fd885d2642a0281708e11986fb32528186afbf614"
+    },
+    {
+      "path": "datasets/entity-resolution/5c-2026-10-16/responses/0040-orcid.body",
+      "bytes": 1048576,
+      "sha256": "3ad4e015dd434c31e59e9c546daf34e646594591bc522ef477471027572d753d"
+    },
+    {
+      "path": "datasets/entity-resolution/README.md",
+      "bytes": 7900,
+      "sha256": "789dcae8ab678550bd604a9f0e0654a9658cab8a4bb332101996c415a8dc5e63"
+    },
+    {
+      "path": "datasets/entity-resolution/acquisition-session.v1.json",
+      "bytes": 1570,
+      "sha256": "37d17fd2044728b1e05a47deab4c1acdd516641442229e147913638827e8fdea"
+    },
+    {
+      "path": "datasets/entity-resolution/population-readiness.v1.json",
+      "bytes": 4305,
+      "sha256": "a6484792fb3727b4b46e2d9ec0541541bf60d734cd9fb37a9e8cc2977a5535b9"
+    },
+    {
+      "path": "datasets/scripts/README.md",
+      "bytes": 2117,
+      "sha256": "b17a6e697dbcde32101a2f9268a0aa84d18a05805809fd3044f54e5edc661fe7"
+    },
+    {
+      "path": "datasets/scripts/acquire_resolution_population.py",
+      "bytes": 22898,
+      "sha256": "5861fc796dbbe955e084e882faf8590ea6290e5bb99d693e24395b9770a67e2d"
+    },
+    {
+      "path": "datasets/scripts/filter_resolution_population.py",
+      "bytes": 4809,
+      "sha256": "3a108e720cdd6444249f63adfd5a87481d69721fd74a9244f5317d71796e874c"
+    },
+    {
+      "path": "datasets/scripts/test_resolution_population.py",
+      "bytes": 6013,
+      "sha256": "f3aa168e7397adfcd02593250fda7e4b7b8716ef9b29b7f91c208d2fc8279d8c"
+    },
+    {
+      "path": "datasets/scripts/validate_resolution_population.py",
+      "bytes": 5693,
+      "sha256": "6003b6732dc7240983b09ed8234ebfcd0dea024cc377c27a5ec635033caf036a"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/5c-baseline.json",
+      "bytes": 35828,
+      "sha256": "5ec0f5ea5dbd860c484d09bd406aedff67cc914fcb038a8f2561b6f10ceddc60"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/5c-implementation.diff",
+      "bytes": 48691329,
+      "sha256": "5f14ddba796fa8ded68d4bc23301dc7a8ab6f417e570fa5a90d3d3c4625722e9"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/5c-source-delta.json",
+      "bytes": 26779,
+      "sha256": "a7be006a04a0ec0623fa464d2bbd0c3f8255064fa6cf944f33f0025fe02c802b"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5c/browser-fixture.txt",
+      "bytes": 157,
+      "sha256": "b0344e34a6d228228bbb4befb39301a55990b3781bcc6c1ba067749881cd0a2e"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5c/collect-5c.py.txt",
+      "bytes": 6931,
+      "sha256": "9c82f3d46cbfd8297a2e44e004be023c11ff32d2a3009ba7101908d1c4770ead"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5c/commands.json",
+      "bytes": 169163,
+      "sha256": "bfc3897cdf5a5f2374a26fd88e4c0160aada10533a3d7b94249a23087ec9d13f"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5c/dataset-existing-validation.txt",
+      "bytes": 64,
+      "sha256": "7e6a9d4295fbf4b736776828edb7e79f2b3093f5422dc1295020850fda826363"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5c/dataset-final-validation.txt",
+      "bytes": 302,
+      "sha256": "b58086f3ed003164f5d7a7ebe1841d91da8daa474de627e92aa31e46cea06058"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5c/datasets-unit.txt",
+      "bytes": 2617,
+      "sha256": "e951cef68e78adbb4dda4ba31aa132e6c87e07c803333fae3e50034222462a4b"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5c/export-review-tool.txt",
+      "bytes": 143,
+      "sha256": "41a4aeb27eabdf34659e2357861104a6decea6e75475a7f39e06516f1235e5aa"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5c/final-readiness-source-hashes.json",
+      "bytes": 93547,
+      "sha256": "cd921d2da753524d6f2f32ee3d6a1e42b277c94294eac8e3240fd35718bdea9b"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5c/finalize-packet.py.txt",
+      "bytes": 13928,
+      "sha256": "43d1db7abda9f48cc0f76c91e13b69b555ab13b20aef94468b915815f97a3415"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5c/first-compile.txt",
+      "bytes": 603,
+      "sha256": "453a489dff824e423926dd8805a2879f80ab15237abe5840a4e25f752ca5fec8"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5c/full-check-summary.json",
+      "bytes": 16412,
+      "sha256": "7ca1b5c60d685207a54e5091c7e0899a2318d5c80886ab923e55f6912198128a"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5c/full-check.txt",
+      "bytes": 243770,
+      "sha256": "ee8d652a3afb8dcc0ec4d5b2dd1a30534dac157be957e3ef1a08656329ecb6ad"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5c/hadoop-classpath-authorized.txt",
+      "bytes": 16833,
+      "sha256": "24bc79d818ba54e7bcb832403a48ee04ac96488316dee298c9a4d2aad598c0f1"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5c/hadoop-classpath.txt",
+      "bytes": 1367,
+      "sha256": "d16be90ad6ceee140d204f7d2c7212ffec5e2251c56f7f849d9c6b4e81218f05"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5c/hadoop-cs.argv.json",
+      "bytes": 17720,
+      "sha256": "7ae85494192bb9c6274212a8f853cd619edbcac7f3b5ef627aee63f673023476"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5c/hadoop-cs.txt",
+      "bytes": 4711,
+      "sha256": "7c7a45abcc079c6520a971df60a2b916e105869641fa3981db2f8e02b92ce8ae"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5c/hadoop-expanded-config.json",
+      "bytes": 463,
+      "sha256": "0537553ac24b861c7b93b995ace81c5bc6eaedd50d4da97f4f18502e8362e161"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5c/hadoop-expanded.argv.json",
+      "bytes": 17720,
+      "sha256": "7176cb1af68f7a7b4bdce361610d5ee2e4c3e974ace762c2124f5f3c6c8e1655"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5c/hadoop-expanded.txt",
+      "bytes": 4717,
+      "sha256": "f4910dc48a5cdc79935a83b4c1f5a150475c0524e29beb57fa70f5e476221e54"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5c/history-integrity.json",
+      "bytes": 727,
+      "sha256": "04178b860f95c5b9592fe2fdded9cf7c1b3bb72439d68938e39124694917ee43"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5c/human-handoff.json",
+      "bytes": 1532,
+      "sha256": "59d5cbbb21306c3657093c1da06437dff413058db926d8bb81dc1f3cc1dfdeb7"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5c/independent-first-target.txt",
+      "bytes": 2720,
+      "sha256": "cfee7df389d42eb1106ce6548241cb9466498fee800282049d6ad2ad08316740"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5c/owner-handoffs.json",
+      "bytes": 1531,
+      "sha256": "a294e2505b4ab66d44d12b9a48d91e2658930864db43aaf2d07e1a1677353d89"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5c/post-demo-input-verification.json",
+      "bytes": 328,
+      "sha256": "ad6034e65a90c25b85da5fc87af2d2b39467f80419daa9b78f00fb1574c323dc"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5c/preliminary-readiness.json",
+      "bytes": 8776,
+      "sha256": "0677dd27f0697fd677b9410cb3e07cd6e868519f889055d20b2fc66654ecbf5e"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5c/queue-final.argv.json",
+      "bytes": 17436,
+      "sha256": "09026d3533bd53f2642cd0a1c5f8d7326f12d5793fab5bfb7ba7f2fe20d564c2"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5c/queue-final.txt",
+      "bytes": 141,
+      "sha256": "c43611384a3259c3b277b56c80b472c5e04615f847ab195ab8025269892af320"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5c/queue-readiness.argv.json",
+      "bytes": 17441,
+      "sha256": "04f30dae5bc2ace19b92a49ccd253581e3ad5b392bd9d0f3a69804c6aa4adddc"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5c/queue-readiness.txt",
+      "bytes": 141,
+      "sha256": "772b6ca9039100737a499f658fd7c85e81e22fb400ebf114ed1e66a7a6397578"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5c/queue-replay.txt",
+      "bytes": 141,
+      "sha256": "c43611384a3259c3b277b56c80b472c5e04615f847ab195ab8025269892af320"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5c/readiness-source-hashes.json",
+      "bytes": 93242,
+      "sha256": "d96c6c2383687e57426b5bcee7271838d39867a8bc321c949383fe875f7767e5"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5c/real-readiness-summary.json",
+      "bytes": 2655,
+      "sha256": "38bba0f8152939ec248aedd8af2941dc9c4a638eaab86f9180482982385e14c6"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5c/review-artifacts/queue.json",
+      "bytes": 7205044,
+      "sha256": "6c14ed24c91ef68e164879a18d4ec35b7364c317662a4be29f7ddb2de1ddcec7"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5c/review-artifacts/split.json",
+      "bytes": 3810714,
+      "sha256": "9dee7738f41d646515eb7a6c77c025a935405f5bdfb34039fcb135021e9c4141"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5c/run-command.py.txt",
+      "bytes": 1188,
+      "sha256": "7f6be17880244672f263a0c15ccbeb1d38b648175312ca8060e2b5c9448769f9"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5c/split-repair-targeted.txt",
+      "bytes": 6232,
+      "sha256": "e99719f4f1238f3dee7bf9d6de71133b376daeacd9e13fbd6cfe9a26e6bd9f50"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5c/synthetic-browser-checkpoint.json",
+      "bytes": 3144,
+      "sha256": "8df22ca962e43b57085faa6433f63e6ad79cb6ff6201902e3d0716e1a389e14f"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5c/synthetic-empty-predictions.json",
+      "bytes": 840,
+      "sha256": "9c50224994d53e88484f99715dc909375878aefab2fd86eb64d1b0f48e85ec8f"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5c/synthetic-evaluate-cli.txt",
+      "bytes": 141,
+      "sha256": "9bb7116be25a0a40fc19af7c654207cd269affac04d1d72ec8b5375bca5601fc"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5c/synthetic-evaluation-missing-predictions/evaluation.json",
+      "bytes": 25918,
+      "sha256": "b87e6b394efe321caf620b261ed712ef20629ae101efb8ae64465ed2641b6e2d"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5c/synthetic-import-labels.txt",
+      "bytes": 193,
+      "sha256": "4385866b1de9df6446d2dd0eed81c9b7e574ae43d2a51bd2cf59148d04d7e212"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5c/synthetic-other-queue-checkpoint.json",
+      "bytes": 533,
+      "sha256": "64c085df8c8ca53513885fe0f2648a7317bb33804a03097739b0932c1401e976"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5c/synthetic-queue.json",
+      "bytes": 45173,
+      "sha256": "e8233b540c88768d30684babd42b7016b3fa36bbba4715c433add68836e30daf"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5c/synthetic-split.json",
+      "bytes": 43011,
+      "sha256": "a706da0f84b22e63655b98d1eb6cb5d107cb8790a5108dcee0fa41e2d29c65b1"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5c/synthetic-validated-labels.json",
+      "bytes": 5697,
+      "sha256": "4bbdf6f52ebbd9822da6490c972c950a1636f5207cfdcd44d0626c24985b220f"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5c/targeted-ready.txt",
+      "bytes": 6309,
+      "sha256": "bd0d051eed516476759136c30958023b3a38c049d5bdb9b0985b08b2f5f8447a"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5c/toolchain.txt",
+      "bytes": 193,
+      "sha256": "d6d51b7f9b468dbba390c4e9a05e191c4f442770e6da555ccb4fc44cb77496b0"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/history/5b-final-handoff/5b-implementation.diff",
+      "bytes": 307781,
+      "sha256": "6aa7e709f25c586591f3979e96cb607f4fc4a6f0b1753e870d94b560fcae62c9"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/history/5b-final-handoff/implementation.diff",
+      "bytes": 458739,
+      "sha256": "87e25f71a140608b2bbab8062b11a8f142ac3570cb041232b24cf75f7ede703f"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/history/5b-final-handoff/review-inventory.json",
+      "bytes": 86797,
+      "sha256": "ea4ef4f0d7209765d6409cc26d705f8b4394c05cc2efa3097261c57f6aa8a3c1"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/history/5b-final-handoff/reviewer-prompt.txt",
+      "bytes": 19199,
+      "sha256": "629403a69ba6940ad29ca2a6b6fbea84c8164abde932b4d9baaddc85c09849f6"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/history/5b-final-handoff/source-freeze.json",
+      "bytes": 35583,
+      "sha256": "2edad728cd786d2b5abce6839dd0d46232b190e8e3a51c6700159609ca7e2909"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/implementation.diff",
+      "bytes": 49145439,
+      "sha256": "185b2cc08068917d3dad3b720352422c859d171b2171a13cf9c0187741ca8f10"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/owner-report.md",
+      "bytes": 53482,
+      "sha256": "72a8625f761f8a585fbb806f5e89fa80c21d57a52e1054ae957af511e9db9a65"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/prompt.md",
+      "bytes": 76214,
+      "sha256": "df52156033da40679d81777098ba5eca19e9bb749e12b633c0dbe2232dc5a3db"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/repairs.md",
+      "bytes": 31707,
+      "sha256": "50d9b412a0bca3d1bdb12f5ae96cfeba89b0ade53cddf459f43ddfd9ef89a38e"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/review.md",
+      "bytes": 52019,
+      "sha256": "4cc48c4b46248e193d50b93b52c54cb3955fd62ed4cab034ed8b581ebea7d37d"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/reviewer-prompt.txt",
+      "bytes": 10196,
+      "sha256": "1e3c238be2bab5a9649040e0c34c25bef0c43da7d7e84c9ca70f74d52762b49e"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/source-freeze.json",
+      "bytes": 104778,
+      "sha256": "cdf3495a419aa56fced17008fa8e6c9402212bcd166121f971acbf99dfbd10e6"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/test-report.md",
+      "bytes": 54895,
+      "sha256": "4878f5d1b0a1fabc0321de1cd0777ca72a7f38149d11a454ee795e1c3aec7a3b"
+    },
+    {
+      "path": "modules/entity-resolution/README.md",
+      "bytes": 49419,
+      "sha256": "03e21375492b642a9e0d184d85bf8f2367bcef9da727e298721c9b3ac6c4ec79"
+    },
+    {
+      "path": "modules/entity-resolution/src/main/resources/review/guide.txt",
+      "bytes": 2882,
+      "sha256": "6d12a7756bc1f74764dcfd00386cdf70944a8d39e19f88c421a9e772f6ff2773"
+    },
+    {
+      "path": "modules/entity-resolution/src/main/resources/review/index.html",
+      "bytes": 14799,
+      "sha256": "04fbbfecf7ffbe5a3cb099c06ad4b4c0d7186b0e7c2cedd91b7ee4bb23e2724e"
+    },
+    {
+      "path": "modules/entity-resolution/src/main/resources/review/sampling.v1.json",
+      "bytes": 214,
+      "sha256": "324f15b5da88d9394d6fd0bbbdb7adca3b52a867da8800bf51699dd81106efba"
+    },
+    {
+      "path": "modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/Evaluation.scala",
+      "bytes": 13196,
+      "sha256": "9c89546f43330d1701eccbd453f24e3f3b8c68efeed0041083720690418acc3a"
+    },
+    {
+      "path": "modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/GoldLabels.scala",
+      "bytes": 6044,
+      "sha256": "5134487cebdfefa5238a037df12ad1b35dcbe2e45bdd26023058bfd2689a4bc8"
+    },
+    {
+      "path": "modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/Phase5Main.scala",
+      "bytes": 3864,
+      "sha256": "a8bdbacd578c1088edfba8caee90110594b39b70638ed6b4b6ba7efc69c36c91"
+    },
+    {
+      "path": "modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/ReviewCommands.scala",
+      "bytes": 11675,
+      "sha256": "2f936f16b821181ac712c499d8f8e30c9f41b5914099f2313e2eae11114b4a8a"
+    },
+    {
+      "path": "modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/ReviewQueue.scala",
+      "bytes": 20567,
+      "sha256": "ee92975dabd393db31197738f2b1bc1a61a8f0eaf3423aed5dcea10f01a5c6be"
+    },
+    {
+      "path": "modules/entity-resolution/src/test/scala/edu/uic/cs441/scholarchain/entityresolution/ReviewReadinessSpec.scala",
+      "bytes": 8193,
+      "sha256": "67cd074f73eb83a77df2fbe177315cbdaf124f32ac4d9248c659ff123543801c"
+    },
+    {
+      "path": "tests/browser/phase5c-review-cua.js",
+      "bytes": 4506,
+      "sha256": "758ac3d31b5742cf905d1b9ba292fe0c0df0b157b55f5a30046e37b13c9e1dcb"
+    },
+    {
+      "path": "tests/browser/phase5c-review-observed.json",
+      "bytes": 2386,
+      "sha256": "b82ee89d128697593f9f8fe22f8055bd2fff7dee9cab1d1c894b2623e6e31da0"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentEvaluationAdapterSpec.scala",
+      "bytes": 5476,
+      "sha256": "a3a6bc3e462e072b1402e4fb1a447b56aa0fc1acf80011d65ebe0b9044b954b4"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentEvaluationSpec.scala",
+      "bytes": 7352,
+      "sha256": "753ce828a213b7dd82c2c4dc5829c5843f85bae459a39e932c97db6c911addb1"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentGoldLabelsSpec.scala",
+      "bytes": 4780,
+      "sha256": "1ad9338a27004b9522ea7508f771717efd430787c1c436b55d3b856e49e33431"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentReviewBrowserFixtureMain.scala",
+      "bytes": 2772,
+      "sha256": "b3eb33163c40c03391ce404f9c1d85ec6ca79865f5606c71fa5b4ffc95e360d5"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentReviewFixtures.scala",
+      "bytes": 4007,
+      "sha256": "a2697430920b1085910f246bf4abe05a9083020fc1970e7947bce5fecfc4606f"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentReviewQueueSpec.scala",
+      "bytes": 8274,
+      "sha256": "074ce5c7c31d8da94642d22d46db107bb67a08c8230454fccf8572b6603b6a81"
+    }
+  ],
+  "recursiveSelfHashExcluded": "docs/agent-runs/phase-05/review-inventory.json"
+}

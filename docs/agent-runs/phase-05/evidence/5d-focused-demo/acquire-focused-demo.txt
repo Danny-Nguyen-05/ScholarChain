@@ -1,0 +1,34 @@
+{
+  "status": "VALID",
+  "schemaVersion": "scholarchain.author-focused-demo-population.v1",
+  "sources": {
+    "crossref": 1,
+    "dblp": 0,
+    "openalex": 7,
+    "orcid": 0
+  },
+  "observed": {
+    "distinctAuthorProfileIds": 5,
+    "distinctWorkIdsIncludingExcluded": 21,
+    "httpAttempts": 6,
+    "newIngestionWorks": 7,
+    "newWorkIdsNotObservedInPriorStages": 21,
+    "responseBytes": 218664,
+    "returnedAuthorProfileRecords": 5,
+    "returnedMetadataRecordsIncludingDuplicatesExcluded": 26,
+    "returnedWorkRecords": 21,
+    "seconds": 5.3543
+  },
+  "cumulative": {
+    "distinctAuthorProfileIdsAcrossStages": 5,
+    "distinctWorkIdsAcrossStages": 65,
+    "httpAttemptsAcrossStages": 18,
+    "responseBytesAcrossStages": 509746,
+    "returnedAuthorProfileRecordsAcrossStages": 5,
+    "returnedMetadataRecordsAcrossStages": 75,
+    "returnedWorkRecordsAcrossStages": 70,
+    "secondsAcrossStages": 15.5683
+  },
+  "files": 85,
+  "admission": "PENDING_CANONICAL_ER_COMPONENT_CHECK_BEFORE_SCORING"
+}

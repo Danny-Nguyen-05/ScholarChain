@@ -1,0 +1,65 @@
+[info] welcome to sbt 1.10.7 (Homebrew Java 17.0.20.1)
+[info] loading settings for project scholarchain-build from plugins.sbt...
+[info] loading project definition from /Users/danny/Documents/UIC/CS441/ScholarChain/project
+[info] loading settings for project root from build.sbt...
+[info] set current project to root (in build file:/Users/danny/Documents/UIC/CS441/ScholarChain/)
+[info] scalafmt: Formatting 1 Scala sources (/Users/danny/Documents/UIC/CS441/ScholarChain/tests)...
+[info] scalafmt: Reformatted 1 Scala sources
+[success] Total time: 1 s, completed Oct 15, 2026, 10:26:42 AM
+[info] * Attributed(/Users/danny/Documents/UIC/CS441/ScholarChain/tests/target/scala-3.3.4/classes)
+[info] * Attributed(/Users/danny/Documents/UIC/CS441/ScholarChain/modules/core/target/scala-3.3.4/classes)
+[info] * Attributed(/Users/danny/Documents/UIC/CS441/ScholarChain/modules/hadoop/target/scala-3.3.4/classes)
+[info] * Attributed(/Users/danny/Documents/UIC/CS441/ScholarChain/modules/entity-resolution/target/scala-3.3.4/classes)
+[success] Total time: 0 s, completed Oct 15, 2026, 10:26:43 AM
+[info] compiling 1 Scala source to /Users/danny/Documents/UIC/CS441/ScholarChain/tests/target/scala-3.3.4/test-classes ...
+[error] -- [E007] Type Mismatch Error: /Users/danny/Documents/UIC/CS441/ScholarChain/tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentResolutionContractSpec.scala:17:21 
+[error] 17 |  private val note = "Synthetic independent contract fixture; identity remains unconfirmed."
+[error]    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[error]    |Found:    ("Synthetic independent contract fixture; identity remains unconfirmed." :
+[error]    |  String)
+[error]    |Required: org.scalatest.Notifier
+[error]    |
+[error]    | longer explanation available when compiling with `-explain`
+[error] -- [E007] Type Mismatch Error: /Users/danny/Documents/UIC/CS441/ScholarChain/tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentResolutionContractSpec.scala:29:13 
+[error] 29 |      Vector(note)
+[error]    |             ^^^^
+[error]    |Found:    (IndependentResolutionContractSpec.this.note : org.scalatest.Notifier)
+[error]    |Required: String
+[error]    |
+[error]    |The following import might fix the problem:
+[error]    |
+[error]    |  import org.scalactic.Prettifier.default
+[error]    |
+[error]    |
+[error]    | longer explanation available when compiling with `-explain`
+[error] -- [E007] Type Mismatch Error: /Users/danny/Documents/UIC/CS441/ScholarChain/tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentResolutionContractSpec.scala:55:12 
+[error] 55 |            note,
+[error]    |            ^^^^
+[error]    |Found:    (IndependentResolutionContractSpec.this.note : org.scalatest.Notifier)
+[error]    |Required: String
+[error]    |
+[error]    | longer explanation available when compiling with `-explain`
+[error] -- [E007] Type Mismatch Error: /Users/danny/Documents/UIC/CS441/ScholarChain/tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentResolutionContractSpec.scala:169:8 
+[error] 169 |        note,
+[error]     |        ^^^^
+[error]     |Found:    (IndependentResolutionContractSpec.this.note : org.scalatest.Notifier)
+[error]     |Required: String
+[error]     |
+[error]     | longer explanation available when compiling with `-explain`
+[error] -- [E007] Type Mismatch Error: /Users/danny/Documents/UIC/CS441/ScholarChain/tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentResolutionContractSpec.scala:225:10 
+[error] 225 |          note,
+[error]     |          ^^^^
+[error]     |Found:    (IndependentResolutionContractSpec.this.note : org.scalatest.Notifier)
+[error]     |Required: String
+[error]     |
+[error]     | longer explanation available when compiling with `-explain`
+[error] -- [E007] Type Mismatch Error: /Users/danny/Documents/UIC/CS441/ScholarChain/tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentResolutionContractSpec.scala:336:6 
+[error] 336 |      note,
+[error]     |      ^^^^
+[error]     |Found:    (IndependentResolutionContractSpec.this.note : org.scalatest.Notifier)
+[error]     |Required: String
+[error]     |
+[error]     | longer explanation available when compiling with `-explain`
+[error] 6 errors found
+[error] (independentTests / Test / compileIncremental) Compilation failed
+[error] Total time: 1 s, completed Oct 15, 2026, 10:26:44 AM

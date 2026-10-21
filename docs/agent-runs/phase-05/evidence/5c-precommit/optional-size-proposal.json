@@ -1,0 +1,19 @@
+{
+  "status": "PROPOSAL_ONLY_NO_REMOVALS_PERFORMED",
+  "v1": {
+    "path": "datasets/entity-resolution/5c-2026-10-16",
+    "bytes": 9223288
+  },
+  "v2": {
+    "path": "datasets/entity-resolution/5c-2026-10-16-v2",
+    "bytes": 22032748
+  },
+  "oldQueueSplit": {
+    "paths": [
+      "docs/agent-runs/phase-05/evidence/5c/review-artifacts/queue.json",
+      "docs/agent-runs/phase-05/evidence/5c/review-artifacts/split.json"
+    ],
+    "bytes": 11015758
+  },
+  "proposal": "With separate user approval, archive v1/v2 off-repository and replace their duplicate payload trees with manifests, retaining necessary parent manifests/request provenance referenced by v3 and its validators. Replace the historical pre-repair queue/split with verified hash/path manifests; retain the repaired artifacts. Any provenance/validator reference adaptation must be reviewed before removal. No such removal or logic change occurred in this cleanup."
+}

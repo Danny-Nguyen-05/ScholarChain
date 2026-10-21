@@ -1,0 +1,221 @@
+{
+  "valid": true,
+  "runs": [
+    {
+      "name": "5b-disabled-demo",
+      "runId": "run:e5666af2-9b7d-42a2-982f-631f35422cb0",
+      "mode": "disabled",
+      "fakeCalls": 0,
+      "liveCalls": 0,
+      "outcomeCounts": {
+        "Work:ACCEPTED": 6,
+        "Researcher:ACCEPTED": 3,
+        "Work:CONFLICT": 3,
+        "Researcher:UNRESOLVED": 6,
+        "Researcher:CONFLICT": 0,
+        "Work:REJECTED": 0,
+        "Researcher:REJECTED": 0,
+        "Work:UNRESOLVED": 0
+      },
+      "inputEvidenceHash": "052d67d212c279c113363712056aa298ccb8720a1bae1d83d9171e676630628b",
+      "manifestSha256": "027250ff4e065b38190c8a72f632070a405d111e9dd96917747e6cfd70de1b96",
+      "verifiedFiles": 19,
+      "constraintBindings": [
+        {
+          "entityType": "Work",
+          "path": "work/grouping-constraints.json",
+          "sha256": "bd5aebc9df576587e1b6e96fec1e813aaf2440486d46fc21d703e04f7c6bae90",
+          "coveredEndpoints": 16,
+          "assertions": 10,
+          "cannotLinks": 3
+        },
+        {
+          "entityType": "Researcher",
+          "path": "researcher/grouping-constraints.json",
+          "sha256": "1f5f28c68d8041dcb3ce8f69b1b049c23d7eaef89b25bbedf1b3158aae0b0422",
+          "coveredEndpoints": 11,
+          "assertions": 4,
+          "cannotLinks": 0
+        }
+      ],
+      "diagnostics": [
+        {
+          "code": "UNSUPPORTED_CROSS_ENTITY_PROFILE_WORK",
+          "count": 8,
+          "details": []
+        },
+        {
+          "code": "UNSUPPORTED_DISTINCT_CROSS_ENTITY_PAIR",
+          "count": 3,
+          "details": []
+        },
+        {
+          "code": "UNSUPPORTED_DISTINCT_NONWORK_PAIR",
+          "count": 2,
+          "details": []
+        },
+        {
+          "code": "UNSUPPORTED_NONWORK_ORCID_ACTIVITY",
+          "count": 2,
+          "details": []
+        }
+      ]
+    },
+    {
+      "name": "5b-disabled-replay",
+      "runId": "run:1fa14830-a1c4-4470-951e-3d99cc235c55",
+      "mode": "disabled",
+      "fakeCalls": 0,
+      "liveCalls": 0,
+      "outcomeCounts": {
+        "Work:ACCEPTED": 6,
+        "Researcher:ACCEPTED": 3,
+        "Work:CONFLICT": 3,
+        "Researcher:UNRESOLVED": 6,
+        "Researcher:CONFLICT": 0,
+        "Work:REJECTED": 0,
+        "Researcher:REJECTED": 0,
+        "Work:UNRESOLVED": 0
+      },
+      "inputEvidenceHash": "052d67d212c279c113363712056aa298ccb8720a1bae1d83d9171e676630628b",
+      "manifestSha256": "adfc584e481a7f92cee4bfc48065d06433d0aec907746b6c5c0d463c198eb896",
+      "verifiedFiles": 19,
+      "constraintBindings": [
+        {
+          "entityType": "Work",
+          "path": "work/grouping-constraints.json",
+          "sha256": "bd5aebc9df576587e1b6e96fec1e813aaf2440486d46fc21d703e04f7c6bae90",
+          "coveredEndpoints": 16,
+          "assertions": 10,
+          "cannotLinks": 3
+        },
+        {
+          "entityType": "Researcher",
+          "path": "researcher/grouping-constraints.json",
+          "sha256": "1f5f28c68d8041dcb3ce8f69b1b049c23d7eaef89b25bbedf1b3158aae0b0422",
+          "coveredEndpoints": 11,
+          "assertions": 4,
+          "cannotLinks": 0
+        }
+      ],
+      "diagnostics": [
+        {
+          "code": "UNSUPPORTED_CROSS_ENTITY_PROFILE_WORK",
+          "count": 8,
+          "details": []
+        },
+        {
+          "code": "UNSUPPORTED_DISTINCT_CROSS_ENTITY_PAIR",
+          "count": 3,
+          "details": []
+        },
+        {
+          "code": "UNSUPPORTED_DISTINCT_NONWORK_PAIR",
+          "count": 2,
+          "details": []
+        },
+        {
+          "code": "UNSUPPORTED_NONWORK_ORCID_ACTIVITY",
+          "count": 2,
+          "details": []
+        }
+      ]
+    },
+    {
+      "name": "5b-fake-demo",
+      "runId": "run:c455b6b8-0d5f-4578-b32d-2b76125d3f38",
+      "mode": "fake",
+      "fakeCalls": 0,
+      "liveCalls": 0,
+      "outcomeCounts": {
+        "Work:ACCEPTED": 6,
+        "Researcher:ACCEPTED": 3,
+        "Work:CONFLICT": 3,
+        "Researcher:UNRESOLVED": 6,
+        "Researcher:CONFLICT": 0,
+        "Work:REJECTED": 0,
+        "Researcher:REJECTED": 0,
+        "Work:UNRESOLVED": 0
+      },
+      "inputEvidenceHash": "052d67d212c279c113363712056aa298ccb8720a1bae1d83d9171e676630628b",
+      "manifestSha256": "81dcafc684e55c11a07213b380823ac8302d4e94fea56ebb47bc8deb942ace5b",
+      "verifiedFiles": 19,
+      "constraintBindings": [
+        {
+          "entityType": "Work",
+          "path": "work/grouping-constraints.json",
+          "sha256": "bd5aebc9df576587e1b6e96fec1e813aaf2440486d46fc21d703e04f7c6bae90",
+          "coveredEndpoints": 16,
+          "assertions": 10,
+          "cannotLinks": 3
+        },
+        {
+          "entityType": "Researcher",
+          "path": "researcher/grouping-constraints.json",
+          "sha256": "1f5f28c68d8041dcb3ce8f69b1b049c23d7eaef89b25bbedf1b3158aae0b0422",
+          "coveredEndpoints": 11,
+          "assertions": 4,
+          "cannotLinks": 0
+        }
+      ],
+      "diagnostics": [
+        {
+          "code": "UNSUPPORTED_CROSS_ENTITY_PROFILE_WORK",
+          "count": 8,
+          "details": []
+        },
+        {
+          "code": "UNSUPPORTED_DISTINCT_CROSS_ENTITY_PAIR",
+          "count": 3,
+          "details": []
+        },
+        {
+          "code": "UNSUPPORTED_DISTINCT_NONWORK_PAIR",
+          "count": 2,
+          "details": []
+        },
+        {
+          "code": "UNSUPPORTED_NONWORK_ORCID_ACTIVITY",
+          "count": 2,
+          "details": []
+        }
+      ]
+    }
+  ],
+  "disabledLogicalReplay": true,
+  "comparedOutputFiles": [
+    "work/accepted.jsonl",
+    "work/rejected.jsonl",
+    "work/unresolved.jsonl",
+    "work/conflict.jsonl",
+    "work/accepted-links.jsonl",
+    "work/grouping-constraints.json",
+    "researcher/accepted.jsonl",
+    "researcher/rejected.jsonl",
+    "researcher/unresolved.jsonl",
+    "researcher/conflict.jsonl",
+    "researcher/accepted-links.jsonl",
+    "researcher/grouping-constraints.json",
+    "evidence.jsonl",
+    "diagnostics.jsonl",
+    "effective-policy.json",
+    "effective-config.json",
+    "audit-details.jsonl"
+  ],
+  "excludedProcessingFields": [
+    "ResolutionDecision.decisionId",
+    "ResolutionDecision.decidedAtUtc",
+    "MatchDecision.runId",
+    "MatchDecision.provenance.runId",
+    "ResolutionAcceptedLink.decisionId",
+    "ResolutionAcceptedLink.runId",
+    "ResolutionAcceptedLink.provenance.runId",
+    "DecisionDetail.decisionId"
+  ],
+  "limitations": [
+    "No source strings, snapshots, candidate IDs, features, outcomes, reasons or source evidence were normalized.",
+    "Run manifest IDs/timestamps and hashes of processing-dependent files differ legitimately.",
+    "No pair was eligible for a fake call; fake invocation/cache paths are established by synthetic tests only.",
+    "Mechanical decisions are not human labels or measured identity accuracy."
+  ]
+}

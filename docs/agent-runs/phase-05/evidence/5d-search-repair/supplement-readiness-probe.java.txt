@@ -1,0 +1,18 @@
+import java.nio.file.*;
+import edu.uic.cs441.scholarchain.entityresolution.*;
+class ScholarChain5DSupplementReadiness {
+ static <T>T value(scala.util.Either<String,T> e){if(e.isLeft())throw new IllegalArgumentException(e.left().get());return e.toOption().get();}
+ static <T>String json(T v,upickle.core.Types.Writer<T>rw){return upickle.default$.MODULE$.write(v,-1,false,false,rw);}
+ public static void main(String[]a)throws Exception{
+  var config=ResolutionConfig$.MODULE$.example();var policy=ResolutionPolicy$.MODULE$.example();
+  var demo=value(InputLoader$.MODULE$.load(Path.of(a[0]),config));var frozen=value(InputLoader$.MODULE$.load(Path.of(a[1]),config));
+  var queue=value(ReviewQueue$.MODULE$.parseQueue(Files.readString(Path.of(a[2]))));
+  var split=value(StrictJson$.MODULE$.parse(Files.readString(Path.of(a[2]).resolveSibling("split.json")),ReviewSplit$.MODULE$.derived$ReadWriter()));
+  var population=value(CandidateBuilder$.MODULE$.build(demo,config));
+  var selection=value(LiveDemo$.MODULE$.selectSupplement(demo,population,frozen,queue,split,policy));
+  var out=Path.of(a[3]);Files.createDirectories(out);
+  Files.writeString(out.resolve("admission.json"),json(selection.admission(),LiveDemoAdmission$.MODULE$.derived$ReadWriter())+"\n");
+  String summary="{\"candidatePairs\":"+population.pairs().size()+",\"admittedPairs\":"+selection.admittedPairs().size()+",\"eligiblePairs\":"+selection.eligiblePairs().size()+",\"excludedPairs\":"+selection.admission().excludedPairIds().size()+",\"heldOutPairsScored\":0,\"providerCalls\":0,\"queueUnchanged\":true,\"policyChanged\":false}";
+  Files.writeString(out.resolve("summary.json"),summary+"\n");System.out.println(summary);
+ }
+}

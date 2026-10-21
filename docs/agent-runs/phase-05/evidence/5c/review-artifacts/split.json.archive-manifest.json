@@ -1,0 +1,19 @@
+{
+  "schema": "scholarchain.archived-evidence-item.v1",
+  "originalPath": "docs/agent-runs/phase-05/evidence/5c/review-artifacts/split.json",
+  "reason": "Obsolete pre-repair 5C queue/split archived after explicit user approval; repaired queue/split/generation binding remains active. Avoid duplicate repository payloads without changing labels or source data.",
+  "archivedAtUtc": "2026-10-17T00:50:13.302521+00:00",
+  "archiveRoot": "/Users/danny/Documents/ScholarChain-archive/phase5c/old-review-21978642c7",
+  "files": [
+    {
+      "relativePath": "split.json",
+      "bytes": 3810714,
+      "sha256": "9dee7738f41d646515eb7a6c77c025a935405f5bdfb34039fcb135021e9c4141",
+      "archiveFile": "/Users/danny/Documents/ScholarChain-archive/phase5c/old-review-21978642c7/docs/agent-runs/phase-05/evidence/5c/review-artifacts/split.json"
+    }
+  ],
+  "fileCount": 1,
+  "bytes": 3810714,
+  "archiveHashVerified": true,
+  "restore": "Copy the listed archiveFile to originalPath only when explicitly needed to inspect historical evidence; verify byte count and SHA-256. Current operation uses evidence/5c-repair/review-artifacts instead."
+}

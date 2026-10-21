@@ -1,0 +1,212 @@
+{
+  "schemaVersion": "scholarchain.phase5d.repair-source-delta.v1",
+  "reviewedFreezeSha256": "8396eb7875d13a080877530c9d517d9134519ca2ebdf0d94b863bc4e4a79133b",
+  "repairedFreezeSha256": "a14f42632137cd6b1da3957d514c5094d187f2d8ae6cf46892be167f2c38d1da",
+  "reviewedCount": 556,
+  "repairedCount": 557,
+  "modified": [
+    {
+      "path": "datasets/entity-resolution/5d-demo-README.md",
+      "before": {
+        "path": "datasets/entity-resolution/5d-demo-README.md",
+        "bytes": 7896,
+        "sha256": "8cfaaf4cbac4ae798146fc4e5d9f284a97ac1c67cf62127dbeccfe788a17ea89"
+      },
+      "after": {
+        "path": "datasets/entity-resolution/5d-demo-README.md",
+        "bytes": 8371,
+        "sha256": "ff28c7de9847544d031ae315ce6d5f25058e9992aff8bcfb7d8c4ddb5b79750f"
+      }
+    },
+    {
+      "path": "datasets/entity-resolution/prepared/3bfbd651-5982-4f3d-b29b-246fb88d07a1.retention-manifest.v1.json",
+      "before": {
+        "path": "datasets/entity-resolution/prepared/3bfbd651-5982-4f3d-b29b-246fb88d07a1.retention-manifest.v1.json",
+        "bytes": 7942,
+        "sha256": "484a3e34acb60490b57133d090ec1864f2a3e1277182a5dd79fb6f2cdeb5dae3"
+      },
+      "after": {
+        "path": "datasets/entity-resolution/prepared/3bfbd651-5982-4f3d-b29b-246fb88d07a1.retention-manifest.v1.json",
+        "bytes": 8009,
+        "sha256": "b413bc380845719b88f655ec5200ea1f6eb6bd4ae4744ec1b4fa1609031547b1"
+      }
+    },
+    {
+      "path": "datasets/entity-resolution/prepared/68c2b012-6d04-4eef-a7bf-5ca31706d895.retention-manifest.v1.json",
+      "before": {
+        "path": "datasets/entity-resolution/prepared/68c2b012-6d04-4eef-a7bf-5ca31706d895.retention-manifest.v1.json",
+        "bytes": 13398,
+        "sha256": "7cf7df07003a01c61a348a4d48168845fc8e9b057c48fb84d0c8ea8045b76d65"
+      },
+      "after": {
+        "path": "datasets/entity-resolution/prepared/68c2b012-6d04-4eef-a7bf-5ca31706d895.retention-manifest.v1.json",
+        "bytes": 13465,
+        "sha256": "d9eec30ba05026f1cd8078745a6b8646d40826551b473a9b7eae64044fd64685"
+      }
+    },
+    {
+      "path": "datasets/entity-resolution/prepared/README.md",
+      "before": {
+        "path": "datasets/entity-resolution/prepared/README.md",
+        "bytes": 6070,
+        "sha256": "8716f72eaa30da8d74c4c713a45bdc0c3da87df7bcbf7fa3e9a039bbe9e115d3"
+      },
+      "after": {
+        "path": "datasets/entity-resolution/prepared/README.md",
+        "bytes": 8456,
+        "sha256": "9fc69396afe9637386ccba76659844ba65015752b87e2a2f7c13afb900bd0f48"
+      }
+    },
+    {
+      "path": "datasets/scripts/README.md",
+      "before": {
+        "path": "datasets/scripts/README.md",
+        "bytes": 3689,
+        "sha256": "08ef27415c6ee5d8aed1dfc0e144a09691a30e076b06927fe8374c5babbc8ab1"
+      },
+      "after": {
+        "path": "datasets/scripts/README.md",
+        "bytes": 4098,
+        "sha256": "f95c12643728ec7ac37e42aff50f09c8f3e4a4601176817a2a60027f9556828f"
+      }
+    },
+    {
+      "path": "datasets/scripts/retain_prepared_population.py",
+      "before": {
+        "path": "datasets/scripts/retain_prepared_population.py",
+        "bytes": 8647,
+        "sha256": "308ef0fc8214a34b5b085ac21819973451bf29881fc1699318de05eaeb5fe24e"
+      },
+      "after": {
+        "path": "datasets/scripts/retain_prepared_population.py",
+        "bytes": 10685,
+        "sha256": "82d59418ba3a414a895eaf91a6df76a9632703b4b39c20386915846284ac1880"
+      }
+    },
+    {
+      "path": "datasets/scripts/test_prepared_retention.py",
+      "before": {
+        "path": "datasets/scripts/test_prepared_retention.py",
+        "bytes": 5828,
+        "sha256": "d46fe41673f52f3f29dfa5bfdb6b840a8c877a85578cd48f871fa1adc8e3351a"
+      },
+      "after": {
+        "path": "datasets/scripts/test_prepared_retention.py",
+        "bytes": 9418,
+        "sha256": "e517c415ab495534763eb8820f36073794f2a2bb9e17d59879d8256287029ed9"
+      }
+    },
+    {
+      "path": "modules/entity-resolution/README.md",
+      "before": {
+        "path": "modules/entity-resolution/README.md",
+        "bytes": 61475,
+        "sha256": "024e1dbc866bbecc270f114f507e32ebb7ab1ecafc5bb6e83813bba9b2a5f635"
+      },
+      "after": {
+        "path": "modules/entity-resolution/README.md",
+        "bytes": 61805,
+        "sha256": "f79bbfdcad106b819eb194e1becba725129540737557fd5d31e5a4f3c99d595a"
+      }
+    },
+    {
+      "path": "modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/LiveAdjudication.scala",
+      "before": {
+        "path": "modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/LiveAdjudication.scala",
+        "bytes": 9764,
+        "sha256": "9e023dc3f26e216ef1261ab0b9ada7840063b1af68f1968b417182e649d761f2"
+      },
+      "after": {
+        "path": "modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/LiveAdjudication.scala",
+        "bytes": 10393,
+        "sha256": "2b11711ea9ceb28b22fdb1b863c806ba9606ce7c3f377816fce39f0e20739e0e"
+      }
+    },
+    {
+      "path": "modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/LiveDemo.scala",
+      "before": {
+        "path": "modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/LiveDemo.scala",
+        "bytes": 16690,
+        "sha256": "ab621784b97aad7eb4b04fbec114e49296447cce8ba4701183cafc1c64ab09e7"
+      },
+      "after": {
+        "path": "modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/LiveDemo.scala",
+        "bytes": 16780,
+        "sha256": "79787e45f83d023f08c9aeae424c2b083f86dbc36b2cf123ac96b5fec1054398"
+      }
+    },
+    {
+      "path": "modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/LiveProvider.scala",
+      "before": {
+        "path": "modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/LiveProvider.scala",
+        "bytes": 12065,
+        "sha256": "03bdb55bb1ba080086968ca73435f8588304343e3b34f4d49e83c0a5a159b048"
+      },
+      "after": {
+        "path": "modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/LiveProvider.scala",
+        "bytes": 12418,
+        "sha256": "e489d22b6e058e2c926f7909aa1c492e4f4be9ae1ae6f4b06bfbe7e9afa7a2c9"
+      }
+    },
+    {
+      "path": "modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/OpenAIResponses.scala",
+      "before": {
+        "path": "modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/OpenAIResponses.scala",
+        "bytes": 12909,
+        "sha256": "e6df10ccfc4d6744f8b7ed620ea9e7828b503e63b9a91e63bebd33d504c02169"
+      },
+      "after": {
+        "path": "modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/OpenAIResponses.scala",
+        "bytes": 13750,
+        "sha256": "c024ef1664705f20432588eb91ebe1ffe95788a1b686626b75386b24fc16185a"
+      }
+    },
+    {
+      "path": "modules/entity-resolution/src/test/scala/edu/uic/cs441/scholarchain/entityresolution/LiveDemoExportSpec.scala",
+      "before": {
+        "path": "modules/entity-resolution/src/test/scala/edu/uic/cs441/scholarchain/entityresolution/LiveDemoExportSpec.scala",
+        "bytes": 9460,
+        "sha256": "c6efcaa1b7d44010b743b64de49ebc988d5721c842644573f1a8cec6cc3dcafd"
+      },
+      "after": {
+        "path": "modules/entity-resolution/src/test/scala/edu/uic/cs441/scholarchain/entityresolution/LiveDemoExportSpec.scala",
+        "bytes": 10436,
+        "sha256": "a3d5b990ef58778322bbc68f60eff88175967d3e221fa32ec155555f7f5ac65c"
+      }
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentLiveCredentialsSpec.scala",
+      "before": {
+        "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentLiveCredentialsSpec.scala",
+        "bytes": 1304,
+        "sha256": "f9617c4549576afef77f1842c34f744e2d968582bcecbb737751ce61de7b7775"
+      },
+      "after": {
+        "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentLiveCredentialsSpec.scala",
+        "bytes": 1324,
+        "sha256": "9af62100a3ed5fb4b1c263ca929478e9693e0912fde14d03bffcb2005e58de5c"
+      }
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentLiveDevelopmentSpec.scala",
+      "before": {
+        "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentLiveDevelopmentSpec.scala",
+        "bytes": 10974,
+        "sha256": "9ea6c1abda0e72d37ed61a319deeb80ea36975c8cf5a70d185df158891e9a065"
+      },
+      "after": {
+        "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentLiveDevelopmentSpec.scala",
+        "bytes": 13812,
+        "sha256": "74cd5ac5a04315b7f04d2fbf882fbd7d2530a68ab2923f19774c8c0e95da6e92"
+      }
+    }
+  ],
+  "added": [
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentLiveCredentialPreflightSpec.scala",
+      "bytes": 3819,
+      "sha256": "46d68217eca54ee14aef5099d225f31be95d533d2541442251f6785dd10d6a62"
+    }
+  ],
+  "removed": []
+}

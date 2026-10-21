@@ -1,0 +1,11 @@
+{
+  "capturedAtUtc": "2026-10-21T04:58:18.394219+00:00",
+  "changedFiles": 1014,
+  "currentChangedFileBytes": 30912161,
+  "largestFile": {
+    "path": "docs/agent-runs/phase-05/evidence/5d-followup-demo/frozen-development-anchor-metadata.json",
+    "bytes": 8861837
+  },
+  "filesOver50MB": [],
+  "scope": "Current byte sizes of tracked/untracked changed files; ignored targets excluded."
+}

@@ -1,0 +1,63 @@
+[info] welcome to sbt 1.10.7 (Homebrew Java 17.0.20.1)
+[info] loading settings for project scholarchain-build from plugins.sbt...
+[info] loading project definition from /Users/danny/Documents/UIC/CS441/ScholarChain/project
+[info] loading settings for project root from build.sbt...
+[info] set current project to root (in build file:/Users/danny/Documents/UIC/CS441/ScholarChain/)
+[info] scalafmt: Formatting 1 Scala sources (/Users/danny/Documents/UIC/CS441/ScholarChain/modules/entity-resolution)...
+[info] scalafmt: Reformatted 1 Scala sources
+[success] Total time: 1 s, completed Oct 16, 2026, 2:37:18 PM
+[info] scalafmt: Formatting 1 Scala sources (/Users/danny/Documents/UIC/CS441/ScholarChain/modules/entity-resolution)...
+[info] scalafmt: Reformatted 1 Scala sources
+[success] Total time: 0 s, completed Oct 16, 2026, 2:37:18 PM
+[info] scalafmt: Formatting 1 Scala sources (/Users/danny/Documents/UIC/CS441/ScholarChain/tests)...
+[info] scalafmt: Reformatted 1 Scala sources
+[success] Total time: 0 s, completed Oct 16, 2026, 2:37:18 PM
+[info] compiling 1 Scala source to /Users/danny/Documents/UIC/CS441/ScholarChain/modules/entity-resolution/target/scala-3.3.4/classes ...
+[info] done compiling
+[info] compiling 1 Scala source to /Users/danny/Documents/UIC/CS441/ScholarChain/modules/entity-resolution/target/scala-3.3.4/test-classes ...
+[info] done compiling
+[info] OfflineResolutionSpec:
+[info] - runtime resources are strict uncalibrated configs; duplicate/unknown keys fail
+[info] - normalization keeps raw accents separate and respects initials surname and repository escapes
+[info] - hard conflict dominates exact DOI and bibliographic similarity
+[info] - same publication copies cannot supply independent researcher coauthor support
+[info] - missing year remains unavailable and does not consume preparation sentinel
+[info] - oversize blocks and aggregate multiblock evidence are explicit diagnostics
+[info] - field citations must point to present supplied input fields; unknown JSON is rejected
+[info] - disabled run is source bound, exports complete constraints and refuses overwrite
+[info] - a fake adapter ignoring interruption fuses further calls instead of overlapping retries
+[info] - CLI help is honest and invalid options fail before creating output
+[info] - strict JSON refuses primitive coercions and fractional integral configuration
+[info] - a valid identifier-index row cannot cite a missing source observation
+[info] - a work abstract reference requires the actual matching text observation
+[info] - ORCID work activity candidates may omit carried workId while present identifiers must bind
+[info] Run completed in 547 milliseconds.
+[info] Total number of tests run: 14
+[info] Suites: completed 1, aborted 0
+[info] Tests: succeeded 14, failed 0, canceled 0, ignored 0, pending 0
+[info] All tests passed.
+[success] Total time: 5 s, completed Oct 16, 2026, 2:37:22 PM
+[info] compiling 1 Scala source to /Users/danny/Documents/UIC/CS441/ScholarChain/tests/target/scala-3.3.4/test-classes ...
+[info] done compiling
+[info] IndependentResolutionInputSpec:
+[info] - same DOI source observations remain distinct while conflicting full lookup keys fail
+[info] - candidate lookup binds source native record and snapshot rather than shared work ID
+[info] - optional candidate work hints may be absent but supplied hints must match source truth
+[info] - native source aliases are rejected before two identities can be assigned to one observation
+[info] - nested unknown schema, forged mention binding and invalid candidate IDs fail closed
+[info] - affiliation evidence cannot point to a missing member or wrong parent snapshot
+[info] Run completed in 93 milliseconds.
+[info] Total number of tests run: 6
+[info] Suites: completed 1, aborted 0
+[info] Tests: succeeded 6, failed 0, canceled 0, ignored 0, pending 0
+[info] All tests passed.
+[success] Total time: 1 s, completed Oct 16, 2026, 2:37:23 PM
+[info] running edu.uic.cs441.scholarchain.entityresolution.Phase5Main resolve --input target/phase4-runs/fda6168a-d4e6-4c20-bf73-42a1c3724f7f --policy modules/entity-resolution/src/main/resources/phase5-policy.v1.json --config modules/entity-resolution/src/main/resources/phase5-config.v1.json --llm-mode disabled --output target/phase5/5b-disabled-demo
+Resolved 18 comparisons; fake calls=0, live calls=0; output=target/phase5/5b-disabled-demo; input=052d67d212c279c113363712056aa298ccb8720a1bae1d83d9171e676630628b. No human labels, accuracy or calibration is claimed.
+[success] Total time: 1 s, completed Oct 16, 2026, 2:37:24 PM
+[info] running edu.uic.cs441.scholarchain.entityresolution.Phase5Main resolve --input target/phase4-runs/fda6168a-d4e6-4c20-bf73-42a1c3724f7f --policy modules/entity-resolution/src/main/resources/phase5-policy.v1.json --config modules/entity-resolution/src/main/resources/phase5-config.v1.json --llm-mode disabled --output target/phase5/5b-disabled-replay
+Resolved 18 comparisons; fake calls=0, live calls=0; output=target/phase5/5b-disabled-replay; input=052d67d212c279c113363712056aa298ccb8720a1bae1d83d9171e676630628b. No human labels, accuracy or calibration is claimed.
+[success] Total time: 0 s, completed Oct 16, 2026, 2:37:24 PM
+[info] running edu.uic.cs441.scholarchain.entityresolution.Phase5Main resolve --input target/phase4-runs/fda6168a-d4e6-4c20-bf73-42a1c3724f7f --policy modules/entity-resolution/src/main/resources/phase5-policy.v1.json --config modules/entity-resolution/src/main/resources/phase5-config.v1.json --llm-mode fake --output target/phase5/5b-fake-demo --cache target/phase5/5b-fake-cache
+Resolved 18 comparisons; fake calls=0, live calls=0; output=target/phase5/5b-fake-demo; input=052d67d212c279c113363712056aa298ccb8720a1bae1d83d9171e676630628b. No human labels, accuracy or calibration is claimed.
+[success] Total time: 0 s, completed Oct 16, 2026, 2:37:24 PM

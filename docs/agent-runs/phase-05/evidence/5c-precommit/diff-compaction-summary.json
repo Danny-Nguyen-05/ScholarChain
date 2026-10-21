@@ -1,0 +1,40 @@
+{
+  "replacements": [
+    {
+      "replaced": "docs/agent-runs/phase-05/implementation.diff",
+      "manifest": "docs/agent-runs/phase-05/implementation.diff.manifest.json",
+      "originalBytes": 98952580,
+      "manifestBytes": 261159,
+      "originalSha256": "e4ff72fa7c36e1600c762db82fd5cbf15e1a99680db2702a4435aa304bbb81f9",
+      "exactReplayVerified": true
+    },
+    {
+      "replaced": "docs/agent-runs/phase-05/5c-implementation.diff",
+      "manifest": "docs/agent-runs/phase-05/5c-implementation.diff.manifest.json",
+      "originalBytes": 98498470,
+      "manifestBytes": 256338,
+      "originalSha256": "20b3c9edb012781f4a863db7e9905ff13b8f5c6e1f089a02e93bad114f43a0ba",
+      "exactReplayVerified": true
+    },
+    {
+      "replaced": "docs/agent-runs/phase-05/history/5c-initial-review/implementation.diff",
+      "manifest": "docs/agent-runs/phase-05/history/5c-initial-review/implementation.diff.manifest.json",
+      "originalBytes": 49145439,
+      "manifestBytes": 208686,
+      "originalSha256": "185b2cc08068917d3dad3b720352422c859d171b2171a13cf9c0187741ca8f10",
+      "exactReplayVerified": true
+    },
+    {
+      "replaced": "docs/agent-runs/phase-05/history/5c-initial-review/5c-implementation.diff",
+      "manifest": "docs/agent-runs/phase-05/history/5c-initial-review/5c-implementation.diff.manifest.json",
+      "originalBytes": 48691329,
+      "manifestBytes": 203865,
+      "originalSha256": "5f14ddba796fa8ded68d4bc23301dc7a8ab6f417e570fa5a90d3d3c4625722e9",
+      "exactReplayVerified": true
+    }
+  ],
+  "removedBytes": 295287818,
+  "manifestBytes": 930048,
+  "historicalBlobFiles": 12,
+  "historicalCompressedBytes": 51672
+}

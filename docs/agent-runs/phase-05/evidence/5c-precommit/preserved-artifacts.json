@@ -1,0 +1,22 @@
+{
+  "datasets/entity-resolution/5c-2026-10-16-v3/population-manifest.v1.json": {
+    "bytes": 19918,
+    "sha256": "6625a645675341c57bff8186d5cf16a4585e91c03eb7528da5bbacacf9b4d608"
+  },
+  "datasets/entity-resolution/prepared/bd424a86-0a1b-4e44-bbdb-4a9b8c8a20e3.retention-manifest.v1.json": {
+    "bytes": 15576,
+    "sha256": "c51963569827ceaba35d1f816a918afecd32a547725ba2b1bb63aa38d49e8556"
+  },
+  "docs/agent-runs/phase-05/evidence/5c-repair/review-artifacts/queue.json": {
+    "bytes": 7204476,
+    "sha256": "39810621fe4b22113e3b11fe014ed3eaf2f6ed82b261a265044ce344a02e506f"
+  },
+  "docs/agent-runs/phase-05/evidence/5c-repair/review-artifacts/split.json": {
+    "bytes": 3810714,
+    "sha256": "9dee7738f41d646515eb7a6c77c025a935405f5bdfb34039fcb135021e9c4141"
+  },
+  "docs/agent-runs/phase-05/evidence/5c-repair/review-artifacts/generation-binding.json": {
+    "bytes": 745,
+    "sha256": "ba43bff1867cfda71a35e94c8c5b53fed39b213e159d17712b17739f776be527"
+  }
+}

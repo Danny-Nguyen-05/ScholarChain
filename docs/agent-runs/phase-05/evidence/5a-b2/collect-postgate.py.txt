@@ -1,0 +1,96 @@
+from pathlib import Path
+from datetime import datetime, timezone
+import hashlib
+import json
+import re
+import subprocess
+import sys
+import xml.etree.ElementTree as ET
+
+# Evidence collection only. Invoke after the coordinator observes terminal gate exit.
+if len(sys.argv) != 2:
+    raise SystemExit("usage: collect-postgate.py OBSERVED_GATE_EXIT_CODE")
+gate_exit = int(sys.argv[1])
+root = Path.cwd()
+out = root / "target/phase5/5a-b2-verification"
+freeze_path = root / "docs/agent-runs/phase-05/source-freeze.json"
+freeze = json.loads(freeze_path.read_text())
+freeze_at = datetime.fromisoformat(freeze["capturedAtUtc"]).timestamp()
+sha = lambda path: hashlib.sha256(path.read_bytes()).hexdigest()
+expected = {item["path"] for item in freeze["files"]}
+mismatches = [item["path"] for item in freeze["files"]
+              if not (root / item["path"]).is_file()
+              or sha(root / item["path"]) != item["sha256"]]
+listed = subprocess.check_output(
+    ["git", "ls-files", "-z", "--cached", "--others", "--exclude-standard", "--", *freeze["scopes"]],
+    text=True,
+)
+actual = {item for item in listed.split("\0") if item}
+source = {"frozenFileCount": len(expected), "hashMismatchPaths": mismatches,
+          "unexpectedPaths": sorted(actual - expected), "missingPaths": sorted(expected - actual)}
+log_path = out / "full-check.log"
+log = log_path.read_text()
+counts = [int(value) for value in re.findall(r"Total number of tests run: (\d+)", log)]
+paths = sorted([*root.glob("modules/*/target/test-reports/*.xml"),
+                *root.glob("tests/target/test-reports/*.xml"),
+                *root.glob("build-verification/target/test-reports/*.xml")])
+reports = []
+groups = {}
+for path in paths:
+    xml = ET.parse(path).getroot()
+    parts = path.relative_to(root).parts
+    group = "independentTests" if parts[0] == "tests" else (
+        "buildVerification" if parts[0] == "build-verification" else parts[1])
+    for suite in ([xml] if xml.tag == "testsuite" else list(xml.iter("testsuite"))):
+        values = {key: int(suite.attrib.get(key, "0"))
+                  for key in ["tests", "failures", "errors", "skipped"]}
+        reports.append({"path": str(path.relative_to(root)), "name": suite.attrib.get("name"),
+                        **values, "sha256": sha(path),
+                        "freshAfterSourceFreeze": path.stat().st_mtime >= freeze_at})
+        total = groups.setdefault(group, {key: 0 for key in values})
+        for key, value in values.items():
+            total[key] += value
+marker_raw = (root / ".claude/.last-test-run").read_text()
+marker = dict(line.split("=", 1) for line in marker_raw.splitlines() if "=" in line)
+timestamp = int(marker["timestamp"])
+marker_result = {
+    "path": ".claude/.last-test-run", "content": marker_raw,
+    "previousTimestamp": 1792081918395,
+    "renewed": timestamp > 1792081918395,
+    "afterSourceFreeze": timestamp / 1000 >= freeze_at,
+    "loggedInvocationAfterAllPassingSuites":
+        log.rfind("running scholarchain.build.TestRunMarker") > log.rfind("All tests passed."),
+}
+java = subprocess.run(
+    ["/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home/bin/java", "-version"],
+    text=True, capture_output=True, check=True,
+)
+summary = {
+    "schema": "scholarchain.phase5a.b2-verification.v1",
+    "capturedAtUtc": datetime.now(timezone.utc).isoformat(),
+    "gateExitCode": gate_exit, "sourceFreezeSha256": sha(freeze_path),
+    "sourceVerification": source, "stdoutTestCounts": counts, "stdoutTestTotal": sum(counts),
+    "junitGroups": groups, "junitTestTotal": sum(item["tests"] for item in groups.values()),
+    "junitReports": reports, "markerVerification": marker_result,
+    "toolchain": {"javaVersionOutput": java.stdout + java.stderr,
+                  "sbt": "1.10.7 (full-check startup)",
+                  "scala": "3.3.4 (frozen Versions.scala)"},
+    "logSha256": {path.name: sha(path) for path in sorted(out.glob("*.log"))},
+    "limitations": ["B2/N10 Subphase 5A repair; no independent reviewer approval inferred.",
+                    "Synthetic fixtures are not human labels or model accuracy evidence."],
+}
+summary["valid"] = (
+    gate_exit == 0 and not mismatches and actual == expected
+    and sum(counts) == summary["junitTestTotal"]
+    and all(not (item["failures"] or item["errors"] or item["skipped"]) for item in groups.values())
+    and all(item["freshAfterSourceFreeze"] for item in reports)
+    and all(marker_result[key] for key in ["renewed", "afterSourceFreeze", "loggedInvocationAfterAllPassingSuites"])
+    and marker.get("success") == "true"
+)
+summary_path = out / "full-check-summary.json"
+summary_path.write_text(json.dumps(summary, indent=2) + "\n")
+print(json.dumps({"valid": summary["valid"], "sourceVerification": source,
+                  "stdoutTestCounts": counts, "junitGroups": groups,
+                  "junitReportCount": len(reports), "markerVerification": marker_result,
+                  "summarySha256": sha(summary_path), "fullCheckLogSha256": sha(log_path)}, indent=2))
+raise SystemExit(0 if summary["valid"] else 1)

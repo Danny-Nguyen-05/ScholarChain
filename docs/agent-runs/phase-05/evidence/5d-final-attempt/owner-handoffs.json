@@ -1,0 +1,59 @@
+{
+  "nativeAgents": [
+    {
+      "id": "/root/phase5_final_dataset",
+      "role": "dataset-engineer",
+      "writes": [
+        "datasets/scripts/acquire_rice_team_demo.py",
+        "datasets/scripts/test_rice_team_demo.py",
+        "datasets/entity-resolution/5d-demo-2026-10-20-rice-final/**",
+        "datasets/entity-resolution/prepared/8d30085c-cb67-4d25-909f-5f2603ad4511*",
+        "dataset/prepared README append-only"
+      ],
+      "notes": "Coordinator alone executed actual HTTP. Dataset owner retained the completed preparation using the existing retainer. Thirteen new Python tests passed. All writes stopped."
+    },
+    {
+      "id": "/root/phase5_final_er",
+      "role": "entity-resolution-engineer",
+      "writes": [],
+      "notes": "Read-only audit of unchanged eligibility logic and source fields. No matcher or policy change."
+    },
+    {
+      "id": "/root/phase5_final_test",
+      "role": "test-engineer",
+      "writes": [],
+      "notes": "Read-only engineering audit of the script/tests before HTTP and independent post-run counter/eligibility recount. No independent reviewer approval."
+    }
+  ],
+  "coordinator": {
+    "id": "/root",
+    "owns": "docs/agent-runs/phase-05 evidence; actualserializedHTTP/Hadoop/CLI/sbtcommands",
+    "noReviewerLaunched": true
+  },
+  "independentRecount": {
+    "httpAttempts": 2,
+    "returnedRows": 15,
+    "distinctWorks": 12,
+    "selectedRows": 3,
+    "admittedPairs": 11,
+    "excludedPairs": 0,
+    "eligiblePairs": 0,
+    "inBandButInsufficient": 2,
+    "coauthorOverlap": 0.2,
+    "supportiveThreshold": 0.8,
+    "allSelectedObjectsExactlyMatchResponses": true
+  },
+  "sourceVersionSupersession": {
+    "oldApproved5eSourceFreeze": {
+      "path": "docs/agent-runs/phase-05/evidence/5d-final-attempt/before-source-freeze.json",
+      "sha256": "52f24a88d8b4d3d802e8e53403428ad6d5e889afc7309ccd55a7f4f2fc91376f"
+    },
+    "oldApproved5eInventory": {
+      "path": "docs/agent-runs/phase-05/evidence/5d-final-attempt/before-review-inventory.json",
+      "sha256": "66738f9a53ea92b246d0b3dec7adc356b759e3c54f416e487cfa11392cde1890"
+    },
+    "approved5eArtifactsUnchanged": true,
+    "note": "Current top-level freeze/inventory describe this later checkpoint. Historical evaluation manifests are unchanged; the exact source-freeze content they bind is retained at before-source-freeze.json."
+  },
+  "noFurtherAcquisition": true
+}

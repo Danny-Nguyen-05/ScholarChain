@@ -1,0 +1,181 @@
+"""Coordinator final repair packet; requires observed fresh frozen gate."""
+from pathlib import Path
+import json,hashlib,subprocess
+ROOT=Path.cwd();OUT=ROOT/'docs/agent-runs/phase-05';EV=OUT/'evidence/5c-repair'
+def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
+g=json.loads((EV/'full-check-summary.json').read_text());assert g['valid'] and g['exitCode']==0
+m=g['moduleCounts'];n=g['totals']['tests'];reports=g['reportCount'];ready=json.loads((EV/'real-readiness-summary.json').read_text())
+text=f"""
+
+## Subphase 5C B1/B2 — final technical repair gate
+
+STATUS: COMPLETE blocker repairs and fresh technical verification; independent external recheck pending. This supersedes the preceding pending-gate status.
+OWNER: Coordinator; ER, dataset and independent test owners have completed and stopped.
+WORK ORDER: Repair only external 5C B1/B2 under the user's explicit instruction.
+FILES CREATED / FILES MODIFIED: 5c-repair-source-delta.json binds 75 additions, 11 modifications and no removals against the exact reviewed 509-file freeze. The new freeze binds 584 files. Complete tracked/untracked inventory is review-inventory.json; old packet remains in history/5c-initial-review/.
+COMMANDS RUN: Exact commands, environment, timestamps and exits are retained in evidence/5c-repair/commands.json; independent dataset checks in dataset-checks.json. Final `sbt -batch check` exited0. All builds serialized; no source edits during final gate.
+TEST RESULTS: {n} tests passed: core {m['core']}, Hadoop {m['hadoop']}, ER {m['entityResolution']}, independent {m['independent']}, build verification {m['buildVerification']}; {reports} fresh JUnit reports; zero failures/errors/skips. All584 source hashes and scoped path membership remain unchanged; generated success marker renewed after all suites. Expected nested injected failure is passing CheckFailurePathSpec coverage. Two original B1 failures are now green; post-fix target25ER+28independent passed after one disclosed synthetic-fixture correction. All26Python tests and68-file durable validator passed.
+VALIDATION RESULTS: B1 queue identity excludes mutable matcher settings; unchanged P0 annotations survive later P1 policy/model/adjudication config/code, and evaluation records actual P1 run provenance. Changed input/candidates/task evidence remains rejected/invalid. Rebuilt real queue reads the durable input; all300tasks and task evidence plus split are unchanged from initial5C, while queuehash appropriately changed before any real labeling. Two runs produce byte-identical queue/split/generation audit. Allocation40dev(20W/20R),200held(100W/100R),60reserves;568groups/100selected;777cross-partition skips. B2 retains68byte-identicalfiles/49,547,452bytes outside target and reproduces original input57efd819... and candidates9381588e... over11,412pairs; actual full hashes in durable-input-proof.json. No UUID normalization or original-payload rewrite occurred.
+ASSUMPTIONS: Population/evidence/split define annotation identity; prediction-run metadata defines actual execution provenance. Dataset retention follows existing datasets/** ownership; no constitutional amendment or separate human ratification is inferred.
+RISKS: All eight new nonblocking findings and prior deferred observations remain unchanged. Required exact input retention adds47.3MiB. Initial manual browser test evidence is historical; no browser actions or new real-queue load were performed in this blocker-only round. No accuracy, real labels, calibration or live-model result is claimed.
+MANUAL ACTION REQUIRED: User launches external repair recheck and returns full verdict; no reviewer has been triggered. Do not label until recheck/human gate. Include durable input and manifest in any later approved commit.
+BLOCKED-ON OWNER: User-selected independent reviewer.
+BLOCKED-ON EVIDENCE: External 5C repair verdict.
+NEXT GATE: External recheck, any necessary repairs, then explicit human advancement before5D. No acquisition, provider/live calls, actual labels, commit/push or later-subphase work occurred. All workers and builds have stopped.
+"""
+for a,b in [('exited0','exited 0'),('All584','All 584'),('target25ER+28independent','target 25 ER +28 independent'),('All26Python','All 26 Python'),('and68-file','and 68-file'),('all300tasks','all 300 tasks'),('initial5C','initial 5C'),('Allocation40dev(20W/20R),200held(100W/100R),60reserves;568groups/100selected;777cross-partition','Allocation 40 development (20 Work /20 Researcher), 200 held-out (100 Work /100 Researcher), 60 reserves; 568 groups /100 selected; 777 cross-partition'),('retains68byte-identicalfiles/49,547,452bytes','retains 68 byte-identical files /49,547,452 bytes'),('input57efd819','input 57efd819'),('candidates9381588e','candidates 9381588e'),('over11,412pairs','over 11,412 pairs'),('adds47.3MiB','adds 47.3 MiB'),('before5D','before 5D')]:text=text.replace(a,b)
+for name in ['owner-report.md','test-report.md','review.md']:
+ with (OUT/name).open('a') as f:f.write(text)
+status=subprocess.check_output(['git','status','--porcelain=v1','-uall'],text=True).splitlines();paths=sorted({l[3:] for l in status}|{'docs/agent-runs/phase-05/review-inventory.json'})
+keys=['source-freeze.json','implementation.diff','5c-implementation.diff','evidence/5c-repair/full-check.txt','evidence/5c-repair/full-check-summary.json','evidence/5c-repair/real-readiness-summary.json','evidence/5c-repair/review-artifacts/queue.json','evidence/5c-repair/review-artifacts/split.json','evidence/5c-repair/durable-input-proof.json']
+hashes='\n'.join(f'- {k}: {sha(OUT/k)}' for k in keys)
+prompt=f"""You are the independent, read-only reviewer for ScholarChain Phase 5,
+Subphase 5C B1/B2 repair recheck.
+Repository: /Users/danny/Documents/UIC/CS441/ScholarChain
+
+All manager-owned implementation, workers/builds, acquisition and browser actions
+have stopped. The user selects and launches you; the manager did not invoke a
+reviewer. Do not repair, run behavior probes or launch agents.
+
+Read:
+1. AGENTS.md, CLAUDE.md, docs/agents.md, .claude/agents/code-reviewer.md,
+   docs/agent-runs/README.md, recorded Phase 1 authority and Phase 4 acceptance.
+2. /Users/danny/Documents/plan/phase5.md and phase-05/prompt.md including
+   the current B1/B2 repair authorization. Only5C repairs authorized.
+3. Course Phase5/entity-linkage/evaluation/D07/relevant Phase6 inputs:
+   https://github.com/0x1DOCD00D/ScholarChain/blob/main/README.md#phase-5-implement-entity-resolution
+4. Full user-returned REQUEST-CHANGES at phase-05/review.md and
+   evidence/5c-repair/external-review.txt (all evidence paths below are
+   relative to docs/agent-runs/phase-05/).
+5. owner-report.md, test-report.md, repairs.md, 5c-repair-start.json,
+   5c-repair-source-delta.json, 5c-baseline.json, source-freeze.json,
+   review-inventory.json, implementation.diff, 5c-implementation.diff,
+   history/5c-initial-review/ and history/5b-final-handoff/.
+6. Current ER queue/evaluation/CLI/page contracts and owner tests; independent
+   IndependentReviewBindingRepairSpec, IndependentEvaluationAdapterSpec,
+   IndependentEvaluationSpec, IndependentRetainedReviewInputSpec and
+   IndependentRetainedReviewInputMain; related unchanged tests.
+7. datasets/entity-resolution/prepared/README.md, durable run and sibling
+   retention manifest, retain_prepared_population.py and its tests.
+8. evidence/5c-repair/: commands.json, dataset-checks.json, before-fix.txt,
+   before-fix-summary.json and JUnit, targeted.txt, targeted-second.txt,
+   durable-input-reload.txt, durable-input-proof.json, real-readiness-summary.json,
+   full-check.txt/full-check-summary.json, queue-source-hashes.json and
+   review-artifacts/queue.json, split.json and generation-binding.json.
+   Older evidence/5c/ and browser receipts are historical and preserved.
+
+Baseline/ownership:
+- Branch phase-5; current HEAD and clean5CstartingHEAD:
+  c8342d25ba04dede26af10bedc5a76691824d1ca
+- WholePhase5base:099e303311be7a1b2e2cf5655e0c7ce9fa710474
+- AcceptedPhase4implementation:3ccd61c071d8080dda04d5e9cf73e9ed19dd75a7
+-5Bexternally/humanapproved;5CinitialreviewREQUEST-CHANGES remains the last
+ independent5Cverdict. No repair approval is inferred.
+- Before repairs all509reviewed hashes matched. Six old handoff artifacts
+ preserved in history/5c-initial-review/. Repair delta75added/11modified/0removed;
+ new freeze584files, unchanged through finalgate.
+- Full tracked/untracked inventory is review-inventory.json ({len(paths)} paths,
+ its own recursive hash excluded). Include all durable/hidden/success files.
+- ERowner writes modules/entity-resolution/**; datasetowner writes datasets/**;
+ tester writes tests/**; coordinator writes phase-05 evidence. Retained prepared
+ population is routed under existing dataset territory, not a new ownership map
+ or invented human ratification. Core/Hadoop/build/originalsamples/constitutional/
+ human-owned decision files remain unchanged. No commit or push.
+
+B1 repair:
+- ReviewPopulationBinding stores only inputEvidenceHash/candidatePopulationHash.
+ Queue/checkpoint identity still binds source population, split/sampling and
+ complete tasks/evidence. Mutable policy/config/prompt/schema/model/code/source
+ metadata is stored separately as generation audit or prediction-run ReviewBinding.
+- Evaluation accepts P1runmetadata for the same immutable population/task evidence
+ and records P1 in its report; original P0 annotations remain unchanged.
+- fromDecisions now requires explicit actual run binding. Inconsistent decisions/
+ adjudication metadata fail against P1, rather than against old label-generation
+ settings. CLIprepare requires --binding and checks actual completed manifest,
+ config/model/source-bound decisions and recomputed candidate population.
+- Two independent pre-fix tests genuinely failed on unchanged production.
+ Post-fix actual offline P1 engine test changes policy/model/version/adjudication
+ timeout/config/code, reuses P0checkpoint, preserves queue identity and reportsP1.
+ Changed input/candidates/task evidence still fails or is counted INVALID.
+- Rebuilt real queue has240initial+60reserves:20Work/20Researcher development,
+ 100Work/100Researcher held-out. Same300tasks/task hashes and split as before;
+ only label-population wire/queue hash changed, before any real human labels.
+- Queue/split/generation audit files are byte-identical across two durable-input
+ generation runs. Separate generation metadata is excluded from label identity.
+
+B2 repair:
+- Durable exact completed input:
+ datasets/entity-resolution/prepared/bd424a86-0a1b-4e44-bbdb-4a9b8c8a20e3/
+- Sibling <UUID>.retention-manifest.v1.json binds68files/49,547,452bytes:
+ entireexport/** includingCRC, original completion/runmanifest and8intermediate
+ _SUCCESS files (plus export success). No ignored target input is needed for
+ future loading. Omitted intermediate data/counters are not claimed retained.
+- All retained bytes/UUIDs/source payloads unchanged. No new Hadoop regeneration
+ or logical-UUID normalization. No retained path is ignored byGit.
+- Actual Scala original-vs-durable replay reproduced:
+ input57efd81957e5eec9194d4b5c42f6ef170213640f148b56bf8b99a51d1d09d1fe
+ candidates9381588e35a418a84a22e9a680db4ab7886a8d33cf9463166edc1222cd8a5581
+ 11,412pairs,456works,8profiles,465activities, complete candidate equality.
+- Independent copy tests prove valid initial loading, identical replay and
+ rejection of missing/corrupted retained parts. Retentionvalidator checks all
+ files/hashes/completion framing/9successmarkers with overwrite/size/path bounds.
+
+Observed verification:
+- Fresh sbt -batch check: exit0, {n} tests passed: core{m['core']},Hadoop{m['hadoop']},
+ ER{m['entityResolution']},independent{m['independent']},build{m['buildVerification']};{reports}freshJUnit reports,
+ zero failures/errors/skips;584sourcehashes/pathsetunchanged;successmarker renewed.
+ Expected nested injected checkfailure is a passing CheckFailurePathSpec assertion.
+- Targeted25ER+28independent passed. First post-fix attempt had27/28independent
+ passing: a new disposable B2fixture snapshot was inconsistent. Fixed only that
+ fixture; meaningful positive-before-negative checks added; failed attempt retained.
+-26Python datasettests and68filedurablevalidator passed.
+-Java17.0.20.1,sbt1.10.7,Scala3.3.4,Python3.14.5; exact args/env/exits retained.
+-No new browseractions or realqueue load in blocker-only round; browser evidence
+ is historical. Current HTMLbinding validator updated with B1 and Node syntaxchecked;
+ no claim that old browser tests prove new browser behavior.
+
+Key SHA-256 values (relative to phase-05):
+{hashes}
+Durable retention manifest:
+c51963569827ceaba35d1f816a918afecd32a547725ba2b1bb63aa38d49e8556
+
+Scope/limitations:
+- User requested BLOCKERS ONLY. N1–N8 and earlier nonblocking findings remain
+ documented and unchanged. No blanket N4completion/sensitivity CLI repair,
+ realqueue browserprobe, clockfix, IDguide warning, reserve-count fix,
+ old ledger rewrite, acquisition-script recovery or repository deduplication.
+- Necessary B2retention adds47.3MiB; size observation remains open beforecommit.
+- No real human labels: all240reviews pending. Synthetic P0/P1 annotations and
+ fake calls establish tests only. No acquisition/live calls/provider implementation,
+ calibration/finalgold measurement,5D/5E,cloud,Phase6or finalPhase5acceptance.
+- Convenience selection/residual leakage, provider hypothesis risks and blocking
+ recall limitations remain as in the initial report. Do not invent accuracy.
+
+Review rules:
+Read-only: no edits, builds/tests, executable behavior probes, installs, network
+source/provider calls, labelchanges, deploys, commits/pushes or agent launches.
+Read-only hashes/inventory comparison permitted. Never read .env/privatekeys/
+credentials or secret directories. Specify necessary executable checks forowners.
+Report ALL confirmed findings inonepass. Prioritize B1 label/prediction separation,
+actual-run provenance, changed-evidence rejection, B2 durable completeness/replay,
+schema/UI compatibility and regression/evidence integrity. Distinguish static
+reasoning from executed evidence; tests do not prove identity accuracy or labels.
+Later subphases remain future scope unless this repair deliverable depends onthem.
+
+Return APPROVE or REQUEST-CHANGES for implemented5C/B1/B2repairs. Explicitly assess
+both blockers and distinguish carried nonblocking notes/unverified future gates.
+For each finding provide severity,path/line,evidence/reproduction reasoning,impact,
+owner,acceptancecheck,andwhetheritblocks5C. Use required reportfields STATUS,OWNER,
+WORK ORDER,FILES CREATED,FILES MODIFIED,COMMANDS RUN,TEST RESULTS,VALIDATION RESULTS,
+ASSUMPTIONS,RISKS,MANUAL ACTION REQUIRED,BLOCKED-ON OWNER,BLOCKED-ON EVIDENCE,NEXT GATE.
+Return completeverdict touserforhandoff. Themanagerhasstopped. EvenAPPROVE still
+requires explicituserauthorization before5D.
+"""
+# Human-readable prose substitutions apply only to the new prompt.
+fix={'Only5C':'Only 5C','Phase5/':'Phase 5/','Phase6':'Phase 6','clean5CstartingHEAD':'clean 5C starting HEAD','WholePhase5base:':'Whole Phase 5 base: ','AcceptedPhase4implementation:':'Accepted Phase 4 implementation: ','-5Bexternally/humanapproved;5CinitialreviewREQUEST-CHANGES':'- 5B externally/human approved; 5C initial review REQUEST-CHANGES','independent5Cverdict':'independent 5C verdict','all509reviewed':'all 509 reviewed','delta75added/11modified/0removed':'delta 75 added /11 modified /0 removed','freeze584files':'freeze 584 files','finalgate':'final gate','ERowner':'ER owner','datasetowner':'dataset owner','originalsamples':'original samples','P1runmetadata':'P1 run metadata','CLIprepare':'CLI prepare','P0checkpoint':'P0 checkpoint','reportsP1':'reports P1','has240initial+60reserves:20Work/20Researcher':'has 240 initial +60 reserves: 20 Work /20 Researcher','100Work/100Researcher':'100 Work /100 Researcher','Same300tasks':'Same 300 tasks','binds68files/49,547,452bytes':'binds 68 files /49,547,452 bytes','entireexport/** includingCRC':'entire export/** including CRC','runmanifest and8intermediate':'run manifest and 8 intermediate','byGit':'by Git','input57efd':'input 57efd','candidates938':'candidates 938','11,412pairs,456works,8profiles,465activities':'11,412 pairs, 456 works, 8 profiles, 465 activities','Retentionvalidator':'Retention validator','9successmarkers':'9 success markers','exit0':'exit 0','Targeted25ER+28independent':'Targeted 25 ER +28 independent','had27/28independent':'had 27/28 independent','B2fixture':'B2 fixture','-26Python datasettests and68filedurablevalidator':'- 26 Python dataset tests and 68-file durable validator','-Java17.0.20.1,sbt1.10.7,Scala3.3.4,Python3.14.5':'- Java 17.0.20.1, sbt 1.10.7, Scala 3.3.4, Python 3.14.5','-No new browseractions or realqueue':'- No new browser actions or real queue','HTMLbinding':'HTML binding','syntaxchecked':'syntax checked','N4completion':'N4 completion','realqueue browserprobe':'real queue browser probe','clockfix':'clock fix','IDguide':'ID guide','B2retention adds47.3MiB':'B2 retention adds 47.3 MiB','beforecommit':'before commit','all240reviews':'all 240 reviews','finalgold':'final gold','measurement,5D/5E,cloud,Phase 6or finalPhase5acceptance':'measurement, 5D/5E, cloud, Phase 6 or final Phase 5 acceptance','labelchanges':'label changes','privatekeys':'private keys','forowners':'for owners','inonepass':'in one pass','onthem':'on them','implemented5C/B1/B2repairs':'implemented 5C/B1/B2 repairs','severity,path/line,evidence/reproduction reasoning,impact':'severity, path/line, evidence/reproduction reasoning, impact','owner,acceptancecheck,andwhetheritblocks5C':'owner, acceptance check, and whether it blocks 5C','reportfields':'report fields','STATUS,OWNER':'STATUS, OWNER','ORDER,FILES':'ORDER, FILES','CREATED,FILES':'CREATED, FILES','MODIFIED,COMMANDS':'MODIFIED, COMMANDS','RUN,TEST':'RUN, TEST','RESULTS,VALIDATION':'RESULTS, VALIDATION','ASSUMPTIONS,RISKS,MANUAL':'ASSUMPTIONS, RISKS, MANUAL','REQUIRED,BLOCKED':'REQUIRED, BLOCKED','OWNER,BLOCKED':'OWNER, BLOCKED','EVIDENCE,NEXT':'EVIDENCE, NEXT','completeverdict touserforhandoff':'complete verdict to user for handoff','Themanagerhasstopped':'The manager has stopped','EvenAPPROVE':'Even APPROVE','explicituserauthorization before5D':'explicit user authorization before 5D'}
+for a,b in fix.items():prompt=prompt.replace(a,b)
+prompt=prompt.replace('core'+str(m['core'])+',Hadoop'+str(m['hadoop']), 'core '+str(m['core'])+', Hadoop '+str(m['hadoop']))
+prompt=prompt.replace('ER'+str(m['entityResolution'])+',independent'+str(m['independent'])+',build'+str(m['buildVerification'])+';'+str(reports)+'freshJUnit reports', 'ER '+str(m['entityResolution'])+', independent '+str(m['independent'])+', build '+str(m['buildVerification'])+'; '+str(reports)+' fresh JUnit reports')
+prompt=prompt.replace('584sourcehashes/pathsetunchanged;successmarker', '584 source hashes/path set unchanged; success marker')
+(OUT/'reviewer-prompt.txt').write_text(prompt)
+print(json.dumps({'tests':n,'reports':reports,'paths':len(paths),'promptSha256':sha(OUT/'reviewer-prompt.txt')}))

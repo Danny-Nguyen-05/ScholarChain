@@ -1,0 +1,66 @@
+{
+  "schemaVersion": "scholarchain.er-policy.example.v1",
+  "artifactRole": "DESIGN_ONLY_NOT_RUNTIME_CONFIG",
+  "evidenceStatus": "SYNTHETIC_UNCALIBRATED_EXAMPLE",
+  "policyVersion": "er-design-v1",
+  "featurePolicyVersion": "er-features-v1",
+  "normalizationVersion": "er-normalization-v1",
+  "supersedes": "ScholarChainConfig.entityResolution",
+  "simultaneousLegacySettings": "ERROR",
+  "conflictPrecedence": "BEFORE_ANY_ACCEPTANCE_AND_BEFORE_LINK_EXPORT",
+  "scoreSemantics": "UNCALIBRATED_AVAILABLE_FEATURE_WEIGHTED_AVERAGE",
+  "emptyAvailableWeightOutcome": "UNRESOLVED",
+  "boundaryConvention": "REJECT_LE_ACCEPT_GE_AFTER_SUFFICIENCY_LLM_BAND_INCLUSIVE",
+  "work": {
+    "rejectThreshold": 0.2,
+    "acceptThreshold": 0.95,
+    "llmBandMin": 0.6,
+    "llmBandMax": 0.85,
+    "yearToleranceYears": 5,
+    "minimumIndependentGroupsForScoredAccept": 3,
+    "requiredGroupsForScoredAccept": ["bibliography", "authorship"],
+    "scoredWeights": {"title": 0.5, "authorOverlap": 0.3, "yearCompatibility": 0.1, "venue": 0.1},
+    "featureGroups": {"title": "bibliography", "authorOverlap": "authorship", "yearCompatibility": "chronology", "venue": "bibliography"},
+    "orcidWorkActivity": "NO_AUTHOR_LIST_OR_TEAM_INFERENCE"
+  },
+  "researcher": {
+    "rejectThreshold": 0.15,
+    "acceptThreshold": 0.97,
+    "llmBandMin": 0.65,
+    "llmBandMax": 0.88,
+    "yearToleranceYears": 10,
+    "minimumIndependentGroupsForScoredAccept": 3,
+    "requiredGroupsForScoredAccept": ["name", "context"],
+    "scoredWeights": {"name": 0.35, "initials": 0.05, "coauthorOverlap": 0.3, "affiliation": 0.2, "authorOrder": 0.1},
+    "featureGroups": {"name": "name", "initials": "name", "authorOrder": "name", "coauthorOverlap": "context", "affiliation": "affiliation"},
+    "nameOnlyAcceptance": false,
+    "openAlexAuthorAuthority": "HYPOTHESIS_CANNOT_OVERRIDE_DIRECT_ORCID"
+  },
+  "sourceReliability": {"DBLP": 1.0, "OPENALEX": 1.0, "CROSSREF": 1.0, "ORCID": 1.0},
+  "sourceReliabilityMeaning": "NEUTRAL_ILLUSTRATION_NOT_MEASURED_SOURCE_ACCURACY",
+  "blocking": {
+    "maxMembersPerBlock": 100,
+    "maxPairsPerBlock": 2000,
+    "maxPairsPerRun": 20000,
+    "maxCrossPublicationPairsPerMention": 100,
+    "maxEvidenceBytesPerPair": 32768,
+    "oversizeAction": "SKIP_WHOLE_BLOCK_WITH_REASON_AND_COUNTS"
+  },
+  "llm": {
+    "defaultMode": "disabled",
+    "canOverrideConflict": false,
+    "canMintIdentifiers": false,
+    "requiresEvidenceSufficiency": true,
+    "allowedResponseOutcomes": ["accept", "reject", "abstain"],
+    "requiresReportedConfidence": true,
+    "reportedConfidenceIsSystemConfidence": false
+  },
+  "completionRequiredIn5B": [
+    "tested_namespace_and_entity_specific_identifier_authority",
+    "tested_normalization_and_complete_feature_catalog",
+    "strict_loader_and_canonical_policy_config_hash_fixtures",
+    "explicit_exact_and_bibliographic_rule_gates",
+    "tested_source_reliability_modifier_formula",
+    "development_calibration_before_policy_freeze"
+  ]
+}

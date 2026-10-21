@@ -1,0 +1,19 @@
+{
+  "schemaVersion": "scholarchain.phase5d.label-import-start.v1",
+  "head": "61d32a38eaad5b2fc352acf0b7f85f3815c2336d",
+  "startedAtUtc": "2026-10-20T21:56:51.757531+00:00",
+  "authorization": "User said all12batches reviewed; then explicitly authorized conversion/import, uncertainty reporting and assessment of outstandinglive-demo prerequisite.",
+  "scope": "5D labels only; no policy tuning,heldout predictions,evaluation,5E,modelcalls,newacquisition or commit/push.",
+  "priorEvidence": {
+    "source-freeze.json": {
+      "sha256": "a14f42632137cd6b1da3957d514c5094d187f2d8ae6cf46892be167f2c38d1da",
+      "bytes": 129863
+    },
+    "review-inventory.json": {
+      "sha256": "f7e18beb97a8ad3ea1bf9f49acc73bda1ee4750cad321d4b256ee7509b25f97f",
+      "bytes": 132718
+    }
+  },
+  "labelProvenance": "Human checkbox choices after exposure to AI draft suggestions; preserve original Markdown and disclose anchoring.",
+  "timestampRule": "Conversion UTC used in strict checkpoint timestamp field; not presented as actual time of human judgment."
+}

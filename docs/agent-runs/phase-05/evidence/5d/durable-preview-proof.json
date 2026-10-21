@@ -1,0 +1,50 @@
+{
+  "schemaVersion": "scholarchain.phase5d.durable-preview-proof.v1",
+  "manifestFiles": [
+    {
+      "path": "demo.json",
+      "valid": true
+    },
+    {
+      "path": "admission.json",
+      "valid": true
+    },
+    {
+      "path": "live-config.json",
+      "valid": true
+    },
+    {
+      "path": "effective-source-config.json",
+      "valid": true
+    },
+    {
+      "path": "effective-policy.json",
+      "valid": true
+    },
+    {
+      "path": "decisions.jsonl",
+      "valid": true
+    },
+    {
+      "path": "accepted-links.jsonl",
+      "valid": true
+    },
+    {
+      "path": "constraints.json",
+      "valid": true
+    },
+    {
+      "path": "PREVIEW-ONLY-NOT-EXECUTED-requests.json",
+      "valid": true
+    }
+  ],
+  "completionHashMatches": true,
+  "inputEvidenceHash": "3dffec0a31f2cf29781bdbe6da4c1f9046cbec98bccde112b86cb7c101a1c055",
+  "candidatePopulationHash": "3fb51d1ac08d167ae142dbd7b64ca2dd31564bc5c05ec3c0552adbd8461d0b94",
+  "sourceFreezeHash": "8396eb7875d13a080877530c9d517d9134519ca2ebdf0d94b863bc4e4a79133b",
+  "providerAttempts": 0,
+  "cacheHits": 0,
+  "eligiblePairs": 0,
+  "approvalStateCreated": false,
+  "valid": true
+}

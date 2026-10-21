@@ -1,0 +1,125 @@
+{
+  "schemaVersion": "scholarchain.phase5d.followup-outcome.v1",
+  "status": "NO_NEW_ADMISSIBLE_DEMO_OBSERVATIONS",
+  "stageActual": {
+    "distinctReturnedWorksIncludingExcluded": 10,
+    "httpAttempts": 2,
+    "newDistinctWorksNotObservedInPreviousStage": 10,
+    "newIngestionRecords": 0,
+    "responseBytes": 43664,
+    "seconds": 1.3677
+  },
+  "cumulative": {
+    "distinctReturnedWorksAcrossStages": 30,
+    "httpAttemptsAcrossStages": 9,
+    "previousStageDistinctReturnedWorks": 20,
+    "responseBytesAcrossStages": 215344,
+    "secondsAcrossStages": 7.9818
+  },
+  "selectedAuthors": [],
+  "sourcePayloadProof": [
+    {
+      "source": "crossref",
+      "sameObservationPayloads": true,
+      "byteIdentical": true,
+      "newSha256": "01a28ad45d265e8d22e7f9cf17523e130320870d3435588cc6ba7cf539146510",
+      "oldSha256": "01a28ad45d265e8d22e7f9cf17523e130320870d3435588cc6ba7cf539146510"
+    },
+    {
+      "source": "dblp",
+      "sameObservationPayloads": true,
+      "byteIdentical": true,
+      "newSha256": "25d64b97056e679c3fab1c80b12342fd210e90e7846569811d0f825f488b9582",
+      "oldSha256": "25d64b97056e679c3fab1c80b12342fd210e90e7846569811d0f825f488b9582"
+    },
+    {
+      "source": "openalex",
+      "sameObservationPayloads": true,
+      "byteIdentical": true,
+      "newSha256": "d24e6d45475a0a777b62d2e1c41a2401add2d8f6031226d04aab120f06b0abbf",
+      "oldSha256": "d24e6d45475a0a777b62d2e1c41a2401add2d8f6031226d04aab120f06b0abbf"
+    },
+    {
+      "source": "orcid",
+      "sameObservationPayloads": true,
+      "byteIdentical": true,
+      "newSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "oldSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "discoveredRecords": [
+    {
+      "id": "https://openalex.org/W128096666",
+      "year": 2018,
+      "venue": "The University of Bath Online Publications Store (The University of Bath)",
+      "title": "Enabling the citation of datasets generated through public health research"
+    },
+    {
+      "id": "https://openalex.org/W1488958868",
+      "year": 2018,
+      "venue": "Figshare",
+      "title": "The Automotive Supply Chain: Global Trends and Asian Perspectives"
+    },
+    {
+      "id": "https://openalex.org/W1513070141",
+      "year": 2018,
+      "venue": "e-space (Manchester Metropolitan University)",
+      "title": "A Distributed Data Extraction and Visualisation Service for Wireless Sensor Networks"
+    },
+    {
+      "id": "https://openalex.org/W1552194638",
+      "year": 2018,
+      "venue": "PDXScholar  (Portland State University)",
+      "title": "Adaptive Execution of Data Parallel Computations on Networks of Heterogeneous Workstations"
+    },
+    {
+      "id": "https://openalex.org/W1567781171",
+      "year": 2018,
+      "venue": "Murdoch University Research Portal",
+      "title": "Neocosmicism: God and the Void"
+    },
+    {
+      "id": "https://openalex.org/W11840961",
+      "year": 2018,
+      "venue": "Figshare",
+      "title": "Mobile Pickpocketing: Exfiltration of Sensitive Data through NFC-enabled Mobile Devices (CMU-CyLab-13-015)"
+    },
+    {
+      "id": "https://openalex.org/W118997741",
+      "year": 2018,
+      "venue": "Scientific investigations report",
+      "title": "Quality of water from crystalline rock aquifers in New England, New Jersey, and New York, 1995-2007"
+    },
+    {
+      "id": "https://openalex.org/W145715014",
+      "year": 2018,
+      "venue": null,
+      "title": "Spanish Orientalism:Washington Irving And The Romance Of The Moors"
+    },
+    {
+      "id": "https://openalex.org/W1493640999",
+      "year": 2018,
+      "venue": "RePEc: Research Papers in Economics",
+      "title": "Computer Aided Assessments and Programming Exercises with JACK"
+    },
+    {
+      "id": "https://openalex.org/W1494572104",
+      "year": 2018,
+      "venue": "KiltHub Repository",
+      "title": "Automated Assistance for Eliciting User Expectations"
+    }
+  ],
+  "newHadoopRunRequired": false,
+  "reason": "Zero new records ingested; all source observation payloads equal the previous already-prepared and canonically checked context. No new input snapshot or duplicate prepared run is claimed. Newly returned raw records were excluded before preparation. Use existing prepared/68c2b012-6d04-4eef-a7bf-5ca31706d895 and retained canonical admission proof for this unchanged context.",
+  "existingContextCandidatePairs": 93,
+  "existingContextExcludedBeforeScoring": 70,
+  "existingContextAdmittedPairs": 23,
+  "existingContextEligiblePairs": 0,
+  "newHeldOutPairsScored": 0,
+  "actualModelCalls": 0,
+  "actualSpendUsd": "0.00",
+  "runtimeCredentialsAccessed": false,
+  "approvalStateInitialized": false,
+  "noFurtherQueryFallbackOrAllowanceReset": true,
+  "noEvaluationOr5E": true
+}

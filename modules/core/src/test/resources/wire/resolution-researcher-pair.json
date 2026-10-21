@@ -1,0 +1,23 @@
+{
+  "schemaVersion": "scholarchain.resolution.v1",
+  "pairId": "resolution-pair:32c83838c7bcf409215f65a5e256dd8535fe0e7bdbef5f9aa28f469d07d06138",
+  "entityType": "Researcher",
+  "left": {
+    "$type": "Mention",
+    "observation": {
+      "source": "DBLP",
+      "sourceRecordId": "series/sapere/BerkeleyR13",
+      "datasetSnapshot": "dblp-2026-10-03"
+    },
+    "mentionId": "mention:dblp:series/sapere/BerkeleyR13#2"
+  },
+  "right": {
+    "$type": "OrcidProfile",
+    "observation": {
+      "source": "ORCID",
+      "sourceRecordId": "0000-0002-4414-6920",
+      "datasetSnapshot": "unknown"
+    },
+    "orcid": "0000-0002-4414-6920"
+  }
+}

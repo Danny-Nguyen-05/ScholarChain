@@ -1,0 +1,25 @@
+{
+  "schema": "scholarchain.precommit-file-size.v1",
+  "definition": "Logical file bytes of changed existing files eligible for commit; deletions have no current bytes. Excludes Git history and ignored target/cache.",
+  "changedPathsIncludingDeletion": 557,
+  "existingChangedFiles": 556,
+  "deletedPaths": [
+    "docs/agent-runs/phase-05/implementation.diff"
+  ],
+  "uncommittedBytes": 125522441,
+  "uncommittedDecimalMB": 125.522,
+  "uncommittedMiB": 119.708,
+  "startingBytes": 419481279,
+  "reductionBytes": 293958838,
+  "entireNonignoredTreeBytes": 134490308,
+  "largestCommitCandidateFile": {
+    "path": "datasets/entity-resolution/prepared/bd424a86-0a1b-4e44-bbdb-4a9b8c8a20e3/export/snapshot=hadoop-prep/run=bd424a86-0a1b-4e44-bbdb-4a9b8c8a20e3/match-candidate/part-r-00000",
+    "bytes": 22313459,
+    "decimalMB": 22.313
+  },
+  "filesOver50MB": [],
+  "limitBytes": 50000000,
+  "optionalArchivalPerformed": false,
+  "commitCreated": false,
+  "phase5DStarted": false
+}

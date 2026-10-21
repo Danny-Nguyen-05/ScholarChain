@@ -1,0 +1,28 @@
+{
+  "scope": "Current modified/untracked file byte sizes, not git-pack or patch estimate. Excludes deleted files.",
+  "files": 760,
+  "totalBytes": 23940620,
+  "largestFiles": [
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-followup-demo/frozen-development-anchor-metadata.json",
+      "bytes": 8861837
+    },
+    {
+      "path": "datasets/entity-resolution/labels/2026-10-20-danny-ai-assisted-v1/source/draft-labels.json",
+      "bytes": 515000
+    },
+    {
+      "path": "datasets/entity-resolution/prepared/f22f1a12-c7be-43af-b470-d4f4e244ca9d/export/snapshot=hadoop-prep/run=f22f1a12-c7be-43af-b470-d4f4e244ca9d/match-candidate/part-r-00000",
+      "bytes": 393166
+    },
+    {
+      "path": "datasets/entity-resolution/prepared/68c2b012-6d04-4eef-a7bf-5ca31706d895/export/snapshot=hadoop-prep/run=68c2b012-6d04-4eef-a7bf-5ca31706d895/match-candidate/part-r-00000",
+      "bytes": 360990
+    },
+    {
+      "path": "datasets/entity-resolution/labels/2026-10-20-danny-ai-assisted-v1/validated-labels.json",
+      "bytes": 326475
+    }
+  ],
+  "filesOver50MB": []
+}

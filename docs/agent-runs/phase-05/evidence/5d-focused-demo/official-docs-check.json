@@ -1,0 +1,26 @@
+{
+  "schemaVersion": "scholarchain.phase5d.focused-model-docs-check.v1",
+  "checkedAtUtc": "2026-10-21T02:15:56.418795+00:00",
+  "method": "Official-domain web search followed by fetched official model page; no API/provider request or credential access.",
+  "model": "gpt-6-luna",
+  "sourceUrl": "https://developers.openai.com/api/docs/models/gpt-6-luna",
+  "facts": {
+    "reasoningEffortMediumSupported": true,
+    "responsesEndpointListed": true,
+    "structuredOutputsListed": true,
+    "standardInputUsdPerMillionTokens": "0.10",
+    "standardCachedInputUsdPerMillionTokens": "0.01",
+    "cacheWriteUsdPerMillionTokens": "0.125",
+    "standardOutputUsdPerMillionTokens": "0.50",
+    "existingApprovedConfigRatesUnchanged": true
+  },
+  "limitations": [
+    "Official documentation does not establish this account has model access or real request/schema compatibility.",
+    "Full Responses create-reference page retrieval failed due web-tool content-size limit; no successful reference fetch is claimed.",
+    "No key provisioning helper was available; approved environment-based runtime credential preflight remains the only allowed mechanism."
+  ],
+  "openAlexAuthorDocs": {
+    "sourceUrl": "https://help.openalex.org/data/authors/",
+    "facts": "Author object lists id, display_name, orcid and affiliations; names searched through search parameter; profiles are hypotheses derived from works, not independently verified identity."
+  }
+}

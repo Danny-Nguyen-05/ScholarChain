@@ -1,0 +1,2118 @@
+[
+  {
+    "partition": "development",
+    "taskNumber": 285,
+    "entityType": "Researcher",
+    "pairId": "resolution-pair:0be9d36df2f219d22d6b9dfd8803a7d217ac8fa4ca93228d843cf63e04fce3d1",
+    "kind": "false-negative",
+    "gold": "same",
+    "outcome": "UNRESOLVED",
+    "path": "Scored",
+    "evidenceHash": "871820d8648d78073954063eb5c8ad873f544fa5d0c73949291217a11e373126",
+    "evidenceRefs": [
+      "er-evidence:0ef77317d84c100171fe86ce78fa7976f99ec20778a7f3a6a1fcba9f488110ab",
+      "er-evidence:1547c45c2b9a066530d94f82563e8f2909c2841449e6b61f9d5bb2c33a603d17",
+      "er-evidence:8b39532294c98ed2f7dc215f83ada1247b78556efd92331c044db0cbed8a1dae",
+      "er-evidence:9a525f2d788aa1d202be967926aee60c9e9c0ed6c1feb44d1825541a4606fd27"
+    ],
+    "analysis": "Scored evidence did not satisfy the unchanged acceptance rule. Inspect available feature values and missing reasons; high name similarity alone cannot establish identity.",
+    "reasonCodes": [
+      "INSUFFICIENT_INDEPENDENT_EVIDENCE"
+    ],
+    "featureEvidence": [
+      {
+        "name": "affiliation",
+        "value": null,
+        "missingReason": "UNAVAILABLE_INCOMPARABLE_AFFILIATION_NAMESPACES",
+        "evidenceRefs": []
+      },
+      {
+        "name": "authorOrder",
+        "value": 1,
+        "missingReason": null,
+        "evidenceRefs": [
+          "er-evidence:0ef77317d84c100171fe86ce78fa7976f99ec20778a7f3a6a1fcba9f488110ab",
+          "er-evidence:1547c45c2b9a066530d94f82563e8f2909c2841449e6b61f9d5bb2c33a603d17",
+          "er-evidence:8b39532294c98ed2f7dc215f83ada1247b78556efd92331c044db0cbed8a1dae",
+          "er-evidence:9a525f2d788aa1d202be967926aee60c9e9c0ed6c1feb44d1825541a4606fd27"
+        ]
+      },
+      {
+        "name": "authorOverlap",
+        "value": null,
+        "missingReason": "NOT_APPLICABLE_OR_SOURCE_EVIDENCE_MISSING",
+        "evidenceRefs": []
+      },
+      {
+        "name": "citationNeighborhood",
+        "value": null,
+        "missingReason": "NOT_EXPORTED_BY_PREPARATION",
+        "evidenceRefs": []
+      },
+      {
+        "name": "coauthorOverlap",
+        "value": null,
+        "missingReason": "NOT_APPLICABLE_OR_SOURCE_EVIDENCE_MISSING",
+        "evidenceRefs": []
+      },
+      {
+        "name": "identifier",
+        "value": null,
+        "missingReason": "NOT_APPLICABLE_OR_SOURCE_EVIDENCE_MISSING",
+        "evidenceRefs": []
+      },
+      {
+        "name": "initials",
+        "value": 1,
+        "missingReason": null,
+        "evidenceRefs": [
+          "er-evidence:0ef77317d84c100171fe86ce78fa7976f99ec20778a7f3a6a1fcba9f488110ab",
+          "er-evidence:1547c45c2b9a066530d94f82563e8f2909c2841449e6b61f9d5bb2c33a603d17",
+          "er-evidence:8b39532294c98ed2f7dc215f83ada1247b78556efd92331c044db0cbed8a1dae",
+          "er-evidence:9a525f2d788aa1d202be967926aee60c9e9c0ed6c1feb44d1825541a4606fd27"
+        ]
+      },
+      {
+        "name": "name",
+        "value": 1,
+        "missingReason": null,
+        "evidenceRefs": [
+          "er-evidence:0ef77317d84c100171fe86ce78fa7976f99ec20778a7f3a6a1fcba9f488110ab",
+          "er-evidence:1547c45c2b9a066530d94f82563e8f2909c2841449e6b61f9d5bb2c33a603d17",
+          "er-evidence:8b39532294c98ed2f7dc215f83ada1247b78556efd92331c044db0cbed8a1dae",
+          "er-evidence:9a525f2d788aa1d202be967926aee60c9e9c0ed6c1feb44d1825541a4606fd27"
+        ]
+      },
+      {
+        "name": "sourceReliability",
+        "value": 1,
+        "missingReason": null,
+        "evidenceRefs": [
+          "er-evidence:0ef77317d84c100171fe86ce78fa7976f99ec20778a7f3a6a1fcba9f488110ab",
+          "er-evidence:1547c45c2b9a066530d94f82563e8f2909c2841449e6b61f9d5bb2c33a603d17",
+          "er-evidence:8b39532294c98ed2f7dc215f83ada1247b78556efd92331c044db0cbed8a1dae",
+          "er-evidence:9a525f2d788aa1d202be967926aee60c9e9c0ed6c1feb44d1825541a4606fd27"
+        ]
+      },
+      {
+        "name": "title",
+        "value": null,
+        "missingReason": "NOT_APPLICABLE_OR_SOURCE_EVIDENCE_MISSING",
+        "evidenceRefs": []
+      },
+      {
+        "name": "venue",
+        "value": null,
+        "missingReason": "UNAVAILABLE_INCOMPARABLE_VENUE_NAMESPACES",
+        "evidenceRefs": []
+      },
+      {
+        "name": "yearCompatibility",
+        "value": 1,
+        "missingReason": null,
+        "evidenceRefs": [
+          "er-evidence:0ef77317d84c100171fe86ce78fa7976f99ec20778a7f3a6a1fcba9f488110ab",
+          "er-evidence:1547c45c2b9a066530d94f82563e8f2909c2841449e6b61f9d5bb2c33a603d17",
+          "er-evidence:8b39532294c98ed2f7dc215f83ada1247b78556efd92331c044db0cbed8a1dae",
+          "er-evidence:9a525f2d788aa1d202be967926aee60c9e9c0ed6c1feb44d1825541a4606fd27"
+        ]
+      }
+    ],
+    "leftEndpoint": {
+      "$type": "Mention",
+      "observation": {
+        "source": "CROSSREF",
+        "sourceRecordId": "10.1145/3299887.3299889",
+        "datasetSnapshot": "crossref-er5c-live-api-2026-10-16"
+      },
+      "mentionId": "mention:crossref:10.1145/3299887.3299889#1"
+    },
+    "rightEndpoint": {
+      "$type": "Mention",
+      "observation": {
+        "source": "OPENALEX",
+        "sourceRecordId": "W2904324473",
+        "datasetSnapshot": "openalex-er5c-live-api-2026-10-16"
+      },
+      "mentionId": "mention:openalex:W2904324473#1"
+    },
+    "queueLocator": "/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-05/evidence/5c-repair/review-artifacts/queue.json",
+    "analysisNotIndependentIdentityAdjudication": true
+  },
+  {
+    "partition": "development",
+    "taskNumber": 287,
+    "entityType": "Researcher",
+    "pairId": "resolution-pair:ced94ab330ec16c10d0414b1fe25fa899e65d0ae0180fb15970251d09b0e8783",
+    "kind": "false-negative",
+    "gold": "same",
+    "outcome": "UNRESOLVED",
+    "path": "Scored",
+    "evidenceHash": "6011ce3339331515b03ddf4a44fd44386644b637b76f41a509ba1179967b2b5e",
+    "evidenceRefs": [
+      "er-evidence:1547c45c2b9a066530d94f82563e8f2909c2841449e6b61f9d5bb2c33a603d17",
+      "er-evidence:680578fdfa824647cb23600d4fbb8e2e26e679e6bc29906a8c018be7305e8fce",
+      "er-evidence:9a525f2d788aa1d202be967926aee60c9e9c0ed6c1feb44d1825541a4606fd27",
+      "er-evidence:d5e2eaaadb905d03baa7c676f0ae505d544cb44b645f4f0ba7af46badd1985df"
+    ],
+    "analysis": "Scored evidence did not satisfy the unchanged acceptance rule. Inspect available feature values and missing reasons; high name similarity alone cannot establish identity.",
+    "reasonCodes": [
+      "INSUFFICIENT_INDEPENDENT_EVIDENCE"
+    ],
+    "featureEvidence": [
+      {
+        "name": "affiliation",
+        "value": null,
+        "missingReason": "UNAVAILABLE_INCOMPARABLE_AFFILIATION_NAMESPACES",
+        "evidenceRefs": []
+      },
+      {
+        "name": "authorOrder",
+        "value": 1,
+        "missingReason": null,
+        "evidenceRefs": [
+          "er-evidence:1547c45c2b9a066530d94f82563e8f2909c2841449e6b61f9d5bb2c33a603d17",
+          "er-evidence:680578fdfa824647cb23600d4fbb8e2e26e679e6bc29906a8c018be7305e8fce",
+          "er-evidence:9a525f2d788aa1d202be967926aee60c9e9c0ed6c1feb44d1825541a4606fd27",
+          "er-evidence:d5e2eaaadb905d03baa7c676f0ae505d544cb44b645f4f0ba7af46badd1985df"
+        ]
+      },
+      {
+        "name": "authorOverlap",
+        "value": null,
+        "missingReason": "NOT_APPLICABLE_OR_SOURCE_EVIDENCE_MISSING",
+        "evidenceRefs": []
+      },
+      {
+        "name": "citationNeighborhood",
+        "value": null,
+        "missingReason": "NOT_EXPORTED_BY_PREPARATION",
+        "evidenceRefs": []
+      },
+      {
+        "name": "coauthorOverlap",
+        "value": null,
+        "missingReason": "NOT_APPLICABLE_OR_SOURCE_EVIDENCE_MISSING",
+        "evidenceRefs": []
+      },
+      {
+        "name": "identifier",
+        "value": null,
+        "missingReason": "NOT_APPLICABLE_OR_SOURCE_EVIDENCE_MISSING",
+        "evidenceRefs": []
+      },
+      {
+        "name": "initials",
+        "value": 1,
+        "missingReason": null,
+        "evidenceRefs": [
+          "er-evidence:1547c45c2b9a066530d94f82563e8f2909c2841449e6b61f9d5bb2c33a603d17",
+          "er-evidence:680578fdfa824647cb23600d4fbb8e2e26e679e6bc29906a8c018be7305e8fce",
+          "er-evidence:9a525f2d788aa1d202be967926aee60c9e9c0ed6c1feb44d1825541a4606fd27",
+          "er-evidence:d5e2eaaadb905d03baa7c676f0ae505d544cb44b645f4f0ba7af46badd1985df"
+        ]
+      },
+      {
+        "name": "name",
+        "value": 1,
+        "missingReason": null,
+        "evidenceRefs": [
+          "er-evidence:1547c45c2b9a066530d94f82563e8f2909c2841449e6b61f9d5bb2c33a603d17",
+          "er-evidence:680578fdfa824647cb23600d4fbb8e2e26e679e6bc29906a8c018be7305e8fce",
+          "er-evidence:9a525f2d788aa1d202be967926aee60c9e9c0ed6c1feb44d1825541a4606fd27",
+          "er-evidence:d5e2eaaadb905d03baa7c676f0ae505d544cb44b645f4f0ba7af46badd1985df"
+        ]
+      },
+      {
+        "name": "sourceReliability",
+        "value": 1,
+        "missingReason": null,
+        "evidenceRefs": [
+          "er-evidence:1547c45c2b9a066530d94f82563e8f2909c2841449e6b61f9d5bb2c33a603d17",
+          "er-evidence:680578fdfa824647cb23600d4fbb8e2e26e679e6bc29906a8c018be7305e8fce",
+          "er-evidence:9a525f2d788aa1d202be967926aee60c9e9c0ed6c1feb44d1825541a4606fd27",
+          "er-evidence:d5e2eaaadb905d03baa7c676f0ae505d544cb44b645f4f0ba7af46badd1985df"
+        ]
+      },
+      {
+        "name": "title",
+        "value": null,
+        "missingReason": "NOT_APPLICABLE_OR_SOURCE_EVIDENCE_MISSING",
+        "evidenceRefs": []
+      },
+      {
+        "name": "venue",
+        "value": null,
+        "missingReason": "UNAVAILABLE_INCOMPARABLE_VENUE_NAMESPACES",
+        "evidenceRefs": []
+      },
+      {
+        "name": "yearCompatibility",
+        "value": 0.6,
+        "missingReason": null,
+        "evidenceRefs": [
+          "er-evidence:1547c45c2b9a066530d94f82563e8f2909c2841449e6b61f9d5bb2c33a603d17",
+          "er-evidence:680578fdfa824647cb23600d4fbb8e2e26e679e6bc29906a8c018be7305e8fce",
+          "er-evidence:9a525f2d788aa1d202be967926aee60c9e9c0ed6c1feb44d1825541a4606fd27",
+          "er-evidence:d5e2eaaadb905d03baa7c676f0ae505d544cb44b645f4f0ba7af46badd1985df"
+        ]
+      }
+    ],
+    "leftEndpoint": {
+      "$type": "Mention",
+      "observation": {
+        "source": "CROSSREF",
+        "sourceRecordId": "10.1145/3299887.3299889",
+        "datasetSnapshot": "crossref-er5c-live-api-2026-10-16"
+      },
+      "mentionId": "mention:crossref:10.1145/3299887.3299889#1"
+    },
+    "rightEndpoint": {
+      "$type": "Mention",
+      "observation": {
+        "source": "OPENALEX",
+        "sourceRecordId": "W4311994618",
+        "datasetSnapshot": "openalex-er5c-live-api-2026-10-16"
+      },
+      "mentionId": "mention:openalex:W4311994618#1"
+    },
+    "queueLocator": "/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-05/evidence/5c-repair/review-artifacts/queue.json",
+    "analysisNotIndependentIdentityAdjudication": true
+  },
+  {
+    "partition": "development",
+    "taskNumber": 289,
+    "entityType": "Researcher",
+    "pairId": "resolution-pair:792b2026d8aae47057430bef742ceb54eb69300ec4949df7c916eaf075c2d5c3",
+    "kind": "false-negative",
+    "gold": "same",
+    "outcome": "UNRESOLVED",
+    "path": "Scored",
+    "evidenceHash": "039c2e0e088ddc7600144fde027fe3d027f25bfcfdb63f719fb7ab83063c64ee",
+    "evidenceRefs": [
+      "er-evidence:5b00867f970a5bca6056c318e8e5eaf60e59901419bcf201a8af72e9e1c80b4e",
+      "er-evidence:737dc7cbe6b0bec0d68f1c6de056afce80a3f160fbb2840898c537068ad188e4",
+      "er-evidence:b52af49df5e710c14d8349165a45d91793cb3fceb4b5312cc67eb17813b99805",
+      "er-evidence:bb3588a6611df516a11db6286b092cc2e5fce0b680b642309dd8410e645d85d2"
+    ],
+    "analysis": "Scored evidence did not satisfy the unchanged acceptance rule. Inspect available feature values and missing reasons; high name similarity alone cannot establish identity.",
+    "reasonCodes": [
+      "SCORE_IN_UNRESOLVED_GAP"
+    ],
+    "featureEvidence": [
+      {
+        "name": "affiliation",
+        "value": 1,
+        "missingReason": null,
+        "evidenceRefs": [
+          "er-evidence:5b00867f970a5bca6056c318e8e5eaf60e59901419bcf201a8af72e9e1c80b4e",
+          "er-evidence:737dc7cbe6b0bec0d68f1c6de056afce80a3f160fbb2840898c537068ad188e4",
+          "er-evidence:b52af49df5e710c14d8349165a45d91793cb3fceb4b5312cc67eb17813b99805",
+          "er-evidence:bb3588a6611df516a11db6286b092cc2e5fce0b680b642309dd8410e645d85d2"
+        ]
+      },
+      {
+        "name": "authorOrder",
+        "value": 0.25,
+        "missingReason": null,
+        "evidenceRefs": [
+          "er-evidence:5b00867f970a5bca6056c318e8e5eaf60e59901419bcf201a8af72e9e1c80b4e",
+          "er-evidence:737dc7cbe6b0bec0d68f1c6de056afce80a3f160fbb2840898c537068ad188e4",
+          "er-evidence:b52af49df5e710c14d8349165a45d91793cb3fceb4b5312cc67eb17813b99805",
+          "er-evidence:bb3588a6611df516a11db6286b092cc2e5fce0b680b642309dd8410e645d85d2"
+        ]
+      },
+      {
+        "name": "authorOverlap",
+        "value": null,
+        "missingReason": "NOT_APPLICABLE_OR_SOURCE_EVIDENCE_MISSING",
+        "evidenceRefs": []
+      },
+      {
+        "name": "citationNeighborhood",
+        "value": null,
+        "missingReason": "NOT_EXPORTED_BY_PREPARATION",
+        "evidenceRefs": []
+      },
+      {
+        "name": "coauthorOverlap",
+        "value": 0.125,
+        "missingReason": null,
+        "evidenceRefs": [
+          "er-evidence:5b00867f970a5bca6056c318e8e5eaf60e59901419bcf201a8af72e9e1c80b4e",
+          "er-evidence:737dc7cbe6b0bec0d68f1c6de056afce80a3f160fbb2840898c537068ad188e4",
+          "er-evidence:b52af49df5e710c14d8349165a45d91793cb3fceb4b5312cc67eb17813b99805",
+          "er-evidence:bb3588a6611df516a11db6286b092cc2e5fce0b680b642309dd8410e645d85d2"
+        ]
+      },
+      {
+        "name": "identifier",
+        "value": 1,
+        "missingReason": null,
+        "evidenceRefs": [
+          "er-evidence:5b00867f970a5bca6056c318e8e5eaf60e59901419bcf201a8af72e9e1c80b4e",
+          "er-evidence:737dc7cbe6b0bec0d68f1c6de056afce80a3f160fbb2840898c537068ad188e4",
+          "er-evidence:b52af49df5e710c14d8349165a45d91793cb3fceb4b5312cc67eb17813b99805",
+          "er-evidence:bb3588a6611df516a11db6286b092cc2e5fce0b680b642309dd8410e645d85d2"
+        ]
+      },
+      {
+        "name": "initials",
+        "value": 1,
+        "missingReason": null,
+        "evidenceRefs": [
+          "er-evidence:5b00867f970a5bca6056c318e8e5eaf60e59901419bcf201a8af72e9e1c80b4e",
+          "er-evidence:737dc7cbe6b0bec0d68f1c6de056afce80a3f160fbb2840898c537068ad188e4",
+          "er-evidence:b52af49df5e710c14d8349165a45d91793cb3fceb4b5312cc67eb17813b99805",
+          "er-evidence:bb3588a6611df516a11db6286b092cc2e5fce0b680b642309dd8410e645d85d2"
+        ]
+      },
+      {
+        "name": "name",
+        "value": 1,
+        "missingReason": null,
+        "evidenceRefs": [
+          "er-evidence:5b00867f970a5bca6056c318e8e5eaf60e59901419bcf201a8af72e9e1c80b4e",
+          "er-evidence:737dc7cbe6b0bec0d68f1c6de056afce80a3f160fbb2840898c537068ad188e4",
+          "er-evidence:b52af49df5e710c14d8349165a45d91793cb3fceb4b5312cc67eb17813b99805",
+          "er-evidence:bb3588a6611df516a11db6286b092cc2e5fce0b680b642309dd8410e645d85d2"
+        ]
+      },
+      {
+        "name": "sourceReliability",
+        "value": 1,
+        "missingReason": null,
+        "evidenceRefs": [
+          "er-evidence:5b00867f970a5bca6056c318e8e5eaf60e59901419bcf201a8af72e9e1c80b4e",
+          "er-evidence:737dc7cbe6b0bec0d68f1c6de056afce80a3f160fbb2840898c537068ad188e4",
+          "er-evidence:b52af49df5e710c14d8349165a45d91793cb3fceb4b5312cc67eb17813b99805",
+          "er-evidence:bb3588a6611df516a11db6286b092cc2e5fce0b680b642309dd8410e645d85d2"
+        ]
+      },
+      {
+        "name": "title",
+        "value": null,
+        "missingReason": "NOT_APPLICABLE_OR_SOURCE_EVIDENCE_MISSING",
+        "evidenceRefs": []
+      },
+      {
+        "name": "venue",
+        "value": 1,
+        "missingReason": null,
+        "evidenceRefs": [
+          "er-evidence:5b00867f970a5bca6056c318e8e5eaf60e59901419bcf201a8af72e9e1c80b4e",
+          "er-evidence:737dc7cbe6b0bec0d68f1c6de056afce80a3f160fbb2840898c537068ad188e4",
+          "er-evidence:b52af49df5e710c14d8349165a45d91793cb3fceb4b5312cc67eb17813b99805",
+          "er-evidence:bb3588a6611df516a11db6286b092cc2e5fce0b680b642309dd8410e645d85d2"
+        ]
+      },
+      {
+        "name": "yearCompatibility",
+        "value": 0.9,
+        "missingReason": null,
+        "evidenceRefs": [
+          "er-evidence:5b00867f970a5bca6056c318e8e5eaf60e59901419bcf201a8af72e9e1c80b4e",
+          "er-evidence:737dc7cbe6b0bec0d68f1c6de056afce80a3f160fbb2840898c537068ad188e4",
+          "er-evidence:b52af49df5e710c14d8349165a45d91793cb3fceb4b5312cc67eb17813b99805",
+          "er-evidence:bb3588a6611df516a11db6286b092cc2e5fce0b680b642309dd8410e645d85d2"
+        ]
+      }
+    ],
+    "leftEndpoint": {
+      "$type": "Mention",
+      "observation": {
+        "source": "OPENALEX",
+        "sourceRecordId": "W4321448364",
+        "datasetSnapshot": "openalex-er5c-live-api-2026-10-16"
+      },
+      "mentionId": "mention:openalex:W4321448364#1"
+    },
+    "rightEndpoint": {
+      "$type": "Mention",
+      "observation": {
+        "source": "OPENALEX",
+        "sourceRecordId": "W4389539730",
+        "datasetSnapshot": "openalex-er5c-live-api-2026-10-16"
+      },
+      "mentionId": "mention:openalex:W4389539730#4"
+    },
+    "queueLocator": "/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-05/evidence/5c-repair/review-artifacts/queue.json",
+    "analysisNotIndependentIdentityAdjudication": true
+  },
+  {
+    "partition": "development",
+    "taskNumber": 299,
+    "entityType": "Researcher",
+    "pairId": "resolution-pair:1347e30466549013b8c1bd84220f29cf0e89382be2322a64a72d79e6754a8d0d",
+    "kind": "false-negative",
+    "gold": "same",
+    "outcome": "UNRESOLVED",
+    "path": "Scored",
+    "evidenceHash": "03d982f3498d7b35ceb5ac9daf8b52d7852a880e5284c1539c4902cb49e8b0f5",
+    "evidenceRefs": [
+      "er-evidence:1547c45c2b9a066530d94f82563e8f2909c2841449e6b61f9d5bb2c33a603d17",
+      "er-evidence:46da9c0da019a9220596b8fc699e9c2e066bc33eabde9ba9561b57a9d0bb0bf0",
+      "er-evidence:9a525f2d788aa1d202be967926aee60c9e9c0ed6c1feb44d1825541a4606fd27",
+      "er-evidence:a6e9da00e5dd2d1bff1c6ca49c3d91c635b528f8b1e1c327f8fb232e03f5376e"
+    ],
+    "analysis": "Scored evidence did not satisfy the unchanged acceptance rule. Inspect available feature values and missing reasons; high name similarity alone cannot establish identity.",
+    "reasonCodes": [
+      "SCORE_IN_UNRESOLVED_GAP"
+    ],
+    "featureEvidence": [
+      {
+        "name": "affiliation",
+        "value": null,
+        "missingReason": "UNAVAILABLE_INCOMPARABLE_AFFILIATION_NAMESPACES",
+        "evidenceRefs": []
+      },
+      {
+        "name": "authorOrder",
+        "value": 0.5,
+        "missingReason": null,
+        "evidenceRefs": [
+          "er-evidence:1547c45c2b9a066530d94f82563e8f2909c2841449e6b61f9d5bb2c33a603d17",
+          "er-evidence:46da9c0da019a9220596b8fc699e9c2e066bc33eabde9ba9561b57a9d0bb0bf0",
+          "er-evidence:9a525f2d788aa1d202be967926aee60c9e9c0ed6c1feb44d1825541a4606fd27",
+          "er-evidence:a6e9da00e5dd2d1bff1c6ca49c3d91c635b528f8b1e1c327f8fb232e03f5376e"
+        ]
+      },
+      {
+        "name": "authorOverlap",
+        "value": null,
+        "missingReason": "NOT_APPLICABLE_OR_SOURCE_EVIDENCE_MISSING",
+        "evidenceRefs": []
+      },
+      {
+        "name": "citationNeighborhood",
+        "value": null,
+        "missingReason": "NOT_EXPORTED_BY_PREPARATION",
+        "evidenceRefs": []
+      },
+      {
+        "name": "coauthorOverlap",
+        "value": null,
+        "missingReason": "NOT_APPLICABLE_OR_SOURCE_EVIDENCE_MISSING",
+        "evidenceRefs": []
+      },
+      {
+        "name": "identifier",
+        "value": null,
+        "missingReason": "NOT_APPLICABLE_OR_SOURCE_EVIDENCE_MISSING",
+        "evidenceRefs": []
+      },
+      {
+        "name": "initials",
+        "value": 1,
+        "missingReason": null,
+        "evidenceRefs": [
+          "er-evidence:1547c45c2b9a066530d94f82563e8f2909c2841449e6b61f9d5bb2c33a603d17",
+          "er-evidence:46da9c0da019a9220596b8fc699e9c2e066bc33eabde9ba9561b57a9d0bb0bf0",
+          "er-evidence:9a525f2d788aa1d202be967926aee60c9e9c0ed6c1feb44d1825541a4606fd27",
+          "er-evidence:a6e9da00e5dd2d1bff1c6ca49c3d91c635b528f8b1e1c327f8fb232e03f5376e"
+        ]
+      },
+      {
+        "name": "name",
+        "value": 1,
+        "missingReason": null,
+        "evidenceRefs": [
+          "er-evidence:1547c45c2b9a066530d94f82563e8f2909c2841449e6b61f9d5bb2c33a603d17",
+          "er-evidence:46da9c0da019a9220596b8fc699e9c2e066bc33eabde9ba9561b57a9d0bb0bf0",
+          "er-evidence:9a525f2d788aa1d202be967926aee60c9e9c0ed6c1feb44d1825541a4606fd27",
+          "er-evidence:a6e9da00e5dd2d1bff1c6ca49c3d91c635b528f8b1e1c327f8fb232e03f5376e"
+        ]
+      },
+      {
+        "name": "sourceReliability",
+        "value": 1,
+        "missingReason": null,
+        "evidenceRefs": [
+          "er-evidence:1547c45c2b9a066530d94f82563e8f2909c2841449e6b61f9d5bb2c33a603d17",
+          "er-evidence:46da9c0da019a9220596b8fc699e9c2e066bc33eabde9ba9561b57a9d0bb0bf0",
+          "er-evidence:9a525f2d788aa1d202be967926aee60c9e9c0ed6c1feb44d1825541a4606fd27",
+          "er-evidence:a6e9da00e5dd2d1bff1c6ca49c3d91c635b528f8b1e1c327f8fb232e03f5376e"
+        ]
+      },
+      {
+        "name": "title",
+        "value": null,
+        "missingReason": "NOT_APPLICABLE_OR_SOURCE_EVIDENCE_MISSING",
+        "evidenceRefs": []
+      },
+      {
+        "name": "venue",
+        "value": null,
+        "missingReason": "UNAVAILABLE_INCOMPARABLE_VENUE_NAMESPACES",
+        "evidenceRefs": []
+      },
+      {
+        "name": "yearCompatibility",
+        "value": 1,
+        "missingReason": null,
+        "evidenceRefs": [
+          "er-evidence:1547c45c2b9a066530d94f82563e8f2909c2841449e6b61f9d5bb2c33a603d17",
+          "er-evidence:46da9c0da019a9220596b8fc699e9c2e066bc33eabde9ba9561b57a9d0bb0bf0",
+          "er-evidence:9a525f2d788aa1d202be967926aee60c9e9c0ed6c1feb44d1825541a4606fd27",
+          "er-evidence:a6e9da00e5dd2d1bff1c6ca49c3d91c635b528f8b1e1c327f8fb232e03f5376e"
+        ]
+      }
+    ],
+    "leftEndpoint": {
+      "$type": "Mention",
+      "observation": {
+        "source": "CROSSREF",
+        "sourceRecordId": "10.1145/3299887.3299889",
+        "datasetSnapshot": "crossref-er5c-live-api-2026-10-16"
+      },
+      "mentionId": "mention:crossref:10.1145/3299887.3299889#1"
+    },
+    "rightEndpoint": {
+      "$type": "Mention",
+      "observation": {
+        "source": "OPENALEX",
+        "sourceRecordId": "W2659288104",
+        "datasetSnapshot": "openalex-er5c-live-api-2026-10-16"
+      },
+      "mentionId": "mention:openalex:W2659288104#2"
+    },
+    "queueLocator": "/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-05/evidence/5c-repair/review-artifacts/queue.json",
+    "analysisNotIndependentIdentityAdjudication": true
+  },
+  {
+    "partition": "held-out",
+    "taskNumber": 27,
+    "entityType": "Researcher",
+    "pairId": "resolution-pair:9bf0674c3648be88a2c2609a77866d77600cf318b9d038c6f17f347a48a9efc4",
+    "kind": "false-negative",
+    "gold": "same",
+    "outcome": "UNRESOLVED",
+    "path": "Scored",
+    "evidenceHash": "bc83abfa72a3e609a3dd0e0f006a0ba9a919b983380169257286e36f723806ef",
+    "evidenceRefs": [
+      "er-evidence:0366818a398a6d1fc64f8ff2c5aee380c8acfae08e505908074bed20befb5593",
+      "er-evidence:4f6776ddaca408a49641068a430f58a43e972bdb49a4b8b32b39bc711f0d3f47",
+      "er-evidence:9a23348e32f3c7704042b549dfdf873cc9815be6f3619578c881f641d7529ff6",
+      "er-evidence:f846af60d3622e1a5fd2def74e22ead106bff1e90d20deeae3969948a09138b6"
+    ],
+    "analysis": "Scored evidence did not satisfy the unchanged acceptance rule. Inspect available feature values and missing reasons; high name similarity alone cannot establish identity.",
+    "reasonCodes": [
+      "INSUFFICIENT_INDEPENDENT_EVIDENCE"
+    ],
+    "featureEvidence": [
+      {
+        "name": "affiliation",
+        "value": null,
+        "missingReason": "UNAVAILABLE_INCOMPARABLE_AFFILIATION_NAMESPACES",
+        "evidenceRefs": []
+      },
+      {
+        "name": "authorOrder",
+        "value": 1,
+        "missingReason": null,
+        "evidenceRefs": [
+          "er-evidence:0366818a398a6d1fc64f8ff2c5aee380c8acfae08e505908074bed20befb5593",
+          "er-evidence:4f6776ddaca408a49641068a430f58a43e972bdb49a4b8b32b39bc711f0d3f47",
+          "er-evidence:9a23348e32f3c7704042b549dfdf873cc9815be6f3619578c881f641d7529ff6",
+          "er-evidence:f846af60d3622e1a5fd2def74e22ead106bff1e90d20deeae3969948a09138b6"
+        ]
+      },
+      {
+        "name": "authorOverlap",
+        "value": null,
+        "missingReason": "NOT_APPLICABLE_OR_SOURCE_EVIDENCE_MISSING",
+        "evidenceRefs": []
+      },
+      {
+        "name": "citationNeighborhood",
+        "value": null,
+        "missingReason": "NOT_EXPORTED_BY_PREPARATION",
+        "evidenceRefs": []
+      },
+      {
+        "name": "coauthorOverlap",
+        "value": 1,
+        "missingReason": null,
+        "evidenceRefs": [
+          "er-evidence:0366818a398a6d1fc64f8ff2c5aee380c8acfae08e505908074bed20befb5593",
+          "er-evidence:4f6776ddaca408a49641068a430f58a43e972bdb49a4b8b32b39bc711f0d3f47",
+          "er-evidence:9a23348e32f3c7704042b549dfdf873cc9815be6f3619578c881f641d7529ff6",
+          "er-evidence:f846af60d3622e1a5fd2def74e22ead106bff1e90d20deeae3969948a09138b6"
+        ]
+      },
+      {
+        "name": "identifier",
+        "value": null,
+        "missingReason": "NOT_APPLICABLE_OR_SOURCE_EVIDENCE_MISSING",
+        "evidenceRefs": []
+      },
+      {
+        "name": "initials",
+        "value": 1,
+        "missingReason": null,
+        "evidenceRefs": [
+          "er-evidence:0366818a398a6d1fc64f8ff2c5aee380c8acfae08e505908074bed20befb5593",
+          "er-evidence:4f6776ddaca408a49641068a430f58a43e972bdb49a4b8b32b39bc711f0d3f47",
+          "er-evidence:9a23348e32f3c7704042b549dfdf873cc9815be6f3619578c881f641d7529ff6",
+          "er-evidence:f846af60d3622e1a5fd2def74e22ead106bff1e90d20deeae3969948a09138b6"
+        ]
+      },
+      {
+        "name": "name",
+        "value": 1,
+        "missingReason": null,
+        "evidenceRefs": [
+          "er-evidence:0366818a398a6d1fc64f8ff2c5aee380c8acfae08e505908074bed20befb5593",
+          "er-evidence:4f6776ddaca408a49641068a430f58a43e972bdb49a4b8b32b39bc711f0d3f47",
+          "er-evidence:9a23348e32f3c7704042b549dfdf873cc9815be6f3619578c881f641d7529ff6",
+          "er-evidence:f846af60d3622e1a5fd2def74e22ead106bff1e90d20deeae3969948a09138b6"
+        ]
+      },
+      {
+        "name": "sourceReliability",
+        "value": 1,
+        "missingReason": null,
+        "evidenceRefs": [
+          "er-evidence:0366818a398a6d1fc64f8ff2c5aee380c8acfae08e505908074bed20befb5593",
+          "er-evidence:4f6776ddaca408a49641068a430f58a43e972bdb49a4b8b32b39bc711f0d3f47",
+          "er-evidence:9a23348e32f3c7704042b549dfdf873cc9815be6f3619578c881f641d7529ff6",
+          "er-evidence:f846af60d3622e1a5fd2def74e22ead106bff1e90d20deeae3969948a09138b6"
+        ]
+      },
+      {
+        "name": "title",
+        "value": null,
+        "missingReason": "NOT_APPLICABLE_OR_SOURCE_EVIDENCE_MISSING",
+        "evidenceRefs": []
+      },
+      {
+        "name": "venue",
+        "value": null,
+        "missingReason": "NOT_APPLICABLE_OR_SOURCE_EVIDENCE_MISSING",
+        "evidenceRefs": []
+      },
+      {
+        "name": "yearCompatibility",
+        "value": 0.8,
+        "missingReason": null,
+        "evidenceRefs": [
+          "er-evidence:0366818a398a6d1fc64f8ff2c5aee380c8acfae08e505908074bed20befb5593",
+          "er-evidence:4f6776ddaca408a49641068a430f58a43e972bdb49a4b8b32b39bc711f0d3f47",
+          "er-evidence:9a23348e32f3c7704042b549dfdf873cc9815be6f3619578c881f641d7529ff6",
+          "er-evidence:f846af60d3622e1a5fd2def74e22ead106bff1e90d20deeae3969948a09138b6"
+        ]
+      }
+    ],
+    "leftEndpoint": {
+      "$type": "Mention",
+      "observation": {
+        "source": "CROSSREF",
+        "sourceRecordId": "10.1145/3196959.3196987",
+        "datasetSnapshot": "crossref-er5c-live-api-2026-10-16"
+      },
+      "mentionId": "mention:crossref:10.1145/3196959.3196987#1"
+    },
+    "rightEndpoint": {
+      "$type": "Mention",
+      "observation": {
+        "source": "OPENALEX",
+        "sourceRecordId": "W3013397275",
+        "datasetSnapshot": "openalex-er5c-live-api-2026-10-16"
+      },
+      "mentionId": "mention:openalex:W3013397275#1"
+    },
+    "queueLocator": "/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-05/evidence/5c-repair/review-artifacts/queue.json",
+    "analysisNotIndependentIdentityAdjudication": true
+  },
+  {
+    "partition": "held-out",
+    "taskNumber": 41,
+    "entityType": "Researcher",
+    "pairId": "resolution-pair:1c8d25477544e0f42ffa0786add32d2adabc3da061d25b22c04cbe1030edcf43",
+    "kind": "false-negative",
+    "gold": "same",
+    "outcome": "UNRESOLVED",
+    "path": "Scored",
+    "evidenceHash": "67d932ab4a7de92142a0b1ccc70839d0cbf1d1545a3de807bb4dddb087ff4498",
+    "evidenceRefs": [
+      "er-evidence:256acadedde29e63218c59a807ea76f26daac8c658b5d6bdb809bf27319c4fa5",
+      "er-evidence:7451477560b776e07c9b04a124317edef660f962ad399cf13d8c650fbb29aa33",
+      "er-evidence:c0b57e8bf04dfcab0dcef8bb915a02ecddd4115a60eb7b816d1555fd3857de37",
+      "er-evidence:e9ce9a5ce535f27d46fdae6c3b440f61958c0ab022ac7883cfaaa776df8f2aaf"
+    ],
+    "analysis": "Scored evidence did not satisfy the unchanged acceptance rule. Inspect available feature values and missing reasons; high name similarity alone cannot establish identity.",
+    "reasonCodes": [
+      "SCORE_IN_UNRESOLVED_GAP"
+    ],
+    "featureEvidence": [
+      {
+        "name": "affiliation",
+        "value": 0,
+        "missingReason": null,
+        "evidenceRefs": [
+          "er-evidence:256acadedde29e63218c59a807ea76f26daac8c658b5d6bdb809bf27319c4fa5",
+          "er-evidence:7451477560b776e07c9b04a124317edef660f962ad399cf13d8c650fbb29aa33",
+          "er-evidence:c0b57e8bf04dfcab0dcef8bb915a02ecddd4115a60eb7b816d1555fd3857de37",
+          "er-evidence:e9ce9a5ce535f27d46fdae6c3b440f61958c0ab022ac7883cfaaa776df8f2aaf"
+        ]
+      },
+      {
+        "name": "authorOrder",
+        "value": 0.2,
+        "missingReason": null,
+        "evidenceRefs": [
+          "er-evidence:256acadedde29e63218c59a807ea76f26daac8c658b5d6bdb809bf27319c4fa5",
+          "er-evidence:7451477560b776e07c9b04a124317edef660f962ad399cf13d8c650fbb29aa33",
+          "er-evidence:c0b57e8bf04dfcab0dcef8bb915a02ecddd4115a60eb7b816d1555fd3857de37",
+          "er-evidence:e9ce9a5ce535f27d46fdae6c3b440f61958c0ab022ac7883cfaaa776df8f2aaf"
+        ]
+      },
+      {
+        "name": "authorOverlap",
+        "value": null,
+        "missingReason": "NOT_APPLICABLE_OR_SOURCE_EVIDENCE_MISSING",
+        "evidenceRefs": []
+      },
+      {
+        "name": "citationNeighborhood",
+        "value": null,
+        "missingReason": "NOT_EXPORTED_BY_PREPARATION",
+        "evidenceRefs": []
+      },
+      {
+        "name": "coauthorOverlap",
+        "value": 0.13043478260869565,
+        "missingReason": null,
+        "evidenceRefs": [
+          "er-evidence:256acadedde29e63218c59a807ea76f26daac8c658b5d6bdb809bf27319c4fa5",
+          "er-evidence:7451477560b776e07c9b04a124317edef660f962ad399cf13d8c650fbb29aa33",
+          "er-evidence:c0b57e8bf04dfcab0dcef8bb915a02ecddd4115a60eb7b816d1555fd3857de37",
+          "er-evidence:e9ce9a5ce535f27d46fdae6c3b440f61958c0ab022ac7883cfaaa776df8f2aaf"
+        ]
+      },
+      {
+        "name": "identifier",
+        "value": null,
+        "missingReason": "NOT_APPLICABLE_OR_SOURCE_EVIDENCE_MISSING",
+        "evidenceRefs": []
+      },
+      {
+        "name": "initials",
+        "value": 1,
+        "missingReason": null,
+        "evidenceRefs": [
+          "er-evidence:256acadedde29e63218c59a807ea76f26daac8c658b5d6bdb809bf27319c4fa5",
+          "er-evidence:7451477560b776e07c9b04a124317edef660f962ad399cf13d8c650fbb29aa33",
+          "er-evidence:c0b57e8bf04dfcab0dcef8bb915a02ecddd4115a60eb7b816d1555fd3857de37",
+          "er-evidence:e9ce9a5ce535f27d46fdae6c3b440f61958c0ab022ac7883cfaaa776df8f2aaf"
+        ]
+      },
+      {
+        "name": "name",
+        "value": 1,
+        "missingReason": null,
+        "evidenceRefs": [
+          "er-evidence:256acadedde29e63218c59a807ea76f26daac8c658b5d6bdb809bf27319c4fa5",
+          "er-evidence:7451477560b776e07c9b04a124317edef660f962ad399cf13d8c650fbb29aa33",
+          "er-evidence:c0b57e8bf04dfcab0dcef8bb915a02ecddd4115a60eb7b816d1555fd3857de37",
+          "er-evidence:e9ce9a5ce535f27d46fdae6c3b440f61958c0ab022ac7883cfaaa776df8f2aaf"
+        ]
+      },
+      {
+        "name": "sourceReliability",
+        "value": 1,
+        "missingReason": null,
+        "evidenceRefs": [
+          "er-evidence:256acadedde29e63218c59a807ea76f26daac8c658b5d6bdb809bf27319c4fa5",
+          "er-evidence:7451477560b776e07c9b04a124317edef660f962ad399cf13d8c650fbb29aa33",
+          "er-evidence:c0b57e8bf04dfcab0dcef8bb915a02ecddd4115a60eb7b816d1555fd3857de37",
+          "er-evidence:e9ce9a5ce535f27d46fdae6c3b440f61958c0ab022ac7883cfaaa776df8f2aaf"
+        ]
+      },
+      {
+        "name": "title",
+        "value": null,
+        "missingReason": "NOT_APPLICABLE_OR_SOURCE_EVIDENCE_MISSING",
+        "evidenceRefs": []
+      },
+      {
+        "name": "venue",
+        "value": 0,
+        "missingReason": null,
+        "evidenceRefs": [
+          "er-evidence:256acadedde29e63218c59a807ea76f26daac8c658b5d6bdb809bf27319c4fa5",
+          "er-evidence:7451477560b776e07c9b04a124317edef660f962ad399cf13d8c650fbb29aa33",
+          "er-evidence:c0b57e8bf04dfcab0dcef8bb915a02ecddd4115a60eb7b816d1555fd3857de37",
+          "er-evidence:e9ce9a5ce535f27d46fdae6c3b440f61958c0ab022ac7883cfaaa776df8f2aaf"
+        ]
+      },
+      {
+        "name": "yearCompatibility",
+        "value": 0.8,
+        "missingReason": null,
+        "evidenceRefs": [
+          "er-evidence:256acadedde29e63218c59a807ea76f26daac8c658b5d6bdb809bf27319c4fa5",
+          "er-evidence:7451477560b776e07c9b04a124317edef660f962ad399cf13d8c650fbb29aa33",
+          "er-evidence:c0b57e8bf04dfcab0dcef8bb915a02ecddd4115a60eb7b816d1555fd3857de37",
+          "er-evidence:e9ce9a5ce535f27d46fdae6c3b440f61958c0ab022ac7883cfaaa776df8f2aaf"
+        ]
+      }
+    ],
+    "leftEndpoint": {
+      "$type": "Mention",
+      "observation": {
+        "source": "OPENALEX",
+        "sourceRecordId": "W2948709946",
+        "datasetSnapshot": "openalex-er5c-live-api-2026-10-16"
+      },
+      "mentionId": "mention:openalex:W2948709946#6"
+    },
+    "rightEndpoint": {
+      "$type": "Mention",
+      "observation": {
+        "source": "OPENALEX",
+        "sourceRecordId": "W3197468999",
+        "datasetSnapshot": "openalex-er5c-live-api-2026-10-16"
+      },
+      "mentionId": "mention:openalex:W3197468999#2"
+    },
+    "queueLocator": "/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-05/evidence/5c-repair/review-artifacts/queue.json",
+    "analysisNotIndependentIdentityAdjudication": true
+  },
+  {
+    "partition": "held-out",
+    "taskNumber": 54,
+    "entityType": "Researcher",
+    "pairId": "resolution-pair:1ea7319d0ca49a709aabbcf0fdc8a31e38cd2c398314b397fc020e2d3db55474",
+    "kind": "false-negative",
+    "gold": "same",
+    "outcome": "UNRESOLVED",
+    "path": "Scored",
+    "evidenceHash": "fa0c5b6724be0de1071222a2440aa55899c107276310ab5bf1d9a3c8c4ad06c7",
+    "evidenceRefs": [
+      "er-evidence:60107b4781dbaa3abfc7f506d7e55f06c717d187508ea2eb375b3216b6bd6e78",
+      "er-evidence:9ddbd3769d1cfe11f8c07e7a9f3e87e33344d6de7c9dfef0c3dfc4a71a05a834",
+      "er-evidence:bdca0792eedcf2169c1178a2b79a5beb8c755a72a8c59374b0c2b615b35d73e7",
+      "er-evidence:ec3e4de73bbb8fd85736344e239e8959865b9a4abff9cfd2df326339630b30b0",
+      "er-evidence:f7c286bb3fdc2309d5542a6a2861d3cc928c95b8af7f40bc14ed7dcd2dd912ae"
+    ],
+    "analysis": "Scored evidence did not satisfy the unchanged acceptance rule. Inspect available feature values and missing reasons; high name similarity alone cannot establish identity.",
+    "reasonCodes": [
+      "SCORE_IN_UNRESOLVED_GAP"
+    ],
+    "featureEvidence": [
+      {
+        "name": "affiliation",
+        "value": 0.5,
+        "missingReason": null,
+        "evidenceRefs": [
+          "er-evidence:60107b4781dbaa3abfc7f506d7e55f06c717d187508ea2eb375b3216b6bd6e78",
+          "er-evidence:9ddbd3769d1cfe11f8c07e7a9f3e87e33344d6de7c9dfef0c3dfc4a71a05a834",
+          "er-evidence:bdca0792eedcf2169c1178a2b79a5beb8c755a72a8c59374b0c2b615b35d73e7",
+          "er-evidence:ec3e4de73bbb8fd85736344e239e8959865b9a4abff9cfd2df326339630b30b0",
+          "er-evidence:f7c286bb3fdc2309d5542a6a2861d3cc928c95b8af7f40bc14ed7dcd2dd912ae"
+        ]
+      },
+      {
+        "name": "authorOrder",
+        "value": 0.2,
+        "missingReason": null,
+        "evidenceRefs": [
+          "er-evidence:60107b4781dbaa3abfc7f506d7e55f06c717d187508ea2eb375b3216b6bd6e78",
+          "er-evidence:9ddbd3769d1cfe11f8c07e7a9f3e87e33344d6de7c9dfef0c3dfc4a71a05a834",
+          "er-evidence:bdca0792eedcf2169c1178a2b79a5beb8c755a72a8c59374b0c2b615b35d73e7",
+          "er-evidence:ec3e4de73bbb8fd85736344e239e8959865b9a4abff9cfd2df326339630b30b0",
+          "er-evidence:f7c286bb3fdc2309d5542a6a2861d3cc928c95b8af7f40bc14ed7dcd2dd912ae"
+        ]
+      },
+      {
+        "name": "authorOverlap",
+        "value": null,
+        "missingReason": "NOT_APPLICABLE_OR_SOURCE_EVIDENCE_MISSING",
+        "evidenceRefs": []
+      },
+      {
+        "name": "citationNeighborhood",
+        "value": null,
+        "missingReason": "NOT_EXPORTED_BY_PREPARATION",
+        "evidenceRefs": []
+      },
+      {
+        "name": "coauthorOverlap",
+        "value": 0.25,
+        "missingReason": null,
+        "evidenceRefs": [
+          "er-evidence:60107b4781dbaa3abfc7f506d7e55f06c717d187508ea2eb375b3216b6bd6e78",
+          "er-evidence:9ddbd3769d1cfe11f8c07e7a9f3e87e33344d6de7c9dfef0c3dfc4a71a05a834",
+          "er-evidence:bdca0792eedcf2169c1178a2b79a5beb8c755a72a8c59374b0c2b615b35d73e7",
+          "er-evidence:ec3e4de73bbb8fd85736344e239e8959865b9a4abff9cfd2df326339630b30b0",
+          "er-evidence:f7c286bb3fdc2309d5542a6a2861d3cc928c95b8af7f40bc14ed7dcd2dd912ae"
+        ]
+      },
+      {
+        "name": "identifier",
+        "value": null,
+        "missingReason": "NOT_APPLICABLE_OR_SOURCE_EVIDENCE_MISSING",
+        "evidenceRefs": []
+      },
+      {
+        "name": "initials",
+        "value": 1,
+        "missingReason": null,
+        "evidenceRefs": [
+          "er-evidence:60107b4781dbaa3abfc7f506d7e55f06c717d187508ea2eb375b3216b6bd6e78",
+          "er-evidence:9ddbd3769d1cfe11f8c07e7a9f3e87e33344d6de7c9dfef0c3dfc4a71a05a834",
+          "er-evidence:bdca0792eedcf2169c1178a2b79a5beb8c755a72a8c59374b0c2b615b35d73e7",
+          "er-evidence:ec3e4de73bbb8fd85736344e239e8959865b9a4abff9cfd2df326339630b30b0",
+          "er-evidence:f7c286bb3fdc2309d5542a6a2861d3cc928c95b8af7f40bc14ed7dcd2dd912ae"
+        ]
+      },
+      {
+        "name": "name",
+        "value": 1,
+        "missingReason": null,
+        "evidenceRefs": [
+          "er-evidence:60107b4781dbaa3abfc7f506d7e55f06c717d187508ea2eb375b3216b6bd6e78",
+          "er-evidence:9ddbd3769d1cfe11f8c07e7a9f3e87e33344d6de7c9dfef0c3dfc4a71a05a834",
+          "er-evidence:bdca0792eedcf2169c1178a2b79a5beb8c755a72a8c59374b0c2b615b35d73e7",
+          "er-evidence:ec3e4de73bbb8fd85736344e239e8959865b9a4abff9cfd2df326339630b30b0",
+          "er-evidence:f7c286bb3fdc2309d5542a6a2861d3cc928c95b8af7f40bc14ed7dcd2dd912ae"
+        ]
+      },
+      {
+        "name": "sourceReliability",
+        "value": 1,
+        "missingReason": null,
+        "evidenceRefs": [
+          "er-evidence:60107b4781dbaa3abfc7f506d7e55f06c717d187508ea2eb375b3216b6bd6e78",
+          "er-evidence:9ddbd3769d1cfe11f8c07e7a9f3e87e33344d6de7c9dfef0c3dfc4a71a05a834",
+          "er-evidence:bdca0792eedcf2169c1178a2b79a5beb8c755a72a8c59374b0c2b615b35d73e7",
+          "er-evidence:ec3e4de73bbb8fd85736344e239e8959865b9a4abff9cfd2df326339630b30b0",
+          "er-evidence:f7c286bb3fdc2309d5542a6a2861d3cc928c95b8af7f40bc14ed7dcd2dd912ae"
+        ]
+      },
+      {
+        "name": "title",
+        "value": null,
+        "missingReason": "NOT_APPLICABLE_OR_SOURCE_EVIDENCE_MISSING",
+        "evidenceRefs": []
+      },
+      {
+        "name": "venue",
+        "value": 0,
+        "missingReason": null,
+        "evidenceRefs": [
+          "er-evidence:60107b4781dbaa3abfc7f506d7e55f06c717d187508ea2eb375b3216b6bd6e78",
+          "er-evidence:9ddbd3769d1cfe11f8c07e7a9f3e87e33344d6de7c9dfef0c3dfc4a71a05a834",
+          "er-evidence:bdca0792eedcf2169c1178a2b79a5beb8c755a72a8c59374b0c2b615b35d73e7",
+          "er-evidence:ec3e4de73bbb8fd85736344e239e8959865b9a4abff9cfd2df326339630b30b0",
+          "er-evidence:f7c286bb3fdc2309d5542a6a2861d3cc928c95b8af7f40bc14ed7dcd2dd912ae"
+        ]
+      },
+      {
+        "name": "yearCompatibility",
+        "value": 0.9,
+        "missingReason": null,
+        "evidenceRefs": [
+          "er-evidence:60107b4781dbaa3abfc7f506d7e55f06c717d187508ea2eb375b3216b6bd6e78",
+          "er-evidence:9ddbd3769d1cfe11f8c07e7a9f3e87e33344d6de7c9dfef0c3dfc4a71a05a834",
+          "er-evidence:bdca0792eedcf2169c1178a2b79a5beb8c755a72a8c59374b0c2b615b35d73e7",
+          "er-evidence:ec3e4de73bbb8fd85736344e239e8959865b9a4abff9cfd2df326339630b30b0",
+          "er-evidence:f7c286bb3fdc2309d5542a6a2861d3cc928c95b8af7f40bc14ed7dcd2dd912ae"
+        ]
+      }
+    ],
+    "leftEndpoint": {
+      "$type": "Mention",
+      "observation": {
+        "source": "OPENALEX",
+        "sourceRecordId": "W2789607830",
+        "datasetSnapshot": "openalex-er5c-live-api-2026-10-16"
+      },
+      "mentionId": "mention:openalex:W2789607830#3"
+    },
+    "rightEndpoint": {
+      "$type": "Mention",
+      "observation": {
+        "source": "OPENALEX",
+        "sourceRecordId": "W2963431420",
+        "datasetSnapshot": "openalex-er5c-live-api-2026-10-16"
+      },
+      "mentionId": "mention:openalex:W2963431420#7"
+    },
+    "queueLocator": "/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-05/evidence/5c-repair/review-artifacts/queue.json",
+    "analysisNotIndependentIdentityAdjudication": true
+  },
+  {
+    "partition": "held-out",
+    "taskNumber": 59,
+    "entityType": "Researcher",
+    "pairId": "resolution-pair:08e8f2b855f86120e545bebf4957605f788fac057e256c3a7d39dc1b65ad1b1e",
+    "kind": "false-negative",
+    "gold": "same",
+    "outcome": "UNRESOLVED",
+    "path": "Scored",
+    "evidenceHash": "5ef138da24617b8373652b7c39c33070dda4222088898144e1f9b811f1c86aa0",
+    "evidenceRefs": [
+      "er-evidence:713f9afc8a05b3a899ebff84c0046f7b89ed1f53f64fb0843fcce7ffae2b1648",
+      "er-evidence:7e2c53e8b8615e5d4be4225237e3edbab9266563825abf358915e92dc695ee21",
+      "er-evidence:c631b83e22622f9ffbaba65aed5cf48c40007b82b2ce772321995474d2f509f7",
+      "er-evidence:d1ee3ba6754d3fea7b2fbcd20f1445ed645f547ac6596bcff6c7840005f1c887"
+    ],
+    "analysis": "Scored evidence did not satisfy the unchanged acceptance rule. Inspect available feature values and missing reasons; high name similarity alone cannot establish identity.",
+    "reasonCodes": [
+      "SCORE_IN_UNRESOLVED_GAP"
+    ],
+    "featureEvidence": [
+      {
+        "name": "affiliation",
+        "value": 1,
+        "missingReason": null,
+        "evidenceRefs": [
+          "er-evidence:713f9afc8a05b3a899ebff84c0046f7b89ed1f53f64fb0843fcce7ffae2b1648",
+          "er-evidence:7e2c53e8b8615e5d4be4225237e3edbab9266563825abf358915e92dc695ee21",
+          "er-evidence:c631b83e22622f9ffbaba65aed5cf48c40007b82b2ce772321995474d2f509f7",
+          "er-evidence:d1ee3ba6754d3fea7b2fbcd20f1445ed645f547ac6596bcff6c7840005f1c887"
+        ]
+      },
+      {
+        "name": "authorOrder",
+        "value": 0.16666666666666666,
+        "missingReason": null,
+        "evidenceRefs": [
+          "er-evidence:713f9afc8a05b3a899ebff84c0046f7b89ed1f53f64fb0843fcce7ffae2b1648",
+          "er-evidence:7e2c53e8b8615e5d4be4225237e3edbab9266563825abf358915e92dc695ee21",
+          "er-evidence:c631b83e22622f9ffbaba65aed5cf48c40007b82b2ce772321995474d2f509f7",
+          "er-evidence:d1ee3ba6754d3fea7b2fbcd20f1445ed645f547ac6596bcff6c7840005f1c887"
+        ]
+      },
+      {
+        "name": "authorOverlap",
+        "value": null,
+        "missingReason": "NOT_APPLICABLE_OR_SOURCE_EVIDENCE_MISSING",
+        "evidenceRefs": []
+      },
+      {
+        "name": "citationNeighborhood",
+        "value": null,
+        "missingReason": "NOT_EXPORTED_BY_PREPARATION",
+        "evidenceRefs": []
+      },
+      {
+        "name": "coauthorOverlap",
+        "value": 0,
+        "missingReason": null,
+        "evidenceRefs": [
+          "er-evidence:713f9afc8a05b3a899ebff84c0046f7b89ed1f53f64fb0843fcce7ffae2b1648",
+          "er-evidence:7e2c53e8b8615e5d4be4225237e3edbab9266563825abf358915e92dc695ee21",
+          "er-evidence:c631b83e22622f9ffbaba65aed5cf48c40007b82b2ce772321995474d2f509f7",
+          "er-evidence:d1ee3ba6754d3fea7b2fbcd20f1445ed645f547ac6596bcff6c7840005f1c887"
+        ]
+      },
+      {
+        "name": "identifier",
+        "value": null,
+        "missingReason": "NOT_APPLICABLE_OR_SOURCE_EVIDENCE_MISSING",
+        "evidenceRefs": []
+      },
+      {
+        "name": "initials",
+        "value": 1,
+        "missingReason": null,
+        "evidenceRefs": [
+          "er-evidence:713f9afc8a05b3a899ebff84c0046f7b89ed1f53f64fb0843fcce7ffae2b1648",
+          "er-evidence:7e2c53e8b8615e5d4be4225237e3edbab9266563825abf358915e92dc695ee21",
+          "er-evidence:c631b83e22622f9ffbaba65aed5cf48c40007b82b2ce772321995474d2f509f7",
+          "er-evidence:d1ee3ba6754d3fea7b2fbcd20f1445ed645f547ac6596bcff6c7840005f1c887"
+        ]
+      },
+      {
+        "name": "name",
+        "value": 1,
+        "missingReason": null,
+        "evidenceRefs": [
+          "er-evidence:713f9afc8a05b3a899ebff84c0046f7b89ed1f53f64fb0843fcce7ffae2b1648",
+          "er-evidence:7e2c53e8b8615e5d4be4225237e3edbab9266563825abf358915e92dc695ee21",
+          "er-evidence:c631b83e22622f9ffbaba65aed5cf48c40007b82b2ce772321995474d2f509f7",
+          "er-evidence:d1ee3ba6754d3fea7b2fbcd20f1445ed645f547ac6596bcff6c7840005f1c887"
+        ]
+      },
+      {
+        "name": "sourceReliability",
+        "value": 1,
+        "missingReason": null,
+        "evidenceRefs": [
+          "er-evidence:713f9afc8a05b3a899ebff84c0046f7b89ed1f53f64fb0843fcce7ffae2b1648",
+          "er-evidence:7e2c53e8b8615e5d4be4225237e3edbab9266563825abf358915e92dc695ee21",
+          "er-evidence:c631b83e22622f9ffbaba65aed5cf48c40007b82b2ce772321995474d2f509f7",
+          "er-evidence:d1ee3ba6754d3fea7b2fbcd20f1445ed645f547ac6596bcff6c7840005f1c887"
+        ]
+      },
+      {
+        "name": "title",
+        "value": null,
+        "missingReason": "NOT_APPLICABLE_OR_SOURCE_EVIDENCE_MISSING",
+        "evidenceRefs": []
+      },
+      {
+        "name": "venue",
+        "value": 0,
+        "missingReason": null,
+        "evidenceRefs": [
+          "er-evidence:713f9afc8a05b3a899ebff84c0046f7b89ed1f53f64fb0843fcce7ffae2b1648",
+          "er-evidence:7e2c53e8b8615e5d4be4225237e3edbab9266563825abf358915e92dc695ee21",
+          "er-evidence:c631b83e22622f9ffbaba65aed5cf48c40007b82b2ce772321995474d2f509f7",
+          "er-evidence:d1ee3ba6754d3fea7b2fbcd20f1445ed645f547ac6596bcff6c7840005f1c887"
+        ]
+      },
+      {
+        "name": "yearCompatibility",
+        "value": 0.6,
+        "missingReason": null,
+        "evidenceRefs": [
+          "er-evidence:713f9afc8a05b3a899ebff84c0046f7b89ed1f53f64fb0843fcce7ffae2b1648",
+          "er-evidence:7e2c53e8b8615e5d4be4225237e3edbab9266563825abf358915e92dc695ee21",
+          "er-evidence:c631b83e22622f9ffbaba65aed5cf48c40007b82b2ce772321995474d2f509f7",
+          "er-evidence:d1ee3ba6754d3fea7b2fbcd20f1445ed645f547ac6596bcff6c7840005f1c887"
+        ]
+      }
+    ],
+    "leftEndpoint": {
+      "$type": "Mention",
+      "observation": {
+        "source": "OPENALEX",
+        "sourceRecordId": "W2963128714",
+        "datasetSnapshot": "openalex-er5c-live-api-2026-10-16"
+      },
+      "mentionId": "mention:openalex:W2963128714#8"
+    },
+    "rightEndpoint": {
+      "$type": "Mention",
+      "observation": {
+        "source": "OPENALEX",
+        "sourceRecordId": "W4285179693",
+        "datasetSnapshot": "openalex-er5c-live-api-2026-10-16"
+      },
+      "mentionId": "mention:openalex:W4285179693#3"
+    },
+    "queueLocator": "/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-05/evidence/5c-repair/review-artifacts/queue.json",
+    "analysisNotIndependentIdentityAdjudication": true
+  },
+  {
+    "partition": "held-out",
+    "taskNumber": 112,
+    "entityType": "Researcher",
+    "pairId": "resolution-pair:607b9a7d9ed7ff1642dd362affb8afdfcdeb00a518196c8d2dc45d41fa4d59d3",
+    "kind": "false-negative",
+    "gold": "same",
+    "outcome": "UNRESOLVED",
+    "path": "Scored",
+    "evidenceHash": "0fc2ed534d02201be347468e2d7c72efabedb66ab87789416c41bc01dfacd5f6",
+    "evidenceRefs": [
+      "er-evidence:b13c23e42fcaedcadc0070447130bdb28189aac6c7b466d69ea79e91cff520be",
+      "er-evidence:c0b57e8bf04dfcab0dcef8bb915a02ecddd4115a60eb7b816d1555fd3857de37",
+      "er-evidence:cf82f4191f22878e9678d7911c768796313d1bdefb93a815805a879082e6b19d",
+      "er-evidence:f862e4a4f284c56d951b5fc5bcfd5f1e7e1db94a015d696fd6acc1f691d5f7b5"
+    ],
+    "analysis": "Scored evidence did not satisfy the unchanged acceptance rule. Inspect available feature values and missing reasons; high name similarity alone cannot establish identity.",
+    "reasonCodes": [
+      "SCORE_IN_UNRESOLVED_GAP"
+    ],
+    "featureEvidence": [
+      {
+        "name": "affiliation",
+        "value": 1,
+        "missingReason": null,
+        "evidenceRefs": [
+          "er-evidence:b13c23e42fcaedcadc0070447130bdb28189aac6c7b466d69ea79e91cff520be",
+          "er-evidence:c0b57e8bf04dfcab0dcef8bb915a02ecddd4115a60eb7b816d1555fd3857de37",
+          "er-evidence:cf82f4191f22878e9678d7911c768796313d1bdefb93a815805a879082e6b19d",
+          "er-evidence:f862e4a4f284c56d951b5fc5bcfd5f1e7e1db94a015d696fd6acc1f691d5f7b5"
+        ]
+      },
+      {
+        "name": "authorOrder",
+        "value": 0.25,
+        "missingReason": null,
+        "evidenceRefs": [
+          "er-evidence:b13c23e42fcaedcadc0070447130bdb28189aac6c7b466d69ea79e91cff520be",
+          "er-evidence:c0b57e8bf04dfcab0dcef8bb915a02ecddd4115a60eb7b816d1555fd3857de37",
+          "er-evidence:cf82f4191f22878e9678d7911c768796313d1bdefb93a815805a879082e6b19d",
+          "er-evidence:f862e4a4f284c56d951b5fc5bcfd5f1e7e1db94a015d696fd6acc1f691d5f7b5"
+        ]
+      },
+      {
+        "name": "authorOverlap",
+        "value": null,
+        "missingReason": "NOT_APPLICABLE_OR_SOURCE_EVIDENCE_MISSING",
+        "evidenceRefs": []
+      },
+      {
+        "name": "citationNeighborhood",
+        "value": null,
+        "missingReason": "NOT_EXPORTED_BY_PREPARATION",
+        "evidenceRefs": []
+      },
+      {
+        "name": "coauthorOverlap",
+        "value": 0.32,
+        "missingReason": null,
+        "evidenceRefs": [
+          "er-evidence:b13c23e42fcaedcadc0070447130bdb28189aac6c7b466d69ea79e91cff520be",
+          "er-evidence:c0b57e8bf04dfcab0dcef8bb915a02ecddd4115a60eb7b816d1555fd3857de37",
+          "er-evidence:cf82f4191f22878e9678d7911c768796313d1bdefb93a815805a879082e6b19d",
+          "er-evidence:f862e4a4f284c56d951b5fc5bcfd5f1e7e1db94a015d696fd6acc1f691d5f7b5"
+        ]
+      },
+      {
+        "name": "identifier",
+        "value": 1,
+        "missingReason": null,
+        "evidenceRefs": [
+          "er-evidence:b13c23e42fcaedcadc0070447130bdb28189aac6c7b466d69ea79e91cff520be",
+          "er-evidence:c0b57e8bf04dfcab0dcef8bb915a02ecddd4115a60eb7b816d1555fd3857de37",
+          "er-evidence:cf82f4191f22878e9678d7911c768796313d1bdefb93a815805a879082e6b19d",
+          "er-evidence:f862e4a4f284c56d951b5fc5bcfd5f1e7e1db94a015d696fd6acc1f691d5f7b5"
+        ]
+      },
+      {
+        "name": "initials",
+        "value": 1,
+        "missingReason": null,
+        "evidenceRefs": [
+          "er-evidence:b13c23e42fcaedcadc0070447130bdb28189aac6c7b466d69ea79e91cff520be",
+          "er-evidence:c0b57e8bf04dfcab0dcef8bb915a02ecddd4115a60eb7b816d1555fd3857de37",
+          "er-evidence:cf82f4191f22878e9678d7911c768796313d1bdefb93a815805a879082e6b19d",
+          "er-evidence:f862e4a4f284c56d951b5fc5bcfd5f1e7e1db94a015d696fd6acc1f691d5f7b5"
+        ]
+      },
+      {
+        "name": "name",
+        "value": 0.5,
+        "missingReason": null,
+        "evidenceRefs": [
+          "er-evidence:b13c23e42fcaedcadc0070447130bdb28189aac6c7b466d69ea79e91cff520be",
+          "er-evidence:c0b57e8bf04dfcab0dcef8bb915a02ecddd4115a60eb7b816d1555fd3857de37",
+          "er-evidence:cf82f4191f22878e9678d7911c768796313d1bdefb93a815805a879082e6b19d",
+          "er-evidence:f862e4a4f284c56d951b5fc5bcfd5f1e7e1db94a015d696fd6acc1f691d5f7b5"
+        ]
+      },
+      {
+        "name": "sourceReliability",
+        "value": 1,
+        "missingReason": null,
+        "evidenceRefs": [
+          "er-evidence:b13c23e42fcaedcadc0070447130bdb28189aac6c7b466d69ea79e91cff520be",
+          "er-evidence:c0b57e8bf04dfcab0dcef8bb915a02ecddd4115a60eb7b816d1555fd3857de37",
+          "er-evidence:cf82f4191f22878e9678d7911c768796313d1bdefb93a815805a879082e6b19d",
+          "er-evidence:f862e4a4f284c56d951b5fc5bcfd5f1e7e1db94a015d696fd6acc1f691d5f7b5"
+        ]
+      },
+      {
+        "name": "title",
+        "value": null,
+        "missingReason": "NOT_APPLICABLE_OR_SOURCE_EVIDENCE_MISSING",
+        "evidenceRefs": []
+      },
+      {
+        "name": "venue",
+        "value": 0,
+        "missingReason": null,
+        "evidenceRefs": [
+          "er-evidence:b13c23e42fcaedcadc0070447130bdb28189aac6c7b466d69ea79e91cff520be",
+          "er-evidence:c0b57e8bf04dfcab0dcef8bb915a02ecddd4115a60eb7b816d1555fd3857de37",
+          "er-evidence:cf82f4191f22878e9678d7911c768796313d1bdefb93a815805a879082e6b19d",
+          "er-evidence:f862e4a4f284c56d951b5fc5bcfd5f1e7e1db94a015d696fd6acc1f691d5f7b5"
+        ]
+      },
+      {
+        "name": "yearCompatibility",
+        "value": 0.9,
+        "missingReason": null,
+        "evidenceRefs": [
+          "er-evidence:b13c23e42fcaedcadc0070447130bdb28189aac6c7b466d69ea79e91cff520be",
+          "er-evidence:c0b57e8bf04dfcab0dcef8bb915a02ecddd4115a60eb7b816d1555fd3857de37",
+          "er-evidence:cf82f4191f22878e9678d7911c768796313d1bdefb93a815805a879082e6b19d",
+          "er-evidence:f862e4a4f284c56d951b5fc5bcfd5f1e7e1db94a015d696fd6acc1f691d5f7b5"
+        ]
+      }
+    ],
+    "leftEndpoint": {
+      "$type": "Mention",
+      "observation": {
+        "source": "OPENALEX",
+        "sourceRecordId": "W2948709946",
+        "datasetSnapshot": "openalex-er5c-live-api-2026-10-16"
+      },
+      "mentionId": "mention:openalex:W2948709946#9"
+    },
+    "rightEndpoint": {
+      "$type": "Mention",
+      "observation": {
+        "source": "OPENALEX",
+        "sourceRecordId": "W3145232008",
+        "datasetSnapshot": "openalex-er5c-live-api-2026-10-16"
+      },
+      "mentionId": "mention:openalex:W3145232008#6"
+    },
+    "queueLocator": "/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-05/evidence/5c-repair/review-artifacts/queue.json",
+    "analysisNotIndependentIdentityAdjudication": true
+  },
+  {
+    "partition": "held-out",
+    "taskNumber": 122,
+    "entityType": "Researcher",
+    "pairId": "resolution-pair:0a81608e2ccd1e539985776df6f4e270a4ff3e449651583e3a6e76c230d695d8",
+    "kind": "false-negative",
+    "gold": "same",
+    "outcome": "UNRESOLVED",
+    "path": "Scored",
+    "evidenceHash": "f8297bcf8ec72167edfb573ce78ae767c877f470be629d8d919dc1caf263aedf",
+    "evidenceRefs": [
+      "er-evidence:337e5265b9f5b64f4da5d0db0cd35159c5d69c544cd31150833d01bd2a09d178",
+      "er-evidence:389c0202b04f10e278ce1bdd0df327d5dd95520fe53766f384aa4db0c6240bad",
+      "er-evidence:690d131b6af699b1f16bff88ab11c81b14fbd5b45d538e17840e146128ff4308",
+      "er-evidence:6c0b33388e2251485298030b2bf5668a67f68cba6d263bf25331c4c56a0c6c7b"
+    ],
+    "analysis": "Scored evidence did not satisfy the unchanged acceptance rule. Inspect available feature values and missing reasons; high name similarity alone cannot establish identity.",
+    "reasonCodes": [
+      "SCORE_IN_UNRESOLVED_GAP"
+    ],
+    "featureEvidence": [
+      {
+        "name": "affiliation",
+        "value": null,
+        "missingReason": "UNAVAILABLE_INCOMPARABLE_AFFILIATION_NAMESPACES",
+        "evidenceRefs": []
+      },
+      {
+        "name": "authorOrder",
+        "value": 0.09090909090909091,
+        "missingReason": null,
+        "evidenceRefs": [
+          "er-evidence:337e5265b9f5b64f4da5d0db0cd35159c5d69c544cd31150833d01bd2a09d178",
+          "er-evidence:389c0202b04f10e278ce1bdd0df327d5dd95520fe53766f384aa4db0c6240bad",
+          "er-evidence:690d131b6af699b1f16bff88ab11c81b14fbd5b45d538e17840e146128ff4308",
+          "er-evidence:6c0b33388e2251485298030b2bf5668a67f68cba6d263bf25331c4c56a0c6c7b"
+        ]
+      },
+      {
+        "name": "authorOverlap",
+        "value": null,
+        "missingReason": "NOT_APPLICABLE_OR_SOURCE_EVIDENCE_MISSING",
+        "evidenceRefs": []
+      },
+      {
+        "name": "citationNeighborhood",
+        "value": null,
+        "missingReason": "NOT_EXPORTED_BY_PREPARATION",
+        "evidenceRefs": []
+      },
+      {
+        "name": "coauthorOverlap",
+        "value": 0,
+        "missingReason": null,
+        "evidenceRefs": [
+          "er-evidence:337e5265b9f5b64f4da5d0db0cd35159c5d69c544cd31150833d01bd2a09d178",
+          "er-evidence:389c0202b04f10e278ce1bdd0df327d5dd95520fe53766f384aa4db0c6240bad",
+          "er-evidence:690d131b6af699b1f16bff88ab11c81b14fbd5b45d538e17840e146128ff4308",
+          "er-evidence:6c0b33388e2251485298030b2bf5668a67f68cba6d263bf25331c4c56a0c6c7b"
+        ]
+      },
+      {
+        "name": "identifier",
+        "value": null,
+        "missingReason": "NOT_APPLICABLE_OR_SOURCE_EVIDENCE_MISSING",
+        "evidenceRefs": []
+      },
+      {
+        "name": "initials",
+        "value": 0,
+        "missingReason": null,
+        "evidenceRefs": [
+          "er-evidence:337e5265b9f5b64f4da5d0db0cd35159c5d69c544cd31150833d01bd2a09d178",
+          "er-evidence:389c0202b04f10e278ce1bdd0df327d5dd95520fe53766f384aa4db0c6240bad",
+          "er-evidence:690d131b6af699b1f16bff88ab11c81b14fbd5b45d538e17840e146128ff4308",
+          "er-evidence:6c0b33388e2251485298030b2bf5668a67f68cba6d263bf25331c4c56a0c6c7b"
+        ]
+      },
+      {
+        "name": "name",
+        "value": 1,
+        "missingReason": null,
+        "evidenceRefs": [
+          "er-evidence:337e5265b9f5b64f4da5d0db0cd35159c5d69c544cd31150833d01bd2a09d178",
+          "er-evidence:389c0202b04f10e278ce1bdd0df327d5dd95520fe53766f384aa4db0c6240bad",
+          "er-evidence:690d131b6af699b1f16bff88ab11c81b14fbd5b45d538e17840e146128ff4308",
+          "er-evidence:6c0b33388e2251485298030b2bf5668a67f68cba6d263bf25331c4c56a0c6c7b"
+        ]
+      },
+      {
+        "name": "sourceReliability",
+        "value": 1,
+        "missingReason": null,
+        "evidenceRefs": [
+          "er-evidence:337e5265b9f5b64f4da5d0db0cd35159c5d69c544cd31150833d01bd2a09d178",
+          "er-evidence:389c0202b04f10e278ce1bdd0df327d5dd95520fe53766f384aa4db0c6240bad",
+          "er-evidence:690d131b6af699b1f16bff88ab11c81b14fbd5b45d538e17840e146128ff4308",
+          "er-evidence:6c0b33388e2251485298030b2bf5668a67f68cba6d263bf25331c4c56a0c6c7b"
+        ]
+      },
+      {
+        "name": "title",
+        "value": null,
+        "missingReason": "NOT_APPLICABLE_OR_SOURCE_EVIDENCE_MISSING",
+        "evidenceRefs": []
+      },
+      {
+        "name": "venue",
+        "value": null,
+        "missingReason": "UNAVAILABLE_INCOMPARABLE_VENUE_NAMESPACES",
+        "evidenceRefs": []
+      },
+      {
+        "name": "yearCompatibility",
+        "value": 0.8,
+        "missingReason": null,
+        "evidenceRefs": [
+          "er-evidence:337e5265b9f5b64f4da5d0db0cd35159c5d69c544cd31150833d01bd2a09d178",
+          "er-evidence:389c0202b04f10e278ce1bdd0df327d5dd95520fe53766f384aa4db0c6240bad",
+          "er-evidence:690d131b6af699b1f16bff88ab11c81b14fbd5b45d538e17840e146128ff4308",
+          "er-evidence:6c0b33388e2251485298030b2bf5668a67f68cba6d263bf25331c4c56a0c6c7b"
+        ]
+      }
+    ],
+    "leftEndpoint": {
+      "$type": "Mention",
+      "observation": {
+        "source": "CROSSREF",
+        "sourceRecordId": "10.1145/3299887.3299900",
+        "datasetSnapshot": "crossref-er5c-live-api-2026-10-16"
+      },
+      "mentionId": "mention:crossref:10.1145/3299887.3299900#2"
+    },
+    "rightEndpoint": {
+      "$type": "Mention",
+      "observation": {
+        "source": "OPENALEX",
+        "sourceRecordId": "W2999832078",
+        "datasetSnapshot": "openalex-er5c-live-api-2026-10-16"
+      },
+      "mentionId": "mention:openalex:W2999832078#12"
+    },
+    "queueLocator": "/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-05/evidence/5c-repair/review-artifacts/queue.json",
+    "analysisNotIndependentIdentityAdjudication": true
+  },
+  {
+    "partition": "held-out",
+    "taskNumber": 157,
+    "entityType": "Researcher",
+    "pairId": "resolution-pair:935b2d38b5b6c95be60f94e1409041bf9ec5c69a8db0b8b4d52f79b52a9df1a0",
+    "kind": "false-negative",
+    "gold": "same",
+    "outcome": "UNRESOLVED",
+    "path": "Scored",
+    "evidenceHash": "5bb0ba3b3883d52ad66e8f97ff5f5a4d8cd7db2a8d0aba7eefd944ac894cd5aa",
+    "evidenceRefs": [
+      "er-evidence:964e9b0ae918fe3ad0e79037234f94b03e53ac2db81d42581e1de583c13b8ad0",
+      "er-evidence:e0918f64c8eeaf5c71ce8f3e79aac8b3861a06efbe4aa63d02e5c466ae492fa9",
+      "er-evidence:ec3e4de73bbb8fd85736344e239e8959865b9a4abff9cfd2df326339630b30b0",
+      "er-evidence:f40b226d1ef0dbc234f09ab0fc541eec679fbd8669d9df32eb08c2aa302e6ec9"
+    ],
+    "analysis": "Scored evidence did not satisfy the unchanged acceptance rule. Inspect available feature values and missing reasons; high name similarity alone cannot establish identity.",
+    "reasonCodes": [
+      "SCORE_IN_UNRESOLVED_GAP"
+    ],
+    "featureEvidence": [
+      {
+        "name": "affiliation",
+        "value": 1,
+        "missingReason": null,
+        "evidenceRefs": [
+          "er-evidence:964e9b0ae918fe3ad0e79037234f94b03e53ac2db81d42581e1de583c13b8ad0",
+          "er-evidence:e0918f64c8eeaf5c71ce8f3e79aac8b3861a06efbe4aa63d02e5c466ae492fa9",
+          "er-evidence:ec3e4de73bbb8fd85736344e239e8959865b9a4abff9cfd2df326339630b30b0",
+          "er-evidence:f40b226d1ef0dbc234f09ab0fc541eec679fbd8669d9df32eb08c2aa302e6ec9"
+        ]
+      },
+      {
+        "name": "authorOrder",
+        "value": 0.5,
+        "missingReason": null,
+        "evidenceRefs": [
+          "er-evidence:964e9b0ae918fe3ad0e79037234f94b03e53ac2db81d42581e1de583c13b8ad0",
+          "er-evidence:e0918f64c8eeaf5c71ce8f3e79aac8b3861a06efbe4aa63d02e5c466ae492fa9",
+          "er-evidence:ec3e4de73bbb8fd85736344e239e8959865b9a4abff9cfd2df326339630b30b0",
+          "er-evidence:f40b226d1ef0dbc234f09ab0fc541eec679fbd8669d9df32eb08c2aa302e6ec9"
+        ]
+      },
+      {
+        "name": "authorOverlap",
+        "value": null,
+        "missingReason": "NOT_APPLICABLE_OR_SOURCE_EVIDENCE_MISSING",
+        "evidenceRefs": []
+      },
+      {
+        "name": "citationNeighborhood",
+        "value": null,
+        "missingReason": "NOT_EXPORTED_BY_PREPARATION",
+        "evidenceRefs": []
+      },
+      {
+        "name": "coauthorOverlap",
+        "value": 0.09090909090909091,
+        "missingReason": null,
+        "evidenceRefs": [
+          "er-evidence:964e9b0ae918fe3ad0e79037234f94b03e53ac2db81d42581e1de583c13b8ad0",
+          "er-evidence:e0918f64c8eeaf5c71ce8f3e79aac8b3861a06efbe4aa63d02e5c466ae492fa9",
+          "er-evidence:ec3e4de73bbb8fd85736344e239e8959865b9a4abff9cfd2df326339630b30b0",
+          "er-evidence:f40b226d1ef0dbc234f09ab0fc541eec679fbd8669d9df32eb08c2aa302e6ec9"
+        ]
+      },
+      {
+        "name": "identifier",
+        "value": null,
+        "missingReason": "NOT_APPLICABLE_OR_SOURCE_EVIDENCE_MISSING",
+        "evidenceRefs": []
+      },
+      {
+        "name": "initials",
+        "value": 1,
+        "missingReason": null,
+        "evidenceRefs": [
+          "er-evidence:964e9b0ae918fe3ad0e79037234f94b03e53ac2db81d42581e1de583c13b8ad0",
+          "er-evidence:e0918f64c8eeaf5c71ce8f3e79aac8b3861a06efbe4aa63d02e5c466ae492fa9",
+          "er-evidence:ec3e4de73bbb8fd85736344e239e8959865b9a4abff9cfd2df326339630b30b0",
+          "er-evidence:f40b226d1ef0dbc234f09ab0fc541eec679fbd8669d9df32eb08c2aa302e6ec9"
+        ]
+      },
+      {
+        "name": "name",
+        "value": 1,
+        "missingReason": null,
+        "evidenceRefs": [
+          "er-evidence:964e9b0ae918fe3ad0e79037234f94b03e53ac2db81d42581e1de583c13b8ad0",
+          "er-evidence:e0918f64c8eeaf5c71ce8f3e79aac8b3861a06efbe4aa63d02e5c466ae492fa9",
+          "er-evidence:ec3e4de73bbb8fd85736344e239e8959865b9a4abff9cfd2df326339630b30b0",
+          "er-evidence:f40b226d1ef0dbc234f09ab0fc541eec679fbd8669d9df32eb08c2aa302e6ec9"
+        ]
+      },
+      {
+        "name": "sourceReliability",
+        "value": 1,
+        "missingReason": null,
+        "evidenceRefs": [
+          "er-evidence:964e9b0ae918fe3ad0e79037234f94b03e53ac2db81d42581e1de583c13b8ad0",
+          "er-evidence:e0918f64c8eeaf5c71ce8f3e79aac8b3861a06efbe4aa63d02e5c466ae492fa9",
+          "er-evidence:ec3e4de73bbb8fd85736344e239e8959865b9a4abff9cfd2df326339630b30b0",
+          "er-evidence:f40b226d1ef0dbc234f09ab0fc541eec679fbd8669d9df32eb08c2aa302e6ec9"
+        ]
+      },
+      {
+        "name": "title",
+        "value": null,
+        "missingReason": "NOT_APPLICABLE_OR_SOURCE_EVIDENCE_MISSING",
+        "evidenceRefs": []
+      },
+      {
+        "name": "venue",
+        "value": 0,
+        "missingReason": null,
+        "evidenceRefs": [
+          "er-evidence:964e9b0ae918fe3ad0e79037234f94b03e53ac2db81d42581e1de583c13b8ad0",
+          "er-evidence:e0918f64c8eeaf5c71ce8f3e79aac8b3861a06efbe4aa63d02e5c466ae492fa9",
+          "er-evidence:ec3e4de73bbb8fd85736344e239e8959865b9a4abff9cfd2df326339630b30b0",
+          "er-evidence:f40b226d1ef0dbc234f09ab0fc541eec679fbd8669d9df32eb08c2aa302e6ec9"
+        ]
+      },
+      {
+        "name": "yearCompatibility",
+        "value": 1,
+        "missingReason": null,
+        "evidenceRefs": [
+          "er-evidence:964e9b0ae918fe3ad0e79037234f94b03e53ac2db81d42581e1de583c13b8ad0",
+          "er-evidence:e0918f64c8eeaf5c71ce8f3e79aac8b3861a06efbe4aa63d02e5c466ae492fa9",
+          "er-evidence:ec3e4de73bbb8fd85736344e239e8959865b9a4abff9cfd2df326339630b30b0",
+          "er-evidence:f40b226d1ef0dbc234f09ab0fc541eec679fbd8669d9df32eb08c2aa302e6ec9"
+        ]
+      }
+    ],
+    "leftEndpoint": {
+      "$type": "Mention",
+      "observation": {
+        "source": "OPENALEX",
+        "sourceRecordId": "W2939050176",
+        "datasetSnapshot": "openalex-er5c-live-api-2026-10-16"
+      },
+      "mentionId": "mention:openalex:W2939050176#5"
+    },
+    "rightEndpoint": {
+      "$type": "Mention",
+      "observation": {
+        "source": "OPENALEX",
+        "sourceRecordId": "W2963431420",
+        "datasetSnapshot": "openalex-er5c-live-api-2026-10-16"
+      },
+      "mentionId": "mention:openalex:W2963431420#4"
+    },
+    "queueLocator": "/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-05/evidence/5c-repair/review-artifacts/queue.json",
+    "analysisNotIndependentIdentityAdjudication": true
+  },
+  {
+    "partition": "held-out",
+    "taskNumber": 159,
+    "entityType": "Researcher",
+    "pairId": "resolution-pair:45b63afe055db72a575a76b611aef40cee920ecdbad4ec7d809714e96e291c1f",
+    "kind": "false-negative",
+    "gold": "same",
+    "outcome": "UNRESOLVED",
+    "path": "Scored",
+    "evidenceHash": "cc5f0b58ec5d26de16175f88cfdd82b808171e8d5820db313a1e261a07affe34",
+    "evidenceRefs": [
+      "er-evidence:b687b5023963cfc7bfd0ade65f83e56760fb6b50f796494204f6804225021bb8",
+      "er-evidence:b91380e05fdc6fdc92131fb044a70a6687f64c66ee4f04e844c65caa439b4a8d",
+      "er-evidence:f7712fcb437510b2eec5f9391a0d4fadb6161ecc98c791213a1feda2573a4bf7"
+    ],
+    "analysis": "Scored evidence did not satisfy the unchanged acceptance rule. Inspect available feature values and missing reasons; high name similarity alone cannot establish identity.",
+    "reasonCodes": [
+      "SCORE_IN_UNRESOLVED_GAP"
+    ],
+    "featureEvidence": [
+      {
+        "name": "affiliation",
+        "value": null,
+        "missingReason": "NOT_APPLICABLE_OR_SOURCE_EVIDENCE_MISSING",
+        "evidenceRefs": []
+      },
+      {
+        "name": "authorOrder",
+        "value": 0.25,
+        "missingReason": null,
+        "evidenceRefs": [
+          "er-evidence:b687b5023963cfc7bfd0ade65f83e56760fb6b50f796494204f6804225021bb8",
+          "er-evidence:b91380e05fdc6fdc92131fb044a70a6687f64c66ee4f04e844c65caa439b4a8d",
+          "er-evidence:f7712fcb437510b2eec5f9391a0d4fadb6161ecc98c791213a1feda2573a4bf7"
+        ]
+      },
+      {
+        "name": "authorOverlap",
+        "value": null,
+        "missingReason": "NOT_APPLICABLE_OR_SOURCE_EVIDENCE_MISSING",
+        "evidenceRefs": []
+      },
+      {
+        "name": "citationNeighborhood",
+        "value": null,
+        "missingReason": "NOT_EXPORTED_BY_PREPARATION",
+        "evidenceRefs": []
+      },
+      {
+        "name": "coauthorOverlap",
+        "value": 0,
+        "missingReason": null,
+        "evidenceRefs": [
+          "er-evidence:b687b5023963cfc7bfd0ade65f83e56760fb6b50f796494204f6804225021bb8",
+          "er-evidence:b91380e05fdc6fdc92131fb044a70a6687f64c66ee4f04e844c65caa439b4a8d",
+          "er-evidence:f7712fcb437510b2eec5f9391a0d4fadb6161ecc98c791213a1feda2573a4bf7"
+        ]
+      },
+      {
+        "name": "identifier",
+        "value": null,
+        "missingReason": "NOT_APPLICABLE_OR_SOURCE_EVIDENCE_MISSING",
+        "evidenceRefs": []
+      },
+      {
+        "name": "initials",
+        "value": 1,
+        "missingReason": null,
+        "evidenceRefs": [
+          "er-evidence:b687b5023963cfc7bfd0ade65f83e56760fb6b50f796494204f6804225021bb8",
+          "er-evidence:b91380e05fdc6fdc92131fb044a70a6687f64c66ee4f04e844c65caa439b4a8d",
+          "er-evidence:f7712fcb437510b2eec5f9391a0d4fadb6161ecc98c791213a1feda2573a4bf7"
+        ]
+      },
+      {
+        "name": "name",
+        "value": 1,
+        "missingReason": null,
+        "evidenceRefs": [
+          "er-evidence:b687b5023963cfc7bfd0ade65f83e56760fb6b50f796494204f6804225021bb8",
+          "er-evidence:b91380e05fdc6fdc92131fb044a70a6687f64c66ee4f04e844c65caa439b4a8d",
+          "er-evidence:f7712fcb437510b2eec5f9391a0d4fadb6161ecc98c791213a1feda2573a4bf7"
+        ]
+      },
+      {
+        "name": "sourceReliability",
+        "value": 1,
+        "missingReason": null,
+        "evidenceRefs": [
+          "er-evidence:b687b5023963cfc7bfd0ade65f83e56760fb6b50f796494204f6804225021bb8",
+          "er-evidence:b91380e05fdc6fdc92131fb044a70a6687f64c66ee4f04e844c65caa439b4a8d",
+          "er-evidence:f7712fcb437510b2eec5f9391a0d4fadb6161ecc98c791213a1feda2573a4bf7"
+        ]
+      },
+      {
+        "name": "title",
+        "value": null,
+        "missingReason": "NOT_APPLICABLE_OR_SOURCE_EVIDENCE_MISSING",
+        "evidenceRefs": []
+      },
+      {
+        "name": "venue",
+        "value": 1,
+        "missingReason": null,
+        "evidenceRefs": [
+          "er-evidence:b687b5023963cfc7bfd0ade65f83e56760fb6b50f796494204f6804225021bb8",
+          "er-evidence:b91380e05fdc6fdc92131fb044a70a6687f64c66ee4f04e844c65caa439b4a8d",
+          "er-evidence:f7712fcb437510b2eec5f9391a0d4fadb6161ecc98c791213a1feda2573a4bf7"
+        ]
+      },
+      {
+        "name": "yearCompatibility",
+        "value": 0.9,
+        "missingReason": null,
+        "evidenceRefs": [
+          "er-evidence:b687b5023963cfc7bfd0ade65f83e56760fb6b50f796494204f6804225021bb8",
+          "er-evidence:b91380e05fdc6fdc92131fb044a70a6687f64c66ee4f04e844c65caa439b4a8d",
+          "er-evidence:f7712fcb437510b2eec5f9391a0d4fadb6161ecc98c791213a1feda2573a4bf7"
+        ]
+      }
+    ],
+    "leftEndpoint": {
+      "$type": "Mention",
+      "observation": {
+        "source": "OPENALEX",
+        "sourceRecordId": "W3031161010",
+        "datasetSnapshot": "openalex-er5c-live-api-2026-10-16"
+      },
+      "mentionId": "mention:openalex:W3031161010#3"
+    },
+    "rightEndpoint": {
+      "$type": "Mention",
+      "observation": {
+        "source": "OPENALEX",
+        "sourceRecordId": "W3174969457",
+        "datasetSnapshot": "openalex-er5c-live-api-2026-10-16"
+      },
+      "mentionId": "mention:openalex:W3174969457#6"
+    },
+    "queueLocator": "/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-05/evidence/5c-repair/review-artifacts/queue.json",
+    "analysisNotIndependentIdentityAdjudication": true
+  },
+  {
+    "partition": "held-out",
+    "taskNumber": 167,
+    "entityType": "Researcher",
+    "pairId": "resolution-pair:9963b41b22b9373b2c398dcb9b1ed8e9331e1d99a771e7c774f8354e343451ce",
+    "kind": "false-negative",
+    "gold": "same",
+    "outcome": "UNRESOLVED",
+    "path": "Scored",
+    "evidenceHash": "7c0126455098d3cbaaeebc2785c845e16a02bd807c89d70c52e2a8c39747370e",
+    "evidenceRefs": [
+      "er-evidence:95e2f418d70a4c2261ca575035772943ac4a45c5be4746173760dc93710a8955",
+      "er-evidence:b494e7c9c287b413eea2a17f0b3848296886689d3af01870f721b8e244446d28",
+      "er-evidence:e9ad95ef7180bf936ac95244b80ad4afe66bb3ca9496abfa4a488ce4b79d5337",
+      "er-evidence:f88fa3fc7699bafbda311b89eb7815952077b63a241315bf7d1e910f1b2c8017"
+    ],
+    "analysis": "Scored evidence did not satisfy the unchanged acceptance rule. Inspect available feature values and missing reasons; high name similarity alone cannot establish identity.",
+    "reasonCodes": [
+      "SCORE_IN_UNRESOLVED_GAP"
+    ],
+    "featureEvidence": [
+      {
+        "name": "affiliation",
+        "value": 1,
+        "missingReason": null,
+        "evidenceRefs": [
+          "er-evidence:95e2f418d70a4c2261ca575035772943ac4a45c5be4746173760dc93710a8955",
+          "er-evidence:b494e7c9c287b413eea2a17f0b3848296886689d3af01870f721b8e244446d28",
+          "er-evidence:e9ad95ef7180bf936ac95244b80ad4afe66bb3ca9496abfa4a488ce4b79d5337",
+          "er-evidence:f88fa3fc7699bafbda311b89eb7815952077b63a241315bf7d1e910f1b2c8017"
+        ]
+      },
+      {
+        "name": "authorOrder",
+        "value": 0.5,
+        "missingReason": null,
+        "evidenceRefs": [
+          "er-evidence:95e2f418d70a4c2261ca575035772943ac4a45c5be4746173760dc93710a8955",
+          "er-evidence:b494e7c9c287b413eea2a17f0b3848296886689d3af01870f721b8e244446d28",
+          "er-evidence:e9ad95ef7180bf936ac95244b80ad4afe66bb3ca9496abfa4a488ce4b79d5337",
+          "er-evidence:f88fa3fc7699bafbda311b89eb7815952077b63a241315bf7d1e910f1b2c8017"
+        ]
+      },
+      {
+        "name": "authorOverlap",
+        "value": null,
+        "missingReason": "NOT_APPLICABLE_OR_SOURCE_EVIDENCE_MISSING",
+        "evidenceRefs": []
+      },
+      {
+        "name": "citationNeighborhood",
+        "value": null,
+        "missingReason": "NOT_EXPORTED_BY_PREPARATION",
+        "evidenceRefs": []
+      },
+      {
+        "name": "coauthorOverlap",
+        "value": 0,
+        "missingReason": null,
+        "evidenceRefs": [
+          "er-evidence:95e2f418d70a4c2261ca575035772943ac4a45c5be4746173760dc93710a8955",
+          "er-evidence:b494e7c9c287b413eea2a17f0b3848296886689d3af01870f721b8e244446d28",
+          "er-evidence:e9ad95ef7180bf936ac95244b80ad4afe66bb3ca9496abfa4a488ce4b79d5337",
+          "er-evidence:f88fa3fc7699bafbda311b89eb7815952077b63a241315bf7d1e910f1b2c8017"
+        ]
+      },
+      {
+        "name": "identifier",
+        "value": null,
+        "missingReason": "NOT_APPLICABLE_OR_SOURCE_EVIDENCE_MISSING",
+        "evidenceRefs": []
+      },
+      {
+        "name": "initials",
+        "value": 1,
+        "missingReason": null,
+        "evidenceRefs": [
+          "er-evidence:95e2f418d70a4c2261ca575035772943ac4a45c5be4746173760dc93710a8955",
+          "er-evidence:b494e7c9c287b413eea2a17f0b3848296886689d3af01870f721b8e244446d28",
+          "er-evidence:e9ad95ef7180bf936ac95244b80ad4afe66bb3ca9496abfa4a488ce4b79d5337",
+          "er-evidence:f88fa3fc7699bafbda311b89eb7815952077b63a241315bf7d1e910f1b2c8017"
+        ]
+      },
+      {
+        "name": "name",
+        "value": 1,
+        "missingReason": null,
+        "evidenceRefs": [
+          "er-evidence:95e2f418d70a4c2261ca575035772943ac4a45c5be4746173760dc93710a8955",
+          "er-evidence:b494e7c9c287b413eea2a17f0b3848296886689d3af01870f721b8e244446d28",
+          "er-evidence:e9ad95ef7180bf936ac95244b80ad4afe66bb3ca9496abfa4a488ce4b79d5337",
+          "er-evidence:f88fa3fc7699bafbda311b89eb7815952077b63a241315bf7d1e910f1b2c8017"
+        ]
+      },
+      {
+        "name": "sourceReliability",
+        "value": 1,
+        "missingReason": null,
+        "evidenceRefs": [
+          "er-evidence:95e2f418d70a4c2261ca575035772943ac4a45c5be4746173760dc93710a8955",
+          "er-evidence:b494e7c9c287b413eea2a17f0b3848296886689d3af01870f721b8e244446d28",
+          "er-evidence:e9ad95ef7180bf936ac95244b80ad4afe66bb3ca9496abfa4a488ce4b79d5337",
+          "er-evidence:f88fa3fc7699bafbda311b89eb7815952077b63a241315bf7d1e910f1b2c8017"
+        ]
+      },
+      {
+        "name": "title",
+        "value": null,
+        "missingReason": "NOT_APPLICABLE_OR_SOURCE_EVIDENCE_MISSING",
+        "evidenceRefs": []
+      },
+      {
+        "name": "venue",
+        "value": 0,
+        "missingReason": null,
+        "evidenceRefs": [
+          "er-evidence:95e2f418d70a4c2261ca575035772943ac4a45c5be4746173760dc93710a8955",
+          "er-evidence:b494e7c9c287b413eea2a17f0b3848296886689d3af01870f721b8e244446d28",
+          "er-evidence:e9ad95ef7180bf936ac95244b80ad4afe66bb3ca9496abfa4a488ce4b79d5337",
+          "er-evidence:f88fa3fc7699bafbda311b89eb7815952077b63a241315bf7d1e910f1b2c8017"
+        ]
+      },
+      {
+        "name": "yearCompatibility",
+        "value": 1,
+        "missingReason": null,
+        "evidenceRefs": [
+          "er-evidence:95e2f418d70a4c2261ca575035772943ac4a45c5be4746173760dc93710a8955",
+          "er-evidence:b494e7c9c287b413eea2a17f0b3848296886689d3af01870f721b8e244446d28",
+          "er-evidence:e9ad95ef7180bf936ac95244b80ad4afe66bb3ca9496abfa4a488ce4b79d5337",
+          "er-evidence:f88fa3fc7699bafbda311b89eb7815952077b63a241315bf7d1e910f1b2c8017"
+        ]
+      }
+    ],
+    "leftEndpoint": {
+      "$type": "Mention",
+      "observation": {
+        "source": "OPENALEX",
+        "sourceRecordId": "W2903965607",
+        "datasetSnapshot": "openalex-er5c-live-api-2026-10-16"
+      },
+      "mentionId": "mention:openalex:W2903965607#6"
+    },
+    "rightEndpoint": {
+      "$type": "Mention",
+      "observation": {
+        "source": "OPENALEX",
+        "sourceRecordId": "W2914529374",
+        "datasetSnapshot": "openalex-er5c-live-api-2026-10-16"
+      },
+      "mentionId": "mention:openalex:W2914529374#7"
+    },
+    "queueLocator": "/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-05/evidence/5c-repair/review-artifacts/queue.json",
+    "analysisNotIndependentIdentityAdjudication": true
+  },
+  {
+    "partition": "held-out",
+    "taskNumber": 170,
+    "entityType": "Researcher",
+    "pairId": "resolution-pair:720b7dca0e190296774e2e8cfe2ea03c35af54d108386e9f738d6e29bcaa44bd",
+    "kind": "false-negative",
+    "gold": "same",
+    "outcome": "UNRESOLVED",
+    "path": "Scored",
+    "evidenceHash": "3f4e22a669fffbb01c88688cc2018fdafb8bb19eb05c69de496f9fc415ee3caa",
+    "evidenceRefs": [
+      "er-evidence:0079cabfc1ddbffa851edb301f9b0aec470f07521ba7d2e516294dceaae515ce",
+      "er-evidence:7099688cbde3f25abe489a4128db27099884ec0f25b81d638a426560fee299bc",
+      "er-evidence:b13c23e42fcaedcadc0070447130bdb28189aac6c7b466d69ea79e91cff520be",
+      "er-evidence:cafc671d97388165a3db2de939bbeb8cfbc28cc0b65efb05fac5940e97b7d802"
+    ],
+    "analysis": "Scored evidence did not satisfy the unchanged acceptance rule. Inspect available feature values and missing reasons; high name similarity alone cannot establish identity.",
+    "reasonCodes": [
+      "SCORE_IN_UNRESOLVED_GAP"
+    ],
+    "featureEvidence": [
+      {
+        "name": "affiliation",
+        "value": 1,
+        "missingReason": null,
+        "evidenceRefs": [
+          "er-evidence:0079cabfc1ddbffa851edb301f9b0aec470f07521ba7d2e516294dceaae515ce",
+          "er-evidence:7099688cbde3f25abe489a4128db27099884ec0f25b81d638a426560fee299bc",
+          "er-evidence:b13c23e42fcaedcadc0070447130bdb28189aac6c7b466d69ea79e91cff520be",
+          "er-evidence:cafc671d97388165a3db2de939bbeb8cfbc28cc0b65efb05fac5940e97b7d802"
+        ]
+      },
+      {
+        "name": "authorOrder",
+        "value": 0.5,
+        "missingReason": null,
+        "evidenceRefs": [
+          "er-evidence:0079cabfc1ddbffa851edb301f9b0aec470f07521ba7d2e516294dceaae515ce",
+          "er-evidence:7099688cbde3f25abe489a4128db27099884ec0f25b81d638a426560fee299bc",
+          "er-evidence:b13c23e42fcaedcadc0070447130bdb28189aac6c7b466d69ea79e91cff520be",
+          "er-evidence:cafc671d97388165a3db2de939bbeb8cfbc28cc0b65efb05fac5940e97b7d802"
+        ]
+      },
+      {
+        "name": "authorOverlap",
+        "value": null,
+        "missingReason": "NOT_APPLICABLE_OR_SOURCE_EVIDENCE_MISSING",
+        "evidenceRefs": []
+      },
+      {
+        "name": "citationNeighborhood",
+        "value": null,
+        "missingReason": "NOT_EXPORTED_BY_PREPARATION",
+        "evidenceRefs": []
+      },
+      {
+        "name": "coauthorOverlap",
+        "value": 0.045454545454545456,
+        "missingReason": null,
+        "evidenceRefs": [
+          "er-evidence:0079cabfc1ddbffa851edb301f9b0aec470f07521ba7d2e516294dceaae515ce",
+          "er-evidence:7099688cbde3f25abe489a4128db27099884ec0f25b81d638a426560fee299bc",
+          "er-evidence:b13c23e42fcaedcadc0070447130bdb28189aac6c7b466d69ea79e91cff520be",
+          "er-evidence:cafc671d97388165a3db2de939bbeb8cfbc28cc0b65efb05fac5940e97b7d802"
+        ]
+      },
+      {
+        "name": "identifier",
+        "value": 1,
+        "missingReason": null,
+        "evidenceRefs": [
+          "er-evidence:0079cabfc1ddbffa851edb301f9b0aec470f07521ba7d2e516294dceaae515ce",
+          "er-evidence:7099688cbde3f25abe489a4128db27099884ec0f25b81d638a426560fee299bc",
+          "er-evidence:b13c23e42fcaedcadc0070447130bdb28189aac6c7b466d69ea79e91cff520be",
+          "er-evidence:cafc671d97388165a3db2de939bbeb8cfbc28cc0b65efb05fac5940e97b7d802"
+        ]
+      },
+      {
+        "name": "initials",
+        "value": 1,
+        "missingReason": null,
+        "evidenceRefs": [
+          "er-evidence:0079cabfc1ddbffa851edb301f9b0aec470f07521ba7d2e516294dceaae515ce",
+          "er-evidence:7099688cbde3f25abe489a4128db27099884ec0f25b81d638a426560fee299bc",
+          "er-evidence:b13c23e42fcaedcadc0070447130bdb28189aac6c7b466d69ea79e91cff520be",
+          "er-evidence:cafc671d97388165a3db2de939bbeb8cfbc28cc0b65efb05fac5940e97b7d802"
+        ]
+      },
+      {
+        "name": "name",
+        "value": 1,
+        "missingReason": null,
+        "evidenceRefs": [
+          "er-evidence:0079cabfc1ddbffa851edb301f9b0aec470f07521ba7d2e516294dceaae515ce",
+          "er-evidence:7099688cbde3f25abe489a4128db27099884ec0f25b81d638a426560fee299bc",
+          "er-evidence:b13c23e42fcaedcadc0070447130bdb28189aac6c7b466d69ea79e91cff520be",
+          "er-evidence:cafc671d97388165a3db2de939bbeb8cfbc28cc0b65efb05fac5940e97b7d802"
+        ]
+      },
+      {
+        "name": "sourceReliability",
+        "value": 1,
+        "missingReason": null,
+        "evidenceRefs": [
+          "er-evidence:0079cabfc1ddbffa851edb301f9b0aec470f07521ba7d2e516294dceaae515ce",
+          "er-evidence:7099688cbde3f25abe489a4128db27099884ec0f25b81d638a426560fee299bc",
+          "er-evidence:b13c23e42fcaedcadc0070447130bdb28189aac6c7b466d69ea79e91cff520be",
+          "er-evidence:cafc671d97388165a3db2de939bbeb8cfbc28cc0b65efb05fac5940e97b7d802"
+        ]
+      },
+      {
+        "name": "title",
+        "value": null,
+        "missingReason": "NOT_APPLICABLE_OR_SOURCE_EVIDENCE_MISSING",
+        "evidenceRefs": []
+      },
+      {
+        "name": "venue",
+        "value": 0,
+        "missingReason": null,
+        "evidenceRefs": [
+          "er-evidence:0079cabfc1ddbffa851edb301f9b0aec470f07521ba7d2e516294dceaae515ce",
+          "er-evidence:7099688cbde3f25abe489a4128db27099884ec0f25b81d638a426560fee299bc",
+          "er-evidence:b13c23e42fcaedcadc0070447130bdb28189aac6c7b466d69ea79e91cff520be",
+          "er-evidence:cafc671d97388165a3db2de939bbeb8cfbc28cc0b65efb05fac5940e97b7d802"
+        ]
+      },
+      {
+        "name": "yearCompatibility",
+        "value": 1,
+        "missingReason": null,
+        "evidenceRefs": [
+          "er-evidence:0079cabfc1ddbffa851edb301f9b0aec470f07521ba7d2e516294dceaae515ce",
+          "er-evidence:7099688cbde3f25abe489a4128db27099884ec0f25b81d638a426560fee299bc",
+          "er-evidence:b13c23e42fcaedcadc0070447130bdb28189aac6c7b466d69ea79e91cff520be",
+          "er-evidence:cafc671d97388165a3db2de939bbeb8cfbc28cc0b65efb05fac5940e97b7d802"
+        ]
+      }
+    ],
+    "leftEndpoint": {
+      "$type": "Mention",
+      "observation": {
+        "source": "OPENALEX",
+        "sourceRecordId": "W2889284307",
+        "datasetSnapshot": "openalex-er5c-live-api-2026-10-16"
+      },
+      "mentionId": "mention:openalex:W2889284307#4"
+    },
+    "rightEndpoint": {
+      "$type": "Mention",
+      "observation": {
+        "source": "OPENALEX",
+        "sourceRecordId": "W3145232008",
+        "datasetSnapshot": "openalex-er5c-live-api-2026-10-16"
+      },
+      "mentionId": "mention:openalex:W3145232008#3"
+    },
+    "queueLocator": "/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-05/evidence/5c-repair/review-artifacts/queue.json",
+    "analysisNotIndependentIdentityAdjudication": true
+  }
+]

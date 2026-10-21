@@ -1,0 +1,22 @@
+{
+  "5b-implementation.diff": {
+    "equalsCommitted5B": true,
+    "sha256": "6aa7e709f25c586591f3979e96cb607f4fc4a6f0b1753e870d94b560fcae62c9"
+  },
+  "implementation.diff": {
+    "equalsCommitted5B": true,
+    "sha256": "87e25f71a140608b2bbab8062b11a8f142ac3570cb041232b24cf75f7ede703f"
+  },
+  "review-inventory.json": {
+    "equalsCommitted5B": true,
+    "sha256": "ea4ef4f0d7209765d6409cc26d705f8b4394c05cc2efa3097261c57f6aa8a3c1"
+  },
+  "reviewer-prompt.txt": {
+    "equalsCommitted5B": true,
+    "sha256": "629403a69ba6940ad29ca2a6b6fbea84c8164abde932b4d9baaddc85c09849f6"
+  },
+  "source-freeze.json": {
+    "equalsCommitted5B": true,
+    "sha256": "2edad728cd786d2b5abce6839dd0d46232b190e8e3a51c6700159609ca7e2909"
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "schemaVersion": "scholarchain.er-policy.v1",
+  "policyVersion": "er-offline-uncalibrated-v2",
+  "featurePolicyVersion": "er-features-v2",
+  "normalizationVersion": "er-normalization-v1",
+  "supersedes": "ScholarChainConfig.entityResolution",
+  "scoreSemantics": "UNCALIBRATED_AVAILABLE_WEIGHTED_AVERAGE_TIMES_SOURCE_RELIABILITY",
+  "work": {
+    "rejectThreshold": 0.2,
+    "acceptThreshold": 0.95,
+    "llmBandMin": 0.6,
+    "llmBandMax": 0.85,
+    "yearToleranceYears": 5,
+    "minimumIndependentGroupsForAccept": 3,
+    "supportiveFeatureMin": 0.8,
+    "requiredGroups": ["bibliography", "authorship"],
+    "weights": {"title": 0.5, "authorOverlap": 0.3, "yearCompatibility": 0.1, "venue": 0.1},
+    "featureGroups": {"title": "bibliography", "authorOverlap": "authorship", "yearCompatibility": "chronology", "venue": "bibliography"},
+    "bibliographicEnabled": false,
+    "bibliographicMinTitle": 1.0,
+    "bibliographicMinAuthors": 1.0,
+    "bibliographicMaxYearDistance": 0
+  },
+  "researcher": {
+    "rejectThreshold": 0.15,
+    "acceptThreshold": 0.97,
+    "llmBandMin": 0.65,
+    "llmBandMax": 0.88,
+    "yearToleranceYears": 10,
+    "minimumIndependentGroupsForAccept": 3,
+    "supportiveFeatureMin": 0.8,
+    "requiredGroups": ["name", "context"],
+    "weights": {"name": 0.35, "initials": 0.05, "coauthorOverlap": 0.3, "affiliation": 0.2, "authorOrder": 0.1},
+    "featureGroups": {"name": "name", "initials": "name", "coauthorOverlap": "context", "affiliation": "affiliation", "authorOrder": "name"},
+    "bibliographicEnabled": false,
+    "bibliographicMinTitle": 1.0,
+    "bibliographicMinAuthors": 1.0,
+    "bibliographicMaxYearDistance": 0
+  },
+  "sourceReliability": {"DBLP": 1.0, "OPENALEX": 1.0, "CROSSREF": 1.0, "ORCID": 1.0}
+}

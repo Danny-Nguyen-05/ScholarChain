@@ -1,0 +1,30 @@
+{
+  "version": "scholarchain.er-acquisition-session.v1",
+  "date": "2026-10-16",
+  "finalPopulation": "5c-2026-10-16-v3/population-manifest.v1.json",
+  "preservedInitialAttempt": "5c-2026-10-16/population-manifest.v1.json",
+  "ledgerHttpAttemptsIncludingInitialAttempt": 125,
+  "connectivityProbesOutsideLedger": [
+    {
+      "source": "dblp",
+      "result": "sandbox DNS denied before HTTP connection",
+      "responseBytesRead": 0
+    },
+    {
+      "source": "dblp",
+      "result": "escalated official API returned HTTP 202 HTML bot challenge",
+      "responseBytesRead": 500
+    }
+  ],
+  "conservativeAllNetworkAttempts": 127,
+  "totalResponseBytesReadIncludingProbes": 12733448,
+  "maximumRequests": 2400,
+  "maximumResponseBytes": 268435456,
+  "firstLedgerRequestUtc": "2026-10-16T21:04:19.347918+00:00",
+  "lastLedgerRequestUtc": "2026-10-16T21:07:11.835422+00:00",
+  "wallClockObservation": "All acquisition HTTP completed in less than four minutes, including the extension gap. The v2 observed.seconds field (124.632) sums active invocation durations and excludes the gap; ledger timestamps retain the full interval.",
+  "scriptMaintenanceAfterAcquisition": "The committed script additionally honors transient-error Retry-After and accounts for the original ledger start across extension gaps. No additional HTTP was executed after these changes. population manifests retain the acquisition-time script hash when available.",
+  "noAuthOrChallengeBypass": true,
+  "humanReviews": 0,
+  "unfilteredAcquisition": "5c-2026-10-16-v2/population-manifest.v1.json"
+}

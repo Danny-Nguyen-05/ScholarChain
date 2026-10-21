@@ -1,0 +1,37 @@
+{
+  "schema": "scholarchain.phase5a.b2-targeted.v1",
+  "environment": {
+    "JAVA_HOME": "/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home",
+    "SBT_OPTS": "-Dlogback.configurationFile=/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-04/xml-repair-logback.xml"
+  },
+  "core": {
+    "command": "sbt -batch 'core/Compile/scalafmt' 'core/Test/scalafmt' 'core/testOnly edu.uic.cs441.scholarchain.core.Resolution*Spec'",
+    "exitCode": 0,
+    "tests": 20,
+    "failed": 0,
+    "suites": 3,
+    "completedLocal": "2026-10-15 12:00:03 America/Chicago"
+  },
+  "independent": {
+    "command": "sbt -batch 'independentTests/Test/scalafmt' 'independentTests/testOnly edu.uic.cs441.scholarchain.independent.IndependentResolutionContractSpec'",
+    "initialExitCode": 1,
+    "initialTests": 17,
+    "initialPassed": 16,
+    "initialFailed": 1,
+    "initialFailure": "oldcannotLinkfixture removedallprofileORCIDassertions,correctlyinvalidunderknownfactcoverage",
+    "repair": "independenttestownerretainedactualprofileassertionswhenaddingcannotLink; no productionrelaxation",
+    "finalExitCode": 0,
+    "finalTests": 17,
+    "finalPassed": 17,
+    "finalFailed": 0,
+    "finalCompletedLocal": "2026-10-15 12:01:05 America/Chicago"
+  },
+  "executor": "coordinatorexecutedowner-requestedformat/targetedcommandssequentiallynativeapprovedcacheaccess;ownerproduction/testseparate",
+  "fullGate": "runningon142newfrozenfiles; targetedpassesnotafullgateresult",
+  "logSha256": {
+    "independent-targeted-fixture-failure.txt": "40ac951b22208a0b6d68187079de8bdb7a6803f05bb7f7ad45210d52b6d4cbb7",
+    "core-targeted.txt": "e292d5ef5a79557ec4f2d7106ccbdd0c08b0eab7e14dd54edd1d1ef5ef9d43c0",
+    "independent-before-fix.txt": "1ff70fedda4638149d18d04cf3074849c182bbfb6c97e9c6426bdc4932e46010",
+    "independent-targeted.txt": "20c85fcc7be38a3c1928b6bb144e22738009b566e8088158f9e321b4094ea0c1"
+  }
+}

@@ -1,0 +1,107 @@
+{
+  "schemaVersion": "scholarchain.phase5d.label-import-proof.v1",
+  "valid": true,
+  "previousFrozenFilesUnchanged": 557,
+  "previousFrozenFilesChanged": [],
+  "missing": [],
+  "originalFilesByteIdentical": [
+    {
+      "path": "datasets/entity-resolution/labels/2026-10-20-danny-ai-assisted-v1/source/baseline-repo-state.json",
+      "sha256": "8eb31c26b5d377f061a8a9b377c1c1e5610270b8ee26f99e31ac9ae3dcd2c1bc",
+      "bytes": 82843
+    },
+    {
+      "path": "datasets/entity-resolution/labels/2026-10-20-danny-ai-assisted-v1/source/batch-01.md",
+      "sha256": "0de690b7a22e74e3763f366207aa4ad0b7bea67ad66d6bb7eb3b0fa6154723f7",
+      "bytes": 55297
+    },
+    {
+      "path": "datasets/entity-resolution/labels/2026-10-20-danny-ai-assisted-v1/source/batch-02.md",
+      "sha256": "1a714f99b041fcc13acf326a3f18cf872dd3db48c9aa79c7bd4af212acdae429",
+      "bytes": 56492
+    },
+    {
+      "path": "datasets/entity-resolution/labels/2026-10-20-danny-ai-assisted-v1/source/batch-03.md",
+      "sha256": "fd3b569a75e1bb31898b3de7ad20d8225cc4c0be582a668ae266344d907013d1",
+      "bytes": 57803
+    },
+    {
+      "path": "datasets/entity-resolution/labels/2026-10-20-danny-ai-assisted-v1/source/batch-04.md",
+      "sha256": "6237d77f15ec8a54626856062d75ff1f96d5243c041cb2f24c7edd67fb193df9",
+      "bytes": 57053
+    },
+    {
+      "path": "datasets/entity-resolution/labels/2026-10-20-danny-ai-assisted-v1/source/batch-05.md",
+      "sha256": "ee3706bbef551a2afcbac147b0b1b5927d7089779efb960e9246f1984fed9f98",
+      "bytes": 56006
+    },
+    {
+      "path": "datasets/entity-resolution/labels/2026-10-20-danny-ai-assisted-v1/source/batch-06.md",
+      "sha256": "a45cd0f35173d20c22ff6b8ffbf0108aac9568f4e287104fa258cf03da94ff5b",
+      "bytes": 59399
+    },
+    {
+      "path": "datasets/entity-resolution/labels/2026-10-20-danny-ai-assisted-v1/source/batch-07.md",
+      "sha256": "cdc5b89fc7628ee113a5141d0f5633eb9d0e8d33732a83a0d59579297f757d37",
+      "bytes": 57439
+    },
+    {
+      "path": "datasets/entity-resolution/labels/2026-10-20-danny-ai-assisted-v1/source/batch-08.md",
+      "sha256": "b309b054ae7b4382975dd13bac01179be5f08697ab6220c0958faf0cda4811f0",
+      "bytes": 54571
+    },
+    {
+      "path": "datasets/entity-resolution/labels/2026-10-20-danny-ai-assisted-v1/source/batch-09.md",
+      "sha256": "83cd3ef2dc5d6a2f9a0785182af2b635848ef498243d0a13f66d33ea7627b067",
+      "bytes": 52223
+    },
+    {
+      "path": "datasets/entity-resolution/labels/2026-10-20-danny-ai-assisted-v1/source/batch-10.md",
+      "sha256": "7c8aac40aedddc1e9f26e66e8fac9a2d1027d5654d22c0b188372c198e0979db",
+      "bytes": 50456
+    },
+    {
+      "path": "datasets/entity-resolution/labels/2026-10-20-danny-ai-assisted-v1/source/batch-11.md",
+      "sha256": "88a1a7ae740e2d5b8f38d95fb6d65eb1f9a181b96326a6b31513619804789852",
+      "bytes": 51408
+    },
+    {
+      "path": "datasets/entity-resolution/labels/2026-10-20-danny-ai-assisted-v1/source/batch-12.md",
+      "sha256": "2e73898e32bb6cf3e8f70ed52815d3ac24344e35de8720699f4a574129d3057c",
+      "bytes": 50208
+    },
+    {
+      "path": "datasets/entity-resolution/labels/2026-10-20-danny-ai-assisted-v1/source/draft-labels.json",
+      "sha256": "8751840bbb0f32ac7bdec82b0303714078418689f1300f3f7f5caba4ad125606",
+      "bytes": 515000
+    },
+    {
+      "path": "datasets/entity-resolution/labels/2026-10-20-danny-ai-assisted-v1/source/progress.json",
+      "sha256": "204f9667e40d36edd4c8ecbed4a78535b5e6a2a0e0c9101ced5f7cbc47deadea",
+      "bytes": 60459
+    },
+    {
+      "path": "datasets/entity-resolution/labels/2026-10-20-danny-ai-assisted-v1/source/summary.md",
+      "sha256": "0551ccad3029382ab4bb027986b979678a6d18facfbfcd2cb65054fda8e0ac9a",
+      "bytes": 8253
+    }
+  ],
+  "initialReviews": 240,
+  "reserveReviews": 0,
+  "counts": {
+    "different": 149,
+    "same": 83,
+    "uncertain": 8
+  },
+  "binaryDevelopment": 38,
+  "binaryHeldOut": 194,
+  "uncertainDevelopment": 2,
+  "uncertainHeldOut": 6,
+  "additionalDefinitiveReviewsIf40And200BinaryRequired": 8,
+  "aiAssisted": true,
+  "externallyAssistedAiComments": 22,
+  "humanDecisionOverrides": 17,
+  "noPredictionOrEvaluationPerformed": true,
+  "checkpointSha256": "69912290a289be76449a3b6514b4f2b0a240e26fcb40991a12b3850127fcbe08",
+  "validatedSha256": "5fbf6f5bdc1d34f7b79e910a07b964b60bdaaf1dfc825de7744b5f684e39e4a6"
+}

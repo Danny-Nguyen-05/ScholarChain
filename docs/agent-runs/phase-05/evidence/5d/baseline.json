@@ -1,0 +1,13 @@
+{
+  "schemaVersion": "scholarchain.phase5d-start.v1",
+  "head": "61d32a38eaad5b2fc352acf0b7f85f3815c2336d",
+  "branch": "phase-5",
+  "capturedAtUtc": "2026-10-17T02:36:37.919952+00:00",
+  "startingStatus": "",
+  "wholePhaseBase": "099e303311be7a1b2e2cf5655e0c7ce9fa710474",
+  "userAuthorization": "alright please do 5d for me. Ask me questions if you have any",
+  "modelChoice": "Let use openAI gpt 6 luna",
+  "liveCallAuthorization": false,
+  "numericalBudgetApproval": null,
+  "humanLabelsProvided": false
+}

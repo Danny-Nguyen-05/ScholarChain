@@ -1,0 +1,31 @@
+[info] welcome to sbt 1.10.7 (Homebrew Java 17.0.20.1)
+[info] loading settings for project scholarchain-build from plugins.sbt...
+[info] loading project definition from /Users/danny/Documents/UIC/CS441/ScholarChain/project
+[info] loading settings for project root from build.sbt...
+[info] set current project to root (in build file:/Users/danny/Documents/UIC/CS441/ScholarChain/)
+[info] scalafmt: Formatting 5 Scala sources (/Users/danny/Documents/UIC/CS441/ScholarChain/modules/entity-resolution)...
+[info] scalafmt: Reformatted 5 Scala sources
+[success] Total time: 1 s, completed Oct 16, 2026, 9:45:12 PM
+[info] scalafmt: Formatting 7 Scala sources (/Users/danny/Documents/UIC/CS441/ScholarChain/tests)...
+[info] scalafmt: Reformatted 7 Scala sources
+[success] Total time: 0 s, completed Oct 16, 2026, 9:45:12 PM
+[info] compiling 5 Scala sources to /Users/danny/Documents/UIC/CS441/ScholarChain/modules/entity-resolution/target/scala-3.3.4/classes ...
+[error] -- [E040] Syntax Error: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/LiveDemo.scala:279:37 
+[error] 279 |              MatchOutcome.Accepted; case Some("reject") => MatchOutcome.Rejected;
+[error]     |                                     ^^^^
+[error]     |                                   unindent expected, but 'case' found
+[error] -- [E040] Syntax Error: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/LiveDemo.scala:280:12 
+[error] 280 |            case _                                       => initial.outcome
+[error]     |            ^^^^
+[error]     |            '}' expected, but unindent found
+[error] -- [E007] Type Mismatch Error: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/LiveAdjudication.scala:47:70 
+[error] 47 |            ujson.Obj("type" -> "output_text", "text" -> write(result.response))
+[error]    |                                                               ^^^^^^^^^^^^^^^
+[error]    |     Found:    (result.response :
+[error]    |       edu.uic.cs441.scholarchain.entityresolution.AdjudicationResponse)
+[error]    |     Required: java.nio.file.Path
+[error]    |
+[error]    | longer explanation available when compiling with `-explain`
+[error] three errors found
+[error] (entityResolution / Compile / compileIncremental) Compilation failed
+[error] Total time: 2 s, completed Oct 16, 2026, 9:45:15 PM

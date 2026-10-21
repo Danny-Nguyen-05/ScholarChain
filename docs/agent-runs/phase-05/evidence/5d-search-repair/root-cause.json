@@ -1,0 +1,22 @@
+{
+  "schemaVersion": "scholarchain.phase5d.search-b2-root-cause.v1",
+  "recordedAtUtc": "2026-10-21T01:33:56.596150+00:00",
+  "finding": "User-supplied external reviewer B2; high severity; open until repair verification and independent recheck.",
+  "originalOutcomePath": "docs/agent-runs/phase-05/evidence/5d-followup-demo/outcome.json",
+  "originalOutcomeSha256": "090c625e974a12663999c6617347544278502f0182acdbb061d1ecd52969a707",
+  "cause": "Topic discovery combined broad full-text search with publication_date:asc. The explicit oldest-first sort displaced relevance ranking. Requesting only five results from each large result set returned unrelated 2018 repository records before relevant CS evidence.",
+  "effect": "The recorded ten returns, ten venue-filter exclusions and zero new ingestion records are real. They measure a flawed retrieval design, not the absence of eligible CS evidence. Existing prepared-context zero eligibility is local to that unchanged population, not an exhaustion claim about public evidence.",
+  "ownerAcknowledgment": "Coordinator accepts this as a query-design error; the prior bounded-search checkpoint is not approved by passing bounds/hash tests.",
+  "expectedRepair": "Use relevance_score:desc for topic discovery while retaining year/field/record/request caps; add a failing-before/passing-after offline URL semantics regression. Historical validation must preserve the exact original executed query semantics.",
+  "officialReferences": [
+    "https://help.openalex.org/api/searching/",
+    "https://help.openalex.org/api/sorting/"
+  ],
+  "retainedResponseEvidence": [
+    "datasets/entity-resolution/5d-demo-2026-10-20-screened/responses/001-openalex.body",
+    "datasets/entity-resolution/5d-demo-2026-10-20-screened/responses/002-openalex.body"
+  ],
+  "originalRecordsNotRewritten": true,
+  "rerunDecision": "User explicitly approved a new separately manifested stage; see ../5d-search-repair/user-rerun-approval.json. No HTTP has run yet for that stage.",
+  "originalOneShotAllowanceNotReused": true
+}

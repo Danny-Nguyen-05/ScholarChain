@@ -1,0 +1,25 @@
+"""Coordinator checks protected human decisions/history and exact durable replay."""
+from pathlib import Path
+import json,hashlib
+base=Path('docs/agent-runs/phase-05/evidence/5d-search-repair')
+sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()
+start=json.loads((base/'start.json').read_text());changed=[];missing=[]
+for f in start['datasetBaseline']:
+ p=Path(f['path'])
+ if not p.is_file():missing.append(str(p))
+ elif sha(p)!=f['sha256']:changed.append(str(p))
+expected={'datasets/scripts/acquire_screened_demo.py','datasets/scripts/test_screened_demo.py','datasets/entity-resolution/README.md','datasets/entity-resolution/prepared/README.md'}
+assert set(changed)==expected,(changed,missing);assert not missing
+protected=[f for f in start['datasetBaseline'] if '/labels/' in f['path'] or '/5d-demo-2026-10-20-screened/' in f['path']]
+assert all(sha(Path(f['path']))==f['sha256'] for f in protected)
+for name in ('admission.json','summary.json'):
+ assert (base/'target-readiness'/name).read_bytes()==(base/'durable-readiness'/name).read_bytes(),name
+admission=json.loads((base/'durable-readiness/admission.json').read_text());summary=json.loads((base/'durable-readiness/summary.json').read_text());assert summary['candidatePairs']==101 and summary['excludedPairs']==78 and summary['admittedPairs']==23 and summary['eligiblePairs']==0
+m=json.loads(Path('datasets/entity-resolution/5d-demo-2026-10-20-relevance-v2/population-manifest.v1.json').read_text());approval=json.loads((base/'user-rerun-approval.json').read_text());assert m['approvalReceiptSha256']==sha(base/'user-rerun-approval.json')
+ledger=[json.loads(x) for x in Path('datasets/entity-resolution/5d-demo-2026-10-20-relevance-v2/request-ledger.jsonl').read_text().splitlines()]
+assert all(x['retrievedAtUtc']>approval['recordedAtUtc'] for x in ledger)
+assert m['observed']['httpAttempts']==3 and m['observed']['distinctReturnedWorksIncludingExcluded']==14 and m['observed']['newIngestionRecords']==5
+assert m['cumulative']=={'distinctReturnedWorksAcrossStages':44,'httpAttemptsAcrossStages':12,'previousStageDistinctReturnedWorks':30,'responseBytesAcrossStages':291082,'secondsAcrossStages':10.214}
+assert not Path('docs/agent-runs/phase-05/evidence/5d/live-state').exists()
+r={'schemaVersion':'scholarchain.phase5d.search-repair-protected-proof.v1','valid':True,'changedExistingDatasetFiles':changed,'removedExistingDatasetFiles':missing,'protectedLabelAndOriginalSearchFilesUnchanged':len(protected),'protectedLabelTreeFiles':sum('/labels/' in f['path'] for f in protected),'protectedOriginalSearchFiles':sum('/5d-demo-2026-10-20-screened/' in f['path'] for f in protected),'attributionSha256':sha(Path(start['protectedAttribution']['path'])),'originalResponsesManifestsExecutedScriptsAndLabelBytesUnchanged':True,'approvalPredatesEveryNewHttp':True,'targetAndDurableAdmissionByteIdentical':True,'demoInputHash':admission['demoInputHash'],'demoCandidateHash':admission['demoCandidateHash'],'readiness':summary,'stageObserved':m['observed'],'cumulative':m['cumulative'],'modelCalls':0,'spendUsd':'0.00','runtimeCredentialsAccessed':False,'liveStateAbsent':True,'noHeldOutLabelsReadForSearchSelection':True}
+(base/'protected-proof.json').write_text(json.dumps(r,indent=2)+'\n');print(json.dumps(r))

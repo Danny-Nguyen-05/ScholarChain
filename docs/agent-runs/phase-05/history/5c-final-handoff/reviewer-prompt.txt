@@ -1,0 +1,149 @@
+You are the independent, read-only reviewer for ScholarChain Phase 5,
+Subphase 5C B1/B2 repair recheck.
+Repository: /Users/danny/Documents/UIC/CS441/ScholarChain
+
+All manager-owned implementation, workers/builds, acquisition and browser actions
+have stopped. The user selects and launches you; the manager did not invoke a
+reviewer. Do not repair, run behavior probes or launch agents.
+
+Read:
+1. AGENTS.md, CLAUDE.md, docs/agents.md, .claude/agents/code-reviewer.md,
+   docs/agent-runs/README.md, recorded Phase 1 authority and Phase 4 acceptance.
+2. /Users/danny/Documents/plan/phase5.md and phase-05/prompt.md including
+   the current B1/B2 repair authorization. Only 5C repairs authorized.
+3. Course Phase 5/entity-linkage/evaluation/D07/relevant Phase 6 inputs:
+   https://github.com/0x1DOCD00D/ScholarChain/blob/main/README.md#phase-5-implement-entity-resolution
+4. Full user-returned REQUEST-CHANGES at phase-05/review.md and
+   evidence/5c-repair/external-review.txt (all evidence paths below are
+   relative to docs/agent-runs/phase-05/).
+5. owner-report.md, test-report.md, repairs.md, 5c-repair-start.json,
+   5c-repair-source-delta.json, 5c-baseline.json, source-freeze.json,
+   review-inventory.json, implementation.diff, 5c-implementation.diff,
+   history/5c-initial-review/ and history/5b-final-handoff/.
+6. Current ER queue/evaluation/CLI/page contracts and owner tests; independent
+   IndependentReviewBindingRepairSpec, IndependentEvaluationAdapterSpec,
+   IndependentEvaluationSpec, IndependentRetainedReviewInputSpec and
+   IndependentRetainedReviewInputMain; related unchanged tests.
+7. datasets/entity-resolution/prepared/README.md, durable run and sibling
+   retention manifest, retain_prepared_population.py and its tests.
+8. evidence/5c-repair/: commands.json, dataset-checks.json, before-fix.txt,
+   before-fix-summary.json and JUnit, targeted.txt, targeted-second.txt,
+   durable-input-reload.txt, durable-input-proof.json, real-readiness-summary.json,
+   full-check.txt/full-check-summary.json, queue-source-hashes.json and
+   review-artifacts/queue.json, split.json and generation-binding.json.
+   Older evidence/5c/ and browser receipts are historical and preserved.
+
+Baseline/ownership:
+- Branch phase-5; current HEAD and clean 5C starting HEAD:
+  c8342d25ba04dede26af10bedc5a76691824d1ca
+- Whole Phase 5 base: 099e303311be7a1b2e2cf5655e0c7ce9fa710474
+- Accepted Phase 4 implementation: 3ccd61c071d8080dda04d5e9cf73e9ed19dd75a7
+- 5B externally/human approved; 5C initial review REQUEST-CHANGES remains the last
+ independent 5C verdict. No repair approval is inferred.
+- Before repairs all 509 reviewed hashes matched. Six old handoff artifacts
+ preserved in history/5c-initial-review/. Repair delta 75 added /11 modified /0 removed;
+ new freeze 584 files, unchanged through final gate.
+- Full tracked/untracked inventory is review-inventory.json (515 paths,
+ its own recursive hash excluded). Include all durable/hidden/success files.
+- ER owner writes modules/entity-resolution/**; dataset owner writes datasets/**;
+ tester writes tests/**; coordinator writes phase-05 evidence. Retained prepared
+ population is routed under existing dataset territory, not a new ownership map
+ or invented human ratification. Core/Hadoop/build/original samples/constitutional/
+ human-owned decision files remain unchanged. No commit or push.
+
+B1 repair:
+- ReviewPopulationBinding stores only inputEvidenceHash/candidatePopulationHash.
+ Queue/checkpoint identity still binds source population, split/sampling and
+ complete tasks/evidence. Mutable policy/config/prompt/schema/model/code/source
+ metadata is stored separately as generation audit or prediction-run ReviewBinding.
+- Evaluation accepts P1 run metadata for the same immutable population/task evidence
+ and records P1 in its report; original P0 annotations remain unchanged.
+- fromDecisions now requires explicit actual run binding. Inconsistent decisions/
+ adjudication metadata fail against P1, rather than against old label-generation
+ settings. CLI prepare requires --binding and checks actual completed manifest,
+ config/model/source-bound decisions and recomputed candidate population.
+- Two independent pre-fix tests genuinely failed on unchanged production.
+ Post-fix actual offline P1 engine test changes policy/model/version/adjudication
+ timeout/config/code, reuses P0 checkpoint, preserves queue identity and reports P1.
+ Changed input/candidates/task evidence still fails or is counted INVALID.
+- Rebuilt real queue has 240 initial +60 reserves: 20 Work /20 Researcher development,
+ 100 Work /100 Researcher held-out. Same 300 tasks/task hashes and split as before;
+ only label-population wire/queue hash changed, before any real human labels.
+- Queue/split/generation audit files are byte-identical across two durable-input
+ generation runs. Separate generation metadata is excluded from label identity.
+
+B2 repair:
+- Durable exact completed input:
+ datasets/entity-resolution/prepared/bd424a86-0a1b-4e44-bbdb-4a9b8c8a20e3/
+- Sibling <UUID>.retention-manifest.v1.json binds 68 files /49,547,452 bytes:
+ entire export/** including CRC, original completion/run manifest and 8 intermediate
+ _SUCCESS files (plus export success). No ignored target input is needed for
+ future loading. Omitted intermediate data/counters are not claimed retained.
+- All retained bytes/UUIDs/source payloads unchanged. No new Hadoop regeneration
+ or logical-UUID normalization. No retained path is ignored by Git.
+- Actual Scala original-vs-durable replay reproduced:
+ input 57efd81957e5eec9194d4b5c42f6ef170213640f148b56bf8b99a51d1d09d1fe
+ candidates 9381588e35a418a84a22e9a680db4ab7886a8d33cf9463166edc1222cd8a5581
+ 11,412 pairs, 456 works, 8 profiles, 465 activities, complete candidate equality.
+- Independent copy tests prove valid initial loading, identical replay and
+ rejection of missing/corrupted retained parts. Retention validator checks all
+ files/hashes/completion framing/9 success markers with overwrite/size/path bounds.
+
+Observed verification:
+- Fresh sbt -batch check: exit 0, 390 tests passed: core 129, Hadoop 64,
+ ER 25, independent 168, build 4; 46 fresh JUnit reports,
+ zero failures/errors/skips;584 source hashes/path set unchanged; success marker renewed.
+ Expected nested injected checkfailure is a passing CheckFailurePathSpec assertion.
+- Targeted 25 ER +28 independent passed. First post-fix attempt had 27/28 independent
+ passing: a new disposable B2 fixture snapshot was inconsistent. Fixed only that
+ fixture; meaningful positive-before-negative checks added; failed attempt retained.
+- 26 Python dataset tests and 68-file durable validator passed.
+- Java 17.0.20.1, sbt 1.10.7, Scala 3.3.4, Python 3.14.5; exact args/env/exits retained.
+- No new browser actions or real queue load in blocker-only round; browser evidence
+ is historical. Current HTML binding validator updated with B1 and Node syntax checked;
+ no claim that old browser tests prove new browser behavior.
+
+Key SHA-256 values (relative to phase-05):
+- source-freeze.json: 13822f14ce35026b92d1ade5505fd3d2d2fcc7a33c28946a4ef29fea8c917080
+- implementation.diff: e4ff72fa7c36e1600c762db82fd5cbf15e1a99680db2702a4435aa304bbb81f9
+- 5c-implementation.diff: 20b3c9edb012781f4a863db7e9905ff13b8f5c6e1f089a02e93bad114f43a0ba
+- evidence/5c-repair/full-check.txt: 24cdaff8387d87ffaeeba6955bfd269922dadfc7c8b9053c52c54f0a2738fb64
+- evidence/5c-repair/full-check-summary.json: 93b3a7bfe0d47a99649722270e438080f81fd381f2bf1fc202f5a365c95397b8
+- evidence/5c-repair/real-readiness-summary.json: 5dcbf3baee2bc80ed3337f2fd8f6b5657dc3418ab53a186b2046c44c1b394f55
+- evidence/5c-repair/review-artifacts/queue.json: 39810621fe4b22113e3b11fe014ed3eaf2f6ed82b261a265044ce344a02e506f
+- evidence/5c-repair/review-artifacts/split.json: 9dee7738f41d646515eb7a6c77c025a935405f5bdfb34039fcb135021e9c4141
+- evidence/5c-repair/durable-input-proof.json: f8d707136c493cd052944afdb04a1547484acd8a3db81b3ddf9086abd18b56b3
+Durable retention manifest:
+c51963569827ceaba35d1f816a918afecd32a547725ba2b1bb63aa38d49e8556
+
+Scope/limitations:
+- User requested BLOCKERS ONLY. N1–N8 and earlier nonblocking findings remain
+ documented and unchanged. No blanket N4 completion/sensitivity CLI repair,
+ real queue browser probe, clock fix, ID guide warning, reserve-count fix,
+ old ledger rewrite, acquisition-script recovery or repository deduplication.
+- Necessary B2 retention adds 47.3 MiB; size observation remains open before commit.
+- No real human labels: all 240 reviews pending. Synthetic P0/P1 annotations and
+ fake calls establish tests only. No acquisition/live calls/provider implementation,
+ calibration/final gold measurement, 5D/5E, cloud, Phase 6 or final Phase 5 acceptance.
+- Convenience selection/residual leakage, provider hypothesis risks and blocking
+ recall limitations remain as in the initial report. Do not invent accuracy.
+
+Review rules:
+Read-only: no edits, builds/tests, executable behavior probes, installs, network
+source/provider calls, label changes, deploys, commits/pushes or agent launches.
+Read-only hashes/inventory comparison permitted. Never read .env/private keys/
+credentials or secret directories. Specify necessary executable checks for owners.
+Report ALL confirmed findings in one pass. Prioritize B1 label/prediction separation,
+actual-run provenance, changed-evidence rejection, B2 durable completeness/replay,
+schema/UI compatibility and regression/evidence integrity. Distinguish static
+reasoning from executed evidence; tests do not prove identity accuracy or labels.
+Later subphases remain future scope unless this repair deliverable depends on them.
+
+Return APPROVE or REQUEST-CHANGES for implemented 5C/B1/B2 repairs. Explicitly assess
+both blockers and distinguish carried nonblocking notes/unverified future gates.
+For each finding provide severity, path/line, evidence/reproduction reasoning, impact,
+owner, acceptance check, and whether it blocks 5C. Use required report fields STATUS, OWNER,
+WORK ORDER, FILES CREATED, FILES MODIFIED, COMMANDS RUN, TEST RESULTS, VALIDATION RESULTS,
+ASSUMPTIONS, RISKS, MANUAL ACTION REQUIRED, BLOCKED-ON OWNER, BLOCKED-ON EVIDENCE, NEXT GATE.
+Return complete verdict to user for handoff. The manager has stopped. Even APPROVE still
+requires explicit user authorization before 5D.

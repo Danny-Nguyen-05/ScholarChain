@@ -1,0 +1,31 @@
+"""Read-only final content/archive checks; writes only its evidence receipt."""
+from pathlib import Path
+import hashlib,json,subprocess
+R=Path.cwd(); E=R/'docs/agent-runs/phase-05/evidence/5c-lean'
+def check(p,expected):
+ b=p.read_bytes(); assert len(b)==expected['bytes'] and hashlib.sha256(b).hexdigest()==expected['sha256'],str(p)
+count=0
+for name in ['5c-2026-10-16','5c-2026-10-16-v2']:
+ root=R/'datasets/entity-resolution'/name
+ m=json.loads((root/'archive-manifest.v1.json').read_text())
+ assert sorted(x.name for x in root.iterdir())==['archive-manifest.v1.json','population-manifest.v1.json']
+ for rel,v in m['files'].items():check(Path(m['archiveAbsoluteDirectory'])/rel,v);count+=1
+ check(root/'population-manifest.v1.json',m['files']['population-manifest.v1.json'])
+for name in ['queue.json','split.json']:
+ root=R/'docs/agent-runs/phase-05/evidence/5c/review-artifacts'
+ m=json.loads((root/(name+'.archive-manifest.json')).read_text())
+ assert not (root/name).exists()
+ for v in m['files']:check(Path(v['archiveFile']),v);count+=1
+assert count==181
+old=json.loads((E/'pre-lean-source-freeze.json').read_text())['files']
+prefixes=('datasets/entity-resolution/5c-2026-10-16-v3/','datasets/entity-resolution/prepared/bd424a86-0a1b-4e44-bbdb-4a9b8c8a20e3/','docs/agent-runs/phase-05/evidence/5c-repair/review-artifacts/')
+preserved=0
+for v in old:
+ if v['path'].startswith(prefixes):check(R/v['path'],v);preserved+=1
+pinned=json.loads((R/'docs/agent-runs/phase-05/evidence/5c-precommit/preserved-artifacts.json').read_text())
+for path,v in pinned.items():check(R/path,v)
+freeze=json.loads(subprocess.check_output(['python3',str(E/'collect-lean.py.txt'),'verify'],text=True));assert freeze['valid']
+ledger=json.loads((E/'commands.json').read_text());assert len(ledger)==1 and ledger[0]['command']==['sbt','-batch','check'] and ledger[0]['exitCode']==0
+summary=json.loads((E/'full-check-summary.json').read_text());assert summary['valid']
+result={'allVerified':True,'archivedFilesVerified':count,'retainedPopulationAndPreparedFilesUnchanged':preserved,'pinnedActiveManifestsAndQueueUnchanged':len(pinned),'sourceFreeze':freeze,'sbtInvocationsThisTask':len(ledger),'testTotals':summary['totals'],'noCommitOrPush':True,'phase5DStarted':False}
+(E/'final-verification.json').write_text(json.dumps(result,indent=2)+'\n');print(json.dumps(result))

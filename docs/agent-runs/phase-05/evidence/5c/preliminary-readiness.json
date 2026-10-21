@@ -1,0 +1,213 @@
+{
+  "status": "PRELIMINARY_QUEUE_SUPERSEDED_PENDING_ENTITY_BALANCE_REPAIR",
+  "phase4Run": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase5c-prep-runs/bd424a86-0a1b-4e44-bbdb-4a9b8c8a20e3",
+  "completionSha256": "ecb1744d591092f66fa57c87108497caf80349d183b79816f7607dcc7b21f399",
+  "manifestSha256": "9d70503b9b3496eb2c39e2f61009a1614db755b783668fd452fb3777a0d48552",
+  "exportRows": {
+    "export": 0,
+    "author-mention": 2867,
+    "authorship": 2423,
+    "enrichment": 4530,
+    "graph-edge": 4654,
+    "index": 8127,
+    "mention-affiliation": 41,
+    "pair": 7106,
+    "team": 437,
+    "venue": 455,
+    "work": 456,
+    "match-candidate": 15417,
+    "reject": 66,
+    "institution": 2743,
+    "topic": 1332,
+    "orcid-activity": 465,
+    "orcid-profile": 8
+  },
+  "files": [
+    {
+      "path": "export/part-r-00000",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "rows": 0
+    },
+    {
+      "path": "export/snapshot=crossref-er5c-live-api-2026-10-16/run=bd424a86-0a1b-4e44-bbdb-4a9b8c8a20e3/author-mention/part-r-00000",
+      "bytes": 32166,
+      "sha256": "dbe4a21f7abbc51315206ed7f6fa3c799eaffc9cd0ec4f7f00b16a508a5377a6",
+      "rows": 41
+    },
+    {
+      "path": "export/snapshot=crossref-er5c-live-api-2026-10-16/run=bd424a86-0a1b-4e44-bbdb-4a9b8c8a20e3/authorship/part-r-00000",
+      "bytes": 25842,
+      "sha256": "ae4e2a43988ec1bf84acf84fc010e49b786e953a09270246235ca85ff9a38914",
+      "rows": 41
+    },
+    {
+      "path": "export/snapshot=crossref-er5c-live-api-2026-10-16/run=bd424a86-0a1b-4e44-bbdb-4a9b8c8a20e3/enrichment/part-r-00000",
+      "bytes": 6885,
+      "sha256": "e33de44400196ecc92b285f64d23c62fdf86be4f76c6776fbf6b0d160b14a11d",
+      "rows": 9
+    },
+    {
+      "path": "export/snapshot=crossref-er5c-live-api-2026-10-16/run=bd424a86-0a1b-4e44-bbdb-4a9b8c8a20e3/graph-edge/part-r-00000",
+      "bytes": 37444,
+      "sha256": "4dac177011e3bf8590fcc706bffa81faab7cdc617aef75455c3d3d051551123e",
+      "rows": 50
+    },
+    {
+      "path": "export/snapshot=crossref-er5c-live-api-2026-10-16/run=bd424a86-0a1b-4e44-bbdb-4a9b8c8a20e3/index/part-r-00000",
+      "bytes": 6810,
+      "sha256": "f661cfdb1c34e54ab8c892752fff906e830a7a30faec902256e508cf09d59ac9",
+      "rows": 10
+    },
+    {
+      "path": "export/snapshot=crossref-er5c-live-api-2026-10-16/run=bd424a86-0a1b-4e44-bbdb-4a9b8c8a20e3/mention-affiliation/part-r-00000",
+      "bytes": 30986,
+      "sha256": "9bbd5c6df60a5a525752fccbc299222af4a4cc659e7fb7c43fb2aa18c47db7be",
+      "rows": 41
+    },
+    {
+      "path": "export/snapshot=crossref-er5c-live-api-2026-10-16/run=bd424a86-0a1b-4e44-bbdb-4a9b8c8a20e3/pair/part-r-00000",
+      "bytes": 110130,
+      "sha256": "e15cbb21560908a77ac2a45d564b4054b22ec3b359b4bfe9607b581aae3cc40b",
+      "rows": 149
+    },
+    {
+      "path": "export/snapshot=crossref-er5c-live-api-2026-10-16/run=bd424a86-0a1b-4e44-bbdb-4a9b8c8a20e3/team/part-r-00000",
+      "bytes": 7292,
+      "sha256": "e1db282d94f03110389a6f6c5623f3593c77631fb80af8d886b7035566521b05",
+      "rows": 10
+    },
+    {
+      "path": "export/snapshot=crossref-er5c-live-api-2026-10-16/run=bd424a86-0a1b-4e44-bbdb-4a9b8c8a20e3/venue/part-r-00000",
+      "bytes": 4833,
+      "sha256": "c44b84dce204a2f1806215fca79627966e4e375535079bfb71e5265595ed4609",
+      "rows": 9
+    },
+    {
+      "path": "export/snapshot=crossref-er5c-live-api-2026-10-16/run=bd424a86-0a1b-4e44-bbdb-4a9b8c8a20e3/work/part-r-00000",
+      "bytes": 40847,
+      "sha256": "36e6e214830107d7b2be3ea549dd1cbba6ac39c192a3fc805b44ec01b9d18b50",
+      "rows": 10
+    },
+    {
+      "path": "export/snapshot=hadoop-prep/run=bd424a86-0a1b-4e44-bbdb-4a9b8c8a20e3/match-candidate/part-r-00000",
+      "bytes": 22313459,
+      "sha256": "f5e7b840eca9ba18aed4118a302ada3a40536f3ca0c9648b24d1b0899f280094",
+      "rows": 15417
+    },
+    {
+      "path": "export/snapshot=hadoop-prep/run=bd424a86-0a1b-4e44-bbdb-4a9b8c8a20e3/reject/part-r-00000",
+      "bytes": 16923,
+      "sha256": "645554e63704facb1ffd8d45dbb45492c7ee7be3769059d0f0a83b608a1d5dd5",
+      "rows": 47
+    },
+    {
+      "path": "export/snapshot=openalex-er5c-live-api-2026-10-16/run=bd424a86-0a1b-4e44-bbdb-4a9b8c8a20e3/author-mention/part-r-00000",
+      "bytes": 2149515,
+      "sha256": "3c651bafaf8c6dc7357d2c28dca0f9ae63545b8427438b5309693ebe660a8f7c",
+      "rows": 2826
+    },
+    {
+      "path": "export/snapshot=openalex-er5c-live-api-2026-10-16/run=bd424a86-0a1b-4e44-bbdb-4a9b8c8a20e3/authorship/part-r-00000",
+      "bytes": 1428542,
+      "sha256": "b0f8cdd1ef9fb22b5222d5b6ab2671785b7e27d666343bb7b5842c85177e70b1",
+      "rows": 2382
+    },
+    {
+      "path": "export/snapshot=openalex-er5c-live-api-2026-10-16/run=bd424a86-0a1b-4e44-bbdb-4a9b8c8a20e3/enrichment/part-r-00000",
+      "bytes": 3425445,
+      "sha256": "bdef4891c2b15ea82963710cd250cbb69de0994277574dc681eb4a1d5d708600",
+      "rows": 4521
+    },
+    {
+      "path": "export/snapshot=openalex-er5c-live-api-2026-10-16/run=bd424a86-0a1b-4e44-bbdb-4a9b8c8a20e3/graph-edge/part-r-00000",
+      "bytes": 3313159,
+      "sha256": "3703187717be31a8dc67ba7470afc44d570ad1bccfbb3cb2175a2c9d3717a472",
+      "rows": 4604
+    },
+    {
+      "path": "export/snapshot=openalex-er5c-live-api-2026-10-16/run=bd424a86-0a1b-4e44-bbdb-4a9b8c8a20e3/index/part-r-00000",
+      "bytes": 4875721,
+      "sha256": "5abfcca183941b692ba3d19efe9868c399971bd2160d76c343e73f02c4c06745",
+      "rows": 7852
+    },
+    {
+      "path": "export/snapshot=openalex-er5c-live-api-2026-10-16/run=bd424a86-0a1b-4e44-bbdb-4a9b8c8a20e3/institution/part-r-00000",
+      "bytes": 1871683,
+      "sha256": "eed160232ed66482b3b80190f9c3ba5e20190a305e84e8d6d0937728c620aba8",
+      "rows": 2743
+    },
+    {
+      "path": "export/snapshot=openalex-er5c-live-api-2026-10-16/run=bd424a86-0a1b-4e44-bbdb-4a9b8c8a20e3/pair/part-r-00000",
+      "bytes": 4840713,
+      "sha256": "623f69384cb228192d1413e5f017f91e1b4a303ecd9bd8311304afa5f859e7bb",
+      "rows": 6957
+    },
+    {
+      "path": "export/snapshot=openalex-er5c-live-api-2026-10-16/run=bd424a86-0a1b-4e44-bbdb-4a9b8c8a20e3/reject/part-r-00000",
+      "bytes": 7201,
+      "sha256": "3c00f6a9184d119145494d1de8cb706ad852c652580bae6fc5dfea45c0584f10",
+      "rows": 19
+    },
+    {
+      "path": "export/snapshot=openalex-er5c-live-api-2026-10-16/run=bd424a86-0a1b-4e44-bbdb-4a9b8c8a20e3/team/part-r-00000",
+      "bytes": 303178,
+      "sha256": "af8a51639f77dd12ae6828fd04613c02cec7fbfdd5f2af99acbb68b7f9ab2b2d",
+      "rows": 427
+    },
+    {
+      "path": "export/snapshot=openalex-er5c-live-api-2026-10-16/run=bd424a86-0a1b-4e44-bbdb-4a9b8c8a20e3/topic/part-r-00000",
+      "bytes": 755912,
+      "sha256": "78c4f62e24dc9cf74849b30031ef7364310695bac38b86fd26129103c626f16c",
+      "rows": 1332
+    },
+    {
+      "path": "export/snapshot=openalex-er5c-live-api-2026-10-16/run=bd424a86-0a1b-4e44-bbdb-4a9b8c8a20e3/venue/part-r-00000",
+      "bytes": 245358,
+      "sha256": "5c7d18837d35fc3f972c744223d5911f59b242fbf39d7f8925ea4cb11dc5fc48",
+      "rows": 446
+    },
+    {
+      "path": "export/snapshot=openalex-er5c-live-api-2026-10-16/run=bd424a86-0a1b-4e44-bbdb-4a9b8c8a20e3/work/part-r-00000",
+      "bytes": 2643374,
+      "sha256": "1252f44704cc765fed332cf1e8327972e60f2a6702a5cfbe806d74846b1bdf9e",
+      "rows": 446
+    },
+    {
+      "path": "export/snapshot=orcid-er5c-live-api-2026-10-16/run=bd424a86-0a1b-4e44-bbdb-4a9b8c8a20e3/index/part-r-00000",
+      "bytes": 185475,
+      "sha256": "dbe1df14b559c60a9c858bd7b96c0f189a8f498051bb97e0a7c01213d9efe0d6",
+      "rows": 265
+    },
+    {
+      "path": "export/snapshot=orcid-er5c-live-api-2026-10-16/run=bd424a86-0a1b-4e44-bbdb-4a9b8c8a20e3/orcid-activity/part-r-00000",
+      "bytes": 467934,
+      "sha256": "057585ae32aeb69c0ec751986173839c6b50cb8fe217d51093f67b6f246b52c1",
+      "rows": 465
+    },
+    {
+      "path": "export/snapshot=orcid-er5c-live-api-2026-10-16/run=bd424a86-0a1b-4e44-bbdb-4a9b8c8a20e3/orcid-profile/part-r-00000",
+      "bytes": 5311,
+      "sha256": "c97134454940ae6bd0881a6302d71d0d67c2f6a7a16bf9ddd5dc6cefa3a67a27",
+      "rows": 8
+    }
+  ],
+  "candidatePairs": 11412,
+  "groups": 568,
+  "tasks": 300,
+  "queueHash": "9bf9b362b30f1472ad13d00671b585276e858b37710ade02d4373564394ee3dd",
+  "splitHash": "13eaed309598ac7e1fc73b0ff65aeb419f5eb58814d8aa8255617f169a3809ba",
+  "allocation": {
+    "held-out:initial": 200,
+    "held-out:reserve": 50,
+    "development:initial": 40,
+    "development:reserve": 10
+  },
+  "initialEntities": {
+    "held-out:Work": 89,
+    "held-out:Researcher": 111,
+    "development:Work": 40
+  },
+  "issue": "Development partition contains no Researcher reviews; new 5C selection repair required before final queue freeze.",
+  "humanReviews": 0
+}

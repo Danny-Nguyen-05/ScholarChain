@@ -1,0 +1,23 @@
+{
+  "schemaVersion": "scholarchain.resolution.v1",
+  "pairId": "resolution-pair:1b7b4ccf905e261f162fd9167241ae2acb6c6379821f225322dea43c82b1fff6",
+  "entityType": "Work",
+  "left": {
+    "$type": "Work",
+    "observation": {
+      "source": "CROSSREF",
+      "sourceRecordId": "10.1007/978-3-642-31674-6_1",
+      "datasetSnapshot": "unknown"
+    },
+    "workId": "work:doi:10.1007/978-3-642-31674-6_1"
+  },
+  "right": {
+    "$type": "Work",
+    "observation": {
+      "source": "DBLP",
+      "sourceRecordId": "series/sapere/BerkeleyR13",
+      "datasetSnapshot": "dblp-2026-10-03"
+    },
+    "workId": "work:doi:10.1007/978-3-642-31674-6_1"
+  }
+}

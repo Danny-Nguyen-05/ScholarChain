@@ -1,0 +1,30 @@
+{
+  "schemaVersion": "scholarchain.evaluation-exclusions.v1",
+  "queueHash": "05c5817f62a70d378829be361b9c9169fc9af18448f7c83c245f1d65bbca6175",
+  "labelHash": "af1f5dd1a2c2df44a36fc2ef0f9e169ab025afef1580cb254af8abec0144fbdd",
+  "reason": "Supplementary sensitivity: exclude all 22 self-attested externally AI-assisted source-check cases; preserve original human labels and primary analysis. Attribution file SHA-256 af88956efd996abf8ca6bd9f440d706bf5d651950ee0a02025a29358fa9b2e9b",
+  "pairIds": [
+    "resolution-pair:08e8f2b855f86120e545bebf4957605f788fac057e256c3a7d39dc1b65ad1b1e",
+    "resolution-pair:0a81608e2ccd1e539985776df6f4e270a4ff3e449651583e3a6e76c230d695d8",
+    "resolution-pair:1347e30466549013b8c1bd84220f29cf0e89382be2322a64a72d79e6754a8d0d",
+    "resolution-pair:183f908d4ff7b79b9bcee27350208c57a6a0faa43fc3ff0ff531235936ed3f94",
+    "resolution-pair:1bd022a079d7c9096e13a07ec316360ef40185976382e975d6c6a78dc8260674",
+    "resolution-pair:1bda332a97dad21d344f9003783980730f927f2b8f45738bd36f56767ddafc9d",
+    "resolution-pair:1c2e039e8d66e1e5aecbc00e958ecb040c47b2163b9fb7c842d39caebc228c51",
+    "resolution-pair:2f1a333949b08fcc86249851864cf444b87130ec734c3320f9c0d7919204469d",
+    "resolution-pair:356215d9111fdb83b0ff4faac04a31c1ead8c3ba3187285e9fd887fe29e70148",
+    "resolution-pair:45b63afe055db72a575a76b611aef40cee920ecdbad4ec7d809714e96e291c1f",
+    "resolution-pair:4aaa1614306b692146b40dca43717e8c70bc76ff708cc144af7c88bdf0bc4f24",
+    "resolution-pair:5c70f1f5744429b5080032add48c2223044b01eb97e173ef511a2880dce5560c",
+    "resolution-pair:61e01f2d63992d8d47dfc6f9d4aeb895aca0d1a7d9d3b39f34554688efbab101",
+    "resolution-pair:83044b367a776177976aaadb83291e654467bfa70c971622547cb18635ca5398",
+    "resolution-pair:8bc2f23f58b2bdb5435daeb2d7ebea53007a311383b6e53559fa630c9d2065dc",
+    "resolution-pair:9963b41b22b9373b2c398dcb9b1ed8e9331e1d99a771e7c774f8354e343451ce",
+    "resolution-pair:ab9722a3c84211a9c05689676954f03375472f663ae8f4f3e024b5c24fa97a2f",
+    "resolution-pair:ced94ab330ec16c10d0414b1fe25fa899e65d0ae0180fb15970251d09b0e8783",
+    "resolution-pair:d055798cc098fe9da0612a14791cc5a207d03d030aa2baccb195c5c3e64db64f",
+    "resolution-pair:d37a4841608e0fcd8aa7209f961ad1aa7dea519140d8d543d424f9c55f889680",
+    "resolution-pair:da3251503f61abbeb0d1857d4a10f86479d6e6f695e8def1ffbd5f65c67823c0",
+    "resolution-pair:f793c19df1b55f29f150e5ed0a38967e3fc11ea9f27fb500becf8becc4b0feec"
+  ]
+}

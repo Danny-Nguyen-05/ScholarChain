@@ -1,0 +1,872 @@
+{
+  "schema": "scholarchain.phase5a.data-readiness.v1",
+  "observedAtUtc": "2026-10-15T15:21:42.818781+00:00",
+  "populationStatus": "INSUFFICIENT",
+  "humanLabels": 0,
+  "productionResearcherCandidatePairs": 0,
+  "productionResearcherCandidatePairsExplanation": "No Phase5 researcher candidate builder exists; Phase4 candidates are bibliographic observation block evidence.",
+  "requestedReviews": {
+    "development": 40,
+    "heldOut": 200
+  },
+  "runs": [
+    {
+      "directory": "target/phase4-runs/fda6168a-d4e6-4c20-bf73-42a1c3724f7f",
+      "manifestSha256": "56e42b26f067dfbc12075cb173d3d0b61b4030a2d754904d4bd86e821b54081b",
+      "completionMarkerSha256": "7f9cb9a76f4160d6d9e8e4af6e518047267e67697dc1df649e9cd793ed218969",
+      "verifiedExportParts": 34,
+      "exactExportInventory": true,
+      "jobSuccessMarkers": 9,
+      "exportCounts": {
+        "author-mention": 10,
+        "authorship": 10,
+        "enrichment": 10,
+        "graph-edge": 18,
+        "index": 27,
+        "institution": 2,
+        "match-candidate": 40,
+        "orcid-activity": 16,
+        "orcid-profile": 1,
+        "pair": 5,
+        "team": 5,
+        "topic": 3,
+        "venue": 5,
+        "work": 5
+      },
+      "distinctObservationPairs": 14,
+      "pairKinds": {
+        "orcid-distinction <-> orcid-distinction": 1,
+        "orcid-employment <-> work": 1,
+        "orcid-profile <-> work": 3,
+        "orcid-work <-> work": 3,
+        "work <-> work": 6
+      },
+      "normalizedMentionNameCounts": {
+        "claiborne rice": 3,
+        "istvan s. n. berkeley": 3,
+        "john mark bishop": 1,
+        "mario verdicchio": 1,
+        "slawomir j. nasuto": 1,
+        "viola schiaffonati": 1
+      },
+      "workObservations": [
+        {
+          "observation": [
+            "CROSSREF",
+            "10.1007/978-3-642-31674-6_1",
+            "crossref-rest-2026-10-05"
+          ],
+          "workId": "work:doi:10.1007/978-3-642-31674-6_1",
+          "title": "Machine Mentality?",
+          "year": 2013
+        },
+        {
+          "observation": [
+            "DBLP",
+            "series/sapere/NasutoB13",
+            "dblp-2026-10-03"
+          ],
+          "workId": "work:doi:10.1007/978-3-642-31674-6_7",
+          "title": "Of (Zombie) Mice and Animats.",
+          "year": 2011
+        },
+        {
+          "observation": [
+            "DBLP",
+            "series/sapere/BerkeleyR13",
+            "dblp-2026-10-03"
+          ],
+          "workId": "work:doi:10.1007/978-3-642-31674-6_1",
+          "title": "Machine Mentality?",
+          "year": 2011
+        },
+        {
+          "observation": [
+            "DBLP",
+            "series/sapere/SchiaffonatiV13",
+            "dblp-2026-10-03"
+          ],
+          "workId": "work:doi:10.1007/978-3-642-31674-6_28",
+          "title": "The Influence of Engineering Theory and Practice on Philosophy of AI.",
+          "year": 2011
+        },
+        {
+          "observation": [
+            "OPENALEX",
+            "W4254447616",
+            "openalex-rest-2026-10-05"
+          ],
+          "workId": "work:doi:10.1007/978-3-642-31674-6_1",
+          "title": "Machine Mentality?",
+          "year": 2012
+        }
+      ],
+      "pairs": [
+        {
+          "left": [
+            "CROSSREF",
+            "10.1007/978-3-642-31674-6_1",
+            "crossref-rest-2026-10-05"
+          ],
+          "leftKind": "work",
+          "right": [
+            "DBLP",
+            "series/sapere/BerkeleyR13",
+            "dblp-2026-10-03"
+          ],
+          "rightKind": "work",
+          "candidateIds": [
+            "match-candidate:a2ffe49d797908b9e673ebcc47944063506c03feb3cfeacdac8288c6b74a3507",
+            "match-candidate:ea25af04da196ce960d0792887b68118308e46ea98898d7e2173365cec25024e",
+            "match-candidate:b5a23f4ddcaeeae0f549a45399a4433326b1eaefe2ee868ec2f259f60095e603",
+            "match-candidate:a9a075885d6de6a93301269e13dfde4628f0d99065fbcf3b96691bb3dc5183de",
+            "match-candidate:9d9b96a041d1f1268c2ae9d1436f03e2826ab0e5593b7ee83da6311a5bfbaee9",
+            "match-candidate:0447a831ad7f8e7eee4dcd1e4220936a010eaabf8c217e364ae8d9fd1adffa4a",
+            "match-candidate:7c42e721210f7575e9fdab4d06c4ee0a8f1f211cdc367c7039000b871ad88336"
+          ],
+          "blockKeys": [
+            "name:istvan s. n. berkeley",
+            "name:claiborne rice",
+            "initial:i s n b",
+            "initial:c r",
+            "exact:doi:10.1007/978-3-642-31674-6_1",
+            "coauthor:istvan s. n. berkeley",
+            "coauthor:claiborne rice"
+          ]
+        },
+        {
+          "left": [
+            "CROSSREF",
+            "10.1007/978-3-642-31674-6_1",
+            "crossref-rest-2026-10-05"
+          ],
+          "leftKind": "work",
+          "right": [
+            "OPENALEX",
+            "W4254447616",
+            "openalex-rest-2026-10-05"
+          ],
+          "rightKind": "work",
+          "candidateIds": [
+            "match-candidate:c0c2dc4af3be24dbd875552eb4c9d501b7e3d731129eadde3d6f62ecf6f255cd",
+            "match-candidate:5c086d1ba87620c9da82623a3cded5402689e21944ef905c6ab83d12db9e3c45",
+            "match-candidate:57822cf445960e9f72502e904c9f4ae36ccb1ac0e74eb2ee1a06203c3253fe07",
+            "match-candidate:7446bfea412ead8e0747687cbd75b6571cb9754ef0d0a915677e4cbc1474effd",
+            "match-candidate:fd6b66b5f0039bd87f93e103a408bb54bcf14882718f55e38e2376c9d27180da",
+            "match-candidate:1283c515ee28572cee9608797e5c288a7e837af3e400d2f1ecd0e0dfe9df8263",
+            "match-candidate:09d3bacd2f2f0728a4eb014f8e9ed8d860934c8b13135ba544607ae0c61d5cfe",
+            "match-candidate:55f4d22d90ae94bca751aaeddbd09c68db336a1c546cd173e93a3e52f8f433cf"
+          ],
+          "blockKeys": [
+            "venue:studies in applied philosophy, epistemology and rational ethics",
+            "name:istvan s. n. berkeley",
+            "name:claiborne rice",
+            "initial:i s n b",
+            "initial:c r",
+            "exact:doi:10.1007/978-3-642-31674-6_1",
+            "coauthor:istvan s. n. berkeley",
+            "coauthor:claiborne rice"
+          ]
+        },
+        {
+          "left": [
+            "CROSSREF",
+            "10.1007/978-3-642-31674-6_1",
+            "crossref-rest-2026-10-05"
+          ],
+          "leftKind": "work",
+          "right": [
+            "ORCID",
+            "0000-0002-4414-6920",
+            "orcid-public-api-2026-10-05"
+          ],
+          "rightKind": "orcid-profile",
+          "candidateIds": [
+            "match-candidate:7567276dcde66c6a588ef3f512eb6a8b1f165845acea85cb60eb61bf8677b63b",
+            "match-candidate:a6edbb5cd7d1c1200a8361b4dd382b8c1003482d02d2d0b1f7c9ce0b46668265"
+          ],
+          "blockKeys": [
+            "name:claiborne rice",
+            "initial:c r"
+          ]
+        },
+        {
+          "left": [
+            "CROSSREF",
+            "10.1007/978-3-642-31674-6_1",
+            "crossref-rest-2026-10-05"
+          ],
+          "leftKind": "work",
+          "right": [
+            "ORCID",
+            "0000-0002-4414-6920/work/128060282",
+            "orcid-public-api-2026-10-05"
+          ],
+          "rightKind": "orcid-work",
+          "candidateIds": [
+            "match-candidate:1cfdceb6a29b893e03a557f964acb10812624c98eb96dedf7a8f8016ff55042e",
+            "match-candidate:1f631c4b23bf90ce1879aaa67825f01b228d30b089c71984087367607fb491f7"
+          ],
+          "blockKeys": [
+            "title-year:machine mentality?:2013",
+            "exact:doi:10.1007/978-3-642-31674-6_1"
+          ]
+        },
+        {
+          "left": [
+            "DBLP",
+            "series/sapere/BerkeleyR13",
+            "dblp-2026-10-03"
+          ],
+          "leftKind": "work",
+          "right": [
+            "DBLP",
+            "series/sapere/NasutoB13",
+            "dblp-2026-10-03"
+          ],
+          "rightKind": "work",
+          "candidateIds": [
+            "match-candidate:c6e3bd65e521a3fa865557141d577b9f1f3143f21e3bd68337cdb5f7717eb4c0"
+          ],
+          "blockKeys": [
+            "venue:pt-ai"
+          ]
+        },
+        {
+          "left": [
+            "DBLP",
+            "series/sapere/BerkeleyR13",
+            "dblp-2026-10-03"
+          ],
+          "leftKind": "work",
+          "right": [
+            "DBLP",
+            "series/sapere/SchiaffonatiV13",
+            "dblp-2026-10-03"
+          ],
+          "rightKind": "work",
+          "candidateIds": [
+            "match-candidate:2110793144de18160a249ba04caa33e19f35c522ad60c892967c13b94c0a4e4d"
+          ],
+          "blockKeys": [
+            "venue:pt-ai"
+          ]
+        },
+        {
+          "left": [
+            "DBLP",
+            "series/sapere/BerkeleyR13",
+            "dblp-2026-10-03"
+          ],
+          "leftKind": "work",
+          "right": [
+            "OPENALEX",
+            "W4254447616",
+            "openalex-rest-2026-10-05"
+          ],
+          "rightKind": "work",
+          "candidateIds": [
+            "match-candidate:fba89c5541f40cd0d329ed5555126de0de35fd02600382dd3848e90289cdb0cb",
+            "match-candidate:f303f094aa59feb543c29f2024807fe7b7d6f61cf16c6a5c5b12debe43d67a5a",
+            "match-candidate:36bc8823d29a7d843aad994b22ce3330645ec1501d67d432269ab032d7894159",
+            "match-candidate:4760bc7de6ad7ba14a30ed7c0caaf0799950642227d7f2937948a7c05b0c330c",
+            "match-candidate:1e3b09f73470fc076707a8b5443b4c3c68b2aea9eaf06ab4524fc22f7887d4b2",
+            "match-candidate:0609db88cdddd4e404d55906db6df9cf9e1c5c06c8ff228b82d6de150ad30d0f",
+            "match-candidate:12df45dad3b1ca3124a40468d6f45952481179ae82073907aae3c3c58f2146a1",
+            "match-candidate:0953099a0c343648131a431dc96c87e4f4ec31e38d442cde1faeb25187041e55"
+          ],
+          "blockKeys": [
+            "name:istvan s. n. berkeley",
+            "name:claiborne rice",
+            "initial:i s n b",
+            "initial:c r",
+            "exact:orcid:0000-0002-4414-6920",
+            "exact:doi:10.1007/978-3-642-31674-6_1",
+            "coauthor:istvan s. n. berkeley",
+            "coauthor:claiborne rice"
+          ]
+        },
+        {
+          "left": [
+            "DBLP",
+            "series/sapere/BerkeleyR13",
+            "dblp-2026-10-03"
+          ],
+          "leftKind": "work",
+          "right": [
+            "ORCID",
+            "0000-0002-4414-6920",
+            "orcid-public-api-2026-10-05"
+          ],
+          "rightKind": "orcid-profile",
+          "candidateIds": [
+            "match-candidate:c5395c5c5c6aba28e6d8ee19ba4c29a6c40382e280d50c4384db260c248c342f",
+            "match-candidate:d6cec38b60c67924a0a6ff7dea0f46436640e79bfe8716a077bf2ef1c5a5819e",
+            "match-candidate:58bfb176e1478eb6cf14fb1c0766d2c3e93253d8e3ca3560dd8b3b6af7b11d69"
+          ],
+          "blockKeys": [
+            "name:claiborne rice",
+            "initial:c r",
+            "exact:orcid:0000-0002-4414-6920"
+          ]
+        },
+        {
+          "left": [
+            "DBLP",
+            "series/sapere/BerkeleyR13",
+            "dblp-2026-10-03"
+          ],
+          "leftKind": "work",
+          "right": [
+            "ORCID",
+            "0000-0002-4414-6920/work/128060282",
+            "orcid-public-api-2026-10-05"
+          ],
+          "rightKind": "orcid-work",
+          "candidateIds": [
+            "match-candidate:16f92da73378daca6d7d32f267f62c8eb8428f1f26bac3e375624456a1b035b3"
+          ],
+          "blockKeys": [
+            "exact:doi:10.1007/978-3-642-31674-6_1"
+          ]
+        },
+        {
+          "left": [
+            "DBLP",
+            "series/sapere/NasutoB13",
+            "dblp-2026-10-03"
+          ],
+          "leftKind": "work",
+          "right": [
+            "DBLP",
+            "series/sapere/SchiaffonatiV13",
+            "dblp-2026-10-03"
+          ],
+          "rightKind": "work",
+          "candidateIds": [
+            "match-candidate:a6904642945db6277e8bc3b2060cf93479798911634ffc590466dddd419c46d8"
+          ],
+          "blockKeys": [
+            "venue:pt-ai"
+          ]
+        },
+        {
+          "left": [
+            "OPENALEX",
+            "W4254447616",
+            "openalex-rest-2026-10-05"
+          ],
+          "leftKind": "work",
+          "right": [
+            "ORCID",
+            "0000-0002-4414-6920",
+            "orcid-public-api-2026-10-05"
+          ],
+          "rightKind": "orcid-profile",
+          "candidateIds": [
+            "match-candidate:35fbb01d622492bddb13b88635439657c0dc92d593647076c7397ca42b68cc50",
+            "match-candidate:73392d46803a191582e1cdf3ece44da8bf4afbfeaaeded7caab9bec2eb0213d3",
+            "match-candidate:1f805f7f916e33ceaeb308a128ea28ab4eb6fe15d82804c5094b70e84210e566"
+          ],
+          "blockKeys": [
+            "name:claiborne rice",
+            "initial:c r",
+            "exact:orcid:0000-0002-4414-6920"
+          ]
+        },
+        {
+          "left": [
+            "OPENALEX",
+            "W4254447616",
+            "openalex-rest-2026-10-05"
+          ],
+          "leftKind": "work",
+          "right": [
+            "ORCID",
+            "0000-0002-4414-6920/employment/19198978",
+            "orcid-public-api-2026-10-05"
+          ],
+          "rightKind": "orcid-employment",
+          "candidateIds": [
+            "match-candidate:1368abc4a2b0d75bfc6724c0d3681e2de7404245b20529204bb6d2823b18cbc5"
+          ],
+          "blockKeys": [
+            "affiliation:university of louisiana at lafayette"
+          ]
+        },
+        {
+          "left": [
+            "OPENALEX",
+            "W4254447616",
+            "openalex-rest-2026-10-05"
+          ],
+          "leftKind": "work",
+          "right": [
+            "ORCID",
+            "0000-0002-4414-6920/work/128060282",
+            "orcid-public-api-2026-10-05"
+          ],
+          "rightKind": "orcid-work",
+          "candidateIds": [
+            "match-candidate:893acfad77157f8036176ce8e0660d9c1ef435d9c044e49d28b132d4b630e5be"
+          ],
+          "blockKeys": [
+            "exact:doi:10.1007/978-3-642-31674-6_1"
+          ]
+        },
+        {
+          "left": [
+            "ORCID",
+            "0000-0002-4414-6920/distinction/19530061",
+            "orcid-public-api-2026-10-05"
+          ],
+          "leftKind": "orcid-distinction",
+          "right": [
+            "ORCID",
+            "0000-0002-4414-6920/distinction/19530090",
+            "orcid-public-api-2026-10-05"
+          ],
+          "rightKind": "orcid-distinction",
+          "candidateIds": [
+            "match-candidate:abb8902bb7f87795f84e853c1cfca693312bb99d98c4275981b3b17654389070"
+          ],
+          "blockKeys": [
+            "affiliation:american folklore society"
+          ]
+        }
+      ]
+    },
+    {
+      "directory": "target/phase4-runs/ccd26111-d26d-4783-bc0f-e7106e4e617d",
+      "manifestSha256": "5bd46c94894bbc543d2f45ffeb96ac7f6b8511d6a054ce01c7f08201035cca5a",
+      "completionMarkerSha256": "39608c659806518335941c5e73e220682efbe9af82b35ae4f12886c78140e501",
+      "verifiedExportParts": 34,
+      "exactExportInventory": true,
+      "jobSuccessMarkers": 9,
+      "exportCounts": {
+        "author-mention": 10,
+        "authorship": 10,
+        "enrichment": 10,
+        "graph-edge": 18,
+        "index": 27,
+        "institution": 2,
+        "match-candidate": 40,
+        "orcid-activity": 16,
+        "orcid-profile": 1,
+        "pair": 5,
+        "team": 5,
+        "topic": 3,
+        "venue": 5,
+        "work": 5
+      },
+      "distinctObservationPairs": 14,
+      "pairKinds": {
+        "orcid-distinction <-> orcid-distinction": 1,
+        "orcid-employment <-> work": 1,
+        "orcid-profile <-> work": 3,
+        "orcid-work <-> work": 3,
+        "work <-> work": 6
+      },
+      "normalizedMentionNameCounts": {
+        "claiborne rice": 3,
+        "istvan s. n. berkeley": 3,
+        "john mark bishop": 1,
+        "mario verdicchio": 1,
+        "slawomir j. nasuto": 1,
+        "viola schiaffonati": 1
+      },
+      "workObservations": [
+        {
+          "observation": [
+            "CROSSREF",
+            "10.1007/978-3-642-31674-6_1",
+            "crossref-rest-2026-10-05"
+          ],
+          "workId": "work:doi:10.1007/978-3-642-31674-6_1",
+          "title": "Machine Mentality?",
+          "year": 2013
+        },
+        {
+          "observation": [
+            "DBLP",
+            "series/sapere/NasutoB13",
+            "dblp-2026-10-03"
+          ],
+          "workId": "work:doi:10.1007/978-3-642-31674-6_7",
+          "title": "Of (Zombie) Mice and Animats.",
+          "year": 2011
+        },
+        {
+          "observation": [
+            "DBLP",
+            "series/sapere/BerkeleyR13",
+            "dblp-2026-10-03"
+          ],
+          "workId": "work:doi:10.1007/978-3-642-31674-6_1",
+          "title": "Machine Mentality?",
+          "year": 2011
+        },
+        {
+          "observation": [
+            "DBLP",
+            "series/sapere/SchiaffonatiV13",
+            "dblp-2026-10-03"
+          ],
+          "workId": "work:doi:10.1007/978-3-642-31674-6_28",
+          "title": "The Influence of Engineering Theory and Practice on Philosophy of AI.",
+          "year": 2011
+        },
+        {
+          "observation": [
+            "OPENALEX",
+            "W4254447616",
+            "openalex-rest-2026-10-05"
+          ],
+          "workId": "work:doi:10.1007/978-3-642-31674-6_1",
+          "title": "Machine Mentality?",
+          "year": 2012
+        }
+      ],
+      "pairs": [
+        {
+          "left": [
+            "CROSSREF",
+            "10.1007/978-3-642-31674-6_1",
+            "crossref-rest-2026-10-05"
+          ],
+          "leftKind": "work",
+          "right": [
+            "DBLP",
+            "series/sapere/BerkeleyR13",
+            "dblp-2026-10-03"
+          ],
+          "rightKind": "work",
+          "candidateIds": [
+            "match-candidate:a2ffe49d797908b9e673ebcc47944063506c03feb3cfeacdac8288c6b74a3507",
+            "match-candidate:ea25af04da196ce960d0792887b68118308e46ea98898d7e2173365cec25024e",
+            "match-candidate:b5a23f4ddcaeeae0f549a45399a4433326b1eaefe2ee868ec2f259f60095e603",
+            "match-candidate:a9a075885d6de6a93301269e13dfde4628f0d99065fbcf3b96691bb3dc5183de",
+            "match-candidate:9d9b96a041d1f1268c2ae9d1436f03e2826ab0e5593b7ee83da6311a5bfbaee9",
+            "match-candidate:0447a831ad7f8e7eee4dcd1e4220936a010eaabf8c217e364ae8d9fd1adffa4a",
+            "match-candidate:7c42e721210f7575e9fdab4d06c4ee0a8f1f211cdc367c7039000b871ad88336"
+          ],
+          "blockKeys": [
+            "name:istvan s. n. berkeley",
+            "name:claiborne rice",
+            "initial:i s n b",
+            "initial:c r",
+            "exact:doi:10.1007/978-3-642-31674-6_1",
+            "coauthor:istvan s. n. berkeley",
+            "coauthor:claiborne rice"
+          ]
+        },
+        {
+          "left": [
+            "CROSSREF",
+            "10.1007/978-3-642-31674-6_1",
+            "crossref-rest-2026-10-05"
+          ],
+          "leftKind": "work",
+          "right": [
+            "OPENALEX",
+            "W4254447616",
+            "openalex-rest-2026-10-05"
+          ],
+          "rightKind": "work",
+          "candidateIds": [
+            "match-candidate:c0c2dc4af3be24dbd875552eb4c9d501b7e3d731129eadde3d6f62ecf6f255cd",
+            "match-candidate:5c086d1ba87620c9da82623a3cded5402689e21944ef905c6ab83d12db9e3c45",
+            "match-candidate:57822cf445960e9f72502e904c9f4ae36ccb1ac0e74eb2ee1a06203c3253fe07",
+            "match-candidate:7446bfea412ead8e0747687cbd75b6571cb9754ef0d0a915677e4cbc1474effd",
+            "match-candidate:fd6b66b5f0039bd87f93e103a408bb54bcf14882718f55e38e2376c9d27180da",
+            "match-candidate:1283c515ee28572cee9608797e5c288a7e837af3e400d2f1ecd0e0dfe9df8263",
+            "match-candidate:09d3bacd2f2f0728a4eb014f8e9ed8d860934c8b13135ba544607ae0c61d5cfe",
+            "match-candidate:55f4d22d90ae94bca751aaeddbd09c68db336a1c546cd173e93a3e52f8f433cf"
+          ],
+          "blockKeys": [
+            "venue:studies in applied philosophy, epistemology and rational ethics",
+            "name:istvan s. n. berkeley",
+            "name:claiborne rice",
+            "initial:i s n b",
+            "initial:c r",
+            "exact:doi:10.1007/978-3-642-31674-6_1",
+            "coauthor:istvan s. n. berkeley",
+            "coauthor:claiborne rice"
+          ]
+        },
+        {
+          "left": [
+            "CROSSREF",
+            "10.1007/978-3-642-31674-6_1",
+            "crossref-rest-2026-10-05"
+          ],
+          "leftKind": "work",
+          "right": [
+            "ORCID",
+            "0000-0002-4414-6920",
+            "orcid-public-api-2026-10-05"
+          ],
+          "rightKind": "orcid-profile",
+          "candidateIds": [
+            "match-candidate:7567276dcde66c6a588ef3f512eb6a8b1f165845acea85cb60eb61bf8677b63b",
+            "match-candidate:a6edbb5cd7d1c1200a8361b4dd382b8c1003482d02d2d0b1f7c9ce0b46668265"
+          ],
+          "blockKeys": [
+            "name:claiborne rice",
+            "initial:c r"
+          ]
+        },
+        {
+          "left": [
+            "CROSSREF",
+            "10.1007/978-3-642-31674-6_1",
+            "crossref-rest-2026-10-05"
+          ],
+          "leftKind": "work",
+          "right": [
+            "ORCID",
+            "0000-0002-4414-6920/work/128060282",
+            "orcid-public-api-2026-10-05"
+          ],
+          "rightKind": "orcid-work",
+          "candidateIds": [
+            "match-candidate:1cfdceb6a29b893e03a557f964acb10812624c98eb96dedf7a8f8016ff55042e",
+            "match-candidate:1f631c4b23bf90ce1879aaa67825f01b228d30b089c71984087367607fb491f7"
+          ],
+          "blockKeys": [
+            "title-year:machine mentality?:2013",
+            "exact:doi:10.1007/978-3-642-31674-6_1"
+          ]
+        },
+        {
+          "left": [
+            "DBLP",
+            "series/sapere/BerkeleyR13",
+            "dblp-2026-10-03"
+          ],
+          "leftKind": "work",
+          "right": [
+            "DBLP",
+            "series/sapere/NasutoB13",
+            "dblp-2026-10-03"
+          ],
+          "rightKind": "work",
+          "candidateIds": [
+            "match-candidate:c6e3bd65e521a3fa865557141d577b9f1f3143f21e3bd68337cdb5f7717eb4c0"
+          ],
+          "blockKeys": [
+            "venue:pt-ai"
+          ]
+        },
+        {
+          "left": [
+            "DBLP",
+            "series/sapere/BerkeleyR13",
+            "dblp-2026-10-03"
+          ],
+          "leftKind": "work",
+          "right": [
+            "DBLP",
+            "series/sapere/SchiaffonatiV13",
+            "dblp-2026-10-03"
+          ],
+          "rightKind": "work",
+          "candidateIds": [
+            "match-candidate:2110793144de18160a249ba04caa33e19f35c522ad60c892967c13b94c0a4e4d"
+          ],
+          "blockKeys": [
+            "venue:pt-ai"
+          ]
+        },
+        {
+          "left": [
+            "DBLP",
+            "series/sapere/BerkeleyR13",
+            "dblp-2026-10-03"
+          ],
+          "leftKind": "work",
+          "right": [
+            "OPENALEX",
+            "W4254447616",
+            "openalex-rest-2026-10-05"
+          ],
+          "rightKind": "work",
+          "candidateIds": [
+            "match-candidate:fba89c5541f40cd0d329ed5555126de0de35fd02600382dd3848e90289cdb0cb",
+            "match-candidate:f303f094aa59feb543c29f2024807fe7b7d6f61cf16c6a5c5b12debe43d67a5a",
+            "match-candidate:36bc8823d29a7d843aad994b22ce3330645ec1501d67d432269ab032d7894159",
+            "match-candidate:4760bc7de6ad7ba14a30ed7c0caaf0799950642227d7f2937948a7c05b0c330c",
+            "match-candidate:1e3b09f73470fc076707a8b5443b4c3c68b2aea9eaf06ab4524fc22f7887d4b2",
+            "match-candidate:0609db88cdddd4e404d55906db6df9cf9e1c5c06c8ff228b82d6de150ad30d0f",
+            "match-candidate:12df45dad3b1ca3124a40468d6f45952481179ae82073907aae3c3c58f2146a1",
+            "match-candidate:0953099a0c343648131a431dc96c87e4f4ec31e38d442cde1faeb25187041e55"
+          ],
+          "blockKeys": [
+            "name:istvan s. n. berkeley",
+            "name:claiborne rice",
+            "initial:i s n b",
+            "initial:c r",
+            "exact:orcid:0000-0002-4414-6920",
+            "exact:doi:10.1007/978-3-642-31674-6_1",
+            "coauthor:istvan s. n. berkeley",
+            "coauthor:claiborne rice"
+          ]
+        },
+        {
+          "left": [
+            "DBLP",
+            "series/sapere/BerkeleyR13",
+            "dblp-2026-10-03"
+          ],
+          "leftKind": "work",
+          "right": [
+            "ORCID",
+            "0000-0002-4414-6920",
+            "orcid-public-api-2026-10-05"
+          ],
+          "rightKind": "orcid-profile",
+          "candidateIds": [
+            "match-candidate:c5395c5c5c6aba28e6d8ee19ba4c29a6c40382e280d50c4384db260c248c342f",
+            "match-candidate:d6cec38b60c67924a0a6ff7dea0f46436640e79bfe8716a077bf2ef1c5a5819e",
+            "match-candidate:58bfb176e1478eb6cf14fb1c0766d2c3e93253d8e3ca3560dd8b3b6af7b11d69"
+          ],
+          "blockKeys": [
+            "name:claiborne rice",
+            "initial:c r",
+            "exact:orcid:0000-0002-4414-6920"
+          ]
+        },
+        {
+          "left": [
+            "DBLP",
+            "series/sapere/BerkeleyR13",
+            "dblp-2026-10-03"
+          ],
+          "leftKind": "work",
+          "right": [
+            "ORCID",
+            "0000-0002-4414-6920/work/128060282",
+            "orcid-public-api-2026-10-05"
+          ],
+          "rightKind": "orcid-work",
+          "candidateIds": [
+            "match-candidate:16f92da73378daca6d7d32f267f62c8eb8428f1f26bac3e375624456a1b035b3"
+          ],
+          "blockKeys": [
+            "exact:doi:10.1007/978-3-642-31674-6_1"
+          ]
+        },
+        {
+          "left": [
+            "DBLP",
+            "series/sapere/NasutoB13",
+            "dblp-2026-10-03"
+          ],
+          "leftKind": "work",
+          "right": [
+            "DBLP",
+            "series/sapere/SchiaffonatiV13",
+            "dblp-2026-10-03"
+          ],
+          "rightKind": "work",
+          "candidateIds": [
+            "match-candidate:a6904642945db6277e8bc3b2060cf93479798911634ffc590466dddd419c46d8"
+          ],
+          "blockKeys": [
+            "venue:pt-ai"
+          ]
+        },
+        {
+          "left": [
+            "OPENALEX",
+            "W4254447616",
+            "openalex-rest-2026-10-05"
+          ],
+          "leftKind": "work",
+          "right": [
+            "ORCID",
+            "0000-0002-4414-6920",
+            "orcid-public-api-2026-10-05"
+          ],
+          "rightKind": "orcid-profile",
+          "candidateIds": [
+            "match-candidate:35fbb01d622492bddb13b88635439657c0dc92d593647076c7397ca42b68cc50",
+            "match-candidate:73392d46803a191582e1cdf3ece44da8bf4afbfeaaeded7caab9bec2eb0213d3",
+            "match-candidate:1f805f7f916e33ceaeb308a128ea28ab4eb6fe15d82804c5094b70e84210e566"
+          ],
+          "blockKeys": [
+            "name:claiborne rice",
+            "initial:c r",
+            "exact:orcid:0000-0002-4414-6920"
+          ]
+        },
+        {
+          "left": [
+            "OPENALEX",
+            "W4254447616",
+            "openalex-rest-2026-10-05"
+          ],
+          "leftKind": "work",
+          "right": [
+            "ORCID",
+            "0000-0002-4414-6920/employment/19198978",
+            "orcid-public-api-2026-10-05"
+          ],
+          "rightKind": "orcid-employment",
+          "candidateIds": [
+            "match-candidate:1368abc4a2b0d75bfc6724c0d3681e2de7404245b20529204bb6d2823b18cbc5"
+          ],
+          "blockKeys": [
+            "affiliation:university of louisiana at lafayette"
+          ]
+        },
+        {
+          "left": [
+            "OPENALEX",
+            "W4254447616",
+            "openalex-rest-2026-10-05"
+          ],
+          "leftKind": "work",
+          "right": [
+            "ORCID",
+            "0000-0002-4414-6920/work/128060282",
+            "orcid-public-api-2026-10-05"
+          ],
+          "rightKind": "orcid-work",
+          "candidateIds": [
+            "match-candidate:893acfad77157f8036176ce8e0660d9c1ef435d9c044e49d28b132d4b630e5be"
+          ],
+          "blockKeys": [
+            "exact:doi:10.1007/978-3-642-31674-6_1"
+          ]
+        },
+        {
+          "left": [
+            "ORCID",
+            "0000-0002-4414-6920/distinction/19530061",
+            "orcid-public-api-2026-10-05"
+          ],
+          "leftKind": "orcid-distinction",
+          "right": [
+            "ORCID",
+            "0000-0002-4414-6920/distinction/19530090",
+            "orcid-public-api-2026-10-05"
+          ],
+          "rightKind": "orcid-distinction",
+          "candidateIds": [
+            "match-candidate:abb8902bb7f87795f84e853c1cfca693312bb99d98c4275981b3b17654389070"
+          ],
+          "blockKeys": [
+            "affiliation:american folklore society"
+          ]
+        }
+      ]
+    }
+  ],
+  "limitations": [
+    "Runs are repeated processing of the same source bytes, not independent populations.",
+    "Candidate pair kind is a lookup classification, not a match outcome or human label.",
+    "Repeated names in these works occur only across copies of the same publication.",
+    "No additional data acquired; future acquisition proposal in owner-report.md is unexecuted."
+  ]
+}

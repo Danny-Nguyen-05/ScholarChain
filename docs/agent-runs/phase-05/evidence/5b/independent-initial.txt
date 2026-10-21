@@ -1,0 +1,28 @@
+[info] welcome to sbt 1.10.7 (Homebrew Java 17.0.20.1)
+[info] loading settings for project scholarchain-build from plugins.sbt...
+[info] loading project definition from /Users/danny/Documents/UIC/CS441/ScholarChain/project
+[info] loading settings for project root from build.sbt...
+[info] set current project to root (in build file:/Users/danny/Documents/UIC/CS441/ScholarChain/)
+[info] compiling 20 Scala sources to /Users/danny/Documents/UIC/CS441/ScholarChain/tests/target/scala-3.3.4/test-classes ...
+[error] -- [E050] Type Error: /Users/danny/Documents/UIC/CS441/ScholarChain/tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentResolutionExportSpec.scala:176:12 
+[error] 176 |    val a = work("conf/independent/ExportConflictA", doi = Some("10.5555/export-conflict-a"))
+[error]     |            ^^^^
+[error]     |            value work does not take parameters
+[error]     |
+[error]     | longer explanation available when compiling with `-explain`
+[error] -- [E050] Type Error: /Users/danny/Documents/UIC/CS441/ScholarChain/tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentResolutionExportSpec.scala:177:12 
+[error] 177 |    val b = work("conf/independent/ExportConflictB", doi = Some("10.5555/export-conflict-b"))
+[error]     |            ^^^^
+[error]     |            value work does not take parameters
+[error]     |
+[error]     | longer explanation available when compiling with `-explain`
+[error] -- [E007] Type Mismatch Error: /Users/danny/Documents/UIC/CS441/ScholarChain/tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentResolutionInputSpec.scala:80:6 
+[error] 80 |      note,
+[error]    |      ^^^^
+[error]    |      Found:    org.scalatest.Notifier
+[error]    |      Required: String
+[error]    |
+[error]    | longer explanation available when compiling with `-explain`
+[error] three errors found
+[error] (independentTests / Test / compileIncremental) Compilation failed
+[error] Total time: 3 s, completed Oct 16, 2026, 2:25:54 PM

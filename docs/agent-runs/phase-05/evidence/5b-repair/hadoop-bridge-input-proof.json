@@ -1,0 +1,185 @@
+{
+  "syntheticRegressionRuns": [
+    {
+      "root": "target/phase4-runs/phase5b-doi-literal-repair-00698782-0f5f-4c49-a47e-0f054c3cf99c",
+      "completedRun": "target/phase4-runs/phase5b-doi-literal-repair-00698782-0f5f-4c49-a47e-0f054c3cf99c/output/bee50894-65ee-4e02-a926-c50edc69779b",
+      "inputs": [
+        {
+          "path": "target/phase4-runs/phase5b-doi-literal-repair-00698782-0f5f-4c49-a47e-0f054c3cf99c/dblp.xml",
+          "bytes": 849,
+          "sha256": "df365e4035ae000cf094b79264ba60ec04400ebdc780f2047f4de8bbc6cbd059"
+        },
+        {
+          "path": "target/phase4-runs/phase5b-doi-literal-repair-00698782-0f5f-4c49-a47e-0f054c3cf99c/openalex.jsonl",
+          "bytes": 234,
+          "sha256": "0dea7bcf1c8a9ec4686acb2a516d9ed6df23aa69376e5de91c34acb3036a9ac8"
+        },
+        {
+          "path": "target/phase4-runs/phase5b-doi-literal-repair-00698782-0f5f-4c49-a47e-0f054c3cf99c/crossref.jsonl",
+          "bytes": 206,
+          "sha256": "23671c4ceb1c3285ea124188fd159e7ce93e0c1f767338c1bc1c5989495a2c41"
+        },
+        {
+          "path": "target/phase4-runs/phase5b-doi-literal-repair-00698782-0f5f-4c49-a47e-0f054c3cf99c/orcid.jsonl",
+          "bytes": 52,
+          "sha256": "5aaa3f87be51096350e95288dd3c6e4fa444dd700852d3b97a06afb358d8f489"
+        }
+      ],
+      "completionSha256": "561912515f7675b8a3393081d3a7c9a1bbd8b9b92822005de8ac29852c19d1ab",
+      "verifiedExportFiles": 24,
+      "acceptedDblpSourceFacts": [
+        {
+          "sourceRecordId": "conf/independent/LiteralBridge2",
+          "doi": "10.5555/(sici)1097-4571(199912)50:14<1258::aid-asi2>3.0.co;2-x",
+          "sourceLinks": [
+            {
+              "name": "ee",
+              "value": "https://doi.org/10.5555/(SICI)1097-4571(199912)50:14<1258::AID-ASI2>3.0.CO;2-X"
+            }
+          ]
+        },
+        {
+          "sourceRecordId": "conf/independent/LiteralBridge1",
+          "doi": "10.5555/a?b",
+          "sourceLinks": [
+            {
+              "name": "ee",
+              "value": "https://doi.org/10.5555/a?b"
+            }
+          ]
+        },
+        {
+          "sourceRecordId": "conf/independent/LiteralBridge0",
+          "doi": "10.5555/a%2fb",
+          "sourceLinks": [
+            {
+              "name": "ee",
+              "value": "https://doi.org/10.5555/a%2Fb"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "root": "target/phase4-runs/phase5b-doi-literal-repair-f4c99124-2988-4612-986c-7565e8ad8f37",
+      "completedRun": "target/phase4-runs/phase5b-doi-literal-repair-f4c99124-2988-4612-986c-7565e8ad8f37/output/031eb61d-44ec-4565-9c4f-03680020f9b6",
+      "inputs": [
+        {
+          "path": "target/phase4-runs/phase5b-doi-literal-repair-f4c99124-2988-4612-986c-7565e8ad8f37/dblp.xml",
+          "bytes": 849,
+          "sha256": "df365e4035ae000cf094b79264ba60ec04400ebdc780f2047f4de8bbc6cbd059"
+        },
+        {
+          "path": "target/phase4-runs/phase5b-doi-literal-repair-f4c99124-2988-4612-986c-7565e8ad8f37/openalex.jsonl",
+          "bytes": 234,
+          "sha256": "0dea7bcf1c8a9ec4686acb2a516d9ed6df23aa69376e5de91c34acb3036a9ac8"
+        },
+        {
+          "path": "target/phase4-runs/phase5b-doi-literal-repair-f4c99124-2988-4612-986c-7565e8ad8f37/crossref.jsonl",
+          "bytes": 206,
+          "sha256": "23671c4ceb1c3285ea124188fd159e7ce93e0c1f767338c1bc1c5989495a2c41"
+        },
+        {
+          "path": "target/phase4-runs/phase5b-doi-literal-repair-f4c99124-2988-4612-986c-7565e8ad8f37/orcid.jsonl",
+          "bytes": 52,
+          "sha256": "5aaa3f87be51096350e95288dd3c6e4fa444dd700852d3b97a06afb358d8f489"
+        }
+      ],
+      "completionSha256": "ddb8d684120ad248fdb2cb05a03cd374374c300635e434802ef4b9e032b6f00d",
+      "verifiedExportFiles": 24,
+      "acceptedDblpSourceFacts": [
+        {
+          "sourceRecordId": "conf/independent/LiteralBridge2",
+          "doi": "10.5555/(sici)1097-4571(199912)50:14<1258::aid-asi2>3.0.co;2-x",
+          "sourceLinks": [
+            {
+              "name": "ee",
+              "value": "https://doi.org/10.5555/(SICI)1097-4571(199912)50:14<1258::AID-ASI2>3.0.CO;2-X"
+            }
+          ]
+        },
+        {
+          "sourceRecordId": "conf/independent/LiteralBridge1",
+          "doi": "10.5555/a?b",
+          "sourceLinks": [
+            {
+              "name": "ee",
+              "value": "https://doi.org/10.5555/a?b"
+            }
+          ]
+        },
+        {
+          "sourceRecordId": "conf/independent/LiteralBridge0",
+          "doi": "10.5555/a%2fb",
+          "sourceLinks": [
+            {
+              "name": "ee",
+              "value": "https://doi.org/10.5555/a%2Fb"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "root": "target/phase4-runs/phase5b-doi-literal-repair-9e2bb55e-7539-43a3-a9a2-c689393e5692",
+      "completedRun": "target/phase4-runs/phase5b-doi-literal-repair-9e2bb55e-7539-43a3-a9a2-c689393e5692/output/1d0a2e86-e8dd-4f7a-975d-2d0769851134",
+      "inputs": [
+        {
+          "path": "target/phase4-runs/phase5b-doi-literal-repair-9e2bb55e-7539-43a3-a9a2-c689393e5692/dblp.xml",
+          "bytes": 849,
+          "sha256": "df365e4035ae000cf094b79264ba60ec04400ebdc780f2047f4de8bbc6cbd059"
+        },
+        {
+          "path": "target/phase4-runs/phase5b-doi-literal-repair-9e2bb55e-7539-43a3-a9a2-c689393e5692/openalex.jsonl",
+          "bytes": 234,
+          "sha256": "0dea7bcf1c8a9ec4686acb2a516d9ed6df23aa69376e5de91c34acb3036a9ac8"
+        },
+        {
+          "path": "target/phase4-runs/phase5b-doi-literal-repair-9e2bb55e-7539-43a3-a9a2-c689393e5692/crossref.jsonl",
+          "bytes": 206,
+          "sha256": "23671c4ceb1c3285ea124188fd159e7ce93e0c1f767338c1bc1c5989495a2c41"
+        },
+        {
+          "path": "target/phase4-runs/phase5b-doi-literal-repair-9e2bb55e-7539-43a3-a9a2-c689393e5692/orcid.jsonl",
+          "bytes": 52,
+          "sha256": "5aaa3f87be51096350e95288dd3c6e4fa444dd700852d3b97a06afb358d8f489"
+        }
+      ],
+      "completionSha256": "ec05e02ffdc97aa0102e886292fc9e4354f83781bccc63add452b5ba7bea60df",
+      "verifiedExportFiles": 24,
+      "acceptedDblpSourceFacts": [
+        {
+          "sourceRecordId": "conf/independent/LiteralBridge2",
+          "doi": "10.5555/(sici)1097-4571(199912)50:14<1258::aid-asi2>3.0.co;2-x",
+          "sourceLinks": [
+            {
+              "name": "ee",
+              "value": "https://doi.org/10.5555/(SICI)1097-4571(199912)50:14<1258::AID-ASI2>3.0.CO;2-X"
+            }
+          ]
+        },
+        {
+          "sourceRecordId": "conf/independent/LiteralBridge1",
+          "doi": "10.5555/a?b",
+          "sourceLinks": [
+            {
+              "name": "ee",
+              "value": "https://doi.org/10.5555/a?b"
+            }
+          ]
+        },
+        {
+          "sourceRecordId": "conf/independent/LiteralBridge0",
+          "doi": "10.5555/a%2fb",
+          "sourceLinks": [
+            {
+              "name": "ee",
+              "value": "https://doi.org/10.5555/a%2Fb"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "limitation": "These are generated regression inputs, not external acquisition or human labels. Before/after ER assertions and results are recorded in the test sources and retained failing/passing logs."
+}

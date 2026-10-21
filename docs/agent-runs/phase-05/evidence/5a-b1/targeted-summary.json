@@ -1,0 +1,35 @@
+{
+  "schema": "scholarchain.phase5a.b1-targeted.v1",
+  "core": {
+    "executor": "coordinator executing domain-owner requested core-only formatting/targeted command",
+    "exitCode": 0,
+    "tests": 13,
+    "suites": 2,
+    "failed": 0,
+    "completedLocal": "2026-10-15 11:24:28 America/Chicago",
+    "command": "sbt -batch 'core/Compile/scalafmt' 'core/Test/scalafmt' 'core/testOnly edu.uic.cs441.scholarchain.core.ResolutionContractSpec edu.uic.cs441.scholarchain.core.ResolutionAuthoritySpec'",
+    "logSha256": "027bc5d5c73cd22e3e37dd914a787793dc73ceb5706986440072d9c415f02caf"
+  },
+  "independent": {
+    "executor": "coordinator executing tester requested tests-only formatting/targeted command",
+    "exitCode": 0,
+    "tests": 11,
+    "suites": 1,
+    "failed": 0,
+    "completedLocal": "2026-10-15 11:24:51 America/Chicago",
+    "command": "sbt -batch 'independentTests/Test/scalafmt' 'independentTests/testOnly edu.uic.cs441.scholarchain.independent.IndependentResolutionContractSpec'",
+    "logSha256": "3e0d5f514cd741e2a3416799041645f262658dc122f2d7d55508fb423feb36e1"
+  },
+  "environment": {
+    "JAVA_HOME": "/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home",
+    "SBT_OPTS": "-Dlogback.configurationFile=/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-04/xml-repair-logback.xml"
+  },
+  "nativeExecution": "Explicit native require_escalated approval used for coordinator sbt access after sandboxbootlockdenial; no permission bypass. Each process ended before next started.",
+  "canonicalGroupingFixture": {
+    "path": "modules/core/src/test/resources/wire/resolution-grouping-constraints.json",
+    "sha256": "86f3d22ed906457570b453d36bf20d4d1e87ca5262e270d6454f3fe7d5bde070",
+    "bytesUnchangedFromReviewedFixture": true,
+    "actualScalaTypedRoundtripPassed": true
+  },
+  "fullGate": "RUNNING on141filefreeze; targetedresultsdoNOTstandinforfinalgate"
+}

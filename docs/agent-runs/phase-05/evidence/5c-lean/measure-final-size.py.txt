@@ -1,0 +1,26 @@
+"""Measure commit-candidate file bytes and synchronize final hash inventory."""
+from pathlib import Path
+import json,subprocess
+R=Path.cwd();O=R/'docs/agent-runs/phase-05';E=O/'evidence/5c-lean';DEST=E/'final-size.json'
+def inventory():
+ x=subprocess.run(['python3',str(E/'collect-lean.py.txt'),'inventory'],capture_output=True,text=True)
+ assert x.returncode==0,x.stderr
+
+def measure():
+ status=subprocess.check_output(['git','status','--porcelain=v1','-uall'],text=True).splitlines()
+ names=sorted({l[3:] for l in status});files=[R/n for n in names if (R/n).is_file()]
+ allnames=subprocess.check_output(['git','ls-files','--cached','--others','--exclude-standard','-z']).split(b'\0')
+ allfiles=[R/n.decode() for n in set(allnames) if n and (R/n.decode()).is_file()]
+ largest=max(files,key=lambda p:p.stat().st_size);n=sum(p.stat().st_size for p in files)
+ old=json.loads((E/'starting-size.json').read_text())['bytes']
+ over=[{'path':str(p.relative_to(R)),'bytes':p.stat().st_size} for p in allfiles if p.stat().st_size>50000000]
+ assert not over,over
+ return {'schema':'scholarchain.precommit-file-size.v1','definition':'Logical file bytes of changed existing files eligible for commit; deletions have no current bytes. Excludes Git history and ignored target/cache.','changedPathsIncludingDeletion':len(names),'existingChangedFiles':len(files),'deletedPaths':[n for n in names if not (R/n).exists()],'uncommittedBytes':n,'uncommittedDecimalMB':round(n/1e6,3),'uncommittedMiB':round(n/1048576,3),'startingBytes':old,'reductionBytes':old-n,'entireNonignoredTreeBytes':sum(p.stat().st_size for p in allfiles),'largestCommitCandidateFile':{'path':str(largest.relative_to(R)),'bytes':largest.stat().st_size,'decimalMB':round(largest.stat().st_size/1e6,3)},'filesOver50MB':over,'limitBytes':50000000,'optionalArchivalPerformed':True,'commitCreated':False,'phase5DStarted':False}
+if not DEST.exists():DEST.write_text('{}\n')
+for attempt in range(8):
+ inventory();d=measure();text=json.dumps(d,indent=2)+'\n'
+ if DEST.read_text()==text:break
+ DEST.write_text(text)
+else:raise RuntimeError('Size report failed to stabilize')
+inventory();assert json.loads(DEST.read_text())==measure()
+print(DEST.read_text())

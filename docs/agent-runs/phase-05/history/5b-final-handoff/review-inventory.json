@@ -1,0 +1,1486 @@
+{
+  "schema": "scholarchain.phase5b.review-inventory.v1",
+  "head": "4ac236fcb01825b73635fa4c762a35bed4b362cd",
+  "branch": "phase-5",
+  "subphaseBase": "4ac236fcb01825b73635fa4c762a35bed4b362cd",
+  "wholePhaseBase": "099e303311be7a1b2e2cf5655e0c7ce9fa710474",
+  "status": [
+    " M docs/agent-runs/phase-05/implementation.diff",
+    " M docs/agent-runs/phase-05/owner-report.md",
+    " M docs/agent-runs/phase-05/prompt.md",
+    " M docs/agent-runs/phase-05/repairs.md",
+    " M docs/agent-runs/phase-05/review-inventory.json",
+    " M docs/agent-runs/phase-05/review.md",
+    " M docs/agent-runs/phase-05/reviewer-prompt.txt",
+    " M docs/agent-runs/phase-05/source-freeze.json",
+    " M docs/agent-runs/phase-05/test-report.md",
+    " M modules/core/README.md",
+    " M modules/core/src/main/scala/edu/uic/cs441/scholarchain/core/ResolutionValidationContext.scala",
+    " M modules/entity-resolution/README.md",
+    "?? docs/agent-runs/phase-05/5b-baseline.json",
+    "?? docs/agent-runs/phase-05/5b-implementation.diff",
+    "?? docs/agent-runs/phase-05/5b-repair-source-delta.json",
+    "?? docs/agent-runs/phase-05/5b-repair-start.json",
+    "?? docs/agent-runs/phase-05/5b-source-delta.json",
+    "?? docs/agent-runs/phase-05/evidence/5b-repair/before-fix-IndependentResolutionPrepBridgeRepairSpec.xml",
+    "?? docs/agent-runs/phase-05/evidence/5b-repair/before-fix-IndependentResolutionRepairSpec.xml",
+    "?? docs/agent-runs/phase-05/evidence/5b-repair/before-fix-summary.json",
+    "?? docs/agent-runs/phase-05/evidence/5b-repair/before-fix.txt",
+    "?? docs/agent-runs/phase-05/evidence/5b-repair/collect-repair.py.txt",
+    "?? docs/agent-runs/phase-05/evidence/5b-repair/commands.json",
+    "?? docs/agent-runs/phase-05/evidence/5b-repair/core-targeted.txt",
+    "?? docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-disabled-demo/_SCHOLARCHAIN_RESOLUTION_COMPLETE",
+    "?? docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-disabled-demo/audit-details.jsonl",
+    "?? docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-disabled-demo/diagnostics.jsonl",
+    "?? docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-disabled-demo/effective-config.json",
+    "?? docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-disabled-demo/effective-policy.json",
+    "?? docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-disabled-demo/evidence.jsonl",
+    "?? docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-disabled-demo/researcher/accepted-links.jsonl",
+    "?? docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-disabled-demo/researcher/accepted.jsonl",
+    "?? docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-disabled-demo/researcher/conflict.jsonl",
+    "?? docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-disabled-demo/researcher/grouping-constraints.json",
+    "?? docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-disabled-demo/researcher/rejected.jsonl",
+    "?? docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-disabled-demo/researcher/unresolved.jsonl",
+    "?? docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-disabled-demo/resolution-manifest.json",
+    "?? docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-disabled-demo/work/accepted-links.jsonl",
+    "?? docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-disabled-demo/work/accepted.jsonl",
+    "?? docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-disabled-demo/work/conflict.jsonl",
+    "?? docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-disabled-demo/work/grouping-constraints.json",
+    "?? docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-disabled-demo/work/rejected.jsonl",
+    "?? docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-disabled-demo/work/unresolved.jsonl",
+    "?? docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-disabled-replay/_SCHOLARCHAIN_RESOLUTION_COMPLETE",
+    "?? docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-disabled-replay/audit-details.jsonl",
+    "?? docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-disabled-replay/diagnostics.jsonl",
+    "?? docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-disabled-replay/effective-config.json",
+    "?? docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-disabled-replay/effective-policy.json",
+    "?? docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-disabled-replay/evidence.jsonl",
+    "?? docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-disabled-replay/researcher/accepted-links.jsonl",
+    "?? docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-disabled-replay/researcher/accepted.jsonl",
+    "?? docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-disabled-replay/researcher/conflict.jsonl",
+    "?? docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-disabled-replay/researcher/grouping-constraints.json",
+    "?? docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-disabled-replay/researcher/rejected.jsonl",
+    "?? docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-disabled-replay/researcher/unresolved.jsonl",
+    "?? docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-disabled-replay/resolution-manifest.json",
+    "?? docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-disabled-replay/work/accepted-links.jsonl",
+    "?? docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-disabled-replay/work/accepted.jsonl",
+    "?? docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-disabled-replay/work/conflict.jsonl",
+    "?? docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-disabled-replay/work/grouping-constraints.json",
+    "?? docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-disabled-replay/work/rejected.jsonl",
+    "?? docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-disabled-replay/work/unresolved.jsonl",
+    "?? docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-fake-demo/_SCHOLARCHAIN_RESOLUTION_COMPLETE",
+    "?? docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-fake-demo/audit-details.jsonl",
+    "?? docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-fake-demo/diagnostics.jsonl",
+    "?? docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-fake-demo/effective-config.json",
+    "?? docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-fake-demo/effective-policy.json",
+    "?? docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-fake-demo/evidence.jsonl",
+    "?? docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-fake-demo/researcher/accepted-links.jsonl",
+    "?? docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-fake-demo/researcher/accepted.jsonl",
+    "?? docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-fake-demo/researcher/conflict.jsonl",
+    "?? docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-fake-demo/researcher/grouping-constraints.json",
+    "?? docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-fake-demo/researcher/rejected.jsonl",
+    "?? docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-fake-demo/researcher/unresolved.jsonl",
+    "?? docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-fake-demo/resolution-manifest.json",
+    "?? docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-fake-demo/work/accepted-links.jsonl",
+    "?? docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-fake-demo/work/accepted.jsonl",
+    "?? docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-fake-demo/work/conflict.jsonl",
+    "?? docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-fake-demo/work/grouping-constraints.json",
+    "?? docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-fake-demo/work/rejected.jsonl",
+    "?? docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-fake-demo/work/unresolved.jsonl",
+    "?? docs/agent-runs/phase-05/evidence/5b-repair/external-review.txt",
+    "?? docs/agent-runs/phase-05/evidence/5b-repair/feature-repair-proof.json",
+    "?? docs/agent-runs/phase-05/evidence/5b-repair/full-check-summary.json",
+    "?? docs/agent-runs/phase-05/evidence/5b-repair/full-check.txt",
+    "?? docs/agent-runs/phase-05/evidence/5b-repair/hadoop-bridge-input-proof.json",
+    "?? docs/agent-runs/phase-05/evidence/5b-repair/inspect-repair-demo.py.txt",
+    "?? docs/agent-runs/phase-05/evidence/5b-repair/postgate-inspection.txt",
+    "?? docs/agent-runs/phase-05/evidence/5b-repair/real-input-cli.txt",
+    "?? docs/agent-runs/phase-05/evidence/5b-repair/real-input-inspection.txt",
+    "?? docs/agent-runs/phase-05/evidence/5b-repair/real-input-summary.json",
+    "?? docs/agent-runs/phase-05/evidence/5b-repair/targeted-second.txt",
+    "?? docs/agent-runs/phase-05/evidence/5b-repair/targeted.txt",
+    "?? docs/agent-runs/phase-05/evidence/5b/collect.py.txt",
+    "?? docs/agent-runs/phase-05/evidence/5b/combined-targeted-initial.txt",
+    "?? docs/agent-runs/phase-05/evidence/5b/commands.json",
+    "?? docs/agent-runs/phase-05/evidence/5b/core-targeted-sandbox-attempt.txt",
+    "?? docs/agent-runs/phase-05/evidence/5b/core-targeted.txt",
+    "?? docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-disabled-demo/_SCHOLARCHAIN_RESOLUTION_COMPLETE",
+    "?? docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-disabled-demo/audit-details.jsonl",
+    "?? docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-disabled-demo/diagnostics.jsonl",
+    "?? docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-disabled-demo/effective-config.json",
+    "?? docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-disabled-demo/effective-policy.json",
+    "?? docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-disabled-demo/evidence.jsonl",
+    "?? docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-disabled-demo/researcher/accepted-links.jsonl",
+    "?? docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-disabled-demo/researcher/accepted.jsonl",
+    "?? docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-disabled-demo/researcher/conflict.jsonl",
+    "?? docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-disabled-demo/researcher/grouping-constraints.json",
+    "?? docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-disabled-demo/researcher/rejected.jsonl",
+    "?? docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-disabled-demo/researcher/unresolved.jsonl",
+    "?? docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-disabled-demo/resolution-manifest.json",
+    "?? docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-disabled-demo/work/accepted-links.jsonl",
+    "?? docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-disabled-demo/work/accepted.jsonl",
+    "?? docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-disabled-demo/work/conflict.jsonl",
+    "?? docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-disabled-demo/work/grouping-constraints.json",
+    "?? docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-disabled-demo/work/rejected.jsonl",
+    "?? docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-disabled-demo/work/unresolved.jsonl",
+    "?? docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-disabled-replay/_SCHOLARCHAIN_RESOLUTION_COMPLETE",
+    "?? docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-disabled-replay/audit-details.jsonl",
+    "?? docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-disabled-replay/diagnostics.jsonl",
+    "?? docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-disabled-replay/effective-config.json",
+    "?? docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-disabled-replay/effective-policy.json",
+    "?? docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-disabled-replay/evidence.jsonl",
+    "?? docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-disabled-replay/researcher/accepted-links.jsonl",
+    "?? docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-disabled-replay/researcher/accepted.jsonl",
+    "?? docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-disabled-replay/researcher/conflict.jsonl",
+    "?? docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-disabled-replay/researcher/grouping-constraints.json",
+    "?? docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-disabled-replay/researcher/rejected.jsonl",
+    "?? docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-disabled-replay/researcher/unresolved.jsonl",
+    "?? docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-disabled-replay/resolution-manifest.json",
+    "?? docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-disabled-replay/work/accepted-links.jsonl",
+    "?? docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-disabled-replay/work/accepted.jsonl",
+    "?? docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-disabled-replay/work/conflict.jsonl",
+    "?? docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-disabled-replay/work/grouping-constraints.json",
+    "?? docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-disabled-replay/work/rejected.jsonl",
+    "?? docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-disabled-replay/work/unresolved.jsonl",
+    "?? docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-fake-demo/_SCHOLARCHAIN_RESOLUTION_COMPLETE",
+    "?? docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-fake-demo/audit-details.jsonl",
+    "?? docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-fake-demo/diagnostics.jsonl",
+    "?? docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-fake-demo/effective-config.json",
+    "?? docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-fake-demo/effective-policy.json",
+    "?? docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-fake-demo/evidence.jsonl",
+    "?? docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-fake-demo/researcher/accepted-links.jsonl",
+    "?? docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-fake-demo/researcher/accepted.jsonl",
+    "?? docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-fake-demo/researcher/conflict.jsonl",
+    "?? docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-fake-demo/researcher/grouping-constraints.json",
+    "?? docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-fake-demo/researcher/rejected.jsonl",
+    "?? docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-fake-demo/researcher/unresolved.jsonl",
+    "?? docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-fake-demo/resolution-manifest.json",
+    "?? docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-fake-demo/work/accepted-links.jsonl",
+    "?? docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-fake-demo/work/accepted.jsonl",
+    "?? docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-fake-demo/work/conflict.jsonl",
+    "?? docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-fake-demo/work/grouping-constraints.json",
+    "?? docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-fake-demo/work/rejected.jsonl",
+    "?? docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-fake-demo/work/unresolved.jsonl",
+    "?? docs/agent-runs/phase-05/evidence/5b/er-first-compile.txt",
+    "?? docs/agent-runs/phase-05/evidence/5b/er-second-compile.txt",
+    "?? docs/agent-runs/phase-05/evidence/5b/er-targeted-second.txt",
+    "?? docs/agent-runs/phase-05/evidence/5b/full-check-summary.json",
+    "?? docs/agent-runs/phase-05/evidence/5b/full-check.txt",
+    "?? docs/agent-runs/phase-05/evidence/5b/independent-initial.txt",
+    "?? docs/agent-runs/phase-05/evidence/5b/independent-second.txt",
+    "?? docs/agent-runs/phase-05/evidence/5b/inspect-demo.py.txt",
+    "?? docs/agent-runs/phase-05/evidence/5b/optional-hint-and-real-cli.txt",
+    "?? docs/agent-runs/phase-05/evidence/5b/postgate-inspection.txt",
+    "?? docs/agent-runs/phase-05/evidence/5b/real-input-cli.txt",
+    "?? docs/agent-runs/phase-05/evidence/5b/real-input-inspection.txt",
+    "?? docs/agent-runs/phase-05/evidence/5b/real-input-summary.json",
+    "?? docs/agent-runs/phase-05/evidence/5b/targeted-third.txt",
+    "?? docs/agent-runs/phase-05/history/5a-final-handoff/implementation.diff",
+    "?? docs/agent-runs/phase-05/history/5a-final-handoff/review-inventory.json",
+    "?? docs/agent-runs/phase-05/history/5a-final-handoff/reviewer-prompt.txt",
+    "?? docs/agent-runs/phase-05/history/5a-final-handoff/source-freeze.json",
+    "?? docs/agent-runs/phase-05/history/5b-initial-review/5b-implementation.diff",
+    "?? docs/agent-runs/phase-05/history/5b-initial-review/5b-source-delta.json",
+    "?? docs/agent-runs/phase-05/history/5b-initial-review/implementation.diff",
+    "?? docs/agent-runs/phase-05/history/5b-initial-review/review-inventory.json",
+    "?? docs/agent-runs/phase-05/history/5b-initial-review/reviewer-prompt.txt",
+    "?? docs/agent-runs/phase-05/history/5b-initial-review/source-freeze.json",
+    "?? modules/core/src/test/scala/edu/uic/cs441/scholarchain/core/ResolutionAuthorityConsumerSpec.scala",
+    "?? modules/entity-resolution/src/main/resources/adjudication/prompt.v1.txt",
+    "?? modules/entity-resolution/src/main/resources/adjudication/response.schema.v1.json",
+    "?? modules/entity-resolution/src/main/resources/phase5-config.v1.json",
+    "?? modules/entity-resolution/src/main/resources/phase5-policy.v1.json",
+    "?? modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/Adjudication.scala",
+    "?? modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/AdjudicationCache.scala",
+    "?? modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/CandidateBuilder.scala",
+    "?? modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/FeatureExtractor.scala",
+    "?? modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/InputLoader.scala",
+    "?? modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/LinkExporter.scala",
+    "?? modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/Normalization.scala",
+    "?? modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/PathIsolation.scala",
+    "?? modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/Phase5Main.scala",
+    "?? modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/ResolutionEngine.scala",
+    "?? modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/ResolutionPolicy.scala",
+    "?? modules/entity-resolution/src/test/scala/edu/uic/cs441/scholarchain/entityresolution/ComparableEvidenceSpec.scala",
+    "?? modules/entity-resolution/src/test/scala/edu/uic/cs441/scholarchain/entityresolution/OfflineResolutionSpec.scala",
+    "?? tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentCandidateDerivationSpec.scala",
+    "?? tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentCompletedPrepFixture.scala",
+    "?? tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentIdentifierNormalizationSpec.scala",
+    "?? tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentOfflineAdjudicationSpec.scala",
+    "?? tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentPrepReaderSpec.scala",
+    "?? tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentResolutionEngineSpec.scala",
+    "?? tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentResolutionExportSpec.scala",
+    "?? tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentResolutionFeaturesSpec.scala",
+    "?? tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentResolutionFixtures.scala",
+    "?? tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentResolutionInputSpec.scala",
+    "?? tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentResolutionPolicySpec.scala",
+    "?? tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentResolutionPrepBridgeRepairSpec.scala",
+    "?? tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentResolutionRepairSpec.scala",
+    "?? tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentResolutionRunSpec.scala"
+  ],
+  "paths": [
+    "docs/agent-runs/phase-05/5b-baseline.json",
+    "docs/agent-runs/phase-05/5b-implementation.diff",
+    "docs/agent-runs/phase-05/5b-repair-source-delta.json",
+    "docs/agent-runs/phase-05/5b-repair-start.json",
+    "docs/agent-runs/phase-05/5b-source-delta.json",
+    "docs/agent-runs/phase-05/evidence/5b-repair/before-fix-IndependentResolutionPrepBridgeRepairSpec.xml",
+    "docs/agent-runs/phase-05/evidence/5b-repair/before-fix-IndependentResolutionRepairSpec.xml",
+    "docs/agent-runs/phase-05/evidence/5b-repair/before-fix-summary.json",
+    "docs/agent-runs/phase-05/evidence/5b-repair/before-fix.txt",
+    "docs/agent-runs/phase-05/evidence/5b-repair/collect-repair.py.txt",
+    "docs/agent-runs/phase-05/evidence/5b-repair/commands.json",
+    "docs/agent-runs/phase-05/evidence/5b-repair/core-targeted.txt",
+    "docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-disabled-demo/_SCHOLARCHAIN_RESOLUTION_COMPLETE",
+    "docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-disabled-demo/audit-details.jsonl",
+    "docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-disabled-demo/diagnostics.jsonl",
+    "docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-disabled-demo/effective-config.json",
+    "docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-disabled-demo/effective-policy.json",
+    "docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-disabled-demo/evidence.jsonl",
+    "docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-disabled-demo/researcher/accepted-links.jsonl",
+    "docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-disabled-demo/researcher/accepted.jsonl",
+    "docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-disabled-demo/researcher/conflict.jsonl",
+    "docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-disabled-demo/researcher/grouping-constraints.json",
+    "docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-disabled-demo/researcher/rejected.jsonl",
+    "docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-disabled-demo/researcher/unresolved.jsonl",
+    "docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-disabled-demo/resolution-manifest.json",
+    "docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-disabled-demo/work/accepted-links.jsonl",
+    "docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-disabled-demo/work/accepted.jsonl",
+    "docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-disabled-demo/work/conflict.jsonl",
+    "docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-disabled-demo/work/grouping-constraints.json",
+    "docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-disabled-demo/work/rejected.jsonl",
+    "docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-disabled-demo/work/unresolved.jsonl",
+    "docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-disabled-replay/_SCHOLARCHAIN_RESOLUTION_COMPLETE",
+    "docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-disabled-replay/audit-details.jsonl",
+    "docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-disabled-replay/diagnostics.jsonl",
+    "docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-disabled-replay/effective-config.json",
+    "docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-disabled-replay/effective-policy.json",
+    "docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-disabled-replay/evidence.jsonl",
+    "docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-disabled-replay/researcher/accepted-links.jsonl",
+    "docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-disabled-replay/researcher/accepted.jsonl",
+    "docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-disabled-replay/researcher/conflict.jsonl",
+    "docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-disabled-replay/researcher/grouping-constraints.json",
+    "docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-disabled-replay/researcher/rejected.jsonl",
+    "docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-disabled-replay/researcher/unresolved.jsonl",
+    "docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-disabled-replay/resolution-manifest.json",
+    "docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-disabled-replay/work/accepted-links.jsonl",
+    "docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-disabled-replay/work/accepted.jsonl",
+    "docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-disabled-replay/work/conflict.jsonl",
+    "docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-disabled-replay/work/grouping-constraints.json",
+    "docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-disabled-replay/work/rejected.jsonl",
+    "docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-disabled-replay/work/unresolved.jsonl",
+    "docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-fake-demo/_SCHOLARCHAIN_RESOLUTION_COMPLETE",
+    "docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-fake-demo/audit-details.jsonl",
+    "docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-fake-demo/diagnostics.jsonl",
+    "docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-fake-demo/effective-config.json",
+    "docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-fake-demo/effective-policy.json",
+    "docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-fake-demo/evidence.jsonl",
+    "docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-fake-demo/researcher/accepted-links.jsonl",
+    "docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-fake-demo/researcher/accepted.jsonl",
+    "docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-fake-demo/researcher/conflict.jsonl",
+    "docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-fake-demo/researcher/grouping-constraints.json",
+    "docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-fake-demo/researcher/rejected.jsonl",
+    "docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-fake-demo/researcher/unresolved.jsonl",
+    "docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-fake-demo/resolution-manifest.json",
+    "docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-fake-demo/work/accepted-links.jsonl",
+    "docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-fake-demo/work/accepted.jsonl",
+    "docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-fake-demo/work/conflict.jsonl",
+    "docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-fake-demo/work/grouping-constraints.json",
+    "docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-fake-demo/work/rejected.jsonl",
+    "docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-fake-demo/work/unresolved.jsonl",
+    "docs/agent-runs/phase-05/evidence/5b-repair/external-review.txt",
+    "docs/agent-runs/phase-05/evidence/5b-repair/feature-repair-proof.json",
+    "docs/agent-runs/phase-05/evidence/5b-repair/full-check-summary.json",
+    "docs/agent-runs/phase-05/evidence/5b-repair/full-check.txt",
+    "docs/agent-runs/phase-05/evidence/5b-repair/hadoop-bridge-input-proof.json",
+    "docs/agent-runs/phase-05/evidence/5b-repair/inspect-repair-demo.py.txt",
+    "docs/agent-runs/phase-05/evidence/5b-repair/postgate-inspection.txt",
+    "docs/agent-runs/phase-05/evidence/5b-repair/real-input-cli.txt",
+    "docs/agent-runs/phase-05/evidence/5b-repair/real-input-inspection.txt",
+    "docs/agent-runs/phase-05/evidence/5b-repair/real-input-summary.json",
+    "docs/agent-runs/phase-05/evidence/5b-repair/targeted-second.txt",
+    "docs/agent-runs/phase-05/evidence/5b-repair/targeted.txt",
+    "docs/agent-runs/phase-05/evidence/5b/collect.py.txt",
+    "docs/agent-runs/phase-05/evidence/5b/combined-targeted-initial.txt",
+    "docs/agent-runs/phase-05/evidence/5b/commands.json",
+    "docs/agent-runs/phase-05/evidence/5b/core-targeted-sandbox-attempt.txt",
+    "docs/agent-runs/phase-05/evidence/5b/core-targeted.txt",
+    "docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-disabled-demo/_SCHOLARCHAIN_RESOLUTION_COMPLETE",
+    "docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-disabled-demo/audit-details.jsonl",
+    "docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-disabled-demo/diagnostics.jsonl",
+    "docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-disabled-demo/effective-config.json",
+    "docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-disabled-demo/effective-policy.json",
+    "docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-disabled-demo/evidence.jsonl",
+    "docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-disabled-demo/researcher/accepted-links.jsonl",
+    "docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-disabled-demo/researcher/accepted.jsonl",
+    "docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-disabled-demo/researcher/conflict.jsonl",
+    "docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-disabled-demo/researcher/grouping-constraints.json",
+    "docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-disabled-demo/researcher/rejected.jsonl",
+    "docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-disabled-demo/researcher/unresolved.jsonl",
+    "docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-disabled-demo/resolution-manifest.json",
+    "docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-disabled-demo/work/accepted-links.jsonl",
+    "docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-disabled-demo/work/accepted.jsonl",
+    "docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-disabled-demo/work/conflict.jsonl",
+    "docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-disabled-demo/work/grouping-constraints.json",
+    "docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-disabled-demo/work/rejected.jsonl",
+    "docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-disabled-demo/work/unresolved.jsonl",
+    "docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-disabled-replay/_SCHOLARCHAIN_RESOLUTION_COMPLETE",
+    "docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-disabled-replay/audit-details.jsonl",
+    "docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-disabled-replay/diagnostics.jsonl",
+    "docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-disabled-replay/effective-config.json",
+    "docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-disabled-replay/effective-policy.json",
+    "docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-disabled-replay/evidence.jsonl",
+    "docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-disabled-replay/researcher/accepted-links.jsonl",
+    "docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-disabled-replay/researcher/accepted.jsonl",
+    "docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-disabled-replay/researcher/conflict.jsonl",
+    "docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-disabled-replay/researcher/grouping-constraints.json",
+    "docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-disabled-replay/researcher/rejected.jsonl",
+    "docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-disabled-replay/researcher/unresolved.jsonl",
+    "docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-disabled-replay/resolution-manifest.json",
+    "docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-disabled-replay/work/accepted-links.jsonl",
+    "docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-disabled-replay/work/accepted.jsonl",
+    "docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-disabled-replay/work/conflict.jsonl",
+    "docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-disabled-replay/work/grouping-constraints.json",
+    "docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-disabled-replay/work/rejected.jsonl",
+    "docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-disabled-replay/work/unresolved.jsonl",
+    "docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-fake-demo/_SCHOLARCHAIN_RESOLUTION_COMPLETE",
+    "docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-fake-demo/audit-details.jsonl",
+    "docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-fake-demo/diagnostics.jsonl",
+    "docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-fake-demo/effective-config.json",
+    "docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-fake-demo/effective-policy.json",
+    "docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-fake-demo/evidence.jsonl",
+    "docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-fake-demo/researcher/accepted-links.jsonl",
+    "docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-fake-demo/researcher/accepted.jsonl",
+    "docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-fake-demo/researcher/conflict.jsonl",
+    "docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-fake-demo/researcher/grouping-constraints.json",
+    "docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-fake-demo/researcher/rejected.jsonl",
+    "docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-fake-demo/researcher/unresolved.jsonl",
+    "docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-fake-demo/resolution-manifest.json",
+    "docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-fake-demo/work/accepted-links.jsonl",
+    "docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-fake-demo/work/accepted.jsonl",
+    "docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-fake-demo/work/conflict.jsonl",
+    "docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-fake-demo/work/grouping-constraints.json",
+    "docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-fake-demo/work/rejected.jsonl",
+    "docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-fake-demo/work/unresolved.jsonl",
+    "docs/agent-runs/phase-05/evidence/5b/er-first-compile.txt",
+    "docs/agent-runs/phase-05/evidence/5b/er-second-compile.txt",
+    "docs/agent-runs/phase-05/evidence/5b/er-targeted-second.txt",
+    "docs/agent-runs/phase-05/evidence/5b/full-check-summary.json",
+    "docs/agent-runs/phase-05/evidence/5b/full-check.txt",
+    "docs/agent-runs/phase-05/evidence/5b/independent-initial.txt",
+    "docs/agent-runs/phase-05/evidence/5b/independent-second.txt",
+    "docs/agent-runs/phase-05/evidence/5b/inspect-demo.py.txt",
+    "docs/agent-runs/phase-05/evidence/5b/optional-hint-and-real-cli.txt",
+    "docs/agent-runs/phase-05/evidence/5b/postgate-inspection.txt",
+    "docs/agent-runs/phase-05/evidence/5b/real-input-cli.txt",
+    "docs/agent-runs/phase-05/evidence/5b/real-input-inspection.txt",
+    "docs/agent-runs/phase-05/evidence/5b/real-input-summary.json",
+    "docs/agent-runs/phase-05/evidence/5b/targeted-third.txt",
+    "docs/agent-runs/phase-05/history/5a-final-handoff/implementation.diff",
+    "docs/agent-runs/phase-05/history/5a-final-handoff/review-inventory.json",
+    "docs/agent-runs/phase-05/history/5a-final-handoff/reviewer-prompt.txt",
+    "docs/agent-runs/phase-05/history/5a-final-handoff/source-freeze.json",
+    "docs/agent-runs/phase-05/history/5b-initial-review/5b-implementation.diff",
+    "docs/agent-runs/phase-05/history/5b-initial-review/5b-source-delta.json",
+    "docs/agent-runs/phase-05/history/5b-initial-review/implementation.diff",
+    "docs/agent-runs/phase-05/history/5b-initial-review/review-inventory.json",
+    "docs/agent-runs/phase-05/history/5b-initial-review/reviewer-prompt.txt",
+    "docs/agent-runs/phase-05/history/5b-initial-review/source-freeze.json",
+    "docs/agent-runs/phase-05/implementation.diff",
+    "docs/agent-runs/phase-05/owner-report.md",
+    "docs/agent-runs/phase-05/prompt.md",
+    "docs/agent-runs/phase-05/repairs.md",
+    "docs/agent-runs/phase-05/review-inventory.json",
+    "docs/agent-runs/phase-05/review.md",
+    "docs/agent-runs/phase-05/reviewer-prompt.txt",
+    "docs/agent-runs/phase-05/source-freeze.json",
+    "docs/agent-runs/phase-05/test-report.md",
+    "modules/core/README.md",
+    "modules/core/src/main/scala/edu/uic/cs441/scholarchain/core/ResolutionValidationContext.scala",
+    "modules/core/src/test/scala/edu/uic/cs441/scholarchain/core/ResolutionAuthorityConsumerSpec.scala",
+    "modules/entity-resolution/README.md",
+    "modules/entity-resolution/src/main/resources/adjudication/prompt.v1.txt",
+    "modules/entity-resolution/src/main/resources/adjudication/response.schema.v1.json",
+    "modules/entity-resolution/src/main/resources/phase5-config.v1.json",
+    "modules/entity-resolution/src/main/resources/phase5-policy.v1.json",
+    "modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/Adjudication.scala",
+    "modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/AdjudicationCache.scala",
+    "modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/CandidateBuilder.scala",
+    "modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/FeatureExtractor.scala",
+    "modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/InputLoader.scala",
+    "modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/LinkExporter.scala",
+    "modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/Normalization.scala",
+    "modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/PathIsolation.scala",
+    "modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/Phase5Main.scala",
+    "modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/ResolutionEngine.scala",
+    "modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/ResolutionPolicy.scala",
+    "modules/entity-resolution/src/test/scala/edu/uic/cs441/scholarchain/entityresolution/ComparableEvidenceSpec.scala",
+    "modules/entity-resolution/src/test/scala/edu/uic/cs441/scholarchain/entityresolution/OfflineResolutionSpec.scala",
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentCandidateDerivationSpec.scala",
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentCompletedPrepFixture.scala",
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentIdentifierNormalizationSpec.scala",
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentOfflineAdjudicationSpec.scala",
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentPrepReaderSpec.scala",
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentResolutionEngineSpec.scala",
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentResolutionExportSpec.scala",
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentResolutionFeaturesSpec.scala",
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentResolutionFixtures.scala",
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentResolutionInputSpec.scala",
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentResolutionPolicySpec.scala",
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentResolutionPrepBridgeRepairSpec.scala",
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentResolutionRepairSpec.scala",
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentResolutionRunSpec.scala"
+  ],
+  "files": [
+    {
+      "path": "docs/agent-runs/phase-05/5b-baseline.json",
+      "bytes": 29341,
+      "sha256": "e89e1f9323b292f9abba8ffff7c8e857c49060cc74e17685180fcb773da533fe"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/5b-implementation.diff",
+      "bytes": 307781,
+      "sha256": "6aa7e709f25c586591f3979e96cb607f4fc4a6f0b1753e870d94b560fcae62c9"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/5b-repair-source-delta.json",
+      "bytes": 6255,
+      "sha256": "7e8c86b7195c73c9f71c1c57e33ffa12106f60cd43d1094976afd411052dd200"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/5b-repair-start.json",
+      "bytes": 46420,
+      "sha256": "3138aa270c0077f341f981cfe7934b87f5b51b9afe3e9f8c57a58ddaab300e94"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/5b-source-delta.json",
+      "bytes": 8443,
+      "sha256": "adc095103549fcc8df325c66f949cc5289e2239aa89f3864d7993e47b881872f"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b-repair/before-fix-IndependentResolutionPrepBridgeRepairSpec.xml",
+      "bytes": 10203,
+      "sha256": "12cf9d41795370d8f9b34313339e3c9cbf3228273206d0ac9d9053d22fe0097d"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b-repair/before-fix-IndependentResolutionRepairSpec.xml",
+      "bytes": 26216,
+      "sha256": "0d9730a4dc2b2df8bfaa8228ee3b5d0b4fcba38de124642f0448ff554c3cf899"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b-repair/before-fix-summary.json",
+      "bytes": 769,
+      "sha256": "1e31735d6027942e91395797d31220d03fa4a2a2d742ddd3f02a6362af2142dc"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b-repair/before-fix.txt",
+      "bytes": 7569,
+      "sha256": "971215d598e6ef603c852d68a8f52ebc203c44b424e28d968b9af867744db4ab"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b-repair/collect-repair.py.txt",
+      "bytes": 6946,
+      "sha256": "3383fd22b59810632e8dba5c829ec20d28088784c8e96f149a11ac760ec293a2"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b-repair/commands.json",
+      "bytes": 6440,
+      "sha256": "a80b4abb6b586e609024af7c2a1618fcd936fcabba56db37680d42d3caee6846"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b-repair/core-targeted.txt",
+      "bytes": 4424,
+      "sha256": "8360e18dda2ba77b411cb45a969f141e29a9561b6fa62c9ce1915fc49c6c8be2"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-disabled-demo/_SCHOLARCHAIN_RESOLUTION_COMPLETE",
+      "bytes": 65,
+      "sha256": "4d0fa5a50e3e82746ad78045f539313c0115f41abfe92eb53abc202520e2ec2d"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-disabled-demo/audit-details.jsonl",
+      "bytes": 31844,
+      "sha256": "72889788d7b75ea68ca03d67718de1e2fba75bfddf86c7ee377a3560d3eea957"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-disabled-demo/diagnostics.jsonl",
+      "bytes": 282,
+      "sha256": "c73fabbfeeafe172266b3d4320c772d9dedca0f4122dc23fb2dae27ca9e123f5"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-disabled-demo/effective-config.json",
+      "bytes": 914,
+      "sha256": "993e86654b5b808c20c89375e30d723afbbd7c12cba6dd0abfea06bf45efb24a"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-disabled-demo/effective-policy.json",
+      "bytes": 1487,
+      "sha256": "9ae06dde1270c5c340d5cb30a453f398111c611ac7ad2a0302b776cbe5c8bc2a"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-disabled-demo/evidence.jsonl",
+      "bytes": 221928,
+      "sha256": "d8a0a986db6bb1434e0609f7ebbb5084a5501d2aa42552d4cdbc5ed665ff81da"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-disabled-demo/researcher/accepted-links.jsonl",
+      "bytes": 3879,
+      "sha256": "c451c5cf0449b3fae4f96ff6c53766dc3c5ea8ee3d428d3b672972786ade8de7"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-disabled-demo/researcher/accepted.jsonl",
+      "bytes": 16479,
+      "sha256": "c49928d27312c7f088963fd7b1ee22842677dcf9a81ba062ab80a4fc764e167b"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-disabled-demo/researcher/conflict.jsonl",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-disabled-demo/researcher/grouping-constraints.json",
+      "bytes": 3787,
+      "sha256": "2d0c5005dc00f64690be22faa04ffa4dbb3ef61a724222d42141d25ff0a89ca6"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-disabled-demo/researcher/rejected.jsonl",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-disabled-demo/researcher/unresolved.jsonl",
+      "bytes": 31919,
+      "sha256": "e08429127de48035dfc1fd9a75f962df0e1920ad3d936e2f803825801045ebe0"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-disabled-demo/resolution-manifest.json",
+      "bytes": 3720,
+      "sha256": "14d8c60ed8ba1005e94eeeb267c7d5807409da114bd2b7e5860f09a023915ad9"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-disabled-demo/work/accepted-links.jsonl",
+      "bytes": 7869,
+      "sha256": "b64728a7d7aba7a431f17a197b15b622b801d6526a4fbba48597c0dd2fcea77b"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-disabled-demo/work/accepted.jsonl",
+      "bytes": 32479,
+      "sha256": "ef75ffce682592153546244d2252ba081602e69b80df32c303798d261bfc35a9"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-disabled-demo/work/conflict.jsonl",
+      "bytes": 14502,
+      "sha256": "f022c1a120a39ed1fda9e1258f8e838a61851b1535bd3e624ca2ace3e2a2eda8"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-disabled-demo/work/grouping-constraints.json",
+      "bytes": 9584,
+      "sha256": "834bdfc36bc6c9771df2908cfa186c939f677a5a202f634b1ba460c91ddcc719"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-disabled-demo/work/rejected.jsonl",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-disabled-demo/work/unresolved.jsonl",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-disabled-replay/_SCHOLARCHAIN_RESOLUTION_COMPLETE",
+      "bytes": 65,
+      "sha256": "23ecb7415c57d00182e1f92439df40793533fdfc3230d44a3ef41164a7ccd5c8"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-disabled-replay/audit-details.jsonl",
+      "bytes": 31844,
+      "sha256": "d8e4c0a5246593022a180f6f9d12bea86b0c13ecf31873974bc76177e8b180af"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-disabled-replay/diagnostics.jsonl",
+      "bytes": 282,
+      "sha256": "c73fabbfeeafe172266b3d4320c772d9dedca0f4122dc23fb2dae27ca9e123f5"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-disabled-replay/effective-config.json",
+      "bytes": 914,
+      "sha256": "993e86654b5b808c20c89375e30d723afbbd7c12cba6dd0abfea06bf45efb24a"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-disabled-replay/effective-policy.json",
+      "bytes": 1487,
+      "sha256": "9ae06dde1270c5c340d5cb30a453f398111c611ac7ad2a0302b776cbe5c8bc2a"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-disabled-replay/evidence.jsonl",
+      "bytes": 221928,
+      "sha256": "d8a0a986db6bb1434e0609f7ebbb5084a5501d2aa42552d4cdbc5ed665ff81da"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-disabled-replay/researcher/accepted-links.jsonl",
+      "bytes": 3879,
+      "sha256": "2b9d5d40f0b3094a17fde542ceb1605c5fcef63993eb676dba2a0c5e1132a4ca"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-disabled-replay/researcher/accepted.jsonl",
+      "bytes": 16479,
+      "sha256": "2583bc90bd9359c5b0b9fa695b2f8871a027a3c84b277f55ba71395ca3baf04a"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-disabled-replay/researcher/conflict.jsonl",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-disabled-replay/researcher/grouping-constraints.json",
+      "bytes": 3787,
+      "sha256": "2d0c5005dc00f64690be22faa04ffa4dbb3ef61a724222d42141d25ff0a89ca6"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-disabled-replay/researcher/rejected.jsonl",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-disabled-replay/researcher/unresolved.jsonl",
+      "bytes": 31919,
+      "sha256": "f8d8a7073d91a876c937baaf7a8b1ef6c074b30e3e31068117be28ce65710cb2"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-disabled-replay/resolution-manifest.json",
+      "bytes": 3720,
+      "sha256": "7a35f8bac7af2ab421c0c0e3fc75b2096e3649c9b926160efba4ce82ef5a7222"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-disabled-replay/work/accepted-links.jsonl",
+      "bytes": 7869,
+      "sha256": "b38b1d3a99d9ffee814e6750e01f00a97c853578e334869505e96320ed135ab6"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-disabled-replay/work/accepted.jsonl",
+      "bytes": 32479,
+      "sha256": "ac623ed443b773bed8b5cda56e512be2aac5d48fd49813e6ca461beb86e05b59"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-disabled-replay/work/conflict.jsonl",
+      "bytes": 14502,
+      "sha256": "f1dc7b03dd2d6fafa288610fb37187592cb0ce328ddb4ccd1598d7dd42f00608"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-disabled-replay/work/grouping-constraints.json",
+      "bytes": 9584,
+      "sha256": "834bdfc36bc6c9771df2908cfa186c939f677a5a202f634b1ba460c91ddcc719"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-disabled-replay/work/rejected.jsonl",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-disabled-replay/work/unresolved.jsonl",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-fake-demo/_SCHOLARCHAIN_RESOLUTION_COMPLETE",
+      "bytes": 65,
+      "sha256": "ab83b346e11e4908601c57444fabd0988768087863a0a5241576afedf5524f76"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-fake-demo/audit-details.jsonl",
+      "bytes": 31844,
+      "sha256": "e3ce2dcc936d2387c0a7cdfc78b631b6824fc4a6d4df5bb55c5e38819ab39cbd"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-fake-demo/diagnostics.jsonl",
+      "bytes": 282,
+      "sha256": "c73fabbfeeafe172266b3d4320c772d9dedca0f4122dc23fb2dae27ca9e123f5"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-fake-demo/effective-config.json",
+      "bytes": 914,
+      "sha256": "993e86654b5b808c20c89375e30d723afbbd7c12cba6dd0abfea06bf45efb24a"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-fake-demo/effective-policy.json",
+      "bytes": 1487,
+      "sha256": "9ae06dde1270c5c340d5cb30a453f398111c611ac7ad2a0302b776cbe5c8bc2a"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-fake-demo/evidence.jsonl",
+      "bytes": 221928,
+      "sha256": "d8a0a986db6bb1434e0609f7ebbb5084a5501d2aa42552d4cdbc5ed665ff81da"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-fake-demo/researcher/accepted-links.jsonl",
+      "bytes": 3867,
+      "sha256": "a95880942d4814e1940eda48c3b2f09cd7160f6269ca6f4e005392cff49ff680"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-fake-demo/researcher/accepted.jsonl",
+      "bytes": 16467,
+      "sha256": "951beac49d5fcfa3e0c74a7d77afd611dd483948b151062fe7c1476df851577c"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-fake-demo/researcher/conflict.jsonl",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-fake-demo/researcher/grouping-constraints.json",
+      "bytes": 3787,
+      "sha256": "2d0c5005dc00f64690be22faa04ffa4dbb3ef61a724222d42141d25ff0a89ca6"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-fake-demo/researcher/rejected.jsonl",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-fake-demo/researcher/unresolved.jsonl",
+      "bytes": 31895,
+      "sha256": "6281b5ef65101b2d99aa25e68ff40d7fa9bf01784c7ba3649a1249a553b61d34"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-fake-demo/resolution-manifest.json",
+      "bytes": 3716,
+      "sha256": "90c30aeb2b1ccab63f05db9314f1f306809f343b9791bd508fe0fae5fff7c238"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-fake-demo/work/accepted-links.jsonl",
+      "bytes": 7845,
+      "sha256": "3d1cf7811491696d94de35f6dac2001f880d166e41f0cc306288bb7abd613d0c"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-fake-demo/work/accepted.jsonl",
+      "bytes": 32455,
+      "sha256": "34def1c46771b7b96ec5079a0c3342d77e2b1c4cd74bb650a86401019c35d845"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-fake-demo/work/conflict.jsonl",
+      "bytes": 14490,
+      "sha256": "351da7b01b8ae1a0ce259b82a6897345d6c72e349662c2c5066fdd5061361641"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-fake-demo/work/grouping-constraints.json",
+      "bytes": 9584,
+      "sha256": "834bdfc36bc6c9771df2908cfa186c939f677a5a202f634b1ba460c91ddcc719"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-fake-demo/work/rejected.jsonl",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b-repair/demo-outputs/5b-repair-fake-demo/work/unresolved.jsonl",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b-repair/external-review.txt",
+      "bytes": 14478,
+      "sha256": "175e0835975e3a3739cc3d042f89a6fbb70585796db95fe4a4d3628b0838e110"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b-repair/feature-repair-proof.json",
+      "bytes": 1623,
+      "sha256": "24be9db0d021f5fc43bdf96936ad3a47d5825cbcb9e3e27c9885e9aef9146ada"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b-repair/full-check-summary.json",
+      "bytes": 14600,
+      "sha256": "d41a0fa326622b093b58eb449b52633c71a4458852ba5001dafb96539416116a"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b-repair/full-check.txt",
+      "bytes": 241007,
+      "sha256": "693587cb0f589bba2031e966e4ed603c9038b17ecc5519b82c7c46cc0e9481a2"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b-repair/hadoop-bridge-input-proof.json",
+      "bytes": 7301,
+      "sha256": "74a7071763c23bab042c8157422fc33a7a6957a966344b3bb07cba00b54bf960"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b-repair/inspect-repair-demo.py.txt",
+      "bytes": 4704,
+      "sha256": "f64a75367c079f7345ccbc892aaa918b1ca46b71fd1227b171052b76aed2489f"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b-repair/postgate-inspection.txt",
+      "bytes": 12222,
+      "sha256": "23b4ac95c2296ec3c5d44345b7c1dc0a007ff42b3e3421a36b8285ddb23f73dc"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b-repair/real-input-cli.txt",
+      "bytes": 2356,
+      "sha256": "a8a4ba0bb64400907ea1cee4fef64d2ec0f49d6b4abc4c957f646c6563d34ad2"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b-repair/real-input-inspection.txt",
+      "bytes": 3984,
+      "sha256": "e4119a624a284a382551396e1cdd43c778fc927c4af67fd546d8181cc2f2e4a5"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b-repair/real-input-summary.json",
+      "bytes": 6857,
+      "sha256": "6c81687e5127ec5ed5591c84f936676112dbd92a5f78f7186d5f923fcf20584b"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b-repair/targeted-second.txt",
+      "bytes": 15255,
+      "sha256": "9f279c6d39f3437efb157a353e794d4aafaadc8b5b995d14bf3ab1ae51944238"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b-repair/targeted.txt",
+      "bytes": 3351,
+      "sha256": "5fefdc4566ba40ec5705d5796f7600c3a12573358a5bb3fd52af7e6e02adb97a"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b/collect.py.txt",
+      "bytes": 6903,
+      "sha256": "63dc3330b39969ee6ce33197946f7a69e7a50351d32439b2a67391a1af956304"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b/combined-targeted-initial.txt",
+      "bytes": 8219,
+      "sha256": "1f458c16c570e6bfee1ae1b161fedde13a089e1a69ed679f736258e0f4f232a3"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b/commands.json",
+      "bytes": 9074,
+      "sha256": "d2c462e44e16232de6c29564f86f9f13bb447c587c79053bd547c94ef0023e90"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b/core-targeted-sandbox-attempt.txt",
+      "bytes": 1367,
+      "sha256": "d16be90ad6ceee140d204f7d2c7212ffec5e2251c56f7f849d9c6b4e81218f05"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b/core-targeted.txt",
+      "bytes": 4008,
+      "sha256": "13725cbefd1cb247d95e631291b4f77eeefae66930fda5908d6a086bd151ca42"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-disabled-demo/_SCHOLARCHAIN_RESOLUTION_COMPLETE",
+      "bytes": 65,
+      "sha256": "9d464ca7969a4f056a0cc038f23d6c9ccf2e376faabe92556df9231e880d1ff3"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-disabled-demo/audit-details.jsonl",
+      "bytes": 32096,
+      "sha256": "855cbf004d4102319eef13887f0fb2fa1698835f64c19fa067cde631126d7e67"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-disabled-demo/diagnostics.jsonl",
+      "bytes": 282,
+      "sha256": "c73fabbfeeafe172266b3d4320c772d9dedca0f4122dc23fb2dae27ca9e123f5"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-disabled-demo/effective-config.json",
+      "bytes": 914,
+      "sha256": "993e86654b5b808c20c89375e30d723afbbd7c12cba6dd0abfea06bf45efb24a"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-disabled-demo/effective-policy.json",
+      "bytes": 1486,
+      "sha256": "1fe9fe2902bf6ffe3b3936495fbf8ebc91dbdac7b78ad50c5982afda2336edbe"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-disabled-demo/evidence.jsonl",
+      "bytes": 221928,
+      "sha256": "d8a0a986db6bb1434e0609f7ebbb5084a5501d2aa42552d4cdbc5ed665ff81da"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-disabled-demo/researcher/accepted-links.jsonl",
+      "bytes": 3879,
+      "sha256": "b10437e6ff7c0f1ba6f449ff43827cb673e4befb64f0d237c2a3d0b6ebb7e645"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-disabled-demo/researcher/accepted.jsonl",
+      "bytes": 16700,
+      "sha256": "dcda9bf360872d97e9d0c1a392ed9ee3806fac8f932d314d10da7d8fa333a8eb"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-disabled-demo/researcher/conflict.jsonl",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-disabled-demo/researcher/grouping-constraints.json",
+      "bytes": 3787,
+      "sha256": "1f5f28c68d8041dcb3ce8f69b1b049c23d7eaef89b25bbedf1b3158aae0b0422"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-disabled-demo/researcher/rejected.jsonl",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-disabled-demo/researcher/unresolved.jsonl",
+      "bytes": 32866,
+      "sha256": "099d8d497d2a6af89ada9e07ec908397709536aa97aa093f7f2f7f50b5f0588c"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-disabled-demo/resolution-manifest.json",
+      "bytes": 3720,
+      "sha256": "027250ff4e065b38190c8a72f632070a405d111e9dd96917747e6cfd70de1b96"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-disabled-demo/work/accepted-links.jsonl",
+      "bytes": 7869,
+      "sha256": "2be222dfd42e8d48d6a03f3071d108018ef0cf08e344664e96e34c14cb2d6f31"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-disabled-demo/work/accepted.jsonl",
+      "bytes": 32905,
+      "sha256": "06b2da987a270788acd7c43ad138e8e39bc5388c70f6dce08825e44abe0a552a"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-disabled-demo/work/conflict.jsonl",
+      "bytes": 14502,
+      "sha256": "98d1b508125577cc5c19ea039216cbb6eb41582b38db3fa1c900b93a90c7e46f"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-disabled-demo/work/grouping-constraints.json",
+      "bytes": 9584,
+      "sha256": "bd5aebc9df576587e1b6e96fec1e813aaf2440486d46fc21d703e04f7c6bae90"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-disabled-demo/work/rejected.jsonl",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-disabled-demo/work/unresolved.jsonl",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-disabled-replay/_SCHOLARCHAIN_RESOLUTION_COMPLETE",
+      "bytes": 65,
+      "sha256": "70013263a0dd404bbeb5e74c3fe2d973ca611b91dcf9effd455155cdf2b2947c"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-disabled-replay/audit-details.jsonl",
+      "bytes": 32096,
+      "sha256": "c7fb8471e5ea839dffb65502fd00cf45b015e536f97a4d52f4ca1fb5a712c337"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-disabled-replay/diagnostics.jsonl",
+      "bytes": 282,
+      "sha256": "c73fabbfeeafe172266b3d4320c772d9dedca0f4122dc23fb2dae27ca9e123f5"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-disabled-replay/effective-config.json",
+      "bytes": 914,
+      "sha256": "993e86654b5b808c20c89375e30d723afbbd7c12cba6dd0abfea06bf45efb24a"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-disabled-replay/effective-policy.json",
+      "bytes": 1486,
+      "sha256": "1fe9fe2902bf6ffe3b3936495fbf8ebc91dbdac7b78ad50c5982afda2336edbe"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-disabled-replay/evidence.jsonl",
+      "bytes": 221928,
+      "sha256": "d8a0a986db6bb1434e0609f7ebbb5084a5501d2aa42552d4cdbc5ed665ff81da"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-disabled-replay/researcher/accepted-links.jsonl",
+      "bytes": 3879,
+      "sha256": "fea9a0b3462f9144a8827a52b9235044340de674eaf9597e9f16387550304b97"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-disabled-replay/researcher/accepted.jsonl",
+      "bytes": 16700,
+      "sha256": "f79125e5aa11d855456b303e01112c545da832764eddd95fd995ab6767788861"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-disabled-replay/researcher/conflict.jsonl",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-disabled-replay/researcher/grouping-constraints.json",
+      "bytes": 3787,
+      "sha256": "1f5f28c68d8041dcb3ce8f69b1b049c23d7eaef89b25bbedf1b3158aae0b0422"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-disabled-replay/researcher/rejected.jsonl",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-disabled-replay/researcher/unresolved.jsonl",
+      "bytes": 32866,
+      "sha256": "8a18cc093dea84add7452cfc6df49c59214f79c85b4f1b732e2a2ffdac3d9e5e"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-disabled-replay/resolution-manifest.json",
+      "bytes": 3720,
+      "sha256": "adfc584e481a7f92cee4bfc48065d06433d0aec907746b6c5c0d463c198eb896"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-disabled-replay/work/accepted-links.jsonl",
+      "bytes": 7869,
+      "sha256": "bff555590882b7c62b3f624967640579968f1192888589f16ad2742186d8c9aa"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-disabled-replay/work/accepted.jsonl",
+      "bytes": 32905,
+      "sha256": "210c4100c72451f2ef2eb18ac71e269d88c8263e48968ed01a5240aee7a40ec5"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-disabled-replay/work/conflict.jsonl",
+      "bytes": 14502,
+      "sha256": "e513b331dd9239d345c7050be6f24a4dc0c19c53fe86189d6286c8e89d722763"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-disabled-replay/work/grouping-constraints.json",
+      "bytes": 9584,
+      "sha256": "bd5aebc9df576587e1b6e96fec1e813aaf2440486d46fc21d703e04f7c6bae90"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-disabled-replay/work/rejected.jsonl",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-disabled-replay/work/unresolved.jsonl",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-fake-demo/_SCHOLARCHAIN_RESOLUTION_COMPLETE",
+      "bytes": 65,
+      "sha256": "62b1bebe46181a279be2db3d246ca182e92c6cedc75e2dde718ae6994ab227fb"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-fake-demo/audit-details.jsonl",
+      "bytes": 32096,
+      "sha256": "b4bba4283df4573c876715e1f2ded14454bb71332d8093a8736e8535464681ff"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-fake-demo/diagnostics.jsonl",
+      "bytes": 282,
+      "sha256": "c73fabbfeeafe172266b3d4320c772d9dedca0f4122dc23fb2dae27ca9e123f5"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-fake-demo/effective-config.json",
+      "bytes": 914,
+      "sha256": "993e86654b5b808c20c89375e30d723afbbd7c12cba6dd0abfea06bf45efb24a"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-fake-demo/effective-policy.json",
+      "bytes": 1486,
+      "sha256": "1fe9fe2902bf6ffe3b3936495fbf8ebc91dbdac7b78ad50c5982afda2336edbe"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-fake-demo/evidence.jsonl",
+      "bytes": 221928,
+      "sha256": "d8a0a986db6bb1434e0609f7ebbb5084a5501d2aa42552d4cdbc5ed665ff81da"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-fake-demo/researcher/accepted-links.jsonl",
+      "bytes": 3867,
+      "sha256": "94fbae3564fd338712f724845886a2283cf360251a00005cfc450c54664afd2b"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-fake-demo/researcher/accepted.jsonl",
+      "bytes": 16688,
+      "sha256": "b8612710b45da12b8f51e6bac265d8b6a1b7bf722d886c2cf7fd3eadfbf2d812"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-fake-demo/researcher/conflict.jsonl",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-fake-demo/researcher/grouping-constraints.json",
+      "bytes": 3787,
+      "sha256": "1f5f28c68d8041dcb3ce8f69b1b049c23d7eaef89b25bbedf1b3158aae0b0422"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-fake-demo/researcher/rejected.jsonl",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-fake-demo/researcher/unresolved.jsonl",
+      "bytes": 32842,
+      "sha256": "b72e5ddb38f40d17ad7729fe4be078717daf8c903ef1e3772d0c3d92d63cda91"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-fake-demo/resolution-manifest.json",
+      "bytes": 3716,
+      "sha256": "81dcafc684e55c11a07213b380823ac8302d4e94fea56ebb47bc8deb942ace5b"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-fake-demo/work/accepted-links.jsonl",
+      "bytes": 7845,
+      "sha256": "ce91eaea72f8dd9bacaeabffb735686513fe4c7b57dedd6836d91df215b3a40c"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-fake-demo/work/accepted.jsonl",
+      "bytes": 32881,
+      "sha256": "8f781c98fec6992d1b7671ec6fb790ff3f6499f5d02ea01cecbff43026bf9ac2"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-fake-demo/work/conflict.jsonl",
+      "bytes": 14490,
+      "sha256": "8dfee2a8d35d2c2356c152c32b410e9f45efafeb4849fc849e1654c6e365d382"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-fake-demo/work/grouping-constraints.json",
+      "bytes": 9584,
+      "sha256": "bd5aebc9df576587e1b6e96fec1e813aaf2440486d46fc21d703e04f7c6bae90"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-fake-demo/work/rejected.jsonl",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b/demo-outputs/5b-fake-demo/work/unresolved.jsonl",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b/er-first-compile.txt",
+      "bytes": 6277,
+      "sha256": "3fd51503a91bc1cfdac68b7b53d2f42d57e01f8a593a2cc538f9c9d776d1fe7a"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b/er-second-compile.txt",
+      "bytes": 1853,
+      "sha256": "444a799163d0dc85d14af581fe917ccefcc0fab37cabb76322908187bdc93704"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b/er-targeted-second.txt",
+      "bytes": 3483,
+      "sha256": "321a0b32f3d5a3f3a8091202eea5db6fff01f6167fd456aab1e6195d6de16f30"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b/full-check-summary.json",
+      "bytes": 13451,
+      "sha256": "5f7a44312cbb30c55ed5dd8d92ea93f8c53bf65edb0bb859ca302907548457be"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b/full-check.txt",
+      "bytes": 234416,
+      "sha256": "aa85acfb82dce5f383d16b6fbc10c27a9c20a7832aaa68665f7bd43280682b8f"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b/independent-initial.txt",
+      "bytes": 2009,
+      "sha256": "91ef3fed09cd7f11e17b296b3ddca89103c80dc35927389c6f32ed30efea12f7"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b/independent-second.txt",
+      "bytes": 126441,
+      "sha256": "7e7b1bf3ed89e254fe9b950b0e652ca0c18312c237d42aed18b6cec80459efed"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b/inspect-demo.py.txt",
+      "bytes": 4676,
+      "sha256": "21916006da8524909b6de9f6be2d80bb0953ed667da40664701fca3877024ce5"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b/optional-hint-and-real-cli.txt",
+      "bytes": 5845,
+      "sha256": "6ad308d5dc2ddde4ad187e134d1869943bdca7670fe552b322576335dac4033d"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b/postgate-inspection.txt",
+      "bytes": 11247,
+      "sha256": "d2b54b5d3cb70ae5a6c51e34ae1a2db0202246b43f8a16cd14d3ae808f42ace2"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b/real-input-cli.txt",
+      "bytes": 1570,
+      "sha256": "4a68399032842ac6d7fb7fe0e134654d9727770def900fb6ff98b7c86c7b811d"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b/real-input-inspection.txt",
+      "bytes": 3963,
+      "sha256": "0ebf8ce0f3a1a27db7f7248a8ba951765395e3d58a99a29ee0df6ccde9a18877"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b/real-input-summary.json",
+      "bytes": 6836,
+      "sha256": "d00c05997b080a68724621d1f8e2d16b7f0b2a189b81bbe7cfe0ced94e27b60e"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5b/targeted-third.txt",
+      "bytes": 9145,
+      "sha256": "9b3092593308cad120736461e7c63f5b5e8f9dc0fbe47c2ab5300b190e7053da"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/history/5a-final-handoff/implementation.diff",
+      "bytes": 158815,
+      "sha256": "3dc7961c6542f11705d81ff841135585d6250ebc8e060a0e8909a5ab9b9d2be0"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/history/5a-final-handoff/review-inventory.json",
+      "bytes": 17552,
+      "sha256": "0935ae7a207cb70fa00c6f80199dc67c8f03d0d2279472bb2e22d5f14678f017"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/history/5a-final-handoff/reviewer-prompt.txt",
+      "bytes": 12075,
+      "sha256": "24e212b394d05a4f938ac0bf4719731378a59b5d007bd6df7bc6c05ff883e450"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/history/5a-final-handoff/source-freeze.json",
+      "bytes": 30755,
+      "sha256": "cba054febf408a19e421c7eef060b48372c4037fedffa107a6893eadfdba8202"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/history/5b-initial-review/5b-implementation.diff",
+      "bytes": 265296,
+      "sha256": "5ea82b0a153eafa38ffcda5eeff4ac24c0a53296c0e3d50d1090903e6455a05d"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/history/5b-initial-review/5b-source-delta.json",
+      "bytes": 7480,
+      "sha256": "95d1693985d3257f120b999c8fdfce10e336f4f93b3181ad4217b26fb5741410"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/history/5b-initial-review/implementation.diff",
+      "bytes": 416131,
+      "sha256": "62dd95ec4a7b3e025f133d906a80f561a19a3561c802a2d35bb60812680ed877"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/history/5b-initial-review/review-inventory.json",
+      "bytes": 48780,
+      "sha256": "e4809172a2d3ce1e0f8f74c02b39dc79bca87967a862ef67ecc30037f5fb4d87"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/history/5b-initial-review/reviewer-prompt.txt",
+      "bytes": 16169,
+      "sha256": "92da3209e4f15dd149c6a2aa52bb8952ce232ef9eae16dac4aff9612b27d7b8e"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/history/5b-initial-review/source-freeze.json",
+      "bytes": 34590,
+      "sha256": "3cabd0018817bddcd1168d8f08d5d10367459073e9a9639f4e42509c5cff063d"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/implementation.diff",
+      "bytes": 458739,
+      "sha256": "87e25f71a140608b2bbab8062b11a8f142ac3570cb041232b24cf75f7ede703f"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/owner-report.md",
+      "bytes": 43312,
+      "sha256": "c428a15fd9fa2589b120fbb2648244256ac424471112d961c1f7252b96c52d5c"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/prompt.md",
+      "bytes": 73459,
+      "sha256": "0f1ea4845bcc1d10b48319703bd625f127335b4f3316f8f77813f27fe37bb187"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/repairs.md",
+      "bytes": 28680,
+      "sha256": "3fad4949fa07335939cb3c1c8684f885c175dd1884af74fa917a187c51ff4d6a"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/review.md",
+      "bytes": 44195,
+      "sha256": "a519904539cf5c67ebb407747f0414a6f5a8829adf3846389b5ffb0128a9a63b"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/reviewer-prompt.txt",
+      "bytes": 19199,
+      "sha256": "629403a69ba6940ad29ca2a6b6fbea84c8164abde932b4d9baaddc85c09849f6"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/source-freeze.json",
+      "bytes": 35583,
+      "sha256": "2edad728cd786d2b5abce6839dd0d46232b190e8e3a51c6700159609ca7e2909"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/test-report.md",
+      "bytes": 48672,
+      "sha256": "6de2a23e9a15b9d7c6b95ddbe2dc8e66fc5aa69501323343da3e1f0bca07c9c2"
+    },
+    {
+      "path": "modules/core/README.md",
+      "bytes": 28627,
+      "sha256": "578a9460fe9d572fe9a41461d381aba49b08dff1c0ffd14c86dc71ff9487e593"
+    },
+    {
+      "path": "modules/core/src/main/scala/edu/uic/cs441/scholarchain/core/ResolutionValidationContext.scala",
+      "bytes": 11411,
+      "sha256": "315b99fa3577a87e02b7d55655a74968e5a3cecaac8fbda4ee667c0fee5fc23b"
+    },
+    {
+      "path": "modules/core/src/test/scala/edu/uic/cs441/scholarchain/core/ResolutionAuthorityConsumerSpec.scala",
+      "bytes": 9827,
+      "sha256": "854b4b1ba9e725e34af57615935476de86c9b928b118345a11d63f9ea5557ead"
+    },
+    {
+      "path": "modules/entity-resolution/README.md",
+      "bytes": 38733,
+      "sha256": "2eda4a026085a39c3db25e5bf9cd2cb714cf6bfe92af0821c362be5aa72bc8e4"
+    },
+    {
+      "path": "modules/entity-resolution/src/main/resources/adjudication/prompt.v1.txt",
+      "bytes": 1335,
+      "sha256": "e9ef5f36238a29f2003f9e6404451aeca7fc54575989910edae2ce0ab7f71940"
+    },
+    {
+      "path": "modules/entity-resolution/src/main/resources/adjudication/response.schema.v1.json",
+      "bytes": 2802,
+      "sha256": "b253e113841a2e02699097ae003c4a01fbbd2fcd28cf2e61ff48a7a46e06aacd"
+    },
+    {
+      "path": "modules/entity-resolution/src/main/resources/phase5-config.v1.json",
+      "bytes": 1001,
+      "sha256": "af72eae47d0894cd9cb55a189fa8f96c583dbe68ef418bbc77eb48a2951a6cd0"
+    },
+    {
+      "path": "modules/entity-resolution/src/main/resources/phase5-policy.v1.json",
+      "bytes": 1755,
+      "sha256": "2d3d12e7489b18437f96b09754709100cbc3529ffd4fcfd0ff6807db87f2a93f"
+    },
+    {
+      "path": "modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/Adjudication.scala",
+      "bytes": 15923,
+      "sha256": "460138a21a90b75ae097c605ceccf8b923f2fc763d20fe59228ccccb06318602"
+    },
+    {
+      "path": "modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/AdjudicationCache.scala",
+      "bytes": 3561,
+      "sha256": "6a700ce870f8024773287485f4038bee2eeb4382a75759ac27f833d8096c52cf"
+    },
+    {
+      "path": "modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/CandidateBuilder.scala",
+      "bytes": 10206,
+      "sha256": "e49332a9112ee1b9437eebb1b398a213f039eb92c1be711b528ab2cad6ac291e"
+    },
+    {
+      "path": "modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/FeatureExtractor.scala",
+      "bytes": 11024,
+      "sha256": "1cfd25875ef20b71ae5b64eb172e81e94a94914ceaba592edefc324ec09b16b8"
+    },
+    {
+      "path": "modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/InputLoader.scala",
+      "bytes": 23033,
+      "sha256": "69e01893f0f07cdb8ac995d099d8cce46ca5c1d77bc71c4d49dabcf61f9ea6cc"
+    },
+    {
+      "path": "modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/LinkExporter.scala",
+      "bytes": 14147,
+      "sha256": "5852d9b4bee919bd0d6aa02c14cbb5b35237ea0a67ab58e3337023daa9ab3b66"
+    },
+    {
+      "path": "modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/Normalization.scala",
+      "bytes": 5576,
+      "sha256": "32071a6d1b0ccef1a77c492da16594bb783e0546c28ca00a8a172465e0b9b7fe"
+    },
+    {
+      "path": "modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/PathIsolation.scala",
+      "bytes": 1242,
+      "sha256": "4a9290709f4ed9731079ee2df818df7cb6743c0769abfcda4bebe12267840441"
+    },
+    {
+      "path": "modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/Phase5Main.scala",
+      "bytes": 3842,
+      "sha256": "ee3832f27cc339553466c807d233307aaad3f86db94986dd8af2bbeec042f112"
+    },
+    {
+      "path": "modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/ResolutionEngine.scala",
+      "bytes": 16496,
+      "sha256": "6b6e3348e2c4db6e171d5211d6c940b2b748d02f4d932ef0cc82c5477ece4b87"
+    },
+    {
+      "path": "modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/ResolutionPolicy.scala",
+      "bytes": 12703,
+      "sha256": "0a35cf1b8ebb8aeee4b1a417348abea08e6878985146d4f6522fa01bb1993684"
+    },
+    {
+      "path": "modules/entity-resolution/src/test/scala/edu/uic/cs441/scholarchain/entityresolution/ComparableEvidenceSpec.scala",
+      "bytes": 9308,
+      "sha256": "819f9d6bd607177dd9c68b4385f1eedc94c6880111deb130cc280b4ea1d62d83"
+    },
+    {
+      "path": "modules/entity-resolution/src/test/scala/edu/uic/cs441/scholarchain/entityresolution/OfflineResolutionSpec.scala",
+      "bytes": 17650,
+      "sha256": "0d36ed8f0e8ef4fde2f9a3da991128dba0d677a7993173208449da14c0162ebc"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentCandidateDerivationSpec.scala",
+      "bytes": 6778,
+      "sha256": "2b1a69e44b1775c39253e8b32daebdcca933732609be9c6f3d6d8d7741662f2b"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentCompletedPrepFixture.scala",
+      "bytes": 4890,
+      "sha256": "45e5fc887d3b29514283611dc6b85a52cdfb4661a9b285bde1459cf16ca6f302"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentIdentifierNormalizationSpec.scala",
+      "bytes": 4034,
+      "sha256": "bd4ca2b0a5cb22b87dbbb7c0c84788f18b361bd6c895fc6cb5fc5c4e6cc119d7"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentOfflineAdjudicationSpec.scala",
+      "bytes": 12785,
+      "sha256": "e4c1dc1f52f7c02466518b1a6f5a5bd296fc7b0295012dd3551c7c423bcf7668"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentPrepReaderSpec.scala",
+      "bytes": 5286,
+      "sha256": "959916095d05e1ae04aaaddd88cef180f5249674d41630c06c56503de88d46fe"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentResolutionEngineSpec.scala",
+      "bytes": 10548,
+      "sha256": "cda7cc0a553331d8cd6d5673db83f51403b376b7bd8d817bbc34e3dddae8b035"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentResolutionExportSpec.scala",
+      "bytes": 10514,
+      "sha256": "fb8c7cf7d281dce426d156d8c7b109b897ba2b518d07c54d089df4e50fd53180"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentResolutionFeaturesSpec.scala",
+      "bytes": 3676,
+      "sha256": "337bea46a01ede76b7d41ef0ad8530e2ad46427375b512f3816a4ff3fc3a3044"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentResolutionFixtures.scala",
+      "bytes": 5114,
+      "sha256": "de6aafb3b8b9227ef1fb8dfa87988e83520ca1c6f673be8f842040c7ab0937bb"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentResolutionInputSpec.scala",
+      "bytes": 6033,
+      "sha256": "566ad57d213f4dff4e5a1bd1178c32b694dc29562569c5f75d258e6131cac1b0"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentResolutionPolicySpec.scala",
+      "bytes": 4209,
+      "sha256": "8508fdffb554254e112760fd272f9556d347449b7e730c7f08d0e6e9d075a9fe"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentResolutionPrepBridgeRepairSpec.scala",
+      "bytes": 3876,
+      "sha256": "cb23a3caafdada7812180490204c979c84fc95d3182e25b003b3168f967ed3ed"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentResolutionRepairSpec.scala",
+      "bytes": 7606,
+      "sha256": "cd1c4e1c98e112333deaa1883c72b9ea0029ea5252a1866de36536cdb9ce52a4"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentResolutionRunSpec.scala",
+      "bytes": 10607,
+      "sha256": "f8a8d5a7aa69992b7fa55a70476db02b4ad984cefe332a14aee91687cde9cb9e"
+    }
+  ],
+  "recursiveSelfHashExcluded": "docs/agent-runs/phase-05/review-inventory.json"
+}

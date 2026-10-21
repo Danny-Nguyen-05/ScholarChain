@@ -1,0 +1,26 @@
+import java.nio.file.*;
+import java.util.*;
+import edu.uic.cs441.scholarchain.entityresolution.*;
+import edu.uic.cs441.scholarchain.core.*;
+class ScholarChain5DSeedAnchors {
+ static <T>T value(scala.util.Either<String,T> e){if(e.isLeft())throw new IllegalArgumentException(e.left().get());return e.toOption().get();}
+ static <T>String json(T x,upickle.core.Types.Writer<T> rw){return upickle.default$.MODULE$.write(x,-1,false,false,rw);}
+ static String q(String x){return "\""+x.replace("\\","\\\\").replace("\"","\\\"").replace("\n","\\n").replace("\r","\\r").replace("\t","\\t")+"\"";}
+ public static void main(String[] a)throws Exception {
+  var c=ResolutionConfig$.MODULE$.example();var demo=value(InputLoader$.MODULE$.load(Path.of(a[0]),c));var frozen=value(InputLoader$.MODULE$.load(Path.of(a[1]),c));
+  var queue=value(ReviewQueue$.MODULE$.parseQueue(Files.readString(Path.of(a[2]))));var split=value(StrictJson$.MODULE$.parse(Files.readString(Path.of(a[3])),ReviewSplit$.MODULE$.derived$ReadWriter()));value(ReviewQueue$.MODULE$.validate(queue,split));
+  if(!frozen.inputEvidenceHash().equals(queue.binding().inputEvidenceHash()))throw new IllegalArgumentException("Frozen input mismatch");
+  var rows=new ArrayList<String>();var es=demo.endpoints().iterator();
+  while(es.hasNext()){
+   var e=es.next();var hs=new TreeSet<String>();var ts=ReviewQueue$.MODULE$.leakageAnchors(e,demo).iterator();while(ts.hasNext())hs.add(StableIds$.MODULE$.sha256Hex(ts.next()));
+   var m=demo.mention(e);String mention="null";var aff=new ArrayList<String>();
+   if(m.isDefined()){
+    var x=m.get();mention=json(x,AuthorMention$.MODULE$.derived$ReadWriter());var as=demo.affiliations().iterator();
+    while(as.hasNext()){var f=as.next();if(f.mentionId().equals(x.mentionId())&&ResolutionInput$.MODULE$.ref(f.provenance()).equals(ResolutionIds$.MODULE$.observation(e)))aff.add(json(f,MentionAffiliation$.MODULE$.derived$ReadWriter()));}
+   }
+   rows.add("{\"endpointId\":"+q(ResolutionIds$.MODULE$.endpointId(e))+",\"observation\":"+json(ResolutionIds$.MODULE$.observation(e),ResolutionObservationRef$.MODULE$.derived$ReadWriter())+",\"anchorHashes\":["+String.join(",",hs.stream().map(ScholarChain5DSeedAnchors::q).toList())+"],\"mention\":"+mention+",\"affiliations\":["+String.join(",",aff)+"]}");
+  }
+  String out="{\"schemaVersion\":\"scholarchain.seed-anchor-metadata.v1\",\"demoInputHash\":"+q(demo.inputEvidenceHash())+",\"frozenInputHash\":"+q(frozen.inputEvidenceHash())+",\"queueHash\":"+q(queue.queueHash())+",\"splitHash\":"+q(split.hash())+",\"endpointRecords\":["+String.join(",",rows)+"]}\n";
+  Files.writeString(Path.of(a[4]),out,StandardOpenOption.CREATE_NEW);System.out.println("Canonical anchor metadata exported without candidate scoring, human labels, credentials or HTTP; endpoints="+rows.size());
+ }
+}

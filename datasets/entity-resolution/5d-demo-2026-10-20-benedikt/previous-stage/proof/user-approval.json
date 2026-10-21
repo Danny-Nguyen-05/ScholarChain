@@ -1,0 +1,25 @@
+{
+  "schemaVersion": "scholarchain.phase5d.corrected-search-approval.v1",
+  "recordedAtUtc": "2026-10-21T01:33:56.596150+00:00",
+  "provenance": "Explicit user answer relayed through async question; coordinator transcription only.",
+  "question": "After the offline repair, may I run one corrected OpenAlex search as a new stage, capped at 30 newly returned records (including exclusions), 20 HTTP attempts, 8 MiB and five minutes, without credentials or paid data? It will preserve cumulative counters and exclude held-out overlaps before scoring; the $1 model-call approval stays unchanged.",
+  "answer": "Approve this corrected bounded rerun",
+  "limits": {
+    "maxNewReturnedRecordsIncludingExcluded": 30,
+    "maxHttpAttemptsIncludingRetries": 20,
+    "maxResponseBytes": 8388608,
+    "maxWallSeconds": 300,
+    "credentials": false,
+    "paidData": false
+  },
+  "previousAcquisitionCounters": {
+    "distinctReturnedWorksAcrossStages": 30,
+    "httpAttemptsAcrossStages": 9,
+    "responseBytesAcrossStages": 215344,
+    "secondsAcrossStages": 7.9818
+  },
+  "originalModelApprovalUnchanged": true,
+  "noLabelsPolicyQueueOrHeldOutChanges": true,
+  "newStagePopulationPath": "datasets/entity-resolution/5d-demo-2026-10-20-relevance-v2",
+  "no5ECommitPushOrReviewerAuthorization": true
+}

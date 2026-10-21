@@ -1,0 +1,36 @@
+{
+  "schemaVersion": "scholarchain.phase5d.live-next-step-assessment.v1",
+  "action": "READ_ONLY_ASSESSMENT_ONLY",
+  "existing": {
+    "developmentPairs": 62,
+    "seedAdmittedPairs": 79,
+    "supplementPairs": 93,
+    "supplementExcludedPairs": 70,
+    "supplementAdmittedPairs": 23,
+    "naturallyEligiblePairs": 0,
+    "actualProviderCalls": 0,
+    "actualSpendUsd": "0.00"
+  },
+  "completedAcquisition": {
+    "newWorksObservedIncludingExcluded": 20,
+    "httpAttempts": 7,
+    "responseBytes": 171680,
+    "seconds": 6.6141
+  },
+  "pendingSeparateApproval": {
+    "kind": "One additional public OpenAlex demo-only researcher-context search",
+    "maxNewWorksIncludingExcluded": 30,
+    "maxHttpAttemptsIncludingRetries": 20,
+    "maxResponseBytes": 8388608,
+    "maxWallSeconds": 300,
+    "maxSeedAuthors": 6,
+    "maxWorksPerAuthor": 5,
+    "useHumanLabels": false,
+    "noPaidDataOrCredentials": true,
+    "unchangedPolicyAndQueue": true,
+    "canonicalHeldOutComponentExclusionBeforeScoring": true,
+    "existingPaidPilotUnchanged": true
+  },
+  "reason": "Exact identifier acceptances and conflicts do not reach the live band; real distinct-publication researcher coauthor/affiliation context is needed under frozen sufficiency rules. No eligibility guarantee.",
+  "execution": "No new acquisition or provider/credential action until explicit answer; no prior allowance reset."
+}

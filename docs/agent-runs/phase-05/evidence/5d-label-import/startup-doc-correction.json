@@ -1,0 +1,8 @@
+{
+  "observedAtUtc": "2026-10-20T22:09:30.159646+00:00",
+  "changedPaths": [
+    "datasets/entity-resolution/README.md"
+  ],
+  "reason": "Dataset owner corrected a stale introductory documentation claim immediately after its initial freeze-ready notice, during sbt startup. All source, tests, labels and population payloads remained unchanged. Refresh the final source freeze; the single completed full check still exercises identical production/test/data bytes. Do not claim every documentation byte was unchanged from command launch.",
+  "productionTestsOrDataChanged": false
+}

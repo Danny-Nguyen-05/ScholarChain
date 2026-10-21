@@ -1,0 +1,32 @@
+Captured from native tool results; no source acquisition was performed.
+
+$ python3 -m venv /tmp/scholarchain-phase5a-datasets-venv
+exit code: 0
+stdout/stderr: empty
+
+$ /tmp/scholarchain-phase5a-datasets-venv/bin/python -m pip install -r datasets/scripts/requirements.txt
+execution: sandbox
+WARNING: The directory '/Users/danny/Library/Caches/pip' or its parent directory is not owned or is not writable by the current user. The cache has been disabled. Check the permissions and owner of that directory. If executing pip with sudo, you should use sudo's -H flag.
+WARNING: Retrying (Retry(total=4, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NameResolutionError("HTTPSConnection(host='pypi.org', port=443): Failed to resolve 'pypi.org' ([Errno 8] nodename nor servname provided, or not known)")': /simple/pyyaml/
+WARNING: Retrying (Retry(total=3, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NameResolutionError("HTTPSConnection(host='pypi.org', port=443): Failed to resolve 'pypi.org' ([Errno 8] nodename nor servname provided, or not known)")': /simple/pyyaml/
+WARNING: Retrying (Retry(total=2, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NameResolutionError("HTTPSConnection(host='pypi.org', port=443): Failed to resolve 'pypi.org' ([Errno 8] nodename nor servname provided, or not known)")': /simple/pyyaml/
+WARNING: Retrying (Retry(total=1, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NameResolutionError("HTTPSConnection(host='pypi.org', port=443): Failed to resolve 'pypi.org' ([Errno 8] nodename nor servname provided, or not known)")': /simple/pyyaml/
+WARNING: Retrying (Retry(total=0, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NameResolutionError("HTTPSConnection(host='pypi.org', port=443): Failed to resolve 'pypi.org' ([Errno 8] nodename nor servname provided, or not known)")': /simple/pyyaml/
+ERROR: Could not find a version that satisfies the requirement PyYAML==6.0.2 (from versions: none)
+ERROR: No matching distribution found for PyYAML==6.0.2
+exit code: 1
+
+$ /tmp/scholarchain-phase5a-datasets-venv/bin/python -m pip install -r datasets/scripts/requirements.txt
+execution: native require_escalated retry after sandbox DNS failure
+Collecting PyYAML==6.0.2 (from -r datasets/scripts/requirements.txt (line 1))
+  Using cached pyyaml-6.0.2-cp314-cp314-macosx_26_0_arm64.whl
+Installing collected packages: PyYAML
+Successfully installed PyYAML-6.0.2
+
+[notice] A new release of pip is available: 26.1.1 -> 26.2.1
+[notice] To update, run: /private/tmp/scholarchain-phase5a-datasets-venv/bin/python -m pip install --upgrade pip
+exit code: 0
+
+$ /tmp/scholarchain-phase5a-datasets-venv/bin/python datasets/scripts/validate_datasets.py > target/phase5/5a-verification/datasets-validation.log 2>&1
+exit code: 0
+stdout/stderr: retained in datasets-validation.log

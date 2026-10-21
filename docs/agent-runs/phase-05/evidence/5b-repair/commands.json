@@ -1,0 +1,89 @@
+{
+  "schema": "scholarchain.phase5b.repair-command-evidence.v1",
+  "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+  "environment": {
+    "JAVA_HOME": "/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home",
+    "SBT_OPTS": "-Dlogback.configurationFile=/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-04/xml-repair-logback.xml"
+  },
+  "calls": [
+    {
+      "executable": "sbt",
+      "argv": [
+        "-batch",
+        "independentTests/Test/scalafmt",
+        "independentTests/testOnly edu.uic.cs441.scholarchain.independent.IndependentResolutionRepairSpec edu.uic.cs441.scholarchain.independent.IndependentResolutionPrepBridgeRepairSpec"
+      ],
+      "stdoutAndStderr": "docs/agent-runs/phase-05/evidence/5b-repair/before-fix.txt",
+      "exitCode": 1,
+      "note": "5/5 failed on unchanged reviewed production; Hadoop fixture completed first"
+    },
+    {
+      "executable": "sbt",
+      "argv": [
+        "-batch",
+        "core/Compile/scalafmt",
+        "core/Test/scalafmt",
+        "core/testOnly edu.uic.cs441.scholarchain.core.ResolutionContractSpec edu.uic.cs441.scholarchain.core.ResolutionAuthoritySpec edu.uic.cs441.scholarchain.core.ResolutionGroundingSpec edu.uic.cs441.scholarchain.resolutionconsumer.ResolutionAuthorityConsumerSpec"
+      ],
+      "stdoutAndStderr": "docs/agent-runs/phase-05/evidence/5b-repair/core-targeted.txt",
+      "exitCode": 0,
+      "note": "30 tests passed"
+    },
+    {
+      "executable": "sbt",
+      "argv": [
+        "-batch",
+        "entityResolution/Compile/scalafmt",
+        "entityResolution/Test/scalafmt",
+        "independentTests/Test/scalafmt",
+        "entityResolution/test",
+        "independentTests/testOnly edu.uic.cs441.scholarchain.independent.IndependentIdentifierNormalizationSpec edu.uic.cs441.scholarchain.independent.IndependentResolutionPolicySpec edu.uic.cs441.scholarchain.independent.IndependentResolutionInputSpec edu.uic.cs441.scholarchain.independent.IndependentPrepReaderSpec edu.uic.cs441.scholarchain.independent.IndependentCandidateDerivationSpec edu.uic.cs441.scholarchain.independent.IndependentResolutionEngineSpec edu.uic.cs441.scholarchain.independent.IndependentResolutionFeaturesSpec edu.uic.cs441.scholarchain.independent.IndependentOfflineAdjudicationSpec edu.uic.cs441.scholarchain.independent.IndependentResolutionRunSpec edu.uic.cs441.scholarchain.independent.IndependentResolutionExportSpec edu.uic.cs441.scholarchain.independent.IndependentResolutionRepairSpec edu.uic.cs441.scholarchain.independent.IndependentResolutionPrepBridgeRepairSpec"
+      ],
+      "stdoutAndStderr": "docs/agent-runs/phase-05/evidence/5b-repair/targeted.txt",
+      "exitCode": 1,
+      "note": "production compiled; three owner-test constant shadowing errors; independent not reached"
+    },
+    {
+      "executable": "sbt",
+      "argv": [
+        "-batch",
+        "entityResolution/Test/scalafmt",
+        "entityResolution/test",
+        "independentTests/testOnly edu.uic.cs441.scholarchain.independent.IndependentIdentifierNormalizationSpec edu.uic.cs441.scholarchain.independent.IndependentResolutionPolicySpec edu.uic.cs441.scholarchain.independent.IndependentResolutionInputSpec edu.uic.cs441.scholarchain.independent.IndependentPrepReaderSpec edu.uic.cs441.scholarchain.independent.IndependentCandidateDerivationSpec edu.uic.cs441.scholarchain.independent.IndependentResolutionEngineSpec edu.uic.cs441.scholarchain.independent.IndependentResolutionFeaturesSpec edu.uic.cs441.scholarchain.independent.IndependentOfflineAdjudicationSpec edu.uic.cs441.scholarchain.independent.IndependentResolutionRunSpec edu.uic.cs441.scholarchain.independent.IndependentResolutionExportSpec edu.uic.cs441.scholarchain.independent.IndependentResolutionRepairSpec edu.uic.cs441.scholarchain.independent.IndependentResolutionPrepBridgeRepairSpec"
+      ],
+      "stdoutAndStderr": "docs/agent-runs/phase-05/evidence/5b-repair/targeted-second.txt",
+      "exitCode": 0,
+      "note": "19 module and70 focused independent tests passed"
+    },
+    {
+      "executable": "sbt",
+      "argv": [
+        "-batch",
+        "entityResolution/runMain edu.uic.cs441.scholarchain.entityresolution.Phase5Main resolve --input target/phase4-runs/fda6168a-d4e6-4c20-bf73-42a1c3724f7f --policy modules/entity-resolution/src/main/resources/phase5-policy.v1.json --config modules/entity-resolution/src/main/resources/phase5-config.v1.json --llm-mode disabled --output target/phase5/5b-repair-disabled-demo",
+        "entityResolution/runMain edu.uic.cs441.scholarchain.entityresolution.Phase5Main resolve --input target/phase4-runs/fda6168a-d4e6-4c20-bf73-42a1c3724f7f --policy modules/entity-resolution/src/main/resources/phase5-policy.v1.json --config modules/entity-resolution/src/main/resources/phase5-config.v1.json --llm-mode disabled --output target/phase5/5b-repair-disabled-replay",
+        "entityResolution/runMain edu.uic.cs441.scholarchain.entityresolution.Phase5Main resolve --input target/phase4-runs/fda6168a-d4e6-4c20-bf73-42a1c3724f7f --policy modules/entity-resolution/src/main/resources/phase5-policy.v1.json --config modules/entity-resolution/src/main/resources/phase5-config.v1.json --llm-mode fake --output target/phase5/5b-repair-fake-demo --cache target/phase5/5b-repair-fake-cache"
+      ],
+      "stdoutAndStderr": "docs/agent-runs/phase-05/evidence/5b-repair/real-input-cli.txt",
+      "exitCode": 0,
+      "note": "three actual-input runs each18comparisons0fake0live"
+    },
+    {
+      "executable": "sbt",
+      "argv": [
+        "-batch",
+        "check"
+      ],
+      "stdoutAndStderr": "docs/agent-runs/phase-05/evidence/5b-repair/full-check.txt",
+      "exitCode": 0,
+      "note": "356 tests passed;39freshJUnitreports;174sourcehashes unchanged;marker renewed after suites"
+    }
+  ],
+  "inspectionCommands": [
+    "python3 target/phase5/5b-verification/inspect-repair-demo.py > docs/agent-runs/phase-05/evidence/5b-repair/real-input-inspection.txt",
+    "python3 target/phase5/5b-verification/collect-repair.py freeze",
+    "python3 target/phase5/5b-verification/collect-repair.py verify",
+    "python3 target/phase5/5b-verification/collect-repair.py postgate 0 1792182133973",
+    "python3 target/phase5/5b-verification/collect-repair.py inventory"
+  ],
+  "scope": "5B repair only. Local synthetic Hadoop input creation is a regression test, not acquisition. No live provider, deployment, commit or push."
+}

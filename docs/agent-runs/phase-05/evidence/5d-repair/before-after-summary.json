@@ -1,0 +1,35 @@
+{
+  "schemaVersion": "scholarchain.phase5d.b1-red-green-summary.v1",
+  "before": {
+    "command": [
+      "sbt",
+      "-batch",
+      "independentTests/Test/scalafmt",
+      "independentTests/testOnly edu.uic.cs441.scholarchain.independent.IndependentLiveCredentialPreflightSpec"
+    ],
+    "exitCode": 1,
+    "log": "docs/agent-runs/phase-05/evidence/5d-repair/before-fix.txt",
+    "tests": 7,
+    "passed": 0,
+    "failed": 7,
+    "observedFailure": "TRANSPORT_FAILED instead of CREDENTIAL_INVALID",
+    "production": "ER owner held production writes; retained original relevant source files match reviewed freeze."
+  },
+  "after": {
+    "command": [
+      "sbt",
+      "-batch",
+      "entityResolution/Compile/scalafmt",
+      "entityResolution/Test/scalafmt",
+      "independentTests/Test/scalafmt",
+      "entityResolution/testOnly edu.uic.cs441.scholarchain.entityresolution.LiveDemoExportSpec",
+      "independentTests/testOnly edu.uic.cs441.scholarchain.independent.IndependentLiveCredentialPreflightSpec edu.uic.cs441.scholarchain.independent.IndependentOpenAIResponsesSpec edu.uic.cs441.scholarchain.independent.IndependentLiveBudgetSpec edu.uic.cs441.scholarchain.independent.IndependentLiveCredentialsSpec edu.uic.cs441.scholarchain.independent.IndependentLiveDevelopmentSpec edu.uic.cs441.scholarchain.independent.IndependentLiveAdjudicatorSpec edu.uic.cs441.scholarchain.independent.IndependentLiveCacheSpec"
+    ],
+    "exitCode": 0,
+    "log": "docs/agent-runs/phase-05/evidence/5d-repair/targeted.txt",
+    "ownerPassed": 4,
+    "independentPassed": 40,
+    "failures": 0
+  },
+  "noRealCredentialsOrNetworkUsed": true
+}

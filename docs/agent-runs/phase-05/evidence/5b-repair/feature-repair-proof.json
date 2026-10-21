@@ -1,0 +1,50 @@
+{
+  "valid": true,
+  "crossSourceSameDoiVenueCases": [
+    {
+      "pairId": "resolution-pair:74ccf77c851b98daf29fa1ed72f648394f1fcfd50804721b9dbd5f990a66d444",
+      "sources": [
+        "DBLP",
+        "OPENALEX"
+      ],
+      "feature": {
+        "name": "venue",
+        "value": null,
+        "missingReason": "UNAVAILABLE_INCOMPARABLE_VENUE_NAMESPACES",
+        "evidenceRefs": []
+      }
+    },
+    {
+      "pairId": "resolution-pair:cd5c2fd19ef268692fce87854d02fbf9e0f29af363a9bfecc56ef30dba9889e9",
+      "sources": [
+        "CROSSREF",
+        "OPENALEX"
+      ],
+      "feature": {
+        "name": "venue",
+        "value": null,
+        "missingReason": "UNAVAILABLE_INCOMPARABLE_VENUE_NAMESPACES",
+        "evidenceRefs": []
+      }
+    },
+    {
+      "pairId": "resolution-pair:dd5b988a601fd1fc5ef42512df5aa75691e64ddbc1b64ef89c7e75bd8bd528a9",
+      "sources": [
+        "CROSSREF",
+        "DBLP"
+      ],
+      "feature": {
+        "name": "venue",
+        "value": null,
+        "missingReason": "UNAVAILABLE_INCOMPARABLE_VENUE_NAMESPACES",
+        "evidenceRefs": []
+      }
+    }
+  ],
+  "policyVersion": "er-offline-uncalibrated-v2",
+  "featurePolicyVersion": "er-features-v2",
+  "oldPolicyHash": "fc50c044dd3aaff927d4b8101a459b3dd18c0c0505e8b283c4d372be2e3f2574",
+  "newPolicyHash": "ad8c520fd8ff2e3697e15b2895852ca23e04c8d93f677acea3b366fcc101ef9f",
+  "independentWeightedScoreProof": "targeted-second.txt IndependentResolutionRepairSpec hand-calculated available score=1; before-fix.txt score=.9",
+  "unaffectedSourceInputHash": "052d67d212c279c113363712056aa298ccb8720a1bae1d83d9171e676630628b"
+}

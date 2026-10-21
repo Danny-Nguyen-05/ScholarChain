@@ -1,0 +1,16 @@
+{
+  "oldFiles": 898,
+  "newFiles": 900,
+  "changed": [
+    "modules/entity-resolution/README.md",
+    "modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/Evaluation.scala",
+    "modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/ReviewCommands.scala",
+    "modules/entity-resolution/src/test/scala/edu/uic/cs441/scholarchain/entityresolution/ReviewReadinessSpec.scala"
+  ],
+  "added": [
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentEvaluationCliSpec.scala",
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentEvaluationCohortSpec.scala"
+  ],
+  "removed": [],
+  "noMatcherPolicyConfigurationOrHumanLabelChanges": true
+}

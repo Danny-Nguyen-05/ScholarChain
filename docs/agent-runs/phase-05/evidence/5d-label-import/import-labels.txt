@@ -1,0 +1,1 @@
+Derived validated labels saved; original export unchanged. Counts=HashMap(different -> 149, uncertain -> 8, same -> 83, missing -> 60, unlabeled -> 0). Uncertain and missing labels require review.
