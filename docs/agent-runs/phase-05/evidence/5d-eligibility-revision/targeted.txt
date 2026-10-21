@@ -1,0 +1,43 @@
+[info] welcome to sbt 1.10.7 (Homebrew Java 17.0.20.1)
+[info] loading settings for project scholarchain-build from plugins.sbt...
+[info] loading project definition from /Users/danny/Documents/UIC/CS441/ScholarChain/project
+[info] loading settings for project root from build.sbt...
+[info] set current project to root (in build file:/Users/danny/Documents/UIC/CS441/ScholarChain/)
+[info] scalafmt: Formatting 6 Scala sources (/Users/danny/Documents/UIC/CS441/ScholarChain/modules/entity-resolution)...
+[info] scalafmt: Reformatted 6 Scala sources
+[success] Total time: 1 s, completed Oct 21, 2026, 1:55:19 PM
+[info] scalafmt: Formatting 1 Scala sources (/Users/danny/Documents/UIC/CS441/ScholarChain/modules/entity-resolution)...
+[info] scalafmt: Reformatted 1 Scala sources
+[success] Total time: 0 s, completed Oct 21, 2026, 1:55:19 PM
+[info] scalafmt: Formatting 1 Scala sources (/Users/danny/Documents/UIC/CS441/ScholarChain/tests)...
+[info] scalafmt: Reformatted 1 Scala sources
+[success] Total time: 0 s, completed Oct 21, 2026, 1:55:19 PM
+[info] compiling 6 Scala sources to /Users/danny/Documents/UIC/CS441/ScholarChain/modules/entity-resolution/target/scala-3.3.4/classes ...
+[info] done compiling
+[info] compiling 3 Scala sources to /Users/danny/Documents/UIC/CS441/ScholarChain/modules/entity-resolution/target/scala-3.3.4/classes ...
+[info] done compiling
+[info] compiling 5 Scala sources to /Users/danny/Documents/UIC/CS441/ScholarChain/modules/entity-resolution/target/scala-3.3.4/test-classes ...
+[info] done compiling
+[info] RequestEligibilitySpec:
+[info] - legacy policy bytes and fingerprint remain unchanged; explicit profile binds its complete hash
+[info] - request evidence permits positive observed context without changing automatic sufficiency
+[info] - missing or disagreeing name affiliation and contextual evidence cannot request adjudication
+[info] - score bands remain inclusive and exact conflict rejected outcomes stay out
+[info] - closed request profile rejects unknown duplicate weakening and unsupported fields
+[info] Run completed in 153 milliseconds.
+[info] Total number of tests run: 5
+[info] Suites: completed 1, aborted 0
+[info] Tests: succeeded 5, failed 0, canceled 0, ignored 0, pending 0
+[info] All tests passed.
+[success] Total time: 7 s, completed Oct 21, 2026, 1:55:26 PM
+[info] compiling 8 Scala sources to /Users/danny/Documents/UIC/CS441/ScholarChain/tests/target/scala-3.3.4/test-classes ...
+[error] -- [E007] Type Mismatch Error: /Users/danny/Documents/UIC/CS441/ScholarChain/tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentRequestEligibilitySpec.scala:55:8 
+[error] 55 |        note,
+[error]    |        ^^^^
+[error]    |        Found:    org.scalatest.Notifier
+[error]    |        Required: String
+[error]    |
+[error]    | longer explanation available when compiling with `-explain`
+[error] one error found
+[error] (independentTests / Test / compileIncremental) Compilation failed
+[error] Total time: 1 s, completed Oct 21, 2026, 1:55:27 PM

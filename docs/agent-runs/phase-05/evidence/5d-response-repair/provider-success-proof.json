@@ -1,0 +1,170 @@
+{
+  "valid": true,
+  "verifiedAtUtc": "2026-10-21T20:21:47.186543+00:00",
+  "scope": "Observed real-provider integration evidence, not verified identity truth or LLM-path accuracy",
+  "runs": [
+    {
+      "directory": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/live-resume-20261021T193340Z",
+      "manifest": {
+        "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/live-resume-20261021T193340Z/live-demo-manifest.json",
+        "bytes": 2573,
+        "sha256": "9338da55a559d8ac5c78e118feba9873454545e804a9b180c1f56a4726dae949"
+      },
+      "attemptsThisRun": 2,
+      "cumulativeBudget": {
+        "schemaVersion": "scholarchain.live-budget.v1",
+        "approvalId": "approval-1b66c9878075",
+        "configHash": "fea364d4a4873b7e948059a2ad16909876bf27fc511e5f0995c13ad91924bf70",
+        "attempts": 2,
+        "reservedInputTokens": 57472,
+        "reservedOutputTokens": 8192,
+        "reservedSpendMicrousd": 11281,
+        "observedInputTokens": 15821,
+        "observedOutputTokens": 1587,
+        "observedReasoningTokens": 291,
+        "observedCachedInputTokens": 0,
+        "observedCacheWriteTokens": 15815,
+        "observedCostUpperBoundMicrousd": 2772,
+        "unknownUsageAttempts": 0,
+        "fused": false
+      },
+      "traceStatuses": [
+        "ADJUDICATION_FAILED",
+        "ADJUDICATION_FAILED"
+      ],
+      "errors": [
+        "PROVIDER_ADJUDICATION_INVALID",
+        "PROVIDER_ADJUDICATION_INVALID"
+      ]
+    },
+    {
+      "directory": "docs/agent-runs/phase-05/evidence/5d-response-repair/live-resume-20261021T195406Z",
+      "manifest": {
+        "path": "docs/agent-runs/phase-05/evidence/5d-response-repair/live-resume-20261021T195406Z/live-demo-manifest.json",
+        "bytes": 2572,
+        "sha256": "914b33d6a69d6f9dc627cc5337c916bcd05d8ae6edd04a2082e12d5127e2b9e9"
+      },
+      "attemptsThisRun": 1,
+      "cumulativeBudget": {
+        "schemaVersion": "scholarchain.live-budget.v1",
+        "approvalId": "approval-1b66c9878075",
+        "configHash": "fea364d4a4873b7e948059a2ad16909876bf27fc511e5f0995c13ad91924bf70",
+        "attempts": 3,
+        "reservedInputTokens": 86215,
+        "reservedOutputTokens": 12288,
+        "reservedSpendMicrousd": 16922,
+        "observedInputTokens": 23718,
+        "observedOutputTokens": 2460,
+        "observedReasoningTokens": 510,
+        "observedCachedInputTokens": 7894,
+        "observedCacheWriteTokens": 15815,
+        "observedCostUpperBoundMicrousd": 4196,
+        "unknownUsageAttempts": 0,
+        "fused": false
+      },
+      "traceStatuses": [
+        "ADJUDICATION_FAILED"
+      ],
+      "errors": [
+        "PROVIDER_ADJUDICATION_FIELD_NOT_FOUND"
+      ]
+    },
+    {
+      "directory": "docs/agent-runs/phase-05/evidence/5d-response-repair/live-resume-20261021T201707Z",
+      "manifest": {
+        "path": "docs/agent-runs/phase-05/evidence/5d-response-repair/live-resume-20261021T201707Z/live-demo-manifest.json",
+        "bytes": 2584,
+        "sha256": "a07d40872152a73a5da0e2e65ccfdcbc9726a8dab1be982cb93bcdfb56220a8f"
+      },
+      "attemptsThisRun": 1,
+      "cumulativeBudget": {
+        "schemaVersion": "scholarchain.live-budget.v1",
+        "approvalId": "approval-1b66c9878075",
+        "configHash": "fea364d4a4873b7e948059a2ad16909876bf27fc511e5f0995c13ad91924bf70",
+        "attempts": 4,
+        "reservedInputTokens": 114958,
+        "reservedOutputTokens": 16384,
+        "reservedSpendMicrousd": 22563,
+        "observedInputTokens": 31615,
+        "observedOutputTokens": 3244,
+        "observedReasoningTokens": 656,
+        "observedCachedInputTokens": 15788,
+        "observedCacheWriteTokens": 15815,
+        "observedCostUpperBoundMicrousd": 5576,
+        "unknownUsageAttempts": 0,
+        "fused": false
+      },
+      "traceStatuses": [
+        "VALIDATED_LIVE"
+      ],
+      "errors": [
+        null
+      ]
+    }
+  ],
+  "cumulativeAttempts": 4,
+  "traceStatuses": {
+    "ADJUDICATION_FAILED": 3,
+    "VALIDATED_LIVE": 1
+  },
+  "validatedResponses": 1,
+  "provider": "openai",
+  "resolvedModel": "gpt-6-luna",
+  "responseId": "resp_0050f915969d4065016ad91dc9ba6487d19ebd54be739d9469",
+  "requestId": "req_31fcebb77f514bbfb92867998c71815c",
+  "requestHash": "6d8ee9ec0e27c0d538c81476f65740e71dd301b952d84a6a6a31b91616c66306",
+  "pairId": "resolution-pair:33e92529c7003a7eca663d2780123255fa33ee46beff9c8942dc0771fb755fef",
+  "modelOutcome": "accept",
+  "systemOutcome": "UNRESOLVED",
+  "acceptedLinks": 0,
+  "blockedAcceptReason": "LLM_ACCEPT_BLOCKED_INSUFFICIENT_ACCEPTANCE_EVIDENCE",
+  "observedUsageSuccessfulAttempt": {
+    "inputTokens": 7897,
+    "outputTokens": 784,
+    "totalTokens": 8681,
+    "reasoningTokens": 146,
+    "cachedInputTokens": 7894,
+    "cacheWriteTokens": 0
+  },
+  "cumulativeBudget": {
+    "schemaVersion": "scholarchain.live-budget.v1",
+    "approvalId": "approval-1b66c9878075",
+    "configHash": "fea364d4a4873b7e948059a2ad16909876bf27fc511e5f0995c13ad91924bf70",
+    "attempts": 4,
+    "reservedInputTokens": 114958,
+    "reservedOutputTokens": 16384,
+    "reservedSpendMicrousd": 22563,
+    "observedInputTokens": 31615,
+    "observedOutputTokens": 3244,
+    "observedReasoningTokens": 656,
+    "observedCachedInputTokens": 15788,
+    "observedCacheWriteTokens": 15815,
+    "observedCostUpperBoundMicrousd": 5576,
+    "unknownUsageAttempts": 0,
+    "fused": false
+  },
+  "citedPresentInputFieldsVerified": 4,
+  "requestAndResponseIdentityFieldsVerified": 6,
+  "canonicalHeldOutAdmissionUnchanged": true,
+  "requestedExcludedIntersection": 0,
+  "sourceFreeze": {
+    "path": "docs/agent-runs/phase-05/source-freeze.json",
+    "bytes": 233195,
+    "sha256": "ffca3fb63de469dbd7cb993b5f5e0ba4f6ec45d20ff0514cdf8e8320369493b6"
+  },
+  "runtimeFilesRechecked": 1019,
+  "offlineCompiledParserCacheRevalidationLog": {
+    "path": "docs/agent-runs/phase-05/evidence/5d-response-repair/validate-live-cache.txt",
+    "bytes": 330,
+    "sha256": "e962f9be5819f555072c7fa4ae28ddc72d101cc1813a8e51ee5f1012f1b39f55"
+  },
+  "historicalFailureScope": "First two failures have no retained raw content and remain unexplained. Third attempt had FIELD_NOT_FOUND with all seven identity comparisons true. Fourth response validated under the same strict validator; no rule, prompt or schema was changed between third and fourth.",
+  "limitations": [
+    "The model rationale relies on the shared OpenAlex author hypothesis, not independent source verification.",
+    "Model confidence 0.99 remains a separate uncalibrated assertion.",
+    "One response is not identity accuracy, calibration or a held-out evaluation.",
+    "Provider authenticity is established by the recorded execution path and identifiers, not cryptographic independent attestation."
+  ],
+  "fullPhase5Accepted": false,
+  "phase6Authorized": false
+}

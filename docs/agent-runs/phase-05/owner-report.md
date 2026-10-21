@@ -706,3 +706,83 @@ MANUAL ACTION REQUIRED: Human checkpoint/continuation decision; independent revi
 BLOCKED-ON OWNER: None for authorized bounded work. Human owns continuation and acceptance.
 BLOCKED-ON EVIDENCE: Naturally eligible non-held-out pair and observed real-provider response; current 0 attempts, $0.00 spent.
 NEXT GATE: Stop acquisition. No policy changes, commit, push, Phase 6 or reviewer launch. Explicit authorization needed before any further scope.
+
+
+## Versioned adjudication request eligibility revision — 2026-10-21
+
+STATUS: COMPLETE (implementation and offline verification); provider demonstration still blocked; no validated response. Independent review and final human acceptance remain pending.
+OWNER: coordinator; entity-resolution-engineer owns module changes; test-engineer owns independent tests; dataset lane performed read-only provenance checks.
+WORK ORDER: User-authorized versioned request eligibility revision, existing bounded live pilot, and separate descriptive evaluation. No acquisition, label changes, nonblocking cleanup, commit, push or Phase 6.
+FILES CREATED: RequestEligibilityPolicy.scala, request-eligibility.v1.json, owner and independent request-policy suites, and this stage's evidence. Full current inventory is review-inventory.json.
+FILES MODIFIED: ER engine/live CLI/exporters/README and append-only phase records. Original policy/config resources, labels, datasets, old 5E outputs and the preexisting human-gate.md are unchanged.
+COMMANDS RUN: Exact argv, allowed environment fields, start/end, exits and logs are in commands.json and per-command receipts. No secret values were inspected or recorded.
+TEST RESULTS: Fresh sbt check: 458 tests, zero failures/errors/skips, 58 fresh JUnit reports. Python: 97 passed. Fourteen integrity validators passed. Targeted owner 5 + independent 61 passed. Earlier sandbox-cache refusal and test-local ScalaTest note naming collision are retained; the fixture name was qualified by the test owner. The nested injected failure in sbt check is expected build-verification coverage.
+VALIDATION RESULTS: 975 protected files unchanged, including 23 label files, 111 original 5E evidence files and the human gate. All 963 source hashes stayed unchanged across the full gate. Two preview requests are admitted with the same canonical held-out exclusion as the historical Rice attempt. Original automatic-acceptance sufficiency is retained. Model accept on a newly eligible insufficient pair stays UNRESOLVED with an explicit reason and no accepted link.
+PROVIDER RESULTS: 0 validated responses; approval ledger attempts=0; observed cost upper bound=$0.000000. See live/demo.json and protected-and-provider-proof.json for actual statuses, request/response bindings, token usage and budget state. A local credential failure is not a provider response and consumes no attempt.
+ASSUMPTIONS: Source observations are provider assertions, not verified identity truth. The unchanged $1/10-attempt approval and fixed ledger apply; no counters were reset.
+RISKS: The revised request rule is an uncalibrated development policy. Shared affiliation/coauthors may correlate. A successful integration pilot establishes neither LLM-path accuracy nor calibrated identity confidence. Human labels are AI-assisted; eight remain uncertain. The reused held-out evaluation is descriptive. The 22 assisted cases remain separately reported, with external evidence unretained. Course/tool-workflow deviation and final acceptance remain human/instructor matters.
+MANUAL ACTION REQUIRED: User launches independent read-only review. If the credential preflight failed, make the key available securely to the execution environment; do not paste it in chat. Final Phase 5 acceptance is not inferred from this implementation.
+BLOCKED-ON OWNER: None for implemented offline scope; user/runtime environment if provider credentials unavailable.
+BLOCKED-ON EVIDENCE: Independent review; real-provider evidence if validatedProviderResponses is zero; final human acceptance.
+NEXT GATE: User-launched review of this checkpoint, followed by the human decision. No Phase 6 authorization.
+
+The original evaluation remains untouched at evidence/5e/. The original 5E source-freeze descriptor's historical bytes remain at evidence/5d-final-attempt/before-source-freeze.json (52f24a88d8b4d3d802e8e53403428ad6d5e889afc7309ccd55a7f4f2fc91376f). Revised outputs are under post-policy-evaluation/. No thresholds were selected from labels.
+
+
+## Safe response diagnostics repair — 2026-10-21
+
+STATUS: COMPLETE (diagnostic implementation and offline verification). Exact historical response rejection remains unknown; a validated real adjudication is still pending.
+OWNER: entity-resolution-engineer for module changes; test-engineer for independent tests; coordinator for evidence and command execution.
+WORK ORDER: Continue the authorized live demonstration safely after the user's two charged responses failed inner validation. Do not relax validation, read secrets, change identity evidence, reset budgets or widen authorization.
+FILES CREATED: ProviderResponseDiagnosticSpec.scala, IndependentLiveResponseDiagnosticSpec.scala and this stage's evidence; see source-delta.json and review-inventory.json.
+FILES MODIFIED: ER response validation diagnostics/live trace/CLI/README, independent eligibility-cap tests, and append-only phase reports. Original labels, datasets, policy/config/prompt/schema resources, earlier outputs and human decisions remain unchanged.
+COMMANDS RUN: Exact commands, dates, exits and logs are retained in commands.json. First targeted command mistakenly selected a nonexistent owner suite and ran zero owner tests; its 54 independent tests passed. Corrected targeted-final selected the actual owner suite: 4 owner + 54 independent passed. The coordinator issued no HTTP request during this repair.
+TEST RESULTS: Fresh sbt -batch check: 469 tests, zero failures/errors/skips, 60 fresh reports. All 965 frozen source hashes remained unchanged. The nested injected failure is expected CheckFailurePathSpec coverage. Dataset/Python code was unchanged; the hash-protected preceding stage retains its observed 97 Python tests and 14 integrity-validator passes, which were not rerun here.
+VALIDATION RESULTS: 1117 protected files unchanged, including all labels, original evaluation, previous eligibility-revision outputs and the preexisting human gate. Runtime classes/resources rechecked: 1019. Preview reports 2 eligible pairs but renders exactly 1 request, with unchanged canonical held-out admission. The current ledger is unchanged at 2 attempts and 2772 micro-USD observed cost upper bound; no counter reset and no fuse. Earlier actual responses passed envelope/model/usage checks but failed the inner adjudication validator. Their exact content failure cannot be reconstructed.
+IMPLEMENTATION: Finite PROVIDER_ADJUDICATION_* codes distinguish existing validation failures. Optional diagnostics retain only byte/character counts, SHA-256 hashes, fixed identity-match booleans, allowlisted outcome and counts. No raw model output, rationale, citation strings, provider error bodies or arbitrary exception text is exposed. Diagnostic generation cannot discard a charged failure trace. --max-pairs 1 narrows both preview and execution to one eligible pair; the existing maxRetries=1 still permits at most two attempts on a transient error, within the same cumulative approval. Invalid output remains rejected. A model accept without original acceptance sufficiency still cannot create a link.
+ASSUMPTIONS: Retained HTTP usage and budget snapshots are provider reports and conservative estimates, not an invoice. Diagnostics make failures observable; they do not guarantee the next response will be valid.
+RISKS: Real adjudication is pending; an additional call may again be rejected. The underlying earlier content error is unknown. Identity accuracy and calibration are not established. Earlier descriptive reused-held-out evaluation is preserved with its original binding; no new evaluation is claimed for this diagnostic-only change.
+MANUAL ACTION REQUIRED: The user may run the new one-pair command from their Terminal where the key is loaded. The coordinator never opens .env or credential files. Return the resulting status/error code. Independent review remains user-launched.
+BLOCKED-ON OWNER: User/runtime environment for the next separately executed bounded call.
+BLOCKED-ON EVIDENCE: A validated real-provider adjudication, independent review and final human acceptance.
+NEXT GATE: One-pair diagnostic live run using the original approval and persistent ledger. No reviewer launch, commit, push, full acceptance or Phase 6.
+
+
+## Observed validated live adjudication — 2026-10-21
+
+STATUS: COMPLETE (implemented checkpoint and observed validated live adjudication); independent review and final human acceptance pending. This supersedes the earlier pending-provider status only, not any human decision or prior evidence.
+OWNER: coordinator for retained evidence; ER owner for source; test-engineer for independent tests. The successful live command was executed from the user's Terminal. The coordinator made no additional provider call and did not read .env or credential files.
+WORK ORDER: Verify the user-returned live-resume-20261021T201707Z result and prepare the independent review handoff. Preserve approval, source, labels, old evaluation and all failed runs.
+FILES CREATED: provider-success-proof.json, the offline parser/cache probe and its retained log, this report, user-run receipt, and a final review packet. Earlier current-state metadata is archived under history/before-live-success-verification/.
+FILES MODIFIED: Coordinator-owned current outcome/proof/inventory and append-only phase reports. No production, test, policy, prompt, schema, dataset, label or human-gate file changed after the fresh full gate.
+COMMANDS RUN: Retained commands.json includes actual user-run commands and offline verification argv/exits. validate-live-cache reparsed the saved successful result through the compiled validator/cache path without constructing a transport or resolving credentials. verify-provider-success independently checked completion/file hashes, request identity, present-field citations, admission and the cumulative budget chain. No sbt rerun was necessary after evidence-only updates.
+TEST RESULTS: Fresh retained full gate: 469 passing tests, zero failures/errors/skips, 60 reports (core 129, Hadoop 64, ER 39, independent 233, build 4). The gate's source hash is ffca3fb63de469dbd7cb993b5f5e0ba4f6ec45d20ff0514cdf8e8320369493b6. All 965 source hashes still match. All 1019 captured runtime class/resource hashes still match. Previous 97 Python tests/14 integrity validators remain retained and unchanged; they were not re-executed in this evidence-only step.
+VALIDATION RESULTS: 1117 protected files remain unchanged, including the labels, original/revised prior evaluation, earlier eligibility-revision outputs and human gate. The ledger accounts for four attempts: two original content rejections, a one-pair FIELD_NOT_FOUND rejection with all identity echoes correct, then one VALIDATED_LIVE response. All requests were admitted by the same canonical held-out exclusion. The successful response is not a cache hit. Request/response identities match, and all four cited JSON-pointer fields exist in the cited input evidence. The offline compiled cache revalidation succeeds.
+PROVIDER RESULTS: openai / gpt-6-luna; response resp_0050f915969d4065016ad91dc9ba6487d19ebd54be739d9469; request req_31fcebb77f514bbfb92867998c71815c. Successful attempt usage: 7897 input tokens, 784 output tokens including 146 reasoning tokens, 7894 reported cached input tokens. Cumulative usage: 31615 input and 3244 output tokens, four attempts, zero unknown-usage attempts and no fuse. Cumulative observed cost upper bound: $0.005576; this is a conservative estimate, not an invoice. Original $1/10-attempt and token limits were not changed or reset. Six attempts remain unused; no further call is planned.
+DECISION SAFETY: The model returned accept with reported confidence 0.99. The system retained UNRESOLVED at the original score 0.6933333333333332, recorded LLM_ACCEPT_BLOCKED_INSUFFICIENT_ACCEPTANCE_EVIDENCE and emitted zero accepted links. The model rationale relies on a shared OpenAlex author hypothesis; it is not independent identity verification. This is one validated integration response, not measured identity accuracy or calibrated confidence.
+ASSUMPTIONS: Provider execution is supported by the retained command path, response/request IDs, usage, cache and hashes. These are not independent cryptographic authentication of the provider.
+RISKS: Invalid field citations remain possible and are refused. The first two failures' exact content is unrecoverable; the third is specifically FIELD_NOT_FOUND. A later valid response does not erase those failures or prove all responses will validate. The request policy is uncalibrated. Labels are human-reviewed and AI-assisted, not blind gold; eight reviews remain uncertain (38 development and 194 held-out binary labels). Externally assisted evidence behind 22 cases is unretained. Revised held-out results reuse a previously exposed cohort and remain descriptive. Instructor acceptance of the Codex/Cursor workflow deviation is not inferred.
+MANUAL ACTION REQUIRED: User launches the independent read-only reviewer using the chat prompt and returns its complete verdict. Full Phase 5 acceptance, any treatment of remaining limitations and any Phase 6 authorization require the human decision.
+BLOCKED-ON OWNER: None for the implemented checkpoint or observed provider response. The independent reviewer and human own the next decisions.
+BLOCKED-ON EVIDENCE: Independent verdict and final human acceptance; broader evaluation limitations remain as stated. Real-provider execution evidence is now present.
+NEXT GATE: User-launched independent review, then human decision. No reviewer was triggered; no commit, push, acceptance or Phase 6 start occurred.
+
+Coordinator verification correction: the first metadata checker assumed an optional diagnostic key was present on successful JSON. The actual serializer omits default None. The checker now uses an optional lookup; the original checker/error note is retained under history/before-live-success-verification/. This was an evidence-script correction only, not a production or response change.
+
+
+## Human Phase 5 acceptance recorded — 2026-10-21
+
+STATUS: COMPLETE (acceptance-recording task).
+OWNER: Coordinator transcribing the user's decision; human architect owns acceptance.
+WORK ORDER: Record the returned independent checkpoint APPROVE and subsequent explicit “I approve them” as Phase 5 acceptance with documented limitations; defer nonblocking observations.
+FILES CREATED: evidence/phase5-human-acceptance/ receipt, full external report, preserved pre-decision human gate/inventory and validation metadata.
+FILES MODIFIED: Append-only human-gate.md, review.md, prompt.md and owner-report.md; refreshed review inventory. No source, tests, datasets, labels, model configuration, provider result or ledger/cache changed.
+COMMANDS RUN: Read-only status/hash inspection and coordinator documentation writes; final verification is retained in evidence/phase5-human-acceptance/validation.json.
+TEST RESULTS: No tests rerun for this documentation-only task. The reviewed 469-test full gate is retained unchanged.
+VALIDATION RESULTS: Acceptance binds the 965-file source freeze ffca3fb63de469dbd7cb993b5f5e0ba4f6ec45d20ff0514cdf8e8320369493b6 and the preserved reviewed inventory. Prior human-gate bytes remain an unchanged prefix and are copied under the acceptance evidence.
+ASSUMPTIONS: The short user answer refers to the immediately preceding explicit Phase 5 acceptance statement; this is recorded with exact conversational context.
+RISKS: All review limitations and nonblocking observations remain; instructor acceptance is not inferred.
+MANUAL ACTION REQUIRED: The user controls any later commit, push or Phase 6 decision. Final accepted-commit SHA remains pending a user commit.
+BLOCKED-ON OWNER: None for recording acceptance.
+BLOCKED-ON EVIDENCE: None for this human decision; broader limitations remain disclosed.
+NEXT GATE: Await a separate user instruction. No commit, push, additional provider call or Phase 6 was performed.

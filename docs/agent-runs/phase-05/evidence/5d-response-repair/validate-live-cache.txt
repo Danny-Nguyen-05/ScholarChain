@@ -1,0 +1,3 @@
+Note: /private/tmp/ScholarChainValidateLiveCache.java uses or overrides a deprecated API.
+Note: Recompile with -Xlint:deprecation for details.
+{"valid":true,"compiledParserAndCacheRevalidation":true,"credentialAccess":"NOT_INVOKED","networkAccess":"NOT_INVOKED","validatedResults":1,"acceptedLinks":0,"finalOutcome":"UNRESOLVED"}

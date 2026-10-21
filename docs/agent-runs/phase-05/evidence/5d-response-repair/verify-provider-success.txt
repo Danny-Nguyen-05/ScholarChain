@@ -1,0 +1,1 @@
+{"valid": true, "attempts": 4, "validatedResponses": 1, "modelOutcome": "accept", "systemOutcome": "UNRESOLVED", "costUpperBoundMicrousd": 5576}

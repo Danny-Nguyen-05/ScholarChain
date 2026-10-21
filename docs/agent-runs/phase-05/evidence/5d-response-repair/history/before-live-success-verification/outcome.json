@@ -1,0 +1,22 @@
+{
+  "schema": "scholarchain.provider-diagnostic-repair-checkpoint.v1",
+  "implementationStatus": "DIAGNOSTICS_VERIFIED_CONTENT_FAILURE_NOT_YET_DIAGNOSED",
+  "sourceFreezeSha256": "ffca3fb63de469dbd7cb993b5f5e0ba4f6ec45d20ff0514cdf8e8320369493b6",
+  "fullCheckTests": 469,
+  "failures": 0,
+  "protectedFilesUnchanged": 1117,
+  "runtimeFilesUnchanged": 1019,
+  "priorProviderAttempts": 2,
+  "cumulativeProviderAttempts": 2,
+  "costUpperBoundMicrousd": 2772,
+  "validatedAdjudicationObserved": false,
+  "eligiblePairs": 2,
+  "nextRunMaxPairs": 1,
+  "nextRunMaxAttemptsIncludingOriginalRetry": 2,
+  "remainingApprovalAttempts": 8,
+  "strictResponseValidationUnchanged": true,
+  "policyConfigPromptSchemaUnchanged": true,
+  "exactHistoricalFailureCause": "Unknown: invalid output was not retained.",
+  "fullPhase5Accepted": false,
+  "phase6Authorized": false
+}

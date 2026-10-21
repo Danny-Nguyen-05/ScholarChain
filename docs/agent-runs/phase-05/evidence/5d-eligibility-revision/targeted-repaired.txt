@@ -1,0 +1,96 @@
+[info] welcome to sbt 1.10.7 (Homebrew Java 17.0.20.1)
+[info] loading settings for project scholarchain-build from plugins.sbt...
+[info] loading project definition from /Users/danny/Documents/UIC/CS441/ScholarChain/project
+[info] loading settings for project root from build.sbt...
+[info] set current project to root (in build file:/Users/danny/Documents/UIC/CS441/ScholarChain/)
+[info] scalafmt: Formatting 1 Scala sources (/Users/danny/Documents/UIC/CS441/ScholarChain/tests)...
+[success] Total time: 1 s, completed Oct 21, 2026, 1:55:53 PM
+[info] RequestEligibilitySpec:
+[info] - legacy policy bytes and fingerprint remain unchanged; explicit profile binds its complete hash
+[info] - request evidence permits positive observed context without changing automatic sufficiency
+[info] - missing or disagreeing name affiliation and contextual evidence cannot request adjudication
+[info] - score bands remain inclusive and exact conflict rejected outcomes stay out
+[info] - closed request profile rejects unknown duplicate weakening and unsupported fields
+[info] Run completed in 143 milliseconds.
+[info] Total number of tests run: 5
+[info] Suites: completed 1, aborted 0
+[info] Tests: succeeded 5, failed 0, canceled 0, ignored 0, pending 0
+[info] All tests passed.
+[success] Total time: 0 s, completed Oct 21, 2026, 1:55:53 PM
+[info] compiling 8 Scala sources to /Users/danny/Documents/UIC/CS441/ScholarChain/tests/target/scala-3.3.4/test-classes ...
+[info] done compiling
+[info] IndependentRequestEligibilitySpec:
+[info] - legacy policy fingerprint and strict acceptance thresholds remain frozen
+[info] - positive independent coauthor and affiliation context permits a request, not acceptance
+[info] - zero, absent and duplicated-publication coauthor context cannot become a request
+[info] - missing, incomparable and conflicting affiliation evidence cannot become a request
+[info] - name-only, incompatible names, exact identifiers, hard conflicts and out-of-band pairs are excluded
+[info] - fake acceptance is retained as an audited judgment but cannot export an unsafe accepted link
+[info] - fake rejection and abstention remain audited while disabled mode never dispatches
+[info] - effective request policy invalidates both offline and live cache identities
+[info] - the researcher request revision preserves the existing work eligibility rule
+[info] - canonical held-out overlap is excluded before even an invalid pair could be classified
+[info] - live synthetic outcomes respect the separate acceptance gate and preserve budget accounting
+[info] - binding mismatches fail before dispatch and missing profile cannot enable revised requests
+[info] IndependentLiveDevelopmentSpec:
+[info] - live demo admission excludes every held-out group before eligibility classification
+[info] - a changed or held-out-only candidate population is refused rather than admitted as a demo
+[info] - zero eligible and explicitly disabled demo runs do not create ledger or inspect credentials
+[info] - supplemental admission excludes a whole transitive identity component linked to held-out evidence
+[info] - enabled synthetic demo dispatches only eligible development pairs and preserves independent pre-model scores
+[info] - disabled or wrong-approval enabled demo with eligible evidence never initializes transport
+[info] - enabled demo preserves its approval ledger after missing credential preflight
+[info] - enabled demo preserves its approval ledger after NUL credential preflight
+[info] IndependentLiveAdjudicatorSpec:
+[info] - budget exhaustion refuses dispatch before credential supplier access
+[info] - retries consume durable reservations and authentication errors are terminal
+[info] - a valid provider response records actual usage separately and replay never consumes another reservation
+[info] - missing usage and thrown transport details remain unknown charged failures without leaking contents
+[info] - interruption-resistant transport fuses later calls and never overlaps retries
+[info] - unapproved numerical configuration cannot construct an active adjudicator or budget ledger
+[info] IndependentLiveCredentialPreflightSpec:
+[info] - missing local credential failure preserves the same approval ledger for recovery
+[info] - empty local credential failure preserves the same approval ledger for recovery
+[info] - CRLF local credential failure preserves the same approval ledger for recovery
+[info] - NUL local credential failure preserves the same approval ledger for recovery
+[info] - DEL local credential failure preserves the same approval ledger for recovery
+[info] - non-Latin1 local credential failure preserves the same approval ledger for recovery
+[info] - supplier exception local credential failure preserves the same approval ledger for recovery
+[info] IndependentLiveBudgetSpec:
+[info] - zero attempts token or spend allowance reserves nothing
+[info] - exact token and microdollar boundary allows one reservation and refuses the next
+[info] - unknown usage remains charged across restart and observed usage never refunds reservations
+[info] - approval scoped ledger refuses simultaneous writers and a changed configuration on restart
+[info] - provider usage above reservation fuses later attempts and invalid wire lengths do not reserve
+[info] IndependentResolutionPolicySpec:
+[info] - runtime policy and config reject unknown fields recursively and simultaneous legacy knobs
+[info] - threshold gap and entire uncertain band are validated before processing
+[info] - duplicate raw JSON keys cannot silently override policy or generation settings
+[info] - policy refuses to count correlated name or bibliography features as independent groups
+[info] - policy fingerprint ignores object key order but changes with every effective setting
+[info] - offline configuration rejects live provider and unbounded or monetary execution
+[info] IndependentOfflineAdjudicationSpec:
+[info] - strict responses bind requests candidate endpoints and evidence with a closed schema
+[info] - abstention is valid while decisive empty citations oversized rationale and response fail
+[info] - N4 adjudication reason codes agree with accept reject and abstain outcomes
+[info] - source prompt injection remains bounded evidence and cannot add tools or identifiers to response
+[info] - malformed replies retry only within configured attempts and all failures consume budget
+[info] - zero request or token allowance makes zero calls and timeout returns unresolved evidence
+[info] - validated fake cache replays without another adapter call and refuses corrupt entries
+[info] - cache key changes with all answer-affecting context and fake cannot satisfy live mode
+[info] - cache writes are complete and a symlinked fake-mode directory is rejected on read
+[info] IndependentResolutionEngineSpec:
+[info] - a conflicting declared DOI wins over equal preferred DOI and equal work ID
+[info] - different direct ORCIDs cannot merge through equal name and shared OpenAlex author hypothesis
+[info] - matching direct identifiers use exact path without treating work equality as author equality
+[info] - hand-computed 2/3 weighted score obeys inclusive accept and reject threshold boundaries
+[info] - missing evidence stays unavailable rather than zero, perfect similarity or prep sentinel
+[info] - bibliographic path requires authors and year evidence independently of exact title
+[info] - recognized DBLP publication links retain conflicting DOI and arXiv source facts
+[info] - backlinks and arbitrary hosts stay weak while malformed recognized publication resolvers fail
+[info] Run completed in 1 second, 6 milliseconds.
+[info] Total number of tests run: 61
+[info] Suites: completed 8, aborted 0
+[info] Tests: succeeded 61, failed 0, canceled 0, ignored 0, pending 0
+[info] All tests passed.
+[success] Total time: 5 s, completed Oct 21, 2026, 1:55:58 PM

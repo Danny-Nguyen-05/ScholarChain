@@ -300,7 +300,8 @@ final class LiveAdjudicator(
                   false,
                   request,
                   None,
-                  Some(message)
+                  Some(message),
+                  Try(OpenAIResponses.responseDiagnostic(http, request, config)).toOption
                 )
           }
       }

@@ -93,6 +93,34 @@ object Adjudication {
   val promptVersion = "er-adjudication-offline-v1"
   def prompt: String = ResourceText.read("adjudication/prompt.v1.txt")
   def schemaText: String = ResourceText.read("adjudication/response.schema.v1.json")
+
+  /** Closed diagnostics only: parser/exception messages may contain untrusted output values. */
+  def safeResponseFailureCode(error: String): String = {
+    val codes = Map(
+      "response byte bound exceeded" -> "RESPONSE_BYTE_BOUND",
+      "response request identity mismatch" -> "IDENTITY_MISMATCH",
+      "invalid response outcome" -> "OUTCOME_INVALID",
+      "invalid model reason codes" -> "REASON_CODES_INVALID",
+      "model reason codes contradict the selected outcome" -> "REASON_OUTCOME_MISMATCH",
+      "fabricated response evidence refs" -> "EVIDENCE_REFS_INVALID",
+      "decisive response requires cited evidence" -> "EVIDENCE_REQUIRED",
+      "invalid cited field count" -> "FIELD_COUNT_INVALID",
+      "decisive response requires cited input fields" -> "FIELDS_REQUIRED",
+      "field citation must identify a cited evidence record and JSON pointer" -> "FIELD_CITATION_FORMAT",
+      "invalid JSON pointer escape" -> "POINTER_ESCAPE_INVALID",
+      "fabricated input field" -> "FIELD_NOT_FOUND",
+      "invalid input field array index" -> "ARRAY_INDEX_INVALID",
+      "input field array index out of range" -> "ARRAY_INDEX_RANGE",
+      "input field pointer traverses scalar" -> "POINTER_SCALAR",
+      "missing input field cannot be cited as evidence" -> "FIELD_NULL",
+      "invalid rationale length/control characters" -> "RATIONALE_INVALID",
+      "model confidence must be in [0,1]" -> "CONFIDENCE_INVALID"
+    )
+    codes.getOrElse(
+      Option(error).getOrElse("").stripPrefix("requirement failed: "),
+      "SCHEMA_OR_FORMAT"
+    )
+  }
   def validateRequest(
       request: AdjudicationRequest,
       config: ResolutionConfig

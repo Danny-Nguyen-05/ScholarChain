@@ -1,0 +1,7 @@
+{
+  "recordedAtUtc": "2026-10-21T20:20:18.123344+00:00",
+  "owner": "coordinator",
+  "observedFailure": "KeyError: 'diagnostic' at verify-repair.py.txt line42; successful serialized trace omits default None field",
+  "repair": "Use t.get('diagnostic') for optional diagnostic metadata. No production/source/response/model/decision changes.",
+  "evidence": "Compiled parser/cache revalidation passed before this metadata-check correction. The live trace is VALIDATED_LIVE."
+}

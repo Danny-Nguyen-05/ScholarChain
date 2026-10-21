@@ -1,0 +1,75 @@
+"""Coordinator invokes existing CLIs; no scoring, label decisions or credential inspection."""
+from pathlib import Path
+import hashlib, json, subprocess, sys, shutil, datetime
+
+R = Path.cwd()
+B = Path(__file__).resolve().parent
+Q = R / 'docs/agent-runs/phase-05/evidence/5c-repair/review-artifacts'
+FROZEN = R / 'datasets/entity-resolution/prepared/bd424a86-0a1b-4e44-bbdb-4a9b8c8a20e3'
+DEMO = R / 'datasets/entity-resolution/prepared/8d30085c-cb67-4d25-909f-5f2603ad4511'
+RES = R / 'modules/entity-resolution/src/main/resources'
+LIVE = R / 'docs/agent-runs/phase-05/evidence/5d'
+PROFILE = RES / 'adjudication/request-eligibility.v1.json'
+sha = lambda p: hashlib.sha256(Path(p).read_bytes()).hexdigest()
+load = lambda p: json.loads(Path(p).read_text())
+def dump(p, x): Path(p).write_text(json.dumps(x, indent=2, ensure_ascii=False)+'\n')
+def run(name, args):
+    subprocess.run(['python3', str(B/'run-command.py.txt'), name, *map(str,args)], check=True)
+cp = str(R/'modules/entity-resolution/target/scala-3.3.4/classes')+':'+(R/'modules/entity-resolution/target/streams/compile/dependencyClasspath/_global/streams/export').read_text().strip()
+java = ['/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home/bin/java','-Xmx4g','-cp',cp,'edu.uic.cs441.scholarchain.entityresolution.Phase5Main']
+head = subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip()
+source = sha(R/'docs/agent-runs/phase-05/source-freeze.json')
+
+def preview_or_live(live=False, resume=False):
+    options = ['--input',DEMO,'--frozen-input',FROZEN,'--queue',Q/'queue.json','--split',Q/'split.json',
+               '--policy',RES/'phase5-policy.v1.json','--request-policy',PROFILE,'--config',RES/'phase5-config.v1.json',
+               '--live-config',LIVE/'approved-live-config.json','--scope','supplement','--code-revision',head,'--source-hash',source]
+    if live:
+        gate=load(B/'full-check-summary.json')
+        assert gate['valid'], 'full gate has not passed'
+        frozen=load(R/'docs/agent-runs/phase-05/source-freeze.json')
+        assert all(sha(R/f['path'])==f['sha256'] for f in frozen['files']), 'source changed after gate'
+        options += ['--runtime-binding',LIVE/'live-runtime-binding.json','--approval',LIVE/'user-live-approval.json','--enable-live','approval-1b66c9878075']
+    name = ('live-resume-'+datetime.datetime.now(datetime.timezone.utc).strftime('%Y%m%dT%H%M%SZ')) if resume else ('live' if live else 'preview')
+    run(name,java+['adjudicate-demo' if live else 'prepare-live-demo',*options,'--output',B/name])
+    if live:
+        result=load(B/name/'demo.json')
+        print(json.dumps({'output':str(B/name),'statuses':[t['status'] for t in result['traces']], 'attempts':result['budget']['attempts'] if result['budget'] else 0,'costUpperBoundMicrousd':result['budget']['observedCostUpperBoundMicrousd'] if result['budget'] else 0}))
+
+def evaluation():
+    E=B/'post-policy-evaluation'; E.mkdir(exist_ok=False)
+    runs=[]
+    for name,mode in [('disabled-a','disabled'),('disabled-b','disabled'),('fake-a','fake')]:
+        out=R/'target/phase5-eligibility-revision'/name
+        run('resolve-'+name,java+['resolve','--input',FROZEN,'--policy',RES/'phase5-policy.v1.json','--request-policy',PROFILE,
+                               '--config',RES/'phase5-config.v1.json','--llm-mode',mode,'--output',out])
+        manifest=load(out/'resolution-manifest.json')
+        shutil.copyfile(out/'resolution-manifest.json',E/(name+'-resolution-manifest.json'))
+        binding=load(Q/'generation-binding.json')
+        binding.update(codeRevision=head,sourceTreeHash=source,policyHash=manifest['policyHash'])
+        dump(E/(name+'-prediction-binding.json'),binding)
+        run('prepare-'+name,java+['prepare-evaluation-predictions','--input',FROZEN,'--config',RES/'phase5-config.v1.json',
+            '--queue',Q/'queue.json','--predictions',out,'--binding',E/(name+'-prediction-binding.json'),
+            '--code-revision',head,'--source-hash',source,'--output',E/(name+'-predictions.json')])
+        runs.append(name)
+    # Every prediction is frozen before the first label-aware invocation. No threshold fitting.
+    old=R/'docs/agent-runs/phase-05/evidence/5e'
+    shutil.copyfile(old/'exclude-assisted-pairs.json',E/'exclude-assisted-pairs.json')
+    gold=R/'datasets/entity-resolution/labels/2026-10-20-danny-ai-assisted-v1/validated-labels.json'
+    for name in ['disabled-a','fake-a']:
+        for part in ['development','held-out']:
+            common=['--queue',Q/'queue.json','--split',Q/'split.json','--gold',gold,'--predictions',E/(name+'-predictions.json'),'--partition',part]
+            run('evaluate-'+name+'-'+part,java+['evaluate',*common,'--output',E/(name+'-'+part)])
+            run('evaluate-'+name+'-'+part+'-without-assisted',java+['evaluate',*common,'--exclude-pairs',E/'exclude-assisted-pairs.json','--output',E/(name+'-'+part+'-without-assisted')])
+    dump(E/'scope.json',{'purpose':'Descriptive post-policy validation on previously exposed held-out cohort; not a fresh unseen confirmation',
+        'policyChoiceUsedHumanLabels':False,'thresholdsChanged':False,'realProviderCallsInThisEvaluation':0,
+        'humanLabelsUnchanged':True,'originalEvaluation':'docs/agent-runs/phase-05/evidence/5e',
+        'historicalFreezeRelocation':{'originalDescriptor':'docs/agent-runs/phase-05/source-freeze.json',
+          'preservedPath':'docs/agent-runs/phase-05/evidence/5d-final-attempt/before-source-freeze.json',
+          'sha256':'52f24a88d8b4d3d802e8e53403428ad6d5e889afc7309ccd55a7f4f2fc91376f'}})
+
+if sys.argv[1]=='preview': preview_or_live()
+elif sys.argv[1]=='live': preview_or_live(True)
+elif sys.argv[1]=='live-resume': preview_or_live(True, True)
+elif sys.argv[1]=='evaluation': evaluation()
+else: raise ValueError('expected preview, live, live-resume or evaluation')

@@ -1,0 +1,1459 @@
+{
+  "schema": "scholarchain.phase5d.review-inventory.v1",
+  "head": "6285210f8b8b2de1fe6d0ae79aecaf3079966fc5",
+  "branch": "main",
+  "subphaseBase": "6285210f8b8b2de1fe6d0ae79aecaf3079966fc5",
+  "wholePhaseBase": "099e303311be7a1b2e2cf5655e0c7ce9fa710474",
+  "status": [
+    " M docs/agent-runs/phase-05/owner-report.md",
+    " M docs/agent-runs/phase-05/prompt.md",
+    " M docs/agent-runs/phase-05/repairs.md",
+    " M docs/agent-runs/phase-05/review-inventory.json",
+    " M docs/agent-runs/phase-05/review.md",
+    " M docs/agent-runs/phase-05/source-freeze.json",
+    " M docs/agent-runs/phase-05/test-report.md",
+    " M modules/entity-resolution/README.md",
+    " M modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/Adjudication.scala",
+    " M modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/LinkExporter.scala",
+    " M modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/LiveAdjudication.scala",
+    " M modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/LiveDemo.scala",
+    " M modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/LiveDemoCommands.scala",
+    " M modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/LiveProvider.scala",
+    " M modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/OpenAIResponses.scala",
+    " M modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/Phase5Main.scala",
+    " M modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/ResolutionEngine.scala",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/audit-evaluation-command.json",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/audit-evaluation-final-command.json",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/audit-evaluation-final.txt",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/audit-evaluation.py.txt",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/audit-evaluation.txt",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/before-review-inventory.json",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/before-source-freeze.json",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/collect-evidence.py.txt",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/commands.json",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/design.md",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/evaluate-disabled-a-development-command.json",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/evaluate-disabled-a-development-without-assisted-command.json",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/evaluate-disabled-a-development-without-assisted.txt",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/evaluate-disabled-a-development.txt",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/evaluate-disabled-a-held-out-command.json",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/evaluate-disabled-a-held-out-without-assisted-command.json",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/evaluate-disabled-a-held-out-without-assisted.txt",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/evaluate-disabled-a-held-out.txt",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/evaluate-fake-a-development-command.json",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/evaluate-fake-a-development-without-assisted-command.json",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/evaluate-fake-a-development-without-assisted.txt",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/evaluate-fake-a-development.txt",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/evaluate-fake-a-held-out-command.json",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/evaluate-fake-a-held-out-without-assisted-command.json",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/evaluate-fake-a-held-out-without-assisted.txt",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/evaluate-fake-a-held-out.txt",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/execute-checkpoint.py.txt",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/finalize-report.py.txt",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/full-check-command.json",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/full-check-summary.json",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/full-check.txt",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/implementation-notes.json",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/input-integrity-command.json",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/input-integrity-gates.json",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/input-integrity.txt",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/live-command.json",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/live-resume-20261021T192650Z-command.json",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/live-resume-20261021T192650Z.txt",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/live-resume-20261021T192650Z/_SCHOLARCHAIN_LIVE_DEMO_COMPLETE",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/live-resume-20261021T192650Z/accepted-links.jsonl",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/live-resume-20261021T192650Z/admission.json",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/live-resume-20261021T192650Z/constraints.json",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/live-resume-20261021T192650Z/decisions.jsonl",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/live-resume-20261021T192650Z/demo.json",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/live-resume-20261021T192650Z/effective-policy.json",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/live-resume-20261021T192650Z/effective-source-config.json",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/live-resume-20261021T192650Z/live-config.json",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/live-resume-20261021T192650Z/live-demo-manifest.json",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/live-resume-20261021T192650Z/request-eligibility-policy.json",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/live-resume-20261021T193340Z-command.json",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/live-resume-20261021T193340Z.txt",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/live-resume-20261021T193340Z/_SCHOLARCHAIN_LIVE_DEMO_COMPLETE",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/live-resume-20261021T193340Z/accepted-links.jsonl",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/live-resume-20261021T193340Z/admission.json",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/live-resume-20261021T193340Z/constraints.json",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/live-resume-20261021T193340Z/decisions.jsonl",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/live-resume-20261021T193340Z/demo.json",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/live-resume-20261021T193340Z/effective-policy.json",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/live-resume-20261021T193340Z/effective-source-config.json",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/live-resume-20261021T193340Z/live-config.json",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/live-resume-20261021T193340Z/live-demo-manifest.json",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/live-resume-20261021T193340Z/request-eligibility-policy.json",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/live.txt",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/live/_SCHOLARCHAIN_LIVE_DEMO_COMPLETE",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/live/accepted-links.jsonl",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/live/admission.json",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/live/constraints.json",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/live/decisions.jsonl",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/live/demo.json",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/live/effective-policy.json",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/live/effective-source-config.json",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/live/live-config.json",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/live/live-demo-manifest.json",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/live/request-eligibility-policy.json",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/official-docs.json",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/outcome.json",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/post-policy-evaluation/comparison-with-original.json",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/post-policy-evaluation/disabled-a-development-without-assisted/evaluation.json",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/post-policy-evaluation/disabled-a-development/evaluation.json",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/post-policy-evaluation/disabled-a-held-out-without-assisted/evaluation.json",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/post-policy-evaluation/disabled-a-held-out/evaluation.json",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/post-policy-evaluation/disabled-a-prediction-binding.json",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/post-policy-evaluation/disabled-a-predictions.json",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/post-policy-evaluation/disabled-a-resolution-manifest.json",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/post-policy-evaluation/disabled-b-prediction-binding.json",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/post-policy-evaluation/disabled-b-predictions.json",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/post-policy-evaluation/disabled-b-resolution-manifest.json",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/post-policy-evaluation/exclude-assisted-pairs.json",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/post-policy-evaluation/fake-a-development-without-assisted/evaluation.json",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/post-policy-evaluation/fake-a-development/evaluation.json",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/post-policy-evaluation/fake-a-held-out-without-assisted/evaluation.json",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/post-policy-evaluation/fake-a-held-out/evaluation.json",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/post-policy-evaluation/fake-a-prediction-binding.json",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/post-policy-evaluation/fake-a-predictions.json",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/post-policy-evaluation/fake-a-resolution-manifest.json",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/post-policy-evaluation/protected-and-metrics-proof.json",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/post-policy-evaluation/replay-proof.json",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/post-policy-evaluation/scope.json",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/prepare-disabled-a-command.json",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/prepare-disabled-a.txt",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/prepare-disabled-b-command.json",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/prepare-disabled-b.txt",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/prepare-fake-a-command.json",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/prepare-fake-a.txt",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/preview-command.json",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/preview.txt",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/preview/PREVIEW-ONLY-NOT-EXECUTED-requests.json",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/preview/_SCHOLARCHAIN_LIVE_DEMO_COMPLETE",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/preview/accepted-links.jsonl",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/preview/admission.json",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/preview/constraints.json",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/preview/decisions.jsonl",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/preview/demo.json",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/preview/effective-policy.json",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/preview/effective-source-config.json",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/preview/live-config.json",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/preview/live-demo-manifest.json",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/preview/request-eligibility-policy.json",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/protected-and-provider-proof.json",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/python-tests-command.json",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/python-tests.txt",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/report.md",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/resolve-disabled-a-command.json",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/resolve-disabled-a.txt",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/resolve-disabled-b-command.json",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/resolve-disabled-b.txt",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/resolve-fake-a-command.json",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/resolve-fake-a.txt",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/run-command.py.txt",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/runtime-files-proof.json",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/runtime-files.json",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/source-delta.json",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/start.json",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/targeted-command.json",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/targeted-repaired-command.json",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/targeted-repaired.txt",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/targeted-sandbox-command.json",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/targeted-sandbox.txt",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/targeted.txt",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/user-authorization.json",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/validate-inputs.py.txt",
+    "?? docs/agent-runs/phase-05/evidence/5d-eligibility-revision/verify-checkpoint.py.txt",
+    "?? docs/agent-runs/phase-05/evidence/5d-response-repair/before-review-inventory.json",
+    "?? docs/agent-runs/phase-05/evidence/5d-response-repair/before-source-freeze.json",
+    "?? docs/agent-runs/phase-05/evidence/5d-response-repair/budget-before.json",
+    "?? docs/agent-runs/phase-05/evidence/5d-response-repair/budget-current.json",
+    "?? docs/agent-runs/phase-05/evidence/5d-response-repair/collect-evidence.py.txt",
+    "?? docs/agent-runs/phase-05/evidence/5d-response-repair/commands.json",
+    "?? docs/agent-runs/phase-05/evidence/5d-response-repair/execute-checkpoint.py.txt",
+    "?? docs/agent-runs/phase-05/evidence/5d-response-repair/finalize-report.py.txt",
+    "?? docs/agent-runs/phase-05/evidence/5d-response-repair/full-check-command.json",
+    "?? docs/agent-runs/phase-05/evidence/5d-response-repair/full-check-summary.json",
+    "?? docs/agent-runs/phase-05/evidence/5d-response-repair/full-check.txt",
+    "?? docs/agent-runs/phase-05/evidence/5d-response-repair/observed-failure.json",
+    "?? docs/agent-runs/phase-05/evidence/5d-response-repair/outcome.json",
+    "?? docs/agent-runs/phase-05/evidence/5d-response-repair/preview-command.json",
+    "?? docs/agent-runs/phase-05/evidence/5d-response-repair/preview.txt",
+    "?? docs/agent-runs/phase-05/evidence/5d-response-repair/preview/PREVIEW-ONLY-NOT-EXECUTED-requests.json",
+    "?? docs/agent-runs/phase-05/evidence/5d-response-repair/preview/_SCHOLARCHAIN_LIVE_DEMO_COMPLETE",
+    "?? docs/agent-runs/phase-05/evidence/5d-response-repair/preview/accepted-links.jsonl",
+    "?? docs/agent-runs/phase-05/evidence/5d-response-repair/preview/admission.json",
+    "?? docs/agent-runs/phase-05/evidence/5d-response-repair/preview/constraints.json",
+    "?? docs/agent-runs/phase-05/evidence/5d-response-repair/preview/decisions.jsonl",
+    "?? docs/agent-runs/phase-05/evidence/5d-response-repair/preview/demo.json",
+    "?? docs/agent-runs/phase-05/evidence/5d-response-repair/preview/effective-policy.json",
+    "?? docs/agent-runs/phase-05/evidence/5d-response-repair/preview/effective-source-config.json",
+    "?? docs/agent-runs/phase-05/evidence/5d-response-repair/preview/live-config.json",
+    "?? docs/agent-runs/phase-05/evidence/5d-response-repair/preview/live-demo-manifest.json",
+    "?? docs/agent-runs/phase-05/evidence/5d-response-repair/preview/request-eligibility-policy.json",
+    "?? docs/agent-runs/phase-05/evidence/5d-response-repair/protected-and-budget-proof.json",
+    "?? docs/agent-runs/phase-05/evidence/5d-response-repair/report.md",
+    "?? docs/agent-runs/phase-05/evidence/5d-response-repair/run-command.py.txt",
+    "?? docs/agent-runs/phase-05/evidence/5d-response-repair/runtime-files.json",
+    "?? docs/agent-runs/phase-05/evidence/5d-response-repair/source-delta.json",
+    "?? docs/agent-runs/phase-05/evidence/5d-response-repair/start.json",
+    "?? docs/agent-runs/phase-05/evidence/5d-response-repair/targeted-command.json",
+    "?? docs/agent-runs/phase-05/evidence/5d-response-repair/targeted-final-command.json",
+    "?? docs/agent-runs/phase-05/evidence/5d-response-repair/targeted-final.txt",
+    "?? docs/agent-runs/phase-05/evidence/5d-response-repair/targeted.txt",
+    "?? docs/agent-runs/phase-05/evidence/5d-response-repair/validate-inputs.py.txt",
+    "?? docs/agent-runs/phase-05/evidence/5d-response-repair/verify-repair.py.txt",
+    "?? docs/agent-runs/phase-05/evidence/5d/live-state/approval-1b66c9878075/budget.json",
+    "?? docs/agent-runs/phase-05/evidence/5d/live-state/approval-1b66c9878075/budget.json.lock",
+    "?? docs/agent-runs/phase-05/human-gate.md",
+    "?? modules/entity-resolution/src/main/resources/adjudication/request-eligibility.v1.json",
+    "?? modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/RequestEligibilityPolicy.scala",
+    "?? modules/entity-resolution/src/test/scala/edu/uic/cs441/scholarchain/entityresolution/ProviderResponseDiagnosticSpec.scala",
+    "?? modules/entity-resolution/src/test/scala/edu/uic/cs441/scholarchain/entityresolution/RequestEligibilitySpec.scala",
+    "?? tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentLiveResponseDiagnosticSpec.scala",
+    "?? tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentRequestEligibilitySpec.scala"
+  ],
+  "paths": [
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/audit-evaluation-command.json",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/audit-evaluation-final-command.json",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/audit-evaluation-final.txt",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/audit-evaluation.py.txt",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/audit-evaluation.txt",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/before-review-inventory.json",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/before-source-freeze.json",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/collect-evidence.py.txt",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/commands.json",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/design.md",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/evaluate-disabled-a-development-command.json",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/evaluate-disabled-a-development-without-assisted-command.json",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/evaluate-disabled-a-development-without-assisted.txt",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/evaluate-disabled-a-development.txt",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/evaluate-disabled-a-held-out-command.json",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/evaluate-disabled-a-held-out-without-assisted-command.json",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/evaluate-disabled-a-held-out-without-assisted.txt",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/evaluate-disabled-a-held-out.txt",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/evaluate-fake-a-development-command.json",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/evaluate-fake-a-development-without-assisted-command.json",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/evaluate-fake-a-development-without-assisted.txt",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/evaluate-fake-a-development.txt",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/evaluate-fake-a-held-out-command.json",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/evaluate-fake-a-held-out-without-assisted-command.json",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/evaluate-fake-a-held-out-without-assisted.txt",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/evaluate-fake-a-held-out.txt",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/execute-checkpoint.py.txt",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/finalize-report.py.txt",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/full-check-command.json",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/full-check-summary.json",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/full-check.txt",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/implementation-notes.json",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/input-integrity-command.json",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/input-integrity-gates.json",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/input-integrity.txt",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/live-command.json",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/live-resume-20261021T192650Z-command.json",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/live-resume-20261021T192650Z.txt",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/live-resume-20261021T192650Z/_SCHOLARCHAIN_LIVE_DEMO_COMPLETE",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/live-resume-20261021T192650Z/accepted-links.jsonl",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/live-resume-20261021T192650Z/admission.json",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/live-resume-20261021T192650Z/constraints.json",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/live-resume-20261021T192650Z/decisions.jsonl",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/live-resume-20261021T192650Z/demo.json",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/live-resume-20261021T192650Z/effective-policy.json",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/live-resume-20261021T192650Z/effective-source-config.json",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/live-resume-20261021T192650Z/live-config.json",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/live-resume-20261021T192650Z/live-demo-manifest.json",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/live-resume-20261021T192650Z/request-eligibility-policy.json",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/live-resume-20261021T193340Z-command.json",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/live-resume-20261021T193340Z.txt",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/live-resume-20261021T193340Z/_SCHOLARCHAIN_LIVE_DEMO_COMPLETE",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/live-resume-20261021T193340Z/accepted-links.jsonl",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/live-resume-20261021T193340Z/admission.json",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/live-resume-20261021T193340Z/constraints.json",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/live-resume-20261021T193340Z/decisions.jsonl",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/live-resume-20261021T193340Z/demo.json",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/live-resume-20261021T193340Z/effective-policy.json",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/live-resume-20261021T193340Z/effective-source-config.json",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/live-resume-20261021T193340Z/live-config.json",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/live-resume-20261021T193340Z/live-demo-manifest.json",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/live-resume-20261021T193340Z/request-eligibility-policy.json",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/live.txt",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/live/_SCHOLARCHAIN_LIVE_DEMO_COMPLETE",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/live/accepted-links.jsonl",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/live/admission.json",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/live/constraints.json",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/live/decisions.jsonl",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/live/demo.json",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/live/effective-policy.json",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/live/effective-source-config.json",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/live/live-config.json",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/live/live-demo-manifest.json",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/live/request-eligibility-policy.json",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/official-docs.json",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/outcome.json",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/post-policy-evaluation/comparison-with-original.json",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/post-policy-evaluation/disabled-a-development-without-assisted/evaluation.json",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/post-policy-evaluation/disabled-a-development/evaluation.json",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/post-policy-evaluation/disabled-a-held-out-without-assisted/evaluation.json",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/post-policy-evaluation/disabled-a-held-out/evaluation.json",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/post-policy-evaluation/disabled-a-prediction-binding.json",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/post-policy-evaluation/disabled-a-predictions.json",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/post-policy-evaluation/disabled-a-resolution-manifest.json",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/post-policy-evaluation/disabled-b-prediction-binding.json",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/post-policy-evaluation/disabled-b-predictions.json",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/post-policy-evaluation/disabled-b-resolution-manifest.json",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/post-policy-evaluation/exclude-assisted-pairs.json",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/post-policy-evaluation/fake-a-development-without-assisted/evaluation.json",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/post-policy-evaluation/fake-a-development/evaluation.json",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/post-policy-evaluation/fake-a-held-out-without-assisted/evaluation.json",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/post-policy-evaluation/fake-a-held-out/evaluation.json",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/post-policy-evaluation/fake-a-prediction-binding.json",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/post-policy-evaluation/fake-a-predictions.json",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/post-policy-evaluation/fake-a-resolution-manifest.json",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/post-policy-evaluation/protected-and-metrics-proof.json",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/post-policy-evaluation/replay-proof.json",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/post-policy-evaluation/scope.json",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/prepare-disabled-a-command.json",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/prepare-disabled-a.txt",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/prepare-disabled-b-command.json",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/prepare-disabled-b.txt",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/prepare-fake-a-command.json",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/prepare-fake-a.txt",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/preview-command.json",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/preview.txt",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/preview/PREVIEW-ONLY-NOT-EXECUTED-requests.json",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/preview/_SCHOLARCHAIN_LIVE_DEMO_COMPLETE",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/preview/accepted-links.jsonl",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/preview/admission.json",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/preview/constraints.json",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/preview/decisions.jsonl",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/preview/demo.json",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/preview/effective-policy.json",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/preview/effective-source-config.json",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/preview/live-config.json",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/preview/live-demo-manifest.json",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/preview/request-eligibility-policy.json",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/protected-and-provider-proof.json",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/python-tests-command.json",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/python-tests.txt",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/report.md",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/resolve-disabled-a-command.json",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/resolve-disabled-a.txt",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/resolve-disabled-b-command.json",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/resolve-disabled-b.txt",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/resolve-fake-a-command.json",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/resolve-fake-a.txt",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/run-command.py.txt",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/runtime-files-proof.json",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/runtime-files.json",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/source-delta.json",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/start.json",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/targeted-command.json",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/targeted-repaired-command.json",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/targeted-repaired.txt",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/targeted-sandbox-command.json",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/targeted-sandbox.txt",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/targeted.txt",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/user-authorization.json",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/validate-inputs.py.txt",
+    "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/verify-checkpoint.py.txt",
+    "docs/agent-runs/phase-05/evidence/5d-response-repair/before-review-inventory.json",
+    "docs/agent-runs/phase-05/evidence/5d-response-repair/before-source-freeze.json",
+    "docs/agent-runs/phase-05/evidence/5d-response-repair/budget-before.json",
+    "docs/agent-runs/phase-05/evidence/5d-response-repair/budget-current.json",
+    "docs/agent-runs/phase-05/evidence/5d-response-repair/collect-evidence.py.txt",
+    "docs/agent-runs/phase-05/evidence/5d-response-repair/commands.json",
+    "docs/agent-runs/phase-05/evidence/5d-response-repair/execute-checkpoint.py.txt",
+    "docs/agent-runs/phase-05/evidence/5d-response-repair/finalize-report.py.txt",
+    "docs/agent-runs/phase-05/evidence/5d-response-repair/full-check-command.json",
+    "docs/agent-runs/phase-05/evidence/5d-response-repair/full-check-summary.json",
+    "docs/agent-runs/phase-05/evidence/5d-response-repair/full-check.txt",
+    "docs/agent-runs/phase-05/evidence/5d-response-repair/observed-failure.json",
+    "docs/agent-runs/phase-05/evidence/5d-response-repair/outcome.json",
+    "docs/agent-runs/phase-05/evidence/5d-response-repair/preview-command.json",
+    "docs/agent-runs/phase-05/evidence/5d-response-repair/preview.txt",
+    "docs/agent-runs/phase-05/evidence/5d-response-repair/preview/PREVIEW-ONLY-NOT-EXECUTED-requests.json",
+    "docs/agent-runs/phase-05/evidence/5d-response-repair/preview/_SCHOLARCHAIN_LIVE_DEMO_COMPLETE",
+    "docs/agent-runs/phase-05/evidence/5d-response-repair/preview/accepted-links.jsonl",
+    "docs/agent-runs/phase-05/evidence/5d-response-repair/preview/admission.json",
+    "docs/agent-runs/phase-05/evidence/5d-response-repair/preview/constraints.json",
+    "docs/agent-runs/phase-05/evidence/5d-response-repair/preview/decisions.jsonl",
+    "docs/agent-runs/phase-05/evidence/5d-response-repair/preview/demo.json",
+    "docs/agent-runs/phase-05/evidence/5d-response-repair/preview/effective-policy.json",
+    "docs/agent-runs/phase-05/evidence/5d-response-repair/preview/effective-source-config.json",
+    "docs/agent-runs/phase-05/evidence/5d-response-repair/preview/live-config.json",
+    "docs/agent-runs/phase-05/evidence/5d-response-repair/preview/live-demo-manifest.json",
+    "docs/agent-runs/phase-05/evidence/5d-response-repair/preview/request-eligibility-policy.json",
+    "docs/agent-runs/phase-05/evidence/5d-response-repair/protected-and-budget-proof.json",
+    "docs/agent-runs/phase-05/evidence/5d-response-repair/report.md",
+    "docs/agent-runs/phase-05/evidence/5d-response-repair/run-command.py.txt",
+    "docs/agent-runs/phase-05/evidence/5d-response-repair/runtime-files.json",
+    "docs/agent-runs/phase-05/evidence/5d-response-repair/source-delta.json",
+    "docs/agent-runs/phase-05/evidence/5d-response-repair/start.json",
+    "docs/agent-runs/phase-05/evidence/5d-response-repair/targeted-command.json",
+    "docs/agent-runs/phase-05/evidence/5d-response-repair/targeted-final-command.json",
+    "docs/agent-runs/phase-05/evidence/5d-response-repair/targeted-final.txt",
+    "docs/agent-runs/phase-05/evidence/5d-response-repair/targeted.txt",
+    "docs/agent-runs/phase-05/evidence/5d-response-repair/validate-inputs.py.txt",
+    "docs/agent-runs/phase-05/evidence/5d-response-repair/verify-repair.py.txt",
+    "docs/agent-runs/phase-05/evidence/5d/live-state/approval-1b66c9878075/budget.json",
+    "docs/agent-runs/phase-05/evidence/5d/live-state/approval-1b66c9878075/budget.json.lock",
+    "docs/agent-runs/phase-05/human-gate.md",
+    "docs/agent-runs/phase-05/owner-report.md",
+    "docs/agent-runs/phase-05/prompt.md",
+    "docs/agent-runs/phase-05/repairs.md",
+    "docs/agent-runs/phase-05/review-inventory.json",
+    "docs/agent-runs/phase-05/review.md",
+    "docs/agent-runs/phase-05/source-freeze.json",
+    "docs/agent-runs/phase-05/test-report.md",
+    "modules/entity-resolution/README.md",
+    "modules/entity-resolution/src/main/resources/adjudication/request-eligibility.v1.json",
+    "modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/Adjudication.scala",
+    "modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/LinkExporter.scala",
+    "modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/LiveAdjudication.scala",
+    "modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/LiveDemo.scala",
+    "modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/LiveDemoCommands.scala",
+    "modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/LiveProvider.scala",
+    "modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/OpenAIResponses.scala",
+    "modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/Phase5Main.scala",
+    "modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/RequestEligibilityPolicy.scala",
+    "modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/ResolutionEngine.scala",
+    "modules/entity-resolution/src/test/scala/edu/uic/cs441/scholarchain/entityresolution/ProviderResponseDiagnosticSpec.scala",
+    "modules/entity-resolution/src/test/scala/edu/uic/cs441/scholarchain/entityresolution/RequestEligibilitySpec.scala",
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentLiveResponseDiagnosticSpec.scala",
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentRequestEligibilitySpec.scala"
+  ],
+  "files": [
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/audit-evaluation-command.json",
+      "bytes": 700,
+      "sha256": "c48ee22397b6044e1d4e31b84e939ba6ff6ef2dc72e315607cf703a1ff7c6da5"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/audit-evaluation-final-command.json",
+      "bytes": 712,
+      "sha256": "77efe4e2fed0844eb182d6ccf88839db93b75ba36fcfcbfe72e705bb0efdd624"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/audit-evaluation-final.txt",
+      "bytes": 79,
+      "sha256": "3ef733d66fe27adf8010e94bf1e010956914b2e227eb015c46b9c8a3682d308d"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/audit-evaluation.py.txt",
+      "bytes": 6440,
+      "sha256": "ccd656f5f7831a39cbb859220bf0ca3d38e18778e9d4d04ad454e007370b33f2"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/audit-evaluation.txt",
+      "bytes": 79,
+      "sha256": "3ef733d66fe27adf8010e94bf1e010956914b2e227eb015c46b9c8a3682d308d"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/before-review-inventory.json",
+      "bytes": 457255,
+      "sha256": "c8ff7830fc411938cdafefc9993200bc9d5856508ae6338b7ea983ffce57fab2"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/before-source-freeze.json",
+      "bytes": 231767,
+      "sha256": "1c82d2f630a864a01af69f8d5940211c626f2701a7af3e5853b5a21222151668"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/collect-evidence.py.txt",
+      "bytes": 6338,
+      "sha256": "5591e83ae686f3de0d43b9d68ea71991b4aaf589584d2059fe139bfcc153c89c"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/commands.json",
+      "bytes": 65715,
+      "sha256": "22288431206a1606c0722b349fe322d0d5f9548e56a8b5454b5799d3963b3639"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/design.md",
+      "bytes": 2550,
+      "sha256": "2c26bb3f5fad3f178cb248d79fc0a8acf561cd4ad15a243dc17b55929c701969"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/evaluate-disabled-a-development-command.json",
+      "bytes": 2930,
+      "sha256": "11ed973ffe14c4dd30c1eb0f6796a3fa0a33b8c47107a0cd54193f9e695a81db"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/evaluate-disabled-a-development-without-assisted-command.json",
+      "bytes": 3166,
+      "sha256": "bcfe426ce5f2aeef9c5692e6ff5a146400fa666a7f97cad56d0fa8900ffdd25a"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/evaluate-disabled-a-development-without-assisted.txt",
+      "bytes": 142,
+      "sha256": "443db2d93cf4d0398376d5e78e9dcf32e0bd95b85a3a9f7c3e11028c155fb25e"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/evaluate-disabled-a-development.txt",
+      "bytes": 142,
+      "sha256": "71519b608d0a31dcd22a91937bcd6fbec578b52d9424bed632fc616ec05cfb0c"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/evaluate-disabled-a-held-out-command.json",
+      "bytes": 2918,
+      "sha256": "0cdd2c214f304ef23faf308a2ced67836db1036d667db5cf449ec0e063a16fd9"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/evaluate-disabled-a-held-out-without-assisted-command.json",
+      "bytes": 3154,
+      "sha256": "686ad4782ed9c4386732037288882f406d9f9853bb9098553f73d53335bce867"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/evaluate-disabled-a-held-out-without-assisted.txt",
+      "bytes": 143,
+      "sha256": "07c8dacf191d415fb1263ade42f5833651bad68bb3ac77f336c4363253ad7f25"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/evaluate-disabled-a-held-out.txt",
+      "bytes": 143,
+      "sha256": "60b8aea60e04cab4f413294624e97f98e6c357cd19e00bc4b27e3572a0c8fd7a"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/evaluate-fake-a-development-command.json",
+      "bytes": 2914,
+      "sha256": "5b8fb050fe09fb99d6d2acd1486a3a77beafa0f7e84ec3707625565dedeca3fa"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/evaluate-fake-a-development-without-assisted-command.json",
+      "bytes": 3150,
+      "sha256": "ea036d82cd4b459a292866b1be04f7d1f7496374c7c69ad0c886aab9439febb7"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/evaluate-fake-a-development-without-assisted.txt",
+      "bytes": 142,
+      "sha256": "443db2d93cf4d0398376d5e78e9dcf32e0bd95b85a3a9f7c3e11028c155fb25e"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/evaluate-fake-a-development.txt",
+      "bytes": 142,
+      "sha256": "71519b608d0a31dcd22a91937bcd6fbec578b52d9424bed632fc616ec05cfb0c"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/evaluate-fake-a-held-out-command.json",
+      "bytes": 2902,
+      "sha256": "c8445f335a8e3fcc8cf96cd215051434bdc86cb8bde2b183ad5a7f011fa0c86c"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/evaluate-fake-a-held-out-without-assisted-command.json",
+      "bytes": 3138,
+      "sha256": "08aaba34c2e9f66388a680b9c7be1e8d62896134ddfeebdaba2197437f7be7a7"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/evaluate-fake-a-held-out-without-assisted.txt",
+      "bytes": 143,
+      "sha256": "07c8dacf191d415fb1263ade42f5833651bad68bb3ac77f336c4363253ad7f25"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/evaluate-fake-a-held-out.txt",
+      "bytes": 143,
+      "sha256": "60b8aea60e04cab4f413294624e97f98e6c357cd19e00bc4b27e3572a0c8fd7a"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/execute-checkpoint.py.txt",
+      "bytes": 5832,
+      "sha256": "1895b0794f7e0acd7d9f703e882374315f5db62013104851c85216e82da2a92a"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/finalize-report.py.txt",
+      "bytes": 6988,
+      "sha256": "b7a72f32f9ba279b2bc82c33eafee873f6980f197c92ebec2cb032e3cab6296c"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/full-check-command.json",
+      "bytes": 622,
+      "sha256": "d83242a3d9bb292699082a2389eb424972ec08e0defcb9df4481cd6d606826c5"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/full-check-summary.json",
+      "bytes": 21602,
+      "sha256": "54af86c99c7a3c3e3dc4f55a1d8f5e86d659e7e1abc407e930a6c167b107910a"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/full-check.txt",
+      "bytes": 251580,
+      "sha256": "caf9e548350bf984eb1565d4098cba949a9980e0b70ed5c7e632b9c56c7108d5"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/implementation-notes.json",
+      "bytes": 651,
+      "sha256": "cf17012abc4eb8574787ed32087ddfb4b21d35dc2d62115f48e800c750390ca4"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/input-integrity-command.json",
+      "bytes": 697,
+      "sha256": "d67289f451eb6552ad7ade6a7b8fe19a2669cc92a3cb57305ef1457157d21695"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/input-integrity-gates.json",
+      "bytes": 12627,
+      "sha256": "d1f3454f72d51afedac674aaf35ad53e5652d082bd2fdc85aaf2deea0c5982a6"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/input-integrity.txt",
+      "bytes": 72,
+      "sha256": "e95a9da304e1e1b2b02159e7221b0a099b414646285d9bc3f643ee38d052ad7b"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/live-command.json",
+      "bytes": 3847,
+      "sha256": "19f23f5f186b9dd9c1d5f70aacb64d995d806ecee14f1b030644e00125f6499c"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/live-resume-20261021T192650Z-command.json",
+      "bytes": 3919,
+      "sha256": "9ae4ea5d5cc223929c6aa3a89a9d5a0ee18cb780786a8ffad208733a87c1a023"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/live-resume-20261021T192650Z.txt",
+      "bytes": 132,
+      "sha256": "3be7d7ff107fc3b6b896717eb3bf48c5e8a4acd03b9ad0b3c4527423971a5539"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/live-resume-20261021T192650Z/_SCHOLARCHAIN_LIVE_DEMO_COMPLETE",
+      "bytes": 65,
+      "sha256": "3d6e50c59e5902ec55ecbd59b4a5ead684cfcfc8ec5601d057ad0a215fe9c189"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/live-resume-20261021T192650Z/accepted-links.jsonl",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/live-resume-20261021T192650Z/admission.json",
+      "bytes": 1537,
+      "sha256": "90badfaf763279da61cf772ca5f008f8de46594b1213b1a5c79630069b91bafa"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/live-resume-20261021T192650Z/constraints.json",
+      "bytes": 8288,
+      "sha256": "969cad7132099c255a1083ef399cf76ce96dffb05be6b538d3988eece62ab386"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/live-resume-20261021T192650Z/decisions.jsonl",
+      "bytes": 15134,
+      "sha256": "14642f1cffb5164ae127bfc006ae08a980791226c6d9a0d341aec22ec75da910"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/live-resume-20261021T192650Z/demo.json",
+      "bytes": 67776,
+      "sha256": "3264f9f9c8a8c28888bc76656fae532c25c5a3ec51cedc7d02766a902837c5ec"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/live-resume-20261021T192650Z/effective-policy.json",
+      "bytes": 1602,
+      "sha256": "87cd8837795c09efb0b8c2aa2f944f970a14ad3da8eb68dfa45bd71dd15fe533"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/live-resume-20261021T192650Z/effective-source-config.json",
+      "bytes": 914,
+      "sha256": "993e86654b5b808c20c89375e30d723afbbd7c12cba6dd0abfea06bf45efb24a"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/live-resume-20261021T192650Z/live-config.json",
+      "bytes": 850,
+      "sha256": "29bbb9bc653baae34a3b1128c97f1d5241f631ed963cf42a4c96f02159dd74a0"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/live-resume-20261021T192650Z/live-demo-manifest.json",
+      "bytes": 2573,
+      "sha256": "9a7f5002368d305107d1229cbac29976d0a25813beb27ddad5873ec1b15b05b1"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/live-resume-20261021T192650Z/request-eligibility-policy.json",
+      "bytes": 279,
+      "sha256": "01e4b67fc8142c6dde699f9cde33ee6a53ffe84fc4e52abb3aa6134b46368bb2"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/live-resume-20261021T193340Z-command.json",
+      "bytes": 3919,
+      "sha256": "05718f85d38cc473ee5fa93335cf6e311438d214be45ebae5dfd8bd06eebb67a"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/live-resume-20261021T193340Z.txt",
+      "bytes": 132,
+      "sha256": "c5181a2af06db9464344de4b131a46b7dd9b6f651a9f151c27633f648015b7a4"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/live-resume-20261021T193340Z/_SCHOLARCHAIN_LIVE_DEMO_COMPLETE",
+      "bytes": 65,
+      "sha256": "84848873d1069ead8c391535c68463ca2ee931491bc1527b7f2f00f91985cc6e"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/live-resume-20261021T193340Z/accepted-links.jsonl",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/live-resume-20261021T193340Z/admission.json",
+      "bytes": 1537,
+      "sha256": "90badfaf763279da61cf772ca5f008f8de46594b1213b1a5c79630069b91bafa"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/live-resume-20261021T193340Z/constraints.json",
+      "bytes": 8288,
+      "sha256": "969cad7132099c255a1083ef399cf76ce96dffb05be6b538d3988eece62ab386"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/live-resume-20261021T193340Z/decisions.jsonl",
+      "bytes": 15136,
+      "sha256": "923963654b82b67ac5aa800f087a54989789f35b051a94bc40b5a7d865a8e2dd"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/live-resume-20261021T193340Z/demo.json",
+      "bytes": 67789,
+      "sha256": "8a374bf148cd95d19b2fdb1a9455cd60ccb9bc7d17d1c700aec8da1b8f7ea2ba"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/live-resume-20261021T193340Z/effective-policy.json",
+      "bytes": 1602,
+      "sha256": "87cd8837795c09efb0b8c2aa2f944f970a14ad3da8eb68dfa45bd71dd15fe533"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/live-resume-20261021T193340Z/effective-source-config.json",
+      "bytes": 914,
+      "sha256": "993e86654b5b808c20c89375e30d723afbbd7c12cba6dd0abfea06bf45efb24a"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/live-resume-20261021T193340Z/live-config.json",
+      "bytes": 850,
+      "sha256": "29bbb9bc653baae34a3b1128c97f1d5241f631ed963cf42a4c96f02159dd74a0"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/live-resume-20261021T193340Z/live-demo-manifest.json",
+      "bytes": 2573,
+      "sha256": "9338da55a559d8ac5c78e118feba9873454545e804a9b180c1f56a4726dae949"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/live-resume-20261021T193340Z/request-eligibility-policy.json",
+      "bytes": 279,
+      "sha256": "01e4b67fc8142c6dde699f9cde33ee6a53ffe84fc4e52abb3aa6134b46368bb2"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/live.txt",
+      "bytes": 132,
+      "sha256": "3be7d7ff107fc3b6b896717eb3bf48c5e8a4acd03b9ad0b3c4527423971a5539"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/live/_SCHOLARCHAIN_LIVE_DEMO_COMPLETE",
+      "bytes": 65,
+      "sha256": "5ae2f4a8182b4646210af69b4d619bc3d3b21111e9e55fc20e604007fc95b1d7"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/live/accepted-links.jsonl",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/live/admission.json",
+      "bytes": 1537,
+      "sha256": "90badfaf763279da61cf772ca5f008f8de46594b1213b1a5c79630069b91bafa"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/live/constraints.json",
+      "bytes": 8288,
+      "sha256": "969cad7132099c255a1083ef399cf76ce96dffb05be6b538d3988eece62ab386"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/live/decisions.jsonl",
+      "bytes": 15134,
+      "sha256": "e5d4288a15228d7b7c1c1f3d179b27fa61b34c3dda4ec1fa52e4f6b8a26f787e"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/live/demo.json",
+      "bytes": 67776,
+      "sha256": "621f0b25dba1afd64c5fb442fcecfdfea9af6494c7f96817a121c76dc903fb6e"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/live/effective-policy.json",
+      "bytes": 1602,
+      "sha256": "87cd8837795c09efb0b8c2aa2f944f970a14ad3da8eb68dfa45bd71dd15fe533"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/live/effective-source-config.json",
+      "bytes": 914,
+      "sha256": "993e86654b5b808c20c89375e30d723afbbd7c12cba6dd0abfea06bf45efb24a"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/live/live-config.json",
+      "bytes": 850,
+      "sha256": "29bbb9bc653baae34a3b1128c97f1d5241f631ed963cf42a4c96f02159dd74a0"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/live/live-demo-manifest.json",
+      "bytes": 2573,
+      "sha256": "9350639c2282f12f8b14f10e55e9c5a2cd1fe78ce0fd989d7ae2767c11b7aeb8"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/live/request-eligibility-policy.json",
+      "bytes": 279,
+      "sha256": "01e4b67fc8142c6dde699f9cde33ee6a53ffe84fc4e52abb3aa6134b46368bb2"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/official-docs.json",
+      "bytes": 759,
+      "sha256": "550e1ca12678e795456974a74072ec4960e0fd8a4381557c87bb2153a45ec321"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/outcome.json",
+      "bytes": 12545,
+      "sha256": "14d31046ad8cc8ac5b99fad020cabf374188a97b4bb32be6aad68a9c4aaa186f"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/post-policy-evaluation/comparison-with-original.json",
+      "bytes": 5814,
+      "sha256": "2108be736b3db37463808dc44bd5929a24da0d555d20faaac3b8e5c71d3805cf"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/post-policy-evaluation/disabled-a-development-without-assisted/evaluation.json",
+      "bytes": 30092,
+      "sha256": "3586b8a7d650ea65526a3c560f4d330b4469571660a24f7e215a03a0552fcacc"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/post-policy-evaluation/disabled-a-development/evaluation.json",
+      "bytes": 29023,
+      "sha256": "1d29b72a914c6bee1d42efff3ab70182ea4b4cfe2c26229c2dd4f080742d2335"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/post-policy-evaluation/disabled-a-held-out-without-assisted/evaluation.json",
+      "bytes": 35239,
+      "sha256": "974d785e47cfe1b62a2f6fac0075d84694853eabd6ce7ca0ab2e88b747409e19"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/post-policy-evaluation/disabled-a-held-out/evaluation.json",
+      "bytes": 34176,
+      "sha256": "cec08f5b63ae850ec222410773e56e4996787bb81dfdf0337b23fbc795bc05f5"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/post-policy-evaluation/disabled-a-prediction-binding.json",
+      "bytes": 745,
+      "sha256": "2efa0859d0202282f33a4425308606b07fb434c993cb8b70c42859bbfce283fc"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/post-policy-evaluation/disabled-a-predictions.json",
+      "bytes": 106261,
+      "sha256": "a81cbf363cbe475969ea974514aa3b757933f2eff29bacfecf43f72fb0fa07d9"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/post-policy-evaluation/disabled-a-resolution-manifest.json",
+      "bytes": 4079,
+      "sha256": "a92406eaf8da7a08c2f33766cd8e4474ce9afa5afe02a26776f5f916bf7f8a02"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/post-policy-evaluation/disabled-b-prediction-binding.json",
+      "bytes": 745,
+      "sha256": "2efa0859d0202282f33a4425308606b07fb434c993cb8b70c42859bbfce283fc"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/post-policy-evaluation/disabled-b-predictions.json",
+      "bytes": 106261,
+      "sha256": "a81cbf363cbe475969ea974514aa3b757933f2eff29bacfecf43f72fb0fa07d9"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/post-policy-evaluation/disabled-b-resolution-manifest.json",
+      "bytes": 4079,
+      "sha256": "3755533e2b27c517e1911f4f541dd2800e44d509f231f2831964bf3eae90d6e4"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/post-policy-evaluation/exclude-assisted-pairs.json",
+      "bytes": 2441,
+      "sha256": "7b672067ceb0ba067cfe8be917dad753222db73989d6ff050a5cfa74684346c8"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/post-policy-evaluation/fake-a-development-without-assisted/evaluation.json",
+      "bytes": 30084,
+      "sha256": "f5635ad023ae01006ceda814652c189d6e4af3699c4b6e304c1a1ea52c90a7a5"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/post-policy-evaluation/fake-a-development/evaluation.json",
+      "bytes": 29015,
+      "sha256": "6583928c6b4fb2be55c30069001353b6492c18a09facf04aac8773e2c065217e"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/post-policy-evaluation/fake-a-held-out-without-assisted/evaluation.json",
+      "bytes": 35221,
+      "sha256": "d51bd09929569ea142e0ae389395d0653e2a2321e02938115d20855b86e49957"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/post-policy-evaluation/fake-a-held-out/evaluation.json",
+      "bytes": 34106,
+      "sha256": "15951485fb112333f93a03e133d852a868c03f56c92e4d22cf670d4ff0d8de8d"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/post-policy-evaluation/fake-a-prediction-binding.json",
+      "bytes": 745,
+      "sha256": "2efa0859d0202282f33a4425308606b07fb434c993cb8b70c42859bbfce283fc"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/post-policy-evaluation/fake-a-predictions.json",
+      "bytes": 106265,
+      "sha256": "d5d3f02900748429db896836fc60d4d1a58d722086606146eafe03986f0e82ba"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/post-policy-evaluation/fake-a-resolution-manifest.json",
+      "bytes": 4076,
+      "sha256": "e60f84335ed5e7c8aa4852e9def003a6fa26b7de21240268397e79dc2e753fc2"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/post-policy-evaluation/protected-and-metrics-proof.json",
+      "bytes": 2481,
+      "sha256": "6d7b4c4f3954b7634458ca8d6e3929f2f50495ae1033cc1799faeb85fbe0a9bc"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/post-policy-evaluation/replay-proof.json",
+      "bytes": 3623,
+      "sha256": "dafed866cf085fa21a949ebebcdae128e0ba9da3afa5ed603533e810487004ef"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/post-policy-evaluation/scope.json",
+      "bytes": 627,
+      "sha256": "33158cbaf8e0e3927f912b9f1e86b12de790c24afbd4e5f282ea7ad8b1633d89"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/prepare-disabled-a-command.json",
+      "bytes": 3162,
+      "sha256": "ce062a8a19774618728e6c26ab8b9e0cfd4f9a9c0e9e1308a20f0fe04a437ee8"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/prepare-disabled-a.txt",
+      "bytes": 55,
+      "sha256": "59b84510627e514344d6483aa559d50f0e9d180ddf1fc2a72b7715dd5ad2a545"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/prepare-disabled-b-command.json",
+      "bytes": 3162,
+      "sha256": "548a48f36eba037659c9e174b52ed6c359aab96445496ddce600b60c1d129b9e"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/prepare-disabled-b.txt",
+      "bytes": 55,
+      "sha256": "59b84510627e514344d6483aa559d50f0e9d180ddf1fc2a72b7715dd5ad2a545"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/prepare-fake-a-command.json",
+      "bytes": 3142,
+      "sha256": "31113cc889adc6693b7186a5ee5482c0faa3257d08d368d20859aa7f083af71c"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/prepare-fake-a.txt",
+      "bytes": 55,
+      "sha256": "59b84510627e514344d6483aa559d50f0e9d180ddf1fc2a72b7715dd5ad2a545"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/preview-command.json",
+      "bytes": 3535,
+      "sha256": "5fb5138580b68dfce8d916297faed6279e46f09e73373422d5de7dc7db200ad2"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/preview.txt",
+      "bytes": 127,
+      "sha256": "4824690b4b6a833594d6e4e61a9335a9ca37cc3b34f2465f4f3dc377d3184031"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/preview/PREVIEW-ONLY-NOT-EXECUTED-requests.json",
+      "bytes": 40386,
+      "sha256": "710946d98a6d6190acc7ce0494035d89812b5c2f0a0c84faa5f9f59c3eada393"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/preview/_SCHOLARCHAIN_LIVE_DEMO_COMPLETE",
+      "bytes": 65,
+      "sha256": "75a6373296b83509b1bc7858e092bf75935c6c4f8aa9ae34d2fb801122c20ce7"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/preview/accepted-links.jsonl",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/preview/admission.json",
+      "bytes": 1537,
+      "sha256": "90badfaf763279da61cf772ca5f008f8de46594b1213b1a5c79630069b91bafa"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/preview/constraints.json",
+      "bytes": 8288,
+      "sha256": "969cad7132099c255a1083ef399cf76ce96dffb05be6b538d3988eece62ab386"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/preview/decisions.jsonl",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/preview/demo.json",
+      "bytes": 11348,
+      "sha256": "2ef01193d114ccce0730e648463ec0d193c6d617ed24ac6dd2f509e90e82d684"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/preview/effective-policy.json",
+      "bytes": 1602,
+      "sha256": "87cd8837795c09efb0b8c2aa2f944f970a14ad3da8eb68dfa45bd71dd15fe533"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/preview/effective-source-config.json",
+      "bytes": 914,
+      "sha256": "993e86654b5b808c20c89375e30d723afbbd7c12cba6dd0abfea06bf45efb24a"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/preview/live-config.json",
+      "bytes": 850,
+      "sha256": "29bbb9bc653baae34a3b1128c97f1d5241f631ed963cf42a4c96f02159dd74a0"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/preview/live-demo-manifest.json",
+      "bytes": 2722,
+      "sha256": "0cc2f14b8ab1e37eb563de61250bfe6454b161d8fdcdb50fdda8b8492099f637"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/preview/request-eligibility-policy.json",
+      "bytes": 279,
+      "sha256": "01e4b67fc8142c6dde699f9cde33ee6a53ffe84fc4e52abb3aa6134b46368bb2"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/protected-and-provider-proof.json",
+      "bytes": 5930,
+      "sha256": "7c1ade3064d284dd46c39ff6c35c79ded02b2e0d8c654b5e0b2d9279b76d08f5"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/python-tests-command.json",
+      "bytes": 706,
+      "sha256": "f82c60ffad8d9fe505a0c7433deb7139bbbc105f407466392b809883aed6ad6e"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/python-tests.txt",
+      "bytes": 196,
+      "sha256": "bf60ba1ac194ab9d39ad7455b6b0e5fe44d430dc1d45c3348210b5c4f587001c"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/report.md",
+      "bytes": 3987,
+      "sha256": "10a8338f788187cf58929578beecd65d304220df1bc45aaeedf9ed5e1a4d784f"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/resolve-disabled-a-command.json",
+      "bytes": 2799,
+      "sha256": "a83c6dcb38101a8050602d37dc1cbc8acdf740df2841879e4b35df00471c9a23"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/resolve-disabled-a.txt",
+      "bytes": 281,
+      "sha256": "03bfad83f3d275a3f55fbcc0273438b174f72eb62e5700b96ff143257e26249e"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/resolve-disabled-b-command.json",
+      "bytes": 2799,
+      "sha256": "75b9397e448eff8a5886c708514d020d290d1e7cc84f14573e761f4ac94ba9dd"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/resolve-disabled-b.txt",
+      "bytes": 281,
+      "sha256": "89b28ab5278f58187e9b033082cae3d588a6578775e8acb49452ef844c98a86d"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/resolve-fake-a-command.json",
+      "bytes": 2783,
+      "sha256": "f6e2599af688151e9f25a846521b91249a8290a9deb5d313d77028ce9fe5a195"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/resolve-fake-a.txt",
+      "bytes": 278,
+      "sha256": "23a5b0ca91973ab8777d3d7d7ae8c9f896b0abe5952405244aad0b3e393630e8"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/run-command.py.txt",
+      "bytes": 1584,
+      "sha256": "4785fb8173829a1c3caf0af82f13d3ca0a6e186a336bc36e78d2b0e2c5d64f55"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/runtime-files-proof.json",
+      "bytes": 169,
+      "sha256": "55107d0a8ca637e9ad67d478eac0aa5d33f10c39f870fa5a8023d1b13b44d6b0"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/runtime-files.json",
+      "bytes": 280664,
+      "sha256": "a20a899ff40604ddc2e4ae47fc90e30ee31d8d52b9e8b3b6145d9ea7644f9983"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/source-delta.json",
+      "bytes": 1145,
+      "sha256": "19fdf2fe0d76e4960d8d1868af669dbe7ea9bacad5b825743500e6b01ab65d2a"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/start.json",
+      "bytes": 233183,
+      "sha256": "070c8be1a8c1bb6c794cbf2467ba3079d6a81277c875ac504c49deac9fea8eec"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/targeted-command.json",
+      "bytes": 928,
+      "sha256": "7d8261bbf0a48683ccf6e0f697e546ba4865fdee170d679766eebc793d600b18"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/targeted-repaired-command.json",
+      "bytes": 1366,
+      "sha256": "c2868d0870a5502d70e3b4aabae7f1fae834c32a99cd7f7cf1a890ec4fa3173a"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/targeted-repaired.txt",
+      "bytes": 7832,
+      "sha256": "6c3a9d837a9f7f3618cd9a4ba480390e52686f93fc09aa56f0ef10a374b65130"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/targeted-sandbox-command.json",
+      "bytes": 944,
+      "sha256": "dc6de161417a4498747e538a972463ecd3d110fa70bef99effc98f8408bbfa3b"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/targeted-sandbox.txt",
+      "bytes": 1367,
+      "sha256": "d16be90ad6ceee140d204f7d2c7212ffec5e2251c56f7f849d9c6b4e81218f05"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/targeted.txt",
+      "bytes": 3015,
+      "sha256": "c444ccac0f16420d693e47294531bca0c312740c9802c91c1604c9cedcc797b3"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/user-authorization.json",
+      "bytes": 810,
+      "sha256": "bc30f853ba03512fddd008eb56cfd3b6345550b12049681e24ff795219c96ad9"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/validate-inputs.py.txt",
+      "bytes": 2670,
+      "sha256": "5a8e369ee91ea49df6ed30e7e4a61e0f2f44d4545536dce5cbb498b9cf8ea02a"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/verify-checkpoint.py.txt",
+      "bytes": 4980,
+      "sha256": "afb7aa88aa89510975f739795ed9137d6381745d5133a87e0435bd7a33a057a8"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-response-repair/before-review-inventory.json",
+      "bytes": 56578,
+      "sha256": "3562a45817f8356d46774025615b9752d5ea3cd85d76268ba73a4e1bb1d254a1"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-response-repair/before-source-freeze.json",
+      "bytes": 232722,
+      "sha256": "5b892436dc00cea30127c52eca09afd7becd98897992b2c1790f46084f201064"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-response-repair/budget-before.json",
+      "bytes": 490,
+      "sha256": "fe746afb241075c0845f16d3ef02dd4f3f337f4f0305760880372e68d5c6a951"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-response-repair/budget-current.json",
+      "bytes": 551,
+      "sha256": "be3f03bb94cffeae8ffdaddd5d545ffc7c918868d10087f222ff2511bfc6b470"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-response-repair/collect-evidence.py.txt",
+      "bytes": 6394,
+      "sha256": "2bf65369b745fa507f3ad4a4bce0ce36b56bf3c49b458ae27a5c4c1e53e72bd5"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-response-repair/commands.json",
+      "bytes": 7125,
+      "sha256": "4d32d0429d0afe90d2ea29b00e4c22df5784ce289cfe6dbdf139f6a06ffbfb9d"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-response-repair/execute-checkpoint.py.txt",
+      "bytes": 3338,
+      "sha256": "8f13dc3c496bacb4e0e6ae4eb5d1a45d904f4f08b6ec479c1b8f4e8ff1c4917a"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-response-repair/finalize-report.py.txt",
+      "bytes": 6645,
+      "sha256": "044e56d7adbceb282ed43fe6895b26131482ceaef96c75f4fd5360d91af236f0"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-response-repair/full-check-command.json",
+      "bytes": 617,
+      "sha256": "adcfbc4ea0c5b3182b1053c1768eea6db0fc113d6702608019093a2dde00b2ec"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-response-repair/full-check-summary.json",
+      "bytes": 22470,
+      "sha256": "2ee31ad6bc924f78fb72d57d128c3b43737007d889065a6bb7f5b6e17eb02461"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-response-repair/full-check.txt",
+      "bytes": 252692,
+      "sha256": "f5d59a1acacd0975d3b40d62fc6dce07113a886d5668de154b816f5ff1d8c251"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-response-repair/observed-failure.json",
+      "bytes": 767,
+      "sha256": "8ecfb09df7f88caee938b16ee4d19574a434e1c86c4c6316872852e012734d85"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-response-repair/outcome.json",
+      "bytes": 856,
+      "sha256": "9e843b171675c9bd94f8dc40af5fbd7844351665fef0f4a159483042aa7d33a2"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-response-repair/preview-command.json",
+      "bytes": 3553,
+      "sha256": "090753ca668262fe0de3ab7fc431a71156bb31cec77feead3f5c7020e2e9d9b5"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-response-repair/preview.txt",
+      "bytes": 127,
+      "sha256": "4824690b4b6a833594d6e4e61a9335a9ca37cc3b34f2465f4f3dc377d3184031"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-response-repair/preview/PREVIEW-ONLY-NOT-EXECUTED-requests.json",
+      "bytes": 20201,
+      "sha256": "eb3dbf48cc5406b62f9a2fecaa1c171e8c08db5976c9b855845049dd212d7cc0"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-response-repair/preview/_SCHOLARCHAIN_LIVE_DEMO_COMPLETE",
+      "bytes": 65,
+      "sha256": "9e83f560f25bca8a8ddc8259ca68f38308f5f31b1850f27657f82d754fb29be0"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-response-repair/preview/accepted-links.jsonl",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-response-repair/preview/admission.json",
+      "bytes": 1537,
+      "sha256": "90badfaf763279da61cf772ca5f008f8de46594b1213b1a5c79630069b91bafa"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-response-repair/preview/constraints.json",
+      "bytes": 8288,
+      "sha256": "969cad7132099c255a1083ef399cf76ce96dffb05be6b538d3988eece62ab386"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-response-repair/preview/decisions.jsonl",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-response-repair/preview/demo.json",
+      "bytes": 11439,
+      "sha256": "d77e3d78a46edc4551593227b31c2e46d751b354f111b0f30b1c5d06b1ee09ba"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-response-repair/preview/effective-policy.json",
+      "bytes": 1602,
+      "sha256": "87cd8837795c09efb0b8c2aa2f944f970a14ad3da8eb68dfa45bd71dd15fe533"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-response-repair/preview/effective-source-config.json",
+      "bytes": 914,
+      "sha256": "993e86654b5b808c20c89375e30d723afbbd7c12cba6dd0abfea06bf45efb24a"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-response-repair/preview/live-config.json",
+      "bytes": 850,
+      "sha256": "29bbb9bc653baae34a3b1128c97f1d5241f631ed963cf42a4c96f02159dd74a0"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-response-repair/preview/live-demo-manifest.json",
+      "bytes": 2722,
+      "sha256": "efd5b5694b1b1b96735a465b757242e2c6a0d749ad49aaeb91f5193602312c42"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-response-repair/preview/request-eligibility-policy.json",
+      "bytes": 279,
+      "sha256": "01e4b67fc8142c6dde699f9cde33ee6a53ffe84fc4e52abb3aa6134b46368bb2"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-response-repair/protected-and-budget-proof.json",
+      "bytes": 2936,
+      "sha256": "b6a5f4c825b1497029638dd8df25ac2d9bf45a5b6560b34369f345f3dd102ad9"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-response-repair/report.md",
+      "bytes": 4227,
+      "sha256": "5760ec2095c1648bc4059f2cb86c92c2cfca8d0f7f320db135d9965686dbfa76"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-response-repair/run-command.py.txt",
+      "bytes": 1584,
+      "sha256": "4785fb8173829a1c3caf0af82f13d3ca0a6e186a336bc36e78d2b0e2c5d64f55"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-response-repair/runtime-files.json",
+      "bytes": 247598,
+      "sha256": "184fd478bbbe4948be007b31e7419f96f4c51766f5a3b96661e33c65bdd4e11f"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-response-repair/source-delta.json",
+      "bytes": 1164,
+      "sha256": "f293f6dab65f6a901f512696ffd75e0c5a278fc22558781e5aa5e780939db339"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-response-repair/start.json",
+      "bytes": 282116,
+      "sha256": "17b309ae4a8558b996ea8d6878c115ebb2b94efe0c192ae0549ca3e0d6929079"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-response-repair/targeted-command.json",
+      "bytes": 1357,
+      "sha256": "3c8d78f3784fbe42d2a6b2130e14046f9666fd8f894d552f7a2cd63203f3cfba"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-response-repair/targeted-final-command.json",
+      "bytes": 1373,
+      "sha256": "483fe137abd537b841aa6a0a1c1d071aeb2ebb932a47ca14adf89cbba42be71a"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-response-repair/targeted-final.txt",
+      "bytes": 7270,
+      "sha256": "21c23dd5f15a5ca4b656fd5dbd55cef028491baf796834f013a89fd8296cfb03"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-response-repair/targeted.txt",
+      "bytes": 7484,
+      "sha256": "d9634041d0758a2250627a624dbb200aea65c9af48c4298b257a255a6f8113e5"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-response-repair/validate-inputs.py.txt",
+      "bytes": 2665,
+      "sha256": "959afc9e328cb059507aa70031a04a6522f415d4156ee28dabfcaee3a4436725"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-response-repair/verify-repair.py.txt",
+      "bytes": 4424,
+      "sha256": "289742a3adc9867f90f75814872b7b405b7e6f9bc8a2609e0de34d17204230e4"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d/live-state/approval-1b66c9878075/budget.json",
+      "bytes": 490,
+      "sha256": "fe746afb241075c0845f16d3ef02dd4f3f337f4f0305760880372e68d5c6a951"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d/live-state/approval-1b66c9878075/budget.json.lock",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/human-gate.md",
+      "bytes": 4753,
+      "sha256": "382f4698cc3f0cbdc0f5ec03f3c0124252e957ba45b3a22f8c1c6fb7338fc33a"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/owner-report.md",
+      "bytes": 131578,
+      "sha256": "01492605558fa06259515af6e7c78d2bb41ed57218e666fed6b6be04ac860c60"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/prompt.md",
+      "bytes": 97971,
+      "sha256": "6a2a9836a163622d4a01022ac146550b15dccbd3f225de887b1249f93da3e9ab"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/repairs.md",
+      "bytes": 65243,
+      "sha256": "8f9503650f5cd46e45a3a858f612d8df38a0a43a8fc5ed644d6fc32f24551b4c"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/review.md",
+      "bytes": 111758,
+      "sha256": "0070483830b792cad9418d60731e332cfad01a61a2bdbe7e783b428fc0aca330"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/source-freeze.json",
+      "bytes": 233195,
+      "sha256": "ffca3fb63de469dbd7cb993b5f5e0ba4f6ec45d20ff0514cdf8e8320369493b6"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/test-report.md",
+      "bytes": 109894,
+      "sha256": "7b45baab433b3a975936df7b5a437d163741e14b7b84b3ce9457a63af3ff33f8"
+    },
+    {
+      "path": "modules/entity-resolution/README.md",
+      "bytes": 69136,
+      "sha256": "caae93f28da13da8c76e3ca7367c812ff61041290d879bef65fde062c1c8b9c1"
+    },
+    {
+      "path": "modules/entity-resolution/src/main/resources/adjudication/request-eligibility.v1.json",
+      "bytes": 308,
+      "sha256": "432e0ec298007a7b0a9e4da02f7dc22e2e2eaf507404b11adf601bcebe1fad55"
+    },
+    {
+      "path": "modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/Adjudication.scala",
+      "bytes": 17488,
+      "sha256": "e28004422a268aa6adf9eff611de6f81772e3fdf11a21d774589d49df1765895"
+    },
+    {
+      "path": "modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/LinkExporter.scala",
+      "bytes": 14939,
+      "sha256": "7b660c186016d9449798227da5e9fdaa352a52ed3808a0d09cd4162bc83857ec"
+    },
+    {
+      "path": "modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/LiveAdjudication.scala",
+      "bytes": 10484,
+      "sha256": "0efac2d76c46aadddf2b6f50a3ca8243641c06eb6d30b961d50d1ae6f9600171"
+    },
+    {
+      "path": "modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/LiveDemo.scala",
+      "bytes": 18275,
+      "sha256": "c0ca6e1b3864a9580d8b832db7c449e46b7a582bcee4a0c54ea936829d104916"
+    },
+    {
+      "path": "modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/LiveDemoCommands.scala",
+      "bytes": 18712,
+      "sha256": "70d123b62fc33579253c1b267ee933abc86dd6e23d538b0aa479d65ca0945cd5"
+    },
+    {
+      "path": "modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/LiveProvider.scala",
+      "bytes": 13007,
+      "sha256": "3b867ebc9e53eaf89109250a1b46a1d2de6b0eac49f7410ad7e4b7d85b2a9b00"
+    },
+    {
+      "path": "modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/OpenAIResponses.scala",
+      "bytes": 16652,
+      "sha256": "96931b6abbcbb59957175b1700d52494be03797e447d18d117db5f99567421e0"
+    },
+    {
+      "path": "modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/Phase5Main.scala",
+      "bytes": 4714,
+      "sha256": "56fcf1aeb094e13dc5f802a0342e1ac76c3f430c80544ba10ed682ddb7f44877"
+    },
+    {
+      "path": "modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/RequestEligibilityPolicy.scala",
+      "bytes": 4777,
+      "sha256": "e2e8642dd1b4342547d62996c200ddc1e14690f3b5aa544f1b9d57dbc6af1464"
+    },
+    {
+      "path": "modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/ResolutionEngine.scala",
+      "bytes": 16829,
+      "sha256": "565c7db91a951e37632310dde577b6451a50604ea4a6e5542547401c14ee6cf8"
+    },
+    {
+      "path": "modules/entity-resolution/src/test/scala/edu/uic/cs441/scholarchain/entityresolution/ProviderResponseDiagnosticSpec.scala",
+      "bytes": 5246,
+      "sha256": "afc05fa9e0171b20d7a72d9ab3bc86c2c074cc3fc02d8760628db2c4779656b7"
+    },
+    {
+      "path": "modules/entity-resolution/src/test/scala/edu/uic/cs441/scholarchain/entityresolution/RequestEligibilitySpec.scala",
+      "bytes": 5082,
+      "sha256": "a253be0d4f80e5466b65d7dfc3c78a25f439d482ae11c7266b8dc42f06267fb1"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentLiveResponseDiagnosticSpec.scala",
+      "bytes": 7740,
+      "sha256": "657fab52917e99be6a353965256b0e016b5f1dbdf153d7664ccbc99a7a4bb524"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentRequestEligibilitySpec.scala",
+      "bytes": 22844,
+      "sha256": "724f254947ceafb943aab35422efa27a8552f7c40fd40ba13b287e188026fcd4"
+    }
+  ],
+  "deletedPaths": [],
+  "recursiveSelfHashExcluded": "docs/agent-runs/phase-05/review-inventory.json"
+}

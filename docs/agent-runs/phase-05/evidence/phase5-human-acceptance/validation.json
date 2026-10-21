@@ -1,0 +1,36 @@
+{
+  "valid": true,
+  "recordedAtUtc": "2026-10-21T20:40:32.178639+00:00",
+  "humanDecision": "ACCEPT_IMPLEMENTED_PHASE_5_WITH_DOCUMENTED_LIMITATIONS",
+  "exactUserMessage": "I approve them",
+  "reviewedInventorySha256": "a37481febee607d05853054524368e0eb146fddb5964c2b9d223389ed7669ea1",
+  "changedReviewedFiles": [
+    "docs/agent-runs/phase-05/human-gate.md",
+    "docs/agent-runs/phase-05/owner-report.md",
+    "docs/agent-runs/phase-05/prompt.md",
+    "docs/agent-runs/phase-05/review.md"
+  ],
+  "priorContentPreservedAsPrefix": {
+    "human-gate.md": true,
+    "review.md": true,
+    "prompt.md": true,
+    "owner-report.md": true
+  },
+  "reviewedSourceFreezeUnchanged": true,
+  "protectedHistoricalProofChangedOnlyByNewHumanDecision": [
+    "docs/agent-runs/phase-05/human-gate.md"
+  ],
+  "oldHumanGateExactCopy": {
+    "path": "docs/agent-runs/phase-05/evidence/phase5-human-acceptance/before-human-gate.md",
+    "sha256": "382f4698cc3f0cbdc0f5ec03f3c0124252e957ba45b3a22f8c1c6fb7338fc33a"
+  },
+  "protectedOtherFilesUnchanged": 1116,
+  "runtimeFilesUnchanged": 1019,
+  "testsRerun": false,
+  "sourceLogicChanges": false,
+  "nonblockingFixesPerformed": false,
+  "ledgerAndCachePreserved": true,
+  "commitPushOrPhase6Performed": false,
+  "externalReviewSha256": "bd22bd6173e1112a9407648755d0709865d5cd7d84637bfa529fd1f6c6378103",
+  "acceptanceReceiptSha256": "4738812d977eb6deecb24b1ad5f933157ff30db4899cf79b774bdbd52a5580aa"
+}

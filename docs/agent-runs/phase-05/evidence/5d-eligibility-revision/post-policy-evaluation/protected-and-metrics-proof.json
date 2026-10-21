@@ -1,0 +1,107 @@
+{
+  "valid": true,
+  "independentRecounts": [
+    {
+      "report": "disabled-a-development",
+      "tasks": 40,
+      "binaryGold": 38,
+      "independentlyRecounted": {
+        "tp": 7,
+        "fp": 0,
+        "fn": 4,
+        "tn": 27
+      },
+      "valid": true
+    },
+    {
+      "report": "disabled-a-development-without-assisted",
+      "tasks": 36,
+      "binaryGold": 34,
+      "independentlyRecounted": {
+        "tp": 6,
+        "fp": 0,
+        "fn": 2,
+        "tn": 26
+      },
+      "valid": true
+    },
+    {
+      "report": "disabled-a-held-out",
+      "tasks": 200,
+      "binaryGold": 194,
+      "independentlyRecounted": {
+        "tp": 57,
+        "fp": 0,
+        "fn": 15,
+        "tn": 122
+      },
+      "valid": true
+    },
+    {
+      "report": "disabled-a-held-out-without-assisted",
+      "tasks": 182,
+      "binaryGold": 181,
+      "independentlyRecounted": {
+        "tp": 51,
+        "fp": 0,
+        "fn": 8,
+        "tn": 122
+      },
+      "valid": true
+    },
+    {
+      "report": "fake-a-development",
+      "tasks": 40,
+      "binaryGold": 38,
+      "independentlyRecounted": {
+        "tp": 7,
+        "fp": 0,
+        "fn": 4,
+        "tn": 27
+      },
+      "valid": true
+    },
+    {
+      "report": "fake-a-development-without-assisted",
+      "tasks": 36,
+      "binaryGold": 34,
+      "independentlyRecounted": {
+        "tp": 6,
+        "fp": 0,
+        "fn": 2,
+        "tn": 26
+      },
+      "valid": true
+    },
+    {
+      "report": "fake-a-held-out",
+      "tasks": 200,
+      "binaryGold": 194,
+      "independentlyRecounted": {
+        "tp": 57,
+        "fp": 0,
+        "fn": 15,
+        "tn": 122
+      },
+      "valid": true
+    },
+    {
+      "report": "fake-a-held-out-without-assisted",
+      "tasks": 182,
+      "binaryGold": 181,
+      "independentlyRecounted": {
+        "tp": 51,
+        "fp": 0,
+        "fn": 8,
+        "tn": 122
+      },
+      "valid": true
+    }
+  ],
+  "protectedFilesUnchanged": 975,
+  "labelFilesUnchanged": 23,
+  "queueSha256": "39810621fe4b22113e3b11fe014ed3eaf2f6ed82b261a265044ce344a02e506f",
+  "labelsSha256": "5fbf6f5bdc1d34f7b79e910a07b964b60bdaaf1dfc825de7744b5f684e39e4a6",
+  "liveStateExists": true,
+  "interpretation": "Descriptive post-policy comparison on reused, previously exposed held-out cohort. AI-assisted human labels and convenience sample. Policy was not fitted to labels. Real-provider pilot, if present, is separate demo evidence and never a held-out prediction."
+}

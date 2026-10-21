@@ -1,0 +1,19 @@
+import java.nio.file.*;
+import edu.uic.cs441.scholarchain.entityresolution.*;
+class ScholarChainValidateLiveCache {
+  static <T> T value(scala.util.Either<String,T> result) {
+    if (result.isLeft()) throw new IllegalArgumentException(result.left().get());
+    return result.toOption().get();
+  }
+  public static void main(String[] args) throws Exception {
+    var run = value(StrictJson$.MODULE$.parse(Files.readString(Path.of(args[0]).resolve("demo.json")), LiveDemoRun$.MODULE$.derived$ReadWriter()));
+    var config = value(LiveProviderConfig$.MODULE$.load(Path.of("docs/agent-runs/phase-05/evidence/5d/approved-live-config.json")));
+    if (run.traces().size()!=1 || run.links().size()!=0) throw new IllegalArgumentException("Unexpected demo trace/link count");
+    var trace=run.traces().head();
+    if (!trace.status().equals("VALIDATED_LIVE") || trace.cacheHit() || trace.result().isEmpty()) throw new IllegalArgumentException("Not an observed validated live response");
+    var cached=value(LiveAdjudicationCache$.MODULE$.read(Path.of("docs/agent-runs/phase-05/evidence/5d/live-state/approval-1b66c9878075/cache"),trace.request(),config));
+    if (cached.isEmpty() || !cached.get().equals(trace.result().get())) throw new IllegalArgumentException("Cache result differs from retained response");
+    if (!run.decisions().head().decision().decision().toString().equals("Unresolved")) throw new IllegalArgumentException("Acceptance safeguard changed");
+    System.out.println("{\"valid\":true,\"compiledParserAndCacheRevalidation\":true,\"credentialAccess\":\"NOT_INVOKED\",\"networkAccess\":\"NOT_INVOKED\",\"validatedResults\":1,\"acceptedLinks\":0,\"finalOutcome\":\"UNRESOLVED\"}");
+  }
+}

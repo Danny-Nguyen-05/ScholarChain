@@ -1,0 +1,33 @@
+{
+  "schema": "scholarchain.provider-diagnostic-repair-checkpoint.v1",
+  "implementationStatus": "VERIFIED_PENDING_EXTERNAL_REVIEW",
+  "sourceFreezeSha256": "ffca3fb63de469dbd7cb993b5f5e0ba4f6ec45d20ff0514cdf8e8320369493b6",
+  "fullCheckTests": 469,
+  "failures": 0,
+  "protectedFilesUnchanged": 1117,
+  "runtimeFilesUnchanged": 1019,
+  "priorProviderAttempts": 2,
+  "cumulativeProviderAttempts": 4,
+  "costUpperBoundMicrousd": 5576,
+  "validatedAdjudicationObserved": true,
+  "eligiblePairs": 2,
+  "nextRunMaxPairs": 1,
+  "nextRunMaxAttemptsIncludingOriginalRetry": 2,
+  "remainingApprovalAttempts": 6,
+  "strictResponseValidationUnchanged": true,
+  "policyConfigPromptSchemaUnchanged": true,
+  "exactHistoricalFailureCause": "First two unknown because invalid output was discarded; third FIELD_NOT_FOUND; fourth validated without changing policy/prompt/schema/validator between third and fourth.",
+  "fullPhase5Accepted": false,
+  "phase6Authorized": false,
+  "realModel": "gpt-6-luna",
+  "modelOutcome": "accept",
+  "systemOutcome": "UNRESOLVED",
+  "acceptedLinks": 0,
+  "furtherProviderCallsPlanned": false,
+  "externalIndependentReview": "PENDING_USER_LAUNCH",
+  "technicalEvidence": {
+    "path": "docs/agent-runs/phase-05/evidence/5d-response-repair/provider-success-proof.json",
+    "bytes": 6806,
+    "sha256": "5ab03ec89caacf602b62c202dbd128905e92964d71cfdb645e6bbc926094ed38"
+  }
+}

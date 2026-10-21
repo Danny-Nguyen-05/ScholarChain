@@ -1,0 +1,21 @@
+{
+  "source": "User-supplied terminal output in this conversation",
+  "name": "live-resume-20261021T201707Z",
+  "status": "complete",
+  "exitCode": 0,
+  "startedMs": 1792613827986,
+  "finishedMs": 1792613841144,
+  "output": "docs/agent-runs/phase-05/evidence/5d-response-repair/live-resume-20261021T201707Z",
+  "traces": [
+    {
+      "status": "VALIDATED_LIVE",
+      "error": null,
+      "validationCode": null,
+      "identityMatches": null,
+      "rationaleCharacters": null
+    }
+  ],
+  "cumulativeAttempts": 4,
+  "costUpperBoundMicrousd": 5576,
+  "notAHumanAcceptanceDecision": true
+}

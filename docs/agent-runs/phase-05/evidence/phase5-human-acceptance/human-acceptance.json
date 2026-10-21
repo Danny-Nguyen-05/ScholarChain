@@ -1,0 +1,60 @@
+{
+  "schemaVersion": "scholarchain.phase5-human-acceptance.v1",
+  "recordedAtUtc": "2026-10-21T20:39:45.564532+00:00",
+  "recordedBy": "Coordinator transcribing the explicit human decision; not self-approval",
+  "authority": "User message in this conversation",
+  "exactUserMessage": "I approve them",
+  "precedingAssistantContext": "The next step is your explicit human acceptance of Phase 5 with the documented limitations. The reviewer’s approval doesn’t record that acceptance or authorize Phase 6.",
+  "earlierUserInstruction": "ignore all non-blockings bugs. Are they good now?",
+  "decision": "ACCEPT_IMPLEMENTED_PHASE_5_WITH_DOCUMENTED_LIMITATIONS",
+  "scope": "Implemented Phase 5, including the limited/descriptive evaluation, versioned request eligibility revision, safe diagnostics and observed validated real-provider demonstration.",
+  "externalReview": {
+    "verdict": "APPROVE_CHECKPOINT_ONLY",
+    "blockers": 0,
+    "nonblockingObservations": 5,
+    "source": "User-supplied independent read-only review",
+    "transcriptionPath": "docs/agent-runs/phase-05/evidence/phase5-human-acceptance/external-review.md",
+    "sha256": "bd22bd6173e1112a9407648755d0709865d5cd7d84637bfa529fd1f6c6378103",
+    "transcriptionNote": "Full report content transcribed; whitespace normalized."
+  },
+  "reviewedSource": {
+    "headAtAcceptance": "6285210f8b8b2de1fe6d0ae79aecaf3079966fc5",
+    "branch": "main",
+    "sourceFreezeSha256": "ffca3fb63de469dbd7cb993b5f5e0ba4f6ec45d20ff0514cdf8e8320369493b6",
+    "sourceFiles": 965,
+    "reviewedInventorySha256": "a37481febee607d05853054524368e0eb146fddb5964c2b9d223389ed7669ea1",
+    "preservedReviewedInventory": "docs/agent-runs/phase-05/evidence/phase5-human-acceptance/before-review-inventory.json",
+    "acceptedCommitDesignation": "PENDING_USER_COMMIT; HEAD is the starting base, not the final accepted implementation commit"
+  },
+  "observedEvidence": {
+    "scalaTestsPassed": 469,
+    "validatedProviderResponses": 1,
+    "cumulativeProviderAttempts": 4,
+    "costUpperBoundMicrousd": 5576,
+    "model": "gpt-6-luna",
+    "modelOutcome": "accept",
+    "systemOutcome": "UNRESOLVED",
+    "acceptedLinks": 0
+  },
+  "nonblockingDisposition": "DEFER_ALL_FIVE_CURRENT_AND_PRIOR_UNFIXED_NONBLOCKING_OBSERVATIONS; no repair authorized or performed here",
+  "limitations": [
+    "Human-reviewed AI-assisted labels, not blind gold.",
+    "Eight uncertain initial reviews; 38 development and 194 held-out binary labels.",
+    "External evidence behind 22 assisted cases was not retained.",
+    "Request policy and model confidence are uncalibrated; LLM-path accuracy, calibration, blocking recall and global identity recall remain unmeasured.",
+    "Revised held-out comparison uses an already exposed cohort and remains descriptive.",
+    "One live integration response is not independent identity verification; the model relied on an OpenAlex author hypothesis.",
+    "Ledger durability and the other five nonblocking review observations remain accepted deferrals.",
+    "Instructor acceptance of the Codex/Cursor workflow deviation is not established."
+  ],
+  "ledgerAndCache": "Existing approval-scoped ledger and cache remain in the working tree with this evidence; neither is deleted, reset or modified by this acceptance record. No approval closure or additional call is inferred.",
+  "phase6Authorized": false,
+  "commitAuthorized": false,
+  "pushAuthorized": false,
+  "newProviderCallsAuthorizedByThisDecision": false,
+  "instructorDeviationAccepted": false,
+  "priorHumanDecisionsPreserved": true,
+  "humanPhase5Accepted": true,
+  "acceptedWithDocumentedLimitations": true,
+  "courseComplianceIndependentlyCertified": false
+}

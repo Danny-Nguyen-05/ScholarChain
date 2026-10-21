@@ -1,0 +1,1 @@
+{"valid": true, "protectedFiles": 1117, "eligiblePairs": 2, "previewRequests": 1, "cumulativeAttempts": 4, "live": {"path": "docs/agent-runs/phase-05/evidence/5d-response-repair/live-resume-20261021T201707Z", "traceStatuses": {"VALIDATED_LIVE": 1}, "validationCodes": [null], "validatedResponses": 1}}

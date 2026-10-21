@@ -1,0 +1,1 @@
+Development/demo checkpoint: eligible=2, live attempts=0, verified cache hits=0. Human labels and final evaluation remain separate.

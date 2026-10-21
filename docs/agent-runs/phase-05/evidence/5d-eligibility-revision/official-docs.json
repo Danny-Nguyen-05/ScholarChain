@@ -1,0 +1,16 @@
+{
+  "checkedAtUtc": "2026-10-21T18:54:31.789656+00:00",
+  "sources": [
+    {
+      "url": "https://developers.openai.com/api/docs/models/gpt-6-luna",
+      "verified": "Selected model supports the Responses API and structured outputs; medium reasoning is supported."
+    },
+    {
+      "url": "https://developers.openai.com/api/docs/guides/structured-outputs",
+      "verified": "Use Responses text.format with json_schema and strict=true; unsupported schemas fail rather than relaxing constraints."
+    }
+  ],
+  "existingApprovalUnchanged": true,
+  "runtimeCompatibility": "Pending observed provider request; documentation alone does not establish compatibility.",
+  "credentialInspection": "No credential files or environment values read by coordinator."
+}

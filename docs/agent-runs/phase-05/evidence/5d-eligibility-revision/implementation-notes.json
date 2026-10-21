@@ -1,0 +1,15 @@
+{
+  "recordedAtUtc": "2026-10-21T18:56:01.031522+00:00",
+  "owner": "coordinator",
+  "repairs": [
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentRequestEligibilitySpec.scala",
+      "observedFailure": "ScalaTest inherited note resolves to Notifier instead of fixture String",
+      "repairOwner": "test-engineer",
+      "change": "Qualify IndependentResolutionFixtures.note; no production behavior changed",
+      "retainedLog": "targeted.txt"
+    }
+  ],
+  "sandboxAttempt": "targeted-sandbox.txt failed on sbt cache lock permission; targeted rerun approved outside sandbox",
+  "reviewerLaunched": false
+}

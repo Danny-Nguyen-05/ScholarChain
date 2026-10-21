@@ -180,10 +180,14 @@ object ResolutionEngine {
       cache: Option[Path],
       runId: String,
       instant: String,
-      adapter: Option[AdjudicationAdapter] = None
+      adapter: Option[AdjudicationAdapter] = None,
+      requestPolicy: Option[RequestEligibilityPolicy] = None
   ): Either[String, ResolutionRun] = Try {
     ResolutionConfig.validate(config).fold(e => throw new IllegalArgumentException(e), identity)
     ResolutionPolicy.validate(policy).fold(e => throw new IllegalArgumentException(e), identity)
+    RequestEligibilityPolicy
+      .validateBinding(policy, requestPolicy)
+      .fold(e => throw new IllegalArgumentException(e), identity)
     input.sourceRootPath.foreach(source =>
       cache.foreach(path =>
         PathIsolation
@@ -288,10 +292,8 @@ object ResolutionEngine {
       val pair = candidate.pair
       val initial = classify(candidate, input, policy)
         .fold(e => throw new IllegalArgumentException(e), identity)
-      val p = policy.forEntity(pair.entityType)
-      val eligible = initial.outcome == MatchOutcome.Unresolved && initial.score.exists(s =>
-        s >= p.llmBandMin && s <= p.llmBandMax
-      ) && initial.sufficient
+      val eligible =
+        RequestEligibilityPolicy.eligible(initial, pair.entityType, policy, requestPolicy)
       val trace =
         if (eligible && mode == "fake")
           Some(
@@ -305,14 +307,18 @@ object ResolutionEngine {
         else None
       val response = trace.flatMap(_.response)
       val finalOutcome = response.map(_.outcome) match {
-        case Some("accept") if !conflicts(pair.left, pair.right, input) => MatchOutcome.Accepted
-        case Some("reject")                                             => MatchOutcome.Rejected
-        case _                                                          => initial.outcome
+        case Some("accept") if initial.sufficient && !conflicts(pair.left, pair.right, input) =>
+          MatchOutcome.Accepted
+        case Some("reject") => MatchOutcome.Rejected
+        case _              => initial.outcome
       }
       val finalPath = if (response.nonEmpty) ResolutionDecisionPath.LlmAdjudicated else initial.path
       val reasons =
-        (initial.reasonCodes ++ (if (eligible && mode == "disabled") Vector("LLM_DISABLED")
-                                 else Vector.empty) ++ trace.toVector.map(
+        (initial.reasonCodes ++ (if (response.exists(_.outcome == "accept") && !initial.sufficient)
+                                   Vector(RequestEligibilityPolicy.blockedAcceptReason)
+                                 else Vector.empty) ++ (if (eligible && mode == "disabled")
+                                                          Vector("LLM_DISABLED")
+                                                        else Vector.empty) ++ trace.toVector.map(
           _.status
         ) ++ response.toVector.flatMap(_.reasonCodes.map("LLM_" + _))).distinct
       val provenance = Provenance(

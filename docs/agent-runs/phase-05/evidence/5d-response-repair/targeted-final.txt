@@ -1,0 +1,89 @@
+[info] welcome to sbt 1.10.7 (Homebrew Java 17.0.20.1)
+[info] loading settings for project scholarchain-build from plugins.sbt...
+[info] loading project definition from /Users/danny/Documents/UIC/CS441/ScholarChain/project
+[info] loading settings for project root from build.sbt...
+[info] set current project to root (in build file:/Users/danny/Documents/UIC/CS441/ScholarChain/)
+[info] scalafmt: Formatting 2 Scala sources (/Users/danny/Documents/UIC/CS441/ScholarChain/modules/entity-resolution)...
+[success] Total time: 1 s, completed Oct 21, 2026, 2:45:13 PM
+[success] Total time: 0 s, completed Oct 21, 2026, 2:45:13 PM
+[success] Total time: 0 s, completed Oct 21, 2026, 2:45:13 PM
+[info] compiling 2 Scala sources to /Users/danny/Documents/UIC/CS441/ScholarChain/modules/entity-resolution/target/scala-3.3.4/classes ...
+[info] done compiling
+[info] ProviderResponseDiagnosticSpec:
+[info] - strict validation reports a closed identity category with bounded identity booleans
+[info] - untrusted model text and provider errors never appear in diagnostics
+[info] - specific field and reason failures stay rejected and produce finite categories
+[info] - historical trace without diagnostic metadata remains readable
+[info] Run completed in 214 milliseconds.
+[info] Total number of tests run: 4
+[info] Suites: completed 1, aborted 0
+[info] Tests: succeeded 4, failed 0, canceled 0, ignored 0, pending 0
+[info] All tests passed.
+[success] Total time: 3 s, completed Oct 21, 2026, 2:45:16 PM
+[info] IndependentLiveResponseDiagnosticSpec:
+[info] - inner validation failures have distinct finite codes without echoing provider-controlled values
+[info] - schema or malformed JSON stays rejected without surfacing raw parse exceptions
+[info] - diagnostics retain only hashes counts allowlisted outcome and fixed identity comparison keys
+[info] - HTTP errors malformed envelopes and oversized bodies never expose model output fields
+[info] - failed adjudication remains charged and diagnosable; corrected output uses the same ledger
+[info] IndependentRequestEligibilitySpec:
+[info] - legacy policy fingerprint and strict acceptance thresholds remain frozen
+[info] - positive independent coauthor and affiliation context permits a request, not acceptance
+[info] - zero, absent and duplicated-publication coauthor context cannot become a request
+[info] - missing, incomparable and conflicting affiliation evidence cannot become a request
+[info] - name-only, incompatible names, exact identifiers, hard conflicts and out-of-band pairs are excluded
+[info] - fake acceptance is retained as an audited judgment but cannot export an unsafe accepted link
+[info] - fake rejection and abstention remain audited while disabled mode never dispatches
+[info] - effective request policy invalidates both offline and live cache identities
+[info] - the researcher request revision preserves the existing work eligibility rule
+[info] - canonical held-out overlap is excluded before even an invalid pair could be classified
+[info] - live synthetic outcomes respect the separate acceptance gate and preserve budget accounting
+[info] - binding mismatches fail before dispatch and missing profile cannot enable revised requests
+[info] - an explicit one-pair pilot cap preserves approval and charges only one of two eligible pairs
+[info] - live preview CLI rejects zero oversized and noninteger pair caps before input loading or writes
+[info] IndependentOpenAIResponsesSpec:
+[info] - live wire request fixes selected model disables storage and tools and uses a strict supported schema
+[info] - completed provider envelope binds typed response and preserves measured reasoning and cached usage
+[info] - refusal incomplete malformed and missing usage envelopes cannot become decisive responses
+[info] - provider usage must be integral nonnegative consistent and bounded by its parent counters
+[info] - strict adjudication validation rejects wrong identity citations extra fields and contradictory reasons through live envelopes
+[info] - HTTP errors and oversized response bodies fail without reflecting sensitive provider body text
+[info] - live request identity settings and wire byte bound reject mutations before transport
+[info] - local response limits remain enforced independently of the provider wire schema subset
+[info] - unselected model and unavailable price assumptions are refused rather than falling back
+[info] IndependentLiveAdjudicatorSpec:
+[info] - budget exhaustion refuses dispatch before credential supplier access
+[info] - retries consume durable reservations and authentication errors are terminal
+[info] - a valid provider response records actual usage separately and replay never consumes another reservation
+[info] - missing usage and thrown transport details remain unknown charged failures without leaking contents
+[info] - interruption-resistant transport fuses later calls and never overlaps retries
+[info] - unapproved numerical configuration cannot construct an active adjudicator or budget ledger
+[info] IndependentLiveCredentialPreflightSpec:
+[info] - missing local credential failure preserves the same approval ledger for recovery
+[info] - empty local credential failure preserves the same approval ledger for recovery
+[info] - CRLF local credential failure preserves the same approval ledger for recovery
+[info] - NUL local credential failure preserves the same approval ledger for recovery
+[info] - DEL local credential failure preserves the same approval ledger for recovery
+[info] - non-Latin1 local credential failure preserves the same approval ledger for recovery
+[info] - supplier exception local credential failure preserves the same approval ledger for recovery
+[info] IndependentLiveDevelopmentSpec:
+[info] - live demo admission excludes every held-out group before eligibility classification
+[info] - a changed or held-out-only candidate population is refused rather than admitted as a demo
+[info] - zero eligible and explicitly disabled demo runs do not create ledger or inspect credentials
+[info] - supplemental admission excludes a whole transitive identity component linked to held-out evidence
+[info] - enabled synthetic demo dispatches only eligible development pairs and preserves independent pre-model scores
+[info] - disabled or wrong-approval enabled demo with eligible evidence never initializes transport
+[info] - enabled demo preserves its approval ledger after missing credential preflight
+[info] - enabled demo preserves its approval ledger after NUL credential preflight
+[info] IndependentLiveBudgetSpec:
+[info] - zero attempts token or spend allowance reserves nothing
+[info] - exact token and microdollar boundary allows one reservation and refuses the next
+[info] - unknown usage remains charged across restart and observed usage never refunds reservations
+[info] - approval scoped ledger refuses simultaneous writers and a changed configuration on restart
+[info] - provider usage above reservation fuses later attempts and invalid wire lengths do not reserve
+[info] Run completed in 937 milliseconds.
+[info] Total number of tests run: 54
+[info] Suites: completed 7, aborted 0
+[info] Tests: succeeded 54, failed 0, canceled 0, ignored 0, pending 0
+[info] All tests passed.
+[success] Total time: 1 s, completed Oct 21, 2026, 2:45:17 PM

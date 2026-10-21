@@ -1,0 +1,76 @@
+{
+  "valid": true,
+  "protectedFilesUnchanged": 1117,
+  "sourceDelta": {
+    "beforeFiles": 963,
+    "currentFiles": 965,
+    "changed": [
+      "modules/entity-resolution/README.md",
+      "modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/Adjudication.scala",
+      "modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/LiveAdjudication.scala",
+      "modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/LiveDemo.scala",
+      "modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/LiveDemoCommands.scala",
+      "modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/LiveProvider.scala",
+      "modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/OpenAIResponses.scala",
+      "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentRequestEligibilitySpec.scala"
+    ],
+    "added": [
+      "modules/entity-resolution/src/test/scala/edu/uic/cs441/scholarchain/entityresolution/ProviderResponseDiagnosticSpec.scala",
+      "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentLiveResponseDiagnosticSpec.scala"
+    ],
+    "removed": []
+  },
+  "eligiblePairs": 2,
+  "previewRequests": 1,
+  "previewProviderAttempts": 0,
+  "canonicalAdmissionUnchanged": true,
+  "requestedExcludedIntersection": 0,
+  "policyHashUnchanged": true,
+  "budgetBefore": {
+    "schemaVersion": "scholarchain.live-budget.v1",
+    "approvalId": "approval-1b66c9878075",
+    "configHash": "fea364d4a4873b7e948059a2ad16909876bf27fc511e5f0995c13ad91924bf70",
+    "attempts": 2,
+    "reservedInputTokens": 57472,
+    "reservedOutputTokens": 8192,
+    "reservedSpendMicrousd": 11281,
+    "observedInputTokens": 15821,
+    "observedOutputTokens": 1587,
+    "observedReasoningTokens": 291,
+    "observedCachedInputTokens": 0,
+    "observedCacheWriteTokens": 15815,
+    "observedCostUpperBoundMicrousd": 2772,
+    "unknownUsageAttempts": 0,
+    "fused": false
+  },
+  "budgetCurrent": {
+    "schemaVersion": "scholarchain.live-budget.v1",
+    "approvalId": "approval-1b66c9878075",
+    "configHash": "fea364d4a4873b7e948059a2ad16909876bf27fc511e5f0995c13ad91924bf70",
+    "attempts": 4,
+    "reservedInputTokens": 114958,
+    "reservedOutputTokens": 16384,
+    "reservedSpendMicrousd": 22563,
+    "observedInputTokens": 31615,
+    "observedOutputTokens": 3244,
+    "observedReasoningTokens": 656,
+    "observedCachedInputTokens": 15788,
+    "observedCacheWriteTokens": 15815,
+    "observedCostUpperBoundMicrousd": 5576,
+    "unknownUsageAttempts": 0,
+    "fused": false
+  },
+  "ledgerCounterReset": false,
+  "live": {
+    "path": "docs/agent-runs/phase-05/evidence/5d-response-repair/live-resume-20261021T201707Z",
+    "traceStatuses": {
+      "VALIDATED_LIVE": 1
+    },
+    "validationCodes": [
+      null
+    ],
+    "validatedResponses": 1
+  },
+  "noReviewerPromptFile": true,
+  "interpretation": "Historical response rejection is real; exact earlier cause is unrecoverable. Diagnostics preserve strict rejection and do not themselves prove a successful adjudication."
+}

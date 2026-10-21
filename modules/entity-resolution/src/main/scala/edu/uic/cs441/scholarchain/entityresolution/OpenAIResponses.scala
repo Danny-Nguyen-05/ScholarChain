@@ -326,7 +326,13 @@ object OpenAIResponses {
     )
     val result = Adjudication
       .validateResponse(text, request, bounds)
-      .fold(_ => throw new IllegalArgumentException("PROVIDER_ADJUDICATION_INVALID"), identity)
+      .fold(
+        e =>
+          throw new IllegalArgumentException(
+            "PROVIDER_ADJUDICATION_" + Adjudication.safeResponseFailureCode(e)
+          ),
+        identity
+      )
     val observed = usage(http).fold(e => throw new IllegalArgumentException(e), identity)
     ProviderResult(
       result,
@@ -336,8 +342,75 @@ object OpenAIResponses {
       http.requestId.filter(_.matches("[A-Za-z0-9_.:-]{1,128}"))
     )
   }.toEither.left.map(e => {
-    val message = Option(e.getMessage).getOrElse("")
+    val message = Option(e.getMessage).getOrElse("").stripPrefix("requirement failed: ")
     if (message.startsWith("PROVIDER_") && message.matches("[A-Z_0-9]+")) message
     else "PROVIDER_RESPONSE_INVALID"
   })
+
+  /** Diagnose a rejected response without retaining output, rationale, refs, error bodies or
+    * arbitrary exception text. Extraction only considers a bounded successful completed envelope.
+    */
+  def responseDiagnostic(
+      http: ProviderHttpResponse,
+      request: AdjudicationRequest,
+      config: LiveProviderConfig
+  ): ProviderResponseDiagnostic = {
+    val bytes = http.body.getBytes(UTF_8)
+    val validationCode =
+      parseResponse(http, request, config).fold(identity, _ => "PROVIDER_RESPONSE_VALID")
+    val text =
+      if (bytes.length <= config.budget.maxResponseBytes && http.status >= 200 && http.status < 300)
+        Try {
+          val root = json(http)
+          require(
+            root("status").str == "completed" && root.obj
+              .get("error")
+              .forall(_ == ujson.Null) && root.obj.get("incomplete_details").forall(_ == ujson.Null)
+          )
+          val items = root("output").arr.toVector
+          require(items.forall(v => Set("message", "reasoning")(v("type").str)))
+          val messages = items.filter(_("type").str == "message")
+          require(
+            messages.size == 1 && messages.head.obj.get("role").forall(_ == ujson.Str("assistant"))
+          )
+          val content = messages.head("content").arr.toVector
+          require(content.size == 1 && content.head("type").str == "output_text")
+          content.head("text").str
+        }.toOption
+      else None
+    val model = text.flatMap(t => StrictJson.parse[ujson.Value](t).toOption).collect {
+      case o: ujson.Obj => o
+    }
+    val expected = Map(
+      "schemaVersion" -> Adjudication.responseSchema,
+      "requestHash" -> request.requestHash,
+      "pairId" -> request.pairId,
+      "sourceId" -> request.sourceId,
+      "targetId" -> request.targetId,
+      "inputEvidenceHash" -> request.inputEvidenceHash,
+      "policyHash" -> request.policyHash
+    )
+    def count(field: String): Option[Int] =
+      model.flatMap(_.obj.get(field)).collect { case a: ujson.Arr => a.value.size }
+    ProviderResponseDiagnostic(
+      "scholarchain.provider-response-diagnostic.v1",
+      validationCode,
+      bytes.length,
+      StableIds.sha256Hex(http.body),
+      text.map(_.getBytes(UTF_8).length),
+      text.map(StableIds.sha256Hex),
+      model
+        .map(o =>
+          expected.map((field, value) => field -> o.obj.get(field).contains(ujson.Str(value)))
+        )
+        .getOrElse(Map.empty),
+      model.flatMap(_.obj.get("outcome")).collect {
+        case ujson.Str(value) if Set("accept", "reject", "abstain")(value) => value
+      },
+      count("evidenceRefs"),
+      count("fieldRefs"),
+      count("reasonCodes"),
+      model.flatMap(_.obj.get("rationale")).collect { case ujson.Str(value) => value.length }
+    )
+  }
 }

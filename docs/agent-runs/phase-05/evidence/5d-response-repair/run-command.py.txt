@@ -1,0 +1,25 @@
+"""Coordinator serial command runner: exact argv, bounded output file, observed exit."""
+import sys, subprocess, os, json, time
+from pathlib import Path
+base = Path(__file__).resolve().parent
+name, *cmd = sys.argv[1:]
+env = os.environ.copy()
+env['JAVA_HOME'] = '/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home'
+env['SBT_OPTS'] = '-Dlogback.configurationFile=' + str(Path('docs/agent-runs/phase-04/xml-repair-logback.xml').resolve())
+record = dict(name=name, command=cmd, cwd=str(Path.cwd()), startedMs=time.time_ns()//1000000,
+              environment={k: env[k] for k in ['JAVA_HOME', 'SBT_OPTS']}, status='running', log=str(base / (name+'.txt')))
+ledger = base / 'commands.json'
+records = json.loads(ledger.read_text()) if ledger.exists() else []
+records.append(record)
+ledger.write_text(json.dumps(records, indent=2)+'\n')
+with (base / (name+'.txt')).open('xb') as output:
+    result = subprocess.run(cmd, env=env, stdout=output, stderr=subprocess.STDOUT)
+record.update(status='complete', exitCode=result.returncode, finishedMs=time.time_ns()//1000000)
+# Reload so an earlier long-running command cannot erase subsequently appended receipts.
+records = json.loads(ledger.read_text())
+records = [record if (r['name'],r['startedMs']) == (name,record['startedMs']) else r for r in records]
+ledger.write_text(json.dumps(records, indent=2)+'\n')
+receipt = base / (name+'-command.json')
+receipt.write_text(json.dumps(record, indent=2)+'\n')
+print(json.dumps({k: record[k] for k in ['name','status','exitCode','startedMs','finishedMs','log']}))
+sys.exit(result.returncode)

@@ -1,0 +1,19 @@
+{
+  "beforeFiles": 963,
+  "currentFiles": 965,
+  "changed": [
+    "modules/entity-resolution/README.md",
+    "modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/Adjudication.scala",
+    "modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/LiveAdjudication.scala",
+    "modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/LiveDemo.scala",
+    "modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/LiveDemoCommands.scala",
+    "modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/LiveProvider.scala",
+    "modules/entity-resolution/src/main/scala/edu/uic/cs441/scholarchain/entityresolution/OpenAIResponses.scala",
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentRequestEligibilitySpec.scala"
+  ],
+  "added": [
+    "modules/entity-resolution/src/test/scala/edu/uic/cs441/scholarchain/entityresolution/ProviderResponseDiagnosticSpec.scala",
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentLiveResponseDiagnosticSpec.scala"
+  ],
+  "removed": []
+}

@@ -1176,3 +1176,25 @@ The user returned an independent APPROVE for limited 5E and the implemented chan
 ## Final Rice-team bounded attempt — verified blocked provider checkpoint
 
 External verdict for this new dataset/evidence checkpoint: PENDING. Earlier limited5E APPROVE remains scoped to its reviewed state. No new reviewer was launched or acceptance inferred. See evidence/5d-final-attempt/report.md.
+
+
+## Versioned adjudication request eligibility revision — awaiting external review
+
+STATUS: PENDING USER-LAUNCHED INDEPENDENT REVIEW. No reviewer was triggered and no approval is inferred. See evidence/5d-eligibility-revision/report.md and outcome.json. Prior review verdicts remain unchanged.
+
+
+## Safe response diagnostics repair — external review pending
+
+No independent reviewer was launched. Implementation evidence: evidence/5d-response-repair/report.md. Earlier two real responses failed validation; no successful adjudication or full acceptance is inferred.
+
+
+## Eligibility revision, diagnostics and observed live response — review pending
+
+STATUS: PENDING USER-LAUNCHED INDEPENDENT REVIEW. The latest retained run contains one VALIDATED_LIVE response, cumulative four attempts and $0.005576 cost upper bound. System outcome remains UNRESOLVED with zero links. No reviewer was invoked and no approval or human acceptance is inferred. See evidence/5d-response-repair/provider-success-report.md and provider-success-proof.json. Earlier verdicts and all failures remain retained.
+
+
+## User-supplied external checkpoint APPROVE and subsequent human acceptance
+
+The user returned an independent read-only APPROVE for the eligibility revision, response diagnostics and observed live adjudication checkpoint: zero blockers and five nonblocking observations. Complete supplied report: [external-review.md](evidence/phase5-human-acceptance/external-review.md). N-1 ledger durability, N-2 eligibility-count/evaluation interpretation, N-3 selection disclosure, N-4 reject-or-advisory asymmetry and N-5 validation-rate reporting remain deferred under the user's instruction to ignore nonblocking bugs. The review's stated unverified gates and broader limitations are retained without converting them into independently executed checks.
+
+After the coordinator explicitly identified human acceptance of Phase 5 with the documented limitations as the next step, the user replied “I approve them”. That separate human decision is transcribed append-only in human-gate.md and bound in evidence/phase5-human-acceptance/human-acceptance.json. Reviewer approval and human acceptance are separate records. No reviewer was launched by the coordinator; no nonblocking repair, commit, push or Phase 6 work follows from this recording.

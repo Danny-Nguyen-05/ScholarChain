@@ -57,9 +57,13 @@ object LinkExporter {
       run: ResolutionRun,
       input: ResolutionInput,
       policy: ResolutionPolicy,
-      config: ResolutionConfig
+      config: ResolutionConfig,
+      requestPolicy: Option[RequestEligibilityPolicy] = None
   ): Either[String, ResolutionExportManifest] = Try {
     ensureNew(output).fold(e => throw new IllegalArgumentException(e), identity)
+    RequestEligibilityPolicy
+      .validateBinding(policy, requestPolicy)
+      .fold(e => throw new IllegalArgumentException(e), identity)
     input.sourceRootPath.foreach(source =>
       PathIsolation
         .disjoint(source, output)
@@ -175,6 +179,7 @@ object LinkExporter {
     jsonl("diagnostics.jsonl", run.diagnostics)
     jsonl("evidence.jsonl", run.evidence)
     files += (("effective-policy.json", write(policy) + "\n", 1))
+    requestPolicy.foreach(p => files += (("request-eligibility-policy.json", write(p) + "\n", 1)))
     files += (("effective-config.json", write(config) + "\n", 1))
     val built = files.result().sortBy(_._1)
     val encoded = built.map { case (name, text, count) =>
@@ -326,6 +331,17 @@ object LinkExporter {
         .fold(e => throw new IllegalArgumentException(e), identity)
       val effectivePolicy = ResolutionPolicy
         .parse(policyText)
+        .fold(e => throw new IllegalArgumentException(e), identity)
+      val requestPolicy =
+        if (manifest.files.exists(_.path == "request-eligibility-policy.json"))
+          Some(
+            RequestEligibilityPolicy
+              .load(output.resolve("request-eligibility-policy.json"))
+              .fold(e => throw new IllegalArgumentException(e), identity)
+          )
+        else None
+      RequestEligibilityPolicy
+        .validateBinding(effectivePolicy, requestPolicy)
         .fold(e => throw new IllegalArgumentException(e), identity)
       val configText = StrictJson
         .file(output.resolve("effective-config.json"), config.input.maxRecordBytes)

@@ -126,9 +126,13 @@ object LiveDemoExporter {
       live: LiveProviderConfig,
       codeRevision: String,
       sourceTreeHash: String,
-      previewRequests: Option[Vector[AdjudicationRequest]] = None
+      previewRequests: Option[Vector[AdjudicationRequest]] = None,
+      requestPolicy: Option[RequestEligibilityPolicy] = None
   ): Either[String, LiveDemoManifest] = Try {
     LinkExporter.ensureNew(output).fold(e => throw new IllegalArgumentException(e), identity)
+    RequestEligibilityPolicy
+      .validateBinding(policy, requestPolicy)
+      .fold(e => throw new IllegalArgumentException(e), identity)
     require(
       codeRevision.matches("[0-9a-f]{40}") && sourceTreeHash.matches("[0-9a-f]{64}"),
       "explicit code/source freeze metadata required"
@@ -213,6 +217,8 @@ object LiveDemoExporter {
         .map(write(_))
         .mkString("", "\n", if (run.links.isEmpty) "" else "\n"),
       "constraints.json" -> (write(run.constraints) + "\n")
+    ) ++ requestPolicy.toVector.map(p =>
+      "request-eligibility-policy.json" -> (write(p) + "\n")
     ) ++ previewRequests.toVector.map(requests =>
       "PREVIEW-ONLY-NOT-EXECUTED-requests.json" -> (write(requests) + "\n")
     )
@@ -282,6 +288,8 @@ object LiveDemoCommands {
   val help = """Phase 5D explicit development-only provider checkpoint:
   prepare-live-demo --input COMPLETED_DEMO_PHASE4_RUN --frozen-input FROZEN_REVIEW_PHASE4_RUN --queue QUEUE_JSON --split SPLIT_JSON --policy POLICY_JSON --config SOURCE_CONFIG_JSON --live-config LIVE_CONFIG_JSON --scope development|supplement --code-revision GIT_SHA40 --source-hash SOURCE_SHA256 --output NEW_DIRECTORY
   adjudicate-demo --input COMPLETED_DEMO_PHASE4_RUN --frozen-input FROZEN_REVIEW_PHASE4_RUN --queue QUEUE_JSON --split SPLIT_JSON --policy POLICY_JSON --config SOURCE_CONFIG_JSON --live-config APPROVED_LIVE_CONFIG_JSON --scope development|supplement --code-revision GIT_SHA40 --source-hash SOURCE_SHA256 --runtime-binding BINDING_JSON --approval USER_APPROVAL_RECEIPT_JSON --enable-live APPROVAL_ID --output NEW_DIRECTORY
+Optional --request-policy REQUEST_ELIGIBILITY_JSON explicitly opts into a hash-bound request-only policy; automatic acceptance is unchanged.
+Optional --max-pairs POSITIVE_INTEGER narrows this invocation to at most that many eligible pairs without changing approval limits.
 prepare-live-demo never reads credentials or calls a provider. No eligible pair means zero calls.
 The live command requires the exact recorded approval and fixed persistent approval-scoped state.
 Existing resolve remains disabled/fake only. Human review and final frozen evaluation are separate gates.
@@ -318,7 +326,9 @@ Existing resolve remains disabled/fake only. Human review and final frozen evalu
     val rest = args.drop(1).toVector; require(rest.size % 2 == 0, "each option requires one value")
     val pairs = rest.grouped(2).map(v => v.head -> v(1)).toVector
     require(
-      pairs.map(_._1).distinct.size == pairs.size && pairs.map(_._1).toSet == required,
+      pairs.map(_._1).distinct.size == pairs.size && required.subsetOf(
+        pairs.map(_._1).toSet
+      ) && pairs.map(_._1).toSet.subsetOf(required ++ Set("--request-policy", "--max-pairs")),
       "unknown, duplicate or missing live demo options"
     )
     val options = pairs.toMap; val output = Path.of(options("--output"))
@@ -343,7 +353,21 @@ Existing resolve remains disabled/fake only. Human review and final frozen evalu
     ).foreach(k => value(PathIsolation.disjoint(Path.of(options(k)), output)))
     val source = value(ResolutionConfig.load(Path.of(options("--config"))))
     val live = value(LiveProviderConfig.load(Path.of(options("--live-config"))))
-    val policy = value(ResolutionPolicy.load(Path.of(options("--policy"))))
+    val maxPairs = options.get("--max-pairs").map(_.toInt)
+    require(
+      maxPairs.forall(n => n > 0 && n <= live.budget.maxAttempts),
+      "live pair cap must be positive and within the approved attempt limit"
+    )
+    val basePolicy = value(ResolutionPolicy.load(Path.of(options("--policy"))))
+    val requestPolicy = options
+      .get("--request-policy")
+      .map(path => value(RequestEligibilityPolicy.load(Path.of(path))))
+    requestPolicy.foreach(_ =>
+      value(PathIsolation.disjoint(Path.of(options("--request-policy")), output))
+    )
+    val policy = requestPolicy
+      .map(p => value(RequestEligibilityPolicy.bind(basePolicy, p)))
+      .getOrElse(basePolicy)
     val input = value(InputLoader.load(Path.of(options("--input")), source))
     val frozen = value(InputLoader.load(Path.of(options("--frozen-input")), source))
     val queue =
@@ -384,23 +408,26 @@ Existing resolve remains disabled/fake only. Human review and final frozen evalu
         enabled,
         runtime.map(_.approvalId).getOrElse(""),
         () => new OpenAIHttpTransport(() => Option(System.getenv(live.apiKeyEnvironment))),
-        supplemental = options("--scope") == "supplement"
+        supplemental = options("--scope") == "supplement",
+        requestPolicy = requestPolicy,
+        maxPairs = maxPairs
       )
     )
     if (!enabled) {
       val previewEvidence = input.evidence ++ population.derivedEvidence.map(e => e.ref -> e)
       val selection = value(
         if (options("--scope") == "supplement")
-          LiveDemo.selectSupplement(input, population, frozen, queue, split, policy)
-        else LiveDemo.select(input, population, queue, split, policy)
+          LiveDemo.selectSupplement(input, population, frozen, queue, split, policy, requestPolicy)
+        else LiveDemo.select(input, population, queue, split, policy, requestPolicy)
       )
-      val requests = selection.eligiblePairs.take(live.budget.maxAttempts).map { candidate =>
-        val classified = value(ResolutionEngine.classify(candidate, input, policy))
-        value(
-          OpenAIResponses
-            .request(candidate, input, policy, source, live, classified.features, previewEvidence)
-        )
-      }
+      val requests =
+        selection.eligiblePairs.take(maxPairs.getOrElse(live.budget.maxAttempts)).map { candidate =>
+          val classified = value(ResolutionEngine.classify(candidate, input, policy))
+          value(
+            OpenAIResponses
+              .request(candidate, input, policy, source, live, classified.features, previewEvidence)
+          )
+        }
       value(
         LiveDemoExporter.writeNew(
           output,
@@ -411,7 +438,8 @@ Existing resolve remains disabled/fake only. Human review and final frozen evalu
           live,
           options("--code-revision"),
           options("--source-hash"),
-          Some(requests)
+          Some(requests),
+          requestPolicy
         )
       )
       s"Development/demo readiness: admitted=${result.admission.admittedPairIds.size}, naturally eligible=${result.eligiblePairs}; provider calls=0. No held-out predictions or human labels read."
@@ -425,7 +453,8 @@ Existing resolve remains disabled/fake only. Human review and final frozen evalu
           source,
           live,
           options("--code-revision"),
-          options("--source-hash")
+          options("--source-hash"),
+          requestPolicy = requestPolicy
         )
       )
       s"Development/demo checkpoint: eligible=${result.eligiblePairs}, live attempts=${manifest.liveAttemptsThisRun}, verified cache hits=${manifest.cacheHitsThisRun}. Human labels and final evaluation remain separate."

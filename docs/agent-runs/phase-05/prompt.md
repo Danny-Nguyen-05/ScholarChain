@@ -696,3 +696,23 @@ The user returned an independent APPROVE for limited 5E and the implemented chan
 ### Final Rice-team acquisition numerical approval
 
 The user explicitly answered “Approve this final bounded attempt” to the question retained in evidence/5d-final-attempt/user-approval.json: at most 30 public OpenAlex work rows including duplicates/exclusions, 20 HTTP attempts, 8 MiB and 300 seconds, no data credentials or paid data. Query only the two already observed author IDs for Luis Leopoldo Perez and Christopher Jermaine, fixed 15 rows each, citation-count descending, years 2018–2024, no refill/fallback. Exact old seed bytes are discovery proof only; ingestion uses fresh response observations with stage-specific snapshot/date. Preserve cumulative acquisition counters. Apply canonical transitive held-out exclusion before scoring. Existing $1/10-attempt model approval remains unchanged and requires natural eligibility, passing offline checks, sanitized preview and credential preflight. Preserve the approved 5E evidence and all labels/rules. No nonblocking repairs, Phase 6, commit/push or reviewer launch.
+
+
+## Versioned adjudication eligibility revision authorization
+
+The user replied “alright can you do it now” after the coordinator proposed handling implementation, tests, a bounded live run and updated evaluation, while retaining the existing $1 / 10-attempt approval, preserving all 240 human reviews and leaving independent review and final acceptance to the user. This authorizes a focused, separately versioned model-request eligibility policy using development-only evidence, with automatic acceptance and identifier-conflict protections preserved. No new source acquisition or unrelated nonblocking repairs. Preserve original policy resources, labels, approved 5E artifacts and existing human-gate.md byte-for-byte. Keep disabled/legacy behavior reproducible. Fresh predictions precede label-aware evaluation; no threshold selection from held-out results. Later measurements on the previously exposed held-out set must be explicitly described as reused-set/descriptive validation, not a fresh unseen test. Provider calls additionally require passing offline gates, a sanitized qualifying preview, original budget/approval binding and runtime credential preflight. No reviewer launch, commit/push, Phase 6 or overall acceptance. Exact receipt: evidence/5d-eligibility-revision/user-authorization.json.
+
+
+## Safe live response diagnostics continuation — 2026-10-21
+
+The user returned a real terminal run with ADJUDICATION_FAILED for both eligible pairs, cumulative attempts 2 and observed cost upper bound 2772 micro-USD. The approved demonstration remains the active work order. The coordinator routes a narrow response-diagnostic repair to the ER and test owners: preserve strict response/identity/citation validation, model, policy, credentials isolation, numerical approval and cumulative ledger; expose only finite sanitized validation categories and bounded hashes/counts/booleans; no raw response text, provider-error body, rationale, arbitrary exceptions or key values. Narrow the next explicit user execution to one eligible pair. Prior outputs and labels are immutable. No further API request is made by the coordinator during diagnosis. Fresh offline gates precede another user-launched attempt. No reviewer, commit, push, acceptance or Phase 6 is authorized. The exact earlier content rejection is unknown because that output was not retained.
+
+
+## User-returned successful live run — 2026-10-21
+
+The user returned live-resume-20261021T201707Z with VALIDATED_LIVE, cumulative attempts 4 and costUpperBoundMicrousd 5576. The coordinator verified the retained successful response, cache and bindings offline; it did not make another API call or access .env. This is observed implementation evidence, not a human acceptance decision. The next gate is the user-launched independent review.
+
+
+## Explicit human Phase 5 acceptance — 2026-10-21
+
+The user supplied the independent checkpoint APPROVE, instructed “ignore all non-blockings bugs. Are they good now?”, and then replied “I approve them” after the coordinator explicitly identified human Phase 5 acceptance with the documented limitations as the remaining decision. Record that new human decision append-only, preserve the full external report, and defer all nonblocking findings. No implementation, new tests/calls, budget reset, commit, push or Phase 6 is authorized by this documentation step. Exact receipt: evidence/phase5-human-acceptance/human-acceptance.json.

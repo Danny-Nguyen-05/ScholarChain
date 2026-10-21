@@ -1,0 +1,49 @@
+{
+  "scope": "Versioned request eligibility revision, safe diagnostics, one-pair cap, preserved descriptive evaluation and observed live response",
+  "head": "6285210f8b8b2de1fe6d0ae79aecaf3079966fc5",
+  "branch": "main",
+  "sourceFreeze": {
+    "path": "docs/agent-runs/phase-05/source-freeze.json",
+    "bytes": 233195,
+    "sha256": "ffca3fb63de469dbd7cb993b5f5e0ba4f6ec45d20ff0514cdf8e8320369493b6"
+  },
+  "fullCheckSummary": {
+    "path": "docs/agent-runs/phase-05/evidence/5d-response-repair/full-check-summary.json",
+    "bytes": 22470,
+    "sha256": "2ee31ad6bc924f78fb72d57d128c3b43737007d889065a6bb7f5b6e17eb02461"
+  },
+  "providerSuccessProof": {
+    "path": "docs/agent-runs/phase-05/evidence/5d-response-repair/provider-success-proof.json",
+    "bytes": 6806,
+    "sha256": "5ab03ec89caacf602b62c202dbd128905e92964d71cfdb645e6bbc926094ed38"
+  },
+  "providerSuccessReport": {
+    "path": "docs/agent-runs/phase-05/evidence/5d-response-repair/provider-success-report.md",
+    "bytes": 5778,
+    "sha256": "1dc856b1c7721eadc8199b8af7c0323705e6b6d08889d472368d8bfdb5c10759"
+  },
+  "protectedProof": {
+    "path": "docs/agent-runs/phase-05/evidence/5d-response-repair/protected-and-budget-proof.json",
+    "bytes": 3167,
+    "sha256": "1d6ea533b8705357a3b0110f085f1ce5e9b8e98b82ff474d04921849d354041b"
+  },
+  "successfulRunManifest": {
+    "path": "docs/agent-runs/phase-05/evidence/5d-response-repair/live-resume-20261021T201707Z/live-demo-manifest.json",
+    "bytes": 2584,
+    "sha256": "a07d40872152a73a5da0e2e65ccfdcbc9726a8dab1be982cb93bcdfb56220a8f"
+  },
+  "cacheValidationLog": {
+    "path": "docs/agent-runs/phase-05/evidence/5d-response-repair/validate-live-cache.txt",
+    "bytes": 330,
+    "sha256": "e962f9be5819f555072c7fa4ae28ddc72d101cc1813a8e51ee5f1012f1b39f55"
+  },
+  "evaluationComparison": {
+    "path": "docs/agent-runs/phase-05/evidence/5d-eligibility-revision/post-policy-evaluation/comparison-with-original.json",
+    "bytes": 5814,
+    "sha256": "2108be736b3db37463808dc44bd5929a24da0d555d20faaac3b8e5c71d3805cf"
+  },
+  "reviewInventory": "docs/agent-runs/phase-05/review-inventory.json",
+  "reviewerLaunched": false,
+  "fullPhase5Accepted": false,
+  "phase6Authorized": false
+}

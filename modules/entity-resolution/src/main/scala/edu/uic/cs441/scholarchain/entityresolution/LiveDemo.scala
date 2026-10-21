@@ -50,16 +50,6 @@ final case class LiveDemoRun(
 object LiveDemo {
   private def value[A](r: Either[String, A]): A =
     r.fold(e => throw new IllegalArgumentException(e), identity)
-  private def eligible(
-      d: ClassifiedPair,
-      entity: ResolutionEntityType,
-      policy: ResolutionPolicy
-  ): Boolean = {
-    val p = policy.forEntity(entity)
-    d.outcome == MatchOutcome.Unresolved && d.sufficient && d.score.exists(s =>
-      s >= p.llmBandMin && s <= p.llmBandMax
-    )
-  }
   private def locked(split: ReviewSplit): Vector[String] = split.groups
     .filter(g => split.partitions.get(g.groupId).contains("held-out"))
     .flatMap(_.anchorHashes)
@@ -73,13 +63,19 @@ object LiveDemo {
       split: ReviewSplit,
       policy: ResolutionPolicy,
       admitted: Vector[DerivedPair],
-      supplemental: Boolean
+      supplemental: Boolean,
+      requestPolicy: Option[RequestEligibilityPolicy]
   ): LiveDemoSelection = {
     val allowed = admitted.sortBy(_.pair.pairId)
     val ids = allowed.map(_.pair.pairId).toSet
     val rejected = population.pairs.map(_.pair.pairId).filterNot(ids).sorted
     val candidates = allowed.filter(d =>
-      eligible(value(ResolutionEngine.classify(d, input, policy)), d.pair.entityType, policy)
+      RequestEligibilityPolicy.eligible(
+        value(ResolutionEngine.classify(d, input, policy)),
+        d.pair.entityType,
+        policy,
+        requestPolicy
+      )
     )
     val admission = LiveDemoAdmission(
       "scholarchain.live-demo-admission.v1",
@@ -113,9 +109,11 @@ object LiveDemo {
       population: CandidatePopulation,
       queue: ReviewQueueDocument,
       split: ReviewSplit,
-      policy: ResolutionPolicy
+      policy: ResolutionPolicy,
+      requestPolicy: Option[RequestEligibilityPolicy] = None
   ): Either[String, LiveDemoSelection] = Try {
     value(ReviewQueue.validate(queue, split)); value(ResolutionPolicy.validate(policy))
+    value(RequestEligibilityPolicy.validateBinding(policy, requestPolicy))
     require(
       input.inputEvidenceHash == queue.binding.inputEvidenceHash && ReviewQueue.populationHash(
         population
@@ -133,7 +131,17 @@ object LiveDemo {
         split.partitions.get(g).contains("development")
       )
     }
-    result(input, population, input, queue, split, policy, admitted, supplemental = false)
+    result(
+      input,
+      population,
+      input,
+      queue,
+      split,
+      policy,
+      admitted,
+      supplemental = false,
+      requestPolicy = requestPolicy
+    )
   }.toEither.left.map(_.getMessage)
   def selectSupplement(
       input: ResolutionInput,
@@ -141,9 +149,11 @@ object LiveDemo {
       frozenInput: ResolutionInput,
       queue: ReviewQueueDocument,
       split: ReviewSplit,
-      policy: ResolutionPolicy
+      policy: ResolutionPolicy,
+      requestPolicy: Option[RequestEligibilityPolicy] = None
   ): Either[String, LiveDemoSelection] = Try {
     value(ReviewQueue.validate(queue, split)); value(ResolutionPolicy.validate(policy))
+    value(RequestEligibilityPolicy.validateBinding(policy, requestPolicy))
     require(
       frozenInput.inputEvidenceHash == queue.binding.inputEvidenceHash,
       "protected frozen input differs from queue"
@@ -172,7 +182,17 @@ object LiveDemo {
         index.get(e).exists(i => !excludedComponents(root(i)))
       )
     }
-    result(input, population, frozenInput, queue, split, policy, admitted, supplemental = true)
+    result(
+      input,
+      population,
+      frozenInput,
+      queue,
+      split,
+      policy,
+      admitted,
+      supplemental = true,
+      requestPolicy = requestPolicy
+    )
   }.toEither.left.map(_.getMessage)
   def run(
       input: ResolutionInput,
@@ -189,12 +209,19 @@ object LiveDemo {
       enabled: Boolean,
       approvalId: String,
       transportFactory: () => OpenAITransport,
-      supplemental: Boolean = false
+      supplemental: Boolean = false,
+      requestPolicy: Option[RequestEligibilityPolicy] = None,
+      maxPairs: Option[Int] = None
   ): Either[String, LiveDemoRun] = Try {
     value(ResolutionConfig.validate(sourceConfig)); value(LiveProviderConfig.validate(liveConfig))
+    require(
+      maxPairs.forall(n => n > 0 && n <= liveConfig.budget.maxAttempts),
+      "live pair cap must be positive and within the approved attempt limit"
+    )
     val selection = value(
-      if (supplemental) selectSupplement(input, population, frozenInput, queue, split, policy)
-      else select(input, population, queue, split, policy)
+      if (supplemental)
+        selectSupplement(input, population, frozenInput, queue, split, policy, requestPolicy)
+      else select(input, population, queue, split, policy, requestPolicy)
     )
     val evidence = input.evidence ++ population.derivedEvidence.map(e => e.ref -> e)
     val limitations = Vector(
@@ -204,6 +231,8 @@ object LiveDemo {
       "Cost is a conservative standard-tier upper-bound estimate from observed tokens, not a provider invoice. Missing cache-write token details are represented as zero reported writes; input cost still uses the higher cache-write rate.",
       "Unobserved identity leakage remains possible; approved supplemental evidence is separate from the frozen review population.",
       "Accepted links and complete source constraints are limited to this explicitly scoped development demo, not a full matching run; the human queue is unchanged."
+    ) ++ maxPairs.toVector.map(n =>
+      "Explicit live candidate cap=" + n + "; the full eligible population remains reported separately."
     )
     def output(
         traces: Vector[LiveAttemptTrace],
@@ -317,107 +346,120 @@ object LiveDemo {
         )
         val traces = Vector.newBuilder[LiveAttemptTrace];
         val decisions = Vector.newBuilder[ResolutionDecision]
-        selection.eligiblePairs.take(liveConfig.budget.maxAttempts).foreach { candidate =>
-          val initial = value(ResolutionEngine.classify(candidate, input, policy))
-          require(
-            eligible(initial, candidate.pair.entityType, policy) && !ResolutionEngine
-              .conflicts(candidate.pair.left, candidate.pair.right, input),
-            "live candidate lost eligibility or gained conflict"
-          )
-          val request = value(
-            OpenAIResponses.request(
-              candidate,
-              input,
-              policy,
-              sourceConfig,
-              liveConfig,
+        selection.eligiblePairs.take(maxPairs.getOrElse(liveConfig.budget.maxAttempts)).foreach {
+          candidate =>
+            val initial = value(ResolutionEngine.classify(candidate, input, policy))
+            require(
+              RequestEligibilityPolicy.eligible(
+                initial,
+                candidate.pair.entityType,
+                policy,
+                requestPolicy
+              ) && !ResolutionEngine
+                .conflicts(candidate.pair.left, candidate.pair.right, input),
+              "live candidate lost eligibility or gained conflict"
+            )
+            val request = value(
+              OpenAIResponses.request(
+                candidate,
+                input,
+                policy,
+                sourceConfig,
+                liveConfig,
+                initial.features,
+                evidence
+              )
+            )
+            val trace = service.adjudicate(request); traces += trace
+            val response = trace.result.map(_.response)
+            val outcome = response.map(_.outcome) match {
+              case Some("accept")
+                  if initial.sufficient && !ResolutionEngine
+                    .conflicts(candidate.pair.left, candidate.pair.right, input) =>
+                MatchOutcome.Accepted
+              case Some("reject") => MatchOutcome.Rejected
+              case _              => initial.outcome
+            }
+            val provenance = Provenance(
+              SchemaVersions.domain,
+              SourceType.ScholarChain,
+              candidate.pair.pairId,
+              None,
+              "entity-resolution-live-demo",
+              None,
+              None,
+              runId,
+              Vector(
+                "development-demo-only",
+                "provider=" + liveConfig.provider,
+                "model=" + liveConfig.model
+              )
+            )
+            val decision = MatchDecision(
+              SchemaVersions.domain,
+              ResolutionIds.endpointId(candidate.pair.left),
+              ResolutionIds.endpointId(candidate.pair.right),
+              initial.features.flatMap(f => f.value.map(v => NamedNumber(f.name, v))),
+              outcome,
+              initial.score.getOrElse(0.0),
+              (initial.reasonCodes ++ (if (
+                                         response
+                                           .exists(_.outcome == "accept") && !initial.sufficient
+                                       ) Vector(RequestEligibilityPolicy.blockedAcceptReason)
+                                       else
+                                         Vector.empty) ++ Vector(trace.status) ++ response.toVector
+                .flatMap(
+                  _.reasonCodes.map("LLM_" + _)
+                )).distinct,
+              policy.policyVersion,
+              runId,
+              "Bounded live development demo; no calibrated probability or measured identity accuracy",
+              provenance
+            )
+            val adjudication = response.map(r =>
+              ResolutionAdjudication(
+                request.requestHash,
+                request.promptVersion,
+                request.promptHash,
+                request.responseSchemaVersion,
+                request.provider,
+                request.model,
+                Some(liveConfig.modelVersion),
+                StrictJson.hash(request.generationSettings),
+                LiveAdjudicationCache.key(request),
+                ResolutionAdjudicationMode.Live,
+                trace.cacheHit,
+                r.reportedConfidence,
+                r.evidenceRefs,
+                ResolutionPreAdjudication(initial.score, initial.outcome, initial.path)
+              )
+            )
+            val raw = ResolutionDecision(
+              ResolutionContracts.schemaVersion,
+              "",
+              candidate.pair,
+              decision,
+              candidate.contributingCandidates,
+              policy.featurePolicyVersion,
               initial.features,
-              evidence
+              if (response.nonEmpty) ResolutionDecisionPath.LlmAdjudicated else initial.path,
+              ResolutionConfidenceSemantics.UncalibratedScore,
+              None,
+              policy.fingerprint,
+              OpenAIResponses.effectiveConfigHash(sourceConfig, liveConfig),
+              input.inputEvidenceHash,
+              candidate.evidenceRefs,
+              Instant.now().toString,
+              adjudication
             )
-          )
-          val trace = service.adjudicate(request); traces += trace
-          val response = trace.result.map(_.response)
-          val outcome = response.map(_.outcome) match {
-            case Some("accept")
-                if !ResolutionEngine.conflicts(candidate.pair.left, candidate.pair.right, input) =>
-              MatchOutcome.Accepted
-            case Some("reject") => MatchOutcome.Rejected
-            case _              => initial.outcome
-          }
-          val provenance = Provenance(
-            SchemaVersions.domain,
-            SourceType.ScholarChain,
-            candidate.pair.pairId,
-            None,
-            "entity-resolution-live-demo",
-            None,
-            None,
-            runId,
-            Vector(
-              "development-demo-only",
-              "provider=" + liveConfig.provider,
-              "model=" + liveConfig.model
+            val audit = raw.copy(decisionId = ResolutionIds.decisionId(raw))
+            value(
+              ResolutionValidation
+                .check(audit, input.context)
+                .left
+                .map(_.map(_.message).mkString("; "))
             )
-          )
-          val decision = MatchDecision(
-            SchemaVersions.domain,
-            ResolutionIds.endpointId(candidate.pair.left),
-            ResolutionIds.endpointId(candidate.pair.right),
-            initial.features.flatMap(f => f.value.map(v => NamedNumber(f.name, v))),
-            outcome,
-            initial.score.getOrElse(0.0),
-            (initial.reasonCodes ++ Vector(trace.status) ++ response.toVector.flatMap(
-              _.reasonCodes.map("LLM_" + _)
-            )).distinct,
-            policy.policyVersion,
-            runId,
-            "Bounded live development demo; no calibrated probability or measured identity accuracy",
-            provenance
-          )
-          val adjudication = response.map(r =>
-            ResolutionAdjudication(
-              request.requestHash,
-              request.promptVersion,
-              request.promptHash,
-              request.responseSchemaVersion,
-              request.provider,
-              request.model,
-              Some(liveConfig.modelVersion),
-              StrictJson.hash(request.generationSettings),
-              LiveAdjudicationCache.key(request),
-              ResolutionAdjudicationMode.Live,
-              trace.cacheHit,
-              r.reportedConfidence,
-              r.evidenceRefs,
-              ResolutionPreAdjudication(initial.score, initial.outcome, initial.path)
-            )
-          )
-          val raw = ResolutionDecision(
-            ResolutionContracts.schemaVersion,
-            "",
-            candidate.pair,
-            decision,
-            candidate.contributingCandidates,
-            policy.featurePolicyVersion,
-            initial.features,
-            if (response.nonEmpty) ResolutionDecisionPath.LlmAdjudicated else initial.path,
-            ResolutionConfidenceSemantics.UncalibratedScore,
-            None,
-            policy.fingerprint,
-            OpenAIResponses.effectiveConfigHash(sourceConfig, liveConfig),
-            input.inputEvidenceHash,
-            candidate.evidenceRefs,
-            Instant.now().toString,
-            adjudication
-          )
-          val audit = raw.copy(decisionId = ResolutionIds.decisionId(raw))
-          value(
-            ResolutionValidation
-              .check(audit, input.context)
-              .left
-              .map(_.map(_.message).mkString("; "))
-          )
-          decisions += audit
+            decisions += audit
         }
         output(traces.result(), decisions.result(), Some(ledger.snapshot))
       } finally ledger.close()

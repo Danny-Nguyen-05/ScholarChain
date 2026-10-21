@@ -1,0 +1,71 @@
+"""Coordinator verifies immutable inputs, actual manifests, admission and observed traces."""
+from pathlib import Path
+import json, hashlib, collections
+R=Path.cwd(); B=Path(__file__).resolve().parent
+load=lambda p: json.loads(Path(p).read_text())
+sha=lambda p: hashlib.sha256(Path(p).read_bytes()).hexdigest()
+def dump(p,x): Path(p).write_text(json.dumps(x,indent=2)+'\n')
+def verified_manifest(root):
+    m=load(root/'live-demo-manifest.json')
+    for f in m['files']:
+        p=root/f['path']
+        assert p.stat().st_size==f['bytes'] and sha(p)==f['sha256'], p
+    assert (root/'_SCHOLARCHAIN_LIVE_DEMO_COMPLETE').is_file(), 'completion marker missing'
+    return m
+
+start=load(B/'start.json')
+changed=[x['path'] for x in start['protectedFiles'] if not Path(x['path']).is_file() or sha(x['path'])!=x['sha256']]
+assert not changed,changed
+old={x['path']:x for x in load(B/'before-source-freeze.json')['files']}
+new={x['path']:x for x in load(R/'docs/agent-runs/phase-05/source-freeze.json')['files']}
+assert not old.keys()-new.keys()
+delta={'beforeFiles':len(old),'currentFiles':len(new),'changed':sorted(p for p in old.keys()&new.keys() if old[p]!=new[p]),'added':sorted(new.keys()-old.keys()),'removed':[]}
+dump(B/'source-delta.json',delta)
+preview=verified_manifest(B/'preview')
+requests=load(B/'preview/PREVIEW-ONLY-NOT-EXECUTED-requests.json')
+admission=load(B/'preview/admission.json')
+assert len(requests)==preview['eligiblePairs']==2
+assert preview['liveAttemptsThisRun']==0
+assert set(x['pairId'] for x in requests)<=set(admission['admittedPairIds'])
+assert not set(x['pairId'] for x in requests)&set(admission['excludedPairIds'])
+assert admission==load(R/'docs/agent-runs/phase-05/evidence/5d-final-attempt/preview/admission.json')
+assert all(r['policyHash']==preview['policyHash'] for r in requests)
+assert preview['sourceTreeHash']==sha(R/'docs/agent-runs/phase-05/source-freeze.json')
+assert preview['policyHash']!='ad8c520fd8ff2e3697e15b2895852ca23e04c8d93f677acea3b366fcc101ef9f'
+live=None
+live_root=sorted([p for p in B.glob('live-resume-*') if p.is_dir() and (p/'live-demo-manifest.json').exists()])
+live_root=live_root[-1] if live_root else B/'live'
+if (live_root/'live-demo-manifest.json').exists():
+    manifest=verified_manifest(live_root); demo=load(live_root/'demo.json')
+    assert load(live_root/'admission.json')==admission
+    assert manifest['policyHash']==preview['policyHash']
+    assert manifest['sourceTreeHash']==preview['sourceTreeHash']
+    assert set(t['pairId'] for t in demo['traces'])<=set(admission['admittedPairIds'])
+    assert not set(t['pairId'] for t in demo['traces'])&set(admission['excludedPairIds'])
+    for trace in demo['traces']:
+        if trace['result']:
+            assert trace['status']=='VALIDATED_LIVE' or trace['cacheHit']
+            assert trace['result']['response']['requestHash']==trace['request']['requestHash']
+            assert trace['result']['response']['policyHash']==preview['policyHash']
+    assert not demo['links'], 'newly eligible insufficient pairs must not export accepted links'
+    live={'outputPath':str(live_root.relative_to(R)),'manifest':manifest,'traceStatuses':dict(collections.Counter(t['status'] for t in demo['traces'])),
+          'validatedResponses':sum(t['result'] is not None for t in demo['traces']),
+          'responseOutcomes':dict(collections.Counter(t['result']['response']['outcome'] for t in demo['traces'] if t['result'])),
+          'finalOutcomes':dict(collections.Counter(d['decision']['decision'] for d in demo['decisions'])),
+          'acceptedLinks':len(demo['links']),'budget':demo['budget']}
+    if demo['budget']:
+        budget=demo['budget']
+        assert budget['attempts']<=10 and budget['reservedInputTokens']<=1000000 and budget['reservedOutputTokens']<=40960
+        assert budget['reservedSpendMicrousd']<=1000000
+        assert budget['observedCostUpperBoundMicrousd']<=1000000
+proof={'valid':True,'protectedFilesUnchanged':len(start['protectedFiles']),
+       'labelFilesUnchanged':sum('/labels/' in x['path'] for x in start['protectedFiles']),
+       'oldEvaluationFilesUnchanged':sum('/evidence/5e/' in x['path'] for x in start['protectedFiles']),
+       'humanGateUnchanged':any(x['path'].endswith('/human-gate.md') for x in start['protectedFiles']),
+       'sourceDelta':delta,'eligiblePreviewRequests':len(requests),'previewProviderAttempts':preview['liveAttemptsThisRun'],
+       'admissionIdenticalToHistoricalRiceAdmission':True,'requestedExcludedIntersection':0,
+       'live':live,'noReviewerPromptFile':not (R/'docs/agent-runs/phase-05/reviewer-prompt.txt').exists(),
+       'scope':'Measured manifests/traces and protected hashes. No identity accuracy or full acceptance is inferred.'}
+assert proof['noReviewerPromptFile']
+dump(B/'protected-and-provider-proof.json',proof)
+print(json.dumps({'valid':True,'protectedFiles':proof['protectedFilesUnchanged'],'eligible':len(requests),'liveStatuses':live['traceStatuses'] if live else None}))

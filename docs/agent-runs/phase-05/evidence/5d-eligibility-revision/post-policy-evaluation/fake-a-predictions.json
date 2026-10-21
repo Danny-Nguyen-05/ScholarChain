@@ -1,0 +1,2716 @@
+{
+  "schemaVersion": "scholarchain.evaluation-predictions.v1",
+  "binding": {
+    "inputEvidenceHash": "57efd81957e5eec9194d4b5c42f6ef170213640f148b56bf8b99a51d1d09d1fe",
+    "candidatePopulationHash": "9381588e35a418a84a22e9a680db4ab7886a8d33cf9463166edc1222cd8a5581",
+    "policyHash": "da0fe66a2f8e446edd9a685df34d824c4dc4d478e1108f564b9be5b0918c20ed",
+    "configHash": "b31c3a77e2815f486b4da76c33d0283d91dba553af91178832ca6d7a0c87f37d",
+    "promptHash": "e9ef5f36238a29f2003f9e6404451aeca7fc54575989910edae2ce0ab7f71940",
+    "responseSchemaHash": "b253e113841a2e02699097ae003c4a01fbbd2fcd28cf2e61ff48a7a46e06aacd",
+    "modelIdentity": "deterministic-fake/abstain-fixture/v1",
+    "codeRevision": "6285210f8b8b2de1fe6d0ae79aecaf3079966fc5",
+    "sourceTreeHash": "5b892436dc00cea30127c52eca09afd7becd98897992b2c1790f46084f201064"
+  },
+  "rows": [
+    {
+      "pairId": "resolution-pair:02f365bd12dc7ac22e66eb3da07807955c52d27a074bfabbbc5885b0cac697d4",
+      "entityType": "Work",
+      "pairEvidenceHash": "0ee23763aeaff59a54f6a8facbac609a8854f95faa5c8ce5e145635adb8ce02f",
+      "outcome": "ACCEPTED",
+      "path": "ExactIdentifier",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:1cfcabc37b7fe1768815f32f0f1fe39dc06fb243b9b9dc3f8829ffa3e24cc953",
+      "entityType": "Work",
+      "pairEvidenceHash": "39b20d046b97eb110723ada7ae4c52910125f6589d574b9e776b860da6340703",
+      "outcome": "ACCEPTED",
+      "path": "ExactIdentifier",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:1f929d8f5a7a732de747946bc944c4b1b783ab73625d17b80e5e06917528469e",
+      "entityType": "Work",
+      "pairEvidenceHash": "cfaf5a50d8930bf21f695a30e45af20c561729a52af1ed5fa738e87aaf5fbaa9",
+      "outcome": "ACCEPTED",
+      "path": "ExactIdentifier",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:28945293206d087cfeced13811cb2a998d358dbd88c42aa2fbcaea070cd17caa",
+      "entityType": "Work",
+      "pairEvidenceHash": "689fd43c615e62d6001eee2e3486a19a325b29826e6b765c658aba1e5a3bf77f",
+      "outcome": "ACCEPTED",
+      "path": "ExactIdentifier",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:2ab5de232610f4aff76ef2c29623a7949c899e9aad5a6a76806e93e66367eac6",
+      "entityType": "Work",
+      "pairEvidenceHash": "cd45eae27e5fe607eba15dd8a2c7e0837bbdaeb5e0b014e1eba6050f89dc996f",
+      "outcome": "ACCEPTED",
+      "path": "ExactIdentifier",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:3843e9f5c0b11b4b8e6aa2c2bd6f0715d0815bcc466beac12e3cd8c716197df2",
+      "entityType": "Work",
+      "pairEvidenceHash": "543e72f2382656bcf20702f6bac23d3543424c99f6e9db1a5dff56e71eef79f3",
+      "outcome": "ACCEPTED",
+      "path": "ExactIdentifier",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:4ec4d96f36a39d44f8561f8dca8463060fb1e71cca639b79cab52fd4bc8c7682",
+      "entityType": "Work",
+      "pairEvidenceHash": "0dc46e780e790b444a1e8402c6845dc96e731416a6193e12fd51519e36f0c93e",
+      "outcome": "ACCEPTED",
+      "path": "ExactIdentifier",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:5f1a1bf18692d61569d1930fd88a85d3fa805a479e1994bfc96e4499164ff42a",
+      "entityType": "Work",
+      "pairEvidenceHash": "f9ae225b4b7c7b8a2a940bbc48620ef293f0f9101e3a77751b6b21a1608597dc",
+      "outcome": "ACCEPTED",
+      "path": "ExactIdentifier",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:747b1d71047a6b27f83e5834f7d974002d606a67f4b761ad05b853c0c1a94f28",
+      "entityType": "Work",
+      "pairEvidenceHash": "a1d6e6e86b04b8f5d0119f99d076d622a82806b0e2a8f80c7b6477f8db378f2a",
+      "outcome": "ACCEPTED",
+      "path": "ExactIdentifier",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:774b465a227565a82409acfad3c6ab5c1c79e9e9a2c5fac4554dcf9a12a4c11b",
+      "entityType": "Work",
+      "pairEvidenceHash": "762977e157a96a07b2a505544e1bd4508d677f097a921d3fb49f3e5b9f09d31c",
+      "outcome": "ACCEPTED",
+      "path": "ExactIdentifier",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:78c24d80a14c24a20f18c0edb6e20298c9372942d15491687b417c4d9347421f",
+      "entityType": "Work",
+      "pairEvidenceHash": "73d85617e8fdf2e2355896cf732d922156c0a32b6adb24f9eab00a0130a73dbd",
+      "outcome": "ACCEPTED",
+      "path": "ExactIdentifier",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:7bf7c98b116de4d3033b0c097528a0df9664b5ed158cbd0b0ac4f1893e047d5b",
+      "entityType": "Work",
+      "pairEvidenceHash": "89fcff0cd174cb6baf5bb417e95f1424b5549eab05c8700411436015de509952",
+      "outcome": "ACCEPTED",
+      "path": "ExactIdentifier",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:85dfbad08bfcf8fd8439cabd90e7de1001688dee83e5e757e2fe32724da9d9c5",
+      "entityType": "Work",
+      "pairEvidenceHash": "749b2ad646ef7c835abf77e4b1b6c3f722ea738de09aa23fd75b80600f3d0c27",
+      "outcome": "ACCEPTED",
+      "path": "ExactIdentifier",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:94672d1e2cf27c091440bde0c24aed2dd87cf1ef7f0520c09a0c2b537d303bd7",
+      "entityType": "Work",
+      "pairEvidenceHash": "24b34af60508903042be85eb5ebaf6a654401bb5821328d4d25ba2b25712bb64",
+      "outcome": "ACCEPTED",
+      "path": "ExactIdentifier",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:955fcb0695c13fc573bdc70780d9dbfcd36d7cd918e5033d1e15d084b2ac877e",
+      "entityType": "Work",
+      "pairEvidenceHash": "b77347deec73fcb8a7a9b8abb0933ee64bed982dd7edbcabff94ea3aafe0810f",
+      "outcome": "ACCEPTED",
+      "path": "ExactIdentifier",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:99f125d5a43bbbd12feb842186f8ea1708db806d2a137574ed2612a97848f1d7",
+      "entityType": "Work",
+      "pairEvidenceHash": "07f438c0265ed9d4cdd07f9492ee84ee53f34b39ba687e8e409aff1d3671cdae",
+      "outcome": "ACCEPTED",
+      "path": "ExactIdentifier",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:a5dfcf229c1a8f63521d63a3b995a2e3596837a636e9407d211387fe561037fe",
+      "entityType": "Work",
+      "pairEvidenceHash": "8852a91076aa956d0792ceb7b85ff7233f29e7e9533f0c88e2c7bb6dadd628ed",
+      "outcome": "ACCEPTED",
+      "path": "ExactIdentifier",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:b15ebbbbd884fafa4fef211fa8a39814f523fd91885cab65fc28d091d0406c39",
+      "entityType": "Work",
+      "pairEvidenceHash": "a18cfd0e3eb26ef0b77e34fe6982fe264dd41f274632315103bac9c7c944d1e7",
+      "outcome": "ACCEPTED",
+      "path": "ExactIdentifier",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:b88d9da4d5f85ae79a63ffe592d66c638f9351456d593d3b7ab75e1a77b125fb",
+      "entityType": "Work",
+      "pairEvidenceHash": "af1c6a7f7f617a8d0b399dada1e8091980358af2c014e050b6d6b0521484ae14",
+      "outcome": "ACCEPTED",
+      "path": "ExactIdentifier",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:bbeada3880d047437365efbfb4670d0ab749183f51f0508a4fe49296755e9ce4",
+      "entityType": "Work",
+      "pairEvidenceHash": "345fb9b7a69901f2fcc5769405d65f2df9960998526aa48e038f0f3039cc5079",
+      "outcome": "ACCEPTED",
+      "path": "ExactIdentifier",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:bef6d447b454c3167809476f55233523585ae0d68fae2a07265c071946c4ca35",
+      "entityType": "Work",
+      "pairEvidenceHash": "26dd6f3ca5cf8d50b1f9125d27377547b25c7e604ddb524d804bb0c38f31a14e",
+      "outcome": "ACCEPTED",
+      "path": "ExactIdentifier",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:c0ccd065f779894023167a1f225700754af922aed7899ca35ec4fd35e1d2c52b",
+      "entityType": "Work",
+      "pairEvidenceHash": "d193541769a344810197094c5a905cb51bdf87b7a6f4a8cd902da3c3e4831f01",
+      "outcome": "ACCEPTED",
+      "path": "ExactIdentifier",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:c552a485b80e43b1fa736d0762efe837b98007a0faf64de289d309fc3ae424cf",
+      "entityType": "Work",
+      "pairEvidenceHash": "aa195291a23e6e50288c2d4037ba093a2bc3434300b26911192b381723ae7f83",
+      "outcome": "ACCEPTED",
+      "path": "ExactIdentifier",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:d3dee846277a7e5f5731e99cb5757db1683a0f4f429a04e9593e33ded94676f4",
+      "entityType": "Work",
+      "pairEvidenceHash": "b8ce7e8c9a34477d0e324e1d2cd9b22fcb8fd214bfd38df30af8b09e12295d53",
+      "outcome": "ACCEPTED",
+      "path": "ExactIdentifier",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:d79ca59866f9ae7d8e6fcf9b41ac935201cef034980b33449cfec3b38b5c419d",
+      "entityType": "Work",
+      "pairEvidenceHash": "f623e2a5f6ca8509ce17a05ed963b524edde1051ff4a0787553690cefb2ec693",
+      "outcome": "ACCEPTED",
+      "path": "ExactIdentifier",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:df4425944ec0f7abcbd3739bb1c95dd941a8aad97d5db932acd9a7c57ad793dd",
+      "entityType": "Work",
+      "pairEvidenceHash": "9e279834f0a006b6e47e3e8893b3bcb8b5a724c1df7940a5a1e761b9b50793f5",
+      "outcome": "ACCEPTED",
+      "path": "ExactIdentifier",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:eddc3bb79f6b9198ed3b9ac9dce7bdeb8b24efe2dda12ae40f485c0ce1a9fcd8",
+      "entityType": "Work",
+      "pairEvidenceHash": "9c2fcdde72af5a9ac9c4fd9ceab12b42f88af4e0b964996be7e5af5585241d12",
+      "outcome": "ACCEPTED",
+      "path": "ExactIdentifier",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:007fc30917217a6153474430ce118b688f4b510cfca9521df91d72eb12e56f91",
+      "entityType": "Work",
+      "pairEvidenceHash": "a7becd76ef44f8942d8828a5a9e1d3dc60a7881a5eb682d53e145f9ab661fc41",
+      "outcome": "REJECTED",
+      "path": "Scored",
+      "score": 0.019999999999999997,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:00dded11c5f3f89a51cc5a1fb7243c66a95dbeb4b81f5dbef8eadc39affa6ddd",
+      "entityType": "Work",
+      "pairEvidenceHash": "f8ccd55b7b810c15ccc966bee0466ff1a7846f17694737f092513fff64e0736e",
+      "outcome": "REJECTED",
+      "path": "Scored",
+      "score": 0.04000000000000001,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:0d27efce6ab02e2b2447115279a3067674968555d5a752259505e41455078342",
+      "entityType": "Work",
+      "pairEvidenceHash": "02d93fc0ee58919687db325808daf4cfc4f8e70fa6275d1b052c8d9cc0b29680",
+      "outcome": "REJECTED",
+      "path": "Scored",
+      "score": 0.08000000000000002,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:0ed5062c6524c3c8046bcf0cfcd92b16ec438747d505f6824a5522f86b9e4b5c",
+      "entityType": "Work",
+      "pairEvidenceHash": "12026077fc39bfb5d9a0f9c81f190c9d9a2e8f93f6e01a4cbd33f071d3bde99e",
+      "outcome": "REJECTED",
+      "path": "Scored",
+      "score": 0.15000000000000002,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:167065dd7daeadca3ae6368389e1d06ba4805de8e6e7d3b664a785a4155f47c2",
+      "entityType": "Work",
+      "pairEvidenceHash": "ad17198404fd15dc5eff6f4b28751128566b18232a12d9cf75926ca81f441e8b",
+      "outcome": "REJECTED",
+      "path": "Scored",
+      "score": 0.08000000000000002,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:1cffbebe535133c4d1579dac105b90bde998935c411ff8ed62230e1a645d3529",
+      "entityType": "Work",
+      "pairEvidenceHash": "ecd0fe9791182c21acfdce2d81f3fa9b5e98b334553cfbd0fdcc9808133ae1b4",
+      "outcome": "REJECTED",
+      "path": "Scored",
+      "score": 0.08000000000000002,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:1d1db1abd7033d65e6f2d6a6c6ab4df45a8f235b3e4975e7be6760b029665650",
+      "entityType": "Work",
+      "pairEvidenceHash": "92ebcb0cc1c02c1ecfd46c065c30b434ae757169b9d5f11b305c5433f5de1df8",
+      "outcome": "REJECTED",
+      "path": "Scored",
+      "score": 0.04000000000000001,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:21319bdc5206404dbe90b4bb0a19f16ee6980bbe55ae36578dc2dbd8335a25d8",
+      "entityType": "Work",
+      "pairEvidenceHash": "856e1dbe4f7c66a0ade12a0baa835b6e637bcf7cf9f28cddd544dc1d61b7f167",
+      "outcome": "REJECTED",
+      "path": "Scored",
+      "score": 0.08941176470588236,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:2172ae4d89522be8de0e868d7c6f5a469ac4718abbcc497183ce263eb520f7b8",
+      "entityType": "Work",
+      "pairEvidenceHash": "502113c428acb2038e33f88925a9f4358b98fceb9eade08ac78099e512161e47",
+      "outcome": "REJECTED",
+      "path": "Scored",
+      "score": 0.08000000000000002,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:2229889f3141135a16bc500593d96649fd8c38bec24a755d4df971c145f1ba98",
+      "entityType": "Work",
+      "pairEvidenceHash": "8e044fcadd4427ec2250d08182e177f8baaedad53a8f8a33593bc31ad3175fc6",
+      "outcome": "REJECTED",
+      "path": "Scored",
+      "score": 0.08272727272727273,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:25ce141f3f657b7e6e0105bb99365e9c5346c1eae0388d168bf60350ea4a457a",
+      "entityType": "Work",
+      "pairEvidenceHash": "498e50cacc3bd01dba9fab1ce4da7932285ad8635b73e0ffbb5a7feb46960c92",
+      "outcome": "REJECTED",
+      "path": "Scored",
+      "score": 0.04000000000000001,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:27459c461982e883e09bbfde0f2d9d24070cfa891b0090963d5978b001f1f743",
+      "entityType": "Work",
+      "pairEvidenceHash": "19513e9c2dc8db55e6fb768240d805425666416ab529128df27d20752376b224",
+      "outcome": "REJECTED",
+      "path": "Scored",
+      "score": 0.16,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:28ddd626448c3cc5fd641ca2d0dac6f791a696cc56a800b2319f0c4093884891",
+      "entityType": "Work",
+      "pairEvidenceHash": "67522d8779b11e54963e1db724228211452140f04681e908d1ac5d3436ce57a7",
+      "outcome": "REJECTED",
+      "path": "Scored",
+      "score": 0.1,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:2f296839deaedf9687225df5e15bfb94d1266df5307c16f1ed31ba75f35a51d1",
+      "entityType": "Work",
+      "pairEvidenceHash": "3e007d5d216714d56c8ba60b9d58d033842b26af1a61dee68a3e0df6ccd87eee",
+      "outcome": "REJECTED",
+      "path": "Scored",
+      "score": 0.19125,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:3067cb18189f98d2e132882d6ec666aedad60d25c409f825aa22004e29facd10",
+      "entityType": "Work",
+      "pairEvidenceHash": "c4d394408066239c7f1c5c413e5cb8bf42dc845507d88d2b67e717fa877809db",
+      "outcome": "REJECTED",
+      "path": "Scored",
+      "score": 0.08000000000000002,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:3560db098e4790e104e0c75257598a404e9e7a9ce9cf8cefa2960d2f18c8f0cb",
+      "entityType": "Work",
+      "pairEvidenceHash": "4b194e6f7a377f66f1abfc85e595c6a0f98d3680cb3f1c9fa3df31687530f578",
+      "outcome": "REJECTED",
+      "path": "Scored",
+      "score": 0.04000000000000001,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:373fa00c475d1879925fbbe1256191cba9c71a7d30de9260de3d2d4baa75d547",
+      "entityType": "Work",
+      "pairEvidenceHash": "301802a071fda2a959d00611af8cfaa3150e4ad7ce3b7f516a03596a43ecb4a2",
+      "outcome": "REJECTED",
+      "path": "Scored",
+      "score": 0.04000000000000001,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:382e1d178138b54d285424b8791aea54337a4cdf30955766598f7a952f1ad377",
+      "entityType": "Work",
+      "pairEvidenceHash": "3de40f0788cba9ac96896c31f927356fafd0b8ca26e2e535c5d480671e0851b9",
+      "outcome": "REJECTED",
+      "path": "Scored",
+      "score": 0.08000000000000002,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:3da54ed429066d0c73c338f5e8518c632a5673e99b1dd05148c42f49d07c3d0d",
+      "entityType": "Work",
+      "pairEvidenceHash": "096a35e88459ae4d6dad8fb4ba7d27ffa660a6f91b627907f060b3a0dc2d48b9",
+      "outcome": "REJECTED",
+      "path": "Scored",
+      "score": 0.06,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:3dc8ecce9a0cc5c0096207142f83c8332abd3ad1f79d0aae6c0c4d2763c3181b",
+      "entityType": "Work",
+      "pairEvidenceHash": "2bfeacec5c186b97df6d9df24e562bd5e3153a8739912229feb4fc2d5101fd5f",
+      "outcome": "REJECTED",
+      "path": "Scored",
+      "score": 0.1863157894736842,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:4559b102d33329f6d95cfc9fab93725ff05ab59ac41a8d3f731aac3dd4ca890a",
+      "entityType": "Work",
+      "pairEvidenceHash": "922e3d53acdb097c611cc51f9b8e82140a6a60c3568aa7134813ec4d0592f0c3",
+      "outcome": "REJECTED",
+      "path": "Scored",
+      "score": 0.06777777777777778,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:467370ecde92c4e89eea8a54f968c6dca00b34173a18ca2462cfa1f32342b3ff",
+      "entityType": "Work",
+      "pairEvidenceHash": "89e7cfd3b62310e6534fc2c3a11fa1828e7789781d8032b07a5bb0e02b0e60f8",
+      "outcome": "REJECTED",
+      "path": "Scored",
+      "score": 0.1,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:48c236d259be760be9679341752fc632ad349fe256d1b17f3a7f41fa66909618",
+      "entityType": "Work",
+      "pairEvidenceHash": "57e455c6eb59f21430b4bebfeef88814537878360da17427a89da6a14a3af9ca",
+      "outcome": "REJECTED",
+      "path": "Scored",
+      "score": 0.07846153846153847,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:4fcca275e8f8c499e075b2235faefd8f462be813bb5549af66e3c1617cf0db8b",
+      "entityType": "Work",
+      "pairEvidenceHash": "6f666055fb747a9c2b05e44da6d46d8eb8f14800e82d6695fd06c8007f044e6f",
+      "outcome": "REJECTED",
+      "path": "Scored",
+      "score": 0.08285714285714285,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:5957914190c786c33ca30cd906c7109c7c422ba901645c16b6ec5e5b7605d82a",
+      "entityType": "Work",
+      "pairEvidenceHash": "b0c3fb960dc7be43486cb029d418ee0ee59da2a288c550f053697b972e15766c",
+      "outcome": "REJECTED",
+      "path": "Scored",
+      "score": 0.08000000000000002,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:5a555ee8e6cad310eef1bb7a017e3034318948d08b16686f8462b72504c10abd",
+      "entityType": "Work",
+      "pairEvidenceHash": "38326fe6c5323f9836c6cbd0ea9cab42b9fb21fbd5f8fb6637ce020e199c5bfc",
+      "outcome": "REJECTED",
+      "path": "Scored",
+      "score": 0.06,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:5ea6d7eea09cdb2dcc77e2b5f488090f837aa5afa684e025b5b0070afab5b579",
+      "entityType": "Work",
+      "pairEvidenceHash": "74a26d88a600dd15e1e29256fd237766eabd1a923bf25e27ac4ab8c29d5f094f",
+      "outcome": "REJECTED",
+      "path": "Scored",
+      "score": 0.08000000000000002,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:62018fa8f2a38204dd2ab26340463c9a9f8199a38ba43fd30306cfaf1da753fa",
+      "entityType": "Work",
+      "pairEvidenceHash": "fc0d938d35093172f0edaaf3a077c77a05eca2d948bd922d52d6ab80d0a0e34d",
+      "outcome": "REJECTED",
+      "path": "Scored",
+      "score": 0.08000000000000002,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:68b59320edff58329237f8eeee46e593136f74374ef7f4357ff5d1802b0796a6",
+      "entityType": "Work",
+      "pairEvidenceHash": "2475a83b9d721d4d4dea384b1e4576c6208db314f0627e7db78cfb9e06378855",
+      "outcome": "REJECTED",
+      "path": "Scored",
+      "score": 0.1,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:6940fb1a63cf297b0c56dd07689b5bacaefe4c59991494b285f8415afe484e64",
+      "entityType": "Work",
+      "pairEvidenceHash": "749fe1675513a008d24ba05f4b3260357f6bcfd3e80d45cc1e9980cb9f17025e",
+      "outcome": "REJECTED",
+      "path": "Scored",
+      "score": 0.04000000000000001,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:72b245776dc15fdc0bf6d257cac311571cb63f3c07ddc450747c4b17a4ea01d0",
+      "entityType": "Work",
+      "pairEvidenceHash": "c8e73db82b2db2dc2a4c22f78c9fed74c1a9dc935b42355b7288f93bfdea4d77",
+      "outcome": "REJECTED",
+      "path": "Scored",
+      "score": 0.04083333333333333,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:8548441f3d9e762eb4a181b842f18cc21e9600661f354e60680fd631cf79b6d7",
+      "entityType": "Work",
+      "pairEvidenceHash": "f0d5d26a06c1c8c6cfd887410c98346246b55bf6911a1a3822ee6be67f35d819",
+      "outcome": "REJECTED",
+      "path": "Scored",
+      "score": 0.06545454545454546,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:9245fe73e7aee843e52c4c17592e07db09eed019044fc7e650296cae7f609824",
+      "entityType": "Work",
+      "pairEvidenceHash": "166aac84c36bc5d31076cce608cbddc7f822cb0107502c74dd73d3be2f2f0082",
+      "outcome": "REJECTED",
+      "path": "Scored",
+      "score": 0.08000000000000002,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:960355d1d965cbc55253d53cd87366e4c94f569bc40da3209bce8659b1e85fdf",
+      "entityType": "Work",
+      "pairEvidenceHash": "dd04a40077f7a2fa6e47799cca404b2414a9151d4eda1b42eedbac2179bbb018",
+      "outcome": "REJECTED",
+      "path": "Scored",
+      "score": 0.12166666666666667,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:9b2116a507f62e7bc4f77b23c7335eabf1c6ba5372888153ebe41bd4487310f6",
+      "entityType": "Work",
+      "pairEvidenceHash": "b95578c3ba9e1bf2b4073632bc7ae33f73ef56824ec78a5af7d70b9cc398094f",
+      "outcome": "REJECTED",
+      "path": "Scored",
+      "score": 0.12941176470588237,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:a289904d7067045aaa559f39c72b4f8c6d092070ff4cdedb594cfc0245772dc6",
+      "entityType": "Work",
+      "pairEvidenceHash": "3397377c6d8fd7d986d3d667eb82abb858025ded8f2d25511efe281d1d08102d",
+      "outcome": "REJECTED",
+      "path": "Scored",
+      "score": 0.1,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:a752d77bd75097eb93fcaf25f9c711615206b622ecf13af84d76cd253f3c1752",
+      "entityType": "Work",
+      "pairEvidenceHash": "5c6978dfd2cc352cd830fc9a8a95c5940121cc016b22b6c196df6d3f9abff57a",
+      "outcome": "REJECTED",
+      "path": "Scored",
+      "score": 0.06272727272727274,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:b1c140e2eae89969ef2cd31d7d72bab0e62bc40864c00772e58970a4077fbba7",
+      "entityType": "Work",
+      "pairEvidenceHash": "3e98ffee6f58769103be5c07c901f6c9cbcd7fceed0883a37385f04363a351f3",
+      "outcome": "REJECTED",
+      "path": "Scored",
+      "score": 0.06,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:b788a3aeceaaa4cf334e3a1290cebccef7220ebdb65d6cde3bf2298e143b8008",
+      "entityType": "Work",
+      "pairEvidenceHash": "260d521bafcda111c9e273e37151b9d486ab6d1a6d4f897278ace326b110f223",
+      "outcome": "REJECTED",
+      "path": "Scored",
+      "score": 0.1,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:c0df7866d93aa7486f5d3f8711ec4efe726e9a02cea75c5d3606d3e4a7894a57",
+      "entityType": "Work",
+      "pairEvidenceHash": "30dc229f2301ed054f522165e1606b4eb4139ce7970d92d7abfc13c9602e0290",
+      "outcome": "REJECTED",
+      "path": "Scored",
+      "score": 0.06,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:c2447d5e3e2bf99cc7645c6b657f51ec13a602c57df528b88da66d54a659de2d",
+      "entityType": "Work",
+      "pairEvidenceHash": "e50836f524462919dbbe7ef7c3864910683366fd09c0418c98f800a550dbde78",
+      "outcome": "REJECTED",
+      "path": "Scored",
+      "score": 0.1,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:c26f02ebf8274b7d4d42bfc69a493bbdfa116d9c9898748c25300696fd9943fd",
+      "entityType": "Work",
+      "pairEvidenceHash": "0c20410067423977a470438ce3b5b6268cfb16d2d1fa0a11efa4779437aecb6c",
+      "outcome": "REJECTED",
+      "path": "Scored",
+      "score": 0.06,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:c3f980d17b741136d59d6706c1bf7160541c400dc9f5c7586c366900116980b5",
+      "entityType": "Work",
+      "pairEvidenceHash": "c7402b6bd3cbfb92cd7da81572304565fe478541bf11afc510f27d4755e845ac",
+      "outcome": "REJECTED",
+      "path": "Scored",
+      "score": 0.04000000000000001,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:c409423b9ca6288e76852690319ddb940c330da0b78c4025dee229e95089c376",
+      "entityType": "Work",
+      "pairEvidenceHash": "313b78a3ac0439a3f7c3174ebb453a8eefbd117817e29801023c7144e56570a0",
+      "outcome": "REJECTED",
+      "path": "Scored",
+      "score": 0.1,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:d684d762649a060e256ff3fb88e44c7fde005b8487ec92c9dbc305357e1a65ab",
+      "entityType": "Work",
+      "pairEvidenceHash": "bd6265cbb876de976b8afed6add463774bf4369532ffc0d71d230a9a844ed925",
+      "outcome": "REJECTED",
+      "path": "Scored",
+      "score": 0.09846153846153846,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:d8c2256381c352a0751d7407040ef5f0d4a173895abf23d5b4a65cfc377b722f",
+      "entityType": "Work",
+      "pairEvidenceHash": "2777634234478e05510f41469e5ffa3c1497e22e3556950e34b40ee3f5d1ab40",
+      "outcome": "REJECTED",
+      "path": "Scored",
+      "score": 0.1,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:d9b37dd419080d34027f031836e968d13e8036723e34091274f84f1138b170cc",
+      "entityType": "Work",
+      "pairEvidenceHash": "3c993ff42d2df416a514bda777cf589f989f6f41a47eebe2677d125e985cccd6",
+      "outcome": "REJECTED",
+      "path": "Scored",
+      "score": 0.04777777777777777,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:e1530b4d35fff5238207e357d5bcda973132827c7b18128401ab1797d829d653",
+      "entityType": "Work",
+      "pairEvidenceHash": "0ca5540bd68e0ab2345d6ca556758d96b1f74005ec01bc320bd99d9a64ae0435",
+      "outcome": "REJECTED",
+      "path": "Scored",
+      "score": 0.06,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:e5ca3ac118ffd0156677458ccc7f64f5aa3f340d7d44c569f4907358845e3875",
+      "entityType": "Work",
+      "pairEvidenceHash": "8a68b518259ab43a422737ffeeafdb08837af849ba25370e3cdae89d3dc01750",
+      "outcome": "REJECTED",
+      "path": "Scored",
+      "score": 0.06,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:ef1a232202dfbdf5e2c3bca71664809bc8f70db3e551e6b6743f6ad274a85ab2",
+      "entityType": "Work",
+      "pairEvidenceHash": "3995e775d26a9c8e1488f1949d7a0f732b6509520f10580e0905e027ef205f12",
+      "outcome": "REJECTED",
+      "path": "Scored",
+      "score": 0.08083333333333333,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:f61e2f47ec21d4f7912b7ef841f947263d767d5ceb7650062f345366cd6022db",
+      "entityType": "Work",
+      "pairEvidenceHash": "8af371d1e5226d4637075c2e66de3fa9c0908021cfa1ff2a0068115946e7e2d0",
+      "outcome": "REJECTED",
+      "path": "Scored",
+      "score": 0.1433333333333333,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:f6ecee61e20cd3de650fc38732a82b118c614787b2940a34d2043accec2127d0",
+      "entityType": "Work",
+      "pairEvidenceHash": "a88fcad3b19d473300e325ae7832d843d4114a93bb62fc582ca2740455083bfe",
+      "outcome": "REJECTED",
+      "path": "Scored",
+      "score": 0.08000000000000002,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:fce991d0774325af3fe1b82ad85af20bee1795ba911c18337255287fa94cf943",
+      "entityType": "Work",
+      "pairEvidenceHash": "cb7c9e0a150823e7d27fa60556f2e74ea7e2e7b4dc37298eee59283b0e97c720",
+      "outcome": "REJECTED",
+      "path": "Scored",
+      "score": 0.1757142857142857,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:93666f5032ef4920164fe2b83cad17c723dc24ff1a41cd782d7bd8b5ced9258a",
+      "entityType": "Work",
+      "pairEvidenceHash": "0146c10de162c1de6fb02bb92859e2d9a8d6f6f216ab723222536a9d12a81933",
+      "outcome": "UNRESOLVED",
+      "path": "Scored",
+      "score": 1,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:dc6acda50bb82f140fc100ea5bb4fbcb222d6586d553d04536cf226cf905f1c4",
+      "entityType": "Work",
+      "pairEvidenceHash": "c97e41e3f5410bd99392e9d68573515ab4a7c551a12d0d696d7998254b3fc6df",
+      "outcome": "UNRESOLVED",
+      "path": "Scored",
+      "score": 0.355,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:f4ad1bc9d088117deea34985b42fdf13a39e090466d8cb5147f6689afd80cdec",
+      "entityType": "Work",
+      "pairEvidenceHash": "3fe5aa88d6be6041486680017e4255d7dc68e3fb50ec61792fd226114ca07e90",
+      "outcome": "UNRESOLVED",
+      "path": "Scored",
+      "score": 1,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:06e5ea29137c7b2af7ef1ae977d20e02c7d2d07e2a83b9e0aafe199736a658b6",
+      "entityType": "Work",
+      "pairEvidenceHash": "7ab0c3a6c49e6eb3760ec1a0a06ed7a3e4766fd9fad3648eb2a79fe503ee92b7",
+      "outcome": "CONFLICT",
+      "path": "HardConflict",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:08bb0a03de6d98ec0a19d0d374fa5d74f25c2215329204293cdf9a53cf14fdae",
+      "entityType": "Work",
+      "pairEvidenceHash": "b680ab3b9246483dd941cd5256e87ef92b81d815c0e8af343a02a253c5a2fc90",
+      "outcome": "CONFLICT",
+      "path": "HardConflict",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:09f1c20ba484a2051489b650ed3fcad8203a9bce3eed9788d26cf13f0996d3e2",
+      "entityType": "Work",
+      "pairEvidenceHash": "0a69f91f0a2c1b1421d6a40855408416eda437fe55ee39facfee63ab48b55b8c",
+      "outcome": "CONFLICT",
+      "path": "HardConflict",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:0bc83ff4908cdd461141752e4b6e897fb6120e6bdd9b6f30cfdf1e4c16ee8b28",
+      "entityType": "Work",
+      "pairEvidenceHash": "f2f055e781462fe2fe9dd9b308175483420a03667e1e3018e69cff5dbe9ff388",
+      "outcome": "CONFLICT",
+      "path": "HardConflict",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:11b910f23d3574b7a71623ebec852efda9abd2d1c5b1470a8a34ef3535d9b04d",
+      "entityType": "Work",
+      "pairEvidenceHash": "2fa6f22e7e119c97df1a88a9cbba2e16cd9dca1e30b9d0a842df7bd82d42847c",
+      "outcome": "CONFLICT",
+      "path": "HardConflict",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:11ddd3cefea31213c0ad157f838aa5c132d93d90a171d9e933007f62a61d3537",
+      "entityType": "Work",
+      "pairEvidenceHash": "571183346fa2d12e61e2fb4cd9de894fb2761fd4fbdf0969991b03bf70d56dc6",
+      "outcome": "CONFLICT",
+      "path": "HardConflict",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:1232fa4eab3beed470bbca63b9a50c1ca83df2a6347797b8c6e7f0bda6679abd",
+      "entityType": "Work",
+      "pairEvidenceHash": "98e0ca9940a4f45e82736ec167751c1dd36cc400df5f555298749070a8e3e843",
+      "outcome": "CONFLICT",
+      "path": "HardConflict",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:13ed560a1716d9f036e8fcd70d67485629dde8cda05d56fc2c45bfb6c44e5cf6",
+      "entityType": "Work",
+      "pairEvidenceHash": "96f5f23953c99bf538be5fcaeceabe5b554102783d0eec7f55df08a63ad8dfae",
+      "outcome": "CONFLICT",
+      "path": "HardConflict",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:1bb247ad60a79e13ba1c623ba74bcdeea308fa41c1565572fa53bd68754e4a85",
+      "entityType": "Work",
+      "pairEvidenceHash": "a98d59ed47f0b4899c86a125a8565ad46be396b7aad4fbe7fa9e17d7a5d61d8e",
+      "outcome": "CONFLICT",
+      "path": "HardConflict",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:1bf1f82c93c439c417be345e57c289ae0cd150b29f19e3d3d4c4504f68d15147",
+      "entityType": "Work",
+      "pairEvidenceHash": "cdb5cfffceee1255f03a890f9ef560a7d9765d6de434d048c7c54d1d0dd2e8bd",
+      "outcome": "CONFLICT",
+      "path": "HardConflict",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:1c67fc43093ed61ce83b62719b39022a7a54eb5b9a2a8548bdf6c410f3921c43",
+      "entityType": "Work",
+      "pairEvidenceHash": "9cb3cc72ea681f272090849a4f8a1f88d6252d03419a4ac672f2ae1ece3b8337",
+      "outcome": "CONFLICT",
+      "path": "HardConflict",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:24219eaa999577b911eeb97c5ef9b08ea772794fb6caf725eb0e83725fd82a40",
+      "entityType": "Work",
+      "pairEvidenceHash": "85957346a8a601b13c483a1b48e102c65873b6f2fc8849ae8cff623bf696eb90",
+      "outcome": "CONFLICT",
+      "path": "HardConflict",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:261d40379723bab888034d72b294d209d697e8856fe2cd5fbd1c0c536a78fc3b",
+      "entityType": "Work",
+      "pairEvidenceHash": "812e6ad24c1fbecf6c7c959b5481b28f4bf76730f5cbed6762abe19c283ee8ec",
+      "outcome": "CONFLICT",
+      "path": "HardConflict",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:29bc5ed3e99807a6d246b093d9947af7247ce73fb0b1988f44eab6eefb367d0f",
+      "entityType": "Work",
+      "pairEvidenceHash": "c938ad65236b6b1ce90a0d15e7355bb42316727d6b93667378a2f0b99bea7dd6",
+      "outcome": "CONFLICT",
+      "path": "HardConflict",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:2cdc70c302c58135bb4ae50f61f75e189f533d4003601b2135670d12ed6e5aa2",
+      "entityType": "Work",
+      "pairEvidenceHash": "1f6fc2ca6d9a56073a5127b608a8fb59feaa0813948f27a6bda61ece2656651d",
+      "outcome": "CONFLICT",
+      "path": "HardConflict",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:2e18fb91e8c6fb464eafdb423af37ab5ff59e2a4facd7254ff8c651d42561b01",
+      "entityType": "Work",
+      "pairEvidenceHash": "70592e6b9893b13be755412d5d665e47ac66294b0a4190bbd80364a0660a1c90",
+      "outcome": "CONFLICT",
+      "path": "HardConflict",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:2eb757e0ab235c4d53ae1a4f86e672c343f3e0e92de5d14d9e250eef3f04e759",
+      "entityType": "Work",
+      "pairEvidenceHash": "341527a71e2584164adc34454e1c7370695c7145b7b8c09e42f32110db53da69",
+      "outcome": "CONFLICT",
+      "path": "HardConflict",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:2f26ec4370dc9dbfcc7899e0214742010a70302a334ffab325a1b77ea78c30c3",
+      "entityType": "Work",
+      "pairEvidenceHash": "3b64cfd020b23fb42168b007d713b376255db04700d337174a4de447930a336d",
+      "outcome": "CONFLICT",
+      "path": "HardConflict",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:2f4ac66c0da6260a1f31edad3cf5243f8586fe2319a08349625565b6243388cf",
+      "entityType": "Work",
+      "pairEvidenceHash": "dce87941bae75beb21a99553b81927ff76fa83209bb948e6b244bb3fe405c6f8",
+      "outcome": "CONFLICT",
+      "path": "HardConflict",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:309501c27d6a2e3b05bf7c9c685699cca7de039c2fe47077a7b0d9115cf6e07a",
+      "entityType": "Work",
+      "pairEvidenceHash": "697cd6f5742bc57463b0e26111c59a02d9a1f9bd11d6dd9f26e91d575c5a668f",
+      "outcome": "CONFLICT",
+      "path": "HardConflict",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:3269fb7a7166b5d232fc5967afe8f476d608251a0aae635f44f327f2d5f490bb",
+      "entityType": "Work",
+      "pairEvidenceHash": "8a9d5c268d280a062ff7b2ebfb1778a2a8068bbdfce5ee0dea344dfa34a4f7ee",
+      "outcome": "CONFLICT",
+      "path": "HardConflict",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:36532ae1601b7f217c424b9fc347b1d6b2ec5f7efa18c8bf8b33d62716fc4b1c",
+      "entityType": "Work",
+      "pairEvidenceHash": "2d3eda40319d41160c733d477d827e3592fab1011197014639d39af00c11e2e0",
+      "outcome": "CONFLICT",
+      "path": "HardConflict",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:37a7e5c7d4d9d754b428590917c6e5a6b51283d3660eba4296756b03a934bec5",
+      "entityType": "Work",
+      "pairEvidenceHash": "d5e59b17f0f33d1a175b9cc2f7bd61fbbaac6aa555de4a53b45ab6b739dffdb2",
+      "outcome": "CONFLICT",
+      "path": "HardConflict",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:3ae7c97b55003ca8bfdc8ca53e6e7573dad4b86bcf8e050543df2be3408f9f5f",
+      "entityType": "Work",
+      "pairEvidenceHash": "0ac6b4fdaced3f9d2010b2f1f299d13f746078d23002fa4ab518832daa4e4f75",
+      "outcome": "CONFLICT",
+      "path": "HardConflict",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:4e00e01af01a0d78292937b93f45883999c26250abcf68f42cec4e4707c9434e",
+      "entityType": "Work",
+      "pairEvidenceHash": "fda556f509b29e1984f0d15834a1625a1bcf31963e827cb529bd19f761e6984f",
+      "outcome": "CONFLICT",
+      "path": "HardConflict",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:4eb55e2726f10c3442d1816deb8261565e91a10532cbfc86d0cb5bcf41ee8831",
+      "entityType": "Work",
+      "pairEvidenceHash": "ab0fb95c15c9128904884afdfa270141a377d983568ca94ece4efcb3346a8099",
+      "outcome": "CONFLICT",
+      "path": "HardConflict",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:4f51585d41cfebe373d09837fed01e319b39180a68dcbad42d3c52fa21fcb503",
+      "entityType": "Work",
+      "pairEvidenceHash": "6d6b9abefd8182f1e01855f750a1764c1953431a3c3459124d0eb893ca04350c",
+      "outcome": "CONFLICT",
+      "path": "HardConflict",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:4f68b1440e0c09ea63d7843bdff95da7ca6a7ad719dff7eb073b7e26115dbff3",
+      "entityType": "Work",
+      "pairEvidenceHash": "7ab106be7af082bacc6e87223e6b0c9602e6eedd01cec636f810658dd6cced08",
+      "outcome": "CONFLICT",
+      "path": "HardConflict",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:500618a58fd719447bebf86b92aa44e57c44072b455b7c104eefeb52a75f6537",
+      "entityType": "Work",
+      "pairEvidenceHash": "34b6dd4daf9e08ee6f28250af78b99ac8f13ac2536e8d7d97e28bb49b0d29197",
+      "outcome": "CONFLICT",
+      "path": "HardConflict",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:53f50e58a9cc736af370e6a6babd51e4768a29d7a9345581ffdd43ad03856337",
+      "entityType": "Work",
+      "pairEvidenceHash": "fe2b86742ba0560fe58e21e3bf658790459001818f7d8ffdae97cbab83fd4929",
+      "outcome": "CONFLICT",
+      "path": "HardConflict",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:56f0bfb689ef49ad50159064702f1605703500f8897507426351beffc82d9b6f",
+      "entityType": "Work",
+      "pairEvidenceHash": "8f6e3ac86c99408a4e80e0f249d5d08bd66c3511e8b8adddb625341710f35a5a",
+      "outcome": "CONFLICT",
+      "path": "HardConflict",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:5730deed1dce38247d7463685205fe5910d83e0b244af89ad2925635f8e2c0de",
+      "entityType": "Work",
+      "pairEvidenceHash": "bdf0f6c77cef9e195aa78691d04e18fd33bf4c818a19c445f889c1df8c30fd32",
+      "outcome": "CONFLICT",
+      "path": "HardConflict",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:59e49efdf520ab427386c59a1ead29d59384def12a7f42200269ed30eee290e2",
+      "entityType": "Work",
+      "pairEvidenceHash": "6bb8c07488e60a6860d3c7a73c3626b9e09a724a1f4c925b5fa4b667de448501",
+      "outcome": "CONFLICT",
+      "path": "HardConflict",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:5c5a8ecf1f095f721158657dc4395e9206572832fbe57a582a39bc141c0f438c",
+      "entityType": "Work",
+      "pairEvidenceHash": "38635b3453fe253b98866d58d8ee64ee7163ef893fc48f2f249922447015bf30",
+      "outcome": "CONFLICT",
+      "path": "HardConflict",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:5d8b09d9049f9e2ee934addb628d3c76f004bef69c2deda3294534bb7783d199",
+      "entityType": "Work",
+      "pairEvidenceHash": "7d20911d8e40ee9aaa4fa102e164f018d425a7a469ece6cf8751ca35e3201ed5",
+      "outcome": "CONFLICT",
+      "path": "HardConflict",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:60d9439a93eac87601cf3930e5bb85faf88817e06b689d5c09bf69f7c6b16b11",
+      "entityType": "Work",
+      "pairEvidenceHash": "b61ccd104c1ab973f781eae09ebc0b5ab4cbf89285e73911127419d60ad689ef",
+      "outcome": "CONFLICT",
+      "path": "HardConflict",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:6345f19232ebe2473bbf9674bcb3078f2ad62140f7a911eaf3fe7453edc316e6",
+      "entityType": "Work",
+      "pairEvidenceHash": "d1692851c1840e338e6f169f89f0370366e21f07df11ada74c995da82426e579",
+      "outcome": "CONFLICT",
+      "path": "HardConflict",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:6b0cf564763d224df095dcfa4fc485703ea2a80f7267e060ac86baf7f04aea52",
+      "entityType": "Work",
+      "pairEvidenceHash": "ea9902832be6d513bad1d286865a62379db819781bb6774863567add01d97392",
+      "outcome": "CONFLICT",
+      "path": "HardConflict",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:724fa484ec4547b110589322aeb86199b71662cd0c021ff126d0bf44b9d8e717",
+      "entityType": "Work",
+      "pairEvidenceHash": "25293aa96aa2b40b323bcf64acd3a28c5ddd28330b36df1daa01176930a52b94",
+      "outcome": "CONFLICT",
+      "path": "HardConflict",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:7456205569dba7c0aa7e54a2c965b349c709d9cf1c8ce5826168915ac722a24a",
+      "entityType": "Work",
+      "pairEvidenceHash": "9ecf3d7b3b5bc215a39affd545e2caca01122d28e981a9a80745a56273d3afb8",
+      "outcome": "CONFLICT",
+      "path": "HardConflict",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:79a8d13f0708109279e3653827bc294b5bf48cb0c63ad3d2ed18e0c7d8a363e5",
+      "entityType": "Work",
+      "pairEvidenceHash": "76b460253875b4a86e3ca0413ce0e905eadd667b592dc8b31cad1685da40e9e6",
+      "outcome": "CONFLICT",
+      "path": "HardConflict",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:805ec2340dffab6dc176fbe0e5b46c533ef2ba061688386343aed3b6dae55e1b",
+      "entityType": "Work",
+      "pairEvidenceHash": "7232298de74b71894eee330ce2b3fb86cb15ad52744b63cb7fd9713cd047dc21",
+      "outcome": "CONFLICT",
+      "path": "HardConflict",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:862944ae569776d39c37df923fc4203cb0bbf682ad88c7901a1ab10408675b95",
+      "entityType": "Work",
+      "pairEvidenceHash": "23f93898b71ccc74abff0d2630671a84e2dcfce7396c2f058cb6544a480eed52",
+      "outcome": "CONFLICT",
+      "path": "HardConflict",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:89236790cec6497d18bbfba617ce9f6d872465a2347ac2aa1d06a8d43f02e2b7",
+      "entityType": "Work",
+      "pairEvidenceHash": "ed2fb6b8498ba46dcb3cab4e29c7715b2b2d8ae46d9177b06b1ad7257dc888f5",
+      "outcome": "CONFLICT",
+      "path": "HardConflict",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:941ce071df7cd771ae07fd4adf4d74846ed508e513c4d1a3dd27f4d339146763",
+      "entityType": "Work",
+      "pairEvidenceHash": "93bb1c8e14aa4029d89343fb5e2f7eacd486c782caac8c66c95a8f129f82eb92",
+      "outcome": "CONFLICT",
+      "path": "HardConflict",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:a4a1c668c2809676465aaed9ba32ddae4e7df55067f93824e033c05bdc8bf59c",
+      "entityType": "Work",
+      "pairEvidenceHash": "3ba17ffec1cb29559d21bff2037adcc9862c74c9e27428e4ecd926b5f633006d",
+      "outcome": "CONFLICT",
+      "path": "HardConflict",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:a664e017628e6d0c9a8b8787cd36fd086b6f360e2c685e1711a5194c333375d9",
+      "entityType": "Work",
+      "pairEvidenceHash": "4fd629ef99b0209ccde8495716455f0deba65bb10b03ae375dc79dcf7c3d4b5f",
+      "outcome": "CONFLICT",
+      "path": "HardConflict",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:ae8ccaaefd996fd04f440e687b56d5822919843f0a704361331a621fd73f0977",
+      "entityType": "Work",
+      "pairEvidenceHash": "7d330b870c54d968bac6160ddf254076714d70bcb043a25f29714bbb38677f3a",
+      "outcome": "CONFLICT",
+      "path": "HardConflict",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:bb226a122017151e87206aebcf138709305f23d81421023ae46d83777ab672ee",
+      "entityType": "Work",
+      "pairEvidenceHash": "6d794bb6f0fe8585d2d50aaf94955f785a3de568e27d2fa7d610e15e2304a43c",
+      "outcome": "CONFLICT",
+      "path": "HardConflict",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:bd3be07004029880a6a40a1c93870b2d1e1c2848e6e652261744f189e8d55196",
+      "entityType": "Work",
+      "pairEvidenceHash": "e08c981a38de956a8b5f83315302f48e9a8114be3244f1bb000188233f519097",
+      "outcome": "CONFLICT",
+      "path": "HardConflict",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:c1e40d59a0eaf96cd353049b79dd4987fcc2e8b45b35ffe26239ba73c6ed4667",
+      "entityType": "Work",
+      "pairEvidenceHash": "a2df94570c97f523e216a38d1d42fc927e6ee20ef06c452a4ea53280a71850f2",
+      "outcome": "CONFLICT",
+      "path": "HardConflict",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:c63b039168d888f01988c349aa2e02c1b8ba39f4e6d26668a199fe16609991d9",
+      "entityType": "Work",
+      "pairEvidenceHash": "e888ebd19a573ed3ff7e63d578bb3e1ba7ecaa68cee6ffc84d13136f28c74250",
+      "outcome": "CONFLICT",
+      "path": "HardConflict",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:c6d78df69a08161fce64c8161dcb6377df176f0809ce4a0a8fa3c6447c7f8cf5",
+      "entityType": "Work",
+      "pairEvidenceHash": "5ca28f777665b42cc22cf7b3b24e3ca7588e165e065915bb1627ac179fc21dd4",
+      "outcome": "CONFLICT",
+      "path": "HardConflict",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:c975635a8ec3f45a97db513823630b4bfab8b5a319c790eb660c46e2595563e5",
+      "entityType": "Work",
+      "pairEvidenceHash": "052e071aa08b60b72c53368a9e62d4c656eb9f96dc3646feb9ed81795d899e78",
+      "outcome": "CONFLICT",
+      "path": "HardConflict",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:d18e11b94d726b7ec4839a262e8fe143c9ace627337980f18683cf945b1fd9c8",
+      "entityType": "Work",
+      "pairEvidenceHash": "06bf0ffd348af19a3d4bcaa4e9647eac51f130f751afc6e04f6e15b2b811b046",
+      "outcome": "CONFLICT",
+      "path": "HardConflict",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:d473c416a70148a1baed857b2b103fba6fe64d34c3f645c815c9dba4cc9fdc68",
+      "entityType": "Work",
+      "pairEvidenceHash": "2b4f4fb67ed03996c59e25d90ead550ed966a200d05f77a221d6a9faf7f824a9",
+      "outcome": "CONFLICT",
+      "path": "HardConflict",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:d4955b77b2d8e48e9f836e68b4a48de4ce8cd4d19aac9b847f43b7a34d5a1330",
+      "entityType": "Work",
+      "pairEvidenceHash": "86fbe249cbe4f168dd224daeacad9f0421bfd6338a36345bff99d5a522e114da",
+      "outcome": "CONFLICT",
+      "path": "HardConflict",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:d62e84ba19acff4166107281bd7342312ed45887d71118314c073174a881ec5d",
+      "entityType": "Work",
+      "pairEvidenceHash": "60bb399adce1d0aec1f8680de0939a9a3ad1bdead9cc274d69293db487d4169d",
+      "outcome": "CONFLICT",
+      "path": "HardConflict",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:d9fa5bef296d4a0dae76c0ce95153542bb6c72cff503075b9f8a0fa59bcf414f",
+      "entityType": "Work",
+      "pairEvidenceHash": "b99cb7d889df462c578e4b29978bc0e09716eca041077d14add213db782c05e1",
+      "outcome": "CONFLICT",
+      "path": "HardConflict",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:dada93f06d98de7525d040aa45f3686c7055bc2b9122801db444668c24d2ff93",
+      "entityType": "Work",
+      "pairEvidenceHash": "cba77ad1366ae7f2ba0b6e0849abb66f1c9aae7fbb0176275d929818ab6ab2fc",
+      "outcome": "CONFLICT",
+      "path": "HardConflict",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:e208891312e08d257fb654de9466e73d489e2ff5f100d6281c6e01d472c0baac",
+      "entityType": "Work",
+      "pairEvidenceHash": "bfa2bc7b27d75d0f9e984a84ec6f49777daddf5ff0f97ec0f666a55c407e230d",
+      "outcome": "CONFLICT",
+      "path": "HardConflict",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:e72ea9c7b3325eae60e197e97e28180a03f35cee11fb5d0ab57f2cc99acb93cc",
+      "entityType": "Work",
+      "pairEvidenceHash": "8e09be0d04375a7d6a20a5131fe02c6d2f453e454257a7820036eae45611eac6",
+      "outcome": "CONFLICT",
+      "path": "HardConflict",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:ebf07157a8fba69763a022a71b4d9aa9af61a65c028449d7bbd65febf0916468",
+      "entityType": "Work",
+      "pairEvidenceHash": "ea7ffa745eec332016d5c647ef9082ff189dafb8ef2e18759d09d77551e3eb09",
+      "outcome": "CONFLICT",
+      "path": "HardConflict",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:f3201afb8ed3ff3ca8be6918b1204f490d256e709babe451d89e69dcd44c1afe",
+      "entityType": "Work",
+      "pairEvidenceHash": "e6db95f4a5845f5eafc9731d151047af575185377709f38985c7b0f878713438",
+      "outcome": "CONFLICT",
+      "path": "HardConflict",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:f3457dff8dcfbfe64a9feef3a68ecf8427aba761b2e52cef5bab0e387a57d6ae",
+      "entityType": "Work",
+      "pairEvidenceHash": "f537f607ab8c4b2a2564394537623fe9934d4fc8c087c3ff345a8166ceb080c6",
+      "outcome": "CONFLICT",
+      "path": "HardConflict",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:f775dd776f61b4a60a16b5473346b72cc660e194ecd879f03600f86a806102e3",
+      "entityType": "Work",
+      "pairEvidenceHash": "2c2f1ddaef6fbb083250e17aa969d12fbddc9ebdaf0bc6ad58e8c888df2c70bf",
+      "outcome": "CONFLICT",
+      "path": "HardConflict",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:fe4d0d9101b0d6e3c804c0a4e97e6dc14a7aca79ec136bc751c104326bccdd59",
+      "entityType": "Work",
+      "pairEvidenceHash": "775b1566978a529e412e9ff187646e1616d9ee7c3eb2b6c12bfbb594735e5b26",
+      "outcome": "CONFLICT",
+      "path": "HardConflict",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:11f74a27697edad42e9ef9cd6651f92efd872c5c12cf62034ec1b848cb50c458",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "952e69668552e4bd3dc8d67a62326ada056f3ff606d8e22837c752096c094b4f",
+      "outcome": "ACCEPTED",
+      "path": "ExactIdentifier",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:17cab78048d757b3e72b49e1804d49fafbbf3a48e60db2f86894460514c717dc",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "57c6f19f24fed4f8a51defba7b40f229ba1b5168ca3171a09b5500ffc0c2c1a8",
+      "outcome": "ACCEPTED",
+      "path": "ExactIdentifier",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:183f908d4ff7b79b9bcee27350208c57a6a0faa43fc3ff0ff531235936ed3f94",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "0b4e33ab87252b3b6fac0e88deee311dd3d4fa427ba0df084c5b3c8e4c864d44",
+      "outcome": "ACCEPTED",
+      "path": "ExactIdentifier",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:19b7826ab7aef6942f646724a4ec3c43cd891377967038e5e697d11b172f7e15",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "35573ea84d8cb6def7a2301d74b0d204e1b5620758fa39643a581fe0c1466a78",
+      "outcome": "ACCEPTED",
+      "path": "ExactIdentifier",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:1b7df06d4ac0ebf5bc2b79330f06bb639c70b8b42df351b1270d523808474c35",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "aaa46489517f9b2efe37f912dce4550f6eec194c70e497f601381d6b08391981",
+      "outcome": "ACCEPTED",
+      "path": "ExactIdentifier",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:1bd022a079d7c9096e13a07ec316360ef40185976382e975d6c6a78dc8260674",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "0ac15b59341176b48b9d9d45f58b076fe1a2b5c75f8ce180a9ba6cc62295706b",
+      "outcome": "ACCEPTED",
+      "path": "ExactIdentifier",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:1bda332a97dad21d344f9003783980730f927f2b8f45738bd36f56767ddafc9d",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "24e467e286f251fb6638b9c0450e065a103bc7cad78f676daf0a76c223d6cb10",
+      "outcome": "ACCEPTED",
+      "path": "ExactIdentifier",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:1c2e039e8d66e1e5aecbc00e958ecb040c47b2163b9fb7c842d39caebc228c51",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "16c4235a8aa1cab5c4a8a047c5fc30dfc30d43325a90d7531450211514966345",
+      "outcome": "ACCEPTED",
+      "path": "ExactIdentifier",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:2c225ee91f580a826eccb1b6be0e05b0694ce6e79c7c51963a05ae2fd408c495",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "23b943b9ce9931ddd397129509312683878922a228212e59b9ad7ed258ec5ca0",
+      "outcome": "ACCEPTED",
+      "path": "ExactIdentifier",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:2c50d3cf98709e870ce063e5dd1775883ba86807236a76b1353900415afec36c",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "44bce29d24c8763938c64e9d3bf29156e44ff4b773da033e8bfb03e654aa672e",
+      "outcome": "ACCEPTED",
+      "path": "ExactIdentifier",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:2d3399015e5a4cb10b799ab65b3564b1ba05db2c09a8a2011c659fb15d73c72d",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "d94b0f2194fba0ee481431a7d1c5a826228d3bdd28664327bb64f8cf76c69d3d",
+      "outcome": "ACCEPTED",
+      "path": "ExactIdentifier",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:2f1a333949b08fcc86249851864cf444b87130ec734c3320f9c0d7919204469d",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "6da9824a2c6be1e84c133c31161279679e347f1e5532696f68b19f22626c967a",
+      "outcome": "ACCEPTED",
+      "path": "ExactIdentifier",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:3304a4781fb67b8235b16ef0a751ce7f4701a70636859aac2383d9dd17340222",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "d157c0980b1fb6ba4d1f7c8b2e1ec9f5e4a3aacb6bb23b1d3d01589ec05427e9",
+      "outcome": "ACCEPTED",
+      "path": "ExactIdentifier",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:356215d9111fdb83b0ff4faac04a31c1ead8c3ba3187285e9fd887fe29e70148",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "d7d209f2555aaee9ea0f32ee480312d6aa67069ec61284a10500891164238d29",
+      "outcome": "ACCEPTED",
+      "path": "ExactIdentifier",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:46ab65ce28c226a295bd85d5b3645cc7f702e18ff95351980f16525a095ec0f4",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "8d5de91b93aee3a59785ede1c1069a5ffd785820def7f381aeae56e4b04009f5",
+      "outcome": "ACCEPTED",
+      "path": "ExactIdentifier",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:47291b52dc219e30f9d7d6f613794472930d713e78e77dc2c4f5ab3e928dc4d4",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "5b695e0d8bca3955f9241ef597e32f26f095cc1f78d87d57b92f96506ecc26ab",
+      "outcome": "ACCEPTED",
+      "path": "ExactIdentifier",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:4bc44414385a79dd1c30ffe1901f44fd06b07914451c87895921c0395d842c3e",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "2c67ec710b737b0819f1d789d6fcadbd8bab53d669e465d9f22d6d36267f9c99",
+      "outcome": "ACCEPTED",
+      "path": "ExactIdentifier",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:4f166602db6308c4dc1332d9c2c8762cdc4125a532b97087ae0213902a03b53a",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "0998de8dec7da7d6de6b37fd1545fde37057a1a53f64fb4d45ab027789c84649",
+      "outcome": "ACCEPTED",
+      "path": "ExactIdentifier",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:502822510c87540bc9f8f7c4d08cd0910b534b1cd8aa99f998ac0814414b510c",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "f2f3842e76a5747512437042026da5dd4f4748c5e9cc2c44a1bc630a8205e63a",
+      "outcome": "ACCEPTED",
+      "path": "ExactIdentifier",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:5594b59eeb970624a6496f053029a6ba88744733fb6acf61bb99dc2e40d376db",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "c0c091a2ff10d7e4385edf4d7b1eb5fe873c2bb9a975f095d1c3673de9170e0f",
+      "outcome": "ACCEPTED",
+      "path": "ExactIdentifier",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:5aa34321971ee91bb041221791541b0c45b03374baed99c8399626f920592527",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "b0d21dd3622ab63bc93f3045742115cc1cb4f992da2c803d77e89e24f5cd2134",
+      "outcome": "ACCEPTED",
+      "path": "ExactIdentifier",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:5c70f1f5744429b5080032add48c2223044b01eb97e173ef511a2880dce5560c",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "096b8b4d8052a4cecbb1c1c56397f81df120005bb9369a30efece07a60e2977c",
+      "outcome": "ACCEPTED",
+      "path": "ExactIdentifier",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:60830b465e5e37150080b8ed5856a41d515709ed355073a2cc4e65505fe50aa2",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "f848a4a306763b3cda57b6d29869aa279e2c39659e81b8b2887c84e9d64a1e19",
+      "outcome": "ACCEPTED",
+      "path": "ExactIdentifier",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:69ade9784418b6a6ee07febc4bbd6f90af1b28950394e1ba1d9df7728687cf74",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "f311f9a38ca8f333a90e601024ed105d82014952bd594b891fa388344e64de30",
+      "outcome": "ACCEPTED",
+      "path": "ExactIdentifier",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:6a790bd55802f926656f0daca7d0bcb78378ca003e0a43bd1a9036d27cc16b50",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "638898fda10a9a3964fd138f8ed7e3e060f757be2192a870540ac018b4105ecd",
+      "outcome": "ACCEPTED",
+      "path": "ExactIdentifier",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:7043e3f9d782d19896773046d640de2820383b1a8d9d6647ec1acb80ae34252d",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "728e2a84461cce5f6fe3170725855c54f5a0c94fdcec5c554ed6d9ef5c653f59",
+      "outcome": "ACCEPTED",
+      "path": "Scored",
+      "score": 1,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:755dd479bf73a6eaa2375d1c812484dc375c9e6a0923ea4669e655ed39010393",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "5608b04dd15b08abacddbbd6ebc55aa28103e7176bac1c478519d31a84ab9fc2",
+      "outcome": "ACCEPTED",
+      "path": "Scored",
+      "score": 1,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:7e4f2a30c7c8fd0eb38056d72abf985a307e722566640054c66e4b000992861f",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "f7f2d54a671347ea1434152f4e4291783927ab70eec4389152b43178dc1867ba",
+      "outcome": "ACCEPTED",
+      "path": "ExactIdentifier",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:7e9d1f241f70d42a349401013ba8af96a267d2ec5ff0e16923e29cf763a88efe",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "edea0f375ce453cc736cf24ab933ec432a19e25e575fdafaaf80a8bd7e6c9b78",
+      "outcome": "ACCEPTED",
+      "path": "ExactIdentifier",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:88a5571e5b8ae0f36f5d367f6dbf45f247bddec48c70f063e06a089a6439b311",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "1ad16c077cef1a60b40808a1c566ed827949a03a969f3485f5bc78738ea12058",
+      "outcome": "ACCEPTED",
+      "path": "ExactIdentifier",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:88aa4f38ca153032b673a32fed122ed8445867c9cff1f36d22c9206d1b4084c5",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "ad3e9ae4e5e94d143fdc2619452bf82f061969b64af690849d4e54132b3fd9e0",
+      "outcome": "ACCEPTED",
+      "path": "ExactIdentifier",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:8bc2f23f58b2bdb5435daeb2d7ebea53007a311383b6e53559fa630c9d2065dc",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "a27188c9c005e029820be00c32cec1cbeeeb89ead323c6aa816f8d3c396fe150",
+      "outcome": "ACCEPTED",
+      "path": "ExactIdentifier",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:93a25422078d451c6241d8cf0bf44e0d7d18415cb4fad702fd795fba3c4a15e5",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "31fbcea5d97d6867b72178eceba9dff00f086b48e4f1ccb76f5a66b10d3586ae",
+      "outcome": "ACCEPTED",
+      "path": "ExactIdentifier",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:9554e7ae15056928884136d8eeff869a4372c2cdb9dec1d8a22d8e09748f65e0",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "615eca9c9187b9912f817bc33d75b6e2881d834072f6003d26dc9a0ef09b2661",
+      "outcome": "ACCEPTED",
+      "path": "ExactIdentifier",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:98a15ad296950644cdf66e93da3680d0617d673fdef323353b6c5932f1d66f16",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "955eea4533ab7e031e5915f62327ac0c80e900e60eac387fd4e5f2c1a43062ac",
+      "outcome": "ACCEPTED",
+      "path": "ExactIdentifier",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:a06827849558b53efba5e5d4516125a33d950faafc04b83bc16eb1f12595226d",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "272db20f4be7553e58f570b76e9520d351a9b4fc3724819dbd5fd9053d1594a8",
+      "outcome": "ACCEPTED",
+      "path": "ExactIdentifier",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:a5249c3b3ddfe8337bc8da9ceb9ac773a26386f34f6aafda943f287bf787d4bd",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "ebc374e44ef378b97482d3ef88ade4010ebf2306d6e58f54525aaf22d0cc2289",
+      "outcome": "ACCEPTED",
+      "path": "ExactIdentifier",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:aa007acaa49ab474c16651b13e1abb5c7b7148f18a7c7dc3d364199831619dd5",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "c7990550dfa6b7a50eb9e6f90fefdd621f44c62d428b57179933b16d673bc49f",
+      "outcome": "ACCEPTED",
+      "path": "ExactIdentifier",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:adfe5c686168d62b5ff148cbf3a6835cfa95c96c44ad8b0974bf32d9c8cb222d",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "ca72c75fccb5aa1193bc03646894111d5331c39140f9e662cfe3c42ca949e31d",
+      "outcome": "ACCEPTED",
+      "path": "ExactIdentifier",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:af29175ea6279dc9878bef7dc8d0a5555c65790d9517ee8dbad9245acc7bf775",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "8fa78e5b0839cba7af5b474c99e041576ba0a46101798c2756f3a0474a5bbaa9",
+      "outcome": "ACCEPTED",
+      "path": "ExactIdentifier",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:ca4cb14d93abd300ebfc521616d5d86ae11451d6d5c2e07455142ae0000fbf19",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "547162e57e76ff98cc915b327c0fd44f8ec9fd1e2f7cf89c3a7058e7d79e79bd",
+      "outcome": "ACCEPTED",
+      "path": "ExactIdentifier",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:cf5ab77249d3f00c88ab043ac46b30d979f42158d6050b0b6216a527b3803fd9",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "6e654688d4edeb4fc84d850deba22626f0529baa72b5c45d03a51dc3f7e3e2c2",
+      "outcome": "ACCEPTED",
+      "path": "ExactIdentifier",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:d055798cc098fe9da0612a14791cc5a207d03d030aa2baccb195c5c3e64db64f",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "687601e8c970fb4f4e892b7129e3ccd0f774d69a9b7cb920e8ebd4665dce0ff5",
+      "outcome": "ACCEPTED",
+      "path": "ExactIdentifier",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:d37a4841608e0fcd8aa7209f961ad1aa7dea519140d8d543d424f9c55f889680",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "98b2b4bcac963678afe5348dfd5f6fa61794640bf48613040b5803e851709699",
+      "outcome": "ACCEPTED",
+      "path": "ExactIdentifier",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:d3ea784f5534e9844c60bb47d81e631c668ddcfeb18ee6f4209dee1d722c7f2c",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "70a87280ef30d50177aabf2f47f985b41b6715b3f5cbe84159d5cd5d7c3b362e",
+      "outcome": "ACCEPTED",
+      "path": "ExactIdentifier",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:df332f9b62aeb3f0c48d4a37e986dccf55d7d96c4dbbc5257936741c66c740af",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "71cbf940f9158e8daf707052359b28a13ab9ce547b9316f57a32bd1b82c8f102",
+      "outcome": "ACCEPTED",
+      "path": "ExactIdentifier",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:e68c5816247b9754795a656cdf92d7cf82a38a611438c55ad2fa415196eef830",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "3bfc6d9b039731b0eea9e349a4a4c3ac72f8242174b17745cd099778d2f233c1",
+      "outcome": "ACCEPTED",
+      "path": "ExactIdentifier",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:e8ccef9b2e587aa7d50e9db60fdf4653d482b36ee8661a239697cd859ec173b8",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "ef45327924d23ce0f7a7eea9ee241b10d25dd4575dae3676171611ae63e24b01",
+      "outcome": "ACCEPTED",
+      "path": "ExactIdentifier",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:ed46e40dc5283af7c03f6e885e51e936da7fc8db45f2890d66a9c6c05128ddab",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "411233d494e3a4579bc48b31389a14b74749ea06bda72e8c073c27bda0d1cf84",
+      "outcome": "ACCEPTED",
+      "path": "ExactIdentifier",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:ed688b80dd12bf9f1acf47528830bec645c7ecf5385fb7d0eb3d8fcd9c0b8c99",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "ca35da7439b3182f76ee0dcd3883b54522cf4df89e2fd93aaf5d0af00fd7533a",
+      "outcome": "ACCEPTED",
+      "path": "ExactIdentifier",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:eec1903cbe04a62f84187680925bc04bae1647f7b40cf4f08e71e0a04daf0a9f",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "31e6a98287c9bac56f2b7715324e4eaec78287b647a30df63f89f2eabb273bbe",
+      "outcome": "ACCEPTED",
+      "path": "ExactIdentifier",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:f509a2001edc6f1b00b2eb4369c8820c6e250403b0842283cf34a80b343d1205",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "385db062b8faf9048bbe08c8a65386833d1a3acf1f4697357162492f395c2aff",
+      "outcome": "ACCEPTED",
+      "path": "ExactIdentifier",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:f793c19df1b55f29f150e5ed0a38967e3fc11ea9f27fb500becf8becc4b0feec",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "cefff5f1f3ca9e46a8668ee36e5d1224725d415f8dee88d8d329fb4fa1894b53",
+      "outcome": "ACCEPTED",
+      "path": "ExactIdentifier",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:2af49eca811744910ac4ed6a87f6d5710a37fa8a3163bd0b851385ad104d2e88",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "de4e657e3da327d426a213a4184039f61bd3193b384accb37051483737d6d68e",
+      "outcome": "REJECTED",
+      "path": "Scored",
+      "score": 0.10178571428571428,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:61e01f2d63992d8d47dfc6f9d4aeb895aca0d1a7d9d3b39f34554688efbab101",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "22b5645da9b08cf22e8ad620fe3e6255ad49543a0fee5379276bfb4cbef76474",
+      "outcome": "REJECTED",
+      "path": "Scored",
+      "score": 0.1375,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:cc1def86f56c13fcad6c3c014c4dc956c2936fabbd395a9339ccb2356c2a19c1",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "618fa5e155b2df3a3a87c4c4025b01238cf3fa9240716e19ee3774960cd3f859",
+      "outcome": "REJECTED",
+      "path": "Scored",
+      "score": 0.1375,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:01a3c608058966b8dc730ece260dd5f6d9101cc9b9da1c6117e5ba31cac464a9",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "1fee663f96fe790d93e4e65a6d991cd02a7405bfe6ef03e099575904c42c32bc",
+      "outcome": "UNRESOLVED",
+      "path": "Scored",
+      "score": 0.18095238095238095,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:04192cf62c78588b97283b2663b61ef273f48e66d6ed4c8ca334a30b6f12362a",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "c88b41561bcd41ebd7550c3f48e3d952c331e5bcd2f4de7c55669c50d4e092a6",
+      "outcome": "UNRESOLVED",
+      "path": "Scored",
+      "score": 0.21794871794871795,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:08e8f2b855f86120e545bebf4957605f788fac057e256c3a7d39dc1b65ad1b1e",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "5ef138da24617b8373652b7c39c33070dda4222088898144e1f9b811f1c86aa0",
+      "outcome": "UNRESOLVED",
+      "path": "Scored",
+      "score": 0.6166666666666667,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:0a81608e2ccd1e539985776df6f4e270a4ff3e449651583e3a6e76c230d695d8",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "f8297bcf8ec72167edfb573ce78ae767c877f470be629d8d919dc1caf263aedf",
+      "outcome": "UNRESOLVED",
+      "path": "Scored",
+      "score": 0.44886363636363635,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:0be9d36df2f219d22d6b9dfd8803a7d217ac8fa4ca93228d843cf63e04fce3d1",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "871820d8648d78073954063eb5c8ad873f544fa5d0c73949291217a11e373126",
+      "outcome": "UNRESOLVED",
+      "path": "Scored",
+      "score": 1,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:1208771dd6923ea05785e5ea340d6a98d57dfceb4190b7fd72672d8188b602f9",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "68ba4762385c406421edf0ffb18981a0368eba6cb9ace17398b67f379ecb3193",
+      "outcome": "UNRESOLVED",
+      "path": "Scored",
+      "score": 0.62,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:1347e30466549013b8c1bd84220f29cf0e89382be2322a64a72d79e6754a8d0d",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "03d982f3498d7b35ceb5ac9daf8b52d7852a880e5284c1539c4902cb49e8b0f5",
+      "outcome": "UNRESOLVED",
+      "path": "Scored",
+      "score": 0.8999999999999999,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:1c8d25477544e0f42ffa0786add32d2adabc3da061d25b22c04cbe1030edcf43",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "67d932ab4a7de92142a0b1ccc70839d0cbf1d1545a3de807bb4dddb087ff4498",
+      "outcome": "UNRESOLVED",
+      "path": "Scored",
+      "score": 0.4591304347826087,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:1ea7319d0ca49a709aabbcf0fdc8a31e38cd2c398314b397fc020e2d3db55474",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "fa0c5b6724be0de1071222a2440aa55899c107276310ab5bf1d9a3c8c4ad06c7",
+      "outcome": "UNRESOLVED",
+      "path": "Scored",
+      "score": 0.595,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:1f26ce2332bcad7f29ac808b12fa890f4a8969105bf0aa86a99de7547b9b2191",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "89608f3102d62b2abb44cab5eaeacbc2825c3e53a01bb2bd35bbbaca52dda8b2",
+      "outcome": "UNRESOLVED",
+      "path": "LlmAdjudicated",
+      "score": 0.6598684210526315,
+      "provenance": "fake"
+    },
+    {
+      "pairId": "resolution-pair:2e97eb2494554fd2b0df7b074af233c968211f17284e34e421258cb9f640c7de",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "fb5be6790d84e7645942f14490d197e41d6b109b4b4c144d404e5dec207dd295",
+      "outcome": "UNRESOLVED",
+      "path": "Scored",
+      "score": 0.46875000000000006,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:3242a51af4f3e3d47fb0f7699b456bf9bdb3e1156da49296147639fdffa4b3ec",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "9a9b27463155e0142cc773b23260cbe58d7863a3379e92ac0067cf41d9b4bc70",
+      "outcome": "UNRESOLVED",
+      "path": "Scored",
+      "score": 0.19999999999999998,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:3d68ad856035770c23944aea204b97f2cf1503796e7f878ad9817f243e179a1a",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "320afd0b440ea377424f1a5e003116c716125f1723ecba9c39ccc018efdb9c9f",
+      "outcome": "UNRESOLVED",
+      "path": "Scored",
+      "score": 0.21666666666666667,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:45b63afe055db72a575a76b611aef40cee920ecdbad4ec7d809714e96e291c1f",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "cc5f0b58ec5d26de16175f88cfdd82b808171e8d5820db313a1e261a07affe34",
+      "outcome": "UNRESOLVED",
+      "path": "Scored",
+      "score": 0.53125,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:4aaa1614306b692146b40dca43717e8c70bc76ff708cc144af7c88bdf0bc4f24",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "043fcaff3d3d70548306bef67b77beb8515194f116741fb9b1c0340c4bde47aa",
+      "outcome": "UNRESOLVED",
+      "path": "Scored",
+      "score": 0.7,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:4ddaa6cee0b9209e0f71504b03ccf695e0efd0e24508d47ac89dae49e32da8b8",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "378be808a263bf85b025d5648b2bfc11d0c576a3105e239ed4b84d9ed3ec93af",
+      "outcome": "UNRESOLVED",
+      "path": "Scored",
+      "score": 0.1738095238095238,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:4e3ca5a7d2b203fe12e4ae3fabee0338739fd46ab0115968ca84f9ae8aa04d50",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "3738db61c118cefae1b395316e6462f401cfb94e22ed8d25c517af0257e01ba3",
+      "outcome": "UNRESOLVED",
+      "path": "Scored",
+      "score": 0.18666666666666665,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:557c111616e3fb2a083d224623cd5800dde2311b4bb0a8f98a39faa1c0daba53",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "abc679a65a91da026606c0e921c856d475e9e5d67778b439efec6fd44c95197e",
+      "outcome": "UNRESOLVED",
+      "path": "Scored",
+      "score": 0.35,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:57c406e4a2c68b634aeb996d8858b70779b72ff80205f64983fbc148ce08ae17",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "35fcf72023985183d240e3117858bde6c439ea1ed93c2cf8b7d16446995796c1",
+      "outcome": "UNRESOLVED",
+      "path": "Scored",
+      "score": 0.18333333333333332,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:59e49f68f7e1782607d0ebb9685431bdab998471dd87e7e9ad9338119556d6e4",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "93059b31fc47cc8383a8d5c30f774f06025345488bfec82e973e3bf8feb353ce",
+      "outcome": "UNRESOLVED",
+      "path": "Scored",
+      "score": 0.19999999999999998,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:5cf86608a13bd8b3a276ca7855af64187910a422fca33a5a6c4c32629a6c893d",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "9ad748f9eb7f26d7db6d20ac75527be9b086e2d8abc8d5f5f030ab050677d161",
+      "outcome": "UNRESOLVED",
+      "path": "Scored",
+      "score": 0.23958333333333334,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:607b9a7d9ed7ff1642dd362affb8afdfcdeb00a518196c8d2dc45d41fa4d59d3",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "0fc2ed534d02201be347468e2d7c72efabedb66ab87789416c41bc01dfacd5f6",
+      "outcome": "UNRESOLVED",
+      "path": "Scored",
+      "score": 0.5459999999999999,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:720b7dca0e190296774e2e8cfe2ea03c35af54d108386e9f738d6e29bcaa44bd",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "3f4e22a669fffbb01c88688cc2018fdafb8bb19eb05c69de496f9fc415ee3caa",
+      "outcome": "UNRESOLVED",
+      "path": "Scored",
+      "score": 0.6636363636363636,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:792b2026d8aae47057430bef742ceb54eb69300ec4949df7c916eaf075c2d5c3",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "039c2e0e088ddc7600144fde027fe3d027f25bfcfdb63f719fb7ab83063c64ee",
+      "outcome": "UNRESOLVED",
+      "path": "Scored",
+      "score": 0.6625,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:7ace0cee5ab3ea4f0bc5acbdba02d4e0613faaaa0b2d1602bd71cbc3cfad9c32",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "c3c7680970fd1da9053b933cc1df224b0814008ad3781ad11d683d967d5b4508",
+      "outcome": "UNRESOLVED",
+      "path": "Scored",
+      "score": 0.19999999999999998,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:7af26bbe90963a67ed42679547307c52f0385197e31a1a8c5ec3ff30444821e6",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "677c8423ea303a7b570c72b77a02a4d99208bcba23226c3ab019fbd5765aa853",
+      "outcome": "UNRESOLVED",
+      "path": "Scored",
+      "score": 0.22916666666666666,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:83044b367a776177976aaadb83291e654467bfa70c971622547cb18635ca5398",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "fc699cd597ee41402e691eb5a13163409ca0b9853e8bcf52d4ea14c7e126b460",
+      "outcome": "UNRESOLVED",
+      "path": "Scored",
+      "score": 0.609090909090909,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:839b9fb3e43fc69f10dad320ca19be6a5e6d1376c9202137a1d92c6f2f562efc",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "d3d3432151c2d12d29e220c4495b1e5c46e442e26fa6747db2ffec038e992826",
+      "outcome": "UNRESOLVED",
+      "path": "Scored",
+      "score": 0.19999999999999998,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:8868cc1e7b05f11a4f7cdd16d0a42343b24a6f883a030cc5a27280a49580637c",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "cc707f45292828ce1c71410ed1753fe695cd03cd5bb49bfe7790060feb3fda82",
+      "outcome": "UNRESOLVED",
+      "path": "Scored",
+      "score": 0.19166666666666665,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:89505642895d2ed6f81019ac9d94262ad9ee3059d986b1914159313e1e756453",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "68a74831280cbe07e316a7fc9221d9cb71ae643fea40af8f6841dc2f36a2c7fa",
+      "outcome": "UNRESOLVED",
+      "path": "Scored",
+      "score": 0.71,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:935b2d38b5b6c95be60f94e1409041bf9ec5c69a8db0b8b4d52f79b52a9df1a0",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "5bb0ba3b3883d52ad66e8f97ff5f5a4d8cd7db2a8d0aba7eefd944ac894cd5aa",
+      "outcome": "UNRESOLVED",
+      "path": "Scored",
+      "score": 0.6772727272727272,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:9963b41b22b9373b2c398dcb9b1ed8e9331e1d99a771e7c774f8354e343451ce",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "7c0126455098d3cbaaeebc2785c845e16a02bd807c89d70c52e2a8c39747370e",
+      "outcome": "UNRESOLVED",
+      "path": "Scored",
+      "score": 0.65,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:9a94dc01569914efd17bf03e3f5566e7fd0ec26e6bde399f06c5bfbf5d292e0f",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "2dc6e5403496442b8764a2b6a855d44de93b047af29280b1afab6f97713ced7b",
+      "outcome": "UNRESOLVED",
+      "path": "Scored",
+      "score": 0.2222222222222222,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:9bf0674c3648be88a2c2609a77866d77600cf318b9d038c6f17f347a48a9efc4",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "bc83abfa72a3e609a3dd0e0f006a0ba9a919b983380169257286e36f723806ef",
+      "outcome": "UNRESOLVED",
+      "path": "Scored",
+      "score": 1,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:9f3c6c16e57c505e431a5f59bf2c5f3ca0f79e610c031ed9d1f89d64f517bfa3",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "1202ee1fa826322a53fb5b324fe556eaa08dbf41f7e95cc6b61de7c91aec477c",
+      "outcome": "UNRESOLVED",
+      "path": "Scored",
+      "score": 0.21666666666666667,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:a2b4d0559ad8ab83ffec732e7bcb44c37bfcc98699405e2dacd2179740172208",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "9cfc92e215a3a8dea67a3b07091314025282c6a8ad284fd9295ba941a0bc9bdd",
+      "outcome": "UNRESOLVED",
+      "path": "Scored",
+      "score": 0.2261904761904762,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:ab9722a3c84211a9c05689676954f03375472f663ae8f4f3e024b5c24fa97a2f",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "fb9d12de0a2240530a0fb700679eb027ae4aaab49352787860b74bcd8de0c7a8",
+      "outcome": "UNRESOLVED",
+      "path": "Scored",
+      "score": 0.575,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:c7f48676ac59dd922ad57337937fa630b562c15a213b86bebe2e4af697153a32",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "b7dbd58c8dcd1894538877504d879e5ecbed24200a42c9bc6d195b7d8f12dfba",
+      "outcome": "UNRESOLVED",
+      "path": "Scored",
+      "score": 0.17222222222222222,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:cbf6f31cdeedd54468d7471ecc50eadc3a82261c43d2d1ae888bbfc0b199cc47",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "b0291064acd5c0aff4c2f11cb09ce6e4e6f6a038cb5cf51b394c2444423077e3",
+      "outcome": "UNRESOLVED",
+      "path": "Scored",
+      "score": 0.33333333333333337,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:ced94ab330ec16c10d0414b1fe25fa899e65d0ae0180fb15970251d09b0e8783",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "6011ce3339331515b03ddf4a44fd44386644b637b76f41a509ba1179967b2b5e",
+      "outcome": "UNRESOLVED",
+      "path": "Scored",
+      "score": 1,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:d7e0b59872c868aa9b0c76689a31bec6baad4010c9ae11e69301d5180c77566d",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "8b485c1b6cc022396b561e3f7f9ab06c995425ce6250faf9b719bb83d8c64c1e",
+      "outcome": "UNRESOLVED",
+      "path": "Scored",
+      "score": 0.6766666666666666,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:da3251503f61abbeb0d1857d4a10f86479d6e6f695e8def1ffbd5f65c67823c0",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "b365d392370d5dc60f326452c9029b87e139e1669222cc3e218134b4a0120086",
+      "outcome": "UNRESOLVED",
+      "path": "Scored",
+      "score": 0.6375000000000001,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:e355b0197a4d518faef5600edd378087ba6c49f07c640c2e255170b615dc140b",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "90547bb03a175923570ea9c30bb1cd33ec702072caf7eb0ca688ce0a4c746368",
+      "outcome": "UNRESOLVED",
+      "path": "Scored",
+      "score": 0.19999999999999998,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:ef682ab710dc35119b63b5fa5ff4977d3bc3382b1c4b2619d53f17cac1f0bf3e",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "f765653d044e4ccfbc5a0c59a772cc9472440dab4c75c2b7997e7ffdca739763",
+      "outcome": "UNRESOLVED",
+      "path": "Scored",
+      "score": 0.22916666666666666,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:062cc1ebb11a7487e91e508f3984e70a4ce9725b07757d95ace3cc29e0f1ec49",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "db6c16acd8056cd77593d22f3c05e0eab85febbce4bedffe140cb5202461a76d",
+      "outcome": "CONFLICT",
+      "path": "HardConflict",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:06b27afdf815d7f1b909e16ad0c84c86d11f9abe5bf38f8a5ee169c23ec2994d",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "ce17906a373b6d656b03a88f10f3fef00a7a66d3c569e7c5676b52605fbec17b",
+      "outcome": "CONFLICT",
+      "path": "HardConflict",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:09bdd83b52a354a6cf36504bc8574b5ba63fb302f5d53a5bebb7cc5b228fdcc8",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "de5ddd7c503f39507d8222bf205db73e0acfbb8e9facff89dc085e94eb6df803",
+      "outcome": "CONFLICT",
+      "path": "HardConflict",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:111afaf6f6e72ebd3552f3ccd499421ab47a87bf257aac7d5c49a2a0663ab088",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "f65329c9177fe6d25f39e926af6346f6af28bebf96336d9b681e17596e8022b2",
+      "outcome": "CONFLICT",
+      "path": "HardConflict",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:113b8ab9f77a8bbeaab3172abd06e210f364f95bd08ff3845a302124720a86d0",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "41b2fc9ca1147e80f5c82483131f3e6f54bfac0d737b7c1726db2ac902faf1f6",
+      "outcome": "CONFLICT",
+      "path": "HardConflict",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:1febab8ad8a140730f0c7153c88d92f3dd8cd1f5db31013e317c15b5a4230f6c",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "f081e08e4971bbde0c3581613180a5816f78851d004a3e673d90057e3ae065e2",
+      "outcome": "CONFLICT",
+      "path": "HardConflict",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:29a7e914643eaccee00451938a863fe6cfabcb328f0f46d2f6ab8609834cc344",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "18221c972982dec6cfd3745e1af0581c87a05017d6574bfa6f0834bb468fa0c6",
+      "outcome": "CONFLICT",
+      "path": "HardConflict",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:2e446deba355f3eab2c9dff4b7ad20c1bba29638d22e68296831ed7c2053f126",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "1b449a6456b3b7b0b3a0331b2f69765c8611cd980034e16af7e03ec4c1ec4508",
+      "outcome": "CONFLICT",
+      "path": "HardConflict",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:3064f1b0b0d1cd196288894a531a5d853e5e7b6e4935b38a6a9e213b80a87d23",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "542ee11d12a9f0a51c0b6fa327982ecd220f11760744aee0aa195909fdeb361d",
+      "outcome": "CONFLICT",
+      "path": "HardConflict",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:35ab3ccd7b21ef14b6e01b1523f4ef62b1f578023b2dd4945c19efb99814a5ba",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "1846cc6a59e02a668e0bedf56900b1e52f0e6a357accfbaa2ba9c79694f1fee5",
+      "outcome": "CONFLICT",
+      "path": "HardConflict",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:360bc496adc683c9ff4f2746e8337eb438057447a826f78fbcb6ec724ed11bcf",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "2412ab9b48ad792ce60408d5da0b96b4c0c07702baac8ca0e037e8bf394c5a91",
+      "outcome": "CONFLICT",
+      "path": "HardConflict",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:3cbe1254167cf14ff2f8b96b92a694c195ff265a582ccd2e4f592a7b7ae638e6",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "ea3e319836d0590df03ef28d8f221cba903d63f9f62c6efd686a7a696db9593e",
+      "outcome": "CONFLICT",
+      "path": "HardConflict",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:3d490a93a2f5484de78261c5fa6ca1cc3d66aabcf83102a3e6e1874e3252e641",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "373dbb1f2eb9aadfa40f577ab2637dd40c8f75882ebc3a90c3be9435908a8a0d",
+      "outcome": "CONFLICT",
+      "path": "HardConflict",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:3d759a5e74843c8d1ba95a5e6539a19ab65088a1dc6f1b3fa8d7c1da653c685c",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "6fdff5dbf04f83fd2459d005503cf4d57edbe366eaaa42845ca3eca8f582c8e2",
+      "outcome": "CONFLICT",
+      "path": "HardConflict",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:41b38e0ab33d41452a0ff43bb059095d90d2315a485c46f2cec6e0e839c5777f",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "6b256ae410b9ce7a2e010bd1231306c53db8cb5941ab48375d7084f582fe7480",
+      "outcome": "CONFLICT",
+      "path": "HardConflict",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:45b9c7b2022d4e43fc3774c74e7dc27fd9431b66814166d253fae47011230823",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "04dbbc73960b1fe5024c7d066944035059db04ba0a0a6c2966614f39846ddf46",
+      "outcome": "CONFLICT",
+      "path": "HardConflict",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:4f98430e79a633f46e604b1543a8bccb0753b4e44d507c3bbdb24645d79f09c8",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "ca3e5dc3314be557fa369294548aff269e5edc7d8c64b2fa5176a4dfc5c7a64b",
+      "outcome": "CONFLICT",
+      "path": "HardConflict",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:50d1bc13fd8d17a2ee128c757f5a44e798bb4a9f1746771391aad645cd743121",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "ff1b49b8e6fa5f51aff2190c21c0ff97265e2f95a64b8b01a0881ba659e7a75c",
+      "outcome": "CONFLICT",
+      "path": "HardConflict",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:551055d803c019b7eca4c06f56b69dfdc9b8772d054dd0deae1db455443e02c5",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "9531745aedd4fddf6f6fc69e6f1f1fecdf61cef1861e220545776276dcd6c9a1",
+      "outcome": "CONFLICT",
+      "path": "HardConflict",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:59392b91e3a67e98ea38acad3b5a5af15d9aedf652c9e941e4c780b2c37aab03",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "4817b913ca6017d7e1d3b8e730e377694cef6a4f708dbb8ea4c1dbf46adb24fc",
+      "outcome": "CONFLICT",
+      "path": "HardConflict",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:6200161157f1139a3d32b322989ef6c1e3d54bbf6c3e79eb9b27ce5bde238f52",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "a13bc824d5daa7ffd10890fc185e4261670a971f5b7533a7d3ad2e8c6653db73",
+      "outcome": "CONFLICT",
+      "path": "HardConflict",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:65603248412af8c0bfc07fd190f50538a064e00261c5568f90e5523f1c9e6407",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "cc27fd4d80206e17c9711dcb729c68a23c315b5e9d177c64f1b1fa259ab39c9f",
+      "outcome": "CONFLICT",
+      "path": "HardConflict",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:68560a148c15307d87374344b5958419d779bacdec5e4fec2158ddcccb8a4e57",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "11d4f51642ce3c5f24070dd3e3381ed1bfe2536a381022423e18f57e0772ad52",
+      "outcome": "CONFLICT",
+      "path": "HardConflict",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:6a42ff16e7ec01cc89dfb7947ec265eefeac83189d36af7420723a875b442486",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "b2e0107fa6cdd3f9de9e28aa3ff0777c6ebd5f77a68acac4607e122e38f1b4bc",
+      "outcome": "CONFLICT",
+      "path": "HardConflict",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:70e2eb0bce1c8a1a045362024d6f1561014689a97249e040d39013978fda2d67",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "8341b5e6110515d593a11c9a2afb01ff61684677948297d17d9d895ce6cb97f6",
+      "outcome": "CONFLICT",
+      "path": "HardConflict",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:7117a93adf930ad3fd1afab4ae2807cc05d59ac1610556458193a624b4b117bf",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "da21bdbf59506576e61afaf73e90eff2e4e33b29e7a81e6be1b7d885e779c377",
+      "outcome": "CONFLICT",
+      "path": "HardConflict",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:713a108e9341fa7dd2ad7c8062be4c5378bf5836fb4be40c153bc7a0bd12fb10",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "dafdced9a2a0591053af62b353d08762d80545cc445acf964a634307db6095b4",
+      "outcome": "CONFLICT",
+      "path": "HardConflict",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:77596c9cef6afceb898b6fe43455a62fe76f0192698137556da210d9a36dd02c",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "7af0caed368d6330a42faf6bad3c376628e6cf6e9256170fed433bf33bb7f3cd",
+      "outcome": "CONFLICT",
+      "path": "HardConflict",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:7c632fef267416786e16b22842eba72642df5aa5c241c11d471f8977279bee22",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "a1f5a71243e28a502456f703cdaf9715ca58b294d1def5df79beac05ce40d5de",
+      "outcome": "CONFLICT",
+      "path": "HardConflict",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:7ce00ac310db090aba78845c73ffa3cc61e3cce1da39a84f84db2c9293468263",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "07d3d0eb358c8851b6b7fc44bdb7a006cc6176852141819b173fbaae3f910742",
+      "outcome": "CONFLICT",
+      "path": "HardConflict",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:8382597d97af42bb3e044641859385404e8322c1e928edc9ace87c8e0a7d54da",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "123cf8fdc33c0767230fbaaec3283c7e207d874342e87b84fa15b833f72198a2",
+      "outcome": "CONFLICT",
+      "path": "HardConflict",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:91a16bfc05d240567329d8537a26315ea1f9ca6c1bcee097dfee5d8fe02d0e6e",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "56d7a10da447b9db4058c008fb1252875bca50a9abfc1a25aea8a016a23c777c",
+      "outcome": "CONFLICT",
+      "path": "HardConflict",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:9ed63b8fc2bb9797ee3e90a0c23f9732798688efbab2c5bb34f2aa44970a246c",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "31bd35840e0b3599db3a2a656f5109ee8a92074491c5f9731a349f475eea5ece",
+      "outcome": "CONFLICT",
+      "path": "HardConflict",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:a4d50deced44430b21c034c934755ed681f86434a01a76502ca992dc6e114d50",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "3701c724e65a10f24b41fd4f85d5d8b40ce75ac642cf703d5610680d2b71376b",
+      "outcome": "CONFLICT",
+      "path": "HardConflict",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:af734e84b037ed7d7b908118005a78e3bfe8dce5a665368a77201c01f200f59d",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "f732384b6c363db263dd7f09b3857c590569b783c9cbe1f953e3c3c9a6644d23",
+      "outcome": "CONFLICT",
+      "path": "HardConflict",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:b440d6f3e180d15dada17075cc6f965f2574de4095a362d165825d7a22d2d0a7",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "e8b070efdd90d7b7aef45093a0b62735184fd4b14f4d5ef575ca2c599d7d0fa7",
+      "outcome": "CONFLICT",
+      "path": "HardConflict",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:bd1f4a3e685c0c971fa58b10b490ec6d2af280a07bbec23291d1808147185dc2",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "c8f452136c3056f25b66ba26f3509e8609bbd6f665ece389fa86160dc7bfcb03",
+      "outcome": "CONFLICT",
+      "path": "HardConflict",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:bfc55237ef6296ae115746ead97e1569f76d00e26ed611bcb75786e14e79d4a7",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "04662f647d5b4f3d000884df386396e6262f3051b31b99662b11415b5fa72899",
+      "outcome": "CONFLICT",
+      "path": "HardConflict",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:c86ed53c202419825ac9bea163a2de0c7898e4ebef5ec4da8d8915a0e26d048f",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "2eeea2006b3a27ed3de1e83c3e841cb860e318777b86539b044514915b5330f8",
+      "outcome": "CONFLICT",
+      "path": "HardConflict",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:cec55279c7837a31f87b5bc3f4fd7ac0fbaa2febf9a2cf4d2668896ebfb78903",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "586d9ee3dde323310df9cfa832bcc6ab65068b12b7976450171b7f9f18931da5",
+      "outcome": "CONFLICT",
+      "path": "HardConflict",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:d0b88fe069ce777056129ff2d9fa4061325f429dec235f5e0d6fc9c29f688dda",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "801c2172cc654c0e0ad43c99b463f423af47bf28c33080a4cc1cc3c4bf266ef3",
+      "outcome": "CONFLICT",
+      "path": "HardConflict",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:d228a844eeb02e00e4be7b4148c759f4a121cc3044f31286a0267225519a23f0",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "3f95274e627c8e01ec6a719bac854e98a0bad7fdf9a014c55c5efee122cab21e",
+      "outcome": "CONFLICT",
+      "path": "HardConflict",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:dd313653fb8c4dfc1a704090b553fa9610ae6094db390140712fe1664feeb147",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "ceb34129ee5bdd1b5665183da05d0dba483e2f2ea0dc9f0a55a99fc05bb17dab",
+      "outcome": "CONFLICT",
+      "path": "HardConflict",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:e00cfa278adcebec68e4ff4ac1dde2dee8fec80ae28f2da6a77c658f197dec7f",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "ab4f1056ba75f0e0f4c64b2d51a7272dc095e2a5e7d24ed09c726bed6f9f3bbe",
+      "outcome": "CONFLICT",
+      "path": "HardConflict",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:e2b51a58fa6b25ac33dd6979633bf21237586d0932dac758353d35667c3d4c42",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "f7f06d7105e65ab176df7fc432517a8ff4043fb55002739ce2ba1713ce725f02",
+      "outcome": "CONFLICT",
+      "path": "HardConflict",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:ebf91b3d605d8e7e7322b704a21d2db61f634128747dc624829bf908572a118c",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "52c010310aedbe90060fa80c24d7dbc34e4e47af310c471121fe0e27919bd8b1",
+      "outcome": "CONFLICT",
+      "path": "HardConflict",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:eeb352368206ffe27494c6467daa5509ed38cc82bd188d522899b778c2df304c",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "723ebf5d9fbe37bb2ae522d2ac57a9531fb07c11aa588a9112454b9925f16e59",
+      "outcome": "CONFLICT",
+      "path": "HardConflict",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:ef744ab8e9abe8335a1222f8188e829c70e607e2810a280ff17d6202875277ce",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "e6f7dc9b2f0f7f7be3692baab75446d43aab72dd5fb1f1bf4244c8716cfc0da4",
+      "outcome": "CONFLICT",
+      "path": "HardConflict",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:f78e39051671affd66bf38e06423a5da7a5880c004c123396b44c1119a2b8925",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "aa908b00107838979a3dc5bcd961be7aabbf3f363b807f651c36740c297ed69d",
+      "outcome": "CONFLICT",
+      "path": "HardConflict",
+      "score": null,
+      "provenance": "disabled"
+    },
+    {
+      "pairId": "resolution-pair:fd0da02f1fb6000187b46c875db5cc3bb8467999e934adc86b7e07f7ae88ad68",
+      "entityType": "Researcher",
+      "pairEvidenceHash": "51131178fb509875678318461c213270278d66cb6d37775f1fd2384aa8b26aca",
+      "outcome": "CONFLICT",
+      "path": "HardConflict",
+      "score": null,
+      "provenance": "disabled"
+    }
+  ]
+}

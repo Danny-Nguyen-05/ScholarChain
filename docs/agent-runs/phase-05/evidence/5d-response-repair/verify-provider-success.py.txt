@@ -1,0 +1,82 @@
+"""Offline verification of retained public demo evidence; never loads credentials or sends HTTP."""
+from pathlib import Path
+import hashlib,json,collections,datetime
+R=Path.cwd();B=Path(__file__).resolve().parent;P=R/'docs/agent-runs/phase-05'
+load=lambda p:json.loads(Path(p).read_text())
+sha=lambda p:hashlib.sha256(Path(p).read_bytes()).hexdigest()
+def descriptor(p):return {'path':str(p.relative_to(R)),'bytes':p.stat().st_size,'sha256':sha(p)}
+def dump(p,x):p.write_text(json.dumps(x,indent=2)+'\n')
+def manifest(root):
+ p=root/'live-demo-manifest.json';m=load(p)
+ assert (root/'_SCHOLARCHAIN_LIVE_DEMO_COMPLETE').read_text()==sha(p)+'\n'
+ for f in m['files']:
+  path=Path(f['path']);assert not path.is_absolute() and '..' not in path.parts
+  part=root/path;assert part.stat().st_size==f['bytes'] and sha(part)==f['sha256']
+ return m
+roots=[P/'evidence/5d-eligibility-revision/live-resume-20261021T193340Z',B/'live-resume-20261021T195406Z',B/'live-resume-20261021T201707Z']
+preview=load(B/'preview/admission.json');records=[];attempts=0;statuses=collections.Counter();last=None
+for root in roots:
+ m=manifest(root);run=load(root/'demo.json')
+ assert run['admission']==preview
+ assert not run['links']
+ local=sum(t['attempts'] for t in run['traces']);attempts+=local
+ assert run['budget']['attempts']==attempts and not run['budget']['fused']
+ if last:
+  assert all(run['budget'][k]>=last[k] for k in ['reservedInputTokens','reservedOutputTokens','reservedSpendMicrousd','observedInputTokens','observedOutputTokens','observedCostUpperBoundMicrousd'])
+ last=run['budget']
+ for trace in run['traces']:
+  statuses[trace['status']]+=1
+  assert trace['pairId'] in preview['admittedPairIds'] and trace['pairId'] not in preview['excludedPairIds']
+ records.append({'directory':str(root.relative_to(R)),'manifest':descriptor(root/'live-demo-manifest.json'),
+                 'attemptsThisRun':local,'cumulativeBudget':run['budget'],
+                 'traceStatuses':[t['status'] for t in run['traces']],
+                 'errors':[t['error'] for t in run['traces']]})
+root=roots[-1];run=load(root/'demo.json');m=load(root/'live-demo-manifest.json')
+assert len(run['traces'])==1
+t=run['traces'][0];result=t['result'];request=t['request'];response=result['response']
+assert t['status']=='VALIDATED_LIVE' and not t['cacheHit'] and t['attempts']==1
+assert result['resolvedModel']=='gpt-6-luna' and run['selectedModel']=='gpt-6-luna'
+for k in ['requestHash','pairId','sourceId','targetId','inputEvidenceHash','policyHash']:
+ assert response[k]==request[k],k
+assert set(response)=={'schemaVersion','requestHash','pairId','sourceId','targetId','inputEvidenceHash','policyHash','outcome','reasonCodes','evidenceRefs','rationale','reportedConfidence','fieldRefs'}
+assert response['outcome']=='accept' and response['reasonCodes']==['SUPPORTED_SAME_IDENTITY']
+evidence={e['ref']:e['payload'] for e in request['evidence']}
+assert len(response['evidenceRefs'])==len(set(response['evidenceRefs'])) and set(response['evidenceRefs'])<=set(evidence)
+assert len(response['fieldRefs'])==len(set(response['fieldRefs'])) and response['fieldRefs']
+for citation in response['fieldRefs']:
+ ref,pointer=citation.split('#');assert ref in response['evidenceRefs'] and pointer.startswith('/')
+ value=evidence[ref]
+ for raw in pointer[1:].split('/'):
+  token=raw.replace('~1','/').replace('~0','~')
+  value=value[int(token)] if isinstance(value,list) else value[token]
+ assert value is not None
+decision=run['decisions'][0]
+assert decision['pair']['pairId']==request['pairId'] and decision['decision']['decision']=='UNRESOLVED'
+assert 'LLM_ACCEPT_BLOCKED_INSUFFICIENT_ACCEPTANCE_EVIDENCE' in decision['decision']['reasonCodes']
+assert decision['decisionPath']=='LlmAdjudicated' and decision['adjudication']['reportedConfidence']==response['reportedConfidence']
+assert decision['adjudication']['preAdjudication']['score']==decision['decision']['confidence']
+full=load(B/'full-check-summary.json')
+assert full['valid'] and m['sourceTreeHash']==full['sourceFreezeSha256']==sha(P/'source-freeze.json')
+runtime=load(B/'runtime-files.json');assert all(sha(R/x['path'])==x['sha256'] for x in runtime['files'])
+budget=load(P/'evidence/5d/live-state/approval-1b66c9878075/budget.json')
+assert budget==last and budget['attempts']==4 and budget['observedCostUpperBoundMicrousd']==5576
+assert budget['attempts']<=10 and budget['reservedInputTokens']<=1000000 and budget['reservedOutputTokens']<=40960
+assert budget['reservedSpendMicrousd']<=1000000 and budget['observedCostUpperBoundMicrousd']<=1000000
+cache_line=next(line for line in (B/'validate-live-cache.txt').read_text().splitlines() if line.startswith('{'))
+assert json.loads(cache_line)['valid']
+proof={'valid':True,'verifiedAtUtc':datetime.datetime.now(datetime.timezone.utc).isoformat(),
+ 'scope':'Observed real-provider integration evidence, not verified identity truth or LLM-path accuracy',
+ 'runs':records,'cumulativeAttempts':attempts,'traceStatuses':dict(statuses),'validatedResponses':1,
+ 'provider':'openai','resolvedModel':result['resolvedModel'],'responseId':result['responseId'],'requestId':result['requestId'],
+ 'requestHash':request['requestHash'],'pairId':request['pairId'],'modelOutcome':response['outcome'],
+ 'systemOutcome':decision['decision']['decision'],'acceptedLinks':0,'blockedAcceptReason':'LLM_ACCEPT_BLOCKED_INSUFFICIENT_ACCEPTANCE_EVIDENCE',
+ 'observedUsageSuccessfulAttempt':result['usage'],'cumulativeBudget':budget,
+ 'citedPresentInputFieldsVerified':len(response['fieldRefs']),'requestAndResponseIdentityFieldsVerified':6,
+ 'canonicalHeldOutAdmissionUnchanged':True,'requestedExcludedIntersection':0,
+ 'sourceFreeze':descriptor(P/'source-freeze.json'),'runtimeFilesRechecked':len(runtime['files']),
+ 'offlineCompiledParserCacheRevalidationLog':descriptor(B/'validate-live-cache.txt'),
+ 'historicalFailureScope':'First two failures have no retained raw content and remain unexplained. Third attempt had FIELD_NOT_FOUND with all seven identity comparisons true. Fourth response validated under the same strict validator; no rule, prompt or schema was changed between third and fourth.',
+ 'limitations':['The model rationale relies on the shared OpenAlex author hypothesis, not independent source verification.','Model confidence 0.99 remains a separate uncalibrated assertion.','One response is not identity accuracy, calibration or a held-out evaluation.','Provider authenticity is established by the recorded execution path and identifiers, not cryptographic independent attestation.'],
+ 'fullPhase5Accepted':False,'phase6Authorized':False}
+dump(B/'provider-success-proof.json',proof)
+print(json.dumps({'valid':True,'attempts':attempts,'validatedResponses':1,'modelOutcome':'accept','systemOutcome':'UNRESOLVED','costUpperBoundMicrousd':budget['observedCostUpperBoundMicrousd']}))

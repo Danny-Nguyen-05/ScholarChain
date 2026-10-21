@@ -1,0 +1,31 @@
+{
+  "recordedAtUtc": "2026-10-21T20:37:22.321275+00:00",
+  "head": "6285210f8b8b2de1fe6d0ae79aecaf3079966fc5",
+  "files": {
+    "human-gate.md": {
+      "sha256": "382f4698cc3f0cbdc0f5ec03f3c0124252e957ba45b3a22f8c1c6fb7338fc33a",
+      "bytes": 4753
+    },
+    "review.md": {
+      "sha256": "7a8c2d8b8f4271f449e016c254ae7d9f879fc49e5f229d662eb17469d1d8b3ef",
+      "bytes": 112280
+    },
+    "owner-report.md": {
+      "sha256": "9776294f5f0a321b4a35f34719ad1185d6c5995c5d8467f8be166b7e3242b364",
+      "bytes": 137362
+    },
+    "prompt.md": {
+      "sha256": "24e32e6a03b7d3d481cf3e76ae27fde2ddad16c3fb3ea59d54d699c9fad7f52b",
+      "bytes": 98415
+    },
+    "review-inventory.json": {
+      "sha256": "a37481febee607d05853054524368e0eb146fddb5964c2b9d223389ed7669ea1",
+      "bytes": 108627
+    },
+    "source-freeze.json": {
+      "sha256": "ffca3fb63de469dbd7cb993b5f5e0ba4f6ec45d20ff0514cdf8e8320369493b6",
+      "bytes": 233195
+    }
+  },
+  "changesAuthorized": "Append user-supplied external APPROVE and the subsequent human acceptance; preserve prior decisions and reviewed source. No fixes, source changes, calls, commits or Phase 6."
+}

@@ -1,0 +1,9 @@
+{
+  "schemaVersion": "scholarchain.request-eligibility.v1",
+  "policyVersion": "researcher-context-request-v1",
+  "researcherNameMin": 0.8,
+  "researcherAffiliationMin": 0.8,
+  "requireCompatibleInitials": true,
+  "requirePositiveCoauthorOverlap": true,
+  "requireAutomaticSufficiencyForModelAccept": true
+}

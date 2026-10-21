@@ -1,0 +1,62 @@
+"""Coordinator checks retained metadata and hashes; no credentials, HTTP or label decisions."""
+from pathlib import Path
+import json,hashlib,collections
+R=Path.cwd();B=Path(__file__).resolve().parent
+load=lambda p:json.loads(Path(p).read_text())
+sha=lambda p:hashlib.sha256(Path(p).read_bytes()).hexdigest()
+def dump(p,x):Path(p).write_text(json.dumps(x,indent=2)+'\n')
+start=load(B/'start.json')
+changed=[x['path'] for x in start['protectedFiles'] if not Path(x['path']).is_file() or sha(x['path'])!=x['sha256']]
+assert not changed,changed
+before={x['path']:x for x in load(B/'before-source-freeze.json')['files']}
+after={x['path']:x for x in load(R/'docs/agent-runs/phase-05/source-freeze.json')['files']}
+assert not before.keys()-after.keys()
+delta={'beforeFiles':len(before),'currentFiles':len(after),'changed':sorted(k for k in before.keys()&after.keys() if before[k]!=after[k]),'added':sorted(after.keys()-before.keys()),'removed':[]}
+dump(B/'source-delta.json',delta)
+m=load(B/'preview/live-demo-manifest.json')
+for f in m['files']:
+ p=B/'preview'/f['path'];assert p.stat().st_size==f['bytes'] and sha(p)==f['sha256']
+requests=load(B/'preview/PREVIEW-ONLY-NOT-EXECUTED-requests.json')
+assert m['eligiblePairs']==2 and len(requests)==1 and m['liveAttemptsThisRun']==0
+admission=load(B/'preview/admission.json')
+assert admission==load(R/'docs/agent-runs/phase-05/evidence/5d-eligibility-revision/preview/admission.json')
+assert all(r['pairId'] in admission['admittedPairIds'] and r['pairId'] not in admission['excludedPairIds'] for r in requests)
+assert m['sourceTreeHash']==sha(R/'docs/agent-runs/phase-05/source-freeze.json')
+assert m['policyHash']==load(R/'docs/agent-runs/phase-05/evidence/5d-eligibility-revision/preview/live-demo-manifest.json')['policyHash']
+budget_path=R/'docs/agent-runs/phase-05/evidence/5d/live-state/approval-1b66c9878075/budget.json'
+budget=load(budget_path);old_budget=load(B/'budget-before.json')
+live_roots=sorted(p for p in B.glob('live-resume-*') if p.is_dir() and (p/'demo.json').is_file())
+traces=[];live=None
+if not live_roots:
+ assert budget==old_budget
+else:
+ root=live_roots[-1];demo=load(root/'demo.json');manifest=load(root/'live-demo-manifest.json')
+ for f in manifest['files']:
+  p=root/f['path'];assert p.stat().st_size==f['bytes'] and sha(p)==f['sha256']
+ assert demo['admission']==admission
+ assert len(demo['traces'])<=1 and not demo['links']
+ assert manifest['sourceTreeHash']==m['sourceTreeHash'] and manifest['policyHash']==m['policyHash']
+ traces=demo['traces']
+ assert all(t['pairId']==requests[0]['pairId'] for t in traces)
+ for t in traces:
+  if t.get('diagnostic'):
+   assert t['diagnostic']['validationCode']==t['error']
+  if t['result']:
+   assert t['result']['response']['requestHash']==t['request']['requestHash']
+   assert t['result']['response']['policyHash']==m['policyHash']
+ assert demo['budget']==budget
+ live={'path':str(root.relative_to(R)),'traceStatuses':dict(collections.Counter(t['status'] for t in traces)),
+       'validationCodes':[t['error'] for t in traces],'validatedResponses':sum(t['result'] is not None for t in traces)}
+assert old_budget['attempts']==2 and old_budget['observedCostUpperBoundMicrousd']==2772
+assert 2<=budget['attempts']<=10 and budget['reservedInputTokens']<=1000000 and budget['reservedOutputTokens']<=40960
+assert budget['reservedSpendMicrousd']<=1000000 and budget['observedCostUpperBoundMicrousd']<=1000000
+dump(B/'budget-current.json',budget)
+proof={'valid':True,'protectedFilesUnchanged':len(start['protectedFiles']),'sourceDelta':delta,
+       'eligiblePairs':m['eligiblePairs'],'previewRequests':len(requests),'previewProviderAttempts':0,
+       'canonicalAdmissionUnchanged':True,'requestedExcludedIntersection':0,'policyHashUnchanged':True,
+       'budgetBefore':old_budget,'budgetCurrent':budget,'ledgerCounterReset':False,
+       'live':live,'noReviewerPromptFile':not (R/'docs/agent-runs/phase-05/reviewer-prompt.txt').exists(),
+       'interpretation':'Historical response rejection is real; exact earlier cause is unrecoverable. Diagnostics preserve strict rejection and do not themselves prove a successful adjudication.'}
+assert proof['noReviewerPromptFile']
+dump(B/'protected-and-budget-proof.json',proof)
+print(json.dumps({'valid':True,'protectedFiles':len(start['protectedFiles']),'eligiblePairs':m['eligiblePairs'],'previewRequests':len(requests),'cumulativeAttempts':budget['attempts'],'live':live}))

@@ -1,0 +1,31 @@
+{
+  "capturedAtUtc": "2026-10-21T20:19:53.135377+00:00",
+  "purpose": "Preserve the diagnostic-only checkpoint metadata before recording subsequent user-executed failures and success. Raw run exports, source freeze and gate logs are unchanged.",
+  "files": [
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-response-repair/history/before-live-success-verification/budget-current.json",
+      "bytes": 551,
+      "sha256": "be3f03bb94cffeae8ffdaddd5d545ffc7c918868d10087f222ff2511bfc6b470"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-response-repair/history/before-live-success-verification/outcome.json",
+      "bytes": 856,
+      "sha256": "9e843b171675c9bd94f8dc40af5fbd7844351665fef0f4a159483042aa7d33a2"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-response-repair/history/before-live-success-verification/protected-and-budget-proof.json",
+      "bytes": 2936,
+      "sha256": "b6a5f4c825b1497029638dd8df25ac2d9bf45a5b6560b34369f345f3dd102ad9"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-response-repair/history/before-live-success-verification/report.md",
+      "bytes": 4227,
+      "sha256": "5760ec2095c1648bc4059f2cb86c92c2cfca8d0f7f320db135d9965686dbfa76"
+    },
+    {
+      "path": "docs/agent-runs/phase-05/evidence/5d-response-repair/history/before-live-success-verification/review-inventory.json",
+      "bytes": 86946,
+      "sha256": "45b39242faa37a40f5ff3c783961cb55b230998700e2a86b5a7bceecbdc7210d"
+    }
+  ]
+}

@@ -1,0 +1,41 @@
+"""Coordinator invokes existing CLIs; no scoring, label decisions or credential inspection."""
+from pathlib import Path
+import hashlib, json, subprocess, sys, shutil, datetime
+
+R = Path.cwd()
+B = Path(__file__).resolve().parent
+Q = R / 'docs/agent-runs/phase-05/evidence/5c-repair/review-artifacts'
+FROZEN = R / 'datasets/entity-resolution/prepared/bd424a86-0a1b-4e44-bbdb-4a9b8c8a20e3'
+DEMO = R / 'datasets/entity-resolution/prepared/8d30085c-cb67-4d25-909f-5f2603ad4511'
+RES = R / 'modules/entity-resolution/src/main/resources'
+LIVE = R / 'docs/agent-runs/phase-05/evidence/5d'
+PROFILE = RES / 'adjudication/request-eligibility.v1.json'
+sha = lambda p: hashlib.sha256(Path(p).read_bytes()).hexdigest()
+load = lambda p: json.loads(Path(p).read_text())
+def dump(p, x): Path(p).write_text(json.dumps(x, indent=2, ensure_ascii=False)+'\n')
+def run(name, args):
+    subprocess.run(['python3', str(B/'run-command.py.txt'), name, *map(str,args)], check=True)
+cp = str(R/'modules/entity-resolution/target/scala-3.3.4/classes')+':'+(R/'modules/entity-resolution/target/streams/compile/dependencyClasspath/_global/streams/export').read_text().strip()
+java = ['/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home/bin/java','-Xmx4g','-cp',cp,'edu.uic.cs441.scholarchain.entityresolution.Phase5Main']
+head = subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip()
+source = sha(R/'docs/agent-runs/phase-05/source-freeze.json')
+
+def preview_or_live(live=False, resume=False):
+    options = ['--input',DEMO,'--frozen-input',FROZEN,'--queue',Q/'queue.json','--split',Q/'split.json',
+               '--policy',RES/'phase5-policy.v1.json','--request-policy',PROFILE,'--config',RES/'phase5-config.v1.json',
+               '--live-config',LIVE/'approved-live-config.json','--max-pairs','1','--scope','supplement','--code-revision',head,'--source-hash',source]
+    if live:
+        gate=load(B/'full-check-summary.json')
+        assert gate['valid'] and gate['sourceFreezeSha256']==source, 'full gate source binding differs'
+        frozen=load(R/'docs/agent-runs/phase-05/source-freeze.json')
+        assert all(sha(R/f['path'])==f['sha256'] for f in frozen['files']), 'source changed after gate'
+        options += ['--runtime-binding',LIVE/'live-runtime-binding.json','--approval',LIVE/'user-live-approval.json','--enable-live','approval-1b66c9878075']
+    name = ('live-resume-'+datetime.datetime.now(datetime.timezone.utc).strftime('%Y%m%dT%H%M%SZ')) if resume else ('live' if live else 'preview')
+    run(name,java+['adjudicate-demo' if live else 'prepare-live-demo',*options,'--output',B/name])
+    if live:
+        result=load(B/name/'demo.json')
+        print(json.dumps({'output':str(B/name),'traces':[{'status':t['status'],'error':t['error'],'validationCode':(t.get('diagnostic') or {}).get('validationCode'),'identityMatches':(t.get('diagnostic') or {}).get('identityMatches'),'rationaleCharacters':(t.get('diagnostic') or {}).get('rationaleCharacters')} for t in result['traces']], 'attempts':result['budget']['attempts'] if result['budget'] else 0,'costUpperBoundMicrousd':result['budget']['observedCostUpperBoundMicrousd'] if result['budget'] else 0}))
+
+if sys.argv[1]=='preview': preview_or_live()
+elif sys.argv[1]=='live-resume': preview_or_live(True, True)
+else: raise ValueError('expected preview or live-resume')

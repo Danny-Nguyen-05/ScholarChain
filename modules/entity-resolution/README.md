@@ -784,3 +784,83 @@ requested partition and excluded count in that partition. Baseline reports retai
 `cohort: null`. The phase evidence separately binds the attribution source-file hash to the derived
 22-pair exclusion manifest; the evaluator does not claim to authenticate external source assistance.
 Development sensitivity remains a hypothetical score-cutoff analysis only; no held-out tuning occurs.
+
+
+### Opt-in request eligibility, with the original merge barrier preserved
+
+The separate `adjudication/request-eligibility.v1.json` resource defines
+`researcher-context-request-v1`. Supply `--request-policy PATH` explicitly on
+`resolve`, `prepare-live-demo` or `adjudicate-demo` to use it. Without that option,
+the legacy policy serialization, fingerprint and eligibility behavior are unchanged.
+No original scoring weights, score bands, source observations or label choices change.
+
+The request profile distinguishes enough evidence to ask a model from enough evidence
+to accept a merge. A Researcher pair must still be unresolved and inside the existing
+inclusive LLM score band. In addition to the original sufficient-evidence route, it
+may be requested when all of these observations are available: name similarity at
+least 0.8, compatible initials (1), comparable-namespace affiliation similarity at
+least 0.8, and strictly positive coauthor overlap. The current extractor supplies
+coauthor overlap only for distinct publications. Empty/missing/disjoint coauthors,
+incomparable affiliations, name/order evidence alone and same-publication copies do
+not open this additional route. Work eligibility retains the original sufficiency rule.
+Identifier conflicts and exact-ID accepts remain outside the unresolved request path.
+
+These profile values were chosen as an evidence-structure rule before inspecting the
+real candidate outcome under the new profile, with synthetic hand-computable examples;
+they are not calibrated thresholds or a fit to held-out labels. Shared affiliation
+and coauthors may be correlated and provider-supplied observations may be wrong. The
+profile establishes a conservative opportunity to ask, not confidence in identity.
+
+A model `accept` still requires the original automatic-acceptance sufficiency flag.
+If the new request-only route lacks that flag, the final decision remains Unresolved
+and contains `LLM_ACCEPT_BLOCKED_INSUFFICIENT_ACCEPTANCE_EVIDENCE`; the response,
+citations and model-reported confidence remain audited. It emits no accepted link.
+A validated reject is retained as Rejected; abstain remains Unresolved. Existing
+sufficient in-band requests retain their prior response behavior. Conflict checks
+also remain before dispatch and link export.
+
+`RequestEligibilityPolicy.bind(basePolicy, profile)` produces an effective policy
+whose version contains the full canonical profile hash. Scores and acceptance fields
+are unchanged; the effective policy fingerprint binds requests, both cache keys,
+decisions and exports to the request policy. Opt-in outputs retain a hash-manifested
+`request-eligibility-policy.json` alongside `effective-policy.json`. The exporter and
+offline export verifier reject a missing or mismatched profile for a bound policy;
+public resolution/selection APIs refuse bound-policy execution without its profile.
+The complete supplied profile is closed-schema validated, and mandatory evidence and
+acceptance protections cannot be disabled. A raw base policy plus a profile, a changed
+profile hash and double binding are refused.
+
+Canonical held-out component exclusion remains before any live-demo scoring. Existing
+human labels and the earlier approved evaluation remain immutable. Any later scoring
+of the already exposed held-out population is descriptive reused-set validation,
+not an untouched final test or evidence of model-path accuracy. Provider execution
+still requires the separately recorded numerical approval, offline gates, preview,
+runtime credential preflight and persistent approval-scoped budget state.
+
+
+### Rejected provider response diagnostics and narrower pilot invocations
+
+Rejected live output remains rejected by the same closed response validator. Its
+failure is now exposed as a finite `PROVIDER_ADJUDICATION_*` category: request
+identity, response shape, evidence references, field-pointer checks, outcome/reason
+consistency, rationale limits or confidence. Arbitrary parser and exception messages
+are replaced by a fixed schema/format category rather than echoed into the trace.
+
+A failed response trace may contain `scholarchain.provider-response-diagnostic.v1`
+metadata: body and extracted output byte counts/hashes, fixed request-identity
+comparison booleans, an allowlisted outcome, and counts of evidence references,
+field references, reason codes and rationale characters. Output metadata extraction
+requires a bounded successful completed message envelope. No rejected raw model
+text, rationale, evidence-reference strings, provider error body or arbitrary
+exception text is retained. Hashes establish byte identity, not correctness or
+verification of the discarded content. Historical traces without this optional
+metadata remain readable. Older failures with discarded output cannot be diagnosed
+retrospectively beyond their recorded generic category.
+
+`prepare-live-demo` and `adjudicate-demo` optionally accept `--max-pairs N`, where N
+is positive and no greater than the approved attempt limit. This narrows the selected
+pair prefix and preview only; the complete admitted/eligible population is still
+reported, source observations and constraints are unchanged, and no approval limit
+or configuration fingerprint changes. One selected pair can still make the existing
+bounded retry on a transient provider failure. Use `--max-pairs 1` for a diagnostic
+pilot with at most one eligible pair, not as a promise of exactly one HTTP attempt.

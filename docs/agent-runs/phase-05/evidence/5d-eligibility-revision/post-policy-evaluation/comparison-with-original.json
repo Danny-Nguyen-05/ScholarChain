@@ -1,0 +1,234 @@
+{
+  "scope": "Descriptive reused-cohort comparison, not a new held-out evaluation",
+  "acceptanceMetricsUnchanged": true,
+  "reports": [
+    {
+      "report": "disabled-a-development",
+      "original": {
+        "tasks": 40,
+        "binaryGold": 38,
+        "tp": 7,
+        "fp": 0,
+        "fn": 4,
+        "tn": 27,
+        "precision": 1,
+        "recall": 0.6363636363636364,
+        "f1": 0.7777777777777778,
+        "decisiveCoverage": 0.34210526315789475
+      },
+      "revised": {
+        "tasks": 40,
+        "binaryGold": 38,
+        "tp": 7,
+        "fp": 0,
+        "fn": 4,
+        "tn": 27,
+        "precision": 1,
+        "recall": 0.6363636363636364,
+        "f1": 0.7777777777777778,
+        "decisiveCoverage": 0.34210526315789475
+      },
+      "unchanged": true
+    },
+    {
+      "report": "disabled-a-development-without-assisted",
+      "original": {
+        "tasks": 36,
+        "binaryGold": 34,
+        "tp": 6,
+        "fp": 0,
+        "fn": 2,
+        "tn": 26,
+        "precision": 1,
+        "recall": 0.75,
+        "f1": 0.8571428571428571,
+        "decisiveCoverage": 0.3235294117647059
+      },
+      "revised": {
+        "tasks": 36,
+        "binaryGold": 34,
+        "tp": 6,
+        "fp": 0,
+        "fn": 2,
+        "tn": 26,
+        "precision": 1,
+        "recall": 0.75,
+        "f1": 0.8571428571428571,
+        "decisiveCoverage": 0.3235294117647059
+      },
+      "unchanged": true
+    },
+    {
+      "report": "disabled-a-held-out",
+      "original": {
+        "tasks": 200,
+        "binaryGold": 194,
+        "tp": 57,
+        "fp": 0,
+        "fn": 15,
+        "tn": 122,
+        "precision": 1,
+        "recall": 0.7916666666666666,
+        "f1": 0.8837209302325582,
+        "decisiveCoverage": 0.4845360824742268
+      },
+      "revised": {
+        "tasks": 200,
+        "binaryGold": 194,
+        "tp": 57,
+        "fp": 0,
+        "fn": 15,
+        "tn": 122,
+        "precision": 1,
+        "recall": 0.7916666666666666,
+        "f1": 0.8837209302325582,
+        "decisiveCoverage": 0.4845360824742268
+      },
+      "unchanged": true
+    },
+    {
+      "report": "disabled-a-held-out-without-assisted",
+      "original": {
+        "tasks": 182,
+        "binaryGold": 181,
+        "tp": 51,
+        "fp": 0,
+        "fn": 8,
+        "tn": 122,
+        "precision": 1,
+        "recall": 0.864406779661017,
+        "f1": 0.9272727272727272,
+        "decisiveCoverage": 0.4861878453038674
+      },
+      "revised": {
+        "tasks": 182,
+        "binaryGold": 181,
+        "tp": 51,
+        "fp": 0,
+        "fn": 8,
+        "tn": 122,
+        "precision": 1,
+        "recall": 0.864406779661017,
+        "f1": 0.9272727272727272,
+        "decisiveCoverage": 0.4861878453038674
+      },
+      "unchanged": true
+    },
+    {
+      "report": "fake-a-development",
+      "original": {
+        "tasks": 40,
+        "binaryGold": 38,
+        "tp": 7,
+        "fp": 0,
+        "fn": 4,
+        "tn": 27,
+        "precision": 1,
+        "recall": 0.6363636363636364,
+        "f1": 0.7777777777777778,
+        "decisiveCoverage": 0.34210526315789475
+      },
+      "revised": {
+        "tasks": 40,
+        "binaryGold": 38,
+        "tp": 7,
+        "fp": 0,
+        "fn": 4,
+        "tn": 27,
+        "precision": 1,
+        "recall": 0.6363636363636364,
+        "f1": 0.7777777777777778,
+        "decisiveCoverage": 0.34210526315789475
+      },
+      "unchanged": true
+    },
+    {
+      "report": "fake-a-development-without-assisted",
+      "original": {
+        "tasks": 36,
+        "binaryGold": 34,
+        "tp": 6,
+        "fp": 0,
+        "fn": 2,
+        "tn": 26,
+        "precision": 1,
+        "recall": 0.75,
+        "f1": 0.8571428571428571,
+        "decisiveCoverage": 0.3235294117647059
+      },
+      "revised": {
+        "tasks": 36,
+        "binaryGold": 34,
+        "tp": 6,
+        "fp": 0,
+        "fn": 2,
+        "tn": 26,
+        "precision": 1,
+        "recall": 0.75,
+        "f1": 0.8571428571428571,
+        "decisiveCoverage": 0.3235294117647059
+      },
+      "unchanged": true
+    },
+    {
+      "report": "fake-a-held-out",
+      "original": {
+        "tasks": 200,
+        "binaryGold": 194,
+        "tp": 57,
+        "fp": 0,
+        "fn": 15,
+        "tn": 122,
+        "precision": 1,
+        "recall": 0.7916666666666666,
+        "f1": 0.8837209302325582,
+        "decisiveCoverage": 0.4845360824742268
+      },
+      "revised": {
+        "tasks": 200,
+        "binaryGold": 194,
+        "tp": 57,
+        "fp": 0,
+        "fn": 15,
+        "tn": 122,
+        "precision": 1,
+        "recall": 0.7916666666666666,
+        "f1": 0.8837209302325582,
+        "decisiveCoverage": 0.4845360824742268
+      },
+      "unchanged": true
+    },
+    {
+      "report": "fake-a-held-out-without-assisted",
+      "original": {
+        "tasks": 182,
+        "binaryGold": 181,
+        "tp": 51,
+        "fp": 0,
+        "fn": 8,
+        "tn": 122,
+        "precision": 1,
+        "recall": 0.864406779661017,
+        "f1": 0.9272727272727272,
+        "decisiveCoverage": 0.4861878453038674
+      },
+      "revised": {
+        "tasks": 182,
+        "binaryGold": 181,
+        "tp": 51,
+        "fp": 0,
+        "fn": 8,
+        "tn": 122,
+        "precision": 1,
+        "recall": 0.864406779661017,
+        "f1": 0.9272727272727272,
+        "decisiveCoverage": 0.4861878453038674
+      },
+      "unchanged": true
+    }
+  ],
+  "fakeAdapterCalls": 10,
+  "fakeCallsAreRealProviderCalls": false,
+  "labelPolicyCorrelation": "Exact-ID matcher and AI-assisted Work review rules overlap; exact-ID agreement is not independent identity verification.",
+  "exclusionCaveat": "Removing 22 assisted cases removes 7 of 15 original held-out false negatives and 2 of 4 development false negatives; improved exclusion-cohort recall is not improved matching."
+}

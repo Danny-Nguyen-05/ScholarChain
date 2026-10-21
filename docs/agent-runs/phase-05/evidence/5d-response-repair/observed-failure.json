@@ -1,0 +1,12 @@
+{
+  "status": "OBSERVED_PROVIDER_ADJUDICATION_REJECTED",
+  "attempts": 2,
+  "observedCostUpperBoundMicrousd": 2772,
+  "errorCodes": [
+    "PROVIDER_ADJUDICATION_INVALID",
+    "PROVIDER_ADJUDICATION_INVALID"
+  ],
+  "scope": "Envelope/model/content/usage validations passed; the inner adjudication failed. Invalid raw response was not retained, so exact reason cannot be reconstructed. No acceptance or successful model judgment is claimed.",
+  "authority": "Continuation of user-authorized Phase5 live demonstration; same approval, model, fixed ledger and numerical limits. No additional acquisition or label/threshold changes.",
+  "nextStep": "Finite sanitized validation diagnostics and offline tests; next user-launched run narrows to at most one eligible pair."
+}

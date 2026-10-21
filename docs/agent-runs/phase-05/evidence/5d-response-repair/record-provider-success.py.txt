@@ -1,0 +1,55 @@
+"""Record observed provider completion, preserving earlier reports and human decisions."""
+from pathlib import Path
+import json,hashlib,datetime
+R=Path.cwd();B=Path(__file__).resolve().parent;P=R/'docs/agent-runs/phase-05'
+load=lambda p:json.loads(p.read_text())
+sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()
+def dump(p,x):p.write_text(json.dumps(x,indent=2)+'\n')
+def desc(p):return {'path':str(p.relative_to(R)),'bytes':p.stat().st_size,'sha256':sha(p)}
+proof=load(B/'provider-success-proof.json');full=load(B/'full-check-summary.json');protected=load(B/'protected-and-budget-proof.json')
+assert proof['valid'] and proof['validatedResponses']==1 and full['valid'] and protected['valid']
+old=load(B/'outcome.json');new=dict(old)
+new.update(implementationStatus='VERIFIED_PENDING_EXTERNAL_REVIEW',validatedAdjudicationObserved=True,
+ cumulativeProviderAttempts=4,costUpperBoundMicrousd=5576,remainingApprovalAttempts=6,
+ realModel='gpt-6-luna',modelOutcome='accept',systemOutcome='UNRESOLVED',acceptedLinks=0,
+ exactHistoricalFailureCause='First two unknown because invalid output was discarded; third FIELD_NOT_FOUND; fourth validated without changing policy/prompt/schema/validator between third and fourth.',
+ furtherProviderCallsPlanned=False,externalIndependentReview='PENDING_USER_LAUNCH',
+ technicalEvidence=desc(B/'provider-success-proof.json'),fullPhase5Accepted=False,phase6Authorized=False)
+dump(B/'outcome.json',new)
+text=f'''# Observed real-provider completion — 2026-10-21
+
+STATUS: COMPLETE (implemented checkpoint and observed validated live adjudication); independent review and final human acceptance pending. This supersedes the earlier pending-provider status only, not any human decision or prior evidence.
+OWNER: coordinator for retained evidence; ER owner for source; test-engineer for independent tests. The successful live command was executed from the user's Terminal. The coordinator made no additional provider call and did not read .env or credential files.
+WORK ORDER: Verify the user-returned live-resume-20261021T201707Z result and prepare the independent review handoff. Preserve approval, source, labels, old evaluation and all failed runs.
+FILES CREATED: provider-success-proof.json, the offline parser/cache probe and its retained log, this report, user-run receipt, and a final review packet. Earlier current-state metadata is archived under history/before-live-success-verification/.
+FILES MODIFIED: Coordinator-owned current outcome/proof/inventory and append-only phase reports. No production, test, policy, prompt, schema, dataset, label or human-gate file changed after the fresh full gate.
+COMMANDS RUN: Retained commands.json includes actual user-run commands and offline verification argv/exits. validate-live-cache reparsed the saved successful result through the compiled validator/cache path without constructing a transport or resolving credentials. verify-provider-success independently checked completion/file hashes, request identity, present-field citations, admission and the cumulative budget chain. No sbt rerun was necessary after evidence-only updates.
+TEST RESULTS: Fresh retained full gate: {full['totals']['tests']} passing tests, zero failures/errors/skips, {full['reportCount']} reports (core 129, Hadoop 64, ER 39, independent 233, build 4). The gate's source hash is {full['sourceFreezeSha256']}. All 965 source hashes still match. All 1019 captured runtime class/resource hashes still match. Previous 97 Python tests/14 integrity validators remain retained and unchanged; they were not re-executed in this evidence-only step.
+VALIDATION RESULTS: {protected['protectedFilesUnchanged']} protected files remain unchanged, including the labels, original/revised prior evaluation, earlier eligibility-revision outputs and human gate. The ledger accounts for four attempts: two original content rejections, a one-pair FIELD_NOT_FOUND rejection with all identity echoes correct, then one VALIDATED_LIVE response. All requests were admitted by the same canonical held-out exclusion. The successful response is not a cache hit. Request/response identities match, and all four cited JSON-pointer fields exist in the cited input evidence. The offline compiled cache revalidation succeeds.
+PROVIDER RESULTS: openai / gpt-6-luna; response {proof['responseId']}; request {proof['requestId']}. Successful attempt usage: 7897 input tokens, 784 output tokens including 146 reasoning tokens, 7894 reported cached input tokens. Cumulative usage: 31615 input and 3244 output tokens, four attempts, zero unknown-usage attempts and no fuse. Cumulative observed cost upper bound: $0.005576; this is a conservative estimate, not an invoice. Original $1/10-attempt and token limits were not changed or reset. Six attempts remain unused; no further call is planned.
+DECISION SAFETY: The model returned accept with reported confidence 0.99. The system retained UNRESOLVED at the original score 0.6933333333333332, recorded LLM_ACCEPT_BLOCKED_INSUFFICIENT_ACCEPTANCE_EVIDENCE and emitted zero accepted links. The model rationale relies on a shared OpenAlex author hypothesis; it is not independent identity verification. This is one validated integration response, not measured identity accuracy or calibrated confidence.
+ASSUMPTIONS: Provider execution is supported by the retained command path, response/request IDs, usage, cache and hashes. These are not independent cryptographic authentication of the provider.
+RISKS: Invalid field citations remain possible and are refused. The first two failures' exact content is unrecoverable; the third is specifically FIELD_NOT_FOUND. A later valid response does not erase those failures or prove all responses will validate. The request policy is uncalibrated. Labels are human-reviewed and AI-assisted, not blind gold; eight reviews remain uncertain (38 development and 194 held-out binary labels). Externally assisted evidence behind 22 cases is unretained. Revised held-out results reuse a previously exposed cohort and remain descriptive. Instructor acceptance of the Codex/Cursor workflow deviation is not inferred.
+MANUAL ACTION REQUIRED: User launches the independent read-only reviewer using the chat prompt and returns its complete verdict. Full Phase 5 acceptance, any treatment of remaining limitations and any Phase 6 authorization require the human decision.
+BLOCKED-ON OWNER: None for the implemented checkpoint or observed provider response. The independent reviewer and human own the next decisions.
+BLOCKED-ON EVIDENCE: Independent verdict and final human acceptance; broader evaluation limitations remain as stated. Real-provider execution evidence is now present.
+NEXT GATE: User-launched independent review, then human decision. No reviewer was triggered; no commit, push, acceptance or Phase 6 start occurred.
+
+Coordinator verification correction: the first metadata checker assumed an optional diagnostic key was present on successful JSON. The actual serializer omits default None. The checker now uses an optional lookup; the original checker/error note is retained under history/before-live-success-verification/. This was an evidence-script correction only, not a production or response change.
+'''
+(B/'provider-success-report.md').write_text(text)
+with (B/'report.md').open('a') as f:f.write('\n\n## Subsequent observed provider completion\n\n'+text.split('\n',2)[2])
+for name in ['owner-report.md','test-report.md','repairs.md']:
+ with (P/name).open('a') as f:f.write('\n\n## Observed validated live adjudication — 2026-10-21\n\n'+text.split('\n',2)[2])
+with (P/'review.md').open('a') as f:f.write('\n\n## Eligibility revision, diagnostics and observed live response — review pending\n\nSTATUS: PENDING USER-LAUNCHED INDEPENDENT REVIEW. The latest retained run contains one VALIDATED_LIVE response, cumulative four attempts and $0.005576 cost upper bound. System outcome remains UNRESOLVED with zero links. No reviewer was invoked and no approval or human acceptance is inferred. See evidence/5d-response-repair/provider-success-report.md and provider-success-proof.json. Earlier verdicts and all failures remain retained.\n')
+with (P/'prompt.md').open('a') as f:f.write('\n\n## User-returned successful live run — 2026-10-21\n\nThe user returned live-resume-20261021T201707Z with VALIDATED_LIVE, cumulative attempts 4 and costUpperBoundMicrousd 5576. The coordinator verified the retained successful response, cache and bindings offline; it did not make another API call or access .env. This is observed implementation evidence, not a human acceptance decision. The next gate is the user-launched independent review.\n')
+dump(B/'review-packet.json',{'scope':'Versioned request eligibility revision, safe diagnostics, one-pair cap, preserved descriptive evaluation and observed live response',
+ 'head':'6285210f8b8b2de1fe6d0ae79aecaf3079966fc5','branch':'main',
+ 'sourceFreeze':desc(P/'source-freeze.json'),'fullCheckSummary':desc(B/'full-check-summary.json'),
+ 'providerSuccessProof':desc(B/'provider-success-proof.json'),'providerSuccessReport':desc(B/'provider-success-report.md'),
+ 'protectedProof':desc(B/'protected-and-budget-proof.json'),
+ 'successfulRunManifest':desc(B/'live-resume-20261021T201707Z/live-demo-manifest.json'),
+ 'cacheValidationLog':desc(B/'validate-live-cache.txt'),
+ 'evaluationComparison':desc(P/'evidence/5d-eligibility-revision/post-policy-evaluation/comparison-with-original.json'),
+ 'reviewInventory':'docs/agent-runs/phase-05/review-inventory.json','reviewerLaunched':False,'fullPhase5Accepted':False,'phase6Authorized':False})
+print(json.dumps({'validatedProviderResponses':1,'cumulativeAttempts':4,'costUpperBoundUsd':0.005576,'systemOutcome':'UNRESOLVED','sourceFiles':965,'tests':full['totals']['tests']}))

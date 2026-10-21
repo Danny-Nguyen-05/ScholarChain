@@ -1,0 +1,17 @@
+{
+  "schemaVersion": "scholarchain.live-budget.v1",
+  "approvalId": "approval-1b66c9878075",
+  "configHash": "fea364d4a4873b7e948059a2ad16909876bf27fc511e5f0995c13ad91924bf70",
+  "attempts": 2,
+  "reservedInputTokens": 57472,
+  "reservedOutputTokens": 8192,
+  "reservedSpendMicrousd": 11281,
+  "observedInputTokens": 15821,
+  "observedOutputTokens": 1587,
+  "observedReasoningTokens": 291,
+  "observedCachedInputTokens": 0,
+  "observedCacheWriteTokens": 15815,
+  "observedCostUpperBoundMicrousd": 2772,
+  "unknownUsageAttempts": 0,
+  "fused": false
+}

@@ -1,0 +1,47 @@
+"""Assemble observed diagnostic-repair gate; never grants acceptance or resets budgets."""
+from pathlib import Path
+import json,hashlib
+R=Path.cwd();B=Path(__file__).resolve().parent;P=R/'docs/agent-runs/phase-05'
+load=lambda p:json.loads(Path(p).read_text())
+sha=lambda p:hashlib.sha256(Path(p).read_bytes()).hexdigest()
+full=load(B/'full-check-summary.json');proof=load(B/'protected-and-budget-proof.json')
+assert full['valid'] and proof['valid']
+runtime=load(B/'runtime-files.json')
+assert all(sha(x['path'])==x['sha256'] for x in runtime['files'])
+budget=proof['budgetCurrent']
+outcome={'schema':'scholarchain.provider-diagnostic-repair-checkpoint.v1',
+ 'implementationStatus':'DIAGNOSTICS_VERIFIED_CONTENT_FAILURE_NOT_YET_DIAGNOSED','sourceFreezeSha256':sha(P/'source-freeze.json'),
+ 'fullCheckTests':full['totals']['tests'],'failures':full['totals']['failures'],
+ 'protectedFilesUnchanged':proof['protectedFilesUnchanged'],'runtimeFilesUnchanged':len(runtime['files']),
+ 'priorProviderAttempts':2,'cumulativeProviderAttempts':budget['attempts'],
+ 'costUpperBoundMicrousd':budget['observedCostUpperBoundMicrousd'],
+ 'validatedAdjudicationObserved':bool(proof['live'] and proof['live']['validatedResponses']),
+ 'eligiblePairs':proof['eligiblePairs'],'nextRunMaxPairs':1,
+ 'nextRunMaxAttemptsIncludingOriginalRetry':2,'remainingApprovalAttempts':10-budget['attempts'],
+ 'strictResponseValidationUnchanged':True,'policyConfigPromptSchemaUnchanged':True,
+ 'exactHistoricalFailureCause':'Unknown: invalid output was not retained.',
+ 'fullPhase5Accepted':False,'phase6Authorized':False}
+(B/'outcome.json').write_text(json.dumps(outcome,indent=2)+'\n')
+text=f'''# Safe response diagnostics and narrowed retry checkpoint
+
+STATUS: COMPLETE (diagnostic implementation and offline verification). Exact historical response rejection remains unknown; a validated real adjudication is still pending.
+OWNER: entity-resolution-engineer for module changes; test-engineer for independent tests; coordinator for evidence and command execution.
+WORK ORDER: Continue the authorized live demonstration safely after the user's two charged responses failed inner validation. Do not relax validation, read secrets, change identity evidence, reset budgets or widen authorization.
+FILES CREATED: ProviderResponseDiagnosticSpec.scala, IndependentLiveResponseDiagnosticSpec.scala and this stage's evidence; see source-delta.json and review-inventory.json.
+FILES MODIFIED: ER response validation diagnostics/live trace/CLI/README, independent eligibility-cap tests, and append-only phase reports. Original labels, datasets, policy/config/prompt/schema resources, earlier outputs and human decisions remain unchanged.
+COMMANDS RUN: Exact commands, dates, exits and logs are retained in commands.json. First targeted command mistakenly selected a nonexistent owner suite and ran zero owner tests; its 54 independent tests passed. Corrected targeted-final selected the actual owner suite: 4 owner + 54 independent passed. The coordinator issued no HTTP request during this repair.
+TEST RESULTS: Fresh sbt -batch check: {full['totals']['tests']} tests, zero failures/errors/skips, {full['reportCount']} fresh reports. All {full['sourceFreeze']['checkedFiles']} frozen source hashes remained unchanged. The nested injected failure is expected CheckFailurePathSpec coverage. Dataset/Python code was unchanged; the hash-protected preceding stage retains its observed 97 Python tests and 14 integrity-validator passes, which were not rerun here.
+VALIDATION RESULTS: {proof['protectedFilesUnchanged']} protected files unchanged, including all labels, original evaluation, previous eligibility-revision outputs and the preexisting human gate. Runtime classes/resources rechecked: {len(runtime['files'])}. Preview reports 2 eligible pairs but renders exactly 1 request, with unchanged canonical held-out admission. The current ledger is unchanged at {budget['attempts']} attempts and {budget['observedCostUpperBoundMicrousd']} micro-USD observed cost upper bound; no counter reset and no fuse. Earlier actual responses passed envelope/model/usage checks but failed the inner adjudication validator. Their exact content failure cannot be reconstructed.
+IMPLEMENTATION: Finite PROVIDER_ADJUDICATION_* codes distinguish existing validation failures. Optional diagnostics retain only byte/character counts, SHA-256 hashes, fixed identity-match booleans, allowlisted outcome and counts. No raw model output, rationale, citation strings, provider error bodies or arbitrary exception text is exposed. Diagnostic generation cannot discard a charged failure trace. --max-pairs 1 narrows both preview and execution to one eligible pair; the existing maxRetries=1 still permits at most two attempts on a transient error, within the same cumulative approval. Invalid output remains rejected. A model accept without original acceptance sufficiency still cannot create a link.
+ASSUMPTIONS: Retained HTTP usage and budget snapshots are provider reports and conservative estimates, not an invoice. Diagnostics make failures observable; they do not guarantee the next response will be valid.
+RISKS: Real adjudication is pending; an additional call may again be rejected. The underlying earlier content error is unknown. Identity accuracy and calibration are not established. Earlier descriptive reused-held-out evaluation is preserved with its original binding; no new evaluation is claimed for this diagnostic-only change.
+MANUAL ACTION REQUIRED: The user may run the new one-pair command from their Terminal where the key is loaded. The coordinator never opens .env or credential files. Return the resulting status/error code. Independent review remains user-launched.
+BLOCKED-ON OWNER: User/runtime environment for the next separately executed bounded call.
+BLOCKED-ON EVIDENCE: A validated real-provider adjudication, independent review and final human acceptance.
+NEXT GATE: One-pair diagnostic live run using the original approval and persistent ledger. No reviewer launch, commit, push, full acceptance or Phase 6.
+'''
+(B/'report.md').write_text(text)
+for name in ['owner-report.md','test-report.md','repairs.md']:
+ with (P/name).open('a') as f:f.write('\n\n## Safe response diagnostics repair — 2026-10-21\n\n'+text.split('\n',2)[2])
+with (P/'review.md').open('a') as f:f.write('\n\n## Safe response diagnostics repair — external review pending\n\nNo independent reviewer was launched. Implementation evidence: evidence/5d-response-repair/report.md. Earlier two real responses failed validation; no successful adjudication or full acceptance is inferred.\n')
+print(json.dumps(outcome))

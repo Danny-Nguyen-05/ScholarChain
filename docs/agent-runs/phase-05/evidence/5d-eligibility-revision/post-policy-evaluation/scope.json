@@ -1,0 +1,13 @@
+{
+  "purpose": "Descriptive post-policy validation on previously exposed held-out cohort; not a fresh unseen confirmation",
+  "policyChoiceUsedHumanLabels": false,
+  "thresholdsChanged": false,
+  "realProviderCallsInThisEvaluation": 0,
+  "humanLabelsUnchanged": true,
+  "originalEvaluation": "docs/agent-runs/phase-05/evidence/5e",
+  "historicalFreezeRelocation": {
+    "originalDescriptor": "docs/agent-runs/phase-05/source-freeze.json",
+    "preservedPath": "docs/agent-runs/phase-05/evidence/5d-final-attempt/before-source-freeze.json",
+    "sha256": "52f24a88d8b4d3d802e8e53403428ad6d5e889afc7309ccd55a7f4f2fc91376f"
+  }
+}

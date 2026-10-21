@@ -138,7 +138,24 @@ final case class LiveAttemptTrace(
     cacheHit: Boolean,
     request: AdjudicationRequest,
     result: Option[ProviderResult],
-    error: Option[String]
+    error: Option[String],
+    diagnostic: Option[ProviderResponseDiagnostic] = None
+) derives ReadWriter
+
+/** No provider-controlled free text is retained for rejected output. */
+final case class ProviderResponseDiagnostic(
+    schemaVersion: String,
+    validationCode: String,
+    responseBytes: Int,
+    responseSha256: String,
+    outputTextBytes: Option[Int],
+    outputTextSha256: Option[String],
+    identityMatches: Map[String, Boolean],
+    outcome: Option[String],
+    evidenceRefCount: Option[Int],
+    fieldRefCount: Option[Int],
+    reasonCodesCount: Option[Int],
+    rationaleCharacters: Option[Int]
 ) derives ReadWriter
 final case class LiveBudgetState(
     schemaVersion: String,
