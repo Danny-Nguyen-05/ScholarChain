@@ -1,0 +1,69 @@
+{
+  "note": "Filesystem/manifest consistency audit; actual complete Parquet row/hash rereads are covered by module and independent export tests.",
+  "runs": [
+    {
+      "run": "first",
+      "root": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase6-runs/6fg-spark-first-v2/run:f02acf56-4bea-4009-adaf-b11d5afceb49",
+      "loadManifests": {
+        "neptune": {
+          "datasets": 13,
+          "sha256": "519ffc584524167905e5ec8c5ed085982a05df92e64771bb850c7b2991b2c761",
+          "parquetPathsExist": true,
+          "countsAndHashesMatchRunMetadata": true
+        },
+        "dynamodb": {
+          "datasets": 11,
+          "sha256": "5be6a17f6f04d4bdb27e1abbd4e3c3c4ab646e8884ad09b582a911e1ef75a808",
+          "parquetPathsExist": true,
+          "countsAndHashesMatchRunMetadata": true
+        },
+        "s3vectors": {
+          "datasets": 1,
+          "sha256": "c4368340109717d814041fdfe7208f162c2c1811ad750cc4418b41963e2e2145",
+          "parquetPathsExist": true,
+          "countsAndHashesMatchRunMetadata": true
+        },
+        "s3": {
+          "datasets": 28,
+          "sha256": "76a2554c759a229ea33793c5446468464b8a8fbf32c3ef5ff45d21f6fcc36815",
+          "parquetPathsExist": true,
+          "countsAndHashesMatchRunMetadata": true
+        }
+      },
+      "planCount": 37,
+      "parquetPartFiles": 153
+    },
+    {
+      "run": "replay",
+      "root": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase6-runs/6fg-spark-replay-v2/run:f02acf56-4bea-4009-adaf-b11d5afceb49",
+      "loadManifests": {
+        "neptune": {
+          "datasets": 13,
+          "sha256": "519ffc584524167905e5ec8c5ed085982a05df92e64771bb850c7b2991b2c761",
+          "parquetPathsExist": true,
+          "countsAndHashesMatchRunMetadata": true
+        },
+        "dynamodb": {
+          "datasets": 11,
+          "sha256": "5be6a17f6f04d4bdb27e1abbd4e3c3c4ab646e8884ad09b582a911e1ef75a808",
+          "parquetPathsExist": true,
+          "countsAndHashesMatchRunMetadata": true
+        },
+        "s3vectors": {
+          "datasets": 1,
+          "sha256": "c4368340109717d814041fdfe7208f162c2c1811ad750cc4418b41963e2e2145",
+          "parquetPathsExist": true,
+          "countsAndHashesMatchRunMetadata": true
+        },
+        "s3": {
+          "datasets": 28,
+          "sha256": "76a2554c759a229ea33793c5446468464b8a8fbf32c3ef5ff45d21f6fcc36815",
+          "parquetPathsExist": true,
+          "countsAndHashesMatchRunMetadata": true
+        }
+      },
+      "planCount": 37,
+      "parquetPartFiles": 136
+    }
+  ]
+}

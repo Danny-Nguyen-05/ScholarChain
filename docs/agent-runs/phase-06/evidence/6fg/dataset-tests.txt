@@ -1,0 +1,17 @@
+test_budget_does_not_request_more_than_remaining (__main__.AcquisitionTests.test_budget_does_not_request_more_than_remaining) ... ok
+test_deadline_refuses_body_read (__main__.AcquisitionTests.test_deadline_refuses_body_read) ... ok
+test_exact_length_body_read_then_verified_no_extra_byte (__main__.AcquisitionTests.test_exact_length_body_read_then_verified_no_extra_byte) ... ok
+test_header_refuses_before_body_when_larger_than_remaining_budget (__main__.AcquisitionTests.test_header_refuses_before_body_when_larger_than_remaining_budget) ... ok
+test_redirect_is_refused_without_body_read (__main__.AcquisitionTests.test_redirect_is_refused_without_body_read) ... ok
+test_truncated_body_fails_without_retry (__main__.AcquisitionTests.test_truncated_body_fails_without_retry) ... ok
+test_wrong_pinned_size_or_checksum_refuses_extraction (__main__.AcquisitionTests.test_wrong_pinned_size_or_checksum_refuses_extraction) ... ok
+test_adjacent_records_across_arbitrary_chunks (__main__.SliceTests.test_adjacent_records_across_arbitrary_chunks) ... ok
+test_no_eligible_rows_refused (__main__.SliceTests.test_no_eligible_rows_refused) ... ok
+test_truncated_publication_refused (__main__.SliceTests.test_truncated_publication_refused) ... ok
+test_unknown_entity_refused (__main__.SliceTests.test_unknown_entity_refused) ... ok
+test_year_venue_cap_source_order_entities_and_replay (__main__.SliceTests.test_year_venue_cap_source_order_entities_and_replay) ... ok
+
+----------------------------------------------------------------------
+Ran 12 tests in 0.003s
+
+OK

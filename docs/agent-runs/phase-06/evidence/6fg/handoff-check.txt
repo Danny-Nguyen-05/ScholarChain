@@ -1,0 +1,40 @@
+git diff --check
+exit=0
+
+All 27 source/config/test/manifest files unchanged during gate.
+Compiled production fingerprint equals both real runs.
+No implementation agent remains running.
+
+FINAL REPORT CHECK
+git diff --check: exit=0
+All27implementation hashes unchanged; final gate SHA verified; HEAD unchanged.
+
+git status --short
+ M docs/agent-runs/phase-06/owner-report.md
+ M docs/agent-runs/phase-06/prompt.md
+ M docs/agent-runs/phase-06/repairs.md
+ M docs/agent-runs/phase-06/test-report.md
+ M modules/core/src/main/scala/edu/uic/cs441/scholarchain/core/SparkAnalyticsValidation.scala
+ M modules/core/src/test/scala/edu/uic/cs441/scholarchain/core/SparkAnalyticsContractSpec.scala
+ M modules/spark/README.md
+ M modules/spark/src/main/scala/edu/uic/cs441/scholarchain/spark/Phase6CJobs.scala
+ M modules/spark/src/main/scala/edu/uic/cs441/scholarchain/spark/Phase6CReaders.scala
+ M modules/spark/src/main/scala/edu/uic/cs441/scholarchain/spark/Phase6DEJobs.scala
+ M modules/spark/src/test/scala/edu/uic/cs441/scholarchain/spark/Phase6CJobsSpec.scala
+ M modules/spark/src/test/scala/edu/uic/cs441/scholarchain/spark/Phase6DEJobsSpec.scala
+?? datasets/phase6/
+?? datasets/scripts/phase6/
+?? docs/agent-runs/phase-06/evidence/6fg/
+?? modules/spark/src/main/scala/edu/uic/cs441/scholarchain/spark/Phase6Context.scala
+?? modules/spark/src/main/scala/edu/uic/cs441/scholarchain/spark/Phase6EventLog.scala
+?? modules/spark/src/main/scala/edu/uic/cs441/scholarchain/spark/Phase6Export.scala
+?? modules/spark/src/main/scala/edu/uic/cs441/scholarchain/spark/Phase6FGJobs.scala
+?? modules/spark/src/main/scala/edu/uic/cs441/scholarchain/spark/Phase6Main.scala
+?? modules/spark/src/main/scala/edu/uic/cs441/scholarchain/spark/Phase6Plans.scala
+?? modules/spark/src/main/scala/edu/uic/cs441/scholarchain/spark/Phase6Report.scala
+?? modules/spark/src/test/scala/edu/uic/cs441/scholarchain/spark/Phase6FGJobsSpec.scala
+?? tests/src/test/resources/
+?? tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentPhase6FGFixtures.scala
+?? tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentPhase6FGSpec.scala
+?? tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentPhase6PipelineSpec.scala
+?? tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentPhase6SafetySpec.scala

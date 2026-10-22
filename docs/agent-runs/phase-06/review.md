@@ -1044,3 +1044,222 @@ Plan: /Users/danny/Documents/plan/phase6.md
 (f) Do ONLY 6F+6G, then stop and end the turn with: "Subphase 6F+6G is ready
     for review. I have stopped and will not start the next subphase until I
     receive the next prompt." Do not start 6I.
+
+
+## Subphase 6F+6G — user-supplied external review
+
+```text
+VERDICT: REQUEST-CHANGES for Subphase 6F+6G. Three findings block, and none needs a change to production Spark code if the repair takes the evidence-only route.
+
+I made no edits and ran no builds, tests or Spark jobs.
+
+What checks out
+
+- Tree state: HEAD is 6ae7378, the plan SHA-256 matches, and the inventories match (12 modified, 87 untracked). All 27 source snapshot hashes match the current files.
+- Gate log: final-check.txt has the claimed size and SHA-256, ends with exit=0, and contains no FAILED lines.
+- Ownership: every changed path maps to a single owner. Core went to domain, modules/spark to spark, datasets/** to dataset, tests/** to test, and docs/agent-runs to the coordinator. human-gate.md is untouched.
+- Driver actions: the only collect calls are in BoundedActions.scala. There is no RDD, GraphX or implicits use.
+- G1 hand-checks: I re-derived the expected deltas by hand and they match the independent test. That covers D's deltas, A leaving and G entering the largest component, the 10 temporal rows, and the 4 missing-endpoint count.
+- Chain estimate: the three-node chain gives mean 4/3 and P90 2, matching the test.
+- Dataset script: the script hash and slice hash match the manifest.
+
+Blocking findings
+
+F1 — Stage DAGs are not reported. Medium. Owner: coordinator for evidence, spark-engineer for any code. Blocking.
+- Evidence: the course Phase 6 report list includes "stage DAGs", and the plan's Done-when says the report contains every item the course lists. real-data-report.md reports stage counts, partitions and shuffle only.
+- Gap in the summarizer: the event-log-summary.json stage rows carry no parent IDs (Phase6EventLog.scala:74-80). The raw event log still has them, e.g. "Parent IDs":[3]. It is in ignored target/phase6-runs/6fg-spark-first-v2/.event-logs/.
+- Accept when: a stage-DAG artifact (stage ID, name, parent IDs, partitions) exists for the successful run, is referenced from the real-data report, and the DAG gap is stated. Deriving it from the retained log needs no code change and no rerun. If instead the summarizer is changed, the run ID changes and the real run, replay and full gate must be redone.
+
+F2 — The replay is not identical for analytics-report.json, and the evidence does not say so. Medium. Owner: spark-engineer for Phase6Report.scala, coordinator for the report. Blocking.
+- Evidence: I diffed the first and replay reports. bridges[1].participationCoefficientP50P90[1] is 0.56 in one and 0.5595567867036011 in the other. Twelve *Mean values also differ in the last digits.
+- Cause: percentile_approx (Phase6Report.scala:19) is partition-dependent, and the means sum floats in unordered aggregates.
+- Impact: the 28 table hashes do match, but real-data-report.md quotes these distribution values and says the replay matches.
+- Accept when: the report is added to replay-comparison.json and its differences are disclosed (approximate percentiles, float summation order), or exact percentiles are used. The same issue exists in the estimate P90 at Phase6DEJobs.scala:1040. It happened to match this time but is latent.
+
+F3 — The source-scan test misses calls written without parentheses. Medium. Owner: test-engineer. Blocking, test-only fix.
+- Evidence: the regex at IndependentPhase6SafetySpec.scala:29-30 requires ( after .collect, .head, .first, .toLocalIterator and .count. Scala 3 allows df.collect and df.head on Java and Scala 2 methods, so those evade the scan. .isEmpty and .reduce are not covered at all.
+- Current state: no violation exists today, per my grep.
+- Accept when: the scanner also flags the parenless and .isEmpty forms, with a self-test on synthetic source proving each is caught.
+
+Non-blocking findings
+
+- F4 — A failed run can't be retried. Low, spark-engineer or docs. Rerunning with the same config and code hits the existing root and fails with "incomplete; refusing overwrite" (Phase6Main.scala:49). The README line "a subsequent corrected run has a distinct ID" only holds if code or config changed. Document the manual cleanup step.
+- F5 — Summary text is thin and one claim isn't grounded for long titles. Low, spark-engineer.
+  - Researcher and path summaries carry no name, window or endpoints, which weakens embeddings in Phase 8.
+  - Paper titles are cut at 900 characters with no marker (Phase6FGJobs.scala:364), so text can differ from the cited field. The test only covers G1.
+- F6 — The continuity tie-break is not observable. Low. The README says ties go to the smaller community ID (README lines 99 and 164), but the row exposes only the overlap score. The test itself acknowledges this. Reword the README, or add a matched-community field in a later contract change.
+- F7 — metrics/type=kcore is a byte-identical copy of researcher_collaboration. Low. Both have 62,757 rows and hash 9b185b97…. This is documented in the README, but the manifests propose loading both.
+- F8 — Manifest proposals are loose. Low, spark-engineer.
+  - The Neptune idProperty for coauthored_with_support is edgeId, which is not unique.
+  - The DynamoDB partitionKey is the free-text string "researcherId or runId (dataset-dependent Phase 7 proposal)", although the README claims run-state keys.
+  - Phase 7 validates these anyway.
+- F9 — The LPA explanation is unverified. Low. The report attributes all non-convergence to two-person components, but 1,349 labels still changed in the last all-years iteration and no per-component convergence or pair count is retained. The workaround comment in Phase6DEJobs.scala:503 also states the Spark cause as fact, while the diagnosis file calls it an inference.
+- F10 — The constraint-propagation workaround is not recorded and its cost is unmeasured.
+  - spark.conf.set(...) at Phase6DEJobs.scala:506 changes the caller's shared session.
+  - The setting is not in run-metadata.json, and its performance impact was not measured.
+- F11 — Evidence is not lean. Low, human decision. It totals 5.0 MB, including a 1.36 MB final-check.txt and two ~424 KB event summaries. Plan rule 10 says to keep evidence lean.
+- F12 — Minor housekeeping.
+  - Two counters, ambiguousNonDblpMentions and ambiguousNonDblpMentionRows, have the same expression.
+  - The coordinator ran scalafmt, which touches owner-owned files. This is disclosed.
+  - The dataset Python tests (12/12) are not part of sbt check.
+
+Unverified
+
+- I did not reread the real Parquet. manifest-file-audit.json only checks that paths exist and that metadata matches.
+- I did not read the bodies of Phase6CJobsSpec, Phase6DEJobsSpec, Phase6FGJobsSpec or the 6C/6D+6E test files beyond their test lists.
+- I did not read all of Phase6CJobs.scala or Phase6CReaders.scala, only their diffs.
+- I did not verify the Hadoop or ER outputs or the downloaded archive.
+- The course "Detailed Spark requirements" section was cut off in my fetch, so the README per-job coverage is checked against the plan, not that section.
+
+Report fields
+
+STATUS: COMPLETE (review) — verdict REQUEST-CHANGES
+OWNER: code-reviewer (independent, read-only)
+WORK ORDER: Review Subphase 6F+6G, base/HEAD 6ae7378, plan SHA-256 6df6d856…5096
+FILES CREATED: none
+FILES MODIFIED: none
+COMMANDS RUN: git rev-parse/status/diff; shasum on plan, script, slice, final-check.txt and 27 snapshot files;
+  grep for forbidden APIs; python3 -I JSON diffs of first vs replay reports; WebFetch of the course README
+  (truncated); reads of the files named above. No build, test, Spark, AWS or model calls.
+TEST RESULTS: Not rerun. Reported gate 551/0, exit 0, log hash and tail verified; no FAILED lines.
+VALIDATION RESULTS: 27/27 source hashes match; replay-comparison 28/28 tables equal;
+  analytics-report.json differs between runs (F2); counters identical.
+ASSUMPTIONS: Scala 3 allows parenless calls to Java/Scala-2 methods (F3). Event-log Parent IDs read from the retained log.
+RISKS: See F4–F12. Known limits (metadata-only reuse, fixed shards, local-artifact replay,
+  LPA oscillation, sampled distances, store mappings as proposals) are disclosed accurately.
+MANUAL ACTION REQUIRED: Route the repair round below. Do not commit as approved yet. 6I not started.
+BLOCKED-ON OWNER: none
+BLOCKED-ON EVIDENCE: F1 stage DAGs; F2 report replay comparison
+NEXT GATE: Repair round, then a recheck review, then commit, then a separately requested 6I.
+
+Next prompt
+
+You are the main agent for ScholarChain Phase 6, Subphase 6F+6G repair round 1, in
+/Users/danny/Documents/UIC/CS441/ScholarChain (branch phase-6, base/HEAD 6ae7378cbef90a176fd1faecae0dee0615eba9e3, work uncommitted).
+Plan: /Users/danny/Documents/plan/phase6.md (SHA-256 6df6d856df6c4c6ee0a8f00125e78af1bce5e789666399ae48a9443aec955096). Use JDK 17 for every sbt/Spark command.
+Do NOT start 6I. Do NOT launch a reviewer. Do NOT commit or push. Stop after this repair.
+
+1. Append the external reviewer verdict (REQUEST-CHANGES, findings F1–F12) verbatim to docs/agent-runs/phase-06/review.md under
+   "Subphase 6F+6G — user-supplied external review". Log the findings in repairs.md.
+2. Route blocking findings to their owners:
+   F1 (coordinator, spark-engineer only if code changes): produce a stage-DAG artifact (stageId, name, parentIds,
+      partitionCount, per-stage task and shuffle totals) for the successful run from the retained raw event log under
+      target/phase6-runs/6fg-spark-first-v2/.event-logs/. Save it under evidence/6fg/ and reference it from
+      real-data-report.md. Preferred: evidence-only, no production change, so the run ID stays
+      run:f02acf56-4bea-4009-adaf-b11d5afceb49. If Phase6EventLog is changed instead, the real run, replay and full
+      gate must be redone and the run ID will change.
+   F2 (spark-engineer for Phase6Report.scala, coordinator for evidence): add analytics-report.json to the replay comparison.
+      Either compute exact percentiles or disclose that report percentiles and means are partition/float-order
+      dependent and are excluded from the logical-identity claim. Correct real-data-report.md and
+      replay-comparison.json so they no longer imply the report is identical. If production code changes, rerun and
+      regate as above.
+   F3 (test-engineer): harden IndependentPhase6SafetySpec so the scan also flags parenless .collect/.head/.first/
+      .toLocalIterator/.count and .isEmpty/.reduce outside BoundedActions, with a synthetic self-test proving each is caught.
+3. Nonblocking F4–F12: apply the cheap documentation fixes through the owning writer (README wording for F4, F6, F8;
+   record the constraint-propagation setting and the LPA per-component caveat in the report for F9/F10). Record any
+   item you leave open, with reasons. F11 is a human decision; list the evidence sizes and ask.
+4. Rerun the affected tests and one full `sbt -batch check` on JDK 17 on a stable tree. Re-verify the source
+   snapshot hashes, `git diff --check`, and that HEAD is unchanged. Report exact observed commands and results.
+5. Update owner-report.md, test-report.md, repairs.md and evidence/6fg/handoff.md, and return a recheck reviewer prompt
+   per plan Section 11 with every placeholder filled. Then end with: "Subphase 6F+6G repair round 1 is ready for
+   review. I have stopped and will not start the next subphase until I receive the next prompt."
+```
+
+## Subphase 6F+6G repair round 1 — user-supplied external review
+
+```text
+VERDICT: APPROVE for Subphase 6F+6G repair round 1. The three blocking findings from the first review (F1–F3) are repaired. I found no new blocking issues.
+
+I made no edits and ran no builds, tests or Spark jobs. Beyond reading the evidence, I recomputed the numbers from retained files.
+
+Acceptance of the blocking findings
+
+F1 — stage DAG: accepted.
+- I re-parsed the retained raw event log (local-1792693895317, 24,040 records). It gives 5,667 stage IDs, 4,532 parent edges, no missing parents and no cycles. Every stage has a name and a partition count.
+- The 2,004 executed attempts give 5,237 tasks, 0 failed, 12,020,965,863 shuffle-read bytes and 10,107,558,658 shuffle-write bytes, matching the original summary.
+- stage-dag.json has 5,667 stage entries.
+- stage-dag.md says plainly that its diagram is a subgraph, not the whole DAG.
+- The report and the DAG file both state that the production summarizer still omits names and parents. This route needed no production change, as the review allowed.
+
+F2 — replay scope: accepted.
+- The two report hashes recorded in analytics-report-comparison.json match the actual files.
+- My earlier diff also found 12 differences: 11 means and one percentile (0.56 vs 0.5595567867036011).
+- replay-comparison.json now has allLogicalTablesEqual: true and allComparedArtifactsEqual: false, with a comparisonScope note.
+- The top of real-data-report.md carries a "Replay scope correction", and the latent partition-dependence of the estimate's P90 is disclosed.
+- The old "Completed replay" paragraph still says only that tables and counters match. That is true and sits under the correction.
+
+F3 — source fence: accepted.
+- Only IndependentPhase6SafetySpec.scala differs from the original 27-file snapshot. The other 26 hashes are identical, and all 27 current files match the repair snapshot.
+- The scanner covers 11 driver methods, including isEmpty and reduce, with and without parentheses.
+- Its identifier-boundary check lets collect_set, headOption and countDistinct through. It handles nested comments, escaped quotes and triple-quoted strings.
+- The non-Spark exceptions are exact and tied to declarations. Three synthetic self-tests are added; the Safety target ran 7/7.
+
+Gate integrity: accepted.
+- final-check.txt is 1,358,928 bytes with SHA-256 3e665483…c5236, ends with exit=0, and has no FAILED lines.
+- Counts are 144/64/39/34/266/7, which totals 554. Independent grew 263→266, matching the three new tests.
+- HEAD and the plan hash are unchanged, and human-gate.md is untouched. review.md carries the verdict under "Subphase 6F+6G — user-supplied external review", and repairs.md logs F1–F12 with F4–F12 deferred.
+
+New nonblocking observations
+
+- Scanner gaps (Low, test-engineer). The scanner does not flag .tail, .toJavaRDD, .javaRDD or .toRdd. The existing \bRDD\b check misses toJavaRDD. Code inside s"${…}" interpolations is masked. Its doc comment already says it is a textual guard and not a parser.
+- Handoff placeholder (trivial, coordinator). repair-1/handoff.md lines 22–23 contain an empty path, ``, where the evidence directory should be named.
+- Evidence size (Low, human decision). repair-1 adds about 3.2 MB of evidence (stage-dag.json is 1.84 MB, final-check.txt 1.36 MB). The earlier F11 retention question was answered "blocking-only", so no cleanup was done.
+
+Still open from the first review
+
+F4–F12 are deferred by the user, so they remain open. Two of them matter for later phases:
+- F4: rerunning with the same config after a failed run refuses to overwrite. The workaround is manual cleanup.
+- F10: the Spark constraint-propagation setting is applied to the caller's session and is not recorded in run metadata.
+
+Known limits, all disclosed accurately, are:
+- reuse checks metadata only;
+- fixed 256-shard hashing;
+- replay on identical local artifacts only;
+- LPA oscillation on isolated pairs;
+- sampled distance estimates;
+- store mappings as proposals;
+- the yearless Neptune edge mapping;
+- the EMR and packaging gates.
+
+Report fields
+
+STATUS: COMPLETE (recheck) — verdict APPROVE
+OWNER: code-reviewer (independent, read-only)
+WORK ORDER: Recheck 6F+6G repair round 1 (F1–F3); base/HEAD 6ae7378; plan SHA-256 6df6d856…5096
+FILES CREATED: none
+FILES MODIFIED: none
+COMMANDS RUN: git rev-parse/status/diff; shasum on plan and final-check.txt; python3 -I recomputation of the stage DAG
+  from the raw event log, source-snapshot hash comparison, and report hash checks; reads of the files named above.
+  No build, test, Spark, AWS or model calls.
+TEST RESULTS: Not rerun. Reported 554/0, exit 0; log size/hash verified; Safety 7/7 per safety-targeted.txt.
+VALIDATION RESULTS: F1 DAG numbers reproduced independently; F2 report hashes and 12 differences confirmed;
+  F3 scanner and self-tests reviewed; 27/27 current files match the repair snapshot; only SafetySpec changed.
+ASSUMPTIONS: Production fingerprint unchanged is inferred from identical production-source hashes and the metadata.
+RISKS: F4–F12 deferred; the nonblocking items above; the known limits listed.
+MANUAL ACTION REQUIRED: User commits Subphase 6F+6G. 6I only on a separate request.
+BLOCKED-ON OWNER: none
+BLOCKED-ON EVIDENCE: none
+NEXT GATE: User commit, then a separately requested 6I close-out. Phase 6 closes only after the comprehensive
+  review, `human-gate.md` and `commit.txt`.
+
+Next prompt
+
+You are the main agent for ScholarChain Phase 6 in /Users/danny/Documents/UIC/CS441/ScholarChain (branch phase-6).
+The independent reviewer returned APPROVE for Subphase 6F+6G repair round 1 (F1–F3 repaired and accepted; no new
+blocking findings; base/HEAD 6ae7378cbef90a176fd1faecae0dee0615eba9e3, work uncommitted).
+
+Do only this, then stop:
+1. Append the reviewer's APPROVE verdict verbatim to docs/agent-runs/phase-06/review.md under
+   "Subphase 6F+6G repair round 1 — user-supplied external review". Do not edit any human-owned file
+   (human-gate.md, commit.txt).
+2. Fix the empty path placeholder in evidence/6fg/repair-1/handoff.md lines 22–23. This is a coordinator-owned
+   documentation edit and needs no gate.
+3. Tell me the 6F+6G tree is approved and ask me to commit it. Do not commit or push yourself.
+4. Do NOT start 6I, and do not run builds, tests or Spark.
+End with: "Subphase 6F+6G is approved and awaiting the user's commit. I have stopped and will not start 6I until I receive a separate prompt."
+
+After I commit, I will send a separate 6I prompt. It will cover: Step 0 questions, a fresh JDK 17 `sbt -batch check`,
+the course-gate traceability table in owner-report.md with "bounded EMR Spark run" marked OPEN (deferred to
+Phase 15), carrying F4–F12 forward as open or deferred items, and the comprehensive whole-Phase-6 reviewer prompt
+covering 0349388 through the current tree including untracked files.
+```

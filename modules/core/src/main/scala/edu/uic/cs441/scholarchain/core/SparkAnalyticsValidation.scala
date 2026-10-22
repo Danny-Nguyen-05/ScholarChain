@@ -380,6 +380,14 @@ object SparkAnalyticsValidation {
           .contains(value.summaryType)
       ) errors += "unsupported summaryType"
       nonBlank(value.entityId, "entityId", errors)
+      value.summaryType match {
+        case "researcher-profile" => researcher(value.entityId, errors)
+        case "community"          => id(value.entityId, "community", errors)
+        case "collaboration-path" => id(value.entityId, "path-evidence", errors)
+        case "paper" =>
+          if (StableIds.parseWorkId(value.entityId).isLeft) errors += "invalid paper work ID"
+        case _ => ()
+      }
       nonBlank(value.text, "text", errors)
       if (value.sourceReferences.isEmpty) errors += "summary requires source references"
       refs(value.sourceReferences, errors)

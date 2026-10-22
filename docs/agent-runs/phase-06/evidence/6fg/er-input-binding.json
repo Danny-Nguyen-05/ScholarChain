@@ -1,0 +1,23 @@
+{
+  "root": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase6-runs/6fg-er-disabled",
+  "runId": "run:d6a8a044-7650-4fe9-87a3-0b8b7554d2b1",
+  "manifestSha256": "accd5f8b0c3bba3a581b2f86b5a952be9905b70a47c42d060f8f91753fb509b9",
+  "inputEvidenceHash": "b9141dfb261a1cb2735c9d397cef972aad6aad5c03f93df2c5860ef26e66e0d4",
+  "prepCompletionHash": "9dc714efed5daaaff3bdd3d80d27b262759735b77b1ec4fe7514a4aae5f78cd9",
+  "llmMode": "disabled",
+  "fakeCalls": 0,
+  "liveCalls": 0,
+  "outcomeCounts": {
+    "Work:ACCEPTED": 1,
+    "Researcher:ACCEPTED": 0,
+    "Work:CONFLICT": 12123,
+    "Researcher:UNRESOLVED": 0,
+    "Researcher:CONFLICT": 0,
+    "Work:REJECTED": 6249,
+    "Researcher:REJECTED": 0,
+    "Work:UNRESOLVED": 1627
+  },
+  "exportBytes": 794017153,
+  "fileCount": 17,
+  "marker": "accd5f8b0c3bba3a581b2f86b5a952be9905b70a47c42d060f8f91753fb509b9\n"
+}

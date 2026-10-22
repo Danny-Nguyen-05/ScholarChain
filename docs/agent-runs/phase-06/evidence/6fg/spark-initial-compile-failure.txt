@@ -1,0 +1,15 @@
+[info] welcome to sbt 1.10.7 (Homebrew Java 17.0.20.1)
+[info] loading settings for project scholarchain-build from plugins.sbt...
+[info] loading project definition from /Users/danny/Documents/UIC/CS441/ScholarChain/project
+[info] loading settings for project root from build.sbt...
+[info] set current project to root (in build file:/Users/danny/Documents/UIC/CS441/ScholarChain/)
+[info] compiling 11 Scala sources to /Users/danny/Documents/UIC/CS441/ScholarChain/modules/spark/target/scala-3.3.4/classes ...
+[error] -- [E171] Type Error: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/spark/src/main/scala/edu/uic/cs441/scholarchain/spark/Phase6Main.scala:78:104 
+[error] 78 |        val manifest=RunManifest(runId,SchemaVersions.domain,"spark-analytics",Vector(DatasetSnapshotRef(SourceType.Dblp,verified.lineage.hadoopSnapshot)),config.configSchemaVersion,config.fingerprint,provenance)
+[error]    |                                                                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[error]    |missing argument for parameter retrievalDate of method apply in object DatasetSnapshotRef: (source: edu.uic.cs441.scholarchain.core.SourceType, snapshot: String,
+[error]    |  retrievalDate: Option[String]):
+[error]    |  edu.uic.cs441.scholarchain.core.DatasetSnapshotRef
+[error] one error found
+[error] (sparkAnalytics / Compile / compileIncremental) Compilation failed
+[error] Total time: 2 s, completed Oct 22, 2026, 1:08:41 PM

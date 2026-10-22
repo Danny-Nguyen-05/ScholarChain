@@ -1,0 +1,97 @@
+{
+  "branch": "phase-6",
+  "base": "6ae7378cbef90a176fd1faecae0dee0615eba9e3",
+  "head": "6ae7378cbef90a176fd1faecae0dee0615eba9e3",
+  "command": "/usr/bin/time -p sbt -batch check",
+  "exitCode": 0,
+  "java": "17.0.20.1",
+  "sbt": "1.10.7",
+  "tests": {
+    "core": 144,
+    "hadoop": 64,
+    "entityResolution": 39,
+    "sparkAnalytics": 34,
+    "independentTests": 266,
+    "buildVerification": 7
+  },
+  "totalPassed": 554,
+  "totalFailed": 0,
+  "realSeconds": 676.42,
+  "sbtSeconds": 674,
+  "logBytes": 1358928,
+  "logSha256": "3e6654835296bab3be44efbdf0cd31c205dd4b34ff87b98848a4ba16623c5236",
+  "completedAtUtc": "2026-10-22T19:29:32.871516+00:00",
+  "sourceFilesChecked": 27,
+  "sourceChangedDuringGate": [],
+  "changedImplementationFilesFromOriginalGate": [
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentPhase6SafetySpec.scala"
+  ],
+  "productionCodeFingerprint": "a6719cbb892e795e3b4e20be99c70c1c74c1ee8ce95887e8c418d9aeb3672971",
+  "realDataRunId": "run:f02acf56-4bea-4009-adaf-b11d5afceb49",
+  "productionSourcesUnchanged": true,
+  "realRunsNotRepeated": true,
+  "diffCheckExit": 0,
+  "testMarkerMtimeUtc": "2026-10-22T19:29:32.706236+00:00",
+  "evidenceLines": [
+    {
+      "line": 172,
+      "text": "[info] Total number of tests run: 144"
+    },
+    {
+      "line": 174,
+      "text": "[info] Tests: succeeded 144, failed 0, canceled 0, ignored 0, pending 0"
+    },
+    {
+      "line": 914,
+      "text": "[info] Total number of tests run: 64"
+    },
+    {
+      "line": 916,
+      "text": "[info] Tests: succeeded 64, failed 0, canceled 0, ignored 0, pending 0"
+    },
+    {
+      "line": 964,
+      "text": "[info] Total number of tests run: 39"
+    },
+    {
+      "line": 966,
+      "text": "[info] Tests: succeeded 39, failed 0, canceled 0, ignored 0, pending 0"
+    },
+    {
+      "line": 2080,
+      "text": "[info] Total number of tests run: 34"
+    },
+    {
+      "line": 2082,
+      "text": "[info] Tests: succeeded 34, failed 0, canceled 0, ignored 0, pending 0"
+    },
+    {
+      "line": 6237,
+      "text": "[info] Total number of tests run: 266"
+    },
+    {
+      "line": 6239,
+      "text": "[info] Tests: succeeded 266, failed 0, canceled 0, ignored 0, pending 0"
+    },
+    {
+      "line": 6279,
+      "text": "[info] Total number of tests run: 7"
+    },
+    {
+      "line": 6281,
+      "text": "[info] Tests: succeeded 7, failed 0, canceled 0, ignored 0, pending 0"
+    },
+    {
+      "line": 6284,
+      "text": "[success] Total time: 674 s (11:14), completed Oct 22, 2026, 2:29:32 PM"
+    },
+    {
+      "line": 6285,
+      "text": "real 676.42"
+    },
+    {
+      "line": 6288,
+      "text": "exit=0"
+    }
+  ]
+}

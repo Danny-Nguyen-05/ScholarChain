@@ -456,4 +456,141 @@ class Phase6DEJobsSpec extends AnyFunSuite with BeforeAndAfterAll with BeforeAnd
     )
     assert(path.getSeq[Row](3).last.getAs[String]("fromResearcherId") == smallPredecessor)
   }
+  test(
+    "community iterations stop per window and every analytics context has the shared ordered schema"
+  ) {
+    val members = frame(
+      Seq("canonicalWorkId" -> StringType, "researcherId" -> StringType, "year" -> IntegerType),
+      Vector(
+        Seq(work("solo"), researcher("E"), Int.box(2015)),
+        Seq(work("pair"), researcher("A"), Int.box(2016)),
+        Seq(work("pair"), researcher("B"), Int.box(2016))
+      )
+    )
+    val pairWindow = SparkWindow("late", Some(2016), Some(2016), Some(1))
+    val ids = Vector(researcher("A"), researcher("B")).sorted
+    val edge = frame(
+      Seq(
+        "windowId" -> StringType,
+        "researcherA" -> StringType,
+        "researcherB" -> StringType,
+        "edgeId" -> StringType,
+        "jointPublicationCount" -> LongType,
+        "representativeWorkIds" -> ArrayType(StringType)
+      ),
+      Vector(
+        Seq(
+          "late",
+          ids(0),
+          ids(1),
+          StableIds.sparkCoauthorEdgeId(ids(0), ids(1), pairWindow, graphPolicy).toOption.get,
+          Long.box(1L),
+          Vector(work("pair")).asJava
+        )
+      )
+    )
+    val cfg = config(communityMax = 3)
+      .copy(windows = Vector(SparkWindow("early", Some(2015), Some(2015), Some(0)), pairWindow))
+    val result = Phase6DEJobs.build(
+      spark,
+      cfg,
+      input.copy(memberships = members, edges = edge),
+      lineage,
+      runId
+    )
+    assert(
+      result.communities.filter(col("windowId") === "early").first().getAs[Int]("iterations") == 1
+    )
+    assert(
+      result.communities
+        .filter(col("windowId") === "late")
+        .collect()
+        .forall(_.getAs[Int]("iterations") == 3)
+    )
+    assert(
+      result.communities.filter(col("windowId") === "early").first().getAs[Boolean]("converged")
+    )
+    assert(
+      result.metrics
+        .schema("context")
+        .dataType
+        .asInstanceOf[StructType]
+        .fieldNames
+        .toVector == Phase6Context.schema.fieldNames.toVector
+    )
+  }
+
+  test("multiwindow seeded BFS crosses checkpoint interval and retains six-hop evidence") {
+    val chain = Vector("A", "B", "C", "D", "E", "F", "G", "H")
+    val windows = Vector(
+      SparkWindow("all-years", None, None, None),
+      SparkWindow("early", Some(2015), Some(2015), Some(0)),
+      SparkWindow("late", Some(2016), Some(2016), Some(1))
+    )
+    val members = frame(
+      Seq("canonicalWorkId" -> StringType, "researcherId" -> StringType, "year" -> IntegerType),
+      chain.sliding(2).zipWithIndex.toVector.flatMap { case (pair, index) =>
+        Vector(2015, 2016).flatMap(y =>
+          pair.map(n => Seq(work(s"chain-$index-$y"), researcher(n), Int.box(y)))
+        )
+      }
+    )
+    val edges = frame(
+      Seq(
+        "windowId" -> StringType,
+        "researcherA" -> StringType,
+        "researcherB" -> StringType,
+        "edgeId" -> StringType,
+        "jointPublicationCount" -> LongType,
+        "representativeWorkIds" -> ArrayType(StringType)
+      ),
+      windows.flatMap(w =>
+        chain.sliding(2).zipWithIndex.map { case (pair, index) =>
+          val ids = pair.map(researcher).sorted
+          val works =
+            if (w.windowId == "all-years")
+              Vector(work(s"chain-$index-2016"), work(s"chain-$index-2015"))
+            else Vector(work(s"chain-$index-${w.startYear.get}"))
+          Seq(
+            w.windowId,
+            ids(0),
+            ids(1),
+            StableIds.sparkCoauthorEdgeId(ids(0), ids(1), w, graphPolicy).toOption.get,
+            Long.box(works.size.toLong),
+            works.asJava
+          )
+        }
+      )
+    )
+    val cfg = config(
+      pairs = Vector(BenchmarkPair("A", "G", "dblp-name"), BenchmarkPair("A", "H", "dblp-name")),
+      communityMax = 3
+    ).copy(windows = windows, sampledPathPairCount = 20, checkpointInterval = 5)
+    val result = Phase6DEJobs.build(
+      spark,
+      cfg,
+      input.copy(memberships = members, edges = edges),
+      lineage,
+      runId
+    )
+    val six = result.paths
+      .filter(
+        col("sourceResearcherId") === researcher("A") && col("targetResearcherId") === researcher(
+          "G"
+        )
+      )
+      .collect()
+    assert(six.length == 3)
+    assert(six.forall(r => r.getAs[String]("status") == "found" && r.getAs[Int]("hopCount") == 6))
+    val seven = result.paths
+      .filter(
+        col("sourceResearcherId") === researcher("A") && col("targetResearcherId") === researcher(
+          "H"
+        )
+      )
+      .collect()
+    assert(seven.length == 3 && seven.forall(_.getAs[String]("status") == "exceeded-maxHops"))
+    assert(result.paths.count() > 6L)
+  }
+
 }

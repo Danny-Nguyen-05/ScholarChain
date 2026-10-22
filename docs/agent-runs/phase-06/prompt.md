@@ -88,3 +88,56 @@ Branch `phase-6`, unchanged base/HEAD `8d5b9d48b2fbc1f03e13f3eabdef1bfa373969d4`
 
 
 The user subsequently supplied the **APPROVE** recheck and a NEXT PROMPT requiring approval retention, F1–F3 closure/R1-O1 registration, then confirmation of the user's commit before 6F+6G. The coordinator recorded those review dispositions. A read-only git check still found the approved 6D+6E tree uncommitted at HEAD `8d5b9d48b2fbc1f03e13f3eabdef1bfa373969d4`; the coordinator stops at that explicit commit gate. The user's next-subphase request does not authorize an agent commit.
+
+
+## Subphase 6F+6G work order
+
+The user replied **"done,"** after committing approved 6D+6E. Read-only preflight found a clean `phase-6` tree at **`6ae7378cbef90a176fd1faecae0dee0615eba9e3`**, commit `phase-06 spark-engineer: add collaboration metrics, graph analytics, and path evidence`; this is the 6F+6G base SHA. The plan hash remains `6df6d856df6c4c6ee0a8f00125e78af1bce5e789666399ae48a9443aec955096`.
+
+The user answered all Step 0 questions:
+
+1. 6F-1: **"Yes, use this limit (recommended)"** — factual templates under 1,200 characters; every stated number tied to source fields; no unsupported ranking language.
+2. 6G-1: **"Approve slice and caps (recommended)"** — up to 20,000 pinned DBLP 2026-10-03 publications, approved distributed-systems venues (PODC, DISC, ICDCS, OSDI, SOSP, NSDI, EuroSys, Middleware), 2005–2026. Prefer a verified local copy; otherwise cap total network download at **1.25 GiB (1,342,177,280 bytes)** and **30 minutes**, including retries/metadata, and stop/report if reached. These caps were stated before dataset network access.
+3. 6G-2: **"Yes, local and LLM disabled (recommended)"** — unchanged Hadoop → ER → Spark local pipeline; ER adjudication disabled; no live model calls.
+4. Distance estimate: **"Implement it (recommended)"** — implement seeded S-source mean distance and 90th-percentile effective diameter now.
+5. N1/N3/N4: **"Fix all three (recommended)"** — stop found BFS pairs, honor checkpoint intervals, correct LPA cache order, and share an explicit context schema before the real-data run.
+6. N2/N5: **"Implement and document (recommended)"** — per-window LPA iteration reporting, missing-benchmark-endpoint counter and sampling counter semantics; disclose two-person LPA oscillation in README/report.
+
+Scope is merged 6F+6G only: jobs 9–11, full CLI, carryover hardening, bounded slice and unchanged Hadoop/ER execution, complete per-table replay, module/independent tests, final README and one full stable-tree JDK 17 check. `dataset-engineer` `/root/dataset_6fg` owns `datasets/**`; `spark-engineer` `/root/spark_6fg` owns `modules/spark/**`; `test-engineer` `/root/test_6fg` owns `tests/**`; core changes are routed to the domain owner on demonstrated dependency. Coordinator executes existing CLIs and assembles `docs/agent-runs/phase-06/**`. Native agent IDs are these task paths; inherited current model, exact deployed child model build unavailable. No reviewer launch, commit, push, AWS or live LLM calls; do not start 6I. Existing human decisions are immutable.
+
+
+### Subphase 6F+6G execution provenance and stop
+
+The six approved answers above were implemented. The domain owner delivered the
+Job10 summary-kind prerequisite with15/15targeted tests. Dataset/Spark/independent
+owners kept their named paths; the coordinator executed supplied formatter
+commands and unchanged upstream CLIs. Capacity interruptions in owner turns were
+resumed with the same current model assignment; exact deployed models/app/tool
+build IDs are unavailable, not guessed. Observed toolchain: Java17.0.20.1,
+sbt1.10.7, Python3.14.5. Native shell/tool/agent APIs were used. The inherited
+Codex workflow is not claimed to be instructor-approved Claude Code equivalence.
+
+The full gate passed551/551 on the stable tree; both fresh bounded Spark runs
+match all28tables. `evidence/6fg/handoff.md` and `reviewer-prompt.md` provide the
+review handoff. No commit, push, reviewer launch, AWS/live model/store call or6I
+start occurred. All initial failures and retained evidence scope are disclosed;
+no previous human decision or historical accepted run was rewritten.
+
+
+## Subphase 6F+6G repair round 1 work order
+
+The user supplied the complete external REQUEST-CHANGES review and next prompt,
+now retained verbatim in `review.md`. Base/HEAD remains
+`6ae7378cbef90a176fd1faecae0dee0615eba9e3`; all existing uncommitted work is
+preserved. The coordinator asked F11's evidence-retention question with actual
+sizes (4,325,261 bytes / 68 files before repair additions); the user replied
+**"only fix the blockings bugs"**. This supersedes optional F4–F12 work.
+
+Scope: coordinator derives F1 stage DAG and F2 report comparison/disclosures from
+retained artifacts; test owner `/root/test_6fg` fixes F3 under `tests/**` with
+synthetic feature tests. The Spark owner reversed only the optional README
+changes made before the user's narrowing reply; its original snapshot SHA is
+restored. No production Spark/core/dataset/build changes or reruns are needed
+for evidence-only F1/F2. Existing logs/data stay intact. Run affected safety tests
+and one stable-tree full JDK17 check, update evidence/reports and return a
+read-only recheck prompt. No commit, push, reviewer launch, AWS/model call or6I.

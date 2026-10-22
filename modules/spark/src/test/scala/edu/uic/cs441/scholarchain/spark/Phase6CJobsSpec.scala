@@ -35,6 +35,7 @@ class Phase6CJobsSpec extends AnyFunSuite with BeforeAndAfterAll with BeforeAndA
       .config("spark.ui.retainedTasks", "100")
       .config("spark.sql.shuffle.partitions", "4")
       .config("spark.sql.session.timeZone", "UTC")
+      .config("spark.sql.jsonGenerator.ignoreNullFields", "false")
       .config("spark.sql.warehouse.dir", root.resolve("warehouse").toString)
       .getOrCreate()
     spark.sparkContext.setCheckpointDir(root.resolve("checkpoint").toString)
@@ -454,7 +455,13 @@ class Phase6CJobsSpec extends AnyFunSuite with BeforeAndAfterAll with BeforeAndA
     val unknown = extra("yearless", None)
     val future = extra("future-2027", Some(2027))
     val augmented = base.copy(
-      works = base.works.unionByName(unknown._1).unionByName(future._1),
+      works = base.works
+        .unionByName(unknown._1)
+        .unionByName(future._1)
+        .withColumn(
+          "year",
+          when(col("workId") === workId("w8"), lit(null).cast(IntegerType)).otherwise(col("year"))
+        ),
       mentions = base.mentions.unionByName(unknown._2).unionByName(future._2),
       teams = base.teams.unionByName(unknown._3).unionByName(future._3),
       pairs = base.pairs.unionByName(unknown._4).unionByName(future._4)
@@ -484,9 +491,9 @@ class Phase6CJobsSpec extends AnyFunSuite with BeforeAndAfterAll with BeforeAndA
       .select("value")
       .head()
       .getLong(0)
-    assert(counter("missingYearExcluded.2015-2017") == 1L)
-    assert(counter("missingYearExcluded.2018-2021") == 1L)
-    assert(counter("post2026WorksAllYearsOnly") == 1L)
+    assert(counter("yearlessWorksExcluded.2015-2017") == 2L)
+    assert(counter("yearlessWorksExcluded.2018-2021") == 2L)
+    assert(counter("worksBeyondLastBoundedYear") == 1L)
     assert(
       result.support
         .filter(
@@ -601,7 +608,9 @@ class Phase6CJobsSpec extends AnyFunSuite with BeforeAndAfterAll with BeforeAndA
       lineage,
       run
     )
-    assert(counter(result, "constraintBlockedWorkLinks") == 2L)
+    assert(counter(result, "constraintBlockedWorkGroups") == 2L)
+    // Three accepted-link rows fall within those two blocked groups.
+    assert(counter(result, "constraintBlockedWorkLinks") == 3L)
     def canonical(label: String): String = result.canonicalWorks
       .filter(col("workId") === workId(label))
       .select("canonicalWorkId")
@@ -928,4 +937,59 @@ class Phase6CJobsSpec extends AnyFunSuite with BeforeAndAfterAll with BeforeAndA
       Phase6CMain.requireReusable(output, logical)
     }
   }
+  test(
+    "representative ID authority survives absent DOI columns and normalized ORCIDs do not conflict"
+  ) {
+    val base = input
+    val lineage =
+      SparkLineage(hadoop, snapshot, er, "module-er-v1", "a" * 64, Vector.empty, Vector.empty)
+    val absentDoi = base.works.withColumn("doi", lit(null).cast(StringType))
+    val paddedOrcids = base.mentions.withColumn(
+      "observedOrcid",
+      when(
+        col("nameText") === "A",
+        when(col("sourceRecordId").endsWith("w1"), lit(" 0000-0002-1825-0097 "))
+          .otherwise(lit("0000-0002-1825-0097"))
+      ).otherwise(col("observedOrcid"))
+    )
+    val nullLink =
+      frame(Seq("leftId" -> StringType, "rightId" -> StringType), Vector(Seq(null, null)))
+    val result = Phase6CJobs.build(
+      spark,
+      config,
+      base.copy(
+        works = absentDoi,
+        mentions = paddedOrcids,
+        researcherLinks = base.researcherLinks.unionByName(nullLink)
+      ),
+      lineage,
+      run
+    )
+    val doi = StableIds.workIdFromDoi("10.5555/module-g1-w1").toOption.get
+    assert(
+      result.canonicalWorks
+        .filter(col("workId") === workId("w1"))
+        .select("canonicalWorkId")
+        .first()
+        .getString(0) == doi
+    )
+    assert(counter(result, "conflictingDblpOrcidGroups") == 0L)
+    assert(counter(result, "acceptedResearcherLinksMissingEndpoint") == 1L)
+    val published = result.graphNodes
+      .filter(col("nodeId") === researcher("A"))
+      .toJSON
+      .collect()
+      .map(j => CoreJson.parse[GraphNode](j).toOption.get)
+    assert(published.length == 1)
+    assert(published(0).properties == Vector(NamedText("orcid.0", "0000-0002-1825-0097")))
+    assert(DomainValidation.check(published(0)).isRight)
+    assert(
+      result.researchers
+        .filter(col("researcherId") === researcher("A"))
+        .select("externalOrcids")
+        .first()
+        .getSeq[String](0) == Seq("0000-0002-1825-0097")
+    )
+  }
+
 }

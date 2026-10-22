@@ -1,0 +1,109 @@
+INTERMEDIATE LOG EXCERPT: independent-plan-memory-failure.txt
+Repeated timestamped Spark WARN lines removed; commands, test results and error traces retained.
+Full original: target/phase6-inputs/6fg-runtime/full-intermediate-logs/independent-plan-memory-failure.txt
+Original bytes=45437 sha256=1884a372b7198d3dbdefcf3513a0f0988539199462568be6977b1a6a1645bf7e
+Final stable-tree gate remains unfiltered in final-check.txt.
+
+[info] welcome to sbt 1.10.7 (Homebrew Java 17.0.20.1)
+[info] loading settings for project scholarchain-build from plugins.sbt...
+[info] loading project definition from /Users/danny/Documents/UIC/CS441/ScholarChain/project
+[info] loading settings for project root from build.sbt...
+[info] set current project to root (in build file:/Users/danny/Documents/UIC/CS441/ScholarChain/)
+[info] scalafmt: Formatting 2 Scala sources (/Users/danny/Documents/UIC/CS441/ScholarChain/tests)...
+[success] Total time: 1 s, completed Oct 22, 2026, 1:17:22 PM
+[info] compiling 3 Scala sources to /Users/danny/Documents/UIC/CS441/ScholarChain/modules/spark/target/scala-3.3.4/classes ...
+[info] done compiling
+[info] compiling 2 Scala sources to /Users/danny/Documents/UIC/CS441/ScholarChain/tests/target/scala-3.3.4/test-classes ...
+[info] done compiling
+[info] IndependentPhase6FGSpec:
+[info] - G1 disjoint-window recomputation gives exact D deltas and explicit entry/exit rows
+[info] - S-source estimate on a three-node chain has exact ordered-pair mean and P90
+[info] - empty configured window produces no invented metrics, paths, summaries or estimates
+[info] - near-Hadoop-limit team preserves every distinct pair and reports ORCID conflict without splitting
+[info] - community continuity uses best Jaccard and handles tied candidate communities
+[info] - all four factual summary templates trace every number and fact to the exact source row/field
+[info] - complete export rereads every table, validates declared core records and binds four manifests to paths counts and hashes
+[info] edu.uic.cs441.scholarchain.independent.IndependentPhase6FGSpec *** ABORTED ***
+[info]   java.lang.OutOfMemoryError: Java heap space
+[info]   at java.base/java.util.Arrays.copyOfRange(Arrays.java:3822)
+[info]   at java.base/java.lang.StringLatin1.newString(StringLatin1.java:769)
+[info]   at java.base/java.lang.StringBuilder.toString(StringBuilder.java:453)
+[info]   at org.apache.spark.sql.catalyst.util.StringConcat.toString(StringUtils.scala:64)
+[info]   at org.apache.spark.sql.catalyst.util.StringUtils$PlanStringConcat.toString(StringUtils.scala:152)
+[info]   at org.apache.spark.sql.execution.QueryExecution.explainString(QueryExecution.scala:254)
+[info]   at org.apache.spark.sql.execution.adaptive.AdaptiveSparkPlanExec.onUpdatePlan(AdaptiveSparkPlanExec.scala:780)
+[info]   at org.apache.spark.sql.execution.adaptive.AdaptiveSparkPlanExec.$anonfun$getFinalPhysicalPlan$9(AdaptiveSparkPlanExec.scala:375)
+[info]   at org.apache.spark.sql.execution.adaptive.AdaptiveSparkPlanExec$$Lambda$3166/0x0000007001cca108.apply$mcVJ$sp(Unknown Source)
+[info]   at scala.runtime.java8.JFunction1$mcVJ$sp.apply(JFunction1$mcVJ$sp.scala:18)
+[info]   ...
+[error] Uncaught exception when running edu.uic.cs441.scholarchain.independent.IndependentPhase6FGSpec: java.lang.OutOfMemoryError: Java heap space
+[error] sbt.ForkMain$ForkError: java.lang.OutOfMemoryError: Java heap space
+[error] 	at java.base/java.util.Arrays.copyOfRange(Arrays.java:3822)
+[error] 	at java.base/java.lang.StringLatin1.newString(StringLatin1.java:769)
+[error] 	at java.base/java.lang.StringBuilder.toString(StringBuilder.java:453)
+[error] 	at org.apache.spark.sql.catalyst.util.StringConcat.toString(StringUtils.scala:64)
+[error] 	at org.apache.spark.sql.catalyst.util.StringUtils$PlanStringConcat.toString(StringUtils.scala:152)
+[error] 	at org.apache.spark.sql.execution.QueryExecution.explainString(QueryExecution.scala:254)
+[error] 	at org.apache.spark.sql.execution.adaptive.AdaptiveSparkPlanExec.onUpdatePlan(AdaptiveSparkPlanExec.scala:780)
+[error] 	at org.apache.spark.sql.execution.adaptive.AdaptiveSparkPlanExec.$anonfun$getFinalPhysicalPlan$9(AdaptiveSparkPlanExec.scala:375)
+[error] 	at org.apache.spark.sql.execution.adaptive.AdaptiveSparkPlanExec$$Lambda$3166/0x0000007001cca108.apply$mcVJ$sp(Unknown Source)
+[error] 	at scala.runtime.java8.JFunction1$mcVJ$sp.apply(JFunction1$mcVJ$sp.scala:18)
+[error] 	at scala.Option.foreach(Option.scala:437)
+[error] 	at org.apache.spark.sql.execution.adaptive.AdaptiveSparkPlanExec.$anonfun$getFinalPhysicalPlan$1(AdaptiveSparkPlanExec.scala:375)
+[error] 	at org.apache.spark.sql.execution.adaptive.AdaptiveSparkPlanExec$$Lambda$2358/0x0000007001af3f90.apply(Unknown Source)
+[error] 	at org.apache.spark.sql.SparkSession.withActive(SparkSession.scala:900)
+[error] 	at org.apache.spark.sql.execution.adaptive.AdaptiveSparkPlanExec.getFinalPhysicalPlan(AdaptiveSparkPlanExec.scala:272)
+[error] 	at org.apache.spark.sql.execution.adaptive.AdaptiveSparkPlanExec.withFinalPlanUpdate(AdaptiveSparkPlanExec.scala:419)
+[error] 	at org.apache.spark.sql.execution.adaptive.AdaptiveSparkPlanExec.doExecute(AdaptiveSparkPlanExec.scala:404)
+[error] 	at org.apache.spark.sql.execution.SparkPlan.$anonfun$execute$1(SparkPlan.scala:195)
+[error] 	at org.apache.spark.sql.execution.SparkPlan$$Lambda$2227/0x0000007001a94630.apply(Unknown Source)
+[error] 	at org.apache.spark.sql.execution.SparkPlan.$anonfun$executeQuery$1(SparkPlan.scala:246)
+[error] 	at org.apache.spark.sql.execution.SparkPlan$$Lambda$2265/0x0000007001ac7b80.apply(Unknown Source)
+[error] 	at org.apache.spark.rdd.RDDOperationScope$.withScope(RDDOperationScope.scala:151)
+[error] 	at org.apache.spark.sql.execution.SparkPlan.executeQuery(SparkPlan.scala:243)
+[error] 	at org.apache.spark.sql.execution.SparkPlan.execute(SparkPlan.scala:191)
+[error] 	at org.apache.spark.sql.Dataset.$anonfun$checkpoint$1(Dataset.scala:728)
+[error] 	at org.apache.spark.sql.Dataset$$Lambda$2156/0x0000007001a7edf0.apply(Unknown Source)
+[error] 	at org.apache.spark.sql.Dataset.$anonfun$withAction$2(Dataset.scala:4323)
+[error] 	at org.apache.spark.sql.Dataset$$Lambda$2223/0x0000007001a92850.apply(Unknown Source)
+[error] 	at org.apache.spark.sql.execution.QueryExecution$.withInternalError(QueryExecution.scala:546)
+[error] 	at org.apache.spark.sql.Dataset.$anonfun$withAction$1(Dataset.scala:4321)
+[error] 	at org.apache.spark.sql.Dataset$$Lambda$2158/0x0000007001a7f6a8.apply(Unknown Source)
+[error] 	at org.apache.spark.sql.execution.SQLExecution$.$anonfun$withNewExecutionId$6(SQLExecution.scala:125)
+[info] IndependentPhase6SafetySpec:
+[info] - production Spark sources keep forbidden driver actions and graph APIs outside BoundedActions
+[info] - output gate refuses partial mismatched and tampered runs and reuses only the identical manifest
+[info] - unknown Spark config schema is refused before any input or output work
+[info] - streaming event-log summary reports exact stage tasks partitions shuffle records and failures
+[info] IndependentPhase6PipelineSpec:
+java.lang.Exception: java.lang.OutOfMemoryError: Java heap space
+	at org.apache.hadoop.mapred.LocalJobRunner$Job.runTasks(LocalJobRunner.java:492) ~[hadoop-mapreduce-client-common-3.3.6.jar:?]
+	at org.apache.hadoop.mapred.LocalJobRunner$Job.run(LocalJobRunner.java:552) [hadoop-mapreduce-client-common-3.3.6.jar:?]
+Caused by: java.lang.OutOfMemoryError: Java heap space
+	at org.apache.hadoop.mapred.MapTask$MapOutputBuffer.init(MapTask.java:1001) ~[hadoop-mapreduce-client-core-3.3.6.jar:?]
+	at org.apache.hadoop.mapred.MapTask.createSortingCollector(MapTask.java:409) ~[hadoop-mapreduce-client-core-3.3.6.jar:?]
+	at org.apache.hadoop.mapred.MapTask.access$100(MapTask.java:83) ~[hadoop-mapreduce-client-core-3.3.6.jar:?]
+	at org.apache.hadoop.mapred.MapTask$NewOutputCollector.<init>(MapTask.java:711) ~[hadoop-mapreduce-client-core-3.3.6.jar:?]
+	at org.apache.hadoop.mapred.MapTask.runNewMapper(MapTask.java:783) ~[hadoop-mapreduce-client-core-3.3.6.jar:?]
+	at org.apache.hadoop.mapred.MapTask.run(MapTask.java:348) ~[hadoop-mapreduce-client-core-3.3.6.jar:?]
+	at org.apache.hadoop.mapred.LocalJobRunner$Job$MapTaskRunnable.run(LocalJobRunner.java:271) ~[hadoop-mapreduce-client-common-3.3.6.jar:?]
+	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:539) ~[?:?]
+	at java.util.concurrent.FutureTask.run(FutureTask.java:264) ~[?:?]
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136) ~[?:?]
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635) ~[?:?]
+	at java.lang.Thread.run(Thread.java:840) ~[?:?]
+[info] - committed tiny fixture completes unchanged Hadoop then offline ER then all Spark jobs *** FAILED ***
+[info]   prepared.isRight was false Left(J01 failed) (IndependentPhase6PipelineSpec.scala:34)
+[info] Run completed in 57 seconds, 656 milliseconds.
+[info] Total number of tests run: 12
+[info] Suites: completed 2, aborted 1
+[info] Tests: succeeded 11, failed 1, canceled 0, ignored 0, pending 0
+[info] *** 1 SUITE ABORTED ***
+[info] *** 1 TEST FAILED ***
+[error] Failed tests:
+[error] 	edu.uic.cs441.scholarchain.independent.IndependentPhase6PipelineSpec
+[error] Error during tests:
+[error] 	edu.uic.cs441.scholarchain.independent.IndependentPhase6FGSpec
+[error] (independentTests / Test / testOnly) sbt.TestsFailedException: Tests unsuccessful
+[error] Total time: 62 s (01:02), completed Oct 22, 2026, 1:18:24 PM
+exit=1

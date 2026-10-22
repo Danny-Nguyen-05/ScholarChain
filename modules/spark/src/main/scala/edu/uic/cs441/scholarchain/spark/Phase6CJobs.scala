@@ -165,15 +165,6 @@ object Phase6CJobs {
       StringType
     )
     spark.udf.register(
-      "phase6Context",
-      new UDF1[String, String] {
-        def call(windowId: String): String = CoreJson.compact(
-          SparkRecordContext(SchemaVersions.sparkAnalytics, runId, Option(windowId), lineage)
-        )
-      },
-      StringType
-    )
-    spark.udf.register(
       "phase6GraphEdgeId",
       new UDF1[Row, String] {
         def call(fact: Row): String = {
@@ -286,17 +277,17 @@ object Phase6CJobs {
       .groupBy("researcherId")
       .agg(
         min("nameText").as("displayName"),
-        sort_array(collect_set("observedOrcid")).as("externalOrcids"),
+        sort_array(collect_set(trim(col("observedOrcid")))).as("externalOrcids"),
         sort_array(collect_set("mentionId")).as("sourceMentionIds")
       )
       .withColumn("runId", lit(runId))
-      .withColumn("schemaVersion", lit(SchemaVersions.domain))
+      .withColumn("schemaVersion", lit(SchemaVersions.sparkAnalytics))
     val conflictingDblpOrcids = dblp
       .filter(col("observedOrcid").isNotNull && trim(col("observedOrcid")) =!= "")
       .groupBy("researcherId")
       .agg(
-        countDistinct("observedOrcid").as("distinctOrcids"),
-        sort_array(collect_set("observedOrcid")).as("orcids")
+        countDistinct(trim(col("observedOrcid"))).as("distinctOrcids"),
+        sort_array(collect_set(trim(col("observedOrcid")))).as("orcids")
       )
       .filter(col("distinctOrcids") > 1L)
       .cache()
@@ -336,8 +327,8 @@ object Phase6CJobs {
       .groupBy("groupId")
       .agg(
         min(when(col("source") === "DBLP", col("workId"))).as("dblpWorkId"),
-        min(when(col("doi").isNotNull, col("workId"))).as("doiWorkId"),
-        min(when(col("arxivId").isNotNull, col("workId"))).as("arxivWorkId"),
+        min(when(col("workId").startsWith("work:doi:"), col("workId"))).as("doiWorkId"),
+        min(when(col("workId").startsWith("work:arxiv:"), col("workId"))).as("arxivWorkId"),
         min("workId").as("minWorkId")
       )
       .withColumn(
@@ -505,23 +496,8 @@ object Phase6CJobs {
       .agg(sort_array(collect_list(struct(col("rank"), col("canonicalWorkId")))).as("ordered"))
       .withColumn("representativeWorkIds", expr("transform(ordered, x -> x.canonicalWorkId)"))
       .drop("ordered")
-    val contextSchema = new StructType()
-      .add("schemaVersion", StringType)
-      .add("runId", StringType)
-      .add("windowId", StringType)
-      .add(
-        "lineage",
-        new StructType()
-          .add("hadoopRunId", StringType)
-          .add("hadoopSnapshot", StringType)
-          .add("entityResolutionRunId", StringType)
-          .add("entityResolutionPolicyVersion", StringType)
-          .add("entityResolutionPolicyHash", StringType)
-          .add("sourceWorkIds", ArrayType(StringType))
-          .add("sourceMentionIds", ArrayType(StringType))
-      )
-    def context(df: DataFrame): DataFrame =
-      df.withColumn("context", from_json(expr("phase6Context(windowId)"), contextSchema))
+    val contextSchema = Phase6Context.schema
+    def context(df: DataFrame): DataFrame = Phase6Context.add(df, lineage, runId, col("windowId"))
     val edges =
       context(edgeMaterial.join(reps, Seq("windowId", "researcherA", "researcherB"))).cache()
     val support = context(
@@ -545,12 +521,39 @@ object Phase6CJobs {
       "conflictingDblpOrcidGroups" -> BoundedActions.count(conflictingDblpOrcids),
       "constraintBlockedResearcherGroups" -> BoundedActions.count(blockedResearcherGroups),
       "ambiguousNonDblpMentions" -> BoundedActions.count(
-        groupTargets.filter(col("targetCount") > 1)
+        researcherGroups
+          .join(groupTargets.filter(col("targetCount") > 1), Seq("label"))
+          .join(
+            mentions.filter(col("source") =!= "DBLP").select(col("mentionId").as("id")),
+            Seq("id")
+          )
       ),
       "unresolvedMentions" -> BoundedActions.count(
         mentions.join(mapping, Seq("mentionId"), "left_anti")
       ),
-      "constraintBlockedWorkLinks" -> BoundedActions.count(blockedGroups),
+      "constraintBlockedWorkLinks" -> BoundedActions.count(
+        workLinks
+          .join(candidateWorkGroups.select(col("id").as("leftId"), col("label")), Seq("leftId"))
+          .join(blockedGroups, Seq("label"))
+      ),
+      "constraintBlockedWorkGroups" -> BoundedActions.count(blockedGroups),
+      "ambiguousResearcherLinkGroups" -> BoundedActions.count(
+        groupTargets.filter(col("targetCount") > 1)
+      ),
+      "ambiguousNonDblpMentionRows" -> BoundedActions.count(
+        researcherGroups
+          .join(groupTargets.filter(col("targetCount") > 1), Seq("label"))
+          .join(
+            mentions.filter(col("source") =!= "DBLP").select(col("mentionId").as("id")),
+            Seq("id")
+          )
+      ),
+      "acceptedResearcherLinksMissingEndpoint" -> BoundedActions.count(
+        input.researcherLinks.filter(col("leftId").isNull || col("rightId").isNull)
+      ),
+      "acceptedWorkLinksMissingEndpoint" -> BoundedActions.count(
+        input.workLinks.filter(col("leftId").isNull || col("rightId").isNull)
+      ),
       "nonAuthoritativeDblpObservationsDropped" -> BoundedActions.count(
         nonAuthoritativeDblpObservations
       ),
@@ -583,16 +586,21 @@ object Phase6CJobs {
       "canonicalResearchers" -> BoundedActions.count(researchers),
       "allYearsEdges" -> BoundedActions.count(edges.filter(col("windowId") === "all-years"))
     ) ++ config.windows.filter(w => w.startYear.nonEmpty || w.endYear.nonEmpty).map { w =>
-      s"missingYearExcluded.${w.windowId}" -> BoundedActions.count(
-        validPairs
-          .filter(col("year").isNull)
+      s"yearlessWorksExcluded.${w.windowId}" -> BoundedActions.count(
+        canonicalWorks
+          .filter(col("hasDblp") && col("year").isNull)
           .select("canonicalWorkId")
           .distinct()
       )
     } ++ Vector(
-      "post2026WorksAllYearsOnly" -> BoundedActions.count(
+      "worksBeyondLastBoundedYear" -> BoundedActions.count(
         canonicalWorks
-          .filter(col("hasDblp") && col("year") > 2026)
+          .filter(
+            col("hasDblp") && col("year") > config.windows
+              .flatMap(_.endYear)
+              .maxOption
+              .getOrElse(Int.MaxValue)
+          )
           .select("canonicalWorkId")
           .distinct()
       )
@@ -687,16 +695,24 @@ object Phase6CJobs {
           contextSchema
         )
       )
+      .join(
+        researchers.select(
+          col("researcherId").as("nodeId"),
+          expr(
+            "transform(externalOrcids, (value, ordinal) -> named_struct('name',concat('orcid.',cast(ordinal as string)), 'value',value))"
+          ).as("externalProperties")
+        ),
+        Seq("nodeId"),
+        "left"
+      )
       .withColumn(
         "properties",
-        array().cast(
-          ArrayType(
-            new StructType()
-              .add("name", StringType)
-              .add("value", StringType)
-          )
+        coalesce(
+          col("externalProperties"),
+          array().cast(ArrayType(new StructType().add("name", StringType).add("value", StringType)))
         )
       )
+      .drop("externalProperties")
       .withColumn(
         "provenance",
         struct(
@@ -766,10 +782,13 @@ object Phase6CJobs {
             coalesce(col("workId"), col("mentionWorkId")).as("evidenceWorkId")
           )
           .filter(col("fromId").isNotNull)
-    val graphEdges = resolveEdges
+    val graphEdgesBeforeEvidence = resolveEdges
       .unionByName(authoredEdges)
       .unionByName(venueEdges)
       .unionByName(enrichmentEdges)
+    val graphEdgesWithoutEvidence =
+      BoundedActions.count(graphEdgesBeforeEvidence.filter(col("evidenceWorkId").isNull))
+    val graphEdges = graphEdgesBeforeEvidence
       .filter(col("evidenceWorkId").isNotNull)
       .withColumn(
         "evidenceRank",
@@ -853,19 +872,32 @@ object Phase6CJobs {
     val integrity = violations.unionByName(missingGraphEndpoints).checkpoint(eager = true)
     if (config.failOnHardInvariant && BoundedActions.exists(integrity.filter(col("hardFailure"))))
       throw new IllegalStateException("Phase 6C hard graph integrity invariant failed")
-    val counters = baseCounters.unionByName(
-      baseCounters
-        .limit(1)
-        .withColumn("name", lit("missingGraphEndpoints"))
-        .withColumn("value", lit(BoundedActions.count(missingGraphEndpoints)))
-        .withColumn("detail", lit("missing fromId or toId references"))
-    )
+    val counters = baseCounters
+      .unionByName(
+        baseCounters
+          .limit(1)
+          .withColumn("name", lit("graphEdgesMissingEvidenceWorkDropped"))
+          .withColumn("value", lit(graphEdgesWithoutEvidence))
+          .withColumn(
+            "detail",
+            lit("candidate graph edges omitted because no source work evidence")
+          )
+      )
+      .unionByName(
+        baseCounters
+          .limit(1)
+          .withColumn("name", lit("missingGraphEndpoints"))
+          .withColumn("value", lit(BoundedActions.count(missingGraphEndpoints)))
+          .withColumn("detail", lit("missing fromId or toId references"))
+      )
     val finalResearchers = researchers.checkpoint(eager = true)
     val finalMentions = mentions.checkpoint(eager = true)
     val finalWorks = works.checkpoint(eager = true)
     val finalCanonicalWorks = canonicalWorks.checkpoint(eager = true)
-    val finalMemberships = memberships.checkpoint(eager = true)
-    val finalEdges = edges.checkpoint(eager = true)
+    val finalMemberships =
+      Phase6Plans.record("job01-authoritative-memberships", memberships).checkpoint(eager = true)
+    val finalEdges =
+      Phase6Plans.record("job02-windowed-coauthorship", edges).checkpoint(eager = true)
     val finalSupport = support.checkpoint(eager = true)
     Vector(
       works,

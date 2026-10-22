@@ -276,6 +276,30 @@ class SparkAnalyticsContractSpec extends AnyFunSuite {
     assert(SparkAnalyticsValidation.check(summary.copy(policyVersion = "graph-v2")).isLeft)
   }
 
+  test("semantic summary entities match their declared type and use well-formed IDs") {
+    def row(kind: String, entity: String): SemanticSummary = summary.copy(
+      summaryType = kind,
+      entityId = entity,
+      summaryId = StableIds
+        .sparkSemanticSummaryId(entity, summary.policyVersion, "all-years", kind, summary.text)
+        .toOption
+        .get
+    )
+
+    val cases = Vector(
+      ("researcher-profile", a, work, "researcher:dblp:" + "A" * 64),
+      ("community", communityA, a, "community:" + "a" * 63),
+      ("collaboration-path", path.pathEvidenceId, communityA, "path-evidence:" + "A" * 64),
+      ("paper", work, a, "work:unknown:example")
+    )
+    cases.foreach { case (kind, valid, wrongKind, malformed) =>
+      assert(SparkAnalyticsValidation.check(row(kind, valid)).isRight, kind)
+      assert(SparkAnalyticsValidation.check(row(kind, wrongKind)).isLeft, s"$kind wrong kind")
+      assert(SparkAnalyticsValidation.check(row(kind, malformed)).isLeft, s"$kind malformed ID")
+    }
+    assert(SparkAnalyticsValidation.check(summary).isRight)
+  }
+
   test("metrics companion enforces the frozen arithmetic and max-team bounds") {
     val invalid = Vector(
       metrics.copy(averageCoauthorsPerPaper = -1.0) -> "averageCoauthorsPerPaper must be >= 0",

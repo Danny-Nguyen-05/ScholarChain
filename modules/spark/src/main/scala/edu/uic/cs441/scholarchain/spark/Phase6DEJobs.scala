@@ -44,23 +44,7 @@ object Phase6DEJobs {
   }
 
   private def withContext(df: DataFrame, lineage: SparkLineage, runId: String): DataFrame = {
-    val sample = CoreJson.compact(
-      SparkRecordContext(
-        SchemaVersions.sparkAnalytics,
-        runId,
-        Some("all-years"),
-        lineage
-      )
-    )
-    val context = struct(
-      lit(SchemaVersions.sparkAnalytics).as("schemaVersion"),
-      lit(runId).as("runId"),
-      col("windowId").as("windowId"),
-      from_json(lit(CoreJson.compact(lineage)), schema_of_json(lit(CoreJson.compact(lineage))))
-        .as("lineage")
-    )
-    // Parse against the wire shape so the nested field order and nullability match core examples.
-    df.withColumn("context", from_json(to_json(context), schema_of_json(lit(sample))))
+    Phase6Context.add(df, lineage, runId, col("windowId"))
   }
 
   private def idUdf(spark: SparkSession, config: SparkAnalyticsConfig): Unit = {
@@ -195,6 +179,7 @@ object Phase6DEJobs {
         .unionByName(offered)
         .groupBy("windowId", "researcherId")
         .agg(min("label").as("label"))
+      Phase6Plans.record("job04-components-propagation", next)
       if ((iteration + 1) % config.checkpointInterval == 0)
         next = next.checkpoint(eager = true)
       next = next.cache()
@@ -299,6 +284,7 @@ object Phase6DEJobs {
         .join(candidate, Seq("windowId", "researcherId"), "left")
         .withColumn("coreness", least(col("coreness"), coalesce(col("h"), lit(0))))
         .drop("h")
+      Phase6Plans.record("job08-kcore-h-index", next)
       if ((iteration + 1) % config.checkpointInterval == 0)
         next = next.checkpoint(eager = true)
       next = next.cache()
@@ -344,34 +330,42 @@ object Phase6DEJobs {
       .select("windowId")
       .distinct()
       .withColumn("finalChangedCount", lit(0L))
+      .withColumn("iterations", lit(0))
+      .withColumn("done", lit(false))
     while (changed > 0 && iteration < config.communityMaxIterations) {
-      val vote = adjacency
-        .join(
-          labels.select(col("windowId"), col("researcherId").as("dst"), col("label")),
-          Seq("windowId", "dst")
-        )
-        .groupBy("windowId", "src", "label")
-        .agg(sum("weight").as("voteWeight"))
-        .withColumn(
-          "rank",
-          row_number().over(
-            Window
-              .partitionBy("windowId", "src")
-              .orderBy(col("voteWeight").desc, col("label"))
+      val vote = Phase6Plans.record(
+        "job06-community-vote",
+        adjacency
+          .join(
+            labels.select(col("windowId"), col("researcherId").as("dst"), col("label")),
+            Seq("windowId", "dst")
           )
-        )
-        .filter(col("rank") === 1)
-        .select(col("windowId"), col("src").as("researcherId"), col("label"))
+          .groupBy("windowId", "src", "label")
+          .agg(sum("weight").as("voteWeight"))
+          .withColumn(
+            "rank",
+            row_number().over(
+              Window
+                .partitionBy("windowId", "src")
+                .orderBy(col("voteWeight").desc, col("label"))
+            )
+          )
+          .filter(col("rank") === 1)
+          .select(col("windowId"), col("src").as("researcherId"), col("label"))
+      )
       var next = labels
         .select("windowId", "researcherId")
         .join(vote, Seq("windowId", "researcherId"), "left")
         .withColumn("label", coalesce(col("label"), col("researcherId")))
       if ((iteration + 1) % config.checkpointInterval == 0)
         next = next.checkpoint(eager = true)
+      next = next.cache()
+      BoundedActions.count(next)
       val differences = labels
         .as("old")
         .join(next.as("new"), Seq("windowId", "researcherId"))
         .filter(col("old.label") =!= col("new.label"))
+      val previousChanges = changes
       changes = vertices
         .select("windowId")
         .distinct()
@@ -384,8 +378,21 @@ object Phase6DEJobs {
         )
         .na
         .fill(0L, Seq("finalChangedCount"))
+        .join(
+          previousChanges.select(
+            col("windowId"),
+            col("iterations").as("previousIterations"),
+            col("done").as("previousDone")
+          ),
+          Seq("windowId")
+        )
+        .withColumn(
+          "iterations",
+          when(col("previousDone"), col("previousIterations")).otherwise(lit(iteration + 1))
+        )
+        .withColumn("done", col("previousDone") || col("finalChangedCount") === 0L)
+        .drop("previousIterations", "previousDone")
         .checkpoint(eager = true)
-      next = next.cache()
       changed = BoundedActions.scalarLong(
         changes.select(
           coalesce(sum("finalChangedCount"), lit(0L))
@@ -493,6 +500,10 @@ object Phase6DEJobs {
       lineage: SparkLineage,
       runId: String
   ): Phase6DEResult = {
+    // Spark 3.5.4 can retain eliminated expression IDs in Union constraints when an iterative
+    // union is checkpointed. Disable inferred constraints (an optimizer-only feature) for this
+    // session, including later lazy publishers; row predicates and validations remain explicit.
+    spark.conf.set("spark.sql.constraintPropagation.enabled", "false")
     SparkAnalyticsConfigLoader
       .validate(config)
       .fold(e => throw new IllegalArgumentException(e.toString), identity)
@@ -519,6 +530,7 @@ object Phase6DEJobs {
     val adjacency = arcs(edges)
       .repartition(col("windowId"), col("src"))
       .checkpoint(eager = true)
+    Phase6Plans.record("job04-components-input", adjacency)
     val (componentsRaw, componentIterations, componentLabelChanges) =
       connected(vertices, adjacency, config)
     val components =
@@ -526,7 +538,7 @@ object Phase6DEJobs {
         .checkpoint(eager = true)
     val summaries = componentSummary(componentsRaw, lineage, runId).checkpoint(eager = true)
     val (cores, coreIterations, coreChanges) = kCore(vertices, adjacency, config)
-    val metricBase = metricsBase(active, edges, config)
+    val metricBase = Phase6Plans.record("job03-metrics", metricsBase(active, edges, config))
     val badWeightedDegree = metricBase.filter(
       col("weightedDegree") =!=
         col("totalCoauthorOccurrences")
@@ -556,9 +568,8 @@ object Phase6DEJobs {
       communitiesRaw
         .select("windowId", "researcherId", "communityId")
         .join(communityChanges, Seq("windowId"))
-        .withColumn("iterations", lit(communityIterations))
         .withColumn("converged", col("finalChangedCount") === 0L)
-        .drop("finalChangedCount"),
+        .drop("finalChangedCount", "done"),
       lineage,
       runId
     )
@@ -568,8 +579,8 @@ object Phase6DEJobs {
         .groupBy("windowId", "communityId")
         .agg(count("*").as("size"))
         .join(communityChanges, Seq("windowId"))
-        .withColumn("iterations", lit(communityIterations))
-        .withColumn("converged", col("finalChangedCount") === 0L),
+        .withColumn("converged", col("finalChangedCount") === 0L)
+        .drop("done"),
       lineage,
       runId
     )
@@ -596,7 +607,11 @@ object Phase6DEJobs {
       lineage,
       runId
     ).checkpoint(eager = true)
-    val bridges = bridgeMeasures(config, edges, communities, lineage, runId)
+    val bridges = Phase6Plans
+      .record(
+        "job07-bridge-aggregation",
+        bridgeMeasures(config, edges, communities, lineage, runId)
+      )
       .checkpoint(eager = true)
     val metrics = withContext(
       metricBase
@@ -678,6 +693,24 @@ object Phase6DEJobs {
         paths.filter(col("status") === "exceeded-maxHops")
       ),
       "pathSelectedPairs" -> BoundedActions.count(paths),
+      "pathMissingBenchmarkEndpoints" -> config.benchmarkPairs.map { pair =>
+        def rid(value: String): String = if (pair.endpointKind == "researcher-id") value
+        else StableIds.researcherIdFromDblpName(config.identityPolicyVersion, value).toOption.get
+        config.windows
+          .count(w =>
+            !BoundedActions.exists(
+              vertices.filter(
+                col("windowId") === w.windowId && col("researcherId") === rid(pair.left)
+              )
+            ) ||
+              !BoundedActions.exists(
+                vertices.filter(
+                  col("windowId") === w.windowId && col("researcherId") === rid(pair.right)
+                )
+              )
+          )
+          .toLong
+      }.sum,
       "pathSeededSamplePairs" -> sampledPairs,
       "foundPathHops" -> BoundedActions
         .scalarLong(paths.select(coalesce(sum("hopCount"), lit(0L)).as("hopCount")), "hopCount"),
@@ -788,7 +821,13 @@ object Phase6DEJobs {
           .select("windowId", "sourceResearcherId", "targetResearcherId")
           .withColumn("selection", lit("seeded-sample"))
       }
-    val sampledPairs = BoundedActions.count(sampled)
+    val sampledPairs = BoundedActions.count(
+      sampled.join(
+        benchmark.select("windowId", "sourceResearcherId", "targetResearcherId"),
+        Seq("windowId", "sourceResearcherId", "targetResearcherId"),
+        "left_anti"
+      )
+    )
     val pairs = benchmark
       .unionByName(sampled)
       .dropDuplicates("windowId", "sourceResearcherId", "targetResearcherId")
@@ -864,22 +903,31 @@ object Phase6DEJobs {
       val rank = Window
         .partitionBy((pairKeys.map(col) :+ col("node"))*)
         .orderBy(col("predecessor"), to_json(col("orderedResearcherIds")))
-      val next = candidate
+      Phase6Plans.record("job05-bfs-frontier", candidate)
+      var next = candidate
         .withColumn("rank", row_number().over(rank))
         .filter(col("rank") === 1)
         .drop("rank", "predecessor")
-        .checkpoint(eager = true)
+      if ((distance + 1) % config.checkpointInterval == 0) next = next.checkpoint(eager = true)
       distance += 1
-      found = found.unionByName(
-        next
-          .filter(col("node") === col("targetResearcherId"))
-          .withColumn("distance", lit(distance))
-      )
+      // Found paths are capped selected-pair outputs, not a graph frontier. Cutting this small
+      // metadata lineage each hop avoids recursively embedding the complete search in its gate.
+      found = found
+        .unionByName(
+          next
+            .filter(col("node") === col("targetResearcherId"))
+            .withColumn("distance", lit(distance))
+        )
+        .checkpoint(eager = true)
       visited = visited
         .unionByName(next.select((pairKeys.map(col) :+ col("node"))*))
         .dropDuplicates(pairKeys :+ "node")
-        .checkpoint(eager = true)
-      frontier = next.filter(col("node") =!= col("targetResearcherId"))
+      if (distance % config.checkpointInterval == 0) visited = visited.checkpoint(eager = true)
+      frontier = next.join(found.select(pairKeys.map(col)*).distinct(), pairKeys, "left_anti")
+      if (distance % config.checkpointInterval == 0) {
+        frontier = frontier.checkpoint(eager = true)
+        found = found.checkpoint(eager = true)
+      }
     }
     val foundRank = Window
       .partitionBy(pairKeys.map(col)*)
@@ -927,21 +975,90 @@ object Phase6DEJobs {
       lineage,
       runId
     ).checkpoint(eager = true)
-    // The S-source effective-diameter estimate is deferred by the approved schedule choice.
-    val estimateSchema = new StructType()
-      .add("windowId", StringType)
-      .add("componentId", StringType)
-      .add("method", StringType)
-      .add("sampleSourceCount", IntegerType)
-      .add("seed", LongType)
-      .add("meanDistance", DoubleType)
-      .add("effectiveDiameterP90", DoubleType)
-      .add("reachedPairCount", LongType)
-    val estimates = withContext(
-      spark.createDataFrame(java.util.Collections.emptyList[Row](), estimateSchema),
+    val estimates = distanceEstimates(config, adjacency, components, summaries, lineage, runId)
+    (paths, estimates, sampledPairs)
+  }
+
+  /** S deterministic sources in the largest component; complete BFS, never all-pairs. */
+  def distanceEstimates(
+      config: SparkAnalyticsConfig,
+      adjacency: DataFrame,
+      components: DataFrame,
+      summaries: DataFrame,
+      lineage: SparkLineage,
+      runId: String
+  ): DataFrame = {
+    val sources = components
+      .join(
+        summaries.filter(col("isLargest")).select("windowId", "componentId"),
+        Seq("windowId", "componentId")
+      )
+      .withColumn(
+        "rank",
+        row_number().over(
+          Window
+            .partitionBy("windowId")
+            .orderBy(xxhash64(col("researcherId"), lit(config.samplingSeed)), col("researcherId"))
+        )
+      )
+      .filter(col("rank") <= config.pathSampleSourceCount)
+      .select(col("windowId"), col("componentId"), col("researcherId").as("source"))
+    var frontier =
+      sources.withColumn("node", col("source")).withColumn("distance", lit(0)).checkpoint(true)
+    var visited = frontier
+    var depth = 0
+    while (BoundedActions.exists(frontier)) {
+      val next = frontier
+        .as("f")
+        .join(
+          adjacency.as("a"),
+          col("f.windowId") === col("a.windowId") && col("f.node") === col("a.src")
+        )
+        .select(
+          col("f.windowId"),
+          col("f.componentId"),
+          col("f.source"),
+          col("a.dst").as("node"),
+          (col("f.distance") + 1).as("distance")
+        )
+        .dropDuplicates("windowId", "source", "node")
+        .join(
+          visited.select("windowId", "source", "node"),
+          Seq("windowId", "source", "node"),
+          "left_anti"
+        )
+      depth += 1
+      frontier = next.checkpoint(true)
+      visited = visited.unionByName(frontier)
+      if (depth % config.checkpointInterval == 0) visited = visited.checkpoint(true)
+    }
+    val stats = visited
+      .filter(col("distance") > 0)
+      .groupBy("windowId", "componentId")
+      .agg(
+        avg("distance").as("meanDistance"),
+        expr("percentile_approx(distance, 0.9, 10000)").cast(DoubleType).as("effectiveDiameterP90"),
+        count("*").as("reachedPairCount")
+      )
+    withContext(
+      sources
+        .groupBy("windowId", "componentId")
+        .agg(count("*").cast(IntegerType).as("sampleSourceCount"))
+        .join(stats, Seq("windowId", "componentId"), "left")
+        .na
+        .fill(0.0, Seq("meanDistance", "effectiveDiameterP90"))
+        .na
+        .fill(0L, Seq("reachedPairCount"))
+        .withColumn(
+          "method",
+          lit(
+            "seeded-largest-component-S-source-complete-BFS; ordered distinct nonself pairs; empirical P90"
+          )
+        )
+        .withColumn("seed", lit(config.samplingSeed)),
       lineage,
       runId
     )
-    (paths, estimates, sampledPairs)
   }
+
 }

@@ -159,3 +159,110 @@ The user-supplied independent reviewer returned **APPROVE**. Its complete report
 | R1-O1: two-person components oscillate under synchronous LPA, affecting real-window convergence | `spark-engineer` | Nonblocking for 6D+6E. During 6F+6G, state this consequence in the README and actual real-data report; report observed convergence per window rather than implying convergence is usual. |
 
 Commit check after approval: branch `phase-6` still has HEAD `8d5b9d48b2fbc1f03e13f3eabdef1bfa373969d4` and the approved 6D+6E source/evidence is uncommitted. The supplied NEXT PROMPT and plan require the user's commit before 6F+6G starts. No 6F+6G base or preflight is recorded yet; no next-subphase work has begun.
+
+## Subphase 6F+6G — carried findings and implementation repairs
+
+The user subsequently committed the approved 6D+6E tree as
+`6ae7378cbef90a176fd1faecae0dee0615eba9e3`, confirmed "done," and approved all
+six 6F+6G Step 0 answers in `prompt.md`. That commit is this subphase's base and
+unchanged HEAD. Historical decisions and reviewer reports above are preserved.
+The table below records implementation dispositions, not independent approval.
+Final stable-tree gate evidence is reported in the 6F+6G test report.
+
+| Prior item | Owner | 6F+6G disposition and evidence |
+| --- | --- | --- |
+| 6B recheck R1: summary entity kinds | `domain-engineer` | Implemented: researcher/community/path/work IDs must match summary type. Positive and wrong-kind/malformed feature tests; `core-targeted.txt` 15/15. No frozen wire or ID formula changed. |
+| 6C N1: hand-maintained code version | `spark-engineer` | Full CLI fingerprints Spark/core compiled production class bytes or code-source JAR bytes. Both successful runs bind code `a6719cbb892e795e3b4e20be99c70c1c74c1ee8ce95887e8c418d9aeb3672971`. Class-directory versus packaged-JAR fingerprints differ; cross-artifact equivalence remains unverified. Historical 6C outputs remain unchanged. |
+| 6C N2/R1-3: representative authority | `spark-engineer` | Selection uses work-ID authority, including a DOI work with an absent nullable DOI column; module feature test passes. README documents one deterministic ordered rule. `representativePolicyVersion` is a provenance/fingerprint tag for that rule, not an implemented alternate-policy dispatch mechanism. |
+| 6C R1-4: inconsistent ORCID trimming | `spark-engineer` | Aggregation and conflict counting both use trimmed ORCID values; module test proves whitespace alone does not create a conflict. Researcher GraphNodes preserve normalized observed ORCIDs as sorted `orcid.N` NamedText properties without changing identity. |
+| 6C N3: silently dropped rows | `spark-engineer` | Explicit null-endpoint accepted-link counters and missing-evidence-work graph-edge counter; reader keeps null links until accounting. Real counts are all zero. |
+| 6C N4: diagnostic meanings | `spark-engineer` | Group and link/mention counts are distinguished; yearless canonical DBLP works include solos, counted for every bounded window; last-year threshold derives from config. Module tests pin two blocked groups/three affected links and yearless solo coverage. Real named counters retained in `local-counters.json`. |
+| 6C N5/N6: post-checkpoint plans and transient listener | `spark-engineer` | `Phase6Plans` captures algorithm plans before checkpoints; actual durable JSON events feed `Phase6EventLog`. Plan text is capped at 65,536 characters and may be truncated. Real stage summary and exact synthetic event tests retained. |
+| 6C N7: UDF/context explanation | `spark-engineer` | Shared explicit context schema and literal construction; README explains Java UDF calls to core IDs/validators. No encoder/RDD/GraphX API added. |
+| 6C N8: schema labels/layout | `spark-engineer` | Graph tables are actual domain `GraphNode`/`GraphEdge` rows, executor-validated. Supplemental `work_sources` is a documented Spark source projection, excluded from Neptune. All applicable exported analytics records parse/validate in independent tests. |
+| 6C R2-1: local docs probe portability | `spark-engineer` / coordinator | Current counter inspection and real-data distributions use the Spark-module report helper and module/independent tests. Old 6C local scripts remain historical evidence. Current command JSON/classpath snapshots are explicitly local evidence, not portable tools. |
+| 6DE N1: found-pair BFS cost/checkpoints | `spark-engineer` | Stops the entire pair after finding the target; frontier/visited checkpoint at configured interval. Small selected-path metadata checkpoints each hop to cut recursive stop-gate lineage. New three-window chain crosses interval 5 with K20 and six-hop evidence. |
+| 6DE N2: LPA global iteration count | `spark-engineer` | Per-window first convergence/iteration state; module fixture distinguishes isolated and oscillating windows. |
+| 6DE N3: LPA cache order | `spark-engineer` | Materialize next labels before releasing previous labels; measured bounded run/replay succeed. |
+| 6DE N4: context struct order | `spark-engineer` | One explicit `Phase6Context` StructType across C/DE/FG; schema assertion plus exported record parsing. |
+| 6DE N5: endpoint/sample counters | `spark-engineer` | Missing benchmark endpoints counted; seeded-pair count means new sampled pairs after benchmark deduplication. Independent G1 test pins missing endpoint count. Real run has no benchmarks and zero missing endpoints. |
+| 6DE N6: partial replay | `test-engineer` / coordinator | Independent actual 28-table exports/rereads at 4 versus 2 partitions match; both fresh real-data runs also match every table count/hash and counter array (`replay-comparison.json`). |
+| 6DE N7: output/core contract coverage | `spark-engineer` / `test-engineer` | Every applicable published record is executor-validated and independently parsed. Source projections and rejects use their documented explicit schemas. Counter rows are core-validated in independent tests. |
+| 6DE N8: README drift | `spark-engineer` | Per-job README updated for actual algorithms/layout/cache/checkpoint/counters. Unimplemented per-job counters are not claimed; entry/exit counts remain derivable from flags. |
+| 6C/6DE N9: coordinator formatter execution | Coordinator | Disclosed: coordinator executed owner-requested formatter/target commands while holding shared sbt slot; named owners authored all source/test changes. No ownership reassignment is claimed. |
+| R1-O1: real LPA non-convergence | `spark-engineer` / coordinator | README and `real-data-report.md` state isolated pairs oscillate. Every observed real window reported non-convergence at iteration 20; exact changed counts are retained. |
+| Required sampled path-length/diameter estimate | `spark-engineer` / `test-engineer` | Implemented as S32 seeded sources in each largest component, complete BFS and empirical distance P90. Exact chain expectation 4/3 and P90 2; real estimates for all six windows are reported. No deviation acceptance is requested. |
+
+### Issues discovered and repaired during implementation
+
+| Issue | Owner | Observed failure and disposition |
+| --- | --- | --- |
+| Dataset adjacent XML records | `dataset-engineer` | Initial extraction failed after successful bounded download. Bounded tag scanner and chunk/adjacent-record regressions fixed it; 12/12 tests and actual byte-identical slice replay. |
+| Spark constructor compile argument | `spark-engineer` | Initial missing `DatasetSnapshotRef` argument failed compilation; corrected compile passes. Both logs retained. |
+| Test JSON nulls / macOS temp symlink / mutable Seq cast | Module and independent test owners | Initial setup failures retained; corrected explicit-null JSON, real temp path and `Row.getSeq` access preserve substantive assertions. |
+| Deep plan-string memory exhaustion | `spark-engineer` / `test-engineer` | Initial independent suite exhausted its fixed 2 GiB heap in plan rendering; Hadoop then failed secondarily. Bounded plan/history retention and materialized found-path metadata fixed it without a test heap increase. Corrected independent 13/13 then final gates cover the fix. |
+| ER export byte bound | Coordinator, existing ER CLI unchanged | 256 MiB output bound refused export, exit 2. Only ignored runtime bound raised to 2 GiB; retry succeeds with zero model calls. No policy or ER source change. |
+| Spark 3.5.4 inferred Union constraint checkpoint error | `spark-engineer` | Initial real run failed, exit 1, stack retained in `spark-first-checkpoint-error.json`. Optimizer-only inferred constraint propagation is disabled for analytics/lazy publication; explicit application invariants remain. Multiwindow six-hop regression passes; fresh first/replay runs exit 0 with new compiled-code-derived run identity. Diagnosis is source-supported inference, not an upstream-ticket claim. |
+| New literal-count assertion expected JSON number | `test-engineer` | Combined target module 33/33, independent 12/13, exit 1. Operational sidecar Long values are strings; assertion now decodes that representation. Corrected tiny pipeline passes 1/1 (`pipeline-final-targeted.txt`), with full gate to cover all assertions together. |
+
+Remaining limitations: reuse authenticates bound manifests/metadata and identity,
+but does not rehash existing Parquet files after completion; fixed 256-shard row
+hashing retains each shard's sorted JSON on executors and is measured only at the
+bounded slice scale; summary/source and integrity layout additions are explicit;
+distance estimates cover sampled sources in largest components, not exact graph
+diameter. Neptune yearless mapping remains a Phase 7 decision. Packaging JDK guard
+and live Scala/EMR runtime alignment remain later release/Phases 13–15 gates. No
+cloud compatibility or storage loading is claimed.
+
+
+### Final 6F+6G gate and stop
+
+All latest assertions pass in the stable-tree full gate: **551/551**, exit 0,
+144/64/39/34/263/7; real **692.82 s**. Full unfiltered log **1,358,948 bytes**,
+SHA-256 `6f48042efe332864661f5d8a73dfa8565fd257db53ff3bcc97371b724919844c`.
+The 27 implementation/config/test/manifest files did not change during the gate;
+post-gate compiled fingerprint equals both successful real-data runs. Both fresh
+runs match all 28 table hashes/counts and counters. The corrected new sidecar-count
+assertion also passed a separate tiny pipeline target before the full check.
+`git diff --check` exits 0. No independent approval is claimed. No commit, push,
+reviewer launch, AWS/live model call or 6I work occurred. Next gate: user's
+independent read-only review.
+
+
+## Subphase 6F+6G repair round 1 — external F1–F12
+
+The complete user-supplied REQUEST-CHANGES review and next prompt are retained
+verbatim in `review.md` and `evidence/6fg/repair-1/external-review.txt`.
+Base/unchanged HEAD `6ae7378cbef90a176fd1faecae0dee0615eba9e3`, branch `phase-6`.
+The user subsequently narrowed scope to **"only fix the blockings bugs"** in
+response to the F11 retention question. This round therefore fixes **F1–F3 only**.
+Optional README edits made before that reply were reversed by the Spark owner;
+its hash again exactly matches the original stable snapshot. Existing evidence
+was not trimmed or removed. No production Scala, IDs, algorithms, manifests or
+retained output are changed. Full-gate results are appended after completion.
+
+| Finding | Blocking / owner | Repair-round disposition and evidence |
+| --- | --- | --- |
+| F1: missing stage DAG | Blocking; coordinator | Evidence-only derivation from retained successful raw event log; `repair-1/stage-dag.json` / `.md` record names, parent IDs, partitions, task/shuffle totals. 5,667 stage IDs / 4,532 edges; 2,004 executed totals match the original summary, no missing parents/cycles. Real-data report states production summarizer gap and links artifacts. No Spark rerun/code change. |
+| F2: operational analytics report differs | Blocking; coordinator (evidence route) | `replay-comparison.json` now explicitly compares reports: logical tables equal, all compared artifacts not equal. `repair-1/analytics-report-comparison.json` lists 12 numeric differences (one approximate percentile, eleven means), hashes, physical-order explanation and latent estimate-P90 caveat. Real-data report labels first-run distributions and scope; outputs/code/run identity remain unchanged. |
+| F3: parenless actions evade scanner | Blocking; test-engineer | Only `IndependentPhase6SafetySpec.scala` changed. Reusable scanner catches 11 driver method names with/without parentheses, adds isEmpty/reduce, and has three synthetic self-tests for forbidden forms, boundaries, comments/strings and narrowly audited metadata receivers. Safety target 7/7, exit 0; full stable-tree gate required below. |
+| F4: retry of incomplete same-ID output | Nonblocking; spark-engineer | Deferred under user blocking-only scope. No automatic cleanup or changed retry semantics; preserve failed evidence and require a separate operator decision before any destructive cleanup. |
+| F5: thin summaries / unmarked long-title truncation | Nonblocking; spark-engineer | Deferred. Needs source/template and long-title feature tests; current code/output intentionally unchanged. Route before Phase 8 embedding consumers. |
+| F6: tie winner not observable | Nonblocking; spark/domain owners | Deferred. Current TemporalChange exposes actual current community and overlap score, not separate matched-community ID. README repair is outside narrowed scope; future wording/contract gate remains. |
+| F7: kcore duplicates collaboration dataset | Nonblocking; spark/storage owners | Deferred to Phase 7 loader validation/deduplication. Both logical datasets and proposals remain unchanged. |
+| F8: loose target mapping proposals | Nonblocking; spark/storage owners | Deferred to Phase 7. Support keys need edgeId+workId, while current proposed idProperty=edgeId is not unique; DynamoDB key/run-state proposal remains unimplemented free text. No store writes were performed. |
+| F9: unproven per-component LPA attribution / Spark cause comment | Nonblocking; spark owner, coordinator reporting | Deferred under narrowed scope. No per-component pair count or convergence evidence was added; the observation must not be treated as measured causal attribution. No source-comment change. |
+| F10: shared-session optimizer setting / unmeasured cost | Nonblocking; spark owner | Deferred. Production still sets constraintPropagation=false on caller session; metadata lacks an explicit field and no A/B cost measurement exists. Existing compiled-code fingerprint remains unchanged. |
+| F11: evidence size | Nonblocking; human decision | Asked with actual pre-repair inventory: 68 files / 4,325,261 bytes; full gate 1,358,948; two summaries 848,446. User replied blocking-only, so no retention cleanup or inferred approval of a retention policy. Required DAG/new gate evidence is added; originals preserved. |
+| F12: duplicate counters / formatter attribution / Python gate | Nonblocking; owners/coordinator | Deferred. Counter aliases remain; coordinator formatter execution is disclosed; Python 12/12 remains separate from sbt counts. No build ownership change. |
+
+
+### Repair round 1 final gate
+
+F1–F3 are repaired and locally validated, **pending external recheck**. Safety7/7;
+full JDK17 check **554/554**, exit0, counts144/64/39/34/266/7, real676.42s.
+Log1,358,928bytes, SHA-256 `3e6654835296bab3be44efbdf0cd31c205dd4b34ff87b98848a4ba16623c5236`. All27repair snapshot files unchanged during
+the gate; only SafetySpec differs from the original reviewed source snapshot.
+Production fingerprint and retained run ID unchanged. Diff check0, HEADunchanged.
+F4–F12 remain deferred under the user's blocking-only answer. No optional README
+or retention changes remain; no real-data rerun, commit, push, reviewer or6I.

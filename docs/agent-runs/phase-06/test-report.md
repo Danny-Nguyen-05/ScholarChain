@@ -378,3 +378,86 @@ NEXT GATE: External read-only 6D+6E repair-round-1 recheck. Stop before 6F+6G.
 ### External 6D+6E repair-round-1 approval
 
 The user-supplied independent reviewer returned **APPROVE**, closing F1–F3 and verifying the retained 528/0 full-gate evidence, core 14/14 and Spark 10/10 targeted results. Its complete text is retained in `review.md`; R1-O1 is assigned in `repairs.md`. These are reviewer-reported checks, not a new test execution. The approved tree is still uncommitted at HEAD `8d5b9d48b2fbc1f03e13f3eabdef1bfa373969d4`. The next gate is the user's commit, followed by 6F+6G Step 0. No next-subphase work, commit or push was performed by the coordinator.
+
+
+## Subphase 6F+6G — final stable-tree test report
+
+STATUS: COMPLETE for local deterministic gates; external review pending.
+
+OWNER: Module owners authored module tests; independent test-engineer authored `tests/**`; dataset owner authored its Python tests. Coordinator retained evidence and ran the final gate. Coordinator executed requested formatters on owner-authored files; no ownership transfer or reviewer approval is claimed.
+
+WORK ORDER: Merged 6F+6G, base/HEAD `6ae7378cbef90a176fd1faecae0dee0615eba9e3`, branch `phase-6`; exact plan hash and six user approvals are in `prompt.md` / `evidence/6fg/preflight.md`.
+
+FILES CREATED/MODIFIED: C/DE/FG module feature coverage; four independent Scala files plus committed tiny XML/empty JSONL fixtures; core summary entity-kind cases; dataset acquisition/replay tests; retained logs, metadata and reports. Exact inventories are in `evidence/6fg/changed-files.txt`.
+
+COMMANDS RUN: `evidence/6fg/commands.md` gives the exact Java17 environment and every compile/targeted/upstream/CLI/gate invocation. Final full command: `/usr/bin/time -p sbt -batch check`; exit **0**. Latest `git diff --check`: exit **0**. No production test source changed during the gate. See `stable-source-before-check.json` and `final-gate-metadata.json`.
+
+### Observed full-gate results
+
+| Suite | Passed / failed | Full log lines |
+| --- | --- | --- |
+| Core | 144 / 0 | 172 / 174 |
+| Hadoop | 64 / 0 | 914 / 916 |
+| ER | 39 / 0 | 964 / 966 |
+| Spark | 34 / 0 | 2079 / 2081 |
+| Independent | 263 / 0 | 6236 / 6238 |
+| Build verification | 7 / 0 | 6278 / 6280 |
+| **Total** | **551 / 0** | success 6283; real 6284; exit 0 at 6287 |
+
+`evidence/6fg/final-check.txt`: **1,358,948 bytes**, SHA-256 **`6f48042efe332864661f5d8a73dfa8565fd257db53ff3bcc97371b724919844c`**. sbt **691 s**, real **692.82 s**, completion **2026-10-22 13:51:06 CDT**. Header records **Java 17.0.20.1**, **sbt 1.10.7**. The existing build marker updated only after passing all gates. Hadoop injected-failure cases and the expected build check-probe trace (6248–6266) test failure handling; they are not failed tests.
+
+### Targeted and runtime sequence, including failures
+
+1. Core target **15/15**, exit 0. Dataset Python tests **12/12**, separate from sbt totals; actual extraction/replay XML bytes match.
+2. Initial Spark compile failed a missing constructor argument; corrected compile passed. Initial independent target **10/13** failed JSON-null/temp-symlink setup. Corrected second target passed 11 tests, failed 1 and aborted 1 suite after 2 GiB heap exhaustion in deep plan rendering; Hadoop's failure was secondary. Retention/plan caps and bounded found-path lineage fixed this without raising test heap. Next independent target **13/13**, exit 0, predates the final added assertions.
+3. Initial module target **29/32**, exit 1: JSON optional-field serialization, changed counter semantics and a mutable collection cast. Corrected module **32/32**, exit 0.
+4. Hadoop real prep passed, ER first output-bound failure exited 2; bound-only retry passed with fake/live calls 0/0. First full Spark attempt failed a Spark Union/checkpoint constraint rewrite, exit 1, with no completion marker. Its SQL stack and typed failure evidence are retained. Optimizer-only compatibility setting plus a multiwindow regression repaired it.
+5. Latest combined target: module **33/33**, independent **12/13**, combined exit 1. A newly added assertion expected numeric sidecar rowCount, whose exact Long representation is a string. Owner changed only its decoder; tiny end-to-end target **1/1**, exit 0, real **52.35 s**. Final **263/263** independent suite above covers this latest assertion and all other final assertions together.
+6. Fresh repaired real Spark run **180.45 s**, replay **158.07 s**, both exit 0; run ID `run:f02acf56-4bea-4009-adaf-b11d5afceb49`. Output/checkpoint roots differ; shuffle partitions 4→2. All 28 counts/hashes and counters match, markers verify, and four load manifests are byte-identical. `replay-comparison.json` / `manifest-file-audit.json` retain exact checks. The real hashes are computed by each fresh pipeline; full physical Parquet reread/hash equivalence is separately covered in module and independent tests.
+
+Intermediate test logs are labeled excerpts with repeated timestamped WARN lines removed; original sizes/hashes and ignored full-copy paths are in `intermediate-log-retention.json`. The final full-gate and real-data CLI logs remain complete. No excerpt is described as a full export or full gate.
+
+VALIDATION RESULTS: Exact G1 bounded-window D deltas and entry/exit flags; community Jaccard overlap; exact three-source chain mean 4/3/P90 2; empty window; 15-author/105-edge near-limit team; ORCID conflicts without splitting; four summary types with actual numeric/field references; applicable core parsing for all 28 exported tables and every counter row; four manifest arrays, path/count/hash consistency, actual two-export Parquet replay at 4→2 partitions; partial/different/tampered-marker refusal and reuse; forbidden API/driver-action scan; exact event aggregates; committed tiny Hadoop→disabled-ER→all-Spark pipeline with literal counts, reuse, unsupported schema and missing marker refusal. Module-specific tests pin ID authority with absent DOI, normalized ORCIDs/properties, yearless solo counting, per-window LPA iteration/context schema and multiwindow six-hop behavior across checkpoint interval 5. All these latest assertions pass inside the full gate.
+
+ASSUMPTIONS: Expected values are literal fixture calculations, not implementation-derived comparison values. Counts of targeted suites are included in full totals and are not added again. Equal-Jaccard winning candidate IDs are not separately represented by the current TemporalChange wire record.
+
+RISKS: The bounded run is a biased convenience slice; no identity accuracy, live-model quality, cloud runtime or store-loading result is claimed. Reuse is a metadata/identity gate rather than a deep audit of already completed Parquet. Stage durations mean summed task times; operational timing is excluded from deterministic hashes. Other limitations and future owners/gates are in `repairs.md` and `real-data-report.md`.
+
+MANUAL ACTION REQUIRED: User launches the independent read-only review; no automatic reviewer, commit, push or 6I start.
+
+BLOCKED-ON OWNER: None.
+
+BLOCKED-ON EVIDENCE: None for 6F+6G local validation.
+
+NEXT GATE: User-run 6F+6G review.
+
+
+## Subphase 6F+6G repair round 1 — test/evidence report
+
+STATUS: COMPLETE for F1–F3 local validation; external recheck pending.
+OWNER: Independent test-engineer authored SafetySpec; coordinator executed requested formatter/target and final gate, derived F1/F2 evidence, and retained results.
+WORK ORDER: User blocking-only scope; unchanged base/HEAD `6ae7378cbef90a176fd1faecae0dee0615eba9e3`. No production change or real-data rerun.
+FILES MODIFIED: Only SafetySpec in implementation paths; coordinator report/evidence changes listed in `repair-1/changed-files.txt`.
+COMMANDS RUN: Exact JDK17 environment and commands in `repair-1/commands.md`; safety target7/7 exit0 real5.79s; full check exit0; diff check exit0.
+
+| Full suite | Passed / failed | Log total / result lines |
+| --- | --- | --- |
+| Core | 144 / 0 | 172 / 174 |
+| Hadoop | 64 / 0 | 914 / 916 |
+| ER | 39 / 0 | 964 / 966 |
+| Spark | 34 / 0 | 2080 / 2082 |
+| Independent | 266 / 0 | 6237 / 6239 |
+| Build verification | 7 / 0 | 6279 / 6281 |
+| **Total** | **554 / 0** | success6284 / real6285 / exit0:6288 |
+
+TEST RESULTS: Full gate sbt674s, real676.42s, finished2026-10-22 14:29:32 CDT, Java17.0.20.1/sbt1.10.7. Full unfiltered log **1,358,928 bytes**, SHA-256 **`3e6654835296bab3be44efbdf0cd31c205dd4b34ff87b98848a4ba16623c5236`**. Expected injected Hadoop/build-probe failure traces are failure-handling tests, not gate failures. Three new scanner tests increase independent263→266 and total551→554. Python12/12 is unchanged prior evidence, not rerun or added to these totals.
+
+VALIDATION RESULTS: Reusable scanner catches collect/collectAsList/toLocalIterator/take/takeAsList/head/first/count/isEmpty/reduce/show regardless of parentheses. Self-tests include five forbidden spellings per method, prefix negatives, nested/line comments, escaped/triple-quoted literals, adjacent executable calls and exact audited config/Option/Column-metadata/helper exceptions. Source scan passes against all production Spark files. It remains explicitly heuristic. All 27 repair snapshot contents/mtimes are unchanged during the gate; only SafetySpec's content differs from the original reviewed implementation snapshot. All production class bytes still fingerprint to the retained real runs.
+
+F1 evidence validation independently resolves all parent IDs, checks acyclicity and metadata presence, and matches every executed stage's task/partition/shuffle totals to the original summary. F2 recursively compares retained reports and records12 exact numeric differences; all28 table hashes remain equal, while all-compared-artifact equality is false. See `repair-1/evidence-validation.json`, `stage-dag.json` and `analytics-report-comparison.json`. No retained report/output payload is rewritten; only disclosure/comparison evidence changes.
+
+ASSUMPTIONS: Existing local real-data execution remains valid because no production source/class change occurred. P90 equality in this replay does not establish general partition invariance.
+RISKS: F4–F12 deferred by the user; approximation and scanner limits remain disclosed.
+MANUAL ACTION REQUIRED: User-run independent read-only recheck.
+BLOCKED-ON OWNER: none. BLOCKED-ON EVIDENCE: none for F1–F3 local gates.
+NEXT GATE: Repair-round recheck; no commit/push/reviewer/6I.

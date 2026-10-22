@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE dblp []>
+<dblp>
+  <inproceedings key="conf/independent6fg/early"><author>Independent Alpha</author><author>Independent Beta</author><title>Synthetic early collaboration.</title><year>2016</year></inproceedings>
+  <inproceedings key="conf/independent6fg/late"><author>Independent Beta</author><author>Independent Gamma</author><title>Synthetic later collaboration.</title><year>2020</year></inproceedings>
+  <inproceedings key="conf/independent6fg/solo"><author>Independent Solo</author><title>Synthetic solo publication.</title><year>2021</year></inproceedings>
+</dblp>

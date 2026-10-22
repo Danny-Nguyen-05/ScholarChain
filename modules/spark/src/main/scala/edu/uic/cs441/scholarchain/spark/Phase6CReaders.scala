@@ -492,6 +492,7 @@ object Phase6CReaders {
         "sourceRecordId",
         "year",
         "title",
+        "abstractTextRef",
         "doi",
         "arxivId",
         "venueId",
@@ -587,7 +588,6 @@ object Phase6CReaders {
           endpointId(col("pair.left")).as("leftId"),
           endpointId(col("pair.right")).as("rightId")
         )
-        .filter(col("leftId").isNotNull && col("rightId").isNotNull)
     def constraint(entity: String): DataFrame = er(
       s"$entity/grouping-constraints.json",
       constraints,

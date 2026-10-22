@@ -1,0 +1,97 @@
+{
+  "artifact": "analytics-report.json",
+  "byteIdentical": false,
+  "structuredEqual": false,
+  "firstSha256": "10b3fdc56475498fc048d0c2cbabffd1a25e416fd9e8b29b1973be4da2fe92ad",
+  "replaySha256": "5b9aa7432dfa2b3065345899b7066ca8ef950e2659e7012656d65cbd0fe81609",
+  "differenceCount": 12,
+  "differences": [
+    {
+      "path": "$.bridges[0].participationCoefficientMean",
+      "first": 0.16883227990049082,
+      "replay": 0.16883227990049102,
+      "kind": "floating-point-mean",
+      "absoluteDifference": 1.942890293094024e-16
+    },
+    {
+      "path": "$.bridges[1].participationCoefficientP50P90[1]",
+      "first": 0.56,
+      "replay": 0.5595567867036011,
+      "kind": "approximate-percentile",
+      "absoluteDifference": 0.0004432132963989588
+    },
+    {
+      "path": "$.bridges[2].participationCoefficientMean",
+      "first": 0.2400117577040159,
+      "replay": 0.2400117577040149,
+      "kind": "floating-point-mean",
+      "absoluteDifference": 9.992007221626409e-16
+    },
+    {
+      "path": "$.bridges[3].participationCoefficientMean",
+      "first": 0.27485674932162846,
+      "replay": 0.27485674932162657,
+      "kind": "floating-point-mean",
+      "absoluteDifference": 1.887379141862766e-15
+    },
+    {
+      "path": "$.bridges[4].participationCoefficientMean",
+      "first": 0.2638467125329841,
+      "replay": 0.2638467125329844,
+      "kind": "floating-point-mean",
+      "absoluteDifference": 3.3306690738754696e-16
+    },
+    {
+      "path": "$.bridges[5].participationCoefficientMean",
+      "first": 0.13196550854561215,
+      "replay": 0.1319655085456122,
+      "kind": "floating-point-mean",
+      "absoluteDifference": 5.551115123125783e-17
+    },
+    {
+      "path": "$.metrics[0].averageCoauthorsPerPaperMean",
+      "first": 3.8069002469390694,
+      "replay": 3.806900246939072,
+      "kind": "floating-point-mean",
+      "absoluteDifference": 2.6645352591003757e-15
+    },
+    {
+      "path": "$.metrics[1].averageCoauthorsPerPaperMean",
+      "first": 4.23878288515051,
+      "replay": 4.238782885150509,
+      "kind": "floating-point-mean",
+      "absoluteDifference": 8.881784197001252e-16
+    },
+    {
+      "path": "$.metrics[2].averageCoauthorsPerPaperMean",
+      "first": 5.5676011574797295,
+      "replay": 5.567601157479736,
+      "kind": "floating-point-mean",
+      "absoluteDifference": 6.217248937900877e-15
+    },
+    {
+      "path": "$.metrics[3].averageCoauthorsPerPaperMean",
+      "first": 4.708493648793602,
+      "replay": 4.708493648793604,
+      "kind": "floating-point-mean",
+      "absoluteDifference": 2.6645352591003757e-15
+    },
+    {
+      "path": "$.metrics[4].averageCoauthorsPerPaperMean",
+      "first": 5.155518005947149,
+      "replay": 5.155518005947142,
+      "kind": "floating-point-mean",
+      "absoluteDifference": 7.105427357601002e-15
+    },
+    {
+      "path": "$.metrics[5].averageCoauthorsPerPaperMean",
+      "first": 3.1792663443436333,
+      "replay": 3.1792663443436364,
+      "kind": "floating-point-mean",
+      "absoluteDifference": 3.1086244689504383e-15
+    }
+  ],
+  "excludedFromLogicalTableIdentity": true,
+  "explanation": "Operational distribution report uses percentile_approx and floating-point mean aggregation. Approximate quantile merge/order and floating summation order can vary with physical partitioning. The displayed distributions belong to the first run; the report is not an identical replay artifact.",
+  "pathEstimateP90Caveat": "PathLengthEstimate also uses percentile_approx. Its six P90 values happened to match this replay and remain included in the observed 28-table hash equality; this does not prove partition invariance for future inputs."
+}

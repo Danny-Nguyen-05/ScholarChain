@@ -1,0 +1,38 @@
+[info] welcome to sbt 1.10.7 (Homebrew Java 17.0.20.1)
+[info] loading settings for project scholarchain-build from plugins.sbt...
+[info] loading project definition from /Users/danny/Documents/UIC/CS441/ScholarChain/project
+[info] loading settings for project root from build.sbt...
+[info] set current project to root (in build file:/Users/danny/Documents/UIC/CS441/ScholarChain/)
+[info] scalafmt: Formatting 1 Scala sources (/Users/danny/Documents/UIC/CS441/ScholarChain/modules/core)...
+[success] Total time: 1 s, completed Oct 22, 2026, 1:06:36 PM
+[info] scalafmt: Formatting 1 Scala sources (/Users/danny/Documents/UIC/CS441/ScholarChain/modules/core)...
+[success] Total time: 0 s, completed Oct 22, 2026, 1:06:36 PM
+[info] compiling 1 Scala source to /Users/danny/Documents/UIC/CS441/ScholarChain/modules/core/target/scala-3.3.4/classes ...
+[info] done compiling
+[info] compiling 1 Scala source to /Users/danny/Documents/UIC/CS441/ScholarChain/modules/core/target/scala-3.3.4/test-classes ...
+[info] done compiling
+[info] SparkAnalyticsContractSpec:
+[info] - DBLP exact-name IDs preserve case and homonym suffix
+[info] - analytics IDs reject LF-delimited collisions and invalid window labels
+[info] - Spark coauthor edge IDs bind labels and numeric window bounds
+[info] - summary IDs bind the policy and window and use citation-compatible text IDs
+[info] - semantic summary entities match their declared type and use well-formed IDs
+[info] - metrics companion enforces the frozen arithmetic and max-team bounds
+[info] - G1 solo J and disconnected A-to-H are representable
+[info] - Spark coauthor edge IDs can back cited edge evidence
+[info] - all new wire examples round-trip and validate
+[info] - legacy edge and metrics wire examples still parse
+[info] - invalid analytics shapes fail validation
+[info] - bridge, community and path records enforce their local consistency rules
+[info] - versioned Spark config loads, fingerprints and validates approved defaults
+[info]   + 6D+6E config fingerprint: 8f6fd8b7b5596ece608424278b10b23f61317562d989a6a40d07fad109cd643e; prior: a75347c8ea36964d5144e09a19f8cb76f9de08128868e76f6fad4f8db77b8169 
+[info]   + 6D+6E logical fingerprint: f03c79505357ca9795894569c3f7cbf0f67e9d18c864eab9de895bb4a85159f3; prior: 49316f88beb239b6d654b9df77814be759a10f20c7209894e3dc63fbab9cc624 
+[info] - Spark run ID binds immutable input evidence and logical settings, not physical paths
+[info] - Spark config rejects duplicate, reversed and nonconsecutive comparison windows
+[info] Run completed in 212 milliseconds.
+[info] Total number of tests run: 15
+[info] Suites: completed 1, aborted 0
+[info] Tests: succeeded 15, failed 0, canceled 0, ignored 0, pending 0
+[info] All tests passed.
+[success] Total time: 3 s, completed Oct 22, 2026, 1:06:40 PM
+exit=0

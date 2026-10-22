@@ -1,0 +1,53 @@
+INTERMEDIATE LOG EXCERPT: independent-initial-setup-failures.txt
+Repeated timestamped Spark WARN lines removed; commands, test results and error traces retained.
+Full original: target/phase6-inputs/6fg-runtime/full-intermediate-logs/independent-initial-setup-failures.txt
+Original bytes=60865 sha256=f187c7675b1377260981c1d7c5ac1371ae5230b43a0e0b0f08d03bc75863305b
+Final stable-tree gate remains unfiltered in final-check.txt.
+
+[info] welcome to sbt 1.10.7 (Homebrew Java 17.0.20.1)
+[info] loading settings for project scholarchain-build from plugins.sbt...
+[info] loading project definition from /Users/danny/Documents/UIC/CS441/ScholarChain/project
+[info] loading settings for project root from build.sbt...
+[info] set current project to root (in build file:/Users/danny/Documents/UIC/CS441/ScholarChain/)
+[info] IndependentPhase6FGSpec:
+[info] - G1 disjoint-window recomputation gives exact D deltas and explicit entry/exit rows *** FAILED ***
+[info]   java.util.NoSuchElementException: None.get
+[info]   at scala.None$.get(Option.scala:627)
+[info]   at scala.None$.get(Option.scala:626)
+[info]   at edu.uic.cs441.scholarchain.independent.IndependentPhase6FGSpec.temporalRows$$anonfun$1(IndependentPhase6FGSpec.scala:79)
+[info]   at scala.collection.immutable.Vector1.map(Vector.scala:2140)
+[info]   at scala.collection.immutable.Vector1.map(Vector.scala:385)
+[info]   at edu.uic.cs441.scholarchain.independent.IndependentPhase6FGSpec.temporalRows(IndependentPhase6FGSpec.scala:78)
+[info]   at edu.uic.cs441.scholarchain.independent.IndependentPhase6FGSpec.testFun$proxy1$1(IndependentPhase6FGSpec.scala:85)
+[info]   at edu.uic.cs441.scholarchain.independent.IndependentPhase6FGSpec.$init$$$anonfun$1(IndependentPhase6FGSpec.scala:84)
+[info]   at org.scalatest.Transformer.apply$$anonfun$1(Transformer.scala:22)
+[info]   at org.scalatest.OutcomeOf.outcomeOf(OutcomeOf.scala:85)
+[info]   ...
+[info] - S-source estimate on a three-node chain has exact ordered-pair mean and P90
+[info] - empty configured window produces no invented metrics, paths, summaries or estimates
+[info] - near-Hadoop-limit team preserves every distinct pair and reports ORCID conflict without splitting
+[info] - community continuity uses best Jaccard and handles tied candidate communities
+[info] - all four factual summary templates trace every number and fact to the exact source row/field
+[info] - complete export rereads every table, validates declared core records and binds four manifests to paths counts and hashes *** FAILED ***
+[info]   parsed.isRight was false nodes/type=researcher: Left(DomainViolation(MalformedInput,missing keys in dictionary: sourceUri, retrievalDate, licenseEvidenceUri at index 1058)); {"nodeId":"researcher:dblp:7b770f9ae41287fa4bbcc25f8f1e648015de38fb78991e8cd5275ca429eba0d3","nodeClass":"RESEARCHER","label":"C","runId":"run:55555555-5555-4555-8555-555555555555","schemaVersion":"scholarchain.domain.v1","context":{"schemaVersion":"scholarchain.spark-analytics.v1","runId":"run:55555555-5555-4555-8555-555555555555","lineage":{"hadoopRunId":"run:33333333-3333-4333-8333-333333333333","hadoopSnapshot":"independent-6c-g1-synthetic","entityResolutionRunId":"run:44444444-4444-4444-8444-444444444444","entityResolutionPolicyVersion":"independent-g1-er-v1","entityResolutionPolicyHash":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa","sourceWorkIds":[],"sourceMentionIds":[]}},"properties":[],"provenance":{"schemaVersion":"scholarchain.domain.v1","source":"SCHOLARCHAIN","sourceRecordId":"researcher:dblp:7b770f9ae41287fa4bbcc25f8f1e648015de38fb78991e8cd5275ca429eba0d3","datasetSnapshot":"spark-analytics","runId":"run:55555555-5555-4555-8555-555555555555","uncertaintyNotes":["derived from completed Hadoop and ER inputs"]}} (IndependentPhase6FGSpec.scala:352)
+[70.724s][warning][gc,alloc] broadcast-exchange-27: Retried waiting for GCLocker too often allocating 4194304 words
+[info] - replay changes physical partition count and output root while every logical table hash stays identical
+[info] IndependentPhase6SafetySpec:
+[info] - production Spark sources keep forbidden driver actions and graph APIs outside BoundedActions
+[info] - output gate refuses partial mismatched and tampered runs and reuses only the identical manifest
+[info] - unknown Spark config schema is refused before any input or output work
+[info] - streaming event-log summary reports exact stage tasks partitions shuffle records and failures
+[info] IndependentPhase6PipelineSpec:
+[info] - committed tiny fixture completes unchanged Hadoop then offline ER then all Spark jobs *** FAILED ***
+[info]   resolved.isRight was false Left(requirement failed: symlink in output path) (IndependentPhase6PipelineSpec.scala:56)
+[info] Run completed in 1 minute, 22 seconds.
+[info] Total number of tests run: 13
+[info] Suites: completed 3, aborted 0
+[info] Tests: succeeded 10, failed 3, canceled 0, ignored 0, pending 0
+[info] *** 3 TESTS FAILED ***
+[error] Failed tests:
+[error] 	edu.uic.cs441.scholarchain.independent.IndependentPhase6PipelineSpec
+[error] 	edu.uic.cs441.scholarchain.independent.IndependentPhase6FGSpec
+[error] (independentTests / Test / testOnly) sbt.TestsFailedException: Tests unsuccessful
+[error] Total time: 84 s (01:24), completed Oct 22, 2026, 1:16:10 PM
+exit=1

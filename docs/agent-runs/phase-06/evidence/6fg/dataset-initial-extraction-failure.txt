@@ -1,0 +1,16 @@
+{"archiveVerified": {"md5": "cbd329100ea1bbb2873fa2f6d414ea00", "sha256": "20e45961bec5610dc07b8e932ccd27a2387534cfa12c92a24289fe873aebe969", "bytes": 1107081001}, "retrieval": {"mode": "pinned-download", "url": "https://drops.dagstuhl.de/storage/artifacts/dblp/xml/2026/dblp-2026-10-03.xml.gz", "status": 200, "bodyBytes": 1107081001, "redirects": 0, "retries": 0, "elapsedSeconds": 244.72}}
+{"status": "STOPPED", "error": "junk after document element: line 12, column 16", "networkBodyBytes": 1107081001, "networkByteCap": 1342177280, "networkSecondsCap": 1800}
+Traceback (most recent call last):
+  File "/Users/danny/Documents/UIC/CS441/ScholarChain/datasets/scripts/phase6/acquire_dblp_slice.py", line 207, in <module>
+    'retrieval': retrieval, 'approvedNetworkCaps': {'bytes': BYTE_CAP, 'seconds': SECONDS_CAP},
+    
+  File "/Users/danny/Documents/UIC/CS441/ScholarChain/datasets/scripts/phase6/acquire_dblp_slice.py", line 180, in main
+    parser.add_argument('--archive', type=Path, default=Path('target/phase6-inputs/6fg-dblp/dblp-2026-10-03.xml.gz'))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/danny/Documents/UIC/CS441/ScholarChain/datasets/scripts/phase6/acquire_dblp_slice.py", line 142, in select_slice
+    observed += 1
+           ^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.5/Frameworks/Python.framework/Versions/3.14/lib/python3.14/xml/etree/ElementTree.py", line 1352, in XML
+    parser.feed(text)
+    ~~~~~~~~~~~^^^^^^
+xml.etree.ElementTree.ParseError: junk after document element: line 12, column 16

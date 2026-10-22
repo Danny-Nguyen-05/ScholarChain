@@ -1,0 +1,167 @@
+{
+  "recordedAtUtc": "2026-10-22T18:39:34.610306+00:00",
+  "files": [
+    {
+      "path": "datasets/phase6/README.md",
+      "bytes": 4283,
+      "mtimeNs": 1792692684423784717,
+      "sha256": "2c00722eeff2c6ea0601bbbecbbf3850d16e18f9ce19020474899b907fe99fef"
+    },
+    {
+      "path": "datasets/phase6/dblp-archive-acquisition.v1.json",
+      "bytes": 231,
+      "mtimeNs": 1792692553071096965,
+      "sha256": "4982a6815823a9fe4d60e2ac00cbc03baedce7e504a13ba40788b54d6ccd5aae"
+    },
+    {
+      "path": "datasets/phase6/dblp-slice-manifest.v1.json",
+      "bytes": 4011,
+      "mtimeNs": 1792692562977185852,
+      "sha256": "107d318fe65a2109152260b2fd846c4700f30716eb9c345dd78df535e6ae7632"
+    },
+    {
+      "path": "datasets/scripts/phase6/acquire_dblp_slice.py",
+      "bytes": 11806,
+      "mtimeNs": 1792692553068131612,
+      "sha256": "abfdc35f4d579d613d65d33607d6f5bc85d94c729d37523870079fce96f992d4"
+    },
+    {
+      "path": "datasets/scripts/phase6/test_dblp_slice.py",
+      "bytes": 6400,
+      "mtimeNs": 1792692553068291780,
+      "sha256": "bac05572443b3d5f0323802a442a284b2849ab1eb5cc7fa37f6109077a6e8961"
+    },
+    {
+      "path": "modules/core/src/main/scala/edu/uic/cs441/scholarchain/core/SparkAnalyticsValidation.scala",
+      "bytes": 20894,
+      "mtimeNs": 1792692378214020538,
+      "sha256": "3b1d42c6492d08c45bf0a70df4b57d224c179ba08dd7ef13a54d1d52f9812849"
+    },
+    {
+      "path": "modules/core/src/test/scala/edu/uic/cs441/scholarchain/core/SparkAnalyticsContractSpec.scala",
+      "bytes": 29615,
+      "mtimeNs": 1792692378214786585,
+      "sha256": "2c970e02030aff6cf4f719006345093afb651068338d2dd9af6c2451fb12936e"
+    },
+    {
+      "path": "modules/spark/README.md",
+      "bytes": 45143,
+      "mtimeNs": 1792694115158653824,
+      "sha256": "617b3af2b41e8b8100ed9b31ced5275ef22ae4829c780a2faa7cfc7341ef5f11"
+    },
+    {
+      "path": "modules/spark/src/main/scala/edu/uic/cs441/scholarchain/spark/Phase6CJobs.scala",
+      "bytes": 35681,
+      "mtimeNs": 1792693843040148025,
+      "sha256": "900399f647cc73be26340917d719914cc739b42be1133045a4b566eb9cf5ef0f"
+    },
+    {
+      "path": "modules/spark/src/main/scala/edu/uic/cs441/scholarchain/spark/Phase6CReaders.scala",
+      "bytes": 25557,
+      "mtimeNs": 1792692682579336696,
+      "sha256": "3823c212fa656686bcdaeb4b5d5ee141dd279c9d8e889fbfc92ad5d4aec5accb"
+    },
+    {
+      "path": "modules/spark/src/main/scala/edu/uic/cs441/scholarchain/spark/Phase6Context.scala",
+      "bytes": 1248,
+      "mtimeNs": 1792693242513999132,
+      "sha256": "083d23db025332a03bd5a110a858d4f6c19030d5ca268232c99cd6d7861b470c"
+    },
+    {
+      "path": "modules/spark/src/main/scala/edu/uic/cs441/scholarchain/spark/Phase6DEJobs.scala",
+      "bytes": 37854,
+      "mtimeNs": 1792693782446586669,
+      "sha256": "590f67ebba12ce407d1d2d8f182a141c61848c6f9ef5e96d176fea065c4d4661"
+    },
+    {
+      "path": "modules/spark/src/main/scala/edu/uic/cs441/scholarchain/spark/Phase6EventLog.scala",
+      "bytes": 4312,
+      "mtimeNs": 1792693242437345332,
+      "sha256": "97929df41e5a6cd8baa9ac5128cb25a5bd673a23fe51c17c536240116231968b"
+    },
+    {
+      "path": "modules/spark/src/main/scala/edu/uic/cs441/scholarchain/spark/Phase6Export.scala",
+      "bytes": 14600,
+      "mtimeNs": 1792693242668630281,
+      "sha256": "b5f3aadc3a5687393422a1a8deb691c7a9e2b42e9d18537be39b4425d97b7f88"
+    },
+    {
+      "path": "modules/spark/src/main/scala/edu/uic/cs441/scholarchain/spark/Phase6FGJobs.scala",
+      "bytes": 14064,
+      "mtimeNs": 1792693242573494526,
+      "sha256": "2245756162d8091db3fd87b852d1829502c1ab22188cf896cb3382c4f33955e1"
+    },
+    {
+      "path": "modules/spark/src/main/scala/edu/uic/cs441/scholarchain/spark/Phase6Main.scala",
+      "bytes": 11574,
+      "mtimeNs": 1792693843142823890,
+      "sha256": "ee9f251f6c2a05847ca6148a4c70d27fff0ddf9ad0a860f6ed5d2a9c04d9d655"
+    },
+    {
+      "path": "modules/spark/src/main/scala/edu/uic/cs441/scholarchain/spark/Phase6Plans.scala",
+      "bytes": 807,
+      "mtimeNs": 1792693242507271879,
+      "sha256": "a3b414ed2d965373feffc6902c017ea272e2d38d3de42ce64cbd73c7c34b23ce"
+    },
+    {
+      "path": "modules/spark/src/main/scala/edu/uic/cs441/scholarchain/spark/Phase6Report.scala",
+      "bytes": 3586,
+      "mtimeNs": 1792693242686761776,
+      "sha256": "809b1e02dae4406219b97399bc012142e072c6f3403680a951bbd239ecc45ddf"
+    },
+    {
+      "path": "modules/spark/src/test/scala/edu/uic/cs441/scholarchain/spark/Phase6CJobsSpec.scala",
+      "bytes": 37244,
+      "mtimeNs": 1792693843687716808,
+      "sha256": "b612532f2e64a5fcf231710aca8c4e9ce35dddd14626fe0ec3f5c9fc507096a2"
+    },
+    {
+      "path": "modules/spark/src/test/scala/edu/uic/cs441/scholarchain/spark/Phase6DEJobsSpec.scala",
+      "bytes": 21473,
+      "mtimeNs": 1792693843512772159,
+      "sha256": "f43490d6d00d48433121fd1648565af4320406fe701160e14b63fa6db5e0f10a"
+    },
+    {
+      "path": "modules/spark/src/test/scala/edu/uic/cs441/scholarchain/spark/Phase6FGJobsSpec.scala",
+      "bytes": 13857,
+      "mtimeNs": 1792693389952277160,
+      "sha256": "05d2ba4b41079cfac99333a619460cdd7e03ba2fb82e5b88f1a886982102d3aa"
+    },
+    {
+      "path": "tests/src/test/resources/phase6/empty.jsonl",
+      "bytes": 0,
+      "mtimeNs": 1792692705256761829,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "tests/src/test/resources/phase6/tiny-pipeline.xml",
+      "bytes": 619,
+      "mtimeNs": 1792692705256552328,
+      "sha256": "2aa9e7fe734ebb17ec2c9e5e02b548ab1e48ab37d638fdc2cd99376873ada36b"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentPhase6FGFixtures.scala",
+      "bytes": 4289,
+      "mtimeNs": 1792692864025488390,
+      "sha256": "9b90bc7e8c957edc16e37105c154f14cfb07caad302c6d81f69b79fb27756939"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentPhase6FGSpec.scala",
+      "bytes": 24303,
+      "mtimeNs": 1792693843887516919,
+      "sha256": "5d902b7d354df5aabbfd2a5b536f74f9b6dacf4a7f78e925e5bcdbcaee1f6dc4"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentPhase6PipelineSpec.scala",
+      "bytes": 6260,
+      "mtimeNs": 1792694151518375114,
+      "sha256": "b6983ae282939e76c79cd92c7795001a51604f5b39248a1a535c6973cac8530a"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentPhase6SafetySpec.scala",
+      "bytes": 6985,
+      "mtimeNs": 1792692864331892422,
+      "sha256": "07f420e3978d52d2aa726246e4ac6178347b70d1c7988a8f3d05b62d43740c65"
+    }
+  ]
+}

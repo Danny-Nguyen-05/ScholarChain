@@ -1,0 +1,68 @@
+{
+  "rule": "Timestamped Spark WARN lines omitted only from listed intermediate logs; full final gate and real-data logs remain unchanged.",
+  "logs": [
+    {
+      "file": "independent-initial-setup-failures.txt",
+      "originalBytes": 60865,
+      "originalSha256": "f187c7675b1377260981c1d7c5ac1371ae5230b43a0e0b0f08d03bc75863305b",
+      "retainedBytes": 5281,
+      "retainedSha256": "f493fe6a2805f423f7e14fc649e402b4364d7b038f2681f83016a6d200e18710",
+      "removedWarningLines": 143,
+      "fullOriginalIgnoredPath": "target/phase6-inputs/6fg-runtime/full-intermediate-logs/independent-initial-setup-failures.txt"
+    },
+    {
+      "file": "independent-plan-memory-failure.txt",
+      "originalBytes": 45437,
+      "originalSha256": "1884a372b7198d3dbdefcf3513a0f0988539199462568be6977b1a6a1645bf7e",
+      "retainedBytes": 9432,
+      "retainedSha256": "a0e14fce2ad98878d39427ac325ba2eb3534c36bfcfef712f81d888ec411dc01",
+      "removedWarningLines": 57,
+      "fullOriginalIgnoredPath": "target/phase6-inputs/6fg-runtime/full-intermediate-logs/independent-plan-memory-failure.txt"
+    },
+    {
+      "file": "independent-targeted.txt",
+      "originalBytes": 739044,
+      "originalSha256": "3803fd19716d4145fcbd4cec3bfd4973ad2b4b7554fe2beae2bd886ebe40b369",
+      "retainedBytes": 2977,
+      "retainedSha256": "720831e8089d49e44147fb748a2148d52b030276bf981824603f929d72eaea21",
+      "removedWarningLines": 2998,
+      "fullOriginalIgnoredPath": "target/phase6-inputs/6fg-runtime/full-intermediate-logs/independent-targeted.txt"
+    },
+    {
+      "file": "module-initial-test-failures.txt",
+      "originalBytes": 265232,
+      "originalSha256": "157a9293f3267ea8edf56c79cd95b658477816fd8c548263c5372457bffa46fc",
+      "retainedBytes": 34230,
+      "retainedSha256": "e069c0f5b887c28079b9b614fd3ae5929ead9d630096d012efe0ec342c330a2b",
+      "removedWarningLines": 620,
+      "fullOriginalIgnoredPath": "target/phase6-inputs/6fg-runtime/full-intermediate-logs/module-initial-test-failures.txt"
+    },
+    {
+      "file": "module-before-real-fix-passed.txt",
+      "originalBytes": 261492,
+      "originalSha256": "2255943e3081505ed8f915e53d2f5800cb1fe50095a009493974f4311943fe94",
+      "retainedBytes": 31787,
+      "retainedSha256": "3d49388cb9db5d5bc3e3c704ed49a55f3bcffd17452d20f2b3370f5c492027d6",
+      "removedWarningLines": 615,
+      "fullOriginalIgnoredPath": "target/phase6-inputs/6fg-runtime/full-intermediate-logs/module-before-real-fix-passed.txt"
+    },
+    {
+      "file": "final-targeted.txt",
+      "originalBytes": 967315,
+      "originalSha256": "743f94add5752eed1326fdd2bdd61dd05634941bf573f31b6c44c34511881607",
+      "retainedBytes": 35176,
+      "retainedSha256": "2ce5b73b2148c416b16aeb08f9336083cc6cd0de623389f6fd01d1ad8d65e8ce",
+      "removedWarningLines": 3428,
+      "fullOriginalIgnoredPath": "target/phase6-inputs/6fg-runtime/full-intermediate-logs/final-targeted.txt"
+    },
+    {
+      "file": "pipeline-final-targeted.txt",
+      "originalBytes": 164804,
+      "originalSha256": "01286a0719dcb12bc59925b83bdb823d7af25edfa42784d6d6b5191e69e9f07c",
+      "retainedBytes": 1694,
+      "retainedSha256": "a746b9dfc0da8dcd0119966540071791158518b466a6b6cb6d649fb5a73f5e2a",
+      "removedWarningLines": 682,
+      "fullOriginalIgnoredPath": "target/phase6-inputs/6fg-runtime/full-intermediate-logs/pipeline-final-targeted.txt"
+    }
+  ]
+}

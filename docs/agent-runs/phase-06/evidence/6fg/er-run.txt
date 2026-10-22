@@ -1,0 +1,14 @@
+Thu Oct 22 18:18:38 UTC 2026
+COMMAND: sbt -J-Xmx8G -batch entityResolution/runMain Phase5Main resolve (exact args below)
+[info] welcome to sbt 1.10.7 (Homebrew Java 17.0.20.1)
+[info] loading settings for project scholarchain-build from plugins.sbt...
+[info] loading project definition from /Users/danny/Documents/UIC/CS441/ScholarChain/project
+[info] loading settings for project root from build.sbt...
+[info] set current project to root (in build file:/Users/danny/Documents/UIC/CS441/ScholarChain/)
+[info] running edu.uic.cs441.scholarchain.entityresolution.Phase5Main resolve --input target/phase6-runs/6fg-hadoop/992f0c54-0d6e-4c63-9177-84b946a18928 --policy modules/entity-resolution/src/main/resources/phase5-policy.v1.json --config target/phase6-inputs/6fg-runtime/er-config.json --llm-mode disabled --output target/phase6-runs/6fg-er-disabled
+Resolved 20000 comparisons; fake calls=0, live calls=0; output=target/phase6-runs/6fg-er-disabled; input=b9141dfb261a1cb2735c9d397cef972aad6aad5c03f93df2c5860ef26e66e0d4. No human labels, accuracy or calibration is claimed.
+[success] Total time: 95 s (01:35), completed Oct 22, 2026, 1:20:15 PM
+real 97.23
+user 192.63
+sys 4.34
+exit=0

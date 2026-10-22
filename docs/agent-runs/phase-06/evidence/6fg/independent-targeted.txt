@@ -1,0 +1,41 @@
+INTERMEDIATE LOG EXCERPT: independent-targeted.txt
+Repeated timestamped Spark WARN lines removed; commands, test results and error traces retained.
+Full original: target/phase6-inputs/6fg-runtime/full-intermediate-logs/independent-targeted.txt
+Original bytes=739044 sha256=3803fd19716d4145fcbd4cec3bfd4973ad2b4b7554fe2beae2bd886ebe40b369
+Final stable-tree gate remains unfiltered in final-check.txt.
+
+[info] welcome to sbt 1.10.7 (Homebrew Java 17.0.20.1)
+[info] loading settings for project scholarchain-build from plugins.sbt...
+[info] loading project definition from /Users/danny/Documents/UIC/CS441/ScholarChain/project
+[info] loading settings for project root from build.sbt...
+[info] set current project to root (in build file:/Users/danny/Documents/UIC/CS441/ScholarChain/)
+[info] scalafmt: Formatting 2 Scala sources (/Users/danny/Documents/UIC/CS441/ScholarChain/tests)...
+[info] scalafmt: Reformatted 2 Scala sources
+[success] Total time: 1 s, completed Oct 22, 2026, 1:23:34 PM
+[info] compiling 1 Scala source to /Users/danny/Documents/UIC/CS441/ScholarChain/modules/spark/target/scala-3.3.4/classes ...
+[info] done compiling
+[info] compiling 2 Scala sources to /Users/danny/Documents/UIC/CS441/ScholarChain/tests/target/scala-3.3.4/test-classes ...
+[info] done compiling
+[info] IndependentPhase6FGSpec:
+[info] - G1 disjoint-window recomputation gives exact D deltas and explicit entry/exit rows
+[info] - S-source estimate on a three-node chain has exact ordered-pair mean and P90
+[info] - empty configured window produces no invented metrics, paths, summaries or estimates
+[info] - near-Hadoop-limit team preserves every distinct pair and reports ORCID conflict without splitting
+[info] - community continuity uses best Jaccard and handles tied candidate communities
+[info] - all four factual summary templates trace every number and fact to the exact source row/field
+[info] - complete export rereads every table, validates declared core records and binds four manifests to paths counts and hashes
+[info] - replay changes physical partition count and output root while every logical table hash stays identical
+[info] IndependentPhase6SafetySpec:
+[info] - production Spark sources keep forbidden driver actions and graph APIs outside BoundedActions
+[info] - output gate refuses partial mismatched and tampered runs and reuses only the identical manifest
+[info] - unknown Spark config schema is refused before any input or output work
+[info] - streaming event-log summary reports exact stage tasks partitions shuffle records and failures
+[info] IndependentPhase6PipelineSpec:
+[info] - committed tiny fixture completes unchanged Hadoop then offline ER then all Spark jobs
+[info] Run completed in 1 minute, 31 seconds.
+[info] Total number of tests run: 13
+[info] Suites: completed 3, aborted 0
+[info] Tests: succeeded 13, failed 0, canceled 0, ignored 0, pending 0
+[info] All tests passed.
+[success] Total time: 96 s (01:36), completed Oct 22, 2026, 1:25:10 PM
+exit=0
