@@ -1,0 +1,31 @@
+{
+  "configSchemaVersion": "scholarchain.spark-analytics-config.v1",
+  "hadoopRunRoot": "target/phase4-runs/example-completed-run",
+  "entityResolutionRunRoot": "target/phase5-runs/example-completed-run",
+  "outputRoot": "target/phase6-runs",
+  "windows": [
+    {"windowId": "all-years", "startYear": null, "endYear": null, "comparisonOrder": null},
+    {"windowId": "through-2009", "startYear": null, "endYear": 2009, "comparisonOrder": 0},
+    {"windowId": "2010-2014", "startYear": 2010, "endYear": 2014, "comparisonOrder": 1},
+    {"windowId": "2015-2019", "startYear": 2015, "endYear": 2019, "comparisonOrder": 2},
+    {"windowId": "2020-2026", "startYear": 2020, "endYear": 2026, "comparisonOrder": 3},
+    {"windowId": "since-2015", "startYear": 2015, "endYear": 2026, "comparisonOrder": null}
+  ],
+  "identityPolicyVersion": "identity-v1",
+  "representativePolicyVersion": "representative-v1",
+  "graphPolicyVersion": "graph-v1",
+  "componentMaxIterations": 100,
+  "communityMaxIterations": 20,
+  "kCoreMaxIterations": 100,
+  "checkpointInterval": 5,
+  "checkpointDirectory": "target/phase6-runs/checkpoints",
+  "maxHops": 6,
+  "benchmarkPairs": [],
+  "sampledPathPairCount": 32,
+  "pathSampleSourceCount": 32,
+  "samplingSeed": 441,
+  "representativeWorkLimit": 5,
+  "maxTeamWorkLimit": 20,
+  "shufflePartitions": 4,
+  "failOnHardInvariant": true
+}

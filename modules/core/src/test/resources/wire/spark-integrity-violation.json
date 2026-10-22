@@ -1,0 +1,29 @@
+{
+  "context": {
+    "schemaVersion": "scholarchain.spark-analytics.v1",
+    "runId": "run:00112233-4455-4677-8899-aabbccddeeff",
+    "windowId": null,
+    "lineage": {
+      "hadoopRunId": "run:00112233-4455-4677-8899-aabbccddeeff",
+      "hadoopSnapshot": "dblp-2026-10-03",
+      "entityResolutionRunId": "run:00112233-4455-4677-8899-aabbccddeeff",
+      "entityResolutionPolicyVersion": "er-v1",
+      "entityResolutionPolicyHash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "sourceWorkIds": [
+        "work:dblp:conf/example/w1"
+      ],
+      "sourceMentionIds": []
+    }
+  },
+  "code": "selfPairsDropped",
+  "entityId": "researcher:dblp:5f3ebef46438fe4e2ea69c2c4bc567b53dbb1cfcf8a0e80dd1cfe797b801a589",
+  "detail": "one collapsed pair",
+  "hardFailure": false,
+  "evidenceRefs": [
+    {
+      "table": "metrics/researcher_collaboration",
+      "rowKey": "researcher:dblp:5f3ebef46438fe4e2ea69c2c4bc567b53dbb1cfcf8a0e80dd1cfe797b801a589",
+      "field": "publicationCount"
+    }
+  ]
+}

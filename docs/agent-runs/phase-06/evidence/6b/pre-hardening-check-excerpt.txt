@@ -1,0 +1,14 @@
+155:[info] Total number of tests run: 134
+157:[info] Tests: succeeded 134, failed 0, canceled 0, ignored 0, pending 0
+897:[info] Total number of tests run: 64
+899:[info] Tests: succeeded 64, failed 0, canceled 0, ignored 0, pending 0
+947:[info] Total number of tests run: 39
+949:[info] Tests: succeeded 39, failed 0, canceled 0, ignored 0, pending 0
+957:[info] Total number of tests run: 1
+959:[info] Tests: succeeded 1, failed 0, canceled 0, ignored 0, pending 0
+2112:[info] Total number of tests run: 234
+2114:[info] Tests: succeeded 234, failed 0, canceled 0, ignored 0, pending 0
+2154:[info] Total number of tests run: 7
+2156:[info] Tests: succeeded 7, failed 0, canceled 0, ignored 0, pending 0
+2159:[success] Total time: 418 s (06:58), completed Oct 21, 2026, 10:40:32 PM
+2160:real 419.69

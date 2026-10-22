@@ -180,3 +180,308 @@ MANUAL ACTION REQUIRED: User commits approved 6A (implementation, reports and ev
 BLOCKED-ON OWNER: none
 BLOCKED-ON EVIDENCE: none
 NEXT GATE: User commit of 6A, then Subphase 6B Step 0
+
+## Subphase 6B review — user-supplied external review
+
+Subphase 6B review (read-only, independent)
+
+1. VERDICT: REQUEST-CHANGES
+
+There are three blocking findings. All are small, owner-local repairs in modules/core/** and modules/spark/README.md. Ownership, the additive wire compatibility, the yearless and entry/exit representation, provenance and the evidence claims check out.
+
+2. Findings
+
+F1 — High — BLOCKING — ResearcherMetricsDetail validation drops the frozen metric invariants
+
+- Where: modules/core/src/main/scala/edu/uic/cs441/scholarchain/core/SparkAnalyticsValidation.scala:62-93, compared with DomainValidation.scala:1343-1395.
+- Evidence: The companion check enforces only non-negativity, finiteness, W == T, the zero-publication rule, ID sorting and tie ≥ retained. Unlike the frozen ResearcherMetrics rules, it does not check:
+  - A ≈ T/P (same tolerance)
+  - C ≤ T, M ≤ C, M ≤ T
+  - T == 0 ⇔ C == 0 ⇔ M == 0
+  - T ≤ P·M (BigInt)
+  - coreness ≤ C
+
+  The new fields have no rules either: maxTeamWorkIds should be nonempty and maxTeamWorkTieCount between 1 and P whenever P > 0. With the current code, the example row with averageCoauthorsPerPaper = 99.0, distinctCoauthorCount = 5, coreness = Some(9) or maxTeamWorkIds = Vector() all pass. modules/core/README.md:166 says this method "validates each new record locally".
+- Impact: The core Phase 6 metric contract is weaker than the frozen one it accompanies. Wrong P/C/T/A/M rows from 6D would pass the contract gate.
+- Owner: domain-engineer
+- Acceptance check: The companion check enforces every frozen consistency rule plus the tie and ID rules above. There is one negative test per rule. The existing wire example still validates.
+
+F2 — Medium — BLOCKING — The summary-ID formula is inconsistent across plan, docs, example and validator
+
+- Where:
+  - Plan phase6.md:353: summaryId via StableIds.chunkOrProfileId
+  - modules/core/README.md:168 and modules/spark/README.md:97: sparkAnalyticsId supplies summary IDs
+  - SparkAnalyticsContractSpec.scala:124-128 and wire/spark-semantic-summary.json: use chunkOrProfileId (profile:20fe…)
+  - SparkAnalyticsValidation.scala:311-314: accepts either form
+- Impact: This misses the 6B Done-when "README design sections match the contracts", and there is no single deterministic summary-ID rule. There is a further issue: as called in the example, chunkOrProfileId(entity, "graph-v1", type, None, text) does not bind the window. The same entity with identical text in two windows gets the same summaryId. Downstream, EvidenceItem.chunkId (DomainValidation.scala:538) parses only chunk/profile IDs, which matters for Phase 8 citation.
+- Owner: domain-engineer (contract, example, core README) and spark-engineer (modules/spark/README.md). The choice is the user's.
+- Acceptance check: One formula is chosen and documented in both READMEs. The validator accepts only that form, and the example is regenerated. A test shows the same entity and text in two windows produces different IDs.
+- Recommended default: Keep chunkOrProfileId (plan §7.10, Phase 8 compatible), with the policy and window bound into sourceVersion.
+
+F3 — Medium — BLOCKING — Missing feature tests for the user-approved 6B-1 and 6B-2 behavior and G1 coverage
+
+- Where: SparkAnalyticsContractSpec.scala:209-216 and 287-333.
+- Evidence:
+  - IDs: No test shows NFC equivalence (precomposed "é" vs "e\u0301" give the same ID). No negative tests for parseResearcherId on bad researcher:dblp: forms (63 hex digits, uppercase hex, an extra : segment), or for an unknown sparkAnalyticsId kind.
+  - Config: Every rule at SparkAnalyticsConfigLoader.scala:115-161 is untested: duplicate windowId, reversed bounds, overlap, gap, an open bound mid-sequence, duplicate comparisonOrder, and a bad endpointKind. Only maxHops = 0, empty windows, an unknown field, an LF name and a ${…} root are tested.
+  - G1: Only A's metrics, C's bridge and the A–G component are shown. J's solo row (P=1, C=T=M=W=0, maxTeamWorkIds=[w8], coreness 0, singleton component) and the A→H no-path row are not.
+- Impact: This fails the definition of done ("every behavior change has feature tests") for the ID and window rules the user explicitly approved.
+- Owner: domain-engineer
+- Acceptance check: The tests above exist and pass inside the JDK 17 sbt -batch check.
+
+F4 — Medium — non-blocking (record now; repair before 6E path evidence or Phase 7/8 consumers) — New edge IDs aren't accepted by existing consumers, and the plan deviation isn't recorded
+
+- Where: StableIds.scala:308-328; DomainValidation.scala:1525-1530; Records.scala:238-243; plan phase6.md:254.
+- Evidence:
+  - EvidenceItem(CoauthorEdge).edgeLocatorId accepts only graph-edge: or coauthor-edge:, so spark-coauthor-edge: IDs from PathHop can't be cited.
+  - CoauthorshipProperties requires integer years, so a yearless all-years edge has no GraphEdge (Neptune) form.
+  - The plan said edgeId comes from StableIds.coauthorEdgeId. The change is justified and documented in modules/spark/README.md:25, but neither prompt.md nor owner-report.md lists it as a plan deviation.
+- Owner: domain-engineer (additive locator acceptance and a test, or a documented open item); the coordinator records the deviation in repairs.md.
+- Acceptance check: The deviation is recorded, and compatibility is either implemented with a test or routed with a named owner and gate.
+
+F5 — Low — non-blocking — Other single-record invariants are missing
+
+- Where: SparkAnalyticsValidation.scala:95-254; SparkAnalyticsConfigLoader.scala:146.
+- Evidence:
+  - Bridge (ResearcherBridgeMetrics):
+    - crossCommunityDegree == 0 should imply participationCoefficient == 0.
+    - crossCommunityWeight should be ≥ crossCommunityDegree.
+  - Community records:
+    - CrossCommunityEdge.summedWeight should be ≥ edgeCount.
+    - A CommunitySummary with converged = true should have finalChangedCount == 0.
+  - Path (PathEvidence with status Found): it accepts hopCount > maxHops, source == target and repeated nodes.
+  - Config: benchmark self-pairs are compared as raw strings, so " A"/"A" passes even though both map to one researcher.
+  - Context: windowId is only checked as non-blank, not against the config pattern.
+- Owner: domain-engineer
+- Acceptance check: Folded into the F1 repair with negative tests, or explicitly deferred in repairs.md.
+
+F6 — Low — non-blocking — Window labels aren't bound to their bounds
+
+- Where: StableIds.scala:250-265 and 308-324; SparkAnalyticsConfigLoader.scala:118-130.
+- Evidence: Edge, component and community IDs hash only the windowId label. Config accepts "2015-2019" with bounds 2010–2014. The frozen coauthorEdgeId binds numeric bounds.
+- Impact: Within a run this is safe, because the run ID includes the config fingerprint. Across runs, consumers keyed by window label could mix up differently defined windows.
+- Owner: domain-engineer
+- Acceptance check: Either bind the bounds into the ID material or validate label-to-bounds consistency, or document the limitation.
+
+F7 — Low — non-blocking, future gate 6F — The deterministic run ID isn't representable yet
+
+- Where: StableIds.scala:64-65; modules/spark/README.md:9; SparkAnalyticsConfig.scala:30-31.
+- Evidence:
+  - SparkRecordContext.runId must match run:<uuid-v4>. Hadoop uses random v4 IDs (HadoopPrepPipeline.scala:374). The README promises a deterministic hash, and no core helper defines how a hash becomes a valid run ID.
+  - The config fingerprint covers roots, checkpointDirectory and shufflePartitions. A local run and an EMR run of the same logical inputs would get different run IDs, so every row's runId would differ. The plan only lets partition counts and part-file names differ.
+- Owner: domain-engineer before 6F. The user decides which fields form the logical fingerprint.
+- Acceptance check: A domain-owned deterministic run-ID helper with tests, plus a recorded decision on the fingerprint scope.
+
+F8 — Info — non-blocking, risk notes for later owners
+
+- LoadManifest.windows must be nonempty even for node tables that have no window. targetMapping is untyped and not checked per target. This goes to the Phase 7 storage-engineer proposal.
+- The rule "a window includes yearless works only when both bounds are absent" is stated in prose only (modules/spark/README.md:11), not in the SparkWindow scaladoc.
+- 2020-2026 and since-2015 end at 2026, so DBLP works dated 2027 (forthcoming volumes) fall into all-years only. 6C should count them.
+
+Verified and acceptable
+
+- Ownership: writes are confined to modules/core/** (domain), modules/spark/README.md (spark) and docs/agent-runs/phase-06/** (coordinator).
+- Additive changes: the frozen CoauthorEdge, ResearcherMetrics and their ID formulas are unchanged. parseResearcherId and supportedManifestConfig are widened additively.
+- DBLP IDs: the formula matches the Step 0 answer. CanonicalResearcher validation lets a DBLP ID carry a validated ORCID.
+- Collision guards: the LF-collision guard is present.
+- Config: a strict unknown-field check; the fingerprint follows the HadoopPrepConfig precedent.
+- Yearless edges: represented with absent first/last years and an optional support year.
+- Temporal entry/exit: handled with presence flags and absent deltas.
+- Path status: wire values found, no-path, exceeded-maxHops.
+- Provenance: carried in SparkRecordContext / SparkLineage on every new record.
+- Wire snapshots: 16 exist; every new record type has one, compared byte for byte, and they pin the ID formulas.
+- Evidence: final-check.txt lines 156/158, 898/900, 948/950, 958/960, 2113/2115, 2155/2157, 2160 and 2161 match the claimed 135 + 64 + 39 + 1 + 234 + 7 = 480 passed, 0 failed, and real 418.74. The [error] lines at 2125–2144 are the injected check-probe self-test. The log header shows Java 17.0.20.1.
+
+3. Report fields
+
+STATUS: COMPLETE (review) — VERDICT REQUEST-CHANGES for Subphase 6B
+OWNER: code-reviewer (independent, user-launched, read-only)
+WORK ORDER: Read-only review of Subphase 6B on phase-6, base/HEAD
+  bc1e4a17fc879b7aac254b28d83e78dbdd34e367, against AGENTS.md, CLAUDE.md,
+  docs/agents.md, code-reviewer.md, docs/agent-runs/README.md, plan §§4–8 and
+  6B, course Phase 6 + Detailed Spark requirements, and 6B evidence.
+FILES CREATED: None.
+FILES MODIFIED: None.
+COMMANDS RUN: Read-only: git rev-parse HEAD; git status --short; git diff --stat
+  and git diff bc1e4a1… (modules/, docs/); cat/sed/grep/wc on the 6B
+  untracked files, core sources (StableIds, DomainValidation, Records,
+  HadoopPrepConfig, CoreJson), project/Versions.scala, plan phase6.md and
+  evidence/6b/*; WebFetch of the course README (Phase 6 and Detailed Spark
+  requirements). One read-only grep was refused by the PreToolUse guard because
+  its text named a protected path; it was re-run without that path. No build,
+  test, Spark, AWS, provider, edit, commit or push.
+TEST RESULTS: Not run by reviewer (read-only). Observed in retained log:
+  480 passed / 0 failed (core 135, Hadoop 64, ER 39, Spark smoke 1,
+  independent 234, build 7), [success] 417 s, real 418.74, Java 17.0.20.1.
+VALIDATION RESULTS: 3 blocking findings (F1 metrics-detail invariants, F2
+  summary-ID inconsistency, F3 missing feature tests); 5 non-blocking
+  (F4–F8). Ownership, additive compatibility, provenance and evidence line
+  claims verified.
+ASSUMPTIONS: The course README's "Detailed Spark requirements" were read via
+  WebFetch summary, not verbatim. Plan phase6.md taken at the recorded SHA-256
+  bd6ecba6… (not re-hashed by the reviewer).
+RISKS: F4 and F7 affect 6E/6F and Phase 7/8 if not tracked. The run
+  ID and fingerprint scope need a user decision before 6F.
+MANUAL ACTION REQUIRED: User chooses the summary-ID formula (F2) and decides
+  F4–F7 disposition (fix now or defer with owner). Do not commit 6B yet.
+BLOCKED-ON OWNER: domain-engineer (F1, F2, F3; F4–F7 if accepted);
+  spark-engineer (F2 README alignment); coordinator (repairs.md, F4 deviation).
+BLOCKED-ON EVIDENCE: Paths and lines in findings F1–F3 above.
+NEXT GATE: 6B repair round 1, then a new user-run read-only recheck.
+
+4. NEXT PROMPT
+
+You are the main coordinator for ScholarChain Phase 6, Subphase 6B REPAIR ROUND 1,
+in /Users/danny/Documents/UIC/CS441/ScholarChain, branch phase-6.
+Base SHA and HEAD: bc1e4a17fc879b7aac254b28d83e78dbdd34e367. 6B is uncommitted;
+do not reset or discard it.
+
+The external 6B reviewer returned VERDICT: REQUEST-CHANGES. First append the
+complete reviewer output verbatim to docs/agent-runs/phase-06/review.md under a
+"Subphase 6B review" heading. Create or extend docs/agent-runs/phase-06/repairs.md
+with one row per finding F1–F8 (disposition, owner, evidence).
+
+Step 0 — ask the user these questions, each with a recommended default, and wait:
+1. F2 summary-ID formula. Recommended: StableIds.chunkOrProfileId (plan §7.10,
+   compatible with EvidenceItem.chunkId), with policy and windowId bound into
+   sourceVersion so identical text in two windows yields different IDs; the
+   validator accepts only that form. Alternative: sparkAnalyticsId("summary", …).
+2. F4–F7: fix now in 6B, or defer with named owner/gate? Recommended: fold F5
+   into the F1 repair; record F4 as a plan deviation and add additive
+   EvidenceItem acceptance of spark-coauthor-edge IDs with a test; defer F6 and
+   F7 to a domain-engineer task before 6F, with the logical-fingerprint scope
+   as a user decision recorded then.
+3. Any other question you have.
+
+Repairs (after answers), routed by docs/agents.md:
+- domain-engineer (modules/core/** only):
+  F1: make SparkAnalyticsValidation.check(ResearcherMetricsDetail) enforce every
+      frozen ResearcherMetrics consistency rule (DomainValidation.scala:1343-1395,
+      same tolerance) plus: P>0 ⇒ maxTeamWorkIds nonempty and 1 ≤ tieCount ≤ P;
+      coreness ≤ distinctCoauthorCount. One negative test per rule.
+  F2: implement the chosen summary-ID formula; regenerate
+      wire/spark-semantic-summary.json; update modules/core/README.md:168;
+      test window binding.
+  F3: add tests for NFC equivalence (precomposed vs combining é), malformed
+      researcher:dblp: forms, unknown sparkAnalyticsId kind, every config window
+      rule (duplicate id, reversed, overlap, gap, open bound mid-sequence,
+      duplicate comparisonOrder), invalid endpointKind, and G1 representability
+      of J's solo row and singleton component and the A→H no-path PathEvidence.
+  F5/F4 only if the user approves them in Step 0.
+- spark-engineer (modules/spark/README.md only): align Job 10 (line 97) and any
+  other text with the F2 decision; no code.
+Keep all changes additive. No existing wire field or ID formula may change, and
+no Phase 5, build, Hadoop or ER files change.
+
+Gate: JDK 17 env and the Phase 4 SBT_OPTS logging config, `sbt -batch check`
+on the stable tree, plus `git diff --check`. Retain the log under
+docs/agent-runs/phase-06/evidence/6b/ (e.g. repair1-final-check.txt). Update the
+6B repair sections of owner-report.md and test-report.md with exact commands,
+exit codes, counts and any intermediate failures.
+
+Then return a handoff packet and a new copyable read-only RECHECK reviewer prompt
+covering F1–F8 dispositions, the repair diff against the same base SHA, and the
+new evidence. Do not launch a reviewer, commit, push, or start Subphase 6C.
+End with: "Subphase 6B repair round 1 is ready for review. I have stopped and
+will not start the next subphase until I receive the next prompt."
+
+## Subphase 6B repair round 1 recheck — user-supplied external review
+
+Subphase 6B repair round 1 recheck (read-only, independent)
+
+1. VERDICT: APPROVE
+
+All three blockers (F1–F3) are fixed and covered by tests. The F4 repair the user asked for is correct and additive. The retained logs match every claimed count, and every source file was last modified before the final gate started. Two low, nonblocking observations remain. One of them changes when F6 and F7 must be resolved: during 6C, not 6F.
+
+2. Findings and dispositions
+
+Prior findings
+
+F1 — CLOSED. SparkAnalyticsValidation.scala:62-127 now covers every frozen ResearcherMetrics rule:
+- C ≤ T, M ≤ C, M ≤ T
+- zero-agreement between T, C and M; T = 0 requires A = 0
+- A ≈ T/P, using the same max(1e-12, 4·ulp) tolerance as DomainValidation.scala:1339-1341
+- T ≤ P·M using BigInt; W == T; coreness ≤ C
+- P = 0 requires every collaboration value to be zero
+
+It also adds the new rules: when P > 0, maxTeamWorkIds is nonempty and the tie count is between 1 and P; when P = 0, there are no IDs and the tie count is 0. SparkAnalyticsContractSpec.scala has one negative case per rule, each asserting its exact message, plus a valid all-zero row and an invalid zero row with IDs.
+
+F2 — CLOSED.
+- StableIds.sparkSemanticSummaryId (StableIds.scala:357-374) calls chunkOrProfileId(entity, s"$policy:$window", summaryType, None, text). A policy or window value can't contain : or LF, so the sourceVersion is unambiguous.
+- SemanticSummary gained policyVersion (SparkAnalyticsContracts.scala:207). This record is new in 6B, so no frozen wire changed.
+- The validator recomputes the exact ID (SparkAnalyticsValidation.scala:~348-360), and "summary" was removed from the sparkAnalyticsId kinds.
+- The wire example has been regenerated (profile:6c6a…). modules/core/README.md:168 and modules/spark/README.md:97 agree with it.
+- Tests show the same text gives different IDs in different windows, and that a changed text, a changed policy or a summary: ID is rejected.
+
+F3 — CLOSED. The tests now cover:
+- NFC: "José" and "Jose\u0301" give the same ID
+- malformed DBLP IDs: 63 hex digits, uppercase hex, an extra : segment
+- unknown and summary analytics kinds
+- config windows: duplicate ID, reversed bounds, overlap (2009), gap (2011), an open lower bound mid-sequence, duplicate comparisonOrder
+- an invalid endpointKind
+- G1: J's solo row (P = 1, everything else 0, [w8], tie count 1, coreness 0) with a singleton ComponentSummary, and A→H no-path evidence
+
+F4 — CLOSED (citation compatibility). StableIds.scala:826-829 and DomainValidation.scala:1525-1528 accept spark-coauthor-edge: as an edge locator, with positive and negative tests. repairs.md records the deviation from plan §7.3. Mapping yearless edges to Neptune GraphEdge records remains a Phase 7 gate, correctly routed.
+
+F5 — Deferred; acceptable. The domain owner must add these before 6D–6E producers rely on them.
+
+F6 and F7 — Deferred; acceptable for 6B, but the gate is wrong (see R2).
+
+F8 — Future scope; acceptable. Counting 2027-dated works is assigned to 6C.
+
+New observations
+
+R1 — Low — non-blocking.
+- Where: SparkAnalyticsValidation.scala (check(SemanticSummary)).
+- Evidence: entityId is only checked for being non-blank. It isn't checked to be a researcher, community, path-evidence or work ID matching summaryType.
+- Owner: domain-engineer
+- Acceptance check: Fold this into the F5 hardening before 6F's Job 10 produces summaries.
+
+R2 — Low — non-blocking: F6 and F7 are scheduled too late.
+- Where: repairs.md 6B rows F6/F7; plan phase6.md Subphase 6C, task 2.
+- Evidence: 6C task 2 is "the run-manifest and deterministic run-ID builder", and 6C Job 2 creates sparkCoauthorEdgeId values that bind window labels. Both F6 (label vs. bounds identity) and F7 (deterministic run ID and fingerprint scope) take effect in 6C. Their recorded "before 6F" gates come too late.
+- Owner: coordinator, to reschedule them. domain-engineer builds the core helper; the user decides the fingerprint scope.
+- Acceptance check: 6C Step 0 asks both questions, and any core helper is delivered by domain-engineer before spark-engineer uses it.
+
+Verified
+
+- Ownership: core edits by domain-engineer, the Spark README by spark-engineer, docs/agent-runs/** by the coordinator. No Phase 5, build, Hadoop, ER or human-owned files changed.
+- Additive compatibility: frozen wire fields and ID formulas are unchanged; parser and locator acceptance only widened.
+- Gate timing: the latest source mtime is 23:07:42, and the full check started at about 23:08:08 (completed 23:15:04, 416 s).
+- Full log: lines 161/163, 903/905, 953/955, 963/965, 2118/2120 and 2160/2162 sum to 140 + 64 + 39 + 1 + 234 + 7 = 485 passed, 0 failed. [success] is at line 2165 and real 418.15 at line 2166. The header shows Java 17.0.20.1. The [error] lines are the injected check-probe self-test.
+- Targeted log: 11/11 passed.
+- Log integrity: the retained log's SHA-256 is 04242ca7…0ce9 and its size is 245,188 bytes, matching test-report.md.
+- review.md: my 6B review was appended verbatim.
+
+3. Report fields
+
+STATUS: COMPLETE (review) — VERDICT APPROVE for Subphase 6B repair round 1
+OWNER: code-reviewer (independent, user-launched, read-only)
+WORK ORDER: Read-only recheck of 6B repair round 1 on phase-6, base/HEAD
+  bc1e4a17fc879b7aac254b28d83e78dbdd34e367 (uncommitted tree), covering F1–F4
+  repairs, F5–F8 dispositions, docs consistency and evidence claims.
+FILES CREATED: None.
+FILES MODIFIED: None.
+COMMANDS RUN: Read-only: git rev-parse HEAD; git status --short; git diff
+  bc1e4a1… for StableIds.scala, DomainValidation.scala, repairs.md, test-report.md,
+  review.md, owner-report.md; sed/grep of SparkAnalyticsValidation.scala,
+  SparkAnalyticsContracts.scala, SparkAnalyticsContractSpec.scala, the
+  semantic-summary wire file and both READMEs; stat mtimes of sources and
+  evidence; grep of evidence/6b/repair-1/{final-check,targeted-contract}.txt;
+  shasum -a 256 and wc -c of final-check.txt; plan 6C and §11. No build, test,
+  Spark, AWS, provider, edit, commit or push.
+TEST RESULTS: Not run by reviewer. Retained logs: full sbt -batch check 485/485
+  (core 140, Hadoop 64, ER 39, Spark 1, independent 234, build 7), 416 s,
+  real 418.15, Java 17.0.20.1; targeted SparkAnalyticsContractSpec 11/11.
+VALIDATION RESULTS: F1, F2, F3 closed; F4 closed for citation; F5–F8 deferred
+  with owners; R1 and R2 low, nonblocking. Ownership, additivity, gate timing
+  and log hash verified.
+ASSUMPTIONS: The course spec was read via WebFetch summary in the prior pass and
+  has not changed for this recheck. Owner-reported intermediate (stale snapshot)
+  failure is not separately retained, as test-report.md discloses.
+RISKS: F6/F7 affect 6C edge IDs and run IDs (R2). The yearless Neptune edge
+  mapping is open for Phase 7.
+MANUAL ACTION REQUIRED: User commits the approved 6B tree before 6C starts.
+BLOCKED-ON OWNER: None for 6B.
+BLOCKED-ON EVIDENCE: None for 6B.
+NEXT GATE: User commit of 6B, then Subphase 6C Step 0.

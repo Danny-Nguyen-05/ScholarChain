@@ -1,0 +1,36 @@
+{
+  "context": {
+    "schemaVersion": "scholarchain.spark-analytics.v1",
+    "runId": "run:00112233-4455-4677-8899-aabbccddeeff",
+    "windowId": "2020-2026",
+    "lineage": {
+      "hadoopRunId": "run:00112233-4455-4677-8899-aabbccddeeff",
+      "hadoopSnapshot": "dblp-2026-10-03",
+      "entityResolutionRunId": "run:00112233-4455-4677-8899-aabbccddeeff",
+      "entityResolutionPolicyVersion": "er-v1",
+      "entityResolutionPolicyHash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "sourceWorkIds": [
+        "work:dblp:conf/example/w1"
+      ],
+      "sourceMentionIds": []
+    }
+  },
+  "researcherId": "researcher:dblp:5f3ebef46438fe4e2ea69c2c4bc567b53dbb1cfcf8a0e80dd1cfe797b801a589",
+  "fromWindowId": "2015-2019",
+  "toWindowId": "2020-2026",
+  "fromPresent": true,
+  "toPresent": true,
+  "deltaDistinctCoauthors": 1,
+  "deltaAverageCoauthorsPerPaper": 0.5,
+  "deltaMaximumCoauthorsOnOnePaper": 1,
+  "deltaComponentSize": 2,
+  "enteredLargestComponent": true,
+  "leftLargestComponent": false,
+  "previousCommunityId": "community:8bad89e3cc87a75822e60d29be7c4a4745ed1a07f784959339646f658ed81374",
+  "currentCommunityId": "community:aa2cbe8eb1d90d5de0617ebe80cf6289e4f07e90aef0d314e968b8a3a69d68bc",
+  "communityJaccardOverlap": 0.5,
+  "deltaCrossCommunityDegree": 1,
+  "deltaCrossCommunityWeight": 2,
+  "deltaCommunitiesConnected": 1,
+  "deltaParticipationCoefficient": 0.25
+}

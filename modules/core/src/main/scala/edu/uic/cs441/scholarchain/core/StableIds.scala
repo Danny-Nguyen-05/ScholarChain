@@ -2,6 +2,7 @@ package edu.uic.cs441.scholarchain.core
 
 import java.nio.charset.StandardCharsets
 import java.security.MessageDigest
+import java.text.Normalizer
 import java.util.UUID
 import scala.util.matching.Regex
 
@@ -31,7 +32,8 @@ final case class ParsedMentionId(sourceWire: String, sourceRecordId: String, ord
   * `evidence:edge:{sha256}`. The hash covers the kind and that kind's fields, joined by a single LF
   * and no trailing LF. Graph-path fields are the node ids in path order. Metric fields are
   * researcher id, collaboration-metric wire name, window start, window end, and policy version. The
-  * edge field is one `graph-edge:` or `coauthor-edge:` id. Text stays on `chunk:` and `profile:`.
+  * edge field is one `graph-edge:`, `coauthor-edge:`, or `spark-coauthor-edge:` id. Text stays on
+  * `chunk:` and `profile:`.
   *
   * Graph edge ID: `graph-edge:{sha256}` of edge type, canonical endpoints, policy version, and
   * source-evidence pointer. `COAUTHORED_WITH` sorts endpoints; other types keep direction.
@@ -58,6 +60,7 @@ object StableIds {
     "^(?:\\d{4}\\.\\d{4,5}(?:v\\d+)?|[a-z-]+(?:\\.[A-Z]{2})?/\\d{7})$".r
   private val orcidPattern: Regex = "^\\d{4}-\\d{4}-\\d{4}-\\d{3}[\\dX]$".r
   private val policyPattern: Regex = "^[a-z0-9][a-z0-9._-]{0,63}$".r
+  private val sparkWindowPattern: Regex = "^[a-z0-9][a-z0-9._-]*$".r
   private val hex64: Regex = "^[0-9a-f]{64}$".r
   private val runPattern: Regex =
     "^run:[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$".r
@@ -228,6 +231,39 @@ object StableIds {
       Right(s"researcher:scholarchain:$identityPolicyVersion:$hash")
     }
 
+  /** Canonical Phase 6 identity from the exact DBLP author string. Case and homonym suffix remain
+    * significant; only outer whitespace and Unicode normalization are canonicalized.
+    */
+  def researcherIdFromDblpName(
+      identityPolicyVersion: String,
+      exactName: String
+  ): Either[DomainViolation, String] = {
+    val name = Normalizer.normalize(exactName.trim, Normalizer.Form.NFC)
+    if (!policyPattern.matches(identityPolicyVersion))
+      Left(malformed("identity policy version", identityPolicyVersion))
+    else if (name.isEmpty || name.exists(ch => ch == '\n' || ch == '\r'))
+      Left(malformed("DBLP author name", exactName))
+    else Right(s"researcher:dblp:${sha256Hex(identityPolicyVersion + "\n" + name)}")
+  }
+
+  /** Phase 6 IDs bind a record kind, policy, window and stable material, without a run timestamp.
+    */
+  def sparkAnalyticsId(
+      kind: String,
+      policyVersion: String,
+      windowId: String,
+      material: Seq[String]
+  ): Either[DomainViolation, String] =
+    if (!Set("component", "community", "path-evidence").contains(kind))
+      Left(malformed("analytics ID kind", kind))
+    else if (
+      !policyPattern.matches(policyVersion) || !sparkWindowPattern.matches(windowId) ||
+      material.isEmpty || material
+        .exists(value => value.trim.isEmpty || value.exists(ch => ch == '\n' || ch == '\r'))
+    )
+      Left(malformed("analytics ID material", kind))
+    else Right(s"$kind:${sha256Hex((Seq(policyVersion, windowId) ++ material).mkString("\n"))}")
+
   def canonicalPair(left: String, right: String): Either[DomainViolation, (String, String)] =
     if (left == right)
       Left(
@@ -267,6 +303,31 @@ object StableIds {
       s"coauthor-edge:$hash"
     }
 
+  /** Phase 6 edge identity uses the configured window label, including unbounded all-years. This is
+    * additive; the frozen numeric-window coauthorEdgeId formula is unchanged.
+    */
+  def sparkCoauthorEdgeId(
+      researcherA: String,
+      researcherB: String,
+      windowId: String,
+      policyVersion: String
+  ): Either[DomainViolation, String] =
+    for {
+      _ <- requirePolicy(policyVersion)
+      _ <- parseResearcherId(researcherA)
+      _ <- parseResearcherId(researcherB)
+      ordered <- canonicalPair(researcherA, researcherB)
+      _ <-
+        if (sparkWindowPattern.matches(windowId)) Right(())
+        else Left(malformed("windowId", windowId))
+    } yield s"spark-coauthor-edge:${sha256Hex(
+        Seq(ordered._1, ordered._2, windowId, policyVersion).mkString("\n")
+      )}"
+
+  def parseSparkCoauthorEdgeId(value: String): Either[DomainViolation, String] =
+    if (value.matches("spark-coauthor-edge:[0-9a-f]{64}")) Right(value)
+    else Left(malformed("Spark coauthor edge ID", value))
+
   def chunkOrProfileId(
       entityId: String,
       sourceVersion: String,
@@ -292,6 +353,25 @@ object StableIds {
       val prefix = if (documentType.trim == "researcher-profile") "profile" else "chunk"
       Right(s"$prefix:$hash")
     }
+
+  /** Summary IDs use the existing Phase 8 citation-compatible text ID format. Policy and window are
+    * unambiguous in sourceVersion because neither token may contain a colon.
+    */
+  def sparkSemanticSummaryId(
+      entityId: String,
+      policyVersion: String,
+      windowId: String,
+      summaryType: String,
+      text: String
+  ): Either[DomainViolation, String] =
+    if (!policyPattern.matches(policyVersion) || !sparkWindowPattern.matches(windowId))
+      Left(malformed("summary policy or window", s"$policyVersion:$windowId"))
+    else if (
+      !Set("researcher-profile", "community", "collaboration-path", "paper")
+        .contains(summaryType)
+    )
+      Left(malformed("summary type", summaryType))
+    else chunkOrProfileId(entityId, s"$policyVersion:$windowId", summaryType, None, text)
 
   /** Stable id for graph-path, metric, and edge evidence. See the object comment for the fields
     * each kind hashes. `chunk:` and `profile:` are not produced here.
@@ -507,7 +587,11 @@ object StableIds {
           Right(value)
         case _ => Left(malformed("researcher id", value))
       }
-    } else Left(malformed("researcher id", value))
+    } else if (
+      value.startsWith("researcher:dblp:") &&
+      hex64.matches(value.stripPrefix("researcher:dblp:"))
+    ) Right(value)
+    else Left(malformed("researcher id", value))
 
   def parseCoauthorEdgeId(value: String): Either[DomainViolation, String] =
     value.stripPrefix("coauthor-edge:") match {
@@ -739,7 +823,10 @@ object StableIds {
     if (fields.length != 1) Left(malformed("edge evidence", fields.mkString(",")))
     else {
       val edgeId = fields.head
-      if (parseGraphEdgeId(edgeId).isRight || parseCoauthorEdgeId(edgeId).isRight) Right(())
+      if (
+        parseGraphEdgeId(edgeId).isRight || parseCoauthorEdgeId(edgeId).isRight ||
+        parseSparkCoauthorEdgeId(edgeId).isRight
+      ) Right(())
       else Left(malformed("edge evidence locator", edgeId))
     }
 

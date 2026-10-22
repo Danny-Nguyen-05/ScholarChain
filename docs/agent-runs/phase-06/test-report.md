@@ -78,3 +78,84 @@ BLOCKED-ON OWNER: None for the requested local repairs.
 BLOCKED-ON EVIDENCE: None for F1–F3. F4–F9 dispositions appear in `repairs.md`.
 
 NEXT GATE: Read-only 6A repair-round recheck, then user decision. Stop before 6B.
+
+## Subphase 6B
+
+STATUS: COMPLETE for the observed local 6B gates; independent review pending.
+
+OWNER: Coordinator `/root` for the full gate and retained log; `domain-engineer` for core-targeted tests; `spark-engineer` for README validation.
+
+WORK ORDER: Validate the additive 6B contracts and wire examples, preserve existing examples, run the repository's full `sbt check` on JDK 17, and report only observed results.
+
+FILES CREATED: `evidence/6b/preflight.md`, `evidence/6b/pre-hardening-check-excerpt.txt`, and `evidence/6b/final-check.txt`.
+
+FILES MODIFIED: This `test-report.md` 6B section.
+
+COMMANDS RUN: From repository root, the coordinator ran `/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home/bin/java -version` (exit 0, OpenJDK `17.0.20.1`). It ran the following full-gate shell command twice before ID-helper hardening:
+
+```bash
+env JAVA_HOME=/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home PATH=/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home/bin:$PATH SBT_OPTS=-Dlogback.configurationFile=$PWD/docs/agent-runs/phase-04/xml-repair-logback.xml /usr/bin/time -p sbt -batch check > /private/tmp/scholarchain-phase6b-final-check.txt 2>&1
+```
+
+The first sandboxed attempt exited **1** before build startup with `java.io.FileNotFoundException: /Users/danny/.sbt/boot/sbt.boot.lock (Operation not permitted)` and `real 0.19`; it was not a test failure. An approved retry allowed the existing sbt cache lock and exited **0**, passing 479/479 before the final ID-helper hardening. Its test-count summary is retained in `pre-hardening-check-excerpt.txt`. After the domain owner hardened the ID helper and passed targeted 6/6, the coordinator ran the final stable-tree command:
+
+```bash
+env JAVA_HOME=/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home PATH=/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home/bin:$PATH SBT_OPTS=-Dlogback.configurationFile=$PWD/docs/agent-runs/phase-04/xml-repair-logback.xml /usr/bin/time -p sbt -batch check > /private/tmp/scholarchain-phase6b-final-check-stable.txt 2>&1
+```
+
+It exited **0**. `cp /private/tmp/scholarchain-phase6b-final-check-stable.txt docs/agent-runs/phase-06/evidence/6b/final-check.txt` exited 0; `wc -c` reported 244,815 bytes. `rg -n 'Total number of tests run:|Tests: succeeded|\[success\] Total time:|^real ' docs/agent-runs/phase-06/evidence/6b/final-check.txt` exited 0 and gave the counts below. `git diff --check` exited 0. The domain owner reported JDK 17 `sbt -batch 'core/Test/runMain edu.uic.cs441.scholarchain.core.WriteSparkAnalyticsExamples' 'core/scalafmt' 'core/Test/scalafmt' 'core/testOnly *SparkAnalyticsContractSpec'` (exit 0, targeted 5/5), `sbt -batch 'core/Test/scalafmt' 'core/scalafmtCheck' 'core/Test/scalafmtCheck' 'core/test'` (exit 0, core 134/134 before hardening), and `sbt -batch 'core/scalafmt' 'core/Test/scalafmt' 'core/scalafmtCheck' 'core/Test/scalafmtCheck' 'core/testOnly *SparkAnalyticsContractSpec'` (exit 0, targeted 6/6 after hardening). These targeted runs are owner-reported; the coordinator retained the complete final full-gate log.
+
+TEST RESULTS: The retained final full gate shows core **135/135** (lines 156–158), Hadoop **64/64** (898–900), entity resolution **39/39** (948–950), Spark smoke **1/1** (958–960), independent **234/234** (2113–2115), build verification **7/7** (2155–2157): **480 passed, zero failed**. `[success] Total time: 417 s` at line 2160 and `real 418.74` at line 2161. Core-targeted Spark analytics contract tests were 6/6 after hardening. The domain owner's first core suite reported 133/134 due to an old two-version manifest assertion; it updated the assertion for the new Spark config version and the rerun plus final gate passed. The full log's deliberate injected failure traces belong to existing failure-path tests; the gate process exited 0.
+
+VALIDATION RESULTS: Full check included formatting, compilation, all module and independent tests, and build verification. The new wire round-trip suite checks all 16 Spark examples, the legacy `CoauthorEdge`/`ResearcherMetrics` examples, DBLP-name IDs, G1 arithmetic values, config defaults/fingerprint/invalid inputs, yearless all-years edges, entering temporal rows with absent deltas, and rejection of LF-ambiguous ID inputs. The Spark owner confirmed all 11 README job sections and links to published core examples. No production Spark graph job or bounded data run was executed in 6B.
+
+ASSUMPTIONS: The default config resource names illustrative local producer roots, not a completed run. Runtime graph invariants, physical plans and cloud linkage await later subphases.
+
+RISKS: The initial sandbox lock failure leaves no separate retained raw log because the retry reused the same temporary path; its observed stack trace and exit are recorded above. The full retry log is retained. Existing 6H compatibility and live-run gates remain open.
+
+MANUAL ACTION REQUIRED: User launches independent read-only 6B review, then commits an approved subphase. No agent commit or push.
+
+BLOCKED-ON OWNER: None for the completed local gate.
+
+BLOCKED-ON EVIDENCE: None for the completed local gate; production Spark behavior remains future scope.
+
+NEXT GATE: Independent 6B review. Stop before 6C.
+
+## Subphase 6B — repair round 1
+
+STATUS: COMPLETE for F1–F4 local test and validation gates; external recheck pending.
+
+OWNER: Coordinator `/root` ran and retained the final gate and affected targeted suite. `domain-engineer` `/root/domain_6b_r1` ran the owning core tests before handoff; `spark-engineer` `/root/spark_design_6b_r1` checked documentation.
+
+WORK ORDER: Recheck the user-requested F1–F4 repairs on the stable uncommitted 6B tree under JDK 17, retain the full `sbt check` output, and record exact observed results. Base/current HEAD is `bc1e4a17fc879b7aac254b28d83e78dbdd34e367` on `phase-6`.
+
+FILES CREATED: `evidence/6b/repair-1/final-check.txt` (245,188 bytes, SHA-256 `04242ca79489287144a656a20952ddba4b7b631b4efb4884b3bad634bacb0ce9`) and `evidence/6b/repair-1/targeted-contract.txt`.
+
+FILES MODIFIED: This `test-report.md` section; the implementation and wire snapshot edits are itemized in `owner-report.md`.
+
+COMMANDS RUN: From repository root, the coordinator ran:
+
+```bash
+env JAVA_HOME=/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home PATH=/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home/bin:$PATH SBT_OPTS=-Dlogback.configurationFile=$PWD/docs/agent-runs/phase-04/xml-repair-logback.xml /usr/bin/time -p sbt -batch check > /private/tmp/scholarchain-phase6b-repair1-final-check.txt 2>&1
+cp /private/tmp/scholarchain-phase6b-repair1-final-check.txt docs/agent-runs/phase-06/evidence/6b/repair-1/final-check.txt
+env JAVA_HOME=/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home PATH=/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home/bin:$PATH SBT_OPTS=-Dlogback.configurationFile=$PWD/docs/agent-runs/phase-04/xml-repair-logback.xml sbt -batch 'core/testOnly *SparkAnalyticsContractSpec' > docs/agent-runs/phase-06/evidence/6b/repair-1/targeted-contract.txt 2>&1
+git diff --check
+```
+
+Each command exited **0**. The domain owner also reported a targeted 11/11 and full core 140/140 after regenerating the semantic-summary wire snapshot; the coordinator's retained targeted and full logs independently confirm those counts. The owner's first targeted run failed on the stale snapshot before it was updated; no raw intermediate output was retained by the coordinator. No later implementation edit followed the coordinator's final full gate.
+
+TEST RESULTS: The full log shows core **140/140** (lines 161–163), Hadoop **64/64** (903–905), entity resolution **39/39** (953–955), Spark smoke **1/1** (963–965), independent **234/234** (2118–2120), build verification **7/7** (2160–2162): **485 passed, zero failed**. `[success] Total time: 416 s` is at line 2165; `real 418.15` is at line 2166. The log starts with `sbt 1.10.7 (Homebrew Java 17.0.20.1)`. The targeted contract log has 11/11 (lines 19–21) and exit 0. The injected `checkProbeInjectFailure` error lines are expected output of the build verification self-test; the full command exited 0.
+
+VALIDATION RESULTS: The targeted suite exercises the added F1 negative metric cases, F2 window-bound citation-compatible summary ID, F3 ID/config/G1 cases and F4 cited Spark edge ID. The full check also includes formatting and unchanged suites. `git diff --check` found no whitespace errors. No Spark graph production job or cloud runtime was run in 6B.
+
+ASSUMPTIONS: Core wire snapshots are contract examples. A passing contract gate does not prove later Spark producers emit the intended rows.
+
+RISKS: F5–F8 are explicitly deferred with owners and gates in `repairs.md`; the yearless Neptune edge mapping remains a Phase 7 design item. The final log retains expected injected failure traces which are not a gate failure.
+
+MANUAL ACTION REQUIRED: The user launches an independent read-only recheck and decides whether to approve and commit 6B.
+
+BLOCKED-ON OWNER: None for F1–F4 local test gates.
+
+BLOCKED-ON EVIDENCE: None for local gate; later producer/export/runtime behavior has not been tested in 6B.
+
+NEXT GATE: User-run read-only 6B repair-round recheck. Stop before 6C.

@@ -1,0 +1,24 @@
+{
+  "context": {
+    "schemaVersion": "scholarchain.spark-analytics.v1",
+    "runId": "run:00112233-4455-4677-8899-aabbccddeeff",
+    "windowId": "all-years",
+    "lineage": {
+      "hadoopRunId": "run:00112233-4455-4677-8899-aabbccddeeff",
+      "hadoopSnapshot": "dblp-2026-10-03",
+      "entityResolutionRunId": "run:00112233-4455-4677-8899-aabbccddeeff",
+      "entityResolutionPolicyVersion": "er-v1",
+      "entityResolutionPolicyHash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "sourceWorkIds": [
+        "work:dblp:conf/example/w1"
+      ],
+      "sourceMentionIds": []
+    }
+  },
+  "researcherId": "researcher:dblp:940d617de31234ad77fa2127fc35c11bd410fdfda76cd706444d84dbb0122e38",
+  "policyVersion": "graph-v1",
+  "crossCommunityDegree": 1,
+  "crossCommunityWeight": 1,
+  "communitiesConnected": 1,
+  "participationCoefficient": 0.4444444444444444
+}

@@ -1,0 +1,31 @@
+{
+  "context": {
+    "schemaVersion": "scholarchain.spark-analytics.v1",
+    "runId": "run:00112233-4455-4677-8899-aabbccddeeff",
+    "windowId": "all-years",
+    "lineage": {
+      "hadoopRunId": "run:00112233-4455-4677-8899-aabbccddeeff",
+      "hadoopSnapshot": "dblp-2026-10-03",
+      "entityResolutionRunId": "run:00112233-4455-4677-8899-aabbccddeeff",
+      "entityResolutionPolicyVersion": "er-v1",
+      "entityResolutionPolicyHash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "sourceWorkIds": [
+        "work:dblp:conf/example/w1"
+      ],
+      "sourceMentionIds": []
+    }
+  },
+  "summaryId": "profile:6c6aa95c5458d420f34871bd5b80452fac999162b266ebfed0c2a170f375a594",
+  "summaryType": "researcher-profile",
+  "entityId": "researcher:dblp:5f3ebef46438fe4e2ea69c2c4bc567b53dbb1cfcf8a0e80dd1cfe797b801a589",
+  "policyVersion": "graph-v1",
+  "text": "A has 3 works.",
+  "sourceReferences": [
+    {
+      "table": "metrics/researcher_collaboration",
+      "rowKey": "researcher:dblp:5f3ebef46438fe4e2ea69c2c4bc567b53dbb1cfcf8a0e80dd1cfe797b801a589",
+      "field": "publicationCount"
+    }
+  ],
+  "abstractTextIds": []
+}

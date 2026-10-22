@@ -607,7 +607,8 @@ class Phase4ContractSpec extends AnyFunSuite {
     assert(
       SchemaVersions.supportedManifestConfig == Set(
         SchemaVersions.config,
-        SchemaVersions.hadoopPrep
+        SchemaVersions.hadoopPrep,
+        SchemaVersions.sparkAnalyticsConfig
       )
     )
     assert(SchemaVersions.supportedConfig == Set(SchemaVersions.config))
