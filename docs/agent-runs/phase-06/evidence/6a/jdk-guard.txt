@@ -1,0 +1,28 @@
+[info] welcome to sbt 1.10.7 (Homebrew Java 27)
+[info] loading settings for project scholarchain-build from plugins.sbt...
+[info] loading project definition from /Users/danny/Documents/UIC/CS441/ScholarChain/project
+[info] compiling 6 Scala sources to /Users/danny/Documents/UIC/CS441/ScholarChain/project/target/scala-2.12/sbt-1.0/classes ...
+[info] done compiling
+[info] loading settings for project root from build.sbt...
+[info] set current project to root (in build file:/Users/danny/Documents/UIC/CS441/ScholarChain/)
+[error] java.lang.IllegalArgumentException: requirement failed: ScholarChain check requires Java 17; found Java 27. Set JAVA_HOME to JDK 17 and put its bin directory first on PATH.
+[error] 	at scala.Predef$.require(Predef.scala:281)
+[error] 	at scholarchain.build.Java17Guard$.requireJava17(Java17Guard.scala:7)
+[error] 	at $e789de04fc73f3f2b838$.$anonfun$root$10(build.sbt:127)
+[error] 	at scala.runtime.java8.JFunction0$mcV$sp.apply(JFunction0$mcV$sp.java:23)
+[error] 	at sbt.std.Transform$$anon$3.$anonfun$apply$2(Transform.scala:47)
+[error] 	at sbt.std.Transform$$anon$4.work(Transform.scala:69)
+[error] 	at sbt.Execute.$anonfun$submit$2(Execute.scala:283)
+[error] 	at sbt.internal.util.ErrorHandling$.wideConvert(ErrorHandling.scala:24)
+[error] 	at sbt.Execute.work(Execute.scala:292)
+[error] 	at sbt.Execute.$anonfun$submit$1(Execute.scala:283)
+[error] 	at sbt.ConcurrentRestrictions$$anon$4.$anonfun$submitValid$1(ConcurrentRestrictions.scala:265)
+[error] 	at sbt.CompletionService$$anon$2.call(CompletionService.scala:65)
+[error] 	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:330)
+[error] 	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:545)
+[error] 	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:330)
+[error] 	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1090)
+[error] 	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:614)
+[error] 	at java.base/java.lang.Thread.run(Thread.java:1527)
+[error] (checkJava17) java.lang.IllegalArgumentException: requirement failed: ScholarChain check requires Java 17; found Java 27. Set JAVA_HOME to JDK 17 and put its bin directory first on PATH.
+[error] Total time: 0 s, completed Oct 21, 2026, 8:59:55 PM

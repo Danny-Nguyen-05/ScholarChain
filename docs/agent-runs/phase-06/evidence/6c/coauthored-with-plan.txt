@@ -1,0 +1,14 @@
+== Physical Plan ==
+* Project (2)
++- * Scan ExistingRDD (1)
+
+
+(1) Scan ExistingRDD [codegen id : 1]
+Output [12]: [windowId#35170, researcherA#34742, researcherB#34743, windowStartYear#35171, windowEndYear#35172, jointPublicationCount#35285L, firstCollaborationYear#35287, lastCollaborationYear#35289, policyVersion#35299, edgeId#35309, representativeWorkIds#35507, context#35840]
+Arguments: [windowId#35170, researcherA#34742, researcherB#34743, windowStartYear#35171, windowEndYear#35172, jointPublicationCount#35285L, firstCollaborationYear#35287, lastCollaborationYear#35289, policyVersion#35299, edgeId#35309, representativeWorkIds#35507, context#35840], MapPartitionsRDD[1622] at checkpoint at Phase6CJobs.scala:804, ExistingRDD, UnknownPartitioning(0)
+
+(2) Project [codegen id : 1]
+Output [14]: [windowId#35170, researcherA#34742, researcherB#34743, windowStartYear#35171, windowEndYear#35172, jointPublicationCount#35285L, firstCollaborationYear#35287, lastCollaborationYear#35289, policyVersion#35299, edgeId#35309, representativeWorkIds#35507, context#35840, run:50e1fc99-a22c-4993-9525-7772e6af1fac AS runId#47976, scholarchain.spark-analytics.v1 AS schemaVersion#47990]
+Input [12]: [windowId#35170, researcherA#34742, researcherB#34743, windowStartYear#35171, windowEndYear#35172, jointPublicationCount#35285L, firstCollaborationYear#35287, lastCollaborationYear#35289, policyVersion#35299, edgeId#35309, representativeWorkIds#35507, context#35840]
+
+

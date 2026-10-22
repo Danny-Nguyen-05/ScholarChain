@@ -1,0 +1,31 @@
+{
+  "sameRunId": true,
+  "sameCompiledCodeFingerprint": true,
+  "sameLogicalConfigFingerprint": true,
+  "tableCount": 28,
+  "allRetainedTableHashesEqual": true,
+  "counterArraysEqual": true,
+  "reportDifferences": 12,
+  "reportDifferencePathsMatch": true,
+  "reportHashesMatch": true,
+  "explicitLogicalTableScope": true,
+  "completionMarkers": [
+    {
+      "root": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase6-runs/6fg-spark-first-v2/run:f02acf56-4bea-4009-adaf-b11d5afceb49",
+      "filesExist": true,
+      "completionValid": true,
+      "retainedManifestMatches": true,
+      "retainedMetadataMatches": true
+    },
+    {
+      "root": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase6-runs/6fg-spark-replay-v2/run:f02acf56-4bea-4009-adaf-b11d5afceb49",
+      "filesExist": true,
+      "completionValid": true,
+      "retainedManifestMatches": true,
+      "retainedMetadataMatches": true
+    }
+  ],
+  "allRequiredChecksPass": true,
+  "checkedAtUtc": "2026-10-22T19:55:21.597910+00:00",
+  "scope": "6I retained JSON/marker consistency audit only; no Parquet reread, event-log reparse, Spark run, dataset Python test rerun or cloud call. Metadata/table hash values come from previously executed pipelines."
+}

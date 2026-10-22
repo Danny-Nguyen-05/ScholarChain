@@ -1,0 +1,39 @@
+{
+  "context": {
+    "schemaVersion": "scholarchain.spark-analytics.v1",
+    "runId": "run:00112233-4455-4677-8899-aabbccddeeff",
+    "windowId": "all-years",
+    "lineage": {
+      "hadoopRunId": "run:00112233-4455-4677-8899-aabbccddeeff",
+      "hadoopSnapshot": "dblp-2026-10-03",
+      "entityResolutionRunId": "run:00112233-4455-4677-8899-aabbccddeeff",
+      "entityResolutionPolicyVersion": "er-v1",
+      "entityResolutionPolicyHash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "sourceWorkIds": [
+        "work:dblp:conf/example/w1"
+      ],
+      "sourceMentionIds": []
+    }
+  },
+  "pathEvidenceId": "path-evidence:2af3ab303510a5d889333e3d228cc3c660eae3f1997d1fa40c3e49f15132139e",
+  "sourceResearcherId": "researcher:dblp:5f3ebef46438fe4e2ea69c2c4bc567b53dbb1cfcf8a0e80dd1cfe797b801a589",
+  "targetResearcherId": "researcher:dblp:c30b1a101927dc74d54cb42f5d54ccb9d98168c0372de03105e7ac26ae144e8d",
+  "status": "found",
+  "hopCount": 1,
+  "orderedResearcherIds": [
+    "researcher:dblp:5f3ebef46438fe4e2ea69c2c4bc567b53dbb1cfcf8a0e80dd1cfe797b801a589",
+    "researcher:dblp:c30b1a101927dc74d54cb42f5d54ccb9d98168c0372de03105e7ac26ae144e8d"
+  ],
+  "hops": [
+    {
+      "fromResearcherId": "researcher:dblp:5f3ebef46438fe4e2ea69c2c4bc567b53dbb1cfcf8a0e80dd1cfe797b801a589",
+      "toResearcherId": "researcher:dblp:c30b1a101927dc74d54cb42f5d54ccb9d98168c0372de03105e7ac26ae144e8d",
+      "edgeId": "spark-coauthor-edge:6b0408eec32196b6e292d2fc0eaacd44baf6713bf625d37e08b54128b3c50099",
+      "jointPublicationCount": 3,
+      "representativeWorkIds": [
+        "work:dblp:conf/example/w1"
+      ]
+    }
+  ],
+  "maxHops": 6
+}

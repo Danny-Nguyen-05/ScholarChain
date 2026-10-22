@@ -1,0 +1,20 @@
+6D+6E repair round 1 source timing and scan
+UTC: 2026-10-22T17:39:16.283291+00:00
+2026-10-22T17:34:55.679381+00:00 modules/core/src/main/resources/scholarchain.spark-analytics-config.v1.json
+2026-10-22T17:35:00.200229+00:00 modules/core/src/test/scala/edu/uic/cs441/scholarchain/core/SparkAnalyticsContractSpec.scala
+2026-10-22T17:36:41.077010+00:00 modules/spark/src/test/scala/edu/uic/cs441/scholarchain/spark/Phase6DEJobsSpec.scala
+2026-10-22T17:35:33.645015+00:00 modules/spark/README.md
+2026-10-22T17:04:49.101408+00:00 modules/spark/src/main/scala/edu/uic/cs441/scholarchain/spark/Phase6DEJobs.scala
+
+Command: rg -n \.(collect|collectAsList|collectAsMap|toLocalIterator|take|head|first|toPandas)\s*\(|\.rdd\b|GraphX|GraphFrames|Encoders|spark\.implicits modules/spark/src/main
+modules/spark/src/main/scala/edu/uic/cs441/scholarchain/spark/BoundedActions.scala:14:    val rows = table.limit(2).collect()
+modules/spark/src/main/scala/edu/uic/cs441/scholarchain/spark/BoundedActions.scala:21:    table.limit(limit + 1).collect().toVector match {
+
+exit=0
+Only the two allowed BoundedActions collect sites matched.
+
+Command: git diff --check
+
+exit=0
+
+Plan SHA-256: 6df6d856df6c4c6ee0a8f00125e78af1bce5e789666399ae48a9443aec955096

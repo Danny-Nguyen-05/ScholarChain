@@ -1,0 +1,18 @@
+[info] welcome to sbt 1.10.7 (Homebrew Java 17.0.20.1)
+[info] loading settings for project scholarchain-build from plugins.sbt...
+[info] loading project definition from /Users/danny/Documents/UIC/CS441/ScholarChain/project
+[info] loading settings for project root from build.sbt...
+[info] set current project to root (in build file:/Users/danny/Documents/UIC/CS441/ScholarChain/)
+[info] compiling 1 Scala source to /Users/danny/Documents/UIC/CS441/ScholarChain/modules/spark/target/scala-3.3.4/classes ...
+[info] done compiling
+[info] compiling 1 Scala source to /Users/danny/Documents/UIC/CS441/ScholarChain/tests/target/scala-3.3.4/test-classes ...
+[error] -- [E007] Type Mismatch Error: /Users/danny/Documents/UIC/CS441/ScholarChain/tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentPhase6DEGraphSpec.scala:259:19 
+[error] 259 |    assert(("A" to "G").map(c => byName(researcherId(c.toString))).distinct.size == 1)
+[error]     |                   ^^^
+[error]     |                   Found:    ("G" : String)
+[error]     |                   Required: scala.collection.Factory[Char, Any]
+[error]     |
+[error]     | longer explanation available when compiling with `-explain`
+[error] one error found
+[error] (independentTests / Test / compileIncremental) Compilation failed
+[error] Total time: 3 s, completed Oct 22, 2026, 3:08:14 AM

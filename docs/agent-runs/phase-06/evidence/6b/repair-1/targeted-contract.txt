@@ -1,0 +1,23 @@
+[info] welcome to sbt 1.10.7 (Homebrew Java 17.0.20.1)
+[info] loading settings for project scholarchain-build from plugins.sbt...
+[info] loading project definition from /Users/danny/Documents/UIC/CS441/ScholarChain/project
+[info] loading settings for project root from build.sbt...
+[info] set current project to root (in build file:/Users/danny/Documents/UIC/CS441/ScholarChain/)
+[info] SparkAnalyticsContractSpec:
+[info] - DBLP exact-name IDs preserve case and homonym suffix
+[info] - analytics IDs reject LF-delimited collisions and invalid window labels
+[info] - summary IDs bind the policy and window and use citation-compatible text IDs
+[info] - metrics companion enforces the frozen arithmetic and max-team bounds
+[info] - G1 solo J and disconnected A-to-H are representable
+[info] - Spark coauthor edge IDs can back cited edge evidence
+[info] - all new wire examples round-trip and validate
+[info] - legacy edge and metrics wire examples still parse
+[info] - invalid analytics shapes fail validation
+[info] - versioned Spark config loads, fingerprints and validates approved defaults
+[info] - Spark config rejects duplicate, reversed and nonconsecutive comparison windows
+[info] Run completed in 187 milliseconds.
+[info] Total number of tests run: 11
+[info] Suites: completed 1, aborted 0
+[info] Tests: succeeded 11, failed 0, canceled 0, ignored 0, pending 0
+[info] All tests passed.
+[success] Total time: 0 s, completed Oct 21, 2026, 11:15:26 PM

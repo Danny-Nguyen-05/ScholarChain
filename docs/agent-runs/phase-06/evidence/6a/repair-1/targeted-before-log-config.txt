@@ -1,0 +1,104 @@
+[info] welcome to sbt 1.10.7 (Homebrew Java 17.0.20.1)
+[info] loading settings for project scholarchain-build from plugins.sbt...
+[info] loading project definition from /Users/danny/Documents/UIC/CS441/ScholarChain/project
+[info] compiling 1 Scala source to /Users/danny/Documents/UIC/CS441/ScholarChain/project/target/scala-2.12/sbt-1.0/classes ...
+[info] done compiling
+[info] loading settings for project root from build.sbt...
+[info] set current project to root (in build file:/Users/danny/Documents/UIC/CS441/ScholarChain/)
+[info] compiling 1 Scala source to /Users/danny/Documents/UIC/CS441/ScholarChain/build-verification/target/scala-3.3.4/classes ...
+[info] done compiling
+[info] compiling 1 Scala source to /Users/danny/Documents/UIC/CS441/ScholarChain/build-verification/target/scala-3.3.4/test-classes ...
+[info] done compiling
+[info] SparkJobJarSpec:
+[info] - job JAR contains current core and Spark classes plus runtime dependencies
+[info] - job JAR rejects runtime-provided classes and conflicting logging entries
+[info] Run completed in 107 milliseconds.
+[info] Total number of tests run: 2
+[info] Suites: completed 1, aborted 0
+[info] Tests: succeeded 2, failed 0, canceled 0, ignored 0, pending 0
+[info] All tests passed.
+[success] Total time: 2 s, completed Oct 21, 2026, 9:36:07 PM
+[info] compiling 1 Scala source to /Users/danny/Documents/UIC/CS441/ScholarChain/tests/target/scala-3.3.4/test-classes ...
+[info] done compiling
+[info] IndependentSparkSessionSpec:
+Using Spark's default log4j profile: org/apache/spark/log4j2-defaults.properties
+26/10/21 21:36:11 WARN Utils: Your hostname, Dannys-MacBook-Pro.local resolves to a loopback address: 127.0.0.1; using 10.0.0.113 instead (on interface en0)
+26/10/21 21:36:11 WARN Utils: Set SPARK_LOCAL_IP if you need to bind to another address
+26/10/21 21:36:11 INFO SparkContext: Running Spark version 3.5.4
+26/10/21 21:36:11 INFO SparkContext: OS info Mac OS X, 26.6.2, aarch64
+26/10/21 21:36:11 INFO SparkContext: Java version 17.0.20.1
+26/10/21 21:36:11 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+26/10/21 21:36:11 INFO ResourceUtils: ==============================================================
+26/10/21 21:36:11 INFO ResourceUtils: No custom resources configured for spark.driver.
+26/10/21 21:36:11 INFO ResourceUtils: ==============================================================
+26/10/21 21:36:11 INFO SparkContext: Submitted application: ScholarChain independent Spark startup
+26/10/21 21:36:11 INFO ResourceProfile: Default ResourceProfile created, executor resources: Map(cores -> name: cores, amount: 1, script: , vendor: , memory -> name: memory, amount: 1024, script: , vendor: , offHeap -> name: offHeap, amount: 0, script: , vendor: ), task resources: Map(cpus -> name: cpus, amount: 1.0)
+26/10/21 21:36:11 INFO ResourceProfile: Limiting resource is cpu
+26/10/21 21:36:11 INFO ResourceProfileManager: Added ResourceProfile id: 0
+26/10/21 21:36:11 INFO SecurityManager: Changing view acls to: danny
+26/10/21 21:36:11 INFO SecurityManager: Changing modify acls to: danny
+26/10/21 21:36:11 INFO SecurityManager: Changing view acls groups to: 
+26/10/21 21:36:11 INFO SecurityManager: Changing modify acls groups to: 
+26/10/21 21:36:11 INFO SecurityManager: SecurityManager: authentication disabled; ui acls disabled; users with view permissions: danny; groups with view permissions: EMPTY; users with modify permissions: danny; groups with modify permissions: EMPTY
+26/10/21 21:36:11 INFO Utils: Successfully started service 'sparkDriver' on port 63247.
+26/10/21 21:36:11 INFO SparkEnv: Registering MapOutputTracker
+26/10/21 21:36:11 INFO SparkEnv: Registering BlockManagerMaster
+26/10/21 21:36:11 INFO BlockManagerMasterEndpoint: Using org.apache.spark.storage.DefaultTopologyMapper for getting topology information
+26/10/21 21:36:11 INFO BlockManagerMasterEndpoint: BlockManagerMasterEndpoint up
+26/10/21 21:36:11 INFO SparkEnv: Registering BlockManagerMasterHeartbeat
+26/10/21 21:36:11 INFO DiskBlockManager: Created local directory at /private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/blockmgr-f7d28f65-f0a4-4b43-bc37-287971ada4c4
+26/10/21 21:36:11 INFO MemoryStore: MemoryStore started with capacity 1048.8 MiB
+26/10/21 21:36:11 INFO SparkEnv: Registering OutputCommitCoordinator
+26/10/21 21:36:11 INFO Executor: Starting executor ID driver on host 10.0.0.113
+26/10/21 21:36:11 INFO Executor: OS info Mac OS X, 26.6.2, aarch64
+26/10/21 21:36:11 INFO Executor: Java version 17.0.20.1
+26/10/21 21:36:11 INFO Executor: Starting executor with user classpath (userClassPathFirst = false): ''
+26/10/21 21:36:11 INFO Executor: Created or updated repl class loader org.apache.spark.util.MutableURLClassLoader@4657a45c for default.
+26/10/21 21:36:11 INFO Utils: Successfully started service 'org.apache.spark.network.netty.NettyBlockTransferService' on port 63248.
+26/10/21 21:36:11 INFO NettyBlockTransferService: Server created on 10.0.0.113:63248
+26/10/21 21:36:11 INFO BlockManager: Using org.apache.spark.storage.RandomBlockReplicationPolicy for block replication policy
+26/10/21 21:36:11 INFO BlockManagerMaster: Registering BlockManager BlockManagerId(driver, 10.0.0.113, 63248, None)
+26/10/21 21:36:11 INFO BlockManagerMasterEndpoint: Registering block manager 10.0.0.113:63248 with 1048.8 MiB RAM, BlockManagerId(driver, 10.0.0.113, 63248, None)
+26/10/21 21:36:11 INFO BlockManagerMaster: Registered BlockManager BlockManagerId(driver, 10.0.0.113, 63248, None)
+26/10/21 21:36:11 INFO BlockManager: Initialized BlockManager: BlockManagerId(driver, 10.0.0.113, 63248, None)
+26/10/21 21:36:11 INFO SharedState: Setting hive.metastore.warehouse.dir ('null') to the value of spark.sql.warehouse.dir.
+26/10/21 21:36:11 INFO SharedState: Warehouse path is 'file:/Users/danny/Documents/UIC/CS441/ScholarChain/spark-warehouse'.
+26/10/21 21:36:12 INFO CodeGenerator: Code generated in 56.725 ms
+26/10/21 21:36:12 INFO SparkContext: Starting job: count at IndependentSparkSessionSpec.scala:16
+26/10/21 21:36:12 INFO DAGScheduler: Got job 0 (count at IndependentSparkSessionSpec.scala:16) with 1 output partitions
+26/10/21 21:36:12 INFO DAGScheduler: Final stage: ResultStage 0 (count at IndependentSparkSessionSpec.scala:16)
+26/10/21 21:36:12 INFO DAGScheduler: Parents of final stage: List()
+26/10/21 21:36:12 INFO DAGScheduler: Missing parents: List()
+26/10/21 21:36:12 INFO DAGScheduler: Submitting ResultStage 0 (MapPartitionsRDD[3] at count at IndependentSparkSessionSpec.scala:16), which has no missing parents
+26/10/21 21:36:12 INFO MemoryStore: Block broadcast_0 stored as values in memory (estimated size 13.8 KiB, free 1048.8 MiB)
+26/10/21 21:36:13 INFO MemoryStore: Block broadcast_0_piece0 stored as bytes in memory (estimated size 5.9 KiB, free 1048.8 MiB)
+26/10/21 21:36:13 INFO BlockManagerInfo: Added broadcast_0_piece0 in memory on 10.0.0.113:63248 (size: 5.9 KiB, free: 1048.8 MiB)
+26/10/21 21:36:13 INFO SparkContext: Created broadcast 0 from broadcast at DAGScheduler.scala:1585
+26/10/21 21:36:13 INFO DAGScheduler: Submitting 1 missing tasks from ResultStage 0 (MapPartitionsRDD[3] at count at IndependentSparkSessionSpec.scala:16) (first 15 tasks are for partitions Vector(0))
+26/10/21 21:36:13 INFO TaskSchedulerImpl: Adding task set 0.0 with 1 tasks resource profile 0
+26/10/21 21:36:13 INFO TaskSetManager: Starting task 0.0 in stage 0.0 (TID 0) (10.0.0.113, executor driver, partition 0, PROCESS_LOCAL, 9214 bytes) 
+26/10/21 21:36:13 INFO Executor: Running task 0.0 in stage 0.0 (TID 0)
+26/10/21 21:36:13 INFO CodeGenerator: Code generated in 7.7675 ms
+26/10/21 21:36:13 INFO Executor: Finished task 0.0 in stage 0.0 (TID 0). 1989 bytes result sent to driver
+26/10/21 21:36:13 INFO TaskSetManager: Finished task 0.0 in stage 0.0 (TID 0) in 53 ms on 10.0.0.113 (executor driver) (1/1)
+26/10/21 21:36:13 INFO TaskSchedulerImpl: Removed TaskSet 0.0, whose tasks have all completed, from pool 
+26/10/21 21:36:13 INFO DAGScheduler: ResultStage 0 (count at IndependentSparkSessionSpec.scala:16) finished in 0.591 s
+26/10/21 21:36:13 INFO DAGScheduler: Job 0 is finished. Cancelling potential speculative or zombie tasks for this job
+26/10/21 21:36:13 INFO TaskSchedulerImpl: Killing all running tasks in stage 0: Stage finished
+26/10/21 21:36:13 INFO DAGScheduler: Job 0 finished: count at IndependentSparkSessionSpec.scala:16, took 0.598200 s
+26/10/21 21:36:13 INFO SparkContext: SparkContext is stopping with exitCode 0.
+26/10/21 21:36:13 INFO MapOutputTrackerMasterEndpoint: MapOutputTrackerMasterEndpoint stopped!
+26/10/21 21:36:13 INFO MemoryStore: MemoryStore cleared
+26/10/21 21:36:13 INFO BlockManager: BlockManager stopped
+26/10/21 21:36:13 INFO BlockManagerMaster: BlockManagerMaster stopped
+26/10/21 21:36:13 INFO OutputCommitCoordinator$OutputCommitCoordinatorEndpoint: OutputCommitCoordinator stopped!
+26/10/21 21:36:13 INFO SparkContext: Successfully stopped SparkContext
+[info] - independent test JVM can start and stop local Spark on Java 17
+26/10/21 21:36:13 INFO ShutdownHookManager: Shutdown hook called
+26/10/21 21:36:13 INFO ShutdownHookManager: Deleting directory /private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/spark-bba572f1-16aa-4fee-9fee-7c87a67352b2
+[info] Run completed in 2 seconds, 178 milliseconds.
+[info] Total number of tests run: 1
+[info] Suites: completed 1, aborted 0
+[info] Tests: succeeded 1, failed 0, canceled 0, ignored 0, pending 0
+[info] All tests passed.
+[success] Total time: 6 s, completed Oct 21, 2026, 9:36:13 PM

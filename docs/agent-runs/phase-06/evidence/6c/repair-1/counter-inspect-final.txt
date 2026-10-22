@@ -1,0 +1,7 @@
+26/10/22 02:25:04 WARN  NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+erResearcherUnresolved=6
+erResearcherConflicts=0
+erWorkUnresolved=0
+erWorkConflicts=3
+missingGraphEndpoints=0
+totalCounterNames=28

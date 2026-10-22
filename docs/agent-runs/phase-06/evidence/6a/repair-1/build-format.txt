@@ -1,0 +1,19 @@
+[info] welcome to sbt 1.10.7 (Homebrew Java 17.0.20.1)
+[info] loading settings for project scholarchain-build from plugins.sbt...
+[info] loading project definition from /Users/danny/Documents/UIC/CS441/ScholarChain/project
+[info] compiling 2 Scala sources to /Users/danny/Documents/UIC/CS441/ScholarChain/project/target/scala-2.12/sbt-1.0/classes ...
+[info] done compiling
+[info] loading settings for project root from build.sbt...
+[info] set current project to root (in build file:/Users/danny/Documents/UIC/CS441/ScholarChain/)
+[info] scalafmt: Formatting 13 Scala sources (/Users/danny/Documents/UIC/CS441/ScholarChain)...
+[info] scalafmt: Reformatted 1 Scala sources
+[info] scalafmt: Formatting 2 Scala sources (/Users/danny/Documents/UIC/CS441/ScholarChain)...
+[success] Total time: 1 s, completed Oct 21, 2026, 9:35:50 PM
+[warn] build source files have changed
+[warn] modified files: 
+[warn]   /Users/danny/Documents/UIC/CS441/ScholarChain/project/ScholarChainBuild.scala
+[warn] Apply these changes by running `reload`.
+[warn] Automatically reload the build when source changes are detected by setting `Global / onChangedBuildSource := ReloadOnSourceChanges`.
+[warn] Disable this warning by setting `Global / onChangedBuildSource := IgnoreSourceChanges`.
+[info] scalafmt: Formatting 1 Scala sources (/Users/danny/Documents/UIC/CS441/ScholarChain/build-verification)...
+[success] Total time: 0 s, completed Oct 21, 2026, 9:35:51 PM

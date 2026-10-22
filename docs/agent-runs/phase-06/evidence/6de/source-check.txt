@@ -1,0 +1,26 @@
+Subphase 6D+6E final source timing and API scan
+Recorded UTC: 2026-10-22T17:08:02.712731+00:00
+
+2026-10-22T07:57:36.780358+00:00 modules/core/src/main/scala/edu/uic/cs441/scholarchain/core/SparkAnalyticsConfigLoader.scala
+2026-10-22T07:57:32.236546+00:00 modules/core/src/main/scala/edu/uic/cs441/scholarchain/core/SparkAnalyticsValidation.scala
+2026-10-22T07:58:36.135168+00:00 modules/core/src/test/scala/edu/uic/cs441/scholarchain/core/SparkAnalyticsContractSpec.scala
+2026-10-22T17:06:22.969660+00:00 modules/spark/README.md
+2026-10-22T17:04:49.101408+00:00 modules/spark/src/main/scala/edu/uic/cs441/scholarchain/spark/Phase6DEJobs.scala
+2026-10-22T17:05:36.848196+00:00 modules/spark/src/test/scala/edu/uic/cs441/scholarchain/spark/Phase6DEJobsSpec.scala
+2026-10-22T17:06:42.181622+00:00 tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentPhase6DEGraphSpec.scala
+
+Command: rg -n "\.collect\(|\.rdd\b|GraphX|GraphFrames|Encoders|\.as\[|spark\.implicits|toLocalIterator|collectAsList" modules/spark/src/main
+modules/spark/src/main/scala/edu/uic/cs441/scholarchain/spark/BoundedActions.scala:14:    val rows = table.limit(2).collect()
+modules/spark/src/main/scala/edu/uic/cs441/scholarchain/spark/BoundedActions.scala:21:    table.limit(limit + 1).collect().toVector match {
+
+rg exit=0
+Only BoundedActions collect sites are expected.
+
+Command: git diff --check
+
+exit=0
+
+Expanded driver-action scan: rg -n \.(collect|collectAsList|collectAsMap|toLocalIterator|take|head|first|toPandas)\s*\( modules/spark/src/main
+modules/spark/src/main/scala/edu/uic/cs441/scholarchain/spark/BoundedActions.scala:14:    val rows = table.limit(2).collect()
+modules/spark/src/main/scala/edu/uic/cs441/scholarchain/spark/BoundedActions.scala:21:    table.limit(limit + 1).collect().toVector match {
+exit=0

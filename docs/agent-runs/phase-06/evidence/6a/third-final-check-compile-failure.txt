@@ -1,0 +1,33 @@
+[info] welcome to sbt 1.10.7 (Homebrew Java 17.0.20.1)
+[info] loading settings for project scholarchain-build from plugins.sbt...
+[info] loading project definition from /Users/danny/Documents/UIC/CS441/ScholarChain/project
+[info] compiling 2 Scala sources to /Users/danny/Documents/UIC/CS441/ScholarChain/project/target/scala-2.12/sbt-1.0/classes ...
+[info] done compiling
+[info] loading settings for project root from build.sbt...
+[info] set current project to root (in build file:/Users/danny/Documents/UIC/CS441/ScholarChain/)
+[info] scalafmt: Checking 13 Scala sources (/Users/danny/Documents/UIC/CS441/ScholarChain)...
+[info] scalafmt: Checking 2 Scala sources (/Users/danny/Documents/UIC/CS441/ScholarChain)...
+[info] compiling 1 Scala source to /Users/danny/Documents/UIC/CS441/ScholarChain/modules/spark/target/scala-3.3.4/test-classes ...
+***** missing reference, looking for TypeTags/T in [33mpackage[0m [35mscala.reflect.api[0m
+decls = Scope{}
+***** missing reference, looking for TypeTag/T in [33mclass[0m [35mTypeTags[0m
+decls = Scope{}
+[error] Bad symbolic reference. A signature in /Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/apache/spark/spark-sql_2.13/3.5.4/spark-sql_2.13-3.5.4.jar(org/apache/spark/sql/SparkSession.class)
+[error] refers to TypeTags/T in package scala.reflect.api which is not available.
+[error] It may be completely missing from the current classpath, or the version on
+[error] the classpath might be incompatible with the version used when compiling /Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/apache/spark/spark-sql_2.13/3.5.4/spark-sql_2.13-3.5.4.jar(org/apache/spark/sql/SparkSession.class).
+[error] Bad symbolic reference. A signature in /Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/apache/spark/spark-sql_2.13/3.5.4/spark-sql_2.13-3.5.4.jar(org/apache/spark/sql/SparkSession.class)
+[error] refers to TypeTag/T in class scala.reflect.api.TypeTags which is not available.
+[error] It may be completely missing from the current classpath, or the version on
+[error] the classpath might be incompatible with the version used when compiling /Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/apache/spark/spark-sql_2.13/3.5.4/spark-sql_2.13-3.5.4.jar(org/apache/spark/sql/SparkSession.class).
+[error] -- Error: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/spark/src/test/scala/edu/uic/cs441/scholarchain/spark/SparkSmokeSpec.scala:60:23 
+[error] 60 |    val events = spark.createDataFrame(rows, schema)
+[error]    |                       ^
+[error]    |Cannot resolve reference to type scala.reflect.runtime.package.universe.type.TypeTag.
+[error]    |The classfile defining the type might be missing from the classpath.
+[error] three errors found
+[error] (sparkAnalytics / Test / compileIncremental) Compilation failed
+[error] Total time: 3 s, completed Oct 21, 2026, 9:02:09 PM
+real 7.89
+user 28.81
+sys 1.31

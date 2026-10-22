@@ -1,0 +1,34 @@
+{
+  "stageDag": {
+    "runId": "run:f02acf56-4bea-4009-adaf-b11d5afceb49",
+    "stageCount": 5667,
+    "allNamesPresent": true,
+    "allPartitionCountsPresent": true,
+    "summary": {
+      "stageIds": 5667,
+      "stageAttempts": 5667,
+      "executedStageAttempts": 2004,
+      "parentEdges": 4532,
+      "missingParentIds": [],
+      "acyclic": true,
+      "perStageTotalsMatchExistingSummary": true,
+      "tasks": 5237,
+      "failedTasks": 0,
+      "durationMs": 277478,
+      "executorRunTimeMs": 264378,
+      "shuffleReadBytes": 12020965863,
+      "shuffleReadRecords": 120211169,
+      "shuffleWriteBytes": 10107558658,
+      "shuffleWriteRecords": 101023634
+    }
+  },
+  "analyticsReport": {
+    "differences": 12,
+    "meanDifferences": 11,
+    "percentileDifferences": 1,
+    "allDifferencesExplainedByDeclaredKinds": true,
+    "tableComparisonUnchanged": true,
+    "reportComparedAndNotEqual": true
+  },
+  "noSparkExecutionRequired": true
+}

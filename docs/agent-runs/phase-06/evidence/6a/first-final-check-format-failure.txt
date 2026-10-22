@@ -1,0 +1,15 @@
+[info] welcome to sbt 1.10.7 (Homebrew Java 17.0.20.1)
+[info] loading settings for project scholarchain-build from plugins.sbt...
+[info] loading project definition from /Users/danny/Documents/UIC/CS441/ScholarChain/project
+[info] compiling 6 Scala sources to /Users/danny/Documents/UIC/CS441/ScholarChain/project/target/scala-2.12/sbt-1.0/classes ...
+[info] done compiling
+[info] loading settings for project root from build.sbt...
+[info] set current project to root (in build file:/Users/danny/Documents/UIC/CS441/ScholarChain/)
+[info] scalafmt: Checking 1 Scala sources (/Users/danny/Documents/UIC/CS441/ScholarChain/modules/spark)...
+[warn] scalafmt: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/spark/src/test/scala/edu/uic/cs441/scholarchain/spark/SparkSmokeSpec.scala isn't formatted properly!
+[error] scalafmt: 1 files must be formatted (/Users/danny/Documents/UIC/CS441/ScholarChain/modules/spark)
+[error] (sparkAnalytics / Test / scalafmtCheck) scalafmt: 1 files must be formatted (/Users/danny/Documents/UIC/CS441/ScholarChain/modules/spark)
+[error] Total time: 1 s, completed Oct 21, 2026, 9:00:39 PM
+real 5.77
+user 22.60
+sys 0.86

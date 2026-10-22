@@ -1,0 +1,43 @@
+{
+  "context": {
+    "schemaVersion": "scholarchain.spark-analytics.v1",
+    "runId": "run:00112233-4455-4677-8899-aabbccddeeff",
+    "windowId": null,
+    "lineage": {
+      "hadoopRunId": "run:00112233-4455-4677-8899-aabbccddeeff",
+      "hadoopSnapshot": "dblp-2026-10-03",
+      "entityResolutionRunId": "run:00112233-4455-4677-8899-aabbccddeeff",
+      "entityResolutionPolicyVersion": "er-v1",
+      "entityResolutionPolicyHash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "sourceWorkIds": [
+        "work:dblp:conf/example/w1"
+      ],
+      "sourceMentionIds": []
+    }
+  },
+  "targetStore": "neptune",
+  "logicalDataset": "researchers",
+  "paths": [
+    "nodes/type=researcher/run_id=example"
+  ],
+  "format": "parquet",
+  "rowCount": 10,
+  "keyColumns": [
+    "researcherId"
+  ],
+  "partitionColumns": [
+    "type",
+    "run_id"
+  ],
+  "sortedRowsSha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  "windows": [
+    "all-years"
+  ],
+  "intendedLoaderOwner": "storage-engineer",
+  "targetMapping": [
+    {
+      "name": "label",
+      "value": "Researcher"
+    }
+  ]
+}

@@ -1524,7 +1524,8 @@ object DomainValidation {
           case Some(edgeId) =>
             if (
               StableIds.parseGraphEdgeId(edgeId).isLeft &&
-              StableIds.parseCoauthorEdgeId(edgeId).isLeft
+              StableIds.parseCoauthorEdgeId(edgeId).isLeft &&
+              StableIds.parseSparkCoauthorEdgeId(edgeId).isLeft
             )
               acc.add(ViolationCode.MalformedId, s"malformed edge evidence locator: $edgeId")
             StableIds.nonTextEvidenceId("edge", Seq(edgeId)) match {

@@ -1,0 +1,29 @@
+[info] welcome to sbt 1.10.7 (Homebrew Java 17.0.20.1)
+[info] loading settings for project scholarchain-build from plugins.sbt...
+[info] loading project definition from /Users/danny/Documents/UIC/CS441/ScholarChain/project
+[info] loading settings for project root from build.sbt...
+[info] set current project to root (in build file:/Users/danny/Documents/UIC/CS441/ScholarChain/)
+[info] compiling 1 Scala source to /Users/danny/Documents/UIC/CS441/ScholarChain/tests/target/scala-3.3.4/test-classes ...
+[info] done compiling
+[info] IndependentPhase6CGraphSpec:
+26/10/21 23:45:46 WARN  Utils: Your hostname, Dannys-MacBook-Pro.local resolves to a loopback address: 127.0.0.1; using 10.0.0.113 instead (on interface en0)
+26/10/21 23:45:46 WARN  Utils: Set SPARK_LOCAL_IP if you need to bind to another address
+26/10/21 23:45:46 WARN  NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+26/10/21 23:45:48 WARN  CacheManager: Asked to cache already cached data.
+26/10/21 23:45:49 WARN  CacheManager: Asked to cache already cached data.
+[info] - G1 has the exact all-years and split-window weighted edges and support
+26/10/21 23:45:56 WARN  CacheManager: Asked to cache already cached data.
+26/10/21 23:45:56 WARN  CacheManager: Asked to cache already cached data.
+[info] - a cross-DBLP accepted link does not collapse two exact DBLP names
+26/10/21 23:46:01 WARN  CacheManager: Asked to cache already cached data.
+26/10/21 23:46:01 WARN  CacheManager: Asked to cache already cached data.
+[info] - a work cannot-link prevents the linked Crossref observation from merging
+26/10/21 23:46:08 WARN  CacheManager: Asked to cache already cached data.
+26/10/21 23:46:09 WARN  CacheManager: Asked to cache already cached data.
+[info] - yearless and 2027 DBLP works enter only all-years; enrichment-only pair is excluded
+[info] Run completed in 28 seconds, 215 milliseconds.
+[info] Total number of tests run: 4
+[info] Suites: completed 1, aborted 0
+[info] Tests: succeeded 4, failed 0, canceled 0, ignored 0, pending 0
+[info] All tests passed.
+[success] Total time: 31 s, completed Oct 21, 2026, 11:46:13 PM

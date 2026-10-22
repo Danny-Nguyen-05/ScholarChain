@@ -1,0 +1,16 @@
+[info] welcome to sbt 1.10.7 (Homebrew Java 17.0.20.1)
+[info] loading settings for project scholarchain-build from plugins.sbt...
+[info] loading project definition from /Users/danny/Documents/UIC/CS441/ScholarChain/project
+[info] loading settings for project root from build.sbt...
+[info] set current project to root (in build file:/Users/danny/Documents/UIC/CS441/ScholarChain/)
+[info] running (fork) edu.uic.cs441.scholarchain.spark.Phase6CMain target/phase6-inputs/6c-spark-config-provenance.json
+[error] 26/10/22 00:16:10 WARN  Utils: Your hostname, Dannys-MacBook-Pro.local resolves to a loopback address: 127.0.0.1; using 10.0.0.113 instead (on interface en0)
+[error] 26/10/22 00:16:10 WARN  Utils: Set SPARK_LOCAL_IP if you need to bind to another address
+[error] 26/10/22 00:16:10 WARN  NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+[error] 26/10/22 00:16:15 WARN  CacheManager: Asked to cache already cached data.
+[error] 26/10/22 00:16:15 WARN  CacheManager: Asked to cache already cached data.
+[info] Completed 6C jobs 1–2 at target/phase6-runs/6c-provenance/run:50e1fc99-a22c-4993-9525-7772e6af1fac; runId=run:50e1fc99-a22c-4993-9525-7772e6af1fac; counts={"nodes/researcher":6,"nodes/author_mention":10,"nodes/work":5,"nodes/graph":26,"edges/graph":22,"intermediate/canonical_works":5,"intermediate/memberships":6,"edges/coauthored_with":6,"edges/coauthored_with_support":6,"integrity":0,"input_rejects":0,"counters":21}
+[success] Total time: 18 s, completed Oct 22, 2026, 12:16:26 AM
+real 20.05
+user 64.17
+sys 3.34

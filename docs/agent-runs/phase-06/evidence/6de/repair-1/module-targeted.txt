@@ -1,0 +1,529 @@
+[info] welcome to sbt 1.10.7 (Homebrew Java 17.0.20.1)
+[info] loading settings for project scholarchain-build from plugins.sbt...
+[info] loading project definition from /Users/danny/Documents/UIC/CS441/ScholarChain/project
+[info] loading settings for project root from build.sbt...
+[info] set current project to root (in build file:/Users/danny/Documents/UIC/CS441/ScholarChain/)
+[info] scalafmt: Formatting 1 Scala sources (/Users/danny/Documents/UIC/CS441/ScholarChain/modules/spark)...
+[info] scalafmt: Reformatted 1 Scala sources
+[success] Total time: 1 s, completed Oct 22, 2026, 12:36:41 PM
+[success] Total time: 0 s, completed Oct 22, 2026, 12:36:41 PM
+[info] compiling 1 Scala source to /Users/danny/Documents/UIC/CS441/ScholarChain/modules/spark/target/scala-3.3.4/test-classes ...
+[info] done compiling
+[info] Phase6DEJobsSpec:
+26/10/22 12:36:43 WARN  Utils: Your hostname, Dannys-MacBook-Pro.local resolves to a loopback address: 127.0.0.1; using 10.0.0.113 instead (on interface en0)
+26/10/22 12:36:43 WARN  Utils: Set SPARK_LOCAL_IP if you need to bind to another address
+26/10/22 12:36:44 WARN  NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+26/10/22 12:36:45 WARN  BlockManager: Block rdd_44_0 already exists on this machine; not re-adding it
+== Physical Plan ==
+AdaptiveSparkPlan (70)
++- Project (69)
+   +- BroadcastHashJoin LeftOuter BuildRight (68)
+      :- Project (55)
+      :  +- BroadcastHashJoin Inner BuildLeft (54)
+      :     :- BroadcastExchange (18)
+      :     :  +- HashAggregate (17)
+      :     :     +- Exchange (16)
+      :     :        +- HashAggregate (15)
+      :     :           +- HashAggregate (14)
+      :     :              +- Exchange (13)
+      :     :                 +- HashAggregate (12)
+      :     :                    +- Project (11)
+      :     :                       +- BroadcastHashJoin Inner BuildRight (10)
+      :     :                          :- LocalTableScan (1)
+      :     :                          +- BroadcastExchange (9)
+      :     :                             +- HashAggregate (8)
+      :     :                                +- Exchange (7)
+      :     :                                   +- HashAggregate (6)
+      :     :                                      +- HashAggregate (5)
+      :     :                                         +- Exchange (4)
+      :     :                                            +- HashAggregate (3)
+      :     :                                               +- LocalTableScan (2)
+      :     +- ObjectHashAggregate (53)
+      :        +- Exchange (52)
+      :           +- ObjectHashAggregate (51)
+      :              +- ObjectHashAggregate (50)
+      :                 +- Exchange (49)
+      :                    +- ObjectHashAggregate (48)
+      :                       +- Project (47)
+      :                          +- BroadcastHashJoin Inner BuildRight (46)
+      :                             :- Project (29)
+      :                             :  +- BroadcastHashJoin Inner BuildRight (28)
+      :                             :     :- LocalTableScan (19)
+      :                             :     +- BroadcastExchange (27)
+      :                             :        +- HashAggregate (26)
+      :                             :           +- Exchange (25)
+      :                             :              +- HashAggregate (24)
+      :                             :                 +- HashAggregate (23)
+      :                             :                    +- Exchange (22)
+      :                             :                       +- HashAggregate (21)
+      :                             :                          +- LocalTableScan (20)
+      :                             +- BroadcastExchange (45)
+      :                                +- Filter (44)
+      :                                   +- HashAggregate (43)
+      :                                      +- Exchange (42)
+      :                                         +- HashAggregate (41)
+      :                                            +- Project (40)
+      :                                               +- BroadcastHashJoin Inner BuildRight (39)
+      :                                                  :- LocalTableScan (30)
+      :                                                  +- BroadcastExchange (38)
+      :                                                     +- HashAggregate (37)
+      :                                                        +- Exchange (36)
+      :                                                           +- HashAggregate (35)
+      :                                                              +- HashAggregate (34)
+      :                                                                 +- Exchange (33)
+      :                                                                    +- HashAggregate (32)
+      :                                                                       +- LocalTableScan (31)
+      +- BroadcastExchange (67)
+         +- HashAggregate (66)
+            +- Exchange (65)
+               +- HashAggregate (64)
+                  +- HashAggregate (63)
+                     +- HashAggregate (62)
+                        +- HashAggregate (61)
+                           +- Exchange (60)
+                              +- HashAggregate (59)
+                                 +- Union (58)
+                                    :- LocalTableScan (56)
+                                    +- LocalTableScan (57)
+
+
+(1) LocalTableScan
+Output [3]: [canonicalWorkId#7428, researcherId#7429, windowId#7446]
+Arguments: [canonicalWorkId#7428, researcherId#7429, windowId#7446]
+
+(2) LocalTableScan
+Output [3]: [canonicalWorkId#7478, researcherId#7479, windowId#7481]
+Arguments: [canonicalWorkId#7478, researcherId#7479, windowId#7481]
+
+(3) HashAggregate
+Input [3]: [canonicalWorkId#7478, researcherId#7479, windowId#7481]
+Keys [3]: [windowId#7481, canonicalWorkId#7478, researcherId#7479]
+Functions: []
+Aggregate Attributes: []
+Results [3]: [windowId#7481, canonicalWorkId#7478, researcherId#7479]
+
+(4) Exchange
+Input [3]: [windowId#7481, canonicalWorkId#7478, researcherId#7479]
+Arguments: hashpartitioning(windowId#7481, canonicalWorkId#7478, researcherId#7479, 4), ENSURE_REQUIREMENTS, [plan_id=38231]
+
+(5) HashAggregate
+Input [3]: [windowId#7481, canonicalWorkId#7478, researcherId#7479]
+Keys [3]: [windowId#7481, canonicalWorkId#7478, researcherId#7479]
+Functions: []
+Aggregate Attributes: []
+Results [3]: [windowId#7481, canonicalWorkId#7478, researcherId#7479]
+
+(6) HashAggregate
+Input [3]: [windowId#7481, canonicalWorkId#7478, researcherId#7479]
+Keys [2]: [windowId#7481, canonicalWorkId#7478]
+Functions [1]: [partial_count(distinct researcherId#7479)]
+Aggregate Attributes [1]: [count(researcherId#7479)#7474L]
+Results [3]: [windowId#7481, canonicalWorkId#7478, count#7672L]
+
+(7) Exchange
+Input [3]: [windowId#7481, canonicalWorkId#7478, count#7672L]
+Arguments: hashpartitioning(windowId#7481, canonicalWorkId#7478, 4), ENSURE_REQUIREMENTS, [plan_id=38235]
+
+(8) HashAggregate
+Input [3]: [windowId#7481, canonicalWorkId#7478, count#7672L]
+Keys [2]: [windowId#7481, canonicalWorkId#7478]
+Functions [1]: [count(distinct researcherId#7479)]
+Aggregate Attributes [1]: [count(researcherId#7479)#7474L]
+Results [3]: [windowId#7481, canonicalWorkId#7478, count(researcherId#7479)#7474L AS teamSize#7473L]
+
+(9) BroadcastExchange
+Input [3]: [windowId#7481, canonicalWorkId#7478, teamSize#7473L]
+Arguments: HashedRelationBroadcastMode(List(input[0, string, false], input[1, string, true]),false), [plan_id=38238]
+
+(10) BroadcastHashJoin
+Left keys [2]: [windowId#7446, canonicalWorkId#7428]
+Right keys [2]: [windowId#7481, canonicalWorkId#7478]
+Join type: Inner
+Join condition: None
+
+(11) Project
+Output [4]: [windowId#7446, canonicalWorkId#7428, researcherId#7429, (teamSize#7473L - 1) AS coauthors#7487L]
+Input [6]: [canonicalWorkId#7428, researcherId#7429, windowId#7446, windowId#7481, canonicalWorkId#7478, teamSize#7473L]
+
+(12) HashAggregate
+Input [4]: [windowId#7446, canonicalWorkId#7428, researcherId#7429, coauthors#7487L]
+Keys [3]: [windowId#7446, researcherId#7429, canonicalWorkId#7428]
+Functions [2]: [partial_sum(coauthors#7487L), partial_max(coauthors#7487L)]
+Aggregate Attributes [2]: [sum(coauthors#7487L)#7501L, max(coauthors#7487L)#7503L]
+Results [5]: [windowId#7446, researcherId#7429, canonicalWorkId#7428, sum#7663L, max#7665L]
+
+(13) Exchange
+Input [5]: [windowId#7446, researcherId#7429, canonicalWorkId#7428, sum#7663L, max#7665L]
+Arguments: hashpartitioning(windowId#7446, researcherId#7429, canonicalWorkId#7428, 4), ENSURE_REQUIREMENTS, [plan_id=38243]
+
+(14) HashAggregate
+Input [5]: [windowId#7446, researcherId#7429, canonicalWorkId#7428, sum#7663L, max#7665L]
+Keys [3]: [windowId#7446, researcherId#7429, canonicalWorkId#7428]
+Functions [2]: [merge_sum(coauthors#7487L), merge_max(coauthors#7487L)]
+Aggregate Attributes [2]: [sum(coauthors#7487L)#7501L, max(coauthors#7487L)#7503L]
+Results [5]: [windowId#7446, researcherId#7429, canonicalWorkId#7428, sum#7663L, max#7665L]
+
+(15) HashAggregate
+Input [5]: [windowId#7446, researcherId#7429, canonicalWorkId#7428, sum#7663L, max#7665L]
+Keys [2]: [windowId#7446, researcherId#7429]
+Functions [3]: [merge_sum(coauthors#7487L), merge_max(coauthors#7487L), partial_count(distinct canonicalWorkId#7428)]
+Aggregate Attributes [3]: [sum(coauthors#7487L)#7501L, max(coauthors#7487L)#7503L, count(canonicalWorkId#7428)#7505L]
+Results [5]: [windowId#7446, researcherId#7429, sum#7663L, max#7665L, count#7668L]
+
+(16) Exchange
+Input [5]: [windowId#7446, researcherId#7429, sum#7663L, max#7665L, count#7668L]
+Arguments: hashpartitioning(windowId#7446, researcherId#7429, 4), ENSURE_REQUIREMENTS, [plan_id=38247]
+
+(17) HashAggregate
+Input [5]: [windowId#7446, researcherId#7429, sum#7663L, max#7665L, count#7668L]
+Keys [2]: [windowId#7446, researcherId#7429]
+Functions [3]: [sum(coauthors#7487L), max(coauthors#7487L), count(distinct canonicalWorkId#7428)]
+Aggregate Attributes [3]: [sum(coauthors#7487L)#7501L, max(coauthors#7487L)#7503L, count(canonicalWorkId#7428)#7505L]
+Results [5]: [windowId#7446, researcherId#7429, count(canonicalWorkId#7428)#7505L AS publicationCount#7500L, sum(coauthors#7487L)#7501L AS totalCoauthorOccurrences#7502L, max(coauthors#7487L)#7503L AS maximumCoauthorsOnOnePaper#7504L]
+
+(18) BroadcastExchange
+Input [5]: [windowId#7446, researcherId#7429, publicationCount#7500L, totalCoauthorOccurrences#7502L, maximumCoauthorsOnOnePaper#7504L]
+Arguments: HashedRelationBroadcastMode(List(input[0, string, false], input[1, string, true]),false), [plan_id=38287]
+
+(19) LocalTableScan
+Output [3]: [canonicalWorkId#7602, researcherId#7603, windowId#7608]
+Arguments: [canonicalWorkId#7602, researcherId#7603, windowId#7608]
+
+(20) LocalTableScan
+Output [3]: [canonicalWorkId#7605, researcherId#7606, windowId#7481]
+Arguments: [canonicalWorkId#7605, researcherId#7606, windowId#7481]
+
+(21) HashAggregate
+Input [3]: [canonicalWorkId#7605, researcherId#7606, windowId#7481]
+Keys [3]: [windowId#7481, canonicalWorkId#7605, researcherId#7606]
+Functions: []
+Aggregate Attributes: []
+Results [3]: [windowId#7481, canonicalWorkId#7605, researcherId#7606]
+
+(22) Exchange
+Input [3]: [windowId#7481, canonicalWorkId#7605, researcherId#7606]
+Arguments: hashpartitioning(windowId#7481, canonicalWorkId#7605, researcherId#7606, 4), ENSURE_REQUIREMENTS, [plan_id=38249]
+
+(23) HashAggregate
+Input [3]: [windowId#7481, canonicalWorkId#7605, researcherId#7606]
+Keys [3]: [windowId#7481, canonicalWorkId#7605, researcherId#7606]
+Functions: []
+Aggregate Attributes: []
+Results [3]: [windowId#7481, canonicalWorkId#7605, researcherId#7606]
+
+(24) HashAggregate
+Input [3]: [windowId#7481, canonicalWorkId#7605, researcherId#7606]
+Keys [2]: [windowId#7481, canonicalWorkId#7605]
+Functions [1]: [partial_count(distinct researcherId#7606)]
+Aggregate Attributes [1]: [count(researcherId#7606)#7474L]
+Results [3]: [windowId#7481, canonicalWorkId#7605, count#7682L]
+
+(25) Exchange
+Input [3]: [windowId#7481, canonicalWorkId#7605, count#7682L]
+Arguments: hashpartitioning(windowId#7481, canonicalWorkId#7605, 4), ENSURE_REQUIREMENTS, [plan_id=38253]
+
+(26) HashAggregate
+Input [3]: [windowId#7481, canonicalWorkId#7605, count#7682L]
+Keys [2]: [windowId#7481, canonicalWorkId#7605]
+Functions [1]: [count(distinct researcherId#7606)]
+Aggregate Attributes [1]: [count(researcherId#7606)#7474L]
+Results [3]: [windowId#7481, canonicalWorkId#7605, count(researcherId#7606)#7474L AS teamSize#7473L]
+
+(27) BroadcastExchange
+Input [3]: [windowId#7481, canonicalWorkId#7605, teamSize#7473L]
+Arguments: HashedRelationBroadcastMode(List(input[0, string, false], input[1, string, true]),false), [plan_id=38256]
+
+(28) BroadcastHashJoin
+Left keys [2]: [windowId#7608, canonicalWorkId#7602]
+Right keys [2]: [windowId#7481, canonicalWorkId#7605]
+Join type: Inner
+Join condition: None
+
+(29) Project
+Output [4]: [windowId#7608, canonicalWorkId#7602, researcherId#7603, (teamSize#7473L - 1) AS coauthors#7487L]
+Input [6]: [canonicalWorkId#7602, researcherId#7603, windowId#7608, windowId#7481, canonicalWorkId#7605, teamSize#7473L]
+
+(30) LocalTableScan
+Output [3]: [canonicalWorkId#7514, researcherId#7515, windowId#7520]
+Arguments: [canonicalWorkId#7514, researcherId#7515, windowId#7520]
+
+(31) LocalTableScan
+Output [3]: [canonicalWorkId#7517, researcherId#7518, windowId#7481]
+Arguments: [canonicalWorkId#7517, researcherId#7518, windowId#7481]
+
+(32) HashAggregate
+Input [3]: [canonicalWorkId#7517, researcherId#7518, windowId#7481]
+Keys [3]: [windowId#7481, canonicalWorkId#7517, researcherId#7518]
+Functions: []
+Aggregate Attributes: []
+Results [3]: [windowId#7481, canonicalWorkId#7517, researcherId#7518]
+
+(33) Exchange
+Input [3]: [windowId#7481, canonicalWorkId#7517, researcherId#7518]
+Arguments: hashpartitioning(windowId#7481, canonicalWorkId#7517, researcherId#7518, 4), ENSURE_REQUIREMENTS, [plan_id=38259]
+
+(34) HashAggregate
+Input [3]: [windowId#7481, canonicalWorkId#7517, researcherId#7518]
+Keys [3]: [windowId#7481, canonicalWorkId#7517, researcherId#7518]
+Functions: []
+Aggregate Attributes: []
+Results [3]: [windowId#7481, canonicalWorkId#7517, researcherId#7518]
+
+(35) HashAggregate
+Input [3]: [windowId#7481, canonicalWorkId#7517, researcherId#7518]
+Keys [2]: [windowId#7481, canonicalWorkId#7517]
+Functions [1]: [partial_count(distinct researcherId#7518)]
+Aggregate Attributes [1]: [count(researcherId#7518)#7474L]
+Results [3]: [windowId#7481, canonicalWorkId#7517, count#7686L]
+
+(36) Exchange
+Input [3]: [windowId#7481, canonicalWorkId#7517, count#7686L]
+Arguments: hashpartitioning(windowId#7481, canonicalWorkId#7517, 4), ENSURE_REQUIREMENTS, [plan_id=38263]
+
+(37) HashAggregate
+Input [3]: [windowId#7481, canonicalWorkId#7517, count#7686L]
+Keys [2]: [windowId#7481, canonicalWorkId#7517]
+Functions [1]: [count(distinct researcherId#7518)]
+Aggregate Attributes [1]: [count(researcherId#7518)#7474L]
+Results [3]: [windowId#7481, canonicalWorkId#7517, count(researcherId#7518)#7474L AS teamSize#7473L]
+
+(38) BroadcastExchange
+Input [3]: [windowId#7481, canonicalWorkId#7517, teamSize#7473L]
+Arguments: HashedRelationBroadcastMode(List(input[0, string, false], input[1, string, true]),false), [plan_id=38266]
+
+(39) BroadcastHashJoin
+Left keys [2]: [windowId#7520, canonicalWorkId#7514]
+Right keys [2]: [windowId#7481, canonicalWorkId#7517]
+Join type: Inner
+Join condition: None
+
+(40) Project
+Output [3]: [windowId#7520, researcherId#7515, (teamSize#7473L - 1) AS coauthors#7487L]
+Input [6]: [canonicalWorkId#7514, researcherId#7515, windowId#7520, windowId#7481, canonicalWorkId#7517, teamSize#7473L]
+
+(41) HashAggregate
+Input [3]: [windowId#7520, researcherId#7515, coauthors#7487L]
+Keys [2]: [windowId#7520, researcherId#7515]
+Functions [1]: [partial_max(coauthors#7487L)]
+Aggregate Attributes [1]: [max#7664L]
+Results [3]: [windowId#7520, researcherId#7515, max#7665L]
+
+(42) Exchange
+Input [3]: [windowId#7520, researcherId#7515, max#7665L]
+Arguments: hashpartitioning(windowId#7520, researcherId#7515, 4), ENSURE_REQUIREMENTS, [plan_id=38271]
+
+(43) HashAggregate
+Input [3]: [windowId#7520, researcherId#7515, max#7665L]
+Keys [2]: [windowId#7520, researcherId#7515]
+Functions [1]: [max(coauthors#7487L)]
+Aggregate Attributes [1]: [max(coauthors#7487L)#7503L]
+Results [3]: [windowId#7520, researcherId#7515, max(coauthors#7487L)#7503L AS maximumCoauthorsOnOnePaper#7504L]
+
+(44) Filter
+Input [3]: [windowId#7520, researcherId#7515, maximumCoauthorsOnOnePaper#7504L]
+Condition : isnotnull(maximumCoauthorsOnOnePaper#7504L)
+
+(45) BroadcastExchange
+Input [3]: [windowId#7520, researcherId#7515, maximumCoauthorsOnOnePaper#7504L]
+Arguments: HashedRelationBroadcastMode(List(input[2, bigint, false], input[0, string, false], input[1, string, true]),false), [plan_id=38275]
+
+(46) BroadcastHashJoin
+Left keys [3]: [coauthors#7487L, windowId#7608, researcherId#7603]
+Right keys [3]: [maximumCoauthorsOnOnePaper#7504L, windowId#7520, researcherId#7515]
+Join type: Inner
+Join condition: None
+
+(47) Project
+Output [3]: [windowId#7608, researcherId#7603, canonicalWorkId#7602]
+Input [7]: [windowId#7608, canonicalWorkId#7602, researcherId#7603, coauthors#7487L, windowId#7520, researcherId#7515, maximumCoauthorsOnOnePaper#7504L]
+
+(48) ObjectHashAggregate
+Input [3]: [windowId#7608, researcherId#7603, canonicalWorkId#7602]
+Keys [3]: [windowId#7608, researcherId#7603, canonicalWorkId#7602]
+Functions [1]: [partial_collect_set(canonicalWorkId#7602, 0, 0)]
+Aggregate Attributes [1]: [collect_set(canonicalWorkId#7602, 0, 0)#7535]
+Results [4]: [windowId#7608, researcherId#7603, canonicalWorkId#7602, buf#7675]
+
+(49) Exchange
+Input [4]: [windowId#7608, researcherId#7603, canonicalWorkId#7602, buf#7675]
+Arguments: hashpartitioning(windowId#7608, researcherId#7603, canonicalWorkId#7602, 4), ENSURE_REQUIREMENTS, [plan_id=38280]
+
+(50) ObjectHashAggregate
+Input [4]: [windowId#7608, researcherId#7603, canonicalWorkId#7602, buf#7675]
+Keys [3]: [windowId#7608, researcherId#7603, canonicalWorkId#7602]
+Functions [1]: [merge_collect_set(canonicalWorkId#7602, 0, 0)]
+Aggregate Attributes [1]: [collect_set(canonicalWorkId#7602, 0, 0)#7535]
+Results [4]: [windowId#7608, researcherId#7603, canonicalWorkId#7602, buf#7675]
+
+(51) ObjectHashAggregate
+Input [4]: [windowId#7608, researcherId#7603, canonicalWorkId#7602, buf#7675]
+Keys [2]: [windowId#7608, researcherId#7603]
+Functions [2]: [merge_collect_set(canonicalWorkId#7602, 0, 0), partial_count(distinct canonicalWorkId#7602)]
+Aggregate Attributes [2]: [collect_set(canonicalWorkId#7602, 0, 0)#7535, count(canonicalWorkId#7602)#7538L]
+Results [4]: [windowId#7608, researcherId#7603, buf#7675, count#7678L]
+
+(52) Exchange
+Input [4]: [windowId#7608, researcherId#7603, buf#7675, count#7678L]
+Arguments: hashpartitioning(windowId#7608, researcherId#7603, 4), ENSURE_REQUIREMENTS, [plan_id=38284]
+
+(53) ObjectHashAggregate
+Input [4]: [windowId#7608, researcherId#7603, buf#7675, count#7678L]
+Keys [2]: [windowId#7608, researcherId#7603]
+Functions [2]: [collect_set(canonicalWorkId#7602, 0, 0), count(distinct canonicalWorkId#7602)]
+Aggregate Attributes [2]: [collect_set(canonicalWorkId#7602, 0, 0)#7535, count(canonicalWorkId#7602)#7538L]
+Results [4]: [windowId#7608, researcherId#7603, count(canonicalWorkId#7602)#7538L AS maxTeamWorkTieCount#7537L, slice(sort_array(collect_set(canonicalWorkId#7602, 0, 0)#7535, true), 1, 20) AS maxTeamWorkIds#7543]
+
+(54) BroadcastHashJoin
+Left keys [2]: [windowId#7446, researcherId#7429]
+Right keys [2]: [windowId#7608, researcherId#7603]
+Join type: Inner
+Join condition: None
+
+(55) Project
+Output [7]: [windowId#7446, researcherId#7429, publicationCount#7500L, totalCoauthorOccurrences#7502L, maximumCoauthorsOnOnePaper#7504L, maxTeamWorkTieCount#7537L, maxTeamWorkIds#7543]
+Input [9]: [windowId#7446, researcherId#7429, publicationCount#7500L, totalCoauthorOccurrences#7502L, maximumCoauthorsOnOnePaper#7504L, windowId#7608, researcherId#7603, maxTeamWorkTieCount#7537L, maxTeamWorkIds#7543]
+
+(56) LocalTableScan
+Output [4]: [windowId#7457, src#7553, dst#7554, weight#7555L]
+Arguments: [windowId#7457, src#7553, dst#7554, weight#7555L]
+
+(57) LocalTableScan
+Output [4]: [windowId#7571, src#7562, dst#7563, weight#7564L]
+Arguments: [windowId#7571, src#7562, dst#7563, weight#7564L]
+
+(58) Union
+
+(59) HashAggregate
+Input [4]: [windowId#7457, src#7553, dst#7554, weight#7555L]
+Keys [3]: [windowId#7457, src#7553, dst#7554]
+Functions [1]: [partial_first(weight#7555L, false)]
+Aggregate Attributes [2]: [first#7694L, valueSet#7695]
+Results [5]: [windowId#7457, src#7553, dst#7554, first#7696L, valueSet#7697]
+
+(60) Exchange
+Input [5]: [windowId#7457, src#7553, dst#7554, first#7696L, valueSet#7697]
+Arguments: hashpartitioning(windowId#7457, src#7553, dst#7554, 4), ENSURE_REQUIREMENTS, [plan_id=38290]
+
+(61) HashAggregate
+Input [5]: [windowId#7457, src#7553, dst#7554, first#7696L, valueSet#7697]
+Keys [3]: [windowId#7457, src#7553, dst#7554]
+Functions [1]: [first(weight#7555L, false)]
+Aggregate Attributes [1]: [first(weight#7555L)()#7658L]
+Results [4]: [windowId#7457, src#7553, dst#7554, first(weight#7555L)()#7658L AS weight#7659L]
+
+(62) HashAggregate
+Input [4]: [windowId#7457, src#7553, dst#7554, weight#7659L]
+Keys [3]: [windowId#7457, src#7553, dst#7554]
+Functions [1]: [partial_sum(weight#7659L)]
+Aggregate Attributes [1]: [sum(weight#7659L)#7590L]
+Results [4]: [windowId#7457, src#7553, dst#7554, sum#7689L]
+
+(63) HashAggregate
+Input [4]: [windowId#7457, src#7553, dst#7554, sum#7689L]
+Keys [3]: [windowId#7457, src#7553, dst#7554]
+Functions [1]: [merge_sum(weight#7659L)]
+Aggregate Attributes [1]: [sum(weight#7659L)#7590L]
+Results [4]: [windowId#7457, src#7553, dst#7554, sum#7689L]
+
+(64) HashAggregate
+Input [4]: [windowId#7457, src#7553, dst#7554, sum#7689L]
+Keys [2]: [windowId#7457, src#7553]
+Functions [2]: [merge_sum(weight#7659L), partial_count(distinct dst#7554)]
+Aggregate Attributes [2]: [sum(weight#7659L)#7590L, count(dst#7554)#7592L]
+Results [4]: [windowId#7457, src#7553, sum#7689L, count#7692L]
+
+(65) Exchange
+Input [4]: [windowId#7457, src#7553, sum#7689L, count#7692L]
+Arguments: hashpartitioning(windowId#7457, src#7553, 4), ENSURE_REQUIREMENTS, [plan_id=38296]
+
+(66) HashAggregate
+Input [4]: [windowId#7457, src#7553, sum#7689L, count#7692L]
+Keys [2]: [windowId#7457, src#7553]
+Functions [2]: [sum(weight#7659L), count(distinct dst#7554)]
+Aggregate Attributes [2]: [sum(weight#7659L)#7590L, count(dst#7554)#7592L]
+Results [4]: [windowId#7457, src#7553 AS researcherId#7597, count(dst#7554)#7592L AS distinctCoauthorCount#7589L, sum(weight#7659L)#7590L AS weightedDegree#7591L]
+
+(67) BroadcastExchange
+Input [4]: [windowId#7457, researcherId#7597, distinctCoauthorCount#7589L, weightedDegree#7591L]
+Arguments: HashedRelationBroadcastMode(List(input[0, string, true], input[1, string, true]),false), [plan_id=38299]
+
+(68) BroadcastHashJoin
+Left keys [2]: [windowId#7446, researcherId#7429]
+Right keys [2]: [windowId#7457, researcherId#7597]
+Join type: LeftOuter
+Join condition: None
+
+(69) Project
+Output [10]: [windowId#7446, researcherId#7429, publicationCount#7500L, totalCoauthorOccurrences#7502L, maximumCoauthorsOnOnePaper#7504L, maxTeamWorkTieCount#7537L, maxTeamWorkIds#7543, coalesce(distinctCoauthorCount#7589L, 0) AS distinctCoauthorCount#7634L, coalesce(weightedDegree#7591L, 0) AS weightedDegree#7635L, (cast(totalCoauthorOccurrences#7502L as double) / cast(publicationCount#7500L as double)) AS averageCoauthorsPerPaper#7645]
+Input [11]: [windowId#7446, researcherId#7429, publicationCount#7500L, totalCoauthorOccurrences#7502L, maximumCoauthorsOnOnePaper#7504L, maxTeamWorkTieCount#7537L, maxTeamWorkIds#7543, windowId#7457, researcherId#7597, distinctCoauthorCount#7589L, weightedDegree#7591L]
+
+(70) AdaptiveSparkPlan
+Output [10]: [windowId#7446, researcherId#7429, publicationCount#7500L, totalCoauthorOccurrences#7502L, maximumCoauthorsOnOnePaper#7504L, maxTeamWorkTieCount#7537L, maxTeamWorkIds#7543, distinctCoauthorCount#7634L, weightedDegree#7635L, averageCoauthorsPerPaper#7645]
+Arguments: isFinalPlan=false
+
+
+== Physical Plan ==
+* Scan ExistingRDD (1)
+
+
+(1) Scan ExistingRDD [codegen id : 1]
+Output [15]: [windowId#18, researcherId#1, publicationCount#2957L, totalCoauthorOccurrences#2959L, maximumCoauthorsOnOnePaper#2961L, maxTeamWorkTieCount#2991L, maxTeamWorkIds#2997, distinctCoauthorCount#3087L, weightedDegree#3088L, averageCoauthorsPerPaper#3098, componentId#6406, coreness#2372, communityId#6443, policyVersion#6460, context#6479]
+Arguments: [windowId#18, researcherId#1, publicationCount#2957L, totalCoauthorOccurrences#2959L, maximumCoauthorsOnOnePaper#2961L, maxTeamWorkTieCount#2991L, maxTeamWorkIds#2997, distinctCoauthorCount#3087L, weightedDegree#3088L, averageCoauthorsPerPaper#3098, componentId#6406, coreness#2372, communityId#6443, policyVersion#6460, context#6479], MapPartitionsRDD[810] at checkpoint at Phase6DEJobs.scala:616, ExistingRDD, UnknownPartitioning(0)
+
+
+== Physical Plan ==
+* Scan ExistingRDD (1)
+
+
+(1) Scan ExistingRDD [codegen id : 1]
+Output [8]: [windowId#18, componentId#1354, minimumResearcherId#1550, size#1441L, singletonCount#1453L, isLargest#1530, largestComponentFraction#1540, context#1570]
+Arguments: [windowId#18, componentId#1354, minimumResearcherId#1550, size#1441L, singletonCount#1453L, isLargest#1530, largestComponentFraction#1540, context#1570], MapPartitionsRDD[166] at checkpoint at Phase6DEJobs.scala:527, ExistingRDD, UnknownPartitioning(0)
+
+
+== Physical Plan ==
+* Scan ExistingRDD (1)
+
+
+(1) Scan ExistingRDD [codegen id : 1]
+Output [15]: [windowId#18, researcherId#1, publicationCount#2957L, totalCoauthorOccurrences#2959L, maximumCoauthorsOnOnePaper#2961L, maxTeamWorkTieCount#2991L, maxTeamWorkIds#2997, distinctCoauthorCount#3087L, weightedDegree#3088L, averageCoauthorsPerPaper#3098, componentId#6406, coreness#2372, communityId#6443, policyVersion#6460, context#6479]
+Arguments: [windowId#18, researcherId#1, publicationCount#2957L, totalCoauthorOccurrences#2959L, maximumCoauthorsOnOnePaper#2961L, maxTeamWorkTieCount#2991L, maxTeamWorkIds#2997, distinctCoauthorCount#3087L, weightedDegree#3088L, averageCoauthorsPerPaper#3098, componentId#6406, coreness#2372, communityId#6443, policyVersion#6460, context#6479], MapPartitionsRDD[810] at checkpoint at Phase6DEJobs.scala:616, ExistingRDD, UnknownPartitioning(0)
+
+
+[info] - jobs 3, 4 and 8 compute numeric metrics, components and exact coreness
+26/10/22 12:36:51 WARN  SimpleFunctionRegistry: The function phase6deid replaced a previously registered function.
+== Physical Plan ==
+* Scan ExistingRDD (1)
+
+
+(1) Scan ExistingRDD [codegen id : 1]
+Output [10]: [windowId#14525, pathEvidenceId#14969, sourceResearcherId#14519, targetResearcherId#14520, status#14920, hopCount#14897, orderedResearcherIds#14932, hops#14944, maxHops#14956, context#14996]
+Arguments: [windowId#14525, pathEvidenceId#14969, sourceResearcherId#14519, targetResearcherId#14520, status#14920, hopCount#14897, orderedResearcherIds#14932, hops#14944, maxHops#14956, context#14996], MapPartitionsRDD[1879] at checkpoint at Phase6DEJobs.scala:929, ExistingRDD, UnknownPartitioning(0)
+
+
+[info] - selected BFS returns canonical shortest path and different-component no-path
+26/10/22 12:36:55 WARN  SimpleFunctionRegistry: The function phase6deid replaced a previously registered function.
+[info] - solo average is zero, max-team ties retain full count after work-ID cap
+26/10/22 12:37:00 WARN  SimpleFunctionRegistry: The function phase6deid replaced a previously registered function.
+26/10/22 12:37:00 WARN  BlockManager: Block rdd_2969_0 already exists on this machine; not re-adding it
+[info] - a weighted-degree mismatch fails with the metric invariant
+26/10/22 12:37:01 WARN  SimpleFunctionRegistry: The function phase6deid replaced a previously registered function.
+26/10/22 12:37:01 WARN  SimpleFunctionRegistry: The function phase6deid replaced a previously registered function.
+[info] - component and k-core iteration limits reject an unfinished fixed point
+26/10/22 12:37:02 WARN  SimpleFunctionRegistry: The function phase6deid replaced a previously registered function.
+[info] - synchronous triangle LPA converges to its minimum initial label
+26/10/22 12:37:04 WARN  SimpleFunctionRegistry: The function phase6deid replaced a previously registered function.
+[info] - two-person synchronous LPA records non-convergence in core community records
+26/10/22 12:37:06 WARN  SimpleFunctionRegistry: The function phase6deid replaced a previously registered function.
+[info] - a reachable pair beyond maxHops reports exceeded-maxHops without hop evidence
+26/10/22 12:37:10 WARN  SimpleFunctionRegistry: The function phase6deid replaced a previously registered function.
+[info] - seeded sampling chooses a bounded pair from the largest component
+26/10/22 12:37:13 WARN  SimpleFunctionRegistry: The function phase6deid replaced a previously registered function.
+[info] - equal-length BFS routes choose the smallest immediate predecessor
+[info] Run completed in 32 seconds, 95 milliseconds.
+[info] Total number of tests run: 10
+[info] Suites: completed 1, aborted 0
+[info] Tests: succeeded 10, failed 0, canceled 0, ignored 0, pending 0
+[info] All tests passed.
+[success] Total time: 35 s, completed Oct 22, 2026, 12:37:15 PM
+
+exit=0

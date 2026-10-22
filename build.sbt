@@ -16,6 +16,10 @@ lazy val buildVerification =
         (ThisBuild / baseDirectory).value / "project/verification/src/main/scala",
       Compile / unmanagedSources +=
         (ThisBuild / baseDirectory).value / "project/HadoopBundleMerge.scala",
+      Compile / unmanagedSources +=
+        (ThisBuild / baseDirectory).value / "project/SparkJobJar.scala",
+      Compile / unmanagedSources +=
+        (ThisBuild / baseDirectory).value / "project/Java17Guard.scala",
       Test / scalaSource :=
         (ThisBuild / baseDirectory).value / "project/verification/src/test/scala"
     )
@@ -47,9 +51,12 @@ lazy val hadoop =
 lazy val independentTests =
   project
     .in(file("tests"))
-    .dependsOn(core, hadoop, entityResolution)
+    .dependsOn(core, hadoop, entityResolution, sparkAnalytics)
     .settings(
-      ScholarChainBuild.moduleSettings(Seq(Dependencies.hadoopClientLib)),
+      ScholarChainBuild.moduleSettings(
+        Seq(Dependencies.hadoopClientLib, Dependencies.sparkSql, Dependencies.sparkScalaReflectLib)
+      ),
+      ScholarChainBuild.sparkTestSettings,
       name := "independentTests",
       publish / skip := true
     )
@@ -64,8 +71,13 @@ lazy val sparkAnalytics =
   project
     .in(file("modules/spark"))
     .dependsOn(core)
+    .enablePlugins(AssemblyPlugin)
     .settings(
-      ScholarChainBuild.moduleSettings(Seq(Dependencies.sparkSql)),
+      ScholarChainBuild.moduleSettings(
+        Seq(Dependencies.sparkSql, Dependencies.sparkScalaReflectLib)
+      ),
+      ScholarChainBuild.sparkJobJarSettings(core),
+      ScholarChainBuild.sparkTestSettings,
       name := "sparkAnalytics"
     )
 
@@ -115,6 +127,8 @@ lazy val root =
         if (sys.props.get("scholarchain.checkProbe.fail").contains("true"))
           sys.error("scholarchain check probe: injected format-stage failure")
       },
+      checkJava17 :=
+        scholarchain.build.Java17Guard.requireJava17(sys.props("java.specification.version")),
       contractTest := Def.taskDyn {
         if (sys.props.get("scholarchain.checkProbe.fail").contains("true"))
           Def.task(())
@@ -124,6 +138,7 @@ lazy val root =
       checkTask := Def
         .sequential(
           Def.sequential(
+            checkJava17,
             checkProbeInjectFailure,
             core / Compile / scalafmtCheck,
             core / Test / scalafmtCheck,
@@ -183,8 +198,9 @@ addCommandAlias("fmt", ";all scalafmtAll; scalafmtSbt")
 addCommandAlias("check", "checkTask")
 addCommandAlias(
   "packageJobs",
-  ";hadoop/package; hadoop/hadoopDependencyBundle; sparkAnalytics/package"
+  ";hadoop/package; hadoop/hadoopDependencyBundle; sparkAnalytics/sparkJobJar"
 )
+addCommandAlias("sparkJobJar", "sparkAnalytics/sparkJobJar")
 addCommandAlias("dockerLocal", "dockerLocalImage")
 addCommandAlias("hadoopLocalClasspath", "hadoop/hadoopLocalClasspath")
 addCommandAlias("hadoopRunMain", "hadoop/hadoopRunMain")

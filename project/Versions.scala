@@ -20,8 +20,10 @@ object Versions {
   // Scala 3.3.x. sparkAnalytics must compile against Spark's Java and Dataset/DataFrame entry
   // points (org.apache.spark.sql.*) and must not call Spark's Scala 2.13 RDD/Dataset APIs.
   // Dependencies.scala keeps spark-sql_2.13 on the Provided classpath with full Java/transitive
-  // deps; org.scala-lang:scala-library, scala-reflect, and org.scala-lang.modules:scala-xml_2.13
-  // are excluded where they break Scala 3 resolution (see Dependencies.scala).
+  // deps; Spark's Scala stdlib/reflection versions and scala-xml_2.13 are excluded where they
+  // break Scala 3 resolution. scala-reflect is added explicitly at the Scala 3 stdlib version.
   val spark = "3.5.4"
   val sparkScalaBinary = "2.13"
+  // Matches the scala-library dependency of scala3-library_3 3.3.4.
+  val sparkScalaReflect = "2.13.14"
 }

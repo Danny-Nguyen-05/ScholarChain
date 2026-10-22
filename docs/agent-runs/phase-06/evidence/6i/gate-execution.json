@@ -1,0 +1,6 @@
+{
+  "startedAtUtc": "2026-10-22T19:52:50.183854+00:00",
+  "completedAtUtc": "2026-10-22T20:04:05.397751+00:00",
+  "exitCode": 0,
+  "command": "/usr/bin/time -p sbt -batch check"
+}

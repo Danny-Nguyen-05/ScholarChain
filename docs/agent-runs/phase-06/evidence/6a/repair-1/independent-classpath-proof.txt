@@ -1,0 +1,24 @@
+[success] Total time: 0 s, completed Oct 21, 2026, 9:40:39 PM
+[info] true
+[info] * -Xmx2g
+[info] * -Dspark.ui.enabled=false
+[info] * -Djava.net.preferIPv4Stack=true
+[info] * --add-opens=java.base/java.lang=ALL-UNNAMED
+[info] * --add-opens=java.base/java.lang.invoke=ALL-UNNAMED
+[info] * --add-opens=java.base/java.lang.reflect=ALL-UNNAMED
+[info] * --add-opens=java.base/java.io=ALL-UNNAMED
+[info] * --add-opens=java.base/java.net=ALL-UNNAMED
+[info] * --add-opens=java.base/java.nio=ALL-UNNAMED
+[info] * --add-opens=java.base/java.util=ALL-UNNAMED
+[info] * --add-opens=java.base/java.util.concurrent=ALL-UNNAMED
+[info] * --add-opens=java.base/java.util.concurrent.atomic=ALL-UNNAMED
+[info] * --add-opens=java.base/jdk.internal.ref=ALL-UNNAMED
+[info] * --add-opens=java.base/sun.nio.ch=ALL-UNNAMED
+[info] * --add-opens=java.base/sun.nio.cs=ALL-UNNAMED
+[info] * --add-opens=java.base/sun.security.action=ALL-UNNAMED
+[info] * --add-opens=java.base/sun.util.calendar=ALL-UNNAMED
+[info] * --add-opens=java.security.jgss/sun.security.krb5=ALL-UNNAMED
+/Users/danny/Documents/UIC/CS441/ScholarChain/modules/spark/target/scala-3.3.4/classes
+/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/apache/spark/spark-sql_2.13/3.5.4/spark-sql_2.13-3.5.4.jar
+/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/scala-lang/scala-reflect/2.13.14/scala-reflect-2.13.14.jar
+/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/apache/logging/log4j/log4j-slf4j2-impl/2.20.0/log4j-slf4j2-impl-2.20.0.jar

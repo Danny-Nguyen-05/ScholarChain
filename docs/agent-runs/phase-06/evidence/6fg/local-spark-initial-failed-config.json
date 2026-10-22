@@ -1,0 +1,61 @@
+{
+  "configSchemaVersion": "scholarchain.spark-analytics-config.v1",
+  "hadoopRunRoot": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase6-runs/6fg-hadoop/992f0c54-0d6e-4c63-9177-84b946a18928",
+  "entityResolutionRunRoot": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase6-runs/6fg-er-disabled",
+  "outputRoot": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase6-runs/6fg-spark-first",
+  "windows": [
+    {
+      "windowId": "all-years",
+      "startYear": null,
+      "endYear": null,
+      "comparisonOrder": null
+    },
+    {
+      "windowId": "through-2009",
+      "startYear": null,
+      "endYear": 2009,
+      "comparisonOrder": 0
+    },
+    {
+      "windowId": "2010-2014",
+      "startYear": 2010,
+      "endYear": 2014,
+      "comparisonOrder": 1
+    },
+    {
+      "windowId": "2015-2019",
+      "startYear": 2015,
+      "endYear": 2019,
+      "comparisonOrder": 2
+    },
+    {
+      "windowId": "2020-2026",
+      "startYear": 2020,
+      "endYear": 2026,
+      "comparisonOrder": 3
+    },
+    {
+      "windowId": "since-2015",
+      "startYear": 2015,
+      "endYear": 2026,
+      "comparisonOrder": null
+    }
+  ],
+  "identityPolicyVersion": "identity-v1",
+  "representativePolicyVersion": "representative-v1",
+  "graphPolicyVersion": "graph-v1",
+  "componentMaxIterations": 50,
+  "communityMaxIterations": 20,
+  "kCoreMaxIterations": 50,
+  "checkpointInterval": 5,
+  "checkpointDirectory": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase6-runs/6fg-checkpoints-first",
+  "maxHops": 6,
+  "benchmarkPairs": [],
+  "sampledPathPairCount": 20,
+  "pathSampleSourceCount": 32,
+  "samplingSeed": 441,
+  "representativeWorkLimit": 5,
+  "maxTeamWorkLimit": 20,
+  "shufflePartitions": 4,
+  "failOnHardInvariant": true
+}
