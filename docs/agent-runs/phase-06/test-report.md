@@ -461,3 +461,43 @@ RISKS: F4–F12 deferred by the user; approximation and scanner limits remain di
 MANUAL ACTION REQUIRED: User-run independent read-only recheck.
 BLOCKED-ON OWNER: none. BLOCKED-ON EVIDENCE: none for F1–F3 local gates.
 NEXT GATE: Repair-round recheck; no commit/push/reviewer/6I.
+
+## Subphase 6I — fresh final JDK 17 gate
+
+STATUS: COMPLETE for observed local validation; final independent review and
+human acceptance pending.
+OWNER: Coordinator execution/evidence; existing module and independent test
+owners retain ownership. No source/test edits or new reviewers.
+WORK ORDER: Evidence-only 6I, base/HEAD `d1afc7f6698965ddbe010621b277b10e655d25ff`, branch `phase-6`;
+full Phase 6 reviewer scope starts at `03493882399e9020e6892c9f97e0ec8919365215`.
+FILES CREATED: `evidence/6i/` gate, metadata, scoped snapshot and audits.
+FILES MODIFIED: Coordinator reports only; exact inventory in `changed-files.txt`.
+COMMANDS RUN: JDK 17 environment and Phase 4 logging from `commands.md`;
+`java -version`; `/usr/bin/time -p sbt -batch check` exit 0; metadata/SHA audits;
+`git diff --check` exit 0; cumulative non-evidence check exit 0. Full cumulative
+check exit 2 solely for historical raw-log whitespace (`diff-check.txt`), left
+unchanged. Metadata-assembly assertion initially rejected that historical result;
+corrected audit records it, with no source/log edit or gate rerun.
+TEST RESULTS: **554 passed / 0 failed**: core 144/Hadoop 64/ER 39/Spark 34/
+independent 266/build 7. Java 17.0.20.1, sbt 1.10.7. Sbt 673s,
+real **675.13s**, exit 0. Completed `2026-10-22T20:04:05.397751+00:00`.
+Full log `evidence/6i/final-check.txt`, **1,359,860 bytes**, SHA-256
+`e2bf289d11f6f2e4ff8e714d3fc4b9b56b16ea7ed59007abd00d5fe73d9d7367`. Exact count/success/exit lines and marker mtime:
+`final-gate-metadata.json`. The build self-test intentionally logs an injected
+error; final six module results and process exit are successful. No standalone
+Python dataset test, real-data CLI or packaging run in 6I.
+VALIDATION RESULTS: 68 scoped source/build/config/dataset hashes+mtimes and all 27
+approved snapshot hashes unchanged, as are HEAD/plan. Human-owned records remain
+absent. Metadata-only retained audit validates both markers, 28 table hash pairs,
+identical counters and 12 operational-report differences. Current Scala export
+and tiny Hadoop→offlineER→Spark integration cases ran in the full suite. Historical
+real Parquet content was not independently reread by the 6I sidecar audit.
+ASSUMPTIONS: Existing 554-test tree is unchanged. Dataset Python 12/12 and prior
+real runtime/stage measurements remain historical, separate from these totals.
+RISKS: F4–F12, scanner gaps, approximation/reuse/hash scale limits, yearless store
+mapping and release/EMR gates remain disclosed; no cloud compatibility inferred.
+MANUAL ACTION REQUIRED: User-run comprehensive review; then human acceptance
+and commit records. Do not treat this test report as approval.
+BLOCKED-ON OWNER: None for local tests. Reviewer/human own remaining close-out.
+BLOCKED-ON EVIDENCE: Whole-phase APPROVE and human gate; EMR open until Phase 15.
+NEXT GATE: Comprehensive Phase 6 review; stop after 6I.

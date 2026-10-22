@@ -266,3 +266,87 @@ the gate; only SafetySpec differs from the original reviewed source snapshot.
 Production fingerprint and retained run ID unchanged. Diff check0, HEADunchanged.
 F4–F12 remain deferred under the user's blocking-only answer. No optional README
 or retention changes remain; no real-data rerun, commit, push, reviewer or6I.
+
+## Subphase 6I — authoritative close-out carry-forward register
+
+The user-supplied external recheck **APPROVED 6F+6G repair round 1**. Its complete
+verdict is already retained verbatim under its own heading in `review.md`.
+F1 (stage DAG), F2 (honest replay/report scope), and F3 (source fence) are closed
+by that reviewer. The user committed the approved tree as
+`d1afc7f6698965ddbe010621b277b10e655d25ff`. Historical "pending" wording above
+records the state of earlier rounds and is superseded by this dated disposition.
+This is not the pending comprehensive whole-Phase-6 review or human acceptance.
+
+No new implementation is authorized in evidence-only 6I. Prior user scope
+"only fix the blockings bugs" is preserved. None of F4–F12 is silently closed:
+
+| Finding | Status and named owner | Downstream gate / practical limit |
+| --- | --- | --- |
+| 6FG F4: same-ID failed-run retry | OPEN / deferred; spark-engineer; operator controls cleanup | Before operational retry/runbook use: same config/code refuses incomplete output. Inspect and preserve failure evidence; any destructive cleanup requires its own human decision. No cleanup performed here. |
+| 6FG F5: thin summaries; title truncation lacks a marker | OPEN / deferred; spark-engineer | Before Phase 8 embedding consumers: improve source-grounded context and test long titles. Current 900-character title bound is unchanged. |
+| 6FG F6: continuity tie winner not exposed | OPEN / deferred; spark-engineer, domain-engineer if a field is added | Before consumers infer a matched community: actual community and overlap are present, selected tie winner is not observable. Clarify documentation or route an additive contract change. |
+| 6FG F7: duplicated kcore/collaboration table | OPEN / deferred; storage-engineer with spark-engineer | Phase 7 loader design must avoid unintended duplicate storage of the same rows. Current proposals preserve both tables. |
+| 6FG F8: target key proposals | OPEN / deferred; storage-engineer with domain/spark support | Phase 7 before loading: support rows need a unique composite key (edgeId alone is not unique); DynamoDB free-text key proposal is not an implemented schema. No stores loaded. |
+| 6FG F9: LPA causal attribution / optimizer-cause wording | OPEN / deferred; spark-engineer; coordinator for future reporting | Before stronger scientific/causal claims: observed final changes and non-convergence are known; per-component causes/counts were not measured. Pair oscillation is a fixture property, not proof explaining all real changes. Spark diagnosis is an inference. |
+| 6FG F10: caller-session constraint setting | OPEN / deferred; spark-engineer | Before operational/session reuse: constraintPropagation=false is applied to the caller session, not explicitly recorded in run metadata; A/B performance cost not measured. No fix or measurement claimed. |
+| 6FG F11: evidence volume | OPEN / deferred; human retention decision, coordinator executes approved scope | No trimming/deletion inferred from blocking-only reply. Existing gates/DAG retained; fresh 6I full log adds evidence. |
+| 6FG F12: counter aliases, formatting process, Python gate | OPEN / deferred; spark-engineer, dataset-engineer, build-engineer as applicable; coordinator attribution | Counter aliases unchanged; prior coordinator formatting disclosed. Historical dataset Python 12/12 is separate from sbt counts; it was not rerun in 6I. Build changes require build owner. |
+| 6FG recheck: scanner blind spots | OPEN / nonblocking; test-engineer | Next source-fence hardening: .tail/.toJavaRDD/.javaRDD/.toRdd and code in interpolated strings are not reliably detected. Textual scan is not a parser/type checker. No current violation was reported by the external reviewer. |
+| 6FG recheck: empty handoff path | CLOSED; coordinator | Corrected before the approved 6FG commit: `evidence/6fg/repair-1/handoff.md` names its evidence directory. No new 6I edit required. |
+| 6FG recheck: evidence size | OPEN / nonblocking; human | Same retention decision as F11; approval is not approval of a new cleanup policy. |
+| 6A F4: wrong-JDK evidence stale | OPEN / deferred; build-engineer and coordinator | Refresh on release tree before packaging/deployment. Fresh JDK 17 check proves the supported-JDK path only; it does not refresh the wrong-JDK log. |
+| 6A F6: packaging not JDK-guarded | OPEN / deferred; build-engineer | Before release packaging / Phase 13–15 deployment. No package rebuilt in 6I, and no guard fix claimed. |
+| 6A F8: packaging wording | OPEN / informational; build-engineer | Future build documentation cleanup, not a release/runtime verification. |
+| EMR runtime / Scala alignment | OPEN; infra-engineer (Phase 13), deploy-engineer (Phase 15), build-engineer for package | **Bounded EMR Spark run: OPEN — deferred to Phase 15 by user decision.** Compatibility research is not a live test. Script in Phase 13, bounded driver/executor class-origin and DataFrame/Parquet check under human budget/deployment gate in Phase 15. |
+| Yearless coauthor edge mapping | OPEN; storage-engineer with domain-engineer | Phase 7 before Neptune loading. Frozen CoauthorshipProperties requires numeric years; no invented dates or live store compatibility claim. |
+| Comprehensive APPROVE / human close-out | PENDING; user-launched independent reviewer, then human architect | Whole diff from `03493882399e9020e6892c9f97e0ec8919365215` including untracked files; then human-owned `human-gate.md` and `commit.txt`. Subphase approvals do not close these gates. |
+
+Current provenance is recorded in `evidence/6i/preflight.md` and `.json` (plan hash,
+Codex tool, observable model identity, unavailable exact model build). It does not
+retroactively invent the missing 6A model or command evidence. Reuse remains
+metadata-only; 256-shard hashing is measured at the bounded slice scale; reports
+and sampled P90 can vary with physical aggregation; cross-JAR/EMR determinism is
+unverified. Prior resolved 6B/6C/6DE items retain the later 6FG evidence above.
+
+### 6I final validation and additional evidence observation
+
+Fresh JDK 17 `sbt -batch check`: **554/554**, exit 0, real 675.13s;
+log 1,359,860bytes, SHA-256 `e2bf289d11f6f2e4ff8e714d3fc4b9b56b16ea7ed59007abd00d5fe73d9d7367`.
+All 68 implementation artifacts (hashes/mtimes) and 27 approved snapshot hashes
+unchanged. No source repair required. Current tracked whitespace check exits 0;
+whole-phase non-evidence check exits 0. The broader cumulative check exits 2 for
+trailing whitespace in preserved historical raw logs only. This is an evidence
+format observation, not a new production failure; originals remain unchanged.
+`evidence/6i/diff-check.txt` retains the diagnostic. No user retention/cleanup
+choice is inferred. Comprehensive whole-phase review and human records remain
+pending; F4–F12 and the routed later gates above stay open/deferred.
+
+## Subphase 6I — comprehensive review disposition (2026-10-22)
+
+**Comprehensive APPROVE: RECEIVED** from the independent, user-launched reviewer
+for 6I and the whole Phase 6 **local implementation**, with no blocking findings.
+Full verdict, observations, report fields and next prompt are retained verbatim
+in `review.md`. This supersedes earlier pending-review status, not prior human
+decisions. **Human close-out: PENDING**; bounded EMR remains OPEN.
+
+No implementation changes or new test/runtime execution in this disposition round.
+The existing 554/0 gate remains the observed implementation gate. 6FG F4–F12,
+scanner blind spots, 6A F4/F6/F8, EMR/Scala alignment and yearless Neptune mapping
+remain **OPEN and unchanged** in the preceding carry-forward register.
+
+| Whole-phase finding | Status / named owner | Next gate / acceptance |
+| --- | --- | --- |
+| N1: LPA oscillation beyond isolated pairs | OPEN, nonblocking; spark-engineer (rule/measurement), coordinator (wording) | Before Phase 7–9 consumers: either validate a converging rule on pairs/bipartite/real windows, or add per-component non-convergence counts and require consumers to display `Converged: false` rather than present iteration-limited partitions/derived bridges as converged results. Odd real changed counts show pairs cannot explain all non-convergence. No rule change or consumer implementation claimed here. |
+| N2: distance P90 uses percentile_approx | OPEN, nonblocking; spark-engineer | Before strengthening partition-invariant logical-table claims: exact P90 with differing-partition tests, or an explicit approximate label. A production change requires a new fingerprint, full gate and fresh real run/replay. Existing replay equality is observational only. |
+| N3: zero real Researcher ER decisions insufficiently explicit | OPEN, nonblocking; coordinator | Clarify real-data-report.md and traceability J1 with all-zero Researcher decisions; Work accepted 1/conflict 12,123/unresolved 1,627 and the five zero branch counters. A short 6I owner-report clarification is added below the existing packet; full requested report/J1 changes remain open. Identity merging/constraints are fixture/tiny-pipeline evidence, not exercised by this real slice. |
+| N4: Job 1/9/10 README drifts from execution | OPEN, nonblocking; spark-engineer | Next Spark documentation pass before consumers rely on the per-job physical account: reflect actual repartitions, joins and approximately 20 cached tables; remove prospective `will own` wording. No Spark-owned README edit in this coordinator-only round. |
+| N5: driver caps are call-site literals | OPEN, nonblocking; spark-engineer | Next bounded-action configuration pass: name caps as constants or config; current 10,000/256 bounds are explicit literals rather than the plan's config limits. No current-scale overflow claimed. Feature tests/regate if behavior changes. |
+| N6: Phase6Plans global destination is not thread-safe | OPEN, nonblocking; spark-engineer | Before parallel suites or concurrent pipeline use: pass the destination explicitly and test isolation. No change to current sequential execution. |
+| N7: commit-title attribution / evidence retention | OPEN, informational; human | Human close-out retention decision: about 15.9 MB evidence, three approximately 1.36 MB gate logs; 188 whitespace hits in 17 raw logs. Role-labelled commit titles aggregate several owners but path ownership was verified intact. No trimming, title rewriting or inferred retention approval. |
+
+Human must decide acceptance of the local implementation, the course work-order
+EMR deferral (script Phase 13/run Phase 15), the unselected Scala-compatible
+runtime's schedule/cost risk, the Codex/Cursor workflow deviation without claimed
+instructor approval, retention, and this open register. The coordinator must not
+write `human-gate.md`, `commit.txt` or `accepted-commit.md`, commit/push or start
+Phase 7. Comprehensive APPROVE is received; human close-out is the next gate.

@@ -1263,3 +1263,203 @@ the course-gate traceability table in owner-report.md with "bounded EMR Spark ru
 Phase 15), carrying F4–F12 forward as open or deferred items, and the comprehensive whole-Phase-6 reviewer prompt
 covering 0349388 through the current tree including untracked files.
 ```
+
+## Subphase 6I — comprehensive review pending
+
+Coordinator status only; **not a reviewer verdict**. User started 6I after committing
+approved 6F+6G as `d1afc7f6698965ddbe010621b277b10e655d25ff`. All received external
+verdicts above remain verbatim. The comprehensive review must cover Phase-6 baseline
+`03493882399e9020e6892c9f97e0ec8919365215` through the final working tree, including
+untracked files. The coordinator does not launch that reviewer. Its copyable work
+order will be retained at `evidence/6i/reviewer-prompt.md`. No whole-phase APPROVE,
+human acceptance, EMR execution, or phase closure is claimed by this record.
+
+## Subphase 6I — comprehensive whole-Phase-6 review — user-supplied external review
+
+Recorded 2026-10-22. The earlier **comprehensive review pending** note is preserved as history and superseded by this external APPROVE on this date. Human acceptance and EMR execution remain open.
+
+```text
+Phase 6, Subphase 6I: whole-phase review
+
+1. VERDICT: APPROVE for 6I and the comprehensive Phase 6 local implementation. I found no blocking defect.
+
+- Local implementation: Jobs 1–11, the CLI, the Parquet export, the manifests, and the independent and module tests are consistent with the plan and the course Phase 6 / Detailed Spark text.
+- Not covered by this APPROVE:
+  - The bounded EMR Spark run is OPEN, deferred to Phase 15 by user decision, with the script in Phase 13. No cloud runtime has been tested.
+  - The human gate is pending: human-gate.md, the commit, and commit.txt.
+  - The Codex/Cursor workflow deviation is not instructor-approved.
+- EMR fact for the human:
+  - The 6a/emr-compatibility.md memo cites EMR 7.x Spark 3.5.x as Scala 2.12. This repo is Scala 3 against spark-sql_2.13.
+  - No compatible runtime has been selected or tested. Phases 13 and 15 need a custom runtime, and I treat that as a real schedule and cost risk.
+  - The course work order lists the bounded EMR run, although its Gate bullets do not. Accepting the deferral is therefore a human decision about a work-order item.
+
+2. Findings. None is blocking. Items already registered in repairs.md:270-322 are re-confirmed as open and unchanged: 6FG F4–F12, the scanner blind spots, 6A F4/F6/F8, EMR alignment, and the yearless Neptune mapping.
+
+#: N1
+Sev: Med
+Path:line: Phase6DEJobs.scala:335-406; real-data-report.md:72-79; README.md:79; Phase6DEJobsSpec.scala:311-359
+Evidence: Final changed-label counts are 372/430/504/1349/793/524 (sum 3972 matches counters.json). Each isolated pair contributes exactly 2 changed
+labels, but 1349 and 793 are odd. So oscillation is not confined to two-person components. The module test asserts that an isolated pair becomes
+two singleton communities.
+Impact: Real community, cross-community-edge, bridge and continuity outputs are iteration-limited. Each two-person component's only edge is reported
+as cross-community. The report and README wording suggests pairs explain the non-convergence.
+Owner: spark-engineer (tie rule or damping), coordinator (wording)
+Acceptance: Either a converging rule on pair, bipartite and real windows, or per-component non-convergence counts (F9) plus a recorded rule that
+Phase 7–9 consumers show Converged: false and do not present it as a result.
+Block: No. Plan §7.7 allows documented non-convergence. The 6D+6E R1-O1 observation was accepted.
+────────────────────────────────────────
+#: N2
+Sev: Low–Med
+Path:line: Phase6DEJobs.scala:1040, :1055
+Evidence: The distance P90 uses percentile_approx inside a hashed logical table, but the method string says "empirical P90". The distance domain is a
+tiny integer set, so an exact percentile is cheap. The replay matched by observation only.
+Impact: Latent partition dependence in a logical table.
+Owner: spark-engineer
+Acceptance: Exact P90 with a test at differing shuffle partitions, or an explicit "approximate" label. A code change alters the fingerprint, so it
+needs a regate and a new run.
+Block: No. This is the already-disclosed 6FG F2 latent risk, not silently closed.
+────────────────────────────────────────
+#: N3
+Sev: Low
+Path:line: er-resolution-manifest.json outcomeCounts; counters.json; real-data-report.md:29,149; traceability rows J1/J2
+Evidence: The ER export had zero Researcher decisions of any kind and 1 accepted Work link (12,123 conflict, 1,627 unresolved). Real counters for
+crossDblpNameLinksNotApplied, constraintBlockedWorkGroups, selfPairsDropped, duplicateTeamMembersCollapsed and
+nonAuthoritativeDblpObservationsDropped are all 0.
+Impact: The report says only "0/0 researcher unresolved/conflict", which could imply real researcher linking ran. Identity-merge and constraint
+branches are exercised only by fixtures and the tiny pipeline.
+Owner: coordinator
+Acceptance: One sentence plus these counters in real-data-report.md and the J1 row.
+Block: No
+────────────────────────────────────────
+#: N4
+Sev: Low
+Path:line: README.md:9, :35; Phase6CJobs.scala:477, :902-924
+Evidence: The Job 1 plan says "repartition at canonical keys after grouping; cache only mapping and teams". The code has no such repartition (only
+Job 2 at :477) and caches about 20 tables. README.md:9 still says "will own". Jobs 9 and 10 say "cache only as measured".
+Impact: The course's per-job documentation must match the code. The D05–D08 rows rely on it.
+Owner: spark-engineer
+Acceptance: README reflects the actual joins, repartitions and caches.
+Block: No
+────────────────────────────────────────
+#: N5
+Sev: Low
+Path:line: Phase6Report.scala:13; Phase6Main.scala:85; Phase6Export.scala:43, :296
+Evidence: The driver caps (10,000 and 256) are call-site literals, not config. The plan §6.5 says "explicit config limit". Real runs had 61 counters,
+so they are safe.
+Impact: Minor drift from the plan rule.
+Owner: spark-engineer
+Acceptance: Name the caps as constants or config.
+Block: No
+────────────────────────────────────────
+#: N6
+Sev: Low
+Path:line: Phase6Plans.scala:10-11
+Evidence: The global var destination is not thread-safe.
+Impact: Only a risk if suites ever run in parallel.
+Owner: spark-engineer
+Acceptance: Pass the path explicitly.
+Block: No
+────────────────────────────────────────
+#: N7
+Sev: Info
+Path:line: git log (6ae7378, d1afc7f); diff-check.txt
+Evidence: Commit titles say "spark-engineer" but include core, tests and datasets paths. Path ownership itself is intact. Full-diff --check exit 2
+comes from 188 hits in 17 raw evidence logs (verified). Evidence is about 15.9 MB, with three 1.36 MB gate logs.
+Impact: Process and retention only. Same as F11.
+Owner: human
+Acceptance: A human decision on retention.
+Block: No
+
+Scheduled later work (not new 6I scope):
+- Store-key validation and yearless Neptune mapping (Phase 7).
+- Summary richness and title-truncation marker (before Phase 8).
+- Runtime Scala alignment and a JDK-guarded packaging path (Phases 13–15).
+- Refreshing the wrong-JDK evidence.
+
+3. Required report fields
+
+STATUS: COMPLETE (review) — verdict APPROVE (local implementation); EMR gate and human gate open
+OWNER: code-reviewer (independent, read-only)
+WORK ORDER: Comprehensive Phase 6 review, baseline 0349388…, HEAD d1afc7f + working tree + untracked
+FILES CREATED: none
+FILES MODIFIED: none
+COMMANDS RUN: git rev-parse/status/diff/diff --name-status/diff --check/log/show; shasum on the plan and final-check.txt;
+  curl of the raw course README (read-only, sha 6a0eddad… equals course-source.json);
+  python3 -I read-only audits: 68 snapshot hashes vs files vs HEAD; snapshot vs diff set; mtimes vs gate start;
+  retained run markers, 28-table hash equality, counters and analytics-report diff, event-log sums;
+  diff-check path attribution; secret-pattern grep; git ls-files; Read of source, tests, evidence.
+  One Bash call was blocked by the project guard hook (it names a .claude/ path in a read-only check);
+  I did not retry it and removed that reference.
+  No build, test, Spark, dataset, AWS, model or store command was run.
+TEST RESULTS: NOT RERUN. Reported 554/0 (144/64/39/34/266/7), exit 0 — verified from final-check.txt:
+  SHA e2bf289d…d7367, 1,359,860 bytes, per-module "Tests: succeeded" lines, [success] 673 s, real 675.13, exit=0;
+  the injected-failure trace is the expected build self-test.
+VALIDATION RESULTS:
+  - Plan SHA 6df6d856… matches; HEAD is d1afc7f; tracked inventory is 241 (232 A + 9 M) and 14 untracked, as claimed.
+  - The 68 non-evidence changes equal the snapshot set exactly. All hashes match, equal HEAD, and all mtimes precede the gate start (newest 19:16Z vs 19:52:50Z).
+  - Nothing is changed under hadoop, entity-resolution, .claude, Phase 5 or other docs. Core changes are additive (IDs and versions); no frozen formula or wire field was altered.
+  - Production driver actions: only the two `collect()` calls in BoundedActions; no RDD, GraphX, implicits or Encoders. `.limit` calls are bounded or row-limiting.
+  - Retained real run: both completion markers verify. 28/28 row counts and content hashes match, 61/61 counters are identical, and the 12 analytics-report differences are reproduced exactly (11 means, 1 percentile).
+  - Event-log sums reproduce 5,237 tasks, 0 failed, 12,020,965,863 B shuffle read and 10,107,558,658 B write.
+  - Algorithms checked against plan §7: DBLP-name identity, cannot-link and authority blocking, rank-1 DBLP team, distinct-work weights, W==T, min-label components, h-index coreness, synchronous weighted LPA with smallest-label tie, bridge formulas, BFS smallest-immediate-predecessor, seeded estimate, adjacent-window deltas.
+  - Independent G1 is a literal transcription of plan §8, and the summary test parses every number against its cited field.
+  - `git diff --check` is 0 for the current tree and the non-evidence diff; the full diff gives 2 because of raw logs only.
+  - No secret patterns found.
+ASSUMPTIONS: The retained ignored target/phase6-runs data is the run the report describes; its metadata and counters were checked.
+RISKS: N1–N7; registered F4–F12; scanner blind spots; metadata-only reuse; 256-shard executor buffering measured at bounded scale only;
+  identical local build artifacts only; stock EMR is Scala 2.12 with no selected runtime; Codex workflow not instructor-approved.
+MANUAL ACTION REQUIRED: Human writes human-gate.md, explicitly accepts the EMR deferral, commits and records commit.txt.
+BLOCKED-ON OWNER: none
+BLOCKED-ON EVIDENCE: none
+NEXT GATE: Human acceptance (EMR deferral, workflow deviation, retention), commit, then Phase 7 only on a separate prompt.
+
+Independently checked: gate log, hashes and mtimes, inventories, ownership, additive core changes, driver-action and Spark API rules, algorithm bodies, G1 and summary tests, and the retained run (markers, tables, counters, report diff, stage sums).
+
+Not independently checked:
+- Parquet content, because no reader was available and I ran no Spark.
+- The Hadoop and ER output bytes, and the downloaded archive.
+- The Python dataset tests.
+- The full text of every earlier-subphase gate log and every module test body.
+
+4. NEXT PROMPT
+
+You are the coordinator for ScholarChain Phase 6, Subphase 6I close-out, in
+/Users/danny/Documents/UIC/CS441/ScholarChain (branch phase-6, HEAD d1afc7f6698965ddbe010621b277b10e655d25ff;
+the working tree holds only uncommitted docs/agent-runs/phase-06 evidence).
+Plan: /Users/danny/Documents/plan/phase6.md (SHA-256 6df6d856df6c4c6ee0a8f00125e78af1bce5e789666399ae48a9443aec955096).
+
+The user-supplied external comprehensive reviewer returned APPROVE for the local Phase 6 implementation:
+no blocking findings; EMR and human gates open. Do ONLY the following, then stop.
+
+1. Append the reviewer's verdict VERBATIM (verdict, findings N1–N7, report fields, this prompt) to
+   docs/agent-runs/phase-06/review.md under "Subphase 6I — comprehensive whole-Phase-6 review — user-supplied external review".
+   Replace nothing; keep the existing "comprehensive review pending" note as history and mark it superseded by date.
+2. Update docs/agent-runs/phase-06/repairs.md dispositions only (no implementation):
+   - Register N1–N7 as OPEN, nonblocking, with their named owners and gates:
+     N1 LPA convergence/oscillation beyond isolated pairs (spark-engineer; before Phase 7–9 consumers);
+     N2 distance P90 percentile_approx (spark-engineer; regate if code changes);
+     N3 report/J1 clarity on zero real researcher ER links (coordinator);
+     N4 README versus code drift in Job 1/9/10 (spark-engineer);
+     N5 driver caps as literals (spark-engineer);
+     N6 Phase6Plans global var (spark-engineer);
+     N7 commit-title attribution and evidence retention (human).
+   - Keep 6FG F4–F12, the scanner blind spots, 6A F4/F6/F8, the EMR/Scala alignment item and the yearless Neptune mapping OPEN and unchanged.
+   - Mark "Comprehensive APPROVE" as received from the independent reviewer; mark "Human close-out" PENDING.
+3. Optionally (docs only, your own territory): add a short N3 sentence to the 6I section of owner-report.md stating the ER outcome counts
+   (Researcher decisions all 0; Work accepted 1, conflict 12,123, unresolved 1,627) and that identity-merge branches are fixture-evidenced.
+   Do not edit retained evidence logs, source, tests, datasets, build files, or any human-owned file.
+4. Do NOT write or edit human-gate.md, commit.txt or accepted-commit.md. Do NOT commit or push. Do NOT launch a reviewer.
+   Do NOT run builds, tests or Spark jobs (docs-only edits; the 554/0 gate and implementation hashes remain valid).
+   Do NOT start Phase 7.
+5. Final message: summarize edits, then ask the HUMAN to do the following themselves:
+   a. Write docs/agent-runs/phase-06/human-gate.md stating, in the human's own words:
+      - the decision to accept Phase 6 local implementation, citing the 554/0 gate and the comprehensive APPROVE;
+      - explicit acceptance (or rejection) of the open gate "bounded EMR Spark run — deferred to Phase 15, script in Phase 13",
+        including the known risk that stock EMR 7.x Spark 3.5 is Scala 2.12 while this repo is Scala 3 / spark-sql_2.13 with no selected runtime,
+        and that the course work order lists the bounded EMR run;
+      - acceptance of the Codex/Cursor-led workflow deviation (no instructor approval is claimed);
+      - the retention decision for evidence (about 15.9 MB; raw logs with trailing whitespace) and the open N1–N7 / F4–F12 register.
+   b. Commit the accepted artifacts, then record the commit SHA in commit.txt (and accepted-commit.md if desired).
+   c. Send a separate prompt before any Phase 7 work.
+Then end with: "Subphase 6I close-out is ready for human acceptance. I have stopped and will not start Phase 7 until I receive a new prompt."
+```

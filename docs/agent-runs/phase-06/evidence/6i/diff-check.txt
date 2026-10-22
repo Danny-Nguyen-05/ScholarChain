@@ -1,0 +1,386 @@
+git diff --check
+exit=0
+
+git diff --check 03493882399e9020e6892c9f97e0ec8919365215
+docs/agent-runs/phase-06/evidence/6a/build-format.txt:13: trailing whitespace.
++[warn] modified files: 
+docs/agent-runs/phase-06/evidence/6a/final-check.txt:1020: trailing whitespace.
++21:06:36.659 [pool-1-thread-1] INFO org.apache.spark.SecurityManager -- Changing view acls groups to: 
+docs/agent-runs/phase-06/evidence/6a/final-check.txt:1021: trailing whitespace.
++21:06:36.659 [pool-1-thread-1] INFO org.apache.spark.SecurityManager -- Changing modify acls groups to: 
+docs/agent-runs/phase-06/evidence/6a/final-check.txt:1143: trailing whitespace.
++21:06:37.395 [pool-1-thread-1-ScalaTest-running-SparkSmokeSpec] DEBUG org.apache.spark.sql.execution.WholeStageCodegenExec -- 
+docs/agent-runs/phase-06/evidence/6a/final-check.txt:1222: trailing whitespace.
++21:06:37.403 [pool-1-thread-1-ScalaTest-running-SparkSmokeSpec] DEBUG org.apache.spark.sql.catalyst.expressions.codegen.CodeGenerator -- 
+docs/agent-runs/phase-06/evidence/6a/final-check.txt:1335: trailing whitespace.
++21:06:37.447 [pool-1-thread-1-ScalaTest-running-SparkSmokeSpec] DEBUG org.apache.spark.sql.catalyst.expressions.codegen.CodeGenerator -- 
+docs/agent-runs/phase-06/evidence/6a/final-check.txt:1400: trailing whitespace.
++21:06:37.847 [dispatcher-event-loop-0] INFO org.apache.spark.scheduler.TaskSetManager -- Starting task 0.0 in stage 0.0 (TID 0) (10.0.0.113, executor driver, partition 0, PROCESS_LOCAL, 9305 bytes) 
+docs/agent-runs/phase-06/evidence/6a/final-check.txt:1401: trailing whitespace.
++21:06:37.848 [dispatcher-event-loop-0] INFO org.apache.spark.scheduler.TaskSetManager -- Starting task 1.0 in stage 0.0 (TID 1) (10.0.0.113, executor driver, partition 1, PROCESS_LOCAL, 9322 bytes) 
+docs/agent-runs/phase-06/evidence/6a/final-check.txt:1408: trailing whitespace.
++21:06:37.879 [Executor task launch worker for task 0.0 in stage 0.0 (TID 0)] DEBUG org.apache.spark.sql.catalyst.expressions.codegen.CodeGenerator -- 
+docs/agent-runs/phase-06/evidence/6a/final-check.txt:1500: trailing whitespace.
++21:06:37.900 [task-result-getter-1] INFO org.apache.spark.scheduler.TaskSchedulerImpl -- Removed TaskSet 0.0, whose tasks have all completed, from pool 
+docs/agent-runs/phase-06/evidence/6a/final-check.txt:1510: trailing whitespace.
++21:06:37.909 [pool-1-thread-1-ScalaTest-running-SparkSmokeSpec] DEBUG org.apache.spark.sql.execution.WholeStageCodegenExec -- 
+docs/agent-runs/phase-06/evidence/6a/final-check.txt:1591: trailing whitespace.
++21:06:37.909 [pool-1-thread-1-ScalaTest-running-SparkSmokeSpec] DEBUG org.apache.spark.sql.catalyst.expressions.codegen.CodeGenerator -- 
+docs/agent-runs/phase-06/evidence/6a/final-check.txt:1708: trailing whitespace.
++21:06:37.930 [dispatcher-event-loop-1] INFO org.apache.spark.scheduler.TaskSetManager -- Starting task 0.0 in stage 2.0 (TID 2) (10.0.0.113, executor driver, partition 0, NODE_LOCAL, 9079 bytes) 
+docs/agent-runs/phase-06/evidence/6a/final-check.txt:1844: trailing whitespace.
++21:06:37.947 [Executor task launch worker for task 0.0 in stage 2.0 (TID 2)] DEBUG org.apache.spark.sql.catalyst.expressions.codegen.CodeGenerator -- 
+docs/agent-runs/phase-06/evidence/6a/final-check.txt:1929: trailing whitespace.
++21:06:37.955 [task-result-getter-2] INFO org.apache.spark.scheduler.TaskSchedulerImpl -- Removed TaskSet 2.0, whose tasks have all completed, from pool 
+docs/agent-runs/phase-06/evidence/6a/final-check.txt:2170: trailing whitespace.
++21:06:38.232 [pool-1-thread-1-ScalaTest-running-SparkSmokeSpec] DEBUG org.apache.spark.sql.execution.WholeStageCodegenExec -- 
+docs/agent-runs/phase-06/evidence/6a/final-check.txt:2441: trailing whitespace.
++21:06:38.233 [pool-1-thread-1-ScalaTest-running-SparkSmokeSpec] DEBUG org.apache.spark.sql.catalyst.expressions.codegen.CodeGenerator -- 
+docs/agent-runs/phase-06/evidence/6a/final-check.txt:2752: trailing whitespace.
++21:06:38.248 [pool-1-thread-1-ScalaTest-running-SparkSmokeSpec] DEBUG org.apache.spark.sql.catalyst.expressions.codegen.CodeGenerator -- 
+docs/agent-runs/phase-06/evidence/6a/final-check.txt:2822: trailing whitespace.
++21:06:38.260 [dispatcher-event-loop-0] INFO org.apache.spark.scheduler.TaskSetManager -- Starting task 0.0 in stage 3.0 (TID 3) (10.0.0.113, executor driver, partition 0, PROCESS_LOCAL, 9353 bytes) 
+docs/agent-runs/phase-06/evidence/6a/final-check.txt:2823: trailing whitespace.
++21:06:38.260 [dispatcher-event-loop-0] INFO org.apache.spark.scheduler.TaskSetManager -- Starting task 1.0 in stage 3.0 (TID 4) (10.0.0.113, executor driver, partition 1, PROCESS_LOCAL, 9394 bytes) 
+docs/agent-runs/phase-06/evidence/6a/final-check.txt:2830: trailing whitespace.
++21:06:38.263 [Executor task launch worker for task 0.0 in stage 3.0 (TID 3)] DEBUG org.apache.spark.sql.catalyst.expressions.codegen.CodeGenerator -- 
+docs/agent-runs/phase-06/evidence/6a/final-check.txt:3220: trailing whitespace.
++21:06:38.275 [Executor task launch worker for task 1.0 in stage 3.0 (TID 4)] DEBUG org.apache.spark.sql.catalyst.expressions.codegen.CodeGenerator -- 
+docs/agent-runs/phase-06/evidence/6a/final-check.txt:3358: trailing whitespace.
++21:06:38.279 [Executor task launch worker for task 1.0 in stage 3.0 (TID 4)] DEBUG org.apache.spark.sql.catalyst.expressions.codegen.CodeGenerator -- 
+docs/agent-runs/phase-06/evidence/6a/final-check.txt:3490: trailing whitespace.
++21:06:38.288 [Executor task launch worker for task 0.0 in stage 3.0 (TID 3)] DEBUG org.apache.spark.sql.catalyst.expressions.codegen.CodeGenerator -- 
+docs/agent-runs/phase-06/evidence/6a/final-check.txt:3620: trailing whitespace.
++21:06:38.294 [Executor task launch worker for task 0.0 in stage 3.0 (TID 3)] DEBUG org.apache.spark.sql.catalyst.expressions.codegen.CodeGenerator -- 
+docs/agent-runs/phase-06/evidence/6a/final-check.txt:3994: trailing whitespace.
++21:06:38.311 [task-result-getter-0] INFO org.apache.spark.scheduler.TaskSchedulerImpl -- Removed TaskSet 3.0, whose tasks have all completed, from pool 
+docs/agent-runs/phase-06/evidence/6a/final-check.txt:4018: trailing whitespace.
++21:06:38.325 [broadcast-exchange-0] DEBUG org.apache.spark.sql.execution.WholeStageCodegenExec -- 
+docs/agent-runs/phase-06/evidence/6a/final-check.txt:4149: trailing whitespace.
++21:06:38.325 [broadcast-exchange-0] DEBUG org.apache.spark.sql.catalyst.expressions.codegen.CodeGenerator -- 
+docs/agent-runs/phase-06/evidence/6a/final-check.txt:4519: trailing whitespace.
++21:06:38.341 [dispatcher-event-loop-0] INFO org.apache.spark.scheduler.TaskSetManager -- Starting task 0.0 in stage 5.0 (TID 5) (10.0.0.113, executor driver, partition 0, NODE_LOCAL, 9079 bytes) 
+docs/agent-runs/phase-06/evidence/6a/final-check.txt:4548: trailing whitespace.
++21:06:38.345 [Executor task launch worker for task 0.0 in stage 5.0 (TID 5)] DEBUG org.apache.spark.sql.catalyst.expressions.codegen.CodeGenerator -- 
+docs/agent-runs/phase-06/evidence/6a/final-check.txt:4816: trailing whitespace.
++21:06:38.353 [task-result-getter-1] INFO org.apache.spark.scheduler.TaskSchedulerImpl -- Removed TaskSet 5.0, whose tasks have all completed, from pool 
+docs/agent-runs/phase-06/evidence/6a/final-check.txt:5003: trailing whitespace.
++21:06:38.366 [pool-1-thread-1-ScalaTest-running-SparkSmokeSpec] DEBUG org.apache.spark.sql.execution.WholeStageCodegenExec -- 
+docs/agent-runs/phase-06/evidence/6a/final-check.txt:5074: trailing whitespace.
++21:06:38.366 [pool-1-thread-1-ScalaTest-running-SparkSmokeSpec] DEBUG org.apache.spark.sql.catalyst.expressions.codegen.CodeGenerator -- 
+docs/agent-runs/phase-06/evidence/6a/final-check.txt:5191: trailing whitespace.
++21:06:38.371 [pool-1-thread-1-ScalaTest-running-SparkSmokeSpec] DEBUG org.apache.spark.sql.catalyst.expressions.codegen.CodeGenerator -- 
+docs/agent-runs/phase-06/evidence/6a/final-check.txt:5348: trailing whitespace.
++21:06:38.378 [dispatcher-event-loop-1] INFO org.apache.spark.scheduler.TaskSetManager -- Starting task 0.0 in stage 6.0 (TID 6) (10.0.0.113, executor driver, partition 0, PROCESS_LOCAL, 9401 bytes) 
+docs/agent-runs/phase-06/evidence/6a/final-check.txt:5349: trailing whitespace.
++21:06:38.378 [dispatcher-event-loop-1] INFO org.apache.spark.scheduler.TaskSetManager -- Starting task 1.0 in stage 6.0 (TID 7) (10.0.0.113, executor driver, partition 1, PROCESS_LOCAL, 9466 bytes) 
+docs/agent-runs/phase-06/evidence/6a/final-check.txt:5356: trailing whitespace.
++21:06:38.380 [Executor task launch worker for task 0.0 in stage 6.0 (TID 6)] DEBUG org.apache.spark.sql.catalyst.expressions.codegen.CodeGenerator -- 
+docs/agent-runs/phase-06/evidence/6a/final-check.txt:5559: trailing whitespace.
++21:06:38.387 [task-result-getter-3] INFO org.apache.spark.scheduler.TaskSchedulerImpl -- Removed TaskSet 6.0, whose tasks have all completed, from pool 
+docs/agent-runs/phase-06/evidence/6a/final-check.txt:5569: trailing whitespace.
++21:06:38.393 [pool-1-thread-1-ScalaTest-running-SparkSmokeSpec] DEBUG org.apache.spark.sql.execution.WholeStageCodegenExec -- 
+docs/agent-runs/phase-06/evidence/6a/final-check.txt:5632: trailing whitespace.
++21:06:38.393 [pool-1-thread-1-ScalaTest-running-SparkSmokeSpec] DEBUG org.apache.spark.sql.catalyst.expressions.codegen.CodeGenerator -- 
+docs/agent-runs/phase-06/evidence/6a/final-check.txt:5866: trailing whitespace.
++21:06:38.413 [dispatcher-event-loop-1] INFO org.apache.spark.scheduler.TaskSetManager -- Starting task 0.0 in stage 8.0 (TID 8) (10.0.0.113, executor driver, partition 0, NODE_LOCAL, 9079 bytes) 
+docs/agent-runs/phase-06/evidence/6a/final-check.txt:5881: trailing whitespace.
++21:06:38.419 [Executor task launch worker for task 0.0 in stage 8.0 (TID 8)] DEBUG org.apache.spark.sql.catalyst.expressions.codegen.CodeGenerator -- 
+docs/agent-runs/phase-06/evidence/6a/final-check.txt:6013: trailing whitespace.
++21:06:38.423 [Executor task launch worker for task 0.0 in stage 8.0 (TID 8)] DEBUG org.apache.spark.sql.catalyst.expressions.codegen.CodeGenerator -- 
+docs/agent-runs/phase-06/evidence/6a/final-check.txt:6126: trailing whitespace.
++21:06:38.429 [Executor task launch worker for task 0.0 in stage 8.0 (TID 8)] DEBUG org.apache.spark.sql.catalyst.expressions.codegen.CodeGenerator -- 
+docs/agent-runs/phase-06/evidence/6a/final-check.txt:6223: trailing whitespace.
++21:06:38.435 [Executor task launch worker for task 0.0 in stage 8.0 (TID 8)] DEBUG org.apache.spark.sql.catalyst.expressions.codegen.CodeGenerator -- 
+docs/agent-runs/phase-06/evidence/6a/final-check.txt:6314: trailing whitespace.
++21:06:38.437 [Executor task launch worker for task 0.0 in stage 8.0 (TID 8)] DEBUG org.apache.spark.sql.catalyst.expressions.codegen.CodeGenerator -- 
+docs/agent-runs/phase-06/evidence/6a/final-check.txt:6402: trailing whitespace.
++21:06:38.442 [Executor task launch worker for task 0.0 in stage 8.0 (TID 8)] DEBUG org.apache.spark.sql.catalyst.expressions.codegen.CodeGenerator -- 
+docs/agent-runs/phase-06/evidence/6a/final-check.txt:6501: trailing whitespace.
++21:06:38.444 [Executor task launch worker for task 0.0 in stage 8.0 (TID 8)] DEBUG org.apache.spark.sql.catalyst.expressions.codegen.CodeGenerator -- 
+docs/agent-runs/phase-06/evidence/6a/final-check.txt:6600: trailing whitespace.
++21:06:38.446 [Executor task launch worker for task 0.0 in stage 8.0 (TID 8)] DEBUG org.apache.spark.sql.catalyst.expressions.codegen.CodeGenerator -- 
+docs/agent-runs/phase-06/evidence/6a/final-check.txt:6653: trailing whitespace.
++21:06:38.448 [task-result-getter-0] INFO org.apache.spark.scheduler.TaskSchedulerImpl -- Removed TaskSet 8.0, whose tasks have all completed, from pool 
+docs/agent-runs/phase-06/evidence/6a/final-check.txt:6806: trailing whitespace.
++21:06:38.452 [pool-1-thread-1-ScalaTest-running-SparkSmokeSpec] DEBUG org.apache.spark.sql.catalyst.expressions.codegen.CodeGenerator -- 
+docs/agent-runs/phase-06/evidence/6a/final-check.txt:6956: trailing whitespace.
++21:06:38.483 [pool-1-thread-1-ScalaTest-running-SparkSmokeSpec] DEBUG org.apache.spark.sql.execution.WholeStageCodegenExec -- 
+docs/agent-runs/phase-06/evidence/6a/final-check.txt:7296: trailing whitespace.
++21:06:38.487 [dispatcher-event-loop-0] INFO org.apache.spark.scheduler.TaskSetManager -- Starting task 0.0 in stage 9.0 (TID 9) (10.0.0.113, executor driver, partition 0, PROCESS_LOCAL, 9353 bytes) 
+docs/agent-runs/phase-06/evidence/6a/final-check.txt:7297: trailing whitespace.
++21:06:38.487 [dispatcher-event-loop-0] INFO org.apache.spark.scheduler.TaskSetManager -- Starting task 1.0 in stage 9.0 (TID 10) (10.0.0.113, executor driver, partition 1, PROCESS_LOCAL, 9394 bytes) 
+docs/agent-runs/phase-06/evidence/6a/final-check.txt:7869: trailing whitespace.
++21:06:38.494 [task-result-getter-2] INFO org.apache.spark.scheduler.TaskSchedulerImpl -- Removed TaskSet 9.0, whose tasks have all completed, from pool 
+docs/agent-runs/phase-06/evidence/6a/final-check.txt:7908: trailing whitespace.
++21:06:38.501 [broadcast-exchange-1] DEBUG org.apache.spark.sql.execution.WholeStageCodegenExec -- 
+docs/agent-runs/phase-06/evidence/6a/final-check.txt:8074: trailing whitespace.
++21:06:38.507 [dispatcher-event-loop-0] INFO org.apache.spark.scheduler.TaskSetManager -- Starting task 0.0 in stage 11.0 (TID 11) (10.0.0.113, executor driver, partition 0, NODE_LOCAL, 9079 bytes) 
+docs/agent-runs/phase-06/evidence/6a/final-check.txt:8225: trailing whitespace.
++21:06:38.511 [task-result-getter-3] INFO org.apache.spark.scheduler.TaskSchedulerImpl -- Removed TaskSet 11.0, whose tasks have all completed, from pool 
+docs/agent-runs/phase-06/evidence/6a/final-check.txt:8308: trailing whitespace.
++21:06:38.517 [pool-1-thread-1-ScalaTest-running-SparkSmokeSpec] DEBUG org.apache.spark.sql.execution.WholeStageCodegenExec -- 
+docs/agent-runs/phase-06/evidence/6a/final-check.txt:8508: trailing whitespace.
++21:06:38.522 [dispatcher-event-loop-1] INFO org.apache.spark.scheduler.TaskSetManager -- Starting task 0.0 in stage 12.0 (TID 12) (10.0.0.113, executor driver, partition 0, PROCESS_LOCAL, 9401 bytes) 
+docs/agent-runs/phase-06/evidence/6a/final-check.txt:8509: trailing whitespace.
++21:06:38.522 [dispatcher-event-loop-1] INFO org.apache.spark.scheduler.TaskSetManager -- Starting task 1.0 in stage 12.0 (TID 13) (10.0.0.113, executor driver, partition 1, PROCESS_LOCAL, 9466 bytes) 
+docs/agent-runs/phase-06/evidence/6a/final-check.txt:9153: trailing whitespace.
++21:06:38.526 [task-result-getter-1] INFO org.apache.spark.scheduler.TaskSchedulerImpl -- Removed TaskSet 12.0, whose tasks have all completed, from pool 
+docs/agent-runs/phase-06/evidence/6a/final-check.txt:9193: trailing whitespace.
++21:06:38.559 [pool-1-thread-1-ScalaTest-running-SparkSmokeSpec] DEBUG org.apache.spark.sql.execution.WholeStageCodegenExec -- 
+docs/agent-runs/phase-06/evidence/6a/final-check.txt:9291: trailing whitespace.
++21:06:38.577 [dispatcher-event-loop-0] INFO org.apache.spark.scheduler.TaskSetManager -- Starting task 0.0 in stage 14.0 (TID 14) (10.0.0.113, executor driver, partition 0, NODE_LOCAL, 9079 bytes) 
+docs/agent-runs/phase-06/evidence/6a/final-check.txt:9721: trailing whitespace.
++       
+docs/agent-runs/phase-06/evidence/6a/final-check.txt:10171: trailing whitespace.
++21:06:38.936 [task-result-getter-2] INFO org.apache.spark.scheduler.TaskSchedulerImpl -- Removed TaskSet 14.0, whose tasks have all completed, from pool 
+docs/agent-runs/phase-06/evidence/6a/final-check.txt:10210: trailing whitespace.
++  
+docs/agent-runs/phase-06/evidence/6a/final-check.txt:10212: trailing whitespace.
++21:06:38.970 [pool-1-thread-1-ScalaTest-running-SparkSmokeSpec] INFO org.apache.spark.sql.execution.datasources.FileSourceStrategy -- Pushed Filters: 
+docs/agent-runs/phase-06/evidence/6a/final-check.txt:10213: trailing whitespace.
++21:06:38.971 [pool-1-thread-1-ScalaTest-running-SparkSmokeSpec] INFO org.apache.spark.sql.execution.datasources.FileSourceStrategy -- Post-Scan Filters: 
+docs/agent-runs/phase-06/evidence/6a/final-check.txt:10214: trailing whitespace.
++21:06:38.977 [pool-1-thread-1-ScalaTest-running-SparkSmokeSpec] DEBUG org.apache.spark.sql.execution.WholeStageCodegenExec -- 
+docs/agent-runs/phase-06/evidence/6a/final-check.txt:10324: trailing whitespace.
++21:06:38.977 [pool-1-thread-1-ScalaTest-running-SparkSmokeSpec] DEBUG org.apache.spark.sql.catalyst.expressions.codegen.CodeGenerator -- 
+docs/agent-runs/phase-06/evidence/6a/final-check.txt:10481: trailing whitespace.
++21:06:39.007 [dispatcher-event-loop-0] INFO org.apache.spark.scheduler.TaskSetManager -- Starting task 0.0 in stage 15.0 (TID 15) (10.0.0.113, executor driver, partition 0, PROCESS_LOCAL, 9825 bytes) 
+docs/agent-runs/phase-06/evidence/6a/final-check.txt:10487: trailing whitespace.
++21:06:39.012 [Executor task launch worker for task 0.0 in stage 15.0 (TID 15)] DEBUG org.apache.spark.sql.catalyst.expressions.codegen.CodeGenerator -- 
+docs/agent-runs/phase-06/evidence/6a/final-check.txt:11059: trailing whitespace.
++       
+docs/agent-runs/phase-06/evidence/6a/final-check.txt:11076: trailing whitespace.
++21:06:39.056 [task-result-getter-3] INFO org.apache.spark.scheduler.TaskSchedulerImpl -- Removed TaskSet 15.0, whose tasks have all completed, from pool 
+docs/agent-runs/phase-06/evidence/6a/final-check.txt:11239: trailing whitespace.
++21:06:39.058 [pool-1-thread-1-ScalaTest-running-SparkSmokeSpec] DEBUG org.apache.spark.sql.catalyst.expressions.codegen.CodeGenerator -- 
+docs/agent-runs/phase-06/evidence/6a/final-check.txt:11397: trailing whitespace.
++21:06:39.063 [pool-1-thread-1-ScalaTest-running-SparkSmokeSpec] DEBUG org.apache.spark.sql.execution.WholeStageCodegenExec -- 
+docs/agent-runs/phase-06/evidence/6a/final-check.txt:11633: trailing whitespace.
++21:06:39.087 [dispatcher-event-loop-1] INFO org.apache.spark.scheduler.TaskSetManager -- Starting task 0.0 in stage 17.0 (TID 16) (10.0.0.113, executor driver, partition 0, NODE_LOCAL, 9079 bytes) 
+docs/agent-runs/phase-06/evidence/6a/final-check.txt:12813: trailing whitespace.
++21:06:39.102 [task-result-getter-0] INFO org.apache.spark.scheduler.TaskSchedulerImpl -- Removed TaskSet 17.0, whose tasks have all completed, from pool 
+docs/agent-runs/phase-06/evidence/6a/final-check.txt:12914: trailing whitespace.
++21:06:39.115 [pool-1-thread-1-ScalaTest-running-SparkSmokeSpec] DEBUG org.apache.spark.sql.execution.WholeStageCodegenExec -- 
+docs/agent-runs/phase-06/evidence/6a/final-check.txt:12965: trailing whitespace.
++21:06:39.115 [pool-1-thread-1-ScalaTest-running-SparkSmokeSpec] DEBUG org.apache.spark.sql.catalyst.expressions.codegen.CodeGenerator -- 
+docs/agent-runs/phase-06/evidence/6a/final-check.txt:13051: trailing whitespace.
++21:06:39.122 [dispatcher-event-loop-0] INFO org.apache.spark.scheduler.TaskSetManager -- Starting task 0.0 in stage 18.0 (TID 17) (10.0.0.113, executor driver, partition 0, PROCESS_LOCAL, 8889 bytes) 
+docs/agent-runs/phase-06/evidence/6a/final-check.txt:13059: trailing whitespace.
++21:06:39.123 [Executor task launch worker for task 0.0 in stage 18.0 (TID 17)] DEBUG org.apache.spark.sql.catalyst.expressions.codegen.CodeGenerator -- 
+docs/agent-runs/phase-06/evidence/6a/final-check.txt:13114: trailing whitespace.
++21:06:39.126 [task-result-getter-1] INFO org.apache.spark.scheduler.TaskSchedulerImpl -- Removed TaskSet 18.0, whose tasks have all completed, from pool 
+docs/agent-runs/phase-06/evidence/6a/repair-1/build-format.txt:13: trailing whitespace.
++[warn] modified files: 
+docs/agent-runs/phase-06/evidence/6a/repair-1/targeted-before-log-config.txt:40: trailing whitespace.
++26/10/21 21:36:11 INFO SecurityManager: Changing view acls groups to: 
+docs/agent-runs/phase-06/evidence/6a/repair-1/targeted-before-log-config.txt:41: trailing whitespace.
++26/10/21 21:36:11 INFO SecurityManager: Changing modify acls groups to: 
+docs/agent-runs/phase-06/evidence/6a/repair-1/targeted-before-log-config.txt:79: trailing whitespace.
++26/10/21 21:36:13 INFO TaskSetManager: Starting task 0.0 in stage 0.0 (TID 0) (10.0.0.113, executor driver, partition 0, PROCESS_LOCAL, 9214 bytes) 
+docs/agent-runs/phase-06/evidence/6a/repair-1/targeted-before-log-config.txt:84: trailing whitespace.
++26/10/21 21:36:13 INFO TaskSchedulerImpl: Removed TaskSet 0.0, whose tasks have all completed, from pool 
+docs/agent-runs/phase-06/evidence/6a/spark-reflect-targeted.txt:86: trailing whitespace.
++21:02:59.224 [pool-1-thread-1] INFO org.apache.spark.SecurityManager -- Changing view acls groups to: 
+docs/agent-runs/phase-06/evidence/6a/spark-reflect-targeted.txt:87: trailing whitespace.
++21:02:59.224 [pool-1-thread-1] INFO org.apache.spark.SecurityManager -- Changing modify acls groups to: 
+docs/agent-runs/phase-06/evidence/6a/spark-reflect-targeted.txt:209: trailing whitespace.
++21:02:59.985 [pool-1-thread-1-ScalaTest-running-SparkSmokeSpec] DEBUG org.apache.spark.sql.execution.WholeStageCodegenExec -- 
+docs/agent-runs/phase-06/evidence/6a/spark-reflect-targeted.txt:288: trailing whitespace.
++21:02:59.995 [pool-1-thread-1-ScalaTest-running-SparkSmokeSpec] DEBUG org.apache.spark.sql.catalyst.expressions.codegen.CodeGenerator -- 
+docs/agent-runs/phase-06/evidence/6a/spark-reflect-targeted.txt:401: trailing whitespace.
++21:03:00.034 [pool-1-thread-1-ScalaTest-running-SparkSmokeSpec] DEBUG org.apache.spark.sql.catalyst.expressions.codegen.CodeGenerator -- 
+docs/agent-runs/phase-06/evidence/6a/spark-reflect-targeted.txt:466: trailing whitespace.
++21:03:00.367 [dispatcher-event-loop-0] INFO org.apache.spark.scheduler.TaskSetManager -- Starting task 0.0 in stage 0.0 (TID 0) (10.0.0.113, executor driver, partition 0, PROCESS_LOCAL, 9305 bytes) 
+docs/agent-runs/phase-06/evidence/6a/spark-reflect-targeted.txt:467: trailing whitespace.
++21:03:00.368 [dispatcher-event-loop-0] INFO org.apache.spark.scheduler.TaskSetManager -- Starting task 1.0 in stage 0.0 (TID 1) (10.0.0.113, executor driver, partition 1, PROCESS_LOCAL, 9322 bytes) 
+docs/agent-runs/phase-06/evidence/6a/spark-reflect-targeted.txt:474: trailing whitespace.
++21:03:00.396 [Executor task launch worker for task 1.0 in stage 0.0 (TID 1)] DEBUG org.apache.spark.sql.catalyst.expressions.codegen.CodeGenerator -- 
+docs/agent-runs/phase-06/evidence/6a/spark-reflect-targeted.txt:566: trailing whitespace.
++21:03:00.417 [task-result-getter-1] INFO org.apache.spark.scheduler.TaskSchedulerImpl -- Removed TaskSet 0.0, whose tasks have all completed, from pool 
+docs/agent-runs/phase-06/evidence/6a/spark-reflect-targeted.txt:576: trailing whitespace.
++21:03:00.426 [pool-1-thread-1-ScalaTest-running-SparkSmokeSpec] DEBUG org.apache.spark.sql.execution.WholeStageCodegenExec -- 
+docs/agent-runs/phase-06/evidence/6a/spark-reflect-targeted.txt:657: trailing whitespace.
++21:03:00.426 [pool-1-thread-1-ScalaTest-running-SparkSmokeSpec] DEBUG org.apache.spark.sql.catalyst.expressions.codegen.CodeGenerator -- 
+docs/agent-runs/phase-06/evidence/6a/spark-reflect-targeted.txt:895: trailing whitespace.
++21:03:00.451 [dispatcher-event-loop-1] INFO org.apache.spark.scheduler.TaskSetManager -- Starting task 0.0 in stage 2.0 (TID 2) (10.0.0.113, executor driver, partition 0, NODE_LOCAL, 9079 bytes) 
+docs/agent-runs/phase-06/evidence/6a/spark-reflect-targeted.txt:910: trailing whitespace.
++21:03:00.465 [Executor task launch worker for task 0.0 in stage 2.0 (TID 2)] DEBUG org.apache.spark.sql.catalyst.expressions.codegen.CodeGenerator -- 
+docs/agent-runs/phase-06/evidence/6a/spark-reflect-targeted.txt:995: trailing whitespace.
++21:03:00.472 [task-result-getter-2] INFO org.apache.spark.scheduler.TaskSchedulerImpl -- Removed TaskSet 2.0, whose tasks have all completed, from pool 
+docs/agent-runs/phase-06/evidence/6a/spark-reflect-targeted.txt:1236: trailing whitespace.
++21:03:00.752 [pool-1-thread-1-ScalaTest-running-SparkSmokeSpec] DEBUG org.apache.spark.sql.execution.WholeStageCodegenExec -- 
+docs/agent-runs/phase-06/evidence/6a/spark-reflect-targeted.txt:1507: trailing whitespace.
++21:03:00.753 [pool-1-thread-1-ScalaTest-running-SparkSmokeSpec] DEBUG org.apache.spark.sql.catalyst.expressions.codegen.CodeGenerator -- 
+docs/agent-runs/phase-06/evidence/6a/spark-reflect-targeted.txt:1818: trailing whitespace.
++21:03:00.770 [pool-1-thread-1-ScalaTest-running-SparkSmokeSpec] DEBUG org.apache.spark.sql.catalyst.expressions.codegen.CodeGenerator -- 
+docs/agent-runs/phase-06/evidence/6a/spark-reflect-targeted.txt:1888: trailing whitespace.
++21:03:00.783 [dispatcher-event-loop-0] INFO org.apache.spark.scheduler.TaskSetManager -- Starting task 0.0 in stage 3.0 (TID 3) (10.0.0.113, executor driver, partition 0, PROCESS_LOCAL, 9353 bytes) 
+docs/agent-runs/phase-06/evidence/6a/spark-reflect-targeted.txt:1889: trailing whitespace.
++21:03:00.784 [dispatcher-event-loop-0] INFO org.apache.spark.scheduler.TaskSetManager -- Starting task 1.0 in stage 3.0 (TID 4) (10.0.0.113, executor driver, partition 1, PROCESS_LOCAL, 9394 bytes) 
+docs/agent-runs/phase-06/evidence/6a/spark-reflect-targeted.txt:1896: trailing whitespace.
++21:03:00.787 [Executor task launch worker for task 1.0 in stage 3.0 (TID 4)] DEBUG org.apache.spark.sql.catalyst.expressions.codegen.CodeGenerator -- 
+docs/agent-runs/phase-06/evidence/6a/spark-reflect-targeted.txt:2286: trailing whitespace.
++21:03:00.799 [Executor task launch worker for task 0.0 in stage 3.0 (TID 3)] DEBUG org.apache.spark.sql.catalyst.expressions.codegen.CodeGenerator -- 
+docs/agent-runs/phase-06/evidence/6a/spark-reflect-targeted.txt:2424: trailing whitespace.
++21:03:00.803 [Executor task launch worker for task 0.0 in stage 3.0 (TID 3)] DEBUG org.apache.spark.sql.catalyst.expressions.codegen.CodeGenerator -- 
+docs/agent-runs/phase-06/evidence/6a/spark-reflect-targeted.txt:2511: trailing whitespace.
++21:03:00.810 [Executor task launch worker for task 1.0 in stage 3.0 (TID 4)] DEBUG org.apache.spark.sql.catalyst.expressions.codegen.CodeGenerator -- 
+docs/agent-runs/phase-06/evidence/6a/spark-reflect-targeted.txt:2725: trailing whitespace.
++21:03:00.814 [Executor task launch worker for task 1.0 in stage 3.0 (TID 4)] DEBUG org.apache.spark.sql.catalyst.expressions.codegen.CodeGenerator -- 
+docs/agent-runs/phase-06/evidence/6a/spark-reflect-targeted.txt:3059: trailing whitespace.
++21:03:00.830 [task-result-getter-0] INFO org.apache.spark.scheduler.TaskSchedulerImpl -- Removed TaskSet 3.0, whose tasks have all completed, from pool 
+docs/agent-runs/phase-06/evidence/6a/spark-reflect-targeted.txt:3084: trailing whitespace.
++21:03:00.840 [broadcast-exchange-0] DEBUG org.apache.spark.sql.execution.WholeStageCodegenExec -- 
+docs/agent-runs/phase-06/evidence/6a/spark-reflect-targeted.txt:3215: trailing whitespace.
++21:03:00.840 [broadcast-exchange-0] DEBUG org.apache.spark.sql.catalyst.expressions.codegen.CodeGenerator -- 
+docs/agent-runs/phase-06/evidence/6a/spark-reflect-targeted.txt:3552: trailing whitespace.
++21:03:00.857 [dispatcher-event-loop-0] INFO org.apache.spark.scheduler.TaskSetManager -- Starting task 0.0 in stage 5.0 (TID 5) (10.0.0.113, executor driver, partition 0, NODE_LOCAL, 9079 bytes) 
+docs/agent-runs/phase-06/evidence/6a/spark-reflect-targeted.txt:3614: trailing whitespace.
++21:03:00.860 [Executor task launch worker for task 0.0 in stage 5.0 (TID 5)] DEBUG org.apache.spark.sql.catalyst.expressions.codegen.CodeGenerator -- 
+docs/agent-runs/phase-06/evidence/6a/spark-reflect-targeted.txt:3882: trailing whitespace.
++21:03:00.871 [task-result-getter-1] INFO org.apache.spark.scheduler.TaskSchedulerImpl -- Removed TaskSet 5.0, whose tasks have all completed, from pool 
+docs/agent-runs/phase-06/evidence/6a/spark-reflect-targeted.txt:4069: trailing whitespace.
++21:03:00.883 [pool-1-thread-1-ScalaTest-running-SparkSmokeSpec] DEBUG org.apache.spark.sql.execution.WholeStageCodegenExec -- 
+docs/agent-runs/phase-06/evidence/6a/spark-reflect-targeted.txt:4140: trailing whitespace.
++21:03:00.884 [pool-1-thread-1-ScalaTest-running-SparkSmokeSpec] DEBUG org.apache.spark.sql.catalyst.expressions.codegen.CodeGenerator -- 
+docs/agent-runs/phase-06/evidence/6a/spark-reflect-targeted.txt:4257: trailing whitespace.
++21:03:00.889 [pool-1-thread-1-ScalaTest-running-SparkSmokeSpec] DEBUG org.apache.spark.sql.catalyst.expressions.codegen.CodeGenerator -- 
+docs/agent-runs/phase-06/evidence/6a/spark-reflect-targeted.txt:4414: trailing whitespace.
++21:03:00.896 [dispatcher-event-loop-1] INFO org.apache.spark.scheduler.TaskSetManager -- Starting task 0.0 in stage 6.0 (TID 6) (10.0.0.113, executor driver, partition 0, PROCESS_LOCAL, 9401 bytes) 
+docs/agent-runs/phase-06/evidence/6a/spark-reflect-targeted.txt:4415: trailing whitespace.
++21:03:00.897 [dispatcher-event-loop-1] INFO org.apache.spark.scheduler.TaskSetManager -- Starting task 1.0 in stage 6.0 (TID 7) (10.0.0.113, executor driver, partition 1, PROCESS_LOCAL, 9466 bytes) 
+docs/agent-runs/phase-06/evidence/6a/spark-reflect-targeted.txt:4422: trailing whitespace.
++21:03:00.899 [Executor task launch worker for task 0.0 in stage 6.0 (TID 6)] DEBUG org.apache.spark.sql.catalyst.expressions.codegen.CodeGenerator -- 
+docs/agent-runs/phase-06/evidence/6a/spark-reflect-targeted.txt:4625: trailing whitespace.
++21:03:00.906 [task-result-getter-3] INFO org.apache.spark.scheduler.TaskSchedulerImpl -- Removed TaskSet 6.0, whose tasks have all completed, from pool 
+docs/agent-runs/phase-06/evidence/6a/spark-reflect-targeted.txt:4635: trailing whitespace.
++21:03:00.911 [pool-1-thread-1-ScalaTest-running-SparkSmokeSpec] DEBUG org.apache.spark.sql.execution.WholeStageCodegenExec -- 
+docs/agent-runs/phase-06/evidence/6a/spark-reflect-targeted.txt:4698: trailing whitespace.
++21:03:00.912 [pool-1-thread-1-ScalaTest-running-SparkSmokeSpec] DEBUG org.apache.spark.sql.catalyst.expressions.codegen.CodeGenerator -- 
+docs/agent-runs/phase-06/evidence/6a/spark-reflect-targeted.txt:4932: trailing whitespace.
++21:03:00.932 [dispatcher-event-loop-1] INFO org.apache.spark.scheduler.TaskSetManager -- Starting task 0.0 in stage 8.0 (TID 8) (10.0.0.113, executor driver, partition 0, NODE_LOCAL, 9079 bytes) 
+docs/agent-runs/phase-06/evidence/6a/spark-reflect-targeted.txt:4947: trailing whitespace.
++21:03:00.942 [Executor task launch worker for task 0.0 in stage 8.0 (TID 8)] DEBUG org.apache.spark.sql.catalyst.expressions.codegen.CodeGenerator -- 
+docs/agent-runs/phase-06/evidence/6a/spark-reflect-targeted.txt:5079: trailing whitespace.
++21:03:00.946 [Executor task launch worker for task 0.0 in stage 8.0 (TID 8)] DEBUG org.apache.spark.sql.catalyst.expressions.codegen.CodeGenerator -- 
+docs/agent-runs/phase-06/evidence/6a/spark-reflect-targeted.txt:5192: trailing whitespace.
++21:03:00.952 [Executor task launch worker for task 0.0 in stage 8.0 (TID 8)] DEBUG org.apache.spark.sql.catalyst.expressions.codegen.CodeGenerator -- 
+docs/agent-runs/phase-06/evidence/6a/spark-reflect-targeted.txt:5289: trailing whitespace.
++21:03:00.957 [Executor task launch worker for task 0.0 in stage 8.0 (TID 8)] DEBUG org.apache.spark.sql.catalyst.expressions.codegen.CodeGenerator -- 
+docs/agent-runs/phase-06/evidence/6a/spark-reflect-targeted.txt:5380: trailing whitespace.
++21:03:00.959 [Executor task launch worker for task 0.0 in stage 8.0 (TID 8)] DEBUG org.apache.spark.sql.catalyst.expressions.codegen.CodeGenerator -- 
+docs/agent-runs/phase-06/evidence/6a/spark-reflect-targeted.txt:5468: trailing whitespace.
++21:03:00.965 [Executor task launch worker for task 0.0 in stage 8.0 (TID 8)] DEBUG org.apache.spark.sql.catalyst.expressions.codegen.CodeGenerator -- 
+docs/agent-runs/phase-06/evidence/6a/spark-reflect-targeted.txt:5567: trailing whitespace.
++21:03:00.967 [Executor task launch worker for task 0.0 in stage 8.0 (TID 8)] DEBUG org.apache.spark.sql.catalyst.expressions.codegen.CodeGenerator -- 
+docs/agent-runs/phase-06/evidence/6a/spark-reflect-targeted.txt:5666: trailing whitespace.
++21:03:00.968 [Executor task launch worker for task 0.0 in stage 8.0 (TID 8)] DEBUG org.apache.spark.sql.catalyst.expressions.codegen.CodeGenerator -- 
+docs/agent-runs/phase-06/evidence/6a/spark-reflect-targeted.txt:5719: trailing whitespace.
++21:03:00.972 [task-result-getter-0] INFO org.apache.spark.scheduler.TaskSchedulerImpl -- Removed TaskSet 8.0, whose tasks have all completed, from pool 
+docs/agent-runs/phase-06/evidence/6a/spark-reflect-targeted.txt:5872: trailing whitespace.
++21:03:00.976 [pool-1-thread-1-ScalaTest-running-SparkSmokeSpec] DEBUG org.apache.spark.sql.catalyst.expressions.codegen.CodeGenerator -- 
+docs/agent-runs/phase-06/evidence/6a/spark-reflect-targeted.txt:6022: trailing whitespace.
++21:03:01.007 [pool-1-thread-1-ScalaTest-running-SparkSmokeSpec] DEBUG org.apache.spark.sql.execution.WholeStageCodegenExec -- 
+docs/agent-runs/phase-06/evidence/6a/spark-reflect-targeted.txt:6362: trailing whitespace.
++21:03:01.010 [dispatcher-event-loop-0] INFO org.apache.spark.scheduler.TaskSetManager -- Starting task 0.0 in stage 9.0 (TID 9) (10.0.0.113, executor driver, partition 0, PROCESS_LOCAL, 9353 bytes) 
+docs/agent-runs/phase-06/evidence/6a/spark-reflect-targeted.txt:6363: trailing whitespace.
++21:03:01.010 [dispatcher-event-loop-0] INFO org.apache.spark.scheduler.TaskSetManager -- Starting task 1.0 in stage 9.0 (TID 10) (10.0.0.113, executor driver, partition 1, PROCESS_LOCAL, 9394 bytes) 
+docs/agent-runs/phase-06/evidence/6a/spark-reflect-targeted.txt:6935: trailing whitespace.
++21:03:01.018 [task-result-getter-2] INFO org.apache.spark.scheduler.TaskSchedulerImpl -- Removed TaskSet 9.0, whose tasks have all completed, from pool 
+docs/agent-runs/phase-06/evidence/6a/spark-reflect-targeted.txt:6974: trailing whitespace.
++21:03:01.025 [broadcast-exchange-1] DEBUG org.apache.spark.sql.execution.WholeStageCodegenExec -- 
+docs/agent-runs/phase-06/evidence/6a/spark-reflect-targeted.txt:7140: trailing whitespace.
++21:03:01.031 [dispatcher-event-loop-0] INFO org.apache.spark.scheduler.TaskSetManager -- Starting task 0.0 in stage 11.0 (TID 11) (10.0.0.113, executor driver, partition 0, NODE_LOCAL, 9079 bytes) 
+docs/agent-runs/phase-06/evidence/6a/spark-reflect-targeted.txt:7317: trailing whitespace.
++21:03:01.036 [task-result-getter-3] INFO org.apache.spark.scheduler.TaskSchedulerImpl -- Removed TaskSet 11.0, whose tasks have all completed, from pool 
+docs/agent-runs/phase-06/evidence/6a/spark-reflect-targeted.txt:7712: trailing whitespace.
++21:03:01.043 [pool-1-thread-1-ScalaTest-running-SparkSmokeSpec] DEBUG org.apache.spark.sql.execution.WholeStageCodegenExec -- 
+docs/agent-runs/phase-06/evidence/6a/spark-reflect-targeted.txt:7858: trailing whitespace.
++21:03:01.046 [dispatcher-event-loop-1] INFO org.apache.spark.scheduler.TaskSetManager -- Starting task 0.0 in stage 12.0 (TID 12) (10.0.0.113, executor driver, partition 0, PROCESS_LOCAL, 9401 bytes) 
+docs/agent-runs/phase-06/evidence/6a/spark-reflect-targeted.txt:7859: trailing whitespace.
++21:03:01.046 [dispatcher-event-loop-1] INFO org.apache.spark.scheduler.TaskSetManager -- Starting task 1.0 in stage 12.0 (TID 13) (10.0.0.113, executor driver, partition 1, PROCESS_LOCAL, 9466 bytes) 
+docs/agent-runs/phase-06/evidence/6a/spark-reflect-targeted.txt:7996: trailing whitespace.
++21:03:01.050 [task-result-getter-1] INFO org.apache.spark.scheduler.TaskSchedulerImpl -- Removed TaskSet 12.0, whose tasks have all completed, from pool 
+docs/agent-runs/phase-06/evidence/6a/spark-reflect-targeted.txt:8036: trailing whitespace.
++21:03:01.083 [pool-1-thread-1-ScalaTest-running-SparkSmokeSpec] DEBUG org.apache.spark.sql.execution.WholeStageCodegenExec -- 
+docs/agent-runs/phase-06/evidence/6a/spark-reflect-targeted.txt:8336: trailing whitespace.
++21:03:01.102 [dispatcher-event-loop-1] INFO org.apache.spark.scheduler.TaskSetManager -- Starting task 0.0 in stage 14.0 (TID 14) (10.0.0.113, executor driver, partition 0, NODE_LOCAL, 9079 bytes) 
+docs/agent-runs/phase-06/evidence/6a/spark-reflect-targeted.txt:8938: trailing whitespace.
++       
+docs/agent-runs/phase-06/evidence/6a/spark-reflect-targeted.txt:9388: trailing whitespace.
++21:03:01.466 [task-result-getter-2] INFO org.apache.spark.scheduler.TaskSchedulerImpl -- Removed TaskSet 14.0, whose tasks have all completed, from pool 
+docs/agent-runs/phase-06/evidence/6a/spark-reflect-targeted.txt:9427: trailing whitespace.
++  
+docs/agent-runs/phase-06/evidence/6a/spark-reflect-targeted.txt:9429: trailing whitespace.
++21:03:01.501 [pool-1-thread-1-ScalaTest-running-SparkSmokeSpec] INFO org.apache.spark.sql.execution.datasources.FileSourceStrategy -- Pushed Filters: 
+docs/agent-runs/phase-06/evidence/6a/spark-reflect-targeted.txt:9430: trailing whitespace.
++21:03:01.501 [pool-1-thread-1-ScalaTest-running-SparkSmokeSpec] INFO org.apache.spark.sql.execution.datasources.FileSourceStrategy -- Post-Scan Filters: 
+docs/agent-runs/phase-06/evidence/6a/spark-reflect-targeted.txt:9431: trailing whitespace.
++21:03:01.507 [pool-1-thread-1-ScalaTest-running-SparkSmokeSpec] DEBUG org.apache.spark.sql.execution.WholeStageCodegenExec -- 
+docs/agent-runs/phase-06/evidence/6a/spark-reflect-targeted.txt:9541: trailing whitespace.
++21:03:01.507 [pool-1-thread-1-ScalaTest-running-SparkSmokeSpec] DEBUG org.apache.spark.sql.catalyst.expressions.codegen.CodeGenerator -- 
+docs/agent-runs/phase-06/evidence/6a/spark-reflect-targeted.txt:9698: trailing whitespace.
++21:03:01.538 [dispatcher-event-loop-1] INFO org.apache.spark.scheduler.TaskSetManager -- Starting task 0.0 in stage 15.0 (TID 15) (10.0.0.113, executor driver, partition 0, PROCESS_LOCAL, 9825 bytes) 
+docs/agent-runs/phase-06/evidence/6a/spark-reflect-targeted.txt:9704: trailing whitespace.
++21:03:01.544 [Executor task launch worker for task 0.0 in stage 15.0 (TID 15)] DEBUG org.apache.spark.sql.catalyst.expressions.codegen.CodeGenerator -- 
+docs/agent-runs/phase-06/evidence/6a/spark-reflect-targeted.txt:10276: trailing whitespace.
++       
+docs/agent-runs/phase-06/evidence/6a/spark-reflect-targeted.txt:10361: trailing whitespace.
++21:03:01.592 [task-result-getter-3] INFO org.apache.spark.scheduler.TaskSchedulerImpl -- Removed TaskSet 15.0, whose tasks have all completed, from pool 
+docs/agent-runs/phase-06/evidence/6a/spark-reflect-targeted.txt:10905: trailing whitespace.
++21:03:01.594 [pool-1-thread-1-ScalaTest-running-SparkSmokeSpec] DEBUG org.apache.spark.sql.catalyst.expressions.codegen.CodeGenerator -- 
+docs/agent-runs/phase-06/evidence/6a/spark-reflect-targeted.txt:11234: trailing whitespace.
++21:03:01.598 [pool-1-thread-1-ScalaTest-running-SparkSmokeSpec] DEBUG org.apache.spark.sql.execution.WholeStageCodegenExec -- 
+docs/agent-runs/phase-06/evidence/6a/spark-reflect-targeted.txt:11345: trailing whitespace.
++21:03:01.619 [dispatcher-event-loop-0] INFO org.apache.spark.scheduler.TaskSetManager -- Starting task 0.0 in stage 17.0 (TID 16) (10.0.0.113, executor driver, partition 0, NODE_LOCAL, 9079 bytes) 
+docs/agent-runs/phase-06/evidence/6a/spark-reflect-targeted.txt:11718: trailing whitespace.
++21:03:01.634 [task-result-getter-0] INFO org.apache.spark.scheduler.TaskSchedulerImpl -- Removed TaskSet 17.0, whose tasks have all completed, from pool 
+docs/agent-runs/phase-06/evidence/6a/spark-reflect-targeted.txt:11819: trailing whitespace.
++21:03:01.647 [pool-1-thread-1-ScalaTest-running-SparkSmokeSpec] DEBUG org.apache.spark.sql.execution.WholeStageCodegenExec -- 
+docs/agent-runs/phase-06/evidence/6a/spark-reflect-targeted.txt:11870: trailing whitespace.
++21:03:01.647 [pool-1-thread-1-ScalaTest-running-SparkSmokeSpec] DEBUG org.apache.spark.sql.catalyst.expressions.codegen.CodeGenerator -- 
+docs/agent-runs/phase-06/evidence/6a/spark-reflect-targeted.txt:12005: trailing whitespace.
++21:03:01.656 [dispatcher-event-loop-1] INFO org.apache.spark.scheduler.TaskSetManager -- Starting task 0.0 in stage 18.0 (TID 17) (10.0.0.113, executor driver, partition 0, PROCESS_LOCAL, 8889 bytes) 
+docs/agent-runs/phase-06/evidence/6a/spark-reflect-targeted.txt:12225: trailing whitespace.
++21:03:01.658 [Executor task launch worker for task 0.0 in stage 18.0 (TID 17)] DEBUG org.apache.spark.sql.catalyst.expressions.codegen.CodeGenerator -- 
+docs/agent-runs/phase-06/evidence/6a/spark-reflect-targeted.txt:12317: trailing whitespace.
++21:03:01.660 [task-result-getter-1] INFO org.apache.spark.scheduler.TaskSchedulerImpl -- Removed TaskSet 18.0, whose tasks have all completed, from pool 
+docs/agent-runs/phase-06/evidence/6a/third-final-check-compile-failure.txt:23: trailing whitespace.
++[error] -- Error: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/spark/src/test/scala/edu/uic/cs441/scholarchain/spark/SparkSmokeSpec.scala:60:23 
+docs/agent-runs/phase-06/evidence/6c/coauthored-with-plan.txt:13: new blank line at EOF.
+docs/agent-runs/phase-06/evidence/6c/input-rejects-plan.txt:146: new blank line at EOF.
+docs/agent-runs/phase-06/evidence/6c/module-targeted-compile-failure.txt:15: trailing whitespace.
++[error] -- [E008] Not Found Error: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/spark/src/main/scala/edu/uic/cs441/scholarchain/spark/Phase6CMain.scala:12:2 
+docs/agent-runs/phase-06/evidence/6c/module-targeted-compile-failure.txt:19: trailing whitespace.
++[error] -- [E006] Not Found Error: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/spark/src/main/scala/edu/uic/cs441/scholarchain/spark/Phase6CMain.scala:39:26 
+docs/agent-runs/phase-06/evidence/6de/independent-compile-failure.txt:9: trailing whitespace.
++[error] -- [E007] Type Mismatch Error: /Users/danny/Documents/UIC/CS441/ScholarChain/tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentPhase6DEGraphSpec.scala:259:19 
+docs/agent-runs/phase-06/evidence/6de/repair-1/core-targeted.txt:21: trailing whitespace.
++[info]   + 6D+6E config fingerprint: 8f6fd8b7b5596ece608424278b10b23f61317562d989a6a40d07fad109cd643e; prior: a75347c8ea36964d5144e09a19f8cb76f9de08128868e76f6fad4f8db77b8169 
+docs/agent-runs/phase-06/evidence/6de/repair-1/core-targeted.txt:22: trailing whitespace.
++[info]   + 6D+6E logical fingerprint: f03c79505357ca9795894569c3f7cbf0f67e9d18c864eab9de895bb4a85159f3; prior: 49316f88beb239b6d654b9df77814be759a10f20c7209894e3dc63fbab9cc624 
+docs/agent-runs/phase-06/evidence/6de/repair-1/final-check.txt:120: trailing whitespace.
++[info]   + 6D+6E config fingerprint: 8f6fd8b7b5596ece608424278b10b23f61317562d989a6a40d07fad109cd643e; prior: a75347c8ea36964d5144e09a19f8cb76f9de08128868e76f6fad4f8db77b8169 
+docs/agent-runs/phase-06/evidence/6de/repair-1/final-check.txt:121: trailing whitespace.
++[info]   + 6D+6E logical fingerprint: f03c79505357ca9795894569c3f7cbf0f67e9d18c864eab9de895bb4a85159f3; prior: 49316f88beb239b6d654b9df77814be759a10f20c7209894e3dc63fbab9cc624 
+docs/agent-runs/phase-06/evidence/6fg/core-targeted.txt:28: trailing whitespace.
++[info]   + 6D+6E config fingerprint: 8f6fd8b7b5596ece608424278b10b23f61317562d989a6a40d07fad109cd643e; prior: a75347c8ea36964d5144e09a19f8cb76f9de08128868e76f6fad4f8db77b8169 
+docs/agent-runs/phase-06/evidence/6fg/core-targeted.txt:29: trailing whitespace.
++[info]   + 6D+6E logical fingerprint: f03c79505357ca9795894569c3f7cbf0f67e9d18c864eab9de895bb4a85159f3; prior: 49316f88beb239b6d654b9df77814be759a10f20c7209894e3dc63fbab9cc624 
+docs/agent-runs/phase-06/evidence/6fg/dataset-initial-extraction-failure.txt:6: trailing whitespace.
++    
+docs/agent-runs/phase-06/evidence/6fg/final-check.txt:126: trailing whitespace.
++[info]   + 6D+6E config fingerprint: 8f6fd8b7b5596ece608424278b10b23f61317562d989a6a40d07fad109cd643e; prior: a75347c8ea36964d5144e09a19f8cb76f9de08128868e76f6fad4f8db77b8169 
+docs/agent-runs/phase-06/evidence/6fg/final-check.txt:127: trailing whitespace.
++[info]   + 6D+6E logical fingerprint: f03c79505357ca9795894569c3f7cbf0f67e9d18c864eab9de895bb4a85159f3; prior: 49316f88beb239b6d654b9df77814be759a10f20c7209894e3dc63fbab9cc624 
+docs/agent-runs/phase-06/evidence/6fg/repair-1/final-check.txt:126: trailing whitespace.
++[info]   + 6D+6E config fingerprint: 8f6fd8b7b5596ece608424278b10b23f61317562d989a6a40d07fad109cd643e; prior: a75347c8ea36964d5144e09a19f8cb76f9de08128868e76f6fad4f8db77b8169 
+docs/agent-runs/phase-06/evidence/6fg/repair-1/final-check.txt:127: trailing whitespace.
++[info]   + 6D+6E logical fingerprint: f03c79505357ca9795894569c3f7cbf0f67e9d18c864eab9de895bb4a85159f3; prior: 49316f88beb239b6d654b9df77814be759a10f20c7209894e3dc63fbab9cc624 
+docs/agent-runs/phase-06/evidence/6fg/spark-initial-compile-failure.txt:7: trailing whitespace.
++[error] -- [E171] Type Error: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/spark/src/main/scala/edu/uic/cs441/scholarchain/spark/Phase6Main.scala:78:104 
+exit=2
+
+git diff --check 03493882399e9020e6892c9f97e0ec8919365215 -- . :(exclude)docs/agent-runs/phase-06/evidence/**
+exit=0

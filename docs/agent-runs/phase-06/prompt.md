@@ -141,3 +141,11 @@ restored. No production Spark/core/dataset/build changes or reruns are needed
 for evidence-only F1/F2. Existing logs/data stay intact. Run affected safety tests
 and one stable-tree full JDK17 check, update evidence/reports and return a
 read-only recheck prompt. No commit, push, reviewer launch, AWS/model call or6I.
+
+## Subphase 6I work order and Step 0
+
+User instruction: **"All right, let's go to the last phase 6i."** Previous 6F+6G repair round 1 received external APPROVE, retained verbatim in `review.md`, and the user committed it as `d1afc7f6698965ddbe010621b277b10e655d25ff`. Branch `phase-6` was clean at preflight. Phase-6 baseline for comprehensive review: `03493882399e9020e6892c9f97e0ec8919365215`. Plan `/Users/danny/Documents/plan/phase6.md`, SHA-256 `6df6d856df6c4c6ee0a8f00125e78af1bce5e789666399ae48a9443aec955096`.
+
+**No questions for this subphase.** No 6I open implementation decision is listed in the plan; prior human decisions remain unchanged. Execute 6I only: a fresh full JDK 17 `sbt -batch check`, course-gate traceability in owner-report.md, accurate reports and deferred findings, and a complete whole-Phase-6 read-only reviewer prompt. Carry 6FG F4–F12 forward as open/deferred, with the new nonblocking scanner observations. List **bounded EMR Spark run: OPEN — deferred to Phase 15 by user decision**, with the EMR script in Phase 13. This is a schedule decision, not proof of course/instructor acceptance.
+
+Coordinator owns only `docs/agent-runs/phase-06/**` evidence, excluding human-owned decisions. Do not author `human-gate.md` or `commit.txt`. Do not change implementation, trigger review, commit/push, run cloud/live models, or start Phase 7. No specialist subagent needed for evidence-only close-out. JDK/logging environment is the plan Section 2 block. Tool/model provenance and preflight: `evidence/6i/preflight.md` and `.json`. User performs comprehensive review and writes final acceptance/commit records after approval; Phase 6 is not yet closed.

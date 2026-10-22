@@ -312,3 +312,224 @@ ASSUMPTIONS: DAG derivation is retained-event metadata inspection; no new applic
 RISKS: F4–F12 remain open under the user's narrowed scope. The scanner is a textual heuristic, not a Scala parser/type checker. Approximate reporting differences are disclosed rather than algorithmically eliminated. Existing evidence was preserved without optional cleanup; the required DAG and new full gate add evidence. Previous local-runtime/storage/EMR limitations remain.
 
 MANUAL ACTION REQUIRED: User launches the independent read-only repair recheck, then decides on commit after approval. BLOCKED-ON OWNER: none. BLOCKED-ON EVIDENCE: none for F1–F3 local acceptance. NEXT GATE: User recheck; stop before6I.
+
+## Subphase 6I — course-gate traceability (whole Phase 6)
+
+This table maps the course Phase 6 jobs, operational/report requirements, gate
+bullets, Detailed Spark requirements, and D08 deliverable to existing evidence.
+**EVIDENCED** means local implementation/test or retained-run evidence is available;
+it is not independent approval, instructor acceptance, or human ratification.
+Fresh gate results are appended in the final 6I report below.
+
+Sources: [course Phase 6](https://github.com/0x1DOCD00D/ScholarChain/blob/main/README.md#phase-6-build-the-temporal-coauthorship-graph-and-run-spark-analytics),
+[Detailed Spark requirements](https://github.com/0x1DOCD00D/ScholarChain/blob/main/README.md#detailed-spark-requirements),
+and D08 in the same course README. `evidence/6i/course-source.json` records the
+retrieved content hash/section line ranges; full relevant sections were read.
+Plan SHA-256 `6df6d856df6c4c6ee0a8f00125e78af1bce5e789666399ae48a9443aec955096`.
+
+Evidence key (paths are repository-relative unless marked FG/6I):
+
+- **README:** `modules/spark/README.md` (per-job sections).
+- **C/M:** `modules/spark/src/test/scala/edu/uic/cs441/scholarchain/spark/Phase6CJobsSpec.scala`
+  and `tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentPhase6CGraphSpec.scala`.
+- **D/E:** `modules/spark/src/test/scala/edu/uic/cs441/scholarchain/spark/Phase6DEJobsSpec.scala`
+  and `tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentPhase6DEGraphSpec.scala`.
+- **F/I:** `modules/spark/src/test/scala/edu/uic/cs441/scholarchain/spark/Phase6FGJobsSpec.scala`
+  and `tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentPhase6FGSpec.scala`.
+- **P:** `tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentPhase6PipelineSpec.scala`.
+- **Safety:** `tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentPhase6SafetySpec.scala`.
+- **Core:** `modules/core/src/main/scala/edu/uic/cs441/scholarchain/core/`,
+  `modules/core/src/test/scala/edu/uic/cs441/scholarchain/core/SparkAnalyticsContractSpec.scala`,
+  `modules/core/src/test/resources/wire/spark-*.json` and
+  `modules/core/src/main/resources/scholarchain.spark-analytics-config.v1.json`.
+- **FG:** `docs/agent-runs/phase-06/evidence/6fg/`; **6I:** `docs/agent-runs/phase-06/evidence/6i/`.
+  Historical targeted/full gates are retained in their subphase directories;
+  the fresh 6I gate runs all current Scala suites together. Dataset Python 12/12
+  is historical and separate from sbt totals.
+
+| ID | Requirement | Current status | Evidence path(s) / key | Limits / later gate |
+| --- | --- | --- | --- | --- |
+| J1 | Canonical identities, works, authorship, venue/institution/topic nodes; accepted ER links; abstentions; endpoint checks | EVIDENCED LOCALLY | C/M/F tests; FG Hadoop/ER bindings, metadata and counters | DBLP exact-name identities; observed ORCIDs do not prove resolved identity; yearless Neptune mapping remains open. |
+| J2 | Temporal undirected weighted edges; self/duplicate handling; years and complete work support; windows | EVIDENCED LOCALLY | C/M literal 18-edge G1 assertions; FG metadata/counters | Authoritative DBLP observation only; source exclusions and yearless policy are counted. |
+| J3 | Per-window P, C, T, A, M, W and maximum-team evidence | EVIDENCED LOCALLY | D/E G1–G4 expectations; FG analytics-report.json and local-run-metadata.json | Metrics are separate; solo publications included. No opaque combined score. |
+| J4 | Components, membership, sizes, largest fraction and singletons | EVIDENCED LOCALLY | D/E hand fixtures; FG real-data-report.md and analytics-report.json | Minimum-label DataFrame iteration; hard non-convergence guard. |
+| J5 | Selected-pair shortest paths, bounded evidence and scalable distance estimate | EVIDENCED LOCALLY | D/E predecessor/path cases; F/I chain mean 4/3 and P90 2; FG real-data-report.md | K=20, maxHops=6, S=32, seed 441. Sampled largest-component distances, not exact diameter; approximate P90 has latent partition dependence. |
+| J6 | Documented community method, memberships/sizes and cross-community edges | EVIDENCED LOCALLY WITH NON-CONVERGENCE | D oscillating-pair core parse/validation; E traced LPA; FG analytics-report.json | Synchronous LPA; all observed real windows stopped at 20 without convergence. Per-component causes unmeasured (F9). |
+| J7 | Defined bridge measures, communities connected and limitations | EVIDENCED LOCALLY | D/E exact G1 injected partition and star; README Job7; FG distributions | Cross-community degree/weight, connected-community count, unweighted participation; no betweenness/articulation claim. |
+| J8 | Coreness/dense-subgraph measure on hand-checkable graphs | EVIDENCED LOCALLY | D/E G1, star, K4, path and singleton; FG coreness distributions | DataFrame h-index iteration, coreness <= degree; duplicated export noted in F7. |
+| J9 | Window recomputation; coauthor/team/component/community/bridge changes; compatible inclusion rules | EVIDENCED LOCALLY | F/I temporal tests; FG temporal table metadata and real-data-report.md | Only adjacent comparison windows have deltas; entry/exit use flags/absent deltas; tie winner is not exposed (F6). |
+| J10 | Source-grounded researcher/community/path/paper context for later embeddings | EVIDENCED LOCALLY; LIMITS OPEN | F/I source/number/length/reference tests; core summary contracts; FG metadata | Deterministic templates < 1,200 characters; no live model. Thin context and unmarked title truncation are deferred F5. |
+| J11 | Partitioned Parquet graph/analytics/path/summary outputs; four target load manifests | EVIDENCED LOCALLY; STORAGE PROPOSALS | F/I all-table export/reread tests; FG manifest-file-audit.json, load-manifest-*.json | 28 datasets. Neptune/DynamoDB/S3 Vectors/S3 are proposals, not loaded services. Key validation F8 due Phase 7. |
+| O1 | Partition/shuffle boundaries and physical strategies | DOCUMENTED + MEASURED LOCALLY | README per-job sections; FG event-log-summary.json; FG repair-1/stage-dag.json | Physical timings/plans and part names are excluded from logical identity. |
+| O2 | Keep graph-sized transformations distributed; bounded driver actions | EVIDENCED LOCALLY | Safety source fence; BoundedActions.scala; fresh 6I full gate | Textual fence has disclosed gaps; no proof for every possible syntax. No RDD/GraphX/GraphFrames/implicits rule changes. |
+| O3 | Iterative persistence/checkpoints | DOCUMENTED + EXERCISED LOCALLY | README Jobs4–8; D/E/F multiwindow/long-chain regressions; FG diagnosis | Checkpoint interval 5; selected-path metadata has its own per-hop checkpoint. Caller-session optimizer setting/cost is deferred F10. |
+| O4 | Counts, rejects and invariant failures | EVIDENCED LOCALLY | F hard-failure persistence test; C orphan flag cases; FG local-counters.json and real-data-report.md | 25 non-hard ORCID warnings ; 0 hard failures/reader rejects in successful real run. Historical failure has no marker. |
+| O5 | Run-manifest reproducibility and input/provenance binding | EVIDENCED LOCALLY; SCOPED REPLAY | FG manifests/metadata; replay-comparison.json; 6I retained-evidence-check.json | Compiled Spark/core code fingerprint; logical config omits roots/shuffle. Metadata-only reuse; identical local build artifacts only. |
+| R1 | Stage DAGs | EVIDENCED FROM RETAINED LOG | FG repair-1/stage-dag.json and stage-dag.md; real-data-report.md | 5,667 stage IDs,4,532 parent edges; diagram is a subgraph. Production summarizer still omits names/parents. |
+| R2 | Partitions and shuffle metrics | EVIDENCED FROM RETAINED RUN | FG event-log-summary.json; repair-1/stage-dag.json | 2,004 executed attempts,5,237 tasks,0 failed; 12,020,965,863 read bytes/10,107,558,658 write bytes. Not new 6I measurements. |
+| R3 | Graph, component and community counts | EVIDENCED FROM RETAINED RUN | FG real-data-report.md, analytics-report.json, local-run-metadata.json | Windowed row totals are not unique researchers across time; LPA partitions are iteration-limited. |
+| R4 | Metric distributions | EVIDENCED WITH REPLAY DIFFERENCES | FG analytics-report.json; repair-1/analytics-report-comparison.json | First-run distributions;12 changed numeric fields (11 means/1 percentile). No identical-report claim. |
+| R5 | Path-test results and estimates | EVIDENCED LOCALLY | D/E/F/I fixture tests; FG real-data-report.md | Real selected pairs: 72 found / 48 exceeded maxHops; no real benchmark query pairs. Fixture evidence covers no-path. |
+| R6 | Explicit temporal windows | EVIDENCED LOCALLY | core config; FG local-run-metadata.json and real-data-report.md | all-years,through-2009,2010-2014,2015-2019,2020-2026,since-2015; cumulative window excluded from adjacent deltas. |
+| R7 | Rejected integrity violations | EVIDENCED LOCALLY | FG local-counters.json, real-data-report.md; F failure-path test | Successful run:25 warnings,0 hard violations,0 input rejects; ER abstentions/conflicts are counted separately. |
+| R8 | Output locations | RETAINED LOCAL PATHS | FG metadata/manifests and real-data-report.md | target/phase6-runs/6fg-spark-{first,replay}-v2/run:f02acf56-4bea-4009-adaf-b11d5afceb49; outputs ignored, not copied into git. |
+| T1 | Fresh sbt check | SEE FINAL 6I GATE BELOW | 6I final-check.txt and final-gate-metadata.json | JDK 17 full definition of done; no change to implementation or expected test count. |
+| T2 | Local/small-cluster Spark integration | EVIDENCED LOCALLY | P tiny unchanged Hadoop→offlineER→Spark pipeline; F/I exports; FG real-data-report.md | Local[2] execution and bounded real dataset, not an EMR or multi-machine measurement. |
+| T3 | Bounded EMR Spark run | **OPEN — deferred to Phase 15 by user decision** | plan schedule change; 6A emr-compatibility.md; this register | EMR script Phase 13, live run Phase 15 under human budget/deployment approval. No cloud runtime tested. Human must explicitly accept this open gate. |
+| G1 | Real distributed Spark transformations/analytics | EVIDENCED LOCALLY | C/DE/FG jobs; full pipeline tests; FG plans/stage DAG | Distributed DataFrame operators in local Spark; no claim of cluster execution. |
+| G2 | No full-graph driver collection | EVIDENCED WITH TEXTUAL GUARD LIMITS | Safety tests/source fence; BoundedActions.scala; fresh gate | Source guard plus reviewed code; scanner blind spots carried forward. |
+| G3 | Known-graph distinct degree and pair weights | EVIDENCED LOCALLY | C/M full literal G1 edge table; E G1 metric table | Module and independent C edges asserted; G1–G4 DE exact expectations belong to independent E suite, not all module fixtures. |
+| G4 | Hand-checkable components/community/path/coreness | EVIDENCED LOCALLY | D/E fixtures, F/I chain and temporal cases; core parse checks | Traced LPA, explicit oscillation, BFS predecessor tie and max-hop checks; no all-pairs driver algorithm. |
+| G5 | Bridge definitions and limitations | DOCUMENTED + TESTED | README Job7; D/E injected partitions/star; real-data-report.md | Community-dependent indicators; optional sampled betweenness intentionally omitted by user. |
+| G6 | Time windows visible in outputs | EVIDENCED LOCALLY | core SparkRecordContext/contracts; F/I record parsing; FG metadata | Window labels/bounds bound in Spark edge IDs; old frozen ID formulas unchanged. |
+| G7 | Partition/shuffle behavior documented | DOCUMENTED + RETAINED MEASUREMENTS | README Jobs1–11; FG plans/event summary; stage DAG | Review complete detailed job matrix below; retain limits instead of claiming unmeasured optimizer cost. |
+| G8 | Code review returns APPROVE | **PENDING — comprehensive whole-Phase-6 review** | review.md; 6I reviewer-prompt.md | 6A–6FG approvals are retained; they do not substitute for final review of0349388 through current tree including untracked files. |
+| D01 | Per-job inputs/schema versions | DOCUMENTED; FINAL REVIEW PENDING | README Shared rules and each Job1–11; core wire/schemas | Hadoop/ER outputs consumed; no independent raw reparse by Spark. |
+| D02 | Per-job outputs/schema versions | DOCUMENTED; CONTRACT TESTS | README table and Jobs1–11; SparkAnalyticsContracts.scala; F/I parsing | Domain GraphNode/GraphEdge versus analytics v1 and explicit work_sources projection distinguished. |
+| D03 | Per-job selected windows/snapshot | DOCUMENTED + PERSISTED | README Shared rules/Jobs1–11; FG manifests | Identity once, analytics by configured windows; each output carries core provenance/context. |
+| D04 | Per-job partition columns | DOCUMENTED + EXPORTED | README Jobs1–11/Job11; FG load manifests and metadata | Layout is local analogue of recommended S3 layout; no S3 upload claim. |
+| D05 | Repartition/coalesce choices | DOCUMENTED; PLAN EVIDENCE | README Jobs1–11; saved FG plans via output roots | Hash partition and sorted writes; no global one-partition export. |
+| D06 | Join strategies | DOCUMENTED; PLAN EVIDENCE | README Jobs1–11; C/DE/FG DataFrame jobs; FG saved plans | Iterative joins remain distributed; physical plan rendering is capped and can truncate. |
+| D07 | Broadcast assumptions | DOCUMENTED | README Shared rules and Jobs1–11; FG plans | Small config/window relations versus graph-sized data; final reviewer checks documentation against code. |
+| D08 | Cache/persistence choices | DOCUMENTED + EXERCISED | README Jobs1–11; DE label-state ordering and regression tests | Eager materialization/cache ordering reviewed in 6FG; no new 6I performance measurement. |
+| D09 | Checkpoint choices | DOCUMENTED + EXERCISED | README Jobs1–11; D/F long-chain tests; FG diagnosis | Explicit temp/test paths, configured production path/interval; hard failures retain evidence before abort. |
+| D10 | Expected shuffle boundaries | DOCUMENTED + MEASURED | README Jobs1–11; FG event summary/stage DAG | Task shuffle totals retained; not a global scalability proof. |
+| D11 | Driver memory assumptions | DOCUMENTED; BOUNDED RUN | README Shared rules/Jobs1–11; BoundedActions; FG commands.md | Tests 2 GiB, real CLI 4 GiB; 256 shard summaries bounded on driver; executor shard buffering remains scale limit. |
+| D12 | Per-job invariants/counters | DOCUMENTED + TESTED | README Jobs1–11; C/DE/FG tests; FG local-counters.json | Counter aliases remain F12; rejected input/failure rows are distinct from normal tables. |
+| D13 | Recommended graph/output layout | LOCAL ANALOGUE EVIDENCED | README Job11; FG metadata, four load manifests, manifest-file-audit.json | 28 tables; empty datasets keep schema; no live Neptune/DynamoDB/Vector/S3 loading. |
+| D14 | A graph hand-checkable across all required measures | EVIDENCED LOCALLY | E literal G1–G4 values, C/M exact G1 edges; D/F/I smaller fixtures | Independent hand expectations are not implementation-derived replay assertions. |
+| D08-package | Spark deliverable: builder, analytics, tests, schemas, bounded results | LOCAL DELIVERABLE EVIDENCED; CLOUD OPEN | modules/spark/**; core contracts/wire examples; tests/**; FG results; 6A package evidence | Historical6A job JAR inspection is not fresh 6I packaging or release/EMR verification. JDK packaging guard remains open. |
+| S1 | Spark grading: actual analytics; graph not centralized | LOCAL EVIDENCE; NO GRADING CLAIM | C/DE/FG jobs; C/D/E/F/I tests; Safety; FG run/DAG | Coordinator cannot award course points or infer instructor acceptance of workflow/EMR deviations. |
+| H1 | Human acceptance and accepted commit evidence | **PENDING — human-owned** | human-gate.md and commit.txt (absent at preflight) | Human writes after comprehensive APPROVE, including EMR deferral/limits; coordinator never authors these files. |
+
+### Limits that remain part of the final handoff
+
+The authoritative carry-forward table is the **Subphase 6I** section of
+`repairs.md`. F4–F12 remain open/deferred by the user's blocking-only scope.
+This includes incomplete-output retry, summary richness/truncation, continuity
+observability, duplicate datasets, unvalidated store keys, causal wording,
+caller-session optimizer setting and unmeasured cost, retention, and the separate
+Python gate. New scanner blind spots remain nonblocking. The fixed empty handoff
+path is already committed. No optional production fix, cleanup or new run is
+claimed in 6I.
+
+Observed replay equality covers 28 logical tables and counters from identical local
+compiled artifacts at 4 versus 2 shuffle partitions. The analytics report differs
+in 12 numeric fields, and sampled-estimate P90 is not proven partition invariant.
+Metadata-only reuse does not rehash existing Parquet. Fixed 256-shard executor
+buffering is validated at this bounded slice only. All real windows reported
+LPA non-convergence; isolated pairs oscillate, but the full real change counts
+have no per-component causal attribution. No cloud/store compatibility claim is
+made. Bounded EMR remains **OPEN — deferred to Phase 15 by user decision**.
+
+Comprehensive whole-phase APPROVE and the human's `human-gate.md`/`commit.txt`
+remain pending. This evidence-only close-out does not close Phase 6 by itself.
+
+## Subphase 6I — final close-out evidence packet
+
+STATUS: COMPLETE for coordinator evidence and fresh local validation. Comprehensive
+whole-Phase-6 review, human acceptance and final commit records remain pending;
+Phase 6 is **not yet closed**.
+
+OWNER: Coordinator; only `docs/agent-runs/phase-06/**` evidence. No specialist
+writer or reviewer launched. Human-owned decisions remain untouched/absent.
+
+WORK ORDER: User: "All right, let's go to the last phase 6i." Plan Section 9/6I;
+Step 0 **No questions for this subphase** because no open 6I implementation choice
+remains. Existing EMR deferral and F4–F12 blocking-only scope persist. Clean
+preflight on `phase-6`, previous 6FG commit/base/current HEAD `d1afc7f6698965ddbe010621b277b10e655d25ff`.
+Comprehensive review baseline `03493882399e9020e6892c9f97e0ec8919365215`.
+
+FILES CREATED: `evidence/6i/` preflight, scoped source snapshot, course-source
+provenance, full gate/execution metadata, retained-sidecar audit, diff diagnostic,
+command log, changed/whole-phase inventories, handoff and reviewer prompt.
+FILES MODIFIED: `prompt.md`, `owner-report.md`, `test-report.md`, `review.md`,
+`repairs.md`. No source/build/dataset/test changes. Exact final inventories:
+`evidence/6i/changed-files.txt` and `whole-phase-files.txt`.
+
+COMMANDS RUN: Plan's JDK 17 JAVA_HOME/PATH and Phase 4 SBT_OPTS, `java -version`,
+`/usr/bin/time -p sbt -batch check` (exit 0); exact command/environment and audit
+scope in `evidence/6i/commands.md`. Git branch/HEAD/status/diff reads; SHA/JSON
+sidecar audit; official course README read in full relevant sections.
+`git diff --check`: exit 0. Whole-phase non-evidence diff check: exit 0.
+Whole-phase diff including historical raw logs: exit 2 for retained trailing
+whitespace, diagnostic preserved in `diff-check.txt`. No historical logs were
+changed. Initial metadata assembly asserted cumulative whitespace cleanliness;
+its audit assertion stopped and was corrected to record this historical result,
+without a gate/source/log change. No rerun substituted for the passing full gate.
+
+TEST RESULTS: **554 passed / 0 failed**. Core 144, Hadoop 64, ER 39, Spark 34,
+independent 266, build 7 (144/64/39/34/266/7). Java 17.0.20.1, sbt 1.10.7; sbt
+673s, real **675.13s**. Full unfiltered `evidence/6i/final-check.txt`:
+**1,359,860 bytes**, SHA-256 **`e2bf289d11f6f2e4ff8e714d3fc4b9b56b16ea7ed59007abd00d5fe73d9d7367`**. Completed
+`2026-10-22T20:04:05.397751+00:00`. Line references and generated test-marker mtime are in
+`final-gate-metadata.json`. Expected injected build self-test error is not a gate
+failure. No separate dataset Python or real-data CLI run was performed in 6I.
+
+VALIDATION RESULTS: All 68 scoped Phase 6 implementation/config/build/dataset
+hashes **and mtimes** unchanged across gate. All 27 prior approved 6FG snapshot
+hashes still match. HEAD/plan unchanged; human-owned files remain absent as at
+preflight. `retained-evidence-check.json` revalidates both published completion
+markers and retained manifest/metadata bytes, 28 recorded table hash pairs and
+counter-array equality, and both analytics-report hashes/all 12 differing paths.
+This is metadata consistency, not a new full Parquet reread. The 52-row table
+above maps jobs 1–11, every course operational/report/gate bullet, Detailed Spark
+job documentation items, layout and D08. External 6FG approval remains verbatim;
+F1–F3 are closed by that reviewer and F4–F12 explicitly stay deferred.
+
+ASSUMPTIONS: Prior bounded real runs and dataset Python 12/12 remain historical
+observations, not new 6I executions. Retained code fingerprint comparison is of
+metadata, not a recomputation of the compiled fingerprint. Codex native tools;
+observable model identity GPT-6; exact deployed model/tool build unavailable.
+No hidden reasoning, secrets or full datasets stored in evidence.
+
+RISKS: F4–F12 and new scanner gaps remain as listed in the 6I repairs register.
+Reuse authenticates metadata only; fixed 256-shard memory measured at bounded
+scale; report means/approximate percentiles and latent distance-P90 partition
+risk disclosed. LPA non-convergence is measured, per-component causes are not.
+Store mappings/yearless Neptune rows are proposals requiring Phase 7 validation.
+Release JDK packaging guard, updated wrong-JDK evidence and exact Scala runtime
+compatibility remain open. **Bounded EMR Spark run: OPEN — deferred to Phase 15
+by user decision** (script Phase 13). A local pass is not EMR/course acceptance.
+Historical raw-log whitespace is preserved; no evidence-retention decision is
+inferred from prior blocking-only scope.
+
+MANUAL ACTION REQUIRED: User launches the comprehensive independent read-only
+review with `evidence/6i/reviewer-prompt.md`. After APPROVE and any required
+repairs, the human writes `human-gate.md` with explicit EMR deferral and known
+limits, commits accepted close-out artifacts, and records accepted commit in
+human-owned `commit.txt` (repository generic accepted-commit convention may also
+be used by the human). No coordinator-authored acceptance/commit SHA.
+
+BLOCKED-ON OWNER: None for this evidence packet; comprehensive review and final
+acceptance belong to the independent reviewer/user.
+BLOCKED-ON EVIDENCE: No comprehensive whole-phase APPROVE or human close-out
+record yet; live EMR evidence deferred to Phase 15.
+NEXT GATE: User-run whole-Phase-6 review, then human acceptance/commit evidence.
+Stop 6I; no Phase 7, reviewer launch, commit or push.
+
+## Subphase 6I — comprehensive approval received (2026-10-22)
+
+The independent user-launched whole-phase reviewer returned **APPROVE for 6I
+and the comprehensive Phase 6 local implementation**, with no blocking defect.
+The complete review is preserved verbatim in `review.md`; N1–N7 are OPEN and
+nonblocking in `repairs.md`. This dated disposition supersedes earlier
+pending-comprehensive-review wording and traceability G8. **Human close-out is
+still PENDING**, as are the explicit EMR and later gates; no whole-phase human
+acceptance, compatible cloud runtime or instructor approval is inferred.
+
+**N3 real-data coverage clarification:** the real ER export has **zero Researcher
+decisions of every outcome**; Work accepted **1**, conflict **12,123**, unresolved
+**1,627**. The real counters `crossDblpNameLinksNotApplied`,
+`constraintBlockedWorkGroups`, `selfPairsDropped`, `duplicateTeamMembersCollapsed`
+and `nonAuthoritativeDblpObservationsDropped` are each **0**. Identity-merge and
+constraint branches are evidenced by fixtures and the tiny pipeline, not by real
+Researcher linking in this slice. This qualification applies to traceability
+J1/J2; N3 remains open for the requested real-data report/J1 edits.
+
+No builds, tests, Spark runs, implementation changes, retained-log edits, human
+file edits, reviewer launch or commits were performed for this disposition-only
+update. The existing fresh **554 passed / 0 failed** gate remains applicable.
+Next action belongs to the human: acceptance record including EMR/workflow/
+retention/open findings, accepted-artifact commit, then commit SHA record. Phase 7
+starts only on a separate user prompt.

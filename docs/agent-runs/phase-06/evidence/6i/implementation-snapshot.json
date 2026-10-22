@@ -1,0 +1,342 @@
+[
+  {
+    "path": "build.sbt",
+    "sha256": "a3ce1496b383fd881c3cb131544cb25ca184c605e768da036122a486bf0b84f7",
+    "mtimeNs": 1792636460569371916
+  },
+  {
+    "path": "datasets/phase6/README.md",
+    "sha256": "2c00722eeff2c6ea0601bbbecbbf3850d16e18f9ce19020474899b907fe99fef",
+    "mtimeNs": 1792692684423784717
+  },
+  {
+    "path": "datasets/phase6/dblp-archive-acquisition.v1.json",
+    "sha256": "4982a6815823a9fe4d60e2ac00cbc03baedce7e504a13ba40788b54d6ccd5aae",
+    "mtimeNs": 1792692553071096965
+  },
+  {
+    "path": "datasets/phase6/dblp-slice-manifest.v1.json",
+    "sha256": "107d318fe65a2109152260b2fd846c4700f30716eb9c345dd78df535e6ae7632",
+    "mtimeNs": 1792692562977185852
+  },
+  {
+    "path": "datasets/scripts/phase6/acquire_dblp_slice.py",
+    "sha256": "abfdc35f4d579d613d65d33607d6f5bc85d94c729d37523870079fce96f992d4",
+    "mtimeNs": 1792692553068131612
+  },
+  {
+    "path": "datasets/scripts/phase6/test_dblp_slice.py",
+    "sha256": "bac05572443b3d5f0323802a442a284b2849ab1eb5cc7fa37f6109077a6e8961",
+    "mtimeNs": 1792692553068291780
+  },
+  {
+    "path": "modules/core/README.md",
+    "sha256": "3ef81cb5a5cdbb8e4c1608f9348bd1de6cd3ab7f67e6a91ec4f6ac14462498e2",
+    "mtimeNs": 1792643708454839054
+  },
+  {
+    "path": "modules/core/src/main/resources/scholarchain.spark-analytics-config.v1.json",
+    "sha256": "0ee0ee1322e3c18f4a1fc6ba640a79b12fe1acef9a32be23f1b72e486353c43e",
+    "mtimeNs": 1792690495679381049
+  },
+  {
+    "path": "modules/core/src/main/scala/edu/uic/cs441/scholarchain/core/DomainValidation.scala",
+    "sha256": "f339b2506a5ee4545488d04c599681d682d2ed8c3bb6cbd1121f790f79700ef3",
+    "mtimeNs": 1792641937768118301
+  },
+  {
+    "path": "modules/core/src/main/scala/edu/uic/cs441/scholarchain/core/SchemaVersions.scala",
+    "sha256": "f50b175d82aebde4097fa1f77a0b48a25ae15e09c32a137d1b2cb710fd248f19",
+    "mtimeNs": 1792639425984104148
+  },
+  {
+    "path": "modules/core/src/main/scala/edu/uic/cs441/scholarchain/core/SparkAnalyticsConfig.scala",
+    "sha256": "5729b4185e417256c69215336bc88bbad433d546f77e611790b77059e2453b02",
+    "mtimeNs": 1792643708430594354
+  },
+  {
+    "path": "modules/core/src/main/scala/edu/uic/cs441/scholarchain/core/SparkAnalyticsConfigLoader.scala",
+    "sha256": "7d0570995312b13565ea740e0c8b8a69a75729adc88fd8cbe7315f37e0b00ca4",
+    "mtimeNs": 1792655856780357491
+  },
+  {
+    "path": "modules/core/src/main/scala/edu/uic/cs441/scholarchain/core/SparkAnalyticsContracts.scala",
+    "sha256": "dd25b58aaf74c7326a8b6746bdef9d0168efe23cffe732e374e3ac8d755b4a90",
+    "mtimeNs": 1792643672243614873
+  },
+  {
+    "path": "modules/core/src/main/scala/edu/uic/cs441/scholarchain/core/SparkAnalyticsValidation.scala",
+    "sha256": "3b1d42c6492d08c45bf0a70df4b57d224c179ba08dd7ef13a54d1d52f9812849",
+    "mtimeNs": 1792692378214020538
+  },
+  {
+    "path": "modules/core/src/main/scala/edu/uic/cs441/scholarchain/core/StableIds.scala",
+    "sha256": "bc0608eafb5bca1ac34acbc2d71ee1736e2e7777c8f93aa16213549f6bf4a023",
+    "mtimeNs": 1792643861523754943
+  },
+  {
+    "path": "modules/core/src/test/resources/wire/spark-coauthor-edge-support.json",
+    "sha256": "5214695dfaa37b74a537351c7f4cfd66787e33c69322d8349374272c61f93231",
+    "mtimeNs": 1792643698623491602
+  },
+  {
+    "path": "modules/core/src/test/resources/wire/spark-coauthor-edge.json",
+    "sha256": "374ba652e7951cfa55ea8fdfa2a80cecc23ba41c87fa4ec58b95509cdb9f1c9a",
+    "mtimeNs": 1792643698623451935
+  },
+  {
+    "path": "modules/core/src/test/resources/wire/spark-community-membership.json",
+    "sha256": "e0b4469db95d4e61c4900f794df2670c43d4354df60fce256839d500b8677e01",
+    "mtimeNs": 1792643698623336769
+  },
+  {
+    "path": "modules/core/src/test/resources/wire/spark-community-summary.json",
+    "sha256": "9c8d19381eec926a9c2a5d6b8eceb8f48e995805cad47a4d6fc18acc0225d91e",
+    "mtimeNs": 1792643698623374352
+  },
+  {
+    "path": "modules/core/src/test/resources/wire/spark-component-membership.json",
+    "sha256": "a1216ac9f1b4b14b1a8e2da4031dd15ce720a4812a26208f98ab485527058581",
+    "mtimeNs": 1792643698623253186
+  },
+  {
+    "path": "modules/core/src/test/resources/wire/spark-component-summary.json",
+    "sha256": "85506729ce9cfa1d12f97a6da360c9231a0d759de1dc5f40635b69926be108cd",
+    "mtimeNs": 1792643698623294394
+  },
+  {
+    "path": "modules/core/src/test/resources/wire/spark-counter.json",
+    "sha256": "d50bfa0a2a5f271e6c1c04207d2dea960c54e451a78fa2bf86db302f683b6fcb",
+    "mtimeNs": 1792643698625664840
+  },
+  {
+    "path": "modules/core/src/test/resources/wire/spark-cross-community-edge.json",
+    "sha256": "b573774d24698ce55c374c89c2bbe641ed3bb4ca8e9bc7ddae0ef3e811e64861",
+    "mtimeNs": 1792643698623413311
+  },
+  {
+    "path": "modules/core/src/test/resources/wire/spark-integrity-violation.json",
+    "sha256": "9192483e262a33daac3ac29ce456fbc6938968b0b9181c360429d6121ac0aabc",
+    "mtimeNs": 1792643698625570507
+  },
+  {
+    "path": "modules/core/src/test/resources/wire/spark-load-manifest.json",
+    "sha256": "7d345bf1d106ba200f117ad6b64aa96fda7b81f2230c7f337d92d66757c8b272",
+    "mtimeNs": 1792643698625621632
+  },
+  {
+    "path": "modules/core/src/test/resources/wire/spark-path-evidence.json",
+    "sha256": "3473e6d86938a08b97caa36949b88196a289fa905605790fd0de19fc803c3c19",
+    "mtimeNs": 1792643698623540060
+  },
+  {
+    "path": "modules/core/src/test/resources/wire/spark-path-length-estimate.json",
+    "sha256": "5b5ecb2ade9ebcf5bc8a36d64d0c20aaf429a42c2c769d334fdd8dcdd22b0677",
+    "mtimeNs": 1792643698623576393
+  },
+  {
+    "path": "modules/core/src/test/resources/wire/spark-researcher-bridge-metrics.json",
+    "sha256": "ce9b4f4aaf0f4db6068a090cdf675d2054283cc8a4d0ec77839d9919c0e614ed",
+    "mtimeNs": 1792643698623205937
+  },
+  {
+    "path": "modules/core/src/test/resources/wire/spark-researcher-metrics-detail.json",
+    "sha256": "509e80e3ee3b3eb6135f9cf1e5db302269ab23b1cb63a8bf25ef092073defb09",
+    "mtimeNs": 1792643698623097979
+  },
+  {
+    "path": "modules/core/src/test/resources/wire/spark-semantic-summary.json",
+    "sha256": "d25f19ad2cf63102adcdc1995e280296d9054a1698a23c51f2e29cc1455a62b9",
+    "mtimeNs": 1792643698625525674
+  },
+  {
+    "path": "modules/core/src/test/resources/wire/spark-temporal-change.json",
+    "sha256": "1fc1db9c933b2e1ef5113e34c5aba1d050a11ab2bb3dee18b42e7dcf8e5c410b",
+    "mtimeNs": 1792643698623614476
+  },
+  {
+    "path": "modules/core/src/test/scala/edu/uic/cs441/scholarchain/core/Phase4ContractSpec.scala",
+    "sha256": "16929d34552c127d6039c71a0d45b4688f9d5f38ba39ae72897060b2993b34f6",
+    "mtimeNs": 1792639957238531685
+  },
+  {
+    "path": "modules/core/src/test/scala/edu/uic/cs441/scholarchain/core/SparkAnalyticsContractSpec.scala",
+    "sha256": "2c970e02030aff6cf4f719006345093afb651068338d2dd9af6c2451fb12936e",
+    "mtimeNs": 1792692378214786585
+  },
+  {
+    "path": "modules/spark/README.md",
+    "sha256": "617b3af2b41e8b8100ed9b31ced5275ef22ae4829c780a2faa7cfc7341ef5f11",
+    "mtimeNs": 1792696482767795956
+  },
+  {
+    "path": "modules/spark/src/main/scala/edu/uic/cs441/scholarchain/spark/BoundedActions.scala",
+    "sha256": "fdbc6ffae9baf16f4ec0faca367bac061acd3ba8ab450f26954a57ef3c9869c5",
+    "mtimeNs": 1792644202728317663
+  },
+  {
+    "path": "modules/spark/src/main/scala/edu/uic/cs441/scholarchain/spark/Phase6CJobs.scala",
+    "sha256": "900399f647cc73be26340917d719914cc739b42be1133045a4b566eb9cf5ef0f",
+    "mtimeNs": 1792693843040148025
+  },
+  {
+    "path": "modules/spark/src/main/scala/edu/uic/cs441/scholarchain/spark/Phase6CMain.scala",
+    "sha256": "b11031ddeb6df2386f4e8586642e0c9d3c16afff2b4623108c348cadf15023f0",
+    "mtimeNs": 1792652985732879212
+  },
+  {
+    "path": "modules/spark/src/main/scala/edu/uic/cs441/scholarchain/spark/Phase6CReaders.scala",
+    "sha256": "3823c212fa656686bcdaeb4b5d5ee141dd279c9d8e889fbfc92ad5d4aec5accb",
+    "mtimeNs": 1792692682579336696
+  },
+  {
+    "path": "modules/spark/src/main/scala/edu/uic/cs441/scholarchain/spark/Phase6Context.scala",
+    "sha256": "083d23db025332a03bd5a110a858d4f6c19030d5ca268232c99cd6d7861b470c",
+    "mtimeNs": 1792693242513999132
+  },
+  {
+    "path": "modules/spark/src/main/scala/edu/uic/cs441/scholarchain/spark/Phase6DEJobs.scala",
+    "sha256": "590f67ebba12ce407d1d2d8f182a141c61848c6f9ef5e96d176fea065c4d4661",
+    "mtimeNs": 1792693782446586669
+  },
+  {
+    "path": "modules/spark/src/main/scala/edu/uic/cs441/scholarchain/spark/Phase6EventLog.scala",
+    "sha256": "97929df41e5a6cd8baa9ac5128cb25a5bd673a23fe51c17c536240116231968b",
+    "mtimeNs": 1792693242437345332
+  },
+  {
+    "path": "modules/spark/src/main/scala/edu/uic/cs441/scholarchain/spark/Phase6Export.scala",
+    "sha256": "b5f3aadc3a5687393422a1a8deb691c7a9e2b42e9d18537be39b4425d97b7f88",
+    "mtimeNs": 1792693242668630281
+  },
+  {
+    "path": "modules/spark/src/main/scala/edu/uic/cs441/scholarchain/spark/Phase6FGJobs.scala",
+    "sha256": "2245756162d8091db3fd87b852d1829502c1ab22188cf896cb3382c4f33955e1",
+    "mtimeNs": 1792693242573494526
+  },
+  {
+    "path": "modules/spark/src/main/scala/edu/uic/cs441/scholarchain/spark/Phase6Main.scala",
+    "sha256": "ee9f251f6c2a05847ca6148a4c70d27fff0ddf9ad0a860f6ed5d2a9c04d9d655",
+    "mtimeNs": 1792693843142823890
+  },
+  {
+    "path": "modules/spark/src/main/scala/edu/uic/cs441/scholarchain/spark/Phase6Plans.scala",
+    "sha256": "a3b414ed2d965373feffc6902c017ea272e2d38d3de42ce64cbd73c7c34b23ce",
+    "mtimeNs": 1792693242507271879
+  },
+  {
+    "path": "modules/spark/src/main/scala/edu/uic/cs441/scholarchain/spark/Phase6Report.scala",
+    "sha256": "809b1e02dae4406219b97399bc012142e072c6f3403680a951bbd239ecc45ddf",
+    "mtimeNs": 1792693242686761776
+  },
+  {
+    "path": "modules/spark/src/test/scala/edu/uic/cs441/scholarchain/spark/Phase6CJobsSpec.scala",
+    "sha256": "b612532f2e64a5fcf231710aca8c4e9ce35dddd14626fe0ec3f5c9fc507096a2",
+    "mtimeNs": 1792693843687716808
+  },
+  {
+    "path": "modules/spark/src/test/scala/edu/uic/cs441/scholarchain/spark/Phase6DEJobsSpec.scala",
+    "sha256": "f43490d6d00d48433121fd1648565af4320406fe701160e14b63fa6db5e0f10a",
+    "mtimeNs": 1792693843512772159
+  },
+  {
+    "path": "modules/spark/src/test/scala/edu/uic/cs441/scholarchain/spark/Phase6FGJobsSpec.scala",
+    "sha256": "05d2ba4b41079cfac99333a619460cdd7e03ba2fb82e5b88f1a886982102d3aa",
+    "mtimeNs": 1792693389952277160
+  },
+  {
+    "path": "modules/spark/src/test/scala/edu/uic/cs441/scholarchain/spark/SparkSmokeSpec.scala",
+    "sha256": "e07f19f9479a2104d35b0978d27a4d3ce38a801b2975b85a28c716950cc94796",
+    "mtimeNs": 1792634458214071611
+  },
+  {
+    "path": "project/Dependencies.scala",
+    "sha256": "d7f23e0961262e316cfcc1f25d2f2ae3a2475f2291fd8a854527ec22b29eea35",
+    "mtimeNs": 1792634565595404613
+  },
+  {
+    "path": "project/Java17Guard.scala",
+    "sha256": "7d808d3b32227ed90c3175fd090bb7f3383cc357aabd50e84dcf6bec22534fcc",
+    "mtimeNs": 1792634228424198082
+  },
+  {
+    "path": "project/ScholarChainBuild.scala",
+    "sha256": "20b5f1b81af7f0816cb1c0a97a7a176d9880777d2811e94bfc0da65c46979b31",
+    "mtimeNs": 1792636823969506762
+  },
+  {
+    "path": "project/SparkJobJar.scala",
+    "sha256": "457ca977461970f3e7e0ccb7720a537c9cf11cbc0a8db333991a7985db3e2ae1",
+    "mtimeNs": 1792636460617324034
+  },
+  {
+    "path": "project/Versions.scala",
+    "sha256": "b73850244e35ac633e90b06afea4336be13383b658a8fd91cc6f62309a786f03",
+    "mtimeNs": 1792634565625945315
+  },
+  {
+    "path": "project/spark-test-resources/log4j2-test.properties",
+    "sha256": "3abbdf06fbe5b539f0abface7526eb8a912acb8ff22d4a3e69a1a675fa4415f4",
+    "mtimeNs": 1792636824028061012
+  },
+  {
+    "path": "project/verification/src/test/scala/scholarchain/build/Java17GuardSpec.scala",
+    "sha256": "bfba5146d6314ab8b493c8a1fa26b957733cc8cebd0c4e089ff2143ffa4ce476",
+    "mtimeNs": 1792634253285678695
+  },
+  {
+    "path": "project/verification/src/test/scala/scholarchain/build/SparkJobJarSpec.scala",
+    "sha256": "221ba56b9abd23474e2a492b4fc9259668b35d4164c6568ef75e71ca7cfc1592",
+    "mtimeNs": 1792636460631410779
+  },
+  {
+    "path": "tests/src/test/resources/phase6/empty.jsonl",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "mtimeNs": 1792692705256761829
+  },
+  {
+    "path": "tests/src/test/resources/phase6/tiny-pipeline.xml",
+    "sha256": "2aa9e7fe734ebb17ec2c9e5e02b548ab1e48ab37d638fdc2cd99376873ada36b",
+    "mtimeNs": 1792692705256552328
+  },
+  {
+    "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentPhase6CGraphSpec.scala",
+    "sha256": "f8de5aa1d58170085a5c316ff9e1235d9f23e89e85627d718f02960a529a7e72",
+    "mtimeNs": 1792649065309145754
+  },
+  {
+    "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentPhase6DEGraphSpec.scala",
+    "sha256": "32f03f01d67d38dcb24fc58f315320becc2a7f75aa06ed872bed0b76e7d88833",
+    "mtimeNs": 1792688802181621698
+  },
+  {
+    "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentPhase6FGFixtures.scala",
+    "sha256": "9b90bc7e8c957edc16e37105c154f14cfb07caad302c6d81f69b79fb27756939",
+    "mtimeNs": 1792692864025488390
+  },
+  {
+    "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentPhase6FGSpec.scala",
+    "sha256": "5d902b7d354df5aabbfd2a5b536f74f9b6dacf4a7f78e925e5bcdbcaee1f6dc4",
+    "mtimeNs": 1792693843887516919
+  },
+  {
+    "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentPhase6G1.scala",
+    "sha256": "358f067d268e6a588d1f04583a1a6bfdf180fcefeeadf13e76138193515e931d",
+    "mtimeNs": 1792643991133162843
+  },
+  {
+    "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentPhase6PipelineSpec.scala",
+    "sha256": "b6983ae282939e76c79cd92c7795001a51604f5b39248a1a535c6973cac8530a",
+    "mtimeNs": 1792694151518375114
+  },
+  {
+    "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentPhase6SafetySpec.scala",
+    "sha256": "ca95bf9261bffc23cdf14352dc28b1b86c5a02c30cc0202fc61e0e623173756c",
+    "mtimeNs": 1792696567500756967
+  },
+  {
+    "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentSparkSessionSpec.scala",
+    "sha256": "2664809f532bc8a4591a968fa025ebf1d815d0c8519a433f5f7d6715cbe15e75",
+    "mtimeNs": 1792636501338875257
+  }
+]

@@ -1,0 +1,21 @@
+{
+  "url": "https://raw.githubusercontent.com/0x1DOCD00D/ScholarChain/main/README.md",
+  "browsableUrl": "https://github.com/0x1DOCD00D/ScholarChain/blob/main/README.md",
+  "retrievedAtUtc": "2026-10-22T19:54:56.703662+00:00",
+  "readmeSha256": "6a0eddaddbb91435198ec868699ca99aec22ae8ee5ff515b6f7b34f18e362695",
+  "bytes": 160436,
+  "sectionsRead": [
+    {
+      "heading": "Phase 6: build the temporal coauthorship graph and run Spark analytics",
+      "startLine": 1249,
+      "endLine": 1349
+    },
+    {
+      "heading": "Detailed Spark requirements",
+      "startLine": 2247,
+      "endLine": 2294
+    }
+  ],
+  "D08Line": 2772,
+  "note": "Read full Phase 6 and Detailed Spark sections, not a truncated fetch summary. Hash binds fetched README; no full course README copied into evidence. Current branch main may change later. Requirements mapped by 6I coordinator; not a course-acceptance verdict."
+}

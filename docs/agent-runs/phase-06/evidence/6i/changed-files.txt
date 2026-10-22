@@ -1,0 +1,30 @@
+git status --short
+ M docs/agent-runs/phase-06/owner-report.md
+ M docs/agent-runs/phase-06/prompt.md
+ M docs/agent-runs/phase-06/repairs.md
+ M docs/agent-runs/phase-06/review.md
+ M docs/agent-runs/phase-06/test-report.md
+?? docs/agent-runs/phase-06/evidence/6i/
+
+git diff --name-only d1afc7f6698965ddbe010621b277b10e655d25ff
+docs/agent-runs/phase-06/owner-report.md
+docs/agent-runs/phase-06/prompt.md
+docs/agent-runs/phase-06/repairs.md
+docs/agent-runs/phase-06/review.md
+docs/agent-runs/phase-06/test-report.md
+
+git ls-files --others --exclude-standard
+docs/agent-runs/phase-06/evidence/6i/changed-files.txt
+docs/agent-runs/phase-06/evidence/6i/commands.md
+docs/agent-runs/phase-06/evidence/6i/course-source.json
+docs/agent-runs/phase-06/evidence/6i/diff-check.txt
+docs/agent-runs/phase-06/evidence/6i/final-check.txt
+docs/agent-runs/phase-06/evidence/6i/final-gate-metadata.json
+docs/agent-runs/phase-06/evidence/6i/gate-execution.json
+docs/agent-runs/phase-06/evidence/6i/handoff.md
+docs/agent-runs/phase-06/evidence/6i/implementation-snapshot.json
+docs/agent-runs/phase-06/evidence/6i/preflight.json
+docs/agent-runs/phase-06/evidence/6i/preflight.md
+docs/agent-runs/phase-06/evidence/6i/retained-evidence-check.json
+docs/agent-runs/phase-06/evidence/6i/reviewer-prompt.md
+docs/agent-runs/phase-06/evidence/6i/whole-phase-files.txt

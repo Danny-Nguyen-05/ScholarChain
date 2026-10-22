@@ -1,0 +1,106 @@
+{
+  "startedAtUtc": "2026-10-22T19:52:50.183854+00:00",
+  "completedAtUtc": "2026-10-22T20:04:05.397751+00:00",
+  "exitCode": 0,
+  "command": "/usr/bin/time -p sbt -batch check",
+  "branch": "phase-6",
+  "base": "d1afc7f6698965ddbe010621b277b10e655d25ff",
+  "head": "d1afc7f6698965ddbe010621b277b10e655d25ff",
+  "phase6Baseline": "03493882399e9020e6892c9f97e0ec8919365215",
+  "planSha256": "6df6d856df6c4c6ee0a8f00125e78af1bce5e789666399ae48a9443aec955096",
+  "java": "17.0.20.1",
+  "sbt": "1.10.7",
+  "tests": {
+    "core": 144,
+    "hadoop": 64,
+    "entityResolution": 39,
+    "sparkAnalytics": 34,
+    "independentTests": 266,
+    "buildVerification": 7
+  },
+  "totalPassed": 554,
+  "totalFailed": 0,
+  "realSeconds": 675.13,
+  "sbtSeconds": 673,
+  "logBytes": 1359860,
+  "logSha256": "e2bf289d11f6f2e4ff8e714d3fc4b9b56b16ea7ed59007abd00d5fe73d9d7367",
+  "implementationFilesChecked": 68,
+  "implementationContentChanged": [],
+  "implementationMtimeChanged": [],
+  "priorApprovedSnapshotFiles": 27,
+  "priorApprovedSnapshotChanged": [],
+  "humanFiles": [
+    {
+      "path": "docs/agent-runs/phase-06/human-gate.md",
+      "exists": false,
+      "unchanged": true
+    },
+    {
+      "path": "docs/agent-runs/phase-06/commit.txt",
+      "exists": false,
+      "unchanged": true
+    },
+    {
+      "path": "docs/agent-runs/phase-06/accepted-commit.md",
+      "exists": false,
+      "unchanged": true
+    }
+  ],
+  "headUnchanged": true,
+  "planUnchanged": true,
+  "diffChecks": [
+    {
+      "command": "git diff --check",
+      "exitCode": 0
+    },
+    {
+      "command": "git diff --check 03493882399e9020e6892c9f97e0ec8919365215",
+      "exitCode": 2
+    },
+    {
+      "command": "git diff --check 03493882399e9020e6892c9f97e0ec8919365215 -- . :(exclude)docs/agent-runs/phase-06/evidence/**",
+      "exitCode": 0
+    }
+  ],
+  "wholePhaseWhitespaceNote": "Historical raw evidence logs contain trailing whitespace; preserved byte-for-byte. All cumulative non-evidence changes and current tracked diff pass. Full diagnostic retained in diff-check.txt. Initial metadata assembly assumed all cumulative checks would return0; that assertion was corrected without changing implementation, logs or rerunning the gate.",
+  "testMarkerMtimeUtc": "2026-10-22T20:04:05.270143+00:00",
+  "evidenceLines": [
+    {
+      "line": 177,
+      "text": "[info] Tests: succeeded 144, failed 0, canceled 0, ignored 0, pending 0"
+    },
+    {
+      "line": 919,
+      "text": "[info] Tests: succeeded 64, failed 0, canceled 0, ignored 0, pending 0"
+    },
+    {
+      "line": 969,
+      "text": "[info] Tests: succeeded 39, failed 0, canceled 0, ignored 0, pending 0"
+    },
+    {
+      "line": 2083,
+      "text": "[info] Tests: succeeded 34, failed 0, canceled 0, ignored 0, pending 0"
+    },
+    {
+      "line": 6246,
+      "text": "[info] Tests: succeeded 266, failed 0, canceled 0, ignored 0, pending 0"
+    },
+    {
+      "line": 6288,
+      "text": "[info] Tests: succeeded 7, failed 0, canceled 0, ignored 0, pending 0"
+    },
+    {
+      "line": 6291,
+      "text": "[success] Total time: 673 s (11:13), completed Oct 22, 2026, 3:04:05 PM"
+    },
+    {
+      "line": 6292,
+      "text": "real 675.13"
+    },
+    {
+      "line": 6296,
+      "text": "exit=0"
+    }
+  ],
+  "scope": "Fresh full Scala gate plus metadata/sidecar audits; no new real-data Spark run or complete real Parquet reread outside tests."
+}
