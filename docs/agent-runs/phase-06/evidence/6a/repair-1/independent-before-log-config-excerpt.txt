@@ -1,0 +1,13 @@
+[info] welcome to sbt 1.10.7 (Homebrew Java 17.0.20.1)
+[info] IndependentSparkSessionSpec:
+26/10/21 21:36:27 INFO SparkContext: Starting job: count at IndependentSparkSessionSpec.scala:16
+26/10/21 21:36:27 INFO DAGScheduler: Got job 0 (count at IndependentSparkSessionSpec.scala:16) with 1 output partitions
+26/10/21 21:36:27 INFO DAGScheduler: Final stage: ResultStage 0 (count at IndependentSparkSessionSpec.scala:16)
+26/10/21 21:36:27 INFO DAGScheduler: Submitting ResultStage 0 (MapPartitionsRDD[3] at count at IndependentSparkSessionSpec.scala:16), which has no missing parents
+26/10/21 21:36:27 INFO DAGScheduler: Submitting 1 missing tasks from ResultStage 0 (MapPartitionsRDD[3] at count at IndependentSparkSessionSpec.scala:16) (first 15 tasks are for partitions Vector(0))
+26/10/21 21:36:27 INFO DAGScheduler: ResultStage 0 (count at IndependentSparkSessionSpec.scala:16) finished in 0.303 s
+26/10/21 21:36:27 INFO DAGScheduler: Job 0 finished: count at IndependentSparkSessionSpec.scala:16, took 0.318209 s
+[info] Total number of tests run: 234
+[info] Tests: succeeded 234, failed 0, canceled 0, ignored 0, pending 0
+[info] All tests passed.
+[success] Total time: 224 s (03:44), completed Oct 21, 2026, 9:40:07 PM

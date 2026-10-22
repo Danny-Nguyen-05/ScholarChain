@@ -9,7 +9,7 @@ import java.security.MessageDigest
 import java.util.jar.{JarEntry, JarFile, JarOutputStream, Manifest}
 import scala.jdk.CollectionConverters._
 import sbt.io.IO
-import scholarchain.build.HadoopBundleMerge
+import scholarchain.build.{HadoopBundleMerge, SparkJobJar}
 
 object ScholarChainBuild {
   val markTestRun = taskKey[Unit]("Write .claude/.last-test-run after required checks succeed")
@@ -17,6 +17,7 @@ object ScholarChainBuild {
   val checkTask = taskKey[Unit]("Format check, compile, test, contract tests, markTestRun")
   val checkProbeInjectFailure =
     taskKey[Unit]("No-op unless -Dscholarchain.checkProbe.fail=true (check failure-path probe)")
+  val checkJava17 = taskKey[Unit]("Fail check unless the sbt JVM is Java 17")
   val dockerLocalImage = taskKey[Unit]("Build the local services container image")
   val hadoopLocalClasspath =
     taskKey[Unit]("Print hadoop Compile/fullClasspath (includes Provided hadoop-client)")
@@ -32,6 +33,75 @@ object ScholarChainBuild {
     taskKey[File](
       "Thin Hadoop JAR plus lib/<dependency bundle> for RunJar's driver classpath"
     )
+  val sparkJobJar =
+    taskKey[File]("EMR Spark job JAR with Spark classes, core and non-Spark runtime libraries")
+
+  val sparkTestJavaOptions: Seq[String] = Seq(
+    "-Xmx2g",
+    "-Dspark.ui.enabled=false",
+    "-Djava.net.preferIPv4Stack=true"
+  ) ++ Seq(
+    "java.base/java.lang",
+    "java.base/java.lang.invoke",
+    "java.base/java.lang.reflect",
+    "java.base/java.io",
+    "java.base/java.net",
+    "java.base/java.nio",
+    "java.base/java.util",
+    "java.base/java.util.concurrent",
+    "java.base/java.util.concurrent.atomic",
+    "java.base/jdk.internal.ref",
+    "java.base/sun.nio.ch",
+    "java.base/sun.nio.cs",
+    "java.base/sun.security.action",
+    "java.base/sun.util.calendar",
+    "java.security.jgss/sun.security.krb5"
+  ).map(module => s"--add-opens=$module=ALL-UNNAMED")
+
+  private val sparkMavenOrg = "org.apache.spark"
+
+  private def isRuntimeProvided(moduleId: ModuleID): Boolean =
+    Seq(hadoopMavenOrg, sparkMavenOrg, "ch.qos.logback").exists(org =>
+      moduleId.organization == org || moduleId.organization.startsWith(s"$org.")
+    )
+
+  private def isRuntimeProvidedJar(name: String): Boolean = {
+    val lower = name.toLowerCase(java.util.Locale.ROOT)
+    lower.startsWith("hadoop-") || lower.startsWith("spark-") || lower.startsWith("logback-")
+  }
+
+  def sparkJobJarSettings(coreProject: ProjectReference): Seq[Setting[_]] = Seq(
+    assemblyPackageDependency / assemblyJarName :=
+      s"spark-dependency-bundle_${scalaBinaryVersion.value}-${version.value}.jar",
+    assemblyPackageDependency / assemblyOutputPath :=
+      (assembly / target).value / (assemblyPackageDependency / assemblyJarName).value,
+    assemblyMergeStrategy := {
+      case PathList("META-INF", "MANIFEST.MF") => MergeStrategy.discard
+      case PathList("META-INF", "services", "org.slf4j.spi.SLF4JServiceProvider") =>
+        MergeStrategy.discard
+      case PathList("META-INF", "services", _*) => MergeStrategy.concat
+      case PathList("META-INF", _*)             => MergeStrategy.discard
+      case "module-info.class"                  => MergeStrategy.discard
+      case x if x.endsWith(".proto")            => MergeStrategy.first
+      case x                                    => MergeStrategy.first
+    },
+    assemblyPackageDependency / assemblyExcludedJars := {
+      (assembly / fullClasspath).value.filter { entry =>
+        entry.get(moduleID.key).exists(isRuntimeProvided) ||
+        isRuntimeProvidedJar(entry.data.getName)
+      }
+    },
+    sparkJobJar := {
+      val coreJar = (coreProject / Compile / packageBin).value
+      val sparkJar = (Compile / packageBin).value
+      val bundle = assemblyPackageDependency.value
+      val output =
+        (Compile / target).value / s"spark-job_${scalaBinaryVersion.value}-${version.value}.jar"
+      SparkJobJar.write(bundle, coreJar, sparkJar, output)
+      streams.value.log.info(s"Verified Spark job JAR: ${output.getAbsolutePath}")
+      output
+    }
+  )
 
   private val hadoopMavenOrg = "org.apache.hadoop"
   private val submitJarForbiddenLibMarkers = Vector(
@@ -334,4 +404,13 @@ object ScholarChainBuild {
 
   def moduleSettings(extra: Seq[ModuleID] = Nil): Seq[Setting[_]] =
     commonSettings ++ Seq(libraryDependencies ++= extra)
+
+  val sparkTestSettings: Seq[Setting[_]] = Seq(
+    libraryDependencies -= Dependencies.logbackClassic,
+    Test / fork := true,
+    Test / javaOptions ++= sparkTestJavaOptions,
+    Test / baseDirectory := (ThisBuild / baseDirectory).value,
+    Test / unmanagedResourceDirectories +=
+      (ThisBuild / baseDirectory).value / "project" / "spark-test-resources"
+  )
 }

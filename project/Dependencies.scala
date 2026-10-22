@@ -12,7 +12,13 @@ object Dependencies {
 
   val hadoopClientLib = "org.apache.hadoop" % "hadoop-client" % hadoopClient % Provided
 
-  // Excludes (Spark 2.13 artifacts vs Scala 3.3.4): org.scala-lang stdlib/reflection jars;
+  // SparkSession's compiled signatures refer to Scala 2.13 TypeTag even when using
+  // the Java-friendly DataFrame API. Keep reflection on the compile/test classpath.
+  val sparkScalaReflectLib =
+    "org.scala-lang" % "scala-reflect" % sparkScalaReflect % Provided
+
+  // Excludes Spark's transitive Scala stdlib/reflection versions in favor of the
+  // Scala 3 stdlib and the explicit matching scala-reflect dependency above;
   // org.scala-lang.modules:scala-xml_2.13 triggers sbt cross-version suffix conflicts with _3.
   val sparkSql =
     ("org.apache.spark" % s"spark-sql_$sparkScalaBinary" % spark % Provided)
