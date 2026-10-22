@@ -1,0 +1,11 @@
+{
+  "source": "SparkListener task and stage events; local Spark event file disabled",
+  "completedStages": 382,
+  "successfulTasks": 807,
+  "failedTasks": 0,
+  "executorRunTimeMs": 3569,
+  "shuffleReadBytes": 45745,
+  "shuffleWriteBytes": 45745,
+  "memorySpilledBytes": 0,
+  "diskSpilledBytes": 0
+}

@@ -1,0 +1,36 @@
+[info] welcome to sbt 1.10.7 (Homebrew Java 17.0.20.1)
+[info] loading settings for project scholarchain-build from plugins.sbt...
+[info] loading project definition from /Users/danny/Documents/UIC/CS441/ScholarChain/project
+[info] loading settings for project root from build.sbt...
+[info] set current project to root (in build file:/Users/danny/Documents/UIC/CS441/ScholarChain/)
+[info] compiling 1 Scala source to /Users/danny/Documents/UIC/CS441/ScholarChain/modules/spark/target/scala-3.3.4/test-classes ...
+[info] done compiling
+[info] Phase6CJobsSpec:
+26/10/21 23:53:21 WARN  Utils: Your hostname, Dannys-MacBook-Pro.local resolves to a loopback address: 127.0.0.1; using 10.0.0.113 instead (on interface en0)
+26/10/21 23:53:21 WARN  Utils: Set SPARK_LOCAL_IP if you need to bind to another address
+26/10/21 23:53:21 WARN  NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+26/10/21 23:53:23 WARN  CacheManager: Asked to cache already cached data.
+26/10/21 23:53:24 WARN  CacheManager: Asked to cache already cached data.
+[info] - module G1 has nine all-years edges, exact A-B weight and no duplicate source weight *** FAILED ***
+[info]   GraphNode: DomainViolation(MalformedInput,missing keys in dictionary: sourceUri, retrievalDate, licenseEvidenceUri at index 441) json={"nodeId":"mention:crossref:10.5555/module-g1-w1#1","schemaVersion":"scholarchain.domain.v1","nodeClass":"AUTHOR_MENTION","label":"A","properties":[],"provenance":{"schemaVersion":"scholarchain.domain.v1","source":"SCHOLARCHAIN","sourceRecordId":"mention:crossref:10.5555/module-g1-w1#1","datasetSnapshot":"spark-analytics","runId":"run:66666666-6666-4666-8666-666666666666","uncertaintyNotes":["derived from completed Hadoop and ER inputs"]}} (Phase6CJobsSpec.scala:279)
+26/10/21 23:53:30 WARN  SimpleFunctionRegistry: The function phase6dblpresearcherid replaced a previously registered function.
+26/10/21 23:53:30 WARN  SimpleFunctionRegistry: The function phase6edgeid replaced a previously registered function.
+26/10/21 23:53:30 WARN  SimpleFunctionRegistry: The function phase6context replaced a previously registered function.
+26/10/21 23:53:30 WARN  SimpleFunctionRegistry: The function phase6graphedgeid replaced a previously registered function.
+26/10/21 23:53:30 WARN  CacheManager: Asked to cache already cached data.
+26/10/21 23:53:31 WARN  CacheManager: Asked to cache already cached data.
+[info] - yearless and post-2026 DBLP works contribute only to all-years
+[info] - explicit JSON schema rejects a malformed line and a mismatched version
+[info] - completed output reuses matching logical identity and rejects mismatch or broken marker
+[info] Run completed in 15 seconds, 336 milliseconds.
+[info] Total number of tests run: 4
+[info] Suites: completed 1, aborted 0
+[info] Tests: succeeded 3, failed 1, canceled 0, ignored 0, pending 0
+[info] *** 1 TEST FAILED ***
+[error] Failed tests:
+[error] 	edu.uic.cs441.scholarchain.spark.Phase6CJobsSpec
+[error] (sparkAnalytics / Test / testOnly) sbt.TestsFailedException: Tests unsuccessful
+[error] Total time: 18 s, completed Oct 21, 2026, 11:53:36 PM
+real 20.01
+user 65.37
+sys 3.29

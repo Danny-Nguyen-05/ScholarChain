@@ -208,12 +208,13 @@ object SparkAnalyticsValidation {
           .sparkCoauthorEdgeId(
             value.researcherA,
             value.researcherB,
-            window,
+            SparkWindow(window, value.windowStartYear, value.windowEndYear, None),
             value.policyVersion
           )
           .toOption
       )
-      if (!expected.contains(value.edgeId)) errors += "edgeId does not match endpoints and window"
+      if (!expected.contains(value.edgeId))
+        errors += "edgeId does not match endpoints and window bounds"
       if (value.jointPublicationCount < 1) errors += "jointPublicationCount must be >= 1"
       if (
         value.firstCollaborationYear

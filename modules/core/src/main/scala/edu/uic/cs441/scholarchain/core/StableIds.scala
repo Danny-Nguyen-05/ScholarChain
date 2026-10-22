@@ -23,7 +23,9 @@ final case class ParsedMentionId(sourceWire: String, sourceRecordId: String, ord
   * disambiguation hypotheses.
   *
   * Coauthor edge ID: `coauthor-edge:{sha256}` of the canonical ordered researcher ids, window
-  * start, window end, and policy version.
+  * start, window end, and policy version. Spark coauthor edge ID: `spark-coauthor-edge:{sha256}` of
+  * canonical ordered researcher ids, configured window label, optional numeric start and end (empty
+  * for absent), and policy version.
   *
   * Chunk or profile ID: `chunk:{sha256}` or `profile:{sha256}` of entity id, source version,
   * document type, ordinal (empty when omitted), and the SHA-256 hex of the text.
@@ -38,8 +40,9 @@ final case class ParsedMentionId(sourceWire: String, sourceRecordId: String, ord
   * Graph edge ID: `graph-edge:{sha256}` of edge type, canonical endpoints, policy version, and
   * source-evidence pointer. `COAUTHORED_WITH` sorts endpoints; other types keep direction.
   *
-  * Run ID: `run:{uuid version 4}` from a caller-supplied UUID. The id does not contain a timestamp.
-  * Store it on an immutable [[RunManifest]].
+  * Run ID: `run:{uuid version 4}` from a caller-supplied UUID. Spark analytics can instead derive
+  * the v4-shaped UUID deterministically from immutable input evidence and logical settings. The id
+  * does not contain a timestamp. Store it on an immutable [[RunManifest]].
   *
   * Match candidate ID: `match-candidate:{sha256}` of the block key and the two observation order
   * keys, after canonical order. Each order key is source wire, source record id, dataset snapshot,
@@ -303,13 +306,14 @@ object StableIds {
       s"coauthor-edge:$hash"
     }
 
-  /** Phase 6 edge identity uses the configured window label, including unbounded all-years. This is
-    * additive; the frozen numeric-window coauthorEdgeId formula is unchanged.
+  /** Phase 6 edge identity binds the configured window label and both optional numeric bounds. An
+    * absent bound is the empty hash field, including unbounded all-years. This is additive; the
+    * frozen numeric-window coauthorEdgeId formula is unchanged.
     */
   def sparkCoauthorEdgeId(
       researcherA: String,
       researcherB: String,
-      windowId: String,
+      window: SparkWindow,
       policyVersion: String
   ): Either[DomainViolation, String] =
     for {
@@ -318,10 +322,26 @@ object StableIds {
       _ <- parseResearcherId(researcherB)
       ordered <- canonicalPair(researcherA, researcherB)
       _ <-
-        if (sparkWindowPattern.matches(windowId)) Right(())
-        else Left(malformed("windowId", windowId))
+        if (sparkWindowPattern.matches(window.windowId)) Right(())
+        else Left(malformed("windowId", window.windowId))
+      _ <-
+        if (window.startYear.forall(year => year >= 1 && year <= 9999)) Right(())
+        else Left(malformed("window start year", window.startYear.toString))
+      _ <-
+        if (window.endYear.forall(year => year >= 1 && year <= 9999)) Right(())
+        else Left(malformed("window end year", window.endYear.toString))
+      _ <-
+        if (window.startYear.zip(window.endYear).forall((start, end) => start <= end)) Right(())
+        else Left(malformed("window bounds", window.toString))
     } yield s"spark-coauthor-edge:${sha256Hex(
-        Seq(ordered._1, ordered._2, windowId, policyVersion).mkString("\n")
+        Seq(
+          ordered._1,
+          ordered._2,
+          window.windowId,
+          window.startYear.fold("")(_.toString),
+          window.endYear.fold("")(_.toString),
+          policyVersion
+        ).mkString("\n")
       )}"
 
   def parseSparkCoauthorEdgeId(value: String): Either[DomainViolation, String] =
@@ -498,6 +518,53 @@ object StableIds {
     val rendered = s"run:${uuid.toString.toLowerCase(java.util.Locale.ROOT)}"
     parseRunId(rendered)
   }
+
+  /** Deterministic Phase 6 run identity from immutable input evidence, logical config and code.
+    * SHA-256 supplies the first 128 bits; RFC 4122 version and variant bits are then set to v4
+    * shape so the existing run ID parser accepts the value. No clock, physical path or partition
+    * count is an input here.
+    */
+  def sparkAnalyticsRunId(
+      hadoopRunId: String,
+      hadoopManifestHash: String,
+      entityResolutionRunId: String,
+      entityResolutionManifestHash: String,
+      entityResolutionPolicyVersion: String,
+      entityResolutionPolicyHash: String,
+      logicalConfigFingerprint: String,
+      codeVersion: String
+  ): Either[DomainViolation, String] =
+    for {
+      _ <- parseRunId(hadoopRunId)
+      _ <- parseRunId(entityResolutionRunId)
+      _ <- requireSha256("Hadoop manifest hash", hadoopManifestHash)
+      _ <- requireSha256("entity-resolution manifest hash", entityResolutionManifestHash)
+      _ <- requirePolicy(entityResolutionPolicyVersion)
+      _ <- requireSha256("entity-resolution policy hash", entityResolutionPolicyHash)
+      _ <- requireSha256("logical config fingerprint", logicalConfigFingerprint)
+      _ <-
+        if (
+          codeVersion.nonEmpty && codeVersion == codeVersion.trim && !codeVersion.contains('\n') &&
+          !codeVersion.contains('\r')
+        ) Right(())
+        else Left(malformed("code version", codeVersion))
+    } yield {
+      val hash = sha256Hex(
+        Seq(
+          hadoopRunId,
+          hadoopManifestHash,
+          entityResolutionRunId,
+          entityResolutionManifestHash,
+          entityResolutionPolicyVersion,
+          entityResolutionPolicyHash,
+          logicalConfigFingerprint,
+          codeVersion
+        ).mkString("\n")
+      )
+      val variant = "89ab".charAt(Character.digit(hash.charAt(16), 16) & 3)
+      val uuid = hash.take(12) + "4" + hash.slice(13, 16) + variant + hash.slice(17, 32)
+      s"run:${uuid.slice(0, 8)}-${uuid.slice(8, 12)}-${uuid.slice(12, 16)}-${uuid.slice(16, 20)}-${uuid.slice(20, 32)}"
+    }
 
   def mentionId(source: SourceType, sourceRecordId: String, ordinal: Int): String =
     s"mention:${source.wire.toLowerCase(java.util.Locale.ROOT)}:$sourceRecordId#$ordinal"
@@ -893,6 +960,10 @@ object StableIds {
   private def requirePolicy(policyVersion: String): Either[DomainViolation, Unit] =
     if (policyPattern.matches(policyVersion)) Right(())
     else Left(malformed("policy version", policyVersion))
+
+  private def requireSha256(kind: String, hash: String): Either[DomainViolation, Unit] =
+    if (hex64.matches(hash)) Right(())
+    else Left(malformed(kind, hash))
 
   private def requireWindow(startYear: Int, endYear: Int): Either[DomainViolation, Unit] =
     if (startYear > endYear)

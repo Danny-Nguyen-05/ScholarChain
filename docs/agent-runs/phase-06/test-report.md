@@ -159,3 +159,91 @@ BLOCKED-ON OWNER: None for F1–F4 local test gates.
 BLOCKED-ON EVIDENCE: None for local gate; later producer/export/runtime behavior has not been tested in 6B.
 
 NEXT GATE: User-run read-only 6B repair-round recheck. Stop before 6C.
+
+## Subphase 6C — final local gate
+
+STATUS: COMPLETE; final JDK 17 gate passed on the stable 6C tree, external review pending.
+
+OWNER: Coordinator `/root` ran the final full check, local smoke and Spark module targeted checks. The domain, Spark and test owners ran their own targeted checks as described in `owner-report.md`.
+
+WORK ORDER: Verify Subphase 6C jobs 1–2, the F6/F7 core helpers, independent G1 cases, real completed Hadoop/ER input smoke, source rules and the full repository gate. Branch `phase-6`, base/current HEAD `01d204b531d3fc72a5c49f884980a5c7c8926b18`.
+
+FILES CREATED: Under `evidence/6c/`: `preflight.md`, `er-export.txt`, `independent-initial-failure.md`, `independent-targeted-final.txt`, `graph-wire-initial-failure.txt`, `module-targeted-compile-failure.txt`, `local-smoke-initial-classpath-failure.txt`, `local-smoke-checkpoint-failure.txt`, `publish-provenance-initial-failure.txt`, `interrupted-gate.md`, `module-targeted-final.txt`, `local-smoke-validated.txt`, `local-run-manifest.json`, `coauthored-with-plan.txt`, `input-rejects-plan.txt`, `event-log-summary.json`, and `final-check.txt`. The full final gate log is 247,609 bytes, SHA-256 `3e2fd5453af35cdf4b7e0f88c1ed4e3d273dd57325fe734cd7eb9e54538682c4`. Local input/output records are ignored under `target/`.
+
+FILES MODIFIED: This `test-report.md`; implementation and other evidence-report edits are itemized in `owner-report.md`.
+
+COMMANDS RUN: From the repository root, `JAVA_HOME` was `/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home`, `PATH` prepended `$JAVA_HOME/bin`, and `SBT_OPTS` was `-Dlogback.configurationFile=$PWD/docs/agent-runs/phase-04/xml-repair-logback.xml` for each sbt command. The preflight `java -version` exited 0 and printed Homebrew OpenJDK 17.0.20.1. Exact coordinator final commands were:
+
+```bash
+env JAVA_HOME=/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home PATH=/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home/bin:$PATH SBT_OPTS=-Dlogback.configurationFile=$PWD/docs/agent-runs/phase-04/xml-repair-logback.xml /usr/bin/time -p sbt -batch 'sparkAnalytics/Compile/scalafmt' 'sparkAnalytics/Test/scalafmt' 'sparkAnalytics/Compile/scalafmtCheck' 'sparkAnalytics/Test/scalafmtCheck' 'sparkAnalytics/testOnly *Phase6CJobsSpec' > /private/tmp/scholarchain-phase6c-publish-provenance-targeted-retry.txt 2>&1
+env JAVA_HOME=/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home PATH=/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home/bin:$PATH SBT_OPTS=-Dlogback.configurationFile=$PWD/docs/agent-runs/phase-04/xml-repair-logback.xml /usr/bin/time -p sbt -batch 'sparkAnalytics/Test/runMain edu.uic.cs441.scholarchain.spark.Phase6CMain target/phase6-inputs/6c-spark-config-provenance.json' > /private/tmp/scholarchain-phase6c-local-smoke-provenance.txt 2>&1
+env JAVA_HOME=/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home PATH=/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home/bin:$PATH SBT_OPTS=-Dlogback.configurationFile=$PWD/docs/agent-runs/phase-04/xml-repair-logback.xml /usr/bin/time -p sbt -batch check > /private/tmp/scholarchain-phase6c-final-check-provenance.txt 2>&1
+cp /private/tmp/scholarchain-phase6c-final-check-provenance.txt docs/agent-runs/phase-06/evidence/6c/final-check.txt
+git diff --check
+```
+
+All five final commands exited **0**. The coordinator also ran the existing Phase 5 offline resolver with `--llm-mode disabled` against the approved Hadoop root; its exact invocation and exit-0 output are in `evidence/6c/er-export.txt`. It produced a completed ER export with 18 comparisons, 3 accepted researcher links, 6 accepted work links and zero fake/live LLM calls. The domain owner reported `core/testOnly *SparkAnalyticsContractSpec` 13/13 and `core/test` 142/142, exit 0. The test owner reported `independentTests/testOnly *IndependentPhase6CGraphSpec` 4/4, exit 0, retained in `independent-targeted-final.txt`. The coordinator's final module log has 6/6, exit 0, real 21.54 s; final smoke log has exit 0, real 20.05 s.
+
+TEST RESULTS: In `final-check.txt`, core **142/142** (lines 163–165), Hadoop **64/64** (905–907), entity resolution **39/39** (955–957), Spark **7/7** (980–982), independent **238/238** (2148–2150), build verification **7/7** (2190–2192): **497 passed, zero failed**. `[success] Total time: 458 s` is line 2195 and `real 459.53` line 2196. The log header shows sbt 1.10.7 and Java 17.0.20.1. The build-verification injected failure and fake-S3 rename stack traces exercise expected failure paths; the full process exited 0.
+
+VALIDATION RESULTS: The module suite checks G1 weighted edges and counters; yearless/2027 all-years behavior; malformed JSON rejection, retained source path and published provenance; schema mismatch; Hadoop/ER frozen-wire reads; ER `prepCompletionHash` binding to the selected Hadoop run; and completed-output reuse/mismatch gates. Independent tests assert literal G1 results and adversarial cross-DBLP, cannot-link and enrichment-only cases. The final smoke used `target/phase4-runs/ccd26111-d26d-4783-bc0f-e7106e4e617d` and matching disabled-mode ER export. It produced the deterministic `run:50e1fc99-a22c-4993-9525-7772e6af1fac` in a fresh ignored output root: 6 weighted edges, 6 support rows, 0 integrity rows, 0 input rejects and 21 counters. The 12 formatted plans and a bounded SparkListener task/stage summary were written locally; representative plans, manifest and summary are retained under `evidence/6c/`. Source scan: only `BoundedActions` contains production `collect()` calls, each capped; no RDD, GraphX, GraphFrames, Spark implicits or typed case-class encoder use was found. Final `git diff --check` exited 0. All implementation source mtimes preceded the final gate.
+
+ASSUMPTIONS: The ER resolver's `prepCompletionHash` formula is SHA-256 of the exact Hadoop completion-marker text, a newline and the exact run-manifest text; the module positive/missing/mismatched tests and the real smoke validate the reader's implementation. The task summary is a local listener aggregate; the local Spark event file was disabled. Jobs 3–11 and cloud execution are outside 6C.
+
+RISKS: Earlier attempts are disclosed rather than counted as final passes. The independent owner's first targeted attempt aborted with Java heap OOM, then a second attempt was canceled amid memory warnings; the final targeted and full suites passed after fixture-session and lineage changes. An earlier graph-wire test omitted null fields in its JSON projection; a compile attempt used a wrong `Success` import; a refreshed smoke checkpointed before setting the Spark checkpoint directory; and a reject-source test found an empty path after caching. Each was fixed and the final gates passed. The first full gate passed 496/496 on a prior tree. A second full gate was canceled (exit 130) after the coordinator found missing top-level provenance on published rows; its partial output is not treated as a result. `sparkAnalytics/runMain` lacks Provided Spark classes, so the local smoke used `sparkAnalytics/Test/runMain`. A hard failure before publish still lacks final persisted integrity/counters, assigned to Job 11 in 6F. No EMR or live cloud check was run.
+
+MANUAL ACTION REQUIRED: User launches the separate independent 6C read-only review, then decides whether to approve and commit 6C. No agent committed or pushed.
+
+BLOCKED-ON OWNER: None for the 6C local gate. Domain F5/R1 hardening, Phase 7 mapping and the 6A packaging guard retain their later owners.
+
+BLOCKED-ON EVIDENCE: None for local jobs 1–2. Job 11 load manifests/content hashes, cloud compatibility and live runtime evidence remain later gates.
+
+NEXT GATE: Independent user-run 6C review. Stop before 6D.
+
+## Subphase 6C — repair round 1 final gate
+
+STATUS: COMPLETE for the requested blocking repairs; external read-only recheck pending.
+
+OWNER: Coordinator `/root` retained the final-tree independent, local smoke and full-gate results. Spark owner `/root/spark_6c_repair_finish` ran the final module suite after its v2 run-ID edit; test owner `/root/test_6c` ran the independent suite after its F1/F2 edits.
+
+WORK ORDER: Verify F1–F5 and recheck blockers R1-1/R1-2 on branch `phase-6`, base/current HEAD `01d204b531d3fc72a5c49f884980a5c7c8926b18`; do not commit or start 6D.
+
+FILES CREATED: `evidence/6c/repair-1/{production-compile,module-targeted,independent-targeted,independent-targeted-final,local-smoke,test-classpath,counter-inspect,counter-inspect-final,final-check}.txt`, `local-run-manifest.json`, `CounterInspect.java` and `inspect_counters.py`. The latter two are bounded local evidence tools. The smoke config `target/phase6-inputs/6c-spark-config-repair-1.json` and output root `target/phase6-runs/6c-repair-1/` are ignored local data.
+
+FILES MODIFIED: This `test-report.md` section and the implementation/report paths itemized in `owner-report.md`.
+
+COMMANDS RUN: From the repository root, every sbt command used JDK 17 `JAVA_HOME=/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home`, `PATH=$JAVA_HOME/bin:$PATH`, and `SBT_OPTS=-Dlogback.configurationFile=$PWD/docs/agent-runs/phase-04/xml-repair-logback.xml`. The coordinator's exact final-tree commands were:
+
+```bash
+env JAVA_HOME=/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home PATH=/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home/bin:$PATH SBT_OPTS=-Dlogback.configurationFile=$PWD/docs/agent-runs/phase-04/xml-repair-logback.xml /usr/bin/time -p sbt -batch 'independentTests/testOnly *IndependentPhase6CGraphSpec' > docs/agent-runs/phase-06/evidence/6c/repair-1/independent-targeted-final.txt 2>&1
+env JAVA_HOME=/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home PATH=/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home/bin:$PATH SBT_OPTS=-Dlogback.configurationFile=$PWD/docs/agent-runs/phase-04/xml-repair-logback.xml /usr/bin/time -p sbt -batch 'sparkAnalytics/Test/runMain edu.uic.cs441.scholarchain.spark.Phase6CMain target/phase6-inputs/6c-spark-config-repair-1.json' > docs/agent-runs/phase-06/evidence/6c/repair-1/local-smoke.txt 2>&1
+env JAVA_HOME=/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home PATH=/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home/bin:$PATH SBT_OPTS=-Dlogback.configurationFile=$PWD/docs/agent-runs/phase-04/xml-repair-logback.xml sbt -batch 'export sparkAnalytics/Test/fullClasspath' > docs/agent-runs/phase-06/evidence/6c/repair-1/test-classpath.txt 2>&1
+python3 -I docs/agent-runs/phase-06/evidence/6c/repair-1/inspect_counters.py target/phase6-runs/6c-repair-1/run:d56e56d9-de03-4862-bc66-46fd5ad27b75/counters > docs/agent-runs/phase-06/evidence/6c/repair-1/counter-inspect-final.txt 2>&1
+env JAVA_HOME=/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home PATH=/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home/bin:$PATH SBT_OPTS=-Dlogback.configurationFile=$PWD/docs/agent-runs/phase-04/xml-repair-logback.xml /usr/bin/time -p sbt -batch check > docs/agent-runs/phase-06/evidence/6c/repair-1/final-check.txt 2>&1
+cp target/phase6-runs/6c-repair-1/run:d56e56d9-de03-4862-bc66-46fd5ad27b75/run-manifest.json docs/agent-runs/phase-06/evidence/6c/repair-1/local-run-manifest.json
+git diff --check
+```
+
+All these final commands exited **0**. Spark owner ran `sbt -batch 'sparkAnalytics/Compile/scalafmt' 'sparkAnalytics/Test/scalafmt' 'sparkAnalytics/Compile/scalafmtCheck' 'sparkAnalytics/Test/scalafmtCheck' 'sparkAnalytics/testOnly *Phase6CJobsSpec'` (exit 0, 14/14) and `git diff --check -- modules/spark` (exit 0); its output is retained in `module-targeted.txt`. The test owner ran JDK 17 independent formatting/check (exit 0) and `independentTests/testOnly *IndependentPhase6CGraphSpec` (exit 0, 6/6), retained in `independent-targeted.txt`. The coordinator's early `sparkAnalytics/compile` ran on an intermediate tree and exited 0, retained in `production-compile.txt`; it is not counted as the final-tree gate.
+
+INTERMEDIATE FAILURES: Initial sandboxed sbt attempts could not open `/Users/danny/.sbt/boot/sbt.boot.lock`; approved existing-cache retries passed. The first direct Java counter probe could not bind Spark's local socket inside the sandbox. The approved local retry and the final replayable `inspect_counters.py` command both exited 0. These are environment denials, not passing tests, and the earlier partial outputs are retained in `production-compile.txt` and `counter-inspect.txt` as applicable.
+
+TEST RESULTS: `module-targeted.txt` shows **14/14**, `independent-targeted-final.txt` **6/6**, both zero failures. The full `final-check.txt` shows core **142/142** (lines 163–165), Hadoop **64/64** (905–907), entity resolution **39/39** (955–957), Spark **15/15** (1036–1038), independent **240/240** (2210–2212) and build verification **7/7** (2252–2254): **507 passed, zero failed**. The log begins with sbt 1.10.7 on Homebrew Java 17.0.20.1, records `[success] Total time: 512 s` at line 2257 and `real 513.92` at line 2258. It is **253,775 bytes**, SHA-256 `6c0fdf7494269c2ccb71a8cdbee35cb36b4c574b4d3d34928e2e37352c5a7773`. The build-verification failure trace is an injected expected self-test; the full process exited 0.
+
+VALIDATION RESULTS: `local-smoke.txt` shows completed local jobs 1–2 with `run:d56e56d9-de03-4862-bc66-46fd5ad27b75`, six coauthored edges, six support rows, zero integrity rows, zero rejects and 28 counters; exit 0, real 21.26. The prior retained smoke used `run:50e1fc99-a22c-4993-9525-7772e6af1fac`. `local-run-manifest.json` records `codeVersion=spark-phase6c-jobs1-2-v2`. `counter-inspect-final.txt` reads the **published Parquet** and asserts `erResearcherUnresolved=6`, `erResearcherConflicts=0`, `erWorkUnresolved=0`, `erWorkConflicts=3` and `missingGraphEndpoints=0`; the probe exited 0. This verifies the real ER `load()` wiring as well as the module's schema fixture. The Spark module test also rejects a v1 completed-output manifest. All Spark and independent implementation source files were last edited before the full gate started. `git diff --check` exited 0.
+
+ASSUMPTIONS: The previously approved `ccd26111…` Hadoop run and matching disabled-mode offline ER export remained unchanged for the fresh smoke. The probe reads 28 bounded counter rows and does not alter output. The full log is the final gate for the v2 repair tree.
+
+RISKS: Only blocking findings were requested. R1-3, R1-4 and R1-5 and the original N observations are not claimed closed. A hard invariant that aborts before publication still needs persisted failure evidence in 6F; no AWS or EMR runtime was run.
+
+MANUAL ACTION REQUIRED: User launches a read-only independent recheck, then decides whether to approve/commit this uncommitted 6C tree.
+
+BLOCKED-ON OWNER: None for the requested local blockers.
+
+BLOCKED-ON EVIDENCE: None for F1–F5 or R1-1/R1-2 local gates.
+
+NEXT GATE: Independent 6C repair-round recheck. Stop before 6D.
+
+### External recheck disposition
+
+The user-supplied external reviewer **APPROVED** the 6C repair round and independently checked the retained log timing, byte count and SHA-256, per-module 507/507 counts, smoke run ID, ER counter evidence, published manifest and completion marker. Its report is retained in `review.md`. These checks are reviewer-reported read-only validation, not a new test run by the coordinator. The next gate is the user's commit of the approved 6C tree before 6D Step 0.

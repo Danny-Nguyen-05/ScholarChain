@@ -1,0 +1,147 @@
+== Physical Plan ==
+Union (29)
+:- * Project (2)
+:  +- * Scan ExistingRDD (1)
+:- * Project (4)
+:  +- * Scan ExistingRDD (3)
+:- * Project (6)
+:  +- * Scan ExistingRDD (5)
+:- * Project (8)
+:  +- * Scan ExistingRDD (7)
+:- * Project (10)
+:  +- * Scan ExistingRDD (9)
+:- * Project (12)
+:  +- * Scan ExistingRDD (11)
+:- * Project (14)
+:  +- * Scan ExistingRDD (13)
+:- * Project (16)
+:  +- * Scan ExistingRDD (15)
+:- * Project (18)
+:  +- * Scan ExistingRDD (17)
+:- * Project (20)
+:  +- * Scan ExistingRDD (19)
+:- * Project (22)
+:  +- * Scan ExistingRDD (21)
+:- * Project (24)
+:  +- * Scan ExistingRDD (23)
+:- * Project (26)
+:  +- * Scan ExistingRDD (25)
++- * Project (28)
+   +- * Scan ExistingRDD (27)
+
+
+(1) Scan ExistingRDD [codegen id : 1]
+Output [4]: [sourceKind#160, sourcePath#161, rawLine#162, reason#163]
+Arguments: [sourceKind#160, sourcePath#161, rawLine#162, reason#163], MapPartitionsRDD[9] at checkpoint at Phase6CReaders.scala:347, ExistingRDD, UnknownPartitioning(0)
+
+(2) Project [codegen id : 1]
+Output [11]: [sourceKind#160, sourcePath#161, rawLine#162, reason#163, run:50e1fc99-a22c-4993-9525-7772e6af1fac AS runId#47785, scholarchain.spark-analytics.v1 AS schemaVersion#47791, run:ccd26111-d26d-4783-bc0f-e7106e4e617d AS hadoopRunId#47798, crossref-rest-2026-10-05,dblp-2026-10-03,openalex-rest-2026-10-05,orcid-public-api-2026-10-05 AS hadoopSnapshot#47806, run:6af4d9dd-26af-4c46-ae45-397dbc82235f AS entityResolutionRunId#47815, er-offline-uncalibrated-v2 AS entityResolutionPolicyVersion#47825, ad8c520fd8ff2e3697e15b2895852ca23e04c8d93f677acea3b366fcc101ef9f AS entityResolutionPolicyHash#47836]
+Input [4]: [sourceKind#160, sourcePath#161, rawLine#162, reason#163]
+
+(3) Scan ExistingRDD [codegen id : 2]
+Output [4]: [sourceKind#3384, sourcePath#3385, rawLine#3386, reason#3387]
+Arguments: [sourceKind#3384, sourcePath#3385, rawLine#3386, reason#3387], MapPartitionsRDD[60] at checkpoint at Phase6CReaders.scala:347, ExistingRDD, UnknownPartitioning(0)
+
+(4) Project [codegen id : 2]
+Output [11]: [sourceKind#3384, sourcePath#3385, rawLine#3386, reason#3387, run:50e1fc99-a22c-4993-9525-7772e6af1fac AS runId#48305, scholarchain.spark-analytics.v1 AS schemaVersion#48318, run:ccd26111-d26d-4783-bc0f-e7106e4e617d AS hadoopRunId#48319, crossref-rest-2026-10-05,dblp-2026-10-03,openalex-rest-2026-10-05,orcid-public-api-2026-10-05 AS hadoopSnapshot#48320, run:6af4d9dd-26af-4c46-ae45-397dbc82235f AS entityResolutionRunId#48321, er-offline-uncalibrated-v2 AS entityResolutionPolicyVersion#48322, ad8c520fd8ff2e3697e15b2895852ca23e04c8d93f677acea3b366fcc101ef9f AS entityResolutionPolicyHash#48323]
+Input [4]: [sourceKind#3384, sourcePath#3385, rawLine#3386, reason#3387]
+
+(5) Scan ExistingRDD [codegen id : 3]
+Output [4]: [sourceKind#6178, sourcePath#6179, rawLine#6180, reason#6181]
+Arguments: [sourceKind#6178, sourcePath#6179, rawLine#6180, reason#6181], MapPartitionsRDD[119] at checkpoint at Phase6CReaders.scala:347, ExistingRDD, UnknownPartitioning(0)
+
+(6) Project [codegen id : 3]
+Output [11]: [sourceKind#6178, sourcePath#6179, rawLine#6180, reason#6181, run:50e1fc99-a22c-4993-9525-7772e6af1fac AS runId#48306, scholarchain.spark-analytics.v1 AS schemaVersion#48324, run:ccd26111-d26d-4783-bc0f-e7106e4e617d AS hadoopRunId#48325, crossref-rest-2026-10-05,dblp-2026-10-03,openalex-rest-2026-10-05,orcid-public-api-2026-10-05 AS hadoopSnapshot#48326, run:6af4d9dd-26af-4c46-ae45-397dbc82235f AS entityResolutionRunId#48327, er-offline-uncalibrated-v2 AS entityResolutionPolicyVersion#48328, ad8c520fd8ff2e3697e15b2895852ca23e04c8d93f677acea3b366fcc101ef9f AS entityResolutionPolicyHash#48329]
+Input [4]: [sourceKind#6178, sourcePath#6179, rawLine#6180, reason#6181]
+
+(7) Scan ExistingRDD [codegen id : 4]
+Output [4]: [sourceKind#7339, sourcePath#7340, rawLine#7341, reason#7342]
+Arguments: [sourceKind#7339, sourcePath#7340, rawLine#7341, reason#7342], MapPartitionsRDD[162] at checkpoint at Phase6CReaders.scala:347, ExistingRDD, UnknownPartitioning(0)
+
+(8) Project [codegen id : 4]
+Output [11]: [sourceKind#7339, sourcePath#7340, rawLine#7341, reason#7342, run:50e1fc99-a22c-4993-9525-7772e6af1fac AS runId#48307, scholarchain.spark-analytics.v1 AS schemaVersion#48330, run:ccd26111-d26d-4783-bc0f-e7106e4e617d AS hadoopRunId#48331, crossref-rest-2026-10-05,dblp-2026-10-03,openalex-rest-2026-10-05,orcid-public-api-2026-10-05 AS hadoopSnapshot#48332, run:6af4d9dd-26af-4c46-ae45-397dbc82235f AS entityResolutionRunId#48333, er-offline-uncalibrated-v2 AS entityResolutionPolicyVersion#48334, ad8c520fd8ff2e3697e15b2895852ca23e04c8d93f677acea3b366fcc101ef9f AS entityResolutionPolicyHash#48335]
+Input [4]: [sourceKind#7339, sourcePath#7340, rawLine#7341, reason#7342]
+
+(9) Scan ExistingRDD [codegen id : 5]
+Output [4]: [sourceKind#9449, sourcePath#9450, rawLine#9451, reason#9452]
+Arguments: [sourceKind#9449, sourcePath#9450, rawLine#9451, reason#9452], MapPartitionsRDD[213] at checkpoint at Phase6CReaders.scala:347, ExistingRDD, UnknownPartitioning(0)
+
+(10) Project [codegen id : 5]
+Output [11]: [sourceKind#9449, sourcePath#9450, rawLine#9451, reason#9452, run:50e1fc99-a22c-4993-9525-7772e6af1fac AS runId#48308, scholarchain.spark-analytics.v1 AS schemaVersion#48336, run:ccd26111-d26d-4783-bc0f-e7106e4e617d AS hadoopRunId#48337, crossref-rest-2026-10-05,dblp-2026-10-03,openalex-rest-2026-10-05,orcid-public-api-2026-10-05 AS hadoopSnapshot#48338, run:6af4d9dd-26af-4c46-ae45-397dbc82235f AS entityResolutionRunId#48339, er-offline-uncalibrated-v2 AS entityResolutionPolicyVersion#48340, ad8c520fd8ff2e3697e15b2895852ca23e04c8d93f677acea3b366fcc101ef9f AS entityResolutionPolicyHash#48341]
+Input [4]: [sourceKind#9449, sourcePath#9450, rawLine#9451, reason#9452]
+
+(11) Scan ExistingRDD [codegen id : 6]
+Output [4]: [sourceKind#10455, sourcePath#10456, rawLine#10457, reason#10458]
+Arguments: [sourceKind#10455, sourcePath#10456, rawLine#10457, reason#10458], MapPartitionsRDD[248] at checkpoint at Phase6CReaders.scala:347, ExistingRDD, UnknownPartitioning(0)
+
+(12) Project [codegen id : 6]
+Output [11]: [sourceKind#10455, sourcePath#10456, rawLine#10457, reason#10458, run:50e1fc99-a22c-4993-9525-7772e6af1fac AS runId#48309, scholarchain.spark-analytics.v1 AS schemaVersion#48342, run:ccd26111-d26d-4783-bc0f-e7106e4e617d AS hadoopRunId#48343, crossref-rest-2026-10-05,dblp-2026-10-03,openalex-rest-2026-10-05,orcid-public-api-2026-10-05 AS hadoopSnapshot#48344, run:6af4d9dd-26af-4c46-ae45-397dbc82235f AS entityResolutionRunId#48345, er-offline-uncalibrated-v2 AS entityResolutionPolicyVersion#48346, ad8c520fd8ff2e3697e15b2895852ca23e04c8d93f677acea3b366fcc101ef9f AS entityResolutionPolicyHash#48347]
+Input [4]: [sourceKind#10455, sourcePath#10456, rawLine#10457, reason#10458]
+
+(13) Scan ExistingRDD [codegen id : 7]
+Output [4]: [sourceKind#11553, sourcePath#11554, rawLine#11555, reason#11556]
+Arguments: [sourceKind#11553, sourcePath#11554, rawLine#11555, reason#11556], MapPartitionsRDD[283] at checkpoint at Phase6CReaders.scala:347, ExistingRDD, UnknownPartitioning(0)
+
+(14) Project [codegen id : 7]
+Output [11]: [sourceKind#11553, sourcePath#11554, rawLine#11555, reason#11556, run:50e1fc99-a22c-4993-9525-7772e6af1fac AS runId#48310, scholarchain.spark-analytics.v1 AS schemaVersion#48348, run:ccd26111-d26d-4783-bc0f-e7106e4e617d AS hadoopRunId#48349, crossref-rest-2026-10-05,dblp-2026-10-03,openalex-rest-2026-10-05,orcid-public-api-2026-10-05 AS hadoopSnapshot#48350, run:6af4d9dd-26af-4c46-ae45-397dbc82235f AS entityResolutionRunId#48351, er-offline-uncalibrated-v2 AS entityResolutionPolicyVersion#48352, ad8c520fd8ff2e3697e15b2895852ca23e04c8d93f677acea3b366fcc101ef9f AS entityResolutionPolicyHash#48353]
+Input [4]: [sourceKind#11553, sourcePath#11554, rawLine#11555, reason#11556]
+
+(15) Scan ExistingRDD [codegen id : 8]
+Output [4]: [sourceKind#12607, sourcePath#12608, rawLine#12609, reason#12610]
+Arguments: [sourceKind#12607, sourcePath#12608, rawLine#12609, reason#12610], MapPartitionsRDD[318] at checkpoint at Phase6CReaders.scala:347, ExistingRDD, UnknownPartitioning(0)
+
+(16) Project [codegen id : 8]
+Output [11]: [sourceKind#12607, sourcePath#12608, rawLine#12609, reason#12610, run:50e1fc99-a22c-4993-9525-7772e6af1fac AS runId#48311, scholarchain.spark-analytics.v1 AS schemaVersion#48354, run:ccd26111-d26d-4783-bc0f-e7106e4e617d AS hadoopRunId#48355, crossref-rest-2026-10-05,dblp-2026-10-03,openalex-rest-2026-10-05,orcid-public-api-2026-10-05 AS hadoopSnapshot#48356, run:6af4d9dd-26af-4c46-ae45-397dbc82235f AS entityResolutionRunId#48357, er-offline-uncalibrated-v2 AS entityResolutionPolicyVersion#48358, ad8c520fd8ff2e3697e15b2895852ca23e04c8d93f677acea3b366fcc101ef9f AS entityResolutionPolicyHash#48359]
+Input [4]: [sourceKind#12607, sourcePath#12608, rawLine#12609, reason#12610]
+
+(17) Scan ExistingRDD [codegen id : 9]
+Output [4]: [sourceKind#14739, sourcePath#14740, rawLine#14741, reason#14742]
+Arguments: [sourceKind#14739, sourcePath#14740, rawLine#14741, reason#14742], MapPartitionsRDD[361] at checkpoint at Phase6CReaders.scala:347, ExistingRDD, UnknownPartitioning(0)
+
+(18) Project [codegen id : 9]
+Output [11]: [sourceKind#14739, sourcePath#14740, rawLine#14741, reason#14742, run:50e1fc99-a22c-4993-9525-7772e6af1fac AS runId#48312, scholarchain.spark-analytics.v1 AS schemaVersion#48360, run:ccd26111-d26d-4783-bc0f-e7106e4e617d AS hadoopRunId#48361, crossref-rest-2026-10-05,dblp-2026-10-03,openalex-rest-2026-10-05,orcid-public-api-2026-10-05 AS hadoopSnapshot#48362, run:6af4d9dd-26af-4c46-ae45-397dbc82235f AS entityResolutionRunId#48363, er-offline-uncalibrated-v2 AS entityResolutionPolicyVersion#48364, ad8c520fd8ff2e3697e15b2895852ca23e04c8d93f677acea3b366fcc101ef9f AS entityResolutionPolicyHash#48365]
+Input [4]: [sourceKind#14739, sourcePath#14740, rawLine#14741, reason#14742]
+
+(19) Scan ExistingRDD [codegen id : 10]
+Output [4]: [sourceKind#16022, sourcePath#16023, rawLine#16024, reason#16025]
+Arguments: [sourceKind#16022, sourcePath#16023, rawLine#16024, reason#16025], MapPartitionsRDD[404] at checkpoint at Phase6CReaders.scala:347, ExistingRDD, UnknownPartitioning(0)
+
+(20) Project [codegen id : 10]
+Output [11]: [sourceKind#16022, sourcePath#16023, rawLine#16024, reason#16025, run:50e1fc99-a22c-4993-9525-7772e6af1fac AS runId#48313, scholarchain.spark-analytics.v1 AS schemaVersion#48366, run:ccd26111-d26d-4783-bc0f-e7106e4e617d AS hadoopRunId#48367, crossref-rest-2026-10-05,dblp-2026-10-03,openalex-rest-2026-10-05,orcid-public-api-2026-10-05 AS hadoopSnapshot#48368, run:6af4d9dd-26af-4c46-ae45-397dbc82235f AS entityResolutionRunId#48369, er-offline-uncalibrated-v2 AS entityResolutionPolicyVersion#48370, ad8c520fd8ff2e3697e15b2895852ca23e04c8d93f677acea3b366fcc101ef9f AS entityResolutionPolicyHash#48371]
+Input [4]: [sourceKind#16022, sourcePath#16023, rawLine#16024, reason#16025]
+
+(21) Scan ExistingRDD [codegen id : 11]
+Output [4]: [sourceKind#17318, sourcePath#17319, rawLine#17320, reason#17321]
+Arguments: [sourceKind#17318, sourcePath#17319, rawLine#17320, reason#17321], MapPartitionsRDD[439] at checkpoint at Phase6CReaders.scala:347, ExistingRDD, UnknownPartitioning(0)
+
+(22) Project [codegen id : 11]
+Output [11]: [sourceKind#17318, sourcePath#17319, rawLine#17320, reason#17321, run:50e1fc99-a22c-4993-9525-7772e6af1fac AS runId#48314, scholarchain.spark-analytics.v1 AS schemaVersion#48372, run:ccd26111-d26d-4783-bc0f-e7106e4e617d AS hadoopRunId#48373, crossref-rest-2026-10-05,dblp-2026-10-03,openalex-rest-2026-10-05,orcid-public-api-2026-10-05 AS hadoopSnapshot#48374, run:6af4d9dd-26af-4c46-ae45-397dbc82235f AS entityResolutionRunId#48375, er-offline-uncalibrated-v2 AS entityResolutionPolicyVersion#48376, ad8c520fd8ff2e3697e15b2895852ca23e04c8d93f677acea3b366fcc101ef9f AS entityResolutionPolicyHash#48377]
+Input [4]: [sourceKind#17318, sourcePath#17319, rawLine#17320, reason#17321]
+
+(23) Scan ExistingRDD [codegen id : 12]
+Output [4]: [sourceKind#18792, sourcePath#18793, rawLine#18794, reason#18795]
+Arguments: [sourceKind#18792, sourcePath#18793, rawLine#18794, reason#18795], MapPartitionsRDD[490] at checkpoint at Phase6CReaders.scala:347, ExistingRDD, UnknownPartitioning(0)
+
+(24) Project [codegen id : 12]
+Output [11]: [sourceKind#18792, sourcePath#18793, rawLine#18794, reason#18795, run:50e1fc99-a22c-4993-9525-7772e6af1fac AS runId#48315, scholarchain.spark-analytics.v1 AS schemaVersion#48378, run:ccd26111-d26d-4783-bc0f-e7106e4e617d AS hadoopRunId#48379, crossref-rest-2026-10-05,dblp-2026-10-03,openalex-rest-2026-10-05,orcid-public-api-2026-10-05 AS hadoopSnapshot#48380, run:6af4d9dd-26af-4c46-ae45-397dbc82235f AS entityResolutionRunId#48381, er-offline-uncalibrated-v2 AS entityResolutionPolicyVersion#48382, ad8c520fd8ff2e3697e15b2895852ca23e04c8d93f677acea3b366fcc101ef9f AS entityResolutionPolicyHash#48383]
+Input [4]: [sourceKind#18792, sourcePath#18793, rawLine#18794, reason#18795]
+
+(25) Scan ExistingRDD [codegen id : 13]
+Output [4]: [sourceKind#20266, sourcePath#20267, rawLine#20268, reason#20269]
+Arguments: [sourceKind#20266, sourcePath#20267, rawLine#20268, reason#20269], MapPartitionsRDD[541] at checkpoint at Phase6CReaders.scala:347, ExistingRDD, UnknownPartitioning(0)
+
+(26) Project [codegen id : 13]
+Output [11]: [sourceKind#20266, sourcePath#20267, rawLine#20268, reason#20269, run:50e1fc99-a22c-4993-9525-7772e6af1fac AS runId#48316, scholarchain.spark-analytics.v1 AS schemaVersion#48384, run:ccd26111-d26d-4783-bc0f-e7106e4e617d AS hadoopRunId#48385, crossref-rest-2026-10-05,dblp-2026-10-03,openalex-rest-2026-10-05,orcid-public-api-2026-10-05 AS hadoopSnapshot#48386, run:6af4d9dd-26af-4c46-ae45-397dbc82235f AS entityResolutionRunId#48387, er-offline-uncalibrated-v2 AS entityResolutionPolicyVersion#48388, ad8c520fd8ff2e3697e15b2895852ca23e04c8d93f677acea3b366fcc101ef9f AS entityResolutionPolicyHash#48389]
+Input [4]: [sourceKind#20266, sourcePath#20267, rawLine#20268, reason#20269]
+
+(27) Scan ExistingRDD [codegen id : 14]
+Output [4]: [sourceKind#21521, sourcePath#21522, rawLine#21523, reason#21524]
+Arguments: [sourceKind#21521, sourcePath#21522, rawLine#21523, reason#21524], MapPartitionsRDD[584] at checkpoint at Phase6CReaders.scala:347, ExistingRDD, UnknownPartitioning(0)
+
+(28) Project [codegen id : 14]
+Output [11]: [sourceKind#21521, sourcePath#21522, rawLine#21523, reason#21524, run:50e1fc99-a22c-4993-9525-7772e6af1fac AS runId#48317, scholarchain.spark-analytics.v1 AS schemaVersion#48390, run:ccd26111-d26d-4783-bc0f-e7106e4e617d AS hadoopRunId#48391, crossref-rest-2026-10-05,dblp-2026-10-03,openalex-rest-2026-10-05,orcid-public-api-2026-10-05 AS hadoopSnapshot#48392, run:6af4d9dd-26af-4c46-ae45-397dbc82235f AS entityResolutionRunId#48393, er-offline-uncalibrated-v2 AS entityResolutionPolicyVersion#48394, ad8c520fd8ff2e3697e15b2895852ca23e04c8d93f677acea3b366fcc101ef9f AS entityResolutionPolicyHash#48395]
+Input [4]: [sourceKind#21521, sourcePath#21522, rawLine#21523, reason#21524]
+
+(29) Union
+
+

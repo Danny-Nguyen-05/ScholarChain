@@ -485,3 +485,282 @@ MANUAL ACTION REQUIRED: User commits the approved 6B tree before 6C starts.
 BLOCKED-ON OWNER: None for 6B.
 BLOCKED-ON EVIDENCE: None for 6B.
 NEXT GATE: User commit of 6B, then Subphase 6C Step 0.
+
+## Subphase 6C review — user-supplied external review
+
+The reviewer output arrived in two user messages. The findings message is followed by the separately supplied report fields; each is preserved below verbatim.
+
+1. VERDICT: REQUEST-CHANGES for Subphase 6C
+
+Most of 6C is solid. The checks against the retained evidence hold up:
+
+- Final gate log: SHA-256 3e2fd545…82c4, 247,609 bytes. Per-module counts are at the cited lines (142/64/39/7/238/7 = 497) and [success] is at line 2195.
+- Source scan: collect() appears only in BoundedActions. There are no RDD, GraphX, GraphFrames, implicits or typed encoders.
+- F6/F7 core helpers: they are correct and tested, and the frozen ID formulas are unchanged.
+- Input binding: the ER prepCompletionHash check binds the ER export to the selected Hadoop run.
+- Independent G1 test: it checks all 18 edges, their years, edge IDs, support sets and representative order against literal hand-computed values.
+- Real-data smoke: the evidence matches the claims.
+
+Four parts of the plan's Job 1/2 rules and 6C tasks are wrong or missing, though, plus a test gap. Details follow.
+
+2. Findings
+
+Blocking
+
+F1 — High — wrong DBLP team selected when a group has more than one DBLP observation
+- Where: modules/spark/src/main/scala/edu/uic/cs441/scholarchain/spark/Phase6CJobs.scala:367-372 (and :392-399)
+- Evidence: selectedTeam joins teams to canonicalWorks on the member's own (workId, sourceRecordId). Every DBLP member of the group passes hasDblp. The rank-1 authoritativeSourceRecordId (:335-351) is computed but never used to filter. This breaks plan §7.2 ("the team is the DBLP author list"), §7.3 step 1, and the module's own modules/spark/README.md:43 ("Keep pairs only from the selected authoritative DBLP team observation").
+- Impact: A canonical group can hold two DBLP records: same DOI means same workId, or both are linked to one Crossref/OpenAlex/ORCID record. Their teams then get merged into memberships, and both records' pairs are kept.
+  - If the author lists differ, the n(n−1)/2 check fails and the run aborts.
+  - If failOnHardInvariant=false, the merged team is published.
+- Owner: spark-engineer; test-engineer for the independent case.
+- Acceptance: Keep only the team and pairs whose (workId, sourceRecordId) equals (authoritativeWorkId, authoritativeSourceRecordId). Count the dropped non-authoritative DBLP observations. Add module and independent tests: two DBLP observations in one group with different author lists produce only the rank-1 team's memberships and pairs, and pairCountMismatches stays 0.
+
+F2 — Medium — conflicting ORCIDs are never flagged
+- Where: Phase6CJobs.scala:281-289 and :588-603
+- Evidence: Researchers just collect_set their observed ORCIDs. integrity only ever contains pair-count-mismatch and constraint-blocked-work-group. Plan §7.2 requires conflicting ORCIDs within one DBLP-name group to be reported as integrity warnings without splitting the group, and §10 lists "conflicting ORCIDs flagged".
+- Impact: A required Job 1 integrity check is missing.
+- Owner: spark-engineer (+ test-engineer).
+- Acceptance: One non-hard integrity row per researcher with more than one distinct DBLP-observed ORCID, plus a counter. The researcher ID is unchanged and the group is not split. Add module and independent tests.
+
+F3 — Medium — missing graph endpoints are thrown but never recorded
+- Where: Phase6CJobs.scala:792-798
+- Evidence: Edges whose endpoint node is missing throw only when failOnHardInvariant is set. They are never added to integrity. With the flag off they disappear silently. Plan §7.2 requires violations to be written to integrity/ and to fail the run when the flag is set. The course spec says "Validate that every canonical authorship edge points to existing nodes… Emit counts and invariant failures."
+- Note: Persisting hard failures to disk before a run aborts is 6F scope, and you disclosed that. The flag-off path losing violations is a 6C defect.
+- Owner: spark-engineer.
+- Acceptance: Missing endpoints become hardFailure=true integrity rows plus a counter, and the run still fails when the flag is set. A test injects an edge with an orphan endpoint and runs with the flag off: the row is published and counted. A second test with the flag on: the run fails.
+
+F4 — Medium — ER unresolved and conflict outputs are not read
+- Where: Phase6CReaders.scala:477-533
+- Evidence: Only accepted-links.jsonl and grouping-constraints.json are read. Plan §7.1 (6C task 1) also requires reading the unresolved and conflict outputs, and §12 requires unresolved and conflicting links to be counted. The smoke ER export has work/conflict.jsonl with 3 rows and researcher/unresolved.jsonl with 6, and neither shows up in the counters. unresolvedMentions is derived from Spark's own mapping, not from ER.
+- Owner: spark-engineer.
+- Acceptance: Read both files for each entity type with explicit schemas through the reject path, and emit per-entity counters. A test covers nonzero conflict and unresolved inputs.
+
+F5 — Medium — module tests miss required cases
+- Where: modules/spark/src/test/scala/edu/uic/cs441/scholarchain/spark/Phase6CJobsSpec.scala:190-206, 232-281
+- Evidence:
+  - Plan 6C task 7 lists module tests for "conflicting constraint not merged" and "cross-DBLP-name link not applied". The module fixture always passes empty cannot-link and authority tables, so neither is tested at module level. Only the independent suite covers them.
+  - The §10 Inputs cases "partial Hadoop run (no marker) refused" and "ER export manifest mismatch refused" are untested. Only requireErPrepBinding has negative tests.
+  - The module G1 test asserts only the edge counts (9/18) and the A–B weight. It does not check all edges "exactly", as Done-when requires for both suites.
+- Owner: spark-engineer.
+- Acceptance: Module tests for:
+  - a cannot-link group;
+  - an authority-conflict group;
+  - a cross-DBLP link;
+  - an ambiguous non-DBLP mention;
+  - a missing Hadoop marker;
+  - a Hadoop inventory/hash mismatch;
+  - an ER marker/manifest mismatch;
+  - the full G1 edge table with literal weights and years.
+
+WORK ORDER: Independent review of Subphase 6C, branch phase-6, base/HEAD 01d204b531d3fc72a5c49f884980a5c7c8926b18, uncommitted tree
+FILES CREATED: none
+FILES MODIFIED: none
+COMMANDS RUN: read-only only — git rev-parse/status/diff 01d204b; cat/sed/grep/wc on sources, tests, docs and evidence; shasum -a 256 on evidence/6c/final-check.txt; python3 -I JSON inspection of target/phase6-inputs/6c-er-ccd26111-disabled and target/phase4-runs/ccd26111…/export work files; WebFetch of the course README. No sbt, tests, Spark, AWS or provider calls.
+TEST RESULTS: Not run by reviewer. Retained final-check.txt verified: hash 3e2fd545…82c4, 247,609 bytes, 497/497 at cited lines, [success] line 2195, real 459.53.
+VALIDATION RESULTS: Source scan clean. F6/F7 correct. Independent G1 assertions complete and literal. Blocking defects F1–F5 as listed.
+ASSUMPTIONS: Course "Detailed Spark requirements" read via a WebFetch summary, partly truncated; plan §7 treated as binding.
+RISKS: F1 can abort or distort real-scale runs where DBLP duplicates share a DOI or an ER link. N1 can cause silent stale reuse.
+MANUAL ACTION REQUIRED: User pastes the NEXT PROMPT; do not commit 6C yet.
+BLOCKED-ON OWNER: spark-engineer (F1–F5, N1–N5, N7); test-engineer (independent cases for F1, F2).
+BLOCKED-ON EVIDENCE: Repaired module and independent tests plus a fresh full JDK 17 sbt -batch check.
+NEXT GATE: 6C repair round 1, then a read-only recheck.
+
+## Subphase 6C repair round 1 recheck — user-supplied external review
+
+Only the following report fields and blocking summary were supplied for this recheck. The full finding text was not supplied; the supplied wording is preserved verbatim.
+
+OWNER: code-reviewer (external, user-launched, read-only)
+WORK ORDER: Recheck of Subphase 6C repair round 1; branch phase-6, base/HEAD 01d204b531d3fc72a5c49f884980a5c7c8926b18, uncommitted tree as of 2026-10-22 02:05 CDT
+FILES CREATED: none
+FILES MODIFIED: none
+COMMANDS RUN: read-only — git rev-parse/status/diff 01d204b; ls/stat for mtimes; cat/sed/grep on Spark sources, tests, README, phase-06 docs and evidence/6c/repair-1; python3 -I inspection of the ER export's unresolved/conflict files and the two smoke configs. No sbt, tests, Spark, AWS or provider calls.
+TEST RESULTS: Not run by reviewer. Retained: repair-1 independent targeted 6/6 (01:05:14) and production compile (01:04:07), both predating later Readers/Main/spec edits. No module, smoke or full-check result exists for this round.
+VALIDATION RESULTS: F1–F5 implemented and their tests are substantive. ER decision schema matches the real export. Blocking: R1-1 missing or stale evidence; R1-2 run-ID reuse across a semantic change.
+ASSUMPTIONS: No repair agent was still writing at review time (last edit 01:41).
+RISKS: Committing now would ship untested Main/reader/spec changes; R1-2 would mislabel post-repair outputs with the pre-repair run ID.
+MANUAL ACTION REQUIRED: User pastes the NEXT PROMPT; do not commit 6C.
+BLOCKED-ON OWNER: spark-engineer (R1-2, module test run); coordinator (evidence and reports, R1-5).
+BLOCKED-ON EVIDENCE: Module 14/14, independent 6/6, repaired smoke with new run ID and ER counters, full JDK 17 sbt -batch check.
+NEXT GATE: Finish 6C repair round 1, then a read-only recheck.
+
+### Complete recheck text supplied subsequently — user-supplied external review
+
+1. VERDICT: REQUEST-CHANGES (recheck of 6C repair round 1)
+
+Your fixes for F1–F5 look correct in the code, but this round isn't finished. Nothing has run the current tree:
+
+- The module tests have never run.
+- The repaired smoke hasn't completed.
+- The full JDK 17 check hasn't run.
+- The reports still describe the pre-repair gate.
+
+There's also one new blocking problem: the run ID doesn't change even though the output did. I reviewed the tree as of 02:05. If a repair agent is still running, this reflects its state at that time.
+
+2. Findings
+
+Closed in code (each still needs its tests to actually run, see R1-1)
+
+Finding: F1
+Evidence: Phase6CJobs.scala:397-406 now keeps only the team where workId = authoritativeWorkId and sourceRecordId = authoritativeSourceRecordId. The
+pair join at :426-433 goes through selectedTeam. Dropped observations are counted at :380-396, :554. The module test
+(Phase6CJobsSpec.scala:500-539) gives the second record a different team (A, D); the result keeps only {A, B, C}, with mismatch 0 and dropped 1.
+The independent test (IndependentPhase6CGraphSpec, "linked DBLP observations…") keeps P–Q only, with R absent.
+────────────────────────────────────────
+Finding: F2
+Evidence: :294-302 and :643-650 add a non-hard conflicting-dblp-orcid row and a counter; the researcher ID is unchanged. Module test :541-558 and an
+independent test.
+────────────────────────────────────────
+Finding: F3
+Evidence: :836-855 adds missing endpoints to integrity as hardFailure=true, throws only when the flag is set, and adds a counter at :856-862. Test
+:560-584 covers flag off (row and count published) and flag on (the run throws).
+────────────────────────────────────────
+Finding: F4
+Evidence: Phase6CReaders.scala:435-470, 630-656 reads all four decision files with an explicit schema through the reject path, refusing a file that
+holds the wrong entity or outcome. Counters are at Phase6CJobs.scala:539-544. I checked the schema against the real export:
+researcher/unresolved.jsonl has 6 rows (Researcher/UNRESOLVED) and work/conflict.jsonl has 3 (Work/CONFLICT), and the nested field types match.
+────────────────────────────────────────
+Finding: F5
+Evidence: Phase6CJobsSpec.scala now covers a literal 18-edge G1 table with weights and years (:277-319), cannot-link plus authority conflict
+(:586-613), the cross-DBLP and ambiguous-mention cases (:615-642), a missing Hadoop marker plus inventory and hash mismatches (:793-830), and an ER
+ marker/manifest mismatch (:832-861).
+
+Blocking
+
+R1-1 — High — no test or gate evidence for the current tree (owner: coordinator for evidence and reports; spark-engineer for the module tests)
+- Stale evidence: these files changed after the last retained log:
+  - Phase6CReaders.scala (01:05:13)
+  - Phase6CMain.scala (01:40:01)
+  - Phase6CJobsSpec.scala (01:41:24)
+  - modules/spark/README.md (01:41:28)
+
+  The only repair-1 evidence is repair-1/production-compile.txt (01:04:07) and repair-1/independent-targeted.txt (6/6, 01:05:14).
+- Nothing else has run:
+  - No run of the 14-test Phase6CJobsSpec.
+  - The repaired smoke's output root target/phase6-runs/6c-repair-1 (from 6c-spark-config-repair-1.json) doesn't exist.
+  - No full sbt -batch check.
+- Docs not updated: owner-report.md and test-report.md are unchanged since 00:24–00:25, and repairs.md still says "Repair in progress" for F1–F5.
+- Gap the smoke must cover: the F4 module test calls readErDecision directly, so only the smoke proves load() wires the real files through.
+- Acceptance:
+  - Phase6CJobsSpec 14/14 and IndependentPhase6CGraphSpec 6/6, both on the final tree.
+  - A completed smoke into a fresh root showing erResearcherUnresolved=6, erResearcherConflicts=0, erWorkUnresolved=0, erWorkConflicts=3 and missingGraphEndpoints=0.
+  - One full JDK 17 sbt -batch check with an exit code, per-module counts, size and SHA-256.
+  - owner-report.md, test-report.md and repairs.md updated with the real results.
+
+R1-2 — Medium — the repaired code would reuse the pre-repair run ID (owner: spark-engineer)
+- Evidence: Phase6CMain.scala:18 still has codeVersion = "spark-phase6c-jobs1-2-v1". The repair config differs from the provenance config only in outputRoot, which is excluded from the logical fingerprint.
+- Impact: The repaired smoke will get the same run:50e1fc99-a22c-4993-9525-7772e6af1fac as the retained pre-repair evidence, yet it publishes different counters and integrity rows and, for multi-DBLP groups, different memberships. Two different outputs would share one run ID. Pointing the run at an existing root would silently reuse the pre-repair output.
+- Acceptance:
+  - Bump codeVersion to …-v2, or bind it to a build or git hash, which closes N1 too.
+  - Update the reuse-gate test literal (Phase6CJobsSpec.scala:869).
+  - The repaired smoke's run ID must differ from 50e1fc99….
+
+Nonblocking
+
+- R1-3 (Low) — README claim is wrong. modules/spark/README.md says "Work representative selection follows the core versioned authority rule". The code at Phase6CJobs.scala:335-347 still ranks by a non-null doi column, which is prior finding N2. Either fix the code or reword the line.
+- R1-4 (Low) — ORCID check counts inconsistently. :295-298 filters on the trimmed ORCID but counts distinct untrimmed values. Two copies of one ORCID that differ only in whitespace would raise a false conflict unless Hadoop already normalizes them. Use trim consistently.
+- R1-5 (Process) — review.md is missing part of my previous review. It records F1–F5 and the report fields but not the Nonblocking N1–N9 list or the "Later gates" list. repairs.md then says N1–N7 have no descriptions. Append the missing sections verbatim.
+- Prior nonblocking items, still open as before: N1 (unless R1-2 binds a build hash), N2, N3, N4, N5, N7 and N8. N6 (SparkListener) stays acceptable.
+
+3. Report fields
+
+STATUS: COMPLETE (recheck); verdict REQUEST-CHANGES
+OWNER: code-reviewer (external, user-launched, read-only)
+WORK ORDER: Recheck of Subphase 6C repair round 1; branch phase-6, base/HEAD 01d204b531d3fc72a5c49f884980a5c7c8926b18, uncommitted tree as of 2026-10-22 02:05 CDT
+FILES CREATED: none
+FILES MODIFIED: none
+COMMANDS RUN: read-only — git rev-parse/status/diff 01d204b; ls/stat for mtimes; cat/sed/grep on Spark sources, tests, README, phase-06 docs and evidence/6c/repair-1; python3 -I inspection of the ER export's unresolved/conflict files and the two smoke configs. No sbt, tests, Spark, AWS or provider calls.
+TEST RESULTS: Not run by reviewer. Retained: repair-1 independent targeted 6/6 (01:05:14) and production compile (01:04:07), both predating later Readers/Main/spec edits. No module, smoke or full-check result exists for this round.
+VALIDATION RESULTS: F1–F5 implemented and their tests are substantive. ER decision schema matches the real export. Blocking: R1-1 missing or stale evidence; R1-2 run-ID reuse across a semantic change.
+ASSUMPTIONS: No repair agent was still writing at review time (last edit 01:41).
+RISKS: Committing now would ship untested Main/reader/spec changes; R1-2 would mislabel post-repair outputs with the pre-repair run ID.
+MANUAL ACTION REQUIRED: User pastes the NEXT PROMPT; do not commit 6C.
+BLOCKED-ON OWNER: spark-engineer (R1-2, module test run); coordinator (evidence and reports, R1-5).
+BLOCKED-ON EVIDENCE: Module 14/14, independent 6/6, repaired smoke with new run ID and ER counters, full JDK 17 sbt -batch check.
+NEXT GATE: Finish 6C repair round 1, then a read-only recheck.
+
+## Subphase 6C repair round 1 approval — user-supplied external review
+
+1. VERDICT: APPROVE for Subphase 6C repair round 1
+
+Both recheck blockers are closed. Every claim I checked holds on the current tree:
+
+R1-1: tests and gates now cover the final tree
+- Timing: no production, test or README file is newer than final-check.txt (02:23:27). The last code edits were Phase6CMain.scala at 02:09:45 and Phase6CJobsSpec.scala at 02:09:54. Every log below came after that:
+  - module targeted run, 14/14, finished 02:11:23;
+  - independent targeted run, 6/6, finished 02:12:29;
+  - smoke, finished 02:13:00;
+  - full check, finished 02:23:27.
+- Full check: repair-1/final-check.txt is 253,775 bytes with SHA-256 6c0fdf74…a7773, and starts on Homebrew Java 17.0.20.1. Counts at lines 165/907/957/1038/2212/2254 are 142/64/39/15/240/7 = 507, with zero failures. The log ends [success] Total time: 512 s and real 513.92. Spark's 15 is the 14 Phase6CJobsSpec tests plus SparkSmokeSpec. Independent's 240 is the earlier 238 plus the new F1 and F2 tests. The [error] lines at 2222–2241 are the expected injected check-probe failure, and the S3 rename warning at line 2175 is the existing Hadoop local test fixture.
+- Real ER counters: counter-inspect-final.txt shows erResearcherUnresolved=6, erResearcherConflicts=0, erWorkUnresolved=0, erWorkConflicts=3, missingGraphEndpoints=0. Those match the row counts I took from the export files myself (researcher unresolved 6, researcher conflict 0, work unresolved 0, work conflict 3). The probe throws on any mismatch and exited 0.
+- Published output: the manifest under target/phase6-runs/6c-repair-1/run:d56e56d9-… is byte-identical to the retained local-run-manifest.json. Its _SCHOLARCHAIN_SPARK_COMPLETE equals sha256(manifest) plus a newline. Integrity has 0 rows, input rejects have 0, and there are 28 counters.
+
+R1-2: the repaired code gets a new run ID
+- Phase6CMain.scala:18 is now spark-phase6c-jobs1-2-v2.
+- The reuse test (Phase6CJobsSpec.scala, last test) checks two things. Run IDs differ between v1 and v2. requireReusable rejects a manifest whose only change is codeVersion being v1.
+- The smoke produced run:d56e56d9-de03-4862-bc66-46fd5ad27b75, not 50e1fc99….
+
+Other checks
+- F1–F5: the code is unchanged since my last recheck, and the tests I reviewed then all passed on the final tree.
+- Spark API rule: collect() still appears only in BoundedActions (lines 14 and 21). No RDD, GraphX, GraphFrames, implicits or encoders.
+- Ownership: clean. Spark-owned code, tests/** from the test owner, docs and evidence from the coordinator. No changes to build, Hadoop, ER, .claude or human-owned files.
+- Reports: repairs.md, owner-report.md and test-report.md are accurate. They disclose the sandbox lock and socket denials as environment problems rather than passing tests, and they don't invent the N-list text.
+
+2. Findings
+
+None of these block approval.
+
+R1-3 — Low — README overstates the representative-work rule (spark-engineer)
+- modules/spark/README.md says "Work representative selection follows the core versioned authority rule", but the code at Phase6CJobs.scala:335-347 ranks by a non-null doi column.
+- Acceptance: fix N2, or reword the line. Do it before the 6F documentation pass.
+
+R1-4 — Low — ORCID conflict check trims inconsistently (spark-engineer)
+- Phase6CJobs.scala:295-298 filters on the trimmed ORCID but counts distinct untrimmed values.
+- Acceptance: use countDistinct(trim(...)). Do it before 6F integrity output.
+
+R1-5 — Process — nonblocking list not yet recorded (coordinator)
+- The N1–N9 and "Later gates" text was never supplied, so nothing could be appended. It is restated below so it can be recorded now.
+
+R2-1 — Low, new — evidence probe scripts live under docs/** (coordinator)
+- repair-1/CounterInspect.java and inspect_counters.py sit under docs, outside the Stop-hook and formatter scope.
+- They hardcode /private/tmp/phase6c-counter-inspect and an absolute Homebrew JDK path, and they depend on the retained test-classpath.txt, which holds absolute local paths. Others can't replay them as written.
+- They are acceptable as local evidence.
+- Acceptance (by 6F): read counters through a Spark-module test or a scripts/** tool with a proper owner.
+
+Nonblocking register from the first 6C review, restated
+
+- N1 (Medium): codeVersion is maintained by hand. v2 fixed this instance, but a future semantic change without a bump would bring the problem back. Bind a git SHA or JAR hash before the 6F/6G determinism replay.
+- N2 (Medium): representative-work selection infers DOI authority from the doi column instead of the work:doi: ID authority, and ignores representativePolicyVersion. A Crossref record without doi loses to work:dblp:.
+- N3 (Low): some rows are dropped without being counted:
+  - accepted links with a null endpoint (Phase6CReaders.scala, the links() filter);
+  - graph edges with no evidence work (Phase6CJobs.scala:773).
+- N4 (Low): counter names and meanings don't match. ambiguousNonDblpMentions and constraintBlockedWorkLinks count groups. missingYearExcluded.* repeats one value for every window. post2026… hardcodes the year. Fix before 6D consumes the counters.
+- N5 (Low): the formatted plans are captured after the eager checkpoints, so they show only checkpoint scans. Capture them before checkpointing (6F).
+- N6 (Observation): the SparkListener is acceptable instrumentation. The real event log and summarizer are 6F work.
+- N7 (Low): the UDF justification is not documented in the Spark README, and phase6Context could be built from literals.
+- N8 (Low): nodes/researcher and the graph tables carry scholarchain.domain.v1 even though nodes/researcher isn't the domain Researcher shape. Resolve with the 6F layout.
+- N9 (Process): in the original 6C round the coordinator ran scalafmt on Spark-owned files. It was disclosed and owner-confirmed.
+
+Later gates (not 6C)
+
+- Prior F5 and recheck-R1 domain hardening, before the 6D–6F producers.
+- 6F: the Job 11 layout, content hashes, load manifests, persisting hard failures before an abort, and the event-log summarizer.
+- Phase 7: Neptune mapping for yearless works.
+- 6H: the JDK packaging guard and live EMR compatibility. No cloud runtime has been tested.
+
+3. Report fields
+
+STATUS: COMPLETE (recheck); verdict APPROVE for Subphase 6C repair round 1
+OWNER: code-reviewer (external, user-launched, read-only)
+WORK ORDER: Recheck of 6C repair round 1 completion; branch phase-6, base/HEAD 01d204b531d3fc72a5c49f884980a5c7c8926b18, uncommitted tree as of 2026-10-22 02:27 CDT
+FILES CREATED: none
+FILES MODIFIED: none
+COMMANDS RUN: read-only — git rev-parse/status; ls -laT and find -newer for timing; shasum -a 256 and wc -c on repair-1/final-check.txt; grep/sed/cat on Spark sources, tests, phase-06 docs and evidence/6c/repair-1; cmp of the published vs retained run manifest; marker hash comparison; python3 -I import probe (pyarrow absent, Parquet not read directly). No sbt, tests, Spark, AWS or provider calls.
+TEST RESULTS: Not run by reviewer. Retained and verified: module 14/14 (02:11:23), independent 6/6 (02:12:29), full JDK 17 sbt -batch check 507/507 (142/64/39/15/240/7), exit success, real 513.92, 253,775 bytes, SHA-256 6c0fdf7494269c2ccb71a8cdbee35cb36b4c574b4d3d34928e2e37352c5a7773.
+VALIDATION RESULTS: All logs postdate the last source edit. v2 run ID run:d56e56d9-… differs from 50e1fc99-…, and the reuse gate rejects v1. Real ER counters 6/0/0/3 match the export files; missingGraphEndpoints 0. Published manifest matches the retained one and the marker is valid. Spark API scan clean. F1–F5 and R1-1/R1-2 closed.
+ASSUMPTIONS: Smoke counter values are taken from the retained probe output, because the reviewer could not read Parquet without pyarrow; the probe asserts the expected values and exited 0.
+RISKS: N1 hand-bumped codeVersion; N2/R1-3 representative rule and README mismatch; N4 counter semantics before 6D; no cloud/EMR evidence.
+MANUAL ACTION REQUIRED: User reviews and commits the 6C tree before 6D Step 0.
+BLOCKED-ON OWNER: none for 6C.
+BLOCKED-ON EVIDENCE: none for 6C.
+NEXT GATE: User's 6C commit, then Subphase 6D Step 0.

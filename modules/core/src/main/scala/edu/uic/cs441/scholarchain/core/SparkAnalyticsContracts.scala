@@ -2,8 +2,9 @@ package edu.uic.cs441.scholarchain.core
 
 import upickle.default.{ReadWriter, readwriter}
 
-/** A bounded or unbounded time window. `comparisonOrder` is present only for the disjoint sequence
-  * used by temporal deltas; all-years and cumulative windows leave it empty.
+/** A bounded or unbounded time window. A yearless work belongs only when both bounds are absent.
+  * `comparisonOrder` is present only for the disjoint sequence used by temporal deltas; all-years
+  * and cumulative windows leave it empty.
   */
 final case class SparkWindow(
     windowId: String,
@@ -114,7 +115,9 @@ final case class SparkCoauthorEdge(
     jointPublicationCount: Long,
     firstCollaborationYear: Option[Int],
     lastCollaborationYear: Option[Int],
-    representativeWorkIds: Vector[String]
+    representativeWorkIds: Vector[String],
+    windowStartYear: Option[Int],
+    windowEndYear: Option[Int]
 ) derives ReadWriter
 
 final case class CoauthorEdgeSupport(

@@ -19,7 +19,8 @@ object SparkAnalyticsExamples {
     StableIds.sparkAnalyticsId("community", "graph-v1", "all-years", Seq(a)).toOption.get
   val communityB: String =
     StableIds.sparkAnalyticsId("community", "graph-v1", "all-years", Seq(d)).toOption.get
-  val edge: String = StableIds.sparkCoauthorEdgeId(a, b, "all-years", "graph-v1").toOption.get
+  val allYears: SparkWindow = SparkWindow("all-years", None, None, None)
+  val edge: String = StableIds.sparkCoauthorEdgeId(a, b, allYears, "graph-v1").toOption.get
   val work: String = "work:dblp:conf/example/w1"
   val lineage: SparkLineage = SparkLineage(
     Fixtures.runId,
@@ -73,7 +74,9 @@ object SparkAnalyticsExamples {
       3,
       Some(2015),
       Some(2016),
-      Vector(work)
+      Vector(work),
+      None,
+      None
     )
   }
   val yearlessEdge: SparkCoauthorEdge =
@@ -232,8 +235,30 @@ class SparkAnalyticsContractSpec extends AnyFunSuite {
     assert(StableIds.sparkAnalyticsId("component", "graph-v1", " all-years", Seq("a")).isLeft)
     assert(StableIds.sparkAnalyticsId("unknown", "graph-v1", "all-years", Seq("a")).isLeft)
     assert(StableIds.sparkAnalyticsId("summary", "graph-v1", "all-years", Seq("a")).isLeft)
-    assert(StableIds.sparkCoauthorEdgeId(a, b, "all\nyears", "graph-v1").isLeft)
-    assert(StableIds.sparkCoauthorEdgeId(a, b, "all-years", "graph-v1").contains(edge))
+    assert(
+      StableIds.sparkCoauthorEdgeId(a, b, allYears.copy(windowId = "all\nyears"), "graph-v1").isLeft
+    )
+    assert(StableIds.sparkCoauthorEdgeId(a, b, allYears, "graph-v1").contains(edge))
+  }
+
+  test("Spark coauthor edge IDs bind labels and numeric window bounds") {
+    val left = SparkWindow("period", Some(2010), Some(2014), Some(0))
+    val right = left.copy(startYear = Some(2011))
+    val leftId = StableIds.sparkCoauthorEdgeId(a, b, left, "graph-v1").toOption.get
+    val rightId = StableIds.sparkCoauthorEdgeId(a, b, right, "graph-v1").toOption.get
+    assert(leftId != rightId)
+    assert(StableIds.sparkCoauthorEdgeId(b, a, left, "graph-v1").contains(leftId))
+    assert(StableIds.sparkCoauthorEdgeId(a, b, left.copy(endYear = Some(2009)), "graph-v1").isLeft)
+    assert(StableIds.sparkCoauthorEdgeId(a, b, left.copy(startYear = Some(0)), "graph-v1").isLeft)
+    assert(StableIds.sparkCoauthorEdgeId(a, b, left.copy(endYear = Some(10000)), "graph-v1").isLeft)
+    val bounded = edgeRecord.copy(
+      context = ctx.copy(windowId = Some(left.windowId)),
+      edgeId = leftId,
+      windowStartYear = left.startYear,
+      windowEndYear = left.endYear
+    )
+    assert(SparkAnalyticsValidation.check(bounded).isRight)
+    assert(SparkAnalyticsValidation.check(bounded.copy(windowStartYear = right.startYear)).isLeft)
   }
 
   test("summary IDs bind the policy and window and use citation-compatible text IDs") {
@@ -425,6 +450,7 @@ class SparkAnalyticsContractSpec extends AnyFunSuite {
     assert(loaded.windows(1).endYear.contains(2009))
     assert(loaded.representativeWorkLimit == 5 && loaded.maxTeamWorkLimit == 20)
     assert(loaded.fingerprint == StableIds.sha256Hex(loaded.canonicalJson))
+    assert(loaded.logicalFingerprint == StableIds.sha256Hex(loaded.logicalCanonicalJson))
     val runManifest = Fixtures.manifest.copy(
       configSchemaVersion = SchemaVersions.sparkAnalyticsConfig,
       configFingerprint = loaded.fingerprint
@@ -462,6 +488,80 @@ class SparkAnalyticsContractSpec extends AnyFunSuite {
         )
         .isLeft
     )
+  }
+
+  test("Spark run ID binds immutable input evidence and logical settings, not physical paths") {
+    val resource = getClass.getResource("/scholarchain.spark-analytics-config.v1.json")
+    val config =
+      SparkAnalyticsConfigLoader.loadText(scala.io.Source.fromURL(resource).mkString).toOption.get
+    val moved = config.copy(
+      hadoopRunRoot = "/tmp/input-hadoop",
+      entityResolutionRunRoot = "/tmp/input-er",
+      outputRoot = "/tmp/output",
+      checkpointDirectory = "/tmp/checkpoint",
+      shufflePartitions = config.shufflePartitions + 4
+    )
+    assert(config.fingerprint != moved.fingerprint)
+    assert(config.logicalCanonicalJson == moved.logicalCanonicalJson)
+    assert(config.logicalFingerprint == moved.logicalFingerprint)
+
+    def runId(
+        logicalFingerprint: String = config.logicalFingerprint,
+        hadoopRunId: String = Fixtures.runId,
+        hadoopManifestHash: String = "a" * 64,
+        erRunId: String = "run:11111111-2222-4333-8444-555555555555",
+        erManifestHash: String = "b" * 64,
+        policyVersion: String = "er-v1",
+        policyHash: String = "c" * 64,
+        codeVersion: String = "01d204b"
+    ): Either[DomainViolation, String] =
+      StableIds.sparkAnalyticsRunId(
+        hadoopRunId,
+        hadoopManifestHash,
+        erRunId,
+        erManifestHash,
+        policyVersion,
+        policyHash,
+        logicalFingerprint,
+        codeVersion
+      )
+
+    val original = runId().toOption.get
+    assert(StableIds.parseRunId(original).contains(original))
+    assert(runId(moved.logicalFingerprint).contains(original))
+    assert(
+      runId(
+        config
+          .copy(windows = config.windows.updated(2, config.windows(2).copy(endYear = Some(2015))))
+          .logicalFingerprint
+      ).toOption != Some(original)
+    )
+    assert(
+      runId(
+        config.copy(samplingSeed = config.samplingSeed + 1).logicalFingerprint
+      ).toOption != Some(original)
+    )
+    assert(
+      runId(
+        config.copy(checkpointInterval = config.checkpointInterval + 1).logicalFingerprint
+      ).toOption != Some(original)
+    )
+    assert(
+      runId(
+        config.copy(failOnHardInvariant = !config.failOnHardInvariant).logicalFingerprint
+      ).toOption != Some(original)
+    )
+    assert(runId(hadoopManifestHash = "d" * 64).toOption != Some(original))
+    assert(
+      runId(hadoopRunId = "run:aaaa1111-2222-4333-8444-555555555555").toOption != Some(original)
+    )
+    assert(runId(erManifestHash = "e" * 64).toOption != Some(original))
+    assert(runId(erRunId = "run:bbbb1111-2222-4333-8444-555555555555").toOption != Some(original))
+    assert(runId(policyVersion = "er-v2").toOption != Some(original))
+    assert(runId(policyHash = "f" * 64).toOption != Some(original))
+    assert(runId(codeVersion = "next-code").toOption != Some(original))
+    assert(runId(hadoopManifestHash = "A" * 64).isLeft)
+    assert(runId(codeVersion = "bad\ncode").isLeft)
   }
 
   test("Spark config rejects duplicate, reversed and nonconsecutive comparison windows") {

@@ -1,0 +1,41 @@
+[info] welcome to sbt 1.10.7 (Homebrew Java 17.0.20.1)
+[info] loading settings for project scholarchain-build from plugins.sbt...
+[info] loading project definition from /Users/danny/Documents/UIC/CS441/ScholarChain/project
+[info] loading settings for project root from build.sbt...
+[info] set current project to root (in build file:/Users/danny/Documents/UIC/CS441/ScholarChain/)
+[info] compiling 4 Scala sources to /Users/danny/Documents/UIC/CS441/ScholarChain/modules/spark/target/scala-3.3.4/classes ...
+[info] done compiling
+[info] running edu.uic.cs441.scholarchain.spark.Phase6CMain target/phase6-inputs/6c-spark-config.json
+Exception in thread "sbt-bg-threads-1" java.lang.NoClassDefFoundError: org/apache/spark/sql/SparkSession$
+	at edu.uic.cs441.scholarchain.spark.Phase6CMain$.run$$anonfun$1(Phase6CMain.scala:20)
+	at scala.util.Try$.apply(Try.scala:217)
+	at edu.uic.cs441.scholarchain.spark.Phase6CMain$.run(Phase6CMain.scala:146)
+	at edu.uic.cs441.scholarchain.spark.Phase6CMain$.main(Phase6CMain.scala:153)
+	at edu.uic.cs441.scholarchain.spark.Phase6CMain.main(Phase6CMain.scala)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at sbt.Run.invokeMain(Run.scala:144)
+	at sbt.Run.execute$1(Run.scala:94)
+	at sbt.Run.$anonfun$runWithLoader$5(Run.scala:121)
+	at sbt.Run$.executeSuccess(Run.scala:187)
+	at sbt.Run.runWithLoader(Run.scala:121)
+	at sbt.Defaults$.$anonfun$bgRunMainTask$7(Defaults.scala:2012)
+	at sbt.Defaults$.$anonfun$termWrapper$2(Defaults.scala:1983)
+	at scala.runtime.java8.JFunction0$mcV$sp.apply(JFunction0$mcV$sp.java:23)
+	at scala.util.Try$.apply(Try.scala:213)
+	at sbt.internal.BackgroundThreadPool$BackgroundRunnable.run(DefaultBackgroundJobService.scala:369)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+Caused by: java.lang.ClassNotFoundException: org.apache.spark.sql.SparkSession$
+	at java.base/java.net.URLClassLoader.findClass(URLClassLoader.java:445)
+	at sbt.internal.ManagedClassLoader.findClass(ManagedClassLoader.java:103)
+	at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:592)
+	at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:525)
+	... 22 more
+[success] Total time: 3 s, completed Oct 21, 2026, 11:44:49 PM
+real 4.70
+user 19.38
+sys 0.89

@@ -28,7 +28,7 @@
     {
       "fromResearcherId": "researcher:dblp:5f3ebef46438fe4e2ea69c2c4bc567b53dbb1cfcf8a0e80dd1cfe797b801a589",
       "toResearcherId": "researcher:dblp:c30b1a101927dc74d54cb42f5d54ccb9d98168c0372de03105e7ac26ae144e8d",
-      "edgeId": "spark-coauthor-edge:d3225aedec8ca3196446c8018168d016df8a72bebcefd8aea02a06c25b6479c9",
+      "edgeId": "spark-coauthor-edge:6b0408eec32196b6e292d2fc0eaacd44baf6713bf625d37e08b54128b3c50099",
       "jointPublicationCount": 3,
       "representativeWorkIds": [
         "work:dblp:conf/example/w1"

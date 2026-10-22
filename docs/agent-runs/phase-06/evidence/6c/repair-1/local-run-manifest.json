@@ -1,0 +1,39 @@
+{
+  "schemaVersion": "scholarchain.spark-analytics.v1",
+  "runId": "run:d56e56d9-de03-4862-bc66-46fd5ad27b75",
+  "codeVersion": "spark-phase6c-jobs1-2-v2",
+  "hadoopRunId": "run:ccd26111-d26d-4783-bc0f-e7106e4e617d",
+  "hadoopManifestHash": "5bd46c94894bbc543d2f45ffeb96ac7f6b8511d6a054ce01c7f08201035cca5a",
+  "entityResolutionRunId": "run:6af4d9dd-26af-4c46-ae45-397dbc82235f",
+  "entityResolutionManifestHash": "f7f60b763573f5814d81de48f6b39617d524deaa503b05f9942b8cbc8d5eed50",
+  "entityResolutionPolicyVersion": "er-offline-uncalibrated-v2",
+  "entityResolutionPolicyHash": "ad8c520fd8ff2e3697e15b2895852ca23e04c8d93f677acea3b366fcc101ef9f",
+  "logicalConfigFingerprint": "49316f88beb239b6d654b9df77814be759a10f20c7209894e3dc63fbab9cc624",
+  "physicalConfigFingerprint": "53a09b7b2b94ae0bf49a6e8bcf137f27e3c76fdf3515b42eb583d918586d46cd",
+  "windows": [
+    "all-years",
+    "through-2009",
+    "2010-2014",
+    "2015-2019",
+    "2020-2026",
+    "since-2015"
+  ],
+  "seed": 441,
+  "sparkVersion": "3.5.4",
+  "javaVersion": "17.0.20.1",
+  "inputRejectCount": 0,
+  "tableCounts": {
+    "nodes/researcher": 6,
+    "nodes/author_mention": 10,
+    "nodes/work": 5,
+    "nodes/graph": 26,
+    "edges/graph": 22,
+    "intermediate/canonical_works": 5,
+    "intermediate/memberships": 6,
+    "edges/coauthored_with": 6,
+    "edges/coauthored_with_support": 6,
+    "integrity": 0,
+    "input_rejects": 0,
+    "counters": 28
+  }
+}

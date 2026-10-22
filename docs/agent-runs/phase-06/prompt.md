@@ -40,3 +40,26 @@ The user supplied an independent read-only `REQUEST-CHANGES` review for 6B. Its 
 The reviewer requested a Step 0 choice for F2. The coordinator asked whether to use `StableIds.chunkOrProfileId` with policy and window bound in `sourceVersion`, the recommended formula compatible with the plan and existing evidence IDs. The user answered exactly: **"yes, use chunkOrProfileId"**. No other Step 0 question remains open within the user's F1–F4 scope.
 
 The repair remains on branch `phase-6`, base/current HEAD `bc1e4a17fc879b7aac254b28d83e78dbdd34e367`, with the uncommitted 6B tree intact. `domain-engineer` owns F1–F4 changes and tests under `modules/core/**`. `spark-engineer` owns only F2 design wording in `modules/spark/README.md`. The coordinator alone assembles `docs/agent-runs/phase-06/**`, retains the final JDK 17 gate, and returns a new read-only reviewer prompt. No 6C work, cloud calls, reviewer launch, commit or push is authorized.
+
+## Subphase 6C work order
+
+The user said exactly: **"alright let move on phase 6c"** after the independent reviewer approved 6B repair round 1. Preflight found a clean `phase-6` tree at base SHA `01d204b531d3fc72a5c49f884980a5c7c8926b18`, commit `phase-06 domain-engineer: add Spark analytics contracts, stable IDs, and configuration`. The approved 6B review and its R1/R2 dispositions are retained in `review.md` and `repairs.md`.
+
+Step 0 answers:
+
+1. 6C-1 and 6C-2: **"Yes to both (recommended)"** — exclude enrichment-only works from coauthorship and keep different DBLP names separate despite accepted links, counting both cases.
+2. 6C-3: The coordinator initially suggested prepared run `f22f1a12-c7be-43af-b470-d4f4e244ca9d`, and the user answered **"Yes, use that run (recommended)"**. Read-only inspection then found no retained DBLP export partition in that completed prepared root. The coordinator sent a correction that superseded this question, naming the latest completed run with a DBLP export, `target/phase4-runs/ccd26111-d26d-4783-bc0f-e7106e4e617d`, and asking to verify or create a matching offline ER export. The user answered **"Use ccd26111… (recommended)"**.
+3. F6: **"Bind bounds in 6C (recommended)"** — bind numeric window bounds as well as label in the new Spark edge ID helper and update the new 6B example before production output; frozen older IDs stay unchanged.
+4. F7: **"Use logical fingerprint (recommended)"** — deterministic run identity includes input run/manifest hashes and logical algorithm settings while excluding machine-specific input roots, checkpoint path, output path and shuffle partition count.
+
+Scope is **Subphase 6C only** of `/Users/danny/Documents/plan/phase6.md` (plan SHA-256 `bd6ecba68004562a39338293e9e9c1ce9af094614b3efdb7ab8accb7229c2fa8`). `domain-engineer` owns F6/F7 core helpers and tests under `modules/core/**`, publishing the interface before Spark uses it. `spark-engineer` owns `modules/spark/**` readers, manifest/output gate, bounded actions, jobs 1–2, module tests, runnable main and local smoke. `test-engineer` owns independent G1 tests under `tests/**`. The coordinator assembles `docs/agent-runs/phase-06/**`, runs one final stable-tree JDK 17 `sbt -batch check`, and returns a Section 11 reviewer prompt. R1 remains future F5 hardening; 6A F4/F6 remain future release gates. No AWS call, live LLM, 6D work, reviewer launch, commit or push is authorized.
+
+## Subphase 6C repair round 1 work order
+
+The user supplied a read-only external `REQUEST-CHANGES` review in two messages and instructed: **"fix all blocking bugs for me"**. The findings message identifies F1–F5 as blocking; the separately supplied report fields are retained with it in `review.md`. No descriptions of nonblocking N1–N7 were supplied, so this repair addresses F1–F5. `repairs.md` routes F1–F5 and records their acceptance checks.
+
+The Spark owner repairs job selection, integrity reporting, ER reads and module coverage in `modules/spark/**`. The independent test owner adds separate F1/F2 cases in `tests/**`. The coordinator records review and evidence in `docs/agent-runs/phase-06/**`, runs the affected JDK 17 tests, a fresh local smoke and a final stable-tree `sbt -batch check`, then returns a copyable read-only recheck prompt. The branch and base/current HEAD remain `phase-6` and `01d204b531d3fc72a5c49f884980a5c7c8926b18`, with 6C uncommitted. No 6D, reviewer launch, AWS call, commit or push is in scope.
+
+The user's subsequent external recheck supplied only report fields, finding F1–F5 changes substantive but blocked on R1-1 (missing/stale final evidence) and R1-2 (unchanged run ID after changed semantics). The user asked to fix all those blockers. A successor Spark owner closes R1-2 in `modules/spark/**`; the coordinator completes fresh targeted, smoke and JDK 17 full-gate evidence on the final repair tree. No further feature scope or 6D work is inferred from this recheck fragment.
+
+The user-supplied independent recheck subsequently returned **APPROVE** for 6C repair round 1. Its complete text, including the previously missing nonblocking N1–N9 and later-gate list, is retained in `review.md`; `repairs.md` routes those items. The reviewer found no remaining 6C blocker. The user must commit the approved 6C tree before a new prompt can start 6D Step 0. This approval is not a commit or a request to begin 6D.
