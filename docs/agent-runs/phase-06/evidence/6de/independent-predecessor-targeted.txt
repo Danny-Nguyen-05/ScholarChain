@@ -1,0 +1,50 @@
+[info] welcome to sbt 1.10.7 (Homebrew Java 17.0.20.1)
+[info] loading settings for project scholarchain-build from plugins.sbt...
+[info] loading project definition from /Users/danny/Documents/UIC/CS441/ScholarChain/project
+[info] loading settings for project root from build.sbt...
+[info] set current project to root (in build file:/Users/danny/Documents/UIC/CS441/ScholarChain/)
+[info] scalafmt: Formatting 1 Scala sources (/Users/danny/Documents/UIC/CS441/ScholarChain/tests)...
+[info] scalafmt: Reformatted 1 Scala sources
+[success] Total time: 1 s, completed Oct 22, 2026, 12:06:42 PM
+[success] Total time: 0 s, completed Oct 22, 2026, 12:06:42 PM
+[info] compiling 1 Scala source to /Users/danny/Documents/UIC/CS441/ScholarChain/tests/target/scala-3.3.4/test-classes ...
+[info] done compiling
+[info] IndependentPhase6DEGraphSpec:
+26/10/22 12:06:45 WARN  Utils: Your hostname, Dannys-MacBook-Pro.local resolves to a loopback address: 127.0.0.1; using 10.0.0.113 instead (on interface en0)
+26/10/22 12:06:45 WARN  Utils: Set SPARK_LOCAL_IP if you need to bind to another address
+26/10/22 12:06:45 WARN  NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+26/10/22 12:06:47 WARN  BlockManager: Block rdd_44_0 already exists on this machine; not re-adding it
+[info] - G1 full hand-computed metrics, components and coreness
+26/10/22 12:06:52 WARN  SimpleFunctionRegistry: The function phase6deid replaced a previously registered function.
+26/10/22 12:06:54 WARN  SimpleFunctionRegistry: The function phase6deid replaced a previously registered function.
+26/10/22 12:06:57 WARN  SimpleFunctionRegistry: The function phase6deid replaced a previously registered function.
+[info] - G2 star, G3 K4, G4 path and isolated node have exact coreness
+26/10/22 12:07:00 WARN  SimpleFunctionRegistry: The function phase6deid replaced a previously registered function.
+26/10/22 12:07:03 WARN  SimpleFunctionRegistry: The function phase6deid replaced a previously registered function.
+[info] - G1 selected paths have unique shortest route, no-path status and supported hop evidence
+26/10/22 12:07:05 WARN  SimpleFunctionRegistry: The function phase6deid replaced a previously registered function.
+[info] - equal-length BFS routes choose the smallest immediate predecessor
+[info] - G1 bridges under the declared partition and G2 star leaves
+26/10/22 12:07:08 WARN  SimpleFunctionRegistry: The function phase6deid replaced a previously registered function.
+26/10/22 12:07:09 WARN  BlockManager: Block rdd_5541_0 already exists on this machine; not re-adding it
+[info] - weighted synchronous LPA converges to the hand-traced two-clique partition
+26/10/22 12:07:11 WARN  SimpleFunctionRegistry: The function phase6deid replaced a previously registered function.
+26/10/22 12:07:11 WARN  SimpleFunctionRegistry: The function phase6deid replaced a previously registered function.
+26/10/22 12:07:12 WARN  SimpleFunctionRegistry: The function phase6deid replaced a previously registered function.
+[info] - component iteration guard and weighted-degree invariant reject incorrect graphs
+26/10/22 12:07:13 WARN  SimpleFunctionRegistry: The function phase6deid replaced a previously registered function.
+26/10/22 12:07:14 WARN  SimpleFunctionRegistry: The function phase6deid replaced a previously registered function.
+[info] - empty graph and one solo publication have no edges and finite measures
+26/10/22 12:07:15 WARN  SimpleFunctionRegistry: The function phase6deid replaced a previously registered function.
+[info] - a yearless edge stays in all-years and a disconnected pair has no path
+26/10/22 12:07:17 WARN  SimpleFunctionRegistry: The function phase6deid replaced a previously registered function.
+26/10/22 12:07:19 WARN  SimpleFunctionRegistry: The function phase6deid replaced a previously registered function.
+[info] - two runs on the same G4 graph produce identical metric, core and component rows
+[info] Run completed in 35 seconds, 962 milliseconds.
+[info] Total number of tests run: 10
+[info] Suites: completed 1, aborted 0
+[info] Tests: succeeded 10, failed 0, canceled 0, ignored 0, pending 0
+[info] All tests passed.
+[success] Total time: 39 s, completed Oct 22, 2026, 12:07:21 PM
+
+exit=0

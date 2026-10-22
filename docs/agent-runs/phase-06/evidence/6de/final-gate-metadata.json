@@ -1,0 +1,21 @@
+{
+  "baseSha": "8d5b9d48b2fbc1f03e13f3eabdef1bfa373969d4",
+  "branch": "phase-6",
+  "exitCode": 0,
+  "perModule": {
+    "core": 143,
+    "hadoop": 64,
+    "entityResolution": 39,
+    "spark": 24,
+    "independent": 250,
+    "buildVerification": 7
+  },
+  "totalPassed": 527,
+  "totalFailed": 0,
+  "bytes": 285463,
+  "sha256": "bd8b9a28348839769b5410364c3f7893fe37bb1c871eac27d7595fba75dbca34",
+  "sbtSeconds": 565,
+  "realSeconds": 567.12,
+  "moduleTargetedPassed": 9,
+  "independentTargetedPassed": 10
+}

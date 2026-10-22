@@ -183,3 +183,70 @@ NEXT GATE: User-run independent read-only 6C repair-round recheck. Stop before 6
 ### External 6C repair-round approval disposition
 
 The user-supplied independent reviewer returned **APPROVE** for Subphase 6C repair round 1. The full verdict is appended verbatim in `review.md`. It verified the final-tree timing, 14/14 module and 6/6 independent targeted results, 507/507 full JDK 17 gate, real ER counters, v2 run ID, manifest marker and Spark API scan. It found no remaining 6C blocker. Its nonblocking register and later gates are recorded in `repairs.md`; no implementation change was made after the reviewed gate. The next gate is the **user's 6C commit**, then a new Subphase 6D Step 0 prompt. No agent commit or push is claimed.
+
+
+## Subphase 6D+6E — jobs 3–8 implementation and handoff
+
+STATUS: COMPLETE for implementation and local deterministic gates; external read-only review is pending.
+
+OWNER: Spark owner `/root/spark_6de` wrote `modules/spark/**`; independent test owner `/root/test_6de` wrote `tests/**`; core owner `/root/domain_6de` wrote the prerequisite F5 contract hardening in `modules/core/**`. Coordinator `/root` assembled evidence, executed the final independent formatter/test command at the test owner's request, and ran the final full gate. This formatter execution is disclosed in `evidence/6de/commands.md`. No agent issued an approval verdict.
+
+WORK ORDER: User requested the merged 6D+6E run of the updated external plan (SHA-256 `6df6d856df6c4c6ee0a8f00125e78af1bce5e789666399ae48a9443aec955096`) and prohibited commits and reviewer launches. Branch `phase-6`, base and unchanged HEAD `8d5b9d48b2fbc1f03e13f3eabdef1bfa373969d4`. The initial tree was clean. All four Step 0 answers and tool/model provenance are recorded in `prompt.md`.
+
+FILES CREATED: `modules/spark/src/main/scala/edu/uic/cs441/scholarchain/spark/Phase6DEJobs.scala`; `modules/spark/src/test/scala/edu/uic/cs441/scholarchain/spark/Phase6DEJobsSpec.scala`; `tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentPhase6DEGraphSpec.scala`; `docs/agent-runs/phase-06/evidence/6de/**` (preflight, exact commands, targeted/intermediate/full logs, source timing/scan, final-gate metadata).
+
+FILES MODIFIED: Core `SparkAnalyticsConfigLoader.scala`, `SparkAnalyticsValidation.scala`, `SparkAnalyticsContractSpec.scala`; `modules/spark/README.md`; coordinator `prompt.md`, `repairs.md`, `owner-report.md`, `test-report.md`. No build, Hadoop, entity-resolution, Phase 5, dataset, Terraform, or tracked constitutional file changed. The full gate updates the ignored generated test marker through the existing build task.
+
+COMMANDS RUN: Exact commands and environment are retained in `evidence/6de/commands.md` and the test report. Final Spark owner targeted command: JDK 17 `sbt -batch 'sparkAnalytics/scalafmt' 'sparkAnalytics/Test/scalafmt' 'sparkAnalytics/testOnly *Phase6DEJobsSpec'` (exit 0, 9/9). Final coordinator independent command: `sbt -batch 'independentTests/Test/scalafmt' 'independentTests/Test/scalafmtCheck' 'independentTests/testOnly *IndependentPhase6DEGraphSpec'` (exit 0, 10/10). Final coordinator `/usr/bin/time -p sbt -batch check` with JDK 17 and the Phase 4 SBT_OPTS config exited 0. `git diff --check` exited 0. The source scan matched only the two allowed `collect()` calls in `BoundedActions`. A read-only course README lookup checked scope; no AWS or live model calls were made.
+
+TEST RESULTS: Full gate **527 passed / 0 failed**: core 143, Hadoop 64, entity resolution 39, Spark 24, independent 250, build verification 7. The new targeted suites are subsets of those totals. Full log: `evidence/6de/final-check.txt`, **285,463 bytes**, SHA-256 `bd8b9a28348839769b5410364c3f7893fe37bb1c871eac27d7595fba75dbca34`; sbt 565 s, real 567.12 s, Homebrew Java 17.0.20.1, sbt 1.10.7. All source/test/README modification times precede the final full gate; `source-check.txt` retains them.
+
+VALIDATION RESULTS: `Phase6DEJobs.build` extends the committed 6C membership, edge and support tables with P/C/T/A/M/W metrics and capped maximum-team evidence, deterministic components and summaries, exact h-index coreness, selected-pair distributed BFS with support-backed hops and three statuses, seeded K-pair selection, synchronous weighted LPA with per-window convergence information, cross-community edges and the three required bridge measures. W==T and CC/k-core iteration guards have failure cases. Tests cover the full literal G1 metric table, components, coreness and unique path; G2 star, G3 K4, G4 path; injected G1/G2 bridges; hand-traced convergent LPA; no cross-component community; solo/tie/cap/empty/single/yearless cases; and replay determinism. Coordinator checks found and routed an immediate-predecessor BFS tie mismatch; module and independent fixtures now distinguish it from whole-route ordering and pass. Existing wire fields and ID formulas are unchanged. Core F5 local invariants are closed for these producers.
+
+ASSUMPTIONS: The builder consumes valid completed 6C canonical tables and caller-supplied explicit config. Approved settings are CC/k-core limits 50, checkpoint 5, LPA limit 20 with disclosed non-convergence, maxHops 6, K=20 and S=32 with seed 441. The original gate did not establish these values in the shipped resource; repair round 1 (F1) corrects that mismatch and records the fingerprint change below. Fixture configs deliberately use smaller LPA limits and disable random-pair additions where exact benchmark counts are asserted. This is bounded synthetic-fixture validation, not a real-data performance claim.
+
+RISKS: The user prioritized selected-pair BFS; the separate S-source distance estimate remains an empty typed table, with no estimate claimed. Optional betweenness was declined. Jobs 3–8 do not yet have a publishing CLI: final export, durable event logs/summarizer, publication-level plans, hard-failure persistence, a bounded real-data pipeline and replay belong to 6F+6G. The targeted module log includes an uncheckpointed metrics physical plan and checkpointed output plans. LPA can oscillate and bridge values depend on its partition. Prior 6C N items and semantic-summary entity-kind validation remain routed to their named later gates in `repairs.md`; jobs 3–8 do not consume the 6C diagnostic counters. EMR remains untested, with script/live work deferred to Phases 13/15 by the updated plan.
+
+MANUAL ACTION REQUIRED: User launches the separate read-only 6D+6E reviewer using the handoff prompt. After approval, the user decides whether to commit this tree. No commit, push or reviewer was launched by an implementation agent.
+
+BLOCKED-ON OWNER: None for the requested local implementation gate.
+
+BLOCKED-ON EVIDENCE: None for the 6D+6E fixture and full-check gates; the later publication/real-data/cloud gates above remain open.
+
+NEXT GATE: User-run independent read-only review of merged Subphase 6D+6E. Stop before 6F+6G.
+
+
+## Subphase 6D+6E — repair round 1 completion (external F1–F3)
+
+STATUS: COMPLETE for blocking repairs and local validation; user-run external recheck is pending.
+
+OWNER: Domain owner `/root/domain_6de` changed the shipped config and core assertions (F1); Spark owner `/root/spark_6de` changed the module test and README (F1/F2); coordinator `/root` corrected report coverage (F3), retained the complete user-supplied review and evidence, and ran the final full gate. The coordinator executed the Spark owner's supplied formatter/check/test command after the owner's sandbox denied its sbt boot lock; all test logic remains owner-authored. No independent-test source changed this round.
+
+WORK ORDER: User instructed "fix all of the blockings bugs for me" after the external 6D+6E `REQUEST-CHANGES` review. F1–F3 only; nonblocking N1–N9 and future gates are registered in `repairs.md`. Branch `phase-6`, base and unchanged HEAD `8d5b9d48b2fbc1f03e13f3eabdef1bfa373969d4`; pre-existing uncommitted 6D+6E work was preserved. Existing Step 0 approval of 50/50/K20 supplied the F1 decision; no new decision was needed.
+
+FILES CREATED: `docs/agent-runs/phase-06/evidence/6de/repair-1/**`: core format/targeted logs, module sandbox-denial and successful targeted logs, direct Java version, source timing/API/diff checks, exact commands, full-check log, final-gate metadata and reviewer handoff.
+
+FILES MODIFIED: Domain owner: `modules/core/src/main/resources/scholarchain.spark-analytics-config.v1.json`, `modules/core/src/test/scala/edu/uic/cs441/scholarchain/core/SparkAnalyticsContractSpec.scala`. Spark owner: `modules/spark/src/test/scala/edu/uic/cs441/scholarchain/spark/Phase6DEJobsSpec.scala`, `modules/spark/README.md`. Coordinator: `docs/agent-runs/phase-06/{review,prompt,repairs,owner-report,test-report}.md`. No production Scala algorithm, existing wire field, ID formula, build, Hadoop, ER, dataset, infrastructure or human-decision file changed in this repair. The generated ignored test marker was updated by the existing full-gate build task.
+
+COMMANDS RUN: JDK 17 with the Phase 4 SBT_OPTS logging config. Core owner ran `sbt -batch 'core/scalafmtAll' 'core/Compile/scalafmtCheck' 'core/Test/scalafmtCheck'` and `sbt -batch 'core/testOnly *SparkAnalyticsContractSpec'`, exit 0, 14/14. Coordinator ran `sbt -batch 'sparkAnalytics/Test/scalafmt' 'sparkAnalytics/Test/scalafmtCheck' 'sparkAnalytics/testOnly *Phase6DEJobsSpec'`, exit 0, 10/10; then `/usr/bin/time -p sbt -batch check`, exit 0. Exact environment, commands, log paths and failure handling are in `evidence/6de/repair-1/commands.md` and the repair test report. `git diff --check` exited 0; source scans still match only the two allowed BoundedActions collect sites. No commit, push, reviewer launch, AWS call or live model-provider call occurred.
+
+TEST RESULTS: Fresh full gate **528 passed / 0 failed**: core 143, Hadoop 64, ER 39, Spark 25, independent 250, build verification 7. Core targeted **14/14**, Spark module targeted **10/10**; those tests are included in the full totals. Full log: `evidence/6de/repair-1/final-check.txt`, **286,117 bytes**, SHA-256 `18d9858bc70337879054a388868dede84e19b2f568f12b2e5e50d2d1c833112f`; sbt **561 s**, real **563.44 s**, Java **17.0.20.1**, sbt **1.10.7**. It finished 2026-10-22 12:47:16 CDT, after all repair source/resource/test/README edits.
+
+VALIDATION RESULTS: F1 is repaired: the resource ships CC50/k-core50/checkpoint5/community20/maxHops6/K20/S32/seed441, and every value is asserted. Full and logical fingerprints change, with exact old/new hashes printed in `core-targeted.txt` and stored in metadata. These are canonical hashes of the config example, not the historical smoke config. Existing 6C manifests and run IDs remain unchanged history. F2 is repaired: the weight-1 two-person graph swaps labels for three synchronous iterations; all two memberships are non-converged at iteration 3, both singleton summaries have changed count 2 and non-converged status, counters are communityConverged=0/communityFinalChangedCount=2, and actual output rows parse to core records accepted by validation. The membership record has no changed-count field; its wire is preserved. F3 is repaired: the original inaccurate test-report sentence now attributes G1–G4 literal coverage to the independent suite, and describes the separate module fixtures accurately. README describes the new oscillation fixture and actual shipped settings.
+
+ASSUMPTIONS: Existing approved default values remain authoritative. The fixed sampling seed is 441. All production algorithms are the same as the externally inspected 6D+6E implementation; this repair changes default config behavior, test evidence and documentation.
+
+RISKS: Nonblocking N1–N9 remain routed to named owners/gates; F2 partially addresses N7 only for community membership/summary validation. Full export validation, BFS performance, LPA iteration/cache details, context schema order, missing-endpoint counters, bounded-window metrics and complete replay remain 6F+6G work. The sampled distance estimate must be built in 6F+6G or explicitly accepted as a deviation by the human at 6I. No such human acceptance is claimed. EMR work remains deferred to Phases 13/15. No real-data run was added in this repair.
+
+MANUAL ACTION REQUIRED: User runs the separate read-only repair-round recheck, then decides whether to commit after approval. No agent starts 6F+6G or commits.
+
+BLOCKED-ON OWNER: None for F1–F3 local repairs.
+
+BLOCKED-ON EVIDENCE: None for F1–F3 targeted/full gates.
+
+NEXT GATE: User-run independent read-only recheck of Subphase 6D+6E repair round 1. Stop before 6F+6G.
+
+
+### External 6D+6E repair-round-1 approval
+
+The user-supplied independent reviewer returned **APPROVE**, closing F1–F3 and verifying the retained 528/0 full-gate evidence, core 14/14 and Spark 10/10 targeted results. Its complete text is retained in `review.md`; R1-O1 is assigned in `repairs.md`. These are reviewer-reported checks, not a new test execution. The approved tree is still uncommitted at HEAD `8d5b9d48b2fbc1f03e13f3eabdef1bfa373969d4`. The next gate is the user's commit, followed by 6F+6G Step 0. No next-subphase work, commit or push was performed by the coordinator.

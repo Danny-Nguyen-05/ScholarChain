@@ -102,3 +102,60 @@ The user-supplied external reviewer **APPROVED** 6C repair round 1. F1–F5 and 
 | N9: coordinator ran scalafmt on Spark-owned files in original 6C work | Coordinator / `spark-engineer` | Process observation; disclosed and owner-confirmed. No further 6C action. |
 
 Later gates retained from the reviewer: prior 6B F5/recheck-R1 domain hardening before 6D–6F producers; 6F Job 11 layout, hashes, load manifests, hard-failure persistence and event-log summary; Phase 7 yearless Neptune mapping; 6H Java 17 packaging guard and live EMR compatibility. No cloud result is claimed in 6C.
+
+## Subphase 6D+6E prerequisite and deferred-item disposition
+
+The user committed 6C as `8d5b9d48b2fbc1f03e13f3eabdef1bfa373969d4` and requested the merged 6D+6E implementation under the shortened plan. The following dispositions extend the historical register without rewriting prior review or human decisions.
+
+| Item | Owner | 6D+6E disposition |
+| --- | --- | --- |
+| Prior 6B F5: bridge/community/path/config local invariants | `domain-engineer` | Implemented under `modules/core/**` with negative feature cases: cross-community weight versus degree, zero-cross-degree participation, community convergence and changed-count agreement, cross-edge weight versus count, found-path max hops/distinct endpoints/no repeated node, window-label syntax, and DBLP benchmark names resolving to one ID. Targeted contract suite passed 14/14; final full-gate evidence is reported in the 6D+6E reports. No wire field or ID formula changed. |
+| Prior 6B recheck R1: semantic-summary entity-kind validation | `domain-engineer` | Still assigned before Job 10 in 6F+6G; this run emits no semantic summaries. |
+| 6C N4: diagnostic counter names and meanings | `spark-engineer` | The new jobs consume 6C memberships, edges and support, not its diagnostic counters. The 6DE README explicitly states this boundary. Renaming or revising 6C counters remains the 6F+6G final-output gate; no 6C run identity or output is changed in this run. |
+| 6C N2/R1-3, R1-4, N1/N3/N5/N7/N8 and R2-1 | Assigned owners in the 6C register | Remain the named 6F+6G documentation, identity, integrity, layout or evidence gates. 6D+6E extends the committed canonical tables without rewriting jobs 1–2. |
+| S-source sampled mean distance/effective diameter | `spark-engineer`; user-approved scope choice | Deferred under the user's 6DE-3 answer to prioritize selected-pair BFS. `pathLengthEstimates` is an empty typed table; no sampled-distance result is claimed. Seeded K-pair selection and selected-pair BFS are implemented and tested. |
+| Optional sampled betweenness | User decision | Omitted as requested in 6E-2. The required partition-dependent bridge measures are implemented. |
+| 6H EMR work | Later phase owners | The updated plan defers the script to Phase 13 and the live run to Phase 15. Phase 6 retains that gate as open; no cloud compatibility result is claimed. |
+
+During coordinator implementation checks, the first BFS draft was found to order entire routes when §7.6 requires the smallest immediate predecessor. The Spark owner changed the candidate ordering to predecessor first and full route second, and added a module fixture where the choices disagree. The independent test owner added a separately authored fixture for the same rule. The repaired targeted suites passed 9/9 and 10/10 (`module-predecessor-targeted.txt` and `independent-predecessor-targeted.txt`). The earlier full check was stopped as superseded (exit 143, retained as `superseded-check.txt`); it is not reported as a passing gate. The final full check runs only on the corrected tree.
+
+Final corrected-tree gate: JDK 17 `sbt -batch check` exited **0**, **527 passed / 0 failed** (143/64/39/24/250/7), real **567.12 s**. `evidence/6de/final-check.txt` is **285,463 bytes**, SHA-256 `bd8b9a28348839769b5410364c3f7893fe37bb1c871eac27d7595fba75dbca34`. `git diff --check` exited 0. These are implementation validation results; external 6D+6E review is still pending.
+
+## Subphase 6D+6E — repair round 1 (external F1–F3)
+
+The complete user-supplied external `REQUEST-CHANGES` review is retained in `review.md`, including N1–N9 and future gates. The user requested **all blocking fixes**. Existing Step 0 choices remain binding; the resource is corrected to those choices rather than changing the decision. Base/HEAD remains `8d5b9d48b2fbc1f03e13f3eabdef1bfa373969d4` on `phase-6`, preserving the uncommitted implementation.
+
+| Finding | Owner and blocking status | Repair round 1 disposition |
+| --- | --- | --- |
+| F1: shipped config retains 100/100/K32 instead of approved 50/50/K20 | High, blocking; `domain-engineer` resource/core test, `spark-engineer` README | **Repaired, external recheck pending.** Full gate 528/528, exit 0. The shipped resource is CC50/k-core50/checkpoint5/community20/maxHops6/K20/S32/seed441. The core test asserts every value and both fingerprint changes; targeted 14/14 (`repair-1/core-targeted.txt`). README identifies the actual resource and preserves historical 6C output/run IDs. |
+| F2: LPA non-convergence lacks feature evidence; README claims nonexistent coverage | Medium, blocking; `spark-engineer` | **Repaired, external recheck pending.** Full gate 528/528, exit 0. The two-person weight-1 fixture runs three iterations, checks every membership/summary is non-converged, summary changed count 2, counters 0/2, and parses actual output rows into core records accepted by validation. `CommunityMembership` has no changed-count field; its existing fields are preserved. Module targeted 10/10 (`repair-1/module-targeted.txt`); README names this exact fixture. |
+| F3: report claims both suites cover G1–G4 | Low accuracy, blocking; coordinator | Corrected the inaccurate original report sentence. G1–G4 literal coverage is assigned to the independent suite; module fixtures are A–E, triangle, route ties, ties/caps, sampling and the new oscillating pair. No module G1–G4 claim remains. |
+
+Fingerprint evidence refers to the checked-in example loaded through the core serializer, not to the separate historical 6C smoke config. Full fingerprint changes from `a75347c8ea36964d5144e09a19f8cb76f9de08128868e76f6fad4f8db77b8169` to `8f6fd8b7b5596ece608424278b10b23f61317562d989a6a40d07fad109cd643e`; logical fingerprint changes from `49316f88beb239b6d654b9df77814be759a10f20c7209894e3dc63fbab9cc624` to `f03c79505357ca9795894569c3f7cbf0f67e9d18c864eab9de895bb4a85159f3`. Future runs using the new logical settings bind different deterministic run identity. Existing smoke manifests and IDs are unchanged historical evidence.
+
+| Nonblocking observation | Owner | Disposition / future gate |
+| --- | --- | --- |
+| 6DE N1: found BFS pairs keep other frontiers; full paths/checkpoint each hop | `spark-engineer` | Deferred by blocking-only scope; optimize and align checkpoint documentation before the 6F+6G real-data run. |
+| 6DE N2: reported LPA iterations is global loop count | `spark-engineer` | Fix or document before 6F+6G reporting; nonblocking for this repair. |
+| 6DE N3: LPA cache timing can rebuild prior iterations | `spark-engineer` | Performance repair before 6F+6G real-data execution. |
+| 6DE N4: inferred nested context field order may differ | `spark-engineer`, core owner if shared contract support is needed | Plausible/unexecuted observation retained as such. Use an explicit shared schema before final manifests/schema hashes in 6F+6G. |
+| 6DE N5: missing endpoints share no-path status; sampled counter precedes benchmark dedup | `spark-engineer` | Add missing-endpoint counter and document counter meaning in 6F+6G. |
+| 6DE N6: replay omits paths/sampling/LPA/bridges | `test-engineer` / `spark-engineer` | 6F+6G full per-table replay-hash gate. |
+| 6DE N7: no DE row-to-core validation tests | `spark-engineer` / `test-engineer` | Partially addressed by F2 for actual community membership/summary rows. Broader output/export record validation remains 6F+6G. |
+| 6DE N8: design README differs from implementation in details | `spark-engineer` | Final README and physical-plan pass in 6F+6G. |
+| 6DE N9: coordinator executed owner-file formatter | Coordinator | Process note retained. In this round the Spark owner's sandbox command failed before compilation; coordinator executed the owner's supplied formatter/check/test command on owner-authored code. |
+
+Future gates from this review: implement sampled path-length/diameter estimation in 6F+6G or obtain an explicit human acceptance of that deviation in the 6I human gate; the original round did not retain a rationale for why it was not a small addition, and no retrospective rationale is invented here. Report LPA oscillation/non-convergence on real-data windows. Publishing, durable event-log summarization, hard-failure persistence, bounded-window metrics, real-data run and complete replay remain 6F+6G. Prior 6C findings and summary entity validation keep their named owners; EMR script/live work remains in Phases 13/15.
+
+Final repair gate: JDK 17 `sbt -batch check` exited **0**, **528 passed / 0 failed** (143/64/39/25/250/7), real **563.44 s**. `repair-1/final-check.txt` is **286,117 bytes**, SHA-256 `18d9858bc70337879054a388868dede84e19b2f568f12b2e5e50d2d1c833112f`. Core targeted 14/14, Spark targeted 10/10, diff check exit 0. No external approval is claimed.
+
+
+### External 6D+6E repair-round-1 approval disposition
+
+The user-supplied independent reviewer returned **APPROVE**. Its complete report and NEXT PROMPT are appended verbatim in `review.md`. F1, F2 and F3 are **closed by external recheck**: shipped defaults and fingerprint assertions match the approved choices; the oscillating pair passes through actual core parse/validation and counter assertions; coverage wording is accurate. The reviewer verified the retained 528/0 gate and reported no new blocker. N1–N9 and all later gates remain registered above. This is an external reviewer verdict, not an agent acceptance or a user commit.
+
+| Observation | Owner | Gate / disposition |
+| --- | --- | --- |
+| R1-O1: two-person components oscillate under synchronous LPA, affecting real-window convergence | `spark-engineer` | Nonblocking for 6D+6E. During 6F+6G, state this consequence in the README and actual real-data report; report observed convergence per window rather than implying convergence is usual. |
+
+Commit check after approval: branch `phase-6` still has HEAD `8d5b9d48b2fbc1f03e13f3eabdef1bfa373969d4` and the approved 6D+6E source/evidence is uncommitted. The supplied NEXT PROMPT and plan require the user's commit before 6F+6G starts. No 6F+6G base or preflight is recorded yet; no next-subphase work has begun.

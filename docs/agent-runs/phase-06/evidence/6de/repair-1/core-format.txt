@@ -1,0 +1,9 @@
+[info] welcome to sbt 1.10.7 (Homebrew Java 17.0.20.1)
+[info] loading settings for project scholarchain-build from plugins.sbt...
+[info] loading project definition from /Users/danny/Documents/UIC/CS441/ScholarChain/project
+[info] loading settings for project root from build.sbt...
+[info] set current project to root (in build file:/Users/danny/Documents/UIC/CS441/ScholarChain/)
+[info] scalafmt: Formatting 1 Scala sources (/Users/danny/Documents/UIC/CS441/ScholarChain/modules/core)...
+[success] Total time: 1 s, completed Oct 22, 2026, 12:35:15 PM
+[success] Total time: 0 s, completed Oct 22, 2026, 12:35:15 PM
+[success] Total time: 0 s, completed Oct 22, 2026, 12:35:15 PM

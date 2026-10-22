@@ -153,11 +153,12 @@ object SparkAnalyticsConfigLoader {
         )
           errors += "benchmark pair researcher IDs are malformed"
       } else if (pair.endpointKind == "dblp-name") {
-        if (
-          StableIds.researcherIdFromDblpName(config.identityPolicyVersion, pair.left).isLeft ||
-          StableIds.researcherIdFromDblpName(config.identityPolicyVersion, pair.right).isLeft
-        )
+        val leftId = StableIds.researcherIdFromDblpName(config.identityPolicyVersion, pair.left)
+        val rightId = StableIds.researcherIdFromDblpName(config.identityPolicyVersion, pair.right)
+        if (leftId.isLeft || rightId.isLeft)
           errors += "benchmark pair DBLP names are malformed"
+        else if (leftId == rightId)
+          errors += "benchmark pair DBLP names resolve to the same researcher"
       }
     }
     if (errors.nonEmpty) Left(ConfigError(errors.toVector)) else Right(config)

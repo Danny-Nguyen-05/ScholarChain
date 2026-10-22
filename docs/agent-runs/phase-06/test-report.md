@@ -247,3 +247,134 @@ NEXT GATE: Independent 6C repair-round recheck. Stop before 6D.
 ### External recheck disposition
 
 The user-supplied external reviewer **APPROVED** the 6C repair round and independently checked the retained log timing, byte count and SHA-256, per-module 507/507 counts, smoke run ID, ER counter evidence, published manifest and completion marker. Its report is retained in `review.md`. These checks are reviewer-reported read-only validation, not a new test run by the coordinator. The next gate is the user's commit of the approved 6C tree before 6D Step 0.
+
+
+## Subphase 6D+6E — final corrected-tree validation
+
+STATUS: COMPLETE for local validation; independent external review is pending.
+
+OWNER: Coordinator `/root` retained the final gate and ran the final independent command; Spark and independent test owners authored their separate suites. Core owner supplied prerequisite F5 feature tests.
+
+WORK ORDER: Validate jobs 3–8 against hand-computed fixtures on `phase-6`, base/unchanged HEAD `8d5b9d48b2fbc1f03e13f3eabdef1bfa373969d4`, without commit, reviewer launch or later-subphase implementation.
+
+FILES CREATED: `evidence/6de/{preflight,commands}.md`, final and intermediate `.txt` logs, `source-check.txt`, `final-gate-metadata.json`. The implementation/test file list is in the matching owner report.
+
+FILES MODIFIED: This report, coordinator work order/repair/owner reports, and owner-scoped sources/tests/README listed in the owner report.
+
+COMMANDS RUN: From the repository root, the coordinator used:
+
+```bash
+export JAVA_HOME=/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home
+export PATH="$JAVA_HOME/bin:$PATH"
+export SBT_OPTS="-Dlogback.configurationFile=$PWD/docs/agent-runs/phase-04/xml-repair-logback.xml"
+sbt -batch 'independentTests/Test/scalafmt' 'independentTests/Test/scalafmtCheck' 'independentTests/testOnly *IndependentPhase6DEGraphSpec' > docs/agent-runs/phase-06/evidence/6de/independent-predecessor-targeted.txt 2>&1
+/usr/bin/time -p sbt -batch check > docs/agent-runs/phase-06/evidence/6de/final-check.txt 2>&1
+git diff --check
+```
+
+Each final sbt process exited **0**; the shell captured `$?`, appended `exit=0` to its log, and exited with that status. The complete command record, including the append/exit lines, is `evidence/6de/commands.md`. The coordinator executed the test owner's requested automatic formatter for the final test addition; the owner authored all test logic. Spark owner ran JDK 17 `sbt -batch 'sparkAnalytics/scalafmt' 'sparkAnalytics/Test/scalafmt' 'sparkAnalytics/testOnly *Phase6DEJobsSpec'`, exit 0; its retained log header verifies Java/sbt versions, while its exported environment was not separately captured. The final full gate checks all formatting again. Core owner's 14/14 targeted result and core formatting checks were observed but not retained separately; the full gate retains the final core result.
+
+TEST RESULTS:
+
+| Gate | Passed / failed | Evidence |
+| --- | --- | --- |
+| Final Spark module targeted | 9 / 0 | `module-predecessor-targeted.txt` (12:06:07) |
+| Final independent targeted | 10 / 0 | `independent-predecessor-targeted.txt` (12:07:21), exit 0, sbt 39 s |
+| Core in full check | 143 / 0 | `final-check.txt:164` / `:166` |
+| Hadoop in full check | 64 / 0 | `final-check.txt:906` / `:908` |
+| Entity resolution in full check | 39 / 0 | `final-check.txt:956` / `:958` |
+| Spark in full check | 24 / 0 | `final-check.txt:1540` / `:1542` |
+| Independent in full check | 250 / 0 | `final-check.txt:2741` / `:2743` |
+| Build verification in full check | 7 / 0 | `final-check.txt:2783` / `:2785` |
+| **Full check total** | **527 / 0** | success at `:2788`, exit 0 at `:2793` |
+
+The full gate completed 2026-10-22 12:17:08 CDT, sbt **565 s**, `/usr/bin/time` real **567.12 s**. Header: **sbt 1.10.7, Homebrew Java 17.0.20.1**. File size **285,463 bytes**; SHA-256 **`bd8b9a28348839769b5410364c3f7893fe37bb1c871eac27d7595fba75dbca34`**. `final-gate-metadata.json` contains machine-readable counts/hash. Targeted counts are included in the full-suite counts and are not added again.
+
+VALIDATION RESULTS: The independent suite exercises G1–G4 expected values, injected G1/G2 bridge partitions, hand-traced two-clique LPA, empty/single/yearless cases, and replay of metric/core/component rows. The module suite uses A–E, triangle and route-tie fixtures for metrics/components/coreness, paths, ties/caps/solo behavior, iteration guards, convergent LPA and seeded pair selection. This coverage wording was corrected in repair round 1 (F3); it does not claim module G1–G4 coverage. Both final targeted suites include an equal-length route fixture where smallest immediate predecessor differs from whole-route lexicographic order. Core feature checks preserve wire/ID compatibility while enforcing the prior F5 consistency rules. The source scan in `source-check.txt` matches only `BoundedActions.scala:14` and `:21`; no forbidden production graph APIs were found by that scan. Source/test/README mtimes precede this full gate. `git diff --check` exited 0. Build-verification `[error]` output is the expected injected check-probe self-test; all seven build tests passed. Hadoop/Spark fixture warnings remain in the full log.
+
+INTERMEDIATE RESULTS AND FAILURES: `independent-compile-failure.txt` retains a test typo (`"A" to "G"`), corrected to a Char range. `independent-interrupted.txt` records the initial slow G1 run using 50 LPA iterations; the owner interrupted it and reduced the fixture's iteration limit to 4, since G1 does not prescribe LPA convergence and the convergent two-clique fixture settles by iteration 3. `independent-runtime-fixture-failure.txt` retains a 6/8 result caused by two test casts from Spark mutable ArraySeq to immutable Seq; the test owner corrected those casts. Earlier passing 8/8 module and 9/9 independent logs remain as provenance and are superseded by the final 9/9 and 10/10 logs. The coordinator stopped an earlier full check after finding the predecessor-rule mismatch; SIGINT did not stop sbt, so the exact running sbt process received SIGTERM, yielding exit **143**, real 180.61 s (`superseded-check.txt`). That stopped run is not a passing gate. Spark source/test owners fixed the rule and added distinguishing fixtures before the final targeted/full gates. Owners also reported initial sandbox lock permission denials; those are environment failures, not passing tests. Model-capacity interruptions delayed turns without changing test outcomes.
+
+ASSUMPTIONS: Synthetic fixture tables are deliberately bounded. The final builder source was stable before targeted validation; the final full gate also postdates the last source, test and README change. The independent owner supplied the final fixture; coordinator formatting execution is disclosed above.
+
+RISKS: No jobs 3–8 real-data export or cloud run is claimed. The S-source distance estimate is deferred by user choice, optional betweenness omitted, and final publishing/event-log/failure-persistence work belongs to 6F+6G. Existing later gates are retained in `repairs.md`.
+
+MANUAL ACTION REQUIRED: User runs the separate read-only 6D+6E review, then decides on a commit after approval. No reviewer or commit was triggered by these tests.
+
+BLOCKED-ON OWNER: None for the requested local gate.
+
+BLOCKED-ON EVIDENCE: None for the targeted/full-check results above.
+
+NEXT GATE: User-run read-only 6D+6E review. Stop before 6F+6G.
+
+
+## Subphase 6D+6E — repair round 1 validation (F1–F3)
+
+STATUS: COMPLETE for blocking repair validation; external recheck pending.
+
+OWNER: Domain/Spark owners authored their changes and core/Spark fixtures. Coordinator retained logs, executed the Spark owner's supplied formatter/test command and the final full check, and corrected the F3 report attribution.
+
+WORK ORDER: Validate F1 shipped defaults, F2 LPA non-convergence and F3 report accuracy on branch `phase-6`, base/unchanged HEAD `8d5b9d48b2fbc1f03e13f3eabdef1bfa373969d4`. Preserve prior implementation/evidence; no commit, reviewer launch or 6F+6G work.
+
+FILES CREATED: `evidence/6de/repair-1/{core-format,core-targeted,module-sandbox-denial,module-targeted,final-check,java-version,source-check}.txt`, `commands.md`, `final-gate-metadata.json` and handoff evidence.
+
+FILES MODIFIED: Owner-authored config resource, core contract test, Spark module test and README; coordinator review/prompt/repair/owner/test reports. No independent-test source or production algorithm changed this round.
+
+COMMANDS RUN: All successful sbt commands used:
+
+```bash
+export JAVA_HOME=/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home
+export PATH="$JAVA_HOME/bin:$PATH"
+export SBT_OPTS="-Dlogback.configurationFile=$PWD/docs/agent-runs/phase-04/xml-repair-logback.xml"
+```
+
+Core owner commands (all exit 0, retained in `core-format.txt` and `core-targeted.txt`):
+
+```bash
+sbt -batch 'core/scalafmtAll' 'core/Compile/scalafmtCheck' 'core/Test/scalafmtCheck'
+sbt -batch 'core/testOnly *SparkAnalyticsContractSpec'
+```
+
+Coordinator commands (all exit 0):
+
+```bash
+sbt -batch 'sparkAnalytics/Test/scalafmt' 'sparkAnalytics/Test/scalafmtCheck' 'sparkAnalytics/testOnly *Phase6DEJobsSpec' > docs/agent-runs/phase-06/evidence/6de/repair-1/module-targeted.txt 2>&1
+/usr/bin/time -p sbt -batch check > docs/agent-runs/phase-06/evidence/6de/repair-1/final-check.txt 2>&1
+git diff --check
+```
+
+The shell captured `$?`, appended the actual exit code to each coordinator sbt log, and returned that status; `commands.md` retains those exact lines. The Spark owner reported a sandbox lock-file denial before compilation (exit 1, `module-sandbox-denial.txt`). The coordinator then executed the owner's requested automatic formatter/check/test command on owner-authored test code. This environment failure is not a test failure or pass. The independent source was unchanged; the full check exercised all 250 independent tests, so no separate independent targeted rerun was needed this round.
+
+TEST RESULTS:
+
+| Gate | Passed / failed | Evidence |
+| --- | --- | --- |
+| Core targeted contract suite | 14 / 0 | `repair-1/core-targeted.txt`, 12:35:26 |
+| Spark targeted module suite | 10 / 0 | `repair-1/module-targeted.txt`, 12:37:15, exit 0 |
+| Core full suite | 143 / 0 | `repair-1/final-check.txt:166` / `:168` |
+| Hadoop full suite | 64 / 0 | `repair-1/final-check.txt:908` / `:910` |
+| ER full suite | 39 / 0 | `repair-1/final-check.txt:958` / `:960` |
+| Spark full suite | 25 / 0 | `repair-1/final-check.txt:1544` / `:1546` |
+| Independent full suite | 250 / 0 | `repair-1/final-check.txt:2746` / `:2748` |
+| Build verification | 7 / 0 | `repair-1/final-check.txt:2788` / `:2790` |
+| **Full gate total** | **528 / 0** | success `:2793`; real `:2794`; exit 0 `:2798` |
+
+Full gate: sbt **561 s**, real **563.44 s**, completion **2026-10-22 12:47:16 CDT**. Header verifies **Homebrew Java 17.0.20.1** and **sbt 1.10.7**; direct `java -version` is retained. Size **286,117 bytes**; SHA-256 **`18d9858bc70337879054a388868dede84e19b2f568f12b2e5e50d2d1c833112f`**. The original 527-test log remains historical evidence at `evidence/6de/final-check.txt`; this repair's log is in `repair-1/`.
+
+VALIDATION RESULTS: F1 asserts CC50, k-core50, checkpoint5, community20, maxHops6, K20, S32, seed441, plus the existing representative/shuffle settings. The test confirms both full and logical fingerprints differ from reconstructed prior 100/100/K32 settings. Exact hashes are retained in core output and metadata; no historical 6C output or run identity is rewritten. F2's two-person fixture asserts all memberships and summaries are non-converged after three iterations, both summaries have finalChangedCount=2, and the counters are 0/2. Actual DataFrame membership/summary JSON is parsed to the corresponding core records and every record passes `SparkAnalyticsValidation.check`. The module suite now has 10 tests; the new case also passes inside the 25-test full Spark suite. F3 is an editorial correction: only the independent suite claims G1–G4, while the module suite uses its separate A–E, triangle, ties/sampling and oscillating-pair fixtures. No fresh module G1–G4 result is claimed. Source/resource/test/README mtimes precede the final gate; API scans only match the bounded helper sites; `git diff --check` exits 0. The injected build-probe `[error]` trace is expected and all seven build-verification tests pass.
+
+ASSUMPTIONS: Step 0 decisions are unchanged; old/new fingerprints printed here belong to the canonical config example, not to old smoke configs with different physical roots. Targeted counts are included in full totals and not added twice.
+
+RISKS: Nonblocking and future findings are tracked in `repairs.md`, including complete replay/export/core parsing, performance and real-data limitations. This repair adds core parsing only for community membership/summary records. No cloud or real-data pipeline result is claimed.
+
+MANUAL ACTION REQUIRED: User launches the separate read-only recheck; user decides on a commit after approval.
+
+BLOCKED-ON OWNER: None for the requested blockers.
+
+BLOCKED-ON EVIDENCE: None for the local repair gates.
+
+NEXT GATE: External read-only 6D+6E repair-round-1 recheck. Stop before 6F+6G.
+
+
+### External 6D+6E repair-round-1 approval
+
+The user-supplied independent reviewer returned **APPROVE**, closing F1–F3 and verifying the retained 528/0 full-gate evidence, core 14/14 and Spark 10/10 targeted results. Its complete text is retained in `review.md`; R1-O1 is assigned in `repairs.md`. These are reviewer-reported checks, not a new test execution. The approved tree is still uncommitted at HEAD `8d5b9d48b2fbc1f03e13f3eabdef1bfa373969d4`. The next gate is the user's commit, followed by 6F+6G Step 0. No next-subphase work, commit or push was performed by the coordinator.

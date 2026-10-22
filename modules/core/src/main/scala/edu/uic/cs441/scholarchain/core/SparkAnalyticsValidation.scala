@@ -37,7 +37,9 @@ object SparkAnalyticsValidation {
     if (!SchemaVersions.supportedSparkAnalytics.contains(value.schemaVersion))
       errors += s"unsupported Spark analytics schema: ${value.schemaVersion}"
     if (StableIds.parseRunId(value.runId).isLeft) errors += "invalid runId"
-    value.windowId.foreach(nonBlank(_, "windowId", errors))
+    value.windowId.foreach { window =>
+      if (!window.matches("[a-z0-9][a-z0-9._-]*")) errors += s"invalid windowId: $window"
+    }
     val lineage = value.lineage
     if (StableIds.parseRunId(lineage.hadoopRunId).isLeft) errors += "invalid Hadoop run ID"
     if (StableIds.parseRunId(lineage.entityResolutionRunId).isLeft)
@@ -140,6 +142,10 @@ object SparkAnalyticsValidation {
       fraction(value.participationCoefficient, "participationCoefficient", errors)
       if (value.communitiesConnected > value.crossCommunityDegree)
         errors += "communitiesConnected exceeds crossCommunityDegree"
+      if (value.crossCommunityWeight < value.crossCommunityDegree)
+        errors += "crossCommunityWeight cannot be less than crossCommunityDegree"
+      if (value.crossCommunityDegree == 0 && value.participationCoefficient != 0.0)
+        errors += "zero crossCommunityDegree requires zero participationCoefficient"
     }
 
   def check(value: ComponentMembership): Either[ConfigError, ComponentMembership] =
@@ -174,6 +180,8 @@ object SparkAnalyticsValidation {
       if (value.size < 1) errors += "community size must be >= 1"
       nonNegative(value.iterations, "iterations", errors)
       nonNegative(value.finalChangedCount, "finalChangedCount", errors)
+      if (value.converged && value.finalChangedCount != 0)
+        errors += "converged community requires zero finalChangedCount"
     }
 
   def check(value: CrossCommunityEdge): Either[ConfigError, CrossCommunityEdge] =
@@ -184,6 +192,8 @@ object SparkAnalyticsValidation {
       if (value.communityA >= value.communityB) errors += "communities must be ordered and distinct"
       if (value.edgeCount < 1 || value.summedWeight < 1)
         errors += "cross-community edge count and weight must be positive"
+      if (value.summedWeight < value.edgeCount)
+        errors += "summedWeight cannot be less than edgeCount"
     }
 
   def check(value: CoauthorEdgeSupport): Either[ConfigError, CoauthorEdgeSupport] =
@@ -256,6 +266,12 @@ object SparkAnalyticsValidation {
       }
       value.status match {
         case PathStatus.Found =>
+          if (value.hopCount.exists(_ > value.maxHops))
+            errors += "found path hopCount cannot exceed maxHops"
+          if (value.sourceResearcherId == value.targetResearcherId)
+            errors += "found path endpoints must differ"
+          if (value.orderedResearcherIds.distinct.size != value.orderedResearcherIds.size)
+            errors += "found path cannot repeat researchers"
           if (
             value.hopCount != Some(value.hops.size) ||
             value.orderedResearcherIds.size != value.hops.size + 1 ||

@@ -1,0 +1,25 @@
+{
+  "branch": "phase-6",
+  "baseSha": "8d5b9d48b2fbc1f03e13f3eabdef1bfa373969d4",
+  "exitCode": 0,
+  "perModule": {
+    "core": 143,
+    "hadoop": 64,
+    "entityResolution": 39,
+    "spark": 25,
+    "independent": 250,
+    "buildVerification": 7
+  },
+  "totalPassed": 528,
+  "totalFailed": 0,
+  "bytes": 286117,
+  "sha256": "18d9858bc70337879054a388868dede84e19b2f568f12b2e5e50d2d1c833112f",
+  "sbtSeconds": 561,
+  "realSeconds": 563.44,
+  "coreTargetedPassed": 14,
+  "moduleTargetedPassed": 10,
+  "configFingerprint": "8f6fd8b7b5596ece608424278b10b23f61317562d989a6a40d07fad109cd643e",
+  "previousConfigFingerprint": "a75347c8ea36964d5144e09a19f8cb76f9de08128868e76f6fad4f8db77b8169",
+  "logicalFingerprint": "f03c79505357ca9795894569c3f7cbf0f67e9d18c864eab9de895bb4a85159f3",
+  "previousLogicalFingerprint": "49316f88beb239b6d654b9df77814be759a10f20c7209894e3dc63fbab9cc624"
+}

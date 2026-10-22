@@ -441,6 +441,70 @@ class SparkAnalyticsContractSpec extends AnyFunSuite {
     assert(SparkAnalyticsValidation.check(change.copy(fromPresent = false)).isLeft)
   }
 
+  test("bridge, community and path records enforce their local consistency rules") {
+    def rejects[A](result: Either[ConfigError, A], message: String): Unit =
+      assert(result.left.exists(_.text.contains(message)), message)
+
+    rejects(
+      SparkAnalyticsValidation.check(
+        bridge.copy(crossCommunityDegree = 0, crossCommunityWeight = 0, communitiesConnected = 0)
+      ),
+      "zero crossCommunityDegree requires zero participationCoefficient"
+    )
+    rejects(
+      SparkAnalyticsValidation.check(bridge.copy(crossCommunityDegree = 2)),
+      "crossCommunityWeight cannot be less than crossCommunityDegree"
+    )
+    rejects(
+      SparkAnalyticsValidation.check(communitySummary.copy(finalChangedCount = 1)),
+      "converged community requires zero finalChangedCount"
+    )
+    rejects(
+      SparkAnalyticsValidation.check(crossCommunityEdge.copy(edgeCount = 2)),
+      "summedWeight cannot be less than edgeCount"
+    )
+    rejects(
+      SparkAnalyticsValidation.check(path.copy(maxHops = 0)),
+      "found path hopCount cannot exceed maxHops"
+    )
+    rejects(
+      SparkAnalyticsValidation.check(path.copy(targetResearcherId = a)),
+      "found path endpoints must differ"
+    )
+    val repeated = path.copy(
+      targetResearcherId = c,
+      hopCount = Some(3),
+      orderedResearcherIds = Vector(a, b, a, c),
+      hops = Vector(
+        PathHop(a, b, edge, 3, Vector(work)),
+        PathHop(b, a, edge, 3, Vector(work)),
+        PathHop(a, c, edge, 3, Vector(work))
+      )
+    )
+    rejects(SparkAnalyticsValidation.check(repeated), "found path cannot repeat researchers")
+    rejects(
+      SparkAnalyticsValidation.check(metrics.copy(context = ctx.copy(windowId = Some("Bad")))),
+      "invalid windowId: Bad"
+    )
+    assert(
+      SparkAnalyticsValidation
+        .check(
+          bridge.copy(
+            crossCommunityDegree = 0,
+            crossCommunityWeight = 0,
+            communitiesConnected = 0,
+            participationCoefficient = 0.0
+          )
+        )
+        .isRight
+    )
+    assert(
+      SparkAnalyticsValidation
+        .check(communitySummary.copy(converged = false, finalChangedCount = 1))
+        .isRight
+    )
+  }
+
   test("versioned Spark config loads, fingerprints and validates approved defaults") {
     val resource = getClass.getResource("/scholarchain.spark-analytics-config.v1.json")
     val text = scala.io.Source.fromURL(resource).mkString
@@ -448,9 +512,29 @@ class SparkAnalyticsContractSpec extends AnyFunSuite {
     assert(loaded.windows.size == 6)
     assert(loaded.windows.head.startYear.isEmpty && loaded.windows.head.endYear.isEmpty)
     assert(loaded.windows(1).endYear.contains(2009))
+    assert(loaded.componentMaxIterations == 50)
+    assert(loaded.communityMaxIterations == 20)
+    assert(loaded.kCoreMaxIterations == 50)
+    assert(loaded.checkpointInterval == 5)
+    assert(loaded.maxHops == 6)
+    assert(loaded.sampledPathPairCount == 20)
+    assert(loaded.pathSampleSourceCount == 32)
+    assert(loaded.samplingSeed == 441L)
     assert(loaded.representativeWorkLimit == 5 && loaded.maxTeamWorkLimit == 20)
+    assert(loaded.shufflePartitions == 4)
     assert(loaded.fingerprint == StableIds.sha256Hex(loaded.canonicalJson))
     assert(loaded.logicalFingerprint == StableIds.sha256Hex(loaded.logicalCanonicalJson))
+    val previous = loaded.copy(
+      componentMaxIterations = 100,
+      kCoreMaxIterations = 100,
+      sampledPathPairCount = 32
+    )
+    assert(loaded.fingerprint != previous.fingerprint)
+    assert(loaded.logicalFingerprint != previous.logicalFingerprint)
+    info(s"6D+6E config fingerprint: ${loaded.fingerprint}; prior: ${previous.fingerprint}")
+    info(
+      s"6D+6E logical fingerprint: ${loaded.logicalFingerprint}; prior: ${previous.logicalFingerprint}"
+    )
     val runManifest = Fixtures.manifest.copy(
       configSchemaVersion = SchemaVersions.sparkAnalyticsConfig,
       configFingerprint = loaded.fingerprint
@@ -608,6 +692,10 @@ class SparkAnalyticsContractSpec extends AnyFunSuite {
     rejects(
       loaded.copy(benchmarkPairs = Vector(BenchmarkPair("A", "B", "unknown"))),
       "benchmark pair has invalid endpoints or endpointKind"
+    )
+    rejects(
+      loaded.copy(benchmarkPairs = Vector(BenchmarkPair(" A", "A", "dblp-name"))),
+      "benchmark pair DBLP names resolve to the same researcher"
     )
   }
 }

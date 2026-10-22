@@ -63,3 +63,28 @@ The Spark owner repairs job selection, integrity reporting, ER reads and module 
 The user's subsequent external recheck supplied only report fields, finding F1–F5 changes substantive but blocked on R1-1 (missing/stale final evidence) and R1-2 (unchanged run ID after changed semantics). The user asked to fix all those blockers. A successor Spark owner closes R1-2 in `modules/spark/**`; the coordinator completes fresh targeted, smoke and JDK 17 full-gate evidence on the final repair tree. No further feature scope or 6D work is inferred from this recheck fragment.
 
 The user-supplied independent recheck subsequently returned **APPROVE** for 6C repair round 1. Its complete text, including the previously missing nonblocking N1–N9 and later-gate list, is retained in `review.md`; `repairs.md` routes those items. The reviewer found no remaining 6C blocker. The user must commit the approved 6C tree before a new prompt can start 6D Step 0. This approval is not a commit or a request to begin 6D.
+
+## Subphase 6D+6E work order
+
+The user requested implementation of the merged 6D+6E run and explicitly said not to commit or trigger code review. Preflight found a clean `phase-6` tree at committed base/HEAD `8d5b9d48b2fbc1f03e13f3eabdef1bfa373969d4` (`phase-06 spark-engineer: implement and validate Phase 6C canonical graph jobs`). The updated plan is `/Users/danny/Documents/plan/phase6.md`, SHA-256 `6df6d856df6c4c6ee0a8f00125e78af1bce5e789666399ae48a9443aec955096`, whose schedule merges 6D+6E into one implementation and review handoff. This run is limited to jobs 3–8, their independent tests, and prerequisite core contract hardening assigned before their producer gates. It does not start 6F+6G, use AWS, commit, push, or launch a reviewer.
+
+The user answered all four Step 0 questions:
+
+1. **6D-1: "Yes, use those defaults"** — `maxIterations=50`, `checkpointInterval=5`, hard failure on non-convergence.
+2. **6E-1: "Yes, use those defaults"** — `maxHops=6`, sampled pair count `K=20`, source count `S=32`, fixed seeds.
+3. **6E-2: "Yes, omit it"** — omit optional sampled betweenness; implement the three required bridge measures.
+4. **6DE-3: "Yes, prioritize BFS"** — selected-pair BFS is required; add sampled path-length estimation only if it is a small addition, otherwise report it as a documented limitation.
+
+`spark-engineer` owns `modules/spark/**`, including module tests and README. `test-engineer` owns `tests/**`. `domain-engineer` owns only `modules/core/**` for the deferred 6B F5 record invariants needed before the 6D+6E producers use them. The coordinator assembles `docs/agent-runs/phase-06/**`, retains exact gate evidence, and returns a copyable Section 11 reviewer prompt. No agent approves its own work.
+
+Tool/model provenance: Codex with native shell and agent delegation; coordinator role `/root`, Spark owner `/root/spark_6de`, independent test owner `/root/test_6de`, core owner `/root/domain_6de`. Agents inherited the current model without an override. The coordinator is identified as GPT-6; exact deployed model builds, the app version, and each child's resolved model ID are not exposed. Model-capacity interruptions delayed coordinator/test-owner turns; they are not test results. This Codex workflow does not claim equivalence to, or instructor approval of a deviation from, the course's Claude Code workflow. JDK and sbt versions are recorded in retained logs. The coordinator consulted the course README's Phase 6 and Detailed Spark requirements read-only at `https://raw.githubusercontent.com/0x1DOCD00D/ScholarChain/main/README.md` on 2026-10-22.
+
+
+## Subphase 6D+6E repair round 1 work order
+
+The user supplied the complete external **REQUEST-CHANGES** review and instructed **"fix all of the blockings bugs for me"**. The review, including F1–F3, N1–N9, future gates and report fields, is appended under "Subphase 6D+6E review — user-supplied external review" in `review.md`. This round fixes only blocking F1–F3: shipped approved config defaults and assertions, a module LPA oscillation test with actual core-record validation, and accurate report/README coverage. The existing Step 0 decisions already select 50/50/K20; no new choice is needed.
+
+Branch `phase-6`, unchanged base/HEAD `8d5b9d48b2fbc1f03e13f3eabdef1bfa373969d4`; existing uncommitted 6D+6E work is preserved. The domain owner `/root/domain_6de` owns F1 resource/test changes under `modules/core/**`; Spark owner `/root/spark_6de` owns F1/F2 README and module-test changes under `modules/spark/**`; coordinator `/root` owns F3 report corrections, review retention and evidence. The coordinator executes the Spark owner's requested formatter/targeted command because the owner's restricted tool context could not open sbt's boot lock; this is a disclosed execution on owner-authored code. No independent-test change is required in this repair round. Nonblocking observations remain registered with named owners/gates. No production algorithm, wire field, ID formula, Hadoop/ER/build behavior, human decision or old 6C evidence is changed. No commit, push, reviewer launch, AWS call or 6F+6G start is authorized.
+
+
+The user subsequently supplied the **APPROVE** recheck and a NEXT PROMPT requiring approval retention, F1–F3 closure/R1-O1 registration, then confirmation of the user's commit before 6F+6G. The coordinator recorded those review dispositions. A read-only git check still found the approved 6D+6E tree uncommitted at HEAD `8d5b9d48b2fbc1f03e13f3eabdef1bfa373969d4`; the coordinator stops at that explicit commit gate. The user's next-subphase request does not authorize an agent commit.

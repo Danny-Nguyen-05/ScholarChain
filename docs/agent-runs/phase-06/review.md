@@ -764,3 +764,283 @@ MANUAL ACTION REQUIRED: User reviews and commits the 6C tree before 6D Step 0.
 BLOCKED-ON OWNER: none for 6C.
 BLOCKED-ON EVIDENCE: none for 6C.
 NEXT GATE: User's 6C commit, then Subphase 6D Step 0.
+
+
+## Subphase 6D+6E review — user-supplied external review
+
+1. VERDICT: REQUEST-CHANGES for Subphase 6D+6E
+
+The jobs 3–8 work itself is sound. The metrics, components, coreness, BFS predecessor rule, LPA and bridge formulas all match the plan, and the G1–G4 expected values are asserted exactly in the independent suite. The retained evidence matches what the reports claim. Three things block approval:
+- Your approved 50/50/K=20 settings never made it into the shipped config.
+- The "LPA reports non-convergence" behavior you decided on has no test.
+- Two report and README statements overstate the test coverage.
+
+All three are small fixes.
+
+What I verified (read-only)
+
+- Git state: HEAD is 8d5b9d4… and unchanged; the work is uncommitted. The plan SHA-256 matches. The diff covers every listed tracked file, and I read all three new Scala files in full.
+- Final log: final-check.txt is 285,463 bytes and its SHA-256 bd8b9a28… matches.
+  - Per-module counts are 143/64/39/24/250/7, at log lines 166, 908, 958, 1542, 2743 and 2785.
+  - real 567.12 is at line 2789 and exit=0 at line 2793.
+  - Both 6DE suites ran inside it (module 9, independent 10).
+- Timestamps: every changed source, test and README file predates the final check (12:04–12:06 vs 12:17 local).
+- Spark API and driver rules: Phase6DEJobs.scala has no RDD, implicits, Encoders, typed Datasets or GraphX. Every driver-side action goes through BoundedActions (count, exists, scalarLong or a capped call). The UDF4 has an explicit StringType and wraps the core StableIds function, the same pattern 6C was approved with.
+- Correctness checked by hand:
+  - k-core uses the h-index operator, starts from degree, and checks coreness ≤ degree.
+  - Components use minimum-label propagation with a hard failure at the iteration limit.
+  - Synchronous LPA breaks ties by the smallest label.
+  - The participation coefficient includes the researcher's own community, so C and D get 4/9 and the star hub gets 0.8.
+  - BFS keeps the smallest immediate predecessor, and both suites have a fixture where that rule and whole-route ordering disagree.
+  - Cross-community edges are ordered so communityA < communityB.
+- Contract compatibility: the core diff only adds validation rules; no wire field or ID formula changed. All DE output columns match the core records.
+- Ownership: writes stayed inside each owner's paths. The coordinator ran the formatter on the test owner's file, which is disclosed.
+
+2. Findings
+
+Blocking
+
+ID: F1
+Severity: High
+Location: modules/core/src/main/resources/scholarchain.spark-analytics-config.v1.json:17,19,24; modules/spark/README.md:134; owner-report.md:206
+Evidence: Your Step 0 answers (prompt.md:73-74) set component/k-core limits to 50 and K=20. The only config file, unchanged since 6B (01d204b), still
+has componentMaxIterations: 100, kCoreMaxIterations: 100, sampledPathPairCount: 32. README:134 says "the config carries these values explicitly",
+but nothing in the repo carries them. The owner report calls them "intended". The core test "…validates approved defaults" never asserts these
+fields.
+Impact: The 6F+6G CLI will load this file and run 100/100/K=32 against your decision. The run fingerprint and run ID will then record values you
+didn't approve.
+Owner: domain-engineer for the resource and core test; spark-engineer for the README:134 wording
+Acceptance check: Resource values become component 50, k-core 50, checkpoint 5, community 20, maxHops 6, K (sampledPathPairCount) 20, S
+(pathSampleSourceCount) 32, seed fixed. The core default-config test asserts every one of them. Disclose that the config fingerprint changes; old
+6C smoke run IDs stay historical. Or, instead, you record a decision keeping 100/100/32.
+────────────────────────────────────────
+ID: F2
+Severity: Medium
+Location: Phase6DEJobs.scala:343-404, 554-560; Phase6DEJobsSpec.scala and IndependentPhase6DEGraphSpec.scala (no such case); README.md:134
+Evidence: You decided that LPA "reports non-convergence", and the plan's test matrix (§10, Communities) requires it. No test asserts converged=false,
+a nonzero finalChangedCount, or counter communityConverged=0. The only LPA tests use graphs that converge, and the configs with a 1-iteration limit
+ never check convergence. README:134 also says "module tests use smaller community limits where they deliberately inspect oscillation", which is
+false.
+Impact: The behavior you decided on is untested, and the README claims coverage that doesn't exist.
+Owner: spark-engineer (module test and README); test-engineer may add an independent case
+Acceptance check: A two-researcher pair (x<y, weight 1) swaps labels every iteration under synchronous LPA. With communityMaxIterations=3: every
+member and summary row of that window has converged=false and finalChangedCount=2; the counters show communityConverged=0 and
+communityFinalChangedCount=2; SparkAnalyticsValidation.check accepts the rows. Also fix the README sentence.
+────────────────────────────────────────
+ID: F3
+Severity: Low (accuracy)
+Location: test-report.md:293
+Evidence: It says "Module and independent tests separately exercise the G1–G4 values". Phase6DEJobsSpec has no G1–G4 fixture; it uses an A–E graph, a
+triangle and a tie graph. Only the independent suite covers G1–G4. Plan §8 expects both suites to use G1.
+Impact: The evidence overstates coverage.
+Owner: Coordinator (report text); spark-engineer only if you want G1 module tests
+Acceptance check: The report states the coverage accurately. The independent G1–G4 coverage already meets "Done when".
+
+Non-blocking observations
+
+ID: N1
+Location: Phase6DEJobs.scala:835-883
+Observation: BFS only drops the target node from the frontier. A pair whose target was found keeps expanding its other frontier nodes up to maxHops,
+while plan §7.6 says to stop at the target. Each frontier row also carries the full path and hop arrays, and it checkpoints every hop, while README
+ job 5 says "at the configured interval". Output is correct, but the cost is roughly pairs × windows × component size.
+Owner / when: spark-engineer; fix before the 6F+6G real-data run (remove found pairs from the frontier; consider rebuilding paths from predecessor
+pointers)
+────────────────────────────────────────
+ID: N2
+Location: :559, :571
+Observation: LPA iterations is the global loop count. A window that converged at iteration 3 reports iterations=20, converged=true.
+Owner / when: spark-engineer; fix or document
+────────────────────────────────────────
+ID: N3
+Location: :365-396
+Observation: LPA calls next.cache() only after the eager changes checkpoint, and drops the old labels before next is built. Each iteration then
+rebuilds up to checkpointInterval−1 earlier iterations from lineage. This affects performance only; connected and kCore do it in the right order.
+Owner / when: spark-engineer
+────────────────────────────────────────
+ID: N4 (plausible, not executed)
+Location: :59-63 vs Phase6CJobs.scala:508-522
+Observation: withContext infers the context schema with schema_of_json. Spark's JSON inference sorts struct fields by name, so the 6DE context field
+order likely differs from 6C's explicit schema, despite the comment at line 62. Readers that match by name are unaffected.
+Owner / when: spark-engineer; share one explicit StructType before the 6F+6G manifests and schema hashes
+────────────────────────────────────────
+ID: N5
+Location: :806-813, :903, :681
+Observation: A benchmark endpoint that is missing from a window, or whose ID is unknown, is reported as no-path, indistinguishable from a
+cross-component pair. pathSeededSamplePairs counts pairs before deduplication against benchmark pairs.
+Owner / when: spark-engineer; add a missing-endpoint counter and document it
+────────────────────────────────────────
+ID: N6
+Location: IndependentPhase6DEGraphSpec.scala:634-646
+Observation: The two-run replay compares only metrics, coreness and components; paths, seeded sampling, LPA and bridges aren't replayed.
+Owner / when: 6F+6G full replay-hash gate
+────────────────────────────────────────
+ID: N7
+Location: —
+Observation: No test parses a DE output row into its core record and validates it. The columns match by inspection.
+Owner / when: 6F+6G export tests
+────────────────────────────────────────
+ID: N8
+Location: README.md jobs 3–6
+Observation: The 6B design text doesn't match the code in places: "verify one membership per active researcher / size sums", "count discovered
+nodes", "repartition frontier by (window, source, nodeId)", "no iteration checkpoint".
+Owner / when: spark-engineer; final README in 6F+6G
+────────────────────────────────────────
+ID: N9
+Location: commands.md
+Observation: The coordinator ran the formatter on the test owner's file (disclosed, same as 6C N9).
+Owner / when: Process note only
+
+Future gates (not demanded now)
+- Path-length estimate: the course requires an estimate of component-level path length or diameter "with a documented scalable method". pathLengthEstimates is empty under your 6DE-3 answer, and the reports don't record why it wasn't a small addition. It must be built in 6F+6G or accepted by you as a deviation in the 6I human-gate.md.
+- LPA on real data: synchronous LPA oscillates forever on any two-person component (G1's H–I is one). Real-data windows will almost always report converged=false, which the 6F+6G report should state.
+- Other 6F+6G work: publishing, the event-log summarizer, writing hard failures to integrity/, metrics per bounded window (only all-years is exercised here), and the real-data run and replay.
+- Later items: the routed 6C N items and summary entity-kind validation stay assigned in repairs.md. EMR stays deferred to Phases 13 and 15.
+
+3. Report fields
+
+STATUS: COMPLETE (review) — VERDICT REQUEST-CHANGES
+OWNER: code-reviewer (user-launched, read-only)
+WORK ORDER: Independent review of merged Subphase 6D+6E (jobs 3–8), branch phase-6, base/HEAD 8d5b9d48b2fbc1f03e13f3eabdef1bfa373969d4, plan SHA-256 6df6d856…c955096
+FILES CREATED: none
+FILES MODIFIED: none
+COMMANDS RUN: git rev-parse HEAD; git status --short; git diff --stat; git diff (core, README, phase-06 reports); shasum -a 256 (plan, final-check.txt); wc/stat/grep/sed reads of sources, tests, config, evidence; read-only WebFetch of the course README (raw.githubusercontent.com). No build, test, Spark, AWS or model-provider calls.
+TEST RESULTS: None run by the reviewer. Retained final-check.txt matches its claims: 527/0 (143/64/39/24/250/7), exit 0, real 567.12 s, 285,463 bytes, SHA-256 bd8b9a28…dbca34; 6DE suites 9 module + 10 independent inside it.
+VALIDATION RESULTS: API/driver rules met; G1–G4, bridge, BFS-predecessor and LPA-trace expectations checked by hand against code and tests; core diff is additive validation only; ownership respected. Blockers: F1 approved defaults absent from the shipped config; F2 LPA non-convergence reporting untested and README claim false; F3 test-report overstates module G1–G4 coverage.
+ASSUMPTIONS: The Step 0 answers in prompt.md:72-76 are your authoritative decisions; no later decision changed the 6B config defaults. Spark JSON schema inference sorts fields by name (N4, not executed).
+RISKS: Shipped config contradicts decisions (F1); path-length estimate still missing against a course item; LPA will rarely converge on real data; BFS cost (N1) before the 6F+6G real-data run.
+MANUAL ACTION REQUIRED: User pastes the NEXT PROMPT into the main agent. For F1, the user may instead record a decision to keep 100/100/32.
+BLOCKED-ON OWNER: domain-engineer (F1 config + test); spark-engineer (F1 README, F2 test + README); coordinator (F3 report text)
+BLOCKED-ON EVIDENCE: config v1.json:17,19,24 vs prompt.md:73-74 and README.md:134; no non-convergence assertion in either 6DE spec; test-report.md:293
+NEXT GATE: Repair round 1 for 6D+6E, fresh JDK 17 sbt check, user-run read-only recheck. 6F+6G does not start.
+
+
+## Subphase 6D+6E repair round 1 approval — user-supplied external review
+
+1. VERDICT: APPROVE for Subphase 6D+6E repair round 1
+
+All three blockers are fixed. The repair touched only the config resource, the core contract test, the Spark module test, the README and the coordinator reports. Production code and the independent suite are byte-for-byte untouched: Phase6DEJobs.scala still has its 12:04:49 mtime and IndependentPhase6DEGraphSpec.scala its 12:06:42 mtime. The retained evidence matches every claim in the handoff. I found no new blockers.
+
+2. Findings
+
+F1–F3 dispositions
+
+ID: F1 (High)
+Disposition: Closed
+Evidence: scholarchain.spark-analytics-config.v1.json changes only three values: componentMaxIterations 100→50, kCoreMaxIterations 100→50,
+sampledPathPairCount 32→20. The others were already right (community 20, checkpoint 5, maxHops 6, S=32, seed 441). The core "approved defaults"
+test asserts all eight values plus shufflePartitions 4. It also proves both the full and the logical fingerprint differ from the old 100/100/K=32
+config. Full fingerprint a75347c8…→8f6fd8b7…; logical 49316f88…→f03c7950…. These match core-targeted.txt:21-22 and final-gate-metadata.json.
+README:134 now matches the shipped file. README:136 and the reports say future run IDs change while the historical 6C outputs stay as they were.
+Ownership: domain-engineer changed core, spark-engineer changed the README.
+────────────────────────────────────────
+ID: F2 (Medium)
+Disposition: Closed
+Evidence: Phase6DEJobsSpec.scala:311-359 uses a two-person, weight-1 graph with communityMax=3. The labels swap on every iteration, so after 3 rounds
+there are two singleton communities. The test asserts:<br>- 2 member rows with iterations=3 and converged=false;<br>- 2 summary rows with size 1,
+finalChangedCount=2 and converged=false;<br>- counters communityConverged=0 and communityFinalChangedCount=2.<br>The actual DataFrame rows are
+converted to JSON and parsed with CoreJson.parse into CommunityMembership/CommunitySummary, and every row passes SparkAnalyticsValidation.check.
+The false README sentence about oscillation tests is replaced with a description of this fixture. The test passed in both module-targeted.txt:515
+and final-check.txt:1536.
+────────────────────────────────────────
+ID: F3 (Low)
+Disposition: Closed
+Evidence: test-report.md:293 now credits G1–G4 coverage to the independent suite only and lists the module suite's own fixtures. The correction is
+disclosed in repairs.md.
+
+Evidence I checked
+- Repo state: HEAD is 8d5b9d4… and unchanged; the status matches handoff-check.txt. The plan SHA-256 matches.
+- Full log: repair-1/final-check.txt is 286,117 bytes and its SHA-256 18d9858b…112f matches. Per-module counts are 143/64/39/25/250/7, at lines 168, 910, 960, 1546, 2748 and 2790, for 528 in total. Success is at line 2793 (12:47:16), real 563.44 at line 2794 and exit=0 at line 2798. The header shows sbt 1.10.7 on Java 17.0.20.1.
+- Timing: every repaired file was last changed at 12:34:55–12:36:41, before the full gate.
+- Targeted runs: the module run finished at 12:37:15. Its formatter step completed at 12:36:41, the same time as the test file's mtime, and the tests ran after it. Core targeted passed 14/14 at 12:35:26.
+- Scans and attribution: the driver/API scan matches only the two BoundedActions collect sites, and git diff --check exited 0. The sandbox lock error and the coordinator re-running the owner's command are disclosed (module-sandbox-denial.txt, commands.md).
+- Review records: review.md has the round-0 verdict appended under its own heading. repairs.md registers F1–F3, N1–N9 and the future gates. It records the missing path-length-estimate rationale honestly instead of inventing one.
+
+Remaining non-blocking items (registered; nothing new is blocking)
+- N1–N9 are unchanged and registered with owners. The new test partly addresses N7 (DE rows now parse into core records for communities). Items to settle before or during 6F+6G:
+  - N1: BFS keeps expanding pairs whose target was already found, and checkpoints every hop.
+  - N2: the LPA iterations field is the global loop count, not per window.
+  - N3: LPA caches in the wrong order, causing extra recomputation.
+  - N4: the context schema is inferred, so its field order may differ from 6C's.
+  - N5: an endpoint missing from a window is reported as an ordinary no-path.
+  - N6: the replay test covers only part of the output.
+  - N8: some README design text has drifted from the code.
+- R1-O1 (new observation, non-blocking): the README says LPA "can oscillate" and names the two-person fixture. It doesn't say what follows for real data: any two-person component (like G1's H–I) oscillates forever. Real-data windows will therefore almost always report converged=false. State this in the 6F+6G report and README. Owner: spark-engineer.
+
+Later gates
+- Build the S-source path-length/diameter estimate (a course requirement) in 6F+6G, or record your explicit acceptance of the deviation at 6I.
+- Also in 6F+6G: publishing, the event-log summarizer, writing hard failures to integrity/, metrics for bounded windows, the real-data run and a full replay. 6C's N items and the summary entity-kind check are in the same 6F+6G batch.
+- EMR stays deferred to Phases 13 and 15.
+
+3. Report fields
+
+STATUS: COMPLETE (review) — VERDICT APPROVE for 6D+6E repair round 1
+OWNER: code-reviewer (user-launched, read-only)
+WORK ORDER: Recheck of 6D+6E F1–F3 on phase-6, base/HEAD 8d5b9d48b2fbc1f03e13f3eabdef1bfa373969d4, plan SHA-256 6df6d856…c955096; inspect base diff and untracked files
+FILES CREATED: none
+FILES MODIFIED: none
+COMMANDS RUN: git rev-parse HEAD; git status --short; git diff --stat; git diff (config resource, core spec, review.md, repairs.md, test-report.md); shasum -a 256 (plan, repair-1/final-check.txt); wc/stat/grep/sed/cat reads of Phase6DEJobsSpec.scala, README.md and repair-1 evidence. No build, test, format, Spark, AWS or model-provider calls.
+TEST RESULTS: None run by reviewer. Retained logs verified: full gate 528/0 (143/64/39/25/250/7), exit 0, real 563.44 s, 286,117 bytes, SHA-256 18d9858b…112f; core targeted 14/14; Spark targeted 10/10, exit 0.
+VALIDATION RESULTS: F1 closed (resource and assertions match decisions; fingerprint change disclosed); F2 closed (oscillating pair asserted through core parse and validation, and counters); F3 closed (report wording accurate). Production code and independent tests unchanged; ownership respected; API/driver scan clean.
+ASSUMPTIONS: Step 0 answers in prompt.md remain the binding decisions; historical 6C run IDs are not rewritten.
+RISKS: Path-length estimate still absent against a course item; LPA will rarely converge on real data (R1-O1); BFS and LPA cost (N1, N3) ahead of the real-data run; possible context-schema mismatch (N4) before manifests and schema hashes.
+MANUAL ACTION REQUIRED: User commits the approved 6D+6E tree, then pastes the NEXT PROMPT.
+BLOCKED-ON OWNER: none
+BLOCKED-ON EVIDENCE: none
+NEXT GATE: User commit of 6D+6E, then Subphase 6F+6G Step 0.
+
+4. NEXT PROMPT
+
+You are the ScholarChain Phase 6 coordinator in
+/Users/danny/Documents/UIC/CS441/ScholarChain, branch phase-6.
+Plan: /Users/danny/Documents/plan/phase6.md
+(SHA-256 6df6d856df6c4c6ee0a8f00125e78af1bce5e789666399ae48a9443aec955096).
+
+(a) Append the external reviewer's "6D+6E repair round 1" verdict VERBATIM to
+    docs/agent-runs/phase-06/review.md under "Subphase 6D+6E", marked
+    "user-supplied external review". Record the F1–F3 closures and the new
+    nonblocking observation R1-O1 in repairs.md. Do not rewrite prior human
+    decisions.
+
+(b) Confirm that the user has committed the approved 6D+6E tree (previous
+    base 8d5b9d48b2fbc1f03e13f3eabdef1bfa373969d4). If the tree is still
+    uncommitted, ask the user and wait. Record the new commit as the 6F+6G
+    base SHA in preflight.
+
+(c) Start ONLY Subphase 6F+6G of the plan (jobs 9–11, CLI, README
+    completion, bounded real-data run, replay and independent hardening),
+    beginning with Step 0. Ask all open questions at once, each with a
+    recommended default: 6F-1, 6G-1, 6G-2, plus your own. Include these
+    decisions carried over from 6D+6E:
+    - S-source sampled path-length / 90th-percentile effective-diameter
+      estimate: implement in 6F+6G (recommended; it is a course requirement)
+      or record a deviation for explicit human acceptance at 6I.
+    - Whether to fix N1 (stop expanding found BFS pairs; checkpoint at the
+      configured interval), N3 (LPA cache order) and N4 (one explicit shared
+      context StructType across 6C and 6DE tables) before the real-data run.
+      Recommended: yes.
+    - N2 (per-window LPA iteration count) and N5 (missing-endpoint counter
+      for benchmark pairs): fix or document.
+    - Disclose R1-O1 in the README and the 6F+6G report: synchronous LPA
+      oscillates on two-person components, so real-data windows will rarely
+      report converged=true.
+    Also carry into the 6F+6G tests and gates: N6 (full replay over every
+    table), N7 (exported rows parse and validate as core records), N8 (final
+    README per-job list), the 6C N items and semantic-summary entity-kind
+    validation routed in repairs.md, writing hard failures to integrity/, and
+    per-bounded-window metric recompute. Wait for the user's answers before
+    implementing. The dataset slice needs the user's 6G-1 approval and a
+    stated download cap before any network access.
+
+(d) Follow docs/agents.md ownership and the plan's 6F+6G internal order. Use
+    the JDK 17 environment block for every sbt/Spark command. No AWS calls, no
+    live LLM calls, ER with LLM adjudication disabled. Retain evidence under
+    docs/agent-runs/phase-06/evidence/6fg/. Run one full sbt check on the
+    stable tree at the end.
+
+(e) Do not launch any reviewer, commit or push. At the end, return the
+    Section 11 handoff packet and a complete 6F+6G reviewer prompt in one
+    fenced block with every placeholder filled.
+
+(f) Do ONLY 6F+6G, then stop and end the turn with: "Subphase 6F+6G is ready
+    for review. I have stopped and will not start the next subphase until I
+    receive the next prompt." Do not start 6I.
