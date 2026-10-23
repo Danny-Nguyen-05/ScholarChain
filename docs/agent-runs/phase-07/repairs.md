@@ -207,3 +207,49 @@ The complete user-supplied independent recheck is appended verbatim to review.md
 | N16: possible orphan job after submission if registry write fails | OPEN/nonblocking, Info | storage-engineer |
 
 Commit gate observed after approval: branch phase-7, HEAD still08e3d21233dbaf8c3d6283fc3bb9bce7f7fb1276 (the 7B base). Approved 7B code/evidence remains modified/untracked; the required human commit is absent. Full observed status and review-transcription hash are recorded in evidence/7b/repair-1/post-review-commit-check.json. Coordinator has not staged, committed, pushed, launched agents/reviewer or started 7C. No build/test rerun for these documentation-only appends; prior636/0 evidence remains the retained gate. User must commit approved7B before 7C Step0.
+
+
+## Subphase 7C — commit gate and accepted carry-over scope
+
+Approved7B is committed as c911b236f2a8c02b7422df56f8c334d47fff7ad3 on phase-7, descendant of08e3d212, including repair-1 evidence and external approval records; preflight tree clean. This supersedes the earlier observed uncommitted status without rewriting it. User accepted all7Cdefaults. N6 SDK stub gaps assigned to test-engineer for7C; N4,N5,N7,N9–N16 remain OPEN/nonblocking and deferred, N8 remains a process note. F1/F2/B1/F3/F4 stay CLOSED. Storage owner authors the guarded live suite and documentation only; its execution stays a later human-approved14Cgate.
+
+
+### Subphase 7C authoring checks — first failures
+
+Two affected checks caught local authoring issues, both retained. C1 (test-engineer): the new SDK ledger-CAS regression expected a string revision, but the stored RunRecord wire uses numeric5; assertion corrected, production format unchanged. First run27/28 passed, exit1. C2 (storage-engineer): offline live-journal test found the default planned state omitted by serialization; writer now emits explicit planned/created/cleaned states and all item fields. Live configuration compiled successfully, normal storage26/27 passed, exit1; live body excluded and independent target not reached. Evidence: evidence/7c/independent-targeted-1.txt/.json and targeted-2.txt/.json. Final affected rerun pending. These do not close deferred N4/N5/N7/N9–N16.
+
+
+### Subphase7C final local disposition
+
+C1 test revision assertion and C2 explicit journal serialization fixes pass; final support-prefix fixture consistency check passes. N6 S3412 and RunLedgerCAS/cancel paths are locally covered, external review closure pending. Other N4/N5/N7/N9–N16 remain OPEN/nonblocking, N8 remains a process note. Fresh full gate exit0: **659 passed/0failed**, groups144/64/39/38/27/339/8, real684.21s. Live suite compiled, excluded from normalcheck, never run. No production/build/core/Spark/control or human record edit. Evidence7c/final-check.txt/.json SHA256 `3da90e0bd60d8948809f3159f4ab24ab85a46d58ddb5ba0a47d46982368e8e2f`; all306frozen source hashes/mtimes unchanged. External review/human closeout remain pending; noPhase8.
+
+
+## Subphase 7C — external review dispositions
+
+The complete user-supplied verdict, findings, confirmation notes and report fields are appended verbatim to review.md. APPROVE is independent review, not human acceptance. Earlier records remain unchanged.
+
+| Item | Status | Owner / next gate |
+|---|---|---|
+| N6: S3412 and ledgerCAS/cancel SDK paths | CLOSED by7C external review | test-engineer; coverage verified |
+| 7C-M1 Medium: graph cleanup marks cleaned without DELETE counts/absence | OPEN/nonblocking for7C; REQUIRED beforePhase14C execution/cleanup | storage-engineer; user explicitly requests repair now |
+| 7C-L1 Low: passed-retained before ledger snapshot | OPEN/nonblocking; not in this repair | storage-engineer |
+| 7C-L2 Low: runtime fence character/interpolation masking blind spots | OPEN/nonblocking; repair before runtime modules gain code | test-engineer |
+| 7C-L3 Low: live index runId/textHash filterability prerequisite absent | OPEN/nonblocking | storage-engineer; infra-engineer Phase12 |
+| 7C-I1: coordinator-assembled owner report after usage limit | OPEN/process acknowledgement | human/coordinator; human Phase7 gate |
+| 7C-I2: course live integration execution deferred to14C | OPEN/course-deviation acceptance | human Phase7 gate |
+
+N4/N5/N7/N9–N16 remain OPEN/nonblocking with recorded owners; N8 process note retained. F1/F2/B1/F3/F4 remain CLOSED. No human acceptance inferred.
+
+### User-authorized repair scope
+
+User instruction after the reviewer prompt: “Fix the first medium bug for me”. This explicitly authorizes only7C-M1 repair now and supersedes the reviewer's generic documentation-only/no-repair next prompt for that finding. No questions are needed; acceptance is explicit. Existing uncommitted7C stays in place, HEAD remainsc911b236 onphase-7. The human commit is still absent; no agent will stage/commit/push. This repair will end with affected/full JDK17 checks and a user-launched recheck packet, before any Phase7 human gate/Phase8. No live suite/AWS/provider calls or actual cleanup. L1/L2/L3 and informational findings remain unchanged.
+
+
+### 7C-M1 — affected repair validation
+
+User-requested M1 repair now passes offline count/absence/journal-ordering regressions. Affected normalstorage32/32 and independentStorage73/73, exit0 in14.30s; live configuration compiles, sole live body and actual cleanup never run. Two test-owned module files added, AwsLiveRun wiring and README changed; no other finding repaired. Full check is running on frozen308-file source/build/test/README snapshot. External repair recheck remains pending. Evidence: evidence/7c/repair-1/targeted-1.txt/.json, acceptance-matrix.md and storage-owner-report.md. N6 stays CLOSED; L1/L2/L3 and other deferred items remain OPEN.
+
+
+### 7C-M1 — final local repair disposition
+
+M1 repaired and locally validated, external recheck pending. Count and separate read-side absence checks precede graphcleaned journal state. Fresh fullgate exit0 **664passed/0failed**, groups144/64/39/38/32/339/8, real681.26s; affected32/73passed. All308frozen source hashes/mtimes unchanged. Full raw SHA256 `f225a4ecaa93d920ae1476211ab638bc1f36b0120bf2e078eb5d0308820773b3`. Live suite compiled, notrun; actual cleanup notrun. NoL1/L2/L3repair; N6closed andallotherdeferreditemsretainowners/status. Evidence repair-1/targeted-1.txt/.json, final-check.txt/.json, acceptance-matrix.md andfinal-audit.json. Human commit remainsabsent; no agentstagecommitpush/humangate/Phase8.

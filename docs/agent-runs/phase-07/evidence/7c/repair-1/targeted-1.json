@@ -1,0 +1,25 @@
+{
+  "exitCode": 0,
+  "realSeconds": 14.3,
+  "java": "17.0.20.1",
+  "sbt": "1.10.7",
+  "groups": {
+    "normalStorage": {
+      "passed": 32,
+      "failed": 0
+    },
+    "independentStorage": {
+      "passed": 73,
+      "failed": 0
+    }
+  },
+  "liveConfigurationCompiled": true,
+  "liveTestTasksInvoked": [],
+  "liveTaggedBodyExecuted": false,
+  "actualCleanupExecuted": false,
+  "testsAdded": "Five offline M1 cleanup stub cases; no failed repair invocation.",
+  "rawLog": "/tmp/phase7c-repair1-targeted-1.txt",
+  "retainedLog": "docs/agent-runs/phase-07/evidence/7c/repair-1/targeted-1.txt",
+  "bytes": 14153,
+  "sha256": "fe2b6f694dcdf6739d514b0507f2fee40ae6ce5a30f617863f31b73e0d9ec25c"
+}

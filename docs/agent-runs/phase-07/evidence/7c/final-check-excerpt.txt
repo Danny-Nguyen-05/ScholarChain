@@ -1,0 +1,43 @@
+Line-numbered excerpt of complete unmodified final-check.txt. Expected injected error is a passing build self-test. AwsIntegrationSpec may be discovered, but its tagged test body is excluded.
+1: openjdk version "17.0.20.1" 2026-08-18
+2: OpenJDK Runtime Environment Homebrew (build 17.0.20.1+0)
+4: [info] welcome to sbt 1.10.7 (Homebrew Java 17.0.20.1)
+170: [info] Total number of tests run: 144
+171: [info] Suites: completed 12, aborted 0
+172: [info] Tests: succeeded 144, failed 0, canceled 0, ignored 0, pending 0
+173: [info] All tests passed.
+912: [info] Total number of tests run: 64
+913: [info] Suites: completed 4, aborted 0
+914: [info] Tests: succeeded 64, failed 0, canceled 0, ignored 0, pending 0
+915: [info] All tests passed.
+962: [info] Total number of tests run: 39
+963: [info] Suites: completed 6, aborted 0
+964: [info] Tests: succeeded 39, failed 0, canceled 0, ignored 0, pending 0
+965: [info] All tests passed.
+2082: [info] Total number of tests run: 38
+2083: [info] Suites: completed 5, aborted 0
+2084: [info] Tests: succeeded 38, failed 0, canceled 0, ignored 0, pending 0
+2085: [info] All tests passed.
+2110: [info] AwsIntegrationSpec:
+2121: [info] Total number of tests run: 27
+2122: [info] Suites: completed 6, aborted 0
+2123: [info] Tests: succeeded 27, failed 0, canceled 0, ignored 0, pending 0
+2124: [info] All tests passed.
+3305: [info]   + Runtime graph fence: runtimeSources=0, inspectedSources=0; heuristic only. 
+6391: [info] Total number of tests run: 339
+6392: [info] Suites: completed 52, aborted 0
+6393: [info] Tests: succeeded 339, failed 0, canceled 0, ignored 0, pending 0
+6394: [info] All tests passed.
+6401: [info] welcome to sbt 1.10.7 (Homebrew Java 17.0.20.1)
+6406: [error] java.lang.RuntimeException: scholarchain check probe: injected format-stage failure
+6424: [error] (checkProbeInjectFailure) scholarchain check probe: injected format-stage failure
+6425: [error] Total time: 0 s, completed Oct 23, 2026, 1:24:17 AM
+6436: [info] Total number of tests run: 8
+6437: [info] Suites: completed 7, aborted 0
+6438: [info] Tests: succeeded 8, failed 0, canceled 0, ignored 0, pending 0
+6439: [info] All tests passed.
+6441: [success] Total time: 682 s (11:22), completed Oct 23, 2026, 1:24:17 AM
+6442: real 684.21
+6443: user 675.73
+6444: sys 95.93
+6445: PHASE7C_EXIT_CODE=0

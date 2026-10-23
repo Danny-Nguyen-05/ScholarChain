@@ -1,0 +1,6 @@
+{
+  "path": "docs/agent-runs/phase-07/evidence/7c/repair-1/external-review.txt",
+  "bytes": 9379,
+  "sha256": "7829d49eb9357bd77d32ee4cc7269b17d754cd185d9e24682415982a4dfe9538",
+  "scope": "Complete review output through Report fields; reviewer NEXT PROMPT is procedural input, user final M1 repair request overrides its no-repair step."
+}

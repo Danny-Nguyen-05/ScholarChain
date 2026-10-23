@@ -1,0 +1,15 @@
+{
+  "exitCode": 0,
+  "realSeconds": 7.19,
+  "liveConfigurationCompileExit": 0,
+  "offlinePolicyTests": {
+    "passed": 4,
+    "failed": 0
+  },
+  "liveTaggedBodyExecuted": false,
+  "change": "Synthetic support Parquet path/CSV pointer aligned with production loader support prefix; no production changes.",
+  "rawLog": "/tmp/phase7c-fixture-targeted-4.txt",
+  "retainedLog": "docs/agent-runs/phase-07/evidence/7c/fixture-targeted-4.txt",
+  "bytes": 1863,
+  "sha256": "7c8240e0326dc9a28ab9e48610e82ef629038f1bb35d77f81f472470fd22b1ee"
+}

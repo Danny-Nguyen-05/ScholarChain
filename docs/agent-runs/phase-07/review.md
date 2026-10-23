@@ -542,3 +542,125 @@ VERDICT: APPROVE for Subphase 7B, repair round 1.
    prompt." and STOP. Do not start Phase 8.
 
 Tip: Use /btw to ask a quick side question without interrupting Claude's current work
+
+
+## Subphase 7C — user-supplied external review: APPROVE
+
+VERDICT: APPROVE for Subphase 7C. None of the findings below blocks 7C. M1 must be fixed before the live suite runs in Phase 14C.
+
+The work meets the plan's 7C "Done when" bar:
+- Full check: sbt check passed on JDK 17, 659 passed / 0 failed. The log's hash, size and group counts match the claims.
+- Live suite: it compiles, normal tests and sbt check exclude its tag, and it never ran. In the full log, AwsIntegrationSpec: appears with no test lines under it. The test settings show -l <tag> for normal tests and -n <tag> for the integration configuration.
+- README: it covers every report item the course lists for Phase 7.
+- Ownership: each changed path has exactly one owner. There are no changes to production code, the build, core, Spark or the control files.
+
+Findings
+
+ID: 7C-M1
+Severity: Medium
+Location: modules/storage/src/test/scala/edu/uic/cs441/scholarchain/storage/AwsLiveRun.scala:417-438, 512, 515
+Evidence: The Neptune cleanup runs two executeOpenCypherQuery DELETEs and never reads the responses. A DELETE that matches nothing still succeeds
+silently. The loop at 512 does nothing for neptune-node/neptune-edge, and line 515 then records the item as cleaned anyway. S3, DynamoDB and vector
+ deletes are each checked before deletion or conditional, so they are fine.
+Impact: In a future Phase 14C cleanup, the journal could say synthetic graph data is gone when it is still in the graph the runtime queries. The
+README's claim that items move to cleaned only when confirmed would then be false for Neptune.
+Owner: storage-engineer
+Acceptance check: Make the edge and node DELETEs return a count and require it to equal the number of journaled IDs. After deleting, point reads
+through the reader must return Missing before the item is marked cleaned. Add an offline stub test showing that a zero-match DELETE does not record
+ cleaned.
+Blocking: No (fix before Phase 14C runs)
+────────────────────────────────────────
+ID: 7C-L1
+Severity: Low
+Location: AwsLiveRun.scala:346-349, 366-367
+Evidence: completed = true and finish("passed-retained") happen before snapshotLedger. If the snapshot throws, the test fails but the outcome stays
+passed-retained, because the finally only rewrites the outcome when !completed.
+Impact: The run outcome can be wrong. The ledger rows were already recorded as planned, so tracking of owned data is not lost.
+Owner: storage-engineer
+Acceptance check: Set completed and passed-retained only after the snapshot succeeds, or record a distinct snapshot-failure outcome.
+Blocking: No
+────────────────────────────────────────
+ID: 7C-L2
+Severity: Low
+Location: tests/src/test/scala/edu/uic/cs441/scholarchain/independent/RuntimeGraphFence.scala:6, 27-55
+Evidence: The source masker has no case for character literals. The '"' literals at ExportStreams.scala:132,134,139 and
+NeptuneExportValidator.scala:71 make it treat code as string text and string text as code for the rest of the file. It also blanks the inside of
+s"${...}" interpolations. Both cause missed findings, yet line 6 calls the scan "conservative".
+Impact: No effect today: rag and services have 0 source files and the scan reports this honestly. Once runtime code exists, the scan could miss a
+loader reference.
+Owner: test-engineer
+Acceptance check: Handle character literals and interpolated expressions, add fixture tests for both, and drop the word "conservative" or justify it.
+Blocking: No
+────────────────────────────────────────
+ID: 7C-L3
+Severity: Low
+Location: modules/storage/README.md:128-170; AwsLiveRun.scala:269; S3VectorStore.scala:287
+Evidence: The live query filters on runId, and the adapter rejects filters on non-filterable keys. The 7C README never says the provisioned index
+must keep runId filterable.
+Impact: A future run would fail at the vector query if Terraform marks runId non-filterable.
+Owner: storage-engineer (Terraform side: infra-engineer, Phase 12)
+Acceptance check: Add a Phase 14C pre-run requirement to the README: runId and textHash must not be in the index's non-filterable keys.
+Blocking: No
+────────────────────────────────────────
+ID: 7C-I1
+Severity: Info
+Location: evidence/7c/storage-owner-report.md
+Evidence: The storage owner's final report was assembled by the coordinator after the owner hit a usage limit. This is disclosed; the files, compile
+and tests were checked.
+Impact: Process deviation only.
+Owner: coordinator / human
+Acceptance check: The human acknowledges it at the Phase 7 gate.
+Blocking: No
+────────────────────────────────────────
+ID: 7C-I2
+Severity: Info
+Location: Course Phase 7 deliverable compared with plan task 7C-2
+Evidence: The course asks for running the bounded integration suite. The accepted plan authors and compiles it only, deferring execution to Phase
+14C, and this is disclosed.
+Impact: Course-compliance deviation the human must accept.
+Owner: human
+Acceptance check: Record it in the human gate.
+Blocking: No
+
+Checked and confirmed:
+- Guards and registration:
+  - Registering the live test reads no environment, opens no files and creates no clients.
+  - The opt-in and profile guard runs before any config file read, and client creation happens only inside the tagged test body.
+  - There is exactly one tag, and its value matches the build policy.
+  - The build guard also covers the test loader.
+- Resources and profiles:
+  - The reader, loader and cleanup profiles are separate.
+  - Using the primary profile for S3, DynamoDB and vector cleanup is truthfully documented.
+  - Nothing creates or deletes infrastructure: there is no ensureIndex or CreateIndex, and the index is checked with a get.
+- Journal:
+  - Journal format is consistent with production: the DynamoDB payload envelope hash matches RowCodec.encode, and the length-framed keys keep the run ID verbatim, so need(id.contains(runId)) holds.
+  - The loader uploads exactly the README's counts: five S3 objects, six registry rows and two ledger rows.
+  - The support Parquet sits outside the loader prefix.
+  - Retain is the default, and cleanup only touches exact, hash-checked owned data.
+- Independent hardening and N6:
+  - Wire round trips cover all six tables.
+  - Unsupported, corrupt and missing payload envelopes are rejected.
+  - Expectations are derived by hand; for example, sha256("abc") is correct.
+  - The N6 cases cover S3 412 returning unchanged or conflict, the ledger transaction compare-and-swap and its condition text, cancellation classification, and the lost root compare-and-swap on completion.
+- Evidence:
+  - These logs hash to their recorded values: final-check, targeted-2, targeted-3, fixture-targeted-4 and independent-targeted-1.
+  - The group counts add up to 659.
+  - The two failed authoring runs are kept.
+  - The plan's hash b54aa123… matches both copies.
+
+Report fields
+
+STATUS: COMPLETE — VERDICT APPROVE for Subphase 7C (independent review; not human acceptance)
+OWNER: code-reviewer (read-only)
+WORK ORDER: Phase 7 Subphase 7C independent review; base/HEAD c911b236f2a8c02b7422df56f8c334d47fff7ad3 plus uncommitted/untracked 7C paths
+FILES CREATED: None
+FILES MODIFIED: None
+COMMANDS RUN: Read-only only — git rev-parse/status/diff c911b236 (stat and per-path); shasum -a 256 on phase7-plan.md (both copies), final-check.txt, targeted-2/3, fixture-targeted-4, independent-targeted-1; wc -c; grep/sed/cat over evidence/7c, storage main/test sources, tests/ sources, project/ScholarChainBuild.scala, project/AwsIntegrationPolicy.scala, README; WebFetch of the public course README (no AWS/provider account calls). No sbt, tests, live suite, cleanup, staging, commit or push.
+TEST RESULTS: Not run by reviewer. Verified retained evidence: full JDK17 check exit 0, 659/0 (144/64/39/38/27/339/8), SHA256 3da90e0b…e8e2f, 1,373,089 bytes; AwsIntegrationSpec discovered with zero executed tests; affected targets 27/27 + 73/73 and policy 4/4 match logs.
+VALIDATION RESULTS: Ownership single-writer; no production/build/core/Spark/control change; live suite tagged, inert at registration, guarded, excluded, never executed; README covers all course Phase 7 report items; findings 7C-M1, 7C-L1..L3 nonblocking, 7C-I1/I2 informational.
+ASSUMPTIONS: Coordinator-assembled storage-owner report accurately reflects owner authorship (not independently verifiable). AWS SDK/Neptune semantics reasoned from code; live behavior unverified by design.
+RISKS: 7C-M1 can make the cleanup journal claim Neptune data is gone when it is not; must be repaired before any Phase 14C cleanup. Runtime fence has false-negative modes once runtime code exists. Live/IAM/cost/cleanup/full-scale unverified. Deferred N4/N5/N7/N9–N16 open; N8 process note.
+MANUAL ACTION REQUIRED: Human commits approved 7C, reviews the complete Phase 7 diff, and writes human-gate.md / commit records accepting deferred and live limitations (including 7C-I2).
+BLOCKED-ON OWNER: None
+BLOCKED-ON EVIDENCE: None for 7C approval
+NEXT GATE: Human Phase 7 acceptance gate; Phase 8 only under a separate prompt after closeout.

@@ -1,0 +1,26 @@
+{
+  "base": "c911b236f2a8c02b7422df56f8c334d47fff7ad3",
+  "implementationOwners": {
+    "modules/storage/README.md": "storage-engineer",
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentStorageSdkSpec.scala": "test-engineer",
+    "modules/storage/src/test/scala/edu/uic/cs441/scholarchain/storage/AwsIntegrationSpec.scala": "storage-engineer",
+    "modules/storage/src/test/scala/edu/uic/cs441/scholarchain/storage/AwsLivePolicySpec.scala": "storage-engineer",
+    "modules/storage/src/test/scala/edu/uic/cs441/scholarchain/storage/AwsLiveRun.scala": "storage-engineer",
+    "modules/storage/src/test/scala/edu/uic/cs441/scholarchain/storage/AwsLiveSupport.scala": "storage-engineer",
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentStorageHardeningSpec.scala": "test-engineer",
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentStorageLiveExclusionSpec.scala": "test-engineer",
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentStorageRuntimeFenceSpec.scala": "test-engineer",
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/RuntimeGraphFence.scala": "test-engineer"
+  },
+  "changedProductionSources": [],
+  "buildCoreSparkControlsChanged": false,
+  "earlierEvidenceChanged": false,
+  "specialists": {
+    "/root/test_engineer": "Completed final report; files frozen.",
+    "/root/storage_engineer": "Authored requested test/docs files, provided readiness/interim reports; final turn ended with provider usage limit. No owner jobs. Coordinator verifies final files/compilation/tests; no specialist source edited by coordinator."
+  },
+  "coordinatorFormatting": "Owner-requested sbt scalafmt execution only; owner retains writing territory.",
+  "reviewerLaunched": false,
+  "liveCalls": false,
+  "stageCommitPush": false
+}

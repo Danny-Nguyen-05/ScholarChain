@@ -120,3 +120,23 @@ Base: 08e3d21233dbaf8c3d6283fc3bb9bce7f7fb1276 on phase-7. The approved 7A imple
 ## Subphase 7B repair round 1 — user work order
 
 The complete user-supplied external review and next prompt are retained verbatim in evidence/7b/repair-1/external-review.txt and appended to review.md. User instruction: “Fix all blocking bugs for me”. Only F3/F4 repairs are authorized; the uncommitted 7B tree remains in place. No questions for this repair round. No reviewer, AWS/provider calls, stage/commit/push, human record edit or 7C work.
+
+
+## Subphase 7C — work order and accepted Step 0
+
+User: “alright let do phase 7c now”. Step0 response: “accept all recommended defauls”. Approved7B commit confirmed on phase-7 at c911b236f2a8c02b7422df56f8c334d47fff7ad3; clean working tree before delegation.
+
+- independent: Plan7C hardening. Runtime roots rag/services plus storage composition used by them; currently empty runtime modules disclosed, scanner has regression fixtures.
+- N6: Include S3 existing-key412 and Dynamo ledgerCAS/transactioncancel SDK stubs, test-engineer.
+- deferred: N4,N5,N7,N9–N16 deferred and documented; N8 process note retained.
+- liveSuite: Author and compile only, never execute here. Exact tag and SCHOLARCHAIN_AWS_ITEST=1, explicit AWS_PROFILE, config path SCHOLARCHAIN_AWS_ITEST_CONFIG.
+- cleanup: Terraform-provisioned resources only; unique fixture IDs/keys; delete only suite-created data in future authorized execution; no bucket/table/index resource creation/deletion.
+- budget: Document5USD incrementaltestbudget excludingexistinginfrastructure; Phase14Ccurrentpricing/budgetvalidationrequired, no hardbillingguarantee.
+- buildReadme: No build change unless compilation requires it; complete required README schemas/keys/indexes/metadata/batches/retries/idempotency/citations/cleanup.
+
+Only plan Section8 Subphase7C; exact JDK17 for every sbt command. Live suite authored and compiled, never run. No reviewer, AWS/provider calls, staging, commit/push, human record edits or Phase8.
+
+
+## Subphase7C repair round1 — user-requested7C-M1
+
+User supplied external APPROVE with nonblocking findings, then requested: “Fix the first medium bug for me”. Only7C-M1 is authorized: counted Neptune deletes and reader point-absence checks before journalcleaned, plus offline zero-match regression. Other findings remain deferred. No questions for this repair round. Existing7Cuncommittedtree retained; no live suite/provider/AWS/cleanup/reviewer/stagecommitpush/humanrecord/Phase8. Full original review output retained repair-1/external-review.txt and appended verbatim to review.md.

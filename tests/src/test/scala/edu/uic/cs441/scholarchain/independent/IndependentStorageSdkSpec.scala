@@ -428,4 +428,153 @@ class IndependentStorageSdkSpec extends AnyFunSuite {
     assert(requests.size == 2 && logicalWrites == 1)
     assert(StorageResult.value(result).get.queryId == "synthetic-query-lost-reply")
   }
+
+  test("S3 conditional 412 verifies existing content and reports unchanged or immutable conflict") {
+    val sha = "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad"
+    Vector(true, false).foreach { identical =>
+      var puts = 0
+      var reads = 0
+      val metadata = Map("sha256" -> sha, "run-id" -> runId)
+      val sdk = stub(classOf[S3Client]) {
+        case ("putObject", Vector(request: PutObjectRequest, _: RequestBody)) =>
+          puts += 1
+          assert(request.ifNoneMatch() == "*")
+          throw S3Exception.builder().statusCode(412).build()
+        case ("headObject", Vector(_: HeadObjectRequest)) =>
+          HeadObjectResponse
+            .builder()
+            .contentLength(3L)
+            .contentType("text/plain")
+            .metadata(metadata.asJava)
+            .build()
+        case ("getObject", Vector(_: GetObjectRequest)) =>
+          reads += 1
+          stream(
+            GetObjectResponse
+              .builder()
+              .contentLength(3L)
+              .contentType("text/plain")
+              .metadata(metadata.asJava)
+              .build(),
+            "abc".getBytes(UTF_8)
+          )
+      }
+      val result = new S3ObjectStore(sdk, config).put(
+        "synthetic/versions/001/object",
+        (if (identical) "abc" else "different").getBytes(UTF_8).toVector,
+        "text/plain",
+        Map("run-id" -> runId)
+      )
+      if (identical) assert(result.isInstanceOf[Unchanged[?]], result.toString)
+      else assert(result == Rejected("immutable-conflict"))
+      assert(puts == 1 && reads == 1)
+    }
+  }
+
+  private def envelope[A: upickle.default.ReadWriter](record: A): String =
+    ujson
+      .Obj(
+        "schemaVersion" -> "scholarchain.storage.v1",
+        "record" -> ujson.read(upickle.default.write(record))
+      )
+      .render()
+
+  private def runItem(stageKey: String, payload: String): java.util.Map[String, AttributeValue] =
+    Map(
+      "runId" -> AttributeValue.builder().s(runId).build(),
+      "stageKey" -> AttributeValue.builder().s(stageKey).build(),
+      "payload" -> AttributeValue.builder().s(payload).build()
+    ).asJava
+
+  test(
+    "ledger stage transaction compares the prior root and conditionally creates the stage atomically"
+  ) {
+    val previous = envelope(RunRecord(runId, "running", Vector.empty, revision = 4))
+    var transactions = 0
+    val sdk = stub(classOf[DynamoDbClient]) {
+      case ("getItem", Vector(request: GetItemRequest)) =>
+        if (request.key().get("stageKey").s() == "RUN")
+          GetItemResponse.builder().item(runItem("RUN", previous)).build()
+        else GetItemResponse.builder().build()
+      case ("transactWriteItems", Vector(request: TransactWriteItemsRequest)) =>
+        transactions += 1
+        val writes = request.transactItems().asScala.map(_.put()).toVector
+        assert(writes.size == 2)
+        val root = writes.find(_.item().get("stageKey").s() == "RUN").get
+        val stage = writes.find(_.item().get("stageKey").s() == "STAGE#load").get
+        assert(root.conditionExpression() == "#payload = :expected")
+        assert(root.expressionAttributeValues().get(":expected").s() == previous)
+        assert(ujson.read(root.item().get("payload").s())("record")("revision") == ujson.Num(5))
+        assert(
+          stage.conditionExpression() == "attribute_not_exists(#pk) AND attribute_not_exists(#sk)"
+        )
+        assert(
+          stage.expressionAttributeNames().asScala.toMap == Map(
+            "#pk" -> "runId",
+            "#sk" -> "stageKey"
+          )
+        )
+        TransactWriteItemsResponse.builder().build()
+    }
+    assert(
+      new DynamoRunLedger(sdk, config).recordStage(runId, "load") == Written(
+        RunStage("load", "running", 0, None)
+      )
+    )
+    assert(transactions == 1)
+  }
+
+  test(
+    "ledger transaction cancellation distinguishes conditional conflict from other cancellation causes"
+  ) {
+    Vector(
+      "ConditionalCheckFailed" -> "conditional-conflict",
+      "ProvisionedThroughputExceeded" -> "transaction-canceled"
+    ).foreach { (code, expected) =>
+      var transactions = 0
+      val sdk = stub(classOf[DynamoDbClient]) {
+        case ("getItem", Vector(request: GetItemRequest)) =>
+          if (request.key().get("stageKey").s() == "RUN")
+            GetItemResponse
+              .builder()
+              .item(runItem("RUN", envelope(RunRecord(runId, "running", Vector.empty))))
+              .build()
+          else GetItemResponse.builder().build()
+        case ("transactWriteItems", Vector(_: TransactWriteItemsRequest)) =>
+          transactions += 1
+          throw TransactionCanceledException
+            .builder()
+            .cancellationReasons(
+              CancellationReason.builder().code("None").build(),
+              CancellationReason.builder().code(code).build()
+            )
+            .build()
+      }
+      assert(new DynamoRunLedger(sdk, config).recordStage(runId, "load") == Rejected(expected))
+      assert(transactions == 1)
+    }
+  }
+
+  test("ledger completion rejects a lost root compare-and-swap without unconditional overwrite") {
+    val previous = envelope(RunRecord(runId, "running", Vector.empty, revision = 4))
+    val done = envelope(RunStage("load", "complete", 1, None))
+    var puts = 0
+    val sdk = stub(classOf[DynamoDbClient]) {
+      case ("getItem", Vector(_: GetItemRequest)) =>
+        GetItemResponse.builder().item(runItem("RUN", previous)).build()
+      case ("query", Vector(_: QueryRequest)) =>
+        QueryResponse
+          .builder()
+          .items(Vector(runItem("RUN", previous), runItem("STAGE#load", done)).asJava)
+          .build()
+      case ("putItem", Vector(request: PutItemRequest)) =>
+        puts += 1
+        assert(request.conditionExpression() == "#payload = :expected")
+        assert(request.expressionAttributeValues().get(":expected").s() == previous)
+        assert(ujson.read(request.item().get("payload").s())("record")("state").str == "complete")
+        throw ConditionalCheckFailedException.builder().build()
+    }
+    assert(new DynamoRunLedger(sdk, config).completeRun(runId) == Rejected("conditional-conflict"))
+    assert(puts == 1)
+  }
 }

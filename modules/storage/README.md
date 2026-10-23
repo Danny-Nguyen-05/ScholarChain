@@ -117,4 +117,108 @@ sbt -batch 'storage / Compile / runMain edu.uic.cs441.scholarchain.storage.Stora
 - [QueryVectors](https://docs.aws.amazon.com/AmazonS3/latest/API/API_S3VectorBuckets_QueryVectors.html): top-K, filters and continuation token. Pinned Java SDK 2.56.0 exposes nextToken for both request and response; pagination is implemented rather than silently truncating at the first 100 results.
 - [DynamoDB TransactWriteItems](https://docs.aws.amazon.com/amazondynamodb/latest/APIReference/API_TransactWriteItems.html): a client token makes repeated identical transactions idempotent within its documented ten-minute window. The adapter fixes the token per logical invocation and its bounded retries.
 
-7C's live integration suite, cleanup/cost instructions and independent hardening remain deferred. No live AWS operation, provider call, resource creation, deletion, deployment or reviewer was triggered in 7B.
+7C's authored live integration suite, cleanup/cost instructions and independent hardening are described below; execution remains deferred to Phase 14C. No live AWS operation, provider call, resource creation, deletion, deployment or reviewer was triggered in 7B.
+
+## Phase 7C live suite: authored and compiled only
+
+`AwsIntegrationSpec` contains one test tagged exactly `edu.uic.cs441.scholarchain.storage.AwsIntegration`. Its registration, companion tag and helper initialization read no environment/configuration, construct no credential providers or clients, and perform no I/O. Only the tagged test body checks the opt-in and loads the explicit configuration. Normal `Test` and `sbt check` exclude the tag; the separate `AwsIntegration` configuration selects it and requires its build guard. The suite was authored for later Phase 14C execution; **no live test has been run in Phase 7**.
+
+The body exercises the real S3 ObjectStore, Dynamo ArtifactRegistry conditional writes, Neptune GraphLoader orchestration with real RunLedger/ArtifactRegistry and a separate GraphReader, and S3VectorStore put/query on a pre-existing index. Its synthetic fixture has three nodes (two researchers and one work), one stable Spark-shaped coauthor edge, one supporting Parquet row, unknown collaboration years and explicit synthetic provenance. It uses the package-private validated-handle seam to avoid constructing a complete producer export inside a live test. Therefore it tests live upload/submission/status/ledger/registry/query behavior, **not live execution of the public Parquet/sidecar validator**; public validation, logical hashes and ID parity remain covered by offline suites. The standalone support fixture is outside the CSV loader prefix. No fixture identity, collaboration or score represents an observed researcher or scientific result.
+
+### Configuration and execution gate
+
+Required environment variables for a future approved execution:
+
+| Variable | Meaning |
+|---|---|
+| `SCHOLARCHAIN_AWS_ITEST` | Must equal `1`; absent by default. |
+| `AWS_PROFILE` | Explicit nonblank profile for ordinary S3, DynamoDB and S3 Vectors. |
+| `SCHOLARCHAIN_AWS_ITEST_CONFIG` | Absolute path to a non-secret JSON configuration, at most 64 KiB. |
+
+The configuration must name a matching approved environment, a human Phase 14C gate reference, and explicitly validated execution/pricing/budget approvals. Reader, loader and cleanup clients are separate from one another. The reader profile must have read-only Neptune query permissions; the loader profile needs loader/status permissions and the configured cluster-attached S3 loader role. The cleanup profile needs only the approved, fixture-scoped Neptune cleanup permissions. Ordinary service cleanup uses the primary profile, whose future human-approved policy must be scoped to the fixture prefix/table keys/vector keys. Code separation does not prove an IAM profile's deployed policy; Terraform/IAM and network reachability are Phase 14C preflight checks.
+
+The following is an intentionally disabled placeholder configuration, not an approval or deployed resource inventory:
+
+```json
+{
+  "schemaVersion": "scholarchain.aws-integration.v1",
+  "environment": "replace-approved-environment",
+  "approvedEnvironment": "replace-approved-environment",
+  "phase14cGateReference": "replace-with-recorded-human-gate",
+  "executionApproved": false,
+  "pricingValidated": false,
+  "budgetValidated": false,
+  "incrementalBudgetUsd": 5.0,
+  "cleanupAuthorized": false,
+  "region": "replace-approved-region",
+  "readerProfile": "replace-read-only-neptune-profile",
+  "loaderProfile": "replace-loader-neptune-profile",
+  "cleanupProfile": "replace-fixture-cleanup-profile",
+  "bucket": "replace-provisioned-ordinary-bucket",
+  "tables": {
+    "runLedger": "replace-provisioned-runs",
+    "entityLinks": "replace-provisioned-links",
+    "querySessions": "replace-provisioned-sessions",
+    "evidence": "replace-provisioned-evidence",
+    "artifacts": "replace-provisioned-artifacts",
+    "metrics": "replace-provisioned-metrics",
+    "idempotencyIndex": "replace-provisioned-idempotency-index"
+  },
+  "vectorBucket": "replace-provisioned-vector-bucket",
+  "vectorIndex": "researcher-profile-v1",
+  "dimension": 2,
+  "metric": "cosine",
+  "neptuneEndpoint": "https://replace-approved-neptune-endpoint:8182",
+  "neptuneRoleArn": "replace-cluster-attached-loader-role-arn",
+  "fixturePrefix": "approved-live-integration-prefix",
+  "manifestDirectory": "/absolute/path/to/retained-live-run-manifests"
+}
+```
+
+Only a course-named, already provisioned vector index is accepted; its float32 type, dimension and metric must match the config. No `ensureIndex`/CreateIndex, bucket/table/cluster creation, schema mutation or infrastructure deletion is performed. All resources must already exist through approved Terraform. Credentials are obtained through the explicitly named profile providers only after the guards; credentials are never copied into the configuration or journal. The suite suppresses raw configuration/provider exception payloads in its failure message.
+
+Safe compile-only command, used in this phase, with the exact JDK environment:
+
+```bash
+cd /Users/danny/Documents/UIC/CS441/ScholarChain
+export JAVA_HOME=/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home
+export PATH="$JAVA_HOME/bin:$PATH"
+export SBT_OPTS="-Dlogback.configurationFile=$PWD/docs/agent-runs/phase-04/xml-repair-logback.xml"
+sbt -batch 'storage / AwsIntegration / compile'
+```
+
+The following command is **for the later human-approved Phase 14C run only**, after resource/network/IAM/pricing/budget and cleanup review. It has not been executed:
+
+```bash
+cd /Users/danny/Documents/UIC/CS441/ScholarChain
+export JAVA_HOME=/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home
+export PATH="$JAVA_HOME/bin:$PATH"
+export SBT_OPTS="-Dlogback.configurationFile=$PWD/docs/agent-runs/phase-04/xml-repair-logback.xml"
+export SCHOLARCHAIN_AWS_ITEST=1
+export AWS_PROFILE="replace-approved-primary-profile"
+export SCHOLARCHAIN_AWS_ITEST_CONFIG="/absolute/path/to/approved-live-config.json"
+sbt -batch 'storage / AwsIntegration / testOnly edu.uic.cs441.scholarchain.storage.AwsIntegrationSpec'
+```
+
+### Bounds, costs and retained ownership
+
+One invocation uses a fresh UUID run. It creates one vector, three synthetic graph nodes/one edge, normally five ordinary-S3 objects (round-trip text, node CSV, edge CSV, support Parquet and storage load manifest), six artifact-registry rows, and two run-ledger rows; a failed stage can add one journaled failure row and a rejected vector can add one S3 rejection report. Each S3 object is capped at 64 KiB. Vector dimension is config-bound to 1–4,096, put/get batches and top-K are one, and vector visibility is checked at most ten times with 500 ms pauses. Loader polling is capped at 90 polls and a 90-second monotonic-time budget. Each SDK call has a 10-second call/attempt timeout; SDK retries are disabled and adapter attempts are one. The last in-flight call can extend a poll deadline. Request/data bounds limit workload; they are not a hard aggregate wall-clock or billing cutoff.
+
+The user proposed a **USD 5 incremental run budget excluding already running infrastructure**. The configuration refuses a larger budget and requires pricing/budget validation, but the test cannot enforce an AWS billing ceiling. Region, provisioned/serverless capacity, baseline vector-index size, request/storage/transaction charges, data transfer, existing infrastructure time and retained artifacts affect actual cost. Revalidate the current [S3/S3 Vectors pricing](https://aws.amazon.com/s3/pricing/), [DynamoDB pricing](https://aws.amazon.com/dynamodb/pricing/) and [Neptune pricing](https://aws.amazon.com/neptune/pricing/) before Phase 14C; these primary pricing pages were consulted on 2026-10-23. No dollar estimate or charge has been measured here. Existing infrastructure costs, later cleanup, and retained data until cleanup are outside a claimed measured run cost. The human gate must decide whether the proposed incremental budget is adequate for the selected environment.
+
+A local `aws-integration-<UUID>.json` ownership journal is written before mutation, then updated atomically with each confirmed data item. It records run/environment/gate, exact bucket/key/version, Dynamo partition/sort keys and payload hashes, vector key/index/text hash, and exact graph IDs. Planned run-ledger root/stage/failure keys are recorded before loader execution. Successful ledger rows are read consistently and snapshotted for conditional cleanup. A planned record means a mutation might not have occurred, or might have committed with a lost reply; it is never an instruction to delete unverified data. Keep this journal with Phase 14C evidence.
+
+### Cleanup procedure
+
+The default is **retain** (`cleanupAuthorized=false`). Automatic cleanup exists only inside this tagged live body, only after all assertions pass, and only when the future human gate explicitly authorizes `cleanupAuthorized=true`. It never deletes infrastructure. It removes the exact journaled graph edge/nodes using their run property and IDs, without DETACH DELETE; removes the exact vector after checking both its run ID and text hash; conditionally deletes journaled Dynamo rows only if their entire payload still matches the recorded hash; and deletes only the exact owned S3 key/version after checking SHA metadata and the run ownership marker. For the graph batch, both ownership-filtered DELETE queries must return exact counts matching the journaled edge/node IDs. Independent read-side point checks must then find every edge and node absent before any graph entry transitions to `cleaned`. A zero/mismatched count, a remaining ID, or a read error leaves the entire graph batch journaled `created` for reconciliation; partial deletion is not reported as successful cleanup. The journal transitions each other confirmed item to `cleaned` after its existing checks. A failed or ambiguous run is retained for reconciliation, not automatically deleted.
+
+For a retained or interrupted run, the Phase 14C operator must:
+
+1. Read the local ownership journal and its human gate. Confirm the resource inventory and run UUID before using cleanup credentials. Resolve planned/uncertain entries with exact point reads; query only the journaled RunLedger partition with bounded pagination to find its exact failure rows. Check the loader job ID from the journaled job-registry row. If it is pending, wait for a final status before removing files that Neptune may still read. Cancellation or wider recovery needs its own human decision.
+2. Compare graph IDs and `liveIntegrationRun`, vector metadata `runId`/`textHash`, Dynamo payload hashes, and S3 metadata/version IDs to the journal. If ownership or content differs, stop that item's cleanup and preserve evidence. Never infer ownership from a broad prefix or a table name alone.
+3. Under the recorded data-cleanup approval, remove only that run's exact edge, then its three now-isolated nodes; its one vector; its exact registry/ledger rows; and its recorded S3 versions/objects. The authored successful-run cleanup follows this same order and refuses modified payloads. Do not delete buckets, tables, indexes, clusters, unrelated rows, or every version of a key.
+4. Verify the exact point reads are absent, retain the journal and observed cleanup result, and record actual spend/runtime separately. The suite's failed-run journal is deliberately not a standalone generic cleanup command. No cleanup action has been executed in Phase 7.
+
+### Remaining limitations and deferred findings
+
+N6's additional S3 412 and ledger CAS/cancellation coverage belongs to the independent 7C test owner. The following accepted items remain deferred; this suite does not repair them: N4 session/reservation TTL divergence (TTL remains off by default), N5 raw idempotency GSI-key length validation, N7 configurable evidence prefix, N9 accepted leading-zero count parsing, N10 fail-closed invalid export without violation counts, N11 vector-registry failure reason/payload semantics, N12 validation/upload file re-read and memory cost, N13 CLI refusal exit/nested production retry composition, N14 full-scale path/community query cost, N15 NEW-mode recovery reloading an export, and N16 possible orphan load after submission before registry persistence. N8 remains a disclosed coordinator formatting process note. Live compatibility, deployed IAM/read-only permissions, actual cost, runtime, cleanup and full-scale behavior remain unverified gates; offline tests and compilation do not establish them.

@@ -1,0 +1,28 @@
+{
+  "exitCode": 0,
+  "realSeconds": 14.87,
+  "java": "17.0.20.1",
+  "sbt": "1.10.7",
+  "liveConfigurationCompileExit": 0,
+  "groups": {
+    "normalStorage": {
+      "passed": 27,
+      "failed": 0
+    },
+    "independentStorage": {
+      "passed": 73,
+      "failed": 0
+    }
+  },
+  "liveTaggedBodyExecuted": false,
+  "liveTestTasksInvoked": [],
+  "runtimeScan": {
+    "runtimeSourceFiles": 0,
+    "inspectedSources": 0,
+    "kind": "Fixture-tested source heuristic; no deployed wiring claim"
+  },
+  "rawLog": "/tmp/phase7c-targeted-3.txt",
+  "retainedLog": "docs/agent-runs/phase-07/evidence/7c/targeted-3.txt",
+  "bytes": 12768,
+  "sha256": "16caedceaf2886e984bf4e0f959bab403cb52eaffb2f6dad455216327eb0b7d9"
+}
