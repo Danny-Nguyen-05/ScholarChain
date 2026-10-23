@@ -12,6 +12,16 @@ object Dependencies {
 
   val hadoopClientLib = "org.apache.hadoop" % "hadoop-client" % hadoopClient % Provided
 
+  val awsS3 = "software.amazon.awssdk" % "s3" % awsSdk
+  val awsDynamoDb = "software.amazon.awssdk" % "dynamodb" % awsSdk
+  val awsNeptuneData = "software.amazon.awssdk" % "neptunedata" % awsSdk
+  val awsS3Vectors = "software.amazon.awssdk" % "s3vectors" % awsSdk
+  val parquetHadoop = "org.apache.parquet" % "parquet-hadoop" % parquet
+  // Local Parquet ingestion runs without Spark or a cluster-provided Hadoop runtime.
+  val storageHadoopClient =
+    ("org.apache.hadoop" % "hadoop-client" % hadoopClient)
+      .exclude("org.slf4j", "slf4j-reload4j")
+
   // SparkSession's compiled signatures refer to Scala 2.13 TypeTag even when using
   // the Java-friendly DataFrame API. Keep reflection on the compile/test classpath.
   val sparkScalaReflectLib =

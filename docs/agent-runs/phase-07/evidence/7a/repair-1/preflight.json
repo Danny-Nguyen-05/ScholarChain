@@ -1,0 +1,24 @@
+{
+  "base": "98dd2a4458e3128d019af1c1d1dbd2bf1dfcbbd2",
+  "branch": "phase-7",
+  "scope": "7A repair1 blockingF1/F2 only",
+  "observedAt": "2026-10-22T17:47:10.142872-05:00",
+  "existingReviewedTreeUncommitted": true,
+  "externalReviewSha256": "d183e79c292a60f42a6cd98ccd10cfdb23bd5a60ce48662b18348e13da308161",
+  "gitignoreSha256": "9c6a0a262b731749bf04a0334de33946ca65f6a71a15652033730c1fa98afb26",
+  "protectedHashes": {
+    "docs/agent-runs/phase-06/human-gate.md": "24b4c5cc82e8126d81b2c7b176e3a87d427a4b7368055e85741ef9ac615a0304",
+    "docs/agent-runs/phase-06/repairs.md": "ba00ddd8dec4919cdbdb3e7368083563874ba41b13f50dffee68fd98f68443fd",
+    "docs/agent-runs/phase-06/commit.txt": "ddbae83e842515f76b7299fa46446b883c9088c5c261daccfc53694c7a957c44",
+    "AGENTS.md": "13c64f8d8d1119d1aec4e2e50382463592f2b0a76e77354146161001b1b5095b",
+    "CLAUDE.md": "92f9d1d3955993f8e5a9a19e447e6bc1ec0928a8df4e1fa1b2fb0d4653618071",
+    "docs/agents.md": "12db98e77642d2e44498ba19f128f68e047a2bf790cad161808d98f9c26a3992"
+  },
+  "nativeOwners": {
+    "storage": "/root/storage_engineer",
+    "tests": "/root/test_engineer",
+    "evidence": "/root"
+  },
+  "model": "Inherited GPT-6 system identity; exact deployed build unavailable",
+  "note": "Owner edits began promptly after no-questions work order. This preflight captures current repair state, not a falsely claimed pristine pre-edit snapshot."
+}

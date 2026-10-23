@@ -35,6 +35,36 @@ object ScholarChainBuild {
     )
   val sparkJobJar =
     taskKey[File]("EMR Spark job JAR with Spark classes, core and non-Spark runtime libraries")
+  val AwsIntegration = config("awsIntegration").extend(Test)
+  val requireAwsIntegration = taskKey[Unit]("Require explicit AWS live-test opt-in and profile")
+
+  val awsIntegrationSettings: Seq[Setting[_]] =
+    inConfig(AwsIntegration)(Defaults.testSettings) ++ Seq(
+      AwsIntegration / scalaSource := (Test / scalaSource).value,
+      AwsIntegration / javaSource := (Test / javaSource).value,
+      AwsIntegration / resourceDirectory := (Test / resourceDirectory).value,
+      AwsIntegration / fork := true,
+      AwsIntegration / parallelExecution := false,
+      AwsIntegration / testOptions := Seq(
+        Tests.Argument(TestFrameworks.ScalaTest, "-n", scholarchain.build.AwsIntegrationPolicy.tag)
+      ),
+      AwsIntegration / requireAwsIntegration :=
+        scholarchain.build.AwsIntegrationPolicy.requireEnabled(sys.env),
+      // The test loader is shared by test, testOnly, testQuick and executeTests.
+      // Gate it as well as the public entry points so selection cannot bypass opt-in.
+      AwsIntegration / testLoader := (AwsIntegration / testLoader)
+        .dependsOn(AwsIntegration / requireAwsIntegration)
+        .value,
+      AwsIntegration / test := (AwsIntegration / test)
+        .dependsOn(AwsIntegration / requireAwsIntegration)
+        .value,
+      AwsIntegration / testOnly := (AwsIntegration / testOnly)
+        .dependsOn(AwsIntegration / requireAwsIntegration)
+        .evaluated,
+      AwsIntegration / testQuick := (AwsIntegration / testQuick)
+        .dependsOn(AwsIntegration / requireAwsIntegration)
+        .evaluated
+    )
 
   val sparkTestJavaOptions: Seq[String] = Seq(
     "-Xmx2g",
@@ -399,7 +429,12 @@ object ScholarChainBuild {
       Dependencies.logbackClassic,
       Dependencies.scalaTestLib
     ),
-    Test / parallelExecution := false
+    Test / parallelExecution := false,
+    Test / testOptions += Tests.Argument(
+      TestFrameworks.ScalaTest,
+      "-l",
+      scholarchain.build.AwsIntegrationPolicy.tag
+    )
   )
 
   def moduleSettings(extra: Seq[ModuleID] = Nil): Seq[Setting[_]] =

@@ -1,0 +1,9 @@
+{
+  "scope": "Read-only source binding hashes captured after bounded smoke; no claim of full Parquet audit or pre-smoke snapshot.",
+  "sha256": {
+    "target/phase6-runs/6fg-spark-first-v2/run:f02acf56-4bea-4009-adaf-b11d5afceb49/run-manifest.json": "0291eae87aeb329168676dd4516f9645a4ca81079521d13a54ff407f88f64442",
+    "target/phase6-runs/6fg-spark-first-v2/run:f02acf56-4bea-4009-adaf-b11d5afceb49/run-metadata.json": "efbd09e9aa2484720ec6d898788a23eab176c640ceca63d83c6880e34630637c",
+    "target/phase6-runs/6fg-spark-first-v2/run:f02acf56-4bea-4009-adaf-b11d5afceb49/_SCHOLARCHAIN_SPARK_COMPLETE": "41f8f0d56c185c297cf486ebce0295a8b13b4aa8d57b02eef2dad61c45b6bc8a",
+    "target/phase6-runs/6fg-spark-first-v2/run:f02acf56-4bea-4009-adaf-b11d5afceb49/load-manifests/s3.json": "76a2554c759a229ea33793c5446468464b8a8fbf32c3ef5ff45d21f6fcc36815"
+  }
+}

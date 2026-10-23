@@ -1,0 +1,26 @@
+[info] welcome to sbt 1.10.7 (Homebrew Java 17.0.20.1)
+[info] loading settings for project scholarchain-build from plugins.sbt...
+[info] loading project definition from /Users/danny/Documents/UIC/CS441/ScholarChain/project
+[info] loading settings for project root from build.sbt...
+[info] set current project to root (in build file:/Users/danny/Documents/UIC/CS441/ScholarChain/)
+[error] java.lang.IllegalArgumentException: requirement failed: awsIntegration is disabled; set SCHOLARCHAIN_AWS_ITEST=1 only for an approved live test run
+[error] 	at scala.Predef$.require(Predef.scala:281)
+[error] 	at scholarchain.build.AwsIntegrationPolicy$.requireEnabled(AwsIntegrationPolicy.scala:9)
+[error] 	at ScholarChainBuild$.$anonfun$awsIntegrationSettings$7(ScholarChainBuild.scala:52)
+[error] 	at scala.runtime.java8.JFunction0$mcV$sp.apply(JFunction0$mcV$sp.java:23)
+[error] 	at sbt.std.Transform$$anon$3.$anonfun$apply$2(Transform.scala:47)
+[error] 	at sbt.std.Transform$$anon$4.work(Transform.scala:69)
+[error] 	at sbt.Execute.$anonfun$submit$2(Execute.scala:283)
+[error] 	at sbt.internal.util.ErrorHandling$.wideConvert(ErrorHandling.scala:24)
+[error] 	at sbt.Execute.work(Execute.scala:292)
+[error] 	at sbt.Execute.$anonfun$submit$1(Execute.scala:283)
+[error] 	at sbt.ConcurrentRestrictions$$anon$4.$anonfun$submitValid$1(ConcurrentRestrictions.scala:265)
+[error] 	at sbt.CompletionService$$anon$2.call(CompletionService.scala:65)
+[error] 	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+[error] 	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:539)
+[error] 	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+[error] 	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+[error] 	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+[error] 	at java.base/java.lang.Thread.run(Thread.java:840)
+[error] (buildVerification / AwsIntegration / requireAwsIntegration) java.lang.IllegalArgumentException: requirement failed: awsIntegration is disabled; set SCHOLARCHAIN_AWS_ITEST=1 only for an approved live test run
+[error] Total time: 0 s, completed Oct 22, 2026, 4:33:51 PM

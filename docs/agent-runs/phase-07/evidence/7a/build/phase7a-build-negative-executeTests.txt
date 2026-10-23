@@ -1,0 +1,11 @@
+[info] welcome to sbt 1.10.7 (Homebrew Java 17.0.20.1)
+[info] loading settings for project scholarchain-build from plugins.sbt...
+[info] loading project definition from /Users/danny/Documents/UIC/CS441/ScholarChain/project
+[info] loading settings for project root from build.sbt...
+[info] set current project to root (in build file:/Users/danny/Documents/UIC/CS441/ScholarChain/)
+[error] Expected configuration
+[error] Expected ':'
+[error] Expected key
+[error] Not a valid key: awsIntegration (similar: requireAwsIntegration, csrConfiguration, updateConfiguration)
+[error] buildVerification / awsIntegration / executeTests
+[error]                                   ^

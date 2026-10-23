@@ -1,0 +1,255 @@
+{
+  "renamedCount": 23,
+  "items": [
+    {
+      "old": "docs/agent-runs/phase-07/evidence/7a/build/phase7a-build-classpath.log",
+      "new": "docs/agent-runs/phase-07/evidence/7a/build/phase7a-build-classpath.txt",
+      "bytes": 2614,
+      "sha256": "0aa3d86b1ab190ca9d88a3b4431a9d4757e724a4f2eaf23c538b17ef2d79f083"
+    },
+    {
+      "old": "docs/agent-runs/phase-07/evidence/7a/build/phase7a-build-first-escalated.log",
+      "new": "docs/agent-runs/phase-07/evidence/7a/build/phase7a-build-first-escalated.txt",
+      "bytes": 2513,
+      "sha256": "f93eab3215b747c1770eced8fc6af8c49bd77199103e65e345e0590a7ed50275"
+    },
+    {
+      "old": "docs/agent-runs/phase-07/evidence/7a/build/phase7a-build-first.log",
+      "new": "docs/agent-runs/phase-07/evidence/7a/build/phase7a-build-first.txt",
+      "bytes": 1367,
+      "sha256": "d16be90ad6ceee140d204f7d2c7212ffec5e2251c56f7f849d9c6b4e81218f05"
+    },
+    {
+      "old": "docs/agent-runs/phase-07/evidence/7a/build/phase7a-build-guard-executeTests.log",
+      "new": "docs/agent-runs/phase-07/evidence/7a/build/phase7a-build-guard-executeTests.txt",
+      "bytes": 2392,
+      "sha256": "4e450825ce5f69ca6f71bf1882787b475339b259451c63590d649b5b0c6d6bfe"
+    },
+    {
+      "old": "docs/agent-runs/phase-07/evidence/7a/build/phase7a-build-guard-test.log",
+      "new": "docs/agent-runs/phase-07/evidence/7a/build/phase7a-build-guard-test.txt",
+      "bytes": 2223,
+      "sha256": "c6b1815093ab23f305b94ae045e5e399c3441b3ad16e67cd5712fd392f4deead"
+    },
+    {
+      "old": "docs/agent-runs/phase-07/evidence/7a/build/phase7a-build-guard-testOnly.log",
+      "new": "docs/agent-runs/phase-07/evidence/7a/build/phase7a-build-guard-testOnly.txt",
+      "bytes": 2223,
+      "sha256": "9f32fde4181e618b28b0bbc6d9c48b7c3ebd5b7e027c5f66ff89e6a2aceb44b4"
+    },
+    {
+      "old": "docs/agent-runs/phase-07/evidence/7a/build/phase7a-build-guard-testQuick.log",
+      "new": "docs/agent-runs/phase-07/evidence/7a/build/phase7a-build-guard-testQuick.txt",
+      "bytes": 2223,
+      "sha256": "b25f41be3055861fb822d3132cf1c03ecf64f8b45756ccf58335fc90a96a2d48"
+    },
+    {
+      "old": "docs/agent-runs/phase-07/evidence/7a/build/phase7a-build-negative-executeTests.log",
+      "new": "docs/agent-runs/phase-07/evidence/7a/build/phase7a-build-negative-executeTests.txt",
+      "bytes": 667,
+      "sha256": "d9410365911c5343fc9563e43e4828471c8f74d6addb5a27fa4c64a6fa79e62d"
+    },
+    {
+      "old": "docs/agent-runs/phase-07/evidence/7a/build/phase7a-build-negative-test.log",
+      "new": "docs/agent-runs/phase-07/evidence/7a/build/phase7a-build-negative-test.txt",
+      "bytes": 808,
+      "sha256": "8bc06c4e396af832b23d2579cc479a7fd875d94de5e0dca0336d26d4731181c8"
+    },
+    {
+      "old": "docs/agent-runs/phase-07/evidence/7a/build/phase7a-build-negative-testOnly.log",
+      "new": "docs/agent-runs/phase-07/evidence/7a/build/phase7a-build-negative-testOnly.txt",
+      "bytes": 663,
+      "sha256": "bf035637441995f468791aeb96ca9272b9b97d39462ed89145bca1db16c88944"
+    },
+    {
+      "old": "docs/agent-runs/phase-07/evidence/7a/build/phase7a-build-negative-testQuick.log",
+      "new": "docs/agent-runs/phase-07/evidence/7a/build/phase7a-build-negative-testQuick.txt",
+      "bytes": 664,
+      "sha256": "680293c8dab2a682ce64038dd7d574330285d19baa6687f5db332244241ff9c7"
+    },
+    {
+      "old": "docs/agent-runs/phase-07/evidence/7a/build/phase7a-build-profile-guard.log",
+      "new": "docs/agent-runs/phase-07/evidence/7a/build/phase7a-build-profile-guard.txt",
+      "bytes": 2154,
+      "sha256": "f63103bdabaf958bdfa7db0d6049b793b59859e254a86f0b6fa06b0129a7f414"
+    },
+    {
+      "old": "docs/agent-runs/phase-07/evidence/7a/build/phase7a-build-providers.log",
+      "new": "docs/agent-runs/phase-07/evidence/7a/build/phase7a-build-providers.txt",
+      "bytes": 1249,
+      "sha256": "0c412a6a3f3f77f5fcc1aa2a858054579070ccf4ed9275dd294d4e831e098c31"
+    },
+    {
+      "old": "docs/agent-runs/phase-07/evidence/7a/build/phase7a-build-resolution.log",
+      "new": "docs/agent-runs/phase-07/evidence/7a/build/phase7a-build-resolution.txt",
+      "bytes": 1283,
+      "sha256": "1a74b11f3771c48dfce73a1121eb5b856fe857f20338a2c9b88b6631b9a1c68a"
+    },
+    {
+      "old": "docs/agent-runs/phase-07/evidence/7a/source-fence-targeted.log",
+      "new": "docs/agent-runs/phase-07/evidence/7a/source-fence-targeted.txt",
+      "bytes": 2983,
+      "sha256": "4c98fa5a7be0d7f774e42e28ed32429da6561b3d0aec1a5dc82ceeb972cceed0"
+    },
+    {
+      "old": "docs/agent-runs/phase-07/evidence/7a/spark-targeted-2.log",
+      "new": "docs/agent-runs/phase-07/evidence/7a/spark-targeted-2.txt",
+      "bytes": 3649,
+      "sha256": "9abdd8394ab50ee5a17d2b02c22bb5d2d05bef1c0db87d5fa6d65b8d4cb13838"
+    },
+    {
+      "old": "docs/agent-runs/phase-07/evidence/7a/spark-targeted-3.log",
+      "new": "docs/agent-runs/phase-07/evidence/7a/spark-targeted-3.txt",
+      "bytes": 2434,
+      "sha256": "3b01851a954774c3ae937e14c725f09fde994389a10fc74f293cce6fcfd5981b"
+    },
+    {
+      "old": "docs/agent-runs/phase-07/evidence/7a/spark-targeted-4.log",
+      "new": "docs/agent-runs/phase-07/evidence/7a/spark-targeted-4.txt",
+      "bytes": 1520,
+      "sha256": "8bb460fcf336c2cbae68296d27dee42f40525268ee3625fff58460a5e0c65222"
+    },
+    {
+      "old": "docs/agent-runs/phase-07/evidence/7a/targeted-1.log",
+      "new": "docs/agent-runs/phase-07/evidence/7a/targeted-1.txt",
+      "bytes": 4028,
+      "sha256": "7175aed322f06e8cd397d0ed5c74057986b3d82dd2b00e8237979095040fa708"
+    },
+    {
+      "old": "docs/agent-runs/phase-07/evidence/7a/targeted-2.log",
+      "new": "docs/agent-runs/phase-07/evidence/7a/targeted-2.txt",
+      "bytes": 2415,
+      "sha256": "c36b8f18fc78ecac2e4c760cc6fa1209de9f6636c33c6eea985ae56ed185e95c"
+    },
+    {
+      "old": "docs/agent-runs/phase-07/evidence/7a/targeted-3.log",
+      "new": "docs/agent-runs/phase-07/evidence/7a/targeted-3.txt",
+      "bytes": 6008,
+      "sha256": "176dbe6c305b28c28a79d375856f08672135c2ec0485f54406880d7f66f2e455"
+    },
+    {
+      "old": "docs/agent-runs/phase-07/evidence/7a/targeted-4.log",
+      "new": "docs/agent-runs/phase-07/evidence/7a/targeted-4.txt",
+      "bytes": 6387,
+      "sha256": "eed4d1e783f02154a82714cf56c223349c30fd515dad6fb9531fc9b9de942877"
+    },
+    {
+      "old": "docs/agent-runs/phase-07/evidence/7a/targeted-5.log",
+      "new": "docs/agent-runs/phase-07/evidence/7a/targeted-5.txt",
+      "bytes": 7729,
+      "sha256": "65a72c8083c58a54e655f2abb98bb1329d3495943d223e978a20de81f94871d4"
+    }
+  ],
+  "authoredReferenceFilesUpdated": [
+    "docs/agent-runs/phase-07/evidence/7a/build/commands.md",
+    "docs/agent-runs/phase-07/evidence/7a/build/log-index.json",
+    "docs/agent-runs/phase-07/evidence/7a/reviewer-prompt.md",
+    "docs/agent-runs/phase-07/repairs.md"
+  ],
+  "buildRawHashRechecks": [
+    {
+      "original": "/tmp/phase7a-build-classpath.log",
+      "rawRecordedHashMatches": true,
+      "retained": "docs/agent-runs/phase-07/evidence/7a/build/phase7a-build-classpath.txt",
+      "retainedHash": "0aa3d86b1ab190ca9d88a3b4431a9d4757e724a4f2eaf23c538b17ef2d79f083",
+      "scope": "full bounded log"
+    },
+    {
+      "original": "/tmp/phase7a-build-first-escalated.log",
+      "rawRecordedHashMatches": true,
+      "retained": "docs/agent-runs/phase-07/evidence/7a/build/phase7a-build-first-escalated.txt",
+      "retainedHash": "f93eab3215b747c1770eced8fc6af8c49bd77199103e65e345e0590a7ed50275",
+      "scope": "full bounded log"
+    },
+    {
+      "original": "/tmp/phase7a-build-first.log",
+      "rawRecordedHashMatches": true,
+      "retained": "docs/agent-runs/phase-07/evidence/7a/build/phase7a-build-first.txt",
+      "retainedHash": "d16be90ad6ceee140d204f7d2c7212ffec5e2251c56f7f849d9c6b4e81218f05",
+      "scope": "full bounded log"
+    },
+    {
+      "original": "/tmp/phase7a-build-guard-executeTests.log",
+      "rawRecordedHashMatches": true,
+      "retained": "docs/agent-runs/phase-07/evidence/7a/build/phase7a-build-guard-executeTests.txt",
+      "retainedHash": "4e450825ce5f69ca6f71bf1882787b475339b259451c63590d649b5b0c6d6bfe",
+      "scope": "full bounded log"
+    },
+    {
+      "original": "/tmp/phase7a-build-guard-test.log",
+      "rawRecordedHashMatches": true,
+      "retained": "docs/agent-runs/phase-07/evidence/7a/build/phase7a-build-guard-test.txt",
+      "retainedHash": "c6b1815093ab23f305b94ae045e5e399c3441b3ad16e67cd5712fd392f4deead",
+      "scope": "full bounded log"
+    },
+    {
+      "original": "/tmp/phase7a-build-guard-testOnly.log",
+      "rawRecordedHashMatches": true,
+      "retained": "docs/agent-runs/phase-07/evidence/7a/build/phase7a-build-guard-testOnly.txt",
+      "retainedHash": "9f32fde4181e618b28b0bbc6d9c48b7c3ebd5b7e027c5f66ff89e6a2aceb44b4",
+      "scope": "full bounded log"
+    },
+    {
+      "original": "/tmp/phase7a-build-guard-testQuick.log",
+      "rawRecordedHashMatches": true,
+      "retained": "docs/agent-runs/phase-07/evidence/7a/build/phase7a-build-guard-testQuick.txt",
+      "retainedHash": "b25f41be3055861fb822d3132cf1c03ecf64f8b45756ccf58335fc90a96a2d48",
+      "scope": "full bounded log"
+    },
+    {
+      "original": "/tmp/phase7a-build-negative-executeTests.log",
+      "rawRecordedHashMatches": true,
+      "retained": "docs/agent-runs/phase-07/evidence/7a/build/phase7a-build-negative-executeTests.txt",
+      "retainedHash": "d9410365911c5343fc9563e43e4828471c8f74d6addb5a27fa4c64a6fa79e62d",
+      "scope": "full bounded log"
+    },
+    {
+      "original": "/tmp/phase7a-build-negative-test.log",
+      "rawRecordedHashMatches": true,
+      "retained": "docs/agent-runs/phase-07/evidence/7a/build/phase7a-build-negative-test.txt",
+      "retainedHash": "8bc06c4e396af832b23d2579cc479a7fd875d94de5e0dca0336d26d4731181c8",
+      "scope": "full bounded log"
+    },
+    {
+      "original": "/tmp/phase7a-build-negative-testOnly.log",
+      "rawRecordedHashMatches": true,
+      "retained": "docs/agent-runs/phase-07/evidence/7a/build/phase7a-build-negative-testOnly.txt",
+      "retainedHash": "bf035637441995f468791aeb96ca9272b9b97d39462ed89145bca1db16c88944",
+      "scope": "full bounded log"
+    },
+    {
+      "original": "/tmp/phase7a-build-negative-testQuick.log",
+      "rawRecordedHashMatches": true,
+      "retained": "docs/agent-runs/phase-07/evidence/7a/build/phase7a-build-negative-testQuick.txt",
+      "retainedHash": "680293c8dab2a682ce64038dd7d574330285d19baa6687f5db332244241ff9c7",
+      "scope": "full bounded log"
+    },
+    {
+      "original": "/tmp/phase7a-build-profile-guard.log",
+      "rawRecordedHashMatches": true,
+      "retained": "docs/agent-runs/phase-07/evidence/7a/build/phase7a-build-profile-guard.txt",
+      "retainedHash": "f63103bdabaf958bdfa7db0d6049b793b59859e254a86f0b6fa06b0129a7f414",
+      "scope": "full bounded log"
+    },
+    {
+      "original": "/tmp/phase7a-build-providers.log",
+      "rawRecordedHashMatches": true,
+      "retained": "docs/agent-runs/phase-07/evidence/7a/build/phase7a-build-providers.txt",
+      "retainedHash": "0c412a6a3f3f77f5fcc1aa2a858054579070ccf4ed9275dd294d4e831e098c31",
+      "scope": "classpath excerpt"
+    },
+    {
+      "original": "/tmp/phase7a-build-resolution.log",
+      "rawRecordedHashMatches": true,
+      "retained": "docs/agent-runs/phase-07/evidence/7a/build/phase7a-build-resolution.txt",
+      "retainedHash": "1a74b11f3771c48dfce73a1121eb5b856fe857f20338a2c9b88b6631b9a1c68a",
+      "scope": "full bounded log"
+    }
+  ],
+  "allRenamedBytesMatch": true,
+  "all23PathsGitVisible": true,
+  "gitCheckIgnoreExit": 1,
+  "gitCheckIgnoreOutput": "",
+  "verbatimReviewAndAcceptedPlanPreserved": true,
+  "note": "Git-visible untracked.txt files are ready for the human commit; no agent staging/commit. Raw/tmp command history remains.log intentionally. External review remains verbatim. Provider classpath excerpt has a retained hash distinct from the original raw-log hash, both verified."
+}

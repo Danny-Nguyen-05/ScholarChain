@@ -1,0 +1,9 @@
+{
+  "exitCode": 1,
+  "testsRun": 0,
+  "rawSha256": "8bb460fcf336c2cbae68296d27dee42f40525268ee3625fff58460a5e0c65222",
+  "realSeconds": 4.18,
+  "failure": "Test compiler missing varargs method argument list toFieldMap; routed Spark owner.",
+  "retainedLog": "docs/agent-runs/phase-07/evidence/7a/spark-targeted-4.txt",
+  "retainedSha256": "8bb460fcf336c2cbae68296d27dee42f40525268ee3625fff58460a5e0c65222"
+}

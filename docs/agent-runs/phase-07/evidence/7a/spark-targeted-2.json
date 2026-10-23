@@ -1,0 +1,7 @@
+{
+  "exitCode": 1,
+  "rawSha256": "9abdd8394ab50ee5a17d2b02c22bb5d2d05bef1c0db87d5fa6d65b8d4cb13838",
+  "note": "Spark2/3. Embedded CRLF source becomes CRCRLF. Routed Spark owner; expected text unchanged.",
+  "retainedLog": "docs/agent-runs/phase-07/evidence/7a/spark-targeted-2.txt",
+  "retainedSha256": "9abdd8394ab50ee5a17d2b02c22bb5d2d05bef1c0db87d5fa6d65b8d4cb13838"
+}

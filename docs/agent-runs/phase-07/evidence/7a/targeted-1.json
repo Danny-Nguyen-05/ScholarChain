@@ -1,0 +1,16 @@
+{
+  "command": "export JAVA_HOME=/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home\nexport PATH=\"$JAVA_HOME/bin:$PATH\"\nexport SBT_OPTS=\"-Dlogback.configurationFile=$PWD/docs/agent-runs/phase-04/xml-repair-logback.xml\"\njava -version\n/usr/bin/time -p sbt -batch 'storage / Compile / scalafmt' 'sparkAnalytics / Compile / scalafmt' 'sparkAnalytics / Test / scalafmt' 'independentTests / Test / scalafmt' 'sparkAnalytics / Test / testOnly edu.uic.cs441.scholarchain.spark.Phase7NeptuneExportSpec' 'storage / Test / compile' 'independentTests / Test / testOnly edu.uic.cs441.scholarchain.independent.IndependentStoragePortsSpec edu.uic.cs441.scholarchain.independent.IndependentStorageSdkSpec' > /tmp/phase7a-targeted-1.log 2>&1",
+  "exitCode": 1,
+  "testsRun": 3,
+  "succeeded": 2,
+  "failed": 1,
+  "notReached": [
+    "storage Test compile",
+    "independent targets"
+  ],
+  "rawSha256": "7175aed322f06e8cd397d0ed5c74057986b3d82dd2b00e8237979095040fa708",
+  "realSeconds": 10.92,
+  "failure": "Spark module test expects ujson.Num while sidecar Long is serialized string; routed spark-engineer. Source roundtrip assertion reached before failure.",
+  "retainedLog": "docs/agent-runs/phase-07/evidence/7a/targeted-1.txt",
+  "retainedSha256": "7175aed322f06e8cd397d0ed5c74057986b3d82dd2b00e8237979095040fa708"
+}

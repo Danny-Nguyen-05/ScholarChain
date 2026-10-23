@@ -1,0 +1,70 @@
+[info] welcome to sbt 1.10.7 (Homebrew Java 17.0.20.1)
+[info] loading settings for project scholarchain-build from plugins.sbt...
+[info] loading project definition from /Users/danny/Documents/UIC/CS441/ScholarChain/project
+[info] loading settings for project root from build.sbt...
+[info] set current project to root (in build file:/Users/danny/Documents/UIC/CS441/ScholarChain/)
+[info] scalafmt: Formatting 1 Scala sources (/Users/danny/Documents/UIC/CS441/ScholarChain/modules/storage)...
+[info] scalafmt: Reformatted 1 Scala sources
+[success] Total time: 2 s, completed Oct 22, 2026, 4:46:47 PM
+[info] scalafmt: Formatting 1 Scala sources (/Users/danny/Documents/UIC/CS441/ScholarChain/modules/storage)...
+[info] scalafmt: Reformatted 1 Scala sources
+[success] Total time: 0 s, completed Oct 22, 2026, 4:46:47 PM
+[success] Total time: 0 s, completed Oct 22, 2026, 4:46:47 PM
+[info] compiling 9 Scala sources to /Users/danny/Documents/UIC/CS441/ScholarChain/modules/storage/target/scala-3.3.4/classes ...
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/DynamoStorage.scala:194:26 
+[warn] 194 |          case None    => return RowCodec.map(responseResult)(_ => Rejected("batch-unavailable"))
+[warn]     |                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[warn]     |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/DynamoStorage.scala:202:30 
+[warn] 202 |          case Rejected(c) => return Rejected(c)
+[warn]     |                              ^^^^^^^^^^^^^^^^^^
+[warn]     |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/DynamoStorage.scala:203:30 
+[warn] 203 |          case _           => return Rejected("batch-decode-failed")
+[warn]     |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[warn]     |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/DynamoStorage.scala:220:50 
+[warn] 220 |              Thread.currentThread().interrupt(); return Rejected("interrupted")
+[warn]     |                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[warn]     |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/DynamoStorage.scala:224:28 
+[warn] 224 |      if (pending.nonEmpty) return Retried(retried, Rejected("unprocessed-keys-exhausted"))
+[warn]     |                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[warn]     |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/InMemoryStorage.scala:78:40 
+[warn] 78 |      if (!StorageResult.successful(r)) return r match {
+[warn]    |                                        ^
+[warn]    |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] 79 |        case Rejected(c) => Rejected(c); case _ => Rejected("object-upload-failed")
+[warn] 80 |      }
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/StorageRows.scala:261:44 
+[warn] 261 |          case Found(old) if old == next => return Unchanged(next)
+[warn]     |                                            ^^^^^^^^^^^^^^^^^^^^^^
+[warn]     |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] 7 warnings found
+[info] done compiling
+[info] compiling 2 Scala sources to /Users/danny/Documents/UIC/CS441/ScholarChain/modules/storage/target/scala-3.3.4/test-classes ...
+[error] -- [E049] Reference Error: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/storage/src/test/scala/edu/uic/cs441/scholarchain/storage/StorageFeatureSpec.scala:93:31 
+[error] 93 |        def hasNext: Boolean = iterator.hasNext; def next(): ujson.Obj = iterator.next();
+[error]    |                               ^^^^^^^^
+[error]    |         Reference to iterator is ambiguous.
+[error]    |         It is both defined in method open
+[error]    |         and inherited subsequently in anonymous class Object with 
+[error]    |           edu.uic.cs441.scholarchain.storage.CloseableRowIterator {...}
+[error]    |
+[error]    | longer explanation available when compiling with `-explain`
+[error] -- [E049] Reference Error: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/storage/src/test/scala/edu/uic/cs441/scholarchain/storage/StorageFeatureSpec.scala:93:73 
+[error] 93 |        def hasNext: Boolean = iterator.hasNext; def next(): ujson.Obj = iterator.next();
+[error]    |                                                                         ^^^^^^^^
+[error]    |         Reference to iterator is ambiguous.
+[error]    |         It is both defined in method open
+[error]    |         and inherited subsequently in anonymous class Object with 
+[error]    |           edu.uic.cs441.scholarchain.storage.CloseableRowIterator {...}
+[error]    |
+[error]    | longer explanation available when compiling with `-explain`
+[error] two errors found
+[error] (storage / Test / compileIncremental) Compilation failed
+[error] Total time: 5 s, completed Oct 22, 2026, 4:46:52 PM
+real 8.76
+user 32.77
+sys 1.34

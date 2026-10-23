@@ -1,0 +1,22 @@
+{
+  "sourceCount": 109,
+  "changedDuringFinalGate": [],
+  "protectedInputHashesMatch": {
+    "docs/agent-runs/phase-06/human-gate.md": true,
+    "docs/agent-runs/phase-06/repairs.md": true,
+    "docs/agent-runs/phase-06/commit.txt": true,
+    "AGENTS.md": true,
+    "CLAUDE.md": true,
+    "docs/agents.md": true
+  },
+  "planOriginalHashMatches": true,
+  "trackedDiffCheckExit": 0,
+  "trackedDiffCheckOutput": "",
+  "newImplementationWhitespace": [],
+  "branch": "phase-7",
+  "head": "98dd2a4458e3128d019af1c1d1dbd2bf1dfcbbd2",
+  "testMarkerExists": true,
+  "allCoordinatorBuildSessionsFinished": true,
+  "specialistsReportNoRunningJobs": true,
+  "scope": "Source hashes/mtimes plus protected inputs/plan and tracked diff/untracked implementation whitespace; raw evidence logs deliberately excluded from source whitespace assertion."
+}

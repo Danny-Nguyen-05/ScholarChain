@@ -1,0 +1,33 @@
+[info] welcome to sbt 1.10.7 (Homebrew Java 17.0.20.1)
+[info] loading settings for project scholarchain-build from plugins.sbt...
+[info] loading project definition from /Users/danny/Documents/UIC/CS441/ScholarChain/project
+[info] loading settings for project root from build.sbt...
+[info] set current project to root (in build file:/Users/danny/Documents/UIC/CS441/ScholarChain/)
+[info] * org.scala-lang:scala3-library:3.3.4
+[info] * com.lihaoyi:upickle:4.0.2
+[info] * org.slf4j:slf4j-api:2.0.16
+[info] * ch.qos.logback:logback-classic:1.5.15:runtime
+[info] * org.scalatest:scalatest:3.2.19:test
+[info] * software.amazon.awssdk:s3:2.56.0
+[info] * software.amazon.awssdk:dynamodb:2.56.0
+[info] * software.amazon.awssdk:neptunedata:2.56.0
+[info] * software.amazon.awssdk:s3vectors:2.56.0
+[info] * org.apache.parquet:parquet-hadoop:1.13.1
+[info] * org.apache.hadoop:hadoop-client:3.3.6
+[info] compiling 5 Scala sources to /Users/danny/Documents/UIC/CS441/ScholarChain/modules/storage/target/scala-3.3.4/classes ...
+[error] -- [E007] Type Mismatch Error: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/InMemoryStorage.scala:90:146 
+[error] 90 |        if(found.isEmpty && d<depth) frontier=frontier.flatMap(p=>adjacent(p.nodeIds.last,window,Set("COAUTHORED_WITH")).filterNot(n=>p.nodeIds(n.nodeId)).map(n=>GraphPath(p.nodeIds:+n.nodeId,p.edgeIds:+n.edgeId)))
+[error]    |                                                                                                                                                ^^^^^^^^
+[error]    |                                           Found:    (n.nodeId : String)
+[error]    |                                           Required: Int
+[error]    |
+[error]    | longer explanation available when compiling with `-explain`
+[error] -- [E006] Not Found Error: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/InMemoryStorage.scala:121:78 
+[error] 121 |      if(d.key.isEmpty || d.values.size!=indexes(index)._1 || d.values.exists(v=>!v.isFinite) || !d.textHash.matches("[0-9a-f]{64}")) rejected+=VectorReject(d.key,"invalid-vector")
+[error]     |                                                                              ^
+[error]     |                                                          Not found: v
+[error]     |
+[error]     | longer explanation available when compiling with `-explain`
+[error] two errors found
+[error] (storage / Compile / compileIncremental) Compilation failed
+[error] Total time: 4 s, completed Oct 22, 2026, 4:34:50 PM

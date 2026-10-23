@@ -1,0 +1,17 @@
+Bounded retained excerpt of forked read-only manifest smoke.
+Raw log: /tmp/phase7a-repair1-real-manifest-smoke.log
+Raw SHA256: 562d4fb2163a0a26697e8dccd5fc7ca91b094236a378fd8f214aeba0450da642
+Original line numbers follow.
+
+10: [info] running (fork) edu.uic.cs441.scholarchain.storage.Phase7ManifestSmokeMain /Users/danny/Documents/UIC/CS441/ScholarChain/target/phase6-runs/6fg-spark-first-v2/run:f02acf56-4bea-4009-adaf-b11d5afceb49
+13: [info] java.io.FileNotFoundException: HADOOP_HOME and hadoop.home.dir are unset.
+46: [info] 17:49:48.066 [main] WARN org.apache.hadoop.util.NativeCodeLoader -- Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+2686: [info] dataset=nodes/type=researcher metadataRows=21819 sampledRows=1 metadataBinding=verified
+4973: [info] dataset=metrics/type=researcher_collaboration metadataRows=62757 sampledRows=1 metadataBinding=verified
+7253: [info] dataset=metrics/type=kcore metadataRows=62757 sampledRows=1 metadataBinding=verified
+7254: [info] Read-only manifest binding and bounded Parquet smoke passed; full row counts and content hashes were not recomputed.
+7259: [success] Total time: 1 s, completed Oct 22, 2026, 5:49:48 PM
+7260: real 4.14
+7261: user 15.41
+7262: sys 0.91
+7263: SMOKE_EXIT_CODE=0

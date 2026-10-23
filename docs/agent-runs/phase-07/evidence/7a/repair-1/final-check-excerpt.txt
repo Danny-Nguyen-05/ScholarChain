@@ -1,0 +1,41 @@
+1: openjdk version "17.0.20.1" 2026-08-18
+2: OpenJDK Runtime Environment Homebrew (build 17.0.20.1+0)
+3: OpenJDK 64-Bit Server VM Homebrew (build 17.0.20.1+0, mixed mode, sharing)
+4: [info] welcome to sbt 1.10.7 (Homebrew Java 17.0.20.1)
+5: [info] loading settings for project scholarchain-build from plugins.sbt...
+6: [info] loading project definition from /Users/danny/Documents/UIC/CS441/ScholarChain/project
+7: [info] loading settings for project root from build.sbt...
+8: [info] set current project to root (in build file:/Users/danny/Documents/UIC/CS441/ScholarChain/)
+9: [info] scalafmt: Checking 15 Scala sources (/Users/danny/Documents/UIC/CS441/ScholarChain)...
+134: [info] - versioned JSON HOCON subset .conf and .json load through the real loader
+170: [info] Total number of tests run: 144
+171: [info] Suites: completed 12, aborted 0
+172: [info] Tests: succeeded 144, failed 0, canceled 0, ignored 0, pending 0
+779: [info] - a one-slash file URI round-trips to the real directory
+912: [info] Total number of tests run: 64
+913: [info] Suites: completed 4, aborted 0
+914: [info] Tests: succeeded 64, failed 0, canceled 0, ignored 0, pending 0
+962: [info] Total number of tests run: 39
+963: [info] Suites: completed 6, aborted 0
+964: [info] Tests: succeeded 39, failed 0, canceled 0, ignored 0, pending 0
+2088: [info] Total number of tests run: 38
+2089: [info] Suites: completed 5, aborted 0
+2090: [info] Tests: succeeded 38, failed 0, canceled 0, ignored 0, pending 0
+2095: [info] - manifest counts use exact nonnegative decimal Long strings without Double rounding
+2106: [info] Total number of tests run: 10
+2107: [info] Suites: completed 2, aborted 0
+2108: [info] Tests: succeeded 10, failed 0, canceled 0, ignored 0, pending 0
+2122: [info] - completed source metadata rejects malformed row counts before opening Parquet
+5555: [info] - S3 retries a transient SDK failure within the configured bound without real sleeping
+6284: [info] Total number of tests run: 293
+6285: [info] Suites: completed 46, aborted 0
+6286: [info] Tests: succeeded 293, failed 0, canceled 0, ignored 0, pending 0
+6317: [error] (checkProbeInjectFailure) scholarchain check probe: injected format-stage failure
+6329: [info] Total number of tests run: 8
+6330: [info] Suites: completed 7, aborted 0
+6331: [info] Tests: succeeded 8, failed 0, canceled 0, ignored 0, pending 0
+6334: [success] Total time: 679 s (11:19), completed Oct 22, 2026, 6:02:48 PM
+6335: real 681.20
+6336: user 660.29
+6337: sys 93.99
+6338: REPAIR1_EXIT_CODE=0

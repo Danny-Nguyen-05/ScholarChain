@@ -1,0 +1,25 @@
+{
+  "baseSha": "98dd2a4458e3128d019af1c1d1dbd2bf1dfcbbd2",
+  "branch": "phase-7",
+  "planPath": "/Users/danny/Library/CloudStorage/GoogleDrive-cpnguyen0630@gmail.com/My Drive/plan/phase7.md",
+  "planSha256": "b54aa12309007bf4758120d8297d1de2eccb497220d3f0de87dc5563fef74ebb",
+  "tool": "Codex",
+  "model": "GPT-6 (system identity); exact build unavailable",
+  "initialStatus": "clean phase-6...origin/phase-6",
+  "initialBranchCreateSandboxExit": 128,
+  "approvedBranchCreateExit": 0,
+  "observedAt": "2026-10-22T16:31:52.222957-05:00",
+  "awsKnowledgeMcp": "unavailable in tool inventory; official AWS web documentation used",
+  "protectedInputHashes": {
+    "docs/agent-runs/phase-06/human-gate.md": "24b4c5cc82e8126d81b2c7b176e3a87d427a4b7368055e85741ef9ac615a0304",
+    "docs/agent-runs/phase-06/repairs.md": "ba00ddd8dec4919cdbdb3e7368083563874ba41b13f50dffee68fd98f68443fd",
+    "docs/agent-runs/phase-06/commit.txt": "ddbae83e842515f76b7299fa46446b883c9088c5c261daccfc53694c7a957c44",
+    "AGENTS.md": "13c64f8d8d1119d1aec4e2e50382463592f2b0a76e77354146161001b1b5095b",
+    "CLAUDE.md": "92f9d1d3955993f8e5a9a19e447e6bc1ec0928a8df4e1fa1b2fb0d4653618071",
+    "docs/agents.md": "12db98e77642d2e44498ba19f128f68e047a2bf790cad161808d98f9c26a3992"
+  },
+  "boundedSourceReference": {
+    "root": "target/phase6-runs/6fg-spark-first-v2/run:f02acf56-4bea-4009-adaf-b11d5afceb49",
+    "scope": "Optional read-only schema reference; no new full Parquet reread or data run claimed. Applied aliases must preserve Phase6 evidence; real Researcher ER decisions in Phase6 were zero."
+  }
+}

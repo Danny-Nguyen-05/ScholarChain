@@ -1,0 +1,22 @@
+{
+  "exitCode": 0,
+  "storage": {
+    "run": 9,
+    "passed": 9,
+    "failed": 0
+  },
+  "independentStorage": {
+    "run": 26,
+    "passed": 26,
+    "failed": 0
+  },
+  "sparkNeptune": {
+    "run": 4,
+    "passed": 4,
+    "failed": 0
+  },
+  "rawSha256": "65a72c8083c58a54e655f2abb98bb1329d3495943d223e978a20de81f94871d4",
+  "realSeconds": 15.22,
+  "retainedLog": "docs/agent-runs/phase-07/evidence/7a/targeted-5.txt",
+  "retainedSha256": "65a72c8083c58a54e655f2abb98bb1329d3495943d223e978a20de81f94871d4"
+}

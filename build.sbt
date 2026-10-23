@@ -8,9 +8,11 @@ ThisBuild / version := "0.1.0-SNAPSHOT"
 lazy val buildVerification =
   project
     .in(file("build-verification"))
+    .configs(AwsIntegration)
     .settings(
       name := "build-verification",
       ScholarChainBuild.commonSettings,
+      ScholarChainBuild.awsIntegrationSettings,
       publish / skip := true,
       Compile / scalaSource :=
         (ThisBuild / baseDirectory).value / "project/verification/src/main/scala",
@@ -20,6 +22,8 @@ lazy val buildVerification =
         (ThisBuild / baseDirectory).value / "project/SparkJobJar.scala",
       Compile / unmanagedSources +=
         (ThisBuild / baseDirectory).value / "project/Java17Guard.scala",
+      Compile / unmanagedSources +=
+        (ThisBuild / baseDirectory).value / "project/AwsIntegrationPolicy.scala",
       Test / scalaSource :=
         (ThisBuild / baseDirectory).value / "project/verification/src/test/scala"
     )
@@ -51,7 +55,7 @@ lazy val hadoop =
 lazy val independentTests =
   project
     .in(file("tests"))
-    .dependsOn(core, hadoop, entityResolution, sparkAnalytics)
+    .dependsOn(core, hadoop, entityResolution, sparkAnalytics, storage)
     .settings(
       ScholarChainBuild.moduleSettings(
         Seq(Dependencies.hadoopClientLib, Dependencies.sparkSql, Dependencies.sparkScalaReflectLib)
@@ -84,8 +88,22 @@ lazy val sparkAnalytics =
 lazy val storage =
   project
     .in(file("modules/storage"))
+    .configs(AwsIntegration)
     .dependsOn(core)
-    .settings(ScholarChainBuild.moduleSettings(), name := "storage")
+    .settings(
+      ScholarChainBuild.moduleSettings(
+        Seq(
+          Dependencies.awsS3,
+          Dependencies.awsDynamoDb,
+          Dependencies.awsNeptuneData,
+          Dependencies.awsS3Vectors,
+          Dependencies.parquetHadoop,
+          Dependencies.storageHadoopClient
+        )
+      ),
+      ScholarChainBuild.awsIntegrationSettings,
+      name := "storage"
+    )
 
 lazy val rag =
   project

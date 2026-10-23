@@ -1,0 +1,17 @@
+{
+  "exitCode": 0,
+  "sparkCsv": {
+    "run": 4,
+    "passed": 4
+  },
+  "unchangedIndependentSafety": {
+    "run": 7,
+    "passed": 7
+  },
+  "realSeconds": 10.63,
+  "rawSha256": "4c98fa5a7be0d7f774e42e28ed32429da6561b3d0aec1a5dc82ceeb972cceed0",
+  "sourceOwner": "spark-engineer",
+  "testScannerChanged": false,
+  "retainedLog": "docs/agent-runs/phase-07/evidence/7a/source-fence-targeted.txt",
+  "retainedSha256": "4c98fa5a7be0d7f774e42e28ed32429da6561b3d0aec1a5dc82ceeb972cceed0"
+}

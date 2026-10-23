@@ -1,0 +1,38 @@
+[info] welcome to sbt 1.10.7 (Homebrew Java 17.0.20.1)
+[info] loading settings for project scholarchain-build from plugins.sbt...
+[info] loading project definition from /Users/danny/Documents/UIC/CS441/ScholarChain/project
+[info] loading settings for project root from build.sbt...
+[info] set current project to root (in build file:/Users/danny/Documents/UIC/CS441/ScholarChain/)
+[info] scalafmt: Formatting 1 Scala sources (/Users/danny/Documents/UIC/CS441/ScholarChain/modules/spark)...
+[info] scalafmt: Reformatted 1 Scala sources
+[success] Total time: 1 s, completed Oct 22, 2026, 4:47:47 PM
+[success] Total time: 0 s, completed Oct 22, 2026, 4:47:47 PM
+[info] compiling 1 Scala source to /Users/danny/Documents/UIC/CS441/ScholarChain/modules/spark/target/scala-3.3.4/classes ...
+[info] done compiling
+[info] Phase7NeptuneExportSpec:
+26/10/22 16:47:50 WARN  Utils: Your hostname, Dannys-MacBook-Pro.local resolves to a loopback address: 127.0.0.1; using 10.0.0.113 instead (on interface en0)
+26/10/22 16:47:50 WARN  Utils: Set SPARK_LOCAL_IP if you need to bind to another address
+26/10/22 16:47:50 WARN  NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+26/10/22 16:47:53 WARN  SparkStringUtils: Truncated the string representation of a plan since it was too large. This behavior can be adjusted by setting 'spark.sql.debug.maxToStringFields'.
+[info] - CSV preserves exact node and edge ID sets, RFC4180 text, yearless values and support provenance *** FAILED ***
+[info]   "Alpha, "β"[]
+[info]   Second line" did not equal "Alpha, "β"[]
+[info]   Second line" (Phase7NeptuneExportSpec.scala:151)
+[info]   Analysis:
+[info]   "Alpha, "β"[]
+[info] Second line" -> "Alpha, "β"[]
+[info] Second line"
+[info] - missing endpoints or support works fail before publication
+[info] - support composite keys cannot duplicate or lose evidence, and orphan evidence is rejected
+[info] Run completed in 4 seconds, 525 milliseconds.
+[info] Total number of tests run: 3
+[info] Suites: completed 1, aborted 0
+[info] Tests: succeeded 2, failed 1, canceled 0, ignored 0, pending 0
+[info] *** 1 TEST FAILED ***
+[error] Failed tests:
+[error] 	edu.uic.cs441.scholarchain.spark.Phase7NeptuneExportSpec
+[error] (sparkAnalytics / Test / testOnly) sbt.TestsFailedException: Tests unsuccessful
+[error] Total time: 7 s, completed Oct 22, 2026, 4:47:54 PM
+real 9.45
+user 34.88
+sys 1.69

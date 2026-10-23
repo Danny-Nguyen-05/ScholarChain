@@ -1,0 +1,34 @@
+{
+  "context": {
+    "schemaVersion": "scholarchain.spark-analytics.v1",
+    "runId": "run:00112233-4455-4677-8899-aabbccddeeff",
+    "windowId": "all-years",
+    "lineage": {
+      "hadoopRunId": "run:00112233-4455-4677-8899-aabbccddeeff",
+      "hadoopSnapshot": "independent-synthetic-snapshot",
+      "entityResolutionRunId": "run:00112233-4455-4677-8899-aabbccddeeff",
+      "entityResolutionPolicyVersion": "synthetic-er-v1",
+      "entityResolutionPolicyHash": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "sourceWorkIds": [
+        "work:dblp:independent/synthetic/storage"
+      ],
+      "sourceMentionIds": []
+    }
+  },
+  "researcherId": "researcher:dblp:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "policyVersion": "independent-storage-synthetic-v1",
+  "publicationCount": 4,
+  "distinctCoauthorCount": 2,
+  "totalCoauthorOccurrences": 2,
+  "averageCoauthorsPerPaper": 0.5,
+  "maximumCoauthorsOnOnePaper": 2,
+  "maxTeamWorkIds": [
+    "work:dblp:independent/synthetic/storage"
+  ],
+  "maxTeamWorkTieCount": 1,
+  "weightedDegree": 2,
+  "componentId": "component:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+  "communityId": null,
+  "coreness": 1,
+  "window": "all-years"
+}
