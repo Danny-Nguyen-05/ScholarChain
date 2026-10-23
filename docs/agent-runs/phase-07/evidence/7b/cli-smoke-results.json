@@ -1,0 +1,42 @@
+[
+  {
+    "attempt": 1,
+    "exitCode": 1,
+    "realSeconds": 7.12,
+    "graphValidation": "passed:84nodes40edges29support",
+    "cacheValidation": "rejected missing-resolution-endpoint (reason surfaced attempt2)",
+    "fakeExecution": "not reached",
+    "rawLog": "/tmp/phase7b-cli-smoke-1.txt",
+    "rawBytes": 3619122,
+    "rawSha256": "4d2b7dd647557ee2d20dba93da194b55d07b5c922091b45c9a20c651fe762d05",
+    "retainedLog": "docs/agent-runs/phase-07/evidence/7b/cli-smoke-1-excerpt.txt",
+    "retention": "bounded excerpt",
+    "retainedBytes": 767,
+    "retainedSha256": "f876d0ad1cc6e91973a3a2c789d09f1d873e6944d4f6d83a9c783cec2402dbc1"
+  },
+  {
+    "attempt": 2,
+    "exitCode": 1,
+    "realSeconds": 8.35,
+    "graphValidation": "passed:84nodes40edges29support",
+    "cacheValidation": "rejected missing-resolution-endpoint (reason surfaced attempt2)",
+    "fakeExecution": "not reached",
+    "rawLog": "/tmp/phase7b-cli-smoke-2.txt",
+    "rawBytes": 2517,
+    "rawSha256": "9fe48657091d13d4dd46c5e296c82ae8c2ec62f56cba92190d2320c0f2b8f14c",
+    "retainedLog": "docs/agent-runs/phase-07/evidence/7b/cli-smoke-2.txt",
+    "retention": "complete raw output",
+    "retainedBytes": 2517,
+    "retainedSha256": "9fe48657091d13d4dd46c5e296c82ae8c2ec62f56cba92190d2320c0f2b8f14c"
+  },
+  {
+    "attempt": 3,
+    "combinedCommand": "targeted tests and CLI dry/fake",
+    "exitCode": 0,
+    "realSeconds": 24.1,
+    "evidence": "targeted-cli-2.json",
+    "retainedLog": "docs/agent-runs/phase-07/evidence/7b/targeted-cli-2.txt",
+    "sha256": "9b1980c900ba65cc2eeb6bd83bb64ece0d235677d74632ce56770b82e50a2230",
+    "note": "Rerun after owner alias fix; both CLI modes passed."
+  }
+]

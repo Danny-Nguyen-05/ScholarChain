@@ -244,7 +244,7 @@ final case class DynamoTables(
     artifacts: String,
     metrics: String,
     idempotencyIndex: String
-)
+) derives ReadWriter
 final case class StorageConfig(
     bucket: String,
     tables: DynamoTables,

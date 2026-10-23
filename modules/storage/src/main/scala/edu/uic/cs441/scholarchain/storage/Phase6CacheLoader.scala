@@ -18,7 +18,9 @@ final class Phase6CacheLoader(
     entityLinks: EntityLinkCache,
     metrics: ResearcherMetricStore,
     reader: ManifestRowReader,
-    config: CacheLoaderConfig = CacheLoaderConfig()
+    config: CacheLoaderConfig = CacheLoaderConfig(),
+    sourceObjects: ObjectStore,
+    sourceRegistry: ArtifactRegistry
 ) {
   private val method = "sha256-fixed-256-shard-sorted-row-json-merkle-v1"
   private def reject(c: String): Nothing = throw SourceRejected(c)
@@ -196,8 +198,10 @@ final class Phase6CacheLoader(
           .parse[GraphNode](row.render())
           .toOption
           .getOrElse(reject("invalid-researcher-node"));
-        if (DomainValidation.check(node).isLeft || node.nodeClass.wire != "RESEARCHER")
-          reject("invalid-researcher-node"); store("researcher", node.nodeId, row)
+        if (DomainValidation.check(node).isLeft || node.nodeClass.wire != "RESEARCHER") {
+          reject("invalid-researcher-node")
+        }
+        store("researcher", node.nodeId, row)
       }
       each("nodes/type=author_mention") { row => store("mention", row("nodeId").str, row) }
       each("nodes/type=institution") { row => store("institution", row("nodeId").str, row) }
@@ -267,6 +271,9 @@ final class Phase6CacheLoader(
           ujson.read(CoreJson.compact(e)).asInstanceOf[ujson.Obj]
         )
       }
+      val sourcePointer = checked(
+        SourceQualifications.put(run, qualifications, sourceObjects, sourceRegistry)
+      )
       var written = 0L; var unchanged = 0L; var rejected = 0L
       def count(r: StorageResult[?]): Unit = r match {
         case Written(_)    => written += 1
@@ -321,7 +328,7 @@ final class Phase6CacheLoader(
             val detail = upickle.default.read[ResearcherMetricsDetail](Files.readString(p, UTF_8));
             val window = detail.context.windowId.get
             val q = ujson.Obj(
-              "sourceRun" -> ujson.read(qualifications),
+              "sourceRunPointer" -> ujson.read(upickle.default.write(sourcePointer)),
               "communityMembership" -> lookup(
                 "community",
                 StorageKeys.composite(detail.researcherId, window)

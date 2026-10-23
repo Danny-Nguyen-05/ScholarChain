@@ -1,0 +1,150 @@
+{
+  "docs/agent-runs/phase-07/evidence/7b/agents.md": {
+    "bytes": 1062,
+    "sha256": "c1a3c65c52e554b81f025255f6e8d458960164de4e112489c3f36b10b98e16e4"
+  },
+  "docs/agent-runs/phase-07/evidence/7b/cli-smoke-1-excerpt.txt": {
+    "bytes": 767,
+    "sha256": "f876d0ad1cc6e91973a3a2c789d09f1d873e6944d4f6d83a9c783cec2402dbc1"
+  },
+  "docs/agent-runs/phase-07/evidence/7b/cli-smoke-2.txt": {
+    "bytes": 2517,
+    "sha256": "9fe48657091d13d4dd46c5e296c82ae8c2ec62f56cba92190d2320c0f2b8f14c"
+  },
+  "docs/agent-runs/phase-07/evidence/7b/cli-smoke-results.json": {
+    "bytes": 1679,
+    "sha256": "d2730a44b384b1f4a17abea79e10b1657907216ed05c2a1969729dbaad9273db"
+  },
+  "docs/agent-runs/phase-07/evidence/7b/commands.md": {
+    "bytes": 7843,
+    "sha256": "568357f419627fd3ec4d07475ce5db6717b27edb623f0be98a6d58c09e84fe8e"
+  },
+  "docs/agent-runs/phase-07/evidence/7b/compile-results.json": {
+    "bytes": 2082,
+    "sha256": "664d8586d21c4c208212cf3529522b7d679c84028acfb39e35a3e6f314286670"
+  },
+  "docs/agent-runs/phase-07/evidence/7b/documentation.md": {
+    "bytes": 2342,
+    "sha256": "70142a2df3b4a0205c41c482ddff320104c3649318e975d552e301ba2079b287"
+  },
+  "docs/agent-runs/phase-07/evidence/7b/files.json": {
+    "bytes": 7347,
+    "sha256": "67dfcefb5cd12f9036695596d6ec2cca4ea5c0e19a0619d77e0f3039a8e2cc92"
+  },
+  "docs/agent-runs/phase-07/evidence/7b/final-check-excerpt.txt": {
+    "bytes": 2122,
+    "sha256": "7b601d77543aa5d300120a0b0e5b22b75a567511746d52471fc4758691588300"
+  },
+  "docs/agent-runs/phase-07/evidence/7b/final-check.json": {
+    "bytes": 1162,
+    "sha256": "891823bbe2e77f4c413fa37c6fb40db4a50962b6c95773ba5dff38dad3b82841"
+  },
+  "docs/agent-runs/phase-07/evidence/7b/final-check.txt": {
+    "bytes": 1365402,
+    "sha256": "a149c77307a1a6f9829b5b73ae9386107707e94bdd1e353724d1cd53032e4e5f"
+  },
+  "docs/agent-runs/phase-07/evidence/7b/final-source-snapshot.json": {
+    "bytes": 62707,
+    "sha256": "ee821f65aa0617b5d2ead793c8487e91f8d5de0d9cfe3553693ea087831c36e3"
+  },
+  "docs/agent-runs/phase-07/evidence/7b/handoff.md": {
+    "bytes": 9025,
+    "sha256": "a46a38b39b70628c99e9118b756b4ea9a840c696f3e8994b2af1d9516bd046c4"
+  },
+  "docs/agent-runs/phase-07/evidence/7b/literal-secret-scan.json": {
+    "bytes": 284,
+    "sha256": "4fadc40debf674061d4b5916f3d7db62fe8421fed8a33384b7183302e6b7475a"
+  },
+  "docs/agent-runs/phase-07/evidence/7b/local-smoke-config.json": {
+    "bytes": 687,
+    "sha256": "08b174691ca25ca5cc4399b682e60317db5ba60f60aeac12cffc441c6b55a40c"
+  },
+  "docs/agent-runs/phase-07/evidence/7b/ownership-audit.json": {
+    "bytes": 3595,
+    "sha256": "87999712471cf0742b4930c2d9697d6f97f03bdbaabe2812c3ba446e212a99a0"
+  },
+  "docs/agent-runs/phase-07/evidence/7b/preflight.json": {
+    "bytes": 1269,
+    "sha256": "8eca2fd1692ce8846d96b650290b12d4a7b072c1b1e646a9aee2dcef95e07610"
+  },
+  "docs/agent-runs/phase-07/evidence/7b/protected-source-before.json": {
+    "bytes": 2252,
+    "sha256": "7f3c9eee01fd9d6b8c3fa9611209898b092f009d927ef81eb46b6612811be328"
+  },
+  "docs/agent-runs/phase-07/evidence/7b/real-csv-replay-1.txt": {
+    "bytes": 11689,
+    "sha256": "edea6ac8de12c352a841b48e13b3178c5ffa1775a7be1c63236a91b3b6537952"
+  },
+  "docs/agent-runs/phase-07/evidence/7b/real-csv-replay-report.json": {
+    "bytes": 9626,
+    "sha256": "e6c7a028b0d4d0a3c167837bfb8c742c8f9eb0b4fd7d471f1766accbebcc4e67"
+  },
+  "docs/agent-runs/phase-07/evidence/7b/real-csv-replay-result.json": {
+    "bytes": 1824,
+    "sha256": "fac7d3ec7ba9440015429b7d74c3236a2a0d4ec40ef30697e68e6d2383a400ff"
+  },
+  "docs/agent-runs/phase-07/evidence/7b/real-source-before.json": {
+    "bytes": 868,
+    "sha256": "a07954df92e145371f25c47761ef9033849543449beacc8347db27f64bef2f79"
+  },
+  "docs/agent-runs/phase-07/evidence/7b/retained-source-audit.json": {
+    "bytes": 511,
+    "sha256": "c905be0ea4e87f4dc9f9a218974b1ce2c08a0648372daa33b495ce1249fb27ad"
+  },
+  "docs/agent-runs/phase-07/evidence/7b/reviewer-prompt.md": {
+    "bytes": 7630,
+    "sha256": "91ec792a07796d82e3b1868cfc99a09c5a26c61670a60463d1dcef56c718f55c"
+  },
+  "docs/agent-runs/phase-07/evidence/7b/spark-owner-report.md": {
+    "bytes": 2247,
+    "sha256": "d467fcf7ebfa0cae1a3cffedf3b8cff7d10534b864037e3058c26c6926210243"
+  },
+  "docs/agent-runs/phase-07/evidence/7b/storage-compile-1.txt": {
+    "bytes": 1533,
+    "sha256": "dc446a4b3a044df88057ff5a226da3f02bbfbbc99ef532abb8a811660b5562ef"
+  },
+  "docs/agent-runs/phase-07/evidence/7b/storage-compile-2.txt": {
+    "bytes": 3729,
+    "sha256": "3700f1b79ca7e9bb3f765ea8955b10c2df08344c5930b4cf35f0f8158958869d"
+  },
+  "docs/agent-runs/phase-07/evidence/7b/storage-compile-3.txt": {
+    "bytes": 1723,
+    "sha256": "bfc5588671dd66345fa3ceb7902802a596f9afdd373586f273b6f4539139e2c6"
+  },
+  "docs/agent-runs/phase-07/evidence/7b/storage-compile-4.txt": {
+    "bytes": 2503,
+    "sha256": "8e56415ff2d76f22cd136264e9b675660ca30a7b6c9c7a6878513b8846cbf352"
+  },
+  "docs/agent-runs/phase-07/evidence/7b/storage-compile-5.txt": {
+    "bytes": 12681,
+    "sha256": "fd4a0dc2a8eb8d8e0667b5dcf6ec6bc84919212a389e21a5aa8effb01f9f3d56"
+  },
+  "docs/agent-runs/phase-07/evidence/7b/storage-owner-report.md": {
+    "bytes": 3796,
+    "sha256": "674c329203a14ba294890cb21d7c264cf7935b48f7d8eb05e03cdc8def7c31ed"
+  },
+  "docs/agent-runs/phase-07/evidence/7b/targeted-1.json": {
+    "bytes": 660,
+    "sha256": "a85669c8a9e8b46b1108c5a5b85c2f313f630df1d88562a8e6195df2d9ab076c"
+  },
+  "docs/agent-runs/phase-07/evidence/7b/targeted-1.txt": {
+    "bytes": 10114,
+    "sha256": "dc236d9f347f1853eed9bb8452243fc436f41125ddb1bd03b8a69f588a150aa4"
+  },
+  "docs/agent-runs/phase-07/evidence/7b/targeted-cli-2.json": {
+    "bytes": 1090,
+    "sha256": "e7be9db071ef831df412371cb589aafdbe7a79b2c707bab76fa0ff84da1bf08d"
+  },
+  "docs/agent-runs/phase-07/evidence/7b/targeted-cli-2.txt": {
+    "bytes": 12413,
+    "sha256": "9b1980c900ba65cc2eeb6bd83bb64ece0d235677d74632ce56770b82e50a2230"
+  },
+  "docs/agent-runs/phase-07/evidence/7b/test-owner-report.md": {
+    "bytes": 2734,
+    "sha256": "399a413eef48a31500b9bd2f4bda003d170994f7e4469097110cf92a3e304bc9"
+  },
+  "docs/agent-runs/phase-07/evidence/7b/work-order.md": {
+    "bytes": 955,
+    "sha256": "fa35a37bd36a58aa5c6282e8ee2c86881726387777a352ad113c8d4ae03f360f"
+  }
+}

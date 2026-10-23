@@ -1,0 +1,15 @@
+{
+  "changedSinceReviewed7B": [
+    "modules/storage/README.md",
+    "modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/NeptuneGraphLoader.scala",
+    "modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/NeptuneGraphReader.scala",
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentStorageGraphLoaderSpec.scala",
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentStorageGraphReaderSpec.scala"
+  ],
+  "addedSinceReviewed7B": [
+    "modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/AwsDocumentJson.scala",
+    "modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/NeptuneJobAttempts.scala",
+    "modules/storage/src/test/scala/edu/uic/cs441/scholarchain/storage/NeptuneRepairSpec.scala"
+  ],
+  "notes": "Only F3/F4 owner paths; historical evidence, Spark, core, build and controls unchanged."
+}

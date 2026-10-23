@@ -1,0 +1,49 @@
+{
+  "command": "sbt -batch sparkAnalytics / Test / scalafmt; sparkAnalytics / Test / runMain Phase7RealCsvReplayMain (exact arguments in commands.md)",
+  "exitCode": 0,
+  "java": "17.0.20.1",
+  "sbt": "1.10.7",
+  "realSeconds": 24.62,
+  "rawLog": "/tmp/phase7b-real-csv-replay-1.txt",
+  "retainedLog": "docs/agent-runs/phase-07/evidence/7b/real-csv-replay-1.txt",
+  "bytes": 11689,
+  "sha256": "edea6ac8de12c352a841b48e13b3178c5ffa1775a7be1c63236a91b3b6537952",
+  "counts": {
+    "nodes": "84",
+    "graphEdges": "20",
+    "coauthorEdges": "20",
+    "supportRows": "29",
+    "communityMemberships": "49",
+    "unknownFirstYearEdges": "0",
+    "unboundedStartEdges": "20",
+    "unboundedEndEdges": "20",
+    "unknownYearSupports": "0",
+    "labelsWithCsvSpecialCharacters": 0
+  },
+  "testCounts": "Explicit main, not ScalaTest test count",
+  "scope": "Bounded sample, not full Phase6 replay, cache load or live Neptune",
+  "sourceMetadataBytesAndMtimesUnchanged": true,
+  "realSourceAfter": {
+    "run-manifest.json": {
+      "bytes": 1151,
+      "mtimeNs": 1792694073743874912,
+      "sha256": "0291eae87aeb329168676dd4516f9645a4ca81079521d13a54ff407f88f64442"
+    },
+    "run-metadata.json": {
+      "bytes": 8029,
+      "mtimeNs": 1792694073744147372,
+      "sha256": "efbd09e9aa2484720ec6d898788a23eab176c640ceca63d83c6880e34630637c"
+    },
+    "counters.json": {
+      "bytes": 39020,
+      "mtimeNs": 1792694072884908772,
+      "sha256": "93c16bdc13d527800e406784722994a6123e1ed70eadfbae1c558ee741c55bea"
+    },
+    "_SCHOLARCHAIN_SPARK_COMPLETE": {
+      "bytes": 65,
+      "mtimeNs": 1792694075078193329,
+      "sha256": "41f8f0d56c185c297cf486ebce0295a8b13b4aa8d57b02eef2dad61c45b6bc8a"
+    }
+  },
+  "unknownYearAndSpecialLabelCoverage": "0 real sampled rows; existing fixture cases cover these values separately"
+}

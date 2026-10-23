@@ -5,6 +5,7 @@ import org.scalatest.funsuite.AnyFunSuite
 import software.amazon.awssdk.core.ResponseInputStream
 import software.amazon.awssdk.http.AbortableInputStream
 import software.amazon.awssdk.core.sync.RequestBody
+import software.amazon.awssdk.core.exception.SdkClientException
 import software.amazon.awssdk.services.dynamodb.DynamoDbClient
 import software.amazon.awssdk.services.dynamodb.model.*
 import software.amazon.awssdk.services.s3.S3Client
@@ -397,5 +398,34 @@ class IndependentStorageSdkSpec extends AnyFunSuite {
       )
     )
     assert(count == 2)
+  }
+
+  test(
+    "a committed Dynamo transaction with lost reply retries the same token and logical write once"
+  ) {
+    val requests = mutable.Buffer.empty[TransactWriteItemsRequest]
+    var committed: Option[TransactWriteItemsRequest] = None
+    var logicalWrites = 0
+    val client = stub(classOf[DynamoDbClient]) {
+      case ("transactWriteItems", Vector(request: TransactWriteItemsRequest)) =>
+        requests += request
+        committed match {
+          case None =>
+            assert(request.clientRequestToken() != null && request.clientRequestToken().nonEmpty)
+            committed = Some(request)
+            logicalWrites += 1
+            throw SdkClientException.create("synthetic reply lost after successful commit")
+          case Some(original) =>
+            assert(request.clientRequestToken() == original.clientRequestToken())
+            assert(request.transactItems() == original.transactItems())
+            TransactWriteItemsResponse.builder().build()
+        }
+    }
+    val sessions = new DynamoQuerySessionStore(client, config)
+    val result = sessions.createIfAbsent("synthetic-query-lost-reply", "synthetic-token-lost-reply")
+    assert(StorageResult.successful(result))
+    assert(result.isInstanceOf[Retried[?]])
+    assert(requests.size == 2 && logicalWrites == 1)
+    assert(StorageResult.value(result).get.queryId == "synthetic-query-lost-reply")
   }
 }

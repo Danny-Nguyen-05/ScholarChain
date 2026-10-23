@@ -1,0 +1,38 @@
+[info] welcome to sbt 1.10.7 (Homebrew Java 17.0.20.1)
+[info] loading settings for project scholarchain-build from plugins.sbt...
+[info] loading project definition from /Users/danny/Documents/UIC/CS441/ScholarChain/project
+[info] loading settings for project root from build.sbt...
+[info] set current project to root (in build file:/Users/danny/Documents/UIC/CS441/ScholarChain/)
+[info] scalafmt: Formatting 8 Scala sources (/Users/danny/Documents/UIC/CS441/ScholarChain/modules/storage)...
+[info] scalafmt: Reformatted 6 Scala sources
+[success] Total time: 1 s, completed Oct 22, 2026, 11:25:48 PM
+[info] scalafmt: Formatting 1 Scala sources (/Users/danny/Documents/UIC/CS441/ScholarChain/modules/storage)...
+[info] scalafmt: Reformatted 1 Scala sources
+[success] Total time: 0 s, completed Oct 22, 2026, 11:25:48 PM
+[info] scalafmt: Formatting 8 Scala sources (/Users/danny/Documents/UIC/CS441/ScholarChain/tests)...
+[info] scalafmt: Reformatted 8 Scala sources
+[success] Total time: 0 s, completed Oct 22, 2026, 11:25:48 PM
+[info] compiling 17 Scala sources to /Users/danny/Documents/UIC/CS441/ScholarChain/modules/storage/target/scala-3.3.4/classes ...
+[error] -- [E007] Type Mismatch Error: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/NeptuneExportValidator.scala:83:8 
+[error] 83 |        if (!p.startsWith(root) || Files.size(p) > config.maxMetadataBytes)
+[error]    |        ^
+[error]    |        Found:    Unit
+[error]    |        Required: String
+[error]    |        Maybe you are missing an else part for the conditional?
+[error] 84 |          fail("source-metadata-limit"); Files.readString(p, UTF_8)
+[error]    |
+[error]    | longer explanation available when compiling with `-explain`
+[error] -- [E007] Type Mismatch Error: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/StorageLoadMain.scala:137:53 
+[error] 137 |      val storage = StorageConfig(cfg("bucket").str, tables)
+[error]     |                                                     ^^^^^^
+[error]     |  Found:    (tables : edu.uic.cs441.scholarchain.storage.DynamoTables)
+[error]     |  Required: String
+[error]     |
+[error]     | longer explanation available when compiling with `-explain`
+[error] two errors found
+[error] (storage / Compile / compileIncremental) Compilation failed
+[error] Total time: 3 s, completed Oct 22, 2026, 11:25:51 PM
+real 6.38
+user 25.24
+sys 1.12
+COMPILE_EXIT_CODE=1

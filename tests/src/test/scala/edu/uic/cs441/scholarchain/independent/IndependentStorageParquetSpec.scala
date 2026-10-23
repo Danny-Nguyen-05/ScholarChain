@@ -136,7 +136,15 @@ class IndependentStorageParquetSpec extends AnyFunSuite {
       assert(ujson.read(metadata)("tables")(0)("rowCount") == ujson.Str("2"))
       Files.writeString(root.resolve("run-manifest.json"), runJson, UTF_8)
       Files.writeString(root.resolve("run-metadata.json"), metadata, UTF_8)
-      Files.writeString(root.resolve("counters.json"), "[]", UTF_8)
+      val counters = Vector(
+        SparkCounter(
+          context,
+          "synthetic.community.converged",
+          0L,
+          Some("Converged: false; iteration cap 3; approximate P90 (synthetic fixture).")
+        )
+      )
+      Files.writeString(root.resolve("counters.json"), CoreJson.compact(counters), UTF_8)
       Files.writeString(
         root.resolve("_SCHOLARCHAIN_SPARK_COMPLETE"),
         StableIds.sha256Hex(runJson + "\n" + metadata) + "\n",
@@ -144,11 +152,15 @@ class IndependentStorageParquetSpec extends AnyFunSuite {
       )
       val store = new InMemoryResearcherMetricStore()
       val reader = new LocalParquetManifestReader(root)
+      val sourceObjects = new InMemoryObjectStore()
+      val sourceRegistry = new InMemoryArtifactRegistry()
       val loader = new Phase6CacheLoader(
         new InMemoryEntityLinkCache(),
         store,
         reader,
-        CacheLoaderConfig(sortChunkRows = 1)
+        CacheLoaderConfig(sortChunkRows = 1),
+        sourceObjects,
+        sourceRegistry
       )
       val first = loader.load(Vector(source))
       assert(first == Written(CacheLoadReport(2, 0, 0, 2)), first.toString)
@@ -169,7 +181,25 @@ class IndependentStorageParquetSpec extends AnyFunSuite {
       assert(positive.communityId.isEmpty && solo.communityId.isEmpty)
       assert(positive.context.lineage == lineage && solo.context.lineage == lineage)
       assert(positive.maxTeamWorkIds == Vector("work:dblp:independent/synthetic/storage"))
+      val pointers = Vector(researcherId, secondResearcherId).map { id =>
+        val record = StorageResult.value(store.get(id, "all-years")).get
+        upickle.default.read[SourceRunPointer](
+          ujson.read(record.qualificationsJson)("sourceRunPointer")
+        )
+      }
+      assert(pointers.distinct.size == 1)
+      assert(pointers.head.runId == runId)
+      val shared = StorageResult
+        .value(SourceQualifications.get(pointers.head, sourceObjects, sourceRegistry))
+        .get
+      val sharedJson = ujson.read(shared)
+      assert(sharedJson == ujson.read(StorageResult.value(reader.qualifications(runId)).get))
+      assert(sharedJson("runMetadata")("runId").str == runId)
+      assert(sharedJson("counters")(0)("detail").str.contains("Converged: false"))
+      assert(sharedJson("counters")(0)("detail").str.contains("approximate P90"))
+      assert(sharedJson("interpretation").str.contains("approximate P90"))
       assert(loader.load(Vector(source)) == Unchanged(CacheLoadReport(0, 2, 0, 2)))
+      assert(sourceObjects.writeOrder.toVector == Vector(pointers.head.key))
     } finally {
       if (spark != null) spark.stop()
       val walk = Files.walk(root)

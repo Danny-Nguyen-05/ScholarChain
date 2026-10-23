@@ -1,0 +1,25 @@
+{
+  "exitCode": 0,
+  "realSeconds": 19.4,
+  "java": "17.0.20.1",
+  "sbt": "1.10.7",
+  "groups": {
+    "storage": {
+      "passed": 23,
+      "failed": 0
+    },
+    "independentStorage": {
+      "passed": 54,
+      "failed": 0
+    },
+    "neptuneCsv": {
+      "passed": 4,
+      "failed": 0
+    }
+  },
+  "rawLog": "/tmp/phase7b-repair1-targeted-1.txt",
+  "retainedLog": "docs/agent-runs/phase-07/evidence/7b/repair-1/targeted-1.txt",
+  "bytes": 13107,
+  "sha256": "3f5f62efbec68e7becefb7ca3f988e52e73f18423b32c5b65fcbae8d65c14b1b",
+  "repairFailures": "None observed in first repair targeted invocation"
+}

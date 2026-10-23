@@ -1,0 +1,50 @@
+[info] welcome to sbt 1.10.7 (Homebrew Java 17.0.20.1)
+[info] loading settings for project scholarchain-build from plugins.sbt...
+[info] loading project definition from /Users/danny/Documents/UIC/CS441/ScholarChain/project
+[info] loading settings for project root from build.sbt...
+[info] set current project to root (in build file:/Users/danny/Documents/UIC/CS441/ScholarChain/)
+[info] scalafmt: Formatting 7 Scala sources (/Users/danny/Documents/UIC/CS441/ScholarChain/modules/storage)...
+[info] scalafmt: Reformatted 3 Scala sources
+[success] Total time: 1 s, completed Oct 22, 2026, 11:20:41 PM
+[success] Total time: 0 s, completed Oct 22, 2026, 11:20:41 PM
+[info] compiling 7 Scala sources to /Users/danny/Documents/UIC/CS441/ScholarChain/modules/storage/target/scala-3.3.4/classes ...
+[error] -- [E007] Type Mismatch Error: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/S3VectorStore.scala:33:35 
+[error] 33 |      "metadata" -> ujson.Obj.from(d.metadata.toVector.sortBy(_._1)),
+[error]    |                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[error]    |                           Found:    Vector[(String, String)]
+[error]    |                           Required: IterableOnce[(String, ujson.Value)]
+[error]    |
+[error]    | longer explanation available when compiling with `-explain`
+[error] -- [E007] Type Mismatch Error: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/S3VectorStore.scala:39:37 
+[error] 39 |    val metaBytes = ujson.Obj.from(d.metadata).render().getBytes(UTF_8).length
+[error]    |                                   ^^^^^^^^^^
+[error]    |                           Found:    (d.metadata : Map[String, String])
+[error]    |                           Required: IterableOnce[(String, ujson.Value)]
+[error]    |
+[error]    | longer explanation available when compiling with `-explain`
+[error] -- [E007] Type Mismatch Error: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/S3VectorStore.scala:41:32 
+[error] 41 |      .from(d.metadata.filterNot((k, _) => config.nonFilterableKeys(k)))
+[error]    |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[error]    |            Found:    Map[String, String]
+[error]    |            Required: IterableOnce[(String, ujson.Value)]
+[error]    |
+[error]    | longer explanation available when compiling with `-explain`
+[error] -- [E024] Syntax Error: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/S3VectorStore.scala:146:29 
+[error] 146 |                  case Found(record) | Unchanged(record) if record.hash == fingerprint =>
+[error]     |                             ^^^^^^
+[error]     |                        Illegal variable record in pattern alternative
+[error]     |
+[error]     | longer explanation available when compiling with `-explain`
+[error] -- [E024] Syntax Error: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/S3VectorStore.scala:146:49 
+[error] 146 |                  case Found(record) | Unchanged(record) if record.hash == fingerprint =>
+[error]     |                                                 ^^^^^^
+[error]     |                        Illegal variable record in pattern alternative
+[error]     |
+[error]     | longer explanation available when compiling with `-explain`
+[error] 5 errors found
+[error] (storage / Compile / compileIncremental) Compilation failed
+[error] Total time: 3 s, completed Oct 22, 2026, 11:20:44 PM
+real 5.99
+user 23.06
+sys 1.04
+COMPILE_EXIT_CODE=1

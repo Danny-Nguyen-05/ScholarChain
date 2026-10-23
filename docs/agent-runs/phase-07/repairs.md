@@ -117,3 +117,93 @@ The user-supplied independent reviewer returned **APPROVE** for Subphase 7A repa
 | N9: decimal parser accepts leading zeros | **OPEN / nonblocking informational** | storage-engineer; reviewer says no fix needed, confirm deferral in 7B Step 0 |
 
 Commit gate observed after receiving approval: branch phase-7, HEAD still98dd2a4458e3128d019af1c1d1dbd2bf1dfcbbd2. Approved 7A files remain modified/untracked. Human commit is required before 7B begins. Coordinator has not staged, committed, pushed, launched a reviewer or started 7B; no 7B base/preflight is recorded. Existing 596/0 test evidence is retained; no build/test rerun for this documentation-only disposition.
+
+
+## Subphase 7B — accepted Step 0 carry-over routing
+
+Human commit confirmed: phase-7 HEAD 08e3d21233dbaf8c3d6283fc3bb9bce7f7fb1276, descendant of 7A base, clean working tree and approved 7A files tracked. This supersedes the earlier observed uncommitted status without rewriting it.
+
+User accepted all recommended defaults. N1 source qualification pointer and N3 fixed logical transaction token routed to storage-engineer. N2 loader sidecar hash verification routed to storage-engineer and bounded real-data CSV replay to spark-engineer (scoped local test harness only; production exporter unchanged). N4–N9 remain OPEN/nonblocking and deferred, N6 to 7C. F1/F2 stay CLOSED. No live-service behavior is verified by this work.
+
+
+### Subphase 7B integration repair B1 — researcher alias index sequencing
+
+Observed during required bounded real-data CLI smoke, after fixture target passed: graph validator accepted84nodes40edges29support, cache rejected `missing-resolution-endpoint`. Both failing attempts retained under evidence/7b (raw/excerpt distinctions and hashes in cli-smoke-results.json). Storage owner confirmed the multiline invalid-node conditional had the subsequent researcher index write in its indented semicolon body, so valid nodes were not indexed for alias resolution. This was not exposed by earlier standalone name/metric fixtures. Owner repaired explicit conditional braces followed by unconditional valid-node indexing and added a positive mention→researcher RESOLVES_TO regression asserting canonical and alias cache entries/evidence. No producer, dataset, IDs or hashes changed. Rerun pending at this entry; later final results supersede pending status without rewriting the failures.
+
+
+### Subphase 7B — final affected validation and carry-over disposition
+
+The final affected invocation passed storage17/17, independent storage48/48 and CSV4/4, exit0 in24.10 seconds. Both actual-sample CLI modes then passed:84nodes40edges29supportrows,68 entity candidate writes; fake graph state LOAD_COMPLETED. B1 is repaired and locally validated by its positive alias regression and actual sample. Two added vector pagination cases cover101hits across pages and exact page-budget refusal. Evidence: `evidence/7b/targeted-cli-2.txt` and `.json`.
+
+| Prior item | 7B disposition | Owner / remaining gate |
+|---|---|---|
+| F1 / F2 | Remain CLOSED by the 7A external recheck | No reopening or historical record rewrite |
+| N1 | Implemented and locally validated: full qualifications once, shared retrievable runId+hash pointer; metric rows retain per-row qualifications | storage-engineer; external 7B review pending |
+| N2 | Loader verifies authoritative source and CSV logical hashes/projections before upload. Bounded actual-data CSV replay and local CLI passed | storage-engineer / spark-engineer; original producer still exports CSV on every Phase6 run and its completion marker does not bind the sidecar. Full replay/live service remain unverified |
+| N3 | Implemented and locally validated: fixed token per logical transaction retry, including committed-write/lost-reply regression | storage-engineer; external 7B review pending |
+| N4 | OPEN / nonblocking; TTL divergence deferred, TTL off by default | storage-engineer |
+| N5 | OPEN / nonblocking; idempotency GSI key length validation deferred | storage-engineer |
+| N6 | OPEN / nonblocking; two additional SDK stub paths remain 7C | test-engineer |
+| N7 | OPEN / informational; configurable evidence prefix deferred | storage-engineer |
+| N8 | OPEN / process note; owner-requested coordinator formatting remains disclosed | coordinator |
+| N9 | OPEN / informational; leading-zero count parsing remains accepted, no fix required | storage-engineer |
+
+The source is frozen for the full check. This is implementation evidence, not independent approval or human acceptance. No reviewer, live service, stage/commit/push, source dataset rewrite or7C work occurred.
+
+
+### Subphase 7B final full gate
+
+Fresh full check passed **624/624**, exit0, real703.46s; groups 144/64/39/38/17/314/8. All291 source hashes and mtimes unchanged. This completes local validation for B1 and accepted N1–N3 work; external review is pending. N4–N9 remain OPEN/deferred. No7C or live service claim. Evidence: evidence/7b/final-check.json and final-check.txt, SHA256 `a149c77307a1a6f9829b5b73ae9386107707e94bdd1e353724d1cd53032e4e5f`.
+
+
+## Subphase 7B repair round 1 — external REQUEST-CHANGES
+
+Complete review and next prompt appended verbatim to review.md; duplicate original text in evidence/7b/repair-1/external-review.txt. Only blockers are in this repair scope.
+
+| Finding | Owner | Disposition / acceptance |
+|---|---|---|
+| F3 High: failed load ID pinned; incomplete final-state classification | storage-engineer modules/storage/**; test-engineer tests/** | OPEN/blocking; explicit pending/success/final classification, sanitized status evidence, append-only recoverable attempts, pending-timeout reuse and completed unchanged; module/independent regressions and README |
+| F4 Medium: Document.toString corrupts control-character JSON | storage-engineer; test-engineer | OPEN/blocking; structural typed Document conversion in reader/loader; exact special-text node/property regression and primitive/nested conversion tests |
+| N10 Low: invalid export fails closed without violation count | storage-engineer | OPEN/nonblocking; listed only, no repair required |
+| N11 Low: vector registry errors mislabeled and payload changes reject | storage-engineer | OPEN/nonblocking; future Phase8 caller/adapter handling |
+| N12 Info: upload re-reads source after validation; memory bound | storage-engineer | OPEN/nonblocking; local mutation/time-of-check limitation remains |
+| N13 Info: CLI refusal exit exception and nested SDK retries | storage-engineer | OPEN/nonblocking; no CLI or retry-policy change in this round |
+| N14 Info: full-scale path enumeration and CONTAINS cost | storage-engineer; Phase14C measurement | OPEN/nonblocking; scale unverified |
+
+N4–N9 remain OPEN/nonblocking with existing owners (N6 → 7C). F1/F2/B1 remain CLOSED. N1/N3 were verified by the reviewer; N2 producer-side sidecar binding and broader real-data limits remain disclosed. No historical result or human decision rewritten.
+
+
+### Repair round 1 — affected validation
+
+First repair invocation passed storage23/23, independentStorage54/54 and CSV4/4, exit0 in19.40 seconds. F3 recovery/status/timeout/completion/legacy cases and F4 structural primitive/numeric/text cases pass in module and independent tests. Five existing paths changed (README, loader, reader, two independent suites) and three storage paths were added (two helpers, one module suite). No Spark/core/build/control or prior evidence content changed. Full check is running on frozen sources; external closure remains pending. See evidence/7b/repair-1/targeted-1.txt/.json, repair-source-changes.json and owner reports.
+
+
+### Repair round 1 — final local disposition
+
+F3 and F4 are repaired and locally validated; independent recheck remains pending. Fresh full gate exit0: **636 passed /0failed**, groups 144/64/39/38/23/320/8, real680.86s. All298 source hashes/mtimes stable. Evidence: repair-1/targeted-1.txt/.json, final-check.txt/.json and final-audit.json. Full raw SHA256 `0d8fb3ecc98dddf264ccba022a7941e49fff44c21e404357fa580daf3f715ef1`. N4–N14 remain OPEN/nonblocking; F1/F2/B1 stay CLOSED. No nonblocking repair, reviewer, cloud/provider call, stage/commit/push or7C work.
+
+
+## Subphase 7B repair round 1 — external recheck APPROVE disposition
+
+The complete user-supplied independent recheck is appended verbatim to review.md. F3/F4 are CLOSED by external recheck; no new blocking finding. This is independent review, not human acceptance or a commit. Earlier records remain intact.
+
+| Item | Status | Owner / next gate |
+|---|---|---|
+| F3: pinned failed load and final-status handling | CLOSED by external recheck | storage-engineer and test-engineer; append-only recovery/status/timeout/legacy/history acceptance verified |
+| F4: Document.toString loses control-character JSON | CLOSED by external recheck | storage-engineer and test-engineer; structural exact-value conversion and node/property regressions verified |
+| F1/F2/B1 | Remain CLOSED | Prior review dispositions preserved |
+| N4: TTL divergence | OPEN/nonblocking | storage-engineer |
+| N5: idempotency GSI key byte limit | OPEN/nonblocking | storage-engineer |
+| N6: remaining SDK stub paths | OPEN/nonblocking | test-engineer, assigned to 7C |
+| N7: evidence prefix configuration | OPEN/nonblocking | storage-engineer |
+| N8: formatter process note | OPEN/nonblocking | coordinator |
+| N9: leading-zero count parsing | OPEN/nonblocking | storage-engineer |
+| N10: fail-closed export without violation count | OPEN/nonblocking | storage-engineer |
+| N11: vector registry reason/payload semantics | OPEN/nonblocking | storage-engineer |
+| N12: validation/upload re-read and memory cost | OPEN/nonblocking | storage-engineer |
+| N13: CLI exit/retry composition | OPEN/nonblocking | storage-engineer |
+| N14: full-scale path/community cost | OPEN/nonblocking | storage-engineer; Phase14C measurement |
+| N15: NEW-mode recovery reloads the full export | OPEN/nonblocking, Info | storage-engineer; revisit if Phase14C load times matter |
+| N16: possible orphan job after submission if registry write fails | OPEN/nonblocking, Info | storage-engineer |
+
+Commit gate observed after approval: branch phase-7, HEAD still08e3d21233dbaf8c3d6283fc3bb9bce7f7fb1276 (the 7B base). Approved 7B code/evidence remains modified/untracked; the required human commit is absent. Full observed status and review-transcription hash are recorded in evidence/7b/repair-1/post-review-commit-check.json. Coordinator has not staged, committed, pushed, launched agents/reviewer or started 7C. No build/test rerun for these documentation-only appends; prior636/0 evidence remains the retained gate. User must commit approved7B before 7C Step0.

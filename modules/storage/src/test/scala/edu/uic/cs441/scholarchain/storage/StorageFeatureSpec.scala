@@ -76,7 +76,11 @@ class StorageFeatureSpec extends AnyFunSuite {
       Vector(dataset),
       "parquet",
       1,
-      Vector(if (dataset.startsWith("nodes")) "nodeId" else "researcherId"),
+      Vector(
+        if (dataset.startsWith("nodes")) "nodeId"
+        else if (dataset.startsWith("edges")) "edgeId"
+        else "researcherId"
+      ),
       Vector("run_id"),
       finalHash,
       Vector("all-years"),
@@ -162,7 +166,14 @@ class StorageFeatureSpec extends AnyFunSuite {
       val reader = new Reader(data); val links = new InMemoryEntityLinkCache;
       val metrics = new InMemoryResearcherMetricStore
       val loader =
-        new Phase6CacheLoader(links, metrics, reader, CacheLoaderConfig(sortChunkRows = 1))
+        new Phase6CacheLoader(
+          links,
+          metrics,
+          reader,
+          CacheLoaderConfig(sortChunkRows = 1),
+          new InMemoryObjectStore,
+          new InMemoryArtifactRegistry
+        )
       val manifests = data.toVector.map((name, rows) => fixture(rows, name))
       assert(loader.load(manifests) == Written(CacheLoadReport(2, 0, 0, 4)))
       assert(loader.load(manifests) == Unchanged(CacheLoadReport(0, 2, 0, 4)))
@@ -180,7 +191,13 @@ class StorageFeatureSpec extends AnyFunSuite {
     val row = ujson.read(CoreJson.compact(detail)).asInstanceOf[ujson.Obj]
     val reader = new Reader(Map("metrics/type=researcher_collaboration" -> Vector(row)))
     val metrics = new InMemoryResearcherMetricStore
-    val loader = new Phase6CacheLoader(new InMemoryEntityLinkCache, metrics, reader)
+    val loader = new Phase6CacheLoader(
+      new InMemoryEntityLinkCache,
+      metrics,
+      reader,
+      sourceObjects = new InMemoryObjectStore,
+      sourceRegistry = new InMemoryArtifactRegistry
+    )
     val m = fixture(Vector(row), "metrics/type=researcher_collaboration")
     assert(
       loader.load(Vector(m.copy(sortedRowsSha256 = "0" * 64))) == Rejected(
@@ -199,7 +216,13 @@ class StorageFeatureSpec extends AnyFunSuite {
       )
     )
     val duplicateLoader =
-      new Phase6CacheLoader(new InMemoryEntityLinkCache, metrics, duplicateReader)
+      new Phase6CacheLoader(
+        new InMemoryEntityLinkCache,
+        metrics,
+        duplicateReader,
+        sourceObjects = new InMemoryObjectStore,
+        sourceRegistry = new InMemoryArtifactRegistry
+      )
     assert(
       duplicateLoader.load(
         Vector(m, fixture(Vector(conflicting), "metrics/type=kcore"))
@@ -272,6 +295,42 @@ class StorageFeatureSpec extends AnyFunSuite {
     val fails = retry[String] { throw new java.io.IOException("synthetic-private-detail") }
     assert(fails == Retried(1, Rejected("transport-retry-exhausted")))
     assert(!fails.toString.contains("synthetic-private-detail"))
+  }
+
+  test("valid researcher indexes authorize applied mention aliases before cache publication") {
+    val mention = node.copy(
+      nodeId = "mention:dblp:" + "f" * 64,
+      nodeClass = GraphNodeClass.AuthorMention,
+      label = "Synthetic Alias"
+    )
+    val nodeRow = ujson.read(CoreJson.compact(node)).asInstanceOf[ujson.Obj]
+    val mentionRow = ujson.read(CoreJson.compact(mention)).asInstanceOf[ujson.Obj]
+    val edge = ujson.Obj(
+      "edgeId" -> "synthetic-resolution-edge",
+      "fromId" -> mention.nodeId,
+      "toId" -> node.nodeId,
+      "context" -> ujson.read(CoreJson.compact(context))
+    )
+    val data = Map(
+      "nodes/type=researcher" -> Vector(nodeRow),
+      "nodes/type=author_mention" -> Vector(mentionRow),
+      "edges/type=resolves_to" -> Vector(edge)
+    )
+    val links = new InMemoryEntityLinkCache
+    val loader = new Phase6CacheLoader(
+      links,
+      new InMemoryResearcherMetricStore,
+      new Reader(data),
+      sourceObjects = new InMemoryObjectStore,
+      sourceRegistry = new InMemoryArtifactRegistry
+    )
+    val result = loader.load(data.toVector.map((name, rows) => fixture(rows, name)))
+    assert(result == Written(CacheLoadReport(2, 0, 0, 3)))
+    val alias = StorageResult.value(links.lookupByNormalizedName("Synthetic Alias")).get
+    assert(alias.size == 1)
+    assert(alias.head.researcherId == node.nodeId)
+    assert(alias.head.sourceId == mention.nodeId)
+    assert(alias.head.evidenceRefs == Vector("edges/type=resolves_to", "synthetic-resolution-edge"))
   }
 
 }

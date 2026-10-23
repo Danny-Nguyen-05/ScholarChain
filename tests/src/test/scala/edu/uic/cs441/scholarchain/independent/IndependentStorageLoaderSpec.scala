@@ -62,6 +62,20 @@ class IndependentStorageLoaderSpec extends AnyFunSuite {
     }
   }
 
+  private def cacheLoader(
+      links: EntityLinkCache,
+      store: ResearcherMetricStore,
+      reader: ManifestRowReader
+  ): Phase6CacheLoader =
+    new Phase6CacheLoader(
+      links,
+      store,
+      reader,
+      CacheLoaderConfig(),
+      new InMemoryObjectStore(),
+      new InMemoryArtifactRegistry()
+    )
+
   test(
     "manifest reload loads one canonical metric copy with exact IDs, lineage and qualifications"
   ) {
@@ -73,7 +87,16 @@ class IndependentStorageLoaderSpec extends AnyFunSuite {
     val reader = new SyntheticReader(rows)
     val links = new InMemoryEntityLinkCache()
     val store = new InMemoryResearcherMetricStore()
-    val loader = new Phase6CacheLoader(links, store, reader, CacheLoaderConfig(sortChunkRows = 1))
+    val sourceObjects = new InMemoryObjectStore()
+    val sourceRegistry = new InMemoryArtifactRegistry()
+    val loader = new Phase6CacheLoader(
+      links,
+      store,
+      reader,
+      CacheLoaderConfig(sortChunkRows = 1),
+      sourceObjects,
+      sourceRegistry
+    )
     val manifests = rows.toVector.sortBy(_._1).map((dataset, name) => source(dataset, name))
     val first = loader.load(manifests)
     assert(first == Written(CacheLoadReport(3, 0, 0, 3)), first.toString)
@@ -90,8 +113,14 @@ class IndependentStorageLoaderSpec extends AnyFunSuite {
     assert(value.averageCoauthorsPerPaper == 0.5)
     assert(value.context.lineage == context.lineage)
     assert(record.metricVersion == policyVersion && record.runId == runId)
-    assert(ujson.read(record.qualificationsJson)("sourceRun") == ujson.read(qualification))
+    val pointer = upickle.default.read[SourceRunPointer](
+      ujson.read(record.qualificationsJson)("sourceRunPointer")
+    )
+    assert(pointer.runId == runId)
+    assert(SourceQualifications.get(pointer, sourceObjects, sourceRegistry) == Found(qualification))
+    assert(!ujson.read(record.qualificationsJson).obj.contains("sourceRun"))
     assert(loader.load(manifests) == Unchanged(CacheLoadReport(0, 3, 0, 3)))
+    assert(sourceObjects.writeOrder.toVector == Vector(pointer.key))
     assert(reader.opened == 6 && reader.closed == 6)
   }
 
@@ -104,7 +133,7 @@ class IndependentStorageLoaderSpec extends AnyFunSuite {
     val reader = new SyntheticReader(rows)
     val links = new InMemoryEntityLinkCache()
     val store = new InMemoryResearcherMetricStore()
-    val result = new Phase6CacheLoader(links, store, reader)
+    val result = cacheLoader(links, store, reader)
       .load(rows.toVector.map((dataset, name) => source(dataset, name)))
     assert(result == Rejected("conflicting-duplicate-metric"), result.toString)
     assert(store.get(researcherId, "all-years") == Missing)
@@ -121,7 +150,7 @@ class IndependentStorageLoaderSpec extends AnyFunSuite {
       val reader = new SyntheticReader(Map(dataset -> "researcher"))
       val links = new InMemoryEntityLinkCache()
       val result =
-        new Phase6CacheLoader(links, new InMemoryResearcherMetricStore(), reader).load(Vector(bad))
+        cacheLoader(links, new InMemoryResearcherMetricStore(), reader).load(Vector(bad))
       assert(!StorageResult.successful(result))
       assert(reader.opened == 1 && reader.closed == 1)
       assert(links.lookupByNormalizedName("Synthetic Example 0001") == Found(Vector.empty))
@@ -132,7 +161,7 @@ class IndependentStorageLoaderSpec extends AnyFunSuite {
     val dataset = "nodes/type=researcher"
     val reader = new SyntheticReader(Map(dataset -> "researcher-invalid"))
     val links = new InMemoryEntityLinkCache()
-    val result = new Phase6CacheLoader(links, new InMemoryResearcherMetricStore(), reader)
+    val result = cacheLoader(links, new InMemoryResearcherMetricStore(), reader)
       .load(Vector(source(dataset, "researcher-invalid")))
     assert(result == Rejected("invalid-researcher-node"), result.toString)
     assert(links.lookupByNormalizedName("Synthetic Example 0001") == Found(Vector.empty))
@@ -142,7 +171,7 @@ class IndependentStorageLoaderSpec extends AnyFunSuite {
   test("missing source qualification metadata and unsupported manifest versions refuse loading") {
     val dataset = "nodes/type=researcher"
     val absent = new SyntheticReader(Map(dataset -> "researcher"), Missing)
-    val missingResult = new Phase6CacheLoader(
+    val missingResult = cacheLoader(
       new InMemoryEntityLinkCache(),
       new InMemoryResearcherMetricStore(),
       absent
@@ -153,7 +182,7 @@ class IndependentStorageLoaderSpec extends AnyFunSuite {
     val invalid =
       source(dataset, "researcher").copy(context = context.copy(schemaVersion = "unknown.v99"))
     assert(
-      new Phase6CacheLoader(
+      cacheLoader(
         new InMemoryEntityLinkCache(),
         new InMemoryResearcherMetricStore(),
         reader

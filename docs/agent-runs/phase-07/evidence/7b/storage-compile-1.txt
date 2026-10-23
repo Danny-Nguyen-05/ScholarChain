@@ -1,0 +1,17 @@
+[info] welcome to sbt 1.10.7 (Homebrew Java 17.0.20.1)
+[info] loading settings for project scholarchain-build from plugins.sbt...
+[info] loading project definition from /Users/danny/Documents/UIC/CS441/ScholarChain/project
+[info] loading settings for project root from build.sbt...
+[info] set current project to root (in build file:/Users/danny/Documents/UIC/CS441/ScholarChain/)
+[info] scalafmt: Formatting 6 Scala sources (/Users/danny/Documents/UIC/CS441/ScholarChain/modules/storage)...
+[error] org.scalafmt.sbt.ScalafmtSbtReporter$ScalafmtSbtError: scalafmt: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/S3VectorStore.scala:121: error: [dialect scala3] do {...} while (...) syntax is no longer supported
+[error]     do {
+[error]     ^ [/Users/danny/Documents/UIC/CS441/ScholarChain/modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/S3VectorStore.scala]
+[error] (storage / Compile / scalafmt) org.scalafmt.sbt.ScalafmtSbtReporter$ScalafmtSbtError: scalafmt: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/S3VectorStore.scala:121: error: [dialect scala3] do {...} while (...) syntax is no longer supported
+[error]     do {
+[error]     ^ [/Users/danny/Documents/UIC/CS441/ScholarChain/modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/S3VectorStore.scala]
+[error] Total time: 1 s, completed Oct 22, 2026, 11:19:48 PM
+real 3.08
+user 10.81
+sys 0.53
+COMPILE_EXIT_CODE=1

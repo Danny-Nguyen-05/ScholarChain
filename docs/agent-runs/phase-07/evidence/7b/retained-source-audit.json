@@ -1,0 +1,8 @@
+{
+  "root": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase6-runs/6fg-spark-first-v2/run:f02acf56-4bea-4009-adaf-b11d5afceb49",
+  "sampleRoot": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase7b-replay-n2-20261022-01",
+  "metadataAndMarkerHashesAndMtimesUnchanged": true,
+  "sourceFilesObserved": 409,
+  "sourceFilesModifiedSinceSampleCreation": [],
+  "method": "Local read-only stat traversal, plus recorded binding hashes. This is not a fresh full content hash of every source file."
+}

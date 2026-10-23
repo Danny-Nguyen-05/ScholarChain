@@ -158,10 +158,16 @@ private[storage] final class DynamoRows(client: DynamoDbClient, config: StorageC
       }
       TransactWriteItem.builder().put(b.build()).build()
     }
+    // A fixed token survives every transport retry of this exact logical transaction.
+    val token = java.util.UUID.randomUUID().toString
     retry {
       try {
         client.transactWriteItems(
-          TransactWriteItemsRequest.builder().transactItems(puts.asJava).build()
+          TransactWriteItemsRequest
+            .builder()
+            .clientRequestToken(token)
+            .transactItems(puts.asJava)
+            .build()
         ); Written(())
       } catch {
         case e: TransactionCanceledException =>

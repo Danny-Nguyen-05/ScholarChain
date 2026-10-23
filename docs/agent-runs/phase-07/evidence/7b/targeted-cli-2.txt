@@ -1,0 +1,151 @@
+[info] welcome to sbt 1.10.7 (Homebrew Java 17.0.20.1)
+[info] loading settings for project scholarchain-build from plugins.sbt...
+[info] loading project definition from /Users/danny/Documents/UIC/CS441/ScholarChain/project
+[info] loading settings for project root from build.sbt...
+[info] set current project to root (in build file:/Users/danny/Documents/UIC/CS441/ScholarChain/)
+[info] scalafmt: Formatting 1 Scala sources (/Users/danny/Documents/UIC/CS441/ScholarChain/modules/storage)...
+[success] Total time: 1 s, completed Oct 22, 2026, 11:33:38 PM
+[info] scalafmt: Formatting 1 Scala sources (/Users/danny/Documents/UIC/CS441/ScholarChain/modules/storage)...
+[info] scalafmt: Reformatted 1 Scala sources
+[success] Total time: 0 s, completed Oct 22, 2026, 11:33:38 PM
+[info] scalafmt: Formatting 1 Scala sources (/Users/danny/Documents/UIC/CS441/ScholarChain/tests)...
+[info] scalafmt: Reformatted 1 Scala sources
+[success] Total time: 0 s, completed Oct 22, 2026, 11:33:39 PM
+[info] compiling 1 Scala source to /Users/danny/Documents/UIC/CS441/ScholarChain/modules/storage/target/scala-3.3.4/classes ...
+[info] done compiling
+[info] compiling 1 Scala source to /Users/danny/Documents/UIC/CS441/ScholarChain/modules/storage/target/scala-3.3.4/test-classes ...
+[info] done compiling
+WARN org.apache.hadoop.util.NativeCodeLoader - Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+[info] ParquetManifestSpec:
+[info] - local completed Parquet export streams nested LIST records and restores partition window
+[info] - manifest counts use exact nonnegative decimal Long strings without Double rounding
+[info] - Parquet integer values outside exact JSON range reject instead of rounding
+[info] Phase7BFeaturesSpec:
+[info] - RFC4180 preserves CR/LF quotes and distinguishes unknown numeric cells from quoted text
+[info] - CSV bounds reject oversized cells and maliciously wide records
+[info] - spilled logical hashes are independent of order chunk size and retain duplicate rows
+[info] - full source qualifications are stored once and remain retrievable by verified pointer
+[info] - community lookup tokens bind exact source window and community without adding identities
+[info] - reader rejects responses exceeding the caller's requested bound
+[info] StorageFeatureSpec:
+[info] - ledger requires stage completion and preserves failed retry provenance
+[info] - every fake store keeps immutable content and repeat counts; object manifest is last
+[info] - validated canonical metric copies load once and preserve observed convergence true and false
+[info] - hash mismatch, wrong count and conflicting duplicate metric copies are rejected before writes
+[info] - graph and vector main fakes provide usable deterministic retrieval without provider calls
+[info] - support keys use collision-safe edge and work pairs without altering either Spark ID
+[info] - stream IO failures receive bounded retries and sanitized exhaustion
+[info] - valid researcher indexes authorize applied mention aliases before cache publication
+[info] Run completed in 682 milliseconds.
+[info] Total number of tests run: 17
+[info] Suites: completed 3, aborted 0
+[info] Tests: succeeded 17, failed 0, canceled 0, ignored 0, pending 0
+[info] All tests passed.
+[success] Total time: 4 s, completed Oct 22, 2026, 11:33:43 PM
+[info] compiling 1 Scala source to /Users/danny/Documents/UIC/CS441/ScholarChain/tests/target/scala-3.3.4/test-classes ...
+[info] done compiling
+[info] IndependentStorageParquetSpec:
+26/10/22 23:33:44 WARN  Utils: Your hostname, Dannys-MacBook-Pro.local resolves to a loopback address: 127.0.0.1; using 10.0.0.113 instead (on interface en0)
+26/10/22 23:33:44 WARN  Utils: Set SPARK_LOCAL_IP if you need to bind to another address
+26/10/22 23:33:45 WARN  NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+[info] - Spark Parquet metrics load with integral doubles, nested lineage, nulls and physical partitions
+[info] - completed source metadata rejects malformed row counts before opening Parquet
+[info] IndependentStorageGraphReaderSpec:
+[info] - all graph reader operations use allowlisted templates with values bound outside query text
+[info] - depth, result, cursor and relationship bounds reject before issuing graph requests
+[info] - graph SDK failure retries to the configured bound and never exposes provider payload
+[info] IndependentStorageGraphLoaderSpec:
+26/10/22 23:33:48 WARN  SparkStringUtils: Truncated the string representation of a plan since it was too large. This behavior can be adjusted by setting 'spark.sql.debug.maxToStringFields'.
+[info] - hash-bound authoritative edges with a missing endpoint or supporting work are rejected before upload
+[info] - storage CLI defaults to a validated dry-run with hand-derived expected counts
+[info] - storage CLI executes the same complete source locally through fake ports
+[info] - storage CLI refuses real execution without profile or matching approved environment
+[info] - validated bulk load preserves exact Spark-shaped IDs both ways and unchanged reload submits nothing
+[info] - sidecar logical hash tampering is rejected before uploads or loader submission
+[info] - bounded loader polling records timeout failure in the run ledger
+[info] IndependentStorageLoaderSpec:
+[info] - manifest reload loads one canonical metric copy with exact IDs, lineage and qualifications
+[info] - conflicting collaboration and kcore copies reject before publishing any cache row
+[info] - count and content-hash mismatches reject the manifest and always close its iterator
+[info] - a hash-valid unsupported researcher schema is rejected before any candidate is cached
+[info] - missing source qualification metadata and unsupported manifest versions refuse loading
+[info] IndependentStorageSdkSpec:
+[info] - S3 read checks SHA-256 against bytes and rejects missing or malformed hash metadata
+[info] - S3 valid read preserves caller metadata and missing objects return Missing
+[info] - S3 writes bind versioned key, SHA metadata and atomic create condition
+[info] - S3 bounds a stream whose body exceeds its advertised content length and closes it
+[info] - S3 retries a transient SDK failure within the configured bound without real sleeping
+[info] - Dynamo immutable writes use conditional create and read the original on conflict
+[info] - Dynamo point reads reject unknown envelope schema and corrupt payload
+[info] - Dynamo idempotency lookup uses configured GSI and the raw key as a parameter
+[info] - Dynamo query creation atomically reserves idempotency and limits TTL to configured sessions
+[info] - Dynamo batch point reads split 101 unique keys into calls of 100 and 1
+[info] - Dynamo unprocessed keys retry to the configured bound and return a typed exhausted result
+[info] - a committed Dynamo transaction with lost reply retries the same token and logical write once
+[info] IndependentStorageVectorSpec:
+[info] - missing configured vector index is created with dimension, metric and nonfilterable text pointer
+[info] - vector writes split 501 valid documents at the documented 500-vector boundary
+[info] - same key and text is unchanged while a changed text hash is rejected before provider write
+[info] - oversized metadata, missing required metadata and invalid vectors are counted without SDK writes
+[info] - transient throttling retries once then succeeds with the same batch and bounded attempts
+[info] - retry exhaustion and permanent provider failures produce rejected-vector reports
+[info] - vector query binds metadata filters and enforces configured top-K and dimensions
+[info] - vector get splits 101 keys into 100 and 1 without synthesizing missing records
+[info] - vector query follows a 100-result page token and returns the remaining hit for top-K 101
+[info] - vector query stops with a typed rejection when the configured page budget is exhausted
+[info] IndependentStoragePortsSpec:
+[info] - versioned immutable objects retain bytes, metadata, and the standard SHA-256 digest
+[info] - support keys keep multiple works and cannot alias through delimiter placement
+[info] - run publisher writes the manifest last, reports unchanged reload and withholds failed completion
+[info] - object validation rejects malformed metadata and caller-supplied mismatching hashes
+[info] - run ledger rejects stages before start and changes after completion
+[info] - entity cache retains multiple candidates and rejects conflicting replacement of one key
+[info] - query idempotency binds one query and optimistic revisions reject a stale writer
+[info] - artifact hashes and metric payloads are immutable, qualified, and window isolated
+[info] - evidence fake preserves source provenance and refuses schema corruption
+[info] Run completed in 6 seconds, 753 milliseconds.
+[info] Total number of tests run: 48
+[info] Suites: completed 7, aborted 0
+[info] Tests: succeeded 48, failed 0, canceled 0, ignored 0, pending 0
+[info] All tests passed.
+[success] Total time: 8 s, completed Oct 22, 2026, 11:33:51 PM
+[info] Phase7NeptuneExportSpec:
+26/10/22 23:33:51 WARN  Utils: Your hostname, Dannys-MacBook-Pro.local resolves to a loopback address: 127.0.0.1; using 10.0.0.113 instead (on interface en0)
+26/10/22 23:33:51 WARN  Utils: Set SPARK_LOCAL_IP if you need to bind to another address
+26/10/22 23:33:51 WARN  NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+26/10/22 23:33:54 WARN  SparkStringUtils: Truncated the string representation of a plan since it was too large. This behavior can be adjusted by setting 'spark.sql.debug.maxToStringFields'.
+[info] - CSV preserves exact node and edge ID sets, RFC4180 text, yearless values and support provenance
+[info] - empty datasets retain a CSV header in every loader file
+[info] - missing endpoints or support works fail before publication
+[info] - support composite keys cannot duplicate or lose evidence, and orphan evidence is rejected
+[info] Run completed in 4 seconds, 552 milliseconds.
+[info] Total number of tests run: 4
+[info] Suites: completed 1, aborted 0
+[info] Tests: succeeded 4, failed 0, canceled 0, ignored 0, pending 0
+[info] All tests passed.
+[success] Total time: 5 s, completed Oct 22, 2026, 11:33:55 PM
+[info] Defining storage / Compile / fork
+[info] The new value will be used by storage / Compile / run / runner, storage / Test / run / runner and 1 others.
+[info] 	Run `last` for details.
+[info] Reapplying settings...
+[info] set current project to root (in build file:/Users/danny/Documents/UIC/CS441/ScholarChain/)
+[info] Defining storage / Compile / javaOptions
+[info] The new value will be used by storage / AwsIntegration / bspBuildTargetJvmEnvironmentItem, storage / AwsIntegration / bspBuildTargetRun and 21 others.
+[info] 	Run `last` for details.
+[info] Reapplying settings...
+[info] set current project to root (in build file:/Users/danny/Documents/UIC/CS441/ScholarChain/)
+[info] running (fork) edu.uic.cs441.scholarchain.storage.StorageLoadMain --manifest /Users/danny/Documents/UIC/CS441/ScholarChain/target/phase7b-replay-n2-20261022-01 --config /tmp/phase7b-local-load-config.json
+[info] WARN org.apache.hadoop.util.NativeCodeLoader - Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+[info] runId=run:f02acf56-4bea-4009-adaf-b11d5afceb49 mode=dry-run nodes=84 edges=40 support=29
+[info] PLAN: cacheWrites=68 cacheUnchanged=0
+[info] PLAN: upload validated graph/support and source qualifications; load entity/metric caches; submit and poll Neptune through ports. No AWS calls or external store writes performed.
+[success] Total time: 1 s, completed Oct 22, 2026, 11:33:58 PM
+[info] running (fork) edu.uic.cs441.scholarchain.storage.StorageLoadMain --manifest /Users/danny/Documents/UIC/CS441/ScholarChain/target/phase7b-replay-n2-20261022-01 --config /tmp/phase7b-local-load-config.json --execute-fake
+[info] WARN org.apache.hadoop.util.NativeCodeLoader - Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+[info] runId=run:f02acf56-4bea-4009-adaf-b11d5afceb49 mode=fake nodes=84 edges=40 support=29
+[info] COMPLETE: cacheWritten=68 cacheUnchanged=0 graphState=LOAD_COMPLETED
+[success] Total time: 2 s, completed Oct 22, 2026, 11:34:00 PM
+real 24.10
+user 74.08
+sys 4.81
+TARGETED_CLI_EXIT_CODE=0

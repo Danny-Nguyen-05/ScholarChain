@@ -1,0 +1,71 @@
+{
+  "timestamp": "2026-10-22T23:47:04.274529-05:00",
+  "sourceFilesChecked": 291,
+  "sourceContentAndMtimesChanged": [],
+  "protectedFileHashesUnchanged": true,
+  "headUnchanged": "08e3d21233dbaf8c3d6283fc3bb9bce7f7fb1276",
+  "gitDiffCheckExit": 0,
+  "gitCheckIgnoreExit": 1,
+  "ignoredEvidence": "",
+  "retainedEvidenceHashIndex": "evidence-index.json",
+  "logFilesUnder7b": [],
+  "implementationPaths": 23,
+  "noReviewerLaunched": true,
+  "noCloudProviderCalls": true,
+  "noAgentCommitStagePush": true,
+  "no7CStarted": true,
+  "specialists": "All completed; no owner jobs",
+  "fullGate": {
+    "exitCode": 0,
+    "totalPassed": 624,
+    "totalFailed": 0,
+    "groups": {
+      "core": {
+        "total": 144,
+        "passed": 144,
+        "failed": 0
+      },
+      "hadoop": {
+        "total": 64,
+        "passed": 64,
+        "failed": 0
+      },
+      "entityResolution": {
+        "total": 39,
+        "passed": 39,
+        "failed": 0
+      },
+      "spark": {
+        "total": 38,
+        "passed": 38,
+        "failed": 0
+      },
+      "storage": {
+        "total": 17,
+        "passed": 17,
+        "failed": 0
+      },
+      "independent": {
+        "total": 314,
+        "passed": 314,
+        "failed": 0
+      },
+      "buildVerification": {
+        "total": 8,
+        "passed": 8,
+        "failed": 0
+      }
+    },
+    "java": "17.0.20.1",
+    "sbt": "1.10.7",
+    "realSeconds": 703.46,
+    "rawLog": "/tmp/phase7b-final-check.txt",
+    "retainedLog": "docs/agent-runs/phase-07/evidence/7b/final-check.txt",
+    "bytes": 1365402,
+    "sha256": "a149c77307a1a6f9829b5b73ae9386107707e94bdd1e353724d1cd53032e4e5f",
+    "expectedFailureProbe": "Injected format-stage failure is a passing build self-test; no gate failure.",
+    "completedLines": [
+      "[success] Total time: 701 s (11:41), completed Oct 22, 2026, 11:46:32 PM"
+    ]
+  }
+}

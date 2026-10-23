@@ -1,0 +1,34 @@
+[info] welcome to sbt 1.10.7 (Homebrew Java 17.0.20.1)
+[info] loading settings for project scholarchain-build from plugins.sbt...
+[info] loading project definition from /Users/danny/Documents/UIC/CS441/ScholarChain/project
+[info] loading settings for project root from build.sbt...
+[info] set current project to root (in build file:/Users/danny/Documents/UIC/CS441/ScholarChain/)
+[info] scalafmt: Formatting 1 Scala sources (/Users/danny/Documents/UIC/CS441/ScholarChain/modules/storage)...
+[info] scalafmt: Reformatted 1 Scala sources
+[success] Total time: 1 s, completed Oct 22, 2026, 11:31:58 PM
+[info] Defining storage / Compile / fork
+[info] The new value will be used by storage / Compile / run / runner, storage / Test / run / runner and 1 others.
+[info] 	Run `last` for details.
+[info] Reapplying settings...
+[info] set current project to root (in build file:/Users/danny/Documents/UIC/CS441/ScholarChain/)
+[info] Defining storage / Compile / javaOptions
+[info] The new value will be used by storage / AwsIntegration / bspBuildTargetJvmEnvironmentItem, storage / AwsIntegration / bspBuildTargetRun and 21 others.
+[info] 	Run `last` for details.
+[info] Reapplying settings...
+[info] set current project to root (in build file:/Users/danny/Documents/UIC/CS441/ScholarChain/)
+[info] compiling 1 Scala source to /Users/danny/Documents/UIC/CS441/ScholarChain/modules/storage/target/scala-3.3.4/classes ...
+[info] done compiling
+[info] running (fork) edu.uic.cs441.scholarchain.storage.StorageLoadMain --manifest /Users/danny/Documents/UIC/CS441/ScholarChain/target/phase7b-replay-n2-20261022-01 --config /tmp/phase7b-local-load-config.json
+[info] WARN org.apache.hadoop.util.NativeCodeLoader - Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+[info] runId=run:f02acf56-4bea-4009-adaf-b11d5afceb49 mode=dry-run nodes=84 edges=40 support=29
+[info] FAILED: cache source validation rejected; reason=missing-resolution-endpoint
+[error] Exception in thread "main" java.lang.IllegalStateException: StorageLoadMain failed with exit code 1
+[error] 	at edu.uic.cs441.scholarchain.storage.StorageLoadMain$.main(StorageLoadMain.scala:256)
+[error] 	at edu.uic.cs441.scholarchain.storage.StorageLoadMain.main(StorageLoadMain.scala)
+[error] Nonzero exit code returned from runner: 1
+[error] (storage / Compile / runMain) Nonzero exit code returned from runner: 1
+[error] Total time: 3 s, completed Oct 22, 2026, 11:32:02 PM
+real 8.35
+user 26.61
+sys 1.53
+CLI_SMOKE_EXIT_CODE=1

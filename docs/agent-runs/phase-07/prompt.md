@@ -96,3 +96,27 @@ This is Subphase 7A REPAIR ROUND 1. Do NOT start 7B.
    receive the next prompt." and STOP.
 
 User action request: Fix all blocking bug for me.
+
+
+## Subphase 7B — user work order and Step 0
+
+# Subphase 7B work order
+
+User: “alright let implement phase 7b”
+
+Step 0 answers: “accept all recommended defaults”
+
+- N1: Store source-run qualifications once, referenced by run ID and SHA-256 from each metric item, preserving all qualifications.
+- N2: Verify CSV sidecar hashes in loader and run bounded local replay from retained real data into new temporary output; original export untouched.
+- N3: Use fixed ClientRequestToken per logical DynamoDB transaction.
+- N4-N9: Defer nonblocking items; N6 remains 7C.
+- existing: Fakes/SDK stubs; no Docker dependency; no AWS/provider calls; no reviewer; only 7B; no stage/commit/push.
+
+Implement only plan Section 8 Subphase 7B using the accepted snapshot. Native storage/test owners, and scoped Spark bounded replay only. No reviewer, cloud/provider calls, staging, commit or push; stop before 7C. Exact JDK 17 environment required for every sbt command. Evidence uses Git-visible files, no *.log.
+
+Base: 08e3d21233dbaf8c3d6283fc3bb9bce7f7fb1276 on phase-7. The approved 7A implementation/review/evidence is committed and working tree was clean before this evidence.
+
+
+## Subphase 7B repair round 1 — user work order
+
+The complete user-supplied external review and next prompt are retained verbatim in evidence/7b/repair-1/external-review.txt and appended to review.md. User instruction: “Fix all blocking bugs for me”. Only F3/F4 repairs are authorized; the uncommitted 7B tree remains in place. No questions for this repair round. No reviewer, AWS/provider calls, stage/commit/push, human record edit or 7C work.

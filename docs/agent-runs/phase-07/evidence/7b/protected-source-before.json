@@ -1,0 +1,58 @@
+{
+  "AGENTS.md": {
+    "sha256": "13c64f8d8d1119d1aec4e2e50382463592f2b0a76e77354146161001b1b5095b",
+    "mtimeNs": 1790722787042605842
+  },
+  "CLAUDE.md": {
+    "sha256": "92f9d1d3955993f8e5a9a19e447e6bc1ec0928a8df4e1fa1b2fb0d4653618071",
+    "mtimeNs": 1790722787056640117
+  },
+  "docs/agents.md": {
+    "sha256": "12db98e77642d2e44498ba19f128f68e047a2bf790cad161808d98f9c26a3992",
+    "mtimeNs": 1790722787071195251
+  },
+  "docs/agent-runs/README.md": {
+    "sha256": "c15f9645a30253e582feb498561601977f1031d04dbede3315c16a123ef3cf8e",
+    "mtimeNs": 1791171273220495699
+  },
+  ".gitignore": {
+    "sha256": "9c6a0a262b731749bf04a0334de33946ca65f6a71a15652033730c1fa98afb26",
+    "mtimeNs": 1791235616355950020
+  },
+  "build.sbt": {
+    "sha256": "f4fdf8c4e871f1b026c532b067f1f73f207b38e24b684c341a9d0fcc0b787791",
+    "mtimeNs": 1792704730240758393
+  },
+  "project/Dependencies.scala": {
+    "sha256": "4b9d0c69e65c6e896342d2aa8022950df58c550ccf34d49e5fdde026e36b8a77",
+    "mtimeNs": 1792704730194852195
+  },
+  "project/ScholarChainBuild.scala": {
+    "sha256": "abe6fa048217f2c75789f8185e4bc71c1996d27cec9387251ae917d330b8fd77",
+    "mtimeNs": 1792704792965971143
+  },
+  "project/Versions.scala": {
+    "sha256": "90229f457d55fad219f82907f6f1d87996c6dd76e76a566b5469d83473b65825",
+    "mtimeNs": 1792704730169257288
+  },
+  "docs/agent-runs/phase-06/human-gate.md": {
+    "sha256": "24b4c5cc82e8126d81b2c7b176e3a87d427a4b7368055e85741ef9ac615a0304",
+    "mtimeNs": 1792702208289595454
+  },
+  "docs/agent-runs/phase-06/repairs.md": {
+    "sha256": "ba00ddd8dec4919cdbdb3e7368083563874ba41b13f50dffee68fd98f68443fd",
+    "mtimeNs": 1792702104453815646
+  },
+  "docs/agent-runs/phase-07/review.md": {
+    "sha256": "bbca1aa47f83fbf5931c4aebedd2157fd8de8ce0e31513fa64a361e7c64d716e",
+    "mtimeNs": 1792715721490285470
+  },
+  "modules/spark/src/main/scala/edu/uic/cs441/scholarchain/spark/Phase6Export.scala": {
+    "sha256": "6937635fadb4c1c7f9bc1e7039af9f5b96a6bc222564e5e0963a8a3238c4abf4",
+    "mtimeNs": 1792705173950638615
+  },
+  "modules/spark/src/main/scala/edu/uic/cs441/scholarchain/spark/Phase7NeptuneExport.scala": {
+    "sha256": "ed0d89dbc44b7e0b3689f403198dd5a2061979d21747e9c4d9ad5b7002abd757",
+    "mtimeNs": 1792706535080427346
+  }
+}

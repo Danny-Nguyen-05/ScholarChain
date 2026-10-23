@@ -1,0 +1,21 @@
+{
+  "schemaVersion": "scholarchain.storage-load.v1",
+  "environment": "local-fake",
+  "approvedEnvironment": null,
+  "region": "us-east-1",
+  "bucket": "synthetic-local-graph",
+  "graphPrefix": "graph",
+  "tables": {
+    "runLedger": "synthetic-local-runs",
+    "entityLinks": "synthetic-local-links",
+    "querySessions": "synthetic-local-sessions",
+    "evidence": "synthetic-local-evidence",
+    "artifacts": "synthetic-local-artifacts",
+    "metrics": "synthetic-local-metrics",
+    "idempotencyIndex": "synthetic-local-idempotency"
+  },
+  "neptune": {
+    "endpoint": "https://synthetic.invalid:8182",
+    "iamRoleArn": "arn:aws:iam::000000000000:role/synthetic-local-loader"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "timestamp": "2026-10-22T23:15:07.732089-05:00",
+  "branch": "phase-7",
+  "baseSha": "08e3d21233dbaf8c3d6283fc3bb9bce7f7fb1276",
+  "statusBeforeEvidence": "",
+  "plan": "docs/agent-runs/phase-07/evidence/7a/phase7-plan.md",
+  "planSha256": "b54aa12309007bf4758120d8297d1de2eccb497220d3f0de87dc5563fef74ebb",
+  "userPrompt": "alright let implement phase 7b",
+  "userAnswers": "accept all recommended defaults",
+  "decisions": {
+    "N1": "Store source-run qualifications once, referenced by run ID and SHA-256 from each metric item, preserving all qualifications.",
+    "N2": "Verify CSV sidecar hashes in loader and run bounded local replay from retained real data into new temporary output; original export untouched.",
+    "N3": "Use fixed ClientRequestToken per logical DynamoDB transaction.",
+    "N4-N9": "Defer nonblocking items; N6 remains 7C.",
+    "existing": "Fakes/SDK stubs; no Docker dependency; no AWS/provider calls; no reviewer; only 7B; no stage/commit/push."
+  },
+  "priorCommitConfirmed": true,
+  "reviewApprovalAlreadyRecorded": "review.md Subphase 7A user-supplied external review repair round 1 recheck APPROVE",
+  "limitations": "No live AWS, provider calls, full real-data replay or full cache load authorized; bounded local sample only."
+}
