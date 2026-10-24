@@ -1,0 +1,20 @@
+{
+  "rawLog": "/tmp/phase8b-targeted-g1-3.txt",
+  "bytes": 152519,
+  "sha256": "fc10e47564964b1e7f8cf77ab9fdabb25ec3433b9e25aafdf0430b094610a978",
+  "exit": 0,
+  "rag": 25,
+  "independent": 39,
+  "failures": 0,
+  "g1Producer": {
+    "researchers": 10,
+    "canonicalWorks": 9,
+    "windowedEdges": 18,
+    "tables": 28
+  },
+  "runtimeFence": {
+    "runtimeSources": 5,
+    "inspectedSources": 20,
+    "findings": 0
+  }
+}

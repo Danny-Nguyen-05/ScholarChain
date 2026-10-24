@@ -1,0 +1,958 @@
+1: [info] welcome to sbt 1.10.7 (Homebrew Java 17.0.20.1)
+2: [info] loading settings for project scholarchain-build from plugins.sbt...
+3: [info] loading project definition from /Users/danny/Documents/UIC/CS441/ScholarChain/project
+4: [info] loading settings for project root from build.sbt...
+5: [info] set current project to root (in build file:/Users/danny/Documents/UIC/CS441/ScholarChain/)
+6: [info] scalafmt: Checking 15 Scala sources (/Users/danny/Documents/UIC/CS441/ScholarChain)...
+7: [info] scalafmt: Checking 2 Scala sources (/Users/danny/Documents/UIC/CS441/ScholarChain)...
+8: [info] SerializationContractSpec:
+9: [info] - work record round-trips and freezes the bibliographic wire example
+10: [info] - canonical researcher and match decision freeze the identity wire examples
+11: [info] - collaboration records freeze pair order and the coauthor edge id
+12: [info] - metrics, reference data, graph, evidence, and run manifest freeze
+13: [info] - author mention wire example states that a name is not an identity
+14: [info] ContractRepairSpec:
+15: [info] - fresh independent contexts validate without global priming and ignore check order
+16: [info] - full derived checks require context while structural checks make no binding claim
+17: [info] - snapshot collisions cannot overwrite observations and missing snapshot cannot fall back
+18: [info] - parallel validation and context construction are deterministic
+19: [info] - later derived runs may reuse source snapshots, but source and record must bind
+20: [info] - source observations sharing DOI do not merge author lists or years
+21: [info] - derived bibliography and own spoofed URI cannot authorize a different work
+22: [info] - work links cannot register false DOI or arXiv bibliography
+23: [info] - direct resolver links validate while unrelated URLs carry no bibliographic authority
+24: [info] - missing Crossref doi still binds from authoritative DOI sourceRecordId
+25: [info] - contextual membership and complete ordered teams match the source authors
+26: [info] - positive multiple-paper metrics include solo papers and tolerate floating rounding
+27: [info] - zero publications and solo publications have consistent zero collaboration values
+28: [info] - metrics maximum and count bounds use overflow-safe arithmetic
+29: [info] - typed multiple-work coauthorship is valid and malformed or conflicting properties fail
+30: [info] - ORCID employment graph evidence binds actual source record and snapshot
+31: [info] - graph source references support other portfolio records and reject malformed keys
+32: [info] - shared strict graph and concrete reference IDs reject bare prefixes and malformed namespaces
+33: [info] - AUTHORED accepts canonical researchers and unresolved mentions and rejects malformed targets
+34: [info] - native OpenAlex and simultaneous DOI/arXiv source observations bind all derived records
+35: [info] - context input failures and lineage metadata collisions return deterministic errors
+36: [info] - reference record fields and mention source namespaces share strict parsing
+37: [info] - duplicate and malformed wire property arrays fail validation without exceptions
+38: [info] - multiple solo papers require exactly zero average and weighted degree
+39: [info] - recomputed coauthorship edge IDs cannot authorize unrelated work evidence
+40: [info] - work evidence on publication-derived relations matches the publication endpoint
+41: [info] - generic provenance relations may cite a separate supporting work
+42: [info] Phase4ContractSpec:
+43: [info] - match candidate id is invariant when the two observations are swapped
+44: [info] - match candidate round-trips and is not a match decision
+45: [info] - prep-features-v2 names stay inside the closed catalog and v1 records stay valid
+46: [info] - block-key grammars stay inside the existing stable id rules
+47: [info] - reject records round-trip for every closed reason and do not invent a source
+48: [info] - identifier index keeps one row per observation and refuses invented work ids
+49: [info] - emitted abstract text is the abstractTextRef target
+50: [info] - ORCID profile and activity stay distinct from works, merges, and institution ids
+51: [info] - OpenAlex institution ids and ORCID work references stay source observations
+52: [info] - enrichment links attach venue, institution, and topic evidence without a decision
+53: [info] - mention affiliation keeps a name without inventing an institution id
+54: [info] - config v1 still loads and fingerprints independently of hadoop prep
+55: [info] - hadoop prep config rejects missing limits and non-positive limits
+56: [info] - run manifest may name the hadoop prep schema that ConfigLoader rejects
+57: [info] - caller-supplied s3 output root loads and the sample stays local
+58: [info] - coauthor pair endpoint field order and ordinal movement are unchanged
+59: [info] ResolutionAuthoritySpec:
+60: [info] - authority codec admits only explicit lowercase DOI arxiv and ORCID namespace wires
+61: [info] - canonical authority values validate and noncanonical representations fail before grouping
+62: [info] - authority namespaces cannot cross work and researcher entity meaning
+63: [info] - canonical conflicting ORCIDs block A-B-C while aliases and noncanonical values fail closed
+64: [info] ResolutionAuthorityConsumerSpec:
+65: [info] - consumers receive source-bound facts for all endpoint kinds and explicit true absence
+66: [info] - consumers cannot borrow facts from another source observation or endpoint binding
+67: [info] - consumers receive all contradictory canonical facts without promoting arbitrary links
+68: [info] - consumers fail closed on malformed own facts and preferred DOI backed only by related evidence
+69: [info] - DBLP electronic-publication resolver disagreements remain complete hard constraints
+70: [info] - only DBLP ee direct publication resolvers ground IDs and arxiv versions retain their base
+71: [info] - recognized DBLP ee resolvers fail closed on malformed or ambiguous URL syntax
+72: [info] - DBLP DOI resolver facts use the same literal suffix semantics as preferred fields
+73: [info] - literal DOI resolver differences cannot be erased by URL decoding or suffix stripping
+74: [info] - publication fact catalogs preserve raw roles and endpoint binding without promoting links
+75: [info] ResolutionContractSpec:
+76: [info] - versioned work/researcher pairs, audits and accepted link freeze concrete wire contracts
+77: [info] - canonical pair identity ignores order and block but binds type, source, snapshot and mention
+78: [info] - context rejects conflicting duplicate keys while allowing identical duplicates and separate snapshots
+79: [info] - ORCID work activity is eligible without authors, other activities cannot masquerade as work
+80: [info] - audit validates timestamps, provenance, hashes, feature availability and finite values
+81: [info] - LLM audit retains pre-decision score and model confidence as separate values
+82: [info] - a single final LLM path requires metadata and cannot report conflict
+83: [info] - links require actual accepted audit, matching run/policy/provenance and endpoints
+84: [info] - component guard rejects transitive conflicts, missing coverage and explicit caller bounds
+85: [info] ResolutionGroundingSpec:
+86: [info] - profile assertions bind their own ORCID and covered profiles cannot omit known IDs
+87: [info] - mention authority uses only the actual member observed ORCID, including raw resolver spelling
+88: [info] - work assertions require actual DOI or arxiv facts and Crossref native DOI survives absent optional field
+89: [info] - recognized raw work fields ground canonical facts and preserve contradictory same-namespace evidence
+90: [info] - OpenAlex declared DOI field roles ground all retained raw values without consulting arbitrary links
+91: [info] - work activities ground own self references and fail related-only preferred DOI metadata
+92: [info] - grounding preserves snapshot binding and rejects endpoint mismatch before looking up facts
+93: [info] WorkSourceEvidenceSpec:
+94: [info] - declared identifier roles and repeated links round trip separately from preferred DOI
+95: [info] - older work JSON without additive evidence fields reads with empty defaults
+96: [info] EmbeddingContractSpec:
+97: [info] - document, manifest item, compact metadata and context have frozen additive wire examples
+98: [info] - text hash is over exact UTF-8 bytes, not whitespace-normalized text
+99: [info] - model ID, model version and dimension all change vector identity without delimiter collisions
+100: [info] - stable vector slots exclude text, content ID and source run but include every slot field
+101: [info] - documents and vector metadata reject unspecified or invalid stable slot versions and ordinals
+102: [info] - work manifest rejects wrong type/index, unsupported schema, malformed pointers and missing provenance
+103: [info] - chunk groups bind count and whole text without changing stable vector slots
+104: [info] - whole-text binding is explicit for multi-chunk documents and compatible with legacy singletons
+105: [info] - abstract and fallback choices are explicit and limited to paper documents
+106: [info] - metadata keeps model/dimension and pointer but cannot carry full text or arbitrary filter fields
+107: [info] - typed embedding outcomes preserve model and attempt information and reject bad dimensions
+108: [info] - semantic context serializes descriptive label and cannot authorize exact metrics or graph claims
+109: [info] - semantic excerpt limits count supplementary Unicode characters as single codepoints
+110: [info] StableIdSpec:
+111: [info] - DOI work ids share one authoritative id across sample URL forms
+112: [info] - DOI outranks a dblp key and an OpenAlex work id when both are present
+113: [info] - provisional researcher ids are mention-scoped and are not the ORCID id
+114: [info] - OpenAlex author ids are rejected as validated researcher ids
+115: [info] - canonical pair order is string order and self-pairs fail
+116: [info] - coauthor edge id hashes canonical order, window, and policy
+117: [info] - chunk and profile ids hash entity, source version, type, ordinal, and text
+118: [info] - non-text evidence ids are distinct for graph path, metric, and edge
+119: [info] - graph edge id hashes type, canonical endpoints, policy, and evidence
+120: [info] - run ids are version-4 UUIDs and do not take a timestamp
+121: [info] SparkAnalyticsContractSpec:
+122: [info] - DBLP exact-name IDs preserve case and homonym suffix
+123: [info] - analytics IDs reject LF-delimited collisions and invalid window labels
+124: [info] - Spark coauthor edge IDs bind labels and numeric window bounds
+125: [info] - summary IDs bind the policy and window and use citation-compatible text IDs
+126: [info] - semantic summary entities match their declared type and use well-formed IDs
+127: [info] - metrics companion enforces the frozen arithmetic and max-team bounds
+128: [info] - G1 solo J and disconnected A-to-H are representable
+129: [info] - Spark coauthor edge IDs can back cited edge evidence
+130: [info] - all new wire examples round-trip and validate
+131: [info] - legacy edge and metrics wire examples still parse
+132: [info] - invalid analytics shapes fail validation
+133: [info] - bridge, community and path records enforce their local consistency rules
+134: [info] - versioned Spark config loads, fingerprints and validates approved defaults
+135: [info]   + 6D+6E config fingerprint: 8f6fd8b7b5596ece608424278b10b23f61317562d989a6a40d07fad109cd643e; prior: a75347c8ea36964d5144e09a19f8cb76f9de08128868e76f6fad4f8db77b8169 
+136: [info]   + 6D+6E logical fingerprint: f03c79505357ca9795894569c3f7cbf0f67e9d18c864eab9de895bb4a85159f3; prior: 49316f88beb239b6d654b9df77814be759a10f20c7209894e3dc63fbab9cc624 
+137: [info] - Spark run ID binds immutable input evidence and logical settings, not physical paths
+138: [info] - Spark config rejects duplicate, reversed and nonconsecutive comparison windows
+139: [info] ConfigLoaderSpec:
+140: [info] - literal file values load and do not invent an account id
+141: [info] - direct environment overrides beat file literals and placeholders
+142: [info] - placeholders fill file strings when no direct override is set
+143: [info] - SCHOLARCHAIN_CONFIG selects the file
+144: [info] - missing required values, bad versions, reversed windows, and bad thresholds fail
+145: [info] - versioned JSON HOCON subset .conf and .json load through the real loader
+146: [info] - graph years outside 1..9999 are rejected
+147: [info] - YAML and non-JSON HOCON are rejected without a vendored parser
+148: [info] ValidationSpec:
+149: [info] - sample fixtures validate
+150: [info] - source years for the shared DOI stay on their own records
+151: [info] - missing provenance and blank provenance fields are rejected
+152: [info] - unsupported schema versions are rejected
+153: [info] - confidence outside 0 to 1 is rejected and endpoints of the range are accepted
+154: [info] - malformed stable ids are rejected
+155: [info] - reversed undirected pairs and reversed windows are rejected
+156: [info] - a name or an observed identifier is not itself a match decision
+157: [info] - CONFLICT is a match outcome and does not replace UNRESOLVED
+158: [info] - coauthor mentions from different works are rejected
+159: [info] - coauthor ordinals that disagree with the mention ids are rejected
+160: [info] - coauthor mentions from another work than the pair workId and provenance are rejected
+161: [info] - a coauthor pair cannot name a DOI work id unrelated to its source record
+162: [info] - a coauthor pair cannot retarget workId and provenance sourceUri while keeping the record doi
+163: [info] - a coauthor pair with a DOI work id and no provenance sourceUri validates
+164: [info] - a coauthor pair cannot self-authorize a DOI work id without provenance sourceUri
+165: [info] - Crossref coauthor pairs bind DOI work ids to the explicit Crossref WorkRecord
+166: [info] - a coauthor pair with an arXiv work id validates without a provenance sourceUri
+167: [info] - authorship position must match the mention ordinal
+168: [info] - publication team mentions must belong to the team's work
+169: [info] - coauthor provenance that names a different source record than workId and mentions is rejected
+170: [info] - an oversized mention ordinal is a validation failure
+171: [info] - a DBLP work record cannot carry another record's source-native work id
+172: [info] - a DBLP work with Crossref provenance is rejected
+173: [info] - researcher metrics must agree with publication and coauthor counts
+174: [info] - publication team duplicate mention ids are rejected
+175: [info] - a coauthor pair cannot retarget both workId and doi away from the source observation
+176: [info] - graph path evidence requires graphPath and a matching evidence id
+177: [info] - graph edges reject malformed endpoints and property values
+178: [info] - Crossref sourceRecordId must match the work DOI
+179: [info] - graph path, metric, and edge evidence ids are not text chunk ids
+180: [info] Run completed in 446 milliseconds.
+181: [info] Total number of tests run: 157
+182: [info] Suites: completed 13, aborted 0
+183: [info] Tests: succeeded 157, failed 0, canceled 0, ignored 0, pending 0
+184: [info] All tests passed.
+578: [info] HadoopPrepSpec:
+579: [info] - pair arithmetic is overflow-safe and ordered mention ids keep their ordinals
+580: [info] - DBLP preserves markup, unicode, repeated names, and optional year
+581: [info] - missing title, unsupported element, malformed identifier, and unsafe entities reject
+582: [info] - -libjars is parsed into tmpjars and kept on the job configuration
+583: [info] - remote config URIs are rejected before a local path is opened
+584: [info] - comments and CDATA do not create titles or authors
+585: [info] - oversize nested XML drains without retaining every tag name
+586: [info] - split edges and gzip keep complete records
+587: [info] - duplicate, conflict, shared DOI, ORCID activity, teams, and text refs
+588: [info] - block and team limits reject the whole group
+589: [info] - failed run leaves no completion marker and a matching marker can be reused
+590: [info] - provenance mismatch is rejected and a dangling text ref does not resolve
+591: [info] - UTF-8 title bytes survive the DBLP record reader
+592: [info] - identical payloads survive once and conflicting payloads are not exported
+593: [info] - largestPairExpansion counts coauthor teams and not block pairs
+594: [info] - one institution-bearing work exports the work and the institution
+595: [info] - two identical institution-bearing observations export one work and one institution
+596: [info] - different topics on the same observation key are a conflict and not an edge
+597: [info] - s3 output root is not created as a local directory
+782: [info] HadoopPrepReviewSpec:
+783: [info] - bibliographic candidates do not require a shared DOI
+784: [info] - ampersand entities, comments, and CDATA stay inside one record
+785: [info] - a truncated record is rejected and is not accepted
+786: [info] - one observation can repeat an institution without a duplicate-observation reject
+787: [info] - the launch cap accepts the same prefix for one split and for many splits
+788: [info] - an oversize JSON line is rejected before it is kept as a string
+789: [info] - cluster mode does not set the local framework
+790: [info] - a one-slash file URI round-trips to the real directory
+791: [info] - export comparison reads both trees and does not treat a missing export as empty
+792: [info] - duplicate export lines do not cancel and opposite orders stay equal
+793: [info] - an s3 output root stays a Hadoop path outside the working directory
+794: [info] - an s3 output root is not refused before a filesystem implementation is required
+795: [info] - a finished remote output is Right and an identical remote identity is reused
+796: [info] - a bad OpenAlex institution id is rejected while the valid ROR affiliation is kept
+797: [info] - a venue id that fails to parse is an invalid-identifier reject
+798: [info] - a topic id that fails to parse is an invalid-identifier reject
+799: [info] - a graph edge that fails validation is a schema-failure reject
+800: [info] - sample cutoffs follow the qualified URI when two files share a basename
+801: [info] - Crossref keeps an affiliation name and an abstract reference
+802: [info] - a malformed DOI is an invalid-identifier reject
+803: [info] - intermediate compression still feeds the next job
+804: [info] - committed samples keep acquisition snapshot ids and retrieval dates
+805: [info] - an invalid limit fails before a job launch
+806: [info] - expanded DBLP JSON under the intermediate cap is exported when the source cap is 1024
+807: [info] - a line over the intermediate cap becomes an oversize reject in the export
+808: [info] - a 2500-byte intermediate line is kept when the source cap is 1024
+809: [info] - OpenAlex institution keeps the native id beside a preferred ROR
+810: [info] - ORCID activity keeps every external id and relationship
+811: [info] - a truncated export part is not reused and the damaged bytes stay
+812: [info] - Request.hadoopConf filesystem settings reach driver validation
+905: [info] SourceEvidenceRegressionSpec:
+906: [info] - OpenAlex retains both DOI field roles and validates the secondary value
+907: [info] - DBLP preserves repeated electronic editions and URLs by their declared field
+908: [info] - overflow lineage survives compressed input and distinct part-file offsets
+909: [info] - valid 600k DBLP title expansion exports rejects with original source lineage
+910: [info] - snapshot metadata beyond its fixed budget fails before filesystem or job work
+911: [info] - missing abstract document exports its reject in the public reject partition
+912: [info] - processing location normalization preserves long roots native identities and unknown lineage
+913: [info] - two fresh valid 600k title overflow pipelines remain logically equivalent
+914: [info] - logical comparison only excludes processing runId fields and retains exact run-shaped source values
+915: [info] DblpXmlRegressionSpec:
+916: [info] - opening names are capped before record framing and launch sample scanning
+917: [info] - CDATA title and author references stay literal while active text expands
+918: [info] - single quoted identifiers and whitespace closing tags retain author evidence
+919: [info] - unmatched mismatched and malformed closing tags reject and preserve the next record
+920: [info] - a self-closing author is a missing-field reject and does not renumber Ada
+921: [info] - a FileSplit inside a comment or CDATA does not invent a publication
+922: [info] Run completed in 3 minutes, 5 seconds.
+923: [info] Total number of tests run: 64
+924: [info] Suites: completed 4, aborted 0
+925: [info] Tests: succeeded 64, failed 0, canceled 0, ignored 0, pending 0
+926: [info] All tests passed.
+927: [info] OfflineResolutionSpec:
+928: [info] - runtime resources are strict uncalibrated configs; duplicate/unknown keys fail
+929: [info] - normalization keeps raw accents separate and respects initials surname and repository escapes
+930: [info] - hard conflict dominates exact DOI and bibliographic similarity
+931: [info] - same publication copies cannot supply independent researcher coauthor support
+932: [info] - missing year remains unavailable and does not consume preparation sentinel
+933: [info] - oversize blocks and aggregate multiblock evidence are explicit diagnostics
+934: [info] - field citations must point to present supplied input fields; unknown JSON is rejected
+935: [info] - disabled run is source bound, exports complete constraints and refuses overwrite
+936: [info] - a fake adapter ignoring interruption fuses further calls instead of overlapping retries
+937: [info] - CLI help is honest and invalid options fail before creating output
+938: [info] - strict JSON refuses primitive coercions and fractional integral configuration
+939: [info] - a valid identifier-index row cannot cite a missing source observation
+940: [info] - a work abstract reference requires the actual matching text observation
+941: [info] - ORCID work activity candidates may omit carried workId while present identifiers must bind
+942: [info] LiveDemoExportSpec:
+943: [info] - credential preflight captures once and uses the complete JDK header character set
+944: [info] - explicit default response limits roundtrip strictly and metadata fails before dispatch
+945: [info] - live demo export binds typed accepted links complete source constraints and all published files
+946: [info] - runtime binding refuses changed receipt paths and limits beyond the recorded approval
+947: [info] ComparableEvidenceSpec:
+948: [info] - incomparable venues are unavailable and do not dilute an otherwise unit score
+949: [info] - affiliations compare namespace partitions and use the minimum of comparable similarities
+950: [info] - feature semantics are versioned and punctuation-only names remain missing
+951: [info] - input output and cache paths must be physically disjoint before IO
+952: [info] - publication catalog preserves raw links and shares core authoritative canonical values
+953: [info] RequestEligibilitySpec:
+954: [info] - legacy policy bytes and fingerprint remain unchanged; explicit profile binds its complete hash
+955: [info] - request evidence permits positive observed context without changing automatic sufficiency
+956: [info] - missing or disagreeing name affiliation and contextual evidence cannot request adjudication
+957: [info] - score bands remain inclusive and exact conflict rejected outcomes stay out
+958: [info] - closed request profile rejects unknown duplicate weakening and unsupported fields
+959: [info] ReviewReadinessSpec:
+960: [info] - CLI help exposes implemented readiness commands and strict argument failures do not create output
+961: [info] - tool export creates a self-contained page and guide and refuses to overwrite an existing export
+962: [info] - label CLI preserves the original checkpoint byte-for-byte and writes a separate durable derivation
+963: [info] - validated human exports cannot be placed under target or through a symlink alias
+964: [info] - unlabeled undo preserves revision history and does not become a binary negative
+965: [info] - evaluation CLI writes explicit no-data denominators and frozen provenance without inventing labels
+966: [info] - explicit exclusion cohorts retain original labels and count only the remaining initial tasks
+967: [info] ProviderResponseDiagnosticSpec:
+968: [info] - strict validation reports a closed identity category with bounded identity booleans
+969: [info] - untrusted model text and provider errors never appear in diagnostics
+970: [info] - specific field and reason failures stay rejected and produce finite categories
+971: [info] - historical trace without diagnostic metadata remains readable
+972: [info] Run completed in 571 milliseconds.
+973: [info] Total number of tests run: 39
+974: [info] Suites: completed 6, aborted 0
+975: [info] Tests: succeeded 39, failed 0, canceled 0, ignored 0, pending 0
+976: [info] All tests passed.
+977: [info] Phase6DEJobsSpec:
+1460: [info] - jobs 3, 4 and 8 compute numeric metrics, components and exact coreness
+1480: [info] - selected BFS returns canonical shortest path and different-component no-path
+1490: [info] - solo average is zero, max-team ties retain full count after work-ID cap
+1494: [info] - a weighted-degree mismatch fails with the metric invariant
+1499: [info] - component and k-core iteration limits reject an unfinished fixed point
+1509: [info] - synchronous triangle LPA converges to its minimum initial label
+1519: [info] - two-person synchronous LPA records non-convergence in core community records
+1529: [info] - a reachable pair beyond maxHops reports exceeded-maxHops without hop evidence
+1539: [info] - seeded sampling chooses a bounded pair from the largest component
+1549: [info] - equal-length BFS routes choose the smallest immediate predecessor
+1559: [info] - community iterations stop per window and every analytics context has the shared ordered schema
+1569: [info] - multiwindow seeded BFS crosses checkpoint interval and retains six-hop evidence
+1570: [info] Phase6CJobsSpec:
+1573: [info] - module G1 has nine all-years edges, exact A-B weight and no duplicate source weight
+1579: [info] - yearless and post-2026 DBLP works contribute only to all-years
+1585: [info] - one rank-one DBLP observation supplies a merged work's team and pairs
+1591: [info] - conflicting DBLP ORCIDs are reported without splitting the exact-name researcher
+1602: [info] - orphan graph endpoints appear as hard integrity rows and obey the failure flag
+1608: [info] - cannot-link and authority-conflict work groups stay separate
+1619: [info] - cross-DBLP links are counted and ambiguous non-DBLP mentions stay unresolved
+1625: [info] - ER unresolved and conflict decisions use explicit wire schemas and named counters
+1626: [info] - explicit JSON schema rejects a malformed line and a mismatched version
+1627: [info] - Hadoop and ER frozen wire examples survive explicit Spark schemas
+1628: [info] - ER export must bind the selected Hadoop completion and manifest bytes
+1629: [info] - Hadoop completion marker, inventory and file hash are required
+1630: [info] - ER completion marker must match the manifest and its schema
+1631: [info] - completed output reuses matching logical identity and rejects mismatch or broken marker
+1637: [info] - representative ID authority survives absent DOI columns and normalized ORCIDs do not conflict
+1638: [info] SparkSmokeSpec:
+1639: [info] - five explicit rows survive join, aggregation, window, Parquet and checkpoint
+1640: [info] Phase6FGJobsSpec:
+2054: [info] - bounded-window temporal rows preserve entering and leaving researchers and exact deltas
+2055: [info] - complete seeded-source estimate gives a three-node chain exact mean and empirical P90
+2056: [info] - four factual template types carry resolvable fields, numeric values and core-validated IDs
+2087: [info] - all published Parquet tables reread with stable logical hashes and four valid load manifests
+2088: [info] - hard failures retain core violation rows and counters before throwing without completion
+2089: [info] - JSON event summarizer aggregates stage tasks partitions durations shuffle and failures
+2090: [info] Phase7NeptuneExportSpec:
+2091: [info] - CSV preserves exact node and edge ID sets, RFC4180 text, yearless values and support provenance
+2092: [info] - empty datasets retain a CSV header in every loader file
+2093: [info] - missing endpoints or support works fail before publication
+2094: [info] - support composite keys cannot duplicate or lose evidence, and orphan evidence is rejected
+2095: [info] Run completed in 1 minute, 53 seconds.
+2096: [info] Total number of tests run: 38
+2097: [info] Suites: completed 5, aborted 0
+2098: [info] Tests: succeeded 38, failed 0, canceled 0, ignored 0, pending 0
+2099: [info] All tests passed.
+2101: [info] AwsLivePolicySpec:
+2102: [info] - live settings refuse before file reads unless opt-in and profile are explicit
+2103: [info] - live configuration requires explicit approval pricing budget resource and endpoint bounds
+2104: [info] - synthetic live graph fixture has exact stable IDs support and unknown-year cells
+2105: [info] - owned-data manifest records intentions before confirmations and retains per-run ownership
+2106: [info] EmbeddingStorageSpec:
+2107: [info] - manifest ingestion stores authoritative JSON and compact vector metadata; replay skips embedding
+2108: [info] - text pointers address canonical full provenance and new model ingestion preserves both source documents
+2109: [info] - changed text with a new genuine document ID conflicts in its stable slot before embedding or payload writes
+2110: [info] - distinct stable chunk ordinals write distinct keys while unchanged replay skips both
+2111: [info] - retry counts and permanent failures are retained in RunLedger and rejected JSON
+2112: [info] - dimension mismatch rejects before vector writes and invalid manifest is bounded
+2113: [info] - prepared checkpoint replays an ambiguous vector write without another embedding
+2114: [info] - completion registry failure replays prepared vectors and summary JSON omits payloads
+2115: [info] - duplicate ordinals reject the complete group before embedding
+2116: [info] - in-memory queue enforces capacity and visibility, rotates receipts on redelivery
+2117: [info] - SQS adapter sends bounded serialized items and exact receive/delete/backlog request shapes
+2118: [info] - SQS aggregate batch bytes reject before any SDK call
+2119: [info] - SQS partial enqueue and malformed receive fail visibly without deleting poison messages
+2120: [info] NeptuneRepairSpec:
+2121: [info] - every non-pending non-success state terminates once and recovery appends NEW attempt
+2122: [info] - timeout keeps provider job active so rerun polls the same ID without submission
+2123: [info] - legacy recorded failed job is marked and recovered without overwriting history
+2124: [info] - only three explicitly pending states can consume the polling budget
+2125: [info] - AWS Documents convert structurally with exact strings nested primitives and decimal values
+2126: [info] - node labels and neighbor properties retain control characters quotes backslash and Unicode
+2127: [info] EmbeddingGroupStateSpec:
+2128: [info] - shrinking a complete bound group rejects even its unchanged prefix before payload writes
+2129: [info] - growing a bound group rejects all new members before any embedding or new vector
+2130: [info] - incomplete and config-invalid groups reject all members before payload writes
+2131: [info] - legacy individual bindings cannot silently bootstrap a group binding
+2132: [info] - local fake state survives save/open with a true unchanged replay and rejects corrupt or changed config state
+2133: [info] - completed source adapter verifies empty table hashes and rejects malformed completion and mismatched work manifests
+2134: [info] ParquetManifestSpec:
+2135: [info] - local completed Parquet export streams nested LIST records and restores partition window
+2136: [info] - manifest counts use exact nonnegative decimal Long strings without Double rounding
+2137: [info] - Parquet integer values outside exact JSON range reject instead of rounding
+2138: [info] Phase7BFeaturesSpec:
+2139: [info] - RFC4180 preserves CR/LF quotes and distinguishes unknown numeric cells from quoted text
+2140: [info] - CSV bounds reject oversized cells and maliciously wide records
+2141: [info] - spilled logical hashes are independent of order chunk size and retain duplicate rows
+2142: [info] - full source qualifications are stored once and remain retrievable by verified pointer
+2143: [info] - community lookup tokens bind exact source window and community without adding identities
+2144: [info] - reader rejects responses exceeding the caller's requested bound
+2145: [info] AwsLiveGraphCleanupSpec:
+2146: [info] - zero-matched edge or node DELETE never marks any graph item cleaned
+2147: [info] - mismatched or nonintegral numeric mutation counts are not successful cleanup
+2148: [info] - correct DELETE counts still require edge and node point reads to prove absence
+2149: [info] - post-delete read failure retains created journal states for operator reconciliation
+2150: [info] - exact mutation counts and independent absence checks precede every cleaned journal entry
+2151: [info] AwsIntegrationSpec:
+2152: [info] StorageFeatureSpec:
+2153: [info] - ledger requires stage completion and preserves failed retry provenance
+2154: [info] - every fake store keeps immutable content and repeat counts; object manifest is last
+2155: [info] - validated canonical metric copies load once and preserve observed convergence true and false
+2156: [info] - hash mismatch, wrong count and conflicting duplicate metric copies are rejected before writes
+2157: [info] - graph and vector main fakes provide usable deterministic retrieval without provider calls
+2158: [info] - support keys use collision-safe edge and work pairs without altering either Spark ID
+2159: [info] - stream IO failures receive bounded retries and sanitized exhaustion
+2160: [info] - valid researcher indexes authorize applied mention aliases before cache publication
+2161: [info] Run completed in 664 milliseconds.
+2162: [info] Total number of tests run: 51
+2163: [info] Suites: completed 9, aborted 0
+2164: [info] Tests: succeeded 51, failed 0, canceled 0, ignored 0, pending 0
+2165: [info] All tests passed.
+2166: [info] EmbeddingSmokeGuardSpec:
+2167: [info] - smoke pure preflight binds full config, manifest, gate, operation and bounded calls/cost
+2168: [info] - smoke planning requires all five indexes, approved expected keys and bounded samples/topK
+2169: [info] - pure report has hand-derived nearest-rank latency, exact per-index counts and verified pointers
+2170: [info] - approved text pointer scope rejects wrong buckets, traversal and URI decorations before reads
+2171: [info] - disabled or ingest-only smoke approval refuses before credentials, gate read and factory
+2172: [info] LiveEmbeddingGuardSpec:
+2173: [info] - pure preflight binds exact content, run, expiry, caps and conservative configured estimate
+2174: [info] - vector, concurrency, request and price approval limits refuse before clients
+2175: [info] - partial or inconsistent chunk groups refuse with bounded work even at an IntMax count
+2176: [info] - disabled approval refuses executable run before credential/client factory or gate reads
+2177: [info] EmbeddingRetrievalSpec:
+2178: [info] - six committed known queries retrieve their fixed neighbor and every hit resolves to hashed ordinary text
+2179: [info] - renderer supplies whole text binding and actual group cardinality for every chunk
+2180: [info] - local CLI rejects missing or live-mode arguments before source or state access
+2181: [info] Embedding8BRepairSpec:
+2182: [info] - actual topic and institution source branch renders exact source fields, table totals, filters and fifth index
+2183: [info] - render-only real model manifest is accepted by pure live preflight without embedding or state
+2184: [info] - pure live report contains configured model, per-index counts and all rejection evidence
+2185: [info] EmbeddingRagSpec:
+2186: [info] - all five templates copy exact source values and are byte deterministic across source ordering
+2187: [info] - abstract permission and source refs remain explicit; missing abstract uses paper fallback
+2188: [info] - chunking has hand-derived boundaries, exact overlap and Unicode codepoint safety
+2189: [info] - stable IDs bind text, window, template and chunk policy, preserving original entity IDs
+2190: [info] - rendering rejects unsupported labels, missing references and invented identity metadata
+2191: [info] - Phase6 summary rendering preserves actual source text qualifications and all source refs
+2192: [info] - stable vector slots reject actual rerendered changed text without re-embedding
+2193: [info] - slot keys bind chunk ordinal, model, template and policy while excluding text and source run
+2194: [info] - Phase6 summaries preserve Unicode and newline bytes and supplied filters through vector metadata
+2195: [info] - explicit summary abstract composition preserves the exact summary prefix and actual permission evidence
+2196: [info] - hashed bag of words is case/order invariant, normalized and has deterministic lexical neighbors
+2197: [info] - Bedrock request uses configured identity/dimension and bounded timeout without credential construction
+2198: [info] - transient provider failures retry with bounded backoff and preserve observed attempts
+2199: [info] - permanent/exhausted failures are typed and never expose provider details
+2200: [info] - dimension/malformed-response errors fail permanently; empty/oversized text never invokes SDK
+2201: [info] - concurrency remains bounded and output follows input ordering across independent invocations
+2202: [info] - semantic excerpt limit counts Unicode codepoints consistently with core validation
+2203: [info] - semantic context follows ordinary-S3 envelope, hash and pointer, excluding metric authority
+2204: [info] Run completed in 189 milliseconds.
+2205: [info] Total number of tests run: 33
+2206: [info] Suites: completed 5, aborted 0
+2207: [info] Tests: succeeded 33, failed 0, canceled 0, ignored 0, pending 0
+2208: [info] All tests passed.
+2209: [info] IndependentPrepReaderSpec:
+2210: [info] - independently framed completed run loads and partial stage or completion fails
+2211: [info] - digest length and exact inventory are independently enforced
+2212: [info] - completion traversal symlink duplicate inventory and mismatched provenance fail closed
+2213: [info] - digest-valid unknown schema nested keys and incomplete JSONL remain invalid
+2214: [info] - standalone author rows cannot borrow or omit members from a nested source observation
+2215: [info] - input byte record and lookup bounds reject before trusting a population
+2216: [info] IndependentStorageParquetSpec:
+2220: [info] - Spark Parquet metrics load with integral doubles, nested lineage, nulls and physical partitions
+2221: [info] - completed source metadata rejects malformed row counts before opening Parquet
+2222: [info] IndependentEmbedding8BFailureSpec:
+2223: [info] - actual throttling retry succeeds and records exactly two calls one delay and one ledger retry
+2224: [info] - permanent provider failure reaches the rejected object and ledger without exposing its message
+2225: [info] - wrong provider dimensions reject without vector publication and a stale manifest model never invokes the client
+2226: [info] IndependentPhase6PipelineSpec:
+2904: [info] - committed tiny fixture completes unchanged Hadoop then offline ER then all Spark jobs
+2905: [info] IndependentLiveBudgetSpec:
+2906: [info] - zero attempts token or spend allowance reserves nothing
+2907: [info] - exact token and microdollar boundary allows one reservation and refuses the next
+2908: [info] - unknown usage remains charged across restart and observed usage never refunds reservations
+2909: [info] - approval scoped ledger refuses simultaneous writers and a changed configuration on restart
+2910: [info] - provider usage above reservation fuses later attempts and invalid wire lengths do not reserve
+2911: [info] IndependentResolutionExportSpec:
+2912: [info] - typed exports bind all outcome files complete constraints run input and effective policy
+2913: [info] - existing output is rejected without overwriting files and invalid CLI stops before input or cache access
+2914: [info] - export corruption extra files and omitted constraint bindings cannot pass downstream verification
+2915: [info] - export boundary rejects an unaccepted link and incomplete or misgrounded constraints
+2916: [info] - equivalent disabled reruns preserve substantive typed decisions and constraint bytes
+2917: [info] - N3 CLI rejects nested input output and cache paths before creating or changing anything
+2918: [info] IndependentGoldLabelsSpec:
+2919: [info] - same different uncertain remain separate and missing pairs are counted
+2920: [info] - revision and undo preserve history rather than silently editing the original annotation
+2921: [info] - duplicate revisions branches gaps and reversed timestamps are rejected
+2922: [info] - wrong queue source split entity pair and evidence cannot be imported
+2923: [info] - unknown keys and unsupported automatic or binary aliases are rejected
+2924: [info] - human-entered reviewer provenance notes timestamps and derived counts are validated
+2925: [info] IndependentResolutionInputSpec:
+2926: [info] - same DOI source observations remain distinct while conflicting full lookup keys fail
+2927: [info] - candidate lookup binds source native record and snapshot rather than shared work ID
+2928: [info] - optional candidate work hints may be absent but supplied hints must match source truth
+2929: [info] - native source aliases are rejected before two identities can be assigned to one observation
+2930: [info] - nested unknown schema, forged mention binding and invalid candidate IDs fail closed
+2931: [info] - affiliation evidence cannot point to a missing member or wrong parent snapshot
+2932: [info] IndependentLiveResponseDiagnosticSpec:
+2933: [info] - inner validation failures have distinct finite codes without echoing provider-controlled values
+2934: [info] - schema or malformed JSON stays rejected without surfacing raw parse exceptions
+2935: [info] - diagnostics retain only hashes counts allowlisted outcome and fixed identity comparison keys
+2936: [info] - HTTP errors malformed envelopes and oversized bodies never expose model output fields
+2937: [info] - failed adjudication remains charged and diagnosable; corrected output uses the same ledger
+2938: [info] IndependentEmbedding8BGuardSpec:
+2939: [info] - missing disabled or content-mismatched live approval never constructs service ports
+2940: [info] - the local CLI refuses a live flag before accessing any state or provider
+2941: [info] - query smoke rejects missing disabled and wrong-operation grants before constructing ports
+2942: [info] IndependentDblpJsonSpec:
+2943: [info] - DblpSplitReader split edge keeps the record that starts before the boundary
+2944: [info] - DblpXml local entity declaration expands inline markup before parse
+2945: [info] - DblpRecords rejects malformed token and external SYSTEM entity declaration
+2946: [info] - DblpRecords preserves unicode in author and title fields
+2947: [info] - JsonSources accepts missing optional publication_year but rejects invalid required doi
+2948: [info] - JsonSources identical openalex payloads share payload hash and conflicting titles diverge
+2949: [info] - PrepLimits pairCount stays overflow-safe at Int.MaxValue team size
+2950: [info] - DerivedRecords provenance mismatch rejects derived publication team emission
+2951: [info] - DerivedRecords publication teams cover size one two three repeat and oversize rejection
+2952: [info] IndependentResolutionRunSpec:
+2953: [info] - disabled mode makes zero adapter calls and eligible pairs remain auditable unresolved
+2954: [info] - fake accept reject and abstain keep pre-adjudication score and model confidence separate
+2955: [info] - out-of-band and insufficient independent evidence cannot reach the adapter
+2956: [info] - hard identifier conflicts never call the adapter and every known source fact is exported
+2957: [info] - fake replay reuses only a verified cache while preserving substantive decisions
+2958: [info] - missing forged or wrong-pair block evidence fails before adapter calls
+2959: [info] IndependentSparkSessionSpec:
+2960: [info] - independent test JVM can start and stop local Spark on Java 17
+2961: [info] IndependentResolutionPrepBridgeRepairSpec:
+2998: [info] - B1 completed Hadoop exports with literal DOI resolver suffixes remain loadable and resolvable
+2999: [info] IndependentStorageGraphReaderSpec:
+3000: [info] - all graph reader operations use allowlisted templates with values bound outside query text
+3001: [info] - depth, result, cursor and relationship bounds reject before issuing graph requests
+3002: [info] - graph SDK failure retries to the configured bound and never exposes provider payload
+3003: [info] - structural SDK node response preserves raw control characters, quotes, backslashes and Unicode
+3004: [info] - structural SDK neighbor edge properties preserve raw multiline text byte for byte
+3005: [info] IndependentPhase4EvidenceSpec:
+3042: [info] - final OpenAlex work retains both declared DOI fields separately from preferred DOI
+3043: [info] - changing only ids.doi is a conflicting observation rather than an identical duplicate
+3044: [info] - valid top-level DOI does not hide a malformed secondary ids.doi
+3045: [info] - all DBLP electronic-edition and URL links survive final export with decoded values
+3172: [info] - valid DBLP expansion overflow retains source snapshot and qualified distinct file locators
+3173: [info] IndependentResolutionFeaturesSpec:
+3174: [info] - author order uses the documented reciprocal distance rather than binary ordinal equality
+3175: [info] - identical initial letters on unrelated surnames are not positive initials evidence
+3176: [info] - identifiers in disjoint namespaces are unavailable rather than contradictory evidence
+3177: [info] - raw names and titles remain source truth while normalized comparison handles Unicode and markup
+3178: [info] - copies of one publication do not create independent coauthor context for researcher acceptance
+3179: [info] IndependentPhase6DEGraphSpec:
+3188: [info] - G1 full hand-computed metrics, components and coreness
+3216: [info] - G2 star, G3 K4, G4 path and isolated node have exact coreness
+3235: [info] - G1 selected paths have unique shortest route, no-path status and supported hop evidence
+3246: [info] - equal-length BFS routes choose the smallest immediate predecessor
+3247: [info] - G1 bridges under the declared partition and G2 star leaves
+3257: [info] - weighted synchronous LPA converges to the hand-traced two-clique partition
+3265: [info] - component iteration guard and weighted-degree invariant reject incorrect graphs
+3284: [info] - empty graph and one solo publication have no edges and finite measures
+3294: [info] - a yearless edge stays in all-years and a disconnected pair has no path
+3313: [info] - two runs on the same G4 graph produce identical metric, core and component rows
+3314: [info] IndependentResolutionRepairSpec:
+3315: [info] - B1 accepted literal DOI resolver tokens remain exact source-bound publication facts
+3316: [info] - B2 incomparable venue namespaces are unavailable while same namespace comparisons remain binary
+3317: [info] - B2 affiliation representations compare only common namespaces without unrelated dilution
+3318: [info] - B2 hand-calculated available-feature weighted score excludes incomparable venue evidence
+3319: [info] - N5 identifier catalog represents every grounded DBLP publication link authority
+3320: [info] - N6 names empty after normalization remain missing rather than numeric disagreement
+3321: [info] IndependentResolutionPolicySpec:
+3322: [info] - runtime policy and config reject unknown fields recursively and simultaneous legacy knobs
+3323: [info] - threshold gap and entire uncertain band are validated before processing
+3324: [info] - duplicate raw JSON keys cannot silently override policy or generation settings
+3325: [info] - policy refuses to count correlated name or bibliography features as independent groups
+3326: [info] - policy fingerprint ignores object key order but changes with every effective setting
+3327: [info] - offline configuration rejects live provider and unbounded or monetary execution
+3328: [info] IndependentIdentifierNormalizationSpec:
+3329: [info] - DOI and ORCID spelling normalizes without accepting an invalid checksum
+3330: [info] - OpenAlex work and author identifiers cannot cross their entity namespace
+3331: [info] - arXiv versions remain auditable and arbitrary URL hosts cannot masquerade as arXiv
+3332: [info] - repository normalization preserves distinct path case and meaningful query identity
+3333: [info] - Semantic Scholar syntax is covered without introducing a live source
+3334: [info] IndependentStorageGraphLoaderSpec:
+3335: [info] - hash-bound authoritative edges with a missing endpoint or supporting work are rejected before upload
+3336: [info] - storage CLI defaults to a validated dry-run with hand-derived expected counts
+3337: [info] - storage CLI executes the same complete source locally through fake ports
+3338: [info] - storage CLI refuses real execution without profile or matching approved environment
+3339: [info] - validated bulk load preserves exact Spark-shaped IDs both ways and unchanged reload submits nothing
+3340: [info] - sidecar logical hash tampering is rejected before uploads or loader submission
+3341: [info] - bounded loader polling records timeout failure in the run ledger
+3342: [info] - LOAD_FAILED stops after one poll and a resumed invocation submits exactly one new job
+3343: [info] - LOAD_COMMITTED_W_WRITE_CONFLICTS is final immediately and a resumed invocation can recover
+3344: [info] - deadlock and unknown Neptune states are classified immediately instead of timing out
+3345: [info] - timeout recovery polls the existing pending job without resubmission and retains prior failure
+3346: [info] IndependentDblpXmlRepairSpec:
+3347: [info] - nextOpen retains a bounded opening name before any record byte limit applies
+3348: [info] - actual InputFormat drains an oversized opening name and retains the following work
+3349: [info] - launch sample scanning counts and drains the oversized opener under a bounded cutoff
+3350: [info] - title and author CDATA preserve bare ampersands literally
+3351: [info] - entity-shaped CDATA stays literal while adjacent active XML references expand
+3352: [info] - combined active and CDATA character data still obeys the expansion byte limit
+3353: [info] - single quoted publication key and ORCID retain supplied author evidence
+3354: [info] - closing tag whitespace preserves valid title and author text
+3355: [info] - direct extraction explicitly rejects unmatched closing tags
+3356: [info] - direct extraction explicitly rejects mismatched closing tags
+3357: [info] - direct extraction explicitly rejects crossed closing tags
+3358: [info] - direct extraction explicitly rejects closing attributes closing tags
+3359: [info] - direct extraction explicitly rejects closing extra name closing tags
+3360: [info] - direct extraction explicitly rejects closing slash closing tags
+3361: [info] - direct extraction explicitly rejects closing doubled slash closing tags
+3362: [info] - direct extraction explicitly rejects empty closing name closing tags
+3367: [info] - LocalJobRunner emits explicit rejects for oversized openers and malformed closing tags
+3368: [info] IndependentStorageRuntimeFenceSpec:
+3369: [info] - runtime scan permits GraphReader and ignores loader names in comments or inert strings
+3370: [info] - runtime scan detects direct, renamed, fully qualified and raw SDK loader access
+3371: [info] - runtime scan follows referenced storage composition and detects a hidden write capability
+3372: [info] - character literals cannot hide a following graph write capability
+3373: [info] - interpolation retains executable expressions including nested braces and strings
+3374: [info] - interpolation masks inert text, escaped dollars and inert nested expressions
+3375: [info] - interpolated references still follow storage composition helpers
+3376: [info] - actual runtime roots and their referenced storage composition expose no graph write dependency
+3377: [info]   + Runtime graph fence: runtimeSources=7, inspectedSources=22; heuristic only. 
+3378: [info] IndependentLiveDevelopmentSpec:
+3379: [info] - live demo admission excludes every held-out group before eligibility classification
+3380: [info] - a changed or held-out-only candidate population is refused rather than admitted as a demo
+3381: [info] - zero eligible and explicitly disabled demo runs do not create ledger or inspect credentials
+3382: [info] - supplemental admission excludes a whole transitive identity component linked to held-out evidence
+3383: [info] - enabled synthetic demo dispatches only eligible development pairs and preserves independent pre-model scores
+3384: [info] - disabled or wrong-approval enabled demo with eligible evidence never initializes transport
+3385: [info] - enabled demo preserves its approval ledger after missing credential preflight
+3386: [info] - enabled demo preserves its approval ledger after NUL credential preflight
+3387: [info] IndependentResolutionEngineSpec:
+3388: [info] - a conflicting declared DOI wins over equal preferred DOI and equal work ID
+3389: [info] - different direct ORCIDs cannot merge through equal name and shared OpenAlex author hypothesis
+3390: [info] - matching direct identifiers use exact path without treating work equality as author equality
+3391: [info] - hand-computed 2/3 weighted score obeys inclusive accept and reject threshold boundaries
+3392: [info] - missing evidence stays unavailable rather than zero, perfect similarity or prep sentinel
+3393: [info] - bibliographic path requires authors and year evidence independently of exact title
+3394: [info] - recognized DBLP publication links retain conflicting DOI and arXiv source facts
+3395: [info] - backlinks and arbitrary hosts stay weak while malformed recognized publication resolvers fail
+3396: [info] IndependentLiveAdjudicatorSpec:
+3397: [info] - budget exhaustion refuses dispatch before credential supplier access
+3398: [info] - retries consume durable reservations and authentication errors are terminal
+3399: [info] - a valid provider response records actual usage separately and replay never consumes another reservation
+3400: [info] - missing usage and thrown transport details remain unknown charged failures without leaking contents
+3401: [info] - interruption-resistant transport fuses later calls and never overlaps retries
+3402: [info] - unapproved numerical configuration cannot construct an active adjudicator or budget ledger
+3403: [info] IndependentLiveCredentialPreflightSpec:
+3404: [info] - missing local credential failure preserves the same approval ledger for recovery
+3405: [info] - empty local credential failure preserves the same approval ledger for recovery
+3406: [info] - CRLF local credential failure preserves the same approval ledger for recovery
+3407: [info] - NUL local credential failure preserves the same approval ledger for recovery
+3408: [info] - DEL local credential failure preserves the same approval ledger for recovery
+3409: [info] - non-Latin1 local credential failure preserves the same approval ledger for recovery
+3410: [info] - supplier exception local credential failure preserves the same approval ledger for recovery
+3411: [info] IndependentStorageHardeningSpec:
+3412: [info] - entity link wire round trip retains candidate confidence, affiliations and source evidence
+3413: [info] - query session wire round trip preserves revision, raw payload and explicit TTL
+3414: [info] - artifact and metric envelopes retain immutable version hashes and exact qualified payloads
+3415: [info] - run ledger wire round trip retains stage failures and recovered retry history
+3416: [info] - inline evidence wire envelope round trips source text and validates its digest
+3417: [info] - large evidence stores one immutable object and a hash-bound pointer instead of inline text
+3418: [info] - all six Dynamo tables reject unsupported envelope versions, corrupt JSON and missing payload metadata
+3419: [info] - metric and entity adapters reject malformed required metadata before issuing a write
+3420: [info] IndependentLiveCacheSpec:
+3421: [info] - fake cache cannot satisfy live request and live cache rejects fake mode
+3422: [info] - live cache rejects corruption and context changes cannot reuse validated results
+3423: [info] - invalid live results are never cached and a complete write leaves no partial readable files
+3424: [info] IndependentEvaluationAdapterSpec:
+3425: [info] - evaluation retains genuine offline adapter versus verified cache provenance
+3426: [info] - evaluation adapter refuses a decision whose endpoints or entity no longer match its frozen pair
+3427: [info] - evaluation adapter refuses prompt or model inconsistent with the declared prediction run
+3428: [info] - B1 actual later offline matcher and adjudication configuration reuse P0 labels and immutable queue
+3429: [info] IndependentPhase6FGSpec:
+3967: [info] - G1 disjoint-window recomputation gives exact D deltas and explicit entry/exit rows
+4362: [info] - S-source estimate on a three-node chain has exact ordered-pair mean and P90
+4683: [info] - empty configured window produces no invented metrics, paths, summaries or estimates
+4962: [info] - near-Hadoop-limit team preserves every distinct pair and reports ORCID conflict without splitting
+4973: [info] - community continuity uses best Jaccard and handles tied candidate communities
+4974: [info] - all four factual summary templates trace every number and fact to the exact source row/field
+5028: [info] - complete export rereads every table, validates declared core records and binds four manifests to paths counts and hashes
+5587: [info] - replay changes physical partition count and output root while every logical table hash stays identical
+5588: [info] IndependentEvaluationSpec:
+5589: [info] - binary acceptance metrics include unresolved conflicts and missing predictions as nonacceptance
+5590: [info] - gold by four-outcome tables preserve uncertain missing conflict and exact denominators
+5591: [info] - no-data paths and unlabeled held-out metrics are null instead of manufactured accuracy
+5592: [info] - invalid predictions stay in denominators and duplicate pairs or foreign bindings are refused
+5593: [info] - development threshold sensitivity is hand-computable and held-out tuning is rejected
+5594: [info] IndependentPhase6SafetySpec:
+5595: [info] - production Spark sources keep forbidden driver actions and graph APIs outside BoundedActions
+5596: [info] - source fence catches every driver method with or without parentheses and respects identifier boundaries
+5597: [info] - source fence masks comments and string payloads without hiding adjacent executable actions
+5598: [info] - source fence permits only audited metadata receiver expressions and explicit BoundedActions calls
+5599: [info] - output gate refuses partial mismatched and tampered runs and reuses only the identical manifest
+5600: [info] - unknown Spark config schema is refused before any input or output work
+5601: [info] - streaming event-log summary reports exact stage tasks partitions shuffle records and failures
+5602: [info] IndependentEmbeddingStorageSpec:
+5603: [info] - first ingestion writes two documents; persistent replay skips embedding and preserves source text
+5604: [info] - a bound vector key rejects changed text before embedding and records the conflict
+5605: [info] - observed embedding attempts create retry counters and ledger failure history
+5606: [info] - index/client dimension mismatch refuses ingestion before an embedding invocation
+5607: [info] - fake queue redelivers after visibility expiry and refuses a stale receipt
+5608: [info] - SQS adapter sends exact bounded configured requests through an injected stub
+5609: [info] IndependentReviewQueueSpec:
+5610: [info] - review allocation is exactly forty development, two hundred held out and sixty reserves
+5611: [info] - selection and assignments replay deterministically and contain no predictions or suggested labels
+5612: [info] - candidate duplicates and altered source or candidate bindings cannot create a review queue
+5613: [info] - infeasible population reports a failure instead of silently reducing the human target
+5614: [info] - queue parser rejects unknown keys and any evidence or queue identity mutation
+5615: [info] - negative candidate edges never make one leakage group while shared publications and IDs stay together
+5616: [info] - development retains both entities when disjoint work pairs have lower degree than researcher groups
+5617: [info] IndependentResolutionContractSpec:
+5618: [info] - same DOI observations stay distinct and cannot satisfy a missing native key or snapshot
+5619: [info] - snapshot-free mention IDs cannot borrow authors from another snapshot or parent work
+5620: [info] - an actual ORCID work activity without DOI is eligible but supplies no publication authors
+5621: [info] - pair deduplication preserves changed snapshot identity even when all bibliographic IDs match
+5622: [info] - only accepted audits authorize links and timestamp changes must renew the decision identity
+5623: [info] - LLM reported confidence is required independently of the system score and UTC audit
+5624: [info] - A-B and B-C admissibility cannot erase conflicting authoritative ORCIDs in A-B-C
+5625: [info] - B1 namespace aliases cannot split conflicting ORCID assertions across a transitive component
+5626: [info] - B1 authoritative namespaces are closed and entity typed at the serialized boundary
+5627: [info] - B1 authoritative values reject noncanonical ORCID and DOI spellings before grouping
+5628: [info] - B1 arXiv authority accepts canonical base tokens and rejects versions or URI spellings
+5629: [info] - B2 a canonical ORCID assertion must be grounded in its own profile observation
+5630: [info] - B2 work authority cannot invent an absent identifier or substitute a contradictory DOI
+5631: [info] - N10 covered profiles cannot omit their own ORCIDs to evade a component conflict
+5632: [info] - B2 mention grounding uses the selected member and accepts its raw ORCID URL
+5633: [info] - B2 all recognized work observations must be retained even when DOI values contradict
+5634: [info] - B2 ORCID work references ground self identifiers while related works remain weak evidence
+5635: [info] IndependentOpenAIResponsesSpec:
+5636: [info] - live wire request fixes selected model disables storage and tools and uses a strict supported schema
+5637: [info] - completed provider envelope binds typed response and preserves measured reasoning and cached usage
+5638: [info] - refusal incomplete malformed and missing usage envelopes cannot become decisive responses
+5639: [info] - provider usage must be integral nonnegative consistent and bounded by its parent counters
+5640: [info] - strict adjudication validation rejects wrong identity citations extra fields and contradictory reasons through live envelopes
+5641: [info] - HTTP errors and oversized response bodies fail without reflecting sensitive provider body text
+5642: [info] - live request identity settings and wire byte bound reject mutations before transport
+5643: [info] - local response limits remain enforced independently of the provider wire schema subset
+5644: [info] - unselected model and unavailable price assumptions are refused rather than falling back
+5645: [info] IndependentEmbeddingContractSpec:
+5646: [info] - UTF-8 content identity and model framing have independent fixed expectations
+5647: [info] - stable slot keys have seven explicit UTF-8 frames and exclude content and source run
+5648: [info] - legacy decoding retains defaults but incomplete slot identity is rejected
+5649: [info] - wire work records preserve source and reject hash, index and model-key substitutions
+5650: [info] - semantic results cannot acquire authority for exact graph facts or metrics
+5651: [info] - compact vector metadata excludes source text and rejects arbitrary or oversized identity fields
+5652: [info] - vector results require finite dimensions and sanitized typed failure codes
+5653: [info] IndependentStorageLiveExclusionSpec:
+5654: [info] - live suite source registers one exact-tagged body and enters the opt-in gate before execution
+5655: [info]   + Checked tagged suite source only; no live test class was loaded or executed. 
+5656: [info] - live initialization check detects provider or environment access outside a tagged body
+5657: [info] - normal Test configuration excludes the exact live tag while the separate profile selects it
+5658: [info] IndependentReviewBindingRepairSpec:
+5659: [info] - B1 identical population sampling and evidence retain queue identity across matcher and code changes
+5660: [info] - B1 original synthetic labels evaluate predictions from a later run and report that later binding
+5661: [info] - B1 changed input or candidate populations remain invalid despite allowing later matcher settings
+5662: [info] IndependentPhase6CGraphSpec:
+5665: [info] - G1 has the exact all-years and split-window weighted edges and support
+5668: [info] - a cross-DBLP accepted link does not collapse two exact DBLP names
+5671: [info] - a work cannot-link prevents the linked Crossref observation from merging
+5674: [info] - yearless and 2027 DBLP works enter only all-years; enrichment-only pair is excluded
+5677: [info] - linked DBLP observations use only the lexical authoritative team and pair
+5680: [info] - conflicting ORCIDs for one exact DBLP name retain identity and emit one warning
+5681: [info] IndependentStorageLoaderSpec:
+5682: [info] - manifest reload loads one canonical metric copy with exact IDs, lineage and qualifications
+5683: [info] - conflicting collaboration and kcore copies reject before publishing any cache row
+5684: [info] - count and content-hash mismatches reject the manifest and always close its iterator
+5685: [info] - a hash-valid unsupported researcher schema is rejected before any candidate is cached
+5686: [info] - missing source qualification metadata and unsupported manifest versions refuse loading
+5687: [info] IndependentDblpXmlAdversarialSpec:
+5688: [info] - a comment is not title or author metadata
+5689: [info] - tag-shaped CDATA is not a title or author element
+5690: [info] - an approved local DTD basename is not UNSAFE_ENTITY
+5691: [info] - oversize nested XML drains under a byte bound
+5692: [info] IndependentCandidateDerivationSpec:
+5693: [info] - multiple preparation blocks produce one unordered work comparison retaining every block
+5694: [info] - cross-publication researcher candidates exist without a matching work candidate
+5695: [info] - common-name giant blocks are skipped rather than expanded to all pairs
+5696: [info] - per-mention and whole-run limits bound cross-publication candidate expansion
+5697: [info] - aggregate multiblock evidence cannot evade the pair byte bound
+5698: [info] - cross-entity profile work and nonwork activities have explicit distinct-pair diagnostics
+5699: [info] IndependentEvaluationCliSpec:
+5700: [info] - prediction preparation CLI consumes a completed export without reading labels
+5701: [info] - prediction preparation CLI refuses incomplete and corrupted exports before publishing
+5702: [info] - prediction preparation CLI rejects a self-consistent manifest with parent traversal
+5703: [info] - sensitivity CLI is development only and leaves reserve labels outside metric denominators
+5704: [info] IndependentEmbeddingRenderingSpec:
+5705: [info] - five document templates render exact supplied fields deterministically and retain provenance
+5706: [info] - paper fallback and permitted abstract record different explicit selections with permission provenance
+5707: [info] - chunking follows a fixed boundary/overlap expectation and rejects invalid limits
+5708: [info] - deterministic fake returns stable finite model-versioned results and typed empty-input failure
+5709: [info] IndependentEmbedding8BSmokeSpec:
+5710: [info] - six committed known queries return literal expected neighbors with competing same-type documents
+5711: [info] - every corpus vector follows its pointer to exact text and verified hash with descriptive-only authority
+5712: [info] IndependentEmbeddingSlotRepairSpec:
+5713: [info] - real rendered content changes keep the stable slot and conflict before any new embedding or data writes
+5714: [info] - a new model occupies a distinct slot while actual separate chunks retain separate ordinal keys
+5715: [info] - R1 shrinking a complete two-chunk group rejects the unchanged surviving prefix before writes
+5716: [info] - R1 growing a complete group rejects all new ordinals before any mixed writes
+5717: [info] - R1 malformed or invalid members reject the complete group before any embedding
+5718: [info] - summary adapter preserves exact source bytes and caller filters through actual ingestion metadata
+5719: [info] - paper summary adapter uses exact source text for absent or blank abstracts and exact permitted composition
+5720: [info] IndependentRequestEligibilitySpec:
+5721: [info] - legacy policy fingerprint and strict acceptance thresholds remain frozen
+5722: [info] - positive independent coauthor and affiliation context permits a request, not acceptance
+5723: [info] - zero, absent and duplicated-publication coauthor context cannot become a request
+5724: [info] - missing, incomparable and conflicting affiliation evidence cannot become a request
+5725: [info] - name-only, incompatible names, exact identifiers, hard conflicts and out-of-band pairs are excluded
+5726: [info] - fake acceptance is retained as an audited judgment but cannot export an unsafe accepted link
+5727: [info] - fake rejection and abstention remain audited while disabled mode never dispatches
+5728: [info] - effective request policy invalidates both offline and live cache identities
+5729: [info] - the researcher request revision preserves the existing work eligibility rule
+5730: [info] - canonical held-out overlap is excluded before even an invalid pair could be classified
+5731: [info] - live synthetic outcomes respect the separate acceptance gate and preserve budget accounting
+5732: [info] - binding mismatches fail before dispatch and missing profile cannot enable revised requests
+5733: [info] - an explicit one-pair pilot cap preserves approval and charges only one of two eligible pairs
+5734: [info] - live preview CLI rejects zero oversized and noninteger pair caps before input loading or writes
+5735: [info] IndependentLiveCredentialsSpec:
+5736: [info] - constructing a live transport does not read credentials and missing credential fails locally
+5737: [info] - invalid synthetic credential is rejected without exposing its value or making HTTP request
+5738: [info] IndependentStorageSdkSpec:
+5739: [info] - S3 read checks SHA-256 against bytes and rejects missing or malformed hash metadata
+5740: [info] - S3 valid read preserves caller metadata and missing objects return Missing
+5741: [info] - S3 writes bind versioned key, SHA metadata and atomic create condition
+5742: [info] - S3 bounds a stream whose body exceeds its advertised content length and closes it
+5743: [info] - S3 retries a transient SDK failure within the configured bound without real sleeping
+5744: [info] - Dynamo immutable writes use conditional create and read the original on conflict
+5745: [info] - Dynamo point reads reject unknown envelope schema and corrupt payload
+5746: [info] - Dynamo idempotency lookup uses configured GSI and the raw key as a parameter
+5747: [info] - Dynamo query creation atomically reserves idempotency and limits TTL to configured sessions
+5748: [info] - Dynamo batch point reads split 101 unique keys into calls of 100 and 1
+5749: [info] - Dynamo unprocessed keys retry to the configured bound and return a typed exhausted result
+5750: [info] - a committed Dynamo transaction with lost reply retries the same token and logical write once
+5751: [info] - S3 conditional 412 verifies existing content and reports unchanged or immutable conflict
+5752: [info] - ledger stage transaction compares the prior root and conditionally creates the stage atomically
+5753: [info] - ledger transaction cancellation distinguishes conditional conflict from other cancellation causes
+5754: [info] - ledger completion rejects a lost root compare-and-swap without unconditional overwrite
+5755: [info] IndependentHadoopPipelineSpec:
+5792: [info] - pipeline duplicate identical and conflicting openalex observations surface in export
+5829: [info] - pipeline shared doi across dblp and crossref keeps lineage in match candidate sides
+5866: [info] - pipeline orcid activity keeps ror and ringgold distinct and work doi is not authorship
+5975: [info] - pipeline block size below at and above maxCandidateBlockSize three
+6012: [info] - pipeline abstractTextRef resolves to emitted chunk document
+6049: [info] - pipeline json round trip preserves emitted MatchCandidate and WorkRecord
+6111: [info] - OutputGate refuses occupied output and failed pipeline run skips completion marker
+6148: [info] - pipeline identical second request reuses completed output
+6185: [info] - pipeline institution-bearing openalex observation exports one work and one institution without conflict
+6222: [info] - pipeline differing topics on the same openalex observation key conflict and emit no HasTopic edge
+6295: [info] - LocalJobRunner sample replay export is logically equivalent across two run ids
+6296: [info] IndependentEvaluationCohortSpec:
+6297: [info] - excluding an attributed review changes only that cohort denominator and preserves source labels
+6298: [info] - cohort exclusions must bind the exact queue and labels and contain only unique initial pairs
+6299: [info] IndependentStorageVectorSpec:
+6300: [info] - missing configured vector index is created with dimension, metric and nonfilterable text pointer
+6301: [info] - vector writes split 501 valid documents at the documented 500-vector boundary
+6302: [info] - same key and text is unchanged while a changed text hash is rejected before provider write
+6303: [info] - oversized metadata, missing required metadata and invalid vectors are counted without SDK writes
+6304: [info] - transient throttling retries once then succeeds with the same batch and bounded attempts
+6305: [info] - retry exhaustion and permanent provider failures produce rejected-vector reports
+6306: [info] - vector query binds metadata filters and enforces configured top-K and dimensions
+6307: [info] - vector get splits 101 keys into 100 and 1 without synthesizing missing records
+6308: [info] - vector query follows a 100-result page token and returns the remaining hit for top-K 101
+6309: [info] - vector query stops with a typed rejection when the configured page budget is exhausted
+6310: [info] IndependentRetainedReviewInputSpec:
+6311: [info] - B2 exact completed input retention reloads with identical evidence candidate hashes and pair population
+6312: [info] - B2 a missing retained export part cannot silently become a different replay population
+6313: [info] - B2 corrupt retained observation bytes are rejected before queue reconstruction
+6314: [info] IndependentOfflineAdjudicationSpec:
+6315: [info] - strict responses bind requests candidate endpoints and evidence with a closed schema
+6316: [info] - abstention is valid while decisive empty citations oversized rationale and response fail
+6317: [info] - N4 adjudication reason codes agree with accept reject and abstain outcomes
+6318: [info] - source prompt injection remains bounded evidence and cannot add tools or identifiers to response
+6319: [info] - malformed replies retry only within configured attempts and all failures consume budget
+6320: [info] - zero request or token allowance makes zero calls and timeout returns unresolved evidence
+6321: [info] - validated fake cache replays without another adapter call and refuses corrupt entries
+6322: [info] - cache key changes with all answer-affecting context and fake cannot satisfy live mode
+6323: [info] - cache writes are complete and a symlinked fake-mode directory is rejected on read
+6324: [info] IndependentPhase4BlockerSpec:
+6361: [info] - DBLP works under a 1024-byte source cap stay in the export or are explicit OVERSIZE_RECORD rejects
+6362: [info] - FileSplit starting inside a comment does not emit the fake article
+6363: [info] - FileSplit starting inside CDATA does not emit the fake article
+6400: [info] - committed OpenAlex and ORCID samples keep native identifiers on success records
+6401: [info] - self-closing author rejects with missing required field and does not emit Ada at ordinal 1
+6438: [info] - truncated export part is not a successful reuse of the identical request
+6476: [info] - Request hadoopConf fs.s3.impl is used by filesystem validation
+6477: [info] IndependentEmbedding8BPipelineSpec:
+7035: Computed G1 completed export: /var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/independent-8b-pipeline-3240821925349611498/computed-g1; researchers=10; works=9; edges=18; tables=28; runId=run:55555555-5555-4555-8555-555555555555
+7036: {"sourceExport":"/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/independent-8b-pipeline-3240821925349611498/computed-g1","sourceRunId":"run:55555555-5555-4555-8555-555555555555","selectedActualSummaries":12,"selectedActualContextNodes":0,"firstWritten":12,"replayUnchanged":12,"replayEmbeddingCalls":0,"freshCountersIdentical":true,"manifestHashesIdentical":true,"allPersistedPointersVerified":true,"verifiedPointerCount":12,"allAvailableSourceDocumentTypesIngested":true,"sourceQualificationsHashVerified":true,"mode":"deterministic-fake"}
+7037: [info] - computed G1 export survives local CLI disk replay and fresh-state determinism with bounded source verification
+7038: [info] IndependentStoragePortsSpec:
+7039: [info] - versioned immutable objects retain bytes, metadata, and the standard SHA-256 digest
+7040: [info] - support keys keep multiple works and cannot alias through delimiter placement
+7041: [info] - run publisher writes the manifest last, reports unchanged reload and withholds failed completion
+7042: [info] - object validation rejects malformed metadata and caller-supplied mismatching hashes
+7043: [info] - run ledger rejects stages before start and changes after completion
+7044: [info] - entity cache retains multiple candidates and rejects conflicting replacement of one key
+7045: [info] - query idempotency binds one query and optimistic revisions reject a stale writer
+7046: [info] - artifact hashes and metric payloads are immutable, qualified, and window isolated
+7047: [info] - evidence fake preserves source provenance and refuses schema corruption
+7048: [info] Run completed in 6 minutes, 27 seconds.
+7049: [info] Total number of tests run: 376
+7050: [info] Suites: completed 60, aborted 0
+7051: [info] Tests: succeeded 376, failed 0, canceled 0, ignored 0, pending 0
+7052: [info] All tests passed.
+7053: [info] AwsIntegrationPolicySpec:
+7054: [info] - live tests require the exact opt-in and an explicit profile together
+7055: [info] AwsIntegrationExclusionSentinelSpec:
+7056: [info] HadoopBundleMergeSpec:
+7057: [info] - a cached dependency assembly uses current core bytes and removes deleted core ownership
+7058: [info] - verification rejects stale current classes and extra removed core classes
+7059: [info] welcome to sbt 1.10.7 (Homebrew Java 17.0.20.1)
+7060: [info] loading settings for project scholarchain-build from plugins.sbt...
+7061: [info] loading project definition from /Users/danny/Documents/UIC/CS441/ScholarChain/project
+7062: [info] loading settings for project root from build.sbt...
+7063: [info] set current project to root (in build file:/Users/danny/Documents/UIC/CS441/ScholarChain/)
+7064: [error] java.lang.RuntimeException: scholarchain check probe: injected format-stage failure
+7065: [error] 	at scala.sys.package$.error(package.scala:30)
+7066: [error] 	at $80ac5351f719ddc48435$.$anonfun$root$8(build.sbt:156)
+7067: [error] 	at scala.runtime.java8.JFunction0$mcV$sp.apply(JFunction0$mcV$sp.java:23)
+7068: [error] 	at sbt.std.Transform$$anon$3.$anonfun$apply$2(Transform.scala:47)
+7069: [error] 	at sbt.std.Transform$$anon$4.work(Transform.scala:69)
+7070: [error] 	at sbt.Execute.$anonfun$submit$2(Execute.scala:283)
+7071: [error] 	at sbt.internal.util.ErrorHandling$.wideConvert(ErrorHandling.scala:24)
+7072: [error] 	at sbt.Execute.work(Execute.scala:292)
+7073: [error] 	at sbt.Execute.$anonfun$submit$1(Execute.scala:283)
+7074: [error] 	at sbt.ConcurrentRestrictions$$anon$4.$anonfun$submitValid$1(ConcurrentRestrictions.scala:265)
+7075: [error] 	at sbt.CompletionService$$anon$2.call(CompletionService.scala:65)
+7076: [error] 	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+7077: [error] 	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:539)
+7078: [error] 	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+7079: [error] 	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+7080: [error] 	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+7081: [error] 	at java.base/java.lang.Thread.run(Thread.java:840)
+7082: [error] (checkProbeInjectFailure) scholarchain check probe: injected format-stage failure
+7083: [error] Total time: 0 s, completed Oct 24, 2026, 12:06:19 PM
+7084: [info] CheckFailurePathSpec:
+7085: [info] - checkTask aborts before markTestRun when an earlier step fails
+7086: [info] Java17GuardSpec:
+7087: [info] - Java 17 passes and other specification versions fail with repair guidance
+7088: [info] TestRunMarkerSpec:
+7089: [info] - write creates gitignored marker path with success and timestamp
+7090: [info] SparkJobJarSpec:
+7091: [info] - job JAR contains current core and Spark classes plus runtime dependencies
+7092: [info] - job JAR rejects runtime-provided classes and conflicting logging entries
+7093: [info] Run completed in 1 second, 949 milliseconds.
+7094: [info] Total number of tests run: 8
+7095: [info] Suites: completed 7, aborted 0
+7096: [info] Tests: succeeded 8, failed 0, canceled 0, ignored 0, pending 0
+7097: [info] All tests passed.
+7098: [info] running scholarchain.build.TestRunMarker /Users/danny/Documents/UIC/CS441/ScholarChain
+7099: [success] Total time: 694 s (11:34), completed Oct 24, 2026, 12:06:20 PM
+7100: real 695.67
+7101: user 708.93
+7102: sys 99.41

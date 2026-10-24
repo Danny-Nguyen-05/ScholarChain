@@ -1,0 +1,38 @@
+[info] welcome to sbt 1.10.7 (Homebrew Java 17.0.20.1)
+[info] loading settings for project scholarchain-build from plugins.sbt...
+[info] loading project definition from /Users/danny/Documents/UIC/CS441/ScholarChain/project
+[info] loading settings for project root from build.sbt...
+[info] set current project to root (in build file:/Users/danny/Documents/UIC/CS441/ScholarChain/)
+[success] Total time: 0 s, completed Oct 24, 2026, 2:37:47 AM
+[info] scalafmt: Formatting 2 Scala sources (/Users/danny/Documents/UIC/CS441/ScholarChain/modules/storage)...
+[info] scalafmt: Reformatted 2 Scala sources
+[success] Total time: 1 s, completed Oct 24, 2026, 2:37:47 AM
+[info] compiling 2 Scala sources to /Users/danny/Documents/UIC/CS441/ScholarChain/modules/storage/target/scala-3.3.4/test-classes ...
+[info] done compiling
+[info] EmbeddingStorageSpec:
+[info] - manifest ingestion stores authoritative JSON and compact vector metadata; replay skips embedding
+[info] - text pointers address canonical full provenance and new model ingestion preserves both source documents
+[info] - changed text with a new genuine document ID conflicts in its stable slot before embedding or payload writes
+[info] - distinct stable chunk ordinals write distinct keys while unchanged replay skips both
+[info] - retry counts and permanent failures are retained in RunLedger and rejected JSON
+[info] - dimension mismatch rejects before vector writes and invalid manifest is bounded
+[info] - prepared checkpoint replays an ambiguous vector write without another embedding
+[info] - completion registry failure replays prepared vectors and summary JSON omits payloads
+[info] - duplicate ordinals reject the complete group before embedding
+[info] - in-memory queue enforces capacity and visibility, rotates receipts on redelivery
+[info] - SQS adapter sends bounded serialized items and exact receive/delete/backlog request shapes
+[info] - SQS aggregate batch bytes reject before any SDK call
+[info] - SQS partial enqueue and malformed receive fail visibly without deleting poison messages
+[info] EmbeddingGroupStateSpec:
+[info] - shrinking a complete bound group rejects even its unchanged prefix before payload writes
+[info] - growing a bound group rejects all new members before any embedding or new vector
+[info] - incomplete and config-invalid groups reject all members before payload writes
+[info] - legacy individual bindings cannot silently bootstrap a group binding
+[info] - local fake state survives save/open with a true unchanged replay and rejects corrupt or changed config state
+[info] - completed source adapter verifies empty table hashes and rejects malformed completion and mismatched work manifests
+[info] Run completed in 373 milliseconds.
+[info] Total number of tests run: 19
+[info] Suites: completed 2, aborted 0
+[info] Tests: succeeded 19, failed 0, canceled 0, ignored 0, pending 0
+[info] All tests passed.
+[success] Total time: 3 s, completed Oct 24, 2026, 2:37:51 AM

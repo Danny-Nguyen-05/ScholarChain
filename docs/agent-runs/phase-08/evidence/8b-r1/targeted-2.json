@@ -1,0 +1,10 @@
+{
+  "rawLog": "/tmp/phase8b-r1-targeted-2.txt",
+  "bytes": 5730,
+  "sha256": "aebe1875081065e2817a4e2cd73168cfb74fcd61e6bf930abd853a8b02d289ca",
+  "exit": 1,
+  "ragPassed": 32,
+  "ragFailed": 1,
+  "reason": "New node fixture expected lowercase openalex; frozen SourceType wire value is OPENALEX. Corrected test literal only.",
+  "independentTestsReached": false
+}

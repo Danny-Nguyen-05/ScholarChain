@@ -52,3 +52,49 @@ The user supplied an external **APPROVE for 8A repair round 1**, retained verbat
 | R3 low: filterable metadata budget checked only after embedding | OPEN, nonblocking, deferred | storage-engineer; pre-embedding budget check relevant before live ingestion |
 
 No R1–R3 or N2–N8 repair is authorized by this recheck prompt. No implementation/test changes or new tests were run for this evidence-only recording. Next gate is the user's commit confirmation for the approved 8A + repair tree; 8B has not started. Agents do not stage, commit or push.
+
+## Subphase 8B
+
+Step0 user answer “Repair chunk-group consistency now (recommended)” authorizes R1. Domain adds count/wholehash and group identity; RAG emits actual prechunk binding; storage preflights complete unique members/config then binds immutable group before writes; independent real-renderer shrink/grow tests and localCLI acceptance pass. R1 is implemented and locally verified, pending the user-launched independent8B review.
+
+F1/N1 retain independently FIXED8A dispositions. N2–N8/R2–R3 remain OPEN/nonblocking/deferred. No deferred behavior was silently repaired; R2/R3 are disclosed in storage README.
+
+Integration findings routed to named owners (not external review): localstate tuple-pattern formatter correction; explicit StorageConfig qualification in guardedlive composition; bounded groupcount guard; extract administrative fake class+alias to preserve unmodified runtimefence; fork RAGCLI and forward optional explicit logback configuration to fix Hadoop shutdown lifecycle/noisy childlogging. Failed attempts and owner reports retained under evidence/8b/. Fullgate pending at this checkpoint.
+
+8B final local disposition: R1 implemented and verified by affected tests, actual CLI acceptance and full756/756 gate exit0. Independent8B review is the next gate; no implementation agent independently closes its own repair. F1/N1 stay independently closed from8A; N2–N8/R2–R3 stay deferred. See evidence/8b/final-check.json, final-audit.json and acceptance-matrix.md.
+
+## Subphase 8B — repair round 1
+
+External REQUEST-CHANGES is retained verbatim under “Subphase 8B — user-supplied external review” in review.md. User explicitly adds N9 to the repair scope. Existing uncommitted work is preserved.
+
+| Finding | Disposition at routing | Owner | Required evidence / remaining gate |
+| --- | --- | --- | --- |
+| B1 medium, blocking: successful local CLI/source/fifth-type path absent from check | REQUIRED repair | test-engineer; rag-engineer | Discovered temporary G1 suite;12 writes then12 skips/zero calls; fresh counters/manifests; pointer/qualification hashes; non-empty source rejection and bounded round-robin selection; exact topic/institution rendering unit test. |
+| N9 medium: real-model manifest producer, full live report and future query smoke command missing | REQUIRED by user's explicit addition | rag-engineer; independent test-engineer | Render-only command without embedding/state; model/per-index/rejection report fields; guarded authored/unexecuted query/latency command. Pure/refusal tests only. |
+| N10 low: group binding survives failed first execution | OPEN/nonblocking/deferred | storage-engineer | README disclosure later; no repair now. |
+| N11 low: mixed summaries omit sourceDataset | OPEN/nonblocking/deferred; future schema report | storage/rag | Disclose in future8C metadata report. |
+| N12 info: cosine and all-years constants | OPEN/nonblocking/deferred | rag/storage | Outside this repair. |
+| N13 info: original evidence table/stale checkpoints | OPEN/nonblocking/deferred | coordinator | Original checkpoints retained; new evidence clearly states final status. |
+| N14 info: weak lexical distractors | OPEN/nonblocking/deferred | rag/test | Fake-only limitation preserved. |
+
+F1/N1 remain independently FIXED. R1 is now independently verified FIXED by this8B review. N2–N8/R2–R3 remain OPEN/nonblocking/deferred. No implementation agent claims independent acceptance of B1/N9; affected/full gates and user-launched recheck are required.
+
+Repair-round1 final local disposition: B1 and user-requested N9 implemented and locally verified (RAG33/independent41 affected,full766/766 exit0). Independent recheck is required before closing B1/N9. N9c command is authored/unexecuted; no live gate is claimed. F1/N1/R1 remain independently FIXED. N2–N8/R2–R3/N10–N14 remain OPEN/nonblocking/deferred. See evidence/8b-r1/acceptance-matrix.md, final-check.json and final-audit.json.
+
+### 8B repair round 1 independent recheck dispositions
+
+The user supplied an independent **APPROVE for Subphase8B repair round1**, retained verbatim in review.md and evidence/8b-r1/external-recheck.txt. This supersedes earlier pending-recheck checkpoints. It is not human acceptance or instructor approval. The user expressly instructed: “don't need to fix non-blockings”. No further repairs are authorized in this step.
+
+| Finding | Independent disposition | Owner / remaining gate |
+| --- | --- | --- |
+| B1 | FIXED, independently verified | test/RAG owners; no further8B repair required |
+| N9 | FIXED, independently verified | RAG owner; N9c authored/unexecuted, live results remain8C gate |
+| F1/N1/R1 | FIXED, independently verified; retained | Original owners; unchanged |
+| N2–N8/R2–R3/N10–N14 | OPEN/nonblocking/deferred | Original assigned owners; no repair now |
+| N15 low: query-smoke approval requires ingest-sized caps | OPEN/nonblocking; resolve before8C | rag-engineer; separate future work order |
+| N16 low: fake CLI accepts real model ID / stale comment | OPEN/nonblocking/deferred | rag-engineer |
+| N17 low: export node-table read branch lacks check coverage | OPEN/nonblocking/deferred | test-engineer/storage-engineer |
+| N18 info: smoke refusal temp directory retained | OPEN/nonblocking/deferred | rag-engineer |
+| N19 info: literal acceptance flags follow required assertions | OPEN/nonblocking/deferred; optional | test-engineer |
+
+Only review/disposition/commit-proposal evidence changed in this step. No source, tests, templates, nonblocking behavior or temporary directories were modified. Next gate: explicit user commit decision; no staging/commit/push or8C.

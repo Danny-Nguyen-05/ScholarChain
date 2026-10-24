@@ -205,7 +205,9 @@ final class DocumentRenderer(config: RenderingConfig) {
                 selection,
                 identityFields = input.identityFields,
                 chunkPolicyVersion = chunkPolicyVersion,
-                chunkOrdinal = ordinal
+                chunkOrdinal = ordinal,
+                chunkCount = chunks.size,
+                wholeTextHash = EmbeddingContracts.textHash(text)
               )
             }
         }

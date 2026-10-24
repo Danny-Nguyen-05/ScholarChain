@@ -1,0 +1,13 @@
+[info] welcome to sbt 1.10.7 (Homebrew Java 17.0.20.1)
+[info] loading settings for project scholarchain-build from plugins.sbt...
+[info] loading project definition from /Users/danny/Documents/UIC/CS441/ScholarChain/project
+[info] loading settings for project root from build.sbt...
+[info] set current project to root (in build file:/Users/danny/Documents/UIC/CS441/ScholarChain/)
+[info] scalafmt: Formatting 3 Scala sources (/Users/danny/Documents/UIC/CS441/ScholarChain/modules/storage)...
+[error] org.scalafmt.sbt.ScalafmtSbtReporter$ScalafmtSbtError: scalafmt: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/LocalEmbeddingState.scala:76: error: [dialect scala3] `;` expected but `=>` found
+[error]     "vectors"->ujson.Arr.from(documents.toVector.sortBy(_._1).map { ((index,_),d)=>ujson.Obj("index"->index,"key"->d.key,"values"->ujson.Arr.from(d.values.map(v=>ujson.Num(v.toDouble))),"metadata"->pairs(d.metadata),"textHash"->d.textHash) }),
+[error]                                                                                  ^ [/Users/danny/Documents/UIC/CS441/ScholarChain/modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/LocalEmbeddingState.scala]
+[error] (storage / Compile / scalafmt) org.scalafmt.sbt.ScalafmtSbtReporter$ScalafmtSbtError: scalafmt: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/LocalEmbeddingState.scala:76: error: [dialect scala3] `;` expected but `=>` found
+[error]     "vectors"->ujson.Arr.from(documents.toVector.sortBy(_._1).map { ((index,_),d)=>ujson.Obj("index"->index,"key"->d.key,"values"->ujson.Arr.from(d.values.map(v=>ujson.Num(v.toDouble))),"metadata"->pairs(d.metadata),"textHash"->d.textHash) }),
+[error]                                                                                  ^ [/Users/danny/Documents/UIC/CS441/ScholarChain/modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/LocalEmbeddingState.scala]
+[error] Total time: 1 s, completed Oct 24, 2026, 2:35:36 AM

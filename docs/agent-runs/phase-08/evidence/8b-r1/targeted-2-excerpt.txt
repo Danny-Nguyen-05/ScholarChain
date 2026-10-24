@@ -1,0 +1,65 @@
+1: [info] welcome to sbt 1.10.7 (Homebrew Java 17.0.20.1)
+2: [info] loading settings for project scholarchain-build from plugins.sbt...
+3: [info] loading project definition from /Users/danny/Documents/UIC/CS441/ScholarChain/project
+4: [info] loading settings for project root from build.sbt...
+5: [info] set current project to root (in build file:/Users/danny/Documents/UIC/CS441/ScholarChain/)
+6: [info] scalafmt: Formatting 1 Scala sources (/Users/danny/Documents/UIC/CS441/ScholarChain/modules/rag)...
+7: [info] scalafmt: Reformatted 1 Scala sources
+8: [success] Total time: 1 s, completed Oct 24, 2026, 11:51:49 AM
+9: [info] scalafmt: Formatting 1 Scala sources (/Users/danny/Documents/UIC/CS441/ScholarChain/modules/rag)...
+10: [info] scalafmt: Reformatted 1 Scala sources
+11: [success] Total time: 0 s, completed Oct 24, 2026, 11:51:49 AM
+12: [info] compiling 1 Scala source to /Users/danny/Documents/UIC/CS441/ScholarChain/modules/rag/target/scala-3.3.4/classes ...
+20: [info] done compiling
+21: [info] compiling 1 Scala source to /Users/danny/Documents/UIC/CS441/ScholarChain/modules/rag/target/scala-3.3.4/test-classes ...
+22: [info] done compiling
+23: [info] EmbeddingSmokeGuardSpec:
+24: [info] - smoke pure preflight binds full config, manifest, gate, operation and bounded calls/cost
+25: [info] - smoke planning requires all five indexes, approved expected keys and bounded samples/topK
+26: [info] - pure report has hand-derived nearest-rank latency, exact per-index counts and verified pointers
+27: [info] - approved text pointer scope rejects wrong buckets, traversal and URI decorations before reads
+28: [info] - disabled or ingest-only smoke approval refuses before credentials, gate read and factory
+29: [info] LiveEmbeddingGuardSpec:
+30: [info] - pure preflight binds exact content, run, expiry, caps and conservative configured estimate
+31: [info] - vector, concurrency, request and price approval limits refuse before clients
+32: [info] - partial or inconsistent chunk groups refuse with bounded work even at an IntMax count
+33: [info] - disabled approval refuses executable run before credential/client factory or gate reads
+34: [info] EmbeddingRetrievalSpec:
+35: [info] - six committed known queries retrieve their fixed neighbor and every hit resolves to hashed ordinary text
+36: [info] - renderer supplies whole text binding and actual group cardinality for every chunk
+37: [info] - local CLI rejects missing or live-mode arguments before source or state access
+38: [info] Embedding8BRepairSpec:
+39: [info] - actual topic and institution source branch renders exact source fields, table totals, filters and fifth index *** FAILED ***
+40: [info]   Map("topicId" -> "synthetic-topic", "sourceDataset" -> "OPENALEX") did not equal Map("topicId" -> "synthetic-topic", "sourceDataset" -> "openalex") (Embedding8BRepairSpec.scala:114)
+41: [info]   Analysis:
+42: [info]   Map("sourceDataset": "OPENALEX" -> "openalex")
+43: [info] - render-only real model manifest is accepted by pure live preflight without embedding or state
+44: [info] - pure live report contains configured model, per-index counts and all rejection evidence
+45: [info] EmbeddingRagSpec:
+46: [info] - all five templates copy exact source values and are byte deterministic across source ordering
+47: [info] - abstract permission and source refs remain explicit; missing abstract uses paper fallback
+48: [info] - chunking has hand-derived boundaries, exact overlap and Unicode codepoint safety
+49: [info] - stable IDs bind text, window, template and chunk policy, preserving original entity IDs
+50: [info] - rendering rejects unsupported labels, missing references and invented identity metadata
+51: [info] - Phase6 summary rendering preserves actual source text qualifications and all source refs
+52: [info] - stable vector slots reject actual rerendered changed text without re-embedding
+53: [info] - slot keys bind chunk ordinal, model, template and policy while excluding text and source run
+54: [info] - Phase6 summaries preserve Unicode and newline bytes and supplied filters through vector metadata
+55: [info] - explicit summary abstract composition preserves the exact summary prefix and actual permission evidence
+56: [info] - hashed bag of words is case/order invariant, normalized and has deterministic lexical neighbors
+57: [info] - Bedrock request uses configured identity/dimension and bounded timeout without credential construction
+58: [info] - transient provider failures retry with bounded backoff and preserve observed attempts
+59: [info] - permanent/exhausted failures are typed and never expose provider details
+60: [info] - dimension/malformed-response errors fail permanently; empty/oversized text never invokes SDK
+61: [info] - concurrency remains bounded and output follows input ordering across independent invocations
+62: [info] - semantic excerpt limit counts Unicode codepoints consistently with core validation
+63: [info] - semantic context follows ordinary-S3 envelope, hash and pointer, excluding metric authority
+64: [info] Run completed in 368 milliseconds.
+65: [info] Total number of tests run: 33
+66: [info] Suites: completed 5, aborted 0
+67: [info] Tests: succeeded 32, failed 1, canceled 0, ignored 0, pending 0
+68: [info] *** 1 TEST FAILED ***
+69: [error] Failed tests:
+70: [error] 	edu.uic.cs441.scholarchain.rag.Embedding8BRepairSpec
+71: [error] (rag / Test / test) sbt.TestsFailedException: Tests unsuccessful
+72: [error] Total time: 4 s, completed Oct 24, 2026, 11:51:53 AM

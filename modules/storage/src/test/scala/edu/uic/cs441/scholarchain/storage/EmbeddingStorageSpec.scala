@@ -188,8 +188,17 @@ class EmbeddingStorageSpec extends AnyFunSuite {
   }
   test("distinct stable chunk ordinals write distinct keys while unchanged replay skips both") {
     val (_, _, _, vectors, embed, runner) = fixture()
-    val first = EmbeddingManifests.item(doc("first chunk", 0), model, config)
-    val second = EmbeddingManifests.item(doc("second chunk", 1), model, config)
+    val wholeHash = StableIds.sha256Hex("first chunksecond chunk")
+    val first = EmbeddingManifests.item(
+      doc("first chunk", 0).copy(chunkCount = 2, wholeTextHash = wholeHash),
+      model,
+      config
+    )
+    val second = EmbeddingManifests.item(
+      doc("second chunk", 1).copy(chunkCount = 2, wholeTextHash = wholeHash),
+      model,
+      config
+    )
     assert(first.vectorKey != second.vectorKey)
     val manifest = EmbeddingManifest(Vector(first, second))
     val written = StorageResult.value(runner.run(manifest, "two-chunks")).get
@@ -314,12 +323,13 @@ class EmbeddingStorageSpec extends AnyFunSuite {
       !events.mkString.contains("distributed graph") && !events.mkString.contains("fixture-entity")
     )
   }
-  test("duplicate items batch once and unchanged duplicates are counted") {
+  test("duplicate ordinals reject the complete group before embedding") {
     val (_, _, _, _, embed, runner) = fixture()
     val item = EmbeddingManifests.item(doc(), model, config)
     val result =
       StorageResult.value(runner.run(EmbeddingManifest(Vector(item, item)), "duplicate")).get
-    assert(result.written == 1 && result.unchanged == 1 && result.rejected == 0 && embed.calls == 1)
+    assert(result.written == 0 && result.unchanged == 0 && result.rejected == 2 && embed.calls == 0)
+    assert(result.rejections.forall(_.reason == "incomplete-embedding-group"))
   }
   test("in-memory queue enforces capacity and visibility, rotates receipts on redelivery") {
     var now = 0L

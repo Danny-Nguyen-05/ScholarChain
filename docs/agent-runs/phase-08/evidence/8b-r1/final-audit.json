@@ -1,0 +1,17 @@
+{
+  "frozenFilesVerified": 346,
+  "frozenContentDrift": [],
+  "repairFilesVerified": 8,
+  "cumulativeSourceFilesVerified": 35,
+  "unchangedPriorScopeFiles": 251,
+  "planCmpExit": 0,
+  "sourceDiffCheckExit": 0,
+  "head": "3c45de74ec5900b8ac5c0273b5bf80bef8f84b1e",
+  "branch": "phase-8",
+  "noCommitOrPush": true,
+  "noReviewerLaunched": true,
+  "noLiveCloudOrProviderCalls": true,
+  "noApprovedLiveExecutionEvenWithFakes": true,
+  "temporaryG1OutputRemoved": true,
+  "temporaryG1OutputPath": "/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/independent-8b-pipeline-3240821925349611498/computed-g1"
+}

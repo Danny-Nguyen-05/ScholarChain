@@ -1,0 +1,112 @@
+[
+  {
+    "path": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase8b-real-local-acceptance/acceptance.json",
+    "bytes": 563,
+    "sha256": "c8bf09ed5c366865dc12a546c875468e3dbc9bf5c4a0a1fabb3a114baae858e3"
+  },
+  {
+    "path": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase8b-real-local-acceptance/final-process-manifest.json",
+    "bytes": 31680,
+    "sha256": "c9228de972ee90914bb1070628f5eca01680e674fcf1459a8e9c2cccb35ad4d3"
+  },
+  {
+    "path": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase8b-real-local-acceptance/final-process-report.json",
+    "bytes": 1451,
+    "sha256": "1cc40cd36e1bfeb543f75ea4c1a73addfa7cfb6e0b2e1399f718235c9f466ad9"
+  },
+  {
+    "path": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase8b-real-local-acceptance/final-process-report.json.source-qualifications.json",
+    "bytes": 48455,
+    "sha256": "7d1664771a0584e108c8bc66fd2dcf1e445d1ac96cd5ef26e4d23df300e7fa23"
+  },
+  {
+    "path": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase8b-real-local-acceptance/first-manifest.json",
+    "bytes": 31680,
+    "sha256": "c9228de972ee90914bb1070628f5eca01680e674fcf1459a8e9c2cccb35ad4d3"
+  },
+  {
+    "path": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase8b-real-local-acceptance/first-report.json",
+    "bytes": 1597,
+    "sha256": "2c829eb31e78669a859821b1ceb0485b2a4f29e96f3357056b05ec56f209aece"
+  },
+  {
+    "path": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase8b-real-local-acceptance/first-report.json.source-qualifications.json",
+    "bytes": 48455,
+    "sha256": "7d1664771a0584e108c8bc66fd2dcf1e445d1ac96cd5ef26e4d23df300e7fa23"
+  },
+  {
+    "path": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase8b-real-local-acceptance/fork-replay-manifest.json",
+    "bytes": 31680,
+    "sha256": "c9228de972ee90914bb1070628f5eca01680e674fcf1459a8e9c2cccb35ad4d3"
+  },
+  {
+    "path": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase8b-real-local-acceptance/fork-replay-report.json",
+    "bytes": 1447,
+    "sha256": "e7efeee81fe6715fd8ad3b4020d7fb7387ca231afc21a26eb91fd0a6ece8063d"
+  },
+  {
+    "path": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase8b-real-local-acceptance/fork-replay-report.json.source-qualifications.json",
+    "bytes": 48455,
+    "sha256": "7d1664771a0584e108c8bc66fd2dcf1e445d1ac96cd5ef26e4d23df300e7fa23"
+  },
+  {
+    "path": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase8b-real-local-acceptance/fresh-manifest.json",
+    "bytes": 31680,
+    "sha256": "c9228de972ee90914bb1070628f5eca01680e674fcf1459a8e9c2cccb35ad4d3"
+  },
+  {
+    "path": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase8b-real-local-acceptance/fresh-report.json",
+    "bytes": 1596,
+    "sha256": "63c4eb7672deb53fcf12b1185f659df2fedc599d99cbe7303a75acbd55f302a5"
+  },
+  {
+    "path": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase8b-real-local-acceptance/fresh-report.json.source-qualifications.json",
+    "bytes": 48455,
+    "sha256": "7d1664771a0584e108c8bc66fd2dcf1e445d1ac96cd5ef26e4d23df300e7fa23"
+  },
+  {
+    "path": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase8b-real-local-acceptance/local-config.json",
+    "bytes": 304,
+    "sha256": "8d4cff395e43a45e13aeec5ba4d13aaa3f32dcb0129acc64f0c225159d3a4113"
+  },
+  {
+    "path": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase8b-real-local-acceptance/process-replay-manifest.json",
+    "bytes": 31680,
+    "sha256": "c9228de972ee90914bb1070628f5eca01680e674fcf1459a8e9c2cccb35ad4d3"
+  },
+  {
+    "path": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase8b-real-local-acceptance/process-replay-report.json",
+    "bytes": 1453,
+    "sha256": "30523ff4f4919996d91bf8accd991be18998a1955d7460621dcd79027cbe29a7"
+  },
+  {
+    "path": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase8b-real-local-acceptance/process-replay-report.json.source-qualifications.json",
+    "bytes": 48455,
+    "sha256": "7d1664771a0584e108c8bc66fd2dcf1e445d1ac96cd5ef26e4d23df300e7fa23"
+  },
+  {
+    "path": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase8b-real-local-acceptance/replay-manifest.json",
+    "bytes": 31680,
+    "sha256": "c9228de972ee90914bb1070628f5eca01680e674fcf1459a8e9c2cccb35ad4d3"
+  },
+  {
+    "path": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase8b-real-local-acceptance/replay-report.json",
+    "bytes": 1444,
+    "sha256": "bec45644b7939081d8ef4d1f02ee9354a7d16dd64befa15cba765cf0a2c65800"
+  },
+  {
+    "path": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase8b-real-local-acceptance/replay-report.json.source-qualifications.json",
+    "bytes": 48455,
+    "sha256": "7d1664771a0584e108c8bc66fd2dcf1e445d1ac96cd5ef26e4d23df300e7fa23"
+  },
+  {
+    "path": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase8b-real-local-acceptance/state-a.json",
+    "bytes": 161002,
+    "sha256": "f982fd0d827e360882a00a71a360a5a9cc04fcb88327e7c721413bb27367a892"
+  },
+  {
+    "path": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase8b-real-local-acceptance/state-b.json",
+    "bytes": 148400,
+    "sha256": "cd35bda59c8d0ef9cd899f8c2bad924c697eedfc069ec251db2d2b0a8f770118"
+  }
+]

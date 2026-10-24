@@ -252,6 +252,21 @@ UTF-8 text, with no normalization;
 its pointer names ordinary S3 JSON, never S3 Vectors. `EmbeddingValidation.workItem` checks the
 key binding, text hash, five-type index mapping and pointer, plus the document/model structure.
 
+Phase 8B adds `chunkCount` and `wholeTextHash` to `EmbeddingDocument`. Renderers provide the
+total chunk count and SHA-256 of the exact full text before chunking, including overlap only
+as it appeared in the original text. These values do not alter vector keys or content IDs.
+`EmbeddingContracts.groupKey(document, model)` length-frames type, entity, window, template,
+chunk policy and model tag, excluding ordinal and run. Storage binds that group to count and
+whole-text hash and must reject an inconsistent or incomplete group before embedding any member.
+Counts must be positive and every ordinal less than its count. Multi-chunk documents require an
+explicit lowercase 64-hex whole-text hash. For additive compatibility, missing group fields decode
+to count 1 and an empty hash; that form is valid only for ordinal zero, where
+`EmbeddingContracts.wholeTextHash(document)` uses the exact chunk text hash. A supplied hash for
+a single chunk must match its text. Multi-chunk hash correctness and complete/unique ordinal
+coverage require renderer and ingestion checks; single-record structural validation cannot prove
+the full source text. Group fields stay in the ordinary-S3 document, without expanding vector
+filter metadata.
+
 `EmbeddingVectorMetadata.compact` emits only typed identity/model/template/hash/pointer fields.
 Optional `identityFields` are limited to researcher, community, topic, institution and source-dataset
 filters, at most 256 UTF-8 bytes each. Unknown fields fail validation and are excluded from

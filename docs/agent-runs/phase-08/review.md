@@ -219,3 +219,307 @@ MANUAL ACTION REQUIRED: User reviews and commits the 8A + repair-round-1 tree (a
 BLOCKED-ON OWNER: None
 BLOCKED-ON EVIDENCE: None for 8A. Live 8C gates remain future.
 NEXT GATE: User commit of 8A, then 8B Step 0.
+
+## Subphase 8B — user-supplied external review
+
+1. VERDICT: REQUEST-CHANGES for Subphase 8B
+
+There is one blocking finding: none of the new 8B local ingestion path has a passing-path test in sbt check, and the fifth document type's real-data path isn't covered by any test. Everything else holds up. The R1 repair is correct and well tested, the evidence verifies, and the spend gates were respected.
+
+What I verified
+
+- Plan and course spec: the plan snapshot matches the Drive file byte for byte (SHA256 14daa4a4…9e27). I read the course Phase 8 section, and the 8B scope matches the plan.
+- Full gate log: /tmp/phase8b-final-check-1.txt is 1,381,548 bytes with SHA256 91ef6871…ea59, both as recorded. Its per-module counts are 157/64/39/38/51/25/374/8, which sum to 756 with 0 failures. It ends in [success], and the injected-failure line at 6518 is the build's expected self-test.
+- File inventory: files.json matches git status exactly (19 tracked, 81 untracked). All 30 hashes, sizes and base hashes in source-files.json match the files on disk and in git.
+- Frozen snapshot: all 254 files in /tmp/phase8b-frozen-source.json (SHA d6fb7eb0…e8e2) are unchanged, and nothing unsnapshotted exists in that scope. The G1/real/producer artifact inventories (22+22+6 hashes) all verify. The raw logs for replay-2, replay-3 and targeted-g1-3 also verify. The .exit files match commands.md, including the failed attempts.
+- Targeted gates: the retained excerpts show core 13, storage 19, RAG 25 and independent 39. The runtime fence reports 5 roots, 20 files and no findings; the fence spec is unchanged.
+- R1 repair: EmbeddingManifest.scala:288-355 builds the group key from type, entity, window, template, chunk policy and model. Ordinal, run, text and count are excluded. The registry binding holds {chunkCount, wholeTextHash}.
+  - Groups must contain exactly the ordinals 0 to count−1, once each. Every member is checked for model, dimension, text size and pointer before anything is written.
+  - Missing old-style group markers make the run reject that group (group-binding-missing).
+  - The renderer (DocumentRendering.scala:208-210) fills in the real chunk count and the hash of the text before chunking.
+  - Tests through the real renderer cover shrink and grow, as do the storage tests. Both show 0 embedding calls and only the rejection report written.
+- Spend gates:
+  - The live guard tests never reach the client factory.
+  - The templates are disabled (executionApproved:false, zero caps).
+  - No secrets were found, and no region or model ID is hardcoded in main sources.
+  - Generated state lives under the ignored target/ directory.
+- Ownership: the work orders are separate per owner. The administrative fake was moved out without weakening the fence: rag/src/main is a fence root, and the in-memory graph loader stays out of runtime files.
+- Live cost estimate: the hand-derived figure checks out: 1 × (0.01 × 3 + 0.01) + 0.10 = 0.14.
+
+Findings
+
+B1 — Medium — BLOCKING. The new local CLI path and the fifth document type's real-data path aren't covered by sbt check.
+- Evidence:
+  - EmbeddingIngestMain.run is only tested with refused arguments (EmbeddingRetrievalSpec.scala:135-138, IndependentEmbedding8BGuardSpec.scala:66-75).
+  - Phase6EmbeddingSource.load is only tested on an empty export plus two rejection cases (EmbeddingGroupStateSpec.scala:181-277).
+  - The literal end-to-end checks live in IndependentEmbeddingLocalReplayMain.scala and IndependentEmbeddingG1ExportMain.scala. These are main objects run by hand through runMain, not test suites, so check never runs them.
+  - The G1 export has no topic or institution nodes (LocalReplayMain:61-62). So renderSource's node rendering (EmbeddingIngestMain.scala:102-143, tableTotalNodes plus topic/institution identity fields) has no automated test at all.
+- Impact: These behaviors could break without any test failing:
+  - the plan's 8B "Done when" property (a rerun gives identical counters);
+  - the source reader's row selection, bounds, and provenance and logical-hash rejection on non-empty rows;
+  - fifth-index rendering from real data.
+
+  This also breaks the repository rule that every behavior change has feature tests. Making it a test is cheap: the G1 export takes about 22 s and the replay about 28 s.
+- Owners:
+  - test-engineer (tests/**): add a suite.
+  - rag-engineer (modules/rag/src/test/**): add a node-rendering test.
+  - storage-engineer: only if the owners decide reader rejection cases belong in the module.
+- Acceptance check:
+  a. A suite in check generates the G1 export in a temporary directory, runs EmbeddingIngestMain.run first, then replays on the same state, then runs on a fresh state. It asserts the literal results: 12 written, then 12 unchanged with 0 calls, identical fresh counters and manifest hash, every pointer and hash verified, and the qualifications hash.
+  b. At least one non-empty reader rejection case, either a logical-hash mismatch or the scan cap below the row count, plus a check of the bounded round-robin selection.
+  c. A RAG unit test over a synthetic batch with topic and institution nodes. It asserts the exact rendered fields, source refs and topicId/institutionId/sourceDataset identity fields, and that the table total isn't presented as a per-node count.
+
+  Rerun the affected gates and the full JDK17 sbt check.
+
+N9 — Medium — nonblocking; must be fixed before 8C. The live command has gaps in its input and its report.
+- (a) No tool produces the real-model manifest. Only the local CLI writes manifests, and it always embeds with the fake client under the configured model (EmbeddingIngestMain.scala:196). Its own comment (line 10) and the RAG README say the model ID must describe the fake. Live preflight requires item.embeddingModel == config.model (LiveEmbeddingIngestMain.scala:174). So no supported path produces a manifest that passes live preflight, even though the README says to "render for the approved real model".
+- (b) The live report is incomplete. It (LiveEmbeddingIngestMain.scala:331-351) leaves out model ID/version, per-index counts, rejection reasons and rejectedReportUri. Plan §7.5 and the course require these.
+- (c) Future gate, not an 8B repair: there is no authored live query/latency smoke command for 8C task 2.
+- Owner: rag-engineer.
+- Acceptance check: a render-only manifest mode (no embedding, no state) using the live model and pointer config, plus the missing report fields, each with tests. Before 8C.
+
+N10 — Low — nonblocking. A group binding can't be undone, even if nothing was ever written under it.
+- Evidence: the binding is registered before any embedding (EmbeddingManifest.scala:~335-350).
+- Impact: If that run then fails permanently, for example through a provider error or ledger outage, the binding stays. Any later corrected text for that entity is rejected in the same template/model namespace, even though no vector exists. This is consistent with the per-item binding design, and the runbook only partly discloses it.
+- Owner: storage-engineer (README disclosure).
+
+N11 — Low — nonblocking, future gate. The four summary types carry no sourceDataset filter.
+- Evidence: they are left out on purpose for mixed exports (Phase6EmbeddingSource.scala:218-226), but the course's compact metadata lists source dataset.
+- Owner: storage/rag. Disclose this in the 8C metadata-schema report.
+
+N12 — Info. Two small hardcoded values: the CLI hardcodes "cosine" (EmbeddingIngestMain.scala:186) instead of the configured metric, and the window falls back to "all-years" (Phase6EmbeddingSource.scala:202).
+- Owners: rag and storage.
+
+N13 — Info. Evidence documents have small formatting and stale-status issues:
+- In evidence/8b/agents.md:9, a blank line splits the table, like N8.
+- commands.md:54 and repairs.md:62 still say "pending" next to later final results.
+- Owner: coordinator.
+
+N14 — Info. The smoke-test distractors in embedding-smoke.json share no content words with their queries, so they only weakly test lexical discrimination. This is already disclosed as fake-only behavior.
+
+F1 and N1 stay FIXED. N2–N8 and R2–R3 remain OPEN, nonblocking and deferred. I'm not reopening them. R1 is verified FIXED.
+
+3. Report fields
+
+STATUS: COMPLETE (review) — verdict REQUEST-CHANGES
+OWNER: code-reviewer (user-launched, read-only)
+WORK ORDER: Phase 8 Subphase 8B independent review per user-supplied prompt; base/HEAD 3c45de74ec5900b8ac5c0273b5bf80bef8f84b1e, branch phase-8, all 8B changes uncommitted
+FILES CREATED: none
+FILES MODIFIED: none
+COMMANDS RUN: read-only git status/diff vs 3c45de7; cmp + shasum of plan snapshot vs Drive source; shasum/size of /tmp/phase8b-final-check-1.txt and /tmp/phase8b-frozen-source.json; grep of raw log test totals; python -I rehash of source-files.json (30), frozen snapshot (254), g1/real/producer artifact inventories and replay raw logs; secret/hardcode greps; WebFetch of course README Phase 8. No build, test, AWS/provider call, data change, commit or reviewer launch.
+TEST RESULTS: Not run by reviewer. Retained raw log independently confirms exit-success, 756 passed/0 failed (157/64/39/38/51/25/374/8), real 678.84 s. Targeted excerpts confirm core 13, storage 19, RAG 25, independent 39.
+VALIDATION RESULTS: All hashes/inventories match; R1 verified FIXED; spend gates intact; one blocker B1 (CLI/source-reader/fifth-type CLI rendering untested in sbt check); nonblocking N9–N14.
+ASSUMPTIONS: Retained /tmp raw logs are the outputs of the recorded commands; the real Phase 6 export under target/ is the Phase 6 retained run.
+RISKS: CLI/reader regressions undetected by check (B1); 8C live packet lacks real-model manifest producer and full §7.5 report fields (N9); live compatibility, Titan quality, ≥10,000-vector corpus (real export has 100,765 summaries), latency, cost and cleanup unverified.
+MANUAL ACTION REQUIRED: User pastes the NEXT PROMPT to the main agent; no commit until a subsequent APPROVE.
+BLOCKED-ON OWNER: test-engineer and rag-engineer (B1); storage-engineer optional.
+BLOCKED-ON EVIDENCE: B1 acceptance check plus rerun affected and full JDK17 sbt check.
+NEXT GATE: 8B repair round 1, then user-launched recheck.
+
+4. NEXT PROMPT
+
+You are the Phase 8 coordinator for ScholarChain in
+/Users/danny/Documents/UIC/CS441/ScholarChain, branch phase-8,
+base/HEAD 3c45de74ec5900b8ac5c0273b5bf80bef8f84b1e, 8B changes uncommitted.
+This is Subphase 8B REPAIR ROUND 1. Do only this repair, then stop.
+
+Plan: /Users/danny/Library/CloudStorage/GoogleDrive-cpnguyen0630@gmail.com/My Drive/plan/phase8.md
+(snapshot docs/agent-runs/phase-08/evidence/8b/phase8-plan.md). Follow AGENTS.md,
+CLAUDE.md, docs/agents.md and docs/agent-runs/README.md.
+
+Step 0: ask the user any questions (with recommended defaults) or state
+"No questions for this repair round", then proceed.
+
+(a) Append the external reviewer's 8B verdict VERBATIM to
+docs/agent-runs/phase-08/review.md under "Subphase 8B — user-supplied external
+review". Log B1 (blocking) and N9–N14 (nonblocking) in repairs.md with owners.
+F1/N1 stay FIXED; R1 is independently verified FIXED; N2–N8 and R2–R3 stay
+OPEN/deferred. Do not repair deferred or nonblocking items unless the user asks.
+
+(b) Route B1 by ownership in separate work orders:
+ - test-engineer (tests/** only): turn the existing local-acceptance
+   harness into a suite that runs in `sbt check`. It must generate the G1
+   export in a temp dir via existing Phase 6 APIs (no target/ dependency), run
+   EmbeddingIngestMain.run first → replay on the same state → fresh state, and
+   assert literal expectations: 12 written; replay 12 unchanged, 0 embedding
+   calls, 0 rejected; fresh counters identical; identical manifest hashes;
+   every persisted pointer/hash resolves; qualifications hash verified. Add at
+   least one non-empty source-reader rejection (e.g. logical-hash mismatch or
+   scan cap below row count → exact rejection code) and assert the bounded
+   round-robin selection (e.g. maxSummaries=4 → one per summary type).
+ - rag-engineer (modules/rag/src/test/** only): unit-test
+   EmbeddingIngestMain.renderSource for a synthetic EmbeddingSourceBatch with
+   topic and institution nodes. Assert exact rendered fields
+   (label, nodeClass, tableTotalNodes), source references, identity fields
+   (topicId/institutionId/sourceDataset), the topic-institution-summary index,
+   and that the table total is not presented as a per-node count.
+ - storage-engineer: only if the owners decide a reader rejection case
+   belongs in modules/storage/src/test/**.
+ No production code changes unless a new test exposes a defect; route any
+ such defect to its owner and report it.
+
+(c) Rerun the affected targeted suites, then the full JDK 17 gate:
+ export JAVA_HOME=/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home
+ export PATH="$JAVA_HOME/bin:$PATH"
+ export SBT_OPTS="-Dlogback.configurationFile=$PWD/docs/agent-runs/phase-04/xml-repair-logback.xml"
+ /usr/bin/time -p sbt -batch check > /tmp/phase8b-r1-final-check-1.txt 2>&1
+ Keep the raw log outside Git. Record size, SHA256, exit, per-module counts,
+ a line-numbered excerpt, the source-hash inventory and the frozen-file audit
+ under docs/agent-runs/phase-08/evidence/8b-r1/. Report every failed attempt.
+
+(d) Do not start 8C. 8C requires Phase 14 deployment, an AWS account, and a
+human-written approval with caps; the user currently has no AWS account.
+No AWS/provider calls, no live command execution, no commits/pushes, no edits
+to human-decision records, and do not launch any reviewer.
+
+(e) End with the handoff packet and a complete recheck reviewer prompt per
+plan Section 10 in one fenced block. Include base/HEAD, the exact changed and
+untracked inventory, commands/exit codes/test counts, raw-log SHA/size,
+evidence paths, the B1 acceptance mapping and the retained dispositions.
+
+(f) Stop and end the turn with: "Subphase 8B repair round 1 is ready for
+review. I have stopped and will not start the next subphase until I receive
+the next prompt."
+
+This review is not human acceptance or instructor approval.
+
+## Subphase 8B repair round 1 recheck — user-supplied external review
+
+1. VERDICT: APPROVE for Subphase 8B repair round 1
+
+  The blocker B1 and the extra repair N9 both meet the acceptance checks I set. The new tests really run in sbt check, and the evidence re-hashes byte for byte. Neither live command was run. I found five more items, none blocking. This recheck is not human acceptance or instructor approval.
+
+  What I verified
+
+  - Checkpoint: branch phase-8 at HEAD 3c45de74…. git status -uall shows 20 tracked changes and 119 untracked files, matching files.json exactly.
+  - Inventories:
+    - All 35 entries in source-files.json match on content, size and the base-commit hash, and they are exactly the changed implementation files.
+    - All 8 entries in repair-files.json match.
+    - Against the earlier 254-file 8B snapshot, only the 3 declared modified files changed.
+  - Frozen snapshot: /tmp/phase8b-r1-frozen-source.json has SHA 633095b1…27ce, as recorded. All 346 files are unchanged, and no file in that scope is missing from it.
+  - Plan copy: cmp of the snapshot against the Drive plan exits 0.
+  - Full gate log: /tmp/phase8b-r1-final-check-1.txt is 1,520,049 bytes with SHA 3b5abff1…876f, both as recorded.
+    - Module counts are 157/64/39/38/51/33/376/8, which sum to 766 with 0 failures. The run ends [success] with real time 695.67 s.
+    - The only [error] lines (7064–7082) are the build's expected checkProbeInjectFailure self-test.
+    - All four new or changed suites appear: EmbeddingSmokeGuardSpec (line 2166), Embedding8BRepairSpec (2181), IndependentEmbedding8BGuardSpec (2938) and IndependentEmbedding8BPipelineSpec (6477). Lines 7035 and 7037 show the G1 producer output and the passing case.
+  - Targeted logs: all three re-hash correctly. Run 2 failed as recorded (OPENALEX vs openalex, Embedding8BRepairSpec.scala:114, 32 passed/1 failed). Run 3 passed.
+  - Temporary output: the G1 temp directory named in final-audit.json no longer exists.
+  - B1:
+    - (a) Full local run is now a real test. The pipeline spec builds G1 in a temp directory through existing Phase 6 jobs. It asserts the literal values 10/9/18/28, then runs the actual CLI three times: first, replay from disk, then a fresh state. It checks 12 written, then 12 unchanged with 0 calls and 0 rejected. Counters and manifest hashes match across runs. It reopens every stored object and checks hash, pointer and context. It also checks the qualifications hash.
+    - (b) Source reader on real rows. A scan cap of 1 is rejected as embedding-source-scan-limit. A summary cap of 4 picks one of each summary type in a literal order, and repeated loads give the same IDs and keys.
+    - (c) Topic/institution rendering. The test compares exact bytes, exact source refs, the totals 17 and 23, the topic/institution IDs with sourceDataset=OPENALEX, and the topic-institution index.
+  - N9:
+    - (a) Render-only manifest command. EmbeddingManifestMain builds no embedder, no saved state and no SDK client. Its output passes the pure live preflight in both the module and G1 tests.
+    - (b) Live report fields. LiveEmbeddingIngestMain.scala:217-248 adds model ID, version and dimension, per-index counts, rejections, and rejectedReportUri (null when absent).
+    - (c) Query smoke command. It requires a separate query-smoke approval, checked before any client is built (LiveEmbeddingSmokeMain.scala:82-90, 325-337). Pointer scope is enforced and tested. I recomputed the test expectations by hand: estimated cost $0.24, p50 = 2 ms and p95 = 9 ms. The refusal tests confirm no client factory is ever called.
+    - Templates: all are disabled. The live-config template is byte-identical to the 8B one.
+  - Ownership: the work orders are separate per owner. rag-engineer wrote only modules/rag/**, test-engineer only tests/**, and the coordinator only evidence. review.md holds the prior verdict verbatim (SHA ef12bb6c… matches preflight.json), and repairs.md records the dispositions correctly.
+
+  Findings (none blocking)
+
+  N15 — Low — nonblocking, fix before 8C. A query-smoke approval has to carry ingest-sized caps.
+
+  - Evidence: LiveEmbeddingSmokeMain.scala:96-99 reruns the full ingest preflight using a modified copy of the approval. The approval's embeddingCallCap and dollarCapUsd must therefore cover a full manifest ingest (items × attempts, plus storage), even though the smoke only makes queries × attempts embedding calls.
+  - Impact: with a manifest of 10,000 or more vectors, a person approving only a query smoke has to sign caps sized for a full ingest. Spending is still limited by the query caps. The problem is that the approval document misstates what is being authorized. The runbook (live-runbook.md:31) only partly discloses this.
+  - Owner: rag-engineer.
+  - Acceptance check: for operation=query-smoke, validate the manifest and resources without the ingest call/cost checks. Add a test where a large manifest with small query caps is accepted.
+
+  N16 — Low — nonblocking. The fake local CLI accepts a real model ID.
+  - Evidence: the render-only command reuses LocalEmbeddingConfig, and render-config.template.json uses the Titan model ID. Nothing stops someone passing that config to EmbeddingIngestMain, which embeds with the fake (EmbeddingIngestMain.scala:196). The comment at line 10 ("fake model ID must describe the fake") is now stale.
+  - Impact: local vectors and reports could carry the Titan label. This is local only, and reports still say mode=deterministic-fake.
+  - Owner: rag-engineer.
+  - Acceptance check: the fake CLI rejects known real-provider model IDs, or the comment and README are corrected.
+
+  N17 — Low — nonblocking, future test gap. Reading topic/institution rows from an export is still untested in check.
+  - Evidence: G1 has no topic or institution nodes (IndependentEmbeddingLocalReplayMain.scala:60-62). The new unit test uses a hand-built batch (Embedding8BRepairSpec.scala:46-63). Reading those rows from an actual export was only exercised by hand against the retained real export.
+  - Owners: test-engineer, with storage-engineer if it belongs in the module.
+  - Acceptance check: a small export fixture containing node tables, read through Phase6EmbeddingSource.
+
+  N18 — Info. A smoke refusal test leaves its temp directory behind.
+  - Evidence: EmbeddingSmokeGuardSpec.scala:215 never deletes its temp directory. I found 3 leftover embedding-smoke-refusal-* directories in the temp folder. They hold only synthetic files.
+  - Owner: rag-engineer.
+
+  N19 — Info. Some acceptance flags are written as literals.
+  - Evidence: in IndependentEmbeddingLocalReplayMain.scala:144-158 the acceptance.json booleans are literals.
+  - Impact: they are safe, because every require above them must pass first, and the pipeline spec re-checks the stored state independently.
+  - Owner: test-engineer, optional.
+
+  Dispositions:
+  - B1 and N9 are FIXED. N9c is authored but unexecuted, so live results stay a gate for 8C.
+  - F1, N1 and R1 remain FIXED.
+  - N2–N8, R2–R3 and N10–N14 remain OPEN, nonblocking and deferred.
+  - N15–N19 are new, OPEN and nonblocking. N15 should be resolved before 8C.
+  - Still unverified and left to 8C: whether the live services work end to end, retrieval quality, the 10,000-vector corpus, latency, cost and cleanup.
+
+  3. Report fields
+
+  STATUS: COMPLETE (recheck) — verdict APPROVE for 8B repair round 1
+  OWNER: code-reviewer (user-launched, read-only)
+  WORK ORDER: Phase 8 Subphase 8B repair round 1 recheck (B1 blocking + user-requested N9); base/HEAD 3c45de74ec5900b8ac5c0273b5bf80bef8f84b1e, branch phase-8, all changes uncommitted
+  FILES CREATED: none
+  FILES MODIFIED: none
+  COMMANDS RUN: read-only git rev-parse/status -uall/diff --stat vs 3c45de7; shasum/size of /tmp/phase8b-r1-final-check-1.txt, targeted-1/2/3 logs and /tmp/phase8b-r1-frozen-source.json; python -I rehash of repair-files.json (8), source-files.json (35 incl. git base hashes), frozen snapshot (346), prior 254-file snapshot; files.json vs git status; cmp of plan snapshot; grep of raw log for suites/totals/errors; source reads; ls of temp paths. No build, test, AWS/provider call, data change, commit or reviewer launch.
+  TEST RESULTS: Not run by reviewer. Raw log independently confirms exit success, 766 passed/0 failed (157/64/39/38/51/33/376/8), real 695.67 s; all four new/changed suites discovered; targeted-2 failure and targeted-3 pass confirmed from raw logs.
+  VALIDATION RESULTS: All hashes/inventories match; B1 and N9 acceptance met; spend gates intact; neither live entrypoint executed; templates disabled; new nonblocking N15–N19.
+  ASSUMPTIONS: Retained /tmp raw logs are outputs of the recorded commands; the plan snapshot is the governing plan.
+  RISKS: Query-smoke approval semantics over-broad (N15); fake CLI accepts real model ID (N16); node-table reading untested in check (N17); all live behavior, quality, ≥10,000 corpus, latency, cost and cleanup unverified until 8C.
+  MANUAL ACTION REQUIRED: User reviews the diff and decides on the commit gate; 8C requires a new prompt, Phase 14 deployment, an AWS account and human-written approvals/caps.
+  BLOCKED-ON OWNER: none for 8B.
+  BLOCKED-ON EVIDENCE: none for 8B; 8C live evidence is a future gate.
+  NEXT GATE: Record recheck verdict, then user commit gate for 8B.
+
+  4. NEXT PROMPT
+
+  You are the Phase 8 coordinator for ScholarChain in
+  /Users/danny/Documents/UIC/CS441/ScholarChain, branch phase-8,
+  base/HEAD 3c45de74ec5900b8ac5c0273b5bf80bef8f84b1e, all 8B work uncommitted.
+  This step only records the 8B repair-round-1 recheck and prepares the user
+  commit gate. Follow AGENTS.md, CLAUDE.md, docs/agents.md and
+  docs/agent-runs/README.md.
+
+  Step 0: ask the user any questions (with recommended defaults) or state
+  "No questions for this step", then proceed.
+
+  (a) Append the external recheck verdict VERBATIM to
+  docs/agent-runs/phase-08/review.md under
+  "Subphase 8B repair round 1 recheck — user-supplied external review"
+  (APPROVE). Retain a copy at docs/agent-runs/phase-08/evidence/8b-r1/
+  external-recheck.txt and record its SHA256.
+
+  (b) Update repairs.md dispositions only (coordinator evidence):
+   - B1 FIXED (independently verified). N9 FIXED; N9c authored/unexecuted,
+     live results remain an 8C gate.
+   - F1/N1/R1 remain FIXED. N2–N8, R2–R3, N10–N14 remain OPEN/nonblocking/
+   live results remain an 8C gate.
+ - F1/N1/R1 remain FIXED. N2–N8, R2–R3, N10–N14 remain OPEN/nonblocking/
+   deferred.
+ - Add N15 (low; query-smoke approval must carry ingest-scale caps;
+   rag-engineer; resolve before 8C), N16 (low; fake CLI accepts real model
+   ID / stale comment EmbeddingIngestMain.scala:10; rag-engineer),
+   N17 (low; Phase6EmbeddingSource node-table read path untested in check;
+   test-engineer/storage-engineer), N18 (info; EmbeddingSmokeGuardSpec
+   temp dir not deleted; rag-engineer), N19 (info; literal acceptance
+   booleans in IndependentEmbeddingLocalReplayMain; test-engineer) as
+   OPEN/nonblocking. Do not repair any of them in this step.
+
+(c) User commit gate: do NOT commit or push. Present the exact proposed
+commit inventory (20 tracked + 119 untracked from evidence/8b-r1/files.json,
+plus only the evidence files changed in this step), confirm no secrets,
+target/ or /tmp artifacts are included, and propose a commit message.
+Re-verify that all 35 source-files.json hashes and the 346-file frozen
+snapshot still match (read-only hashing; no build needed because no source
+changes are allowed in this step). Wait for the user's explicit
+human-written commit decision.
+
+(d) Do not start 8C. 8C requires a new user prompt, Phase 14 deployment,
+an AWS account and actual human-written approvals/caps; the user has no AWS
+account. No AWS/provider calls, no live or smoke command execution, no
+source edits, no edits to human-decision records, and do not launch any
+reviewer.
+
+(e) End with the handoff packet and stop with: "Subphase 8B is recorded as
+independently approved and awaits the user commit gate. I have stopped and
+will not commit, push or start the next subphase until I receive the next
+prompt."
+
+This recheck is not human acceptance or instructor approval.

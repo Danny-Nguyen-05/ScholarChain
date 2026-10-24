@@ -1,0 +1,11 @@
+{
+  "rawLog": "/tmp/phase8b-cli-process-replay-2.txt",
+  "bytes": 234631833,
+  "sha256": "9b31d743a0b8707b8d8ccb2fbccfcfe9ee0077a43cfc78c71b411e19abdea2db",
+  "exit": 0,
+  "g1Unchanged": 12,
+  "realUnchanged": 16,
+  "embeddingCalls": 0,
+  "forked": true,
+  "remainingIssue": "forked child did not inherit explicit logback property; excessive DEBUG output. Build owner forwarding only configured property before final CLI run."
+}

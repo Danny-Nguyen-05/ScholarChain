@@ -1,0 +1,13 @@
+{
+  "rawLog": "/tmp/phase8b-cli-process-replay-3.txt",
+  "sha256": "e4d5865fad8a81f54b63f230d5a170b2187dd9fe774ca3c70a50e9b256ef8343",
+  "bytes": 4953,
+  "exit": 0,
+  "forked": true,
+  "g1Unchanged": 12,
+  "realUnchanged": 16,
+  "embeddingCalls": 0,
+  "manifestHashesMatchFirstRun": true,
+  "deletedJarShutdownException": false,
+  "debugOutput": false
+}

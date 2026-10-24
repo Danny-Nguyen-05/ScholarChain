@@ -112,7 +112,13 @@ lazy val rag =
     .dependsOn(core, storage)
     .settings(
       ScholarChainBuild.moduleSettings(Seq(Dependencies.awsBedrockRuntime)),
-      name := "rag"
+      name := "rag",
+      Compile / run / fork := true,
+      Compile / run / baseDirectory := (ThisBuild / baseDirectory).value,
+      Compile / run / javaOptions ++= sys.props
+        .get("logback.configurationFile")
+        .map(path => s"-Dlogback.configurationFile=$path")
+        .toSeq
     )
 
 lazy val services =

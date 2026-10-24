@@ -295,3 +295,61 @@ a storage → rag dependency. All are synthetic and offline. Phase 8B
 owns the CLI, Phase 6 fixture/real-slice ingestion and five-query retrieval smoke suite. The 8C live
 command, actual ingestion, service compatibility, source corpus counts, performance, budget and
 cleanup remain later gates. No AWS account, provider call or live execution was used for 8A.
+
+## Phase 8B group consistency and local export replay
+
+Before processing any chunk, the manifest runner validates every member of its document group,
+including the configured model/dimension, text byte bound and ordinary-S3 pointer scope. Groups
+must contain exactly one occurrence of every ordinal from zero through `chunkCount - 1`, with a
+coherent count and whole-text hash. A count larger than the bounded manifest cannot allocate an
+unbounded ordinal range. Identical duplicate ordinals are now rejected as incomplete group input;
+replay is expressed as a separate execution with the complete manifest, not duplicate work entries.
+
+An immutable ArtifactRegistry group binding covers document type, entity, window, template,
+chunk policy and model, excluding ordinal, source run and text. Its hash binds the total chunk
+count and the hash of the full rendered text before chunking. A changed count or whole-text hash
+rejects every incoming member as `vectorKeyTextConflict` before embedding or ordinary text,
+prepared-vector or vector writes. Only its rejection report is written to ObjectStore. This prevents
+an unchanged prefix from hiding a shrink and prevents a growing document from writing its new tail
+alongside old chunks. Rejected old groups retain their original vectors; the runner does not delete
+or replace them. A deliberate model/template/chunk-policy namespace change remains explicit.
+The group guard is a text-consistency preflight, not an atomic transaction across all vector writes.
+
+Single ordinal-zero legacy documents may omit the new whole-text hash, in which case their exact
+text hash is used. Multi-chunk input requires explicit count/hash from its renderer. Existing
+individual artifact bindings without the new group binding fail closed as `group-binding-missing`;
+they cannot silently bootstrap a potentially stale group. No 8A cloud ingestion occurred, so there
+is no live corpus to migrate. An old local state or later exceptional migration needs an explicit
+operator namespace/state decision; this adapter does not infer or rewrite historical group counts.
+
+`Phase6EmbeddingSource.load` reads completed local Phase 6 exports plus their S3 Vectors work
+proposal. It binds the completion marker, producer run/lineage, table declarations and work proposal.
+The semantic-summary, topic-node and institution-node tables are streamed in full under configured
+scan/row/metadata bounds; all three logical hashes and counts are checked before returning a batch.
+Exceeding the scan bound rejects instead of labelling an incomplete scan verified. Selection holds
+bounded candidates per summary type and chooses round robin in stable type/key order; it returns
+actual summary-type counts so absent types remain absent. Topic/institution selections use actual
+GraphNode labels, IDs, provenance and source references. Their aggregate count is the exported table
+node total, not an invented per-node degree or a topic-to-institution relationship. Mixed dataset
+exports do not acquire a guessed `sourceDataset` filter. The returned qualifications retain the
+producer's convergence and approximation disclosures. Unselected table bodies are not revalidated
+by this reader; source-reference existence and any later join beyond these selected tables retain
+upstream or composition validation responsibilities.
+
+`LocalEmbeddingState.open(path, config)` and `save(path)` provide explicit fake-only disk persistence
+for the local CLI. Snapshots contain bounded ordinary objects, immutable registry bindings, fake
+indexes/vectors and successful RunLedger operations. A SHA-256 envelope detects accidental
+corruption; restore traverses the existing fake port validators. Bucket, prefix, dimension and metric
+must match the state configuration. Save uses an atomic local file replacement; separate sequential
+CLI processes can reopen state and observe real unchanged counters without invoking the embedder.
+This is a local single-writer demonstration format with a 64 MiB encoded snapshot cap, not an AWS
+adapter or concurrent database. Corrupt or incompatible state is rejected, never reset silently.
+Failed stages and prepared checkpoints persist when composition saves after a partial run.
+
+Module cases cover group shrink/grow, invalid/incomplete membership, legacy binding refusal,
+separate-state reopen/replay and corruption, source completion and work-manifest binding. The
+independent owner verifies real renderer shrink/grow, the actual G1 completed export and retrieval.
+Deferred N3 (serial embedding invocation), N6 (whole SQS receive batch rejection), R2 (first filter
+metadata retained on unchanged text) and R3 (filterable metadata checked only by the vector adapter)
+remain outside this repair. Live compatibility, provider quality, counts and costs are not inferred
+from local replay.

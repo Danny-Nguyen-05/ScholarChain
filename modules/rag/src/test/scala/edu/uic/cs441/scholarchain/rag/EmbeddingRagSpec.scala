@@ -513,6 +513,7 @@ class EmbeddingRagSpec extends AnyFunSuite {
     val original = rendered()
     val doc = original.copy(
       text = text,
+      wholeTextHash = EmbeddingContracts.textHash(text),
       documentId = StableIds
         .chunkOrProfileId(
           original.entityId,

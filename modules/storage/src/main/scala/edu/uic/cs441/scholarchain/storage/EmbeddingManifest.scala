@@ -285,6 +285,74 @@ final class EmbeddingManifestRunner(
         }
       }
     }
+    // Bind a complete rendered document before processing any of its chunks. The binding
+    // excludes source runs and ordinals, so shrinking/growing text cannot leave a mixed set.
+    val groupErrors = scala.collection.mutable.Map.empty[String, String]
+    manifest.items
+      .groupBy(i => EmbeddingContracts.groupKey(i.document, i.embeddingModel))
+      .toVector
+      .sortBy(_._1)
+      .foreach { (key, items) =>
+        val descriptors = items
+          .map(i => i.document.chunkCount -> EmbeddingContracts.wholeTextHash(i.document))
+          .distinct
+        val invalid = items.iterator
+          .flatMap { i =>
+            EmbeddingValidation.workItem(i) ++
+              Option.when(
+                i.embeddingModel != embedder.model || i.embeddingModel.dimension != config.dimension
+              )("embedding-model-mismatch") ++
+              Option.when(i.document.text.getBytes(UTF_8).length > config.maxTextBytes)(
+                "text-byte-limit"
+              ) ++
+              Option.when(objectKey(i.textS3Uri).isEmpty)("text-pointer-outside-config")
+          }
+          .take(1)
+          .toVector
+          .headOption
+        val ordinals = items.map(_.document.chunkOrdinal).sorted
+        if (invalid.nonEmpty) groupErrors(key) = invalid.get
+        else if (descriptors.size != 1) groupErrors(key) = "vectorKeyTextConflict"
+        else if (
+          ordinals.size != descriptors.head._1 || !ordinals.zipWithIndex
+            .forall((ordinal, index) => ordinal == index)
+        ) groupErrors(key) = "incomplete-embedding-group"
+        else {
+          val (count, wholeHash) = descriptors.head
+          val hash = StableIds.sha256Hex(
+            ujson.Obj("chunkCount" -> count, "wholeTextHash" -> wholeHash).render()
+          )
+          val id = "embedding-group:" + key
+          val uri = "embedding-group://" + StableIds.sha256Hex(key)
+          registry.get(id, "v1") match {
+            case r
+                if StorageResult
+                  .value(r)
+                  .exists(record => record.hash == hash && record.uri == uri) =>
+              ()
+            case r if StorageResult.successful(r) => groupErrors(key) = "vectorKeyTextConflict"
+            case Missing =>
+              val legacy = items.map(i => registry.get(artifact(i), "binding"))
+              if (legacy.exists(StorageResult.successful))
+                groupErrors(key) = "group-binding-missing"
+              else if (legacy.exists(_ != Missing))
+                groupErrors(key) = "embedding-group-registry-unavailable"
+              else if (!StorageResult.successful(registry.register(id, "v1", uri, hash))) {
+                registry.get(id, "v1") match {
+                  case r
+                      if StorageResult
+                        .value(r)
+                        .exists(record => record.hash == hash && record.uri == uri) =>
+                    ()
+                  case r if StorageResult.successful(r) =>
+                    groupErrors(key) = "vectorKeyTextConflict"
+                  case _ => groupErrors(key) = "embedding-group-registry-unavailable"
+                }
+              }
+            case _ => groupErrors(key) = "embedding-group-registry-unavailable"
+          }
+        }
+      }
     val seen = scala.collection.mutable.Map.empty[(String, String), String]
     manifest.items.zipWithIndex.foreach { (i, ordinal) =>
       val stage = "embedding-" + ordinal + "-" + StableIds
@@ -296,6 +364,8 @@ final class EmbeddingManifestRunner(
       val invalid = EmbeddingValidation.workItem(i)
       val identity = i.indexName -> i.vectorKey
       if (ledgerFailed) ()
+      else if (groupErrors.contains(EmbeddingContracts.groupKey(i.document, i.embeddingModel)))
+        reject(i, stage, groupErrors(EmbeddingContracts.groupKey(i.document, i.embeddingModel)))
       else if (invalid.nonEmpty) reject(i, stage, invalid.head)
       else if (i.embeddingModel != embedder.model || i.embeddingModel.dimension != config.dimension)
         reject(i, stage, "embedding-model-mismatch")

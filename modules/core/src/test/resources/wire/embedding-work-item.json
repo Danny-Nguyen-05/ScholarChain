@@ -22,7 +22,9 @@
       "sourceDataset": "synthetic-fixture"
     },
     "chunkPolicyVersion": "fixture-chunk-policy-v1",
-    "chunkOrdinal": 0
+    "chunkOrdinal": 0,
+    "chunkCount": 1,
+    "wholeTextHash": ""
   },
   "textS3Uri": "s3://fixture-text/graph/rag/fixture-A.json",
   "textHash": "d23025bf3ac41e3d69947fe4aa5bd6318fe202cb7664cac26464143a85926552",

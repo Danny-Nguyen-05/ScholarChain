@@ -1,0 +1,8 @@
+{
+  "source": "User-supplied independent read-only recheck",
+  "verdict": "APPROVE for Subphase 8B repair round 1",
+  "path": "docs/agent-runs/phase-08/evidence/8b-r1/external-recheck.txt",
+  "sha256": "e79dfe2a2e2e3a4d0e7135dfe59c23d598f7a0d3f1439b87618c207d517f2d1f",
+  "bytes": 12161,
+  "note": "Full pasted review and next prompt retained, including duplicated lines; UI tip and subsequent user scope instruction are not part of the reviewer text."
+}

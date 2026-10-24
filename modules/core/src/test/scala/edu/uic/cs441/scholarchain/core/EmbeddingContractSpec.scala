@@ -210,6 +210,99 @@ class EmbeddingContractSpec extends AnyFunSuite {
         .contains("invalid-document-id")
     )
   }
+  test("chunk groups bind count and whole text without changing stable vector slots") {
+    val first = document.copy(
+      documentType = "paper",
+      entityId = "e",
+      windowId = "w",
+      templateVersion = "t",
+      chunkPolicyVersion = "p",
+      chunkCount = 2,
+      wholeTextHash = "a" * 64
+    )
+    val second = first.copy(chunkOrdinal = 1, text = "second part")
+    val smallModel = EmbeddingModel("m", "v", 2)
+    assert(EmbeddingValidation.document(first).isEmpty)
+    assert(EmbeddingValidation.document(second).isEmpty)
+    // Six independently length-counted frames; ordinal/count/hash/run do not supply identity.
+    assert(EmbeddingContracts.groupKey(first, smallModel) == "5:paper1:e1:w1:t1:p9:1:m1:v1:2")
+    assert(
+      EmbeddingContracts.groupKey(second, smallModel) == EmbeddingContracts.groupKey(
+        first,
+        smallModel
+      )
+    )
+    assert(
+      EmbeddingContracts.vectorKey(first, smallModel) != EmbeddingContracts.vectorKey(
+        second,
+        smallModel
+      )
+    )
+    val changed = first.copy(chunkCount = 3, wholeTextHash = "b" * 64, runId = "another-run")
+    assert(
+      EmbeddingContracts.groupKey(changed, smallModel) == EmbeddingContracts.groupKey(
+        first,
+        smallModel
+      )
+    )
+    assert(
+      EmbeddingContracts.vectorKey(changed, smallModel) == EmbeddingContracts.vectorKey(
+        first,
+        smallModel
+      )
+    )
+    assert(EmbeddingContracts.wholeTextHash(changed) == "b" * 64)
+    assert(
+      EmbeddingContracts.groupKey(first, smallModel.copy(version = "v2")) != EmbeddingContracts
+        .groupKey(first, smallModel)
+    )
+  }
+  test(
+    "whole-text binding is explicit for multi-chunk documents and compatible with legacy singletons"
+  ) {
+    assert(EmbeddingContracts.wholeTextHash(document) == hash)
+    val oldJson = ujson.read(CoreJson.compact(document))
+    oldJson.obj.remove("chunkCount")
+    oldJson.obj.remove("wholeTextHash")
+    val legacy = CoreJson.parse[EmbeddingDocument](oldJson.render()).toOption.get
+    assert(legacy.chunkCount == 1 && legacy.wholeTextHash.isEmpty)
+    assert(EmbeddingValidation.document(legacy).isEmpty)
+    assert(EmbeddingContracts.wholeTextHash(legacy) == hash)
+    assert(EmbeddingValidation.document(document.copy(wholeTextHash = hash)).isEmpty)
+    assert(
+      EmbeddingValidation
+        .document(document.copy(wholeTextHash = "0" * 64))
+        .contains("whole-text-hash-mismatch")
+    )
+    Vector("bad", "A" * 64).foreach { value =>
+      assert(
+        EmbeddingValidation
+          .document(document.copy(chunkCount = 2, wholeTextHash = value))
+          .contains("invalid-whole-text-hash")
+      )
+    }
+    assert(
+      EmbeddingValidation
+        .document(document.copy(chunkCount = 2))
+        .contains("invalid-whole-text-hash")
+    )
+    assert(
+      EmbeddingValidation.document(document.copy(chunkCount = 0)).contains("invalid-chunk-count")
+    )
+    assert(
+      EmbeddingValidation.document(document.copy(chunkOrdinal = 1)).contains("invalid-chunk-count")
+    )
+    assert(
+      EmbeddingValidation
+        .document(document.copy(chunkOrdinal = 1))
+        .contains("invalid-whole-text-hash")
+    )
+    assert(
+      EmbeddingValidation
+        .document(document.copy(chunkCount = 2, chunkOrdinal = 2, wholeTextHash = "a" * 64))
+        .contains("invalid-chunk-count")
+    )
+  }
   test("abstract and fallback choices are explicit and limited to paper documents") {
     val paper = document.copy(documentType = "paper", documentId = "chunk:" + "a" * 64)
     assert(EmbeddingValidation.document(paper.copy(textSelection = "permitted-abstract")).isEmpty)

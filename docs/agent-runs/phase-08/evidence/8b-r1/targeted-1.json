@@ -1,0 +1,15 @@
+{
+  "rawLog": "/tmp/phase8b-r1-targeted-1.txt",
+  "bytes": 145748,
+  "sha256": "70843ebc3edfaa2b21e0a163adf220eefa7e42eb87e270d7e5a64377dc61ae4c",
+  "exit": 0,
+  "ragTests": 7,
+  "independentTests": 11,
+  "newDiscoveredPipelineSuiteTests": 1,
+  "runtimeFence": {
+    "runtimeRoots": 7,
+    "inspectedFiles": 22,
+    "findings": 0
+  },
+  "note": "First gate targeted old RAG retrieval/guard plus new independent pipeline. New node/report/render module suite and query-smoke cases run in next affected gate."
+}

@@ -34,3 +34,27 @@ After supplying independent APPROVE for repair round 1, the user instructed: "No
 Pre-commit verification: all 303 source/build/test/doc contents match the retained 731-test full-gate snapshot; no code changes since that gate. Only phase-08 evidence changed afterward. Tests are not rerun for this commit-only operation.
 
 Staged pre-commit check: source/build/test whitespace check exits 0. The whole-tree check reports 14 trailing-space notices solely in retained sbt .txt output/excerpts; those reviewed evidence bytes are intentionally preserved. No source formatting defect was reported.
+
+## Subphase 8B
+
+User request: “All right, let's start Phase 8B.” Base/HEAD: 3c45de74ec5900b8ac5c0273b5bf80bef8f84b1e on phase-8, clean and pushed before work. The prior 8A external APPROVE is already retained verbatim; no duplicate review appended.
+
+Step 0: asked whether to repair R1 chunk-group consistency before local CLI runs or document/test it as a limitation. User answer: “Repair chunk-group consistency now (recommended)”. No other open 8B decisions remain; approved Phase 8 decisions persist. N2–N8 and R2–R3 stay deferred.
+
+Scope: R1 complete-group preflight binding; local fake CLI over completed Phase 6 G1 and bounded real export; five fixed-neighbor smoke queries and pointer/hash round trip; independent failure/dedup/replay matrix; authored but unexecuted bounded live command, disabled approval template and cleanup instructions; affected and full JDK17 gates. Only 8B; no 8C execution, reviewer, cloud/provider calls, commits/pushes, or human-decision edits. Original plan source and byte-identical snapshot are recorded in evidence/8b/preflight.json.
+
+## Subphase 8B — repair round 1
+
+User supplied the independent REQUEST-CHANGES review and requested: “Fix our locking bug and the N9 bug for me.” Interpreted in the supplied review context as blocking B1 plus N9. No questions for this repair round. N9a/b implementation and tests are authorized; N9c is authored as a guarded future query/latency command only, never executed.
+
+B1: make genuine temporary G1 → CLI first/replay/fresh and source selection/rejection part of sbt check, plus exact fifth-type node-rendering unit assertions. N9: supported render-only real-model manifest; full live report fields; authored query smoke command. Separate test/RAG work orders and native IDs retained under evidence/8b-r1/. No other nonblocking repairs,8C execution, reviewer, cloud/provider calls, commits/pushes, secret reads or human-decision edits. All approved decisions persist. Required affected targets then full JDK17 check with outside-repo raw log, hashes, size, counts, excerpt and frozen audit.
+
+## Record approved 8B recheck and prepare user commit gate
+
+User supplied APPROVE for8B repair round1 and instructed: “don't need to fix non-blockings”. No questions for this step. Record the external verdict verbatim, independently close B1/N9, preserve F1/N1/R1 closure and all deferred findings including N15–N19. Verify source/frozen hashes and exact proposed commit inventory without builds or implementation edits. Propose a commit message and wait for explicit user commit authorization. No staging, commit/push, reviewer, source edits, temporary cleanup, live commands, human-decision edits or8C. This does not extend the earlier8A-only commit/push authorization.
+
+## User-authorized 8B commit and push
+
+After the independent APPROVE and exact commit proposal, the user instructed: “All right, now I want you to commit and push the change for me.” This explicitly authorizes staging and committing the proposed8B implementation, repair, review and coordinator evidence on phase-8, then pushing phase-8 to origin. It supersedes the earlier no-agent-commit/push restriction for this action only; historical pending-gate records remain checkpoints. It does not authorize8C, a merge, nonblocking repairs, cloud calls, or human/instructor acceptance. No human-owned decision record is edited.
+
+Pre-commit verification: exact proposed144paths (20tracked+124untracked),35source hashes and346frozen contents unchanged from the passing766-test gate. Credential-pattern/path checks found no matches or runtime/credential files. No tests rerun for this commit-only operation; only this coordinator authorization note changed after verification.

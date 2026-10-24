@@ -1,0 +1,9 @@
+{
+  "snapshot": "/tmp/phase8b-r1-frozen-source.json",
+  "sha256": "633095b1de67ec3b24f7263528a1fa017ff6b3d662a35f8a5d0359e2fabc27ce",
+  "files": 346,
+  "scope": "All modules, tests, project files excluding target; build.sbt and .scalafmt.conf",
+  "note": "All owner files frozen before full gate. Only coordinator phase evidence may change.",
+  "repairDeltaScope": "Compared to prior 254-file scope only; broader all-module freeze adds unchanged prior module files, not repair changes.",
+  "repairDeltaFiles": 8
+}

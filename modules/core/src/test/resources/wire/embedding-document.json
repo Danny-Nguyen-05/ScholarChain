@@ -19,5 +19,7 @@
     "sourceDataset": "synthetic-fixture"
   },
   "chunkPolicyVersion": "fixture-chunk-policy-v1",
-  "chunkOrdinal": 0
+  "chunkOrdinal": 0,
+  "chunkCount": 1,
+  "wholeTextHash": ""
 }

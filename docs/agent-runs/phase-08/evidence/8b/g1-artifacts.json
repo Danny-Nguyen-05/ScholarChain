@@ -1,0 +1,112 @@
+[
+  {
+    "path": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase8b-g1-local-acceptance/acceptance.json",
+    "bytes": 509,
+    "sha256": "442d601d6d0b72471d00b6a2ac2ab16fde02defb26f9e3096ce6234d6c7c228b"
+  },
+  {
+    "path": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase8b-g1-local-acceptance/final-process-manifest.json",
+    "bytes": 24783,
+    "sha256": "531a93f963c846bed4d651d23972eaf116c1a35691394d752006e3aa367ee7df"
+  },
+  {
+    "path": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase8b-g1-local-acceptance/final-process-report.json",
+    "bytes": 1353,
+    "sha256": "366a48554d9f13a3b6f978f327f1ed2edab31142f1427f77198ad1af054960ea"
+  },
+  {
+    "path": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase8b-g1-local-acceptance/final-process-report.json.source-qualifications.json",
+    "bytes": 41944,
+    "sha256": "7ebd8c5b8b73075b68cb7db9700236c6616d7b8b140ff6c486ae1198e2aa62c7"
+  },
+  {
+    "path": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase8b-g1-local-acceptance/first-manifest.json",
+    "bytes": 24783,
+    "sha256": "531a93f963c846bed4d651d23972eaf116c1a35691394d752006e3aa367ee7df"
+  },
+  {
+    "path": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase8b-g1-local-acceptance/first-report.json",
+    "bytes": 1469,
+    "sha256": "4fd31369bad0e78e14a1013d327c5583925dc4afdf44489c3853298a976d8bae"
+  },
+  {
+    "path": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase8b-g1-local-acceptance/first-report.json.source-qualifications.json",
+    "bytes": 41944,
+    "sha256": "7ebd8c5b8b73075b68cb7db9700236c6616d7b8b140ff6c486ae1198e2aa62c7"
+  },
+  {
+    "path": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase8b-g1-local-acceptance/fork-replay-manifest.json",
+    "bytes": 24783,
+    "sha256": "531a93f963c846bed4d651d23972eaf116c1a35691394d752006e3aa367ee7df"
+  },
+  {
+    "path": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase8b-g1-local-acceptance/fork-replay-report.json",
+    "bytes": 1350,
+    "sha256": "d58a9417b457dc83b470bae71e6391ba1d53cf19b028bc86359e13a697e79ea7"
+  },
+  {
+    "path": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase8b-g1-local-acceptance/fork-replay-report.json.source-qualifications.json",
+    "bytes": 41944,
+    "sha256": "7ebd8c5b8b73075b68cb7db9700236c6616d7b8b140ff6c486ae1198e2aa62c7"
+  },
+  {
+    "path": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase8b-g1-local-acceptance/fresh-manifest.json",
+    "bytes": 24783,
+    "sha256": "531a93f963c846bed4d651d23972eaf116c1a35691394d752006e3aa367ee7df"
+  },
+  {
+    "path": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase8b-g1-local-acceptance/fresh-report.json",
+    "bytes": 1468,
+    "sha256": "498d4d1069743d6d8ad4e12d12ca0df616219bb6962c9a89b63e44aba8077ce8"
+  },
+  {
+    "path": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase8b-g1-local-acceptance/fresh-report.json.source-qualifications.json",
+    "bytes": 41944,
+    "sha256": "7ebd8c5b8b73075b68cb7db9700236c6616d7b8b140ff6c486ae1198e2aa62c7"
+  },
+  {
+    "path": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase8b-g1-local-acceptance/local-config.json",
+    "bytes": 304,
+    "sha256": "8d4cff395e43a45e13aeec5ba4d13aaa3f32dcb0129acc64f0c225159d3a4113"
+  },
+  {
+    "path": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase8b-g1-local-acceptance/process-replay-manifest.json",
+    "bytes": 24783,
+    "sha256": "531a93f963c846bed4d651d23972eaf116c1a35691394d752006e3aa367ee7df"
+  },
+  {
+    "path": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase8b-g1-local-acceptance/process-replay-report.json",
+    "bytes": 1355,
+    "sha256": "8815cf550401669f346bc2f6a7ddd4195b1e43c48fe43683703381f9b5944963"
+  },
+  {
+    "path": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase8b-g1-local-acceptance/process-replay-report.json.source-qualifications.json",
+    "bytes": 41944,
+    "sha256": "7ebd8c5b8b73075b68cb7db9700236c6616d7b8b140ff6c486ae1198e2aa62c7"
+  },
+  {
+    "path": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase8b-g1-local-acceptance/replay-manifest.json",
+    "bytes": 24783,
+    "sha256": "531a93f963c846bed4d651d23972eaf116c1a35691394d752006e3aa367ee7df"
+  },
+  {
+    "path": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase8b-g1-local-acceptance/replay-report.json",
+    "bytes": 1348,
+    "sha256": "23322e7862c8f96154b66960cbda1661e375d4b5de8e47b2ddc45f23ff0ad745"
+  },
+  {
+    "path": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase8b-g1-local-acceptance/replay-report.json.source-qualifications.json",
+    "bytes": 41944,
+    "sha256": "7ebd8c5b8b73075b68cb7db9700236c6616d7b8b140ff6c486ae1198e2aa62c7"
+  },
+  {
+    "path": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase8b-g1-local-acceptance/state-a.json",
+    "bytes": 123209,
+    "sha256": "ce8fc7df63553765aa3bb4d9cc0c70d1a8a8a1769100798e8f7ae272e26c5b9f"
+  },
+  {
+    "path": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase8b-g1-local-acceptance/state-b.json",
+    "bytes": 113843,
+    "sha256": "51204aff65a7c7b4eeee86d3eeeb7cb925301c3da29557d36029293e9286c87d"
+  }
+]

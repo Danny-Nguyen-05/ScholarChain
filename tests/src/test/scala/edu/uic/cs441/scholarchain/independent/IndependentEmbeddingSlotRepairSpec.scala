@@ -74,6 +74,17 @@ class IndependentEmbeddingSlotRepairSpec extends AnyFunSuite {
         execution: String,
         selectedModel: EmbeddingModel = model
     ): EmbeddingIngestReport = {
+      runItems(
+        documents.map(EmbeddingManifests.item(_, selectedModel, config)),
+        execution,
+        selectedModel
+      )
+    }
+    def runItems(
+        items: Vector[EmbeddingWorkItem],
+        execution: String,
+        selectedModel: EmbeddingModel = model
+    ): EmbeddingIngestReport = {
       val client = new EmbeddingClient {
         val model = selectedModel
         def embed(texts: Seq[String]): Seq[EmbeddingResult] = texts.map { text =>
@@ -82,12 +93,7 @@ class IndependentEmbeddingSlotRepairSpec extends AnyFunSuite {
         }
       }
       val runner = new EmbeddingManifestRunner(config, objects, vectors, registry, ledger, client)
-      value(
-        runner.run(
-          EmbeddingManifest(documents.map(EmbeddingManifests.item(_, selectedModel, config))),
-          execution
-        )
-      )
+      value(runner.run(EmbeddingManifest(items), execution))
     }
   }
 
@@ -167,6 +173,107 @@ class IndependentEmbeddingSlotRepairSpec extends AnyFunSuite {
     assert((first.written, first.rejected, first.embeddingCalls) == (2, 0, 2))
     val replay = separate.run(chunks, "chunks-two")
     assert((replay.written, replay.unchanged, replay.embeddingCalls) == (0, 2, 0))
+  }
+
+  test(
+    "R1 shrinking a complete two-chunk group rejects the unchanged surviving prefix before writes"
+  ) {
+    val renderer = new DocumentRenderer(RenderingConfig("template-v1", ChunkPolicy(6, 0)))
+    val original = documents(renderer.fromSummary(summary("abcdefghijkl")))
+    val shorter = documents(renderer.fromSummary(summary("abcdef")))
+    assert(original.map(_.text) == Vector("abcdef", "ghijkl"))
+    assert(shorter.map(_.text) == Vector("abcdef"))
+    assert(original.map(_.chunkCount) == Vector(2, 2) && shorter.head.chunkCount == 1)
+    assert(
+      EmbeddingManifests.item(original.head, model, config).vectorKey == EmbeddingManifests
+        .item(shorter.head, model, config)
+        .vectorKey
+    )
+    val f = new Fixture()
+    assert(f.run(original, "shrink-original").written == 2)
+    val embeddings = f.embedded.toVector
+    val batches = f.vectors.batches.size
+    val puts = f.objects.putKeys.size
+    val report = f.run(shorter, "shrink-attempt")
+    assert(
+      (
+        report.written,
+        report.unchanged,
+        report.vectorKeyTextConflict,
+        report.rejected,
+        report.embeddingCalls
+      ) == (0, 0, 1, 1, 0)
+    )
+    assert(report.rejections.forall(_.reason == "vectorKeyTextConflict"))
+    assert(f.embedded.toVector == embeddings && f.vectors.batches.size == batches)
+    val newPuts = f.objects.putKeys.drop(puts).toVector
+    assert(newPuts.size == 1 && newPuts.head.startsWith("graph/rejected/versions/"))
+    val replay = f.run(original, "shrink-complete-replay")
+    assert((replay.written, replay.unchanged, replay.embeddingCalls) == (0, 2, 0))
+  }
+
+  test("R1 growing a complete group rejects all new ordinals before any mixed writes") {
+    val renderer = new DocumentRenderer(RenderingConfig("template-v1", ChunkPolicy(6, 0)))
+    val original = documents(renderer.fromSummary(summary("abcdef")))
+    val grown = documents(renderer.fromSummary(summary("UVWXYZghijkl")))
+    assert(grown.map(_.text) == Vector("UVWXYZ", "ghijkl"))
+    assert(grown.map(_.chunkOrdinal) == Vector(0, 1) && grown.forall(_.chunkCount == 2))
+    val f = new Fixture()
+    assert(f.run(original, "grow-original").written == 1)
+    val embeddings = f.embedded.toVector
+    val batches = f.vectors.batches.size
+    val puts = f.objects.putKeys.size
+    val report = f.run(grown, "grow-attempt")
+    assert(
+      (
+        report.written,
+        report.unchanged,
+        report.vectorKeyTextConflict,
+        report.rejected,
+        report.embeddingCalls
+      ) == (0, 0, 2, 2, 0)
+    )
+    assert(report.rejections.forall(_.reason == "vectorKeyTextConflict"))
+    assert(f.embedded.toVector == embeddings && f.vectors.batches.size == batches)
+    val newPuts = f.objects.putKeys.drop(puts).toVector
+    assert(newPuts.size == 1 && newPuts.head.startsWith("graph/rejected/versions/"))
+    val newOrdinalKey = EmbeddingManifests.item(grown(1), model, config).vectorKey
+    assert(value(f.vectors.get("researcher-profile-v1", Vector(newOrdinalKey))).isEmpty)
+    val newModel = model.copy(version = "v2")
+    assert(f.run(grown, "grow-new-model", newModel).written == 2)
+    val crossRun = grown.map(_.copy(runId = "new-upstream-source-run"))
+    val replay = f.run(crossRun, "grow-cross-run-replay", newModel)
+    assert(
+      (replay.written, replay.unchanged, replay.rejected, replay.embeddingCalls) == (0, 2, 0, 0)
+    )
+  }
+
+  test("R1 malformed or invalid members reject the complete group before any embedding") {
+    val renderer = new DocumentRenderer(RenderingConfig("template-v1", ChunkPolicy(6, 0)))
+    val original = documents(renderer.fromSummary(summary("abcdefghijkl")))
+    val items = original.map(EmbeddingManifests.item(_, model, config))
+    val badDimension = items(1).copy(embeddingModel = model.copy(dimension = 3))
+    val malformedGroups = Vector(
+      Vector(items.head),
+      Vector(items.head, items.head),
+      Vector(
+        items.head,
+        EmbeddingManifests.item(original(1).copy(wholeTextHash = "0" * 64), model, config)
+      ),
+      Vector(items.head, items(1).copy(textS3Uri = "s3://outside-config/forbidden.json")),
+      Vector(items.head, badDimension)
+    )
+    malformedGroups.zipWithIndex.foreach { (group, number) =>
+      val f = new Fixture()
+      val report = f.runItems(group, "invalid-group-" + number)
+      assert(
+        report.written == 0 && report.unchanged == 0 && report.rejected == group.size && report.embeddingCalls == 0
+      )
+      assert(f.embedded.isEmpty && f.vectors.batches.isEmpty)
+      assert(
+        f.objects.putKeys.size == 1 && f.objects.putKeys.head.startsWith("graph/rejected/versions/")
+      )
+    }
   }
 
   private val lineage = SparkLineage(

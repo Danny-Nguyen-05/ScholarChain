@@ -39,6 +39,25 @@ object EmbeddingContracts {
       document.chunkOrdinal.toString,
       model.tag
     )
+
+  /** Entity-group identity omits the ordinal so a binding can cover every chunk atomically. Count
+    * and whole-text hash are binding values, never part of this identity.
+    */
+  def groupKey(document: EmbeddingDocument, model: EmbeddingModel): String =
+    frame(
+      document.documentType,
+      document.entityId,
+      document.windowId,
+      document.templateVersion,
+      document.chunkPolicyVersion,
+      model.tag
+    )
+
+  /** Legacy single-chunk documents can establish their complete-text hash from their own text.
+    * Validation rejects this fallback for a multi-chunk document or a nonzero ordinal.
+    */
+  def wholeTextHash(document: EmbeddingDocument): String =
+    if (document.wholeTextHash.nonEmpty) document.wholeTextHash else textHash(document.text)
   val descriptiveOnly: String =
     "descriptive-context-only; exact metrics and graph claims require graph/metric evidence"
   def textHash(text: String): String = StableIds.sha256Hex(text)
@@ -69,7 +88,9 @@ final case class EmbeddingDocument(
     schemaVersion: String = EmbeddingContracts.schemaVersion,
     identityFields: Map[String, String] = Map.empty,
     chunkPolicyVersion: String = "",
-    chunkOrdinal: Int = -1
+    chunkOrdinal: Int = -1,
+    chunkCount: Int = 1,
+    wholeTextHash: String = ""
 ) derives ReadWriter
 
 /** Manifest and queue payload. Hash is over the exact document text encoded as UTF-8. The URI
@@ -199,6 +220,17 @@ object EmbeddingValidation {
     (slotVersion(value.templateVersion), "invalid-template-version"),
     (slotVersion(value.chunkPolicyVersion), "invalid-chunk-policy-version"),
     (value.chunkOrdinal >= 0, "invalid-chunk-ordinal"),
+    (value.chunkCount >= 1 && value.chunkOrdinal < value.chunkCount, "invalid-chunk-count"),
+    (
+      (value.wholeTextHash.isEmpty && value.chunkCount == 1 && value.chunkOrdinal == 0) ||
+        sha(value.wholeTextHash),
+      "invalid-whole-text-hash"
+    ),
+    (
+      value.chunkCount != 1 || value.wholeTextHash.isEmpty ||
+        value.wholeTextHash == EmbeddingContracts.textHash(value.text),
+      "whole-text-hash-mismatch"
+    ),
     (nonblank(value.text), "empty-document-text"),
     (
       value.sourceReferences.nonEmpty && value.sourceReferences.forall(r =>

@@ -1,0 +1,15 @@
+{
+  "snapshot": "/tmp/phase8b-frozen-source.json",
+  "sha256": "d6fb7eb0d076a0fc61c1f5972a333e3132ce7c6fd88dff30e6b8d3b6238ae8e2",
+  "files": 254,
+  "scope": [
+    "modules/core",
+    "modules/storage",
+    "modules/rag",
+    "tests",
+    "project",
+    "build.sbt",
+    ".scalafmt.conf"
+  ],
+  "note": "All named source owners frozen; full gate must run on unchanged source/build/test bytes."
+}

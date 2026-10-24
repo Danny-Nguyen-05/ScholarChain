@@ -1,0 +1,23 @@
+[info] welcome to sbt 1.10.7 (Homebrew Java 17.0.20.1)
+[info] loading settings for project scholarchain-build from plugins.sbt...
+[info] loading project definition from /Users/danny/Documents/UIC/CS441/ScholarChain/project
+[info] loading settings for project root from build.sbt...
+[info] set current project to root (in build file:/Users/danny/Documents/UIC/CS441/ScholarChain/)
+[info] scalafmt: Formatting 3 Scala sources (/Users/danny/Documents/UIC/CS441/ScholarChain/modules/rag)...
+[info] scalafmt: Reformatted 2 Scala sources
+[success] Total time: 1 s, completed Oct 24, 2026, 2:38:45 AM
+[info] scalafmt: Formatting 2 Scala sources (/Users/danny/Documents/UIC/CS441/ScholarChain/modules/rag)...
+[info] scalafmt: Reformatted 1 Scala sources
+[success] Total time: 0 s, completed Oct 24, 2026, 2:38:45 AM
+[info] compiling 5 Scala sources to /Users/danny/Documents/UIC/CS441/ScholarChain/modules/rag/target/scala-3.3.4/classes ...
+[error] -- [E049] Reference Error: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/rag/src/main/scala/edu/uic/cs441/scholarchain/rag/LiveEmbeddingIngestMain.scala:233:6 
+[error] 233 |      StorageConfig(config.textBucket, config.tables, retry = RetryConfig(maxAttempts = 1))
+[error]     |      ^^^^^^^^^^^^^
+[error]     |Reference to StorageConfig is ambiguous.
+[error]     |It is both imported by import edu.uic.cs441.scholarchain.core._
+[error]     |and imported subsequently by import edu.uic.cs441.scholarchain.storage._
+[error]     |
+[error]     | longer explanation available when compiling with `-explain`
+[error] one error found
+[error] (rag / Compile / compileIncremental) Compilation failed
+[error] Total time: 2 s, completed Oct 24, 2026, 2:38:48 AM

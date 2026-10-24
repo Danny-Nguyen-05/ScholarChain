@@ -1,0 +1,14 @@
+{
+  "rawLog": "/tmp/phase8b-r1-targeted-3.txt",
+  "bytes": 148941,
+  "sha256": "a7a12c058f577bfaa308d22afea16212e70a64fcd536f3a9161f7671707ea05e",
+  "exit": 0,
+  "ragPassed": 33,
+  "independentPassed": 41,
+  "failed": 0,
+  "newDiscoveredG1PipelineTestPassed": true,
+  "runtimeRoots": 7,
+  "runtimeInspected": 22,
+  "runtimeFindings": 0,
+  "priorFailedAttempt": "targeted-2.json"
+}

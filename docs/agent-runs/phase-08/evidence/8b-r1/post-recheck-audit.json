@@ -1,0 +1,36 @@
+{
+  "status": "PASS; awaiting user commit decision",
+  "branch": "phase-8",
+  "head": "3c45de74ec5900b8ac5c0273b5bf80bef8f84b1e",
+  "sourceEntriesVerified": 35,
+  "sourceSizesAndBaseHashesVerified": true,
+  "sourceFailures": [],
+  "frozenFilesVerified": 346,
+  "frozenSnapshotSha256": "633095b1de67ec3b24f7263528a1fa017ff6b3d662a35f8a5d0359e2fabc27ce",
+  "contentDrift": [],
+  "priorInventoryMatchesBeforeStep": true,
+  "proposedTrackedChangedCount": 20,
+  "proposedUntrackedCount": 124,
+  "onlyAdditionalCoordinatorEvidence": [
+    "docs/agent-runs/phase-08/evidence/8b-r1/commit-inventory.json",
+    "docs/agent-runs/phase-08/evidence/8b-r1/commit-proposal.md",
+    "docs/agent-runs/phase-08/evidence/8b-r1/external-recheck.json",
+    "docs/agent-runs/phase-08/evidence/8b-r1/external-recheck.txt",
+    "docs/agent-runs/phase-08/evidence/8b-r1/post-recheck-audit.json"
+  ],
+  "excludedTargetTmpCredentialPaths": true,
+  "highConfidenceCredentialPatternsChecked": [
+    "AWS access key",
+    "private key material",
+    "GitHub token",
+    "GitHub fine-grained token"
+  ],
+  "credentialPatternFindings": [],
+  "secretScanLimit": "Path and high-confidence credential-pattern checks plus prior independent review; not a proof against every possible secret format. No secret values printed.",
+  "externalRecheckSha256": "e79dfe2a2e2e3a4d0e7135dfe59c23d598f7a0d3f1439b87618c207d517f2d1f",
+  "noSourceChanges": true,
+  "noBuildOrTestRun": true,
+  "noStageCommitOrPush": true,
+  "noReviewerOrCloudCalls": true,
+  "nonblockingRepairsPerformed": []
+}

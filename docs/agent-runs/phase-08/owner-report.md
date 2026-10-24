@@ -67,3 +67,54 @@ BLOCKED-ON EVIDENCE: None for local repair validation; independent recheck absen
 NEXT GATE: User-launched 8A repair-round-1 recheck, then human commit if approved. Implementation stopped; no 8B until next prompt.
 
 Final evidence: evidence/8a-r1/final-check.json, final-check-excerpt.txt, final-audit.json, repair-files.json and commands.md. Expected injected checkProbeInjectFailure self-test passed; no live suite ran. All specialist work and build sessions finished. Raw log /tmp/phase8a-r1-final-check-1.txt, 1378030 bytes, SHA256 ff4baf2ed391f587d1d3cd6a6b62b7bda652943fa353874f0c8182a487104a0b; retained line-numbered excerpt is portable evidence, raw temp file is not.
+
+## Subphase 8B
+
+STATUS: COMPLETE for implementation and local validation; independent review pending.
+OWNER: /root coordinator; domain, storage, RAG, test and build owners recorded in evidence/8b/agents.md.
+WORK ORDER: User requested Phase 8B and chose “Repair chunk-group consistency now (recommended)”. Base and current HEAD 3c45de74ec5900b8ac5c0273b5bf80bef8f84b1e, branch phase-8. Only 8B authorized.
+FILES CREATED: 15 source/test/fixture files, plus coordinator evidence under evidence/8b/. Exact paths and hashes: evidence/8b/source-files.json; complete tracked/untracked inventory: evidence/8b/files.json.
+FILES MODIFIED: 15 existing source/build/module-documentation files, plus this report, test-report.md, prompt.md and repairs.md. No human-owned decisions edited. Exact inventory retained.
+COMMANDS RUN: Required JDK17 environment and every command/failed attempt in evidence/8b/commands.md. Core target exit0; post-split storage target exit0; RAG/independent targets exit0; actual G1 producer and local G1/real acceptance exit0; direct forked CLI replay exit0. Full `/usr/bin/time -p sbt -batch check > /tmp/phase8b-final-check-1.txt 2>&1` exit0.
+TEST RESULTS: Core embedding13/13; storage embedding/group19/19; RAG25/25; independent embedding/runtime fence39/39. Full756 passed,0 failed: core157, Hadoop64, ER39, Spark38, storage51, RAG25, independent374, build8. Full wall time678.84s; expected checkProbeInjectFailure is the passing build failure-path test.
+VALIDATION RESULTS: R1 complete-group binding rejects changed whole text/count before payload/embedding writes; real-renderer shrink/grow and invalid membership covered. G1 producer checks10 researchers/9 canonical works/18 literal windowed edges/28 tables. G1 CLI12 written→12 unchanged/0 calls; real CLI16 written→16 unchanged/0 calls, covering all five types. Fresh counters and manifest hashes match. Every12/16 persisted text pointer/hash and qualification hash verifies. Six fixed lexical retrieval neighbors pass. Original runtime fence unchanged,5 roots/20 inspected/no findings. All254 frozen files and30 changed/new source hashes match after full gate. Live command/templates/cleanup authored but unexecuted; guard tests never construct clients.
+ASSUMPTIONS: Prior Phase8 decisions persist: us-east-2, configured TitanV2/version, provisional256/cosine, five types, permitted abstract or recorded fallback, manifest+SQS, shared core client and stable slot excluding source run. User has no AWS account. G1 is explicitly synthetic direct fixture input, not an executed Hadoop/ER acquisition. The retained real export is unchanged; its convenience-slice, LPA non-convergence and approximation qualifications remain attached.
+RISKS: Independent review pending. N2–N8/R2–R3 remain nonblocking/deferred; R1 is locally verified, not independently closed. Group consistency is a preflight guard, not atomic vector transactions. Old per-item state without group markers fails closed. Fake snapshots are single-writer and bounded64MiB. Selected source tables are fully checked; unrelated table bodies are not revalidated. Live compatibility, Titan quality, corpus count, latency, cost and object cleanup remain unverified. Assumed dollar bounds are not billing guarantees. Optional providers/OpenSearch/extra indexes/services/CI omitted.
+MANUAL ACTION REQUIRED: User launches the supplied read-only reviewer prompt. Commit/push only after review and separate user instruction. Any future8C requires Phase14 deployment, AWS account and human-written approval/caps; do not execute it now.
+BLOCKED-ON OWNER: None for completed8B implementation.
+BLOCKED-ON EVIDENCE: None for local8B gates; independent review and future live8C gates remain open.
+NEXT GATE: User-launched independent8B review. No reviewer launched,8B commit/push, live/provider call or next-subphase work occurred.
+
+## Subphase 8B — repair round 1
+
+STATUS: COMPLETE for B1/N9 implementation and local gates; independent recheck pending.
+OWNER: /root coordinator; /root/rag_engineer and /root/test_engineer own assigned paths.
+WORK ORDER: User supplied independent REQUEST-CHANGES and requested “Fix our locking bug and the N9 bug for me.” Interpreted as blocking B1 plus N9. No questions for this repair round. Preserve the uncommitted8B tree, prior decisions and all other deferrals; no8C execution.
+FILES CREATED: Five new implementation/test files and repair evidence under evidence/8b-r1/. Exact repair delta8paths/before-after hashes: repair-files.json; cumulative35source paths: source-files.json; complete current tracked/untracked inventory: files.json.
+FILES MODIFIED: Three pre-existing8B files in the repair delta (RAG README, LiveEmbeddingIngestMain, IndependentEmbedding8BGuardSpec), plus coordinator prompt/review/repairs/reports. No core/storage/build production changes or human-decision edits in this repair.
+COMMANDS RUN: Exact required JDK17 environment and all attempts in evidence/8b-r1/commands.md. Targeted-1 exit0 (RAG7,focused independent11). Targeted-2 exit1 (RAG32passed1failed due expected lowercase source wire; independent stage not reached). Corrected test literal only. Targeted-3 exit0 (RAG33/33,independent41/41). Full `/usr/bin/time -p sbt -batch check > /tmp/phase8b-r1-final-check-1.txt 2>&1` exit0.
+TEST RESULTS: Full766passed0failed,695.67s real: core157/Hadoop64/ER39/Spark38/storage51/RAG33/independent376/build8. The new temporary G1 suite is discovered and passes inside check; raw log lines6477/7035/7037 identify suite, actual producer and passing case. Expected checkProbeInjectFailure remains the passing build failure-path self-test.
+VALIDATION RESULTS: B1 suite uses a fresh temporary computed G1 export with no retainedtarget dependency, then actual CLI12writes→12unchanged/zero calls/rejections and fresh identical counters/manifests. Every persisted pointer/object/text hash and qualifications hash verified. Non-empty cap1 rejects exact scan-limit code; cap4 selects one per four literal summary types in stable order. RAG node unit test checks exact source fields/refs/table totals17/23/filter metadata/fifth index. N9 render-only actual CLI produces valid real-model work with no embedding/state, accepted by pure live preflight. Pure report retains model ID/version/dimension, per-index written counts, rejection details/URI. Query/latency command and disabled templates are authored but unexecuted; pure bounds/quantile/pointer/operation tests and refusal-zero-factory checks pass. Original runtime fence unchanged,7roots22inspected/no findings.346frozen files,8repair hashes and35cumulative source hashes match;251prior-scope files unchanged.
+ASSUMPTIONS: Prior region/model/provisionaldimension/five-types/fallback/queue/coreclient/stable-slot decisions persist. User has no AWS account. G1 is explicitly synthetic direct-input provenance, not an executed Hadoop/ER acquisition. Pure valid approvals and hypothetical reports are test fixtures, never actual human grants or live measurements.
+RISKS: Independent recheck pending. Live compatibility, real expected neighbors, latency, provider quality,10,000-vector count, costs and cleanup remain unverified. Query smoke retains conservative shared manifest/resource/cost checks and separately bounded query caps. Assumed prices/overhead are operator-validated bounds, not a billing guarantee. N10–N14/N2–N8/R2–R3 remain nonblocking/deferred. F1/N1/R1 retain independently FIXED status.
+MANUAL ACTION REQUIRED: User launches independent recheck with evidence/8b-r1/reviewer-prompt.md. No commit before subsequent APPROVE; no automatic commit/push afterward. Future8C requires Phase14 deployment, AWS account and actual human approval/caps/new prompt.
+BLOCKED-ON OWNER: None for completed repair.
+BLOCKED-ON EVIDENCE: None for local gates; independent approval and future live gates open.
+NEXT GATE: User-launched read-only8B repair-round-1 recheck. No reviewer, approved live execution, provider/cloud call, commit/push or next subphase started.
+
+## Subphase 8B — independent approval recorded / commit proposal
+
+STATUS: COMPLETE evidence recording; awaiting explicit user commit decision.
+OWNER: /root coordinator.
+WORK ORDER: Record user-supplied APPROVE for8B repair round1; user says not to repair nonblocking findings. No questions for this step.
+FILES CREATED: evidence/8b-r1/external-recheck.txt, external-recheck.json, post-recheck-audit.json, commit-inventory.json and commit-proposal.md.
+FILES MODIFIED: review.md, repairs.md, prompt.md, this report and test-report.md; coordinator evidence only.
+COMMANDS RUN: Read-only git status/rev-parse; source/frozen re-hashing; proposed-path and credential-pattern checks. Exact inventory/audit retained in the new evidence files. No build/test command, staging, commit or push.
+TEST RESULTS: No rerun; independently verified prior766passed0failed remains the test evidence. All35 source hashes and346 frozen files reverified unchanged.
+VALIDATION RESULTS: B1/N9 independently FIXED; F1/N1/R1 retained FIXED. N2–N8/R2–R3/N10–N19 remain OPEN/nonblocking/deferred; N15 requires future pre-8C attention, not repair in this step. Proposed inventory excludes target/runtime/credential paths and high-confidence credential patterns; no secret content printed. External review copied verbatim and SHA256 retained.
+ASSUMPTIONS: Independent approval is not human acceptance/instructor approval or commit permission. Prior8A commit/push permission does not authorize this8B commit.
+RISKS: Deferred findings and all live8C gates remain. No code changes in this evidence-only step.
+MANUAL ACTION REQUIRED: User reviews exact commit-proposal.md/commit-inventory.json and supplies an explicit commit decision. Proposed message: Implement Phase 8B local ingestion and retrieval validation.
+BLOCKED-ON OWNER: User for commit authorization only.
+BLOCKED-ON EVIDENCE: None for8B implementation; live gates remain future.
+NEXT GATE: Explicit user commit decision; do not stage, commit, push or start8C.
