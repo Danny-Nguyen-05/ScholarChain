@@ -224,3 +224,48 @@ Reuse `WorkRecord`, `AuthorMention`, `PublicationTeam`, `AuthorshipRecord`, `Coa
 `GraphEdge` can carry `PUBLISHED_IN`, `HAS_TOPIC`, mention-sourced `AUTHORED`, and `AFFILIATED_WITH` from `researcher:orcid:{orcid}` to one institution id. Do not emit `RESOLVES_TO` or researcher `COAUTHORED_WITH`; those are identity decisions. Keep ROR and Ringgold in their own fields and in their own institution ids (`institution:ror:` and `institution:ringgold:`). Do not copy one into the other. A DOI or ORCID link is not authorship and not a cross-dataset merge.
 
 `OrcidProfileRecord` exists because `CanonicalResearcher` is an identity record and `WorkRecord` would fabricate a publication. `OrcidActivityRecord` exists because an ORCID work summary has no author list, and one `GraphEdge` endpoint cannot retain both a ROR and a Ringgold. `observedDoi` and `observedWorkId` stay the preferred DOI fields. `observedWorkId` is set only on a work activity and only as `work:doi:{normalized DOI}`. `workReferences` keeps every declared external id: `externalIdType`, `value`, and `relationship` when the source supplied `external-id-relationship`. That includes the DOI, `other-id`, ISBN, and ISSN. Each `externalIdType` and `value` is trimmed and non-empty. A present `relationship` is trimmed and non-empty. Those references are evidence. They do not replace the preferred DOI and they do not merge records. Employment and education years stay in `startYear`. `Institution.institutionId` remains the preferred institution id, which may be the ROR id when the source also observed an OpenAlex institution id. `observedSourceIds` carries that other observation, for example `ObservedIdentifier(namespace = "openalex-institution", value = "https://openalex.org/I79516672", interpretation = SOURCE_OBSERVATION)`. Each entry needs a known `IdentifierNamespace` wire and a trimmed non-empty value. The vector does not create a researcher id or a work id. `EnrichmentLink` exists because `AFFILIATED_WITH` requires a researcher id, so an unresolved mention cannot use that edge. Venue, institution, and topic targets use the existing id parsers. `MentionAffiliation` exists for a mention whose affiliation is only a name, or whose ROR or Ringgold should stay on the mention without pretending the name is an institution id.
+
+## Phase 8 embedding contracts (8A)
+
+`EmbeddingContracts.schemaVersion` is `scholarchain.embedding.v1`; existing domain,
+Spark and identity contracts remain unchanged. `EmbeddingDocument` retains stable chunk/profile
+ID, source entity/window/run, rendering-template version, exact text, source row/field references,
+and explicit `textSelection` (`generated-summary`, `permitted-abstract`, or
+`paper-summary-fallback`). Abstract/fallback selections are paper-only. References assert locators,
+not externally verified facts or abstract permissions: rendering and ingestion owners must bind
+them to actual producer exports.
+
+`EmbeddingModel.tag` length-frames model ID, explicit model version and output dimension using
+UTF-8 byte lengths. `EmbeddingContracts.vectorKey(document, model)` extends the Phase 7
+length-framing convention over seven fields: document type, original entity ID, window, template
+version, chunk-policy version, zero-based chunk ordinal and model tag. This is a stable slot:
+text, text-hashed `documentId` and source `runId` do not enter the key. Changed text in the same
+slot therefore reaches the ingestion conflict guard; a source rerun cannot evade that guard.
+`documentId` remains content-addressed metadata using unchanged `StableIds` formulas. Distinct
+ordinals separate chunks, while a new template/chunk policy/model version creates a new slot.
+The rendering owner must bind chunk-policy version to its algorithm and all segmentation limits;
+changing a boundary policy requires a new policy version. Core rejects negative ordinals and
+blank, whitespace/control-containing, or over-256-byte template/policy versions. Additive missing
+slot fields decode to empty policy/-1 ordinal for compatibility but fail validation before writes.
+A new model/version/dimension therefore has a new key. A work item's SHA-256 hashes the exact
+UTF-8 text, with no normalization;
+its pointer names ordinary S3 JSON, never S3 Vectors. `EmbeddingValidation.workItem` checks the
+key binding, text hash, five-type index mapping and pointer, plus the document/model structure.
+
+`EmbeddingVectorMetadata.compact` emits only typed identity/model/template/hash/pointer fields.
+Optional `identityFields` are limited to researcher, community, topic, institution and source-dataset
+filters, at most 256 UTF-8 bytes each. Unknown fields fail validation and are excluded from
+`compact`. All consumers must validate before side effects; the storage adapter additionally
+applies service metadata/key/request limits. The core contracts deliberately depend on neither
+storage nor RAG. `EmbeddingClient` preserves input order/cardinality and returns one
+`EmbeddingSuccess` or `EmbeddingFailure` per text, with model and provider-attempt count.
+Zero attempts means a preflight failure. Retry policy/provider execution belongs to RAG.
+
+`SemanticContext` always serializes its descriptive-only usage label and false graph/metric
+authority flags. `EmbeddingValidation.context` rejects changed authority, nonfinite scores,
+invalid pointers/hashes and oversized excerpts. A ranking score or context excerpt cannot prove
+an edge, path, component, count or bridge measure; synthesis must obtain those claims from
+explicit graph/metric evidence. Structural validation is not source existence verification.
+
+Four `wire/embedding-*.json` test resources freeze synthetic document, work-item, metadata and
+context examples. They are contract fixtures and describe no observed researcher.

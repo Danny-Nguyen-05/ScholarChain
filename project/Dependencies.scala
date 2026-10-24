@@ -16,6 +16,8 @@ object Dependencies {
   val awsDynamoDb = "software.amazon.awssdk" % "dynamodb" % awsSdk
   val awsNeptuneData = "software.amazon.awssdk" % "neptunedata" % awsSdk
   val awsS3Vectors = "software.amazon.awssdk" % "s3vectors" % awsSdk
+  val awsSqs = "software.amazon.awssdk" % "sqs" % awsSdk
+  val awsBedrockRuntime = "software.amazon.awssdk" % "bedrockruntime" % awsSdk
   val parquetHadoop = "org.apache.parquet" % "parquet-hadoop" % parquet
   // Local Parquet ingestion runs without Spark or a cluster-provided Hadoop runtime.
   val storageHadoopClient =

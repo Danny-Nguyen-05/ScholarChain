@@ -1,0 +1,12 @@
+{
+  "baseSha": "8503e1715cbcaf043fd68213c5b08731e9de9ba7",
+  "head": "8503e1715cbcaf043fd68213c5b08731e9de9ba7",
+  "branch": "phase-8",
+  "workingTree": "Existing 8A uncommitted implementation retained under explicit repair work order; no reset/stage/commit.",
+  "scope": "F1 and user-requested N1 only; N2-N8 deferred.",
+  "step0Question": "Stable-slot key or content-addressed keys?",
+  "step0Answer": "Use recommended stable-slot key",
+  "keyDecision": "Exclude source runId, text and content documentId from slot; retain content documentId in metadata.",
+  "originalAcceptedSourceSnapshot": "/tmp/phase8a-frozen-source.json",
+  "previousFullCheck": "../8a/final-check.json"
+}

@@ -1,0 +1,57 @@
+[
+  {
+    "gate": "prerequisite-1",
+    "exit": 1,
+    "suiteGroupTestCounts": [],
+    "log": "docs/agent-runs/phase-08/evidence/8a/prerequisite-1.txt"
+  },
+  {
+    "gate": "prerequisite-2",
+    "exit": 0,
+    "suiteGroupTestCounts": [
+      8
+    ],
+    "log": "docs/agent-runs/phase-08/evidence/8a/prerequisite-2.txt"
+  },
+  {
+    "gate": "interfaces-1",
+    "exit": 0,
+    "suiteGroupTestCounts": [
+      8
+    ],
+    "log": "docs/agent-runs/phase-08/evidence/8a/interfaces-1.txt"
+  },
+  {
+    "gate": "rag-compile-1",
+    "exit": 0,
+    "suiteGroupTestCounts": [],
+    "log": "docs/agent-runs/phase-08/evidence/8a/rag-compile-1.txt"
+  },
+  {
+    "gate": "targeted-1",
+    "exit": 0,
+    "suiteGroupTestCounts": [
+      11,
+      23
+    ],
+    "log": "docs/agent-runs/phase-08/evidence/8a/targeted-1.txt"
+  },
+  {
+    "gate": "targeted-2",
+    "exit": 0,
+    "suiteGroupTestCounts": [
+      9,
+      12
+    ],
+    "log": "docs/agent-runs/phase-08/evidence/8a/targeted-2.txt"
+  },
+  {
+    "gate": "targeted-3",
+    "exit": 0,
+    "suiteGroupTestCounts": [
+      14,
+      23
+    ],
+    "log": "docs/agent-runs/phase-08/evidence/8a/targeted-3.txt"
+  }
+]

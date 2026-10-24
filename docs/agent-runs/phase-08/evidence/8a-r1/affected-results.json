@@ -1,0 +1,20 @@
+[
+  {
+    "gate": "targeted-1",
+    "exit": 0,
+    "testGroups": [
+      11,
+      13
+    ],
+    "sha256": "c79128213b17e3d2cc33e4f1cc94d02cfd6dd4fdbf7fc4f739c4afb12046de3b"
+  },
+  {
+    "gate": "targeted-2",
+    "exit": 0,
+    "testGroups": [
+      18,
+      29
+    ],
+    "sha256": "050507c6a28c3f85e67fab196f7e62bb4f4ffc00b38cbe6b37836978d4781e96"
+  }
+]

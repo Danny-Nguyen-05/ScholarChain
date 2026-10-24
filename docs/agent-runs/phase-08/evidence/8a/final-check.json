@@ -1,0 +1,25 @@
+{
+  "command": "/usr/bin/time -p sbt -batch check > /tmp/phase8a-final-check-1.txt 2>&1",
+  "javaVersion": "17.0.20.1",
+  "sbtVersion": "1.10.7",
+  "exit": 0,
+  "moduleTests": {
+    "core": 153,
+    "hadoop": 64,
+    "entityResolution": 39,
+    "sparkAnalytics": 38,
+    "storage": 44,
+    "rag": 14,
+    "independentTests": 358,
+    "buildVerification": 8
+  },
+  "totalTests": 718,
+  "failedTests": 0,
+  "realSeconds": 683.81,
+  "rawLog": "/tmp/phase8a-final-check-1.txt",
+  "rawBytes": 1379298,
+  "rawSha256": "4d4a5e7a280b7ba62eb98693294e9a572f91de19d21797105fc4c8dbd35ea13c",
+  "retainedExcerpt": "docs/agent-runs/phase-08/evidence/8a/final-check-excerpt.txt",
+  "liveAwsTestsExecuted": false,
+  "expectedInjectedFailureSelfTest": true
+}

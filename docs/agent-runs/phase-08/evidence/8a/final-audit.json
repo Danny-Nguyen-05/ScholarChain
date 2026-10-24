@@ -1,0 +1,43 @@
+{
+  "baseSha": "8503e1715cbcaf043fd68213c5b08731e9de9ba7",
+  "branch": "phase-8",
+  "head": "8503e1715cbcaf043fd68213c5b08731e9de9ba7",
+  "frozenFiles": 302,
+  "changedHashOrMtimeDuringFullGate": [],
+  "snapshotFile": "/tmp/phase8a-frozen-source.json",
+  "snapshotSha256": "6dd42f8c0e829b52091690e6b789903dc22ba7d353d8a988251c647223e8413a",
+  "gitDiffCheckExit": 0,
+  "newSourceTrailingWhitespace": [],
+  "originalPlanMatchesRetainedSnapshot": true,
+  "planSha256": "14daa4a41ca151e161e9bf4b67a4c5e95f02ae3b0fdfdda51a9a6b5cbd1c9e27",
+  "protectedPathsModified": false,
+  "generatedTestMarkerExists": true,
+  "implementationUntrackedFiles": [
+    "modules/core/src/main/scala/edu/uic/cs441/scholarchain/core/EmbeddingContracts.scala",
+    "modules/core/src/test/resources/wire/embedding-context.json",
+    "modules/core/src/test/resources/wire/embedding-document.json",
+    "modules/core/src/test/resources/wire/embedding-metadata.json",
+    "modules/core/src/test/resources/wire/embedding-work-item.json",
+    "modules/core/src/test/scala/edu/uic/cs441/scholarchain/core/EmbeddingContractSpec.scala",
+    "modules/rag/README.md",
+    "modules/rag/src/main/scala/edu/uic/cs441/scholarchain/rag/DocumentRendering.scala",
+    "modules/rag/src/main/scala/edu/uic/cs441/scholarchain/rag/EmbeddingClients.scala",
+    "modules/rag/src/main/scala/edu/uic/cs441/scholarchain/rag/SemanticContexts.scala",
+    "modules/rag/src/test/scala/edu/uic/cs441/scholarchain/rag/EmbeddingRagSpec.scala",
+    "modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/EmbeddingManifest.scala",
+    "modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/EmbeddingWorkQueue.scala",
+    "modules/storage/src/test/scala/edu/uic/cs441/scholarchain/storage/EmbeddingStorageSpec.scala",
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentEmbeddingContractSpec.scala",
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentEmbeddingRenderingSpec.scala",
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentEmbeddingStorageSpec.scala"
+  ],
+  "trackedChanges": [
+    "build.sbt",
+    "modules/core/README.md",
+    "modules/storage/README.md",
+    "modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/fakes/Fakes.scala",
+    "project/Dependencies.scala",
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentStorageRuntimeFenceSpec.scala",
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/RuntimeGraphFence.scala"
+  ]
+}
