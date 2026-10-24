@@ -1,0 +1,7 @@
+{
+  "exitCode": 1,
+  "rawSha256": "c36b8f18fc78ecac2e4c760cc6fa1209de9f6636c33c6eea985ae56ed185e95c",
+  "note": "Storage compile syntax errors; no tests",
+  "retainedLog": "docs/agent-runs/phase-07/evidence/7a/targeted-2.txt",
+  "retainedSha256": "c36b8f18fc78ecac2e4c760cc6fa1209de9f6636c33c6eea985ae56ed185e95c"
+}

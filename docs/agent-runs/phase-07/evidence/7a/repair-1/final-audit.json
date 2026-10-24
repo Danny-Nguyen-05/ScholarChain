@@ -1,0 +1,43 @@
+{
+  "auditedAt": "2026-10-22T18:03:33.416209-05:00",
+  "sourceCount": 110,
+  "sourceChangesDuringGate": [],
+  "onlyFourAuthorizedF1FilesDifferFromReviewedSource": [
+    "modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/ManifestRows.scala",
+    "modules/storage/src/test/scala/edu/uic/cs441/scholarchain/storage/ParquetManifestSpec.scala",
+    "modules/storage/src/test/scala/edu/uic/cs441/scholarchain/storage/Phase7ManifestSmokeMain.scala",
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentStorageParquetSpec.scala"
+  ],
+  "protectedInputsMatch": {
+    "docs/agent-runs/phase-06/human-gate.md": true,
+    "docs/agent-runs/phase-06/repairs.md": true,
+    "docs/agent-runs/phase-06/commit.txt": true,
+    "AGENTS.md": true,
+    "CLAUDE.md": true,
+    "docs/agents.md": true
+  },
+  "gitignoreUnchanged": true,
+  "externalReviewVerbatimHashMatches": true,
+  "realSourceMetadataHashesMatchAfterGate": {
+    "target/phase6-runs/6fg-spark-first-v2/run:f02acf56-4bea-4009-adaf-b11d5afceb49/run-manifest.json": true,
+    "target/phase6-runs/6fg-spark-first-v2/run:f02acf56-4bea-4009-adaf-b11d5afceb49/run-metadata.json": true,
+    "target/phase6-runs/6fg-spark-first-v2/run:f02acf56-4bea-4009-adaf-b11d5afceb49/_SCHOLARCHAIN_SPARK_COMPLETE": true,
+    "target/phase6-runs/6fg-spark-first-v2/run:f02acf56-4bea-4009-adaf-b11d5afceb49/load-manifests/s3.json": true
+  },
+  "retainedLogRenameCount": 23,
+  "all23RenamedByteHashesMatch": true,
+  "all23NewPathsGitVisible": true,
+  "liveRetainedIndexAndTargetReferencesResolveAndHashMatch": true,
+  "all14BuildRawHashesStillMatch": true,
+  "repositoryLocalLogCount": 0,
+  "gitCheckIgnoreExit": 1,
+  "trackedDiffCheckExit": 0,
+  "trackedDiffCheckOutput": "",
+  "repairSourceTrailingWhitespace": [],
+  "branch": "phase-7",
+  "head": "98dd2a4458e3128d019af1c1d1dbd2bf1dfcbbd2",
+  "allLaunchedBuildSessionsFinished": true,
+  "ownerReportsNoRunningJobs": true,
+  "noStagingCommitOrPushPerformed": true,
+  "nonblockingN1ThroughN8": "OPEN; not repaired"
+}

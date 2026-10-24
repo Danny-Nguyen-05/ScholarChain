@@ -1,0 +1,86 @@
+{
+  "at": "2026-10-23T01:24:29.229445-05:00",
+  "branch": "phase-7",
+  "head": "c911b236f2a8c02b7422df56f8c334d47fff7ad3",
+  "sourceFilesChecked": 306,
+  "sourceContentOrMtimeDrift": [],
+  "committedBaseFilesChecked": 633,
+  "baseChangedBeforeFinalReports": [
+    "docs/agent-runs/phase-07/prompt.md",
+    "docs/agent-runs/phase-07/repairs.md",
+    "modules/storage/README.md",
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentStorageSdkSpec.scala"
+  ],
+  "priorEvidenceAndProtectedFilesUnchanged": true,
+  "gitDiffCheckExit": 0,
+  "gitCheckIgnoreExit": 1,
+  "ignoredEvidence": "",
+  "productionSourceChanges": [],
+  "liveConfigurationCompiled": true,
+  "liveExecutionTasksInvoked": [],
+  "liveTaggedBodyExecuted": false,
+  "runtimeSourceFiles": 0,
+  "stagingCommitPush": false,
+  "reviewerLaunched": false,
+  "cloudProviderAPICalls": false,
+  "humanRecordsEdited": false,
+  "Phase8Started": false,
+  "specialists": "No active owner jobs; test owner complete, storage owner final reporting turn ended at usage limit after authored files.",
+  "fullGate": {
+    "exitCode": 0,
+    "totalPassed": 659,
+    "totalFailed": 0,
+    "groups": {
+      "core": {
+        "total": 144,
+        "passed": 144,
+        "failed": 0
+      },
+      "hadoop": {
+        "total": 64,
+        "passed": 64,
+        "failed": 0
+      },
+      "entityResolution": {
+        "total": 39,
+        "passed": 39,
+        "failed": 0
+      },
+      "spark": {
+        "total": 38,
+        "passed": 38,
+        "failed": 0
+      },
+      "storage": {
+        "total": 27,
+        "passed": 27,
+        "failed": 0
+      },
+      "independent": {
+        "total": 339,
+        "passed": 339,
+        "failed": 0
+      },
+      "buildVerification": {
+        "total": 8,
+        "passed": 8,
+        "failed": 0
+      }
+    },
+    "java": "17.0.20.1",
+    "sbt": "1.10.7",
+    "realSeconds": 684.21,
+    "rawLog": "/tmp/phase7c-final-check.txt",
+    "retainedLog": "docs/agent-runs/phase-07/evidence/7c/final-check.txt",
+    "bytes": 1373089,
+    "sha256": "3da90e0bd60d8948809f3159f4ab24ab85a46d58ddb5ba0a47d46982368e8e2f",
+    "liveConfigurationCompiled": true,
+    "liveTestTasksInvoked": [],
+    "liveTaggedBodyExecuted": false,
+    "runtimeSourcesObserved": 0,
+    "completedLines": [
+      "[success] Total time: 682 s (11:22), completed Oct 23, 2026, 1:24:17 AM"
+    ],
+    "expectedError": "Injected build format-stage failure belongs to a passing self-test."
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "exitCode": 1,
+  "realSeconds": 9.04,
+  "liveConfigurationCompileExit": 0,
+  "testSelection": {
+    "normal": "-l edu.uic.cs441.scholarchain.storage.AwsIntegration",
+    "integration": "-n edu.uic.cs441.scholarchain.storage.AwsIntegration"
+  },
+  "storageTests": {
+    "total": 27,
+    "passed": 26,
+    "failed": 1
+  },
+  "failure": "Offline owned-journal policy test: default planned state omitted by serializer. Storage owner made all journal item fields explicit.",
+  "independentTests": "not reached",
+  "liveTaggedBodyExecuted": false,
+  "rawLog": "/tmp/phase7c-targeted-2.txt",
+  "retainedLog": "docs/agent-runs/phase-07/evidence/7c/targeted-2.txt",
+  "bytes": 6720,
+  "sha256": "7bef75037fffc8f491cf12db0dfb6f0681b390c36809dcc585536f4f7b272645"
+}

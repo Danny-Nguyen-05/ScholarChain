@@ -1,0 +1,40 @@
+{
+  "targeted": {
+    "exitCode": 0,
+    "storageTests": 10,
+    "independentStorageTests": 27,
+    "sparkCsvTests": 4,
+    "realSeconds": 16.52,
+    "sha256": "873721034415241cca2ae739652454cd11f987a444205c126dfc6f0eb6ad08b4",
+    "note": "All tests and first un-forked smoke succeeded; post-success Hadoop shutdown classpath error retained. Subsequent forked absolute-path smoke exits cleanly."
+  },
+  "smoke": {
+    "exitCode": 0,
+    "realSeconds": 4.14,
+    "datasets": {
+      "nodes/type=researcher": {
+        "metadataRows": 21819,
+        "sampledRows": 1
+      },
+      "metrics/type=researcher_collaboration": {
+        "metadataRows": 62757,
+        "sampledRows": 1
+      },
+      "metrics/type=kcore": {
+        "metadataRows": 62757,
+        "sampledRows": 1
+      }
+    },
+    "scope": "Read-only metadata/completion binding and <=1 Parquet row/table; no cache writes or full rowcount/logicalhash recomputation. Metadata is actual retained Phase6 output.",
+    "rawLog": "/tmp/phase7a-repair1-real-manifest-smoke.log",
+    "rawBytes": 474091,
+    "rawSha256": "562d4fb2163a0a26697e8dccd5fc7ca91b094236a378fd8f214aeba0450da642",
+    "retainedExcerpt": "docs/agent-runs/phase-07/evidence/7a/repair-1/real-manifest-smoke.txt",
+    "retainedSha256": "0d4463e69b09558dee0a4b24c0c4064481994b059efe8c84788eae9c27fe4cd7"
+  },
+  "forkedRelativePathAttempt": {
+    "exitCode": 1,
+    "log": "real-manifest-smoke-relative-failure.txt",
+    "reason": "Forked JVM working directory is storage module; relative source root did not resolve. Corrected with absolute path, no source/build edit."
+  }
+}

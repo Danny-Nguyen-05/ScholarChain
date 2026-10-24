@@ -1,0 +1,25 @@
+{
+  "nodeId": "researcher:dblp:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "schemaVersion": "unsupported.v99",
+  "nodeClass": "RESEARCHER",
+  "label": "Synthetic Example 0001",
+  "properties": [
+    {
+      "name": "orcid.0",
+      "value": "0000-0002-1825-0097"
+    }
+  ],
+  "provenance": {
+    "schemaVersion": "scholarchain.domain.v1",
+    "source": "DBLP",
+    "sourceRecordId": "independent/synthetic/storage",
+    "sourceUri": null,
+    "datasetSnapshot": "independent-synthetic-snapshot",
+    "retrievalDate": null,
+    "licenseEvidenceUri": null,
+    "runId": "run:00112233-4455-4677-8899-aabbccddeeff",
+    "uncertaintyNotes": [
+      "Synthetic independent test fixture; no observed researcher or source claim."
+    ]
+  }
+}

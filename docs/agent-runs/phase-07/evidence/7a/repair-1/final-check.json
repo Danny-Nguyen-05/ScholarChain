@@ -1,0 +1,25 @@
+{
+  "exitCode": 0,
+  "java": "17.0.20.1",
+  "sbt": "1.10.7",
+  "groups": {
+    "core": 144,
+    "hadoop": 64,
+    "entityResolution": 39,
+    "spark": 38,
+    "storage": 10,
+    "independent": 293,
+    "buildVerification": 8
+  },
+  "passed": 596,
+  "failed": 0,
+  "realSeconds": 681.2,
+  "sbtSeconds": 679,
+  "completedAt": "2026-10-22T18:02:48-05:00",
+  "rawLog": "/tmp/phase7a-repair1-final-check.log",
+  "rawBytes": 1362175,
+  "rawSha256": "26f7ad074aa1db1028558326d8826e30fd6e07937ed8ad511a2d5870f12e2497",
+  "retainedExcerpt": "final-check-excerpt.txt",
+  "retainedExcerptSha256": "251e2bba1f4cd85f9680e9a58af649aee3d932ee08793a3c290f94c068b3671d",
+  "expectedFailure": "Injected format-stage probe is a passing build verification test, not a failed outer gate."
+}

@@ -1,0 +1,83 @@
+openjdk version "17.0.20.1" 2026-08-18
+OpenJDK Runtime Environment Homebrew (build 17.0.20.1+0)
+OpenJDK 64-Bit Server VM Homebrew (build 17.0.20.1+0, mixed mode, sharing)
+[info] welcome to sbt 1.10.7 (Homebrew Java 17.0.20.1)
+[info] loading settings for project scholarchain-build from plugins.sbt...
+[info] loading project definition from /Users/danny/Documents/UIC/CS441/ScholarChain/project
+[info] loading settings for project root from build.sbt...
+[info] set current project to root (in build file:/Users/danny/Documents/UIC/CS441/ScholarChain/)
+[info] scalafmt: Formatting 4 Scala sources (/Users/danny/Documents/UIC/CS441/ScholarChain/tests)...
+[info] scalafmt: Reformatted 4 Scala sources
+[success] Total time: 1 s, completed Oct 23, 2026, 1:06:08 AM
+[info] compiling 4 Scala sources to /Users/danny/Documents/UIC/CS441/ScholarChain/tests/target/scala-3.3.4/test-classes ...
+[info] done compiling
+[info] IndependentStorageHardeningSpec:
+[info] - entity link wire round trip retains candidate confidence, affiliations and source evidence
+[info] - query session wire round trip preserves revision, raw payload and explicit TTL
+[info] - artifact and metric envelopes retain immutable version hashes and exact qualified payloads
+[info] - run ledger wire round trip retains stage failures and recovered retry history
+[info] - inline evidence wire envelope round trips source text and validates its digest
+[info] - large evidence stores one immutable object and a hash-bound pointer instead of inline text
+[info] - all six Dynamo tables reject unsupported envelope versions, corrupt JSON and missing payload metadata
+[info] - metric and entity adapters reject malformed required metadata before issuing a write
+[info] IndependentStorageRuntimeFenceSpec:
+[info] - runtime scan permits GraphReader and ignores loader names in comments or inert strings
+[info] - runtime scan detects direct, renamed, fully qualified and raw SDK loader access
+[info] - runtime scan follows referenced storage composition and detects a hidden write capability
+[info] - actual runtime roots and their referenced storage composition expose no graph write dependency
+[info]   + Runtime graph fence: runtimeSources=0, inspectedSources=0; heuristic only. 
+[info]   + rag/services have no runtime Scala source yet; detection is established by regression fixtures, not by runtime wiring. 
+[info] IndependentStorageSdkSpec:
+[info] - S3 read checks SHA-256 against bytes and rejects missing or malformed hash metadata
+[info] - S3 valid read preserves caller metadata and missing objects return Missing
+[info] - S3 writes bind versioned key, SHA metadata and atomic create condition
+[info] - S3 bounds a stream whose body exceeds its advertised content length and closes it
+[info] - S3 retries a transient SDK failure within the configured bound without real sleeping
+[info] - Dynamo immutable writes use conditional create and read the original on conflict
+[info] - Dynamo point reads reject unknown envelope schema and corrupt payload
+[info] - Dynamo idempotency lookup uses configured GSI and the raw key as a parameter
+[info] - Dynamo query creation atomically reserves idempotency and limits TTL to configured sessions
+[info] - Dynamo batch point reads split 101 unique keys into calls of 100 and 1
+[info] - Dynamo unprocessed keys retry to the configured bound and return a typed exhausted result
+[info] - a committed Dynamo transaction with lost reply retries the same token and logical write once
+[info] - S3 conditional 412 verifies existing content and reports unchanged or immutable conflict
+[info] - ledger stage transaction compares the prior root and conditionally creates the stage atomically *** FAILED ***
+[info]   java.lang.reflect.UndeclaredThrowableException:
+[info]   at jdk.proxy2/jdk.proxy2.$Proxy2.transactWriteItems(Unknown Source)
+[info]   at edu.uic.cs441.scholarchain.storage.DynamoRows.transact$$anonfun$3(DynamoStorage.scala:169)
+[info]   at edu.uic.cs441.scholarchain.storage.StorageRetry.apply(S3ObjectStore.scala:19)
+[info]   at edu.uic.cs441.scholarchain.storage.DynamoRows.transact(DynamoStorage.scala:179)
+[info]   at edu.uic.cs441.scholarchain.storage.RowRunLedger.transition$$anonfun$1(StorageRows.scala:310)
+[info]   at edu.uic.cs441.scholarchain.storage.RowCodec$.map(StorageRows.scala:80)
+[info]   at edu.uic.cs441.scholarchain.storage.RowRunLedger.transition(StorageRows.scala:268)
+[info]   at edu.uic.cs441.scholarchain.storage.RowRunLedger.recordStage(StorageRows.scala:318)
+[info]   at edu.uic.cs441.scholarchain.independent.IndependentStorageSdkSpec.testFun$proxy14$1(IndependentStorageSdkSpec.scala:520)
+[info]   at edu.uic.cs441.scholarchain.independent.IndependentStorageSdkSpec.$init$$$anonfun$14(IndependentStorageSdkSpec.scala:491)
+[info]   ...
+[info]   Cause: ujson.Value$InvalidData: Expected ujson.Str (data: 5)
+[info]   at ujson.Value$InvalidData$.apply(Value.scala:202)
+[info]   at ujson.Value.str(Value.scala:19)
+[info]   at ujson.Value.str$(Value.scala:9)
+[info]   at ujson.Num.str(Value.scala:245)
+[info]   at edu.uic.cs441.scholarchain.independent.IndependentStorageSdkSpec$$anon$15.applyOrElse(IndependentStorageSdkSpec.scala:507)
+[info]   at edu.uic.cs441.scholarchain.independent.IndependentStorageSdkSpec$$anon$15.applyOrElse(IndependentStorageSdkSpec.scala:494)
+[info]   at scala.runtime.AbstractPartialFunction.apply(AbstractPartialFunction.scala:35)
+[info]   at edu.uic.cs441.scholarchain.independent.IndependentStorageSdkSpec$$anon$18.invoke(IndependentStorageSdkSpec.scala:49)
+[info]   at jdk.proxy2/jdk.proxy2.$Proxy2.transactWriteItems(Unknown Source)
+[info]   at edu.uic.cs441.scholarchain.storage.DynamoRows.transact$$anonfun$3(DynamoStorage.scala:169)
+[info]   ...
+[info] - ledger transaction cancellation distinguishes conditional conflict from other cancellation causes
+[info] - ledger completion rejects a lost root compare-and-swap without unconditional overwrite
+[info] Run completed in 689 milliseconds.
+[info] Total number of tests run: 28
+[info] Suites: completed 3, aborted 0
+[info] Tests: succeeded 27, failed 1, canceled 0, ignored 0, pending 0
+[info] *** 1 TEST FAILED ***
+[error] Failed tests:
+[error] 	edu.uic.cs441.scholarchain.independent.IndependentStorageSdkSpec
+[error] (independentTests / Test / testOnly) sbt.TestsFailedException: Tests unsuccessful
+[error] Total time: 5 s, completed Oct 23, 2026, 1:06:13 AM
+real 7.86
+user 26.72
+sys 1.48
+PHASE7C_TARGETED_EXIT_CODE=1

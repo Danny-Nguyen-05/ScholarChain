@@ -1,0 +1,11 @@
+{
+  "exitCode": 1,
+  "tests": 3,
+  "passed": 2,
+  "failed": 1,
+  "rawSha256": "3b01851a954774c3ae937e14c725f09fde994389a10fc74f293cce6fcfd5981b",
+  "realSeconds": 9.45,
+  "note": "Custom writer compiles; Spark CSV readback normalizes CRLF. Owner must verify raw bytes and use lossless independent parsing without weakening text expectations.",
+  "retainedLog": "docs/agent-runs/phase-07/evidence/7a/spark-targeted-3.txt",
+  "retainedSha256": "3b01851a954774c3ae937e14c725f09fde994389a10fc74f293cce6fcfd5981b"
+}

@@ -15,6 +15,14 @@ object Versions {
 
   val hadoopClient = "3.3.6"
 
+  // AWS's latest published release verified 2026-10-22:
+  // https://github.com/aws/aws-sdk-java-v2/releases/tag/2.56.0 (2026-10-14).
+  val awsSdk = "2.56.0"
+
+  // Match Phase 6 / Spark 3.5.4's Parquet format implementation.
+  // https://github.com/apache/spark/blob/v3.5.4/pom.xml
+  val parquet = "1.13.1"
+
   // Spark 3.5.4 is published on Maven Central only as Scala 2.13 artifacts (e.g.
   // org.apache.spark:spark-sql_2.13:3.5.4). There is no Spark 3.5 artifact cross-built for
   // Scala 3.3.x. sparkAnalytics must compile against Spark's Java and Dataset/DataFrame entry

@@ -1,0 +1,57 @@
+{
+  "exitCode": 0,
+  "totalPassed": 664,
+  "totalFailed": 0,
+  "groups": {
+    "core": {
+      "total": 144,
+      "passed": 144,
+      "failed": 0
+    },
+    "hadoop": {
+      "total": 64,
+      "passed": 64,
+      "failed": 0
+    },
+    "entityResolution": {
+      "total": 39,
+      "passed": 39,
+      "failed": 0
+    },
+    "spark": {
+      "total": 38,
+      "passed": 38,
+      "failed": 0
+    },
+    "storage": {
+      "total": 32,
+      "passed": 32,
+      "failed": 0
+    },
+    "independent": {
+      "total": 339,
+      "passed": 339,
+      "failed": 0
+    },
+    "buildVerification": {
+      "total": 8,
+      "passed": 8,
+      "failed": 0
+    }
+  },
+  "java": "17.0.20.1",
+  "sbt": "1.10.7",
+  "realSeconds": 681.26,
+  "rawLog": "/tmp/phase7c-repair1-final-check.txt",
+  "retainedLog": "docs/agent-runs/phase-07/evidence/7c/repair-1/final-check.txt",
+  "bytes": 1370465,
+  "sha256": "f225a4ecaa93d920ae1476211ab638bc1f36b0120bf2e078eb5d0308820773b3",
+  "liveConfigurationCompiled": true,
+  "liveExecutionTasksInvoked": [],
+  "liveTaggedBodyExecuted": false,
+  "actualCleanupExecuted": false,
+  "completedLines": [
+    "[success] Total time: 679 s (11:19), completed Oct 23, 2026, 1:13:30 PM"
+  ],
+  "expectedError": "Injected format-stage failure belongs to passing build self-test."
+}

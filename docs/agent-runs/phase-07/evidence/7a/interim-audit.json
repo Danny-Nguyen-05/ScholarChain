@@ -1,0 +1,15 @@
+{
+  "sourceCount": 109,
+  "changedSinceGateStarted": [],
+  "protectedInputHashesMatch": {
+    "docs/agent-runs/phase-06/human-gate.md": true,
+    "docs/agent-runs/phase-06/repairs.md": true,
+    "docs/agent-runs/phase-06/commit.txt": true,
+    "AGENTS.md": true,
+    "CLAUDE.md": true,
+    "docs/agents.md": true
+  },
+  "branch": "phase-7",
+  "head": "98dd2a4458e3128d019af1c1d1dbd2bf1dfcbbd2",
+  "scope": "Interim read-only audit during full gate; final audit will repeat only if gate completes."
+}

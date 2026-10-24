@@ -1,0 +1,26 @@
+{
+  "exitCode": 0,
+  "realSeconds": 20.95,
+  "groups": {
+    "storage": {
+      "total": 16,
+      "passed": 16,
+      "failed": 0
+    },
+    "independentStorage": {
+      "total": 46,
+      "passed": 46,
+      "failed": 0
+    },
+    "neptuneCsv": {
+      "total": 4,
+      "passed": 4,
+      "failed": 0
+    }
+  },
+  "rawLog": "/tmp/phase7b-targeted-1.txt",
+  "retainedLog": "docs/agent-runs/phase-07/evidence/7b/targeted-1.txt",
+  "bytes": 10114,
+  "sha256": "dc236d9f347f1853eed9bb8452243fc436f41125ddb1bd03b8a69f588a150aa4",
+  "notes": "After compile5 fixes and reader cap; one later product-message wording change; extra query-pagination test pending."
+}

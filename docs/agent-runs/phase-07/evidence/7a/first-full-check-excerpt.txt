@@ -1,0 +1,40 @@
+1: openjdk version "17.0.20.1" 2026-08-18
+2: OpenJDK Runtime Environment Homebrew (build 17.0.20.1+0)
+3: OpenJDK 64-Bit Server VM Homebrew (build 17.0.20.1+0, mixed mode, sharing)
+4: [info] welcome to sbt 1.10.7 (Homebrew Java 17.0.20.1)
+5: [info] loading settings for project scholarchain-build from plugins.sbt...
+6: [info] loading project definition from /Users/danny/Documents/UIC/CS441/ScholarChain/project
+7: [info] loading settings for project root from build.sbt...
+8: [info] set current project to root (in build file:/Users/danny/Documents/UIC/CS441/ScholarChain/)
+9: [info] scalafmt: Checking 15 Scala sources (/Users/danny/Documents/UIC/CS441/ScholarChain)...
+134: [info] - versioned JSON HOCON subset .conf and .json load through the real loader
+170: [info] Total number of tests run: 144
+171: [info] Suites: completed 12, aborted 0
+172: [info] Tests: succeeded 144, failed 0, canceled 0, ignored 0, pending 0
+779: [info] - a one-slash file URI round-trips to the real directory
+912: [info] Total number of tests run: 64
+913: [info] Suites: completed 4, aborted 0
+914: [info] Tests: succeeded 64, failed 0, canceled 0, ignored 0, pending 0
+962: [info] Total number of tests run: 39
+963: [info] Suites: completed 6, aborted 0
+964: [info] Tests: succeeded 39, failed 0, canceled 0, ignored 0, pending 0
+2082: [info] Total number of tests run: 38
+2083: [info] Suites: completed 5, aborted 0
+2084: [info] Tests: succeeded 38, failed 0, canceled 0, ignored 0, pending 0
+2099: [info] Total number of tests run: 9
+2100: [info] Suites: completed 2, aborted 0
+2101: [info] Tests: succeeded 9, failed 0, canceled 0, ignored 0, pending 0
+5444: [info] - production Spark sources keep forbidden driver actions and graph APIs outside BoundedActions *** FAILED ***
+5445: [info]   Vector("forbidden driver action isEmpty at 1103", "forbidden driver action count at 1871", "forbidden driver action count at 3219") was not empty forbidden Spark API/action in /Users/danny/Documents/UIC/CS441/ScholarChain/modules/spark/src/main/scala/edu/uic/cs441/scholarchain/spark/Phase7NeptuneExport.scala: forbidden driver action isEmpty at 1103, forbidden driver action count at 1871, forbidden driver action count at 3219 (IndependentPhase6SafetySpec.scala:144)
+5557: [info] - S3 retries a transient SDK failure within the configured bound without real sleeping
+6286: [info] Total number of tests run: 292
+6287: [info] Suites: completed 46, aborted 0
+6288: [info] Tests: succeeded 291, failed 1, canceled 0, ignored 0, pending 0
+6290: [error] Failed tests:
+6291: [error] 	edu.uic.cs441.scholarchain.independent.IndependentPhase6SafetySpec
+6292: [error] (independentTests / Test / test) sbt.TestsFailedException: Tests unsuccessful
+6293: [error] Total time: 675 s (11:15), completed Oct 22, 2026, 5:01:30 PM
+6294: real 676.92
+6295: user 655.69
+6296: sys 93.78
+6297: PHASE7A_EXIT_CODE=1

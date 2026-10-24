@@ -1,0 +1,42 @@
+{
+  "exitCode": 0,
+  "realSeconds": 24.1,
+  "groups": {
+    "storage": {
+      "total": 17,
+      "passed": 17,
+      "failed": 0
+    },
+    "independentStorage": {
+      "total": 48,
+      "passed": 48,
+      "failed": 0
+    },
+    "neptuneCsv": {
+      "total": 4,
+      "passed": 4,
+      "failed": 0
+    }
+  },
+  "rawLog": "/tmp/phase7b-targeted-cli-2.txt",
+  "retainedLog": "docs/agent-runs/phase-07/evidence/7b/targeted-cli-2.txt",
+  "bytes": 12413,
+  "sha256": "9b1980c900ba65cc2eeb6bd83bb64ece0d235677d74632ce56770b82e50a2230",
+  "cli": {
+    "scope": "Bounded derivative actual producer sample graph/community tables only; not full original cache load",
+    "nodes": 84,
+    "edges": 40,
+    "supportRows": 29,
+    "dryRun": {
+      "proposedCacheWrites": 68,
+      "unchanged": 0
+    },
+    "fake": {
+      "cacheWrites": 68,
+      "unchanged": 0,
+      "graphState": "LOAD_COMPLETED"
+    },
+    "cacheWriteKind": "Entity candidates; no collaboration/kcore metric tables in this sample"
+  },
+  "newCases": "positive RESOLVES_TO alias regression and vector pagination two cases"
+}

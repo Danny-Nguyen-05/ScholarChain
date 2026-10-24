@@ -1,0 +1,174 @@
+openjdk version "17.0.20.1" 2026-08-18
+OpenJDK Runtime Environment Homebrew (build 17.0.20.1+0)
+OpenJDK 64-Bit Server VM Homebrew (build 17.0.20.1+0, mixed mode, sharing)
+[info] welcome to sbt 1.10.7 (Homebrew Java 17.0.20.1)
+[info] loading settings for project scholarchain-build from plugins.sbt...
+[info] loading project definition from /Users/danny/Documents/UIC/CS441/ScholarChain/project
+[info] loading settings for project root from build.sbt...
+[info] set current project to root (in build file:/Users/danny/Documents/UIC/CS441/ScholarChain/)
+[info] scalafmt: Formatting 1 Scala sources (/Users/danny/Documents/UIC/CS441/ScholarChain/modules/storage)...
+[info] scalafmt: Reformatted 1 Scala sources
+[success] Total time: 1 s, completed Oct 22, 2026, 5:47:24 PM
+[info] scalafmt: Formatting 2 Scala sources (/Users/danny/Documents/UIC/CS441/ScholarChain/modules/storage)...
+[info] scalafmt: Reformatted 2 Scala sources
+[success] Total time: 0 s, completed Oct 22, 2026, 5:47:25 PM
+[info] scalafmt: Formatting 1 Scala sources (/Users/danny/Documents/UIC/CS441/ScholarChain/tests)...
+[info] scalafmt: Reformatted 1 Scala sources
+[success] Total time: 0 s, completed Oct 22, 2026, 5:47:25 PM
+[info] compiling 1 Scala source to /Users/danny/Documents/UIC/CS441/ScholarChain/modules/storage/target/scala-3.3.4/classes ...
+[info] done compiling
+[info] compiling 3 Scala sources to /Users/danny/Documents/UIC/CS441/ScholarChain/modules/storage/target/scala-3.3.4/test-classes ...
+[info] done compiling
+WARN org.apache.hadoop.util.NativeCodeLoader - Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+[info] ParquetManifestSpec:
+[info] - local completed Parquet export streams nested LIST records and restores partition window
+[info] - manifest counts use exact nonnegative decimal Long strings without Double rounding
+[info] - Parquet integer values outside exact JSON range reject instead of rounding
+[info] StorageFeatureSpec:
+[info] - ledger requires stage completion and preserves failed retry provenance
+[info] - every fake store keeps immutable content and repeat counts; object manifest is last
+[info] - validated canonical metric copies load once and preserve observed convergence true and false
+[info] - hash mismatch, wrong count and conflicting duplicate metric copies are rejected before writes
+[info] - graph and vector main fakes provide usable deterministic retrieval without provider calls
+[info] - support keys use collision-safe edge and work pairs without altering either Spark ID
+[info] - stream IO failures receive bounded retries and sanitized exhaustion
+[info] Run completed in 582 milliseconds.
+[info] Total number of tests run: 10
+[info] Suites: completed 2, aborted 0
+[info] Tests: succeeded 10, failed 0, canceled 0, ignored 0, pending 0
+[info] All tests passed.
+[success] Total time: 4 s, completed Oct 22, 2026, 5:47:28 PM
+[info] compiling 1 Scala source to /Users/danny/Documents/UIC/CS441/ScholarChain/tests/target/scala-3.3.4/test-classes ...
+[info] done compiling
+[info] IndependentStorageParquetSpec:
+26/10/22 17:47:30 WARN  Utils: Your hostname, Dannys-MacBook-Pro.local resolves to a loopback address: 127.0.0.1; using 10.0.0.113 instead (on interface en0)
+26/10/22 17:47:30 WARN  Utils: Set SPARK_LOCAL_IP if you need to bind to another address
+26/10/22 17:47:30 WARN  NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+[info] - Spark Parquet metrics load with integral doubles, nested lineage, nulls and physical partitions
+[info] - completed source metadata rejects malformed row counts before opening Parquet
+[info] IndependentStorageLoaderSpec:
+[info] - manifest reload loads one canonical metric copy with exact IDs, lineage and qualifications
+[info] - conflicting collaboration and kcore copies reject before publishing any cache row
+[info] - count and content-hash mismatches reject the manifest and always close its iterator
+[info] - a hash-valid unsupported researcher schema is rejected before any candidate is cached
+[info] - missing source qualification metadata and unsupported manifest versions refuse loading
+[info] IndependentStorageSdkSpec:
+[info] - S3 read checks SHA-256 against bytes and rejects missing or malformed hash metadata
+[info] - S3 valid read preserves caller metadata and missing objects return Missing
+[info] - S3 writes bind versioned key, SHA metadata and atomic create condition
+[info] - S3 bounds a stream whose body exceeds its advertised content length and closes it
+[info] - S3 retries a transient SDK failure within the configured bound without real sleeping
+[info] - Dynamo immutable writes use conditional create and read the original on conflict
+[info] - Dynamo point reads reject unknown envelope schema and corrupt payload
+[info] - Dynamo idempotency lookup uses configured GSI and the raw key as a parameter
+[info] - Dynamo query creation atomically reserves idempotency and limits TTL to configured sessions
+[info] - Dynamo batch point reads split 101 unique keys into calls of 100 and 1
+[info] - Dynamo unprocessed keys retry to the configured bound and return a typed exhausted result
+[info] IndependentStoragePortsSpec:
+[info] - versioned immutable objects retain bytes, metadata, and the standard SHA-256 digest
+[info] - support keys keep multiple works and cannot alias through delimiter placement
+[info] - run publisher writes the manifest last, reports unchanged reload and withholds failed completion
+[info] - object validation rejects malformed metadata and caller-supplied mismatching hashes
+[info] - run ledger rejects stages before start and changes after completion
+[info] - entity cache retains multiple candidates and rejects conflicting replacement of one key
+[info] - query idempotency binds one query and optimistic revisions reject a stale writer
+[info] - artifact hashes and metric payloads are immutable, qualified, and window isolated
+[info] - evidence fake preserves source provenance and refuses schema corruption
+[info] Run completed in 3 seconds, 235 milliseconds.
+[info] Total number of tests run: 27
+[info] Suites: completed 4, aborted 0
+[info] Tests: succeeded 27, failed 0, canceled 0, ignored 0, pending 0
+[info] All tests passed.
+[success] Total time: 4 s, completed Oct 22, 2026, 5:47:33 PM
+[info] Phase7NeptuneExportSpec:
+26/10/22 17:47:33 WARN  Utils: Your hostname, Dannys-MacBook-Pro.local resolves to a loopback address: 127.0.0.1; using 10.0.0.113 instead (on interface en0)
+26/10/22 17:47:33 WARN  Utils: Set SPARK_LOCAL_IP if you need to bind to another address
+26/10/22 17:47:33 WARN  NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+26/10/22 17:47:36 WARN  SparkStringUtils: Truncated the string representation of a plan since it was too large. This behavior can be adjusted by setting 'spark.sql.debug.maxToStringFields'.
+[info] - CSV preserves exact node and edge ID sets, RFC4180 text, yearless values and support provenance
+[info] - empty datasets retain a CSV header in every loader file
+[info] - missing endpoints or support works fail before publication
+[info] - support composite keys cannot duplicate or lose evidence, and orphan evidence is rejected
+[info] Run completed in 4 seconds, 390 milliseconds.
+[info] Total number of tests run: 4
+[info] Suites: completed 1, aborted 0
+[info] Tests: succeeded 4, failed 0, canceled 0, ignored 0, pending 0
+[info] All tests passed.
+[success] Total time: 4 s, completed Oct 22, 2026, 5:47:37 PM
+[info] running edu.uic.cs441.scholarchain.storage.Phase7ManifestSmokeMain target/phase6-runs/6fg-spark-first-v2/run:f02acf56-4bea-4009-adaf-b11d5afceb49
+WARN org.apache.hadoop.util.NativeCodeLoader - Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+dataset=nodes/type=researcher metadataRows=21819 sampledRows=1 metadataBinding=verified
+dataset=metrics/type=researcher_collaboration metadataRows=62757 sampledRows=1 metadataBinding=verified
+dataset=metrics/type=kcore metadataRows=62757 sampledRows=1 metadataBinding=verified
+Read-only manifest binding and bounded Parquet smoke passed; full row counts and content hashes were not recomputed.
+[success] Total time: 1 s, completed Oct 22, 2026, 5:47:38 PM
+ERROR org.apache.hadoop.conf.Configuration - error parsing conf core-default.xml
+java.nio.file.NoSuchFileException: /Users/danny/Documents/UIC/CS441/ScholarChain/target/bg-jobs/sbt_c8a8c98c/target/00ea0a5d/5d986717/hadoop-common-3.3.6.jar
+	at java.base/sun.nio.fs.UnixException.translateToIOException(UnixException.java:92)
+	at java.base/sun.nio.fs.UnixException.rethrowAsIOException(UnixException.java:106)
+	at java.base/sun.nio.fs.UnixException.rethrowAsIOException(UnixException.java:111)
+	at java.base/sun.nio.fs.UnixFileAttributeViews$Basic.readAttributes(UnixFileAttributeViews.java:55)
+	at java.base/sun.nio.fs.UnixFileSystemProvider.readAttributes(UnixFileSystemProvider.java:148)
+	at java.base/java.nio.file.Files.readAttributes(Files.java:1851)
+	at java.base/java.util.zip.ZipFile$Source.get(ZipFile.java:1432)
+	at java.base/java.util.zip.ZipFile$CleanableResource.<init>(ZipFile.java:717)
+	at java.base/java.util.zip.ZipFile.<init>(ZipFile.java:251)
+	at java.base/java.util.zip.ZipFile.<init>(ZipFile.java:180)
+	at java.base/java.util.jar.JarFile.<init>(JarFile.java:346)
+	at java.base/sun.net.www.protocol.jar.URLJarFile.<init>(URLJarFile.java:103)
+	at java.base/sun.net.www.protocol.jar.URLJarFile.getJarFile(URLJarFile.java:72)
+	at java.base/sun.net.www.protocol.jar.JarFileFactory.get(JarFileFactory.java:168)
+	at java.base/sun.net.www.protocol.jar.JarFileFactory.getOrCreate(JarFileFactory.java:91)
+	at java.base/sun.net.www.protocol.jar.JarURLConnection.connect(JarURLConnection.java:117)
+	at java.base/sun.net.www.protocol.jar.JarURLConnection.getInputStream(JarURLConnection.java:160)
+	at org.apache.hadoop.conf.Configuration.parse(Configuration.java:3018)
+	at org.apache.hadoop.conf.Configuration.getStreamReader(Configuration.java:3114)
+	at org.apache.hadoop.conf.Configuration.loadResource(Configuration.java:3072)
+	at org.apache.hadoop.conf.Configuration.loadResources(Configuration.java:3045)
+	at org.apache.hadoop.conf.Configuration.loadProps(Configuration.java:2923)
+	at org.apache.hadoop.conf.Configuration.getProps(Configuration.java:2905)
+	at org.apache.hadoop.conf.Configuration.get(Configuration.java:1247)
+	at org.apache.hadoop.conf.Configuration.getTimeDuration(Configuration.java:1864)
+	at org.apache.hadoop.conf.Configuration.getTimeDuration(Configuration.java:1841)
+	at org.apache.hadoop.util.ShutdownHookManager.getShutdownTimeout(ShutdownHookManager.java:183)
+	at org.apache.hadoop.util.ShutdownHookManager.shutdownExecutor(ShutdownHookManager.java:145)
+	at org.apache.hadoop.util.ShutdownHookManager.access$300(ShutdownHookManager.java:65)
+	at org.apache.hadoop.util.ShutdownHookManager$1.run(ShutdownHookManager.java:102)
+Exception in thread "Thread-21" java.lang.RuntimeException: java.nio.file.NoSuchFileException: /Users/danny/Documents/UIC/CS441/ScholarChain/target/bg-jobs/sbt_c8a8c98c/target/00ea0a5d/5d986717/hadoop-common-3.3.6.jar
+	at org.apache.hadoop.conf.Configuration.loadResource(Configuration.java:3098)
+	at org.apache.hadoop.conf.Configuration.loadResources(Configuration.java:3045)
+	at org.apache.hadoop.conf.Configuration.loadProps(Configuration.java:2923)
+	at org.apache.hadoop.conf.Configuration.getProps(Configuration.java:2905)
+	at org.apache.hadoop.conf.Configuration.get(Configuration.java:1247)
+	at org.apache.hadoop.conf.Configuration.getTimeDuration(Configuration.java:1864)
+	at org.apache.hadoop.conf.Configuration.getTimeDuration(Configuration.java:1841)
+	at org.apache.hadoop.util.ShutdownHookManager.getShutdownTimeout(ShutdownHookManager.java:183)
+	at org.apache.hadoop.util.ShutdownHookManager.shutdownExecutor(ShutdownHookManager.java:145)
+	at org.apache.hadoop.util.ShutdownHookManager.access$300(ShutdownHookManager.java:65)
+	at org.apache.hadoop.util.ShutdownHookManager$1.run(ShutdownHookManager.java:102)
+Caused by: java.nio.file.NoSuchFileException: /Users/danny/Documents/UIC/CS441/ScholarChain/target/bg-jobs/sbt_c8a8c98c/target/00ea0a5d/5d986717/hadoop-common-3.3.6.jar
+	at java.base/sun.nio.fs.UnixException.translateToIOException(UnixException.java:92)
+	at java.base/sun.nio.fs.UnixException.rethrowAsIOException(UnixException.java:106)
+	at java.base/sun.nio.fs.UnixException.rethrowAsIOException(UnixException.java:111)
+	at java.base/sun.nio.fs.UnixFileAttributeViews$Basic.readAttributes(UnixFileAttributeViews.java:55)
+	at java.base/sun.nio.fs.UnixFileSystemProvider.readAttributes(UnixFileSystemProvider.java:148)
+	at java.base/java.nio.file.Files.readAttributes(Files.java:1851)
+	at java.base/java.util.zip.ZipFile$Source.get(ZipFile.java:1432)
+	at java.base/java.util.zip.ZipFile$CleanableResource.<init>(ZipFile.java:717)
+	at java.base/java.util.zip.ZipFile.<init>(ZipFile.java:251)
+	at java.base/java.util.zip.ZipFile.<init>(ZipFile.java:180)
+	at java.base/java.util.jar.JarFile.<init>(JarFile.java:346)
+	at java.base/sun.net.www.protocol.jar.URLJarFile.<init>(URLJarFile.java:103)
+	at java.base/sun.net.www.protocol.jar.URLJarFile.getJarFile(URLJarFile.java:72)
+	at java.base/sun.net.www.protocol.jar.JarFileFactory.get(JarFileFactory.java:168)
+	at java.base/sun.net.www.protocol.jar.JarFileFactory.getOrCreate(JarFileFactory.java:91)
+	at java.base/sun.net.www.protocol.jar.JarURLConnection.connect(JarURLConnection.java:117)
+	at java.base/sun.net.www.protocol.jar.JarURLConnection.getInputStream(JarURLConnection.java:160)
+	at org.apache.hadoop.conf.Configuration.parse(Configuration.java:3018)
+	at org.apache.hadoop.conf.Configuration.getStreamReader(Configuration.java:3114)
+	at org.apache.hadoop.conf.Configuration.loadResource(Configuration.java:3072)
+	... 10 more
+real 16.52
+user 56.57
+sys 2.94
+REPAIR1_EXIT_CODE=0

@@ -1,0 +1,16 @@
+{
+  "modifiedSinceReviewed7C": [
+    "modules/storage/README.md",
+    "modules/storage/src/test/scala/edu/uic/cs441/scholarchain/storage/AwsLiveRun.scala"
+  ],
+  "addedSinceReviewed7C": [
+    "modules/storage/src/test/scala/edu/uic/cs441/scholarchain/storage/AwsLiveGraphCleanup.scala",
+    "modules/storage/src/test/scala/edu/uic/cs441/scholarchain/storage/AwsLiveGraphCleanupSpec.scala"
+  ],
+  "coordinatorAppends": [
+    "docs/agent-runs/phase-07/prompt.md",
+    "docs/agent-runs/phase-07/repairs.md",
+    "docs/agent-runs/phase-07/review.md"
+  ],
+  "scope": "Only7C-M1. L1/L2/L3, other nonblocking findings and prior evidence unchanged."
+}

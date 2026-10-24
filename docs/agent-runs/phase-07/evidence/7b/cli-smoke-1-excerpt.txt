@@ -1,0 +1,11 @@
+Bounded excerpt of raw log; line numbers refer to unmodified /tmp source. Full Hadoop DEBUG payloads omitted.
+1: [info] welcome to sbt 1.10.7 (Homebrew Java 17.0.20.1)
+15: [info] running (fork) edu.uic.cs441.scholarchain.storage.StorageLoadMain --manifest /Users/danny/Documents/UIC/CS441/ScholarChain/target/phase7b-replay-n2-20261022-01 --config /tmp/phase7b-local-load-config.json
+38749: [info] runId=run:f02acf56-4bea-4009-adaf-b11d5afceb49 mode=dry-run nodes=84 edges=40 support=29
+59531: [info] FAILED: cache source validation rejected.
+59539: [error] Nonzero exit code returned from runner: 1
+59540: [error] (storage / Compile / runMain) Nonzero exit code returned from runner: 1
+59542: real 7.12
+59543: user 24.90
+59544: sys 1.43
+59545: CLI_SMOKE_EXIT_CODE=1

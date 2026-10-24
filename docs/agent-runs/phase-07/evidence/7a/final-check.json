@@ -1,0 +1,81 @@
+{
+  "exitCode": 0,
+  "java": "17.0.20.1",
+  "sbt": "1.10.7",
+  "groups": {
+    "core": 144,
+    "hadoop": 64,
+    "entityResolution": 39,
+    "spark": 38,
+    "storage": 9,
+    "independent": 292,
+    "buildVerification": 8
+  },
+  "totalPassed": 594,
+  "totalFailed": 0,
+  "groupResults": [
+    [
+      144,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      64,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      39,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      38,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      9,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      292,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      8,
+      0,
+      0,
+      0,
+      0
+    ]
+  ],
+  "wallTime": [
+    "real 680.62",
+    "user 685.37",
+    "sys 94.48"
+  ],
+  "sbtCompletion": [
+    "[success] Total time: 679 s (11:19), completed Oct 22, 2026, 5:20:28 PM"
+  ],
+  "rawLog": "/tmp/phase7a-final-check-2.log",
+  "rawBytes": 1363026,
+  "rawSha256": "a1ce196af9385e3340b648ba5340f0449299b0bbe2330767a671a6c5896d179b",
+  "excerpt": "final-check-excerpt.txt",
+  "expectedFailure": "checkProbeInjectFailure injected format-stage failure is the passing build verification self-test, not a failed outer gate",
+  "completedAuditAt": "2026-10-22T17:20:59.689827-05:00"
+}

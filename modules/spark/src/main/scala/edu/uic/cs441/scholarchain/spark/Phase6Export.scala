@@ -275,6 +275,15 @@ object Phase6Export {
       )
       target -> proposals.size
     }
+    Phase7NeptuneExport.publish(
+      root,
+      canonical.graphNodes,
+      canonical.graphEdges,
+      canonical.edges,
+      canonical.support,
+      published,
+      runId
+    )
     val counts = canonical.counters.unionByName(analytics.counters)
     val rejectCount = BoundedActions.count(rejected)
     val extras = Vector(

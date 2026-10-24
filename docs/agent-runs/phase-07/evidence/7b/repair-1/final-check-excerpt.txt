@@ -1,0 +1,41 @@
+Line numbers refer to complete byte-identical final-check.txt. Injected build-probe failure is an expected passing self-test.
+1: openjdk version "17.0.20.1" 2026-08-18
+2: OpenJDK Runtime Environment Homebrew (build 17.0.20.1+0)
+4: [info] welcome to sbt 1.10.7 (Homebrew Java 17.0.20.1)
+170: [info] Total number of tests run: 144
+171: [info] Suites: completed 12, aborted 0
+172: [info] Tests: succeeded 144, failed 0, canceled 0, ignored 0, pending 0
+173: [info] All tests passed.
+912: [info] Total number of tests run: 64
+913: [info] Suites: completed 4, aborted 0
+914: [info] Tests: succeeded 64, failed 0, canceled 0, ignored 0, pending 0
+915: [info] All tests passed.
+962: [info] Total number of tests run: 39
+963: [info] Suites: completed 6, aborted 0
+964: [info] Tests: succeeded 39, failed 0, canceled 0, ignored 0, pending 0
+965: [info] All tests passed.
+2083: [info] Total number of tests run: 38
+2084: [info] Suites: completed 5, aborted 0
+2085: [info] Tests: succeeded 38, failed 0, canceled 0, ignored 0, pending 0
+2086: [info] All tests passed.
+2116: [info] Total number of tests run: 23
+2117: [info] Suites: completed 4, aborted 0
+2118: [info] Tests: succeeded 23, failed 0, canceled 0, ignored 0, pending 0
+2119: [info] All tests passed.
+6332: [info] Total number of tests run: 320
+6333: [info] Suites: completed 49, aborted 0
+6334: [info] Tests: succeeded 320, failed 0, canceled 0, ignored 0, pending 0
+6335: [info] All tests passed.
+6342: [info] welcome to sbt 1.10.7 (Homebrew Java 17.0.20.1)
+6347: [error] java.lang.RuntimeException: scholarchain check probe: injected format-stage failure
+6365: [error] (checkProbeInjectFailure) scholarchain check probe: injected format-stage failure
+6366: [error] Total time: 0 s, completed Oct 23, 2026, 12:23:35 AM
+6377: [info] Total number of tests run: 8
+6378: [info] Suites: completed 7, aborted 0
+6379: [info] Tests: succeeded 8, failed 0, canceled 0, ignored 0, pending 0
+6380: [info] All tests passed.
+6382: [success] Total time: 679 s (11:19), completed Oct 23, 2026, 12:23:35 AM
+6383: real 680.86
+6384: user 664.26
+6385: sys 95.31
+6386: REPAIR1_EXIT_CODE=0

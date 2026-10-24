@@ -1,0 +1,268 @@
+{
+  "base": "98dd2a4458e3128d019af1c1d1dbd2bf1dfcbbd2",
+  "branch": "phase-7",
+  "head": "98dd2a4458e3128d019af1c1d1dbd2bf1dfcbbd2",
+  "repairSourcePaths": [
+    "modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/ManifestRows.scala",
+    "modules/storage/src/test/scala/edu/uic/cs441/scholarchain/storage/ParquetManifestSpec.scala",
+    "modules/storage/src/test/scala/edu/uic/cs441/scholarchain/storage/Phase7ManifestSmokeMain.scala",
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentStorageParquetSpec.scala"
+  ],
+  "retainedLogRenames": [
+    {
+      "old": "docs/agent-runs/phase-07/evidence/7a/build/phase7a-build-classpath.log",
+      "new": "docs/agent-runs/phase-07/evidence/7a/build/phase7a-build-classpath.txt",
+      "sha256": "0aa3d86b1ab190ca9d88a3b4431a9d4757e724a4f2eaf23c538b17ef2d79f083"
+    },
+    {
+      "old": "docs/agent-runs/phase-07/evidence/7a/build/phase7a-build-first-escalated.log",
+      "new": "docs/agent-runs/phase-07/evidence/7a/build/phase7a-build-first-escalated.txt",
+      "sha256": "f93eab3215b747c1770eced8fc6af8c49bd77199103e65e345e0590a7ed50275"
+    },
+    {
+      "old": "docs/agent-runs/phase-07/evidence/7a/build/phase7a-build-first.log",
+      "new": "docs/agent-runs/phase-07/evidence/7a/build/phase7a-build-first.txt",
+      "sha256": "d16be90ad6ceee140d204f7d2c7212ffec5e2251c56f7f849d9c6b4e81218f05"
+    },
+    {
+      "old": "docs/agent-runs/phase-07/evidence/7a/build/phase7a-build-guard-executeTests.log",
+      "new": "docs/agent-runs/phase-07/evidence/7a/build/phase7a-build-guard-executeTests.txt",
+      "sha256": "4e450825ce5f69ca6f71bf1882787b475339b259451c63590d649b5b0c6d6bfe"
+    },
+    {
+      "old": "docs/agent-runs/phase-07/evidence/7a/build/phase7a-build-guard-test.log",
+      "new": "docs/agent-runs/phase-07/evidence/7a/build/phase7a-build-guard-test.txt",
+      "sha256": "c6b1815093ab23f305b94ae045e5e399c3441b3ad16e67cd5712fd392f4deead"
+    },
+    {
+      "old": "docs/agent-runs/phase-07/evidence/7a/build/phase7a-build-guard-testOnly.log",
+      "new": "docs/agent-runs/phase-07/evidence/7a/build/phase7a-build-guard-testOnly.txt",
+      "sha256": "9f32fde4181e618b28b0bbc6d9c48b7c3ebd5b7e027c5f66ff89e6a2aceb44b4"
+    },
+    {
+      "old": "docs/agent-runs/phase-07/evidence/7a/build/phase7a-build-guard-testQuick.log",
+      "new": "docs/agent-runs/phase-07/evidence/7a/build/phase7a-build-guard-testQuick.txt",
+      "sha256": "b25f41be3055861fb822d3132cf1c03ecf64f8b45756ccf58335fc90a96a2d48"
+    },
+    {
+      "old": "docs/agent-runs/phase-07/evidence/7a/build/phase7a-build-negative-executeTests.log",
+      "new": "docs/agent-runs/phase-07/evidence/7a/build/phase7a-build-negative-executeTests.txt",
+      "sha256": "d9410365911c5343fc9563e43e4828471c8f74d6addb5a27fa4c64a6fa79e62d"
+    },
+    {
+      "old": "docs/agent-runs/phase-07/evidence/7a/build/phase7a-build-negative-test.log",
+      "new": "docs/agent-runs/phase-07/evidence/7a/build/phase7a-build-negative-test.txt",
+      "sha256": "8bc06c4e396af832b23d2579cc479a7fd875d94de5e0dca0336d26d4731181c8"
+    },
+    {
+      "old": "docs/agent-runs/phase-07/evidence/7a/build/phase7a-build-negative-testOnly.log",
+      "new": "docs/agent-runs/phase-07/evidence/7a/build/phase7a-build-negative-testOnly.txt",
+      "sha256": "bf035637441995f468791aeb96ca9272b9b97d39462ed89145bca1db16c88944"
+    },
+    {
+      "old": "docs/agent-runs/phase-07/evidence/7a/build/phase7a-build-negative-testQuick.log",
+      "new": "docs/agent-runs/phase-07/evidence/7a/build/phase7a-build-negative-testQuick.txt",
+      "sha256": "680293c8dab2a682ce64038dd7d574330285d19baa6687f5db332244241ff9c7"
+    },
+    {
+      "old": "docs/agent-runs/phase-07/evidence/7a/build/phase7a-build-profile-guard.log",
+      "new": "docs/agent-runs/phase-07/evidence/7a/build/phase7a-build-profile-guard.txt",
+      "sha256": "f63103bdabaf958bdfa7db0d6049b793b59859e254a86f0b6fa06b0129a7f414"
+    },
+    {
+      "old": "docs/agent-runs/phase-07/evidence/7a/build/phase7a-build-providers.log",
+      "new": "docs/agent-runs/phase-07/evidence/7a/build/phase7a-build-providers.txt",
+      "sha256": "0c412a6a3f3f77f5fcc1aa2a858054579070ccf4ed9275dd294d4e831e098c31"
+    },
+    {
+      "old": "docs/agent-runs/phase-07/evidence/7a/build/phase7a-build-resolution.log",
+      "new": "docs/agent-runs/phase-07/evidence/7a/build/phase7a-build-resolution.txt",
+      "sha256": "1a74b11f3771c48dfce73a1121eb5b856fe857f20338a2c9b88b6631b9a1c68a"
+    },
+    {
+      "old": "docs/agent-runs/phase-07/evidence/7a/source-fence-targeted.log",
+      "new": "docs/agent-runs/phase-07/evidence/7a/source-fence-targeted.txt",
+      "sha256": "4c98fa5a7be0d7f774e42e28ed32429da6561b3d0aec1a5dc82ceeb972cceed0"
+    },
+    {
+      "old": "docs/agent-runs/phase-07/evidence/7a/spark-targeted-2.log",
+      "new": "docs/agent-runs/phase-07/evidence/7a/spark-targeted-2.txt",
+      "sha256": "9abdd8394ab50ee5a17d2b02c22bb5d2d05bef1c0db87d5fa6d65b8d4cb13838"
+    },
+    {
+      "old": "docs/agent-runs/phase-07/evidence/7a/spark-targeted-3.log",
+      "new": "docs/agent-runs/phase-07/evidence/7a/spark-targeted-3.txt",
+      "sha256": "3b01851a954774c3ae937e14c725f09fde994389a10fc74f293cce6fcfd5981b"
+    },
+    {
+      "old": "docs/agent-runs/phase-07/evidence/7a/spark-targeted-4.log",
+      "new": "docs/agent-runs/phase-07/evidence/7a/spark-targeted-4.txt",
+      "sha256": "8bb460fcf336c2cbae68296d27dee42f40525268ee3625fff58460a5e0c65222"
+    },
+    {
+      "old": "docs/agent-runs/phase-07/evidence/7a/targeted-1.log",
+      "new": "docs/agent-runs/phase-07/evidence/7a/targeted-1.txt",
+      "sha256": "7175aed322f06e8cd397d0ed5c74057986b3d82dd2b00e8237979095040fa708"
+    },
+    {
+      "old": "docs/agent-runs/phase-07/evidence/7a/targeted-2.log",
+      "new": "docs/agent-runs/phase-07/evidence/7a/targeted-2.txt",
+      "sha256": "c36b8f18fc78ecac2e4c760cc6fa1209de9f6636c33c6eea985ae56ed185e95c"
+    },
+    {
+      "old": "docs/agent-runs/phase-07/evidence/7a/targeted-3.log",
+      "new": "docs/agent-runs/phase-07/evidence/7a/targeted-3.txt",
+      "sha256": "176dbe6c305b28c28a79d375856f08672135c2ec0485f54406880d7f66f2e455"
+    },
+    {
+      "old": "docs/agent-runs/phase-07/evidence/7a/targeted-4.log",
+      "new": "docs/agent-runs/phase-07/evidence/7a/targeted-4.txt",
+      "sha256": "eed4d1e783f02154a82714cf56c223349c30fd515dad6fb9531fc9b9de942877"
+    },
+    {
+      "old": "docs/agent-runs/phase-07/evidence/7a/targeted-5.log",
+      "new": "docs/agent-runs/phase-07/evidence/7a/targeted-5.txt",
+      "sha256": "65a72c8083c58a54e655f2abb98bb1329d3495943d223e978a20de81f94871d4"
+    }
+  ],
+  "cumulativeTrackedModified": [
+    "build.sbt",
+    "modules/spark/README.md",
+    "modules/spark/src/main/scala/edu/uic/cs441/scholarchain/spark/Phase6Export.scala",
+    "project/Dependencies.scala",
+    "project/ScholarChainBuild.scala",
+    "project/Versions.scala"
+  ],
+  "cumulativeUntrackedImplementation": [
+    "modules/spark/src/main/scala/edu/uic/cs441/scholarchain/spark/Phase7NeptuneExport.scala",
+    "modules/spark/src/test/scala/edu/uic/cs441/scholarchain/spark/Phase7NeptuneExportSpec.scala",
+    "modules/storage/README.md",
+    "modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/DynamoStorage.scala",
+    "modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/EvidenceStorage.scala",
+    "modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/InMemoryStorage.scala",
+    "modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/ManifestRows.scala",
+    "modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/Phase6CacheLoader.scala",
+    "modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/S3ObjectStore.scala",
+    "modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/StoragePorts.scala",
+    "modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/StorageRows.scala",
+    "modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/fakes/Fakes.scala",
+    "modules/storage/src/test/scala/edu/uic/cs441/scholarchain/storage/ParquetManifestSpec.scala",
+    "modules/storage/src/test/scala/edu/uic/cs441/scholarchain/storage/Phase7ManifestSmokeMain.scala",
+    "modules/storage/src/test/scala/edu/uic/cs441/scholarchain/storage/StorageFeatureSpec.scala",
+    "project/AwsIntegration.md",
+    "project/AwsIntegrationPolicy.scala",
+    "project/verification/src/test/scala/scholarchain/build/AwsIntegrationPolicySpec.scala",
+    "tests/src/test/resources/storage/metrics-conflict.json",
+    "tests/src/test/resources/storage/metrics.json",
+    "tests/src/test/resources/storage/researcher-invalid.json",
+    "tests/src/test/resources/storage/researcher.json",
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentStorageFixtures.scala",
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentStorageLoaderSpec.scala",
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentStorageParquetSpec.scala",
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentStoragePortsSpec.scala",
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentStorageSdkSpec.scala"
+  ],
+  "cumulativeUntrackedEvidence": [
+    "docs/agent-runs/phase-07/evidence/7a/agents.md",
+    "docs/agent-runs/phase-07/evidence/7a/build/commands.md",
+    "docs/agent-runs/phase-07/evidence/7a/build/log-index.json",
+    "docs/agent-runs/phase-07/evidence/7a/build/owner-report.md",
+    "docs/agent-runs/phase-07/evidence/7a/build/phase7a-build-classpath.txt",
+    "docs/agent-runs/phase-07/evidence/7a/build/phase7a-build-first-escalated.txt",
+    "docs/agent-runs/phase-07/evidence/7a/build/phase7a-build-first.txt",
+    "docs/agent-runs/phase-07/evidence/7a/build/phase7a-build-guard-executeTests.txt",
+    "docs/agent-runs/phase-07/evidence/7a/build/phase7a-build-guard-test.txt",
+    "docs/agent-runs/phase-07/evidence/7a/build/phase7a-build-guard-testOnly.txt",
+    "docs/agent-runs/phase-07/evidence/7a/build/phase7a-build-guard-testQuick.txt",
+    "docs/agent-runs/phase-07/evidence/7a/build/phase7a-build-negative-executeTests.txt",
+    "docs/agent-runs/phase-07/evidence/7a/build/phase7a-build-negative-test.txt",
+    "docs/agent-runs/phase-07/evidence/7a/build/phase7a-build-negative-testOnly.txt",
+    "docs/agent-runs/phase-07/evidence/7a/build/phase7a-build-negative-testQuick.txt",
+    "docs/agent-runs/phase-07/evidence/7a/build/phase7a-build-profile-guard.txt",
+    "docs/agent-runs/phase-07/evidence/7a/build/phase7a-build-providers.txt",
+    "docs/agent-runs/phase-07/evidence/7a/build/phase7a-build-resolution.txt",
+    "docs/agent-runs/phase-07/evidence/7a/commands.md",
+    "docs/agent-runs/phase-07/evidence/7a/documentation.md",
+    "docs/agent-runs/phase-07/evidence/7a/files.json",
+    "docs/agent-runs/phase-07/evidence/7a/final-audit.json",
+    "docs/agent-runs/phase-07/evidence/7a/final-check-excerpt.txt",
+    "docs/agent-runs/phase-07/evidence/7a/final-check.json",
+    "docs/agent-runs/phase-07/evidence/7a/final-source-snapshot.json",
+    "docs/agent-runs/phase-07/evidence/7a/first-full-check-excerpt.txt",
+    "docs/agent-runs/phase-07/evidence/7a/first-full-check.json",
+    "docs/agent-runs/phase-07/evidence/7a/first-full-source-snapshot.json",
+    "docs/agent-runs/phase-07/evidence/7a/handoff.md",
+    "docs/agent-runs/phase-07/evidence/7a/interim-audit.json",
+    "docs/agent-runs/phase-07/evidence/7a/ownership-audit.json",
+    "docs/agent-runs/phase-07/evidence/7a/phase7-plan.md",
+    "docs/agent-runs/phase-07/evidence/7a/preflight.json",
+    "docs/agent-runs/phase-07/evidence/7a/repair-1/commands.md",
+    "docs/agent-runs/phase-07/evidence/7a/repair-1/evidence-migration.json",
+    "docs/agent-runs/phase-07/evidence/7a/repair-1/external-review.txt",
+    "docs/agent-runs/phase-07/evidence/7a/repair-1/files.json",
+    "docs/agent-runs/phase-07/evidence/7a/repair-1/final-audit.json",
+    "docs/agent-runs/phase-07/evidence/7a/repair-1/final-check-excerpt.txt",
+    "docs/agent-runs/phase-07/evidence/7a/repair-1/final-check.json",
+    "docs/agent-runs/phase-07/evidence/7a/repair-1/git-visible-files.txt",
+    "docs/agent-runs/phase-07/evidence/7a/repair-1/handoff.md",
+    "docs/agent-runs/phase-07/evidence/7a/repair-1/owner-reports.md",
+    "docs/agent-runs/phase-07/evidence/7a/repair-1/preflight.json",
+    "docs/agent-runs/phase-07/evidence/7a/repair-1/real-manifest-smoke-relative-failure.txt",
+    "docs/agent-runs/phase-07/evidence/7a/repair-1/real-manifest-smoke.txt",
+    "docs/agent-runs/phase-07/evidence/7a/repair-1/real-source-metadata-hashes.json",
+    "docs/agent-runs/phase-07/evidence/7a/repair-1/rechecker-prompt.md",
+    "docs/agent-runs/phase-07/evidence/7a/repair-1/source-snapshot.json",
+    "docs/agent-runs/phase-07/evidence/7a/repair-1/targeted-results.json",
+    "docs/agent-runs/phase-07/evidence/7a/repair-1/targeted-tests.txt",
+    "docs/agent-runs/phase-07/evidence/7a/repair-1/work-order.txt",
+    "docs/agent-runs/phase-07/evidence/7a/reviewer-prompt.md",
+    "docs/agent-runs/phase-07/evidence/7a/source-fence-targeted.json",
+    "docs/agent-runs/phase-07/evidence/7a/source-fence-targeted.txt",
+    "docs/agent-runs/phase-07/evidence/7a/spark-owner-report.md",
+    "docs/agent-runs/phase-07/evidence/7a/spark-targeted-2.json",
+    "docs/agent-runs/phase-07/evidence/7a/spark-targeted-2.txt",
+    "docs/agent-runs/phase-07/evidence/7a/spark-targeted-3.json",
+    "docs/agent-runs/phase-07/evidence/7a/spark-targeted-3.txt",
+    "docs/agent-runs/phase-07/evidence/7a/spark-targeted-4.json",
+    "docs/agent-runs/phase-07/evidence/7a/spark-targeted-4.txt",
+    "docs/agent-runs/phase-07/evidence/7a/storage-owner-report.md",
+    "docs/agent-runs/phase-07/evidence/7a/targeted-1.json",
+    "docs/agent-runs/phase-07/evidence/7a/targeted-1.txt",
+    "docs/agent-runs/phase-07/evidence/7a/targeted-2.json",
+    "docs/agent-runs/phase-07/evidence/7a/targeted-2.txt",
+    "docs/agent-runs/phase-07/evidence/7a/targeted-3.json",
+    "docs/agent-runs/phase-07/evidence/7a/targeted-3.txt",
+    "docs/agent-runs/phase-07/evidence/7a/targeted-4.json",
+    "docs/agent-runs/phase-07/evidence/7a/targeted-4.txt",
+    "docs/agent-runs/phase-07/evidence/7a/targeted-5.json",
+    "docs/agent-runs/phase-07/evidence/7a/targeted-5.txt",
+    "docs/agent-runs/phase-07/evidence/7a/test-owner-report.md",
+    "docs/agent-runs/phase-07/owner-report.md",
+    "docs/agent-runs/phase-07/prompt.md",
+    "docs/agent-runs/phase-07/repairs.md",
+    "docs/agent-runs/phase-07/review.md",
+    "docs/agent-runs/phase-07/test-report.md"
+  ],
+  "newRepairEvidence": [
+    "docs/agent-runs/phase-07/evidence/7a/repair-1/commands.md",
+    "docs/agent-runs/phase-07/evidence/7a/repair-1/evidence-migration.json",
+    "docs/agent-runs/phase-07/evidence/7a/repair-1/external-review.txt",
+    "docs/agent-runs/phase-07/evidence/7a/repair-1/files.json",
+    "docs/agent-runs/phase-07/evidence/7a/repair-1/final-audit.json",
+    "docs/agent-runs/phase-07/evidence/7a/repair-1/final-check-excerpt.txt",
+    "docs/agent-runs/phase-07/evidence/7a/repair-1/final-check.json",
+    "docs/agent-runs/phase-07/evidence/7a/repair-1/git-visible-files.txt",
+    "docs/agent-runs/phase-07/evidence/7a/repair-1/handoff.md",
+    "docs/agent-runs/phase-07/evidence/7a/repair-1/owner-reports.md",
+    "docs/agent-runs/phase-07/evidence/7a/repair-1/preflight.json",
+    "docs/agent-runs/phase-07/evidence/7a/repair-1/real-manifest-smoke-relative-failure.txt",
+    "docs/agent-runs/phase-07/evidence/7a/repair-1/real-manifest-smoke.txt",
+    "docs/agent-runs/phase-07/evidence/7a/repair-1/real-source-metadata-hashes.json",
+    "docs/agent-runs/phase-07/evidence/7a/repair-1/rechecker-prompt.md",
+    "docs/agent-runs/phase-07/evidence/7a/repair-1/source-snapshot.json",
+    "docs/agent-runs/phase-07/evidence/7a/repair-1/targeted-results.json",
+    "docs/agent-runs/phase-07/evidence/7a/repair-1/targeted-tests.txt",
+    "docs/agent-runs/phase-07/evidence/7a/repair-1/work-order.txt"
+  ],
+  "note": "No staging/commit. Source repair is four files; other initial7A implementation remains uncommitted."
+}

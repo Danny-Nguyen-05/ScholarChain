@@ -1,0 +1,58 @@
+[
+  {
+    "attempt": 1,
+    "exitCode": 1,
+    "realSeconds": 3.08,
+    "failedStage": "scalafmt Scala3 do/while syntax",
+    "rawLog": "/tmp/phase7b-storage-compile-1.txt",
+    "retainedLog": "docs/agent-runs/phase-07/evidence/7b/storage-compile-1.txt",
+    "bytes": 1533,
+    "sha256": "dc446a4b3a044df88057ff5a226da3f02bbfbbc99ef532abb8a811660b5562ef",
+    "testsRun": 0
+  },
+  {
+    "attempt": 2,
+    "exitCode": 1,
+    "realSeconds": 5.99,
+    "failedStage": "storage Compile: explicit ujson values and Scala3 alternative patterns",
+    "rawLog": "/tmp/phase7b-storage-compile-2.txt",
+    "retainedLog": "docs/agent-runs/phase-07/evidence/7b/storage-compile-2.txt",
+    "bytes": 3729,
+    "sha256": "3700f1b79ca7e9bb3f765ea8955b10c2df08344c5930b4cf35f0f8158958869d",
+    "testsRun": 0
+  },
+  {
+    "attempt": 3,
+    "exitCode": 1,
+    "realSeconds": 2.92,
+    "failedStage": "scalafmt Scala3 reserved export identifier",
+    "rawLog": "/tmp/phase7b-storage-compile-3.txt",
+    "retainedLog": "docs/agent-runs/phase-07/evidence/7b/storage-compile-3.txt",
+    "bytes": 1723,
+    "sha256": "bfc5588671dd66345fa3ceb7902802a596f9afdd373586f273b6f4539139e2c6",
+    "testsRun": 0
+  },
+  {
+    "attempt": 4,
+    "exitCode": 1,
+    "realSeconds": 6.38,
+    "failedStage": "storage Compile: metadata conditional String return and core/storage config name shadowing",
+    "rawLog": "/tmp/phase7b-storage-compile-4.txt",
+    "retainedLog": "docs/agent-runs/phase-07/evidence/7b/storage-compile-4.txt",
+    "bytes": 2503,
+    "sha256": "8e56415ff2d76f22cd136264e9b675660ca30a7b6c9c7a6878513b8846cbf352",
+    "testsRun": 0
+  },
+  {
+    "attempt": 5,
+    "exitCode": 1,
+    "realSeconds": 10.91,
+    "failedStage": "independent Test compile: one explicit ujson map conversion",
+    "storageProductionAndModuleTestCompile": "passed",
+    "rawLog": "/tmp/phase7b-storage-compile-5.txt",
+    "retainedLog": "docs/agent-runs/phase-07/evidence/7b/storage-compile-5.txt",
+    "bytes": 12681,
+    "sha256": "fd4a0dc2a8eb8d8e0667b5dcf6ec6bc84919212a389e21a5aa8effb01f9f3d56",
+    "testsRun": 0
+  }
+]

@@ -1,0 +1,15 @@
+{
+  "exitCode": 1,
+  "realSeconds": 7.86,
+  "tests": {
+    "total": 28,
+    "passed": 27,
+    "failed": 1
+  },
+  "suites": "Hardening8 passed; RuntimeFence4 passed; SDK15 passed and1failed",
+  "failure": "New test assertion expected revision as JSON string; actual stored RunRecord revision is numeric5. Test-engineer corrected the test, no production change.",
+  "rawLog": "/tmp/phase7c-independent-targeted-1.txt",
+  "retainedLog": "docs/agent-runs/phase-07/evidence/7c/independent-targeted-1.txt",
+  "bytes": 6435,
+  "sha256": "3139569a3e6f95abce2a66021794485ff13088869bc18dbba706fc7e25db2f3c"
+}

@@ -1,0 +1,9 @@
+{
+  "exitCode": 1,
+  "mainCompile": "passed with 7 nonlocal-return warnings",
+  "testCompile": "failed ambiguous backing iterator in StorageFeatureSpec93; no tests run",
+  "rawSha256": "176dbe6c305b28c28a79d375856f08672135c2ec0485f54406880d7f66f2e455",
+  "realSeconds": 8.76,
+  "retainedLog": "docs/agent-runs/phase-07/evidence/7a/targeted-3.txt",
+  "retainedSha256": "176dbe6c305b28c28a79d375856f08672135c2ec0485f54406880d7f66f2e455"
+}

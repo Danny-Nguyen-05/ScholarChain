@@ -1,0 +1,106 @@
+{
+  "docs/agent-runs/phase-07/evidence/7c/acceptance-matrix.md": {
+    "bytes": 1972,
+    "sha256": "0d97302811e73c2ec3c9f40a436fc8c110a977060b4d872b917f5e5e610d0a5b"
+  },
+  "docs/agent-runs/phase-07/evidence/7c/agents.md": {
+    "bytes": 943,
+    "sha256": "de282acae0b68bd1b4342df9d09c1facacb6f203141edb4e9c542ac965bbb5d2"
+  },
+  "docs/agent-runs/phase-07/evidence/7c/base-snapshot.json": {
+    "bytes": 91173,
+    "sha256": "232574a74bfbb6046b2a27cf4f4e89b6931dade1a50400e3281a39217e3d5ed4"
+  },
+  "docs/agent-runs/phase-07/evidence/7c/commands.md": {
+    "bytes": 4918,
+    "sha256": "9caa6a49ae475374c4cc142404b7e323897cb5057de2e8904f1b708d93d2054d"
+  },
+  "docs/agent-runs/phase-07/evidence/7c/documentation.md": {
+    "bytes": 1220,
+    "sha256": "8f58616dab20f89e8edfbb36ff02da9eebee2435234284ccadb2392640d6a3bb"
+  },
+  "docs/agent-runs/phase-07/evidence/7c/files.json": {
+    "bytes": 4044,
+    "sha256": "d9b8a791a05b606b790c7e99775b8b7461f40e7a106b711819e4946194754122"
+  },
+  "docs/agent-runs/phase-07/evidence/7c/final-check-excerpt.txt": {
+    "bytes": 2312,
+    "sha256": "aa60460d6cdc5988033e8b4386ae97791351daff6712e5dc795dbe3bb7f2da30"
+  },
+  "docs/agent-runs/phase-07/evidence/7c/final-check.json": {
+    "bytes": 1278,
+    "sha256": "ee5d3d72145e854530d6caf299476f95045e58125f5b94138da6ef8a1ea30357"
+  },
+  "docs/agent-runs/phase-07/evidence/7c/final-check.txt": {
+    "bytes": 1373089,
+    "sha256": "3da90e0bd60d8948809f3159f4ab24ab85a46d58ddb5ba0a47d46982368e8e2f"
+  },
+  "docs/agent-runs/phase-07/evidence/7c/final-source-snapshot.json": {
+    "bytes": 65867,
+    "sha256": "78ff7727dc21883cb194f2dec76f42bae1eb0362296b904bd1a52e0a626b63c4"
+  },
+  "docs/agent-runs/phase-07/evidence/7c/fixture-targeted-4.json": {
+    "bytes": 535,
+    "sha256": "ca9c5bef0b5551fbb936618160e6946ccd732190958ee1469694d57cb14964d8"
+  },
+  "docs/agent-runs/phase-07/evidence/7c/fixture-targeted-4.txt": {
+    "bytes": 1863,
+    "sha256": "7c8240e0326dc9a28ab9e48610e82ef629038f1bb35d77f81f472470fd22b1ee"
+  },
+  "docs/agent-runs/phase-07/evidence/7c/handoff.md": {
+    "bytes": 8602,
+    "sha256": "37182d8c47666dcdf35b9ff3d4417858262267528238299fa07efdda0eb35742"
+  },
+  "docs/agent-runs/phase-07/evidence/7c/independent-targeted-1.json": {
+    "bytes": 599,
+    "sha256": "9557f8263be4b20b8daaa503b51f5273df240c1f15fff1e21d30dc0bac0371af"
+  },
+  "docs/agent-runs/phase-07/evidence/7c/independent-targeted-1.txt": {
+    "bytes": 6435,
+    "sha256": "3139569a3e6f95abce2a66021794485ff13088869bc18dbba706fc7e25db2f3c"
+  },
+  "docs/agent-runs/phase-07/evidence/7c/literal-secret-scan.json": {
+    "bytes": 1170,
+    "sha256": "983e1799eb52b69df04841a9696e610aacc691f292fba39d9a3d080d34d2fc32"
+  },
+  "docs/agent-runs/phase-07/evidence/7c/live-selection-evidence.txt": {
+    "bytes": 714,
+    "sha256": "96c58c536f91077cccbf232243d29551da591dd9c690027270384ffcd18f1b77"
+  },
+  "docs/agent-runs/phase-07/evidence/7c/ownership-audit.json": {
+    "bytes": 1847,
+    "sha256": "6fc9461e731e68f1d761cc02aba1cd12da987b85b786a8496a94b0648ccad248"
+  },
+  "docs/agent-runs/phase-07/evidence/7c/preflight.json": {
+    "bytes": 1747,
+    "sha256": "55b3c28c7781f0078e45e68a39e20b9069f3dd7c69e31b6d00ac552639ea23e9"
+  },
+  "docs/agent-runs/phase-07/evidence/7c/reviewer-prompt.md": {
+    "bytes": 6866,
+    "sha256": "faec5acb3bb661e14c82b47f76f0bcff2e269952646e3f545afb46cc9a27738c"
+  },
+  "docs/agent-runs/phase-07/evidence/7c/storage-owner-report.md": {
+    "bytes": 3522,
+    "sha256": "395ec21f0b1d2286598bd2097c6e5814f5e5b737a70ecdb1b363491834257b46"
+  },
+  "docs/agent-runs/phase-07/evidence/7c/targeted-2.json": {
+    "bytes": 759,
+    "sha256": "b2a677a7201e5d0ecce19ac13ecf95448bd3c3de138717cf577d2661a44c9317"
+  },
+  "docs/agent-runs/phase-07/evidence/7c/targeted-2.txt": {
+    "bytes": 6720,
+    "sha256": "7bef75037fffc8f491cf12db0dfb6f0681b390c36809dcc585536f4f7b272645"
+  },
+  "docs/agent-runs/phase-07/evidence/7c/targeted-3.json": {
+    "bytes": 712,
+    "sha256": "54319cc988035492bacc8e86bf30d524a6c70802d2e86aa504a37e15a353fea9"
+  },
+  "docs/agent-runs/phase-07/evidence/7c/targeted-3.txt": {
+    "bytes": 12768,
+    "sha256": "16caedceaf2886e984bf4e0f959bab403cb52eaffb2f6dad455216327eb0b7d9"
+  },
+  "docs/agent-runs/phase-07/evidence/7c/test-owner-report.md": {
+    "bytes": 2367,
+    "sha256": "a9901fd4f99dd0d8687eb6c50f6cea9ab0b9a63ec4b7d34fb845d5f69afe46b5"
+  }
+}

@@ -1,0 +1,129 @@
+[info] welcome to sbt 1.10.7 (Homebrew Java 17.0.20.1)
+[info] loading settings for project scholarchain-build from plugins.sbt...
+[info] loading project definition from /Users/danny/Documents/UIC/CS441/ScholarChain/project
+[info] loading settings for project root from build.sbt...
+[info] set current project to root (in build file:/Users/danny/Documents/UIC/CS441/ScholarChain/)
+[info] scalafmt: Formatting 3 Scala sources (/Users/danny/Documents/UIC/CS441/ScholarChain/modules/storage)...
+[info] scalafmt: Reformatted 3 Scala sources
+[success] Total time: 1 s, completed Oct 22, 2026, 11:27:18 PM
+[info] scalafmt: Formatting 1 Scala sources (/Users/danny/Documents/UIC/CS441/ScholarChain/modules/storage)...
+[info] scalafmt: Reformatted 1 Scala sources
+[success] Total time: 0 s, completed Oct 22, 2026, 11:27:19 PM
+[info] scalafmt: Formatting 1 Scala sources (/Users/danny/Documents/UIC/CS441/ScholarChain/tests)...
+[info] scalafmt: Reformatted 1 Scala sources
+[success] Total time: 0 s, completed Oct 22, 2026, 11:27:19 PM
+[info] compiling 17 Scala sources to /Users/danny/Documents/UIC/CS441/ScholarChain/modules/storage/target/scala-3.3.4/classes ...
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/DynamoStorage.scala:200:26 
+[warn] 200 |          case None    => return RowCodec.map(responseResult)(_ => Rejected("batch-unavailable"))
+[warn]     |                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[warn]     |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/DynamoStorage.scala:208:30 
+[warn] 208 |          case Rejected(c) => return Rejected(c)
+[warn]     |                              ^^^^^^^^^^^^^^^^^^
+[warn]     |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/DynamoStorage.scala:209:30 
+[warn] 209 |          case _           => return Rejected("batch-decode-failed")
+[warn]     |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[warn]     |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/DynamoStorage.scala:226:50 
+[warn] 226 |              Thread.currentThread().interrupt(); return Rejected("interrupted")
+[warn]     |                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[warn]     |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/DynamoStorage.scala:230:28 
+[warn] 230 |      if (pending.nonEmpty) return Retried(retried, Rejected("unprocessed-keys-exhausted"))
+[warn]     |                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[warn]     |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/InMemoryStorage.scala:78:40 
+[warn] 78 |      if (!StorageResult.successful(r)) return r match {
+[warn]    |                                        ^
+[warn]    |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] 79 |        case Rejected(c) => Rejected(c); case _ => Rejected("object-upload-failed")
+[warn] 80 |      }
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/NeptuneGraphLoader.scala:53:32 
+[warn] 53 |          case Found(record) => return Unchanged(GraphLoadStatus(record.uri, "LOAD_COMPLETED"))
+[warn]    |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[warn]    |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/NeptuneGraphLoader.scala:55:32 
+[warn] 55 |          case _             => return Rejected("neptune-registry-unavailable")
+[warn]    |                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[warn]    |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/NeptuneGraphLoader.scala:58:61 
+[warn] 58 |        if (!StorageResult.successful(ledger.startRun(run))) return Rejected("ledger-start-failed")
+[warn]    |                                                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[warn]    |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/NeptuneGraphLoader.scala:60:10 
+[warn] 60 |          return Rejected("ledger-stage-failed")
+[warn]    |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[warn]    |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/NeptuneGraphLoader.scala:90:36 
+[warn] 90 |        if (uploadFailure.nonEmpty) return fail(uploadFailure.get)
+[warn]    |                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[warn]    |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/NeptuneGraphLoader.scala:110:50 
+[warn] 110 |        if (!StorageResult.successful(published)) return fail("graph-manifest-upload-failed")
+[warn]     |                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[warn]     |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/NeptuneGraphLoader.scala:137:62 
+[warn] 137 |            val id = StorageResult.value(submitted).getOrElse(return fail("neptune-submit-failed"))
+[warn]     |                                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[warn]     |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/NeptuneGraphLoader.scala:142:14 
+[warn] 142 |            ) return fail("loader-job-registry-failed")
+[warn]     |              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[warn]     |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/NeptuneGraphLoader.scala:144:20 
+[warn] 144 |          case _ => return fail("loader-job-registry-unavailable")
+[warn]     |                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[warn]     |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/NeptuneGraphLoader.scala:156:16 
+[warn] 156 |              ) return fail("loader-completion-registry-failed")
+[warn]     |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[warn]     |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/NeptuneGraphLoader.scala:160:16 
+[warn] 160 |              ) return Rejected("ledger-completion-failed")
+[warn]     |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[warn]     |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/NeptuneGraphLoader.scala:161:14 
+[warn] 161 |              return Written(s)
+[warn]     |              ^^^^^^^^^^^^^^^^^
+[warn]     |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/NeptuneGraphLoader.scala:165:14 
+[warn] 165 |              return fail("neptune-load-failed")
+[warn]     |              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[warn]     |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/NeptuneGraphLoader.scala:167:28 
+[warn] 167 |            case None    => return fail("neptune-status-failed")
+[warn]     |                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[warn]     |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/S3VectorStore.scala:272:82 
+[warn] 272 |      StorageResult.value(result) match { case Some(v) => out ++= v; case None => return result }
+[warn]     |                                                                                  ^^^^^^^^^^^^^
+[warn]     |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/S3VectorStore.scala:323:34 
+[warn] 323 |          if (!seen.add(v.key())) return Rejected("duplicate-vector-result")
+[warn]     |                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[warn]     |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/StorageRows.scala:275:44 
+[warn] 275 |          case Found(old) if old == next => return Unchanged(next)
+[warn]     |                                            ^^^^^^^^^^^^^^^^^^^^^^
+[warn]     |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] 23 warnings found
+[info] done compiling
+[info] compiling 2 Scala sources to /Users/danny/Documents/UIC/CS441/ScholarChain/modules/storage/target/scala-3.3.4/test-classes ...
+[info] done compiling
+[success] Total time: 6 s, completed Oct 22, 2026, 11:27:25 PM
+[info] compiling 8 Scala sources to /Users/danny/Documents/UIC/CS441/ScholarChain/tests/target/scala-3.3.4/test-classes ...
+[error] -- [E007] Type Mismatch Error: /Users/danny/Documents/UIC/CS441/ScholarChain/tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentStorageVectorSpec.scala:245:52 
+[error] 245 |            .metadata(document(ujson.Obj.from(value.metadata)))
+[error]     |                                              ^^^^^^^^^^^^^^
+[error]     |                      Found:    (value.metadata : Map[String, String])
+[error]     |                      Required: IterableOnce[(String, ujson.Value)]
+[error]     |
+[error]     | longer explanation available when compiling with `-explain`
+[error] one error found
+[error] (independentTests / Test / compileIncremental) Compilation failed
+[error] Total time: 2 s, completed Oct 22, 2026, 11:27:26 PM
+real 10.91
+user 45.72
+sys 1.95
+COMPILE_EXIT_CODE=1

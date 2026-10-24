@@ -1,0 +1,5 @@
+Source: targeted-2.txt; line-numbered exact read-only show output. Full tagged configuration compiled, never executed.
+34: [info] * Argument(Some(TestFramework(org.scalatest.tools.Framework, org.scalatest.tools.ScalaTestFramework)),List(-l, edu.uic.cs441.scholarchain.storage.AwsIntegration))
+36: [info] * Argument(Some(TestFramework(org.scalatest.tools.Framework, org.scalatest.tools.ScalaTestFramework)),List(-n, edu.uic.cs441.scholarchain.storage.AwsIntegration))
+
+Final sources recompiled with storage / AwsIntegration / compile in targeted-3.txt, exit0. Normal storage tests run27 offline cases; the sole tagged live body is excluded. Existing build sentinel tests verify default exclusion in the full check.

@@ -1,0 +1,18 @@
+{
+  "exitCode": 0,
+  "storage": {
+    "run": 8,
+    "passed": 8,
+    "failed": 0
+  },
+  "independentStorage": {
+    "run": 26,
+    "passed": 26,
+    "failed": 0
+  },
+  "rawSha256": "eed4d1e783f02154a82714cf56c223349c30fd515dad6fb9531fc9b9de942877",
+  "realSeconds": 13.34,
+  "scope": "Storage module and independent7A cases incl actual SparkParquet integral-double encoding integration; not full sbt check.",
+  "retainedLog": "docs/agent-runs/phase-07/evidence/7a/targeted-4.txt",
+  "retainedSha256": "eed4d1e783f02154a82714cf56c223349c30fd515dad6fb9531fc9b9de942877"
+}

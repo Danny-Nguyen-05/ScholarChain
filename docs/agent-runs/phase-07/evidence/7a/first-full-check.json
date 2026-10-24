@@ -1,0 +1,23 @@
+{
+  "exitCode": 1,
+  "rawLog": "/tmp/phase7a-final-check.log",
+  "rawBytes": 1360284,
+  "rawSha256": "5da3f4b666f4017c6667b02c245215db4be3670ada16757839ba45d28c2c0e98",
+  "counts": [
+    144,
+    64,
+    39,
+    38,
+    9,
+    292
+  ],
+  "passed": 585,
+  "failed": 1,
+  "buildVerification": "not reached after independent suite failure",
+  "wallTime": [
+    "real 676.92"
+  ],
+  "soleFailure": "IndependentPhase6SafetySpec production source fence flags String.isEmpty and grouped DataFrame.count transformations in Phase7NeptuneExport.scala; scanner unchanged, routed Spark owner",
+  "excerpt": "first-full-check-excerpt.txt",
+  "sourceChangesDuringGate": []
+}

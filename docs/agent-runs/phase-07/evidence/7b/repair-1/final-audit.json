@@ -1,0 +1,86 @@
+{
+  "at": "2026-10-23T00:23:46.909555-05:00",
+  "branch": "phase-7",
+  "head": "08e3d21233dbaf8c3d6283fc3bb9bce7f7fb1276",
+  "sourceFilesChecked": 298,
+  "sourceContentOrMtimeDrift": [],
+  "priorCapturedFiles": 600,
+  "priorChangedFiles": [
+    "modules/storage/README.md",
+    "modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/NeptuneGraphLoader.scala",
+    "modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/NeptuneGraphReader.scala",
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentStorageGraphLoaderSpec.scala",
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentStorageGraphReaderSpec.scala"
+  ],
+  "repairAddedFiles": [
+    "modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/AwsDocumentJson.scala",
+    "modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/NeptuneJobAttempts.scala",
+    "modules/storage/src/test/scala/edu/uic/cs441/scholarchain/storage/NeptuneRepairSpec.scala"
+  ],
+  "priorEvidenceAndProtectedFilesUnchanged": true,
+  "reviewAppendVerbatimMatches": true,
+  "earlierReviewPrefixPreserved": true,
+  "gitDiffCheckExit": 0,
+  "gitCheckIgnoreExit": 1,
+  "ignoredEvidence": "",
+  "logFilesUnderRepair": [],
+  "indexStaged": false,
+  "reviewerLaunched": false,
+  "cloudProviderCalls": false,
+  "commitPush": false,
+  "7CStarted": false,
+  "specialistsAndBuilds": "Completed; no owner jobs",
+  "fullGate": {
+    "exitCode": 0,
+    "totalPassed": 636,
+    "totalFailed": 0,
+    "groups": {
+      "core": {
+        "total": 144,
+        "passed": 144,
+        "failed": 0
+      },
+      "hadoop": {
+        "total": 64,
+        "passed": 64,
+        "failed": 0
+      },
+      "entityResolution": {
+        "total": 39,
+        "passed": 39,
+        "failed": 0
+      },
+      "spark": {
+        "total": 38,
+        "passed": 38,
+        "failed": 0
+      },
+      "storage": {
+        "total": 23,
+        "passed": 23,
+        "failed": 0
+      },
+      "independent": {
+        "total": 320,
+        "passed": 320,
+        "failed": 0
+      },
+      "buildVerification": {
+        "total": 8,
+        "passed": 8,
+        "failed": 0
+      }
+    },
+    "java": "17.0.20.1",
+    "sbt": "1.10.7",
+    "realSeconds": 680.86,
+    "rawLog": "/tmp/phase7b-repair1-final-check.txt",
+    "retainedLog": "docs/agent-runs/phase-07/evidence/7b/repair-1/final-check.txt",
+    "bytes": 1366798,
+    "sha256": "0d8fb3ecc98dddf264ccba022a7941e49fff44c21e404357fa580daf3f715ef1",
+    "completedLines": [
+      "[success] Total time: 679 s (11:19), completed Oct 23, 2026, 12:23:35 AM"
+    ],
+    "expectedError": "Injected format-stage failure belongs to passing build self-test; not a gate failure."
+  }
+}

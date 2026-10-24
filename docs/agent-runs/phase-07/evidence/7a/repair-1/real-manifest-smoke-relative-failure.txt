@@ -1,0 +1,24 @@
+[info] welcome to sbt 1.10.7 (Homebrew Java 17.0.20.1)
+[info] loading settings for project scholarchain-build from plugins.sbt...
+[info] loading project definition from /Users/danny/Documents/UIC/CS441/ScholarChain/project
+[info] loading settings for project root from build.sbt...
+[info] set current project to root (in build file:/Users/danny/Documents/UIC/CS441/ScholarChain/)
+[info] Defining storage / Test / fork
+[info] The new value will be used by storage / Test / run / runner, storage / Test / run / testGrouping, storage / Test / testGrouping
+[info] Reapplying settings...
+[info] set current project to root (in build file:/Users/danny/Documents/UIC/CS441/ScholarChain/)
+[info] running (fork) edu.uic.cs441.scholarchain.storage.Phase7ManifestSmokeMain target/phase6-runs/6fg-spark-first-v2/run:f02acf56-4bea-4009-adaf-b11d5afceb49
+[error] Exception in thread "main" java.nio.file.NoSuchFileException: target/phase6-runs/6fg-spark-first-v2/run:f02acf56-4bea-4009-adaf-b11d5afceb49
+[error] 	at java.base/sun.nio.fs.UnixException.translateToIOException(UnixException.java:92)
+[error] 	at java.base/sun.nio.fs.UnixException.rethrowAsIOException(UnixException.java:106)
+[error] 	at java.base/sun.nio.fs.UnixException.rethrowAsIOException(UnixException.java:111)
+[error] 	at java.base/sun.nio.fs.UnixPath.toRealPath(UnixPath.java:825)
+[error] 	at edu.uic.cs441.scholarchain.storage.Phase7ManifestSmokeMain$.main(Phase7ManifestSmokeMain.scala:13)
+[error] 	at edu.uic.cs441.scholarchain.storage.Phase7ManifestSmokeMain.main(Phase7ManifestSmokeMain.scala)
+[error] Nonzero exit code returned from runner: 1
+[error] (storage / Test / runMain) Nonzero exit code returned from runner: 1
+[error] Total time: 1 s, completed Oct 22, 2026, 5:49:02 PM
+real 3.72
+user 14.27
+sys 0.82
+SMOKE_EXIT_CODE=1

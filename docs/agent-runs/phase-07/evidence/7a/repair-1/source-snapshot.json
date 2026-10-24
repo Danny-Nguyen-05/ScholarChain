@@ -1,0 +1,452 @@
+{
+  "capturedAt": "2026-10-22T17:51:17.114529-05:00",
+  "scope": "Source/build/test snapshot after F1 targets and before repair fullgate; F2 only coordinator evidence",
+  "files": {
+    "modules/storage/README.md": {
+      "sha256": "084d8522f7fb9f6b4fd01bee71e5fdfd01f373868e14a0ad0e47722748e70a24",
+      "mtimeNs": 1792705704680201280
+    },
+    "modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/Phase6CacheLoader.scala": {
+      "sha256": "fb7c13a52db38efb5f91f6b001e8729e9ce75bee38b2c22d3034801d7870ed2f",
+      "mtimeNs": 1792705688297986959
+    },
+    "modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/InMemoryStorage.scala": {
+      "sha256": "5fd4245d92d1ee72621d371441271c7fc330485e354b9e321d7b7b63e0f21681",
+      "mtimeNs": 1792705173532847174
+    },
+    "modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/EvidenceStorage.scala": {
+      "sha256": "e8aed8a12ce7e830cd43a0de76593ada03e3863f19132138b2e874dd8a96500d",
+      "mtimeNs": 1792705173551773987
+    },
+    "modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/DynamoStorage.scala": {
+      "sha256": "8dc857c1c30fee3abf571bb23d7650751cc949785ff6d2c69ae9ed48a0f7a917",
+      "mtimeNs": 1792705607254101767
+    },
+    "modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/StorageRows.scala": {
+      "sha256": "81cfa64e7fe2dd348f3ee32e00e6006ba8f6dc8204e24057846e65012c2b01fc",
+      "mtimeNs": 1792705762785545070
+    },
+    "modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/S3ObjectStore.scala": {
+      "sha256": "06ec3a01b1dd81a3f91754803248049bbe3ac18bd5f1ba00635e8c13a1df77ee",
+      "mtimeNs": 1792705746660631096
+    },
+    "modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/StoragePorts.scala": {
+      "sha256": "78b9e6278a0bf0237478770dd943e47dbc295d341cfa8f26e77d1f7ed28daec2",
+      "mtimeNs": 1792705665210912628
+    },
+    "modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/ManifestRows.scala": {
+      "sha256": "6a4a86b695f094e40a066b0cce2c8542cd18eca58dd94b18105f7c39592b3d57",
+      "mtimeNs": 1792709244919096661
+    },
+    "modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/fakes/Fakes.scala": {
+      "sha256": "a9b55d9b810eae18fa3098defb77047e0487a3e27e2aeae47214d05f6aca8a9f",
+      "mtimeNs": 1792705173846807684
+    },
+    "modules/storage/src/test/scala/edu/uic/cs441/scholarchain/storage/ParquetManifestSpec.scala": {
+      "sha256": "36df498b85cf3d39d3bde42d03c6398779b871ac71d39c9afb40126bedc89d0b",
+      "mtimeNs": 1792709245010480921
+    },
+    "modules/storage/src/test/scala/edu/uic/cs441/scholarchain/storage/StorageFeatureSpec.scala": {
+      "sha256": "ae1f2a90c63be5f3960055b8918270d7db524b4f284ed27d952a22f8d43929e9",
+      "mtimeNs": 1792705762933240454
+    },
+    "modules/storage/src/test/scala/edu/uic/cs441/scholarchain/storage/Phase7ManifestSmokeMain.scala": {
+      "sha256": "310821d09a663f68ff982593fea1dda128c533fab528837c6db04b2f23f0260b",
+      "mtimeNs": 1792709245031301636
+    },
+    "modules/spark/README.md": {
+      "sha256": "9c6af6edfde4ae69d85fd99edbca345116df6c96df5b0e474380cae8f5b84a59",
+      "mtimeNs": 1792705717076770680
+    },
+    "modules/spark/src/main/scala/edu/uic/cs441/scholarchain/spark/Phase6CReaders.scala": {
+      "sha256": "3823c212fa656686bcdaeb4b5d5ee141dd279c9d8e889fbfc92ad5d4aec5accb",
+      "mtimeNs": 1792692682579336696
+    },
+    "modules/spark/src/main/scala/edu/uic/cs441/scholarchain/spark/Phase6Main.scala": {
+      "sha256": "ee9f251f6c2a05847ca6148a4c70d27fff0ddf9ad0a860f6ed5d2a9c04d9d655",
+      "mtimeNs": 1792693843142823890
+    },
+    "modules/spark/src/main/scala/edu/uic/cs441/scholarchain/spark/BoundedActions.scala": {
+      "sha256": "fdbc6ffae9baf16f4ec0faca367bac061acd3ba8ab450f26954a57ef3c9869c5",
+      "mtimeNs": 1792644202728317663
+    },
+    "modules/spark/src/main/scala/edu/uic/cs441/scholarchain/spark/Phase6DEJobs.scala": {
+      "sha256": "590f67ebba12ce407d1d2d8f182a141c61848c6f9ef5e96d176fea065c4d4661",
+      "mtimeNs": 1792693782446586669
+    },
+    "modules/spark/src/main/scala/edu/uic/cs441/scholarchain/spark/Phase7NeptuneExport.scala": {
+      "sha256": "ed0d89dbc44b7e0b3689f403198dd5a2061979d21747e9c4d9ad5b7002abd757",
+      "mtimeNs": 1792706535080427346
+    },
+    "modules/spark/src/main/scala/edu/uic/cs441/scholarchain/spark/Phase6Plans.scala": {
+      "sha256": "a3b414ed2d965373feffc6902c017ea272e2d38d3de42ce64cbd73c7c34b23ce",
+      "mtimeNs": 1792693242507271879
+    },
+    "modules/spark/src/main/scala/edu/uic/cs441/scholarchain/spark/Phase6FGJobs.scala": {
+      "sha256": "2245756162d8091db3fd87b852d1829502c1ab22188cf896cb3382c4f33955e1",
+      "mtimeNs": 1792693242573494526
+    },
+    "modules/spark/src/main/scala/edu/uic/cs441/scholarchain/spark/Phase6Context.scala": {
+      "sha256": "083d23db025332a03bd5a110a858d4f6c19030d5ca268232c99cd6d7861b470c",
+      "mtimeNs": 1792693242513999132
+    },
+    "modules/spark/src/main/scala/edu/uic/cs441/scholarchain/spark/Phase6Report.scala": {
+      "sha256": "809b1e02dae4406219b97399bc012142e072c6f3403680a951bbd239ecc45ddf",
+      "mtimeNs": 1792693242686761776
+    },
+    "modules/spark/src/main/scala/edu/uic/cs441/scholarchain/spark/Phase6EventLog.scala": {
+      "sha256": "97929df41e5a6cd8baa9ac5128cb25a5bd673a23fe51c17c536240116231968b",
+      "mtimeNs": 1792693242437345332
+    },
+    "modules/spark/src/main/scala/edu/uic/cs441/scholarchain/spark/Phase6CMain.scala": {
+      "sha256": "b11031ddeb6df2386f4e8586642e0c9d3c16afff2b4623108c348cadf15023f0",
+      "mtimeNs": 1792652985732879212
+    },
+    "modules/spark/src/main/scala/edu/uic/cs441/scholarchain/spark/Phase6CJobs.scala": {
+      "sha256": "900399f647cc73be26340917d719914cc739b42be1133045a4b566eb9cf5ef0f",
+      "mtimeNs": 1792693843040148025
+    },
+    "modules/spark/src/main/scala/edu/uic/cs441/scholarchain/spark/Phase6Export.scala": {
+      "sha256": "6937635fadb4c1c7f9bc1e7039af9f5b96a6bc222564e5e0963a8a3238c4abf4",
+      "mtimeNs": 1792705173950638615
+    },
+    "modules/spark/src/test/scala/edu/uic/cs441/scholarchain/spark/SparkSmokeSpec.scala": {
+      "sha256": "e07f19f9479a2104d35b0978d27a4d3ce38a801b2975b85a28c716950cc94796",
+      "mtimeNs": 1792634458214071611
+    },
+    "modules/spark/src/test/scala/edu/uic/cs441/scholarchain/spark/Phase6DEJobsSpec.scala": {
+      "sha256": "f43490d6d00d48433121fd1648565af4320406fe701160e14b63fa6db5e0f10a",
+      "mtimeNs": 1792693843512772159
+    },
+    "modules/spark/src/test/scala/edu/uic/cs441/scholarchain/spark/Phase6CJobsSpec.scala": {
+      "sha256": "b612532f2e64a5fcf231710aca8c4e9ce35dddd14626fe0ec3f5c9fc507096a2",
+      "mtimeNs": 1792693843687716808
+    },
+    "modules/spark/src/test/scala/edu/uic/cs441/scholarchain/spark/Phase7NeptuneExportSpec.scala": {
+      "sha256": "84079ed8127b25352dd770c8ea55f506ad8bc018debe52c3784d2e827c0b8000",
+      "mtimeNs": 1792705749824330554
+    },
+    "modules/spark/src/test/scala/edu/uic/cs441/scholarchain/spark/Phase6FGJobsSpec.scala": {
+      "sha256": "05d2ba4b41079cfac99333a619460cdd7e03ba2fb82e5b88f1a886982102d3aa",
+      "mtimeNs": 1792693389952277160
+    },
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentEvaluationSpec.scala": {
+      "sha256": "ca6714e19d8402c61a38313e415aed315b7ca74ff983a51407cfd4975f24f5f1",
+      "mtimeNs": 1792594908299240011
+    },
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentResolutionPrepBridgeRepairSpec.scala": {
+      "sha256": "cb23a3caafdada7812180490204c979c84fc95d3182e25b003b3168f967ed3ed",
+      "mtimeNs": 1792594908300641176
+    },
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentOfflineAdjudicationSpec.scala": {
+      "sha256": "e4c1dc1f52f7c02466518b1a6f5a5bd296fc7b0295012dd3551c7c423bcf7668",
+      "mtimeNs": 1792594908299857594
+    },
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentDblpJsonSpec.scala": {
+      "sha256": "de3fa0e8868e57c0e86c97beed9a1b537e1bd9e4d4ba8b1bbdb95ee7b986139b",
+      "mtimeNs": 1791383259949996887
+    },
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentLiveCredentialPreflightSpec.scala": {
+      "sha256": "46d68217eca54ee14aef5099d225f31be95d533d2541442251f6785dd10d6a62",
+      "mtimeNs": 1792594908299562927
+    },
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentGoldLabelsSpec.scala": {
+      "sha256": "1ad9338a27004b9522ea7508f771717efd430787c1c436b55d3b856e49e33431",
+      "mtimeNs": 1792594908299307803
+    },
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentLiveAdjudicatorSpec.scala": {
+      "sha256": "f8843f5a1aae55da03069878140950654f38cac737a085fffc5781e1dcb68fdf",
+      "mtimeNs": 1792594908299426052
+    },
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentCandidateDerivationSpec.scala": {
+      "sha256": "2b1a69e44b1775c39253e8b32daebdcca933732609be9c6f3d6d8d7741662f2b",
+      "mtimeNs": 1792594908298860136
+    },
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentPhase6PipelineSpec.scala": {
+      "sha256": "b6983ae282939e76c79cd92c7795001a51604f5b39248a1a535c6973cac8530a",
+      "mtimeNs": 1792694151518375114
+    },
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentPhase6FGFixtures.scala": {
+      "sha256": "9b90bc7e8c957edc16e37105c154f14cfb07caad302c6d81f69b79fb27756939",
+      "mtimeNs": 1792692864025488390
+    },
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentRetainedReviewInputMain.scala": {
+      "sha256": "aff1dab7650a94724bf01ec1e1e5f21c4836a8d921c544b25b558ee6d9feef3d",
+      "mtimeNs": 1792594908300847051
+    },
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentEvaluationCliSpec.scala": {
+      "sha256": "1b81bb20499a30e2c542fd9b79c986be01a0c076d0e1831c098e63c4acc9cabf",
+      "mtimeNs": 1792594908299102136
+    },
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentPhase6SafetySpec.scala": {
+      "sha256": "ca95bf9261bffc23cdf14352dc28b1b86c5a02c30cc0202fc61e0e623173756c",
+      "mtimeNs": 1792696567500756967
+    },
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentResolutionInputSpec.scala": {
+      "sha256": "566ad57d213f4dff4e5a1bd1178c32b694dc29562569c5f75d258e6131cac1b0",
+      "mtimeNs": 1792594908300518468
+    },
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentPhase4BlockerSpec.scala": {
+      "sha256": "ab1fea1ab7fb9bd1169c437e13a6e374dcc1a8600db008e368254cfd37c38f67",
+      "mtimeNs": 1791413350609871777
+    },
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentSparkSessionSpec.scala": {
+      "sha256": "2664809f532bc8a4591a968fa025ebf1d815d0c8519a433f5f7d6715cbe15e75",
+      "mtimeNs": 1792636501338875257
+    },
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentReviewBindingRepairSpec.scala": {
+      "sha256": "71d558ef27c113b1d4966f1bcd01811c9fe3be6fb31aa128bf88d0d0ca95df90",
+      "mtimeNs": 1792594908300961384
+    },
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentResolutionPolicySpec.scala": {
+      "sha256": "8508fdffb554254e112760fd272f9556d347449b7e730c7f08d0e6e9d075a9fe",
+      "mtimeNs": 1792594908300585385
+    },
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentReviewQueueSpec.scala": {
+      "sha256": "074ce5c7c31d8da94642d22d46db107bb67a08c8230454fccf8572b6603b6a81",
+      "mtimeNs": 1792594908301147717
+    },
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentOpenAIResponsesSpec.scala": {
+      "sha256": "417c370aca763821d1abe095f7eeec9438591240d57b419ba136b802bc9d0514",
+      "mtimeNs": 1792594908299927677
+    },
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentLiveDevelopmentSpec.scala": {
+      "sha256": "74cd5ac5a04315b7f04d2fbf882fbd7d2530a68ab2923f19774c8c0e95da6e92",
+      "mtimeNs": 1792594908299694844
+    },
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentLiveResponseDiagnosticSpec.scala": {
+      "sha256": "657fab52917e99be6a353965256b0e016b5f1dbdf153d7664ccbc99a7a4bb524",
+      "mtimeNs": 1792611820157024710
+    },
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentResolutionRunSpec.scala": {
+      "sha256": "f8a8d5a7aa69992b7fa55a70476db02b4ad984cefe332a14aee91687cde9cb9e",
+      "mtimeNs": 1792594908300798176
+    },
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentStorageLoaderSpec.scala": {
+      "sha256": "0bc4e1fb43aec6650b84cfe0ff69a30908cc2f128f516b60a51f3d88cb3957e4",
+      "mtimeNs": 1792705527682749166
+    },
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentResolutionRepairSpec.scala": {
+      "sha256": "cd1c4e1c98e112333deaa1883c72b9ea0029ea5252a1866de36536cdb9ce52a4",
+      "mtimeNs": 1792594908300717801
+    },
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentLiveFixtures.scala": {
+      "sha256": "80d6bebab54e9325e4d9dd7bc9adaaab9878a04b5220ea45eb880127bd0ce1ce",
+      "mtimeNs": 1792594908299750552
+    },
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentRetainedReviewInputSpec.scala": {
+      "sha256": "59511dd884280e27ac4598400394e0cc82abd58dc3299b7513d48c42430bcd06",
+      "mtimeNs": 1792594908300893384
+    },
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentLiveCacheSpec.scala": {
+      "sha256": "405858daccd07c6e9369b74e5cd49174d2bb93522c69e07f1988c4282c982d15",
+      "mtimeNs": 1792594908299516844
+    },
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentCompletedPrepFixture.scala": {
+      "sha256": "45e5fc887d3b29514283611dc6b85a52cdfb4661a9b285bde1459cf16ca6f302",
+      "mtimeNs": 1792594908298940678
+    },
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentIdentifierNormalizationSpec.scala": {
+      "sha256": "bd4ca2b0a5cb22b87dbbb7c0c84788f18b361bd6c895fc6cb5fc5c4e6cc119d7",
+      "mtimeNs": 1792594908299358136
+    },
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentEvaluationAdapterSpec.scala": {
+      "sha256": "379a8dd3b823fd31425a3e11f03746d9ba9caa118da4eec99ca3456647e1fb4d",
+      "mtimeNs": 1792594908299022928
+    },
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentResolutionExportSpec.scala": {
+      "sha256": "fb8c7cf7d281dce426d156d8c7b109b897ba2b518d07c54d089df4e50fd53180",
+      "mtimeNs": 1792594908300336802
+    },
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentReviewFixtures.scala": {
+      "sha256": "a2697430920b1085910f246bf4abe05a9083020fc1970e7947bce5fecfc4606f",
+      "mtimeNs": 1792594908301060384
+    },
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentResolutionEngineSpec.scala": {
+      "sha256": "cda7cc0a553331d8cd6d5673db83f51403b376b7bd8d817bbc34e3dddae8b035",
+      "mtimeNs": 1792594908300255760
+    },
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentRequestEligibilitySpec.scala": {
+      "sha256": "724f254947ceafb943aab35422efa27a8552f7c40fd40ba13b287e188026fcd4",
+      "mtimeNs": 1792611820131293594
+    },
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentHadoopPipelineSpec.scala": {
+      "sha256": "d522a7fcdbd595e86170ea180de89f8b524ac9a5eab72253cd2902ea89f02382",
+      "mtimeNs": 1791384748353151847
+    },
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentStorageParquetSpec.scala": {
+      "sha256": "906fc878ed7bf2ff1376f7faa444d786e9051439046f655b17648d8d20002806",
+      "mtimeNs": 1792709245118231734
+    },
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentResolutionContractSpec.scala": {
+      "sha256": "813cd28f83bd3e030e9a162089b1f4077339a684bfed464e2912649c309570da",
+      "mtimeNs": 1792594908300059344
+    },
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentPrepReaderSpec.scala": {
+      "sha256": "959916095d05e1ae04aaaddd88cef180f5249674d41630c06c56503de88d46fe",
+      "mtimeNs": 1792594908299995802
+    },
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentResolutionFeaturesSpec.scala": {
+      "sha256": "337bea46a01ede76b7d41ef0ad8530e2ad46427375b512f3816a4ff3fc3a3044",
+      "mtimeNs": 1792594908300382510
+    },
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentPhase6CGraphSpec.scala": {
+      "sha256": "f8de5aa1d58170085a5c316ff9e1235d9f23e89e85627d718f02960a529a7e72",
+      "mtimeNs": 1792649065309145754
+    },
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentLiveBudgetSpec.scala": {
+      "sha256": "80cd6bdb017734b4def96bc25d4128eb63176ca96616ccd894f05a028771c707",
+      "mtimeNs": 1792594908299471178
+    },
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentStoragePortsSpec.scala": {
+      "sha256": "901f2615ca5acdad7bb58e7bd176b95c492ba7b9cfcb0093809cdb8c9841c802",
+      "mtimeNs": 1792705527646531541
+    },
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentPhase6FGSpec.scala": {
+      "sha256": "5d902b7d354df5aabbfd2a5b536f74f9b6dacf4a7f78e925e5bcdbcaee1f6dc4",
+      "mtimeNs": 1792693843887516919
+    },
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentReviewBrowserFixtureMain.scala": {
+      "sha256": "b3eb33163c40c03391ce404f9c1d85ec6ca79865f5606c71fa5b4ffc95e360d5",
+      "mtimeNs": 1792594908301010551
+    },
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentDblpXmlAdversarialSpec.scala": {
+      "sha256": "e62c58defaa07ccef02cd56b49458aa9927ea09722dc2c780051e006c7fa2cd4",
+      "mtimeNs": 1791395572497047775
+    },
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentPhase4EvidenceSpec.scala": {
+      "sha256": "6274c2eb50f4a313b8725491c2465f0ca2830f8cbc5d4e1cca047558ae3471d3",
+      "mtimeNs": 1791427736924556295
+    },
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentPhase6G1.scala": {
+      "sha256": "358f067d268e6a588d1f04583a1a6bfdf180fcefeeadf13e76138193515e931d",
+      "mtimeNs": 1792643991133162843
+    },
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentStorageSdkSpec.scala": {
+      "sha256": "a5901f5f4c507a97f06773f78895dbf009d8efb79393a1f0946943fe5a708ba1",
+      "mtimeNs": 1792705217340181303
+    },
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentTestSupport.scala": {
+      "sha256": "b41a9c88a8dc7b6cd1bef435c57b64d3288f2f948b0c491c166c8787ffd76f0f",
+      "mtimeNs": 1791383052018584265
+    },
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentStorageFixtures.scala": {
+      "sha256": "44cded8da79c58f6cc50c353837e81dcd8c13690f4bac1f83baa7905c505e86d",
+      "mtimeNs": 1792704708790062001
+    },
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentEvaluationCohortSpec.scala": {
+      "sha256": "62f8978d830719383a3f2621dbe5a195dad71ab89e60e5d7aa9dbbdc68f8a7e6",
+      "mtimeNs": 1792594908299171095
+    },
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentPhase6DEGraphSpec.scala": {
+      "sha256": "32f03f01d67d38dcb24fc58f315320becc2a7f75aa06ed872bed0b76e7d88833",
+      "mtimeNs": 1792688802181621698
+    },
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentLiveCredentialsSpec.scala": {
+      "sha256": "9af62100a3ed5fb4b1c263ca929478e9693e0912fde14d03bffcb2005e58de5c",
+      "mtimeNs": 1792594908299601677
+    },
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentDblpXmlRepairSpec.scala": {
+      "sha256": "9db455d1469b84853ff42402ca78df7aa52b613827ecc645b8e582da03b21a9b",
+      "mtimeNs": 1791404157487912277
+    },
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentResolutionFixtures.scala": {
+      "sha256": "de6aafb3b8b9227ef1fb8dfa87988e83520ca1c6f673be8f842040c7ab0937bb",
+      "mtimeNs": 1792594908300450593
+    },
+    "tests/src/test/resources/storage/metrics.json": {
+      "sha256": "9175c1bbb965aa9e649e2eeff773371a0ceaf68c6d36d1f23793b0b31203ba1f",
+      "mtimeNs": 1792705087727282240
+    },
+    "tests/src/test/resources/storage/researcher-invalid.json": {
+      "sha256": "2ccbdf78f3f68ec2d4e5321cc9eb0cf5793a5ebec9b8fc5ee7d9065728e4e2ca",
+      "mtimeNs": 1792705074821231812
+    },
+    "tests/src/test/resources/storage/metrics-conflict.json": {
+      "sha256": "88ea19534d65d4ef3968f6f3adfc41790498bd3a57fb06eaf97b76550a955d20",
+      "mtimeNs": 1792705087727426320
+    },
+    "tests/src/test/resources/storage/researcher.json": {
+      "sha256": "afcfdab74bd7beaf45bfc38073f4de5e0afb72814374d8058f2dc196039d41f5",
+      "mtimeNs": 1792705074820856750
+    },
+    "project/Java17Guard.scala": {
+      "sha256": "7d808d3b32227ed90c3175fd090bb7f3383cc357aabd50e84dcf6bec22534fcc",
+      "mtimeNs": 1792634228424198082
+    },
+    "project/Versions.scala": {
+      "sha256": "90229f457d55fad219f82907f6f1d87996c6dd76e76a566b5469d83473b65825",
+      "mtimeNs": 1792704730169257288
+    },
+    "project/Dependencies.scala": {
+      "sha256": "4b9d0c69e65c6e896342d2aa8022950df58c550ccf34d49e5fdde026e36b8a77",
+      "mtimeNs": 1792704730194852195
+    },
+    "project/HadoopBundleMerge.scala": {
+      "sha256": "e799e65289a5d1ee93e0c3aeac458ffb7b77dac16d25909d771aba6c6ba5e81a",
+      "mtimeNs": 1791428922758807192
+    },
+    "project/ScholarChainBuild.scala": {
+      "sha256": "abe6fa048217f2c75789f8185e4bc71c1996d27cec9387251ae917d330b8fd77",
+      "mtimeNs": 1792704792965971143
+    },
+    "project/AwsIntegration.md": {
+      "sha256": "c89aa4e53c6901d2fded9511d427f83d6f7c0999823c2e4202c55181004ab083",
+      "mtimeNs": 1792704824754375293
+    },
+    "project/AwsIntegrationPolicy.scala": {
+      "sha256": "279b2e6a9252cf28fa0fbf68b962ac406eef16922dfe3af532779e76dcc8321e",
+      "mtimeNs": 1792704730214536441
+    },
+    "project/SparkJobJar.scala": {
+      "sha256": "457ca977461970f3e7e0ccb7720a537c9cf11cbc0a8db333991a7985db3e2ae1",
+      "mtimeNs": 1792636460617324034
+    },
+    "project/HadoopPackaging.md": {
+      "sha256": "b5c78ef1c5078dd3cc11ec1ad97ee6e4b0da097f562b89229985681b5b20857f",
+      "mtimeNs": 1791395412335864825
+    },
+    "project/verification/src/main/scala/scholarchain/build/TestRunMarker.scala": {
+      "sha256": "d06d4cbaa07dc193c964aaee889a13ec57e21751c81f0909add695338a9f925d",
+      "mtimeNs": 1791160546345293373
+    },
+    "project/verification/src/main/scala/scholarchain/build/TestRunMarkerPolicy.scala": {
+      "sha256": "6d47415966d8e9e5f6fc84b0d2a7d797f4ddd422a5b0ac3433c9d840c46076e8",
+      "mtimeNs": 1791159737714514224
+    },
+    "project/verification/src/test/scala/scholarchain/build/AwsIntegrationPolicySpec.scala": {
+      "sha256": "cc4ff4ab63a519e3fac442491f64bf83626d6c6fabb1f21fec071e30ffa2008d",
+      "mtimeNs": 1792704785429001962
+    },
+    "project/verification/src/test/scala/scholarchain/build/SparkJobJarSpec.scala": {
+      "sha256": "221ba56b9abd23474e2a492b4fc9259668b35d4164c6568ef75e71ca7cfc1592",
+      "mtimeNs": 1792636460631410779
+    },
+    "project/verification/src/test/scala/scholarchain/build/TestRunMarkerSpec.scala": {
+      "sha256": "d8dc14d4dcf59e2aefa74fe167984863453116fd378c7d4e48b7306b1390bdb0",
+      "mtimeNs": 1791169988777458611
+    },
+    "project/verification/src/test/scala/scholarchain/build/CheckFailurePathSpec.scala": {
+      "sha256": "b8fe74a900e799d260931efea5262252d1e4daa85c5a8641333d164e5a0ad87e",
+      "mtimeNs": 1791169987861963171
+    },
+    "project/verification/src/test/scala/scholarchain/build/HadoopBundleMergeSpec.scala": {
+      "sha256": "a4a7455336fe41cebb58a64431a62ea111ec47c7cf397536a3c3e0000d781be7",
+      "mtimeNs": 1791428922821957668
+    },
+    "project/verification/src/test/scala/scholarchain/build/Java17GuardSpec.scala": {
+      "sha256": "bfba5146d6314ab8b493c8a1fa26b957733cc8cebd0c4e089ff2143ffa4ce476",
+      "mtimeNs": 1792634253285678695
+    },
+    "build.sbt": {
+      "sha256": "f4fdf8c4e871f1b026c532b067f1f73f207b38e24b684c341a9d0fcc0b787791",
+      "mtimeNs": 1792704730240758393
+    }
+  },
+  "changesFromReviewedImplementation": [
+    "modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/ManifestRows.scala",
+    "modules/storage/src/test/scala/edu/uic/cs441/scholarchain/storage/ParquetManifestSpec.scala",
+    "modules/storage/src/test/scala/edu/uic/cs441/scholarchain/storage/Phase7ManifestSmokeMain.scala",
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentStorageParquetSpec.scala"
+  ]
+}

@@ -1,0 +1,6 @@
+{
+  "path": "docs/agent-runs/phase-07/evidence/7b/repair-1/external-review.txt",
+  "bytes": 16921,
+  "sha256": "dd222f5af4077aeeb8e900b3dc197a5af44e3719e0295790b745bb25c49d45f9",
+  "scope": "Complete external reviewer response including next prompt; user repair instruction recorded separately in prompt.md"
+}
