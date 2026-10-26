@@ -1,0 +1,23 @@
+{
+  "schemaVersion": "scholarchain.embedding-local.v1",
+  "model": {
+    "modelId": "amazon.titan-embed-text-v2:0",
+    "version": "REPLACE_WITH_PINNED_MODEL_VERSION",
+    "dimension": 256
+  },
+  "textBucket": "REPLACE_WITH_DEPLOYED_TEXT_BUCKET",
+  "textPrefix": "graph/rag",
+  "templateVersion": "REPLACE_WITH_REVIEWED_TEMPLATE_VERSION",
+  "chunkMaxCharacters": 1000,
+  "chunkOverlapCharacters": 100,
+  "chunkMaxCount": 1000,
+  "maxDocumentCharacters": 1000000,
+  "maxSummaries": 0,
+  "maxTopicNodes": 0,
+  "maxInstitutionNodes": 0,
+  "maxScannedRows": 0,
+  "maxManifestItems": 0,
+  "maxManifestBytes": 16777216,
+  "maxTextBytes": 1048576,
+  "batchSize": 100
+}

@@ -1,0 +1,109 @@
+{
+  "provenance": "Synthetic committed fixture only; no real researcher, institution, path, metric or permission claim.",
+  "documents": [
+    {
+      "entityId": "synthetic-researcher-graph",
+      "documentType": "researcher-profile",
+      "text": "graph neural retrieval researcher"
+    },
+    {
+      "entityId": "synthetic-distractor-researcher",
+      "documentType": "researcher-profile",
+      "text": "volcano mineral geology basalt distractor researcher"
+    },
+    {
+      "entityId": "synthetic-community-database",
+      "documentType": "community",
+      "text": "database transaction distributed community"
+    },
+    {
+      "entityId": "synthetic-distractor-community",
+      "documentType": "community",
+      "text": "volcano mineral geology basalt distractor community"
+    },
+    {
+      "entityId": "synthetic-path-algebra",
+      "documentType": "collaboration-path",
+      "text": "algebra topology verified coauthor path"
+    },
+    {
+      "entityId": "synthetic-distractor-path",
+      "documentType": "collaboration-path",
+      "text": "volcano mineral geology basalt distractor path"
+    },
+    {
+      "entityId": "synthetic-paper-genome",
+      "documentType": "paper",
+      "text": "genome protein molecular paper"
+    },
+    {
+      "entityId": "synthetic-distractor-paper",
+      "documentType": "paper",
+      "text": "volcano mineral geology basalt distractor paper"
+    },
+    {
+      "entityId": "synthetic-topic-optics",
+      "documentType": "topic-institution-summary",
+      "text": "quantum optics photon topic"
+    },
+    {
+      "entityId": "synthetic-distractor-topic",
+      "documentType": "topic-institution-summary",
+      "text": "volcano mineral geology basalt distractor topic"
+    },
+    {
+      "entityId": "synthetic-institution-ocean",
+      "documentType": "topic-institution-summary",
+      "text": "marine ocean coastal institution"
+    },
+    {
+      "entityId": "synthetic-distractor-institution",
+      "documentType": "topic-institution-summary",
+      "text": "volcano mineral geology basalt distractor institution"
+    }
+  ],
+  "queries": [
+    {
+      "caseId": "researcher",
+      "query": "graph neural researcher",
+      "documentType": "researcher-profile",
+      "expectedEntityId": "synthetic-researcher-graph",
+      "topK": 1
+    },
+    {
+      "caseId": "community",
+      "query": "transaction database community",
+      "documentType": "community",
+      "expectedEntityId": "synthetic-community-database",
+      "topK": 1
+    },
+    {
+      "caseId": "path",
+      "query": "algebra topology path",
+      "documentType": "collaboration-path",
+      "expectedEntityId": "synthetic-path-algebra",
+      "topK": 1
+    },
+    {
+      "caseId": "paper",
+      "query": "genome protein paper",
+      "documentType": "paper",
+      "expectedEntityId": "synthetic-paper-genome",
+      "topK": 1
+    },
+    {
+      "caseId": "topic",
+      "query": "quantum optics photon",
+      "documentType": "topic-institution-summary",
+      "expectedEntityId": "synthetic-topic-optics",
+      "topK": 1
+    },
+    {
+      "caseId": "institution",
+      "query": "marine ocean institution",
+      "documentType": "topic-institution-summary",
+      "expectedEntityId": "synthetic-institution-ocean",
+      "topK": 1
+    }
+  ]
+}

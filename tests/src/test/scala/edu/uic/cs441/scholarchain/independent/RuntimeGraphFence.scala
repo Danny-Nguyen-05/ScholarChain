@@ -23,35 +23,94 @@ object RuntimeGraphFence {
     "executeGremlinProfileQuery"
   )
 
-  /** Mask comments and literals before scanning; nested block comments are supported. */
+  /** Mask inert literals/comments, retaining executable interpolation expressions. This remains a
+    * conservative source heuristic rather than a Scala parser.
+    */
   def code(text: String): String = {
     val out = new StringBuilder
     var i = 0
-    while (i < text.length) {
-      if (text.startsWith("//", i)) {
-        while (i < text.length && text(i) != '\n') { out.append(' '); i += 1 }
-      } else if (text.startsWith("/*", i)) {
-        var depth = 1
-        i += 2
-        while (i < text.length && depth > 0) {
-          if (text.startsWith("/*", i)) { depth += 1; i += 2 }
-          else if (text.startsWith("*/", i)) { depth -= 1; i += 2 }
-          else { out.append(if (text(i) == '\n') '\n' else ' '); i += 1 }
-        }
-      } else if (text.startsWith("\"\"\"", i)) {
-        i += 3
-        while (i < text.length && !text.startsWith("\"\"\"", i)) { out.append(' '); i += 1 }
-        i = math.min(i + 3, text.length)
-      } else if (text(i) == '"') {
-        i += 1
-        var ended = false
-        while (i < text.length && !ended) {
-          if (text(i) == '\\') i = math.min(i + 2, text.length)
-          else if (text(i) == '"') { ended = true; i += 1 }
-          else { out.append(' '); i += 1 }
-        }
-      } else { out.append(text(i)); i += 1 }
+    def blank(): Unit = {
+      out.append(if (text(i) == '\n') '\n' else ' ')
+      i += 1
     }
+    def blanks(count: Int): Unit = (0 until count).foreach(_ => blank())
+    def identifier(c: Char): Boolean = c.isLetterOrDigit || c == '_' || c == '$'
+    def characterEnd(start: Int): Option[Int] = {
+      var end = start + 1
+      if (end >= text.length || text(end) == '\n' || text(end) == '\r') None
+      else {
+        if (text(end) == '\\') {
+          end += 1
+          if (end < text.length && text(end) == 'u') {
+            while (end < text.length && text(end) == 'u') end += 1
+            val digits = text.slice(end, end + 4)
+            if (digits.length != 4 || !digits.forall(c => Character.digit(c, 16) >= 0))
+              return None
+            end += 4
+          } else if (end < text.length) end += 1
+        } else end += Character.charCount(text.codePointAt(end))
+        Option.when(end < text.length && text(end) == '\'')(end + 1)
+      }
+    }
+    def stringLiteral(interpolated: Boolean): Unit = {
+      val width = if (text.startsWith("\"\"\"", i)) 3 else 1
+      blanks(width)
+      var ended = false
+      while (i < text.length && !ended) {
+        if (text.startsWith("\"" * width, i)) {
+          blanks(width)
+          ended = true
+        } else if (interpolated && text.startsWith("$$", i)) blanks(2)
+        else if (interpolated && text.startsWith("${", i)) {
+          blank()
+          out.append('{')
+          i += 1
+          scan(stopAtBrace = true)
+        } else if (
+          interpolated && text(i) == '$' && i + 1 < text.length &&
+          (text(i + 1).isLetter || text(i + 1) == '_')
+        ) {
+          blank()
+          while (i < text.length && identifier(text(i))) { out.append(text(i)); i += 1 }
+        } else if (width == 1 && text(i) == '\\') {
+          blank()
+          if (i < text.length) blank()
+        } else blank()
+      }
+    }
+    def scan(stopAtBrace: Boolean): Unit = {
+      var depth = 0
+      var ended = false
+      while (i < text.length && !ended) {
+        if (text.startsWith("//", i)) {
+          while (i < text.length && text(i) != '\n') blank()
+        } else if (text.startsWith("/*", i)) {
+          var comments = 1
+          blanks(2)
+          while (i < text.length && comments > 0) {
+            if (text.startsWith("/*", i)) { comments += 1; blanks(2) }
+            else if (text.startsWith("*/", i)) { comments -= 1; blanks(2) }
+            else blank()
+          }
+        } else if (text(i) == '\'' && characterEnd(i).nonEmpty) {
+          val end = characterEnd(i).get
+          while (i < end) blank()
+        } else if (text(i) == '\"') {
+          val interpolated = i > 0 && (identifier(text(i - 1)) || text(i - 1) == '`')
+          stringLiteral(interpolated)
+        } else if (text(i) == '}' && stopAtBrace && depth == 0) {
+          out.append('}')
+          i += 1
+          ended = true
+        } else {
+          if (text(i) == '{') depth += 1
+          else if (text(i) == '}') depth -= 1
+          out.append(text(i))
+          i += 1
+        }
+      }
+    }
+    scan(stopAtBrace = false)
     out.toString
   }
 

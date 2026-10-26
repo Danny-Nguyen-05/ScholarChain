@@ -1,0 +1,21 @@
+{
+  "schemaVersion": "scholarchain.embedding-live-approval.v1",
+  "executionApproved": false,
+  "environment": "REPLACE_WITH_DEPLOYED_ENVIRONMENT",
+  "runId": "REPLACE_WITH_APPROVED_EXECUTION_RUN_ID",
+  "configSha256": "",
+  "manifestSha256": "",
+  "phase14GateReference": "",
+  "phase14GateSha256": "",
+  "vectorCap": 0,
+  "concurrencyCap": 0,
+  "embeddingCallCap": 0,
+  "dollarCapUsd": 0.0,
+  "pricingValidated": false,
+  "budgetValidated": false,
+  "expiresAtEpochSeconds": 0,
+  "operation": "ingest",
+  "queryRequestCap": 0,
+  "queryEmbeddingCallCap": 0,
+  "queryObjectReadCap": 0
+}

@@ -1,0 +1,112 @@
+1: [info] welcome to sbt 1.10.7 (Homebrew Java 17.0.20.1)
+2: [info] loading settings for project scholarchain-build from plugins.sbt...
+3: [info] loading project definition from /Users/danny/Documents/UIC/CS441/ScholarChain/project
+4: [info] loading settings for project root from build.sbt...
+5: [info] set current project to root (in build file:/Users/danny/Documents/UIC/CS441/ScholarChain/)
+6: [info] scalafmt: Formatting 1 Scala sources (/Users/danny/Documents/UIC/CS441/ScholarChain/modules/rag)...
+7: [info] scalafmt: Reformatted 1 Scala sources
+8: [success] Total time: 1 s, completed Oct 24, 2026, 2:47:17 AM
+9: [info] scalafmt: Formatting 1 Scala sources (/Users/danny/Documents/UIC/CS441/ScholarChain/modules/rag)...
+10: [info] scalafmt: Reformatted 1 Scala sources
+11: [success] Total time: 0 s, completed Oct 24, 2026, 2:47:17 AM
+12: [info] compiling 5 Scala sources to /Users/danny/Documents/UIC/CS441/ScholarChain/modules/rag/target/scala-3.3.4/classes ...
+20: [info] done compiling
+21: [info] compiling 3 Scala sources to /Users/danny/Documents/UIC/CS441/ScholarChain/modules/rag/target/scala-3.3.4/test-classes ...
+22: [info] done compiling
+23: [info] EmbeddingRagSpec:
+24: [info] - all five templates copy exact source values and are byte deterministic across source ordering
+25: [info] - abstract permission and source refs remain explicit; missing abstract uses paper fallback
+26: [info] - chunking has hand-derived boundaries, exact overlap and Unicode codepoint safety
+27: [info] - stable IDs bind text, window, template and chunk policy, preserving original entity IDs
+28: [info] - rendering rejects unsupported labels, missing references and invented identity metadata
+29: [info] - Phase6 summary rendering preserves actual source text qualifications and all source refs
+30: [info] - stable vector slots reject actual rerendered changed text without re-embedding
+31: [info] - slot keys bind chunk ordinal, model, template and policy while excluding text and source run
+32: [info] - Phase6 summaries preserve Unicode and newline bytes and supplied filters through vector metadata
+33: [info] - explicit summary abstract composition preserves the exact summary prefix and actual permission evidence
+34: [info] - hashed bag of words is case/order invariant, normalized and has deterministic lexical neighbors
+35: [info] - Bedrock request uses configured identity/dimension and bounded timeout without credential construction
+36: [info] - transient provider failures retry with bounded backoff and preserve observed attempts
+37: [info] - permanent/exhausted failures are typed and never expose provider details
+38: [info] - dimension/malformed-response errors fail permanently; empty/oversized text never invokes SDK
+39: [info] - concurrency remains bounded and output follows input ordering across independent invocations
+40: [info] - semantic excerpt limit counts Unicode codepoints consistently with core validation
+41: [info] - semantic context follows ordinary-S3 envelope, hash and pointer, excluding metric authority
+42: [info] EmbeddingRetrievalSpec:
+43: [info] - six committed known queries retrieve their fixed neighbor and every hit resolves to hashed ordinary text
+44: [info] - renderer supplies whole text binding and actual group cardinality for every chunk
+45: [info] - local CLI rejects missing or live-mode arguments before source or state access
+46: [info] LiveEmbeddingGuardSpec:
+47: [info] - pure preflight binds exact content, run, expiry, caps and conservative configured estimate
+48: [info] - vector, concurrency, request and price approval limits refuse before clients
+49: [info] - partial or inconsistent chunk groups refuse with bounded work even at an IntMax count
+50: [info] - disabled approval refuses executable run before credential/client factory or gate reads
+51: [info] Run completed in 342 milliseconds.
+52: [info] Total number of tests run: 25
+53: [info] Suites: completed 3, aborted 0
+54: [info] Tests: succeeded 25, failed 0, canceled 0, ignored 0, pending 0
+55: [info] All tests passed.
+56: [success] Total time: 6 s, completed Oct 24, 2026, 2:47:22 AM
+57: [info] scalafmt: Formatting 6 Scala sources (/Users/danny/Documents/UIC/CS441/ScholarChain/tests)...
+58: [info] scalafmt: Reformatted 6 Scala sources
+59: [success] Total time: 0 s, completed Oct 24, 2026, 2:47:23 AM
+60: [info] compiling 9 Scala sources to /Users/danny/Documents/UIC/CS441/ScholarChain/tests/target/scala-3.3.4/test-classes ...
+61: [info] done compiling
+62: [success] Total time: 2 s, completed Oct 24, 2026, 2:47:25 AM
+63: [info] IndependentEmbedding8BFailureSpec:
+64: [info] - actual throttling retry succeeds and records exactly two calls one delay and one ledger retry
+65: [info] - permanent provider failure reaches the rejected object and ledger without exposing its message
+66: [info] - wrong provider dimensions reject without vector publication and a stale manifest model never invokes the client
+67: [info] IndependentEmbedding8BGuardSpec:
+68: [info] - missing disabled or content-mismatched live approval never constructs service ports
+69: [info] - the local CLI refuses a live flag before accessing any state or provider
+70: [info] IndependentEmbeddingStorageSpec:
+71: [info] - first ingestion writes two documents; persistent replay skips embedding and preserves source text
+72: [info] - a bound vector key rejects changed text before embedding and records the conflict
+73: [info] - observed embedding attempts create retry counters and ledger failure history
+74: [info] - index/client dimension mismatch refuses ingestion before an embedding invocation
+75: [info] - fake queue redelivers after visibility expiry and refuses a stale receipt
+76: [info] - SQS adapter sends exact bounded configured requests through an injected stub
+77: [info] IndependentEmbeddingContractSpec:
+78: [info] - UTF-8 content identity and model framing have independent fixed expectations
+79: [info] - stable slot keys have seven explicit UTF-8 frames and exclude content and source run
+80: [info] - legacy decoding retains defaults but incomplete slot identity is rejected
+81: [info] - wire work records preserve source and reject hash, index and model-key substitutions
+82: [info] - semantic results cannot acquire authority for exact graph facts or metrics
+83: [info] - compact vector metadata excludes source text and rejects arbitrary or oversized identity fields
+84: [info] - vector results require finite dimensions and sanitized typed failure codes
+85: [info] IndependentEmbeddingRenderingSpec:
+86: [info] - five document templates render exact supplied fields deterministically and retain provenance
+87: [info] - paper fallback and permitted abstract record different explicit selections with permission provenance
+88: [info] - chunking follows a fixed boundary/overlap expectation and rejects invalid limits
+89: [info] - deterministic fake returns stable finite model-versioned results and typed empty-input failure
+90: [info] IndependentEmbedding8BSmokeSpec:
+91: [info] - six committed known queries return literal expected neighbors with competing same-type documents
+92: [info] - every corpus vector follows its pointer to exact text and verified hash with descriptive-only authority
+93: [info] IndependentEmbeddingSlotRepairSpec:
+94: [info] - real rendered content changes keep the stable slot and conflict before any new embedding or data writes
+95: [info] - a new model occupies a distinct slot while actual separate chunks retain separate ordinal keys
+96: [info] - R1 shrinking a complete two-chunk group rejects the unchanged surviving prefix before writes
+97: [info] - R1 growing a complete group rejects all new ordinals before any mixed writes
+98: [info] - R1 malformed or invalid members reject the complete group before any embedding
+99: [info] - summary adapter preserves exact source bytes and caller filters through actual ingestion metadata
+100: [info] - paper summary adapter uses exact source text for absent or blank abstracts and exact permitted composition
+101: [info] IndependentStorageRuntimeFenceSpec:
+102: [info] - runtime scan permits GraphReader and ignores loader names in comments or inert strings
+103: [info] - runtime scan detects direct, renamed, fully qualified and raw SDK loader access
+104: [info] - runtime scan follows referenced storage composition and detects a hidden write capability
+105: [info] - character literals cannot hide a following graph write capability
+106: [info] - interpolation retains executable expressions including nested braces and strings
+107: [info] - interpolation masks inert text, escaped dollars and inert nested expressions
+108: [info] - interpolated references still follow storage composition helpers
+109: [info] - actual runtime roots and their referenced storage composition expose no graph write dependency
+110: [info]   + Runtime graph fence: runtimeSources=5, inspectedSources=20; heuristic only. 
+111: [info] Run completed in 675 milliseconds.
+112: [info] Total number of tests run: 39
+113: [info] Suites: completed 8, aborted 0
+114: [info] Tests: succeeded 39, failed 0, canceled 0, ignored 0, pending 0
+115: [info] All tests passed.
+116: [success] Total time: 1 s, completed Oct 24, 2026, 2:47:26 AM
+117: [info] running (fork) edu.uic.cs441.scholarchain.independent.IndependentEmbeddingG1ExportMain target/phase8b-g1-export
+676: [info] Computed G1 completed export: /Users/danny/Documents/UIC/CS441/ScholarChain/target/phase8b-g1-export; researchers=10; works=9; edges=18; tables=28; runId=run:55555555-5555-4555-8555-555555555555
+677: [success] Total time: 22 s, completed Oct 24, 2026, 2:47:48 AM

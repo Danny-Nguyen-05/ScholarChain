@@ -1,0 +1,16 @@
+{
+  "items": [
+    {
+      "vectorKey": "18:researcher-profile80:researcher:dblp:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb9:all-years19:fixture-template-v123:fixture-chunk-policy-v11:027:17:fixture.embedding2:v11:3",
+      "score": 0.75,
+      "documentType": "researcher-profile",
+      "textS3Uri": "s3://fixture-text/graph/rag/fixture-A.json",
+      "excerpt": "Fixture A",
+      "textHash": "d23025bf3ac41e3d69947fe4aa5bd6318fe202cb7664cac26464143a85926552"
+    }
+  ],
+  "usage": "descriptive-context-only; exact metrics and graph claims require graph/metric evidence",
+  "exactMetricsAllowed": false,
+  "graphClaimsAllowed": false,
+  "schemaVersion": "scholarchain.embedding.v1"
+}

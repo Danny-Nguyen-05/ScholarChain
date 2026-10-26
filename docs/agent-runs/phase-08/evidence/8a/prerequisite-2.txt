@@ -1,0 +1,34 @@
+[info] welcome to sbt 1.10.7 (Homebrew Java 17.0.20.1)
+[info] loading settings for project scholarchain-build from plugins.sbt...
+[info] loading project definition from /Users/danny/Documents/UIC/CS441/ScholarChain/project
+[info] compiling 1 Scala source to /Users/danny/Documents/UIC/CS441/ScholarChain/project/target/scala-2.12/sbt-1.0/classes ...
+[info] done compiling
+[info] loading settings for project root from build.sbt...
+[info] set current project to root (in build file:/Users/danny/Documents/UIC/CS441/ScholarChain/)
+[info] scalafmt: Formatting 22 Scala sources (/Users/danny/Documents/UIC/CS441/ScholarChain/tests)...
+[info] scalafmt: Reformatted 1 Scala sources
+[success] Total time: 2 s, completed Oct 23, 2026, 7:46:40 PM
+[info] scalafmt: Formatting 15 Scala sources (/Users/danny/Documents/UIC/CS441/ScholarChain)...
+[info] scalafmt: Formatting 2 Scala sources (/Users/danny/Documents/UIC/CS441/ScholarChain)...
+[success] Total time: 0 s, completed Oct 23, 2026, 7:46:40 PM
+[info] compiling 1 Scala source to /Users/danny/Documents/UIC/CS441/ScholarChain/modules/core/target/scala-3.3.4/classes ...
+[info] done compiling
+[info] compiling 2 Scala sources to /Users/danny/Documents/UIC/CS441/ScholarChain/tests/target/scala-3.3.4/test-classes ...
+[info] done compiling
+[info] IndependentStorageRuntimeFenceSpec:
+[info] - runtime scan permits GraphReader and ignores loader names in comments or inert strings
+[info] - runtime scan detects direct, renamed, fully qualified and raw SDK loader access
+[info] - runtime scan follows referenced storage composition and detects a hidden write capability
+[info] - character literals cannot hide a following graph write capability
+[info] - interpolation retains executable expressions including nested braces and strings
+[info] - interpolation masks inert text, escaped dollars and inert nested expressions
+[info] - interpolated references still follow storage composition helpers
+[info] - actual runtime roots and their referenced storage composition expose no graph write dependency
+[info]   + Runtime graph fence: runtimeSources=0, inspectedSources=0; heuristic only. 
+[info]   + rag/services have no runtime Scala source yet; detection is established by regression fixtures, not by runtime wiring. 
+[info] Run completed in 329 milliseconds.
+[info] Total number of tests run: 8
+[info] Suites: completed 1, aborted 0
+[info] Tests: succeeded 8, failed 0, canceled 0, ignored 0, pending 0
+[info] All tests passed.
+[success] Total time: 9 s, completed Oct 23, 2026, 7:46:50 PM

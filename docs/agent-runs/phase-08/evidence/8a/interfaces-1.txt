@@ -1,0 +1,45 @@
+[info] welcome to sbt 1.10.7 (Homebrew Java 17.0.20.1)
+[info] loading settings for project scholarchain-build from plugins.sbt...
+[info] loading project definition from /Users/danny/Documents/UIC/CS441/ScholarChain/project
+[info] loading settings for project root from build.sbt...
+[info] set current project to root (in build file:/Users/danny/Documents/UIC/CS441/ScholarChain/)
+[info] scalafmt: Formatting 8 Scala sources (/Users/danny/Documents/UIC/CS441/ScholarChain/modules/core)...
+[info] scalafmt: Reformatted 1 Scala sources
+[success] Total time: 1 s, completed Oct 23, 2026, 7:48:40 PM
+[info] scalafmt: Formatting 3 Scala sources (/Users/danny/Documents/UIC/CS441/ScholarChain/modules/core)...
+[info] scalafmt: Reformatted 1 Scala sources
+[success] Total time: 0 s, completed Oct 23, 2026, 7:48:40 PM
+[info] scalafmt: Formatting 21 Scala sources (/Users/danny/Documents/UIC/CS441/ScholarChain/modules/storage)...
+[info] scalafmt: Reformatted 2 Scala sources
+[success] Total time: 1 s, completed Oct 23, 2026, 7:48:41 PM
+[info] compiling 1 Scala source to /Users/danny/Documents/UIC/CS441/ScholarChain/modules/core/target/scala-3.3.4/classes ...
+[info] done compiling
+[info] compiling 1 Scala source to /Users/danny/Documents/UIC/CS441/ScholarChain/modules/core/target/scala-3.3.4/test-classes ...
+[info] done compiling
+[info] EmbeddingContractSpec:
+[info] - document, manifest item, compact metadata and context have frozen additive wire examples
+[info] - text hash is over exact UTF-8 bytes, not whitespace-normalized text
+[info] - model ID, model version and dimension all change vector identity without delimiter collisions
+[info] - work manifest rejects wrong type/index, unsupported schema, malformed pointers and missing provenance
+[info] - abstract and fallback choices are explicit and limited to paper documents
+[info] - metadata keeps model/dimension and pointer but cannot carry full text or arbitrary filter fields
+[info] - typed embedding outcomes preserve model and attempt information and reject bad dimensions
+[info] - semantic context serializes descriptive label and cannot authorize exact metrics or graph claims
+[info] Run completed in 176 milliseconds.
+[info] Total number of tests run: 8
+[info] Suites: completed 1, aborted 0
+[info] Tests: succeeded 8, failed 0, canceled 0, ignored 0, pending 0
+[info] All tests passed.
+[success] Total time: 4 s, completed Oct 23, 2026, 7:48:45 PM
+[info] compiling 3 Scala sources to /Users/danny/Documents/UIC/CS441/ScholarChain/modules/storage/target/scala-3.3.4/classes ...
+[warn] -- [E029] Pattern Match Exhaustivity Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/EmbeddingManifest.scala:313:26 
+[warn] 313 |              registry.get(artifact(i), "complete") match {
+[warn]     |              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[warn]     |match may not be exhaustive.
+[warn]     |
+[warn]     |It would fail on pattern case: edu.uic.cs441.scholarchain.storage.StorageResult.Written(_), edu.uic.cs441.scholarchain.storage.StorageResult.Unchanged(_), edu.uic.cs441.scholarchain.storage.StorageResult.Found(_), edu.uic.cs441.scholarchain.storage.StorageResult.Rejected(_), edu.uic.cs441.scholarchain.storage.StorageResult.Retried(_, _)
+[warn]     |
+[warn]     | longer explanation available when compiling with `-explain`
+[warn] one warning found
+[info] done compiling
+[success] Total time: 1 s, completed Oct 23, 2026, 7:48:47 PM

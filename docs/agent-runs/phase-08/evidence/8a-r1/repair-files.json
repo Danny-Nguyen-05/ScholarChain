@@ -1,0 +1,126 @@
+{
+  "comparison": "Original 8A final-gate source snapshot to repair round 1 frozen source snapshot; hashes verified against retained original audit.",
+  "originalSnapshotSha256": "6dd42f8c0e829b52091690e6b789903dc22ba7d353d8a988251c647223e8413a",
+  "newSnapshotSha256": "6d61f2c37d3e2392a9e533e9e5271740dbfe64090ba935d6a7bfb2dab30115d9",
+  "files": [
+    {
+      "path": "modules/core/README.md",
+      "change": "modified",
+      "owner": "domain-engineer",
+      "beforeSha256": "f70639d52a8cc50fc6ef965e7fd50960a57ebacd5ee1b15205ddeabdd94d81af",
+      "afterSha256": "d321adb05a109247cb7f27693f731ccf3f16e0039b825db4847be76f4fe4d7a7"
+    },
+    {
+      "path": "modules/core/src/main/scala/edu/uic/cs441/scholarchain/core/EmbeddingContracts.scala",
+      "change": "modified",
+      "owner": "domain-engineer",
+      "beforeSha256": "5302faf7f739a5f28a8838cbfdc605efeb9aad3364ef189940b40e60e7b977ba",
+      "afterSha256": "cc0b1d6225d3eb0e1664aa2dec8ad719448dd5791318f272464e0ec234f4724e"
+    },
+    {
+      "path": "modules/core/src/test/resources/wire/embedding-context.json",
+      "change": "modified",
+      "owner": "domain-engineer",
+      "beforeSha256": "0052c9e2c5b9e2ea027e2c64c1c628513269318a2c4352de568aa0c7b0be6080",
+      "afterSha256": "6e0dff4d68eb0c1eb48c32c73bb109aa3d94e94779c3680988240548d01303d1"
+    },
+    {
+      "path": "modules/core/src/test/resources/wire/embedding-document.json",
+      "change": "modified",
+      "owner": "domain-engineer",
+      "beforeSha256": "9b346900e359cd8d62415f85cc74ae1bdbcf45256809a13a9824177725250bca",
+      "afterSha256": "fe2182ea7ab0b2659fa48d4fbbc53505cab6c3ae3c59c75b7a0b71c40a59abe4"
+    },
+    {
+      "path": "modules/core/src/test/resources/wire/embedding-metadata.json",
+      "change": "modified",
+      "owner": "domain-engineer",
+      "beforeSha256": "5b4829a8fea196a0524824caf216ca61155449ec4b71bc18036c9127b2baf65f",
+      "afterSha256": "c6997681c47ab64df2942f69985a61a234ed7a007e657609cbb759ecaa1acab4"
+    },
+    {
+      "path": "modules/core/src/test/resources/wire/embedding-work-item.json",
+      "change": "modified",
+      "owner": "domain-engineer",
+      "beforeSha256": "7d0e3436cc4ccb442dcac43545a94bdad9334b840cd8d622eaa6f520703b2031",
+      "afterSha256": "2906ada6520dae4f123e790aab7987c62ea0d8b71c5fbebc888b7ac302085e78"
+    },
+    {
+      "path": "modules/core/src/test/scala/edu/uic/cs441/scholarchain/core/EmbeddingContractSpec.scala",
+      "change": "modified",
+      "owner": "domain-engineer",
+      "beforeSha256": "b13468a585afe81db9c970a93526212838a7eb95b0cc56a91f0ed57b151ede59",
+      "afterSha256": "d60385a1bcb59e0fdeac4800382b5139c9f5af2dd158eef9c5e266ac943427a6"
+    },
+    {
+      "path": "modules/rag/README.md",
+      "change": "modified",
+      "owner": "rag-engineer",
+      "beforeSha256": "04b79a0512c9a38359be20d086e6104eef6c9986c31d54a0d394652d9107680b",
+      "afterSha256": "e55c8ebdc43547c97b71e5c2aafc34eb9a2f511cddc8a536c5ff4243137dd5e7"
+    },
+    {
+      "path": "modules/rag/src/main/scala/edu/uic/cs441/scholarchain/rag/DocumentRendering.scala",
+      "change": "modified",
+      "owner": "rag-engineer",
+      "beforeSha256": "4afcf756228b8a9699e53f2638895f1ab60cbb4d4cf058571f6d7b2e79537571",
+      "afterSha256": "37817ee04886095e30be303a6967fa0c02b15d7b831f3d5c7a04fb2bfebd2688"
+    },
+    {
+      "path": "modules/rag/src/main/scala/edu/uic/cs441/scholarchain/rag/SemanticContexts.scala",
+      "change": "modified",
+      "owner": "rag-engineer",
+      "beforeSha256": "8c1898a178dac8ad098645b7e55cb9019b9f5cd828c8a801bc705194ba0eb8ad",
+      "afterSha256": "0f8ca0107096dfe3df874e47514ef866311d348c89e7d82ee052c5f43354b2a3"
+    },
+    {
+      "path": "modules/rag/src/test/scala/edu/uic/cs441/scholarchain/rag/EmbeddingRagSpec.scala",
+      "change": "modified",
+      "owner": "rag-engineer",
+      "beforeSha256": "dc3ff6449afc1bb1749d8a67879d69c7dfe4999e4a106c19bc98442e772a0312",
+      "afterSha256": "6d0aba68ed8a69083b6ad739ef8cf6e688130a2f35a537e58a3f04eb18c22a8d"
+    },
+    {
+      "path": "modules/storage/README.md",
+      "change": "modified",
+      "owner": "storage-engineer",
+      "beforeSha256": "0f0bfdd5346ad56db726a73453c0e6fba0e77de8de7ea372e3db7578c116dee6",
+      "afterSha256": "27e1803ab65781597c547f2452bbba171a2f9e1bec71dba546563a2ea01a1d1d"
+    },
+    {
+      "path": "modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/EmbeddingManifest.scala",
+      "change": "modified",
+      "owner": "storage-engineer",
+      "beforeSha256": "bfafbd883e3423ebe7439c3ebe5a91810a1f6fffc23d1c5dbe4f01e6db7ef0bf",
+      "afterSha256": "4f68c3478d2e91cdff1cb597f965abc6c586c01b85a3f669905f3358b37a56f5"
+    },
+    {
+      "path": "modules/storage/src/test/scala/edu/uic/cs441/scholarchain/storage/EmbeddingStorageSpec.scala",
+      "change": "modified",
+      "owner": "storage-engineer",
+      "beforeSha256": "5d9c215b32709be4a6f961fd1ac59019303cd5c5c33ec53c63d1aa9f070e3ad7",
+      "afterSha256": "1c2e4196f65b1d46fb180d78b227efbe9a5a49d57c013f05580a1aee6d192b38"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentEmbeddingContractSpec.scala",
+      "change": "modified",
+      "owner": "test-engineer",
+      "beforeSha256": "f084dfca891d7398a581e345a91d1cfc9ac5606c06c83bfefc9a86edc6b95f1d",
+      "afterSha256": "78f4298efbe55d6beb94e63e0612f58b6c69d1d2ab89b1dc09e800594f5c307b"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentEmbeddingSlotRepairSpec.scala",
+      "change": "added",
+      "owner": "test-engineer",
+      "beforeSha256": null,
+      "afterSha256": "7083ebda324c8d4ae0c5f0331000fc58facbe584abb5a2449bf4762933ac131f"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentEmbeddingStorageSpec.scala",
+      "change": "modified",
+      "owner": "test-engineer",
+      "beforeSha256": "e4a0e20ed10b6d8cb9d865ee3e42e97cd6c47dc58b5470857e4e7ece6958106c",
+      "afterSha256": "951a7463586f794ae1e786b3ba0f7d97109c5bfaeda1f5f420e158ef77d3bd6c"
+    }
+  ]
+}

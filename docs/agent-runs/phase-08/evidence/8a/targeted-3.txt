@@ -1,0 +1,72 @@
+[info] welcome to sbt 1.10.7 (Homebrew Java 17.0.20.1)
+[info] loading settings for project scholarchain-build from plugins.sbt...
+[info] loading project definition from /Users/danny/Documents/UIC/CS441/ScholarChain/project
+[info] loading settings for project root from build.sbt...
+[info] set current project to root (in build file:/Users/danny/Documents/UIC/CS441/ScholarChain/)
+[info] scalafmt: Formatting 2 Scala sources (/Users/danny/Documents/UIC/CS441/ScholarChain/modules/rag)...
+[info] scalafmt: Reformatted 2 Scala sources
+[success] Total time: 1 s, completed Oct 23, 2026, 7:53:53 PM
+[info] scalafmt: Formatting 1 Scala sources (/Users/danny/Documents/UIC/CS441/ScholarChain/modules/rag)...
+[info] scalafmt: Reformatted 1 Scala sources
+[success] Total time: 0 s, completed Oct 23, 2026, 7:53:53 PM
+[info] compiling 3 Scala sources to /Users/danny/Documents/UIC/CS441/ScholarChain/modules/rag/target/scala-3.3.4/classes ...
+[info] done compiling
+[info] compiling 1 Scala source to /Users/danny/Documents/UIC/CS441/ScholarChain/modules/rag/target/scala-3.3.4/test-classes ...
+[info] done compiling
+[info] EmbeddingRagSpec:
+[info] - all five templates copy exact source values and are byte deterministic across source ordering
+[info] - abstract permission and source refs remain explicit; missing abstract uses paper fallback
+[info] - chunking has hand-derived boundaries, exact overlap and Unicode codepoint safety
+[info] - stable IDs bind text, window, template and chunk policy, preserving original entity IDs
+[info] - rendering rejects unsupported labels, missing references and invented identity metadata
+[info] - Phase6 summary rendering preserves actual source text qualifications and all source refs
+[info] - hashed bag of words is case/order invariant, normalized and has deterministic lexical neighbors
+[info] - Bedrock request uses configured identity/dimension and bounded timeout without credential construction
+[info] - transient provider failures retry with bounded backoff and preserve observed attempts
+[info] - permanent/exhausted failures are typed and never expose provider details
+[info] - dimension/malformed-response errors fail permanently; empty/oversized text never invokes SDK
+[info] - concurrency remains bounded and output follows input ordering across independent invocations
+[info] - semantic excerpt limit counts Unicode codepoints consistently with core validation
+[info] - semantic context follows ordinary-S3 envelope, hash and pointer, excluding metric authority
+[info] Run completed in 217 milliseconds.
+[info] Total number of tests run: 14
+[info] Suites: completed 1, aborted 0
+[info] Tests: succeeded 14, failed 0, canceled 0, ignored 0, pending 0
+[info] All tests passed.
+[success] Total time: 4 s, completed Oct 23, 2026, 7:53:57 PM
+[info] compiling 1 Scala source to /Users/danny/Documents/UIC/CS441/ScholarChain/tests/target/scala-3.3.4/test-classes ...
+[info] done compiling
+[info] IndependentEmbeddingContractSpec:
+[info] - UTF-8 content identity and model framing have independent fixed expectations
+[info] - wire work records preserve source and reject hash, index and model-key substitutions
+[info] - semantic results cannot acquire authority for exact graph facts or metrics
+[info] - compact vector metadata excludes source text and rejects arbitrary or oversized identity fields
+[info] - vector results require finite dimensions and sanitized typed failure codes
+[info] IndependentEmbeddingStorageSpec:
+[info] - first ingestion writes two documents; persistent replay skips embedding and preserves source text
+[info] - a bound vector key rejects changed text before embedding and records the conflict
+[info] - observed embedding attempts create retry counters and ledger failure history
+[info] - index/client dimension mismatch refuses ingestion before an embedding invocation
+[info] - fake queue redelivers after visibility expiry and refuses a stale receipt
+[info] - SQS adapter sends exact bounded configured requests through an injected stub
+[info] IndependentEmbeddingRenderingSpec:
+[info] - five document templates render exact supplied fields deterministically and retain provenance
+[info] - paper fallback and permitted abstract record different explicit selections with permission provenance
+[info] - chunking follows a fixed boundary/overlap expectation and rejects invalid limits
+[info] - deterministic fake returns stable finite model-versioned results and typed empty-input failure
+[info] IndependentStorageRuntimeFenceSpec:
+[info] - runtime scan permits GraphReader and ignores loader names in comments or inert strings
+[info] - runtime scan detects direct, renamed, fully qualified and raw SDK loader access
+[info] - runtime scan follows referenced storage composition and detects a hidden write capability
+[info] - character literals cannot hide a following graph write capability
+[info] - interpolation retains executable expressions including nested braces and strings
+[info] - interpolation masks inert text, escaped dollars and inert nested expressions
+[info] - interpolated references still follow storage composition helpers
+[info] - actual runtime roots and their referenced storage composition expose no graph write dependency
+[info]   + Runtime graph fence: runtimeSources=3, inspectedSources=3; heuristic only. 
+[info] Run completed in 645 milliseconds.
+[info] Total number of tests run: 23
+[info] Suites: completed 4, aborted 0
+[info] Tests: succeeded 23, failed 0, canceled 0, ignored 0, pending 0
+[info] All tests passed.
+[success] Total time: 2 s, completed Oct 23, 2026, 7:53:59 PM

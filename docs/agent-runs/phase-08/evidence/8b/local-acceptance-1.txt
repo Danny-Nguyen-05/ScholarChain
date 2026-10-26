@@ -1,0 +1,13 @@
+[info] welcome to sbt 1.10.7 (Homebrew Java 17.0.20.1)
+[info] loading settings for project scholarchain-build from plugins.sbt...
+[info] loading project definition from /Users/danny/Documents/UIC/CS441/ScholarChain/project
+[info] loading settings for project root from build.sbt...
+[info] set current project to root (in build file:/Users/danny/Documents/UIC/CS441/ScholarChain/)
+[info] running (fork) edu.uic.cs441.scholarchain.independent.IndependentEmbeddingLocalReplayMain target/phase8b-g1-export target/phase8b-g1-local-acceptance
+[error] 26/10/24 02:48:01 WARN  NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+[info] {"sourceExport":"/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase8b-g1-export","sourceRunId":"run:55555555-5555-4555-8555-555555555555","selectedActualSummaries":12,"selectedActualContextNodes":0,"firstWritten":12,"replayUnchanged":12,"replayEmbeddingCalls":0,"freshCountersIdentical":true,"manifestHashesIdentical":true,"allPersistedPointersVerified":true,"verifiedPointerCount":12,"allAvailableSourceDocumentTypesIngested":true,"sourceQualificationsHashVerified":true,"mode":"deterministic-fake"}
+[success] Total time: 3 s, completed Oct 24, 2026, 2:48:02 AM
+[info] running (fork) edu.uic.cs441.scholarchain.independent.IndependentEmbeddingLocalReplayMain target/phase6-runs/6fg-spark-first-v2/run:f02acf56-4bea-4009-adaf-b11d5afceb49 target/phase8b-real-local-acceptance
+[error] 26/10/24 02:48:03 WARN  NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+[info] {"sourceExport":"/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase6-runs/6fg-spark-first-v2/run:f02acf56-4bea-4009-adaf-b11d5afceb49","sourceRunId":"run:f02acf56-4bea-4009-adaf-b11d5afceb49","selectedActualSummaries":12,"selectedActualContextNodes":4,"firstWritten":16,"replayUnchanged":16,"replayEmbeddingCalls":0,"freshCountersIdentical":true,"manifestHashesIdentical":true,"allPersistedPointersVerified":true,"verifiedPointerCount":16,"allAvailableSourceDocumentTypesIngested":true,"sourceQualificationsHashVerified":true,"mode":"deterministic-fake"}
+[success] Total time: 28 s, completed Oct 24, 2026, 2:48:30 AM

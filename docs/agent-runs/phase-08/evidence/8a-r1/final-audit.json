@@ -1,0 +1,21 @@
+{
+  "baseSha": "8503e1715cbcaf043fd68213c5b08731e9de9ba7",
+  "branch": "phase-8",
+  "head": "8503e1715cbcaf043fd68213c5b08731e9de9ba7",
+  "frozenFiles": 303,
+  "changedHashOrMtimeDuringFullGate": [],
+  "snapshotPath": "/tmp/phase8a-r1-frozen-source.json",
+  "snapshotSha256": "6d61f2c37d3e2392a9e533e9e5271740dbfe64090ba935d6a7bfb2dab30115d9",
+  "gitDiffCheckExit": 0,
+  "newSourceTrailingWhitespace": [],
+  "protectedPathsModified": [],
+  "sourceFilesProvingDeferredBehaviorUnchanged": [
+    "modules/rag/src/main/scala/edu/uic/cs441/scholarchain/rag/EmbeddingClients.scala",
+    "modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/EmbeddingWorkQueue.scala",
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/RuntimeGraphFence.scala",
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentStorageRuntimeFenceSpec.scala"
+  ],
+  "planMatchesSnapshot": true,
+  "generatedTestMarkerExists": true,
+  "allLaunchedBuildSessionsCompleted": true
+}

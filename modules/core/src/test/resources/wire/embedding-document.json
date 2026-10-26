@@ -1,0 +1,25 @@
+{
+  "documentId": "profile:2656ff5a7b83f95cf717db02dda2783262c91ed6708ba27e3a85b14d568c27d0",
+  "documentType": "researcher-profile",
+  "entityId": "researcher:dblp:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  "windowId": "all-years",
+  "runId": "run:00112233-4455-4677-8899-aabbccddeeff",
+  "templateVersion": "fixture-template-v1",
+  "text": "Fixture A has 3 works.",
+  "sourceReferences": [
+    {
+      "table": "fixture/researcher_metrics",
+      "rowKey": "fixture-A",
+      "field": "publicationCount"
+    }
+  ],
+  "textSelection": "generated-summary",
+  "schemaVersion": "scholarchain.embedding.v1",
+  "identityFields": {
+    "sourceDataset": "synthetic-fixture"
+  },
+  "chunkPolicyVersion": "fixture-chunk-policy-v1",
+  "chunkOrdinal": 0,
+  "chunkCount": 1,
+  "wholeTextHash": ""
+}

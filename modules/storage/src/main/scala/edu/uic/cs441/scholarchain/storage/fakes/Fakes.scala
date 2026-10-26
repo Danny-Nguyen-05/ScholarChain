@@ -9,6 +9,6 @@ type InMemoryEvidenceBundleStore = edu.uic.cs441.scholarchain.storage.InMemoryEv
 type InMemoryArtifactRegistry = edu.uic.cs441.scholarchain.storage.InMemoryArtifactRegistry
 type InMemoryResearcherMetricStore =
   edu.uic.cs441.scholarchain.storage.InMemoryResearcherMetricStore
-type InMemoryGraphLoader = edu.uic.cs441.scholarchain.storage.InMemoryGraphLoader
 type InMemoryGraphReader = edu.uic.cs441.scholarchain.storage.InMemoryGraphReader
 type InMemoryVectorStore = edu.uic.cs441.scholarchain.storage.InMemoryVectorStore
+type InMemoryEmbeddingWorkQueue = edu.uic.cs441.scholarchain.storage.InMemoryEmbeddingWorkQueue

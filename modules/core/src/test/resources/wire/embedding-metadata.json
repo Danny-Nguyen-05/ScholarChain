@@ -1,0 +1,21 @@
+{
+  "documentType": "researcher-profile",
+  "entityId": "researcher:dblp:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  "windowId": "all-years",
+  "runId": "run:00112233-4455-4677-8899-aabbccddeeff",
+  "textS3Uri": "s3://fixture-text/graph/rag/fixture-A.json",
+  "textHash": "d23025bf3ac41e3d69947fe4aa5bd6318fe202cb7664cac26464143a85926552",
+  "embeddingModel": {
+    "modelId": "fixture.embedding",
+    "version": "v1",
+    "dimension": 3
+  },
+  "templateVersion": "fixture-template-v1",
+  "documentId": "profile:2656ff5a7b83f95cf717db02dda2783262c91ed6708ba27e3a85b14d568c27d0",
+  "schemaVersion": "scholarchain.embedding.v1",
+  "identityFields": {
+    "sourceDataset": "synthetic-fixture"
+  },
+  "chunkPolicyVersion": "fixture-chunk-policy-v1",
+  "chunkOrdinal": 0
+}

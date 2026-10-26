@@ -55,7 +55,7 @@ lazy val hadoop =
 lazy val independentTests =
   project
     .in(file("tests"))
-    .dependsOn(core, hadoop, entityResolution, sparkAnalytics, storage)
+    .dependsOn(core, hadoop, entityResolution, sparkAnalytics, storage, rag)
     .settings(
       ScholarChainBuild.moduleSettings(
         Seq(Dependencies.hadoopClientLib, Dependencies.sparkSql, Dependencies.sparkScalaReflectLib)
@@ -97,6 +97,7 @@ lazy val storage =
           Dependencies.awsDynamoDb,
           Dependencies.awsNeptuneData,
           Dependencies.awsS3Vectors,
+          Dependencies.awsSqs,
           Dependencies.parquetHadoop,
           Dependencies.storageHadoopClient
         )
@@ -109,7 +110,16 @@ lazy val rag =
   project
     .in(file("modules/rag"))
     .dependsOn(core, storage)
-    .settings(ScholarChainBuild.moduleSettings(), name := "rag")
+    .settings(
+      ScholarChainBuild.moduleSettings(Seq(Dependencies.awsBedrockRuntime)),
+      name := "rag",
+      Compile / run / fork := true,
+      Compile / run / baseDirectory := (ThisBuild / baseDirectory).value,
+      Compile / run / javaOptions ++= sys.props
+        .get("logback.configurationFile")
+        .map(path => s"-Dlogback.configurationFile=$path")
+        .toSeq
+    )
 
 lazy val services =
   project

@@ -1,0 +1,182 @@
+[
+  {
+    "path": "build.sbt",
+    "sha256": "9a0f93dff0e276074d602cf7d6896e44979314d977a0abd651e63ff82ed089c6",
+    "bytes": 8075,
+    "baseSha256": "5ed2a2a1030cb04940e315ee3d9e09cc80da32e4f40afe2e255397315b09fbfc"
+  },
+  {
+    "path": "modules/core/README.md",
+    "sha256": "815bbe92eb302bf1de3b053ae1e2ee39a5e52c9436607fe9fceacf7f05c1f3aa",
+    "bytes": 37771,
+    "baseSha256": "d321adb05a109247cb7f27693f731ccf3f16e0039b825db4847be76f4fe4d7a7"
+  },
+  {
+    "path": "modules/core/src/main/scala/edu/uic/cs441/scholarchain/core/EmbeddingContracts.scala",
+    "sha256": "63de0ef673b7566b1dfb86e2438371ce1a361c396e6fb16a53faccb71ba119e1",
+    "bytes": 13202,
+    "baseSha256": "cc0b1d6225d3eb0e1664aa2dec8ad719448dd5791318f272464e0ec234f4724e"
+  },
+  {
+    "path": "modules/core/src/test/resources/wire/embedding-document.json",
+    "sha256": "585dcdf766b24d6b729c6ed66fe27d06772d9612309c8aaaefcc9c06ed2c0c9e",
+    "bytes": 814,
+    "baseSha256": "fe2182ea7ab0b2659fa48d4fbbc53505cab6c3ae3c59c75b7a0b71c40a59abe4"
+  },
+  {
+    "path": "modules/core/src/test/resources/wire/embedding-work-item.json",
+    "sha256": "f066124571d10e79047457eaf5bb6fa46a9ccb6c722ab4091af03ab34d1830a0",
+    "bytes": 1429,
+    "baseSha256": "2906ada6520dae4f123e790aab7987c62ea0d8b71c5fbebc888b7ac302085e78"
+  },
+  {
+    "path": "modules/core/src/test/scala/edu/uic/cs441/scholarchain/core/EmbeddingContractSpec.scala",
+    "sha256": "ba2af611d84ab04c5b26b437e14507a039f723d2d39069fdf112c6756a79c498",
+    "bytes": 15643,
+    "baseSha256": "d60385a1bcb59e0fdeac4800382b5139c9f5af2dd158eef9c5e266ac943427a6"
+  },
+  {
+    "path": "modules/rag/README.md",
+    "sha256": "df7937d0a2f763c9160c1d15be1c9f38eb2e641cba35f103a712047bfbf35f3f",
+    "bytes": 14006,
+    "baseSha256": "e55c8ebdc43547c97b71e5c2aafc34eb9a2f511cddc8a536c5ff4243137dd5e7"
+  },
+  {
+    "path": "modules/rag/src/main/scala/edu/uic/cs441/scholarchain/rag/DocumentRendering.scala",
+    "sha256": "9a49fff9f5e4a9cacf0b6559d1ddaf131f22d61848359de4f789a732581e79c4",
+    "bytes": 8875,
+    "baseSha256": "37817ee04886095e30be303a6967fa0c02b15d7b831f3d5c7a04fb2bfebd2688"
+  },
+  {
+    "path": "modules/rag/src/main/scala/edu/uic/cs441/scholarchain/rag/EmbeddingIngestMain.scala",
+    "sha256": "91b202877634886f03e395133ee657b3c5cfc10abb5ed7bb511e97a2cc522a7e",
+    "bytes": 10721,
+    "baseSha256": null
+  },
+  {
+    "path": "modules/rag/src/main/scala/edu/uic/cs441/scholarchain/rag/LiveEmbeddingIngestMain.scala",
+    "sha256": "0f71851ea47ecb77edaef656bcb5b3218cceab984a0a3b7e8b161286fa5fd214",
+    "bytes": 15559,
+    "baseSha256": null
+  },
+  {
+    "path": "modules/rag/src/test/resources/embedding-smoke.json",
+    "sha256": "e168f612546e35d03a20dfbfe056b609f703fad0eeec120ebdf2d39c12693621",
+    "bytes": 3289,
+    "baseSha256": null
+  },
+  {
+    "path": "modules/rag/src/test/scala/edu/uic/cs441/scholarchain/rag/EmbeddingRagSpec.scala",
+    "sha256": "6be1156dc7fbeeef238bccc9e5893c35a5f6b390aac8f1de7980ecb743429426",
+    "bytes": 23888,
+    "baseSha256": "6d0aba68ed8a69083b6ad739ef8cf6e688130a2f35a537e58a3f04eb18c22a8d"
+  },
+  {
+    "path": "modules/rag/src/test/scala/edu/uic/cs441/scholarchain/rag/EmbeddingRetrievalSpec.scala",
+    "sha256": "eb83a80f554b3741f2d0907f1f58caf06e364da6875c4f8f2fdc4d0b036a4077",
+    "bytes": 5650,
+    "baseSha256": null
+  },
+  {
+    "path": "modules/rag/src/test/scala/edu/uic/cs441/scholarchain/rag/LiveEmbeddingGuardSpec.scala",
+    "sha256": "909de702c92ca5766b7c0abaa7e7a58345dd82b53b8313d044cf586feb332a69",
+    "bytes": 6717,
+    "baseSha256": null
+  },
+  {
+    "path": "modules/storage/README.md",
+    "sha256": "9d56b254944063711cddc4fccd2adc773ab3f5bafb380feab348a3ac595e8523",
+    "bytes": 46458,
+    "baseSha256": "27e1803ab65781597c547f2452bbba171a2f9e1bec71dba546563a2ea01a1d1d"
+  },
+  {
+    "path": "modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/EmbeddingManifest.scala",
+    "sha256": "f4a58cd7270f2b73e254670cf5940f3182c3819214a4f31f8a52dba89752da2d",
+    "bytes": 23573,
+    "baseSha256": "4f68c3478d2e91cdff1cb597f965abc6c586c01b85a3f669905f3358b37a56f5"
+  },
+  {
+    "path": "modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/InMemoryGraphLoader.scala",
+    "sha256": "287ea6bb7d68295cac86cd79144ce92b5ac5595e80c19c6e1ba7c2165ad0b409",
+    "bytes": 1018,
+    "baseSha256": null
+  },
+  {
+    "path": "modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/InMemoryStorage.scala",
+    "sha256": "72ca22d9f394e6030cd0584af1dc102062ee9f589321b3f71f88b56d028e3ad8",
+    "bytes": 10840,
+    "baseSha256": "5fd4245d92d1ee72621d371441271c7fc330485e354b9e321d7b7b63e0f21681"
+  },
+  {
+    "path": "modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/LocalEmbeddingState.scala",
+    "sha256": "396dcf2080228936f3ddf7dd03280ef851e6153805e975fd9073f9a7bbf41026",
+    "bytes": 9774,
+    "baseSha256": null
+  },
+  {
+    "path": "modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/Phase6EmbeddingSource.scala",
+    "sha256": "3fc3b1a493d87e5d499a9a39669727f9e07af08f92d775028ba0469627d47126",
+    "bytes": 10895,
+    "baseSha256": null
+  },
+  {
+    "path": "modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/fakes/AdministrativeFakes.scala",
+    "sha256": "457711cb0c2aabbd35500cb9fd313ed5a8da54ff482b0eb83fd9bf5395f0f82c",
+    "bytes": 219,
+    "baseSha256": null
+  },
+  {
+    "path": "modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/fakes/Fakes.scala",
+    "sha256": "abc3c61d9d40784a73fdb30fd72d41f925d60661a4a9e30968c0501a5b6f08fd",
+    "bytes": 1048,
+    "baseSha256": "5bd7c2584d6fae85265ea5f135f6abb8bb47c2ae504cb61905eae683f6ac8cd7"
+  },
+  {
+    "path": "modules/storage/src/test/scala/edu/uic/cs441/scholarchain/storage/EmbeddingGroupStateSpec.scala",
+    "sha256": "964b95b9c1b6f7729074d13e4540cf376a882acc203e8a5de96b8143237ab2a4",
+    "bytes": 11247,
+    "baseSha256": null
+  },
+  {
+    "path": "modules/storage/src/test/scala/edu/uic/cs441/scholarchain/storage/EmbeddingStorageSpec.scala",
+    "sha256": "7f358acbda11b106d31a70682ac7767fac88ab3ec4b64823369eb432c08d6bc3",
+    "bytes": 21121,
+    "baseSha256": "1c2e4196f65b1d46fb180d78b227efbe9a5a49d57c013f05580a1aee6d192b38"
+  },
+  {
+    "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentEmbedding8BFailureSpec.scala",
+    "sha256": "eabeb7cad06369fbfaffbac86a38b25df9aba6791cbbd5dbd9077bd4ad1c7b73",
+    "bytes": 5841,
+    "baseSha256": null
+  },
+  {
+    "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentEmbedding8BGuardSpec.scala",
+    "sha256": "3b5c014f69eb40047bcaa76d6217a0b7dfc19a5c4c58d02543566517c4ff7452",
+    "bytes": 2759,
+    "baseSha256": null
+  },
+  {
+    "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentEmbedding8BSmokeSpec.scala",
+    "sha256": "2a7c2022ba06ba14390a73bce89232ee92bc454c36231da924b90a764d2c14c8",
+    "bytes": 5251,
+    "baseSha256": null
+  },
+  {
+    "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentEmbeddingG1ExportMain.scala",
+    "sha256": "cf15990d6c35f58e6642ad41a919bf6946f40e561761e18729f576b4e7431d3a",
+    "bytes": 8405,
+    "baseSha256": null
+  },
+  {
+    "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentEmbeddingLocalReplayMain.scala",
+    "sha256": "28d0bed5ab59b242395d59094443c568bcd79d72f4ea3ad54bcdc3cfdc100846",
+    "bytes": 6543,
+    "baseSha256": null
+  },
+  {
+    "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentEmbeddingSlotRepairSpec.scala",
+    "sha256": "4a9ed31ce41b98d0423fc4a3235c6008f85bc42cd866171a78d5e8552fe99ac6",
+    "bytes": 16248,
+    "baseSha256": "7083ebda324c8d4ae0c5f0331000fc58facbe584abb5a2449bf4762933ac131f"
+  }
+]

@@ -1,0 +1,44 @@
+{
+  "exportRoot": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase8b-g1-export",
+  "syntheticDirectInputs": true,
+  "executedHadoopOrER": false,
+  "literalAssertions": {
+    "researchers": 10,
+    "canonicalWorks": 9,
+    "windowedEdges": 18,
+    "publishedTables": 28
+  },
+  "topLevelArtifacts": [
+    {
+      "path": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase8b-g1-export/_SCHOLARCHAIN_SPARK_COMPLETE",
+      "bytes": 65,
+      "sha256": "a4d3d50b142b03d7b1084e405720795df106c5cb890aa06410815e903e9b5832"
+    },
+    {
+      "path": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase8b-g1-export/counters.json",
+      "bytes": 32837,
+      "sha256": "65c5356f49e714315aa74dd6ef89822477920449dfb539897a74fe2a3a6be976"
+    },
+    {
+      "path": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase8b-g1-export/fixture-config.json",
+      "bytes": 1186,
+      "sha256": "d3fb70704ce50b85995df086637eb16ee7e3440938e76516c044533008dae44e"
+    },
+    {
+      "path": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase8b-g1-export/g1-acceptance.json",
+      "bytes": 223,
+      "sha256": "203a1787d9c14bd0b9194262fa83b909be83cf89e58dd31324dfec7f42ae9a13"
+    },
+    {
+      "path": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase8b-g1-export/run-manifest.json",
+      "bytes": 1106,
+      "sha256": "471cdd900be0d661caf449e48990f36f8f516d97e1f6bc19507be9dafeec6eca"
+    },
+    {
+      "path": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase8b-g1-export/run-metadata.json",
+      "bytes": 7746,
+      "sha256": "ecc02b975b70abcbddc06bb27c9e7f089d0a275d52dc4b7209915c80cac15ebe"
+    }
+  ],
+  "reproduction": "Run IndependentEmbeddingG1ExportMain with a new output directory. Existing output is refused rather than overwritten; harness reads committed independent G1 fixtures and existing public Spark APIs."
+}

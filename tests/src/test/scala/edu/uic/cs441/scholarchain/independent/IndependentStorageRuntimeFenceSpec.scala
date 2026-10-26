@@ -66,6 +66,58 @@ class IndependentStorageRuntimeFenceSpec extends AnyFunSuite {
     assert(safe.inspected == Set(runtime, helper) && safe.findings.isEmpty)
   }
 
+  test("character literals cannot hide a following graph write capability") {
+    val literals = Vector("'\"'", "'\\\''", "'\\\\'", "'\\n'", "'x'", "'\\" + "u0022'")
+    literals.foreach { literal =>
+      val source = s"class Runtime { val c = $literal; val loader: GraphLoader = ??? }"
+      val masked = RuntimeGraphFence.code(source)
+      assert(masked.length == source.length)
+      val result = RuntimeGraphFence.scan(Map(runtime -> source), Set(runtime))
+      assert(result.findings.exists(_.capability == "GraphLoader"), source)
+    }
+  }
+
+  test("interpolation retains executable expressions including nested braces and strings") {
+    val snippets = Vector(
+      "class Runtime { val text = s\"${new NeptuneGraphLoader()}\" }",
+      "class Runtime { val text = raw\"${loader.startLoaderJob()}\" }",
+      "class Runtime { val text = custom\"$GraphLoader\" }",
+      "class Runtime { val text = s\"\"\"${new NeptuneGraphLoader()}\"\"\" }",
+      "class Runtime { val text = s\"${ { val c = '}'; /* } */ loader.startLoaderJob() } }\" }",
+      "class Runtime { val text = s\"${s\"${loader.startLoaderJob()}\"}\" }",
+      "class Runtime { val text = s\"${\"}\"; loader.startLoaderJob()}\" }"
+    )
+    snippets.foreach { source =>
+      val result = RuntimeGraphFence.scan(Map(runtime -> source), Set(runtime))
+      assert(result.findings.nonEmpty, source)
+    }
+  }
+
+  test("interpolation masks inert text, escaped dollars and inert nested expressions") {
+    val snippets = Vector(
+      "class Runtime { val text = s\"GraphLoader $$GraphLoader $safe\" }",
+      "class Runtime { val text = s\"$${GraphLoader}\" }",
+      "class Runtime { val text = s\"${\"GraphLoader\"}\" }",
+      "class Runtime { val text = s\"${ { /* GraphLoader */ 1 } }\" }",
+      "class Runtime { val text = raw\"\"\"GraphLoader $$GraphLoader\"\"\" }"
+    )
+    snippets.foreach { source =>
+      val masked = RuntimeGraphFence.code(source)
+      assert(masked.length == source.length)
+      assert(RuntimeGraphFence.scan(Map(runtime -> source), Set(runtime)).findings.isEmpty, source)
+    }
+  }
+
+  test("interpolated references still follow storage composition helpers") {
+    val sources = Map(
+      runtime -> "class Runtime { val text = s\"${RuntimeAssembly()}\" }",
+      helper -> "object RuntimeAssembly { def apply(): GraphLoader = new NeptuneGraphLoader() }"
+    )
+    val result = RuntimeGraphFence.scan(sources, Set(runtime))
+    assert(result.inspected == Set(runtime, helper))
+    assert(result.findings.exists(f => f.path == helper && f.capability == "GraphLoader"))
+  }
+
   test(
     "actual runtime roots and their referenced storage composition expose no graph write dependency"
   ) {

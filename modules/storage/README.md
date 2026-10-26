@@ -222,3 +222,134 @@ For a retained or interrupted run, the Phase 14C operator must:
 ### Remaining limitations and deferred findings
 
 N6's additional S3 412 and ledger CAS/cancellation coverage belongs to the independent 7C test owner. The following accepted items remain deferred; this suite does not repair them: N4 session/reservation TTL divergence (TTL remains off by default), N5 raw idempotency GSI-key length validation, N7 configurable evidence prefix, N9 accepted leading-zero count parsing, N10 fail-closed invalid export without violation counts, N11 vector-registry failure reason/payload semantics, N12 validation/upload file re-read and memory cost, N13 CLI refusal exit/nested production retry composition, N14 full-scale path/community query cost, N15 NEW-mode recovery reloading an export, and N16 possible orphan load after submission before registry persistence. N8 remains a disclosed coordinator formatting process note. Live compatibility, deployed IAM/read-only permissions, actual cost, runtime, cleanup and full-scale behavior remain unverified gates; offline tests and compilation do not establish them.
+
+## Phase 8A embedding queue and manifest composition
+
+`EmbeddingWorkQueue` exposes bounded enqueue, receive, receipt acknowledgement and backlog reads.
+`InMemoryEmbeddingWorkQueue` models capacity, visibility expiry, redelivery and rotating receipt
+handles. `SqsEmbeddingWorkQueue` injects an existing SDK client and standard queue URL; it never
+creates a queue, discovers credentials, or starts workers. Enqueue requests contain at most ten
+validated work items, with configured per-message and aggregate byte limits (the latter at most
+1 MiB). Receive bounds, visibility timeout, wait time and API timeout are configuration values.
+Partial sends are explicit failures; successful entries may already be queued, so replay can
+redeliver work. Malformed received bodies are rejected and left unacknowledged. A later deployment
+must configure its DLQ/redrive policy through Terraform. FIFO-specific message groups and dedup
+parameters are not implemented. SQS backlog is the sum of approximate visible, invisible and
+delayed counts, not a transactional exact metric.
+
+`EmbeddingManifestRunner` accepts the additive core `EmbeddingClient` and the existing ObjectStore,
+VectorStore, ArtifactRegistry and RunLedger ports. There is no dependency on rag. Its configured
+text bucket/prefix, document/manifest byte and item limits, vector dimension/metric and batch size
+bound local work. It never calls `ensureIndex`: tests explicitly establish fake indexes, while
+future live indexes must already exist through approved Terraform. Model IDs, region, resource
+names and endpoint/client construction remain composition inputs. The agreed production target
+is Ohio (`us-east-2`) with configured Titan V2 and provisional 256/cosine; the runner contains no
+hardcoded production model or region.
+
+`EmbeddingManifests.item` derives the vector key from a text-independent slot: document type,
+entity ID, window, template version, chunk-policy version, chunk ordinal and model tag. Source run
+ID and the content-addressed chunk/profile document ID are excluded from the key. The model tag
+includes ID, version and dimension. The document ID remains in compact metadata alongside the
+explicit policy/ordinal slot fields, so stored text keeps its exact content identity. Changing text
+in the same slot and model reaches the existing text-hash conflict check instead of writing a
+parallel stale vector. Distinct ordinals and new model versions use distinct keys; a deliberate
+new template/chunk-policy version creates a new slot namespace. Changing source run alone does
+not create another slot. Authoritative ordinary S3 JSON contains the full document and text hash. Its pointer addresses canonical full JSON bytes,
+including provenance, with sorted object keys. The text hash separately covers exact UTF-8 text.
+Thus a new source provenance or model can preserve old immutable source documents. Completed
+same-key/text/model work is skipped before embedding and retains its original stored pointer and
+provenance even when the new input would use another pointer. Incomplete changed-pointer payloads
+reject rather than changing an immutable prepared payload. Compact vector metadata retains supplied
+source/topic/institution/researcher/community IDs through the core allowlist; it contains no source
+text or reference arrays. Input fields are not evidence that their referenced source exists: the
+upstream producer and later bounded export composition retain that validation responsibility.
+
+The runner reserves its own immutable text binding. A changed text for an existing key is rejected
+as `vectorKeyTextConflict`; a reservation without completion is never treated as unchanged. Before
+calling VectorStore it persists a content-addressed prepared vector and registry pointer. Ambiguous
+vector writes, adapter payload reservations and completion-registry failures can then replay the
+same finite vector values and metadata without another embedding. This is a replay checkpoint,
+not a distributed transaction: failed concurrent workers can leave unreferenced ordinary S3 objects,
+and external deletion of a completed vector is not detected by the unchanged shortcut.
+
+Use a fresh ingestion execution ID for each observed rerun; source run IDs remain in documents.
+A completed execution ID refuses further mutation. An incomplete execution can resume unchanged
+stage transitions, but the normal replay contract uses a fresh execution ID and immutable artifact
+bindings. First-run counters report writes; persistent replay reports unchanged items with zero
+additional embedding calls and vector writes. `perIndex` counts observed writes. `embeddingCalls`
+counts reported per-text provider attempts, and `retried` counts attempts beyond the first plus
+reported VectorStore retries. Elapsed nanoseconds and vectors/second are observational, not
+reproducible counters. Each retry/failure is recorded through RunLedger; terminal failed stages
+remain failed and prevent complete-run claims. Rejection JSON retains keys/reason codes only.
+Vector-write counters describe observed adapter outcomes; if its later completion registry write
+fails, the item also appears as rejected and replay reconciles its prepared payload. Ledger or
+rejection-report persistence failures make the whole runner result a typed rejection. Summary logs
+contain execution ID and counters, not texts, source identities, SDK error payloads or credentials.
+
+Module fixtures test text-pointer/hash round trips, immutable provenance across model versions,
+dedup and reachable same-slot text conflicts using genuinely recomputed content IDs, distinct
+chunk slots, retries and rejected records, dimension refusal, ambiguous-write replay, duplicate
+batches, queue expiry and SDK request shapes. The independent suite owns the actual
+DocumentRenderer → EmbeddingManifests.item → runner conflict acceptance path without introducing
+a storage → rag dependency. All are synthetic and offline. Phase 8B
+owns the CLI, Phase 6 fixture/real-slice ingestion and five-query retrieval smoke suite. The 8C live
+command, actual ingestion, service compatibility, source corpus counts, performance, budget and
+cleanup remain later gates. No AWS account, provider call or live execution was used for 8A.
+
+## Phase 8B group consistency and local export replay
+
+Before processing any chunk, the manifest runner validates every member of its document group,
+including the configured model/dimension, text byte bound and ordinary-S3 pointer scope. Groups
+must contain exactly one occurrence of every ordinal from zero through `chunkCount - 1`, with a
+coherent count and whole-text hash. A count larger than the bounded manifest cannot allocate an
+unbounded ordinal range. Identical duplicate ordinals are now rejected as incomplete group input;
+replay is expressed as a separate execution with the complete manifest, not duplicate work entries.
+
+An immutable ArtifactRegistry group binding covers document type, entity, window, template,
+chunk policy and model, excluding ordinal, source run and text. Its hash binds the total chunk
+count and the hash of the full rendered text before chunking. A changed count or whole-text hash
+rejects every incoming member as `vectorKeyTextConflict` before embedding or ordinary text,
+prepared-vector or vector writes. Only its rejection report is written to ObjectStore. This prevents
+an unchanged prefix from hiding a shrink and prevents a growing document from writing its new tail
+alongside old chunks. Rejected old groups retain their original vectors; the runner does not delete
+or replace them. A deliberate model/template/chunk-policy namespace change remains explicit.
+The group guard is a text-consistency preflight, not an atomic transaction across all vector writes.
+
+Single ordinal-zero legacy documents may omit the new whole-text hash, in which case their exact
+text hash is used. Multi-chunk input requires explicit count/hash from its renderer. Existing
+individual artifact bindings without the new group binding fail closed as `group-binding-missing`;
+they cannot silently bootstrap a potentially stale group. No 8A cloud ingestion occurred, so there
+is no live corpus to migrate. An old local state or later exceptional migration needs an explicit
+operator namespace/state decision; this adapter does not infer or rewrite historical group counts.
+
+`Phase6EmbeddingSource.load` reads completed local Phase 6 exports plus their S3 Vectors work
+proposal. It binds the completion marker, producer run/lineage, table declarations and work proposal.
+The semantic-summary, topic-node and institution-node tables are streamed in full under configured
+scan/row/metadata bounds; all three logical hashes and counts are checked before returning a batch.
+Exceeding the scan bound rejects instead of labelling an incomplete scan verified. Selection holds
+bounded candidates per summary type and chooses round robin in stable type/key order; it returns
+actual summary-type counts so absent types remain absent. Topic/institution selections use actual
+GraphNode labels, IDs, provenance and source references. Their aggregate count is the exported table
+node total, not an invented per-node degree or a topic-to-institution relationship. Mixed dataset
+exports do not acquire a guessed `sourceDataset` filter. The returned qualifications retain the
+producer's convergence and approximation disclosures. Unselected table bodies are not revalidated
+by this reader; source-reference existence and any later join beyond these selected tables retain
+upstream or composition validation responsibilities.
+
+`LocalEmbeddingState.open(path, config)` and `save(path)` provide explicit fake-only disk persistence
+for the local CLI. Snapshots contain bounded ordinary objects, immutable registry bindings, fake
+indexes/vectors and successful RunLedger operations. A SHA-256 envelope detects accidental
+corruption; restore traverses the existing fake port validators. Bucket, prefix, dimension and metric
+must match the state configuration. Save uses an atomic local file replacement; separate sequential
+CLI processes can reopen state and observe real unchanged counters without invoking the embedder.
+This is a local single-writer demonstration format with a 64 MiB encoded snapshot cap, not an AWS
+adapter or concurrent database. Corrupt or incompatible state is rejected, never reset silently.
+Failed stages and prepared checkpoints persist when composition saves after a partial run.
+
+Module cases cover group shrink/grow, invalid/incomplete membership, legacy binding refusal,
+separate-state reopen/replay and corruption, source completion and work-manifest binding. The
+independent owner verifies real renderer shrink/grow, the actual G1 completed export and retrieval.
+Deferred N3 (serial embedding invocation), N6 (whole SQS receive batch rejection), R2 (first filter
+metadata retained on unchanged text) and R3 (filterable metadata checked only by the vector adapter)
+remain outside this repair. Live compatibility, provider quality, counts and costs are not inferred
+from local replay.

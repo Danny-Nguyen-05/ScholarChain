@@ -1,0 +1,104 @@
+{
+  "schemaVersion": "scholarchain.embedding-live-smoke.v1",
+  "live": {
+    "schemaVersion": "scholarchain.embedding-live.v1",
+    "environment": "REPLACE_WITH_DEPLOYED_ENVIRONMENT",
+    "region": "us-east-2",
+    "profile": "REPLACE_WITH_APPROVED_LOCAL_PROFILE",
+    "model": {
+      "modelId": "amazon.titan-embed-text-v2:0",
+      "version": "REPLACE_WITH_PINNED_MODEL_VERSION",
+      "dimension": 256
+    },
+    "textBucket": "REPLACE_WITH_DEPLOYED_TEXT_BUCKET",
+    "textPrefix": "graph/rag",
+    "vectorBucket": "REPLACE_WITH_DEPLOYED_VECTOR_BUCKET",
+    "tables": {
+      "runLedger": "REPLACE_WITH_DEPLOYED_RUNLEDGER",
+      "entityLinks": "REPLACE_WITH_DEPLOYED_ENTITYLINKS",
+      "querySessions": "REPLACE_WITH_DEPLOYED_QUERYSESSIONS",
+      "evidence": "REPLACE_WITH_DEPLOYED_EVIDENCE",
+      "artifacts": "REPLACE_WITH_DEPLOYED_ARTIFACTS",
+      "metrics": "REPLACE_WITH_DEPLOYED_METRICS",
+      "idempotencyIndex": "REPLACE_WITH_DEPLOYED_IDEMPOTENCYINDEX"
+    },
+    "metric": "cosine",
+    "maxVectors": 0,
+    "maxConcurrentCalls": 0,
+    "maxEmbeddingAttempts": 0,
+    "maxEmbeddingCalls": 0,
+    "dollarCapUsd": 0.0,
+    "assumedMaxDollarsPerEmbeddingAttempt": 0.0,
+    "assumedMaxStorageDollarsPerVector": 0.0,
+    "fixedOverheadUsd": 0.0,
+    "requestTimeoutMillis": 30000,
+    "maxManifestBytes": 16777216,
+    "batchSize": 100,
+    "indexNames": {
+      "researcher-profile": "researcher-profile-v1",
+      "community": "collaboration-community-v1",
+      "paper": "paper-abstract-v1",
+      "collaboration-path": "collaboration-path-v1",
+      "topic-institution-summary": "topic-institution-summary-v1"
+    },
+    "nonFilterableKeys": [
+      "textS3Uri"
+    ]
+  },
+  "queries": [
+    {
+      "queryId": "researcher-profile",
+      "indexName": "researcher-profile-v1",
+      "text": "REPLACE_WITH_REVIEWED_QUERY_TEXT",
+      "expectedVectorKeys": [
+        "REPLACE_WITH_ACTUAL_KEY_FROM_REVIEWED_REAL_MODEL_MANIFEST"
+      ],
+      "topK": 1
+    },
+    {
+      "queryId": "community",
+      "indexName": "collaboration-community-v1",
+      "text": "REPLACE_WITH_REVIEWED_QUERY_TEXT",
+      "expectedVectorKeys": [
+        "REPLACE_WITH_ACTUAL_KEY_FROM_REVIEWED_REAL_MODEL_MANIFEST"
+      ],
+      "topK": 1
+    },
+    {
+      "queryId": "paper",
+      "indexName": "paper-abstract-v1",
+      "text": "REPLACE_WITH_REVIEWED_QUERY_TEXT",
+      "expectedVectorKeys": [
+        "REPLACE_WITH_ACTUAL_KEY_FROM_REVIEWED_REAL_MODEL_MANIFEST"
+      ],
+      "topK": 1
+    },
+    {
+      "queryId": "collaboration-path",
+      "indexName": "collaboration-path-v1",
+      "text": "REPLACE_WITH_REVIEWED_QUERY_TEXT",
+      "expectedVectorKeys": [
+        "REPLACE_WITH_ACTUAL_KEY_FROM_REVIEWED_REAL_MODEL_MANIFEST"
+      ],
+      "topK": 1
+    },
+    {
+      "queryId": "topic-institution-summary",
+      "indexName": "topic-institution-summary-v1",
+      "text": "REPLACE_WITH_REVIEWED_QUERY_TEXT",
+      "expectedVectorKeys": [
+        "REPLACE_WITH_ACTUAL_KEY_FROM_REVIEWED_REAL_MODEL_MANIFEST"
+      ],
+      "topK": 1
+    }
+  ],
+  "samplesPerQuery": 0,
+  "maxQueryRequests": 0,
+  "maxQueryEmbeddingCalls": 0,
+  "maxTopK": 0,
+  "maxObjectReads": 0,
+  "assumedMaxDollarsPerQuery": 0.0,
+  "assumedMaxDollarsPerObjectRead": 0.0,
+  "dollarCapUsd": 0.0,
+  "maxObjectBytes": 1048576
+}

@@ -1,0 +1,1 @@
+{"model":{"modelId":"local-independent-hashed-bag-of-words","version":"v1","dimension":256},"textBucket":"synthetic-local-text","textPrefix":"graph","templateVersion":"independent-local-v1","chunkMaxCharacters":10000,"chunkOverlapCharacters":0,"maxSummaries":12,"maxTopicNodes":3,"maxInstitutionNodes":1}

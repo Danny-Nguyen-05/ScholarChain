@@ -1,0 +1,50 @@
+[
+  {
+    "path": "modules/rag/README.md",
+    "beforeRepairSha256": "df7937d0a2f763c9160c1d15be1c9f38eb2e641cba35f103a712047bfbf35f3f",
+    "afterSha256": "d99b70eab0b673dbdd974f0dac977c1ff9cc9e0bc7c580ee6b444d512808dc41",
+    "bytes": 19180
+  },
+  {
+    "path": "modules/rag/src/main/scala/edu/uic/cs441/scholarchain/rag/EmbeddingManifestMain.scala",
+    "beforeRepairSha256": null,
+    "afterSha256": "58eba8da6b23029816ea132873838edda6d3b73006fd0c4d80e6af4a5d8e110c",
+    "bytes": 5154
+  },
+  {
+    "path": "modules/rag/src/main/scala/edu/uic/cs441/scholarchain/rag/LiveEmbeddingIngestMain.scala",
+    "beforeRepairSha256": "0f71851ea47ecb77edaef656bcb5b3218cceab984a0a3b7e8b161286fa5fd214",
+    "afterSha256": "6f30e8b60005d222c15cc06e67866698a28c0f6edad773b41879d2d859cee882",
+    "bytes": 16505
+  },
+  {
+    "path": "modules/rag/src/main/scala/edu/uic/cs441/scholarchain/rag/LiveEmbeddingSmokeMain.scala",
+    "beforeRepairSha256": null,
+    "afterSha256": "aa17f271f343d79708f7d3ae9c7a3a131ecb594ee34b85a68f62bd7b47c41ce6",
+    "bytes": 18986
+  },
+  {
+    "path": "modules/rag/src/test/scala/edu/uic/cs441/scholarchain/rag/Embedding8BRepairSpec.scala",
+    "beforeRepairSha256": null,
+    "afterSha256": "c42bbb8b34f1d33462ea1b3d5b242714847c7e75fe776cf75b6f3d550a54eb4d",
+    "bytes": 6350
+  },
+  {
+    "path": "modules/rag/src/test/scala/edu/uic/cs441/scholarchain/rag/EmbeddingSmokeGuardSpec.scala",
+    "beforeRepairSha256": null,
+    "afterSha256": "9c824ca870b7c77b28811f46484747e982a7fcc8ffaf7bdab000b33c0e4e47db",
+    "bytes": 8584
+  },
+  {
+    "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentEmbedding8BGuardSpec.scala",
+    "beforeRepairSha256": "3b5c014f69eb40047bcaa76d6217a0b7dfc19a5c4c58d02543566517c4ff7452",
+    "afterSha256": "8a6cc864b442c5462e67ea17f4b7813ce39ca318278e3cad76909c6d95bfa1ce",
+    "bytes": 7442
+  },
+  {
+    "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentEmbedding8BPipelineSpec.scala",
+    "beforeRepairSha256": null,
+    "afterSha256": "e632d2454d60a5b47fb88d609af5d1082c26b4382d2a6c997806474f060115b5",
+    "bytes": 10756
+  }
+]

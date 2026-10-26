@@ -1,0 +1,56 @@
+1: [info] welcome to sbt 1.10.7 (Homebrew Java 17.0.20.1)
+2: [info] loading settings for project scholarchain-build from plugins.sbt...
+3: [info] loading project definition from /Users/danny/Documents/UIC/CS441/ScholarChain/project
+4: [info] loading settings for project root from build.sbt...
+5: [info] set current project to root (in build file:/Users/danny/Documents/UIC/CS441/ScholarChain/)
+6: [info] scalafmt: Formatting 3 Scala sources (/Users/danny/Documents/UIC/CS441/ScholarChain/modules/rag)...
+7: [info] scalafmt: Reformatted 3 Scala sources
+8: [success] Total time: 1 s, completed Oct 24, 2026, 11:49:34 AM
+9: [info] scalafmt: Formatting 1 Scala sources (/Users/danny/Documents/UIC/CS441/ScholarChain/modules/rag)...
+10: [info] scalafmt: Reformatted 1 Scala sources
+11: [success] Total time: 0 s, completed Oct 24, 2026, 11:49:34 AM
+12: [info] compiling 3 Scala sources to /Users/danny/Documents/UIC/CS441/ScholarChain/modules/rag/target/scala-3.3.4/classes ...
+26: [info] done compiling
+27: [info] compiling 2 Scala sources to /Users/danny/Documents/UIC/CS441/ScholarChain/modules/rag/target/scala-3.3.4/test-classes ...
+28: [info] done compiling
+29: [info] EmbeddingRetrievalSpec:
+30: [info] - six committed known queries retrieve their fixed neighbor and every hit resolves to hashed ordinary text
+31: [info] - renderer supplies whole text binding and actual group cardinality for every chunk
+32: [info] - local CLI rejects missing or live-mode arguments before source or state access
+33: [info] LiveEmbeddingGuardSpec:
+34: [info] - pure preflight binds exact content, run, expiry, caps and conservative configured estimate
+35: [info] - vector, concurrency, request and price approval limits refuse before clients
+36: [info] - partial or inconsistent chunk groups refuse with bounded work even at an IntMax count
+37: [info] - disabled approval refuses executable run before credential/client factory or gate reads
+38: [info] Run completed in 244 milliseconds.
+39: [info] Total number of tests run: 7
+40: [info] Suites: completed 2, aborted 0
+41: [info] Tests: succeeded 7, failed 0, canceled 0, ignored 0, pending 0
+42: [info] All tests passed.
+43: [success] Total time: 5 s, completed Oct 24, 2026, 11:49:39 AM
+44: [info] scalafmt: Formatting 1 Scala sources (/Users/danny/Documents/UIC/CS441/ScholarChain/tests)...
+45: [info] scalafmt: Reformatted 1 Scala sources
+46: [success] Total time: 0 s, completed Oct 24, 2026, 11:49:39 AM
+47: [info] compiling 2 Scala sources to /Users/danny/Documents/UIC/CS441/ScholarChain/tests/target/scala-3.3.4/test-classes ...
+48: [info] done compiling
+49: [info] IndependentEmbedding8BPipelineSpec:
+617: [info] - computed G1 export survives local CLI disk replay and fresh-state determinism with bounded source verification
+618: [info] IndependentEmbedding8BGuardSpec:
+619: [info] - missing disabled or content-mismatched live approval never constructs service ports
+620: [info] - the local CLI refuses a live flag before accessing any state or provider
+621: [info] IndependentStorageRuntimeFenceSpec:
+622: [info] - runtime scan permits GraphReader and ignores loader names in comments or inert strings
+623: [info] - runtime scan detects direct, renamed, fully qualified and raw SDK loader access
+624: [info] - runtime scan follows referenced storage composition and detects a hidden write capability
+625: [info] - character literals cannot hide a following graph write capability
+626: [info] - interpolation retains executable expressions including nested braces and strings
+627: [info] - interpolation masks inert text, escaped dollars and inert nested expressions
+628: [info] - interpolated references still follow storage composition helpers
+629: [info] - actual runtime roots and their referenced storage composition expose no graph write dependency
+630: [info]   + Runtime graph fence: runtimeSources=7, inspectedSources=22; heuristic only. 
+631: [info] Run completed in 23 seconds, 993 milliseconds.
+632: [info] Total number of tests run: 11
+633: [info] Suites: completed 3, aborted 0
+634: [info] Tests: succeeded 11, failed 0, canceled 0, ignored 0, pending 0
+635: [info] All tests passed.
+636: [success] Total time: 25 s, completed Oct 24, 2026, 11:50:04 AM

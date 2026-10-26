@@ -1,0 +1,38 @@
+{
+  "branch": "phase-8",
+  "baseSha": "3c45de74ec5900b8ac5c0273b5bf80bef8f84b1e",
+  "initialStatus": "clean; verified before any 8B edit",
+  "planCmpExit": 0,
+  "userRequest": "All right, let\u2019s start Phase 8B.",
+  "step0Question": "Repair R1 chunk-group consistency now or document and test limitation?",
+  "step0Answer": "Repair chunk-group consistency now (recommended)",
+  "preservedDecisions": [
+    "us-east-2",
+    "configured Titan V2 ID/version",
+    "provisional256/cosine",
+    "five document types",
+    "permittedabstract or recordedfallback",
+    "manifest runner+SQS adapter/fake",
+    "EmbeddingClient in core",
+    "stable-slot excludes runId",
+    "noAWS account/live/provider calls",
+    "no8B commits/pushes",
+    "no reviewer launch"
+  ],
+  "deferred": [
+    "N2",
+    "N3",
+    "N4",
+    "N5",
+    "N6",
+    "N7",
+    "N8",
+    "R2",
+    "R3"
+  ],
+  "planSource": "/Users/danny/Library/CloudStorage/GoogleDrive-cpnguyen0630@gmail.com/My Drive/plan/phase8.md",
+  "planSnapshot": "docs/agent-runs/phase-08/evidence/8b/phase8-plan.md",
+  "planSha256": "14daa4a41ca151e161e9bf4b67a4c5e95f02ae3b0fdfdda51a9a6b5cbd1c9e27",
+  "priorReviewAlreadyRecorded": "docs/agent-runs/phase-08/review.md: Repair round 1 recheck \u2014 user-supplied external review",
+  "priorCommitAndPushVerified": "phase-8 at 3c45de74ec5900b8ac5c0273b5bf80bef8f84b1e, clean tracking origin/phase-8 before 8B"
+}

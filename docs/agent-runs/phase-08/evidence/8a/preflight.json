@@ -1,0 +1,20 @@
+{
+  "baseSha": "8503e1715cbcaf043fd68213c5b08731e9de9ba7",
+  "preflightBranch": "main",
+  "preflightStatusShort": "",
+  "branch": "phase-8",
+  "head": "8503e1715cbcaf043fd68213c5b08731e9de9ba7",
+  "questions": "No questions remain; user accepted all recommended defaults and nearest Chicago region.",
+  "branchCreation": [
+    {
+      "command": "git switch -c phase-8",
+      "exit": 128,
+      "reason": "sandbox .git write denied"
+    },
+    {
+      "command": "git switch -c phase-8",
+      "exit": 0,
+      "approval": "native sandbox escalation"
+    }
+  ]
+}
