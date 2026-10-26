@@ -1,0 +1,82 @@
+[
+  {
+    "path": "modules/core/README.md",
+    "beforeSha256": "d999cec21446eb475963be765db9892b7b0a1ba70974f23ab5fba843603c6209",
+    "afterSha256": "4eb64afbfba07731f973c581e26777f39e6be4091bf01e790e95ec6f1fb0829c"
+  },
+  {
+    "path": "modules/core/src/main/resources/scholarchain.runtime-config.v1.json",
+    "beforeSha256": "37c1beb2af68ac8516174b29581b0eb09fb8d53b133776b8674a2c5e7996ff28",
+    "afterSha256": "778adc226007b98b54803af734d091af80e2709c3436049d0d32a9b6e0e28e11"
+  },
+  {
+    "path": "modules/core/src/main/scala/edu/uic/cs441/scholarchain/core/RuntimeConfig.scala",
+    "beforeSha256": "f9cdc278376fe63ea4e3dffe0cab73e00e0066815c9c8b9a46fa8652239680d0",
+    "afterSha256": "3b1c72789fa2db8217a6fcf92284fff8e9c615fd612e43409223c3d84196a9c2"
+  },
+  {
+    "path": "modules/core/src/main/scala/edu/uic/cs441/scholarchain/core/RuntimeContracts.scala",
+    "beforeSha256": "14698eac9690c56f549438639905bd182ac092d5ad8beaf10ef121a6288afaaf",
+    "afterSha256": "183b634e13882f1589da56f8356e3fc8eb0d48073281862d25b99dd1aff7a67d"
+  },
+  {
+    "path": "modules/core/src/test/scala/edu/uic/cs441/scholarchain/core/RuntimeContractSpec.scala",
+    "beforeSha256": "23a1b10b3b24295583c5b6e5f2b3919291d6945e109231b4a78cd6ac878ac5d2",
+    "afterSha256": "21122f9f3118bab68d4226ab5b92381b0d0a995fd67889095746ec58973eac78"
+  },
+  {
+    "path": "modules/rag/README.md",
+    "beforeSha256": "00a837b9e7322c7ab3f27a7ffe813c87b23359b668f1fd43083dc0c53b0cce81",
+    "afterSha256": "0ad5318ddde46b5f8bb24a518fe28e278624c455cc63ad46ab4f1ed88ef444d6"
+  },
+  {
+    "path": "modules/rag/src/main/scala/edu/uic/cs441/scholarchain/rag/QueryPlannerAgent.scala",
+    "beforeSha256": "2cd66a3230b8d31462d3cbea13135400d932d3b595fc511a98a8b9548122ea23",
+    "afterSha256": "3918712a3ff53be6cc52525fca32b997d6e4742a3a48d50f9a34dc0513a1d302"
+  },
+  {
+    "path": "modules/rag/src/main/scala/edu/uic/cs441/scholarchain/rag/ResearcherResolverAgent.scala",
+    "beforeSha256": "88d77e50f2b04819dfc5bc5b7f71f89cfd1776d1fd42443271792fbb10ee1e33",
+    "afterSha256": "532cf2379d5c89a98c33e474700a3769a5daa573f226c571292a304f584d1dd7"
+  },
+  {
+    "path": "modules/rag/src/test/scala/edu/uic/cs441/scholarchain/rag/Runtime9ARepairSpec.scala",
+    "beforeSha256": null,
+    "afterSha256": "88f3e6be053f2f56fcc3b734c45656e8db2e33329131104b81075d983ceeb17b"
+  },
+  {
+    "path": "modules/rag/src/test/scala/edu/uic/cs441/scholarchain/rag/Runtime9ASpec.scala",
+    "beforeSha256": "dd014401aac578bb705fa31ba000a0ceb068951159b5209698895babc94f88a0",
+    "afterSha256": "cb9ab8bc0e970362785967930e542dd084ee5694def3978bc4a78d7bfc3f78ba"
+  },
+  {
+    "path": "modules/storage/README.md",
+    "beforeSha256": "70d7c5b4b58deb26ed0308616c07f6acc1aab58aff3848ab095b38fc4bb9b807",
+    "afterSha256": "3a2b717f01ae07ad8d72867f2450eccb3cadd8786308f1fa8a9b229f2dc7a9b9"
+  },
+  {
+    "path": "modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/RuntimeArtifacts.scala",
+    "beforeSha256": "0541002c1a67f64dcd453132ceb8bfee21b86f964aab454b7e9dd0f657b2c2e8",
+    "afterSha256": "786c6a949b3e285722871a9bef9ef168e567c2049783c2f654286076ef5d0750"
+  },
+  {
+    "path": "modules/storage/src/test/scala/edu/uic/cs441/scholarchain/storage/RuntimeArtifactStorageSpec.scala",
+    "beforeSha256": "1ca9717b423a92d26ffd24fe6f4fda4cd00a1a3a41cfecec26a66146fad3ab1d",
+    "afterSha256": "bc682c2cc22d159eda4087d306646a4e16f9e8d01f64a6a40046abb4ebc6fdc4"
+  },
+  {
+    "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentRuntime9ARepairPlannerSpec.scala",
+    "beforeSha256": null,
+    "afterSha256": "a51ab457dcdb1d3e1e61c98bcc69e01a05ba2afe3506fee577fe982252859aef"
+  },
+  {
+    "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentRuntime9ARepairResolverSpec.scala",
+    "beforeSha256": null,
+    "afterSha256": "e5d42da2f5caf0401891aa31516ef0e605d802e3ce44d36d43d6b7aba0d6bd60"
+  },
+  {
+    "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentRuntime9AResolverSpec.scala",
+    "beforeSha256": "fa44dd56a040472d7ffc42798c3ac50f308cb4e68e4e26979f9fbdab8fc5cbd6",
+    "afterSha256": "bd142272a585237568478751db5192113cee618c38cc2c8b9add80d6b47211fe"
+  }
+]

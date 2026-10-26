@@ -276,7 +276,8 @@ final case class EvidenceItem(
     edgeLocatorId: Option[String] = None,
     score: Double,
     text: Option[String],
-    provenance: Provenance
+    provenance: Provenance,
+    runtime: Option[RuntimeEvidence] = None
 ) derives ReadWriter
 
 final case class EvidenceBundle(
@@ -288,7 +289,8 @@ final case class EvidenceBundle(
     metricRecordIds: Vector[String],
     identityConfidence: Option[Double],
     uncertainty: String,
-    provenance: Provenance
+    provenance: Provenance,
+    runtime: Option[RuntimeBundleContext] = None
 ) derives ReadWriter
 
 final case class QueryPlan(
@@ -304,7 +306,8 @@ final case class QueryPlan(
     graphLimit: Int,
     vectorLimit: Int,
     maxPathDepth: Int,
-    provenance: Provenance
+    provenance: Provenance,
+    runtime: Option[RuntimeQueryOptions] = None
 ) derives ReadWriter
 
 final case class AnswerClaim(
@@ -314,7 +317,8 @@ final case class AnswerClaim(
     evidenceIds: Vector[String],
     verificationStatus: VerificationStatus,
     uncertainty: Option[String],
-    provenance: Provenance
+    provenance: Provenance,
+    runtime: Option[TypedAnswerClaim] = None
 ) derives ReadWriter
 
 final case class AnswerResponse(

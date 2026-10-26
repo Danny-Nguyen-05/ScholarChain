@@ -296,6 +296,12 @@ final class Phase6CacheLoader(
           evidence
         )
         count(entityLinks.putLink(candidate))
+        // DBLP suffixes disambiguate identities. Base-name aliases expose all candidates while
+        // preserving exact suffixed names, IDs and provenance; they never authorize a merge.
+        if (id.startsWith("researcher:dblp:") && display.matches("(?s).*\\s[0-9]{4}$")) {
+          val baseName = display.replaceFirst("\\s[0-9]{4}$", "")
+          count(entityLinks.putLink(candidate.copy(normalizedKey = TextNorm.personName(baseName))))
+        }
         row("properties").arr.foreach { p =>
           val name = p("name").str
           if (name == "orcid" || name.startsWith("orcid."))

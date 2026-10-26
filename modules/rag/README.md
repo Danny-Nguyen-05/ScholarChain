@@ -235,3 +235,67 @@ request/retention scope and existing infrastructure. It cannot enforce an AWS bi
 Pure tests cover content/operation/cap refusal, all-five-index query definitions, exact quantile
 expectations and report fields; executable tests take only refusal branches with a factory sentinel.
 No approved live execution, including an approved path with fake ports, is used in offline tests.
+
+## Phase 9A runtime planning and identity contracts
+
+`QueryPlannerAgent` proposes only allowlisted `QueryOperation` values. It validates model JSON
+against `prompts/schemas/query-plan-v1.json` using the explicit bounded JSON Schema subset in
+`RuntimeJsonSchema`; unsupported schema keywords fail closed. `planner-v1` and `synthesis-v1`
+prompts live in `prompts/runtime/`. Their schema IDs are `scholarchain.runtime.planner.v1` and
+`scholarchain.runtime.synthesis.v1`. Assets are loaded from an explicitly supplied prompts
+directory and checked against configured versions. The synthesis schema/prompt are contracts
+only in 9A; synthesis, claim verification, workflow orchestration and benchmarks arrive later.
+
+`LlmClient` has a deterministic, recording `ScriptedLlmClient` and an injected-client
+`BedrockConverseLlmClient`. The adapter forces the named output tool with `toolChoice.tool`,
+accepts exactly one correctly named tool-use block, rejects text substitutes and unsafe numeric
+rounding, and retains configured model/version and optional token usage. All deterministic
+claim numbers use decimal strings. The caller owns region/IAM/client lifecycle and disables SDK
+retries so the planner's single configured malformed-output retry remains the effective bound.
+No client, resource or live model call is created by normal tests. The configured placeholder
+model has no verified deployed-model or regional compatibility; that remains a future live gate.
+
+The planner preserves extracted names, stored window IDs, topic/institution/venue constraints,
+the requested metric and configured retrieval mode (`fused` by default). Conservative coverage
+validation rejects unrepresented words/clauses and checks common unquoted population filters.
+Unknown constraints, unknown metrics, arbitrary Cypher/SQL/AWS requests and requests to recompute
+unstored filtered metrics are unsupported. After at most one malformed-output retry, a small
+anchored fallback handles quoted-name path/direct-coauthor/component requests, distinct-coauthor
+ranking, maximum-team/bridge ranking and semantic topic explanations. Explicit filters use
+`topic "..."`, `institution "..."`, `venue "..."`; stored windows use `window <id>` or a uniquely
+mapped `since <year>`. Novel language can abstain even when a human could interpret it. Model
+suggestions cannot remove a recognized constraint. Retries share one planner deadline. Factual
+ranking/filter execution and authoritative metadata availability checks belong to 9B.
+
+`ResearcherResolverAgent` groups cache rows by canonical researcher ID, preserves source IDs,
+affiliations, evidence/run pointers and absent confidence, and abstains on zero or multiple
+candidates. Different confidence values never break identity ties. It optionally obtains bounded
+source-backed coauthor context through `RuntimeArtifactStore`; absent context stays absent.
+`Name 0001` and `Name 0002` remain distinct. Unsuffixed base-name ambiguity depends on the storage
+loader's source-backed base aliases; an older cache must be reloaded to acquire those aliases.
+Source identifiers, source-row bindings and deadlines are checked before returning a result.
+
+The runtime config classpath example is a local placeholder. It contains explicit model ID/version,
+region, temperature, context/input/output bounds, prompt/schema versions, stored-window definitions,
+retrieval mode and stage deadlines constrained by `operations.synchronousDeadlineMs`. Legacy numeric
+window projections are compatibility fields; actual runtime selection uses stored `windowId`s.
+Phase 8C remains deferred to Phase 14C. Offline correctness tests establish contract/control
+behavior only; live model quality, injection resistance and provider compatibility are unverified.
+
+The 9A repair binds each recognized ranking metric, bridge measure, required operation and
+author-count conversion to deterministic request intent before accepting model output. An
+unspecified bridge measure is the configured default; model-selected alternatives are rejected.
+Stored window IDs and uniquely mapped cumulative `since`/bounded-period phrases must match the
+complete requested period. A request naming no window uses the configured default, and cannot
+acquire extra model-selected windows or comparison windows. Multiple incompatible metric intents
+fail closed because the existing plan has one ranking metric. Model disagreements use the same
+bounded retry and safe fallback/Unsupported policy as malformed output.
+
+Identity bounds use `resolver.maxDistinctCandidates`, independently of graph-result limits and
+raw cache-observation counts. Candidate source IDs, evidence refs, affiliations and run IDs have
+separate configured caps. `provenanceSummary` reports their distinct totals before clipping and
+whether any list was truncated. Confidence still uses all observations for that canonical identity.
+An overflow result is `Ambiguous(name, candidates, totalCandidateCount, truncated)` with a bounded,
+deterministically ordered candidate list. A candidate absent from a known stored window retains
+its identity with absent context; this also preserves ambiguity when one homonym is absent.
+An unknown window remains a typed failure. These repairs do not implement 9B retrieval stages.

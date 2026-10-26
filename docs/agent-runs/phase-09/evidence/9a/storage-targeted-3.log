@@ -1,0 +1,41 @@
+[info] welcome to sbt 1.10.7 (Homebrew Java 17.0.20.1)
+[info] loading settings for project scholarchain-build from plugins.sbt...
+[info] loading project definition from /Users/danny/Documents/UIC/CS441/ScholarChain/project
+[info] loading settings for project root from build.sbt...
+[info] set current project to root (in build file:/Users/danny/Documents/UIC/CS441/ScholarChain/)
+[info] compiling 1 Scala source to /Users/danny/Documents/UIC/CS441/ScholarChain/modules/core/target/scala-3.3.4/classes ...
+[info] done compiling
+[info] compiling 1 Scala source to /Users/danny/Documents/UIC/CS441/ScholarChain/modules/storage/target/scala-3.3.4/test-classes ...
+[info] done compiling
+[info] RuntimeArtifactStorageSpec:
+[info] - complete population is ranked by stored values with deterministic ties and honest top-K *** FAILED ***
+[info]   Rejected(runtime-artifact-edge-mismatch) (RuntimeArtifactStorageSpec.scala:79)
+[info] - filters select authoritative population BEFORE stored-metric ranking and disclose scope *** FAILED ***
+[info]   Rejected(runtime-artifact-edge-mismatch) (RuntimeArtifactStorageSpec.scala:79)
+[info] - absent authoritative metadata, unavailable filtered metrics and unknown windows reject *** FAILED ***
+[info]   Rejected("runtime-artifact-edge-mismatch") did not equal Rejected("unsupported-authoritative-filter-metadata") (RuntimeArtifactStorageSpec.scala:98)
+[info]   Analysis:
+[info]   StorageResult$Rejected(code: "[runtime-artifact-edge-mismatch]" -> "[unsupported-authoritative-filter-metadata]")
+[info] - bridge and community records preserve degree and iteration-limited qualifications *** FAILED ***
+[info]   Rejected(runtime-artifact-edge-mismatch) (RuntimeArtifactStorageSpec.scala:79)
+[info] - edge support, context caps and temporal absent-side semantics retain source records *** FAILED ***
+[info]   Rejected(runtime-artifact-edge-mismatch) (RuntimeArtifactStorageSpec.scala:79)
+[info] - source-verified materialization publishes immutable content and the real object reader works *** FAILED ***
+[info]   Rejected(runtime-artifact-edge-mismatch) (RuntimeArtifactStorageSpec.scala:79)
+[info] - declared caps reject before opening sources; changed rows or actual overruns publish nothing
+[info] - duplicate keys, missing supporting works and mismatched bridge qualifications fail closed *** FAILED ***
+[info]   Rejected("runtime-artifact-edge-mismatch") did not equal Rejected("runtime-artifact-duplicate-source-key") (RuntimeArtifactStorageSpec.scala:168)
+[info]   Analysis:
+[info]   StorageResult$Rejected(code: "runtime-artifact-[edge-mismatch]" -> "runtime-artifact-[duplicate-source-key]")
+[info] - real cache loader publishes base-name homonym candidates without merging suffix identities
+[info] - evidence item lookup works by frozen ID, repeated puts and sharing immutable content
+[info] - evidence index corruption and failed required index write cannot report success
+[info] Run completed in 321 milliseconds.
+[info] Total number of tests run: 11
+[info] Suites: completed 1, aborted 0
+[info] Tests: succeeded 4, failed 7, canceled 0, ignored 0, pending 0
+[info] *** 7 TESTS FAILED ***
+[error] Failed tests:
+[error] 	edu.uic.cs441.scholarchain.storage.RuntimeArtifactStorageSpec
+[error] (storage / Test / testOnly) sbt.TestsFailedException: Tests unsuccessful
+[error] Total time: 6 s, completed Oct 25, 2026, 10:45:06 PM

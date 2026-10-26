@@ -540,6 +540,11 @@ object DomainValidation {
     requireNonBlank(value.sourceUri, "sourceUri", acc)
     requireFinite(value.score, "score", acc)
     requireEvidenceLocator(value, acc)
+    value.runtime.foreach(v =>
+      RuntimeContractValidation
+        .evidence(v)
+        .foreach(m => acc.add(ViolationCode.InconsistentRecord, m))
+    )
     done(acc, value)
   }
 
@@ -555,6 +560,11 @@ object DomainValidation {
     value.researcherIds.foreach(id => parse(StableIds.parseResearcherId(id), acc))
     value.identityConfidence.foreach(requireConfidence(_, "identityConfidence", acc))
     requireNonBlank(value.uncertainty, "uncertainty", acc)
+    value.runtime.foreach(v =>
+      RuntimeContractValidation
+        .bundle(v, value.items.map(_.evidenceId))
+        .foreach(m => acc.add(ViolationCode.InconsistentRecord, m))
+    )
     done(acc, value)
   }
 
@@ -570,6 +580,9 @@ object DomainValidation {
     requireWindow(value.window.startYear, value.window.endYear, acc)
     if (value.graphLimit < 1 || value.vectorLimit < 1 || value.maxPathDepth < 1)
       acc.add(ViolationCode.InconsistentRecord, "query limits must be positive")
+    value.runtime.foreach(v =>
+      RuntimeContractValidation.query(v).foreach(m => acc.add(ViolationCode.InconsistentRecord, m))
+    )
     done(acc, value)
   }
 
@@ -584,6 +597,9 @@ object DomainValidation {
     value.evidenceIds.foreach(id => parse(StableIds.parseEvidenceId(id), acc))
     if (value.uncertainty.forall(_.trim.isEmpty))
       acc.add(ViolationCode.InconsistentRecord, "claim uncertainty must be present")
+    value.runtime.foreach(v =>
+      RuntimeContractValidation.claim(v).foreach(m => acc.add(ViolationCode.InconsistentRecord, m))
+    )
     done(acc, value)
   }
 

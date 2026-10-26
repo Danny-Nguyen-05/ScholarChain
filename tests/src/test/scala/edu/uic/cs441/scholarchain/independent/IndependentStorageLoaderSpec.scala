@@ -99,11 +99,21 @@ class IndependentStorageLoaderSpec extends AnyFunSuite {
     )
     val manifests = rows.toVector.sortBy(_._1).map((dataset, name) => source(dataset, name))
     val first = loader.load(manifests)
-    assert(first == Written(CacheLoadReport(3, 0, 0, 3)), first.toString)
+    // Exact suffixed name, base-name alias, observed ORCID and one canonical metric.
+    assert(first == Written(CacheLoadReport(4, 0, 0, 3)), first.toString)
     val candidates = StorageResult.value(links.lookupByNormalizedName("Synthetic Example 0001")).get
     assert(candidates.map(_.researcherId) == Vector(researcherId))
     assert(candidates.head.confidence.isEmpty)
     assert(candidates.head.runId == runId)
+    val baseAlias = StorageResult.value(links.lookupByNormalizedName("Synthetic Example")).get
+    assert(baseAlias.size == 1)
+    assert(baseAlias.head.researcherId == researcherId)
+    assert(baseAlias.head.displayName == "Synthetic Example 0001")
+    assert(baseAlias.head.confidence.isEmpty)
+    assert(baseAlias.head.runId == runId)
+    assert(baseAlias.head.sourceId == researcherId)
+    assert(baseAlias.head.evidenceRefs == Vector("nodes/type=researcher", researcherId))
+    assert(baseAlias.head == candidates.head.copy(normalizedKey = "synthetic example"))
     val external = StorageResult.value(links.lookupByExternalId("orcid", "0000-0002-1825-0097")).get
     assert(external.map(_.researcherId) == Vector(researcherId))
     val record = StorageResult.value(store.get(researcherId, "all-years")).get
@@ -119,7 +129,7 @@ class IndependentStorageLoaderSpec extends AnyFunSuite {
     assert(pointer.runId == runId)
     assert(SourceQualifications.get(pointer, sourceObjects, sourceRegistry) == Found(qualification))
     assert(!ujson.read(record.qualificationsJson).obj.contains("sourceRun"))
-    assert(loader.load(manifests) == Unchanged(CacheLoadReport(0, 3, 0, 3)))
+    assert(loader.load(manifests) == Unchanged(CacheLoadReport(0, 4, 0, 3)))
     assert(sourceObjects.writeOrder.toVector == Vector(pointer.key))
     assert(reader.opened == 6 && reader.closed == 6)
   }

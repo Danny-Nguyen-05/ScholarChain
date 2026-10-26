@@ -284,3 +284,38 @@ explicit graph/metric evidence. Structural validation is not source existence ve
 
 Four `wire/embedding-*.json` test resources freeze synthetic document, work-item, metadata and
 context examples. They are contract fixtures and describe no observed researcher.
+
+## Phase 9A runtime contracts
+
+`QueryPlan`, `EvidenceItem`, `EvidenceBundle` and `AnswerClaim` retain their existing domain
+wire formats and add defaulted optional `runtime` payloads. Existing frozen examples remain
+readable. Runtime numerical claim values use decimal strings to preserve stored integer
+precision. Per-claim `ClaimVerdict` maps to the existing overall `VerificationStatus`; explicit
+abstention remains `ABSTAINED`. Audit contracts preserve all attempted and rejected claims.
+
+`scholarchain.runtime-config.v1.json` is a local configuration example, with an unselected
+Converse model placeholder and configured `us-east-2` region. It authorizes no live call.
+`RuntimeConfigLoader` reads JSON only. Its validation includes the complete serial/parallel
+critical path within `operations.synchronousDeadlineMs`; stage budgets include retries.
+The legacy numeric window projection for an unbounded runtime window is compatibility
+metadata only: actual retrieval and evidence use the stored window ID and optional bounds.
+Runtime ranking filters identify a population and do not recompute metrics on filtered works.
+
+Evidence-item IDs retain their existing parsers. The storage owner's immutable ordinary-object
+item-to-bundle pointer index resolves an item ID through `EvidenceBundleStore.getItem`; no
+new database table or index is required. Retrieval/synthesis/verifier implementations belong
+to later subphases; these declarations are contracts only.
+
+Phase 9A repair B2 gives identity resolution its own `resolver` limits, independent of
+`retrieval.graphLimit`. The example permits 25 distinct canonical candidates, 16 source IDs,
+32 evidence references, 16 affiliations and 8 source-run IDs per candidate. These conservative
+output bounds keep common-name ambiguity and accumulated mention provenance reviewable;
+they are configurable output caps, not measured latency guarantees or limits on cache-row count.
+The larger evidence-reference allowance retains more source pointers than identity labels.
+Legacy runtime configuration without the `resolver` object uses these same compatibility defaults.
+Every bound must be positive. `ResearcherCandidate.provenanceSummary` optionally retains the
+distinct merged count of each provenance list before clipping plus a truncation flag, including
+context-derived evidence references and run IDs. An omitted summary means the original
+producer supplied no count/truncation observation; it never implies completeness. Coauthor
+context retains its separate truncation flag. Candidate-set overflow is disclosed by the RAG
+resolver's bounded `Ambiguous` result, rather than failing identity resolution.

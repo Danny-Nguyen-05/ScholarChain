@@ -1,0 +1,39 @@
+{
+  "baseSha": "5fee9ffc607cf802e4aaddf4a261c21f1f232fec",
+  "startingBranch": "phase-8",
+  "branch": "phase-9",
+  "head": "5fee9ffc607cf802e4aaddf4a261c21f1f232fec",
+  "initialGitStatusShort": "",
+  "planOfRecord": "/Users/danny/Library/CloudStorage/GoogleDrive-cpnguyen0630@gmail.com/My Drive/plan/phase9.md",
+  "planSha256": "8c16e8eeaf783ee47a484a0927cac372263335d664bac7ac0f5e470b33b5fcf8",
+  "localPlanIdentical": true,
+  "phase8LiveDeferral": "8C deferred by design to Phase14C; offline9A only; no claim of whole Phase8 acceptance",
+  "agents": [
+    {
+      "nativeId": "/root/domain_engineer",
+      "role": "domain-engineer",
+      "model": "inherited session model; exact model identifier not exposed",
+      "paths": [
+        "modules/core/**"
+      ]
+    },
+    {
+      "nativeId": "/root/storage_engineer",
+      "role": "storage-engineer",
+      "model": "inherited session model; exact model identifier not exposed",
+      "paths": [
+        "modules/storage/**"
+      ]
+    },
+    {
+      "nativeId": "/root/rag_engineer",
+      "role": "rag-engineer",
+      "model": "inherited session model; exact model identifier not exposed",
+      "paths": [
+        "modules/rag/**",
+        "prompts/runtime/**",
+        "prompts/schemas/**"
+      ]
+    }
+  ]
+}

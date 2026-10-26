@@ -1,0 +1,78 @@
+[info] welcome to sbt 1.10.7 (Homebrew Java 17.0.20.1)
+[info] loading settings for project scholarchain-build from plugins.sbt...
+[info] loading project definition from /Users/danny/Documents/UIC/CS441/ScholarChain/project
+[info] loading settings for project root from build.sbt...
+[info] set current project to root (in build file:/Users/danny/Documents/UIC/CS441/ScholarChain/)
+[info] compiling 2 Scala sources to /Users/danny/Documents/UIC/CS441/ScholarChain/modules/rag/target/scala-3.3.4/test-classes ...
+[info] done compiling
+INFO scholarchain.runtime.stage - {"event":"runtime-stage-outcome","stage":"planner","traceId":"trace-fixture","runId":"run:00112233-4455-4677-8899-aabbccddeeff","outcome":"planned","planId":"plan:9c94da8ef5860a0477c59c6ce28b1cdee16af1d0f5c04c8feba85fa1d9ca1bda"}
+INFO scholarchain.runtime.stage - {"event":"runtime-stage-outcome","stage":"resolver","traceId":"plan:9c94da8ef5860a0477c59c6ce28b1cdee16af1d0f5c04c8feba85fa1d9ca1bda","runId":"run:00112233-4455-4677-8899-aabbccddeeff","outcome":"resolved","planId":"plan:9c94da8ef5860a0477c59c6ce28b1cdee16af1d0f5c04c8feba85fa1d9ca1bda"}
+[info] Runtime9ASpec:
+[info] - versioned assets load and planner schema rejects missing, unknown and fabricated fields
+[info] - structured stage logs contain correlation and outcome without question or names
+[info] - valid LLM plan preserves configured limits, mode and evidence-only option
+[info] - Cypher AWS and unknown metric requests reject before any model call
+[info] - malformed JSON retries once then anchored fallback preserves filters and stored year
+[info] - fabricated operation and unknown keys cannot escape bounded validation
+[info] - model cannot drop unquoted topic institution extra conditions or change ranking metric
+[info] - a proposed filter or name cannot hide an unknown metric or named ranking scope
+[info] - model cannot invent a name filter window or silently drop a quoted constraint
+[info] - unsupported and exhausted scripted model fail safely without network
+[info] - late model and cache responses fail with deterministic stage deadlines
+[info] - a model plan may preserve an unquoted topic and exact stored since window
+[info] - unique canonical ID groups source aliases and preserves absent confidence
+[info] - common-name candidates abstain even with different confidence values
+[info] - source-backed coauthor context retains truncation and provenance
+[info] - DBLP exact suffixes stay separate and base-name alias rows remain ambiguous
+[info] - Bedrock adapter forces configured tool and model, preserves schema and usage, no client construction
+[info] - Bedrock adapter rejects text substitutes wrong tools multiple blocks and unsafe numbers
+[info] - Bedrock provider exception messages never escape typed failure
+[info] - synthesis proposal schema requires typed evidence-backed claims and forbids raw narrative or verdict
+[info] Runtime9ARepairSpec:
+[info] - B1 ground complete explicit intent: Rank researchers by publication count
+[info] - B1 ground complete explicit intent: Rank researchers by distinct coauthors
+[info] - B1 ground complete explicit intent: Rank researchers by total coauthor occurrences
+[info] - B1 ground complete explicit intent: Rank researchers by average coauthors per paper
+[info] - B1 ground complete explicit intent: Rank researchers by maximum coauthors on one paper
+[info] - B1 ground complete explicit intent: Which researchers have the largest team size?
+[info] - B1 ground complete explicit intent: Rank researchers by weighted degree
+[info] - B1 ground complete explicit intent: Rank researchers by coreness
+[info] - B1 ground complete explicit intent: Rank bridge researchers by cross-community degree
+[info] - B1 ground complete explicit intent: Rank bridge researchers by cross-community weight
+[info] - B1 ground complete explicit intent: Rank bridge researchers by communities connected
+[info] - B1 ground complete explicit intent: Rank bridge researchers by participation coefficient
+[info] - B1 ground complete explicit intent: Which researchers are the strongest bridges?
+[info] - B1 ground complete explicit intent: Show strongest repeated collaborations
+[info] - B1 ground complete explicit intent: Rank researchers by maximum total authors on one paper
+[info] - B1 exact cumulative explicit and default windows cannot narrow or acquire extra comparisons
+[info] - B1 operation measure conversion and configurable defaults cannot be model overrides
+[info] - B2 many observations for one identity resolve and provenance lists disclose their distinct totals
+[info] - B2 overflow returns bounded Ambiguous candidates with exact total instead of failure
+[info] - B3 actual artifact composition preserves absent identities and rejects unknown windows
+[info] Run completed in 406 milliseconds.
+[info] Total number of tests run: 40
+[info] Suites: completed 2, aborted 0
+[info] Tests: succeeded 40, failed 0, canceled 0, ignored 0, pending 0
+[info] All tests passed.
+[success] Total time: 4 s, completed Oct 26, 2026, 10:40:28 AM
+[info] scalafmt: Formatting 2 Scala sources (/Users/danny/Documents/UIC/CS441/ScholarChain/modules/core)...
+[info] scalafmt: Reformatted 1 Scala sources
+[success] Total time: 1 s, completed Oct 26, 2026, 10:40:29 AM
+[info] scalafmt: Formatting 1 Scala sources (/Users/danny/Documents/UIC/CS441/ScholarChain/modules/core)...
+[info] scalafmt: Reformatted 1 Scala sources
+[success] Total time: 0 s, completed Oct 26, 2026, 10:40:29 AM
+[info] scalafmt: Formatting 1 Scala sources (/Users/danny/Documents/UIC/CS441/ScholarChain/modules/storage)...
+[info] scalafmt: Reformatted 1 Scala sources
+[success] Total time: 0 s, completed Oct 26, 2026, 10:40:29 AM
+[info] scalafmt: Formatting 1 Scala sources (/Users/danny/Documents/UIC/CS441/ScholarChain/modules/storage)...
+[info] scalafmt: Reformatted 1 Scala sources
+[success] Total time: 0 s, completed Oct 26, 2026, 10:40:29 AM
+[info] scalafmt: Formatting 2 Scala sources (/Users/danny/Documents/UIC/CS441/ScholarChain/modules/rag)...
+[info] scalafmt: Reformatted 2 Scala sources
+[success] Total time: 0 s, completed Oct 26, 2026, 10:40:29 AM
+[info] scalafmt: Formatting 2 Scala sources (/Users/danny/Documents/UIC/CS441/ScholarChain/modules/rag)...
+[info] scalafmt: Reformatted 1 Scala sources
+[success] Total time: 0 s, completed Oct 26, 2026, 10:40:30 AM
+[info] scalafmt: Formatting 3 Scala sources (/Users/danny/Documents/UIC/CS441/ScholarChain/tests)...
+[info] scalafmt: Reformatted 2 Scala sources
+[success] Total time: 0 s, completed Oct 26, 2026, 10:40:30 AM

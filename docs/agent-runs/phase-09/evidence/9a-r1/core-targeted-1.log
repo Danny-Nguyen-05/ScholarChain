@@ -1,0 +1,38 @@
+[info] welcome to sbt 1.10.7 (Homebrew Java 17.0.20.1)
+[info] loading settings for project scholarchain-build from plugins.sbt...
+[info] loading project definition from /Users/danny/Documents/UIC/CS441/ScholarChain/project
+[info] loading settings for project root from build.sbt...
+[info] set current project to root (in build file:/Users/danny/Documents/UIC/CS441/ScholarChain/)
+[info] compiling 2 Scala sources to /Users/danny/Documents/UIC/CS441/ScholarChain/modules/core/target/scala-3.3.4/classes ...
+[info] done compiling
+[info] compiling 1 Scala source to /Users/danny/Documents/UIC/CS441/ScholarChain/modules/core/target/scala-3.3.4/test-classes ...
+[info] done compiling
+[info] RuntimeContractSpec:
+[info] - frozen runtime-related v1 wire records parse without optional runtime fields
+[info] - optional query payload converts without changing the legacy plan or researcher spelling
+[info] - typed claims preserve exact integers beyond binary floating point and legacy claim fields
+[info] - new per-claim verdicts map explicitly while overall abstention remains ABSTAINED
+[info] - mixed claim verdicts remain partially verified and rejected attempted claims survive audit serialization
+[info] - domain validation rejects malformed optional payload rather than ignoring it
+[info] - evidence qualifiers retain iteration-limited and approximate source observations
+[info] - vector-only evidence partition cannot carry deterministic evidence
+[info] - runtime configuration loads explicit model region and bounded deadlines
+[info] - runtime configuration rejects total deadline overflow even if each individual stage fits
+[info] - runtime configuration rejects unsupported modes, missing versions, unknown defaults and malformed windows
+[info] - researcher candidates preserve absent confidence and distinct DBLP suffixes
+[info] - resolver configuration remains compatible and its identity cap is independent of graph results
+[info] - resolver configuration rejects every nonpositive candidate or provenance bound
+[info] - candidate provenance counts disclose clipped distinct lists and remain optional for legacy JSON
+[info] - candidate provenance validation rejects hidden truncation and impossible source totals
+[info] SerializationContractSpec:
+[info] - work record round-trips and freezes the bibliographic wire example
+[info] - canonical researcher and match decision freeze the identity wire examples
+[info] - collaboration records freeze pair order and the coauthor edge id
+[info] - metrics, reference data, graph, evidence, and run manifest freeze
+[info] - author mention wire example states that a name is not an identity
+[info] Run completed in 232 milliseconds.
+[info] Total number of tests run: 21
+[info] Suites: completed 2, aborted 0
+[info] Tests: succeeded 21, failed 0, canceled 0, ignored 0, pending 0
+[info] All tests passed.
+[success] Total time: 6 s, completed Oct 26, 2026, 10:31:31 AM

@@ -1,0 +1,27 @@
+# User-supplied Phase 9 Step 0 answers (verbatim)
+
+Answers to Phase 9 Step 0 questions.
+Plan of record: /Users/danny/Library/CloudStorage/GoogleDrive-cpnguyen0630@gmail.com/My Drive/plan/phase9.md
+(local /Users/danny/Documents/plan is now an identical copy; reviewer templates point to the Drive path).
+
+1. Phase 8 deferral: proceed with offline Phase 9. 8C is deferred by design (phase8.md; it returns in Phase 14C). Carry the deferral forward and do not claim Phase 8 is fully accepted. I have written / will write an interim Phase 8 human-gate.md (8A/8B accepted, 8C open).
+
+2. LLM provider: Bedrock Converse behind LlmClient. Model ID/version, region (us-east-2) and temperature come from config. The existing awsBedrockRuntime dependency in rag suffices, so no new SDK entry. Use forced tool use (toolChoice) for schema-shaped JSON. No live calls in 9A/9B. The optional 9C smoke needs my separate written approval with a dollar cap; no AWS account exists yet.
+
+3. Contracts: additive and backward compatible. Add optional fields with defaults to the existing QueryPlan / EvidenceItem / EvidenceBundle / AnswerClaim, and a new per-claim verdict enum (VERIFIED / PARTIALLY_SUPPORTED / UNSUPPORTED / CONFLICTING) mapped to the existing VerificationStatus for the overall status. Keep ABSTAINED, which Phase 10 metrics count. Existing wire examples must still parse; add conversion tests. No parallel v2 hierarchy. Also settle how a claim's evidence-item ID resolves through EvidenceBundleStore, which is currently keyed by bundle ID: Phase 10 GET /v1/evidence/{evidenceId} depends on it.
+
+4. Storage prerequisites: yes, handle them in 9A. In Step 0, list the minimum additions with exact port signatures before coding. Prefer read-only ObjectStore-backed artifacts from the Phase 6 export (top-K per window and metric, CommunitySummary, bridge records, temporal-change records) over new DynamoDB tables or GSIs, so Phase 12 needs no new infrastructure. Real adapter plus fake for each. domain-engineer and storage-engineer may work in 9B/9C, for contract gaps only.
+
+5. Filters: your default. Filter the researcher population by authoritative stored metadata, then rank by the selected window's stored metric, and state that scope (including any top-K truncation) in the answer. If the authoritative metadata needed for the filter does not exist, or the question needs filtered metrics that are not stored, return Unsupported. Semantic similarity never defines the population for an exact ranking.
+
+6. Bridge and team-size terms: your default. Use cross-community degree for an unspecified bridge ranking, with participation coefficient, communities connected and degree shown beside it. Keep the stored coauthor terminology (M = max coauthors on one paper); if total authors are asked for, label the coauthors+1 conversion. Follow phase9.md §7.2 item 5 on converged=false: carry the converged flag and iteration count, label such results iteration-limited, and have the verifier reject claims that call them converged. Label the distance P90 approximate. Do not present W and T as independent support (W == T by invariant); for repeated-collaboration questions use the per-edge jointPublicationCount.
+
+7. Verification: your default, strengthened. Typed claims, verified deterministically. Factual sentences are rendered by templates from verified claim fields. Any LLM interpretation must contain no numbers, names or IDs (reject it if it does) and is labeled as interpretation. Remove rejected claims and regenerate any text that depends on them. Keep rejected claims in the audit record and the explain output: the Phase 17 demo shows an unsupported claim, and Phase 16 compares the runtime verifier with an independent checker. No LLM verifier.
+
+8. Bounded search and partial failure: your default, matching Phase 6 path statuses. Check stored component IDs first: different components gives Disconnected with component evidence. Otherwise return NoPathWithinLimit or ExceededMaxHops; never imply disconnection from an empty bounded search. Give a qualified partial answer when the essential evidence is present and abstain with a typed reason when it is missing. If the required audit write fails, fail closed with a typed failure.
+
+9. Planner and retrieval: your default. Structured LLM plan, one bounded retry, then a narrow deterministic fallback that keeps every recognized constraint; if it cannot represent a constraint, the result is Unsupported (never silently drop a filter). retrievalMode defaults to fused, with graph and vector selectable by config; vector-only can never produce deterministic graph or numeric claims. WorkflowRunner must also support evidence-only runs with no synthesis (Phase 15, question 15-3). Per-stage deadlines must fit within Phase 10's synchronous deadline (operations.synchronousDeadlineMs).
+
+10. Benchmark: the 12 required questions plus institution/venue/topic filter cases, stored as a versioned benchmark file that Phase 16 can extend. Extend the fake fixture with venue, topic and institution metadata and a DBLP homonym pair (Name 0001 / Name 0002), since G1 has neither. Cover missing window, partial failure, audit failure and contradictory prose/claims as unit tests in the test matrix rather than benchmark questions; Phase 11B adds the broader injection and fault-injection suites. Report everything as offline correctness tests with a scripted fake LLM; live-model quality and injection resistance remain unverified.
+
+Proceed with 9A only, then stop and return the reviewer prompt.

@@ -1,0 +1,93 @@
+ubphase 9A repair round 1 review: APPROVE
+
+1. VERDICT: APPROVE
+
+All four blocking findings (B1–B4) are fixed, and I found no new blockers. The evidence checks out:
+- All 34 cumulative source hashes and all 16 repair "after" hashes match the files on disk.
+- The SHA-256 of /tmp/phase9a-r1-check-1.log (a0ba6005…) and of the independent-target log (7b33fd0a…) match their result records.
+- The full-check module counts add up to 901, with no *** FAILED lines in the raw log. The only error lines are the expected injected-failure self-test, and the TestRunMarker ran.
+- git diff --check exits 0, HEAD is still the base 5fee9ff, and the untracked inventory matches files.json.
+- Ownership in delegation.md and source-audit.json follows docs/agents.md.
+- The external review copy in review.md matches external-review.txt, whose SHA-256 is bound.
+
+2. Findings
+
+B1–B4: all fixed
+
+B1 · FIXED · Planner grounds metric, measure, operation, window and conversion in the question
+- QueryPlannerAgent.scala:46-171 now works out the question's intent without looking at the model's answer:
+  - every metric phrase in the question, including largest/maximum team size, coreness, weighted degree, publication count and average coauthors;
+  - bridge measures, with the default taken from config only when no measure is named;
+  - repeated collaboration, mapped to JOINT_PUBLICATION_COUNT;
+  - exact ordered windows and comparisons;
+  - total-author conversion, only when the question asks for it.
+- :331-351 rejects any model output that disagrees, so it goes to retry, then fallback, then Unsupported.
+- "since 2015" can only map to a window that starts in 2015 and ends at the latest configured end year, which means since-2015. A stray year left over after the window phrases are removed is rejected.
+- The fallback runs through the same decoder, so it obeys the same rules.
+- Tests: each phrasing is a positive case that succeeds on the first call, paired with a substitution negative. Alternate configured defaults for the bridge measure and for the window are also tested (IndependentRuntime9ARepairPlannerSpec.scala:115-290), so a planner that returned Unsupported for everything could not pass.
+
+B2 · FIXED · Resolver caps distinct canonical identities, not raw rows
+- ResearcherResolverAgent.scala:79-81 groups rows by canonical ID before applying the cap. The cap is the new dedicated resolver.maxDistinctCandidates, separate from graphLimit, with its rationale in the core README (:309-321).
+- Each provenance list is bounded, and an additive ResearcherCandidateProvenanceSummary records the totals and a truncation flag. That summary is validated (RuntimeContracts.scala:233-246, called at resolver :142).
+- Overflow returns Ambiguous with totalCandidateCount and truncated set, not a failure (:148-154).
+- Tests: one identity with many observations resolves; 5 identities against a cap of 2 return a truncated Ambiguous with exact counts.
+
+B3 · FIXED · A researcher absent from a stored window no longer breaks resolution
+- RuntimeArtifacts.scala:417-418: an undeclared window is still Rejected. A known researcher with no row in a stored window now returns Missing.
+- The resolver treats Missing as "no context" (:109).
+- Tests run against the real artifact fake:
+  - an absent identity still comes back Resolved;
+  - a homonym absent from the window is still included in Ambiguous;
+  - an unknown window is still rejected.
+
+B4 · FIXED · Snapshot is verified once per reader and indexed
+- The verified snapshot is cached per reader instance under a lock, and only successful loads are cached (RuntimeArtifacts.scala:606-638).
+- Keyed indexes replace the full-table scans (:244-283). The checks that tie edges, supports and bridges together now use maps and sets instead of nested loops (:560-590).
+- Storage tests cover:
+  - warm reads on all six ports making no further GET;
+  - concurrent cold reads sharing one GET;
+  - failures on first load (throttled, missing, corrupt) not being cached and succeeding on retry.
+- No production latency was measured, and the evidence correctly says so.
+
+New nonblocking observations
+
+- N8 · Low · The stricter grammar rejects some natural phrasings. QueryPlannerAgent.scala:103-106,154-159:
+  - Community comparison is recognized only from the literal phrases "community comparison" and "compare communities".
+  - A temporal question needs the word "temporal", or "compare"/"comparison" with two windows. "How did X change from 2010-2014 to 2015-2019?" returns Unsupported.
+
+  These fail closed, so it's a coverage gap, not a correctness bug. Before 9C writes its benchmark questions, rag-engineer should either extend the grammar (it owns this file) or match the benchmark wording to it.
+- N9 · Low · Stale opening line in review.md. It still starts with "No user-supplied external review has been received", directly above the appended review. The coordinator should append a dated clarification rather than rewrite that line.
+- N1–N7 stay open and deferred, as logged in repairs.md. N1 (checking that the vector-mode semantic partition matches each item's descriptive flag and type) has to be settled as a domain contract gap before the 9B EvidenceBuilder can be accepted.
+
+Not verified (live or future gates)
+
+- Live model, tool, region, temperature, quality and injection behaviour.
+- Production artifact latency.
+- Every 9B and 9C stage.
+- Phase 8C stays deferred to 14C.
+
+3. Report fields
+
+STATUS: COMPLETE (review); verdict APPROVE for Subphase 9A repair round 1
+OWNER: code-reviewer (independent, user-launched, read-only)
+WORK ORDER: Phase 9 Subphase 9A repair round 1 recheck (pasted prompt)
+FILES CREATED: none
+FILES MODIFIED: none
+COMMANDS RUN: read-only only — git rev-parse/branch/status/diff --check; cat/sed/grep/wc over
+  evidence/9a-r1, review.md, repairs.md and repaired sources/tests; shasum -a 256 on
+  /tmp/phase9a-r1-check-1.log and /tmp/phase9a-r1-independent-targeted-1.log (both match);
+  python3 -I SHA-256 check of source-files.json (34/34 match) and repair-files.json (16/16 match);
+  inventory comparison (match, sort-order only); grep of raw full-check log for failures (none
+  beyond the expected injected probe). No sbt, AWS, provider or git writes.
+TEST RESULTS: not run by reviewer. Retained: targeted core 21, storage 15, RAG 40 (after one
+  test-compile failure fixed in a test helper), independent 64 = 140 passed; full check exit 0,
+  901 passed, 0 failed, 725.07 s.
+VALIDATION RESULTS: B1–B4 FIXED; no new blockers; N8–N9 new nonblocking; N1–N7 remain deferred.
+ASSUMPTIONS: B4 is a structural improvement; latency remains unmeasured as disclosed.
+RISKS: conservative planner grammar (N8); the resolver still loads every cache row for a name
+  before grouping (bounded only by the cache partition); live behaviour unverified.
+MANUAL ACTION REQUIRED: user commits Subphase 9A (agents must not); user owns the Phase 8
+  interim human gate.
+BLOCKED-ON OWNER: none
+BLOCKED-ON EVIDENCE: none
+NEXT GATE: user commit of 9A, then Subphase 9B Step 0 questions.

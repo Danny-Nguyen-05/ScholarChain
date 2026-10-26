@@ -1,0 +1,120 @@
+1: [info] welcome to sbt 1.10.7 (Homebrew Java 17.0.20.1)
+2: [info] loading settings for project scholarchain-build from plugins.sbt...
+3: [info] loading project definition from /Users/danny/Documents/UIC/CS441/ScholarChain/project
+4: [info] loading settings for project root from build.sbt...
+5: [info] set current project to root (in build file:/Users/danny/Documents/UIC/CS441/ScholarChain/)
+6: [info] compiling 1 Scala source to /Users/danny/Documents/UIC/CS441/ScholarChain/modules/core/target/scala-3.3.4/test-classes ...
+7: [info] done compiling
+8: [info] RuntimeContractSpec:
+9: [info] - frozen runtime-related v1 wire records parse without optional runtime fields
+10: [info] - optional query payload converts without changing the legacy plan or researcher spelling
+11: [info] - typed claims preserve exact integers beyond binary floating point and legacy claim fields
+12: [info] - new per-claim verdicts map explicitly while overall abstention remains ABSTAINED
+13: [info] - mixed claim verdicts remain partially verified and rejected attempted claims survive audit serialization
+14: [info] - domain validation rejects malformed optional payload rather than ignoring it
+15: [info] - evidence qualifiers retain iteration-limited and approximate source observations
+16: [info] - vector-only evidence partition cannot carry deterministic evidence
+17: [info] - runtime configuration loads explicit model region and bounded deadlines
+18: [info] - runtime configuration rejects total deadline overflow even if each individual stage fits
+19: [info] - runtime configuration rejects unsupported modes, missing versions, unknown defaults and malformed windows
+20: [info] - researcher candidates preserve absent confidence and distinct DBLP suffixes
+21: [info] SerializationContractSpec:
+22: [info] - work record round-trips and freezes the bibliographic wire example
+23: [info] - canonical researcher and match decision freeze the identity wire examples
+24: [info] - collaboration records freeze pair order and the coauthor edge id
+25: [info] - metrics, reference data, graph, evidence, and run manifest freeze
+26: [info] - author mention wire example states that a name is not an identity
+27: [info] Run completed in 203 milliseconds.
+28: [info] Total number of tests run: 17
+29: [info] Suites: completed 2, aborted 0
+30: [info] Tests: succeeded 17, failed 0, canceled 0, ignored 0, pending 0
+31: [info] All tests passed.
+32: [success] Total time: 2 s, completed Oct 25, 2026, 10:46:38 PM
+33: [info] compiling 1 Scala source to /Users/danny/Documents/UIC/CS441/ScholarChain/modules/storage/target/scala-3.3.4/classes ...
+34: [info] done compiling
+35: [info] compiling 1 Scala source to /Users/danny/Documents/UIC/CS441/ScholarChain/modules/storage/target/scala-3.3.4/test-classes ...
+36: [info] done compiling
+37: [info] RuntimeArtifactStorageSpec:
+38: [info] - complete population is ranked by stored values with deterministic ties and honest top-K
+39: [info] - filters select authoritative population BEFORE stored-metric ranking and disclose scope
+40: [info] - absent authoritative metadata, unavailable filtered metrics and unknown windows reject
+41: [info] - bridge and community records preserve degree and iteration-limited qualifications
+42: [info] - edge support, context caps and temporal absent-side semantics retain source records
+43: [info] - source-verified materialization publishes immutable content and the real object reader works
+44: [info] - declared caps reject before opening sources; changed rows or actual overruns publish nothing
+45: [info] - duplicate keys, missing supporting works and mismatched bridge qualifications fail closed
+46: [info] - real cache loader publishes base-name homonym candidates without merging suffix identities
+47: [info] - evidence item lookup works by frozen ID, repeated puts and sharing immutable content
+48: [info] - evidence index corruption and failed required index write cannot report success
+49: [info] Run completed in 303 milliseconds.
+50: [info] Total number of tests run: 11
+51: [info] Suites: completed 1, aborted 0
+52: [info] Tests: succeeded 11, failed 0, canceled 0, ignored 0, pending 0
+53: [info] All tests passed.
+54: [success] Total time: 3 s, completed Oct 25, 2026, 10:46:41 PM
+55: [info] compiling 3 Scala sources to /Users/danny/Documents/UIC/CS441/ScholarChain/modules/rag/target/scala-3.3.4/classes ...
+105: [info] done compiling
+106: [info] compiling 1 Scala source to /Users/danny/Documents/UIC/CS441/ScholarChain/modules/rag/target/scala-3.3.4/test-classes ...
+107: [info] done compiling
+110: [info] Runtime9ASpec:
+111: [info] - versioned assets load and planner schema rejects missing, unknown and fabricated fields
+112: [info] - structured stage logs contain correlation and outcome without question or names
+113: [info] - valid LLM plan preserves configured limits, mode and evidence-only option
+114: [info] - Cypher AWS and unknown metric requests reject before any model call
+115: [info] - malformed JSON retries once then anchored fallback preserves filters and stored year
+116: [info] - fabricated operation and unknown keys cannot escape bounded validation
+117: [info] - model cannot drop unquoted topic institution extra conditions or change ranking metric
+118: [info] - a proposed filter or name cannot hide an unknown metric or named ranking scope
+119: [info] - model cannot invent a name filter window or silently drop a quoted constraint
+120: [info] - unsupported and exhausted scripted model fail safely without network
+121: [info] - late model and cache responses fail with deterministic stage deadlines
+122: [info] - a model plan may preserve an unquoted topic and exact stored since window
+123: [info] - unique canonical ID groups source aliases and preserves absent confidence
+124: [info] - common-name candidates abstain even with different confidence values
+125: [info] - source-backed coauthor context retains truncation and provenance
+126: [info] - DBLP exact suffixes stay separate and base-name alias rows remain ambiguous
+127: [info] - Bedrock adapter forces configured tool and model, preserves schema and usage, no client construction
+128: [info] - Bedrock adapter rejects text substitutes wrong tools multiple blocks and unsafe numbers
+129: [info] - Bedrock provider exception messages never escape typed failure
+130: [info] - synthesis proposal schema requires typed evidence-backed claims and forbids raw narrative or verdict
+131: [info] Run completed in 213 milliseconds.
+132: [info] Total number of tests run: 20
+133: [info] Suites: completed 1, aborted 0
+134: [info] Tests: succeeded 20, failed 0, canceled 0, ignored 0, pending 0
+135: [info] All tests passed.
+136: [success] Total time: 2 s, completed Oct 25, 2026, 10:46:43 PM
+137: [info] compiling 6 Scala sources to /Users/danny/Documents/UIC/CS441/ScholarChain/tests/target/scala-3.3.4/test-classes ...
+138: [info] done compiling
+139: [info] IndependentRuntime9AResolverSpec:
+140: [info] - multiple observations of one canonical identity remain one candidate with all sources
+141: [info] - common name abstains with both identities even when one confidence is higher
+142: [info] - exact homonym suffix resolves its identity while the published base alias stays ambiguous
+143: [info] - missing name returns NotFound without generating an identity or confidence
+144: [info] - cache failures stay typed failures instead of being misreported as not found
+145: [info] - a ranking question without named researchers needs no invented resolution
+146: [info] IndependentRuntime9APlannerSpec:
+147: [info] - schema rejects fabricated operations and extra executable query fields
+148: [info] - database and AWS requests are unsupported without invoking the model
+149: [info] - unknown metrics do not get replaced with stored collaboration counts
+150: [info] - two malformed outputs lead to a constrained deterministic fallback
+151: [info] - a natural topic constraint cannot be dropped by schema-valid model output
+152: [info] - an explicit ranking metric cannot be switched by schema-valid model output
+153: [info] - unrepresentable trailing constraints are unsupported after malformed responses
+154: [info] - fabricated operations never survive decoding even for a recognized question
+155: [info] - explicit window cannot be replaced with the default all-years population
+156: [info] - runtime config checks combined critical path and preserves overall ABSTAINED
+157: [info] - legacy plans without runtime fields remain readable and additive round trips lose no data
+158: [info] IndependentRuntime9AEvidenceSpec:
+159: [info] - an evidence item ID resolves through its bundle, including an identical item shared by bundles
+160: [info] - the same evidence item ID cannot be rebound to changed text in another bundle
+161: [info] - corrupt pointer bytes are rejected before any item can be returned
+162: [info] - indexed fake exposes the same item-ID lookup contract
+163: [info] IndependentRuntime9AArtifactPipelineSpec:
+721: Computed G1 completed export: /var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/independent-runtime-9a-artifact-3081592800756380096/computed-g1; researchers=10; works=9; edges=18; tables=28; runId=run:55555555-5555-4555-8555-555555555555
+722: [info] - computed G1 source artifacts preserve exact metrics, edge support and iteration qualifications
+723: [info] Run completed in 23 seconds, 205 milliseconds.
+724: [info] Total number of tests run: 22
+725: [info] Suites: completed 4, aborted 0
+726: [info] Tests: succeeded 22, failed 0, canceled 0, ignored 0, pending 0
+727: [info] All tests passed.
+728: [success] Total time: 25 s, completed Oct 25, 2026, 10:47:07 PM
