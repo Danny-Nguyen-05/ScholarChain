@@ -124,7 +124,7 @@ object RuntimePromptAssets {
   def fromDirectory(root: Path, config: RuntimeConfig): Either[String, RuntimePromptAssets] = try {
     def read(relative: String): String = {
       val file = root.resolve(relative)
-      require(Files.size(file) <= config.maxInputBytes)
+      require(Files.size(file) <= config.effectiveByteLimits.promptBytes)
       Files.readString(file, UTF_8)
     }
     val planner = read("runtime/planner-v1.md")

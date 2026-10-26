@@ -1,0 +1,11 @@
+{
+  "command": "/usr/bin/time -p sbt -batch 'independentTests/testOnly *Runtime9CVerificationSpec *Runtime9CSynthesisSpec *Runtime9CTrustSpec *Runtime9CWorkflowSpec'",
+  "rawPath": "/tmp/phase9c-independent-targeted-1.log",
+  "rawSha256": "a603fee0259d73ff34c7191f46ba7743126b3610d454ca1897d7cf944d34ff2c",
+  "exitCode": 1,
+  "passed": 63,
+  "failed": 1,
+  "elapsedSeconds": 10.78,
+  "failure": "Natural compare-community phrase rejected by planner; verifier/synthesis/workflow suites passed. Owner repairs grammar; assertion retained.",
+  "sourceNote": "RAG owner completed a small grammar/benchmark/label edit just before freeze message arrived; these were compiled in this diagnostic run. Final frozen gate will be rerun after integration repairs."
+}

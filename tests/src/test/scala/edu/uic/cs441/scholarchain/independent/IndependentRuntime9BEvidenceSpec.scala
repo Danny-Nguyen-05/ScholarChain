@@ -67,7 +67,7 @@ class IndependentRuntime9BEvidenceSpec extends AnyFunSuite {
       CoreJson
         .compact(bundle)
         .getBytes(java.nio.charset.StandardCharsets.UTF_8)
-        .length <= config.maxInputBytes
+        .length <= config.effectiveByteLimits.persistedBundleBytes
     )
     assert(DomainValidation.check(bundle).isRight)
     assert(StorageResult.value(store.get(bundle.bundleId)).contains(bundle))

@@ -356,3 +356,28 @@ nonblank source/reference/affiliation lists, source-run IDs, confidence bounds a
 count/truncation summaries. Candidate IDs are unique within the bundle. The evidence builder
 enforces configured resolver bounds and budgets rendered identity context; the core contract
 does not read runtime configuration or invent missing confidence observations.
+
+Phase 9C separates byte limits through the optional `RuntimeConfig.byteLimits` object:
+`questionBytes`, `promptBytes`, `requestBytes`, `outputBytes`, and `persistedBundleBytes`.
+`effectiveByteLimits` maps an omitted object to the existing `maxInputBytes` on all five
+surfaces, preserving legacy configuration behavior. Each bound must be positive. The explicit
+example retains 16 KiB question/prompt caps, permits 64 KiB structured requests (context plus
+prompt/schema), bounds structured output at 32 KiB, and permits 64 KiB persisted bundles with
+source lineage. These are configurable application bounds, not provider limits or measured
+latency guarantees. The 4,096 context budget and 30-second synchronous deadline are unchanged.
+
+Runtime deterministic bundle items now require `text=None`; descriptive excerpts cannot be
+attached to a falsely labeled deterministic profile. Runtime-less legacy bundles remain valid.
+`RuntimeEvidence.sourceContext` optionally retains the original stored `SparkRecordContext`,
+including its upstream lineage. Source run/window and the existing Spark context contract are
+validated; complete item ID binding also covers this context. Omitting it preserves old JSON.
+The runtime must derive source provenance from stored observations rather than request metadata.
+
+`RuntimeAuditEnvelope` retains an optional existing `AuditRecord` so planner failures and
+unsupported requests can be audited without inventing a QueryPlan. It adds execution outcome,
+original question, typed stage failures, latency, answer hash, model usage and evidence-only mode.
+Answered/evidence-only successes require the plan-containing record; keys and answer hashes must
+agree across the envelope and record. A pre-plan failure can omit the record. Rejected or
+malformed attempted claims are intentionally retained without validating them away. The existing
+AuditRecord wire format remains unchanged; `RuntimeModelUsage.region` is optional for legacy JSON.
+`RuntimeAuditValidation` validates the durable envelope, not claim truth or provider behavior.

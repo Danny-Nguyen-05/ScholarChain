@@ -47,7 +47,8 @@ final class PathFinderAgent(
           number("returnedCount", page.items.size),
           flag("truncated", page.cursor.nonEmpty)
         ),
-        Vector(ref("nodes/type=researcher", a))
+        Vector(ref("nodes/type=researcher", a)),
+        sourceContext = Some(first.detail.context)
       )
       RetrievalOutput("path", Vector(item) ++ edges, truncated = page.cursor.nonEmpty)
     } else {
@@ -73,7 +74,8 @@ final class PathFinderAgent(
           Vector(window),
           first.record.runId,
           Vector(text("pathStatus", "Disconnected"), number("maxHops", depth)) ++ componentValues,
-          componentRefs
+          componentRefs,
+          sourceContext = Some(first.detail.context)
         )
         RetrievalOutput("path", Vector(item))
       } else {
@@ -95,7 +97,8 @@ final class PathFinderAgent(
                 Vector(window),
                 first.record.runId,
                 Vector(text("pathStatus", status), number("maxHops", depth)) ++ componentValues,
-                componentRefs
+                componentRefs,
+                sourceContext = Some(first.detail.context)
               )
             )
           )
@@ -133,7 +136,8 @@ final class PathFinderAgent(
               ),
               componentRefs ++ p.edgeIds.map(ref("edges/type=coauthored_with", _)),
               evidenceType = EvidenceType.GraphPath,
-              graphPath = Some(p.nodeIds)
+              graphPath = Some(p.nodeIds),
+              sourceContext = Some(first.detail.context)
             )
             Vector(path) ++ hops
           }

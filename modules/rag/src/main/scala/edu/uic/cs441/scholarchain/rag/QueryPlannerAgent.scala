@@ -102,8 +102,9 @@ final class QueryPlannerAgent(
     if (windowError || yearPattern.findFirstIn(residual).nonEmpty)
       return Left("unrepresentable-window-intent")
     requested = selectedPositions.sortBy(_._1).map(_._2).distinct
-    val temporal = source.contains("temporal") ||
-      (requested.size == 2 && (source.contains("compare") || source.contains("comparison")))
+    val temporal =
+      source.contains("temporal") || (source.contains("change") && requested.size == 2) ||
+        (requested.size == 2 && (source.contains("compare") || source.contains("comparison")))
     if ((temporal && requested.size != 2) || (!temporal && requested.size > 1))
       return Left("unrepresentable-window-comparison")
     val windows = if (requested.isEmpty) Vector(config.defaultWindowId) else requested
@@ -154,7 +155,10 @@ final class QueryPlannerAgent(
     if (source.contains("shortest")) operations += QueryOperation.ShortestPath
     if (source.contains("direct coauthors")) operations += QueryOperation.DirectCoauthors
     if (source.contains("component")) operations += QueryOperation.ComponentLookup
-    if (source.contains("community comparison") || source.contains("compare communities"))
+    if (
+      source.contains("community comparison") || source.contains("compare communities") || source
+        .contains("communities compare") || source.contains("compare community")
+    )
       operations += QueryOperation.CommunityComparison
     if (source.contains("explain")) operations += QueryOperation.SemanticExplanation
     if (operations.isEmpty) Left("unrecognized-operation-intent")
@@ -171,8 +175,13 @@ final class QueryPlannerAgent(
       )
   }
 
-  def plan(question: String, queryId: String, provenance: Provenance): PlannerResult = {
-    val result = planInternal(question, queryId, provenance)
+  def plan(
+      question: String,
+      queryId: String,
+      provenance: Provenance,
+      usageSink: RuntimeModelUsage => Unit = _ => ()
+  ): PlannerResult = {
+    val result = planInternal(question, queryId, provenance, usageSink)
     val (outcome, planId) = result match {
       case PlannerResult.Planned(p, _, _)  => ("planned", Some(p.planId))
       case PlannerResult.Unsupported(_, _) => ("unsupported", None)
@@ -184,13 +193,14 @@ final class QueryPlannerAgent(
   private def planInternal(
       question: String,
       queryId: String,
-      provenance: Provenance
+      provenance: Provenance,
+      usageSink: RuntimeModelUsage => Unit
   ): PlannerResult = {
     val started = clockNanos()
     if (
       question.trim.isEmpty || queryId.trim.isEmpty || question
         .getBytes(UTF_8)
-        .length > config.maxInputBytes
+        .length > config.effectiveByteLimits.questionBytes
     )
       return PlannerResult.Failed("planner-input-bound")
     if (unsafe.findFirstIn(question).nonEmpty)
@@ -238,7 +248,18 @@ final class QueryPlannerAgent(
       if ((clockNanos() - started) / 1000000 >= config.deadlines.plannerMs)
         return PlannerResult.Failed("planner-deadline")
       result match {
-        case LlmResult.Output(json, _, _, _) =>
+        case LlmResult.Output(json, tokens, model, version) =>
+          usageSink(
+            RuntimeModelUsage(
+              model,
+              version,
+              config.plannerPromptVersion,
+              config.plannerSchemaVersion,
+              tokens.inputTokens,
+              tokens.outputTokens,
+              Some(config.model.region)
+            )
+          )
           decode(json, question, queryId, provenance, attempt, false) match {
             case Right(result) => return result
             case Left(_)       => ()
@@ -260,7 +281,8 @@ final class QueryPlannerAgent(
       attempts: Int,
       fallbackUsed: Boolean
   ): Either[String, PlannerResult] = try {
-    if (json.getBytes(UTF_8).length > config.maxInputBytes) return Left("planner-output-bound")
+    if (json.getBytes(UTF_8).length > config.effectiveByteLimits.questionBytes)
+      return Left("planner-output-bound")
     val value = ujson.read(json)
     if (RuntimeJsonSchema.validate(assets.plannerSchema, value).isLeft)
       return Left("planner-schema")
@@ -317,8 +339,13 @@ final class QueryPlannerAgent(
       "shortest",
       "direct coauthors",
       "component",
+      "membership",
       "community",
       "communities",
+      "change",
+      "changed",
+      "did",
+      "from",
       "temporal",
       "explain"
     )
@@ -408,7 +435,10 @@ final class QueryPlannerAgent(
       windows: Vector[String]
   ): Boolean = {
     var residual = norm(question)
-    def remove(value: String): Unit = residual = residual.replace(norm(value), " ")
+    def remove(value: String): Unit = residual = residual.replaceAll(
+      "(?<![a-z0-9])" + java.util.regex.Pattern.quote(norm(value)) + "(?![a-z0-9])",
+      " "
+    )
     (names ++ topics ++ institutions ++ venues).sortBy(-_.length).foreach(remove)
     windows.foreach { id =>
       remove(id)
@@ -417,6 +447,7 @@ final class QueryPlannerAgent(
         .foreach(w => (w.startYear.toVector ++ w.endYear.toVector).foreach(y => remove(y.toString)))
     }
     val vocabulary = Set(
+      "how",
       "which",
       "who",
       "what",
@@ -450,6 +481,7 @@ final class QueryPlannerAgent(
       "and",
       "component",
       "lookup",
+      "membership",
       "community",
       "communities",
       "compare",
@@ -457,6 +489,10 @@ final class QueryPlannerAgent(
       "bridge",
       "bridges",
       "strongest",
+      "change",
+      "changed",
+      "did",
+      "from",
       "temporal",
       "change",
       "changes",

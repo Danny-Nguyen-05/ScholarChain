@@ -133,7 +133,9 @@ private[rag] object RuntimeEvidenceItems {
       edgeLocator: Option[String] = None,
       descriptive: Boolean = false,
       excerpt: Option[String] = None,
-      sourceUri: Option[String] = None
+      sourceUri: Option[String] = None,
+      sourceContext: Option[SparkRecordContext] = None,
+      sourceProvenance: Option[Provenance] = None
   ): EvidenceItem = {
     val runtime = RuntimeEvidence(
       subjects.distinct,
@@ -145,13 +147,22 @@ private[rag] object RuntimeEvidenceItems {
       converged,
       iterations,
       approximate,
-      descriptive
+      descriptive,
+      sourceContext = sourceContext
     )
-    val provenance = input.plan.provenance.copy(
-      runId = run,
-      sourceRecordId = s"runtime/$kind",
-      uncertaintyNotes =
-        Vector("Stored source evidence; semantic excerpts are descriptive untrusted data.")
+    val provenance = sourceProvenance.getOrElse(
+      Provenance(
+        SchemaVersions.domain,
+        SourceType.ScholarChain,
+        StorageKeys
+          .composite(kind, refs.map(r => s"${r.table}:${r.rowKey}:${r.field}").mkString("|")),
+        sourceUri,
+        sourceContext.map(_.lineage.hadoopSnapshot).getOrElse(run),
+        None,
+        None,
+        run,
+        Vector("Derived from stored source records; request provenance is retained separately.")
+      )
     )
     val item = EvidenceItem(
       "profile:" + ("0" * 64),
@@ -200,7 +211,8 @@ private[rag] object RuntimeEvidenceItems {
           window.legacyWindow.endYear,
           m.policyVersion
         )
-      )
+      ),
+      sourceContext = Some(m.context)
     )
   }
   def metricValues(m: ResearcherMetricsDetail): Vector[RuntimeClaimValue] = Vector(
@@ -257,7 +269,8 @@ private[rag] object RuntimeEvidenceItems {
       ),
       Some(e.policyVersion),
       evidenceType = EvidenceType.CoauthorEdge,
-      edgeLocator = Some(e.edgeId)
+      edgeLocator = Some(e.edgeId),
+      sourceContext = Some(e.context)
     )
   }
 }
@@ -273,7 +286,10 @@ object EvidenceContext {
       "evidenceId" -> item.evidenceId,
       "type" -> item.evidenceType.wire,
       "subjects" -> ujson.Arr.from(
-        if (r.values.exists(v => v.field == "kind" && v.text.exists(Set("edge", "path"))))
+        if (
+          r.values
+            .exists(v => v.field == "kind" && v.text.contains("edge")) || item.graphPath.isDefined
+        )
           Vector.empty
         else r.subjectIds
       ),

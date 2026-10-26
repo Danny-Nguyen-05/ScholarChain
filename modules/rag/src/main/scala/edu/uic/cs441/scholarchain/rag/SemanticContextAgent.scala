@@ -20,7 +20,11 @@ final class SemanticContextAgent(
       throw RetrievalProblem("unsupported", "semantic-venue-metadata-not-stored")
     if (plan.topicFilters.size > 1 || plan.institutionFilters.size > 1)
       throw RetrievalProblem("unsupported", "semantic-multiple-filter-values-not-supported")
-    val filter = Map("windowId" -> window) ++ plan.topicFilters.headOption.map("topicId" -> _) ++
+    if (input.candidates.size > 1)
+      throw RetrievalProblem("unsupported", "semantic-multiple-resolved-identities")
+    val filter = input.candidates.headOption.map(c => "entityId" -> c.researcherId).toMap ++ Map(
+      "windowId" -> window
+    ) ++ plan.topicFilters.headOption.map("topicId" -> _) ++
       plan.institutionFilters.headOption.map("institutionId" -> _)
     val result = embedding.embed(Vector(plan.question)).toVector
     val vector = result match {
@@ -55,8 +59,9 @@ final class SemanticContextAgent(
         ujson.read(new String(stored.bytes.toArray, java.nio.charset.StandardCharsets.UTF_8))
       val document = upickle.default.read[EmbeddingDocument](envelope("document"))
       RuntimeRead.check(
-        document.windowId == window && filter
-          .filterNot(_._1 == "windowId")
+        document.windowId == window && input.candidates.headOption
+          .forall(_.researcherId == document.entityId) && filter
+          .filterNot(p => p._1 == "windowId" || p._1 == "entityId")
           .forall((k, v) => document.identityFields.get(k).contains(v)),
         "semantic-document-filter-mismatch"
       )

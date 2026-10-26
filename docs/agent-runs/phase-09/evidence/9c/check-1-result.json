@@ -1,0 +1,15 @@
+{
+  "command": "/usr/bin/time -p sbt -batch check",
+  "rawPath": "/tmp/phase9c-check-1.log",
+  "rawSha256": "296a41b4cf4ab78dd35dcb299d77e152546a810f785a7a86e618ce9e0b400ea3",
+  "exitCode": 143,
+  "elapsedSeconds": 112.1,
+  "status": "INTENTIONALLY_TERMINATED",
+  "reason": "Coordinator found final answer/CLI discarded ambiguity candidate list; stopped before owner edits, will run targeted and complete full check after repair. No full-check pass claimed.",
+  "completedModuleCounts": [
+    {
+      "passed": 207,
+      "failed": 0
+    }
+  ]
+}

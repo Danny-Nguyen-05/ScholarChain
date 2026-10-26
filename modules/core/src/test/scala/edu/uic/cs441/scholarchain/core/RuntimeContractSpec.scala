@@ -169,8 +169,9 @@ class RuntimeContractSpec extends AnyFunSuite {
         .check(
           Fixtures.bundle.copy(
             items = Fixtures.bundle.items.map(
-              _.copy(runtime =
-                Some(
+              _.copy(
+                text = None,
+                runtime = Some(
                   RuntimeEvidence(
                     Vector.empty,
                     Vector("all-years"),

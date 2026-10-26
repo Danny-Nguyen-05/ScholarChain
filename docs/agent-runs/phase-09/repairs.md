@@ -142,3 +142,119 @@ N1 remains fixed; N2–N9 remain carried forward. No optional source repair was 
 recording approval. All 22 reviewed source hashes still match. The approved 9B work remains
 uncommitted at HEAD f139f9c925b4925864a2c9a33734d869a1929cd2. Wait for explicit user commit
 instructions or a user-provided commit before starting 9C Step 0. No 9C preparation occurred.
+
+
+## Subphase 9C implementation findings
+
+| ID | Owner | Finding and required check | Status |
+|---|---|---|---|
+| 9C-I1 | storage-engineer | Initial test assumed pointer smaller than an unusually tiny envelope; actual bound is configured pointer cap and no question body in the pointer | Test corrected; storage14/14 passed in integrated target1; production unchanged |
+| 9C-I2 | rag-engineer | Named G1 benchmark questions exposed global one-letter name removal corrupting other request words | Word-boundary coverage removal; positive/negative planner regressions and benchmark rerun required |
+| 9C-I3 | rag-engineer | Team-size scripted target was outside admitted ranking prefix | Keep literal maximum2; select a retained exact ranking row, without inventing facts or increasing budgets |
+| 9C-I4 | rag-engineer | Natural compare-community phrase still rejected in independent test | OPEN: extend approved bounded grammar and retain all constraints |
+| 9C-I5 | rag-engineer | Unexpected workflow exceptions should produce a terminal audit when audit storage is available | OPEN: bounded terminal failure handling and independent test |
+
+Initial integrated target1: storage14passed, RAG14passed1failed, independent not reached.
+Independent diagnostic target1:63passed1failed, only natural community phrase; verification,
+synthesis, audit workflow and trust cases otherwise passed. Exact logs/hashes/commands retained
+in evidence/9c. No claim of full acceptance yet. Earlier9A/9B observations remain logged.
+
+
+9C gate progress: storage14/14 and RAG72/72 passed in targeted3; independent208/209,
+with all new9C83 cases and15benchmarks passing. The only failure was an old9B assertion
+against legacy maxInputBytes instead of the approved independent persistedBundleBytes cap;
+sourceContext increased the full stored path bundle to19,227bytes while model context stayed
+within4,096. Test owner updates two byte assertions to the effective cap, retaining complete
+path/context checks. A CLI regex compile error from targeted2 was corrected and retained.
+Final synthesis entry guards will enforce separate question/prompt caps for scripted clients too.
+
+
+9C-I6 (rag-engineer; independent test-engineer): final workflow discarded ambiguity candidates while retrieval retained them. Required candidate list must survive the terminal result and CLI, without turning alternatives into resolved audit identities. Full check 1 intentionally stopped, exit 143; targeted and full gates will be rerun after repair.
+
+
+## Subphase 9C — final local validation
+
+All implementation findings 9C-I1 through 9C-I6 are locally fixed and covered by the final gates; external review remains pending. The initial pointer-size test assumption was corrected without a storage production change. Bounded grammar/name-coverage and CLI quoting issues were repaired. Team/bridge benchmark scripts select retained ranking rows while retaining literal expected values. Unexpected workflow exceptions are audited. Separate synthesis entry byte guards are enforced. Final ambiguity results preserve both homonym candidates without selecting audit identities; reason and candidates are covered by the abstention hash.
+
+Final targeted gate: 299 passed, zero failed; actual CLI benchmark: 15/15; full JDK 17 check: 1,131 passed, zero failed. Full check 1 was intentionally stopped with exit 143 before candidate-list repairs; full check 2 passed after the frozen-source rerun. Earlier failures, exits, excerpts and raw SHA-256 bindings remain in evidence/9c.
+
+Approved 9C handling of N3/N8/O1/O2/O3/O4/O8/O9/R1 is described in evidence/9c/coverage-and-limitations.md. N1 stays fixed. N2/N4/N5/N6/N7 and O5/O6/O7/O10 retain disclosed limits; R1's generic evidence type remains disclosed. R2 is addressed by normal spacing in final prose, with prior human decisions/reviews unchanged. No externally approved prior finding is reopened or silently claimed fully resolved.
+
+No live/model/cloud calls, infrastructure, commits/pushes, reviewer launch, human-gate edits or Phase 10 work. User-launched 9C review is next.
+
+
+## Subphase 9C review - nonblocking findings (logged only)
+
+User-supplied external review: APPROVE, no blocking findings. Each item below is logged; not implemented. Original decisions, approved defaults and prior findings remain unchanged.
+
+### NB1
+
+Status: logged; not implemented
+Owner: rag-engineer; test-engineer for independent tests
+path:line: modules/rag/.../ClaimVerificationAgent.scala:169-174, 186-192, 245-252
+Acceptance check: A claim with an unrelated, other-subject or descriptive citation on a non-SEMANTIC claim is UNSUPPORTED, or that citation is
+removed and the removal recorded. Add independent tests for both shapes.
+
+### NB2
+
+Status: logged; not implemented
+Owner: rag-engineer; test-engineer
+path:line: modules/rag/.../RuntimeAnswerWorkflow.scala:129, 204-205; tests/.../IndependentRuntime9CWorkflowSpec.scala:113-116
+Acceptance check: Either return Abstained(reason, audit) when verification.abstained, or record this contract as binding for Phase 10, with a test
+either way.
+
+### NB3
+
+Status: logged; not implemented
+Owner: rag-engineer
+path:line: modules/rag/.../QueryPlannerAgent.scala:285
+Acceptance check: Use outputBytes, plus a test with a small question cap and a valid larger planner output.
+
+### NB4
+
+Status: logged; not implemented
+Owner: test-engineer
+path:line: tests/.../IndependentRuntime9CBenchmarkSpec.scala:10-16, 53-63; RuntimeWorkflowMain.scala:224-226
+Acceptance check: Assert the ranked researchers and ranks by hand (e.g. C/D/F for distinct coauthors = 3).
+
+### NB5
+
+Status: logged; not implemented
+Owner: rag-engineer
+path:line: RuntimeOfflineFixture.scala:46; SemanticContextAgent.scala:23-24
+Acceptance check: Note this in the README, or add one fused-mode benchmark or workflow case.
+
+### NB6
+
+Status: logged; not implemented
+Owner: rag-engineer (Phase 11 may absorb this)
+path:line: RuntimeAnswerWorkflow.scala:160-162, 177-179
+Acceptance check: Stage outcome logs with trace and run IDs, and no payloads.
+
+### NB7
+
+Status: logged; not implemented
+Owner: rag-engineer
+path:line: modules/rag/README.md:371-444
+Acceptance check: Add the observed results with a pointer to the evidence.
+
+### NB8
+
+Status: logged; not implemented
+Owner: rag-engineer
+path:line: RuntimeAnswerWorkflow.scala:58, 81
+Acceptance check: Make it volatile or atomic.
+
+### NB9
+
+Status: logged; not implemented
+Owner: rag-engineer
+path:line: ClaimVerificationAgent.scala:322-331
+Acceptance check: Neutral separator for sets.
+
+### NB10
+
+Status: logged; not implemented
+Owner: rag-engineer
+path:line: RuntimeRetrieval.scala:153-165
+Acceptance check: Disclose it, or leave the snapshot absent when it is unknown.

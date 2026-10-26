@@ -1,0 +1,108 @@
+{
+  "command": "/usr/bin/time -p sbt -batch 'rag/runMain edu.uic.cs441.scholarchain.rag.RuntimeWorkflowMain --benchmark'",
+  "rawPath": "/tmp/phase9c-cli-benchmark-2.log",
+  "rawSha256": "b08d7aa37c9dfcaa3ea6b278760e974b430b7f7baf01c3d82961082744b88986",
+  "exitCode": 0,
+  "elapsedSeconds": 4.45,
+  "cases": [
+    {
+      "id": "ranking",
+      "expectedOutcome": "ANSWERED",
+      "outcome": "ANSWERED",
+      "passed": true
+    },
+    {
+      "id": "team",
+      "expectedOutcome": "ANSWERED",
+      "outcome": "ANSWERED",
+      "passed": true
+    },
+    {
+      "id": "direct",
+      "expectedOutcome": "ANSWERED",
+      "outcome": "ANSWERED",
+      "passed": true
+    },
+    {
+      "id": "path",
+      "expectedOutcome": "ANSWERED",
+      "outcome": "ANSWERED",
+      "passed": true
+    },
+    {
+      "id": "component",
+      "expectedOutcome": "ANSWERED",
+      "outcome": "ANSWERED",
+      "passed": true
+    },
+    {
+      "id": "community",
+      "expectedOutcome": "ANSWERED",
+      "outcome": "ANSWERED",
+      "passed": true
+    },
+    {
+      "id": "bridge",
+      "expectedOutcome": "ANSWERED",
+      "outcome": "ANSWERED",
+      "passed": true
+    },
+    {
+      "id": "temporal",
+      "expectedOutcome": "ANSWERED",
+      "outcome": "ANSWERED",
+      "passed": true
+    },
+    {
+      "id": "topic",
+      "expectedOutcome": "ANSWERED",
+      "outcome": "ANSWERED",
+      "passed": true
+    },
+    {
+      "id": "ambiguous",
+      "expectedOutcome": "ABSTAINED",
+      "outcome": "ABSTAINED",
+      "passed": true
+    },
+    {
+      "id": "unsupported",
+      "expectedOutcome": "UNSUPPORTED",
+      "outcome": "UNSUPPORTED",
+      "passed": true
+    },
+    {
+      "id": "injection",
+      "expectedOutcome": "UNSUPPORTED",
+      "outcome": "UNSUPPORTED",
+      "passed": true
+    },
+    {
+      "id": "institution",
+      "expectedOutcome": "ANSWERED",
+      "outcome": "ANSWERED",
+      "passed": true
+    },
+    {
+      "id": "venue",
+      "expectedOutcome": "ANSWERED",
+      "outcome": "ANSWERED",
+      "passed": true
+    },
+    {
+      "id": "disconnected",
+      "expectedOutcome": "ANSWERED",
+      "outcome": "ANSWERED",
+      "passed": true
+    }
+  ],
+  "ambiguityCandidateNames": [
+    "Name 0002",
+    "Name 0001"
+  ],
+  "ambiguityCandidateIds": [
+    "researcher:dblp:a4cf7edc3df888558346aef2ef104eaba1ddbf314ae73d813a4bf4b9a1430957",
+    "researcher:dblp:dab27315ec3314ddc611f101055b6275e0889feb25ce569302eef23d931fb2f9"
+  ],
+  "scope": "Offline scripted fake LLM; synthetic G1 overlays. No live-model quality claim."
+}

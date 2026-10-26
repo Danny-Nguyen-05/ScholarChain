@@ -117,9 +117,11 @@ final class EvidenceBuilderAgent(store: EvidenceBundleStore, config: RuntimeConf
         SchemaVersions.domain,
         queryId,
         selected,
-        (input.candidates.map(_.researcherId) ++ selected.flatMap(
-          _.runtime.toVector.flatMap(_.subjectIds)
-        )).filter(StableIds.parseResearcherId(_).isRight).distinct,
+        (input.candidates.map(_.researcherId) ++ selected
+          .filterNot(_.runtime.exists(_.descriptive))
+          .flatMap(
+            _.runtime.toVector.flatMap(_.subjectIds)
+          )).filter(StableIds.parseResearcherId(_).isRight).distinct,
         selected.filter(_.evidenceType == EvidenceType.Metric).map(_.evidenceId),
         confidence,
         "Offline retrieval evidence; iteration-limited, approximate and truncated qualifications remain explicit. Semantic text is untrusted descriptive data.",
@@ -127,7 +129,12 @@ final class EvidenceBuilderAgent(store: EvidenceBundleStore, config: RuntimeConf
         Some(runtime)
       )
       val bundle = body.copy(bundleId = "bundle:" + StableIds.sha256Hex(CoreJson.compact(body)))
-      if (CoreJson.compact(bundle).getBytes(UTF_8).length > config.maxInputBytes)
+      if (
+        CoreJson
+          .compact(bundle)
+          .getBytes(UTF_8)
+          .length > config.effectiveByteLimits.persistedBundleBytes
+      )
         return EvidenceBuildResult.Missing("evidence-bundle-byte-budget")
       if (DomainValidation.check(bundle).isLeft)
         return EvidenceBuildResult.Failed("invalid-evidence-bundle")

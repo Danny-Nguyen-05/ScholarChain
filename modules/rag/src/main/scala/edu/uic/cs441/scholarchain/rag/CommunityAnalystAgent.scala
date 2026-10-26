@@ -151,7 +151,8 @@ final class CommunityAnalystAgent(
             )
           ),
           converged = Option.when(memberships.nonEmpty)(memberships.forall(_.converged)),
-          iterations = memberships.map(_.iterations).maxOption
+          iterations = memberships.map(_.iterations).maxOption,
+          sourceContext = Some(change.context)
         )
       }
       if (items.isEmpty) throw RetrievalProblem("missing", "researcher-required")
@@ -262,7 +263,8 @@ final class CommunityAnalystAgent(
               )
           ),
           converged = Some(summary.converged),
-          iterations = Some(summary.iterations)
+          iterations = Some(summary.iterations),
+          sourceContext = Some(summary.context)
         )
         Vector(item, bridgeItem)
       }
@@ -311,7 +313,8 @@ final class CommunityAnalystAgent(
       ),
       Some(b.policyVersion),
       Some(m.converged),
-      Some(m.iterations)
+      Some(m.iterations),
+      sourceContext = Some(b.context)
     )
   }
 }

@@ -120,13 +120,22 @@ final class CollaborationMetricsAgent(
               text("componentId", e.componentId),
               decimal("effectiveDiameterP90", e.effectiveDiameterP90),
               text("distanceMethod", e.method),
-              flag("distanceP90Approximate", true)
+              flag("distanceP90Approximate", true),
+              number("sampleSourceCount", e.sampleSourceCount),
+              number("seed", e.seed),
+              decimal("meanDistance", e.meanDistance),
+              number("reachedPairCount", e.reachedPairCount)
             ),
             Vector(
               ref("metrics/type=path_length_estimate", e.componentId, "effectiveDiameterP90"),
-              ref("metrics/type=path_length_estimate", e.componentId, "method")
+              ref("metrics/type=path_length_estimate", e.componentId, "method"),
+              ref("metrics/type=path_length_estimate", e.componentId, "sampleSourceCount"),
+              ref("metrics/type=path_length_estimate", e.componentId, "seed"),
+              ref("metrics/type=path_length_estimate", e.componentId, "meanDistance"),
+              ref("metrics/type=path_length_estimate", e.componentId, "reachedPairCount")
             ),
-            approximate = true
+            approximate = true,
+            sourceContext = Some(e.context)
           )
         }
       }

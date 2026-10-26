@@ -76,9 +76,11 @@ final class BedrockConverseLlmClient(client: BedrockRuntimeClient, config: Runti
     if (
       request.timeoutMillis <= 0 || request.toolName.trim.isEmpty ||
       request.systemPrompt.trim.isEmpty || request.userData.trim.isEmpty ||
+      request.systemPrompt.getBytes(UTF_8).length > config.effectiveByteLimits.promptBytes ||
+      request.schemaJson.getBytes(UTF_8).length > config.effectiveByteLimits.promptBytes ||
       Vector(request.systemPrompt, request.userData, request.schemaJson)
         .map(_.getBytes(UTF_8).length.toLong)
-        .sum > config.maxInputBytes
+        .sum > config.effectiveByteLimits.requestBytes
     ) return LlmResult.Failure("llm-input-bound")
     var acquired = false
     try {
@@ -143,7 +145,7 @@ final class BedrockConverseLlmClient(client: BedrockRuntimeClient, config: Runti
       )
         return LlmResult.Failure("llm-invalid-tool-output")
       val json = LlmDocuments.fromDocument(blocks.head.toolUse().input()).render()
-      if (json.getBytes(UTF_8).length > config.maxInputBytes)
+      if (json.getBytes(UTF_8).length > config.effectiveByteLimits.outputBytes)
         return LlmResult.Failure("llm-output-bound")
       val usage = Option(response.usage())
       LlmResult.Output(

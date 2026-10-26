@@ -1,0 +1,64 @@
+[info] welcome to sbt 1.10.7 (Homebrew Java 17.0.20.1)
+[info] loading settings for project scholarchain-build from plugins.sbt...
+[info] loading project definition from /Users/danny/Documents/UIC/CS441/ScholarChain/project
+[info] loading settings for project root from build.sbt...
+[info] set current project to root (in build file:/Users/danny/Documents/UIC/CS441/ScholarChain/)
+[info] scalafmt: Formatting 1 Scala sources (/Users/danny/Documents/UIC/CS441/ScholarChain/modules/storage)...
+[info] scalafmt: Reformatted 1 Scala sources
+[info] scalafmt: Formatting 1 Scala sources (/Users/danny/Documents/UIC/CS441/ScholarChain/modules/rag)...
+[info] scalafmt: Reformatted 1 Scala sources
+[info] scalafmt: Formatting 6 Scala sources (/Users/danny/Documents/UIC/CS441/ScholarChain/tests)...
+[info] scalafmt: Reformatted 6 Scala sources
+[info] compiling 1 Scala source to /Users/danny/Documents/UIC/CS441/ScholarChain/modules/storage/target/scala-3.3.4/test-classes ...
+[info] done compiling
+[info] RuntimeAuditStorageSpec:
+[info] - terminal audit writes reads and identical replay use immutable content with a small pointer
+[info] - audit namespace preserves an existing application query session
+[info] - a changed terminal record cannot overwrite the first audit for a query
+[info] - invalid envelopes and byte bounds refuse before object publication
+[info] - rejected fabricated claim proposals survive exact audit storage and lookup
+[info] - object write failure is typed and never publishes a terminal session pointer
+[info] - failed pointer publication leaves a retryable object and pending session
+[info] - lost successful pointer-write response is recognized by authoritative lookup
+[info] - session creation failure is typed and retrying reuses the existing immutable object
+[info] - corrupt or missing stored objects cannot be returned through a valid pointer
+[info] - pointer query and key tampering fail closed
+[info] - TTL-bearing sessions and foreign reserved rows are never reused
+[info] - two adapters racing different records publish only one immutable winner
+[info] - matching in-memory fake exposes the same durable-audit lookup and conflict contract
+[info] Run completed in 227 milliseconds.
+[info] Total number of tests run: 14
+[info] Suites: completed 1, aborted 0
+[info] Tests: succeeded 14, failed 0, canceled 0, ignored 0, pending 0
+[info] All tests passed.
+[info] compiling 5 Scala sources to /Users/danny/Documents/UIC/CS441/ScholarChain/modules/rag/target/scala-3.3.4/test-classes ...
+[info] done compiling
+[info] Runtime9CSpec:
+[info] - exact publication count is checked and factual text is regenerated
+[info] - wrong count is removed but retained as rejected audit material
+[info] - mixed verified and rejected claims return partially verified status
+[info] - missing evidence cannot authorize an otherwise correct field
+[info] - subject and window substitutions fail closed
+[info] - interpretation is bounded to generic words and rejects names numbers and IDs
+[info] - unknown templates and fields are not rendered
+[info] - malformed synthesis is retried once then abstains
+[info] - stored source provenance and content IDs are independent of request lineage
+[info] - path status rendered context retains its researcher pair
+[info] - sampling details stay on separate approximate P90 evidence
+[info] - CLI refuses live and malformed arguments before creating providers
+[info] - versioned benchmark contains at least required cases and literal expected values
+[info] - offline CLI returns a verified answer and persisted audit
+[info] - all scripted benchmark cases meet their hand-derived outcomes *** FAILED ***
+[info]   results.forall(((_$13: ujson.Value) => _$13.apply(ujson.Value.Selector.StringSelector("passed")).bool)) was false [{"id":"team","expectedOutcome":"ANSWERED","outcome":"ABSTAINED","passed":false,"result":{"answer":{"schemaVersion":"scholarchain.domain.v1","responseId":"answer:391470f7e7cd55974ed2193de9b19a4ec3f1df9477142363926de877dc256e73","queryPlanId":"plan:32030d99a68f22406116fa1427807da95ff9abd7b9872707599015b49d1a5c8c","runId":"run:55555555-5555-4555-8555-555555555555","summary":"No verified answer is available from the supplied evidence.","claims":[],"evidenceBundleId":"bundle:ffc2184a4b8fe72d372415d0d0188763c8f55dad48ddf8c2de5e895e7627c9ae","uncertainty":"Essential verified claims are unavailable.","provenance":{"schemaVersion":"scholarchain.domain.v1","source":"DBLP","sourceRecordId":"synthetic-9b-g1","sourceUri":null,"datasetSnapshot":"synthetic-9b","retrievalDate":"2026-10-26","licenseEvidenceUri":null,"runId":"run:55555555-5555-4555-8555-555555555555","uncertaintyNotes":["Synthetic Phase6 G1 fixture; overlays separate."]}},"audit":{"queryId":"query:offline:d1f46fe7162947192fcb6d21e5c3202130c3574680bde638eeb4437f0339a831","traceId":"query:offline:d1f46fe7162947192fcb6d21e5c3202130c3574680bde638eeb4437f0339a831","question":"Which researchers have the largest team size?","outcome":"ABSTAINED","reason":"partial-retrieval","record":{"queryId":"query:offline:d1f46fe7162947192fcb6d21e5c3202130c3574680bde638eeb4437f0339a831","traceId":"query:offline:d1f46fe7162947192fcb6d21e5c3202130c3574680bde638eeb4437f0339a831","plan":{"planId":"plan:32030d99a68f22406116fa1427807da95ff9abd7b9872707599015b49d1a5c8c","schemaVersion":"scholarchain.domain.v1","question":"Which researchers have the largest team size?","operations":["MAXIMUM_TEAM_SIZE"],"window":{"startYear":10 [long assertion display clipped; full raw retained]
+[info] Run completed in 790 milliseconds.
+[info] Total number of tests run: 15
+[info] Suites: completed 1, aborted 0
+[info] Tests: succeeded 14, failed 1, canceled 0, ignored 0, pending 0
+[info] *** 1 TEST FAILED ***
+[error] Failed tests:
+[error] 	edu.uic.cs441.scholarchain.rag.Runtime9CSpec
+[error] (rag / Test / testOnly) sbt.TestsFailedException: Tests unsuccessful
+[error] Total time: 3 s, completed Oct 26, 2026, 2:43:06 PM
+real 11.36
+user 42.25
+sys 2.03

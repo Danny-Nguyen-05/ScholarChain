@@ -68,24 +68,43 @@ final class WorkflowRunner(
       }
     }
   )
-  def run(question: String, queryId: String, provenance: Provenance): WorkflowResult = {
-    val pool = executor();
-    val deadline = System.nanoTime() + config.operations.synchronousDeadlineMs * 1000000L
+  def run(question: String, queryId: String, provenance: Provenance): WorkflowResult =
+    runUntil(
+      question,
+      queryId,
+      provenance,
+      System.nanoTime() + config.operations.synchronousDeadlineMs * 1000000L
+    )
+  def runUntil(
+      question: String,
+      queryId: String,
+      provenance: Provenance,
+      deadline: Long,
+      planSink: QueryPlan => Unit = _ => (),
+      usageSink: RuntimeModelUsage => Unit = _ => ()
+  ): WorkflowResult = {
+    val pool = executor()
     try
       timed(pool, deadline, "planner", config.deadlines.plannerMs)(
-        planner.plan(question, queryId, provenance)
+        planner.plan(question, queryId, provenance, usageSink)
       ) match {
-        case Left(failure)                               => WorkflowResult.Failed(failure)
-        case Right(PlannerResult.Planned(plan, _, _))    => execute(plan, queryId, pool, deadline)
+        case Left(failure) => WorkflowResult.Failed(failure)
+        case Right(PlannerResult.Planned(plan, _, _)) =>
+          planSink(plan); execute(plan, queryId, pool, deadline)
         case Right(PlannerResult.Unsupported(reason, _)) => WorkflowResult.Unsupported(reason)
         case Right(PlannerResult.Failed(reason)) =>
           WorkflowResult.Failed(StageFailure("planner", reason))
       }
     finally close(pool, deadline)
   }
-  def runPlan(plan: QueryPlan, queryId: String): WorkflowResult = {
-    val pool = executor();
-    val deadline = System.nanoTime() + config.operations.synchronousDeadlineMs * 1000000L
+  def runPlan(plan: QueryPlan, queryId: String): WorkflowResult =
+    runPlanUntil(
+      plan,
+      queryId,
+      System.nanoTime() + config.operations.synchronousDeadlineMs * 1000000L
+    )
+  def runPlanUntil(plan: QueryPlan, queryId: String, deadline: Long): WorkflowResult = {
+    val pool = executor()
     try execute(plan, queryId, pool, deadline)
     finally close(pool, deadline)
   }

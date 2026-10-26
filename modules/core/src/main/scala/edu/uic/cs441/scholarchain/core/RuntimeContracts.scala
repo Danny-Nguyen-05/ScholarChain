@@ -92,7 +92,8 @@ final case class RuntimeEvidence(
     iterations: Option[Int],
     approximate: Boolean,
     descriptive: Boolean,
-    contentBindingVersion: Option[String] = None
+    contentBindingVersion: Option[String] = None,
+    sourceContext: Option[SparkRecordContext] = None
 ) derives ReadWriter
 final case class RuntimeBundleContext(
     deterministicEvidenceIds: Vector[String],
@@ -148,7 +149,27 @@ final case class RuntimeModelUsage(
     promptVersion: String,
     schemaVersion: String,
     inputTokens: Option[Long],
-    outputTokens: Option[Long]
+    outputTokens: Option[Long],
+    region: Option[String] = None
+) derives ReadWriter
+
+/** An observable execution can finish before a QueryPlan exists. The optional existing record
+  * avoids inventing a successful plan for a planner rejection or timeout.
+  */
+final case class RuntimeAuditFailure(stage: String, reason: String) derives ReadWriter
+final case class RuntimeAuditEnvelope(
+    queryId: String,
+    traceId: String,
+    question: String,
+    outcome: String,
+    reason: Option[String],
+    record: Option[AuditRecord],
+    stageFailures: Vector[RuntimeAuditFailure],
+    latencyMillis: Long,
+    answerHash: String,
+    modelUsage: Vector[RuntimeModelUsage] = Vector.empty,
+    evidenceOnly: Boolean = false,
+    schemaVersion: String = "scholarchain.runtime-audit.v1"
 ) derives ReadWriter
 final case class AuditRecord(
     queryId: String,
@@ -291,7 +312,14 @@ object RuntimeContractValidation {
     Option.when(v.contentBindingVersion.exists(_ != RuntimeEvidenceIds.version))(
       "unsupported-runtime-evidence-content-binding"
     )
-  ).flatten
+  ).flatten ++ v.sourceContext.toVector.flatMap { context =>
+    Vector(
+      Option.when(SparkAnalyticsValidation.check(context).isLeft)("invalid-runtime-source-context"),
+      Option.when(context.runId != v.runId || context.windowId.exists(!v.windowIds.contains(_)))(
+        "runtime-source-context-mismatch"
+      )
+    ).flatten
+  }
 
   /** Structural compatibility check. Runtime bundle admission additionally checks the actual
     * records through bundleItems; IDs alone cannot establish the evidence partition.
@@ -352,7 +380,7 @@ object RuntimeContractValidation {
           Vector(
             Option.when(
               deterministic(item.evidenceId) &&
-                (payload.descriptive || item.evidenceType == EvidenceType.TextChunk)
+                (payload.descriptive || item.evidenceType == EvidenceType.TextChunk || item.text.isDefined)
             )("runtime-deterministic-item-mismatch"),
             Option.when(
               semantic(item.evidenceId) &&

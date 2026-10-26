@@ -111,3 +111,28 @@ Retained results are 99 targeted passes and 1,004 full-check passes, zero failur
 with raw-log hashes verified by the reviewer. No tests were rerun and no source was
 edited for approval recording. All 22 reviewed source hashes still match. The next
 gate is the approved 9B commit, followed by the user's separate 9C prompt.
+
+
+# Subphase 9C
+
+STATUS: COMPLETE local validation; independent external review pending.
+OWNER: Coordinator serializes builds/evidence; module owners author module suites; /root/tests_9c independently owns tests/**.
+WORK ORDER: Offline 9C feature matrix with hand-derived assertions, all original and approved subphase decisions retained.
+FILES CREATED: Core Runtime9CContractSpec; storage RuntimeAuditStorageSpec; RAG Runtime9CSpec; six independent fixture/spec files. Exact paths and hashes in evidence/9c/source-files.json.
+FILES MODIFIED: Core positive partition fixture uses text=None. Two old independent 9B byte assertions use approved effective persistedBundleBytes while retaining complete-path/context checks. Existing assertions were strengthened for candidate lists and benchmark semantics.
+COMMANDS RUN: All exact JDK 17 formatting/target/full/CLI commands and every attempt are retained in evidence/9c/commands.md and result records. Final target 5 exited 0; actual CLI benchmark 2 exited 0; full check 2 exited 0. Initial failed attempts and intentionally terminated full check 1 are preserved with raw-log hashes. No reviewer ran tests.
+TEST RESULTS: Core target 50/50; final target storage 14 + RAG 74 + independent 211 = 299/299, 16.31 seconds. Of these, 85 independent tests are new 9C cases. Actual CLI benchmark 15/15. Full check 1,131 passed, zero failed, 780.69 seconds: core 207, Hadoop 64, entity-resolution 39, Spark 38, storage 80, RAG 107, independent 588, build 8. Final TestRunMarker ran; expected injected format-stage self-test is not an application failure.
+VALIDATION RESULTS: Literal values and decimals larger than floating-point precision; fabricated/missing evidence/IDs and wrong type/template/window rejection; contradictory cited facts; complete four-hop supports; iteration-limited and approximate qualifiers; unrequested author conversion rejection; regenerated factual prose; partial/rejected claims retained in audit; title/abstract/profile instruction text stays untrusted under scripted tests; interpretation names/numbers/IDs rejected; schema/retry/byte/model controls; provenance/semantic identity separation; evidence-only and audit failures; deadline/cancellation and exception auditing. Benchmark checks component identity, direct B/C coauthors, ordered A-C-D-F-G route, both C=3/D=4 community sizes, ranking scope and actual homonym alternatives. All final source hashes match after the full gate.
+ASSUMPTIONS: Explicit synthetic overlays and scripted fake LLM; canonical ID formulas are domain contracts, while expected counts/routes are hand-derived.
+RISKS: Tests establish offline correctness only. Real enrichment coverage, production performance, provider compatibility/quality and general injection resistance are unverified. See coverage-and-limitations.md; Phase 11B expands injection/fault suites. Phase 8C remains deferred to 14C.
+MANUAL ACTION REQUIRED: User launches independent read-only 9C review; human gate remains user-owned.
+BLOCKED-ON OWNER: None for local tests.
+BLOCKED-ON EVIDENCE: User-launched external review.
+NEXT GATE: Independent 9C review; no further implementation or next-phase work authorized.
+
+
+## Subphase 9C — external approval recorded
+
+The user-supplied independent review returned APPROVE for Subphase 9C with no blocking findings. The complete review is appended verbatim in review.md. NB1–NB10 are logged in repairs.md with their exact owners, locations and acceptance checks; all are logged; not implemented.
+
+All 38 reviewed source SHA-256 hashes still match evidence/9c/source-files.json. No source, test, build, infrastructure or evidence-result changes and no test reruns were made while recording approval. Retained results remain full check 1,131 passed / 0 failed, targeted 299 / 0, CLI benchmark 15 / 15.

@@ -1,0 +1,32 @@
+[info] RuntimeAuditStorageSpec:
+[info] - terminal audit writes reads and identical replay use immutable content with a small pointer
+[info] - audit namespace preserves an existing application query session
+[info] - a changed terminal record cannot overwrite the first audit for a query
+[info] - invalid envelopes and byte bounds refuse before object publication
+[info] - rejected fabricated claim proposals survive exact audit storage and lookup
+[info] - object write failure is typed and never publishes a terminal session pointer
+[info] - failed pointer publication leaves a retryable object and pending session
+[info] - lost successful pointer-write response is recognized by authoritative lookup
+[info] - session creation failure is typed and retrying reuses the existing immutable object
+[info] - corrupt or missing stored objects cannot be returned through a valid pointer
+[info] - pointer query and key tampering fail closed
+[info] - TTL-bearing sessions and foreign reserved rows are never reused
+[info] - two adapters racing different records publish only one immutable winner
+[info] - matching in-memory fake exposes the same durable-audit lookup and conflict contract
+[info] Run completed in 224 milliseconds.
+[info] Total number of tests run: 14
+[info] Suites: completed 1, aborted 0
+[info] Tests: succeeded 14, failed 0, canceled 0, ignored 0, pending 0
+[info] All tests passed.
+[success] Total time: 1 s, completed Oct 26, 2026, 2:45:22 PM
+[info] compiling 4 Scala sources to /Users/danny/Documents/UIC/CS441/ScholarChain/modules/rag/target/scala-3.3.4/classes ...
+[error] -- Error: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/rag/src/main/scala/edu/uic/cs441/scholarchain/rag/RuntimeWorkflowMain.scala:142:72
+[error] 142 |        def filter(name: String): Vector[String] = ("(?i)\b" + name + "\s+\"([^\"]+)\"").r
+[error]     |                                                                        ^
+[error]     |                                              invalid escape character
+[error] one error found
+[error] (rag / Compile / compileIncremental) Compilation failed
+[error] Total time: 2 s, completed Oct 26, 2026, 2:45:24 PM
+real 6.58
+user 20.82
+sys 1.26

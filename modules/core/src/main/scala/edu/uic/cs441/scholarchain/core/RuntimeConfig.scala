@@ -33,6 +33,20 @@ final case class RuntimeResolverConfig(
     maxRunIdsPerCandidate: Int = 8
 ) derives ReadWriter
 
+/** Separate bounded surfaces prevent a question limit from also truncating a schema or persisted
+  * evidence. An omitted object retains the original maxInputBytes behavior on every surface.
+  */
+final case class RuntimeByteLimits(
+    questionBytes: Int,
+    promptBytes: Int,
+    requestBytes: Int,
+    outputBytes: Int,
+    persistedBundleBytes: Int
+) derives ReadWriter {
+  def all: Vector[Int] =
+    Vector(questionBytes, promptBytes, requestBytes, outputBytes, persistedBundleBytes)
+}
+
 final case class RuntimeStageDeadlines(
     plannerMs: Long,
     resolverMs: Long,
@@ -83,9 +97,13 @@ final case class RuntimeConfig(
     windows: Vector[RuntimeWindow],
     defaultWindowId: String,
     defaultRankingMeasure: String,
-    resolver: RuntimeResolverConfig = RuntimeResolverConfig()
+    resolver: RuntimeResolverConfig = RuntimeResolverConfig(),
+    byteLimits: Option[RuntimeByteLimits] = None
 ) derives ReadWriter {
   def windowIds: Vector[String] = windows.map(_.windowId)
+  def effectiveByteLimits: RuntimeByteLimits = byteLimits.getOrElse(
+    RuntimeByteLimits(maxInputBytes, maxInputBytes, maxInputBytes, maxInputBytes, maxInputBytes)
+  )
 }
 object RuntimeConfigValidation {
   val schemaVersion = "scholarchain.runtime-config.v1"
@@ -130,6 +148,7 @@ object RuntimeConfigValidation {
       Option.when(
         config.malformedRetries < 0 || config.malformedRetries > 1 || config.maxInputBytes <= 0 || config.maxOutputTokens <= 0
       )("invalid-runtime-model-bound"),
+      Option.when(config.effectiveByteLimits.all.exists(_ <= 0))("invalid-runtime-byte-bound"),
       Option.when(
         config.windows.isEmpty || config.windowIds.distinct != config.windowIds || !config.windowIds
           .contains(config.defaultWindowId)

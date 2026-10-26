@@ -1,0 +1,48 @@
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/RuntimeAuditStore.scala:168:47
+[warn] 168 |        StorageResult.value(created).getOrElse(return Rejected("audit-session-create-failed"))
+[warn]     |                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[warn]     |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/RuntimeAuditStore.scala:169:45
+[warn] 169 |      if (!owned(session, envelope.queryId)) return Rejected("audit-session-ownership-mismatch")
+[warn]     |                                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[warn]     |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/RuntimeAuditStore.scala:171:8
+[warn] 171 |        return readSession(session, envelope.queryId) match {
+[warn]     |        ^
+[warn]     |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] 172 |          case Found(old) if old == envelope => Unchanged(envelope)
+[warn] 173 |          case Found(_)                      => Rejected("audit-query-content-conflict")
+[warn] 174 |          case _                             => Rejected("audit-session-publication-conflict")
+[warn] 175 |        }
+[warn] 11 warnings found
+[info] done compiling
+[info] compiling 2 Scala sources to /Users/danny/Documents/UIC/CS441/ScholarChain/modules/storage/target/scala-3.3.4/test-classes ...
+[info] done compiling
+[info] RuntimeAuditStorageSpec:
+[info] - terminal audit writes reads and identical replay use immutable content with a small pointer *** FAILED ***
+[info]   312 was not less than 292 (RuntimeAuditStorageSpec.scala:67)
+[info] - audit namespace preserves an existing application query session
+[info] - a changed terminal record cannot overwrite the first audit for a query
+[info] - invalid envelopes and byte bounds refuse before object publication
+[info] - rejected fabricated claim proposals survive exact audit storage and lookup
+[info] - object write failure is typed and never publishes a terminal session pointer
+[info] - failed pointer publication leaves a retryable object and pending session
+[info] - lost successful pointer-write response is recognized by authoritative lookup
+[info] - session creation failure is typed and retrying reuses the existing immutable object
+[info] - corrupt or missing stored objects cannot be returned through a valid pointer
+[info] - pointer query and key tampering fail closed
+[info] - TTL-bearing sessions and foreign reserved rows are never reused
+[info] - two adapters racing different records publish only one immutable winner
+[info] - matching in-memory fake exposes the same durable-audit lookup and conflict contract
+[info] Run completed in 237 milliseconds.
+[info] Total number of tests run: 14
+[info] Suites: completed 1, aborted 0
+[info] Tests: succeeded 13, failed 1, canceled 0, ignored 0, pending 0
+[info] *** 1 TEST FAILED ***
+[error] Failed tests:
+[error] 	edu.uic.cs441.scholarchain.storage.RuntimeAuditStorageSpec
+[error] (storage / Test / testOnly) sbt.TestsFailedException: Tests unsuccessful
+[error] Total time: 7 s, completed Oct 26, 2026, 2:41:57 PM
+real 10.85
+user 26.69
+sys 1.44

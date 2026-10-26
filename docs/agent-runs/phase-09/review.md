@@ -530,3 +530,169 @@ Step 4 — After 9C gates pass, stop. Ensure no specialists or builds are runnin
 handoff packet and a complete independent reviewer prompt for Subphase 9C in one fenced block,
 with checkpoint facts filled in with real values. End with:
 "Subphase 9C is ready for review. I have stopped and will not start the next subphase until I
+
+
+## Subphase 9C
+
+user-supplied external review
+
+VERDICT: APPROVE for Subphase 9C. Nothing blocks it. There are ten nonblocking findings, listed below.
+
+I checked every claimed result against the files and raw logs, and all of it holds:
+- Inventory: HEAD and base are both 2527de0. There are 24 changed tracked files and 60 untracked files, and all 38 source SHA-256 hashes match source-files.json.
+- Raw logs: all 13 /tmp log hashes match log-bindings.json.
+- Full check (check-2): 207/64/39/38/80/107/588/8 passed, 0 failed, TestRunMarker ran, 780.69 s. The log was created at 18:01:18, after the last source change at 18:00:40. That change was the scalafmt step inside the final targeted run.
+- Final targeted run (targeted-5): 14/74/211 passed.
+- Offline CLI benchmark: 15/15 cases passed. The ambiguous case returned both homonyms, Name 0001 and Name 0002.
+- New 9C tests: counted per suite from the full log: core 11, storage 14, RAG 17, independent 85. That makes 127, and 1,004 + 127 = 1,131.
+- Ownership: every file is in its owner's territory. No build, services, infrastructure, constitutional, prior-review or human-gate changes, and no secrets or hardcoded cloud values in the new files.
+
+Findings (all nonblocking)
+
+#: NB1
+Severity: Medium
+path:line: modules/rag/.../ClaimVerificationAgent.scala:169-174, 186-192, 245-252
+Evidence: The verifier only checks that each cited evidence ID exists in the bundle. Support comes from the filtered subset that matches subject,
+window and trust, but the accepted claim keeps all its citations. So a METRIC claim citing [metric(A), semantic(A)] or [metric(A),  metric(B)]
+passes as VERIFIED and still lists the unrelated or descriptive ID.
+Impact: A verified number can point at semantic text (possibly containing injected instructions) or at another researcher's evidence. This weakens
+the deterministic/semantic separation in the final answer and in Phase 10 GET /v1/evidence/{id}.
+Owner: rag-engineer; test-engineer for independent tests
+Acceptance check: A claim with an unrelated, other-subject or descriptive citation on a non-SEMANTIC claim is UNSUPPORTED, or that citation is
+removed and the removal recorded. Add independent tests for both shapes.
+────────────────────────────────────────
+#: NB2
+Severity: Medium
+path:line: modules/rag/.../RuntimeAnswerWorkflow.scala:129, 204-205; tests/.../IndependentRuntime9CWorkflowSpec.scala:113-116
+Evidence: When verification ends with no accepted claim (verifier rejected everything, synthesis abstained or synthesis was malformed), the workflow
+returns AnswerWorkflowResult.Completed with audit.outcome == "ABSTAINED". The Abstained result type is never used in those cases, and the reason
+(e.g. synthesis-invalid-output) exists only in the audit. The independent test locks in this behavior.
+Impact: A Phase 10 consumer matching on Completed could present an abstention as an answer.
+Owner: rag-engineer; test-engineer
+Acceptance check: Either return Abstained(reason, audit) when verification.abstained, or record this contract as binding for Phase 10, with a test
+either way.
+────────────────────────────────────────
+#: NB3
+Severity: Low
+path:line: modules/rag/.../QueryPlannerAgent.scala:285
+Evidence: The planner's model-output JSON is limited by questionBytes, not outputBytes.
+Impact: This mixes two byte limits that 9C was meant to separate (N3). If someone sets a small question cap, every valid planner output gets rejected
+and the planner silently falls back to rules.
+Owner: rag-engineer
+Acceptance check: Use outputBytes, plus a test with a small question cap and a valid larger planner output.
+────────────────────────────────────────
+#: NB4
+Severity: Low
+path:line: tests/.../IndependentRuntime9CBenchmarkSpec.scala:10-16, 53-63; RuntimeWorkflowMain.scala:224-226
+Evidence: The ranking, team and bridge cases only check that some verified row has the expected value. The scripted model proposes that same value
+for every retained row.
+Impact: Rank order and which researcher is on top are not asserted end to end.
+Owner: test-engineer
+Acceptance check: Assert the ranked researchers and ranks by hand (e.g. C/D/F for distinct coauthors = 3).
+────────────────────────────────────────
+#: NB5
+Severity: Low
+path:line: RuntimeOfflineFixture.scala:46; SemanticContextAgent.scala:23-24
+Evidence: The benchmark runs in graph mode, not the default fused. In fused mode, any query naming more than one researcher always gets a
+non-essential semantic Unsupported, so it reports partial-retrieval.
+Impact: The default retrieval mode is not covered by the benchmark.
+Owner: rag-engineer
+Acceptance check: Note this in the README, or add one fused-mode benchmark or workflow case.
+────────────────────────────────────────
+#: NB6
+Severity: Low
+path:line: RuntimeAnswerWorkflow.scala:160-162, 177-179
+Evidence: The synthesis, verification and audit stages write no structured logs, and traceId is just the queryId.
+Impact: Plan §6.8 asks for structured logs with trace/run IDs.
+Owner: rag-engineer (Phase 11 may absorb this)
+Acceptance check: Stage outcome logs with trace and run IDs, and no payloads.
+────────────────────────────────────────
+#: NB7
+Severity: Low
+path:line: modules/rag/README.md:371-444
+Evidence: Task 7 asks the README to record benchmark results; the 9C section describes the cases but never states the observed 15/15.
+Impact: Documentation is incomplete.
+Owner: rag-engineer
+Acceptance check: Add the observed results with a pointer to the evidence.
+────────────────────────────────────────
+#: NB8
+Severity: Low
+path:line: RuntimeAnswerWorkflow.scala:58, 81
+Evidence: The plan variable is written from the stage thread without synchronization.
+Impact: After a retrieval timeout the audit may miss a plan that did exist.
+Owner: rag-engineer
+Acceptance check: Make it volatile or atomic.
+────────────────────────────────────────
+#: NB9
+Severity: Low
+path:line: ClaimVerificationAgent.scala:322-331
+Evidence: Researchers that were not resolved by name show up as raw IDs in the answer text, and unordered coauthorIds are joined with "→".
+Impact: Cosmetic and misleading in the final text.
+Owner: rag-engineer
+Acceptance check: Neutral separator for sets.
+────────────────────────────────────────
+#: NB10
+Severity: Low
+path:line: RuntimeRetrieval.scala:153-165
+Evidence: When an item has no stored source context, datasetSnapshot falls back to the run ID (for semantic items, the embedding document's run ID).
+Impact: That field holds a value of a different kind; the README only partly discloses this.
+Owner: rag-engineer
+Acceptance check: Disclose it, or leave the snapshot absent when it is unknown.
+
+Unverified future gates (not 9C defects):
+- Live Bedrock compatibility (model, tool, region, temperature) and the optional smoke run, which needs the user's approval and cap.
+- Live answer quality and general injection resistance (broader suites are Phase 11B).
+- Production latency, real enrichment coverage and real loader confidence.
+- Ports that ignore interruption.
+- Orphan audit objects left by a failed pointer write.
+- Phase 8C, deferred to 14C.
+
+Report fields
+
+STATUS: COMPLETE (read-only review). VERDICT: APPROVE for Subphase 9C.
+OWNER: code-reviewer (user-launched, read-only)
+WORK ORDER: Independent review of Phase 9 Subphase 9C at branch phase-9, base/HEAD 2527de01252286080e6db776b9cc0199a9353e1e, uncommitted.
+FILES CREATED: None.
+FILES MODIFIED: None.
+COMMANDS RUN: git rev-parse HEAD; git status --short [-uall]; git diff --stat/diff 2527de0 (core, rag, storage, tests, phase-09 evidence); reads of all untracked sources/tests/resources and evidence/9c/*; shasum of the plan (8c16e8ee… matches preflight); python3 -I SHA-256 re-verification of 38 sources (0 mismatches) and 13 raw logs (all OK); grep/parse of /tmp/phase9c-check-2.log, targeted-5.log, cli-benchmark-2.log (per-suite counts, 0 "*** FAILED", marker, outcomes/verdicts); secret/hardcoded-cloud-value grep (no hits). No builds, tests, provider/AWS calls, secret reads or writes.
+TEST RESULTS: Not run by the reviewer. Observed retained logs: full check 1,131 passed / 0 failed (207/64/39/38/80/107/588/8), 780.69 s, TestRunMarker ran; targeted 299/0; CLI 15/15. Check 1 (exit 143) is not counted.
+VALIDATION RESULTS: Ownership single-writer per path; schema-validated synthesis, one bounded retry, byte/deadline guards; deterministic verifier is the only decider; exact BigDecimal comparison; template-regenerated facts; interpretation guard; field-scoped convergence and approximate P90 with sampling details; stored-source lineage separate from request lineage; resolved/deterministic audit identities; named semantic entity filter; deterministic text=None; path-status pairs; vector mode rejects non-SEMANTIC claims; untrusted JSON delimiters; versioned prompts/schemas unchanged; immutable content-addressed audit with conditional namespaced pointer, readback, replay/conflict, fail-closed; pre-plan audits without a fabricated plan; evidence-only skips synthesis; critical path 22,000 ms ≤ 30,000 ms; ambiguity keeps both homonyms, skips synthesis, leaves resolved IDs empty. Benchmark values hand-checked against literal G1 (A-C-D-F-G = 4 hops; C=3/D=4 community sizes; B/C coauthors; D Δ=1). Ten nonblocking findings NB1-NB10.
+ASSUMPTIONS: The /tmp raw logs are the originals (hashes match). The Drive plan and course README sections are as recorded in authority-reading.md.
+RISKS: NB1/NB2 affect how Phase 10 will consume results; offline scripted LLM and synthetic overlays only.
+MANUAL ACTION REQUIRED: User decides whether to implement any nonblocker; user authorizes or performs the 9C commit; user writes human-gate.md/commit records.
+BLOCKED-ON OWNER: None.
+BLOCKED-ON EVIDENCE: None for 9C. Live gates remain unverified future gates.
+NEXT GATE: Append the review, user-authorized 9C commit, Phase 9 human gate. Phase 10 next (not started).
+
+Next prompt
+
+You are the ScholarChain Phase 9 orchestrator in /Users/danny/Documents/UIC/CS441/ScholarChain,
+branch phase-9, base/HEAD 2527de01252286080e6db776b9cc0199a9353e1e, Subphase 9C uncommitted.
+
+The independent read-only reviewer returned VERDICT: APPROVE for Subphase 9C with no blocking
+findings and ten nonblocking findings (NB1-NB10). The full reviewer output I am supplying with this
+prompt is the user-supplied external review.
+
+Do exactly this, then stop:
+1. Append that complete reviewer output verbatim to docs/agent-runs/phase-09/review.md under a
+   "Subphase 9C" heading, marked "user-supplied external review". Do not edit any earlier review text.
+2. In docs/agent-runs/phase-09/repairs.md, add a "Subphase 9C review - nonblocking findings (logged
+   only)" section listing NB1-NB10 with ID, owner, path:line and acceptance check exactly as the
+   review states. Mark each "logged; not implemented". Do not implement any of them unless I
+   explicitly ask in a later prompt. If I ask, route each to its native owner (rag-engineer for
+   modules/rag/**, test-engineer for tests/**), one writer per path, keep all ten original decisions,
+   the approved 9B defaults and the seven approved 9C defaults, rerun the affected targets and the
+   full JDK 17 `sbt check` with retained evidence and hashes, and return a recheck reviewer prompt.
+3. Update owner-report.md / test-report.md only to cite the APPROVE verdict and the logged
+   nonblockers. No source, test, build, infrastructure or evidence-result changes, and no reruns.
+   The 9C source hashes in evidence/9c/source-files.json must still match. Verify and report this.
+4. Commit authorization: I have not yet authorized a 9C commit unless this message says so
+   explicitly. Ask me whether to commit (and whether to push) Subphase 9C. Never commit or push
+   without my explicit instruction. If I authorize it, commit only the reviewed 9C paths in
+   evidence/9c/files.json plus the review/repairs/report updates from steps 1-3, and report the
+   exact git output and SHA.
+5. Tell me Phase 9 is ready for my human gate (human-gate.md and commit.txt are written only by
+   me) and that Phase 10 is next. Do not start, plan or prepare Phase 10.
+
+Rules: no nested delegation, no reviewer launch, no live/cloud/provider calls, no secret reads, no
+infrastructure, no human-gate edits, no Phase 10 work. End the turn after step 5.

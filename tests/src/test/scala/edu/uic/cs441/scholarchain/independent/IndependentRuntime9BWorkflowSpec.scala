@@ -116,7 +116,7 @@ class IndependentRuntime9BWorkflowSpec extends AnyFunSuite {
           CoreJson
             .compact(bundle)
             .getBytes(java.nio.charset.StandardCharsets.UTF_8)
-            .length <= config.maxInputBytes
+            .length <= config.effectiveByteLimits.persistedBundleBytes
         )
       case other =>
         fail(s"Required four-hop evidence must fit the configured default budgets: $other")

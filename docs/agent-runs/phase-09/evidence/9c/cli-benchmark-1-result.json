@@ -1,0 +1,100 @@
+{
+  "command": "/usr/bin/time -p sbt -batch 'rag/runMain edu.uic.cs441.scholarchain.rag.RuntimeWorkflowMain --benchmark'",
+  "rawPath": "/tmp/phase9c-cli-benchmark-1.log",
+  "rawSha256": "ca2b47b883cecbae4becde5f4ed494cfe487596f9e7d5c172531b70c95a74d17",
+  "exitCode": 0,
+  "elapsedSeconds": 4.76,
+  "cases": [
+    {
+      "id": "ranking",
+      "expectedOutcome": "ANSWERED",
+      "outcome": "ANSWERED",
+      "passed": true
+    },
+    {
+      "id": "team",
+      "expectedOutcome": "ANSWERED",
+      "outcome": "ANSWERED",
+      "passed": true
+    },
+    {
+      "id": "direct",
+      "expectedOutcome": "ANSWERED",
+      "outcome": "ANSWERED",
+      "passed": true
+    },
+    {
+      "id": "path",
+      "expectedOutcome": "ANSWERED",
+      "outcome": "ANSWERED",
+      "passed": true
+    },
+    {
+      "id": "component",
+      "expectedOutcome": "ANSWERED",
+      "outcome": "ANSWERED",
+      "passed": true
+    },
+    {
+      "id": "community",
+      "expectedOutcome": "ANSWERED",
+      "outcome": "ANSWERED",
+      "passed": true
+    },
+    {
+      "id": "bridge",
+      "expectedOutcome": "ANSWERED",
+      "outcome": "ANSWERED",
+      "passed": true
+    },
+    {
+      "id": "temporal",
+      "expectedOutcome": "ANSWERED",
+      "outcome": "ANSWERED",
+      "passed": true
+    },
+    {
+      "id": "topic",
+      "expectedOutcome": "ANSWERED",
+      "outcome": "ANSWERED",
+      "passed": true
+    },
+    {
+      "id": "ambiguous",
+      "expectedOutcome": "ABSTAINED",
+      "outcome": "ABSTAINED",
+      "passed": true
+    },
+    {
+      "id": "unsupported",
+      "expectedOutcome": "UNSUPPORTED",
+      "outcome": "UNSUPPORTED",
+      "passed": true
+    },
+    {
+      "id": "injection",
+      "expectedOutcome": "UNSUPPORTED",
+      "outcome": "UNSUPPORTED",
+      "passed": true
+    },
+    {
+      "id": "institution",
+      "expectedOutcome": "ANSWERED",
+      "outcome": "ANSWERED",
+      "passed": true
+    },
+    {
+      "id": "venue",
+      "expectedOutcome": "ANSWERED",
+      "outcome": "ANSWERED",
+      "passed": true
+    },
+    {
+      "id": "disconnected",
+      "expectedOutcome": "ANSWERED",
+      "outcome": "ANSWERED",
+      "passed": true
+    }
+  ],
+  "scope": "Offline scripted fake LLM, synthetic G1 metadata/partition overlays; correctness only, no live quality claim."
+}

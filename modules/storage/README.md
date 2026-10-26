@@ -422,3 +422,38 @@ Deferred N3 (serial embedding invocation), N6 (whole SQS receive batch rejection
 metadata retained on unchanged text) and R3 (filterable metadata checked only by the vector adapter)
 remain outside this repair. Live compatibility, provider quality, counts and costs are not inferred
 from local replay.
+
+## Phase 9C terminal audit persistence
+
+`RuntimeAuditStore.put(envelope)` and `get(queryId)` provide the required typed audit
+boundary for answers, abstentions, unsupported requests, failures and evidence-only runs.
+`ObjectStoreRuntimeAuditStore(objects, sessions, RuntimeAuditStoreConfig(prefix, ...))`
+uses the existing ordinary object store and query-session table. It creates no table,
+GSI or infrastructure. The injected `QuerySessionStore` must have TTL disabled so audit
+pointers do not expire. Reserved, hashed audit primary/idempotency keys are distinct
+from the application query ID and its client idempotency key; application query-session
+state is never overwritten.
+
+The complete envelope is immutable and addressed by its SHA-256 under the configured
+versioned prefix. Only a small pointer is written with the session adapter's conditional
+revision update. The default audit-envelope bound is one MiB, allowing bounded rejected
+proposals and provenance without putting the payload in DynamoDB; the independent pointer
+bound is sixteen KiB. Both limits are configurable application bounds. Reads bind pointer
+schema, original query ID, object key, size, hash and decoded envelope validation. Public
+errors are closed codes and never include provider messages or stored payloads.
+
+A successful `put` verifies the object and authoritative pointer lookup before returning.
+An identical terminal envelope replays as unchanged; a different envelope for the same
+query ID is an immutable conflict. Object publication precedes the conditional pointer,
+so a failed pointer write can leave an unreferenced immutable object and a pending session.
+Retrying the identical envelope repairs that publication. Concurrent adapters use the
+session compare-and-swap; a competing different terminal record cannot overwrite the
+winner. This is not a cross-store transaction, and orphan-object cleanup is not performed
+by the runtime. Audit validation deliberately retains unsupported or fabricated attempted
+claims in the audit record for later explain/independent-checker use.
+
+`storage.fakes.InMemoryRuntimeAuditStore` composes the same adapter with in-memory ports.
+Module tests exercise real adapter composition, replay, application-session isolation,
+invalid/oversize refusal, object/session failures and retry, lost replies, corruption,
+TTL refusal, concurrent publication, and retention of malformed rejected proposals.
+These are offline correctness checks; no live AWS or provider call is made.

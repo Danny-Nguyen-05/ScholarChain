@@ -1,0 +1,9 @@
+{
+  "command": "/usr/bin/time -p sbt -batch 'rag/Compile/scalafmt' 'rag/compile'",
+  "rawPath": "/tmp/phase9c-rag-compile-1.log",
+  "rawSha256": "f80f02772dc0f219432da4e82a00ad3a616f008e5e18ec40f11d60ebaf5a4c28",
+  "exitCode": 0,
+  "elapsedSeconds": 13.34,
+  "passed": 0,
+  "failed": 0
+}

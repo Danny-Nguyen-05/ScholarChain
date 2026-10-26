@@ -103,5 +103,12 @@
     "maxEvidenceRefsPerCandidate": 32,
     "maxAffiliationsPerCandidate": 16,
     "maxRunIdsPerCandidate": 8
+  },
+  "byteLimits": {
+    "questionBytes": 16384,
+    "promptBytes": 16384,
+    "requestBytes": 65536,
+    "outputBytes": 32768,
+    "persistedBundleBytes": 65536
   }
 }

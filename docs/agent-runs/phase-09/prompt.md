@@ -368,3 +368,8 @@ All ten original decisions remain in evidence/9a/user-answers.md. Do 9B only; no
 # Subphase 9B repair round 1
 
 User supplied external REQUEST-CHANGES and instructed "fix all blocking bugs for me". Only B1 routed; O1-O10 log only, no9C work. Complete user-supplied review/NEXT PROMPT: evidence/9b-r1/external-review.txt. Bounded work order: evidence/9b-r1/work-order.md. Original10decisions and9Bdefaults unchanged. No questions for this repair round.
+
+
+# Subphase 9C — user-authorized start
+
+Approved9B committed/pushed as2527de01252286080e6db776b9cc0199a9353e1e;22reviewed committed blobs match. User answered "use all recommended defaults" to the seven9CStep0choices. Exact choices/work order: evidence/9c/user-answers.md and work-order.md. All ten original decisions and9Bdefaults remain binding. Only9C; no livecalls, infrastructure, commits/pushes, human gates orPhase10work.

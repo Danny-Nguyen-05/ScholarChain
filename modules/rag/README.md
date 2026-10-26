@@ -367,3 +367,78 @@ separate component, and J is solo. Declared community labels, venue/topic/instit
 The independent test fixture separately exercises complete authoritative metadata and real artifact
 readers. Confidence remains absent when the real loader has no confidence; synthetic values do not
 establish calibrated identity confidence. Phase 8C remains deferred to Phase 14C.
+
+## Phase 9C synthesis, verification, audit and offline CLI
+
+`RuntimeAnswerWorkflow` composes the existing retrieval runner with `AnswerSynthesisAgent`,
+`ClaimVerificationAgent` and the injected `RuntimeAuditStore`. The retrieval-only API remains
+available for experiments. Evidence-only full-workflow runs skip synthesis and verification calls
+but still require an `EVIDENCE_ONLY` audit. A terminal result is returned only after the audit
+payload and its indexed query lookup are readable. The adapter uses existing object/session ports;
+there are no new tables, indexes or infrastructure. A required audit write/read failure returns a
+typed failure, including after otherwise successful synthesis. Unsupported requests, ambiguous
+identities, missing evidence and malformed synthesis are audited with their closed outcome/reason.
+Ambiguous-name abstentions return the bounded candidate list with display names and source context;
+the reason discloses total/truncation, and candidates are not recorded as resolved identities.
+The abstention response hash includes this candidate list.
+The audit retains proposed and rejected claims, per-claim verdicts/reasons, plan when available,
+source run/version/evidence IDs, prompt/model versions, usage when supplied, latency and the hash
+of the complete final answer. Pre-plan outcomes use an optional record rather than a fabricated plan.
+
+Synthesis uses the versioned `synthesis-v1` prompt and `scholarchain.runtime.synthesis.v1` schema,
+with forced `submit_answer` tool use through the same configured Bedrock Converse port. The stage
+allows at most one malformed-output retry inside its total configured deadline. Tests and the CLI
+use scripted clients; no Bedrock request is made. Model output supplies only typed proposals and
+narrative claim IDs. Factual prose and model uncertainty text are never trusted as answer facts.
+The deterministic verifier checks allowlisted claim fields and templates against evidence IDs,
+subjects, windows and exact stored values. It rejects missing evidence, wrong values, fabricated
+identities, unrelated evidence kinds and unrequested total-author conversions. Vector evidence
+cannot authorize deterministic graph or numeric claims. Rejected proposals remain in the audit;
+only fully verified claims are rendered. Mixed claim outcomes remain partially verified, while no
+accepted claims yields `ABSTAINED`.
+
+Factual templates render verified fields and source qualifications. Convergence/iteration labels
+apply to community-derived fields, rather than exact publication/coauthor counts. A separate
+component distance estimate remains approximate and carries stored sample count, seed, mean and
+reached-pair count with source references. Maximum coauthors excludes the researcher; explicitly
+requested total authors is labeled as coauthors plus one. Weighted degree equals total coauthor
+occurrences and is not independent corroboration; repeated collaboration is the individual edge's
+joint-publication count. Optional interpretation uses a deliberately narrow generic vocabulary;
+numbers, identifiers, names and unknown words are rejected. Accepted interpretation is labeled.
+This is a conservative coverage boundary, not evidence of general live-model injection resistance.
+
+Stored evidence uses source-derived lineage/provenance, without copying request snapshot/date/
+license values into facts. The request retains its own plan/audit provenance. Semantic source
+provenance comes from the verified document/run/pointer; unknown dates/licenses remain absent.
+Named semantic retrieval includes the resolved entity constraint; multiple resolved subjects without
+an available multi-entity filter return Unsupported. Verified identities and audit resolved IDs use
+resolver candidates and deterministic subjects, never subjects chosen only by semantic similarity.
+Path-status context retains the researcher pair even when no path exists. Deterministic evidence
+cannot contain a descriptive excerpt. The planner also recognizes natural temporal "change from"
+phrasing and community comparisons while preserving exact window/metric/filter intent checks.
+
+The runtime configuration separates question, prompt, total request, output and persisted-bundle
+byte limits. Omitted `byteLimits` preserves the legacy shared `maxInputBytes` behavior. Context
+remains bounded by its conservative UTF-8-byte token upper bound. Full workflow deadlines reserve
+configured audit time inside the same synchronous deadline. Interruptible tasks are cancelled on
+expiry; injected ports must honor interruption or their own timeout. Java cannot forcibly stop a
+port that ignores interruption. Larger atomic evidence groups can still abstain, and strict missing
+authoritative metadata can produce Unsupported. Live compatibility and production latency remain
+unverified.
+
+The offline CLI accepts only:
+
+```sh
+sbt -batch 'rag/runMain edu.uic.cs441.scholarchain.rag.RuntimeWorkflowMain --benchmark'
+```
+
+Use the prescribed JDK 17 environment from the phase plan for every sbt command. An optional
+`--evidence-only` flag skips synthesis. The CLI never constructs provider clients or reads credentials.
+Its scripted proposals are defined for the versioned benchmark questions; other safe questions may
+abstain rather than fabricate a response. `runtime-benchmark-v1.json` contains the 12 required query
+families plus institution, venue and disconnected-path cases. Numeric expected values are literal,
+hand-derived G1 facts; only evidence IDs are bound dynamically. `RuntimeOfflineFixture` preserves
+the original G1 graph and uses explicitly synthetic community, metadata and homonym overlays.
+The temporal comparison uses declared stored fixture rows. These tests establish offline
+correctness, not real metadata coverage, model quality or live injection behavior. Broader fault/
+injection suites remain Phase 11B. Phase 8C remains deferred to Phase 14C.

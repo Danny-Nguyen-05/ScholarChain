@@ -1,0 +1,9 @@
+{
+  "command": "/usr/bin/time -p sbt -batch 'rag/Compile/scalafmt' 'rag/Test/scalafmt' 'independentTests/Test/scalafmt' 'storage/testOnly *RuntimeAuditStorageSpec' 'rag/testOnly *Runtime9CSpec *Runtime9ASpec *Runtime9ARepairSpec *Runtime9BSpec' 'independentTests/testOnly *Runtime9C* *Runtime9B* *Runtime9APlannerSpec *Runtime9AResolverSpec *Runtime9ARepairPlannerSpec *Runtime9ARepairResolverSpec *Runtime9AEvidenceSpec'",
+  "rawPath": "/tmp/phase9c-targeted-2.log",
+  "rawSha256": "0578d4c1f5b1020676f16f31578a0986ffa628d6d861b0bf729960cb42fd94d9",
+  "exitCode": 1,
+  "elapsedSeconds": 6.58,
+  "storagePassed": 14,
+  "failure": "RAG compile invalid Scala regex escape in CLI filter parser; RAG/independent tests not reached."
+}
