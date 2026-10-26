@@ -1,0 +1,13 @@
+{
+  "rawPath": "/tmp/phase9a-targeted-all-1.log",
+  "rawSha256": "ac0fd39c60b6f9486c3a249ae597f9f5a5e964bdd48f92d64d83f98784cac14a",
+  "exitCode": 0,
+  "counts": {
+    "core": 17,
+    "storage": 11,
+    "rag": 20,
+    "independent": 22
+  },
+  "total": 70,
+  "failed": 0
+}

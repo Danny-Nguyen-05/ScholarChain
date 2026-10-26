@@ -1,0 +1,11 @@
+{
+  "command": "/usr/bin/time -p sbt -batch 'rag/Test/scalafmt' 'rag/testOnly *Runtime9BSpec' 'independentTests/testOnly *Runtime9B* *Runtime9AEvidenceSpec'",
+  "rawPath": "/tmp/phase9b-targeted-2.log",
+  "rawSha256": "f00c7dd46043c17b5ff4806d33f361c9fc94b1cb243f219b3e39e49312485652",
+  "exitCode": 1,
+  "elapsedSeconds": 6.19,
+  "passed": 12,
+  "failed": 2,
+  "independentReached": false,
+  "failure": "Full G1 four-hop required evidence context4234bytes exceeds conservative4096tokenupperbound; builder and runner abstain; owner repair compact rendering without dropping essential facts."
+}

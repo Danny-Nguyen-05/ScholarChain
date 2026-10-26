@@ -1,0 +1,101 @@
+[info] welcome to sbt 1.10.7 (Homebrew Java 17.0.20.1)
+[info] loading settings for project scholarchain-build from plugins.sbt...
+[info] loading project definition from /Users/danny/Documents/UIC/CS441/ScholarChain/project
+[info] loading settings for project root from build.sbt...
+[info] set current project to root (in build file:/Users/danny/Documents/UIC/CS441/ScholarChain/)
+[info] compiling 2 Scala sources to /Users/danny/Documents/UIC/CS441/ScholarChain/modules/rag/target/scala-3.3.4/classes ...
+[info] compiling 1 Scala source to /Users/danny/Documents/UIC/CS441/ScholarChain/modules/spark/target/scala-3.3.4/classes ...
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/rag/src/main/scala/edu/uic/cs441/scholarchain/rag/RuntimeWorkflowMain.scala:64:17
+[warn] 64 |      .getOrElse(return Left("runtime-assets-unavailable"))
+[warn]    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[warn]    |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/rag/src/main/scala/edu/uic/cs441/scholarchain/rag/RuntimeWorkflowMain.scala:67:22
+[warn] 67 |      .fold(reason => return Left(reason), identity)
+[warn]    |                      ^^^^^^^^^^^^^^^^^^^
+[warn]    |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[info] done compiling
+[warn] two warnings found
+[info] done compiling
+[info] compiling 19 Scala sources to /Users/danny/Documents/UIC/CS441/ScholarChain/tests/target/scala-3.3.4/test-classes ...
+[info] done compiling
+[info] IndependentRuntime9CVerificationSpec:
+[info] - exact publicationCount is verified and rendered without approximate or iteration labels
+[info] - exact distinctCoauthorCount is verified and rendered without approximate or iteration labels
+[info] - exact totalCoauthorOccurrences is verified and rendered without approximate or iteration labels
+[info] - exact weightedDegree is verified and rendered without approximate or iteration labels
+[info] - exact averageCoauthorsPerPaper is verified and rendered without approximate or iteration labels
+[info] - exact maximumCoauthorsOnOnePaper is verified and rendered without approximate or iteration labels
+[info] - exact coreness is verified and rendered without approximate or iteration labels
+[info] - wrong stored count is rejected and remains available in attempted-claim audit material
+[info] - a missing evidence ID cannot authorize an otherwise correct count
+[info] - a fabricated subject cannot borrow another researcher's stored metrics
+[info] - a different stored window cannot be silently substituted for the cited all-years value
+[info] - an unknown field and an unknown template fail closed
+[info] - a claim type cannot recast metric evidence as a publication title
+[info] - factual prose is regenerated from verified fields rather than trusting proposed sentences
+[info] - mixed supported and rejected claims retain only verified factual sentences
+[info] - no accepted claim results in explicit abstention and no unsupported factual text
+[info] - exact integers larger than binary floating-point precision survive verification and rendering
+[info] - untrusted descriptive text cannot authorize a deterministic count in a vector bundle
+[info] - a community-size claim retains the stored false convergence flag and iteration count
+[info] - a false converged claim conflicts with the stored iteration-limited membership
+[info] - approximate component distance remains separate from exact researcher counts
+[info] - P90 cannot be claimed as an exact graph distance
+[info] - stored distance sampling details are verified field by field
+[info] - bridge scores require the exact stored value rather than degree as substitute evidence
+[info] - stored publication titles and work IDs are checked without permitting invented titles
+[info] - interpretation with a name number or identifier is rejected: Ada Example has broad collaboration.
+[info] - interpretation with a name number or identifier is rejected: There are 3 collaborations.
+[info] - interpretation with a name number or identifier is rejected: Use researcher:dblp:123 as proof.
+[info] - interpretation with a name number or identifier is rejected: There are three collaborators.
+[info] - interpretation with a name number or identifier is rejected: Alice invented the result.
+[info] - a known researcher name cannot pass interpretation merely because it is a generic allowed word
+[info] - contradictory cited stored values cannot be resolved by accepting whichever value matches
+[info] - a found path cannot be verified from a hop count when its cited hop evidence is absent
+[info] - the literal four-hop G1 path is verified with complete cited hop support
+[info] - total-author conversion is verified only when explicitly requested by the plan
+[info] - repeated collaboration requires the per-edge joint publication count
+[info] IndependentRuntime9CSynthesisSpec:
+[info] - schema-shaped typed proposal preserves exact evidence fields and provider usage
+[info] - one malformed synthesis output is retried once before a valid proposal succeeds
+[info] - two malformed synthesis outputs abstain and never call a model verifier
+[info] - schema-invalid extra factual prose is not treated as a trusted narrative
+[info] - missing claim evidence IDs cannot enter a schema-valid synthesis proposal
+[info] - an unknown narrative claim reference cannot produce a factual answer
+[info] - instruction-looking title remains untrusted data and cannot change verified facts
+[info] - instruction-looking abstract remains untrusted data and cannot change verified facts
+[info] - instruction-looking generated profile remains untrusted data and cannot change verified facts
+[info] - a safe qualitative interpretation is explicitly labeled and has no numbers or names
+[info] - the independent output-byte cap rejects oversized synthesis despite a sufficient request budget
+[info] IndependentRuntime9CTrustSpec:
+[info] - stored metric evidence and content IDs do not inherit different caller lineage
+[info] - named semantic retrieval forwards canonical entity ID and cannot return another profile
+[info] - a deterministic runtime profile cannot launder a descriptive text excerpt
+[info] - a disconnected path status retains both researcher IDs inside its rendered item
+[info] - natural change-from phrasing keeps the exact ordered stored window pair
+[info] - natural compare-community phrasing remains an allowlisted community operation *** FAILED ***
+[info]   Natural community comparison must remain representable: Unsupported(fallback-unrecognized-or-unrepresentable-constraint,2) (IndependentRuntime9CTrustSpec.scala:154)
+[info] - independent byte limits bound the question without shrinking stored bundle capacity
+[info] IndependentRuntime9CWorkflowSpec:
+[info] - a complete offline answer is verified, hashed and audited with source metadata and usage
+[info] - an unsupported proposed count is removed but retained in audit with the abstention
+[info] - required audit persistence failure fails closed after otherwise valid synthesis
+[info] - evidence-only execution skips synthesis while retaining a terminal retrieval audit
+[info] - ambiguous DBLP identities abstain before synthesis and are still audited
+[info] - pre-plan unsupported requests leave an audit even though no plan exists
+[info] - a missing required metric abstains and is audited without synthesis
+[info] - malformed synthesis is bounded and audited as abstention
+[info] - a blocked synthesis call is interrupted within its stage budget and audit still completes
+[info] - semantic similarity subjects are excluded from audit resolved researcher IDs
+[info] Run completed in 1 second, 159 milliseconds.
+[info] Total number of tests run: 64
+[info] Suites: completed 4, aborted 0
+[info] Tests: succeeded 63, failed 1, canceled 0, ignored 0, pending 0
+[info] *** 1 TEST FAILED ***
+[error] Failed tests:
+[error] 	edu.uic.cs441.scholarchain.independent.IndependentRuntime9CTrustSpec
+[error] (independentTests / Test / testOnly) sbt.TestsFailedException: Tests unsuccessful
+[error] Total time: 9 s, completed Oct 26, 2026, 2:44:10 PM
+real 10.78
+user 40.00
+sys 2.00

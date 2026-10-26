@@ -1,0 +1,19 @@
+{
+  "command": "/usr/bin/time -p sbt -batch 'storage/Test/scalafmt' 'rag/Test/scalafmt' 'independentTests/Test/scalafmt' 'storage/testOnly *RuntimeAuditStorageSpec' 'rag/testOnly *Runtime9CSpec' 'independentTests/testOnly *Runtime9C*'",
+  "rawPath": "/tmp/phase9c-targeted-1.log",
+  "rawSha256": "10d9b28f6c95d78b2a233bfa8fd879d779ac6e99bbd1fcbcf8056f12cedc346c",
+  "exitCode": 1,
+  "elapsedSeconds": 11.36,
+  "modules": {
+    "storage": {
+      "passed": 14,
+      "failed": 0
+    },
+    "rag": {
+      "passed": 14,
+      "failed": 1
+    }
+  },
+  "independentReached": false,
+  "failure": "RAG benchmark suite 14/15: multiple CLI scripted question/planner cases unsupported and team target absent from budgeted prefix. Required expectations retained; owners repair."
+}

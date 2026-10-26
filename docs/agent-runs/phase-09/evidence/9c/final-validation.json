@@ -1,0 +1,23 @@
+{
+  "recordedAt": "2026-10-26T23:17:05.057559+00:00",
+  "branch": "phase-9",
+  "head": "2527de01252286080e6db776b9cc0199a9353e1e",
+  "sourceHashesChecked": 38,
+  "sourceHashMismatches": [],
+  "rawLogBindingsChecked": 13,
+  "rawLogMismatches": [],
+  "gitDiffCheckExit": 0,
+  "untrackedWhitespaceFindings": [],
+  "planHashUnchanged": true,
+  "originalUserDecisionsAndPriorReviewsUnchanged": true,
+  "activeBuilds": [],
+  "specialists": "All native specialists completed; coordinator confirmed via list_agents.",
+  "externalReview": "Pending; none launched.",
+  "humanGateEdits": false,
+  "commitsOrPushes": false,
+  "liveCloudProviderCalls": false,
+  "inventoryTrackedModified": 24,
+  "inventoryUntracked": 60,
+  "finalPromptAndInventoryWhitespaceChecked": true,
+  "reviewerPrompt": "reviewer-prompt.md"
+}

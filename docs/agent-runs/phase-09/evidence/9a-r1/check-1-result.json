@@ -1,0 +1,20 @@
+{
+  "command": "/usr/bin/time -p sbt -batch check",
+  "rawPath": "/tmp/phase9a-r1-check-1.log",
+  "rawSha256": "a0ba6005ceae9cf2a8c05d64ade1e8df8d33d1dd90379bd0e3eace910b09ec01",
+  "exitCode": 0,
+  "elapsedSeconds": 725.07,
+  "passed": 901,
+  "failed": 0,
+  "modules": {
+    "core": 173,
+    "hadoop": 64,
+    "entityResolution": 39,
+    "sparkAnalytics": 38,
+    "storage": 66,
+    "rag": 73,
+    "independentTests": 440,
+    "buildVerification": 8
+  },
+  "expectedFailureProbe": "Injected format-stage failure belongs to passing CheckFailurePathSpec; build8/8 and final TestRunMarker success observed."
+}

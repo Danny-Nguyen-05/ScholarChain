@@ -1,0 +1,14 @@
+{
+  "researcherNames": [
+    "Name 0001"
+  ],
+  "windowIds": [
+    "since-2015"
+  ],
+  "comparisonWindowIds": [],
+  "retrievalMode": "fused",
+  "evidenceOnly": true,
+  "rankingMeasure": "CROSS_COMMUNITY_DEGREE",
+  "unsupportedReason": null,
+  "authorCountConversion": false
+}

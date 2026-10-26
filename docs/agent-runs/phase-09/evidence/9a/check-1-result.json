@@ -1,0 +1,21 @@
+{
+  "rawPath": "/tmp/phase9a-check-1.log",
+  "rawSha256": "2a72683091552bc4e0ccaaf0d6ae140619c729b788238a27040cdc50bc35c6e6",
+  "exitCode": 1,
+  "elapsedSeconds": 724.36,
+  "modules": {
+    "core": 169,
+    "hadoop": 64,
+    "entityResolution": 39,
+    "sparkAnalytics": 38,
+    "storage": 62,
+    "rag": 53,
+    "independentTests": {
+      "run": 398,
+      "passed": 397,
+      "failed": 1
+    },
+    "buildVerification": "not run after upstream failure"
+  },
+  "failure": "IndependentStorageLoaderSpec expected3 cachewrites; approved homonym alias adds fourth immutable row. Test owner updates explicit4write/replay counts and checks alias provenance; no production change."
+}

@@ -1,0 +1,168 @@
+{
+  "type": "object",
+  "properties": {
+    "schemaVersion": {
+      "type": "string",
+      "const": "scholarchain.runtime.planner.v1"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "SUPPORTED",
+        "UNSUPPORTED"
+      ]
+    },
+    "operations": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "RESEARCHER_RANKING",
+          "MAXIMUM_TEAM_SIZE",
+          "DIRECT_COAUTHORS",
+          "SHORTEST_PATH",
+          "COMPONENT_LOOKUP",
+          "COMMUNITY_COMPARISON",
+          "BRIDGE_RANKING",
+          "TEMPORAL_COMPARISON",
+          "TOPIC_FILTER",
+          "INSTITUTION_FILTER",
+          "SEMANTIC_EXPLANATION"
+        ]
+      },
+      "maxItems": 100,
+      "uniqueItems": true
+    },
+    "researcherNames": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 256
+      },
+      "maxItems": 100,
+      "uniqueItems": true
+    },
+    "windowIds": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 128
+      },
+      "maxItems": 100,
+      "uniqueItems": true
+    },
+    "comparisonWindowIds": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 128
+      },
+      "maxItems": 100,
+      "uniqueItems": true
+    },
+    "topicFilters": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 256
+      },
+      "maxItems": 100,
+      "uniqueItems": true
+    },
+    "institutionFilters": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 256
+      },
+      "maxItems": 100,
+      "uniqueItems": true
+    },
+    "venueFilters": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 256
+      },
+      "maxItems": 100,
+      "uniqueItems": true
+    },
+    "rankingMetric": {
+      "anyOf": [
+        {
+          "type": "string",
+          "enum": [
+            "PUBLICATION_COUNT",
+            "DISTINCT_COAUTHOR_COUNT",
+            "TOTAL_COAUTHOR_OCCURRENCES",
+            "AVERAGE_COAUTHORS_PER_PAPER",
+            "MAXIMUM_COAUTHORS_ON_ONE_PAPER",
+            "WEIGHTED_DEGREE",
+            "BRIDGE_SCORE",
+            "CORENESS"
+          ]
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "rankingMeasure": {
+      "anyOf": [
+        {
+          "type": "string",
+          "enum": [
+            "CROSS_COMMUNITY_DEGREE",
+            "PARTICIPATION_COEFFICIENT",
+            "CROSS_COMMUNITY_WEIGHT",
+            "COMMUNITIES_CONNECTED",
+            "JOINT_PUBLICATION_COUNT"
+          ]
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "authorCountConversion": {
+      "type": "boolean"
+    },
+    "unsupportedReason": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "status",
+    "operations",
+    "researcherNames",
+    "windowIds",
+    "comparisonWindowIds",
+    "topicFilters",
+    "institutionFilters",
+    "venueFilters",
+    "rankingMetric",
+    "rankingMeasure",
+    "authorCountConversion",
+    "unsupportedReason"
+  ],
+  "additionalProperties": false,
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "scholarchain.runtime.planner.v1",
+  "title": "Allowlisted runtime planner output v1"
+}

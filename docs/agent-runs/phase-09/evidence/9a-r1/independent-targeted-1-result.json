@@ -1,0 +1,10 @@
+{
+  "rawPath": "/tmp/phase9a-r1-independent-targeted-1.log",
+  "rawSha256": "7b33fd0a05b82fcda6af1864be81ab96c6539b83d21c0ea4ae3c710027695c9f",
+  "exitCode": 0,
+  "passed": 64,
+  "failed": 0,
+  "suites": 6,
+  "newRepairCases": 42,
+  "originalRuntimeCases": 22
+}

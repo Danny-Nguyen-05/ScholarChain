@@ -284,3 +284,100 @@ explicit graph/metric evidence. Structural validation is not source existence ve
 
 Four `wire/embedding-*.json` test resources freeze synthetic document, work-item, metadata and
 context examples. They are contract fixtures and describe no observed researcher.
+
+## Phase 9A runtime contracts
+
+`QueryPlan`, `EvidenceItem`, `EvidenceBundle` and `AnswerClaim` retain their existing domain
+wire formats and add defaulted optional `runtime` payloads. Existing frozen examples remain
+readable. Runtime numerical claim values use decimal strings to preserve stored integer
+precision. Per-claim `ClaimVerdict` maps to the existing overall `VerificationStatus`; explicit
+abstention remains `ABSTAINED`. Audit contracts preserve all attempted and rejected claims.
+
+`scholarchain.runtime-config.v1.json` is a local configuration example, with an unselected
+Converse model placeholder and configured `us-east-2` region. It authorizes no live call.
+`RuntimeConfigLoader` reads JSON only. Its validation includes the complete serial/parallel
+critical path within `operations.synchronousDeadlineMs`; stage budgets include retries.
+The legacy numeric window projection for an unbounded runtime window is compatibility
+metadata only: actual retrieval and evidence use the stored window ID and optional bounds.
+Runtime ranking filters identify a population and do not recompute metrics on filtered works.
+
+Evidence-item IDs retain their existing parsers. The storage owner's immutable ordinary-object
+item-to-bundle pointer index resolves an item ID through `EvidenceBundleStore.getItem`; no
+new database table or index is required. Retrieval/synthesis/verifier implementations belong
+to later subphases; these declarations are contracts only.
+
+Phase 9A repair B2 gives identity resolution its own `resolver` limits, independent of
+`retrieval.graphLimit`. The example permits 25 distinct canonical candidates, 16 source IDs,
+32 evidence references, 16 affiliations and 8 source-run IDs per candidate. These conservative
+output bounds keep common-name ambiguity and accumulated mention provenance reviewable;
+they are configurable output caps, not measured latency guarantees or limits on cache-row count.
+The larger evidence-reference allowance retains more source pointers than identity labels.
+Legacy runtime configuration without the `resolver` object uses these same compatibility defaults.
+Every bound must be positive. `ResearcherCandidate.provenanceSummary` optionally retains the
+distinct merged count of each provenance list before clipping plus a truncation flag, including
+context-derived evidence references and run IDs. An omitted summary means the original
+producer supplied no count/truncation observation; it never implies completeness. Coauthor
+context retains its separate truncation flag. Candidate-set overflow is disclosed by the RAG
+resolver's bounded `Ambiguous` result, rather than failing identity resolution.
+
+Phase 9B closes the evidence-partition contract gap at bundle admission.
+`DomainValidation.check(EvidenceBundle)` uses `RuntimeContractValidation.bundleItems` when
+the bundle has a runtime context. Every item must then carry its own runtime payload.
+Deterministic items must have `descriptive=false` and cannot use the `TEXT_CHUNK` evidence
+type. Semantic items must have `descriptive=true` and use `TEXT_CHUNK` or
+`RESEARCHER_PROFILE`; graph, edge and metric locators, typed numeric/flag/ID values, metric
+versions and deterministic convergence/approximation qualifications are rejected there.
+Provenance fields such as source references, source-run IDs, subject/window IDs and text
+pointers remain available without authorizing a factual claim. Vector mode still rejects
+any deterministic partition. Legacy bundles without a runtime context and their frozen
+wire examples retain their original validation. The older `bundle(context,itemIds)` helper
+remains a structural-only compatibility check; admission must use the actual-item helper.
+
+Runtime evidence persisted through the immutable item index also needs content-bound IDs:
+the same node path or edge can recur with different windows, source runs or observations.
+`RuntimeEvidenceIds.bind(item)` sets the additive optional runtime
+`contentBindingVersion` to `runtime-evidence-content-v1`, then hashes the complete item
+excluding only `evidenceId`. Object keys are sorted recursively, array order is retained,
+and the binding includes text, score, source URI, provenance, runtime values and the version
+marker. `expectedId(item)` returns that expected ID for an already marked item.
+Graph paths, edges and metrics retain their precise evidence types and existing
+`evidence:graph-path:`, `evidence:edge:` and `evidence:metric:` formats. Researcher profiles
+use the existing `profile:` format; other types use `chunk:`. Metric locators retain the
+actual stored policy version. Domain validation checks both the content binding and all
+existing type-specific locator requirements; a changed payload with an unchanged ID fails.
+New runtime builders use the binding helper. The marker defaults to `None`, so old runtime
+records and frozen legacy examples retain their original locator-only ID rules. Unknown
+binding versions fail closed. This is an additive identity contract, not a new wire hierarchy.
+
+`RuntimeBundleContext.resolvedCandidates` defaults to an empty vector for old JSON and retains
+the bounded resolver observations needed to cite display names, source IDs and individual
+confidence values. Bundle validation checks canonical researcher IDs, nonblank names, distinct
+nonblank source/reference/affiliation lists, source-run IDs, confidence bounds and provenance
+count/truncation summaries. Candidate IDs are unique within the bundle. The evidence builder
+enforces configured resolver bounds and budgets rendered identity context; the core contract
+does not read runtime configuration or invent missing confidence observations.
+
+Phase 9C separates byte limits through the optional `RuntimeConfig.byteLimits` object:
+`questionBytes`, `promptBytes`, `requestBytes`, `outputBytes`, and `persistedBundleBytes`.
+`effectiveByteLimits` maps an omitted object to the existing `maxInputBytes` on all five
+surfaces, preserving legacy configuration behavior. Each bound must be positive. The explicit
+example retains 16 KiB question/prompt caps, permits 64 KiB structured requests (context plus
+prompt/schema), bounds structured output at 32 KiB, and permits 64 KiB persisted bundles with
+source lineage. These are configurable application bounds, not provider limits or measured
+latency guarantees. The 4,096 context budget and 30-second synchronous deadline are unchanged.
+
+Runtime deterministic bundle items now require `text=None`; descriptive excerpts cannot be
+attached to a falsely labeled deterministic profile. Runtime-less legacy bundles remain valid.
+`RuntimeEvidence.sourceContext` optionally retains the original stored `SparkRecordContext`,
+including its upstream lineage. Source run/window and the existing Spark context contract are
+validated; complete item ID binding also covers this context. Omitting it preserves old JSON.
+The runtime must derive source provenance from stored observations rather than request metadata.
+
+`RuntimeAuditEnvelope` retains an optional existing `AuditRecord` so planner failures and
+unsupported requests can be audited without inventing a QueryPlan. It adds execution outcome,
+original question, typed stage failures, latency, answer hash, model usage and evidence-only mode.
+Answered/evidence-only successes require the plan-containing record; keys and answer hashes must
+agree across the envelope and record. A pre-plan failure can omit the record. Rejected or
+malformed attempted claims are intentionally retained without validating them away. The existing
+AuditRecord wire format remains unchanged; `RuntimeModelUsage.region` is optional for legacy JSON.
+`RuntimeAuditValidation` validates the durable envelope, not claim truth or provider behavior.

@@ -1,0 +1,35 @@
+[info] set current project to root (in build file:/Users/danny/Documents/UIC/CS441/ScholarChain/)
+[info] scalafmt: Formatting 1 Scala sources (/Users/danny/Documents/UIC/CS441/ScholarChain/modules/rag)...
+[info] scalafmt: Reformatted 1 Scala sources
+[success] Total time: 1 s, completed Oct 26, 2026, 11:37:35 AM
+[info] compiling 2 Scala sources to /Users/danny/Documents/UIC/CS441/ScholarChain/modules/rag/target/scala-3.3.4/test-classes ...
+[info] done compiling
+[info] Runtime9BSpec:
+[info] - G1 fixture preserves ten original researchers nine works and exact A metrics
+[info] - solo researcher retains zero coauthors and no invented confidence
+[info] - explicit total-author conversion is labeled and absent otherwise
+[info] - ranking is stored metric order and discloses top K
+[info] - missing stored window is Unsupported and filters on named metrics are never discarded
+[info] - A to G four hops retains exact supporting works and collaboration years
+[info] - different component IDs prove Disconnected; empty bounded search remains NoPathWithinLimit
+[info] - direct coauthors retain per-edge jointPublicationCount for repeated collaboration
+[info] - community evidence is iteration-limited and distinguishes degree from bridge importance
+[info] - bundle stable content IDs resolve individually and budget preserves entire G1 path *** FAILED ***
+[info]   default path budget: Missing(essential-evidence-context-budget), context=4234 bytes=11892 (Runtime9BSpec.scala:163)
+[info] - tiny evidence budget abstains without partial path persistence
+[info] - graph evidence-only runner reaches persisted evidence with no semantic calls *** FAILED ***
+[info]   Abstained("essential-evidence-context-budget", Vector(ResearcherCandidate("researcher:dblp:df3f8f903aede083509ee3f5bf14ff03463b3fe4484a46d0aecdd75d931eaf64", "A", Vector("synthetic:A"), Vector(), None, Vector(), Vector("g1:A"), Vector("run:55555555-5555-4555-8555-555555555555"), None, Some(ResearcherCandidateProvenanceSummary(1, 1, 0, 1, false))), ResearcherCandidate("researcher:dblp:42f95d0ba474488874068054f8b74f901f6921c1b56ff1f42db3b098978af89e", "G", Vector("synthetic:G"), Vector(), None, Vector(), Vector("g1:G"), Vector("run:55555555-5555-4555-8555-555555555555"), None, Some(ResearcherCandidateProvenanceSummary(1, 1, 0, 1, false)))), Vector()) was not instance of edu.uic.cs441.scholarchain.rag.WorkflowResult.Ready Abstained(essential-evidence-context-budget,Vector(ResearcherCandidate(researcher:dblp:df3f8f903aede083509ee3f5bf14ff03463b3fe4484a46d0aecdd75d931eaf64,A,Vector(synthetic:A),Vector(),None,Vector(),Vector(g1:A),Vector(run:55555555-5555-4555-8555-555555555555),None,Some(ResearcherCandidateProvenanceSummary(1,1,0,1,false))), ResearcherCandidate(researcher:dblp:42f95d0ba474488874068054f8b74f901f6921c1b56ff1f42db3b098978af89e,G,Vector(synthetic:G),Vector(),None,Vector(),Vector(g1:G),Vector(run:55555555-5555-4555-8555-555555555555),None,Some(ResearcherCandidateProvenanceSummary(1,1,0,1,false)))),Vector()) (Runtime9BSpec.scala:184)
+[info] - vector mode abstains on deterministic path requests
+[info] - homonym overlays expose both candidates without adding graph nodes
+[info] Run completed in 493 milliseconds.
+[info] Total number of tests run: 14
+[info] Suites: completed 1, aborted 0
+[info] Tests: succeeded 12, failed 2, canceled 0, ignored 0, pending 0
+[info] *** 2 TESTS FAILED ***
+[error] Failed tests:
+[error] 	edu.uic.cs441.scholarchain.rag.Runtime9BSpec
+[error] (rag / Test / testOnly) sbt.TestsFailedException: Tests unsuccessful
+[error] Total time: 3 s, completed Oct 26, 2026, 11:37:39 AM
+real 6.19
+user 23.63
+sys 1.07

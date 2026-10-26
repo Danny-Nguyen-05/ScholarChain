@@ -61,6 +61,10 @@ object SparkAnalyticsValidation {
     if (value.windowId.isEmpty) errors += "windowId is required"
   }
 
+  /** Runtime evidence can retain an original source context without manufacturing another row. */
+  def check(value: SparkRecordContext): Either[ConfigError, SparkRecordContext] =
+    evaluate(value)(errors => context(value, errors))
+
   def check(value: ResearcherMetricsDetail): Either[ConfigError, ResearcherMetricsDetail] =
     evaluate(value) { errors =>
       windowed(value.context, errors)

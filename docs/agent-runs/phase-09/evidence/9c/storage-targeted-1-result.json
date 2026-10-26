@@ -1,0 +1,9 @@
+{
+  "command": "/usr/bin/time -p sbt -batch 'storage/Compile/scalafmt' 'storage/Test/scalafmt' 'storage/testOnly *RuntimeAuditStorageSpec'",
+  "rawPath": "/tmp/phase9c-storage-targeted-1.log",
+  "rawSha256": "8123e243ffccfb258bee34900f8c0de5249dcbcc0ab1e60affc378f14fc9a412",
+  "exitCode": 1,
+  "elapsedSeconds": 10.85,
+  "passed": 13,
+  "failed": 1
+}

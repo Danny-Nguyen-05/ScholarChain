@@ -1,0 +1,23 @@
+282: [info] Total number of tests run: 169
+284: [info] Tests: succeeded 169, failed 0, canceled 0, ignored 0, pending 0
+1024: [info] Total number of tests run: 64
+1026: [info] Tests: succeeded 64, failed 0, canceled 0, ignored 0, pending 0
+1074: [info] Total number of tests run: 39
+1076: [info] Tests: succeeded 39, failed 0, canceled 0, ignored 0, pending 0
+2195: [info] Total number of tests run: 38
+2197: [info] Tests: succeeded 38, failed 0, canceled 0, ignored 0, pending 0
+2273: [info] Total number of tests run: 62
+2275: [info] Tests: succeeded 62, failed 0, canceled 0, ignored 0, pending 0
+2339: [info] Total number of tests run: 53
+2341: [info] Tests: succeeded 53, failed 0, canceled 0, ignored 0, pending 0
+6400: [info] - manifest reload loads one canonical metric copy with exact IDs, lineage and qualifications *** FAILED ***
+6401: [info]   Written(CacheLoadReport(4, 0, 0, 3)) did not equal Written(CacheLoadReport(3, 0, 0, 3)) Written(CacheLoadReport(4,0,0,3)) (IndependentStorageLoaderSpec.scala:102)
+7774: [info] Total number of tests run: 398
+7776: [info] Tests: succeeded 397, failed 1, canceled 0, ignored 0, pending 0
+7778: [error] Failed tests:
+7779: [error] 	edu.uic.cs441.scholarchain.independent.IndependentStorageLoaderSpec
+7780: [error] (independentTests / Test / test) sbt.TestsFailedException: Tests unsuccessful
+7781: [error] Total time: 722 s (12:02), completed Oct 25, 2026, 11:03:30 PM
+7782: real 724.36
+7783: user 796.65
+7784: sys 106.25

@@ -1,0 +1,22 @@
+[
+  {
+    "path": "modules/rag/README.md",
+    "beforeSha256": "66da92aea0d144442590979118c9e47e31c267c844f3ca25457e87dd53fd3e5e",
+    "afterSha256": "88aa7f21b3325fcc0178246c0d0b1bd564be5babed5b1ca761a6135ec9d397b2"
+  },
+  {
+    "path": "modules/rag/src/main/scala/edu/uic/cs441/scholarchain/rag/CollaborationMetricsAgent.scala",
+    "beforeSha256": "b452d9a27711066e586c3c0f14bd185c7e7bfb284ad0c49aa60c0ee9ac9197df",
+    "afterSha256": "5125281de3e941b921545782d93998d544d84332cc28cc3b4a9d0b7d0307629d"
+  },
+  {
+    "path": "modules/rag/src/test/scala/edu/uic/cs441/scholarchain/rag/Runtime9BSpec.scala",
+    "beforeSha256": "ed5b092880cb3f9136f04cc963593e6df6dcfa571a0055005daa2130d4d9de4a",
+    "afterSha256": "0123c4f83ae0ea12787c8003622ff7aeb46c2b3880c3f0f3d1301b092abf2a7b"
+  },
+  {
+    "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentRuntime9BStagesSpec.scala",
+    "beforeSha256": "c1002b78d6c37e48c01b8d2eb53f105e013396e82ff86edca450d8d342a0e5e5",
+    "afterSha256": "2046af4629e73e88b193fb998be031d9e0d8a34430182139e5c8ce38b4c66bb0"
+  }
+]

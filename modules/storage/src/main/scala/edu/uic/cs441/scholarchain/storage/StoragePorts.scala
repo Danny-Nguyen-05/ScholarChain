@@ -129,6 +129,12 @@ trait QuerySessionStore {
 trait EvidenceBundleStore {
   def put(bundle: EvidenceBundle): StorageResult[EvidenceBundle]
   def get(evidenceId: String): StorageResult[EvidenceBundle]
+
+  /** Existing bundle-only adapters remain source compatible. Runtime composition uses
+    * IndexedEvidenceBundleStore to resolve item IDs without changing frozen ID formats.
+    */
+  def getItem(evidenceId: String): StorageResult[EvidenceItem] =
+    StorageResult.Rejected("evidence-item-index-required")
 }
 final case class ArtifactRecord(artifactId: String, version: String, uri: String, hash: String)
     derives ReadWriter

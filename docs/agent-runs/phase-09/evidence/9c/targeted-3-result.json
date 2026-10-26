@@ -1,0 +1,22 @@
+{
+  "command": "/usr/bin/time -p sbt -batch 'rag/Compile/scalafmt' 'rag/Test/scalafmt' 'independentTests/Test/scalafmt' 'storage/testOnly *RuntimeAuditStorageSpec' 'rag/testOnly *Runtime9CSpec *Runtime9ASpec *Runtime9ARepairSpec *Runtime9BSpec' 'independentTests/testOnly *Runtime9C* *Runtime9B* *Runtime9APlannerSpec *Runtime9AResolverSpec *Runtime9ARepairPlannerSpec *Runtime9ARepairResolverSpec *Runtime9AEvidenceSpec'",
+  "rawPath": "/tmp/phase9c-targeted-3.log",
+  "rawSha256": "3e6e90a8f7daaa5b34f9d222e08450c5f351c300cc483a3fd79ee88b9844b9b7",
+  "exitCode": 1,
+  "elapsedSeconds": 12.9,
+  "modules": {
+    "storage": {
+      "passed": 14,
+      "failed": 0
+    },
+    "rag": {
+      "passed": 72,
+      "failed": 0
+    },
+    "independentTests": {
+      "passed": 208,
+      "failed": 1
+    }
+  },
+  "failure": "Old9B bundle assertion used legacy maxInputBytes16384 instead of approved new effective persistedBundleBytes65536. Actual source-lineage-bearing path bundle19227bytes; context cap/completepath remain unchanged. Both old byte assertions updated to effective cap. All new9C83cases and15benchmarks passed."
+}

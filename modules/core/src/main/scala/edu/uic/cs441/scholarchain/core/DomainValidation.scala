@@ -540,6 +540,11 @@ object DomainValidation {
     requireNonBlank(value.sourceUri, "sourceUri", acc)
     requireFinite(value.score, "score", acc)
     requireEvidenceLocator(value, acc)
+    value.runtime.foreach(v =>
+      RuntimeContractValidation
+        .evidence(v)
+        .foreach(m => acc.add(ViolationCode.InconsistentRecord, m))
+    )
     done(acc, value)
   }
 
@@ -555,6 +560,11 @@ object DomainValidation {
     value.researcherIds.foreach(id => parse(StableIds.parseResearcherId(id), acc))
     value.identityConfidence.foreach(requireConfidence(_, "identityConfidence", acc))
     requireNonBlank(value.uncertainty, "uncertainty", acc)
+    value.runtime.foreach(v =>
+      RuntimeContractValidation
+        .bundleItems(v, value.items)
+        .foreach(m => acc.add(ViolationCode.InconsistentRecord, m))
+    )
     done(acc, value)
   }
 
@@ -570,6 +580,9 @@ object DomainValidation {
     requireWindow(value.window.startYear, value.window.endYear, acc)
     if (value.graphLimit < 1 || value.vectorLimit < 1 || value.maxPathDepth < 1)
       acc.add(ViolationCode.InconsistentRecord, "query limits must be positive")
+    value.runtime.foreach(v =>
+      RuntimeContractValidation.query(v).foreach(m => acc.add(ViolationCode.InconsistentRecord, m))
+    )
     done(acc, value)
   }
 
@@ -584,6 +597,9 @@ object DomainValidation {
     value.evidenceIds.foreach(id => parse(StableIds.parseEvidenceId(id), acc))
     if (value.uncertainty.forall(_.trim.isEmpty))
       acc.add(ViolationCode.InconsistentRecord, "claim uncertainty must be present")
+    value.runtime.foreach(v =>
+      RuntimeContractValidation.claim(v).foreach(m => acc.add(ViolationCode.InconsistentRecord, m))
+    )
     done(acc, value)
   }
 
@@ -1475,13 +1491,14 @@ object DomainValidation {
     ids.foreach(id => parse(StableIds.parseWorkId(id), acc))
   }
 
-  private def requireEvidenceLocator(value: EvidenceItem, acc: Acc): Unit =
+  private def requireEvidenceLocator(value: EvidenceItem, acc: Acc): Unit = {
+    val contentBound = value.runtime.exists(_.contentBindingVersion.isDefined)
     value.evidenceType match {
       case EvidenceType.GraphPath =>
         value.graphPath match {
           case Some(path) if path.nonEmpty =>
             StableIds.nonTextEvidenceId("graph-path", path) match {
-              case Right(expected) if expected != value.evidenceId =>
+              case Right(expected) if !contentBound && expected != value.evidenceId =>
                 acc.add(
                   ViolationCode.InconsistentRecord,
                   "graph path evidence id does not match graphPath"
@@ -1508,7 +1525,7 @@ object DomainValidation {
                 locator.policyVersion
               )
             ) match {
-              case Right(expected) if expected != value.evidenceId =>
+              case Right(expected) if !contentBound && expected != value.evidenceId =>
                 acc.add(
                   ViolationCode.InconsistentRecord,
                   "metric evidence id does not match metricLocator"
@@ -1529,7 +1546,7 @@ object DomainValidation {
             )
               acc.add(ViolationCode.MalformedId, s"malformed edge evidence locator: $edgeId")
             StableIds.nonTextEvidenceId("edge", Seq(edgeId)) match {
-              case Right(expected) if expected != value.evidenceId =>
+              case Right(expected) if !contentBound && expected != value.evidenceId =>
                 acc.add(
                   ViolationCode.InconsistentRecord,
                   "edge evidence id does not match edgeLocatorId"
@@ -1542,6 +1559,17 @@ object DomainValidation {
         }
       case _ => ()
     }
+    if (contentBound)
+      RuntimeEvidenceIds.expectedId(value) match {
+        case Right(expected) if expected != value.evidenceId =>
+          acc.add(
+            ViolationCode.InconsistentRecord,
+            "runtime evidence id does not match item content"
+          )
+        case Left(violation) => acc.add(violation)
+        case _               => ()
+      }
+  }
 
   private def provenancePairSource(provenance: Provenance): (String, String) =
     (

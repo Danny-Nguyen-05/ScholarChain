@@ -235,3 +235,210 @@ request/retention scope and existing infrastructure. It cannot enforce an AWS bi
 Pure tests cover content/operation/cap refusal, all-five-index query definitions, exact quantile
 expectations and report fields; executable tests take only refusal branches with a factory sentinel.
 No approved live execution, including an approved path with fake ports, is used in offline tests.
+
+## Phase 9A runtime planning and identity contracts
+
+`QueryPlannerAgent` proposes only allowlisted `QueryOperation` values. It validates model JSON
+against `prompts/schemas/query-plan-v1.json` using the explicit bounded JSON Schema subset in
+`RuntimeJsonSchema`; unsupported schema keywords fail closed. `planner-v1` and `synthesis-v1`
+prompts live in `prompts/runtime/`. Their schema IDs are `scholarchain.runtime.planner.v1` and
+`scholarchain.runtime.synthesis.v1`. Assets are loaded from an explicitly supplied prompts
+directory and checked against configured versions. The synthesis schema/prompt are contracts
+only in 9A; synthesis, claim verification, workflow orchestration and benchmarks arrive later.
+
+`LlmClient` has a deterministic, recording `ScriptedLlmClient` and an injected-client
+`BedrockConverseLlmClient`. The adapter forces the named output tool with `toolChoice.tool`,
+accepts exactly one correctly named tool-use block, rejects text substitutes and unsafe numeric
+rounding, and retains configured model/version and optional token usage. All deterministic
+claim numbers use decimal strings. The caller owns region/IAM/client lifecycle and disables SDK
+retries so the planner's single configured malformed-output retry remains the effective bound.
+No client, resource or live model call is created by normal tests. The configured placeholder
+model has no verified deployed-model or regional compatibility; that remains a future live gate.
+
+The planner preserves extracted names, stored window IDs, topic/institution/venue constraints,
+the requested metric and configured retrieval mode (`fused` by default). Conservative coverage
+validation rejects unrepresented words/clauses and checks common unquoted population filters.
+Unknown constraints, unknown metrics, arbitrary Cypher/SQL/AWS requests and requests to recompute
+unstored filtered metrics are unsupported. After at most one malformed-output retry, a small
+anchored fallback handles quoted-name path/direct-coauthor/component requests, distinct-coauthor
+ranking, maximum-team/bridge ranking and semantic topic explanations. Explicit filters use
+`topic "..."`, `institution "..."`, `venue "..."`; stored windows use `window <id>` or a uniquely
+mapped `since <year>`. Novel language can abstain even when a human could interpret it. Model
+suggestions cannot remove a recognized constraint. Retries share one planner deadline. Factual
+ranking/filter execution and authoritative metadata availability checks belong to 9B.
+
+`ResearcherResolverAgent` groups cache rows by canonical researcher ID, preserves source IDs,
+affiliations, evidence/run pointers and absent confidence, and abstains on zero or multiple
+candidates. Different confidence values never break identity ties. It optionally obtains bounded
+source-backed coauthor context through `RuntimeArtifactStore`; absent context stays absent.
+`Name 0001` and `Name 0002` remain distinct. Unsuffixed base-name ambiguity depends on the storage
+loader's source-backed base aliases; an older cache must be reloaded to acquire those aliases.
+Source identifiers, source-row bindings and deadlines are checked before returning a result.
+
+The runtime config classpath example is a local placeholder. It contains explicit model ID/version,
+region, temperature, context/input/output bounds, prompt/schema versions, stored-window definitions,
+retrieval mode and stage deadlines constrained by `operations.synchronousDeadlineMs`. Legacy numeric
+window projections are compatibility fields; actual runtime selection uses stored `windowId`s.
+Phase 8C remains deferred to Phase 14C. Offline correctness tests establish contract/control
+behavior only; live model quality, injection resistance and provider compatibility are unverified.
+
+The 9A repair binds each recognized ranking metric, bridge measure, required operation and
+author-count conversion to deterministic request intent before accepting model output. An
+unspecified bridge measure is the configured default; model-selected alternatives are rejected.
+Stored window IDs and uniquely mapped cumulative `since`/bounded-period phrases must match the
+complete requested period. A request naming no window uses the configured default, and cannot
+acquire extra model-selected windows or comparison windows. Multiple incompatible metric intents
+fail closed because the existing plan has one ranking metric. Model disagreements use the same
+bounded retry and safe fallback/Unsupported policy as malformed output.
+
+Identity bounds use `resolver.maxDistinctCandidates`, independently of graph-result limits and
+raw cache-observation counts. Candidate source IDs, evidence refs, affiliations and run IDs have
+separate configured caps. `provenanceSummary` reports their distinct totals before clipping and
+whether any list was truncated. Confidence still uses all observations for that canonical identity.
+An overflow result is `Ambiguous(name, candidates, totalCandidateCount, truncated)` with a bounded,
+deterministically ordered candidate list. A candidate absent from a known stored window retains
+its identity with absent context; this also preserves ambiguity when one homonym is absent.
+An unknown window remains a typed failure. These repairs do not implement 9B retrieval stages.
+
+## Phase 9B retrieval and persisted evidence
+
+`CollaborationMetricsAgent`, `PathFinderAgent`, `CommunityAnalystAgent` and
+`SemanticContextAgent` accept `RetrievalInput(plan, resolvedCandidates)` and return typed
+`Ready`, `Missing`, `Unsupported` or `Failed` results. Their inputs are storage ports; runtime
+code does not recompute Phase 6 collaboration metrics or choose a researcher by semantic similarity.
+Rankings filter the authoritative stored population before selecting the requested stored metric,
+and carry population, matched and returned counts plus top-K truncation. A missing authoritative
+filter projection is unsupported. Named-researcher metric, path, community and temporal requests
+with unsupported population filters fail closed rather than dropping those filters.
+
+Path retrieval checks stored component IDs first. Different components produce `Disconnected`
+with component evidence. An empty bounded template search produces `NoPathWithinLimit`, and an
+explicit adapter depth-limit result produces `ExceededMaxHops`; neither claims disconnection.
+Each returned hop is matched to the selected window/run and authoritative edge support, retaining
+joint-publication count, supporting work IDs and known/unknown years. Direct coauthor lists carry
+truncation. Repeated collaboration uses per-edge `jointPublicationCount`; weighted degree and total
+coauthor occurrences remain the same stored invariant, not independent corroboration.
+
+Community and bridge evidence carries convergence and iteration qualifications; `converged=false`
+is explicitly `iteration-limited`. Selected members and neighboring communities are bounded, and
+selected cross-community edge counts are labeled as selected. Bridge evidence includes cross-
+community degree and weight, communities connected, participation coefficient and distinct degree.
+Stored temporal deltas retain presence flags and separate source-window qualifications. A stored
+P90 distance estimate is a separate deterministic evidence item marked approximate, bound to its
+component, window, source run, method and source row. Exact researcher metric items remain
+non-approximate with the same stored values whether the estimate exists or not. Both items are
+admitted atomically for the metric request; a context budget that cannot retain both abstains.
+The stored P90 is not an exact distance.
+
+Semantic retrieval embeds the question through the injected port, queries the configured existing
+index with supported metadata filters, verifies each ordinary-object pointer and Phase 8 document
+hash, and emits descriptive `TextChunk` evidence. Query-model identity must match the hit metadata.
+Venue filters and multiple values for one semantic filter are currently unsupported because that
+metadata/query contract is unavailable. Similarity score remains retrieval metadata and never
+becomes deterministic evidence. Excerpts render as JSON in an `untrusted_evidence_json` data block;
+angle brackets in retrieved content are JSON escaped, preventing text from closing the block.
+
+`EvidenceBuilderAgent` retains full source provenance in persisted items, partitions deterministic
+and descriptive evidence, and uses `RuntimeEvidenceIds.bind` content-bound IDs. Thus a changed
+run, window, payload or supporting work cannot silently reuse an immutable citation. Path and comparison output is atomic: a budget failure returns a typed missing-evidence result rather than keeping an incomplete path. Rankings retain the largest admitted top-K prefix with explicit source-fetched and context-retained counts and a truncation flag; an empty prefix abstains. Optional semantic excerpts are Unicode-safe truncated and rebound.
+The context cost is a conservative UTF-8-byte upper bound on tokens, applied to a compact rendered
+context with shared run/window/version lookup tables that omits repeated storage provenance and absent fields. Bounded resolved candidates, their names, source IDs, evidence references and individual confidence are retained in the bundle; identity context is included in the same token budget. Persisted bundle bytes are also
+bounded by configured `maxInputBytes`; this shared limit remains the existing N3 configuration
+limitation for later synthesis. The default 4,096 context / 16,384 bundle-byte limits retain the
+complete G1 four-hop path with its four supporting edge items. Larger requests can abstain.
+Persistence must support indexed item lookup; a bundle-only store fails closed.
+
+`WorkflowRunner` composes planner, resolver, parallel retrieval and persisted evidence. It returns
+evidence rather than a final answer for both values of `evidenceOnly`; synthesis, verification and
+audit execution remain Phase 9C. Graph mode launches no semantic query; vector mode launches no
+graph stages and abstains on deterministic graph/numeric requests. Fused mode can return a qualified
+partial result when optional semantic retrieval fails and essential deterministic evidence survives.
+An essential-stage failure abstains; evidence persistence/index failure is a typed workflow failure.
+Each future has its own absolute stage deadline and completion timestamp within the synchronous
+deadline, so collecting a slow sibling cannot invalidate a result that completed on time. Deadline
+expiry cancels and interrupts the task; shutdown waits at most the smallest configured stage budget and the remaining overall deadline.
+Injected adapters must honor interruption or their own request timeout: Java cannot forcibly stop
+an uncooperative port. No production latency or live provider behavior is established by these tests.
+
+The module fixture transcribes the ten original G1 identities, nine canonical works and nine
+all-years edges with literal expected metric values. A→G is A→C→D→F→G (four hops); H/I form a
+separate component, and J is solo. Declared community labels, venue/topic/institution metadata and
+`Name 0001` / `Name 0002` aliases are synthetic overlays, not real enrichment or clustering.
+The independent test fixture separately exercises complete authoritative metadata and real artifact
+readers. Confidence remains absent when the real loader has no confidence; synthetic values do not
+establish calibrated identity confidence. Phase 8C remains deferred to Phase 14C.
+
+## Phase 9C synthesis, verification, audit and offline CLI
+
+`RuntimeAnswerWorkflow` composes the existing retrieval runner with `AnswerSynthesisAgent`,
+`ClaimVerificationAgent` and the injected `RuntimeAuditStore`. The retrieval-only API remains
+available for experiments. Evidence-only full-workflow runs skip synthesis and verification calls
+but still require an `EVIDENCE_ONLY` audit. A terminal result is returned only after the audit
+payload and its indexed query lookup are readable. The adapter uses existing object/session ports;
+there are no new tables, indexes or infrastructure. A required audit write/read failure returns a
+typed failure, including after otherwise successful synthesis. Unsupported requests, ambiguous
+identities, missing evidence and malformed synthesis are audited with their closed outcome/reason.
+Ambiguous-name abstentions return the bounded candidate list with display names and source context;
+the reason discloses total/truncation, and candidates are not recorded as resolved identities.
+The abstention response hash includes this candidate list.
+The audit retains proposed and rejected claims, per-claim verdicts/reasons, plan when available,
+source run/version/evidence IDs, prompt/model versions, usage when supplied, latency and the hash
+of the complete final answer. Pre-plan outcomes use an optional record rather than a fabricated plan.
+
+Synthesis uses the versioned `synthesis-v1` prompt and `scholarchain.runtime.synthesis.v1` schema,
+with forced `submit_answer` tool use through the same configured Bedrock Converse port. The stage
+allows at most one malformed-output retry inside its total configured deadline. Tests and the CLI
+use scripted clients; no Bedrock request is made. Model output supplies only typed proposals and
+narrative claim IDs. Factual prose and model uncertainty text are never trusted as answer facts.
+The deterministic verifier checks allowlisted claim fields and templates against evidence IDs,
+subjects, windows and exact stored values. It rejects missing evidence, wrong values, fabricated
+identities, unrelated evidence kinds and unrequested total-author conversions. Vector evidence
+cannot authorize deterministic graph or numeric claims. Rejected proposals remain in the audit;
+only fully verified claims are rendered. Mixed claim outcomes remain partially verified, while no
+accepted claims yields `ABSTAINED`.
+
+Factual templates render verified fields and source qualifications. Convergence/iteration labels
+apply to community-derived fields, rather than exact publication/coauthor counts. A separate
+component distance estimate remains approximate and carries stored sample count, seed, mean and
+reached-pair count with source references. Maximum coauthors excludes the researcher; explicitly
+requested total authors is labeled as coauthors plus one. Weighted degree equals total coauthor
+occurrences and is not independent corroboration; repeated collaboration is the individual edge's
+joint-publication count. Optional interpretation uses a deliberately narrow generic vocabulary;
+numbers, identifiers, names and unknown words are rejected. Accepted interpretation is labeled.
+This is a conservative coverage boundary, not evidence of general live-model injection resistance.
+
+Stored evidence uses source-derived lineage/provenance, without copying request snapshot/date/
+license values into facts. The request retains its own plan/audit provenance. Semantic source
+provenance comes from the verified document/run/pointer; unknown dates/licenses remain absent.
+Named semantic retrieval includes the resolved entity constraint; multiple resolved subjects without
+an available multi-entity filter return Unsupported. Verified identities and audit resolved IDs use
+resolver candidates and deterministic subjects, never subjects chosen only by semantic similarity.
+Path-status context retains the researcher pair even when no path exists. Deterministic evidence
+cannot contain a descriptive excerpt. The planner also recognizes natural temporal "change from"
+phrasing and community comparisons while preserving exact window/metric/filter intent checks.
+
+The runtime configuration separates question, prompt, total request, output and persisted-bundle
+byte limits. Omitted `byteLimits` preserves the legacy shared `maxInputBytes` behavior. Context
+remains bounded by its conservative UTF-8-byte token upper bound. Full workflow deadlines reserve
+configured audit time inside the same synchronous deadline. Interruptible tasks are cancelled on
+expiry; injected ports must honor interruption or their own timeout. Java cannot forcibly stop a
+port that ignores interruption. Larger atomic evidence groups can still abstain, and strict missing
+authoritative metadata can produce Unsupported. Live compatibility and production latency remain
+unverified.
+
+The offline CLI accepts only:
+
+```sh
+sbt -batch 'rag/runMain edu.uic.cs441.scholarchain.rag.RuntimeWorkflowMain --benchmark'
+```
+
+Use the prescribed JDK 17 environment from the phase plan for every sbt command. An optional
+`--evidence-only` flag skips synthesis. The CLI never constructs provider clients or reads credentials.
+Its scripted proposals are defined for the versioned benchmark questions; other safe questions may
+abstain rather than fabricate a response. `runtime-benchmark-v1.json` contains the 12 required query
+families plus institution, venue and disconnected-path cases. Numeric expected values are literal,
+hand-derived G1 facts; only evidence IDs are bound dynamically. `RuntimeOfflineFixture` preserves
+the original G1 graph and uses explicitly synthetic community, metadata and homonym overlays.
+The temporal comparison uses declared stored fixture rows. These tests establish offline
+correctness, not real metadata coverage, model quality or live injection behavior. Broader fault/
+injection suites remain Phase 11B. Phase 8C remains deferred to Phase 14C.

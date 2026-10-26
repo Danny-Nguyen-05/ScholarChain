@@ -1,0 +1,248 @@
+{
+  "baseSha": "2527de01252286080e6db776b9cc0199a9353e1e",
+  "currentSources": 38,
+  "owners": {
+    "domain-engineer": 8,
+    "rag-engineer": 18,
+    "storage-engineer": 4,
+    "test-engineer": 8
+  },
+  "prior9BChangedIn9C": [
+    "modules/core/README.md",
+    "modules/core/src/main/scala/edu/uic/cs441/scholarchain/core/RuntimeContracts.scala",
+    "modules/core/src/test/scala/edu/uic/cs441/scholarchain/core/RuntimeContractSpec.scala",
+    "modules/rag/README.md",
+    "modules/rag/src/main/scala/edu/uic/cs441/scholarchain/rag/CollaborationMetricsAgent.scala",
+    "modules/rag/src/main/scala/edu/uic/cs441/scholarchain/rag/CommunityAnalystAgent.scala",
+    "modules/rag/src/main/scala/edu/uic/cs441/scholarchain/rag/EvidenceBuilderAgent.scala",
+    "modules/rag/src/main/scala/edu/uic/cs441/scholarchain/rag/PathFinderAgent.scala",
+    "modules/rag/src/main/scala/edu/uic/cs441/scholarchain/rag/RuntimeRetrieval.scala",
+    "modules/rag/src/main/scala/edu/uic/cs441/scholarchain/rag/SemanticContextAgent.scala",
+    "modules/rag/src/main/scala/edu/uic/cs441/scholarchain/rag/WorkflowRunner.scala",
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentRuntime9BEvidenceSpec.scala",
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentRuntime9BWorkflowSpec.scala"
+  ],
+  "prior9BUntouched": [
+    "modules/core/src/main/scala/edu/uic/cs441/scholarchain/core/DomainValidation.scala",
+    "modules/core/src/main/scala/edu/uic/cs441/scholarchain/core/RuntimeEvidenceIds.scala",
+    "modules/core/src/test/scala/edu/uic/cs441/scholarchain/core/RuntimeBundlePartitionSpec.scala",
+    "modules/core/src/test/scala/edu/uic/cs441/scholarchain/core/RuntimeEvidenceIdSpec.scala",
+    "modules/rag/src/test/scala/edu/uic/cs441/scholarchain/rag/Runtime9BG1Fixture.scala",
+    "modules/rag/src/test/scala/edu/uic/cs441/scholarchain/rag/Runtime9BSpec.scala",
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentRuntime9BFixture.scala",
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentRuntime9BSemanticSpec.scala",
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentRuntime9BStagesSpec.scala"
+  ],
+  "prior9BUntouchedHashMismatches": [],
+  "sourceHashMismatches": [],
+  "forbiddenScopeChanges": [],
+  "credentialPatternFindings": [],
+  "credentialScanScope": "Known changed source/evidence files only; no secret directories or credentials read. Pattern scan is not a comprehensive secret detector.",
+  "frozenWireExampleChanges": [],
+  "prior9AIntegrity": [
+    {
+      "path": "modules/core/README.md",
+      "changedIn9C": true,
+      "baseAlreadyChangedSince9A": true,
+      "matches9CBase": false
+    },
+    {
+      "path": "modules/core/src/main/resources/scholarchain.runtime-config.v1.json",
+      "changedIn9C": true,
+      "baseAlreadyChangedSince9A": false,
+      "matches9CBase": false
+    },
+    {
+      "path": "modules/core/src/main/scala/edu/uic/cs441/scholarchain/core/DomainValidation.scala",
+      "changedIn9C": false,
+      "baseAlreadyChangedSince9A": true,
+      "matches9CBase": true
+    },
+    {
+      "path": "modules/core/src/main/scala/edu/uic/cs441/scholarchain/core/Records.scala",
+      "changedIn9C": false,
+      "baseAlreadyChangedSince9A": false,
+      "matches9CBase": true
+    },
+    {
+      "path": "modules/core/src/main/scala/edu/uic/cs441/scholarchain/core/RuntimeConfig.scala",
+      "changedIn9C": true,
+      "baseAlreadyChangedSince9A": false,
+      "matches9CBase": false
+    },
+    {
+      "path": "modules/core/src/main/scala/edu/uic/cs441/scholarchain/core/RuntimeContracts.scala",
+      "changedIn9C": true,
+      "baseAlreadyChangedSince9A": true,
+      "matches9CBase": false
+    },
+    {
+      "path": "modules/core/src/test/resources/wire/runtime-query-options.json",
+      "changedIn9C": false,
+      "baseAlreadyChangedSince9A": false,
+      "matches9CBase": true
+    },
+    {
+      "path": "modules/core/src/test/resources/wire/runtime-typed-claim.json",
+      "changedIn9C": false,
+      "baseAlreadyChangedSince9A": false,
+      "matches9CBase": true
+    },
+    {
+      "path": "modules/core/src/test/scala/edu/uic/cs441/scholarchain/core/RuntimeContractSpec.scala",
+      "changedIn9C": true,
+      "baseAlreadyChangedSince9A": true,
+      "matches9CBase": false
+    },
+    {
+      "path": "modules/rag/README.md",
+      "changedIn9C": true,
+      "baseAlreadyChangedSince9A": true,
+      "matches9CBase": false
+    },
+    {
+      "path": "modules/rag/src/main/scala/edu/uic/cs441/scholarchain/rag/QueryPlannerAgent.scala",
+      "changedIn9C": true,
+      "baseAlreadyChangedSince9A": false,
+      "matches9CBase": false
+    },
+    {
+      "path": "modules/rag/src/main/scala/edu/uic/cs441/scholarchain/rag/ResearcherResolverAgent.scala",
+      "changedIn9C": false,
+      "baseAlreadyChangedSince9A": false,
+      "matches9CBase": true
+    },
+    {
+      "path": "modules/rag/src/main/scala/edu/uic/cs441/scholarchain/rag/RuntimeLlm.scala",
+      "changedIn9C": true,
+      "baseAlreadyChangedSince9A": false,
+      "matches9CBase": false
+    },
+    {
+      "path": "modules/rag/src/main/scala/edu/uic/cs441/scholarchain/rag/RuntimeSchemas.scala",
+      "changedIn9C": true,
+      "baseAlreadyChangedSince9A": false,
+      "matches9CBase": false
+    },
+    {
+      "path": "modules/rag/src/test/scala/edu/uic/cs441/scholarchain/rag/Runtime9ARepairSpec.scala",
+      "changedIn9C": false,
+      "baseAlreadyChangedSince9A": false,
+      "matches9CBase": true
+    },
+    {
+      "path": "modules/rag/src/test/scala/edu/uic/cs441/scholarchain/rag/Runtime9ASpec.scala",
+      "changedIn9C": false,
+      "baseAlreadyChangedSince9A": false,
+      "matches9CBase": true
+    },
+    {
+      "path": "modules/storage/README.md",
+      "changedIn9C": true,
+      "baseAlreadyChangedSince9A": false,
+      "matches9CBase": false
+    },
+    {
+      "path": "modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/IndexedEvidenceBundleStore.scala",
+      "changedIn9C": false,
+      "baseAlreadyChangedSince9A": false,
+      "matches9CBase": true
+    },
+    {
+      "path": "modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/Phase6CacheLoader.scala",
+      "changedIn9C": false,
+      "baseAlreadyChangedSince9A": false,
+      "matches9CBase": true
+    },
+    {
+      "path": "modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/RuntimeArtifacts.scala",
+      "changedIn9C": false,
+      "baseAlreadyChangedSince9A": false,
+      "matches9CBase": true
+    },
+    {
+      "path": "modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/StoragePorts.scala",
+      "changedIn9C": false,
+      "baseAlreadyChangedSince9A": false,
+      "matches9CBase": true
+    },
+    {
+      "path": "modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/fakes/RuntimeFakes.scala",
+      "changedIn9C": false,
+      "baseAlreadyChangedSince9A": false,
+      "matches9CBase": true
+    },
+    {
+      "path": "modules/storage/src/test/scala/edu/uic/cs441/scholarchain/storage/RuntimeArtifactStorageSpec.scala",
+      "changedIn9C": false,
+      "baseAlreadyChangedSince9A": false,
+      "matches9CBase": true
+    },
+    {
+      "path": "prompts/runtime/planner-v1.md",
+      "changedIn9C": false,
+      "baseAlreadyChangedSince9A": false,
+      "matches9CBase": true
+    },
+    {
+      "path": "prompts/runtime/synthesis-v1.md",
+      "changedIn9C": false,
+      "baseAlreadyChangedSince9A": false,
+      "matches9CBase": true
+    },
+    {
+      "path": "prompts/schemas/answer-synthesis-v1.json",
+      "changedIn9C": false,
+      "baseAlreadyChangedSince9A": false,
+      "matches9CBase": true
+    },
+    {
+      "path": "prompts/schemas/query-plan-v1.json",
+      "changedIn9C": false,
+      "baseAlreadyChangedSince9A": false,
+      "matches9CBase": true
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentRuntime9AArtifactPipelineSpec.scala",
+      "changedIn9C": false,
+      "baseAlreadyChangedSince9A": false,
+      "matches9CBase": true
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentRuntime9AEvidenceSpec.scala",
+      "changedIn9C": false,
+      "baseAlreadyChangedSince9A": false,
+      "matches9CBase": true
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentRuntime9APlannerSpec.scala",
+      "changedIn9C": false,
+      "baseAlreadyChangedSince9A": false,
+      "matches9CBase": true
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentRuntime9ARepairPlannerSpec.scala",
+      "changedIn9C": false,
+      "baseAlreadyChangedSince9A": false,
+      "matches9CBase": true
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentRuntime9ARepairResolverSpec.scala",
+      "changedIn9C": false,
+      "baseAlreadyChangedSince9A": false,
+      "matches9CBase": true
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentRuntime9AResolverSpec.scala",
+      "changedIn9C": false,
+      "baseAlreadyChangedSince9A": false,
+      "matches9CBase": true
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentStorageLoaderSpec.scala",
+      "changedIn9C": false,
+      "baseAlreadyChangedSince9A": false,
+      "matches9CBase": true
+    }
+  ]
+}

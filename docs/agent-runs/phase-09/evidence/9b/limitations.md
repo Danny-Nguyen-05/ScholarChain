@@ -1,0 +1,14 @@
+# Subphase 9B limits and deferred gates
+
+- Offline correctness only: scripted LLMs, deterministic fake embeddings, in-memory ports and explicitly synthetic G1 inputs/overlays. No live/cloud/provider call, deployment, infrastructure or SDK dependency change.
+- Phase8C remains deferred to14C; this work does not accept Phase8 as a whole.
+- This runner ends at persisted evidence for either evidenceOnly value. Synthesis, deterministic claim verification, interpretation checks, rejected-claim audit/explain, audit execution/fail-closed audit handling, CLI and versioned benchmark suite remain9C. No9C code is prepared.
+- The original G1 graph is ten canonical researchers/nine canonical works/nine all-years edges; four-hop A-C-D-F-G. Community labels, authoritative metadata and homonym identities are declared synthetic overlays. They do not establish real enrichment coverage or clustering quality.
+- Strict authoritative metadata coverage remains required. Real filtered populations can be Unsupported; semantic similarity never substitutes for the population. Named-subject filter semantics without stored projections, semantic venue filters and multiple semantic alternatives fail Unsupported.
+- Context tokens use a conservative UTF-8-byte upper bound; compact rendered context includes resolved identities and shared provenance dictionaries. Budgeted ranking prefixes disclose source scope and retained counts. Path/comparison facts stay atomic; larger essential groups can abstain. Persisted bundles also retain the existing16KiB maxInputBytes bound.
+- Cancellation interrupts deadline-expired tasks and cleanup fits the remaining synchronous deadline. An injected adapter must honor interruption or its own timeout; JVM code cannot forcibly terminate an uncooperative blocking port. Production latency remains unmeasured.
+- New runtime evidence uses content-bound IDs; frozen legacy/unmarked records keep their existing contract. Earlier bundle-only stores need the existing IndexedEvidenceBundleStore composition/replay; the builder fails closed if item lookup is unavailable.
+- N1 actual-item partition validation is locally addressed and requires independent review. N2-N9 remain carried forward: real filter coverage, shared input budget, actual live region check, absent real confidence, fixed-v1 prompt asset filenames, snapshot-bounded context refs, conservative planner grammar deferred9C, historical review opening clarified by append-only note. N5 confidence absence is disclosed; no calibration claimed.
+- Live model/tool/region/temperature compatibility, model quality, injection resistance, cloud scale/cost and production artifact latency remain unverified. Broader injection/fault suites remain11B. Optional OpenSearch, extra indexes/services/CI omitted per lean scope.
+
+- Filter strings must identify authoritative stored metadata; no label-to-ID resolution port is added. Unrecognized/free-text labels do not acquire invented associations.

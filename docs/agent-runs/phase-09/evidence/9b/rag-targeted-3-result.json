@@ -1,0 +1,9 @@
+{
+  "command": "/usr/bin/time -p sbt -batch 'rag/Compile/scalafmt' 'rag/Test/scalafmt' 'rag/testOnly *Runtime9BSpec'",
+  "rawPath": "/tmp/phase9b-rag-targeted-3.log",
+  "rawSha256": "f936dc1b33ba3708891932a74e15a5bed7ba2b40938a0959f596cf78c7021b6a",
+  "exitCode": 0,
+  "elapsedSeconds": 6.14,
+  "passed": 14,
+  "failed": 0
+}

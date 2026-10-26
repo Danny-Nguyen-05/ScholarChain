@@ -1,5 +1,74 @@
 # Storage ports and Phase 7A adapters
 
+## Phase 9A runtime prerequisites
+
+`RuntimeArtifactStore` supplies read-only ranking, exact community summaries, qualified bridge
+records, temporal changes, complete coauthor-edge support and bounded researcher context.
+`Phase6RuntimeArtifacts.materialize(exportRoot, objects, versionedKey, config)` reads a completed
+Phase 6 local export through the existing Parquet boundary. It checks selected table manifests,
+producer logical hashes, source run/lineage, row contracts, duplicate keys and edge-support/bridge
+bindings before publishing one immutable ordinary-S3 artifact through `ObjectStore`. No Spark
+dependency, DynamoDB table, GSI, Terraform resource or live call is added. `publish` accepts an
+injected manifest reader for producer contract fixtures; it applies the same checks.
+
+The artifact is a **complete bounded snapshot of the selected source tables**, with configurable
+row and byte caps. The defaults are 10,000 total rows, 16 MiB artifact bytes, 1 MiB per row, 4 MiB
+source metadata and 100 returned records. These are application memory/request bounds, not cloud
+limits. Declared row caps reject before opening source rows, actual row/byte overruns reject, and
+no truncated snapshot is published. Larger exports require a future partitioned artifact design;
+this implementation does not claim whole-corpus scalability. Memory retains this capped snapshot,
+its row/relationship indexes, and at most the configured result count during top-K selection.
+
+`ObjectStoreRuntimeArtifactStore` checks bytes, SHA-256, source run and table bindings on its first
+successful load, then reuses the verified immutable snapshot and indexes for that instance and
+pointer. Concurrent cold calls share a synchronized load. Warm mixed port calls do not issue
+another object GET, parse JSON or validate tables again. Only success is cached: missing objects,
+transport/provider rejections and corrupt first responses remain retryable on a later call; none
+can turn into a cached success. A different source pointer requires a new reader instance. Metrics,
+bridge/membership/community/temporal records, edges and supports have keyed indexes. Authorship
+and association edges are indexed by their source subjects, avoiding whole-table scans per
+researcher without expanding the potentially quadratic researcher/work/topic join in memory.
+Binding validation groups supports by edge rather than scanning every support for every edge.
+Ranking first filters the complete stored
+researcher population by authoritative associations, then selects stored metric values. It never
+uses semantic similarity to define an exact population and never recalculates collaboration
+metrics. Within one filter dimension values are OR; topic, institution and venue dimensions are
+AND. Associations are source-export associations across the export, while the ranked metric is
+for the requested stored window. Absent association rows are unknown rather than proof of an
+empty association set: a requested filter rejects if any population member lacks the necessary
+authoritative coverage. Publication-subgraph metric requests reject. Responses retain the
+population/match counts, result truncation, original metric records, source run and artifact hash;
+numeric ranking values are decimal strings so stored Long values remain exact.
+
+Community and bridge access retains `converged` and iteration counts; a false flag remains
+iteration-limited, never inferred convergence. Bridge records include distinct degree beside the
+separate stored bridge measures. Edge support retains every supporting work, optional year and
+source context. Temporal records retain absent-side deltas and available membership qualifications.
+The existing metric-store qualifications remain authoritative for approximate distance P90.
+`storage.fakes.InMemoryRuntimeArtifactStore` builds the same bounded synthetic artifact without
+network activity. A context request for an unknown declared window is rejected; a known researcher
+with no metric row in a known stored window returns `Missing` context. The latter does not invalidate
+the researcher's identity or eliminate an ambiguous-name candidate. Synthetic fixtures establish
+offline correctness only.
+
+For item-ID access, compose `IndexedEvidenceBundleStore(bundleStore, objectStore, indexPrefix)`.
+Its automatic `put` writes the bundle and immutable item-ID-to-bundle pointers in the existing
+object bucket; `getItem(evidenceId)` checks the pointer and exact item content hash before returning
+the item. Phase 10's evidence route must use this wrapper. Existing bundle-only adapters keep
+their API and return `evidence-item-index-required` for the additive default `getItem`; existing
+bundles need an explicit replay through the wrapper to populate indexes. Frozen evidence ID
+formats remain unchanged. Reusing one item ID for different content rejects; identical items may
+be shared across bundles. There is no cross-store transaction: an interrupted index write may
+leave a stored bundle, returns failure, and an unchanged retry can fill missing pointers. Corrupt
+or dangling pointers fail closed. The matching offline fake is
+`storage.fakes.InMemoryIndexedEvidenceBundleStore`.
+
+`Phase6CacheLoader` also writes unsuffixed lookup aliases for DBLP researcher labels ending in
+four numeric homonym digits. `Name 0001` and `Name 0002` keep distinct canonical IDs, exact-name
+rows, source evidence and absent confidence; lookup of `Name` exposes both candidates. Existing
+caches need an idempotent source reload to acquire these extra aliases. Aliases never merge IDs.
+
+
 Storage depends on core, the pinned AWS Java SDK v2, and Parquet/Hadoop readers; it never depends on Spark or service routes. `StoragePorts.scala` defines ten ports. `storage.fakes` exposes usable main-source fakes to downstream modules. Real graph loading/reading, S3 Vectors and the dry-run CLI are implemented in 7B as described below; the opt-in live suite belongs to 7C. No AWS resources, deployment, or live calls are performed in 7A.
 
 ## Configuration and table access
@@ -353,3 +422,38 @@ Deferred N3 (serial embedding invocation), N6 (whole SQS receive batch rejection
 metadata retained on unchanged text) and R3 (filterable metadata checked only by the vector adapter)
 remain outside this repair. Live compatibility, provider quality, counts and costs are not inferred
 from local replay.
+
+## Phase 9C terminal audit persistence
+
+`RuntimeAuditStore.put(envelope)` and `get(queryId)` provide the required typed audit
+boundary for answers, abstentions, unsupported requests, failures and evidence-only runs.
+`ObjectStoreRuntimeAuditStore(objects, sessions, RuntimeAuditStoreConfig(prefix, ...))`
+uses the existing ordinary object store and query-session table. It creates no table,
+GSI or infrastructure. The injected `QuerySessionStore` must have TTL disabled so audit
+pointers do not expire. Reserved, hashed audit primary/idempotency keys are distinct
+from the application query ID and its client idempotency key; application query-session
+state is never overwritten.
+
+The complete envelope is immutable and addressed by its SHA-256 under the configured
+versioned prefix. Only a small pointer is written with the session adapter's conditional
+revision update. The default audit-envelope bound is one MiB, allowing bounded rejected
+proposals and provenance without putting the payload in DynamoDB; the independent pointer
+bound is sixteen KiB. Both limits are configurable application bounds. Reads bind pointer
+schema, original query ID, object key, size, hash and decoded envelope validation. Public
+errors are closed codes and never include provider messages or stored payloads.
+
+A successful `put` verifies the object and authoritative pointer lookup before returning.
+An identical terminal envelope replays as unchanged; a different envelope for the same
+query ID is an immutable conflict. Object publication precedes the conditional pointer,
+so a failed pointer write can leave an unreferenced immutable object and a pending session.
+Retrying the identical envelope repairs that publication. Concurrent adapters use the
+session compare-and-swap; a competing different terminal record cannot overwrite the
+winner. This is not a cross-store transaction, and orphan-object cleanup is not performed
+by the runtime. Audit validation deliberately retains unsupported or fabricated attempted
+claims in the audit record for later explain/independent-checker use.
+
+`storage.fakes.InMemoryRuntimeAuditStore` composes the same adapter with in-memory ports.
+Module tests exercise real adapter composition, replay, application-session isolation,
+invalid/oversize refusal, object/session failures and retry, lost replies, corruption,
+TTL refusal, concurrent publication, and retention of malformed rejected proposals.
+These are offline correctness checks; no live AWS or provider call is made.

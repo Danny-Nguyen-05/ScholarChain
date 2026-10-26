@@ -1,0 +1,58 @@
+[success] Total time: 0 s, completed Oct 26, 2026, 11:42:49 AM
+[info] compiling 1 Scala source to /Users/danny/Documents/UIC/CS441/ScholarChain/modules/core/target/scala-3.3.4/classes ...
+[info] done compiling
+[info] compiling 2 Scala sources to /Users/danny/Documents/UIC/CS441/ScholarChain/modules/core/target/scala-3.3.4/classes ...
+[info] done compiling
+[info] compiling 3 Scala sources to /Users/danny/Documents/UIC/CS441/ScholarChain/modules/core/target/scala-3.3.4/test-classes ...
+[info] done compiling
+[info] RuntimeContractSpec:
+[info] - frozen runtime-related v1 wire records parse without optional runtime fields
+[info] - optional query payload converts without changing the legacy plan or researcher spelling
+[info] - typed claims preserve exact integers beyond binary floating point and legacy claim fields
+[info] - new per-claim verdicts map explicitly while overall abstention remains ABSTAINED
+[info] - mixed claim verdicts remain partially verified and rejected attempted claims survive audit serialization
+[info] - domain validation rejects malformed optional payload rather than ignoring it
+[info] - evidence qualifiers retain iteration-limited and approximate source observations
+[info] - vector-only evidence partition cannot carry deterministic evidence
+[info] - runtime configuration loads explicit model region and bounded deadlines
+[info] - runtime configuration rejects total deadline overflow even if each individual stage fits
+[info] - runtime configuration rejects unsupported modes, missing versions, unknown defaults and malformed windows
+[info] - researcher candidates preserve absent confidence and distinct DBLP suffixes
+[info] - resolver configuration remains compatible and its identity cap is independent of graph results
+[info] - resolver configuration rejects every nonpositive candidate or provenance bound
+[info] - candidate provenance counts disclose clipped distinct lists and remain optional for legacy JSON
+[info] - candidate provenance validation rejects hidden truncation and impossible source totals
+[info] RuntimeBundlePartitionSpec:
+[info] - frozen legacy bundles remain valid without runtime classification
+[info] - runtime bundles reject unclassified legacy items instead of trusting partition IDs
+[info] - vector bundles accept descriptive text chunks and researcher profiles with provenance
+[info] - the reported non-descriptive metric masquerading as semantic is rejected
+[info] - marking graph and metric evidence descriptive cannot make its type semantic
+[info] - semantic text and profile payloads require descriptive=true
+[info] - semantic payload cannot carry typed numeric, flag or ID facts
+[info] - semantic payload cannot carry deterministic metric or convergence qualifications
+[info] - semantic types cannot conceal deterministic graph, edge or metric locators
+[info] - fused partitions accept stored metrics and descriptive context together
+[info] - deterministic partitions reject descriptive items and text chunks with a false label
+[info] - old runtime bundle JSON defaults omitted resolved candidates to empty
+[info] - resolved candidate identities and per-candidate confidence survive bundle serialization
+[info] - bundle validation rejects malformed resolved identity provenance and confidence
+[info] RuntimeEvidenceIdSpec:
+[info] - legacy and unmarked runtime evidence retain their frozen locator-only IDs
+[info] - binding is deterministic and idempotent and retains precise types and actual metric policy
+[info] - the same path across windows source runs and payload values has distinct evidence IDs
+[info] - complete item binding includes text score source URI and provenance
+[info] - tampering a bound payload without rebinding is rejected
+[info] - binding cannot bypass path edge metric locator and exact-value validation
+[info] - unknown binding versions and missing runtime are rejected
+[info] - binding supports descriptive profile and chunk evidence using existing ID parsers
+[info] - serialization round trips preserve binding and large exact decimal values
+[info] Run completed in 205 milliseconds.
+[info] Total number of tests run: 39
+[info] Suites: completed 3, aborted 0
+[info] Tests: succeeded 39, failed 0, canceled 0, ignored 0, pending 0
+[info] All tests passed.
+[success] Total time: 9 s, completed Oct 26, 2026, 11:42:59 AM
+real 11.95
+user 49.38
+sys 1.72

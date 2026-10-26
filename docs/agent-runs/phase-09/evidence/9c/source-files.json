@@ -1,0 +1,192 @@
+[
+  {
+    "path": "modules/core/README.md",
+    "sha256": "3a883aa15bdbdee77b71f3dc254aa6fa8af1b9d4c90a64775808695e1941df3b",
+    "owner": "domain-engineer"
+  },
+  {
+    "path": "modules/core/src/main/resources/scholarchain.runtime-config.v1.json",
+    "sha256": "24e289382c3764e5652bf036b0682e99a09795d4e0bd2f19d3029fbd3323718e",
+    "owner": "domain-engineer"
+  },
+  {
+    "path": "modules/core/src/main/scala/edu/uic/cs441/scholarchain/core/RuntimeAuditValidation.scala",
+    "sha256": "0c91d2a43b284817805db9dd1f938ec3c3417ce02b0ce2925ef3e31be1edb7fe",
+    "owner": "domain-engineer"
+  },
+  {
+    "path": "modules/core/src/main/scala/edu/uic/cs441/scholarchain/core/RuntimeConfig.scala",
+    "sha256": "afa08744a600ca027782e3a811908846e86bf596568facf9d98962367beeda4f",
+    "owner": "domain-engineer"
+  },
+  {
+    "path": "modules/core/src/main/scala/edu/uic/cs441/scholarchain/core/RuntimeContracts.scala",
+    "sha256": "44e97619aa3e13c5dd6017d366793ebca470e9fea93b6a6f10d3dbc652d02048",
+    "owner": "domain-engineer"
+  },
+  {
+    "path": "modules/core/src/main/scala/edu/uic/cs441/scholarchain/core/SparkAnalyticsValidation.scala",
+    "sha256": "829e88115a4b319f828a0964e82ee07a63ef8e41e8fe86869b2631072ac326e2",
+    "owner": "domain-engineer"
+  },
+  {
+    "path": "modules/core/src/test/scala/edu/uic/cs441/scholarchain/core/Runtime9CContractSpec.scala",
+    "sha256": "abdab199c83429a780069ca83ab91eb7cd5faff3e91e9673e6c5680cd879439e",
+    "owner": "domain-engineer"
+  },
+  {
+    "path": "modules/core/src/test/scala/edu/uic/cs441/scholarchain/core/RuntimeContractSpec.scala",
+    "sha256": "fcdcadc170107bd7e71e8442936e618519984848b2f9a980c3df07d50dcd3a4b",
+    "owner": "domain-engineer"
+  },
+  {
+    "path": "modules/rag/README.md",
+    "sha256": "f71d74513a83778d3336205ab24ba8361e4e29229f70729c20167d33694542a2",
+    "owner": "rag-engineer"
+  },
+  {
+    "path": "modules/rag/src/main/resources/runtime-benchmark-v1.json",
+    "sha256": "eb345c1609391acab05ef6677f060a1249f2d153bee80eb7a7b33f70a7caa6c2",
+    "owner": "rag-engineer"
+  },
+  {
+    "path": "modules/rag/src/main/scala/edu/uic/cs441/scholarchain/rag/AnswerSynthesisAgent.scala",
+    "sha256": "d072258274b682d67d05de18296c3ccb986f5b1933b38b593a82396ec7c939dc",
+    "owner": "rag-engineer"
+  },
+  {
+    "path": "modules/rag/src/main/scala/edu/uic/cs441/scholarchain/rag/ClaimVerificationAgent.scala",
+    "sha256": "abbf46e5674a4843f3d015c8c7c26ee1fcea7e29f1c1481f0f74da0c147bb08f",
+    "owner": "rag-engineer"
+  },
+  {
+    "path": "modules/rag/src/main/scala/edu/uic/cs441/scholarchain/rag/CollaborationMetricsAgent.scala",
+    "sha256": "cbba4e771568e7a464ba0ebc5ba0a252df0c3d46208cca884e188b4740205db5",
+    "owner": "rag-engineer"
+  },
+  {
+    "path": "modules/rag/src/main/scala/edu/uic/cs441/scholarchain/rag/CommunityAnalystAgent.scala",
+    "sha256": "6f9fa0053568ce1ee649dd92e05fd9612b14b42ac0ad1c1b7877e1d8c0ed4e5c",
+    "owner": "rag-engineer"
+  },
+  {
+    "path": "modules/rag/src/main/scala/edu/uic/cs441/scholarchain/rag/EvidenceBuilderAgent.scala",
+    "sha256": "21cd6078ca8d5a585bfe1a638d4e28f97e27568dd8a2f2e9e69b06a24d5f83e6",
+    "owner": "rag-engineer"
+  },
+  {
+    "path": "modules/rag/src/main/scala/edu/uic/cs441/scholarchain/rag/PathFinderAgent.scala",
+    "sha256": "cf705102a9e22b1e09dc54e051be728f711560a0475e834330e78fda5b8957fc",
+    "owner": "rag-engineer"
+  },
+  {
+    "path": "modules/rag/src/main/scala/edu/uic/cs441/scholarchain/rag/QueryPlannerAgent.scala",
+    "sha256": "9f39a0a1946307ca187dcd021b2b1e1f69a928ab87ac637e7bc57eb32c144583",
+    "owner": "rag-engineer"
+  },
+  {
+    "path": "modules/rag/src/main/scala/edu/uic/cs441/scholarchain/rag/RuntimeAnswerWorkflow.scala",
+    "sha256": "7904f73ff1452b95c79d2c5080bc22159af490fe8af4f0718a0272d0d76a6035",
+    "owner": "rag-engineer"
+  },
+  {
+    "path": "modules/rag/src/main/scala/edu/uic/cs441/scholarchain/rag/RuntimeLlm.scala",
+    "sha256": "0de0551cdf9049ce1601baba752ae9e9abcb24efb0cb3809c900768755b58c3b",
+    "owner": "rag-engineer"
+  },
+  {
+    "path": "modules/rag/src/main/scala/edu/uic/cs441/scholarchain/rag/RuntimeOfflineFixture.scala",
+    "sha256": "a0edd1816651e045ecf05bd6d029cc2e9eeadeb50c72b3ab2fe2912aebd30889",
+    "owner": "rag-engineer"
+  },
+  {
+    "path": "modules/rag/src/main/scala/edu/uic/cs441/scholarchain/rag/RuntimeRetrieval.scala",
+    "sha256": "55b36a11a8d38d3868a6530e15a530065c234e432c1928de2683a89d64457d1c",
+    "owner": "rag-engineer"
+  },
+  {
+    "path": "modules/rag/src/main/scala/edu/uic/cs441/scholarchain/rag/RuntimeSchemas.scala",
+    "sha256": "b48ed5ee71755279ecd6cd542f2959aec45bb7b3d377bfa08cd0ffe5725072a5",
+    "owner": "rag-engineer"
+  },
+  {
+    "path": "modules/rag/src/main/scala/edu/uic/cs441/scholarchain/rag/RuntimeWorkflowMain.scala",
+    "sha256": "bce8da605e79389539f56e6914b03eb4c19c5bfaa8663b736a29af4c064a75b3",
+    "owner": "rag-engineer"
+  },
+  {
+    "path": "modules/rag/src/main/scala/edu/uic/cs441/scholarchain/rag/SemanticContextAgent.scala",
+    "sha256": "a3782f63b59d8fff8e2dfe3135d2e1d5e46b1e7df3df8d8609d39d4f6c185548",
+    "owner": "rag-engineer"
+  },
+  {
+    "path": "modules/rag/src/main/scala/edu/uic/cs441/scholarchain/rag/WorkflowRunner.scala",
+    "sha256": "917c54520b75a3ec3b348fd672cf333cb78b168fa010c4f46ccc93cffc88bb54",
+    "owner": "rag-engineer"
+  },
+  {
+    "path": "modules/rag/src/test/scala/edu/uic/cs441/scholarchain/rag/Runtime9CSpec.scala",
+    "sha256": "01147ca49ae26aaa01890b73cf03b7d08838c1f03b984c6da432c788ac7e4d23",
+    "owner": "rag-engineer"
+  },
+  {
+    "path": "modules/storage/README.md",
+    "sha256": "0e7dd3cc55e88808b67118fa3dfe828d634ba48d7f863a081e5316e20400ef32",
+    "owner": "storage-engineer"
+  },
+  {
+    "path": "modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/RuntimeAuditStore.scala",
+    "sha256": "c61ecf0a73ab96def5d510562c83c408e82515488e3dc4a8c541fbd940f48c93",
+    "owner": "storage-engineer"
+  },
+  {
+    "path": "modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/fakes/InMemoryRuntimeAuditStore.scala",
+    "sha256": "c68e0b4be490ea33a4c10c1baa58171d8bea3091ad2d3cbda7c2cd02cf2ac4b7",
+    "owner": "storage-engineer"
+  },
+  {
+    "path": "modules/storage/src/test/scala/edu/uic/cs441/scholarchain/storage/RuntimeAuditStorageSpec.scala",
+    "sha256": "ba4bc07a509251bf0c6365cdf12021faf254b70e6662b1d80cf7daaafaebd2f5",
+    "owner": "storage-engineer"
+  },
+  {
+    "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentRuntime9BEvidenceSpec.scala",
+    "sha256": "31c8c550d336c81d15fbb1343153f9cc11b5e8efe2162aad1511c7334380e480",
+    "owner": "test-engineer"
+  },
+  {
+    "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentRuntime9BWorkflowSpec.scala",
+    "sha256": "6ccbe1efecfd440de40fddd43236061b6c140ba14c0390e16568a0feb18a2196",
+    "owner": "test-engineer"
+  },
+  {
+    "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentRuntime9CBenchmarkSpec.scala",
+    "sha256": "c02c445779c06d19cef4c1dd0b33058a7160395d9781ec809dad11204100164f",
+    "owner": "test-engineer"
+  },
+  {
+    "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentRuntime9CFixture.scala",
+    "sha256": "6ca1056d9dc53b71da9958bf19eeaba4be822c44dedbbcbf9ed1c4960593d575",
+    "owner": "test-engineer"
+  },
+  {
+    "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentRuntime9CSynthesisSpec.scala",
+    "sha256": "4b800e11ce6878ad47dc306731535bc636ac73ff27987cec8b9154cc63fc0338",
+    "owner": "test-engineer"
+  },
+  {
+    "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentRuntime9CTrustSpec.scala",
+    "sha256": "09e9c595c22ee81cb345f73e70782a328b406081e9009b2eb880f8be0ab4c47f",
+    "owner": "test-engineer"
+  },
+  {
+    "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentRuntime9CVerificationSpec.scala",
+    "sha256": "f9f8eff2d32c6e9336e30fa918d239cd9d091deee849281020115ca45c34acca",
+    "owner": "test-engineer"
+  },
+  {
+    "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentRuntime9CWorkflowSpec.scala",
+    "sha256": "b63a24f72e6cdd6961284a7bbbde2fd983c08ab49c695923f102750ec2325253",
+    "owner": "test-engineer"
+  }
+]

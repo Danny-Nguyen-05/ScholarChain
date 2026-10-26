@@ -1,0 +1,48 @@
+{
+  "sourceFileCount": 31,
+  "changedSincePreFinalGate": [],
+  "credentialPatternFindings": [],
+  "ownership": {
+    "domain-engineer": [
+      "modules/core/README.md",
+      "modules/core/src/main/resources/scholarchain.runtime-config.v1.json",
+      "modules/core/src/main/scala/edu/uic/cs441/scholarchain/core/DomainValidation.scala",
+      "modules/core/src/main/scala/edu/uic/cs441/scholarchain/core/Records.scala",
+      "modules/core/src/main/scala/edu/uic/cs441/scholarchain/core/RuntimeConfig.scala",
+      "modules/core/src/main/scala/edu/uic/cs441/scholarchain/core/RuntimeContracts.scala",
+      "modules/core/src/test/resources/wire/runtime-query-options.json",
+      "modules/core/src/test/resources/wire/runtime-typed-claim.json",
+      "modules/core/src/test/scala/edu/uic/cs441/scholarchain/core/RuntimeContractSpec.scala"
+    ],
+    "rag-engineer": [
+      "modules/rag/README.md",
+      "modules/rag/src/main/scala/edu/uic/cs441/scholarchain/rag/QueryPlannerAgent.scala",
+      "modules/rag/src/main/scala/edu/uic/cs441/scholarchain/rag/ResearcherResolverAgent.scala",
+      "modules/rag/src/main/scala/edu/uic/cs441/scholarchain/rag/RuntimeLlm.scala",
+      "modules/rag/src/main/scala/edu/uic/cs441/scholarchain/rag/RuntimeSchemas.scala",
+      "modules/rag/src/test/scala/edu/uic/cs441/scholarchain/rag/Runtime9ASpec.scala",
+      "prompts/runtime/planner-v1.md",
+      "prompts/runtime/synthesis-v1.md",
+      "prompts/schemas/answer-synthesis-v1.json",
+      "prompts/schemas/query-plan-v1.json"
+    ],
+    "storage-engineer": [
+      "modules/storage/README.md",
+      "modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/IndexedEvidenceBundleStore.scala",
+      "modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/Phase6CacheLoader.scala",
+      "modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/RuntimeArtifacts.scala",
+      "modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/StoragePorts.scala",
+      "modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/fakes/RuntimeFakes.scala",
+      "modules/storage/src/test/scala/edu/uic/cs441/scholarchain/storage/RuntimeArtifactStorageSpec.scala"
+    ],
+    "test-engineer": [
+      "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentRuntime9AArtifactPipelineSpec.scala",
+      "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentRuntime9AEvidenceSpec.scala",
+      "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentRuntime9APlannerSpec.scala",
+      "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentRuntime9AResolverSpec.scala",
+      "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentStorageLoaderSpec.scala"
+    ]
+  },
+  "gitDiffCheckExit": 0,
+  "limitations": "Bounded changed-file credential-literal scan, not proof that every possible secret is absent. No secret locations read."
+}

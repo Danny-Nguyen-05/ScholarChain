@@ -1,0 +1,45 @@
+{
+  "command": "/usr/bin/time -p sbt -batch check",
+  "rawPath": "/tmp/phase9c-check-2.log",
+  "rawSha256": "830bb94d47e4d122f44013f5a42f82fc45fed696df4020afba395511cbd0bc37",
+  "exitCode": 0,
+  "elapsedSeconds": 780.69,
+  "modules": {
+    "core": {
+      "passed": 207,
+      "failed": 0
+    },
+    "hadoop": {
+      "passed": 64,
+      "failed": 0
+    },
+    "entityResolution": {
+      "passed": 39,
+      "failed": 0
+    },
+    "spark": {
+      "passed": 38,
+      "failed": 0
+    },
+    "storage": {
+      "passed": 80,
+      "failed": 0
+    },
+    "rag": {
+      "passed": 107,
+      "failed": 0
+    },
+    "independentTests": {
+      "passed": 588,
+      "failed": 0
+    },
+    "build": {
+      "passed": 8,
+      "failed": 0
+    }
+  },
+  "totalPassed": 1131,
+  "totalFailed": 0,
+  "testRunMarkerObserved": true,
+  "expectedInjectedFailureProbeObserved": true
+}

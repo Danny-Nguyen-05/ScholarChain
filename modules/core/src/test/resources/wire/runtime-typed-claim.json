@@ -1,0 +1,19 @@
+{
+  "claimType": "METRIC",
+  "subjectIds": [
+    "synthetic-researcher-A"
+  ],
+  "values": [
+    {
+      "field": "distinctCoauthorCount",
+      "number": "9007199254740993",
+      "text": null,
+      "ids": null,
+      "flag": null
+    }
+  ],
+  "windowIds": [
+    "since-2015"
+  ],
+  "templateId": "metric-v1"
+}

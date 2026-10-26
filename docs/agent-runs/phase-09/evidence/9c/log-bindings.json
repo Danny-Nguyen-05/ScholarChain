@@ -1,0 +1,80 @@
+[
+  {
+    "record": "check-1-result.json",
+    "rawPath": "/tmp/phase9c-check-1.log",
+    "sha256": "296a41b4cf4ab78dd35dcb299d77e152546a810f785a7a86e618ce9e0b400ea3",
+    "exitCode": 143
+  },
+  {
+    "record": "check-2-result.json",
+    "rawPath": "/tmp/phase9c-check-2.log",
+    "sha256": "830bb94d47e4d122f44013f5a42f82fc45fed696df4020afba395511cbd0bc37",
+    "exitCode": 0
+  },
+  {
+    "record": "cli-benchmark-1-result.json",
+    "rawPath": "/tmp/phase9c-cli-benchmark-1.log",
+    "sha256": "ca2b47b883cecbae4becde5f4ed494cfe487596f9e7d5c172531b70c95a74d17",
+    "exitCode": 0
+  },
+  {
+    "record": "cli-benchmark-2-result.json",
+    "rawPath": "/tmp/phase9c-cli-benchmark-2.log",
+    "sha256": "b08d7aa37c9dfcaa3ea6b278760e974b430b7f7baf01c3d82961082744b88986",
+    "exitCode": 0
+  },
+  {
+    "record": "core-targeted-1-result.json",
+    "rawPath": "/tmp/phase9c-core-targeted-1.log",
+    "sha256": "5c834634f91ef13041e33c7c3281042c815e9c73eee264e1a806da8703cbf507",
+    "exitCode": 0
+  },
+  {
+    "record": "independent-targeted-1-result.json",
+    "rawPath": "/tmp/phase9c-independent-targeted-1.log",
+    "sha256": "a603fee0259d73ff34c7191f46ba7743126b3610d454ca1897d7cf944d34ff2c",
+    "exitCode": 1
+  },
+  {
+    "record": "rag-compile-1-result.json",
+    "rawPath": "/tmp/phase9c-rag-compile-1.log",
+    "sha256": "f80f02772dc0f219432da4e82a00ad3a616f008e5e18ec40f11d60ebaf5a4c28",
+    "exitCode": 0
+  },
+  {
+    "record": "storage-targeted-1-result.json",
+    "rawPath": "/tmp/phase9c-storage-targeted-1.log",
+    "sha256": "8123e243ffccfb258bee34900f8c0de5249dcbcc0ab1e60affc378f14fc9a412",
+    "exitCode": 1
+  },
+  {
+    "record": "targeted-1-result.json",
+    "rawPath": "/tmp/phase9c-targeted-1.log",
+    "sha256": "10d9b28f6c95d78b2a233bfa8fd879d779ac6e99bbd1fcbcf8056f12cedc346c",
+    "exitCode": 1
+  },
+  {
+    "record": "targeted-2-result.json",
+    "rawPath": "/tmp/phase9c-targeted-2.log",
+    "sha256": "0578d4c1f5b1020676f16f31578a0986ffa628d6d861b0bf729960cb42fd94d9",
+    "exitCode": 1
+  },
+  {
+    "record": "targeted-3-result.json",
+    "rawPath": "/tmp/phase9c-targeted-3.log",
+    "sha256": "3e6e90a8f7daaa5b34f9d222e08450c5f351c300cc483a3fd79ee88b9844b9b7",
+    "exitCode": 1
+  },
+  {
+    "record": "targeted-4-result.json",
+    "rawPath": "/tmp/phase9c-targeted-4.log",
+    "sha256": "4e27b6d1ca269408c09e42399a780b8036d59b609f4ef4575e2d33bd9dbdbb4d",
+    "exitCode": 0
+  },
+  {
+    "record": "targeted-5-result.json",
+    "rawPath": "/tmp/phase9c-targeted-5.log",
+    "sha256": "03be3286d55e126145eb6b864216cb10042b17eaaaed84d13b5903cd159e7200",
+    "exitCode": 0
+  }
+]

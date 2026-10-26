@@ -1,0 +1,39 @@
+187: [info] - versioned JSON HOCON subset .conf and .json load through the real loader
+222: [info] Run completed in 476 milliseconds.
+223: [info] Total number of tests run: 196
+225: [info] Tests: succeeded 196, failed 0, canceled 0, ignored 0, pending 0
+832: [info] - a one-slash file URI round-trips to the real directory
+964: [info] Run completed in 3 minutes, 6 seconds.
+965: [info] Total number of tests run: 64
+967: [info] Tests: succeeded 64, failed 0, canceled 0, ignored 0, pending 0
+1014: [info] Run completed in 635 milliseconds.
+1015: [info] Total number of tests run: 39
+1017: [info] Tests: succeeded 39, failed 0, canceled 0, ignored 0, pending 0
+2137: [info] Run completed in 1 minute, 58 seconds.
+2138: [info] Total number of tests run: 38
+2140: [info] Tests: succeeded 38, failed 0, canceled 0, ignored 0, pending 0
+2200: [info] - source-verified materialization publishes immutable content and the real object reader works
+2206: [info] - real cache loader publishes base-name homonym candidates without merging suffix identities
+2219: [info] Run completed in 852 milliseconds.
+2220: [info] Total number of tests run: 66
+2222: [info] Tests: succeeded 66, failed 0, canceled 0, ignored 0, pending 0
+2285: [info] - render-only real model manifest is accepted by pure live preflight without embedding or state
+2324: [info] Run completed in 630 milliseconds.
+2325: [info] Total number of tests run: 90
+2327: [info] Tests: succeeded 90, failed 0, canceled 0, ignored 0, pending 0
+3494: [info] - storage CLI refuses real execution without profile or matching approved environment
+6483: [info] - real rendered content changes keep the stable slot and conflict before any new embedding or data writes
+6551: [info] - S3 retries a transient SDK failure within the configured bound without real sleeping
+7871: [info] Run completed in 6 minutes, 42 seconds.
+7872: [info] Total number of tests run: 503
+7874: [info] Tests: succeeded 503, failed 0, canceled 0, ignored 0, pending 0
+7887: [error] java.lang.RuntimeException: scholarchain check probe: injected format-stage failure
+7905: [error] (checkProbeInjectFailure) scholarchain check probe: injected format-stage failure
+7907: [info] CheckFailurePathSpec:
+7911: [info] TestRunMarkerSpec:
+7916: [info] Run completed in 2 seconds, 218 milliseconds.
+7917: [info] Total number of tests run: 8
+7919: [info] Tests: succeeded 8, failed 0, canceled 0, ignored 0, pending 0
+7921: [info] running scholarchain.build.TestRunMarker /Users/danny/Documents/UIC/CS441/ScholarChain
+7922: [success] Total time: 715 s (11:55), completed Oct 26, 2026, 2:18:57 PM
+7923: real 717.84

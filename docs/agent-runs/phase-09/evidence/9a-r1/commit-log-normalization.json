@@ -1,0 +1,26 @@
+{
+  "reason": "Commit packaging: preserve original raw logs while making staged display copies pass git diff --check.",
+  "changes": [
+    {
+      "displayCopy": "docs/agent-runs/phase-09/evidence/9a/rag-independent-targeted-1.log",
+      "rawPath": "/tmp/phase9a-rag-independent-targeted-1.log",
+      "rawSha256": "34dafdb0a93d6b05c84414196b3d5d3e819254fc82e398142e6de176842996d5",
+      "displaySha256": "21716269f5381ace858a918d42952cbf0d3a23d94791d9e99a24f8b78c1c2e49",
+      "transformation": "Remove trailing spaces/tabs only; line text, outcomes and original raw bytes unchanged."
+    },
+    {
+      "displayCopy": "docs/agent-runs/phase-09/evidence/9a/storage-targeted-1.log",
+      "rawPath": "/tmp/phase9a-storage-targeted-1.log",
+      "rawSha256": "3be21525398766421031fc039780bacf16b65a3fb0654e073a368067d7f9308f",
+      "displaySha256": "b915dfbaf0765a3a7a219335945ed44a75eceb151537cb5be11c9d244f87c8aa",
+      "transformation": "Remove trailing spaces/tabs only; line text, outcomes and original raw bytes unchanged."
+    },
+    {
+      "displayCopy": "docs/agent-runs/phase-09/evidence/9a-r1/rag-format-targeted-1.log",
+      "rawPath": "/tmp/phase9a-r1-rag-format-targeted-1.log",
+      "rawSha256": "dfc3aa6f387cc006c7f68ee2ce1b31926958766ce77973080a79ad75332cdada",
+      "displaySha256": "c8c8737e9c8c4605b389a2ccabd361a0a654b1047585ce389e0d8b9e40609e2f",
+      "transformation": "Remove trailing spaces/tabs only; line text, outcomes and original raw bytes unchanged."
+    }
+  ]
+}

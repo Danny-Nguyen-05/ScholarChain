@@ -1,0 +1,97 @@
+[info] welcome to sbt 1.10.7 (Homebrew Java 17.0.20.1)
+[info] loading settings for project scholarchain-build from plugins.sbt...
+[info] loading project definition from /Users/danny/Documents/UIC/CS441/ScholarChain/project
+[info] loading settings for project root from build.sbt...
+[info] set current project to root (in build file:/Users/danny/Documents/UIC/CS441/ScholarChain/)
+[info] compiling 2 Scala sources to /Users/danny/Documents/UIC/CS441/ScholarChain/modules/rag/target/scala-3.3.4/test-classes ...
+[error] -- [E007] Type Mismatch Error: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/rag/src/test/scala/edu/uic/cs441/scholarchain/rag/Runtime9ARepairSpec.scala:48:63
+[error] 48 |  private def execute(q:String,value:ujson.Obj,c:RuntimeConfig=config):PlannerResult = {
+[error]    |                                                               ^^^^^^
+[error]    |Found:    (Runtime9ARepairSpec.this.config : edu.uic.cs441.scholarchain.core.RuntimeConfig
+[error]    |  )
+[error]    |Required: Boolean @uncheckedVariance
+[error]    |
+[error]    | longer explanation available when compiling with `-explain`
+[error] -- [E134] Type Error: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/rag/src/test/scala/edu/uic/cs441/scholarchain/rag/Runtime9ARepairSpec.scala:61:6
+[error] 61 |      execute(e.question,json(e)) match {
+[error]    |      ^^^^^^^
+[error]    |None of the overloaded alternatives of method execute in class Runtime9ARepairSpec with types
+[error]    | (q: String, value: ujson.Obj, c: edu.uic.cs441.scholarchain.core.RuntimeConfig)
+[error]    |  : edu.uic.cs441.scholarchain.rag.PlannerResult
+[error]    | (testName: String, configMap: org.scalatest.ConfigMap, color: Boolean,
+[error]    |  durations: Boolean, shortstacks: Boolean, fullstacks: Boolean, stats: Boolean)
+[error]    |  : Unit
+[error]    |match arguments ((e.question : String), ujson.Obj)
+[error] -- [E006] Not Found Error: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/rag/src/test/scala/edu/uic/cs441/scholarchain/rag/Runtime9ARepairSpec.scala:62:60
+[error] 62 |        case PlannerResult.Planned(p,1,false)=>assertFields(p,e)
+[error]    |                                                            ^
+[error]    |                                                            Not found: p
+[error]    |
+[error]    | longer explanation available when compiling with `-explain`
+[error] -- [E134] Type Error: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/rag/src/test/scala/edu/uic/cs441/scholarchain/rag/Runtime9ARepairSpec.scala:70:6
+[error] 70 |      execute(e.question,wrong) match {
+[error]    |      ^^^^^^^
+[error]    |None of the overloaded alternatives of method execute in class Runtime9ARepairSpec with types
+[error]    | (q: String, value: ujson.Obj, c: edu.uic.cs441.scholarchain.core.RuntimeConfig)
+[error]    |  : edu.uic.cs441.scholarchain.rag.PlannerResult
+[error]    | (testName: String, configMap: org.scalatest.ConfigMap, color: Boolean,
+[error]    |  durations: Boolean, shortstacks: Boolean, fullstacks: Boolean, stats: Boolean)
+[error]    |  : Unit
+[error]    |match arguments ((e.question : String), (wrong : ujson.Obj))
+[error] -- [E006] Not Found Error: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/rag/src/test/scala/edu/uic/cs441/scholarchain/rag/Runtime9ARepairSpec.scala:71:59
+[error] 71 |        case PlannerResult.Planned(p,2,true)=>assertFields(p,e)
+[error]    |                                                           ^
+[error]    |                                                           Not found: p
+[error]    |
+[error]    | longer explanation available when compiling with `-explain`
+[error] -- [E134] Type Error: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/rag/src/test/scala/edu/uic/cs441/scholarchain/rag/Runtime9ARepairSpec.scala:82:6
+[error] 82 |      execute(q,json(e,window)) match {
+[error]    |      ^^^^^^^
+[error]    |None of the overloaded alternatives of method execute in class Runtime9ARepairSpec with types
+[error]    | (q: String, value: ujson.Obj, c: edu.uic.cs441.scholarchain.core.RuntimeConfig)
+[error]    |  : edu.uic.cs441.scholarchain.rag.PlannerResult
+[error]    | (testName: String, configMap: org.scalatest.ConfigMap, color: Boolean,
+[error]    |  durations: Boolean, shortstacks: Boolean, fullstacks: Boolean, stats: Boolean)
+[error]    |  : Unit
+[error]    |match arguments ((q : String), ujson.Obj)
+[error] -- [E006] Not Found Error: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/rag/src/test/scala/edu/uic/cs441/scholarchain/rag/Runtime9ARepairSpec.scala:83:60
+[error] 83 |        case PlannerResult.Planned(p,1,false)=>assertFields(p,e,window)
+[error]    |                                                            ^
+[error]    |                                                            Not found: p
+[error]    |
+[error]    | longer explanation available when compiling with `-explain`
+[error] -- [E134] Type Error: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/rag/src/test/scala/edu/uic/cs441/scholarchain/rag/Runtime9ARepairSpec.scala:88:6
+[error] 88 |      execute(q,wrong) match {
+[error]    |      ^^^^^^^
+[error]    |None of the overloaded alternatives of method execute in class Runtime9ARepairSpec with types
+[error]    | (q: String, value: ujson.Obj, c: edu.uic.cs441.scholarchain.core.RuntimeConfig)
+[error]    |  : edu.uic.cs441.scholarchain.rag.PlannerResult
+[error]    | (testName: String, configMap: org.scalatest.ConfigMap, color: Boolean,
+[error]    |  durations: Boolean, shortstacks: Boolean, fullstacks: Boolean, stats: Boolean)
+[error]    |  : Unit
+[error]    |match arguments ((q : String), (wrong : ujson.Obj))
+[error] -- [E006] Not Found Error: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/rag/src/test/scala/edu/uic/cs441/scholarchain/rag/Runtime9ARepairSpec.scala:89:59
+[error] 89 |        case PlannerResult.Planned(p,2,true)=>assertFields(p,e,window)
+[error]    |                                                           ^
+[error]    |                                                           Not found: p
+[error]    |
+[error]    | longer explanation available when compiling with `-explain`
+[error] -- [E134] Type Error: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/rag/src/test/scala/edu/uic/cs441/scholarchain/rag/Runtime9ARepairSpec.scala:100:27
+[error] 100 |    cases.foreach { (e,v)=>execute(e.question,v) match {
+[error]     |                           ^^^^^^^
+[error]     |None of the overloaded alternatives of method execute in class Runtime9ARepairSpec with types
+[error]     | (q: String, value: ujson.Obj, c: edu.uic.cs441.scholarchain.core.RuntimeConfig)
+[error]     |  : edu.uic.cs441.scholarchain.rag.PlannerResult
+[error]     | (testName: String, configMap: org.scalatest.ConfigMap, color: Boolean,
+[error]     |  durations: Boolean, shortstacks: Boolean, fullstacks: Boolean, stats: Boolean)
+[error]     |  : Unit
+[error]     |match arguments ((e.question : String), (v : ujson.Obj))
+[error] -- [E006] Not Found Error: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/rag/src/test/scala/edu/uic/cs441/scholarchain/rag/Runtime9ARepairSpec.scala:101:57
+[error] 101 |      case PlannerResult.Planned(p,2,true)=>assertFields(p,e)
+[error]     |                                                         ^
+[error]     |                                                         Not found: p
+[error]     |
+[error]     | longer explanation available when compiling with `-explain`
+[error] 11 errors found
+[error] (rag / Test / compileIncremental) Compilation failed
+[error] Total time: 3 s, completed Oct 26, 2026, 10:39:09 AM

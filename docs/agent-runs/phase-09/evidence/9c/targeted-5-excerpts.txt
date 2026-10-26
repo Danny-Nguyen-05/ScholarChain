@@ -1,0 +1,10 @@
+[info] Total number of tests run: 14
+[info] Tests: succeeded 14, failed 0, canceled 0, ignored 0, pending 0
+[info] All tests passed.
+[info] Total number of tests run: 74
+[info] Tests: succeeded 74, failed 0, canceled 0, ignored 0, pending 0
+[info] All tests passed.
+[info] Total number of tests run: 211
+[info] Tests: succeeded 211, failed 0, canceled 0, ignored 0, pending 0
+[info] All tests passed.
+real 16.31

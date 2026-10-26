@@ -1,0 +1,177 @@
+76: [info] SerializationContractSpec:
+77: [info] - work record round-trips and freezes the bibliographic wire example
+78: [info] - canonical researcher and match decision freeze the identity wire examples
+79: [info] - collaboration records freeze pair order and the coauthor edge id
+80: [info] - metrics, reference data, graph, evidence, and run manifest freeze
+81: [info] - author mention wire example states that a name is not an identity
+127: [info] RuntimeContractSpec:
+128: [info] - frozen runtime-related v1 wire records parse without optional runtime fields
+129: [info] - optional query payload converts without changing the legacy plan or researcher spelling
+130: [info] - typed claims preserve exact integers beyond binary floating point and legacy claim fields
+131: [info] - new per-claim verdicts map explicitly while overall abstention remains ABSTAINED
+132: [info] - mixed claim verdicts remain partially verified and rejected attempted claims survive audit serialization
+133: [info] - domain validation rejects malformed optional payload rather than ignoring it
+134: [info] - evidence qualifiers retain iteration-limited and approximate source observations
+135: [info] - vector-only evidence partition cannot carry deterministic evidence
+136: [info] - runtime configuration loads explicit model region and bounded deadlines
+137: [info] - runtime configuration rejects total deadline overflow even if each individual stage fits
+138: [info] - runtime configuration rejects unsupported modes, missing versions, unknown defaults and malformed windows
+139: [info] - researcher candidates preserve absent confidence and distinct DBLP suffixes
+140: [info] - resolver configuration remains compatible and its identity cap is independent of graph results
+141: [info] - resolver configuration rejects every nonpositive candidate or provenance bound
+142: [info] - candidate provenance counts disclose clipped distinct lists and remain optional for legacy JSON
+143: [info] - candidate provenance validation rejects hidden truncation and impossible source totals
+266: [info] Total number of tests run: 173
+268: [info] Tests: succeeded 173, failed 0, canceled 0, ignored 0, pending 0
+1008: [info] Total number of tests run: 64
+1010: [info] Tests: succeeded 64, failed 0, canceled 0, ignored 0, pending 0
+1058: [info] Total number of tests run: 39
+1060: [info] Tests: succeeded 39, failed 0, canceled 0, ignored 0, pending 0
+2182: [info] Total number of tests run: 38
+2184: [info] Tests: succeeded 38, failed 0, canceled 0, ignored 0, pending 0
+2237: [info] RuntimeArtifactStorageSpec:
+2238: [info] - complete population is ranked by stored values with deterministic ties and honest top-K
+2239: [info] - filters select authoritative population BEFORE stored-metric ranking and disclose scope
+2240: [info] - absent authoritative metadata, unavailable filtered metrics and unknown windows reject
+2241: [info] - bridge and community records preserve degree and iteration-limited qualifications
+2242: [info] - edge support, context caps and temporal absent-side semantics retain source records
+2243: [info] - context distinguishes a stored window with absent researcher metrics from an unknown window
+2244: [info] - source-verified materialization publishes immutable content and the real object reader works
+2245: [info] - mixed warm artifact calls reuse one verified snapshot even when subsequent GETs would throw
+2246: [info] - concurrent cold mixed calls share one successful load and safely reuse immutable indexes
+2247: [info] - failed first loads are not cached; transient rejection and corrupt first bytes remain retryable
+2248: [info] - declared caps reject before opening sources; changed rows or actual overruns publish nothing
+2249: [info] - duplicate keys, missing supporting works and mismatched bridge qualifications fail closed
+2250: [info] - real cache loader publishes base-name homonym candidates without merging suffix identities
+2251: [info] - evidence item lookup works by frozen ID, repeated puts and sharing immutable content
+2252: [info] - evidence index corruption and failed required index write cannot report success
+2264: [info] Total number of tests run: 66
+2266: [info] Tests: succeeded 66, failed 0, canceled 0, ignored 0, pending 0
+2274: [info] Runtime9ARepairSpec:
+2275: [info] - B1 ground complete explicit intent: Rank researchers by publication count
+2276: [info] - B1 ground complete explicit intent: Rank researchers by distinct coauthors
+2277: [info] - B1 ground complete explicit intent: Rank researchers by total coauthor occurrences
+2278: [info] - B1 ground complete explicit intent: Rank researchers by average coauthors per paper
+2279: [info] - B1 ground complete explicit intent: Rank researchers by maximum coauthors on one paper
+2280: [info] - B1 ground complete explicit intent: Which researchers have the largest team size?
+2281: [info] - B1 ground complete explicit intent: Rank researchers by weighted degree
+2282: [info] - B1 ground complete explicit intent: Rank researchers by coreness
+2283: [info] - B1 ground complete explicit intent: Rank bridge researchers by cross-community degree
+2284: [info] - B1 ground complete explicit intent: Rank bridge researchers by cross-community weight
+2285: [info] - B1 ground complete explicit intent: Rank bridge researchers by communities connected
+2286: [info] - B1 ground complete explicit intent: Rank bridge researchers by participation coefficient
+2287: [info] - B1 ground complete explicit intent: Which researchers are the strongest bridges?
+2288: [info] - B1 ground complete explicit intent: Show strongest repeated collaborations
+2289: [info] - B1 ground complete explicit intent: Rank researchers by maximum total authors on one paper
+2290: [info] - B1 exact cumulative explicit and default windows cannot narrow or acquire extra comparisons
+2291: [info] - B1 operation measure conversion and configurable defaults cannot be model overrides
+2292: [info] - B2 many observations for one identity resolve and provenance lists disclose their distinct totals
+2293: [info] - B2 overflow returns bounded Ambiguous candidates with exact total instead of failure
+2294: [info] - B3 actual artifact composition preserves absent identities and rejects unknown windows
+2306: [info] Runtime9ASpec:
+2307: [info] - versioned assets load and planner schema rejects missing, unknown and fabricated fields
+2308: [info] - structured stage logs contain correlation and outcome without question or names
+2309: [info] - valid LLM plan preserves configured limits, mode and evidence-only option
+2310: [info] - Cypher AWS and unknown metric requests reject before any model call
+2311: [info] - malformed JSON retries once then anchored fallback preserves filters and stored year
+2312: [info] - fabricated operation and unknown keys cannot escape bounded validation
+2313: [info] - model cannot drop unquoted topic institution extra conditions or change ranking metric
+2314: [info] - a proposed filter or name cannot hide an unknown metric or named ranking scope
+2315: [info] - model cannot invent a name filter window or silently drop a quoted constraint
+2316: [info] - unsupported and exhausted scripted model fail safely without network
+2317: [info] - late model and cache responses fail with deterministic stage deadlines
+2318: [info] - a model plan may preserve an unquoted topic and exact stored since window
+2319: [info] - unique canonical ID groups source aliases and preserves absent confidence
+2320: [info] - common-name candidates abstain even with different confidence values
+2321: [info] - source-backed coauthor context retains truncation and provenance
+2322: [info] - DBLP exact suffixes stay separate and base-name alias rows remain ambiguous
+2323: [info] - Bedrock adapter forces configured tool and model, preserves schema and usage, no client construction
+2324: [info] - Bedrock adapter rejects text substitutes wrong tools multiple blocks and unsafe numbers
+2325: [info] - Bedrock provider exception messages never escape typed failure
+2326: [info] - synthesis proposal schema requires typed evidence-backed claims and forbids raw narrative or verdict
+2351: [info] Total number of tests run: 73
+2353: [info] Tests: succeeded 73, failed 0, canceled 0, ignored 0, pending 0
+3051: [info] IndependentRuntime9ARepairResolverSpec:
+3052: [info] - B2 many raw observations for one canonical identity resolve with bounded disclosed provenance
+3053: [info] - B2 too many canonical identities returns a bounded Ambiguous list with exact total
+3054: [info] - B3 known identity absent from a stored window resolves with empty context
+3055: [info] - B3 an absent homonym remains in ambiguity with the active homonym
+3056: [info] - B3 an undeclared window remains rejected by the actual artifact store and resolver
+3104: [info] IndependentRuntime9AResolverSpec:
+3105: [info] - multiple observations of one canonical identity remain one candidate with all sources
+3106: [info] - common name abstains with both identities even when one confidence is higher
+3107: [info] - exact homonym suffix resolves its identity while the published base alias stays ambiguous
+3108: [info] - missing name returns NotFound without generating an identity or confidence
+3109: [info] - cache failures stay typed failures instead of being misreported as not found
+3110: [info] - a ranking question without named researchers needs no invented resolution
+3332: [info] IndependentRuntime9APlannerSpec:
+3333: [info] - schema rejects fabricated operations and extra executable query fields
+3334: [info] - database and AWS requests are unsupported without invoking the model
+3335: [info] - unknown metrics do not get replaced with stored collaboration counts
+3336: [info] - two malformed outputs lead to a constrained deterministic fallback
+3337: [info] - a natural topic constraint cannot be dropped by schema-valid model output
+3338: [info] - an explicit ranking metric cannot be switched by schema-valid model output
+3339: [info] - unrepresentable trailing constraints are unsupported after malformed responses
+3340: [info] - fabricated operations never survive decoding even for a recognized question
+3341: [info] - explicit window cannot be replaced with the default all-years population
+3342: [info] - runtime config checks combined critical path and preserves overall ABSTAINED
+3343: [info] - legacy plans without runtime fields remain readable and additive round trips lose no data
+3350: [info] IndependentRuntime9AEvidenceSpec:
+3351: [info] - an evidence item ID resolves through its bundle, including an identical item shared by bundles
+3352: [info] - the same evidence item ID cannot be rebound to changed text in another bundle
+3353: [info] - corrupt pointer bytes are rejected before any item can be returned
+3354: [info] - indexed fake exposes the same item-ID lookup contract
+3604: [info] IndependentRuntime9AArtifactPipelineSpec:
+4167: Computed G1 completed export: /var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/independent-runtime-9a-artifact-13806079699466458957/computed-g1; researchers=10; works=9; edges=18; tables=28; runId=run:55555555-5555-4555-8555-555555555555
+4168: [info] - computed G1 source artifacts preserve exact metrics, edge support and iteration qualifications
+6461: [info] IndependentRuntime9ARepairPlannerSpec:
+6462: [info] - B1 correct schema-shaped output preserves Rank researchers by publication count
+6463: [info] - B1 substituted metric or measure cannot change Rank researchers by publication count
+6464: [info] - B1 correct schema-shaped output preserves Rank researchers by distinct coauthors
+6465: [info] - B1 substituted metric or measure cannot change Rank researchers by distinct coauthors
+6466: [info] - B1 correct schema-shaped output preserves Rank researchers by total coauthor occurrences
+6467: [info] - B1 substituted metric or measure cannot change Rank researchers by total coauthor occurrences
+6468: [info] - B1 correct schema-shaped output preserves Rank researchers by average coauthors per paper
+6469: [info] - B1 substituted metric or measure cannot change Rank researchers by average coauthors per paper
+6470: [info] - B1 correct schema-shaped output preserves Rank researchers by maximum coauthors on one paper
+6471: [info] - B1 substituted metric or measure cannot change Rank researchers by maximum coauthors on one paper
+6472: [info] - B1 correct schema-shaped output preserves Which researchers have the largest team size?
+6473: [info] - B1 substituted metric or measure cannot change Which researchers have the largest team size?
+6474: [info] - B1 correct schema-shaped output preserves Rank researchers by weighted degree
+6475: [info] - B1 substituted metric or measure cannot change Rank researchers by weighted degree
+6476: [info] - B1 correct schema-shaped output preserves Rank researchers by coreness
+6477: [info] - B1 substituted metric or measure cannot change Rank researchers by coreness
+6478: [info] - B1 correct schema-shaped output preserves Rank bridge researchers by cross-community degree
+6479: [info] - B1 substituted metric or measure cannot change Rank bridge researchers by cross-community degree
+6480: [info] - B1 correct schema-shaped output preserves Rank bridge researchers by cross-community weight
+6481: [info] - B1 substituted metric or measure cannot change Rank bridge researchers by cross-community weight
+6482: [info] - B1 correct schema-shaped output preserves Rank bridge researchers by communities connected
+6483: [info] - B1 substituted metric or measure cannot change Rank bridge researchers by communities connected
+6484: [info] - B1 correct schema-shaped output preserves Rank bridge researchers by participation coefficient
+6485: [info] - B1 substituted metric or measure cannot change Rank bridge researchers by participation coefficient
+6486: [info] - B1 correct schema-shaped output preserves Which researchers are the strongest bridges?
+6487: [info] - B1 substituted metric or measure cannot change Which researchers are the strongest bridges?
+6488: [info] - B1 correct schema-shaped output preserves Show strongest repeated collaborations
+6489: [info] - B1 substituted metric or measure cannot change Show strongest repeated collaborations
+6490: [info] - B1 explicit bridge measure cannot silently become the configured default
+6491: [info] - B1 since-2015 cannot narrow to the stored 2015-2019 period
+6492: [info] - B1 correct cumulative since-2015 output remains supported
+6493: [info] - B1 a question naming no window uses the configured default
+6494: [info] - B1 exact stored window names remain supported and cannot be replaced
+6495: [info] - B1 total-author conversion is rejected when the question asks only for coauthors
+6496: [info] - B1 explicit total-author request requires its labeled conversion
+6497: [info] - B1 an alternate configured default bridge measure controls unspecified bridge requests
+6498: [info] - B1 an alternate configured default window controls questions naming no window
+7816: Computed G1 completed export: /var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/independent-8b-pipeline-8352807373475293561/computed-g1; researchers=10; works=9; edges=18; tables=28; runId=run:55555555-5555-4555-8555-555555555555
+7830: [info] Total number of tests run: 440
+7832: [info] Tests: succeeded 440, failed 0, canceled 0, ignored 0, pending 0
+7845: [error] java.lang.RuntimeException: scholarchain check probe: injected format-stage failure
+7863: [error] (checkProbeInjectFailure) scholarchain check probe: injected format-stage failure
+7866: [info] - checkTask aborts before markTestRun when an earlier step fails
+7875: [info] Total number of tests run: 8
+7877: [info] Tests: succeeded 8, failed 0, canceled 0, ignored 0, pending 0
+7879: [info] running scholarchain.build.TestRunMarker /Users/danny/Documents/UIC/CS441/ScholarChain
+7880: [success] Total time: 723 s (12:03), completed Oct 26, 2026, 10:53:17 AM
+7881: real 725.07
+7882: user 760.82
+7883: sys 106.50

@@ -1,0 +1,110 @@
+8: [info] SerializationContractSpec:
+9: [info] - work record round-trips and freezes the bibliographic wire example
+10: [info] - canonical researcher and match decision freeze the identity wire examples
+11: [info] - collaboration records freeze pair order and the coauthor edge id
+12: [info] - metrics, reference data, graph, evidence, and run manifest freeze
+13: [info] - author mention wire example states that a name is not an identity
+59: [info] RuntimeContractSpec:
+60: [info] - frozen runtime-related v1 wire records parse without optional runtime fields
+61: [info] - optional query payload converts without changing the legacy plan or researcher spelling
+62: [info] - typed claims preserve exact integers beyond binary floating point and legacy claim fields
+63: [info] - new per-claim verdicts map explicitly while overall abstention remains ABSTAINED
+64: [info] - mixed claim verdicts remain partially verified and rejected attempted claims survive audit serialization
+65: [info] - domain validation rejects malformed optional payload rather than ignoring it
+66: [info] - evidence qualifiers retain iteration-limited and approximate source observations
+67: [info] - vector-only evidence partition cannot carry deterministic evidence
+68: [info] - runtime configuration loads explicit model region and bounded deadlines
+69: [info] - runtime configuration rejects total deadline overflow even if each individual stage fits
+70: [info] - runtime configuration rejects unsupported modes, missing versions, unknown defaults and malformed windows
+71: [info] - researcher candidates preserve absent confidence and distinct DBLP suffixes
+194: [info] Total number of tests run: 169
+196: [info] Tests: succeeded 169, failed 0, canceled 0, ignored 0, pending 0
+936: [info] Total number of tests run: 64
+938: [info] Tests: succeeded 64, failed 0, canceled 0, ignored 0, pending 0
+986: [info] Total number of tests run: 39
+988: [info] Tests: succeeded 39, failed 0, canceled 0, ignored 0, pending 0
+2109: [info] Total number of tests run: 38
+2111: [info] Tests: succeeded 38, failed 0, canceled 0, ignored 0, pending 0
+2164: [info] RuntimeArtifactStorageSpec:
+2165: [info] - complete population is ranked by stored values with deterministic ties and honest top-K
+2166: [info] - filters select authoritative population BEFORE stored-metric ranking and disclose scope
+2167: [info] - absent authoritative metadata, unavailable filtered metrics and unknown windows reject
+2168: [info] - bridge and community records preserve degree and iteration-limited qualifications
+2169: [info] - edge support, context caps and temporal absent-side semantics retain source records
+2170: [info] - source-verified materialization publishes immutable content and the real object reader works
+2171: [info] - declared caps reject before opening sources; changed rows or actual overruns publish nothing
+2172: [info] - duplicate keys, missing supporting works and mismatched bridge qualifications fail closed
+2173: [info] - real cache loader publishes base-name homonym candidates without merging suffix identities
+2174: [info] - evidence item lookup works by frozen ID, repeated puts and sharing immutable content
+2175: [info] - evidence index corruption and failed required index write cannot report success
+2187: [info] Total number of tests run: 62
+2189: [info] Tests: succeeded 62, failed 0, canceled 0, ignored 0, pending 0
+2208: [info] Runtime9ASpec:
+2209: [info] - versioned assets load and planner schema rejects missing, unknown and fabricated fields
+2210: [info] - structured stage logs contain correlation and outcome without question or names
+2211: [info] - valid LLM plan preserves configured limits, mode and evidence-only option
+2212: [info] - Cypher AWS and unknown metric requests reject before any model call
+2213: [info] - malformed JSON retries once then anchored fallback preserves filters and stored year
+2214: [info] - fabricated operation and unknown keys cannot escape bounded validation
+2215: [info] - model cannot drop unquoted topic institution extra conditions or change ranking metric
+2216: [info] - a proposed filter or name cannot hide an unknown metric or named ranking scope
+2217: [info] - model cannot invent a name filter window or silently drop a quoted constraint
+2218: [info] - unsupported and exhausted scripted model fail safely without network
+2219: [info] - late model and cache responses fail with deterministic stage deadlines
+2220: [info] - a model plan may preserve an unquoted topic and exact stored since window
+2221: [info] - unique canonical ID groups source aliases and preserves absent confidence
+2222: [info] - common-name candidates abstain even with different confidence values
+2223: [info] - source-backed coauthor context retains truncation and provenance
+2224: [info] - DBLP exact suffixes stay separate and base-name alias rows remain ambiguous
+2225: [info] - Bedrock adapter forces configured tool and model, preserves schema and usage, no client construction
+2226: [info] - Bedrock adapter rejects text substitutes wrong tools multiple blocks and unsafe numbers
+2227: [info] - Bedrock provider exception messages never escape typed failure
+2228: [info] - synthesis proposal schema requires typed evidence-backed claims and forbids raw narrative or verdict
+2253: [info] Total number of tests run: 53
+2255: [info] Tests: succeeded 53, failed 0, canceled 0, ignored 0, pending 0
+3000: [info] IndependentRuntime9AResolverSpec:
+3001: [info] - multiple observations of one canonical identity remain one candidate with all sources
+3002: [info] - common name abstains with both identities even when one confidence is higher
+3003: [info] - exact homonym suffix resolves its identity while the published base alias stays ambiguous
+3004: [info] - missing name returns NotFound without generating an identity or confidence
+3005: [info] - cache failures stay typed failures instead of being misreported as not found
+3006: [info] - a ranking question without named researchers needs no invented resolution
+3228: [info] IndependentRuntime9APlannerSpec:
+3229: [info] - schema rejects fabricated operations and extra executable query fields
+3230: [info] - database and AWS requests are unsupported without invoking the model
+3231: [info] - unknown metrics do not get replaced with stored collaboration counts
+3232: [info] - two malformed outputs lead to a constrained deterministic fallback
+3233: [info] - a natural topic constraint cannot be dropped by schema-valid model output
+3234: [info] - an explicit ranking metric cannot be switched by schema-valid model output
+3235: [info] - unrepresentable trailing constraints are unsupported after malformed responses
+3236: [info] - fabricated operations never survive decoding even for a recognized question
+3237: [info] - explicit window cannot be replaced with the default all-years population
+3238: [info] - runtime config checks combined critical path and preserves overall ABSTAINED
+3239: [info] - legacy plans without runtime fields remain readable and additive round trips lose no data
+3246: [info] IndependentRuntime9AEvidenceSpec:
+3247: [info] - an evidence item ID resolves through its bundle, including an identical item shared by bundles
+3248: [info] - the same evidence item ID cannot be rebound to changed text in another bundle
+3249: [info] - corrupt pointer bytes are rejected before any item can be returned
+3250: [info] - indexed fake exposes the same item-ID lookup contract
+3500: [info] IndependentRuntime9AArtifactPipelineSpec:
+4059: Computed G1 completed export: /var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/independent-runtime-9a-artifact-9472535177199317851/computed-g1; researchers=10; works=9; edges=18; tables=28; runId=run:55555555-5555-4555-8555-555555555555
+4060: [info] - computed G1 source artifacts preserve exact metrics, edge support and iteration qualifications
+6318: [info] IndependentStorageLoaderSpec:
+6319: [info] - manifest reload loads one canonical metric copy with exact IDs, lineage and qualifications
+6320: [info] - conflicting collaboration and kcore copies reject before publishing any cache row
+6321: [info] - count and content-hash mismatches reject the manifest and always close its iterator
+6322: [info] - a hash-valid unsupported researcher schema is rejected before any candidate is cached
+6323: [info] - missing source qualification metadata and unsupported manifest versions refuse loading
+7677: Computed G1 completed export: /var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/independent-8b-pipeline-126918861703294664/computed-g1; researchers=10; works=9; edges=18; tables=28; runId=run:55555555-5555-4555-8555-555555555555
+7691: [info] Total number of tests run: 398
+7693: [info] Tests: succeeded 398, failed 0, canceled 0, ignored 0, pending 0
+7706: [error] java.lang.RuntimeException: scholarchain check probe: injected format-stage failure
+7724: [error] (checkProbeInjectFailure) scholarchain check probe: injected format-stage failure
+7727: [info] - checkTask aborts before markTestRun when an earlier step fails
+7736: [info] Total number of tests run: 8
+7738: [info] Tests: succeeded 8, failed 0, canceled 0, ignored 0, pending 0
+7740: [info] running scholarchain.build.TestRunMarker /Users/danny/Documents/UIC/CS441/ScholarChain
+7741: [success] Total time: 703 s (11:43), completed Oct 25, 2026, 11:53:17 PM
+7742: real 705.87
+7743: user 715.68
+7744: sys 101.73

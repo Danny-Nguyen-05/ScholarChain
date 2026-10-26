@@ -1,0 +1,22 @@
+[info] scalafmt: Formatting 3 Scala sources (/Users/danny/Documents/UIC/CS441/ScholarChain/modules/rag)...
+[info] scalafmt: Reformatted 3 Scala sources
+[success] Total time: 1 s, completed Oct 26, 2026, 11:37:04 AM
+[info] scalafmt: Formatting 2 Scala sources (/Users/danny/Documents/UIC/CS441/ScholarChain/modules/rag)...
+[info] scalafmt: Reformatted 2 Scala sources
+[success] Total time: 0 s, completed Oct 26, 2026, 11:37:04 AM
+[info] scalafmt: Formatting 5 Scala sources (/Users/danny/Documents/UIC/CS441/ScholarChain/tests)...
+[info] scalafmt: Reformatted 5 Scala sources
+[success] Total time: 0 s, completed Oct 26, 2026, 11:37:04 AM
+[info] compiling 3 Scala sources to /Users/danny/Documents/UIC/CS441/ScholarChain/modules/rag/target/scala-3.3.4/classes ...
+[info] done compiling
+[info] compiling 2 Scala sources to /Users/danny/Documents/UIC/CS441/ScholarChain/modules/rag/target/scala-3.3.4/test-classes ...
+[error] -- [E172] Type Error: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/rag/src/test/scala/edu/uic/cs441/scholarchain/rag/Runtime9BSpec.scala:54:64
+[error] 54 |    assert(item.runtime.get.windowIds == Vector("all-years") && item.runtime.get.runId == run)
+[error]    |                                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[error]    |Values of types String and (Option[String], org.scalatest.Args) => org.scalatest.Status cannot be compared with == or !=
+[error] one error found
+[error] (rag / Test / compileIncremental) Compilation failed
+[error] Total time: 3 s, completed Oct 26, 2026, 11:37:07 AM
+real 7.02
+user 26.65
+sys 1.16

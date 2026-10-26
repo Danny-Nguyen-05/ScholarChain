@@ -1,0 +1,114 @@
+{
+  "schemaVersion": "scholarchain.runtime-config.v1",
+  "model": {
+    "modelId": "local-placeholder-converse-model",
+    "modelVersion": "local-placeholder-version",
+    "region": "us-east-2",
+    "temperature": 0.0
+  },
+  "plannerPromptVersion": "planner-v1",
+  "plannerSchemaVersion": "scholarchain.runtime.planner.v1",
+  "synthesisPromptVersion": "synthesis-v1",
+  "synthesisSchemaVersion": "scholarchain.runtime.synthesis.v1",
+  "retrieval": {
+    "graphLimit": 25,
+    "vectorLimit": 10,
+    "contextTokenBudget": 4096,
+    "fusionPolicyVersion": "runtime-population-v1",
+    "maxPathDepth": 6
+  },
+  "operations": {
+    "synchronousDeadlineMs": 30000,
+    "maxWorkflowRetries": 0,
+    "maxConcurrentLlmCalls": 2
+  },
+  "deadlines": {
+    "plannerMs": 5000,
+    "resolverMs": 2000,
+    "metricsMs": 4000,
+    "pathMs": 4000,
+    "communityMs": 4000,
+    "semanticMs": 4000,
+    "evidenceMs": 2000,
+    "synthesisMs": 5000,
+    "verificationMs": 2000,
+    "auditMs": 2000
+  },
+  "malformedRetries": 1,
+  "maxInputBytes": 16384,
+  "maxOutputTokens": 2048,
+  "retrievalMode": "fused",
+  "evidenceOnly": false,
+  "windows": [
+    {
+      "windowId": "all-years",
+      "startYear": null,
+      "endYear": null,
+      "legacyWindow": {
+        "startYear": 1000,
+        "endYear": 9999
+      }
+    },
+    {
+      "windowId": "through-2009",
+      "startYear": null,
+      "endYear": 2009,
+      "legacyWindow": {
+        "startYear": 1000,
+        "endYear": 2009
+      }
+    },
+    {
+      "windowId": "2010-2014",
+      "startYear": 2010,
+      "endYear": 2014,
+      "legacyWindow": {
+        "startYear": 2010,
+        "endYear": 2014
+      }
+    },
+    {
+      "windowId": "2015-2019",
+      "startYear": 2015,
+      "endYear": 2019,
+      "legacyWindow": {
+        "startYear": 2015,
+        "endYear": 2019
+      }
+    },
+    {
+      "windowId": "2020-2026",
+      "startYear": 2020,
+      "endYear": 2026,
+      "legacyWindow": {
+        "startYear": 2020,
+        "endYear": 2026
+      }
+    },
+    {
+      "windowId": "since-2015",
+      "startYear": 2015,
+      "endYear": 2026,
+      "legacyWindow": {
+        "startYear": 2015,
+        "endYear": 2026
+      }
+    }
+  ],
+  "defaultWindowId": "all-years",
+  "defaultRankingMeasure": "CROSS_COMMUNITY_DEGREE",
+  "resolver": {
+    "maxDistinctCandidates": 25,
+    "maxSourceIdsPerCandidate": 16,
+    "maxEvidenceRefsPerCandidate": 32,
+    "maxAffiliationsPerCandidate": 16,
+    "maxRunIdsPerCandidate": 8
+  },
+  "byteLimits": {
+    "questionBytes": 16384,
+    "promptBytes": 16384,
+    "requestBytes": 65536,
+    "outputBytes": 32768,
+    "persistedBundleBytes": 65536
+  }
+}

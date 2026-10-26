@@ -1,0 +1,86 @@
+1: [info] welcome to sbt 1.10.7 (Homebrew Java 17.0.20.1)
+2: [info] loading settings for project scholarchain-build from plugins.sbt...
+3: [info] loading project definition from /Users/danny/Documents/UIC/CS441/ScholarChain/project
+4: [info] loading settings for project root from build.sbt...
+5: [info] set current project to root (in build file:/Users/danny/Documents/UIC/CS441/ScholarChain/)
+6: [info] compiling 4 Scala sources to /Users/danny/Documents/UIC/CS441/ScholarChain/modules/rag/target/scala-3.3.4/classes ...
+56: [info] done compiling
+57: [info] compiling 4 Scala sources to /Users/danny/Documents/UIC/CS441/ScholarChain/tests/target/scala-3.3.4/test-classes ...
+58: [info] done compiling
+59: [info] IndependentRuntime9ARepairResolverSpec:
+60: [info] - B2 many raw observations for one canonical identity resolve with bounded disclosed provenance
+61: [info] - B2 too many canonical identities returns a bounded Ambiguous list with exact total
+62: [info] - B3 known identity absent from a stored window resolves with empty context
+63: [info] - B3 an absent homonym remains in ambiguity with the active homonym
+64: [info] - B3 an undeclared window remains rejected by the actual artifact store and resolver
+65: [info] IndependentRuntime9AResolverSpec:
+66: [info] - multiple observations of one canonical identity remain one candidate with all sources
+67: [info] - common name abstains with both identities even when one confidence is higher
+68: [info] - exact homonym suffix resolves its identity while the published base alias stays ambiguous
+69: [info] - missing name returns NotFound without generating an identity or confidence
+70: [info] - cache failures stay typed failures instead of being misreported as not found
+71: [info] - a ranking question without named researchers needs no invented resolution
+72: [info] IndependentRuntime9APlannerSpec:
+73: [info] - schema rejects fabricated operations and extra executable query fields
+74: [info] - database and AWS requests are unsupported without invoking the model
+75: [info] - unknown metrics do not get replaced with stored collaboration counts
+76: [info] - two malformed outputs lead to a constrained deterministic fallback
+77: [info] - a natural topic constraint cannot be dropped by schema-valid model output
+78: [info] - an explicit ranking metric cannot be switched by schema-valid model output
+79: [info] - unrepresentable trailing constraints are unsupported after malformed responses
+80: [info] - fabricated operations never survive decoding even for a recognized question
+81: [info] - explicit window cannot be replaced with the default all-years population
+82: [info] - runtime config checks combined critical path and preserves overall ABSTAINED
+83: [info] - legacy plans without runtime fields remain readable and additive round trips lose no data
+84: [info] IndependentRuntime9AEvidenceSpec:
+85: [info] - an evidence item ID resolves through its bundle, including an identical item shared by bundles
+86: [info] - the same evidence item ID cannot be rebound to changed text in another bundle
+87: [info] - corrupt pointer bytes are rejected before any item can be returned
+88: [info] - indexed fake exposes the same item-ID lookup contract
+89: [info] IndependentRuntime9AArtifactPipelineSpec:
+647: Computed G1 completed export: /var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/independent-runtime-9a-artifact-2269564315290987750/computed-g1; researchers=10; works=9; edges=18; tables=28; runId=run:55555555-5555-4555-8555-555555555555
+648: [info] - computed G1 source artifacts preserve exact metrics, edge support and iteration qualifications
+649: [info] IndependentRuntime9ARepairPlannerSpec:
+650: [info] - B1 correct schema-shaped output preserves Rank researchers by publication count
+651: [info] - B1 substituted metric or measure cannot change Rank researchers by publication count
+652: [info] - B1 correct schema-shaped output preserves Rank researchers by distinct coauthors
+653: [info] - B1 substituted metric or measure cannot change Rank researchers by distinct coauthors
+654: [info] - B1 correct schema-shaped output preserves Rank researchers by total coauthor occurrences
+655: [info] - B1 substituted metric or measure cannot change Rank researchers by total coauthor occurrences
+656: [info] - B1 correct schema-shaped output preserves Rank researchers by average coauthors per paper
+657: [info] - B1 substituted metric or measure cannot change Rank researchers by average coauthors per paper
+658: [info] - B1 correct schema-shaped output preserves Rank researchers by maximum coauthors on one paper
+659: [info] - B1 substituted metric or measure cannot change Rank researchers by maximum coauthors on one paper
+660: [info] - B1 correct schema-shaped output preserves Which researchers have the largest team size?
+661: [info] - B1 substituted metric or measure cannot change Which researchers have the largest team size?
+662: [info] - B1 correct schema-shaped output preserves Rank researchers by weighted degree
+663: [info] - B1 substituted metric or measure cannot change Rank researchers by weighted degree
+664: [info] - B1 correct schema-shaped output preserves Rank researchers by coreness
+665: [info] - B1 substituted metric or measure cannot change Rank researchers by coreness
+666: [info] - B1 correct schema-shaped output preserves Rank bridge researchers by cross-community degree
+667: [info] - B1 substituted metric or measure cannot change Rank bridge researchers by cross-community degree
+668: [info] - B1 correct schema-shaped output preserves Rank bridge researchers by cross-community weight
+669: [info] - B1 substituted metric or measure cannot change Rank bridge researchers by cross-community weight
+670: [info] - B1 correct schema-shaped output preserves Rank bridge researchers by communities connected
+671: [info] - B1 substituted metric or measure cannot change Rank bridge researchers by communities connected
+672: [info] - B1 correct schema-shaped output preserves Rank bridge researchers by participation coefficient
+673: [info] - B1 substituted metric or measure cannot change Rank bridge researchers by participation coefficient
+674: [info] - B1 correct schema-shaped output preserves Which researchers are the strongest bridges?
+675: [info] - B1 substituted metric or measure cannot change Which researchers are the strongest bridges?
+676: [info] - B1 correct schema-shaped output preserves Show strongest repeated collaborations
+677: [info] - B1 substituted metric or measure cannot change Show strongest repeated collaborations
+678: [info] - B1 explicit bridge measure cannot silently become the configured default
+679: [info] - B1 since-2015 cannot narrow to the stored 2015-2019 period
+680: [info] - B1 correct cumulative since-2015 output remains supported
+681: [info] - B1 a question naming no window uses the configured default
+682: [info] - B1 exact stored window names remain supported and cannot be replaced
+683: [info] - B1 total-author conversion is rejected when the question asks only for coauthors
+684: [info] - B1 explicit total-author request requires its labeled conversion
+685: [info] - B1 an alternate configured default bridge measure controls unspecified bridge requests
+686: [info] - B1 an alternate configured default window controls questions naming no window
+687: [info] Run completed in 22 seconds, 657 milliseconds.
+688: [info] Total number of tests run: 64
+689: [info] Suites: completed 6, aborted 0
+690: [info] Tests: succeeded 64, failed 0, canceled 0, ignored 0, pending 0
+691: [info] All tests passed.
+692: [success] Total time: 28 s, completed Oct 26, 2026, 10:37:59 AM

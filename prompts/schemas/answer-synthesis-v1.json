@@ -1,0 +1,187 @@
+{
+  "type": "object",
+  "properties": {
+    "schemaVersion": {
+      "type": "string",
+      "const": "scholarchain.runtime.synthesis.v1"
+    },
+    "claims": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "claimId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "claimType": {
+            "type": "string",
+            "enum": [
+              "METRIC",
+              "RANKING",
+              "PATH",
+              "COMMUNITY",
+              "BRIDGE",
+              "IDENTITY",
+              "PUBLICATION",
+              "TEMPORAL",
+              "SEMANTIC"
+            ]
+          },
+          "subjectIds": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 512
+            },
+            "maxItems": 100,
+            "uniqueItems": true,
+            "minItems": 1
+          },
+          "values": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "field": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 128
+                },
+                "number": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "maxLength": 128
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "text": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "maxLength": 4096
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "ids": {
+                  "anyOf": [
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 512
+                      },
+                      "maxItems": 100
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "flag": {
+                  "anyOf": [
+                    {
+                      "type": "boolean"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "field",
+                "number",
+                "text",
+                "ids",
+                "flag"
+              ],
+              "additionalProperties": false
+            },
+            "maxItems": 100,
+            "uniqueItems": true,
+            "minItems": 1
+          },
+          "evidenceIds": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 1024
+            },
+            "maxItems": 100,
+            "uniqueItems": true,
+            "minItems": 1
+          },
+          "windowIds": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            },
+            "maxItems": 100,
+            "uniqueItems": true
+          },
+          "templateId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          }
+        },
+        "required": [
+          "claimId",
+          "claimType",
+          "subjectIds",
+          "values",
+          "evidenceIds",
+          "windowIds",
+          "templateId"
+        ],
+        "additionalProperties": false
+      },
+      "maxItems": 100,
+      "uniqueItems": true
+    },
+    "narrativeClaimIds": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 128
+      },
+      "maxItems": 100,
+      "uniqueItems": true
+    },
+    "interpretation": {
+      "type": "string",
+      "maxLength": 2048
+    },
+    "uncertainty": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 2048
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "claims",
+    "narrativeClaimIds",
+    "interpretation",
+    "uncertainty"
+  ],
+  "additionalProperties": false,
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "scholarchain.runtime.synthesis.v1",
+  "title": "Typed answer proposal v1; never a verification decision"
+}

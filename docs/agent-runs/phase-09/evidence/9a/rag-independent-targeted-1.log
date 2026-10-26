@@ -1,0 +1,92 @@
+[info] welcome to sbt 1.10.7 (Homebrew Java 17.0.20.1)
+[info] loading settings for project scholarchain-build from plugins.sbt...
+[info] loading project definition from /Users/danny/Documents/UIC/CS441/ScholarChain/project
+[info] loading settings for project root from build.sbt...
+[info] set current project to root (in build file:/Users/danny/Documents/UIC/CS441/ScholarChain/)
+[info] compiling 4 Scala sources to /Users/danny/Documents/UIC/CS441/ScholarChain/modules/rag/target/scala-3.3.4/classes ...
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/rag/src/main/scala/edu/uic/cs441/scholarchain/rag/ResearcherResolverAgent.scala:22:41
+[warn] 22 |    val options = plan.runtime.getOrElse(return ResolverResult.Failed("missing-runtime-query-options"))
+[warn]    |                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[warn]    |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/rag/src/main/scala/edu/uic/cs441/scholarchain/rag/ResearcherResolverAgent.scala:28:8
+[warn] 28 |        return ResolverResult.Failed("resolver-deadline")
+[warn]    |        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[warn]    |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/rag/src/main/scala/edu/uic/cs441/scholarchain/rag/ResearcherResolverAgent.scala:30:36
+[warn] 30 |        catch { case NonFatal(_) => return ResolverResult.Failed("resolver-cache-failure") }
+[warn]    |                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[warn]    |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/rag/src/main/scala/edu/uic/cs441/scholarchain/rag/ResearcherResolverAgent.scala:32:8
+[warn] 32 |        return ResolverResult.Failed("resolver-deadline")
+[warn]    |        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[warn]    |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/rag/src/main/scala/edu/uic/cs441/scholarchain/rag/ResearcherResolverAgent.scala:36:21
+[warn] 36 |        case None => return ResolverResult.Failed("resolver-cache-unavailable")
+[warn]    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[warn]    |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/rag/src/main/scala/edu/uic/cs441/scholarchain/rag/ResearcherResolverAgent.scala:39:8
+[warn] 39 |        return ResolverResult.Failed("resolver-candidate-bound")
+[warn]    |        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[warn]    |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/rag/src/main/scala/edu/uic/cs441/scholarchain/rag/ResearcherResolverAgent.scala:44:8
+[warn] 44 |        return ResolverResult.Failed("resolver-invalid-source-row")
+[warn]    |        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[warn]    |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/rag/src/main/scala/edu/uic/cs441/scholarchain/rag/ResearcherResolverAgent.scala:52:40
+[warn] 52 |            catch { case NonFatal(_) => return ResolverResult.Failed("resolver-context-failure") }
+[warn]    |                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[warn]    |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/rag/src/main/scala/edu/uic/cs441/scholarchain/rag/ResearcherResolverAgent.scala:54:12
+[warn] 54 |            return ResolverResult.Failed("resolver-deadline")
+[warn]    |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[warn]    |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/rag/src/main/scala/edu/uic/cs441/scholarchain/rag/ResearcherResolverAgent.scala:63:22
+[warn] 63 |            case _ => return ResolverResult.Failed("resolver-context-unavailable")
+[warn]    |                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[warn]    |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/rag/src/main/scala/edu/uic/cs441/scholarchain/rag/ResearcherResolverAgent.scala:76:25
+[warn] 76 |      if (found.isEmpty) return ResolverResult.NotFound(name)
+[warn]    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[warn]    |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/rag/src/main/scala/edu/uic/cs441/scholarchain/rag/ResearcherResolverAgent.scala:77:26
+[warn] 77 |      if (found.size > 1) return ResolverResult.Ambiguous(name,found)
+[warn]    |                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[warn]    |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] 12 warnings found
+[info] done compiling
+[info] compiling 1 Scala source to /Users/danny/Documents/UIC/CS441/ScholarChain/modules/rag/target/scala-3.3.4/test-classes ...
+[info] done compiling
+[info] Runtime9ASpec:
+[info] - versioned assets load and planner schema rejects missing, unknown and fabricated fields
+[info] - valid LLM plan preserves configured limits, mode and evidence-only option
+[info] - Cypher AWS and unknown metric requests reject before any model call
+[info] - malformed JSON retries once then anchored fallback preserves filters and stored year
+[info] - fabricated operation and unknown keys cannot escape bounded validation
+[info] - model cannot drop unquoted topic institution extra conditions or change ranking metric
+[info] - model cannot invent a name filter window or silently drop a quoted constraint
+[info] - unsupported and exhausted scripted model fail safely without network
+[info] - late model and cache responses fail with deterministic stage deadlines
+[info] - a model plan may preserve an unquoted topic and exact stored since window
+[info] - unique canonical ID groups source aliases and preserves absent confidence
+[info] - common-name candidates abstain even with different confidence values
+[info] - DBLP exact suffixes stay separate and base-name alias rows remain ambiguous
+[info] - Bedrock adapter forces configured tool and model, preserves schema and usage, no client construction
+[info] - Bedrock adapter rejects text substitutes wrong tools multiple blocks and unsafe numbers
+[info] - Bedrock provider exception messages never escape typed failure
+[info] - synthesis proposal schema requires typed evidence-backed claims and forbids raw narrative or verdict
+[info] Run completed in 267 milliseconds.
+[info] Total number of tests run: 17
+[info] Suites: completed 1, aborted 0
+[info] Tests: succeeded 17, failed 0, canceled 0, ignored 0, pending 0
+[info] All tests passed.
+[success] Total time: 4 s, completed Oct 25, 2026, 10:42:28 PM
+[info] compiling 6 Scala sources to /Users/danny/Documents/UIC/CS441/ScholarChain/tests/target/scala-3.3.4/test-classes ...
+[error] -- [E141] Type Error: /Users/danny/Documents/UIC/CS441/ScholarChain/tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentRuntime9AArtifactPipelineSpec.scala:72:38
+[error] 72 |          .isInstanceOf[StorageResult.Rejected])
+[error]    |                        ^^^^^^^^^^^^^^^^^^^^^^
+[error]    |Missing type parameter for edu.uic.cs441.scholarchain.storage.StorageResult.Rejected
+[error]    |
+[error]    | longer explanation available when compiling with `-explain`
+[error] one error found
+[error] (independentTests / Test / compileIncremental) Compilation failed
+[error] Total time: 1 s, completed Oct 25, 2026, 10:42:29 PM
