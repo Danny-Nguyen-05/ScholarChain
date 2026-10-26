@@ -1,0 +1,13 @@
+{
+  "recordedAt": "2026-10-26T19:27:07.313892+00:00",
+  "head": "f139f9c925b4925864a2c9a33734d869a1929cd2",
+  "branch": "phase-9",
+  "latestCommit": "f139f9c925b4925864a2c9a33734d869a1929cd2 Implement Phase 9A runtime contracts, planning and resolution",
+  "approvedSourceCount": 22,
+  "workingTreeSourceHashMismatches": [],
+  "approved9BCommitted": false,
+  "reason": "HEAD remains the approved 9A commit; reviewed 9B source paths are modified or untracked.",
+  "nextGate": "User commits approved 9B or explicitly instructs the agent to commit. Wait before any 9C work.",
+  "externalRecheckSha256": "447b270e1918b8abeb8eb4c0035a8c0f1d6b6763c2594645cb07445d14c3375a",
+  "pastedNextPromptTruncated": true
+}

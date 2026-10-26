@@ -242,3 +242,291 @@ NEXT GATE: user commit of 9A, then Subphase 9B Step 0 questions.
 The opening statement "No user-supplied external review has been received" records the
 initial pre-review state. It predates the appended initial REQUEST-CHANGES and this
 repair-round-1 APPROVE. The opening and earlier review text are preserved unchanged.
+
+
+## Subphase 9B
+
+user-supplied external review
+
+Subphase 9B review: REQUEST-CHANGES
+
+1. VERDICT: REQUEST-CHANGES
+
+There is one blocking defect: a researcher's exact stored metrics are marked approximate on real data. Everything else in the review focus checks out. The evidence record is honest:
+- Hashes: all 22 source hashes match. All 9 raw-log SHA-256 bindings match /tmp. The plan hash matches.
+- Counts: the full log shows 196+64+39+38+66+88+502+8 = 1001 passed, with no *** FAILED lines. The only error is the expected injected format-stage probe, and TestRunMarker ran.
+- Scope: HEAD is f139f9c. Ownership is clean, and there are no storage, build or infra changes.
+
+2. Findings
+
+B1 · Medium · BLOCKING · Exact metrics are flagged approximate whenever a P90 estimate exists
+
+- Where: modules/rag/.../CollaborationMetricsAgent.scala:117-123. The test that encodes the behaviour is tests/.../IndependentRuntime9BStagesSpec.scala:116.
+- What happens: when the metric record's qualifications contain a pathLengthEstimate, the agent rebinds the whole metric item with approximate = true. That item also holds exact stored values: publicationCount, distinctCoauthorCount, totalCoauthorOccurrences, weightedDegree, maximumCoauthorsOnOnePaper and coreness. approximate is a single item-level flag, so it qualifies every value in the item.
+- Why it hits real data: Phase6CacheLoader.scala:349-352 writes pathLengthEstimate into every researcher's record whenever their component has an estimate. Most named-researcher lookups on real data will therefore come back approximate.
+- Inconsistency: the ranking path never adds P90. The same researcher, window and run gets approximate=false in a ranking and approximate=true in a named lookup.
+- Impact: this contradicts plan §7.2.3 ("returns exact stored values") and decision 6 (label only the distance P90 approximate). The ambiguity goes into immutable, content-bound evidence and into the rendered context ("approximate": true). 9C templates and the verifier would then either mislabel exact counts or have to ignore the contract flag.
+- Owners: rag-engineer for production code and the module test; test-engineer for the independent test.
+- Acceptance check:
+  a. The exact metric item keeps approximate=false and identical exact values whether or not an estimate exists.
+  b. The stored P90 is emitted unambiguously, as a separate evidence item with approximate=true, bound to its component, window, run, method and source reference. It stays deterministic and is atomic with the metric request.
+  c. The named-lookup and ranking items for the same researcher, window and run agree on the exact values and on approximate=false.
+  d. Hand-derived tests are updated in the module spec and in IndependentRuntime9BStagesSpec (the P90 case asserts that the metric item is not approximate and the estimate item is).
+  e. No iteration-limited labeling is weakened. The default four-hop path and ranking workflows still pass.
+
+Nonblocking observations (log only; not required in 9B)
+
+- O1 · Medium · Convergence flags have the same scope problem. Item-level converged/iterations qualify mixed items:
+  - Metric items take them from the community membership (RuntimeRetrieval.scala:192-193).
+  - Temporal items take converged=forall across both windows, while also holding exact coauthor deltas (CommunityAnalystAgent.scala:153-154).
+  - "Iteration-limited" therefore also covers exact P/C/T values. Either split these the same way as B1, or have the 9C verifier scope the qualifier to community-derived fields. Owner: rag-engineer.
+- O2 · Medium · Mixed provenance on evidence items. Item provenance copies the caller/plan provenance (source, datasetSnapshot, retrievalDate, license, sourceUri) and overwrites only runId with the source run (RuntimeRetrieval.scala:150-155). The resulting record mixes request and source lineage. Content-bound IDs for the same stored fact also change with request provenance. Resolve before the 9C audit or the Phase 10 evidence endpoint exposes it. Owner: rag-engineer.
+- O3 · Medium · bundle.researcherIds includes identities picked by semantic similarity. It unions in the subject IDs of semantic hits (EvidenceBuilderAgent.scala:120-122). A vector-mode bundle can therefore list a researcher chosen only by similarity. 9C must use resolvedCandidates plus deterministic subjects for identity checks and the audit's "resolved researcher IDs", or restrict this field. Owner: rag-engineer.
+- O4 · Low-Medium · Semantic retrieval ignores resolved candidates. It filters only by window, topic and institution, with no entityId filter (SemanticContextAgent.scala:23-24). A named-researcher explanation can return other researchers' profiles. Owner: rag-engineer.
+- O5 · Low-Medium · Larger atomic groups abstain at the default 4,096-byte context budget. This is disclosed:
+  - A direct-coauthor result can carry up to 25 edge items, and community comparisons are similar; both abstain for realistic degrees.
+  - Every ranking row repeats the full sourceRankingScope string (CollaborationMetricsAgent.scala:59, CommunityAnalystAgent.scala:63). That cuts the default G1 ranking below 10 of 10 rows.
+  - Consider disclosed prefixes for lists and deduplicating the scope string. Owner: rag-engineer, in 9C or 11.
+- O6 · Low · Ranking prefix ignores the byte bound. Prefix selection checks only the context bound. The persisted maxInputBytes check (EvidenceBuilderAgent.scala:130-131) can abstain on a ranking whose shorter prefix would fit, unlike the README's "largest admitted prefix".
+- O7 · Low · ExceededMaxHops is unreachable with the shipped adapters. It is produced only from Rejected("exceeded-maxHops"), which neither graph adapter emits. A same-component empty search is reported as NoPathWithinLimit; Phase 6 calls that case exceeded-maxHops. This is allowed by decision 8, but 9C benchmark wording should match.
+- O8 · Low · The deterministic partition admits RESEARCHER_PROFILE items with excerpt text. bundleItems (RuntimeContracts.scala:338-356) accepts RESEARCHER_PROFILE items with descriptive=false and a text excerpt. Community, bridge, temporal, path-status and direct-coauthor facts all default to RESEARCHER_PROFILE (RuntimeRetrieval.scala:130). Hardening: require deterministic items to carry text=None. Owner: domain-engineer.
+- O9 · Low · Path-status items lose their researcher pair in the prompt context. Rendering drops subjects for all "path"-kind items (RuntimeRetrieval.scala:276-279), so Disconnected and NoPathWithinLimit statuses are not tied to the pair in the context. The persisted item keeps them.
+- O10 · Low · The population-filter test can't tell filter-then-rank from rank-then-filter. Its limit of 25 exceeds the population (IndependentRuntime9BStagesSpec.scala:139-156). Add a filtered case with limit=2. Owner: test-engineer.
+- N1 is confirmed fixed. Actual-item type, descriptive flag and payload checks are enforced; legacy runtime-less bundles are unchanged; the tests discriminate. N2–N9 remain carried forward. Nothing new is confirmed against them except the O-items above.
+
+Not verified (live or future gates)
+
+- Live provider, model, region and injection behaviour.
+- Production latency, and adapters that ignore interruption.
+- Real enrichment coverage.
+- All 9C work.
+- Phase 8C stays deferred to 14C.
+- I did not re-fetch the course README; I relied on the plan sections and authority-reading.md.
+
+3. Report fields
+
+STATUS: COMPLETE (review); verdict REQUEST-CHANGES for Subphase 9B
+OWNER: code-reviewer (independent, user-launched, read-only)
+WORK ORDER: Phase 9 Subphase 9B review (pasted prompt)
+FILES CREATED: none
+FILES MODIFIED: none
+COMMANDS RUN: read-only only — git rev-parse/status/diff f139f9c; cat/sed/grep/wc over evidence/9b,
+  phase-09 reports, 9A answers/recheck, core/rag/storage/spark sources and 9B tests; python3 -I
+  SHA-256 of 22 source-files.json entries (22/22 match), 9 raw /tmp logs (9/9 match), plan (match);
+  grep of /tmp/phase9b-check-1.log (0 "*** FAILED"; module counts sum to 1001; expected probe only;
+  TestRunMarker ran). No sbt, AWS, provider, network or git writes.
+TEST RESULTS: not run by reviewer. Retained: targeted core 39 + storage 15 + RAG 15 + independent 66
+  = 135 passed; full check exit 0, 1001 passed, 0 failed, 707.18 s (JDK 17.0.20.1).
+VALIDATION RESULTS: B1 blocking; N1 confirmed fixed; O1–O10 nonblocking; N2–N9 carried forward.
+ASSUMPTIONS: Phase 6 export provides pathLengthEstimate for most components (per Phase6CacheLoader).
+RISKS: qualification-scope ambiguity (B1/O1), mixed provenance (O2), similarity-derived researcherIds (O3).
+MANUAL ACTION REQUIRED: user relays the next prompt; no commit of 9B until a recheck approves.
+BLOCKED-ON OWNER: rag-engineer, test-engineer (B1)
+BLOCKED-ON EVIDENCE: B1 repair plus affected targets and full JDK 17 check
+NEXT GATE: 9B repair round 1, then user-launched recheck
+
+4. Next prompt
+
+You are the ScholarChain Phase 9 coordinator in a fresh session at
+/Users/danny/Documents/UIC/CS441/ScholarChain, branch phase-9, base/HEAD
+f139f9c925b4925864a2c9a33734d869a1929cd2. Subphase 9B changes are uncommitted.
+The independent read-only review of Subphase 9B returned REQUEST-CHANGES.
+
+Read first: AGENTS.md, CLAUDE.md, docs/agents.md, docs/agent-runs/README.md, the plan of record
+/Users/danny/Library/CloudStorage/GoogleDrive-cpnguyen0630@gmail.com/My Drive/plan/phase9.md
+(Sections 3–8 9B, 9, 10), docs/agent-runs/phase-09/evidence/9b/ and
+docs/agent-runs/phase-09/evidence/9a/user-answers.md (ten original decisions, binding).
+
+Step 1 — Record the review. Append the reviewer's verdict verbatim (the user supplies the full text)
+to docs/agent-runs/phase-09/review.md under a new heading "## Subphase 9B", marked
+"user-supplied external review". Do not alter earlier text. Store an identical copy at
+docs/agent-runs/phase-09/evidence/9b-r1/external-review.txt with its SHA-256. Log B1 and O1–O10 in
+repairs.md under "Subphase 9B repair round 1" (B1 routed; O1–O10 logged nonblocking).
+
+Step 2 — Repair only B1, routed by docs/agents.md:
+- rag-engineer (modules/rag/** only): in CollaborationMetricsAgent, the exact metric item must keep
+  approximate=false and identical exact values whether or not a pathLengthEstimate exists. Emit the
+  stored P90 unambiguously as a separate deterministic evidence item with approximate=true, bound to
+  componentId, window, source run, method and source reference, content-bound via
+  RuntimeEvidenceIds.bind. Keep it atomic with the metric request in the builder. Named-lookup and
+  ranking items for the same researcher/window/run must agree on exact values and approximate=false.
+  Update the module spec with hand-derived assertions and modules/rag/README.md wording.
+- test-engineer (tests/** only): update IndependentRuntime9BStagesSpec P90 case so it asserts that
+  the metric item is NOT approximate and the separate estimate item IS approximate, with
+  effectiveDiameterP90 4.0, method sampled-bfs, matching component/window/run. Do not weaken any
+  other assertion.
+- domain-engineer only if a proven contract gap appears (return BLOCKED-ON with evidence first).
+Do not weaken iteration-limited labeling, N1 partition checks, budgets or existing assertions.
+O1–O10 are optional; implement none unless the user asks. No 9C work.
+
+Step 3 — Gates, serialized by the coordinator, every sbt command with:
+  export JAVA_HOME=/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home
+  export PATH="$JAVA_HOME/bin:$PATH"
+  export SBT_OPTS="-Dlogback.configurationFile=$PWD/docs/agent-runs/phase-04/xml-repair-logback.xml"
+Record java -version. Run touched-project scalafmt, then targeted:
+  /usr/bin/time -p sbt -batch 'rag/Compile/scalafmt' 'rag/Test/scalafmt' 'independentTests/Test/scalafmt' 'storage/testOnly *RuntimeArtifactStorageSpec' 'rag/testOnly *Runtime9BSpec' 'independentTests/testOnly *Runtime9B* *Runtime9AEvidenceSpec'
+(add core targets only if core changes), then the full
+  /usr/bin/time -p sbt -batch check
+and git diff --check. Retain every failed attempt honestly. Write lean evidence to
+docs/agent-runs/phase-09/evidence/9b-r1/: commands, exits, counts, raw-log paths and SHA-256,
+repair-files.json (before/after hashes), a refreshed cumulative source-files.json for all changed
+9B source/test/module-doc paths, files.json inventory, and owner reports. Append 9B repair-round-1
+sections to owner-report.md and test-report.md. Verify that previously reviewed 9A paths are unchanged.
+
+Rules: no commits/pushes, no AWS/provider/live calls, no infrastructure, no secret reads, no
+human-gate edits, no nested delegation, never launch a reviewer. Preserve all ten original decisions
+and the 9B Step 0 defaults; N2–N9 stay carried forward; Phase 8C stays deferred to 14C.
+
+Step 4 — Stop. Ensure no specialists or builds are running. Return the handoff packet and a complete
+recheck reviewer prompt in one fenced block (Subphase 9B repair round 1; checkpoint facts filled
+with real values; review focus: B1 fixed without regressions, unchanged other 9B behavior, evidence
+honesty; return APPROVE or REQUEST-CHANGES plus the next prompt). End with:
+"Subphase 9B repair round 1 is ready for review. I have stopped and will not start the next
+subphase until I receive the next prompt."
+
+
+## Subphase 9B repair round 1
+
+user-supplied external review
+
+Subphase 9B repair round 1 review: APPROVE
+
+1. VERDICT: APPROVE
+
+B1 is fixed and the fix holds up under every check I ran. I found no blockers and no regressions. The evidence matches what it claims:
+- Hashes: all 22 cumulative source hashes match. All 4 repair before/after pairs match. The 22 "before" hashes equal the reviewed 9B source-files.json.
+- 9A integrity: the 29 untouched paths from the approved 9A repair round match. The other 5 of its 34 paths are exactly the ones already changed in the initial 9B.
+- Logs: both raw-log SHA-256 bindings match. The external-review copy matches its SHA-256 (a558249e…) and appears verbatim in review.md under ## Subphase 9B.
+- Full check log: 196+64+39+38+66+90+503+8 = 1004 passed. There are no *** FAILED lines; the only [error] is the expected injected format-stage probe. TestRunMarker ran, real time 717.84 s.
+- Scope: HEAD is f139f9c. There are 10 changed tracked files plus the 17 untracked 9B source files. Nothing touches core, storage, build or infrastructure in this round, and no Java or sbt process is running.
+
+B1 acceptance:
+
+1. The exact metric is no longer marked approximate. In CollaborationMetricsAgent.scala:103-109 the metric item is built once and never rebound. Both specs assert exact == baseline against a store with no estimate (Runtime9BSpec.scala:80, IndependentRuntime9BStagesSpec.scala:131). They also check approximate=false and the hand-derived A values: 3, 2, 4, 4/3, 2, 4, coreness 2.
+2. Named and ranking items agree. The independent spec compares every exact field (except kind) against the ranking row for the same researcher, window and run. It also compares run, window, converged and iterations, and asserts !ranked.approximate (IndependentRuntime9BStagesSpec.scala:155-162).
+3. P90 is now a separate item. It is built by make(... "distance-estimate" ..., approximate = true) at CollaborationMetricsAgent.scala:112-131 and carries the required fields:
+   - component subject and componentId;
+   - effectiveDiameterP90 "4.0", sampled-bfs, distanceP90Approximate=true;
+   - the source window and run, which are checked against the metric record at lines 95-101;
+   - two path_length_estimate source references.
+
+   It is content-bound through RuntimeEvidenceIds.bind, and the specs check expectedId and bind idempotence. The rendered context shows approximate:true only on the estimate.
+4. The pair is admitted atomically. The builder admits non-ranked deterministic items all-or-nothing, and this repair did not change the builder (EvidenceBuilderAgent.scala:56-57). The independent spec proves the exact metric alone fits the budget, then shows the pair returns Missing("essential-evidence-context-budget") with zero put calls. With enough budget, both items are persisted and resolve through the index lookup.
+5. Nothing else regressed. Iteration flags on metric items, source-mismatch checks, N1 partition checks, budgets, and the four-hop and ranking workflows are all unchanged and still pass.
+6. No O-item or 9C work was introduced.
+
+2. Findings
+
+There are no blocking findings.
+
+- R1 · Low · Nonblocking · The P90 item leaves out its sampling details.
+  - Where: CollaborationMetricsAgent.scala:119-124.
+  - What: the item carries P90, method and component. It omits the stored sampleSourceCount, seed, meanDistance, reachedPairCount and context.policyVersion (metricVersion=None). It is also typed RESEARCHER_PROFILE although its subject is a component.
+  - Impact: a 9C answer can say "approximate" but cannot state the sample size behind it.
+  - Owner: rag-engineer, optional, alongside O8.
+  - Acceptance check (if adopted): sample count and reached pairs appear as evidence values, and the source references cover them.
+- R2 · Cosmetic · Nonblocking · Missing spaces in the evidence prose.
+  - Where: docs/agent-runs/phase-09/repairs.md:93-123, for example "before9C", "99targeted/1004full", "fullcheckexit0", "Fourrepairpaths". The initial-9B reports had the same problem.
+  - Owner: orchestrator. Only new text should be fixed; recorded human decisions stay unedited.
+- Carried forward: O1–O10 stay open, nonblocking and log-only. N1 is fixed; N2–N9 stay carried forward. R1 is O1-adjacent: the exact metric item still carries the membership's converged/iterations, which is O1 and unchanged.
+
+Not verified (live or future gates)
+
+- Live provider, model, region and injection behaviour.
+- Production latency and adapters that ignore interruption.
+- Real enrichment coverage.
+- How often real exports carry pathLengthEstimate.
+- All 9C work; 11B suites.
+- Phase 8C stays deferred to 14C.
+
+3. Report fields
+
+STATUS: COMPLETE (review); verdict APPROVE for Subphase 9B repair round 1
+OWNER: code-reviewer (independent, user-launched, read-only)
+WORK ORDER: Phase 9 Subphase 9B repair round 1 recheck (pasted prompt)
+FILES CREATED: none
+FILES MODIFIED: none
+COMMANDS RUN: read-only — git rev-parse/branch/status/diff --stat f139f9c; cat/sed/grep over
+  evidence/9b-r1, review.md, repairs.md, rag README, CollaborationMetricsAgent, RuntimeRetrieval,
+  EvidenceBuilderAgent, WorkflowRunner, Runtime9BSpec, IndependentRuntime9BStagesSpec/EvidenceSpec,
+  core PathLengthEstimate; python3 -I SHA-256 of source-files.json (22/22), repair-files.json (4/4),
+  source-before vs 9b source-files (22/22 equal), 9a-r1 source-files (29 match + 5 known 9B
+  changes), external-review.txt (match; verbatim in review.md), two /tmp raw logs (2/2); grep of
+  /tmp/phase9b-r1-check-1.log (0 "*** FAILED", counts 1004, probe-only [error], TestRunMarker);
+  ps for java/sbt (none). No sbt, AWS, provider, network or git writes.
+TEST RESULTS: not run by reviewer. Retained: targeted exit 0, 99 passed (storage 15, RAG 17,
+  independent 67), 11.66 s; full check exit 0, 1004 passed, 0 failed, 717.84 s, JDK 17.0.20.1.
+VALIDATION RESULTS: B1 FIXED (acceptance 1–6 met); no blockers; R1 (Low), R2 (cosmetic) nonblocking;
+  O1–O10 open log-only; N1 fixed; N2–N9 carried forward.
+ASSUMPTIONS: external-review.txt is the user-supplied text; its fidelity to the pasted review was
+  not independently compared beyond the hash and the verbatim append.
+RISKS: O1–O3 must be handled before 9C verifier/audit rely on qualifier scope, lineage and
+  researcherIds; R1 limits approximate-disclosure detail.
+MANUAL ACTION REQUIRED: user decides and performs (or explicitly instructs) the 9B commit; user
+  relays the next prompt.
+BLOCKED-ON OWNER: none
+BLOCKED-ON EVIDENCE: none for 9B; 9C base commit pending user confirmation
+NEXT GATE: record approval → user-confirmed 9B commit as 9C base → 9C Step 0 questions
+
+4. Next prompt
+
+You are the ScholarChain Phase 9 coordinator in a fresh session at
+/Users/danny/Documents/UIC/CS441/ScholarChain, branch phase-9, base/HEAD
+f139f9c925b4925864a2c9a33734d869a1929cd2. Subphase 9B and its repair round 1 are uncommitted.
+The independent read-only recheck of Subphase 9B repair round 1 returned APPROVE.
+
+Read first: AGENTS.md, CLAUDE.md, docs/agents.md, docs/agent-runs/README.md, the plan of record
+/Users/danny/Library/CloudStorage/GoogleDrive-cpnguyen0630@gmail.com/My Drive/plan/phase9.md
+(Sections 3–7, Subphase 9C in Section 8, Sections 9–10), the course Phase 9 specification,
+docs/agent-runs/phase-09/{prompt,owner-report,test-report,review,repairs}.md,
+evidence/9a/user-answers.md (ten original decisions, binding), evidence/9b/user-answers.md
+(approved 9B defaults, binding) and evidence/9b-r1/.
+
+Step 1 — Record the approval. Append the reviewer's verdict verbatim (the user supplies the full
+text) to docs/agent-runs/phase-09/review.md under a new heading "## Subphase 9B repair round 1",
+marked "user-supplied external review". Do not alter earlier text. Store an identical copy at
+docs/agent-runs/phase-09/evidence/9b-r1/external-recheck.txt with its SHA-256. In repairs.md
+record B1 FIXED (externally approved), log R1 (Low: P90 item omits sampleSourceCount, seed,
+meanDistance, reachedPairCount, policyVersion; RESEARCHER_PROFILE type for a component subject)
+and R2 (cosmetic: missing spaces in evidence prose) as OPEN/nonblocking/log only, and keep
+O1–O10 OPEN/log only. Write new evidence prose with normal spacing; do not edit recorded human
+decisions.
+
+Step 2 — Commit gate. Run git status and git log -1 (read-only) and check whether the approved 9B
+work (the 22 source/test/module-doc paths in evidence/9b-r1/source-files.json, the phase-09
+reports and the evidence/9b and 9b-r1 packets) has been committed. If it has not, ask the user
+to commit it or to give an explicit instruction for you to commit it, and STOP and wait. No agent
+commit or push without explicit user instruction. Once committed, verify that the committed blobs
+match the source-files.json hashes and record that commit SHA as the 9C base in
+evidence/9c/preflight.json.
+
+Step 3 — Start ONLY Subphase 9C, and only after the user's next prompt confirms the base. Begin
+with one bundled set of Step 0 questions covering every open 9C decision in plan Section 8
+(synthesis model and prompts, verifier and claim rules, audit record, CLI, benchmark, and how
+O1–O3 and R1 affect verifier/audit scope), each with a recommended default. Then STOP and wait
+for answers. Do not prepare or implement 9C before the answers arrive.
+
+Binding constraints for all of 9C:
+- Preserve all ten original decisions, the approved 9B defaults, N2–N9 carried forward,
+  O1–O10 and R1–R2 as logged. Phase 8C stays deferred to 14C; no whole-Phase-8 acceptance.
+- Route every edit by docs/agents.md (rag-engineer modules/rag/** and prompts/**,
+  domain-engineer modules/core/**, test-engineer tests/**, coordinator evidence only).
+  No nested delegation.
+- The 9C verifier and audit must treat converged/iterations and approximate qualifiers per O1/R1,
+  use resolvedCandidates plus deterministic subjects for identity (O3), and keep the separate
+  approximate distance-estimate item approximate in claims.
+- Every sbt command uses
+    export JAVA_HOME=/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home
+    export PATH="$JAVA_HOME/bin:$PATH"
+    export SBT_OPTS="-Dlogback.configurationFile=$PWD/docs/agent-runs/phase-04/xml-repair-logback.xml"
+  with java -version recorded, targeted gates, the full /usr/bin/time -p sbt -batch check and
+  git diff --check. Retain every failed attempt, raw-log paths and SHA-256 values, and source
+  before/after hashes.
+- No AWS, provider or live calls, infrastructure, secret reads or human-gate edits. A live smoke
+  test requires separate written user approval with a dollar cap, recorded before any call.
+- Never launch a reviewer.
+
+Step 4 — After 9C gates pass, stop. Ensure no specialists or builds are running. Return the
+handoff packet and a complete independent reviewer prompt for Subphase 9C in one fenced block,
+with checkpoint facts filled in with real values. End with:
+"Subphase 9C is ready for review. I have stopped and will not start the next subphase until I

@@ -91,7 +91,8 @@ final case class RuntimeEvidence(
     converged: Option[Boolean],
     iterations: Option[Int],
     approximate: Boolean,
-    descriptive: Boolean
+    descriptive: Boolean,
+    contentBindingVersion: Option[String] = None
 ) derives ReadWriter
 final case class RuntimeBundleContext(
     deterministicEvidenceIds: Vector[String],
@@ -100,7 +101,8 @@ final case class RuntimeBundleContext(
     metricVersions: Vector[String],
     retrievalMode: RetrievalMode,
     rankingScope: Option[String],
-    truncated: Boolean
+    truncated: Boolean,
+    resolvedCandidates: Vector[ResearcherCandidate] = Vector.empty
 ) derives ReadWriter
 
 enum ClaimVerdict(val wire: String) {
@@ -285,8 +287,15 @@ object RuntimeContractValidation {
     Option.when(v.iterations.exists(_ < 0) || v.converged.isDefined != v.iterations.isDefined)(
       "invalid-community-qualification"
     ),
-    Option.when(v.metricVersion.exists(_.trim.isEmpty))("blank-metric-version")
+    Option.when(v.metricVersion.exists(_.trim.isEmpty))("blank-metric-version"),
+    Option.when(v.contentBindingVersion.exists(_ != RuntimeEvidenceIds.version))(
+      "unsupported-runtime-evidence-content-binding"
+    )
   ).flatten
+
+  /** Structural compatibility check. Runtime bundle admission additionally checks the actual
+    * records through bundleItems; IDs alone cannot establish the evidence partition.
+    */
   def bundle(v: RuntimeBundleContext, itemIds: Vector[String]): Vector[String] = {
     val ids = v.deterministicEvidenceIds ++ v.semanticEvidenceIds
     Vector(
@@ -300,7 +309,57 @@ object RuntimeContractValidation {
       )("invalid-runtime-bundle-provenance"),
       Option.when(v.retrievalMode == RetrievalMode.Vector && v.deterministicEvidenceIds.nonEmpty)(
         "vector-mode-deterministic-evidence"
+      ),
+      Option.when(!strings(v.resolvedCandidates.map(_.researcherId)))(
+        "duplicate-runtime-resolved-candidate"
       )
-    ).flatten
+    ).flatten ++ v.resolvedCandidates.flatMap { resolved =>
+      candidate(resolved) ++ Vector(
+        Option.when(
+          StableIds.parseResearcherId(resolved.researcherId).isLeft ||
+            resolved.displayName.trim.isEmpty || resolved.sourceIds.isEmpty ||
+            !strings(resolved.sourceIds) || !strings(resolved.affiliations) ||
+            !strings(resolved.evidenceRefs) || !strings(resolved.coauthorContext) ||
+            resolved.coauthorContext.exists(StableIds.parseResearcherId(_).isLeft) ||
+            resolved.runIds.isEmpty || !strings(resolved.runIds) ||
+            resolved.runIds.exists(StableIds.parseRunId(_).isLeft)
+        )("invalid-runtime-resolved-candidate"),
+        Option.when(resolved.confidence.exists(value => !value.isFinite || value < 0 || value > 1))(
+          "invalid-runtime-resolved-candidate-confidence"
+        )
+      ).flatten
+    }
+  }
+
+  /** A descriptive label never upgrades a metric or graph record into semantic context. Semantic
+    * records retain provenance in their envelope, but only text-valued descriptive payloads. Legacy
+    * bundles without a runtime context do not enter this stricter runtime boundary.
+    */
+  def bundleItems(v: RuntimeBundleContext, items: Vector[EvidenceItem]): Vector[String] = {
+    val deterministic = v.deterministicEvidenceIds.toSet
+    val semantic = v.semanticEvidenceIds.toSet
+    bundle(v, items.map(_.evidenceId)) ++ items.flatMap { item =>
+      item.runtime match {
+        case None => Vector("runtime-bundle-item-payload-required")
+        case Some(payload) =>
+          val semanticType = item.evidenceType == EvidenceType.TextChunk ||
+            item.evidenceType == EvidenceType.ResearcherProfile
+          val deterministicPayload = item.graphPath.isDefined || item.metricLocator.isDefined ||
+            item.edgeLocatorId.isDefined || payload.values.exists(value =>
+              value.number.isDefined || value.flag.isDefined || value.ids.isDefined
+            ) || payload.metricVersion.isDefined || payload.converged.isDefined ||
+            payload.iterations.isDefined || payload.approximate
+          Vector(
+            Option.when(
+              deterministic(item.evidenceId) &&
+                (payload.descriptive || item.evidenceType == EvidenceType.TextChunk)
+            )("runtime-deterministic-item-mismatch"),
+            Option.when(
+              semantic(item.evidenceId) &&
+                (!payload.descriptive || !semanticType || deterministicPayload)
+            )("runtime-semantic-item-mismatch")
+          ).flatten
+      }
+    }
   }
 }

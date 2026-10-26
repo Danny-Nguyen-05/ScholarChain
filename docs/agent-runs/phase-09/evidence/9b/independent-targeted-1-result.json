@@ -1,0 +1,10 @@
+{
+  "command": "/usr/bin/time -p sbt -batch 'independentTests/Test/scalafmt' 'independentTests/testOnly *Runtime9B* *Runtime9AEvidenceSpec'",
+  "rawPath": "/tmp/phase9b-independent-targeted-1.log",
+  "rawSha256": "a1cbf055ee3f08b49cf0e96fc4ba416936899e78571b8ef8b6bf3e3607f1decc",
+  "exitCode": 1,
+  "elapsedSeconds": 9.71,
+  "passed": 62,
+  "failed": 1,
+  "failure": "New temporal fixture both-present row omitted required bridge deltas; source validator correctly rejected. Test owner repairs literal fixture, no production validation weakened."
+}

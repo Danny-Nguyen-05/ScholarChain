@@ -1,0 +1,66 @@
+{
+  "scope": "22 changed source/test/module-doc paths only; no secret directories or credential files read",
+  "sourceFileCount": 22,
+  "sourceHashMismatches": [],
+  "highConfidenceCredentialPatternFindings": [],
+  "ownershipClasses": [
+    "modules/core/** domain_9b",
+    "modules/rag/** rag_9b",
+    "tests/** tests_9b",
+    "docs/agent-runs/phase-09/** root"
+  ],
+  "noStorageBuildInfrastructureChanges": true,
+  "gitDiffCheckExitCode": 0,
+  "fullCheckExitCode": 0,
+  "fullCheckPassed": 1001,
+  "postGateSourceHashMismatches": [],
+  "planHashStillMatches": true,
+  "branch": "phase-9",
+  "head": "f139f9c925b4925864a2c9a33734d869a1929cd2",
+  "sourceFreezeVerifiedAfterFullGate": true,
+  "sourceHashMismatchesFinal": [],
+  "rawLogBindingsFinal": [
+    {
+      "record": "check-1-result.json",
+      "matches": true
+    },
+    {
+      "record": "core-targeted-1-result.json",
+      "matches": true
+    },
+    {
+      "record": "core-targeted-2-result.json",
+      "matches": true
+    },
+    {
+      "record": "independent-targeted-1-result.json",
+      "matches": true
+    },
+    {
+      "record": "rag-compile-1-result.json",
+      "matches": true
+    },
+    {
+      "record": "rag-targeted-3-result.json",
+      "matches": true
+    },
+    {
+      "record": "targeted-1-result.json",
+      "matches": true
+    },
+    {
+      "record": "targeted-2-result.json",
+      "matches": true
+    },
+    {
+      "record": "targeted-4-result.json",
+      "matches": true
+    }
+  ],
+  "trackedAndUntrackedTrailingWhitespace": [],
+  "gitDiffCheckExitCodeFinal": 0,
+  "specialistStatus": "All three native specialist agents completed; no nested agents.",
+  "buildStatus": "Full check process completed exit0; no further build or job requested.",
+  "changedTrackedCount": 9,
+  "untrackedCount": 56
+}

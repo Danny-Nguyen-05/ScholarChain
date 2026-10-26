@@ -1,0 +1,14 @@
+{
+  "previousReviewedManifest": "../9a-r1/source-files.json",
+  "previousFileCount": 34,
+  "previousPathsChangedIn9B": [
+    "modules/core/README.md",
+    "modules/core/src/main/scala/edu/uic/cs441/scholarchain/core/DomainValidation.scala",
+    "modules/core/src/main/scala/edu/uic/cs441/scholarchain/core/RuntimeContracts.scala",
+    "modules/core/src/test/scala/edu/uic/cs441/scholarchain/core/RuntimeContractSpec.scala",
+    "modules/rag/README.md"
+  ],
+  "previousPathsRetainedCount": 29,
+  "retainedMismatches": [],
+  "plannerGrammarUnchanged": true
+}

@@ -1,0 +1,9 @@
+{
+  "command": "/usr/bin/time -p sbt -batch 'core/Compile/scalafmt' 'core/Test/scalafmt' 'core/testOnly *RuntimeContractSpec *RuntimeBundlePartitionSpec *RuntimeEvidenceIdSpec'",
+  "rawPath": "/tmp/phase9b-core-targeted-1.log",
+  "rawSha256": "dcfe0e2d17ba17aaab014d498363233345626fafa3eff90c00b95ec4f41e52da",
+  "exitCode": 0,
+  "passed": 36,
+  "failed": 0,
+  "elapsedSeconds": 13.82
+}

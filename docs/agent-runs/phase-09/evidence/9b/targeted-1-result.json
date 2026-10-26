@@ -1,0 +1,9 @@
+{
+  "command": "/usr/bin/time -p sbt -batch 'rag/Compile/scalafmt' 'rag/Test/scalafmt' 'independentTests/Test/scalafmt' 'rag/testOnly *Runtime9BSpec' 'independentTests/testOnly *Runtime9B* *Runtime9AEvidenceSpec'",
+  "rawPath": "/tmp/phase9b-targeted-1.log",
+  "rawSha256": "f0d00a1e2d626911952260b2a6c40af1959b0d626cb9ddf8afc95da0c2564f57",
+  "exitCode": 1,
+  "elapsedSeconds": 7.02,
+  "testsRun": 0,
+  "failure": "RAG module test compile: unqualified fixture run identifier resolves to ScalaTest.run method; no production compile failure; independent target not reached."
+}

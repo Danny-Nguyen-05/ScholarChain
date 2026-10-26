@@ -63,3 +63,82 @@ N1–N7 remain open/deferred. N1 is a domain contract gap required before9B Evid
 acceptance; discuss in9B Step0 after the user commit gate. No9B implementation or preparation
 started. Current branchphase-9 HEAD remains5fee9ffc607cf802e4aaddf4a261c21f1f232fec,
 with repaired9A tree uncommitted. Agents must not commit/push; await user commit SHA.
+
+
+## Subphase 9B implementation findings
+
+| ID | Owner | Finding / acceptance | Status |
+|---|---|---|---|
+| 9B-I1 | domain-engineer | N1 actual-item type/descriptive partition, not ID-only; semantic numeric/graph masquerading rejected | Core targeted36pass; integrated/full gates pending |
+| 9B-I2 | domain-engineer + rag-engineer | Immutable item index needs full runtime content/run/window binding for precise existing evidence types; optional marker keeps frozen legacy valid | Core targeted36pass; persistence replay tests pending |
+| 9B-I3 | rag-engineer | Target1 module testcompile: unqualified fixture run shadows ScalaTest.run method | Test identifier qualified; target2 compiled |
+| 9B-I4 | rag-engineer | Target2 required four-hop context4234 exceeds4096; builder/workflow fail closed but required fixture must fit defaults | OPEN — compact render empty/null envelope fields, retain essential facts; two failure cases retained |
+| 9B-I5 | rag-engineer; test-engineer regression | Sequential result collection must judge actual completion time, so a fast completed later stage is not falsely timed out after waiting for another stage | OPEN — completion-time-bound await repair and independent test |
+
+Named-candidate metric/community/temporal filters are rejected as Unsupported when exact filtered semantics are unavailable; no constraint is silently dropped. N2-N9 remain carried forward, with N8 grammar deferred9C and N9 dated clarification already appended. No external9B review received.
+
+
+9B local gate progress: I4 compact context repair verified module14/14 including required four-hop persisted evidence and workflow, no budget increase or essential-fact removal. First independent gate62/63; one new temporal fixture had both-present=true but missing bridge deltas, violating the existing source contract. Test owner supplies explicit hand-derived deltas and verifies source validity; production validator retained. I5 completion-time regression passed in that gate. Canonical researcher-ID union for ranking/path bundles, validated community-cross-edge provenance, bounded cleanup within the overall deadline and closed structured stage logs are being completed before final targeted/full gate.
+
+
+### Subphase 9B local closure
+
+I1-I5 and all routed integration issues are locally verified by final135targeted/1001full passes (exit0,707.18seconds). Retained evidence covers the fixture-name compile error, required-path budget repair and corrected source-invalid temporal fixture. Completion-time race, default-budget full path, explicit ranking prefix, source-bound cross-community edges, identity retention and indexed persistence all pass. No production checks weakened. Complete commands/raw hashes in evidence/9b/.
+
+N1 is LOCALLY FIXED, awaiting external9B review. Content-bound runtime IDs and defaulted resolvedCandidates were necessary additive evidence contract gaps; domain owner only. N2-N9 remain carried forward/nonblocking, with N5 absent-confidence disclosure and N9 append-only historical clarification recorded. N8 planner file unchanged/deferred9C. No external9B review received yet, no9C work started, no human decisions rewritten.
+
+
+## Subphase 9B repair round 1
+
+User supplied REQUEST-CHANGES and explicitly instructed "fix all blocking bugs for me".
+No questions for this repair round. Only B1 is blocking/routed. Full review preserved verbatim
+in review.md and evidence/9b-r1/external-review.txt with SHA256. N1 externally confirmed FIXED;
+N2-N9 carried forward. No O-item implementation authorized in this repair.
+
+| ID | Blocking | Owner | Acceptance / next action | Status |
+|---|---|---|---|---|
+| B1 | yes | rag-engineer + test-engineer | Exact metric approximate=false unchanged with/without P90 and consistent with ranking; separate deterministic approximate P90 item bound component/window/run/method/source; atomic admission; hand-derived module/independent tests; iteration labels and default path/ranking retained | ROUTED |
+| O1 | no | rag-engineer | Scope convergence/iteration qualifiers to community-derived fields before9C verification | OPEN/log only |
+| O2 | no | rag-engineer | Separate request/source lineage before9C audit orPhase10 evidence exposure | OPEN/log only |
+| O3 | no | rag-engineer | Restrict resolved identities to resolvedCandidates/deterministic subjects for identity checks/audit, not similarity hits | OPEN/log only |
+| O4 | no | rag-engineer | Scope named semantic retrieval to resolved candidates or disclose cross-entity context | OPEN/log only |
+| O5 | no | rag-engineer | Consider disclosed list prefixes/scope deduplication for realistic atomic groups in9C or11 | OPEN/log only |
+| O6 | no | rag-engineer | Consider byte-bound-aware ranking prefix selection | OPEN/log only |
+| O7 | no | rag-engineer |9C benchmark wording must match shipped bounded NoPathWithinLimit behavior; ExceededMaxHops adapter path unreachable | OPEN/log only |
+| O8 | no | domain-engineer | Consider text=None requirement for deterministic items | OPEN/log only |
+| O9 | no | rag-engineer | Preserve path-status researcher pair in rendered context | OPEN/log only |
+| O10 | no | test-engineer | Future filtered ranking test limit2 discriminates filter-before-rank | OPEN/log only |
+
+Only B1 repair, affected targeted gates and full JDK17check are required. No9C work or reviewer launch.
+
+
+### Subphase 9B repair round 1 — local gate closure
+
+B1 LOCALLY FIXED:99targeted/1004full passed,0failed; fullcheckexit0,717.84seconds.
+Exact metric evidence stays approximate=false and unchanged with optionalP90; separate deterministic
+component distance-estimate approximate=true retains sourcecomponent/window/run/method/refs.
+Both stay atomic under existing unchanged builder. Named/ranking exact values agree, iteration
+flags retained, default4hop/ranking regressions pass. Fourrepairpaths with before/afterSHA256;
+all18otherreviewed9B paths and29untouchedprior9A paths match. Externalrecheckstillpending.
+O1-O10 OPEN/nonblocking/logonly, notimplemented. N1externallyconfirmedfixed; N2-N9carriedforward.
+No9Cwork, commits/pushes, live/provider/cloudcalls orhumangateedits. No failedrepairbuild/testattempt.
+
+
+### Subphase 9B repair round 1 — external approval recorded
+
+The user-supplied independent recheck returned APPROVE. B1 is FIXED and externally approved;
+all six acceptance checks were met, with no new blockers or regressions. The full review is
+preserved verbatim in review.md and evidence/9b-r1/external-recheck.txt with its SHA-256.
+The supplied next prompt ends mid-sentence; its text is preserved exactly as received.
+
+| ID | Owner | Status | Next action |
+|---|---|---|---|
+| B1 | rag-engineer and test-engineer | FIXED — externally approved | No remaining 9B repair work |
+| R1 | rag-engineer | OPEN / nonblocking / log only | Optional P90 sampling details and source references; do not infer missing sample values |
+| R2 | coordinator | OPEN / cosmetic / log only | Use normal spacing in new evidence prose; preserve recorded human decisions and reviews |
+| O1–O10 | Previously assigned owners | OPEN / nonblocking / log only | Carry forward; O1–O3 need decisions before 9C verifier/audit rely on them |
+
+N1 remains fixed; N2–N9 remain carried forward. No optional source repair was made while
+recording approval. All 22 reviewed source hashes still match. The approved 9B work remains
+uncommitted at HEAD f139f9c925b4925864a2c9a33734d869a1929cd2. Wait for explicit user commit
+instructions or a user-provided commit before starting 9C Step 0. No 9C preparation occurred.

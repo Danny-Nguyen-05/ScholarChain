@@ -167,8 +167,26 @@ class RuntimeContractSpec extends AnyFunSuite {
     assert(
       DomainValidation
         .check(
-          Fixtures.bundle.copy(runtime =
-            Some(
+          Fixtures.bundle.copy(
+            items = Fixtures.bundle.items.map(
+              _.copy(runtime =
+                Some(
+                  RuntimeEvidence(
+                    Vector.empty,
+                    Vector("all-years"),
+                    None,
+                    Fixtures.evidence.provenance.runId,
+                    Vector(RuntimeClaimValue("title", text = Some("Stored title"))),
+                    Vector.empty,
+                    None,
+                    None,
+                    approximate = false,
+                    descriptive = false
+                  )
+                )
+              )
+            ),
+            runtime = Some(
               context.copy(
                 retrievalMode = RetrievalMode.Fused,
                 deterministicEvidenceIds = Fixtures.bundle.items.map(_.evidenceId)

@@ -1,0 +1,125 @@
+[info] - failed first loads are not cached; transient rejection and corrupt first bytes remain retryable
+[info] - declared caps reject before opening sources; changed rows or actual overruns publish nothing
+[info] - duplicate keys, missing supporting works and mismatched bridge qualifications fail closed
+[info] - real cache loader publishes base-name homonym candidates without merging suffix identities
+[info] - evidence item lookup works by frozen ID, repeated puts and sharing immutable content
+[info] - evidence index corruption and failed required index write cannot report success
+[info] Run completed in 388 milliseconds.
+[info] Total number of tests run: 15
+[info] Suites: completed 1, aborted 0
+[info] Tests: succeeded 15, failed 0, canceled 0, ignored 0, pending 0
+[info] All tests passed.
+[success] Total time: 3 s, completed Oct 26, 2026, 11:44:03 AM
+[info] compiling 7 Scala sources to /Users/danny/Documents/UIC/CS441/ScholarChain/modules/rag/target/scala-3.3.4/classes ...
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/rag/src/main/scala/edu/uic/cs441/scholarchain/rag/EvidenceBuilderAgent.scala:71:10
+[warn] 71 |          return EvidenceBuildResult.Missing("essential-ranking-evidence-context-budget")
+[warn]    |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[warn]    |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] one warning found
+[info] done compiling
+[info] compiling 1 Scala source to /Users/danny/Documents/UIC/CS441/ScholarChain/modules/rag/target/scala-3.3.4/test-classes ...
+[info] done compiling
+[info] Runtime9BSpec:
+[info] - G1 fixture preserves ten original researchers nine works and exact A metrics
+[info] - solo researcher retains zero coauthors and no invented confidence
+[info] - explicit total-author conversion is labeled and absent otherwise
+[info] - ranking is stored metric order and discloses top K
+[info] - missing stored window is Unsupported and filters on named metrics are never discarded
+[info] - A to G four hops retains exact supporting works and collaboration years
+[info] - different component IDs prove Disconnected; empty bounded search remains NoPathWithinLimit
+[info] - direct coauthors retain per-edge jointPublicationCount for repeated collaboration
+[info] - community evidence is iteration-limited and distinguishes degree from bridge importance
+[info] - bundle stable content IDs resolve individually and budget preserves entire G1 path
+[info] - tiny evidence budget abstains without partial path persistence
+[info] - graph evidence-only runner reaches persisted evidence with no semantic calls
+[info] - vector mode abstains on deterministic path requests
+[info] - default ranking retains an explicit bounded prefix instead of losing the whole population
+[info] - homonym overlays expose both candidates without adding graph nodes
+[info] Run completed in 425 milliseconds.
+[info] Total number of tests run: 15
+[info] Suites: completed 1, aborted 0
+[info] Tests: succeeded 15, failed 0, canceled 0, ignored 0, pending 0
+[info] All tests passed.
+[success] Total time: 2 s, completed Oct 26, 2026, 11:44:05 AM
+[info] compiling 8 Scala sources to /Users/danny/Documents/UIC/CS441/ScholarChain/tests/target/scala-3.3.4/test-classes ...
+[info] done compiling
+[info] IndependentRuntime9BSemanticSpec:
+[info] - Phase8 pointer and hashes yield descriptive-only evidence with no deterministic fields
+[info] - semantic query forwards authoritative supported metadata filters
+[info] - unsupported semantic venue filter is preserved by Unsupported rather than silently dropped
+[info] - multiple semantic filter alternatives cannot be silently reduced to one value
+[info] - long retrieved injection text is truncated and remains within untrusted JSON data
+[info] - vector result with corrupt text hash is rejected before becoming evidence
+[info] - semantic hits embedded by a different model cannot be compared with the query vector
+[info] IndependentRuntime9BStagesSpec:
+[info] - G1 A exact stored publicationCount retains window, policy and source run
+[info] - G1 A exact stored distinctCoauthorCount retains window, policy and source run
+[info] - G1 A exact stored totalCoauthorOccurrences retains window, policy and source run
+[info] - G1 A exact stored averageCoauthorsPerPaper retains window, policy and source run
+[info] - G1 A exact stored maximumCoauthorsOnOnePaper retains window, policy and source run
+[info] - G1 A exact stored weightedDegree retains window, policy and source run
+[info] - G1 A exact stored maxTeamWorkTieCount retains window, policy and source run
+[info] - G1 A exact stored coreness retains window, policy and source run
+[info] - every G1 researcher's literal count table survives retrieval without recomputation
+[info] - maximum coauthors keeps its label and total authors needs explicit conversion
+[info] - unknown metric window is rejected instead of reading all years
+[info] - stored distance P90 is explicitly approximate and carries its sampling method
+[info] - distinct-coauthor ranking has exact G1 leaders and discloses top-K truncation
+[info] - institution population filter uses authoritative overlay before exact stored ranking
+[info] - topic population filter uses authoritative overlay before exact stored ranking
+[info] - venue population filter uses authoritative overlay before exact stored ranking
+[info] - missing authoritative filter metadata is Unsupported, never replaced by semantic neighbors
+[info] - named researcher ComponentLookup cannot silently discard an institution filter
+[info] - named researcher CommunityComparison cannot silently discard an institution filter
+[info] - G1 A to G returns the literal four-hop route and all supporting work years
+[info] - G1 A to H is Disconnected only from differing stored component IDs
+[info] - same-component empty bounded search never asserts disconnection
+[info] - max depth below the four-hop route yields a bounded status, never an invented path
+[info] - a graph path with missing supporting edge is not accepted as a found path
+[info] - a graph adapter exceeding the requested path result cap is rejected
+[info] - an explicit graph ExceededMaxHops status is preserved independently of disconnection
+[info] - direct coauthor result cap is disclosed instead of presenting a complete neighbor list
+[info] - direct A-B repeated collaboration uses per-edge jointPublicationCount and three works
+[info] - community comparison retains declared sizes, neighboring communities and iteration limit
+[info] - a cross-community graph row cannot cite an unrelated stored collaboration edge
+[info] - bridge evidence preserves breadth and all selected bridge measures without conflating them
+[info] - temporal D comparison preserves hand-derived deltas and both iteration-limited windows
+[info] IndependentRuntime9BWorkflowSpec:
+[info] - graph mode and evidence-only workflow stop at persisted deterministic evidence
+[info] - fused workflow combines descriptive and stored deterministic evidence within its budget
+[info] - default budgets persist G1 A to G and all four hop evidence items atomically
+[info] - default ranking budget retains a disclosed nonempty prefix of the exact stored order
+[info] - vector-only workflow cannot produce deterministic graph or numeric evidence
+[info] - ambiguous DBLP base name abstains with both suffixed identities before retrieval
+[info] - not-found identity abstains before any graph search
+[info] - missing optional semantic context gives a qualified partial result when metrics survive
+[info] - missing essential metrics abstains even when descriptive context survives
+[info] - a blocking path port is interrupted at its stage deadline and leaves no active call
+[info] - metrics and semantic retrieval fan out concurrently rather than serially
+[info] - completed path stage is not timed out while an earlier metrics future consumes its deadline
+[info] - failed evidence persistence fails the workflow rather than returning unpersisted evidence
+[info] IndependentRuntime9BEvidenceSpec:
+[info] - bounded evidence persists and item IDs resolve through the actual indexed store
+[info] - replaying identical evidence produces stable IDs and an identical persisted bundle
+[info] - ranking bundle researcher IDs include source-backed ranked identities without named candidates
+[info] - run, window and supporting payload changes cannot reuse an indexed runtime evidence ID
+[info] - essential evidence over a tiny context budget abstains rather than silently dropping facts
+[info] - optional long semantic context is dropped before essential graph evidence
+[info] - vector-only builder refuses deterministic numeric evidence even if called directly
+[info] - N1 semantic partition cannot launder metrics, graph locators, or numeric payloads
+[info] - retrieved delimiter injection stays JSON data inside one untrusted block
+[info] - evidence persistence failure is typed and never reported as a ready bundle
+[info] IndependentRuntime9AEvidenceSpec:
+[info] - an evidence item ID resolves through its bundle, including an identical item shared by bundles
+[info] - the same evidence item ID cannot be rebound to changed text in another bundle
+[info] - corrupt pointer bytes are rejected before any item can be returned
+[info] - indexed fake exposes the same item-ID lookup contract
+[info] Run completed in 1 second, 637 milliseconds.
+[info] Total number of tests run: 66
+[info] Suites: completed 5, aborted 0
+[info] Tests: succeeded 66, failed 0, canceled 0, ignored 0, pending 0
+[info] All tests passed.
+[success] Total time: 4 s, completed Oct 26, 2026, 11:44:09 AM
+real 12.78
+user 51.36
+sys 2.20

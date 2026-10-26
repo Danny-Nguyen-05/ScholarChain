@@ -355,3 +355,16 @@ Retain exact commands, exits, counts, raw-log hashes, source hashes and git diff
 Return a complete recheck prompt for user-launched read-only review and stop.
 
 Full external review: evidence/9a-r1/external-review.txt.
+
+
+# Subphase 9B — user-authorized start
+
+User: "alright let move on to phase 9b". Step 0 answer: "use all recommend defaults".
+Approved 9A commit/base f139f9c925b4925864a2c9a33734d869a1929cd2; branch phase-9, initially clean.
+Bounded work order and Step 0 choices: evidence/9b/work-order.md and evidence/9b/user-answers.md.
+All ten original decisions remain in evidence/9a/user-answers.md. Do 9B only; no reviewer launch, live/cloud calls, commits/pushes or 9C preparation.
+
+
+# Subphase 9B repair round 1
+
+User supplied external REQUEST-CHANGES and instructed "fix all blocking bugs for me". Only B1 routed; O1-O10 log only, no9C work. Complete user-supplied review/NEXT PROMPT: evidence/9b-r1/external-review.txt. Bounded work order: evidence/9b-r1/work-order.md. Original10decisions and9Bdefaults unchanged. No questions for this repair round.

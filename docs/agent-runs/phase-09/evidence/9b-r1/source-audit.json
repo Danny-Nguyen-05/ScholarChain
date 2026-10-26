@@ -1,0 +1,22 @@
+[
+  {
+    "path": "modules/rag/README.md",
+    "sha256": "88aa7f21b3325fcc0178246c0d0b1bd564be5babed5b1ca761a6135ec9d397b2",
+    "owner": "/root/rag_9b_r1"
+  },
+  {
+    "path": "modules/rag/src/main/scala/edu/uic/cs441/scholarchain/rag/CollaborationMetricsAgent.scala",
+    "sha256": "5125281de3e941b921545782d93998d544d84332cc28cc3b4a9d0b7d0307629d",
+    "owner": "/root/rag_9b_r1"
+  },
+  {
+    "path": "modules/rag/src/test/scala/edu/uic/cs441/scholarchain/rag/Runtime9BSpec.scala",
+    "sha256": "0123c4f83ae0ea12787c8003622ff7aeb46c2b3880c3f0f3d1301b092abf2a7b",
+    "owner": "/root/rag_9b_r1"
+  },
+  {
+    "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentRuntime9BStagesSpec.scala",
+    "sha256": "2046af4629e73e88b193fb998be031d9e0d8a34430182139e5c8ce38b4c66bb0",
+    "owner": "/root/tests_9b_r1"
+  }
+]

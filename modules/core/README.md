@@ -319,3 +319,40 @@ context-derived evidence references and run IDs. An omitted summary means the or
 producer supplied no count/truncation observation; it never implies completeness. Coauthor
 context retains its separate truncation flag. Candidate-set overflow is disclosed by the RAG
 resolver's bounded `Ambiguous` result, rather than failing identity resolution.
+
+Phase 9B closes the evidence-partition contract gap at bundle admission.
+`DomainValidation.check(EvidenceBundle)` uses `RuntimeContractValidation.bundleItems` when
+the bundle has a runtime context. Every item must then carry its own runtime payload.
+Deterministic items must have `descriptive=false` and cannot use the `TEXT_CHUNK` evidence
+type. Semantic items must have `descriptive=true` and use `TEXT_CHUNK` or
+`RESEARCHER_PROFILE`; graph, edge and metric locators, typed numeric/flag/ID values, metric
+versions and deterministic convergence/approximation qualifications are rejected there.
+Provenance fields such as source references, source-run IDs, subject/window IDs and text
+pointers remain available without authorizing a factual claim. Vector mode still rejects
+any deterministic partition. Legacy bundles without a runtime context and their frozen
+wire examples retain their original validation. The older `bundle(context,itemIds)` helper
+remains a structural-only compatibility check; admission must use the actual-item helper.
+
+Runtime evidence persisted through the immutable item index also needs content-bound IDs:
+the same node path or edge can recur with different windows, source runs or observations.
+`RuntimeEvidenceIds.bind(item)` sets the additive optional runtime
+`contentBindingVersion` to `runtime-evidence-content-v1`, then hashes the complete item
+excluding only `evidenceId`. Object keys are sorted recursively, array order is retained,
+and the binding includes text, score, source URI, provenance, runtime values and the version
+marker. `expectedId(item)` returns that expected ID for an already marked item.
+Graph paths, edges and metrics retain their precise evidence types and existing
+`evidence:graph-path:`, `evidence:edge:` and `evidence:metric:` formats. Researcher profiles
+use the existing `profile:` format; other types use `chunk:`. Metric locators retain the
+actual stored policy version. Domain validation checks both the content binding and all
+existing type-specific locator requirements; a changed payload with an unchanged ID fails.
+New runtime builders use the binding helper. The marker defaults to `None`, so old runtime
+records and frozen legacy examples retain their original locator-only ID rules. Unknown
+binding versions fail closed. This is an additive identity contract, not a new wire hierarchy.
+
+`RuntimeBundleContext.resolvedCandidates` defaults to an empty vector for old JSON and retains
+the bounded resolver observations needed to cite display names, source IDs and individual
+confidence values. Bundle validation checks canonical researcher IDs, nonblank names, distinct
+nonblank source/reference/affiliation lists, source-run IDs, confidence bounds and provenance
+count/truncation summaries. Candidate IDs are unique within the bundle. The evidence builder
+enforces configured resolver bounds and budgets rendered identity context; the core contract
+does not read runtime configuration or invent missing confidence observations.

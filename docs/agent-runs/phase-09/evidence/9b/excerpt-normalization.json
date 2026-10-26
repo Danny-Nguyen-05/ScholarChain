@@ -1,0 +1,14 @@
+[
+  {
+    "displayPath": "docs/agent-runs/phase-09/evidence/9b/targeted-1-excerpts.txt",
+    "beforeSha256": "5d9a60393b091176c6d46a0ce46e6cd00b8c06550ee4fc0379d050e9c382a87c",
+    "afterSha256": "f3c9f601b10266e460c75177ee192e4d5f00d909c6de60a1797916561b1fd041",
+    "transformation": "Trim trailing spaces/tabs in lean display excerpts; authoritative raw /tmp bytes and result hashes unchanged."
+  },
+  {
+    "displayPath": "docs/agent-runs/phase-09/evidence/9b/targeted-4-excerpts.txt",
+    "beforeSha256": "a4ba699ac8bf04d8cba263153a3d59c14762d9a0f61d0a9bdff5fd1d7b3c7503",
+    "afterSha256": "a117712dc8354399a356d287a987601532e8b30fece10e80db8fb671ab260fe0",
+    "transformation": "Trim trailing spaces/tabs in lean display excerpts; authoritative raw /tmp bytes and result hashes unchanged."
+  }
+]

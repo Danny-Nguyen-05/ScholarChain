@@ -1,0 +1,141 @@
+Subphase 9B repair round 1 review: APPROVE
+
+1. VERDICT: APPROVE
+
+B1 is fixed and the fix holds up under every check I ran. I found no blockers and no regressions. The evidence matches what it claims:
+- Hashes: all 22 cumulative source hashes match. All 4 repair before/after pairs match. The 22 "before" hashes equal the reviewed 9B source-files.json.
+- 9A integrity: the 29 untouched paths from the approved 9A repair round match. The other 5 of its 34 paths are exactly the ones already changed in the initial 9B.
+- Logs: both raw-log SHA-256 bindings match. The external-review copy matches its SHA-256 (a558249e…) and appears verbatim in review.md under ## Subphase 9B.
+- Full check log: 196+64+39+38+66+90+503+8 = 1004 passed. There are no *** FAILED lines; the only [error] is the expected injected format-stage probe. TestRunMarker ran, real time 717.84 s.
+- Scope: HEAD is f139f9c. There are 10 changed tracked files plus the 17 untracked 9B source files. Nothing touches core, storage, build or infrastructure in this round, and no Java or sbt process is running.
+
+B1 acceptance:
+
+1. The exact metric is no longer marked approximate. In CollaborationMetricsAgent.scala:103-109 the metric item is built once and never rebound. Both specs assert exact == baseline against a store with no estimate (Runtime9BSpec.scala:80, IndependentRuntime9BStagesSpec.scala:131). They also check approximate=false and the hand-derived A values: 3, 2, 4, 4/3, 2, 4, coreness 2.
+2. Named and ranking items agree. The independent spec compares every exact field (except kind) against the ranking row for the same researcher, window and run. It also compares run, window, converged and iterations, and asserts !ranked.approximate (IndependentRuntime9BStagesSpec.scala:155-162).
+3. P90 is now a separate item. It is built by make(... "distance-estimate" ..., approximate = true) at CollaborationMetricsAgent.scala:112-131 and carries the required fields:
+   - component subject and componentId;
+   - effectiveDiameterP90 "4.0", sampled-bfs, distanceP90Approximate=true;
+   - the source window and run, which are checked against the metric record at lines 95-101;
+   - two path_length_estimate source references.
+
+   It is content-bound through RuntimeEvidenceIds.bind, and the specs check expectedId and bind idempotence. The rendered context shows approximate:true only on the estimate.
+4. The pair is admitted atomically. The builder admits non-ranked deterministic items all-or-nothing, and this repair did not change the builder (EvidenceBuilderAgent.scala:56-57). The independent spec proves the exact metric alone fits the budget, then shows the pair returns Missing("essential-evidence-context-budget") with zero put calls. With enough budget, both items are persisted and resolve through the index lookup.
+5. Nothing else regressed. Iteration flags on metric items, source-mismatch checks, N1 partition checks, budgets, and the four-hop and ranking workflows are all unchanged and still pass.
+6. No O-item or 9C work was introduced.
+
+2. Findings
+
+There are no blocking findings.
+
+- R1 · Low · Nonblocking · The P90 item leaves out its sampling details.
+  - Where: CollaborationMetricsAgent.scala:119-124.
+  - What: the item carries P90, method and component. It omits the stored sampleSourceCount, seed, meanDistance, reachedPairCount and context.policyVersion (metricVersion=None). It is also typed RESEARCHER_PROFILE although its subject is a component.
+  - Impact: a 9C answer can say "approximate" but cannot state the sample size behind it.
+  - Owner: rag-engineer, optional, alongside O8.
+  - Acceptance check (if adopted): sample count and reached pairs appear as evidence values, and the source references cover them.
+- R2 · Cosmetic · Nonblocking · Missing spaces in the evidence prose.
+  - Where: docs/agent-runs/phase-09/repairs.md:93-123, for example "before9C", "99targeted/1004full", "fullcheckexit0", "Fourrepairpaths". The initial-9B reports had the same problem.
+  - Owner: orchestrator. Only new text should be fixed; recorded human decisions stay unedited.
+- Carried forward: O1–O10 stay open, nonblocking and log-only. N1 is fixed; N2–N9 stay carried forward. R1 is O1-adjacent: the exact metric item still carries the membership's converged/iterations, which is O1 and unchanged.
+
+Not verified (live or future gates)
+
+- Live provider, model, region and injection behaviour.
+- Production latency and adapters that ignore interruption.
+- Real enrichment coverage.
+- How often real exports carry pathLengthEstimate.
+- All 9C work; 11B suites.
+- Phase 8C stays deferred to 14C.
+
+3. Report fields
+
+STATUS: COMPLETE (review); verdict APPROVE for Subphase 9B repair round 1
+OWNER: code-reviewer (independent, user-launched, read-only)
+WORK ORDER: Phase 9 Subphase 9B repair round 1 recheck (pasted prompt)
+FILES CREATED: none
+FILES MODIFIED: none
+COMMANDS RUN: read-only — git rev-parse/branch/status/diff --stat f139f9c; cat/sed/grep over
+  evidence/9b-r1, review.md, repairs.md, rag README, CollaborationMetricsAgent, RuntimeRetrieval,
+  EvidenceBuilderAgent, WorkflowRunner, Runtime9BSpec, IndependentRuntime9BStagesSpec/EvidenceSpec,
+  core PathLengthEstimate; python3 -I SHA-256 of source-files.json (22/22), repair-files.json (4/4),
+  source-before vs 9b source-files (22/22 equal), 9a-r1 source-files (29 match + 5 known 9B
+  changes), external-review.txt (match; verbatim in review.md), two /tmp raw logs (2/2); grep of
+  /tmp/phase9b-r1-check-1.log (0 "*** FAILED", counts 1004, probe-only [error], TestRunMarker);
+  ps for java/sbt (none). No sbt, AWS, provider, network or git writes.
+TEST RESULTS: not run by reviewer. Retained: targeted exit 0, 99 passed (storage 15, RAG 17,
+  independent 67), 11.66 s; full check exit 0, 1004 passed, 0 failed, 717.84 s, JDK 17.0.20.1.
+VALIDATION RESULTS: B1 FIXED (acceptance 1–6 met); no blockers; R1 (Low), R2 (cosmetic) nonblocking;
+  O1–O10 open log-only; N1 fixed; N2–N9 carried forward.
+ASSUMPTIONS: external-review.txt is the user-supplied text; its fidelity to the pasted review was
+  not independently compared beyond the hash and the verbatim append.
+RISKS: O1–O3 must be handled before 9C verifier/audit rely on qualifier scope, lineage and
+  researcherIds; R1 limits approximate-disclosure detail.
+MANUAL ACTION REQUIRED: user decides and performs (or explicitly instructs) the 9B commit; user
+  relays the next prompt.
+BLOCKED-ON OWNER: none
+BLOCKED-ON EVIDENCE: none for 9B; 9C base commit pending user confirmation
+NEXT GATE: record approval → user-confirmed 9B commit as 9C base → 9C Step 0 questions
+
+4. Next prompt
+
+You are the ScholarChain Phase 9 coordinator in a fresh session at
+/Users/danny/Documents/UIC/CS441/ScholarChain, branch phase-9, base/HEAD
+f139f9c925b4925864a2c9a33734d869a1929cd2. Subphase 9B and its repair round 1 are uncommitted.
+The independent read-only recheck of Subphase 9B repair round 1 returned APPROVE.
+
+Read first: AGENTS.md, CLAUDE.md, docs/agents.md, docs/agent-runs/README.md, the plan of record
+/Users/danny/Library/CloudStorage/GoogleDrive-cpnguyen0630@gmail.com/My Drive/plan/phase9.md
+(Sections 3–7, Subphase 9C in Section 8, Sections 9–10), the course Phase 9 specification,
+docs/agent-runs/phase-09/{prompt,owner-report,test-report,review,repairs}.md,
+evidence/9a/user-answers.md (ten original decisions, binding), evidence/9b/user-answers.md
+(approved 9B defaults, binding) and evidence/9b-r1/.
+
+Step 1 — Record the approval. Append the reviewer's verdict verbatim (the user supplies the full
+text) to docs/agent-runs/phase-09/review.md under a new heading "## Subphase 9B repair round 1",
+marked "user-supplied external review". Do not alter earlier text. Store an identical copy at
+docs/agent-runs/phase-09/evidence/9b-r1/external-recheck.txt with its SHA-256. In repairs.md
+record B1 FIXED (externally approved), log R1 (Low: P90 item omits sampleSourceCount, seed,
+meanDistance, reachedPairCount, policyVersion; RESEARCHER_PROFILE type for a component subject)
+and R2 (cosmetic: missing spaces in evidence prose) as OPEN/nonblocking/log only, and keep
+O1–O10 OPEN/log only. Write new evidence prose with normal spacing; do not edit recorded human
+decisions.
+
+Step 2 — Commit gate. Run git status and git log -1 (read-only) and check whether the approved 9B
+work (the 22 source/test/module-doc paths in evidence/9b-r1/source-files.json, the phase-09
+reports and the evidence/9b and 9b-r1 packets) has been committed. If it has not, ask the user
+to commit it or to give an explicit instruction for you to commit it, and STOP and wait. No agent
+commit or push without explicit user instruction. Once committed, verify that the committed blobs
+match the source-files.json hashes and record that commit SHA as the 9C base in
+evidence/9c/preflight.json.
+
+Step 3 — Start ONLY Subphase 9C, and only after the user's next prompt confirms the base. Begin
+with one bundled set of Step 0 questions covering every open 9C decision in plan Section 8
+(synthesis model and prompts, verifier and claim rules, audit record, CLI, benchmark, and how
+O1–O3 and R1 affect verifier/audit scope), each with a recommended default. Then STOP and wait
+for answers. Do not prepare or implement 9C before the answers arrive.
+
+Binding constraints for all of 9C:
+- Preserve all ten original decisions, the approved 9B defaults, N2–N9 carried forward,
+  O1–O10 and R1–R2 as logged. Phase 8C stays deferred to 14C; no whole-Phase-8 acceptance.
+- Route every edit by docs/agents.md (rag-engineer modules/rag/** and prompts/**,
+  domain-engineer modules/core/**, test-engineer tests/**, coordinator evidence only).
+  No nested delegation.
+- The 9C verifier and audit must treat converged/iterations and approximate qualifiers per O1/R1,
+  use resolvedCandidates plus deterministic subjects for identity (O3), and keep the separate
+  approximate distance-estimate item approximate in claims.
+- Every sbt command uses
+    export JAVA_HOME=/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home
+    export PATH="$JAVA_HOME/bin:$PATH"
+    export SBT_OPTS="-Dlogback.configurationFile=$PWD/docs/agent-runs/phase-04/xml-repair-logback.xml"
+  with java -version recorded, targeted gates, the full /usr/bin/time -p sbt -batch check and
+  git diff --check. Retain every failed attempt, raw-log paths and SHA-256 values, and source
+  before/after hashes.
+- No AWS, provider or live calls, infrastructure, secret reads or human-gate edits. A live smoke
+  test requires separate written user approval with a dollar cap, recorded before any call.
+- Never launch a reviewer.
+
+Step 4 — After 9C gates pass, stop. Ensure no specialists or builds are running. Return the
+handoff packet and a complete independent reviewer prompt for Subphase 9C in one fenced block,
+with checkpoint facts filled in with real values. End with:
+"Subphase 9C is ready for review. I have stopped and will not start the next subphase until I

@@ -562,7 +562,7 @@ object DomainValidation {
     requireNonBlank(value.uncertainty, "uncertainty", acc)
     value.runtime.foreach(v =>
       RuntimeContractValidation
-        .bundle(v, value.items.map(_.evidenceId))
+        .bundleItems(v, value.items)
         .foreach(m => acc.add(ViolationCode.InconsistentRecord, m))
     )
     done(acc, value)
@@ -1491,13 +1491,14 @@ object DomainValidation {
     ids.foreach(id => parse(StableIds.parseWorkId(id), acc))
   }
 
-  private def requireEvidenceLocator(value: EvidenceItem, acc: Acc): Unit =
+  private def requireEvidenceLocator(value: EvidenceItem, acc: Acc): Unit = {
+    val contentBound = value.runtime.exists(_.contentBindingVersion.isDefined)
     value.evidenceType match {
       case EvidenceType.GraphPath =>
         value.graphPath match {
           case Some(path) if path.nonEmpty =>
             StableIds.nonTextEvidenceId("graph-path", path) match {
-              case Right(expected) if expected != value.evidenceId =>
+              case Right(expected) if !contentBound && expected != value.evidenceId =>
                 acc.add(
                   ViolationCode.InconsistentRecord,
                   "graph path evidence id does not match graphPath"
@@ -1524,7 +1525,7 @@ object DomainValidation {
                 locator.policyVersion
               )
             ) match {
-              case Right(expected) if expected != value.evidenceId =>
+              case Right(expected) if !contentBound && expected != value.evidenceId =>
                 acc.add(
                   ViolationCode.InconsistentRecord,
                   "metric evidence id does not match metricLocator"
@@ -1545,7 +1546,7 @@ object DomainValidation {
             )
               acc.add(ViolationCode.MalformedId, s"malformed edge evidence locator: $edgeId")
             StableIds.nonTextEvidenceId("edge", Seq(edgeId)) match {
-              case Right(expected) if expected != value.evidenceId =>
+              case Right(expected) if !contentBound && expected != value.evidenceId =>
                 acc.add(
                   ViolationCode.InconsistentRecord,
                   "edge evidence id does not match edgeLocatorId"
@@ -1558,6 +1559,17 @@ object DomainValidation {
         }
       case _ => ()
     }
+    if (contentBound)
+      RuntimeEvidenceIds.expectedId(value) match {
+        case Right(expected) if expected != value.evidenceId =>
+          acc.add(
+            ViolationCode.InconsistentRecord,
+            "runtime evidence id does not match item content"
+          )
+        case Left(violation) => acc.add(violation)
+        case _               => ()
+      }
+  }
 
   private def provenancePairSource(provenance: Provenance): (String, String) =
     (

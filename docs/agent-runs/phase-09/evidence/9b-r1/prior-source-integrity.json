@@ -1,0 +1,15 @@
+{
+  "prior9APathsAlreadyChangedInInitial9B": [
+    "modules/core/README.md",
+    "modules/core/src/main/scala/edu/uic/cs441/scholarchain/core/DomainValidation.scala",
+    "modules/core/src/main/scala/edu/uic/cs441/scholarchain/core/RuntimeContracts.scala",
+    "modules/core/src/test/scala/edu/uic/cs441/scholarchain/core/RuntimeContractSpec.scala",
+    "modules/rag/README.md"
+  ],
+  "prior9AUnchangedPathCount": 29,
+  "prior9AUnchangedPathMismatches": [],
+  "reviewed9BUnrepairedPathCount": 18,
+  "reviewed9BUnrepairedPathMismatches": [],
+  "coreStorageBuildInfraChangedDuringRepair": false,
+  "currentSourceHashMismatches": []
+}

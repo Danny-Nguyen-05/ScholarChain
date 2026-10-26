@@ -199,3 +199,68 @@ from actual git output; this entry does not claim an unobserved commit or push.
 
 Commit packaging note: three compiler-log display copies had trailing spaces trimmed;
 original raw /tmp bytes preserved, transformations SHA-bound in evidence/9a-r1/commit-log-normalization.json.
+
+
+# Subphase 9B — implementation and local validation complete
+
+STATUS: COMPLETE for9B implementation/local gates; user-launched external review pending.
+OWNER: /root coordinator; /root/domain_9b modules/core/**, /root/rag_9b modules/rag/** and owned prompts, /root/tests_9b tests/**. Native IDs/territories in evidence/9b/delegation.md.
+WORK ORDER: User requested9B after approved9A commit f139f9c925b4925864a2c9a33734d869a1929cd2, then answered "use all recommend defaults". Branch phase-9; HEAD/base unchanged. Initial tree clean. All original ten decisions retained;9B only.
+FILES CREATED:17source/test files plus lean evidence/9b/. Exact22source/test/module-documentation paths+SHA256 in source-files.json; complete changed/untracked inventory in files.json.
+FILES MODIFIED:5existing source/test/module-README paths plus coordinator prompt.md, repairs.md, owner-report.md and test-report.md. No human-owned decisions or gates changed.
+COMMANDS RUN: Exact JDK17 environment/commands/exits in evidence/9b/commands.md. java-version reports Homebrew17.0.20.1. Final coretarget2 exit0; final integratedtarget4 exit0; touched-project scalafmt applied. /usr/bin/time -p sbt -batch check exit0,707.18seconds. git diff --check exit0; all22source hashes and29unchanged prior reviewed9A paths verified. Full raw /tmp/phase9b-check-1.log SHA256 4a3835389a36c942220ca8650876b04d2b8e69087f8a1b8522bb3fd670077fea.
+TEST RESULTS:135targeted passes/0failures:core39/storage15/RAG15/independent66. Full1001passed0failed:core196/Hadoop64/ER39/Spark38/storage66/RAG88/independent502/build8. Expected injected format-stage failure is the passing build self-test; final TestRunMarker ran. Earlier testcompile name collision, default-path context overrun and invalid new temporal fixture are retained with raw hashes/excerpts and routed repair evidence. No failing assertion removed or production validation weakened.
+VALIDATION RESULTS: Six9B stages/workflow implemented against injected ports; exact stored metrics and authoritative population filtering; bounded component-qualified paths and full hop supports; community/bridge/temporal source qualifiers; verified descriptive semantic retrieval and model/filter checks; JSON data delimiting; stable complete-content-bound item IDs and indexed persistence; resolved identity names/confidence/provenance retained; conservative context+byte budgets, atomic path/comparison groups and disclosed ranking prefixes; graph/vector/fused/evidence-only modes; essential-vs-optional failures, parallel fanout, completion-time deadlines and cancellation. N1 actual-item partition gap addressed. Two further required evidence contract gaps are additive/defaulted, no v2 hierarchy. Frozen wire examples/planner grammar unchanged. No storage/build/infrastructure change required.
+ASSUMPTIONS: Original G1 ten researchers/nine canonical works/nine all-years edges retained; community partition, metadata and DBLP homonyms are declared synthetic overlays. Filter values identify authoritative stored metadata; no invented free-text-to-ID mapping. JVM adapters honor interruption or own timeouts.
+RISKS: External review pending. Strict metadata coverage can make real filters Unsupported; larger essential groups can abstain. Context budget uses conservative UTF8byte upper bound; maxInputBytes shared16KiB remains N3. Live provider/model/tool/region/temperature compatibility, live quality/injection resistance, cloud scale/cost and production latency unverified. N2-N9 carried forward, N8 deferred9C unless needed; confidenceNone disclosed. Phase8C remains deferred14C with no whole-Phase8 acceptance claim. Full limitations in evidence/9b/limitations.md.
+MANUAL ACTION REQUIRED: User launches independent read-only9B reviewer with evidence/9b/reviewer-prompt.md. Commit/push requires later explicit user instruction after review. User owns Phase8 interim gate and all human-gate/commit records. No live approval exists.
+BLOCKED-ON OWNER: None for implementation/local validation.
+BLOCKED-ON EVIDENCE: Independent user-launched external review; live/future gates remain unverified.
+NEXT GATE: User-launched9B read-only review. All three specialists completed; build finished. No reviewer, nested delegation, live/cloud/provider call, commit/push, human-gate edit or9C implementation/preparation occurred. Stop at9B.
+
+
+# Subphase 9B repair round 1
+
+STATUS: COMPLETE implementation and local validation; external recheck pending.
+OWNER: /root coordinator evidence/gates; /root/rag_9b_r1 modules/rag/**; /root/tests_9b_r1 tests/**.
+WORK ORDER: User "fix all blocking bugs for me" on external9B REQUEST-CHANGES. Only B1 blocking; O1-O10 log only. Base/HEAD f139f9c925b4925864a2c9a33734d869a1929cd2, branchphase-9; prior9B uncommitted. Original10decisions/9Bdefaults binding; no questions for repair.
+FILES CREATED: Lean evidence/9b-r1 records only; no newsource files.
+FILES MODIFIED: Four reviewed9B paths: CollaborationMetricsAgent.scala, Runtime9BSpec.scala, modules/rag/README.md, IndependentRuntime9BStagesSpec.scala. Coordinator appended review.md verbatim externalreview+NEXT PROMPT, prompt.md, repairs.md and owner/test reports. Exact four before/after hashes repair-files.json; cumulative22source hashes source-files.json.
+COMMANDS RUN: Required JDK17environment/java-version and exactformat/target/fullcommands in evidence/9b-r1/commands.md. Target1 exit0,99passed0failed,11.66seconds. Full /usr/bin/time -p sbt -batch check exit0,1004passed0failed,717.84seconds. git diff --check exit0; sourcehashes verified afterfullgate. No failedbuild/testattempt in repairround. Raw full /tmp/phase9b-r1-check-1.log SHA256 6b4755d9be0c7449f27d1d4ace7c1942bd6728a0b39f7935823e5a8f373ef42a.
+TEST RESULTS: Targetstorage15/RAG17/independent67=99passed0failed. Fullcore196/Hadoop64/ER39/Spark38/storage66/RAG90/independent503/build8=1004passed0failed. Expectedinjectedformatfailure is passingbuildselftest; finalTestRunMarker observed. Added2modulecases and1independentcase; existingindependentP90case strengthened. Default4hop/rankingworkflows pass unchanged.
+VALIDATION RESULTS: Exact metric evidence remains approximate=false, samecompleteitem with/withoutestimate, and named/ranking exactfields agree. Separate deterministic distance-estimate item approximate=true contains component/P90=4.0/methodsampled-bfs/window/run and specific sourcefieldrefs, content-bound by existinghelper. Existingbuilder nonrankingadmission unchanged/atomic: exact-only budget refuses pair beforewrite; fullpair persists and itemlookup resolves. Iteration-limited labels retained. N1 remainsfixed. O1-O10 loggedunchanged; N2-N9 carriedforward. No domain/storage/build/infra/buildercontracts changed. All18unrepaired9B paths and29unchangedprior9A paths match reviewedhashes; originalwire/planner unchanged.
+ASSUMPTIONS: Stored PathLengthEstimate sourcevalidation supplies component/window/run integrity; no metrics recalculated. Tests use declared syntheticfixtures, notlivequality/performance evidence.
+RISKS: External recheckpending. O1-O10 remainknownnonblockers perreview, including convergencequalifier scope/mixedprovenance/semanticidentity andcontextlimits. Liveprovider/model/region/injection/latency/realcoverage unverified. Phase8C deferred14C, no wholePhase8acceptance. All9Cwork untouched.
+MANUAL ACTION REQUIRED: Userlaunches read-only repairrecheck using evidence/9b-r1/reviewer-prompt.md; nocommit9B untilapproved. Userownshumangates; no liveapprovalexists.
+BLOCKED-ON OWNER: None forimplementation/localvalidation.
+BLOCKED-ON EVIDENCE: User-launched externalrecheck, plus laterlive/futuregates.
+NEXT GATE: Independentread-only9Brepairround1 recheck. Allspecialists/buildscompleted; no nesteddelegation/reviewer/livecalls/commits/pushes/humangateedits or9Cwork. Stop.
+
+
+# Subphase 9B repair round 1 — external approval recorded
+
+STATUS: COMPLETE approval recording; waiting at the user commit gate.
+OWNER: /root coordinator, phase evidence only.
+WORK ORDER: User supplied independent APPROVE and directed approval recording followed by a commit gate.
+FILES CREATED: evidence/9b-r1/external-recheck.txt, external-recheck.sha256, commit-gate-observation.json.
+FILES MODIFIED: review.md (verbatim append), repairs.md (external B1 closure, R1/R2 logged), this report and test-report.md.
+COMMANDS RUN: Read-only git status, branch, log -1, rev-parse; compared all 22 source hashes to the working tree and HEAD; git diff --check. No staging, commit or push.
+TEST RESULTS: No rerun for evidence-only recording. Retained targeted 99 passed and full 1004 passed, zero failed; independent reviewer verified the evidence. All 22 source hashes remain unchanged.
+VALIDATION RESULTS: APPROVE recorded verbatim, including the supplied next prompt, which ends mid-sentence. Earlier review text and human decisions remain intact. B1 externally fixed; R1/R2 and O1–O10 logged as nonblocking. Approved 9B changes remain uncommitted on phase-9 at f139f9c925b4925864a2c9a33734d869a1929cd2.
+ASSUMPTIONS: Independent code approval does not itself authorize an agent commit or push.
+RISKS: Existing nonblocking and live/future gates remain open. Phase 8C stays deferred to 14C.
+MANUAL ACTION REQUIRED: User commits approved 9B or explicitly instructs the agent to commit it.
+BLOCKED-ON OWNER: User for the commit gate only.
+BLOCKED-ON EVIDENCE: Approved 9B commit SHA.
+NEXT GATE: Wait for commit authorization/confirmation. No 9C files, questions or implementation prepared.
+
+
+## User-authorized 9B commit and push
+
+The user explicitly instructed: "yes please commit and push it". This authorizes committing
+and pushing the independently approved 9B work and repair round 1. The coordinator verified
+all 22 reviewed source hashes, an empty prior index, expected ownership/path scope and a clean
+git diff --check. Retained full validation remains 1,004 passed and zero failed; no source
+changes or test rerun were needed for approval recording. Lean evidence packets are included;
+full raw /tmp logs and generated outputs remain excluded. No human-gate or commit record is
+written. Commit and push results will be reported from observed Git output. No 9C work starts.

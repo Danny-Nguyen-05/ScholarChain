@@ -299,3 +299,71 @@ An overflow result is `Ambiguous(name, candidates, totalCandidateCount, truncate
 deterministically ordered candidate list. A candidate absent from a known stored window retains
 its identity with absent context; this also preserves ambiguity when one homonym is absent.
 An unknown window remains a typed failure. These repairs do not implement 9B retrieval stages.
+
+## Phase 9B retrieval and persisted evidence
+
+`CollaborationMetricsAgent`, `PathFinderAgent`, `CommunityAnalystAgent` and
+`SemanticContextAgent` accept `RetrievalInput(plan, resolvedCandidates)` and return typed
+`Ready`, `Missing`, `Unsupported` or `Failed` results. Their inputs are storage ports; runtime
+code does not recompute Phase 6 collaboration metrics or choose a researcher by semantic similarity.
+Rankings filter the authoritative stored population before selecting the requested stored metric,
+and carry population, matched and returned counts plus top-K truncation. A missing authoritative
+filter projection is unsupported. Named-researcher metric, path, community and temporal requests
+with unsupported population filters fail closed rather than dropping those filters.
+
+Path retrieval checks stored component IDs first. Different components produce `Disconnected`
+with component evidence. An empty bounded template search produces `NoPathWithinLimit`, and an
+explicit adapter depth-limit result produces `ExceededMaxHops`; neither claims disconnection.
+Each returned hop is matched to the selected window/run and authoritative edge support, retaining
+joint-publication count, supporting work IDs and known/unknown years. Direct coauthor lists carry
+truncation. Repeated collaboration uses per-edge `jointPublicationCount`; weighted degree and total
+coauthor occurrences remain the same stored invariant, not independent corroboration.
+
+Community and bridge evidence carries convergence and iteration qualifications; `converged=false`
+is explicitly `iteration-limited`. Selected members and neighboring communities are bounded, and
+selected cross-community edge counts are labeled as selected. Bridge evidence includes cross-
+community degree and weight, communities connected, participation coefficient and distinct degree.
+Stored temporal deltas retain presence flags and separate source-window qualifications. A stored
+P90 distance estimate is a separate deterministic evidence item marked approximate, bound to its
+component, window, source run, method and source row. Exact researcher metric items remain
+non-approximate with the same stored values whether the estimate exists or not. Both items are
+admitted atomically for the metric request; a context budget that cannot retain both abstains.
+The stored P90 is not an exact distance.
+
+Semantic retrieval embeds the question through the injected port, queries the configured existing
+index with supported metadata filters, verifies each ordinary-object pointer and Phase 8 document
+hash, and emits descriptive `TextChunk` evidence. Query-model identity must match the hit metadata.
+Venue filters and multiple values for one semantic filter are currently unsupported because that
+metadata/query contract is unavailable. Similarity score remains retrieval metadata and never
+becomes deterministic evidence. Excerpts render as JSON in an `untrusted_evidence_json` data block;
+angle brackets in retrieved content are JSON escaped, preventing text from closing the block.
+
+`EvidenceBuilderAgent` retains full source provenance in persisted items, partitions deterministic
+and descriptive evidence, and uses `RuntimeEvidenceIds.bind` content-bound IDs. Thus a changed
+run, window, payload or supporting work cannot silently reuse an immutable citation. Path and comparison output is atomic: a budget failure returns a typed missing-evidence result rather than keeping an incomplete path. Rankings retain the largest admitted top-K prefix with explicit source-fetched and context-retained counts and a truncation flag; an empty prefix abstains. Optional semantic excerpts are Unicode-safe truncated and rebound.
+The context cost is a conservative UTF-8-byte upper bound on tokens, applied to a compact rendered
+context with shared run/window/version lookup tables that omits repeated storage provenance and absent fields. Bounded resolved candidates, their names, source IDs, evidence references and individual confidence are retained in the bundle; identity context is included in the same token budget. Persisted bundle bytes are also
+bounded by configured `maxInputBytes`; this shared limit remains the existing N3 configuration
+limitation for later synthesis. The default 4,096 context / 16,384 bundle-byte limits retain the
+complete G1 four-hop path with its four supporting edge items. Larger requests can abstain.
+Persistence must support indexed item lookup; a bundle-only store fails closed.
+
+`WorkflowRunner` composes planner, resolver, parallel retrieval and persisted evidence. It returns
+evidence rather than a final answer for both values of `evidenceOnly`; synthesis, verification and
+audit execution remain Phase 9C. Graph mode launches no semantic query; vector mode launches no
+graph stages and abstains on deterministic graph/numeric requests. Fused mode can return a qualified
+partial result when optional semantic retrieval fails and essential deterministic evidence survives.
+An essential-stage failure abstains; evidence persistence/index failure is a typed workflow failure.
+Each future has its own absolute stage deadline and completion timestamp within the synchronous
+deadline, so collecting a slow sibling cannot invalidate a result that completed on time. Deadline
+expiry cancels and interrupts the task; shutdown waits at most the smallest configured stage budget and the remaining overall deadline.
+Injected adapters must honor interruption or their own request timeout: Java cannot forcibly stop
+an uncooperative port. No production latency or live provider behavior is established by these tests.
+
+The module fixture transcribes the ten original G1 identities, nine canonical works and nine
+all-years edges with literal expected metric values. A→G is A→C→D→F→G (four hops); H/I form a
+separate component, and J is solo. Declared community labels, venue/topic/institution metadata and
+`Name 0001` / `Name 0002` aliases are synthetic overlays, not real enrichment or clustering.
+The independent test fixture separately exercises complete authoritative metadata and real artifact
+readers. Confidence remains absent when the real loader has no confidence; synthetic values do not
+establish calibrated identity confidence. Phase 8C remains deferred to Phase 14C.

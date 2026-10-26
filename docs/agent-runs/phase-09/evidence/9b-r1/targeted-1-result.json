@@ -1,0 +1,14 @@
+{
+  "command": "/usr/bin/time -p sbt -batch 'rag/Compile/scalafmt' 'rag/Test/scalafmt' 'independentTests/Test/scalafmt' 'storage/testOnly *RuntimeArtifactStorageSpec' 'rag/testOnly *Runtime9BSpec' 'independentTests/testOnly *Runtime9B* *Runtime9AEvidenceSpec'",
+  "rawPath": "/tmp/phase9b-r1-targeted-1.log",
+  "rawSha256": "6ab60e10fbb8af910f580827ae3411b8c52bf2f75ea031170324146e0bbeec3d",
+  "exitCode": 0,
+  "passed": 99,
+  "failed": 0,
+  "modules": {
+    "storage": 15,
+    "rag": 17,
+    "independentTests": 67
+  },
+  "elapsedSeconds": 11.66
+}
