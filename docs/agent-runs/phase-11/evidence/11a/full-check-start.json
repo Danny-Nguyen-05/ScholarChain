@@ -1,0 +1,17 @@
+{
+  "start_epoch": 1793129739.7862668,
+  "start_utc": "2026-10-27T19:35:39.786269+00:00",
+  "source_files": {
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/AdversarialBlockingReplaySpec.scala": "00a8bd1bdbe2f00872c93dca662f8baeea7c027b80d1b77a735de32f4982ca6a",
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/AdversarialDataPlaneSpec.scala": "8d870222eeecdad4ef58e214ef34175a914fea69a21cda51f8db3599836e7e31",
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/AdversarialGraphShapesSpec.scala": "78fa802cfd5226f0edb4c081d1ebaeaac09fff682a0ec0c7d1eda970c12dcba3"
+  },
+  "raw_log": "/tmp/phase11a-final-check.log",
+  "command": "sbt -batch check",
+  "environment": {
+    "JAVA_HOME": "/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home",
+    "PATH": "$JAVA_HOME/bin:$PATH",
+    "SBT_OPTS": "-Dlogback.configurationFile=$PWD/docs/agent-runs/phase-04/xml-repair-logback.xml"
+  },
+  "targeted3_note": "19 tests in4suites passed (15new+4existing), but last sparse-author assertion was added after targeted compilation; full check is required to verify final frozen tree."
+}

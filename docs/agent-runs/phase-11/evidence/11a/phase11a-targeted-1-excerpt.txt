@@ -1,0 +1,5 @@
+1: java.io.FileNotFoundException: /Users/danny/.sbt/boot/sbt.boot.lock (Operation not permitted)
+2: 	at java.base/java.io.FileOutputStream.open0(Native Method)
+3: 	at java.base/java.io.FileOutputStream.open(FileOutputStream.java:293)
+4: 	at java.base/java.io.FileOutputStream.<init>(FileOutputStream.java:235)
+24: [error] [launcher] error during sbt launcher: java.io.FileNotFoundException: /Users/danny/.sbt/boot/sbt.boot.lock (Operation not permitted)

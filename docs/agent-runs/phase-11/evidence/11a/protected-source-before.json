@@ -1,0 +1,15 @@
+{
+  "production": {
+    "files": 224,
+    "aggregate_sha256": "897f8c11977fdaaf3fff73db981ea9f557ef303ddb5dd386c708bd82bcb6ebab"
+  },
+  "build": {
+    "files": 19,
+    "aggregate_sha256": "0d9d983b6e68e8cc7560460d4b93395afe0336a574bbfc93b64521f9435aa985"
+  },
+  "existing_independent_tests": {
+    "files": 103,
+    "aggregate_sha256": "1c8b0eccc5a25fabab82fc45c212891bd73e42bb708550c0387893553cd711e0"
+  },
+  "note": "Tracked source/config aggregate fingerprints only; no claims about dataset files or runtime output. Excludes test resources. New Adversarial files are separately hashed after final test edits."
+}

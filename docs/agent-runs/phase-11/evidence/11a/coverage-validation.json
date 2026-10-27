@@ -1,0 +1,54 @@
+{
+  "categories": 11,
+  "unique_selected_cases": 45,
+  "unique_new_cases": 15,
+  "unique_existing_cases": 30,
+  "missing_named_cases": [],
+  "category_counts": {
+    "1": {
+      "selected_existing": 4,
+      "new_mapped": 2
+    },
+    "2": {
+      "selected_existing": 0,
+      "new_mapped": 2
+    },
+    "3": {
+      "selected_existing": 3,
+      "new_mapped": 0
+    },
+    "4": {
+      "selected_existing": 1,
+      "new_mapped": 1
+    },
+    "5": {
+      "selected_existing": 1,
+      "new_mapped": 3
+    },
+    "6": {
+      "selected_existing": 4,
+      "new_mapped": 0
+    },
+    "7": {
+      "selected_existing": 2,
+      "new_mapped": 2
+    },
+    "8": {
+      "selected_existing": 4,
+      "new_mapped": 3
+    },
+    "9": {
+      "selected_existing": 6,
+      "new_mapped": 4
+    },
+    "10": {
+      "selected_existing": 1,
+      "new_mapped": 1
+    },
+    "11": {
+      "selected_existing": 4,
+      "new_mapped": 1
+    }
+  },
+  "counting_rule": "Selected named mapping; not exhaustive. Cross-category references overlap, so category counts do not sum to unique tests."
+}

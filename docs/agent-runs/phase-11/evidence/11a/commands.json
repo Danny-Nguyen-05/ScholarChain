@@ -1,0 +1,78 @@
+{
+  "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+  "gate_commands": [
+    {
+      "id": "preflight",
+      "command": "git status --short; git branch --show-current; git rev-parse HEAD",
+      "exit_code": 0,
+      "result": "Clean phase-10 at0c5ee89994b5b738a3490ef5e8f032fdc67327b2"
+    },
+    {
+      "id": "branch-sandbox",
+      "command": "git switch -c phase-11",
+      "exit_code": 128,
+      "result": "Sandbox .git lock refusal"
+    },
+    {
+      "id": "branch-approved",
+      "command": "git switch -c phase-11",
+      "exit_code": 0,
+      "result": "Approved escalation; phase-11 created"
+    },
+    {
+      "id": "java",
+      "command": "export JAVA_HOME=/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home\nexport PATH=\"$JAVA_HOME/bin:$PATH\"\nexport SBT_OPTS=\"-Dlogback.configurationFile=$PWD/docs/agent-runs/phase-04/xml-repair-logback.xml\"\njava -version",
+      "exit_code": 0,
+      "result": "OpenJDK17.0.20.1; java-version.txt"
+    },
+    {
+      "id": "targeted1",
+      "command": "export JAVA_HOME=/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home\nexport PATH=\"$JAVA_HOME/bin:$PATH\"\nexport SBT_OPTS=\"-Dlogback.configurationFile=$PWD/docs/agent-runs/phase-04/xml-repair-logback.xml\"\nsbt -batch 'independentTests / Test / scalafmt' 'independentTests / Test / testOnly *Adversarial*' > /tmp/phase11a-targeted-1.log 2>&1",
+      "exit_code": 1,
+      "result": "Sandbox sbt cache lock refusal; no tests"
+    },
+    {
+      "id": "child-escalation",
+      "command": "export JAVA_HOME=/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home\nexport PATH=\"$JAVA_HOME/bin:$PATH\"\nexport SBT_OPTS=\"-Dlogback.configurationFile=$PWD/docs/agent-runs/phase-04/xml-repair-logback.xml\"\nsbt -batch 'independentTests / Test / scalafmt' 'independentTests / Test / testOnly *Adversarial*' > /tmp/phase11a-targeted-2.log 2>&1",
+      "exit_code": null,
+      "result": "Child approval call aborted without execution; no session/log created by child; coordinator took over"
+    },
+    {
+      "id": "targeted2",
+      "command": "export JAVA_HOME=/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home\nexport PATH=\"$JAVA_HOME/bin:$PATH\"\nexport SBT_OPTS=\"-Dlogback.configurationFile=$PWD/docs/agent-runs/phase-04/xml-repair-logback.xml\"\nsbt -batch 'independentTests / Test / scalafmt' 'independentTests / Test / testOnly *Adversarial*' > /tmp/phase11a-targeted-2.log 2>&1\nphase11a_result=$?\ntail -65 /tmp/phase11a-targeted-2.log\nexit $phase11a_result",
+      "exit_code": 1,
+      "result": "Format succeeded, test compilation failed on new-test Scala indentation; zero tests executed"
+    },
+    {
+      "id": "targeted3",
+      "command": "export JAVA_HOME=/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home\nexport PATH=\"$JAVA_HOME/bin:$PATH\"\nexport SBT_OPTS=\"-Dlogback.configurationFile=$PWD/docs/agent-runs/phase-04/xml-repair-logback.xml\"\nsbt -batch 'independentTests / Test / scalafmt' 'independentTests / Test / testOnly *Adversarial*' > /tmp/phase11a-targeted-3.log 2>&1\nphase11a_result=$?\ntail -65 /tmp/phase11a-targeted-3.log\nexit $phase11a_result",
+      "exit_code": 0,
+      "result": "19/19 in4suites,15new+4existing; last sparse-author assertion added after compilation, requires final full check; final full check subsequently verified the last assertion"
+    },
+    {
+      "id": "full-check",
+      "command": "export JAVA_HOME=/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home\nexport PATH=\"$JAVA_HOME/bin:$PATH\"\nexport SBT_OPTS=\"-Dlogback.configurationFile=$PWD/docs/agent-runs/phase-04/xml-repair-logback.xml\"\n/usr/bin/time -p sbt -batch check > /tmp/phase11a-final-check.log 2>&1\nphase11a_result=$?\nprintf '%s\\n' \"$phase11a_result\" > docs/agent-runs/phase-11/evidence/11a/full-check-exit.txt\ntail -22 /tmp/phase11a-final-check.log\nexit $phase11a_result",
+      "exit_code": 0,
+      "result": "1231/1231tests in152reports; zero failures/errors/skips; sbt728s, real730.49s; expected nested failure-probe self-test passed; final source frozen"
+    },
+    {
+      "id": "coverage-validation",
+      "command": "Coordinator Python standard-library validation of coverage.json suite/name strings against tests/src/test/scala and modules/*/src/test/scala",
+      "exit_code": 0,
+      "result": "45distinct selected names exist;30existing+15new;11categories; coverage-validation.json"
+    },
+    {
+      "id": "diff-check",
+      "command": "git diff --name-only 0c5ee89994b5b738a3490ef5e8f032fdc67327b2 -- modules build.sbt project; git diff --check",
+      "exit_code": 0,
+      "result": "No tracked module/build changes; no whitespace errors in tracked diff; new Scala formatting checked by full check"
+    },
+    {
+      "id": "collect-evidence",
+      "command": "python3 docs/agent-runs/phase-11/evidence/11a/collect-evidence.py",
+      "exit_code": 0,
+      "result": "1231tests/152freshreports,45mappednames present,3newfilehashes and346protectedtrackedsource/configfiles unchanged; log totals agree"
+    }
+  ],
+  "inspection_note": "Read-only file/status/rg/Python source and JUnit inventories are in the session transcript; reading and count provenance recorded separately. No cloud/provider profile executed."
+}
