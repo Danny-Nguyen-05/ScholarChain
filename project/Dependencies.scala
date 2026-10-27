@@ -4,6 +4,7 @@ object Dependencies {
   import Versions._
 
   val upickleLib = "com.lihaoyi" %% "upickle" % upickle
+  val caskLib = "com.lihaoyi" %% "cask" % cask
 
   val scalaTestLib = "org.scalatest" %% "scalatest" % scalaTest % Test
 

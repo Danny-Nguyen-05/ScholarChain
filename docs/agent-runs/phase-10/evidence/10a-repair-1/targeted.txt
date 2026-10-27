@@ -1,0 +1,74 @@
+openjdk version "17.0.20.1" 2026-08-18
+OpenJDK Runtime Environment Homebrew (build 17.0.20.1+0)
+OpenJDK 64-Bit Server VM Homebrew (build 17.0.20.1+0, mixed mode, sharing)
+[info] welcome to sbt 1.10.7 (Homebrew Java 17.0.20.1)
+[info] loading settings for project scholarchain-build from plugins.sbt...
+[info] loading project definition from /Users/danny/Documents/UIC/CS441/ScholarChain/project
+[info] loading settings for project root from build.sbt...
+[info] set current project to root (in build file:/Users/danny/Documents/UIC/CS441/ScholarChain/)
+[info] scalafmt: Formatting 1 Scala sources (/Users/danny/Documents/UIC/CS441/ScholarChain/modules/services)...
+[info] scalafmt: Reformatted 1 Scala sources
+[success] Total time: 1 s, completed Oct 26, 2026, 9:22:12 PM
+[info] scalafmt: Formatting 1 Scala sources (/Users/danny/Documents/UIC/CS441/ScholarChain/modules/services)...
+[info] scalafmt: Reformatted 1 Scala sources
+[success] Total time: 0 s, completed Oct 26, 2026, 9:22:12 PM
+[info] compiling 1 Scala source to /Users/danny/Documents/UIC/CS441/ScholarChain/modules/services/target/scala-3.3.4/classes ...
+[info] done compiling
+[info] compiling 1 Scala source to /Users/danny/Documents/UIC/CS441/ScholarChain/modules/services/target/scala-3.3.4/test-classes ...
+[info] done compiling
+[info] ServiceFoundationSpec:
+[info] - request validation rejects malformed JSON and wrong field types
+[info] - request validation rejects unsupported fields, bounds and ranking metric
+[info] - canonical fingerprints ignore object key order but bind field values
+[info] - authentication domains are separate with no usable default credentials
+[info] - safe IDs replace control characters and all error paths carry a trace
+[info] - metrics require authentication and have derivable latency histogram
+[info] - safe log construction excludes headers, body and raw route IDs
+[info] - completed query replay survives a second service instance and never reruns workflow
+[info] - workflow wall clock timeout is enforced and persisted as a typed terminal failure
+[info] - workflow retry is bounded and terminal replay cannot trigger another attempt
+[info] - verification and abstention metrics preserve closed labels
+[info] - configuration rejects identical auth domains and externalizes application bounds
+[info] RuntimeWorkflowAdapterSpec:
+[info] - real full runtime adapter persists a truthful abstention when synthesis is unavailable
+[info] - explicit filters cannot be discarded by a runtime plan resolver
+[info] - explicit inclusion flags and retrieval caps cannot be silently dropped
+[info] - verification metrics distinguish partial, rejected and empty verification from fully verified
+[info] RetriedSessionCreationSpec:
+[info] - Retried Written owns creation, binds the body and executes exactly once across replay
+[info] - Retried Unchanged reconciles the existing outcome without executing workflow
+[info] - Retried Rejected reconciles the existing outcome without executing workflow
+[info] Run completed in 666 milliseconds.
+[info] Total number of tests run: 19
+[info] Suites: completed 3, aborted 0
+[info] Tests: succeeded 19, failed 0, canceled 0, ignored 0, pending 0
+[info] All tests passed.
+[success] Total time: 4 s, completed Oct 26, 2026, 9:22:16 PM
+[info] IndependentServices10ASpec:
+[info] - synchronous HTTP query returns course response shape and propagates request identifiers
+[info] - same idempotency key replays stored answer without a second workflow execution
+[info] - same idempotency key with a different question gives typed conflict
+[info] - stored replay and body conflict survive a fresh service instance sharing the session store
+[info] - concurrent service instances sharing an idempotency key claim one workflow and one job
+[info] - replay waits for conditional reservation body binding before resolving replay or conflict
+[info] - asynchronous query keeps its job reference and exposes final result after completion
+[info] - missing and incorrect bearer credentials reject query and jobs before workflow
+[info] - liveness remains healthy while failed readiness reveals no dependency address
+[info] - external bearer cannot authorize internal routes and internal token cannot authorize queries
+[info] - malformed JSON and invalid constraint types are rejected before workflow
+[info] - unsupported constraint gets 422 and missing idempotency key gets 400
+[info] - workflow downstream error and timeout preserve typed HTTP mapping with trace ID
+[info] - missing jobs produce typed 404 for status and result
+[info] - structured request logs exclude authorization, extra headers, and malformed request content
+[info] - authenticated metrics expose status counts, timeout counts, and histogram buckets
+[info] IndependentServices10AResilienceSpec:
+[info] - GET retries transient reads to configured bound and propagates both request identifiers
+[info] - non-read methods attempt transient failures once and nonretryable GET fails once
+[info] - actual blocked dependency is bounded by timeout and its task is interrupted
+[info] - open circuit rejects calls, permits one half-open probe, and closes on success
+[info] Run completed in 1 second, 789 milliseconds.
+[info] Total number of tests run: 20
+[info] Suites: completed 2, aborted 0
+[info] Tests: succeeded 20, failed 0, canceled 0, ignored 0, pending 0
+[info] All tests passed.
+[success] Total time: 3 s, completed Oct 26, 2026, 9:22:18 PM

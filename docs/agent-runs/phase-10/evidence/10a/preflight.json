@@ -1,0 +1,24 @@
+{
+  "capturedAtUtc": "2026-10-27T00:19:17.261268+00:00",
+  "branch": "phase-10",
+  "baseSha": "3c0a817305d783bbb6a4cb6fe9bb654d06d8632a",
+  "statusShortBeforeEdits": "",
+  "preflightCommands": [
+    {
+      "command": "git status --short",
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "command": "git branch --show-current",
+      "exitCode": 0,
+      "output": "phase-10"
+    },
+    {
+      "command": "git rev-parse HEAD",
+      "exitCode": 0,
+      "output": "3c0a817305d783bbb6a4cb6fe9bb654d06d8632a"
+    }
+  ],
+  "limitation": "Initial combined preflight command exited 1 because rg found no matching path before later cat; individual git results above observed. No reset/discard/commit/push."
+}

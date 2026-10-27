@@ -1,0 +1,203 @@
+openjdk version "17.0.20.1" 2026-08-18
+OpenJDK Runtime Environment Homebrew (build 17.0.20.1+0)
+OpenJDK 64-Bit Server VM Homebrew (build 17.0.20.1+0, mixed mode, sharing)
+[info] welcome to sbt 1.10.7 (Homebrew Java 17.0.20.1)
+[info] SerializationContractSpec:
+[info] ContractRepairSpec:
+[info] Phase4ContractSpec:
+[info] RuntimeBundlePartitionSpec:
+[info] RuntimeContractSpec:
+[info] RuntimeEvidenceIdSpec:
+[info] ResolutionAuthoritySpec:
+[info] ResolutionAuthorityConsumerSpec:
+[info] ResolutionContractSpec:
+[info] ResolutionGroundingSpec:
+[info] WorkSourceEvidenceSpec:
+[info] EmbeddingContractSpec:
+[info] StableIdSpec:
+[info] SparkAnalyticsContractSpec:
+[info] Runtime9CContractSpec:
+[info] ConfigLoaderSpec:
+[info] ValidationSpec:
+[info] Total number of tests run: 207
+[info] Suites: completed 17, aborted 0
+[info] Tests: succeeded 207, failed 0, canceled 0, ignored 0, pending 0
+[info] All tests passed.
+[info] HadoopPrepSpec:
+[info] HadoopPrepReviewSpec:
+[info] SourceEvidenceRegressionSpec:
+[info] DblpXmlRegressionSpec:
+[info] Total number of tests run: 64
+[info] Suites: completed 4, aborted 0
+[info] Tests: succeeded 64, failed 0, canceled 0, ignored 0, pending 0
+[info] All tests passed.
+[info] OfflineResolutionSpec:
+[info] LiveDemoExportSpec:
+[info] ComparableEvidenceSpec:
+[info] RequestEligibilitySpec:
+[info] ReviewReadinessSpec:
+[info] ProviderResponseDiagnosticSpec:
+[info] Total number of tests run: 39
+[info] Suites: completed 6, aborted 0
+[info] Tests: succeeded 39, failed 0, canceled 0, ignored 0, pending 0
+[info] All tests passed.
+[info] Phase6DEJobsSpec:
+[info] Phase6CJobsSpec:
+[info] SparkSmokeSpec:
+[info] Phase6FGJobsSpec:
+[info] Phase7NeptuneExportSpec:
+[info] Total number of tests run: 38
+[info] Suites: completed 5, aborted 0
+[info] Tests: succeeded 38, failed 0, canceled 0, ignored 0, pending 0
+[info] All tests passed.
+[info] AwsLivePolicySpec:
+[info] EmbeddingStorageSpec:
+[info] NeptuneRepairSpec:
+[info] EmbeddingGroupStateSpec:
+[info] RuntimeAuditStorageSpec:
+[info] ParquetManifestSpec:
+[info] Phase7BFeaturesSpec:
+[info] AwsLiveGraphCleanupSpec:
+[info] RuntimeArtifactStorageSpec:
+[info] AwsIntegrationSpec:
+[info] StorageFeatureSpec:
+[info] Total number of tests run: 80
+[info] Suites: completed 11, aborted 0
+[info] Tests: succeeded 80, failed 0, canceled 0, ignored 0, pending 0
+[info] All tests passed.
+[info] EmbeddingSmokeGuardSpec:
+[info] Runtime9ARepairSpec:
+[info] LiveEmbeddingGuardSpec:
+[info] EmbeddingRetrievalSpec:
+[info] Runtime9ASpec:
+[info] Embedding8BRepairSpec:
+[info] Runtime9CSpec:
+[info] Runtime9BSpec:
+[info] EmbeddingRagSpec:
+[info] Total number of tests run: 107
+[info] Suites: completed 9, aborted 0
+[info] Tests: succeeded 107, failed 0, canceled 0, ignored 0, pending 0
+[info] All tests passed.
+[info] ServiceFoundationSpec:
+[info] RuntimeWorkflowAdapterSpec:
+[info] RetriedSessionCreationSpec:
+[info] Total number of tests run: 19
+[info] Suites: completed 3, aborted 0
+[info] Tests: succeeded 19, failed 0, canceled 0, ignored 0, pending 0
+[info] All tests passed.
+[info] IndependentPrepReaderSpec:
+[info] IndependentStorageParquetSpec:
+[info] IndependentEmbedding8BFailureSpec:
+[info] IndependentPhase6PipelineSpec:
+[info] IndependentRuntime9ARepairResolverSpec:
+[info] IndependentRuntime9BSemanticSpec:
+[info] IndependentRuntime9CVerificationSpec:
+[info] IndependentLiveBudgetSpec:
+[info] IndependentResolutionExportSpec:
+[info] IndependentGoldLabelsSpec:
+[info] IndependentResolutionInputSpec:
+[info] IndependentLiveResponseDiagnosticSpec:
+[info] IndependentEmbedding8BGuardSpec:
+[info] IndependentDblpJsonSpec:
+[info] IndependentRuntime9AResolverSpec:
+[info] IndependentResolutionRunSpec:
+[info] IndependentSparkSessionSpec:
+[info] IndependentResolutionPrepBridgeRepairSpec:
+[info] IndependentStorageGraphReaderSpec:
+[info] IndependentPhase4EvidenceSpec:
+[info] IndependentRuntime9APlannerSpec:
+[info] IndependentResolutionFeaturesSpec:
+[info] IndependentRuntime9AEvidenceSpec:
+[info] IndependentPhase6DEGraphSpec:
+[info] IndependentResolutionRepairSpec:
+[info] IndependentResolutionPolicySpec:
+[info] IndependentRuntime9CBenchmarkSpec:
+[info] IndependentServices10ASpec:
+[info] IndependentIdentifierNormalizationSpec:
+[info] IndependentServices10AResilienceSpec:
+[info] IndependentStorageGraphLoaderSpec:
+[info] IndependentDblpXmlRepairSpec:
+[info] IndependentStorageRuntimeFenceSpec:
+[info] IndependentRuntime9CWorkflowSpec:
+[info] IndependentLiveDevelopmentSpec:
+[info] IndependentResolutionEngineSpec:
+[info] IndependentLiveAdjudicatorSpec:
+[info] IndependentLiveCredentialPreflightSpec:
+[info] IndependentStorageHardeningSpec:
+[info] IndependentLiveCacheSpec:
+[info] IndependentEvaluationAdapterSpec:
+[info] IndependentRuntime9AArtifactPipelineSpec:
+[info] IndependentPhase6FGSpec:
+[info] IndependentEvaluationSpec:
+[info] IndependentPhase6SafetySpec:
+[info] IndependentEmbeddingStorageSpec:
+[info] IndependentReviewQueueSpec:
+[info] IndependentResolutionContractSpec:
+[info] IndependentOpenAIResponsesSpec:
+[info] IndependentRuntime9BStagesSpec:
+[info] IndependentEmbeddingContractSpec:
+[info] IndependentRuntime9BWorkflowSpec:
+[info] IndependentStorageLiveExclusionSpec:
+[info] IndependentReviewBindingRepairSpec:
+[info] IndependentPhase6CGraphSpec:
+[info] IndependentStorageLoaderSpec:
+[info] IndependentDblpXmlAdversarialSpec:
+[info] IndependentCandidateDerivationSpec:
+[info] IndependentEvaluationCliSpec:
+[info] IndependentEmbeddingRenderingSpec:
+[info] IndependentEmbedding8BSmokeSpec:
+[info] IndependentEmbeddingSlotRepairSpec:
+[info] IndependentRuntime9ARepairPlannerSpec:
+[info] IndependentRuntime9CTrustSpec:
+[info] IndependentRequestEligibilitySpec:
+[info] IndependentLiveCredentialsSpec:
+[info] IndependentStorageSdkSpec:
+[info] IndependentHadoopPipelineSpec:
+[info] IndependentEvaluationCohortSpec:
+[info] IndependentStorageVectorSpec:
+[info] IndependentRetainedReviewInputSpec:
+[info] IndependentOfflineAdjudicationSpec:
+[info] IndependentPhase4BlockerSpec:
+[info] IndependentEmbedding8BPipelineSpec:
+[info] IndependentRuntime9CSynthesisSpec:
+[info] IndependentRuntime9BEvidenceSpec:
+[info] IndependentStoragePortsSpec:
+[info] Total number of tests run: 608
+[info] Suites: completed 77, aborted 0
+[info] Tests: succeeded 608, failed 0, canceled 0, ignored 0, pending 0
+[info] All tests passed.
+[info] AwsIntegrationPolicySpec:
+[info] AwsIntegrationExclusionSentinelSpec:
+[info] HadoopBundleMergeSpec:
+[info] ServiceDistributionSpec:
+[info] welcome to sbt 1.10.7 (Homebrew Java 17.0.20.1)
+[error] java.lang.RuntimeException: scholarchain check probe: injected format-stage failure
+[error] 	at scala.sys.package$.error(package.scala:30)
+[error] 	at $6cd2ca9e88c9bed4f884$.$anonfun$root$8(build.sbt:163)
+[error] 	at scala.runtime.java8.JFunction0$mcV$sp.apply(JFunction0$mcV$sp.java:23)
+[error] 	at sbt.std.Transform$$anon$3.$anonfun$apply$2(Transform.scala:47)
+[error] 	at sbt.std.Transform$$anon$4.work(Transform.scala:69)
+[error] 	at sbt.Execute.$anonfun$submit$2(Execute.scala:283)
+[error] 	at sbt.internal.util.ErrorHandling$.wideConvert(ErrorHandling.scala:24)
+[error] 	at sbt.Execute.work(Execute.scala:292)
+[error] 	at sbt.Execute.$anonfun$submit$1(Execute.scala:283)
+[error] 	at sbt.ConcurrentRestrictions$$anon$4.$anonfun$submitValid$1(ConcurrentRestrictions.scala:265)
+[error] 	at sbt.CompletionService$$anon$2.call(CompletionService.scala:65)
+[error] 	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+[error] 	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:539)
+[error] 	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+[error] 	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+[error] 	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+[error] 	at java.base/java.lang.Thread.run(Thread.java:840)
+[error] (checkProbeInjectFailure) scholarchain check probe: injected format-stage failure
+[error] Total time: 0 s, completed Oct 26, 2026, 9:34:30 PM
+[info] CheckFailurePathSpec:
+[info] Java17GuardSpec:
+[info] TestRunMarkerSpec:
+[info] SparkJobJarSpec:
+[info] Total number of tests run: 11
+[info] Suites: completed 8, aborted 0
+[info] Tests: succeeded 11, failed 0, canceled 0, ignored 0, pending 0
+[info] All tests passed.
+[info] running scholarchain.build.TestRunMarker /Users/danny/Documents/UIC/CS441/ScholarChain
+[success] Total time: 713 s (11:53), completed Oct 26, 2026, 9:34:30 PM

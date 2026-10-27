@@ -1,6 +1,7 @@
 import ScholarChainBuild._
 import sbt.Keys._
 import sbtassembly.AssemblyPlugin
+import scholarchain.build.ServiceDistribution
 
 ThisBuild / organization := "edu.uic.cs441.scholarchain"
 ThisBuild / version := "0.1.0-SNAPSHOT"
@@ -24,6 +25,8 @@ lazy val buildVerification =
         (ThisBuild / baseDirectory).value / "project/Java17Guard.scala",
       Compile / unmanagedSources +=
         (ThisBuild / baseDirectory).value / "project/AwsIntegrationPolicy.scala",
+      Compile / unmanagedSources +=
+        (ThisBuild / baseDirectory).value / "project/ServiceDistribution.scala",
       Test / scalaSource :=
         (ThisBuild / baseDirectory).value / "project/verification/src/test/scala"
     )
@@ -55,7 +58,7 @@ lazy val hadoop =
 lazy val independentTests =
   project
     .in(file("tests"))
-    .dependsOn(core, hadoop, entityResolution, sparkAnalytics, storage, rag)
+    .dependsOn(core, hadoop, entityResolution, sparkAnalytics, storage, rag, services)
     .settings(
       ScholarChainBuild.moduleSettings(
         Seq(Dependencies.hadoopClientLib, Dependencies.sparkSql, Dependencies.sparkScalaReflectLib)
@@ -124,8 +127,12 @@ lazy val rag =
 lazy val services =
   project
     .in(file("modules/services"))
-    .dependsOn(core, rag, storage, sparkAnalytics)
-    .settings(ScholarChainBuild.moduleSettings(), name := "services")
+    .dependsOn(core, rag, storage)
+    .settings(
+      ScholarChainBuild.moduleSettings(Seq(Dependencies.caskLib)),
+      ScholarChainBuild.serviceDistributionSettings(core, rag, storage),
+      name := "services"
+    )
 
 lazy val applicationModules =
   Seq(
@@ -214,11 +221,25 @@ lazy val root =
         )
         .value,
       dockerLocalImage := {
-        val _ = (services / Compile / Keys.`package`).value
+        val _ = (services / serviceDistribution).value
         import sys.process._
-        val exit =
-          s"docker build -f ${baseDirectory.value / "Dockerfile"} -t scholarchain-local:latest .".!
-        if (exit != 0) sys.error(s"docker build failed with exit code $exit")
+        ServiceDistribution.artifacts.foreach { case (artifact, mainClass) =>
+          val exit = Process(
+            Seq(
+              "docker",
+              "build",
+              "-f",
+              "Dockerfile",
+              "--build-arg",
+              s"MAIN_CLASS=$mainClass",
+              "-t",
+              s"scholarchain-$artifact:local",
+              "."
+            ),
+            baseDirectory.value
+          ).!
+          if (exit != 0) sys.error(s"docker build for $artifact failed with exit code $exit")
+        }
       }
     )
 
@@ -230,6 +251,7 @@ addCommandAlias(
 )
 addCommandAlias("sparkJobJar", "sparkAnalytics/sparkJobJar")
 addCommandAlias("dockerLocal", "dockerLocalImage")
+addCommandAlias("packageServices", "services/serviceDistribution")
 addCommandAlias("hadoopLocalClasspath", "hadoop/hadoopLocalClasspath")
 addCommandAlias("hadoopRunMain", "hadoop/hadoopRunMain")
 addCommandAlias("hadoopDependencyBundle", "hadoop/hadoopDependencyBundle")

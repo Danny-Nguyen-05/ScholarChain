@@ -8,6 +8,9 @@ object Versions {
   val scalafmtCore = "3.8.3"
 
   val upickle = "4.0.2"
+  // Cask 0.10.2's published POM uses Scala 3.3.4 and uPickle 4.0.2.
+  // https://repo.maven.apache.org/maven2/com/lihaoyi/cask_3/0.10.2/cask_3-0.10.2.pom
+  val cask = "0.10.2"
   val scalaTest = "3.2.19"
 
   val slf4j = "2.0.16"

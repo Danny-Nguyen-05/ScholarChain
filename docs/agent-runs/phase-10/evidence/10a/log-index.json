@@ -1,0 +1,100 @@
+[
+  {
+    "sourceLog": "/tmp/phase10a-build-initial.log",
+    "sourceSha256": "380321a95cecac37f7a51cfb7cb1d82e9728061981ef4c361ba85fdab11d0231",
+    "sourceBytes": 1538,
+    "retainedEvidence": "docs/agent-runs/phase-10/evidence/10a/phase10a-build-initial.txt",
+    "retainedBytes": 1538
+  },
+  {
+    "sourceLog": "/tmp/phase10a-build-resolved.log",
+    "sourceSha256": "91872e815b11c4b27eb36a72c23cd602e0435bceebe8d240a8fdc4f3b2d47cac",
+    "sourceBytes": 3338,
+    "retainedEvidence": "docs/agent-runs/phase-10/evidence/10a/phase10a-build-resolved.txt",
+    "retainedBytes": 3338
+  },
+  {
+    "sourceLog": "/tmp/phase10a-service-compile-1.log",
+    "sourceSha256": "d16be90ad6ceee140d204f7d2c7212ffec5e2251c56f7f849d9c6b4e81218f05",
+    "sourceBytes": 1367,
+    "retainedEvidence": "docs/agent-runs/phase-10/evidence/10a/phase10a-service-compile-1.txt",
+    "retainedBytes": 1367
+  },
+  {
+    "sourceLog": "/tmp/phase10a-service-compile-2.log",
+    "sourceSha256": "407ef61f504c8c9a43f1daa77ecde2c103271f3cf77b7af703fec396a61d6d97",
+    "sourceBytes": 4265,
+    "retainedEvidence": "docs/agent-runs/phase-10/evidence/10a/phase10a-service-compile-2.txt",
+    "retainedBytes": 4265
+  },
+  {
+    "sourceLog": "/tmp/phase10a-service-test-1.log",
+    "sourceSha256": "2fbbf59dedc65beffe7887b63e2024b47d98bb1ca709b84f343dd316cffe16ef",
+    "sourceBytes": 5204,
+    "retainedEvidence": "docs/agent-runs/phase-10/evidence/10a/phase10a-service-test-1.txt",
+    "retainedBytes": 5204
+  },
+  {
+    "sourceLog": "/tmp/phase10a-service-test-2.log",
+    "sourceSha256": "7a0a68851bce372ac17e4b4ceec72d657604c762cff8920b1d5b7b8c2347311a",
+    "sourceBytes": 2776,
+    "retainedEvidence": "docs/agent-runs/phase-10/evidence/10a/phase10a-service-test-2.txt",
+    "retainedBytes": 2776
+  },
+  {
+    "sourceLog": "/tmp/phase10a-service-test-3.log",
+    "sourceSha256": "fe24d0b1e72a081606f527e83061501f3c2fe3c5716b052324bb42fc7c74c409",
+    "sourceBytes": 2263,
+    "retainedEvidence": "docs/agent-runs/phase-10/evidence/10a/phase10a-service-test-3.txt",
+    "retainedBytes": 2263
+  },
+  {
+    "sourceLog": "/tmp/phase10a-independent-test-1.log",
+    "sourceSha256": "d16be90ad6ceee140d204f7d2c7212ffec5e2251c56f7f849d9c6b4e81218f05",
+    "sourceBytes": 1367,
+    "retainedEvidence": "docs/agent-runs/phase-10/evidence/10a/phase10a-independent-test-1.txt",
+    "retainedBytes": 1367
+  },
+  {
+    "sourceLog": "/tmp/phase10a-independent-test-2.log",
+    "sourceSha256": "ceef94dca58e7d8aabac06265fdf6bc5f3ec3e57ae14f79c8630194b52504542",
+    "sourceBytes": 2891,
+    "retainedEvidence": "docs/agent-runs/phase-10/evidence/10a/phase10a-independent-test-2.txt",
+    "retainedBytes": 2891
+  },
+  {
+    "sourceLog": "/tmp/phase10a-service-test-4.log",
+    "sourceSha256": "9a476e446e03d13f8f62c56e6de53f91def58000064c2a66f6c0464b975ce1d1",
+    "sourceBytes": 2787,
+    "retainedEvidence": "docs/agent-runs/phase-10/evidence/10a/phase10a-service-test-4.txt",
+    "retainedBytes": 2787
+  },
+  {
+    "sourceLog": "/tmp/phase10a-build-package.log",
+    "sourceSha256": "f7e73f101ab0ec733e133abb97d178109793936cb5328d6f9b0fc2b4f7866835",
+    "sourceBytes": 10113,
+    "retainedEvidence": "docs/agent-runs/phase-10/evidence/10a/phase10a-build-package.txt",
+    "retainedBytes": 10113
+  },
+  {
+    "sourceLog": "/tmp/phase10a-container-smoke.log",
+    "sourceSha256": "107c03c5b9aa042c3b8050db126654b208a0c0084824b6ebae8f2ab39f43e267",
+    "sourceBytes": 2383,
+    "retainedEvidence": "docs/agent-runs/phase-10/evidence/10a/phase10a-container-smoke.txt",
+    "retainedBytes": 2383
+  },
+  {
+    "sourceLog": "/tmp/phase10a-container-smoke-2.log",
+    "sourceSha256": "81ae67ea6423fd451930fd0dc4d9342eb06c688e08d6d698912ee24049150ea5",
+    "sourceBytes": 1448,
+    "retainedEvidence": "docs/agent-runs/phase-10/evidence/10a/phase10a-container-smoke-2.txt",
+    "retainedBytes": 1448
+  },
+  {
+    "sourceLog": "/tmp/phase10a-check-1.log",
+    "sourceSha256": "c47056544833f78059bfd32668f74bd73b30caae6ca72dbc27238cd5e5dcddd0",
+    "sourceBytes": 1700962,
+    "retainedEvidence": "docs/agent-runs/phase-10/evidence/10a/check-excerpts.txt",
+    "retainedBytes": 8250
+  }
+]

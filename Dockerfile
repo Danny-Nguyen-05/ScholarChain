@@ -6,8 +6,21 @@ ENV JAVA_TOOL_OPTIONS="-XX:MaxRAMPercentage=75.0"
 RUN groupadd --system scholarchain && useradd --system --gid scholarchain --home-dir /app scholarchain
 WORKDIR /app
 
-COPY modules/services/target/scala-3.3.4/services_*.jar /app/services.jar
+# Build locally with `sbt packageServices`; the distribution retains signed/service
+# metadata inside dependency JARs rather than merging unrelated resources.
+COPY modules/services/target/distribution/services.jar /app/services.jar
+COPY modules/services/target/distribution/lib/ /app/lib/
+
+ARG MAIN_CLASS=edu.uic.cs441.scholarchain.services.QueryApiMain
+RUN case "$MAIN_CLASS" in \
+    edu.uic.cs441.scholarchain.services.QueryApiMain|\
+    edu.uic.cs441.scholarchain.services.GraphServiceMain|\
+    edu.uic.cs441.scholarchain.services.SemanticServiceMain|\
+    edu.uic.cs441.scholarchain.services.EmbeddingWorkerMain) ;; \
+    *) echo "Unsupported service main class" >&2; exit 1 ;; \
+    esac
+ENV SCHOLARCHAIN_MAIN_CLASS=${MAIN_CLASS}
 
 USER scholarchain
 
-ENTRYPOINT ["java", "-jar", "/app/services.jar"]
+ENTRYPOINT ["sh", "-c", "exec java -cp '/app/services.jar:/app/lib/*' \"$SCHOLARCHAIN_MAIN_CLASS\" \"$@\"", "scholarchain"]

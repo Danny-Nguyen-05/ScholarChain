@@ -1,0 +1,236 @@
+openapi: 3.0.3
+info:
+  title: ScholarChain API
+  version: 1.0.0-10A
+  description: >-
+    Offline foundation contract. Examples are illustrative synthetic values, not corpus observations.
+    Evidence, explain, graph and semantic routes and the embedding consumer belong to 10B.
+    Deployment credentials and production backend composition are not enabled by the foundation mains.
+security:
+  - ExternalBearer: []
+paths:
+  /healthz:
+    get:
+      security: []
+      summary: Process liveness independent of dependencies
+      responses:
+        '200':
+          description: Process alive
+          content:
+            application/json:
+              schema: {type: object, properties: {status: {type: string, enum: [alive]}}}
+  /readyz:
+    get:
+      security: []
+      summary: Dependency readiness without addresses or configuration
+      responses:
+        '200':
+          description: Dependencies reachable
+          content:
+            application/json:
+              schema: {type: object, properties: {status: {type: string, enum: [ready]}}}
+        '503': {$ref: '#/components/responses/Error'}
+  /metrics:
+    get:
+      summary: Authenticated Prometheus metrics including cumulative latency buckets
+      responses:
+        '200':
+          description: Request/status/latency, timeouts, downstream failures, circuit state, verification and abstention counters
+          content:
+            text/plain:
+              schema: {type: string}
+        '401': {$ref: '#/components/responses/Error'}
+  /v1/query:
+    post:
+      summary: Execute a validated query or return its asynchronous job reference
+      description: >-
+        Required idempotency key is atomically reserved in QuerySessionStore. Canonical JSON binds
+        its request body. Replays return the persisted terminal answer/error or current job reference;
+        they never rerun the workflow. Default synchronous wait is 15000 ms; workflow execution
+        has a separate configured deadline. All structured constraints must be enforced or rejected.
+      parameters:
+        - name: Idempotency-Key
+          in: header
+          required: true
+          schema: {type: string, minLength: 1, maxLength: 256}
+        - {$ref: '#/components/parameters/RequestId'}
+        - {$ref: '#/components/parameters/TraceId'}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/QueryRequest'}
+            example: {question: 'Synthetic fixture question'}
+      responses:
+        '200':
+          description: Persisted terminal answer, possibly an explicit abstention
+          headers:
+            X-Request-Id: {schema: {type: string}}
+            X-Trace-Id: {schema: {type: string}}
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/QueryResponse'}
+        '202':
+          description: Bounded local asynchronous worker path accepted; consult job state
+          headers:
+            X-Request-Id: {schema: {type: string}}
+            X-Trace-Id: {schema: {type: string}}
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/JobReference'}
+        '400': {$ref: '#/components/responses/Error'}
+        '401': {$ref: '#/components/responses/Error'}
+        '409': {$ref: '#/components/responses/Error'}
+        '422': {$ref: '#/components/responses/Error'}
+        '429': {$ref: '#/components/responses/Error'}
+        '500': {$ref: '#/components/responses/Error'}
+        '502': {$ref: '#/components/responses/Error'}
+        '503': {$ref: '#/components/responses/Error'}
+        '504': {$ref: '#/components/responses/Error'}
+  /v1/jobs/{jobId}:
+    get:
+      summary: Read persisted job state, public stage, timestamps and result link
+      parameters:
+        - {$ref: '#/components/parameters/JobId'}
+        - {$ref: '#/components/parameters/RequestId'}
+        - {$ref: '#/components/parameters/TraceId'}
+      responses:
+        '200':
+          description: Job state
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/JobStatus'}
+        '401': {$ref: '#/components/responses/Error'}
+        '404': {$ref: '#/components/responses/Error'}
+        '500': {$ref: '#/components/responses/Error'}
+        '503': {$ref: '#/components/responses/Error'}
+  /v1/jobs/{jobId}/result:
+    get:
+      summary: Return the stored answer, pending job reference or terminal typed failure
+      parameters:
+        - {$ref: '#/components/parameters/JobId'}
+        - {$ref: '#/components/parameters/RequestId'}
+        - {$ref: '#/components/parameters/TraceId'}
+      responses:
+        '200':
+          description: Stored answer
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/QueryResponse'}
+        '202':
+          description: Still pending
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/JobReference'}
+        '401': {$ref: '#/components/responses/Error'}
+        '404': {$ref: '#/components/responses/Error'}
+        '422': {$ref: '#/components/responses/Error'}
+        '429': {$ref: '#/components/responses/Error'}
+        '500': {$ref: '#/components/responses/Error'}
+        '502': {$ref: '#/components/responses/Error'}
+        '503': {$ref: '#/components/responses/Error'}
+        '504': {$ref: '#/components/responses/Error'}
+components:
+  securitySchemes:
+    ExternalBearer: {type: http, scheme: bearer, description: API key whose SHA-256 hash is injected through Secrets Manager at deployment}
+    InternalBearer: {type: http, scheme: bearer, description: Separate service token; external key is never accepted for internal routes}
+  parameters:
+    JobId: {name: jobId, in: path, required: true, schema: {type: string, pattern: '^job-[0-9a-f]{64}$'}}
+    RequestId: {name: X-Request-Id, in: header, schema: {type: string, pattern: '^[a-zA-Z0-9._:-]{1,128}$'}, description: Invalid or absent IDs are replaced by generated safe IDs}
+    TraceId: {name: X-Trace-Id, in: header, schema: {type: string, pattern: '^[a-zA-Z0-9._:-]{1,128}$'}, description: Propagated to downstream calls and returned on every response}
+  responses:
+    Error:
+      description: Typed safe error; includes current request trace ID and never a stack trace or provider message
+      headers:
+        X-Request-Id: {schema: {type: string}}
+        X-Trace-Id: {schema: {type: string}}
+      content:
+        application/json:
+          schema: {$ref: '#/components/schemas/Error'}
+  schemas:
+    Error:
+      type: object
+      required: [error, message, traceId, retryable]
+      properties:
+        error: {type: string}
+        message: {type: string}
+        traceId: {type: string}
+        retryable: {type: boolean}
+    QueryRequest:
+      type: object
+      additionalProperties: false
+      required: [question]
+      properties:
+        question: {type: string, minLength: 1, maxLength: 8192}
+        constraints:
+          type: object
+          additionalProperties: false
+          properties:
+            yearFrom: {type: integer, minimum: 1, maximum: 9999}
+            yearTo: {type: integer, minimum: 1, maximum: 9999}
+            topics: {$ref: '#/components/schemas/Filters'}
+            institutions: {$ref: '#/components/schemas/Filters'}
+            venues: {$ref: '#/components/schemas/Filters'}
+        analysis:
+          type: object
+          additionalProperties: false
+          properties:
+            rankingMetric: {type: string, enum: [PUBLICATION_COUNT, DISTINCT_COAUTHOR_COUNT, TOTAL_COAUTHOR_OCCURRENCES, AVERAGE_COAUTHORS_PER_PAPER, MAXIMUM_COAUTHORS_ON_ONE_PAPER, WEIGHTED_DEGREE, BRIDGE_SCORE, CORENESS]}
+            includeTeamSize: {type: boolean}
+            includeBridgeMetrics: {type: boolean}
+            includeCommunities: {type: boolean}
+            includePaths: {type: boolean}
+        retrieval:
+          type: object
+          additionalProperties: false
+          description: Configured deployment caps may be lower than these foundation defaults; excess caps yield 422
+          properties:
+            graphLimit: {type: integer, minimum: 1, maximum: 100}
+            vectorLimit: {type: integer, minimum: 1, maximum: 50}
+            maxPathDepth: {type: integer, minimum: 1, maximum: 6}
+        output:
+          type: object
+          additionalProperties: false
+          properties:
+            includeEvidence: {type: boolean}
+            includeScores: {type: boolean, description: Explicit true is unsupported by the foundation real runtime adapter and yields 422}
+            includeUncertainty: {type: boolean}
+    Filters:
+      type: array
+      maxItems: 100
+      items: {type: string, minLength: 1, maxLength: 512}
+    QueryResponse:
+      type: object
+      required: [queryId, mode, answer, claims, links]
+      properties:
+        queryId: {type: string}
+        mode: {type: string, enum: [synchronous]}
+        answer: {type: object, required: [summary], properties: {summary: {type: string}}, additionalProperties: true}
+        claims: {type: array, items: {type: object, additionalProperties: true}}
+        links:
+          type: object
+          required: [explain, result]
+          properties:
+            explain: {type: string}
+            result: {type: string}
+    JobReference:
+      type: object
+      required: [queryId, mode, jobId, status, statusUrl]
+      properties:
+        queryId: {type: string}
+        mode: {type: string, enum: [asynchronous]}
+        jobId: {type: string}
+        status: {type: string, enum: [QUEUED]}
+        statusUrl: {type: string}
+    JobStatus:
+      type: object
+      required: [jobId, queryId, state, stage, createdAt, updatedAt, resultUrl, error]
+      properties:
+        jobId: {type: string}
+        queryId: {type: string}
+        state: {type: string, enum: [QUEUED, RUNNING, SUCCEEDED, FAILED]}
+        stage: {type: string}
+        createdAt: {type: string, format: date-time}
+        updatedAt: {type: string, format: date-time}
+        resultUrl: {type: string, nullable: true}
+        error: {allOf: [{$ref: '#/components/schemas/Error'}], nullable: true}

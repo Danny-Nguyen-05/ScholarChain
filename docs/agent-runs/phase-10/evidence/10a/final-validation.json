@@ -1,0 +1,9 @@
+{
+  "sourceFilesVerifiedUnchanged": 22,
+  "sourceFilesChangedSinceFreeze": [],
+  "gitDiffCheckExitCode": 0,
+  "gitDiffCheckOutput": "",
+  "branch": "phase-10",
+  "head": "3c0a817305d783bbb6a4cb6fe9bb654d06d8632a",
+  "childAgents": "All three delegated agents completed; no source changes during full gate."
+}
