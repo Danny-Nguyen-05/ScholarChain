@@ -86,3 +86,57 @@ User launches read-only recheck from evidence/10a-repair-1/reviewer-prompt.md. N
 BLOCKED-ON OWNER: None for this implementation/gate; independent reviewer and human acceptance are next gates.
 BLOCKED-ON EVIDENCE: None for F1 repair gates. Prior nonblocking findings remain listed rather than silently repaired.
 NEXT GATE: User-launched independent F1 recheck for10A repair round1; no reviewer invoked. Service agent completed; all regression,targeted,fullcheck processes exited. No Docker jobs/containers started. No cloud/provider,push/commit/reset/discard,human-gate edits or10B work.
+
+
+## Subphase 10B
+
+STATUS: COMPLETE
+OWNER: orchestrator assembling independently owned tests and observed central gates
+WORK ORDER: Phase10B required matrix and full JDK17 check.
+FILES CREATED: Five independent10Bfiles and Services10BSpec.scala; two packaging cases added to existing ServiceDistributionSpec. Source/owner manifest: evidence/10b/source-files.json.
+FILES MODIFIED: Source tests only by their respective owners; this report and evidence by orchestrator.
+COMMANDS RUN: evidence/10b/commands.md records exact commands; each named *-result.json binds exit/time/log hash and its pre-command source hashes.
+TEST RESULTS: Full check1199passed/0failed/145suites,exit0,708s(sbt)/709.995s(wall),JDK17.0.20.1. Module totals: core207,hadoop64,entityResolution39,sparkAnalytics38,storage80,rag107,services26,independentTests625,buildVerification13. Focused final10B17/17; services26/26; prior10A20/20 preserved. Fourimages/eightbootcases plus packaged3-service HTTP and fail-dependency readiness passed. Exact summaries in check-summary.json and Docker result JSON.
+VALIDATION RESULTS: Real bounded HTTP query→verifiedcount3→stored evidence→explain lifecycle; auth/malformed/timeouttraces; graphdirectedfilters/caps/signedstablecursors; workerduplicate/poison/failedDLQ; actualreadretries/writeonce/correlation/breakers; fivecommittedJSONexamples; thinroutesourceheuristic. F1regressionspreserved; F2–F5featurechecks pass. Rootretains every failedattempt: two compilegates sameJSONmetadata typeerror; targeted-2 services25pass and independent13pass/3fail due unfinishedOpenAPI and Caskqueryparams; one cancelledcredentialhelper build; three integrationharnessissues. Fixedwithout weakening required behavior. Nested CheckFailurePathSpec error is intentional and outercheckpassed. Full-logSHA256 376355f9d008d6aa3e8cb9159fbd3166fde575e0f34372c16bca7af5c5c815a1.
+ASSUMPTIONS: Approved offlinefixture/defaultscope; no liveproviderorcloudcalls.
+RISKS: Explicit offline-synthetic composition uses declared Phase9G1 fixtures; live backend/provider execution and deployment remain unverified human-gated work. The frozen GraphReader lacks direction/snapshot semantics, so live graph deployment needs the stronger GraphSnapshot adapter. Query execution is local and nondurable; worker PROCESSING reservations require crash recovery and DLQ publication/terminal recording are not transactional. Missing cache/retry measurements are null; unknown score weights are absent; internal runtime trace uses query ID linked to HTTP context. New/internal routes currently log safe template label unmatched. Full OpenAPI semantic validation was unavailable; YAML/local refs, committed examples and wire assertions passed. Optional OpenSearch/indexes/CI and cloud deployment were omitted.
+MANUAL ACTION REQUIRED: User-launched independentreview, then human acceptance/commit.
+BLOCKED-ON OWNER: None.
+BLOCKED-ON EVIDENCE: None for localrequiredgates.
+NEXT GATE: Subphase10Bread-onlyreview; stop.
+
+
+## Subphase 10B repair round 1
+
+STATUS: COMPLETE
+OWNER: orchestrator assembling independent and module-owner tests
+WORK ORDER: F6 acceptance/outage regression and F9 evidence correction; user-authorized scope only.
+FILES CREATED: One module suite (5tests) and one independent suite (4tests); paths in repair-files.json.
+FILES MODIFIED: No existing tests; new module503 metric assertion corrected to existing contract after red. New independent positive ordering strengthened after first green.
+COMMANDS RUN: commands.md and *-result.json retain exact JDK17 commands/exits/times/hashes. No standalone buildVerification/test needed because no build file changed; fullcheck included13/13.
+TEST RESULTS: Final targeted31/31 services5suites and41/41 independent7suites; full1208/1208 in147suites,exit0,sbt709s/wall710.548s,JDK17.0.20.1. Four rebuilt images/eight startup cases and three-main remote/outage smoke passed. Full-logSHA256 39aaf21ff6902af2bcde194c7e45622f207aa9338adebaaf5b04dc8b2bc6f4d3.
+VALIDATION RESULTS: Independent red4run/3pass/1fail exactly reproduced F6; three true-outage guards passed before fix. Module red5run/2pass/3fail included two intended missing-marker failures and one corrected503 metric expectation. First green31/41+package passed. Original red source retained. Independent test then strengthened to burst4 without successful readiness calls resetting failures; first full attempt intentionally SIGTERM-cancelled at230.240s(exit143), retained separately. Final targeted gate passed stronger test; final full gate used that exact test source. Intentional nested CheckFailurePathSpec failure is expected; parent and outer check passed. See regression-notes.md and acceptance.md.
+ASSUMPTIONS: F6/F9 only; local authenticated HTTP/fakes and synthetic packaged runtime.
+RISKS: Local results are not live deployment guarantees; nonblocking F7,F8,F10–F15 remain carried.
+MANUAL ACTION REQUIRED: User-launched read-only recheck.
+BLOCKED-ON OWNER: None.
+BLOCKED-ON EVIDENCE: None for required gates.
+NEXT GATE: Subphase10B repair round1 recheck, then stop.
+
+
+## Subphase 10B repair round 2
+
+STATUS: COMPLETE
+OWNER: orchestrator assembling module/independent/build owner reports
+WORK ORDER: F6residual equal-budget behavioral red/green and fullgate.
+FILES CREATED: Module GraphTransportBudgetSpec final5tests;independentEqualBudgetSpec3tests.
+FILES MODIFIED: Two independent fakeGraphEndpoints wrappers receive budget-aware overloads;original retry/status/trace assertions intact.
+COMMANDS RUN: Exactcommands/exits/durations/hash/source evidence in evidence/10b-repair-2/commands.md and *-result.json, allJDK17environment.
+TEST RESULTS: Redindependent3run/1pass/2fail,redmodule4run/0pass/4fail. Green36/36services6suites,44/44independent8suites,packagepassed. Finalfull1216/1216,149suites,exit0,sbt721s/wall723.581s,JDK17.0.20.1. Fullmodulescore207,hadoop64,entityResolution39,sparkAnalytics38,storage80,rag107,services36,independent632,buildVerification13. Fourcurrentimages/eightstartupcases plusremoteequal500/500composition/stopgraphpassed. Full-logSHA256 8930aa7a4c872e6412011fc362a2e00b5cb5a18640b059bc9e8b8dfffe26c526.
+VALIDATION RESULTS: Exactformattedredtexts/pre-gatehashes retained. Both actualequal300budgets omitted/caller300 reproduced3executionsfor4requests beforefix. Newindependenttesttextunchangedredtogreen;modulegreengained5thconfigcase/expandedrealnode-metric-path guards explicitlyreported. Cursorreplayandprioroutageguards pass. NestedCheckFailurePathSpec injectederrorintentional,parent/outergatepassed. No cancelled repair2 gate orfailedDockerattempt. OnlyREADMEcountdocchangedpost-fullsnapshot.
+ASSUMPTIONS: User-authorizedF6only;noF16backendreadychange.
+RISKS: Localtests do notestablishlivebackend/network guarantees;carriedfindingsunchanged.
+MANUAL ACTION REQUIRED: User-launched independentrecheck.
+BLOCKED-ON OWNER: None.
+BLOCKED-ON EVIDENCE: None forrequiredlocalgates.
+NEXT GATE: Repair2read-onlyrecheck,thenstop.

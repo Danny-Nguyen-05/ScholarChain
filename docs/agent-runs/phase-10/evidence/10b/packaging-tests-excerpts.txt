@@ -1,0 +1,28 @@
+[success] Total time: 1 s, completed Oct 26, 2026, 11:37:02 PM
+[success] Total time: 0 s, completed Oct 26, 2026, 11:37:02 PM
+[success] Total time: 0 s, completed Oct 26, 2026, 11:37:02 PM
+[error] java.lang.RuntimeException: scholarchain check probe: injected format-stage failure
+[error] 	at scala.sys.package$.error(package.scala:30)
+[error] 	at $fc7244dbace165edcad1$.$anonfun$root$8(build.sbt:163)
+[error] 	at scala.runtime.java8.JFunction0$mcV$sp.apply(JFunction0$mcV$sp.java:23)
+[error] 	at sbt.std.Transform$$anon$3.$anonfun$apply$2(Transform.scala:47)
+[error] 	at sbt.std.Transform$$anon$4.work(Transform.scala:69)
+[error] 	at sbt.Execute.$anonfun$submit$2(Execute.scala:283)
+[error] 	at sbt.internal.util.ErrorHandling$.wideConvert(ErrorHandling.scala:24)
+[error] 	at sbt.Execute.work(Execute.scala:292)
+[error] 	at sbt.Execute.$anonfun$submit$1(Execute.scala:283)
+[error] 	at sbt.ConcurrentRestrictions$$anon$4.$anonfun$submitValid$1(ConcurrentRestrictions.scala:265)
+[error] 	at sbt.CompletionService$$anon$2.call(CompletionService.scala:65)
+[error] 	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+[error] 	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:539)
+[error] 	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+[error] 	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+[error] 	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+[error] 	at java.base/java.lang.Thread.run(Thread.java:840)
+[error] (checkProbeInjectFailure) scholarchain check probe: injected format-stage failure
+[error] Total time: 0 s, completed Oct 26, 2026, 11:37:10 PM
+[info] Total number of tests run: 13
+[info] Suites: completed 8, aborted 0
+[info] Tests: succeeded 13, failed 0, canceled 0, ignored 0, pending 0
+[info] All tests passed.
+[success] Total time: 8 s, completed Oct 26, 2026, 11:37:10 PM

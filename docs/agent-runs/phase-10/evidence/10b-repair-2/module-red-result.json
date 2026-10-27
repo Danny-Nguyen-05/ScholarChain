@@ -1,0 +1,14 @@
+{
+  "command": "sbt -batch 'services / Test / testOnly edu.uic.cs441.scholarchain.services.GraphTransportBudgetSpec'",
+  "workingDirectory": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+  "environment": {
+    "JAVA_HOME": "/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home",
+    "SBT_OPTS": "-Dlogback.configurationFile=/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-04/xml-repair-logback.xml"
+  },
+  "PATHPrefix": "/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home/bin",
+  "exitCode": 1,
+  "elapsedSeconds": 6.032,
+  "log": "/tmp/phase10b-r2-module-red.log",
+  "sha256": "0de970926ffe8d53f4d391e16613cac42371819b9d089904f4e1053c1e0ed724",
+  "sourceHashes": "module-red-sources.json"
+}

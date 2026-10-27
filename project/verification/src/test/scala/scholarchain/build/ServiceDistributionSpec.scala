@@ -75,4 +75,56 @@ class ServiceDistributionSpec extends AnyFunSuite {
     assert(error.getMessage.contains("names collide"))
     assert(!output.exists())
   }
+
+  test("runtime assets retain nested paths and exact bytes while replacing stale assets") {
+    val root = Files.createTempDirectory("service-assets-test")
+    val source = root.resolve("source")
+    val runtime = source.resolve("runtime/nested/synthesis.md")
+    val schema = source.resolve("schemas/answer.json")
+    Files.createDirectories(runtime.getParent)
+    Files.createDirectories(schema.getParent)
+    Files.write(runtime, Array[Byte](0, 10, 13, 127, -1))
+    Files.write(schema, "{\"type\":\"object\"}".getBytes("UTF-8"))
+    Files.write(source.resolve("unrelated.txt"), "excluded".getBytes("UTF-8"))
+    val output = root.resolve("distribution")
+    Files.createDirectories(output.resolve("prompts/runtime"))
+    Files.write(output.resolve("prompts/runtime/stale.md"), Array[Byte](1))
+    Files.write(output.resolve("services.jar"), Array[Byte](2))
+    ServiceDistribution.writePromptAssets(source.toFile, output.toFile)
+    assert(
+      Files
+        .readAllBytes(output.resolve("prompts/runtime/nested/synthesis.md"))
+        .sameElements(Array[Byte](0, 10, 13, 127, -1))
+    )
+    assert(
+      new String(Files.readAllBytes(output.resolve("prompts/schemas/answer.json")), "UTF-8") ==
+        "{\"type\":\"object\"}"
+    )
+    assert(!Files.exists(output.resolve("prompts/runtime/stale.md")))
+    assert(!Files.exists(output.resolve("prompts/unrelated.txt")))
+    assert(Files.readAllBytes(output.resolve("services.jar")).sameElements(Array[Byte](2)))
+  }
+
+  test("missing prompt trees and symlinked assets are rejected") {
+    val root = Files.createTempDirectory("service-assets-invalid-test")
+    val source = root.resolve("source")
+    Files.createDirectories(source.resolve("runtime"))
+    Files.write(source.resolve("runtime/synthesis.md"), Array[Byte](1))
+    val output = root.resolve("distribution")
+    val missing = intercept[IllegalArgumentException](
+      ServiceDistribution.writePromptAssets(source.toFile, output.toFile)
+    )
+    assert(missing.getMessage.contains("Missing runtime asset directory"))
+    assert(!Files.exists(output))
+    Files.createDirectories(source.resolve("schemas"))
+    Files.createSymbolicLink(
+      source.resolve("schemas/answer.json"),
+      source.resolve("runtime/synthesis.md")
+    )
+    val linked = intercept[IllegalArgumentException](
+      ServiceDistribution.writePromptAssets(source.toFile, output.toFile)
+    )
+    assert(linked.getMessage.contains("symlink"))
+    assert(!Files.exists(output))
+  }
 }

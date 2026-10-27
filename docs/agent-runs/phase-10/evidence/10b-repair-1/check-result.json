@@ -1,0 +1,14 @@
+{
+  "command": "sbt -batch check",
+  "workingDirectory": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+  "environment": {
+    "JAVA_HOME": "/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home",
+    "SBT_OPTS": "-Dlogback.configurationFile=/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-04/xml-repair-logback.xml"
+  },
+  "PATHPrefix": "/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home/bin",
+  "exitCode": 0,
+  "elapsedSeconds": 710.548,
+  "log": "/tmp/phase10b-r1-check.log",
+  "sha256": "39aaf21ff6902af2bcde194c7e45622f207aa9338adebaaf5b04dc8b2bc6f4d3",
+  "sourceHashes": "check-sources.json"
+}

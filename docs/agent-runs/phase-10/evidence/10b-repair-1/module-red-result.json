@@ -1,0 +1,14 @@
+{
+  "command": "sbt -batch 'services / Test / testOnly edu.uic.cs441.scholarchain.services.GraphRequestDeadlineSpec'",
+  "workingDirectory": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+  "environment": {
+    "JAVA_HOME": "/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home",
+    "SBT_OPTS": "-Dlogback.configurationFile=/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-04/xml-repair-logback.xml"
+  },
+  "PATHPrefix": "/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home/bin",
+  "exitCode": 1,
+  "elapsedSeconds": 5.142,
+  "log": "/tmp/phase10b-r1-module-red.log",
+  "sha256": "04eda8511d066063ed84ffd2168302cae41b3ff0d71beef014fbb1f2816a2681",
+  "sourceHashes": "module-red-sources.json"
+}

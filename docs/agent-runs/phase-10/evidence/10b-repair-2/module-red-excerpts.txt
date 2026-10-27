@@ -1,0 +1,12 @@
+[info] - every graph operation forwards a deterministic budget below transport for absent and near-cap requests *** FAILED ***
+[info] - graph budget configuration rejects invalid reserves or caps and impossible tiny transports *** FAILED ***
+[info] - malformed and out-of-cap caller budgets reject before any backend call *** FAILED ***
+[info] - equal graph and transport caps yield a graph marker with no retries or readiness loss *** FAILED ***
+[info]   504 equaled 504, but "[DOWNSTREAM_TIMEOUT]" did not equal "[GRAPH_DEADLINE_EXCEEDED]" (GraphTransportBudgetSpec.scala:178)
+[info] Total number of tests run: 4
+[info] Suites: completed 1, aborted 0
+[info] Tests: succeeded 0, failed 4, canceled 0, ignored 0, pending 0
+[error] Failed tests:
+[error] 	edu.uic.cs441.scholarchain.services.GraphTransportBudgetSpec
+[error] (services / Test / testOnly) sbt.TestsFailedException: Tests unsuccessful
+[error] Total time: 4 s, completed Oct 27, 2026, 11:43:20 AM

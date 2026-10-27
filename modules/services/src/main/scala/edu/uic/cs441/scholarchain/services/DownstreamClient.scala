@@ -60,6 +60,12 @@ final class DownstreamClient(
   def call[A](method: String, context: RequestContext)(
       operation: Map[String, String] => Either[ApiError, A]
   ): Either[ApiError, A] = {
+    callWithin(method, context, config.downstreamTimeoutMs)(operation)
+  }
+  def callWithin[A](method: String, context: RequestContext, timeoutMs: Long)(
+      operation: Map[String, String] => Either[ApiError, A]
+  ): Either[ApiError, A] = {
+    require(timeoutMs > 0 && timeoutMs <= config.downstreamTimeoutMs)
     val attempts =
       if (Set("GET", "HEAD")(method.toUpperCase(java.util.Locale.ROOT)))
         config.downstreamMaxAttempts
@@ -75,7 +81,7 @@ final class DownstreamClient(
           val task = pool.submit(new Callable[Either[ApiError, A]] {
             def call(): Either[ApiError, A] = operation(context.downstreamHeaders)
           })
-          try task.get(config.downstreamTimeoutMs, TimeUnit.MILLISECONDS)
+          try task.get(timeoutMs, TimeUnit.MILLISECONDS)
           catch {
             case _: TimeoutException => task.cancel(true); Left(ApiError.timeout)
             case _: InterruptedException =>
@@ -83,9 +89,13 @@ final class DownstreamClient(
             case NonFatal(_) => Left(ApiError.downstream)
           }
         } catch { case _: RejectedExecutionException => Left(ApiError.unavailable) }
-      result.left.foreach(e => metrics.downstream(e.status))
+      result.left.foreach { error =>
+        if (ApiError.isGraphDeadline(error)) metrics.graphRequestDeadline()
+        else metrics.downstream(error.status)
+      }
       result match {
         case Right(_)                                => breaker.success(); return result
+        case Left(e) if ApiError.isGraphDeadline(e)  => breaker.success(); return result
         case Left(e) if Set(502, 503, 504)(e.status) => breaker.failure()
         case Left(_)                                 => breaker.success(); return result
       }

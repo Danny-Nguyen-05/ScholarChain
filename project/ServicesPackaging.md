@@ -6,6 +6,13 @@ runtime dependency classpath. Spark is not a service dependency. Storage's
 Parquet/Hadoop dependencies remain because the storage module still declares
 them; splitting the storage adapters is outside this phase.
 
+The distribution also copies the versioned `prompts/runtime/**` and
+`prompts/schemas/**` trees to `distribution/prompts/`, retaining exact file bytes
+and relative paths. Each build replaces that generated asset tree so removed
+assets cannot survive in an image. Both source directories must contain files;
+symbolic links are rejected. Docker places these assets at `/app/prompts` for
+the explicit offline synthetic runtime and configured runtime composition.
+
 The distribution task validates the four service entry points, rejects duplicate
 dependency filenames, and replaces stale generated libraries. Keeping dependency
 JARs intact preserves their resources and service-provider descriptors. There is

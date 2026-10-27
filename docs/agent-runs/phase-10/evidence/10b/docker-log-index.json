@@ -1,0 +1,32 @@
+[
+  {
+    "path": "/tmp/phase10b-docker.log",
+    "sha256": "91d9058c6cda4dc03402be99a0590045337baca6cb9945a5731b4828522f008a",
+    "bytes": 46451
+  },
+  {
+    "path": "/tmp/phase10b-docker-attempt-1.log",
+    "sha256": "c5f8606a1a24af356befe3a9bf4df642276c9c1639e29b74c5b8440b074ba1ae",
+    "bytes": 1840
+  },
+  {
+    "path": "/tmp/phase10b-docker-remote-attempt-1.log",
+    "sha256": "319bdc6210ecc4ce8dbc7d4f6acfac8ab87a356578f48f309c0f13ada6ff44e8",
+    "bytes": 4627
+  },
+  {
+    "path": "/tmp/phase10b-docker-remote-attempt-2.log",
+    "sha256": "6a8fcc72c67374905703ed44b9d9156e8959176d13108832752965e12dce64e7",
+    "bytes": 4768
+  },
+  {
+    "path": "/tmp/phase10b-docker-remote-attempt-3.log",
+    "sha256": "280fe41a14403e5654ebbb9f316cdf1c5097c7e31ee353aeda6ca4f25373acc6",
+    "bytes": 14572
+  },
+  {
+    "path": "/tmp/phase10b-docker-remote.log",
+    "sha256": "a5601dac901791a372748e4559ff3e734ecd792d383a9bea1a7a8b8c6485cd93",
+    "bytes": 14893
+  }
+]

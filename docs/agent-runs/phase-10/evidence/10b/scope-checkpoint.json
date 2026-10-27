@@ -1,0 +1,12 @@
+{
+  "trackedSourceCount": 13,
+  "untrackedSourceCount": 17,
+  "sourceFileCount": 30,
+  "owners": {
+    "build-engineer": 5,
+    "service-engineer": 20,
+    "test-engineer": 5
+  },
+  "humanGateOrApprovalFilesChanged": [],
+  "limitations": "Source checkpoint before full check and Docker completion; final validation will rehash."
+}

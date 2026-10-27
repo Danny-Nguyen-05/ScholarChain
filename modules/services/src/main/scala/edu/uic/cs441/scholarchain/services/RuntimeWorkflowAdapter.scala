@@ -9,7 +9,8 @@ import edu.uic.cs441.scholarchain.rag.*
   */
 final class RuntimeWorkflowAdapter(
     workflow: RuntimeAnswerWorkflow,
-    resolvePlan: (QueryRequest, RequestContext) => Either[ApiError, QueryPlan]
+    resolvePlan: (QueryRequest, RequestContext) => Either[ApiError, QueryPlan],
+    evidenceStore: Option[edu.uic.cs441.scholarchain.storage.EvidenceBundleStore] = None
 ) extends QueryWorkflow {
   def run(
       request: QueryRequest,
@@ -35,8 +36,18 @@ final class RuntimeWorkflowAdapter(
             val body =
               ujson.Obj(
                 "summary" -> answer.summary,
-                "researchers" -> ujson.Arr(),
+                "researchers" -> researchers(answer),
                 "evidenceBundleId" -> answer.evidenceBundleId
+              )
+            if (include("includeScores"))
+              body("scores") = ujson.Arr.from(
+                evidenceStore.toVector
+                  .flatMap(s =>
+                    edu.uic.cs441.scholarchain.storage.StorageResult
+                      .value(s.get(answer.evidenceBundleId))
+                  )
+                  .flatMap(_.items)
+                  .map(item => ujson.Obj("evidenceId" -> item.evidenceId, "score" -> item.score))
               )
             if (include("includeUncertainty")) body("uncertainty") = answer.uncertainty
             if (!include("includeEvidence")) body.obj.remove("evidenceBundleId")
@@ -79,6 +90,42 @@ final class RuntimeWorkflowAdapter(
       }
     }
   }
+  private def researchers(answer: AnswerResponse): ujson.Value = {
+    val bundle = evidenceStore.flatMap(s =>
+      edu.uic.cs441.scholarchain.storage.StorageResult.value(s.get(answer.evidenceBundleId))
+    )
+    val candidates = bundle.toVector
+      .flatMap(_.runtime.toVector.flatMap(_.resolvedCandidates))
+      .map(c => c.researcherId -> c)
+      .toMap
+    val claims = answer.claims
+      .filter(c => c.verificationStatus == VerificationStatus.Verified)
+      .flatMap(c => c.runtime.map(t => c -> t))
+    val ids = claims.flatMap(_._2.subjectIds).distinct
+    ujson.Arr.from(ids.map { id =>
+      val obj = ujson.Obj("researcherId" -> id)
+      candidates.get(id).foreach(c => obj("displayName") = c.displayName)
+      val relevant = claims.filter(_._2.subjectIds == Vector(id))
+      obj("claimIds") = ujson.Arr.from(relevant.map(_._1.claimId))
+      relevant.flatMap(_._2.values).foreach { v =>
+        if (
+          Set(
+            "publicationCount",
+            "distinctCoauthorCount",
+            "weightedDegree",
+            "averageCoauthorsPerPaper",
+            "maximumCoauthorsOnOnePaper",
+            "componentId",
+            "communityId"
+          )(v.field)
+        ) {
+          v.number.foreach(n => obj(v.field) = ujson.Str(n))
+          v.text.foreach(t => obj(v.field) = ujson.Str(t))
+        }
+      }
+      obj
+    })
+  }
   private def matches(request: QueryRequest, plan: QueryPlan): Boolean = {
     val json = request.json
     val constraints = json.obj.get("constraints")
@@ -93,7 +140,7 @@ final class RuntimeWorkflowAdapter(
       "includeCommunities" -> Set(QueryOperation.CommunityComparison),
       "includePaths" -> Set(QueryOperation.DirectCoauthors, QueryOperation.ShortestPath)
     )
-    check(json.obj.get("output"), "includeScores")(v => !v.bool) &&
+    check(json.obj.get("output"), "includeScores")(v => !v.bool || evidenceStore.nonEmpty) &&
     plan.question == request.question && !plan.runtime.exists(_.evidenceOnly) &&
     check(constraints, "yearFrom")(_.num.toInt == plan.window.startYear) &&
     check(constraints, "yearTo")(_.num.toInt == plan.window.endYear) &&

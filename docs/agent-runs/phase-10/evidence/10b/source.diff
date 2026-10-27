@@ -1,0 +1,3548 @@
+diff --git a/Dockerfile b/Dockerfile
+index db86214..8ee5bff 100644
+--- a/Dockerfile
++++ b/Dockerfile
+@@ -10,6 +10,7 @@ WORKDIR /app
+ # metadata inside dependency JARs rather than merging unrelated resources.
+ COPY modules/services/target/distribution/services.jar /app/services.jar
+ COPY modules/services/target/distribution/lib/ /app/lib/
++COPY modules/services/target/distribution/prompts/ /app/prompts/
+ 
+ ARG MAIN_CLASS=edu.uic.cs441.scholarchain.services.QueryApiMain
+ RUN case "$MAIN_CLASS" in \
+diff --git a/modules/services/README.md b/modules/services/README.md
+index 774dc23..94ce5cf 100644
+--- a/modules/services/README.md
++++ b/modules/services/README.md
+@@ -1,140 +1,238 @@
+-# Services foundation (Phase 10A)
+-
+-`ApiApplication` exposes the HTTP contract through Cask 0.10.2 / Undertow on Java 17.
+-Routes delegate to `QueryService`; retrieval and synthesis remain behind `QueryWorkflow`.
+-`RuntimeWorkflowAdapter` composes the real Phase 9 `RuntimeAnswerWorkflow` with an injected
+-plan resolver, using `runPlan` only after checking every explicit constraint against the plan.
+-The resolver must use configured corpus windows and return a typed rejection for unsupported
+-requests. The service never derives metrics, identities, paths or scores from model text.
+-
+-The four packaged main classes are `QueryApiMain`, `GraphServiceMain`,
+-`SemanticServiceMain` and `EmbeddingWorkerMain`, all in
+-`edu.uic.cs441.scholarchain.services`. **Their 10A bootstrap has no configured runtime:**
+-`/healthz` is 200, `/readyz` is 503, and query work fails with typed 503. It constructs no
+-AWS SDK or model-provider client. Injection tests supply explicit fake workflows; a separate
+-module test runs the real retrieval, verification and audit composition against the versioned
+-synthetic Phase 9 fixture and proves truthful abstention when synthesis is unavailable.
+-Successful fake API responses are fixture observations, not deployed corpus answers.
+-
+-## HTTP surface
+-
+-| Service | Method/path | Behavior in 10A |
+-| --- | --- | --- |
+-| query-api | POST `/v1/query` | Validated synchronous answer or 202 job reference |
+-| query-api | GET `/v1/jobs/{jobId}` | Persisted state, public stage, timestamps, failure and result URL |
+-| query-api | GET `/v1/jobs/{jobId}/result` | Stored answer, pending 202 or stored typed failure |
+-| all | GET `/healthz` | Public process liveness |
+-| all | GET `/readyz` | Public injected dependency reachability check |
+-| all | GET `/metrics` | Authenticated Prometheus text |
+-
+-`X-Request-Id` and `X-Trace-Id` are accepted when they match the bounded correlation-token
+-syntax; invalid or absent IDs are replaced. Both are returned on every application response
+-and passed to downstream operations. Error JSON is flat: `error`, `message`, `traceId`,
+-`retryable`. Status mapping is 400 malformed/invalid input; 401 missing/invalid bearer;
+-403 reserved for permission policy; 404 absent route/job; 409 idempotency conflict;
+-422 unsupported query/constraint; 429 bounded queue full; 500 internal; 502 dependency
+-failure; 503 dependency unavailable/not ready/open circuit; 504 dependency/workflow timeout.
+-Raw exception messages and stack traces never enter application errors or request logs.
+-HTTP parser failures occurring before a request reaches Cask remain the HTTP server's boundary.
+-
+-`Idempotency-Key` is required for query POSTs. A deterministic opaque query ID is derived
+-from the key; only a hash-prefixed application reservation is sent to `QuerySessionStore`.
+-The store atomically reserves the ID/key, then a revision CAS binds a canonical-JSON body
+-fingerprint. Both `Written(session)` and `Retried(_, Written(session))` confirm creation by
+-this caller and use the same body-binding and scheduling path. Other retried outcomes reconcile
+-the authoritative session without starting work. Replays read the authoritative primary session, avoiding eventual-consistency
+-GSI assumptions. Same-body replays return a stored answer/error or job reference without
+-rerunning work; changed bodies return 409. Competing callers wait for the initial body binding
+-within the configured downstream timeout. Application sessions and runtime audit sessions use
+-separate namespaces. Query state, timestamps, stage, attempt count, trace IDs and bounded
+-terminal response are persisted in the session payload. `resultUrl` points to that stored result.
+-
+-The synchronous wait and maximum workflow execution deadline are separate. Exceeding only
+-the synchronous wait returns 202 while the bounded local executor continues the same work.
+-Jobs progress through QUEUED, RUNNING, SUCCEEDED or FAILED. Retryable workflow failures
+-are retried at most `maxWorkflowRetries`; typed terminal outcomes replay without new work.
+-The real runtime adapter marks its failures nonretryable because Phase 9 already publishes
+-immutable terminal audits. Queue capacity, thread count, byte bounds and deadlines are enforced.
+-
+-The real adapter retains verified core claim fields as additional public claim properties,
+-with course `claimId`, `text`, `evidenceIds`, `verificationStatus` and uncertainty fields.
+-Its `researchers` array is empty in 10A: the core answer does not supply authoritative display
+-names/complete row projections, so none are invented. An explicit `includeScores=true`
+-returns 422 until a supported score projection is supplied. `includeEvidence=false` and
+-`includeUncertainty=false` remove those fields from the public result; immutable audits remain
+-unchanged. True analysis inclusion flags require the relevant plan operation. False flags
+-permit the resolver to execute supporting operations and do not authorize invented claims.
+-
+-## Authentication, observability and resilience
+-
+-Every non-health route requires a bearer API key. `/internal/**` uses a distinct bearer
+-service token, even for currently unmatched routes; the external token cannot access them.
+-Only SHA-256 hashes are configured, compared with `MessageDigest.isEqual`. There are no
+-fallback credentials. Deploy-time Secrets Manager injection and TLS/ingress belong to later
+-infrastructure phases; the service never discovers or reads local credential files.
+-The shared course API key is one authorization domain; tenant-specific access is not claimed.
+-
+-Request logs are JSON constructed from an allowlist of event, safe request/trace IDs,
+-route template, status and elapsed milliseconds. They never include request bodies, headers,
+-raw route IDs, bearer values or provider errors. Prometheus counters cover requests/statuses,
+-API timeouts, per-attempt downstream failures/timeouts, workflow verification and abstention.
+-Cumulative latency buckets (5 ms through 60 s and +Inf) are fixed instrumentation boundaries,
+-not execution limits; p50/p95/p99 are derivable with histogram queries. Registered dependency
+-breakers expose CLOSED/OPEN/HALF_OPEN gauge labels.
+-
+-`DownstreamClient` uses an interruptible bounded pool, a timeout per attempt, bounded immediate
+-retries only for GET/HEAD transient failures and one circuit breaker per dependency. Other HTTP
+-methods attempt once. Open circuits refuse calls, then permit one half-open probe after reset;
+-a successful probe closes the circuit. Both HTTP correlation headers reach each attempt.
+-Adapters that ignore interruption can occupy their bounded executor slots; cancellation is
+-not claimed to forcibly terminate arbitrary provider code.
+-
+-## Configuration
+-
+-`ServiceConfig.fromEnvironment` reads the following entries. Defaults are small offline
+-foundation bounds, not measured production tuning. The API key and internal token hashes
+-are mandatory, distinct, lowercase 64-character SHA-256 strings. Hashes/keys are never logged.
+-
+-| Environment suffix after `SCHOLARCHAIN_` | Default | Rationale |
+-| --- | --- | --- |
+-| `API_KEY_SHA256`, `INTERNAL_TOKEN_SHA256` | required | Separate external/internal authentication |
+-| `HTTP_HOST`, `HTTP_PORT` | `127.0.0.1`, `8080` | Local-only foundation listener; configure container bind explicitly |
+-| `SYNCHRONOUS_DEADLINE_MS` | 15000 | User-approved synchronous wait |
+-| `WORKFLOW_TIMEOUT_MS` | 60000 | Finite local asynchronous execution bound |
+-| `MAX_WORKFLOW_RETRIES` | 2 | User-approved bounded job retries |
+-| `WORKER_THREADS`, `QUEUE_CAPACITY` | 4, 64 | Bound active and queued local work |
+-| `MAX_REQUEST_BYTES`, `MAX_RESULT_BYTES` | 65536, 131072 | Bound JSON memory and inline session-result size |
+-| `MAX_QUESTION_CHARS` | 8192 | Bound user question |
+-| `MAX_GRAPH_LIMIT`, `MAX_VECTOR_LIMIT`, `MAX_PATH_DEPTH` | 100, 50, 6 | Match foundation runtime retrieval caps |
+-| `MAX_FILTER_ITEMS`, `MAX_FILTER_CHARS` | 100, 512 | Bound each filter list and string |
+-| `MAX_IDEMPOTENCY_KEY_CHARS` | 256 | Bound client key before hashing |
+-| `DOWNSTREAM_TIMEOUT_MS`, `DOWNSTREAM_MAX_ATTEMPTS` | 5000, 3 | Bound each downstream attempt and read retries |
+-| `BREAKER_FAILURE_THRESHOLD`, `BREAKER_RESET_MS` | 3, 30000 | Bound failures before opening and recovery interval |
+-| `SESSION_CAS_ATTEMPTS` | 8 | Bound optimistic session update retries |
+-| `SESSION_POLL_MS` | 50 | Bound local polling frequency; tune upward for remote stores |
+-| `REQUEST_READ_TIMEOUT_MS` | 5000 | Socket read inactivity bound, not an aggregate upload deadline |
+-
+-OpenAPI gives default caps; changing configured public bounds requires publishing a matching
+-contract for the deployment. Year bounds 1–9999 are the versioned calendar schema, not corpus
+-coverage. All larger-work inputs must still match available configured corpus windows.
+-
+-## Validation and remaining scope
+-
+-Observed module validation: **16 tests passed** in two suites on Java 17 (`services / test`).
+-The independent owner reports wire/API and resilience validation separately; those counts and
+-full `sbt check` are retained by the coordinator in Phase 10 evidence.
+-
+-10B owns evidence/explain/graph/semantic routes, graph proxy ingress through query-api,
+-embedding queue consumption/DLQ, the evidence-backed HTTP lifecycle and final contract/docs.
+-No OpenSearch, optional indexes, CI workflow, cloud deployment or paid provider call is added.
+-
+-The local executor is not a durable distributed dispatcher. Completed outcomes survive a new
+-`QueryService` using the same injected store, but process termination can leave QUEUED/RUNNING
+-jobs pending. A crash between reservation and body binding leaves an unbound session; calls
+-fail 503 after bounded reconciliation instead of stealing it and risking a duplicate workflow.
+-The foundation does not automatically reset or recover these uncertain records. A permanent
+-store outage can also prevent terminal state persistence. Production recovery, remote-store
+-poll tuning and dispatcher/lease composition must be settled before live deployment.
+-The Phase 9 workflow uses its query ID as its internal audit trace; the adapter links that ID to
+-the HTTP request context, but a separate injected HTTP trace field inside every Phase 9 stage
+-is not part of the frozen runtime port. No live durability, throughput or cost claim is made.
++# ScholarChain REST services
++
++Phase 10 provides four Java 17 / Scala 3.3.4 artifacts from one service distribution:
++`QueryApiMain`, `GraphServiceMain`, `SemanticServiceMain`, and `EmbeddingWorkerMain` in
++`edu.uic.cs441.scholarchain.services`. Cask 0.10.2 transports HTTP and delegates parsing,
++authentication and dispatch to `ApiApplication`; application services call typed ports.
++No route handler implements retrieval, metric computation, synthesis or verification.
++
++The committed [OpenAPI contract](src/main/resources/openapi/scholarchain.v1.yaml) documents
++public and internal routes. JSON in `src/main/resources/openapi/examples` is explicitly
++synthetic format material, never a claim about a real researcher or deployed answer.
++
++## Route and dependency graph
++
++| Artifact | Routes and work |
++| --- | --- |
++| query-api | POST `/v1/query`; GET `/v1/jobs/{jobId}` and `/result`; GET `/v1/evidence/{evidenceId}`; GET `/v1/queries/{queryId}/evidence`; GET `/v1/explain/{queryId}`; graph proxy routes below |
++| query-api, graph-service | GET `/v1/graph/nodes/{nodeId}` and `/neighbors` |
++| graph-service | GET `/internal/v1/graph/nodes/{nodeId}` and `/neighbors`; GET `/internal/v1/graph/metrics/{nodeId}`; GET `/internal/v1/graph/paths` |
++| semantic-service | POST `/internal/v1/semantic/retrieve` |
++| query-api | POST `/internal/v1/semantic/retrieve` forwards to the configured semantic service |
++| all artifacts | GET `/healthz`, `/readyz`, `/metrics` |
++| embedding-worker | Bounded `EmbeddingWorkQueue` consumer, durable per-payload processing reservation, separate DLQ queue port |
++
++```mermaid
++flowchart LR
++  Client --> Query[query-api]
++  Query --> Sessions[QuerySessionStore]
++  Query --> Runtime[RuntimeAnswerWorkflow]
++  Query --> Evidence[EvidenceBundleStore / RuntimeAuditStore]
++  Query --> GC[RemoteGraphApi / DownstreamClient]
++  Query --> SC[RemoteSemanticApi / DownstreamClient]
++  GC --> Graph[graph-service / GraphSnapshot]
++  SC --> Semantic[semantic-service / EmbeddingClient / VectorStore]
++  Runtime --> GC
++  Runtime --> SC
++  Queue[EmbeddingWorkQueue] --> Worker[embedding-worker]
++  Worker --> Processor[EmbeddingManifestRunner]
++  Worker --> DLQ[EmbeddingWorkQueue DLQ port]
++```
++
++`ExtendedApi` injects evidence, graph and semantic application services. `RemoteService` uses
++Java HTTP clients wrapped by `DownstreamClient`; graph and semantic have separate circuit
++breakers and registered metrics. Public graph ingress through query-api is a thin proxy to
++internal graph endpoints. The explicit offline runtime also uses remote graph metrics and
++semantic retrieval ports when both service URLs are configured. Runtime answers still pass
++the real evidence builder, synthesis verifier and immutable audit store before publication.
++
++## Execution modes and local run
++
++All main classes require distinct `SCHOLARCHAIN_API_KEY_SHA256` and
++`SCHOLARCHAIN_INTERNAL_TOKEN_SHA256`; there are no fallback credentials. Invalid/missing
++configuration exits **2**, including malformed worker configuration before a listener starts.
++Default `SCHOLARCHAIN_SERVICE_MODE=unconfigured` keeps liveness 200 and readiness 503 and
++refuses query work. It never silently selects synthetic data as a production fallback.
++
++Set `SCHOLARCHAIN_SERVICE_MODE=offline-synthetic` to explicitly run the declared Phase 9 G1
++fixture. This mode creates only fake stores and a scripted model; no AWS SDK/provider client
++or credentials are discovered. Its supported question is exactly:
++
++```json
++{"question":"Synthetic fixture: publication count for A","output":{"includeScores":false}}
++```
++
++A real `RuntimeAnswerWorkflow` retrieves fixture evidence, a scripted proposal copies its
++publication-count value, `ClaimVerificationAgent` checks it, and the audit is persisted.
++Other questions or mismatched structured constraints return typed 422 rather than invented
++answers. All fixture identities and overlays are synthetic, as declared in `RuntimeOfflineFixture`.
++The independently owned test fixture supplies separate hand-derived expected values.
++
++Configure `SCHOLARCHAIN_GRAPH_BASE_URI` and `SCHOLARCHAIN_SEMANTIC_BASE_URI` together on
++query-api to use independently running service artifacts. These HTTP(S) base URLs are runtime
++inputs; URI user-info is forbidden. Supply `SCHOLARCHAIN_INTERNAL_TOKEN` through deployment
++secret injection for outgoing calls and ensure its hash matches the internal-token hash.
++The raw token is never logged, returned or committed. In that composition query execution
++reads actual remote graph metric records and actual remote semantic hits, and graph exploration
++is proxied to the graph artifact. Both dependency readiness checks must succeed for readiness
++200. No request is sent to an AWS or paid model endpoint by these entrypoints.
++
++Graph-service and semantic-service in offline mode use immutable fake graph/vector ports.
++The semantic index starts empty and returns truthful empty hits; it never invents context.
++Embedding-worker starts a bounded loop over an empty fake queue with a real
++`ManifestEmbeddingProcessor`/`EmbeddingManifestRunner`; injection tests enqueue actual bounded
++synthetic work. Live stores, SQS URLs, model clients and deployment lifecycle remain later
++approved composition inputs. Offline mode is not a live production adapter configuration.
++
++The distribution contains `services.jar`, `lib/`, and required `prompts/runtime` and
++`prompts/schemas` assets. Build with `sbt packageServices` on JDK 17; Docker's `MAIN_CLASS`
++build argument selects one of the four allowed mains. Container listeners require
++`SCHOLARCHAIN_HTTP_HOST=0.0.0.0` explicitly. Images are built locally without a registry push.
++
++## Requests, jobs and errors
++
++`X-Request-Id` and `X-Trace-Id` are bounded safe correlation tokens, generated when absent or
++invalid, returned on every application response and propagated to downstream calls. Query
++constraints, analysis flags, retrieval caps and output options are validated. The runtime
++adapter checks supplied filters/windows/caps against its actual plan before retrieval.
++Evidence scores require an injected evidence store; they are observed retrieval signals,
++not authoritative counts or invented fusion weights. Researcher rows use verified typed
++claim subjects and values and stored candidate labels only; unavailable fields remain absent.
++Numeric claim values remain decimal strings to preserve exact stored integers.
++
++`Idempotency-Key` is required on query POSTs. An opaque deterministic query ID and hashed
++application reservation isolate application sessions from audit/worker namespaces. Both
++`Written(session)` and `Retried(_, Written(session))` mean this caller owns creation and enter
++the same body-binding/scheduling path. Other retried results reconcile the authoritative
++primary record without executing work. A revision CAS binds a canonical JSON body fingerprint.
++Same-body replays return stored answers, terminal errors or a current job reference; different
++bodies return 409. Concurrent callers wait for body binding within a configured deadline.
++
++Synchronous wait and maximum workflow execution deadline are separate. Work exceeding only
++the synchronous wait returns 202 and continues in the same bounded background worker task.
++The reference reports the actual persisted QUEUED/RUNNING state. Job reads include state,
++stage, timestamps, error and result URL. Workflow failures retry within the configured policy,
++then persist a **nonretryable** terminal error; same-key replay cannot execute again. Queue-full
++429 and oversize-result 502 are also terminal/nonretryable. A deliberate new workflow requires
++a new idempotency key. Runtime-adapter failures do not retry an already published immutable audit.
++
++| Status | Meaning |
++| --- | --- |
++| 400 | Malformed JSON, wrong types, invalid graph/cursor bounds, malformed query parameters |
++| 401 | Missing or invalid authentication |
++| 403 | Reserved for a configured permission policy; shared course key has one authorization domain |
++| 404 | Missing job, evidence, audit or graph node |
++| 409 | Different request body under an existing key or incompatible downstream state |
++| 422 | Unsupported query/constraint, graph scan/node cap or incomplete bounded path expansion |
++| 429 | Bounded local queue full or downstream throttling |
++| 500 | Closed internal error with trace ID |
++| 502 | Downstream failure, oversized result or rejected downstream authentication |
++| 503 | Not ready, dependency unavailable or circuit open |
++| 504 | Workflow/downstream/aggregate graph timeout |
++
++Errors contain `error`, `message`, `traceId`, `retryable`. Logs and errors never contain provider
++exception messages, stack traces, raw credentials, bodies, user queries or internal URLs.
++Request logs use an allowlist of safe correlation IDs, route template, status and duration.
++HTTP parser failures before Cask/application dispatch remain the server/parser boundary.
++
++## Graph, evidence and audit semantics
++
++`GraphSnapshot` explicitly promises immutable snapshot identity and directed edge records.
++The in-memory implementation reads supplied edges and metrics without recomputation. The
++older storage `GraphReader.neighbors` port does not expose direction or snapshot identity;
++a live adapter must implement the stronger service port or reject unsupported directions.
++No inferred directed edges are attributed to that older port.
++
++Default graph exploration is `direction=both`, depth 1 (maximum 3), limit 50 (maximum 200),
++edge types from `COAUTHORED_WITH,AUTHORED,HAS_TOPIC,AFFILIATED_WITH,PUBLISHED_IN`, and timeout
++5000 ms. Complete expansion is bounded by edge/node scan caps and the aggregate requested
++deadline, including blocking adapter calls. Stable BFS order determines pages. Signed opaque
++cursors bind node, snapshot, direction, depth, edge filters, window, page limit and timeout.
++Changing any binding or tampering rejects the cursor. Use a stable secret cursor key across
++replicas; a per-process random key intentionally invalidates old cursors after restart.
++Path results use shortest bounded BFS and never exceed the requested hop cap. Truncated
++expansion yields 422 instead of a fabricated absence of paths.
++
++Evidence reads retain the actual source dataset/record/snapshot/URI, work/chunk/path pointer,
++score, compact stored content and full source provenance. Query evidence lists come from the
++immutable audit. Explain reads persisted plan, versions, verification and stage failures;
++`stagesExecuted` is only observed application-stage history, **null** if that application session
++is unavailable. It never labels planned stages or prompt versions as executed stages. Retrieval
++mode and filters live in the actual `queryPlan`; model versions include their prompt/schema
++versions. `scoreComponents` shows actual persisted evidence scores without invented weights.
++Latency/claim counters are actual audit observations; unmeasured retry/cache counts are null.
++Hidden chain-of-thought, secret prompts and model-generated private reasoning are never returned.
++
++## Worker safety and operational limits
++
++`EmbeddingWorker.pollOnce` receives a configured batch, conditionally reserves a stable hash
++of the full validated payload, then revision-CAS claims PROCESSING. Concurrent consumers
++cannot both execute that reservation. Completed duplicates acknowledge without invoking the
++processor. Failed attempts persist RETRY until the threshold (default 3). At the threshold the
++worker first publishes to the injected DLQ queue, records DEAD, then acknowledges the original.
++DLQ failure leaves the original unacknowledged and eligible for another delivery. Acknowledgement
++failure also leaves the original; terminal replay safely acknowledges without another embedding.
++The manifest processor retains the existing vector/text/model idempotency contracts.
++
++This is at-least-once queue handling, not a distributed transaction. A crash after DLQ publication
++but before marking DEAD can duplicate the DLQ entry. A crash while PROCESSING leaves a fenced
++reservation needing explicit recovery; no lease is guessed or stolen. The existing queue port
++decodes valid work payloads before returning them; malformed raw messages are rejected by that
++adapter and need a deployment SQS redrive policy authored through Terraform. Live leases,
++DLQ redrive and recovery are explicit later deployment gates.
++
++GET/HEAD downstream reads retry only transient failures up to a finite attempt bound. Writes
++and semantic POST calls attempt once. Each dependency owns its breaker: CLOSED failures open
++it, reset permits one HALF_OPEN probe, success closes it and failed probes reopen it. Bounded
++executor slots prevent unlimited blocked tasks; adapters must honor interrupts for prompt
++cancellation. Prometheus metrics cover HTTP requests/statuses, cumulative latency buckets,
++API timeouts, per-attempt downstream errors/timeouts, registered breaker states and workflow
++verification/abstention. Histogram boundaries 5 ms through 60 s/+Inf are fixed instrumentation
++choices; p50/p95/p99 can be derived from the buckets.
++
++## Configuration and verification
++
++`ServiceConfig.fromEnvironment` externalizes application limits with prefix `SCHOLARCHAIN_`:
++
++| Suffix | Default / rationale |
++| --- | --- |
++| API_KEY_SHA256, INTERNAL_TOKEN_SHA256 | Required distinct SHA-256 hashes; no default credentials |
++| HTTP_HOST, HTTP_PORT | 127.0.0.1, 8080; explicit container bind |
++| SYNCHRONOUS_DEADLINE_MS, WORKFLOW_TIMEOUT_MS | 15000, 60000; independent finite wait/execution bounds |
++| MAX_WORKFLOW_RETRIES | 2; bounded job retries |
++| WORKER_THREADS, QUEUE_CAPACITY | 4, 64; bounded execution and backlog |
++| MAX_REQUEST_BYTES, MAX_RESULT_BYTES | 65536, 131072; bounded wire/result memory |
++| MAX_QUESTION_CHARS | 8192 |
++| MAX_GRAPH_LIMIT, MAX_VECTOR_LIMIT, MAX_PATH_DEPTH | 100, 50, 6; runtime query caps distinct from graph exploration caps |
++| MAX_FILTER_ITEMS, MAX_FILTER_CHARS | 100, 512 |
++| MAX_IDEMPOTENCY_KEY_CHARS | 256 before hashing |
++| DOWNSTREAM_TIMEOUT_MS, DOWNSTREAM_MAX_ATTEMPTS | 5000, 3 per-read attempt |
++| BREAKER_FAILURE_THRESHOLD, BREAKER_RESET_MS | 3, 30000 |
++| SESSION_CAS_ATTEMPTS, SESSION_POLL_MS | 8, 50; tune poll interval upward for remote stores |
++| REQUEST_READ_TIMEOUT_MS | 5000 socket inactivity bound, not an aggregate upload deadline |
++
++Additional bootstrap graph prefix `SCHOLARCHAIN_GRAPH_`: `DIRECTION=both`,
++`DEFAULT_DEPTH=1`, `MAX_DEPTH=3`, `DEFAULT_LIMIT=50`, `MAX_LIMIT=200`, `TIMEOUT_MS=5000`,
++`DEFAULT_WINDOW=all-years`, `MAX_SCANNED_EDGES=10000`, `MAX_VISITED_NODES=2000`,
++`MAX_CURSOR_CHARS=4096`, and `CURSOR_KEY` (random per-process unless injected).
++Worker prefix `SCHOLARCHAIN_WORKER_`: `MAX_ATTEMPTS=3`, `BATCH_SIZE=1`, `POLL_MS=1000`.
++Semantic injection config defaults top-K 50, question chars 8192, body bytes 65536,
++filter count 16 and timeout 5000 ms. All caps are configured application bounds, not measured
++production tuning. Publishing different public caps requires updating the deployment contract.
++
++Observed targeted gate: **26/26 module tests passed in four suites**, plus **37/37 independent
++10A/10B tests passed in six suites** (20 from 10A, 17 from 10B) on Java 17. The wire
++query-parameter, graph timeout, verified lifecycle, source-structure and worker cases passed.
++Committed-example validation also passed. Final JDK 17.0.20.1 `sbt check` passed
++**1199 tests in 145 suites, zero failures** (708 seconds reported by sbt). All **four Docker
++images** rebuilt locally; **eight image smoke cases** and the **three-service HTTP composition**
++passed. Exact commands, elapsed times, image IDs and retained logs are recorded by the
++coordinator under `docs/agent-runs/phase-10`.
++
++No OpenSearch, optional index/service, CI workflow, cloud apply, live deployment or paid provider
++call was added. Completed query results replay with the same injected persistent store, but the
++local query executor is not a durable distributed dispatcher: process death can leave queued or
++running jobs pending, and a crash between key reservation and body binding can leave an uncertain
++unbound session. A permanent store outage can prevent terminal publication. These limitations,
++remote polling tuning, live adapter configuration and deployment recovery must be resolved at
++approved deployment gates; no live durability, cost or throughput claim follows from offline tests.
+diff --git a/modules/services/src/main/resources/openapi/scholarchain.v1.yaml b/modules/services/src/main/resources/openapi/scholarchain.v1.yaml
+index 82b05c1..a8fb34e 100644
+--- a/modules/services/src/main/resources/openapi/scholarchain.v1.yaml
++++ b/modules/services/src/main/resources/openapi/scholarchain.v1.yaml
+@@ -1,11 +1,12 @@
+ openapi: 3.0.3
+ info:
+   title: ScholarChain API
+-  version: 1.0.0-10A
++  version: 1.0.0
+   description: >-
+-    Offline foundation contract. Examples are illustrative synthetic values, not corpus observations.
+-    Evidence, explain, graph and semantic routes and the embedding consumer belong to 10B.
+-    Deployment credentials and production backend composition are not enabled by the foundation mains.
++    Versioned service contract. All committed examples are declared synthetic fixtures.
++    Public graph routes are exposed through query-api as an authenticated thin proxy.
++    Internal graph and semantic routes require the separate internal bearer token.
++    Explicit offline-synthetic mode runs bounded fixture ports; unconfigured mode fails readiness.
+ security:
+   - ExternalBearer: []
+ paths:
+@@ -60,7 +61,10 @@ paths:
+         content:
+           application/json:
+             schema: {$ref: '#/components/schemas/QueryRequest'}
+-            example: {question: 'Synthetic fixture question'}
++            examples:
++              syntheticFixture:
++                summary: Declared offline synthetic query
++                externalValue: ./examples/query-request.json
+       responses:
+         '200':
+           description: Persisted terminal answer, possibly an explicit abstention
+@@ -78,6 +82,9 @@ paths:
+           content:
+             application/json:
+               schema: {$ref: '#/components/schemas/JobReference'}
++              examples:
++                syntheticFixture:
++                  externalValue: ./examples/job-reference.json
+         '400': {$ref: '#/components/responses/Error'}
+         '401': {$ref: '#/components/responses/Error'}
+         '409': {$ref: '#/components/responses/Error'}
+@@ -122,6 +129,9 @@ paths:
+           content:
+             application/json:
+               schema: {$ref: '#/components/schemas/JobReference'}
++              examples:
++                syntheticFixture:
++                  externalValue: ./examples/job-reference.json
+         '401': {$ref: '#/components/responses/Error'}
+         '404': {$ref: '#/components/responses/Error'}
+         '422': {$ref: '#/components/responses/Error'}
+@@ -130,11 +140,192 @@ paths:
+         '502': {$ref: '#/components/responses/Error'}
+         '503': {$ref: '#/components/responses/Error'}
+         '504': {$ref: '#/components/responses/Error'}
++  /v1/evidence/{evidenceId}:
++    get:
++      summary: Read one persisted evidence item with source provenance
++      parameters:
++        - {name: evidenceId, in: path, required: true, schema: {type: string}}
++      responses:
++        '200':
++          description: Actual supporting evidence and source pointer
++          content:
++            application/json:
++              schema: {$ref: '#/components/schemas/Evidence'}
++        '401': {$ref: '#/components/responses/Error'}
++        '404': {$ref: '#/components/responses/Error'}
++        '502': {$ref: '#/components/responses/Error'}
++  /v1/queries/{queryId}/evidence:
++    get:
++      summary: List evidence IDs referenced by the persisted query audit
++      parameters:
++        - {$ref: '#/components/parameters/QueryId'}
++      responses:
++        '200':
++          description: Audited evidence references
++          content:
++            application/json:
++              schema: {type: object, required: [queryId, evidenceIds], properties: {queryId: {type: string}, evidenceIds: {type: array, items: {type: string}}}}
++        '401': {$ref: '#/components/responses/Error'}
++        '404': {$ref: '#/components/responses/Error'}
++        '502': {$ref: '#/components/responses/Error'}
++  /v1/explain/{queryId}:
++    get:
++      summary: Observable audit derivation with no hidden reasoning or secret prompts
++      parameters:
++        - {$ref: '#/components/parameters/QueryId'}
++      responses:
++        '200':
++          description: Persisted plan, observable service stages, versions, evidence, scores and counters
++          content:
++            application/json:
++              schema: {$ref: '#/components/schemas/Explain'}
++        '401': {$ref: '#/components/responses/Error'}
++        '404': {$ref: '#/components/responses/Error'}
++        '502': {$ref: '#/components/responses/Error'}
++  /v1/graph/nodes/{nodeId}:
++    get:
++      summary: Read a node from the immutable graph snapshot through query-api
++      parameters:
++        - {$ref: '#/components/parameters/NodeId'}
++      responses:
++        '200':
++          description: Actual graph node and snapshot ID
++          content:
++            application/json:
++              schema: {type: object, required: [nodeId, snapshot, node], properties: {nodeId: {type: string}, snapshot: {type: string}, node: {type: object}}}
++        '401': {$ref: '#/components/responses/Error'}
++        '404': {$ref: '#/components/responses/Error'}
++        '502': {$ref: '#/components/responses/Error'}
++        '503': {$ref: '#/components/responses/Error'}
++        '504': {$ref: '#/components/responses/Error'}
++  /v1/graph/nodes/{nodeId}/neighbors:
++    get:
++      summary: Bounded directed graph expansion and snapshot-bound opaque pagination
++      parameters:
++        - {$ref: '#/components/parameters/NodeId'}
++        - {name: direction, in: query, schema: {type: string, enum: [in, out, both], default: both}}
++        - {name: depth, in: query, schema: {type: integer, minimum: 1, maximum: 3, default: 1}}
++        - {name: limit, in: query, schema: {type: integer, minimum: 1, maximum: 200, default: 50}}
++        - {name: edgeTypes, in: query, schema: {type: string}, description: Comma separated subset of COAUTHORED_WITH AUTHORED HAS_TOPIC AFFILIATED_WITH PUBLISHED_IN}
++        - {name: window, in: query, schema: {type: string, default: all-years}}
++        - {name: timeoutMs, in: query, schema: {type: integer, minimum: 1, maximum: 5000, default: 5000}}
++        - {name: cursor, in: query, schema: {type: string}, description: Signed opaque cursor bound to node filters limit timeout and immutable snapshot}
++      responses:
++        '200':
++          description: Stable page; null cursor means no next page
++          content:
++            application/json:
++              schema: {$ref: '#/components/schemas/GraphPage'}
++              examples:
++                syntheticFixture:
++                  externalValue: ./examples/graph-page.json
++        '400': {$ref: '#/components/responses/Error'}
++        '401': {$ref: '#/components/responses/Error'}
++        '404': {$ref: '#/components/responses/Error'}
++        '422': {$ref: '#/components/responses/Error'}
++        '502': {$ref: '#/components/responses/Error'}
++        '503': {$ref: '#/components/responses/Error'}
++        '504': {$ref: '#/components/responses/Error'}
++  /internal/v1/graph/nodes/{nodeId}:
++    get:
++      security: [{InternalBearer: []}]
++      summary: Internal snapshot node read
++      parameters:
++        - {$ref: '#/components/parameters/NodeId'}
++      responses:
++        '200': {description: Actual node and snapshot}
++        '401': {$ref: '#/components/responses/Error'}
++        '404': {$ref: '#/components/responses/Error'}
++        '504': {$ref: '#/components/responses/Error'}
++  /internal/v1/graph/nodes/{nodeId}/neighbors:
++    get:
++      security: [{InternalBearer: []}]
++      summary: Internal graph expansion with the same bounded query parameters as the public proxy
++      parameters:
++        - {$ref: '#/components/parameters/NodeId'}
++        - {name: direction, in: query, schema: {type: string, enum: [in, out, both], default: both}}
++        - {name: depth, in: query, schema: {type: integer, minimum: 1, maximum: 3, default: 1}}
++        - {name: limit, in: query, schema: {type: integer, minimum: 1, maximum: 200, default: 50}}
++        - {name: edgeTypes, in: query, schema: {type: string}}
++        - {name: window, in: query, schema: {type: string, default: all-years}}
++        - {name: timeoutMs, in: query, schema: {type: integer, minimum: 1, maximum: 5000, default: 5000}}
++        - {name: cursor, in: query, schema: {type: string}}
++      responses:
++        '200':
++          description: Internal stable graph page
++          content:
++            application/json:
++              schema: {$ref: '#/components/schemas/GraphPage'}
++              examples:
++                syntheticFixture:
++                  externalValue: ./examples/graph-page.json
++        '400': {$ref: '#/components/responses/Error'}
++        '401': {$ref: '#/components/responses/Error'}
++        '404': {$ref: '#/components/responses/Error'}
++        '422': {$ref: '#/components/responses/Error'}
++        '504': {$ref: '#/components/responses/Error'}
++  /internal/v1/graph/metrics/{nodeId}:
++    get:
++      security: [{InternalBearer: []}]
++      summary: Stored researcher metrics and qualifications without recomputation
++      parameters:
++        - {$ref: '#/components/parameters/NodeId'}
++        - {name: window, in: query, schema: {type: string, default: all-years}}
++      responses:
++        '200':
++          description: Stored record, qualifications, metric version and source run
++          content:
++            application/json:
++              schema: {type: object, required: [researcherId, window, record, qualifications, metricVersion, runId]}
++        '401': {$ref: '#/components/responses/Error'}
++        '404': {$ref: '#/components/responses/Error'}
++        '504': {$ref: '#/components/responses/Error'}
++  /internal/v1/graph/paths:
++    get:
++      security: [{InternalBearer: []}]
++      summary: Bounded shortest path in the immutable snapshot
++      parameters:
++        - {name: from, in: query, required: true, schema: {type: string}}
++        - {name: to, in: query, required: true, schema: {type: string}}
++        - {name: maxDepth, in: query, schema: {type: integer, minimum: 1, maximum: 3, default: 3}}
++        - {name: window, in: query, schema: {type: string, default: all-years}}
++      responses:
++        '200': {description: Snapshot and bounded nodeId/edgeId path, or empty paths after complete bounded exploration}
++        '400': {$ref: '#/components/responses/Error'}
++        '401': {$ref: '#/components/responses/Error'}
++        '404': {$ref: '#/components/responses/Error'}
++        '422': {$ref: '#/components/responses/Error'}
++        '504': {$ref: '#/components/responses/Error'}
++  /internal/v1/semantic/retrieve:
++    post:
++      security: [{InternalBearer: []}]
++      summary: Embed query text and retrieve bounded actual vector hits
++      requestBody:
++        required: true
++        content:
++          application/json:
++            schema: {$ref: '#/components/schemas/SemanticRequest'}
++            examples:
++              syntheticFixture:
++                externalValue: ./examples/semantic-request.json
++      responses:
++        '200':
++          description: Actual vector hits with distances and metadata; similarity is not graph evidence
++          content:
++            application/json:
++              schema: {$ref: '#/components/schemas/SemanticResponse'}
++        '400': {$ref: '#/components/responses/Error'}
++        '401': {$ref: '#/components/responses/Error'}
++        '502': {$ref: '#/components/responses/Error'}
++        '503': {$ref: '#/components/responses/Error'}
++        '504': {$ref: '#/components/responses/Error'}
+ components:
+   securitySchemes:
+     ExternalBearer: {type: http, scheme: bearer, description: API key whose SHA-256 hash is injected through Secrets Manager at deployment}
+     InternalBearer: {type: http, scheme: bearer, description: Separate service token; external key is never accepted for internal routes}
+   parameters:
++    NodeId: {name: nodeId, in: path, required: true, schema: {type: string}}
++    QueryId: {name: queryId, in: path, required: true, schema: {type: string}}
+     JobId: {name: jobId, in: path, required: true, schema: {type: string, pattern: '^job-[0-9a-f]{64}$'}}
+     RequestId: {name: X-Request-Id, in: header, schema: {type: string, pattern: '^[a-zA-Z0-9._:-]{1,128}$'}, description: Invalid or absent IDs are replaced by generated safe IDs}
+     TraceId: {name: X-Trace-Id, in: header, schema: {type: string, pattern: '^[a-zA-Z0-9._:-]{1,128}$'}, description: Propagated to downstream calls and returned on every response}
+@@ -147,6 +338,9 @@ components:
+       content:
+         application/json:
+           schema: {$ref: '#/components/schemas/Error'}
++          examples:
++            syntheticFixture:
++              externalValue: ./examples/error.json
+   schemas:
+     Error:
+       type: object
+@@ -193,7 +387,7 @@ components:
+           additionalProperties: false
+           properties:
+             includeEvidence: {type: boolean}
+-            includeScores: {type: boolean, description: Explicit true is unsupported by the foundation real runtime adapter and yields 422}
++            includeScores: {type: boolean, description: Explicit true requires an injected evidence store and otherwise yields 422; scores are persisted retrieval signals}
+             includeUncertainty: {type: boolean}
+     Filters:
+       type: array
+@@ -209,9 +403,10 @@ components:
+         claims: {type: array, items: {type: object, additionalProperties: true}}
+         links:
+           type: object
+-          required: [explain, result]
++          required: [explain, evidence, result]
+           properties:
+             explain: {type: string}
++            evidence: {type: string}
+             result: {type: string}
+     JobReference:
+       type: object
+@@ -220,7 +415,7 @@ components:
+         queryId: {type: string}
+         mode: {type: string, enum: [asynchronous]}
+         jobId: {type: string}
+-        status: {type: string, enum: [QUEUED]}
++        status: {type: string, enum: [QUEUED, RUNNING]}
+         statusUrl: {type: string}
+     JobStatus:
+       type: object
+@@ -234,3 +429,65 @@ components:
+         updatedAt: {type: string, format: date-time}
+         resultUrl: {type: string, nullable: true}
+         error: {allOf: [{$ref: '#/components/schemas/Error'}], nullable: true}
++    Evidence:
++      type: object
++      required: [evidenceId, evidenceType, workId, sourceDataset, sourceRecordId, snapshot, sourceUri, text, textS3Uri, graphPath, chunkId, score, provenance, supportingContent]
++      properties:
++        evidenceId: {type: string}
++        evidenceType: {type: string}
++        workId: {type: string, nullable: true}
++        sourceDataset: {type: string}
++        sourceRecordId: {type: string}
++        snapshot: {type: string}
++        sourceUri: {type: string}
++        text: {type: string, nullable: true}
++        textS3Uri: {type: string, nullable: true}
++        graphPath: {type: array, nullable: true, items: {type: string}}
++        chunkId: {type: string, nullable: true}
++        score: {type: number}
++        provenance: {type: object}
++        supportingContent: {type: object, nullable: true}
++    Explain:
++      type: object
++      required: [queryId, traceId, queryPlan, stagesExecuted, stageFailures, promptVersions, modelVersions, evidenceIds, scoreComponents, counters, verificationStatus, verification, outcome, reason, metricVersions, graphRunIds]
++      properties:
++        queryId: {type: string}
++        traceId: {type: string}
++        queryPlan: {type: object, nullable: true, description: Includes actual planned retrieval mode and filters}
++        stagesExecuted: {type: array, nullable: true, items: {type: string}, description: Only observed persisted service stages; null when no application session exists}
++        stageFailures: {type: array, items: {type: object}}
++        promptVersions: {type: array, items: {type: string}}
++        modelVersions: {type: array, items: {type: object}}
++        evidenceIds: {type: array, items: {type: string}}
++        scoreComponents: {type: array, items: {type: object}, description: Actual persisted evidence scores; absent weights are not invented}
++        counters: {type: object, description: Actual latency and claim counts; unknown cache hits and retry counts are null}
++        verificationStatus: {type: string}
++        verification: {type: array, items: {type: object}}
++        outcome: {type: string}
++        reason: {type: string, nullable: true}
++        metricVersions: {type: array, items: {type: string}}
++        graphRunIds: {type: array, items: {type: string}}
++    GraphPage:
++      type: object
++      required: [nodeId, snapshot, direction, depth, items, cursor]
++      properties:
++        nodeId: {type: string}
++        snapshot: {type: string}
++        direction: {type: string, enum: [in, out, both]}
++        depth: {type: integer}
++        items: {type: array, items: {type: object, required: [nodeId, edgeId, edgeType, depth, fromId, toId, provenance]}}
++        cursor: {type: string, nullable: true}
++    SemanticRequest:
++      type: object
++      additionalProperties: false
++      required: [question]
++      properties:
++        question: {type: string, minLength: 1, maxLength: 8192}
++        topK: {type: integer, minimum: 1, maximum: 50, default: 50}
++        filters: {type: object, additionalProperties: {type: string}}
++    SemanticResponse:
++      type: object
++      required: [hits]
++      properties:
++        hits: {type: array, items: {type: object, required: [key, distance, metadata]}}
++        model: {type: object}
+diff --git a/modules/services/src/main/scala/edu/uic/cs441/scholarchain/services/ApiApplication.scala b/modules/services/src/main/scala/edu/uic/cs441/scholarchain/services/ApiApplication.scala
+index 8ffb982..cc4ef4e 100644
+--- a/modules/services/src/main/scala/edu/uic/cs441/scholarchain/services/ApiApplication.scala
++++ b/modules/services/src/main/scala/edu/uic/cs441/scholarchain/services/ApiApplication.scala
+@@ -87,7 +87,8 @@ final class ApiApplication(
+     config: ServiceConfig,
+     readiness: () => Boolean = () => true,
+     logSink: String => Unit = s => org.slf4j.LoggerFactory.getLogger("scholarchain.http").info(s),
+-    serviceRole: String = "query-api"
++    serviceRole: String = "query-api",
++    extended: Option[ExtendedApi] = None
+ ) extends AutoCloseable {
+   def requestByteLimit: Int = config.maxRequestBytes
+   def requestReadTimeoutMs: Int = config.requestReadTimeoutMs
+@@ -100,12 +101,14 @@ final class ApiApplication(
+   }
+   def handle(
+       method: String,
+-      path: String,
++      uri: String,
+       headers: Map[String, String],
+       body: String,
+       transportError: Option[ApiError] = None
+   ): HttpReply = {
+     val start = System.nanoTime()
++    val path = uri.takeWhile(_ != '?')
++    val params = QueryParameters.parse(uri)
+     val normalized = headers.map((k, v) => k.toLowerCase(java.util.Locale.ROOT) -> v)
+     val context = RequestContext(
+       safeId(normalized.get("x-request-id"), "req-"),
+@@ -159,7 +162,9 @@ final class ApiApplication(
+             case Vector(id, "result") => queries.result(id)
+             case _ => Left(ApiError(404, "NOT_FOUND", "The requested route was not found."))
+           }
+-        } else Left(ApiError(404, "NOT_FOUND", "The requested route was not found."))
++        } else if (extended.nonEmpty)
++          params.flatMap(p => routeExtended(method, path, p, body, context, extended.get))
++        else Left(ApiError(404, "NOT_FOUND", "The requested route was not found."))
+       } catch { case NonFatal(_) => Left(ApiError.internal) }
+     val reply = result.fold(e => ApiReply(e.status, e.json(context.traceId)), identity)
+     val elapsed = System.nanoTime() - start
+@@ -174,5 +179,56 @@ final class ApiApplication(
+       )
+     else HttpReply(reply.status, reply.body.render(), responseHeaders)
+   }
+-  def close(): Unit = queries.close()
++  private def routeExtended(
++      method: String,
++      path: String,
++      p: Map[String, String],
++      body: String,
++      context: RequestContext,
++      api: ExtendedApi
++  ): Either[ApiError, ApiReply] = {
++    val parts =
++      path.stripPrefix("/").split("/", -1).toVector.map(java.net.URLDecoder.decode(_, "UTF-8"))
++    val query = serviceRole == "query-api"
++    val graph = serviceRole == "graph-service"
++    val semantic = serviceRole == "semantic-service"
++    (method, parts) match {
++      case ("GET", Vector("v1", "evidence", id)) if query => api.evidence.evidence(id)
++      case ("GET", Vector("v1", "explain", id)) if query  => api.evidence.explain(id)
++      case ("GET", Vector("v1", "queries", id, "evidence")) if query =>
++        api.evidence.queryEvidence(id)
++      case ("GET", Vector("v1", "graph", "nodes", id)) if query || graph =>
++        api.graph.node(id, context)
++      case ("GET", Vector("v1", "graph", "nodes", id, "neighbors")) if query || graph =>
++        api.graph.neighbors(id, p, context)
++      case ("GET", Vector("internal", "v1", "graph", "nodes", id)) if graph =>
++        api.graph.node(id, context)
++      case ("GET", Vector("internal", "v1", "graph", "nodes", id, "neighbors")) if graph =>
++        api.graph.neighbors(id, p, context)
++      case ("GET", Vector("internal", "v1", "graph", "metrics", id)) if graph =>
++        api.graph.metrics(id, p.getOrElse("window", "all-years"), context)
++      case ("GET", Vector("internal", "v1", "graph", "paths")) if graph =>
++        api.graph.paths(p, context)
++      case ("POST", Vector("internal", "v1", "semantic", "retrieve")) if query || semantic =>
++        api.semantic.retrieve(body, context)
++      case _ => Left(ApiError(404, "NOT_FOUND", "The requested route was not found."))
++    }
++  }
++  def close(): Unit = { extended.foreach(_.close()); queries.close() }
++}
++
++object QueryParameters {
++  def parse(uri: String): Either[ApiError, Map[String, String]] = try {
++    val raw = uri.dropWhile(_ != '?').drop(1)
++    if (raw.isEmpty) Right(Map.empty)
++    else {
++      val fields = raw.split("&", -1).toVector.map { field =>
++        val p = field.split("=", 2)
++        if (p.length != 2) throw new IllegalArgumentException
++        java.net.URLDecoder.decode(p(0), "UTF-8") -> java.net.URLDecoder.decode(p(1), "UTF-8")
++      }
++      if (fields.map(_._1).distinct.size != fields.size) Left(ApiError.invalid)
++      else Right(fields.toMap)
++    }
++  } catch { case NonFatal(_) => Left(ApiError.invalid) }
+ }
+diff --git a/modules/services/src/main/scala/edu/uic/cs441/scholarchain/services/ApiServer.scala b/modules/services/src/main/scala/edu/uic/cs441/scholarchain/services/ApiServer.scala
+index 6e1ec98..7ddc0b5 100644
+--- a/modules/services/src/main/scala/edu/uic/cs441/scholarchain/services/ApiServer.scala
++++ b/modules/services/src/main/scala/edu/uic/cs441/scholarchain/services/ApiServer.scala
+@@ -31,7 +31,8 @@ object ApiServer {
+         )
+         def dispatch(
+             request: cask.Request,
+-            remaining: cask.RemainingPathSegments
++            remaining: cask.RemainingPathSegments,
++            params: cask.QueryParams
+         ): cask.Response[String] = {
+           val exchange = request.exchange
+           val headers = exchange.getRequestHeaders.asScala
+@@ -45,7 +46,10 @@ object ApiServer {
+             } catch { case NonFatal(_) => Left(ApiError.invalid) }
+           val result = app.handle(
+             exchange.getRequestMethod.toString,
+-            exchange.getRequestPath,
++            exchange.getRequestPath + Option(exchange.getQueryString)
++              .filter(_.nonEmpty)
++              .map("?" + _)
++              .getOrElse(""),
+             headers,
+             body.getOrElse(""),
+             body.left.toOption
+@@ -62,7 +66,10 @@ object ApiServer {
+           .toMap
+         val result = app.handle(
+           req.exchange.getRequestMethod.toString,
+-          req.exchange.getRequestPath,
++          req.exchange.getRequestPath + Option(req.exchange.getQueryString)
++            .filter(_.nonEmpty)
++            .map("?" + _)
++            .getOrElse(""),
+           headers,
+           ""
+         )
+diff --git a/modules/services/src/main/scala/edu/uic/cs441/scholarchain/services/DownstreamClient.scala b/modules/services/src/main/scala/edu/uic/cs441/scholarchain/services/DownstreamClient.scala
+index 62f243d..936e825 100644
+--- a/modules/services/src/main/scala/edu/uic/cs441/scholarchain/services/DownstreamClient.scala
++++ b/modules/services/src/main/scala/edu/uic/cs441/scholarchain/services/DownstreamClient.scala
+@@ -60,6 +60,12 @@ final class DownstreamClient(
+   def call[A](method: String, context: RequestContext)(
+       operation: Map[String, String] => Either[ApiError, A]
+   ): Either[ApiError, A] = {
++    callWithin(method, context, config.downstreamTimeoutMs)(operation)
++  }
++  def callWithin[A](method: String, context: RequestContext, timeoutMs: Long)(
++      operation: Map[String, String] => Either[ApiError, A]
++  ): Either[ApiError, A] = {
++    require(timeoutMs > 0 && timeoutMs <= config.downstreamTimeoutMs)
+     val attempts =
+       if (Set("GET", "HEAD")(method.toUpperCase(java.util.Locale.ROOT)))
+         config.downstreamMaxAttempts
+@@ -75,7 +81,7 @@ final class DownstreamClient(
+           val task = pool.submit(new Callable[Either[ApiError, A]] {
+             def call(): Either[ApiError, A] = operation(context.downstreamHeaders)
+           })
+-          try task.get(config.downstreamTimeoutMs, TimeUnit.MILLISECONDS)
++          try task.get(timeoutMs, TimeUnit.MILLISECONDS)
+           catch {
+             case _: TimeoutException => task.cancel(true); Left(ApiError.timeout)
+             case _: InterruptedException =>
+diff --git a/modules/services/src/main/scala/edu/uic/cs441/scholarchain/services/QueryService.scala b/modules/services/src/main/scala/edu/uic/cs441/scholarchain/services/QueryService.scala
+index 08e6e0e..b28b15b 100644
+--- a/modules/services/src/main/scala/edu/uic/cs441/scholarchain/services/QueryService.scala
++++ b/modules/services/src/main/scala/edu/uic/cs441/scholarchain/services/QueryService.scala
+@@ -69,6 +69,9 @@ final class QueryService(
+           val p = read(s)
+           if (Set("SUCCEEDED", "FAILED")(p("state").str)) return false
+           change(p); p("updatedAt") = instant
++          val history = p.obj.get("observedStages").map(_.arr.toVector).getOrElse(Vector.empty)
++          if (history.lastOption.forall(_ != p("stage")))
++            p("observedStages") = ujson.Arr.from(history :+ p("stage"))
+           if (
+             StorageResult.successful(
+               store.update(
+@@ -108,14 +111,14 @@ final class QueryService(
+     p("state").str match {
+       case "SUCCEEDED" => Right(ApiReply(200, p("result")))
+       case "FAILED"    => Left(errorFrom(p))
+-      case _           => Right(ApiReply(202, reference(s.queryId)))
++      case _           => Right(ApiReply(202, reference(s.queryId, s.state)))
+     }
+   }
+-  private def reference(id: String): ujson.Value = ujson.Obj(
++  private def reference(id: String, state: String): ujson.Value = ujson.Obj(
+     "queryId" -> id,
+     "mode" -> "asynchronous",
+     "jobId" -> jobId(id),
+-    "status" -> "QUEUED",
++    "status" -> state,
+     "statusUrl" -> s"/v1/jobs/${jobId(id)}"
+   )
+   def submit(
+@@ -135,6 +138,7 @@ final class QueryService(
+         val now = instant
+         val payload = ujson.Obj(
+           "fingerprint" -> fingerprint,
++          "observedStages" -> ujson.Arr("QUEUED"),
+           "state" -> "QUEUED",
+           "stage" -> "QUEUED",
+           "createdAt" -> now,
+@@ -209,7 +213,7 @@ final class QueryService(
+         "status" -> error.status,
+         "code" -> error.code,
+         "message" -> error.message,
+-        "retryable" -> error.retryable
++        "retryable" -> false
+       )
+     }
+     ()
+@@ -257,6 +261,7 @@ final class QueryService(
+           "claims" -> ujson.Arr.from(output.claims),
+           "links" -> ujson.Obj(
+             "explain" -> s"/v1/explain/$id",
++            "evidence" -> s"/v1/queries/$id/evidence",
+             "result" -> s"/v1/jobs/${jobId(id)}/result"
+           )
+         )
+diff --git a/modules/services/src/main/scala/edu/uic/cs441/scholarchain/services/RuntimeWorkflowAdapter.scala b/modules/services/src/main/scala/edu/uic/cs441/scholarchain/services/RuntimeWorkflowAdapter.scala
+index b8264f7..be79d58 100644
+--- a/modules/services/src/main/scala/edu/uic/cs441/scholarchain/services/RuntimeWorkflowAdapter.scala
++++ b/modules/services/src/main/scala/edu/uic/cs441/scholarchain/services/RuntimeWorkflowAdapter.scala
+@@ -9,7 +9,8 @@ import edu.uic.cs441.scholarchain.rag.*
+   */
+ final class RuntimeWorkflowAdapter(
+     workflow: RuntimeAnswerWorkflow,
+-    resolvePlan: (QueryRequest, RequestContext) => Either[ApiError, QueryPlan]
++    resolvePlan: (QueryRequest, RequestContext) => Either[ApiError, QueryPlan],
++    evidenceStore: Option[edu.uic.cs441.scholarchain.storage.EvidenceBundleStore] = None
+ ) extends QueryWorkflow {
+   def run(
+       request: QueryRequest,
+@@ -35,9 +36,19 @@ final class RuntimeWorkflowAdapter(
+             val body =
+               ujson.Obj(
+                 "summary" -> answer.summary,
+-                "researchers" -> ujson.Arr(),
++                "researchers" -> researchers(answer),
+                 "evidenceBundleId" -> answer.evidenceBundleId
+               )
++            if (include("includeScores"))
++              body("scores") = ujson.Arr.from(
++                evidenceStore.toVector
++                  .flatMap(s =>
++                    edu.uic.cs441.scholarchain.storage.StorageResult
++                      .value(s.get(answer.evidenceBundleId))
++                  )
++                  .flatMap(_.items)
++                  .map(item => ujson.Obj("evidenceId" -> item.evidenceId, "score" -> item.score))
++              )
+             if (include("includeUncertainty")) body("uncertainty") = answer.uncertainty
+             if (!include("includeEvidence")) body.obj.remove("evidenceBundleId")
+             val abstained = audit.outcome == "ABSTAINED"
+@@ -79,6 +90,42 @@ final class RuntimeWorkflowAdapter(
+       }
+     }
+   }
++  private def researchers(answer: AnswerResponse): ujson.Value = {
++    val bundle = evidenceStore.flatMap(s =>
++      edu.uic.cs441.scholarchain.storage.StorageResult.value(s.get(answer.evidenceBundleId))
++    )
++    val candidates = bundle.toVector
++      .flatMap(_.runtime.toVector.flatMap(_.resolvedCandidates))
++      .map(c => c.researcherId -> c)
++      .toMap
++    val claims = answer.claims
++      .filter(c => c.verificationStatus == VerificationStatus.Verified)
++      .flatMap(c => c.runtime.map(t => c -> t))
++    val ids = claims.flatMap(_._2.subjectIds).distinct
++    ujson.Arr.from(ids.map { id =>
++      val obj = ujson.Obj("researcherId" -> id)
++      candidates.get(id).foreach(c => obj("displayName") = c.displayName)
++      val relevant = claims.filter(_._2.subjectIds == Vector(id))
++      obj("claimIds") = ujson.Arr.from(relevant.map(_._1.claimId))
++      relevant.flatMap(_._2.values).foreach { v =>
++        if (
++          Set(
++            "publicationCount",
++            "distinctCoauthorCount",
++            "weightedDegree",
++            "averageCoauthorsPerPaper",
++            "maximumCoauthorsOnOnePaper",
++            "componentId",
++            "communityId"
++          )(v.field)
++        ) {
++          v.number.foreach(n => obj(v.field) = ujson.Str(n))
++          v.text.foreach(t => obj(v.field) = ujson.Str(t))
++        }
++      }
++      obj
++    })
++  }
+   private def matches(request: QueryRequest, plan: QueryPlan): Boolean = {
+     val json = request.json
+     val constraints = json.obj.get("constraints")
+@@ -93,7 +140,7 @@ final class RuntimeWorkflowAdapter(
+       "includeCommunities" -> Set(QueryOperation.CommunityComparison),
+       "includePaths" -> Set(QueryOperation.DirectCoauthors, QueryOperation.ShortestPath)
+     )
+-    check(json.obj.get("output"), "includeScores")(v => !v.bool) &&
++    check(json.obj.get("output"), "includeScores")(v => !v.bool || evidenceStore.nonEmpty) &&
+     plan.question == request.question && !plan.runtime.exists(_.evidenceOnly) &&
+     check(constraints, "yearFrom")(_.num.toInt == plan.window.startYear) &&
+     check(constraints, "yearTo")(_.num.toInt == plan.window.endYear) &&
+diff --git a/modules/services/src/main/scala/edu/uic/cs441/scholarchain/services/ServiceMains.scala b/modules/services/src/main/scala/edu/uic/cs441/scholarchain/services/ServiceMains.scala
+index 3fe15d7..70d86e9 100644
+--- a/modules/services/src/main/scala/edu/uic/cs441/scholarchain/services/ServiceMains.scala
++++ b/modules/services/src/main/scala/edu/uic/cs441/scholarchain/services/ServiceMains.scala
+@@ -1,34 +1,141 @@
+ package edu.uic.cs441.scholarchain.services
+ 
+-import edu.uic.cs441.scholarchain.storage.InMemoryQuerySessionStore
++import java.net.URI
++import edu.uic.cs441.scholarchain.core.*
++import edu.uic.cs441.scholarchain.rag.DeterministicHashedEmbeddingClient
++import edu.uic.cs441.scholarchain.storage.*
++import scala.util.control.NonFatal
+ 
+-/** 10A entrypoints are an offline foundation. No SDK, provider, credential discovery or production
+-  * backend is implicitly enabled. 10B supplies graph/semantic/worker composition.
+-  */
+-object ServiceBootstrap {
+-  def start(role: String): Unit = ServiceConfig.fromEnvironment(sys.env) match {
+-    case Left(code) => System.err.println(code)
+-    case Right(config) =>
+-      val unconfigured = new QueryWorkflow {
+-        def run(
+-            request: QueryRequest,
+-            context: RequestContext,
+-            stage: String => Unit
+-        ): Either[ApiError, WorkflowOutput] = Left(ApiError.unavailable)
+-      }
+-      val queries = new QueryService(new InMemoryQuerySessionStore, unconfigured, config)
+-      val app = new ApiApplication(queries, config, readiness = () => false, serviceRole = role)
+-      val server = ApiServer.start(app, config.host, config.port, config.maxRequestBytes)
+-      Runtime.getRuntime.addShutdownHook(new Thread(() => server.close()))
++object BootstrapConfig {
++  def graph(env: Map[String, String]): GraphApiConfig = {
++    def int(k: String, d: Int) = env.get("SCHOLARCHAIN_GRAPH_" + k).map(_.toInt).getOrElse(d)
++    GraphApiConfig(
++      defaultDirection = env.getOrElse("SCHOLARCHAIN_GRAPH_DIRECTION", "both"),
++      defaultDepth = int("DEFAULT_DEPTH", 1),
++      maxDepth = int("MAX_DEPTH", 3),
++      defaultLimit = int("DEFAULT_LIMIT", 50),
++      maxLimit = int("MAX_LIMIT", 200),
++      timeoutMs = int("TIMEOUT_MS", 5000).toLong,
++      defaultWindow = env.getOrElse("SCHOLARCHAIN_GRAPH_DEFAULT_WINDOW", "all-years"),
++      maxScannedEdges = int("MAX_SCANNED_EDGES", 10000),
++      maxVisitedNodes = int("MAX_VISITED_NODES", 2000),
++      maxCursorChars = int("MAX_CURSOR_CHARS", 4096),
++      cursorKey =
++        env.getOrElse("SCHOLARCHAIN_GRAPH_CURSOR_KEY", java.util.UUID.randomUUID().toString)
++    )
+   }
++  def worker(env: Map[String, String]): WorkerConfig = WorkerConfig(
++    env.get("SCHOLARCHAIN_WORKER_MAX_ATTEMPTS").map(_.toInt).getOrElse(3),
++    env.get("SCHOLARCHAIN_WORKER_BATCH_SIZE").map(_.toInt).getOrElse(1),
++    env.get("SCHOLARCHAIN_WORKER_POLL_MS").map(_.toLong).getOrElse(1000L)
++  )
++}
++object ServiceBootstrap {
++
++  /** Return an exit code for invalid configuration so packaging tests can check refusal without
++    * terminating their test JVM. Production mains apply that exit code via System.exit.
++    */
++  def start(role: String): Int = try {
++    ServiceConfig.fromEnvironment(sys.env) match {
++      case Left(code) => System.err.println(code); 2
++      case Right(config) =>
++        val mode = sys.env.getOrElse("SCHOLARCHAIN_SERVICE_MODE", "unconfigured")
++        if (!Set("unconfigured", "offline-synthetic")(mode)) {
++          System.err.println("unsupported-service-mode"); return 2
++        }
++        val validMode = mode == "offline-synthetic"
++        val workerConfig = BootstrapConfig.worker(sys.env)
++        val composition = new OfflineComposition(config)
++        // In explicit offline mode query-api can call independently running graph/semantic
++        // artifacts through real HTTP clients. Raw runtime token is required only for those calls.
++        val graphUri = sys.env.get("SCHOLARCHAIN_GRAPH_BASE_URI")
++        val semanticUri = sys.env.get("SCHOLARCHAIN_SEMANTIC_BASE_URI")
++        val configuredRemote = role == "query-api" && (graphUri.nonEmpty || semanticUri.nonEmpty)
++        val bundle = if (configuredRemote) {
++          if (graphUri.isEmpty || semanticUri.isEmpty) {
++            composition.queries.close(); composition.extended.close(); return 2
++          }
++          val token =
++            sys.env.getOrElse("SCHOLARCHAIN_INTERNAL_TOKEN", throw new IllegalArgumentException)
++          if (Auth.sha256(token) != config.internalTokenSha256) throw new IllegalArgumentException
++          val graph = new RemoteGraphApi(
++            new RemoteService(URI.create(graphUri.get), token, config, composition.metrics, "graph")
++          )
++          val semantic = new RemoteSemanticApi(
++            new RemoteService(
++              URI.create(semanticUri.get),
++              token,
++              config,
++              composition.metrics,
++              "semantic"
++            )
++          )
++          val remoteComposition =
++            new OfflineComposition(config, Some(graph), Some(semantic), Some(composition.metrics))
++          composition.queries.close(); composition.extended.close()
++          remoteComposition
++        } else composition
++        val workflow =
++          if (validMode) bundle.workflow
++          else
++            new QueryWorkflow {
++              def run(
++                  r: QueryRequest,
++                  c: RequestContext,
++                  s: String => Unit
++              ): Either[ApiError, WorkflowOutput] = Left(ApiError.unavailable)
++            }
++        val queries =
++          if (validMode) bundle.queries
++          else new QueryService(bundle.sessions, workflow, config, bundle.metrics)
++        val app = new ApiApplication(
++          queries,
++          config,
++          readiness = () => validMode && bundle.ready,
++          serviceRole = role,
++          extended = if (validMode) Some(bundle.extended) else None
++        )
++        val server = ApiServer.start(app, config.host, config.port, config.maxRequestBytes)
++        val worker = if (role == "embedding-worker" && validMode) {
++          val embedder = new DeterministicHashedEmbeddingClient(
++            EmbeddingModel("synthetic-offline-services", "v1", 8)
++          )
++          val vectors = new InMemoryVectorStore
++          val runner = new EmbeddingManifestRunner(
++            EmbeddingIngestConfig("synthetic-offline", "text", 8),
++            new InMemoryObjectStore,
++            vectors,
++            new InMemoryArtifactRegistry,
++            new InMemoryRunLedger,
++            embedder
++          )
++          val w = new EmbeddingWorker(
++            new InMemoryEmbeddingWorkQueue,
++            new InMemoryEmbeddingWorkQueue,
++            new InMemoryQuerySessionStore,
++            new ManifestEmbeddingProcessor(runner),
++            workerConfig
++          )
++          val thread = ServiceThreads.daemon("embedding-worker").newThread(() => w.run());
++          thread.start(); Some((w, thread))
++        } else None
++        Runtime.getRuntime.addShutdownHook(new Thread(() => {
++          worker.foreach((w, t) => {
++            w.close(); t.interrupt(); t.join(config.downstreamTimeoutMs)
++          }); server.close()
++        }))
++        0
++    }
++  } catch { case NonFatal(_) => System.err.println("invalid-service-configuration"); 2 }
++  def main(role: String): Unit = { val exit = start(role); if (exit != 0) System.exit(exit) }
+ }
+-object QueryApiMain { def main(args: Array[String]): Unit = ServiceBootstrap.start("query-api") }
++object QueryApiMain { def main(args: Array[String]): Unit = ServiceBootstrap.main("query-api") }
+ object GraphServiceMain {
+-  def main(args: Array[String]): Unit = ServiceBootstrap.start("graph-service")
++  def main(args: Array[String]): Unit = ServiceBootstrap.main("graph-service")
+ }
+ object SemanticServiceMain {
+-  def main(args: Array[String]): Unit = ServiceBootstrap.start("semantic-service")
++  def main(args: Array[String]): Unit = ServiceBootstrap.main("semantic-service")
+ }
+ object EmbeddingWorkerMain {
+-  def main(args: Array[String]): Unit = ServiceBootstrap.start("embedding-worker")
++  def main(args: Array[String]): Unit = ServiceBootstrap.main("embedding-worker")
+ }
+diff --git a/project/ScholarChainBuild.scala b/project/ScholarChainBuild.scala
+index 8834c40..e89cff1 100644
+--- a/project/ScholarChainBuild.scala
++++ b/project/ScholarChainBuild.scala
+@@ -103,6 +103,10 @@ object ScholarChainBuild {
+       )
+       val output = target.value / "distribution"
+       ServiceDistribution.write(appJar, dependencies, output)
++      ServiceDistribution.writePromptAssets(
++        (LocalRootProject / baseDirectory).value / "prompts",
++        output
++      )
+       streams.value.log.info(
+         s"Verified four-artifact service distribution: ${output.getAbsolutePath}"
+       )
+diff --git a/project/ServiceDistribution.scala b/project/ServiceDistribution.scala
+index e525c0a..6236ffe 100644
+--- a/project/ServiceDistribution.scala
++++ b/project/ServiceDistribution.scala
+@@ -3,6 +3,7 @@ package scholarchain.build
+ import java.io.File
+ import java.nio.file.{Files, StandardCopyOption}
+ import java.util.jar.JarFile
++import scala.jdk.CollectionConverters._
+ 
+ /** A thin application JAR and its complete runtime JAR classpath. */
+ object ServiceDistribution {
+@@ -13,6 +14,33 @@ object ServiceDistribution {
+     "embedding-worker" -> "edu.uic.cs441.scholarchain.services.EmbeddingWorkerMain"
+   )
+ 
++  /** Versioned runtime prompts and schemas remain ordinary files, preserving their paths. */
++  def writePromptAssets(source: File, output: File): Unit = {
++    val roots = Seq("runtime", "schemas").map(name => new File(source, name).toPath)
++    val assets = roots.flatMap { root =>
++      require(Files.isDirectory(root), s"Missing runtime asset directory: $root")
++      val walk = Files.walk(root)
++      try {
++        val paths = walk.iterator().asScala.toVector
++        require(!paths.exists(Files.isSymbolicLink(_)), s"Runtime assets contain a symlink: $root")
++        val files = paths.filter(Files.isRegularFile(_))
++        require(files.nonEmpty, s"Empty runtime asset directory: $root")
++        files
++      } finally walk.close()
++    }
++    val destination = new File(output, "prompts").toPath
++    if (Files.exists(destination)) {
++      val walk = Files.walk(destination)
++      try walk.iterator().asScala.toVector.sortBy(_.getNameCount).reverse.foreach(Files.delete(_))
++      finally walk.close()
++    }
++    assets.foreach { asset =>
++      val target = destination.resolve(source.toPath.relativize(asset))
++      Files.createDirectories(target.getParent)
++      Files.copy(asset, target, StandardCopyOption.REPLACE_EXISTING)
++    }
++  }
++
+   def write(appJar: File, dependencies: Seq[File], output: File): Unit = {
+     require(appJar.isFile, s"Missing application JAR: $appJar")
+     val jar = new JarFile(appJar)
+diff --git a/project/ServicesPackaging.md b/project/ServicesPackaging.md
+index 031c264..fa4a1d6 100644
+--- a/project/ServicesPackaging.md
++++ b/project/ServicesPackaging.md
+@@ -6,6 +6,13 @@ runtime dependency classpath. Spark is not a service dependency. Storage's
+ Parquet/Hadoop dependencies remain because the storage module still declares
+ them; splitting the storage adapters is outside this phase.
+ 
++The distribution also copies the versioned `prompts/runtime/**` and
++`prompts/schemas/**` trees to `distribution/prompts/`, retaining exact file bytes
++and relative paths. Each build replaces that generated asset tree so removed
++assets cannot survive in an image. Both source directories must contain files;
++symbolic links are rejected. Docker places these assets at `/app/prompts` for
++the explicit offline synthetic runtime and configured runtime composition.
++
+ The distribution task validates the four service entry points, rejects duplicate
+ dependency filenames, and replaces stale generated libraries. Keeping dependency
+ JARs intact preserves their resources and service-provider descriptors. There is
+diff --git a/project/verification/src/test/scala/scholarchain/build/ServiceDistributionSpec.scala b/project/verification/src/test/scala/scholarchain/build/ServiceDistributionSpec.scala
+index 0c133af..dcc07aa 100644
+--- a/project/verification/src/test/scala/scholarchain/build/ServiceDistributionSpec.scala
++++ b/project/verification/src/test/scala/scholarchain/build/ServiceDistributionSpec.scala
+@@ -75,4 +75,56 @@ class ServiceDistributionSpec extends AnyFunSuite {
+     assert(error.getMessage.contains("names collide"))
+     assert(!output.exists())
+   }
++
++  test("runtime assets retain nested paths and exact bytes while replacing stale assets") {
++    val root = Files.createTempDirectory("service-assets-test")
++    val source = root.resolve("source")
++    val runtime = source.resolve("runtime/nested/synthesis.md")
++    val schema = source.resolve("schemas/answer.json")
++    Files.createDirectories(runtime.getParent)
++    Files.createDirectories(schema.getParent)
++    Files.write(runtime, Array[Byte](0, 10, 13, 127, -1))
++    Files.write(schema, "{\"type\":\"object\"}".getBytes("UTF-8"))
++    Files.write(source.resolve("unrelated.txt"), "excluded".getBytes("UTF-8"))
++    val output = root.resolve("distribution")
++    Files.createDirectories(output.resolve("prompts/runtime"))
++    Files.write(output.resolve("prompts/runtime/stale.md"), Array[Byte](1))
++    Files.write(output.resolve("services.jar"), Array[Byte](2))
++    ServiceDistribution.writePromptAssets(source.toFile, output.toFile)
++    assert(
++      Files
++        .readAllBytes(output.resolve("prompts/runtime/nested/synthesis.md"))
++        .sameElements(Array[Byte](0, 10, 13, 127, -1))
++    )
++    assert(
++      new String(Files.readAllBytes(output.resolve("prompts/schemas/answer.json")), "UTF-8") ==
++        "{\"type\":\"object\"}"
++    )
++    assert(!Files.exists(output.resolve("prompts/runtime/stale.md")))
++    assert(!Files.exists(output.resolve("prompts/unrelated.txt")))
++    assert(Files.readAllBytes(output.resolve("services.jar")).sameElements(Array[Byte](2)))
++  }
++
++  test("missing prompt trees and symlinked assets are rejected") {
++    val root = Files.createTempDirectory("service-assets-invalid-test")
++    val source = root.resolve("source")
++    Files.createDirectories(source.resolve("runtime"))
++    Files.write(source.resolve("runtime/synthesis.md"), Array[Byte](1))
++    val output = root.resolve("distribution")
++    val missing = intercept[IllegalArgumentException](
++      ServiceDistribution.writePromptAssets(source.toFile, output.toFile)
++    )
++    assert(missing.getMessage.contains("Missing runtime asset directory"))
++    assert(!Files.exists(output))
++    Files.createDirectories(source.resolve("schemas"))
++    Files.createSymbolicLink(
++      source.resolve("schemas/answer.json"),
++      source.resolve("runtime/synthesis.md")
++    )
++    val linked = intercept[IllegalArgumentException](
++      ServiceDistribution.writePromptAssets(source.toFile, output.toFile)
++    )
++    assert(linked.getMessage.contains("symlink"))
++    assert(!Files.exists(output))
++  }
+ }
+diff --git a/modules/services/src/main/resources/openapi/examples/error.json b/modules/services/src/main/resources/openapi/examples/error.json
+new file mode 100644
+index 0000000..7da90e7
+--- /dev/null
++++ b/modules/services/src/main/resources/openapi/examples/error.json
+@@ -0,0 +1 @@
++{"error":"NOT_FOUND","message":"The requested record was not found.","traceId":"trace-synthetic-example","retryable":false}
+diff --git a/modules/services/src/main/resources/openapi/examples/graph-page.json b/modules/services/src/main/resources/openapi/examples/graph-page.json
+new file mode 100644
+index 0000000..949cd6a
+--- /dev/null
++++ b/modules/services/src/main/resources/openapi/examples/graph-page.json
+@@ -0,0 +1 @@
++{"nodeId":"synthetic:example","snapshot":"synthetic-example-v1","direction":"both","depth":1,"items":[],"cursor":null}
+diff --git a/modules/services/src/main/resources/openapi/examples/job-reference.json b/modules/services/src/main/resources/openapi/examples/job-reference.json
+new file mode 100644
+index 0000000..7ea61af
+--- /dev/null
++++ b/modules/services/src/main/resources/openapi/examples/job-reference.json
+@@ -0,0 +1 @@
++{"queryId":"qry-0000000000000000000000000000000000000000000000000000000000000000","mode":"asynchronous","jobId":"job-0000000000000000000000000000000000000000000000000000000000000000","status":"RUNNING","statusUrl":"/v1/jobs/job-0000000000000000000000000000000000000000000000000000000000000000"}
+diff --git a/modules/services/src/main/resources/openapi/examples/query-request.json b/modules/services/src/main/resources/openapi/examples/query-request.json
+new file mode 100644
+index 0000000..49a5a22
+--- /dev/null
++++ b/modules/services/src/main/resources/openapi/examples/query-request.json
+@@ -0,0 +1 @@
++{"question":"Synthetic fixture: publication count for A","output":{"includeScores":false}}
+diff --git a/modules/services/src/main/resources/openapi/examples/semantic-request.json b/modules/services/src/main/resources/openapi/examples/semantic-request.json
+new file mode 100644
+index 0000000..cb446fe
+--- /dev/null
++++ b/modules/services/src/main/resources/openapi/examples/semantic-request.json
+@@ -0,0 +1 @@
++{"question":"Synthetic fixture query","topK":3,"filters":{}}
+diff --git a/modules/services/src/main/scala/edu/uic/cs441/scholarchain/services/EmbeddingWorker.scala b/modules/services/src/main/scala/edu/uic/cs441/scholarchain/services/EmbeddingWorker.scala
+new file mode 100644
+index 0000000..c5e4286
+--- /dev/null
++++ b/modules/services/src/main/scala/edu/uic/cs441/scholarchain/services/EmbeddingWorker.scala
+@@ -0,0 +1,116 @@
++package edu.uic.cs441.scholarchain.services
++
++import edu.uic.cs441.scholarchain.core.*
++import edu.uic.cs441.scholarchain.storage.*
++import scala.util.control.NonFatal
++
++trait EmbeddingProcessor {
++  def process(item: EmbeddingWorkItem): Either[ApiError, Unit]
++}
++final class ManifestEmbeddingProcessor(runner: EmbeddingManifestRunner) extends EmbeddingProcessor {
++  def process(item: EmbeddingWorkItem): Either[ApiError, Unit] = {
++    val run = "run:" + java.util.UUID.randomUUID().toString
++    PortResult.read(runner.run(EmbeddingManifest(Vector(item)), run)).flatMap { report =>
++      if (report.rejected == 0 && report.vectorKeyTextConflict == 0) Right(())
++      else Left(ApiError.downstream)
++    }
++  }
++}
++final case class WorkerConfig(maxAttempts: Int = 3, batchSize: Int = 1, pollMs: Long = 1000) {
++  require(maxAttempts > 0 && batchSize > 0 && batchSize <= 10 && pollMs > 0)
++}
++final case class WorkerPoll(
++    received: Int,
++    completed: Int,
++    duplicates: Int,
++    deadLettered: Int,
++    failed: Int
++)
++
++/** Durable per-payload reservation fences concurrent consumers. Receipt acknowledgement only
++  * follows recorded success or successful DLQ publication. No queue/provider is constructed here.
++  */
++final class EmbeddingWorker(
++    queue: EmbeddingWorkQueue,
++    dlq: EmbeddingWorkQueue,
++    sessions: QuerySessionStore,
++    processor: EmbeddingProcessor,
++    val config: WorkerConfig = WorkerConfig()
++) extends AutoCloseable {
++  @volatile private var active = true
++  def pollOnce(): Either[ApiError, WorkerPoll] =
++    PortResult.read(queue.receive(config.batchSize)).map { messages =>
++      var done = 0; var duplicate = 0; var dead = 0; var failed = 0
++      messages.foreach { message =>
++        val hash = Auth.sha256(upickle.default.write(message.item))
++        val id = "EMBEDDING_WORKER#" + hash
++        val created = sessions.createIfAbsent(id, "embedding-worker:" + hash)
++        val row = StorageResult.value(created).orElse(StorageResult.value(sessions.get(id)))
++        row match {
++          case None => failed += 1
++          case Some(s) if s.state == "COMPLETE" || s.state == "DEAD" =>
++            if (StorageResult.successful(queue.acknowledge(message.receipt))) duplicate += 1
++            else failed += 1
++          case Some(s) if s.state == "created" || s.state == "RETRY" =>
++            val attempts = if (s.payload == "{}") 0 else ujson.read(s.payload)("attempts").num.toInt
++            val claimed = s.copy(
++              state = "PROCESSING",
++              revision = s.revision + 1,
++              payload = ujson.Obj("attempts" -> (attempts + 1)).render()
++            )
++            if (!StorageResult.successful(sessions.update(claimed, s.revision))) failed += 1
++            else {
++              val result =
++                try processor.process(message.item)
++                catch { case NonFatal(_) => Left(ApiError.downstream) }
++              result match {
++                case Right(_) =>
++                  val saved = sessions.update(
++                    claimed.copy(state = "COMPLETE", revision = claimed.revision + 1),
++                    claimed.revision
++                  )
++                  if (
++                    StorageResult.successful(saved) && StorageResult
++                      .successful(queue.acknowledge(message.receipt))
++                  ) done += 1
++                  else failed += 1
++                case Left(_) if attempts + 1 >= config.maxAttempts =>
++                  val published = dlq.enqueue(Vector(message.item))
++                  if (StorageResult.successful(published)) {
++                    val saved = sessions.update(
++                      claimed.copy(state = "DEAD", revision = claimed.revision + 1),
++                      claimed.revision
++                    )
++                    if (
++                      StorageResult.successful(saved) && StorageResult
++                        .successful(queue.acknowledge(message.receipt))
++                    ) dead += 1
++                    else failed += 1
++                  } else {
++                    sessions.update(
++                      claimed.copy(state = "RETRY", revision = claimed.revision + 1),
++                      claimed.revision
++                    )
++                    failed += 1
++                  }
++                case Left(_) =>
++                  sessions.update(
++                    claimed.copy(state = "RETRY", revision = claimed.revision + 1),
++                    claimed.revision
++                  )
++                  failed += 1
++              }
++            }
++          case _ =>
++            failed += 1 // Another live worker owns PROCESSING; leave the receipt unacknowledged.
++        }
++      }
++      WorkerPoll(messages.size, done, duplicate, dead, failed)
++    }
++  def run(): Unit = while (active && !Thread.currentThread().isInterrupted) {
++    pollOnce()
++    try Thread.sleep(config.pollMs)
++    catch { case _: InterruptedException => Thread.currentThread().interrupt() }
++  }
++  def close(): Unit = { active = false }
++}
+diff --git a/modules/services/src/main/scala/edu/uic/cs441/scholarchain/services/EvidenceApi.scala b/modules/services/src/main/scala/edu/uic/cs441/scholarchain/services/EvidenceApi.scala
+new file mode 100644
+index 0000000..7737dcf
+--- /dev/null
++++ b/modules/services/src/main/scala/edu/uic/cs441/scholarchain/services/EvidenceApi.scala
+@@ -0,0 +1,108 @@
++package edu.uic.cs441.scholarchain.services
++
++import edu.uic.cs441.scholarchain.storage.*
++import edu.uic.cs441.scholarchain.core.*
++
++private[services] object PortResult {
++  def read[A](r: StorageResult[A]): Either[ApiError, A] = r match {
++    case StorageResult.Missing =>
++      Left(ApiError(404, "NOT_FOUND", "The requested record was not found."))
++    case other => StorageResult.value(other).toRight(ApiError.downstream)
++  }
++}
++final class EvidenceApi(
++    store: EvidenceBundleStore,
++    audits: RuntimeAuditStore,
++    sessions: Option[QuerySessionStore] = None
++) {
++  def evidence(id: String): Either[ApiError, ApiReply] =
++    PortResult.read(store.getItem(id)).map { item =>
++      ApiReply(
++        200,
++        ujson.Obj(
++          "evidenceId" -> item.evidenceId,
++          "evidenceType" -> item.evidenceType.wire,
++          "workId" -> upickle.default.writeJs(item.workId),
++          "sourceDataset" -> item.provenance.source.wire,
++          "sourceRecordId" -> item.provenance.sourceRecordId,
++          "snapshot" -> item.provenance.datasetSnapshot,
++          "sourceUri" -> item.sourceUri,
++          "text" -> upickle.default.writeJs(item.text),
++          "textS3Uri" -> (if (item.sourceUri.startsWith("s3://")) ujson.Str(item.sourceUri)
++                          else ujson.Null),
++          "graphPath" -> upickle.default.writeJs(item.graphPath),
++          "chunkId" -> upickle.default.writeJs(item.chunkId),
++          "score" -> item.score,
++          "provenance" -> upickle.default.writeJs(item.provenance),
++          "supportingContent" -> item.runtime.map(upickle.default.writeJs(_)).getOrElse(ujson.Null)
++        )
++      )
++    }
++  def queryEvidence(id: String): Either[ApiError, ApiReply] =
++    PortResult.read(audits.get(id)).map { audit =>
++      ApiReply(
++        200,
++        ujson.Obj(
++          "queryId" -> id,
++          "evidenceIds" -> ujson.Arr.from(audit.record.toVector.flatMap(_.evidenceIds))
++        )
++      )
++    }
++  def explain(id: String): Either[ApiError, ApiReply] =
++    PortResult.read(audits.get(id)).map { audit =>
++      val record = audit.record
++      // Only observable, persisted audit fields are projected. Neither attempted model prose nor
++      // hidden prompts/reasoning are returned. Missing measurements remain null, never guessed.
++      ApiReply(
++        200,
++        ujson.Obj(
++          "queryId" -> audit.queryId,
++          "traceId" -> audit.traceId,
++          "queryPlan" -> record.map(r => upickle.default.writeJs(r.plan)).getOrElse(ujson.Null),
++          "stagesExecuted" -> sessions
++            .flatMap(s => StorageResult.value(s.get(id)))
++            .flatMap(s =>
++              try ujson.read(s.payload).obj.get("observedStages")
++              catch { case _: Exception => None }
++            )
++            .getOrElse(ujson.Null),
++          "stageFailures" -> upickle.default.writeJs(audit.stageFailures),
++          "promptVersions" -> ujson.Arr.from(audit.modelUsage.map(_.promptVersion).distinct),
++          "modelVersions" -> upickle.default.writeJs(audit.modelUsage),
++          "evidenceIds" -> ujson.Arr.from(record.toVector.flatMap(_.evidenceIds)),
++          "scoreComponents" -> ujson.Arr.from(
++            record.toVector
++              .flatMap(_.evidenceIds)
++              .flatMap(id => StorageResult.value(store.getItem(id)))
++              .map(item =>
++                ujson.Obj(
++                  "evidenceId" -> item.evidenceId,
++                  "score" -> item.score,
++                  "source" -> "persisted-evidence-item"
++                )
++              )
++          ),
++          "counters" -> ujson.Obj(
++            "latencyMillis" -> audit.latencyMillis,
++            "retries" -> ujson.Null,
++            "cacheHits" -> ujson.Null,
++            "attemptedClaims" -> record.map(_.attemptedClaims.size).getOrElse(0),
++            "verifiedClaims" -> record.toVector
++              .flatMap(_.verification.claims)
++              .count(_.verdict == ClaimVerdict.Verified),
++            "rejectedClaims" -> record.map(_.verification.rejectedClaims.size).getOrElse(0)
++          ),
++          "verificationStatus" -> record
++            .map(r => r.verification.overallStatus.wire)
++            .getOrElse(audit.outcome),
++          "verification" -> record
++            .map(r => upickle.default.writeJs(r.verification.claims))
++            .getOrElse(ujson.Arr()),
++          "outcome" -> audit.outcome,
++          "reason" -> upickle.default.writeJs(audit.reason),
++          "metricVersions" -> ujson.Arr.from(record.toVector.flatMap(_.metricVersions)),
++          "graphRunIds" -> ujson.Arr.from(record.toVector.flatMap(_.graphRunIds))
++        )
++      )
++    }
++}
+diff --git a/modules/services/src/main/scala/edu/uic/cs441/scholarchain/services/GraphApi.scala b/modules/services/src/main/scala/edu/uic/cs441/scholarchain/services/GraphApi.scala
+new file mode 100644
+index 0000000..ebd66fd
+--- /dev/null
++++ b/modules/services/src/main/scala/edu/uic/cs441/scholarchain/services/GraphApi.scala
+@@ -0,0 +1,316 @@
++package edu.uic.cs441.scholarchain.services
++
++import edu.uic.cs441.scholarchain.core.*
++import edu.uic.cs441.scholarchain.storage.*
++import java.nio.charset.StandardCharsets.UTF_8
++import java.util.Base64
++import javax.crypto.Mac
++import javax.crypto.spec.SecretKeySpec
++import scala.util.boundary
++import scala.util.control.NonFatal
++
++/** Directed immutable snapshot supplied by composition. The older GraphReader neighbor port has
++  * neither direction nor snapshot identity and cannot satisfy this stronger public contract.
++  */
++trait GraphSnapshot {
++  def snapshotId: String
++  def node(id: String): StorageResult[GraphNode]
++  def edges(id: String, window: String): StorageResult[Vector[GraphEdge]]
++  def metrics(id: String, window: String): StorageResult[ResearcherMetricRecord]
++}
++final class InMemoryGraphSnapshot(
++    val snapshotId: String,
++    nodes: Vector[GraphNode],
++    edges: Vector[GraphEdge],
++    metricStore: ResearcherMetricStore = new InMemoryResearcherMetricStore
++) extends GraphSnapshot {
++  require(snapshotId.nonEmpty && nodes.map(_.nodeId).distinct.size == nodes.size)
++  def node(id: String): StorageResult[GraphNode] =
++    nodes.find(_.nodeId == id).map(StorageResult.Found(_)).getOrElse(StorageResult.Missing)
++  def edges(id: String, window: String): StorageResult[Vector[GraphEdge]] =
++    StorageResult.Found(
++      edges
++        .filter(e => e.fromId == id || e.toId == id)
++        .filter(e => e.properties.find(_.name == "windowId").forall(_.value == window))
++    )
++  def metrics(id: String, window: String): StorageResult[ResearcherMetricRecord] =
++    metricStore.get(id, window)
++}
++final case class GraphApiConfig(
++    defaultDirection: String = "both",
++    defaultDepth: Int = 1,
++    maxDepth: Int = 3,
++    defaultLimit: Int = 50,
++    maxLimit: Int = 200,
++    timeoutMs: Long = 5000,
++    defaultWindow: String = "all-years",
++    maxScannedEdges: Int = 10000,
++    maxVisitedNodes: Int = 2000,
++    maxCursorChars: Int = 4096,
++    cursorKey: String = java.util.UUID.randomUUID().toString
++) {
++  require(
++    Set("in", "out", "both")(
++      defaultDirection
++    ) && defaultDepth > 0 && defaultDepth <= maxDepth && maxDepth <= 3
++  )
++  require(defaultLimit > 0 && defaultLimit <= maxLimit && maxLimit <= 200 && timeoutMs > 0)
++  require(
++    defaultWindow.nonEmpty && maxScannedEdges > 0 && maxVisitedNodes > 0 && maxCursorChars > 0 && cursorKey.nonEmpty
++  )
++}
++final class GraphApi(snapshot: GraphSnapshot, val config: GraphApiConfig = GraphApiConfig())
++    extends GraphEndpoints {
++  private val edgeTypes =
++    Set("COAUTHORED_WITH", "AUTHORED", "HAS_TOPIC", "AFFILIATED_WITH", "PUBLISHED_IN")
++  private val boundaryConfig = ServiceConfig(
++    Auth.sha256("graph-boundary-placeholder"),
++    Auth.sha256("graph-boundary-internal-placeholder"),
++    downstreamTimeoutMs = config.timeoutMs,
++    downstreamMaxAttempts = 1
++  )
++  private val boundaryClient =
++    new DownstreamClient(boundaryConfig, new CircuitBreaker(Int.MaxValue, config.timeoutMs))
++  private def timed[A](context: RequestContext, timeout: Long)(
++      body: => Either[ApiError, A]
++  ): Either[ApiError, A] = {
++    // One call wraps the complete expansion so slow node/edge adapters cannot extend the aggregate deadline.
++    boundaryClient.callWithin("GET", context, timeout)(_ => body)
++  }
++  private def signature(value: String): String = {
++    val mac = Mac.getInstance("HmacSHA256")
++    mac.init(new SecretKeySpec(config.cursorKey.getBytes(UTF_8), "HmacSHA256"))
++    Base64.getUrlEncoder.withoutPadding().encodeToString(mac.doFinal(value.getBytes(UTF_8)))
++  }
++  private def encode(offset: Int, binding: String): String = {
++    val p = ujson.Obj("offset" -> offset, "binding" -> binding).render()
++    Base64.getUrlEncoder.withoutPadding().encodeToString(p.getBytes(UTF_8)) + "." + signature(p)
++  }
++  private def decode(cursor: String, binding: String): Either[ApiError, Int] = try {
++    if (cursor.length > config.maxCursorChars) return Left(ApiError.invalid)
++    val parts = cursor.split("\\.", -1)
++    if (parts.length != 2) return Left(ApiError.invalid)
++    val p = new String(Base64.getUrlDecoder.decode(parts(0)), UTF_8)
++    if (
++      !java.security.MessageDigest.isEqual(signature(p).getBytes(UTF_8), parts(1).getBytes(UTF_8))
++    ) return Left(ApiError.invalid)
++    val value = ujson.read(p)
++    if (value("binding").str != binding || !value("offset").num.isWhole || value("offset").num < 0)
++      Left(ApiError.invalid)
++    else Right(value("offset").num.toInt)
++  } catch { case NonFatal(_) => Left(ApiError.invalid) }
++  def node(id: String, context: RequestContext): Either[ApiError, ApiReply] =
++    timed(context, config.timeoutMs) {
++      PortResult
++        .read(snapshot.node(id))
++        .map(n =>
++          ApiReply(
++            200,
++            ujson.Obj(
++              "nodeId" -> n.nodeId,
++              "snapshot" -> snapshot.snapshotId,
++              "node" -> upickle.default.writeJs(n)
++            )
++          )
++        )
++    }
++  def neighbors(
++      id: String,
++      params: Map[String, String],
++      context: RequestContext
++  ): Either[ApiError, ApiReply] = boundary {
++    try {
++      if (
++        !params.keySet.subsetOf(
++          Set("direction", "depth", "limit", "edgeTypes", "window", "timeoutMs", "cursor")
++        )
++      ) boundary.break(Left(ApiError.invalid))
++      val direction = params.getOrElse("direction", config.defaultDirection)
++      val depth = params.get("depth").map(_.toInt).getOrElse(config.defaultDepth)
++      val limit = params.get("limit").map(_.toInt).getOrElse(config.defaultLimit)
++      val timeout = params.get("timeoutMs").map(_.toLong).getOrElse(config.timeoutMs)
++      val window = params.getOrElse("window", config.defaultWindow)
++      val types = params.get("edgeTypes").map(_.split(",", -1).toSet).getOrElse(edgeTypes)
++      if (
++        !Set("in", "out", "both")(
++          direction
++        ) || depth < 1 || depth > config.maxDepth || limit < 1 || limit > config.maxLimit || timeout < 1 || timeout > config.timeoutMs || window.isEmpty || !types
++          .subsetOf(edgeTypes) || types.isEmpty
++      ) boundary.break(Left(ApiError.invalid))
++      val binding = Auth.sha256(
++        ujson
++          .Arr(
++            id,
++            snapshot.snapshotId,
++            direction,
++            depth,
++            limit,
++            window,
++            ujson.Arr.from(types.toVector.sorted),
++            timeout
++          )
++          .render()
++      )
++      val offset = params
++        .get("cursor")
++        .map(decode(_, binding))
++        .getOrElse(Right(0))
++        .fold(e => boundary.break(Left(e)), identity)
++      timed(context, timeout) {
++        PortResult.read(snapshot.node(id)).flatMap { _ =>
++          val expires = System.nanoTime() + timeout * 1000000L
++          var frontier = Vector(id); var visited = Set(id); var scanned = 0; var level = 0
++          var items = Vector.empty[ujson.Value]; var seenEdges = Set.empty[String]
++          var error: Option[ApiError] = None
++          while (frontier.nonEmpty && level < depth && error.isEmpty) {
++            level += 1; var next = Vector.empty[String]
++            frontier.sorted.foreach { current =>
++              if (System.nanoTime() >= expires) error = Some(ApiError.timeout)
++              else if (error.isEmpty) PortResult.read(snapshot.edges(current, window)) match {
++                case Left(e) => error = Some(e)
++                case Right(edges) =>
++                  scanned += edges.size
++                  if (scanned > config.maxScannedEdges)
++                    error = Some(
++                      ApiError(
++                        422,
++                        "GRAPH_SCAN_CAP",
++                        "Graph exploration exceeds the configured scan cap."
++                      )
++                    )
++                  else
++                    edges.sortBy(_.edgeId).filter(e => types(e.edgeType.wire)).foreach { edge =>
++                      val follow =
++                        if (direction == "out" && edge.fromId == current) Some(edge.toId)
++                        else if (direction == "in" && edge.toId == current) Some(edge.fromId)
++                        else if (direction == "both")
++                          Some(if (edge.fromId == current) edge.toId else edge.fromId)
++                        else None
++                      follow.foreach { target =>
++                        if (!seenEdges(edge.edgeId)) {
++                          items :+= ujson.Obj(
++                            "nodeId" -> target,
++                            "edgeId" -> edge.edgeId,
++                            "edgeType" -> edge.edgeType.wire,
++                            "depth" -> level,
++                            "fromId" -> edge.fromId,
++                            "toId" -> edge.toId,
++                            "provenance" -> upickle.default.writeJs(edge.provenance)
++                          )
++                          seenEdges += edge.edgeId
++                        }
++                        if (!visited(target)) { visited += target; next :+= target }
++                      }
++                    }
++              }
++              if (visited.size > config.maxVisitedNodes)
++                error = Some(
++                  ApiError(
++                    422,
++                    "GRAPH_NODE_CAP",
++                    "Graph exploration exceeds the configured node cap."
++                  )
++                )
++            }
++            frontier = next.distinct
++          }
++          if (System.nanoTime() >= expires) error = Some(ApiError.timeout)
++          error.map(Left(_)).getOrElse {
++            if (offset > items.size) Left(ApiError.invalid)
++            else
++              Right(
++                ApiReply(
++                  200,
++                  ujson.Obj(
++                    "nodeId" -> id,
++                    "snapshot" -> snapshot.snapshotId,
++                    "direction" -> direction,
++                    "depth" -> depth,
++                    "items" -> ujson.Arr.from(items.slice(offset, offset + limit)),
++                    "cursor" -> (if (offset + limit < items.size)
++                                   ujson.Str(encode(offset + limit, binding))
++                                 else ujson.Null)
++                  )
++                )
++              )
++          }
++        }
++      }
++    } catch { case b: boundary.Break[?] => throw b; case NonFatal(_) => Left(ApiError.invalid) }
++  }
++  def metrics(id: String, window: String, context: RequestContext): Either[ApiError, ApiReply] =
++    timed(context, config.timeoutMs) {
++      PortResult
++        .read(snapshot.metrics(id, window))
++        .map(m =>
++          ApiReply(
++            200,
++            ujson.Obj(
++              "researcherId" -> id,
++              "window" -> window,
++              "record" -> ujson.read(m.payloadJson),
++              "qualifications" -> ujson.read(m.qualificationsJson),
++              "metricVersion" -> m.metricVersion,
++              "runId" -> m.runId
++            )
++          )
++        )
++    }
++  def paths(params: Map[String, String], context: RequestContext): Either[ApiError, ApiReply] = {
++    val to = params.getOrElse("to", "")
++    if (to.isEmpty || !params.keySet.subsetOf(Set("from", "to", "maxDepth", "window")))
++      Left(ApiError.invalid)
++    else {
++      val from = params.getOrElse("from", "")
++      val p = Map(
++        "depth" -> params.getOrElse("maxDepth", config.maxDepth.toString),
++        "limit" -> config.maxLimit.toString,
++        "window" -> params.getOrElse("window", config.defaultWindow)
++      )
++      neighbors(from, p, context).flatMap { reply =>
++        val items = reply.body("items").arr.toVector
++        val maxDepth = p("depth").toInt
++        var frontier = Vector((Vector(from), Vector.empty[String]));
++        var found: Option[(Vector[String], Vector[String])] = None
++        var level = 0
++        var visited = Set(from)
++        while (frontier.nonEmpty && found.isEmpty && level <= maxDepth) {
++          found = frontier.find(_._1.last == to)
++          if (found.isEmpty && level < maxDepth) frontier = frontier.flatMap { (ns, es) =>
++            items.filter(x => x("fromId").str == ns.last || x("toId").str == ns.last).flatMap {
++              item =>
++                val n = if (item("fromId").str == ns.last) item("toId").str else item("fromId").str
++                if (visited(n)) None
++                else { visited += n; Some((ns :+ n, es :+ item("edgeId").str)) }
++            }
++          }
++          else frontier = Vector.empty
++          level += 1
++        }
++        val nodes = found.map(_._1).getOrElse(Vector.empty)
++        val edgeIds = found.map(_._2).getOrElse(Vector.empty)
++        if (reply.body("cursor") != ujson.Null)
++          return Left(
++            ApiError(422, "PATH_EXPANSION_TRUNCATED", "The bounded path expansion is incomplete.")
++          )
++        Right(
++          ApiReply(
++            200,
++            ujson.Obj(
++              "snapshot" -> snapshot.snapshotId,
++              "paths" -> (if (found.nonEmpty)
++                            ujson.Arr(
++                              ujson.Obj(
++                                "nodeIds" -> ujson.Arr.from(nodes),
++                                "edgeIds" -> ujson.Arr.from(edgeIds)
++                              )
++                            )
++                          else ujson.Arr())
++            )
++          )
++        )
++      }
++    }
++  }
++  def close(): Unit = boundaryClient.close()
++}
+diff --git a/modules/services/src/main/scala/edu/uic/cs441/scholarchain/services/OfflineComposition.scala b/modules/services/src/main/scala/edu/uic/cs441/scholarchain/services/OfflineComposition.scala
+new file mode 100644
+index 0000000..3ef7cd8
+--- /dev/null
++++ b/modules/services/src/main/scala/edu/uic/cs441/scholarchain/services/OfflineComposition.scala
+@@ -0,0 +1,266 @@
++package edu.uic.cs441.scholarchain.services
++
++import edu.uic.cs441.scholarchain.core.*
++import edu.uic.cs441.scholarchain.rag.*
++import edu.uic.cs441.scholarchain.storage.*
++import edu.uic.cs441.scholarchain.storage.fakes.{
++  InMemoryIndexedEvidenceBundleStore,
++  InMemoryRuntimeAuditStore
++}
++import java.nio.file.{Path, Files}
++
++/** Explicit synthetic offline composition, never selected as an implicit production fallback. It
++  * runs the real retrieval/synthesis/verification/audit path against the declared Phase9 G1
++  * snapshot. Its scripted synthesis copies only a retrieved publication count for verification.
++  */
++final class OfflineComposition(
++    config: ServiceConfig,
++    remoteGraph: Option[GraphEndpoints] = None,
++    remoteSemantic: Option[SemanticEndpoints] = None,
++    sharedMetrics: Option[ServiceMetrics] = None
++) {
++  val sessions = new InMemoryQuerySessionStore
++  val evidence = new InMemoryIndexedEvidenceBundleStore
++  val audits = new InMemoryRuntimeAuditStore
++  val metrics = sharedMetrics.getOrElse(new ServiceMetrics)
++  private val fixture = RuntimeOfflineFixture
++  private val runtimeConfig = fixture.config.copy(retrievalMode = RetrievalMode.Fused)
++  private val assetsRoot = Iterator
++    .iterate(Path.of("").toAbsolutePath)(_.getParent)
++    .takeWhile(_ != null)
++    .map(_.resolve("prompts"))
++    .find(Files.isDirectory(_))
++  private val localMetrics = fixture.metricStore()
++  private val graphNodes = fixture.names.map(n =>
++    GraphNode(
++      fixture.id(n),
++      SchemaVersions.domain,
++      GraphNodeClass.Researcher,
++      n,
++      Vector.empty,
++      fixture.provenance
++    )
++  )
++  private val graphEdges = fixture.edges.map { e =>
++    val source = GraphSourceEvidence.Work(e.representativeWorkIds.head)
++    GraphEdge(
++      e.edgeId,
++      SchemaVersions.domain,
++      e.researcherA,
++      GraphEdgeType.CoauthoredWith,
++      e.researcherB,
++      fixture.policy,
++      source,
++      Vector(NamedText("windowId", "all-years")),
++      None,
++      fixture.provenance
++    )
++  }
++  val graph: GraphEndpoints = remoteGraph.getOrElse(
++    new GraphApi(
++      new InMemoryGraphSnapshot("synthetic-phase9-g1-v1", graphNodes, graphEdges, localMetrics),
++      BootstrapConfig.graph(sys.env)
++    )
++  )
++  private val embedding = new DeterministicHashedEmbeddingClient(
++    EmbeddingModel("synthetic-offline-services", "v1", 8)
++  )
++  private val vectors = new InMemoryVectorStore
++  private val index = "synthetic-offline-services-v1"
++  vectors.ensureIndex(index, 8, "cosine")
++  val semantic: SemanticEndpoints =
++    remoteSemantic.getOrElse(SemanticApi.fromPorts(embedding, embedding.model, vectors, index))
++  val extended = ExtendedApi(new EvidenceApi(evidence, audits, Some(sessions)), graph, semantic)
++
++  val workflow: QueryWorkflow = new QueryWorkflow {
++    def run(
++        request: QueryRequest,
++        context: RequestContext,
++        stage: String => Unit
++    ): Either[ApiError, WorkflowOutput] = {
++      if (request.question != "Synthetic fixture: publication count for A")
++        return Left(ApiError.unsupported)
++      val assets = assetsRoot
++        .toRight(ApiError.unavailable)
++        .flatMap(p =>
++          RuntimePromptAssets.fromDirectory(p, runtimeConfig).left.map(_ => ApiError.unavailable)
++        )
++      assets.flatMap { prompts =>
++        val metricPort = new ResearcherMetricStore {
++          def put(r: ResearcherMetricRecord) = StorageResult.Rejected("read-only-runtime")
++          def get(id: String, window: String): StorageResult[ResearcherMetricRecord] =
++            remoteGraph match {
++              case None => localMetrics.get(id, window)
++              case Some(g) =>
++                g.metrics(id, window, context) match {
++                  case Left(_) => StorageResult.Rejected("remote-metrics-unavailable")
++                  case Right(reply) =>
++                    val body = reply.body
++                    StorageResult.Found(
++                      ResearcherMetricRecord(
++                        id,
++                        window,
++                        body("metricVersion").str,
++                        body("runId").str,
++                        body("record").render(),
++                        body("qualifications").render()
++                      )
++                    )
++                }
++            }
++          def batchGet(
++              keys: Vector[(String, String)]
++          ): StorageResult[Vector[ResearcherMetricRecord]] = {
++            val values = keys.map((id, w) => get(id, w))
++            if (values.forall(StorageResult.successful))
++              StorageResult.Found(values.flatMap(StorageResult.value))
++            else StorageResult.Rejected("remote-metrics-unavailable")
++          }
++        }
++        val semanticVectors: VectorStore = remoteSemantic
++          .map { remote =>
++            new VectorStore {
++              def ensureIndex(n: String, d: Int, m: String) =
++                StorageResult.Rejected("read-only-runtime")
++              def putBatch(n: String, ds: Vector[VectorDocument]) =
++                StorageResult.Rejected("read-only-runtime")
++              def get(n: String, keys: Vector[String]): StorageResult[Vector[VectorDocument]] =
++                StorageResult.Found(Vector.empty)
++              def query(n: String, v: Vector[Float], k: Int, f: Map[String, String])
++                  : StorageResult[Vector[VectorHit]] = remote.retrieve(
++                ujson
++                  .Obj(
++                    "question" -> request.question,
++                    "topK" -> k,
++                    "filters" -> ujson.Obj.from(f.map((key, value) => key -> ujson.Str(value)))
++                  )
++                  .render(),
++                context
++              ) match {
++                case Left(_) => StorageResult.Rejected("remote-semantic-unavailable")
++                case Right(reply) =>
++                  StorageResult.Found(
++                    reply
++                      .body("hits")
++                      .arr
++                      .toVector
++                      .map(h =>
++                        VectorHit(
++                          h("key").str,
++                          h("distance").num,
++                          h("metadata").obj.toMap.map((key, value) => key -> value.str)
++                        )
++                      )
++                  )
++              }
++            }
++          }
++          .getOrElse(vectors)
++        val model = new LlmClient {
++          def complete(r: StructuredLlmRequest): LlmResult = {
++            val body = ujson.read(r.userData)
++            val contextJson = ujson.read(
++              body("evidenceData").str
++                .stripPrefix("<untrusted_evidence_json>\n")
++                .stripSuffix("\n</untrusted_evidence_json>")
++            )
++            val item = contextJson("items").arr.find(
++              _.obj.get("values").exists(_.obj.contains("publicationCount"))
++            )
++            item match {
++              case None => LlmResult.Failure("synthetic-count-evidence-unavailable")
++              case Some(ev) =>
++                val raw = ev("values")("publicationCount")
++                val value = raw.strOpt.getOrElse(raw.render())
++                val claim = ujson.Obj(
++                  "claimId" -> "synthetic-publication-count",
++                  "claimType" -> "METRIC",
++                  "subjectIds" -> ujson.Arr(fixture.id("A")),
++                  "values" -> ujson.Arr(
++                    ujson.Obj(
++                      "field" -> "publicationCount",
++                      "number" -> value,
++                      "text" -> ujson.Null,
++                      "ids" -> ujson.Null,
++                      "flag" -> ujson.Null
++                    )
++                  ),
++                  "evidenceIds" -> ujson.Arr(ev("evidenceId")),
++                  "windowIds" -> ujson.Arr("all-years"),
++                  "templateId" -> "metric-v1"
++                )
++                LlmResult.Output(
++                  ujson
++                    .Obj(
++                      "schemaVersion" -> runtimeConfig.synthesisSchemaVersion,
++                      "claims" -> ujson.Arr(claim),
++                      "narrativeClaimIds" -> ujson.Arr("synthetic-publication-count"),
++                      "interpretation" -> "",
++                      "uncertainty" -> "Declared synthetic offline G1 fixture only."
++                    )
++                    .render(),
++                  LlmUsage(None, None),
++                  runtimeConfig.model.modelId,
++                  runtimeConfig.model.modelVersion
++                )
++            }
++          }
++        }
++        val retrieval = new WorkflowRunner(
++          new QueryPlannerAgent(new ScriptedLlmClient(Vector.empty), runtimeConfig, prompts),
++          new ResearcherResolverAgent(fixture.cache(), runtimeConfig),
++          new CollaborationMetricsAgent(metricPort, fixture.artifacts(), runtimeConfig),
++          new PathFinderAgent(fixture.graph(), metricPort, fixture.artifacts(), runtimeConfig),
++          new CommunityAnalystAgent(
++            fixture.graph(),
++            metricPort,
++            fixture.artifacts(),
++            runtimeConfig
++          ),
++          new SemanticContextAgent(
++            semanticVectors,
++            new InMemoryObjectStore,
++            embedding,
++            index,
++            runtimeConfig
++          ),
++          new EvidenceBuilderAgent(evidence, runtimeConfig),
++          runtimeConfig
++        )
++        val full = new RuntimeAnswerWorkflow(
++          retrieval,
++          new AnswerSynthesisAgent(model, runtimeConfig, prompts),
++          new ClaimVerificationAgent(runtimeConfig),
++          audits,
++          runtimeConfig
++        )
++        val adapter = new RuntimeWorkflowAdapter(
++          full,
++          (req, _) =>
++            Right(
++              fixture
++                .plan(QueryOperation.MaximumTeamSize, "A")
++                .copy(
++                  question = req.question,
++                  runtime = Some(
++                    RuntimeQueryOptions(
++                      researcherNames = Vector("A"),
++                      windowIds = Vector("all-years"),
++                      retrievalMode = RetrievalMode.Fused,
++                      evidenceOnly = false
++                    )
++                  )
++                )
++            ),
++          Some(evidence)
++        )
++        adapter.run(request, context, stage)
++      }
++    }
++  }
++  def ready: Boolean =
++    assetsRoot.nonEmpty && graph.ready(RequestContext("readiness", "readiness")) && semantic.ready(
++      RequestContext("readiness", "readiness")
++    )
++  val queries = new QueryService(sessions, workflow, config, metrics)
++}
+diff --git a/modules/services/src/main/scala/edu/uic/cs441/scholarchain/services/RemoteServices.scala b/modules/services/src/main/scala/edu/uic/cs441/scholarchain/services/RemoteServices.scala
+new file mode 100644
+index 0000000..6220062
+--- /dev/null
++++ b/modules/services/src/main/scala/edu/uic/cs441/scholarchain/services/RemoteServices.scala
+@@ -0,0 +1,136 @@
++package edu.uic.cs441.scholarchain.services
++
++import java.net.{URI, URLEncoder}
++import java.net.http.{HttpClient, HttpRequest, HttpResponse}
++import java.time.Duration
++import java.nio.charset.StandardCharsets.UTF_8
++import scala.util.control.NonFatal
++
++/** Endpoint/token values are runtime injection inputs, never logged or included in public errors.
++  */
++final class RemoteService(
++    baseUri: URI,
++    internalToken: String,
++    config: ServiceConfig,
++    metrics: ServiceMetrics,
++    dependencyName: String
++) extends AutoCloseable {
++  require(
++    Set("http", "https")(
++      baseUri.getScheme
++    ) && baseUri.getHost != null && baseUri.getUserInfo == null && internalToken.nonEmpty
++  )
++  private val http =
++    HttpClient.newBuilder().connectTimeout(Duration.ofMillis(config.downstreamTimeoutMs)).build()
++  private val boundary = new DownstreamClient(
++    config,
++    new CircuitBreaker(config.breakerFailureThreshold, config.breakerResetMs),
++    metrics,
++    dependencyName
++  )
++  def call(
++      method: String,
++      path: String,
++      params: Map[String, String],
++      body: Option[String],
++      context: RequestContext
++  ): Either[ApiError, ApiReply] = {
++    val query =
++      if (params.isEmpty) ""
++      else
++        params.toVector
++          .sortBy(_._1)
++          .map((k, v) => RemoteService.segment(k) + "=" + RemoteService.segment(v))
++          .mkString("?", "&", "")
++    boundary.call(method, context) { correlation =>
++      try {
++        val builder = HttpRequest
++          .newBuilder(URI.create(baseUri.toString.stripSuffix("/") + path + query))
++          .timeout(Duration.ofMillis(config.downstreamTimeoutMs))
++          .header("Authorization", "Bearer " + internalToken)
++          .header("Content-Type", "application/json")
++        correlation.foreach((k, v) => builder.header(k, v))
++        val request = builder
++          .method(
++            method,
++            body
++              .map(HttpRequest.BodyPublishers.ofString(_))
++              .getOrElse(HttpRequest.BodyPublishers.noBody())
++          )
++          .build()
++        val response = http.send(request, HttpResponse.BodyHandlers.ofInputStream())
++        val in = response.body()
++        val bytes =
++          try in.readNBytes(config.maxResultBytes + 1)
++          finally in.close()
++        if (bytes.length > config.maxResultBytes)
++          Left(
++            ApiError(
++              502,
++              "DOWNSTREAM_RESULT_TOO_LARGE",
++              "Downstream result exceeds the configured bound."
++            )
++          )
++        else if (response.statusCode() >= 200 && response.statusCode() < 300)
++          Right(ApiReply(response.statusCode(), ujson.read(new String(bytes, UTF_8))))
++        else {
++          val status = response.statusCode()
++          val safe = Map(
++            400 -> ApiError.invalid,
++            401 -> ApiError(
++              502,
++              "DOWNSTREAM_AUTH_FAILURE",
++              "A downstream service rejected authentication."
++            ),
++            404 -> ApiError(404, "NOT_FOUND", "The requested record was not found."),
++            409 -> ApiError(409, "DOWNSTREAM_CONFLICT", "A downstream state conflict occurred."),
++            422 -> ApiError.unsupported,
++            429 -> ApiError(429, "THROTTLED", "A downstream service is throttled.", true),
++            503 -> ApiError.unavailable,
++            504 -> ApiError.timeout
++          )
++          Left(safe.getOrElse(status, ApiError.downstream))
++        }
++      } catch {
++        case _: java.net.http.HttpTimeoutException => Left(ApiError.timeout)
++        case _: InterruptedException =>
++          Thread.currentThread().interrupt(); Left(ApiError.unavailable)
++        case NonFatal(_) => Left(ApiError.downstream)
++      }
++    }
++  }
++  def close(): Unit = boundary.close()
++}
++object RemoteService {
++  def segment(value: String): String = URLEncoder.encode(value, UTF_8).replace("+", "%20")
++}
++final class RemoteGraphApi(remote: RemoteService) extends GraphEndpoints {
++  override def ready(context: RequestContext): Boolean =
++    remote.call("GET", "/readyz", Map.empty, None, context).exists(_.status == 200)
++  def node(id: String, c: RequestContext) =
++    remote.call("GET", "/internal/v1/graph/nodes/" + RemoteService.segment(id), Map.empty, None, c)
++  def neighbors(id: String, p: Map[String, String], c: RequestContext) = remote.call(
++    "GET",
++    "/internal/v1/graph/nodes/" + RemoteService.segment(id) + "/neighbors",
++    p,
++    None,
++    c
++  )
++  def metrics(id: String, window: String, c: RequestContext) = remote.call(
++    "GET",
++    "/internal/v1/graph/metrics/" + RemoteService.segment(id),
++    Map("window" -> window),
++    None,
++    c
++  )
++  def paths(p: Map[String, String], c: RequestContext) =
++    remote.call("GET", "/internal/v1/graph/paths", p, None, c)
++  def close(): Unit = remote.close()
++}
++final class RemoteSemanticApi(remote: RemoteService) extends SemanticEndpoints {
++  override def ready(context: RequestContext): Boolean =
++    remote.call("GET", "/readyz", Map.empty, None, context).exists(_.status == 200)
++  def retrieve(body: String, c: RequestContext) =
++    remote.call("POST", "/internal/v1/semantic/retrieve", Map.empty, Some(body), c)
++  def close(): Unit = remote.close()
++}
+diff --git a/modules/services/src/main/scala/edu/uic/cs441/scholarchain/services/SemanticApi.scala b/modules/services/src/main/scala/edu/uic/cs441/scholarchain/services/SemanticApi.scala
+new file mode 100644
+index 0000000..8cd001b
+--- /dev/null
++++ b/modules/services/src/main/scala/edu/uic/cs441/scholarchain/services/SemanticApi.scala
+@@ -0,0 +1,110 @@
++package edu.uic.cs441.scholarchain.services
++
++import edu.uic.cs441.scholarchain.core.*
++import edu.uic.cs441.scholarchain.storage.*
++import scala.util.control.NonFatal
++
++trait GraphEndpoints extends AutoCloseable {
++  def ready(context: RequestContext): Boolean = true
++  def node(id: String, context: RequestContext): Either[ApiError, ApiReply]
++  def neighbors(
++      id: String,
++      params: Map[String, String],
++      context: RequestContext
++  ): Either[ApiError, ApiReply]
++  def metrics(id: String, window: String, context: RequestContext): Either[ApiError, ApiReply]
++  def paths(params: Map[String, String], context: RequestContext): Either[ApiError, ApiReply]
++}
++trait SemanticEndpoints extends AutoCloseable {
++  def ready(context: RequestContext): Boolean = true
++  def retrieve(body: String, context: RequestContext): Either[ApiError, ApiReply]
++}
++final case class SemanticApiConfig(
++    maxTopK: Int = 50,
++    maxQuestionChars: Int = 8192,
++    maxBodyBytes: Int = 65536,
++    maxFilters: Int = 16,
++    timeoutMs: Long = 5000
++) {
++  require(
++    maxTopK > 0 && maxQuestionChars > 0 && maxBodyBytes > 0 && maxFilters > 0 && timeoutMs > 0
++  )
++}
++final class SemanticApi(
++    retrieve: (ujson.Value, RequestContext) => Either[ApiError, ujson.Value],
++    config: SemanticApiConfig = SemanticApiConfig()
++) extends SemanticEndpoints {
++  private val deadlineConfig = ServiceConfig(
++    Auth.sha256("semantic-boundary-placeholder"),
++    Auth.sha256("semantic-boundary-internal-placeholder"),
++    downstreamTimeoutMs = config.timeoutMs,
++    downstreamMaxAttempts = 1
++  )
++  private val deadline =
++    new DownstreamClient(deadlineConfig, new CircuitBreaker(Int.MaxValue, config.timeoutMs))
++  def retrieve(body: String, context: RequestContext): Either[ApiError, ApiReply] = try {
++    if (body.getBytes(java.nio.charset.StandardCharsets.UTF_8).length > config.maxBodyBytes)
++      return Left(ApiError.invalid)
++    val json = ujson.read(body)
++    if (!json.obj.keySet.subsetOf(Set("question", "topK", "filters"))) return Left(ApiError.invalid)
++    val question = json("question").str
++    val topK = json.obj.get("topK").map(_.num).getOrElse(config.maxTopK.toDouble)
++    if (
++      question.trim.isEmpty || question.length > config.maxQuestionChars || !topK.isWhole || topK < 1 || topK > config.maxTopK
++    ) return Left(ApiError.invalid)
++    json.obj.get("filters").foreach { f =>
++      if (
++        f.obj.size > config.maxFilters || f.obj
++          .exists((k, v) => k.isEmpty || v.str.length > config.maxQuestionChars)
++      ) throw new IllegalArgumentException
++    }
++    deadline.call("POST", context)(_ => retrieve(json, context)).map(v => ApiReply(200, v))
++  } catch { case NonFatal(_) => Left(ApiError.invalid) }
++  def close(): Unit = deadline.close()
++}
++object SemanticApi {
++
++  /** Existing embedding/vector ports do the work. Query text is never logged. Returned hits are
++    * actual backend records; no hit, score, or source evidence is synthesized by the route.
++    */
++  def fromPorts(
++      embedding: EmbeddingClient,
++      model: EmbeddingModel,
++      vectors: VectorStore,
++      index: String,
++      config: SemanticApiConfig = SemanticApiConfig()
++  ): SemanticApi =
++    new SemanticApi(
++      (json, _) => {
++        val topK = json.obj.get("topK").map(_.num.toInt).getOrElse(config.maxTopK)
++        val filters =
++          json.obj.get("filters").map(_.obj.toMap.map((k, v) => k -> v.str)).getOrElse(Map.empty)
++        embedding.embed(Vector(json("question").str)).head match {
++          case EmbeddingSuccess(values, _, _) =>
++            PortResult.read(vectors.query(index, values, topK, filters)).map { hits =>
++              ujson.Obj(
++                "hits" -> ujson.Arr.from(
++                  hits.map(h =>
++                    ujson.Obj(
++                      "key" -> h.key,
++                      "distance" -> h.distance,
++                      "metadata" -> ujson.Obj.from(h.metadata.map((k, v) => k -> ujson.Str(v)))
++                    )
++                  )
++                ),
++                "model" -> upickle.default.writeJs(model)
++              )
++            }
++          case _ => Left(ApiError.downstream)
++        }
++      },
++      config
++    )
++}
++final case class ExtendedApi(
++    evidence: EvidenceApi,
++    graph: GraphEndpoints,
++    semantic: SemanticEndpoints
++) extends AutoCloseable {
++  def close(): Unit = { graph.close(); semantic.close() }
++}
+diff --git a/modules/services/src/test/scala/edu/uic/cs441/scholarchain/services/Services10BSpec.scala b/modules/services/src/test/scala/edu/uic/cs441/scholarchain/services/Services10BSpec.scala
+new file mode 100644
+index 0000000..d24e21d
+--- /dev/null
++++ b/modules/services/src/test/scala/edu/uic/cs441/scholarchain/services/Services10BSpec.scala
+@@ -0,0 +1,188 @@
++package edu.uic.cs441.scholarchain.services
++
++import org.scalatest.funsuite.AnyFunSuite
++import edu.uic.cs441.scholarchain.storage.*
++import edu.uic.cs441.scholarchain.core.*
++import java.util.concurrent.{CountDownLatch, TimeUnit}
++import java.util.concurrent.atomic.{AtomicInteger, AtomicLong}
++
++class Services10BSpec extends AnyFunSuite {
++  private def config = ServiceConfig(
++    Auth.sha256("synthetic-10b-public"),
++    Auth.sha256("synthetic-10b-internal"),
++    synchronousDeadlineMs = 10,
++    workflowTimeoutMs = 2000,
++    maxWorkflowRetries = 0,
++    workerThreads = 1,
++    queueCapacity = 1,
++    sessionPollMs = 1
++  )
++  private val request =
++    QueryRequest.parse("{\"question\":\"Synthetic queue question\"}", config).toOption.get
++  private val context = RequestContext("req-synthetic", "trace-synthetic")
++  test("failed half-open probe reopens the dependency circuit and rejects the next read") {
++    val time = new AtomicLong(0)
++    val breaker = new CircuitBreaker(1, 10, () => time.get())
++    val client = new DownstreamClient(config.copy(downstreamMaxAttempts = 1), breaker)
++    val calls = new AtomicInteger
++    try {
++      def fail = client.call[String]("GET", context)(_ => {
++        calls.incrementAndGet(); Left(ApiError.downstream)
++      })
++      assert(fail.isLeft); assert(breaker.state == "OPEN")
++      time.set(10000000L)
++      assert(fail.isLeft); assert(breaker.state == "OPEN")
++      assert(fail.left.toOption.get.code == "CIRCUIT_OPEN")
++      assert(calls.get() == 2)
++    } finally client.close()
++  }
++  test("full local queue persists a terminal nonretryable429 and never executes the refused work") {
++    val release = new CountDownLatch(1); val entered = new CountDownLatch(1);
++    val calls = new AtomicInteger
++    val workflow = new QueryWorkflow {
++      def run(
++          r: QueryRequest,
++          c: RequestContext,
++          s: String => Unit
++      ): Either[ApiError, WorkflowOutput] = {
++        calls.incrementAndGet(); entered.countDown(); release.await(2, TimeUnit.SECONDS);
++        Right(WorkflowOutput(ujson.Obj("summary" -> "synthetic")))
++      }
++    }
++    val service = new QueryService(new InMemoryQuerySessionStore, workflow, config)
++    try {
++      assert(service.submit(request, "first", context).toOption.get.status == 202)
++      assert(entered.await(1, TimeUnit.SECONDS))
++      assert(service.submit(request, "second", context).toOption.get.status == 202)
++      val rejected = service.submit(request, "third", context).left.toOption.get
++      assert(rejected.status == 429 && !rejected.retryable)
++      assert(service.submit(request, "third", context).left.toOption.get == rejected)
++      assert(calls.get() == 1)
++    } finally { release.countDown(); service.close() }
++  }
++  test("oversized workflow result is a persisted nonretryable502") {
++    val cfg = config.copy(synchronousDeadlineMs = 500, maxResultBytes = 100)
++    val calls = new AtomicInteger
++    val workflow = new QueryWorkflow {
++      def run(r: QueryRequest, c: RequestContext, s: String => Unit) = {
++        calls.incrementAndGet(); Right(WorkflowOutput(ujson.Obj("summary" -> ("x" * 200))))
++      }
++    }
++    val service = new QueryService(new InMemoryQuerySessionStore, workflow, cfg)
++    try {
++      val result = service.submit(request, "oversize", context).left.toOption.get
++      assert(result.status == 502 && result.code == "RESULT_TOO_LARGE" && !result.retryable)
++      assert(service.submit(request, "oversize", context).left.toOption.get == result)
++      assert(calls.get() == 1)
++    } finally service.close()
++  }
++  test("202 reference reports actual persisted RUNNING state") {
++    val release = new CountDownLatch(1); val entered = new CountDownLatch(1)
++    val workflow = new QueryWorkflow {
++      def run(r: QueryRequest, c: RequestContext, s: String => Unit) = {
++        entered.countDown(); release.await(2, TimeUnit.SECONDS);
++        Right(WorkflowOutput(ujson.Obj("summary" -> "synthetic")))
++      }
++    }
++    val service = new QueryService(new InMemoryQuerySessionStore, workflow, config)
++    try {
++      val first = service.submit(request, "running-state", context).toOption.get
++      assert(entered.await(1, TimeUnit.SECONDS))
++      val replay = service.submit(request, "running-state", context).toOption.get
++      assert(first.status == 202 && replay.body("status").str == "RUNNING")
++    } finally { release.countDown(); service.close() }
++  }
++  test("graph aggregate requested deadline interrupts a slow snapshot read") {
++    val graph = new GraphApi(
++      new GraphSnapshot {
++        def snapshotId = "synthetic-slow"
++        def node(id: String): StorageResult[GraphNode] = {
++          Thread.sleep(1000); StorageResult.Missing
++        }
++        def edges(id: String, w: String) = StorageResult.Found(Vector.empty)
++        def metrics(id: String, w: String) = StorageResult.Missing
++      },
++      GraphApiConfig(timeoutMs = 500)
++    )
++    try {
++      val begin = System.nanoTime()
++      assert(
++        graph
++          .neighbors("synthetic", Map("timeoutMs" -> "20"), context)
++          .left
++          .toOption
++          .get
++          .status == 504
++      )
++      assert(System.nanoTime() - begin < 500000000L)
++    } finally graph.close()
++  }
++  test(
++    "explicit offline composition produces only verified synthetic claims with stored evidence"
++  ) {
++    val composition =
++      new OfflineComposition(config.copy(synchronousDeadlineMs = 3000, workflowTimeoutMs = 10000))
++    try {
++      val r = QueryRequest
++        .parse("{\"question\":\"Synthetic fixture: publication count for A\"}", config)
++        .toOption
++        .get
++      val reply = composition.queries.submit(r, "offline-lifecycle", context).toOption.get
++      assert(reply.status == 200)
++      assert(reply.body("claims").arr.nonEmpty)
++      assert(reply.body("claims").arr.forall(_("verificationStatus").str == "VERIFIED"))
++      val id = reply.body("claims")(0)("evidenceIds")(0).str
++      assert(composition.extended.evidence.evidence(id).isRight)
++      assert(
++        composition.extended.evidence
++          .explain(reply.body("queryId").str)
++          .toOption
++          .get
++          .body("outcome")
++          .str == "ANSWERED"
++      )
++    } finally { composition.queries.close(); composition.extended.close() }
++  }
++  test("shortest graph paths respect the requested hop cap and expose only actual edges") {
++    val fixture = edu.uic.cs441.scholarchain.rag.RuntimeOfflineFixture
++    val nodes = fixture.names.map(n =>
++      GraphNode(
++        fixture.id(n),
++        SchemaVersions.domain,
++        GraphNodeClass.Researcher,
++        n,
++        Vector.empty,
++        fixture.provenance
++      )
++    )
++    val edges = fixture.edges.map(e =>
++      GraphEdge(
++        e.edgeId,
++        SchemaVersions.domain,
++        e.researcherA,
++        GraphEdgeType.CoauthoredWith,
++        e.researcherB,
++        fixture.policy,
++        GraphSourceEvidence.Work(e.representativeWorkIds.head),
++        Vector.empty,
++        None,
++        fixture.provenance
++      )
++    )
++    val graph = new GraphApi(new InMemoryGraphSnapshot("synthetic-paths", nodes, edges))
++    try {
++      val params = Map("from" -> fixture.id("A"), "to" -> fixture.id("D"))
++      val shallow = graph.paths(params.updated("maxDepth", "1"), context).toOption.get
++      assert(shallow.body("paths").arr.isEmpty)
++      val result =
++        graph.paths(params.updated("maxDepth", "2"), context).toOption.get.body("paths")(0)
++      assert(
++        result("nodeIds").arr.toVector
++          .map(_.str) == Vector(fixture.id("A"), fixture.id("C"), fixture.id("D"))
++      )
++      assert(result("edgeIds").arr.size == 2)
++      assert(result("edgeIds").arr.forall(e => edges.exists(_.edgeId == e.str)))
++    } finally graph.close()
++  }
++
++}
+diff --git a/tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentServices10BFixture.scala b/tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentServices10BFixture.scala
+new file mode 100644
+index 0000000..5f4638c
+--- /dev/null
++++ b/tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentServices10BFixture.scala
+@@ -0,0 +1,158 @@
++package edu.uic.cs441.scholarchain.independent
++
++import edu.uic.cs441.scholarchain.core.*
++import edu.uic.cs441.scholarchain.rag.*
++import edu.uic.cs441.scholarchain.services.*
++import edu.uic.cs441.scholarchain.storage.*
++import edu.uic.cs441.scholarchain.storage.fakes.{
++  InMemoryIndexedEvidenceBundleStore,
++  InMemoryRuntimeAuditStore
++}
++import java.net.URI
++import java.net.http.{HttpClient, HttpRequest, HttpResponse}
++import java.time.Duration
++import java.util.concurrent.atomic.AtomicInteger
++
++/** Reuses hand-transcribed G1 facts; every provider and backing store is an offline fake. */
++private[independent] object IndependentServices10BFixture {
++  val externalKey = "synthetic-public-10b"
++  val internalKey = "synthetic-internal-10b"
++  val config = ServiceConfig(
++    apiKeySha256 = Auth.sha256(externalKey),
++    internalTokenSha256 = Auth.sha256(internalKey),
++    synchronousDeadlineMs = 3000,
++    workflowTimeoutMs = 10000,
++    maxWorkflowRetries = 0
++  )
++  val question = IndependentRuntime9CFixture.plan.question
++  val body =
++    ujson.Obj("question" -> question, "output" -> ujson.Obj("includeScores" -> false)).render()
++  private val client = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(3)).build()
++  val a = IndependentRuntime9BFixture.id("A")
++  val b = IndependentRuntime9BFixture.id("B")
++  val work1 = IndependentPhase6G1.canonicalWorkId("w1")
++  val work2 = IndependentPhase6G1.canonicalWorkId("w2")
++  val topic = IndependentRuntime9BFixture.topic
++  private val provenance = IndependentRuntime9BFixture.provenance
++  val graphNodes = Vector(
++    (a, GraphNodeClass.Researcher),
++    (b, GraphNodeClass.Researcher),
++    (work1, GraphNodeClass.Work),
++    (work2, GraphNodeClass.Work),
++    (topic, GraphNodeClass.Topic)
++  ).map { (id, kind) =>
++    GraphNode(id, SchemaVersions.domain, kind, "Synthetic fixture node", Vector.empty, provenance)
++  }
++  private def edge(from: String, kind: GraphEdgeType, to: String, source: String): GraphEdge = {
++    val evidence = GraphSourceEvidence.Work(source)
++    GraphEdge(
++      StableIds.graphEdgeId(kind, from, to, "independent-10b", evidence).toOption.get,
++      SchemaVersions.domain,
++      from,
++      kind,
++      to,
++      "independent-10b",
++      evidence,
++      Vector.empty,
++      None,
++      provenance
++    )
++  }
++  val graphEdges = Vector(
++    edge(a, GraphEdgeType.Authored, work1, work1),
++    edge(a, GraphEdgeType.Authored, work2, work2),
++    edge(b, GraphEdgeType.Authored, work1, work1),
++    edge(work1, GraphEdgeType.HasTopic, topic, work1)
++  )
++  def snapshot(id: String = "synthetic-10b-snapshot-v1"): InMemoryGraphSnapshot =
++    new InMemoryGraphSnapshot(id, graphNodes, graphEdges)
++
++  def request(
++      port: Int,
++      path: String,
++      content: Option[String] = None,
++      auth: Option[String] = Some(externalKey),
++      key: Option[String] = None,
++      trace: String = "trace-independent-10b"
++  ): HttpResponse[String] = {
++    val builder = HttpRequest
++      .newBuilder(URI.create(s"http://127.0.0.1:$port$path"))
++      .timeout(Duration.ofSeconds(12))
++      .header("X-Trace-Id", trace)
++      .header("X-Request-Id", "request-independent-10b")
++    auth.foreach(k => builder.header("Authorization", s"Bearer $k"))
++    key.foreach(k => builder.header("Idempotency-Key", k))
++    content match {
++      case Some(value) =>
++        builder
++          .header("Content-Type", "application/json")
++          .POST(HttpRequest.BodyPublishers.ofString(value))
++      case None => builder.GET()
++    }
++    client.send(builder.build(), HttpResponse.BodyHandlers.ofString())
++  }
++
++  final class Runtime(questionText: String = question) {
++    import IndependentRuntime9CFixture.{config as runtimeConfig, *}
++    val evidence = new InMemoryIndexedEvidenceBundleStore
++    val audits = new InMemoryRuntimeAuditStore
++    val modelCalls = new AtomicInteger
++    private val assets = RuntimePromptAssets
++      .fromDirectory(
++        IndependentRuntime9AFixture.root.resolve("prompts"),
++        runtimeConfig
++      )
++      .toOption
++      .get
++    private val llm = new LlmClient {
++      def complete(request: StructuredLlmRequest): LlmResult = {
++        modelCalls.incrementAndGet()
++        val data = ujson.read(request.userData)
++        val context = ujson.read(
++          data("evidenceData").str
++            .stripPrefix("<untrusted_evidence_json>\n")
++            .stripSuffix("\n</untrusted_evidence_json>")
++        )
++        val id = context("items").arr
++          .find(
++            _.obj
++              .get("values")
++              .exists(_.obj.contains("publicationCount"))
++          )
++          .get("evidenceId")
++          .str
++        model(output(Vector(claim(Vector(n("publicationCount", "3")), Vector(id)))))
++      }
++    }
++    private val source = IndependentRuntime9BFixture.artifacts()
++    private val metric = IndependentRuntime9BFixture.metricStore()
++    private val graph = new IndependentRuntime9BFixture.Graph
++    private val corpus = new IndependentRuntime9BSemanticFixture.Corpus
++    private val retrieval = new WorkflowRunner(
++      new QueryPlannerAgent(new ScriptedLlmClient(Vector.empty), runtimeConfig, assets),
++      new ResearcherResolverAgent(IndependentRuntime9BFixture.cache(), runtimeConfig),
++      new CollaborationMetricsAgent(metric, source, runtimeConfig),
++      new PathFinderAgent(graph, metric, source, runtimeConfig),
++      new CommunityAnalystAgent(graph, metric, source, runtimeConfig),
++      new SemanticContextAgent(
++        corpus.vectors,
++        corpus.objects,
++        corpus.embeddings,
++        corpus.index,
++        runtimeConfig
++      ),
++      new EvidenceBuilderAgent(evidence, runtimeConfig),
++      runtimeConfig
++    )
++    val workflow = new RuntimeWorkflowAdapter(
++      new RuntimeAnswerWorkflow(
++        retrieval,
++        new AnswerSynthesisAgent(llm, runtimeConfig, assets),
++        new ClaimVerificationAgent(runtimeConfig),
++        audits,
++        runtimeConfig
++      ),
++      (_, _) => Right(plan.copy(question = questionText))
++    )
++  }
++}
+diff --git a/tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentServices10BGraphSpec.scala b/tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentServices10BGraphSpec.scala
+new file mode 100644
+index 0000000..009c887
+--- /dev/null
++++ b/tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentServices10BGraphSpec.scala
+@@ -0,0 +1,119 @@
++package edu.uic.cs441.scholarchain.independent
++
++import edu.uic.cs441.scholarchain.core.*
++import edu.uic.cs441.scholarchain.services.*
++import edu.uic.cs441.scholarchain.storage.*
++import java.util.concurrent.{CountDownLatch, TimeUnit}
++import org.scalatest.funsuite.AnyFunSuite
++
++class IndependentServices10BGraphSpec extends AnyFunSuite {
++  import IndependentServices10BFixture.*
++  private val context = RequestContext("request-graph-10b", "trace-graph-10b")
++  private val cfg = GraphApiConfig(cursorKey = "synthetic-stable-cursor-key-10b")
++  private def value(result: Either[ApiError, ApiReply]): ujson.Value =
++    result.fold(e => fail(e.code), _.body)
++  private def error(result: Either[ApiError, ApiReply], status: Int): Unit =
++    assert(result.left.toOption.exists(_.status == status), result.toString)
++
++  test(
++    "directed graph exploration honors in/out/both, edge types and depth against literal topology"
++  ) {
++    val api = new GraphApi(snapshot(), cfg)
++    try {
++      def neighbors(id: String, params: (String, String)*) =
++        value(api.neighbors(id, params.toMap, context))("items").arr.toVector
++      assert(neighbors(a, "direction" -> "out").map(_("nodeId").str).toSet == Set(work1, work2))
++      assert(neighbors(a, "direction" -> "in").isEmpty)
++      assert(neighbors(work1, "direction" -> "in").map(_("nodeId").str).toSet == Set(a, b))
++      val authored = neighbors(a, "direction" -> "both", "depth" -> "2", "edgeTypes" -> "AUTHORED")
++      assert(authored.map(_("edgeId").str).toSet == graphEdges.take(3).map(_.edgeId).toSet)
++      assert(!authored.exists(_("nodeId").str == topic))
++      val twoHops = neighbors(a, "direction" -> "out", "depth" -> "2")
++      assert(twoHops.map(_("nodeId").str).toSet == Set(work1, work2, topic))
++      assert(twoHops.find(_("nodeId").str == topic).get("depth").num == 2)
++      assert(value(api.node(a, context))("nodeId").str == a)
++      error(api.node("missing-node", context), 404)
++    } finally api.close()
++  }
++
++  test(
++    "signed pagination replays stably and rejects tampering, changed filters, node or snapshot"
++  ) {
++    val api = new GraphApi(snapshot(), cfg)
++    val otherSnapshot = new GraphApi(snapshot("synthetic-10b-snapshot-v2"), cfg)
++    try {
++      val params = Map("direction" -> "out", "limit" -> "1")
++      val first = value(api.neighbors(a, params, context))
++      val cursor = first("cursor").str
++      assert(cursor.nonEmpty && first("items").arr.size == 1)
++      val next = params.updated("cursor", cursor)
++      val second = value(api.neighbors(a, next, context))
++      assert(second == value(api.neighbors(a, next, context)))
++      assert(second("cursor") == ujson.Null)
++      val nodes = first("items").arr.toVector ++ second("items").arr.toVector
++      assert(nodes.map(_("nodeId").str).toSet == Set(work1, work2))
++      assert(nodes.map(_("edgeId").str).distinct.size == 2)
++      for (
++        changed <- Vector(
++          next.updated("direction", "both"),
++          next.updated("depth", "2"),
++          next.updated("limit", "2"),
++          next.updated("edgeTypes", "AUTHORED"),
++          next.updated("cursor", cursor + "x")
++        )
++      ) error(api.neighbors(a, changed, context), 400)
++      error(api.neighbors(b, next, context), 400)
++      error(otherSnapshot.neighbors(a, next, context), 400)
++    } finally { api.close(); otherSnapshot.close() }
++  }
++
++  test("graph request caps reject unbounded or unsupported work before retrieval") {
++    val api = new GraphApi(snapshot(), cfg)
++    val scanCap = new GraphApi(snapshot(), cfg.copy(maxScannedEdges = 1))
++    val nodeCap = new GraphApi(snapshot(), cfg.copy(maxVisitedNodes = 1))
++    try {
++      for (
++        params <- Vector(
++          Map("depth" -> "0"),
++          Map("depth" -> "4"),
++          Map("depth" -> "1.5"),
++          Map("limit" -> "0"),
++          Map("limit" -> "201"),
++          Map("direction" -> "sideways"),
++          Map("edgeTypes" -> "UNDECLARED"),
++          Map("timeoutMs" -> "0"),
++          Map("timeoutMs" -> "5001"),
++          Map("unknown" -> "ignored")
++        )
++      ) error(api.neighbors(a, params, context), 400)
++      error(scanCap.neighbors(a, Map.empty, context), 422)
++      error(nodeCap.neighbors(a, Map.empty, context), 422)
++    } finally { api.close(); scanCap.close(); nodeCap.close() }
++  }
++
++  test("hard aggregate graph timeout interrupts a blocked snapshot adapter") {
++    val entered = new CountDownLatch(1)
++    val interrupted = new CountDownLatch(1)
++    val delegate = snapshot()
++    val slow = new GraphSnapshot {
++      def snapshotId = delegate.snapshotId
++      def node(id: String) = delegate.node(id)
++      def edges(id: String, window: String): StorageResult[Vector[GraphEdge]] = {
++        entered.countDown()
++        try { Thread.sleep(10000); delegate.edges(id, window) }
++        catch {
++          case _: InterruptedException => interrupted.countDown(); throw new InterruptedException
++        }
++      }
++      def metrics(id: String, window: String) = delegate.metrics(id, window)
++    }
++    val api = new GraphApi(slow, cfg.copy(timeoutMs = 50))
++    try {
++      val start = System.nanoTime()
++      error(api.neighbors(a, Map.empty, context), 504)
++      assert(entered.await(1, TimeUnit.SECONDS))
++      assert(interrupted.await(1, TimeUnit.SECONDS))
++      assert(TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - start) < 2000)
++    } finally api.close()
++  }
++}
+diff --git a/tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentServices10BLifecycleSpec.scala b/tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentServices10BLifecycleSpec.scala
+new file mode 100644
+index 0000000..025f26c
+--- /dev/null
++++ b/tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentServices10BLifecycleSpec.scala
+@@ -0,0 +1,375 @@
++package edu.uic.cs441.scholarchain.independent
++
++import edu.uic.cs441.scholarchain.core.*
++import edu.uic.cs441.scholarchain.services.*
++import edu.uic.cs441.scholarchain.storage.*
++import java.net.{URI, URLEncoder}
++import java.net.http.HttpResponse
++import java.nio.file.Files
++import java.util.concurrent.atomic.AtomicInteger
++import org.scalatest.funsuite.AnyFunSuite
++
++class IndependentServices10BLifecycleSpec extends AnyFunSuite {
++  import IndependentServices10BFixture.*
++  private def json(r: HttpResponse[String]) = ujson.read(r.body())
++  private def encoded(value: String) = URLEncoder.encode(value, "UTF-8")
++  private def error(response: HttpResponse[String], status: Int): Unit = {
++    assert(response.statusCode() == status, response.body())
++    val value = json(response)
++    assert(value("traceId").str == "trace-independent-10b")
++    assert(value("error").str.nonEmpty && value("message").str.nonEmpty)
++    assert(response.headers().firstValue("X-Trace-Id").orElse("") == "trace-independent-10b")
++    assert(!response.body().contains(externalKey) && !response.body().contains(internalKey))
++    assert(!response.body().contains("java.lang.") && !response.body().contains("Exception:"))
++  }
++  private def withServer(
++      runtime: Runtime,
++      graph: GraphEndpoints = new GraphApi(snapshot()),
++      semantic: SemanticEndpoints =
++        new SemanticApi((_, _) => Right(ujson.Obj("hits" -> ujson.Arr()))),
++      role: String = "query-api",
++      metrics: ServiceMetrics = new ServiceMetrics
++  )(check: Int => Unit): Unit = {
++    val sessions = new InMemoryQuerySessionStore
++    val queries = new QueryService(sessions, runtime.workflow, config, metrics)
++    val extension = ExtendedApi(
++      new EvidenceApi(runtime.evidence, runtime.audits, Some(sessions)),
++      graph,
++      semantic
++    )
++    val app = new ApiApplication(
++      queries,
++      config,
++      logSink = _ => (),
++      serviceRole = role,
++      extended = Some(extension)
++    )
++    val server = ApiServer.start(app, port = 0)
++    try check(server.port)
++    finally server.close()
++  }
++
++  test(
++    "HTTP lifecycle runs real retrieval, verifies count three, fetches backing evidence and explains the audited answer"
++  ) {
++    val runtime = new Runtime
++    withServer(runtime) { port =>
++      val response = request(port, "/v1/query", Some(body), key = Some("independent-10b-lifecycle"))
++      assert(response.statusCode() == 200, response.body())
++      val answer = json(response)
++      val queryId = answer("queryId").str
++      assert(answer("answer")("summary").str.contains("3"))
++      val claims = answer("claims").arr.toVector
++      assert(claims.nonEmpty)
++      assert(claims.forall(_("verificationStatus").str == "VERIFIED"))
++      val typedClaims = claims.map(upickle.default.read[AnswerClaim](_))
++      assert(
++        typedClaims.exists(
++          _.runtime.exists(
++            _.values.exists(v => v.field == "publicationCount" && v.number.contains("3"))
++          )
++        )
++      )
++      val referenced = claims.flatMap(_("evidenceIds").arr.map(_.str)).distinct
++      assert(referenced.nonEmpty)
++      for (id <- referenced) {
++        val stored = StorageResult
++          .value(runtime.evidence.getItem(id))
++          .getOrElse(fail("Claim lacks stored source evidence"))
++        val fetched = request(port, "/v1/evidence/" + encoded(id))
++        assert(fetched.statusCode() == 200, fetched.body())
++        val evidence = json(fetched)
++        assert(evidence("evidenceId").str == id)
++        assert(evidence("sourceUri").str == stored.sourceUri && stored.sourceUri.nonEmpty)
++        assert(evidence("sourceRecordId").str == stored.provenance.sourceRecordId)
++        assert(evidence("snapshot").str == stored.provenance.datasetSnapshot)
++        assert(evidence("provenance") == upickle.default.writeJs(stored.provenance))
++        assert(evidence("supportingContent") == upickle.default.writeJs(stored.runtime.get))
++        assert(
++          stored.runtime.get.values.exists(v =>
++            v.field == "publicationCount" && v.number.contains("3")
++          )
++        )
++      }
++      val evidenceList = request(port, answer("links")("evidence").str)
++      assert(evidenceList.statusCode() == 200, evidenceList.body())
++      assert(referenced.toSet.subsetOf(json(evidenceList)("evidenceIds").arr.map(_.str).toSet))
++      val explain = request(port, answer("links")("explain").str)
++      assert(explain.statusCode() == 200, explain.body())
++      val explanation = json(explain)
++      val audit = StorageResult.value(runtime.audits.get(queryId)).get
++      assert(explanation("queryPlan") == upickle.default.writeJs(IndependentRuntime9CFixture.plan))
++      assert(explanation("verificationStatus").str == "VERIFIED")
++      assert(explanation("evidenceIds").arr.map(_.str).toSet == audit.record.get.evidenceIds.toSet)
++      assert(
++        explanation("promptVersions").arr
++          .map(_.str)
++          .contains(IndependentRuntime9CFixture.config.synthesisPromptVersion)
++      )
++      assert(
++        explanation("modelVersions").arr.exists(
++          _("modelId").str == IndependentRuntime9CFixture.config.model.modelId
++        )
++      )
++      assert(explanation("counters")("verifiedClaims").num >= 1)
++      assert(explanation("counters")("rejectedClaims").num == 0)
++      val stages = explanation("stagesExecuted").arr.map(_.str).toSet
++      assert(Set("PLANNING", "RETRIEVAL", "AUDIT").subsetOf(stages))
++      assert(explanation.obj.contains("scoreComponents"))
++      assert(
++        !explanation.obj.keySet.exists(k =>
++          Set("chainOfThought", "reasoning", "hiddenReasoning", "promptText")(k)
++        )
++      )
++      val replay = request(port, "/v1/query", Some(body), key = Some("independent-10b-lifecycle"))
++      assert(replay.statusCode() == 200 && json(replay) == answer)
++      assert(runtime.modelCalls.get == 1)
++    }
++  }
++
++  test(
++    "new evidence, explain and graph HTTP routes require external authentication and return traced missing records"
++  ) {
++    withServer(new Runtime) { port =>
++      for (
++        path <- Vector(
++          "/v1/evidence/missing",
++          "/v1/explain/missing",
++          "/v1/queries/missing/evidence",
++          s"/v1/graph/nodes/$a",
++          s"/v1/graph/nodes/$a/neighbors"
++        )
++      ) {
++        error(request(port, path, auth = None), 401)
++        error(request(port, path, auth = Some(internalKey)), 401)
++      }
++      error(request(port, "/v1/evidence/missing"), 404)
++      error(request(port, "/v1/explain/missing"), 404)
++      error(request(port, "/v1/query", Some("{broken"), key = Some("malformed-10b")), 400)
++    }
++  }
++
++  test(
++    "HTTP graph query strings enforce requested direction, pagination, caps and duplicate parameter rejection"
++  ) {
++    withServer(new Runtime) { port =>
++      val path = s"/v1/graph/nodes/$a/neighbors"
++      val first = request(port, path + "?direction=out&limit=1&edgeTypes=AUTHORED")
++      assert(first.statusCode() == 200, first.body())
++      assert(json(first)("items").arr.size == 1)
++      val cursor = encoded(json(first)("cursor").str)
++      val second = request(port, path + s"?direction=out&limit=1&edgeTypes=AUTHORED&cursor=$cursor")
++      assert(second.statusCode() == 200, second.body())
++      assert(
++        (json(first)("items").arr ++ json(second)("items").arr).map(_("nodeId").str).toSet == Set(
++          work1,
++          work2
++        )
++      )
++      val incoming = request(port, path + "?direction=in")
++      assert(incoming.statusCode() == 200 && json(incoming)("items").arr.isEmpty)
++      for (
++        query <- Vector(
++          "depth=4",
++          "limit=201",
++          "edgeTypes=UNKNOWN",
++          "timeoutMs=5001",
++          "limit=1&limit=2"
++        )
++      )
++        error(request(port, path + "?" + query), 400)
++    }
++  }
++
++  test(
++    "internal semantic HTTP routes enforce separate auth and reject malformed or over-cap payloads before retrieval"
++  ) {
++    val calls = new AtomicInteger
++    val semantic = new SemanticApi((value, context) => {
++      calls.incrementAndGet()
++      assert(context.traceId == "trace-independent-10b")
++      assert(value("question").str == "synthetic context")
++      Right(ujson.Obj("hits" -> ujson.Arr()))
++    })
++    withServer(new Runtime, semantic = semantic, role = "semantic-service") { port =>
++      val path = "/internal/v1/semantic/retrieve"
++      val valid = """{"question":"synthetic context","topK":1}"""
++      error(request(port, path, Some(valid), auth = None), 401)
++      error(request(port, path, Some(valid)), 401)
++      for (
++        invalid <- Vector(
++          "{broken",
++          """{"question":"synthetic context","topK":51}""",
++          """{"question":"synthetic context","topK":1.5}""",
++          """{"question":"synthetic context","filters":[]}"""
++        )
++      )
++        error(request(port, path, Some(invalid), auth = Some(internalKey)), 400)
++      val result = request(port, path, Some(valid), auth = Some(internalKey))
++      assert(result.statusCode() == 200 && json(result)("hits").arr.isEmpty)
++      assert(calls.get == 1)
++      assert(request(port, "/healthz", auth = None).statusCode() == 200)
++    }
++  }
++
++  test("wire graph dependency timeout returns typed 504 with the requesting trace") {
++    val delegate = snapshot()
++    val slow = new GraphSnapshot {
++      def snapshotId = delegate.snapshotId
++      def node(id: String): StorageResult[GraphNode] = { Thread.sleep(10000); delegate.node(id) }
++      def edges(id: String, window: String) = delegate.edges(id, window)
++      def metrics(id: String, window: String) = delegate.metrics(id, window)
++    }
++    withServer(new Runtime, graph = new GraphApi(slow, GraphApiConfig(timeoutMs = 40))) { port =>
++      error(request(port, s"/v1/graph/nodes/$a"), 504)
++      assert(request(port, "/healthz", auth = None).statusCode() == 200)
++    }
++  }
++
++  test(
++    "query API proxies graph HTTP through retry and breaker helpers with correlation and metrics"
++  ) {
++    val attempts = new AtomicInteger
++    val local = new GraphApi(snapshot())
++    val observing = new GraphEndpoints {
++      def node(id: String, context: RequestContext): Either[ApiError, ApiReply] = {
++        assert(
++          context.requestId == "request-independent-10b" && context.traceId == "trace-independent-10b"
++        )
++        if (attempts.incrementAndGet() < 3) Left(ApiError.downstream) else local.node(id, context)
++      }
++      def neighbors(id: String, p: Map[String, String], c: RequestContext) =
++        local.neighbors(id, p, c)
++      def metrics(id: String, window: String, c: RequestContext) = local.metrics(id, window, c)
++      def paths(p: Map[String, String], c: RequestContext) = local.paths(p, c)
++      def close(): Unit = local.close()
++    }
++    withServer(new Runtime, graph = observing, role = "graph-service") { graphPort =>
++      val metrics = new ServiceMetrics
++      val remote = new RemoteGraphApi(
++        new RemoteService(
++          URI.create(s"http://127.0.0.1:$graphPort"),
++          internalKey,
++          config,
++          metrics,
++          "graph"
++        )
++      )
++      withServer(new Runtime, graph = remote, metrics = metrics) { queryPort =>
++        val result = request(queryPort, s"/v1/graph/nodes/$a")
++        assert(result.statusCode() == 200, result.body())
++        assert(json(result)("nodeId").str == a)
++        assert(attempts.get == 3)
++        val page = request(queryPort, s"/v1/graph/nodes/$a/neighbors?direction=out&limit=1")
++        assert(page.statusCode() == 200 && json(page)("items").arr.size == 1)
++        val measured = request(queryPort, "/metrics")
++        assert(measured.statusCode() == 200)
++        assert(
++          measured
++            .body()
++            .contains("downstream_circuit_state{dependency=\"graph\",state=\"CLOSED\"} 1")
++        )
++        assert(measured.body().contains("api_downstream_errors_total 2"))
++      }
++    }
++  }
++
++  test(
++    "remote semantic POST forwards correlation, attempts once and exposes its registered breaker"
++  ) {
++    val attempts = new AtomicInteger
++    val failing = new SemanticApi((_, context) => {
++      attempts.incrementAndGet()
++      assert(
++        context.requestId == "request-independent-10b" && context.traceId == "trace-independent-10b"
++      )
++      Left(ApiError.downstream)
++    })
++    withServer(new Runtime, semantic = failing, role = "semantic-service") { semanticPort =>
++      val metrics = new ServiceMetrics
++      val remote = new RemoteSemanticApi(
++        new RemoteService(
++          URI.create(s"http://127.0.0.1:$semanticPort"),
++          internalKey,
++          config,
++          metrics,
++          "semantic"
++        )
++      )
++      withServer(new Runtime, semantic = remote, metrics = metrics) { queryPort =>
++        error(
++          request(
++            queryPort,
++            "/internal/v1/semantic/retrieve",
++            Some("""{"question":"synthetic context","topK":1}"""),
++            auth = Some(internalKey)
++          ),
++          502
++        )
++        assert(attempts.get == 1)
++        val measured = request(queryPort, "/metrics")
++        assert(measured.statusCode() == 200)
++        assert(
++          measured
++            .body()
++            .contains("downstream_circuit_state{dependency=\"semantic\",state=\"CLOSED\"} 1")
++        )
++        assert(measured.body().contains("api_downstream_errors_total 1"))
++      }
++    }
++  }
++
++  test("committed JSON request and response examples agree with actual HTTP contracts") {
++    def example(name: String): ujson.Value = ujson.read(
++      Files.readString(
++        IndependentRuntime9AFixture.root.resolve(
++          s"modules/services/src/main/resources/openapi/examples/$name.json"
++        )
++      )
++    )
++    val queryExample = example("query-request")
++    val semanticExample = example("semantic-request")
++    val errorExample = example("error")
++    val graphExample = example("graph-page")
++    val jobExample = example("job-reference")
++    assert(jobExample("queryId").str.matches("qry-[0-9a-f]{64}"))
++    assert(jobExample("jobId").str.matches("job-[0-9a-f]{64}"))
++    assert(jobExample("statusUrl").str == "/v1/jobs/" + jobExample("jobId").str)
++    assert(Set("QUEUED", "RUNNING")(jobExample("status").str))
++    assert(jobExample("mode").str == "asynchronous")
++    val calls = new AtomicInteger
++    val semantic = new SemanticApi((value, _) => {
++      calls.incrementAndGet()
++      assert(value == semanticExample)
++      Right(ujson.Obj("hits" -> ujson.Arr()))
++    })
++    val runtime = new Runtime(queryExample("question").str)
++    withServer(runtime, semantic = semantic) { port =>
++      val query =
++        request(port, "/v1/query", Some(queryExample.render()), key = Some("example-query-10b"))
++      assert(query.statusCode() == 200, query.body())
++      assert(json(query)("claims").arr.nonEmpty)
++      assert(json(query)("answer")("summary").str.contains("3"))
++      val result = request(
++        port,
++        "/internal/v1/semantic/retrieve",
++        Some(semanticExample.render()),
++        auth = Some(internalKey)
++      )
++      assert(result.statusCode() == 200 && json(result)("hits").arr.isEmpty)
++      assert(calls.get == 1 && runtime.modelCalls.get == 1)
++      val missing = request(port, "/v1/evidence/missing")
++      error(missing, 404)
++      errorExample("traceId") = "trace-independent-10b"
++      assert(json(missing) == errorExample)
++      val incoming = request(port, s"/v1/graph/nodes/$a/neighbors?direction=in")
++      assert(incoming.statusCode() == 200, incoming.body())
++      val actual = json(incoming)
++      assert(actual.obj.keySet == graphExample.obj.keySet)
++      assert(actual("nodeId").str == a && actual("snapshot").str == snapshot().snapshotId)
++      assert(actual("items") == graphExample("items") && actual("cursor") == graphExample("cursor"))
++      assert(actual("depth") == graphExample("depth"))
++      assert(actual("direction").str == "in")
++    }
++  }
++}
+diff --git a/tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentServices10BStructureSpec.scala b/tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentServices10BStructureSpec.scala
+new file mode 100644
+index 0000000..01f00cf
+--- /dev/null
++++ b/tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentServices10BStructureSpec.scala
+@@ -0,0 +1,66 @@
++package edu.uic.cs441.scholarchain.independent
++
++import java.nio.file.Files
++import org.scalatest.funsuite.AnyFunSuite
++
++class IndependentServices10BStructureSpec extends AnyFunSuite {
++  private val root = IndependentRuntime9AFixture.root
++  private val directory =
++    root.resolve("modules/services/src/main/scala/edu/uic/cs441/scholarchain/services")
++
++  test("HTTP adapters delegate and contain no graph, vector, planner or synthesis implementation") {
++    val forbidden = Set(
++      "GraphReader",
++      "VectorStore",
++      "EmbeddingClient",
++      "LlmClient",
++      "RuntimeAnswerWorkflow",
++      "WorkflowRunner",
++      "QueryPlannerAgent",
++      "AnswerSynthesisAgent",
++      "ClaimVerificationAgent",
++      "executeGremlinQuery",
++      "executeOpenCypherQuery",
++      "shortestPaths",
++      "cosineSimilarity"
++    )
++    for (name <- Vector("ApiServer.scala", "ApiApplication.scala")) {
++      val code = RuntimeGraphFence.code(Files.readString(directory.resolve(name)))
++      val tokens = "[A-Za-z_$][A-Za-z0-9_$]*".r.findAllIn(code).toSet
++      assert(
++        tokens.intersect(forbidden).isEmpty,
++        s"$name contains retrieval capability: ${tokens.intersect(forbidden)}"
++      )
++    }
++    val adapter = RuntimeGraphFence.code(Files.readString(directory.resolve("ApiServer.scala")))
++    assert(adapter.contains("app.handle"))
++    val application =
++      RuntimeGraphFence.code(Files.readString(directory.resolve("ApiApplication.scala")))
++    assert(application.contains("queries.submit"))
++  }
++
++  test("committed OpenAPI declares the complete public and internal HTTP surface") {
++    val spec = Files.readString(
++      root.resolve("modules/services/src/main/resources/openapi/scholarchain.v1.yaml")
++    )
++    val declared = "(?m)^  (/[^:\\n]*):\\s*$".r.findAllMatchIn(spec).map(_.group(1)).toSet
++    val required = Set(
++      "/v1/query",
++      "/v1/jobs/{jobId}",
++      "/v1/jobs/{jobId}/result",
++      "/v1/evidence/{evidenceId}",
++      "/v1/explain/{queryId}",
++      "/v1/graph/nodes/{nodeId}",
++      "/v1/graph/nodes/{nodeId}/neighbors",
++      "/healthz",
++      "/readyz",
++      "/metrics"
++    )
++    assert(required.subsetOf(declared), s"Undocumented routes: ${required -- declared}")
++    assert(declared.exists(_.startsWith("/internal/v1/semantic/")))
++    assert(declared.exists(p => p.startsWith("/internal/v1/") && p.contains("metric")))
++    assert(declared.exists(p => p.startsWith("/internal/v1/") && p.contains("path")))
++    assert(spec.contains("InternalBearer") && spec.contains("ExternalBearer"))
++    assert(spec.contains("traceId") && spec.contains("Idempotency-Key"))
++  }
++}
+diff --git a/tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentServices10BWorkerSpec.scala b/tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentServices10BWorkerSpec.scala
+new file mode 100644
+index 0000000..9af716f
+--- /dev/null
++++ b/tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentServices10BWorkerSpec.scala
+@@ -0,0 +1,120 @@
++package edu.uic.cs441.scholarchain.independent
++
++import edu.uic.cs441.scholarchain.core.*
++import edu.uic.cs441.scholarchain.services.*
++import edu.uic.cs441.scholarchain.storage.*
++import java.util.concurrent.atomic.{AtomicInteger, AtomicLong}
++import org.scalatest.funsuite.AnyFunSuite
++import scala.collection.mutable.ArrayBuffer
++
++class IndependentServices10BWorkerSpec extends AnyFunSuite {
++  private def item: EmbeddingWorkItem = {
++    val corpus = new IndependentRuntime9BSemanticFixture.Corpus
++    EmbeddingManifests.item(corpus.document, corpus.embeddings.model, corpus.ingest)
++  }
++  private def poll(worker: EmbeddingWorker): WorkerPoll =
++    worker.pollOnce().fold(e => fail(e.code), identity)
++  private def processor(f: EmbeddingWorkItem => Either[ApiError, Unit]): EmbeddingProcessor =
++    new EmbeddingProcessor { def process(i: EmbeddingWorkItem) = f(i) }
++
++  test(
++    "duplicate queue payloads execute once across worker instances and acknowledge both receipts"
++  ) {
++    val queue = new InMemoryEmbeddingWorkQueue
++    val dlq = new InMemoryEmbeddingWorkQueue
++    val sessions = new InMemoryQuerySessionStore
++    val calls = new AtomicInteger
++    val work = item
++    assert(StorageResult.successful(queue.enqueue(Vector(work, work))))
++    val process = processor { _ =>
++      calls.incrementAndGet(); Right(())
++    }
++    val first = new EmbeddingWorker(queue, dlq, sessions, process)
++    val second = new EmbeddingWorker(queue, dlq, sessions, process)
++    try {
++      assert(poll(first).completed == 1)
++      assert(poll(second).duplicates == 1)
++      assert(calls.get == 1)
++      assert(StorageResult.value(queue.backlog).contains(0L))
++      assert(StorageResult.value(dlq.backlog).contains(0L))
++    } finally { first.close(); second.close() }
++  }
++
++  test("three failed deliveries publish the exact poison payload to DLQ before acknowledgement") {
++    val now = new AtomicLong(1000)
++    val backing =
++      new InMemoryEmbeddingWorkQueue(visibilityTimeoutMillis = 20, nowMillis = () => now.get)
++    val events = ArrayBuffer.empty[String]
++    val calls = new AtomicInteger
++    val work = item
++    var deadItems = Vector.empty[EmbeddingWorkItem]
++    val queue = new EmbeddingWorkQueue {
++      def enqueue(items: Vector[EmbeddingWorkItem]) = backing.enqueue(items)
++      def receive(max: Int) = backing.receive(max)
++      def acknowledge(receipt: String) = { events += "ack"; backing.acknowledge(receipt) }
++      def backlog = backing.backlog
++    }
++    val dlq = new EmbeddingWorkQueue {
++      def enqueue(items: Vector[EmbeddingWorkItem]) = {
++        events += "dead-letter"; deadItems ++= items; StorageResult.Written(items.size)
++      }
++      def receive(max: Int) = StorageResult.Found(Vector.empty[EmbeddingQueueMessage])
++      def acknowledge(receipt: String) = StorageResult.Rejected("unused")
++      def backlog = StorageResult.Found(deadItems.size.toLong)
++    }
++    assert(StorageResult.successful(queue.enqueue(Vector(work))))
++    val sessions = new InMemoryQuerySessionStore
++    val process = processor { _ =>
++      calls.incrementAndGet(); Left(ApiError.downstream)
++    }
++    for (attempt <- 1 to 3) {
++      // A new worker for every delivery proves that retry counts are persisted, not process-local.
++      val worker = new EmbeddingWorker(queue, dlq, sessions, process, WorkerConfig(maxAttempts = 3))
++      try {
++        val result = poll(worker)
++        if (attempt < 3) {
++          assert(result.failed == 1 && result.deadLettered == 0)
++          assert(events.isEmpty)
++          assert(StorageResult.value(queue.backlog).contains(1L))
++        } else assert(result.deadLettered == 1)
++      } finally worker.close()
++      now.addAndGet(21)
++    }
++    assert(calls.get == 3)
++    assert(deadItems == Vector(work))
++    assert(events.toVector == Vector("dead-letter", "ack"))
++    assert(StorageResult.value(queue.backlog).contains(0L))
++  }
++
++  test("failed DLQ publication leaves the source message unacknowledged for redelivery") {
++    val now = new AtomicLong(1000)
++    val queue =
++      new InMemoryEmbeddingWorkQueue(visibilityTimeoutMillis = 20, nowMillis = () => now.get)
++    val dlqCalls = new AtomicInteger
++    val dlq = new EmbeddingWorkQueue {
++      def enqueue(items: Vector[EmbeddingWorkItem]): StorageResult[Int] = {
++        dlqCalls.incrementAndGet(); StorageResult.Rejected("synthetic-dlq-down")
++      }
++      def receive(max: Int) = StorageResult.Found(Vector.empty[EmbeddingQueueMessage])
++      def acknowledge(receipt: String) = StorageResult.Rejected("unused")
++      def backlog = StorageResult.Found(0L)
++    }
++    val work = item
++    assert(StorageResult.successful(queue.enqueue(Vector(work))))
++    val worker = new EmbeddingWorker(
++      queue,
++      dlq,
++      new InMemoryQuerySessionStore,
++      processor(_ => Left(ApiError.downstream)),
++      WorkerConfig(maxAttempts = 1)
++    )
++    try {
++      assert(poll(worker).failed == 1)
++      assert(dlqCalls.get == 1)
++      assert(StorageResult.value(queue.backlog).contains(1L))
++      now.addAndGet(21)
++      val redelivered = StorageResult.value(queue.receive(1)).get
++      assert(redelivered.size == 1 && redelivered.head.item == work)
++    } finally worker.close()
++  }
++}

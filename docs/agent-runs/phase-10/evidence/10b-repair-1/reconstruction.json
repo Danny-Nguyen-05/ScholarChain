@@ -1,0 +1,7 @@
+{
+  "input": "docs/agent-runs/phase-10/evidence/10b/source.diff",
+  "baseSHA": "c85da7365927a1f7d8ee5ab1f67c5c1a128391b3",
+  "reconstructedFiles": 30,
+  "allMatchPreRepairSourceHashes": true,
+  "purpose": "Reconstruct exact previously reviewed uncommitted10B source bytes for repair-only diff; no worktree reset or mutation."
+}

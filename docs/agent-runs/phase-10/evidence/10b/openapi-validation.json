@@ -1,0 +1,26 @@
+{
+  "commands": [
+    {
+      "argv": [
+        "ruby",
+        "-ryaml",
+        "-rjson",
+        "-e",
+        "puts JSON.generate(YAML.load_file(ARGV[0]))",
+        "modules/services/src/main/resources/openapi/scholarchain.v1.yaml"
+      ],
+      "exitCode": 0
+    },
+    {
+      "command": "Python recursive local $ref resolution and JSON parsing of five committed examples",
+      "exitCode": 0
+    }
+  ],
+  "openapi": "3.0.3",
+  "pathCount": 16,
+  "referenceCount": 97,
+  "unresolvedReferences": [],
+  "exampleCount": 5,
+  "sourceSha256": "6d50575393fc8753a6b4b22434834ea16004602410e98f3aad6fba265cec537f",
+  "limitations": "Syntax/local references and wire contract assertions, not a third-party full OpenAPI semantic validator."
+}

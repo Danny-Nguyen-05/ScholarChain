@@ -103,6 +103,10 @@ object ScholarChainBuild {
       )
       val output = target.value / "distribution"
       ServiceDistribution.write(appJar, dependencies, output)
+      ServiceDistribution.writePromptAssets(
+        (LocalRootProject / baseDirectory).value / "prompts",
+        output
+      )
       streams.value.log.info(
         s"Verified four-artifact service distribution: ${output.getAbsolutePath}"
       )

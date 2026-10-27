@@ -1,0 +1,60 @@
+{
+  "command": "sbt -batch check",
+  "exitCode": 0,
+  "passed": 1208,
+  "failed": 0,
+  "suites": 147,
+  "modules": [
+    {
+      "module": "core",
+      "passed": 207,
+      "suites": 17
+    },
+    {
+      "module": "hadoop",
+      "passed": 64,
+      "suites": 4
+    },
+    {
+      "module": "entityResolution",
+      "passed": 39,
+      "suites": 6
+    },
+    {
+      "module": "sparkAnalytics",
+      "passed": 38,
+      "suites": 5
+    },
+    {
+      "module": "storage",
+      "passed": 80,
+      "suites": 11
+    },
+    {
+      "module": "rag",
+      "passed": 107,
+      "suites": 9
+    },
+    {
+      "module": "services",
+      "passed": 31,
+      "suites": 5
+    },
+    {
+      "module": "independentTests",
+      "passed": 629,
+      "suites": 82
+    },
+    {
+      "module": "buildVerification",
+      "passed": 13,
+      "suites": 8
+    }
+  ],
+  "sbtTime": "709 s (11:49)",
+  "elapsedSeconds": 710.548,
+  "javaVersion": "17.0.20.1",
+  "log": "/tmp/phase10b-r1-check.log",
+  "sha256": "39aaf21ff6902af2bcde194c7e45622f207aa9338adebaaf5b04dc8b2bc6f4d3",
+  "intentionalNestedFailure": "CheckFailurePathSpec intentionally invokes checkProbeInjectFailure. Parent test and outer check passed."
+}

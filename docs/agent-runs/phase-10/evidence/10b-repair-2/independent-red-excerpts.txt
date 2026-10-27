@@ -1,0 +1,11 @@
+[info] - equal graph and transport budgets return graph deadlines once each when caller timeout is omitted *** FAILED ***
+[info]   3 did not equal 4 4 graph deadlines caused 3 snapshot executions (IndependentServices10BEqualBudgetSpec.scala:110)
+[info] - explicit graph timeout at the transport cap leaves enough response budget and never trips the breaker *** FAILED ***
+[info]   3 did not equal 4 4 graph deadlines caused 3 snapshot executions (IndependentServices10BEqualBudgetSpec.scala:110)
+[info] Total number of tests run: 3
+[info] Suites: completed 1, aborted 0
+[info] Tests: succeeded 1, failed 2, canceled 0, ignored 0, pending 0
+[error] Failed tests:
+[error] 	edu.uic.cs441.scholarchain.independent.IndependentServices10BEqualBudgetSpec
+[error] (independentTests / Test / testOnly) sbt.TestsFailedException: Tests unsuccessful
+[error] Total time: 6 s, completed Oct 27, 2026, 11:42:03 AM

@@ -1,0 +1,14 @@
+STATUS: COMPLETE
+OWNER: build-engineer /root/build_10b; evidence assembled by orchestrator
+WORK ORDER: Subphase 10B packaging, four local images, startup smoke and packaged downstream integration.
+FILES CREATED: None in repository.
+FILES MODIFIED: Dockerfile; project/ScholarChainBuild.scala; project/ServiceDistribution.scala; project/ServicesPackaging.md; project/verification/src/test/scala/scholarchain/build/ServiceDistributionSpec.scala.
+COMMANDS RUN: Coordinator observed JDK 17 formatting/buildVerification test (exit 0, 13 tests/8 suites) and packageServices (exit 0). Successful Docker commands: DOCKER_CONFIG=/tmp/phase10b-docker-config DOCKER_HOST=unix:///Users/danny/.docker/run/docker.sock python3 /tmp/phase10b-docker.py (exit 0,13.530 s); same environment python3 /tmp/phase10b-docker-remote.py (exit 0,2.805 s). Per-command argv, exits and times are in copied Docker result JSON. Initial credential-helper stall cancelled only owned build (build exit130, harness exit1,165.960 s). Three integration harness attempts were retained before successful startup/probe assertions. No source production change was needed for those harness failures.
+TEST RESULTS: Two packaging tests added for exact nested prompt bytes/stale replacement/exclusion and missing/symlinked assets. Four rebuilt images passed eight role/mode boot cases. Every image runs expected main as non-root UID999, refuses missing configuration with exit2, exposes health200 and ready503 unconfigured or ready200 explicitly offline, and requires metrics authentication. Packaged query returned verified count3, same-key identical200, changed-body409, evidence index/item/explain200. JAR and four prompt assets match distribution hashes in all images. Three packaged mains communicated over an internal isolated Docker network, showing actual downstream graph/semantic requests with correlation and CLOSED breaker gauges; graph stop kept query health200 and made ready503 with trace. Nullable evidence/explain field types were also verified through actual HTTP (exit0,0.999 s).
+VALIDATION RESULTS: Image IDs, package/asset hashes and cleanup are in phase10b-docker-result.json; actual remote wiring/readiness in phase10b-docker-remote-result.json. All task containers and the temporary network were removed; no build jobs remain in this owner. No cloud/provider call, push, commit, source-prompt edit or human-gate write occurred.
+ASSUMPTIONS: Declared synthetic fixture mode and deliberately public local test authentication placeholders.
+RISKS: Local packaging/runtime checks are not a live deployment claim. New/internal route log labels are currently unmatched; correlation and successful calls are observable.
+MANUAL ACTION REQUIRED: Orchestrator completes full check/handoff; user launches independent review.
+BLOCKED-ON OWNER: None.
+BLOCKED-ON EVIDENCE: None.
+NEXT GATE: Full sbt check and user-launched review.

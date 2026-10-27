@@ -69,6 +69,9 @@ final class QueryService(
           val p = read(s)
           if (Set("SUCCEEDED", "FAILED")(p("state").str)) return false
           change(p); p("updatedAt") = instant
+          val history = p.obj.get("observedStages").map(_.arr.toVector).getOrElse(Vector.empty)
+          if (history.lastOption.forall(_ != p("stage")))
+            p("observedStages") = ujson.Arr.from(history :+ p("stage"))
           if (
             StorageResult.successful(
               store.update(
@@ -108,14 +111,14 @@ final class QueryService(
     p("state").str match {
       case "SUCCEEDED" => Right(ApiReply(200, p("result")))
       case "FAILED"    => Left(errorFrom(p))
-      case _           => Right(ApiReply(202, reference(s.queryId)))
+      case _           => Right(ApiReply(202, reference(s.queryId, s.state)))
     }
   }
-  private def reference(id: String): ujson.Value = ujson.Obj(
+  private def reference(id: String, state: String): ujson.Value = ujson.Obj(
     "queryId" -> id,
     "mode" -> "asynchronous",
     "jobId" -> jobId(id),
-    "status" -> "QUEUED",
+    "status" -> state,
     "statusUrl" -> s"/v1/jobs/${jobId(id)}"
   )
   def submit(
@@ -135,6 +138,7 @@ final class QueryService(
         val now = instant
         val payload = ujson.Obj(
           "fingerprint" -> fingerprint,
+          "observedStages" -> ujson.Arr("QUEUED"),
           "state" -> "QUEUED",
           "stage" -> "QUEUED",
           "createdAt" -> now,
@@ -209,7 +213,7 @@ final class QueryService(
         "status" -> error.status,
         "code" -> error.code,
         "message" -> error.message,
-        "retryable" -> error.retryable
+        "retryable" -> false
       )
     }
     ()
@@ -257,6 +261,7 @@ final class QueryService(
           "claims" -> ujson.Arr.from(output.claims),
           "links" -> ujson.Obj(
             "explain" -> s"/v1/explain/$id",
+            "evidence" -> s"/v1/queries/$id/evidence",
             "result" -> s"/v1/jobs/${jobId(id)}/result"
           )
         )

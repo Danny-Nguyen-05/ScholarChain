@@ -31,7 +31,8 @@ object ApiServer {
         )
         def dispatch(
             request: cask.Request,
-            remaining: cask.RemainingPathSegments
+            remaining: cask.RemainingPathSegments,
+            params: cask.QueryParams
         ): cask.Response[String] = {
           val exchange = request.exchange
           val headers = exchange.getRequestHeaders.asScala
@@ -45,7 +46,10 @@ object ApiServer {
             } catch { case NonFatal(_) => Left(ApiError.invalid) }
           val result = app.handle(
             exchange.getRequestMethod.toString,
-            exchange.getRequestPath,
+            exchange.getRequestPath + Option(exchange.getQueryString)
+              .filter(_.nonEmpty)
+              .map("?" + _)
+              .getOrElse(""),
             headers,
             body.getOrElse(""),
             body.left.toOption
@@ -62,7 +66,10 @@ object ApiServer {
           .toMap
         val result = app.handle(
           req.exchange.getRequestMethod.toString,
-          req.exchange.getRequestPath,
+          req.exchange.getRequestPath + Option(req.exchange.getQueryString)
+            .filter(_.nonEmpty)
+            .map("?" + _)
+            .getOrElse(""),
           headers,
           ""
         )

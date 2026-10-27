@@ -1,0 +1,14 @@
+{
+  "command": "sbt -batch scalafmtSbt 'buildVerification / Compile / scalafmt' 'buildVerification / Test / scalafmt' 'buildVerification / test'",
+  "workingDirectory": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+  "environment": {
+    "JAVA_HOME": "/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home",
+    "SBT_OPTS": "-Dlogback.configurationFile=/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-04/xml-repair-logback.xml"
+  },
+  "PATHPrefix": "/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home/bin",
+  "exitCode": 0,
+  "elapsedSeconds": 15.62,
+  "log": "/tmp/phase10b-packaging-tests.log",
+  "sha256": "8feae86eb6790b9005d96f92ba551d8c3ff5c56b398079450481113a35160917",
+  "sourceHashes": "packaging-tests-sources.json"
+}

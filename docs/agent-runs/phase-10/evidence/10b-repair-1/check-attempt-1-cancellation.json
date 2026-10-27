@@ -1,0 +1,5 @@
+{
+  "reason": "Strengthen independent F6 burst test so successful readiness probes cannot reset breaker failures between requests. No production change; restart full gate after final test source is frozen.",
+  "signal": "SIGTERM",
+  "ownedSbtPid": 38827
+}

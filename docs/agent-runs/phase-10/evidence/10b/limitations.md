@@ -1,0 +1,5 @@
+# Scope and limitations
+
+Explicit offline-synthetic composition uses declared Phase9G1 fixtures; live backend/provider execution and deployment remain unverified human-gated work. The frozen GraphReader lacks direction/snapshot semantics, so live graph deployment needs the stronger GraphSnapshot adapter. Query execution is local and nondurable; worker PROCESSING reservations require crash recovery and DLQ publication/terminal recording are not transactional. Missing cache/retry measurements are null; unknown score weights are absent; internal runtime trace uses query ID linked to HTTP context. New/internal routes currently log safe template label unmatched. Full OpenAPI semantic validation was unavailable; YAML/local refs, committed examples and wire assertions passed. Optional OpenSearch/indexes/CI and cloud deployment were omitted.
+
+Only the README count summary changed after the full-check source snapshot. No Scala/test/build/packaged resource changed after validation. No10Bcommit, push, reviewer invocation, cloud/provider call or human-gate write occurred.

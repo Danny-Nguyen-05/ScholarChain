@@ -15,6 +15,7 @@ final class ServiceMetrics {
   private val abstentions = new LongAdder; private val timeouts = new LongAdder
   private val downstreamErrors = new LongAdder
   private val downstreamTimeouts = new LongAdder
+  private val graphDeadlines = new LongAdder
   private val breakers = new ConcurrentHashMap[String, () => String]()
   def registerBreaker(name: String, state: () => String): Unit = {
     require(name.matches("[a-zA-Z0-9_]{1,64}")); breakers.put(name, state); ()
@@ -26,6 +27,7 @@ final class ServiceMetrics {
     buckets.zip(latencies).foreach { (upper, counter) => if (seconds <= upper) counter.increment() }
     if (status == 504) timeouts.increment()
   }
+  def graphRequestDeadline(): Unit = graphDeadlines.increment()
   def downstream(status: Int): Unit = {
     if (status == 504) downstreamTimeouts.increment()
     if (status == 502 || status == 504) downstreamErrors.increment()
@@ -50,6 +52,7 @@ final class ServiceMetrics {
         s"api_timeouts_total ${timeouts.sum()}",
         s"api_downstream_errors_total ${downstreamErrors.sum()}",
         s"downstream_timeouts_total ${downstreamTimeouts.sum()}",
+        s"graph_request_deadlines_total ${graphDeadlines.sum()}",
         s"workflow_abstentions_total ${abstentions.sum()}"
       ) ++
       verification.asScala.toVector
@@ -87,7 +90,8 @@ final class ApiApplication(
     config: ServiceConfig,
     readiness: () => Boolean = () => true,
     logSink: String => Unit = s => org.slf4j.LoggerFactory.getLogger("scholarchain.http").info(s),
-    serviceRole: String = "query-api"
+    serviceRole: String = "query-api",
+    extended: Option[ExtendedApi] = None
 ) extends AutoCloseable {
   def requestByteLimit: Int = config.maxRequestBytes
   def requestReadTimeoutMs: Int = config.requestReadTimeoutMs
@@ -100,12 +104,14 @@ final class ApiApplication(
   }
   def handle(
       method: String,
-      path: String,
+      uri: String,
       headers: Map[String, String],
       body: String,
       transportError: Option[ApiError] = None
   ): HttpReply = {
     val start = System.nanoTime()
+    val path = uri.takeWhile(_ != '?')
+    val params = QueryParameters.parse(uri)
     val normalized = headers.map((k, v) => k.toLowerCase(java.util.Locale.ROOT) -> v)
     val context = RequestContext(
       safeId(normalized.get("x-request-id"), "req-"),
@@ -159,7 +165,9 @@ final class ApiApplication(
             case Vector(id, "result") => queries.result(id)
             case _ => Left(ApiError(404, "NOT_FOUND", "The requested route was not found."))
           }
-        } else Left(ApiError(404, "NOT_FOUND", "The requested route was not found."))
+        } else if (extended.nonEmpty)
+          params.flatMap(p => routeExtended(method, path, p, body, context, extended.get))
+        else Left(ApiError(404, "NOT_FOUND", "The requested route was not found."))
       } catch { case NonFatal(_) => Left(ApiError.internal) }
     val reply = result.fold(e => ApiReply(e.status, e.json(context.traceId)), identity)
     val elapsed = System.nanoTime() - start
@@ -174,5 +182,56 @@ final class ApiApplication(
       )
     else HttpReply(reply.status, reply.body.render(), responseHeaders)
   }
-  def close(): Unit = queries.close()
+  private def routeExtended(
+      method: String,
+      path: String,
+      p: Map[String, String],
+      body: String,
+      context: RequestContext,
+      api: ExtendedApi
+  ): Either[ApiError, ApiReply] = {
+    val parts =
+      path.stripPrefix("/").split("/", -1).toVector.map(java.net.URLDecoder.decode(_, "UTF-8"))
+    val query = serviceRole == "query-api"
+    val graph = serviceRole == "graph-service"
+    val semantic = serviceRole == "semantic-service"
+    (method, parts) match {
+      case ("GET", Vector("v1", "evidence", id)) if query => api.evidence.evidence(id)
+      case ("GET", Vector("v1", "explain", id)) if query  => api.evidence.explain(id)
+      case ("GET", Vector("v1", "queries", id, "evidence")) if query =>
+        api.evidence.queryEvidence(id)
+      case ("GET", Vector("v1", "graph", "nodes", id)) if query || graph =>
+        api.graph.node(id, p, context)
+      case ("GET", Vector("v1", "graph", "nodes", id, "neighbors")) if query || graph =>
+        api.graph.neighbors(id, p, context)
+      case ("GET", Vector("internal", "v1", "graph", "nodes", id)) if graph =>
+        api.graph.node(id, p, context)
+      case ("GET", Vector("internal", "v1", "graph", "nodes", id, "neighbors")) if graph =>
+        api.graph.neighbors(id, p, context)
+      case ("GET", Vector("internal", "v1", "graph", "metrics", id)) if graph =>
+        api.graph.metrics(id, p.getOrElse("window", "all-years"), p, context)
+      case ("GET", Vector("internal", "v1", "graph", "paths")) if graph =>
+        api.graph.paths(p, context)
+      case ("POST", Vector("internal", "v1", "semantic", "retrieve")) if query || semantic =>
+        api.semantic.retrieve(body, context)
+      case _ => Left(ApiError(404, "NOT_FOUND", "The requested route was not found."))
+    }
+  }
+  def close(): Unit = { extended.foreach(_.close()); queries.close() }
+}
+
+object QueryParameters {
+  def parse(uri: String): Either[ApiError, Map[String, String]] = try {
+    val raw = uri.dropWhile(_ != '?').drop(1)
+    if (raw.isEmpty) Right(Map.empty)
+    else {
+      val fields = raw.split("&", -1).toVector.map { field =>
+        val p = field.split("=", 2)
+        if (p.length != 2) throw new IllegalArgumentException
+        java.net.URLDecoder.decode(p(0), "UTF-8") -> java.net.URLDecoder.decode(p(1), "UTF-8")
+      }
+      if (fields.map(_._1).distinct.size != fields.size) Left(ApiError.invalid)
+      else Right(fields.toMap)
+    }
+  } catch { case NonFatal(_) => Left(ApiError.invalid) }
 }

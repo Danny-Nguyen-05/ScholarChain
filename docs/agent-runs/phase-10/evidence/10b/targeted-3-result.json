@@ -1,0 +1,14 @@
+{
+  "command": "sbt -batch 'services / Compile / scalafmt' 'services / Test / scalafmt' 'independentTests / Test / scalafmt' 'services / test' 'independentTests / Test / testOnly edu.uic.cs441.scholarchain.independent.IndependentServices10A* edu.uic.cs441.scholarchain.independent.IndependentServices10B*'",
+  "workingDirectory": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+  "environment": {
+    "JAVA_HOME": "/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home",
+    "SBT_OPTS": "-Dlogback.configurationFile=/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-04/xml-repair-logback.xml"
+  },
+  "PATHPrefix": "/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home/bin",
+  "exitCode": 0,
+  "elapsedSeconds": 11.579,
+  "log": "/tmp/phase10b-targeted-3.log",
+  "sha256": "0fc1d9901dc90286418f0447f464660b79c9d795788fc15f9c7e4ecc93ddc5d9",
+  "sourceHashes": "targeted-3-sources.json"
+}

@@ -10,6 +10,7 @@ WORKDIR /app
 # metadata inside dependency JARs rather than merging unrelated resources.
 COPY modules/services/target/distribution/services.jar /app/services.jar
 COPY modules/services/target/distribution/lib/ /app/lib/
+COPY modules/services/target/distribution/prompts/ /app/prompts/
 
 ARG MAIN_CLASS=edu.uic.cs441.scholarchain.services.QueryApiMain
 RUN case "$MAIN_CLASS" in \

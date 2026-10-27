@@ -1,0 +1,63 @@
+VERDICT: REQUEST-CHANGES for Subphase 10B repair round 1.
+
+F9 is closed. F6 is only partly closed. The timeoutMs=1 path is fixed and well tested. But the other half of F6's failure scenario, a heavy expansion that runs to the default 5000 ms graph cap, still opens the breaker under the shipped default configuration.
+
+What I verified
+
+- Hashes: all 33 source files match source-files.json, and all 9 repair files match repair-files.json.
+- Change scope: since the full-check snapshot, only modules/services/README.md changed. Every 10B file outside the repair list is unchanged since round 0, including QueryService and the worker.
+- Logs and counts: the full-check log and both Docker log hashes match. Module counts add up to 1208 with 0 failures. git diff --check passes, and HEAD is still c85da73.
+- Scope and ownership: the work stayed inside the authorized F6 + F9 scope, and F12 is unchanged. Each file was written by its listed owner, and no human decision file was touched. review.md and repairs.md carry the prior verdict as user-supplied external review.
+- F1–F5, O1–O2: no regressions.
+- F9: CLOSED. README.md:230-236 now reports the 36/36 six-suite and 17/17 four-suite gates separately, plus the observed 41/41 seven-suite repair gate.
+- Marker parsing: the parser in RemoteServices.scala:107-129 is narrow, as claimed:
+  - it requires the graph dependency, a GET to an allowlisted path, status 504, an exact four-field body and retryable:false;
+  - it discards the downstream message and trace;
+  - malformed, wrong-scope and retryable markers keep normal failure handling.
+- Tests: the red runs genuinely failed before the fix, which is good evidence. The independent burst test asserts CLOSED before any readiness probe runs.
+
+Findings
+
+F6 — Medium — BLOCKING (still open in one scenario). Owners: service-engineer (fix and module test), test-engineer (independent test), build-engineer (rebuild and smokes).
+
+- Where:
+  - graph-service's default budget is 5000 ms: ServiceMains.scala:18 and GraphApi.scala:135,141;
+  - query-api's attempt deadline is also 5000 ms (ApiContracts default): DownstreamClient.scala:63,86 and RemoteServices.scala:49,101.
+- What happens: take a /v1/graph/nodes/X/neighbors request with no timeoutMs, or timeoutMs=5000, that takes longer than the budget (a hub node at depth 3, or a slow snapshot adapter).
+  a. query-api's clock starts before it sends the request. graph-service's clock starts after it receives and parses it, and its 504 marker still has to travel back.
+  b. So query-api's own timer always fires first. It produces the retryable DOWNSTREAM_TIMEOUT, not the marker.
+  c. That timeout is retried 3 times and counts 3 breaker failures. The breaker opens, and query-api /readyz returns 503 for 30 s. This is the original F6 outcome.
+  d. Any caller timeoutMs close to 5000 ms races the same way.
+
+  The repair's Docker harness also sets query-api's SCHOLARCHAIN_DOWNSTREAM_TIMEOUT_MS=500 while the graph budget stays 5000 (phase10b-r1-docker-remote.py:6). Nothing checks that these two settings fit together.
+- How I confirmed it: by tracing the code. I did not run it.
+- Why the tests missed it: both new suites only use timeoutMs=1, or a module-level budget far below the transport deadline.
+- Acceptance check:
+  a. query-api must not let a graph request's budget reach its own per-attempt transport deadline. One option is to always forward a timeoutMs clamped to the transport deadline minus a configured margin, deterministically so cursor binding stays stable. Another is to refuse to start (exit 2) when the configured budgets overlap. Document the chosen rule in the README and OpenAPI.
+  b. An independent HTTP test puts query-api in front of a real GraphApi whose snapshot read blocks, with equal default-style budgets (for example both 300 ms) and no timeoutMs on the request. Four requests must each return 504 GRAPH_DEADLINE_EXCEEDED with the caller's trace, cause exactly one backend call each, and leave the breaker CLOSED and /readyz at 200.
+  c. The existing outage tests (refusal, no response, unready 503) still pass.
+
+F16 — Low — nonblocking, future live-adapter gate. Owner: service-engineer.
+
+Because of the repair, a graph-service whose snapshot backend hangs now only ever returns GRAPH_DEADLINE_EXCEEDED. That never trips query-api's breaker, and graph-service's own readiness never checks the snapshot: GraphEndpoints.ready defaults to true at SemanticApi.scala:8 and GraphApi doesn't override it. A live GraphSnapshot adapter must report backend readiness.
+
+Carried and unchanged (nonblocking): F7, F8, F10, F11, F12, F13, F14, F15.
+
+Later human-gated work, not verified here: live adapters and deployment, stable cursor-key injection, SQS redrive, a durable dispatcher and PROCESSING recovery, and a full OpenAPI validator.
+
+Report fields
+
+STATUS: COMPLETE (recheck) — verdict REQUEST-CHANGES
+OWNER: code-reviewer (read-only)
+WORK ORDER: docs/agent-runs/phase-10/evidence/10b-repair-1/reviewer-prompt.md
+FILES CREATED: None
+FILES MODIFIED: None
+COMMANDS RUN: git rev-parse HEAD; git branch --show-current; git status --short; git diff --check c85da73; git diff c85da73 -- review.md; cat/grep of repair evidence, repair-source.diff and current sources; python3 -I SHA-256 rehash vs 10b-repair-1 source-files.json, check-sources.json, repair-files.json and 10b/source-files.json; shasum -a 256 of /tmp/phase10b-r1-check.log, -docker.log, -docker-remote.log
+TEST RESULTS: None executed by reviewer. Retained evidence: services 31/31 (5 suites), independent 10A/B 41/41 (7 suites), full check 1208/0 in 147 suites, exit 0, JDK 17.0.20.1; red gates independent 3/4 and module 2/5 as described
+VALIDATION RESULTS: 33/33 and 9/9 hashes match; only README differs from the check snapshot; three log hashes match; module totals sum to 1208; diff --check exit 0; scope limited to F6+F9; F9 closed; F6 timeoutMs=1 path closed, default-budget path open
+ASSUMPTIONS: Default ServiceConfig and SCHOLARCHAIN_GRAPH_TIMEOUT_MS values describe the shipped configuration; residual confirmed by static trace
+RISKS: A heavy or slow graph expansion at the default cap still opens the graph breaker and fails query-api readiness for 30 s
+MANUAL ACTION REQUIRED: User pastes NEXT PROMPT; user owns commit and human gate
+BLOCKED-ON OWNER: service-engineer, test-engineer, build-engineer (F6 residual)
+BLOCKED-ON EVIDENCE: Equal-budget independent HTTP test, targeted and full JDK 17 gates, rebuilt images and smokes
+NEXT GATE: Repair round 2 for F6 residual, then user-launched read-only recheck

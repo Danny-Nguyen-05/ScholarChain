@@ -1,0 +1,14 @@
+{
+  "command": "sbt -batch 'independentTests / Test / testOnly edu.uic.cs441.scholarchain.independent.IndependentServices10BEqualBudgetSpec'",
+  "workingDirectory": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+  "environment": {
+    "JAVA_HOME": "/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home",
+    "SBT_OPTS": "-Dlogback.configurationFile=/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-04/xml-repair-logback.xml"
+  },
+  "PATHPrefix": "/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home/bin",
+  "exitCode": 1,
+  "elapsedSeconds": 7.895,
+  "log": "/tmp/phase10b-r2-independent-red.log",
+  "sha256": "899416ca8e1ba5397badbe93a01fb34c922e02220acdb6292d5f77311b44b8c8",
+  "sourceHashes": "independent-red-sources.json"
+}

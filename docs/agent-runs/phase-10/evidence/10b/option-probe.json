@@ -1,0 +1,291 @@
+{
+  "commands": [
+    {
+      "argv": [
+        "docker",
+        "run",
+        "-d",
+        "--name",
+        "phase10b-option-probe",
+        "-p",
+        "127.0.0.1::8080",
+        "-e",
+        "SCHOLARCHAIN_API_KEY_SHA256=9943981103307159e79693db0faf1b6b31352df4caa328714fa94e527fd210a1",
+        "-e",
+        "SCHOLARCHAIN_INTERNAL_TOKEN_SHA256=77e0b1a0a9ea3f952d4790e92b6390302f706ac148d5a23f9585427a0fdf7f1f",
+        "-e",
+        "SCHOLARCHAIN_HTTP_HOST=0.0.0.0",
+        "-e",
+        "SCHOLARCHAIN_SERVICE_MODE=offline-synthetic",
+        "scholarchain-query-api:local"
+      ],
+      "exitCode": 0,
+      "output": "c45e5d712d6f41b1b03fc4fcfb6503005874e58191adf3a8b7253598f31ba8be"
+    },
+    {
+      "argv": [
+        "docker",
+        "port",
+        "phase10b-option-probe",
+        "8080/tcp"
+      ],
+      "exitCode": 0,
+      "output": "127.0.0.1:64423"
+    },
+    {
+      "argv": [
+        "docker",
+        "rm",
+        "-f",
+        "phase10b-option-probe"
+      ],
+      "exitCode": 0,
+      "output": "phase10b-option-probe"
+    }
+  ],
+  "fields": {
+    "workId": {
+      "value": null,
+      "jsonType": "null"
+    },
+    "text": {
+      "value": null,
+      "jsonType": "null"
+    },
+    "graphPath": {
+      "value": null,
+      "jsonType": "null"
+    },
+    "chunkId": {
+      "value": null,
+      "jsonType": "null"
+    },
+    "explain.reason": {
+      "value": "partial-retrieval",
+      "jsonType": "string"
+    }
+  },
+  "evidence": {
+    "evidenceId": "evidence:metric:812172f23e435f0eeb77daa658f3c0dce62178d82b5ee76da789d9f72e9b201c",
+    "evidenceType": "METRIC",
+    "workId": null,
+    "sourceDataset": "SCHOLARCHAIN",
+    "sourceRecordId": "7:metrics120:metrics/type=researcher_collaboration:researcher:dblp:df3f8f903aede083509ee3f5bf14ff03463b3fe4484a46d0aecdd75d931eaf64:*",
+    "snapshot": "synthetic-9b",
+    "sourceUri": "artifact:run:55555555-5555-4555-8555-555555555555:metrics",
+    "text": null,
+    "textS3Uri": null,
+    "graphPath": null,
+    "chunkId": null,
+    "score": 1,
+    "provenance": {
+      "schemaVersion": "scholarchain.domain.v1",
+      "source": "SCHOLARCHAIN",
+      "sourceRecordId": "7:metrics120:metrics/type=researcher_collaboration:researcher:dblp:df3f8f903aede083509ee3f5bf14ff03463b3fe4484a46d0aecdd75d931eaf64:*",
+      "sourceUri": null,
+      "datasetSnapshot": "synthetic-9b",
+      "retrievalDate": null,
+      "licenseEvidenceUri": null,
+      "runId": "run:55555555-5555-4555-8555-555555555555",
+      "uncertaintyNotes": [
+        "Derived from stored source records; request provenance is retained separately."
+      ]
+    },
+    "supportingContent": {
+      "subjectIds": [
+        "researcher:dblp:df3f8f903aede083509ee3f5bf14ff03463b3fe4484a46d0aecdd75d931eaf64"
+      ],
+      "windowIds": [
+        "all-years"
+      ],
+      "metricVersion": "module-g1-v1",
+      "runId": "run:55555555-5555-4555-8555-555555555555",
+      "values": [
+        {
+          "field": "kind",
+          "text": "metrics"
+        },
+        {
+          "field": "publicationCount",
+          "number": "3"
+        },
+        {
+          "field": "distinctCoauthorCount",
+          "number": "2"
+        },
+        {
+          "field": "totalCoauthorOccurrences",
+          "number": "4"
+        },
+        {
+          "field": "averageCoauthorsPerPaper",
+          "number": "1.3333333333333333"
+        },
+        {
+          "field": "maximumCoauthorsOnOnePaper",
+          "number": "2"
+        },
+        {
+          "field": "maxTeamWorkIds",
+          "ids": [
+            "work:dblp:conf/module-g1/w1"
+          ]
+        },
+        {
+          "field": "maxTeamWorkTieCount",
+          "number": "1"
+        },
+        {
+          "field": "weightedDegree",
+          "number": "4"
+        },
+        {
+          "field": "componentId",
+          "text": "component:9aaf680776b98fd17fe63376120525cbcdffc01bc66f71df96b6e90b87f39b86"
+        },
+        {
+          "field": "communityId",
+          "text": "community:ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad"
+        },
+        {
+          "field": "coreness",
+          "number": "2"
+        }
+      ],
+      "sourceRefs": [
+        {
+          "table": "metrics/type=researcher_collaboration",
+          "rowKey": "researcher:dblp:df3f8f903aede083509ee3f5bf14ff03463b3fe4484a46d0aecdd75d931eaf64",
+          "field": "*"
+        }
+      ],
+      "converged": false,
+      "iterations": 3,
+      "approximate": false,
+      "descriptive": false,
+      "contentBindingVersion": "runtime-evidence-content-v1",
+      "sourceContext": {
+        "schemaVersion": "scholarchain.spark-analytics.v1",
+        "runId": "run:55555555-5555-4555-8555-555555555555",
+        "windowId": "all-years",
+        "lineage": {
+          "hadoopRunId": "run:33333333-3333-4333-8333-333333333333",
+          "hadoopSnapshot": "synthetic-9b",
+          "entityResolutionRunId": "run:44444444-4444-4444-8444-444444444444",
+          "entityResolutionPolicyVersion": "module-g1-v1",
+          "entityResolutionPolicyHash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "sourceWorkIds": [],
+          "sourceMentionIds": []
+        }
+      }
+    }
+  },
+  "explain": {
+    "queryId": "qry-532e1aba6037fdbb5c507d1fddecd901c96b15a5aa2840880a5ddfec9b7ae427",
+    "traceId": "qry-532e1aba6037fdbb5c507d1fddecd901c96b15a5aa2840880a5ddfec9b7ae427",
+    "queryPlan": {
+      "planId": "plan:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "schemaVersion": "scholarchain.domain.v1",
+      "question": "Synthetic fixture: publication count for A",
+      "operations": [
+        "MAXIMUM_TEAM_SIZE"
+      ],
+      "window": {
+        "startYear": 1000,
+        "endYear": 9999
+      },
+      "topicFilters": [],
+      "institutionFilters": [],
+      "venueFilters": [],
+      "rankingMetric": "DISTINCT_COAUTHOR_COUNT",
+      "graphLimit": 25,
+      "vectorLimit": 10,
+      "maxPathDepth": 6,
+      "provenance": {
+        "schemaVersion": "scholarchain.domain.v1",
+        "source": "DBLP",
+        "sourceRecordId": "synthetic-9b-g1",
+        "sourceUri": null,
+        "datasetSnapshot": "synthetic-9b",
+        "retrievalDate": "2026-10-26",
+        "licenseEvidenceUri": null,
+        "runId": "run:55555555-5555-4555-8555-555555555555",
+        "uncertaintyNotes": [
+          "Synthetic Phase6 G1 fixture; overlays separate."
+        ]
+      },
+      "runtime": {
+        "researcherNames": [
+          "A"
+        ],
+        "windowIds": [
+          "all-years"
+        ]
+      }
+    },
+    "stagesExecuted": [
+      "QUEUED",
+      "WORKFLOW",
+      "PLANNING",
+      "RETRIEVAL",
+      "AUDIT",
+      "COMPLETE"
+    ],
+    "stageFailures": [
+      {
+        "stage": "semantic",
+        "reason": "semantic-context-empty"
+      }
+    ],
+    "promptVersions": [
+      "synthesis-v1"
+    ],
+    "modelVersions": [
+      {
+        "modelId": "local-placeholder-converse-model",
+        "modelVersion": "local-placeholder-version",
+        "promptVersion": "synthesis-v1",
+        "schemaVersion": "scholarchain.runtime.synthesis.v1",
+        "inputTokens": null,
+        "outputTokens": null,
+        "region": "us-east-2"
+      }
+    ],
+    "evidenceIds": [
+      "evidence:metric:812172f23e435f0eeb77daa658f3c0dce62178d82b5ee76da789d9f72e9b201c"
+    ],
+    "scoreComponents": [
+      {
+        "evidenceId": "evidence:metric:812172f23e435f0eeb77daa658f3c0dce62178d82b5ee76da789d9f72e9b201c",
+        "score": 1,
+        "source": "persisted-evidence-item"
+      }
+    ],
+    "counters": {
+      "latencyMillis": "63",
+      "retries": null,
+      "cacheHits": null,
+      "attemptedClaims": 1,
+      "verifiedClaims": 1,
+      "rejectedClaims": 0
+    },
+    "verificationStatus": "VERIFIED",
+    "verification": [
+      {
+        "claimId": "synthetic-publication-count",
+        "verdict": "VERIFIED",
+        "reasons": []
+      }
+    ],
+    "outcome": "ANSWERED",
+    "reason": "partial-retrieval",
+    "metricVersions": [
+      "module-g1-v1"
+    ],
+    "graphRunIds": [
+      "run:55555555-5555-4555-8555-555555555555"
+    ]
+  },
+  "status": "PASS",
+  "elapsedSeconds": 0.999
+}

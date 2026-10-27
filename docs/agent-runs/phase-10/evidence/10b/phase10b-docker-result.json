@@ -1,0 +1,874 @@
+{
+  "startedUtc": "2026-10-27T04:42:48Z",
+  "commands": [
+    {
+      "argv": [
+        "docker",
+        "build",
+        "-f",
+        "Dockerfile",
+        "--build-arg",
+        "MAIN_CLASS=edu.uic.cs441.scholarchain.services.QueryApiMain",
+        "-t",
+        "scholarchain-query-api:local",
+        "."
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 3.264
+    },
+    {
+      "argv": [
+        "docker",
+        "image",
+        "inspect",
+        "scholarchain-query-api:local"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.027
+    },
+    {
+      "argv": [
+        "docker",
+        "run",
+        "--rm",
+        "--network",
+        "none",
+        "--entrypoint",
+        "sha256sum",
+        "scholarchain-query-api:local",
+        "/app/services.jar",
+        "/app/prompts/runtime/planner-v1.md",
+        "/app/prompts/runtime/synthesis-v1.md",
+        "/app/prompts/schemas/answer-synthesis-v1.json",
+        "/app/prompts/schemas/query-plan-v1.json"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.199
+    },
+    {
+      "argv": [
+        "docker",
+        "run",
+        "--rm",
+        "--network",
+        "none",
+        "scholarchain-query-api:local"
+      ],
+      "exitCode": 2,
+      "elapsedSeconds": 0.253
+    },
+    {
+      "argv": [
+        "docker",
+        "run",
+        "-d",
+        "--name",
+        "phase10b-smoke-query-api-unconfigured",
+        "-p",
+        "127.0.0.1::8080",
+        "-e",
+        "SCHOLARCHAIN_API_KEY_SHA256=9943981103307159e79693db0faf1b6b31352df4caa328714fa94e527fd210a1",
+        "-e",
+        "SCHOLARCHAIN_INTERNAL_TOKEN_SHA256=77e0b1a0a9ea3f952d4790e92b6390302f706ac148d5a23f9585427a0fdf7f1f",
+        "-e",
+        "SCHOLARCHAIN_HTTP_HOST=0.0.0.0",
+        "-e",
+        "SCHOLARCHAIN_GRAPH_CURSOR_KEY=phase10b-public-local-cursor",
+        "scholarchain-query-api:local"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.073
+    },
+    {
+      "argv": [
+        "docker",
+        "port",
+        "phase10b-smoke-query-api-unconfigured",
+        "8080/tcp"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.017
+    },
+    {
+      "argv": [
+        "docker",
+        "exec",
+        "phase10b-smoke-query-api-unconfigured",
+        "id",
+        "-u"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.043
+    },
+    {
+      "argv": [
+        "docker",
+        "logs",
+        "phase10b-smoke-query-api-unconfigured"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.014
+    },
+    {
+      "argv": [
+        "docker",
+        "rm",
+        "-f",
+        "phase10b-smoke-query-api-unconfigured"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.151
+    },
+    {
+      "argv": [
+        "docker",
+        "run",
+        "-d",
+        "--name",
+        "phase10b-smoke-query-api-offline-synthetic",
+        "-p",
+        "127.0.0.1::8080",
+        "-e",
+        "SCHOLARCHAIN_API_KEY_SHA256=9943981103307159e79693db0faf1b6b31352df4caa328714fa94e527fd210a1",
+        "-e",
+        "SCHOLARCHAIN_INTERNAL_TOKEN_SHA256=77e0b1a0a9ea3f952d4790e92b6390302f706ac148d5a23f9585427a0fdf7f1f",
+        "-e",
+        "SCHOLARCHAIN_HTTP_HOST=0.0.0.0",
+        "-e",
+        "SCHOLARCHAIN_GRAPH_CURSOR_KEY=phase10b-public-local-cursor",
+        "-e",
+        "SCHOLARCHAIN_SERVICE_MODE=offline-synthetic",
+        "scholarchain-query-api:local"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.08
+    },
+    {
+      "argv": [
+        "docker",
+        "port",
+        "phase10b-smoke-query-api-offline-synthetic",
+        "8080/tcp"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.015
+    },
+    {
+      "argv": [
+        "docker",
+        "exec",
+        "phase10b-smoke-query-api-offline-synthetic",
+        "id",
+        "-u"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.03
+    },
+    {
+      "argv": [
+        "docker",
+        "logs",
+        "phase10b-smoke-query-api-offline-synthetic"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.016
+    },
+    {
+      "argv": [
+        "docker",
+        "rm",
+        "-f",
+        "phase10b-smoke-query-api-offline-synthetic"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.142
+    },
+    {
+      "argv": [
+        "docker",
+        "build",
+        "-f",
+        "Dockerfile",
+        "--build-arg",
+        "MAIN_CLASS=edu.uic.cs441.scholarchain.services.GraphServiceMain",
+        "-t",
+        "scholarchain-graph-service:local",
+        "."
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.304
+    },
+    {
+      "argv": [
+        "docker",
+        "image",
+        "inspect",
+        "scholarchain-graph-service:local"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.031
+    },
+    {
+      "argv": [
+        "docker",
+        "run",
+        "--rm",
+        "--network",
+        "none",
+        "--entrypoint",
+        "sha256sum",
+        "scholarchain-graph-service:local",
+        "/app/services.jar",
+        "/app/prompts/runtime/planner-v1.md",
+        "/app/prompts/runtime/synthesis-v1.md",
+        "/app/prompts/schemas/answer-synthesis-v1.json",
+        "/app/prompts/schemas/query-plan-v1.json"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.115
+    },
+    {
+      "argv": [
+        "docker",
+        "run",
+        "--rm",
+        "--network",
+        "none",
+        "scholarchain-graph-service:local"
+      ],
+      "exitCode": 2,
+      "elapsedSeconds": 0.215
+    },
+    {
+      "argv": [
+        "docker",
+        "run",
+        "-d",
+        "--name",
+        "phase10b-smoke-graph-service-unconfigured",
+        "-p",
+        "127.0.0.1::8080",
+        "-e",
+        "SCHOLARCHAIN_API_KEY_SHA256=9943981103307159e79693db0faf1b6b31352df4caa328714fa94e527fd210a1",
+        "-e",
+        "SCHOLARCHAIN_INTERNAL_TOKEN_SHA256=77e0b1a0a9ea3f952d4790e92b6390302f706ac148d5a23f9585427a0fdf7f1f",
+        "-e",
+        "SCHOLARCHAIN_HTTP_HOST=0.0.0.0",
+        "-e",
+        "SCHOLARCHAIN_GRAPH_CURSOR_KEY=phase10b-public-local-cursor",
+        "scholarchain-graph-service:local"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.12
+    },
+    {
+      "argv": [
+        "docker",
+        "port",
+        "phase10b-smoke-graph-service-unconfigured",
+        "8080/tcp"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.019
+    },
+    {
+      "argv": [
+        "docker",
+        "exec",
+        "phase10b-smoke-graph-service-unconfigured",
+        "id",
+        "-u"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.031
+    },
+    {
+      "argv": [
+        "docker",
+        "logs",
+        "phase10b-smoke-graph-service-unconfigured"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.016
+    },
+    {
+      "argv": [
+        "docker",
+        "rm",
+        "-f",
+        "phase10b-smoke-graph-service-unconfigured"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.145
+    },
+    {
+      "argv": [
+        "docker",
+        "run",
+        "-d",
+        "--name",
+        "phase10b-smoke-graph-service-offline-synthetic",
+        "-p",
+        "127.0.0.1::8080",
+        "-e",
+        "SCHOLARCHAIN_API_KEY_SHA256=9943981103307159e79693db0faf1b6b31352df4caa328714fa94e527fd210a1",
+        "-e",
+        "SCHOLARCHAIN_INTERNAL_TOKEN_SHA256=77e0b1a0a9ea3f952d4790e92b6390302f706ac148d5a23f9585427a0fdf7f1f",
+        "-e",
+        "SCHOLARCHAIN_HTTP_HOST=0.0.0.0",
+        "-e",
+        "SCHOLARCHAIN_GRAPH_CURSOR_KEY=phase10b-public-local-cursor",
+        "-e",
+        "SCHOLARCHAIN_SERVICE_MODE=offline-synthetic",
+        "scholarchain-graph-service:local"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.11
+    },
+    {
+      "argv": [
+        "docker",
+        "port",
+        "phase10b-smoke-graph-service-offline-synthetic",
+        "8080/tcp"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.017
+    },
+    {
+      "argv": [
+        "docker",
+        "exec",
+        "phase10b-smoke-graph-service-offline-synthetic",
+        "id",
+        "-u"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.035
+    },
+    {
+      "argv": [
+        "docker",
+        "logs",
+        "phase10b-smoke-graph-service-offline-synthetic"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.015
+    },
+    {
+      "argv": [
+        "docker",
+        "rm",
+        "-f",
+        "phase10b-smoke-graph-service-offline-synthetic"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.129
+    },
+    {
+      "argv": [
+        "docker",
+        "build",
+        "-f",
+        "Dockerfile",
+        "--build-arg",
+        "MAIN_CLASS=edu.uic.cs441.scholarchain.services.SemanticServiceMain",
+        "-t",
+        "scholarchain-semantic-service:local",
+        "."
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.348
+    },
+    {
+      "argv": [
+        "docker",
+        "image",
+        "inspect",
+        "scholarchain-semantic-service:local"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.03
+    },
+    {
+      "argv": [
+        "docker",
+        "run",
+        "--rm",
+        "--network",
+        "none",
+        "--entrypoint",
+        "sha256sum",
+        "scholarchain-semantic-service:local",
+        "/app/services.jar",
+        "/app/prompts/runtime/planner-v1.md",
+        "/app/prompts/runtime/synthesis-v1.md",
+        "/app/prompts/schemas/answer-synthesis-v1.json",
+        "/app/prompts/schemas/query-plan-v1.json"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.117
+    },
+    {
+      "argv": [
+        "docker",
+        "run",
+        "--rm",
+        "--network",
+        "none",
+        "scholarchain-semantic-service:local"
+      ],
+      "exitCode": 2,
+      "elapsedSeconds": 0.289
+    },
+    {
+      "argv": [
+        "docker",
+        "run",
+        "-d",
+        "--name",
+        "phase10b-smoke-semantic-service-unconfigured",
+        "-p",
+        "127.0.0.1::8080",
+        "-e",
+        "SCHOLARCHAIN_API_KEY_SHA256=9943981103307159e79693db0faf1b6b31352df4caa328714fa94e527fd210a1",
+        "-e",
+        "SCHOLARCHAIN_INTERNAL_TOKEN_SHA256=77e0b1a0a9ea3f952d4790e92b6390302f706ac148d5a23f9585427a0fdf7f1f",
+        "-e",
+        "SCHOLARCHAIN_HTTP_HOST=0.0.0.0",
+        "-e",
+        "SCHOLARCHAIN_GRAPH_CURSOR_KEY=phase10b-public-local-cursor",
+        "scholarchain-semantic-service:local"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.119
+    },
+    {
+      "argv": [
+        "docker",
+        "port",
+        "phase10b-smoke-semantic-service-unconfigured",
+        "8080/tcp"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.015
+    },
+    {
+      "argv": [
+        "docker",
+        "exec",
+        "phase10b-smoke-semantic-service-unconfigured",
+        "id",
+        "-u"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.033
+    },
+    {
+      "argv": [
+        "docker",
+        "logs",
+        "phase10b-smoke-semantic-service-unconfigured"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.016
+    },
+    {
+      "argv": [
+        "docker",
+        "rm",
+        "-f",
+        "phase10b-smoke-semantic-service-unconfigured"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.144
+    },
+    {
+      "argv": [
+        "docker",
+        "run",
+        "-d",
+        "--name",
+        "phase10b-smoke-semantic-service-offline-synthetic",
+        "-p",
+        "127.0.0.1::8080",
+        "-e",
+        "SCHOLARCHAIN_API_KEY_SHA256=9943981103307159e79693db0faf1b6b31352df4caa328714fa94e527fd210a1",
+        "-e",
+        "SCHOLARCHAIN_INTERNAL_TOKEN_SHA256=77e0b1a0a9ea3f952d4790e92b6390302f706ac148d5a23f9585427a0fdf7f1f",
+        "-e",
+        "SCHOLARCHAIN_HTTP_HOST=0.0.0.0",
+        "-e",
+        "SCHOLARCHAIN_GRAPH_CURSOR_KEY=phase10b-public-local-cursor",
+        "-e",
+        "SCHOLARCHAIN_SERVICE_MODE=offline-synthetic",
+        "scholarchain-semantic-service:local"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.109
+    },
+    {
+      "argv": [
+        "docker",
+        "port",
+        "phase10b-smoke-semantic-service-offline-synthetic",
+        "8080/tcp"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.015
+    },
+    {
+      "argv": [
+        "docker",
+        "exec",
+        "phase10b-smoke-semantic-service-offline-synthetic",
+        "id",
+        "-u"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.048
+    },
+    {
+      "argv": [
+        "docker",
+        "logs",
+        "phase10b-smoke-semantic-service-offline-synthetic"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.017
+    },
+    {
+      "argv": [
+        "docker",
+        "rm",
+        "-f",
+        "phase10b-smoke-semantic-service-offline-synthetic"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.141
+    },
+    {
+      "argv": [
+        "docker",
+        "build",
+        "-f",
+        "Dockerfile",
+        "--build-arg",
+        "MAIN_CLASS=edu.uic.cs441.scholarchain.services.EmbeddingWorkerMain",
+        "-t",
+        "scholarchain-embedding-worker:local",
+        "."
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.357
+    },
+    {
+      "argv": [
+        "docker",
+        "image",
+        "inspect",
+        "scholarchain-embedding-worker:local"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.049
+    },
+    {
+      "argv": [
+        "docker",
+        "run",
+        "--rm",
+        "--network",
+        "none",
+        "--entrypoint",
+        "sha256sum",
+        "scholarchain-embedding-worker:local",
+        "/app/services.jar",
+        "/app/prompts/runtime/planner-v1.md",
+        "/app/prompts/runtime/synthesis-v1.md",
+        "/app/prompts/schemas/answer-synthesis-v1.json",
+        "/app/prompts/schemas/query-plan-v1.json"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.136
+    },
+    {
+      "argv": [
+        "docker",
+        "run",
+        "--rm",
+        "--network",
+        "none",
+        "scholarchain-embedding-worker:local"
+      ],
+      "exitCode": 2,
+      "elapsedSeconds": 0.292
+    },
+    {
+      "argv": [
+        "docker",
+        "run",
+        "-d",
+        "--name",
+        "phase10b-smoke-embedding-worker-unconfigured",
+        "-p",
+        "127.0.0.1::8080",
+        "-e",
+        "SCHOLARCHAIN_API_KEY_SHA256=9943981103307159e79693db0faf1b6b31352df4caa328714fa94e527fd210a1",
+        "-e",
+        "SCHOLARCHAIN_INTERNAL_TOKEN_SHA256=77e0b1a0a9ea3f952d4790e92b6390302f706ac148d5a23f9585427a0fdf7f1f",
+        "-e",
+        "SCHOLARCHAIN_HTTP_HOST=0.0.0.0",
+        "-e",
+        "SCHOLARCHAIN_GRAPH_CURSOR_KEY=phase10b-public-local-cursor",
+        "scholarchain-embedding-worker:local"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.101
+    },
+    {
+      "argv": [
+        "docker",
+        "port",
+        "phase10b-smoke-embedding-worker-unconfigured",
+        "8080/tcp"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.026
+    },
+    {
+      "argv": [
+        "docker",
+        "exec",
+        "phase10b-smoke-embedding-worker-unconfigured",
+        "id",
+        "-u"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.032
+    },
+    {
+      "argv": [
+        "docker",
+        "logs",
+        "phase10b-smoke-embedding-worker-unconfigured"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.016
+    },
+    {
+      "argv": [
+        "docker",
+        "rm",
+        "-f",
+        "phase10b-smoke-embedding-worker-unconfigured"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.158
+    },
+    {
+      "argv": [
+        "docker",
+        "run",
+        "-d",
+        "--name",
+        "phase10b-smoke-embedding-worker-offline-synthetic",
+        "-p",
+        "127.0.0.1::8080",
+        "-e",
+        "SCHOLARCHAIN_API_KEY_SHA256=9943981103307159e79693db0faf1b6b31352df4caa328714fa94e527fd210a1",
+        "-e",
+        "SCHOLARCHAIN_INTERNAL_TOKEN_SHA256=77e0b1a0a9ea3f952d4790e92b6390302f706ac148d5a23f9585427a0fdf7f1f",
+        "-e",
+        "SCHOLARCHAIN_HTTP_HOST=0.0.0.0",
+        "-e",
+        "SCHOLARCHAIN_GRAPH_CURSOR_KEY=phase10b-public-local-cursor",
+        "-e",
+        "SCHOLARCHAIN_SERVICE_MODE=offline-synthetic",
+        "scholarchain-embedding-worker:local"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.107
+    },
+    {
+      "argv": [
+        "docker",
+        "port",
+        "phase10b-smoke-embedding-worker-offline-synthetic",
+        "8080/tcp"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.014
+    },
+    {
+      "argv": [
+        "docker",
+        "exec",
+        "phase10b-smoke-embedding-worker-offline-synthetic",
+        "id",
+        "-u"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.036
+    },
+    {
+      "argv": [
+        "docker",
+        "logs",
+        "phase10b-smoke-embedding-worker-offline-synthetic"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.015
+    },
+    {
+      "argv": [
+        "docker",
+        "rm",
+        "-f",
+        "phase10b-smoke-embedding-worker-offline-synthetic"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.135
+    }
+  ],
+  "images": {
+    "query-api": {
+      "id": "sha256:ce64537e884a8a7c9684df0582dece648fb2b9c8c69fa6fd8f1ce0fd373b1fa9",
+      "mainClass": "QueryApiMain",
+      "user": "scholarchain",
+      "invalidConfigExit": 2,
+      "packageHashMatches": true,
+      "promptAssetsHashMatches": true
+    },
+    "graph-service": {
+      "id": "sha256:4e5338bf0275e5d02a7589a7b03870eaabf614c8b873cd6d1e2debef56a80645",
+      "mainClass": "GraphServiceMain",
+      "user": "scholarchain",
+      "invalidConfigExit": 2,
+      "packageHashMatches": true,
+      "promptAssetsHashMatches": true
+    },
+    "semantic-service": {
+      "id": "sha256:8215ee8df16b46a088fffd64cab8c654632f2742321d80546357d41246b2b8b8",
+      "mainClass": "SemanticServiceMain",
+      "user": "scholarchain",
+      "invalidConfigExit": 2,
+      "packageHashMatches": true,
+      "promptAssetsHashMatches": true
+    },
+    "embedding-worker": {
+      "id": "sha256:ddbff6d4b178c282f570b48d216e8d3dfbfc4f2c4b3bf2114944ec5fdac18779",
+      "mainClass": "EmbeddingWorkerMain",
+      "user": "scholarchain",
+      "invalidConfigExit": 2,
+      "packageHashMatches": true,
+      "promptAssetsHashMatches": true
+    }
+  },
+  "smoke": [
+    {
+      "role": "query-api",
+      "mode": "unconfigured",
+      "health": 200,
+      "ready": 503,
+      "uid": "999",
+      "metrics": 200,
+      "unauthorizedMetrics": 401
+    },
+    {
+      "role": "query-api",
+      "mode": "offline-synthetic",
+      "health": 200,
+      "ready": 200,
+      "uid": "999",
+      "metrics": 200,
+      "unauthorizedMetrics": 401,
+      "queryLifecycle": {
+        "queryStatus": 200,
+        "claims": 1,
+        "verified": true,
+        "publicationCount": "3",
+        "sameKeyReplay": 200,
+        "differentBody": 409,
+        "evidenceIndex": 200,
+        "evidenceFetch": 200,
+        "explain": 200,
+        "evidenceCount": 1
+      }
+    },
+    {
+      "role": "graph-service",
+      "mode": "unconfigured",
+      "health": 200,
+      "ready": 503,
+      "uid": "999",
+      "metrics": 200,
+      "unauthorizedMetrics": 401
+    },
+    {
+      "role": "graph-service",
+      "mode": "offline-synthetic",
+      "health": 200,
+      "ready": 200,
+      "uid": "999",
+      "metrics": 200,
+      "unauthorizedMetrics": 401
+    },
+    {
+      "role": "semantic-service",
+      "mode": "unconfigured",
+      "health": 200,
+      "ready": 503,
+      "uid": "999",
+      "metrics": 200,
+      "unauthorizedMetrics": 401
+    },
+    {
+      "role": "semantic-service",
+      "mode": "offline-synthetic",
+      "health": 200,
+      "ready": 200,
+      "uid": "999",
+      "metrics": 200,
+      "unauthorizedMetrics": 401
+    },
+    {
+      "role": "embedding-worker",
+      "mode": "unconfigured",
+      "health": 200,
+      "ready": 503,
+      "uid": "999",
+      "metrics": 200,
+      "unauthorizedMetrics": 401
+    },
+    {
+      "role": "embedding-worker",
+      "mode": "offline-synthetic",
+      "health": 200,
+      "ready": 200,
+      "uid": "999",
+      "metrics": 200,
+      "unauthorizedMetrics": 401
+    }
+  ],
+  "cleanup": [
+    "phase10b-smoke-query-api-unconfigured",
+    "phase10b-smoke-query-api-offline-synthetic",
+    "phase10b-smoke-graph-service-unconfigured",
+    "phase10b-smoke-graph-service-offline-synthetic",
+    "phase10b-smoke-semantic-service-unconfigured",
+    "phase10b-smoke-semantic-service-offline-synthetic",
+    "phase10b-smoke-embedding-worker-unconfigured",
+    "phase10b-smoke-embedding-worker-offline-synthetic"
+  ],
+  "servicesJarSha256": "e3a8103743f00bd36e64919256b31d9084a903783d9f100288a0787d73783878",
+  "assetHashes": {
+    "prompts/runtime/planner-v1.md": "aed20ab1fda01d58574dc8bb7876cb6ee92872ad33dfa930eb5a4653fd1c2249",
+    "prompts/runtime/synthesis-v1.md": "119329c84c55f2cc0537facf8f664d385e67d746aca4a1e9fbd4a7427a531fd6",
+    "prompts/schemas/answer-synthesis-v1.json": "7ae08048a175649889ed92ed53d34e0f4f630e591da4441e36ac53725be4de0b",
+    "prompts/schemas/query-plan-v1.json": "d35ad231ab1e742f036773e3ccbfb514e06e31eae2c8aeabfb331d438a39338b"
+  },
+  "status": "PASS",
+  "elapsedSeconds": 13.53,
+  "finishedUtc": "2026-10-27T04:43:01Z",
+  "logSha256": "91d9058c6cda4dc03402be99a0590045337baca6cb9945a5731b4828522f008a"
+}

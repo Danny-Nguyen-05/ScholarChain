@@ -1,0 +1,51 @@
+{
+  "observedAt": "2026-10-27T04:54:45.107034+00:00",
+  "branch": "phase-10",
+  "baseSHA": "c85da7365927a1f7d8ee5ab1f67c5c1a128391b3",
+  "HEAD": "c85da7365927a1f7d8ee5ab1f67c5c1a128391b3",
+  "gitDiffCheckExit": 0,
+  "sourceHashCount": 30,
+  "sourceHashMismatches": [],
+  "fullCheckLogHashMatches": true,
+  "distributionJarMatchesBuiltImages": true,
+  "sourcePromptAssetsMatchBuiltImages": {
+    "prompts/runtime/planner-v1.md": true,
+    "prompts/runtime/synthesis-v1.md": true,
+    "prompts/schemas/answer-synthesis-v1.json": true,
+    "prompts/schemas/query-plan-v1.json": true
+  },
+  "taskContainersCheck": {
+    "exitCode": 0,
+    "output": ""
+  },
+  "taskNetworkCheck": {
+    "exitCode": 0,
+    "output": ""
+  },
+  "runningTaskJobs": [],
+  "subagents": "All three specialist agents completed; observed via collaboration.list_agents.",
+  "humanGateOrApprovalFilesChanged": [],
+  "committed10B": false,
+  "pushed": false,
+  "reviewerInvoked": false,
+  "trackedChangedFiles": [
+    "Dockerfile",
+    "docs/agent-runs/phase-10/owner-report.md",
+    "docs/agent-runs/phase-10/repairs.md",
+    "docs/agent-runs/phase-10/test-report.md",
+    "modules/services/README.md",
+    "modules/services/src/main/resources/openapi/scholarchain.v1.yaml",
+    "modules/services/src/main/scala/edu/uic/cs441/scholarchain/services/ApiApplication.scala",
+    "modules/services/src/main/scala/edu/uic/cs441/scholarchain/services/ApiServer.scala",
+    "modules/services/src/main/scala/edu/uic/cs441/scholarchain/services/DownstreamClient.scala",
+    "modules/services/src/main/scala/edu/uic/cs441/scholarchain/services/QueryService.scala",
+    "modules/services/src/main/scala/edu/uic/cs441/scholarchain/services/RuntimeWorkflowAdapter.scala",
+    "modules/services/src/main/scala/edu/uic/cs441/scholarchain/services/ServiceMains.scala",
+    "project/ScholarChainBuild.scala",
+    "project/ServiceDistribution.scala",
+    "project/ServicesPackaging.md",
+    "project/verification/src/test/scala/scholarchain/build/ServiceDistributionSpec.scala"
+  ],
+  "untrackedFilesManifest": "files.json",
+  "limitations": "Only README counts changed after full-check source snapshot; no Scala, tests, build or packaged resource changed."
+}

@@ -3,6 +3,7 @@ package scholarchain.build
 import java.io.File
 import java.nio.file.{Files, StandardCopyOption}
 import java.util.jar.JarFile
+import scala.jdk.CollectionConverters._
 
 /** A thin application JAR and its complete runtime JAR classpath. */
 object ServiceDistribution {
@@ -12,6 +13,33 @@ object ServiceDistribution {
     "semantic-service" -> "edu.uic.cs441.scholarchain.services.SemanticServiceMain",
     "embedding-worker" -> "edu.uic.cs441.scholarchain.services.EmbeddingWorkerMain"
   )
+
+  /** Versioned runtime prompts and schemas remain ordinary files, preserving their paths. */
+  def writePromptAssets(source: File, output: File): Unit = {
+    val roots = Seq("runtime", "schemas").map(name => new File(source, name).toPath)
+    val assets = roots.flatMap { root =>
+      require(Files.isDirectory(root), s"Missing runtime asset directory: $root")
+      val walk = Files.walk(root)
+      try {
+        val paths = walk.iterator().asScala.toVector
+        require(!paths.exists(Files.isSymbolicLink(_)), s"Runtime assets contain a symlink: $root")
+        val files = paths.filter(Files.isRegularFile(_))
+        require(files.nonEmpty, s"Empty runtime asset directory: $root")
+        files
+      } finally walk.close()
+    }
+    val destination = new File(output, "prompts").toPath
+    if (Files.exists(destination)) {
+      val walk = Files.walk(destination)
+      try walk.iterator().asScala.toVector.sortBy(_.getNameCount).reverse.foreach(Files.delete(_))
+      finally walk.close()
+    }
+    assets.foreach { asset =>
+      val target = destination.resolve(source.toPath.relativize(asset))
+      Files.createDirectories(target.getParent)
+      Files.copy(asset, target, StandardCopyOption.REPLACE_EXISTING)
+    }
+  }
 
   def write(appJar: File, dependencies: Seq[File], output: File): Unit = {
     require(appJar.isFile, s"Missing application JAR: $appJar")

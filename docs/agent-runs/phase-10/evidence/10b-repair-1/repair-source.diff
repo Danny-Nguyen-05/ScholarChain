@@ -1,0 +1,606 @@
+--- a/modules/services/README.md
++++ b/modules/services/README.md
+@@ -185,7 +185,14 @@
+ and semantic POST calls attempt once. Each dependency owns its breaker: CLOSED failures open
+ it, reset permits one HALF_OPEN probe, success closes it and failed probes reopen it. Bounded
+ executor slots prevent unlimited blocked tasks; adapters must honor interrupts for prompt
+-cancellation. Prometheus metrics cover HTTP requests/statuses, cumulative latency buckets,
++cancellation. A graph-service operation exhausting its own execution budget returns the distinct
++nonretryable `GRAPH_DEADLINE_EXCEEDED` 504. The proxy accepts this request-specific marker only
++from a bounded, fully typed error body for an allowlisted internal graph GET operation. It uses
++a fixed safe message and the caller's trace ID, attempts the request once, and leaves the graph
++breaker healthy. Malformed/unrecognized markers, wrong operations, unready 5xx, connection
++failures and transport timeouts without a response retain dependency retries and breaker failures.
++`graph_request_deadlines_total` counts recognized request deadlines separately from dependency
++errors/timeouts; HTTP 504/status/latency metrics still reflect the request outcome. Prometheus metrics cover HTTP requests/statuses, cumulative latency buckets,
+ API timeouts, per-attempt downstream errors/timeouts, registered breaker states and workflow
+ verification/abstention. Histogram boundaries 5 ms through 60 s/+Inf are fixed instrumentation
+ choices; p50/p95/p99 can be derived from the buckets.
+@@ -220,14 +227,29 @@
+ filter count 16 and timeout 5000 ms. All caps are configured application bounds, not measured
+ production tuning. Publishing different public caps requires updating the deployment contract.
+ 
+-Observed targeted gate: **26/26 module tests passed in four suites**, plus **37/37 independent
+-10A/10B tests passed in six suites** (20 from 10A, 17 from 10B) on Java 17. The wire
++Prior observed targeted gates on Java 17: **26/26 module tests in four suites**; the combined
++independent targeted-3 gate ran **36/36 tests in six suites** (20 from 10A, 16 from 10B).
++After adding committed-example validation, the final independent 10B targeted gate ran
++**17/17 tests in four suites**. The 37 independent 10A/10B tests ran together only within the
++full check's 625 independent tests, rather than in a separate 37-test targeted gate. The wire
+ query-parameter, graph timeout, verified lifecycle, source-structure and worker cases passed.
+ Committed-example validation also passed. Final JDK 17.0.20.1 `sbt check` passed
+ **1199 tests in 145 suites, zero failures** (708 seconds reported by sbt). All **four Docker
+ images** rebuilt locally; **eight image smoke cases** and the **three-service HTTP composition**
+ passed. Exact commands, elapsed times, image IDs and retained logs are recorded by the
+ coordinator under `docs/agent-runs/phase-10`.
++
++Repair round 1 (F6/F9) targeted validation passed **31/31 module tests in five suites** and
++**41/41 independent 10A/10B tests in seven suites**, followed by successful `packageServices`.
++The new cases distinguish graph request deadlines from real outages, preserve a healthy breaker
++across repeated request deadlines, and retain retries/open circuits for malformed markers,
++connection refusal, transport timeout without a response, and unready dependency responses.
++The final repair JDK 17.0.20.1 `sbt check` passed **1208 tests in 147 suites, zero failures**
++(709 seconds reported by sbt; 710.548 seconds wall time). All **four repaired Docker images**
++rebuilt and passed **eight boot smoke cases** plus the **three-service remote HTTP composition**,
++including real outage/readiness checks. The final retained check log and image/JAR hashes are
++recorded by the coordinator in the repair evidence. The 1199-test result above is the historical
++pre-repair 10B gate.
+ 
+ No OpenSearch, optional index/service, CI workflow, cloud apply, live deployment or paid provider
+ call was added. Completed query results replay with the same injected persistent store, but the
+--- a/modules/services/src/main/resources/openapi/scholarchain.v1.yaml
++++ b/modules/services/src/main/resources/openapi/scholarchain.v1.yaml
+@@ -209,7 +209,7 @@
+         - {name: edgeTypes, in: query, schema: {type: string}, description: Comma separated subset of COAUTHORED_WITH AUTHORED HAS_TOPIC AFFILIATED_WITH PUBLISHED_IN}
+         - {name: window, in: query, schema: {type: string, default: all-years}}
+         - {name: timeoutMs, in: query, schema: {type: integer, minimum: 1, maximum: 5000, default: 5000}}
+-        - {name: cursor, in: query, schema: {type: string}, description: Signed opaque cursor bound to node filters limit timeout and immutable snapshot}
++        - {name: cursor, in: query, schema: {type: string}, description: Signed opaque cursor bound to node filters limit timeout and immutable snapshot; a graph-operation budget expiry returns nonretryable GRAPH_DEADLINE_EXCEEDED 504 without dependency retries}
+       responses:
+         '200':
+           description: Stable page; null cursor means no next page
+@@ -346,7 +346,7 @@
+       type: object
+       required: [error, message, traceId, retryable]
+       properties:
+-        error: {type: string}
++        error: {type: string, description: Closed safe error code; GRAPH_DEADLINE_EXCEEDED denotes a nonretryable graph-operation execution budget, distinct from a transport timeout}
+         message: {type: string}
+         traceId: {type: string}
+         retryable: {type: boolean}
+--- a/modules/services/src/main/scala/edu/uic/cs441/scholarchain/services/ApiApplication.scala
++++ b/modules/services/src/main/scala/edu/uic/cs441/scholarchain/services/ApiApplication.scala
+@@ -15,6 +15,7 @@
+   private val abstentions = new LongAdder; private val timeouts = new LongAdder
+   private val downstreamErrors = new LongAdder
+   private val downstreamTimeouts = new LongAdder
++  private val graphDeadlines = new LongAdder
+   private val breakers = new ConcurrentHashMap[String, () => String]()
+   def registerBreaker(name: String, state: () => String): Unit = {
+     require(name.matches("[a-zA-Z0-9_]{1,64}")); breakers.put(name, state); ()
+@@ -26,6 +27,7 @@
+     buckets.zip(latencies).foreach { (upper, counter) => if (seconds <= upper) counter.increment() }
+     if (status == 504) timeouts.increment()
+   }
++  def graphRequestDeadline(): Unit = graphDeadlines.increment()
+   def downstream(status: Int): Unit = {
+     if (status == 504) downstreamTimeouts.increment()
+     if (status == 502 || status == 504) downstreamErrors.increment()
+@@ -50,6 +52,7 @@
+         s"api_timeouts_total ${timeouts.sum()}",
+         s"api_downstream_errors_total ${downstreamErrors.sum()}",
+         s"downstream_timeouts_total ${downstreamTimeouts.sum()}",
++        s"graph_request_deadlines_total ${graphDeadlines.sum()}",
+         s"workflow_abstentions_total ${abstentions.sum()}"
+       ) ++
+       verification.asScala.toVector
+--- a/modules/services/src/main/scala/edu/uic/cs441/scholarchain/services/ApiContracts.scala
++++ b/modules/services/src/main/scala/edu/uic/cs441/scholarchain/services/ApiContracts.scala
+@@ -20,6 +20,10 @@
+   val unavailable = ApiError(503, "SERVICE_UNAVAILABLE", "Service temporarily unavailable.", true)
+   val downstream = ApiError(502, "DOWNSTREAM_FAILURE", "A downstream dependency failed.", true)
+   val timeout = ApiError(504, "DOWNSTREAM_TIMEOUT", "A downstream dependency timed out.", true)
++  val graphDeadline =
++    ApiError(504, "GRAPH_DEADLINE_EXCEEDED", "The graph request exceeded its execution deadline.")
++  def isGraphDeadline(error: ApiError): Boolean =
++    error.status == 504 && error.code == graphDeadline.code && !error.retryable
+   val internal = ApiError(500, "INTERNAL_ERROR", "An internal error occurred.")
+ }
+ final case class RequestContext(requestId: String, traceId: String, queryId: String = "") {
+--- a/modules/services/src/main/scala/edu/uic/cs441/scholarchain/services/DownstreamClient.scala
++++ b/modules/services/src/main/scala/edu/uic/cs441/scholarchain/services/DownstreamClient.scala
+@@ -89,9 +89,13 @@
+             case NonFatal(_) => Left(ApiError.downstream)
+           }
+         } catch { case _: RejectedExecutionException => Left(ApiError.unavailable) }
+-      result.left.foreach(e => metrics.downstream(e.status))
++      result.left.foreach { error =>
++        if (ApiError.isGraphDeadline(error)) metrics.graphRequestDeadline()
++        else metrics.downstream(error.status)
++      }
+       result match {
+         case Right(_)                                => breaker.success(); return result
++        case Left(e) if ApiError.isGraphDeadline(e)  => breaker.success(); return result
+         case Left(e) if Set(502, 503, 504)(e.status) => breaker.failure()
+         case Left(_)                                 => breaker.success(); return result
+       }
+--- a/modules/services/src/main/scala/edu/uic/cs441/scholarchain/services/GraphApi.scala
++++ b/modules/services/src/main/scala/edu/uic/cs441/scholarchain/services/GraphApi.scala
+@@ -75,7 +75,11 @@
+       body: => Either[ApiError, A]
+   ): Either[ApiError, A] = {
+     // One call wraps the complete expansion so slow node/edge adapters cannot extend the aggregate deadline.
+-    boundaryClient.callWithin("GET", context, timeout)(_ => body)
++    boundaryClient.callWithin("GET", context, timeout)(_ => body).left.map { error =>
++      // This boundary encloses local graph work only. An expiry here is the request's graph
++      // execution budget, not the remote HTTP client's transport timeout.
++      if (error == ApiError.timeout) ApiError.graphDeadline else error
++    }
+   }
+   private def signature(value: String): String = {
+     val mac = Mac.getInstance("HmacSHA256")
+--- a/modules/services/src/main/scala/edu/uic/cs441/scholarchain/services/RemoteServices.scala
++++ b/modules/services/src/main/scala/edu/uic/cs441/scholarchain/services/RemoteServices.scala
+@@ -89,7 +89,13 @@
+             503 -> ApiError.unavailable,
+             504 -> ApiError.timeout
+           )
+-          Left(safe.getOrElse(status, ApiError.downstream))
++          // Only a fully typed, allowlisted graph-operation deadline is request-specific.
++          // Every other status/body retains the existing dependency-failure classification.
++          Left(
++            graphRequestDeadline(method, path, status, bytes).getOrElse(
++              safe.getOrElse(status, ApiError.downstream)
++            )
++          )
+         }
+       } catch {
+         case _: java.net.http.HttpTimeoutException => Left(ApiError.timeout)
+@@ -98,6 +104,28 @@
+         case NonFatal(_) => Left(ApiError.downstream)
+       }
+     }
++  }
++  private def graphRequestDeadline(
++      method: String,
++      path: String,
++      status: Int,
++      bytes: Array[Byte]
++  ): Option[ApiError] = {
++    val graphOperation =
++      path.matches("/internal/v1/graph/(?:nodes/[^/]+(?:/neighbors)?|metrics/[^/]+|paths)")
++    if (dependencyName != "graph" || method != "GET" || !graphOperation || status != 504) None
++    else
++      try {
++        val json = ujson.read(new String(bytes, UTF_8))
++        val typed = json.obj.keySet == Set("error", "message", "traceId", "retryable") &&
++          json("error").strOpt.contains(ApiError.graphDeadline.code) &&
++          json("message").strOpt.isDefined &&
++          json("traceId").strOpt.exists(_.matches("[a-zA-Z0-9._:-]{1,128}")) &&
++          json("retryable").boolOpt.contains(false)
++        // The body was already byte-bounded. Its arbitrary message and remote trace are never
++        // forwarded: public dispatch supplies the caller's trace and a fixed safe message.
++        Option.when(typed)(ApiError.graphDeadline)
++      } catch { case NonFatal(_) => None }
+   }
+   def close(): Unit = boundary.close()
+ }
+--- /dev/null
++++ b/modules/services/src/test/scala/edu/uic/cs441/scholarchain/services/GraphRequestDeadlineSpec.scala
+@@ -0,0 +1,180 @@
++package edu.uic.cs441.scholarchain.services
++
++import com.sun.net.httpserver.{HttpExchange, HttpServer}
++import edu.uic.cs441.scholarchain.storage.*
++import edu.uic.cs441.scholarchain.core.{GraphNode, GraphEdge}
++import java.net.{InetSocketAddress, URI}
++import java.nio.charset.StandardCharsets.UTF_8
++import java.util.concurrent.{Executors, TimeUnit}
++import java.util.concurrent.atomic.{AtomicBoolean, AtomicInteger}
++import org.scalatest.funsuite.AnyFunSuite
++
++class GraphRequestDeadlineSpec extends AnyFunSuite {
++  private val context = RequestContext("synthetic-deadline-request", "synthetic-deadline-trace")
++  private val config = ServiceConfig(
++    Auth.sha256("synthetic-deadline-public"),
++    Auth.sha256("synthetic-deadline-internal"),
++    downstreamTimeoutMs = 500,
++    downstreamMaxAttempts = 3,
++    breakerFailureThreshold = 3
++  )
++  private val path = "/internal/v1/graph/nodes/synthetic-node/neighbors"
++  private def marker(retryable: Boolean = false): String = ujson
++    .Obj(
++      "error" -> "GRAPH_DEADLINE_EXCEEDED",
++      "message" -> "untrusted downstream details",
++      "traceId" -> "remote-synthetic-trace",
++      "retryable" -> retryable
++    )
++    .render()
++  private def withStub[A](reply: HttpExchange => (Int, String))(body: URI => A): A = {
++    val server = HttpServer.create(new InetSocketAddress("127.0.0.1", 0), 0)
++    val executor = Executors.newFixedThreadPool(2)
++    server.setExecutor(executor)
++    server.createContext(
++      "/",
++      exchange => {
++        val (status, text) = reply(exchange)
++        val bytes = text.getBytes(UTF_8)
++        exchange.getResponseHeaders.set("Content-Type", "application/json")
++        try {
++          exchange.sendResponseHeaders(status, bytes.length); exchange.getResponseBody.write(bytes)
++        } finally exchange.close()
++      }
++    )
++    server.start()
++    try body(URI.create("http://127.0.0.1:" + server.getAddress.getPort))
++    finally {
++      server.stop(0); executor.shutdownNow(); executor.awaitTermination(2, TimeUnit.SECONDS)
++    }
++  }
++  test("graph operation budget expiry has a distinct nonretryable request deadline code") {
++    val graph = new GraphApi(
++      new GraphSnapshot {
++        def snapshotId = "synthetic-request-deadline"
++        def node(id: String): StorageResult[GraphNode] = {
++          Thread.sleep(10000); StorageResult.Missing
++        }
++        def edges(id: String, window: String): StorageResult[Vector[GraphEdge]] =
++          StorageResult.Found(Vector.empty)
++        def metrics(id: String, window: String): StorageResult[ResearcherMetricRecord] =
++          StorageResult.Missing
++      },
++      GraphApiConfig(timeoutMs = 40)
++    )
++    try {
++      val error =
++        graph.neighbors("synthetic-node", Map("timeoutMs" -> "20"), context).left.toOption.get
++      assert(error.status == 504 && error.code == "GRAPH_DEADLINE_EXCEEDED" && !error.retryable)
++    } finally graph.close()
++  }
++  test("allowlisted graph deadline responses do not retry or open the dependency circuit") {
++    val calls = new AtomicInteger
++    val normal = new AtomicBoolean(false)
++    withStub { exchange =>
++      if (exchange.getRequestURI.getPath == "/readyz") (200, "{\"status\":\"ready\"}")
++      else {
++        calls.incrementAndGet(); if (normal.get()) (200, "{\"items\":[]}") else (504, marker())
++      }
++    } { uri =>
++      val metrics = new ServiceMetrics
++      val remote = new RemoteService(uri, "synthetic-internal-token", config, metrics, "graph")
++      try {
++        for (_ <- 1 to (config.breakerFailureThreshold + 1)) {
++          val error =
++            remote.call("GET", path, Map("timeoutMs" -> "1"), None, context).left.toOption.get
++          assert(error.status == 504 && error.code == "GRAPH_DEADLINE_EXCEEDED" && !error.retryable)
++          assert(!error.message.contains("untrusted"))
++        }
++        assert(calls.get() == config.breakerFailureThreshold + 1)
++        assert(
++          metrics.render.contains(
++            "downstream_circuit_state{dependency=\"graph\",state=\"CLOSED\"} 1"
++          )
++        )
++        assert(metrics.render.contains("graph_request_deadlines_total 4"))
++        assert(metrics.render.contains("api_downstream_errors_total 0"))
++        assert(new RemoteGraphApi(remote).ready(context))
++        normal.set(true)
++        assert(remote.call("GET", path, Map.empty, None, context).toOption.get.status == 200)
++      } finally remote.close()
++    }
++  }
++  test(
++    "malformed wrong-status retryable wrong-operation and wrong-dependency markers remain failures"
++  ) {
++    val cases = Vector(
++      (504, marker(true), path, "graph"),
++      (503, marker(), path, "graph"),
++      (504, "{not-json", path, "graph"),
++      (504, "{\"error\":\"GRAPH_DEADLINE_EXCEEDED\",\"retryable\":false}", path, "graph"),
++      (504, marker(), "/readyz", "graph"),
++      (504, marker(), path, "semantic"),
++      (504, marker().replace("GRAPH_DEADLINE_EXCEEDED", "UNRECOGNIZED_DEADLINE"), path, "graph")
++    )
++    for ((status, text, operation, dependency) <- cases) withStub(_ => (status, text)) { uri =>
++      val metrics = new ServiceMetrics
++      val remote = new RemoteService(
++        uri,
++        "synthetic-internal-token",
++        config.copy(downstreamMaxAttempts = 1, breakerFailureThreshold = 1),
++        metrics,
++        dependency
++      )
++      try {
++        val error = remote.call("GET", operation, Map.empty, None, context).left.toOption.get
++        assert(error.code != "GRAPH_DEADLINE_EXCEEDED")
++        assert(
++          metrics.render.contains(
++            s"downstream_circuit_state{dependency=\"$dependency\",state=\"OPEN\"} 1"
++          )
++        )
++        assert(
++          metrics.render.contains(s"api_downstream_errors_total ${if (status == 503) 0 else 1}")
++        )
++      } finally remote.close()
++    }
++  }
++  test("transport timeout without a response remains retryable and opens the circuit") {
++    val calls = new AtomicInteger
++    withStub { _ =>
++      calls.incrementAndGet(); Thread.sleep(1000); (200, "{}")
++    } { uri =>
++      val metrics = new ServiceMetrics
++      val remote = new RemoteService(
++        uri,
++        "synthetic-internal-token",
++        config
++          .copy(downstreamTimeoutMs = 100, downstreamMaxAttempts = 1, breakerFailureThreshold = 1),
++        metrics,
++        "graph"
++      )
++      try {
++        val error = remote.call("GET", path, Map.empty, None, context).left.toOption.get
++        assert(error.status == 504 && error.code == "DOWNSTREAM_TIMEOUT" && error.retryable)
++        assert(
++          metrics.render.contains("downstream_circuit_state{dependency=\"graph\",state=\"OPEN\"} 1")
++        )
++        assert(metrics.render.contains("downstream_timeouts_total 1"))
++      } finally remote.close()
++    }
++  }
++  test("connection refusal remains a dependency failure and opens the circuit") {
++    val socket = new java.net.ServerSocket(0, 0, java.net.InetAddress.getLoopbackAddress)
++    val port = socket.getLocalPort; socket.close()
++    val metrics = new ServiceMetrics
++    val remote = new RemoteService(
++      URI.create("http://127.0.0.1:" + port),
++      "synthetic-internal-token",
++      config.copy(downstreamMaxAttempts = 1, breakerFailureThreshold = 1),
++      metrics,
++      "graph"
++    )
++    try {
++      assert(remote.call("GET", path, Map.empty, None, context).left.toOption.get.status == 502)
++      assert(
++        metrics.render.contains("downstream_circuit_state{dependency=\"graph\",state=\"OPEN\"} 1")
++      )
++    } finally remote.close()
++  }
++}
+--- /dev/null
++++ b/tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentServices10BDeadlineSpec.scala
+@@ -0,0 +1,233 @@
++package edu.uic.cs441.scholarchain.independent
++
++import edu.uic.cs441.scholarchain.services.*
++import edu.uic.cs441.scholarchain.storage.*
++import edu.uic.cs441.scholarchain.storage.fakes.{
++  InMemoryIndexedEvidenceBundleStore,
++  InMemoryRuntimeAuditStore
++}
++import java.net.{InetAddress, ServerSocket, Socket, SocketException, URI}
++import java.net.http.HttpResponse
++import java.util.concurrent.ConcurrentLinkedQueue
++import java.util.concurrent.atomic.{AtomicBoolean, AtomicInteger}
++import org.scalatest.funsuite.AnyFunSuite
++
++/** Request-budget exhaustion is a completed application response from a healthy dependency.
++  * Connection failures, silence and unavailable responses remain dependency failures.
++  */
++class IndependentServices10BDeadlineSpec extends AnyFunSuite {
++  import IndependentServices10BFixture.{config as baseConfig, *}
++  private val nodeId = "synthetic-deadline-node"
++  private val cfg = baseConfig.copy(
++    downstreamTimeoutMs = 1000,
++    downstreamMaxAttempts = 3,
++    breakerFailureThreshold = 3,
++    breakerResetMs = 30000
++  )
++  private val context = RequestContext("request-readiness-10b", "trace-readiness-10b")
++  private def json(response: HttpResponse[String]): ujson.Value = ujson.read(response.body())
++  private def closed(metrics: String): Boolean =
++    metrics.contains("downstream_circuit_state{dependency=\"graph\",state=\"CLOSED\"} 1")
++  private def open(metrics: String): Boolean =
++    metrics.contains("downstream_circuit_state{dependency=\"graph\",state=\"OPEN\"} 1")
++  private def traced(response: HttpResponse[String], status: Int, trace: String): Unit = {
++    assert(response.statusCode() == status, response.body())
++    assert(json(response)("traceId").str == trace)
++    assert(response.headers().firstValue("X-Trace-Id").orElse("") == trace)
++    assert(json(response)("error").str.nonEmpty)
++    assert(!response.body().contains(externalKey) && !response.body().contains(internalKey))
++  }
++  private def start(
++      graph: GraphEndpoints,
++      role: String,
++      ready: () => Boolean,
++      config: ServiceConfig = cfg,
++      metrics: ServiceMetrics = new ServiceMetrics
++  ): ApiServer.RunningServer = {
++    val workflow = new QueryWorkflow {
++      def run(
++          r: QueryRequest,
++          c: RequestContext,
++          stage: String => Unit
++      ): Either[ApiError, WorkflowOutput] =
++        Left(ApiError.unavailable)
++    }
++    val queries = new QueryService(new InMemoryQuerySessionStore, workflow, config, metrics)
++    val extended = ExtendedApi(
++      new EvidenceApi(new InMemoryIndexedEvidenceBundleStore, new InMemoryRuntimeAuditStore),
++      graph,
++      new SemanticApi((_, _) => Right(ujson.Obj("hits" -> ujson.Arr())))
++    )
++    ApiServer.start(
++      new ApiApplication(
++        queries,
++        config,
++        readiness = ready,
++        logSink = _ => (),
++        serviceRole = role,
++        extended = Some(extended)
++      ),
++      port = 0
++    )
++  }
++  private def withProxy(uri: URI, config: ServiceConfig = cfg)(check: Int => Unit): Unit = {
++    val metrics = new ServiceMetrics
++    val remote = new RemoteGraphApi(new RemoteService(uri, internalKey, config, metrics, "graph"))
++    val server = start(remote, "query-api", () => remote.ready(context), config, metrics)
++    try check(server.port)
++    finally server.close()
++  }
++  private final class StubGraph(unavailable: Boolean = false) extends GraphEndpoints {
++    val neighborCalls = new AtomicInteger
++    val nodeCalls = new AtomicInteger
++    def node(id: String, c: RequestContext): Either[ApiError, ApiReply] = {
++      nodeCalls.incrementAndGet()
++      if (unavailable) Left(ApiError.unavailable)
++      else
++        Right(ApiReply(200, ujson.Obj("nodeId" -> id, "snapshot" -> "synthetic-deadline-snapshot")))
++    }
++    def neighbors(
++        id: String,
++        p: Map[String, String],
++        c: RequestContext
++    ): Either[ApiError, ApiReply] = {
++      neighborCalls.incrementAndGet()
++      if (unavailable) Left(ApiError.unavailable)
++      else if (p.get("timeoutMs").contains("1"))
++        Left(ApiError(504, "GRAPH_DEADLINE_EXCEEDED", "Graph request deadline exceeded.", false))
++      else
++        Right(
++          ApiReply(200, ujson.Obj("nodeId" -> id, "items" -> ujson.Arr(), "cursor" -> ujson.Null))
++        )
++    }
++    def metrics(id: String, window: String, c: RequestContext) = node(id, c)
++    def paths(p: Map[String, String], c: RequestContext) = node(nodeId, c)
++    def close(): Unit = ()
++  }
++
++  test(
++    "graph request deadline 504 never retries, opens the dependency breaker or fails query readiness"
++  ) {
++    val graph = new StubGraph
++    val backend = start(graph, "graph-service", () => true)
++    try
++      withProxy(URI.create(s"http://127.0.0.1:${backend.port}")) { port =>
++        val observed = Vector.tabulate(cfg.breakerFailureThreshold + 1) { index =>
++          val trace = s"trace-graph-deadline-$index"
++          val response =
++            request(port, s"/v1/graph/nodes/$nodeId/neighbors?timeoutMs=1", trace = trace)
++          (response, trace)
++        }
++        assert(
++          graph.neighborCalls.get == observed.size,
++          s"Each exhausted request must execute once; ${observed.size} requests caused ${graph.neighborCalls.get} backend calls"
++        )
++        observed.foreach { (response, trace) =>
++          traced(response, 504, trace)
++          assert(json(response)("error").str == "GRAPH_DEADLINE_EXCEEDED")
++          assert(!json(response)("retryable").bool)
++        }
++        // No successful downstream/readiness call may reset the breaker between deadlines.
++        assert(closed(request(port, "/metrics").body()))
++        observed.foreach { _ =>
++          val ready = request(port, "/readyz", auth = None)
++          assert(ready.statusCode() == 200, ready.body())
++        }
++        val node = request(port, s"/v1/graph/nodes/$nodeId")
++        val neighbors = request(port, s"/v1/graph/nodes/$nodeId/neighbors")
++        assert(node.statusCode() == 200 && json(node)("nodeId").str == nodeId)
++        assert(neighbors.statusCode() == 200 && json(neighbors)("items").arr.isEmpty)
++        assert(graph.neighborCalls.get == observed.size + 1)
++        assert(closed(request(port, "/metrics").body()))
++        assert(request(port, "/readyz", auth = None).statusCode() == 200)
++      }
++    finally backend.close()
++  }
++
++  test(
++    "connection refusal remains a dependency failure that opens the graph breaker and fails readiness"
++  ) {
++    val reserved = new ServerSocket(0, 1, InetAddress.getLoopbackAddress)
++    val port = reserved.getLocalPort
++    reserved.close()
++    withProxy(URI.create(s"http://127.0.0.1:$port")) { queryPort =>
++      val response = request(queryPort, s"/v1/graph/nodes/$nodeId", trace = "trace-refused-10b")
++      traced(response, 502, "trace-refused-10b")
++      assert(open(request(queryPort, "/metrics").body()))
++      traced(request(queryPort, "/readyz", auth = None), 503, "trace-independent-10b")
++      val refused = request(queryPort, s"/v1/graph/nodes/$nodeId")
++      traced(refused, 503, "trace-independent-10b")
++      assert(json(refused)("error").str == "CIRCUIT_OPEN")
++    }
++  }
++
++  test("client timeout without any HTTP response remains a breaker failure and fails readiness") {
++    val sockets = new ConcurrentLinkedQueue[Socket]
++    val accepting = new AtomicBoolean(true)
++    val listener = new ServerSocket(0, 10, InetAddress.getLoopbackAddress)
++    val accepted = new AtomicInteger
++    val thread = new Thread(
++      () => {
++        try
++          while (accepting.get) {
++            val socket = listener.accept()
++            sockets.add(socket)
++            accepted.incrementAndGet()
++          }
++        catch { case _: SocketException if !accepting.get => () }
++      },
++      "synthetic-silent-http-10b"
++    )
++    thread.setDaemon(true)
++    thread.start()
++    try
++      withProxy(
++        URI.create(s"http://127.0.0.1:${listener.getLocalPort}"),
++        cfg.copy(downstreamTimeoutMs = 150)
++      ) { port =>
++        traced(
++          request(port, s"/v1/graph/nodes/$nodeId", trace = "trace-silent-10b"),
++          504,
++          "trace-silent-10b"
++        )
++        assert(accepted.get >= 1)
++        assert(open(request(port, "/metrics").body()))
++        traced(request(port, "/readyz", auth = None), 503, "trace-independent-10b")
++        val before = accepted.get
++        traced(request(port, s"/v1/graph/nodes/$nodeId"), 503, "trace-independent-10b")
++        assert(accepted.get == before)
++      }
++    finally {
++      accepting.set(false)
++      listener.close()
++      val iterator = sockets.iterator()
++      while (iterator.hasNext) iterator.next().close()
++      thread.join(2000)
++      assert(!thread.isAlive)
++    }
++  }
++
++  test(
++    "an unready graph service 503 is retried to threshold, opens the breaker and fails query readiness"
++  ) {
++    val graph = new StubGraph(unavailable = true)
++    val backend = start(graph, "graph-service", () => false)
++    try
++      withProxy(URI.create(s"http://127.0.0.1:${backend.port}")) { port =>
++        traced(
++          request(port, s"/v1/graph/nodes/$nodeId/neighbors", trace = "trace-unready-10b"),
++          503,
++          "trace-unready-10b"
++        )
++        assert(graph.neighborCalls.get == cfg.breakerFailureThreshold)
++        assert(open(request(port, "/metrics").body()))
++        traced(request(port, "/readyz", auth = None), 503, "trace-independent-10b")
++        val before = graph.neighborCalls.get
++        val refused = request(port, s"/v1/graph/nodes/$nodeId/neighbors")
++        traced(refused, 503, "trace-independent-10b")
++        assert(json(refused)("error").str == "CIRCUIT_OPEN")
++        assert(graph.neighborCalls.get == before)
++      }
++    finally backend.close()
++  }
++}

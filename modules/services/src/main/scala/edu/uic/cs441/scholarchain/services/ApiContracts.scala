@@ -20,6 +20,10 @@ object ApiError {
   val unavailable = ApiError(503, "SERVICE_UNAVAILABLE", "Service temporarily unavailable.", true)
   val downstream = ApiError(502, "DOWNSTREAM_FAILURE", "A downstream dependency failed.", true)
   val timeout = ApiError(504, "DOWNSTREAM_TIMEOUT", "A downstream dependency timed out.", true)
+  val graphDeadline =
+    ApiError(504, "GRAPH_DEADLINE_EXCEEDED", "The graph request exceeded its execution deadline.")
+  def isGraphDeadline(error: ApiError): Boolean =
+    error.status == 504 && error.code == graphDeadline.code && !error.retryable
   val internal = ApiError(500, "INTERNAL_ERROR", "An internal error occurred.")
 }
 final case class RequestContext(requestId: String, traceId: String, queryId: String = "") {
@@ -65,7 +69,9 @@ final case class ServiceConfig(
     maxFilterChars: Int = 512,
     sessionPollMs: Long = 50,
     maxIdempotencyKeyChars: Int = 256,
-    requestReadTimeoutMs: Int = 5000
+    requestReadTimeoutMs: Int = 5000,
+    graphDeadlineReservePercent: Int = 25,
+    graphRequestTimeoutMs: Long = 5000
 ) {
   require(Vector(apiKeySha256, internalTokenSha256).forall(_.matches("[0-9a-f]{64}")))
   require(apiKeySha256 != internalTokenSha256, "separate-auth-domains-required")
@@ -78,6 +84,9 @@ final case class ServiceConfig(
   )
   require(
     sessionCasAttempts > 0 && maxFilterItems > 0 && maxFilterChars > 0 && sessionPollMs > 0 && maxIdempotencyKeyChars > 0 && requestReadTimeoutMs > 0
+  )
+  require(
+    graphDeadlineReservePercent >= 1 && graphDeadlineReservePercent <= 99 && graphRequestTimeoutMs > 0
   )
   require(port >= 0 && port <= 65535 && host.nonEmpty)
 }
@@ -114,7 +123,9 @@ object ServiceConfig {
         int("SCHOLARCHAIN_MAX_FILTER_CHARS", 512),
         long("SCHOLARCHAIN_SESSION_POLL_MS", 50),
         int("SCHOLARCHAIN_MAX_IDEMPOTENCY_KEY_CHARS", 256),
-        int("SCHOLARCHAIN_REQUEST_READ_TIMEOUT_MS", 5000)
+        int("SCHOLARCHAIN_REQUEST_READ_TIMEOUT_MS", 5000),
+        int("SCHOLARCHAIN_GRAPH_DEADLINE_RESERVE_PERCENT", 25),
+        long("SCHOLARCHAIN_GRAPH_TIMEOUT_MS", 5000)
       )
     )
   } catch { case NonFatal(_) => Left("invalid-or-missing-service-configuration") }
