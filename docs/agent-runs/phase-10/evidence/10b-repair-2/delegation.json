@@ -1,0 +1,29 @@
+[
+  {
+    "agent": "/root/service_engineer",
+    "role": "service-engineer",
+    "model": "inherited",
+    "paths": [
+      "modules/services/**"
+    ]
+  },
+  {
+    "agent": "/root/test_10b",
+    "role": "test-engineer",
+    "model": "inherited",
+    "paths": [
+      "tests/**"
+    ]
+  },
+  {
+    "agent": "/root/build_10b",
+    "role": "build-engineer",
+    "model": "inherited",
+    "paths": [
+      "Dockerfile",
+      "Dockerfile.dockerignore",
+      "build.sbt",
+      "project/**"
+    ]
+  }
+]

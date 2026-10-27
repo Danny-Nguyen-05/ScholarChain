@@ -1,0 +1,9 @@
+{"image": "scholarchain-query-api:local", "imageId": "sha256:46cd526aefc4d80119a4ba1bec2716bbeb03e6df1fd0c92381852eae3fb482a7", "user": "scholarchain", "mainClass": "edu.uic.cs441.scholarchain.services.QueryApiMain", "healthz": 200, "readyz": 503}
+{"image": "scholarchain-query-api:local", "cleanup": "removed created container"}
+{"image": "scholarchain-graph-service:local", "imageId": "sha256:de08163ff2dda1d0549566db4afe1d9a186ce4a0fa230157dbe65907f5025df1", "user": "scholarchain", "mainClass": "edu.uic.cs441.scholarchain.services.GraphServiceMain", "healthz": 200, "readyz": 503}
+{"image": "scholarchain-graph-service:local", "cleanup": "removed created container"}
+{"image": "scholarchain-semantic-service:local", "imageId": "sha256:f06c991dd869f4484fe96e3078eb78a7c7711b4d63bb95206e50e1eddffdab54", "user": "scholarchain", "mainClass": "edu.uic.cs441.scholarchain.services.SemanticServiceMain", "healthz": 200, "readyz": 503}
+{"image": "scholarchain-semantic-service:local", "cleanup": "removed created container"}
+{"image": "scholarchain-embedding-worker:local", "imageId": "sha256:3a34816458f2a884b9f4b4e85e04a788143afb988de2ff183e47ca67cd3cc47b", "user": "scholarchain", "mainClass": "edu.uic.cs441.scholarchain.services.EmbeddingWorkerMain", "healthz": 200, "readyz": 503}
+{"image": "scholarchain-embedding-worker:local", "cleanup": "removed created container"}
+Docker foundation smoke: 4 images passed; all created containers removed.

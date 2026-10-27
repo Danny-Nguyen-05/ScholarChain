@@ -1,0 +1,16 @@
+{
+  "rubyCommand": [
+    "ruby",
+    "-ryaml",
+    "-rjson",
+    "-e",
+    "puts JSON.generate(YAML.load_file(ARGV[0]))",
+    "modules/services/src/main/resources/openapi/scholarchain.v1.yaml"
+  ],
+  "exitCode": 0,
+  "version": "3.0.3",
+  "pathCount": 16,
+  "localReferencesResolved": 97,
+  "deadlineCodeDocumented": true,
+  "limitations": "Syntax/local-ref validation plus existing independent wire-contract tests; no third-party semantic validator."
+}

@@ -1,0 +1,30 @@
+[
+  {
+    "commandLog": "/tmp/phase10a-r1-service-regression-red.log",
+    "exitCode": 1,
+    "sha256": "1451a1960957a70cb4e6aaa6542fd8a9a409dd4691fcfb25e74009ca33ff2d8d",
+    "bytes": 1396,
+    "retained": "docs/agent-runs/phase-10/evidence/10a-repair-1/phase10a-r1-service-regression-red.txt"
+  },
+  {
+    "commandLog": "/tmp/phase10a-r1-regression-red.log",
+    "exitCode": 1,
+    "sha256": "edaa0da44c8cf9b47143b298d82b76a276b127ffc6724b9bc06edfeefc0a6861",
+    "bytes": 1676,
+    "retained": "docs/agent-runs/phase-10/evidence/10a-repair-1/phase10a-r1-regression-red.txt"
+  },
+  {
+    "commandLog": "/tmp/phase10a-r1-targeted.log",
+    "exitCode": 0,
+    "sha256": "328c594c6051b84a1f7f92afb4355dae828e6e2151b0b8a814457ca2ea565610",
+    "bytes": 5414,
+    "retained": "docs/agent-runs/phase-10/evidence/10a-repair-1/targeted.txt"
+  },
+  {
+    "commandLog": "/tmp/phase10a-r1-check.log",
+    "exitCode": 0,
+    "sha256": "964d6d8041b97fe6f6ca7c3b1e9ab8ef96ca5e58ff130bf1a3eb32b02b7b223f",
+    "bytes": 1697570,
+    "retained": "docs/agent-runs/phase-10/evidence/10a-repair-1/check-excerpts.txt"
+  }
+]

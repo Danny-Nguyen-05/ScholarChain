@@ -1,0 +1,32 @@
+[info] welcome to sbt 1.10.7 (Homebrew Java 17.0.20.1)
+[info] loading settings for project scholarchain-build from plugins.sbt...
+[info] loading project definition from /Users/danny/Documents/UIC/CS441/ScholarChain/project
+[info] loading settings for project root from build.sbt...
+[info] set current project to root (in build file:/Users/danny/Documents/UIC/CS441/ScholarChain/)
+[info] scalafmt: Formatting 1 Scala sources (/Users/danny/Documents/UIC/CS441/ScholarChain/modules/services)...
+[success] Total time: 1 s, completed Oct 26, 2026, 7:30:51 PM
+[info] compiling 1 Scala source to /Users/danny/Documents/UIC/CS441/ScholarChain/modules/services/target/scala-3.3.4/classes ...
+[info] done compiling
+[info] ServiceFoundationSpec:
+[info] - request validation rejects malformed JSON and wrong field types
+[info] - request validation rejects unsupported fields, bounds and ranking metric
+[info] - canonical fingerprints ignore object key order but bind field values
+[info] - authentication domains are separate with no usable default credentials
+[info] - safe IDs replace control characters and all error paths carry a trace
+[info] - metrics require authentication and have derivable latency histogram
+[info] - safe log construction excludes headers, body and raw route IDs
+[info] - completed query replay survives a second service instance and never reruns workflow
+[info] - workflow wall clock timeout is enforced and persisted as a typed terminal failure
+[info] - workflow retry is bounded and terminal replay cannot trigger another attempt
+[info] - verification and abstention metrics preserve closed labels
+[info] - configuration rejects identical auth domains and externalizes application bounds
+[info] RuntimeWorkflowAdapterSpec:
+[info] - real full runtime adapter persists a truthful abstention when synthesis is unavailable
+[info] - explicit filters cannot be discarded by a runtime plan resolver
+[info] - explicit inclusion flags and retrieval caps cannot be silently dropped
+[info] Run completed in 688 milliseconds.
+[info] Total number of tests run: 15
+[info] Suites: completed 2, aborted 0
+[info] Tests: succeeded 15, failed 0, canceled 0, ignored 0, pending 0
+[info] All tests passed.
+[success] Total time: 4 s, completed Oct 26, 2026, 7:30:54 PM

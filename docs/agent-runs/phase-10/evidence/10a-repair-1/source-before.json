@@ -1,0 +1,134 @@
+[
+  {
+    "path": "Dockerfile",
+    "sha256": "727a4b211987837d16825fbf00a47e689f4f6d2adf39effc5be9959a8a9bb336",
+    "bytes": 1230,
+    "owner": "build-engineer"
+  },
+  {
+    "path": "Dockerfile.dockerignore",
+    "sha256": "80067cbe98ae35d87484a8aa28fecce1aa82a29ccbfd64b2d5d3d4d1136b59d2",
+    "bytes": 225,
+    "owner": "build-engineer"
+  },
+  {
+    "path": "build.sbt",
+    "sha256": "549a9bb8838699ccb93d30adb61653b2998b2dfd737d0c2aab1baaab037c126f",
+    "bytes": 8752,
+    "owner": "build-engineer"
+  },
+  {
+    "path": "modules/services/README.md",
+    "sha256": "298cc9bdb1cf9f44468ceddfa73c588be41a313b205a6a466eb7a0e99965ec2b",
+    "bytes": 10058,
+    "owner": "service-engineer"
+  },
+  {
+    "path": "modules/services/src/main/resources/openapi/scholarchain.v1.yaml",
+    "sha256": "288161e59029b9a69e1e60dd49a9ba555746f0b93fdd3193da48ab0d8e434a52",
+    "bytes": 10197,
+    "owner": "service-engineer"
+  },
+  {
+    "path": "modules/services/src/main/scala/edu/uic/cs441/scholarchain/services/ApiApplication.scala",
+    "sha256": "550c149af5da28e6c08e34415ed4e1b286a67c02fa59db169737c28c36ece333",
+    "bytes": 8176,
+    "owner": "service-engineer"
+  },
+  {
+    "path": "modules/services/src/main/scala/edu/uic/cs441/scholarchain/services/ApiContracts.scala",
+    "sha256": "60019c43b9cb03dbf89c5a53b037a9277ef03529f8a6c04f4cfabb8e04ad9ef4",
+    "bytes": 8999,
+    "owner": "service-engineer"
+  },
+  {
+    "path": "modules/services/src/main/scala/edu/uic/cs441/scholarchain/services/ApiServer.scala",
+    "sha256": "f2ef838f1e211d6a5e4960979540a64f3a8bbf5a2ac5c0268a8ba5bfa01b28eb",
+    "bytes": 3126,
+    "owner": "service-engineer"
+  },
+  {
+    "path": "modules/services/src/main/scala/edu/uic/cs441/scholarchain/services/DownstreamClient.scala",
+    "sha256": "53f7b1a7df5472a3c5f294ea2359050e2f1d4fb3f1728226a1ee1208a027d4dc",
+    "bytes": 3838,
+    "owner": "service-engineer"
+  },
+  {
+    "path": "modules/services/src/main/scala/edu/uic/cs441/scholarchain/services/QueryService.scala",
+    "sha256": "6bc3157991297ddc8c8ca21b97870bb767c8d6f1bfc31ebc44d8b8220efe8453",
+    "bytes": 11550,
+    "owner": "service-engineer"
+  },
+  {
+    "path": "modules/services/src/main/scala/edu/uic/cs441/scholarchain/services/RuntimeWorkflowAdapter.scala",
+    "sha256": "7a79a0c4bbc09d02f59d58a2d173e111c8c1be844f4b1a6544ab92c2e32caeca",
+    "bytes": 5308,
+    "owner": "service-engineer"
+  },
+  {
+    "path": "modules/services/src/main/scala/edu/uic/cs441/scholarchain/services/ServiceMains.scala",
+    "sha256": "b95520a9b4432775de0741efae63c68f3332e161c0fe501914a16aac4598c24e",
+    "bytes": 1524,
+    "owner": "service-engineer"
+  },
+  {
+    "path": "modules/services/src/test/scala/edu/uic/cs441/scholarchain/services/RuntimeWorkflowAdapterSpec.scala",
+    "sha256": "fc38f958e028c2569acee2f913aabfcfc4ed44fa02de5905734a8bbbfbafe200",
+    "bytes": 5804,
+    "owner": "service-engineer"
+  },
+  {
+    "path": "modules/services/src/test/scala/edu/uic/cs441/scholarchain/services/ServiceFoundationSpec.scala",
+    "sha256": "c2f4881d743fd9d8174d4a73fb0453c547cebd3f660c475faeab622ac2cb77a1",
+    "bytes": 8307,
+    "owner": "service-engineer"
+  },
+  {
+    "path": "project/Dependencies.scala",
+    "sha256": "7d9597e36af33b9930a23ba93ad1d5ac0ace89e5a182659b846e6ebfe1ff0845",
+    "bytes": 1940,
+    "owner": "build-engineer"
+  },
+  {
+    "path": "project/ScholarChainBuild.scala",
+    "sha256": "18b6fda65da37d88712b5acbd16c41173bdec19213d6b5020720c5d38a7284fe",
+    "bytes": 18850,
+    "owner": "build-engineer"
+  },
+  {
+    "path": "project/ServiceDistribution.scala",
+    "sha256": "fb4f1d79437ca420c64d0f3e760e23e64d122026b02fd92997fcc575dcaac44f",
+    "bytes": 1948,
+    "owner": "build-engineer"
+  },
+  {
+    "path": "project/ServicesPackaging.md",
+    "sha256": "b7d388493e10639343d10f2babeb703c8adc367732412bea515ad9fd535e8d1e",
+    "bytes": 2050,
+    "owner": "build-engineer"
+  },
+  {
+    "path": "project/Versions.scala",
+    "sha256": "f268658bd45ea6f73a5dbe394f997aebd9bb2b5061eb30457a85da600e4520dc",
+    "bytes": 1584,
+    "owner": "build-engineer"
+  },
+  {
+    "path": "project/verification/src/test/scala/scholarchain/build/ServiceDistributionSpec.scala",
+    "sha256": "b9b45a120104da6183897f1c6179235f3b46e099108235bae1353b2f624c4085",
+    "bytes": 2930,
+    "owner": "build-engineer"
+  },
+  {
+    "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentServices10AResilienceSpec.scala",
+    "sha256": "62b6c0544401b3eac0396a5ec335f7f0f6e201eba9d4a8c1814f6c65f9fb1991",
+    "bytes": 5747,
+    "owner": "test-engineer"
+  },
+  {
+    "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentServices10ASpec.scala",
+    "sha256": "fa0d22e6343d2a109edc2028725749d178796c6c7365778674f2b5e5a0cb2886",
+    "bytes": 19861,
+    "owner": "test-engineer"
+  }
+]

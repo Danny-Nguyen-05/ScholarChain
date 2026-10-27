@@ -1,0 +1,14 @@
+{
+  "command": "sbt -batch 'services / Test / scalafmt' 'independentTests / Test / scalafmt'",
+  "workingDirectory": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+  "environment": {
+    "JAVA_HOME": "/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home",
+    "SBT_OPTS": "-Dlogback.configurationFile=/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-04/xml-repair-logback.xml"
+  },
+  "PATHPrefix": "/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home/bin",
+  "exitCode": 0,
+  "elapsedSeconds": 3.037,
+  "log": "/tmp/phase10b-r1-format-red.log",
+  "sha256": "802b67aeb5fa43a492fd8633258431c7fd78a0b5ba92f099ea5954f876b8b18d",
+  "sourceHashes": "format-red-sources.json"
+}

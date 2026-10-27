@@ -1,0 +1,10 @@
+[error] -- [E007] Type Mismatch Error: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/services/src/main/scala/edu/uic/cs441/scholarchain/services/SemanticApi.scala:47:130 
+[error] 47 |          ujson.Obj("hits"->ujson.Arr.from(hits.map(h=>ujson.Obj("key"->h.key,"distance"->h.distance,"metadata"->ujson.Obj.from(h.metadata)))),"model"->upickle.default.writeJs(model))
+[error]    |                                                                                                                                ^^^^^^^^^^
+[error]    |                           Found:    (h.metadata : Map[String, String])
+[error]    |                           Required: IterableOnce[(String, ujson.Value)]
+[error]    |
+[error]    | longer explanation available when compiling with `-explain`
+[error] one error found
+[error] (services / Compile / compileIncremental) Compilation failed
+[error] Total time: 3 s, completed Oct 26, 2026, 11:32:57 PM

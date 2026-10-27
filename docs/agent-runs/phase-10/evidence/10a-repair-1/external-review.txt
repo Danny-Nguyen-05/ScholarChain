@@ -1,0 +1,26 @@
+VERDICT: REQUEST-CHANGES for Subphase 10A.
+F1 (High, BLOCKING) — QueryService.scala:182-195 with StorageRows.scala:208 and
+DynamoStorage.scala:161-171. DynamoRows.transact retries with a fixed ClientRequestToken; a
+successful retry makes RowSessions.createIfAbsent return Retried(n, Written(session)), meaning
+this caller created the reservation. QueryService.submit treats every Retried as a lost reply,
+never binds the fingerprint or schedules the workflow, polls an unbound "{}" row and returns
+503; all replays and GET /v1/jobs/{jobId} for that key then return 503 permanently. No test
+covers Retried. Owner: service-engineer. Acceptance: a module test whose store returns
+Retried(1, Written(s)) from createIfAbsent gives exactly one workflow run, a 200 (or 202 with
+a valid jobId) first response, a same-body replay of the stored result without rerun, and 409
+for a different body; Retried(n, Rejected(..)) and Retried(n, Unchanged(..)) still reconcile
+without starting work; services/test, the 10A independent tests and full sbt -batch check on
+JDK 17 pass.
+F2 (Medium, nonblocking) — QueryService.scala:147-151,105-110: a queue-full 429 and exhausted
+retryable 502/503/504 failures are persisted with retryable:true, so same-key retries can never
+succeed. Replay stored terminal failures as retryable:false, or document/test that a new
+Idempotency-Key is required. Owner: service-engineer.
+F3 (Low, nonblocking) — QueryService.scala:118: the 202 job reference always reports status
+QUEUED, even while RUNNING. Owner: service-engineer.
+F4 (Low, nonblocking) — ServiceMains.scala:10: configuration failure exits the JVM with code 0;
+it should exit nonzero. Owner: service-engineer.
+F5 (Low, nonblocking) — no tests for a failed half-open probe reopening the breaker, the 429
+queue-full path or RESULT_TOO_LARGE. Owners: test-engineer / service-engineer.
+Future scope (10B): links.evidence in the sync response; DownstreamClient production wiring and
+breaker gauges in the mains; graph/semantic/worker/explain/evidence routes; lifecycle test;
+final OpenAPI.

@@ -1,0 +1,12 @@
+{
+  "changedFromOriginal10A": [
+    "modules/services/README.md",
+    "modules/services/src/main/scala/edu/uic/cs441/scholarchain/services/QueryService.scala",
+    "modules/services/src/test/scala/edu/uic/cs441/scholarchain/services/RetriedSessionCreationSpec.scala"
+  ],
+  "added": [
+    "modules/services/src/test/scala/edu/uic/cs441/scholarchain/services/RetriedSessionCreationSpec.scala"
+  ],
+  "unchangedOriginalSourceArtifacts": 20,
+  "sourceFreeze": "After scoped service and test formatting; before full check completes."
+}

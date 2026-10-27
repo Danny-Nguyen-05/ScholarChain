@@ -1,0 +1,15 @@
+[success] Total time: 1 s, completed Oct 27, 2026, 11:46:23 AM
+[success] Total time: 0 s, completed Oct 27, 2026, 11:46:23 AM
+[success] Total time: 0 s, completed Oct 27, 2026, 11:46:23 AM
+[info] Total number of tests run: 36
+[info] Suites: completed 6, aborted 0
+[info] Tests: succeeded 36, failed 0, canceled 0, ignored 0, pending 0
+[info] All tests passed.
+[success] Total time: 10 s, completed Oct 27, 2026, 11:46:32 AM
+[info] Total number of tests run: 44
+[info] Suites: completed 8, aborted 0
+[info] Tests: succeeded 44, failed 0, canceled 0, ignored 0, pending 0
+[info] All tests passed.
+[success] Total time: 6 s, completed Oct 27, 2026, 11:46:39 AM
+[info] Verified four-artifact service distribution: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/services/target/distribution
+[success] Total time: 0 s, completed Oct 27, 2026, 11:46:39 AM

@@ -1,0 +1,54 @@
+{
+  "observedAt": "2026-10-27T17:01:04.513809+00:00",
+  "branch": "phase-10",
+  "baseSHA": "c85da7365927a1f7d8ee5ab1f67c5c1a128391b3",
+  "HEAD": "c85da7365927a1f7d8ee5ab1f67c5c1a128391b3",
+  "step0": "yes fix f6 for me, since it is the blocking bug",
+  "repairSourceFiles": 11,
+  "aggregateSourceHashes": 35,
+  "sourceHashMismatches": [],
+  "postCheckSourceChanges": [
+    "modules/services/README.md"
+  ],
+  "postCheckChangesReason": "Final observed-count documentation only; no Scala/test/build/packaged resource changed.",
+  "gitDiffCheckExit": 0,
+  "logHashesVerified": true,
+  "distributionAndBuiltImagesMatch": true,
+  "independentEqualBudgetSourceIdenticalToRed": true,
+  "taskContainers": {
+    "exitCode": 0,
+    "output": ""
+  },
+  "taskNetworks": {
+    "exitCode": 0,
+    "output": ""
+  },
+  "runningTaskJobs": [],
+  "specialistAgents": "All three completed; observed via collaboration.list_agents.",
+  "externalReviewRetainedVerbatim": true,
+  "humanGateOrApprovalFilesChanged": [],
+  "committed": false,
+  "pushed": false,
+  "reviewerInvoked": false,
+  "trackedChangedFiles": [
+    "Dockerfile",
+    "docs/agent-runs/phase-10/owner-report.md",
+    "docs/agent-runs/phase-10/repairs.md",
+    "docs/agent-runs/phase-10/review.md",
+    "docs/agent-runs/phase-10/test-report.md",
+    "modules/services/README.md",
+    "modules/services/src/main/resources/openapi/scholarchain.v1.yaml",
+    "modules/services/src/main/scala/edu/uic/cs441/scholarchain/services/ApiApplication.scala",
+    "modules/services/src/main/scala/edu/uic/cs441/scholarchain/services/ApiContracts.scala",
+    "modules/services/src/main/scala/edu/uic/cs441/scholarchain/services/ApiServer.scala",
+    "modules/services/src/main/scala/edu/uic/cs441/scholarchain/services/DownstreamClient.scala",
+    "modules/services/src/main/scala/edu/uic/cs441/scholarchain/services/QueryService.scala",
+    "modules/services/src/main/scala/edu/uic/cs441/scholarchain/services/RuntimeWorkflowAdapter.scala",
+    "modules/services/src/main/scala/edu/uic/cs441/scholarchain/services/ServiceMains.scala",
+    "project/ScholarChainBuild.scala",
+    "project/ServiceDistribution.scala",
+    "project/ServicesPackaging.md",
+    "project/verification/src/test/scala/scholarchain/build/ServiceDistributionSpec.scala"
+  ],
+  "untrackedFiles": "files.json"
+}

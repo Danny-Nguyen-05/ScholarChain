@@ -1,0 +1,7 @@
+{
+  "priorManifest": "docs/agent-runs/phase-10/evidence/10b-repair-1/source-files.json",
+  "sourceFiles": 33,
+  "hashesMatch": true,
+  "preRepairTextSaved": "/tmp/phase10b-r2-source-before-text.json",
+  "purpose": "Exact pre-edit bytes for repair-only diff; no reset or worktree changes."
+}

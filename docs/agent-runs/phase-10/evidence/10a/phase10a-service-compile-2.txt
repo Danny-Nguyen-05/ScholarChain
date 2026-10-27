@@ -1,0 +1,37 @@
+[info] welcome to sbt 1.10.7 (Homebrew Java 17.0.20.1)
+[info] loading settings for project scholarchain-build from plugins.sbt...
+[info] loading project definition from /Users/danny/Documents/UIC/CS441/ScholarChain/project
+[info] compiling 2 Scala sources to /Users/danny/Documents/UIC/CS441/ScholarChain/project/target/scala-2.12/sbt-1.0/classes ...
+[info] done compiling
+[info] loading settings for project root from build.sbt...
+[info] set current project to root (in build file:/Users/danny/Documents/UIC/CS441/ScholarChain/)
+[info] compiling 7 Scala sources to /Users/danny/Documents/UIC/CS441/ScholarChain/modules/services/target/scala-3.3.4/classes ...
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/services/src/main/scala/edu/uic/cs441/scholarchain/services/ApiContracts.scala:115:49 
+[warn] 115 |      if (!section.obj.keySet.subsetOf(allowed)) return Left(ApiError.unsupported)
+[warn]     |                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[warn]     |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/services/src/main/scala/edu/uic/cs441/scholarchain/services/ApiContracts.scala:119:131 
+[warn] 119 |          if (v.arr.size > config.maxFilterItems || v.arr.exists(x => x.str.trim.isEmpty || x.str.length > config.maxFilterChars)) return Left(ApiError.invalid)
+[warn]     |                                                                                                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[warn]     |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/services/src/main/scala/edu/uic/cs441/scholarchain/services/ApiContracts.scala:121:217 
+[warn] 121 |          if (!Set("DISTINCT_COAUTHOR_COUNT", "PUBLICATION_COUNT", "WEIGHTED_DEGREE", "MAXIMUM_COAUTHORS_ON_ONE_PAPER", "BRIDGE_SCORE", "TOTAL_COAUTHOR_OCCURRENCES", "AVERAGE_COAUTHORS_PER_PAPER", "CORENESS")(v.str)) return Left(ApiError.unsupported)
+[warn]     |                                                                                                                                                                                                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[warn]     |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/services/src/main/scala/edu/uic/cs441/scholarchain/services/ApiContracts.scala:124:55 
+[warn] 124 |          if (!n.isWhole || n < 1 || n > Int.MaxValue) return Left(ApiError.invalid)
+[warn]     |                                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[warn]     |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/services/src/main/scala/edu/uic/cs441/scholarchain/services/ApiContracts.scala:131:23 
+[warn] 131 |          if (n > max) return Left(ApiError.unsupported)
+[warn]     |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[warn]     |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/services/src/main/scala/edu/uic/cs441/scholarchain/services/ApiContracts.scala:136:105 
+[warn] 136 |      if (c.obj.contains("yearFrom") && c.obj.contains("yearTo") && c("yearFrom").num > c("yearTo").num) return Left(ApiError.invalid)
+[warn]     |                                                                                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[warn]     |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] 6 warnings found
+[info] done compiling
+[info] compiling 1 Scala source to /Users/danny/Documents/UIC/CS441/ScholarChain/modules/services/target/scala-3.3.4/test-classes ...
+[info] done compiling
+[success] Total time: 5 s, completed Oct 26, 2026, 7:26:12 PM

@@ -1,0 +1,951 @@
+--- a/modules/services/README.md
++++ b/modules/services/README.md
+@@ -192,7 +192,28 @@
+ breaker healthy. Malformed/unrecognized markers, wrong operations, unready 5xx, connection
+ failures and transport timeouts without a response retain dependency retries and breaker failures.
+ `graph_request_deadlines_total` counts recognized request deadlines separately from dependency
+-errors/timeouts; HTTP 504/status/latency metrics still reflect the request outcome. Prometheus metrics cover HTTP requests/statuses, cumulative latency buckets,
++errors/timeouts; HTTP 504/status/latency metrics still reflect the request outcome.
++
++Query-api reserves response-delivery headroom for **every** internal graph GET operation:
++node, neighbors, metrics and paths. Let `T` be the configured per-attempt transport timeout and
++`P` the configured graph reserve percentage (default 25). The reserve is `ceil(T * P / 100)`
++milliseconds, calculated without integer overflow. Before sending the request, query-api always
++sets an explicit graph `timeoutMs` to `min(requested-or-configured-graph-cap, T - reserve)`.
++With default 5000 ms transport and graph caps this forwards 3750 ms, leaving 1250 ms for delivery;
++with equal 300 ms caps it forwards 225 ms. An explicitly requested 1 ms remains 1 ms.
++Malformed, nonpositive or above-cap caller budgets return 400 before any backend call.
++Graph-service consumes the forwarded budget on all four operations, including blocking node
++and metric reads and path expansion. Actual transport failures remain dependency failures.
++
++The clamp depends only on configuration and the caller's requested budget, not elapsed time or
++connection state. Repeating the same cursor request under the same configuration therefore
++preserves its signed budget binding. Changing the effective budget intentionally invalidates
++old cursors. Reserve percentages must be 1–99 and graph caps positive; a graph client whose
++transport/reserve combination leaves no positive work budget refuses configuration before a
++listener starts. Two milliseconds with the default reserve permits one millisecond of work;
++one millisecond cannot accommodate both work and response delivery. Semantic and readiness
++requests retain their existing transport/dependency behavior. This repair does not change the
++live snapshot-backend readiness contract (F16 remains future scope). Prometheus metrics cover HTTP requests/statuses, cumulative latency buckets,
+ API timeouts, per-attempt downstream errors/timeouts, registered breaker states and workflow
+ verification/abstention. Histogram boundaries 5 ms through 60 s/+Inf are fixed instrumentation
+ choices; p50/p95/p99 can be derived from the buckets.
+@@ -214,6 +235,8 @@
+ | MAX_FILTER_ITEMS, MAX_FILTER_CHARS | 100, 512 |
+ | MAX_IDEMPOTENCY_KEY_CHARS | 256 before hashing |
+ | DOWNSTREAM_TIMEOUT_MS, DOWNSTREAM_MAX_ATTEMPTS | 5000, 3 per-read attempt |
++| GRAPH_DEADLINE_RESERVE_PERCENT | 25; response headroom for graph requests, 1–99 |
++| GRAPH_TIMEOUT_MS | 5000; positive declared graph work cap before proxy clamp |
+ | BREAKER_FAILURE_THRESHOLD, BREAKER_RESET_MS | 3, 30000 |
+ | SESSION_CAS_ATTEMPTS, SESSION_POLL_MS | 8, 50; tune poll interval upward for remote stores |
+ | REQUEST_READ_TIMEOUT_MS | 5000 socket inactivity bound, not an aggregate upload deadline |
+@@ -251,6 +274,18 @@
+ recorded by the coordinator in the repair evidence. The 1199-test result above is the historical
+ pre-repair 10B gate.
+ 
++Repair round 2 (F6 default-budget residual) targeted validation passed **36/36 module tests in
++six suites** and **44/44 independent 10A/10B tests in eight suites**, followed by successful
++`packageServices`. Cases include real HTTP requests at equal graph/transport caps with omitted
++or explicit full budgets, all-operation forwarding and enforcement, deterministic cursor replay,
++nondefault environment settings, and impossible tiny configurations. The final repair-round-2
++JDK 17.0.20.1 `sbt check` passed **1216 tests in 149 suites, zero failures** (721 seconds
++reported by sbt; 723.581 seconds wall time). All **four round-2 Docker images** rebuilt and
++passed **eight boot smoke cases** plus the **three-service remote HTTP composition** with equal
++500 ms graph/transport caps and the stop-graph outage check. Exact commands, image/JAR hashes
++and retained logs are recorded by the coordinator in the round-2 evidence. Earlier counts above
++are historical checkpoints for their stated rounds.
++
+ No OpenSearch, optional index/service, CI workflow, cloud apply, live deployment or paid provider
+ call was added. Completed query results replay with the same injected persistent store, but the
+ local query executor is not a durable distributed dispatcher: process death can leave queued or
+--- a/modules/services/src/main/resources/openapi/scholarchain.v1.yaml
++++ b/modules/services/src/main/resources/openapi/scholarchain.v1.yaml
+@@ -186,6 +186,7 @@
+     get:
+       summary: Read a node from the immutable graph snapshot through query-api
+       parameters:
++        - {$ref: '#/components/parameters/GraphTimeoutMs'}
+         - {$ref: '#/components/parameters/NodeId'}
+       responses:
+         '200':
+@@ -208,7 +209,7 @@
+         - {name: limit, in: query, schema: {type: integer, minimum: 1, maximum: 200, default: 50}}
+         - {name: edgeTypes, in: query, schema: {type: string}, description: Comma separated subset of COAUTHORED_WITH AUTHORED HAS_TOPIC AFFILIATED_WITH PUBLISHED_IN}
+         - {name: window, in: query, schema: {type: string, default: all-years}}
+-        - {name: timeoutMs, in: query, schema: {type: integer, minimum: 1, maximum: 5000, default: 5000}}
++        - {$ref: '#/components/parameters/GraphTimeoutMs'}
+         - {name: cursor, in: query, schema: {type: string}, description: Signed opaque cursor bound to node filters limit timeout and immutable snapshot; a graph-operation budget expiry returns nonretryable GRAPH_DEADLINE_EXCEEDED 504 without dependency retries}
+       responses:
+         '200':
+@@ -231,6 +232,7 @@
+       security: [{InternalBearer: []}]
+       summary: Internal snapshot node read
+       parameters:
++        - {$ref: '#/components/parameters/GraphTimeoutMs'}
+         - {$ref: '#/components/parameters/NodeId'}
+       responses:
+         '200': {description: Actual node and snapshot}
+@@ -248,7 +250,7 @@
+         - {name: limit, in: query, schema: {type: integer, minimum: 1, maximum: 200, default: 50}}
+         - {name: edgeTypes, in: query, schema: {type: string}}
+         - {name: window, in: query, schema: {type: string, default: all-years}}
+-        - {name: timeoutMs, in: query, schema: {type: integer, minimum: 1, maximum: 5000, default: 5000}}
++        - {$ref: '#/components/parameters/GraphTimeoutMs'}
+         - {name: cursor, in: query, schema: {type: string}}
+       responses:
+         '200':
+@@ -269,6 +271,7 @@
+       security: [{InternalBearer: []}]
+       summary: Stored researcher metrics and qualifications without recomputation
+       parameters:
++        - {$ref: '#/components/parameters/GraphTimeoutMs'}
+         - {$ref: '#/components/parameters/NodeId'}
+         - {name: window, in: query, schema: {type: string, default: all-years}}
+       responses:
+@@ -285,6 +288,7 @@
+       security: [{InternalBearer: []}]
+       summary: Bounded shortest path in the immutable snapshot
+       parameters:
++        - {$ref: '#/components/parameters/GraphTimeoutMs'}
+         - {name: from, in: query, required: true, schema: {type: string}}
+         - {name: to, in: query, required: true, schema: {type: string}}
+         - {name: maxDepth, in: query, schema: {type: integer, minimum: 1, maximum: 3, default: 3}}
+@@ -324,6 +328,16 @@
+     ExternalBearer: {type: http, scheme: bearer, description: API key whose SHA-256 hash is injected through Secrets Manager at deployment}
+     InternalBearer: {type: http, scheme: bearer, description: Separate service token; external key is never accepted for internal routes}
+   parameters:
++    GraphTimeoutMs:
++      name: timeoutMs
++      in: query
++      schema: {type: integer, minimum: 1, maximum: 5000, default: 5000}
++      description: >-
++        Graph operation work budget. Query-api always forwards the lesser of the requested/default
++        graph cap and its transport timeout minus ceil(transport * configured reserve percent / 100).
++        Reserve defaults to 25 percent, so equal 5000 ms caps forward 3750 ms. The deterministic
++        clamp preserves cursor bindings under unchanged configuration. Invalid caller budgets
++        yield 400; configurations leaving no positive work and response budgets are rejected.
+     NodeId: {name: nodeId, in: path, required: true, schema: {type: string}}
+     QueryId: {name: queryId, in: path, required: true, schema: {type: string}}
+     JobId: {name: jobId, in: path, required: true, schema: {type: string, pattern: '^job-[0-9a-f]{64}$'}}
+--- a/modules/services/src/main/scala/edu/uic/cs441/scholarchain/services/ApiApplication.scala
++++ b/modules/services/src/main/scala/edu/uic/cs441/scholarchain/services/ApiApplication.scala
+@@ -201,15 +201,15 @@
+       case ("GET", Vector("v1", "queries", id, "evidence")) if query =>
+         api.evidence.queryEvidence(id)
+       case ("GET", Vector("v1", "graph", "nodes", id)) if query || graph =>
+-        api.graph.node(id, context)
++        api.graph.node(id, p, context)
+       case ("GET", Vector("v1", "graph", "nodes", id, "neighbors")) if query || graph =>
+         api.graph.neighbors(id, p, context)
+       case ("GET", Vector("internal", "v1", "graph", "nodes", id)) if graph =>
+-        api.graph.node(id, context)
++        api.graph.node(id, p, context)
+       case ("GET", Vector("internal", "v1", "graph", "nodes", id, "neighbors")) if graph =>
+         api.graph.neighbors(id, p, context)
+       case ("GET", Vector("internal", "v1", "graph", "metrics", id)) if graph =>
+-        api.graph.metrics(id, p.getOrElse("window", "all-years"), context)
++        api.graph.metrics(id, p.getOrElse("window", "all-years"), p, context)
+       case ("GET", Vector("internal", "v1", "graph", "paths")) if graph =>
+         api.graph.paths(p, context)
+       case ("POST", Vector("internal", "v1", "semantic", "retrieve")) if query || semantic =>
+--- a/modules/services/src/main/scala/edu/uic/cs441/scholarchain/services/ApiContracts.scala
++++ b/modules/services/src/main/scala/edu/uic/cs441/scholarchain/services/ApiContracts.scala
+@@ -69,7 +69,9 @@
+     maxFilterChars: Int = 512,
+     sessionPollMs: Long = 50,
+     maxIdempotencyKeyChars: Int = 256,
+-    requestReadTimeoutMs: Int = 5000
++    requestReadTimeoutMs: Int = 5000,
++    graphDeadlineReservePercent: Int = 25,
++    graphRequestTimeoutMs: Long = 5000
+ ) {
+   require(Vector(apiKeySha256, internalTokenSha256).forall(_.matches("[0-9a-f]{64}")))
+   require(apiKeySha256 != internalTokenSha256, "separate-auth-domains-required")
+@@ -82,6 +84,9 @@
+   )
+   require(
+     sessionCasAttempts > 0 && maxFilterItems > 0 && maxFilterChars > 0 && sessionPollMs > 0 && maxIdempotencyKeyChars > 0 && requestReadTimeoutMs > 0
++  )
++  require(
++    graphDeadlineReservePercent >= 1 && graphDeadlineReservePercent <= 99 && graphRequestTimeoutMs > 0
+   )
+   require(port >= 0 && port <= 65535 && host.nonEmpty)
+ }
+@@ -118,7 +123,9 @@
+         int("SCHOLARCHAIN_MAX_FILTER_CHARS", 512),
+         long("SCHOLARCHAIN_SESSION_POLL_MS", 50),
+         int("SCHOLARCHAIN_MAX_IDEMPOTENCY_KEY_CHARS", 256),
+-        int("SCHOLARCHAIN_REQUEST_READ_TIMEOUT_MS", 5000)
++        int("SCHOLARCHAIN_REQUEST_READ_TIMEOUT_MS", 5000),
++        int("SCHOLARCHAIN_GRAPH_DEADLINE_RESERVE_PERCENT", 25),
++        long("SCHOLARCHAIN_GRAPH_TIMEOUT_MS", 5000)
+       )
+     )
+   } catch { case NonFatal(_) => Left("invalid-or-missing-service-configuration") }
+--- a/modules/services/src/main/scala/edu/uic/cs441/scholarchain/services/GraphApi.scala
++++ b/modules/services/src/main/scala/edu/uic/cs441/scholarchain/services/GraphApi.scala
+@@ -81,6 +81,16 @@
+       if (error == ApiError.timeout) ApiError.graphDeadline else error
+     }
+   }
++  private def operationTimeout(
++      params: Map[String, String],
++      allowed: Set[String]
++  ): Either[ApiError, Long] = try {
++    if (!params.keySet.subsetOf(allowed + "timeoutMs")) Left(ApiError.invalid)
++    else {
++      val timeout = params.get("timeoutMs").map(_.toLong).getOrElse(config.timeoutMs)
++      if (timeout <= 0 || timeout > config.timeoutMs) Left(ApiError.invalid) else Right(timeout)
++    }
++  } catch { case NonFatal(_) => Left(ApiError.invalid) }
+   private def signature(value: String): String = {
+     val mac = Mac.getInstance("HmacSHA256")
+     mac.init(new SecretKeySpec(config.cursorKey.getBytes(UTF_8), "HmacSHA256"))
+@@ -104,19 +114,27 @@
+     else Right(value("offset").num.toInt)
+   } catch { case NonFatal(_) => Left(ApiError.invalid) }
+   def node(id: String, context: RequestContext): Either[ApiError, ApiReply] =
+-    timed(context, config.timeoutMs) {
+-      PortResult
+-        .read(snapshot.node(id))
+-        .map(n =>
+-          ApiReply(
+-            200,
+-            ujson.Obj(
+-              "nodeId" -> n.nodeId,
+-              "snapshot" -> snapshot.snapshotId,
+-              "node" -> upickle.default.writeJs(n)
++    node(id, Map.empty, context)
++  override def node(
++      id: String,
++      params: Map[String, String],
++      context: RequestContext
++  ): Either[ApiError, ApiReply] =
++    operationTimeout(params, Set.empty).flatMap { timeout =>
++      timed(context, timeout) {
++        PortResult
++          .read(snapshot.node(id))
++          .map(n =>
++            ApiReply(
++              200,
++              ujson.Obj(
++                "nodeId" -> n.nodeId,
++                "snapshot" -> snapshot.snapshotId,
++                "node" -> upickle.default.writeJs(n)
++              )
+             )
+           )
+-        )
++      }
+     }
+   def neighbors(
+       id: String,
+@@ -243,33 +261,48 @@
+     } catch { case b: boundary.Break[?] => throw b; case NonFatal(_) => Left(ApiError.invalid) }
+   }
+   def metrics(id: String, window: String, context: RequestContext): Either[ApiError, ApiReply] =
+-    timed(context, config.timeoutMs) {
+-      PortResult
+-        .read(snapshot.metrics(id, window))
+-        .map(m =>
+-          ApiReply(
+-            200,
+-            ujson.Obj(
+-              "researcherId" -> id,
+-              "window" -> window,
+-              "record" -> ujson.read(m.payloadJson),
+-              "qualifications" -> ujson.read(m.qualificationsJson),
+-              "metricVersion" -> m.metricVersion,
+-              "runId" -> m.runId
++    metrics(id, window, Map.empty, context)
++  override def metrics(
++      id: String,
++      window: String,
++      params: Map[String, String],
++      context: RequestContext
++  ): Either[ApiError, ApiReply] =
++    operationTimeout(params, Set("window")).flatMap { timeout =>
++      timed(context, timeout) {
++        PortResult
++          .read(snapshot.metrics(id, window))
++          .map(m =>
++            ApiReply(
++              200,
++              ujson.Obj(
++                "researcherId" -> id,
++                "window" -> window,
++                "record" -> ujson.read(m.payloadJson),
++                "qualifications" -> ujson.read(m.qualificationsJson),
++                "metricVersion" -> m.metricVersion,
++                "runId" -> m.runId
++              )
+             )
+           )
+-        )
++      }
+     }
+   def paths(params: Map[String, String], context: RequestContext): Either[ApiError, ApiReply] = {
++    val started = System.nanoTime()
++    val timeout = operationTimeout(params, Set("from", "to", "maxDepth", "window")) match {
++      case Left(error)  => return Left(error)
++      case Right(value) => value
++    }
+     val to = params.getOrElse("to", "")
+-    if (to.isEmpty || !params.keySet.subsetOf(Set("from", "to", "maxDepth", "window")))
++    if (to.isEmpty)
+       Left(ApiError.invalid)
+     else {
+       val from = params.getOrElse("from", "")
+       val p = Map(
+         "depth" -> params.getOrElse("maxDepth", config.maxDepth.toString),
+         "limit" -> config.maxLimit.toString,
+-        "window" -> params.getOrElse("window", config.defaultWindow)
++        "window" -> params.getOrElse("window", config.defaultWindow),
++        "timeoutMs" -> timeout.toString
+       )
+       neighbors(from, p, context).flatMap { reply =>
+         val items = reply.body("items").arr.toVector
+@@ -279,6 +312,7 @@
+         var level = 0
+         var visited = Set(from)
+         while (frontier.nonEmpty && found.isEmpty && level <= maxDepth) {
++          if (System.nanoTime() - started >= timeout * 1000000L) return Left(ApiError.graphDeadline)
+           found = frontier.find(_._1.last == to)
+           if (found.isEmpty && level < maxDepth) frontier = frontier.flatMap { (ns, es) =>
+             items.filter(x => x("fromId").str == ns.last || x("toId").str == ns.last).flatMap {
+--- a/modules/services/src/main/scala/edu/uic/cs441/scholarchain/services/RemoteServices.scala
++++ b/modules/services/src/main/scala/edu/uic/cs441/scholarchain/services/RemoteServices.scala
+@@ -20,6 +20,14 @@
+       baseUri.getScheme
+     ) && baseUri.getHost != null && baseUri.getUserInfo == null && internalToken.nonEmpty
+   )
++  // Ceil with BigInt keeps even very large configured transport durations overflow-safe.
++  private val graphWorkBudgetMs = if (dependencyName == "graph") {
++    val reserve =
++      ((BigInt(config.downstreamTimeoutMs) * config.graphDeadlineReservePercent + 99) / 100).toLong
++    val work = config.downstreamTimeoutMs - reserve
++    require(work > 0, "graph-transport-must-leave-positive-work-and-response-budgets")
++    work
++  } else config.downstreamTimeoutMs
+   private val http =
+     HttpClient.newBuilder().connectTimeout(Duration.ofMillis(config.downstreamTimeoutMs)).build()
+   private val boundary = new DownstreamClient(
+@@ -35,10 +43,14 @@
+       body: Option[String],
+       context: RequestContext
+   ): Either[ApiError, ApiReply] = {
++    val effectiveParams = graphParameters(method, path, params) match {
++      case Left(error)  => return Left(error)
++      case Right(value) => value
++    }
+     val query =
+-      if (params.isEmpty) ""
++      if (effectiveParams.isEmpty) ""
+       else
+-        params.toVector
++        effectiveParams.toVector
+           .sortBy(_._1)
+           .map((k, v) => RemoteService.segment(k) + "=" + RemoteService.segment(v))
+           .mkString("?", "&", "")
+@@ -105,15 +117,30 @@
+       }
+     }
+   }
++  private def graphOperation(method: String, path: String): Boolean =
++    dependencyName == "graph" && method == "GET" &&
++      path.matches("/internal/v1/graph/(?:nodes/[^/]+(?:/neighbors)?|metrics/[^/]+|paths)")
++  private def graphParameters(
++      method: String,
++      path: String,
++      params: Map[String, String]
++  ): Either[ApiError, Map[String, String]] = {
++    if (!graphOperation(method, path)) Right(params)
++    else
++      try {
++        val requested =
++          params.get("timeoutMs").map(_.toLong).getOrElse(config.graphRequestTimeoutMs)
++        if (requested <= 0 || requested > config.graphRequestTimeoutMs) Left(ApiError.invalid)
++        else Right(params.updated("timeoutMs", math.min(requested, graphWorkBudgetMs).toString))
++      } catch { case NonFatal(_) => Left(ApiError.invalid) }
++  }
+   private def graphRequestDeadline(
+       method: String,
+       path: String,
+       status: Int,
+       bytes: Array[Byte]
+   ): Option[ApiError] = {
+-    val graphOperation =
+-      path.matches("/internal/v1/graph/(?:nodes/[^/]+(?:/neighbors)?|metrics/[^/]+|paths)")
+-    if (dependencyName != "graph" || method != "GET" || !graphOperation || status != 504) None
++    if (!graphOperation(method, path) || status != 504) None
+     else
+       try {
+         val json = ujson.read(new String(bytes, UTF_8))
+@@ -135,8 +162,13 @@
+ final class RemoteGraphApi(remote: RemoteService) extends GraphEndpoints {
+   override def ready(context: RequestContext): Boolean =
+     remote.call("GET", "/readyz", Map.empty, None, context).exists(_.status == 200)
+-  def node(id: String, c: RequestContext) =
+-    remote.call("GET", "/internal/v1/graph/nodes/" + RemoteService.segment(id), Map.empty, None, c)
++  def node(id: String, c: RequestContext): Either[ApiError, ApiReply] = node(id, Map.empty, c)
++  override def node(
++      id: String,
++      params: Map[String, String],
++      c: RequestContext
++  ): Either[ApiError, ApiReply] =
++    remote.call("GET", "/internal/v1/graph/nodes/" + RemoteService.segment(id), params, None, c)
+   def neighbors(id: String, p: Map[String, String], c: RequestContext) = remote.call(
+     "GET",
+     "/internal/v1/graph/nodes/" + RemoteService.segment(id) + "/neighbors",
+@@ -144,10 +176,17 @@
+     None,
+     c
+   )
+-  def metrics(id: String, window: String, c: RequestContext) = remote.call(
++  def metrics(id: String, window: String, c: RequestContext): Either[ApiError, ApiReply] =
++    metrics(id, window, Map.empty, c)
++  override def metrics(
++      id: String,
++      window: String,
++      params: Map[String, String],
++      c: RequestContext
++  ): Either[ApiError, ApiReply] = remote.call(
+     "GET",
+     "/internal/v1/graph/metrics/" + RemoteService.segment(id),
+-    Map("window" -> window),
++    params.updated("window", window),
+     None,
+     c
+   )
+--- a/modules/services/src/main/scala/edu/uic/cs441/scholarchain/services/SemanticApi.scala
++++ b/modules/services/src/main/scala/edu/uic/cs441/scholarchain/services/SemanticApi.scala
+@@ -7,12 +7,26 @@
+ trait GraphEndpoints extends AutoCloseable {
+   def ready(context: RequestContext): Boolean = true
+   def node(id: String, context: RequestContext): Either[ApiError, ApiReply]
++  def node(
++      id: String,
++      params: Map[String, String],
++      context: RequestContext
++  ): Either[ApiError, ApiReply] =
++    if (params.isEmpty) node(id, context) else Left(ApiError.invalid)
+   def neighbors(
+       id: String,
+       params: Map[String, String],
+       context: RequestContext
+   ): Either[ApiError, ApiReply]
+   def metrics(id: String, window: String, context: RequestContext): Either[ApiError, ApiReply]
++  def metrics(
++      id: String,
++      window: String,
++      params: Map[String, String],
++      context: RequestContext
++  ): Either[ApiError, ApiReply] =
++    if (params.keySet.subsetOf(Set("window"))) metrics(id, window, context)
++    else Left(ApiError.invalid)
+   def paths(params: Map[String, String], context: RequestContext): Either[ApiError, ApiReply]
+ }
+ trait SemanticEndpoints extends AutoCloseable {
+--- /dev/null
++++ b/modules/services/src/test/scala/edu/uic/cs441/scholarchain/services/GraphTransportBudgetSpec.scala
+@@ -0,0 +1,264 @@
++package edu.uic.cs441.scholarchain.services
++
++import com.sun.net.httpserver.HttpServer
++import edu.uic.cs441.scholarchain.storage.*
++import edu.uic.cs441.scholarchain.storage.fakes.{
++  InMemoryIndexedEvidenceBundleStore,
++  InMemoryRuntimeAuditStore
++}
++import edu.uic.cs441.scholarchain.core.{GraphNode, GraphEdge}
++import java.net.{InetSocketAddress, URI}
++import java.nio.charset.StandardCharsets.UTF_8
++import java.util.concurrent.{Executors, TimeUnit}
++import java.util.concurrent.atomic.AtomicInteger
++import org.scalatest.funsuite.AnyFunSuite
++
++class GraphTransportBudgetSpec extends AnyFunSuite {
++  private val context = RequestContext("synthetic-budget-request", "synthetic-budget-trace")
++  private def config = ServiceConfig(
++    Auth.sha256("synthetic-budget-public"),
++    Auth.sha256("synthetic-budget-internal"),
++    downstreamTimeoutMs = 300,
++    downstreamMaxAttempts = 3,
++    breakerFailureThreshold = 3
++  )
++  private val operations = Vector(
++    "/internal/v1/graph/nodes/synthetic-node",
++    "/internal/v1/graph/nodes/synthetic-node/neighbors",
++    "/internal/v1/graph/metrics/synthetic-node",
++    "/internal/v1/graph/paths"
++  )
++  private def withStub[A](body: (URI, () => Vector[Map[String, String]]) => A): A = {
++    var seen = Vector.empty[Map[String, String]]
++    val server = HttpServer.create(new InetSocketAddress("127.0.0.1", 0), 0)
++    val executor = Executors.newSingleThreadExecutor()
++    server.setExecutor(executor)
++    server.createContext(
++      "/",
++      exchange => {
++        val params = QueryParameters.parse(exchange.getRequestURI.toString).toOption.get
++        synchronized { seen :+= params }
++        val bytes = "{}".getBytes(UTF_8)
++        try {
++          exchange.sendResponseHeaders(200, bytes.length); exchange.getResponseBody.write(bytes)
++        } finally exchange.close()
++      }
++    )
++    server.start()
++    try
++      body(URI.create("http://127.0.0.1:" + server.getAddress.getPort), () => synchronized { seen })
++    finally {
++      server.stop(0); executor.shutdownNow(); executor.awaitTermination(2, TimeUnit.SECONDS)
++    }
++  }
++  test(
++    "every graph operation forwards a deterministic budget below transport for absent and near-cap requests"
++  ) {
++    withStub { (uri, seen) =>
++      val remote =
++        new RemoteService(uri, "synthetic-budget-token", config, new ServiceMetrics, "graph")
++      try {
++        for (
++          path <- operations;
++          caller <- Vector(
++            Map.empty[String, String],
++            Map("timeoutMs" -> "300"),
++            Map("timeoutMs" -> "1")
++          )
++        ) {
++          assert(remote.call("GET", path, caller, None, context).isRight)
++          val forwarded = seen().last
++            .getOrElse("timeoutMs", fail(s"No explicit execution budget on $path"))
++            .toLong
++          assert(forwarded == (if (caller.get("timeoutMs").contains("1")) 1L else 225L))
++          assert(forwarded > 0 && forwarded < config.downstreamTimeoutMs)
++        }
++        val original = Map("timeoutMs" -> "300", "cursor" -> "synthetic-cursor", "depth" -> "2")
++        assert(remote.call("GET", operations(1), original, None, context).isRight)
++        val first = seen().last
++        assert(remote.call("GET", operations(1), original, None, context).isRight)
++        assert(seen().last == first)
++        assert(first("cursor") == "synthetic-cursor" && first("depth") == "2")
++      } finally remote.close()
++    }
++  }
++  test(
++    "graph budget configuration rejects invalid reserves or caps and impossible tiny transports"
++  ) {
++    val base = Map(
++      "SCHOLARCHAIN_API_KEY_SHA256" -> config.apiKeySha256,
++      "SCHOLARCHAIN_INTERNAL_TOKEN_SHA256" -> config.internalTokenSha256
++    )
++    for (
++      extra <- Vector(
++        Map("SCHOLARCHAIN_GRAPH_DEADLINE_RESERVE_PERCENT" -> "0"),
++        Map("SCHOLARCHAIN_GRAPH_DEADLINE_RESERVE_PERCENT" -> "100"),
++        Map("SCHOLARCHAIN_GRAPH_TIMEOUT_MS" -> "0")
++      )
++    ) {
++      assert(ServiceConfig.fromEnvironment(base ++ extra).isLeft)
++    }
++    intercept[IllegalArgumentException] {
++      new RemoteService(
++        URI.create("http://127.0.0.1:1"),
++        "synthetic-budget-token",
++        config.copy(downstreamTimeoutMs = 1),
++        new ServiceMetrics,
++        "graph"
++      )
++    }
++  }
++  test("malformed and out-of-cap caller budgets reject before any backend call") {
++    withStub { (uri, seen) =>
++      val remote =
++        new RemoteService(uri, "synthetic-budget-token", config, new ServiceMetrics, "graph")
++      try {
++        for (value <- Vector("0", "-1", "not-a-number", "5001")) {
++          assert(
++            remote
++              .call("GET", operations(1), Map("timeoutMs" -> value), None, context)
++              .left
++              .toOption
++              .exists(_.status == 400)
++          )
++        }
++        assert(seen().isEmpty)
++      } finally remote.close()
++    }
++  }
++  test("equal graph and transport caps yield a graph marker with no retries or readiness loss") {
++    val cfg = config.copy(downstreamTimeoutMs = 300)
++    val calls = new AtomicInteger
++    val graph = new GraphApi(
++      new GraphSnapshot {
++        def snapshotId = "synthetic-equal-budget"
++        def node(id: String): StorageResult[GraphNode] = {
++          calls.incrementAndGet(); Thread.sleep(10000); StorageResult.Missing
++        }
++        def edges(id: String, window: String): StorageResult[Vector[GraphEdge]] =
++          StorageResult.Found(Vector.empty)
++        def metrics(id: String, window: String): StorageResult[ResearcherMetricRecord] = {
++          calls.incrementAndGet(); Thread.sleep(10000); StorageResult.Missing
++        }
++      },
++      GraphApiConfig(timeoutMs = 300)
++    )
++    val workflow = new QueryWorkflow {
++      def run(
++          r: QueryRequest,
++          c: RequestContext,
++          s: String => Unit
++      ): Either[ApiError, WorkflowOutput] = Left(ApiError.unsupported)
++    }
++    val queries = new QueryService(new InMemoryQuerySessionStore, workflow, cfg)
++    val app = new ApiApplication(
++      queries,
++      cfg,
++      logSink = _ => (),
++      serviceRole = "graph-service",
++      extended = Some(
++        ExtendedApi(
++          new EvidenceApi(new InMemoryIndexedEvidenceBundleStore, new InMemoryRuntimeAuditStore),
++          graph,
++          new SemanticApi((_, _) => Right(ujson.Obj("hits" -> ujson.Arr())))
++        )
++      )
++    )
++    val server = ApiServer.start(app)
++    val metrics = new ServiceMetrics
++    val remote = new RemoteService(
++      URI.create("http://127.0.0.1:" + server.port),
++      "synthetic-budget-internal",
++      cfg,
++      metrics,
++      "graph"
++    )
++    try {
++      for (_ <- 1 to 4) {
++        val error = remote.call("GET", operations(1), Map.empty, None, context).left.toOption.get
++        assert(error.status == 504 && error.code == "GRAPH_DEADLINE_EXCEEDED" && !error.retryable)
++      }
++      assert(calls.get() == 4)
++      assert(
++        metrics.render.contains("downstream_circuit_state{dependency=\"graph\",state=\"CLOSED\"} 1")
++      )
++      assert(new RemoteGraphApi(remote).ready(context))
++      for (
++        (operation, params) <- Vector(
++          operations.head -> Map.empty[String, String],
++          operations(2) -> Map("window" -> "all-years"),
++          operations(3) -> Map(
++            "from" -> "synthetic-node",
++            "to" -> "synthetic-other",
++            "maxDepth" -> "1"
++          )
++        )
++      ) {
++        val error = remote.call("GET", operation, params, None, context).left.toOption.get
++        assert(error.status == 504 && error.code == "GRAPH_DEADLINE_EXCEEDED" && !error.retryable)
++      }
++      assert(calls.get() == 7)
++    } finally { remote.close(); server.close() }
++  }
++  test("configured reserve and graph cap are applied rather than a hardcoded default") {
++    val env = Map(
++      "SCHOLARCHAIN_API_KEY_SHA256" -> config.apiKeySha256,
++      "SCHOLARCHAIN_INTERNAL_TOKEN_SHA256" -> config.internalTokenSha256,
++      "SCHOLARCHAIN_DOWNSTREAM_TIMEOUT_MS" -> "400",
++      "SCHOLARCHAIN_GRAPH_DEADLINE_RESERVE_PERCENT" -> "50",
++      "SCHOLARCHAIN_GRAPH_TIMEOUT_MS" -> "100"
++    )
++    withStub { (uri, seen) =>
++      val capped = ServiceConfig.fromEnvironment(env).toOption.get
++      val remote =
++        new RemoteService(uri, "synthetic-budget-token", capped, new ServiceMetrics, "graph")
++      try {
++        assert(remote.call("GET", operations.head, Map.empty, None, context).isRight)
++        assert(seen().last("timeoutMs") == "100")
++        assert(
++          remote
++            .call("GET", operations.head, Map("timeoutMs" -> "101"), None, context)
++            .left
++            .toOption
++            .exists(_.status == 400)
++        )
++      } finally remote.close()
++      val reserved = ServiceConfig
++        .fromEnvironment(env.updated("SCHOLARCHAIN_GRAPH_TIMEOUT_MS", "500"))
++        .toOption
++        .get
++      val second =
++        new RemoteService(uri, "synthetic-budget-token", reserved, new ServiceMetrics, "graph")
++      try {
++        assert(second.call("GET", operations.head, Map.empty, None, context).isRight)
++        assert(seen().last("timeoutMs") == "200")
++      } finally second.close()
++      val tiny = new RemoteService(
++        uri,
++        "synthetic-budget-token",
++        config.copy(downstreamTimeoutMs = 2),
++        new ServiceMetrics,
++        "graph"
++      )
++      tiny.close()
++      intercept[IllegalArgumentException] {
++        new RemoteService(
++          uri,
++          "synthetic-budget-token",
++          config.copy(downstreamTimeoutMs = 2, graphDeadlineReservePercent = 99),
++          new ServiceMetrics,
++          "graph"
++        )
++      }
++      val large = new RemoteService(
++        uri,
++        "synthetic-budget-token",
++        config.copy(downstreamTimeoutMs = Long.MaxValue),
++        new ServiceMetrics,
++        "graph"
++      )
++      large.close()
++    }
++  }
++
++}
+--- a/tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentServices10BDeadlineSpec.scala
++++ b/tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentServices10BDeadlineSpec.scala
+@@ -86,6 +86,12 @@
+       else
+         Right(ApiReply(200, ujson.Obj("nodeId" -> id, "snapshot" -> "synthetic-deadline-snapshot")))
+     }
++    override def node(
++        id: String,
++        params: Map[String, String],
++        c: RequestContext
++    ): Either[ApiError, ApiReply] =
++      node(id, c)
+     def neighbors(
+         id: String,
+         p: Map[String, String],
+@@ -101,6 +107,13 @@
+         )
+     }
+     def metrics(id: String, window: String, c: RequestContext) = node(id, c)
++    override def metrics(
++        id: String,
++        window: String,
++        params: Map[String, String],
++        c: RequestContext
++    ) =
++      node(id, c)
+     def paths(p: Map[String, String], c: RequestContext) = node(nodeId, c)
+     def close(): Unit = ()
+   }
+--- /dev/null
++++ b/tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentServices10BEqualBudgetSpec.scala
+@@ -0,0 +1,170 @@
++package edu.uic.cs441.scholarchain.independent
++
++import edu.uic.cs441.scholarchain.core.*
++import edu.uic.cs441.scholarchain.services.*
++import edu.uic.cs441.scholarchain.storage.*
++import edu.uic.cs441.scholarchain.storage.fakes.{
++  InMemoryIndexedEvidenceBundleStore,
++  InMemoryRuntimeAuditStore
++}
++import java.net.{URI, URLEncoder}
++import java.net.http.HttpResponse
++import java.util.concurrent.atomic.{AtomicBoolean, AtomicInteger}
++import org.scalatest.funsuite.AnyFunSuite
++
++/** Exercises the real graph execution timer and both HTTP layers, rather than a stub deadline
++  * marker.
++  */
++class IndependentServices10BEqualBudgetSpec extends AnyFunSuite {
++  import IndependentServices10BFixture.{config as baseConfig, *}
++  private val config = baseConfig.copy(
++    downstreamTimeoutMs = 300,
++    downstreamMaxAttempts = 3,
++    breakerFailureThreshold = 3,
++    breakerResetMs = 30000
++  )
++  private val graphConfig =
++    GraphApiConfig(timeoutMs = 300, cursorKey = "synthetic-equal-budget-cursor-key")
++  private val readyContext =
++    RequestContext("request-equal-budget-readiness", "trace-equal-budget-readiness")
++  private def json(response: HttpResponse[String]): ujson.Value = ujson.read(response.body())
++  private def closed(port: Int): Unit = {
++    val response = request(port, "/metrics")
++    assert(response.statusCode() == 200, response.body())
++    assert(
++      response.body().contains("downstream_circuit_state{dependency=\"graph\",state=\"CLOSED\"} 1"),
++      response.body()
++    )
++  }
++  private final class BlockingSnapshot extends GraphSnapshot {
++    private val delegate = snapshot()
++    val blocking = new AtomicBoolean(true)
++    val executions = new AtomicInteger
++    def snapshotId: String = delegate.snapshotId
++    def node(id: String): StorageResult[GraphNode] = delegate.node(id)
++    def edges(id: String, window: String): StorageResult[Vector[GraphEdge]] = {
++      executions.incrementAndGet()
++      if (blocking.get) Thread.sleep(10000)
++      delegate.edges(id, window)
++    }
++    def metrics(id: String, window: String): StorageResult[ResearcherMetricRecord] =
++      delegate.metrics(id, window)
++  }
++  private def start(
++      graph: GraphEndpoints,
++      role: String,
++      ready: () => Boolean,
++      metrics: ServiceMetrics
++  ): ApiServer.RunningServer = {
++    val unused = new QueryWorkflow {
++      def run(
++          r: QueryRequest,
++          c: RequestContext,
++          stage: String => Unit
++      ): Either[ApiError, WorkflowOutput] =
++        Left(ApiError.unavailable)
++    }
++    val queries = new QueryService(new InMemoryQuerySessionStore, unused, config, metrics)
++    val extended = ExtendedApi(
++      new EvidenceApi(new InMemoryIndexedEvidenceBundleStore, new InMemoryRuntimeAuditStore),
++      graph,
++      new SemanticApi((_, _) => Right(ujson.Obj("hits" -> ujson.Arr())))
++    )
++    ApiServer.start(
++      new ApiApplication(
++        queries,
++        config,
++        readiness = ready,
++        logSink = _ => (),
++        serviceRole = role,
++        extended = Some(extended)
++      ),
++      port = 0
++    )
++  }
++  private def withServers(source: GraphSnapshot)(check: Int => Unit): Unit = {
++    val backend =
++      start(new GraphApi(source, graphConfig), "graph-service", () => true, new ServiceMetrics)
++    val metrics = new ServiceMetrics
++    val remote = new RemoteGraphApi(
++      new RemoteService(
++        URI.create(s"http://127.0.0.1:${backend.port}"),
++        internalKey,
++        config,
++        metrics,
++        "graph"
++      )
++    )
++    val proxy = start(remote, "query-api", () => remote.ready(readyContext), metrics)
++    try check(proxy.port)
++    finally { proxy.close(); backend.close() }
++  }
++  private def deadlineBurst(params: String): Unit = {
++    val source = new BlockingSnapshot
++    withServers(source) { port =>
++      val responses = Vector.tabulate(config.breakerFailureThreshold + 1) { index =>
++        val trace = s"trace-equal-budget-$index"
++        (request(port, s"/v1/graph/nodes/$a/neighbors$params", trace = trace), trace)
++      }
++      // Readiness calls would reset consecutive failures, so do not probe until after this burst.
++      assert(
++        source.executions.get == responses.size,
++        s"${responses.size} graph deadlines caused ${source.executions.get} snapshot executions"
++      )
++      responses.foreach { (response, trace) =>
++        assert(response.statusCode() == 504, response.body())
++        assert(json(response)("error").str == "GRAPH_DEADLINE_EXCEEDED", response.body())
++        assert(!json(response)("retryable").bool)
++        assert(json(response)("traceId").str == trace)
++        assert(response.headers().firstValue("X-Trace-Id").orElse("") == trace)
++      }
++      closed(port)
++      assert(request(port, "/readyz", auth = None).statusCode() == 200)
++      source.blocking.set(false)
++      val node = request(port, s"/v1/graph/nodes/$a")
++      val normal = request(port, s"/v1/graph/nodes/$a/neighbors")
++      assert(node.statusCode() == 200 && json(node)("nodeId").str == a, node.body())
++      assert(normal.statusCode() == 200 && json(normal)("items").arr.nonEmpty, normal.body())
++      assert(source.executions.get == responses.size + 1)
++      closed(port)
++      assert(request(port, "/readyz", auth = None).statusCode() == 200)
++    }
++  }
++
++  test(
++    "equal graph and transport budgets return graph deadlines once each when caller timeout is omitted"
++  ) {
++    deadlineBurst("")
++  }
++
++  test(
++    "explicit graph timeout at the transport cap leaves enough response budget and never trips the breaker"
++  ) {
++    deadlineBurst("?timeoutMs=300")
++  }
++
++  test("deterministic forwarded graph budgets keep snapshot cursor replay stable") {
++    withServers(snapshot()) { port =>
++      for (extra <- Vector("", "&timeoutMs=300")) {
++        val path = s"/v1/graph/nodes/$a/neighbors?direction=out&limit=1$extra"
++        val first = request(port, path)
++        assert(first.statusCode() == 200, first.body())
++        assert(json(first)("items").arr.size == 1)
++        val cursor = URLEncoder.encode(json(first)("cursor").str, "UTF-8")
++        val next = request(port, path + "&cursor=" + cursor)
++        val replay = request(port, path + "&cursor=" + cursor)
++        assert(next.statusCode() == 200 && replay.statusCode() == 200, next.body() + replay.body())
++        assert(json(next) == json(replay))
++        assert(json(next)("cursor") == ujson.Null)
++        assert(
++          (json(first)("items").arr ++ json(next)("items").arr).map(_("nodeId").str).toSet == Set(
++            work1,
++            work2
++          )
++        )
++      }
++      closed(port)
++      assert(request(port, "/readyz", auth = None).statusCode() == 200)
++    }
++  }
++}
+--- a/tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentServices10BLifecycleSpec.scala
++++ b/tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentServices10BLifecycleSpec.scala
+@@ -232,15 +232,29 @@
+     val attempts = new AtomicInteger
+     val local = new GraphApi(snapshot())
+     val observing = new GraphEndpoints {
+-      def node(id: String, context: RequestContext): Either[ApiError, ApiReply] = {
++      def node(id: String, context: RequestContext): Either[ApiError, ApiReply] =
++        node(id, Map.empty, context)
++      override def node(
++          id: String,
++          params: Map[String, String],
++          context: RequestContext
++      ): Either[ApiError, ApiReply] = {
+         assert(
+           context.requestId == "request-independent-10b" && context.traceId == "trace-independent-10b"
+         )
+-        if (attempts.incrementAndGet() < 3) Left(ApiError.downstream) else local.node(id, context)
++        if (attempts.incrementAndGet() < 3) Left(ApiError.downstream)
++        else local.node(id, params, context)
+       }
+       def neighbors(id: String, p: Map[String, String], c: RequestContext) =
+         local.neighbors(id, p, c)
+       def metrics(id: String, window: String, c: RequestContext) = local.metrics(id, window, c)
++      override def metrics(
++          id: String,
++          window: String,
++          params: Map[String, String],
++          c: RequestContext
++      ) =
++        local.metrics(id, window, params, c)
+       def paths(p: Map[String, String], c: RequestContext) = local.paths(p, c)
+       def close(): Unit = local.close()
+     }

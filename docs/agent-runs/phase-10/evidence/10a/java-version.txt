@@ -1,0 +1,10 @@
+Command environment:
+export JAVA_HOME=/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home
+export PATH="$JAVA_HOME/bin:$PATH"
+export SBT_OPTS="-Dlogback.configurationFile=$PWD/docs/agent-runs/phase-04/xml-repair-logback.xml"
+java -version
+Exit code: 0
+
+openjdk version "17.0.20.1" 2026-08-18
+OpenJDK Runtime Environment Homebrew (build 17.0.20.1+0)
+OpenJDK 64-Bit Server VM Homebrew (build 17.0.20.1+0, mixed mode, sharing)

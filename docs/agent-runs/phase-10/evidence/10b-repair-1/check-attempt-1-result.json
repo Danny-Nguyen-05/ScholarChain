@@ -1,0 +1,15 @@
+{
+  "command": "sbt -batch check",
+  "workingDirectory": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+  "environment": {
+    "JAVA_HOME": "/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home",
+    "SBT_OPTS": "-Dlogback.configurationFile=/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-04/xml-repair-logback.xml"
+  },
+  "PATHPrefix": "/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home/bin",
+  "exitCode": 143,
+  "elapsedSeconds": 230.24,
+  "log": "/tmp/phase10b-r1-check-attempt-1.log",
+  "sha256": "73f6b86d70c4c453795eaa41c139c825066cdf575cadd30a2c377ee341585caa",
+  "sourceHashes": "check-attempt-1-sources.json",
+  "reason": "Intentional SIGTERM to strengthen independent burst test before final full gate; not a test failure."
+}

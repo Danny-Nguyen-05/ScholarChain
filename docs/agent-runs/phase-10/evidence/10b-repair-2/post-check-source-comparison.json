@@ -1,0 +1,7 @@
+{
+  "changedAfterCheckSnapshot": [
+    "modules/services/README.md"
+  ],
+  "reason": "Final observed-count documentation only; no Scala/test/build/packaged resource changed.",
+  "allOtherHashesMatch": true
+}

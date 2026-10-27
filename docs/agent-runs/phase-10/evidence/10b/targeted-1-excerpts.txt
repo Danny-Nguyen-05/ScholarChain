@@ -1,0 +1,13 @@
+[success] Total time: 1 s, completed Oct 26, 2026, 11:33:33 PM
+[success] Total time: 0 s, completed Oct 26, 2026, 11:33:33 PM
+[success] Total time: 0 s, completed Oct 26, 2026, 11:33:34 PM
+[error] -- [E007] Type Mismatch Error: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/services/src/main/scala/edu/uic/cs441/scholarchain/services/SemanticApi.scala:78:53 
+[error] 78 |                      "metadata" -> ujson.Obj.from(h.metadata)
+[error]    |                                                   ^^^^^^^^^^
+[error]    |                           Found:    (h.metadata : Map[String, String])
+[error]    |                           Required: IterableOnce[(String, ujson.Value)]
+[error]    |
+[error]    | longer explanation available when compiling with `-explain`
+[error] one error found
+[error] (services / Compile / compileIncremental) Compilation failed
+[error] Total time: 3 s, completed Oct 26, 2026, 11:33:36 PM

@@ -1,0 +1,10 @@
+{
+  "repairSourceFiles": 11,
+  "serviceOwned": 8,
+  "testOwned": 3,
+  "buildSourceChanges": [],
+  "aggregateSourceArtifacts": 35,
+  "nonRepairExistingSourceUnchanged": true,
+  "step0": "User explicitly confirmed F6 only.",
+  "carried": "F7,F8,F10\u2013F16 unchanged; F9 externally closed."
+}

@@ -9,7 +9,7 @@ import java.security.MessageDigest
 import java.util.jar.{JarEntry, JarFile, JarOutputStream, Manifest}
 import scala.jdk.CollectionConverters._
 import sbt.io.IO
-import scholarchain.build.{HadoopBundleMerge, SparkJobJar}
+import scholarchain.build.{HadoopBundleMerge, ServiceDistribution, SparkJobJar}
 
 object ScholarChainBuild {
   val markTestRun = taskKey[Unit]("Write .claude/.last-test-run after required checks succeed")
@@ -19,6 +19,7 @@ object ScholarChainBuild {
     taskKey[Unit]("No-op unless -Dscholarchain.checkProbe.fail=true (check failure-path probe)")
   val checkJava17 = taskKey[Unit]("Fail check unless the sbt JVM is Java 17")
   val dockerLocalImage = taskKey[Unit]("Build the local services container image")
+  val serviceDistribution = taskKey[File]("Package services JAR and runtime dependency JARs")
   val hadoopLocalClasspath =
     taskKey[Unit]("Print hadoop Compile/fullClasspath (includes Provided hadoop-client)")
   val hadoopRunMain =
@@ -87,6 +88,31 @@ object ScholarChainBuild {
     "java.base/sun.util.calendar",
     "java.security.jgss/sun.security.krb5"
   ).map(module => s"--add-opens=$module=ALL-UNNAMED")
+
+  def serviceDistributionSettings(
+      coreProject: ProjectReference,
+      ragProject: ProjectReference,
+      storageProject: ProjectReference
+  ): Seq[Setting[_]] = Seq(
+    serviceDistribution := {
+      val appJar = (Compile / packageBin).value
+      val dependencies = (Runtime / externalDependencyClasspath).value.files ++ Seq(
+        (coreProject / Compile / packageBin).value,
+        (ragProject / Compile / packageBin).value,
+        (storageProject / Compile / packageBin).value
+      )
+      val output = target.value / "distribution"
+      ServiceDistribution.write(appJar, dependencies, output)
+      ServiceDistribution.writePromptAssets(
+        (LocalRootProject / baseDirectory).value / "prompts",
+        output
+      )
+      streams.value.log.info(
+        s"Verified four-artifact service distribution: ${output.getAbsolutePath}"
+      )
+      output
+    }
+  )
 
   private val sparkMavenOrg = "org.apache.spark"
 

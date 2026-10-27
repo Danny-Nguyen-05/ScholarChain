@@ -1,0 +1,10 @@
+{
+  "repairFiles": 9,
+  "serviceOwned": 8,
+  "testOwned": 1,
+  "buildFilesChanged": [],
+  "productionScope": "F6 only; F9 is documentation count correction. F7,F8,F10\u2013F15 remain unchanged.",
+  "prior10BSourceReconstructedAndHashVerified": true,
+  "nonRepairExistingSourceHashesMatch": true,
+  "fullGate": "Passed1208tests147suites0fail"
+}

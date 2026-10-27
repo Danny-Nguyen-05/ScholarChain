@@ -1,0 +1,52 @@
+[
+  {
+    "path": "/tmp/phase10b-r1-check-attempt-1.log",
+    "sha256": "73f6b86d70c4c453795eaa41c139c825066cdf575cadd30a2c377ee341585caa",
+    "bytes": 258277
+  },
+  {
+    "path": "/tmp/phase10b-r1-check.log",
+    "sha256": "39aaf21ff6902af2bcde194c7e45622f207aa9338adebaaf5b04dc8b2bc6f4d3",
+    "bytes": 1699197
+  },
+  {
+    "path": "/tmp/phase10b-r1-docker-remote.log",
+    "sha256": "d150a338adb461224c289089e7d4ce5200b65d97dc49a683c68a2766d939214f",
+    "bytes": 15150
+  },
+  {
+    "path": "/tmp/phase10b-r1-docker.log",
+    "sha256": "b7b757de8ed6551df0df304ef055ff246ac207e8e0c347ce3b03ddd358e785a8",
+    "bytes": 47001
+  },
+  {
+    "path": "/tmp/phase10b-r1-format-red.log",
+    "sha256": "802b67aeb5fa43a492fd8633258431c7fd78a0b5ba92f099ea5954f876b8b18d",
+    "bytes": 809
+  },
+  {
+    "path": "/tmp/phase10b-r1-independent-red.log",
+    "sha256": "391d4db4595f8947d2d84d3e345213188a0e9c405c61597c3dc57d1173791fab",
+    "bytes": 1628
+  },
+  {
+    "path": "/tmp/phase10b-r1-java-version.log",
+    "sha256": "2fe83b0053132e4e834defa82250462f4c62733d29bf76b19ee1bb3c14b06b39",
+    "bytes": 171
+  },
+  {
+    "path": "/tmp/phase10b-r1-module-red.log",
+    "sha256": "04eda8511d066063ed84ffd2168302cae41b3ff0d71beef014fbb1f2816a2681",
+    "bytes": 2967
+  },
+  {
+    "path": "/tmp/phase10b-r1-targeted-final.log",
+    "sha256": "d4735a4f471625995a94bd20355519893840e5c51d5c577c0d77f168df4605f5",
+    "bytes": 8200
+  },
+  {
+    "path": "/tmp/phase10b-r1-targeted-green.log",
+    "sha256": "3136fb0051ab6bbb472eac85bc4be4db1a5c311adadb120a9fe9888b590884c1",
+    "bytes": 9567
+  }
+]

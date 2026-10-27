@@ -1,0 +1,8 @@
+{
+  "changedAfterCheckSnapshot": [
+    "modules/services/README.md"
+  ],
+  "reason": "README-only final observed test/Docker counts were updated by service owner; no Scala, test, build or packaged resource changed.",
+  "sourceFileCount": 30,
+  "allOtherCheckSnapshotHashesMatch": true
+}

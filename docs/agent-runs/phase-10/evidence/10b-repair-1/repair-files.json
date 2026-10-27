@@ -1,0 +1,65 @@
+[
+  {
+    "path": "modules/services/README.md",
+    "owner": "service-engineer",
+    "status": "modified",
+    "beforeSha256": "216edb607f30913d11cfbcf41124a27e695b5ed924ec28c729811c1a3c986f5a",
+    "sha256": "2db5ae806aecc829e229d375af6d4c2d88927ccf339fca28e7ae8ad5007c0e74"
+  },
+  {
+    "path": "modules/services/src/main/resources/openapi/scholarchain.v1.yaml",
+    "owner": "service-engineer",
+    "status": "modified",
+    "beforeSha256": "6d50575393fc8753a6b4b22434834ea16004602410e98f3aad6fba265cec537f",
+    "sha256": "b627af8405b25519ad193c32e54c9dc540e99c4e72daa9443636fce9b979e87a"
+  },
+  {
+    "path": "modules/services/src/main/scala/edu/uic/cs441/scholarchain/services/ApiApplication.scala",
+    "owner": "service-engineer",
+    "status": "modified",
+    "beforeSha256": "6ff7f5827231af1af49d3c2bdb98c34344b0ec073845cf015cf60b55f085c665",
+    "sha256": "0009614e215988402c03d18d1dd132289e9587f2dc9d6c81c057774d3878352c"
+  },
+  {
+    "path": "modules/services/src/main/scala/edu/uic/cs441/scholarchain/services/ApiContracts.scala",
+    "owner": "service-engineer",
+    "status": "modified",
+    "beforeSha256": "60019c43b9cb03dbf89c5a53b037a9277ef03529f8a6c04f4cfabb8e04ad9ef4",
+    "sha256": "766f1e11a11fc270268631af1bc6a3e7e9788da9f352597433ccf9fc87d51768"
+  },
+  {
+    "path": "modules/services/src/main/scala/edu/uic/cs441/scholarchain/services/DownstreamClient.scala",
+    "owner": "service-engineer",
+    "status": "modified",
+    "beforeSha256": "03696b935a23a6c7a97f7bdbf7936f0a06912a7a561c7114d33db7d37060ccbd",
+    "sha256": "aaad7175e9a11cfd837d0b1bc079aa2068d9d402143febcebea206ebdfea7258"
+  },
+  {
+    "path": "modules/services/src/main/scala/edu/uic/cs441/scholarchain/services/GraphApi.scala",
+    "owner": "service-engineer",
+    "status": "modified",
+    "beforeSha256": "afd9afa5993bc6bc4ec5ed6de94b8d0fe888cbf70891899c0aa9890e178ffc62",
+    "sha256": "a0004c9acd87b769fd28426ecc74872ae21649ee0e3f668edaa3c4c591b1ab02"
+  },
+  {
+    "path": "modules/services/src/main/scala/edu/uic/cs441/scholarchain/services/RemoteServices.scala",
+    "owner": "service-engineer",
+    "status": "modified",
+    "beforeSha256": "ad94691880bfcdcc362df974aade2ac8a3c2f1e26ecda282a3f7275b664dc6e6",
+    "sha256": "e5d6f4f84fa63b4838a7cd1be69da2a156c929cf0d2deeef4f5c4d46f12bb1ee"
+  },
+  {
+    "path": "modules/services/src/test/scala/edu/uic/cs441/scholarchain/services/GraphRequestDeadlineSpec.scala",
+    "owner": "service-engineer",
+    "status": "created",
+    "beforeSha256": null,
+    "sha256": "eb8683734217f090032ccfcacb5ec1b77b52f9e230a2736e2db37c44679268a3"
+  },
+  {
+    "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentServices10BDeadlineSpec.scala",
+    "owner": "test-engineer",
+    "status": "created",
+    "beforeSha256": null,
+    "sha256": "fb6ed16f22b26b53bb58641f9a582e789814ea0175f2dfa66a1de14d784011f2"
+  }
+]

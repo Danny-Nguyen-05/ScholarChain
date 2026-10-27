@@ -1,0 +1,8 @@
+# Only the generated runtime distribution enters the Docker build context.
+**
+!Dockerfile
+!modules/
+!modules/services/
+!modules/services/target/
+!modules/services/target/distribution/
+!modules/services/target/distribution/**

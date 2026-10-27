@@ -1,0 +1,40 @@
+{
+  "command": "sbt -batch check",
+  "environment": {
+    "JAVA_HOME": "/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home",
+    "PATH": "$JAVA_HOME/bin:$PATH",
+    "SBT_OPTS": "-Dlogback.configurationFile=$PWD/docs/agent-runs/phase-04/xml-repair-logback.xml"
+  },
+  "exitCode": 0,
+  "elapsedSeconds": 756,
+  "testsPassed": 1170,
+  "testsFailed": 0,
+  "suiteCounts": [
+    17,
+    4,
+    6,
+    5,
+    11,
+    9,
+    2,
+    77,
+    8
+  ],
+  "suitesCompleted": 139,
+  "moduleTestCounts": {
+    "core": 207,
+    "hadoop": 64,
+    "entityResolution": 39,
+    "sparkAnalytics": 38,
+    "storage": 80,
+    "rag": 107,
+    "services": 16,
+    "independentTests": 608,
+    "buildVerification": 11
+  },
+  "expectedFailureProbe": "Nested checkProbeInjectFailure injected format-stage failure is expected CheckFailurePathSpec self-test; outer check exit0.",
+  "sourceLog": "/tmp/phase10a-check-1.log",
+  "sourceLogSha256": "c47056544833f78059bfd32668f74bd73b30caae6ca72dbc27238cd5e5dcddd0",
+  "sourceLogBytes": 1700962,
+  "retainedEvidence": "docs/agent-runs/phase-10/evidence/10a/check-excerpts.txt"
+}

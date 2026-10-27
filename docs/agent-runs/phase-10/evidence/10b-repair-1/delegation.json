@@ -1,0 +1,39 @@
+[
+  {
+    "agent": "/root/service_engineer",
+    "owner": "service-engineer",
+    "model": "inherited",
+    "paths": [
+      "modules/services/**"
+    ],
+    "scope": [
+      "F6",
+      "F9 README"
+    ]
+  },
+  {
+    "agent": "/root/test_10b",
+    "owner": "test-engineer",
+    "model": "inherited",
+    "paths": [
+      "tests/**"
+    ],
+    "scope": [
+      "F6 independent HTTP deadline and outage tests"
+    ]
+  },
+  {
+    "agent": "/root/build_10b",
+    "owner": "build-engineer",
+    "model": "inherited",
+    "paths": [
+      "build.sbt",
+      "project/**",
+      "Dockerfile",
+      "Dockerfile.dockerignore"
+    ],
+    "scope": [
+      "four image rebuild/smoke after source fix; no build edits expected"
+    ]
+  }
+]

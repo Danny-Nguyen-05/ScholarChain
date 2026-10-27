@@ -1,0 +1,38 @@
+[info] welcome to sbt 1.10.7 (Homebrew Java 17.0.20.1)
+[info] loading settings for project scholarchain-build from plugins.sbt...
+[info] loading project definition from /Users/danny/Documents/UIC/CS441/ScholarChain/project
+[info] loading settings for project root from build.sbt...
+[info] set current project to root (in build file:/Users/danny/Documents/UIC/CS441/ScholarChain/)
+[info] scalafmt: Formatting 32 Scala sources (/Users/danny/Documents/UIC/CS441/ScholarChain/tests)...
+[info] scalafmt: Reformatted 2 Scala sources
+[success] Total time: 2 s, completed Oct 26, 2026, 7:31:54 PM
+[info] compiling 2 Scala sources to /Users/danny/Documents/UIC/CS441/ScholarChain/tests/target/scala-3.3.4/test-classes ...
+[info] done compiling
+[info] IndependentServices10ASpec:
+[info] - synchronous HTTP query returns course response shape and propagates request identifiers
+[info] - same idempotency key replays stored answer without a second workflow execution
+[info] - same idempotency key with a different question gives typed conflict
+[info] - stored replay and body conflict survive a fresh service instance sharing the session store
+[info] - concurrent service instances sharing an idempotency key claim one workflow and one job
+[info] - replay waits for conditional reservation body binding before resolving replay or conflict
+[info] - asynchronous query keeps its job reference and exposes final result after completion
+[info] - missing and incorrect bearer credentials reject query and jobs before workflow
+[info] - liveness remains healthy while failed readiness reveals no dependency address
+[info] - external bearer cannot authorize internal routes and internal token cannot authorize queries
+[info] - malformed JSON and invalid constraint types are rejected before workflow
+[info] - unsupported constraint gets 422 and missing idempotency key gets 400
+[info] - workflow downstream error and timeout preserve typed HTTP mapping with trace ID
+[info] - missing jobs produce typed 404 for status and result
+[info] - structured request logs exclude authorization, extra headers, and malformed request content
+[info] - authenticated metrics expose status counts, timeout counts, and histogram buckets
+[info] IndependentServices10AResilienceSpec:
+[info] - GET retries transient reads to configured bound and propagates both request identifiers
+[info] - non-read methods attempt transient failures once and nonretryable GET fails once
+[info] - actual blocked dependency is bounded by timeout and its task is interrupted
+[info] - open circuit rejects calls, permits one half-open probe, and closes on success
+[info] Run completed in 1 second, 844 milliseconds.
+[info] Total number of tests run: 20
+[info] Suites: completed 2, aborted 0
+[info] Tests: succeeded 20, failed 0, canceled 0, ignored 0, pending 0
+[info] All tests passed.
+[success] Total time: 9 s, completed Oct 26, 2026, 7:32:03 PM

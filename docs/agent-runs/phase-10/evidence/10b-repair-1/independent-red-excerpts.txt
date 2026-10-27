@@ -1,0 +1,9 @@
+[info] - graph request deadline 504 never retries, opens the dependency breaker or fails query readiness *** FAILED ***
+[info]   3 did not equal 4 Each exhausted request must execute once; 4 requests caused 3 backend calls (IndependentServices10BDeadlineSpec.scala:122)
+[info] Total number of tests run: 4
+[info] Suites: completed 1, aborted 0
+[info] Tests: succeeded 3, failed 1, canceled 0, ignored 0, pending 0
+[error] Failed tests:
+[error] 	edu.uic.cs441.scholarchain.independent.IndependentServices10BDeadlineSpec
+[error] (independentTests / Test / testOnly) sbt.TestsFailedException: Tests unsuccessful
+[error] Total time: 5 s, completed Oct 27, 2026, 10:19:22 AM

@@ -1,0 +1,12 @@
+[info] - graph operation budget expiry has a distinct nonretryable request deadline code *** FAILED ***
+[info]   504 equaled 504, but "[DOWNSTREAM_TIMEOUT]" did not equal "[GRAPH_DEADLINE_EXCEEDED]" (GraphRequestDeadlineSpec.scala:68)
+[info] - allowlisted graph deadline responses do not retry or open the dependency circuit *** FAILED ***
+[info]   504 equaled 504, but "[DOWNSTREAM_TIMEOUT]" did not equal "[GRAPH_DEADLINE_EXCEEDED]" (GraphRequestDeadlineSpec.scala:86)
+[info] - malformed wrong-status retryable wrong-operation and wrong-dependency markers remain failures *** FAILED ***
+[info] Total number of tests run: 5
+[info] Suites: completed 1, aborted 0
+[info] Tests: succeeded 2, failed 3, canceled 0, ignored 0, pending 0
+[error] Failed tests:
+[error] 	edu.uic.cs441.scholarchain.services.GraphRequestDeadlineSpec
+[error] (services / Test / testOnly) sbt.TestsFailedException: Tests unsuccessful
+[error] Total time: 3 s, completed Oct 27, 2026, 10:19:55 AM

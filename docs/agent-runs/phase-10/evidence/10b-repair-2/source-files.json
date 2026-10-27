@@ -1,0 +1,212 @@
+[
+  {
+    "path": "Dockerfile",
+    "owner": "build-engineer",
+    "status": "modified",
+    "sha256": "95dbe8038ddc3746bd4f7e337e4e9977e443b563d62eacc573b24ce9b964ef40"
+  },
+  {
+    "path": "modules/services/README.md",
+    "owner": "service-engineer",
+    "status": "modified",
+    "sha256": "912d10756e783c81ec10e5b4e14a10a5e597fcd6c836073b5274838e967e7b74"
+  },
+  {
+    "path": "modules/services/src/main/resources/openapi/examples/error.json",
+    "owner": "service-engineer",
+    "status": "created",
+    "sha256": "a149ec0efbf28bbed4b7487cbe5f4208685bac24045f569f9ffd75c8ff78b023"
+  },
+  {
+    "path": "modules/services/src/main/resources/openapi/examples/graph-page.json",
+    "owner": "service-engineer",
+    "status": "created",
+    "sha256": "689a91de207539a5af4da2864a5b22baa76feff7d4273a6dee979b26497a6c35"
+  },
+  {
+    "path": "modules/services/src/main/resources/openapi/examples/job-reference.json",
+    "owner": "service-engineer",
+    "status": "created",
+    "sha256": "4b27264800399bece8c535739fe57b96b60dd992f4ff1bcc9d231864d6fc9882"
+  },
+  {
+    "path": "modules/services/src/main/resources/openapi/examples/query-request.json",
+    "owner": "service-engineer",
+    "status": "created",
+    "sha256": "e0796950bda3df3cf8ff513fec2371e5812b0d9c58944c7727d6bf96b1c9bb34"
+  },
+  {
+    "path": "modules/services/src/main/resources/openapi/examples/semantic-request.json",
+    "owner": "service-engineer",
+    "status": "created",
+    "sha256": "d4e33343c969a9e2af8b8bf74dad3fc8d09d451deb5fc0970ab25fa8b081f274"
+  },
+  {
+    "path": "modules/services/src/main/resources/openapi/scholarchain.v1.yaml",
+    "owner": "service-engineer",
+    "status": "modified",
+    "sha256": "1e1168cdb4eccea5ce053e6161bfbd6a771ea4b22b6fcdd2c608013c8190fcbd"
+  },
+  {
+    "path": "modules/services/src/main/scala/edu/uic/cs441/scholarchain/services/ApiApplication.scala",
+    "owner": "service-engineer",
+    "status": "modified",
+    "sha256": "d22c0b8fece8ae1f85d90dbe4ad86997bee4f55cff29e33ac654d13ea02c9980"
+  },
+  {
+    "path": "modules/services/src/main/scala/edu/uic/cs441/scholarchain/services/ApiContracts.scala",
+    "owner": "service-engineer",
+    "status": "modified",
+    "sha256": "57d0357f09c005ed130d3cdd2df2a42581c7dd7220503815f7ee9cbfeb5384f1"
+  },
+  {
+    "path": "modules/services/src/main/scala/edu/uic/cs441/scholarchain/services/ApiServer.scala",
+    "owner": "service-engineer",
+    "status": "modified",
+    "sha256": "7512bd2d404986a4694f60069013bc596ef657f5153435d1323220166a7954aa"
+  },
+  {
+    "path": "modules/services/src/main/scala/edu/uic/cs441/scholarchain/services/DownstreamClient.scala",
+    "owner": "service-engineer",
+    "status": "modified",
+    "sha256": "aaad7175e9a11cfd837d0b1bc079aa2068d9d402143febcebea206ebdfea7258"
+  },
+  {
+    "path": "modules/services/src/main/scala/edu/uic/cs441/scholarchain/services/EmbeddingWorker.scala",
+    "owner": "service-engineer",
+    "status": "created",
+    "sha256": "22e38b99b7a597be95ed805f7cdd90954c7f7346fd69d976354b1a943af515e3"
+  },
+  {
+    "path": "modules/services/src/main/scala/edu/uic/cs441/scholarchain/services/EvidenceApi.scala",
+    "owner": "service-engineer",
+    "status": "created",
+    "sha256": "4e15c1d3093dd4de8997fb4d56ce942ec414873c24788d3e9e698857bcc9069e"
+  },
+  {
+    "path": "modules/services/src/main/scala/edu/uic/cs441/scholarchain/services/GraphApi.scala",
+    "owner": "service-engineer",
+    "status": "created",
+    "sha256": "089d1119129e7738b7d5383274be82b90f42407b4e269bd719c464ec63bd3b66"
+  },
+  {
+    "path": "modules/services/src/main/scala/edu/uic/cs441/scholarchain/services/OfflineComposition.scala",
+    "owner": "service-engineer",
+    "status": "created",
+    "sha256": "4100a0912edfe3013af0f7f2afeb3b5c2819c3c04459530e5a46cb475324e6ad"
+  },
+  {
+    "path": "modules/services/src/main/scala/edu/uic/cs441/scholarchain/services/QueryService.scala",
+    "owner": "service-engineer",
+    "status": "modified",
+    "sha256": "ff11409ffb2ed9c14b31d4bbe2190fa232bb78a49d1e27ab5d082d3b3d1a0fc3"
+  },
+  {
+    "path": "modules/services/src/main/scala/edu/uic/cs441/scholarchain/services/RemoteServices.scala",
+    "owner": "service-engineer",
+    "status": "created",
+    "sha256": "6ea8e8023d5f9145a476d86a1b6ba62b72c96686ccc105ce0847c3a86b7ae75b"
+  },
+  {
+    "path": "modules/services/src/main/scala/edu/uic/cs441/scholarchain/services/RuntimeWorkflowAdapter.scala",
+    "owner": "service-engineer",
+    "status": "modified",
+    "sha256": "887bcf16b1b64d2931cfaa9b6de9cd6f139532181d9e119e008e948c96c629e6"
+  },
+  {
+    "path": "modules/services/src/main/scala/edu/uic/cs441/scholarchain/services/SemanticApi.scala",
+    "owner": "service-engineer",
+    "status": "created",
+    "sha256": "4170af1ef325beaf98ff30bdd111dc38d88c281b13ec77b2650e69cca0dce047"
+  },
+  {
+    "path": "modules/services/src/main/scala/edu/uic/cs441/scholarchain/services/ServiceMains.scala",
+    "owner": "service-engineer",
+    "status": "modified",
+    "sha256": "9f2170534b7ec6a4c7bcb0cfae5dd46b61889027842463b944051a751e3d7f5c"
+  },
+  {
+    "path": "modules/services/src/test/scala/edu/uic/cs441/scholarchain/services/GraphRequestDeadlineSpec.scala",
+    "owner": "service-engineer",
+    "status": "created",
+    "sha256": "eb8683734217f090032ccfcacb5ec1b77b52f9e230a2736e2db37c44679268a3"
+  },
+  {
+    "path": "modules/services/src/test/scala/edu/uic/cs441/scholarchain/services/GraphTransportBudgetSpec.scala",
+    "owner": "service-engineer",
+    "status": "created",
+    "sha256": "3ca04c767247fcc70682264a82924403309a3e4694931bbbcb75dcebc0269efb"
+  },
+  {
+    "path": "modules/services/src/test/scala/edu/uic/cs441/scholarchain/services/Services10BSpec.scala",
+    "owner": "service-engineer",
+    "status": "created",
+    "sha256": "ad151dbf2e23b6d3ff07593dfdd2c5cdd54aec0e48ce038608c1dbcc26da40c2"
+  },
+  {
+    "path": "project/ScholarChainBuild.scala",
+    "owner": "build-engineer",
+    "status": "modified",
+    "sha256": "6363801b07165c967eb4d2008ab08f643b558c9598e16161ba15ab8099d66fcd"
+  },
+  {
+    "path": "project/ServiceDistribution.scala",
+    "owner": "build-engineer",
+    "status": "modified",
+    "sha256": "33345204fc8572fc4dca3de61b8b2e9feca981b16a41a8df45a7885ded384ab9"
+  },
+  {
+    "path": "project/ServicesPackaging.md",
+    "owner": "build-engineer",
+    "status": "modified",
+    "sha256": "e1b1995b084b267d0a8bea33e83ed69dc4b4abcbc85570ef108294dd94e43a0c"
+  },
+  {
+    "path": "project/verification/src/test/scala/scholarchain/build/ServiceDistributionSpec.scala",
+    "owner": "build-engineer",
+    "status": "modified",
+    "sha256": "a4a7da2bf0de8408858e290801efaa9dc5950f3b8689256e0c122bfe0602e033"
+  },
+  {
+    "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentServices10BDeadlineSpec.scala",
+    "owner": "test-engineer",
+    "status": "created",
+    "sha256": "1ba67b80f1f845fa4532b5569867230ec4b62d04d469690b3d8ef1ed324708b9"
+  },
+  {
+    "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentServices10BEqualBudgetSpec.scala",
+    "owner": "test-engineer",
+    "status": "created",
+    "sha256": "be0722ac59baa29abd0cb69f5b62d51365eff979536cbb07797b63008f8cd0f9"
+  },
+  {
+    "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentServices10BFixture.scala",
+    "owner": "test-engineer",
+    "status": "created",
+    "sha256": "27a148b01e2ff3697ba19a18f4bd5b015953460ae7ca7e12ad7628fb93bd4e60"
+  },
+  {
+    "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentServices10BGraphSpec.scala",
+    "owner": "test-engineer",
+    "status": "created",
+    "sha256": "eabb986108c962f29b3c3e27f611156fce4ddc4d363200b6aff405e34f793ee7"
+  },
+  {
+    "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentServices10BLifecycleSpec.scala",
+    "owner": "test-engineer",
+    "status": "created",
+    "sha256": "1b4627fdb634ad54ba4344336ef33422108220a71af82b712852d7a70e9d11a1"
+  },
+  {
+    "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentServices10BStructureSpec.scala",
+    "owner": "test-engineer",
+    "status": "created",
+    "sha256": "4f66cce24e4e71fa920827108778b389633e7ac94b275ba446ddc196c8e555d6"
+  },
+  {
+    "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentServices10BWorkerSpec.scala",
+    "owner": "test-engineer",
+    "status": "created",
+    "sha256": "b6260fef175bac9e9276db400135db36b8bb8a45cce3b4426085cdd2de510682"
+  }
+]

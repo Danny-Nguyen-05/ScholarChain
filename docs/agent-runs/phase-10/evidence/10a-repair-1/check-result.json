@@ -1,0 +1,26 @@
+{
+  "command": "sbt -batch check",
+  "exitCode": 0,
+  "jdk": "17.0.20.1",
+  "elapsedSeconds": 713,
+  "testsPassed": 1173,
+  "testsFailed": 0,
+  "suitesCompleted": 140,
+  "suitesAborted": 0,
+  "moduleTestCounts": {
+    "core": 207,
+    "hadoop": 64,
+    "entityResolution": 39,
+    "sparkAnalytics": 38,
+    "storage": 80,
+    "rag": 107,
+    "services": 19,
+    "independentTests": 608,
+    "buildVerification": 11
+  },
+  "log": "/tmp/phase10a-r1-check.log",
+  "logSha256": "964d6d8041b97fe6f6ca7c3b1e9ab8ef96ca5e58ff130bf1a3eb32b02b7b223f",
+  "logBytes": 1697570,
+  "retainedEvidence": "check-excerpts.txt",
+  "expectedFailureProbe": "Nested checkProbeInjectFailure is expected passing CheckFailurePathSpec self-test; outer check exited0 and markTestRun ran."
+}

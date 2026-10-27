@@ -1,0 +1,21 @@
+{
+  "exitCode": 0,
+  "jdk": "17.0.20.1",
+  "services": {
+    "passed": 19,
+    "failed": 0,
+    "suites": 3,
+    "sbtElapsedSeconds": 4
+  },
+  "independent10A": {
+    "passed": 20,
+    "failed": 0,
+    "suites": 2,
+    "sbtElapsedSeconds": 3
+  },
+  "formattingElapsedSeconds": [
+    1,
+    0
+  ],
+  "log": "targeted.txt"
+}

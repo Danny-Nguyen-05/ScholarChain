@@ -1,0 +1,11 @@
+{
+  "exitCode": 1,
+  "tests": 3,
+  "passed": 2,
+  "failed": 1,
+  "suites": 1,
+  "expectedFailure": "Retried Written creator returned503 instead of answer/job; pre-fix behavior reproduced. Retried Unchanged/Rejected passed.",
+  "sbtElapsedSeconds": 3,
+  "jdk": "17.0.20.1",
+  "log": "phase10a-r1-regression-red.txt"
+}

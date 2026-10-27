@@ -1,0 +1,35 @@
+{
+  "startedUtc": "2026-10-27T04:39:49Z",
+  "commands": [
+    {
+      "argv": [
+        "docker",
+        "build",
+        "-f",
+        "Dockerfile",
+        "--build-arg",
+        "MAIN_CLASS=edu.uic.cs441.scholarchain.services.QueryApiMain",
+        "-t",
+        "scholarchain-query-api:local",
+        "."
+      ],
+      "exitCode": 130,
+      "elapsedSeconds": 165.959
+    }
+  ],
+  "images": {},
+  "smoke": [],
+  "cleanup": [],
+  "servicesJarSha256": "e3a8103743f00bd36e64919256b31d9084a903783d9f100288a0787d73783878",
+  "assetHashes": {
+    "prompts/runtime/planner-v1.md": "aed20ab1fda01d58574dc8bb7876cb6ee92872ad33dfa930eb5a4653fd1c2249",
+    "prompts/runtime/synthesis-v1.md": "119329c84c55f2cc0537facf8f664d385e67d746aca4a1e9fbd4a7427a531fd6",
+    "prompts/schemas/answer-synthesis-v1.json": "7ae08048a175649889ed92ed53d34e0f4f630e591da4441e36ac53725be4de0b",
+    "prompts/schemas/query-plan-v1.json": "d35ad231ab1e742f036773e3ccbfb514e06e31eae2c8aeabfb331d438a39338b"
+  },
+  "status": "FAIL",
+  "error": "['docker', 'build', '-f'] exit 130, expected 0; see /tmp/phase10b-docker.log",
+  "elapsedSeconds": 165.96,
+  "finishedUtc": "2026-10-27T04:42:35Z",
+  "logSha256": "c5f8606a1a24af356befe3a9bf4df642276c9c1639e29b74c5b8440b074ba1ae"
+}

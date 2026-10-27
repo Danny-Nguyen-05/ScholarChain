@@ -1,0 +1,193 @@
+openjdk version "17.0.20.1" 2026-08-18
+OpenJDK Runtime Environment Homebrew (build 17.0.20.1+0)
+OpenJDK 64-Bit Server VM Homebrew (build 17.0.20.1+0, mixed mode, sharing)
+[info] welcome to sbt 1.10.7 (Homebrew Java 17.0.20.1)
+[info] loading settings for project scholarchain-build from plugins.sbt...
+[info] loading project definition from /Users/danny/Documents/UIC/CS441/ScholarChain/project
+[info] loading settings for project root from build.sbt...
+[info] set current project to root (in build file:/Users/danny/Documents/UIC/CS441/ScholarChain/)
+[warn] multiple main classes detected: run 'show discoveredMainClasses' to see the list
+[warn] multiple main classes detected: run 'show discoveredMainClasses' to see the list
+[info] Verified four-artifact service distribution: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/services/target/distribution
+[success] Total time: 1 s, completed Oct 26, 2026, 7:34:24 PM
+[warn] multiple main classes detected: run 'show discoveredMainClasses' to see the list
+[warn] multiple main classes detected: run 'show discoveredMainClasses' to see the list
+[info] Verified four-artifact service distribution: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/services/target/distribution
+#0 building with "desktop-linux" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 1.55kB done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/eclipse-temurin@sha256:8993f1aed8b25fcea7a7047a7949c1866fa558fc6830d938c22c4f13b26be9d7
+#2 DONE 2.6s
+
+#3 [1/6] FROM docker.io/library/eclipse-temurin@sha256:8993f1aed8b25fcea7a7047a7949c1866fa558fc6830d938c22c4f13b26be9d7
+#3 resolve docker.io/library/eclipse-temurin@sha256:8993f1aed8b25fcea7a7047a7949c1866fa558fc6830d938c22c4f13b26be9d7 done
+#3 DONE 0.0s
+
+#4 [2/6] RUN groupadd --system scholarchain && useradd --system --gid scholarchain --home-dir /app scholarchain
+#4 CACHED
+
+#5 [3/6] WORKDIR /app
+#5 CACHED
+
+#6 [internal] load build context
+#6 transferring context: 16.24MB 0.1s
+#6 transferring context: 115.05MB 0.7s done
+#6 DONE 0.7s
+
+#7 [4/6] COPY modules/services/target/distribution/services.jar /app/services.jar
+#7 DONE 0.0s
+
+#8 [5/6] COPY modules/services/target/distribution/lib/ /app/lib/
+#8 DONE 0.1s
+
+#9 [6/6] RUN case "edu.uic.cs441.scholarchain.services.QueryApiMain" in     edu.uic.cs441.scholarchain.services.QueryApiMain|    edu.uic.cs441.scholarchain.services.GraphServiceMain|    edu.uic.cs441.scholarchain.services.SemanticServiceMain|    edu.uic.cs441.scholarchain.services.EmbeddingWorkerMain) ;;     *) echo "Unsupported service main class" >&2; exit 1 ;;     esac
+#9 DONE 0.1s
+
+#10 exporting to image
+#10 exporting layers
+#10 exporting layers 1.5s done
+#10 exporting manifest sha256:d81d60adf879317faa605af9208e9a2ab4faf4299964a50924cb85fee5da28af
+#10 exporting manifest sha256:d81d60adf879317faa605af9208e9a2ab4faf4299964a50924cb85fee5da28af done
+#10 exporting config sha256:ec199598532310e93af5067cad9c25f1402b6637d4b0d2d4c13a87b6960b249f done
+#10 exporting attestation manifest sha256:8b2329f933a2432f4d8af43757783257ea8f636dd6732c73d139707ac0c96307 0.0s done
+#10 exporting manifest list sha256:46cd526aefc4d80119a4ba1bec2716bbeb03e6df1fd0c92381852eae3fb482a7 done
+#10 naming to docker.io/library/scholarchain-query-api:local done
+#10 unpacking to docker.io/library/scholarchain-query-api:local
+#10 unpacking to docker.io/library/scholarchain-query-api:local 0.3s done
+#10 DONE 1.9s
+
+View build details: docker-desktop://dashboard/build/desktop-linux/desktop-linux/qmkgxhvcx5h25bn37jvxcl4oo
+#0 building with "desktop-linux" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 1.55kB done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/eclipse-temurin@sha256:8993f1aed8b25fcea7a7047a7949c1866fa558fc6830d938c22c4f13b26be9d7
+#2 DONE 0.0s
+
+#3 [1/6] FROM docker.io/library/eclipse-temurin@sha256:8993f1aed8b25fcea7a7047a7949c1866fa558fc6830d938c22c4f13b26be9d7
+#3 resolve docker.io/library/eclipse-temurin@sha256:8993f1aed8b25fcea7a7047a7949c1866fa558fc6830d938c22c4f13b26be9d7 done
+#3 DONE 0.0s
+
+#4 [internal] load build context
+#4 transferring context: 17.56kB done
+#4 DONE 0.0s
+
+#5 [2/6] RUN groupadd --system scholarchain && useradd --system --gid scholarchain --home-dir /app scholarchain
+#5 CACHED
+
+#6 [4/6] COPY modules/services/target/distribution/services.jar /app/services.jar
+#6 CACHED
+
+#7 [3/6] WORKDIR /app
+#7 CACHED
+
+#8 [5/6] COPY modules/services/target/distribution/lib/ /app/lib/
+#8 CACHED
+
+#9 [6/6] RUN case "edu.uic.cs441.scholarchain.services.GraphServiceMain" in     edu.uic.cs441.scholarchain.services.QueryApiMain|    edu.uic.cs441.scholarchain.services.GraphServiceMain|    edu.uic.cs441.scholarchain.services.SemanticServiceMain|    edu.uic.cs441.scholarchain.services.EmbeddingWorkerMain) ;;     *) echo "Unsupported service main class" >&2; exit 1 ;;     esac
+#9 DONE 0.1s
+
+#10 exporting to image
+#10 exporting layers 0.0s done
+#10 exporting manifest sha256:ef578bbb8e11b81a46693e1381fed7053c040b277ba241a15b5058fccf178536 done
+#10 exporting config sha256:e9f594dc4497fdde1ddbc800fff846c49e74cb1b3fc731f380d1e578b6b5b5f1 done
+#10 exporting attestation manifest sha256:0727f772dfca46e44caf80e1fa497bb1d11c2d0f4fecd8e159b789dca061d0ae 0.0s done
+#10 exporting manifest list sha256:de08163ff2dda1d0549566db4afe1d9a186ce4a0fa230157dbe65907f5025df1 done
+#10 naming to docker.io/library/scholarchain-graph-service:local done
+#10 unpacking to docker.io/library/scholarchain-graph-service:local done
+#10 DONE 0.1s
+
+View build details: docker-desktop://dashboard/build/desktop-linux/desktop-linux/0jfy4rczl3jjsfgqio9b2t9rs
+#0 building with "desktop-linux" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 1.55kB done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/eclipse-temurin@sha256:8993f1aed8b25fcea7a7047a7949c1866fa558fc6830d938c22c4f13b26be9d7
+#2 DONE 0.0s
+
+#3 [1/6] FROM docker.io/library/eclipse-temurin@sha256:8993f1aed8b25fcea7a7047a7949c1866fa558fc6830d938c22c4f13b26be9d7
+#3 resolve docker.io/library/eclipse-temurin@sha256:8993f1aed8b25fcea7a7047a7949c1866fa558fc6830d938c22c4f13b26be9d7 done
+#3 DONE 0.0s
+
+#4 [internal] load build context
+#4 transferring context: 17.56kB done
+#4 DONE 0.0s
+
+#5 [4/6] COPY modules/services/target/distribution/services.jar /app/services.jar
+#5 CACHED
+
+#6 [2/6] RUN groupadd --system scholarchain && useradd --system --gid scholarchain --home-dir /app scholarchain
+#6 CACHED
+
+#7 [3/6] WORKDIR /app
+#7 CACHED
+
+#8 [5/6] COPY modules/services/target/distribution/lib/ /app/lib/
+#8 CACHED
+
+#9 [6/6] RUN case "edu.uic.cs441.scholarchain.services.SemanticServiceMain" in     edu.uic.cs441.scholarchain.services.QueryApiMain|    edu.uic.cs441.scholarchain.services.GraphServiceMain|    edu.uic.cs441.scholarchain.services.SemanticServiceMain|    edu.uic.cs441.scholarchain.services.EmbeddingWorkerMain) ;;     *) echo "Unsupported service main class" >&2; exit 1 ;;     esac
+#9 DONE 0.1s
+
+#10 exporting to image
+#10 exporting layers 0.0s done
+#10 exporting manifest sha256:ade840ad0f64a691b12f2f570b2e8c05519d9aa95705d6969d3897d896b42e22 done
+#10 exporting config sha256:201cdea50176d4ccdaea2bdc5e2d98773dd14a3dd8953e829a5e1bdcc35579ee done
+#10 exporting attestation manifest sha256:e65f70851a320727c327e5e890f7c358478327eb23ff81ca368dc47dc9e10066 0.0s done
+#10 exporting manifest list sha256:f06c991dd869f4484fe96e3078eb78a7c7711b4d63bb95206e50e1eddffdab54 done
+#10 naming to docker.io/library/scholarchain-semantic-service:local done
+#10 unpacking to docker.io/library/scholarchain-semantic-service:local done
+#10 DONE 0.1s
+
+View build details: docker-desktop://dashboard/build/desktop-linux/desktop-linux/lww72l7i8bzara46limn4iqsx
+#0 building with "desktop-linux" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 1.55kB done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/eclipse-temurin@sha256:8993f1aed8b25fcea7a7047a7949c1866fa558fc6830d938c22c4f13b26be9d7
+#2 DONE 0.0s
+
+#3 [1/6] FROM docker.io/library/eclipse-temurin@sha256:8993f1aed8b25fcea7a7047a7949c1866fa558fc6830d938c22c4f13b26be9d7
+#3 resolve docker.io/library/eclipse-temurin@sha256:8993f1aed8b25fcea7a7047a7949c1866fa558fc6830d938c22c4f13b26be9d7 done
+#3 DONE 0.0s
+
+#4 [internal] load build context
+#4 transferring context: 17.56kB done
+#4 DONE 0.0s
+
+#5 [3/6] WORKDIR /app
+#5 CACHED
+
+#6 [4/6] COPY modules/services/target/distribution/services.jar /app/services.jar
+#6 CACHED
+
+#7 [2/6] RUN groupadd --system scholarchain && useradd --system --gid scholarchain --home-dir /app scholarchain
+#7 CACHED
+
+#8 [5/6] COPY modules/services/target/distribution/lib/ /app/lib/
+#8 CACHED
+
+#9 [6/6] RUN case "edu.uic.cs441.scholarchain.services.EmbeddingWorkerMain" in     edu.uic.cs441.scholarchain.services.QueryApiMain|    edu.uic.cs441.scholarchain.services.GraphServiceMain|    edu.uic.cs441.scholarchain.services.SemanticServiceMain|    edu.uic.cs441.scholarchain.services.EmbeddingWorkerMain) ;;     *) echo "Unsupported service main class" >&2; exit 1 ;;     esac
+#9 DONE 0.1s
+
+#10 exporting to image
+#10 exporting layers 0.0s done
+#10 exporting manifest sha256:bad89bd827b34889f2cf10e8cd839a7197c316dff331340a7d9ebe9cc2ef57a4
+#10 exporting manifest sha256:bad89bd827b34889f2cf10e8cd839a7197c316dff331340a7d9ebe9cc2ef57a4 done
+#10 exporting config sha256:d6ec992c53b0ecfc08fbf7b80b8ec0c9081da6777db056e87014df998305f915 done
+#10 exporting attestation manifest sha256:05716a1ab5292ae04556fea7d8a688ed2031f91f48e3081d73ff74b51233d15e 0.0s done
+#10 exporting manifest list sha256:3a34816458f2a884b9f4b4e85e04a788143afb988de2ff183e47ca67cd3cc47b done
+#10 naming to docker.io/library/scholarchain-embedding-worker:local done
+#10 unpacking to docker.io/library/scholarchain-embedding-worker:local done
+#10 DONE 0.1s
+
+View build details: docker-desktop://dashboard/build/desktop-linux/desktop-linux/g3kf7np6twct9o5gh9rx21oxb
+[success] Total time: 8 s, completed Oct 26, 2026, 7:34:33 PM

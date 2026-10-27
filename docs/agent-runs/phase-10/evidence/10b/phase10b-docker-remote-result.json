@@ -1,0 +1,443 @@
+{
+  "startedUtc": "2026-10-27T04:46:12Z",
+  "commands": [
+    {
+      "argv": [
+        "docker",
+        "network",
+        "create",
+        "--internal",
+        "phase10b-remote-isolated-smoke"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.054
+    },
+    {
+      "argv": [
+        "docker",
+        "run",
+        "-d",
+        "--name",
+        "phase10b-remote-graph-service",
+        "--network",
+        "phase10b-remote-isolated-smoke",
+        "-e",
+        "SCHOLARCHAIN_API_KEY_SHA256=9943981103307159e79693db0faf1b6b31352df4caa328714fa94e527fd210a1",
+        "-e",
+        "SCHOLARCHAIN_INTERNAL_TOKEN_SHA256=77e0b1a0a9ea3f952d4790e92b6390302f706ac148d5a23f9585427a0fdf7f1f",
+        "-e",
+        "SCHOLARCHAIN_HTTP_HOST=0.0.0.0",
+        "-e",
+        "SCHOLARCHAIN_SERVICE_MODE=offline-synthetic",
+        "-e",
+        "SCHOLARCHAIN_GRAPH_CURSOR_KEY=phase10b-public-local-cursor",
+        "-e",
+        "SCHOLARCHAIN_DOWNSTREAM_TIMEOUT_MS=500",
+        "-e",
+        "SCHOLARCHAIN_DOWNSTREAM_MAX_ATTEMPTS=1",
+        "scholarchain-graph-service:local"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.094
+    },
+    {
+      "argv": [
+        "docker",
+        "run",
+        "-d",
+        "--name",
+        "phase10b-remote-semantic-service",
+        "--network",
+        "phase10b-remote-isolated-smoke",
+        "-e",
+        "SCHOLARCHAIN_API_KEY_SHA256=9943981103307159e79693db0faf1b6b31352df4caa328714fa94e527fd210a1",
+        "-e",
+        "SCHOLARCHAIN_INTERNAL_TOKEN_SHA256=77e0b1a0a9ea3f952d4790e92b6390302f706ac148d5a23f9585427a0fdf7f1f",
+        "-e",
+        "SCHOLARCHAIN_HTTP_HOST=0.0.0.0",
+        "-e",
+        "SCHOLARCHAIN_SERVICE_MODE=offline-synthetic",
+        "-e",
+        "SCHOLARCHAIN_GRAPH_CURSOR_KEY=phase10b-public-local-cursor",
+        "-e",
+        "SCHOLARCHAIN_DOWNSTREAM_TIMEOUT_MS=500",
+        "-e",
+        "SCHOLARCHAIN_DOWNSTREAM_MAX_ATTEMPTS=1",
+        "scholarchain-semantic-service:local"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.144
+    },
+    {
+      "argv": [
+        "docker",
+        "run",
+        "-d",
+        "--name",
+        "phase10b-remote-query-api",
+        "--network",
+        "phase10b-remote-isolated-smoke",
+        "-e",
+        "SCHOLARCHAIN_API_KEY_SHA256=9943981103307159e79693db0faf1b6b31352df4caa328714fa94e527fd210a1",
+        "-e",
+        "SCHOLARCHAIN_INTERNAL_TOKEN_SHA256=77e0b1a0a9ea3f952d4790e92b6390302f706ac148d5a23f9585427a0fdf7f1f",
+        "-e",
+        "SCHOLARCHAIN_HTTP_HOST=0.0.0.0",
+        "-e",
+        "SCHOLARCHAIN_SERVICE_MODE=offline-synthetic",
+        "-e",
+        "SCHOLARCHAIN_GRAPH_CURSOR_KEY=phase10b-public-local-cursor",
+        "-e",
+        "SCHOLARCHAIN_DOWNSTREAM_TIMEOUT_MS=500",
+        "-e",
+        "SCHOLARCHAIN_DOWNSTREAM_MAX_ATTEMPTS=1",
+        "-e",
+        "SCHOLARCHAIN_GRAPH_BASE_URI=http://phase10b-remote-graph-service:8080",
+        "-e",
+        "SCHOLARCHAIN_SEMANTIC_BASE_URI=http://phase10b-remote-semantic-service:8080",
+        "-e",
+        "SCHOLARCHAIN_INTERNAL_TOKEN=<public-local-smoke-placeholder>",
+        "scholarchain-query-api:local"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.149
+    },
+    {
+      "argv": [
+        "docker",
+        "exec",
+        "phase10b-remote-query-api",
+        "curl",
+        "-sS",
+        "--max-time",
+        "5",
+        "-w",
+        "\n%{http_code}",
+        "-H",
+        "Authorization: Bearer <public-local-smoke-placeholder>",
+        "-H",
+        "X-Request-Id: phase10b-remote-request",
+        "-H",
+        "X-Trace-Id: phase10b-remote-trace",
+        "http://127.0.0.1:8080/healthz"
+      ],
+      "exitCode": 7,
+      "elapsedSeconds": 0.058
+    },
+    {
+      "argv": [
+        "docker",
+        "exec",
+        "phase10b-remote-query-api",
+        "curl",
+        "-sS",
+        "--max-time",
+        "5",
+        "-w",
+        "\n%{http_code}",
+        "-H",
+        "Authorization: Bearer <public-local-smoke-placeholder>",
+        "-H",
+        "X-Request-Id: phase10b-remote-request",
+        "-H",
+        "X-Trace-Id: phase10b-remote-trace",
+        "http://127.0.0.1:8080/healthz"
+      ],
+      "exitCode": 7,
+      "elapsedSeconds": 0.07
+    },
+    {
+      "argv": [
+        "docker",
+        "exec",
+        "phase10b-remote-query-api",
+        "curl",
+        "-sS",
+        "--max-time",
+        "5",
+        "-w",
+        "\n%{http_code}",
+        "-H",
+        "Authorization: Bearer <public-local-smoke-placeholder>",
+        "-H",
+        "X-Request-Id: phase10b-remote-request",
+        "-H",
+        "X-Trace-Id: phase10b-remote-trace",
+        "http://127.0.0.1:8080/healthz"
+      ],
+      "exitCode": 7,
+      "elapsedSeconds": 0.079
+    },
+    {
+      "argv": [
+        "docker",
+        "exec",
+        "phase10b-remote-query-api",
+        "curl",
+        "-sS",
+        "--max-time",
+        "5",
+        "-w",
+        "\n%{http_code}",
+        "-H",
+        "Authorization: Bearer <public-local-smoke-placeholder>",
+        "-H",
+        "X-Request-Id: phase10b-remote-request",
+        "-H",
+        "X-Trace-Id: phase10b-remote-trace",
+        "http://127.0.0.1:8080/healthz"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.077
+    },
+    {
+      "argv": [
+        "docker",
+        "exec",
+        "phase10b-remote-query-api",
+        "curl",
+        "-sS",
+        "--max-time",
+        "5",
+        "-w",
+        "\n%{http_code}",
+        "-H",
+        "Authorization: Bearer <public-local-smoke-placeholder>",
+        "-H",
+        "X-Request-Id: phase10b-remote-request",
+        "-H",
+        "X-Trace-Id: phase10b-remote-trace",
+        "http://127.0.0.1:8080/readyz"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.183
+    },
+    {
+      "argv": [
+        "docker",
+        "exec",
+        "phase10b-remote-query-api",
+        "curl",
+        "-sS",
+        "--max-time",
+        "5",
+        "-w",
+        "\n%{http_code}",
+        "-H",
+        "Authorization: Bearer <public-local-smoke-placeholder>",
+        "-H",
+        "X-Request-Id: phase10b-remote-request",
+        "-H",
+        "X-Trace-Id: phase10b-remote-trace",
+        "-H",
+        "Content-Type: application/json",
+        "--data",
+        "{\"question\": \"Synthetic fixture: publication count for A\"}",
+        "-H",
+        "Idempotency-Key: phase10b-remote-key",
+        "http://127.0.0.1:8080/v1/query"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.255
+    },
+    {
+      "argv": [
+        "docker",
+        "exec",
+        "phase10b-remote-query-api",
+        "curl",
+        "-sS",
+        "--max-time",
+        "5",
+        "-w",
+        "\n%{http_code}",
+        "-H",
+        "Authorization: Bearer <public-local-smoke-placeholder>",
+        "-H",
+        "X-Request-Id: phase10b-remote-request",
+        "-H",
+        "X-Trace-Id: phase10b-remote-trace",
+        "http://127.0.0.1:8080/metrics"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.036
+    },
+    {
+      "argv": [
+        "docker",
+        "logs",
+        "phase10b-remote-graph-service"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.016
+    },
+    {
+      "argv": [
+        "docker",
+        "logs",
+        "phase10b-remote-semantic-service"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.014
+    },
+    {
+      "argv": [
+        "docker",
+        "stop",
+        "--time",
+        "2",
+        "phase10b-remote-graph-service"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.068
+    },
+    {
+      "argv": [
+        "docker",
+        "exec",
+        "phase10b-remote-query-api",
+        "curl",
+        "-sS",
+        "--max-time",
+        "5",
+        "-w",
+        "\n%{http_code}",
+        "-H",
+        "Authorization: Bearer <public-local-smoke-placeholder>",
+        "-H",
+        "X-Request-Id: phase10b-remote-request",
+        "-H",
+        "X-Trace-Id: phase10b-remote-trace",
+        "http://127.0.0.1:8080/healthz"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.033
+    },
+    {
+      "argv": [
+        "docker",
+        "exec",
+        "phase10b-remote-query-api",
+        "curl",
+        "-sS",
+        "--max-time",
+        "5",
+        "-w",
+        "\n%{http_code}",
+        "-H",
+        "Authorization: Bearer <public-local-smoke-placeholder>",
+        "-H",
+        "X-Request-Id: phase10b-remote-request",
+        "-H",
+        "X-Trace-Id: phase10b-remote-trace",
+        "http://127.0.0.1:8080/readyz"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.544
+    },
+    {
+      "argv": [
+        "docker",
+        "logs",
+        "phase10b-remote-graph-service"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.013
+    },
+    {
+      "argv": [
+        "docker",
+        "rm",
+        "-f",
+        "phase10b-remote-graph-service"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.02
+    },
+    {
+      "argv": [
+        "docker",
+        "logs",
+        "phase10b-remote-semantic-service"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.014
+    },
+    {
+      "argv": [
+        "docker",
+        "rm",
+        "-f",
+        "phase10b-remote-semantic-service"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.064
+    },
+    {
+      "argv": [
+        "docker",
+        "logs",
+        "phase10b-remote-query-api"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.015
+    },
+    {
+      "argv": [
+        "docker",
+        "rm",
+        "-f",
+        "phase10b-remote-query-api"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.074
+    },
+    {
+      "argv": [
+        "docker",
+        "network",
+        "rm",
+        "phase10b-remote-isolated-smoke"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.111
+    }
+  ],
+  "cleanup": [
+    "phase10b-remote-graph-service",
+    "phase10b-remote-semantic-service",
+    "phase10b-remote-query-api",
+    "phase10b-remote-isolated-smoke"
+  ],
+  "initial": {
+    "health": 200,
+    "ready": 200
+  },
+  "query": {
+    "status": 200,
+    "verified": true,
+    "publicationCount": "3",
+    "claims": 1
+  },
+  "breakerGauges": {
+    "graph": "CLOSED",
+    "semantic": "CLOSED"
+  },
+  "propagation": {
+    "graphCorrelatedRequest200": true,
+    "semanticCorrelatedRequest200": true,
+    "traceId": "phase10b-remote-trace",
+    "internalRouteLogLabel": "unmatched"
+  },
+  "afterGraphStopped": {
+    "health": 200,
+    "ready": 503,
+    "error": "NOT_READY",
+    "traceId": "phase10b-remote-trace",
+    "elapsedSeconds": 0.577
+  },
+  "status": "PASS",
+  "elapsedSeconds": 2.805,
+  "finishedUtc": "2026-10-27T04:46:15Z",
+  "logSha256": "a5601dac901791a372748e4559ff3e734ecd792d383a9bea1a7a8b8c6485cd93"
+}
