@@ -1,0 +1,41 @@
+1: [info] welcome to sbt 1.10.7 (Homebrew Java 17.0.20.1)
+6: [success] Total time: 0 s, completed Oct 28, 2026, 11:33:10 AM
+7: [info] compiling 1 Scala source to /Users/danny/Documents/UIC/CS441/ScholarChain/modules/services/target/scala-3.3.4/test-classes ...
+8: [error] -- [E049] Reference Error: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/services/src/test/scala/edu/uic/cs441/scholarchain/services/SessionBindingRecoverySpec.scala:92:21
+9: [error] 92 |        val result = backing.update(s, expected)
+10: [error]    |                     ^^^^^^^
+11: [error]    |Reference to backing is ambiguous.
+12: [error]    |It is both defined in value <local SessionBindingRecoverySpec>
+13: [error]    |and inherited subsequently in anonymous class SessionBindingRecoverySpec.this.DelegatingStore {...}
+14: [error]    |
+15: [error]    | longer explanation available when compiling with `-explain`
+16: [error] -- [E049] Reference Error: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/services/src/test/scala/edu/uic/cs441/scholarchain/services/SessionBindingRecoverySpec.scala:161:25
+17: [error] 161 |          val snapshot = backing.get(id)
+18: [error]     |                         ^^^^^^^
+19: [error]     |Reference to backing is ambiguous.
+20: [error]     |It is both defined in method $anonfun
+21: [error]     |and inherited subsequently in anonymous class SessionBindingRecoverySpec.this.DelegatingStore {...}
+22: [error]     |
+23: [error]     | longer explanation available when compiling with `-explain`
+24: [error] -- [E049] Reference Error: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/services/src/test/scala/edu/uic/cs441/scholarchain/services/SessionBindingRecoverySpec.scala:166:29
+25: [error] 166 |          if (expected != 0) backing.update(s, expected)
+26: [error]     |                             ^^^^^^^
+27: [error]     |Reference to backing is ambiguous.
+28: [error]     |It is both defined in method $anonfun
+29: [error]     |and inherited subsequently in anonymous class SessionBindingRecoverySpec.this.DelegatingStore {...}
+30: [error]     |
+31: [error]     | longer explanation available when compiling with `-explain`
+32: [error] -- [E049] Reference Error: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/services/src/test/scala/edu/uic/cs441/scholarchain/services/SessionBindingRecoverySpec.scala:177:27
+33: [error] 177 |              val result = backing.update(s, expected)
+34: [error]     |                           ^^^^^^^
+35: [error]     |Reference to backing is ambiguous.
+36: [error]     |It is both defined in method $anonfun
+37: [error]     |and inherited subsequently in anonymous class SessionBindingRecoverySpec.this.DelegatingStore {...}
+38: [error]     |
+39: [error]     | longer explanation available when compiling with `-explain`
+40: [error] four errors found
+41: [error] (services / Test / compileIncremental) Compilation failed
+42: [error] Total time: 2 s, completed Oct 28, 2026, 11:33:12 AM
+43: real 4.19
+44: user 16.10
+45: sys 0.86

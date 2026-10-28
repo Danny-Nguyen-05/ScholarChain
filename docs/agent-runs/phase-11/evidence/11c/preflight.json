@@ -1,0 +1,29 @@
+{
+  "recorded_utc": "2026-10-28T16:15:46.940676+00:00",
+  "branch": "phase-11",
+  "base_sha": "2b0aee044f243f01bbb603170d09f5c507df8bb7",
+  "head": "2b0aee044f243f01bbb603170d09f5c507df8bb7",
+  "clean_before_first_edit": true,
+  "original_read_only_status": "",
+  "status_after_assembly_script_creation": "?? docs/agent-runs/phase-11/evidence/11c/\n",
+  "last_commit": "2b0aee044f243f01bbb603170d09f5c507df8bb7\nphase-11 test-engineer: add approved 11B runtime adversarial tests\n",
+  "review_baseline": "03493882399e9020e6892c9f97e0ec8919365215",
+  "review_scope": "Complete repository at HEAD plus baseline-to-HEAD diff and current working diff/untracked files",
+  "review_diff_stat": "1273 files changed, 252675 insertions(+), 36 deletions(-)",
+  "review_diff_files": 1273,
+  "environment": {
+    "JAVA_HOME": "/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home",
+    "SBT_OPTS": "-Dlogback.configurationFile=/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-04/xml-repair-logback.xml"
+  },
+  "path_prefix": "/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home/bin",
+  "step_0": {
+    "question": "Confirm complete repository at HEAD 2b0aee0 plus diff from baseline 0349388",
+    "answer": "Confirm recorded scope (Recommended)",
+    "other_questions": "None",
+    "inherited": [
+      "ExposedDefect tags and explicit defect runs if needed",
+      "Requirement-to-test table and exact counts; no coverage tool"
+    ]
+  },
+  "stop_point": "11C tasks 1–2 only; no reviewer, repairs, delegation or builds"
+}

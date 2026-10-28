@@ -1,0 +1,162 @@
+{
+  "totals": {
+    "reports": 156,
+    "tests": 1253,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "rows": [
+    {
+      "module": "modules/core",
+      "reports": 17,
+      "tests": 207,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "modules/hadoop",
+      "reports": 4,
+      "tests": 64,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "modules/entity-resolution",
+      "reports": 6,
+      "tests": 39,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "modules/spark",
+      "reports": 5,
+      "tests": 38,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "modules/storage",
+      "reports": 11,
+      "tests": 80,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "modules/rag",
+      "reports": 9,
+      "tests": 107,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "modules/services",
+      "reports": 7,
+      "tests": 40,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "tests",
+      "reports": 89,
+      "tests": 665,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "build-verification",
+      "reports": 8,
+      "tests": 13,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  ],
+  "log_group_counts": [
+    207,
+    64,
+    39,
+    38,
+    80,
+    107,
+    40,
+    665,
+    13
+  ],
+  "excluded_stale_report_paths": [],
+  "module_regression_cases": [
+    [
+      "SessionBindingRecoverySpec",
+      "an applied body-binding write with a lost reply completes exactly once and replays its stored result"
+    ],
+    [
+      "SessionBindingRecoverySpec",
+      "concurrent cross-instance replays with reused client IDs bind and execute once when winner reply is lost=false"
+    ],
+    [
+      "SessionBindingRecoverySpec",
+      "concurrent cross-instance replays with reused client IDs bind and execute once when winner reply is lost=true"
+    ],
+    [
+      "SessionBindingRecoverySpec",
+      "one clean binding rejection leaves the same key recoverable by a replay rather than permanently retryable"
+    ]
+  ],
+  "mapped_distinct": 84,
+  "mapped_missing_from_fresh_reports": [],
+  "final_independent_http_cases": [
+    [
+      "AdversarialRuntimeHttpSpec",
+      "HTTP abstract injection reaches real retrieval and verifier and replay preserves the audited abstention"
+    ],
+    [
+      "AdversarialRuntimeHttpSpec",
+      "HTTP fullText injection reaches real retrieval and verifier and replay preserves the audited abstention"
+    ],
+    [
+      "AdversarialRuntimeHttpSpec",
+      "HTTP title injection reaches real retrieval and verifier and replay preserves the audited abstention"
+    ],
+    [
+      "AdversarialRuntimeHttpSpec",
+      "an applied Dynamo body bind with a lost reply completes through HTTP and stored replay without rerunning"
+    ],
+    [
+      "AdversarialRuntimeHttpSpec",
+      "healthy control accepts the exact stored count through the same real HTTP and runtime composition"
+    ],
+    [
+      "AdversarialRuntimeHttpSpec",
+      "one rejected Dynamo body bind recovers through same-key HTTP replay and executes exactly once"
+    ],
+    [
+      "AdversarialRuntimeHttpSpec",
+      "synthetic config credentials header and thrown provider canaries stay absent from HTTP responses and observed logs"
+    ]
+  ],
+  "baseline": {
+    "reports": 155,
+    "tests": 1248,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "raw_log": "/tmp/phase11c-r1-full-check.log",
+  "raw_bytes": 1723342,
+  "raw_sha256": "cd1d970fc3ba52792fc38af5f404bbb35d78540c9b12f28172d9d7e5dfabeccd",
+  "exit_code": 0,
+  "sources_frozen": 25,
+  "protected_files_unchanged": 423,
+  "historical_evidence_unchanged_except_append_reports": true,
+  "start_record_sha256": "c02aa85ca5cb041f4dacd180ecc5b435a3df43507cad42c7ed2f40a4646d20b2",
+  "start_record_mtime_ns": 1793205611195379198,
+  "collected_utc": "2026-10-28T16:52:25.086137+00:00"
+}

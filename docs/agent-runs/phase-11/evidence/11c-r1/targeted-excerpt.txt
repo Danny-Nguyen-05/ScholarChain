@@ -1,0 +1,21 @@
+1: [info] welcome to sbt 1.10.7 (Homebrew Java 17.0.20.1)
+6: [info] compiling 1 Scala source to /Users/danny/Documents/UIC/CS441/ScholarChain/modules/services/target/scala-3.3.4/classes ...
+33: [info] - real full runtime adapter persists a truthful abstention when synthesis is unavailable
+59: [info] Total number of tests run: 40
+60: [info] Suites: completed 7, aborted 0
+61: [info] Tests: succeeded 40, failed 0, canceled 0, ignored 0, pending 0
+62: [info] All tests passed.
+63: [success] Total time: 5 s, completed Oct 28, 2026, 11:39:19 AM
+64: [info] compiling 1 Scala source to /Users/danny/Documents/UIC/CS441/ScholarChain/tests/target/scala-3.3.4/test-classes ...
+67: [info] - healthy control accepts the exact stored count through the same real HTTP and runtime composition
+68: [info] - HTTP title injection reaches real retrieval and verifier and replay preserves the audited abstention
+69: [info] - HTTP abstract injection reaches real retrieval and verifier and replay preserves the audited abstention
+70: [info] - HTTP fullText injection reaches real retrieval and verifier and replay preserves the audited abstention
+88: [info] Total number of tests run: 18
+89: [info] Suites: completed 3, aborted 0
+90: [info] Tests: succeeded 18, failed 0, canceled 0, ignored 0, pending 0
+91: [info] All tests passed.
+92: [success] Total time: 3 s, completed Oct 28, 2026, 11:39:22 AM
+93: real 10.77
+94: user 30.22
+95: sys 1.53

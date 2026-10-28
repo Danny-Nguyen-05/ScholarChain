@@ -1,0 +1,27 @@
+{
+  "modified": [
+    "docs/agent-runs/phase-11/owner-report.md",
+    "docs/agent-runs/phase-11/prompt.md",
+    "docs/agent-runs/phase-11/repairs.md",
+    "docs/agent-runs/phase-11/review.md",
+    "docs/agent-runs/phase-11/test-report.md"
+  ],
+  "untracked": [
+    "docs/agent-runs/phase-11/evidence/11c/README.md",
+    "docs/agent-runs/phase-11/evidence/11c/assemble-evidence.py",
+    "docs/agent-runs/phase-11/evidence/11c/carried-findings.md",
+    "docs/agent-runs/phase-11/evidence/11c/commands.json",
+    "docs/agent-runs/phase-11/evidence/11c/coverage.json",
+    "docs/agent-runs/phase-11/evidence/11c/coverage.md",
+    "docs/agent-runs/phase-11/evidence/11c/defects.json",
+    "docs/agent-runs/phase-11/evidence/11c/final-validation.json",
+    "docs/agent-runs/phase-11/evidence/11c/handoff-files.json",
+    "docs/agent-runs/phase-11/evidence/11c/java-version.txt",
+    "docs/agent-runs/phase-11/evidence/11c/preflight.json",
+    "docs/agent-runs/phase-11/evidence/11c/test-evidence.json",
+    "docs/agent-runs/phase-11/reviewer-prompt-11c.md"
+  ],
+  "modified_count": 5,
+  "untracked_count": 13,
+  "scope": "Only coordinator phase evidence; no production/build/test changes"
+}

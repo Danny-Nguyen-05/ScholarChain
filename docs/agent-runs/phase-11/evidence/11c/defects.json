@@ -1,0 +1,13 @@
+{
+  "exposed_defect_count": 0,
+  "tagged_tests": [],
+  "production_defects_exposed_by_completed_runs": [],
+  "sources": [
+    "docs/agent-runs/phase-11/evidence/11a/defects.json",
+    "docs/agent-runs/phase-11/evidence/11b/defects.json"
+  ],
+  "distinction": "F11B-1 and 11A N4 are unconfirmed code-reading leads, not executed failing tests. Zero exposed tests does not close any registered finding.",
+  "repairs": [],
+  "routing_started": false,
+  "build_exclusion_required": false
+}

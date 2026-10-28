@@ -1,0 +1,18 @@
+1: [info] welcome to sbt 1.10.7 (Homebrew Java 17.0.20.1)
+6: [success] Total time: 0 s, completed Oct 28, 2026, 11:34:11 AM
+7: [info] compiling 1 Scala source to /Users/danny/Documents/UIC/CS441/ScholarChain/modules/services/target/scala-3.3.4/test-classes ...
+10: [info] - an applied body-binding write with a lost reply completes exactly once and replays its stored result *** FAILED ***
+12: [info] - one clean binding rejection leaves the same key recoverable by a replay rather than permanently retryable *** FAILED ***
+14: [info] - concurrent cross-instance replays with reused client IDs bind and execute once when winner reply is lost=false *** FAILED ***
+16: [info] - concurrent cross-instance replays with reused client IDs bind and execute once when winner reply is lost=true *** FAILED ***
+19: [info] Total number of tests run: 4
+20: [info] Suites: completed 1, aborted 0
+21: [info] Tests: succeeded 0, failed 4, canceled 0, ignored 0, pending 0
+22: [info] *** 4 TESTS FAILED ***
+23: [error] Failed tests:
+24: [error] 	edu.uic.cs441.scholarchain.services.SessionBindingRecoverySpec
+25: [error] (services / Test / testOnly) sbt.TestsFailedException: Tests unsuccessful
+26: [error] Total time: 3 s, completed Oct 28, 2026, 11:34:14 AM
+27: real 5.06
+28: user 19.53
+29: sys 0.94

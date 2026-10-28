@@ -219,3 +219,80 @@ BLOCKED-ON OWNER: None for implemented local scope; reviewer/human own acceptanc
 BLOCKED-ON EVIDENCE: No missing local deterministic gate. Independent approval, live behavior and whole-repository review remain future/unverified.
 
 NEXT GATE: User-launched 11B review. Specialist finished; no builds or child agents running at final handoff. Stop; no 11C preparation or implementation.
+
+
+## Subphase 11C
+
+STATUS: COMPLETE (11C tasks 1–2 assembly only; whole-repository review pending)
+
+OWNER: Coordinator `/root`; no delegated writer or reviewer invoked in 11C.
+
+WORK ORDER: phase11.md §§3–7, §8 11C tasks 1–2, §9–§11; user's “now start phase 11c.” and supplied 11B NEXT PROMPT. Branch phase-11; base/current HEAD 2b0aee044f243f01bbb603170d09f5c507df8bb7; confirmed review baseline 03493882399e9020e6892c9f97e0ec8919365215, plus all repository files at HEAD and current diff/untracked evidence. 11A/11B commits and Phase 10 ancestry are present. Step 0: user confirmed recorded scope; no other questions.
+
+FILES CREATED: 12 files under evidence/11c/ and reviewer-prompt-11c.md; exact paths in evidence/11c/handoff-files.json.
+
+FILES MODIFIED: Append-only prompt.md, owner-report.md, test-report.md, review.md, repairs.md under this phase. No production/build/test/prompt asset or human-decision record changed.
+
+COMMANDS RUN: `python3 docs/agent-runs/phase-11/evidence/11c/assemble-evidence.py` performs coordinator assembly and read-only assertions. Exact child argv, exits and observed output: evidence/11c/commands.json. Includes git status/branch/HEAD/log, ancestor checks for 0349388 and 0c5ee89, baseline shortstat/name list, JDK 17 `java -version`, Phase 11 path audit, current diff/whitespace/process checks. All recorded required-success subprocesses exit 0. Java reports OpenJDK 17.0.20.1 under plan §2 environment. No sbt, formatter, test, AWS or provider invocation in 11C. See final-validation.json for assembly assertions; command success means evidence assembly, not independent approval.
+
+TEST RESULTS: Zero tests executed in 11C. Retained 11A full gate: 1,231/152 reports; 11B: 1,248/155 reports; both exit 0 and zero failures/errors/skips. New tests: 15 + 17 = 32 in 6 suites, plus one shared fixture source. Independent module final: 664 tests/89 reports. Current retained XML reconciles to 1,248/155, and all 83 distinct mapped cases appear. Combined selected map: 51 existing + 32 new = 83 across all 20 categories; categories overlap. ExposedDefect count 0. Mutation thought checks: 8 data-plane, 9 runtime; no production mutations. Prior failed development/compile gates remain recorded in evidence/11a and evidence/11b, not erased.
+
+VALIDATION RESULTS: Seven current new-source hashes match the passing historical gates; both historical full raw-log hashes/byte counts rechecked when available (test-evidence.json). Phase 11 base-to-HEAD path audit has no production/build/existing-test delta. Current 11C delta is restricted to coordinator evidence, prior report content is preserved as a prefix, coverage names/counts and retained XML agree, and git diff --check passes. Review baseline-to-HEAD diff: 1273 files changed, 252675 insertions(+), 36 deletions(-). Full repository scope includes unchanged and pre-baseline files, not just those 1273 changed paths. Current file list/validation are in evidence/11c/handoff-files.json and final-validation.json.
+
+ASSUMPTIONS: Historical passing gates apply to their frozen source hashes; no fresh execution or general correctness claim is made. The user launches a separate independent read-only reviewer. No finding is closed by passing tests or by this assembly.
+
+RISKS: F11B-1 lost-reply/body-bind QUEUED lead and 11A N4 markup-sensitive blocking lead are unconfirmed; F11B-2/F11B-3 test-contract limits and F11B-4 context remain logged. Earlier registers remain under original owners/dispositions. Synthetic local fixtures do not establish live AWS/provider, scale, model quality, IAM, cleanup, EMR or cost. Raw logs only in /tmp; model revision unavailable; inherited report reading is scan-level. Codex/course-workflow deviation persists. No optional OpenSearch/index/service/CI/coverage-tool work added. Whole-repository verdict and human phase gate remain unverified.
+
+MANUAL ACTION REQUIRED: User launches the read-only reviewer using reviewer-prompt-11c.md and returns its verdict/NEXT PROMPT. No commit/push requested or performed in this stop point. Human gate and acceptance remain user-owned; Phase 12 does not start automatically.
+
+BLOCKED-ON OWNER: None for assembly; reviewer/user own the next gate.
+
+BLOCKED-ON EVIDENCE: Independent whole-repository verdict remains pending; live gates are deferred, not passed.
+
+NEXT GATE: User-launched whole-repository review. On a returned REQUEST_CHANGES, only the authorized owner batch may run, followed by affected/full JDK 17 gates and another handoff. No repairs or routing now. No active subagents/builds/jobs started by this assembly.
+
+Coverage tables and exact suite/name mappings are assembled in evidence/11c/coverage.md and coverage.json, preserving the original 11A/11B report sections above.
+
+
+### Subphase 11C repair round 1 — batch 1 completion
+
+STATUS: COMPLETE (authorized local repair/gates; external recheck pending)
+
+OWNER: Coordinator /root assembles evidence. service-engineer /root/service_engineer_11c_r1 solely wrote modules/services/**; test-engineer /root/test_engineer_11c_r1 then solely wrote the independent HTTP spec. Inherited models, exact revisions unavailable. No nested delegation, reviewer or build-engineer invoked. Both specialists completed and stopped writing before final gates.
+
+WORK ORDER: User-supplied initial 11C REQUEST_CHANGES and “Fix all blocking bugs for me.” Only batch 1 R11C-1/R11C-2 plus user-approved R11C-5 README. Branch phase-11, base/current HEAD 2b0aee044f243f01bbb603170d09f5c507df8bb7; earlier uncommitted 11C assembly preserved. Step 0 user answered “Yes, include R11C-5 (Recommended)”. Whole-repository baseline remains 03493882399e9020e6892c9f97e0ec8919365215 plus all repository files at HEAD/current diff/untracked evidence.
+
+FILES CREATED: New service-owned SessionBindingRecoverySpec.scala (4 cases), coordinator evidence/11c-r1/** and reviewer-prompt-11c-r1.md. Prior untracked evidence/11c/** and reviewer-prompt-11c.md remain untouched. Full changed/untracked inventory: evidence/11c-r1/handoff-files.json.
+
+FILES MODIFIED: Service owner: QueryService.scala and modules/services/README.md. Test owner: tests/**/AdversarialRuntimeHttpSpec.scala only. Coordinator: append-only prompt.md, owner-report.md, test-report.md, review.md and repairs.md. No storage/core/Hadoop/Spark/RAG/build/infra/prompt-asset or human-owned decision changes. No commit/push.
+
+COMMANDS RUN: All sbt commands used the exact plan §2 environment: JAVA_HOME=/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home; PATH prefixed with $JAVA_HOME/bin; SBT_OPTS=-Dlogback.configurationFile=$PWD/docs/agent-runs/phase-04/xml-repair-logback.xml. Observed java -version: OpenJDK 17.0.20.1, sbt 1.10.7. Coordinator wrappers, argv/cwd/env/exits, start/result/excerpts and raw hashes are in evidence/11c-r1/commands.json. Exact invocations use `python3 docs/agent-runs/phase-11/evidence/11c-r1/run-gate.py <gate> <arguments>`; resolved sbt argv follow.
+
+| Gate | Exact sbt arguments (all wrapped by /usr/bin/time -p sbt -batch) | Exit | Result |
+| --- | --- | ---: | --- |
+| red-format | `'services / Test / scalafmt'` | 0 | Reformatted only new SessionBindingRecoverySpec |
+| red | `'services / Test / scalafmtCheck' 'services / Test / testOnly *SessionBindingRecoverySpec'` | 1 | Compile-only failure:4 ambiguous fixture references;0 tests |
+| red-format-2 | `'services / Test / scalafmt'` | 0 | Reformatted only corrected SessionBindingRecoverySpec |
+| red-2 | `'services / Test / scalafmtCheck' 'services / Test / testOnly *SessionBindingRecoverySpec'` | 1 | 4 executed,0 passed,4 failed against unchanged production/README |
+| final-format | `'services / Test / scalafmt' 'services / Compile / scalafmt' 'independentTests / Test / scalafmt'` | 0 | Reformatted QueryService.scala and HTTP spec only |
+| format-check | `'services / Test / scalafmtCheck' 'independentTests / Test / scalafmtCheck'` | 0 | Both requested format checks passed; no rewrite |
+| targeted | `'services / testOnly *' 'independentTests / Test / testOnly *AdversarialRuntime*'` | 0 | Services40/7suites + Runtime18/3suites =58 passed,0 failed |
+| full-check | `check` | 0 | 1253 passed/156 fresh reports,0 failures/errors/skips; no rewrite |
+
+Coordinator reconciliation: `python3 docs/agent-runs/phase-11/evidence/11c-r1/collect-evidence.py` exit0; `git diff --check` exit0. Each gate-start record was exclusively created immediately before launch, never rewritten; all eight final hashes/mtimes match. Explicit stopped-writing barriers precede every gate. Format rewrites were owner-authorized and are disclosed above. Final sources remained frozen through format-check/targeted/full-check.
+
+TEST RESULTS: First red attempt compiled0 tests due to new fixture name ambiguity, corrected only by its service test owner. Actual red-2 executed4/failure4 before any production or README edit. Final targeted58/58,0 failed/canceled/ignored/pending (services40/7suites; runtime18/3suites). Full1253/156 fresh reports,0 failures/errors/skips: baseline1248 +4module +1net independent =1253. Services40, independent665; other module/build totals unchanged. Stale report exclusions are listed in full-check-summary.json. Full raw bytes 1723342; SHA256 cd1d970fc3ba52792fc38af5f404bbb35d78540c9b12f28172d9d7e5dfabeccd; elapsed 724.18s. The expected nested checkProbeInjectFailure self-test is not an outer failure; outer success and TestRunMarker observed.
+
+VALIDATION RESULTS: R11C-1 now reconciles an applied binding's ambiguous reply against the exact intended primary row, including revision/fingerprint/requestId/traceId and per-attempt UUID token. R11C-2 allows later replay to CAS-bind an unbound revision0 reservation. Only the winning binder schedules; losing binders replay or409, even when client IDs are identical. Module tests exercise direct/lost winner replies with two QueryService instances sharing a store. Independent HTTP tests assert actual workflow/model counts1, grounded literal verified count3, persisted SUCCEEDED/result, unchanged audit/stored replay and changed-body409. R11C-5 documents recovery and remaining process-death durability limits. Current requirement map:51 existing +33 new cross-module =84 selected tests over20categories, plus4 additional module regressions; category16=2existing/4new/6, category17=2/5/7. Counts overlap. Historical maps preserved, renamed test accounted for. ExposedDefect0; all final tests pass, no tag/exclusion/build-engineer needed. Protected423 tracked artifacts unchanged and prior evidence preserved except append-only reports; frozen 25 owned/runtime files match final gate hashes. Mutation checks are reasoning only:6 service-owner +7 independent sensitivities in the owner handoffs; no production mutations.
+
+ASSUMPTIONS: Storage primary reads/CAS honor their contracts. Binding token lives in opaque session JSON, not a shared schema; client IDs alone are not ownership proof. Store/LLM inputs are synthetic. Local verification is not independent acceptance.
+
+RISKS: Persistent store outage and process death after successful binding still lack durable dispatcher recovery. No live DynamoDB/AWS/provider, scale, deployment or general model-quality guarantee. R11C-3 remains an unassigned orphan needing a future human owner decision; no deletion or ignore edit. R11C-4/R11C-6, F11B-3/F11B-4, 11A N3, Phase9 NB1–NB10, Phase10 F7/F8/F10–F17 and earlier limits remain untouched. Raw logs only in /tmp; model revision unavailable; earlier reviewer unread areas/scan-level reports and Codex/course deviation remain disclosed. Optional OpenSearch/index/service/CI/coverage tooling omitted.
+
+MANUAL ACTION REQUIRED: User launches independent read-only repair recheck using reviewer-prompt-11c-r1.md and returns verdict/NEXT PROMPT. Do not commit until recheck. Human acceptance/gate and any orphan ownership decision remain user-owned. No further batch or Phase12 starts automatically.
+
+BLOCKED-ON OWNER: None for this authorized local repair; independent reviewer/user own next gate.
+
+BLOCKED-ON EVIDENCE: Independent recheck pending; future live/deployment gates remain unverified.
+
+NEXT GATE: User-launched read-only 11C repair-round 1 recheck; stop after this handoff. No active child writers/builds/jobs remain at handoff.

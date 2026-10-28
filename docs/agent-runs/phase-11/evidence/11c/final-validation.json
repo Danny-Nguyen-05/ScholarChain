@@ -1,0 +1,73 @@
+{
+  "recorded_utc": "2026-10-28T16:15:47.177376+00:00",
+  "base_sha": "2b0aee044f243f01bbb603170d09f5c507df8bb7",
+  "head": "2b0aee044f243f01bbb603170d09f5c507df8bb7",
+  "branch": "phase-11",
+  "modified_files": [
+    "docs/agent-runs/phase-11/owner-report.md",
+    "docs/agent-runs/phase-11/prompt.md",
+    "docs/agent-runs/phase-11/repairs.md",
+    "docs/agent-runs/phase-11/review.md",
+    "docs/agent-runs/phase-11/test-report.md"
+  ],
+  "untracked_files": [
+    "docs/agent-runs/phase-11/evidence/11c/README.md",
+    "docs/agent-runs/phase-11/evidence/11c/assemble-evidence.py",
+    "docs/agent-runs/phase-11/evidence/11c/carried-findings.md",
+    "docs/agent-runs/phase-11/evidence/11c/commands.json",
+    "docs/agent-runs/phase-11/evidence/11c/coverage.json",
+    "docs/agent-runs/phase-11/evidence/11c/coverage.md",
+    "docs/agent-runs/phase-11/evidence/11c/defects.json",
+    "docs/agent-runs/phase-11/evidence/11c/final-validation.json",
+    "docs/agent-runs/phase-11/evidence/11c/handoff-files.json",
+    "docs/agent-runs/phase-11/evidence/11c/java-version.txt",
+    "docs/agent-runs/phase-11/evidence/11c/preflight.json",
+    "docs/agent-runs/phase-11/evidence/11c/test-evidence.json",
+    "docs/agent-runs/phase-11/reviewer-prompt-11c.md"
+  ],
+  "modified_count": 5,
+  "untracked_count": 13,
+  "prior_report_prefix_preserved": {
+    "docs/agent-runs/phase-11/prompt.md": true,
+    "docs/agent-runs/phase-11/owner-report.md": true,
+    "docs/agent-runs/phase-11/test-report.md": true,
+    "docs/agent-runs/phase-11/review.md": true,
+    "docs/agent-runs/phase-11/repairs.md": true
+  },
+  "paths_only_coordinator_evidence": true,
+  "git_diff_check_exit": 0,
+  "current_retained_junit": {
+    "reports": 155,
+    "tests": 1248,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "mapped_distinct": 83,
+  "all_mapped_names_present": true,
+  "source_hashes_matched": 7,
+  "raw_full_logs": [
+    {
+      "path": "/tmp/phase11a-final-check.log",
+      "exists": true,
+      "bytes": 1717764,
+      "sha256": "07f515f3f51427dac4a730bf2ab0af39c3c7d005111b335b7c6c6a78fff32758",
+      "matches": true
+    },
+    {
+      "path": "/tmp/phase11b-full-check.log",
+      "exists": true,
+      "bytes": 1721327,
+      "sha256": "142d10e1518e579d76a45f6a4c2db93771d496105f777a8f301ebf03559cfb31",
+      "matches": true
+    }
+  ],
+  "tests_executed_in_11c": 0,
+  "repairs": 0,
+  "reviewer_invoked": false,
+  "new_delegation": false,
+  "prior_agent_status": "Native list_agents observed test_engineer_11b completed; no active child agents",
+  "java_or_sbt_processes_observed": [],
+  "human_records_written": false,
+  "note": "Working status captured before the last two evidence files; their planned paths are included and externally verified after script exit. No independent verdict claimed."
+}

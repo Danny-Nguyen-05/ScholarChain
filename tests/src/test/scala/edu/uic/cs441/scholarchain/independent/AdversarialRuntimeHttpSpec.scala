@@ -7,7 +7,7 @@ import java.net.URI
 import java.net.http.{HttpClient, HttpRequest, HttpResponse}
 import java.time.Duration
 import java.util.concurrent.ConcurrentLinkedQueue
-import java.util.concurrent.atomic.AtomicInteger
+import java.util.concurrent.atomic.{AtomicBoolean, AtomicInteger}
 import org.scalatest.funsuite.AnyFunSuite
 import scala.jdk.CollectionConverters.*
 
@@ -49,13 +49,83 @@ class AdversarialRuntimeHttpSpec extends AnyFunSuite {
   private def withServer(
       runtime: Runtime,
       store: QuerySessionStore = new InMemoryQuerySessionStore,
-      log: String => Unit = _ => ()
+      log: String => Unit = _ => (),
+      workflowCalls: Option[AtomicInteger] = None
   )(check: Int => Unit): Unit = {
-    val queries = new QueryService(store, runtime.adapter(), cfg)
+    val delegate = runtime.adapter()
+    val observed = new QueryWorkflow {
+      def run(
+          request: QueryRequest,
+          context: RequestContext,
+          stage: String => Unit
+      ): Either[ApiError, WorkflowOutput] = {
+        workflowCalls.foreach(_.incrementAndGet())
+        delegate.run(request, context, stage)
+      }
+    }
+    val queries = new QueryService(store, observed, cfg)
     val app = new ApiApplication(queries, cfg, logSink = log)
     val server = ApiServer.start(app, port = 0)
     try check(server.port)
     finally { server.close(); app.close() }
+  }
+
+  private def completed(port: Int, initial: HttpResponse[String]): ujson.Value = {
+    assert(Set(200, 202)(initial.statusCode()), initial.body())
+    if (initial.statusCode() == 200) ujson.read(initial.body())
+    else {
+      val job = ujson.read(initial.body())("jobId").str
+      val until = System.nanoTime() + Duration.ofSeconds(10).toNanos
+      var current = initial
+      while (current.statusCode() == 202 && System.nanoTime() < until) {
+        val request = HttpRequest
+          .newBuilder(URI.create(s"http://127.0.0.1:$port/v1/jobs/$job/result"))
+          .timeout(Duration.ofSeconds(3))
+          .header("Authorization", "Bearer " + external)
+          .GET()
+          .build()
+        current = client.send(request, HttpResponse.BodyHandlers.ofString())
+        if (current.statusCode() == 202) Thread.sleep(10)
+      }
+      assert(
+        current.statusCode() == 200,
+        s"job must complete rather than stay QUEUED: ${current.body()}"
+      )
+      ujson.read(current.body())
+    }
+  }
+
+  private def assertRecoveredAnswer(
+      port: Int,
+      initial: HttpResponse[String],
+      key: String,
+      runtime: Runtime,
+      backing: QuerySessionStore,
+      calls: AtomicInteger
+  ): Unit = {
+    val terminal = completed(port, initial)
+    val claims = terminal("claims").arr.toVector.map(upickle.default.read[AnswerClaim](_))
+    assert(claims.size == 1 && claims.head.verificationStatus == VerificationStatus.Verified)
+    assert(
+      claims.head.runtime.get.values == Vector(
+        IndependentRuntime9CFixture.n("publicationCount", "3")
+      )
+    )
+    val query = terminal("queryId").str
+    val audit = runtime.audit(query)
+    assert(audit.outcome == "ANSWERED")
+    val stored = StorageResult.value(backing.get(query)).get
+    assert(stored.state == "SUCCEEDED")
+    assert(ujson.read(stored.payload)("result") == terminal)
+    val replay = post(port, key = key)
+    assert(replay.statusCode() == 200 && ujson.read(replay.body()) == terminal, replay.body())
+    assert(runtime.audit(query) == audit)
+    val changed = ujson.read(body)
+    changed("question") = "A different synthetic recovery question"
+    val conflict = post(port, content = changed.render(), key = key)
+    assert(conflict.statusCode() == 409, conflict.body())
+    assert(ujson.read(conflict.body())("error").str == "IDEMPOTENCY_CONFLICT")
+    assert(calls.get() == 1 && runtime.llm.calls.size == 1)
   }
 
   test(
@@ -114,31 +184,74 @@ class AdversarialRuntimeHttpSpec extends AnyFunSuite {
     }
   }
 
-  test("Dynamo conditional body-binding conflict fails HTTP closed before any runtime execution") {
+  test(
+    "one rejected Dynamo body bind recovers through same-key HTTP replay and executes exactly once"
+  ) {
     val backing = new InMemoryQuerySessionStore
-    val creates = new AtomicInteger
-    val updates = new AtomicInteger
+    val rejectFirst = new AtomicBoolean(true)
+    val bindingAttempts = new AtomicInteger
+    val appliedBindings = new AtomicInteger
+    val calls = new AtomicInteger
     val store = new QuerySessionStore {
-      def createIfAbsent(q: String, k: String): StorageResult[QuerySession] = {
-        creates.incrementAndGet(); backing.createIfAbsent(q, k)
-      }
+      def createIfAbsent(q: String, k: String): StorageResult[QuerySession] =
+        backing.createIfAbsent(q, k)
       def get(q: String) = backing.get(q)
       def lookupByIdempotencyKey(k: String) = backing.lookupByIdempotencyKey(k)
       def update(s: QuerySession, expected: Long): StorageResult[QuerySession] = {
-        updates.incrementAndGet(); StorageResult.Rejected("synthetic-dynamo-conditional-conflict")
+        if (expected == 0) {
+          bindingAttempts.incrementAndGet()
+          if (rejectFirst.compareAndSet(true, false))
+            return StorageResult.Rejected("synthetic-dynamo-conditional-conflict")
+        }
+        val result = backing.update(s, expected)
+        if (expected == 0 && StorageResult.successful(result)) appliedBindings.incrementAndGet()
+        result
       }
     }
     val runtime = new Runtime(llm = new AttackLlm("correct"))
-    withServer(runtime, store) { port =>
-      val failed = post(port, key = "adversarial-cas-conflict")
+    withServer(runtime, store, workflowCalls = Some(calls)) { port =>
+      val key = "adversarial-cas-conflict"
+      val failed = post(port, key = key)
       assert(failed.statusCode() == 503, failed.body())
       assert(ujson.read(failed.body())("error").str == "SERVICE_UNAVAILABLE")
-      assert(creates.get == 1 && updates.get == 1)
-      assert(runtime.llm.calls.isEmpty)
-      val replay = post(port, key = "adversarial-cas-conflict")
-      assert(replay.statusCode() == 503)
-      assert(creates.get == 2 && updates.get == 1 && runtime.llm.calls.isEmpty)
+      assert(bindingAttempts.get() == 1 && appliedBindings.get() == 0)
+      assert(calls.get() == 0 && runtime.llm.calls.isEmpty)
       assert(!failed.body().contains("conditional-conflict"))
+      assertRecoveredAnswer(port, post(port, key = key), key, runtime, backing, calls)
+      assert(bindingAttempts.get() == 2 && appliedBindings.get() == 1)
+    }
+  }
+
+  test(
+    "an applied Dynamo body bind with a lost reply completes through HTTP and stored replay without rerunning"
+  ) {
+    val backing = new InMemoryQuerySessionStore
+    val bindingAttempts = new AtomicInteger
+    val appliedBindings = new AtomicInteger
+    val calls = new AtomicInteger
+    val store = new QuerySessionStore {
+      def createIfAbsent(q: String, k: String): StorageResult[QuerySession] =
+        backing.createIfAbsent(q, k)
+      def get(q: String) = backing.get(q)
+      def lookupByIdempotencyKey(k: String) = backing.lookupByIdempotencyKey(k)
+      def update(s: QuerySession, expected: Long): StorageResult[QuerySession] = {
+        val result = backing.update(s, expected)
+        if (expected == 0) {
+          bindingAttempts.incrementAndGet()
+          assert(
+            StorageResult.successful(result),
+            "the injected reply loss must follow an applied bind"
+          )
+          appliedBindings.incrementAndGet()
+          StorageResult.Retried(1, StorageResult.Rejected("conditional-conflict"))
+        } else result
+      }
+    }
+    val runtime = new Runtime(llm = new AttackLlm("correct"))
+    withServer(runtime, store, workflowCalls = Some(calls)) { port =>
+      val key = "adversarial-applied-bind-lost-reply"
+      assertRecoveredAnswer(port, post(port, key = key), key, runtime, backing, calls)
+      assert(bindingAttempts.get() == 1 && appliedBindings.get() == 1)
     }
   }
 

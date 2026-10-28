@@ -323,3 +323,23 @@ Return:
 ## Subphase 11B work-order continuation
 
 User: "now move on phase 11b". Execute only 11B of the external phase11.md plan copied above. The user-supplied 11A APPROVE and full next prompt are retained in review.md and the session. 11A is committed and pushed at d80afb755c649ecc5cda60525a1a0201aceb4c03; Phase 9 and Phase 10 commits are in history. No Step 0 questions remain; prior defect/coverage decisions persist. No production edits, reviewer invocation, live AWS/provider calls, or 11C work. Test-engineer owns new Adversarial* tests; coordinator owns evidence. Apply N1/N2: state formatter rewrites explicitly or use scalafmtCheck, require writing barrier before gates, create gate-start record once immediately before launch and never rewrite. Return the complete reviewer prompt and stop. No human gate or approval record is authorized.
+
+
+## Subphase 11C
+
+Exact current user instruction: “now start phase 11c.”
+
+Continuation: the user-supplied 11B APPROVE/NEXT PROMPT permits only 11C tasks 1–2: assemble both test reports, combined defect list, categories 1–20, earlier registers and F11B-1..F11B-4; produce one whole-repository read-only reviewer prompt in the 12-point order; do not launch a reviewer, route repairs, edit production/build/tests, run cloud/provider calls or create human-owned records. The prior verdict and F11B findings were already appended and committed in 2b0aee0; do not duplicate or rewrite them.
+
+Step 0 asked together: “11C Step 0: Confirm the recorded review scope: the complete repository at HEAD 2b0aee0 plus the diff from baseline 0349388. I have no other questions for this subphase.” User answer: “Confirm recorded scope (Recommended)”. No other questions for this subphase. Earlier ExposedDefect/table decisions persist.
+
+Stop at the first 11C review handoff. No independent whole-repository verdict or completed Phase 11 is claimed.
+
+
+### Subphase 11C repair round 1 — batch 1 work order
+
+Exact current user instruction: “Fix all blocking bugs for me.” The accompanying user-supplied external review returns REQUEST_CHANGES for R11C-1 High and R11C-2 Medium and authorizes ONLY batch 1: service-engineer writes modules/services/** implementation/module tests; test-engineer then updates the independent HTTP test and adds an apply-then-reject regression under tests/**. No nested delegation or reviewer invocation. R11C-5 services README inclusion requires the one Step 0 answer; no other finding is authorized. Preserve uncommitted 11C assembly evidence. Use the exact plan §2 JDK 17 environment for every sbt command; run services/independent format checks, affected services and AdversarialRuntime tests, then full sbt -batch check. Confirm stopped-writing barriers, freeze/hash sources, create each gate-start record exclusively immediately before launch, disclose formatter rewrites and failures. Evidence under evidence/11c-r1/. No commit/push, human-gate/commit/approval record, further batch or Phase 12. Stop with complete recheck prompt.
+
+Step 0 answer: user selected “Yes, include R11C-5 (Recommended)”. Batch 1 includes R11C-1/R11C-2 and the same-owner services README correction R11C-5 only. R11C-3 remains unassigned and untouched.
+
+Round1 execution: service test-only reproduction, service implementation/README, then independent HTTP writer, all sequential; coordinator ran the requested frozen-source JDK 17 gates. Only R11C-1/R11C-2/R11C-5 repaired. No other batch, reviewer, commit/push or human record. Final handoff: reviewer-prompt-11c-r1.md.
