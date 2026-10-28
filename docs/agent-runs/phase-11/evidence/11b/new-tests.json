@@ -1,0 +1,70 @@
+[
+  [
+    "AdversarialRuntimeBoundarySpec",
+    "duplicate vector result keys reject the whole semantic result before source objects become evidence"
+  ],
+  [
+    "AdversarialRuntimeBoundarySpec",
+    "each required service credential omission fails configuration before composition without revealing supplied values"
+  ],
+  [
+    "AdversarialRuntimeBoundarySpec",
+    "stale model version in a same-dimension vector result is rejected before it can authorize evidence"
+  ],
+  [
+    "AdversarialRuntimeHttpSpec",
+    "Dynamo conditional body-binding conflict fails HTTP closed before any runtime execution"
+  ],
+  [
+    "AdversarialRuntimeHttpSpec",
+    "HTTP abstract injection reaches real retrieval and verifier and replay preserves the audited abstention"
+  ],
+  [
+    "AdversarialRuntimeHttpSpec",
+    "HTTP fullText injection reaches real retrieval and verifier and replay preserves the audited abstention"
+  ],
+  [
+    "AdversarialRuntimeHttpSpec",
+    "HTTP title injection reaches real retrieval and verifier and replay preserves the audited abstention"
+  ],
+  [
+    "AdversarialRuntimeHttpSpec",
+    "healthy control accepts the exact stored count through the same real HTTP and runtime composition"
+  ],
+  [
+    "AdversarialRuntimeHttpSpec",
+    "synthetic config credentials header and thrown provider canaries stay absent from HTTP responses and observed logs"
+  ],
+  [
+    "AdversarialRuntimeWorkflowSpec",
+    "Neptune reader timeout interrupts the actual graph call and audits missing essential evidence without synthesis"
+  ],
+  [
+    "AdversarialRuntimeWorkflowSpec",
+    "full workflow rejects an injected abstract instruction and malicious count while retaining source evidence"
+  ],
+  [
+    "AdversarialRuntimeWorkflowSpec",
+    "full workflow rejects an injected fullText instruction and malicious count while retaining source evidence"
+  ],
+  [
+    "AdversarialRuntimeWorkflowSpec",
+    "full workflow rejects an injected title instruction and malicious count while retaining source evidence"
+  ],
+  [
+    "AdversarialRuntimeWorkflowSpec",
+    "full workflow rejects model fake-citation even when JSON conforms to the synthesis schema"
+  ],
+  [
+    "AdversarialRuntimeWorkflowSpec",
+    "full workflow rejects model fake-identity even when JSON conforms to the synthesis schema"
+  ],
+  [
+    "AdversarialRuntimeWorkflowSpec",
+    "malformed JSON exhausts the bounded model script and persists an abstention without attempted claims"
+  ],
+  [
+    "AdversarialRuntimeWorkflowSpec",
+    "vector throttle failure cannot become semantic evidence and a later healthy query recovers without stale failure state"
+  ]
+]

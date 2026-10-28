@@ -1,0 +1,31 @@
+{
+  "status": "PASS",
+  "branch": "phase-11",
+  "head": "0c5ee89994b5b738a3490ef5e8f032fdc67327b2",
+  "tracked_changes": [],
+  "untracked_files": 33,
+  "source_hashes_still_match": true,
+  "report_fields_present": [
+    "STATUS",
+    "OWNER",
+    "WORK ORDER",
+    "FILES CREATED",
+    "FILES MODIFIED",
+    "COMMANDS RUN",
+    "TEST RESULTS",
+    "VALIDATION RESULTS",
+    "ASSUMPTIONS",
+    "RISKS",
+    "MANUAL ACTION REQUIRED",
+    "BLOCKED-ON OWNER",
+    "BLOCKED-ON EVIDENCE",
+    "NEXT GATE"
+  ],
+  "collector_python_syntax": "PASS",
+  "git_diff_check_exit": 0,
+  "sbt_sessions": "All coordinator sbt sessions returned final exit codes; final full-check session30110 exit0",
+  "specialists": "/root/test_engineer_11a completed; no reviewer or nested agent",
+  "human_records_written": false,
+  "commits_or_pushes": false,
+  "next_gate": "User-launched11Areview;11Bnotstarted"
+}

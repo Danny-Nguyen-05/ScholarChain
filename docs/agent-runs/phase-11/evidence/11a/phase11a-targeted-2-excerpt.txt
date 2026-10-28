@@ -1,0 +1,16 @@
+1: [info] welcome to sbt 1.10.7 (Homebrew Java 17.0.20.1)
+2: [info] loading settings for project scholarchain-build from plugins.sbt...
+3: [info] loading project definition from /Users/danny/Documents/UIC/CS441/ScholarChain/project
+4: [info] loading settings for project root from build.sbt...
+5: [info] set current project to root (in build file:/Users/danny/Documents/UIC/CS441/ScholarChain/)
+6: [info] scalafmt: Formatting 3 Scala sources (/Users/danny/Documents/UIC/CS441/ScholarChain/tests)...
+7: [info] scalafmt: Reformatted 3 Scala sources
+8: [success] Total time: 1 s, completed Oct 27, 2026, 2:32:50 PM
+9: [info] compiling 3 Scala sources to /Users/danny/Documents/UIC/CS441/ScholarChain/tests/target/scala-3.3.4/test-classes ...
+10: [error] -- [E040] Syntax Error: /Users/danny/Documents/UIC/CS441/ScholarChain/tests/src/test/scala/edu/uic/cs441/scholarchain/independent/AdversarialDataPlaneSpec.scala:164:14 
+11: [error] 164 |        true; case _ => false
+12: [error]     |              ^^^^
+13: [error]     |              unindent expected, but 'case' found
+14: [error] one error found
+15: [error] (independentTests / Test / compileIncremental) Compilation failed
+16: [error] Total time: 3 s, completed Oct 27, 2026, 2:32:53 PM

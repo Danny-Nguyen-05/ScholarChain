@@ -1,0 +1,35 @@
+{
+  "runs": [
+    {
+      "raw_path": "/tmp/phase11a-targeted-1.log",
+      "raw_sha256": "d16be90ad6ceee140d204f7d2c7212ffec5e2251c56f7f849d9c6b4e81218f05",
+      "raw_bytes": 1367,
+      "exit_code": 1,
+      "excerpt": "phase11a-targeted-1-excerpt.txt"
+    },
+    {
+      "raw_path": "/tmp/phase11a-targeted-2.log",
+      "raw_sha256": "c0e6911361028325eed1998edbed932232d3464f340242dfca94513ab2fd6e02",
+      "raw_bytes": 1185,
+      "exit_code": 1,
+      "excerpt": "phase11a-targeted-2-excerpt.txt"
+    },
+    {
+      "raw_path": "/tmp/phase11a-targeted-3.log",
+      "raw_sha256": "6a21eb43f7526c26253168ce53479ed10363a4164e1fa597dd4293bfc5623f73",
+      "raw_bytes": 16520,
+      "exit_code": 0,
+      "excerpt": "phase11a-targeted-3-excerpt.txt"
+    }
+  ],
+  "child_escalation": "Child escalation reported aborted by user during handoff, no process/session/log or execution observed; coordinator resumed via approved tool.",
+  "targeted3_final_source_caveat": "The final sparse-author cardinality assertion was added after targeted compilation, requires verification by final full check. Final full check passed on the frozen final source.",
+  "targeted3_counts": {
+    "tests": 19,
+    "suites": 4,
+    "new_tests": 15,
+    "existing_tests": 4,
+    "failures": 0
+  },
+  "exposed_production_defects": 0
+}

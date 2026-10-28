@@ -1,0 +1,84 @@
+{
+  "provenance": "Pre-edit existing generated JUnit XML, inspected in this session; historical execution, not a new baseline test run. Counts are corroboration only; final fresh gate will be measured separately.",
+  "rows": [
+    {
+      "module": "modules/core",
+      "reports": 17,
+      "tests": 207,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "modules/hadoop",
+      "reports": 4,
+      "tests": 64,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "modules/entity-resolution",
+      "reports": 6,
+      "tests": 39,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "modules/spark",
+      "reports": 5,
+      "tests": 38,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "modules/storage",
+      "reports": 11,
+      "tests": 80,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "modules/rag",
+      "reports": 9,
+      "tests": 107,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "modules/services",
+      "reports": 6,
+      "tests": 36,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "tests",
+      "reports": 83,
+      "tests": 632,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "build-verification",
+      "reports": 8,
+      "tests": 13,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  ],
+  "totals": {
+    "reports": 149,
+    "tests": 1216,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "recorded_utc": "2026-10-27T21:11:04.827623+00:00",
+  "branch": "phase-11",
+  "base_sha": "d80afb755c649ecc5cda60525a1a0201aceb4c03",
+  "git_status_short": "",
+  "phase9_commit": "3c0a817305d783bbb6a4cb6fe9bb654d06d8632a",
+  "phase10_commit": "0c5ee89994b5b738a3490ef5e8f032fdc67327b2",
+  "step0": "No questions for this subphase. Existing user decisions persist; no additional preference is required.",
+  "decisions": [
+    "ExposedDefect tags, explicit runs, build-engineer exclusion only if needed",
+    "Requirement-to-test table with exact counts; no coverage tool",
+    "11A N1/N2 process lessons apply; no 11A repairs",
+    "Only 11B, no reviewer or 11C"
+  ],
+  "agent": {
+    "native_id": "/root/test_engineer_11b",
+    "role": "test-engineer",
+    "model": "inherited parent; exact revision unavailable",
+    "write_paths": [
+      "tests/**"
+    ],
+    "nested_delegation": false
+  }
+}

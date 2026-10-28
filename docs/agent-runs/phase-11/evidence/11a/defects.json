@@ -1,0 +1,8 @@
+{
+  "subphase": "11A",
+  "exposed_defect_count": 0,
+  "tagged_tests": [],
+  "production_defects_exposed_by_completed_runs": [],
+  "production_repairs": [],
+  "note": "No new production defect exposed by these completed runs; this is not proof that no repository defects exist. Earlier registered findings retain their previous status. No ExposedDefect tag/exclusion wiring needed."
+}

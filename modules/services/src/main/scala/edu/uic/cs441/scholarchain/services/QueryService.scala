@@ -2,6 +2,7 @@ package edu.uic.cs441.scholarchain.services
 
 import edu.uic.cs441.scholarchain.storage.*
 import java.time.Instant
+import java.util.UUID
 import java.util.concurrent.{
   ArrayBlockingQueue,
   Callable,
@@ -25,7 +26,7 @@ final case class ApiReply(status: Int, body: ujson.Value)
 
 /** Application jobs are namespaced separately from RuntimeAuditStore sessions. The deterministic ID
   * makes the store's conditional reservation authoritative even if its GSI is lagging. Only the
-  * creator may start work; state/result changes use compare-and-swap revisions.
+  * caller that conditionally binds the body may start work; state/result changes use CAS revisions.
   */
 final class QueryService(
     val store: QuerySessionStore,
@@ -85,7 +86,7 @@ final class QueryService(
     }
     false
   }
-  private def boundSession(id: String): Either[ApiError, QuerySession] = {
+  private def awaitBinding(id: String): Either[ApiError, QuerySession] = {
     val until = System.nanoTime() + config.downstreamTimeoutMs * 1000000L
     var current = session(id)
     while (current.exists(_.payload == "{}") && System.nanoTime() < until) {
@@ -99,7 +100,8 @@ final class QueryService(
       }
       current = session(id)
     }
-    current.flatMap(s => if (s.payload == "{}") Left(ApiError.unavailable) else Right(s))
+    // A failed binder may have left revision zero unbound. The caller may now compete for its CAS.
+    current
   }
   private def errorFrom(p: ujson.Value): ApiError = {
     val e = p("failure")
@@ -121,89 +123,109 @@ final class QueryService(
     "status" -> state,
     "statusUrl" -> s"/v1/jobs/${jobId(id)}"
   )
+  private def replay(s: QuerySession, fingerprint: String): Either[ApiError, ApiReply] = {
+    if (s.payload == "{}") Left(ApiError.unavailable)
+    else if (read(s)("fingerprint").str != fingerprint)
+      Left(
+        ApiError(
+          409,
+          "IDEMPOTENCY_CONFLICT",
+          "The idempotency key was already used with a different body."
+        )
+      )
+    else reply(s)
+  }
+  private def dispatch(
+      id: String,
+      request: QueryRequest,
+      context: RequestContext
+  ): Either[ApiError, ApiReply] = {
+    try workers.execute(() => execute(id, request, context.copy(queryId = id)))
+    catch {
+      case _: RejectedExecutionException =>
+        fail(id, ApiError(429, "THROTTLED", "The local workflow queue is full.", true))
+    }
+    val until = System.nanoTime() + config.synchronousDeadlineMs * 1000000L
+    var current = session(id)
+    while (current.exists(s => !Set("SUCCEEDED", "FAILED")(s.state)) && System.nanoTime() < until) {
+      try
+        Thread.sleep(
+          math.min(config.sessionPollMs, math.max(1L, (until - System.nanoTime()) / 1000000L))
+        )
+      catch {
+        case _: InterruptedException =>
+          Thread.currentThread().interrupt(); return Left(ApiError.unavailable)
+      }
+      current = session(id)
+    }
+    current.flatMap(reply)
+  }
+  private def bind(
+      reservation: QuerySession,
+      request: QueryRequest,
+      fingerprint: String,
+      context: RequestContext
+  ): Either[ApiError, ApiReply] = {
+    if (reservation.revision != 0 || reservation.payload != "{}")
+      return replay(reservation, fingerprint)
+    val now = instant
+    val payload = ujson.Obj(
+      "fingerprint" -> fingerprint,
+      "observedStages" -> ujson.Arr("QUEUED"),
+      "state" -> "QUEUED",
+      "stage" -> "QUEUED",
+      "createdAt" -> now,
+      "updatedAt" -> now,
+      "result" -> ujson.Null,
+      "failure" -> ujson.Null,
+      "attempts" -> 0,
+      "requestId" -> context.requestId,
+      "traceId" -> context.traceId,
+      // Request/trace IDs are client-controlled and may be identical across concurrent binders.
+      "bindingToken" -> UUID.randomUUID().toString
+    )
+    val intended = reservation.copy(
+      state = "QUEUED",
+      revision = reservation.revision + 1,
+      payload = payload.render()
+    )
+    def written(result: StorageResult[QuerySession]): Boolean = result match {
+      case StorageResult.Written(s)         => s == intended
+      case StorageResult.Retried(_, nested) => written(nested)
+      case _                                => false
+    }
+    val result = store.update(intended, reservation.revision)
+    if (written(result)) dispatch(reservation.queryId, request, context)
+    else {
+      // The CAS may have applied before its reply was lost. Exact revision/payload equality also
+      // checks fingerprint, request/trace IDs and this attempt's token; another binder cannot claim it.
+      session(reservation.queryId).flatMap { current =>
+        if (current == intended) dispatch(reservation.queryId, request, context)
+        else replay(current, fingerprint)
+      }
+    }
+  }
   def submit(
       request: QueryRequest,
       key: String,
       context: RequestContext
   ): Either[ApiError, ApiReply] = {
     val id = queryId(key); val fingerprint = QueryRequest.fingerprint(request)
-    // Written after a successful transport retry still belongs to this creator. Other retried
-    // outcomes remain ambiguous and must reconcile without scheduling another workflow.
+    def reconcile(id: String): Either[ApiError, ApiReply] = awaitBinding(id).flatMap { current =>
+      if (current.payload == "{}") bind(current, request, fingerprint, context)
+      else replay(current, fingerprint)
+    }
+    // Creation owns only the reservation. The revision-zero body CAS chooses the one dispatcher,
+    // including when a later request recovers a reservation left unbound by an earlier store failure.
     val creation = store.createIfAbsent(id, "api:" + Auth.sha256(key)) match {
       case StorageResult.Retried(_, StorageResult.Written(s)) => StorageResult.Written(s)
       case other                                              => other
     }
     creation match {
-      case StorageResult.Written(s) =>
-        val now = instant
-        val payload = ujson.Obj(
-          "fingerprint" -> fingerprint,
-          "observedStages" -> ujson.Arr("QUEUED"),
-          "state" -> "QUEUED",
-          "stage" -> "QUEUED",
-          "createdAt" -> now,
-          "updatedAt" -> now,
-          "result" -> ujson.Null,
-          "failure" -> ujson.Null,
-          "attempts" -> 0,
-          "requestId" -> context.requestId,
-          "traceId" -> context.traceId
-        )
-        val bound = store.update(
-          s.copy(state = "QUEUED", revision = s.revision + 1, payload = payload.render()),
-          s.revision
-        )
-        if (!StorageResult.successful(bound)) return Left(ApiError.unavailable)
-        try workers.execute(() => execute(id, request, context.copy(queryId = id)))
-        catch {
-          case _: RejectedExecutionException =>
-            fail(id, ApiError(429, "THROTTLED", "The local workflow queue is full.", true))
-        }
-        val until = System.nanoTime() + config.synchronousDeadlineMs * 1000000L
-        var current = session(id)
-        while (
-          current.exists(s => !Set("SUCCEEDED", "FAILED")(s.state)) && System.nanoTime() < until
-        ) {
-          try
-            Thread.sleep(
-              math.min(config.sessionPollMs, math.max(1L, (until - System.nanoTime()) / 1000000L))
-            )
-          catch {
-            case _: InterruptedException =>
-              Thread.currentThread().interrupt(); return Left(ApiError.unavailable)
-          }
-          current = session(id)
-        }
-        current.flatMap(reply)
-      case StorageResult.Unchanged(s) =>
-        // Use a primary read: the returned reservation may predate a just-completed result.
-        boundSession(s.queryId).flatMap { current =>
-          if (current.payload == "{}") Left(ApiError.unavailable)
-          else if (read(current)("fingerprint").str != fingerprint)
-            Left(
-              ApiError(
-                409,
-                "IDEMPOTENCY_CONFLICT",
-                "The idempotency key was already used with a different body."
-              )
-            )
-          else reply(current)
-        }
-      case StorageResult.Retried(_, r) =>
-        // Lost replies must never start a second workflow. Reconcile the authoritative primary row.
-        boundSession(id).flatMap { s =>
-          if (s.payload == "{}") Left(ApiError.unavailable)
-          else if (read(s)("fingerprint").str != fingerprint)
-            Left(
-              ApiError(
-                409,
-                "IDEMPOTENCY_CONFLICT",
-                "The idempotency key was already used with a different body."
-              )
-            )
-          else reply(s)
-        }
-      case _ => Left(ApiError.unavailable)
+      case StorageResult.Written(s)    => bind(s, request, fingerprint, context)
+      case StorageResult.Unchanged(s)  => reconcile(s.queryId)
+      case StorageResult.Retried(_, _) => reconcile(id)
+      case _                           => Left(ApiError.unavailable)
     }
   }
   private def fail(id: String, error: ApiError): Unit = {

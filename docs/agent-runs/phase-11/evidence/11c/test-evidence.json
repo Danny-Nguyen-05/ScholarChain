@@ -1,0 +1,349 @@
+{
+  "historical_summaries": {
+    "11a": {
+      "path": "docs/agent-runs/phase-11/evidence/11a/full-check-summary.json",
+      "totals": {
+        "reports": 152,
+        "tests": 1231,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "exit_code": 0,
+      "raw_log": "/tmp/phase11a-final-check.log",
+      "raw_sha256": "07f515f3f51427dac4a730bf2ab0af39c3c7d005111b335b7c6c6a78fff32758"
+    },
+    "11b": {
+      "path": "docs/agent-runs/phase-11/evidence/11b/full-check-summary.json",
+      "totals": {
+        "reports": 155,
+        "tests": 1248,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "exit_code": 0,
+      "raw_log": "/tmp/phase11b-full-check.log",
+      "raw_sha256": "142d10e1518e579d76a45f6a4c2db93771d496105f777a8f301ebf03559cfb31"
+    }
+  },
+  "current_source_hash_checks": [
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/AdversarialBlockingReplaySpec.scala",
+      "sha256": "00a8bd1bdbe2f00872c93dca662f8baeea7c027b80d1b77a735de32f4982ca6a",
+      "matches_historical_gate": true
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/AdversarialDataPlaneSpec.scala",
+      "sha256": "8d870222eeecdad4ef58e214ef34175a914fea69a21cda51f8db3599836e7e31",
+      "matches_historical_gate": true
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/AdversarialGraphShapesSpec.scala",
+      "sha256": "78fa802cfd5226f0edb4c081d1ebaeaac09fff682a0ec0c7d1eda970c12dcba3",
+      "matches_historical_gate": true
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/AdversarialRuntimeBoundarySpec.scala",
+      "sha256": "6b8c4dd7114a366c52d69494339b668c8d5d06beb1b3bb41e589d8424653db7c",
+      "matches_historical_gate": true
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/AdversarialRuntimeFixture.scala",
+      "sha256": "e8bf0dd1a0c028e1048cae20f794f97694e141039e59f76e43ec0c46fc8c5a02",
+      "matches_historical_gate": true
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/AdversarialRuntimeHttpSpec.scala",
+      "sha256": "c9c8810a6eb8de64bb8bbfbff08b1864e8a758d3e6b198cc1cd7246329a6f999",
+      "matches_historical_gate": true
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/AdversarialRuntimeWorkflowSpec.scala",
+      "sha256": "8ff0b02e59b3104a62295e5900e44359e297bf3005aef7cb8e7378b88b2809ef",
+      "matches_historical_gate": true
+    }
+  ],
+  "current_raw_full_log_checks": [
+    {
+      "path": "/tmp/phase11a-final-check.log",
+      "exists": true,
+      "bytes": 1717764,
+      "sha256": "07f515f3f51427dac4a730bf2ab0af39c3c7d005111b335b7c6c6a78fff32758",
+      "matches": true
+    },
+    {
+      "path": "/tmp/phase11b-full-check.log",
+      "exists": true,
+      "bytes": 1721327,
+      "sha256": "142d10e1518e579d76a45f6a4c2db93771d496105f777a8f301ebf03559cfb31",
+      "matches": true
+    }
+  ],
+  "current_retained_junit_counts": {
+    "reports": 155,
+    "tests": 1248,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "all_mapped_names_present_in_current_retained_junit": true,
+  "mapped_distinct": 83,
+  "tests_executed_in_11c": 0,
+  "source_change_in_11c": false,
+  "earlier_reports_and_module_readmes": [
+    {
+      "path": "docs/agent-runs/phase-01/owner-report.md",
+      "sha256": "08e079d2700c606c50c758150c24f72a2c5935441d0c2fc2d78c8040d1a9e5ea",
+      "scope": "Prior active-disposition scans carried from 11A/11B; indexed now, not a fresh line-by-line review."
+    },
+    {
+      "path": "docs/agent-runs/phase-01/test-report.md",
+      "sha256": "f01d7140a7acb9cc77fa57e2bf514a010653d1ed19f0e58519185cf8a9f7d3f1",
+      "scope": "Prior active-disposition scans carried from 11A/11B; indexed now, not a fresh line-by-line review."
+    },
+    {
+      "path": "docs/agent-runs/phase-01/review.md",
+      "sha256": "ea3feb5810b6e210581b179ae7ccd3efb389c7cbaf0fa29337f32374c408f161",
+      "scope": "Prior active-disposition scans carried from 11A/11B; indexed now, not a fresh line-by-line review."
+    },
+    {
+      "path": "docs/agent-runs/phase-01/repairs.md",
+      "sha256": "3d63ef6c584abdfa2dc3caef766176502f65ad80b2fef07ad4cecd3c3b78cf7d",
+      "scope": "Prior active-disposition scans carried from 11A/11B; indexed now, not a fresh line-by-line review."
+    },
+    {
+      "path": "docs/agent-runs/phase-02/owner-report.md",
+      "sha256": "f6f88ee3d2065e09a5747824edbe554913cba0c9a5d71afc34fa72ae57d8baf0",
+      "scope": "Prior active-disposition scans carried from 11A/11B; indexed now, not a fresh line-by-line review."
+    },
+    {
+      "path": "docs/agent-runs/phase-02/test-report.md",
+      "sha256": "55f0267ac21f8cb1f9ef5d4106b8b3c43cf8cd44c0126e66aa033bd226072386",
+      "scope": "Prior active-disposition scans carried from 11A/11B; indexed now, not a fresh line-by-line review."
+    },
+    {
+      "path": "docs/agent-runs/phase-02/review.md",
+      "sha256": "ff618b8cf94646f10d2fb38720eca5be8dbc5e6cca1a2b799cfb34caaaaa7427",
+      "scope": "Prior active-disposition scans carried from 11A/11B; indexed now, not a fresh line-by-line review."
+    },
+    {
+      "path": "docs/agent-runs/phase-02/repairs.md",
+      "sha256": "4b08e599024a123f3c8424e9c4bb55aebbe562fb960077faed58dd516c0f0b36",
+      "scope": "Prior active-disposition scans carried from 11A/11B; indexed now, not a fresh line-by-line review."
+    },
+    {
+      "path": "docs/agent-runs/phase-03/owner-report.md",
+      "sha256": "c684003ac2a8b2eb66f1f386611f7c386c4010a6703b682a6782e3527e778394",
+      "scope": "Prior active-disposition scans carried from 11A/11B; indexed now, not a fresh line-by-line review."
+    },
+    {
+      "path": "docs/agent-runs/phase-03/test-report.md",
+      "sha256": "7f5cc68e448bd95127e59600f2ed673ff72846c6acd8a302ff7ee08c4c97da1d",
+      "scope": "Prior active-disposition scans carried from 11A/11B; indexed now, not a fresh line-by-line review."
+    },
+    {
+      "path": "docs/agent-runs/phase-03/review.md",
+      "sha256": "34fd5d396ed61eb80345e385ca1c9ff5c196aa602ce0063631a5a90ee245b868",
+      "scope": "Prior active-disposition scans carried from 11A/11B; indexed now, not a fresh line-by-line review."
+    },
+    {
+      "path": "docs/agent-runs/phase-03/repairs.md",
+      "sha256": "32557190d918e58e4f5ca003b515a8a5fb9214ef6d6390166a87354d5e94d448",
+      "scope": "Prior active-disposition scans carried from 11A/11B; indexed now, not a fresh line-by-line review."
+    },
+    {
+      "path": "docs/agent-runs/phase-04/owner-report.md",
+      "sha256": "d6a6b7a3e6effacdf7e734e7dba987a64982d414c458fc6f5899ee19f9939410",
+      "scope": "Prior active-disposition scans carried from 11A/11B; indexed now, not a fresh line-by-line review."
+    },
+    {
+      "path": "docs/agent-runs/phase-04/test-report.md",
+      "sha256": "37f7b396bcb341f83648b13d73c69639c150ff8178c7d558d609e8761d132a7b",
+      "scope": "Prior active-disposition scans carried from 11A/11B; indexed now, not a fresh line-by-line review."
+    },
+    {
+      "path": "docs/agent-runs/phase-04/review.md",
+      "sha256": "76cff032f7dbd5957aebfd8be2024d8cebcf7b977bf38b603373d7d22dfc745c",
+      "scope": "Prior active-disposition scans carried from 11A/11B; indexed now, not a fresh line-by-line review."
+    },
+    {
+      "path": "docs/agent-runs/phase-04/repairs.md",
+      "sha256": "0152bfd079461a2aca4686be7963a247e7ab8393f011c2d5a009c52de51a590f",
+      "scope": "Prior active-disposition scans carried from 11A/11B; indexed now, not a fresh line-by-line review."
+    },
+    {
+      "path": "docs/agent-runs/phase-05/owner-report.md",
+      "sha256": "1ab4fa6c2159b6b0069ad922fd72fc050b6eabbaf59ace018afea179a124599f",
+      "scope": "Prior active-disposition scans carried from 11A/11B; indexed now, not a fresh line-by-line review."
+    },
+    {
+      "path": "docs/agent-runs/phase-05/test-report.md",
+      "sha256": "946f9089c739fa0d79552832d7c7eda86a063a5d27a1f4a42a6120601da5f9af",
+      "scope": "Prior active-disposition scans carried from 11A/11B; indexed now, not a fresh line-by-line review."
+    },
+    {
+      "path": "docs/agent-runs/phase-05/review.md",
+      "sha256": "f612cff04e0113164b9f40e380a663f9980f6faeebc5d1c91d032dd4e823a1ab",
+      "scope": "Prior active-disposition scans carried from 11A/11B; indexed now, not a fresh line-by-line review."
+    },
+    {
+      "path": "docs/agent-runs/phase-05/repairs.md",
+      "sha256": "06c8b69f4bad19912ebd561d92b751d8bf8bdfe064f72bbe51b8eb253d7d497d",
+      "scope": "Prior active-disposition scans carried from 11A/11B; indexed now, not a fresh line-by-line review."
+    },
+    {
+      "path": "docs/agent-runs/phase-06/owner-report.md",
+      "sha256": "fe420f57e77000de1985dce01bfb4762bccf355a7fd8093bf91d2632b2cb1afc",
+      "scope": "Prior active-disposition scans carried from 11A/11B; indexed now, not a fresh line-by-line review."
+    },
+    {
+      "path": "docs/agent-runs/phase-06/test-report.md",
+      "sha256": "6a13db0eb491744ac39662cf5f0655e07712ef0a97c01327214c6703d78af83b",
+      "scope": "Prior active-disposition scans carried from 11A/11B; indexed now, not a fresh line-by-line review."
+    },
+    {
+      "path": "docs/agent-runs/phase-06/review.md",
+      "sha256": "a7a243ebc3fc23ecc04bc7f612ec9a6eca02613b0c66f326a6a7f8113b4cd864",
+      "scope": "Prior active-disposition scans carried from 11A/11B; indexed now, not a fresh line-by-line review."
+    },
+    {
+      "path": "docs/agent-runs/phase-06/repairs.md",
+      "sha256": "ba00ddd8dec4919cdbdb3e7368083563874ba41b13f50dffee68fd98f68443fd",
+      "scope": "Prior active-disposition scans carried from 11A/11B; indexed now, not a fresh line-by-line review."
+    },
+    {
+      "path": "docs/agent-runs/phase-07/owner-report.md",
+      "sha256": "9b3f1793cad55e0807fd0815a42553ca1d07f7846d3b6eaf2ddbc03ef59cc48e",
+      "scope": "Prior active-disposition scans carried from 11A/11B; indexed now, not a fresh line-by-line review."
+    },
+    {
+      "path": "docs/agent-runs/phase-07/test-report.md",
+      "sha256": "81ceb0167451c919d2f2fef33a0b3438eb603f3bcedbc3ccc33266c2566cbf3a",
+      "scope": "Prior active-disposition scans carried from 11A/11B; indexed now, not a fresh line-by-line review."
+    },
+    {
+      "path": "docs/agent-runs/phase-07/review.md",
+      "sha256": "9bf00d9bc5d76eee7c50af770912139a62a80e973406d0976688bd48e004b7e0",
+      "scope": "Prior active-disposition scans carried from 11A/11B; indexed now, not a fresh line-by-line review."
+    },
+    {
+      "path": "docs/agent-runs/phase-07/repairs.md",
+      "sha256": "0bf3714bbcf92b7764d938038dfd7c5ac9c25920021e34517420561b98a9f445",
+      "scope": "Prior active-disposition scans carried from 11A/11B; indexed now, not a fresh line-by-line review."
+    },
+    {
+      "path": "docs/agent-runs/phase-08/owner-report.md",
+      "sha256": "3e277a3aa31883b9127f75882dbfd99cb256d503573a17a79d886893c296b8d5",
+      "scope": "Prior active-disposition scans carried from 11A/11B; indexed now, not a fresh line-by-line review."
+    },
+    {
+      "path": "docs/agent-runs/phase-08/test-report.md",
+      "sha256": "94aeb262650727c7f8b88502293ccb3cb9cf20c25e1faff4d87c65fbdd9d095c",
+      "scope": "Prior active-disposition scans carried from 11A/11B; indexed now, not a fresh line-by-line review."
+    },
+    {
+      "path": "docs/agent-runs/phase-08/review.md",
+      "sha256": "b05910d43870e38ff1ea5def125b3d8f6e413c536fef0999a3326f79eee6dd39",
+      "scope": "Prior active-disposition scans carried from 11A/11B; indexed now, not a fresh line-by-line review."
+    },
+    {
+      "path": "docs/agent-runs/phase-08/repairs.md",
+      "sha256": "7fa785a14595295184979fdd2488be6a80b43072713e08add9639d12d7a31af3",
+      "scope": "Prior active-disposition scans carried from 11A/11B; indexed now, not a fresh line-by-line review."
+    },
+    {
+      "path": "docs/agent-runs/phase-09/owner-report.md",
+      "sha256": "708ec4cbbc9cd88c5d06dec54af2efad0001774deaaef093e5effff69624105f",
+      "scope": "Prior active-disposition scans carried from 11A/11B; indexed now, not a fresh line-by-line review."
+    },
+    {
+      "path": "docs/agent-runs/phase-09/test-report.md",
+      "sha256": "038931b1909edf9b65d90c30900688ad15ebdf7dd85be6679a33c4751a559690",
+      "scope": "Prior active-disposition scans carried from 11A/11B; indexed now, not a fresh line-by-line review."
+    },
+    {
+      "path": "docs/agent-runs/phase-09/review.md",
+      "sha256": "a8e961da617af13c7bb314545520d4c27e87c790378925f9665316b092fd0af5",
+      "scope": "Prior active-disposition scans carried from 11A/11B; indexed now, not a fresh line-by-line review."
+    },
+    {
+      "path": "docs/agent-runs/phase-09/repairs.md",
+      "sha256": "ca9cf9b077854935898dcb0602d82bd82a838ba83c712cc218956b2c6cc0380c",
+      "scope": "Prior active-disposition scans carried from 11A/11B; indexed now, not a fresh line-by-line review."
+    },
+    {
+      "path": "docs/agent-runs/phase-10/owner-report.md",
+      "sha256": "e9aaae2417e933ea022ce7d965a7bd9b5244f078e4c7ffccaaf5c1a1f391c2fd",
+      "scope": "Prior active-disposition scans carried from 11A/11B; indexed now, not a fresh line-by-line review."
+    },
+    {
+      "path": "docs/agent-runs/phase-10/test-report.md",
+      "sha256": "d3202bc2a0b01ccbaa386870f4ca83fe7bc937e934d148eda0f155bfdeba1c32",
+      "scope": "Prior active-disposition scans carried from 11A/11B; indexed now, not a fresh line-by-line review."
+    },
+    {
+      "path": "docs/agent-runs/phase-10/review.md",
+      "sha256": "23c2643c0cee8ad392561de38fb22acf701796e5a7001bff0088049b3db9e8c0",
+      "scope": "Prior active-disposition scans carried from 11A/11B; indexed now, not a fresh line-by-line review."
+    },
+    {
+      "path": "docs/agent-runs/phase-10/repairs.md",
+      "sha256": "d01c1e8859143a30adab31e37b37a721c69f66e301675c12ba984b8df3e13686",
+      "scope": "Prior active-disposition scans carried from 11A/11B; indexed now, not a fresh line-by-line review."
+    },
+    {
+      "path": "modules/core/README.md",
+      "sha256": "3a883aa15bdbdee77b71f3dc254aa6fa8af1b9d4c90a64775808695e1941df3b",
+      "scope": "Heading/limit scan; full review belongs to independent reviewer."
+    },
+    {
+      "path": "modules/entity-resolution/README.md",
+      "sha256": "caae93f28da13da8c76e3ca7367c812ff61041290d879bef65fde062c1c8b9c1",
+      "scope": "Heading/limit scan; full review belongs to independent reviewer."
+    },
+    {
+      "path": "modules/hadoop/README.md",
+      "sha256": "6b2bddd613af7842a32edd8e6e89e1008cb6b33c950241749dac3d86b64cbaf0",
+      "scope": "Heading/limit scan; full review belongs to independent reviewer."
+    },
+    {
+      "path": "modules/rag/README.md",
+      "sha256": "f71d74513a83778d3336205ab24ba8361e4e29229f70729c20167d33694542a2",
+      "scope": "Heading/limit scan; full review belongs to independent reviewer."
+    },
+    {
+      "path": "modules/services/README.md",
+      "sha256": "912d10756e783c81ec10e5b4e14a10a5e597fcd6c836073b5274838e967e7b74",
+      "scope": "Heading/limit scan; full review belongs to independent reviewer."
+    },
+    {
+      "path": "modules/spark/README.md",
+      "sha256": "9c6af6edfde4ae69d85fd99edbca345116df6c96df5b0e474380cae8f5b84a59",
+      "scope": "Heading/limit scan; full review belongs to independent reviewer."
+    },
+    {
+      "path": "modules/storage/README.md",
+      "sha256": "0e7dd3cc55e88808b67118fa3dfe828d634ba48d7f863a081e5316e20400ef32",
+      "scope": "Heading/limit scan; full review belongs to independent reviewer."
+    }
+  ],
+  "test_reports": "docs/agent-runs/phase-11/test-report.md sections Subphase 11A and Subphase 11B (append-only; original content remains)",
+  "mutation_checks": {
+    "data_plane": 8,
+    "runtime_plane": 9,
+    "execution": "Reasoning only; no production mutations"
+  },
+  "course": {
+    "url": "https://github.com/0x1DOCD00D/ScholarChain/blob/main/README.md",
+    "accessed_utc": "2026-10-28T16:15:46.940676+00:00",
+    "scope": "Primary course Phase 11, required test inventory, evaluation deductions retrieved with web open/find; no full page copy retained."
+  },
+  "limitations": [
+    "No new test execution or independent review in 11C assembly",
+    "Historical evidence remains historical; no earlier inventory is rewritten after commit",
+    "Raw logs exist only in /tmp and may disappear; availability/hash observed now",
+    "Synthetic offline fixtures; live AWS/provider/EMR/scale/cost not established",
+    "Exact inherited model revision unavailable; no constitutional/instructor ratification inferred"
+  ]
+}

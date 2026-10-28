@@ -1,0 +1,44 @@
+{
+  "initial_branch": "phase-10",
+  "branch": "phase-11",
+  "base_sha": "0c5ee89994b5b738a3490ef5e8f032fdc67327b2",
+  "initial_git_status_short": "",
+  "branch_creation": "git switch -c phase-11: initial sandbox attempt exit 128 (lock permission); same command escalated and approved, exit 0",
+  "user_answers": {
+    "11-1": "Use ExposedDefect tags and explicit defect runs (Recommended)",
+    "11-2": "Requirement-to-test table and exact counts (Recommended)",
+    "11-3": "Use 0349388 plus whole-repository review (Recommended)"
+  },
+  "delegations": [
+    {
+      "native_id": "/root/test_engineer_11a",
+      "role": "test-engineer",
+      "model": "inherited parent model; exact runtime identifier unavailable",
+      "paths": [
+        "tests/**"
+      ],
+      "task": "Inventory and implement missing data-plane adversarial tests, return report content to coordinator; no nested delegation."
+    }
+  ],
+  "reviewer_launched": false,
+  "authority_readings": [
+    "AGENTS.md",
+    "CLAUDE.md",
+    "docs/agents.md",
+    ".claude/agents/test-engineer.md",
+    ".claude/agents/code-reviewer.md",
+    "docs/agent-runs/README.md",
+    "docs/agent-runs/phase-01/human-gate.md",
+    "docs/agent-runs/phase-06/human-gate.md"
+  ],
+  "course_reading": {
+    "url": "https://github.com/0x1DOCD00D/ScholarChain/blob/main/README.md",
+    "sections": [
+      "Phase 11: adversarial testing and full repository review",
+      "Required test inventory",
+      "Evaluation deductions and failure conditions"
+    ],
+    "method": "web tool, read in this session"
+  },
+  "scope": "11A only; no production repairs, reviewer delegation, live AWS, paid provider, commits or pushes."
+}

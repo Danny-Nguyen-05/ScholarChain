@@ -1,0 +1,13 @@
+{
+  "recorded_utc": "2026-10-28T16:30:34.024516+00:00",
+  "question": "May batch 1 include R11C-5 services README disclosure?",
+  "answer": "Yes, include R11C-5 (Recommended)",
+  "scope": [
+    "R11C-1",
+    "R11C-2",
+    "R11C-5"
+  ],
+  "unassigned_orphan": "R11C-3; untouched",
+  "baseline": "2b0aee044f243f01bbb603170d09f5c507df8bb7",
+  "whole_repository_baseline": "03493882399e9020e6892c9f97e0ec8919365215"
+}

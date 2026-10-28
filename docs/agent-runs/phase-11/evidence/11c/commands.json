@@ -1,0 +1,245 @@
+{
+  "assembly_invocation": "python3 docs/agent-runs/phase-11/evidence/11c/assemble-evidence.py",
+  "commands": [
+    {
+      "argv": [
+        "git",
+        "status",
+        "--short"
+      ],
+      "command": "git status --short",
+      "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+      "exit_code": 0,
+      "stdout": "?? docs/agent-runs/phase-11/evidence/11c/\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "branch",
+        "--show-current"
+      ],
+      "command": "git branch --show-current",
+      "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+      "exit_code": 0,
+      "stdout": "phase-11\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "command": "git rev-parse HEAD",
+      "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+      "exit_code": 0,
+      "stdout": "2b0aee044f243f01bbb603170d09f5c507df8bb7\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "log",
+        "-1",
+        "--format=%H%n%s"
+      ],
+      "command": "git log -1 --format=%H%n%s",
+      "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+      "exit_code": 0,
+      "stdout": "2b0aee044f243f01bbb603170d09f5c507df8bb7\nphase-11 test-engineer: add approved 11B runtime adversarial tests\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "merge-base",
+        "--is-ancestor",
+        "03493882399e9020e6892c9f97e0ec8919365215",
+        "HEAD"
+      ],
+      "command": "git merge-base --is-ancestor 03493882399e9020e6892c9f97e0ec8919365215 HEAD",
+      "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "merge-base",
+        "--is-ancestor",
+        "0c5ee89994b5b738a3490ef5e8f032fdc67327b2",
+        "HEAD"
+      ],
+      "command": "git merge-base --is-ancestor 0c5ee89994b5b738a3490ef5e8f032fdc67327b2 HEAD",
+      "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "diff",
+        "--shortstat",
+        "03493882399e9020e6892c9f97e0ec8919365215",
+        "HEAD"
+      ],
+      "command": "git diff --shortstat 03493882399e9020e6892c9f97e0ec8919365215 HEAD",
+      "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+      "exit_code": 0,
+      "stdout": " 1273 files changed, 252675 insertions(+), 36 deletions(-)\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "diff",
+        "--name-only",
+        "03493882399e9020e6892c9f97e0ec8919365215",
+        "HEAD"
+      ],
+      "command": "git diff --name-only 03493882399e9020e6892c9f97e0ec8919365215 HEAD",
+      "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+      "exit_code": 0,
+      "stdout": "1273 paths; full list reproducible with recorded command\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "java",
+        "-version"
+      ],
+      "command": "java -version",
+      "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "openjdk version \"17.0.20.1\" 2026-08-18\nOpenJDK Runtime Environment Homebrew (build 17.0.20.1+0)\nOpenJDK 64-Bit Server VM Homebrew (build 17.0.20.1+0, mixed mode, sharing)\n"
+    },
+    {
+      "argv": [
+        "git",
+        "diff",
+        "--name-status",
+        "0c5ee89994b5b738a3490ef5e8f032fdc67327b2",
+        "HEAD"
+      ],
+      "command": "git diff --name-status 0c5ee89994b5b738a3490ef5e8f032fdc67327b2 HEAD",
+      "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+      "exit_code": 0,
+      "stdout": "A\tdocs/agent-runs/phase-11/evidence/11a/baseline-test-counts.json\nA\tdocs/agent-runs/phase-11/evidence/11a/collect-evidence.py\nA\tdocs/agent-runs/phase-11/evidence/11a/commands.json\nA\tdocs/agent-runs/phase-11/evidence/11a/coverage-validation.json\nA\tdocs/agent-runs/phase-11/evidence/11a/coverage.json\nA\tdocs/agent-runs/phase-11/evidence/11a/defects.json\nA\tdocs/agent-runs/phase-11/evidence/11a/development-runs.json\nA\tdocs/agent-runs/phase-11/evidence/11a/final-validation.json\nA\tdocs/agent-runs/phase-11/evidence/11a/full-check-excerpt.txt\nA\tdocs/agent-runs/phase-11/evidence/11a/full-check-exit.txt\nA\tdocs/agent-runs/phase-11/evidence/11a/full-check-start.json\nA\tdocs/agent-runs/phase-11/evidence/11a/full-check-summary.json\nA\tdocs/agent-runs/phase-11/evidence/11a/git-status.txt\nA\tdocs/agent-runs/phase-11/evidence/11a/handoff-files.json\nA\tdocs/agent-runs/phase-11/evidence/11a/inventory-before.md\nA\tdocs/agent-runs/phase-11/evidence/11a/java-version.txt\nA\tdocs/agent-runs/phase-11/evidence/11a/new-tests.json\nA\tdocs/agent-runs/phase-11/evidence/11a/phase11a-targeted-1-excerpt.txt\nA\tdocs/agent-runs/phase-11/evidence/11a/phase11a-targeted-2-excerpt.txt\nA\tdocs/agent-runs/phase-11/evidence/11a/phase11a-targeted-3-excerpt.txt\nA\tdocs/agent-runs/phase-11/evidence/11a/preflight.json\nA\tdocs/agent-runs/phase-11/evidence/11a/protected-source-before.json\nA\tdocs/agent-runs/phase-11/evidence/11a/reading-ledger.json\nA\tdocs/agent-runs/phase-11/evidence/11a/test-engineer-handoff.md\nA\tdocs/agent-runs/phase-11/evidence/11b/baseline-test-counts.json\nA\tdocs/agent-runs/phase-11/evidence/11b/collect-evidence.py\nA\tdocs/agent-runs/phase-11/evidence/11b/commands.json\nA\tdocs/agent-runs/phase-11/evidence/11b/coverage-validation.json\nA\tdocs/agent-runs/phase-11/evidence/11b/coverage.json\nA\tdocs/agent-runs/phase-11/evidence/11b/defects.json\nA\tdocs/agent-runs/phase-11/evidence/11b/final-validation.json\nA\tdocs/agent-runs/phase-11/evidence/11b/format-1-excerpt.txt\nA\tdocs/agent-runs/phase-11/evidence/11b/format-1-result.json\nA\tdocs/agent-runs/phase-11/evidence/11b/format-1-start.json\nA\tdocs/agent-runs/phase-11/evidence/11b/format-2-excerpt.txt\nA\tdocs/agent-runs/phase-11/evidence/11b/format-2-result.json\nA\tdocs/agent-runs/phase-11/evidence/11b/format-2-start.json\nA\tdocs/agent-runs/phase-11/evidence/11b/full-check-excerpt.txt\nA\tdocs/agent-runs/phase-11/evidence/11b/full-check-result.json\nA\tdocs/agent-runs/phase-11/evidence/11b/full-check-start.json\nA\tdocs/agent-runs/phase-11/evidence/11b/full-check-summary.json\nA\tdocs/agent-runs/phase-11/evidence/11b/full-start-file-stamp.json\nA\tdocs/agent-runs/phase-11/evidence/11b/git-status.txt\nA\tdocs/agent-runs/phase-11/evidence/11b/handoff-files.json\nA\tdocs/agent-runs/phase-11/evidence/11b/inventory-before.json\nA\tdocs/agent-runs/phase-11/evidence/11b/java-version.txt\nA\tdocs/agent-runs/phase-11/evidence/11b/mutation-spot-checks.json\nA\tdocs/agent-runs/phase-11/evidence/11b/new-tests.json\nA\tdocs/agent-runs/phase-11/evidence/11b/preflight.json\nA\tdocs/agent-runs/phase-11/evidence/11b/protected-source-before.json\nA\tdocs/agent-runs/phase-11/evidence/11b/reading-ledger.json\nA\tdocs/agent-runs/phase-11/evidence/11b/run-gate.py\nA\tdocs/agent-runs/phase-11/evidence/11b/targeted-1-excerpt.txt\nA\tdocs/agent-runs/phase-11/evidence/11b/targeted-1-result.json\nA\tdocs/agent-runs/phase-11/evidence/11b/targeted-1-start.json\nA\tdocs/agent-runs/phase-11/evidence/11b/targeted-2-excerpt.txt\nA\tdocs/agent-runs/phase-11/evidence/11b/targeted-2-result.json\nA\tdocs/agent-runs/phase-11/evidence/11b/targeted-2-start.json\nA\tdocs/agent-runs/phase-11/evidence/11b/test-engineer-handoff.md\nA\tdocs/agent-runs/phase-11/evidence/11b/writing-barrier.json\nA\tdocs/agent-runs/phase-11/owner-report.md\nA\tdocs/agent-runs/phase-11/prompt.md\nA\tdocs/agent-runs/phase-11/repairs.md\nA\tdocs/agent-runs/phase-11/review.md\nA\tdocs/agent-runs/phase-11/reviewer-prompt-11b.md\nA\tdocs/agent-runs/phase-11/reviewer-prompt.md\nA\tdocs/agent-runs/phase-11/test-report.md\nA\ttests/src/test/scala/edu/uic/cs441/scholarchain/independent/AdversarialBlockingReplaySpec.scala\nA\ttests/src/test/scala/edu/uic/cs441/scholarchain/independent/AdversarialDataPlaneSpec.scala\nA\ttests/src/test/scala/edu/uic/cs441/scholarchain/independent/AdversarialGraphShapesSpec.scala\nA\ttests/src/test/scala/edu/uic/cs441/scholarchain/independent/AdversarialRuntimeBoundarySpec.scala\nA\ttests/src/test/scala/edu/uic/cs441/scholarchain/independent/AdversarialRuntimeFixture.scala\nA\ttests/src/test/scala/edu/uic/cs441/scholarchain/independent/AdversarialRuntimeHttpSpec.scala\nA\ttests/src/test/scala/edu/uic/cs441/scholarchain/independent/AdversarialRuntimeWorkflowSpec.scala\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "command": "git diff --check",
+      "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "diff",
+        "--name-only"
+      ],
+      "command": "git diff --name-only",
+      "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+      "exit_code": 0,
+      "stdout": "docs/agent-runs/phase-11/owner-report.md\ndocs/agent-runs/phase-11/prompt.md\ndocs/agent-runs/phase-11/repairs.md\ndocs/agent-runs/phase-11/review.md\ndocs/agent-runs/phase-11/test-report.md\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "ls-files",
+        "--others",
+        "--exclude-standard"
+      ],
+      "command": "git ls-files --others --exclude-standard",
+      "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+      "exit_code": 0,
+      "stdout": "docs/agent-runs/phase-11/evidence/11c/README.md\ndocs/agent-runs/phase-11/evidence/11c/assemble-evidence.py\ndocs/agent-runs/phase-11/evidence/11c/carried-findings.md\ndocs/agent-runs/phase-11/evidence/11c/coverage.json\ndocs/agent-runs/phase-11/evidence/11c/coverage.md\ndocs/agent-runs/phase-11/evidence/11c/defects.json\ndocs/agent-runs/phase-11/evidence/11c/handoff-files.json\ndocs/agent-runs/phase-11/evidence/11c/java-version.txt\ndocs/agent-runs/phase-11/evidence/11c/preflight.json\ndocs/agent-runs/phase-11/evidence/11c/test-evidence.json\ndocs/agent-runs/phase-11/reviewer-prompt-11c.md\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "HEAD:docs/agent-runs/phase-11/prompt.md"
+      ],
+      "command": "git show HEAD:docs/agent-runs/phase-11/prompt.md",
+      "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+      "exit_code": 0,
+      "stdout": "27570 bytes; content omitted, append-only check below\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "HEAD:docs/agent-runs/phase-11/owner-report.md"
+      ],
+      "command": "git show HEAD:docs/agent-runs/phase-11/owner-report.md",
+      "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+      "exit_code": 0,
+      "stdout": "14117 bytes; content omitted, append-only check below\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "HEAD:docs/agent-runs/phase-11/test-report.md"
+      ],
+      "command": "git show HEAD:docs/agent-runs/phase-11/test-report.md",
+      "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+      "exit_code": 0,
+      "stdout": "32320 bytes; content omitted, append-only check below\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "HEAD:docs/agent-runs/phase-11/review.md"
+      ],
+      "command": "git show HEAD:docs/agent-runs/phase-11/review.md",
+      "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+      "exit_code": 0,
+      "stdout": "6814 bytes; content omitted, append-only check below\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "HEAD:docs/agent-runs/phase-11/repairs.md"
+      ],
+      "command": "git show HEAD:docs/agent-runs/phase-11/repairs.md",
+      "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+      "exit_code": 0,
+      "stdout": "7242 bytes; content omitted, append-only check below\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "ps",
+        "-axo",
+        "pid=,comm="
+      ],
+      "command": "ps -axo pid=,comm=",
+      "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    }
+  ],
+  "note": "No sbt/build/test/provider command. Python assembly assertions and reads are visible in the retained script. Large read-only inventories and historical report bodies omitted from command output; paths/counts retained."
+}

@@ -1,0 +1,44 @@
+{
+  "recorded_utc": "2026-10-27T21:29:41.611388+00:00",
+  "branch": "phase-11",
+  "head": "d80afb755c649ecc5cda60525a1a0201aceb4c03",
+  "modified_tracked_count": 5,
+  "untracked_created_count": 41,
+  "earlier_report_prefixes_unchanged": true,
+  "tracked_production_build_tests_prompt_diff_empty": true,
+  "new_file_whitespace_errors": [],
+  "git_diff_check_exit": 0,
+  "full_start_hash_mtime_unchanged": true,
+  "gate_start_records": {
+    "format-1-start.json": {
+      "sha256": "328180a355694c279253f0a6b4ecf5a04db164f1606684b4cec7c1493c8196fd",
+      "mtime": 1793135636.6404977,
+      "start_epoch": 1793135636.6402729
+    },
+    "format-2-start.json": {
+      "sha256": "68871c0fb15d8e93c8fcfcd504bb3bc5c692ae5135c39bf17cd388fedbff70bc",
+      "mtime": 1793135710.0664866,
+      "start_epoch": 1793135710.066249
+    },
+    "full-check-start.json": {
+      "sha256": "9b656961420398bb370bde5701d1a10d0228330df4573324084568ef6f9b78cc",
+      "mtime": 1793135736.0065563,
+      "start_epoch": 1793135736.006146
+    },
+    "targeted-1-start.json": {
+      "sha256": "c66d2212c65b0c2157c7f0b79f73bed8eafa65159de0fac84d1195740cad2e27",
+      "mtime": 1793135644.9610085,
+      "start_epoch": 1793135644.960549
+    },
+    "targeted-2-start.json": {
+      "sha256": "277012cee8f9447198d935a022d22228b2d1052f8ffd5d367c2ad8eb458b8888",
+      "mtime": 1793135720.7646062,
+      "start_epoch": 1793135720.7642398
+    }
+  },
+  "known_gate_processes_running": [],
+  "agent_status": "test-engineer native final report received; completed; no nested agents",
+  "source_and_protected_reconciliation": "full-check-summary.json; 448 tracked files match baseline; final4sources match targeted2/full",
+  "no_commit_push_in_11b": true,
+  "no_human_decision_record_written": true
+}

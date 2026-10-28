@@ -1,0 +1,16 @@
+{
+  "command": "sbt -batch 'services / Test / scalafmtCheck' 'services / Test / testOnly *SessionBindingRecoverySpec'",
+  "gate": "red-2",
+  "exit_code": 1,
+  "executed": 4,
+  "succeeded": 0,
+  "failed": 4,
+  "suites": 1,
+  "canceled": 0,
+  "ignored": 0,
+  "pending": 0,
+  "production_and_readme_equal_HEAD": true,
+  "prior_red_gate": "red exit1 compile-only: 4 E049 ambiguous backing fixture references, 0 tests; owner corrected test fixture only",
+  "source": "red-2-excerpt.txt",
+  "repairs_authorized_after_actual_red": true
+}

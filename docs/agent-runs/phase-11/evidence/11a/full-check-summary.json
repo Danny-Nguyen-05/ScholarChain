@@ -1,0 +1,123 @@
+{
+  "exit_code": 0,
+  "raw_log": "/tmp/phase11a-final-check.log",
+  "raw_bytes": 1717764,
+  "raw_sha256": "07f515f3f51427dac4a730bf2ab0af39c3c7d005111b335b7c6c6a78fff32758",
+  "rows": [
+    {
+      "module": "modules/core",
+      "reports": 17,
+      "tests": 207,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "modules/hadoop",
+      "reports": 4,
+      "tests": 64,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "modules/entity-resolution",
+      "reports": 6,
+      "tests": 39,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "modules/spark",
+      "reports": 5,
+      "tests": 38,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "modules/storage",
+      "reports": 11,
+      "tests": 80,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "modules/rag",
+      "reports": 9,
+      "tests": 107,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "modules/services",
+      "reports": 6,
+      "tests": 36,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "tests",
+      "reports": 86,
+      "tests": 647,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "build-verification",
+      "reports": 8,
+      "tests": 13,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  ],
+  "totals": {
+    "reports": 152,
+    "tests": 1231,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "log_group_counts": [
+    207,
+    64,
+    39,
+    38,
+    80,
+    107,
+    36,
+    647,
+    13
+  ],
+  "mapped_tests_missing_from_fresh_reports": [],
+  "final_new_source_hashes": {
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/AdversarialBlockingReplaySpec.scala": "00a8bd1bdbe2f00872c93dca662f8baeea7c027b80d1b77a735de32f4982ca6a",
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/AdversarialDataPlaneSpec.scala": "8d870222eeecdad4ef58e214ef34175a914fea69a21cda51f8db3599836e7e31",
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/AdversarialGraphShapesSpec.scala": "78fa802cfd5226f0edb4c081d1ebaeaac09fff682a0ec0c7d1eda970c12dcba3"
+  },
+  "protected_source_after": {
+    "production": {
+      "files": 224,
+      "aggregate_sha256": "897f8c11977fdaaf3fff73db981ea9f557ef303ddb5dd386c708bd82bcb6ebab"
+    },
+    "build": {
+      "files": 19,
+      "aggregate_sha256": "0d9d983b6e68e8cc7560460d4b93395afe0336a574bbfc93b64521f9435aa985"
+    },
+    "existing_independent_tests": {
+      "files": 103,
+      "aggregate_sha256": "1c8b0eccc5a25fabab82fc45c212891bd73e42bb708550c0387893553cd711e0"
+    }
+  },
+  "notes": [
+    "All JUnit reports are newer than gate start; counts corroborate log groups.",
+    "Protected module fingerprint includes module tests/config; excludes test resources.",
+    "Raw logs remain in /tmp only; retained excerpts and hashes survive reboot."
+  ]
+}

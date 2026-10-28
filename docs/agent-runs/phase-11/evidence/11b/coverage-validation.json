@@ -1,0 +1,54 @@
+{
+  "categories": {
+    "12": {
+      "existing": 3,
+      "new": 2,
+      "total": 5
+    },
+    "13": {
+      "existing": 4,
+      "new": 6,
+      "total": 10
+    },
+    "14": {
+      "existing": 2,
+      "new": 3,
+      "total": 5
+    },
+    "15": {
+      "existing": 2,
+      "new": 9,
+      "total": 11
+    },
+    "16": {
+      "existing": 2,
+      "new": 3,
+      "total": 5
+    },
+    "17": {
+      "existing": 2,
+      "new": 3,
+      "total": 5
+    },
+    "18": {
+      "existing": 4,
+      "new": 3,
+      "total": 7
+    },
+    "19": {
+      "existing": 1,
+      "new": 1,
+      "total": 2
+    },
+    "20": {
+      "existing": 1,
+      "new": 1,
+      "total": 2
+    }
+  },
+  "existing_distinct": 21,
+  "new_distinct": 17,
+  "combined_distinct": 38,
+  "mapped_tests_missing_from_fresh_reports": [],
+  "exposed_tests_intentionally_excluded_from_full_check": []
+}

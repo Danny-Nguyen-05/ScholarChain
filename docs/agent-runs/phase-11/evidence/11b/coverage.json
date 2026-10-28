@@ -1,0 +1,264 @@
+{
+  "12": {
+    "existing": [
+      [
+        "IndependentEmbeddingStorageSpec",
+        "a bound vector key rejects changed text before embedding and records the conflict"
+      ],
+      [
+        "IndependentStorageVectorSpec",
+        "same key and text is unchanged while a changed text hash is rejected before provider write"
+      ],
+      [
+        "IndependentRuntime9BSemanticSpec",
+        "semantic hits embedded by a different model cannot be compared with the query vector"
+      ]
+    ],
+    "new": [
+      [
+        "AdversarialRuntimeBoundarySpec",
+        "duplicate vector result keys reject the whole semantic result before source objects become evidence"
+      ],
+      [
+        "AdversarialRuntimeBoundarySpec",
+        "stale model version in a same-dimension vector result is rejected before it can authorize evidence"
+      ]
+    ]
+  },
+  "13": {
+    "existing": [
+      [
+        "IndependentRuntime9CSynthesisSpec",
+        "instruction-looking title remains untrusted data and cannot change verified facts"
+      ],
+      [
+        "IndependentRuntime9CSynthesisSpec",
+        "instruction-looking abstract remains untrusted data and cannot change verified facts"
+      ],
+      [
+        "IndependentRuntime9CSynthesisSpec",
+        "instruction-looking generated profile remains untrusted data and cannot change verified facts"
+      ],
+      [
+        "IndependentRuntime9BEvidenceSpec",
+        "retrieved delimiter injection stays JSON data inside one untrusted block"
+      ]
+    ],
+    "new": [
+      [
+        "AdversarialRuntimeWorkflowSpec",
+        "full workflow rejects an injected title instruction and malicious count while retaining source evidence"
+      ],
+      [
+        "AdversarialRuntimeHttpSpec",
+        "HTTP title injection reaches real retrieval and verifier and replay preserves the audited abstention"
+      ],
+      [
+        "AdversarialRuntimeWorkflowSpec",
+        "full workflow rejects an injected abstract instruction and malicious count while retaining source evidence"
+      ],
+      [
+        "AdversarialRuntimeHttpSpec",
+        "HTTP abstract injection reaches real retrieval and verifier and replay preserves the audited abstention"
+      ],
+      [
+        "AdversarialRuntimeWorkflowSpec",
+        "full workflow rejects an injected fullText instruction and malicious count while retaining source evidence"
+      ],
+      [
+        "AdversarialRuntimeHttpSpec",
+        "HTTP fullText injection reaches real retrieval and verifier and replay preserves the audited abstention"
+      ]
+    ]
+  },
+  "14": {
+    "existing": [
+      [
+        "IndependentRuntime9CSynthesisSpec",
+        "two malformed synthesis outputs abstain and never call a model verifier"
+      ],
+      [
+        "IndependentRuntime9CVerificationSpec",
+        "a fabricated subject cannot borrow another researcher's stored metrics"
+      ]
+    ],
+    "new": [
+      [
+        "AdversarialRuntimeWorkflowSpec",
+        "full workflow rejects model fake-identity even when JSON conforms to the synthesis schema"
+      ],
+      [
+        "AdversarialRuntimeWorkflowSpec",
+        "full workflow rejects model fake-citation even when JSON conforms to the synthesis schema"
+      ],
+      [
+        "AdversarialRuntimeWorkflowSpec",
+        "malformed JSON exhausts the bounded model script and persists an abstention without attempted claims"
+      ]
+    ]
+  },
+  "15": {
+    "existing": [
+      [
+        "IndependentRuntime9CVerificationSpec",
+        "a missing evidence ID cannot authorize an otherwise correct count"
+      ],
+      [
+        "IndependentRuntime9CVerificationSpec",
+        "wrong stored count is rejected and remains available in attempted-claim audit material"
+      ]
+    ],
+    "new": [
+      [
+        "AdversarialRuntimeWorkflowSpec",
+        "full workflow rejects an injected title instruction and malicious count while retaining source evidence"
+      ],
+      [
+        "AdversarialRuntimeHttpSpec",
+        "HTTP title injection reaches real retrieval and verifier and replay preserves the audited abstention"
+      ],
+      [
+        "AdversarialRuntimeWorkflowSpec",
+        "full workflow rejects an injected abstract instruction and malicious count while retaining source evidence"
+      ],
+      [
+        "AdversarialRuntimeHttpSpec",
+        "HTTP abstract injection reaches real retrieval and verifier and replay preserves the audited abstention"
+      ],
+      [
+        "AdversarialRuntimeWorkflowSpec",
+        "full workflow rejects an injected fullText instruction and malicious count while retaining source evidence"
+      ],
+      [
+        "AdversarialRuntimeHttpSpec",
+        "HTTP fullText injection reaches real retrieval and verifier and replay preserves the audited abstention"
+      ],
+      [
+        "AdversarialRuntimeWorkflowSpec",
+        "full workflow rejects model fake-identity even when JSON conforms to the synthesis schema"
+      ],
+      [
+        "AdversarialRuntimeWorkflowSpec",
+        "full workflow rejects model fake-citation even when JSON conforms to the synthesis schema"
+      ],
+      [
+        "AdversarialRuntimeHttpSpec",
+        "healthy control accepts the exact stored count through the same real HTTP and runtime composition"
+      ]
+    ]
+  },
+  "16": {
+    "existing": [
+      [
+        "IndependentStorageVectorSpec",
+        "transient throttling retries once then succeeds with the same batch and bounded attempts"
+      ],
+      [
+        "IndependentRuntime9CWorkflowSpec",
+        "required audit persistence failure fails closed after otherwise valid synthesis"
+      ]
+    ],
+    "new": [
+      [
+        "AdversarialRuntimeWorkflowSpec",
+        "Neptune reader timeout interrupts the actual graph call and audits missing essential evidence without synthesis"
+      ],
+      [
+        "AdversarialRuntimeWorkflowSpec",
+        "vector throttle failure cannot become semantic evidence and a later healthy query recovers without stale failure state"
+      ],
+      [
+        "AdversarialRuntimeHttpSpec",
+        "Dynamo conditional body-binding conflict fails HTTP closed before any runtime execution"
+      ]
+    ]
+  },
+  "17": {
+    "existing": [
+      [
+        "IndependentServices10ASpec",
+        "same idempotency key replays stored answer without a second workflow execution"
+      ],
+      [
+        "IndependentServices10BWorkerSpec",
+        "duplicate queue payloads execute once across worker instances and acknowledge both receipts"
+      ]
+    ],
+    "new": [
+      [
+        "AdversarialRuntimeHttpSpec",
+        "HTTP title injection reaches real retrieval and verifier and replay preserves the audited abstention"
+      ],
+      [
+        "AdversarialRuntimeHttpSpec",
+        "HTTP abstract injection reaches real retrieval and verifier and replay preserves the audited abstention"
+      ],
+      [
+        "AdversarialRuntimeHttpSpec",
+        "HTTP fullText injection reaches real retrieval and verifier and replay preserves the audited abstention"
+      ]
+    ]
+  },
+  "18": {
+    "existing": [
+      [
+        "IndependentServices10ASpec",
+        "missing and incorrect bearer credentials reject query and jobs before workflow"
+      ],
+      [
+        "IndependentServices10ASpec",
+        "external bearer cannot authorize internal routes and internal token cannot authorize queries"
+      ],
+      [
+        "IndependentServices10ASpec",
+        "malformed JSON and invalid constraint types are rejected before workflow"
+      ],
+      [
+        "IndependentServices10ASpec",
+        "workflow downstream error and timeout preserve typed HTTP mapping with trace ID"
+      ]
+    ],
+    "new": [
+      [
+        "AdversarialRuntimeHttpSpec",
+        "HTTP title injection reaches real retrieval and verifier and replay preserves the audited abstention"
+      ],
+      [
+        "AdversarialRuntimeHttpSpec",
+        "HTTP abstract injection reaches real retrieval and verifier and replay preserves the audited abstention"
+      ],
+      [
+        "AdversarialRuntimeHttpSpec",
+        "HTTP fullText injection reaches real retrieval and verifier and replay preserves the audited abstention"
+      ]
+    ]
+  },
+  "19": {
+    "existing": [
+      [
+        "IndependentServices10ASpec",
+        "structured request logs exclude authorization, extra headers, and malformed request content"
+      ]
+    ],
+    "new": [
+      [
+        "AdversarialRuntimeHttpSpec",
+        "synthetic config credentials header and thrown provider canaries stay absent from HTTP responses and observed logs"
+      ]
+    ]
+  },
+  "20": {
+    "existing": [
+      [
+        "ServiceFoundationSpec",
+        "authentication domains are separate with no usable default credentials"
+      ]
+    ],
+    "new": [
+      [
+        "AdversarialRuntimeBoundarySpec",
+        "each required service credential omission fails configuration before composition without revealing supplied values"
+      ]
+    ]
+  }
+}

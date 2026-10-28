@@ -1,0 +1,44 @@
+{
+  "recorded_utc": "2026-10-28T16:52:33.370969+00:00",
+  "branch": "phase-11",
+  "base_sha": "2b0aee044f243f01bbb603170d09f5c507df8bb7",
+  "head": "2b0aee044f243f01bbb603170d09f5c507df8bb7",
+  "modified_count": 8,
+  "untracked_count": 65,
+  "all_prior_report_prefixes_preserved": {
+    "docs/agent-runs/phase-11/review.md": true,
+    "docs/agent-runs/phase-11/repairs.md": true,
+    "docs/agent-runs/phase-11/prompt.md": true,
+    "docs/agent-runs/phase-11/owner-report.md": true,
+    "docs/agent-runs/phase-11/test-report.md": true
+  },
+  "protected_files_unchanged": 423,
+  "historical_evidence_preserved": true,
+  "gate_start_records_unchanged": 8,
+  "final_sources_frozen": 25,
+  "current_mapped_cases": 84,
+  "full_check_totals": {
+    "reports": 156,
+    "tests": 1253,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "targeted": {
+    "services": 40,
+    "runtime": 18,
+    "total": 58,
+    "failed": 0
+  },
+  "exposed_defect_count": 0,
+  "ownership_scope_pass": true,
+  "git_diff_check_exit": 0,
+  "java_or_sbt_processes": [],
+  "child_agents": "Both repair specialists completed; no active child agents",
+  "reviewer_launched": false,
+  "cloud_provider_calls": 0,
+  "commit_push": false,
+  "human_gate_or_approval_record_written": false,
+  "further_batch_or_phase_started": false,
+  "pending": "Independent user-launched recheck; local verification does not supersede REQUEST_CHANGES"
+}

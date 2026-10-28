@@ -1,0 +1,129 @@
+{
+  "totals": {
+    "reports": 155,
+    "tests": 1248,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "rows": [
+    {
+      "module": "modules/core",
+      "reports": 17,
+      "tests": 207,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "modules/hadoop",
+      "reports": 4,
+      "tests": 64,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "modules/entity-resolution",
+      "reports": 6,
+      "tests": 39,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "modules/spark",
+      "reports": 5,
+      "tests": 38,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "modules/storage",
+      "reports": 11,
+      "tests": 80,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "modules/rag",
+      "reports": 9,
+      "tests": 107,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "modules/services",
+      "reports": 6,
+      "tests": 36,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "tests",
+      "reports": 89,
+      "tests": 664,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "build-verification",
+      "reports": 8,
+      "tests": 13,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  ],
+  "log_group_counts": [
+    207,
+    64,
+    39,
+    38,
+    80,
+    107,
+    36,
+    664,
+    13
+  ],
+  "source_files": {
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/AdversarialRuntimeBoundarySpec.scala": "6b8c4dd7114a366c52d69494339b668c8d5d06beb1b3bb41e589d8424653db7c",
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/AdversarialRuntimeFixture.scala": "e8bf0dd1a0c028e1048cae20f794f97694e141039e59f76e43ec0c46fc8c5a02",
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/AdversarialRuntimeHttpSpec.scala": "c9c8810a6eb8de64bb8bbfbff08b1864e8a758d3e6b198cc1cd7246329a6f999",
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/AdversarialRuntimeWorkflowSpec.scala": "8ff0b02e59b3104a62295e5900e44359e297bf3005aef7cb8e7378b88b2809ef"
+  },
+  "protected_source_after": {
+    "modules": {
+      "files": 304,
+      "aggregate_sha256": "5e6a4ed7c0047a4081e530a4a667f366f2b280acc600d11ae3b329b2d5269fb0"
+    },
+    "build": {
+      "files": 24,
+      "aggregate_sha256": "8f0d7efc5ca71c96502df9ac459094c697c51accee803cf9cb0745c1c9764bcf"
+    },
+    "existing_independent_tests": {
+      "files": 115,
+      "aggregate_sha256": "93a8793742e9691262dc4105e6457bfeadea5dbb614631a3d3d386530f5a2d4f"
+    },
+    "prompt_assets": {
+      "files": 5,
+      "aggregate_sha256": "e8a1949632bf7c11c0c17b47db0c6c48bd7d42b3692092f441dbc35e75c7cbd5"
+    }
+  },
+  "raw_log": "/tmp/phase11b-full-check.log",
+  "raw_bytes": 1721327,
+  "raw_sha256": "142d10e1518e579d76a45f6a4c2db93771d496105f777a8f301ebf03559cfb31",
+  "exit_code": 0,
+  "mapped_distinct": 38,
+  "new_tests": 17,
+  "exposed_defect_count": 0,
+  "notes": [
+    "Every JUnit file is fresh after this gate's single-write start record.",
+    "Raw logs live in /tmp; committed excerpts and hashes are durable."
+  ]
+}

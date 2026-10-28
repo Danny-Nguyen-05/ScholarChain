@@ -102,11 +102,20 @@ Numeric claim values remain decimal strings to preserve exact stored integers.
 
 `Idempotency-Key` is required on query POSTs. An opaque deterministic query ID and hashed
 application reservation isolate application sessions from audit/worker namespaces. Both
-`Written(session)` and `Retried(_, Written(session))` mean this caller owns creation and enter
-the same body-binding/scheduling path. Other retried results reconcile the authoritative
-primary record without executing work. A revision CAS binds a canonical JSON body fingerprint.
-Same-body replays return stored answers, terminal errors or a current job reference; different
-bodies return 409. Concurrent callers wait for body binding within a configured deadline.
+`Written(session)` and `Retried(_, Written(session))` enter the same body-binding path.
+A revision-zero CAS binds a canonical JSON body fingerprint; only that winning binder schedules
+work. Each binding attempt stores a fresh ownership token alongside its request/trace IDs,
+which clients may reuse. If a binding write applies but its reply is lost (including a retried
+conditional-conflict result), a primary read must match the exact intended revision and payload,
+including fingerprint, request/trace IDs and ownership token, before this caller schedules it.
+A competing binder can only replay that record or receive a body-conflict 409.
+
+Other retried creation results also reconcile the authoritative primary record. Concurrent
+callers wait for body binding within the configured downstream deadline; if the reservation is
+still unbound, a replay may compete for the same revision-zero CAS. A clean bind rejection can
+return a retryable 503 for that attempt, but leaves the key recoverable on a later request rather
+than permanently stranded. Same-body replays of bound sessions return stored answers, terminal
+errors or a current job reference; different bodies return 409 without running another workflow.
 
 Synchronous wait and maximum workflow execution deadline are separate. Work exceeding only
 the synchronous wait returns 202 and continues in the same bounded background worker task.
@@ -289,7 +298,10 @@ are historical checkpoints for their stated rounds.
 No OpenSearch, optional index/service, CI workflow, cloud apply, live deployment or paid provider
 call was added. Completed query results replay with the same injected persistent store, but the
 local query executor is not a durable distributed dispatcher: process death can leave queued or
-running jobs pending, and a crash between key reservation and body binding can leave an uncertain
-unbound session. A permanent store outage can prevent terminal publication. These limitations,
+running jobs pending after a successful body binding. Transient lost replies on binding are
+reconciled in the live process; a later same-key request can recover a reservation that remains
+unbound after a bind rejection or a crash before binding. These recovery paths do not add a
+background dispatcher for already-bound jobs after process death. A permanent store outage can
+prevent reconciliation or terminal publication. These limitations,
 remote polling tuning, live adapter configuration and deployment recovery must be resolved at
 approved deployment gates; no live durability, cost or throughput claim follows from offline tests.

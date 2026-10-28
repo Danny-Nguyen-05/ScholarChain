@@ -1,0 +1,81 @@
+1: [info] welcome to sbt 1.10.7 (Homebrew Java 17.0.20.1)
+6: [info] scalafmt: Checking 17 Scala sources (/Users/danny/Documents/UIC/CS441/ScholarChain)...
+7: [info] scalafmt: Checking 2 Scala sources (/Users/danny/Documents/UIC/CS441/ScholarChain)...
+199: [info] - versioned JSON HOCON subset .conf and .json load through the real loader
+235: [info] Total number of tests run: 207
+236: [info] Suites: completed 17, aborted 0
+237: [info] Tests: succeeded 207, failed 0, canceled 0, ignored 0, pending 0
+238: [info] All tests passed.
+844: [info] - a one-slash file URI round-trips to the real directory
+977: [info] Total number of tests run: 64
+978: [info] Suites: completed 4, aborted 0
+979: [info] Tests: succeeded 64, failed 0, canceled 0, ignored 0, pending 0
+980: [info] All tests passed.
+1027: [info] Total number of tests run: 39
+1028: [info] Suites: completed 6, aborted 0
+1029: [info] Tests: succeeded 39, failed 0, canceled 0, ignored 0, pending 0
+1030: [info] All tests passed.
+2149: [info] Total number of tests run: 38
+2150: [info] Suites: completed 5, aborted 0
+2151: [info] Tests: succeeded 38, failed 0, canceled 0, ignored 0, pending 0
+2152: [info] All tests passed.
+2226: [info] - source-verified materialization publishes immutable content and the real object reader works
+2232: [info] - real cache loader publishes base-name homonym candidates without merging suffix identities
+2246: [info] Total number of tests run: 80
+2247: [info] Suites: completed 11, aborted 0
+2248: [info] Tests: succeeded 80, failed 0, canceled 0, ignored 0, pending 0
+2249: [info] All tests passed.
+2311: [info] - render-only real model manifest is accepted by pure live preflight without embedding or state
+2369: [info] Total number of tests run: 107
+2370: [info] Suites: completed 9, aborted 0
+2371: [info] Tests: succeeded 107, failed 0, canceled 0, ignored 0, pending 0
+2372: [info] All tests passed.
+2398: [info] - real full runtime adapter persists a truthful abstention when synthesis is unavailable
+2424: [info] Total number of tests run: 40
+2425: [info] Suites: completed 7, aborted 0
+2426: [info] Tests: succeeded 40, failed 0, canceled 0, ignored 0, pending 0
+2427: [info] All tests passed.
+3640: [info] - healthy control accepts the exact stored count through the same real HTTP and runtime composition
+3641: [info] - HTTP title injection reaches real retrieval and verifier and replay preserves the audited abstention
+3642: [info] - HTTP abstract injection reaches real retrieval and verifier and replay preserves the audited abstention
+3643: [info] - HTTP fullText injection reaches real retrieval and verifier and replay preserves the audited abstention
+3698: [info] - storage CLI refuses real execution without profile or matching approved environment
+3702: [info] - LOAD_FAILED stops after one poll and a resumed invocation submits exactly one new job
+6586: [info] - HTTP lifecycle runs real retrieval, verifies count three, fetches backing evidence and explains the audited answer
+6745: [info] - real rendered content changes keep the stable slot and conflict before any new embedding or data writes
+6821: [info] - S3 retries a transient SDK failure within the configured bound without real sleeping
+8190: [info] Total number of tests run: 665
+8191: [info] Suites: completed 89, aborted 0
+8192: [info] Tests: succeeded 665, failed 0, canceled 0, ignored 0, pending 0
+8193: [info] All tests passed.
+8206: [info] welcome to sbt 1.10.7 (Homebrew Java 17.0.20.1)
+8211: [error] java.lang.RuntimeException: scholarchain check probe: injected format-stage failure
+8212: [error] 	at scala.sys.package$.error(package.scala:30)
+8213: [error] 	at $fc7244dbace165edcad1$.$anonfun$root$8(build.sbt:163)
+8214: [error] 	at scala.runtime.java8.JFunction0$mcV$sp.apply(JFunction0$mcV$sp.java:23)
+8215: [error] 	at sbt.std.Transform$$anon$3.$anonfun$apply$2(Transform.scala:47)
+8216: [error] 	at sbt.std.Transform$$anon$4.work(Transform.scala:69)
+8217: [error] 	at sbt.Execute.$anonfun$submit$2(Execute.scala:283)
+8218: [error] 	at sbt.internal.util.ErrorHandling$.wideConvert(ErrorHandling.scala:24)
+8219: [error] 	at sbt.Execute.work(Execute.scala:292)
+8220: [error] 	at sbt.Execute.$anonfun$submit$1(Execute.scala:283)
+8221: [error] 	at sbt.ConcurrentRestrictions$$anon$4.$anonfun$submitValid$1(ConcurrentRestrictions.scala:265)
+8222: [error] 	at sbt.CompletionService$$anon$2.call(CompletionService.scala:65)
+8223: [error] 	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+8224: [error] 	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:539)
+8225: [error] 	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+8226: [error] 	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+8227: [error] 	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+8228: [error] 	at java.base/java.lang.Thread.run(Thread.java:840)
+8229: [error] (checkProbeInjectFailure) scholarchain check probe: injected format-stage failure
+8230: [error] Total time: 0 s, completed Oct 28, 2026, 11:52:15 AM
+8235: [info] TestRunMarkerSpec:
+8241: [info] Total number of tests run: 13
+8242: [info] Suites: completed 8, aborted 0
+8243: [info] Tests: succeeded 13, failed 0, canceled 0, ignored 0, pending 0
+8244: [info] All tests passed.
+8245: [info] running scholarchain.build.TestRunMarker /Users/danny/Documents/UIC/CS441/ScholarChain
+8246: [success] Total time: 722 s (12:02), completed Oct 28, 2026, 11:52:15 AM
+8247: real 724.17
+8248: user 730.56
+8249: sys 103.35
