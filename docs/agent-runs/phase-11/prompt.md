@@ -318,3 +318,8 @@ Return:
 - [ ] No reviewer wrote production code.
 - [ ] All tests pass under their declared profiles (`sbt check`; live profile deferred to Phase 14).
 - [ ] The human wrote `human-gate.md` and `commit.txt`.
+
+
+## Subphase 11B work-order continuation
+
+User: "now move on phase 11b". Execute only 11B of the external phase11.md plan copied above. The user-supplied 11A APPROVE and full next prompt are retained in review.md and the session. 11A is committed and pushed at d80afb755c649ecc5cda60525a1a0201aceb4c03; Phase 9 and Phase 10 commits are in history. No Step 0 questions remain; prior defect/coverage decisions persist. No production edits, reviewer invocation, live AWS/provider calls, or 11C work. Test-engineer owns new Adversarial* tests; coordinator owns evidence. Apply N1/N2: state formatter rewrites explicitly or use scalafmtCheck, require writing barrier before gates, create gate-start record once immediately before launch and never rewrite. Return the complete reviewer prompt and stop. No human gate or approval record is authorized.

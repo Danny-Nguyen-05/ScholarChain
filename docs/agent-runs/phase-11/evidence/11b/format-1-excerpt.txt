@@ -1,0 +1,7 @@
+1: [info] welcome to sbt 1.10.7 (Homebrew Java 17.0.20.1)
+6: [info] scalafmt: Formatting 4 Scala sources (/Users/danny/Documents/UIC/CS441/ScholarChain/tests)...
+7: [info] scalafmt: Reformatted 4 Scala sources
+8: [success] Total time: 1 s, completed Oct 27, 2026, 4:13:59 PM
+9: real 2.76
+10: user 10.36
+11: sys 0.47

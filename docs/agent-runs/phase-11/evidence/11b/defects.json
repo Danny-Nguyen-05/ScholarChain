@@ -1,0 +1,18 @@
+{
+  "exposed_defects": [],
+  "combined_11a_11b_exposed_defects": [],
+  "exposed_defect_count": 0,
+  "phase11a_count": 0,
+  "phase11b_count": 0,
+  "disposition": "Targeted17/17 and full1248/1248 passing. No production defect exposed; no tag, exclusion wiring or explicit defect run required for the empty exposed list.",
+  "development_failure": "New test referenced unavailable Logback classes; test-engineer switched capture to existing Log4j2 backend; compile failure is not a production defect.",
+  "prior_findings": "Earlier phase registers and 11A N1\u2013N5 remain under original dispositions. New passing tests do not close prior findings. Whole repository review/repairs deferred11C.",
+  "prior_registers": [
+    "docs/agent-runs/phase-11/repairs.md",
+    "docs/agent-runs/phase-09/repairs.md",
+    "docs/agent-runs/phase-10/repairs.md",
+    "docs/agent-runs/phase-07/repairs.md",
+    "docs/agent-runs/phase-06/repairs.md",
+    "docs/agent-runs/phase-05/repairs.md"
+  ]
+}

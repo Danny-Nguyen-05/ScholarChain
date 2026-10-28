@@ -1,0 +1,21 @@
+1: [info] welcome to sbt 1.10.7 (Homebrew Java 17.0.20.1)
+6: [success] Total time: 0 s, completed Oct 27, 2026, 4:14:07 PM
+7: [info] compiling 4 Scala sources to /Users/danny/Documents/UIC/CS441/ScholarChain/tests/target/scala-3.3.4/test-classes ...
+8: [error] -- [E006] Not Found Error: /Users/danny/Documents/UIC/CS441/ScholarChain/tests/src/test/scala/edu/uic/cs441/scholarchain/independent/AdversarialRuntimeHttpSpec.scala:166:20
+9: [error] 166 |      .asInstanceOf[ch.qos.logback.classic.Logger]
+10: [error]     |                    ^^
+11: [error]     |                    Not found: ch
+12: [error]     |
+13: [error]     | longer explanation available when compiling with `-explain`
+14: [error] -- [E006] Not Found Error: /Users/danny/Documents/UIC/CS441/ScholarChain/tests/src/test/scala/edu/uic/cs441/scholarchain/independent/AdversarialRuntimeHttpSpec.scala:168:10
+15: [error] 168 |      new ch.qos.logback.core.read.ListAppender[ch.qos.logback.classic.spi.ILoggingEvent]
+16: [error]     |          ^^
+17: [error]     |          Not found: ch
+18: [error]     |
+19: [error]     | longer explanation available when compiling with `-explain`
+20: [error] two errors found
+21: [error] (independentTests / Test / compileIncremental) Compilation failed
+22: [error] Total time: 3 s, completed Oct 27, 2026, 4:14:09 PM
+23: real 4.83
+24: user 20.37
+25: sys 1.02

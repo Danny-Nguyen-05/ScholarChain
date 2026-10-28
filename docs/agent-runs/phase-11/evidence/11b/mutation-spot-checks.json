@@ -1,0 +1,56 @@
+[
+  {
+    "id": "M1",
+    "behavior": "Count verification",
+    "reasoned_effect": "If an injected 999 count is authorized, workflow and HTTP attack cases fail their empty-claims, rejected-claim and ABSTAINED audit assertions. The same HTTP composition accepts the literal supported count 3, preventing blanket rejection from passing both controls.",
+    "executed_production_mutation": false
+  },
+  {
+    "id": "M2",
+    "behavior": "Researcher identity",
+    "reasoned_effect": "If an invented subject can borrow real metrics, the correct-count3 fake-identity case fails its rejection and subject-window-or-trust-mismatch reason assertions.",
+    "executed_production_mutation": false
+  },
+  {
+    "id": "M3",
+    "behavior": "Citation existence",
+    "reasoned_effect": "If a nonexistent evidence ID authorizes a correct count3 claim, fake-citation fails its empty accepted claims and missing-or-duplicate-evidence-id rejection assertions.",
+    "executed_production_mutation": false
+  },
+  {
+    "id": "M4",
+    "behavior": "Vector key/model binding",
+    "reasoned_effect": "If duplicate hit keys or a stale same-dimension model tag become evidence, the boundary cases fail their exact semantic-filter-or-result-mismatch failure expectation.",
+    "executed_production_mutation": false
+  },
+  {
+    "id": "M5",
+    "behavior": "Graph deadline and cancellation",
+    "reasoned_effect": "If blocked graph retrieval is no longer bounded/cancelled at the path deadline, the entered/interrupted latches, exact one invocation, path stage-deadline and no-synthesis assertions detect the change.",
+    "executed_production_mutation": false
+  },
+  {
+    "id": "M6",
+    "behavior": "Conditional session write",
+    "reasoned_effect": "If a rejected body-binding CAS schedules runtime work, the HTTP conflict case fails its 503, one update and zero model-call expectations; replay also remains closed.",
+    "executed_production_mutation": false
+  },
+  {
+    "id": "M7",
+    "behavior": "Idempotency replay",
+    "reasoned_effect": "If same-key replay runs the model again, the HTTP cases fail their exact response equality, unchanged audit or one model invocation assertions. Changed-body reuse separately must return409.",
+    "executed_production_mutation": false
+  },
+  {
+    "id": "M8",
+    "behavior": "Redaction",
+    "reasoned_effect": "If config hashes, raw auth/private header or provider-exception canaries enter captured HTTP request logs, runtime-stage logs or wire response/headers, the redaction assertions fail. Positive runtime-event capture and one throwing store invocation exercise the path.",
+    "executed_production_mutation": false
+  },
+  {
+    "id": "M9",
+    "behavior": "Fault recovery",
+    "reasoned_effect": "If vector rejection is disguised as successful empty evidence, the first semantic failure audit/result checks fail. A later healthy query must return exactly one descriptive evidence item with no failures, preventing blanket failure from satisfying both requests.",
+    "executed_production_mutation": false
+  }
+]

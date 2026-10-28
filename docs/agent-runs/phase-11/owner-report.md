@@ -56,3 +56,56 @@ BLOCKED-ON OWNER: None for 11A implementation/gates; independent reviewer and hu
 BLOCKED-ON EVIDENCE: None for completed local gates. External review and later live/distributed gates remain unverified.
 
 NEXT GATE: User-launched read-only 11A review. No reviewer invoked; no 11B work. All specialist turns and sbt sessions completed before handoff.
+
+
+## Subphase 11B
+
+STATUS: COMPLETE (implementation and local gates; user-launched independent review pending)
+
+OWNER: Coordinator `/root` assembles evidence; `/root/test_engineer_11b` is sole test writer. Inherited model, exact revision unavailable. No nested delegation, reviewer invocation or build-engineer needed.
+
+WORK ORDER: Only 11B of phase11.md §§3–7, §8 11B and §10, plus the user-supplied 11A external-review continuation and "now move on phase 11b". Clean phase-11 base/HEAD `d80afb755c649ecc5cda60525a1a0201aceb4c03`; committed Phases 9/10 ancestry verified including `0c5ee89994b5b738a3490ef5e8f032fdc67327b2`. Step0: "No questions for this subphase"; no new unresolved preference, prior ExposedDefect/table decisions persist. Only 11B is implemented.
+
+FILES CREATED: Four new AdversarialRuntime* Scala files under tests/src/test/scala/edu/uic/cs441/scholarchain/independent/ (three suites plus shared fixture); evidence/11b/** and reviewer-prompt-11b.md. Exact paths in evidence/11b/handoff-files.json.
+
+FILES MODIFIED: Append-only 11B sections in prompt.md, owner-report.md, test-report.md, repairs.md and review.md. No production, build, existing test, prompt-asset or human-decision edit. Ignored test outputs and success marker updated by sbt. No commit/push in11B.
+
+COMMANDS RUN:
+
+All commands ran at /Users/danny/Documents/UIC/CS441/ScholarChain. Every sbt invocation used:
+
+```bash
+export JAVA_HOME=/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home
+export PATH="$JAVA_HOME/bin:$PATH"
+export SBT_OPTS="-Dlogback.configurationFile=$PWD/docs/agent-runs/phase-04/xml-repair-logback.xml"
+```
+
+| Gate | Command after JDK 17 environment | Exit | Observed result |
+| --- | --- | ---: | --- |
+| Toolchain | `java -version` | 0 | OpenJDK 17.0.20.1 |
+| format-1 | `sbt -batch 'independentTests / Test / scalafmt'` | 0 | **Rewrote all four new sources** |
+| targeted-1 | `sbt -batch 'independentTests / Test / scalafmtCheck' 'independentTests / Test / testOnly *AdversarialRuntime*'` | 1 | Compile failed on two unavailable Logback references; zero tests ran |
+| format-2 | `sbt -batch 'independentTests / Test / scalafmt'` | 0 | **Rewrote only the new HTTP suite** after its owner's capture correction |
+| targeted-2 | Same targeted command as targeted-1 | 0 | Format check passed;17/17 in 3 suites;0failed/canceled/ignored/pending |
+| full-check | `/usr/bin/time -p sbt -batch check` | 0 | 1,248/1,248;155 fresh JUnit reports;0failures/errors/skips |
+| Reconciliation | `python3 docs/agent-runs/phase-11/evidence/11b/collect-evidence.py` | 0 | All named coverage/new cases, counts, freshness and protected hashes verified |
+
+Exact coordinator wrapper arguments, environment, cwd, raw-log paths, exits, elapsed times and SHA-256 values are in `evidence/11b/commands.json` and each gate's start/result records. The wrapper runs `/usr/bin/time -p sbt -batch ...` and redirects stdout/stderr to `/tmp/phase11b-<gate>.log`. No specialist ran sbt. Every start record was created with exclusive creation immediately before process launch and never rewritten. Specialist stopped-writing barriers preceded every gate; formatting ran only while the specialist was stopped. Final source stayed frozen through targeted-2/full-check. The expected nested `checkProbeInjectFailure ... injected format-stage failure` self-test is not an outer-gate failure.
+
+TEST RESULTS: Historical 11A baseline: 1,231 tests/152 reports (not rerun before edits); final full: 1,248 tests/155 reports, zero failures/errors/skips. Added 17 tests/3 suites: Boundary 3, Workflow 8, HTTP 6. Independent module: 664 tests/89 reports, other modules: 571 tests and build-verification: 13. Targeted 17/17. Selected runtime mapping: 38 distinct = 21 existing + 17 new; per-category counts overlap. Nine mutation thought checks; no production mutations. Combined 11A + 11B ExposedDefect count: 0. No tagged, ignored or quarantined new cases; no explicit defect command/exclusion wiring necessary for an empty list. Existing live-AWS exclusion remains in place.
+
+VALIDATION RESULTS: Reconciled all nine per-group log totals against 155 fresh JUnit reports and all 38 mapped cases against those reports. Exact new source hashes and all 448 protected tracked files match: 304 module files, 24 build files, 115 existing independent-test files and 5 prompt assets, including resources. Gate-start records were exclusively created immediately before launch; full-start hash/mtime unchanged at final validation. The initial compile error was a test-classpath mistake, fixed only by its test owner using the existing Log4j2 backend; no production defect or dependency change. Raw full log 1,721,327 bytes; SHA-256 `142d10e1518e579d76a45f6a4c2db93771d496105f777a8f301ebf03559cfb31`. Full elapsed 722.38 s. Passing source was frozen for both final targeted/full gates.
+
+ASSUMPTIONS: Public interfaces and documented contracts define expectations. Count 3 is a hand-stated G1 fixture fact; fake subjects/citations retain count 3 to isolate trust checks; attacks propose 999, and healthy control accepts 3. Exact one/two invocation counts, typed failures, absence of unsupported claims, readable immutable audit, replay equality and interruption latches make fault paths observable. Selected existing coverage is not an exhaustive historic census.
+
+RISKS: All sources, credentials, models and faults are synthetic. No live AWS profile, provider, deployment, cloud mutation, image rebuild, population-quality, general injection-resistance, scale, throughput or cost claim. The HTTP adapter supplies a bounded plan; existing planner tests cover planning. Fault-injecting graph/vector/session ports test runtime contracts; selected existing adapter tests exercise SDK behavior. The HTTP control and attacks use the real workflow, evidence builder, verifier and audit store. Logging capture covers HTTP request events and the runtime-stage logger, with positive observed-event assertions; it does not capture every possible process logger. Service authorization uses the documented external/internal credential domains; no tenant/role policy is invented. Missing required credentials produce the documented generic invalid-or-missing-service-configuration error.
+
+Phase 5 calibration/AI-assisted-label limits, Phase 6 convergence/approximation/EMR limits, Phase 7 live/cleanup limits, Phase 9 registered nonblocking findings and Phase 10 F7/F8/F10–F17 remain carried under their original owners. 11A N1/N2 process lessons were applied; N3/N4 were not repaired or investigated. Model revision unavailable. Earlier report reading scope is the disclosed active-disposition scan in reading-ledger.json, not a fresh line-by-line reread. Raw logs remain only in /tmp, so hashes/excerpts survive Git retention but raw logs are not reboot-durable. No optional OpenSearch, index/service, CI or coverage tool was added. Whole-repository review/repairs belong to 11C; live gates to Phase 14.
+
+MANUAL ACTION REQUIRED: User launches the read-only reviewer with reviewer-prompt-11b.md, returns its verdict, then controls acceptance/commit and any next prompt. No human gate or approval record authored.
+
+BLOCKED-ON OWNER: None for implemented local scope; reviewer/human own acceptance.
+
+BLOCKED-ON EVIDENCE: No missing local deterministic gate. Independent approval, live behavior and whole-repository review remain future/unverified.
+
+NEXT GATE: User-launched 11B review. Specialist finished; no builds or child agents running at final handoff. Stop; no 11C preparation or implementation.

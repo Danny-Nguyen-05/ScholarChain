@@ -22,3 +22,32 @@ N5 Info: disclosed limits accepted: scan-level reading of earlier reports (readi
 
 Unverified future gates: 11B runtime categories 12–20; 11C whole-repository review and repairs; live AWS (Phase 14); human gate and commit.
 ----- END VERBATIM 11A VERDICT -----
+
+
+## Subphase 11B
+
+No user-supplied external review of 11B has been received. No reviewer was launched. Passing implementation gates are not independent approval or a human gate. The user may return a verdict to append verbatim on a later prompt.
+
+### user-supplied external review
+
+Received 2026-10-28. The preceding placeholder is historical. The following verdict is retained verbatim from the user's supplied NEXT PROMPT. This records an independent external review, not a human phase gate. The reviewer reported read-only inspection, no builds/tests, no AWS/provider calls and no file edits.
+
+```text
+VERDICT: APPROVE for Subphase
+11B, no blocking findings; nonblocking F11B-1 (Medium, service-engineer/test-engineer, 11C
+input: QueryService.scala:152-156 + DynamoStorage.scala:137 — a lost reply on the
+body-binding conditional write returns Retried(1, Rejected("conditional-conflict")); submit
+returns 503 without scheduling while the row is bound QUEUED; same-key replay returns 202
+QUEUED indefinitely until TTL; N04 covers only the clean-rejection variant), F11B-2 (Low,
+test-engineer: AdversarialRuntimeHttpSpec.scala:138-140 pins replay-after-failed-bind 503
+as current behavior rather than a stated requirement), F11B-3 (Low, test-engineer /
+service-engineer: AdversarialRuntimeBoundarySpec.scala:77-98 exercises only
+ServiceConfig.fromEnvironment despite "before composition", and the generic error does not
+name the missing key), F11B-4 (Info: category-16 E11 mapping; weak summary "3" check backed
+by exact claim values). Carried: 11A N3/N4/N5, /tmp raw-log durability, model revision
+unavailable, Phase 9 NB1–NB10, Phase 10 F7, F8, F10–F17.
+```
+
+The reviewer cross-checked the five raw-log hashes, four current source hashes, five start-record hashes/mtimes, writing barriers, append-only tracked diff and 41-file untracked inventory. Reported counts reconcile: 1,231 + 17 = 1,248 tests; 152 + 3 = 155 reports; 647 + 17 = 664 independent tests. The reviewer found no hits for six synthetic canary strings in the full raw log. F11B-1 is a code-reading lead, not an executed reproduction. All four nonblocking findings are logged in repairs.md; no repair is authorized in this recording step.
+
+Next gate: commit approved 11B on phase-11, then the first 11C stop point only. No 11C assembly has started.

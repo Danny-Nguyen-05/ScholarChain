@@ -1,0 +1,114 @@
+{
+  "scope": "Selected named existing coverage before new implementation, not exhaustive census; test-engineer first reported gaps before editing.",
+  "coverage": {
+    "12": [
+      [
+        "IndependentEmbeddingStorageSpec",
+        "a bound vector key rejects changed text before embedding and records the conflict"
+      ],
+      [
+        "IndependentStorageVectorSpec",
+        "same key and text is unchanged while a changed text hash is rejected before provider write"
+      ],
+      [
+        "IndependentRuntime9BSemanticSpec",
+        "semantic hits embedded by a different model cannot be compared with the query vector"
+      ]
+    ],
+    "13": [
+      [
+        "IndependentRuntime9CSynthesisSpec",
+        "instruction-looking title remains untrusted data and cannot change verified facts"
+      ],
+      [
+        "IndependentRuntime9CSynthesisSpec",
+        "instruction-looking abstract remains untrusted data and cannot change verified facts"
+      ],
+      [
+        "IndependentRuntime9CSynthesisSpec",
+        "instruction-looking generated profile remains untrusted data and cannot change verified facts"
+      ],
+      [
+        "IndependentRuntime9BEvidenceSpec",
+        "retrieved delimiter injection stays JSON data inside one untrusted block"
+      ]
+    ],
+    "14": [
+      [
+        "IndependentRuntime9CSynthesisSpec",
+        "two malformed synthesis outputs abstain and never call a model verifier"
+      ],
+      [
+        "IndependentRuntime9CVerificationSpec",
+        "a fabricated subject cannot borrow another researcher's stored metrics"
+      ]
+    ],
+    "15": [
+      [
+        "IndependentRuntime9CVerificationSpec",
+        "a missing evidence ID cannot authorize an otherwise correct count"
+      ],
+      [
+        "IndependentRuntime9CVerificationSpec",
+        "wrong stored count is rejected and remains available in attempted-claim audit material"
+      ]
+    ],
+    "16": [
+      [
+        "IndependentStorageVectorSpec",
+        "transient throttling retries once then succeeds with the same batch and bounded attempts"
+      ],
+      [
+        "IndependentRuntime9CWorkflowSpec",
+        "required audit persistence failure fails closed after otherwise valid synthesis"
+      ]
+    ],
+    "17": [
+      [
+        "IndependentServices10ASpec",
+        "same idempotency key replays stored answer without a second workflow execution"
+      ],
+      [
+        "IndependentServices10BWorkerSpec",
+        "duplicate queue payloads execute once across worker instances and acknowledge both receipts"
+      ]
+    ],
+    "18": [
+      [
+        "IndependentServices10ASpec",
+        "missing and incorrect bearer credentials reject query and jobs before workflow"
+      ],
+      [
+        "IndependentServices10ASpec",
+        "external bearer cannot authorize internal routes and internal token cannot authorize queries"
+      ],
+      [
+        "IndependentServices10ASpec",
+        "malformed JSON and invalid constraint types are rejected before workflow"
+      ],
+      [
+        "IndependentServices10ASpec",
+        "workflow downstream error and timeout preserve typed HTTP mapping with trace ID"
+      ]
+    ],
+    "19": [
+      [
+        "IndependentServices10ASpec",
+        "structured request logs exclude authorization, extra headers, and malformed request content"
+      ]
+    ],
+    "20": [
+      [
+        "ServiceFoundationSpec",
+        "authentication domains are separate with no usable default credentials"
+      ]
+    ]
+  },
+  "gaps": [
+    "Full ingestion/retrieval/synthesis/verifier and real HTTP source-injection integration",
+    "Schema-valid fake identities/citations exercised through workflow with good-count controls",
+    "Faulting graph/vector/session ports with observed invocations, deadlines and recovery",
+    "Duplicate vector query keys and same-dimension stale model metadata",
+    "Per-required-key service config omission and config/header/exception canary redaction"
+  ]
+}

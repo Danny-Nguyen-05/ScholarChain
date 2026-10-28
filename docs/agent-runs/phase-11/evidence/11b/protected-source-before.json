@@ -1,0 +1,18 @@
+{
+  "modules": {
+    "files": 304,
+    "aggregate_sha256": "5e6a4ed7c0047a4081e530a4a667f366f2b280acc600d11ae3b329b2d5269fb0"
+  },
+  "build": {
+    "files": 24,
+    "aggregate_sha256": "8f0d7efc5ca71c96502df9ac459094c697c51accee803cf9cb0745c1c9764bcf"
+  },
+  "existing_independent_tests": {
+    "files": 115,
+    "aggregate_sha256": "93a8793742e9691262dc4105e6457bfeadea5dbb614631a3d3d386530f5a2d4f"
+  },
+  "prompt_assets": {
+    "files": 5,
+    "aggregate_sha256": "e8a1949632bf7c11c0c17b47db0c6c48bd7d42b3692092f441dbc35e75c7cbd5"
+  }
+}

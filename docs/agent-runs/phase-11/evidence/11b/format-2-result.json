@@ -1,0 +1,17 @@
+{
+  "exit_code": 0,
+  "end_epoch": 1793135712.6888819,
+  "elapsed_seconds": 2.622633934020996,
+  "raw_log": "/tmp/phase11b-format-2.log",
+  "raw_bytes": 618,
+  "raw_sha256": "c1b10a246f87407781f4a01a31e711cca86af19a1407dd50d6c1fde139aad4cd",
+  "source_files_after": {
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/AdversarialRuntimeBoundarySpec.scala": "6b8c4dd7114a366c52d69494339b668c8d5d06beb1b3bb41e589d8424653db7c",
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/AdversarialRuntimeFixture.scala": "e8bf0dd1a0c028e1048cae20f794f97694e141039e59f76e43ec0c46fc8c5a02",
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/AdversarialRuntimeHttpSpec.scala": "c9c8810a6eb8de64bb8bbfbff08b1864e8a758d3e6b198cc1cd7246329a6f999",
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/AdversarialRuntimeWorkflowSpec.scala": "8ff0b02e59b3104a62295e5900e44359e297bf3005aef7cb8e7378b88b2809ef"
+  },
+  "rewritten_sources": [
+    "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/AdversarialRuntimeHttpSpec.scala"
+  ]
+}
