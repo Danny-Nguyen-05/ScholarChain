@@ -1,0 +1,30 @@
+{
+  "source_files": 67,
+  "selected_secret_pattern_hits": {
+    "access_key_id": [],
+    "private_key": [],
+    "secret_value_resource": []
+  },
+  "provider_pins": {
+    "infra/terraform/modules/emr/versions.tf": true,
+    "infra/terraform/modules/neptune/versions.tf": true,
+    "infra/terraform/modules/observability/versions.tf": true,
+    "infra/terraform/modules/s3vectors/versions.tf": true,
+    "infra/terraform/modules/workflow/versions.tf": true,
+    "infra/terraform/modules/datalake/versions.tf": true,
+    "infra/terraform/modules/dynamodb/versions.tf": true,
+    "infra/terraform/modules/foundation/bootstrap/versions.tf": true,
+    "infra/terraform/modules/foundation/versions.tf": true,
+    "infra/terraform/modules/identity/versions.tf": true,
+    "infra/terraform/modules/messaging/versions.tf": true,
+    "infra/terraform/modules/network/versions.tf": true,
+    "infra/terraform/modules/runtime/versions.tf": true,
+    "infra/terraform/versions.tf": true
+  },
+  "scanner_available": {
+    "trivy": null,
+    "checkov": null
+  },
+  "lock_unchanged": true,
+  "limitations": "Selected source patterns and mock tests are not an independent security scan or evidence of live IAM/region/cost effectiveness."
+}

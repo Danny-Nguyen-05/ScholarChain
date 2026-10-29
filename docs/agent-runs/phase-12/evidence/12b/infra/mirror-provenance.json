@@ -1,0 +1,15 @@
+{
+  "provider": "hashicorp/aws",
+  "version": "6.44.0",
+  "source": "/Users/danny/Documents/UIC/CS441/ScholarChain/infra/terraform/.terraform/providers/registry.terraform.io/hashicorp/aws/6.44.0/darwin_arm64/terraform-provider-aws_v6.44.0_x5",
+  "mirror": "/tmp/scholarchain-phase12b-infra/mirror/registry.terraform.io/hashicorp/aws/6.44.0/darwin_arm64/terraform-provider-aws_v6.44.0_x5",
+  "method": "hardlink from pinned provider installed and verified during12A",
+  "sha256": "050fc3a7514d11585206c2a059be393ee54f50b9276ed1b092a1a975ae2afa73",
+  "cli_config_file": "/tmp/scholarchain-phase12b-infra/terraformrc",
+  "lock_sha256": "421b75245b0080edee2b434482ff348419a75d7a6b798d5218e0a0f9f723eaea",
+  "package_files": {
+    "terraform-provider-aws_v6.44.0_x5": "050fc3a7514d11585206c2a059be393ee54f50b9276ed1b092a1a975ae2afa73",
+    "LICENSE.txt": "588768dc819dc773d6914c22df7de8932cc7899c24188f5b09b013d86457e115"
+  },
+  "initial_scratch_init_failure": "Mirror initially omitted LICENSE.txt, so new scratch installation correctly failed committed h1 package verification. Full pinned package now retained with LICENSE; no lock change."
+}

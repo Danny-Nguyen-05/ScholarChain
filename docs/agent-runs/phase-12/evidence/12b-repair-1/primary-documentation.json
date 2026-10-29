@@ -1,0 +1,8 @@
+{
+  "timestamp_utc": "2026-10-29T15:36:13.117580+00:00",
+  "url": "https://docs.aws.amazon.com/AmazonS3/latest/userguide/s3-vectors-data-encryption.html",
+  "sha256_fetched_bytes": "5fe32d9e114201269a2d42362ac837046a6eadbeb4c37a1e7e713a317d19880a",
+  "bytes": 25210,
+  "scope": "Public primary documentation only; no AWS account API. Exact service principal and encryption context pattern checked against AWS example. Scope narrowed to this project vector bucket.",
+  "live_effectiveness": "unverified"
+}

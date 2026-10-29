@@ -18,3 +18,14 @@ output "data_controls" {
 output "network_controls" { value = module.network.controls }
 output "iam_controls" { value = module.identity.controls }
 output "budget_controls" { value = module.foundation.budget_controls }
+
+output "phase12b_controls" { value = {
+  neptune             = module.neptune.controls
+  vectors             = module.s3vectors.controls
+  emr                 = module.emr.controls
+  runtime             = module.runtime.compute_controls
+  workflow            = module.workflow.controls
+  observability       = module.observability.controls
+  deployment_contract = module.runtime.deployment_contract
+} }
+output "embedding_dispatch_arn" { value = module.workflow.arn }

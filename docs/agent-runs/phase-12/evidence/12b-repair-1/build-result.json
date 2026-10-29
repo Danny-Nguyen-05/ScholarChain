@@ -1,0 +1,75 @@
+{
+  "owner": "build-engineer",
+  "native_task": "/root/build_12a",
+  "phase": "12B repair round1",
+  "model": "inherited; exact model identifier not exposed",
+  "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+  "start_epoch": 1793288136.8371599,
+  "start_utc": "2026-10-29T15:35:36.837163+00:00",
+  "branch": "phase-12",
+  "head": "a83f62e9af56058a170075f98c4e027d039567ec",
+  "environment": {
+    "JAVA_HOME": "/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home",
+    "SBT_OPTS": "-Dlogback.configurationFile=/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-04/xml-repair-logback.xml"
+  },
+  "path_prefix": "/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home/bin",
+  "commands": [
+    [
+      "java",
+      "-version"
+    ],
+    [
+      "sbt",
+      "-batch",
+      "check"
+    ]
+  ],
+  "freeze_path": "/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-12/evidence/12b-repair-1/infra-source-freeze.json",
+  "freeze_sha256": "0cb2daba592e30fa86032adb27f9a75f07120b8c777063c5923934a21253fe41",
+  "freeze_epoch": 1793288120.277855,
+  "max_source_mtime_epoch": 1793288084.3678057,
+  "start_after_freeze": true,
+  "start_after_all_source_mtimes": true,
+  "frozen_source_count": 67,
+  "infra_source_count": 67,
+  "tracked_source_count": 454,
+  "all_snapshot_file_count": 521,
+  "frozen_hash_mismatches": [],
+  "source_before_path": "/tmp/scholarchain-phase12b-repair1-build-source-before.json",
+  "results": [
+    {
+      "argv": [
+        "java",
+        "-version"
+      ],
+      "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+      "start_epoch": 1793288136.837301,
+      "exit_code": 0,
+      "elapsed_seconds": 0.065,
+      "log": "/tmp/scholarchain-phase12b-repair1-build-java-version.log",
+      "log_sha256": "2fe83b0053132e4e834defa82250462f4c62733d29bf76b19ee1bb3c14b06b39",
+      "log_bytes": 171
+    },
+    {
+      "argv": [
+        "sbt",
+        "-batch",
+        "check"
+      ],
+      "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+      "start_epoch": 1793288136.902967,
+      "exit_code": 0,
+      "elapsed_seconds": 745.944,
+      "log": "/tmp/scholarchain-phase12b-repair1-build-sbt-check.log",
+      "log_sha256": "71fd8fd868bb90de21164ca405cebda22123fba06453d0d0072e9ee5499fb16b",
+      "log_bytes": 1719202
+    }
+  ],
+  "end_utc": "2026-10-29T15:48:02.876901+00:00",
+  "elapsed_seconds": 746.04,
+  "source_after_path": "/tmp/scholarchain-phase12b-repair1-build-source-after.json",
+  "source_changed_paths": [],
+  "source_unchanged": true,
+  "git_branch_head_unchanged": true,
+  "gate_exit_code": 0
+}

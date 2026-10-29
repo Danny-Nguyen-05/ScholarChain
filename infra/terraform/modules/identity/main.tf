@@ -119,6 +119,17 @@ resource "aws_kms_key" "data" {
       Principal = { AWS = local.root_arn }
       Action    = distinct(local.key_admin_actions)
       Resource  = "*"
+      }, {
+      Sid       = "AllowS3VectorsServicePrincipal"
+      Effect    = "Allow"
+      Principal = { Service = "indexing.s3vectors.amazonaws.com" }
+      Action    = ["kms:Decrypt"]
+      Resource  = "*" # This CMK only, as required by a KMS key policy.
+      Condition = {
+        StringEquals               = { "aws:SourceAccount" = var.aws_account_id }
+        ArnLike                    = { "aws:SourceArn" = "arn:aws:s3vectors:${var.aws_region}:${var.aws_account_id}:bucket/${var.name_prefix}-${var.aws_account_id}-vectors" }
+        "ForAnyValue:StringEquals" = { "kms:EncryptionContextKeys" = ["aws:s3vectors:arn", "aws:s3vectors:resource-id"] }
+      }
     }]
   })
   tags = var.tags
@@ -137,7 +148,7 @@ resource "aws_iam_role_policy" "task" {
   for_each = local.services
   name     = "${each.key}-data"
   role     = aws_iam_role.task[each.key].id
-  policy   = jsonencode({ Version = "2012-10-17", Statement = local.task_statements[each.key] })
+  policy   = jsonencode({ Version = "2012-10-17", Statement = concat(local.task_statements[each.key], local.additional_task_statements[each.key]) })
 }
 resource "aws_iam_role" "execution" {
   for_each           = local.services
@@ -232,6 +243,7 @@ resource "aws_iam_role_policy" "emr_data" {
       { Sid = "ReadInputAndArtifacts", Effect = "Allow", Action = ["s3:GetObject", "s3:GetObjectVersion"], Resource = [for b in ["raw", "curated", "graph", "artifacts"] : "${var.bucket_arns[b]}/*"] },
       { Sid = "ListPipelineBuckets", Effect = "Allow", Action = ["s3:ListBucket", "s3:GetBucketLocation"], Resource = [for b in ["raw", "curated", "graph", "artifacts", "logs", "reports"] : var.bucket_arns[b]] },
       { Sid = "WriteOutputs", Effect = "Allow", Action = ["s3:PutObject", "s3:AbortMultipartUpload", "s3:ListMultipartUploadParts"], Resource = [for b in ["curated", "graph", "artifacts", "logs", "reports"] : "${var.bucket_arns[b]}/*"] },
+      { Sid = "CommitOutputTemporaryFiles", Effect = "Allow", Action = ["s3:DeleteObject"], Resource = flatten([for b, prefixes in var.emr_output_prefixes : [for prefix in prefixes : "${var.bucket_arns[b]}/${prefix}*"]]) },
       { Sid = "EncryptPipelineData", Effect = "Allow", Action = ["kms:Encrypt", "kms:Decrypt", "kms:GenerateDataKey", "kms:DescribeKey"], Resource = [aws_kms_key.data.arn] }
     ]
   })

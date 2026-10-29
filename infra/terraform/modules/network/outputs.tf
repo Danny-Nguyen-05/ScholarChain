@@ -1,10 +1,11 @@
 output "ids" {
   value = {
-    vpc_id                 = aws_vpc.course.id
-    public_subnet_ids      = [for s in aws_subnet.public : s.id]
-    application_subnet_ids = [for s in aws_subnet.application : s.id]
-    data_subnet_ids        = [for s in aws_subnet.data : s.id]
-    security_group_ids     = { for k, s in aws_security_group.role : k => s.id }
+    emr_service_access_group_id = aws_security_group.emr_service_access.id
+    vpc_id                      = aws_vpc.course.id
+    public_subnet_ids           = [for s in aws_subnet.public : s.id]
+    application_subnet_ids      = [for s in aws_subnet.application : s.id]
+    data_subnet_ids             = [for s in aws_subnet.data : s.id]
+    security_group_ids          = { for k, s in aws_security_group.role : k => s.id }
   }
 }
 output "controls" {

@@ -213,3 +213,42 @@ resource "aws_vpc_endpoint" "interface" {
   private_dns_enabled = true
   tags                = var.tags
 }
+
+resource "aws_security_group" "emr_service_access" {
+  name        = "${var.name_prefix}-emr-service-access"
+  description = "EMR private subnet service access; role references only"
+  vpc_id      = aws_vpc.course.id
+  tags        = merge(var.tags, { "for-use-with-amazon-emr-managed-policies" = "true" })
+}
+resource "aws_vpc_security_group_ingress_rule" "emr_service_to_nodes" {
+  security_group_id            = aws_security_group.role["emr"].id
+  referenced_security_group_id = aws_security_group.emr_service_access.id
+  ip_protocol                  = "tcp"
+  from_port                    = 8443
+  to_port                      = 8443
+  tags                         = var.tags
+}
+resource "aws_vpc_security_group_egress_rule" "emr_service_to_nodes" {
+  security_group_id            = aws_security_group.emr_service_access.id
+  referenced_security_group_id = aws_security_group.role["emr"].id
+  ip_protocol                  = "tcp"
+  from_port                    = 8443
+  to_port                      = 8443
+  tags                         = var.tags
+}
+resource "aws_vpc_security_group_ingress_rule" "emr_nodes_to_service" {
+  security_group_id            = aws_security_group.emr_service_access.id
+  referenced_security_group_id = aws_security_group.role["emr"].id
+  ip_protocol                  = "tcp"
+  from_port                    = 9443
+  to_port                      = 9443
+  tags                         = var.tags
+}
+resource "aws_vpc_security_group_egress_rule" "emr_nodes_to_service" {
+  security_group_id            = aws_security_group.role["emr"].id
+  referenced_security_group_id = aws_security_group.emr_service_access.id
+  ip_protocol                  = "tcp"
+  from_port                    = 9443
+  to_port                      = 9443
+  tags                         = var.tags
+}

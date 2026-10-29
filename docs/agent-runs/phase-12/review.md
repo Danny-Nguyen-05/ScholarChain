@@ -488,3 +488,578 @@ with every placeholder filled; save it as
 docs/agent-runs/phase-12/reviewer-prompt-12b.md. End with:
 "Subphase 12B is ready for review. I have stopped and will not start the
 next subphase until I receive the next prompt."
+
+
+## Subphase 12B
+
+user-supplied external review
+
+1. VERDICT: REQUEST-CHANGES for Subphase 12B
+
+  2. Findings
+
+  Blocking
+
+  B3 — Medium — The project key policy does not let the S3 Vectors service use the key, so the always-created vector bucket and indexes would not work
+  - Paths: infra/terraform/modules/identity/main.tf:114-123 (the key policy), infra/terraform/modules/s3vectors/main.tf:4 and :17 (bucket and indexes set to use that key).
+  - Evidence:
+    - The key policy has one statement, an account-root delegation.
+    - AWS's S3 Vectors encryption page says that with a customer-managed key you "must explicitly grant permissions to the S3 Vectors service principal… indexing.s3vectors.amazonaws.com". Its example grants kms:Decrypt with aws:SourceAccount, aws:SourceArn (arn:aws:s3vectors:<region>:<acct>:bucket/*) and kms:EncryptionContextKeys conditions (https://docs.aws.amazon.com/AmazonS3/latest/userguide/s3-vectors-data-encryption.html).
+    - Root delegation cannot authorize a service principal.
+    - No file under infra/terraform or the 12B evidence mentions indexing.s3vectors.
+    - Unlike Neptune, EMR and ECS, the vector bucket and all five indexes are not gated, so they are in the default course configuration.
+  - Concrete failure: with the default course.tfvars, the Phase 14 apply creates a vector bucket and five indexes encrypted with this key. Creation or background indexing then fails when the service cannot decrypt, so the embedding worker's PutVectors and the semantic service's QueryVectors stop working. The mock plan cannot show this, because the mocks do not evaluate key policies.
+  - Impact: the accepted "native S3 Vectors, CMK-encrypted" area cannot work as authored. Fixing it now keeps the 12C plan's IAM/KMS summary accurate.
+  - Owner: infra-engineer
+  - Acceptance check:
+    a. Add a key-policy statement for indexing.s3vectors.amazonaws.com that allows only kms:Decrypt. Condition it on aws:SourceAccount = var.aws_account_id and on aws:SourceArn limited to this project's vector bucket ARN, plus the documented encryption-context condition.
+    b. To avoid a module dependency cycle, build the bucket ARN from region, account and name_prefix rather than from a module.s3vectors output.
+    c. Do not broaden the root statement. Add no wildcard Allow beyond the existing documented key-policy Resource="*".
+    d. Add a mock-plan assertion on iam_controls.kms_policy. It must require that exact principal, an action list of exactly ["kms:Decrypt"], and the account and bucket conditions.
+    e. Keep red/green evidence: the new assertion fails against the current source, then passes after the fix.
+    f. Re-run init, fmt-check, validate and test with exact counts, then the full JDK 17 sbt check after the final source freeze.
+  - Blocking: yes
+
+  Nonblocking observations
+
+  N9 — Low — The EBS-encryption KMS grant is on the EMR EC2 role, but EMR's EBS encryption needs it on the EMR service role
+  - Paths: modules/identity/phase12b.tf:34-41, modules/identity/main.tf:241-253.
+  - Evidence: the security configuration sets EnableEbsEncryption = true with the project key (modules/emr/main.tf:11). AWS's EMR encryption page says the service role needs to be able to use the key (https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-encryption-enable.html). Here the service role only gets whatever emr_service_policy_json the user supplies later.
+  - Impact: none while EMR is disabled. Once activated, cluster creation would likely fail unless the supplied policy happens to include KMS key use.
+  - Owner: infra-engineer, before any EMR activation (12C review or 12D)
+  - Acceptance check: give the service role a scoped project-key statement (or require it in the activation guard), and assert it.
+
+  N10 — Low — The EMR control-policy guard rejects only a literal "*" resource
+  - Path: phase12b-variables.tf:198.
+  - Evidence: Resource: ["arn:aws:ec2:*:*:*"] or ["arn:*"] with ec2:TerminateInstances or iam:PassRole passes validation. The error message says only EC2 Describe APIs may use global resources. The README defers suffix review to 12C.
+  - Owner: infra-engineer, in 12C or before EMR activation
+  - Acceptance check: reject wildcard region, account or service segments, or list them for human sign-off in the 12C security review. Add one negative case.
+
+  N11 — Low — PLAUSIBLE — Empty metric arrays in the default dashboard
+  - Path: modules/observability/main.tf:6-7 and :31-32.
+  - Evidence: with EMR and Neptune disabled (the default), the EMR and Neptune widgets get metrics = []. I could not confirm whether PutDashboard rejects an empty metrics array. A plan would not show it either way, because validation only happens at apply.
+  - Owner: infra-engineer
+  - Acceptance check: omit those widgets when their source is null, or confirm in 12C that the empty array is accepted.
+
+  N12 — Low — Some natively available metrics in the course Observability list are not on the dashboard
+  - Path: modules/observability/main.tf:32-33.
+  - Evidence: the course lists Neptune error count and DynamoDB "conditional failures, and latency". These native metrics exist but are not charted: Neptune TotalClientErrorsPerSec/TotalServerErrorsPerSec, and DynamoDB ConditionalCheckFailedRequests/SuccessfulRequestLatency. Application metrics (LLM retries, claim-verification counts, abstention, evidence size) depend on the publisher and are correctly disclosed as such.
+  - Owner: infra-engineer for the native panels; Phase 13/14 for the publisher.
+  - Blocking: no
+
+  N13 — Info — The HTTPS test only inspects aws_lb_listener.https
+  - Path: tests/phase12b.tftest.hcl:251.
+  - Evidence: a separately named HTTP listener resource would not be counted. The current code is correct: no HTTP listener exists, and the ALB security group allows 443 only.
+
+  N14 — Info — The workflow's input check errors instead of reaching InvalidWork when workItem is missing
+  - Path: modules/workflow/main.tf:32.
+  - Evidence: IsString on a missing path likely raises States.Runtime rather than routing to InvalidWork. Either way nothing is enqueued. And[IsPresent, IsString] would give the intended error name.
+
+  N15 — Info — Internal service traffic is plain HTTP
+  - Path: modules/runtime/compute.tf:61-62 and :91.
+  - Evidence: ALB→query-api and query-api→graph/semantic use HTTP inside the VPC.
+  - Action: disclose this in the 12C security self-review against "encryption in transit".
+
+  N16 — Info — No identity can write the graph or the DynamoDB tables yet
+  - Evidence: no principal can start a Neptune loader job (neptune-db:StartLoaderJob) or write the pipeline DynamoDB tables. Like N2, the loader identities are deferred to Phase 13. Record this in 12C.
+
+  Carried and prior items
+
+  ┌───────┬───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │  ID   │                                                                Status                                                                 │
+  ├───────┼───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ B1    │ Preserved. The EMR data policy has no dynamodb: action (asserted at tests/phase12b.tftest.hcl:167).                                   │
+  ├───────┼───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ B2    │ Preserved. The retained 12A runs pass.                                                                                                │
+  ├───────┼───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ N1    │ Resolved as answered. s3:DeleteObject is limited to {curated,graph,artifacts,reports}/pipeline/*, and raw is rejected                 │
+  │       │ (phase12b-variables.tf:56, test emr_delete_cannot_reach_raw). Live commit behavior is still for 12C/12D.                              │
+  ├───────┼───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │       │ Resolved at the infrastructure level. The embedding-producer role trusts only the exact state machine ARN plus aws:SourceAccount. It  │
+  │ N2    │ can send only to the work queue and DLQ. The SQS key grant uses ViaService, and a separate workflow grant uses the exact              │
+  │       │ aws:states:stateMachineArn encryption context. The production caller is Phase 13.                                                     │
+  ├───────┼───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ N3,   │                                                                                                                                       │
+  │ N4,   │ Optional, carried. B3's repair adds the first key-policy assertion, which partly addresses N4.                                        │
+  │ N6    │                                                                                                                                       │
+  ├───────┼───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ N5    │ Resolved. ALB access logs are off and documented (compute.tf:83-84).                                                                  │
+  ├───────┼───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ N7    │ Resolved procedurally. Freeze at 01:53:29Z, gate 01:53:55Z–02:05:56Z, newest source mtime 01:52:07Z.                                  │
+  ├───────┼───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ N8    │ Addressed. A working Standard state machine has a 120 s overall timeout, 20 s task timeouts, retry limits of 2 and 1, and Catch → DLQ │
+  │       │  → Fail. It is charted on the dashboard. No instructor approval is claimed.                                                           │
+  ├───────┼───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ R1    │ Confirmed. All 7 route, route-table and association declarations are in modules/network/main.tf:62-109. No route-table ID is          │
+  │       │ exported, and a source guard test exists.                                                                                             │
+  ├───────┼───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ R2    │ Still unverified until the 12C real plan.                                                                                             │
+  ├───────┼───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ R3    │ No action needed.                                                                                                                     │
+  └───────┴───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+  Verified (confirmed acceptable)
+
+  - Ownership and scope:
+    - 17 tracked and 129 untracked files match handoff-files.json exactly.
+    - Untracked files are only under infra/terraform/ and docs/agent-runs/phase-12/.
+    - All 455 non-infrastructure baseline files are unchanged.
+    - 89 of the 93 prior records are byte-identical; the other 4 are appended to, with their original text intact.
+    - review.md is untouched and no human-owned file exists.
+  - Source freeze: the 67 Git-visible infrastructure files equal the frozen set, with 0 hash, size or mtime mismatches. All 521 build-snapshot files are unchanged now and were unchanged across the gate (before == after).
+  - Pins and hygiene: 14 of 14 versions.tf files pin = 1.13.5 / = 6.44.0. The lock file is unchanged and git diff --check is clean. No secret patterns appear in the source or in the 57 MB debug log (only the synthetic account 111122223333).
+  - Native tests and logs:
+    - 31 runs passed, 0 failed (13 from 12A plus 18 new), with 51 assertions and 16 expected-failure cases.
+    - 47 of the 48 command-log hashes match. The 48th is the debug alias, held once as gzip; its raw hash (5ee832d6…) and compressed hash (e84ec93a…) both match.
+    - 70 of 70 curated artifacts match.
+    - 18 nonzero development attempts are retained. The first graph-write mutation (init failed, diagnostic did not match) is retained as a failure, not presented as a pass.
+  - Negative mutations: all three v2 mutations show init 0, test 1, 30 passed / 1 failed, and a real "Test assertion failed" at the intended lines (124, 140, 144), not an unknown-value or provider error. The repository source was unchanged.
+  - Build gate:
+    - The decompressed sbt log hash is 72d8f261…a8d8a8.
+    - Per-module totals sum to 1,240 + 13 = 1,253. I re-parsed 156 of 156 XML reports, all written within the gate window: 1,253 tests, 0 failures, errors or skips.
+    - Total time 719 s on JDK 17.0.20.1. The only error lines are the expected checkProbeInjectFailure self-test.
+  - Neptune:
+    - Private: data subnets, a chained security group, and publicly_accessible=false.
+    - Encrypted with the project key, IAM authentication on, 7-day backups, deletion protection and a final snapshot unless in cleanup mode.
+    - 1–2.5 NCU, enforced by a precondition.
+    - The audit log group name matches AWS's documented /aws/neptune/<cluster>/audit.
+  - Graph reader: only ReadDataViaQuery, GetQueryStatus, CancelQuery and GetEngineStatus on the cluster's data ARN, with QueryLanguage=OpenCypher (a documented value). There is no write action, and a test asserts this.
+  - Vectors:
+    - Exactly the five names in Phase7Configs.scala:86-92.
+    - float32, 256 dimensions, cosine, and textS3Uri as the only non-filterable key. These match the defaults in VectorAdapterConfig (Phase7Configs.scala:56-67) and the vector store's required metadata.
+    - Only the embedding worker can call PutVectors, on the five exact index ARNs. Read access covers exactly the actions the code calls (GetIndex, GetVectors, QueryVectors).
+  - Model access: InvokeModel is granted only for the configured Titan V2 model ARN, to semantic-service and embedding-worker. With no synthesis model set, query-api gets no model grant.
+  - Scaling:
+    - EMR: 1 primary and 1 core. Managed scaling ranges 1–3 units, with at most 1 core and 3 on-demand units. No Spot. 1800 s idle termination.
+    - HTTP services: CPU target tracking at 60%, min 1 / max 2.
+    - Worker: visible SQS messages divided by Container Insights RunningTaskCount (ECS/ContainerInsights, with ClusterName and ServiceName), target 10, min 1 / max 4.
+    - DynamoDB: on-demand (from 12A).
+    - With the runtime disabled, no task definitions, services, scaling targets or policies are created.
+  - Activation guards: these reject a missing runtime acknowledgment, image revision, Neptune setting, auth secrets, outgoing token or shared graph cursor key. They also reject a missing EMR release, bootstrap, TLS bundle or runtime evidence. For HTTPS, they reject a missing certificate, missing ingress CIDRs or a disabled runtime.
+  - HTTPS and secrets: there is a 443 HTTPS listener only, and no HTTP fallback. Secrets are injected by ARN only, with environment names matching the service contracts. Mode unconfigured is stated honestly.
+  - Dashboard and alarms:
+    - Metric arrays are well-formed and native dimensions are correct (DynamoDB uses table-level throttle events).
+    - Retention is 7 days. Missing data is treated as missing, and there are no notification targets.
+    - Custom panels are labelled "publisher required" and are not presented as proof that metrics are emitted.
+
+  Unverified gates (not passes)
+
+  - No real plan, apply, account call or paid model call happened, so live IAM/KMS behavior (including the B3 fix), quotas, region and engine availability, cost and the budget are unverified.
+  - EMR's Spark/Scala compatibility, EMRFS commits, EMR-managed security group behavior and whether the primary node counts toward scaling limits are unverified.
+  - Whether PutDashboard accepts empty metric arrays (N11) is unverified.
+  - No security scanner ran.
+  - Live service composition and the CloudWatch metric publisher are absent.
+
+  3. Reviewer report
+
+  STATUS: COMPLETE (review); verdict REQUEST-CHANGES for Subphase 12B
+  OWNER: code-reviewer (independent, user-launched, read-only)
+  WORK ORDER: Review Phase 12 Subphase 12B per user-supplied reviewer prompt; branch phase-12, base/HEAD a83f62e9af56058a170075f98c4e027d039567ec; 12B uncommitted.
+  FILES CREATED: None in repository. Scratch only: /private/tmp/claude-501/-Users-danny-Documents-UIC-CS441-ScholarChain/a7550066-cbe0-4bfd-86df-4468d3148df6/scratchpad/course/README.md (course README copy).
+  FILES MODIFIED: None.
+  COMMANDS RUN: git rev-parse HEAD; git status --short; git diff a83f62e (stat/full for infra and phase-12 records); git ls-files --others --exclude-standard; git diff --check a83f62e (clean); git diff --quiet a83f62e -- .terraform.lock.hcl (unchanged); cat/sed/grep of control files, plan, all Terraform, tests, README, evidence and Scala contracts; python3 -I re-hash of infra freeze (67/67, 0 mismatches), build before/after snapshots (521, equal, 0 current mismatches), non-infra baseline (455, 0 changed), prior records (89 identical, 4 prefix-preserved), commands.json logs (47 match + gz alias), retention records (70/70), XML re-parse (156 fresh; 1253/0/0/0); gzip -dc | shasum on sbt log (72d8f261…) and debug log (5ee832d6…); secret-pattern grep of debug log (no hits); curl of public course README to scratch; aws-knowledge public documentation search/read (S3 Vectors encryption, Neptune log groups, Neptune IAM condition keys, EMR managed SGs, EMR EBS encryption, App Auto Scaling metric math). No terraform, sbt, AWS account, provider or write commands.
+  TEST RESULTS: Not rerun (read-only). Retained: terraform test 31 passed/0 failed; 3 v2 mutations each init 0/test 1 (30/1) at intended assertions; v1 graph-write mutation init 1 retained as failed; sbt -batch check exit 0, 1,253 tests, 156/156 fresh XML, 0 failures/errors/skips, "Total time: 719 s", expected checkProbeInjectFailure only.
+  VALIDATION RESULTS: Retained init/fmt-check/validate/test/diff-check exit 0; pins exact in 14 files; lock unchanged; R1 confirmed (7 declarations, all in modules/network). B3 is a confirmed KMS key-policy defect not detectable by mock plans.
+  ASSUMPTIONS: Retained /tmp-origin logs are the byte copies their manifests describe. AWS public documentation reflects current S3 Vectors/EMR/Neptune behavior. 12A-approved controls not changed by 12B were not re-derived beyond regression checks.
+  RISKS: Mock-only verification; S3 Vectors unusable until B3 is fixed; EMR activation needs service-role KMS (N9) and tighter policy-ARN review (N10); dashboard empty-array validation unverified (N11); internal HTTP plaintext (N15); no loader/writer identities yet (N16); live IAM/KMS, quotas, cost, EMR runtime unverified.
+  MANUAL ACTION REQUIRED: User routes the B3 repair (next prompt) and launches the independent recheck. No commit before approval. AWS account/profile/region/budget still pending; reminder due before 12C or an earlier separately approved 12D.
+  BLOCKED-ON OWNER: infra-engineer (B3)
+  BLOCKED-ON EVIDENCE: infra/terraform/modules/identity/main.tf:114-123 (no indexing.s3vectors.amazonaws.com statement) with modules/s3vectors/main.tf:4,17 (CMK-encrypted, ungated vector bucket/indexes); AWS doc https://docs.aws.amazon.com/AmazonS3/latest/userguide/s3-vectors-data-encryption.html
+  NEXT GATE: Bounded 12B repair round 1 (B3 only), then a user-launched independent recheck. Do not start 12C/12D.
+
+  4. NEXT PROMPT
+
+  You are the ScholarChain Phase 12 coordinator in
+  /Users/danny/Documents/UIC/CS441/ScholarChain, branch phase-12,
+  base/HEAD a83f62e9af56058a170075f98c4e027d039567ec. Subphase 12B received
+  an independent REQUEST-CHANGES with ONE blocking finding (B3). This is
+  Subphase 12B REPAIR ROUND 1 only. Do not start 12C or 12D. Never launch,
+  invoke or auto-select any reviewer. Never commit or push.
+
+  Authority: AGENTS.md, CLAUDE.md, docs/agents.md,
+  .claude/agents/infra-engineer.md, docs/agent-runs/README.md, and
+  /Users/danny/Library/CloudStorage/GoogleDrive-cpnguyen0630@gmail.com/My Drive/plan/phase12.md
+  (Sections 2–7, Subphase 12B, Sections 9–10).
+
+  Step A — Record (coordinator only; phase evidence is yours):
+  - Append the complete user-supplied 12B review that accompanied this prompt,
+    verbatim, to docs/agent-runs/phase-12/review.md under "Subphase 12B",
+    marked "user-supplied external review". Keep Markdown emphasis intact.
+  - Append to docs/agent-runs/phase-12/repairs.md under "Subphase 12B repair
+    round 1": B3 (blocking, infra-engineer) open; N9 EMR service-role KMS for
+    EBS encryption, N10 EMR policy wildcard-ARN guard, N11 PLAUSIBLE empty
+    dashboard metric arrays, N12 native Neptune/DynamoDB observability panels,
+    N13 HTTPS test scope, N14 workflow IsPresent check, N15 internal HTTP
+    disclosure, N16 loader/writer identities deferred — all NONBLOCKING and
+    NOT repaired this round. Carried: B1/B2 preserved; N1, N2, N5 resolved as
+    answered; N3/N4/N6 optional; N7 procedural; N8 addressed without instructor
+    approval; R1 confirmed; R2 still needs the 12C real plan; R3 no action.
+  - Do not edit any human-owned file. Do not rewrite prior records.
+
+  Step B — Bounded repair (route ONLY B3 to infra-engineer; it owns
+  infra/terraform/** and nothing else):
+  B3: modules/identity/main.tf:114-123 key policy lacks the S3 Vectors
+  service principal required for customer-managed keys
+  (https://docs.aws.amazon.com/AmazonS3/latest/userguide/s3-vectors-data-encryption.html),
+  while modules/s3vectors/main.tf:4,17 encrypts the ungated vector bucket and
+  five indexes with that key.
+  Required change:
+  - Add one key-policy statement: Principal Service
+    indexing.s3vectors.amazonaws.com; Action exactly ["kms:Decrypt"];
+    Resource "*" (meaning this key); conditions aws:SourceAccount =
+    var.aws_account_id, an aws:SourceArn ArnLike limited to this project's
+    vector bucket ARN, and the documented
+    ForAnyValue:StringEquals kms:EncryptionContextKeys
+    ["aws:s3vectors:arn","aws:s3vectors:resource-id"].
+  - Build the bucket ARN as a string from region/account/name_prefix,
+    matching modules/s3vectors/main.tf:3 "${name_prefix}-${account}-vectors".
+    Do not create a module dependency cycle. Do not broaden the root
+    statement and add no new wildcard Allow.
+  - Add a mock plan-only assertion on output.iam_controls.kms_policy requiring
+    exactly that principal, action list, account and bucket-scoped SourceArn.
+  - Keep RED/GREEN evidence: run the new assertion against the pre-fix source
+    in a scratch copy (expect exit 1 at the new assertion with a real
+    value mismatch, not an unknown value or provider error), then the fixed
+    source (pass). Repository source must stay unchanged by scratch runs.
+  - Update README.md only for this control (one short note).
+  Do not touch N9–N16, application code, build files, scripts, .gitignore,
+  the constitution, pins or the lock file. Keep exact pins Terraform 1.13.5 /
+  AWS 6.44.0 and every 12A/12B invariant (B1/B2 assertions, R1 route guard,
+  graph reader with no write action, EMR with no DynamoDB, fixed-queue workflow).
+  No real plan/apply/destroy/import, AWS API call, credential lookup or paid
+  model call.
+
+  Step C — Gates (exact commands, cwd, exits, counts, log SHA-256 under
+  docs/agent-runs/phase-12/evidence/12b-repair-1/; raw logs as .log.txt):
+  - From infra/terraform:
+    TF_CLI_CONFIG_FILE=/tmp/scholarchain-phase12b-infra/terraformrc /tmp/scholarchain-phase12a-infra-toolchain/terraform init -backend=false -input=false -no-color
+    /tmp/scholarchain-phase12a-infra-toolchain/terraform fmt -check -recursive
+    /tmp/scholarchain-phase12a-infra-toolchain/terraform validate -no-color
+    /tmp/scholarchain-phase12a-infra-toolchain/terraform test -no-color
+    Report runs passed/failed (expect 31 plus any added), assertions and
+    expected-failure counts. Verify the toolchain checksum if reinstalled.
+  /tmp/scholarchain-phase12a-infra-toolchain/terraform test -no-color
+  Report runs passed/failed (expect 31 plus any added), assertions and
+  expected-failure counts. Verify the toolchain checksum if reinstalled.
+- git diff --check; then a final SHA-256/bytes/mtime freeze of all
+  Git-visible infra/terraform files with a timestamp.
+- AFTER the final freeze, build-engineer runs the full JDK 17 gate:
+  cd /Users/danny/Documents/UIC/CS441/ScholarChain
+  export JAVA_HOME=/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home
+  export PATH="$JAVA_HOME/bin:$PATH"
+  export SBT_OPTS="-Dlogback.configurationFile=$PWD/docs/agent-runs/phase-04/xml-repair-logback.xml"
+  java -version
+  sbt -batch check
+  Report exit, tests, fresh XML count, failures/errors/skips, wall time,
+  compressed log plus raw SHA-256, and before/after source snapshots showing
+  no change. checkProbeInjectFailure is the expected self-test.
+- Confirm prior phase records are byte-identical except allowed appends, and
+  that the 12B evidence packet is preserved unchanged.
+
+Step D — Reports: append "Subphase 12B repair round 1" sections to
+owner-report.md and test-report.md using exactly the 14 fields from
+docs/agent-runs/README.md, including the red/green evidence and unverified
+live gates (live KMS effectiveness of the new statement remains unverified).
+
+Step E — Handoff and stop. Make sure no subagents, builds or jobs remain.
+Return the handoff packet (status, base/branch/HEAD, changed and untracked
+files, exact commands/exits/counts, evidence paths, limitations, manual
+actions including the AWS account reminder before 12C or an earlier
+approved 12D) and a COMPLETE independent read-only recheck reviewer prompt in
+one fenced block with every placeholder filled. Save it as
+docs/agent-runs/phase-12/reviewer-prompt-12b-recheck-1.md. The recheck must
+verify B3 closure, red/green evidence, unchanged nonblocking items, source
+freeze vs gate timing, and hash reconciliation. End with:
+"Subphase 12B repair round 1 is ready for review. I have stopped and will not start the next subphase until I receive the next prompt."
+Tip: Use /btw to ask a quick side question without interrupting Claude's current work
+Fix all blockings bug for me
+
+
+## Subphase 12B repair round 1
+
+user-supplied external review
+
+1. VERDICT: APPROVE for Subphase 12B including repair round 1
+
+  2. Findings
+
+  Blocking
+
+  None.
+
+  B3 — ACCEPTED (closed)
+
+  - Path: infra/terraform/modules/identity/main.tf:122-132
+  - The new statement (AllowS3VectorsServicePrincipal) has:
+    - Principal: Service indexing.s3vectors.amazonaws.com.
+    - Effect Allow, with Action exactly ["kms:Decrypt"].
+    - Resource = "*", which in a key policy means this key only.
+    - StringEquals aws:SourceAccount = var.aws_account_id.
+    - ArnLike aws:SourceArn = arn:aws:s3vectors:${region}:${account}:bucket/${name_prefix}-${account}-vectors, which matches the bucket name built at modules/s3vectors/main.tf:3.
+    - ForAnyValue:StringEquals kms:EncryptionContextKeys = ["aws:s3vectors:arn","aws:s3vectors:resource-id"].
+  - Against the AWS page: principal, action, account condition and encryption-context condition match https://docs.aws.amazon.com/AmazonS3/latest/userguide/s3-vectors-data-encryption.html exactly. The source-ARN condition is narrower than AWS's example (see N17).
+  - No broadening: the root delegation statement is unchanged and no new wildcard Allow exists.
+  - No dependency cycle: the ARN is built only from identity-module variables, and validate passed.
+  - Delta isolated:
+    - Reverse-applying delta.patch in scratch reproduces all three reviewed 12B hashes.
+    - Exactly 3 of the 67 infrastructure files differ from the 12B freeze. The other 64, the provider lock and .gitignore are unchanged.
+  - Assertion: tests/phase12b.tftest.hcl:100-106 checks the exact principal, Effect, action list, Resource, full Condition object and a total of 2 statements. That is independent and strict.
+  - RED is genuine:
+    - red.py copies the tree with the new test in place and asserts the scratch policy file is byte-equal to the pre-repair copy.
+    - red-proof.json shows the repository's identity/main.tf hash equal to the 12B freeze at red time.
+    - Init exited 0; test exited 1 with 30 passed / 1 failed at line 101, "Test assertion failed".
+    - The log has no unknown-value or "known after apply" diagnostic, and the repository was unchanged.
+  - GREEN: 31 passed / 0 failed, with 52 assertions (29 + 23) and 16 expected-failure cases. Final fmt-check and diff-check logs are empty; validate is valid.
+  - Blocking: no longer.
+
+  Nonblocking observations
+
+  N17 — Low — PLAUSIBLE — The B3 source-ARN condition is the exact bucket ARN, but AWS's example uses bucket/*
+  - Path: infra/terraform/modules/identity/main.tf:130.
+  - Evidence: the AWS page uses ArnLike aws:SourceArn = arn:aws:s3vectors:<region>:<acct>:bucket/*. That pattern also covers index ARNs (bucket/<name>/index/<idx>). The page does not say which ARN the indexing service sends for background maintenance of the five indexes, each of which is encrypted with the key at modules/s3vectors/main.tf:17.
+  - Concrete failure, if the service sends index ARNs: index maintenance is denied and B3's failure mode returns for the indexes.
+  - Context: this narrowing follows my repair round 1 acceptance wording ("limited to this project's vector bucket ARN"), so it is not an owner error.
+  - Owner: infra-engineer
+  - Acceptance check: in 12C, set the condition to [<bucket ARN>, "<bucket ARN>/index/*"] (still project-scoped) and update the assertion. Otherwise, verify the live source ARN in the Phase 14 smoke test.
+  - Blocking: no
+
+  N18 — Info — A read-only terraform version call ran during the build gate
+  - Evidence: the toolchain-version command (terraform version -json) ran at 15:35:49Z, after the 15:35:20Z freeze and inside the 15:35:36Z–15:48:02Z gate. It writes nothing, and all 521 snapshot inputs were equal before and after the gate.
+  - Impact: none.
+
+  Carried items
+
+  ┌─────────────────────────────────┬─────────────────────────────────────────────────────────────────────────────────────────────────────────────┐
+  │               ID                │                                                   Status                                                    │
+  ├─────────────────────────────────┼─────────────────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ N9 EMR service-role KMS for EBS │ Open, not repaired. Code unchanged (identity/phase12b.tf hash unchanged). Must be fixed before EMR          │
+  │                                 │ activation.                                                                                                 │
+  ├─────────────────────────────────┼─────────────────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ N10 EMR policy wildcard-ARN     │ Open. phase12b-variables.tf unchanged. 12C security review or before EMR activation.                        │
+  │ guard                           │                                                                                                             │
+  ├─────────────────────────────────┼─────────────────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ N11 empty dashboard metric      │ PLAUSIBLE. observability/main.tf unchanged. Confirm or fix in 12C.                                          │
+  │ arrays                          │                                                                                                             │
+  ├─────────────────────────────────┼─────────────────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ N12 native Neptune/DynamoDB     │ Open, Low. Unchanged.                                                                                       │
+  │ panels                          │                                                                                                             │
+  ├─────────────────────────────────┼─────────────────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ N13 HTTPS test scope            │ Info. Unchanged.                                                                                            │
+  ├─────────────────────────────────┼─────────────────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ N14 workflow IsPresent          │ Info. workflow/main.tf unchanged.                                                                           │
+  ├─────────────────────────────────┼─────────────────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ N15 internal HTTP               │ Disclose in the 12C security self-review.                                                                   │
+  ├─────────────────────────────────┼─────────────────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ N16 loader/writer identities    │ Deferred to Phase 13; record in 12C.                                                                        │
+  ├─────────────────────────────────┼─────────────────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ N1, N2, N5                      │ Resolved as answered; unchanged.                                                                            │
+  ├─────────────────────────────────┼─────────────────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ N3, N4, N6                      │ Optional. B3's assertion is the first key-policy assertion, which partly addresses N4.                      │
+  ├─────────────────────────────────┼─────────────────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ N7                              │ Procedural, held. Freeze 15:35:20Z; gate 15:35:36Z–15:48:02Z; newest source mtime 15:34:44Z.                │
+  ├─────────────────────────────────┼─────────────────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ N8                              │ Addressed, without instructor approval.                                                                     │
+  ├─────────────────────────────────┼─────────────────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ B1, B2, R1                      │ Preserved. Their assertions and route guard are unchanged and green; all 7 route declarations remain in     │
+  │                                 │ modules/network.                                                                                            │
+  ├─────────────────────────────────┼─────────────────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ R2                              │ Needs the 12C real plan.                                                                                    │
+  ├─────────────────────────────────┼─────────────────────────────────────────────────────────────────────────────────────────────────────────────┤
+  │ R3                              │ No action.                                                                                                  │
+  └─────────────────────────────────┴─────────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+  The read-only graph role, EMR's lack of DynamoDB access, the fixed-queue workflow, bounded capacity and private encrypted data stores all sit in source files that are unchanged since the 12B review.
+
+  Evidence verified
+
+  - Footprint:
+    - 18 tracked and 184 untracked files exactly match handoff-files.json.
+    - Untracked files are only under infra/terraform/ and docs/agent-runs/phase-12/.
+    - All 103 files of the original 12B packet are unchanged.
+    - Of 265 preflight-baseline files, 258 are unchanged. The 7 that changed are the 3 authorized infrastructure files and 4 report records.
+    - review.md, repairs.md, owner-report.md, test-report.md and prompt.md all still begin with their HEAD text.
+    - The full 12B review is contained verbatim in review.md (26,890 characters). No human-owned record exists.
+  - Freeze: 67 Git-visible infrastructure files equal the freeze, with 0 hash, size or mtime mismatches. The freeze file's SHA-256 (0cb2daba…) equals the one recorded by the build.
+  - Logs and artifacts: 11 of 11 command-log hashes and 25 of 25 retained artifacts match.
+  - Toolchain: the Terraform 1.13.5 ARM64 ZIP SHA (1bf94223…) matches the official checksum file retained in 12A. Pins and lock are unchanged.
+  - Build gate:
+    - Snapshots before and after are equal across 521 files, with 0 current mismatches.
+    - Re-parsing the XML gives 156 of 156 reports written inside the gate window: 1,253 tests, 0 failures, errors or skips.
+    - The decompressed sbt log SHA-256 is 71fd8fd8…fb16b. "Total time: 744 s", JDK 17.0.20.1, and the only errors are the expected checkProbeInjectFailure self-test.
+
+  Unverified gates (not passes)
+
+  - Whether S3 Vectors actually accepts the new key-policy statement (including N17) is unverified.
+  - No real plan, account API call, apply/destroy/import, paid call or security scanner ran.
+  - Account, profile, region and budget are pending, so cost and quotas are unknown.
+  - The EMR runtime, live service composition and the CloudWatch metric publisher are unverified.
+
+  3. Reviewer report
+
+  STATUS: COMPLETE (review); verdict APPROVE for Subphase 12B including repair round 1
+  OWNER: code-reviewer (independent, user-launched, read-only)
+  WORK ORDER: Recheck Phase 12 Subphase 12B repair round 1 (B3 only); branch phase-12, base/HEAD a83f62e9af56058a170075f98c4e027d039567ec; 12B and repair uncommitted.
+  FILES CREATED: None in repository. Scratch only: /private/tmp/claude-501/-Users-danny-Documents-UIC-CS441-ScholarChain/a7550066-cbe0-4bfd-86df-4468d3148df6/scratchpad/rev1/ (copies of the 3 changed files, reverse-patched).
+  FILES MODIFIED: None.
+  COMMANDS RUN: git rev-parse HEAD; git status --short; git diff --name-only/--stat/--check/--quiet a83f62e; git ls-files --others --exclude-standard; git show a83f62e:<records>; cat/grep of delta.patch, red.py, red-proof.json, logs, manifests, reports; scratch cp + patch -R -p1 of delta.patch (exit 0; 3/3 hashes equal 12B freeze); python3 -I rehash of repair freeze (67/67), 12B-freeze delta (exactly 3 files), red-proof hash provenance, command logs (11/11), retention (25/25), build snapshots (521 equal, 0 current mismatches), preflight baseline (258/265 same; 7 authorized), 12B packet (103/103), report prefixes, verbatim review containment, XML re-parse (156 fresh, 1253/0/0/0), gzip sbt log hash; grep of official checksum file; aws-knowledge read of the S3 Vectors encryption page. No terraform, sbt, AWS account, provider or write commands.
+  TEST RESULTS: Not rerun (read-only). Retained: RED init 0/test 1, 30 passed/1 failed at the B3 assertion with real mismatch; GREEN terraform test 31 passed/0 failed (52 assertions, 16 expected-failure cases); sbt -batch check exit 0, 1,253 tests, 156/156 fresh XML, 0 failures/errors/skips, "Total time: 744 s", expected checkProbeInjectFailure only.
+  VALIDATION RESULTS: Final init/fmt-check/validate/test/diff-check exit 0; pins/lock/.gitignore unchanged; toolchain ZIP checksum matches retained official list; gate started after freeze and newest source mtime; sources unchanged across gate.
+  ASSUMPTIONS: Retained /tmp-origin logs are the byte copies their manifests describe. AWS documentation reflects current S3 Vectors KMS requirements; the indexing service's actual aws:SourceArn value is undocumented (N17).
+  RISKS: N17 index-maintenance SourceArn scope (PLAUSIBLE); N9-N16 open nonblocking; mock-only verification; live KMS/IAM, quotas, cost, EMR runtime, live composition and metrics publisher unverified.
+  MANUAL ACTION REQUIRED: User commits approved 12B + repair round 1 + review records (agents never commit). Supply AWS account/profile/region/budget and explicit read-only plan authorization before any 12C account call. 12D needs its own approval record.
+  BLOCKED-ON OWNER: None for 12B.
+  BLOCKED-ON EVIDENCE: None for 12B; live gates are unrun, not passed.
+  NEXT GATE: Human commit of 12B, then Subphase 12C Step 0 questions only.
+
+  4. NEXT PROMPT
+
+  You are the ScholarChain Phase 12 coordinator in
+  /Users/danny/Documents/UIC/CS441/ScholarChain, branch phase-12,
+  pre-commit HEAD a83f62e9af56058a170075f98c4e027d039567ec. Subphase 12B
+  (including repair round 1) received an independent APPROVE. Your job: record
+  the review, confirm the user's commit, then begin ONLY Subphase 12C with
+  Step 0 questions. Never launch, invoke or auto-select any reviewer. Never
+  commit or push unless the user explicitly asks again in this session.
+
+  Authority: AGENTS.md, CLAUDE.md, docs/agents.md,
+  .claude/agents/infra-engineer.md, .claude/agents/test-engineer.md,
+  docs/agent-runs/README.md, and
+  /Users/danny/Library/CloudStorage/GoogleDrive-cpnguyen0630@gmail.com/My Drive/plan/phase12.md
+  (Sections 2–7, especially 7.3 and 7.4; Subphase 12C in Section 8;
+  Sections 9–10). Course Phase 12 plus Security, Observability and Cost
+  sections:
+  https://github.com/0x1DOCD00D/ScholarChain/blob/main/README.md#phase-12-create-the-aws-infrastructure-in-terraform
+
+  Step A — Record (coordinator only):
+  - Append the complete user-supplied recheck review that accompanied this
+    prompt, verbatim with Markdown emphasis intact, to
+    docs/agent-runs/phase-12/review.md under "Subphase 12B repair round 1",
+    marked "user-supplied external review".
+  - Append to docs/agent-runs/phase-12/repairs.md under "Subphase 12B repair
+    round 1 — independent recheck": B3 ACCEPTED (closed); new N17 PLAUSIBLE
+    Low (B3 aws:SourceArn is the exact bucket ARN, while the AWS example uses
+    bucket/* covering index ARNs; candidate 12C change to
+    [bucket ARN, bucket ARN + "/index/*"] or live verification in the
+    Phase 14 smoke test); N18 Info (read-only terraform version during gate;
+    no impact). Carried nonblocking: N9 EMR service-role KMS for EBS
+    (before EMR activation), N10 EMR policy wildcard-ARN guard, N11 PLAUSIBLE
+    empty dashboard metric arrays, N12 native Neptune/DynamoDB panels,
+    N13 HTTPS test scope, N14 workflow IsPresent, N15 internal-HTTP
+    disclosure, N16 loader/writer identities deferred to Phase 13.
+    N1/N2/N5 resolved as answered; N3/N4/N6 optional; N7 procedural;
+    N8 addressed without instructor approval; B1/B2/R1 preserved;
+    R2 requires the 12C real plan; R3 no action.
+  - Do not edit any human-owned file (human-gate.md, commit.txt, approvals).
+
+  Step B — Commit confirmation. Ask the user whether they have committed the
+  approved 12B source, the repair round 1 changes, and all 12B/repair
+  evidence and review records on phase-12, and ask for the commit SHA. If not
+  committed, STOP and wait. Never commit yourself. When confirmed, record
+  git status --short, branch and HEAD as the 12C base SHA. If uncommitted
+  changes remain, ask before proceeding.
+
+  Step C — Subphase 12C Step 0 questions (ask all at once, each with a
+  recommended default; WAIT for answers before any edit or account call):
+   1. 12-1: actual AWS account ID, named CLI profile (name only; never read
+      credential files or environment values), region, and two AZs. Region
+      must support Neptune Serverless, S3 Vectors, Bedrock Titan V2
+      embeddings and EMR. No default; required before any plan.
+   2. Explicit written authorization for READ-ONLY planning: terraform init
+      (provider download) and terraform plan only, against the course
+      environment, with the plan file saved outside git. State that no
+      apply/destroy/import, AWS write call, credential lookup or paid model
+      call is authorized. Without this authorization, stop after Step 0.
+   3. 12-2: total budget ceiling (USD) and expected stack lifetime.
+      Recommended assumption: 7–10 days up, EMR only inside experiment
+      windows, destroy after the demo recording. Ask whether
+      enable_budget_resource should be true, with real subscriber email(s)
+      or SNS topic ARN (never invented).
+   4. Deployment trusted principal ARN for the deployment role (exact ARN
+      supplied by the user).
+   5. Plan shape: which activation flags the 12C plan should exercise.
+      Recommended: plan the default course configuration (Neptune, EMR and
+      runtime disabled) as the primary plan. Optionally, a second plan with
+      neptune_enabled=true and an explicit engine version and matching
+      family, if the user selects one and regional availability is checked
+      from documentation. Runtime and EMR stay disabled; their prerequisites
+      remain Phase 13/14 and 12D.
+   6. 12-8 security scanner: which is installed (trivy config / checkov /
+      none)? Recommended: if none, a documented manual IAM/encryption
+      checklist plus validate, with the disclosure.
+   7. Whether to fold the nonblocking items into 12C before planning
+      (infra-engineer, infra/terraform/** only, with red/green tests):
+      N17 SourceArn breadth (recommended: yes), N11 empty metric widgets
+      (recommended: yes, omit widgets when the source is null), N9 EMR
+      service-role KMS (recommended: yes, even while disabled), N12 native
+      Neptune error and DynamoDB ConditionalCheckFailedRequests/
+      SuccessfulRequestLatency panels (recommended: yes), N10 wildcard-ARN
+      guard tightening (recommended: yes), N14 (optional). N15 and N16 are
+      disclosures only. The user chooses; do not add other scope.
+   8. Optional test-engineer static checks under tests/** (no wildcard IAM
+      Allow, no public bucket ACL or policy, no secret-looking strings).
+      Recommended: yes, small and text-based, no AWS calls.
+   9. Plan hygiene (Section 7.4): confirm the plan file and plan JSON stay
+      outside git; only the summary, counts and SHA-256 checksum are
+      committed. Confirm local state stays ignored and out of evidence.
+  10. 12D: remind the user that 12D needs its own written approval record
+      (dollar cap, region, instance types, max runtime in hours, teardown).
+      Do not start or prepare 12D.
+  Also say whether you have any additional questions of your own.
+
+  Step D — After answers and authorization, execute ONLY 12C per the plan:
+  - infra-engineer: apply only the user-selected Step 0 repairs (if any),
+    with red/green evidence; then init, fmt -check, validate, test; then
+    terraform plan (never apply) with the approved profile and region,
+    -out to a path outside git; record the plan file's SHA-256 checksum.
+  - Produce the Section 7.3 plan summary: add/change/destroy counts;
+    resources by module; high-cost resources with hourly and
+    total-for-duration estimates against the stated budget (cite pricing
+    sources and dates); any stateful replacement (R2: confirm no route
+    replacements); every IAM role and policy (including the B3/N17
+    statement and the B1 no-DynamoDB EMR policy); required human actions
+    before Phase 14; tool versions.
+  - Short security self-review against the course Security requirements,
+    disclosing N15, N16 and any open N-items.
+  - Run the selected scanner or the manual checklist; retain the output.
+  - test-engineer (if approved): static checks under tests/** only.
+  - Return BLOCKED-ON user for any unexplained destroy or stateful
+    replacement; never work around it.
+  - Do not apply. State the human actions required before Phase 14.
+
+  Step E — Gates (exact commands, cwd, exit codes, counts, log SHA-256 under
+  docs/agent-runs/phase-12/evidence/12c/; raw logs as .log.txt):
+  - Terraform 1.13.5 / AWS 6.44.0 pins unchanged (verify toolchain checksum
+Step E — Gates (exact commands, cwd, exit codes, counts, log SHA-256 under
+docs/agent-runs/phase-12/evidence/12c/; raw logs as .log.txt):
+- Terraform 1.13.5 / AWS 6.44.0 pins unchanged (verify toolchain checksum
+  if reinstalled); fmt -check, validate, test counts; plan exit code and
+  checksum. Never paste raw plan JSON with account-sensitive values beyond
+  what the user approves.
+- git diff --check; final SHA-256/bytes/mtime freeze of all Git-visible
+  infra/terraform and any tests/** files.
+- AFTER the final freeze, build-engineer runs the full JDK 17 gate:
+  cd /Users/danny/Documents/UIC/CS441/ScholarChain
+  export JAVA_HOME=/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home
+  export PATH="$JAVA_HOME/bin:$PATH"
+  export SBT_OPTS="-Dlogback.configurationFile=$PWD/docs/agent-runs/phase-04/xml-repair-logback.xml"
+  java -version
+  sbt -batch check
+  Report exit, tests, fresh XML count, failures/errors/skips, wall time,
+  compressed log plus raw SHA-256, and unchanged sources across the gate.
+  checkProbeInjectFailure is the expected self-test.
+
+Step F — Reports: append "Subphase 12C" sections to owner-report.md and
+test-report.md using exactly the 14 fields from docs/agent-runs/README.md.
+Preserve gates: nothing applied; Neptune/EMR/runtime activation and live
+composition, CloudWatch metrics publisher, EMR runtime (12D), cost fit and
+the human plan sign-off all remain open.
+
+Step G — Handoff and stop. Make sure no subagents, builds or jobs remain.
+Return the handoff packet (status, base SHA/branch/HEAD, changed and
+untracked files, exact commands/exits/counts, plan checksum, evidence
+paths, Step 0 answers, limitations, manual actions) and a COMPLETE
+independent read-only 12C reviewer prompt in one fenced block with every
+placeholder filled. Save it as
+docs/agent-runs/phase-12/reviewer-prompt-12c.md. End with:
+"Subphase 12C is ready for review. I have stopped and will not start the next subphase until I receive the next prompt."
+Tip: Use /btw to ask a quick side question without interrupting Claude's current work

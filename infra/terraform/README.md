@@ -1,11 +1,12 @@
-# ScholarChain Terraform — Phase 12A
+# ScholarChain Terraform — Phase12A and12B
 
-This tree currently implements **12A only**: foundation, network, identity,
-seven ordinary-S3 zones, six application DynamoDB tables, embedding SQS/DLQ,
-and four ECR repositories. It is source and offline validation, **not a deployment**.
-No AWS account, profile, region, budget, live resource, or runtime success is implied.
-The user approved the recommended local-only choices and asked to be told when an
-AWS account becomes necessary.
+This tree authors the12A foundation plus12B Neptune, native S3 Vectors, bounded EMR,
+ECS/Fargate/discovery/HTTPS ALB, autoscaling, observability, and a functional
+Step Functions embedding-dispatch workflow. This is source with offline mock
+validation, **not a deployment or an apply-ready runtime**. No AWS account/profile,
+region or budget has been supplied. Nothing was applied or called a paid model.
+Neptune, EMR and ECS service activation default off pending explicit inputs below.
+The user accepted all12B Step0 recommendations and asked for an account reminder.
 
 ## Local checks without an AWS account
 
@@ -234,25 +235,132 @@ Terraform schema/feature checks is the approved fallback, **not an independent
 security approval or scanner result**. Security/API behavior must still be reviewed
 independently and checked with the actual account in later gates.
 
+## Subphase12B configuration and deployment prerequisites
+
+The user accepted the recommendations in the coordinator's
+`docs/agent-runs/phase-12/evidence/12b/step-0-answers.md`. All new inputs are in
+`phase12b-variables.tf`, with local-only choices in `environments/course.tfvars`.
+Activation flags do not authorize any cloud action; the human gates still apply.
+
+| Area | Authored behavior and required later input |
+| --- | --- |
+| Neptune | One private serverless writer, IAM authentication, project CMK, audit export, subnet/cluster/instance parameter groups,7-day backups,1–2.5NCU, deletion protection and final snapshot outside cleanup. `neptune_enabled=false` until the user selects `neptune_engine_version` and matching `neptune_parameter_family`; no implicit latest engine or regional support claim. |
+| Vectors | Native vector bucket and exactly five float32 indexes,256 dimensions,cosine,project CMK,TLS Deny. Names match `VectorIndexes` in `modules/storage/.../Phase7Configs.scala:86-93`; planned dimension/metric match `modules/rag/README.md:57-61`. Every index marks exactly `textS3Uri` non-filterable, matching `VectorAdapterConfig` (`Phase7Configs.scala:67`) and live ingest/query GetIndex preflight. Changing dimension/metric/metadata requires an explicitly reviewed index migration. Literal `prevent_destroy=true` remains on bucket AND indexes even in cleanup. |
+| EMR | Disabled by default. One primary plus one core, at most two task nodes, on-demand only, managed scaling uses1–3 worker instances (primary excluded), one-core ceiling, idle termination1800s, bounded instance choices,encrypted local disks/S3 and in-transit TLS. |
+| ECS | One cluster with Container Insights and private DNS. Four Fargate service/task definitions are declared behind `runtime_enabled=false`. Default active task shape is512CPU/1024MiB. HTTP services min1/max2 and worker min1/max4. Each HTTP service has CPU target60%; worker uses visible SQS messages divided by RunningTaskCount, target10/task. No service OR scaling target exists while disabled. |
+| Ingress | No HTTP listener. HTTPS443 requires an existing same-account/region ACM ARN and approved CIDRs. Certificate remains unset and CIDRs empty. ALB access logging is intentionally OFF because the existing logs bucket uses SSE-KMS; ALB/S3 server access logs require an SSE-S3 destination. Ordinary application/EMR logs can still use that bucket. |
+| Workflow | Standard Step Functions dispatches one serialized EmbeddingWorkItem to the fixed embedding queue, with120s overall timeout,20s tasks, two retries and fixed DLQ failure routing. The separate `embedding-producer` execution identity trusts only this exact state machine/account and has queue-only SendMessage plus CMK rights. The Phase13 pipeline invokes it; no caller identity/StartExecution grant or production enqueue caller is invented here. |
+| Bedrock | Embedding participants only may InvokeModel on configured TitanV2 foundation-model ARN. `synthesis_model_id=null` means no query-api invocation grant. Model IDs are configurable, never wildcard; actual regional availability/model access is unverified. |
+| Logs/alarms | Service and Neptune audit groups retain7 days using CloudWatch's default service encryption. Queue age>300s, API/graph p95>5s, API errors>5%; missing data remains missing. SNS targets default empty; alarm resources alone do not notify a person. |
+
+**EMR runtime and permissions remain unresolved.** The Phase6A compatibility memo
+(`docs/agent-runs/phase-06/evidence/6a/emr-compatibility.md`) records that the
+repository's Scala3 / spark-sql_2.13 job is not proven on stock EMR Scala2.12.
+The user chose offline module authoring before the preferred12D spike.
+`emr_config.enabled=true` requires an explicit release label, reviewed bootstrap
+S3 URI, TLS certificate bundle URI, proven runtime reference and acknowledgment.
+It also requires nonempty `emr_service_policy_json`; the12A service role is trust-only
+without it. The policy rejects wildcard actions and global write resources; only
+concrete EC2 Describe actions may use `Resource=["*"]`, because those read APIs do
+not support resource scoping. Future-resource ARN suffixes and selected control-plane
+permissions still require a concrete12C security review. No broad managed policy
+is silently attached. The synthetic test policy permits DescribeInstances only:
+it is a configuration fixture, deliberately **not enough to launch a real cluster**.
+Real IAM effectiveness, service connectivity, certificates and runtime are unverified.
+
+Private EMR service communication uses SG references on8443/9443; the existing
+HTTPS443 egress reaches AWS/S3. All route and route-table resources remain inside
+`modules/network` (R1); route-table IDs are not exported. The selected runtime's
+full egress and EMR-managed SG behavior must be verified before live activation.
+
+**N1 output commit rationale:** Hadoop/EMRFS rename and Spark temporary-output
+cleanup can require s3:DeleteObject. `emr_output_prefixes` defaults to `pipeline/`
+in curated,graph,artifacts,reports only. Configure job output URIs under those
+prefixes. The role cannot delete raw data, logs, arbitrary bucket roots or versions;
+versioned deletes create recoverable delete markers. Output puts retain the12A
+scope. EMR continues to have **no DynamoDB action**, including QuerySession and
+EvidenceBundle. Real output commit behavior must still be checked in12C/12D.
+
+**Current service code cannot run a live AWS composition.**
+`modules/services/.../ServiceMains.scala:42-44` accepts unconfigured and
+explicit offline-synthetic modes only. Endpoints/table/vector/queue names are
+exposed through `phase12b_controls.deployment_contract` for future adapter composition;
+no unimplemented environment variable name is passed as though the application
+consumed it. Task environments wire existing HTTP/region/downstream URI contracts,
+existing secret bindings by ARN, and deliberately retain
+`SCHOLARCHAIN_SERVICE_MODE=unconfigured`. `runtime_enabled` additionally requires
+`runtime_composition_verified`, an immutable40-character image revision, Neptune,
+auth-secret references for all four services, query's outgoing token reference,
+and graph-service's shared `SCHOLARCHAIN_GRAPH_CURSOR_KEY` by ARN. The shared
+cursor key prevents autoscaled replicas from rejecting each other's cursors.
+These are configuration guardrails, **not evidence of a live working artifact**.
+Phase13/14 must route actual live composition to the service owner and update the
+mode contract under review before deployment. Auth hashes must be distinct and the
+outgoing internal token must match its configured hash; Terraform never reads these
+values. Acknowledgment alone does not implement those checks. Readiness remains503
+for the current unconfigured artifacts. Writable ephemeral `/tmp` supports Java
+without making the container image root writable. Image CPU architecture must
+match task X86_64; Phase13 packaging owns that validation.
+
+## Observability contract and honest missing data
+
+The dashboard separates task counts, utilization, queue depth/age, EMR nodes,
+Neptune, DynamoDB, API percentiles, graph/vector/LLM latency, usage/errors and
+workflow failures/timeouts. Native EMR charts use300s intervals; Container Insights
+provides RunningTaskCount for worker metric math. The worker never scales to zero
+when activated, so a missing divisor does not deadlock scale-out; the metric math
+also floors a zero divisor to one.
+
+Current `/metrics` endpoints are Prometheus. No CloudWatch application publisher
+exists yet. The declared application namespace defaults `ScholarChain/Application`
+with exact dimension `Service=<service-name>` and the following **future publisher
+contract**, not a claim about emitted names today:
+
+| Metric | Value/statistic required |
+| --- | --- |
+| HttpRequests / HttpServerErrors | Interval request/5xx counts; publish zero errors for active intervals; Sum yields the alarm's error percentage. |
+| RequestLatencySeconds | Raw/distribution latency samples for query-api and graph-service; support CloudWatch p50/p95/p99, not a percentile-of-percentiles. |
+| VectorQueryLatencySeconds / VectorClientErrors | Semantic service latency samples / interval error counts. |
+| LlmLatencySeconds / LlmInputTokens / LlmOutputTokens | Query service model-call latency samples / observed interval token counts. |
+| LlmEstimatedCostUsd | Explicitly computed publisher estimate using configured current model rates; absent until those inputs exist. Tokens are not silently converted to cost here. |
+
+Until Phase13/14 supplies and verifies that publisher, these panels/alarms remain
+empty or INSUFFICIENT_DATA. They are not measured performance, zero errors or an
+operational alert. No PutMetricData wildcard grant or collector image is invented.
+DynamoDB charts use ReadThrottleEvents/WriteThrottleEvents with TableName; the
+ThrottledRequests metric would instead require Operation and is deliberately absent.
+Neptune audit log export is precreated with7-day retention, avoiding default
+indefinite retention. Step Functions execution-data CloudWatch logging is off to
+avoid copying manifest/document payloads; native execution metrics remain charted.
+
 ## Deferred scope and provenance
 
-12B owns Neptune, S3 Vectors, EMR, ECS/Fargate/ALB/discovery, autoscaling, log groups,
-dashboards and alarms. Their directories are not filled with speculative code in
-12A. 12C owns the real non-destructive plan/checksum, pricing against the actual
-budget, and full security preparation. 12D is the separately approved optional
-Spark compatibility experiment. Neptune sizing/pricing, EMR release/instance
-selection and Scala 2.13 compatibility remain unselected/unverified; use the Phase
-6A memo in `docs/agent-runs/phase-06/evidence/6a/emr-compatibility.md`. Phase 10 live
-service-store composition is also a later deployment prerequisite; its offline
-synthetic mode is not evidence of working AWS services.
+12C owns the real non-destructive plan/checksum, regional quota/engine/model checks,
+pricing against the actual user budget, and full security preparation.12D remains
+a separately approved runtime experiment; no spike root or live action is authored
+here. Create/configure the AWS account before12C, or before an earlier approved12D.
+Account/profile/region/budget, actual AZs, certificate and image publication remain
+pending. Deployment roles remain separate and not granted generic provisioning rights.
 
-Step Functions, EventBridge, OpenSearch, Glue catalog, extra indexes/services and
-CI workflows are omitted under the approved lean phase plan. **The course Phase 12
-workflow list explicitly names Step Functions; the plan's omission is a disclosed
-scope discrepancy requiring human/instructor resolution before full phase closure,
-not proof the course waived it.** Required operational scripts in the course's
-Phase 12 section are assigned to Phase 13 by this work order. No course/instructor
-approval of those schedule/scope deviations is implied.
+Step Functions is now present following the user's12B answer, addressing N8's
+previous omission. This does not constitute instructor acceptance of the whole
+workflow or waive any course obligation. EventBridge,OpenSearch,Glue catalog,
+extra services/indexes and CI workflows remain omitted because they are not used.
+Required operational scripts are assigned to Phase13 by this work order. No
+course/instructor approval of that schedule deviation or Codex-led workflow is implied.
+
+N2's queue producer identity and functional dispatch path are authored; its
+production caller remains Phase13. N5 is resolved by explicitly disabling ALB
+access logs. N3's general12A mock bucket/table ARN differentiation, N4's optional
+loader/KMS test extension and N6's cosmetic key-action cleanup are not repaired.
+The existing B1/B2 protections and N7's post-final-freeze gate order are retained.
+
+`tests/phase12b.tftest.hcl` exercises enabled and disabled mock paths, actual
+Neptune privacy/protections, exact vector schema/metadata/resource scoping,
+read-only graph IAM, bounded autoscaling and EMR capacity, fixed-queue workflow,
+CMK encryption context and explicit input rejection. Separate scratch mutations
+prove security/metric regressions fail assertions without changing repository
+source. Mock feature checks do not establish live authorization or cost fit.
 
 Primary references read for authoring (AWS provider **6.44.0**, versioned links):
 
@@ -269,7 +377,7 @@ Primary references read for authoring (AWS provider **6.44.0**, versioned links)
 - [Native S3 Vectors bucket](https://registry.terraform.io/providers/hashicorp/aws/6.44.0/docs/resources/s3vectors_vector_bucket),
   [Native S3 Vectors index](https://registry.terraform.io/providers/hashicorp/aws/6.44.0/docs/resources/s3vectors_index).
   Both resource schemas exist in the installed pinned provider, including encryption
-  and tags; no CloudFormation workaround is needed. Resources themselves are 12B.
+  and tags; the12B implementation uses them directly.
 - [Neptune](https://registry.terraform.io/providers/hashicorp/aws/6.44.0/docs/resources/neptune_cluster),
   [EMR managed scaling](https://registry.terraform.io/providers/hashicorp/aws/6.44.0/docs/resources/emr_managed_scaling_policy),
   [ECS application autoscaling](https://registry.terraform.io/providers/hashicorp/aws/6.44.0/docs/resources/appautoscaling_policy)
@@ -279,3 +387,37 @@ Primary references read for authoring (AWS provider **6.44.0**, versioned links)
 Registry HTML required JavaScript in this environment. The versioned provider
 Markdown sources at `https://raw.githubusercontent.com/hashicorp/terraform-provider-aws/v6.44.0/website/docs/r/`
 and installed provider schema were used to verify the documented fields.
+
+Additional12B primary references:
+
+- [Neptune parameter families](https://docs.aws.amazon.com/neptune/latest/userguide/parameter-groups.html),
+  [serverless capacity bounds](https://docs.aws.amazon.com/neptune/latest/userguide/neptune-serverless-capacity-scaling.html),
+  [read-only data actions](https://docs.aws.amazon.com/neptune/latest/userguide/iam-dp-actions.html).
+- [EMR private security groups](https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-man-sec-groups.html),
+  [EMR service-role requirements](https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-iam-role.html),
+  [EMRFS S3 permissions](https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-emrfs-iam-roles.html).
+- [Worker backlog metric math](https://registry.terraform.io/providers/hashicorp/aws/6.44.0/docs/resources/appautoscaling_policy),
+  [ECS queue scaling](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/service-autoscaling-queue.html).
+- [Step Functions fixed SQS integration](https://docs.aws.amazon.com/step-functions/latest/dg/connect-sqs.html),
+  [execution-role CMK encryption context](https://docs.aws.amazon.com/step-functions/latest/dg/encryption-at-rest.html).
+  The latter explicitly warns against ViaService on an execution-role grant; only
+  the separate SQS grant uses ViaService here.
+- [DynamoDB metric dimensions](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/metrics-dimensions.html),
+  [EMR native metrics](https://docs.aws.amazon.com/emr/latest/ManagementGuide/UsingEMR_ViewingMetrics.html),
+  [Neptune log publication](https://docs.aws.amazon.com/neptune/latest/userguide/cloudwatch-logs.html).
+
+For cost comparison only, the public Ohio offer file checked during12B lists
+standard `db.t4g.medium` atUSD0.093/hour and Serverless atUSD0.1608/NCU-hour.
+At1–2.5NCUs that isUSD0.1608–0.402/hour for compute alone, before storage,I/O,
+network and other services. Ohio is NOT a selected deployment region and these
+prices do not establish budget fit or free-tier eligibility. AWS discourages
+small T-family instances for openCypher/performance testing; accepted sizing is
+Serverless with live revalidation deferred to12C.
+[Regional public price file](https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonNeptune/current/us-east-2/index.json),
+[AWS sizing/cost guidance](https://docs.aws.amazon.com/prescriptive-guidance/latest/neptune-well-architected-framework/cost-optimization-pillar.html).
+
+B3 CMK control: the key policy grants only `kms:Decrypt` to
+`indexing.s3vectors.amazonaws.com`, restricted to the configured account, exact
+project vector-bucket ARN and S3 Vectors encryption-context keys. `Resource="*"`
+in this key policy means this CMK only; the account-root delegation is unchanged.
+[AWS S3 Vectors encryption requirements](https://docs.aws.amazon.com/AmazonS3/latest/userguide/s3-vectors-data-encryption.html).

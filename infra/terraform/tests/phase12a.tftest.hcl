@@ -24,6 +24,13 @@ mock_provider "aws" {
   mock_resource "aws_ecr_repository" {
     defaults = { arn = "arn:aws:ecr:us-east-1:111122223333:repository/synthetic-phase12a-repo" }
   }
+  # New12B outputs participate in existing runtime policy assertions.
+  mock_resource "aws_s3vectors_index" {
+    defaults = { index_arn = "arn:aws:s3vectors:us-east-1:111122223333:bucket/synthetic-phase12a-vectors/index/synthetic-index" }
+  }
+  mock_resource "aws_s3vectors_vector_bucket" {
+    defaults = { vector_bucket_arn = "arn:aws:s3vectors:us-east-1:111122223333:bucket/synthetic-phase12a-vectors" }
+  }
   mock_resource "aws_vpc_endpoint" {
     defaults = { prefix_list_id = "pl-synthetic" }
   }

@@ -1,0 +1,15 @@
+
+Error: Missing required argument
+
+  on phase12b-variables.tf line 197, in variable "emr_service_policy_json":
+ 197:   validation {
+
+The argument "error_message" is required, but no definition was found.
+
+Error: Missing argument separator
+
+  on phase12b-variables.tf line 200, in variable "emr_service_policy_json":
+ 198:     condition = var.emr_service_policy_json == null ? true : try(length(jsondecode(var.emr_service_policy_json).Statement) > 0 && alltrue(flatten([for s in jsondecode(var.emr_service_policy_json).Statement : [for a in s.Action : !strcontains(a, "*")]]) && alltrue([for st in jsondecode(var.emr_service_policy_json).Statement : alltrue([for arn in st.Resource : arn!="*" || alltrue([for a in st.Action : startswith(a,"ec2:Describe")])])]), false)
+ 199:     error_message = "Supply a nonempty IAM policy with concrete action lists; only EC2 Describe APIs may use global resources; explain scoped future-ID ARN suffixes in the12C review."
+
+A comma is required to separate each function argument from the next.

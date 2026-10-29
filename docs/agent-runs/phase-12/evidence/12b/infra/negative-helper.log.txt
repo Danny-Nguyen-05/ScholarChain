@@ -1,0 +1,6 @@
+{"name": "graph-write", "cwd": "/tmp/scholarchain-phase12b-infra/mutation-graph-write", "changed_file": "modules/identity/phase12b.tf", "init_exit": 1, "test_exit": 1, "expected_diagnostic": "The graph role must have only explicit read/query-control access", "matched": false, "repository_source_unchanged": true}
+Traceback (most recent call last):
+  File "/tmp/scholarchain-phase12b-infra/negative_cases.py", line 30, in <module>
+    (scratch/'negative-results.json').write_text(json.dumps(results,indent=2)+'\n');raise RuntimeError('Negative case did not prove intended assertion: '+name)
+                                                                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: Negative case did not prove intended assertion: graph-write

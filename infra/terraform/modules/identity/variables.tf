@@ -11,3 +11,11 @@ variable "dead_letter_queue_arn" { type = string }
 variable "repository_arns" { type = map(string) }
 variable "service_secret_arns" { type = map(set(string)) }
 variable "tags" { type = map(string) }
+
+variable "emr_output_prefixes" { type = map(set(string)) }
+variable "enable_emr" { type = bool }
+variable "emr_service_policy_json" { type = string }
+variable "neptune_data_arn" { type = string }
+variable "vector_index_arns" { type = map(string) }
+variable "embedding_model_id" { type = string }
+variable "synthesis_model_id" { type = string }

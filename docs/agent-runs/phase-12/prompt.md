@@ -356,3 +356,12 @@ Return:
 - [ ] The plan checksum is recorded and **nothing in the main environment was applied**. The only live action in this phase is the approved, destroyed-afterward 12D spike.
 - [ ] The EMR Spark runtime decision (12-10) is recorded with evidence or with the options the user chose between.
 - [ ] The human reviewed the plan summary; the reviewer returned APPROVE; the human wrote `human-gate.md` and `commit.txt`.
+
+
+## Subphase 12B work order and Step 0 answer
+
+User start instruction (verbatim): `alright let do phase 12b`
+
+User acceptance (verbatim): `use all recommendations`
+
+The complete accepted recommendations are retained in `evidence/12b/step-0-answers.md`. Follow the complete user-supplied NEXT PROMPT in `review.md` under Subphase 12A repair round 1, Steps D–G, after its completed review-record and commit-confirmation steps. Base/HEAD `a83f62e9af56058a170075f98c4e027d039567ec`, branch `phase-12`, clean before the first 12B edit. Implement ONLY 12B via infra-engineer; run all required local gates and a post-freeze full JDK 17 check via build-engineer. No reviewer is invoked, no cloud action/spend or commit/push is authorized. Stop with a complete independent reviewer prompt after 12B.

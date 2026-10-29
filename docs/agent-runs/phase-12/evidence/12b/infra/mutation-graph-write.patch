@@ -1,0 +1,11 @@
+--- a/modules/identity/phase12b.tf
++++ b/modules/identity/phase12b.tf
+@@ -4,7 +4,7 @@
+   additional_task_statements = { for service in local.services : service => concat(
+     service == "graph-service" && var.neptune_data_arn != null ? [{
+       Sid      = "ReadOnlyNeptuneGraph", Effect = "Allow",
+-      Action   = ["neptune-db:ReadDataViaQuery", "neptune-db:GetQueryStatus", "neptune-db:CancelQuery"],
++      Action   = ["neptune-db:WriteDataViaQuery", "neptune-db:GetQueryStatus", "neptune-db:CancelQuery"],
+       Resource = [var.neptune_data_arn], Condition = { StringEquals = { "neptune-db:QueryLanguage" = "OpenCypher" } }
+     }] : [],
+     service == "graph-service" && var.neptune_data_arn != null ? [{

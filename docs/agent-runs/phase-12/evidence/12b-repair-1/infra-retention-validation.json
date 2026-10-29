@@ -1,0 +1,238 @@
+{
+  "timestamp_utc": "2026-10-29T15:36:12.653352+00:00",
+  "artifact_count": 25,
+  "command_log_count": 11,
+  "records": [
+    {
+      "source": "/tmp/scholarchain-phase12b-repair1-infra/b3-red-init.log.txt",
+      "retained_path": "docs/agent-runs/phase-12/evidence/12b-repair-1/infra/b3-red-init.log.txt",
+      "bytes": 1179,
+      "sha256": "bea09208d94de22b2d864999cb48dcdeb3bd7a1c12723069af42a1fe9269b976"
+    },
+    {
+      "source": "/tmp/scholarchain-phase12b-repair1-infra/b3-red-test.log.txt",
+      "retained_path": "docs/agent-runs/phase-12/evidence/12b-repair-1/infra/b3-red-test.log.txt",
+      "bytes": 2978,
+      "sha256": "069b1c0cb7c42c7daad7f41913bd66025cb76a75104213a6165c414bc97d2ab9"
+    },
+    {
+      "source": "/tmp/scholarchain-phase12b-repair1-infra/command-manifest.json",
+      "retained_path": "docs/agent-runs/phase-12/evidence/12b-repair-1/infra/command-manifest.json",
+      "bytes": 6763,
+      "sha256": "35539d6c573c9de8028cf841cb71a751db7db5b72dfccf26972f4229b5779a48"
+    },
+    {
+      "source": "/tmp/scholarchain-phase12b-repair1-infra/delta.patch",
+      "retained_path": "docs/agent-runs/phase-12/evidence/12b-repair-1/infra/delta.patch",
+      "bytes": 3442,
+      "sha256": "ff79c4fc55580728607e3c628a599adff0284cc35ead5509e4190e23f5e5dbcd"
+    },
+    {
+      "source": "/tmp/scholarchain-phase12b-repair1-infra/edit.py",
+      "retained_path": "docs/agent-runs/phase-12/evidence/12b-repair-1/infra/edit.py",
+      "bytes": 1743,
+      "sha256": "82a695395f733d8dd2464dc71ee20d34bb26874646823fee89ed8a4914024d3d"
+    },
+    {
+      "source": "/tmp/scholarchain-phase12b-repair1-infra/final-diff-check.log.txt",
+      "retained_path": "docs/agent-runs/phase-12/evidence/12b-repair-1/infra/final-diff-check.log.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "/tmp/scholarchain-phase12b-repair1-infra/final-fmt-check.log.txt",
+      "retained_path": "docs/agent-runs/phase-12/evidence/12b-repair-1/infra/final-fmt-check.log.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "/tmp/scholarchain-phase12b-repair1-infra/final-init.log.txt",
+      "retained_path": "docs/agent-runs/phase-12/evidence/12b-repair-1/infra/final-init.log.txt",
+      "bytes": 677,
+      "sha256": "6fd242691fd6bbc7efe25549609a26c11107f98c3ae3cb12128985c21a261753"
+    },
+    {
+      "source": "/tmp/scholarchain-phase12b-repair1-infra/final-test.log.txt",
+      "retained_path": "docs/agent-runs/phase-12/evidence/12b-repair-1/infra/final-test.log.txt",
+      "bytes": 1838,
+      "sha256": "ca01f69508557980b51362a8604057df04133c62bfde441b57c2f95383cda6bc"
+    },
+    {
+      "source": "/tmp/scholarchain-phase12b-repair1-infra/final-validate.log.txt",
+      "retained_path": "docs/agent-runs/phase-12/evidence/12b-repair-1/infra/final-validate.log.txt",
+      "bytes": 38,
+      "sha256": "f7997225125835fdd14060ac776d273f394b874f9a481b9e2122c83dc8adc5c1"
+    },
+    {
+      "source": "/tmp/scholarchain-phase12b-repair1-infra/format-new-assertion.log.txt",
+      "retained_path": "docs/agent-runs/phase-12/evidence/12b-repair-1/infra/format-new-assertion.log.txt",
+      "bytes": 26,
+      "sha256": "a41384767c7670b31bceaf144c0451bd63f4ef2789f23383cede8a50d181737e"
+    },
+    {
+      "source": "/tmp/scholarchain-phase12b-repair1-infra/format-policy.log.txt",
+      "retained_path": "docs/agent-runs/phase-12/evidence/12b-repair-1/infra/format-policy.log.txt",
+      "bytes": 25,
+      "sha256": "81ac0c99f78174d07f36d08de9a4bd669e6ca71b0e6661e82b9919a5b503c358"
+    },
+    {
+      "source": "/tmp/scholarchain-phase12b-repair1-infra/owner-report.md",
+      "retained_path": "docs/agent-runs/phase-12/evidence/12b-repair-1/infra/owner-report.md",
+      "bytes": 5432,
+      "sha256": "bfbef2d5fe99cc71424074cd998237a6529c267501ec54b2c01b6e5537132233"
+    },
+    {
+      "source": "/tmp/scholarchain-phase12b-repair1-infra/pre-repair-source.json",
+      "retained_path": "docs/agent-runs/phase-12/evidence/12b-repair-1/infra/pre-repair-source.json",
+      "bytes": 7941,
+      "sha256": "9adbe52ba79dfc657b4ead50360f32e4f687baeafcb1a78c5b6f14233fb32f16"
+    },
+    {
+      "source": "/tmp/scholarchain-phase12b-repair1-infra/red-helper.log.txt",
+      "retained_path": "docs/agent-runs/phase-12/evidence/12b-repair-1/infra/red-helper.log.txt",
+      "bytes": 311,
+      "sha256": "460f2b8397249434742a53434f65ccd2d4a82ef27b6509f68944e3299e4f7caf"
+    },
+    {
+      "source": "/tmp/scholarchain-phase12b-repair1-infra/red-proof.json",
+      "retained_path": "docs/agent-runs/phase-12/evidence/12b-repair-1/infra/red-proof.json",
+      "bytes": 16134,
+      "sha256": "e6d17a84aaa742c5e0adff929079c90ca422273152fd54587cc241ceaeee61c4"
+    },
+    {
+      "source": "/tmp/scholarchain-phase12b-repair1-infra/red.py",
+      "retained_path": "docs/agent-runs/phase-12/evidence/12b-repair-1/infra/red.py",
+      "bytes": 2086,
+      "sha256": "13295b694490b4cb47543df4adbe4b629782ceeeb2044367d816fe8902a164f0"
+    },
+    {
+      "source": "/tmp/scholarchain-phase12b-repair1-infra/run.py",
+      "retained_path": "docs/agent-runs/phase-12/evidence/12b-repair-1/infra/run.py",
+      "bytes": 907,
+      "sha256": "b5fd8e0a2efecbd9fabe6a8bf1444cafccb2daf05746465f0c2158f1be6e9d87"
+    },
+    {
+      "source": "/tmp/scholarchain-phase12b-repair1-infra/scope-and-preservation.json",
+      "retained_path": "docs/agent-runs/phase-12/evidence/12b-repair-1/infra/scope-and-preservation.json",
+      "bytes": 475,
+      "sha256": "b97da9de6bbd7c27a9b567475d5ffd3931915b07de26935858ab7bd4ef84fd96"
+    },
+    {
+      "source": "/tmp/scholarchain-phase12b-repair1-infra/setup.py",
+      "retained_path": "docs/agent-runs/phase-12/evidence/12b-repair-1/infra/setup.py",
+      "bytes": 2796,
+      "sha256": "9a29f183aad72b9999b6f84ba8e4cd0eefa542c9abf77a1fad18aaeeae5b7e6f"
+    },
+    {
+      "source": "/tmp/scholarchain-phase12b-repair1-infra/source-freeze.json",
+      "retained_path": "docs/agent-runs/phase-12/evidence/12b-repair-1/infra/source-freeze.json",
+      "bytes": 13613,
+      "sha256": "a2c5fa9a898a427bebcfb9ae79c53a8757c7b8b543f32225425e358452d256e0"
+    },
+    {
+      "source": "/tmp/scholarchain-phase12b-repair1-infra/terraformrc",
+      "retained_path": "docs/agent-runs/phase-12/evidence/12b-repair-1/infra/terraformrc",
+      "bytes": 159,
+      "sha256": "67a233406bf19256b5dbec592c14ae3b202b536fb2dfaf59b02d93d6afaf278a"
+    },
+    {
+      "source": "/tmp/scholarchain-phase12b-repair1-infra/test-coverage.json",
+      "retained_path": "docs/agent-runs/phase-12/evidence/12b-repair-1/infra/test-coverage.json",
+      "bytes": 364,
+      "sha256": "62238261afe0dfa93c76c8c569bd4648d1ce6db85718444bca2d1e2a8f66a54a"
+    },
+    {
+      "source": "/tmp/scholarchain-phase12b-repair1-infra/toolchain-provenance.json",
+      "retained_path": "docs/agent-runs/phase-12/evidence/12b-repair-1/infra/toolchain-provenance.json",
+      "bytes": 1317,
+      "sha256": "0076ef0d73bc460bfb1824791891ab9eca811798ef4f4df892902a2a62972f4e"
+    },
+    {
+      "source": "/tmp/scholarchain-phase12b-repair1-infra/toolchain-version.log.txt",
+      "retained_path": "docs/agent-runs/phase-12/evidence/12b-repair-1/infra/toolchain-version.log.txt",
+      "bytes": 180,
+      "sha256": "5d3100f59cca63307c83f2fd1e4c669f9621be555281cdac250763c7d54bc621"
+    }
+  ],
+  "commands": [
+    {
+      "name": "format-new-assertion",
+      "log": "format-new-assertion.log.txt",
+      "exit_code": 0,
+      "hash_matches": true
+    },
+    {
+      "name": "b3-red-init",
+      "log": "b3-red-init.log.txt",
+      "exit_code": 0,
+      "hash_matches": true
+    },
+    {
+      "name": "b3-red-test",
+      "log": "b3-red-test.log.txt",
+      "exit_code": 1,
+      "hash_matches": true
+    },
+    {
+      "name": "red-helper",
+      "log": "red-helper.log.txt",
+      "exit_code": 0,
+      "hash_matches": true
+    },
+    {
+      "name": "format-policy",
+      "log": "format-policy.log.txt",
+      "exit_code": 0,
+      "hash_matches": true
+    },
+    {
+      "name": "final-init",
+      "log": "final-init.log.txt",
+      "exit_code": 0,
+      "hash_matches": true
+    },
+    {
+      "name": "final-fmt-check",
+      "log": "final-fmt-check.log.txt",
+      "exit_code": 0,
+      "hash_matches": true
+    },
+    {
+      "name": "final-validate",
+      "log": "final-validate.log.txt",
+      "exit_code": 0,
+      "hash_matches": true
+    },
+    {
+      "name": "final-test",
+      "log": "final-test.log.txt",
+      "exit_code": 0,
+      "hash_matches": true
+    },
+    {
+      "name": "final-diff-check",
+      "log": "final-diff-check.log.txt",
+      "exit_code": 0,
+      "hash_matches": true
+    },
+    {
+      "name": "toolchain-version",
+      "log": "toolchain-version.log.txt",
+      "exit_code": 0,
+      "hash_matches": true
+    }
+  ],
+  "coordinator_gate_reconciliation": {
+    "timestamp_utc": "2026-10-29T15:45:45.918298+00:00",
+    "coverage": {
+      "runs": 31,
+      "assertions": 52,
+      "expected_failure_cases": 16
+    },
+    "all_runs_mock_plan_only": true,
+    "red_intended_assertion_and_30_1": true,
+    "green_31_0": true,
+    "version_files_exact": 14,
+    "lock_byte_identical_to_base": true
+  }
+}

@@ -1,0 +1,241 @@
+{
+  "timestamp_utc": "2026-10-29T02:05:19.220029+00:00",
+  "reason": "Repository ignores *.log. Retained raw native logs use .log.txt names with byte-identical content; original absolute command-log paths remain provenance. Resolve logs through records or log-name-map.json. No ignore rule changed.",
+  "files": [
+    {
+      "original_name": "final-diff-check.log",
+      "retained_name": "final-diff-check.log.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original_name": "final-fmt-check.log",
+      "retained_name": "final-fmt-check.log.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original_name": "final-init.log",
+      "retained_name": "final-init.log.txt",
+      "sha256": "6fd242691fd6bbc7efe25549609a26c11107f98c3ae3cb12128985c21a261753"
+    },
+    {
+      "original_name": "final-test.log",
+      "retained_name": "final-test.log.txt",
+      "sha256": "ca01f69508557980b51362a8604057df04133c62bfde441b57c2f95383cda6bc"
+    },
+    {
+      "original_name": "final-validate.log",
+      "retained_name": "final-validate.log.txt",
+      "sha256": "f7997225125835fdd14060ac776d273f394b874f9a481b9e2122c83dc8adc5c1"
+    },
+    {
+      "original_name": "fmt-development-1.log",
+      "retained_name": "fmt-development-1.log.txt",
+      "sha256": "672485e4b1b33fc4b8d8cecfefcec5a370f8fb778f062e644bf78df27946dd9a"
+    },
+    {
+      "original_name": "fmt-development-10.log",
+      "retained_name": "fmt-development-10.log.txt",
+      "sha256": "3e7b5e03882277db11978f10895866369b492e41110c950a0e9ce9547b37f949"
+    },
+    {
+      "original_name": "fmt-development-11.log",
+      "retained_name": "fmt-development-11.log.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original_name": "fmt-development-12.log",
+      "retained_name": "fmt-development-12.log.txt",
+      "sha256": "5c4412a6f558da1cdbd8e099b50ca037f54768eb52a5c7613b8d596ae8d5f732"
+    },
+    {
+      "original_name": "fmt-development-13.log",
+      "retained_name": "fmt-development-13.log.txt",
+      "sha256": "69e02857dea57a92f5ad1d219b381b0b30dd48015ce707243aa194834bb7e7ef"
+    },
+    {
+      "original_name": "fmt-development-14.log",
+      "retained_name": "fmt-development-14.log.txt",
+      "sha256": "421259867be3040589d84346dca5d7e94d295d426a97ea63d5ffae5d2f71b786"
+    },
+    {
+      "original_name": "fmt-development-2.log",
+      "retained_name": "fmt-development-2.log.txt",
+      "sha256": "6daca4fff242216b558c7e504084e429012d0a6790e4df07ce809cf850b053e2"
+    },
+    {
+      "original_name": "fmt-development-3.log",
+      "retained_name": "fmt-development-3.log.txt",
+      "sha256": "a41384767c7670b31bceaf144c0451bd63f4ef2789f23383cede8a50d181737e"
+    },
+    {
+      "original_name": "fmt-development-4.log",
+      "retained_name": "fmt-development-4.log.txt",
+      "sha256": "4543d631a896e854987867c620470733f3dbc4ee2e890bff982ebf35e4be4b1d"
+    },
+    {
+      "original_name": "fmt-development-5.log",
+      "retained_name": "fmt-development-5.log.txt",
+      "sha256": "cf0e2cc958df385e89457c6e77844ad91b47a423944b74d11753d426a794e9e6"
+    },
+    {
+      "original_name": "fmt-development-6.log",
+      "retained_name": "fmt-development-6.log.txt",
+      "sha256": "5c0e01dbbc1e875bd165ea328c040e75e61f0a366140e2b1257d99079a2fd956"
+    },
+    {
+      "original_name": "fmt-development-7.log",
+      "retained_name": "fmt-development-7.log.txt",
+      "sha256": "9c8331d488287e3a380c918f91aeb000fd9600fbbabc130a220a1396d92fdc87"
+    },
+    {
+      "original_name": "fmt-development-8.log",
+      "retained_name": "fmt-development-8.log.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original_name": "fmt-development-9.log",
+      "retained_name": "fmt-development-9.log.txt",
+      "sha256": "c4eb9e0b40b7351b0915f5d82599525cd7a01e54b1a8dab5fe65b25bd6c70538"
+    },
+    {
+      "original_name": "init-development-1.log",
+      "retained_name": "init-development-1.log.txt",
+      "sha256": "b475b3d040af3eb25638a5f17d912c4c5470728c80bb293500fb0dec367d16e4"
+    },
+    {
+      "original_name": "init-local-mirror.log",
+      "retained_name": "init-local-mirror.log.txt",
+      "sha256": "6fd242691fd6bbc7efe25549609a26c11107f98c3ae3cb12128985c21a261753"
+    },
+    {
+      "original_name": "mutation-graph-write-init.log",
+      "retained_name": "mutation-graph-write-init.log.txt",
+      "sha256": "6545a713c228f0dc92ae5a34526f8587feecb26f45982fa5410903494fbafaa6"
+    },
+    {
+      "original_name": "mutation-graph-write-test.log",
+      "retained_name": "mutation-graph-write-test.log.txt",
+      "sha256": "9a85df7abb5cfe79f14cfa6fd0c95a6d779d700460c578f100d7f712d03a3730"
+    },
+    {
+      "original_name": "mutation-v2-flatten-dashboard-init.log",
+      "retained_name": "mutation-v2-flatten-dashboard-init.log.txt",
+      "sha256": "bea09208d94de22b2d864999cb48dcdeb3bd7a1c12723069af42a1fe9269b976"
+    },
+    {
+      "original_name": "mutation-v2-flatten-dashboard-test.log",
+      "retained_name": "mutation-v2-flatten-dashboard-test.log.txt",
+      "sha256": "454f40cb9bb4ea0c5bf1ab9b32112eab5307b64e500b262d56a38ba7005ab112"
+    },
+    {
+      "original_name": "mutation-v2-graph-write-init.log",
+      "retained_name": "mutation-v2-graph-write-init.log.txt",
+      "sha256": "bea09208d94de22b2d864999cb48dcdeb3bd7a1c12723069af42a1fe9269b976"
+    },
+    {
+      "original_name": "mutation-v2-graph-write-test.log",
+      "retained_name": "mutation-v2-graph-write-test.log.txt",
+      "sha256": "5125b02fefba3433fc8ae04b28d4df1f38ff07ba8716778578e76f138e280545"
+    },
+    {
+      "original_name": "mutation-v2-public-neptune-init.log",
+      "retained_name": "mutation-v2-public-neptune-init.log.txt",
+      "sha256": "bea09208d94de22b2d864999cb48dcdeb3bd7a1c12723069af42a1fe9269b976"
+    },
+    {
+      "original_name": "mutation-v2-public-neptune-test.log",
+      "retained_name": "mutation-v2-public-neptune-test.log.txt",
+      "sha256": "ddda269e81e14e73c6784914776c548c70506e3006f79fd469852b4c0f753c3d"
+    },
+    {
+      "original_name": "negative-helper-v2.log",
+      "retained_name": "negative-helper-v2.log.txt",
+      "sha256": "55791c7fe899087bb04d81c4c20b4595418389cb0478c237f26b4ee2996ca795"
+    },
+    {
+      "original_name": "negative-helper.log",
+      "retained_name": "negative-helper.log.txt",
+      "sha256": "97475baa8bc8f1d53bcdd956d2a5d8f854f9bf223f0773e964dc66d5118a3fb7"
+    },
+    {
+      "original_name": "test-development-1.log",
+      "retained_name": "test-development-1.log.txt",
+      "sha256": "7b1b4def04eb8c35f1ad541d97bc46e68e0212f2014d38ba2e226a8e715b1e5f"
+    },
+    {
+      "original_name": "test-development-10.log",
+      "retained_name": "test-development-10.log.txt",
+      "sha256": "ca01f69508557980b51362a8604057df04133c62bfde441b57c2f95383cda6bc"
+    },
+    {
+      "original_name": "test-development-2.log",
+      "retained_name": "test-development-2.log.txt",
+      "sha256": "4ec828a3bffbe30aa5a9b81da6cab8dec9f0e73a172987ef3ec8784b5f31d882"
+    },
+    {
+      "original_name": "test-development-3.log",
+      "retained_name": "test-development-3.log.txt",
+      "sha256": "1629e5117322c7e5d58850fb1d4ad9777569d9971676f9455971f1fefbec89dd"
+    },
+    {
+      "original_name": "test-development-4.log",
+      "retained_name": "test-development-4.log.txt",
+      "sha256": "db79cf25ecc1927b469399ee833ee77a7e3f5db24ec297fe79a6dd7ebc98849a"
+    },
+    {
+      "original_name": "test-development-5.log",
+      "retained_name": "test-development-5.log.txt",
+      "sha256": "5c3d82bfb053c0a3837c08bf6b68d278907754b07eace672ad9ae27ffeb404ef"
+    },
+    {
+      "original_name": "test-development-6.log",
+      "retained_name": "test-development-6.log.txt",
+      "sha256": "1629e5117322c7e5d58850fb1d4ad9777569d9971676f9455971f1fefbec89dd"
+    },
+    {
+      "original_name": "test-development-7.log",
+      "retained_name": "test-development-7.log.txt",
+      "sha256": "7b332597978b552a45d060d8db4bfbd6bcac3a1ebfb5890997bfe7cf0b89a130"
+    },
+    {
+      "original_name": "test-development-8.log",
+      "retained_name": "test-development-8.log.txt",
+      "sha256": "d363b0578226f837cf28da2c4341b793afa0d00a022c012c0271638c0eb106c0"
+    },
+    {
+      "original_name": "test-development-9.log",
+      "retained_name": "test-development-9.log.txt",
+      "sha256": "87e32035413618827995258bb95625ff6d6b573375dea80229a2b20cd95f292f"
+    },
+    {
+      "original_name": "toolchain-version.log",
+      "retained_name": "toolchain-version.log.txt",
+      "sha256": "5d3100f59cca63307c83f2fd1e4c669f9621be555281cdac250763c7d54bc621"
+    },
+    {
+      "original_name": "validate-development-1.log",
+      "retained_name": "validate-development-1.log.txt",
+      "sha256": "ffa7741e05ec31e4804b328109e1601073348f9e2c4d915729c4b421246e2ad3"
+    },
+    {
+      "original_name": "validate-development-2.log",
+      "retained_name": "validate-development-2.log.txt",
+      "sha256": "f7997225125835fdd14060ac776d273f394b874f9a481b9e2122c83dc8adc5c1"
+    },
+    {
+      "original_name": "validate-development-3.log",
+      "retained_name": "validate-development-3.log.txt",
+      "sha256": "db79cf25ecc1927b469399ee833ee77a7e3f5db24ec297fe79a6dd7ebc98849a"
+    },
+    {
+      "original_name": "validate-development-4.log",
+      "retained_name": "validate-development-4.log.txt",
+      "sha256": "f7997225125835fdd14060ac776d273f394b874f9a481b9e2122c83dc8adc5c1"
+    },
+    {
+      "original_name": "validate-development-5.log",
+      "retained_name": "validate-development-5.log.txt",
+      "sha256": "f7997225125835fdd14060ac776d273f394b874f9a481b9e2122c83dc8adc5c1"
+    }
+  ]
+}

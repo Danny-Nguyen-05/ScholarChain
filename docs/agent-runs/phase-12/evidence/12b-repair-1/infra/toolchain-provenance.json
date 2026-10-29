@@ -1,0 +1,17 @@
+{
+  "timestamp": "2026-10-29T15:34:08.704311+00:00",
+  "download_url": "https://releases.hashicorp.com/terraform/1.13.5/terraform_1.13.5_darwin_arm64.zip",
+  "zip_sha256": "1bf942231235e7e1a4c38c6d7b820e54f526ac487f87d19f0c4a425c6ddb62cb",
+  "retained_checksums": "/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-12/evidence/12a/terraform-1.13.5-official-checksums.txt",
+  "verified_against_retained_sha256": true,
+  "terraform_binary": "/tmp/scholarchain-phase12b-repair1-infra/terraform",
+  "binary_sha256": "899b3c0ca0d2669ebd67be4bcd98e84bd9a914ce2fb3897ad0b86c98cbf3c962",
+  "provider_package": {
+    "terraform-provider-aws_v6.44.0_x5": "050fc3a7514d11585206c2a059be393ee54f50b9276ed1b092a1a975ae2afa73",
+    "LICENSE.txt": "588768dc819dc773d6914c22df7de8932cc7899c24188f5b09b013d86457e115"
+  },
+  "provider_source": "/Users/danny/Documents/UIC/CS441/ScholarChain/infra/terraform/.terraform/providers/registry.terraform.io/hashicorp/aws/6.44.0/darwin_arm64",
+  "mirror": "/tmp/scholarchain-phase12b-repair1-infra/mirror/registry.terraform.io/hashicorp/aws/6.44.0/darwin_arm64",
+  "cli_config": "/tmp/scholarchain-phase12b-repair1-infra/terraformrc",
+  "signature_verification": "No new detached signature verification; exact official ZIP SHA verified against retained official checksums."
+}

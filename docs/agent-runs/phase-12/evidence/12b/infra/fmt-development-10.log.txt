@@ -1,0 +1,4 @@
+modules/s3vectors/main.tf
+phase12b-variables.tf
+phase12b.tf
+tests/phase12b.tftest.hcl

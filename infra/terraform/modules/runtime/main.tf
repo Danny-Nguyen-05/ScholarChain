@@ -1,4 +1,4 @@
-# ECR only in 12A. ECS/Fargate/ALB/discovery/scaling belong to 12B.
+# Immutable per-service repositories, retained from12A.
 locals { services = toset(["query-api", "graph-service", "semantic-service", "embedding-worker"]) }
 resource "aws_ecr_repository" "service" {
   for_each             = local.services
