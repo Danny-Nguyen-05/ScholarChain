@@ -1,0 +1,119 @@
+{
+  "commands": [
+    {
+      "command": "/tmp/scholarchain-phase12a-infra-toolchain/terraform version",
+      "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain/infra/terraform",
+      "exit_code": 0,
+      "notes": "v1.13.5 Darwin ARM64; isolated official HTTPS ZIP/checksum metadata in toolchain/install.json; no detached signature check"
+    },
+    {
+      "command": "/tmp/scholarchain-phase12a-infra-toolchain/terraform fmt -recursive",
+      "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain/infra/terraform",
+      "exit_code": 0,
+      "notes": "Initial first-draft formatting."
+    },
+    {
+      "command": "/tmp/scholarchain-phase12a-infra-toolchain/terraform init -backend=false -input=false -no-color",
+      "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain/infra/terraform",
+      "exit_code": 0,
+      "log": "/tmp/scholarchain-phase12a-infra-init.log",
+      "sha256": "c71a49cf2b74aa57053344d367d7529a5d5a7d3b3d6ac5838b3b8bb322491517"
+    },
+    {
+      "command": "/tmp/scholarchain-phase12a-infra-toolchain/terraform validate -no-color",
+      "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain/infra/terraform",
+      "exit_code": 0,
+      "log": "/tmp/scholarchain-phase12a-infra-validate-1.log",
+      "sha256": "f7997225125835fdd14060ac776d273f394b874f9a481b9e2122c83dc8adc5c1"
+    },
+    {
+      "command": "/tmp/scholarchain-phase12a-infra-toolchain/terraform test -no-color",
+      "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain/infra/terraform",
+      "exit_code": 0,
+      "log": "/tmp/scholarchain-phase12a-infra-test-1.log",
+      "sha256": "d5794d34a7addf6de18f550871bd73d26a8859c7e127139e6483add32a62d860",
+      "notes": "11 passed,0 failed; GSI hash_key deprecation warning subsequently removed with key_schema."
+    },
+    {
+      "command": "/tmp/scholarchain-phase12a-infra-toolchain/terraform providers schema -json",
+      "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain/infra/terraform",
+      "exit_code": 0,
+      "log": "/tmp/scholarchain-phase12a-infra-provider-schema.json",
+      "sha256": "1fa5e2f4048bf38d2ca512ec5c4846dc1604f70b65e2576a2cd2842131073905",
+      "notes": "Local plugin schema inspection, not an AWS call; large raw schema need not be committed."
+    },
+    {
+      "command": "/tmp/scholarchain-phase12a-infra-toolchain/terraform fmt -recursive",
+      "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain/infra/terraform",
+      "exit_code": 0,
+      "notes": "Formatting after configuration externalization and GSI schema migration."
+    },
+    {
+      "command": "/tmp/scholarchain-phase12a-infra-toolchain/terraform -chdir=infra/terraform validate -no-color",
+      "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+      "exit_code": 0,
+      "log": "/tmp/scholarchain-phase12a-infra-validate-2.log",
+      "sha256": "f7997225125835fdd14060ac776d273f394b874f9a481b9e2122c83dc8adc5c1"
+    },
+    {
+      "command": "/tmp/scholarchain-phase12a-infra-toolchain/terraform fmt -recursive",
+      "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+      "exit_code": 2,
+      "notes": "Transient development failure after optional bootstrap creation: nested encryption block incorrectly on one line; corrected before final checks. Full output exists in tool transcript, no raw file was retained."
+    },
+    {
+      "command": "/tmp/scholarchain-phase12a-infra-toolchain/terraform fmt -recursive",
+      "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+      "exit_code": 0,
+      "log": "/tmp/scholarchain-phase12a-infra-fmt-development.log",
+      "sha256": "01aab073c2af7f21b60d1743a936d7c013f11e6eff9b91eabd506ae0e049add5"
+    },
+    {
+      "command": "/tmp/scholarchain-phase12a-infra-toolchain/terraform -chdir=infra/terraform init -backend=false -input=false -no-color",
+      "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+      "exit_code": 0,
+      "log": "/tmp/scholarchain-phase12a-infra-init-2.log",
+      "sha256": "af5bba909a82b8c4c53e4edc59e78f0eb597589ca75de0cc80e050fdfc6215f1"
+    },
+    {
+      "command": "/tmp/scholarchain-phase12a-infra-toolchain/terraform fmt -recursive",
+      "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+      "exit_code": 0,
+      "log": "/tmp/scholarchain-phase12a-infra-fmt-development-2.log",
+      "sha256": "940dea2ecc1a544d60f06b3c9d1a11627943a747f7a23e0b076b17272fe4591c"
+    },
+    {
+      "command": "/tmp/scholarchain-phase12a-infra-toolchain/terraform test -no-color",
+      "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain/infra/terraform",
+      "exit_code": 0,
+      "log": "/tmp/scholarchain-phase12a-infra-test-2.log",
+      "sha256": "7cb6be1995c6c4bb1abac1df0c1cd19b06b06fb0409f68ecae3207cf6c25a14f",
+      "notes": "Final test run:13 passed,0 failed;27 assertions+6 expected-failure cases; mock provider,command=plan only."
+    },
+    {
+      "command": "/tmp/scholarchain-phase12a-infra-toolchain/terraform fmt -check -recursive",
+      "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain/infra/terraform",
+      "exit_code": 0,
+      "log": "/tmp/scholarchain-phase12a-infra-fmt-final.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": "/tmp/scholarchain-phase12a-infra-toolchain/terraform validate -no-color",
+      "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain/infra/terraform",
+      "exit_code": 0,
+      "log": "/tmp/scholarchain-phase12a-infra-validate-final.log",
+      "sha256": "f7997225125835fdd14060ac776d273f394b874f9a481b9e2122c83dc8adc5c1"
+    },
+    {
+      "command": "git diff --check",
+      "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+      "exit_code": 0,
+      "notes": "No whitespace errors in tracked diff; untracked Terraform formatted by final fmt check."
+    }
+  ],
+  "development_notes": [
+    "Initial source-authoring Python here-doc exited1 because modules parent directory was absent; created the parent and continued. No Terraform resource was run by that authoring failure.",
+    "Initial schema-summary Python print exited1 on missing block_types key for a schema using nested attributes; corrected to optional access, confirmed both native S3 Vectors resources.",
+    "Both development errors are in the tool transcript, not fabricated successful commands. File authoring/read-only research commands are not replay-gate evidence; deterministic gate commands above are exact."
+  ]
+}

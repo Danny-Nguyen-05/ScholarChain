@@ -1,0 +1,7 @@
+{
+  "terraform_version": "1.13.5",
+  "download": "https://releases.hashicorp.com/terraform/1.13.5/terraform_1.13.5_darwin_arm64.zip",
+  "checksums": "https://releases.hashicorp.com/terraform/1.13.5/terraform_1.13.5_SHA256SUMS",
+  "sha256": "1bf942231235e7e1a4c38c6d7b820e54f526ac487f87d19f0c4a425c6ddb62cb",
+  "verification": "SHA-256 matches official HTTPS checksum file; no detached-signature verification"
+}

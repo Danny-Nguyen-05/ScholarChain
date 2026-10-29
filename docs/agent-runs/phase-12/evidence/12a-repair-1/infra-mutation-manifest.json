@@ -1,0 +1,54 @@
+[
+  {
+    "label": "mutation-data-map-init",
+    "command": [
+      "/tmp/scholarchain-phase12a-infra-toolchain/terraform",
+      "init",
+      "-backend=false",
+      "-input=false",
+      "-no-color"
+    ],
+    "cwd": "/tmp/scholarchain-phase12a-repair1-infra-data-map-c1zl2w_s",
+    "exit_code": 0,
+    "log": "/tmp/scholarchain-phase12a-repair1-infra-mutation-data-map-init.log",
+    "sha256": "f43033ae5960b69d4ae12baa5aff96299990b7de7ef13b5c704995bac2ede29a"
+  },
+  {
+    "label": "mutation-data-map-test",
+    "command": [
+      "/tmp/scholarchain-phase12a-infra-toolchain/terraform",
+      "test",
+      "-no-color"
+    ],
+    "cwd": "/tmp/scholarchain-phase12a-repair1-infra-data-map-c1zl2w_s",
+    "exit_code": 1,
+    "log": "/tmp/scholarchain-phase12a-repair1-infra-mutation-data-map-test.log",
+    "sha256": "6ba18aac6a72acdb5860c813152db3b2c68eed2111683acdbc5e01d1051760ec"
+  },
+  {
+    "label": "mutation-rogue-resource-init",
+    "command": [
+      "/tmp/scholarchain-phase12a-infra-toolchain/terraform",
+      "init",
+      "-backend=false",
+      "-input=false",
+      "-no-color"
+    ],
+    "cwd": "/tmp/scholarchain-phase12a-repair1-infra-rogue-resource-5kzpm2av",
+    "exit_code": 0,
+    "log": "/tmp/scholarchain-phase12a-repair1-infra-mutation-rogue-resource-init.log",
+    "sha256": "f43033ae5960b69d4ae12baa5aff96299990b7de7ef13b5c704995bac2ede29a"
+  },
+  {
+    "label": "mutation-rogue-resource-test",
+    "command": [
+      "/tmp/scholarchain-phase12a-infra-toolchain/terraform",
+      "test",
+      "-no-color"
+    ],
+    "cwd": "/tmp/scholarchain-phase12a-repair1-infra-rogue-resource-5kzpm2av",
+    "exit_code": 1,
+    "log": "/tmp/scholarchain-phase12a-repair1-infra-mutation-rogue-resource-test.log",
+    "sha256": "8c75af8974937b18663fc0aab1298f04708c8e94f53dafbde4e5ef2a6ee1af5b"
+  }
+]

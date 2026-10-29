@@ -1,0 +1,13 @@
+variable "name_prefix" { type = string }
+variable "aws_region" { type = string }
+variable "aws_account_id" { type = string }
+variable "deployment_trusted_principal_arn" { type = string }
+variable "kms_deletion_window_days" { type = number }
+variable "bucket_arns" { type = map(string) }
+variable "table_arns" { type = map(string) }
+variable "query_session_index_arn" { type = string }
+variable "queue_arn" { type = string }
+variable "dead_letter_queue_arn" { type = string }
+variable "repository_arns" { type = map(string) }
+variable "service_secret_arns" { type = map(set(string)) }
+variable "tags" { type = map(string) }

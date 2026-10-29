@@ -1,0 +1,27 @@
+{
+  "source_url": "https://raw.githubusercontent.com/0x1DOCD00D/ScholarChain/main/README.md",
+  "retrieved_at_utc": "2026-10-28T18:44:04.684957+00:00",
+  "full_source_sha256": "6a0eddaddbb91435198ec868699ca99aec22ae8ee5ff515b6f7b34f18e362695",
+  "sections_read": [
+    "Required technology stack",
+    "Phase 12: create the AWS infrastructure in Terraform",
+    "Phase 15: run the data pipeline and elasticity experiments",
+    "Observability requirements",
+    "Security requirements",
+    "Cost controls"
+  ],
+  "discrepancies": [
+    {
+      "topic": "Step Functions",
+      "course": "Phase 12 workflow and messaging explicitly lists Step Functions state machines; technology stack and Phase 15 also reference them.",
+      "phase_plan": "Recommended omission as lean scope, described as when used.",
+      "disposition": "User accepted recommended omission; retain discrepancy as course-compliance risk, no claim of instructor acceptance; 12A does not implement Step Functions."
+    },
+    {
+      "topic": "Operational scripts",
+      "course": "Phase 12 lists plan/deploy/rollback/smoke/pipeline/cleanup scripts.",
+      "phase_plan": "Defers operational scripts to Phase 13.",
+      "disposition": "Follow user phase work order; disclose deferred course deliverables, not complete in 12A."
+    }
+  ]
+}

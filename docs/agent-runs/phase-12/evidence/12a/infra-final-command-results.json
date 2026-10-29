@@ -1,0 +1,25 @@
+[
+  {
+    "command": [
+      "/tmp/scholarchain-phase12a-infra-toolchain/terraform",
+      "fmt",
+      "-check",
+      "-recursive"
+    ],
+    "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain/infra/terraform",
+    "exit_code": 0,
+    "log": "/tmp/scholarchain-phase12a-infra-fmt-final.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "command": [
+      "/tmp/scholarchain-phase12a-infra-toolchain/terraform",
+      "validate",
+      "-no-color"
+    ],
+    "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain/infra/terraform",
+    "exit_code": 0,
+    "log": "/tmp/scholarchain-phase12a-infra-validate-final.log",
+    "sha256": "f7997225125835fdd14060ac776d273f394b874f9a481b9e2122c83dc8adc5c1"
+  }
+]

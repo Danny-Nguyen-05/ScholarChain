@@ -1,0 +1,50 @@
+{
+  "captured_at_utc": "2026-10-28T18:43:22.482272+00:00",
+  "base_sha": "649b13b9bb40b0b6218bf7f2b71ab9d541c7aafe",
+  "initial_branch": "phase-11",
+  "branch_created": "phase-12",
+  "initial_working_tree": "clean (observed before branch creation and evidence writes)",
+  "plan_path": "/Users/danny/Library/CloudStorage/GoogleDrive-cpnguyen0630@gmail.com/My Drive/plan/phase12.md",
+  "plan_sha256": "85f531e198d0fd6e138a5698eec1c4332807fa7e06f6b526089fb549e870d5ef",
+  "checks": [
+    {
+      "argv": [
+        "git",
+        "status",
+        "--short"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "branch",
+        "--show-current"
+      ],
+      "exit_code": 0,
+      "stdout": "phase-12\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "exit_code": 0,
+      "stdout": "649b13b9bb40b0b6218bf7f2b71ab9d541c7aafe\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home/bin/java",
+        "-version"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "openjdk version \"17.0.20.1\" 2026-08-18\nOpenJDK Runtime Environment Homebrew (build 17.0.20.1+0)\nOpenJDK 64-Bit Server VM Homebrew (build 17.0.20.1+0, mixed mode, sharing)\n"
+    }
+  ]
+}

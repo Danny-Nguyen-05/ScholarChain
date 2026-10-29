@@ -1,0 +1,8 @@
+{
+  "raw_bytes": 1721183,
+  "raw_sha256": "390b4f7ad2c62309a3df98f1fe0f9ad8abfdd1f599ea879a264d175dfe07fc3a",
+  "retained_gzip": "sbt-check.log.gz",
+  "gzip_bytes": 93195,
+  "gzip_sha256": "6f448694d2da4726479037306d2a4f55035b24f05eea67035f5f22288c129f0f",
+  "original_log": "/tmp/scholarchain-phase12a-repair1-build-sbt-check.log"
+}

@@ -1,0 +1,30 @@
+tests/phase12a.tftest.hcl... in progress
+  run "course_data_safety"... pass
+  run "network_role_boundaries"... pass
+  run "runtime_identity_boundaries"... fail
+
+Error: Test assertion failed
+
+  on tests/phase12a.tftest.hcl line 129, in run "runtime_identity_boundaries":
+ 129:     condition = alltrue(flatten([for statement in jsondecode(output.iam_controls.emr_data_policy).Statement : [
+ 130:       for action in statement.Action : !startswith(lower(action), "dynamodb:")
+ 131:     ]]))
+    ├────────────────
+    │ output.iam_controls.emr_data_policy is "{\"Statement\":[{\"Action\":[\"s3:GetObject\",\"s3:GetObjectVersion\"],\"Effect\":\"Allow\",\"Resource\":[\"arn:aws:s3:::synthetic-phase12a-bucket/*\",\"arn:aws:s3:::synthetic-phase12a-bucket/*\",\"arn:aws:s3:::synthetic-phase12a-bucket/*\",\"arn:aws:s3:::synthetic-phase12a-bucket/*\"],\"Sid\":\"ReadInputAndArtifacts\"},{\"Action\":[\"s3:ListBucket\",\"s3:GetBucketLocation\"],\"Effect\":\"Allow\",\"Resource\":[\"arn:aws:s3:::synthetic-phase12a-bucket\",\"arn:aws:s3:::synthetic-phase12a-bucket\",\"arn:aws:s3:::synthetic-phase12a-bucket\",\"arn:aws:s3:::synthetic-phase12a-bucket\",\"arn:aws:s3:::synthetic-phase12a-bucket\",\"arn:aws:s3:::synthetic-phase12a-bucket\"],\"Sid\":\"ListPipelineBuckets\"},{\"Action\":[\"s3:PutObject\",\"s3:AbortMultipartUpload\",\"s3:ListMultipartUploadParts\"],\"Effect\":\"Allow\",\"Resource\":[\"arn:aws:s3:::synthetic-phase12a-bucket/*\",\"arn:aws:s3:::synthetic-phase12a-bucket/*\",\"arn:aws:s3:::synthetic-phase12a-bucket/*\",\"arn:aws:s3:::synthetic-phase12a-bucket/*\",\"arn:aws:s3:::synthetic-phase12a-bucket/*\"],\"Sid\":\"WriteOutputs\"},{\"Action\":[\"dynamodb:GetItem\",\"dynamodb:Query\",\"dynamodb:PutItem\",\"dynamodb:UpdateItem\",\"dynamodb:BatchGetItem\"],\"Effect\":\"Allow\",\"Resource\":[\"arn:aws:dynamodb:us-east-1:111122223333:table/synthetic-phase12a-table\",\"arn:aws:dynamodb:us-east-1:111122223333:table/synthetic-phase12a-table\",\"arn:aws:dynamodb:us-east-1:111122223333:table/synthetic-phase12a-table\",\"arn:aws:dynamodb:us-east-1:111122223333:table/synthetic-phase12a-table\",\"arn:aws:dynamodb:us-east-1:111122223333:table/synthetic-phase12a-table\",\"arn:aws:dynamodb:us-east-1:111122223333:table/synthetic-phase12a-table\"],\"Sid\":\"LoadConfiguredTables\"},{\"Action\":[\"kms:Encrypt\",\"kms:Decrypt\",\"kms:GenerateDataKey\",\"kms:DescribeKey\"],\"Effect\":\"Allow\",\"Resource\":[\"arn:aws:kms:us-east-1:111122223333:key/00000000-0000-0000-0000-000000000001\"],\"Sid\":\"EncryptPipelineData\"}],\"Version\":\"2012-10-17\"}"
+
+EMR jobs do not use DynamoDB; the EMR data role must have no DynamoDB action,
+including runtime audit writes.
+  run "cleanup_is_explicit_and_ttl_is_narrow"... pass
+  run "persistent_data_has_no_intermediate_expiration"... pass
+  run "configured_secrets_are_arn_only_and_per_service"... pass
+  run "invalid_account_is_rejected"... pass
+  run "invalid_budget_is_rejected"... pass
+  run "wrong_region_az_is_rejected"... pass
+  run "duplicate_az_is_rejected"... pass
+  run "malformed_secret_reference_is_rejected"... pass
+  run "optional_bootstrap_preserves_state"... pass
+  run "budget_requires_actual_subscribers"... pass
+tests/phase12a.tftest.hcl... tearing down
+tests/phase12a.tftest.hcl... fail
+
+Failure! 12 passed, 1 failed.

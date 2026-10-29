@@ -1,0 +1,259 @@
+{
+  "captured_at_utc": "2026-10-28T21:46:27.765700+00:00",
+  "branch": "phase-12",
+  "head": "649b13b9bb40b0b6218bf7f2b71ab9d541c7aafe",
+  "files": {
+    "infra/terraform/.terraform.lock.hcl": {
+      "sha256": "421b75245b0080edee2b434482ff348419a75d7a6b798d5218e0a0f9f723eaea",
+      "bytes": 1406,
+      "mtime_epoch": 1793213376.307088,
+      "mtime_ns": 1793213376307087886
+    },
+    "infra/terraform/README.md": {
+      "sha256": "ba082972f1cbe1e01184237e1ef7a2a57a247a5536d54995820dc1b48c7e8494",
+      "bytes": 20368,
+      "mtime_epoch": 1793222998.8785825,
+      "mtime_ns": 1793222998878582392
+    },
+    "infra/terraform/environments/course.tfvars": {
+      "sha256": "0b7016c3f40006409cc04e56321d3ef0fcef4f6c836527253f2cc7d923d16bec",
+      "bytes": 663,
+      "mtime_epoch": 1793213367.3416126,
+      "mtime_ns": 1793213367341612468
+    },
+    "infra/terraform/main.tf": {
+      "sha256": "b9150f97b5ec215605e78aee77c07ca0e560689e4f27e63948ab9d56a91d8ff4",
+      "bytes": 4442,
+      "mtime_epoch": 1793213526.8813622,
+      "mtime_ns": 1793213526881362255
+    },
+    "infra/terraform/modules/datalake/main.tf": {
+      "sha256": "33a1f9d21962c285f597a4e17a74535af186ab52a741c045b663717f4f7bf9bf",
+      "bytes": 2835,
+      "mtime_epoch": 1793213526.882057,
+      "mtime_ns": 1793213526882056884
+    },
+    "infra/terraform/modules/datalake/outputs.tf": {
+      "sha256": "c04264c35b25d7dbde8e0ebef4c0d0f0a8eec82c20fb38e1a2a868cae7f8c07d",
+      "bytes": 810,
+      "mtime_epoch": 1793213238.560783,
+      "mtime_ns": 1793213238560782999
+    },
+    "infra/terraform/modules/datalake/variables.tf": {
+      "sha256": "f34c80bf90187a86eff99db8bee280872f6b21da339ce5a3a3386d2629b4083a",
+      "bytes": 362,
+      "mtime_epoch": 1793213526.8421042,
+      "mtime_ns": 1793213526842104173
+    },
+    "infra/terraform/modules/datalake/versions.tf": {
+      "sha256": "38c0d27255f1ccf0c6f57b6854b80e5bcecde516ebfbcdfbd7ae95ad220ba0a1",
+      "bytes": 150,
+      "mtime_epoch": 1793213192.4770539,
+      "mtime_ns": 1793213192477053788
+    },
+    "infra/terraform/modules/dynamodb/main.tf": {
+      "sha256": "a6ba78a8127de3f6df9c2cf42b9f397f18ea3dc239fed0b20c5e718d8d91c120",
+      "bytes": 1751,
+      "mtime_epoch": 1793213526.8827422,
+      "mtime_ns": 1793213526882742096
+    },
+    "infra/terraform/modules/dynamodb/outputs.tf": {
+      "sha256": "3d8b58ed4096f3d53c8620673fa44ff015029176064823aa342cfefd490f4820",
+      "bytes": 776,
+      "mtime_epoch": 1793213238.560923,
+      "mtime_ns": 1793213238560923083
+    },
+    "infra/terraform/modules/dynamodb/variables.tf": {
+      "sha256": "d3927de45e5a434c8b30dd941283ed080ad29b14909d16cd0158b5a89df65641",
+      "bytes": 265,
+      "mtime_epoch": 1793213238.5608315,
+      "mtime_ns": 1793213238560831499
+    },
+    "infra/terraform/modules/dynamodb/versions.tf": {
+      "sha256": "38c0d27255f1ccf0c6f57b6854b80e5bcecde516ebfbcdfbd7ae95ad220ba0a1",
+      "bytes": 150,
+      "mtime_epoch": 1793213192.477117,
+      "mtime_ns": 1793213192477116955
+    },
+    "infra/terraform/modules/foundation/bootstrap/main.tf": {
+      "sha256": "c26429519d1a02fa5263532856b9cc7a154974e4798039599c54bc7936356d15",
+      "bytes": 1990,
+      "mtime_epoch": 1793213663.3138733,
+      "mtime_ns": 1793213663313873385
+    },
+    "infra/terraform/modules/foundation/bootstrap/outputs.tf": {
+      "sha256": "fdc3ff0702da0eb128deb35fdab6cda02b96507354ad41fcc3dd5a4b54e9f2c0",
+      "bytes": 960,
+      "mtime_epoch": 1793213639.3491642,
+      "mtime_ns": 1793213639349164208
+    },
+    "infra/terraform/modules/foundation/bootstrap/variables.tf": {
+      "sha256": "ebc3bedbb4957baf5692e19b227df77f44e83ce1c107702375105d493c110b76",
+      "bytes": 693,
+      "mtime_epoch": 1793213814.7424212,
+      "mtime_ns": 1793213814742421048
+    },
+    "infra/terraform/modules/foundation/bootstrap/versions.tf": {
+      "sha256": "38c0d27255f1ccf0c6f57b6854b80e5bcecde516ebfbcdfbd7ae95ad220ba0a1",
+      "bytes": 150,
+      "mtime_epoch": 1793213639.307417,
+      "mtime_ns": 1793213639307417029
+    },
+    "infra/terraform/modules/foundation/main.tf": {
+      "sha256": "28a5dd65c502cd18d039da4d35c92964fae4fac74909a69fbc9ea8b1984b77d2",
+      "bytes": 1095,
+      "mtime_epoch": 1793213526.8419788,
+      "mtime_ns": 1793213526841978840
+    },
+    "infra/terraform/modules/foundation/outputs.tf": {
+      "sha256": "bfbab11ed31c4a9d0aec8fef35b926fecd04f3964fe849cd044b412a4ccddf8e",
+      "bytes": 266,
+      "mtime_epoch": 1793213526.8420458,
+      "mtime_ns": 1793213526842045715
+    },
+    "infra/terraform/modules/foundation/variables.tf": {
+      "sha256": "38f1a007c2de96f671eb980a466140835e7f88dfe89519607e6da0784dc0b553",
+      "bytes": 486,
+      "mtime_epoch": 1793213526.8419087,
+      "mtime_ns": 1793213526841908589
+    },
+    "infra/terraform/modules/foundation/versions.tf": {
+      "sha256": "38c0d27255f1ccf0c6f57b6854b80e5bcecde516ebfbcdfbd7ae95ad220ba0a1",
+      "bytes": 150,
+      "mtime_epoch": 1793213192.4768353,
+      "mtime_ns": 1793213192476835287
+    },
+    "infra/terraform/modules/identity/main.tf": {
+      "sha256": "df18d1335ed58911d8eca606e4ee3260d7aaac8f4f8595fcabd5780350ca4348",
+      "bytes": 10739,
+      "mtime_epoch": 1793222998.877232,
+      "mtime_ns": 1793222998877232024
+    },
+    "infra/terraform/modules/identity/outputs.tf": {
+      "sha256": "28bda82d0a65110741acfd90fd7be58bba7d7f8f39cddd49d0ee9eba700a7168",
+      "bytes": 1087,
+      "mtime_epoch": 1793213361.5232487,
+      "mtime_ns": 1793213361523248678
+    },
+    "infra/terraform/modules/identity/variables.tf": {
+      "sha256": "6405de696a17e43f427e9422e6aac6a4dcbce0980df910b6af679435ead8ce3f",
+      "bytes": 623,
+      "mtime_epoch": 1793213361.5230472,
+      "mtime_ns": 1793213361523047260
+    },
+    "infra/terraform/modules/identity/versions.tf": {
+      "sha256": "38c0d27255f1ccf0c6f57b6854b80e5bcecde516ebfbcdfbd7ae95ad220ba0a1",
+      "bytes": 150,
+      "mtime_epoch": 1793213192.4769862,
+      "mtime_ns": 1793213192476986163
+    },
+    "infra/terraform/modules/messaging/main.tf": {
+      "sha256": "3088aba1f4c77017fa7bc91e6d0a16b55b9ce4bc1e71f580b4e310c55f82d679",
+      "bytes": 1553,
+      "mtime_epoch": 1793213526.8869898,
+      "mtime_ns": 1793213526886989910
+    },
+    "infra/terraform/modules/messaging/outputs.tf": {
+      "sha256": "9f104df2f4af14ba20b018aeef1f53367fc789f535892587ca2ee580380e4d61",
+      "bytes": 864,
+      "mtime_epoch": 1793213238.5610745,
+      "mtime_ns": 1793213238561074459
+    },
+    "infra/terraform/modules/messaging/variables.tf": {
+      "sha256": "2c2d1fda57e9b1d9a3c17aefe195992e2009e6ca508c6479cb404cda49176163",
+      "bytes": 1077,
+      "mtime_epoch": 1793213526.8422263,
+      "mtime_ns": 1793213526842226299
+    },
+    "infra/terraform/modules/messaging/versions.tf": {
+      "sha256": "38c0d27255f1ccf0c6f57b6854b80e5bcecde516ebfbcdfbd7ae95ad220ba0a1",
+      "bytes": 150,
+      "mtime_epoch": 1793213192.4771986,
+      "mtime_ns": 1793213192477198539
+    },
+    "infra/terraform/modules/network/main.tf": {
+      "sha256": "50a484e03cee844ebe868d081af62ee70db7c32222fc6261edfa1ba5d0de1f7e",
+      "bytes": 9173,
+      "mtime_epoch": 1793222998.9130116,
+      "mtime_ns": 1793222998913011660
+    },
+    "infra/terraform/modules/network/outputs.tf": {
+      "sha256": "1000e6df44170da6e3466796b672a5ef131ea25830cf8ce2ad823226bdfd60db",
+      "bytes": 1685,
+      "mtime_epoch": 1793222998.8779914,
+      "mtime_ns": 1793222998877991478
+    },
+    "infra/terraform/modules/network/variables.tf": {
+      "sha256": "85ce3718b5a1d47ec6fda18303d40fb7a73805645f1648bd4318d956aca42890",
+      "bytes": 742,
+      "mtime_epoch": 1793213286.8058493,
+      "mtime_ns": 1793213286805849309
+    },
+    "infra/terraform/modules/network/versions.tf": {
+      "sha256": "38c0d27255f1ccf0c6f57b6854b80e5bcecde516ebfbcdfbd7ae95ad220ba0a1",
+      "bytes": 150,
+      "mtime_epoch": 1793213192.4769187,
+      "mtime_ns": 1793213192476918705
+    },
+    "infra/terraform/modules/runtime/main.tf": {
+      "sha256": "1f4b4ae147ef0d2574332f620e84d8428a5f3f58bd3fbb6defb38cf9c13d7a87",
+      "bytes": 561,
+      "mtime_epoch": 1793213238.5611634,
+      "mtime_ns": 1793213238561163334
+    },
+    "infra/terraform/modules/runtime/outputs.tf": {
+      "sha256": "1fc8d9ae8037a560bce5b1d3eb0bafae064527b599cd7b23105bd339a088e9f4",
+      "bytes": 496,
+      "mtime_epoch": 1793213238.5612118,
+      "mtime_ns": 1793213238561211709
+    },
+    "infra/terraform/modules/runtime/variables.tf": {
+      "sha256": "e03e3a474b939260bf7d1d48d5d9b76ffca67269b068ea68ffbdc8c0ce3c543d",
+      "bytes": 161,
+      "mtime_epoch": 1793213238.561121,
+      "mtime_ns": 1793213238561121001
+    },
+    "infra/terraform/modules/runtime/versions.tf": {
+      "sha256": "38c0d27255f1ccf0c6f57b6854b80e5bcecde516ebfbcdfbd7ae95ad220ba0a1",
+      "bytes": 150,
+      "mtime_epoch": 1793213192.4772792,
+      "mtime_ns": 1793213192477279248
+    },
+    "infra/terraform/outputs.tf": {
+      "sha256": "8fe2ef8ec7e9e9958e0150d687a582a6353e664aaa75779d616a83e7617e186c",
+      "bytes": 957,
+      "mtime_epoch": 1793213188.1277757,
+      "mtime_ns": 1793213188127775575
+    },
+    "infra/terraform/providers.tf": {
+      "sha256": "665ed676e139cd00e9e7b7bb744a217aeb16d40d4d5cabe13187150c088c2296",
+      "bytes": 192,
+      "mtime_epoch": 1793213188.1276035,
+      "mtime_ns": 1793213188127603532
+    },
+    "infra/terraform/tests/phase12a.tftest.hcl": {
+      "sha256": "b283766c1b0fb1e93a09c2bb9cbbbf5d65f5418d1679b34f226dd6415e5ee9eb",
+      "bytes": 15912,
+      "mtime_epoch": 1793223161.9012697,
+      "mtime_ns": 1793223161901269770
+    },
+    "infra/terraform/variables.tf": {
+      "sha256": "654032b61eaae460f2e817afb7794bcad09f36a01dc54520de1e74772590b056",
+      "bytes": 10151,
+      "mtime_epoch": 1793213814.753822,
+      "mtime_ns": 1793213814753822150
+    },
+    "infra/terraform/versions.tf": {
+      "sha256": "38c0d27255f1ccf0c6f57b6854b80e5bcecde516ebfbcdfbd7ae95ad220ba0a1",
+      "bytes": 150,
+      "mtime_epoch": 1793213188.1275434,
+      "mtime_ns": 1793213188127543448
+    },
+    ".gitignore": {
+      "sha256": "0978fb0878cf23456a1fade40eeb6458215a275d3e91ff89dcf260b36c3a5160",
+      "bytes": 1095,
+      "mtime_epoch": 1793213289.722074,
+      "mtime_ns": 1793213289722073970
+    }
+  }
+}

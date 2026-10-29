@@ -1,0 +1,34 @@
+{
+  "owner": "build-engineer",
+  "native_task": "/root/build_12a",
+  "model": "inherited; exact model identifier not exposed",
+  "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+  "start_epoch": 1793223258.242954,
+  "start_utc": "2026-10-28T21:34:18.242955+00:00",
+  "environment": {
+    "JAVA_HOME": "/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home",
+    "SBT_OPTS": "-Dlogback.configurationFile=/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-04/xml-repair-logback.xml"
+  },
+  "path_prefix": "/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home/bin",
+  "commands": [
+    [
+      "java",
+      "-version"
+    ],
+    [
+      "sbt",
+      "-batch",
+      "check"
+    ]
+  ],
+  "freeze_path": "/tmp/scholarchain-phase12a-repair1-infra-source-freeze.json",
+  "freeze_sha256": "e00074e7405225537cd77c174c729b0be6b4e1ff859e30960dfd57935463ba1d",
+  "freeze_epoch": 1793223203.682294,
+  "max_source_mtime_epoch": 1793223161.9012697,
+  "start_after_freeze": true,
+  "start_after_all_source_mtimes": true,
+  "frozen_source_count": 41,
+  "frozen_hash_mismatches": [],
+  "source_before_path": "/tmp/scholarchain-phase12a-repair1-build-source-before.json",
+  "results": []
+}

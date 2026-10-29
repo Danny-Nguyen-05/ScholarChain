@@ -1,0 +1,24 @@
+{
+  "source": "User supplied complete independent read-only review and next work order in current task message",
+  "verdict": "REQUEST-CHANGES",
+  "recorded_path": "docs/agent-runs/phase-12/review.md",
+  "recorded_file_sha256": "f63f4b910b76236485ede5686444157ea9b2c532a8bcba8de185d21b4aad68d5",
+  "heading": "Subphase 12A / user-supplied external review",
+  "routed_blockers": [
+    "B1",
+    "B2"
+  ],
+  "nonblocking_recorded_only": [
+    "N1",
+    "N2",
+    "N3",
+    "N4",
+    "N5",
+    "N6",
+    "N7",
+    "N8"
+  ],
+  "implementation_scope": "Only B1/B2; required post-final-edit sbt gate; no later subphase or live AWS",
+  "questions": "No questions for this repair round",
+  "account_reminder": "Before12C real plan or earlier approved12D; no account needed now"
+}

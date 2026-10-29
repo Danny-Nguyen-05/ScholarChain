@@ -26,3 +26,37 @@ __pycache__/
 
 # OS
 .DS_Store
+
+# Terraform local data and sensitive state (all module/root directories)
+.terraform/
+*.tfstate
+*.tfstate.*
+.terraform.tfstate.lock.info
+crash.log
+crash.*.log
+
+# Saved plans and their raw JSON/text exports; commit summaries/checksums only
+*.plan
+*.tfplan
+*.tfplan.*
+tfplan
+tfplan.*
+/infra/terraform/**/.plans/
+/infra/terraform/**/plan
+/infra/terraform/**/plan.out
+/infra/terraform/**/plan.json
+/infra/terraform/**/plan.txt
+/infra/terraform/**/terraform-plan.*
+
+# Local variable values and overrides; course.tfvars is a nonsecret example
+*.tfvars
+*.tfvars.json
+*.tfvars.local
+*.tfvars.json.local
+!/infra/terraform/environments/course.tfvars
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Keep .terraform.lock.hcl and native *.tftest.hcl feature tests tracked.

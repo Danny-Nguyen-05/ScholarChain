@@ -1,0 +1,10 @@
+{
+  "command": "sbt -batch check",
+  "owner": "build-engineer",
+  "original_log": "/tmp/scholarchain-phase12a-build-sbt-check.log",
+  "raw_bytes": 1719573,
+  "raw_sha256": "aa3fc6b34ee2797205a4199ef6a7d37c87bb7f14b1a4ed3b25c76d0d20b20af1",
+  "retained_gzip": "sbt-check.log.gz",
+  "gzip_bytes": 93120,
+  "gzip_sha256": "7852a0d7ffa32ba6635f4799b379d93e5929400fb0b2ffaa1d1dc1ae5acd6a54"
+}

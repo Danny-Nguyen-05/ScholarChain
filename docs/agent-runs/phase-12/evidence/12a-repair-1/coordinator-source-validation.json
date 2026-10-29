@@ -1,0 +1,22 @@
+{
+  "source_frozen_at_utc": "2026-10-28T21:33:23.682294+00:00",
+  "compared_infra_files": 41,
+  "changed_files_since_review": [
+    "infra/terraform/README.md",
+    "infra/terraform/modules/identity/main.tf",
+    "infra/terraform/modules/network/main.tf",
+    "infra/terraform/modules/network/outputs.tf",
+    "infra/terraform/tests/phase12a.tftest.hcl"
+  ],
+  "changed_paths_match_exact_B1_B2_scope": true,
+  "frozen_source_hash_mismatches": [],
+  "gitignore_unchanged": true,
+  "test_runs": 13,
+  "plan_commands": 13,
+  "apply_commands": 0,
+  "assertions": 29,
+  "expected_failure_cases": 6,
+  "AWS_plan": "unrun",
+  "AWS_mutation": "none",
+  "N1_N8": "carried, no unrelated repairs; N7 required new gate starts after final source freeze"
+}

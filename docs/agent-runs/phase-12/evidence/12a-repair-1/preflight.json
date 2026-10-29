@@ -1,0 +1,316 @@
+{
+  "captured_at_utc": "2026-10-28T21:28:28.921873+00:00",
+  "base_sha": "649b13b9bb40b0b6218bf7f2b71ab9d541c7aafe",
+  "commands": [
+    {
+      "argv": [
+        "git",
+        "status",
+        "--short"
+      ],
+      "exit_code": 0,
+      "stdout": " M .gitignore\n?? docs/agent-runs/phase-12/\n?? infra/terraform/.terraform.lock.hcl\n?? infra/terraform/README.md\n?? infra/terraform/environments/\n?? infra/terraform/main.tf\n?? infra/terraform/modules/\n?? infra/terraform/outputs.tf\n?? infra/terraform/providers.tf\n?? infra/terraform/tests/\n?? infra/terraform/variables.tf\n?? infra/terraform/versions.tf\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "branch",
+        "--show-current"
+      ],
+      "exit_code": 0,
+      "stdout": "phase-12\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "exit_code": 0,
+      "stdout": "649b13b9bb40b0b6218bf7f2b71ab9d541c7aafe\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    }
+  ],
+  "preexisting_uncommitted_work": "12A is intentionally uncommitted; user explicitly authorized repair on this existing state. No reset/discard/commit.",
+  "preexisting_infra_source_count": 41,
+  "preexisting_source_sha256": [
+    {
+      "path": "infra/terraform/.terraform.lock.hcl",
+      "sha256": "421b75245b0080edee2b434482ff348419a75d7a6b798d5218e0a0f9f723eaea"
+    },
+    {
+      "path": "infra/terraform/README.md",
+      "sha256": "49e3409a157f6827c15446533df522ec4960544341c7b8496c3b12631a706af0"
+    },
+    {
+      "path": "infra/terraform/environments/course.tfvars",
+      "sha256": "0b7016c3f40006409cc04e56321d3ef0fcef4f6c836527253f2cc7d923d16bec"
+    },
+    {
+      "path": "infra/terraform/main.tf",
+      "sha256": "b9150f97b5ec215605e78aee77c07ca0e560689e4f27e63948ab9d56a91d8ff4"
+    },
+    {
+      "path": "infra/terraform/modules/datalake/main.tf",
+      "sha256": "33a1f9d21962c285f597a4e17a74535af186ab52a741c045b663717f4f7bf9bf"
+    },
+    {
+      "path": "infra/terraform/modules/datalake/outputs.tf",
+      "sha256": "c04264c35b25d7dbde8e0ebef4c0d0f0a8eec82c20fb38e1a2a868cae7f8c07d"
+    },
+    {
+      "path": "infra/terraform/modules/datalake/variables.tf",
+      "sha256": "f34c80bf90187a86eff99db8bee280872f6b21da339ce5a3a3386d2629b4083a"
+    },
+    {
+      "path": "infra/terraform/modules/datalake/versions.tf",
+      "sha256": "38c0d27255f1ccf0c6f57b6854b80e5bcecde516ebfbcdfbd7ae95ad220ba0a1"
+    },
+    {
+      "path": "infra/terraform/modules/dynamodb/main.tf",
+      "sha256": "a6ba78a8127de3f6df9c2cf42b9f397f18ea3dc239fed0b20c5e718d8d91c120"
+    },
+    {
+      "path": "infra/terraform/modules/dynamodb/outputs.tf",
+      "sha256": "3d8b58ed4096f3d53c8620673fa44ff015029176064823aa342cfefd490f4820"
+    },
+    {
+      "path": "infra/terraform/modules/dynamodb/variables.tf",
+      "sha256": "d3927de45e5a434c8b30dd941283ed080ad29b14909d16cd0158b5a89df65641"
+    },
+    {
+      "path": "infra/terraform/modules/dynamodb/versions.tf",
+      "sha256": "38c0d27255f1ccf0c6f57b6854b80e5bcecde516ebfbcdfbd7ae95ad220ba0a1"
+    },
+    {
+      "path": "infra/terraform/modules/foundation/bootstrap/main.tf",
+      "sha256": "c26429519d1a02fa5263532856b9cc7a154974e4798039599c54bc7936356d15"
+    },
+    {
+      "path": "infra/terraform/modules/foundation/bootstrap/outputs.tf",
+      "sha256": "fdc3ff0702da0eb128deb35fdab6cda02b96507354ad41fcc3dd5a4b54e9f2c0"
+    },
+    {
+      "path": "infra/terraform/modules/foundation/bootstrap/variables.tf",
+      "sha256": "ebc3bedbb4957baf5692e19b227df77f44e83ce1c107702375105d493c110b76"
+    },
+    {
+      "path": "infra/terraform/modules/foundation/bootstrap/versions.tf",
+      "sha256": "38c0d27255f1ccf0c6f57b6854b80e5bcecde516ebfbcdfbd7ae95ad220ba0a1"
+    },
+    {
+      "path": "infra/terraform/modules/foundation/main.tf",
+      "sha256": "28a5dd65c502cd18d039da4d35c92964fae4fac74909a69fbc9ea8b1984b77d2"
+    },
+    {
+      "path": "infra/terraform/modules/foundation/outputs.tf",
+      "sha256": "bfbab11ed31c4a9d0aec8fef35b926fecd04f3964fe849cd044b412a4ccddf8e"
+    },
+    {
+      "path": "infra/terraform/modules/foundation/variables.tf",
+      "sha256": "38f1a007c2de96f671eb980a466140835e7f88dfe89519607e6da0784dc0b553"
+    },
+    {
+      "path": "infra/terraform/modules/foundation/versions.tf",
+      "sha256": "38c0d27255f1ccf0c6f57b6854b80e5bcecde516ebfbcdfbd7ae95ad220ba0a1"
+    },
+    {
+      "path": "infra/terraform/modules/identity/main.tf",
+      "sha256": "0febf0c1df35b08fab4c00bcbffbe210a9943ec79cafda6aea10a750166bfad9"
+    },
+    {
+      "path": "infra/terraform/modules/identity/outputs.tf",
+      "sha256": "28bda82d0a65110741acfd90fd7be58bba7d7f8f39cddd49d0ee9eba700a7168"
+    },
+    {
+      "path": "infra/terraform/modules/identity/variables.tf",
+      "sha256": "6405de696a17e43f427e9422e6aac6a4dcbce0980df910b6af679435ead8ce3f"
+    },
+    {
+      "path": "infra/terraform/modules/identity/versions.tf",
+      "sha256": "38c0d27255f1ccf0c6f57b6854b80e5bcecde516ebfbcdfbd7ae95ad220ba0a1"
+    },
+    {
+      "path": "infra/terraform/modules/messaging/main.tf",
+      "sha256": "3088aba1f4c77017fa7bc91e6d0a16b55b9ce4bc1e71f580b4e310c55f82d679"
+    },
+    {
+      "path": "infra/terraform/modules/messaging/outputs.tf",
+      "sha256": "9f104df2f4af14ba20b018aeef1f53367fc789f535892587ca2ee580380e4d61"
+    },
+    {
+      "path": "infra/terraform/modules/messaging/variables.tf",
+      "sha256": "2c2d1fda57e9b1d9a3c17aefe195992e2009e6ca508c6479cb404cda49176163"
+    },
+    {
+      "path": "infra/terraform/modules/messaging/versions.tf",
+      "sha256": "38c0d27255f1ccf0c6f57b6854b80e5bcecde516ebfbcdfbd7ae95ad220ba0a1"
+    },
+    {
+      "path": "infra/terraform/modules/network/main.tf",
+      "sha256": "aa844103eeb3993c380ec76ed1f6f8276668a3147cf7fd81c5382da639ae83ea"
+    },
+    {
+      "path": "infra/terraform/modules/network/outputs.tf",
+      "sha256": "74bf84ff311f023f662229da65188062542eaa06f0ae3478ee235124c3e35a74"
+    },
+    {
+      "path": "infra/terraform/modules/network/variables.tf",
+      "sha256": "85ce3718b5a1d47ec6fda18303d40fb7a73805645f1648bd4318d956aca42890"
+    },
+    {
+      "path": "infra/terraform/modules/network/versions.tf",
+      "sha256": "38c0d27255f1ccf0c6f57b6854b80e5bcecde516ebfbcdfbd7ae95ad220ba0a1"
+    },
+    {
+      "path": "infra/terraform/modules/runtime/main.tf",
+      "sha256": "1f4b4ae147ef0d2574332f620e84d8428a5f3f58bd3fbb6defb38cf9c13d7a87"
+    },
+    {
+      "path": "infra/terraform/modules/runtime/outputs.tf",
+      "sha256": "1fc8d9ae8037a560bce5b1d3eb0bafae064527b599cd7b23105bd339a088e9f4"
+    },
+    {
+      "path": "infra/terraform/modules/runtime/variables.tf",
+      "sha256": "e03e3a474b939260bf7d1d48d5d9b76ffca67269b068ea68ffbdc8c0ce3c543d"
+    },
+    {
+      "path": "infra/terraform/modules/runtime/versions.tf",
+      "sha256": "38c0d27255f1ccf0c6f57b6854b80e5bcecde516ebfbcdfbd7ae95ad220ba0a1"
+    },
+    {
+      "path": "infra/terraform/outputs.tf",
+      "sha256": "8fe2ef8ec7e9e9958e0150d687a582a6353e664aaa75779d616a83e7617e186c"
+    },
+    {
+      "path": "infra/terraform/providers.tf",
+      "sha256": "665ed676e139cd00e9e7b7bb744a217aeb16d40d4d5cabe13187150c088c2296"
+    },
+    {
+      "path": "infra/terraform/tests/phase12a.tftest.hcl",
+      "sha256": "a1133894c1b1e225d6f29a7b9fa56cb38ee5eabd1ee94a2503092570382a3d95"
+    },
+    {
+      "path": "infra/terraform/variables.tf",
+      "sha256": "654032b61eaae460f2e817afb7794bcad09f36a01dc54520de1e74772590b056"
+    },
+    {
+      "path": "infra/terraform/versions.tf",
+      "sha256": "38c0d27255f1ccf0c6f57b6854b80e5bcecde516ebfbcdfbd7ae95ad220ba0a1"
+    }
+  ],
+  "mismatches_against_original_12a_freeze": [],
+  "preexisting_gitignore_sha256": "0978fb0878cf23456a1fade40eeb6458215a275d3e91ff89dcf260b36c3a5160",
+  "scope": "B1/B2 only, N1\u2013N8 recorded but not repaired; no later subphase",
+  "questions": "No questions for this repair round",
+  "delegation": [
+    {
+      "native_id": "/root/infra_12a",
+      "role": "infra-engineer",
+      "scope": "infra/terraform/** B1/B2 only",
+      "model": "inherited; exact runtime identifier unavailable"
+    },
+    {
+      "native_id": "/root/build_12a",
+      "role": "build-engineer",
+      "scope": "After final Terraform freeze: full JDK17 gate and ignored generated marker only; no authored edits",
+      "model": "inherited; exact runtime identifier unavailable"
+    }
+  ],
+  "preexisting_12a_documents_before_report_append": {
+    "docs/agent-runs/phase-12/evidence/12a/README.md": "d03be067c09e5b6bd167174adfa81e2f59b90ff28b54d98eff9a9f8894b09ccb",
+    "docs/agent-runs/phase-12/evidence/12a/authority-reading.json": "23e0fa9f293a5496c512a7b155a048c5b654ffd286674270b6d9e3b33ca1dec6",
+    "docs/agent-runs/phase-12/evidence/12a/build-evidence-reconciliation.json": "e13e35ba50f331e5140b50a7d061246496faefbffe0fa9380b455b8f42de4f7e",
+    "docs/agent-runs/phase-12/evidence/12a/build-ignore-checks.json": "f21678e7a1942846ff8cc4f5c51c8a4e2a7129ce1478420083551895c9223e04",
+    "docs/agent-runs/phase-12/evidence/12a/build-owner-report.txt": "cf713d2d6612ab9e4d3bcca7ac7f5040f0e05503ffb685b021a2f86e338c55eb",
+    "docs/agent-runs/phase-12/evidence/12a/build-result.json": "e8acf4568d0779582f609075e4a2a0d97dd98396816c17d9c4e47539267ceb15",
+    "docs/agent-runs/phase-12/evidence/12a/build-sbt-check-excerpt.txt": "e93a65e25623d04b4aed76d0a8f6fdb70e78a65ae72a80c1bcef675871d1d81e",
+    "docs/agent-runs/phase-12/evidence/12a/build-start.json": "f14d737aa83040518289e87facf086ce176c13f91ae3b357fbcf2b544984e4fa",
+    "docs/agent-runs/phase-12/evidence/12a/build-validation.json": "75c040161bd9d86446c2325b4634c53d66578a36cb044f01ccf98a7fcde6224a",
+    "docs/agent-runs/phase-12/evidence/12a/coordinator-validation.json": "26d28a0837da7e977adc5ee76e5cfd8555e2eacda13d43a160237dcd91467989",
+    "docs/agent-runs/phase-12/evidence/12a/handoff-files.json": "30f3d2dec3bc97928fda87c6df14b6ccf051dc801e541c50595c503ad4429e61",
+    "docs/agent-runs/phase-12/evidence/12a/infra-command-manifest.json": "35f8582ddb78bff50442ffa007b582d85f3484824d864461135fc89b0fa1c0b0",
+    "docs/agent-runs/phase-12/evidence/12a/infra-coverage.json": "72d372a8fc666e7bd5207819d47095bfa8e4027c2b41cf6ffaa70efaedb3a1f4",
+    "docs/agent-runs/phase-12/evidence/12a/infra-final-command-results.json": "d53614c7edc4f575722af7505ae8cea5311c4d8df015ed76f031c72268bf1de3",
+    "docs/agent-runs/phase-12/evidence/12a/infra-fmt-development-2.txt": "940dea2ecc1a544d60f06b3c9d1a11627943a747f7a23e0b076b17272fe4591c",
+    "docs/agent-runs/phase-12/evidence/12a/infra-fmt-development.txt": "01aab073c2af7f21b60d1743a936d7c013f11e6eff9b91eabd506ae0e049add5",
+    "docs/agent-runs/phase-12/evidence/12a/infra-fmt-final.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "docs/agent-runs/phase-12/evidence/12a/infra-init-2.txt": "af5bba909a82b8c4c53e4edc59e78f0eb597589ca75de0cc80e050fdfc6215f1",
+    "docs/agent-runs/phase-12/evidence/12a/infra-init.txt": "c71a49cf2b74aa57053344d367d7529a5d5a7d3b3d6ac5838b3b8bb322491517",
+    "docs/agent-runs/phase-12/evidence/12a/infra-manual-checklist.json": "52bcdcd0f47f904e4f6b42cdfea1b65739d16d4f979bf4d1e03e0eed64a568fc",
+    "docs/agent-runs/phase-12/evidence/12a/infra-native-vector-schema-check.json": "5cf6c51fdb67cf255485e52b831ea2cc9d691095a3027621a426b846599ca454",
+    "docs/agent-runs/phase-12/evidence/12a/infra-owner-report.md": "3f90833032cc175795192ff3eafc8d45366f8ea5f66e08c28d923da889f8c5a4",
+    "docs/agent-runs/phase-12/evidence/12a/infra-source-freeze.json": "3ab92bf3d3aaaae720c8a6ed5ae8fef7d31d7a8b84396b899461c21e0bd72b0d",
+    "docs/agent-runs/phase-12/evidence/12a/infra-test-1.txt": "d5794d34a7addf6de18f550871bd73d26a8859c7e127139e6483add32a62d860",
+    "docs/agent-runs/phase-12/evidence/12a/infra-test-2.txt": "7cb6be1995c6c4bb1abac1df0c1cd19b06b06fb0409f68ecae3207cf6c25a14f",
+    "docs/agent-runs/phase-12/evidence/12a/infra-validate-1.txt": "f7997225125835fdd14060ac776d273f394b874f9a481b9e2122c83dc8adc5c1",
+    "docs/agent-runs/phase-12/evidence/12a/infra-validate-2.txt": "f7997225125835fdd14060ac776d273f394b874f9a481b9e2122c83dc8adc5c1",
+    "docs/agent-runs/phase-12/evidence/12a/infra-validate-final.txt": "f7997225125835fdd14060ac776d273f394b874f9a481b9e2122c83dc8adc5c1",
+    "docs/agent-runs/phase-12/evidence/12a/java-version.txt": "2fe83b0053132e4e834defa82250462f4c62733d29bf76b19ee1bb3c14b06b39",
+    "docs/agent-runs/phase-12/evidence/12a/ownership-and-reading.json": "80eda5b6209b2a85f958c5e726b1f51ea5e68db0adeb3e2fe1e92d053488b7f6",
+    "docs/agent-runs/phase-12/evidence/12a/preflight.json": "f692223b0d079e01e9d273ae1a00df582898eeccd368e47924e5e52f55a1c6c6",
+    "docs/agent-runs/phase-12/evidence/12a/sbt-check.log.gz": "7852a0d7ffa32ba6635f4799b379d93e5929400fb0b2ffaa1d1dc1ae5acd6a54",
+    "docs/agent-runs/phase-12/evidence/12a/sbt-log-integrity.json": "9a8a78771fe871a229ca4e08fd5dea686be1d20f7418072c7b8070f7f1df32fd",
+    "docs/agent-runs/phase-12/evidence/12a/step-0-answers.md": "cac7cd42ffaa4de4da3ea4f2635d40310ea25a8b693c9bbc3fb7a562a3182356",
+    "docs/agent-runs/phase-12/evidence/12a/terraform-1.13.5-official-checksums.txt": "2866ed8d8bc60dd12e29fbdc2ba8a41080097664f9fed6b90c6dfd48dd58f62c",
+    "docs/agent-runs/phase-12/evidence/12a/terraform-cli-install.json": "2233001891ef93147776d3522a9e89d110fbfe276adabe9754e4450b2dfeb12c",
+    "docs/agent-runs/phase-12/owner-report.md": "5f031c9a2551cbf92b5b9182d773d3bd03390c8e6bafc8e0bc548e95103e5b59",
+    "docs/agent-runs/phase-12/prompt.md": "d894ea1a57777e002ad2a7c09a973a3b8c02179220b6323f6c12cde6588ad170",
+    "docs/agent-runs/phase-12/reviewer-prompt-12a.md": "2986088b0305155b407bd10101315d7461f38c5107132bdb4815d393770ca868",
+    "docs/agent-runs/phase-12/test-report.md": "502e635c75810c9a39bbebff63dddb67b7bbf9a700558d022d738ef38043bfff"
+  },
+  "preexisting_12a_document_bytes": {
+    "docs/agent-runs/phase-12/evidence/12a/README.md": 2336,
+    "docs/agent-runs/phase-12/evidence/12a/authority-reading.json": 1310,
+    "docs/agent-runs/phase-12/evidence/12a/build-evidence-reconciliation.json": 408,
+    "docs/agent-runs/phase-12/evidence/12a/build-ignore-checks.json": 7978,
+    "docs/agent-runs/phase-12/evidence/12a/build-owner-report.txt": 4140,
+    "docs/agent-runs/phase-12/evidence/12a/build-result.json": 1391,
+    "docs/agent-runs/phase-12/evidence/12a/build-sbt-check-excerpt.txt": 3270,
+    "docs/agent-runs/phase-12/evidence/12a/build-start.json": 686,
+    "docs/agent-runs/phase-12/evidence/12a/build-validation.json": 61870,
+    "docs/agent-runs/phase-12/evidence/12a/coordinator-validation.json": 7915,
+    "docs/agent-runs/phase-12/evidence/12a/handoff-files.json": 5145,
+    "docs/agent-runs/phase-12/evidence/12a/infra-command-manifest.json": 6409,
+    "docs/agent-runs/phase-12/evidence/12a/infra-coverage.json": 1592,
+    "docs/agent-runs/phase-12/evidence/12a/infra-final-command-results.json": 757,
+    "docs/agent-runs/phase-12/evidence/12a/infra-fmt-development-2.txt": 87,
+    "docs/agent-runs/phase-12/evidence/12a/infra-fmt-development.txt": 29,
+    "docs/agent-runs/phase-12/evidence/12a/infra-fmt-final.txt": 0,
+    "docs/agent-runs/phase-12/evidence/12a/infra-init-2.txt": 766,
+    "docs/agent-runs/phase-12/evidence/12a/infra-init.txt": 1191,
+    "docs/agent-runs/phase-12/evidence/12a/infra-manual-checklist.json": 1284,
+    "docs/agent-runs/phase-12/evidence/12a/infra-native-vector-schema-check.json": 244,
+    "docs/agent-runs/phase-12/evidence/12a/infra-owner-report.md": 6923,
+    "docs/agent-runs/phase-12/evidence/12a/infra-source-freeze.json": 4739,
+    "docs/agent-runs/phase-12/evidence/12a/infra-test-1.txt": 3435,
+    "docs/agent-runs/phase-12/evidence/12a/infra-test-2.txt": 777,
+    "docs/agent-runs/phase-12/evidence/12a/infra-validate-1.txt": 38,
+    "docs/agent-runs/phase-12/evidence/12a/infra-validate-2.txt": 38,
+    "docs/agent-runs/phase-12/evidence/12a/infra-validate-final.txt": 38,
+    "docs/agent-runs/phase-12/evidence/12a/java-version.txt": 171,
+    "docs/agent-runs/phase-12/evidence/12a/ownership-and-reading.json": 2328,
+    "docs/agent-runs/phase-12/evidence/12a/preflight.json": 1372,
+    "docs/agent-runs/phase-12/evidence/12a/sbt-check.log.gz": 93120,
+    "docs/agent-runs/phase-12/evidence/12a/sbt-log-integrity.json": 388,
+    "docs/agent-runs/phase-12/evidence/12a/step-0-answers.md": 1659,
+    "docs/agent-runs/phase-12/evidence/12a/terraform-1.13.5-official-checksums.txt": 1392,
+    "docs/agent-runs/phase-12/evidence/12a/terraform-cli-install.json": 410,
+    "docs/agent-runs/phase-12/owner-report.md": 5402,
+    "docs/agent-runs/phase-12/prompt.md": 34779,
+    "docs/agent-runs/phase-12/reviewer-prompt-12a.md": 11457,
+    "docs/agent-runs/phase-12/test-report.md": 3199
+  }
+}
