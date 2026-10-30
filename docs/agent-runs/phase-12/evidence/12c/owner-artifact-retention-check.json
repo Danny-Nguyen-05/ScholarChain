@@ -1,0 +1,265 @@
+{
+  "verified_entries": 52,
+  "artifacts": [
+    {
+      "path": "infra/commands.jsonl",
+      "bytes": 7852,
+      "sha256": "c6942509641182d87fbd6899c78a5e1e9bd218399aa93b1c03d7755a2d1a4cb7"
+    },
+    {
+      "path": "infra/coverage-counts.json",
+      "bytes": 394,
+      "sha256": "310cf52eccd46fd0d47af9ac3ff29012e7d0b372c5b8d4e3c4164ee99459d192"
+    },
+    {
+      "path": "infra/delta.patch",
+      "bytes": 46361,
+      "sha256": "0835b9c95147d2e46a171d5d3c4a99c831ee37367a154e1c6e70b1c338dfb802"
+    },
+    {
+      "path": "infra/final-diff-check.log.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "infra/final-fmt-check.log.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "infra/final-init.log.txt",
+      "bytes": 677,
+      "sha256": "6fd242691fd6bbc7efe25549609a26c11107f98c3ae3cb12128985c21a261753"
+    },
+    {
+      "path": "infra/final-test.log.txt",
+      "bytes": 2466,
+      "sha256": "b5a4b9c9f15c4a6bebd3aaf0b60f81fbb9664f09e96ed9c8c713bc67c90264d5"
+    },
+    {
+      "path": "infra/final-validate.log.txt",
+      "bytes": 38,
+      "sha256": "f7997225125835fdd14060ac776d273f394b874f9a481b9e2122c83dc8adc5c1"
+    },
+    {
+      "path": "infra/fmt-development.log.txt",
+      "bytes": 77,
+      "sha256": "78748e6b274377bf5c589efec65d305982f5f175c8e108dfae310ddd9e445d73"
+    },
+    {
+      "path": "infra/green-development.log.txt",
+      "bytes": 2466,
+      "sha256": "b5a4b9c9f15c4a6bebd3aaf0b60f81fbb9664f09e96ed9c8c713bc67c90264d5"
+    },
+    {
+      "path": "infra/init-development.log.txt",
+      "bytes": 677,
+      "sha256": "6fd242691fd6bbc7efe25549609a26c11107f98c3ae3cb12128985c21a261753"
+    },
+    {
+      "path": "infra/owner-report.md",
+      "bytes": 5293,
+      "sha256": "6ceb1b87d761283ad0468193f130e4cf5655c6a5e2ee6d9cb99f5e851edbf9ca"
+    },
+    {
+      "path": "infra/plan-input-provenance.json",
+      "bytes": 14297,
+      "sha256": "77ba8cc3c05a9e096097896153c51458e0bc66367be3b3b6ae50cb35bd9b4879"
+    },
+    {
+      "path": "infra/plan-summary.json",
+      "bytes": 47562,
+      "sha256": "702f283a02e2ea49b5c81b4dd9ffd975b259f80885213a89e05ef5473a151400"
+    },
+    {
+      "path": "infra/red-init.log.txt",
+      "bytes": 1179,
+      "sha256": "bea09208d94de22b2d864999cb48dcdeb3bd7a1c12723069af42a1fe9269b976"
+    },
+    {
+      "path": "infra/red-proof.json",
+      "bytes": 1206,
+      "sha256": "3f2b6fec232ffa6c6e5d1de9c37e48bb81266386e299733111c1963234ba6802"
+    },
+    {
+      "path": "infra/red-repository-before.json",
+      "bytes": 6111,
+      "sha256": "e644f24f9cd941b5e3d432ef050eb97033595235c232b0ec02e924cd5e784478"
+    },
+    {
+      "path": "infra/red-repository-unchanged.json",
+      "bytes": 173,
+      "sha256": "f71ff9f29f96e82d6b6e1ebe7530e6ddab0ba71c5e87c25d21633809ea0c30e9"
+    },
+    {
+      "path": "infra/red-reproduce.py",
+      "bytes": 2027,
+      "sha256": "c3e7415380c7fe72228bc428ff1a3cadfe6671968baae7b7bd3b32f5b99b1933"
+    },
+    {
+      "path": "infra/red-test-v2.log.txt",
+      "bytes": 8827,
+      "sha256": "0789b6c0879c25b0a4c6578331adc37dfdb67afd16842ceabb7e19fa59616cef"
+    },
+    {
+      "path": "infra/red-test.log.txt",
+      "bytes": 8388,
+      "sha256": "cfcd988d771521366079d7cda66a996a5d06c12c94edd91717f0a3e8b85777e8"
+    },
+    {
+      "path": "infra/source-before.json",
+      "bytes": 14477,
+      "sha256": "2e925f519b6a3dffff7cab3c514f49d8bbf5bfb02d88bc5bb14f4a65c7978a34"
+    },
+    {
+      "path": "infra/source-final.json",
+      "bytes": 14694,
+      "sha256": "6d638713023fc4bdcf70a255e36c4a2e9ba768385f270262ec3d6acbd3a43a23"
+    },
+    {
+      "path": "infra/test-first-fmt.log.txt",
+      "bytes": 54,
+      "sha256": "12077395a36b95a6575fcff4320fc93936482826b85d638b6b8dfab8b4c39627"
+    },
+    {
+      "path": "infra/toolchain-provenance.json",
+      "bytes": 827,
+      "sha256": "c701540e5d314d5834fdcd5bec96297e95c772b785a33ef12b927f831fb249c0"
+    },
+    {
+      "path": "static/commands.json",
+      "bytes": 9796,
+      "sha256": "7f9bae44e49a3d3763b539e7e3c4282085975ade97ee617352cfb5c95ea57607"
+    },
+    {
+      "path": "static/coverage.json",
+      "bytes": 831,
+      "sha256": "a7dcd65fc75461ded77ca2be894b3100b90faa45b9190debc963e85ca9d3f76a"
+    },
+    {
+      "path": "static/development-self-test.log.txt",
+      "bytes": 636,
+      "sha256": "c40a6ed13297b5c4e9856ae01d570b73a4249910d9c71af2214c54001b44581d"
+    },
+    {
+      "path": "static/development-source-scan.log.txt",
+      "bytes": 70,
+      "sha256": "97a739d5383c7b1cc0fe728de3e85915247b305b69aa34157fd05aecebdfd4ea"
+    },
+    {
+      "path": "static/final-self-test.log.txt",
+      "bytes": 636,
+      "sha256": "c40a6ed13297b5c4e9856ae01d570b73a4249910d9c71af2214c54001b44581d"
+    },
+    {
+      "path": "static/final-source-scan.log.txt",
+      "bytes": 70,
+      "sha256": "97a739d5383c7b1cc0fe728de3e85915247b305b69aa34157fd05aecebdfd4ea"
+    },
+    {
+      "path": "static/infra-after-final-checks.json",
+      "bytes": 13806,
+      "sha256": "3a00c9fb59e3496c486fca436e157086bdd6126141c1828aa7487f16ebedc554"
+    },
+    {
+      "path": "static/infra-before-final-checks.json",
+      "bytes": 13806,
+      "sha256": "3a00c9fb59e3496c486fca436e157086bdd6126141c1828aa7487f16ebedc554"
+    },
+    {
+      "path": "static/negative-proof.json",
+      "bytes": 423,
+      "sha256": "7962930ba4363ad9c3f3a78829869d674bd2d69d08ba2a3be87f9d1499c4dc36"
+    },
+    {
+      "path": "static/negative-public-acl/infra/terraform/unsafe.tf",
+      "bytes": 60,
+      "sha256": "2bcc59c89a6fc6840c54152d71859357337bb7802176109178e70f802ed13ea9"
+    },
+    {
+      "path": "static/negative-secret-shaped/infra/terraform/unsafe.tf",
+      "bytes": 47,
+      "sha256": "534c1bb1ff8a63e1283552011bfb84328bb859381252b5755926a9dd0eb4b995"
+    },
+    {
+      "path": "static/negative-wildcard/infra/terraform/unsafe.tf",
+      "bytes": 270,
+      "sha256": "f8458adead02cf636af74e66eadf1038a873ae263f62b0c0da05c14dfa060702"
+    },
+    {
+      "path": "static/owner-report.md",
+      "bytes": 4462,
+      "sha256": "e8d2a3644d5877b7e3a746f057200be53307763a3dc01f4a256f7ae9e07d3a5d"
+    },
+    {
+      "path": "static/public-acl-final-negative.log.txt",
+      "bytes": 182,
+      "sha256": "a16ca8f2897673c6dad6a1b2665d18d5f8145b143966c02146e31772c428b806"
+    },
+    {
+      "path": "static/public-acl-git-init.log.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "static/public-acl-negative.log.txt",
+      "bytes": 182,
+      "sha256": "a16ca8f2897673c6dad6a1b2665d18d5f8145b143966c02146e31772c428b806"
+    },
+    {
+      "path": "static/secret-shaped-final-negative.log.txt",
+      "bytes": 304,
+      "sha256": "c7310404a2c7900368e7709ba99281f57033ca5ef49dd932f937bc28a6805677"
+    },
+    {
+      "path": "static/secret-shaped-git-init.log.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "static/secret-shaped-negative.log.txt",
+      "bytes": 304,
+      "sha256": "c7310404a2c7900368e7709ba99281f57033ca5ef49dd932f937bc28a6805677"
+    },
+    {
+      "path": "static/test-source-freeze.json",
+      "bytes": 752,
+      "sha256": "fb549e97516ac0c7b81644f0346807186c00a4782239602f92b8d3584649e2a8"
+    },
+    {
+      "path": "static/tests-diff-check.log.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "static/verify-wrapper.py",
+      "bytes": 1379,
+      "sha256": "a9fe0db819c1be7fffa4460c7d3c9e7d9a36bf66426b23b95683fe944809bba1"
+    },
+    {
+      "path": "static/wildcard-final-negative.log.txt",
+      "bytes": 184,
+      "sha256": "6b928e687e75bc54c9cf3b054015f498ccd0598430a03525a85d9cf759d0040e"
+    },
+    {
+      "path": "static/wildcard-git-init.log.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "static/wildcard-negative.log.txt",
+      "bytes": 184,
+      "sha256": "6b928e687e75bc54c9cf3b054015f498ccd0598430a03525a85d9cf759d0040e"
+    },
+    {
+      "path": "static/wrapper-verification.log.txt",
+      "bytes": 1349,
+      "sha256": "607849ed2124d8faf2664ac5e1b7045499377065f122b65d6d1d8357a4e5d3db"
+    },
+    {
+      "path": "static/wrapper-xml-summary.json",
+      "bytes": 326,
+      "sha256": "04cbd88f14a71cea4f5bd2564ce5fc9c009666cdf54cde3fc2faa2e3abbb59cd"
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+test_allows_scoped_globs_and_statement_local_exceptions (__main__.GuardExamples.test_allows_scoped_globs_and_statement_local_exceptions) ... ok
+test_rejects_global_resources_and_public_access (__main__.GuardExamples.test_rejects_global_resources_and_public_access) ... ok
+test_rejects_wildcard_allow_beside_valid_deny_and_key_policy (__main__.GuardExamples.test_rejects_wildcard_allow_beside_valid_deny_and_key_policy) ... ok
+test_secret_findings_do_not_echo_values (__main__.GuardExamples.test_secret_findings_do_not_echo_values) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.001s
+
+OK

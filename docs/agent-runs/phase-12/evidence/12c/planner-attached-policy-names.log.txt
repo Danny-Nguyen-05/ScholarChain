@@ -1,0 +1,5 @@
+[
+    "ReadOnlyAccess",
+    "IAMUserChangePassword",
+    "SignInLocalDevelopmentAccess"
+]

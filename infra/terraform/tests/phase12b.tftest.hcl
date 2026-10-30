@@ -100,10 +100,10 @@ run "inactive_defaults_and_vector_contract" {
   assert {
     condition = length([for statement in jsondecode(output.iam_controls.kms_policy).Statement : statement if try(statement.Principal.Service, "") == "indexing.s3vectors.amazonaws.com" && statement.Effect == "Allow" && statement.Action == ["kms:Decrypt"] && statement.Resource == "*" && try(statement.Condition, {}) == {
       StringEquals               = { "aws:SourceAccount" = "111122223333" }
-      ArnLike                    = { "aws:SourceArn" = "arn:aws:s3vectors:us-east-1:111122223333:bucket/scholarchain-course-111122223333-vectors" }
+      ArnLike                    = { "aws:SourceArn" = ["arn:aws:s3vectors:us-east-1:111122223333:bucket/scholarchain-course-111122223333-vectors", "arn:aws:s3vectors:us-east-1:111122223333:bucket/scholarchain-course-111122223333-vectors/index/*"] }
       "ForAnyValue:StringEquals" = { "kms:EncryptionContextKeys" = ["aws:s3vectors:arn", "aws:s3vectors:resource-id"] }
     }]) == 1 && length(jsondecode(output.iam_controls.kms_policy).Statement) == 2
-    error_message = "B3: The project CMK must allow exactly one S3 Vectors indexing service decrypt grant, restricted to the expected account, exact vector bucket ARN and S3 Vectors encryption context keys."
+    error_message = "B3: The project CMK must allow exactly one S3 Vectors indexing service decrypt grant, restricted to the expected account, project vector bucket and index ARNs and S3 Vectors encryption context keys."
   }
   assert {
     condition     = !output.phase12b_controls.runtime.enabled && length(output.phase12b_controls.runtime.services) == 0 && length(output.phase12b_controls.runtime.scaling_targets) == 0 && !output.phase12b_controls.emr.enabled && output.phase12b_controls.emr.cluster == null && !output.phase12b_controls.neptune.enabled
@@ -129,7 +129,7 @@ run "inactive_defaults_and_vector_contract" {
 run "dashboard_metric_shapes_and_route_ownership" {
   command = plan
   assert {
-    condition     = alltrue(flatten([for w in jsondecode(output.phase12b_controls.observability.dashboard).widgets : [for m in try(w.properties.metrics, []) : can(m[0]) && can(m[1])]])) && length([for m in jsondecode(output.phase12b_controls.observability.dashboard).widgets[7].properties.metrics : m if m[0] == "AWS/DynamoDB" && contains(["ReadThrottleEvents", "WriteThrottleEvents"], m[1]) && m[2] == "TableName" && length(m) == 4]) == 12
+    condition     = alltrue(flatten([for w in jsondecode(output.phase12b_controls.observability.dashboard).widgets : [for m in try(w.properties.metrics, []) : can(m[0]) && can(m[1])]])) && length([for m in one([for w in jsondecode(output.phase12b_controls.observability.dashboard).widgets : w.properties.metrics if try(w.properties.title, "") == "DynamoDB capacity units and table throttle events"]) : m if m[0] == "AWS/DynamoDB" && contains(["ReadThrottleEvents", "WriteThrottleEvents"], m[1]) && m[2] == "TableName" && length(m) == 4]) == 12
     error_message = "CloudWatch metrics must be arrays (not recursively flattened strings); each of six tables gets correctly dimensioned read/write throttle-event series."
   }
   assert {

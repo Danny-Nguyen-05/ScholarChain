@@ -1,0 +1,23 @@
+{
+  "timestamp_utc": "2026-10-30T17:38:32.415227+00:00",
+  "files": [
+    {
+      "path": "tests/infra/terraform_source_guard.py",
+      "bytes": 11700,
+      "sha256": "17cf7941d48c71f571088669b1da3ec435c16951f1e4a6865274c14186de70ca",
+      "mtime_ns": 1793381729883561521
+    },
+    {
+      "path": "tests/infra/README.md",
+      "bytes": 1718,
+      "sha256": "9cd8f380d78d2ccdb3566018360651254635bd34dc9b799d841105b37dc6b256",
+      "mtime_ns": 1793381636398229752
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentTerraformSourceSpec.scala",
+      "bytes": 1006,
+      "sha256": "658d3c795663aedeac892a80acb4eaf9189828bf1248b80601238ca2197bec4a",
+      "mtime_ns": 1793381636398053499
+    }
+  ]
+}

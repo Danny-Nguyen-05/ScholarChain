@@ -1,0 +1,13 @@
+{
+  "checked_utc": "2026-10-30T17:39:00.369431+00:00",
+  "terraform_version": "1.13.5",
+  "aws_provider_version": "6.44.0",
+  "zip_sha256": "1bf942231235e7e1a4c38c6d7b820e54f526ac487f87d19f0c4a425c6ddb62cb",
+  "binary_sha256": "899b3c0ca0d2669ebd67be4bcd98e84bd9a914ce2fb3897ad0b86c98cbf3c962",
+  "official_checksums_sha256": "2866ed8d8bc60dd12e29fbdc2ba8a41080097664f9fed6b90c6dfd48dd58f62c",
+  "zip_matches_official": true,
+  "binary_matches_zip": true,
+  "provider_sha256": "050fc3a7514d11585206c2a059be393ee54f50b9276ed1b092a1a975ae2afa73",
+  "provider_origin": "Reused6.44.0 package from retained12B-repair1 toolchain; mirror init reports unauthenticated, exact lock and package retained.",
+  "signature_note": "No new detached-signature verification; official ZIP SHA verified against retained official checksum list."
+}

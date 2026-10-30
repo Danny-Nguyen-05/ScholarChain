@@ -1,0 +1,240 @@
+[
+  {
+    "service": "AmazonNeptune",
+    "url": "https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonNeptune/current/us-east-2/index.json",
+    "retrieved_utc": "2026-10-30T17:33:11.462494+00:00",
+    "bytes": 369434,
+    "sha256": "2c9081216d1e37345a90e47415e2679ee915919b8564dfd6843e67c3f3060485",
+    "products": 214,
+    "publicationDate": "2026-09-11T12:44:56Z",
+    "version": "20260911124456"
+  },
+  {
+    "service": "AmazonECS",
+    "url": "https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonECS/current/us-east-2/index.json",
+    "retrieved_utc": "2026-10-30T17:33:12.150136+00:00",
+    "bytes": 1172629,
+    "sha256": "554645074475fcd5f93e860e53130cb3eb6d4577e708d9dd052c2f23044abf63",
+    "products": 900,
+    "publicationDate": "2026-10-19T22:43:17Z",
+    "version": "20261019224317"
+  },
+  {
+    "service": "ElasticMapReduce",
+    "url": "https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/ElasticMapReduce/current/us-east-2/index.json",
+    "retrieved_utc": "2026-10-30T17:33:12.485329+00:00",
+    "bytes": 942463,
+    "sha256": "689f965f8994a6f575284205e840ed5253b56567c5a99a8449bfe5ddb0fefa3e",
+    "products": 730,
+    "publicationDate": "2026-10-29T06:11:37Z",
+    "version": "20261029061137"
+  },
+  {
+    "service": "AWSKeyManagementService",
+    "url": "https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AWSKeyManagementService/current/us-east-2/index.json",
+    "retrieved_utc": "2026-10-30T17:33:13.028796+00:00",
+    "error": "HTTP Error 404: Not Found"
+  },
+  {
+    "service": "AmazonCloudWatch",
+    "url": "https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonCloudWatch/current/us-east-2/index.json",
+    "retrieved_utc": "2026-10-30T17:33:13.349611+00:00",
+    "bytes": 204818,
+    "sha256": "a63198fe9401b27344b8f7824c1254b2cc5c22024497a7f696534b2321914ed0",
+    "products": 114,
+    "publicationDate": "2026-10-07T11:55:40Z",
+    "version": "20261007115540"
+  },
+  {
+    "service": "AWSSecretsManager",
+    "url": "https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AWSSecretsManager/current/us-east-2/index.json",
+    "retrieved_utc": "2026-10-30T17:33:13.647337+00:00",
+    "bytes": 2890,
+    "sha256": "357a59b1b57c45ad0c7514e0e5b069c047d33e7ca7f1ee9dfdc7d215a41abdbe",
+    "products": 2,
+    "publicationDate": "2026-09-11T12:46:10Z",
+    "version": "20260911124610"
+  },
+  {
+    "service": "AmazonDynamoDB",
+    "url": "https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonDynamoDB/current/us-east-2/index.json",
+    "retrieved_utc": "2026-10-30T17:33:13.829705+00:00",
+    "bytes": 40802,
+    "sha256": "6fb852c04a82fb5b92affa62d4b25d2c2e22f4ef6c961b49b98d42309ce73cf3",
+    "products": 27,
+    "publicationDate": "2026-09-11T12:44:22Z",
+    "version": "20260911124422"
+  },
+  {
+    "service": "AmazonS3",
+    "url": "https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonS3/current/us-east-2/index.json",
+    "retrieved_utc": "2026-10-30T17:33:14.105574+00:00",
+    "bytes": 512893,
+    "sha256": "52b93329ad3e132d8195b27b027907322a7a142fafef301d55073605826452da",
+    "products": 380,
+    "publicationDate": "2026-10-15T17:35:40Z",
+    "version": "20261015173540"
+  },
+  {
+    "service": "AmazonVPC",
+    "url": "https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonVPC/current/us-east-2/index.json",
+    "retrieved_utc": "2026-10-30T17:33:14.525533+00:00",
+    "bytes": 79915,
+    "sha256": "d39be27486a06c9769bc61dd77206d8d9f8a95a9495986fe42d1b93a23e0f2e4",
+    "products": 57,
+    "publicationDate": "2026-10-16T22:43:21Z",
+    "version": "20261016224321"
+  },
+  {
+    "service": "awskms",
+    "url": "https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/awskms/current/us-east-2/index.json",
+    "retrieved_utc": "2026-10-30T17:34:01.892283+00:00",
+    "bytes": 12795,
+    "sha256": "9042850a2498f311ea630aa22cda604a45e34dd4fcf6511aa35c079ba63c4e0d",
+    "products": 9,
+    "publicationDate": "2026-10-26T20:18:14Z",
+    "version": "20261026201814"
+  },
+  {
+    "service": "AWSELB",
+    "url": "https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AWSELB/current/us-east-2/index.json",
+    "retrieved_utc": "2026-10-30T17:34:02.082447+00:00",
+    "bytes": 19015,
+    "sha256": "e23add7e42c15a5e3c47c4d267bc8889a0c704c63ffbf734f580a825a52e4b57",
+    "products": 14,
+    "publicationDate": "2026-09-11T12:45:44Z",
+    "version": "20260911124544"
+  },
+  {
+    "service": "AmazonEC2ContainerRegistry",
+    "url": "https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonEC2ContainerRegistry/current/us-east-2/index.json",
+    "retrieved_utc": "2026-10-30T17:34:02.239106+00:00",
+    "error": "HTTP Error 404: Not Found"
+  },
+  {
+    "service": "AWSQueueService",
+    "url": "https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AWSQueueService/current/us-east-2/index.json",
+    "retrieved_utc": "2026-10-30T17:34:02.580397+00:00",
+    "bytes": 9449,
+    "sha256": "f78db035d72477c7972e79cfaa9120a595900313b67dc210a1ba4ea17f4141f8",
+    "products": 4,
+    "publicationDate": "2026-09-11T12:46:07Z",
+    "version": "20260911124607"
+  },
+  {
+    "service": "AmazonStates",
+    "url": "https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonStates/current/us-east-2/index.json",
+    "retrieved_utc": "2026-10-30T17:34:02.751696+00:00",
+    "bytes": 7375,
+    "sha256": "9aa30e50a7acc3e6d0cd1c4692c10b845fae1bf48a3450b189d8ef6fde3c0bf9",
+    "products": 4,
+    "publicationDate": "2026-09-11T12:45:11Z",
+    "version": "20260911124511"
+  },
+  {
+    "service": "AWSCloudMap",
+    "url": "https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AWSCloudMap/current/us-east-2/index.json",
+    "retrieved_utc": "2026-10-30T17:34:02.948016+00:00",
+    "bytes": 4022,
+    "sha256": "9ba7c10426d3c95bb36934452438069aa1d054ad847320ee42df7ae4808ac07b",
+    "products": 3,
+    "publicationDate": "2026-09-11T12:45:31Z",
+    "version": "20260911124531"
+  },
+  {
+    "service": "AmazonRoute53",
+    "url": "https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonRoute53/current/us-east-2/index.json",
+    "retrieved_utc": "2026-10-30T17:34:03.283754+00:00",
+    "bytes": 13671,
+    "sha256": "d476d67d8b69b0ff5a24af2897d92f90ca400eb040ab4cc3a03517cff390e9d5",
+    "products": 10,
+    "publicationDate": "2026-09-11T12:45:04Z",
+    "version": "20260911124504"
+  },
+  {
+    "service": "AmazonBedrock",
+    "url": "https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonBedrock/current/us-east-2/index.json",
+    "retrieved_utc": "2026-10-30T17:34:03.451565+00:00",
+    "bytes": 1257350,
+    "sha256": "14fd013d18ec1721c91c68cfbc507ce8f806643c8bee91df16527b69954c3f5a",
+    "products": 920,
+    "publicationDate": "2026-10-30T16:04:56Z",
+    "version": "20261030160456"
+  },
+  {
+    "service": "ec2-linux-public-map",
+    "url": "https://b0.p.awsstatic.com/pricing/2.0/meteredUnitMaps/ec2/USD/current/ec2-ondemand-without-os/US%20East%20%28Ohio%29/Linux/index.json",
+    "retrieved_utc": "2026-10-30T17:34:51.840227+00:00",
+    "error": "HTTP Error 404: Not Found"
+  },
+  {
+    "service": "AmazonCloudWatch-global",
+    "url": "https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonCloudWatch/current/index.json",
+    "retrieved_utc": "2026-10-30T17:34:52.214918+00:00",
+    "bytes": 5580639,
+    "sha256": "b61cce086dfcc184c901064a388fbcc9ab6bbe355a417dc8c04c706e0cbcd51e",
+    "products": 3324,
+    "keys": [
+      "formatVersion",
+      "disclaimer",
+      "offerCode",
+      "version",
+      "publicationDate",
+      "products"
+    ]
+  },
+  {
+    "service": "AmazonEC2ContainerRegistry-global",
+    "url": "https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonEC2ContainerRegistry/current/index.json",
+    "retrieved_utc": "2026-10-30T17:34:52.802865+00:00",
+    "error": "HTTP Error 404: Not Found"
+  },
+  {
+    "service": "ec2-public-map",
+    "url": "https://b0.p.awsstatic.com/pricing/2.0/meteredUnitMaps/ec2/USD/current/ec2-ondemand-without-os/US%20East%20%28Ohio%29/index.json",
+    "retrieved_utc": "2026-10-30T17:35:32.684335+00:00",
+    "error": "HTTP Error 404: Not Found"
+  },
+  {
+    "service": "AmazonECR",
+    "url": "https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonECR/current/us-east-2/index.json",
+    "retrieved_utc": "2026-10-30T17:35:33.060155+00:00",
+    "bytes": 5785,
+    "sha256": "5ec0d2378a2d0dd2a94488a3fc409c3094a866bf3f0125eaf3cec1f58a85436b",
+    "keys": [
+      "formatVersion",
+      "disclaimer",
+      "offerCode",
+      "version",
+      "publicationDate",
+      "products"
+    ]
+  },
+  {
+    "service": "AmazonRoute53-global",
+    "url": "https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonRoute53/current/index.json",
+    "retrieved_utc": "2026-10-30T17:35:33.302825+00:00",
+    "bytes": 523988,
+    "sha256": "e2f11e8f4a44ee5c7d837e26f788a25f2528002e02cd040d889a132e68d5a975",
+    "keys": [
+      "formatVersion",
+      "disclaimer",
+      "offerCode",
+      "version",
+      "publicationDate",
+      "products"
+    ]
+  },
+  {
+    "service": "ec2-ohio-map",
+    "url": "https://b0.p.awsstatic.com/pricing/2.0/meteredUnitMaps/ec2/USD/current/ec2/US%20East%20%28Ohio%29.json",
+    "retrieved_utc": "2026-10-30T17:37:44.743229+00:00",
+    "error": "HTTP Error 404: Not Found"
+  },
+  {
+    "service": "ec2-ohio-map2",
+    "url": "https://b0.p.awsstatic.com/pricing/2.0/meteredUnitMaps/ec2/USD/current/ec2/US%20East%20%28Ohio%29/Linux.json",
+    "retrieved_utc": "2026-10-30T17:37:45.091049+00:00",
+    "error": "HTTP Error 404: Not Found"
+  }
+]

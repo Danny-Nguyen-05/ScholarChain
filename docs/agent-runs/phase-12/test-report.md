@@ -110,3 +110,21 @@ export SBT_OPTS="-Dlogback.configurationFile=$PWD/docs/agent-runs/phase-04/xml-r
 java -version
 sbt -batch check
 ```
+
+
+## Subphase 12C
+
+STATUS: COMPLETE for observed native/static/build gates; independent review pending.
+OWNER: Coordinator assembly from infra-engineer, test-engineer and build-engineer reports.
+WORK ORDER: Selected N9/N10/N11/N12/N14/N17, independent static checks and read-only planning; base 3b0855b9657a72b30e8ac43bd484161a9b886c79.
+FILES CREATED: One Terraform feature-test file, three independent tests/** files and curated evidence/12c/**.
+FILES MODIFIED: Existing 12B key-policy assertion follows N17 bucket/index scope; only selected infrastructure changes and append-only Phase 12 reports.
+COMMANDS RUN: Final Terraform init -backend=false -input=false -no-color; fmt -check -recursive; validate -no-color; test -no-color, all exit 0 from infra/terraform. Real plan with -detailed-exitcode and saved -out outside Git exit 2; private show -json exit 0. Exact arguments, executable, TF_CLI_CONFIG_FILE, cwd, timestamps and SHA-256 values are in evidence/12c/infra/commands.jsonl. Read-only account commands, expired-session attempt and corrected empty-budget query are in coordinator-commands.jsonl. Independent static/targeted commands are in static/commands.json. Full JDK 17 java -version and sbt -batch check exit 0; exact environment and cwd are in build/commands.json. Public pricing fetch attempts and offline replay are in cost/research-commands.md and cost/fetch-manifest.json.
+TEST RESULTS: Terraform 40 runs passed / 0 failed, 62 assertions, 18 expected-failure runs: 12A 13/29/6, 12B 18/23/10, 12C 9/10/2 respectively. RED v2 provides genuine old-source mismatches; first RED mock error is retained and not counted as proof. Static self-tests 4/0; scan 62 files / zero literal findings; three intended negative CLI exits 1; targeted Scala 2/0. Full sbt check exit 0: 1,255 tests, 157 fresh XML reports, zero failures/errors/skips; expected probe only.
+VALIDATION RESULTS: All 190 frozen infrastructure/test files and all 3,565 build snapshot inputs remain equal by SHA-256/bytes/mtime. Gate 17:42:32.864369Z–17:54:33.788049Z follows freeze 17:40:28.200020Z on 2026-10-30; JDK 17.0.20.1, sbt 1.10.7, reported 718 seconds. Coordinator complete XML enumeration adds build-verification's eight reports / 13 tests to the original runner subset 149/1,242, without rerunning tests or editing the original result. build/build-validation.json records the correction and all fresh XML hashes. Raw log SHA-256 19d0959878981057976b356a23a02589fc9e20e3821ae52f35b2b500b2a8f5dc; gzip SHA-256 70c405d6d92ac733511945b95bc6ea16831598cf95ec8e5ccdfa66facd004095; decompression verified. Final Terraform gates exit 0; real plan exit 2 with zero destruction/replacements. Pins/lock unchanged and tool ZIP verified.
+ASSUMPTIONS: Mock-provider command=plan feature proofs are offline. Static guard evaluates bounded literal text with statement-local exceptions; manual review remains necessary for dynamic references.
+RISKS: No external security scanner, live apply/runtime/model or paid Cost Explorer tests. Costs are modeled, not bills or complete budget-fit proof. Catalog/account checks do not establish complete quota headroom or live KMS/model invocation. N15/N16 and activation prerequisites remain open.
+MANUAL ACTION REQUIRED: Independent review must reconcile manifests, source freeze, plan checksum, RED proof and cost assumptions. Establish monitoring before any paid run; review is not apply approval.
+BLOCKED-ON OWNER: None for observed 12C gates.
+BLOCKED-ON EVIDENCE: Unrun live verification remains explicitly unverified.
+NEXT GATE: User-launched 12C review; no automatic reviewer or subphase advance.

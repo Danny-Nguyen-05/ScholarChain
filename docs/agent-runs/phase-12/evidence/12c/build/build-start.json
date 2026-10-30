@@ -1,0 +1,13 @@
+{
+  "started_utc": "2026-10-30T17:42:32.864369+00:00",
+  "started_ns": 1793382152864374000,
+  "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+  "base_sha": "3b0855b9657a72b30e8ac43bd484161a9b886c79",
+  "freeze_path": "/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-12/evidence/12c/source-freeze.json",
+  "freeze_sha256": "9f61ad19c6bff130e2d110fb69ca682497ec4b2a8674c5e84f58645f49db583b",
+  "freeze_timestamp": "2026-10-30T17:40:28.200020+00:00",
+  "snapshot_files": 3565,
+  "runner_pid": 25030,
+  "java_home": "/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home",
+  "sbt_opts": "-Dlogback.configurationFile=/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-04/xml-repair-logback.xml"
+}

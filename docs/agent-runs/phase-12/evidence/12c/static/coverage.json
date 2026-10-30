@@ -1,0 +1,22 @@
+{
+  "scope": "Git-visible .tf/.tfvars literal-source checks only",
+  "files_scanned": 62,
+  "self_test_methods": 4,
+  "negative_fixture_groups": 3,
+  "sbt_tests_added": 2,
+  "expected_full_suite_total_after_existing_1253": 1255,
+  "limitations": [
+    "No full HCL evaluation",
+    "No variable-supplied JSON or aws_iam_policy_document default evaluation",
+    "No heredoc/encoded-policy evaluation",
+    "No effective permission or live behavior validation",
+    "No secret-store/credential/environment inspection"
+  ],
+  "exceptions": [
+    "Only Resource=* in a statement inside an aws_kms_key key policy",
+    "Only ecr:GetAuthorizationToken global resource",
+    "Only concrete ec2:Describe... global resource",
+    "Literal Deny wildcard actions/principals allowed"
+  ],
+  "secret_diagnostics": "path, line, category only"
+}

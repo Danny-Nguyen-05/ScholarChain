@@ -1,0 +1,14 @@
+[
+    {
+        "Name": "us-east-2a",
+        "State": "available",
+        "OptIn": "opt-in-not-required",
+        "Id": "use2-az1"
+    },
+    {
+        "Name": "us-east-2b",
+        "State": "available",
+        "OptIn": "opt-in-not-required",
+        "Id": "use2-az2"
+    }
+]

@@ -1,0 +1,11 @@
+{
+  "command": [
+    "python3",
+    "/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/scholarchain-cost-replay-y3foyvp5/build_cost_evidence.py"
+  ],
+  "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+  "exit_code": 0,
+  "numeric_and_plan_reference_equal": true,
+  "excluded_variable_field": "calculated_utc",
+  "full_catalogs_present_in_replay": false
+}

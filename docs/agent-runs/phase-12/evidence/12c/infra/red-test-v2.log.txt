@@ -1,0 +1,151 @@
+tests/phase12c.tftest.hcl... in progress
+  run "s3vectors_key_covers_project_bucket_and_indexes"... fail
+
+Error: Test assertion failed
+
+  on tests/phase12c.tftest.hcl line 103, in run "s3vectors_key_covers_project_bucket_and_indexes":
+ 103:     condition = length([for st in jsondecode(output.iam_controls.kms_policy).Statement : st if try(st.Principal.Service, "") == "indexing.s3vectors.amazonaws.com" && st.Effect == "Allow" && st.Action == ["kms:Decrypt"] && st.Resource == "*" && try(st.Condition, {}) == {
+ 104:       StringEquals               = { "aws:SourceAccount" = "111122223333" }
+ 105:       ArnLike                    = { "aws:SourceArn" = ["arn:aws:s3vectors:us-east-1:111122223333:bucket/scholarchain-course-111122223333-vectors", "arn:aws:s3vectors:us-east-1:111122223333:bucket/scholarchain-course-111122223333-vectors/index/*"] }
+ 106:       "ForAnyValue:StringEquals" = { "kms:EncryptionContextKeys" = ["aws:s3vectors:arn", "aws:s3vectors:resource-id"] }
+ 107:     }]) == 1 && length(jsondecode(output.iam_controls.kms_policy).Statement) == 2
+    ├────────────────
+    │ Diff:
+    │ --- actual
+    │ +++ expected
+    │ - false
+    │ + true
+
+
+N17: Indexing decrypt requires exactly this project's bucket and index ARN
+paths, account and documented context; no wider key grant.
+  run "disabled_sources_have_no_empty_dashboard_widgets"... fail
+
+Error: Test assertion failed
+
+  on tests/phase12c.tftest.hcl line 114, in run "disabled_sources_have_no_empty_dashboard_widgets":
+ 114:     condition     = alltrue([for w in jsondecode(output.phase12b_controls.observability.dashboard).widgets : try(length(w.properties.metrics) > 0, true)]) && length([for w in jsondecode(output.phase12b_controls.observability.dashboard).widgets : w if can(regex("^(EMR |Neptune )", try(w.properties.title, "")))]) == 0
+    ├────────────────
+
+
+N11: Disabled EMR/Neptune must omit their widgets; no metric widget may have
+an empty metric array.
+  run "dynamodb_native_failure_and_latency_panels"... fail
+
+Error: Test assertion failed
+
+  on tests/phase12c.tftest.hcl line 121, in run "dynamodb_native_failure_and_latency_panels":
+ 121:     condition     = length([for w in jsondecode(output.phase12b_controls.observability.dashboard).widgets : w if try(w.properties.title, "") == "DynamoDB conditional write failures" && try(w.properties.stat, "") == "Sum" && try(length(w.properties.metrics), 0) == 6 && alltrue([for m in w.properties.metrics : m[0] == "AWS/DynamoDB" && m[1] == "ConditionalCheckFailedRequests" && m[2] == "TableName" && length(m) == 4])]) == 1
+    ├────────────────
+    │ Diff:
+    │ --- actual
+    │ +++ expected
+    │ - 0
+    │ + 1
+
+
+N12: All six tables need native conditional-write failure counts with
+TableName and Sum.
+
+Error: Test assertion failed
+
+  on tests/phase12c.tftest.hcl line 125, in run "dynamodb_native_failure_and_latency_panels":
+ 125:     condition     = length([for w in jsondecode(output.phase12b_controls.observability.dashboard).widgets : w if try(w.properties.title, "") == "DynamoDB successful request latency (milliseconds)" && try(w.properties.stat, "") == "Average" && try(length(w.properties.metrics), 0) == 42 && alltrue([for m in w.properties.metrics : m[0] == "AWS/DynamoDB" && m[1] == "SuccessfulRequestLatency" && m[2] == "TableName" && m[4] == "Operation" && contains(["GetItem", "PutItem", "UpdateItem", "DeleteItem", "Query", "BatchGetItem", "BatchWriteItem"], m[5]) && length(m) == 6])]) == 1
+    ├────────────────
+    │ Diff:
+    │ --- actual
+    │ +++ expected
+    │ - 0
+    │ + 1
+
+
+N12: Six tables and seven adapter operations need native successful latency
+with TableName/Operation and Average.
+  run "neptune_native_errors_when_enabled"... fail
+
+Error: Test assertion failed
+
+  on tests/phase12c.tftest.hcl line 137, in run "neptune_native_errors_when_enabled":
+ 137:     condition     = length([for w in jsondecode(output.phase12b_controls.observability.dashboard).widgets : w if try(w.properties.title, "") == "Neptune client/server errors per second" && try(w.properties.stat, "") == "Average" && try(length(w.properties.metrics), 0) == 2 && toset([for m in w.properties.metrics : m[1]]) == toset(["TotalClientErrorsPerSec", "TotalServerErrorsPerSec"]) && alltrue([for m in w.properties.metrics : m[0] == "AWS/Neptune" && m[2] == "DBClusterIdentifier" && m[3] == "scholarchain-course-graph" && length(m) == 4])]) == 1
+    ├────────────────
+    │ Diff:
+    │ --- actual
+    │ +++ expected
+    │ - 0
+    │ + 1
+
+
+N12: Active Neptune needs correctly dimensioned native client/server
+error-rate series, averaged per second.
+
+Error: Test assertion failed
+
+  on tests/phase12c.tftest.hcl line 141, in run "neptune_native_errors_when_enabled":
+ 141:     condition     = length([for w in jsondecode(output.phase12b_controls.observability.dashboard).widgets : w if try(w.properties.title, "") == "Neptune capacity and utilization"]) == 1 && alltrue([for w in jsondecode(output.phase12b_controls.observability.dashboard).widgets : try(length(w.properties.metrics) > 0, true)])
+    ├────────────────
+    │ Diff:
+    │ --- actual
+    │ +++ expected
+    │ - true
+    │ + false
+
+
+N11: An active Neptune writer retains its capacity widget without introducing
+empty EMR widgets.
+  run "emr_service_role_owns_ebs_key_permissions"... fail
+
+Error: Test assertion failed
+
+  on tests/phase12c.tftest.hcl line 162, in run "emr_service_role_owns_ebs_key_permissions":
+ 162:     condition     = output.iam_controls.emr_disk_encryption.role == "synthetic-emr-service" && length(jsondecode(output.iam_controls.emr_disk_encryption.policy).Statement) == 2 && length([for st in jsondecode(output.iam_controls.emr_disk_encryption.policy).Statement : st if st.Action == ["kms:CreateGrant"] && st.Resource == ["arn:aws:kms:us-east-1:111122223333:key/00000000-0000-0000-0000-000000000001"] && try(st.Condition.Bool["kms:GrantIsForAWSResource"], "false") == "true"]) == 1 && length([for st in jsondecode(output.iam_controls.emr_disk_encryption.policy).Statement : st if toset(st.Action) == toset(["kms:Decrypt", "kms:DescribeKey", "kms:GenerateDataKeyWithoutPlaintext", "kms:ReEncryptFrom", "kms:ReEncryptTo"]) && st.Resource == ["arn:aws:kms:us-east-1:111122223333:key/00000000-0000-0000-0000-000000000001"]]) == 1
+    ├────────────────
+
+
+N9: The EMR service role, not the EC2 role, needs only the project CMK's
+explicit EBS actions and AWS-resource-conditioned CreateGrant.
+
+Error: Test assertion failed
+
+  on tests/phase12c.tftest.hcl line 166, in run "emr_service_role_owns_ebs_key_permissions":
+ 166:     condition     = length([for w in jsondecode(output.phase12b_controls.observability.dashboard).widgets : w if try(w.properties.title, "") == "EMR running/pending/requested nodes"]) == 1 && alltrue([for w in jsondecode(output.phase12b_controls.observability.dashboard).widgets : try(length(w.properties.metrics) > 0, true)])
+    ├────────────────
+    │ Diff:
+    │ --- actual
+    │ +++ expected
+    │ - true
+    │ + false
+
+
+N11: Active EMR retains its native nodes widget while inactive Neptune
+widgets are absent.
+  run "missing_work_item_reaches_invalid_work"... fail
+
+Error: Test assertion failed
+
+  on tests/phase12c.tftest.hcl line 173, in run "missing_work_item_reaches_invalid_work":
+ 173:     condition     = try(jsondecode(output.phase12b_controls.workflow.definition).States.ValidateWork.Choices[0], {}) == { And = [{ Variable = "$.workItem", IsPresent = true }, { Variable = "$.workItem", IsString = true }], Next = "Enqueue" } && jsondecode(output.phase12b_controls.workflow.definition).States.ValidateWork.Default == "InvalidWork" && jsondecode(output.phase12b_controls.workflow.definition).States.InvalidWork.Error == "InvalidEmbeddingWork"
+    ├────────────────
+    │ Diff:
+    │ --- actual
+    │ +++ expected
+    │ - false
+    │ + true
+
+
+N14: Guard IsString with IsPresent in that order so missing input routes to
+InvalidWork without States.Runtime.
+  run "emr_rejects_wildcard_region_account"... fail
+
+Error: Missing expected failure
+
+  on tests/phase12c.tftest.hcl line 180, in run "emr_rejects_wildcard_region_account":
+ 180:   expect_failures = [var.emr_service_policy_json]
+
+The checkable object, var.emr_service_policy_json, was expected to report an
+error but did not.
+  run "emr_rejects_wildcard_arn_service"... skip
+  run "emr_accepts_scoped_future_resource_suffix"... skip
+tests/phase12c.tftest.hcl... tearing down
+tests/phase12c.tftest.hcl... fail
+
+Failure! 0 passed, 7 failed, 2 skipped.

@@ -1,0 +1,22 @@
+{
+  "red_v2_repository_unchanged": true,
+  "tf_files": 61,
+  "production_original_hashes": {
+    "modules/identity/main.tf": "707e43fc8436f57a1716ad2a0f13730380496ec73615808c6b4a3078ca34fbf7",
+    "modules/identity/phase12b.tf": "7cb0788990d8e6ecff81e340b66a18cc0b6eaa57bdeb7c85c4132af8d43be239",
+    "phase12b-variables.tf": "cb6a0237a6548ddd149208d0e8262cae9d70ceeb6e875ad631e633da1d85cc54",
+    "modules/workflow/main.tf": "70ae11a3a2cfc9e77cff2a25d3545233eeec0931d6c829299146a50dd689ed3e",
+    "modules/observability/main.tf": "7ea33250abb3d97d838994a73b8f079ed86eff8539b2383f0c7ec9f983d80129"
+  },
+  "original_matches": true,
+  "red_v2_runs": {
+    "passed": 0,
+    "failed": 7,
+    "skipped": 2,
+    "assertion_failure_diagnostics": 9,
+    "missing_expected_failure_diagnostics": 1,
+    "unknown_or_provider_error": false,
+    "note": "N17/N11/N12/N9/N14 produce real value mismatches; first N10 negative input is unexpectedly accepted on original source. Terraform skips subsequent runs after a missing expected validation failure."
+  },
+  "retained_failed_development_attempt": "red-test.log.txt: first attempt lacked an explicit mock EMR cluster id; it is retained, not claimed as valid proof."
+}

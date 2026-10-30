@@ -130,3 +130,25 @@ User-supplied independent verdict: APPROVE for 12B including repair round 1. Com
 | R3 | INFO; no action. | Prior review text remains untouched. |
 
 Next gate: commit confirmation of approved12B source, repair, evidence and review records on phase-12. Current HEAD remains a83f62e9af56058a170075f98c4e027d039567ec with uncommitted work. Ask user for commit SHA and wait; never commit or push without a new explicit request. Do not begin12C questions/edits/account calls before the commit checkpoint. Account/profile/region/budget and explicit read-only planning authorization are required before12C account access. Account reminder is now due for12C; earlier12D would require its own written bounded approval. Human-owned gate/commit/approval files untouched.
+
+
+## Subphase 12C — selected follow-ups
+
+User accepted the remaining recommendations on 2026-10-30. Owner: infra-engineer for infra/terraform/** only. Verification is completed in the final12C report, not inferred from this routing record.
+
+- N9 ROUTED: put scoped CMK EBS-use/grant permissions on the EMR service role; retain disabled activation and assert the service-role binding.
+- N10 ROUTED: reject wildcard service/account/region components in write/control resource ARNs, preserving only the justified EC2 Describe global exception; add negative inputs.
+- N11 ROUTED: omit EMR/Neptune widgets for inactive/null sources; prove default/active shapes.
+- N12 ROUTED: chart native Neptune client/server errors and DynamoDB conditional failures/request latency with correct dimensions.
+- N14 ROUTED: IsPresent + IsString for workflow workItem, safely choose InvalidWork for missing input.
+- N17 ROUTED: service-principal CMK SourceArn includes only this vector bucket and its index/* path, retaining exact action/account/context conditions.
+
+B1/B2/B3/R1 remain invariants; R2 requires the real plan replacement check. N13 remains information only. N15 internal HTTP and N16 Phase13 loader/writer identities remain disclosed, not repaired. Optional N3/N4/N6 are not expanded into unrelated work. N7 retains the post-freeze gate rule; N8 Step Functions remains authored without new instructor claims; N18 had no impact.
+
+The independent static guard under tests/** is test-engineer-owned. Coordinator alone owns these reports. No reviewer is invoked; user launches review at handoff.
+
+### Subphase 12C selected follow-ups — owner completion, review pending
+
+Infra owner reports N9/N10/N11/N12/N14/N17 implemented with retained RED v2 and 40/0 GREEN. N9 binds the disk policy to the service role and project CMK; N10 rejects wildcard ARN segments; N11 omits disabled widgets; N12 adds native error/failure/latency panels; N14 guards missing input; N17 covers the project bucket and index SourceArn paths. This is an implementation disposition, not independent approval. See evidence/12c/infra/{owner-report.md,red-proof.json,delta.patch,coverage-counts.json}.
+
+B1/B2/B3/R1 remain asserted. R2 has no address replacement in the fresh-state real plan. N13, N15/N16 and optional N3/N4/N6 were not repaired; N15/N16 are disclosed in security-self-review.md.

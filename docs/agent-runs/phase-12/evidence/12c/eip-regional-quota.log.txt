@@ -1,0 +1,5 @@
+{
+    "Name": "EC2-VPC Elastic IPs",
+    "Value": 5.0,
+    "Code": "L-0263D0A3"
+}

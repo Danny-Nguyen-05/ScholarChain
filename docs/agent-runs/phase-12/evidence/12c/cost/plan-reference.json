@@ -1,0 +1,28 @@
+{
+  "summary_sha256": "702f283a02e2ea49b5c81b4dd9ffd975b259f80885213a89e05ef5473a151400",
+  "plan_sha256": "1e0eb776c6bebe0aea4a0d7070dbc2328953d7cc001e921b9ac674eb8b6bbd34",
+  "managed_creates": 171,
+  "aws_managed_creates": 169,
+  "terraform_data_creates": 2,
+  "change": 0,
+  "destroy": 0,
+  "replacement": 0,
+  "resources_by_module": {
+    "module.datalake": 49,
+    "module.dynamodb": 6,
+    "module.identity": 25,
+    "module.messaging": 5,
+    "module.network": 58,
+    "module.observability": 10,
+    "module.runtime": 6,
+    "module.s3vectors": 7,
+    "module.workflow": 3,
+    "root": 2
+  },
+  "primary_activation_flags": {
+    "neptune_enabled": false,
+    "runtime_enabled": false,
+    "emr_enabled": false,
+    "enable_budget_resource": false
+  }
+}

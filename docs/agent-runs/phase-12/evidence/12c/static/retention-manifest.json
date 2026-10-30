@@ -1,0 +1,141 @@
+{
+  "timestamp_utc": "2026-10-30T17:39:26.322181+00:00",
+  "artifact_count": 27,
+  "artifacts": [
+    {
+      "path": "commands.json",
+      "bytes": 9796,
+      "sha256": "7f9bae44e49a3d3763b539e7e3c4282085975ade97ee617352cfb5c95ea57607"
+    },
+    {
+      "path": "coverage.json",
+      "bytes": 831,
+      "sha256": "a7dcd65fc75461ded77ca2be894b3100b90faa45b9190debc963e85ca9d3f76a"
+    },
+    {
+      "path": "development-self-test.log.txt",
+      "bytes": 636,
+      "sha256": "c40a6ed13297b5c4e9856ae01d570b73a4249910d9c71af2214c54001b44581d"
+    },
+    {
+      "path": "development-source-scan.log.txt",
+      "bytes": 70,
+      "sha256": "97a739d5383c7b1cc0fe728de3e85915247b305b69aa34157fd05aecebdfd4ea"
+    },
+    {
+      "path": "final-self-test.log.txt",
+      "bytes": 636,
+      "sha256": "c40a6ed13297b5c4e9856ae01d570b73a4249910d9c71af2214c54001b44581d"
+    },
+    {
+      "path": "final-source-scan.log.txt",
+      "bytes": 70,
+      "sha256": "97a739d5383c7b1cc0fe728de3e85915247b305b69aa34157fd05aecebdfd4ea"
+    },
+    {
+      "path": "infra-after-final-checks.json",
+      "bytes": 13806,
+      "sha256": "3a00c9fb59e3496c486fca436e157086bdd6126141c1828aa7487f16ebedc554"
+    },
+    {
+      "path": "infra-before-final-checks.json",
+      "bytes": 13806,
+      "sha256": "3a00c9fb59e3496c486fca436e157086bdd6126141c1828aa7487f16ebedc554"
+    },
+    {
+      "path": "negative-proof.json",
+      "bytes": 423,
+      "sha256": "7962930ba4363ad9c3f3a78829869d674bd2d69d08ba2a3be87f9d1499c4dc36"
+    },
+    {
+      "path": "negative-public-acl/infra/terraform/unsafe.tf",
+      "bytes": 60,
+      "sha256": "2bcc59c89a6fc6840c54152d71859357337bb7802176109178e70f802ed13ea9"
+    },
+    {
+      "path": "negative-secret-shaped/infra/terraform/unsafe.tf",
+      "bytes": 47,
+      "sha256": "534c1bb1ff8a63e1283552011bfb84328bb859381252b5755926a9dd0eb4b995"
+    },
+    {
+      "path": "negative-wildcard/infra/terraform/unsafe.tf",
+      "bytes": 270,
+      "sha256": "f8458adead02cf636af74e66eadf1038a873ae263f62b0c0da05c14dfa060702"
+    },
+    {
+      "path": "owner-report.md",
+      "bytes": 4462,
+      "sha256": "e8d2a3644d5877b7e3a746f057200be53307763a3dc01f4a256f7ae9e07d3a5d"
+    },
+    {
+      "path": "public-acl-final-negative.log.txt",
+      "bytes": 182,
+      "sha256": "a16ca8f2897673c6dad6a1b2665d18d5f8145b143966c02146e31772c428b806"
+    },
+    {
+      "path": "public-acl-git-init.log.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "public-acl-negative.log.txt",
+      "bytes": 182,
+      "sha256": "a16ca8f2897673c6dad6a1b2665d18d5f8145b143966c02146e31772c428b806"
+    },
+    {
+      "path": "secret-shaped-final-negative.log.txt",
+      "bytes": 304,
+      "sha256": "c7310404a2c7900368e7709ba99281f57033ca5ef49dd932f937bc28a6805677"
+    },
+    {
+      "path": "secret-shaped-git-init.log.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "secret-shaped-negative.log.txt",
+      "bytes": 304,
+      "sha256": "c7310404a2c7900368e7709ba99281f57033ca5ef49dd932f937bc28a6805677"
+    },
+    {
+      "path": "test-source-freeze.json",
+      "bytes": 752,
+      "sha256": "fb549e97516ac0c7b81644f0346807186c00a4782239602f92b8d3584649e2a8"
+    },
+    {
+      "path": "tests-diff-check.log.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "verify-wrapper.py",
+      "bytes": 1379,
+      "sha256": "a9fe0db819c1be7fffa4460c7d3c9e7d9a36bf66426b23b95683fe944809bba1"
+    },
+    {
+      "path": "wildcard-final-negative.log.txt",
+      "bytes": 184,
+      "sha256": "6b928e687e75bc54c9cf3b054015f498ccd0598430a03525a85d9cf759d0040e"
+    },
+    {
+      "path": "wildcard-git-init.log.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "wildcard-negative.log.txt",
+      "bytes": 184,
+      "sha256": "6b928e687e75bc54c9cf3b054015f498ccd0598430a03525a85d9cf759d0040e"
+    },
+    {
+      "path": "wrapper-verification.log.txt",
+      "bytes": 1349,
+      "sha256": "607849ed2124d8faf2664ac5e1b7045499377065f122b65d6d1d8357a4e5d3db"
+    },
+    {
+      "path": "wrapper-xml-summary.json",
+      "bytes": 326,
+      "sha256": "04cbd88f14a71cea4f5bd2564ce5fc9c009666cdf54cde3fc2faa2e3abbb59cd"
+    }
+  ]
+}

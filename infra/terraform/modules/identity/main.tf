@@ -126,8 +126,11 @@ resource "aws_kms_key" "data" {
       Action    = ["kms:Decrypt"]
       Resource  = "*" # This CMK only, as required by a KMS key policy.
       Condition = {
-        StringEquals               = { "aws:SourceAccount" = var.aws_account_id }
-        ArnLike                    = { "aws:SourceArn" = "arn:aws:s3vectors:${var.aws_region}:${var.aws_account_id}:bucket/${var.name_prefix}-${var.aws_account_id}-vectors" }
+        StringEquals = { "aws:SourceAccount" = var.aws_account_id }
+        ArnLike = { "aws:SourceArn" = [
+          "arn:aws:s3vectors:${var.aws_region}:${var.aws_account_id}:bucket/${var.name_prefix}-${var.aws_account_id}-vectors",
+          "arn:aws:s3vectors:${var.aws_region}:${var.aws_account_id}:bucket/${var.name_prefix}-${var.aws_account_id}-vectors/index/*"
+        ] }
         "ForAnyValue:StringEquals" = { "kms:EncryptionContextKeys" = ["aws:s3vectors:arn", "aws:s3vectors:resource-id"] }
       }
     }]

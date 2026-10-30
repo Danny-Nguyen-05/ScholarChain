@@ -1063,3 +1063,115 @@ placeholder filled. Save it as
 docs/agent-runs/phase-12/reviewer-prompt-12c.md. End with:
 "Subphase 12C is ready for review. I have stopped and will not start the next subphase until I receive the next prompt."
 Tip: Use /btw to ask a quick side question without interrupting Claude's current work
+
+
+## Subphase 12C — independent review
+
+User-supplied external review. Verdict: **APPROVE**. The review below is preserved verbatim as supplied through its report; the subsequent next prompt is the work order for this append-only recording turn. No source repair or execution approval is inferred.
+
+Phase 12C review: APPROVE
+
+  There are no blocking findings. All six selected repairs are implemented correctly, and every reported number in the evidence reconciled. I found four nonblocking items, one Low and three Info. Nothing was applied, and every live gate is still open.
+
+  What I verified
+
+  The six repairs
+  - N17: The S3 Vectors key grant is exactly kms:Decrypt with Resource="*", the SourceAccount condition and the two documented encryption-context keys. SourceArn allows only this project's bucket and its /index/* path. It matches AWS's documented shape but is narrower than AWS's bucket/*. Root delegation is unchanged, and the key policy still has exactly 2 statements.
+  - N9: The disk-encryption policy now sits on the EMR service role (phase12b.tf:37-42). It has the five EBS actions plus CreateGrant conditioned on GrantIsForAWSResource, all scoped to the project key ARN. It is still created only when EMR is enabled and a control policy is supplied. The mock test tells the service role apart from the EC2 role.
+  - N10: I ran the validation regex in scratch. It rejects arn:*, arn:aws:ec2:*:*:instance/*, wildcard service, wildcard account, ? in region and non-aws partitions. Wildcard and ? actions are rejected, and only ec2:Describe* statements may use a literal "*" resource.
+  - N11: EMR and Neptune widgets are left out when their source is null, and no widget has an empty metrics array. With a component enabled, its widget is present.
+  - N12: Neptune TotalClient/ServerErrorsPerSec (DBClusterIdentifier, Average) is correct. DynamoDB ConditionalCheckFailedRequests (TableName, Sum) and SuccessfulRequestLatency (TableName/Operation, Average) match the AWS docs. Coverage has a gap, written up as N19.
+  - N14: And[IsPresent, IsString] is in the right order, and the default goes to InvalidWork. Queues, timeouts and bounded retries are preserved.
+
+  Scope and inventory
+  - git status matches handoff-files.json exactly: 12 modified files and 115 untracked.
+  - Of 3,813 baseline files, only the 12 allowed paths changed. The only new files outside the evidence folder are the reviewer prompt and the four allowed new source files.
+  - All four Phase 12 reports keep their original text byte-for-byte as a prefix. review.md is unchanged.
+  - The four Phase 08–11 human-gate files match their baseline SHA, size and mtime.
+  - Lock file, pins and .gitignore are unchanged.
+
+  Tests and RED proof
+  - I counted the test files directly: 13/29/6 + 18/23/10 + 9/10/2 gives 40 runs, 62 assertions and 18 expected-failure runs.
+  - final-test.log.txt reports "40 passed, 0 failed".
+  - RED v2 production hashes match HEAD. It shows 7 failures from genuine assertion mismatches plus one missing expected failure. There were no provider or unknown-value errors.
+
+  Static guard
+  - I re-ran the repository scan: 62 files, 0 findings.
+  - In-memory probes caught a rogue neighboring Allow, mixed ECR/S3 actions, a public principal in a KMS key policy, kms:* and arn:aws:s3:::*.
+  - The aws_iam_policy_document default-effect gap is honestly disclosed in the README.
+  - The three negative fixtures are synthetic; the key-shaped one is AKIA followed by sixteen As.
+
+  Build gate
+  - I re-parsed all 157 fresh XML reports: 1,255 tests, 0 failures, errors or skips. Hashes and mtimes match.
+  - The per-module sbt log totals also sum to 1,255. The 149/1,242 → 157/1,255 reconciliation is exactly the eight build-verification reports (13 tests). The only stale reports are in project/verification.
+  - The only [error] lines come from the expected checkProbeInjectFailure. The log reports 718 s.
+  - Gzip and decompressed SHAs match. All 190 frozen files match SHA, size and mtime, and the freeze file SHA is 9f61ad19….
+
+  Plan
+  - All 63 config/lock inputs match their recorded hashes, with mtimes before the plan. Only the README changed afterward.
+  - Summary shows 171 creates, 0 replacements and 0 destroys.
+  - /tmp/.../course.tfplan hashes to 1e0eb776…. I computed the hash only; I did not open the plan or run show.
+
+  Cost
+
+  - I recomputed base-window results independently: $16.95, $19.22, $157.94 and $251.28, with margins of $42.06 and $5.09. Hour counts of 239 and 335 are correct; CST holds throughout because DST ends Nov 1.
+  - All 45 curated rates match the calculation inputs. Failed EC2/KMS/ECR price fetches are retained, not hidden.
+  - Cost fit is correctly left open.
+
+  Findings
+
+  N19 — Low — nonblocking: DynamoDB widgets miss the adapter's transactional write path
+  - Where:
+    - infra/terraform/modules/observability/main.tf:6-7, 61-62
+    - infra/terraform/tests/phase12c.tftest.hcl:125
+    - infra/terraform/README.md:462
+  - Problem:
+    - The storage adapter's transact() calls TransactWriteItems with condition expressions (modules/storage/.../DynamoStorage.scala:165-176), and production callers use it (StorageRows.scala:206, 310).
+    - The latency widget's seven operations leave out TransactWriteItems, and include UpdateItem, DeleteItem and BatchWriteItem, which the adapter never calls. So the README's "seven adapter-relevant operations" claim is inaccurate.
+    - AWS documents ConditionalCheckFailedRequests only for PutItem, UpdateItem, DeleteItem and PartiQL. Transactional condition failures (TransactionCanceledException, which the adapter maps to conditional-conflict) are likely not shown in the "conditional write failures" widget.
+  - Impact: Dashboard only; nothing is deployed and there is no security impact. Once live, transactional latency and conflicts would look missing or zero.
+  - Owner: infra-engineer for the native panel and README. Phase 13/14 publisher owners for an application-level conflict count.
+  - Acceptance check: Add TransactWriteItems to the operation list (and drop unused operations or justify them), correct the README wording, and update the assertion. Alternatively, explicitly disclose that transactional condition failures need the application publisher. Must happen before Phase 14 observability sign-off.
+
+  N20 — Info: the N10 check accepts some broad or foreign-account ARNs
+  - Where: infra/terraform/phase12b-variables.tf:205
+  - Problem: The validation does not pin the account or region to var.aws_account_id/var.aws_region, and it accepts a bare * resource suffix. In scratch, arn:aws:s3:::*, arn:aws:ec2:us-east-2:<acct>:* and arn:aws:ec2:us-west-2:999999999999:instance/* all pass.
+  - Why it isn't a defect: It meets the routed requirement (no wildcard in the service, region or account segment), and the README defers suffix review to EMR activation.
+  - Owner: infra-engineer, before any EMR activation. Optionally pin account and region and reject a whole-resource * suffix.
+
+  N21 — Info: the arn:* negative case has no RED proof of its own
+  - Terraform skipped it in RED v2 after the earlier missing-expected-failure run. The GREEN run does prove it is rejected, and the old arn != "*" check would have accepted it.
+  - No action needed.
+
+  N22 — Info: your email appears inside a Google Drive path
+  - It is in reviewer-prompt-12c.md:7, evidence/12c/reviewer-work-order-12c.txt:14 and evidence/12c/phase12-plan-at-start.md:292,336.
+  - This is the same pattern already committed in review.md. It is not the private notification address, which is absent.
+  - This is your call before pushing.
+
+  Disclosed gates (still open, not defects)
+
+  - N15 internal HTTP and N16 missing loader, writer and workflow-caller identities.
+  - N13 and optional N3/N4/N6 are untouched.
+  - Not yet verified live: the indexing service's actual SourceArn, live IAM/KMS behavior, EMR runtime and EC2/EBS prices.
+  - The synthesis model is unset, and the reserves are provisional.
+  - There are zero budgets in the account, and Cost Explorer activation is unverified.
+  - Quota headroom is unverified. A fresh local state does not prove remote state is absent.
+  - Service composition, the metric publisher and human plan sign-off are still to come.
+  - No external scanner ran.
+
+  Report
+
+  STATUS: COMPLETE
+  OWNER: code-reviewer (independent, read-only)
+  WORK ORDER: Independent read-only review of ScholarChain Subphase 12C (docs/agent-runs/phase-12/reviewer-prompt-12c.md), branch phase-12, base/HEAD 3b0855b9657a72b30e8ac43bd484161a9b886c79. Verdict: APPROVE.
+  FILES CREATED: None in the repository. Scratch only: /private/tmp/claude-501/-Users-danny-Documents-UIC-CS441-ScholarChain/516e3239-0e91-4a25-9df6-afce386c9d09/scratchpad/verify.py
+  FILES MODIFIED: None. git status -uall is still 127 entries (12 M + 115 ??), HEAD unchanged, no __pycache__ created.
+  COMMANDS RUN: Read-only git (rev-parse, status --porcelain -uall, diff, show HEAD:<path>, ls-files -co --exclude-standard, check-ignore). python3 -I hash/size/mtime reconciliation of source-freeze (190), preflight-baseline (3813), evidence-manifest (105), infra/static/build/cost manifests, plan-input-provenance (63), build-validation XML (157, re-parsed) and gzip log. In-memory exec of terraform_source_guard.scan on synthetic probes, plus a -B repo scan (62 files / 0 findings). Python re-check of the N10 regex. Independent cost arithmetic replay. shasum of /tmp/scholarchain-phase12c-infra/course.tfplan (hash only, not opened). Public AWS documentation searches via the aws-knowledge MCP (S3 Vectors KMS policy, DynamoDB metrics, Step Functions Choice). No AWS account call, Terraform, sbt, credentials, paid service, agent launch, commit or push.
+  TEST RESULTS: Not re-run (forbidden). Retained evidence reconciles: Terraform 40 passed/0 failed, 62 assertions, 18 expected-failure runs (counted from source). RED v2: 0/7/2 with 9 assertion mismatches + 1 missing expected failure; original hashes equal HEAD. Static guard 4 self-tests, 3 negatives exit 1. sbt check exit 0: 1,255 tests in 157 fresh XML reports, 0 failures/errors/skips; per-module log totals sum to 1,255; only the probe error block.
+  VALIDATION RESULTS: Inventory matches handoff-files.json. Only the 12 allowed baseline paths changed. Four reports are prefix-preserved; review.md unchanged; human-gate hashes/mtimes match. Freeze 190/190 and freeze SHA 9f61ad19… match. Log SHAs 19d09598…/70c405d6… match. Plan SHA 1e0eb776… matches; 63/63 plan inputs unchanged. Curated rates equal calculation inputs. Base totals 16.95/19.22/157.94/251.28 recomputed.
+  ASSUMPTIONS: Retained /tmp-origin logs are the byte copies their manifests describe. AWS public documentation is current. Step Functions And evaluation of IsPresent-before-IsString is per the ASL docs, verified only in mocks.
+  RISKS: N19 Low (DynamoDB transactional path missing from panels; README wording). N20/N21/N22 Info. Mock-only proofs. Live IAM/KMS, actual indexing SourceArn, quota headroom, EMR runtime/EC2/EBS price, synthesis model, composition/publisher, budgets (zero) and Cost Explorer (unverified) remain open. Upper-window minimum margin is only $5.09; sustained maxima exceed $200.
+  MANUAL ACTION REQUIRED: Human decides whether to record this approval and commit 12C (excluding the four Phase 08–11 human-gate files unless separately decided), and whether to fold N19 into a small follow-up. Before any paid work: separately approved budget bootstrap/Cost Explorer activation and private subscriber input. 12D requires its own written cap/region/types/max-runtime/teardown approval.
+  BLOCKED-ON OWNER: None.
+  BLOCKED-ON EVIDENCE: None.
+  NEXT GATE: Coordinator records this review append-only; human commit decision; human chooses the next work order. No automatic 12D or paid work.

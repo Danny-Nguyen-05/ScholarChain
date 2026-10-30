@@ -1,0 +1,9 @@
+[
+    {
+        "Id": "amazon.titan-embed-text-v2:0",
+        "Status": "ACTIVE",
+        "InferenceTypes": [
+            "ON_DEMAND"
+        ]
+    }
+]

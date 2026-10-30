@@ -1,12 +1,14 @@
-# ScholarChain Terraform — Phase12A and12B
+# ScholarChain Terraform — Phase12A–12C
 
 This tree authors the12A foundation plus12B Neptune, native S3 Vectors, bounded EMR,
 ECS/Fargate/discovery/HTTPS ALB, autoscaling, observability, and a functional
-Step Functions embedding-dispatch workflow. This is source with offline mock
-validation, **not a deployment or an apply-ready runtime**. No AWS account/profile,
-region or budget has been supplied. Nothing was applied or called a paid model.
-Neptune, EMR and ECS service activation default off pending explicit inputs below.
-The user accepted all12B Step0 recommendations and asked for an account reminder.
+Step Functions embedding-dispatch workflow. Phase12C adds the selected control
+repairs and a real read-only plan, **not a deployment or an apply-ready runtime**.
+The user supplied account/profile inputs privately, selected Ohio (`us-east-2`)
+and a shared USD200 project ceiling before credits. Nothing was applied or called
+a paid model. Neptune, EMR and ECS service activation remain off pending the
+explicit prerequisites below. Budget creation/notification and Cost Explorer
+activation remain separate pre-spend account setup gates.
 
 ## Local checks without an AWS account
 
@@ -49,13 +51,14 @@ supplied before a real plan can proceed:
 | `aws_profile` | Local profile name only, configured by the human; never credentials |
 | `availability_zones` | Two distinct actual AZ names in the chosen region |
 | `deployment_trusted_principal_arn` | Approved existing IAM role/user permitted to assume the separate deployment role |
-| `budget_limit_usd` | Positive human-selected total spending ceiling; no amount has been approved |
+| `budget_limit_usd` | USD200 shared project ceiling before credits; no deployment/spend approval implied |
 
-When 12C is ready, tell the user to create/configure the AWS account and provide
-these values and permission for read-only planning. If the user moves the optional
-12D spike earlier, that spike needs the account first plus its own written dollar,
-instance, duration and teardown approval. Do not run a live plan, create credentials,
-or infer a budget from the test fixtures.
+The account is now configured and12C read-only planning was explicitly authorized.
+Live values remain outside Git; never inspect credential files or print session
+credentials. The optional12D spike still needs its own written dollar, instance,
+duration and teardown approval plus active pre-spend monitoring. The selected
+read-only plan authorizes no apply, credential creation or paid model/Cost Explorer
+request. Do not infer live inputs or spending authority from mock fixtures.
 
 Resource names derive from the configurable `project`/`environment` prefix.
 Bucket names additionally use the supplied account ID for global uniqueness;
@@ -91,10 +94,18 @@ scope; GovCloud/China would require a separately reviewed configuration.
 
 The optional monthly AWS Budget filters the project tag. It is an **alert**, not
 a hard spending stop or a full-stack cost estimate; a multi-month window can incur
-charges across multiple monthly limits. The human's total budget and 7–10 day
-working duration still need the 12C estimate and experiment controls. Do not claim
-the configuration fits an unselected budget. Budget tags/filter activation and
-permissions are unverified until an account is available.
+charges across multiple monthly limits. The selected USD200 ceiling is shared
+across all cloud phases, including early spikes, optional9C smoke and retained
+evidence. Cost November15–24 as the base case and November11–24 as the upper case;
+actual deployment/runtime remains separately approved. The default plan keeps this
+budget disabled: the early account-wide monitoring bootstrap is a separate,
+human-approved Terraform work order, and must not depend on project tags already
+being active. Do not duplicate or manage one budget from two Terraform states.
+Pass the subscriber address privately through `TF_VAR_budget_notification_emails`
+or an ignored local tfvars file; never put it in committed course.tfvars or logs.
+State, plan binaries/JSON and unredacted outputs remain outside Git/evidence.
+Billing reports lag; runtime/capacity/request limits enforce each run, not a
+Cost Explorer query. No cost-fit or active-notification claim follows from a plan.
 
 ## Module boundaries and security controls
 
@@ -260,10 +271,12 @@ The user chose offline module authoring before the preferred12D spike.
 `emr_config.enabled=true` requires an explicit release label, reviewed bootstrap
 S3 URI, TLS certificate bundle URI, proven runtime reference and acknowledgment.
 It also requires nonempty `emr_service_policy_json`; the12A service role is trust-only
-without it. The policy rejects wildcard actions and global write resources; only
-concrete EC2 Describe actions may use `Resource=["*"]`, because those read APIs do
-not support resource scoping. Future-resource ARN suffixes and selected control-plane
-permissions still require a concrete12C security review. No broad managed policy
+without it. The policy rejects wildcard actions and wildcard ARN partition,
+service, region or account segments; only concrete EC2 Describe actions may use
+literal `Resource=["*"]`, because those read APIs do not support resource scoping.
+Concrete region/account ARN prefixes may retain a reviewed future-resource suffix
+such as `instance/*`; that does not authorize EMR activation. Selected control-plane
+permissions still require a concrete security review before a live runtime. No broad managed policy
 is silently attached. The synthetic test policy permits DescribeInstances only:
 it is a configuration fixture, deliberately **not enough to launch a real cluster**.
 Real IAM effectiveness, service connectivity, certificates and runtime are unverified.
@@ -338,9 +351,10 @@ avoid copying manifest/document payloads; native execution metrics remain charte
 12C owns the real non-destructive plan/checksum, regional quota/engine/model checks,
 pricing against the actual user budget, and full security preparation.12D remains
 a separately approved runtime experiment; no spike root or live action is authored
-here. Create/configure the AWS account before12C, or before an earlier approved12D.
-Account/profile/region/budget, actual AZs, certificate and image publication remain
-pending. Deployment roles remain separate and not granted generic provisioning rights.
+here. Account/profile inputs, Ohio AZs and the shared budget were supplied for
+read-only12C planning; certificate, image publication, actual live service access,
+quotas and runtime prerequisites remain separately gated. Deployment roles remain
+separate and not granted generic provisioning rights.
 
 Step Functions is now present following the user's12B answer, addressing N8's
 previous omission. This does not constitute instructor acceptance of the whole
@@ -409,15 +423,67 @@ Additional12B primary references:
 For cost comparison only, the public Ohio offer file checked during12B lists
 standard `db.t4g.medium` atUSD0.093/hour and Serverless atUSD0.1608/NCU-hour.
 At1–2.5NCUs that isUSD0.1608–0.402/hour for compute alone, before storage,I/O,
-network and other services. Ohio is NOT a selected deployment region and these
-prices do not establish budget fit or free-tier eligibility. AWS discourages
+network and other services. These are retained12B comparison prices, not the
+12C dated estimate or a free-tier eligibility claim. Ohio is now selected for
+read-only planning; revalidate each price for the actual activation window. AWS discourages
 small T-family instances for openCypher/performance testing; accepted sizing is
 Serverless with live revalidation deferred to12C.
 [Regional public price file](https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonNeptune/current/us-east-2/index.json),
 [AWS sizing/cost guidance](https://docs.aws.amazon.com/prescriptive-guidance/latest/neptune-well-architected-framework/cost-optimization-pillar.html).
 
 B3 CMK control: the key policy grants only `kms:Decrypt` to
-`indexing.s3vectors.amazonaws.com`, restricted to the configured account, exact
-project vector-bucket ARN and S3 Vectors encryption-context keys. `Resource="*"`
+`indexing.s3vectors.amazonaws.com`, restricted to the configured account, the
+project vector-bucket ARN plus its `/index/*` descendants, and the documented
+S3 Vectors encryption-context keys. `Resource="*"`
 in this key policy means this CMK only; the account-root delegation is unchanged.
 [AWS S3 Vectors encryption requirements](https://docs.aws.amazon.com/AmazonS3/latest/userguide/s3-vectors-data-encryption.html).
+
+
+## Phase12C control repairs and plan boundary
+
+The selected follow-ups N9/N10/N11/N12/N14/N17 are exercised by the new mock
+requirements in `tests/phase12c.tftest.hcl`; original12A/12B safety runs remain.
+
+- N9: EBS CMK permissions belong to the EMR **service role**, not the EC2 instance
+  role. When EMR is explicitly activated, a separate policy permits only this
+  project's key: Decrypt, DescribeKey, GenerateDataKeyWithoutPlaintext and the
+  explicit ReEncryptFrom/ReEncryptTo actions. CreateGrant is separate and requires
+  `kms:GrantIsForAWSResource=true`. EMR-ready service output depends on this policy.
+  The EC2 data role retains its S3 key-use scope and still has no DynamoDB access.
+- N10: malformed or wildcard ARN service/region/account prefixes are rejected,
+  including `arn:*` and `arn:aws:ec2:*:*:instance/*`. Concrete future-ID suffixes
+  remain subject to activation review; only concrete EC2 Describe actions get the
+  literal global-resource exception. A mock Describe-only fixture is not a usable
+  real provisioning policy.
+- N11/N12: dashboard construction omits the EMR and Neptune widgets when their
+  source is null. When enabled, Neptune native client/server error rates use
+  DBClusterIdentifier and Average. DynamoDB conditional-write failures use
+  TableName/Sum; successful-request latency uses TableName/Operation/Average,
+  with seven adapter-relevant operations for each of six tables. Missing telemetry
+  and application publisher requirements are unchanged.
+- N14: the workflow checks IsPresent before IsString in an ordered And condition;
+  a missing workItem reaches InvalidWork rather than evaluating a missing string.
+- N17: service indexing decrypt is allowed for exactly this project's vector
+  bucket and its index descendants; principal, action, account and encryption
+  context restrictions remain strict. Actual service-supplied SourceArn and KMS
+  behavior still require the Phase14 smoke test.
+
+The default read-only plan proposes171 managed creates, zero changes, zero destroys
+and zero replacements, with Neptune, EMR, ECS runtime and the budget resource off.
+The binary, JSON and private input file are outside Git. A fresh-state plan proves
+no route replacements are proposed; it is not a resource inventory or proof of
+IAM effectiveness. Policies that depend on future ARNs are honestly unknown until
+apply; source and mock contracts establish their intended scopes.
+
+N15 remains disclosed: ALB-to-query and internal query-to-graph/semantic traffic
+uses HTTP inside the VPC. N16 remains deferred: Phase13 must supply authorized
+loader/writer/StartExecution callers; no principal here can start a Neptune loader
+or write pipeline tables as a pipeline loader. Live composition, application metric
+publication, EMR runtime compatibility, actual model access and spend authorization
+are not established by this plan. N13 and optional N3/N4/N6 were not expanded.
+
+[EMR service-role EBS encryption](https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-encryption-enable.html),
+[EBS minimum key actions and grant condition](https://docs.aws.amazon.com/ebs/latest/userguide/ebs-encryption-requirements.html),
+[Neptune native metrics](https://docs.aws.amazon.com/neptune/latest/userguide/cw-metrics.html),
+[DynamoDB metric dimensions](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/metrics-dimensions.html),
+[Step Functions ordered IsPresent/IsString guard](https://docs.aws.amazon.com/step-functions/latest/dg/state-choice.html).

@@ -195,9 +195,19 @@ variable "emr_service_policy_json" {
 
   description = "Explicit scoped control-plane policy supplied only after selecting runtime/network. No default broad managed-policy attachment. Activation refuses a trust-only service role."
   validation {
-    condition = var.emr_service_policy_json == null ? true : try(length(jsondecode(var.emr_service_policy_json).Statement) > 0 && alltrue(flatten([for s in jsondecode(var.emr_service_policy_json).Statement : [for a in s.Action : !strcontains(a, "*")]])) && alltrue([for st in jsondecode(var.emr_service_policy_json).Statement : alltrue([for arn in st.Resource : arn != "*" || alltrue([for a in st.Action : startswith(a, "ec2:Describe")])])]), false)
+    condition = var.emr_service_policy_json == null ? true : try(
+      length(jsondecode(var.emr_service_policy_json).Statement) > 0 &&
+      alltrue([for st in jsondecode(var.emr_service_policy_json).Statement :
+        length(st.Action) > 0 && length(st.Resource) > 0 &&
+        alltrue([for action in st.Action : !can(regex("[?*]", action))]) &&
+        alltrue([for arn in st.Resource :
+          arn == "*" ? alltrue([for action in st.Action : startswith(action, "ec2:Describe")]) :
+          can(regex("^arn:aws:[a-z0-9-]+:[a-z0-9-]*:([0-9]{12})?:.+$", arn))
+        ])
+    ]), false)
 
-    error_message = "Supply a nonempty IAM policy with concrete action lists; only EC2 Describe APIs may use global resources; explain scoped future-ID ARN suffixes in the12C review."
+
+    error_message = "Supply nonempty concrete action/resource lists. ARN partition, service, region and account segments cannot contain wildcards; only literal global resources for EC2 Describe APIs are allowed. Review scoped future-ID resource suffixes before activation."
   }
 }
 

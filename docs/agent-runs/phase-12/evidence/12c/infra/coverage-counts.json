@@ -1,0 +1,22 @@
+{
+  "phase12a.tftest.hcl": {
+    "runs": 13,
+    "assertions": 29,
+    "expected_failure_runs": 6
+  },
+  "phase12b.tftest.hcl": {
+    "runs": 18,
+    "assertions": 23,
+    "expected_failure_runs": 10
+  },
+  "phase12c.tftest.hcl": {
+    "runs": 9,
+    "assertions": 10,
+    "expected_failure_runs": 2
+  },
+  "total": {
+    "runs": 40,
+    "assertions": 62,
+    "expected_failure_runs": 18
+  }
+}

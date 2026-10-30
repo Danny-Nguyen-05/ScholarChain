@@ -365,3 +365,16 @@ User start instruction (verbatim): `alright let do phase 12b`
 User acceptance (verbatim): `use all recommendations`
 
 The complete accepted recommendations are retained in `evidence/12b/step-0-answers.md`. Follow the complete user-supplied NEXT PROMPT in `review.md` under Subphase 12A repair round 1, Steps D–G, after its completed review-record and commit-confirmation steps. Base/HEAD `a83f62e9af56058a170075f98c4e027d039567ec`, branch `phase-12`, clean before the first 12B edit. Implement ONLY 12B via infra-engineer; run all required local gates and a post-freeze full JDK 17 check via build-engineer. No reviewer is invoked, no cloud action/spend or commit/push is authorized. Stop with a complete independent reviewer prompt after 12B.
+
+
+## Subphase 12C — authorized 2026-10-30
+
+Source: the complete independently supplied 12C next prompt already preserved in review.md, current external phase12.md copied to evidence/12c/phase12-plan-at-start.md, and user answers in the current conversation. The approved 12B source/repair/review records are committed at 3b0855b9657a72b30e8ac43bd484161a9b886c79.
+
+The coordinator presented all remaining defaults (account/profile/Ohio/AZs/deployment trust, N9/N10/N11/N12/N14/N17, inactive primary plan, manual security plus static checks) and asked for provider downloads, read-only AWS checks and Terraform plan only. User answered verbatim: “All right, let's do it.” No apply, cloud writes, paid model calls or paid Cost Explorer calls were included.
+
+Preflight found four untracked human-owned gates for Phases 08–11. The user answered verbatim: “Leave them untouched and continue 12C (Recommended)”. Their baseline hashes are retained. Do not modify, stage or commit them.
+
+Budget USD200 before credits is shared across all cloud phases including optional9C, 12D, ingestion, experiments, evaluation and retained evidence. Cost Nov15 00:00CST to Nov24 23:00CST (239h) as base and Nov11 00:00CST to Nov24 23:00CST (335h) as upper duration; dates are costing assumptions, not live approval. Follow the updated shared plan for privacy, delayed cost reporting, independently approved cleanup, instructor archival approval and early monitoring. The exact notification email is private; budget bootstrap/activation remains pending and outside12C.
+
+Implement only12C via the assigned infra/test owners, retain red/green evidence, pinned native gates, a real plan outside Git with checksum and sanitized summary, security/cost summaries, and the full JDK17 post-freeze check by build-engineer. Never launch a reviewer or start12D. Detailed inputs and limitations: evidence/12c/step-0-answers.md.

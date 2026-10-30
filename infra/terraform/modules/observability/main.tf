@@ -1,10 +1,13 @@
 locals {
-  services            = toset(["query-api", "graph-service", "semantic-service", "embedding-worker"])
-  task_metrics        = concat([for service in local.services : [for metric in ["DesiredTaskCount", "RunningTaskCount", "PendingTaskCount"] : ["ECS/ContainerInsights", metric, "ClusterName", var.name_prefix, "ServiceName", service]]]...)
-  utilization_metrics = concat([for service in local.services : [for metric in ["CPUUtilization", "MemoryUtilization"] : ["AWS/ECS", metric, "ClusterName", var.name_prefix, "ServiceName", service]]]...)
-  table_metrics       = concat([for name in values(var.table_names) : [for metric in ["ConsumedReadCapacityUnits", "ConsumedWriteCapacityUnits", "ReadThrottleEvents", "WriteThrottleEvents"] : ["AWS/DynamoDB", metric, "TableName", name]]]...)
-  neptune_metrics     = var.neptune_identifier == null ? [] : [for metric in ["CPUUtilization", "ServerlessDatabaseCapacity", "NCUUtilization"] : ["AWS/Neptune", metric, "DBClusterIdentifier", var.neptune_identifier]]
-  emr_metrics         = var.emr_cluster_id == null ? [] : [for metric in ["CoreNodesRunning", "TaskNodesRunning", "CoreNodesPending", "TaskNodesPending", "TotalNodesRequested", "TotalNodesRunning"] : ["AWS/ElasticMapReduce", metric, "JobFlowId", var.emr_cluster_id]]
+  services              = toset(["query-api", "graph-service", "semantic-service", "embedding-worker"])
+  task_metrics          = concat([for service in local.services : [for metric in ["DesiredTaskCount", "RunningTaskCount", "PendingTaskCount"] : ["ECS/ContainerInsights", metric, "ClusterName", var.name_prefix, "ServiceName", service]]]...)
+  utilization_metrics   = concat([for service in local.services : [for metric in ["CPUUtilization", "MemoryUtilization"] : ["AWS/ECS", metric, "ClusterName", var.name_prefix, "ServiceName", service]]]...)
+  table_metrics         = concat([for name in values(var.table_names) : [for metric in ["ConsumedReadCapacityUnits", "ConsumedWriteCapacityUnits", "ReadThrottleEvents", "WriteThrottleEvents"] : ["AWS/DynamoDB", metric, "TableName", name]]]...)
+  conditional_metrics   = [for name in values(var.table_names) : ["AWS/DynamoDB", "ConditionalCheckFailedRequests", "TableName", name]]
+  latency_metrics       = concat([for name in values(var.table_names) : [for operation in ["GetItem", "PutItem", "UpdateItem", "DeleteItem", "Query", "BatchGetItem", "BatchWriteItem"] : ["AWS/DynamoDB", "SuccessfulRequestLatency", "TableName", name, "Operation", operation]]]...)
+  neptune_error_metrics = var.neptune_identifier == null ? [] : [for metric in ["TotalClientErrorsPerSec", "TotalServerErrorsPerSec"] : ["AWS/Neptune", metric, "DBClusterIdentifier", var.neptune_identifier]]
+  neptune_metrics       = var.neptune_identifier == null ? [] : [for metric in ["CPUUtilization", "ServerlessDatabaseCapacity", "NCUUtilization"] : ["AWS/Neptune", metric, "DBClusterIdentifier", var.neptune_identifier]]
+  emr_metrics           = var.emr_cluster_id == null ? [] : [for metric in ["CoreNodesRunning", "TaskNodesRunning", "CoreNodesPending", "TaskNodesPending", "TotalNodesRequested", "TotalNodesRunning"] : ["AWS/ElasticMapReduce", metric, "JobFlowId", var.emr_cluster_id]]
 }
 resource "aws_cloudwatch_log_group" "service" {
   for_each          = local.services
@@ -19,7 +22,7 @@ resource "aws_cloudwatch_log_group" "neptune_audit" {
 }
 resource "aws_cloudwatch_dashboard" "elasticity" {
   dashboard_name = "${var.name_prefix}-elasticity"
-  dashboard_body = jsonencode({ widgets = [
+  dashboard_body = jsonencode({ widgets = concat([
     { type = "text", x = 0, y = 0, width = 24, height = 3, properties = { markdown = "# ScholarChain elasticity\nNative metrics appear after activation. Custom panels and alarms require a verified Phase13/14 publisher; missing data is not zero errors. EMR native metrics have300-second cadence. No LLM dollar cost is inferred from tokens. The custom publisher contract is documented in README.md." } },
     { type = "metric", x = 0, y = 3, width = 12, height = 6, properties = { title = "ECS desired/running/pending tasks", region = var.aws_region, period = 60, stat = "Average", metrics = local.task_metrics } },
     { type = "metric", x = 12, y = 3, width = 12, height = 6, properties = { title = "ECS CPU and memory utilization (%)", region = var.aws_region, period = 60, stat = "Average", metrics = local.utilization_metrics } },
@@ -28,8 +31,6 @@ resource "aws_cloudwatch_dashboard" "elasticity" {
       ["AWS/SQS", "ApproximateNumberOfMessagesVisible", "QueueName", "${var.name_prefix}-embedding-dlq"]
     ] } },
     { type = "metric", x = 12, y = 9, width = 12, height = 6, properties = { title = "Oldest embedding message age (seconds)", region = var.aws_region, period = 60, stat = "Maximum", metrics = [["AWS/SQS", "ApproximateAgeOfOldestMessage", "QueueName", var.queue_name]] } },
-    { type = "metric", x = 0, y = 15, width = 12, height = 6, properties = { title = "EMR running/pending/requested nodes", region = var.aws_region, period = 300, stat = "Average", metrics = local.emr_metrics } },
-    { type = "metric", x = 12, y = 15, width = 12, height = 6, properties = { title = "Neptune capacity and utilization", region = var.aws_region, period = 60, stat = "Average", metrics = local.neptune_metrics } },
     { type = "metric", x = 0, y = 21, width = 24, height = 6, properties = { title = "DynamoDB capacity units and table throttle events", region = var.aws_region, period = 60, stat = "Sum", metrics = local.table_metrics } },
     { type = "metric", x = 0, y = 27, width = 12, height = 6, properties = { title = "API p50/p95/p99 latency (publisher required)", region = var.aws_region, period = 60, metrics = [for p in ["p50", "p95", "p99"] : [var.application_namespace, "RequestLatencySeconds", "Service", "query-api", { stat = p }]] } },
     { type = "metric", x = 12, y = 27, width = 12, height = 6, properties = { title = "Graph/vector/LLM p95 latency (publisher required)", region = var.aws_region, period = 60, metrics = [
@@ -51,7 +52,16 @@ resource "aws_cloudwatch_dashboard" "elasticity" {
       ["AWS/States", "ExecutionsFailed", "StateMachineArn", var.workflow_arn],
       ["AWS/States", "ExecutionsTimedOut", "StateMachineArn", var.workflow_arn]
     ] } }
-  ] })
+    ],
+    var.emr_cluster_id == null ? [] : [{ type = "metric", x = 0, y = 15, width = 12, height = 6, properties = { title = "EMR running/pending/requested nodes", region = var.aws_region, period = 300, stat = "Average", metrics = local.emr_metrics } }],
+    var.neptune_identifier == null ? [] : [{ type = "metric", x = 12, y = 15, width = 12, height = 6, properties = { title = "Neptune capacity and utilization", region = var.aws_region, period = 60, stat = "Average", metrics = local.neptune_metrics } },
+      { type = "metric", x = 0, y = 57, width = 24, height = 6, properties = { title = "Neptune client/server errors per second", region = var.aws_region, period = 60, stat = "Average", metrics = local.neptune_error_metrics } }
+    ],
+    [
+      { type = "metric", x = 0, y = 45, width = 24, height = 6, properties = { title = "DynamoDB conditional write failures", region = var.aws_region, period = 60, stat = "Sum", metrics = local.conditional_metrics } },
+      { type = "metric", x = 0, y = 51, width = 24, height = 6, properties = { title = "DynamoDB successful request latency (milliseconds)", region = var.aws_region, period = 60, stat = "Average", metrics = local.latency_metrics } }
+    ]
+  ) })
 }
 resource "aws_cloudwatch_metric_alarm" "queue_age" {
   alarm_name          = "${var.name_prefix}-embedding-age"

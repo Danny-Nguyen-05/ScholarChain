@@ -1,0 +1,152 @@
+  4. NEXT PROMPT
+
+  You are the ScholarChain Phase 12 coordinator in
+  /Users/danny/Documents/UIC/CS441/ScholarChain, branch phase-12,
+  pre-commit HEAD a83f62e9af56058a170075f98c4e027d039567ec. Subphase 12B
+  (including repair round 1) received an independent APPROVE. Your job: record
+  the review, confirm the user's commit, then begin ONLY Subphase 12C with
+  Step 0 questions. Never launch, invoke or auto-select any reviewer. Never
+  commit or push unless the user explicitly asks again in this session.
+
+  Authority: AGENTS.md, CLAUDE.md, docs/agents.md,
+  .claude/agents/infra-engineer.md, .claude/agents/test-engineer.md,
+  docs/agent-runs/README.md, and
+  /Users/danny/Library/CloudStorage/GoogleDrive-cpnguyen0630@gmail.com/My Drive/plan/phase12.md
+  (Sections 2–7, especially 7.3 and 7.4; Subphase 12C in Section 8;
+  Sections 9–10). Course Phase 12 plus Security, Observability and Cost
+  sections:
+  https://github.com/0x1DOCD00D/ScholarChain/blob/main/README.md#phase-12-create-the-aws-infrastructure-in-terraform
+
+  Step A — Record (coordinator only):
+  - Append the complete user-supplied recheck review that accompanied this
+    prompt, verbatim with Markdown emphasis intact, to
+    docs/agent-runs/phase-12/review.md under "Subphase 12B repair round 1",
+    marked "user-supplied external review".
+  - Append to docs/agent-runs/phase-12/repairs.md under "Subphase 12B repair
+    round 1 — independent recheck": B3 ACCEPTED (closed); new N17 PLAUSIBLE
+    Low (B3 aws:SourceArn is the exact bucket ARN, while the AWS example uses
+    bucket/* covering index ARNs; candidate 12C change to
+    [bucket ARN, bucket ARN + "/index/*"] or live verification in the
+    Phase 14 smoke test); N18 Info (read-only terraform version during gate;
+    no impact). Carried nonblocking: N9 EMR service-role KMS for EBS
+    (before EMR activation), N10 EMR policy wildcard-ARN guard, N11 PLAUSIBLE
+    empty dashboard metric arrays, N12 native Neptune/DynamoDB panels,
+    N13 HTTPS test scope, N14 workflow IsPresent, N15 internal-HTTP
+    disclosure, N16 loader/writer identities deferred to Phase 13.
+    N1/N2/N5 resolved as answered; N3/N4/N6 optional; N7 procedural;
+    N8 addressed without instructor approval; B1/B2/R1 preserved;
+    R2 requires the 12C real plan; R3 no action.
+  - Do not edit any human-owned file (human-gate.md, commit.txt, approvals).
+
+  Step B — Commit confirmation. Ask the user whether they have committed the
+  approved 12B source, the repair round 1 changes, and all 12B/repair
+  evidence and review records on phase-12, and ask for the commit SHA. If not
+  committed, STOP and wait. Never commit yourself. When confirmed, record
+  git status --short, branch and HEAD as the 12C base SHA. If uncommitted
+  changes remain, ask before proceeding.
+
+  Step C — Subphase 12C Step 0 questions (ask all at once, each with a
+  recommended default; WAIT for answers before any edit or account call):
+   1. 12-1: actual AWS account ID, named CLI profile (name only; never read
+      credential files or environment values), region, and two AZs. Region
+      must support Neptune Serverless, S3 Vectors, Bedrock Titan V2
+      embeddings and EMR. No default; required before any plan.
+   2. Explicit written authorization for READ-ONLY planning: terraform init
+      (provider download) and terraform plan only, against the course
+      environment, with the plan file saved outside git. State that no
+      apply/destroy/import, AWS write call, credential lookup or paid model
+      call is authorized. Without this authorization, stop after Step 0.
+   3. 12-2: total budget ceiling (USD) and expected stack lifetime.
+      Recommended assumption: 7–10 days up, EMR only inside experiment
+      windows, destroy after the demo recording. Ask whether
+      enable_budget_resource should be true, with real subscriber email(s)
+      or SNS topic ARN (never invented).
+   4. Deployment trusted principal ARN for the deployment role (exact ARN
+      supplied by the user).
+   5. Plan shape: which activation flags the 12C plan should exercise.
+      Recommended: plan the default course configuration (Neptune, EMR and
+      runtime disabled) as the primary plan. Optionally, a second plan with
+      neptune_enabled=true and an explicit engine version and matching
+      family, if the user selects one and regional availability is checked
+      from documentation. Runtime and EMR stay disabled; their prerequisites
+      remain Phase 13/14 and 12D.
+   6. 12-8 security scanner: which is installed (trivy config / checkov /
+      none)? Recommended: if none, a documented manual IAM/encryption
+      checklist plus validate, with the disclosure.
+   7. Whether to fold the nonblocking items into 12C before planning
+      (infra-engineer, infra/terraform/** only, with red/green tests):
+      N17 SourceArn breadth (recommended: yes), N11 empty metric widgets
+      (recommended: yes, omit widgets when the source is null), N9 EMR
+      service-role KMS (recommended: yes, even while disabled), N12 native
+      Neptune error and DynamoDB ConditionalCheckFailedRequests/
+      SuccessfulRequestLatency panels (recommended: yes), N10 wildcard-ARN
+      guard tightening (recommended: yes), N14 (optional). N15 and N16 are
+      disclosures only. The user chooses; do not add other scope.
+   8. Optional test-engineer static checks under tests/** (no wildcard IAM
+      Allow, no public bucket ACL or policy, no secret-looking strings).
+      Recommended: yes, small and text-based, no AWS calls.
+   9. Plan hygiene (Section 7.4): confirm the plan file and plan JSON stay
+      outside git; only the summary, counts and SHA-256 checksum are
+      committed. Confirm local state stays ignored and out of evidence.
+  10. 12D: remind the user that 12D needs its own written approval record
+      (dollar cap, region, instance types, max runtime in hours, teardown).
+      Do not start or prepare 12D.
+  Also say whether you have any additional questions of your own.
+
+  Step D — After answers and authorization, execute ONLY 12C per the plan:
+  - infra-engineer: apply only the user-selected Step 0 repairs (if any),
+    with red/green evidence; then init, fmt -check, validate, test; then
+    terraform plan (never apply) with the approved profile and region,
+    -out to a path outside git; record the plan file's SHA-256 checksum.
+  - Produce the Section 7.3 plan summary: add/change/destroy counts;
+    resources by module; high-cost resources with hourly and
+    total-for-duration estimates against the stated budget (cite pricing
+    sources and dates); any stateful replacement (R2: confirm no route
+    replacements); every IAM role and policy (including the B3/N17
+    statement and the B1 no-DynamoDB EMR policy); required human actions
+    before Phase 14; tool versions.
+  - Short security self-review against the course Security requirements,
+    disclosing N15, N16 and any open N-items.
+  - Run the selected scanner or the manual checklist; retain the output.
+  - test-engineer (if approved): static checks under tests/** only.
+  - Return BLOCKED-ON user for any unexplained destroy or stateful
+    replacement; never work around it.
+  - Do not apply. State the human actions required before Phase 14.
+
+  Step E — Gates (exact commands, cwd, exit codes, counts, log SHA-256 under
+  docs/agent-runs/phase-12/evidence/12c/; raw logs as .log.txt):
+  - Terraform 1.13.5 / AWS 6.44.0 pins unchanged (verify toolchain checksum
+Step E — Gates (exact commands, cwd, exit codes, counts, log SHA-256 under
+docs/agent-runs/phase-12/evidence/12c/; raw logs as .log.txt):
+- Terraform 1.13.5 / AWS 6.44.0 pins unchanged (verify toolchain checksum
+  if reinstalled); fmt -check, validate, test counts; plan exit code and
+  checksum. Never paste raw plan JSON with account-sensitive values beyond
+  what the user approves.
+- git diff --check; final SHA-256/bytes/mtime freeze of all Git-visible
+  infra/terraform and any tests/** files.
+- AFTER the final freeze, build-engineer runs the full JDK 17 gate:
+  cd /Users/danny/Documents/UIC/CS441/ScholarChain
+  export JAVA_HOME=/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home
+  export PATH="$JAVA_HOME/bin:$PATH"
+  export SBT_OPTS="-Dlogback.configurationFile=$PWD/docs/agent-runs/phase-04/xml-repair-logback.xml"
+  java -version
+  sbt -batch check
+  Report exit, tests, fresh XML count, failures/errors/skips, wall time,
+  compressed log plus raw SHA-256, and unchanged sources across the gate.
+  checkProbeInjectFailure is the expected self-test.
+
+Step F — Reports: append "Subphase 12C" sections to owner-report.md and
+test-report.md using exactly the 14 fields from docs/agent-runs/README.md.
+Preserve gates: nothing applied; Neptune/EMR/runtime activation and live
+composition, CloudWatch metrics publisher, EMR runtime (12D), cost fit and
+the human plan sign-off all remain open.
+
+Step G — Handoff and stop. Make sure no subagents, builds or jobs remain.
+Return the handoff packet (status, base SHA/branch/HEAD, changed and
+untracked files, exact commands/exits/counts, plan checksum, evidence
+paths, Step 0 answers, limitations, manual actions) and a COMPLETE
+independent read-only 12C reviewer prompt in one fenced block with every
+placeholder filled. Save it as
+docs/agent-runs/phase-12/reviewer-prompt-12c.md. End with:
+"Subphase 12C is ready for review. I have stopped and will not start the next subphase until I receive the next prompt."
+Tip: Use /btw to ask a quick side question without interrupting Claude's current work

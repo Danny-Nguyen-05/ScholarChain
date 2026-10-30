@@ -1,0 +1,279 @@
+[
+  {
+    "name": "development-self-test",
+    "argv": [
+      "python3",
+      "-I",
+      "/Users/danny/Documents/UIC/CS441/ScholarChain/tests/infra/terraform_source_guard.py",
+      "--self-test"
+    ],
+    "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+    "start_utc": "2026-10-30T17:36:19.160538+00:00",
+    "end_utc": "2026-10-30T17:36:19.199314+00:00",
+    "wall_seconds": 0.039,
+    "exit_code": 0,
+    "expected_exit": 0,
+    "log": "/tmp/scholarchain-phase12c-test/development-self-test.log.txt",
+    "bytes": 636,
+    "sha256": "c40a6ed13297b5c4e9856ae01d570b73a4249910d9c71af2214c54001b44581d"
+  },
+  {
+    "name": "development-source-scan",
+    "argv": [
+      "python3",
+      "-I",
+      "/Users/danny/Documents/UIC/CS441/ScholarChain/tests/infra/terraform_source_guard.py",
+      "--repo-root",
+      "/Users/danny/Documents/UIC/CS441/ScholarChain"
+    ],
+    "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+    "start_utc": "2026-10-30T17:36:19.199470+00:00",
+    "end_utc": "2026-10-30T17:36:19.254278+00:00",
+    "wall_seconds": 0.055,
+    "exit_code": 0,
+    "expected_exit": 0,
+    "log": "/tmp/scholarchain-phase12c-test/development-source-scan.log.txt",
+    "bytes": 70,
+    "sha256": "97a739d5383c7b1cc0fe728de3e85915247b305b69aa34157fd05aecebdfd4ea"
+  },
+  {
+    "name": "wildcard-git-init",
+    "argv": [
+      "git",
+      "init",
+      "-q",
+      "/tmp/scholarchain-phase12c-test/negative-wildcard"
+    ],
+    "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+    "start_utc": "2026-10-30T17:36:19.254525+00:00",
+    "end_utc": "2026-10-30T17:36:19.265280+00:00",
+    "wall_seconds": 0.011,
+    "exit_code": 0,
+    "expected_exit": 0,
+    "log": "/tmp/scholarchain-phase12c-test/wildcard-git-init.log.txt",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "wildcard-negative",
+    "argv": [
+      "python3",
+      "-I",
+      "/Users/danny/Documents/UIC/CS441/ScholarChain/tests/infra/terraform_source_guard.py",
+      "--repo-root",
+      "/tmp/scholarchain-phase12c-test/negative-wildcard"
+    ],
+    "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+    "start_utc": "2026-10-30T17:36:19.265457+00:00",
+    "end_utc": "2026-10-30T17:36:19.302134+00:00",
+    "wall_seconds": 0.037,
+    "exit_code": 1,
+    "expected_exit": 1,
+    "log": "/tmp/scholarchain-phase12c-test/wildcard-negative.log.txt",
+    "bytes": 184,
+    "sha256": "6b928e687e75bc54c9cf3b054015f498ccd0598430a03525a85d9cf759d0040e"
+  },
+  {
+    "name": "public-acl-git-init",
+    "argv": [
+      "git",
+      "init",
+      "-q",
+      "/tmp/scholarchain-phase12c-test/negative-public-acl"
+    ],
+    "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+    "start_utc": "2026-10-30T17:36:19.302415+00:00",
+    "end_utc": "2026-10-30T17:36:19.309238+00:00",
+    "wall_seconds": 0.007,
+    "exit_code": 0,
+    "expected_exit": 0,
+    "log": "/tmp/scholarchain-phase12c-test/public-acl-git-init.log.txt",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "public-acl-negative",
+    "argv": [
+      "python3",
+      "-I",
+      "/Users/danny/Documents/UIC/CS441/ScholarChain/tests/infra/terraform_source_guard.py",
+      "--repo-root",
+      "/tmp/scholarchain-phase12c-test/negative-public-acl"
+    ],
+    "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+    "start_utc": "2026-10-30T17:36:19.309470+00:00",
+    "end_utc": "2026-10-30T17:36:19.345849+00:00",
+    "wall_seconds": 0.036,
+    "exit_code": 1,
+    "expected_exit": 1,
+    "log": "/tmp/scholarchain-phase12c-test/public-acl-negative.log.txt",
+    "bytes": 182,
+    "sha256": "a16ca8f2897673c6dad6a1b2665d18d5f8145b143966c02146e31772c428b806"
+  },
+  {
+    "name": "secret-shaped-git-init",
+    "argv": [
+      "git",
+      "init",
+      "-q",
+      "/tmp/scholarchain-phase12c-test/negative-secret-shaped"
+    ],
+    "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+    "start_utc": "2026-10-30T17:36:19.346109+00:00",
+    "end_utc": "2026-10-30T17:36:19.352837+00:00",
+    "wall_seconds": 0.007,
+    "exit_code": 0,
+    "expected_exit": 0,
+    "log": "/tmp/scholarchain-phase12c-test/secret-shaped-git-init.log.txt",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "secret-shaped-negative",
+    "argv": [
+      "python3",
+      "-I",
+      "/Users/danny/Documents/UIC/CS441/ScholarChain/tests/infra/terraform_source_guard.py",
+      "--repo-root",
+      "/tmp/scholarchain-phase12c-test/negative-secret-shaped"
+    ],
+    "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+    "start_utc": "2026-10-30T17:36:19.353126+00:00",
+    "end_utc": "2026-10-30T17:36:19.388974+00:00",
+    "wall_seconds": 0.036,
+    "exit_code": 1,
+    "expected_exit": 1,
+    "log": "/tmp/scholarchain-phase12c-test/secret-shaped-negative.log.txt",
+    "bytes": 304,
+    "sha256": "c7310404a2c7900368e7709ba99281f57033ca5ef49dd932f937bc28a6805677"
+  },
+  {
+    "name": "wrapper-verification",
+    "argv": [
+      "/bin/zsh",
+      "-c",
+      "set -e\nexport JAVA_HOME=/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home\nexport PATH=\"$JAVA_HOME/bin:$PATH\"\nexport SBT_OPTS=\"-Dlogback.configurationFile=$PWD/docs/agent-runs/phase-04/xml-repair-logback.xml\"\njava -version\nsbt -batch \"independentTests/Test/scalafmt\" \"independentTests/testOnly edu.uic.cs441.scholarchain.independent.IndependentTerraformSourceSpec\""
+    ],
+    "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+    "start_utc": "2026-10-30T17:36:44.483402+00:00",
+    "end_utc": "2026-10-30T17:36:50.333490+00:00",
+    "wall_seconds": 5.85,
+    "exit_code": 0,
+    "log": "/tmp/scholarchain-phase12c-test/wrapper-verification.log.txt",
+    "bytes": 1349,
+    "sha256": "607849ed2124d8faf2664ac5e1b7045499377065f122b65d6d1d8357a4e5d3db"
+  },
+  {
+    "name": "final-self-test",
+    "argv": [
+      "python3",
+      "-I",
+      "/Users/danny/Documents/UIC/CS441/ScholarChain/tests/infra/terraform_source_guard.py",
+      "--self-test"
+    ],
+    "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+    "start_utc": "2026-10-30T17:38:32.206028+00:00",
+    "end_utc": "2026-10-30T17:38:32.243431+00:00",
+    "wall_seconds": 0.037,
+    "exit_code": 0,
+    "expected_exit": 0,
+    "log": "/tmp/scholarchain-phase12c-test/final-self-test.log.txt",
+    "bytes": 636,
+    "sha256": "c40a6ed13297b5c4e9856ae01d570b73a4249910d9c71af2214c54001b44581d"
+  },
+  {
+    "name": "final-source-scan",
+    "argv": [
+      "python3",
+      "-I",
+      "/Users/danny/Documents/UIC/CS441/ScholarChain/tests/infra/terraform_source_guard.py",
+      "--repo-root",
+      "/Users/danny/Documents/UIC/CS441/ScholarChain"
+    ],
+    "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+    "start_utc": "2026-10-30T17:38:32.243632+00:00",
+    "end_utc": "2026-10-30T17:38:32.295719+00:00",
+    "wall_seconds": 0.052,
+    "exit_code": 0,
+    "expected_exit": 0,
+    "log": "/tmp/scholarchain-phase12c-test/final-source-scan.log.txt",
+    "bytes": 70,
+    "sha256": "97a739d5383c7b1cc0fe728de3e85915247b305b69aa34157fd05aecebdfd4ea"
+  },
+  {
+    "name": "wildcard-final-negative",
+    "argv": [
+      "python3",
+      "-I",
+      "/Users/danny/Documents/UIC/CS441/ScholarChain/tests/infra/terraform_source_guard.py",
+      "--repo-root",
+      "/tmp/scholarchain-phase12c-test/negative-wildcard"
+    ],
+    "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+    "start_utc": "2026-10-30T17:38:32.295939+00:00",
+    "end_utc": "2026-10-30T17:38:32.332877+00:00",
+    "wall_seconds": 0.037,
+    "exit_code": 1,
+    "expected_exit": 1,
+    "log": "/tmp/scholarchain-phase12c-test/wildcard-final-negative.log.txt",
+    "bytes": 184,
+    "sha256": "6b928e687e75bc54c9cf3b054015f498ccd0598430a03525a85d9cf759d0040e"
+  },
+  {
+    "name": "public-acl-final-negative",
+    "argv": [
+      "python3",
+      "-I",
+      "/Users/danny/Documents/UIC/CS441/ScholarChain/tests/infra/terraform_source_guard.py",
+      "--repo-root",
+      "/tmp/scholarchain-phase12c-test/negative-public-acl"
+    ],
+    "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+    "start_utc": "2026-10-30T17:38:32.333075+00:00",
+    "end_utc": "2026-10-30T17:38:32.369025+00:00",
+    "wall_seconds": 0.036,
+    "exit_code": 1,
+    "expected_exit": 1,
+    "log": "/tmp/scholarchain-phase12c-test/public-acl-final-negative.log.txt",
+    "bytes": 182,
+    "sha256": "a16ca8f2897673c6dad6a1b2665d18d5f8145b143966c02146e31772c428b806"
+  },
+  {
+    "name": "secret-shaped-final-negative",
+    "argv": [
+      "python3",
+      "-I",
+      "/Users/danny/Documents/UIC/CS441/ScholarChain/tests/infra/terraform_source_guard.py",
+      "--repo-root",
+      "/tmp/scholarchain-phase12c-test/negative-secret-shaped"
+    ],
+    "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+    "start_utc": "2026-10-30T17:38:32.369209+00:00",
+    "end_utc": "2026-10-30T17:38:32.404831+00:00",
+    "wall_seconds": 0.036,
+    "exit_code": 1,
+    "expected_exit": 1,
+    "log": "/tmp/scholarchain-phase12c-test/secret-shaped-final-negative.log.txt",
+    "bytes": 304,
+    "sha256": "c7310404a2c7900368e7709ba99281f57033ca5ef49dd932f937bc28a6805677"
+  },
+  {
+    "name": "tests-diff-check",
+    "argv": [
+      "git",
+      "diff",
+      "--check",
+      "--",
+      "tests"
+    ],
+    "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+    "start_utc": "2026-10-30T17:38:32.411118+00:00",
+    "end_utc": "2026-10-30T17:38:32.414970+00:00",
+    "wall_seconds": 0.004,
+    "exit_code": 0,
+    "expected_exit": 0,
+    "log": "/tmp/scholarchain-phase12c-test/tests-diff-check.log.txt",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+]

@@ -1,0 +1,5 @@
+{
+  "scope": "literal-source-only",
+  "files": 62,
+  "findings": []
+}

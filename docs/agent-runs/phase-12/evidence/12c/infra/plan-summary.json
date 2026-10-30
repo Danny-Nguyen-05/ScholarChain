@@ -1,0 +1,1784 @@
+{
+  "created_utc": "2026-10-30T17:36:25.186525+00:00",
+  "terraform_version": "1.13.5",
+  "plan_file": "/tmp/scholarchain-phase12c-infra/course.tfplan",
+  "plan_sha256": "1e0eb776c6bebe0aea4a0d7070dbc2328953d7cc001e921b9ac674eb8b6bbd34",
+  "plan_bytes": 68686,
+  "plan_exit_code": 2,
+  "managed_resource_actions": {
+    "create": 171
+  },
+  "resources_by_module": {
+    "module.datalake": 49,
+    "module.dynamodb": 6,
+    "module.identity": 25,
+    "module.messaging": 5,
+    "module.network": 58,
+    "module.observability": 10,
+    "module.runtime": 6,
+    "module.s3vectors": 7,
+    "module.workflow": 3,
+    "root": 2
+  },
+  "resource_addresses": [
+    {
+      "address": "terraform_data.configuration_guard",
+      "type": "terraform_data",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "terraform_data.phase12b_guard",
+      "type": "terraform_data",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.datalake.aws_s3_bucket.zone[\"artifacts\"]",
+      "type": "aws_s3_bucket",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.datalake.aws_s3_bucket.zone[\"curated\"]",
+      "type": "aws_s3_bucket",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.datalake.aws_s3_bucket.zone[\"graph\"]",
+      "type": "aws_s3_bucket",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.datalake.aws_s3_bucket.zone[\"logs\"]",
+      "type": "aws_s3_bucket",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.datalake.aws_s3_bucket.zone[\"rag\"]",
+      "type": "aws_s3_bucket",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.datalake.aws_s3_bucket.zone[\"raw\"]",
+      "type": "aws_s3_bucket",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.datalake.aws_s3_bucket.zone[\"reports\"]",
+      "type": "aws_s3_bucket",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.datalake.aws_s3_bucket_lifecycle_configuration.zone[\"artifacts\"]",
+      "type": "aws_s3_bucket_lifecycle_configuration",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.datalake.aws_s3_bucket_lifecycle_configuration.zone[\"curated\"]",
+      "type": "aws_s3_bucket_lifecycle_configuration",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.datalake.aws_s3_bucket_lifecycle_configuration.zone[\"graph\"]",
+      "type": "aws_s3_bucket_lifecycle_configuration",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.datalake.aws_s3_bucket_lifecycle_configuration.zone[\"logs\"]",
+      "type": "aws_s3_bucket_lifecycle_configuration",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.datalake.aws_s3_bucket_lifecycle_configuration.zone[\"rag\"]",
+      "type": "aws_s3_bucket_lifecycle_configuration",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.datalake.aws_s3_bucket_lifecycle_configuration.zone[\"raw\"]",
+      "type": "aws_s3_bucket_lifecycle_configuration",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.datalake.aws_s3_bucket_lifecycle_configuration.zone[\"reports\"]",
+      "type": "aws_s3_bucket_lifecycle_configuration",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.datalake.aws_s3_bucket_ownership_controls.zone[\"artifacts\"]",
+      "type": "aws_s3_bucket_ownership_controls",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.datalake.aws_s3_bucket_ownership_controls.zone[\"curated\"]",
+      "type": "aws_s3_bucket_ownership_controls",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.datalake.aws_s3_bucket_ownership_controls.zone[\"graph\"]",
+      "type": "aws_s3_bucket_ownership_controls",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.datalake.aws_s3_bucket_ownership_controls.zone[\"logs\"]",
+      "type": "aws_s3_bucket_ownership_controls",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.datalake.aws_s3_bucket_ownership_controls.zone[\"rag\"]",
+      "type": "aws_s3_bucket_ownership_controls",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.datalake.aws_s3_bucket_ownership_controls.zone[\"raw\"]",
+      "type": "aws_s3_bucket_ownership_controls",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.datalake.aws_s3_bucket_ownership_controls.zone[\"reports\"]",
+      "type": "aws_s3_bucket_ownership_controls",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.datalake.aws_s3_bucket_policy.tls[\"artifacts\"]",
+      "type": "aws_s3_bucket_policy",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.datalake.aws_s3_bucket_policy.tls[\"curated\"]",
+      "type": "aws_s3_bucket_policy",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.datalake.aws_s3_bucket_policy.tls[\"graph\"]",
+      "type": "aws_s3_bucket_policy",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.datalake.aws_s3_bucket_policy.tls[\"logs\"]",
+      "type": "aws_s3_bucket_policy",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.datalake.aws_s3_bucket_policy.tls[\"rag\"]",
+      "type": "aws_s3_bucket_policy",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.datalake.aws_s3_bucket_policy.tls[\"raw\"]",
+      "type": "aws_s3_bucket_policy",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.datalake.aws_s3_bucket_policy.tls[\"reports\"]",
+      "type": "aws_s3_bucket_policy",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.datalake.aws_s3_bucket_public_access_block.zone[\"artifacts\"]",
+      "type": "aws_s3_bucket_public_access_block",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.datalake.aws_s3_bucket_public_access_block.zone[\"curated\"]",
+      "type": "aws_s3_bucket_public_access_block",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.datalake.aws_s3_bucket_public_access_block.zone[\"graph\"]",
+      "type": "aws_s3_bucket_public_access_block",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.datalake.aws_s3_bucket_public_access_block.zone[\"logs\"]",
+      "type": "aws_s3_bucket_public_access_block",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.datalake.aws_s3_bucket_public_access_block.zone[\"rag\"]",
+      "type": "aws_s3_bucket_public_access_block",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.datalake.aws_s3_bucket_public_access_block.zone[\"raw\"]",
+      "type": "aws_s3_bucket_public_access_block",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.datalake.aws_s3_bucket_public_access_block.zone[\"reports\"]",
+      "type": "aws_s3_bucket_public_access_block",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.datalake.aws_s3_bucket_server_side_encryption_configuration.zone[\"artifacts\"]",
+      "type": "aws_s3_bucket_server_side_encryption_configuration",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.datalake.aws_s3_bucket_server_side_encryption_configuration.zone[\"curated\"]",
+      "type": "aws_s3_bucket_server_side_encryption_configuration",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.datalake.aws_s3_bucket_server_side_encryption_configuration.zone[\"graph\"]",
+      "type": "aws_s3_bucket_server_side_encryption_configuration",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.datalake.aws_s3_bucket_server_side_encryption_configuration.zone[\"logs\"]",
+      "type": "aws_s3_bucket_server_side_encryption_configuration",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.datalake.aws_s3_bucket_server_side_encryption_configuration.zone[\"rag\"]",
+      "type": "aws_s3_bucket_server_side_encryption_configuration",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.datalake.aws_s3_bucket_server_side_encryption_configuration.zone[\"raw\"]",
+      "type": "aws_s3_bucket_server_side_encryption_configuration",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.datalake.aws_s3_bucket_server_side_encryption_configuration.zone[\"reports\"]",
+      "type": "aws_s3_bucket_server_side_encryption_configuration",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.datalake.aws_s3_bucket_versioning.zone[\"artifacts\"]",
+      "type": "aws_s3_bucket_versioning",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.datalake.aws_s3_bucket_versioning.zone[\"curated\"]",
+      "type": "aws_s3_bucket_versioning",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.datalake.aws_s3_bucket_versioning.zone[\"graph\"]",
+      "type": "aws_s3_bucket_versioning",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.datalake.aws_s3_bucket_versioning.zone[\"logs\"]",
+      "type": "aws_s3_bucket_versioning",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.datalake.aws_s3_bucket_versioning.zone[\"rag\"]",
+      "type": "aws_s3_bucket_versioning",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.datalake.aws_s3_bucket_versioning.zone[\"raw\"]",
+      "type": "aws_s3_bucket_versioning",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.datalake.aws_s3_bucket_versioning.zone[\"reports\"]",
+      "type": "aws_s3_bucket_versioning",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.dynamodb.aws_dynamodb_table.table[\"ArtifactRegistry\"]",
+      "type": "aws_dynamodb_table",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.dynamodb.aws_dynamodb_table.table[\"EntityLinkCache\"]",
+      "type": "aws_dynamodb_table",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.dynamodb.aws_dynamodb_table.table[\"EvidenceBundle\"]",
+      "type": "aws_dynamodb_table",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.dynamodb.aws_dynamodb_table.table[\"QuerySession\"]",
+      "type": "aws_dynamodb_table",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.dynamodb.aws_dynamodb_table.table[\"ResearcherMetricCache\"]",
+      "type": "aws_dynamodb_table",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.dynamodb.aws_dynamodb_table.table[\"RunLedger\"]",
+      "type": "aws_dynamodb_table",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.identity.aws_iam_instance_profile.emr",
+      "type": "aws_iam_instance_profile",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.identity.aws_iam_role.deployment",
+      "type": "aws_iam_role",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.identity.aws_iam_role.emr_ec2",
+      "type": "aws_iam_role",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.identity.aws_iam_role.emr_service",
+      "type": "aws_iam_role",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.identity.aws_iam_role.execution[\"embedding-worker\"]",
+      "type": "aws_iam_role",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.identity.aws_iam_role.execution[\"graph-service\"]",
+      "type": "aws_iam_role",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.identity.aws_iam_role.execution[\"query-api\"]",
+      "type": "aws_iam_role",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.identity.aws_iam_role.execution[\"semantic-service\"]",
+      "type": "aws_iam_role",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.identity.aws_iam_role.neptune_loader",
+      "type": "aws_iam_role",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.identity.aws_iam_role.task[\"embedding-worker\"]",
+      "type": "aws_iam_role",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.identity.aws_iam_role.task[\"graph-service\"]",
+      "type": "aws_iam_role",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.identity.aws_iam_role.task[\"query-api\"]",
+      "type": "aws_iam_role",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.identity.aws_iam_role.task[\"semantic-service\"]",
+      "type": "aws_iam_role",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.identity.aws_iam_role_policy.emr_data",
+      "type": "aws_iam_role_policy",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.identity.aws_iam_role_policy.execution[\"embedding-worker\"]",
+      "type": "aws_iam_role_policy",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.identity.aws_iam_role_policy.execution[\"graph-service\"]",
+      "type": "aws_iam_role_policy",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.identity.aws_iam_role_policy.execution[\"query-api\"]",
+      "type": "aws_iam_role_policy",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.identity.aws_iam_role_policy.execution[\"semantic-service\"]",
+      "type": "aws_iam_role_policy",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.identity.aws_iam_role_policy.neptune_loader",
+      "type": "aws_iam_role_policy",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.identity.aws_iam_role_policy.task[\"embedding-worker\"]",
+      "type": "aws_iam_role_policy",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.identity.aws_iam_role_policy.task[\"graph-service\"]",
+      "type": "aws_iam_role_policy",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.identity.aws_iam_role_policy.task[\"query-api\"]",
+      "type": "aws_iam_role_policy",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.identity.aws_iam_role_policy.task[\"semantic-service\"]",
+      "type": "aws_iam_role_policy",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.identity.aws_kms_alias.data",
+      "type": "aws_kms_alias",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.identity.aws_kms_key.data",
+      "type": "aws_kms_key",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.messaging.aws_sqs_queue.dead_letter",
+      "type": "aws_sqs_queue",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.messaging.aws_sqs_queue.embedding",
+      "type": "aws_sqs_queue",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.messaging.aws_sqs_queue_policy.tls[\"dead_letter\"]",
+      "type": "aws_sqs_queue_policy",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.messaging.aws_sqs_queue_policy.tls[\"embedding\"]",
+      "type": "aws_sqs_queue_policy",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.messaging.aws_sqs_queue_redrive_allow_policy.dead_letter",
+      "type": "aws_sqs_queue_redrive_allow_policy",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.network.aws_default_security_group.closed",
+      "type": "aws_default_security_group",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.network.aws_eip.nat",
+      "type": "aws_eip",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.network.aws_internet_gateway.course",
+      "type": "aws_internet_gateway",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.network.aws_nat_gateway.course",
+      "type": "aws_nat_gateway",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.network.aws_route.default[\"application\"]",
+      "type": "aws_route",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.network.aws_route.default[\"public\"]",
+      "type": "aws_route",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.network.aws_route_table.application",
+      "type": "aws_route_table",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.network.aws_route_table.data",
+      "type": "aws_route_table",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.network.aws_route_table.public",
+      "type": "aws_route_table",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.network.aws_route_table_association.application[\"0\"]",
+      "type": "aws_route_table_association",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.network.aws_route_table_association.application[\"1\"]",
+      "type": "aws_route_table_association",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.network.aws_route_table_association.data[\"0\"]",
+      "type": "aws_route_table_association",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.network.aws_route_table_association.data[\"1\"]",
+      "type": "aws_route_table_association",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.network.aws_route_table_association.public[\"0\"]",
+      "type": "aws_route_table_association",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.network.aws_route_table_association.public[\"1\"]",
+      "type": "aws_route_table_association",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.network.aws_security_group.emr_service_access",
+      "type": "aws_security_group",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.network.aws_security_group.role[\"alb\"]",
+      "type": "aws_security_group",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.network.aws_security_group.role[\"embedding-worker\"]",
+      "type": "aws_security_group",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.network.aws_security_group.role[\"emr\"]",
+      "type": "aws_security_group",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.network.aws_security_group.role[\"endpoints\"]",
+      "type": "aws_security_group",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.network.aws_security_group.role[\"graph-service\"]",
+      "type": "aws_security_group",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.network.aws_security_group.role[\"neptune\"]",
+      "type": "aws_security_group",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.network.aws_security_group.role[\"query-api\"]",
+      "type": "aws_security_group",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.network.aws_security_group.role[\"semantic-service\"]",
+      "type": "aws_security_group",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.network.aws_subnet.application[\"0\"]",
+      "type": "aws_subnet",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.network.aws_subnet.application[\"1\"]",
+      "type": "aws_subnet",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.network.aws_subnet.data[\"0\"]",
+      "type": "aws_subnet",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.network.aws_subnet.data[\"1\"]",
+      "type": "aws_subnet",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.network.aws_subnet.public[\"0\"]",
+      "type": "aws_subnet",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.network.aws_subnet.public[\"1\"]",
+      "type": "aws_subnet",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.network.aws_vpc.course",
+      "type": "aws_vpc",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.network.aws_vpc_endpoint.gateway[\"dynamodb\"]",
+      "type": "aws_vpc_endpoint",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.network.aws_vpc_endpoint.gateway[\"s3\"]",
+      "type": "aws_vpc_endpoint",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.network.aws_vpc_security_group_egress_rule.dependency[\"alb_query\"]",
+      "type": "aws_vpc_security_group_egress_rule",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.network.aws_vpc_security_group_egress_rule.dependency[\"graph_neptune\"]",
+      "type": "aws_vpc_security_group_egress_rule",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.network.aws_vpc_security_group_egress_rule.dependency[\"query_graph\"]",
+      "type": "aws_vpc_security_group_egress_rule",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.network.aws_vpc_security_group_egress_rule.dependency[\"query_semantic\"]",
+      "type": "aws_vpc_security_group_egress_rule",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.network.aws_vpc_security_group_egress_rule.emr_nodes_to_service",
+      "type": "aws_vpc_security_group_egress_rule",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.network.aws_vpc_security_group_egress_rule.emr_self",
+      "type": "aws_vpc_security_group_egress_rule",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.network.aws_vpc_security_group_egress_rule.emr_service_to_nodes",
+      "type": "aws_vpc_security_group_egress_rule",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.network.aws_vpc_security_group_egress_rule.https[\"embedding-worker\"]",
+      "type": "aws_vpc_security_group_egress_rule",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.network.aws_vpc_security_group_egress_rule.https[\"emr\"]",
+      "type": "aws_vpc_security_group_egress_rule",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.network.aws_vpc_security_group_egress_rule.https[\"graph-service\"]",
+      "type": "aws_vpc_security_group_egress_rule",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.network.aws_vpc_security_group_egress_rule.https[\"query-api\"]",
+      "type": "aws_vpc_security_group_egress_rule",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.network.aws_vpc_security_group_egress_rule.https[\"semantic-service\"]",
+      "type": "aws_vpc_security_group_egress_rule",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.network.aws_vpc_security_group_egress_rule.neptune_s3",
+      "type": "aws_vpc_security_group_egress_rule",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.network.aws_vpc_security_group_ingress_rule.dependency[\"alb_query\"]",
+      "type": "aws_vpc_security_group_ingress_rule",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.network.aws_vpc_security_group_ingress_rule.dependency[\"graph_neptune\"]",
+      "type": "aws_vpc_security_group_ingress_rule",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.network.aws_vpc_security_group_ingress_rule.dependency[\"query_graph\"]",
+      "type": "aws_vpc_security_group_ingress_rule",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.network.aws_vpc_security_group_ingress_rule.dependency[\"query_semantic\"]",
+      "type": "aws_vpc_security_group_ingress_rule",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.network.aws_vpc_security_group_ingress_rule.emr_nodes_to_service",
+      "type": "aws_vpc_security_group_ingress_rule",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.network.aws_vpc_security_group_ingress_rule.emr_self",
+      "type": "aws_vpc_security_group_ingress_rule",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.network.aws_vpc_security_group_ingress_rule.emr_service_to_nodes",
+      "type": "aws_vpc_security_group_ingress_rule",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.network.aws_vpc_security_group_ingress_rule.endpoint[\"embedding-worker\"]",
+      "type": "aws_vpc_security_group_ingress_rule",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.network.aws_vpc_security_group_ingress_rule.endpoint[\"emr\"]",
+      "type": "aws_vpc_security_group_ingress_rule",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.network.aws_vpc_security_group_ingress_rule.endpoint[\"graph-service\"]",
+      "type": "aws_vpc_security_group_ingress_rule",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.network.aws_vpc_security_group_ingress_rule.endpoint[\"query-api\"]",
+      "type": "aws_vpc_security_group_ingress_rule",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.network.aws_vpc_security_group_ingress_rule.endpoint[\"semantic-service\"]",
+      "type": "aws_vpc_security_group_ingress_rule",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.observability.aws_cloudwatch_dashboard.elasticity",
+      "type": "aws_cloudwatch_dashboard",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.observability.aws_cloudwatch_log_group.neptune_audit",
+      "type": "aws_cloudwatch_log_group",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.observability.aws_cloudwatch_log_group.service[\"embedding-worker\"]",
+      "type": "aws_cloudwatch_log_group",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.observability.aws_cloudwatch_log_group.service[\"graph-service\"]",
+      "type": "aws_cloudwatch_log_group",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.observability.aws_cloudwatch_log_group.service[\"query-api\"]",
+      "type": "aws_cloudwatch_log_group",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.observability.aws_cloudwatch_log_group.service[\"semantic-service\"]",
+      "type": "aws_cloudwatch_log_group",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.observability.aws_cloudwatch_metric_alarm.api_errors",
+      "type": "aws_cloudwatch_metric_alarm",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.observability.aws_cloudwatch_metric_alarm.latency[\"graph-service\"]",
+      "type": "aws_cloudwatch_metric_alarm",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.observability.aws_cloudwatch_metric_alarm.latency[\"query-api\"]",
+      "type": "aws_cloudwatch_metric_alarm",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.observability.aws_cloudwatch_metric_alarm.queue_age",
+      "type": "aws_cloudwatch_metric_alarm",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.runtime.aws_ecr_repository.service[\"embedding-worker\"]",
+      "type": "aws_ecr_repository",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.runtime.aws_ecr_repository.service[\"graph-service\"]",
+      "type": "aws_ecr_repository",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.runtime.aws_ecr_repository.service[\"query-api\"]",
+      "type": "aws_ecr_repository",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.runtime.aws_ecr_repository.service[\"semantic-service\"]",
+      "type": "aws_ecr_repository",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.runtime.aws_ecs_cluster.course",
+      "type": "aws_ecs_cluster",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.runtime.aws_service_discovery_private_dns_namespace.course",
+      "type": "aws_service_discovery_private_dns_namespace",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.s3vectors.aws_s3vectors_index.document[\"collaboration-community-v1\"]",
+      "type": "aws_s3vectors_index",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.s3vectors.aws_s3vectors_index.document[\"collaboration-path-v1\"]",
+      "type": "aws_s3vectors_index",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.s3vectors.aws_s3vectors_index.document[\"paper-abstract-v1\"]",
+      "type": "aws_s3vectors_index",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.s3vectors.aws_s3vectors_index.document[\"researcher-profile-v1\"]",
+      "type": "aws_s3vectors_index",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.s3vectors.aws_s3vectors_index.document[\"topic-institution-summary-v1\"]",
+      "type": "aws_s3vectors_index",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.s3vectors.aws_s3vectors_vector_bucket.embeddings",
+      "type": "aws_s3vectors_vector_bucket",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.s3vectors.aws_s3vectors_vector_bucket_policy.tls",
+      "type": "aws_s3vectors_vector_bucket_policy",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.workflow.aws_iam_role.producer",
+      "type": "aws_iam_role",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.workflow.aws_iam_role_policy.producer",
+      "type": "aws_iam_role_policy",
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "address": "module.workflow.aws_sfn_state_machine.embedding_dispatch",
+      "type": "aws_sfn_state_machine",
+      "actions": [
+        "create"
+      ]
+    }
+  ],
+  "replacements": [],
+  "destroy_count": 0,
+  "iam": [
+    {
+      "address": "module.identity.aws_iam_instance_profile.emr",
+      "type": "aws_iam_instance_profile",
+      "actions": [
+        "create"
+      ],
+      "name": "scholarchain-course-emr",
+      "policy_known_in_plan": true
+    },
+    {
+      "address": "module.identity.aws_iam_role.deployment",
+      "type": "aws_iam_role",
+      "actions": [
+        "create"
+      ],
+      "name": "scholarchain-course-deployment",
+      "policy_known_in_plan": true,
+      "trust_policy": {
+        "Statement": [
+          {
+            "Action": "sts:AssumeRole",
+            "Effect": "Allow",
+            "Principal": {
+              "AWS": "arn:aws:iam::530332961125:user/scholarchain-planner"
+            }
+          }
+        ],
+        "Version": "2012-10-17"
+      }
+    },
+    {
+      "address": "module.identity.aws_iam_role.emr_ec2",
+      "type": "aws_iam_role",
+      "actions": [
+        "create"
+      ],
+      "name": "scholarchain-course-emr-ec2",
+      "policy_known_in_plan": true,
+      "trust_policy": {
+        "Statement": [
+          {
+            "Action": "sts:AssumeRole",
+            "Effect": "Allow",
+            "Principal": {
+              "Service": "ec2.amazonaws.com"
+            }
+          }
+        ],
+        "Version": "2012-10-17"
+      }
+    },
+    {
+      "address": "module.identity.aws_iam_role.emr_service",
+      "type": "aws_iam_role",
+      "actions": [
+        "create"
+      ],
+      "name": "scholarchain-course-emr-service",
+      "policy_known_in_plan": true,
+      "trust_policy": {
+        "Statement": [
+          {
+            "Action": "sts:AssumeRole",
+            "Condition": {
+              "StringEquals": {
+                "aws:SourceAccount": "530332961125"
+              }
+            },
+            "Effect": "Allow",
+            "Principal": {
+              "Service": "elasticmapreduce.amazonaws.com"
+            }
+          }
+        ],
+        "Version": "2012-10-17"
+      }
+    },
+    {
+      "address": "module.identity.aws_iam_role.execution[\"embedding-worker\"]",
+      "type": "aws_iam_role",
+      "actions": [
+        "create"
+      ],
+      "name": "scholarchain-course-embedding-worker-execution",
+      "policy_known_in_plan": true,
+      "trust_policy": {
+        "Statement": [
+          {
+            "Action": "sts:AssumeRole",
+            "Condition": {
+              "ArnLike": {
+                "aws:SourceArn": "arn:aws:ecs:us-east-2:530332961125:*"
+              },
+              "StringEquals": {
+                "aws:SourceAccount": "530332961125"
+              }
+            },
+            "Effect": "Allow",
+            "Principal": {
+              "Service": "ecs-tasks.amazonaws.com"
+            }
+          }
+        ],
+        "Version": "2012-10-17"
+      }
+    },
+    {
+      "address": "module.identity.aws_iam_role.execution[\"graph-service\"]",
+      "type": "aws_iam_role",
+      "actions": [
+        "create"
+      ],
+      "name": "scholarchain-course-graph-service-execution",
+      "policy_known_in_plan": true,
+      "trust_policy": {
+        "Statement": [
+          {
+            "Action": "sts:AssumeRole",
+            "Condition": {
+              "ArnLike": {
+                "aws:SourceArn": "arn:aws:ecs:us-east-2:530332961125:*"
+              },
+              "StringEquals": {
+                "aws:SourceAccount": "530332961125"
+              }
+            },
+            "Effect": "Allow",
+            "Principal": {
+              "Service": "ecs-tasks.amazonaws.com"
+            }
+          }
+        ],
+        "Version": "2012-10-17"
+      }
+    },
+    {
+      "address": "module.identity.aws_iam_role.execution[\"query-api\"]",
+      "type": "aws_iam_role",
+      "actions": [
+        "create"
+      ],
+      "name": "scholarchain-course-query-api-execution",
+      "policy_known_in_plan": true,
+      "trust_policy": {
+        "Statement": [
+          {
+            "Action": "sts:AssumeRole",
+            "Condition": {
+              "ArnLike": {
+                "aws:SourceArn": "arn:aws:ecs:us-east-2:530332961125:*"
+              },
+              "StringEquals": {
+                "aws:SourceAccount": "530332961125"
+              }
+            },
+            "Effect": "Allow",
+            "Principal": {
+              "Service": "ecs-tasks.amazonaws.com"
+            }
+          }
+        ],
+        "Version": "2012-10-17"
+      }
+    },
+    {
+      "address": "module.identity.aws_iam_role.execution[\"semantic-service\"]",
+      "type": "aws_iam_role",
+      "actions": [
+        "create"
+      ],
+      "name": "scholarchain-course-semantic-service-execution",
+      "policy_known_in_plan": true,
+      "trust_policy": {
+        "Statement": [
+          {
+            "Action": "sts:AssumeRole",
+            "Condition": {
+              "ArnLike": {
+                "aws:SourceArn": "arn:aws:ecs:us-east-2:530332961125:*"
+              },
+              "StringEquals": {
+                "aws:SourceAccount": "530332961125"
+              }
+            },
+            "Effect": "Allow",
+            "Principal": {
+              "Service": "ecs-tasks.amazonaws.com"
+            }
+          }
+        ],
+        "Version": "2012-10-17"
+      }
+    },
+    {
+      "address": "module.identity.aws_iam_role.neptune_loader",
+      "type": "aws_iam_role",
+      "actions": [
+        "create"
+      ],
+      "name": "scholarchain-course-neptune-loader",
+      "policy_known_in_plan": true,
+      "trust_policy": {
+        "Statement": [
+          {
+            "Action": "sts:AssumeRole",
+            "Condition": {
+              "StringEquals": {
+                "aws:SourceAccount": "530332961125"
+              }
+            },
+            "Effect": "Allow",
+            "Principal": {
+              "Service": "rds.amazonaws.com"
+            }
+          }
+        ],
+        "Version": "2012-10-17"
+      }
+    },
+    {
+      "address": "module.identity.aws_iam_role.task[\"embedding-worker\"]",
+      "type": "aws_iam_role",
+      "actions": [
+        "create"
+      ],
+      "name": "scholarchain-course-embedding-worker-task",
+      "policy_known_in_plan": true,
+      "trust_policy": {
+        "Statement": [
+          {
+            "Action": "sts:AssumeRole",
+            "Condition": {
+              "ArnLike": {
+                "aws:SourceArn": "arn:aws:ecs:us-east-2:530332961125:*"
+              },
+              "StringEquals": {
+                "aws:SourceAccount": "530332961125"
+              }
+            },
+            "Effect": "Allow",
+            "Principal": {
+              "Service": "ecs-tasks.amazonaws.com"
+            }
+          }
+        ],
+        "Version": "2012-10-17"
+      }
+    },
+    {
+      "address": "module.identity.aws_iam_role.task[\"graph-service\"]",
+      "type": "aws_iam_role",
+      "actions": [
+        "create"
+      ],
+      "name": "scholarchain-course-graph-service-task",
+      "policy_known_in_plan": true,
+      "trust_policy": {
+        "Statement": [
+          {
+            "Action": "sts:AssumeRole",
+            "Condition": {
+              "ArnLike": {
+                "aws:SourceArn": "arn:aws:ecs:us-east-2:530332961125:*"
+              },
+              "StringEquals": {
+                "aws:SourceAccount": "530332961125"
+              }
+            },
+            "Effect": "Allow",
+            "Principal": {
+              "Service": "ecs-tasks.amazonaws.com"
+            }
+          }
+        ],
+        "Version": "2012-10-17"
+      }
+    },
+    {
+      "address": "module.identity.aws_iam_role.task[\"query-api\"]",
+      "type": "aws_iam_role",
+      "actions": [
+        "create"
+      ],
+      "name": "scholarchain-course-query-api-task",
+      "policy_known_in_plan": true,
+      "trust_policy": {
+        "Statement": [
+          {
+            "Action": "sts:AssumeRole",
+            "Condition": {
+              "ArnLike": {
+                "aws:SourceArn": "arn:aws:ecs:us-east-2:530332961125:*"
+              },
+              "StringEquals": {
+                "aws:SourceAccount": "530332961125"
+              }
+            },
+            "Effect": "Allow",
+            "Principal": {
+              "Service": "ecs-tasks.amazonaws.com"
+            }
+          }
+        ],
+        "Version": "2012-10-17"
+      }
+    },
+    {
+      "address": "module.identity.aws_iam_role.task[\"semantic-service\"]",
+      "type": "aws_iam_role",
+      "actions": [
+        "create"
+      ],
+      "name": "scholarchain-course-semantic-service-task",
+      "policy_known_in_plan": true,
+      "trust_policy": {
+        "Statement": [
+          {
+            "Action": "sts:AssumeRole",
+            "Condition": {
+              "ArnLike": {
+                "aws:SourceArn": "arn:aws:ecs:us-east-2:530332961125:*"
+              },
+              "StringEquals": {
+                "aws:SourceAccount": "530332961125"
+              }
+            },
+            "Effect": "Allow",
+            "Principal": {
+              "Service": "ecs-tasks.amazonaws.com"
+            }
+          }
+        ],
+        "Version": "2012-10-17"
+      }
+    },
+    {
+      "address": "module.identity.aws_iam_role_policy.emr_data",
+      "type": "aws_iam_role_policy",
+      "actions": [
+        "create"
+      ],
+      "name": "pipeline-data",
+      "policy_known_in_plan": false
+    },
+    {
+      "address": "module.identity.aws_iam_role_policy.execution[\"embedding-worker\"]",
+      "type": "aws_iam_role_policy",
+      "actions": [
+        "create"
+      ],
+      "name": "embedding-worker-bootstrap",
+      "policy_known_in_plan": false
+    },
+    {
+      "address": "module.identity.aws_iam_role_policy.execution[\"graph-service\"]",
+      "type": "aws_iam_role_policy",
+      "actions": [
+        "create"
+      ],
+      "name": "graph-service-bootstrap",
+      "policy_known_in_plan": false
+    },
+    {
+      "address": "module.identity.aws_iam_role_policy.execution[\"query-api\"]",
+      "type": "aws_iam_role_policy",
+      "actions": [
+        "create"
+      ],
+      "name": "query-api-bootstrap",
+      "policy_known_in_plan": false
+    },
+    {
+      "address": "module.identity.aws_iam_role_policy.execution[\"semantic-service\"]",
+      "type": "aws_iam_role_policy",
+      "actions": [
+        "create"
+      ],
+      "name": "semantic-service-bootstrap",
+      "policy_known_in_plan": false
+    },
+    {
+      "address": "module.identity.aws_iam_role_policy.neptune_loader",
+      "type": "aws_iam_role_policy",
+      "actions": [
+        "create"
+      ],
+      "name": "read-graph-export",
+      "policy_known_in_plan": false
+    },
+    {
+      "address": "module.identity.aws_iam_role_policy.task[\"embedding-worker\"]",
+      "type": "aws_iam_role_policy",
+      "actions": [
+        "create"
+      ],
+      "name": "embedding-worker-data",
+      "policy_known_in_plan": false
+    },
+    {
+      "address": "module.identity.aws_iam_role_policy.task[\"graph-service\"]",
+      "type": "aws_iam_role_policy",
+      "actions": [
+        "create"
+      ],
+      "name": "graph-service-data",
+      "policy_known_in_plan": false
+    },
+    {
+      "address": "module.identity.aws_iam_role_policy.task[\"query-api\"]",
+      "type": "aws_iam_role_policy",
+      "actions": [
+        "create"
+      ],
+      "name": "query-api-data",
+      "policy_known_in_plan": false
+    },
+    {
+      "address": "module.identity.aws_iam_role_policy.task[\"semantic-service\"]",
+      "type": "aws_iam_role_policy",
+      "actions": [
+        "create"
+      ],
+      "name": "semantic-service-data",
+      "policy_known_in_plan": false
+    },
+    {
+      "address": "module.identity.aws_kms_key.data",
+      "type": "aws_kms_key",
+      "actions": [
+        "create"
+      ],
+      "name": null,
+      "policy_known_in_plan": true,
+      "key_policy": {
+        "Statement": [
+          {
+            "Action": [
+              "kms:CreateKey",
+              "kms:DescribeKey",
+              "kms:EnableKey",
+              "kms:DisableKey",
+              "kms:GetKeyPolicy",
+              "kms:PutKeyPolicy",
+              "kms:GetKeyRotationStatus",
+              "kms:EnableKeyRotation",
+              "kms:DisableKeyRotation",
+              "kms:ScheduleKeyDeletion",
+              "kms:CancelKeyDeletion",
+              "kms:TagResource",
+              "kms:UntagResource",
+              "kms:ListResourceTags",
+              "kms:UpdateKeyDescription",
+              "kms:CreateAlias",
+              "kms:UpdateAlias",
+              "kms:DeleteAlias",
+              "kms:Encrypt",
+              "kms:Decrypt",
+              "kms:ReEncryptFrom",
+              "kms:ReEncryptTo",
+              "kms:GenerateDataKey",
+              "kms:GenerateDataKeyWithoutPlaintext",
+              "kms:CreateGrant",
+              "kms:ListGrants",
+              "kms:RevokeGrant",
+              "kms:RetireGrant"
+            ],
+            "Effect": "Allow",
+            "Principal": {
+              "AWS": "arn:aws:iam::530332961125:root"
+            },
+            "Resource": "*",
+            "Sid": "EnableExplicitAccountIamDelegationForThisKey"
+          },
+          {
+            "Action": [
+              "kms:Decrypt"
+            ],
+            "Condition": {
+              "ArnLike": {
+                "aws:SourceArn": [
+                  "arn:aws:s3vectors:us-east-2:530332961125:bucket/scholarchain-course-530332961125-vectors",
+                  "arn:aws:s3vectors:us-east-2:530332961125:bucket/scholarchain-course-530332961125-vectors/index/*"
+                ]
+              },
+              "ForAnyValue:StringEquals": {
+                "kms:EncryptionContextKeys": [
+                  "aws:s3vectors:arn",
+                  "aws:s3vectors:resource-id"
+                ]
+              },
+              "StringEquals": {
+                "aws:SourceAccount": "530332961125"
+              }
+            },
+            "Effect": "Allow",
+            "Principal": {
+              "Service": "indexing.s3vectors.amazonaws.com"
+            },
+            "Resource": "*",
+            "Sid": "AllowS3VectorsServicePrincipal"
+          }
+        ],
+        "Version": "2012-10-17"
+      }
+    },
+    {
+      "address": "module.workflow.aws_iam_role.producer",
+      "type": "aws_iam_role",
+      "actions": [
+        "create"
+      ],
+      "name": "scholarchain-course-embedding-producer",
+      "policy_known_in_plan": true,
+      "trust_policy": {
+        "Statement": [
+          {
+            "Action": "sts:AssumeRole",
+            "Condition": {
+              "ArnEquals": {
+                "aws:SourceArn": "arn:aws:states:us-east-2:530332961125:stateMachine:scholarchain-course-embedding-dispatch"
+              },
+              "StringEquals": {
+                "aws:SourceAccount": "530332961125"
+              }
+            },
+            "Effect": "Allow",
+            "Principal": {
+              "Service": "states.amazonaws.com"
+            }
+          }
+        ],
+        "Version": "2012-10-17"
+      }
+    },
+    {
+      "address": "module.workflow.aws_iam_role_policy.producer",
+      "type": "aws_iam_role_policy",
+      "actions": [
+        "create"
+      ],
+      "name": "send-configured-embedding-work",
+      "policy_known_in_plan": false
+    }
+  ],
+  "notes": [
+    "Fresh local state: plan only, no AWS resources created.",
+    "IAM policy JSON depending on future resource ARNs remains unknown; assess source/mock contracts and references, not fictional resolved ARNs.",
+    "No Neptune/EMR/ECS runtime resources or budget resource in selected plan."
+  ],
+  "limitations": [
+    "Account STS, PAID/ACTIVE plan and AZ availability independently confirmed by coordinator; not proof of all quotas/headroom or live IAM/KMS.",
+    "No AWS write, apply/destroy/import, paid model/Cost Explorer call.",
+    "Account budget inventory Count0: no active budget notifications; Cost Explorer activation unverified, separate pre-spend bootstrap pending.",
+    "No Neptune/EMR/runtime/budget resources activated in default plan.",
+    "Future IAM policy resource ARNs stay unknown until apply; source/mock scopes are reviewable.",
+    "N15 internal HTTP and N16 pipeline loader/writer/StartExecution caller identities remain deferred.",
+    "N13 HTTPS test coverage and optional N3/N4/N6 untouched.",
+    "Fresh local state gives zero route replacements; this does not prove absence of remote infrastructure/state."
+  ]
+}

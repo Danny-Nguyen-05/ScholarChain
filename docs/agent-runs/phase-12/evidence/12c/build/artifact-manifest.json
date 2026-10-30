@@ -1,0 +1,61 @@
+{
+  "artifacts": [
+    {
+      "path": "build-result.json",
+      "bytes": 55820,
+      "sha256": "c5026f213008a8e84888f371a3b2141c5841082d5732eb630ee9cd9db4c03db2"
+    },
+    {
+      "path": "build-start.json",
+      "bytes": 746,
+      "sha256": "9f5b0a203f6d52744cabf66280218a8c8853233fe53f864b6bee5051ddaa82de"
+    },
+    {
+      "path": "build-validation.json",
+      "bytes": 53697,
+      "sha256": "385f540cbda3ab63b825417df8f44e30cfc707758d3dce973c2fa2e408c15029"
+    },
+    {
+      "path": "commands.json",
+      "bytes": 1414,
+      "sha256": "e5cd9dd8ce3a944506fff8574bbbead0e699993fc8549ac643f0c0d6c1b0e2bc"
+    },
+    {
+      "path": "java-version.log.txt",
+      "bytes": 171,
+      "sha256": "2fe83b0053132e4e834defa82250462f4c62733d29bf76b19ee1bb3c14b06b39"
+    },
+    {
+      "path": "owner-report.md",
+      "bytes": 1914,
+      "sha256": "7aca3aa34bdac2491c6dee66c3b700fe126ef94d463c1f12a5b012a4c0b46813"
+    },
+    {
+      "path": "process.json",
+      "bytes": 135,
+      "sha256": "1fbc6628db6393a3592f6158fcd7b827c727b1c1d9d1bad0eea6a152e0e6ae74"
+    },
+    {
+      "path": "run.py",
+      "bytes": 6626,
+      "sha256": "4c25f11c2a9759604c2bf2c6f8033d586b74598796b008b69b6f98962de0e086"
+    },
+    {
+      "path": "sbt-check.log.gz",
+      "bytes": 93282,
+      "sha256": "70c405d6d92ac733511945b95bc6ea16831598cf95ec8e5ccdfa66facd004095"
+    },
+    {
+      "path": "source-after.json",
+      "bytes": 902533,
+      "sha256": "0d8d5632f4950e09ab906d3b6d67810764c072aa5e715d5643a83c3d4825c4f0"
+    },
+    {
+      "path": "source-before.json",
+      "bytes": 902753,
+      "sha256": "54b7663688a3bd0a348d4538b61caad33b22b9a83fbbf366921621d013ac598e"
+    }
+  ],
+  "raw_log_retained_as": "sbt-check.log.gz",
+  "raw_log_sha256": "19d0959878981057976b356a23a02589fc9e20e3821ae52f35b2b500b2a8f5dc"
+}

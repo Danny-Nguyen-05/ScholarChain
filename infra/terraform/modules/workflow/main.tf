@@ -29,7 +29,7 @@ resource "aws_sfn_state_machine" "embedding_dispatch" {
     StartAt        = "ValidateWork"
     TimeoutSeconds = 120
     States = {
-      ValidateWork = { Type = "Choice", Choices = [{ Variable = "$.workItem", IsString = true, Next = "Enqueue" }], Default = "InvalidWork" }
+      ValidateWork = { Type = "Choice", Choices = [{ And = [{ Variable = "$.workItem", IsPresent = true }, { Variable = "$.workItem", IsString = true }], Next = "Enqueue" }], Default = "InvalidWork" }
       InvalidWork  = { Type = "Fail", Error = "InvalidEmbeddingWork", Cause = "workItem must be a serialized EmbeddingWorkItem string" }
       Enqueue = {
         Type       = "Task", Resource = "arn:aws:states:::sqs:sendMessage", TimeoutSeconds = 20,

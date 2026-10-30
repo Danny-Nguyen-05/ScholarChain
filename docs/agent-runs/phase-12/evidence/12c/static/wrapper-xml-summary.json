@@ -1,0 +1,9 @@
+{
+  "path": "tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentTerraformSourceSpec.xml",
+  "suite": "edu.uic.cs441.scholarchain.independent.IndependentTerraformSourceSpec",
+  "tests": "2",
+  "failures": "0",
+  "errors": "0",
+  "skipped": "0",
+  "mtime_utc": "2026-10-30T17:36:50.260676+00:00"
+}
