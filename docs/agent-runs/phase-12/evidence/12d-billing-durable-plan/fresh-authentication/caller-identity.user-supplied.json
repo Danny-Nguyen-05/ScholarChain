@@ -1,0 +1,27 @@
+{
+  "recorded_utc": "2026-11-01T19:54:37.315316+00:00",
+  "provenance": "User-pasted command/output in fresh role-login workflow; not an independent agent API observation",
+  "argv": [
+    "aws",
+    "sts",
+    "get-caller-identity",
+    "--profile",
+    "scholarchain-billing-deployer",
+    "--region",
+    "us-east-2",
+    "--query",
+    "{Account:Account,Arn:Arn}",
+    "--output",
+    "json",
+    "--no-cli-pager"
+  ],
+  "output": {
+    "Account": "530332961125",
+    "Arn": "arn:aws:sts::530332961125:assumed-role/scholarchain-billing-deployer/scholarchain-billing-operator"
+  },
+  "actual_command_cwd_times_exit": "Not captured; none invented",
+  "fresh_context": "After user console role-switch screenshot and fresh aws login instructions",
+  "expected_account_and_full_role_arn_match": true,
+  "MFA_limit": "Caller identity alone does not prove MFA; strict reviewed trust and reported role flow provide context",
+  "apply_authorized": false
+}

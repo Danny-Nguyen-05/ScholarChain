@@ -1,0 +1,31 @@
+{
+  "scope": "Public W1/W2 repair/offline handoff",
+  "self_excluded": true,
+  "files": [
+    {
+      "path": "delegation.json",
+      "bytes": 412,
+      "sha256": "21c0cf6f4e83698a0b13bb633f732b52870112be10f702e89e42825916fded93"
+    },
+    {
+      "path": "preflight-status.log.txt",
+      "bytes": 63408,
+      "sha256": "21107b483a13eefd7935be229557707a338e84bca63f13c415cfe8c1745a649d"
+    },
+    {
+      "path": "preflight.json",
+      "bytes": 32166,
+      "sha256": "d5e5f6dd1374819ec719dc6d145f300b4ca0bbdb47d53b41a84ed57a6f5c0a21"
+    },
+    {
+      "path": "record-prefix-check.json",
+      "bytes": 1694,
+      "sha256": "8d6afb6cbac4f4f82e07eac78d5ce7d3bbb023d540b70c5fb7be26e6931d1c1b"
+    },
+    {
+      "path": "user-supplied-review.txt",
+      "bytes": 2614,
+      "sha256": "c7d3d7264800c6b7cf2417a7ffb1157564ec6a49d4376883a9e2e3ff380ad045"
+    }
+  ]
+}

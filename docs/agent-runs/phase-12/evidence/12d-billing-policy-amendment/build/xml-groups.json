@@ -1,0 +1,65 @@
+{
+  "build-verification": {
+    "reports": 8,
+    "tests": 13,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "modules/core": {
+    "reports": 17,
+    "tests": 207,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "modules/entity-resolution": {
+    "reports": 6,
+    "tests": 39,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "modules/hadoop": {
+    "reports": 4,
+    "tests": 64,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "modules/rag": {
+    "reports": 9,
+    "tests": 107,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "modules/services": {
+    "reports": 7,
+    "tests": 40,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "modules/spark": {
+    "reports": 5,
+    "tests": 38,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "modules/storage": {
+    "reports": 11,
+    "tests": 80,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "tests": {
+    "reports": 90,
+    "tests": 667,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  }
+}

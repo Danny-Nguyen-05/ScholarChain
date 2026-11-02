@@ -1,0 +1,132 @@
+{
+  "recorded_utc": "2026-11-01T21:06:07.426029+00:00",
+  "scope": "Wrapper authoring and authorized offline tests only; no production mode invoked.",
+  "attempts": [
+    {
+      "command": "python3 -I scripts/billing/tests/test_budget_execution.py",
+      "log": "offline-tests-attempt1.log.txt",
+      "exit": 1,
+      "tests": 33,
+      "failures": 12,
+      "errors": 15,
+      "reason": "Harness temp root traversed macOS /var symlink; production symlink guard correctly failed closed. Canonicalized fixture root only."
+    },
+    {
+      "command": "python3 -I scripts/billing/tests/test_budget_execution.py",
+      "log": "offline-tests-attempt2.log.txt",
+      "exit": 1,
+      "tests": 33,
+      "failures": 1,
+      "errors": 0,
+      "reason": "macOS injected __CF_USER_TEXT_ENCODING into child Python environment; test now permits only that and LC_CTYPE in addition to exact explicit environment."
+    },
+    {
+      "command": "python3 -I scripts/billing/tests/test_budget_execution.py",
+      "log": "offline-tests-attempt3.log.txt",
+      "exit": 0,
+      "tests": 33,
+      "failures": 0,
+      "errors": 0
+    },
+    {
+      "command": "python3 -I scripts/billing/tests/terraform_state_binding.py",
+      "log": "a1-attempt1.log.txt",
+      "exit": 0,
+      "terraform_calls": 3,
+      "terraform_exits": [
+        0,
+        0,
+        0
+      ],
+      "assertions": 7,
+      "result": "a1-result-attempt1.json",
+      "commands": "a1-commands-attempt1.json"
+    },
+    {
+      "command": "python3 -I scripts/billing/tests/test_budget_execution.py",
+      "log": "offline-tests-attempt4.log.txt",
+      "exit": 0,
+      "tests": 37,
+      "failures": 0,
+      "errors": 0
+    },
+    {
+      "command": "python3 -I scripts/billing/tests/terraform_state_binding.py",
+      "log": "a1-attempt2.log.txt",
+      "exit": 0,
+      "terraform_calls": 3,
+      "terraform_exits": [
+        0,
+        0,
+        0
+      ],
+      "assertions": 7,
+      "result": "a1-result.json",
+      "commands": "a1-commands.json",
+      "final_wrapper_sha256": "81fe564942a9f53ccf40236f32569a0f3fbdba13119c1ca3a23305d64c0039f0"
+    }
+  ],
+  "final_offline_tests": 37,
+  "final_failures": 0,
+  "final_errors": 0,
+  "final_A1_assertions": 7,
+  "A1_A2_status": "Evidence prepared for independent reviewer acceptance; owner does not close findings.",
+  "final_wrapper_sha256": "81fe564942a9f53ccf40236f32569a0f3fbdba13119c1ca3a23305d64c0039f0",
+  "source_files": [
+    {
+      "path": "scripts/billing/README.md",
+      "bytes": 11539,
+      "sha256": "ff39ee4d987d89a393c31963f1c8f2fe4dc12037bdb2bc50b7e6b44ea1c78ebf"
+    },
+    {
+      "path": "scripts/billing/budget_execution.py",
+      "bytes": 36540,
+      "sha256": "81fe564942a9f53ccf40236f32569a0f3fbdba13119c1ca3a23305d64c0039f0"
+    },
+    {
+      "path": "scripts/billing/reviewed-pins.json",
+      "bytes": 46174,
+      "sha256": "cb285259b7217bb4186ca80e74d376f215e4150396aa5fd66187d4e0dc96a753"
+    },
+    {
+      "path": "scripts/billing/tests/terraform_state_binding.py",
+      "bytes": 5340,
+      "sha256": "faaf64cd14192abbe45c1284617c26e7c1c2958ace61fcbcde955d8ac471a7c3"
+    },
+    {
+      "path": "scripts/billing/tests/test_budget_execution.py",
+      "bytes": 27551,
+      "sha256": "246093152aacb2dee57ef9b3db1edc4105a6395313830afffc032fe0d3a33c4e"
+    }
+  ],
+  "static_validation": {
+    "python_ast_files": 3,
+    "source_freeze_entries": 209,
+    "config_pin_entries": 7,
+    "source_inventory_files": 5
+  },
+  "lookup_errata": [
+    {
+      "command": "rg --files scripts/billing",
+      "exit": 2,
+      "reason": "Directory did not yet exist; later created under authorized ownership."
+    },
+    {
+      "command": "head -n 35 docs/agent-runs/phase-12/evidence/12d-billing-durable-plan/source-freeze.json",
+      "exit": 1,
+      "reason": "Actual public files are source-freeze-before.json and source-freeze-after.json; corrected read."
+    }
+  ],
+  "live_access": {
+    "aws_cli_calls": 0,
+    "iam_or_console_calls": 0,
+    "real_config_terraform_calls": 0,
+    "durable_primary_or_backups_access": false,
+    "actual_plan_or_private_input_access": false,
+    "credential_config_cache_access": false,
+    "new_sbt_run": false
+  },
+  "A1_boundary": "Only pinned non-durable binary and terraform_data scratch; no AWS/external provider. Policy.apply_argv and PrivateRunner are real wrapper functions under Python-only scratch Policy injection; full live gate is not invoked.",
+  "retention": "Isolated public-fixture scratch state/plan/raw logs retained outside Git; no cleanup performed.",
+  "fixture_cleanup": "Feature-suite TemporaryDirectory fixtures are test-owned and automatically removed after each test. A1 isolated public-fixture scratch is retained outside Git, including state/plan/raw logs; metadata only in this packet."
+}

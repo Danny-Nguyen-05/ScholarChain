@@ -1,0 +1,11 @@
+{
+  "checked_utc": "2026-11-01T20:34:56.252265+00:00",
+  "source_files_hash_bytes_mtime": 209,
+  "prior_packet_files": 83,
+  "mismatches": [],
+  "human_record": {
+    "path": "docs/agent-runs/phase-12/billing-bootstrap-exception.md",
+    "sha256": "abe3a50ad7167fa01227c73e15e92a422a50609f6313bdcc56404cb61765d71a",
+    "bytes": 1334
+  }
+}

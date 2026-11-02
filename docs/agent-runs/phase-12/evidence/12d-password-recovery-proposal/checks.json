@@ -1,0 +1,20 @@
+{
+  "recorded_utc": "2026-11-01T19:26:19.054782+00:00",
+  "phase_record_prefixes_preserved": [
+    "prompt.md",
+    "repairs.md",
+    "owner-report.md",
+    "test-report.md",
+    "review.md"
+  ],
+  "review_and_human_record_unchanged": true,
+  "human_record_sha256": "abe3a50ad7167fa01227c73e15e92a422a50609f6313bdcc56404cb61765d71a",
+  "diff_check_argv": [
+    "git",
+    "diff",
+    "--check"
+  ],
+  "diff_check_exit": 0,
+  "security_mutations": 0,
+  "human_approval_authored": false
+}

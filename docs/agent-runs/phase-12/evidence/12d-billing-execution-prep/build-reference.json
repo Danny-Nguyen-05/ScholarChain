@@ -1,0 +1,18 @@
+{
+  "freeze_timestamp": "2026-10-31T16:56:11.517506+00:00",
+  "freeze_sha256": "ec96c67541385151f69ebea29b2c574e13dbdd4c37f43f197bd6551e166005b7",
+  "build_start": "2026-10-31T16:57:09.567577+00:00",
+  "build_end": "2026-10-31T17:09:34.929280+00:00",
+  "exit_code": 0,
+  "tests": {
+    "tests": 1255,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "fresh_xml": 157,
+  "stale_xml": 1,
+  "broad_inputs": 1383,
+  "raw_sha256": "b23b1f6064ce6905b69a8550027f640736baca4c7ee3e1e7909a41e7443c57f4",
+  "gzip_sha256": "5e095c0c982764bc3e1329e1d2e457b2d793ca75ec9baf848b511c0d2970bc78"
+}

@@ -1,0 +1,109 @@
+{
+  "recorded_utc": "2026-11-02T01:52:53.193822+00:00",
+  "scope": "W3 public-only helper authorship and isolated offline features only; not an actual final evidence assembly/scan/publication",
+  "attempts": [
+    {
+      "exactcommand": "python3 -I scripts/billing/tests/test_publication_evidence.py > /tmp/scholarchain-phase12d-billing-publication-helper/offline-tests-attempt1.log.txt 2>&1",
+      "exit": 0,
+      "log": "offline-tests-attempt1.log.txt",
+      "count": 33,
+      "failures": 0,
+      "errors": 0,
+      "note": "First invocation shell also displayed the log with cat; unittest log records OK. Later invocations returned Python status directly."
+    },
+    {
+      "exactcommand": "python3 -I scripts/billing/tests/test_publication_evidence.py > /tmp/scholarchain-phase12d-billing-publication-helper/offline-tests-attempt2.log.txt 2>&1",
+      "exit": 0,
+      "log": "offline-tests-attempt2.log.txt",
+      "count": 38,
+      "failures": 0,
+      "errors": 0,
+      "note": "Direct Python command exit observed0."
+    },
+    {
+      "exactcommand": "python3 -I scripts/billing/tests/test_publication_evidence.py > /tmp/scholarchain-phase12d-billing-publication-helper/offline-tests-attempt3.log.txt 2>&1",
+      "exit": 0,
+      "log": "offline-tests-attempt3.log.txt",
+      "count": 39,
+      "failures": 0,
+      "errors": 0,
+      "note": "Direct Python command exit observed0."
+    }
+  ],
+  "final_tests": 39,
+  "failures": 0,
+  "errors": 0,
+  "source_files": [
+    {
+      "path": "scripts/billing/publication_evidence.py",
+      "bytes": 18539,
+      "sha256": "cb2edbb74ce1250282dd4a39ca5397c33e26490e18ae626187a900cf28be4580"
+    },
+    {
+      "path": "scripts/billing/tests/test_publication_evidence.py",
+      "bytes": 18627,
+      "sha256": "3adf9a30ae8fe72a77816ac100f1e70a295d053722fd2c8d7060e9568a10f6e6"
+    },
+    {
+      "path": "scripts/billing/PUBLICATION.md",
+      "bytes": 12342,
+      "sha256": "dfc32dad40bc0b33a03018f6175f178941db8b3784fbfa5365b89a2e6b368648"
+    }
+  ],
+  "existing_five_preserved": true,
+  "existing_five_files": [
+    {
+      "path": "scripts/billing/README.md",
+      "bytes": 14797,
+      "sha256": "c83e61880cebebf5bb6c17b2ba9c971fad302c17d81a4dec5c166be37d7b9391"
+    },
+    {
+      "path": "scripts/billing/budget_execution.py",
+      "bytes": 39844,
+      "sha256": "e8876abe58a787f9753793b822140cc311863c12373e09f79b8f367ebdfa3507"
+    },
+    {
+      "path": "scripts/billing/reviewed-pins.json",
+      "bytes": 46174,
+      "sha256": "cb285259b7217bb4186ca80e74d376f215e4150396aa5fd66187d4e0dc96a753"
+    },
+    {
+      "path": "scripts/billing/tests/terraform_state_binding.py",
+      "bytes": 5340,
+      "sha256": "faaf64cd14192abbe45c1284617c26e7c1c2958ace61fcbcde955d8ac471a7c3"
+    },
+    {
+      "path": "scripts/billing/tests/test_budget_execution.py",
+      "bytes": 36221,
+      "sha256": "04dc9f32fe7e2bc8f59d6028785b6ace7978c39f392e7403cfc7b36fe143d34c"
+    }
+  ],
+  "future_wrapper_file_count": 8,
+  "final_test_after_helper_and_test_edits": true,
+  "python_ast_files": 2,
+  "helper_cli_modes": [
+    "assemble",
+    "verify-before",
+    "verify-after"
+  ],
+  "live_or_private_access": {
+    "aws_cli_or_terraform_calls": 0,
+    "budget_wrapper_invocations": 0,
+    "actual_recipient_processing": false,
+    "actual_durable_private_plan_state_credentials_config_cache_access": false,
+    "real_records_read_or_changed_by_helper": false,
+    "actual_publication": false,
+    "sbt_or_original_wrapper_tests": false
+  },
+  "limitations": [
+    "Receipt metadata cannot authenticate an actual private scanner or freshness; external gate/supervision required.",
+    "--repo supports public evidence workspace/fixtures; only comparisons against actual canonical destinations prove that publication.",
+    "Helper never transfers packets or appends phase records; later approved source-controlled transfer/publication mechanism remains an execution-work-order requirement.",
+    "Canonical scan only allows packet/freeze dirty; staging assembled separately, receipt transferred only after scan; no automatic rerun/cleanup/waiver.",
+    "Point-in-time equality has no cross-process lock; human must avoid concurrent edits and stop on drift.",
+    "Lexical path/UTF8 bounds do not classify sensitive content; staging must already be sanitized public input.",
+    "W3 remains open pending actual authorized frozen scan and publication evidence; all other human/live gates stay open."
+  ],
+  "test_cleanup": "Only test-owned TemporaryDirectory fixtures automatically removed; no real artifacts or prior scratch/evidence deleted.",
+  "lookup_or_failed_command_errata": []
+}

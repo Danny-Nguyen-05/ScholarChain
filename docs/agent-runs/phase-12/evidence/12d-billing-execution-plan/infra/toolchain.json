@@ -1,0 +1,8 @@
+{
+  "terraform_binary": "/tmp/scholarchain-phase12b-repair1-infra/terraform",
+  "binary_sha256": "899b3c0ca0d2669ebd67be4bcd98e84bd9a914ce2fb3897ad0b86c98cbf3c962",
+  "reinstalled": false,
+  "terraform_pin": "1.13.5",
+  "aws_pin": "6.44.0",
+  "lock_sha256": "421b75245b0080edee2b434482ff348419a75d7a6b798d5218e0a0f9f723eaea"
+}

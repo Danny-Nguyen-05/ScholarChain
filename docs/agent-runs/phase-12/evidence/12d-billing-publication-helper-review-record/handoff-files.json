@@ -1,0 +1,17 @@
+{
+  "baseline_status_entries": 805,
+  "final_status_entries": 814,
+  "new_files": [
+    "docs/agent-runs/phase-12/evidence/12d-billing-publication-helper-review-record/coordinator-report.txt",
+    "docs/agent-runs/phase-12/evidence/12d-billing-publication-helper-review-record/evidence-manifest.json",
+    "docs/agent-runs/phase-12/evidence/12d-billing-publication-helper-review-record/final-status.log.txt",
+    "docs/agent-runs/phase-12/evidence/12d-billing-publication-helper-review-record/handoff-files.json",
+    "docs/agent-runs/phase-12/evidence/12d-billing-publication-helper-review-record/preflight-status.log.txt",
+    "docs/agent-runs/phase-12/evidence/12d-billing-publication-helper-review-record/preflight.json",
+    "docs/agent-runs/phase-12/evidence/12d-billing-publication-helper-review-record/preservation-check.json",
+    "docs/agent-runs/phase-12/evidence/12d-billing-publication-helper-review-record/public-address-scan.json",
+    "docs/agent-runs/phase-12/evidence/12d-billing-publication-helper-review-record/user-supplied-review.txt"
+  ],
+  "new_file_count": 9,
+  "git_diff_check_exit": 0
+}

@@ -1,0 +1,14 @@
+STATUS: COMPLETE (review); verdict REQUEST-CHANGES for wrapper/offline tests ONLY — W1 Medium blocking; W2 Low; W3 Low (execution-gate); W4 Info; A1 and A2 accepted/closed
+OWNER: code-reviewer (independent, read-only)
+WORK ORDER: docs/agent-runs/phase-12/reviewer-prompt-12d-billing-wrapper.md; branch phase-12, HEAD 5ca8406bad5fe55f732458fa0cbd5d561ac83d8f; scripts/billing/**, evidence/12d-billing-wrapper/, evidence/12d-billing-apply-proposal-review-record/, five record suffixes
+FILES CREATED: None
+FILES MODIFIED: None
+COMMANDS RUN: cat/grep/sed/stat/find/wc of public scripts and evidence; stat of public /tmp wrapper scratch metadata; python3 -I manifest/preservation (105 prior, 209 source)/pin/script-hash/prefix-chain/verbatim/status/email-pattern checks; git status, git diff --check. No wrapper, test, Terraform, AWS, build, durable/private/state/plan/credential access.
+TEST RESULTS: Not run (review). Recorded: final 37/0/0 (attempt 4, after final wrapper edit); earlier attempts 33 with 12F/15E, 33 with 1F, 33 passing — causes disclosed; A1 3 calls 0/0/0 with 7/7 assertions, run after the final wrapper edit.
+VALIDATION RESULTS: Preservation, prefixes, verbatim review, human record, manifests 21/13/7, script hashes, pins equal to freeze, status 723=687+36, diff --check 0, reserved fixtures only. Modes, gate, clean checkout, pre-mutation checks, P3 parsing, replay/concurrency, backup, readback and scan conform, except W1/W2 (and W3 scope). A1 and A2 accepted.
+ASSUMPTIONS: Recorded logs and results reflect actual runs (manifests consistent; mtimes order the final runs after the final wrapper); the real CLI NotFound text and exit 254 match AWS CLI v2 behavior.
+RISKS: Hard kill can orphan a live budget (W1); window-edge backup skip (W2); unscanned record appends (W3); live permission, CUSTOM/CostTypes/tag acceptance, delivery, remote ownership, F4, refresh and EMR unverified; same-disk backup; scripts uncommitted.
+MANUAL ACTION REQUIRED: None now. Later: source-control/clean-checkout decision, own-words G1, personally written gate with plan/proposal/wrapper SHAs, identity and dated window; human login and STS; private delivery confirmation.
+BLOCKED-ON OWNER: infra-engineer (W1, W2; W3 if fixed in code)
+BLOCKED-ON EVIDENCE: Repaired wrapper with SIGINT-first apply termination, separate apply timeout and unconditional local backup; new offline tests; full suite and A1 rerun with exact counts; user-launched independent recheck APPROVE
+NEXT GATE: Bounded repair of W1/W2 (W3 optional in code) by infra-engineer with offline tests, then user-launched recheck. No live action.

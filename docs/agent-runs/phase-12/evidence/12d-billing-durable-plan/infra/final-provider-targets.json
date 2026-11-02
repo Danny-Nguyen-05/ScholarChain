@@ -1,0 +1,75 @@
+{
+  "all_targets_within_primary": true,
+  "paths": [
+    {
+      "path": "/Users/danny/Library/Application Support/ScholarChain/terraform/billing-bootstrap/offline-tf-data/providers/registry.terraform.io",
+      "symlink": false,
+      "resolved": "/Users/danny/Library/Application Support/ScholarChain/terraform/billing-bootstrap/offline-tf-data/providers/registry.terraform.io",
+      "mode": "0o700",
+      "uid": 501
+    },
+    {
+      "path": "/Users/danny/Library/Application Support/ScholarChain/terraform/billing-bootstrap/offline-tf-data/providers/registry.terraform.io/hashicorp",
+      "symlink": false,
+      "resolved": "/Users/danny/Library/Application Support/ScholarChain/terraform/billing-bootstrap/offline-tf-data/providers/registry.terraform.io/hashicorp",
+      "mode": "0o700",
+      "uid": 501
+    },
+    {
+      "path": "/Users/danny/Library/Application Support/ScholarChain/terraform/billing-bootstrap/offline-tf-data/providers/registry.terraform.io/hashicorp/aws",
+      "symlink": false,
+      "resolved": "/Users/danny/Library/Application Support/ScholarChain/terraform/billing-bootstrap/offline-tf-data/providers/registry.terraform.io/hashicorp/aws",
+      "mode": "0o700",
+      "uid": 501
+    },
+    {
+      "path": "/Users/danny/Library/Application Support/ScholarChain/terraform/billing-bootstrap/offline-tf-data/providers/registry.terraform.io/hashicorp/aws/6.44.0",
+      "symlink": false,
+      "resolved": "/Users/danny/Library/Application Support/ScholarChain/terraform/billing-bootstrap/offline-tf-data/providers/registry.terraform.io/hashicorp/aws/6.44.0",
+      "mode": "0o700",
+      "uid": 501
+    },
+    {
+      "path": "/Users/danny/Library/Application Support/ScholarChain/terraform/billing-bootstrap/offline-tf-data/providers/registry.terraform.io/hashicorp/aws/6.44.0/darwin_arm64",
+      "symlink": true,
+      "resolved": "/Users/danny/Library/Application Support/ScholarChain/terraform/billing-bootstrap/toolchain/provider-mirror/registry.terraform.io/hashicorp/aws/6.44.0/darwin_arm64",
+      "mode": "0o700",
+      "uid": 501
+    },
+    {
+      "path": "/Users/danny/Library/Application Support/ScholarChain/terraform/billing-bootstrap/tf-data/providers/registry.terraform.io",
+      "symlink": false,
+      "resolved": "/Users/danny/Library/Application Support/ScholarChain/terraform/billing-bootstrap/tf-data/providers/registry.terraform.io",
+      "mode": "0o700",
+      "uid": 501
+    },
+    {
+      "path": "/Users/danny/Library/Application Support/ScholarChain/terraform/billing-bootstrap/tf-data/providers/registry.terraform.io/hashicorp",
+      "symlink": false,
+      "resolved": "/Users/danny/Library/Application Support/ScholarChain/terraform/billing-bootstrap/tf-data/providers/registry.terraform.io/hashicorp",
+      "mode": "0o700",
+      "uid": 501
+    },
+    {
+      "path": "/Users/danny/Library/Application Support/ScholarChain/terraform/billing-bootstrap/tf-data/providers/registry.terraform.io/hashicorp/aws",
+      "symlink": false,
+      "resolved": "/Users/danny/Library/Application Support/ScholarChain/terraform/billing-bootstrap/tf-data/providers/registry.terraform.io/hashicorp/aws",
+      "mode": "0o700",
+      "uid": 501
+    },
+    {
+      "path": "/Users/danny/Library/Application Support/ScholarChain/terraform/billing-bootstrap/tf-data/providers/registry.terraform.io/hashicorp/aws/6.44.0",
+      "symlink": false,
+      "resolved": "/Users/danny/Library/Application Support/ScholarChain/terraform/billing-bootstrap/tf-data/providers/registry.terraform.io/hashicorp/aws/6.44.0",
+      "mode": "0o700",
+      "uid": 501
+    },
+    {
+      "path": "/Users/danny/Library/Application Support/ScholarChain/terraform/billing-bootstrap/tf-data/providers/registry.terraform.io/hashicorp/aws/6.44.0/darwin_arm64",
+      "symlink": true,
+      "resolved": "/Users/danny/Library/Application Support/ScholarChain/terraform/billing-bootstrap/toolchain/provider-mirror/registry.terraform.io/hashicorp/aws/6.44.0/darwin_arm64",
+      "mode": "0o700",
+      "uid": 501
+    }
+  ]
+}

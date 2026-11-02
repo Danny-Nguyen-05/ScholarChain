@@ -1,0 +1,761 @@
+{
+  "branch": "phase-12",
+  "base_sha": "5ca8406bad5fe55f732458fa0cbd5d561ac83d8f",
+  "head": "5ca8406bad5fe55f732458fa0cbd5d561ac83d8f",
+  "tracked_modified": 5,
+  "untracked": 183,
+  "files": [
+    {
+      "status": " M",
+      "path": "docs/agent-runs/phase-12/owner-report.md"
+    },
+    {
+      "status": " M",
+      "path": "docs/agent-runs/phase-12/prompt.md"
+    },
+    {
+      "status": " M",
+      "path": "docs/agent-runs/phase-12/repairs.md"
+    },
+    {
+      "status": " M",
+      "path": "docs/agent-runs/phase-12/review.md"
+    },
+    {
+      "status": " M",
+      "path": "docs/agent-runs/phase-12/test-report.md"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation-repair-1/build/artifact-manifest.json"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation-repair-1/build/build-owner-report.txt"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation-repair-1/build/build-result.json"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation-repair-1/build/commands.json"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation-repair-1/build/expected-error-check.json"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation-repair-1/build/finalize.py"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation-repair-1/build/freeze-after.json"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation-repair-1/build/freeze-before.json"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation-repair-1/build/java-version.log.txt"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation-repair-1/build/retention-note.json"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation-repair-1/build/run.py"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation-repair-1/build/sbt-check.log.gz"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation-repair-1/build/source-after.json"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation-repair-1/build/source-before.json"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation-repair-1/build/xml-groups.json"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation-repair-1/build/xml-reports.json"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation-repair-1/coordinator/commands.json"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation-repair-1/coordinator/delta-reconstruction.json"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation-repair-1/coordinator/diff-check.log.txt"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation-repair-1/coordinator/final-integrity.json"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation-repair-1/coordinator/intermediate-integrity.json"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation-repair-1/coordinator/reverse-patch.log.txt"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation-repair-1/coordinator/static-guard-self-test.log.txt"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation-repair-1/coordinator/static-guard.log.txt"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation-repair-1/coordinator/xml-reconciliation.json"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation-repair-1/delegation.json"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation-repair-1/errata.md"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation-repair-1/evidence-manifest.json"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation-repair-1/gate-summary.json"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation-repair-1/handoff-files.json"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation-repair-1/handoff.md"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation-repair-1/infra-delta-summary.json"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation-repair-1/infra/delta.patch"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation-repair-1/infra/development-budget-fmt-check.log.txt"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation-repair-1/infra/development-budget-fmt.log.txt"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation-repair-1/infra/development-budget-init.log.txt"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation-repair-1/infra/development-budget-test.log.txt"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation-repair-1/infra/development-budget-validate.log.txt"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation-repair-1/infra/development-commands.json"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation-repair-1/infra/development-spike-fmt-check.log.txt"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation-repair-1/infra/development-spike-fmt.log.txt"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation-repair-1/infra/development-spike-init.log.txt"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation-repair-1/infra/development-spike-test.log.txt"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation-repair-1/infra/development-spike-validate.log.txt"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation-repair-1/infra/final-budget-fmt-check.log.txt"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation-repair-1/infra/final-budget-init.log.txt"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation-repair-1/infra/final-budget-test.log.txt"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation-repair-1/infra/final-budget-validate.log.txt"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation-repair-1/infra/final-commands.json"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation-repair-1/infra/final-course-fmt-check.log.txt"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation-repair-1/infra/final-course-init.log.txt"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation-repair-1/infra/final-course-test.log.txt"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation-repair-1/infra/final-course-validate.log.txt"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation-repair-1/infra/final-spike-fmt-check.log.txt"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation-repair-1/infra/final-spike-init.log.txt"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation-repair-1/infra/final-spike-test.log.txt"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation-repair-1/infra/final-spike-validate.log.txt"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation-repair-1/infra/final_checks.py"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation-repair-1/infra/original-source-files.json"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation-repair-1/infra/owner-report.txt"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation-repair-1/infra/public-docs.json"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation-repair-1/infra/red-missing-owner-init.log.txt"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation-repair-1/infra/red-missing-owner-main.tf.txt"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation-repair-1/infra/red-missing-owner-test.log.txt"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation-repair-1/infra/red-proof.json"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation-repair-1/infra/retention-manifest.json"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation-repair-1/infra/run_checks.py"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation-repair-1/infra/source-files.json"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation-repair-1/infra/test-counts.json"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation-repair-1/original-note-provenance.json"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation-repair-1/original-notes/cost-proposal.md"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation-repair-1/original-notes/evidence-manifest.json"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation-repair-1/original-notes/handoff-files.json"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation-repair-1/original-notes/handoff.md"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation-repair-1/original-notes/launch-dependencies.md"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation-repair-1/original-notes/next-steps.md"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation-repair-1/original-notes/security-self-review.md"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation-repair-1/original-notes/step-0-answers.md"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation-repair-1/original-notes/work-order.md"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation-repair-1/preflight-baseline.json"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation-repair-1/preparation-note-update.json"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation-repair-1/recording-provenance.json"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation-repair-1/repair-summary.md"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation-repair-1/source-freeze.json"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation-repair-1/step-0-answers.md"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation-repair-1/user-supplied-review.txt"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation-repair-1/user-supplied-work-order.txt"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation/build/artifact-manifest.json"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation/build/build-owner-report.txt"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation/build/build-result.json"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation/build/commands.json"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation/build/freeze-after.json"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation/build/freeze-before.json"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation/build/java-version.log.txt"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation/build/retention-note.json"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation/build/run.py"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation/build/sbt-check.log.gz"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation/build/source-after.json"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation/build/source-before.json"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation/build/xml-groups.json"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation/build/xml-reports.json"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation/coordinator/commands.json"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation/coordinator/diff-check.log.txt"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation/coordinator/final-integrity.json"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation/coordinator/intermediate-integrity.json"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation/coordinator/static-guard-self-test.log.txt"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation/coordinator/static-guard.log.txt"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation/coordinator/xml-reconciliation.json"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation/cost-management-initialization.json"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation/cost-proposal.md"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation/delegation.json"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation/evidence-manifest.json"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation/gate-summary.json"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation/handoff-files.json"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation/handoff.md"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation/infra/budget-fmt-check.log.txt"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation/infra/budget-fmt.log.txt"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation/infra/budget-init.log.txt"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation/infra/budget-test.log.txt"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation/infra/budget-validate.log.txt"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation/infra/commands.json"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation/infra/final-budget-fmt-check.log.txt"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation/infra/final-budget-init.log.txt"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation/infra/final-budget-test.log.txt"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation/infra/final-budget-validate.log.txt"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation/infra/final-commands.json"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation/infra/final-course-fmt-check.log.txt"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation/infra/final-course-init.log.txt"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation/infra/final-course-test.log.txt"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation/infra/final-course-validate.log.txt"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation/infra/final-spike-fmt-check.log.txt"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation/infra/final-spike-init.log.txt"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation/infra/final-spike-test.log.txt"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation/infra/final-spike-validate.log.txt"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation/infra/green-budget-fmt-check.log.txt"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation/infra/green-budget-fmt.log.txt"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation/infra/green-budget-test.log.txt"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation/infra/green-budget-validate.log.txt"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation/infra/green-commands.json"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation/infra/green-spike-fmt-check.log.txt"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation/infra/green-spike-fmt.log.txt"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation/infra/green-spike-test.log.txt"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation/infra/green-spike-validate.log.txt"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation/infra/red-credit-init.log.txt"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation/infra/red-credit-main.tf.txt"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation/infra/red-credit-test.log.txt"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation/infra/red-proof.json"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation/infra/retention-manifest.json"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation/infra/source-files.json"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation/infra/spike-fmt-check.log.txt"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation/infra/spike-fmt.log.txt"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation/infra/spike-init.log.txt"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation/infra/spike-test.log.txt"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation/infra/spike-validate.log.txt"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation/infra/test-counts.json"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation/launch-dependencies.md"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation/new-source-paths.json"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation/next-steps.md"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation/plan-reference.json"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation/preflight-baseline.json"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation/public/ec2-ohio-linux.response.gz"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation/public/ec2-price-error.json"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation/public/ec2-price-extract.json"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation/public/prior-12c-selected-rates.json"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation/security-self-review.md"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation/source-freeze.json"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation/step-0-answers.md"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation/work-order.md"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/reviewer-prompt-12d-preparation-recheck-1.md"
+    },
+    {
+      "status": "??",
+      "path": "docs/agent-runs/phase-12/reviewer-prompt-12d-preparation.md"
+    },
+    {
+      "status": "??",
+      "path": "infra/terraform/billing-bootstrap/.terraform.lock.hcl"
+    },
+    {
+      "status": "??",
+      "path": "infra/terraform/billing-bootstrap/README.md"
+    },
+    {
+      "status": "??",
+      "path": "infra/terraform/billing-bootstrap/main.tf"
+    },
+    {
+      "status": "??",
+      "path": "infra/terraform/billing-bootstrap/outputs.tf"
+    },
+    {
+      "status": "??",
+      "path": "infra/terraform/billing-bootstrap/tests/budget.tftest.hcl"
+    },
+    {
+      "status": "??",
+      "path": "infra/terraform/billing-bootstrap/variables.tf"
+    },
+    {
+      "status": "??",
+      "path": "infra/terraform/billing-bootstrap/versions.tf"
+    },
+    {
+      "status": "??",
+      "path": "infra/terraform/spikes/emr-spark/.terraform.lock.hcl"
+    },
+    {
+      "status": "??",
+      "path": "infra/terraform/spikes/emr-spark/README.md"
+    },
+    {
+      "status": "??",
+      "path": "infra/terraform/spikes/emr-spark/main.tf"
+    },
+    {
+      "status": "??",
+      "path": "infra/terraform/spikes/emr-spark/tests/proposal.tftest.hcl"
+    },
+    {
+      "status": "??",
+      "path": "infra/terraform/spikes/emr-spark/variables.tf"
+    },
+    {
+      "status": "??",
+      "path": "infra/terraform/spikes/emr-spark/versions.tf"
+    }
+  ]
+}

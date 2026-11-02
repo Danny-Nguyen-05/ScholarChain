@@ -1,0 +1,21 @@
+{
+  "scope": "Public scratch apply proposal only; no execution",
+  "self_excluded": true,
+  "files": [
+    {
+      "path": "owner-report.txt",
+      "bytes": 4825,
+      "sha256": "218172922f1b6a6512aab48da7a420caa46e1e8ce439c319a5a6e77750a3fa3d"
+    },
+    {
+      "path": "proposal.md",
+      "bytes": 25228,
+      "sha256": "d97abf57f30f72a3c66502a998e3962c4f2b4a2f28797237fd464a5b5d8113d5"
+    },
+    {
+      "path": "sources.json",
+      "bytes": 6275,
+      "sha256": "4d9e1970dd009f7330f04d8348333daa4175b97bccc3c1d240d80bdb4c658127"
+    }
+  ]
+}

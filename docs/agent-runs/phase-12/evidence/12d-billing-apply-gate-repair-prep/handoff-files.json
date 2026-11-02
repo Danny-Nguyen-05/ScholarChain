@@ -1,0 +1,41 @@
+{
+  "branch": "phase-12",
+  "head": "5ca8406bad5fe55f732458fa0cbd5d561ac83d8f",
+  "current_work_evidence_files": [
+    "assemble.py",
+    "coordinator-report.md",
+    "delegation.json",
+    "diff-check-result.json",
+    "diff-check.log.txt",
+    "evidence-manifest.json",
+    "final-status.log.txt",
+    "finalize.py",
+    "handoff-files.json",
+    "handoff.md",
+    "human-inputs.json",
+    "infra/artifact-manifest.json",
+    "infra/owner-report.txt",
+    "infra/preflight-design.md",
+    "infra/proposal.md",
+    "infra/sources.json",
+    "local-validation.json",
+    "preflight-status.log.txt",
+    "preflight.json",
+    "record-prefix-check.json",
+    "repair-status.json",
+    "timing-followup.json",
+    "user-supplied-external-review.txt"
+  ],
+  "current_work_reviewer_prompt": "docs/agent-runs/phase-12/reviewer-prompt-12d-identity-establishment.md",
+  "current_work_append_only_records": [
+    "docs/agent-runs/phase-12/prompt.md",
+    "docs/agent-runs/phase-12/review.md",
+    "docs/agent-runs/phase-12/repairs.md",
+    "docs/agent-runs/phase-12/owner-report.md",
+    "docs/agent-runs/phase-12/test-report.md"
+  ],
+  "human_record_changed_by_human_reported_not_agent": "docs/agent-runs/phase-12/billing-bootstrap-exception.md",
+  "earlier_uncommitted_work_retained": true,
+  "final_git_status_entries": 557,
+  "inventory_includes_itself_and_manifest": true
+}

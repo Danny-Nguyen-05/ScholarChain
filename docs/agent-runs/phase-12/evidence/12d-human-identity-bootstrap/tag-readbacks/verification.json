@@ -1,0 +1,25 @@
+{
+  "recorded_at_utc": "2026-11-01T02:12:57.707704+00:00",
+  "method": "Visual inspection of user-provided console screenshots; no agent AWS API call",
+  "tags_read_back_on_both": {
+    "course": "CS441",
+    "project": "scholarchain",
+    "environment": "course",
+    "owner": "danny",
+    "expiration_date": "2027-01-01"
+  },
+  "match_approved_values": true,
+  "screenshots": [
+    {
+      "path": "operator-tags.png",
+      "source_attachment_name": "codex-clipboard-f9f06d09-5dc4-4f12-8861-35c835389c83.png",
+      "sha256": "7e85b2b5c125cf836f39a7d8e1f9607d1089726953f0db3ca3ee42c43594a8f1"
+    },
+    {
+      "path": "role-tags.png",
+      "source_attachment_name": "codex-clipboard-29c87a81-6257-467d-b742-06b5f780ef11.png",
+      "sha256": "fdbbcb69bd9045b70597765db301024676c12a14f40aa2effcc589f6ec0a15db"
+    }
+  ],
+  "remaining": "Final operator permissions inventory confirmation; human root logout and actual session times; separate authentication verification. Prior observations preserved unchanged."
+}

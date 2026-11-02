@@ -1,0 +1,90 @@
+[
+  {
+    "installed_source": "/opt/homebrew/Cellar/awscli/2.35.4/libexec/lib/python3.14/site-packages/awscli/customizations/login/login.py",
+    "original_bytes": 10488,
+    "original_sha256": "84aaee03dbc279726cc813cff69863e0a2ac228de665a74ad524804172983b63",
+    "ranges": [
+      [
+        34,
+        61
+      ],
+      [
+        175,
+        203
+      ]
+    ],
+    "retained_as": "login.py.source-extract.txt",
+    "retained_sha256": "0ca2083297dc2033648dc927790363b436aa5de36eef57b98d24a66b2e9af02f"
+  },
+  {
+    "installed_source": "/opt/homebrew/Cellar/awscli/2.35.4/libexec/lib/python3.14/site-packages/awscli/customizations/login/utils.py",
+    "original_bytes": 11480,
+    "original_sha256": "e8f79b5dfc19bc59b466f0e21455d9954374e4440b102833819bbddcaae0557d",
+    "ranges": [
+      [
+        34,
+        45
+      ],
+      [
+        127,
+        153
+      ],
+      [
+        179,
+        197
+      ]
+    ],
+    "retained_as": "utils.py.source-extract.txt",
+    "retained_sha256": "8c3c1e2e1f6b6e07100becc80192ed3c8cfb557111986f79fefb9d1b34c8cc46"
+  },
+  {
+    "installed_source": "/opt/homebrew/Cellar/awscli/2.35.4/libexec/lib/python3.14/site-packages/awscli/botocore/credentials.py",
+    "original_bytes": 99431,
+    "original_sha256": "5ebbc23d4bd72aa632ce3288d0936ca2297431c9b9255f4b56989688e27a18db",
+    "ranges": [
+      [
+        1628,
+        1676
+      ],
+      [
+        1804,
+        1846
+      ],
+      [
+        2647,
+        2697
+      ]
+    ],
+    "retained_as": "credentials.py.source-extract.txt",
+    "retained_sha256": "52e042fe702053ad6650db9905a8ea4bfa952293302895521d77323b5eaf0d61"
+  },
+  {
+    "installed_source": "/opt/homebrew/Cellar/awscli/2.35.4/libexec/lib/python3.14/site-packages/awscli/botocore/credentials.py",
+    "original_bytes": 99431,
+    "original_sha256": "5ebbc23d4bd72aa632ce3288d0936ca2297431c9b9255f4b56989688e27a18db",
+    "ranges": [
+      [
+        202,
+        213
+      ],
+      [
+        260,
+        270
+      ],
+      [
+        915,
+        933
+      ],
+      [
+        1638,
+        1671
+      ],
+      [
+        1806,
+        1838
+      ]
+    ],
+    "retained_as": "cli-resolver.source-extract.txt",
+    "retained_sha256": "2b9d06605a750e43482c4ab689d4ba85382df5e9c2f5e27cc3ee08fd46f702ef"
+  }
+]

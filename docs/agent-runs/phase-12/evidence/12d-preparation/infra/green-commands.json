@@ -1,0 +1,116 @@
+[
+  {
+    "argv": [
+      "/tmp/scholarchain-phase12b-repair1-infra/terraform",
+      "fmt",
+      "-recursive"
+    ],
+    "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain/infra/terraform/billing-bootstrap",
+    "started_utc": "2026-10-30T21:50:36.083166+00:00",
+    "ended_utc": "2026-10-30T21:50:36.102303+00:00",
+    "exit_code": 0,
+    "log": "green-budget-fmt.log.txt",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "argv": [
+      "/tmp/scholarchain-phase12b-repair1-infra/terraform",
+      "fmt",
+      "-check",
+      "-recursive"
+    ],
+    "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain/infra/terraform/billing-bootstrap",
+    "started_utc": "2026-10-30T21:50:36.102358+00:00",
+    "ended_utc": "2026-10-30T21:50:36.120950+00:00",
+    "exit_code": 0,
+    "log": "green-budget-fmt-check.log.txt",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "argv": [
+      "/tmp/scholarchain-phase12b-repair1-infra/terraform",
+      "validate",
+      "-no-color"
+    ],
+    "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain/infra/terraform/billing-bootstrap",
+    "started_utc": "2026-10-30T21:50:36.120985+00:00",
+    "ended_utc": "2026-10-30T21:50:37.188489+00:00",
+    "exit_code": 0,
+    "log": "green-budget-validate.log.txt",
+    "sha256": "f7997225125835fdd14060ac776d273f394b874f9a481b9e2122c83dc8adc5c1",
+    "bytes": 38
+  },
+  {
+    "argv": [
+      "/tmp/scholarchain-phase12b-repair1-infra/terraform",
+      "test",
+      "-no-color"
+    ],
+    "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain/infra/terraform/billing-bootstrap",
+    "started_utc": "2026-10-30T21:50:37.188521+00:00",
+    "ended_utc": "2026-10-30T21:50:38.057086+00:00",
+    "exit_code": 0,
+    "log": "green-budget-test.log.txt",
+    "sha256": "26bb87e8fcedcd596cc037560fad3e6ec37031fec4614bd6ac879fe2514cc2a5",
+    "bytes": 375
+  },
+  {
+    "argv": [
+      "/tmp/scholarchain-phase12b-repair1-infra/terraform",
+      "fmt",
+      "-recursive"
+    ],
+    "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain/infra/terraform/spikes/emr-spark",
+    "started_utc": "2026-10-30T21:50:38.057143+00:00",
+    "ended_utc": "2026-10-30T21:50:38.072505+00:00",
+    "exit_code": 0,
+    "log": "green-spike-fmt.log.txt",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "argv": [
+      "/tmp/scholarchain-phase12b-repair1-infra/terraform",
+      "fmt",
+      "-check",
+      "-recursive"
+    ],
+    "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain/infra/terraform/spikes/emr-spark",
+    "started_utc": "2026-10-30T21:50:38.072544+00:00",
+    "ended_utc": "2026-10-30T21:50:38.087212+00:00",
+    "exit_code": 0,
+    "log": "green-spike-fmt-check.log.txt",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "argv": [
+      "/tmp/scholarchain-phase12b-repair1-infra/terraform",
+      "validate",
+      "-no-color"
+    ],
+    "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain/infra/terraform/spikes/emr-spark",
+    "started_utc": "2026-10-30T21:50:38.087255+00:00",
+    "ended_utc": "2026-10-30T21:50:39.019255+00:00",
+    "exit_code": 0,
+    "log": "green-spike-validate.log.txt",
+    "sha256": "f7997225125835fdd14060ac776d273f394b874f9a481b9e2122c83dc8adc5c1",
+    "bytes": 38
+  },
+  {
+    "argv": [
+      "/tmp/scholarchain-phase12b-repair1-infra/terraform",
+      "test",
+      "-no-color"
+    ],
+    "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain/infra/terraform/spikes/emr-spark",
+    "started_utc": "2026-10-30T21:50:39.019303+00:00",
+    "ended_utc": "2026-10-30T21:50:39.886631+00:00",
+    "exit_code": 0,
+    "log": "green-spike-test.log.txt",
+    "sha256": "18480c6550a16bf4a744305a7fd8394b3ce45408edb8bca2dbc9886482405037",
+    "bytes": 410
+  }
+]

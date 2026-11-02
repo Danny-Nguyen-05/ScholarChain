@@ -1,0 +1,12 @@
+{
+  "checked_utc": "2026-11-01T21:10:45.878199+00:00",
+  "type": "Generic email-pattern scan ONLY",
+  "scope": "Both final new public packets, all5script files, reviewer prompt and5appended suffixes",
+  "scope_units": 38,
+  "reserved_fixture_matches": 5,
+  "other_address_matches": 0,
+  "fixture_allowlist": "Reserved synthetic address in public artifacts; additionally the reserved other address only in the exact authored subscriber-drift test source. No non-reserved address permitted.",
+  "exclusions": "This count-only receipt and hash-only root manifests; original specialist manifest included",
+  "actual_recipient_processing": false,
+  "future_requirement": "Authorized runtime exact-recipient scan after final assembly/freeze; repeat after any change"
+}

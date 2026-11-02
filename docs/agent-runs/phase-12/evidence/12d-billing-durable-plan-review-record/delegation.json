@@ -1,0 +1,9 @@
+{
+  "agent": "/root/infra_12d_apply_proposal",
+  "role": "infra-engineer",
+  "model": "Inherited parent; exact native model version not exposed",
+  "writes": "Public scratch proposal/source/report/manifest only",
+  "coordinator_owns_repo_evidence": true,
+  "children_or_reviewers": false,
+  "executable_code_or_live_calls_authorized": false
+}

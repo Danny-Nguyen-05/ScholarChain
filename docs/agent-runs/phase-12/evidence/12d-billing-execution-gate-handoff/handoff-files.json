@@ -1,0 +1,30 @@
+{
+  "baseline_entries": 750,
+  "final_entries": 765,
+  "new_file_count": 15,
+  "new_files": [
+    "docs/agent-runs/phase-12/evidence/12d-billing-execution-gate-handoff/coordinator-report.txt",
+    "docs/agent-runs/phase-12/evidence/12d-billing-execution-gate-handoff/diff-check-result.json",
+    "docs/agent-runs/phase-12/evidence/12d-billing-execution-gate-handoff/evidence-manifest.json",
+    "docs/agent-runs/phase-12/evidence/12d-billing-execution-gate-handoff/final-status.log.txt",
+    "docs/agent-runs/phase-12/evidence/12d-billing-execution-gate-handoff/handoff-files.json",
+    "docs/agent-runs/phase-12/evidence/12d-billing-execution-gate-handoff/handoff.md",
+    "docs/agent-runs/phase-12/evidence/12d-billing-execution-gate-handoff/preflight-status.log.txt",
+    "docs/agent-runs/phase-12/evidence/12d-billing-execution-gate-handoff/preflight.json",
+    "docs/agent-runs/phase-12/evidence/12d-billing-execution-gate-handoff/preservation-check.json",
+    "docs/agent-runs/phase-12/evidence/12d-billing-execution-gate-handoff/public-address-scan.json",
+    "docs/agent-runs/phase-12/evidence/12d-billing-execution-gate-handoff/record-prefix-check.json",
+    "docs/agent-runs/phase-12/evidence/12d-billing-execution-gate-handoff/reviewed-bindings.json",
+    "docs/agent-runs/phase-12/evidence/12d-billing-execution-gate-handoff/user-supplied-review.txt",
+    "docs/agent-runs/phase-12/evidence/12d-billing-execution-gate-handoff/validation-checks.json",
+    "docs/agent-runs/phase-12/reviewer-prompt-12d-billing-execution-gate-handoff.md"
+  ],
+  "modified_records": [
+    "docs/agent-runs/phase-12/prompt.md",
+    "docs/agent-runs/phase-12/review.md",
+    "docs/agent-runs/phase-12/repairs.md",
+    "docs/agent-runs/phase-12/owner-report.md",
+    "docs/agent-runs/phase-12/test-report.md"
+  ],
+  "other_source_changes": false
+}

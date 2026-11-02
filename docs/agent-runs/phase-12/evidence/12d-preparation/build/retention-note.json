@@ -1,0 +1,6 @@
+{
+  "origin_manifest": "artifact-manifest.json",
+  "raw_log_alias": "sbt-check.log.txt",
+  "retained_as": "sbt-check.log.gz",
+  "verification": "decompress gzip; verify original raw SHA and bytes against origin manifest. Raw duplicate omitted to keep evidence lean."
+}

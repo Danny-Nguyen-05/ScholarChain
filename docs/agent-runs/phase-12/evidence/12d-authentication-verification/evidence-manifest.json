@@ -1,0 +1,70 @@
+{
+  "artifact_count": 13,
+  "artifacts": [
+    {
+      "path": "caller-identity.user-supplied.json",
+      "sha256": "7e89cdb80d9d422a65b1d49acbe8222046bb136779a066c93f01abec32e6ac78",
+      "bytes": 147
+    },
+    {
+      "path": "coordinator-report.md",
+      "sha256": "397fcba82af058401d750a628b3a2065c8bd22c23c21ae805e529182d5b749c2",
+      "bytes": 4330
+    },
+    {
+      "path": "diff-check.log.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "handoff-files.json",
+      "sha256": "07414cc5ad9a2f57405ed87140bbee8dfecfbeace8dea07a8d63806310da42bd",
+      "bytes": 64745
+    },
+    {
+      "path": "human-command-records.json",
+      "sha256": "89dd89b9121aa34a12fbdc51b1c55898e8b71116898a4ce8e44ee593e0ca654c",
+      "bytes": 1237
+    },
+    {
+      "path": "human-record-preservation.json",
+      "sha256": "ba3a9b11af7221633a3c8e53ffd476ab4ad8c93910b34e29e9ecd69663e0323f",
+      "bytes": 211
+    },
+    {
+      "path": "local-checks.json",
+      "sha256": "98e0bcadee2f8ed7b8637e1d8283a185dd134dd58727b2059aef9399cd96d7a3",
+      "bytes": 571
+    },
+    {
+      "path": "next-billing-plan-proposal.md",
+      "sha256": "447ca09fae187bc53489aa423f01a05e41d2b4331531b6f2446a627af9436bd2",
+      "bytes": 2695
+    },
+    {
+      "path": "report-prefix-check.json",
+      "sha256": "8cb5fe76ff09d0b7c44086085dc028710fb8845f81fa4a3a5f1e92c8179a6bcf",
+      "bytes": 1307
+    },
+    {
+      "path": "result.json",
+      "sha256": "03b847b1b80d94999955e68ab98e695951c74529e3202db1d20ce0e9fb7380bf",
+      "bytes": 2840
+    },
+    {
+      "path": "screenshots/billing-role-console-display.png",
+      "sha256": "971fc20d1465c0a66e9f77b075e739feedd521c72c0f35b112cfd48e19fef8c8",
+      "bytes": 1018520
+    },
+    {
+      "path": "screenshots/operator-console-sign-in.png",
+      "sha256": "32d715d464a35bb6099ba5db9abb97750f9e0fa94b47133794f2d191eb87ac01",
+      "bytes": 733554
+    },
+    {
+      "path": "user-go-ahead-transcription.json",
+      "sha256": "c7ea597cb49334ccb2323481ef60c12841f57f191e6f1621281f6eca13a96eaa",
+      "bytes": 1552
+    }
+  ]
+}

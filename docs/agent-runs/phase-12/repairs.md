@@ -152,3 +152,284 @@ The independent static guard under tests/** is test-engineer-owned. Coordinator 
 Infra owner reports N9/N10/N11/N12/N14/N17 implemented with retained RED v2 and 40/0 GREEN. N9 binds the disk policy to the service role and project CMK; N10 rejects wildcard ARN segments; N11 omits disabled widgets; N12 adds native error/failure/latency panels; N14 guards missing input; N17 covers the project bucket and index SourceArn paths. This is an implementation disposition, not independent approval. See evidence/12c/infra/{owner-report.md,red-proof.json,delta.patch,coverage-counts.json}.
 
 B1/B2/B3/R1 remain asserted. R2 has no address replacement in the fresh-state real plan. N13, N15/N16 and optional N3/N4/N6 were not repaired; N15/N16 are disclosed in security-self-review.md.
+
+
+## Subphase12D — preparation dependencies
+
+No new independent review was received. These are preparation dependencies, not reviewer defects or live execution results.
+
+- Portable G1 CLI inputs and shared/distributed filesystem behavior: spark-engineer/infra-engineer; Phase6Main NIO metadata and Spark/Hadoop Parquet must address the same shared files. No application adaptation is authorized or applied by this preparation.
+- Class-origin probe and baseline: spark-engineer/build owner; driver AND executor origins/versions, distributed DataFrame/Parquet proof, local/distributed row/hash comparison with the same assembledJAR and logical bindings. Hashes retain nestedcontext.runId, so historical differently packaged runs are not a valid comparison baseline.
+- Independent deadline and cleanup: infra-engineer/deploy-engineer; two-hour total includes provisioning/retries/teardown. Idle termination does not enforce this clock. Future Terraform-authored deadline mechanism and exact reviewed execution plan required.
+- Monitoring/access/human gate: human architect; live account-wide USD200 before-credit monitor, private subscriber and explicit project period, CostExplorer enabled, conservative remaining allowance, separate non-root temporary deployment identity and user-written exact live approval. Last12Cbudget count0; no new account check.
+- PriorB1/B2/B3 and R1 preserved. N19/N20 and all other12Cnonblocking/open live gates are carried unchanged. No unrelated repairs this round.
+
+
+## Subphase 12D preparation — repair round 1
+
+- F1 Medium, blocking, OPEN; owner infra-engineer. Add and validate course/project/environment/owner/expiration_date tags, retention-aware expiration, exact mock assertion and genuine missing-tag RED; all three roots and static/build gates must pass with new freeze. Fold alert-threshold rationale into this repair.
+- F2 Medium, nonblocking for preparation; coordinator discloses USD15−10=USD5 remaining all-EMR reserve, USD5.09 upper-window margin, later allocation decisions. Human decision on keeping/lowering spike cap is pending.
+- F3 Low, nonblocking; infra-engineer README must disclose deprecated CostTypes and require credits/refunds exclusion readback or alternative routed for review.
+- F4 Low, nonblocking; infra-engineer README must say zero-resource claim is based on source inspection. Optional test-engineer scope is not assigned.
+- F5 Low, nonblocking; coordinator records historical environment omission as erratum and includes only selected non-secret environment in new command records; never reconstruct missing historical metadata as observed.
+- F6 Low, nonblocking; coordinator restores spacing in untracked notes, preserving originals, and appends readable errata to tracked records. Do not rewrite prior record bytes.
+- F7 Medium, carried/nonblocking; human decision pending on existing Gmail-bearing source paths. No redaction/history rewrite or changes to earlier human records. Future references use neutral repository plan copy.
+- Info: document alert-threshold rationale; existing guard omits .tftest.hcl; disclose excluded stale TestRunMarkerSpec XML. B1/B2/B3/R1 and N19/N20 unchanged.
+- Step0 answers are required before implementation. All live prerequisites remain unmet; no account calls, real plan/apply/destroy/import, paid calls, reviewers, commits/pushes or Phase13.
+
+
+## Subphase 12D preparation repair round 1 — readable erratum
+
+The earlier 12D preparation text is preserved byte-for-byte. Read its joined words as ordinary spaced prose: for example, “203 frozen files at 2026-10-30”, “main foundation budget”, “before inventory”, “assembled JAR” and “13 files”. These spacing corrections change no observed gate result.
+
+The original preparation had 51 passing Terraform runs, 69 assertions, 26 expected-failure runs, a 203-file freeze and a full JDK 17 check with 1,255 tests in 157 fresh XML reports. One stale TestRunMarkerSpec report under project/verification/target was excluded. Those results describe the original source state; use the repair-round evidence for the repaired source and new gate results.
+
+F2 allocation clarification: the original USD 15 reserve covers ALL EMR spikes and experiments. The former USD 10 spike proposal would leave USD 5 for later EMR. The user now chose a USD 5 proposed spike cap, leaving USD 10 if fully spent. The 12C upper-window margin remains USD 5.09. Later EMR runs require a new allocation decision and exact all-resource costing. Nothing increases the shared USD 200 before-credit ceiling or authorizes spending.
+
+F5 metadata clarification: historical Terraform records omit their environment field. The original prose names TF_CLI_CONFIG_FILE, but the missing per-command observation is not reconstructed as fact. New repair records explicitly retain selected non-secret environment variables. Original logs and metadata remain unchanged.
+
+F7 decision transcription: use neutral references in new material and preserve existing records/history. No historical redaction, human-record rewrite or history rewrite is authorized. The neutral authority reference is the repository copy at docs/agent-runs/phase-12/evidence/12c/phase12-plan-at-start.md.
+
+
+## Subphase 12D preparation repair round 1 — implementation disposition
+
+F1 is implemented and awaiting independent acceptance. F2–F6 corrections and disclosures are complete within the assigned offline scope. F7 is recorded as the user's decision to use neutral future references while preserving existing records/history. No reviewer acceptance or live approval is inferred. Native checks passed 53/0; the full post-freeze repository gate passed. See evidence/12d-preparation-repair-1/ for exact counts, timestamps and hashes.
+
+
+## Subphase 12D preparation repair round 1 — independent recheck
+
+- Independent user-launched recheck: APPROVE for preparation repair round 1 only. F1 is ACCEPTED by the external reviewer; F2–F7 dispositions verified. No live execution, plan, spending or apply approval.
+- New N1 Low, NONBLOCKING, carried; owner infra-engineer. Billing-bootstrap README.md:30 says tag permissions “if used” although all five tags are mandatory. At the next billing-bootstrap or deployment-identity touch, state tagging actions are required and verify them against current AWS action documentation before policy review/apply. No source edit in this record-only turn.
+- I1 Info: sensitive-value RED accepted by reviewer using sole-mutation, genuine assertion failure and matching GREEN evidence. No repair required.
+- I2 Info: future build records should retain the JDK PATH prefix instead of the full inherited tool path. Preserve existing records unchanged.
+- I3 Info: dollar cap is not an enforceable billing cutoff; the existing spike README retains that disclosure. No new live gate is passed.
+- All live prerequisites retained unchanged: active monitor/recipient proof; usable cost data and conservative remaining allowance; separate non-root temporary deployment identity; portable G1; same-JAR baseline; actual driver/executor origins; shared-filesystem proof; independent elapsed deadline; genuine isolated plan/checksum/review; human-written exact execution and teardown approval.
+- B1/B2/B3/R1 and N19/N20 carried unchanged; planner remains read-only. Continuation selection is pending. No AWS/paid calls, real plan/apply/destroy/import, private-input reads, human approval writes, reviewers, commits, pushes or Phase 13.
+
+
+## Subphase 12D billing-monitor plan — N1 documentation disposition
+
+The preparation recheck's N1 tagging-permissions wording is corrected in billing-bootstrap/README.md. Tagged creation requires budgets:ModifyBudget plus budgets:TagResource; reads/tag readback require budgets:ViewBudget and budgets:ListTagsForResource; removals use budgets:UntagResource. The official service authorization reference is cited. No IAM policy or grant was created. The authorized plan proposes one budget creation and nothing was applied. Independent review pending. All prior live blockers and B1/B2/B3/R1/N19/N20 remain unchanged.
+
+
+## Subphase 12D billing-plan review — carried findings and decisions
+
+- User-launched review verdict: APPROVE for the read-only billing plan ONLY. No execution, IAM grant, spending, apply or live 12D approval.
+- Billing-plan review B1 — Low, NONBLOCKING, carried to infra-engineer. The reported IAM action list is incomplete and aws-portal actions may not support budget-ARN scoping. Resolve against current official action/resource documentation before any deployment-identity policy or execution plan. No IAM/source correction in this record-only turn. Distinct from the earlier 12A/12B B1 finding.
+- Billing-plan review B2 — Low, NONBLOCKING, human retention decision PENDING. Protected /tmp/scholarchain-phase12d-billing-plan artifacts contain the plaintext recipient (directly or within plan/JSON/logs). Human chooses deletion or a stated retention location/purpose. The agent neither reads nor deletes them in this turn. Distinct from the earlier 12A B2 route-test finding.
+- The supplied review contains the 14-field report and mentions Info in the work order; no additional detailed Info finding text was supplied. Record what was provided without inventing details.
+- Saved plan remains bound to read-only scholarchain-planner, not an execution plan for another identity. A new execution identity requires its own fresh plan/checksum/review and human-written apply gate. Never elevate or repurpose planner.
+- Budget is not active. CUSTOM/CostTypes/tag acceptance, accounting, alert delivery, usable cost data and remaining allowance unverified. USD 5 proposed spike cap and USD 10 remaining all-EMR reserve unchanged; no spending authorized.
+- All EMR/G1/same-JAR/probe/filesystem/deadline/isolated-plan/teardown/human-approval prerequisites remain open. Earlier B1/B2/B3/R1 and N19/N20 remain carried unchanged.
+- No source/infra edit, AWS/account/paid call, Terraform invocation, credential/state/private-input/raw-plan read, private-artifact deletion, human approval write, reviewer launch, commit, push or Phase 13 in this record-only task.
+
+
+## Subphase 12D billing execution preparation
+
+- Billing review B1: drafted exact-budget API permission audit and five-action policy, distinguishing current Budgets actions from legacy global aws-portal actions. Documentation/source work complete; independent review and live authorization remain open. This is not old 12A B1.
+- Billing review B2: human reports deleting /tmp/scholarchain-phase12d-billing-plan; metadata-only check confirms absence. No private input recovered. Historical sanitized packet preserved; no execution artifact remains. This is not old 12A B2.
+- Actual operator and bootstrap route remain human decisions. No root-run Terraform, planner elevation, console exception, IAM grant or apply inferred.
+- Prior B1/B2/B3/R1 and N19/N20 unchanged. Other open items, live prerequisites and the USD 5 proposed cap/USD 10 remaining EMR reserve/USD 5.09 upper-window margin unchanged. No new repair outside billing policy preparation.
+
+
+## Subphase 12D billing execution preparation — independent review dispositions
+
+- User-launched verdict APPROVE for OFFLINE PREPARATION ONLY. No authorization for IAM identity/role/policy installation, console exception, real plan/apply, budget creation, spending or Phase 12D completion.
+- Billing B1 RESOLVED by the reviewed exact-budget five-action policy and documented exclusion of legacy global aws-portal permissions. Live authorization remains unverified. This is distinct from earlier infrastructure B1.
+- E1 — Low, NONBLOCKING, carried to infra-engineer at the next touch of billing-execution/variables.tf:31: compare the planner name case-insensitively using lower(...) and add a mixed-case planner rejection test. No repair this record-only turn.
+- E2 — Info: the billing README audit-link insertion comprises two sentences; the prior handoff's one-sentence wording is imprecise. Preserve earlier records; no source change needed here.
+- E3 — Info, pending human identity/credential-path decision: browser aws login MFA-context compatibility is unverified. Access-key/MFA AssumeRole conflicts with the no-long-lived-key stance; Identity Center would need a separately reviewed design. No fallback is selected or approved.
+- Deployment identity, installed billing role/policy, execution plan, active monitor, recipient delivery, usable cost data and conservative remaining allowance remain absent or unverified by this work. Old planner-bound plan was deleted and is not reusable. Planner remains read-only, never trusted or elevated.
+- Proposed USD 5 spike cap, USD 10 remaining all-EMR reserve and USD 5.09 upper-window margin unchanged and unapproved. Every G1/same-JAR/class-origin/filesystem/elapsed-deadline/isolated-plan/teardown gate open. Prior B1/B2/B3/R1 and N19/N20 carried unchanged.
+- Human choices remain pending; answers will be recorded only as coordinator transcriptions, never as exception, IAM, plan, apply or spending approval. No source edit, AWS/IAM/Terraform/build call, secret/state/private-input read, console action, human-owned record edit, agent/reviewer launch, commit, push or Phase 13 in this continuation.
+
+
+## Subphase 12D offline browser-login path evaluation
+
+- E3 evaluation: the original IAM-user OAuth MFA-context inheritance remains unverified. Recommended next offline design is candidate B: operator console MFA → strict-MFA Switch Role → role-selected aws login → native provider login_session. This avoids reliance on inheritance or a second STS call; composition is not live-proven.
+- New documented design dependency: login requires both signin:AuthorizeOAuth2Access and signin:CreateOAuth2Token. For B, propose a separate exact account/region/localhost statement on the billing role. No grant, policy-source amendment or install in this evaluation.
+- Provider compatibility: CLI can prompt for explicit MFA, but the pinned provider's shared-profile MFA path lacks an interactive token callback. Candidate A therefore needs a separately reviewed credential-process bridge. It is an alternative, never an automatic fallback. GetSessionToken with temporary login credentials is not an accepted shortcut.
+- E1 remains Low/nonblocking and untouched until the next billing-execution source edit; include lower(...) comparison and mixed-case planner negative then. E2 two-sentence wording correction remains append-only historical clarification. Billing B1 remains resolved; old B1/B2/B3/R1 and N19/N20 unchanged.
+- User selected evaluation recommendations and proposed operator name only; no actual identity/ARN verified, human exception or live approval inferred. Planner remains read-only and never trusted/elevated. All live prerequisites and financial bounds unchanged.
+
+
+## Subphase 12D offline login-path evaluation — independent review dispositions
+
+- Verdict APPROVE for OFFLINE LOGIN-PATH EVALUATION ONLY. No setup, console exception, login, installed IAM grant, account plan/apply, spending or full 12D approval.
+- L1 — Info, input for infra-engineer's next offline amendment: proposed exact-localhost scope follows AWS's managed-policy pattern, while the authorization reference also lists console resources. Live scope verification remains open; denial must stop for review with no automatic console/global widening. Ask whether to add exact signin:OAuthClientId same-device pin; recommended yes, disclosed as an additional possible live denial.
+- L2 — Info, input for the human choice and infra-engineer documentation: specify bootstrap-assigned console password/MFA, forced-reset choice and any ChangePassword permission, and that no MFA self-management is included without separate review. Recommended no forced reset grant and bootstrap-assigned MFA; no answer inferred.
+- L3 — Info, input for infra-engineer documentation: login/role/refresh lifetime remains unverified. Mid-plan expiry must fail closed, with separate re-login on the dedicated profile, never fallback to root/planner or silent permission widening.
+- E1 remains carried until the authorized source amendment: lower(operator_user_arn) planner comparison and mixed-case rejection test. Candidate B remains inferred from documentation; A/permanent-key/Identity Center fallbacks not selected. Earlier B1/B2/B3/R1 and N19/N20 unchanged.
+- Step 0 choices are PENDING; no amendment or source edit starts until the human answers. Answers will be coordinator transcriptions, not approval/exception records. Planner remains read-only. All billing/EMR live prerequisites and proposed USD 5 cap/USD 10 reserve/USD 5.09 margin unchanged.
+
+
+## Subphase 12D offline billing-execution policy amendment
+
+- E1 implementation completed, independent review pending: planner comparison case-folded with lower(operator_user_arn); mixed-case and mixed-case-under-path rejection tests pass. Old-guard RED catches first missing expected failure (14/1/4 skipped); no claim the skipped path case has individual RED proof.
+- L1 addressed in offline draft: separate exact two-action localhost login policy with strict same-device OAuthClientId condition; full independent JSON/binding assertions and widening RED. Managed-policy scope inference/extra-condition denial risk retained; never automatically widen to console/global/remote. Live acceptance unverified.
+- L2 documentation follows user-selected bootstrap-set password with no forced reset or ChangePassword grant; bootstrap-assigned MFA with no self-management grant. No password, device, identity or permission is created.
+- L3 documented fail-closed mid-plan expiry and dedicated-profile re-login/fresh plan/checksum/review under later authorization; no root/planner/fallback or partial-plan reuse. Refresh-chain lifetime remains unverified.
+- Budget/trust/caller bodies remain byte-identical, five-action budget scope/strict MFA unchanged. Billing B1 stays resolved; earlier B1/B2/B3/R1/N19/N20 and all unrelated source unchanged.
+- User's defaults authorize this offline amendment only. No human gate/exception, actual operator/role, login grant, budget/monitor/delivery/cost-data or live EMR approval inferred. USD 5 proposed cap/USD 10 reserve/USD 5.09 margin unchanged and unapproved.
+
+
+## Subphase 12D offline billing-execution policy amendment — independent review dispositions
+
+- Verdict APPROVE for OFFLINE AMENDMENT ONLY. No identity setup, console exception, login/account/IAM call, real plan/apply, spending or Phase 12D completion authorized.
+- E1 RESOLVED by the reviewed case-insensitive planner guard and mixed-case negative tests.
+- L1–L3 ADDRESSED in README: scope/client-ID inference and denial stop without widening; bootstrap-set password without forced reset/ChangePassword grant and bootstrap-assigned MFA without self-management; session expiry fails closed with dedicated-profile re-login and a fresh reviewed plan. All live acceptance remains unverified.
+- Info RED coverage carried OPTIONAL: the old-guard mutation proves the first mixed-case failure only, path variant was skipped; three region-rejection cases have no individual RED. No additional repair needed for this offline approval, and no skipped case is claimed as proof.
+- Identity-establishment decision remains PENDING. Existing privileged non-root Terraform-first bootstrap is available if the human supplies an already-authorized identity/session method. Otherwise the proposed one-time human console bootstrap requires a personally recorded exception before any action. The agent neither writes an exception/approval nor infers one from a route/name/work-order choice.
+- Proposed names remain scholarchain-billing-operator and scholarchain-billing-deployer; neither exists or is verified by this work. Candidate B remains inferred/live-unverified; scoped login denial stops for review, with no root/planner/A/permanent-key/Identity Center fallback. Old planner-bound plan remains deleted.
+- No operator, role/login grant, budget/execution plan/active monitor/delivery/accounting acceptance/usable cost data/remaining allowance established or verified. Proposed USD 5 cap/USD 10 remaining EMR reserve/USD 5.09 margin unchanged and unapproved; every G1/same-JAR/class-origin/filesystem/elapsed-deadline/isolated-plan/teardown gate open. Earlier B1/B2/B3/R1 and N19/N20 unchanged.
+- This continuation records the review and asks for choices only. No source/infra edit, AWS/login/IAM/paid call, console action, Terraform/build run, private/config/credential/cache/state read, human record write, reviewer launch, commit/push or Phase 13. Answers will be coordinator transcriptions only, never approvals or exception records.
+
+
+## Subphase 12D — human identity-route choices (coordinator transcription)
+
+The user answered the pending questions:
+
+1. “Consider the limited human console-bootstrap route (Recommended if root and planner are your only identities)”.
+2. “Keep both names (Recommended)”: proposed user scholarchain-billing-operator and role scholarchain-billing-deployer. These names are proposals, not verified identities.
+3. “Post-exception read-only verification checklist for your manual setup (Recommended for the console route)”. This follow-up is conditional on the chosen route’s prerequisites.
+
+This is a coordinator transcription of planning choices only. It is not an exception, security-change approval, IAM creation authorization, login authorization, budget/plan/apply approval or spending approval. The human-owned console exception has not been supplied or verified. Do not write human-gate.md, accepted-commit.md, approvals or exception records on the human’s behalf. No console or AWS action occurred.
+
+Next gate: the human personally records the exact limited account-access exception before any action, then supplies a separately bounded checklist work order when prerequisites exist. The proposed scope remains the dedicated operator with bootstrap-set password/no forced reset, bootstrap-assigned MFA/no self-management, and the one billing role with reviewed exact trust/caller/execution/same-device login policies and required governance tags. No root access keys, AdministratorAccess, planner change, Organizations/Identity Center enablement, budget creation or unrelated resources. Actual operator ARN and live login chain remain unverified. No automatic setup or checklist execution starts from these answers.
+
+All live billing/EMR gates remain open; old planner plan remains deleted; proposed USD 5 cap/USD 10 EMR reserve/USD 5.09 margin and B1/B2/B3/R1/N19/N20 unchanged.
+
+
+## Subphase 12D — observed manual setup and role-first CLI authentication
+
+- The dedicated operator/role, exact trust/caller/budget/login documents, required tags and one-hour role maximum were checked via user screenshots/pasted readbacks. Operator one-policy inventory and root logout are user-confirmed.
+- E3 / candidate-B role-first CLI path: user-reported console login, role switch and browser CLI login now culminate in the expected billing-role GetCallerIdentity JSON. This closes the CLI identity check only; it does not prove native Terraform provider consumption, full refresh lifetime, a standalone MFA claim from STS or live budget effectiveness.
+- The earlier console password-label inconsistency did not prevent the subsequently reported operator console sign-in; no password reset or MFA removal was performed by this work.
+- Actual bootstrap timing/compliance with the proposed 60-minute session remains unverified. Do not backdate or infer times from screenshot creation timestamps. Manual IAM Terraform ownership/adoption remains a separate reviewed decision.
+- B1/B2/B3/R1 (12B/12C), N19/N20, all live budget/accounting/delivery/cost gates and all EMR prerequisites are carried unchanged. No active monitor was verified and no budget creation, new plan/apply or spending was authorized in this authentication check.
+
+
+## Subphase 12D — fresh billing execution-identity read-only plan
+
+Planning now demonstrates pinned provider consumption of the dedicated login profile. Initial sandbox provider handshake failure is retained; identical pinned retry passed. No source repair or policy widening occurred. Exact provider ARN, refresh lifetime, live budget acceptance/delivery, remote ownership, manual IAM adoption and bootstrap timing remain limited/unverified. No active monitor or paid EMR readiness is claimed. B1/B2/B3/R1/N19/N20 and all live gates carry forward unchanged.
+
+
+## Subphase 12D — fresh plan review findings P1–P3
+
+- P1 Medium, blocks apply. Coordinator routes user-launched independent review of identity-decision, human-bootstrap and authentication packets. Human architect personally records actual setup timing or inability/reason. OPEN: timing clarification and external review pending. Human reported timing recorded, but file currently changes supervised window to9–10PM and still promises actual times afterward; creation screenshots display8:01/8:23PM. Agent will not edit the human record.
+- P2 Medium, blocks apply. Human selected /Users/danny/Library/Application Support/ScholarChain/terraform/billing-bootstrap/ and sibling billing-bootstrap-backups/, modes0700 directories/0600 sensitive files, outside Git/cloud sync. Keep state/backups until reviewed teardown and human-approved cleanup; plans until superseded/cleanup approval. Local backups do not protect against disk failure. OPEN: durable-path regeneration and independent checksum review await P1. Prior /tmp plan is historical read-only evidence, not an apply artifact. Infra-engineer/coordinator own preparation; human owns location/retention decisions.
+- P3 Low, required before later apply. Coordinator prepares explicitly authorized in-window exact-role caller and exact-name budget absence checks. Stop on presence, wrong identity, denied/network/unknown result; no ad hoc import or policy widening. OPEN for later authorized execution; no live check now.
+
+Prior plan APPROVE does not approve apply, IAM changes, spending or Phase12D completion. B1/B2/B3/R1/N19/N20 and all live EMR gates unchanged.
+
+
+## Subphase 12D — human actual-timing clarification
+
+P1 timing statement is now explicitly supplied by the human in chat:9–10PM Chicago October31. Stop asking for repeated saves. Screenshot creation times20:01/20:23UTC-05 remain earlier and unexplained; independent reviewer must assess this rather than coordinator inventing reconciliation. P1 remains OPEN pending external identity-review verdict; P2 remains OPEN pending later durable-path plan and review. No human-record bytes changed by agent.
+
+
+## Subphase 12D — P1 identity review F1–F4
+
+- F1 Medium BLOCKING P1. Human timing record contradicts AWS20:01/20:23 creation and20:33 retained setup evidence; exact duration and compliance unverified. Human now reports uncertain approximate8–9PM and explicitly requested its verbatim append; prior bytes preserved. OPEN: human must personally address the observed timestamps and accept/reject window/60-minute deviation (or supply consistent exact timing), followed by user-launched narrow recheck. No invented actual times or backdating.
+- F2 Low. Prior exact-request provenance for original replacement paragraph is not retained verbatim in available context. Recorded honestly in append-provenance.json. OPEN until human affirms paragraph or original request is supplied. New explicit timing-append request and dictated text are retained separately; these do not establish old paragraph provenance.
+- F3 Low. ADDED new evidence/12d-identity-decision-draft/evidence-manifest.json with hashes/bytes for the three existing files; no existing packet file changed. Independent recheck confirms closure.
+- F4 Info. Technical identity scope, policies, tags, MFA/password discrepancy and inventory sufficiency verified by reviewer. Post-creation groups/managed policies and complete manual-IAM Terraform adoption belong to later adoption review. Full refresh lifetime remains unverified. No IAM rebuild/change needed.
+
+P1 remains REQUEST-CHANGES. P2 durable regeneration and all apply/spending gates remain blocked; B1/B2/B3/R1/N19/N20 and all EMR gates unchanged. Coordinator never launches the recheck.
+
+
+F1/F2 human response follow-up: human supplied uncertain approximate8–9PM estimate, then answered “accept” to the explicit retrospective deviation/AWS20:01–20:23 question and “yes it is mine” to paragraph attribution. Exact questions/replies appended under explicit user instruction, prior record prefixes preserved. F1/F2 evidence repairs are prepared for independent timing-only recheck; P1 remains REQUEST-CHANGES until that verdict. F3 new3-file manifest verified. No future plan/apply/IAM/spending authorized.
+
+
+## Subphase 12D — P1 recheck APPROVE and durable-plan routing
+
+Independent recheck APPROVES P1 timing/provenance: F1/F2/F3 CLOSED. The human accepted an uncertain timing deviation; historical window/60-minute compliance is not established. F4 inventory/adoption/refresh remains deferred.
+
+G1 Low OPEN before apply: human personally confirms the abe3a50a…1334-byte record reflects their statements; future personal records should be typed directly by human. Does not block read-only plan. G2 Info remains: approximate8–9PM/“accept” is retrospective acknowledgment, not proof of cap compliance or prospective approval. P2 OPEN pending new durable plan and independent review. P3 pre-apply identity/exact-budget checks, live permissions/accounting/delivery/cost-data and all EMR gates remain open. B1/B2/B3/R1/N19/N20 and USD5 proposed spike/USD10 remaining EMR reserve/USD5.09 margin unchanged. No apply/IAM/spending authorized.
+
+
+## Subphase 12D — operator password recovery proposal
+
+New access blocker: operator password reportedly not saved. Proposed human-only password reset requires new recorded security gate; prior console setup exception does not authorize new recovery automatically. P1 historical APPROVE unchanged; recovery event must be separate. Preserve MFA/policies, do not force next-login password change or add revocation policy without separate scope. No actual reset occurred. Durable-plan prerequisites remain pending.
+
+
+## Subphase 12D — durable-path read-only billing plan completion
+
+P2 durable-path plan now generated successfully with selected state/data/config/toolchain and new checksum ab9f141e83058209263cf561eef1d102496ec7f534b88ce421620d8e0045f855. Independent durable-plan review still required; coordinator does not close P2. P1 F1/F2/F3 remain independently CLOSED. G1 pre-apply human affirmation, G2 accepted timing uncertainty, F4 inventory/adoption/refresh and P3 live checks remain. Password-recovery proposal was withdrawn; no reset performed by agent or reported by human. Old/tmp plan35e35914… remains untouched but superseded. Nothing applied; all live budget/EMR gates remain open.
+
+
+## Subphase 12D — durable-plan APPROVE, D1–D3 and apply proposal routing
+
+P2 SATISFIED AT PLAN STAGE by independent durable-plan APPROVE. State snapshot/consistent backup procedure after any future approved apply remains a condition; no apply authority inferred. D1 Low: append-only D1-sequencing-erratum.json records19:57:00.911190Z as coordinator JSON write time, not unknown user receipt/helper execution time. Logical session order retained without inventing timestamps; runner presence/regular/owner0600 guard recorded19:56:50.384782Z before plan. Erratum prepared for review, no prior evidence overwritten. D2 Info: prior reviewer independently scanned post-assembly additions; future exact-recipient scans should occur after final assembly under explicitly authorized private processing. This proposal-only scope forbids raw/private-plan access, so current new-doc scan is generic and its scope will be stated accurately. D3 Info: mirror signature skip/“unauthenticated” does not bypass pinned readonly lock checks; reviewed binary provenance retained, no action.
+
+Keep G1 own-words human affirmation, G2 accepted timing uncertainty, F4 inventory/adoption/refresh, P3 in-window caller/exact-budget absence and live budget/accounting/delivery/cost/EMR gates open. B1/B2/B3/R1/N19/N20 and proposedUSD5spike/USD10reserve/USD5.09margin unchanged. Deploy-engineer role also requires clean tree/approved source-controlled execution; current uncommitted work is not silently exempt. Proposal only; no script/approval or exception invented.
+
+
+## Subphase 12D — apply proposal APPROVE; wrapper routing
+
+Independent apply-proposal review APPROVES proposal only and closes D1. A1 Low OPEN and execution-blocking: pinned1.13.5 credential-free scratch saved-plan apply must prove absolute state path with spaces, no default/config/workspace/TF_DATA_DIR resource state or initial .backup and lock removed. A2 Info OPEN: explicit opaque preservation and test of config/errored.tfstate. Infra-engineer owns scripts/billing/** and offline tests. D2/D3 information retained. G1/G2/F4/P3/B1/B2/B3/R1/N19/N20 and live billing/EMR gates remain open. No source-control/clean-checkout or approval exception.
+
+
+## Subphase 12D — wrapper offline evidence prepared
+
+D1 remains independently CLOSED. A1 and A2 repairs are prepared for independent acceptance, not self-closed: final37 feature tests passed; final pinned1.13.5 terraform_data scratch init/plan/saved-apply exits0/0/0 and all7 state/lock assertions passed against wrapper SHA81fe564942a9f53ccf40236f32569a0f3fbdba13119c1ca3a23305d64c0039f0. Explicit config/errored.tfstate preservation is tested. Earlier failed harness attempts retained. G1/G2/F4/P3/B1/B2/B3/R1/N19/N20, source-control/clean execution and all human/live gates remain open. No production wrapper mode was invoked.
+
+
+## Subphase 12D — wrapper review REQUEST-CHANGES
+
+A1/A2 independently ACCEPTED/CLOSED. W1 Medium blocking OPEN: immediate SIGKILL risks orphaned live budget; infra owner to implement SIGINT-first graceful shutdown, bounded grace and explicit forced escalation handling. W2 Low OPEN: dedicated apply timeout and unconditional local backup/preservation even if approval window closes after apply; no further live/readback after expiry. W3 Low EXECUTION-GATE OPEN: single packet scan does not cover later five-record appends; final execution handoff must require separate authorized post-assembly exact-recipient coverage for every published record suffix and artifact, or an independently reviewed code change. W4 Info carried, no detailed text supplied. G1/G2/F4/P3/B1/B2/B3/R1/N19/N20, source-control/clean-checkout and all human/live gates remain open. Bounded repair only, not live authorization.
+
+
+## Subphase 12D — W1/W2 repair evidence prepared
+
+W1/W2 repairs prepared for independent recheck, not self-closed: one parent-only SIGINT,60s grace before explicit forced escalation, separate300s apply/60s read timeout and80s window headroom; canonical local backup before expiry block.46offline tests passed; final isolated pinned A1 regression3calls0/0/0 and7checks passed. A1/A2 remain independently CLOSED. W3 final-publication suffix coverage remains execution-gate OPEN; W4 unspecifiedInfo carried. Earlier repository packets unchanged; two old/tmp public A1 metadata files overwritten by test output-path mistake, disclosed in new result/report; old/tmp manifest now stale, not claimed intact. No live execution.
+
+
+## Subphase 12D — W1/W2 recheck APPROVE and execution-gate handoff
+
+W1/W2 independently CLOSED; A1/A2 remain CLOSED. W3 execution-gate OPEN: freeze exact final public artifacts/five record suffix copies, verify destination/base/suffix equality and final scan-before-publication with explicit fixed-schema exclusions; any later change rescan. R1 Low execution-gate OPEN: human-supervised persistent foreground Terminal, residual wrapper-death risk, no retry if completion unknown; incident diagnosis separately reviewed. W4/R2/R3Info have no detailed text supplied; carry without invention. All G1/G2/F4/P3/B1/B2/B3/R1/N19/N20/live billing/EMR gates remain. Handoff prepared only, no human approval or source-control exception inferred.
+
+
+## Subphase 12D — handoff APPROVE; human decisions pending
+
+Independent review APPROVES HANDOFF PREPARATION ONLY. H1Low actor/mechanism and H2Low window/W3tooling resolve through explicit human choices before any gate; pending, not closed by recommendations. R3Info detailed text not supplied, no invention. W3/R1remain OPEN execution conditions; W1/W2/A1/A2closed. Proposed recommendation: human launches later approved wrapper commands in persistent foregroundTerminal with deploy-owner guidance; choose offline infra W3assembly/equality helper with tests/review before scheduling full60minwindow. Neither recommendation authorizes work. Human must choose sourcecontrol/clean canonical checkout, personally affirm G1, authorize local-only CLI version/hash check and accept/decline residual wrapper-death risk. All other live gates remain unchanged.
+
+
+## Subphase 12D — G1 user confirmation received
+
+Human replied verbatim “yes it is accurate” after the explicit request to read and affirm billing-bootstrap-exception.md. Statement transcribed in evidence/12d-billing-human-decisions/g1-user-confirmation.json and bound to unchanged1334byte/SHAabe3a50ad7167fa01227c73e15e92a422a50609f6313bdcc56404cb61765d71a record. G1 accuracy confirmation supplied; preserve personal provenance for the later gate. This does not authorize CLI preflight/helper authorship/commit/login/apply/AWS calls/spending or resolve the other human decisions. No live or dependent work performed.
+
+
+## Subphase 12D — authorized local CLI preflight
+
+Human answered “yes” to local-only version/resolved-executable hash check. Observed aws-cli/2.35.4 Python/3.14.5 Darwin/25.6.0 source/arm64; exit0; resolved /opt/homebrew/Cellar/awscli/2.35.4/libexec/bin/aws; SHA256a0124776b581826399171820e7812f2965486e79605c07fc3e86dbe798baf3f9. Exact argv/minimal environment/stability/observation times in evidence/12d-billing-human-decisions/cli-local-preflight.json; AWS_CONFIG_FILE/AWS_SHARED_CREDENTIALS_FILE=/dev/null, metadata disabled. No login/service request/credential-config inspection/wrapper invocation. This binds launcher bytes only, not installed dependencies/capability/effective permissions; later gate rechecks. Sourcecontrol/actor/window/tooling/R1risk/personal execution gate remain pending.
+
+
+## Subphase 12D — H1 human Terminal actor choice
+
+Human replied verbatim “yes” to personally running later approved commands with guidance and keeping Terminal open/computer awake until backup finishes. H1actor/mechanism choice supplied; exact context retained in evidence/12d-billing-human-decisions/h1-terminal-actor-confirmation.json. This preparation choice is not permission to execute/login/apply/AWS/helper/commit. Persistent-terminal supervision confirmed; residual wrapper-death risk acceptance not inferred. H2tooling/window, sourcecontrol/clean canonical checkout, R1risk and personal execution gate remain pending.
+
+
+## Subphase 12D — H2 offline-tooling choice supplied
+
+Human selected offline W3helper preparation/tests and independent review by answering “yes”; no actual window chosen, no private-input/execution permission. H2tooling choice supplied, window feasibility remains for later actualgate. W3 remains OPEN until approved helper plus actual finalassembly/freeze/private scan/publication equality evidence. R1residualrisk acceptance remains pending; H1humanTerminalactor chosen and G1accuracyconfirmation received; no effect on other live gates. W1/W2/A1/A2remain closed. Route only newpublichelpercode/tests/docs to infraowner, preserve budgetwrapper unchanged.
+
+
+## Subphase 12D — W3helper evidence prepared
+
+Three new public-helper files prepared;39offline tests passed. Existing five scripts unchanged. W3tooling prepared for independent acceptance, W3actualpublication gate still OPEN. All8script hashes now required in future personal gate. Separate assembly workspace/canonical frozen-packet transfer and postscan receipt ordering documented/tested; helper never appends records, invokes scanner or reads recipient. R1residualrisk/window/sourcecontrol/personal gate remain pending; W1/W2/A1/A2closed.
+
+
+## Subphase 12D — publication helper APPROVE; execution decisions pending
+
+Helper/offline tests independently APPROVED, no blocking repair before human decisions. W3actualfinalfreeze/private scan/publication equality remains OPEN; R1residualrisk/persistentTerminal condition, H2datedwindow feasibility and all live gates remain OPEN. Sourcecontrol must bind all8files and canonical checkout clean. Latest reviewer lists twoLow/threeInfo but only P1/P3/P5labels without detailed finding text; retain exact report, carry those helper-review labels into future execution workorder without inventing definitions or conflating with existing P3identitycheck. Receipt authenticity/freshness external; canonical verify-before/after and manual transfer/append mechanism still required. G1confirmation/H1actor/CLIpreflight/H2tooling choices already supplied; do not ask them again. W1/W2/A1/A2closed. No apply/spend/phasecompletion authorization.
+
+
+## Subphase 12D — R1 residual-risk acceptance supplied
+
+Human answered verbatim “yes” to remaining wrapper/Terminal crash risk under supervised-Terminal procedure and stop/review before recovery. Exact context in evidence/12d-billing-human-decisions/r1-residual-risk-confirmation.json. R1human risk acceptance supplied; actual uninterrupted execution/backup supervision is still future observed evidence, not proven or retrospectively closed. This is not apply/spend authority. Sourcecontrol/clean canonical all8release, datedwindow/personalgate/freshP3 and actualW3publication coverage remain pending. Original human bootstrap record untouched.
+
+
+## Subphase 12D — human source-control actor selected
+
+Human answered “yes” to personally making the Phase12commit with guidance. Exact context in evidence/12d-billing-human-decisions/source-control-choice.json. Agent prepares read-only file/hash checks and scoped commands only; user reviews staging and commits. No agent stage/commit/stash/reset; no actual releaseSHA/cleancheckout inferred until observed. All8billingfiles must be included. No execution/paidspike/Phase12completion authorized. Remaining personal datedwindow/exact-checksum gate and freshP3/W3actualevidence pending.

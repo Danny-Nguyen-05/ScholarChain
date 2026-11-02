@@ -1,0 +1,27 @@
+{
+  "applied": false,
+  "cloud_mutation": false,
+  "independent_account_inventory": false,
+  "provider_resolved_caller_arn": "Not independently queried; user supplied fresh sanitized STS via coordinator. Profile chain consumed internally by Terraform.",
+  "private_input_read_or_hashed": false,
+  "protected_plan_json_processed_programmatically": true,
+  "private_values_returned_to_model": false,
+  "retention": "State/backups through reviewed teardown and final reconciliation plus human-approved cleanup; plans until superseded and human-approved cleanup. Same-disk backup does not protect disk failure.",
+  "backups": "Protected sibling initialized empty; no state exists and no state backup claimed.",
+  "old_plan": {
+    "path": "/tmp/scholarchain-phase12d-billing-execution-plan/billing.execution.tfplan",
+    "sha256": "35e3591498a3708ff82617ff4ee382f3402bdcf0176a8d4c95e6260913d1cdc5",
+    "status": "superseded by fresh durable plan; untouched, not deleted or decoded"
+  },
+  "not_verified": [
+    "live create/tag IAM acceptance",
+    "CUSTOM/CostTypes/tags service acceptance",
+    "active budget",
+    "delivery",
+    "full OAuth refresh lifetime",
+    "remote budget name ownership/absence",
+    "G1 human-authored pre-apply confirmation",
+    "P3 pre-apply checks"
+  ],
+  "no_sbt_rerun": "No repository/source changes; relevant seven current billing tests passed. Prior full build remains historical."
+}

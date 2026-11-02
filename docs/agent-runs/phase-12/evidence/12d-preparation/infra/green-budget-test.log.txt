@@ -1,0 +1,10 @@
+tests/budget.tftest.hcl... in progress
+  run "disabled_by_default"... pass
+  run "one_cumulative_before_credit_account_budget"... pass
+  run "cannot_enable_without_private_subscriber"... pass
+  run "cannot_raise_shared_budget"... pass
+  run "end_must_follow_start"... pass
+tests/budget.tftest.hcl... tearing down
+tests/budget.tftest.hcl... pass
+
+Success! 5 passed, 0 failed.

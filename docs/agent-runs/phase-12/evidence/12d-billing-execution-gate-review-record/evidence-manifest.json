@@ -1,0 +1,45 @@
+{
+  "self_excluded": true,
+  "files": [
+    {
+      "path": "coordinator-report.txt",
+      "bytes": 3276,
+      "sha256": "6c91e01913a9b897be315b5ad890167b9ae832202784d5b864e47a346c2798e2"
+    },
+    {
+      "path": "final-status.log.txt",
+      "bytes": 68077,
+      "sha256": "96801a394c32a21b429f37510cd2b9e862f4f7a8f0701a668ffc3c588cdab93e"
+    },
+    {
+      "path": "handoff-files.json",
+      "bytes": 1078,
+      "sha256": "c7dac0a044a02a536582ca8023ec268af32a61ae051be5351e5cf88d0279a4db"
+    },
+    {
+      "path": "preflight-status.log.txt",
+      "bytes": 67175,
+      "sha256": "8859b3ce3e7694db29c84f5569a4e5daef21441e6349a308afb8c6cb33a19804"
+    },
+    {
+      "path": "preflight.json",
+      "bytes": 40988,
+      "sha256": "e7c2300808863840da4b4a77e94f1348820eb19d07c1cbdcae180e0d36bbc8d7"
+    },
+    {
+      "path": "preservation-check.json",
+      "bytes": 1793,
+      "sha256": "ab47472b1382c1c2f41419eb17cd64a998a250d5549738d8bbf5d5be71411120"
+    },
+    {
+      "path": "public-address-scan.json",
+      "bytes": 190,
+      "sha256": "daf00e358bb83e1b0b78f20d8f1ebacdebeab6f17d42e56c40b103406fb46427"
+    },
+    {
+      "path": "user-supplied-review.txt",
+      "bytes": 2413,
+      "sha256": "3d9ed99e7c513330d4d34c99c99398d28ae0e5289b02474eb6a37e61b67fe8ef"
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "scope": "public offline proposal only",
+  "files": [
+    {
+      "path": "owner-report.txt",
+      "bytes": 4751,
+      "sha256": "c717dc913be6b7b1b131389122c4e2d100ff94648c72b4c6a1273e5a62f7427c",
+      "mode": "0600"
+    },
+    {
+      "path": "preflight-design.md",
+      "bytes": 4777,
+      "sha256": "5ae76ae1fabcff6be9202ed3973ea71b079ad0c902544477719521891c2ad504",
+      "mode": "0600"
+    },
+    {
+      "path": "proposal.md",
+      "bytes": 12103,
+      "sha256": "b07d4655092583a595dd3f0762f874324cb8269c63608992aff4042162869f9a",
+      "mode": "0600"
+    },
+    {
+      "path": "sources.json",
+      "bytes": 5792,
+      "sha256": "85b1ab469b9d249e91b2016f7f91f8244256e3563b65ca6c79f461f4ecb1dccf",
+      "mode": "0600"
+    }
+  ],
+  "count": 4,
+  "self_excluded": "artifact-manifest.json",
+  "private_artifacts_read": false,
+  "durable_paths_written": false,
+  "terraform_aws_executed": false,
+  "jobs_running": false
+}

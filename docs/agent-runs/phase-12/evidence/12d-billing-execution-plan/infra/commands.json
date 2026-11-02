@@ -1,0 +1,308 @@
+[
+  {
+    "label": "offline-init",
+    "argv": [
+      "/tmp/scholarchain-phase12b-repair1-infra/terraform",
+      "init",
+      "-backend=false",
+      "-input=false",
+      "-no-color",
+      "-lockfile=readonly"
+    ],
+    "cwd": "/tmp/scholarchain-phase12d-billing-execution-plan/config",
+    "environment": {
+      "HOME": "/Users/danny",
+      "PATH": "/opt/homebrew/bin:/usr/bin:/bin:/usr/sbin:/sbin",
+      "TF_CLI_CONFIG_FILE": "/tmp/scholarchain-phase12b-repair1-infra/terraformrc",
+      "TF_IN_AUTOMATION": "1",
+      "AWS_EC2_METADATA_DISABLED": "true",
+      "AWS_PAGER": "",
+      "AWS_CONFIG_FILE": "/dev/null",
+      "AWS_SHARED_CREDENTIALS_FILE": "/dev/null",
+      "TF_DATA_DIR": "/tmp/scholarchain-phase12d-billing-execution-plan/offline-tf-data"
+    },
+    "started_utc": "2026-11-01T03:04:09.471575+00:00",
+    "ended_utc": "2026-11-01T03:04:10.099368+00:00",
+    "wall_seconds": 0.6284234159975313,
+    "exit_code": 0,
+    "log": "/tmp/scholarchain-phase12d-billing-execution-plan/safe/offline-init.log.txt",
+    "log_sha256": "0332e5a2014b4e3a832437119fe49036bc6a8355061e8def4e2d5ffc1c783808",
+    "log_bytes": 243,
+    "raw_private": false
+  },
+  {
+    "label": "offline-fmt-check",
+    "argv": [
+      "/tmp/scholarchain-phase12b-repair1-infra/terraform",
+      "fmt",
+      "-check",
+      "-recursive"
+    ],
+    "cwd": "/tmp/scholarchain-phase12d-billing-execution-plan/config",
+    "environment": {
+      "HOME": "/Users/danny",
+      "PATH": "/opt/homebrew/bin:/usr/bin:/bin:/usr/sbin:/sbin",
+      "TF_CLI_CONFIG_FILE": "/tmp/scholarchain-phase12b-repair1-infra/terraformrc",
+      "TF_IN_AUTOMATION": "1",
+      "AWS_EC2_METADATA_DISABLED": "true",
+      "AWS_PAGER": "",
+      "AWS_CONFIG_FILE": "/dev/null",
+      "AWS_SHARED_CREDENTIALS_FILE": "/dev/null",
+      "TF_DATA_DIR": "/tmp/scholarchain-phase12d-billing-execution-plan/offline-tf-data"
+    },
+    "started_utc": "2026-11-01T03:04:10.099729+00:00",
+    "ended_utc": "2026-11-01T03:04:10.118923+00:00",
+    "wall_seconds": 0.019219666995923035,
+    "exit_code": 0,
+    "log": "/tmp/scholarchain-phase12d-billing-execution-plan/safe/offline-fmt-check.log.txt",
+    "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "log_bytes": 0,
+    "raw_private": false
+  },
+  {
+    "label": "offline-validate",
+    "argv": [
+      "/tmp/scholarchain-phase12b-repair1-infra/terraform",
+      "validate",
+      "-no-color"
+    ],
+    "cwd": "/tmp/scholarchain-phase12d-billing-execution-plan/config",
+    "environment": {
+      "HOME": "/Users/danny",
+      "PATH": "/opt/homebrew/bin:/usr/bin:/bin:/usr/sbin:/sbin",
+      "TF_CLI_CONFIG_FILE": "/tmp/scholarchain-phase12b-repair1-infra/terraformrc",
+      "TF_IN_AUTOMATION": "1",
+      "AWS_EC2_METADATA_DISABLED": "true",
+      "AWS_PAGER": "",
+      "AWS_CONFIG_FILE": "/dev/null",
+      "AWS_SHARED_CREDENTIALS_FILE": "/dev/null",
+      "TF_DATA_DIR": "/tmp/scholarchain-phase12d-billing-execution-plan/offline-tf-data"
+    },
+    "started_utc": "2026-11-01T03:04:10.119188+00:00",
+    "ended_utc": "2026-11-01T03:04:10.617563+00:00",
+    "wall_seconds": 0.49891533300979063,
+    "exit_code": 1,
+    "log": "/tmp/scholarchain-phase12d-billing-execution-plan/safe/offline-validate.log.txt",
+    "log_sha256": "410f0fb4134e77d08b978d5659b641af582addeb977ccfde6629ab50a46cb590",
+    "log_bytes": 1039,
+    "raw_private": false
+  },
+  {
+    "label": "offline-init-retry",
+    "argv": [
+      "/tmp/scholarchain-phase12b-repair1-infra/terraform",
+      "init",
+      "-backend=false",
+      "-input=false",
+      "-no-color",
+      "-lockfile=readonly"
+    ],
+    "cwd": "/tmp/scholarchain-phase12d-billing-execution-plan/config",
+    "environment": {
+      "HOME": "/Users/danny",
+      "PATH": "/opt/homebrew/bin:/usr/bin:/bin:/usr/sbin:/sbin",
+      "TF_CLI_CONFIG_FILE": "/tmp/scholarchain-phase12b-repair1-infra/terraformrc",
+      "TF_IN_AUTOMATION": "1",
+      "AWS_EC2_METADATA_DISABLED": "true",
+      "AWS_PAGER": "",
+      "AWS_CONFIG_FILE": "/dev/null",
+      "AWS_SHARED_CREDENTIALS_FILE": "/dev/null",
+      "TF_DATA_DIR": "/tmp/scholarchain-phase12d-billing-execution-plan/offline-tf-data"
+    },
+    "started_utc": "2026-11-01T03:05:22.352704+00:00",
+    "ended_utc": "2026-11-01T03:05:22.670227+00:00",
+    "wall_seconds": 0.31743712499155663,
+    "exit_code": 0,
+    "log": "/tmp/scholarchain-phase12d-billing-execution-plan/safe/offline-init-retry.log.txt",
+    "log_sha256": "93e6d8afa8d5f52652c8fb18e0d6900bca6e2e38e731e16b7416d1d672657428",
+    "log_bytes": 204,
+    "raw_private": false
+  },
+  {
+    "label": "offline-fmt-check-retry",
+    "argv": [
+      "/tmp/scholarchain-phase12b-repair1-infra/terraform",
+      "fmt",
+      "-check",
+      "-recursive"
+    ],
+    "cwd": "/tmp/scholarchain-phase12d-billing-execution-plan/config",
+    "environment": {
+      "HOME": "/Users/danny",
+      "PATH": "/opt/homebrew/bin:/usr/bin:/bin:/usr/sbin:/sbin",
+      "TF_CLI_CONFIG_FILE": "/tmp/scholarchain-phase12b-repair1-infra/terraformrc",
+      "TF_IN_AUTOMATION": "1",
+      "AWS_EC2_METADATA_DISABLED": "true",
+      "AWS_PAGER": "",
+      "AWS_CONFIG_FILE": "/dev/null",
+      "AWS_SHARED_CREDENTIALS_FILE": "/dev/null",
+      "TF_DATA_DIR": "/tmp/scholarchain-phase12d-billing-execution-plan/offline-tf-data"
+    },
+    "started_utc": "2026-11-01T03:05:22.670620+00:00",
+    "ended_utc": "2026-11-01T03:05:22.688814+00:00",
+    "wall_seconds": 0.01821120899694506,
+    "exit_code": 0,
+    "log": "/tmp/scholarchain-phase12d-billing-execution-plan/safe/offline-fmt-check-retry.log.txt",
+    "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "log_bytes": 0,
+    "raw_private": false
+  },
+  {
+    "label": "offline-validate-retry",
+    "argv": [
+      "/tmp/scholarchain-phase12b-repair1-infra/terraform",
+      "validate",
+      "-no-color"
+    ],
+    "cwd": "/tmp/scholarchain-phase12d-billing-execution-plan/config",
+    "environment": {
+      "HOME": "/Users/danny",
+      "PATH": "/opt/homebrew/bin:/usr/bin:/bin:/usr/sbin:/sbin",
+      "TF_CLI_CONFIG_FILE": "/tmp/scholarchain-phase12b-repair1-infra/terraformrc",
+      "TF_IN_AUTOMATION": "1",
+      "AWS_EC2_METADATA_DISABLED": "true",
+      "AWS_PAGER": "",
+      "AWS_CONFIG_FILE": "/dev/null",
+      "AWS_SHARED_CREDENTIALS_FILE": "/dev/null",
+      "TF_DATA_DIR": "/tmp/scholarchain-phase12d-billing-execution-plan/offline-tf-data"
+    },
+    "started_utc": "2026-11-01T03:05:22.689186+00:00",
+    "ended_utc": "2026-11-01T03:05:23.864356+00:00",
+    "wall_seconds": 1.1752024589950452,
+    "exit_code": 0,
+    "log": "/tmp/scholarchain-phase12d-billing-execution-plan/safe/offline-validate-retry.log.txt",
+    "log_sha256": "f7997225125835fdd14060ac776d273f394b874f9a481b9e2122c83dc8adc5c1",
+    "log_bytes": 38,
+    "raw_private": false
+  },
+  {
+    "label": "offline-test-retry",
+    "argv": [
+      "/tmp/scholarchain-phase12b-repair1-infra/terraform",
+      "test",
+      "-no-color"
+    ],
+    "cwd": "/tmp/scholarchain-phase12d-billing-execution-plan/config",
+    "environment": {
+      "HOME": "/Users/danny",
+      "PATH": "/opt/homebrew/bin:/usr/bin:/bin:/usr/sbin:/sbin",
+      "TF_CLI_CONFIG_FILE": "/tmp/scholarchain-phase12b-repair1-infra/terraformrc",
+      "TF_IN_AUTOMATION": "1",
+      "AWS_EC2_METADATA_DISABLED": "true",
+      "AWS_PAGER": "",
+      "AWS_CONFIG_FILE": "/dev/null",
+      "AWS_SHARED_CREDENTIALS_FILE": "/dev/null",
+      "TF_DATA_DIR": "/tmp/scholarchain-phase12d-billing-execution-plan/offline-tf-data"
+    },
+    "started_utc": "2026-11-01T03:05:23.864737+00:00",
+    "ended_utc": "2026-11-01T03:05:24.746708+00:00",
+    "wall_seconds": 0.8820095840055728,
+    "exit_code": 0,
+    "log": "/tmp/scholarchain-phase12d-billing-execution-plan/safe/offline-test-retry.log.txt",
+    "log_sha256": "aca7bb50be9aa6e39085eb2d1ac166e100d61aaa15cf8c95ccf3e4a87becb78e",
+    "log_bytes": 483,
+    "raw_private": false
+  },
+  {
+    "label": "protected-init",
+    "argv": [
+      "/tmp/scholarchain-phase12b-repair1-infra/terraform",
+      "init",
+      "-backend=false",
+      "-input=false",
+      "-no-color",
+      "-lockfile=readonly"
+    ],
+    "cwd": "/tmp/scholarchain-phase12d-billing-execution-plan/config",
+    "environment": {
+      "HOME": "/Users/danny",
+      "PATH": "/opt/homebrew/bin:/usr/bin:/bin:/usr/sbin:/sbin",
+      "TF_CLI_CONFIG_FILE": "/tmp/scholarchain-phase12b-repair1-infra/terraformrc",
+      "TF_IN_AUTOMATION": "1",
+      "AWS_EC2_METADATA_DISABLED": "true",
+      "AWS_PAGER": "",
+      "AWS_PROFILE": "scholarchain-billing-deployer",
+      "AWS_REGION": "us-east-2",
+      "AWS_DEFAULT_REGION": "us-east-2",
+      "AWS_SDK_LOAD_CONFIG": "1",
+      "TF_DATA_DIR": "/tmp/scholarchain-phase12d-billing-execution-plan/live-tf-data"
+    },
+    "started_utc": "2026-11-01T03:06:28.596260+00:00",
+    "ended_utc": "2026-11-01T03:06:29.198625+00:00",
+    "wall_seconds": 0.6023907920025522,
+    "exit_code": 0,
+    "log": "/tmp/scholarchain-phase12d-billing-execution-plan/protected-init.log.txt",
+    "log_sha256": "0332e5a2014b4e3a832437119fe49036bc6a8355061e8def4e2d5ffc1c783808",
+    "log_bytes": 243,
+    "raw_private": true
+  },
+  {
+    "label": "real-plan",
+    "argv": [
+      "/tmp/scholarchain-phase12b-repair1-infra/terraform",
+      "plan",
+      "-input=false",
+      "-no-color",
+      "-detailed-exitcode",
+      "-lock-timeout=30s",
+      "-state=/tmp/scholarchain-phase12d-billing-execution-plan/billing.execution.tfstate",
+      "-var-file=/tmp/scholarchain-phase12d-billing-execution-plan/approved-public-inputs.tfvars.json",
+      "-var-file=/tmp/scholarchain-phase12d-billing-execution-plan/notification.private.tfvars.json",
+      "-out=/tmp/scholarchain-phase12d-billing-execution-plan/billing.execution.tfplan"
+    ],
+    "cwd": "/tmp/scholarchain-phase12d-billing-execution-plan/config",
+    "environment": {
+      "HOME": "/Users/danny",
+      "PATH": "/opt/homebrew/bin:/usr/bin:/bin:/usr/sbin:/sbin",
+      "TF_CLI_CONFIG_FILE": "/tmp/scholarchain-phase12b-repair1-infra/terraformrc",
+      "TF_IN_AUTOMATION": "1",
+      "AWS_EC2_METADATA_DISABLED": "true",
+      "AWS_PAGER": "",
+      "AWS_PROFILE": "scholarchain-billing-deployer",
+      "AWS_REGION": "us-east-2",
+      "AWS_DEFAULT_REGION": "us-east-2",
+      "AWS_SDK_LOAD_CONFIG": "1",
+      "TF_DATA_DIR": "/tmp/scholarchain-phase12d-billing-execution-plan/live-tf-data"
+    },
+    "started_utc": "2026-11-01T03:06:29.199135+00:00",
+    "ended_utc": "2026-11-01T03:06:34.048498+00:00",
+    "wall_seconds": 4.849367875009193,
+    "exit_code": 2,
+    "log": "/tmp/scholarchain-phase12d-billing-execution-plan/real-plan.log.txt",
+    "log_sha256": "c23336f77fda43a5f5af2ef602aa8acd05fb7f57f7cd49f8ab010e1333ce6cd1",
+    "log_bytes": 2559,
+    "raw_private": true
+  },
+  {
+    "label": "protected-show",
+    "argv": [
+      "/tmp/scholarchain-phase12b-repair1-infra/terraform",
+      "show",
+      "-json",
+      "/tmp/scholarchain-phase12d-billing-execution-plan/billing.execution.tfplan"
+    ],
+    "cwd": "/tmp/scholarchain-phase12d-billing-execution-plan/config",
+    "environment": {
+      "HOME": "/Users/danny",
+      "PATH": "/opt/homebrew/bin:/usr/bin:/bin:/usr/sbin:/sbin",
+      "TF_CLI_CONFIG_FILE": "/tmp/scholarchain-phase12b-repair1-infra/terraformrc",
+      "TF_IN_AUTOMATION": "1",
+      "AWS_EC2_METADATA_DISABLED": "true",
+      "AWS_PAGER": "",
+      "AWS_PROFILE": "scholarchain-billing-deployer",
+      "AWS_REGION": "us-east-2",
+      "AWS_DEFAULT_REGION": "us-east-2",
+      "AWS_SDK_LOAD_CONFIG": "1",
+      "TF_DATA_DIR": "/tmp/scholarchain-phase12d-billing-execution-plan/live-tf-data"
+    },
+    "started_utc": "2026-11-01T03:06:34.049058+00:00",
+    "ended_utc": "2026-11-01T03:06:35.256329+00:00",
+    "wall_seconds": 1.2073395420011366,
+    "exit_code": 0,
+    "log": "/tmp/scholarchain-phase12d-billing-execution-plan/protected-show.log.txt",
+    "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "log_bytes": 0,
+    "raw_private": true,
+    "protected_stdout_path": "/tmp/scholarchain-phase12d-billing-execution-plan/billing.execution.plan.json"
+  }
+]

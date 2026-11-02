@@ -1,0 +1,49 @@
+# Phase 12D EMR Spark spike — preparation contract, not a launch root
+
+This directory contains **zero AWS resources**. It exports a reviewable proposal and rejects `launch_requested=true` unconditionally. No executable bootstrap, cluster, network or deployment permission is created. It is not a completed feasibility spike, a runnable EMR configuration, a verified cost fit or approval to spend. The main course Terraform root remains untouched.
+
+The user selected the recommendations: test EMR on EC2 first using a separately installed Spark 3.5.4 / Scala 2.13 distribution; propose exactly **one primary and one core `m5.xlarge` in `us-east-2`**, no task/Spot nodes; a **USD 5 suballocation of the shared USD 200** and **two hours total cluster runtime including retries**. Stop after the first attempt. EMR Serverless or any alternate shape requires another decision. The instance type is a proposal requiring current price, regional availability, quota and exact approval checks, not a proven compatible runtime.
+
+Repair round 1 lowers the proposed spike cap from USD 10 to **USD 5**. The existing USD 15 reserve covers all EMR spikes and experiments: the former USD 10 allocation would leave USD 5; the chosen USD 5 allocation leaves USD 10 for later EMR work. The 12C upper-window margin remains only USD 5.09. Later EMR runs, including the scale experiment, need a new allocation decision and full cost verification. This change neither increases the shared USD 200 ceiling nor approves spending.
+
+
+## Launch blockers found in the current application
+
+`modules/spark/.../Phase6Main.scala:96-170` uses Java NIO for configuration, manifests, event directories and completion metadata. `Phase6CReaders` also verifies upstream local files. `Phase6Export.scala:172-206` writes distributed Parquet through Spark using paths derived from the same `java.nio.file.Path` root. A bare path can therefore name local driver metadata but a different HDFS location under EMR's default Hadoop filesystem. Merely setting `fs.defaultFS=file:///` instead risks executor-local files. A bootstrapped Spark distribution alone does not resolve this mismatch.
+
+G1 is constructed in module test fixtures (`Phase6CJobsSpec`, `Phase6FGJobsSpec`); no reviewed portable G1 bundle and complete CLI comparison baseline is declared here. Do not substitute the historical real-data run, invent a manifest, weaken completion checks, rewrite production paths, claim that a local-mode test is distributed, or mark runtime evidence as verified to get past a guard.
+
+The **spark-engineer** must provide a bounded, separately scoped artifact strategy: upstream-complete G1 Hadoop/ER inputs preserving hash bindings; an identical-path distributed/shared filesystem method or approved application adaptation; a current packaged Phase 6 CLI JAR; and a local run with table counts and logical content hashes. The class-origin probe must report the actually loaded `Spark`, `scala-library`, `scala-reflect` and `scala3-library` versions/origins on the driver and an executor outside the driver process. A JVM package listing alone is insufficient. Require a representative distributed DataFrame/Parquet write/read and canonical row/hash comparison. Build the local comparison baseline with the **same assembled JAR** used remotely and preserve logical input/config bindings. Class-directory and assembled-JAR runs can have different code fingerprints and run IDs; the existing logical table hash drops `run_id` but retains nested `context.runId`. Therefore do not assume hashes from a historical sbt run compare directly. Any deliberate provenance normalization needs a separately reviewed, explicit comparator; never discard lineage silently or compare part-file names. Any additional adaptation or probe belongs to the module/build owner; this preparation does not edit those paths.
+
+## Proposed isolated live design, after the blockers are resolved
+
+The future runnable root must declare every resource itself and use separate protected state. It must not read/apply the course environment or assume its VPC/KMS/buckets exist. Propose a dedicated VPC/private subnet, minimal outbound connectivity with its cost included, no public node addresses or ingress SSH, separate EMR primary/core/service-access security groups with documented EMR rules, and an emptied default security group. No Neptune, ECS, DynamoDB, Bedrock calls, unrestricted application-data access or unrelated services belong in this spike.
+
+Artifacts and logs require project-scoped encrypted private S3 storage, public-access blocks, ownership enforcement and TLS-only transport. Scope object permissions to the spike's input/artifact/log/output prefixes; never give the EMR job DynamoDB or audit-table access. Record checksums of the actual Spark distribution, bootstrap, JAR and fixture before upload. Use reviewed encrypted disks and in-transit TLS artifacts without committing private keys or certificates containing private keys. The service role, node role and deployment identity remain separate; disk/KMS grants must be attached to the correct role. Review grant behavior and key deletion/retention dependencies explicitly.
+
+Choose the EMR release only after checking current release documentation, Corretto/Java 17, YARN integration and instance availability. Stock EMR's Spark/Scala 2.12 must not enter the candidate's effective classpath. The [Apache 3.5.4 archive](https://archive.apache.org/dist/spark/spark-3.5.4/) lists the upstream `spark-3.5.4-bin-hadoop3-scala2.13.tgz`; a filename is not checksum verification or compatibility proof. AWS [bootstrap guidance](https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-plan-bootstrap.html) supports installing additional software on nodes; it does not validate a replaced Spark/YARN stack. Follow the Phase 6A compatibility memo for Scala patch alignment and class-origin checks.
+
+## Deadline, cost and teardown gates
+
+AWS [auto-termination](https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-auto-termination-policy.html) measures **idle time**, not elapsed cluster lifetime. A busy or stuck job can outlive that policy. A local command timeout also does not stop remote billing. No watchdog has been implemented or proven by this contract.
+
+Before launch, require a separately reviewed Terraform-authored deadline mechanism, independent of the submitting terminal, with permission limited to terminating this exact spike cluster and tested failure handling. Set its deadline and begin teardown early enough to reserve termination time within the proposed two-hour total; measure from resource creation/startup, not only from Spark job start. Cover bootstrap failure, submission failure, pending/active YARN jobs, connection loss and cleanup failure. An account alert is delayed monitoring, not a runtime or dollar enforcement mechanism. If termination cannot be verified or headroom cannot be established, do not launch. A launch-time runtime limit does not guarantee that AWS billing stops instantaneously.
+
+A pre-run cost review must include EC2 plus EMR surcharges for both nodes, startup/termination, EBS, NAT/public IPv4 if used, S3 requests/storage, logs, KMS, data transfer, taxes, retained evidence and an uncertainty reserve. The coordinator retains source-dated public pricing separately. Reconcile delayed spend plus estimated unreported charges and existing commitments before reserving USD 5. Stop rather than infer credits or a monthly reset add budget. No paid Cost Explorer query is authorized.
+
+Required prerequisites: verify the account-wide USD 200 monitor and three actual-spend recipients/thresholds; human-enable Cost Explorer; establish conservative remaining budget; obtain a non-root deployment identity with short-lived credentials and reviewed scoped permissions; inspect a genuine isolated plan and checksum; obtain independent review; and have the human record the exact cap, Ohio region, instance types/counts, maximum runtime, one-attempt scope and teardown. This preparation writes no human approval or IAM grant and never upgrades the planner.
+
+On success **or failure**, preserve only the approved evidence, terminate and destroy all spike resources through the approved Terraform workflow, and retain before/after inventory proving no cluster, EC2/EBS, NAT/EIP, endpoints or other billable leftovers remain. `terraform destroy` alone is not proof of cleanup. Retained evidence storage/KMS dependencies require an explicit inventory, cost allowance and archival decision; do not silently delete grading originals. The account budget survives the spike. Record any failed cleanup and escalate immediately. Do not claim 12D complete until live compatibility (or failed options) and teardown are evidenced.
+
+## Local checks
+
+```sh
+TF_CLI_CONFIG_FILE=/tmp/scholarchain-phase12b-repair1-infra/terraformrc /tmp/scholarchain-phase12b-repair1-infra/terraform init -backend=false -input=false -no-color
+/tmp/scholarchain-phase12b-repair1-infra/terraform fmt -check -recursive
+/tmp/scholarchain-phase12b-repair1-infra/terraform validate -no-color
+/tmp/scholarchain-phase12b-repair1-infra/terraform test -no-color
+```
+
+The **zero-resource claim rests on source inspection**, not on the plan assertion of `aws_resources_declared=0`, `launchable=false` or a prerequisite-list length. Those are output constants; checking them does not prove the absence of Terraform resource, data, module, provider or provisioner blocks. Current inspection finds none in this root. Reinspect every source file before any continuation; no independent static absence check was assigned in this round.
+
+All native tests are mock-provider, plan-only. They check the offline proposal and rejection of changed limits/launch intent; they do **not** test a cluster, IAM effectiveness, security groups, distributed execution, actual costs or cleanup. No apply/destroy/account call is part of these checks.

@@ -1,0 +1,12 @@
+{
+  "kind": "Coordinator transcription of human preparation/sourcecontrol choice, not execution approval",
+  "recorded_utc": "2026-11-02T02:13:47.840047+00:00",
+  "time_meaning": "Record-write time only",
+  "question_verbatim": "Will you personally create the Phase 12 commit with my guidance? Reply yes or no. Don\u2019t run any commands yet.",
+  "user_response_verbatim": "yes",
+  "human_actor": "User personally reviews staging and creates commit; agent stages/commits/discards nothing",
+  "scope": "Reviewed Phase12billing preparation/evidence plus previously prepared EMRspike source, no paidrun or completion claim",
+  "approved_commit_sha": null,
+  "clean_canonical_checkout_verified": false,
+  "live_execution_authorized": false
+}

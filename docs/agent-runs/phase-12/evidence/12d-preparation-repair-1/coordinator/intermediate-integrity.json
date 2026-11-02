@@ -1,0 +1,17 @@
+{
+  "checked_at": "2026-10-31T02:39:56.785195+00:00",
+  "freeze_matches": 203,
+  "command_environment_checks": [
+    {
+      "path": "infra/development-commands.json",
+      "records": 10,
+      "selected_environment_present": true
+    },
+    {
+      "path": "infra/final-commands.json",
+      "records": 14,
+      "selected_environment_present": true
+    }
+  ],
+  "note": "Intermediate check while build runs; final proof will supersede this check."
+}

@@ -1,0 +1,12 @@
+{
+  "exactly_one_budget_create": true,
+  "no_replacement_or_destruction": true,
+  "approved_account_name_amount_dates_tags": true,
+  "three_exact_actual_thresholds": true,
+  "one_private_email_each_count_only": true,
+  "no_filters": true,
+  "credit_refund_excluded_in_authored_plan": true,
+  "live_service_cost_type_tags_acceptance": "unverified until separately approved apply/readback",
+  "existing_remote_monitor_conflict": "unverified; no API inventory authorized",
+  "raw_plan_variables_outputs_and_recipient_strings_excluded": true
+}

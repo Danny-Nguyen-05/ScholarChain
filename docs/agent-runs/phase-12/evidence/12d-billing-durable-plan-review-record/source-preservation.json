@@ -1,0 +1,11 @@
+{
+  "checked_utc": "2026-11-01T20:22:59.686143+00:00",
+  "reference": "docs/agent-runs/phase-12/evidence/12d-billing-policy-amendment/source-freeze.json",
+  "reference_sha256": "f6cd6649d084cad038234f9ec476bead72a05e6e74124b9d77b86e4c8777ba1a",
+  "source_files_checked": 209,
+  "hash_bytes_mtime_mismatches": [],
+  "earlier_durable_packet_files_checked": 83,
+  "earlier_durable_packet_mismatches": [],
+  "source_or_behavior_changes": false,
+  "new_tests_or_builds": false
+}

@@ -1,0 +1,11 @@
+{
+  "prior_public_files": 161,
+  "scripts": 5,
+  "source_hash_bytes_mtime": 209,
+  "human_record": {
+    "path": "docs/agent-runs/phase-12/billing-bootstrap-exception.md",
+    "bytes": 1334,
+    "sha256": "abe3a50ad7167fa01227c73e15e92a422a50609f6313bdcc56404cb61765d71a"
+  },
+  "mismatches": []
+}

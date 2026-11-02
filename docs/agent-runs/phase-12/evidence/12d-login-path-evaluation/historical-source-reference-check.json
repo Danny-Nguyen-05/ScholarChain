@@ -1,0 +1,10 @@
+{
+  "checked_utc": "2026-10-31T17:35:03.491502+00:00",
+  "reference_freeze": "docs/agent-runs/phase-12/evidence/12d-billing-execution-prep/source-freeze.json",
+  "reference_sha256": "ec96c67541385151f69ebea29b2c574e13dbdd4c37f43f197bd6551e166005b7",
+  "freeze_files": 209,
+  "freeze_mismatches": [],
+  "previous_build_input_files": 1383,
+  "previous_build_input_mismatches": [],
+  "scope": "Read-only reconciliation only; no new Terraform or sbt run. Previous gate results remain historical, not live authentication proof."
+}

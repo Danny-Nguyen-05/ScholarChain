@@ -1,0 +1,23 @@
+{
+  "recorded_utc": "2026-11-01T03:16:53.193325+00:00",
+  "branch": "phase-12",
+  "head": "5ca8406bad5fe55f732458fa0cbd5d561ac83d8f",
+  "preflight_file_count": 4397,
+  "earlier_files_unchanged": 4393,
+  "earlier_files_changed_append_only": [
+    "docs/agent-runs/phase-12/owner-report.md",
+    "docs/agent-runs/phase-12/prompt.md",
+    "docs/agent-runs/phase-12/repairs.md",
+    "docs/agent-runs/phase-12/test-report.md"
+  ],
+  "earlier_files_removed": [],
+  "production_source_changes": [],
+  "source_reference_files_equal": 209,
+  "prior_packets_review_human_records_unchanged": true,
+  "infra_safe_artifacts": 31,
+  "infra_manifest_sha256": "e48dcfb0d7dd3a9f53786c64602d4ee28284ed41856fff0fefc60c949a39ff2e",
+  "plan_sha256": "35e3591498a3708ff82617ff4ee382f3402bdcf0176a8d4c95e6260913d1cdc5",
+  "no_apply": true,
+  "reviewer_not_launched": true,
+  "specialist_finished_no_running_jobs": true
+}

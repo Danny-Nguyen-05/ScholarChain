@@ -1,0 +1,46 @@
+{
+  "checked_utc": "2026-11-01T21:10:45.818437+00:00",
+  "records": [
+    {
+      "path": "docs/agent-runs/phase-12/prompt.md",
+      "bytes": 78601,
+      "sha256": "7e61c06eb22f01dec22d333e85f9c55f8fe850795ff344866958becb8423a8f6",
+      "prefix_preserved": true,
+      "after_bytes": 79244,
+      "after_sha256": "89deda3a531f7228a06847ffe64d7dfa32c5d74d5a93ff6aa2f7fbf7a5d24b27"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/review.md",
+      "bytes": 212374,
+      "sha256": "7a4eddbf78d6131ba1898d46bf5b545a7d5504296e61deae9b698a0db5325c9e",
+      "prefix_preserved": true,
+      "after_bytes": 225081,
+      "after_sha256": "b965aa9d4e7318ff4f2d2bc8ad009b099012faaca82aa8773094b7e748573a0c"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/repairs.md",
+      "bytes": 52030,
+      "sha256": "47f9c7a4e64b2f645a03c2ae7f3252d178c03d1b3b1f5da197d671f4f2c72ed9",
+      "prefix_preserved": true,
+      "after_bytes": 53318,
+      "after_sha256": "651e0e38c01357a3b15393dee4dcfaa9e69d20fa0505d82ce8855077091386b3"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/owner-report.md",
+      "bytes": 102646,
+      "sha256": "432665c64ae34664354888d4187eafccd4f11af29d0ebdf77b9cc09b065c1bf9",
+      "prefix_preserved": true,
+      "after_bytes": 108136,
+      "after_sha256": "b6255657faaf80ecd0195736e6d98c3d9449c26ae77fe17aa5cd7195e477d418"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/test-report.md",
+      "bytes": 95933,
+      "sha256": "15ad43eabe41d9ea2701b3fa722bc7df17f2b5e29937ee618c77a17d0f24d43e",
+      "prefix_preserved": true,
+      "after_bytes": 101423,
+      "after_sha256": "f391084fcf09bb4eaebd8073cbb0c7f151e3636c00e439eeeea98c27b44dd4e6"
+    }
+  ],
+  "review_verbatim": true
+}

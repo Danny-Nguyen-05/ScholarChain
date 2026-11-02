@@ -1,0 +1,30 @@
+{
+  "recorded_at_utc": "2026-11-01T03:04:25.362049+00:00",
+  "user_reply_verbatim": "everything is good",
+  "context": "Confirms previously selected USD200, budget name, period, account/profile/region after selecting the fresh read-only billing plan.",
+  "inputs": {
+    "aws_account_id": "530332961125",
+    "aws_profile": "scholarchain-billing-deployer",
+    "aws_region": "us-east-2",
+    "budget_name": "scholarchain-project-budget",
+    "budget_limit_usd": 200,
+    "project_period_start_utc": "2026-10-01_00:00",
+    "project_period_end_utc": "2027-01-01_00:00",
+    "enable_budget": "true in isolated planning inputs only",
+    "resource_tags": {
+      "course": "CS441",
+      "project": "scholarchain",
+      "environment": "course",
+      "owner": "danny"
+    },
+    "expiration_date": "2027-01-01 derived from end date",
+    "notification_thresholds": [
+      50,
+      80,
+      100
+    ]
+  },
+  "private_recipient": "Awaiting human-only hidden Terminal entry outside Git; exact address is not read, printed or requested in chat.",
+  "terraform_scope": "Init/download, local checks, real read-only plan and protected show/sanitization only; no apply/IAM changes/paid calls.",
+  "identity_provenance": "User-supplied STS result retained in evidence/12d-authentication-verification/caller-identity.user-supplied.json; no independent agent STS call authorized or made."
+}

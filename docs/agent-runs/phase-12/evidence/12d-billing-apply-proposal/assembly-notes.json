@@ -1,0 +1,11 @@
+{
+  "recorded_utc": "2026-11-01T20:34:56.221414+00:00",
+  "scope": "Public proposal/evidence assembly only",
+  "infra_owner": "/root/infra_12d_apply_proposal",
+  "no_execution_or_private_reads": true,
+  "D2_followup": "Infra owner corrected future exact-recipient scan to after final assembly/freeze; any subsequent content change requires rescan.",
+  "lookup_erratum": "Coordinator rg referenced nonexistent docs/phase-plan.md. rg emitted a missing-file diagnostic; the combined shell invocation ended 0 because later head/tail succeeded. Discovered the neutral evidence/12c/phase12-plan-at-start.md with rg --files and read it. No source/live failure or retry.",
+  "assembly_erratum": "First assemble-public.py exit1 at the D2 text assertion: check expected a paraphrase rather than the actual corrected sentence. Four public specialist files had been copied; no records appended yet. Corrected assertion to the actual sentence and verified existing copies byte-equal before resuming. No specialist content, source, private or cloud artifact changed.",
+  "limits": "Preservation proves selected 209 source files, 83 prior packet files and five record prefixes; not a full repository baseline.",
+  "test_scope": "No behavior change, tests or builds. Historical seven mock passes and sbt are not rerun."
+}

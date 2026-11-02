@@ -1,0 +1,7 @@
+{
+  "timestamp": "2026-10-31T21:22:03.425875+00:00",
+  "freeze": "docs/agent-runs/phase-12/evidence/12d-billing-policy-amendment/source-freeze.json",
+  "freeze_sha256": "f6cd6649d084cad038234f9ec476bead72a05e6e74124b9d77b86e4c8777ba1a",
+  "files": 209,
+  "mismatches": []
+}

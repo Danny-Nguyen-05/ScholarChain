@@ -1,0 +1,57 @@
+Verdict: APPROVE, for the helper and its offline tests only. This approval does not authorize any production helper run, private scan, publication, apply, IAM change, spending or Phase 12D completion. W3 (actual final freeze, private scan and publication equality) stays open. I found no blocking defects: two Low and three Info findings, none of which need a repair before the next human-decision step.
+- Helper scope (scripts/billing/publication_evidence.py). It has only three modes: assemble, verify-before and verify-after. It has no scan, append, transfer, subprocess or AWS path, and the five destination records are fixed (lines 17–18).
+  - Path controls: relative paths only, no traversal, and private, credential, secret, state and plan names are refused (51–59). Symlinked ancestors and leaves, hardlinks, other owners, non-UTF-8 input and size limits are all rejected (62–107). Duplicate JSON keys and NaN-style constants are rejected (110–123).
+  - Output privacy: argument errors never echo the input (32–35), and every error is a fixed code (392–397).
+- Assemble (184–261).
+  - Inputs: the staging directory must contain exactly the listed files (220). All five base records are snapshotted and re-checked before the first write (222–228).
+  - Exclusive output: the packet and freeze are created exclusively with 0700/0600 modes and fsync (138–146, 229–243). An existing packet blocks a rerun, so a failed partial packet is retained and blocks reuse (140, 232–233).
+  - Inventory: it binds each record’s base, suffix and final base+suffix length and SHA (216–219).
+  - Freeze manifest: it sits outside the packet with exactly {root, files}, covers every packet file including the inventory, and has no self-hash (250–257).
+- Verify (280–365).
+  - Freeze and packet: checks the freeze hash, exact packet membership and every byte. Every packet file must be the inventory, a listed artifact or a suffix (317–345).
+  - Before mode: each destination must equal its base exactly and base+suffix must equal the anticipated final hash (343–344).
+  - After mode: whole-file length and hash, the prefix hash and exact suffix bytes are all checked (339–341).
+  - Receipt: strict 10-key schema, binding, manifest SHA, count, zero matches and the exact exclusion text (264–277). It returns scan_authenticity_verified=false.
+  - Second pass: freeze, receipt, packet and destinations are re-read to catch changes during verification (353–360).
+- Compatibility with the unchanged wrapper (budget_execution.py). The receipt keys and exclusion text match the wrapper’s output (754–756). The plan and caller match its binding (464–465). The freeze shape and per-file count match its post-freeze scan (719–752). The wrapper still allows only the packet and the named freeze to be dirty (482–496), so leftover staging files or an early receipt would be rejected; the accepted wrapper test at test_budget_execution.py:414 covers this. The wrapper_files check scans every file under scripts/billing (498–501), so all 8 files must be bound. I found no __pycache__ directory.
+- Tests. The file has 39 test methods. The retained logs show 33, then 38, then 39 passing with OK and exit 0. Fixtures are synthetic temporary directories only, and the only addresses anywhere are the synthetic example.invalid fixture.
+- Preservation.
+  - Script hashes: all 8 match all-script-bindings.json, and the original 5 are unchanged.
+  - Phase records: all 5 match their recorded prefix and full hashes. The record bases chain to the earlier review-record packet; the extra 2,070 bytes in repairs.md came from the human-decisions packet (G1, CLI preflight, H1).
+  - Prior files: the human record is still 1,334 bytes with SHA abe3a50a…. The 190 prior public files and the 209 source files match (hashes, bytes and mtimes), with 0 mismatches.
+  - Packet and checkout: the packet manifest lists 20 files with 0 mismatches and excludes only itself. git status shows 805 entries (780 + 25 new), HEAD is 5ca8406b…, and git diff --check exits 0.
+- Human choice. The question and the “yes” reply are kept verbatim. Recording it as the H2 tooling choice fits the question, and no window was selected. No approval is inferred.
+1. STATUS: APPROVE for the helper and offline tests only. No live, publication or scan authority.
+2. OWNER: code-reviewer (independent, read-only). The authored code belongs to infra-engineer, and the phase evidence to the coordinator.
+3. WORK ORDER: Phase 12D offline publication helper review. HEAD is 5ca8406b, branch phase-12.
+4. FILES CREATED: None.
+5. FILES MODIFIED: None.
+6. COMMANDS RUN:
+   - Read-only ls, cat, sed, grep and wc.
+   - git rev-parse HEAD, git status --porcelain=v1 --untracked-files=all (805), git diff --check (exit 0).
+   - python3 -I scripts that only hash and compare: 8 scripts, 5 prefix chains, 20 manifest entries, 209 source files, 190 prior files and the human record.
+   - Nothing else ran: no helper, tests, wrapper, build, AWS, CLI or private reads.
+7. TEST RESULTS: Not run by me. The retained logs show 33, 38 and 39 passing with 0 failures and exit 0, and the file has 39 tests. The earlier results (46 wrapper tests, 7 A1 checks) remain historical and were not rerun.
+8. VALIDATION RESULTS:
+   - All 8 script hashes match, and the original 5 are unchanged.
+   - All 5 record prefixes and full hashes match, and the human record is unchanged (1,334 bytes, abe3a50a…).
+   - The 209 source files and 190 prior files match; the manifest has 20 entries with 0 mismatches.
+   - The status count reconciles (805 = 780 + 25), and the only addresses found are synthetic.
+   - The receipt, freeze and binding formats are compatible with the wrapper.
+9. ASSUMPTIONS:
+   - The staging inputs will be sanitized public text; the helper does not classify sensitive content.
+   - Receipt authenticity and freshness are verified externally by deployment supervision.
+10. RISKS:
+    - P1, P3 and P5 must go into the execution work order.
+    - Comparisons are point-in-time with no lock, and publication across the five files is not atomic.
+    - W3, R1, persistent-Terminal supervision, H2 window feasibility and every live gate remain open.
+11. MANUAL ACTION REQUIRED: The human decides on source control and a clean checkout covering all 8 files, R1 residual-risk acceptance and the dated window, then writes the gate personally.
+12. BLOCKED-ON OWNER: None for this step. Execution waits on the human architect.
+13. BLOCKED-ON EVIDENCE:
+    - an 8-file release commit and a clean canonical checkout;
+    - the personal gate;
+    - R1 acceptance;
+    - a fresh P3;
+    - a genuine scan receipt;
+    - canonical verify-before and verify-after results.
+14. NEXT GATE: The coordinator records this verdict and presents the remaining human decisions. Nothing runs automatically.

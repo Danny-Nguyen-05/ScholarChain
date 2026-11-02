@@ -1,0 +1,123 @@
+Verdict: REQUEST-CHANGES for the P1 identity evidence, on one point only: the human’s timing record. The installed identity itself checks out exactly against what was reviewed, so no IAM change or rebuild is needed. What fails is the record: the human says the setup happened 9–10 PM, but AWS’s own timestamps show the operator and role were created before 9 PM. That has to be reconciled by the human before P1 can close.
+
+This review does not authorize an apply, an IAM change, spending, closing P2, completing Phase 12D or starting the durable-path plan.
+
+What checked out
+Exception scope and chronology (Chicago time, UTC−5 on Oct 31):
+
+Time	Event	Source
+17:47–17:58	Proposal written (813c24fe…, matches); user replied “I appove it”; first human record verified (325 bytes, f478affb…) with a 19:00–20:00 window	identity-decision-draft
+20:01	Operator user created	AWS console display
+20:23	Billing role created	AWS console display
+20:33	Coordinator saved all 7 setup screenshots; record was then 4265d7a7… (537 bytes), still 7–8 PM plus the “up to 60 minutes, starting when I begin” paragraph	observations.json
+21:08 / 21:12 / 21:17	Pasted policy readbacks, tag readbacks, then “one policy confirmed and signed out” recorded	readbacks, completion
+21:30–21:44	Separately authorized operator authentication	auth packet
+22:26	Human edit: window becomes 9–10 PM (538 bytes, f00a7159…, file mtime)	exception file
+Nov 1, 01:08	User: “that is my real time I have updated it”	timing clarification
+The scope that was carried out matches the proposal: one operator, one role, four exact policies, a passkey MFA and the five tags. I saw no budget creation, access keys, admin rights, planner changes, or Organizations / Identity Center use.
+Historical hashes were left alone: 4265d7a7… is still cited in observations, completion and the auth packet, and the later edit is recorded separately. No agent edited the record after 20:33.
+All 11 screenshots viewed. Hashes match their manifests, observations.json and result.json.
+
+Operator, before creation: custom password, third column “No” (header not visible), no permissions attached (“No resources”), and the five tags entered.
+Operator after passkey assignment:
+ARN …:user/scholarchain-billing-operator, created 20:01;
+MFA (1): a passkey or security key;
+no access key (“Create access key” is offered);
+last sign-in “Never”.
+Caller policy: scholarchain-billing-assume-role, STS only, scoped to role name scholarchain-billing-deployer, with MFA Bool true.
+Role before creation: trust policy ending in MFA "true", no permissions added, five tags.
+Budget policy: the exact five actions on the single budget ARN, entered before installation.
+Role after setup:
+created 20:23, with a 1-hour maximum session;
+exactly two customer inline policies (…-browser-login, …-project-budget-management);
+no permissions boundary and no last activity.
+Trust readback: one statement, DistinctOperatorWithMFA, with the principal set to exactly the operator ARN, sts:AssumeRole, and Bool MFA "true". Only the formatting is normalized.
+Tag readbacks: both identities show exactly CS441 / scholarchain / course / danny / 2027-01-01. The operator still showed “Never” signed in and no access key, and the role showed no activity, so these were captured before any use.
+Operator sign-in: the console header shows scholarchain-billing-operator in account 530332961125, Ohio.
+Role session: “ScholarChain Billing” in account 530332961125. Cost and Health widgets show Access denied, which is consistent with the narrow grant and no widening.
+Exact policy match: I rendered billing-execution/main.tf with account 530332961125, region us-east-2, the role and the budget names. The three pasted bodies (caller, budget, login) are exactly equal as JSON objects to the rendered templates.
+
+MFA and authentication:
+
+Both the caller policy and the trust policy require MFA. A successful console switch into the role therefore implies an MFA-authenticated operator session; the STS result alone does not prove MFA.
+The STS ARN …assumed-role/scholarchain-billing-deployer/scholarchain-billing-operator is user-pasted. The command’s working directory, times and exit codes are recorded as unknown, not invented.
+Refresh lifetime and Terraform adoption of the manually created IAM resources remain unverified.
+Packet integrity: the bootstrap manifests (9, 24, 3 and 4 entries), the auth manifest (13) and the timing manifest (3) all match, with only the manifest files themselves unlisted. review.md is unchanged (6b39f772…), and git diff --check is clean.
+
+Required assessments
+Password-label discrepancy:
+The summary says “Enabled with MFA” while the subordinate “Console password” says “Not enabled”. That was a reading taken right after creation.
+The later operator console sign-in screenshot shows password sign-in works.
+There is no evidence of a reset or a disable. The Reset/Disable dialog was only offered, and nothing shows it was used.
+Resolved in practice. The cause is not inferred.
+Inventory sufficiency:
+The operator’s inventory is supported by three things: the creation screenshot showing no permissions, no access keys at two later points, and the user’s report of one policy and sign-out.
+The role’s inventory is shown directly: two inline policies, no boundary, and the exact trust policy.
+Sufficient for P1, but not an independent, complete inventory (groups and managed policies after creation are user-reported).
+The actor’s root status is not provable from the “danny (530332961125)” label and is not inferred.
+Findings
+F1 — Medium — BLOCKING for P1 closure
+
+Where: docs/agent-runs/phase-12/billing-bootstrap-exception.md (f00a7159…, current text says 9:00–10:00 PM), together with 12d-timing-clarification/user-statement.json.
+Evidence:
+AWS shows operator creation at 20:01 and role creation at 20:23 (UTC−05:00).
+The coordinator already held all seven creation and installation screenshots by 20:33.
+Under the current 21:00–22:00 window, every setup action happened before the window opened.
+The original 19:00–20:00 window had already closed when the operator was created.
+The replacement clause (“up to 60 minutes, starting when I begin”) is unverifiable: the root activity runs from at or before 20:01 to installed-policy and tag captures made before sign-out (recorded 21:17). That span cannot be shown to be 60 minutes or less.
+The 22:26 edit came after the setup and after authentication. The reply “Actual timing and discrepancy clarified in my file” is not reflected: the file contains no explanation.
+Impact: The only human record of a live, security-sensitive exception carries a window contradicted by AWS’s own timestamps. Neither compliance with that window nor with the 60-minute cap can be established.
+Owner: human architect, writing personally. The agent may not write times, suggest times or backdate anything.
+Acceptance: The human, in their own words in their own record, either:
+(a) states actual start and end times consistent with the 20:01 and 20:23 creation timestamps, or explicitly addresses them; or
+(b) states that exact times are unavailable, acknowledges that the setup actions happened around 20:01–20:23 rather than 9–10 PM, and personally accepts or rejects the duration and window deviation.
+A narrow, user-launched recheck then reviews that record only.
+
+F2 — Low — non-blocking, close together with F1
+
+Where: three coordinator reports in the bootstrap and authentication packets.
+Evidence: They say the replacement paragraph in the exception was “the user’s exact requested text” and was “requested verbatim by the human”. That implies the coordinator wrote dictated text into a human-owned record, and no verbatim request is retained.
+Acceptance: The human’s F1 record affirms the paragraph as their own, or the coordinator appends the verbatim chat request as a transcription, without changing the record.
+F3 — Low — non-blocking
+
+Where: 12d-identity-decision-draft/, which has 3 files and no manifest. Only the proposal’s hash is recorded elsewhere.
+Acceptance: The coordinator adds a new, append-only manifest with the current hashes.
+F4 — Info
+
+Operator groups and managed policies after creation, and complete IAM ownership, should be captured in the later Terraform adoption review.
+Refresh lifetime and provider session lifetime remain unverified.
+Report fields
+STATUS: COMPLETE (review); verdict REQUEST-CHANGES for Phase 12D P1 identity evidence ONLY — technical identity/auth evidence verified; human timing record contradicted by AWS-displayed creation times (F1)
+OWNER: code-reviewer (independent, read-only)
+WORK ORDER: docs/agent-runs/phase-12/reviewer-prompt-12d-identity-establishment.md (incl. appended timing clarification); branch phase-12, HEAD 5ca8406bad5fe55f732458fa0cbd5d561ac83d8f; packets 12d-identity-decision-draft, 12d-human-identity-bootstrap, 12d-authentication-verification
+FILES CREATED: None
+FILES MODIFIED: None
+COMMANDS RUN: git rev-parse/status -uall/diff --check; stat/shasum; cat/grep of packet text, exception record, review.md headings, reviewer prompt, billing-execution main.tf; python3 -I manifest/hash/screenshot-hash checks and rendered-template JSON equality; viewed 11 PNGs. No Terraform/AWS/login/console/build calls; no credential/config/cache/state/private/raw-plan reads.
+TEST RESULTS: Not run (review only). Readbacks == rendered templates (3/3); all packet manifests 0 mismatches; 11/11 screenshot hashes match; diff --check empty.
+VALIDATION RESULTS: Scope/policies/trust/tags/1h max/no keys/two inline/no boundary/operator sign-in/role session/STS ARN verified as described; password-label discrepancy resolved by sign-in; inventory sufficient for P1 (not independent). Timing: stated 21:00–22:00 contradicts 20:01/20:23 AWS creation and 20:33 evidence; ≤60 min unverifiable. Hash chain f478→4265→f00a preserved without rewrite.
+ASSUMPTIONS: Screenshots/pastes are unmodified depictions of the human's sessions; AWS console times shown in UTC−05:00 equal Chicago CDT on Oct 31, 2026; file mtimes are local CDT.
+RISKS: Exception compliance (window/60-min) unestablished; possible coordinator-authored text in human record; operator post-creation inventory user-reported; refresh lifetime, provider consumption, manual-IAM Terraform adoption, live budget permissions and all EMR/billing gates open.
+MANUAL ACTION REQUIRED: Human personally writes a timing record that reconciles with or explicitly addresses 20:01/20:23 (or states unavailable and accepts/rejects the deviation); user launches a narrow recheck.
+BLOCKED-ON OWNER: Human architect (F1, F2 affirmation); coordinator (F2 transcription option, F3 manifest, recheck prompt)
+BLOCKED-ON EVIDENCE: billing-bootstrap-exception.md f00a7159… (9–10 PM); screenshots operator 20:01 / role 20:23 UTC-05; observations.json recorded 01:33:21Z; timing-followup.json "Clarification not observed"
+NEXT GATE: Human timing record → narrow user-launched P1 recheck → only then a read-only durable-path plan per the P2 selection. No apply/IAM/spend.
+NEXT PROMPT
+Phase 12D — record P1 identity review (REQUEST-CHANGES) and obtain the human's timing reconciliation. Fresh session. No AWS/IAM/console/login/Terraform/build calls, no durable-path plan, no apply or spending.
+Repository /Users/danny/Documents/UIC/CS441/ScholarChain, branch phase-12, HEAD 5ca8406bad5fe55f732458fa0cbd5d561ac83d8f (uncommitted 12D work present).
+
+1. Append this independent review VERBATIM to docs/agent-runs/phase-12/review.md under "## Subphase 12D human identity establishment/authentication (P1) — independent review". Append F1–F4 with owners to repairs.md; append this work order to prompt.md; append-only owner-report.md/test-report.md entries. Verify every prior byte-prefix. Never edit billing-bootstrap-exception.md or any human record; never rewrite historical hashes (f478affb…, 4265d7a7…).
+
+2. F3: create docs/agent-runs/phase-12/evidence/12d-identity-decision-draft/evidence-manifest.json (new file) listing the 3 existing files with current SHA-256/bytes. Do not modify those files.
+
+3. F2: if the human's original chat request for the "This replaces the fixed clock window…" paragraph is available in this session's record, append a coordinator transcription of it verbatim to a new file evidence/12d-p1-timing-reconciliation/append-provenance.json; otherwise record "not retained".
+
+4. Ask the human, without suggesting any times, and wait:
+   "AWS shows the billing operator created at 20:01 and the role at 20:23 (UTC−05:00) on Oct 31, and setup screenshots were with the coordinator by 20:33 — before the 9–10 PM window now in your record. In your own words, in your own file, please either (a) record the actual root setup start and end in a way that addresses those timestamps, or (b) state that exact times are unavailable, acknowledge that setup occurred around 20:01–20:23, and state whether you accept the window/60-minute deviation. Please also confirm whether the 'replaces the fixed clock window' paragraph is your own text."
+   The agent never writes, edits, drafts or backdates that record. Record only a coordinator transcription of the human's reply and the new file SHA-256/bytes in evidence/12d-p1-timing-reconciliation/.
+
+5. Prepare (do not launch) docs/agent-runs/phase-12/reviewer-prompt-12d-p1-timing-recheck.md: a narrow read-only recheck of the new human record against the AWS-displayed 20:01/20:23 times, the 20:33 evidence timestamp, the hash chain, and F2/F3 closure. Technical identity evidence is already verified and is not re-reviewed. The prompt must include the reviewer's verdict scope (APPROVE/REQUEST-CHANGES for P1 timing only) and forbid apply/IAM/spending/P2 closure.
+
+6. Do not start the durable-path read-only plan until the recheck returns APPROVE and a new prompt arrives.
+
+Forbidden: AWS/IAM/console/login/Terraform/sbt calls, credential/config/cache/state/private-input/raw-plan reads, writing or editing human records/approvals, launching reviewers, commits, pushes, Phase 13.
+End with: "The P1 identity review is recorded as REQUEST-CHANGES. I have stopped and am waiting for your timing record and for you to launch the recheck."

@@ -1,0 +1,98 @@
+{
+  "checked_utc": "2026-10-31T21:36:43.176497+00:00",
+  "baseline_files": 4273,
+  "unchanged_baseline_files": 4265,
+  "changed_baseline_paths": [
+    "docs/agent-runs/phase-12/owner-report.md",
+    "docs/agent-runs/phase-12/prompt.md",
+    "docs/agent-runs/phase-12/repairs.md",
+    "docs/agent-runs/phase-12/test-report.md",
+    "infra/terraform/billing-execution/README.md",
+    "infra/terraform/billing-execution/main.tf",
+    "infra/terraform/billing-execution/tests/policy.tftest.hcl",
+    "infra/terraform/billing-execution/variables.tf"
+  ],
+  "prefixes": [
+    {
+      "path": "docs/agent-runs/phase-12/prompt.md",
+      "bytes": 61840,
+      "sha256": "a0c94b949d3b583d3d05804dbff82c24062294b22df910a967dbc7c410609390",
+      "new_bytes": 63636,
+      "new_sha256": "11a0327dead8aa72f73e1ec3f01c86ac5627d3b0d46f9adc2681f8b6e7dc8703",
+      "prefix_preserved": true,
+      "HEAD_prefix_preserved": true
+    },
+    {
+      "path": "docs/agent-runs/phase-12/repairs.md",
+      "bytes": 36239,
+      "sha256": "3d6d9ba31f199ba38c931cab4ebcc7c026e8dd1506c50be994d16dd464ed4655",
+      "new_bytes": 37836,
+      "new_sha256": "365fee0078f2042642ac06e54f0140c4dd0c040a773b6dcf627b05ba3cc3afb7",
+      "prefix_preserved": true,
+      "HEAD_prefix_preserved": true
+    },
+    {
+      "path": "docs/agent-runs/phase-12/owner-report.md",
+      "bytes": 58703,
+      "sha256": "ea2f2e8e572218d1a6e73ead61c478fd09847890600eb595e75b06bef1887f20",
+      "new_bytes": 65560,
+      "new_sha256": "2ed9a2c1bbfbab9a6b4052b79c934b1f97172284bdd185a9f02e582911f4ad75",
+      "prefix_preserved": true,
+      "HEAD_prefix_preserved": true
+    },
+    {
+      "path": "docs/agent-runs/phase-12/test-report.md",
+      "bytes": 51957,
+      "sha256": "310b22b244e64011575caab4df066e3c649febc33cff1a72f68903d5c1aba56b",
+      "new_bytes": 58814,
+      "new_sha256": "91ab54e3119141eba23479bb03554c8f30953e519a3aa8d507e21d29d48dacff",
+      "prefix_preserved": true,
+      "HEAD_prefix_preserved": true
+    },
+    {
+      "path": "docs/agent-runs/phase-12/review.md",
+      "bytes": 152813,
+      "sha256": "19a570fa3c1e467e583acf11ae4a60cc0f4472e9ec037f2998226f9e01287111",
+      "new_bytes": 152813,
+      "new_sha256": "19a570fa3c1e467e583acf11ae4a60cc0f4472e9ec037f2998226f9e01287111",
+      "prefix_preserved": true,
+      "HEAD_prefix_preserved": true
+    }
+  ],
+  "prior_packets": {
+    "12c": {
+      "files": 106,
+      "mismatches": []
+    },
+    "12d-preparation": {
+      "files": 81,
+      "mismatches": []
+    },
+    "12d-preparation-repair-1": {
+      "files": 87,
+      "mismatches": []
+    },
+    "12d-billing-plan": {
+      "files": 47,
+      "mismatches": []
+    },
+    "12d-billing-execution-prep": {
+      "files": 73,
+      "mismatches": []
+    },
+    "12d-login-path-evaluation": {
+      "files": 37,
+      "mismatches": []
+    }
+  },
+  "freeze_files": 209,
+  "freeze_sha256": "f6cd6649d084cad038234f9ec476bead72a05e6e74124b9d77b86e4c8777ba1a",
+  "freeze_mismatches": [],
+  "head": "5ca8406bad5fe55f732458fa0cbd5d561ac83d8f",
+  "completion_observation": {
+    "build_exit": 0,
+    "active_build_marker_exists": false,
+    "live_subagents_other_than_root": 0,
+    "system_process_inventory": "Unavailable: pgrep exit 3, sysmond service not found. No system-wide no-process assertion is derived from pgrep. Build completion is established by recorded exit and absent runner marker."
+  }
+}

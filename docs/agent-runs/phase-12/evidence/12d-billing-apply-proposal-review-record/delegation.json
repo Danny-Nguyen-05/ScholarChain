@@ -1,0 +1,8 @@
+{
+  "agent": "/root/infra_12d_apply_proposal",
+  "role": "infra-engineer",
+  "model": "Inherited parent; exact version not exposed",
+  "ownership": "scripts/billing/**; public scratch report/test artifacts only",
+  "children_or_reviewers": false,
+  "scope": "Wrapper authorship and offline tests only; A1 isolated credential-free scratch exception; no durable/private access"
+}

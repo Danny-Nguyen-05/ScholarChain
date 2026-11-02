@@ -1,0 +1,31 @@
+{
+  "recorded_utc": "2026-11-01T21:00:46.846862+00:00",
+  "coordinator_observations": [
+    {
+      "command": "cat .claude/agents/infra-engineer.md; cat .claude/agents/code-reviewer.md; rg --files -g AGENTS.md scripts docs",
+      "exit": 1,
+      "meaning": "Two role reads succeeded; rg found no nested AGENTS.md, its normal no-match exit was 1."
+    },
+    {
+      "command": "ls -la /tmp/scholarchain-phase12d-billing-execution-plan; cat docs/agent-runs/phase-12/evidence/12d-billing-apply-proposal-review-record/preflight.json",
+      "exit": 1,
+      "meaning": "Unnecessary legacy temporary directory metadata listing succeeded; requested preflight file did not yet exist. Scope deviation: listing included private-input filename/mode/size metadata; no file contents were read or used, no helpers invoked. No further legacy temporary/private-directory inspection performed."
+    },
+    {
+      "command": "Initial python3 -I preflight assembly heredoc",
+      "exit": 1,
+      "meaning": "Expected exactly687 Git entries, but delegated infra agent had already created one scripts/billing file. Assertion occurred before any writes. Corrected by preserving prior final status687 (also observed at turn start) and separately retaining current688 status with the one bounded concurrent script addition. No destructive reset or hidden source/live failure."
+    },
+    {
+      "command": "python3 -I docs/agent-runs/phase-12/evidence/12d-billing-wrapper/assemble-public.py first attempt",
+      "exit": 1,
+      "meaning": "Compared runtime source pins directly with historical source-freeze rows; pins intentionally contain path/bytes/SHA only whereas historical rows also contain mtime. Corrected check to compare those exact three fields; separate preservation check still verifies all209 historical mtimes. Fourteen public artifact copies existed, no report/repair record appended on this failure. Existing copies verified byte-equal before resuming; no source or live failure."
+    },
+    {
+      "command": "python3 -I docs/agent-runs/phase-12/evidence/12d-billing-wrapper/assemble-public.py second attempt",
+      "exit": 1,
+      "meaning": "Generic address scan initially allowed only the original synthetic reserved fixture. Subscriber-drift feature test intentionally uses a second reserved example.invalid address. Confirmed zero non-reserved matches and narrowly allowed that exact reserved value only in that exact test source. No private recipient lookup/comparison performed. Records had been appended once; resumed idempotently without repeating them. Final scan repeated after all content changes."
+    }
+  ],
+  "limits": "No durable primary/backups, actual plan/state, credential/config/cache or private input content was accessed. Only authorized offline fixture work is delegated."
+}

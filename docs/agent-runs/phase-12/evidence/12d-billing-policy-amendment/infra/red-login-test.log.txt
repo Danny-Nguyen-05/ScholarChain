@@ -1,0 +1,104 @@
+tests/policy.tftest.hcl... in progress
+  run "budget_policy_is_exact_and_complete"... pass
+  run "trust_and_caller_require_exact_distinct_mfa_operator"... pass
+  run "different_budget_is_bound_independently"... pass
+  run "planner_cannot_be_operator"... pass
+  run "root_cannot_be_operator"... pass
+  run "foreign_account_cannot_be_operator"... pass
+  run "wildcard_cannot_be_operator"... pass
+  run "wildcard_cannot_be_budget"... pass
+  run "role_cannot_replace_user_mfa_contract"... pass
+  run "invalid_account_is_rejected"... pass
+  run "planner_under_path_cannot_be_operator"... pass
+  run "login_policy_is_exact_same_device_only"... fail
+
+Error: Test assertion failed
+
+  on tests/policy.tftest.hcl line 108, in run "login_policy_is_exact_same_device_only":
+ 108:     condition = jsondecode(output.login_policy_json) == {
+ 109:       Version = "2012-10-17"
+ 110:       Statement = [{
+ 111:         Sid      = "BillingRoleSameDeviceLogin"
+ 112:         Effect   = "Allow"
+ 113:         Action   = ["signin:AuthorizeOAuth2Access", "signin:CreateOAuth2Token"]
+ 114:         Resource = ["arn:aws:signin:us-east-2:111122223333:oauth2/public-client/localhost"]
+ 115:         Condition = {
+ 116:           StringEquals = {
+ 117:             "signin:OAuthClientId" = "arn:aws:signin:::devtools/same-device"
+ 118:           }
+ 119:         }
+ 120:       }]
+ 121:     }
+    ├────────────────
+    │ Diff:
+    │ --- actual
+    │ +++ expected
+    │   {
+    │     "Statement": [
+    │       {
+    │         "Action": [
+    │           "signin:AuthorizeOAuth2Access",
+    │           "signin:CreateOAuth2Token"
+    │         ],
+    │         "Condition": {
+    │           "StringEquals": {
+    │             "signin:OAuthClientId": "arn:aws:signin:::devtools/same-device"
+    │           }
+    │         },
+    │         "Effect": "Allow",
+    │         "Resource": [
+    │ -         "arn:aws:signin:us-east-2:111122223333:oauth2/public-client/*"
+    │ +         "arn:aws:signin:us-east-2:111122223333:oauth2/public-client/localhost"
+    │         ],
+    │         "Sid": "BillingRoleSameDeviceLogin"
+    │       }
+    │     ],
+    │     "Version": "2012-10-17"
+    │   }
+
+
+Allow exactly the two login actions on one account/region localhost resource,
+pinned to the same-device client ID.
+  run "login_region_changes_only_authentication_binding"... fail
+
+Error: Test assertion failed
+
+  on tests/policy.tftest.hcl line 129, in run "login_region_changes_only_authentication_binding":
+ 129:     condition     = jsondecode(output.login_policy_json).Statement[0].Resource == ["arn:aws:signin:eu-west-1:111122223333:oauth2/public-client/localhost"]
+    ├────────────────
+    │ Diff:
+    │ --- actual
+    │ +++ expected
+    │   [
+    │ -   "arn:aws:signin:eu-west-1:111122223333:oauth2/public-client/*"
+    │ +   "arn:aws:signin:eu-west-1:111122223333:oauth2/public-client/localhost"
+    │   ]
+
+
+Authentication region must bind the login resource exactly.
+  run "login_account_changes_independently"... fail
+
+Error: Test assertion failed
+
+  on tests/policy.tftest.hcl line 149, in run "login_account_changes_independently":
+ 149:     condition     = jsondecode(output.login_policy_json).Statement[0].Resource == ["arn:aws:signin:us-east-2:444455556666:oauth2/public-client/localhost"]
+    ├────────────────
+    │ Diff:
+    │ --- actual
+    │ +++ expected
+    │   [
+    │ -   "arn:aws:signin:us-east-2:444455556666:oauth2/public-client/*"
+    │ +   "arn:aws:signin:us-east-2:444455556666:oauth2/public-client/localhost"
+    │   ]
+
+
+The configured account, not a constant or wildcard, must bind login access.
+  run "mixed_case_planner_cannot_be_operator"... pass
+  run "mixed_case_planner_under_path_cannot_be_operator"... pass
+  run "wildcard_region_is_rejected"... pass
+  run "question_mark_region_is_rejected"... pass
+  run "malformed_region_is_rejected"... pass
+tests/policy.tftest.hcl... tearing down
+tests/policy.tftest.hcl... fail
+
+Failure! 16 passed, 3 failed.

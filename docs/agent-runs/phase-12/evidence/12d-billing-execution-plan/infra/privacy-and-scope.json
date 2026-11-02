@@ -1,0 +1,21 @@
+{
+  "private_directory": "/tmp/scholarchain-phase12d-billing-execution-plan",
+  "mode": "0700",
+  "private_input": "notification.private.tfvars.json (mode0600; metadata only, not opened/hashed by agent)",
+  "protected_raw_artifacts": [
+    "protected-init.log.txt",
+    "real-plan.log.txt",
+    "protected-show.log.txt",
+    "billing.execution.tfplan",
+    "billing.execution.plan.json"
+  ],
+  "private_recipient_present_in_plan_json_expected": true,
+  "safe_evidence_contains_recipient": false,
+  "safe_evidence_validation": "Only selected budget fields and recipient counts extracted programmatically; raw variables/output controls/subscriber strings omitted. Code supplied for review.",
+  "local_state_path": "/tmp/scholarchain-phase12d-billing-execution-plan/billing.execution.tfstate",
+  "state_exists_after_plan": false,
+  "terraform_data_dir": "/tmp/scholarchain-phase12d-billing-execution-plan/live-tf-data",
+  "no_secret_config_credential_cache_lookup": "No direct reads; provider standard login credential resolution for authorized planning only.",
+  "no_private_retention_decision_inferred": true,
+  "no_apply": true
+}

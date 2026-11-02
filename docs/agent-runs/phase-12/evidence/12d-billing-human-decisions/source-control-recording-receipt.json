@@ -1,0 +1,11 @@
+{
+  "confirmation": "source-control-choice.json",
+  "sha256": "74693ad9c86fc6a72844f498031d1eece678c0b174ac6cc46fd49df3e4d0901a",
+  "bytes": 739,
+  "repairs_before_bytes": 61418,
+  "repairs_before_sha256": "ead2d68b9bc74bfcb872bbb587b9c31aa19dc3ec701bcd7127475cd55038b8dc",
+  "repairs_prefix_preserved": true,
+  "repairs_after_sha256": "a0761a95557df12da26df538e9769a9b8153e2111ce8044afa8991bd2ea2588f",
+  "original_human_record_unchanged": true,
+  "agent_git_mutation": false
+}

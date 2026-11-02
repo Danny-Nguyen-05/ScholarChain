@@ -1,0 +1,71 @@
+{
+  "scope": "Human execution-gate handoff preparation only",
+  "self_excluded": true,
+  "files": [
+    {
+      "path": "coordinator-report.txt",
+      "bytes": 4566,
+      "sha256": "64a087bfb992f23670b7ed23b4c2a6b421232e343bc9d6f46dba03adb3472350"
+    },
+    {
+      "path": "diff-check-result.json",
+      "bytes": 73,
+      "sha256": "e0d6ebf318d62dd74e6a1621fae3cfd6c3a8772391fd380b4e9caa606a5a03c4"
+    },
+    {
+      "path": "final-status.log.txt",
+      "bytes": 67175,
+      "sha256": "8859b3ce3e7694db29c84f5569a4e5daef21441e6349a308afb8c6cb33a19804"
+    },
+    {
+      "path": "handoff-files.json",
+      "bytes": 1837,
+      "sha256": "d048ae25565254e8bdce13192a1c66ebf7f91f5a5c7d9e90899d040bdd97a695"
+    },
+    {
+      "path": "handoff.md",
+      "bytes": 15197,
+      "sha256": "b277c392deeca3388f701aecb035b216202eaabe2680748c4e759825b6c33512"
+    },
+    {
+      "path": "preflight-status.log.txt",
+      "bytes": 65780,
+      "sha256": "c3f19b1093428b595478cc2dcec6c7515db14fca56df288dd2ddbd2b4499440e"
+    },
+    {
+      "path": "preflight.json",
+      "bytes": 37842,
+      "sha256": "4e501f80014d6f45435da51ea7e63075f5fef234630e928a55d21af7a5f0a781"
+    },
+    {
+      "path": "preservation-check.json",
+      "bytes": 298,
+      "sha256": "48b78c5a239e390b51f882c2de619b36de3b982c2904b5225d9c3d33c03e0d68"
+    },
+    {
+      "path": "public-address-scan.json",
+      "bytes": 334,
+      "sha256": "6751b1229df874d9a89c44a7eeeb04fb3e5a0485ae8972b735d4ad5172e8a085"
+    },
+    {
+      "path": "record-prefix-check.json",
+      "bytes": 1701,
+      "sha256": "e8e954a0897b8cf5c8f6f5776882ed0cdc47941b5fa465606e9a339a46972347"
+    },
+    {
+      "path": "reviewed-bindings.json",
+      "bytes": 1917,
+      "sha256": "71a2455395c51e3bd27a3765935e133a74bfdd89b9fde0f3c5c8abd38b0af50e"
+    },
+    {
+      "path": "user-supplied-review.txt",
+      "bytes": 2801,
+      "sha256": "258544a13c140150c726e8247e505dbe5d97f9b2b50b340338feaf755a83216a"
+    },
+    {
+      "path": "validation-checks.json",
+      "bytes": 699,
+      "sha256": "e8e217f80ce828c4d459c7139db1c1e3e6cd3534f18db0698bc9d0030e908b93"
+    }
+  ]
+}

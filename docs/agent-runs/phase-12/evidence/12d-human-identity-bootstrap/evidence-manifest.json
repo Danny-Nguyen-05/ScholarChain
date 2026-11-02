@@ -1,0 +1,50 @@
+{
+  "artifact_count": 9,
+  "artifacts": [
+    {
+      "path": "coordinator-report.md",
+      "sha256": "486934611500b2bce61153c5cc8cdd25e40ccc426c88d0421828371a9ab6c714",
+      "bytes": 2619
+    },
+    {
+      "path": "observations.json",
+      "sha256": "e9a42168fce9e5783b5c53b2f39d2a835a34acd6a9b226934c73df5aec20656e",
+      "bytes": 6839
+    },
+    {
+      "path": "screenshots/budget-policy-json-before-installation.png",
+      "sha256": "111766f02720199f87ada85fe338b01bbd11c11d99f1db365efee527cb033191",
+      "bytes": 522577
+    },
+    {
+      "path": "screenshots/caller-policy-review-summary.png",
+      "sha256": "9812041bc707e76d6a290adc0aaf5f0e078e4f1b60840d0a563e7fccdedcd973",
+      "bytes": 314515
+    },
+    {
+      "path": "screenshots/operator-passkey-confirmation.png",
+      "sha256": "f35e8eac823adfa7d74173c5bfe9d5e0a645ecbf96c707420d0c21af25e55b49",
+      "bytes": 517531
+    },
+    {
+      "path": "screenshots/operator-tags-before-creation.png",
+      "sha256": "49ccf0dac5829db0b0e4646115fbcea24bfd4d413421bb443b96112743c44bac",
+      "bytes": 305522
+    },
+    {
+      "path": "screenshots/role-tags-before-creation.png",
+      "sha256": "3f8e8966e63f9423bc81bf563e7de75806d531c7653fb288826fb6645567ed4e",
+      "bytes": 302742
+    },
+    {
+      "path": "screenshots/role-trust-policy-readback.png",
+      "sha256": "703679e481bc9443a13475a190c2a4936c56c34b543e9d3e5039afc7c86a103e",
+      "bytes": 288636
+    },
+    {
+      "path": "screenshots/role-two-policies-confirmation.png",
+      "sha256": "d6361703dbf1fedd6d600128d226c6dd04fc229abed236ee44d316e5a7f251bb",
+      "bytes": 636535
+    }
+  ]
+}

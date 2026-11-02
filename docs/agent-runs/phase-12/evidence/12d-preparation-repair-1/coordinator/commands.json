@@ -1,0 +1,59 @@
+[
+  {
+    "name": "static-guard",
+    "argv": [
+      "python3",
+      "-B",
+      "tests/infra/terraform_source_guard.py",
+      "--repo-root",
+      "/Users/danny/Documents/UIC/CS441/ScholarChain"
+    ],
+    "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+    "environment_overrides": {},
+    "environment_note": "No overrides; inherited environment not collected. -B suppresses Python cache writes.",
+    "started_utc": "2026-10-31T02:37:22.758482+00:00",
+    "ended_utc": "2026-10-31T02:37:22.826692+00:00",
+    "wall_seconds": 0.06811195799673442,
+    "exit_code": 0,
+    "log": "static-guard.log.txt",
+    "sha256": "bf1c870aa3a8cd76f105a856da09ba19d01788a14625eaa645a7221af0a9ad07",
+    "bytes": 70
+  },
+  {
+    "name": "static-guard-self-test",
+    "argv": [
+      "python3",
+      "-B",
+      "tests/infra/terraform_source_guard.py",
+      "--self-test"
+    ],
+    "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+    "environment_overrides": {},
+    "environment_note": "No overrides; inherited environment not collected. -B suppresses Python cache writes.",
+    "started_utc": "2026-10-31T02:37:22.826741+00:00",
+    "ended_utc": "2026-10-31T02:37:22.864961+00:00",
+    "wall_seconds": 0.038237458997173235,
+    "exit_code": 0,
+    "log": "static-guard-self-test.log.txt",
+    "sha256": "c40a6ed13297b5c4e9856ae01d570b73a4249910d9c71af2214c54001b44581d",
+    "bytes": 636
+  },
+  {
+    "name": "diff-check",
+    "argv": [
+      "git",
+      "diff",
+      "--check"
+    ],
+    "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+    "environment_overrides": {},
+    "environment_note": "No overrides; inherited environment not collected. -B suppresses Python cache writes.",
+    "started_utc": "2026-10-31T02:37:22.864996+00:00",
+    "ended_utc": "2026-10-31T02:37:22.874131+00:00",
+    "wall_seconds": 0.009147000004304573,
+    "exit_code": 0,
+    "log": "diff-check.log.txt",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  }
+]

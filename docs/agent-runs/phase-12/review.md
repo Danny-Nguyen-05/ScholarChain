@@ -1175,3 +1175,1116 @@ Phase 12C review: APPROVE
   BLOCKED-ON OWNER: None.
   BLOCKED-ON EVIDENCE: None.
   NEXT GATE: Coordinator records this review append-only; human commit decision; human chooses the next work order. No automatic 12D or paid work.
+
+
+## Subphase 12D preparation — independent review
+
+Marked: user-supplied external review.
+
+Verdict for PREPARATION ONLY: REQUEST-CHANGES. There is one blocking finding: the billing-bootstrap budget has no tags. Almost everything else you asked me to verify reproduced exactly. The live 12D spike stays blocked and none of this approves it.
+
+Review method: read-only Git, hash, XML and log checks, plus public AWS docs and the course README. I edited nothing and ran no builds, tests, Terraform or AWS calls.
+
+Findings (most severe first)
+
+F1 — Medium — BLOCKING (preparation)
+- Where: infra/terraform/billing-bootstrap/main.tf:1-5 and main.tf:9-49.
+- Evidence: The provider has no default_tags, and aws_budgets_budget.project has no tags.
+  - Plan §4 says "Tags on every resource: course, project, environment, owner and expiration date". The course Phase 12 Foundation section says "Required tags" and "Budget and cost-allocation tags where course accounts allow."
+  - The main root already does this on the same provider pin: providers.tf:5 sets default_tags, and modules/foundation/main.tf:28 sets tags = local.tags on its budget.
+  - The main README (infra/terraform/README.md:197) says a future bootstrap root "must supply … the five required tags".
+- Impact: The next step for this root is a real plan and then apply. As written, that plan would create an untagged resource that breaks a binding rule, and it would have to be planned again.
+- Owner: infra-engineer.
+- Acceptance check:
+  - Add the five required tags, either as validated variables or as provider default_tags.
+  - The expiration tag must reflect the budget's own retention through final reconciliation, not the stack's November 25 date.
+  - Add a mock plan assertion that checks all five tags.
+  - fmt, validate and test pass in all three roots; the static guard and git diff --check pass; there is a new freeze.
+
+F2 — Medium — non-blocking for preparation; must be resolved before any live approval
+- Where: docs/agent-runs/phase-12/evidence/12d-preparation/cost-proposal.md:15.
+- Evidence:
+  - That line says the 12C "USD15 EMR reserve is replaced by/contains this spike allocation". The wording is ambiguous.
+  - In 12C, evidence/12c/cost/cost-memo.md:64 says the USD 15 is the "provisional reserve for all EMR spikes/experiments".
+  - 12C's upper-window margin was only USD 5.09 (cost-calculations.json:237; review.md:1117).
+- Impact: Spending USD 10 on 12D leaves about USD 5 for all later EMR work in Phases 13 and 15. That includes the scale experiment of at least 1M edges. The human chose "use recommendations" without this consequence stated.
+- Owner:
+  - Coordinator: the cost-proposal and handoff disclosure.
+  - Human architect: deciding whether to accept the smaller remaining EMR reserve.
+- Acceptance check: The packet explicitly states:
+  - the remaining EMR reserve after the spike (USD 15 − 10 = USD 5);
+  - the USD 5.09 upper-window margin;
+  - that later EMR runs need a new allocation decision.
+
+F3 — Low — non-blocking
+- Where: infra/terraform/billing-bootstrap/main.tf:19-31 and billing-bootstrap/README.md:9.
+- Evidence: The "before credits" basis depends entirely on cost_types. The Budget API page that the README cites marks CostTypes as "This member has been deprecated". The README does not mention this.
+- Impact: The live service might not honour include_credit=false the way the mock does.
+- Owner: infra-engineer.
+- Acceptance check: The README discloses the deprecation. The post-apply readback step explicitly checks that credits and refunds are excluded, or it routes an alternative (Metrics/FilterExpression) for review.
+
+F4 — Low — non-blocking
+- Where: infra/terraform/spikes/emr-spark/main.tf:17-20 and tests/proposal.tftest.hcl:13.
+- Evidence: The test asserts the hard-coded constants aws_resources_declared = 0, launchable = false and the list length of 8. That is tautological under plan §6.9 (tests must not re-run the implementation's own logic). The zero-resource property is true: I inspected the source and found only one output, no resource, data, module, provider or provisioner. But the test does not prove it.
+- Owner:
+  - infra-engineer: README disclosure.
+  - test-engineer: an optional static check.
+- Acceptance check: Either README.md:44 says the zero-resource claim rests on inspection, or a static check fails if any such block appears under spikes/emr-spark.
+
+F5 — Low — non-blocking
+- Where: evidence/12d-preparation/infra/final-commands.json (all 14 records).
+- Evidence: The records hold argv, cwd, times and hashes but no environment. TF_CLI_CONFIG_FILE appears only in the prose of handoff.md:23; no evidence JSON contains it.
+- Owner: coordinator.
+- Acceptance check: Future command records include the non-secret environment variables, or a recorded erratum states this omission.
+
+F6 — Low — non-blocking
+- Where:
+  - handoff.md:5-27;
+  - launch-dependencies.md:5-13;
+  - cost-proposal.md:3-15;
+  - the 12D blocks appended to owner-report.md and test-report.md.
+- Evidence: Spaces have been stripped from the prose, for example "Freeze203 files at2026-…", "Mainfoundationbudget", "beforeinventory", "(13files)".
+- Impact: Readability only; every number I checked is correct.
+- Owner: coordinator.
+- Acceptance check: Clean up the untracked evidence. Correct the tracked records only through an appended erratum, because the prefixes are append-only.
+
+F7 — Medium — carried, pre-existing, NOT introduced by 12D, non-blocking here; routed to the human
+- Where: 69 tracked files since a83f62e and earlier, including:
+  - docs/agent-runs/phase-12/prompt.md:15,287,331;
+  - review.md (4 occurrences);
+  - evidence/12c/phase12-plan-at-start.md;
+  - Phase 7 evidence.
+- Evidence: A Google Drive CloudStorage/GoogleDrive-… source path embeds the account owner's Gmail address. I have not reproduced it here. The plan's shared-budget section says the signup Gmail must stay out of the graded repository. None of the 95 new 12D files and none of the appended text adds it. Prior reviews did not flag it.
+- Owner: human architect. Redaction or history rewriting is destructive and needs a human gate; agents must not rewrite prior records.
+- Acceptance check: A recorded human decision, either to accept, redact going forward, or rewrite history. Future prompts should cite the plan by a neutral path.
+
+Info
+- The three alert thresholds [50, 80, 100] are hard-coded at main.tf:33 with no rationale comment (plan §6.7). This can be folded into F1.
+- The static guard scans only .tf and .tfvars, so .tftest.hcl fixtures are not scanned. I scanned them by hand and found only example.invalid and 111122223333.
+- One stale XML report (TestRunMarkerSpec) is correctly excluded. That is disclosed only in gate-summary.json.
+
+What verified cleanly
+
+1. Budget:
+   - One account-wide budget: COST, CUSTOM period, USD 200 enforced by validation.
+   - Explicit start and end variables with no defaults; the end must be later than the start.
+   - No filters, which the test checks.
+   - include_credit and include_refund are false.
+   - Exactly three actual-spend alerts above 50%, 80% and 100% (GREATER_THAN, PERCENTAGE).
+   - A sensitive recipient set with a precondition, prevent_destroy, and enable_budget=false by default.
+   - The separate-state rules are documented (README.md:24), and the main root keeps enable_budget_resource=false (course.tfvars:7).
+   - The AWS API docs confirm CUSTOM is valid and that a budget is deleted after its end date.
+2. Proposal:
+   - No resources and no provisioners.
+   - launch_requested=true is always rejected.
+   - The README and self-review say the capacity limits are proposals, not enforcement, and that idle auto-termination is not a total-runtime clock.
+3. Disclosures:
+   - I confirmed every code claim:
+     - Phase6Main.scala:94-170 uses Java NIO.
+     - Phase6Export.scala:28-29 drops only the top-level run_id.
+     - Phase6Context.scala:20,28 keeps a nested context.runId.
+     - Phase6Main.scala:18-38 fingerprints class directories and JAR bytes differently.
+   - So the "same assembled JAR" requirement is correct. All of these are presented as prerequisites, not as observed live failures.
+4. Evidence reconciliation:
+   - Footprint: git status has 99 entries, matching handoff-files.json exactly (4 modified, 95 untracked). 3,924 tracked files with 3,920 unchanged.
+   - Records: all four record prefixes are byte-identical to HEAD; the diffs are additions only.
+   - Manifests:
+     - 81 evidence files: 80 in the manifest plus the manifest itself; all 80 hashes and byte counts match.
+     - The 38 infra-native artifacts match.
+     - 13 build-origin artifacts: 12 present and matching, plus the raw-log alias. Decompressing the gzip reproduces the raw SHA 9b244a2c… and 1,720,676 bytes.
+   - Freeze: all 203 frozen files and all 1,377 build-snapshot files still match today.
+   - XML: 157 reports fall inside the gate window and are unchanged on disk. Parsing them independently gives 1,255 tests, 0 failures/errors/skips.
+   - Build log: the 20 [error] lines are one contiguous block (lines 8201–8220), the checkProbeInjectFailure probe. The summary lines add up to 1,255. JDK is 17.0.20.1.
+   - Terraform logs: all 32 Terraform log hashes match. Final results: course 40 passed, billing 5, proposal 6.
+   - RED proof: the scratch copy of main.tf differs only at line 20 and fails at the intended assertion, budget.tftest.hcl:33 (4 passed, 1 failed). Repository hashes are identical to the RED proof's before and after values.
+   - Locks: both new lock files are byte-identical to the course lock.
+   - Plan copy: its SHA is b136cd3c…, matching plan-reference.json.
+5. Cost: USD 0.96 is labelled as compute only. Everything excluded is listed (EBS, NAT, IPv4, S3, logs, KMS, tax, delayed charges). The public price file reproduces (decompressed SHA 5d3736e4…, 606,679 bytes).
+6. No live activity found:
+   - review.md, the 12C evidence and the human records are unchanged.
+   - B1/B2/B3/R1 and N19/N20 are carried forward unchanged.
+   - No .tfstate exists in the new roots, and their .terraform/ folders are git-ignored.
+   - There is no human-gate.md, and no approval was written.
+
+Report fields
+
+STATUS: COMPLETE (review); verdict REQUEST-CHANGES for Phase 12D PREPARATION ONLY (1 blocking: F1)
+OWNER: code-reviewer (independent, read-only)
+WORK ORDER: Independent review of 12D offline preparation; branch phase-12, base/HEAD 5ca8406bad5fe55f732458fa0cbd5d561ac83d8f; evidence root docs/agent-runs/phase-12/evidence/12d-preparation/
+FILES CREATED: None
+FILES MODIFIED: None
+COMMANDS RUN: Read-only git (rev-parse, status -uall, diff/numstat/-U0, cat-file, show, ls-files, check-ignore, grep, log -S, diff --check); sha256/gzip -dc/wc/stat/diff/sed/grep; python3 -I hash, manifest, XML-parse and freeze reconciliation; public docs via aws-knowledge read_documentation (Budget, TimePeriod) and WebFetch of the raw course README (only the first 100,000 of 160,436 characters read; the github-readonly MCP failed to connect). No Terraform, sbt, AWS, credential, state or plan access.
+TEST RESULTS: Not re-run (read-only). Observed artifacts reconcile: Terraform 51/0, 69 assertions, 26 expected-failure runs; RED 4/1 at budget.tftest.hcl:33; sbt check 1,255 tests, 0 failures/errors/skips across 157 fresh XML reports.
+VALIDATION RESULTS: All hashes, counts, prefixes, freeze (203), snapshot (1,377), locks, plan copy and public price data verified; F1–F7 found.
+ASSUMPTIONS: The external plan matches its repository copy, per plan-reference.json. Course README text after character 100,000 was not read. Live AWS acceptance of CUSTOM periods and cost_types is unverified.
+RISKS: Untagged budget (F1); undisclosed reduction of the EMR reserve (F2); deprecated CostTypes (F3); pre-existing Gmail in tracked paths (F7). All live 12D prerequisites remain unmet.
+MANUAL ACTION REQUIRED: Human decides F2 (reduced EMR reserve) and F7 (handling of the address in tracked paths); human chooses the next bounded 12D continuation after a recheck APPROVE.
+BLOCKED-ON OWNER: infra-engineer (F1, F3, F4 README); coordinator (F2 text, F5, F6); human architect (F2 decision, F7, all live gates)
+BLOCKED-ON EVIDENCE: billing-bootstrap/main.tf:1-5,9-49; cost-proposal.md:15 vs 12c/cost/cost-memo.md:64; README.md:9; spikes/emr-spark/main.tf:17-20; final-commands.json; phase-12/prompt.md:15
+NEXT GATE: Repair round for F1 (and F2–F6 as scoped), then a user-launched independent recheck of preparation only. No live 12D, plan, apply or Phase 13.
+
+
+## Subphase 12D preparation repair round 1 — independent recheck
+
+Marked: user-supplied external review.
+
+Verdict for PREPARATION ONLY: APPROVE. Every repair claim you listed reproduced, and nothing new blocks preparation. The live 12D spike stays blocked, and this approves no spending, plan or apply.
+
+I worked read-only: Git, hashes, XML and logs. One command was blocked by the project’s PreToolUse guard. My scratch-only git apply -R was flagged as terraform apply, which is a false positive. I didn’t try to get around the guard; I rebuilt the originals in memory with a small Python diff reader instead, and nothing was written to the repository.
+
+What verified
+F1 (budget tags):
+The budget now has all five tags (main.tf:7-12,27). The keys match the main foundation module exactly (modules/foundation/main.tf:2-8).
+The four ownership values are validated as non-blank and email-free (variables.tf:57-75). expiration_date is derived from the budget’s own end date.
+Tests compare the budget’s full tag map against independent synthetic values, and also cover a changed end date (2027-02-03) and a blank owner being rejected.
+RED proof: the scratch main.tf differs only at line 27, and the scratch test file is byte-identical to the current one. It fails with Test assertion failed at budget.tftest.hcl:39, which is a genuine mismatch, not an unknown value or provider error (6 passed, 1 failed). The repository’s 13 hashes are the same before and after.
+The alert thresholds now have a rationale comment (main.tf:41-42).
+F2–F7:
+F2: the USD 5 / USD 10 reserve split and the USD 5.09 margin are stated in the cost proposal, both READMEs, the errata and the reports. The spike cap is changed to 5 in variables.tf, and a test rejects 6.
+F3: the deprecated CostTypes field and a post-apply readback check are documented.
+F4: the zero-resource claim is now attributed to source inspection.
+F5: every final command record carries TF_CLI_CONFIG_FILE, and the errata honestly records the earlier omission.
+F6: the notes are readable again.
+F7: no address was added; the 0 matches are in new text only, and history is untouched.
+Footprint:
+git status has 188 entries, matching handoff-files.json exactly (5 tracked, 183 untracked).
+4,019 baseline files: 3,998 unchanged and exactly the 21 listed changes.
+All 5 tracked records keep both the HEAD prefix and the round-1 prefix. The review is stored verbatim inside the review.md append.
+Reverse-applying delta.patch rebuilds all 8 changed infra originals; the other 5 files are unchanged.
+Evidence:
+The 86 manifest entries match on hash and size.
+The 36 infra-native artifacts and 14 build-origin artifacts match; the raw build log is the gzip alias.
+The 7 corrected notes only add banners or appended sections, and every user quote is kept.
+The archived originals match the original 80-entry manifest, and the refreshed preparation manifest matches what’s on disk.
+Gates:
+Terraform: 32 log hashes match. Final results: 40 + 7 + 6 = 53 passed, 71 assertions, 27 expected-failure runs.
+Locks: all three are byte-identical (421b7524…).
+Static guard: 69 files, 0 findings, 4 self-tests pass. git diff --check exits 0.
+Freeze: the file’s SHA is b11ccf28… and all 203 entries still match. It covers the 13 new infra files and was taken before the build started.
+Build log: gzip a16df5b1… decompresses to raw 20ca0ec0… (1,719,079 bytes). The only [error] lines are one contiguous 20-line block for the checkProbeInjectFailure probe. JDK 17.0.20.1.
+XML: 157 reports fall inside the gate window and are unchanged on disk; parsing them gives 1,255 tests with 0 failures, errors or skips. All 1,377 build inputs are unchanged.
+No state file exists in either new root.
+Findings
+N1 — Low — non-blocking
+
+Where: infra/terraform/billing-bootstrap/README.md:30.
+Evidence: It still says the deployment identity needs “applicable tag permissions if used”, but tags are now always applied (main.tf:27).
+Impact: A future policy for the non-root deployment identity could leave out the Budgets tagging actions. Creating, refreshing or reading back the tags would then fail.
+Owner: infra-engineer.
+Acceptance check: Before the deployment-identity policy review or any billing apply, the README states that tag permissions are required, checked against current AWS action docs.
+Info
+
+I1: The RED diagnostic shows the actual value as "(sensitive value)" because the whole output is sensitive. I accept the RED as genuine because:
+it fails with an assertion failure, not an unknown value or provider error;
+the GREEN run passes the same assertion on the same sensitive output;
+the mutation is the only difference.
+I2: build/commands.json:12,36 stores the full PATH. It holds nothing secret, but it does expose local tool paths. For leaner future records, keep only the JDK prefix.
+I3: The corrected cost-proposal.md lost the line saying the cap is not an enforceable billing cutoff. That disclaimer is still in spikes/emr-spark/README.md:30.
+Report fields
+STATUS: COMPLETE (review); verdict APPROVE for Phase 12D PREPARATION repair round 1 ONLY
+OWNER: code-reviewer (independent, read-only)
+WORK ORDER: Recheck of 12D preparation repair round 1; branch phase-12, base/HEAD 5ca8406bad5fe55f732458fa0cbd5d561ac83d8f; evidence root docs/agent-runs/phase-12/evidence/12d-preparation-repair-1/
+FILES CREATED: None in the repository (scratch directory created, but no files written)
+FILES MODIFIED: None
+COMMANDS RUN: Read-only git (rev-parse, status -uall, diff numstat/-U0/--check, show HEAD:), shasum, gzip -dc, diff, grep, stat; python3 -I for manifest, prefix, baseline, freeze, snapshot, XML parsing, log scan and in-memory reverse-patch reconstruction. One scratch "git apply -R" was blocked by the PreToolUse guard (false positive) and was not retried. No Terraform, sbt, AWS, credential, state or plan access.
+TEST RESULTS: Not re-run. Observed artifacts reconcile: Terraform 53 passed/0 failed, 71 assertions, 27 expected-failure runs; RED 6 passed/1 failed at budget.tftest.hcl:39; sbt check exit 0, 1,255 tests, 0 failures/errors/skips across 157 fresh XML reports.
+VALIDATION RESULTS: Footprint (188), baseline (3,998/21), 5 record prefixes, 86/36/14 manifests, 8+5 original reconstruction, 203-file freeze, 1,377-file snapshot, locks, guard and diff-check all verified. N1 Low; I1–I3 Info.
+ASSUMPTIONS: The user-supplied review and work-order copies are what the user supplied. Live AWS acceptance of tags, CUSTOM periods and CostTypes is unverified.
+RISKS: N1 (tag IAM wording). All live prerequisites remain unmet. The shared budget margin is thin (USD 5.09 in the upper window).
+MANUAL ACTION REQUIRED: Human chooses whether and which bounded 12D continuation to authorise; human commits if desired.
+BLOCKED-ON OWNER: Human architect (continuation choice and all live gates); infra-engineer (N1, at the next billing/identity touch)
+BLOCKED-ON EVIDENCE: infra/terraform/billing-bootstrap/README.md:30 vs main.tf:27
+NEXT GATE: Human-selected bounded 12D continuation. No live execution, plan, apply or Phase 13 without the recorded human gates.
+
+
+## Subphase 12D billing-monitor read-only plan — independent review
+
+Marked: user-supplied external review.
+
+STATUS: COMPLETE (review); verdict APPROVE for Phase 12D BILLING-MONITOR READ-ONLY PLAN ONLY
+OWNER: code-reviewer (independent, read-only)
+WORK ORDER: Review of the read-only billing plan; branch phase-12, base/HEAD 5ca8406bad5fe55f732458fa0cbd5d561ac83d8f; evidence root docs/agent-runs/phase-12/evidence/12d-billing-plan/
+FILES CREATED: None
+FILES MODIFIED: None
+COMMANDS RUN: Read-only git (rev-parse, status -uall, diff numstat/-U0, show HEAD:); shasum of repository files, copied config and the opaque plan binary (not opened); ls/stat for modes only; python3 -I for manifest, command-log hash, freeze, baseline, prefix, broad-input and plan-input reconciliation; address-pattern scan of new evidence; AWS docs via aws-knowledge (service authorization reference; custom-period budgets). No Terraform/AWS/sbt calls; no private input, raw plan JSON, plan logs, credentials or state read.
+TEST RESULTS: Not re-run. Observed: Terraform 53 passed/0 failed (71 assertions, 27 expected-failure runs); plan exit 2 with 1 add/0 change/0 destroy/0 replace; protected init and show exit 0. No new sbt run (justified; prior result historical).
+VALIDATION RESULTS: Plan SHA/size, config copies, sanitized fields, identity and inventory, 15 command logs, 46+26 manifests, 203-file freeze, 4,107/5 baseline, 5 record prefixes and 1,376/1,377 broad inputs verified; B1 and B2 Low.
+ASSUMPTIONS: The sanitized summary was produced programmatically from the protected plan JSON as recorded. Live AWS acceptance of CUSTOM/CostTypes/tags is unverified.
+RISKS: B1 (incomplete IAM action list, non-scopable aws-portal actions); B2 (plaintext recipient in /tmp artifacts); budget not active; delivery, accounting basis and remaining allowance unverified; all live EMR prerequisites open.
+MANUAL ACTION REQUIRED: Human decides B2 retention; chooses the next bounded continuation; any apply needs a scoped non-root deployment identity, a fresh plan for it, independent review and human-written approval.
+BLOCKED-ON OWNER: Human architect (continuation, identity establishment, any apply, B2); infra-engineer (B1 at the next identity/execution-plan step)
+BLOCKED-ON EVIDENCE: infra/terraform/billing-bootstrap/README.md:30 vs the AWS Budget Service authorization reference; /tmp/scholarchain-phase12d-billing-plan/ artifacts
+NEXT GATE: Human-selected bounded continuation. No apply, IAM grant or live 12D without recorded human gates.
+
+
+## Subphase 12D billing execution preparation — independent review
+
+User-supplied external review; verbatim.
+
+Verdict for OFFLINE PREPARATION ONLY: APPROVE. Every claim in the work order reproduced, and I found nothing blocking. This approval does not authorize creating any IAM identity, a console exception, a plan or apply, any spending, or completing Phase 12D.
+
+Review method: read-only Git, hash, XML and log checks, plus public AWS docs. I made no Terraform, AWS or build calls and read no private or raw-plan data.
+
+What verified
+Footprint and baseline:
+git status has 316 entries (5 modified, 311 untracked), matching handoff-files.json exactly.
+Of 4,155 baseline files, only the 5 permitted paths changed. The only new source files are the 6 under infra/terraform/billing-execution/; the only other new file outside evidence is the reviewer prompt.
+All 5 records keep their HEAD and preflight prefixes, and review.md is untouched.
+The four prior packets (12C with 106 files, preparation 81, repair-1 87, billing-plan 47) still match their own manifests.
+Reconstructed README original: its hash and size equal the preflight baseline (f278eeff…, 7,518 bytes). The change is purely additive at line 30, and the reconstruction method is disclosed.
+Execution policy (main.tf:6-18): one Allow statement with exactly ModifyBudget, ViewBudget, TagResource, UntagResource and ListTagsForResource, on one concrete budget ARN. There are no IAM, PassRole, Budget Action, Cost Explorer, EC2, EMR or model grants. The retained provider 6.44.0 source calls only operations that these actions cover:
+CreateBudget, UpdateBudget, DeleteBudget, DescribeBudget;
+Create/DeleteNotification, DescribeNotificationsForBudget, DescribeSubscribersForNotification;
+Tag/Untag/ListTagsForResource.
+Leaving out the aws-portal actions is justified:
+AWS’s migration page says the aws-portal namespace reached end of standard support in July 2023, and fine-grained permissions apply to accounts created after March 6, 2023.
+The same page says API access to AWS Budgets “remains unaffected”.
+The draft neither adds a global grant nor attaches an ineffective budget-scoped one, and its stop-on-failure rule is sound. README:21-23 states that ModifyBudget also allows deleting the budget and changing its amount or recipient, so it cannot enforce USD 200. My earlier billing B1 is resolved.
+Trust and caller policies:
+Both outputs are null while operator_user_arn is unset.
+With a synthetic operator, the trust names one same-account IAM user and requires strict Bool aws:MultiFactorAuthPresent=true; the caller policy reaches only the named billing role, also with MFA.
+Tests reject root, the planner (including under a path), roles, a foreign account, wildcards and an invalid account ID.
+Browser-login MFA compatibility and the separate SignInLocalDevelopmentAccess login permission are honestly marked unverified (authentication-readiness.md).
+Both establishment routes are left to the human, with no exception inferred.
+Tests and RED:
+Final counts: 40 + 7 + 6 + 11 = 64 passed, 76 assertions, 35 expected-failure runs.
+The RED’s main.tf differs only at line 16 (Resource = ["*"]), and its test file is byte-identical to production. It fails 9 passed / 2 failed at lines 10 and 60 with real value differences (the diff shows "*" against the expected ARN), not unknown values or provider errors.
+All 87 repository hashes are unchanged before and after the RED.
+Command logs and toolchain:
+All 22 native command logs match their hashes; each records TF_CLI_CONFIG_FILE, and every fmt call used -check -recursive.
+Static guard: 72 files, 0 findings, 4 self-tests pass; git diff --check is empty.
+All 17 versions.tf files pin 1.13.5 / 6.44.0, the 4 lock files are identical, and the new root’s .terraform/ folder is git-ignored.
+Freeze:
+The file’s SHA is ec96c675…. All 209 entries still match today, including the 6 new files.
+It was taken at 16:56:11Z, before the build started at 16:57:09Z.
+Build gate:
+Run: exit 0, 745.36 s wall, JDK 17.0.20.1.
+Log: gzip 5e095c0c… decompresses to raw b23b1f60… (1,718,971 bytes). The only [error] lines are one contiguous 20-line probe block, and the summary lines add up to 1,255.
+XML: 157 reports fall inside the gate window and are unchanged on disk; parsing them gives 1,255 tests with 0 failures, errors or skips. The one stale TestRunMarkerSpec report is excluded.
+Inputs: all 1,383 build inputs are unchanged.
+Environment: the build environment now records only a PATH prefix, which resolves my earlier I2 note.
+Manifests: the 72-artifact evidence manifest matches, plus the infra (36) and build (16, with the raw-log alias) manifests.
+Privacy: no address or Drive path appears in any new file. The one appended match is my own earlier F7 finding text, which contains no address. The deleted /tmp billing-plan directory is gone, and nothing tries to reuse that plan.
+Unchanged items: USD 5 cap, USD 10 remaining EMR reserve and USD 5.09 upper-window margin; B1/B2/B3/R1 and N19/N20; every live gate.
+Findings
+E1 — Low — non-blocking
+
+Where: infra/terraform/billing-execution/variables.tf:31.
+Evidence: !endswith(var.operator_user_arn, "/scholarchain-planner") is case-sensitive, so user/SCHOLARCHAIN-PLANNER passes validation. IAM treats user names as unique regardless of case, but matches names in policy ARNs case-sensitively. A case variant therefore wouldn’t grant access to the real planner; IAM would most likely reject it as an invalid principal.
+Impact: This is not a bypass. It is a weaker guard and a confusing failure mode, the kind of identity confusion this draft is meant to rule out.
+Owner: infra-engineer.
+Acceptance check: At the next touch of this root, compare against lower(...) and add a mixed-case planner rejection test. This is not required before the human’s identity choice.
+Info
+
+E2: The handoff calls the README change “one audit-link sentence”, but the insertion at README:30 is two sentences. The content is fine.
+E3, for the human’s choice: If aws login turns out not to supply the strict MFA context, the draft has no ready alternative. Realistic alternatives are an IAM user access key with an MFA-protected AssumeRole, which conflicts with the “no long-lived key” stance, or an IAM Identity Center design, which the console-exception text excludes. Either needs its own review. The draft’s stop rule covers this, but the human should weigh it when choosing a route.
+Report fields
+STATUS: COMPLETE (review); verdict APPROVE for Phase 12D BILLING EXECUTION PREPARATION (offline) ONLY
+OWNER: code-reviewer (independent, read-only)
+WORK ORDER: docs/agent-runs/phase-12/reviewer-prompt-12d-billing-execution-prep.md; branch phase-12, base/HEAD 5ca8406bad5fe55f732458fa0cbd5d561ac83d8f; evidence docs/agent-runs/phase-12/evidence/12d-billing-execution-prep/
+FILES CREATED: None
+FILES MODIFIED: None
+COMMANDS RUN: Read-only git (rev-parse, status -uall, diff numstat/-U0/--check, show HEAD:, check-ignore); shasum, gzip -dc, diff, cmp, grep, find, ls; python3 -I for baseline, prefix, README-insertion, prior-packet, manifest, command-log, RED, freeze, build snapshot, XML parse and log scans; address/Drive-path scan; metadata-only absence check of the deleted /tmp directory; AWS docs via aws-knowledge (Budgets authorization reference; Billing access-control migration). No Terraform/AWS/sbt calls; no private, credential, state or raw-plan access.
+TEST RESULTS: Not re-run. Observed: Terraform 64 passed/0 failed (76 assertions, 35 expected-failure runs); RED 9 passed/2 failed at policy.tftest.hcl:10,60; sbt check exit 0, 1,255 tests, 0 failures/errors/skips across 157 fresh XML reports.
+VALIDATION RESULTS: Footprint 316, baseline 4,155/5, 5 record prefixes, 4 prior packets, README reconstruction, policy/action mapping, 22 command logs, 17 pins, 4 locks, 209-file freeze, 1,383 build inputs and 72/36/16 manifests verified. E1 Low; E2/E3 Info.
+ASSUMPTIONS: The retained provider source files reflect provider v6.44.0 as cited. The aws-portal exclusion rests on AWS documentation, not live policy evaluation.
+RISKS: Browser-login MFA compatibility unknown (E3); ModifyBudget is coarse (deletion/amount/recipient); no identity, execution plan, active monitor, delivery or usable cost data; all live EMR gates open.
+MANUAL ACTION REQUIRED: Human chooses the identity-establishment route and supplies actual identity/session details; any console exception, IAM creation, plan or apply needs its own recorded human gate.
+BLOCKED-ON OWNER: Human architect (identity route, any exception, all live gates); infra-engineer (E1 at the next touch)
+BLOCKED-ON EVIDENCE: infra/terraform/billing-execution/variables.tf:31; authentication-readiness.md (browser-login MFA unverified)
+NEXT GATE: Human identity-establishment decision, then a separately bounded work order. No IAM change, plan, apply or live 12D without recorded human gates.
+
+
+## Subphase 12D offline login-path evaluation — independent review
+
+User-supplied external review; verbatim.
+
+Verdict for the OFFLINE LOGIN-PATH EVALUATION ONLY: APPROVE. Every claim reproduced, the recommendation of candidate B is honestly labelled as inferred from documentation rather than observed, and nothing blocks. This approval does not authorize any identity setup, a console exception, login, IAM change, plan, apply, spending or completing Phase 12D.
+
+Review method: read-only Git, hash and log checks, plus public primary documentation. I made no login, AWS, Terraform or build calls and read no config, credential or cache files.
+
+What verified
+Footprint and baseline:
+git status has 354 entries (5 modified, 349 untracked), matching handoff-files.json exactly. The only new files are this packet’s 37 and the reviewer prompt.
+Of 4,235 baseline files, only the 4 coordinator records changed, all append-only. HEAD and preflight prefixes hold, and review.md is untouched.
+All five 12D packet manifests match (80, 86, 46, 72 and 36 entries); the infra specialist manifest has 24 matching entries.
+No source change: all 209 frozen files and all 1,383 earlier build inputs are unchanged, and no new Terraform or build pass is claimed.
+CLI commands:
+Four commands ran: --version, login help, sts assume-role help and configure export-credentials help. All exited 0 and their log hashes match.
+The environment was a fresh allowlist: AWS_CONFIG_FILE and AWS_SHARED_CREDENTIALS_FILE set to /dev/null, metadata disabled, a minimal PATH.
+The export-credentials help log contains no credential fields.
+Candidate B’s documented components hold:
+The CLI reference and local 2.35.4 help both show a login example that selects arn:aws:sts::…:assumed-role/….
+The CLI guide says login uses “your selected console session”.
+Nothing claims that an IAM user’s OAuth login carries MFA context into a later role assumption. The full chain, its refresh lifetime and account behaviour are explicitly unverified.
+Pinned SDK and provider claims:
+Provider 6.44.0’s go.mod pins config v1.32.17 and credentials v1.19.16.
+In the SDK’s resolve_credentials.go, line 176 resolves login_session natively, while lines 553–577 raise AssumeRoleTokenProviderNotSetError for an mfa_serial profile without a token provider.
+The retained aws-sdk-go-base sources never set an assume-role token provider. So candidate A really does need a separately reviewed credential-process bridge, and nothing falls back to it automatically.
+Sign-In permissions:
+The AWS managed policy SignInLocalDevelopmentAccess v3 grants exactly signin:AuthorizeOAuth2Access and signin:CreateOAuth2Token on arn:aws:signin:*:*:oauth2/public-client/*.
+The authorization reference defines the resource type arn:${Partition}:signin:${Region}:${Account}:oauth2/public-client/localhost. So the proposed ARN is that managed scope narrowed to one account, one region and the same-device client only.
+The memo correctly separates that IAM resource from the CLI’s OAuth client ID, arn:aws:signin:::devtools/same-device (utils.py lines 41–43).
+Nothing was authored or installed. The five-action budget policy and the strict MFA trust and caller policies are unchanged, and the planner gets nothing.
+Carried items and boundaries:
+E1 is carried to the next source edit. scholarchain-billing-operator is labelled as a proposed name, not an established identity.
+Provenance covers 24 public references, and the one failed lookup (token_cache.go, HTTP 404) is kept in validation.json.
+No address or Drive path appears in any new file.
+All billing and EMR live gates, the USD 5 cap, the USD 10 reserve and the USD 5.09 margin are unchanged.
+Findings
+No blocking or Low findings. Three Info notes for the next offline amendment:
+
+L1 — the scope rests on AWS’s managed policy, not an explicit rule: The authorization reference also lists the console* resource type for both Sign-In actions. AWS’s own managed policy grants only the oauth2/public-client resources, so the narrowed scope copies a pattern AWS ships. It is still inferred from documentation, so live verification must exercise it. If login is denied, stop and review; never widen to console or * automatically.
+Optional tightening: pin signin:OAuthClientId to arn:aws:signin:::devtools/same-device, test it with independent synthetic values, and note it as an extra condition that could cause a denial.
+L2 — operator console setup is not spelled out: The memo leaves the operator’s console prerequisites to later setup steps. The amendment’s documentation should state:
+a console password and an MFA device assigned by whoever bootstraps the account;
+whether a forced password reset on first login is used, since that needs iam:ChangePassword (or no reset);
+that MFA self-management is granted only if separately reviewed.
+Otherwise the “dedicated operator” is under-specified at the human’s decision point.
+
+L3 — session length is unknown: The CLI guide caps login sessions at the principal’s session duration, up to 12 hours. Console Switch Role sessions and the proposed one-hour role maximum may cut this much shorter. The memo already marks refresh lifetime as a live check; the amendment should say what a mid-plan expiry looks like (fail closed, re-login on the dedicated profile).
+Report fields
+STATUS: COMPLETE (review); verdict APPROVE for Phase 12D OFFLINE LOGIN-PATH EVALUATION ONLY
+OWNER: code-reviewer (independent, read-only)
+WORK ORDER: docs/agent-runs/phase-12/reviewer-prompt-12d-login-path-evaluation.md; branch phase-12, base/HEAD 5ca8406bad5fe55f732458fa0cbd5d561ac83d8f; evidence docs/agent-runs/phase-12/evidence/12d-login-path-evaluation/
+FILES CREATED: None
+FILES MODIFIED: None
+COMMANDS RUN: Read-only git (rev-parse, status -uall, diff numstat/-U0/--check, show HEAD:); grep/sed over retained source extracts and CLI help logs; python3 -I for inventory, baseline, prefix, five packet manifests, 24-entry specialist manifest, command-log hashes, 209-file freeze and 1,383 build inputs; address/Drive-path scan; public docs via aws-knowledge (Sign-In authorization reference, SignInLocalDevelopmentAccess, CLI sign-in guide) and WebFetch (CLI login reference). No login/AWS/IAM/Terraform/sbt calls; no config, credential, cache, state or private-input access.
+TEST RESULTS: None run or claimed this round. The four CLI version/help commands observed exit 0. Earlier gate results remain historical.
+VALIDATION RESULTS: Footprint 354, baseline 4,235/4, 5 record prefixes, 5 packet manifests plus 24 specialist artifacts, CLI command logs and environments, SDK/provider source claims, Sign-In action/resource mapping, client-ID distinction, freeze and build inputs all verified. Info L1–L3 only.
+ASSUMPTIONS: Retained source extracts reflect the cited pinned versions. Candidate B rests on documentation (Switch Role MFA evaluation, assumed-role login selection, role-level Sign-In permissions), not observed behaviour.
+RISKS: The end-to-end B flow, refresh lifetime and narrowed Sign-In scope are unverified live (L1, L3); operator console prerequisites unspecified (L2); no identity, monitor, delivery, cost data or execution plan; all EMR gates open.
+MANUAL ACTION REQUIRED: Human authorizes (or declines) the separately bounded offline policy amendment for candidate B and E1. The identity-establishment route and any exception remain human choices.
+BLOCKED-ON OWNER: Human architect (authorize the amendment; later identity route, exception, all live gates); infra-engineer (amendment, E1)
+BLOCKED-ON EVIDENCE: decision-memo.md:26-34 (amendment scope); infra/terraform/billing-execution/variables.tf:31 (E1)
+NEXT GATE: Separately authorized offline policy amendment, then independent review. No setup, login, IAM change, plan or apply.
+
+
+## Subphase 12D offline billing-execution policy amendment — independent review
+
+User-supplied external review; verbatim.
+
+Verdict for the OFFLINE BILLING-EXECUTION POLICY AMENDMENT ONLY: APPROVE. Every claim reproduced and I found nothing blocking; one Info note on RED coverage. This approval does not authorize creating any IAM identity, a console exception, login, account calls, a plan or apply, spending or completing Phase 12D.
+
+Review method: read-only Git, hash, XML and log checks. Patch reconstruction was done in memory with no repository writes. I made no Terraform, AWS, login or build calls and read no config, credential, cache or private files.
+
+What verified
+Footprint and scope:
+git status has 435 entries (5 modified, 430 untracked), matching handoff-files.json exactly. The only new files are this packet’s 80 and the reviewer prompt.
+Against the 4,273-file baseline, exactly 8 paths changed: the 4 billing-execution sources (main.tf, variables.tf, tests/policy.tftest.hcl, README.md) and the 4 coordinator records. No new source files.
+All 6 captured originals match the baseline. Applying delta.patch to them reproduces all 4 current files exactly.
+All 5 records keep their HEAD and preflight prefixes; review.md is unchanged. All five earlier 12D packets still match their manifests.
+Login policy (main.tf:21-34,65-68):
+It is a separate document allowing exactly signin:AuthorizeOAuth2Access and signin:CreateOAuth2Token on arn:aws:signin:${region}:${account}:oauth2/public-client/localhost.
+A StringEquals condition pins signin:OAuthClientId to arn:aws:signin:::devtools/same-device, and the README keeps the resource ARN and the client ID clearly apart.
+It grants no remote client, console resource, wildcard or administrative action.
+aws_region defaults to us-east-2 and must match ^[a-z]{2}-[a-z]+-[1-9][0-9]*$.
+The source has no resource, data, module, provider or provisioner blocks; the zero-resource claim comes from inspecting the source.
+Existing policies:
+The execution_policy, trust_policy and caller_policy bodies are byte-identical to the originals, and the original 103 test lines are an exact prefix of the new test file.
+Trust and caller stay null without an operator, and the planner receives nothing.
+E1 now compares lower(var.operator_user_arn) (variables.tf:40), with mixed-case planner tests both directly and under a path.
+Tests:
+Final counts: course 40/62/18, billing 7/6/4, proposal 6/3/5 and execution 19/9/13, for a total of 72 passed / 0 failed, 80 assertions and 40 expected-failure runs.
+New cases cover the exact login JSON, region and account binding with independent synthetic values (the region-change run also re-checks the budget statement), and rejection of wildcard, ? and malformed regions.
+REDs:
+Both use a test file byte-identical to production (d38c30f7…), and all 87 hashes are identical before and after each run.
+Login RED: main.tf:27 widened to public-client/*. It fails 16 passed / 3 failed at lines 108, 129 and 149, each showing a real value diff of …/* against …/localhost.
+E1 RED: lower() removed. It fails 14 passed / 1 failed / 4 skipped with “Missing expected failure” at line 156. The skips are not claimed as proof.
+Command logs:
+All 21 commands match their log hashes and record argv, cwd, environment, timestamps and exit codes:
+1 development fmt -recursive;
+16 final commands across four roots (init, fmt -check -recursive, validate, test), all exit 0;
+4 RED init/test calls.
+The environment is a minimal allowlist: PATH=/opt/homebrew/bin:/usr/bin:/bin and AWS_CONFIG_FILE/AWS_SHARED_CREDENTIALS_FILE set to /dev/null.
+The metadata-helper traceback is honestly labelled as transcribed, with the correction described.
+Guard, pins and locks: the static guard found 0 issues in 72 files and its 4 self-tests pass; git diff --check is empty. All 17 versions.tf pins are 1.13.5 / 6.44.0, and the 4 lock files are identical.
+Freeze: the file’s SHA is f6cd6649…, and all 209 entries still match today. It was taken at 21:19:28Z, before the build started at 21:20:09Z.
+Build gate:
+Run: exit 0, 743.19 s wall, JDK 17.0.20.1.
+Log: gzip 3c05c13a… decompresses to raw e1a8bce4…. The only [error] lines are one contiguous 20-line probe block, and the summary lines add up to 1,255.
+XML: 157 reports fall inside the gate window and are unchanged on disk; parsing them gives 1,255 tests with 0 failures, errors or skips. The one stale report is excluded.
+Inputs: all 1,383 build inputs are unchanged.
+Manifests: the root manifest (79 entries), native manifest (46) and build-origin manifest (16, with the raw-log alias) all match.
+README covers L1–L3:
+L1: the narrowed scope copies AWS’s managed-policy pattern, is still inferred, the client-ID pin may add denials, and any denial means stop and review with no automatic widening.
+L2: a bootstrap-set password with no forced reset and no ChangePassword grant, and bootstrap-assigned MFA with no self-management, matching the chosen defaults.
+L3: session expiry fails closed, partial plan output is never reused, re-login uses only the dedicated role and needs a fresh plan and review, and nothing falls back to root, the planner, candidate A, a key or Identity Center.
+Privacy and boundaries:
+No address or Drive path appears in any new or appended text. The old billing-plan directory is still gone.
+Every live item stays unverified, and the USD 5 cap, USD 10 reserve and USD 5.09 margin are unchanged, as are B1/B2/B3/R1 and N19/N20.
+The handoff’s limitation is accepted: no system-wide process inventory was available, so completion rests on the recorded exit code, the absent active-job marker and the completed agents.
+Findings
+No blocking or Low findings.
+
+Info — RED coverage: The E1 RED proves only the first mixed-case case; mixed_case_planner_under_path_cannot_be_operator was skipped. The three region-rejection runs have no RED of their own. None of this is overclaimed, and each is a plain expected-failure check on the validation it targets. If tighter proof is wanted later, run a scratch RED per case (for example by loosening the region regex), but it is not needed for this offline approval.
+Report fields
+STATUS: COMPLETE (review); verdict APPROVE for Phase 12D OFFLINE BILLING-EXECUTION POLICY AMENDMENT ONLY
+OWNER: code-reviewer (independent, read-only)
+WORK ORDER: docs/agent-runs/phase-12/reviewer-prompt-12d-billing-policy-amendment.md; branch phase-12, base/HEAD 5ca8406bad5fe55f732458fa0cbd5d561ac83d8f; evidence docs/agent-runs/phase-12/evidence/12d-billing-policy-amendment/
+FILES CREATED: None
+FILES MODIFIED: None
+COMMANDS RUN: Read-only git (status -uall, diff numstat/-U0/--check/--no-index, show HEAD:); shasum, gzip -dc, diff, cmp, grep, find, ls; python3 -I for baseline, original-capture, in-memory forward patch reconstruction, policy-block byte comparison, test-prefix, record-prefix, six packet manifests, 46/16 nested manifests, 21 command-log hashes, two RED proofs, 209-file freeze, 1,383 build inputs, XML parsing and log scans; address/Drive-path scan; zero-resource grep. No Terraform/AWS/login/IAM/sbt calls; no private, config, credential, cache or state access.
+TEST RESULTS: Not re-run. Observed: Terraform 72 passed/0 failed (80 assertions, 40 expected-failure runs); login RED 16 passed/3 failed at lines 108/129/149; E1 RED 14 passed/1 failed/4 skipped (line 156); sbt check exit 0, 1,255 tests, 0 failures/errors/skips across 157 fresh XML reports.
+VALIDATION RESULTS: Footprint 435, baseline 4,273/8, originals and patch, byte-identical policy bodies, test prefix, 5 record prefixes, 6 packet manifests, 21 logs, 17 pins, 4 locks, 209-file freeze, build inputs and XML verified. One Info note (RED coverage).
+ASSUMPTIONS: Candidate B and the narrowed Sign-In scope with the client-ID pin rest on public documentation, not observed AWS behaviour.
+RISKS: The live login chain, scope acceptance, client-ID condition and refresh lifetime are unverified; no operator, role, login grant, budget, execution plan, monitor, delivery or cost data exists; all EMR gates open.
+MANUAL ACTION REQUIRED: Human chooses the identity-establishment route; any console exception is recorded personally by the human; identity details are supplied only for a separately bounded work order.
+BLOCKED-ON OWNER: Human architect (identity route, any exception, all live gates)
+BLOCKED-ON EVIDENCE: infra/terraform/billing-execution/README.md (establishment strategy section); no operator ARN or bootstrap identity recorded
+NEXT GATE: Human identity-establishment decision, then a separately bounded work order with its own review. No setup, login, IAM change, plan or apply is authorized by this approval.
+
+
+## Subphase 12D fresh billing execution-identity plan — independent review
+
+User-supplied external review, retained verbatim. Approval applies to the read-only plan only.
+
+Verdict for the FRESH READ-ONLY BILLING EXECUTION-IDENTITY PLAN ONLY: APPROVE. The plan proposes exactly the approved budget, and every claim in the packet reproduced.
+
+However, the apply handoff is not ready. Two Medium findings and one Low finding must be resolved before any apply gate. This approval does not authorize an apply, an IAM change, spending or completing Phase 12D.
+
+Review method: read-only Git, hash and sanitized-log checks. I hashed the plan binary without opening it. I made no Terraform, AWS, login or build calls, and did not read the private input, raw plan JSON, raw logs, config, caches or state.
+
+What verified
+Footprint:
+git status has 533 entries, matching handoff-files.json. Its 55 new paths are all present; the only one outside this packet is the reviewer prompt.
+Of 4,397 preflight files, only the 4 coordinator records changed. They keep their HEAD and preflight prefixes, and review.md is unchanged.
+Unchanged inputs:
+The human exception record (4265d7a7…) and all earlier packet manifests still match; the bootstrap packet has 24 entries in its current manifest.
+All 209 frozen files match on hash, size and mtime. course.tfvars still has enable_budget_resource = false.
+All 17 pins and the 4 identical lock files are unchanged. The 7 config copies in evidence and the 5 in /tmp/…/config equal the source.
+Commands (10):
+Sandbox attempt: init 0, fmt 0, validate 1. The failure was a provider plugin handshake (“Failed to read any lines from plugin’s stdout”), not a source problem.
+Retry: init 0, fmt 0, validate 0, test 0 (billing 7/0, 6 assertions, 4 expected-failure runs).
+Protected run: init 0, plan exit 2, show 0.
+The 7 retained offline logs match their hashes. The 3 protected logs are correctly kept private.
+No new sbt run is claimed.
+Plan inputs:
+The environment uses AWS_PROFILE=scholarchain-billing-deployer and a dedicated TF_DATA_DIR.
+The plan argv passes an explicit -state path, the public tfvars, the private tfvars and -out.
+Sanitized plan:
+one create (aws_budgets_budget.project[0]), with 0 changes, destroys or replacements;
+account 530332961125, USD 200 COST/CUSTOM, from 2026-10-01 to 2027-01-01, no filters;
+credits and refunds excluded, the five approved tags;
+three ACTUAL/GREATER_THAN/PERCENTAGE alerts at 50, 80 and 100 percent, each with one email subscriber and no SNS.
+Plan binary: SHA 35e35914…cdc5, 6,626 bytes. The directory is 0700, files are 0600, and no state file exists.
+Recipient handling:
+save-recipient.py reads the address hidden via getpass, writes it with O_EXCL at mode 0600 and never echoes it.
+run.py projects only counts and allowlisted fields, and its assertions fail closed.
+No address appears in Git, apart from the two reserved example.invalid fixtures in the copied tests.
+Installed identity, spot-checked: the three installed policy documents the user pasted (caller, budget, login) are exactly the reviewed templates with the real account, role, budget and region substituted. The caller ARN the user pasted is assumed-role/scholarchain-billing-deployer/scholarchain-billing-operator.
+Limitations, honestly disclosed: the provider-resolved identity was not independently queried, remote budget absence was not verified, and the plan does not prove live create or tag permission or that AWS accepts the settings.
+Findings
+P1 — Medium — blocks the apply gate, not this plan
+
+Where:
+docs/agent-runs/phase-12/review.md: the last section is the offline policy amendment, and its bytes are unchanged since then;
+the evidence folders 12d-identity-decision-draft/, 12d-human-identity-bootstrap/ and 12d-authentication-verification/;
+billing-bootstrap-exception.md.
+Evidence:
+These three packets record a live, human-performed security change under a human-written exception, but no independent review of them exists.
+My check above covers only the pasted policy documents. I did not review the screenshots, the full scope of the exception, the final operator permission inventory (user-reported as “one policy”), or the earlier console-password label discrepancy.
+The exception record says “I will record the actual start and end afterward”, and completion.json still says “Not supplied”.
+Impact: An apply would rely on an identity whose establishment was never independently checked against the exception’s limits.
+Owner:
+coordinator: route a user-launched independent review of the three packets;
+human architect: record the actual session start and end personally, or record that they can’t.
+Acceptance check: Before any apply approval, an independent read-only review of the three packets is appended to review.md, and the human’s own record states the actual setup timing, or a reason it can’t be given.
+P2 — Medium — blocks the apply gate
+
+Where: infra/commands.json, the real-plan record: -state=/tmp/scholarchain-phase12d-billing-execution-plan/billing.execution.tfstate, with TF_DATA_DIR and the saved plan also under /tmp.
+Evidence: macOS clears /tmp on reboot, and its daily maintenance script removes old files there.
+Impact: After an apply, the only Terraform state for a prevent_destroy, account-wide budget could vanish. That would leave the budget unmanaged, so a later plan would try to create a duplicate, and the README’s “sole owner” claim would break. The saved plan could also disappear before the apply. The state will also contain the recipient address.
+Owner:
+human architect: choose the location;
+infra-engineer / coordinator: regenerate the plan.
+Acceptance check:
+Choose a durable, protected state location: mode 0700, outside Git and outside any cloud-synced folder, with an explicit backup and retention decision.
+Recommended: regenerate the plan with that exact -state path and TF_DATA_DIR, then record the new checksum and get it reviewed.
+The apply handoff must name the exact argv, cwd, -state path, TF_DATA_DIR and config copies, all byte-identical to the plan’s.
+P3 — Low — non-blocking, but required in the apply handoff
+
+Where: infra/plan-summary.json (remote_budget_absence_verified: false).
+Evidence: The last account inventory was the planner’s describe-budgets on 2026-10-31 at about 03:20 UTC, which found 0 budgets.
+Impact: If the budget already exists, CreateBudget fails rather than overwriting, so the failure is safe. But it would waste the apply window, and the fix must never be an improvised terraform import.
+Owner: coordinator, with a human-authorized read-only check.
+Acceptance check: Inside the authorized apply window, immediately before the apply:
+Check the exact budget name read-only and record the result.
+Record the non-sensitive caller ARN.
+Stop if the budget exists or the caller is not the exact billing role.
+Info
+
+The sandbox validate failure and its retry outside the sandbox are disclosed and preserved, not overwritten.
+The resolved provider identity relies on the account guard plus the earlier user STS check. Capturing it is folded into P3.
+Report fields
+STATUS: COMPLETE (review); verdict APPROVE for the Phase 12D fresh billing execution-identity READ-ONLY PLAN ONLY; apply handoff blocked by P1 and P2
+OWNER: code-reviewer (independent, read-only)
+WORK ORDER: docs/agent-runs/phase-12/reviewer-prompt-12d-billing-execution-plan.md; branch phase-12, base/HEAD 5ca8406bad5fe55f732458fa0cbd5d561ac83d8f; evidence docs/agent-runs/phase-12/evidence/12d-billing-execution-plan/
+FILES CREATED: None
+FILES MODIFIED: None
+COMMANDS RUN: Read-only git (status -uall, diff numstat/-U0/--check, show HEAD:, grep of review.md headings); stat/ls for modes; opaque shasum of the saved plan; shasum comparison of config copies; python3 -I for inventory, baseline, prefixes, all 12D packet manifests, the 31-entry infra manifest, 10 command records and 7 retained logs, the 209-file freeze (hash/size/mtime), sanitized summary and inputs; reads of public helper and runner sources, bootstrap/authentication observations and pasted policy readbacks; address/Drive-path scan. No Terraform/AWS/login/console/sbt calls; no private input, raw plan, raw log, config, cache or state access.
+TEST RESULTS: Not re-run. Observed: billing tests 7 passed/0 failed (6 assertions, 4 expected-failure runs) after the disclosed sandbox handshake failure; protected init 0, plan 2, show 0. Earlier 72-test and 1,255-test results are historical.
+VALIDATION RESULTS: Footprint 533, baseline 4,397/4, 5 record prefixes, all packet manifests, 209-file freeze, 17 pins, 4 locks, config copies, plan checksum/size/modes, sanitized fields and recipient handling verified; installed policy readbacks match the reviewed templates. P1/P2 Medium (apply gate), P3 Low, Info.
+ASSUMPTIONS: The sanitized summary was produced by run.py from the protected plan JSON as recorded. Human-supplied screenshots and readbacks are accurate. Not independently reviewed here (P1).
+RISKS: Unreviewed identity bootstrap and missing session times (P1); volatile /tmp state and plan (P2); unverified remote budget absence (P3); live create/tag permission, CUSTOM/CostTypes/tag acceptance, refresh lifetime, monitor, delivery, cost data and remaining allowance unverified; all EMR gates open.
+MANUAL ACTION REQUIRED: Human records actual bootstrap session timing; user launches an independent review of the three identity packets; human chooses a durable protected state location; any apply needs a human-written approval of an exact reviewed plan checksum.
+BLOCKED-ON OWNER: Human architect (P1 timing, P2 location, apply gate); coordinator (P1 review routing, P3 check design); infra-engineer (P2 plan regeneration)
+BLOCKED-ON EVIDENCE: review.md (no entries for the three identity packets); 12d-human-identity-bootstrap/completion/completion.json ("actual_session_start_end": not supplied); 12d-billing-execution-plan/infra/commands.json real-plan -state=/tmp/...
+NEXT GATE: Resolve P1 and P2, then a bounded ownership/state and exact-plan apply handoff for human-written approval. No mutation before that approval.
+NEXT PROMPT
+Phase 12D — record billing execution-identity plan review and prepare a bounded ownership/state and exact-plan apply handoff. Fresh session. No AWS mutation, apply, IAM change or spending in this turn.
+Repository /Users/danny/Documents/UIC/CS441/ScholarChain, branch phase-12, base/HEAD 5ca8406bad5fe55f732458fa0cbd5d561ac83d8f (uncommitted 12D work present).
+
+1. Coordinator: append this independent review (verdict APPROVE for the read-only execution-identity plan only; P1/P2 Medium blocking the apply gate; P3 Low; Info) VERBATIM to docs/agent-runs/phase-12/review.md under "## Subphase 12D fresh billing execution-identity plan — independent review". Append P1–P3 to repairs.md with owners. Append this work order to prompt.md. Append only; never edit billing-bootstrap-exception.md or any human record.
+
+2. Ask the human, wait, and record answers only as coordinator transcriptions (never approvals):
+   a. P1: (i) Please record the actual bootstrap session start/end (Chicago time) in your own words in your own record, or state that it cannot be reconstructed. The agent will not write or edit that record. (ii) Will you launch an independent read-only review of 12d-identity-decision-draft, 12d-human-identity-bootstrap and 12d-authentication-verification? The coordinator prepares only the reviewer prompt; it never launches the reviewer.
+   b. P2: choose a durable protected location for this root's state and TF_DATA_DIR: mode 0700, outside Git, outside any cloud-synced folder, and not /tmp. Also give a backup/retention decision. The state will contain the private recipient.
+   c. Confirm whether to regenerate the read-only plan with that exact state path (recommended), using the same approved inputs and a freshly re-entered private recipient via the hidden helper.
+
+3. Only after (a)(i) is recorded by the human, the identity-packet review returns APPROVE, and (b)/(c) are answered, prepare (offline) the bounded apply handoff document for the human. It must contain:
+   - the exact regenerated plan path, SHA-256, size, cwd, config-copy hashes, -state path and TF_DATA_DIR; apply argv = `terraform apply` of that saved plan only, with the identical -state and environment; no -var or -target;
+   - a pre-apply read-only check inside the approved window (P3): non-sensitive caller ARN must equal arn:aws:sts::530332961125:assumed-role/scholarchain-billing-deployer/<session>, and an exact-name budget absence check through an approved identity; stop on mismatch or presence, with no import;
+   - stop conditions: auth expiry mid-run (fail closed; no partial reuse), any Access Denied (no widening), any plan-staleness error (regenerate and re-review);
+   - post-apply read-back plan: budget amount, CUSTOM dates, before-credit cost types, five tags, three ACTUAL alerts and subscriber count, without printing the recipient; private delivery confirmation by the human; state file mode/location/backup;
+   - unchanged items: USD 5 proposed spike cap, USD 10 remaining EMR reserve, USD 5.09 margin, all EMR gates, B1/B2/B3/R1, N19/N20.
+   The handoff is a proposal. The human writes any apply approval personally, naming the exact plan SHA-256 and window, before any mutation. The apply executor is the deploy-engineer role, and it acts only after that written approval.
+
+Forbidden in this turn: terraform apply/destroy/import, AWS/IAM/console mutations, paid calls, credential/config/cache/state/private-input/raw-plan reads, writing human-gate.md, approvals or exception records, launching reviewers, commits, pushes, Phase 13.
+End with: "The billing execution-identity plan review is recorded. I have stopped and will not start the apply handoff until P1 and P2 are resolved and I receive the next prompt."
+
+
+## Subphase 12D human identity establishment/authentication (P1) — independent review
+
+User-supplied external review, retained verbatim. REQUEST-CHANGES for timing only; technical identity evidence verified.
+
+Verdict: REQUEST-CHANGES for the P1 identity evidence, on one point only: the human’s timing record. The installed identity itself checks out exactly against what was reviewed, so no IAM change or rebuild is needed. What fails is the record: the human says the setup happened 9–10 PM, but AWS’s own timestamps show the operator and role were created before 9 PM. That has to be reconciled by the human before P1 can close.
+
+This review does not authorize an apply, an IAM change, spending, closing P2, completing Phase 12D or starting the durable-path plan.
+
+What checked out
+Exception scope and chronology (Chicago time, UTC−5 on Oct 31):
+
+Time	Event	Source
+17:47–17:58	Proposal written (813c24fe…, matches); user replied “I appove it”; first human record verified (325 bytes, f478affb…) with a 19:00–20:00 window	identity-decision-draft
+20:01	Operator user created	AWS console display
+20:23	Billing role created	AWS console display
+20:33	Coordinator saved all 7 setup screenshots; record was then 4265d7a7… (537 bytes), still 7–8 PM plus the “up to 60 minutes, starting when I begin” paragraph	observations.json
+21:08 / 21:12 / 21:17	Pasted policy readbacks, tag readbacks, then “one policy confirmed and signed out” recorded	readbacks, completion
+21:30–21:44	Separately authorized operator authentication	auth packet
+22:26	Human edit: window becomes 9–10 PM (538 bytes, f00a7159…, file mtime)	exception file
+Nov 1, 01:08	User: “that is my real time I have updated it”	timing clarification
+The scope that was carried out matches the proposal: one operator, one role, four exact policies, a passkey MFA and the five tags. I saw no budget creation, access keys, admin rights, planner changes, or Organizations / Identity Center use.
+Historical hashes were left alone: 4265d7a7… is still cited in observations, completion and the auth packet, and the later edit is recorded separately. No agent edited the record after 20:33.
+All 11 screenshots viewed. Hashes match their manifests, observations.json and result.json.
+
+Operator, before creation: custom password, third column “No” (header not visible), no permissions attached (“No resources”), and the five tags entered.
+Operator after passkey assignment:
+ARN …:user/scholarchain-billing-operator, created 20:01;
+MFA (1): a passkey or security key;
+no access key (“Create access key” is offered);
+last sign-in “Never”.
+Caller policy: scholarchain-billing-assume-role, STS only, scoped to role name scholarchain-billing-deployer, with MFA Bool true.
+Role before creation: trust policy ending in MFA "true", no permissions added, five tags.
+Budget policy: the exact five actions on the single budget ARN, entered before installation.
+Role after setup:
+created 20:23, with a 1-hour maximum session;
+exactly two customer inline policies (…-browser-login, …-project-budget-management);
+no permissions boundary and no last activity.
+Trust readback: one statement, DistinctOperatorWithMFA, with the principal set to exactly the operator ARN, sts:AssumeRole, and Bool MFA "true". Only the formatting is normalized.
+Tag readbacks: both identities show exactly CS441 / scholarchain / course / danny / 2027-01-01. The operator still showed “Never” signed in and no access key, and the role showed no activity, so these were captured before any use.
+Operator sign-in: the console header shows scholarchain-billing-operator in account 530332961125, Ohio.
+Role session: “ScholarChain Billing” in account 530332961125. Cost and Health widgets show Access denied, which is consistent with the narrow grant and no widening.
+Exact policy match: I rendered billing-execution/main.tf with account 530332961125, region us-east-2, the role and the budget names. The three pasted bodies (caller, budget, login) are exactly equal as JSON objects to the rendered templates.
+
+MFA and authentication:
+
+Both the caller policy and the trust policy require MFA. A successful console switch into the role therefore implies an MFA-authenticated operator session; the STS result alone does not prove MFA.
+The STS ARN …assumed-role/scholarchain-billing-deployer/scholarchain-billing-operator is user-pasted. The command’s working directory, times and exit codes are recorded as unknown, not invented.
+Refresh lifetime and Terraform adoption of the manually created IAM resources remain unverified.
+Packet integrity: the bootstrap manifests (9, 24, 3 and 4 entries), the auth manifest (13) and the timing manifest (3) all match, with only the manifest files themselves unlisted. review.md is unchanged (6b39f772…), and git diff --check is clean.
+
+Required assessments
+Password-label discrepancy:
+The summary says “Enabled with MFA” while the subordinate “Console password” says “Not enabled”. That was a reading taken right after creation.
+The later operator console sign-in screenshot shows password sign-in works.
+There is no evidence of a reset or a disable. The Reset/Disable dialog was only offered, and nothing shows it was used.
+Resolved in practice. The cause is not inferred.
+Inventory sufficiency:
+The operator’s inventory is supported by three things: the creation screenshot showing no permissions, no access keys at two later points, and the user’s report of one policy and sign-out.
+The role’s inventory is shown directly: two inline policies, no boundary, and the exact trust policy.
+Sufficient for P1, but not an independent, complete inventory (groups and managed policies after creation are user-reported).
+The actor’s root status is not provable from the “danny (530332961125)” label and is not inferred.
+Findings
+F1 — Medium — BLOCKING for P1 closure
+
+Where: docs/agent-runs/phase-12/billing-bootstrap-exception.md (f00a7159…, current text says 9:00–10:00 PM), together with 12d-timing-clarification/user-statement.json.
+Evidence:
+AWS shows operator creation at 20:01 and role creation at 20:23 (UTC−05:00).
+The coordinator already held all seven creation and installation screenshots by 20:33.
+Under the current 21:00–22:00 window, every setup action happened before the window opened.
+The original 19:00–20:00 window had already closed when the operator was created.
+The replacement clause (“up to 60 minutes, starting when I begin”) is unverifiable: the root activity runs from at or before 20:01 to installed-policy and tag captures made before sign-out (recorded 21:17). That span cannot be shown to be 60 minutes or less.
+The 22:26 edit came after the setup and after authentication. The reply “Actual timing and discrepancy clarified in my file” is not reflected: the file contains no explanation.
+Impact: The only human record of a live, security-sensitive exception carries a window contradicted by AWS’s own timestamps. Neither compliance with that window nor with the 60-minute cap can be established.
+Owner: human architect, writing personally. The agent may not write times, suggest times or backdate anything.
+Acceptance: The human, in their own words in their own record, either:
+(a) states actual start and end times consistent with the 20:01 and 20:23 creation timestamps, or explicitly addresses them; or
+(b) states that exact times are unavailable, acknowledges that the setup actions happened around 20:01–20:23 rather than 9–10 PM, and personally accepts or rejects the duration and window deviation.
+A narrow, user-launched recheck then reviews that record only.
+
+F2 — Low — non-blocking, close together with F1
+
+Where: three coordinator reports in the bootstrap and authentication packets.
+Evidence: They say the replacement paragraph in the exception was “the user’s exact requested text” and was “requested verbatim by the human”. That implies the coordinator wrote dictated text into a human-owned record, and no verbatim request is retained.
+Acceptance: The human’s F1 record affirms the paragraph as their own, or the coordinator appends the verbatim chat request as a transcription, without changing the record.
+F3 — Low — non-blocking
+
+Where: 12d-identity-decision-draft/, which has 3 files and no manifest. Only the proposal’s hash is recorded elsewhere.
+Acceptance: The coordinator adds a new, append-only manifest with the current hashes.
+F4 — Info
+
+Operator groups and managed policies after creation, and complete IAM ownership, should be captured in the later Terraform adoption review.
+Refresh lifetime and provider session lifetime remain unverified.
+Report fields
+STATUS: COMPLETE (review); verdict REQUEST-CHANGES for Phase 12D P1 identity evidence ONLY — technical identity/auth evidence verified; human timing record contradicted by AWS-displayed creation times (F1)
+OWNER: code-reviewer (independent, read-only)
+WORK ORDER: docs/agent-runs/phase-12/reviewer-prompt-12d-identity-establishment.md (incl. appended timing clarification); branch phase-12, HEAD 5ca8406bad5fe55f732458fa0cbd5d561ac83d8f; packets 12d-identity-decision-draft, 12d-human-identity-bootstrap, 12d-authentication-verification
+FILES CREATED: None
+FILES MODIFIED: None
+COMMANDS RUN: git rev-parse/status -uall/diff --check; stat/shasum; cat/grep of packet text, exception record, review.md headings, reviewer prompt, billing-execution main.tf; python3 -I manifest/hash/screenshot-hash checks and rendered-template JSON equality; viewed 11 PNGs. No Terraform/AWS/login/console/build calls; no credential/config/cache/state/private/raw-plan reads.
+TEST RESULTS: Not run (review only). Readbacks == rendered templates (3/3); all packet manifests 0 mismatches; 11/11 screenshot hashes match; diff --check empty.
+VALIDATION RESULTS: Scope/policies/trust/tags/1h max/no keys/two inline/no boundary/operator sign-in/role session/STS ARN verified as described; password-label discrepancy resolved by sign-in; inventory sufficient for P1 (not independent). Timing: stated 21:00–22:00 contradicts 20:01/20:23 AWS creation and 20:33 evidence; ≤60 min unverifiable. Hash chain f478→4265→f00a preserved without rewrite.
+ASSUMPTIONS: Screenshots/pastes are unmodified depictions of the human's sessions; AWS console times shown in UTC−05:00 equal Chicago CDT on Oct 31, 2026; file mtimes are local CDT.
+RISKS: Exception compliance (window/60-min) unestablished; possible coordinator-authored text in human record; operator post-creation inventory user-reported; refresh lifetime, provider consumption, manual-IAM Terraform adoption, live budget permissions and all EMR/billing gates open.
+MANUAL ACTION REQUIRED: Human personally writes a timing record that reconciles with or explicitly addresses 20:01/20:23 (or states unavailable and accepts/rejects the deviation); user launches a narrow recheck.
+BLOCKED-ON OWNER: Human architect (F1, F2 affirmation); coordinator (F2 transcription option, F3 manifest, recheck prompt)
+BLOCKED-ON EVIDENCE: billing-bootstrap-exception.md f00a7159… (9–10 PM); screenshots operator 20:01 / role 20:23 UTC-05; observations.json recorded 01:33:21Z; timing-followup.json "Clarification not observed"
+NEXT GATE: Human timing record → narrow user-launched P1 recheck → only then a read-only durable-path plan per the P2 selection. No apply/IAM/spend.
+NEXT PROMPT
+Phase 12D — record P1 identity review (REQUEST-CHANGES) and obtain the human's timing reconciliation. Fresh session. No AWS/IAM/console/login/Terraform/build calls, no durable-path plan, no apply or spending.
+Repository /Users/danny/Documents/UIC/CS441/ScholarChain, branch phase-12, HEAD 5ca8406bad5fe55f732458fa0cbd5d561ac83d8f (uncommitted 12D work present).
+
+1. Append this independent review VERBATIM to docs/agent-runs/phase-12/review.md under "## Subphase 12D human identity establishment/authentication (P1) — independent review". Append F1–F4 with owners to repairs.md; append this work order to prompt.md; append-only owner-report.md/test-report.md entries. Verify every prior byte-prefix. Never edit billing-bootstrap-exception.md or any human record; never rewrite historical hashes (f478affb…, 4265d7a7…).
+
+2. F3: create docs/agent-runs/phase-12/evidence/12d-identity-decision-draft/evidence-manifest.json (new file) listing the 3 existing files with current SHA-256/bytes. Do not modify those files.
+
+3. F2: if the human's original chat request for the "This replaces the fixed clock window…" paragraph is available in this session's record, append a coordinator transcription of it verbatim to a new file evidence/12d-p1-timing-reconciliation/append-provenance.json; otherwise record "not retained".
+
+4. Ask the human, without suggesting any times, and wait:
+   "AWS shows the billing operator created at 20:01 and the role at 20:23 (UTC−05:00) on Oct 31, and setup screenshots were with the coordinator by 20:33 — before the 9–10 PM window now in your record. In your own words, in your own file, please either (a) record the actual root setup start and end in a way that addresses those timestamps, or (b) state that exact times are unavailable, acknowledge that setup occurred around 20:01–20:23, and state whether you accept the window/60-minute deviation. Please also confirm whether the 'replaces the fixed clock window' paragraph is your own text."
+   The agent never writes, edits, drafts or backdates that record. Record only a coordinator transcription of the human's reply and the new file SHA-256/bytes in evidence/12d-p1-timing-reconciliation/.
+
+5. Prepare (do not launch) docs/agent-runs/phase-12/reviewer-prompt-12d-p1-timing-recheck.md: a narrow read-only recheck of the new human record against the AWS-displayed 20:01/20:23 times, the 20:33 evidence timestamp, the hash chain, and F2/F3 closure. Technical identity evidence is already verified and is not re-reviewed. The prompt must include the reviewer's verdict scope (APPROVE/REQUEST-CHANGES for P1 timing only) and forbid apply/IAM/spending/P2 closure.
+
+6. Do not start the durable-path read-only plan until the recheck returns APPROVE and a new prompt arrives.
+
+Forbidden: AWS/IAM/console/login/Terraform/sbt calls, credential/config/cache/state/private-input/raw-plan reads, writing or editing human records/approvals, launching reviewers, commits, pushes, Phase 13.
+End with: "The P1 identity review is recorded as REQUEST-CHANGES. I have stopped and am waiting for your timing record and for you to launch the recheck."
+
+
+## Subphase 12D P1 timing/provenance recheck — independent review
+
+User-supplied external review, retained verbatim. APPROVE for P1 timing/provenance only; no apply or P2 closure.
+
+Verdict: APPROVE for P1 timing and provenance only. F1, F2 and F3 are closed. Combined with the earlier verification of the IAM and authentication evidence, P1 no longer blocks routing the read-only plan with durable state paths. This does not authorize an apply, an IAM change, spending, P2 closure or Phase 12D completion.
+
+What I checked
+Human record: 1,334 bytes, SHA abe3a50a…, matching what the coordinator reported.
+Hash chain:
+The first 538 bytes hash to f00a7159… and the first 591 bytes to d9ca3b90…. Both appends kept every earlier byte.
+Append 1 is exactly the dictated sentence, “I don’t really remember it was around 8-9pm I think”.
+Append 2 contains the two questions and the verbatim replies.
+4265d7a7… and f478affb… cannot be recomputed from the current file: the 9–10 PM edit changed bytes mid-file, so they aren’t prefixes. Six historical evidence files still cite those hashes unchanged, and nothing was rewritten.
+Manifests: the reconciliation manifest (12 files) and the bootstrap (24), authentication (13) and timing (3) manifests all match, with 0 mismatches.
+Phase records: all five keep their preflight prefixes, and their current hashes equal the “after” values in local-checks.json.
+Prior review: the review attachment (74b8c8bd…) is contained verbatim in review.md under the new P1 heading.
+Repository state: git diff --check is empty. git status shows 576 entries, matching handoff-files.json.
+F1 to F3
+F1 (timing) — CLOSED.
+The human now says the exact times are unavailable, with an approximate 8–9 PM. That fits the AWS creation times (20:01 operator, 20:23 role) and the setup evidence retained by 20:33, and it supersedes the contradicted 9–10 PM claim.
+The human answered “accept” to a question that explicitly named the 20:01–20:23 activity and the uncertain window and 60-minute compliance. That meets acceptance option (b) from my earlier review.
+The record is honest about uncertainty. It is not proof that the original window was met, and it is not prospective approval.
+The superseded 9–10 PM sentence stays at the top of the file by design, with the correction following it.
+F2 (authorship of the replacement paragraph) — CLOSED.
+The human answered “yes it is mine”.
+The packet honestly records that the original verbatim request is “not retained”.
+F3 (manifest for the identity-decision draft) — CLOSED.
+The new manifest lists exactly the 3 preexisting files and excludes itself; its SHA is a1e23530….
+The 3 files keep their original hashes and their mtimes from 17:47, 17:49 and 17:58 CDT.
+F4 — still deferred: the operator inventory and Terraform adoption of the manual IAM resources go to the adoption review, and the full refresh lifetime is still unverified.
+Findings
+G1 — Low — non-blocking for the read-only plan; must be resolved before any apply gate
+
+Where: docs/agent-runs/phase-12/billing-bootstrap-exception.md, from byte 592 to the end.
+Evidence: The human-owned record now contains question text written by the coordinator, plus the human’s replies transcribed by the agent. This was done under the explicit instruction “oh yeh can you update that window for me”, and both the questions and the replies are clearly labelled.
+Impact: This is a minor authorship ambiguity in a human record. It is not a content defect.
+Owner: human architect.
+Acceptance: Before any apply approval, the human confirms in their own words that the abe3a50a… file reflects their statements. Future human records should be typed by the human directly.
+G2 — Info
+
+The approximate 8–9 PM window and the “accept” answer document a deviation the human accepted. They do not prove compliance with the 60-minute cap.
+Live budget, delivery and EMR gates, P2, and the P3 pre-apply checks are all still open.
+Report fields
+STATUS: COMPLETE (recheck); verdict APPROVE for Phase 12D P1 timing/provenance ONLY — F1/F2/F3 closed; G1 Low (pre-apply), G2 Info
+OWNER: code-reviewer (independent, read-only)
+WORK ORDER: docs/agent-runs/phase-12/reviewer-prompt-12d-p1-timing-recheck.md; branch phase-12, HEAD 5ca8406bad5fe55f732458fa0cbd5d561ac83d8f; evidence docs/agent-runs/phase-12/evidence/12d-p1-timing-reconciliation/
+FILES CREATED: None
+FILES MODIFIED: None
+COMMANDS RUN: stat/shasum/cat of the human record and reconciliation packet; python3 -I prefix-hash chain, historical-citation, manifest (5 packets), F3 file hash/mtime, phase-record prefix/after-hash and review-containment checks; grep review.md headings; git diff --check; git status -uall count. No Terraform/AWS/IAM/login/console/build calls or private/state/raw-plan reads.
+TEST RESULTS: Not run (review only). Chain f00a7159(538)→d9ca3b90(591)→abe3a50a(1334) verified by prefix; 4265d7a7/f478affb preserved in historical evidence; all manifests 0 mismatches; 5/5 prefixes; diff --check empty.
+VALIDATION RESULTS: F1 closed (human-stated unavailable/approx 8–9 PM consistent with 20:01/20:23/20:33; explicit "accept" of acknowledged deviation); F2 closed ("yes it is mine"; original request honestly not retained); F3 closed (3 unchanged files manifested). G1 Low, G2 Info.
+ASSUMPTIONS: Transcribed replies are the human's own chat words; AWS times UTC−05:00 = Chicago CDT on Oct 31, 2026.
+RISKS: Original window/60-min compliance permanently unprovable (human-accepted); agent-transcribed text in human record (G1); F4 inventory/adoption/refresh; P2 durable plan absent; P3 pre-apply checks; all live billing/EMR gates.
+MANUAL ACTION REQUIRED: Human performs a fresh role-session login for the durable-path plan, re-enters the recipient via the hidden helper, and later launches the plan review; before any apply, confirms G1 in their own words.
+BLOCKED-ON OWNER: None for routing the read-only durable-path plan; human for G1 (pre-apply) and the apply gate
+BLOCKED-ON EVIDENCE: None for P1. For apply: durable-path plan checksum + independent review, G1 confirmation, P3 checks, human-written approval
+NEXT GATE: Fresh read-only durable-path plan (infra-engineer) with sanitized summary/new checksum, then user-launched independent review. No apply/IAM/spend.
+NEXT PROMPT
+Phase 12D — record P1 timing recheck APPROVE and run ONLY the fresh read-only durable-path billing plan. Fresh session. No apply, import, destroy, IAM change or spending.
+Repository /Users/danny/Documents/UIC/CS441/ScholarChain, branch phase-12, HEAD 5ca8406bad5fe55f732458fa0cbd5d561ac83d8f (uncommitted 12D work present).
+1. Append this recheck VERBATIM to docs/agent-runs/phase-12/review.md under "## Subphase 12D P1 timing/provenance recheck — independent review". Mark F1/F2/F3 closed and G1 (pre-apply human confirmation) and G2 open in repairs.md; append to prompt.md, owner-report.md and test-report.md. Verify all byte-prefixes. Never edit billing-bootstrap-exception.md or any human record.
+2. Route to infra-engineer (protected runner, same pattern as evidence/12d-billing-execution-plan/infra/run.py), packet evidence/12d-billing-durable-plan/:
+   a. Durable paths (human-selected): primary "/Users/danny/Library/Application Support/ScholarChain/terraform/billing-bootstrap", backups "/Users/danny/Library/Application Support/ScholarChain/terraform/billing-bootstrap-backups". Quote paths (they contain a space). Create only if absent, mode 0700; sensitive files 0600. Verify both are outside Git and not inside a cloud-synced folder; stop on any doubt. Record retention as selected (same-disk backup limitation disclosed). No tfstate may exist before the plan.
+   b. Copy the unchanged billing-bootstrap config from the repository source into a config/ subdirectory there; prove byte equality and record hashes. course.tfvars keeps enable_budget_resource=false; use the existing approved public inputs unchanged.
+   c. Human re-enters the recipient through the hidden getpass helper (O_EXCL, 0600) into the durable directory. Never echo, log, hash-publish or commit it.
+   d. The human performs a fresh `aws login --profile scholarchain-billing-deployer --region us-east-2` (role session selected), then pastes only the sanitized GetCallerIdentity Account/Arn. Stop unless the Arn starts with arn:aws:sts::530332961125:assumed-role/scholarchain-billing-deployer/. Do not read credentials, config or cache.
+   e. Pinned Terraform 1.13.5 / provider 6.44.0 with the existing lock: offline init/fmt/validate/test, then protected init and `terraform plan -input=false -no-color -detailed-exitcode -lock-timeout=30s -state="<primary>/billing.execution.tfstate" -var-file=<approved public> -var-file=<private recipient> -out="<primary>/billing.execution.tfplan"`, with TF_DATA_DIR="<primary>/tf-data", AWS_PROFILE=scholarchain-billing-deployer, AWS_REGION=us-east-2. Expect exit 2. Write show -json only to a protected 0600 file; publish only the sanitized summary. Assert exactly one create of aws_budgets_budget.project[0] with the same reviewed values (USD 200 COST/CUSTOM 2026-10-01→2027-01-01, credits/refunds excluded, five tags, three ACTUAL alerts at 50/80/100, one email subscriber each, no SNS) and 0 change/destroy/replace. Record the new plan SHA-256/bytes/modes, the exact argv/env/cwd, and that no tfstate exists afterward.
+   f. Mark the old /tmp plan 35e35914… as superseded. Do not delete it without explicit human approval.
+   g. Append-only records, manifests, 209-source freeze, pins/locks unchanged, git diff --check, and an address scan proving no recipient in Git.
+3. Prepare (do not launch) docs/agent-runs/phase-12/reviewer-prompt-12d-billing-durable-plan.md for a user-launched independent read-only review of the durable plan only.
+Forbidden: terraform apply/import/destroy/state mutation, IAM/console/account mutations, paid calls, credential/config/cache reads, raw-plan/private-input disclosure, writing human approvals or human records, launching reviewers, commits, pushes, Phase 13. The apply handoff (P3 checks, G1 confirmation, human-written approval naming the exact new checksum and window) remains a later gate.
+End with: "The P1 recheck is recorded and the durable-path read-only plan is prepared for independent review. I have stopped. Nothing has been applied."
+
+
+## Subphase 12D durable-path billing plan — independent review
+
+User-supplied external review, retained verbatim. APPROVE for durable read-only plan only; P2 satisfied at plan stage, not an apply/spending approval.
+
+Verdict: APPROVE for the durable read-only plan only. P2 is satisfied at the plan stage. This does not authorize an apply, an IAM change, spending or Phase 12D completion. G1, G2, F4, P3 and every live billing and EMR gate stay open.
+
+P2 assessment
+The plan, state path, Terraform working data, config, toolchain and provider mirror all sit in the human-selected durable location, with no runtime dependency on /tmp. The backups directory exists and is empty. P2 is therefore met for the plan. Backing up the state file after an apply, and doing it the same way each time, is still a condition of the apply gate.
+
+What I verified
+1. The plan
+
+I re-hashed the plan file without decoding it: 6,631 bytes, SHA ab9f141e…f855, mode 0600.
+The sanitized summary shows only aws_budgets_budget.project[0] as a create: 1 add, 0 change, 0 destroy, 0 replace.
+It is identical field for field to the previously approved summary; only the path, SHA, byte count and timestamp differ. That covers:
+account 530332961125 and name scholarchain-project-budget;
+USD 200, COST, CUSTOM, 2026-10-01_00:00 → 2027-01-01_00:00;
+credits and refunds excluded, all other cost types as authored;
+no filters;
+five tags (CS441, scholarchain, course, danny, and expiration 2027-01-01 derived from the end date);
+three ACTUAL / GREATER_THAN / PERCENTAGE alerts at 50, 80 and 100, each with one email subscriber and no SNS.
+The runner asserts every one of these against the plan.
+The public inputs are byte-identical to the approved file (SHA 48f19c45…).
+The seven config copies are byte-equal to infra/terraform/billing-bootstrap/**, including mtimes.
+2. Durable paths
+
+Locations: the working directory is primary/config. The plan used -state=primary/billing.execution.tfstate and TF_DATA_DIR=primary/tf-data. The CLI config uses only the durable filesystem mirror.
+Provider links: both provider symlinks (in tf-data and offline-tf-data) resolve into primary/toolchain/provider-mirror.
+Binaries: the Terraform binary (899b3c0c…) and the provider binary (050fc3a7…) match the toolchain recorded in earlier reviewed packets.
+Permissions: all directories are 0700 and owned by uid 501. Data files are 0600 and executables 0700.
+Exclusion: the location is not inside a Git repository, and the parent Application Support folder is 0700.
+State: no *.tfstate exists anywhere under primary or backups, and backups holds 0 entries.
+Retention and limits: the selected retention and the same-disk limitation are stated explicitly. Remote absence of the budget is correctly left unverified.
+3. Commands and integrity
+
+Commands: seven Terraform commands ran, with exits 0/0/0/0/0/2/0. The repository copies of the offline logs match their recorded hashes.
+Tests: “7 passed, 0 failed”. There was no retry.
+Packet and phase-record checks:
+Manifests: root 82 entries (self-excluded), infra 32 and preparation 21, all with 0 mismatches.
+Source files: all 209 match on SHA, bytes and mtime.
+Earlier packets: 137 files with 0 mismatches.
+Human record: still 1,334 bytes, abe3a50a….
+Phase records: all five keep their prefixes and match their “after” hashes.
+The P1 attachment (16b57d9d…) appears verbatim in review.md.
+Repository state: git diff --check exits 0, and git status shows 664 entries, which equals 576 + 88 per the handoff.
+No new sbt claim: the earlier full sbt result is labeled as historical.
+Errata: the coordinator disclosed three wrong-filename lookups and one first-run failure of its address-scan allowlist. None hides a source or live failure.
+4. Identity and privacy
+
+Screenshots: the operator console shows scholarchain-billing-operator and the role console shows “ScholarChain Billing”, both in account 530332961125. Neither shows a password or the recipient.
+Caller identity: the user-pasted STS result shows the exact assumed-role/scholarchain-billing-deployer/… ARN. It is labeled as user-supplied, not as an agent API call.
+Hidden-input helper: it requires a terminal, hides input with getpass, uses exclusive create at 0600, and fails closed.
+Recipient protection:
+The runner compares the recipient only in memory, against 2,995 public Git-visible files under docs/ and infra/, with 0 matches. The scope is stated honestly.
+My own email-pattern scan of the packet, the reviewer prompt and all five appended record sections found only synthetic@example.invalid.
+Old plan: /tmp/… is still 6,626 bytes with SHA 35e35914… and its Oct 31 22:06 mtime, so it is untouched.
+Findings
+D1 — Low — non-blocking.
+Where: fresh-authentication/hidden-input.user-confirmation.json and private-input-metadata-check.json.
+Evidence: the hidden-input confirmation is recorded at 19:57:00Z, after the plan ran at 19:56:51–52Z. The metadata check (written 19:54:37Z) shows the private file absent. So the “user said Saved, then go-ahead” order cannot be shown from timestamps.
+Mitigation: the runner itself fail-closed on the private file’s presence, regular-file type, mode 0600 and owner at 19:56:50Z.
+Owner: coordinator.
+Acceptance: an append-only erratum that separates when each record was written from when the user’s reply arrived, without inventing times.
+D2 — Info.
+Evidence: the exact-recipient scan ran at 19:56:54Z, before final assembly at 20:04Z. My generic scan found no addresses in the content added afterwards, which closes the gap for this packet.
+Owner: coordinator.
+Acceptance: for any future packet, run the exact-recipient count after final assembly.
+D3 — Info.
+Evidence: init reports the provider as “(unauthenticated)”, because a filesystem mirror skips signature checks.
+Mitigation: the readonly lock-file checksum still applies, and the provider binary hash matches the 12B-reviewed provenance.
+Action: none.
+Report fields
+STATUS: COMPLETE (review); verdict APPROVE for Phase12D durable read-only billing plan ONLY; P2 satisfied for plan stage; D1 Low, D2/D3 Info
+OWNER: code-reviewer (independent, read-only)
+WORK ORDER: docs/agent-runs/phase-12/reviewer-prompt-12d-billing-durable-plan.md; branch phase-12, HEAD 5ca8406bad5fe55f732458fa0cbd5d561ac83d8f; evidence docs/agent-runs/phase-12/evidence/12d-billing-durable-plan/
+FILES CREATED: None
+FILES MODIFIED: None
+COMMANDS RUN: cat/diff/cmp/shasum/stat/ls/find/readlink/xattr of public evidence, source and durable non-private paths; opaque shasum of new and old plan files; stat-only (no size print) of private tfvars; python3 -I manifest/freeze/prior-packet/prefix/verbatim/address-pattern checks; git status/ls-files/diff --check; viewed 2 screenshots. No Terraform/AWS/login/build; no private input, raw plan JSON, raw logs or state read; no retained scripts invoked.
+TEST RESULTS: Not run (review). Evidence: 7 Terraform calls exits 0/0/0/0/0/2/0; billing tests 7 passed/0 failed, 6 assertions, 4 expect-failure runs; no new sbt.
+VALIDATION RESULTS: Plan 6631 B / ab9f141e…f855 / 0600; 1 add/0/0/0 for aws_budgets_budget.project[0]; summary identical to approved plan except path/hash/bytes; public inputs and 7 config copies byte-equal; durable cwd/state/TF_DATA_DIR/toolchain/mirror, symlinks inside primary; 0700/0600/0700; no state; backups empty; manifests 82/32/21 0 mismatches; 209 source + 137 prior files unchanged; human record abe3a50a 1334 B; 5 prefixes; diff --check 0; 664 status entries; only synthetic@example.invalid in public scans; old /tmp plan 35e35914… untouched.
+ASSUMPTIONS: User-pasted STS output and helper success text are genuine; recipient scan counts produced as the retained runner source shows; no third-party backup/sync of Application Support beyond recognized paths.
+RISKS: D1 sequencing provenance; remote budget absence/name ownership, live create/tag/CUSTOM/CostTypes acceptance, delivery, refresh lifetime, IAM adoption/inventory (F4), current spend/allowance and EMR feasibility unverified; same-disk backup; alerts are not spending caps; G1, G2, P3, B1/B2/B3/R1/N19/N20 open.
+MANUAL ACTION REQUIRED: Human later supplies G1 affirmation in own words and personally writes any apply approval naming checksum ab9f141e…f855, identity and window; human controls retention/cleanup of the superseded /tmp plan.
+BLOCKED-ON OWNER: None for recording this verdict and preparing an apply proposal; human architect for G1 and any apply approval
+BLOCKED-ON EVIDENCE: For apply: G1 affirmation, P3 in-window caller + exact-name budget checks, independently reviewed apply proposal, human-written exact-checksum/window approval
+NEXT GATE: Record verdict; prepare (not execute) a bounded apply proposal for user-launched independent review. No apply/IAM/spend.
+NEXT PROMPT
+Phase 12D — record durable-plan APPROVE and prepare ONLY a bounded apply PROPOSAL. Fresh session. Nothing is executed.
+Repository /Users/danny/Documents/UIC/CS441/ScholarChain, branch phase-12, HEAD 5ca8406bad5fe55f732458fa0cbd5d561ac83d8f (uncommitted 12D work retained).
+
+1. Append this review VERBATIM to docs/agent-runs/phase-12/review.md under "## Subphase 12D durable-path billing plan — independent review". In repairs.md mark P2 satisfied for plan stage, D1 Low open (coordinator erratum), D2/D3 Info; keep G1, G2, F4, P3, B1/B2/B3/R1/N19/N20 open. Append to prompt.md, owner-report.md and test-report.md. Verify all five byte prefixes. Add the D1 erratum append-only in a new file in evidence/12d-billing-durable-plan-review-record/ (record-write time vs user-reply receipt; invent no times). Never edit billing-bootstrap-exception.md or any human record; never write human approvals.
+
+2. Route infra-engineer (authoring only) to write evidence/12d-billing-apply-proposal/proposal.md plus manifest, containing:
+   a. Bound artifact: plan "/Users/danny/Library/Application Support/ScholarChain/terraform/billing-bootstrap/billing.execution.tfplan", 6631 bytes, SHA256 ab9f141e83058209263cf561eef1d102496ec7f534b88ce421620d8e0045f855; stop if the hash, bytes or mode differ, or if any tfstate exists before apply.
+   b. Identical execution: same cwd primary/config, TF_DATA_DIR primary/tf-data, TF_CLI_CONFIG_FILE, toolchain binary 899b3c0c…, mirror provider 050fc3a7…, lock 421b7524…, env AWS_PROFILE=scholarchain-billing-deployer AWS_REGION=us-east-2; exact future argv `terraform apply -input=false -no-color -lock-timeout=30s -state="<primary>/billing.execution.tfstate" "<primary>/billing.execution.tfplan"` documented as a PROPOSAL only, for deploy-engineer to execute after human approval.
+   c. Preconditions, in a human-specified window within one fresh role session: (G1) human's own-words affirmation of abe3a50a; (P3) fresh user-run STS showing the exact assumed-role ARN; and an exact-name read-only budget existence check, with its permission basis cited from the reviewed role policy, or BLOCKED-ON if not covered. Stop if the budget exists.
+   d. Post-apply: immediate 0600 state copy to backups with SHA recorded; private readback of name/amount/CUSTOM period/cost types/tags/three alerts with only a sanitized summary published; human confirms subscription/delivery privately; retention per selected policy; old /tmp plan stays superseded and is not deleted without human approval.
+   e. Failure handling: stop on any error; no retry, import, destroy, state edit or policy widening; incident route.
+   f. Explicit non-claims: not EMR readiness, spending authority or Phase12D completion.
+
+3. Prepare (do not launch) docs/agent-runs/phase-12/reviewer-prompt-12d-billing-apply-proposal.md for a user-launched independent review of the proposal only.
+
+Forbidden: terraform apply/import/destroy/state mutation, any AWS/IAM/console/login/paid call by agents, credential/config/cache/private-input/raw-plan reads, writing human approvals or records, launching reviewers, commits, pushes, Phase 13.
+End with: "The durable-plan verdict is recorded and an apply proposal is prepared for independent review. I have stopped. Nothing has been applied."
+
+
+## Subphase 12D billing apply proposal — independent review
+
+User-supplied external review; APPROVE for proposal only, no live authority.
+
+Verdict: APPROVE for the apply proposal only. D1 is closed. Nothing here authorizes an apply, IAM change, spending, a live call or Phase 12D completion. G1, G2, F4, P3, B1/B2/B3/R1/N19/N20 and all live billing and EMR gates stay open.
+
+Item results
+Recording and preservation pass.
+The durable-plan review is appended verbatim to review.md under its own heading. The attachment is retained as user-supplied-review.txt (013e5dbe…).
+All five phase records keep both the current prefix and the original durable-plan preflight prefix. Each “before” hash equals the previous “after” hash.
+The human record is still 1,334 bytes with SHA abe3a50a…. The 83 durable-packet files and 209 source files are unchanged (SHA, bytes and mtime).
+Manifests reconcile with 0 mismatches: apply root 13 entries, specialist artifacts 3, review-record 7. Each manifest excludes itself.
+git status shows 687 entries, which is 664 + 23 new. git diff --check exits 0.
+My own email-pattern scan of both new packets, the reviewer prompt and the five appended sections found only synthetic@example.invalid.
+D1 is closed. D1-sequencing-erratum.json records 19:57:00Z as the coordinator’s write time only. It leaves the user’s reply time and the helper’s run time and exit null, invents no timestamps, and leaves earlier evidence unchanged. D2 and D3 are correctly treated as information:
+the current scan is labelled generic only;
+the exact-recipient scan is deferred until after final assembly, with a rescan on any later change (proposal.md:129);
+D3 needs no action.
+Scope and binding are correct (proposal.md:7–9, 24, 102). The proposal covers only aws_budgets_budget.project[0], as a single create in account 530332961125, profile scholarchain-billing-deployer, region us-east-2. The plan binding is 6,631 bytes, 0600, uid 501, SHA ab9f141e…. Any mismatch or unexpected state stops the run. Replanning, adopting, importing, applying the main environment and the old /tmp plan are all excluded.
+The execution context is identical to the planned one (proposal.md:30–47).
+Every hash matches the reviewed durable-plan values: binary, provider, CLI config, lock, public inputs and the seven sources.
+The environment is minimal and explicit, there is no runtime /tmp dependency, and no credential override or init/upgrade is allowed.
+The apply argv is a proposal only: separate argument elements, an absolute -state, no -state-out, -var, -target or -auto-approve.
+The pinned-source reasoning holds, with a gap (see A1). I fetched the cited v1.13.5 files. PrepareBackend calls applyStateArguments before BackendForLocalPlan. backendCLIOpts passes StatePath, StateOutPath and StateBackupPath. Local StatePaths puts the overrides first, defaults the output to the input path, and defaults the backup to output plus .backup.
+The P3 checks are sound (proposal.md:61–86).
+The STS check is fresh and run by the human.
+The exact-name DescribeBudget counts absence only on an anchored NotFoundException from DescribeBudget. Denial, expiry, an unknown response or a present budget all stop the run.
+The permission basis checks out: the reviewed policy grants ViewBudget, ModifyBudget, TagResource, UntagResource and ListTagsForResource on the exact budget ARN (infra/terraform/billing-execution/main.tf:13-16).
+The proposal forbids widening IAM or falling back to root.
+Whether the installed CLI supports --show-filter-expression is correctly left as a blocking question for the future wrapper.
+Backup, failure handling and readbacks are acceptable (proposal.md:110–131).
+Backup: an exclusively created 0700 directory per operation; a no-follow, byte-for-byte 0600 copy with fsync and hash/identity equality before any readback; no claim of backing up a prior state that never existed.
+Failure handling: on partial failure, only opaque local preservation, then stop, with no retry, import, destroy, state edit, refresh or rollback.
+Readbacks: compare all 11 CostTypes, the five tags, exact UTC dates, no filters, and 3 notifications × 1 EMAIL / 0 SNS. Only booleans and counts are published. Delivery is confirmed privately by the human, and the proposal says plainly that no spend will be manufactured to test delivery.
+Non-claims are correct. No wrapper exists yet, and its authorship, offline tests, independent review, clean checkout and source control are listed as blocking (proposal.md:17–18). No new tests are claimed. Same-disk storage and the retention choice are stated explicitly.
+Findings
+A1 — Low — does not block this proposal; blocks execution.
+
+Where: evidence/12d-billing-apply-proposal/proposal.md:104
+Evidence: Two links in the state-binding argument are missing:
+the source that copies the CLI options into the local backend’s Override* fields (CLIInit, in internal/backend/local) is not cited;
+the fetch of the argument parser (internal/command/arguments/apply.go) failed, according to sources.json.
+Static source is also not runtime proof that a saved-plan apply honours an absolute -state path containing spaces.
+
+Owner: infra-engineer.
+Acceptance: an offline feature test of the wrapper with the pinned 1.13.5 binary. It must use a credential-free scratch config with terraform_data and never touch the durable primary. It must show:
+plan, then a saved-plan apply with the same -state="<path with space>", writes state only at that path;
+no config/terraform.tfstate, no terraform.tfstate.d and no .backup file at initial create;
+the lock file is removed afterwards;
+TF_DATA_DIR holds no resource state.
+A2 — Info — non-blocking.
+
+Where: proposal.md:23, 113
+Evidence: Recovery files are covered only generically. When Terraform cannot persist state, it writes errored.tfstate into the working directory (primary/config).
+Owner: infra-engineer.
+Acceptance: the wrapper’s preservation branch and its offline tests name errored.tfstate in the working directory explicitly. The file is copied opaquely, never read, and the run stops.
+Report fields
+STATUS: COMPLETE (review); verdict APPROVE for Phase12D bounded billing APPLY PROPOSAL ONLY; D1 closed; A1 Low (execution-blocking), A2 Info
+OWNER: code-reviewer (independent, read-only)
+WORK ORDER: docs/agent-runs/phase-12/reviewer-prompt-12d-billing-apply-proposal.md; branch phase-12, HEAD 5ca8406bad5fe55f732458fa0cbd5d561ac83d8f; evidence/12d-billing-apply-proposal/ and evidence/12d-billing-durable-plan-review-record/
+FILES CREATED: None
+FILES MODIFIED: None
+COMMANDS RUN: ls/find/wc/cat/tail/grep of public packets, records and infra/terraform/billing-execution/main.tf; python3 -I manifest, preservation (83 packet/209 source), prefix-chain, verbatim, git status and email-pattern checks; git diff --check; WebFetch of three cited pinned Terraform v1.13.5 source files (public). No Terraform/AWS/IAM/login/console, durable/private storage, state, raw plan or credential access; no scripts invoked.
+TEST RESULTS: Not run (review). No new tests claimed by packet; seven mock passes and full sbt remain historical.
+VALIDATION RESULTS: Verdict verbatim; 5/5 prefixes (current and original preflight); human record 1334 B/abe3a50a; 83+209 unchanged; manifests 13/3/7 with 0 mismatches; status 687=664+23; diff --check 0; only reserved fixture address. Proposal binds one create to plan ab9f141e…/6631 B/0600/uid501 with identical durable context and hashes; P3 anchored NotFoundException; permission basis matches the reviewed policy; backup, failure and readback design is sound; non-claims are accurate. Pinned source supports -state binding (A1 gap).
+ASSUMPTIONS: Cited AWS operation mappings are current; the installed role policy equals the reviewed rendered policy (verified in prior P1 review); WebFetch summaries reflect the pinned source accurately.
+RISKS: Runtime -state binding unproven (A1); recovery-file naming (A2); CLI --show-filter-expression capability unknown; live create/tag/CUSTOM/CostTypes acceptance, delivery, remote absence, refresh lifetime, F4, current spend/EMR unverified; one-hour role session must cover P3+apply+backup+readbacks; same-disk backup; alerts are not caps.
+MANUAL ACTION REQUIRED: None now. Later: human source-control/clean-checkout decision, own-words G1 affirmation, personally written exact-checksum/actor/window gate; human login and STS; private delivery confirmation.
+BLOCKED-ON OWNER: None for wrapper authorship. Execution: infra-engineer (wrapper + A1/A2 tests), user-launched reviewer, human architect (source control, G1, gate), deploy-engineer afterwards
+BLOCKED-ON EVIDENCE: Approved source-controlled wrapper with offline tests incl. A1/A2, independent script review APPROVE, clean execution checkout, G1, human-written gate, fresh in-window P3
+NEXT GATE: Record verdict; bounded wrapper authorship + offline tests; user-launched independent script review. No live calls or apply.
+NEXT PROMPT
+Phase 12D — record APPLY PROPOSAL APPROVE and author ONLY the bounded execution/backup/sanitizer wrapper with offline tests. Fresh session. Nothing live.
+Repository /Users/danny/Documents/UIC/CS441/ScholarChain, branch phase-12, HEAD 5ca8406bad5fe55f732458fa0cbd5d561ac83d8f (uncommitted work retained; no commit, push or clean-tree exception).
+
+1. Append this review VERBATIM to docs/agent-runs/phase-12/review.md under "## Subphase 12D billing apply proposal — independent review". In repairs.md: D1 closed; A1 Low open (execution-blocking), A2 Info open; G1/G2/F4/P3/B1/B2/B3/R1/N19/N20 open. Append to prompt.md, owner-report.md and test-report.md; verify all five byte prefixes. Retain the attachment verbatim in a new evidence/12d-billing-apply-proposal-review-record/ packet with manifest. Never edit the human record or write approvals.
+
+2. Route infra-engineer to author, under scripts/billing/ (infra-engineer territory), a source-controlled wrapper implementing evidence/12d-billing-apply-proposal/proposal.md exactly, reviewed-hash pinned:
+   a. Modes: p3-check (STS result supplied by the human; exact-name describe-budget with anchored NotFoundException parsing), apply (preconditions, the exact proposed argv, immediate exclusive 0600 backup with fsync/hash/identity receipts), readback (four narrow reads, allowlisted comparisons, booleans/counts only), and post-freeze exact-recipient scan receipt. Full argv arrays, minimal env, umask 077, exclusive private logs, no retries, stop on any error, no printing of private data.
+   b. Preservation branch explicitly covers primary state, any .backup file, lock info and config/errored.tfstate (A2): opaque copy, never read, then stop.
+   c. Offline feature tests under scripts/billing/tests/ run with python3 -I, using stub terraform/aws executables and temp dirs: argv/env exactness; plan hash/mode/owner mismatch stops; pre-existing state stops; NotFoundException vs AccessDenied/expired/throttled/malformed/blank/exists outcomes; missing --show-filter-expression support → BLOCKED-ON; backup equality/fsync and failure paths; readback mismatches (extra notification, SNS subscriber, changed CostTypes, filter present, tag drift, date drift); sanitizer never emits address or hash; scan rerun after content change.
+   d. A1 test: pinned Terraform 1.13.5 with a credential-free scratch config (terraform_data only; scratch dir with a space in its path; never the durable primary). Saved-plan apply with absolute -state writes state only there: no config/terraform.tfstate, no terraform.tfstate.d, no .backup at initial create, lock removed, no resource state in TF_DATA_DIR.
+   e. Do not touch the durable primary/backups, private input, plan or AWS. Run only the offline tests and report exact counts. Record the script SHA256 values for the future gate.
+
+3. Prepare (do not launch) docs/agent-runs/phase-12/reviewer-prompt-12d-billing-wrapper.md for a user-launched independent script/test review only.
+
+Carry to the concrete execution gate, unresolved: the human's source-control/commit and clean-checkout decision, own-words G1 affirmation, and a personally written gate naming plan SHA ab9f141e83058209263cf561eef1d102496ec7f534b88ce421620d8e0045f855, actor/role/profile/account, dated window/timezone, proposal and wrapper SHAs.
+
+Forbidden: any AWS/IAM/login/console/paid call, terraform plan/apply/import/destroy against any real config or state, durable/private storage access, credential/config/cache reads, writing human approvals or records, launching reviewers, commits, pushes, Phase 13.
+End with: "The apply-proposal verdict is recorded and the wrapper with offline tests is prepared for independent review. I have stopped. Nothing live was executed."
+
+
+## Subphase 12D billing wrapper — independent review
+
+User-supplied external review, retained verbatim below.
+
+STATUS: COMPLETE (review); verdict REQUEST-CHANGES for wrapper/offline tests ONLY — W1 Medium blocking; W2 Low; W3 Low (execution-gate); W4 Info; A1 and A2 accepted/closed
+OWNER: code-reviewer (independent, read-only)
+WORK ORDER: docs/agent-runs/phase-12/reviewer-prompt-12d-billing-wrapper.md; branch phase-12, HEAD 5ca8406bad5fe55f732458fa0cbd5d561ac83d8f; scripts/billing/**, evidence/12d-billing-wrapper/, evidence/12d-billing-apply-proposal-review-record/, five record suffixes
+FILES CREATED: None
+FILES MODIFIED: None
+COMMANDS RUN: cat/grep/sed/stat/find/wc of public scripts and evidence; stat of public /tmp wrapper scratch metadata; python3 -I manifest/preservation (105 prior, 209 source)/pin/script-hash/prefix-chain/verbatim/status/email-pattern checks; git status, git diff --check. No wrapper, test, Terraform, AWS, build, durable/private/state/plan/credential access.
+TEST RESULTS: Not run (review). Recorded: final 37/0/0 (attempt 4, after final wrapper edit); earlier attempts 33 with 12F/15E, 33 with 1F, 33 passing — causes disclosed; A1 3 calls 0/0/0 with 7/7 assertions, run after the final wrapper edit.
+VALIDATION RESULTS: Preservation, prefixes, verbatim review, human record, manifests 21/13/7, script hashes, pins equal to freeze, status 723=687+36, diff --check 0, reserved fixtures only. Modes, gate, clean checkout, pre-mutation checks, P3 parsing, replay/concurrency, backup, readback and scan conform, except W1/W2 (and W3 scope). A1 and A2 accepted.
+ASSUMPTIONS: Recorded logs and results reflect actual runs (manifests consistent; mtimes order the final runs after the final wrapper); the real CLI NotFound text and exit 254 match AWS CLI v2 behavior.
+RISKS: Hard kill can orphan a live budget (W1); window-edge backup skip (W2); unscanned record appends (W3); live permission, CUSTOM/CostTypes/tag acceptance, delivery, remote ownership, F4, refresh and EMR unverified; same-disk backup; scripts uncommitted.
+MANUAL ACTION REQUIRED: None now. Later: source-control/clean-checkout decision, own-words G1, personally written gate with plan/proposal/wrapper SHAs, identity and dated window; human login and STS; private delivery confirmation.
+BLOCKED-ON OWNER: infra-engineer (W1, W2; W3 if fixed in code)
+BLOCKED-ON EVIDENCE: Repaired wrapper with SIGINT-first apply termination, separate apply timeout and unconditional local backup; new offline tests; full suite and A1 rerun with exact counts; user-launched independent recheck APPROVE
+NEXT GATE: Bounded repair of W1/W2 (W3 optional in code) by infra-engineer with offline tests, then user-launched recheck. No live action.
+
+End of user-supplied wrapper review. This verdict authorizes offline repair only.
+
+
+## Subphase 12D W1/W2 wrapper repair — independent recheck
+
+User-supplied external review, retained verbatim.
+
+STATUS: COMPLETE (recheck); verdict APPROVE for W1/W2 wrapper repair/offline regressions ONLY — W1 CLOSED, W2 CLOSED; A1/A2 remain closed; W3 OPEN (execution gate); W4 Info; R1 Low (execution gate), R2/R3 Info
+OWNER: code-reviewer (independent, read-only)
+WORK ORDER: docs/agent-runs/phase-12/reviewer-prompt-12d-billing-wrapper-recheck-1.md; branch phase-12, HEAD 5ca8406bad5fe55f732458fa0cbd5d561ac83d8f; scripts/billing/**, evidence/12d-billing-wrapper-repair1/, evidence/12d-billing-wrapper-review-record/, five record suffixes
+FILES CREATED: None
+FILES MODIFIED: None
+COMMANDS RUN: cat/grep/sed/stat/find/wc of public scripts and evidence; stat of public /tmp repair-scratch metadata; python3 -I manifest, preservation (135 prior/209 source), script-hash before/after, prefix-chain (4 generations), verbatim, status, A1-result and email-pattern checks; git status, git diff --check. No script/test/Terraform/AWS/build execution; no durable, private, state, plan or credential access.
+TEST RESULTS: Not run (review). Recorded: 46/0/0 after the final wrapper/test edits; A1 regression 3 calls 0/0/0 with 7/7 assertions (plus a disclosed wrong-output run, also 7/7). No sbt or live claims.
+VALIDATION RESULTS: W1: separate 300 s apply timeout with 80 s window reserve, single SIGINT to the Terraform parent, 60 s grace, forced group kill last and recorded, incident with preservation, no retry; reads bounded. W2: unconditional verified backup after exit 0, then window block; readback blocked after expiry. Prior guards intact. Preservation, prefixes, verbatim review, human record, manifests 19/11/5, status 750=723+27, diff --check 0, reserved fixtures only.
+ASSUMPTIONS: Recorded logs and results reflect actual runs (mtimes order them after the final edits); real Terraform handles SIGINT with graceful provider stop and state persistence, as in the pinned release.
+RISKS: R1 wrapper-death gap; W3 publication coverage; live permission, CUSTOM/CostTypes/tag acceptance, delivery, remote ownership, F4, refresh and EMR unverified; same-disk backup; scripts uncommitted; post-expiry readback requires a separately reviewed path.
+MANUAL ACTION REQUIRED: At the execution gate: human source-control/clean-checkout decision, own-words G1, personally written gate with plan/proposal/final-wrapper SHAs, AWS CLI hash and version, identity and dated window; human login and STS; persistent terminal (R1); private delivery confirmation.
+BLOCKED-ON OWNER: None for preparing the execution-gate handoff; human architect for every execution decision
+BLOCKED-ON EVIDENCE: Human source control and clean checkout, G1, personally written gate, W3 coverage procedure, R1 procedure, fresh in-window P3
+NEXT GATE: Record verdict; prepare the concrete bundled human execution-gate handoff only. No live action.
+
+End of user-supplied recheck; no live execution authority.
+
+
+## Subphase 12D execution-gate handoff — independent review
+
+User-supplied external review, verbatim.
+
+STATUS: COMPLETE (review); verdict APPROVE for HANDOFF PREPARATION ONLY — H1 Low, H2 Low (both resolve in the human decision before any gate), R3 Info; W3 and R1 remain OPEN execution-gate conditions
+OWNER: code-reviewer (independent, read-only)
+WORK ORDER: docs/agent-runs/phase-12/reviewer-prompt-12d-billing-execution-gate-handoff.md; branch phase-12, HEAD 5ca8406bad5fe55f732458fa0cbd5d561ac83d8f; evidence/12d-billing-execution-gate-handoff/, five record suffixes, scripts/billing/** for contract comparison
+FILES CREATED: None
+FILES MODIFIED: None
+COMMANDS RUN: ls/find/wc/cat/head/tail/grep of public handoff evidence and scripts; python3 -I manifest, preservation (161 prior/5 scripts/209 source), binding, five-generation prefix-chain, verbatim, status and email-pattern checks; git status, git diff --check. No script/test/build/Terraform/AWS/CLI execution or durable/private access.
+TEST RESULTS: Not run (review). No new tests claimed; 46 passes and 7 A1 regression checks are historical.
+VALIDATION RESULTS: Verbatim recheck; prefixes preserved; human record 1334 B/abe3a50a; 161/5/209 unchanged; manifest 13 entries, 0 mismatches; status 765=750+15; diff --check 0; no addresses. Bindings exact; unknowns null; field guide equals the load_gate schema; no pre-filled approval content; R1 and W3 procedures conform and stay open.
+ASSUMPTIONS: The human will make the decisions personally; the canonical repository path remains the execution location; Terraform and AWS CLI behavior as previously reviewed.
+RISKS: Actor/mechanism ambiguity (H1); window and W3-tooling feasibility (H2); wrapper death (R1); actual CLI hash/version unknown; live permission, CUSTOM/CostTypes/tag acceptance, delivery, remote ownership, F4, refresh, EMR unverified; same-disk backup.
+MANUAL ACTION REQUIRED: Human reviews the bundled decisions: release commit and clean canonical checkout, own-words G1, authorization for a local-only CLI preflight, stage actor/mechanism (H1), window budget and W3 tooling (H2), acceptance of the R1 residual risk.
+BLOCKED-ON OWNER: Human architect for all decisions; infra-engineer only if an H2 helper is chosen
+BLOCKED-ON EVIDENCE: Human decisions, CLI preflight output (after authorization), personally written gate; for execution, fresh in-window MFA/STS/P3
+NEXT GATE: Record verdict; present the concise bundled human decisions; no dependent or live work until the human answers.
+
+End of handoff-preparation review; no execution approval.
+
+
+## Subphase 12D offline publication helper — review pending
+
+No new independent verdict yet. User-selected helper authorship/tests prepared for user-launched review only; no live authority.
+
+
+## Subphase 12D offline publication helper — independent review
+
+User-supplied external review, verbatim.
+
+Verdict: APPROVE, for the helper and its offline tests only. This approval does not authorize any production helper run, private scan, publication, apply, IAM change, spending or Phase 12D completion. W3 (actual final freeze, private scan and publication equality) stays open. I found no blocking defects: two Low and three Info findings, none of which need a repair before the next human-decision step.
+- Helper scope (scripts/billing/publication_evidence.py). It has only three modes: assemble, verify-before and verify-after. It has no scan, append, transfer, subprocess or AWS path, and the five destination records are fixed (lines 17–18).
+  - Path controls: relative paths only, no traversal, and private, credential, secret, state and plan names are refused (51–59). Symlinked ancestors and leaves, hardlinks, other owners, non-UTF-8 input and size limits are all rejected (62–107). Duplicate JSON keys and NaN-style constants are rejected (110–123).
+  - Output privacy: argument errors never echo the input (32–35), and every error is a fixed code (392–397).
+- Assemble (184–261).
+  - Inputs: the staging directory must contain exactly the listed files (220). All five base records are snapshotted and re-checked before the first write (222–228).
+  - Exclusive output: the packet and freeze are created exclusively with 0700/0600 modes and fsync (138–146, 229–243). An existing packet blocks a rerun, so a failed partial packet is retained and blocks reuse (140, 232–233).
+  - Inventory: it binds each record’s base, suffix and final base+suffix length and SHA (216–219).
+  - Freeze manifest: it sits outside the packet with exactly {root, files}, covers every packet file including the inventory, and has no self-hash (250–257).
+- Verify (280–365).
+  - Freeze and packet: checks the freeze hash, exact packet membership and every byte. Every packet file must be the inventory, a listed artifact or a suffix (317–345).
+  - Before mode: each destination must equal its base exactly and base+suffix must equal the anticipated final hash (343–344).
+  - After mode: whole-file length and hash, the prefix hash and exact suffix bytes are all checked (339–341).
+  - Receipt: strict 10-key schema, binding, manifest SHA, count, zero matches and the exact exclusion text (264–277). It returns scan_authenticity_verified=false.
+  - Second pass: freeze, receipt, packet and destinations are re-read to catch changes during verification (353–360).
+- Compatibility with the unchanged wrapper (budget_execution.py). The receipt keys and exclusion text match the wrapper’s output (754–756). The plan and caller match its binding (464–465). The freeze shape and per-file count match its post-freeze scan (719–752). The wrapper still allows only the packet and the named freeze to be dirty (482–496), so leftover staging files or an early receipt would be rejected; the accepted wrapper test at test_budget_execution.py:414 covers this. The wrapper_files check scans every file under scripts/billing (498–501), so all 8 files must be bound. I found no __pycache__ directory.
+- Tests. The file has 39 test methods. The retained logs show 33, then 38, then 39 passing with OK and exit 0. Fixtures are synthetic temporary directories only, and the only addresses anywhere are the synthetic example.invalid fixture.
+- Preservation.
+  - Script hashes: all 8 match all-script-bindings.json, and the original 5 are unchanged.
+  - Phase records: all 5 match their recorded prefix and full hashes. The record bases chain to the earlier review-record packet; the extra 2,070 bytes in repairs.md came from the human-decisions packet (G1, CLI preflight, H1).
+  - Prior files: the human record is still 1,334 bytes with SHA abe3a50a…. The 190 prior public files and the 209 source files match (hashes, bytes and mtimes), with 0 mismatches.
+  - Packet and checkout: the packet manifest lists 20 files with 0 mismatches and excludes only itself. git status shows 805 entries (780 + 25 new), HEAD is 5ca8406b…, and git diff --check exits 0.
+- Human choice. The question and the “yes” reply are kept verbatim. Recording it as the H2 tooling choice fits the question, and no window was selected. No approval is inferred.
+1. STATUS: APPROVE for the helper and offline tests only. No live, publication or scan authority.
+2. OWNER: code-reviewer (independent, read-only). The authored code belongs to infra-engineer, and the phase evidence to the coordinator.
+3. WORK ORDER: Phase 12D offline publication helper review. HEAD is 5ca8406b, branch phase-12.
+4. FILES CREATED: None.
+5. FILES MODIFIED: None.
+6. COMMANDS RUN:
+   - Read-only ls, cat, sed, grep and wc.
+   - git rev-parse HEAD, git status --porcelain=v1 --untracked-files=all (805), git diff --check (exit 0).
+   - python3 -I scripts that only hash and compare: 8 scripts, 5 prefix chains, 20 manifest entries, 209 source files, 190 prior files and the human record.
+   - Nothing else ran: no helper, tests, wrapper, build, AWS, CLI or private reads.
+7. TEST RESULTS: Not run by me. The retained logs show 33, 38 and 39 passing with 0 failures and exit 0, and the file has 39 tests. The earlier results (46 wrapper tests, 7 A1 checks) remain historical and were not rerun.
+8. VALIDATION RESULTS:
+   - All 8 script hashes match, and the original 5 are unchanged.
+   - All 5 record prefixes and full hashes match, and the human record is unchanged (1,334 bytes, abe3a50a…).
+   - The 209 source files and 190 prior files match; the manifest has 20 entries with 0 mismatches.
+   - The status count reconciles (805 = 780 + 25), and the only addresses found are synthetic.
+   - The receipt, freeze and binding formats are compatible with the wrapper.
+9. ASSUMPTIONS:
+   - The staging inputs will be sanitized public text; the helper does not classify sensitive content.
+   - Receipt authenticity and freshness are verified externally by deployment supervision.
+10. RISKS:
+    - P1, P3 and P5 must go into the execution work order.
+    - Comparisons are point-in-time with no lock, and publication across the five files is not atomic.
+    - W3, R1, persistent-Terminal supervision, H2 window feasibility and every live gate remain open.
+11. MANUAL ACTION REQUIRED: The human decides on source control and a clean checkout covering all 8 files, R1 residual-risk acceptance and the dated window, then writes the gate personally.
+12. BLOCKED-ON OWNER: None for this step. Execution waits on the human architect.
+13. BLOCKED-ON EVIDENCE:
+    - an 8-file release commit and a clean canonical checkout;
+    - the personal gate;
+    - R1 acceptance;
+    - a fresh P3;
+    - a genuine scan receipt;
+    - canonical verify-before and verify-after results.
+14. NEXT GATE: The coordinator records this verdict and presents the remaining human decisions. Nothing runs automatically.
+End of helper/offline-test review; no production or execution authority.

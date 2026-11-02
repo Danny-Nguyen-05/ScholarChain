@@ -1,0 +1,11 @@
+{
+  "timestamp_utc": "2026-11-01T19:56:54.064029+00:00",
+  "scope": "Git-visible docs/ and infra/ public text, including all current phase evidence; excluded credentials/secrets/environment/private-key directories and binary/other source paths. Does not read private input.",
+  "files_scanned": 2995,
+  "paths_excluded": 1539,
+  "matching_file_count": 0,
+  "matching_filenames": [],
+  "recipient_source": "new protected plan JSON notification subscribers, in-process only; no address values or private-value hashes returned",
+  "known_public_fixture": "synthetic@example.invalid in unchanged mock tests is a public fixture, not considered recipient absent proof by itself",
+  "private_input_contents_read_or_hashed": false
+}

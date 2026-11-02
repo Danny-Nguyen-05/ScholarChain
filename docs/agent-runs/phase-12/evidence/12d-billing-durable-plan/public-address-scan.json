@@ -1,0 +1,31 @@
+{
+  "scope": "Current public durable-plan evidence/reviewer prompt; binary images excluded; no private input used",
+  "nonfixture_matches": 0,
+  "reserved_fixtures": [
+    {
+      "path": "infra/patch-runner.py",
+      "reserved_example_matches": 1
+    },
+    {
+      "path": "infra/run.py",
+      "reserved_example_matches": 1
+    },
+    {
+      "path": "infra/recipient-privacy-scan.json",
+      "reserved_example_matches": 1
+    },
+    {
+      "path": "infra-preparation/run.py",
+      "reserved_example_matches": 1
+    },
+    {
+      "path": "infra-preparation/config-copies/tests/budget.tftest.hcl",
+      "reserved_example_matches": 2
+    },
+    {
+      "path": "infra/config-copies/tests/budget.tftest.hcl",
+      "reserved_example_matches": 2
+    }
+  ],
+  "exact_recipient_scan_reference": "infra/recipient-privacy-scan.json (2995 public docs/infra text files,0matches;1539excluded)"
+}

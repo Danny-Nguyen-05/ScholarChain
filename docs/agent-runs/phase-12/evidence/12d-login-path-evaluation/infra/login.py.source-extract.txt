@@ -1,0 +1,61 @@
+
+# Source lines 34-61
+34: DEFAULT_REGION_FOR_PROMPT = 'us-east-1'
+35: 
+36: 
+37: class LoginCommand(BasicCommand):
+38:     NAME = 'login'
+39:     DESCRIPTION = (
+40:         'Login for local development using AWS Management Console '
+41:         'credentials. Each time the ``login`` command is called, the '
+42:         'CLI will acquire temporary credentials and a refresh token '
+43:         'that correspond to your selected console session. '
+44:         'The CLI will refresh the temporary credentials automatically '
+45:         'as long as the refresh token is valid.\n\n'
+46:         'You can override the directory where the CLI will store the '
+47:         'temporary credentials with the ``AWS_LOGIN_CACHE_DIRECTORY`` '
+48:         'environment variable.'
+49:     )
+50:     EXAMPLES = BasicCommand.FROM_FILE()
+51:     ARG_TABLE = [
+52:         {
+53:             'name': 'remote',
+54:             'action': 'store_true',
+55:             'default': False,
+56:             'help_text': (
+57:                 'Disables the local callback server and redirect-based auth '
+58:                 'flow. Instead displays the URL and prompts you to paste the '
+59:                 'authorization code that is displayed after logging in. This is '
+60:                 'intended when running the CLI on remote hosts via SSH '
+61:                 'where a local browser is not available.'
+
+# Source lines 175-203
+175:     def ensure_profile_does_not_have_existing_credentials(self, profile_name):
+176:         """
+177:         Raises an error if the specified profile is already
+178:         configured with a different style of credentials.
+179:         """
+180:         config = self._session.full_config['profiles'].get(profile_name, {})
+181:         existing_credentials_style = None
+182: 
+183:         if 'web_identity_token_file' in config:
+184:             existing_credentials_style = 'Web Identity'
+185:         elif 'sso_role_name' in config or 'sso_account_id' in config:
+186:             existing_credentials_style = 'SSO'
+187:         elif 'aws_access_key_id' in config:
+188:             existing_credentials_style = 'Access Key'
+189:         elif 'role_arn' in config:
+190:             existing_credentials_style = 'Assume Role'
+191:         elif 'credential_process' in config:
+192:             existing_credentials_style = 'Credential Process'
+193: 
+194:         if existing_credentials_style:
+195:             raise ConfigurationError(
+196:                 f'Profile \'{profile_name}\' is already configured '
+197:                 f'with {existing_credentials_style} credentials.\n\n'
+198:                 f'You may run \'aws login --profile new-profile-name\' to '
+199:                 f'create a new profile with the specified name. Otherwise you '
+200:                 f'must first manually remove the existing credentials '
+201:                 f'from \'{profile_name}\'.\n'
+202:             )
+203: 

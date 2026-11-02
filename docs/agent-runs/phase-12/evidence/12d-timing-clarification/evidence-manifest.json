@@ -1,0 +1,21 @@
+{
+  "self_excluded": "evidence-manifest.json",
+  "count": 3,
+  "files": [
+    {
+      "path": "coordinator-report.md",
+      "sha256": "c4b7b689d00649af0f2692556ed099a2cc22b1325d71cea7dc1830cebafc29b0",
+      "bytes": 2436
+    },
+    {
+      "path": "local-checks.json",
+      "sha256": "04752bbf18e92807732c4affeab3fadf973fb02b0099bc19b2d87a8f2568fe39",
+      "bytes": 608
+    },
+    {
+      "path": "user-statement.json",
+      "sha256": "3e31b5e76c5d17f0e098503d9419e37a9aadc529824726d7665e6b9c4735d6c7",
+      "bytes": 1755
+    }
+  ]
+}

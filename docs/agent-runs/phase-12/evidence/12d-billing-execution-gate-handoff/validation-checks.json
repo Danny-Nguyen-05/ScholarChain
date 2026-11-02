@@ -1,0 +1,19 @@
+{
+  "scope": "Public handoff/evidence only",
+  "checks": [
+    "161 prior files SHA/bytes unchanged",
+    "5script files SHA/bytes unchanged",
+    "209frozen sources SHA/bytes/mtime unchanged",
+    "5record prefix SHA preserved",
+    "1334byte human record unchanged",
+    "recheck verbatim contained",
+    "plan/proposal/script public pins match",
+    "14report fieldnames/order exact",
+    "git diff --check exit0",
+    "generic scan after final content assembly; count/hash-only receipts excluded",
+    "manifest exact inventory/hash/bytes reconciliation",
+    "gitstatus baseline plus exact newfiles; existing entries retained"
+  ],
+  "private_or_live_checks": false,
+  "current_tests": false
+}

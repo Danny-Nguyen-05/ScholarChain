@@ -1,0 +1,69 @@
+{
+  "files": [
+    {
+      "path": "build-owner-report.txt",
+      "bytes": 4423,
+      "sha256": "18a7313f5525c296bd07f7a02f792bd30ab5ba5a7c132be716d08c959a24b6d7"
+    },
+    {
+      "path": "build-result.json",
+      "bytes": 5938,
+      "sha256": "5a1dbe20f8b93f2304cb5534afda3b2bd389da3451bf371394c7247245053dee"
+    },
+    {
+      "path": "commands.json",
+      "bytes": 1536,
+      "sha256": "dc34db26b5306e8cc72236828f587526bb6d32bdf76c0dfd6899495ac4aa33ef"
+    },
+    {
+      "path": "freeze-after.json",
+      "bytes": 178,
+      "sha256": "ed1ddba6fb1b95556c60ef72f9442761c4d67a5d362edcffc333b1f8601b2c0c"
+    },
+    {
+      "path": "freeze-before.json",
+      "bytes": 178,
+      "sha256": "b795f2d907f9daa23be7a50c9bab523e13dbee92bbcc4ccd912c3ebb1ee2b032"
+    },
+    {
+      "path": "java-version.log.txt",
+      "bytes": 171,
+      "sha256": "2fe83b0053132e4e834defa82250462f4c62733d29bf76b19ee1bb3c14b06b39"
+    },
+    {
+      "path": "run.py",
+      "bytes": 6032,
+      "sha256": "ba908de0e3721cf536ee8bd7707d2a84df1d1e1bc9c3282a1e8ea0ca9d8a06f9"
+    },
+    {
+      "path": "sbt-check.log.gz",
+      "bytes": 92998,
+      "sha256": "6a8eb7dbab33f33999f432647f477e600e167a08861593397c74c54072b651c7"
+    },
+    {
+      "path": "sbt-check.log.txt",
+      "bytes": 1720676,
+      "sha256": "9b244a2c34db8dea4d619849725a7be9bd9b29b162a11669f274a5b08f0f3575"
+    },
+    {
+      "path": "source-after.json",
+      "bytes": 372501,
+      "sha256": "64957b5fefb2aebdfe206623448c16a8152f50f4da7d5f6fb5f5efdbd450f568"
+    },
+    {
+      "path": "source-before.json",
+      "bytes": 372501,
+      "sha256": "2074454e039cf74e26a7d82e89b41de75aa03d77aefd755a20e3b05ba127a8f6"
+    },
+    {
+      "path": "xml-groups.json",
+      "bytes": 1047,
+      "sha256": "d317dba5823dafb44decf591eb66b78e35e4e00836257e03939d69c093502406"
+    },
+    {
+      "path": "xml-reports.json",
+      "bytes": 71939,
+      "sha256": "39a1652f39b3d67b6dc797365d0b3e84130a4770b7be589bace47dfceaf99c39"
+    }
+  ]
+}

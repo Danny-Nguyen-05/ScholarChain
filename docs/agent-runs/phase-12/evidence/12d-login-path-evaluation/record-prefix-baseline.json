@@ -1,0 +1,27 @@
+[
+  {
+    "path": "docs/agent-runs/phase-12/prompt.md",
+    "bytes": 55111,
+    "sha256": "cfb5662ebfd29e68c3d51eb8ccc2a0b422a8139d03d3079015b6c8fd33dbbdab"
+  },
+  {
+    "path": "docs/agent-runs/phase-12/repairs.md",
+    "bytes": 32814,
+    "sha256": "620c23d7bab2ad0a9084ff83db84342aa7599d4b1a3c45d86d554b823cd69dd4"
+  },
+  {
+    "path": "docs/agent-runs/phase-12/owner-report.md",
+    "bytes": 53131,
+    "sha256": "69830f562be9fa5e63ddd55da18fd76ae728167cb6e09823cdcd8a77a48ab4ba"
+  },
+  {
+    "path": "docs/agent-runs/phase-12/test-report.md",
+    "bytes": 46372,
+    "sha256": "2237f73a286ae312c4bc46f839c8e6401eeba80eaf7b9b5457f5784004b413e1"
+  },
+  {
+    "path": "docs/agent-runs/phase-12/review.md",
+    "bytes": 145008,
+    "sha256": "0aa1b235f0259242f5b98a0298e7d06869c52cb8a27604c0ca93d29459f75aca"
+  }
+]

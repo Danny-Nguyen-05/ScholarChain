@@ -1,0 +1,11 @@
+{
+  "receipt": "cli-local-preflight.json",
+  "sha256": "576639d9fe054e0c4e8a5749b7737f4b2a99f09664a0c139c0171c64e6400a91",
+  "bytes": 1437,
+  "repairs_before_bytes": 57167,
+  "repairs_before_sha256": "ed225ae2bc20f6fe45fd79cf78fdca4723e289952946f67382b2062caa31648d",
+  "repairs_prefix_preserved": true,
+  "repairs_after_sha256": "6798f211d6c44fe511f13eba706825837248cfc61c7af6fcb3f06f11db64da49",
+  "human_record_unchanged": true,
+  "diff_check_exit": 0
+}

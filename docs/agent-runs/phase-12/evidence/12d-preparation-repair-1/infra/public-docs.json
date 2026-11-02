@@ -1,0 +1,14 @@
+{
+  "checked_at": "2026-10-31T02:37:56.756725+00:00",
+  "sources": [
+    {
+      "url": "https://docs.aws.amazon.com/aws-cost-management/latest/APIReference/API_budgets_Budget.html",
+      "observed": "CostTypes marked deprecated; no live behavior verified."
+    },
+    {
+      "url": "https://raw.githubusercontent.com/hashicorp/terraform-provider-aws/v6.44.0/website/docs/r/budgets_budget.html.markdown",
+      "observed": "Pinned resource documentation supports tags and legacy cost_types configuration; not proof of live acceptance."
+    }
+  ],
+  "method": "public documentation read only; no AWS account API"
+}

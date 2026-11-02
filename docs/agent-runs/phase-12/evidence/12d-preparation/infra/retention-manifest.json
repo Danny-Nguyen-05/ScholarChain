@@ -1,0 +1,195 @@
+{
+  "created_utc": "2026-10-30T21:51:36.592785+00:00",
+  "files": [
+    {
+      "path": "budget-fmt-check.log.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "budget-fmt.log.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "budget-init.log.txt",
+      "sha256": "f4d1ec406f0625699db92137da4eeaa17a9a9a2671c2b282501554c5e540ff01",
+      "bytes": 634
+    },
+    {
+      "path": "budget-test.log.txt",
+      "sha256": "c5d7e0755a2c93821d0e4847e7e5cc7f5da5a52e9f5e87f85a665eb00da8b834",
+      "bytes": 844
+    },
+    {
+      "path": "budget-validate.log.txt",
+      "sha256": "f7997225125835fdd14060ac776d273f394b874f9a481b9e2122c83dc8adc5c1",
+      "bytes": 38
+    },
+    {
+      "path": "commands.json",
+      "sha256": "9373a17de40865e9ec2a5c3c46d5d138362e8b960edff7fab5175e9c7c504ac5",
+      "bytes": 4957
+    },
+    {
+      "path": "final-budget-fmt-check.log.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "final-budget-init.log.txt",
+      "sha256": "fa47f2a25afc25577c295cc0a696558f0a9e3ddbc7c4816dbf956c63ccf4d2a6",
+      "bytes": 595
+    },
+    {
+      "path": "final-budget-test.log.txt",
+      "sha256": "26bb87e8fcedcd596cc037560fad3e6ec37031fec4614bd6ac879fe2514cc2a5",
+      "bytes": 375
+    },
+    {
+      "path": "final-budget-validate.log.txt",
+      "sha256": "f7997225125835fdd14060ac776d273f394b874f9a481b9e2122c83dc8adc5c1",
+      "bytes": 38
+    },
+    {
+      "path": "final-commands.json",
+      "sha256": "8bfc3eafa53443bb099de819e25c3a16e98a6097222f31b6ee6c198d274631f9",
+      "bytes": 7008
+    },
+    {
+      "path": "final-course-fmt-check.log.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "final-course-init.log.txt",
+      "sha256": "6fd242691fd6bbc7efe25549609a26c11107f98c3ae3cb12128985c21a261753",
+      "bytes": 677
+    },
+    {
+      "path": "final-course-test.log.txt",
+      "sha256": "b5a4b9c9f15c4a6bebd3aaf0b60f81fbb9664f09e96ed9c8c713bc67c90264d5",
+      "bytes": 2466
+    },
+    {
+      "path": "final-course-validate.log.txt",
+      "sha256": "f7997225125835fdd14060ac776d273f394b874f9a481b9e2122c83dc8adc5c1",
+      "bytes": 38
+    },
+    {
+      "path": "final-spike-fmt-check.log.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "final-spike-init.log.txt",
+      "sha256": "fa47f2a25afc25577c295cc0a696558f0a9e3ddbc7c4816dbf956c63ccf4d2a6",
+      "bytes": 595
+    },
+    {
+      "path": "final-spike-test.log.txt",
+      "sha256": "18480c6550a16bf4a744305a7fd8394b3ce45408edb8bca2dbc9886482405037",
+      "bytes": 410
+    },
+    {
+      "path": "final-spike-validate.log.txt",
+      "sha256": "f7997225125835fdd14060ac776d273f394b874f9a481b9e2122c83dc8adc5c1",
+      "bytes": 38
+    },
+    {
+      "path": "green-budget-fmt-check.log.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "green-budget-fmt.log.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "green-budget-test.log.txt",
+      "sha256": "26bb87e8fcedcd596cc037560fad3e6ec37031fec4614bd6ac879fe2514cc2a5",
+      "bytes": 375
+    },
+    {
+      "path": "green-budget-validate.log.txt",
+      "sha256": "f7997225125835fdd14060ac776d273f394b874f9a481b9e2122c83dc8adc5c1",
+      "bytes": 38
+    },
+    {
+      "path": "green-commands.json",
+      "sha256": "7436421bbc69330c544e1105fa208e882b11970e2f99379213991d7b9f0df91a",
+      "bytes": 3905
+    },
+    {
+      "path": "green-spike-fmt-check.log.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "green-spike-fmt.log.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "green-spike-test.log.txt",
+      "sha256": "18480c6550a16bf4a744305a7fd8394b3ce45408edb8bca2dbc9886482405037",
+      "bytes": 410
+    },
+    {
+      "path": "green-spike-validate.log.txt",
+      "sha256": "f7997225125835fdd14060ac776d273f394b874f9a481b9e2122c83dc8adc5c1",
+      "bytes": 38
+    },
+    {
+      "path": "red-credit-init.log.txt",
+      "sha256": "f4d1ec406f0625699db92137da4eeaa17a9a9a2671c2b282501554c5e540ff01",
+      "bytes": 634
+    },
+    {
+      "path": "red-credit-test.log.txt",
+      "sha256": "95edeb34f495f010f60e39d68d41c098169afaf486e0b898d2988ae5be765fdf",
+      "bytes": 990
+    },
+    {
+      "path": "red-proof.json",
+      "sha256": "c096d0410ac85d7a1e4279d811ab54dd912e79d335de785484b921eba453b580",
+      "bytes": 3437
+    },
+    {
+      "path": "source-files.json",
+      "sha256": "7fc61b81fb5305c578a6cc6e1a64a4ebe9828adc22bdf75b0df41702f79ee0d7",
+      "bytes": 2235
+    },
+    {
+      "path": "spike-fmt-check.log.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "spike-fmt.log.txt",
+      "sha256": "73ea12e7d11258b5b1a8c223954d523956951d4ab39472ac3a7c3d7d9df6c183",
+      "bytes": 8
+    },
+    {
+      "path": "spike-init.log.txt",
+      "sha256": "f4d1ec406f0625699db92137da4eeaa17a9a9a2671c2b282501554c5e540ff01",
+      "bytes": 634
+    },
+    {
+      "path": "spike-test.log.txt",
+      "sha256": "18480c6550a16bf4a744305a7fd8394b3ce45408edb8bca2dbc9886482405037",
+      "bytes": 410
+    },
+    {
+      "path": "spike-validate.log.txt",
+      "sha256": "f7997225125835fdd14060ac776d273f394b874f9a481b9e2122c83dc8adc5c1",
+      "bytes": 38
+    },
+    {
+      "path": "test-counts.json",
+      "sha256": "17d5fa810d8aaca884ce066fdd931923dc8d7f8ef5cf4ae897548250279df041",
+      "bytes": 263
+    }
+  ]
+}

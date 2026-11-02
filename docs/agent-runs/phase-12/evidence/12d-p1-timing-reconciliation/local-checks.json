@@ -1,0 +1,63 @@
+{
+  "recorded_utc": "2026-11-01T17:24:45.782349+00:00",
+  "source_reference_files_unchanged": 209,
+  "original_decision_files_unchanged": 3,
+  "F3_manifest_sha256": "a1e2353016ff151f448eea82b83a42209a0c0162049e990f0a777f3584d7de8e",
+  "phase_record_prefixes": [
+    {
+      "path": "docs/agent-runs/phase-12/prompt.md",
+      "before_sha256": "265be4b8cf845c2adb654e85d2d7bb7dec0dce2e87196ad981e422c9144d8cfd",
+      "before_bytes": 73338,
+      "prefix_preserved": true,
+      "after_sha256": "86597c524c31f90f6295dc18dfc600a71476928e398f9eca2cc8abdb4256af78",
+      "after_bytes": 75042
+    },
+    {
+      "path": "docs/agent-runs/phase-12/review.md",
+      "before_sha256": "6b39f772df2fdefa36f262396199284fb3c27562da1000052877cc1211aa3766",
+      "before_bytes": 175385,
+      "prefix_preserved": true,
+      "after_sha256": "ca8c1aebf031c5f3e8eaba0dcfed269a01143bb5dbb0d922128dbf08cdf4eafc",
+      "after_bytes": 189933
+    },
+    {
+      "path": "docs/agent-runs/phase-12/repairs.md",
+      "before_sha256": "f7a25c474201e0a82d26637419f5896fb3961c5037cb45016131fe1bd00676d1",
+      "before_bytes": 46199,
+      "prefix_preserved": true,
+      "after_sha256": "ad50929c2f37c47647bdf51ab3e59933f611f2b804475a4807464dea44524b72",
+      "after_bytes": 48336
+    },
+    {
+      "path": "docs/agent-runs/phase-12/owner-report.md",
+      "before_sha256": "ab846da4f5b3871f6647eb512a26e3077c2effa449f84c183a57413b8fbe8b4a",
+      "before_bytes": 82815,
+      "prefix_preserved": true,
+      "after_sha256": "01d2e11f9f9bf9c5a98e38a3a99815d7d8a693212a9016706c9344620b0aa6fb",
+      "after_bytes": 87048
+    },
+    {
+      "path": "docs/agent-runs/phase-12/test-report.md",
+      "before_sha256": "528175673ebe7623bf14ef9d673c0b52fcffb3ef053a41395c33afd0d04abc07",
+      "before_bytes": 76102,
+      "prefix_preserved": true,
+      "after_sha256": "e11c29d0843ab457137cae2387046c588ee9824aafbb618e1e7d2cd9839c3711",
+      "after_bytes": 80335
+    }
+  ],
+  "review_attachment_verbatim": true,
+  "human_record_append_chain_verified": true,
+  "human_record_current_sha256": "abe3a50ad7167fa01227c73e15e92a422a50609f6313bdcc56404cb61765d71a",
+  "human_record_bytes": 1334,
+  "diff_check_argv": [
+    "git",
+    "diff",
+    "--check"
+  ],
+  "diff_check_exit": 0,
+  "diff_check_output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "test_or_build_calls": 0,
+  "cloud_or_private_artifact_calls": 0,
+  "reviewer_launched": false,
+  "agents_or_jobs_started_this_round": 0
+}

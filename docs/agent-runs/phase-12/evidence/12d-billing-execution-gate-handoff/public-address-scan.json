@@ -1,0 +1,9 @@
+{
+  "scope": "Final new packet/reviewerprompt/five appended suffixes",
+  "units": 18,
+  "type": "Generic pattern only, not actual-recipient scan",
+  "reserved_fixture_matches": 0,
+  "other_matches": 0,
+  "private_processing": false,
+  "excluded": "This count-only receipt and hash-only root manifest; no arbitrary prose exclusions"
+}

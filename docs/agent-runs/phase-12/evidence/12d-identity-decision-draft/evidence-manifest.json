@@ -1,0 +1,23 @@
+{
+  "recorded_utc": "2026-11-01T17:19:51.205190+00:00",
+  "kind": "New retrospective manifest added for reviewer F3; original three files unchanged",
+  "self_excluded": "evidence-manifest.json",
+  "count": 3,
+  "files": [
+    {
+      "path": "bootstrap-exception-proposal.md",
+      "sha256": "813c24fec06f32e84dc231de4e967340b47c2919fc458c0b1ddafb8e50dc200b",
+      "bytes": 6407
+    },
+    {
+      "path": "human-record-verification.json",
+      "sha256": "0e0a88cf08fe39cdb6a4f157f7cb7de32c423a7321a21446fe8e2a51217bcf70",
+      "bytes": 1499
+    },
+    {
+      "path": "selection-transcript.md",
+      "sha256": "2e4f301b410468fdc8ab7e3403a9f4fdb003f01877ad71290fb3941547a19923",
+      "bytes": 1052
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "type": "Generic pattern only",
+  "scope": "Newpacket/fiveappendedsuffixes; count/hash-onlyreceipts excluded",
+  "units": 12,
+  "reserved_fixture_matches": 0,
+  "other_matches": 0,
+  "actual_recipient_access": false
+}

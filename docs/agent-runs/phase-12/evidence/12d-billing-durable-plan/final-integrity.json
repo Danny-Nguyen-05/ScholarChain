@@ -1,0 +1,13 @@
+{
+  "checked_utc": "2026-11-01T20:04:38.307956+00:00",
+  "source_files_unchanged": 209,
+  "prior_packet_files_unchanged": 137,
+  "human_record_sha256": "abe3a50ad7167fa01227c73e15e92a422a50609f6313bdcc56404cb61765d71a",
+  "phase_records_append_only": 5,
+  "infra_artifacts": 32,
+  "infra_manifest_sha256": "3982c5cae40d26705f329b724ed544209b24bcddf0302e0546786b355e93d4b3",
+  "plan_sha256": "ab9f141e83058209263cf561eef1d102496ec7f534b88ce421620d8e0045f855",
+  "no_jobs_running": true,
+  "reviewer_not_launched": true,
+  "applied": false
+}

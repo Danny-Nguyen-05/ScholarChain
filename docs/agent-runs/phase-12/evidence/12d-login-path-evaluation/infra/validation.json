@@ -1,0 +1,16 @@
+{
+  "timestamp": "2026-10-31T17:37:40.379675+00:00",
+  "local_commands": 4,
+  "all_help_version_exit_zero": true,
+  "freeze_files": 209,
+  "freeze_sha256": "ec96c67541385151f69ebea29b2c574e13dbdd4c37f43f197bd6551e166005b7",
+  "freeze_mismatches": [],
+  "source_edits": [],
+  "account_calls": 0,
+  "public_fetch_errors": [
+    {
+      "name": "sdk-login-cache",
+      "error": "HTTP Error 404: Not Found"
+    }
+  ]
+}

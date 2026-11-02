@@ -1,0 +1,23 @@
+# Live 12D launch dependencies
+
+> Updated during preparation repair round 1. Original bytes are preserved in `../12d-preparation-repair-1/original-notes/`. Earlier gates describe the pre-repair state; use the repair packet for current source and gate results.
+
+The live spike has not run. The readiness contract declares no AWS resources. The main course environment remains unchanged and unapplied.
+
+1. **Monitoring.** Review the separate billing-bootstrap plan with private recipient input and a project period covering early spending through evidence retention and final reconciliation. Obtain a human-written apply approval for that exact plan and a scoped non-root execution identity. Verify the account-wide USD 200 before-credit monitor and actual-spend 50/80/100 alerts, including delivery. Read back the cost basis to confirm credits and refunds are excluded; CostTypes is deprecated, so mock results alone are insufficient. Keep the main foundation budget disabled to avoid duplicate ownership.
+2. **Cost Explorer and remaining allowance.** The user screenshot shows first-visit data preparation. Usable spending data remains unavailable. Complete human console initialization, keep optional paid data features off, and allow for delayed/unreported charges. The selected spike cap is USD 5 within the existing USD 15 all-EMR reserve, leaving USD 10 if fully spent. Later EMR runs require another allocation decision; the 12C upper-window margin was USD 5.09.
+3. **Deployment access.** Keep scholarchain-planner read-only. The human selects a separate non-root temporary deployment identity; review exact deploy, pass-role and teardown permissions. No IAM grants or credential inspection occur in this repair.
+4. **Portable G1 inputs and shared paths.** The test harness constructs DataFrames and forces local[2]; it is not a portable Phase6Main input bundle. The full CLI uses NIO for local metadata while Spark writes tables through Hadoop filesystems. Bare EMR paths may resolve differently, and file:/// alone can leave executor-local data. Provide a provenance-bound completed G1 bundle and a demonstrated identical shared-filesystem mapping, or obtain a separately scoped application adaptation decision. See Phase6Main.scala:94–170 and Phase6Export.scala:172–206.
+5. **Class origins and comparison.** Prove exact Spark, scala-library, scala-reflect and scala3-library versions and loaded origins on the driver and an actual remote executor, with host/process evidence. Demonstrate distributed DataFrame/Parquet read/write. Compare G1 rows/counts/hashes with a local baseline using the same assembled JAR and logical bindings. The current hash removes only top-level run_id and retains nested context.runId; class-directory and JAR fingerprints differ. Do not silently normalize away provenance.
+6. **Elapsed-time deadline.** Idle termination is not a two-hour total-runtime limit. A future independently supervised, Terraform-authored deadline mechanism must cover provisioning, bootstrap, submission failure, busy jobs, disconnects, retries and teardown reserve. A local command timeout does not stop remote billing. No deadline controller is implemented or proven here.
+7. **Exact isolated resource plan.** Author and review the spike's own network, encrypted storage/TLS, IAM, artifacts and cleanup resources in separate protected state. Proposed capacity is one primary and one core m5.xlarge in Ohio, no Spot/tasks. Check availability and quota headroom, verify archive/JAR/fixture hashes, and validate JDK/YARN/classpath integration. Do not apply the main course root.
+8. **Human live approval and teardown.** Only after a genuine plan, cost review and independent review may the human approve the exact cap, region, release, types/counts, plan checksum, artifacts, identity, window, two-hour total runtime and teardown. Preserve evidence before approved destruction, capture before/after inventories, and report retained dependencies or failed cleanup honestly. The account-wide budget remains outside spike cleanup. No additional attempt or Serverless fallback is automatic.
+
+Primary references:
+- https://docs.aws.amazon.com/cost-management/latest/userguide/ce-enable.html
+- https://docs.aws.amazon.com/emr/latest/APIReference/API_AutoTerminationPolicy.html
+- https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-plan-termination.html
+- https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-plan-software.html
+- https://spark.apache.org/docs/3.5.4/running-on-yarn.html
+
+These are prerequisites and risks, not observed live failures. B1/B2/B3/R1 and carried 12C items, including N19/N20, remain unchanged.

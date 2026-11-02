@@ -1,0 +1,585 @@
+#!/usr/bin/env python3
+"""Credential-free features; every child process here is a local stub."""
+import copy
+from datetime import datetime, timedelta, timezone
+import importlib.util
+import io
+import json
+import os
+from pathlib import Path
+import stat
+import sys
+import tempfile
+import unittest
+from unittest import mock
+
+sys.dont_write_bytecode = True
+ROOT = Path(__file__).resolve().parents[1]
+spec = importlib.util.spec_from_file_location('budget_execution', ROOT / 'budget_execution.py')
+b = importlib.util.module_from_spec(spec)
+sys.modules[spec.name] = b
+spec.loader.exec_module(b)
+FIXTURE_ADDRESS = 'synthetic@example.invalid'
+NOW = datetime(2026, 11, 1, 21, 0, tzinfo=timezone.utc)
+
+STUB = r'''#!/usr/bin/env python3
+import json, os, pathlib, sys
+root=pathlib.Path.cwd().parent
+scenario=json.loads((root/'scenario.json').read_text())
+with open(root/'calls.jsonl','a') as journal:
+ journal.write(json.dumps({'argv':sys.argv,'env':dict(os.environ),'cwd':str(pathlib.Path.cwd())})+'\n')
+if pathlib.Path(sys.argv[0]).name.startswith('terraform'):
+ state=pathlib.Path(next(x.split('=',1)[1] for x in sys.argv if x.startswith('-state=')))
+ if scenario.get('terraform_fail'):
+  state.write_bytes(b'opaque partial state')
+  state.chmod(0o600)
+  for path in [state.with_name(state.name+'.backup'),root/'config/errored.tfstate',root/'.billing.execution.tfstate.lock.info']:
+   path.write_bytes(b'opaque recovery fixture');path.chmod(0o600)
+  sys.exit(1)
+ state.write_bytes(b'opaque completed fixture state');state.chmod(0o600)
+ print('no private output should be published')
+ sys.exit(0)
+if '--generate-cli-skeleton' in sys.argv:
+ print(json.dumps({} if scenario.get('unsupported') else {'ShowFilterExpression':True}))
+ sys.exit(0)
+operation=sys.argv[2]
+if operation=='describe-budget' and not (root/'billing.execution.tfstate').exists():
+ outcome=scenario.get('p3','absent')
+ if outcome=='exists':print(json.dumps({'Budget':{}}));sys.exit(0)
+ if outcome=='blank':sys.exit(254)
+ if outcome=='malformed':print('{malformed');sys.exit(0)
+ if outcome=='network':print('Could not connect to the endpoint URL',file=sys.stderr);sys.exit(255)
+ error={'absent':'NotFoundException','denied':'AccessDeniedException','expired':'ExpiredTokenException','throttled':'ThrottlingException'}.get(outcome,'NotFoundException')
+ message='Specified budget does not exist.'
+ if outcome=='mixed':message+=' AccessDenied credentials.'
+ op='DescribeBudgets' if outcome=='wrong-operation' else 'DescribeBudget'
+ print('An error occurred ('+error+') when calling the '+op+' operation: '+message,file=sys.stderr)
+ sys.exit(254)
+responses=scenario['responses']
+if operation=='describe-subscribers-for-notification':
+ threshold=json.loads(sys.argv[sys.argv.index('--notification')+1])['Threshold']
+ print(json.dumps(responses['subscribers'][str(threshold)]));sys.exit(0)
+print(json.dumps(responses[operation]))
+'''
+
+
+def fixture_responses():
+    return {'describe-budget': {'Budget': {'BudgetName': b.BUDGET, 'BudgetType':'COST',
+             'TimeUnit':'CUSTOM','BudgetLimit':{'Amount':'200','Unit':'USD'},
+             'TimePeriod':{'Start':'2026-10-01T00:00:00Z','End':'2027-01-01T00:00:00Z'},
+             'CostTypes':dict(b.COST_TYPES),'CostFilters':{},'FilterExpression':{},
+             'HealthStatus':{'Status':'HEALTHY'}}},
+            'list-tags-for-resource':{'ResourceTags':[{'Key':k,'Value':v} for k,v in b.TAGS.items()]},
+            'describe-notifications-for-budget':{'Notifications':[b.expected_notification(x) for x in (50,80,100)]},
+            'subscribers':{str(x):{'Subscribers':[{'SubscriptionType':'EMAIL','Address':FIXTURE_ADDRESS}]} for x in (50,80,100)}}
+
+
+class Features(unittest.TestCase):
+    def setUp(self):
+        self.temp=tempfile.TemporaryDirectory(prefix='billing wrapper test ')
+        self.root=Path(self.temp.name).resolve();self.root.chmod(0o700)
+        self.primary=self.root/'primary with space';self.backups=self.root/'backups';self.repo=self.root/'repo'
+        for d in (self.primary,self.backups,self.repo):d.mkdir(mode=0o700)
+        for rel in ('config','config/tests','toolchain','tf-data','offline-tf-data',
+                    'toolchain/provider-mirror','toolchain/provider-mirror/registry.terraform.io',
+                    'toolchain/provider-mirror/registry.terraform.io/hashicorp',
+                    'toolchain/provider-mirror/registry.terraform.io/hashicorp/aws',
+                    'toolchain/provider-mirror/registry.terraform.io/hashicorp/aws/6.44.0',
+                    'toolchain/provider-mirror/registry.terraform.io/hashicorp/aws/6.44.0/darwin_arm64'):
+            (self.primary/rel).mkdir(mode=0o700)
+        self.write(self.primary/'toolchain/terraform-1.13.5',STUB,0o700)
+        self.aws=self.primary/'toolchain/aws-stub';self.write(self.aws,STUB,0o700)
+        self.write(self.primary/'toolchain/terraform.tfrc','public fixture')
+        self.write(self.primary/'approved-public-inputs.tfvars.json','{}')
+        self.write(self.primary/'billing.execution.tfplan','public fake plan')
+        provider=self.primary/'toolchain/provider-mirror/registry.terraform.io/hashicorp/aws/6.44.0/darwin_arm64/terraform-provider-aws_v6.44.0_x5'
+        self.write(provider,'provider fixture',0o700)
+        self.write(self.primary/'config/main.tf','public config fixture')
+        self.pins={'plan_sha256':b.hash_file(self.primary/'billing.execution.tfplan'),
+                   'plan_bytes':(self.primary/'billing.execution.tfplan').stat().st_size,
+                   'terraform_sha256':b.hash_file(self.primary/'toolchain/terraform-1.13.5'),
+                   'provider_sha256':b.hash_file(provider),
+                   'cli_config_sha256':b.hash_file(self.primary/'toolchain/terraform.tfrc'),
+                   'public_input_sha256':b.hash_file(self.primary/'approved-public-inputs.tfvars.json'),
+                   'proposal_sha256':'1'*64,'human_record_sha256':'2'*64,
+                   'config':[{'copy_relative':'config/main.tf','sha256':b.hash_file(self.primary/'config/main.tf'),'bytes':21}],
+                   'source_freeze':[]}
+        self.pins['config'][0]['bytes']=(self.primary/'config/main.tf').stat().st_size
+        self.policy=b.Policy(self.primary,self.backups,self.repo,os.getuid(),self.aws,self.pins)
+        self.scenario={'responses':fixture_responses()};self.scenario_file=self.primary/'scenario.json';self.save_scenario()
+        self.gate={'operation':'initial','plan_sha256':self.pins['plan_sha256'],
+            'proposal_sha256':self.pins['proposal_sha256'],'wrapper_files':{'scripts/billing/budget_execution.py':'3'*64},
+            'source_commit':'a'*40,'human_record_sha256':self.pins['human_record_sha256'],
+            'g1_affirmation':'A human statement fixture, no real approval.',
+            'actor_arn':b.CALLER,'account':b.ACCOUNT,'profile':b.PROFILE,'region':b.REGION,
+            'window_start':b.iso(NOW-timedelta(minutes=5)), 'window_end':b.iso(NOW+timedelta(minutes=30)),
+            'timezone':'America/Chicago','login_at':b.iso(NOW-timedelta(minutes=4)),
+            'human_sts_observed_at':b.iso(NOW-timedelta(minutes=3)),
+            'human_sts':{'Account':b.ACCOUNT,'Arn':b.CALLER},'permissions':sorted(b.ACTIONS),
+            'retention_accepted':True,'wrapper_review_approved':True,'ownership_reconciled':True,
+            'aws_cli_sha256':b.hash_file(self.aws),'public_packet_root':'docs/agent-runs/phase-12/evidence/fixture'}
+        self.gate_path=self.root/'human-gate-fixture.json'
+        self.ex=self.execution()
+
+    def tearDown(self):self.temp.cleanup()
+
+    def write(self,path,value,mode=0o600):
+        path.write_text(value);path.chmod(mode)
+
+    def save_scenario(self):self.write(self.scenario_file,json.dumps(self.scenario))
+
+    def calls(self):
+        p=self.primary/'calls.jsonl'
+        return [json.loads(x) for x in p.read_text().splitlines()] if p.exists() else []
+
+    def p3_apply(self):self.ex.p3_check();return self.ex.apply()
+
+    def test_apply_exact_argv_env_and_space_paths(self):
+        self.p3_apply();calls=self.calls();last=calls[-1]
+        self.assertEqual(last['argv'],self.policy.apply_argv())
+        self.assertEqual(last['cwd'],str(self.policy.config))
+        # Python interpreter adds LC_CTYPE on macOS; other inherited secrets absent.
+        self.assertEqual({k:v for k,v in last['env'].items() if k not in ('LC_CTYPE','__CF_USER_TEXT_ENCODING')},self.policy.env())
+        self.assertNotIn('AWS_ACCESS_KEY_ID',last['env'])
+        self.assertEqual(len([x for x in calls if x['argv'][1]=='apply']),1)
+        self.assertFalse((self.primary/'.billing-wrapper-active.lock').exists())
+
+    def test_full_readback_safe_only(self):
+        self.p3_apply();safe=self.ex.readback();text=json.dumps(safe)
+        self.assertNotIn(FIXTURE_ADDRESS,text);self.assertNotIn(b.digest(FIXTURE_ADDRESS.encode()),text)
+        self.assertTrue(safe['result']['private_recipients_match'])
+        self.assertEqual(safe['result']['notification_count'],3)
+        self.assertEqual(len(self.calls()),9) # capability, P3, apply, six read requests
+
+    def test_opaque_backup_hash_modes_fsync(self):
+        self.ex.p3_check()
+        with mock.patch.object(b.os,'fsync',wraps=os.fsync) as fsync:
+            receipt=self.ex.apply()
+        target=self.backups/'initial-ab9f141e83058209/billing.execution.tfstate'
+        self.assertEqual(b.hash_file(target),b.hash_file(self.policy.state))
+        self.assertEqual(stat.S_IMODE(target.stat().st_mode),0o600)
+        self.assertGreaterEqual(fsync.call_count,4)
+        self.assertTrue(receipt['result']['backup']['fsync_completed'])
+
+    def test_plan_hash_rejected_before_process(self):
+        self.write(self.policy.plan,'changed')
+        with self.assertRaises(b.Blocked):self.ex.p3_check()
+        self.assertEqual(self.calls(),[])
+
+    def test_plan_mode_rejected_before_process(self):
+        self.policy.plan.chmod(0o644)
+        with self.assertRaises(b.Blocked):self.ex.p3_check()
+        self.assertEqual(self.calls(),[])
+
+    def test_owner_mismatch_rejected_before_process(self):
+        with self.assertRaises(b.Blocked):b.file_meta(self.policy.plan,os.getuid()+1)
+        self.assertEqual(self.calls(),[])
+
+    def test_plan_size_mismatch_rejected(self):
+        self.pins['plan_bytes']+=1
+        with self.assertRaisesRegex(b.Blocked,'PLAN_SIZE'):self.ex.p3_check()
+        self.assertEqual(self.calls(),[])
+
+    def test_preexisting_state_and_recovery_stop(self):
+        for rel in ('billing.execution.tfstate','config/errored.tfstate','tf-data/terraform.tfstate',
+                    'config/terraform.tfstate.d','billing.execution.tfstate.backup',
+                    '.billing.execution.tfstate.lock.info'):
+            with self.subTest(rel=rel):
+                path=self.primary/rel;self.write(path,'opaque fixture')
+                with self.assertRaises(b.Blocked):self.ex.no_state()
+                path.unlink()
+        self.assertEqual(self.calls(),[])
+
+    def test_p3_error_classification_no_retry(self):
+        for outcome in ('denied','expired','throttled','malformed','blank','exists','mixed','network','wrong-operation'):
+            with self.subTest(outcome=outcome):
+                self.scenario['p3']=outcome;self.save_scenario()
+                self.gate['operation']='op-'+outcome
+                self.write(self.gate_path,json.dumps(self.gate))
+                ex=b.Execution(self.policy,now=lambda:NOW).load_gate(self.gate_path,b.hash_file(self.gate_path),self.gate['operation'])
+                ex.check_checkout=lambda *args,**kwargs:None
+                before=len(self.calls())
+                with self.assertRaises(b.Blocked):ex.p3_check()
+                self.assertEqual(len(self.calls())-before,2)
+                with self.assertRaises(FileExistsError):ex.p3_check()
+                self.assertEqual(len(self.calls())-before,2)
+
+    def test_exact_notfound_accepted_only_known_operation(self):
+        self.ex.p3_check()
+        self.assertTrue(self.ex.prior('p3-check')['result']['exact_name_absent'])
+        for code,out,err in [(1,b'',b'NotFoundException'),(254,b'{}',b'NotFoundException'),
+                             (254,b'',b'HTTP400 NotFoundException')]:
+            with self.subTest(code=code,out=out):
+                with self.assertRaises(b.Blocked):b.absence(code,out,err)
+
+    def test_missing_filter_option_stops_before_live_request(self):
+        self.scenario['unsupported']=True;self.save_scenario()
+        with self.assertRaisesRegex(b.Blocked,'CLI_SHOW_FILTER_UNSUPPORTED'):self.ex.p3_check()
+        self.assertEqual(len(self.calls()),1)
+
+    def test_apply_fail_preserves_all_recovery_including_errored(self):
+        self.ex.p3_check();self.scenario['terraform_fail']=True;self.save_scenario()
+        with self.assertRaisesRegex(b.Blocked,'INCIDENT_REQUIRED'):self.ex.apply()
+        receipt=json.loads((self.backups/'initial-ab9f141e83058209/preservation.receipt.json').read_text())
+        names={x['source'] for x in receipt['artifacts']}
+        self.assertIn('config/errored.tfstate',names)
+        self.assertIn('billing.execution.tfstate.backup',names)
+        self.assertIn('.billing.execution.tfstate.lock.info',names)
+        self.assertTrue(all(x.get('equal') for x in receipt['artifacts']))
+        self.assertTrue((self.policy.config/'errored.tfstate').exists())
+        with self.assertRaises(b.Blocked):self.ex.apply()
+        self.assertEqual(len(self.calls()),3)
+
+    def test_backup_fsync_failure_stops_no_readback_no_retry(self):
+        self.ex.p3_check()
+        original=b.opaque_copy
+        def fail_copy(*args,**kwargs):
+            with mock.patch.object(b.os,'fsync',side_effect=OSError('fixture disk failure')):
+                return original(*args,**kwargs)
+        with mock.patch.object(b,'opaque_copy',side_effect=fail_copy):
+            with self.assertRaisesRegex(b.Blocked,'INCIDENT_REQUIRED'):self.ex.apply()
+        self.assertFalse((self.ex.op/'apply.receipt.json').exists())
+        with self.assertRaises((b.Blocked,OSError)):self.ex.readback()
+        self.assertEqual(len(self.calls()),3)
+
+    def test_backup_never_overwrites(self):
+        self.ex.p3_check()
+        (self.backups/'initial-ab9f141e83058209').mkdir(mode=0o700)
+        with self.assertRaises(FileExistsError):self.ex.apply()
+        self.assertEqual(len(self.calls()),2)
+
+    def test_symlink_copy_rejected(self):
+        source=self.root/'source';self.write(source,'state fixture')
+        linked=self.root/'linked';linked.symlink_to(source)
+        with self.assertRaises(b.Blocked):b.opaque_copy(linked,self.backups/'out',os.getuid())
+        self.assertFalse((self.backups/'out').exists())
+
+    def test_copy_changed_source_rejected(self):
+        source=self.root/'source';self.write(source,'state fixture')
+        original=b.hash_file
+        with mock.patch.object(b,'hash_file',side_effect=lambda path:'0'*64 if Path(path)==source else original(path)):
+            with self.assertRaises(b.Blocked):b.opaque_copy(source,self.backups/'out',os.getuid())
+
+    def test_gate_denies_wrong_identity_window_scope_binding(self):
+        cases=[('actor_arn','wrong'),('account','000000000000'),('plan_sha256','0'*64),
+               ('permissions',['apply']),('window_end',b.iso(NOW-timedelta(seconds=1))),
+               ('g1_affirmation',''),('wrapper_review_approved',False),('ownership_reconciled',False)]
+        for field,value in cases:
+            with self.subTest(field=field):
+                gate=copy.deepcopy(self.gate);gate[field]=value
+                self.write(self.gate_path,json.dumps(gate))
+                with self.assertRaises(b.Blocked):b.Execution(self.policy,now=lambda:NOW).load_gate(self.gate_path,b.hash_file(self.gate_path),'initial')
+        self.assertEqual(self.calls(),[])
+
+    def test_gate_hash_tamper_fails(self):
+        with self.assertRaisesRegex(b.Blocked,'GATE_HASH'):b.Execution(self.policy).load_gate(self.gate_path,'0'*64,'initial')
+
+    def test_replayed_apply_readback_stages_fail_before_process(self):
+        self.p3_apply();before=len(self.calls())
+        with self.assertRaises(b.Blocked):self.ex.apply()
+        self.assertEqual(len(self.calls()),before)
+        self.ex.readback();before=len(self.calls())
+        with self.assertRaises(FileExistsError):self.ex.readback()
+        self.assertEqual(len(self.calls()),before)
+
+    def test_p3_receipt_stale_and_cross_gate_binding_stop(self):
+        self.ex.p3_check()
+        self.ex.now=lambda:NOW+timedelta(minutes=3)
+        with self.assertRaisesRegex(b.Blocked,'STALE_P3'):self.ex.apply()
+        self.ex.now=lambda:NOW
+        self.ex.binding['gate_sha256']='f'*64
+        with self.assertRaisesRegex(b.Blocked,'PRIOR_RECEIPT_BINDING'):self.ex.apply()
+        self.assertEqual(len(self.calls()),2)
+
+    def test_readback_needs_backup_receipt_and_unchanged_state(self):
+        self.ex.p3_check()
+        with self.assertRaises((b.Blocked,OSError)):self.ex.readback()
+        self.ex.apply();self.write(self.policy.state,'changed state fixture')
+        with self.assertRaisesRegex(b.Blocked,'STATE_BACKUP_DRIFT'):self.ex.readback()
+        self.assertEqual(len(self.calls()),3)
+
+    def test_readback_matrix_sanitizer_no_private_emission(self):
+        cases={
+          'extra_notification':lambda r:r['describe-notifications-for-budget']['Notifications'].append(b.expected_notification(60)),
+          'sns':lambda r:r['subscribers']['50']['Subscribers'][0].update(SubscriptionType='SNS'),
+          'cost_types':lambda r:r['describe-budget']['Budget']['CostTypes'].update(IncludeCredit=True),
+          'filter':lambda r:r['describe-budget']['Budget'].update(FilterExpression={'Tags':{'Key':'project'}}),
+          'tag':lambda r:r['list-tags-for-resource']['ResourceTags'][0].update(Value='wrong'),
+          'date':lambda r:r['describe-budget']['Budget']['TimePeriod'].update(End='2027-01-02T00:00:00Z'),
+          'address':lambda r:r['subscribers']['80']['Subscribers'][0].update(Address='other@example.invalid'),
+          'pagination':lambda r:r['subscribers']['100'].update(NextToken='more'),
+          'unhealthy':lambda r:r['describe-budget']['Budget']['HealthStatus'].update(Status='UNHEALTHY')}
+        for name,mutate in cases.items():
+            with self.subTest(name=name):
+                r=fixture_responses();mutate(r)
+                with self.assertRaises(b.Blocked) as error:
+                    b.sanitize_readback(r['describe-budget'],r['list-tags-for-resource'],r['describe-notifications-for-budget'],{int(k):v for k,v in r['subscribers'].items()},FIXTURE_ADDRESS)
+                self.assertNotIn(FIXTURE_ADDRESS,str(error.exception))
+                self.assertNotIn(b.digest(FIXTURE_ADDRESS.encode()),str(error.exception))
+
+    def test_readback_command_mismatch_does_not_retry(self):
+        self.p3_apply();self.scenario['responses']['describe-budget']['Budget']['CostTypes']['IncludeTax']=False;self.save_scenario()
+        with self.assertRaisesRegex(b.Blocked,'COST_TYPES'):self.ex.readback()
+        self.assertEqual(len(self.calls()),9)
+        with self.assertRaises(FileExistsError):self.ex.readback()
+        self.assertEqual(len(self.calls()),9)
+
+    def test_postfreeze_scan_complete_snapshot_and_rerun(self):
+        self.p3_apply();self.ex.readback()
+        packet=self.repo/'docs/agent-runs/phase-12/evidence/fixture'
+        packet.mkdir(parents=True);f=packet/'handoff.md';self.write(f,'public text')
+        manifest=self.root/'freeze.json'
+        def freeze():
+            rows=[{'path':str(x.relative_to(self.repo)),'bytes':x.stat().st_size,'sha256':b.hash_file(x)} for x in packet.rglob('*') if x.is_file()]
+            self.write(manifest,json.dumps({'root':str(packet.relative_to(self.repo)),'files':rows}))
+            return b.hash_file(manifest)
+        checksum=freeze();safe=self.ex.post_freeze_scan(manifest,checksum)
+        self.assertEqual(safe['matches'],0);self.assertEqual(safe['files_scanned'],1)
+        self.write(f,'modified public text')
+        with self.assertRaisesRegex(b.Blocked,'RESCAN'):self.ex.post_freeze_scan(manifest,checksum)
+        checksum=freeze();self.assertEqual(self.ex.post_freeze_scan(manifest,checksum)['matches'],0)
+        self.write(packet/'extra.md','new content')
+        with self.assertRaisesRegex(b.Blocked,'INCOMPLETE'):self.ex.post_freeze_scan(manifest,checksum)
+        checksum=freeze();self.assertEqual(self.ex.post_freeze_scan(manifest,checksum)['files_scanned'],2)
+        self.write(f,FIXTURE_ADDRESS)
+        checksum=freeze()
+        with self.assertRaisesRegex(b.Blocked,'PUBLIC_RECIPIENT_FOUND'):self.ex.post_freeze_scan(manifest,checksum)
+
+    def test_private_recipient_not_in_cli_or_logs_receipts(self):
+        self.p3_apply();self.ex.readback()
+        for call in self.calls():self.assertNotIn(FIXTURE_ADDRESS,json.dumps(call['argv']))
+        for f in self.ex.op.glob('*.receipt.json'):
+            self.assertNotIn(FIXTURE_ADDRESS,f.read_text())
+            self.assertNotIn(b.digest(FIXTURE_ADDRESS.encode()),f.read_text())
+
+    def test_cli_rejects_dangerous_mode_and_root_overrides(self):
+        with mock.patch.object(b,'production_policy',side_effect=AssertionError('must not be reached')):
+            for args in (['destroy'],['apply','--primary','/tmp/x'],['test-mode']):
+                with self.subTest(args=args),mock.patch('sys.stderr',new=io.StringIO()):
+                    with self.assertRaises(SystemExit):b.main(args)
+
+    def test_duplicate_json_keys_rejected(self):
+        with self.assertRaisesRegex(b.Blocked,'DUPLICATE'):b.parse_json(b'{"a":1,"a":2}')
+
+    def test_global_operation_lock_stops_parallel_command(self):
+        self.ex.p3_check()
+        self.write(self.primary/'.billing-wrapper-active.lock','occupied')
+        with self.assertRaises(FileExistsError):self.ex.apply()
+        self.assertEqual(len(self.calls()),2)
+
+    def test_dirty_checkout_blocks(self):
+        completed=mock.Mock(returncode=0,stdout=b'a'*40+b'\n')
+        dirty=mock.Mock(returncode=0,stdout=b' M changed\n')
+        with mock.patch.object(b.subprocess,'run',side_effect=[completed,dirty]):
+            with self.assertRaisesRegex(b.Blocked,'DIRTY_CHECKOUT'):b.Execution.check_checkout(self.ex)
+
+    def test_wrong_checkout_commit_blocks(self):
+        with mock.patch.object(b.subprocess,'run',return_value=mock.Mock(returncode=0,stdout=b'wrong\n')):
+            with self.assertRaisesRegex(b.Blocked,'SOURCE_COMMIT'):b.Execution.check_checkout(self.ex)
+
+    def test_no_prior_receipt_modes_do_not_call_aws(self):
+        operations=self.primary/'operations';operations.mkdir(mode=0o700)
+        self.ex.op.mkdir(mode=0o700)
+        for method in (self.ex.apply,self.ex.readback):
+            with self.subTest(method=method.__name__):
+                with self.assertRaises((b.Blocked,OSError)):method()
+        self.assertEqual(self.calls(),[])
+
+    def test_expired_window_does_not_call_aws(self):
+        self.ex.now=lambda:NOW+timedelta(hours=2)
+        with self.assertRaisesRegex(b.Blocked,'WINDOW_EXPIRED'):self.ex.p3_check()
+        self.assertEqual(self.calls(),[])
+
+    def test_scan_bounded_dirty_packet_only(self):
+        script=self.repo/'scripts/billing/budget_execution.py'
+        script.parent.mkdir(parents=True);self.write(script,'public script fixture')
+        proposal=self.repo/b.PROPOSAL;proposal.parent.mkdir(parents=True);self.write(proposal,'proposal fixture')
+        human=self.repo/b.HUMAN_RECORD;self.write(human,'human fixture')
+        course=self.repo/'infra/terraform/environments/course.tfvars';course.parent.mkdir(parents=True)
+        self.write(course,'enable_budget_resource = false\n')
+        self.gate['wrapper_files']={'scripts/billing/budget_execution.py':b.hash_file(script)}
+        self.pins['proposal_sha256']=b.hash_file(proposal)
+        self.pins['human_record_sha256']=b.hash_file(human)
+        self.gate['proposal_sha256']=self.pins['proposal_sha256']
+        self.gate['human_record_sha256']=self.pins['human_record_sha256']
+        self.ex=self.execution()
+        def git_result(dirty):
+            return [mock.Mock(returncode=0,stdout=b'a'*40+b'\n'),mock.Mock(returncode=0,stdout=dirty),mock.Mock(returncode=0,stdout=b'')]
+        dirty=b'?? docs/agent-runs/phase-12/evidence/fixture/handoff.md\0'
+        with mock.patch.object(b.subprocess,'run',side_effect=git_result(dirty)):
+            b.Execution.check_checkout(self.ex,allow_packet=True)
+        with mock.patch.object(b.subprocess,'run',side_effect=git_result(dirty)):
+            with self.assertRaisesRegex(b.Blocked,'DIRTY_CHECKOUT'):b.Execution.check_checkout(self.ex)
+        with mock.patch.object(b.subprocess,'run',side_effect=git_result(b' M scripts/billing/budget_execution.py\0')):
+            with self.assertRaisesRegex(b.Blocked,'DIRTY_OUTSIDE_PACKET'):b.Execution.check_checkout(self.ex,allow_packet=True)
+
+    def test_scan_scope_bound_to_gate(self):
+        self.p3_apply();self.ex.readback()
+        manifest=self.root/'freeze.json'
+        self.write(manifest,json.dumps({'root':'docs/agent-runs/phase-12/evidence/wrong','files':[{}]}))
+        with self.assertRaisesRegex(b.Blocked,'PUBLIC_FREEZE_GATE_SCOPE'):self.ex.post_freeze_scan(manifest,b.hash_file(manifest))
+
+    def test_timeout_kills_child_group_and_stops(self):
+        logs=self.primary/'logs';logs.mkdir(mode=0o700)
+        process=mock.Mock(pid=54321)
+        process.wait.side_effect=[b.subprocess.TimeoutExpired('fixture',1),0]
+        process.poll.return_value=None
+        with mock.patch.object(b.subprocess,'Popen',return_value=process),mock.patch.object(b.os,'killpg') as kill:
+            with self.assertRaisesRegex(b.Blocked,'COMMAND_TIMEOUT'):b.PrivateRunner()([str(self.aws)],self.policy.config,self.policy.env(),logs,'timeout',1)
+        kill.assert_called_once_with(54321,b.signal.SIGKILL)
+
+    def test_apply_timeout_sigint_first_graceful_exit_without_group_kill(self):
+        logs=self.primary/'grace logs';logs.mkdir(mode=0o700)
+        process=mock.Mock(pid=54321);process.poll.return_value=None
+        process.wait.side_effect=[b.subprocess.TimeoutExpired('fixture',1),0]
+        with mock.patch.object(b.subprocess,'Popen',return_value=process),mock.patch.object(b.os,'killpg') as kill:
+            with self.assertRaisesRegex(b.Blocked,'COMMAND_TIMEOUT'):
+                b.PrivateRunner()(self.policy.apply_argv(),self.policy.config,self.policy.env(),logs,'graceful',1)
+        process.send_signal.assert_called_once_with(b.signal.SIGINT)
+        kill.assert_not_called()
+        receipt=json.loads((logs/'graceful.termination.json').read_text())
+        self.assertTrue(receipt['graceful_exit']);self.assertFalse(receipt['forced_kill'])
+        self.assertLessEqual(process.wait.call_args_list[1].kwargs['timeout'],b.APPLY_GRACE_SECONDS)
+
+    def test_apply_forced_kill_only_after_sigint_and_grace_timeout(self):
+        logs=self.primary/'forced logs';logs.mkdir(mode=0o700)
+        process=mock.Mock(pid=54321);process.poll.return_value=None
+        events=[]
+        def wait(**kwargs):
+            events.append(('wait',kwargs['timeout']))
+            if len([x for x in events if x[0]=='wait']) < 3:
+                raise b.subprocess.TimeoutExpired('fixture',kwargs['timeout'])
+            return -9
+        process.wait.side_effect=wait
+        process.send_signal.side_effect=lambda sig:events.append(('signal',sig))
+        with mock.patch.object(b.subprocess,'Popen',return_value=process),mock.patch.object(b.os,'killpg',side_effect=lambda pid,sig:events.append(('kill',sig))):
+            with self.assertRaisesRegex(b.Blocked,'COMMAND_TIMEOUT'):
+                b.PrivateRunner()(self.policy.apply_argv(),self.policy.config,self.policy.env(),logs,'forced',1)
+        self.assertEqual([x for x in events if x[0] in ('signal','kill')],[('signal',b.signal.SIGINT),('kill',b.signal.SIGKILL)])
+        self.assertEqual([x[0] for x in events],['wait','signal','wait','kill','wait'])
+        receipt=json.loads((logs/'forced.termination.json').read_text())
+        self.assertTrue(receipt['forced_kill']);self.assertFalse(receipt['graceful_exit'])
+        self.assertEqual(receipt['final_exit'],-9)
+
+    def test_keyboard_interrupt_waits_gracefully_and_never_resends_sigint(self):
+        logs=self.primary/'interrupt logs';logs.mkdir(mode=0o700)
+        process=mock.Mock(pid=54321);process.poll.return_value=None
+        process.wait.side_effect=[KeyboardInterrupt(),KeyboardInterrupt(),0]
+        with mock.patch.object(b.subprocess,'Popen',return_value=process),mock.patch.object(b.os,'killpg') as kill:
+            with self.assertRaisesRegex(b.Blocked,'COMMAND_INTERRUPTED'):
+                b.PrivateRunner()(self.policy.apply_argv(),self.policy.config,self.policy.env(),logs,'interrupt',10)
+        process.send_signal.assert_called_once_with(b.signal.SIGINT)
+        kill.assert_not_called()
+        self.assertEqual(process.wait.call_count,3)
+
+    def test_apply_timeout_separate_and_reserves_window_headroom(self):
+        calls=[]
+        self.ex.runner=lambda *args:calls.append(args) or (0,b'',b'')
+        self.ex.command(self.policy.apply_argv(),'apply')
+        self.assertEqual(calls[-1][-1],b.APPLY_TIMEOUT_SECONDS)
+        self.ex.command(self.policy.aws_argv('describe-budget'),'read')
+        self.assertEqual(calls[-1][-1],b.READ_TIMEOUT_SECONDS)
+        self.ex.gate['window_end']=b.iso(NOW+timedelta(seconds=90))
+        self.ex.command(self.policy.apply_argv(),'apply')
+        reserve=b.APPLY_GRACE_SECONDS+b.FORCED_REAP_SECONDS+b.LOCAL_PRESERVATION_HEADROOM_SECONDS
+        self.assertEqual(calls[-1][-1],90-reserve)
+        before=len(calls);self.ex.gate['window_end']=b.iso(NOW+timedelta(seconds=reserve))
+        with self.assertRaisesRegex(b.Blocked,'HEADROOM_REQUIRED'):self.ex.command(self.policy.apply_argv(),'apply')
+        self.assertEqual(len(calls),before)
+
+    def test_success_at_window_edge_has_normal_backup_then_blocks_live(self):
+        self.ex.p3_check();real_runner=self.ex.runner
+        def window_edge(*args):
+            result=real_runner(*args)
+            self.ex.now=lambda:NOW+timedelta(minutes=31)
+            return result
+        self.ex.runner=window_edge
+        with self.assertRaisesRegex(b.Blocked,'WINDOW_EXPIRED_AFTER_BACKUP'):
+            self.ex.apply()
+        backup=self.backups/'initial-ab9f141e83058209/billing.execution.tfstate'
+        self.assertEqual(b.hash_file(backup),b.hash_file(self.policy.state))
+        receipt=json.loads((self.ex.op/'apply.receipt.json').read_text())
+        self.assertTrue(receipt['result']['backup_verified'])
+        self.assertFalse(receipt['result']['window_open_for_further_live'])
+        with self.assertRaisesRegex(b.Blocked,'WINDOW_EXPIRED'):self.ex.readback()
+        self.assertEqual(len(self.calls()),3)
+
+    def test_failed_apply_at_window_edge_preserves_partial_state(self):
+        self.ex.p3_check();self.scenario['terraform_fail']=True;self.save_scenario()
+        real_runner=self.ex.runner
+        def window_edge(*args):
+            result=real_runner(*args);self.ex.now=lambda:NOW+timedelta(minutes=31);return result
+        self.ex.runner=window_edge
+        with self.assertRaisesRegex(b.Blocked,'INCIDENT_REQUIRED'):self.ex.apply()
+        receipt=json.loads((self.backups/'initial-ab9f141e83058209/preservation.receipt.json').read_text())
+        self.assertIn('config/errored.tfstate',{x['source'] for x in receipt['artifacts']})
+        self.assertTrue(all(x.get('equal') for x in receipt['artifacts']))
+        self.assertEqual(len(self.calls()),3)
+
+    def test_real_local_child_sigint_persists_fixture_before_exit(self):
+        # This is a Python signal fixture named terraform, never real Terraform/AWS.
+        child=self.primary/'toolchain/terraform-signal-fixture'
+        state=self.primary/'signal-fixture-state'
+        self.write(child,"#!/usr/bin/env python3\nimport pathlib,signal,time\np=pathlib.Path("+repr(str(state))+")\ndef stop(sig,frame):\n p.write_bytes(b'opaque gracefully persisted fixture');p.chmod(0o600)\n raise SystemExit(0)\nsignal.signal(signal.SIGINT,stop)\nwhile True: time.sleep(0.01)\n",0o700)
+        logs=self.primary/'real signal logs';logs.mkdir(mode=0o700)
+        with self.assertRaisesRegex(b.Blocked,'COMMAND_TIMEOUT'):
+            b.PrivateRunner()([str(child),'apply'],self.policy.config,self.policy.env(),logs,'real-grace',0.2)
+        self.assertTrue(state.exists())
+        receipt=json.loads((logs/'real-grace.termination.json').read_text())
+        self.assertTrue(receipt['graceful_exit']);self.assertFalse(receipt['forced_kill'])
+
+    def test_real_local_child_forced_path_keeps_sigint_marker(self):
+        child=self.primary/'toolchain/terraform-unresponsive-fixture'
+        marker=self.primary/'sigint-marker'
+        self.write(child,"#!/usr/bin/env python3\nimport pathlib,signal,time\np=pathlib.Path("+repr(str(marker))+")\ndef stop(sig,frame):\n p.write_bytes(b'opaque SIGINT observed');p.chmod(0o600)\nsignal.signal(signal.SIGINT,stop)\nwhile True: time.sleep(0.01)\n",0o700)
+        logs=self.primary/'real force logs';logs.mkdir(mode=0o700)
+        with mock.patch.object(b,'APPLY_GRACE_SECONDS',0.05):
+            with self.assertRaisesRegex(b.Blocked,'COMMAND_TIMEOUT'):
+                b.PrivateRunner()([str(child),'apply'],self.policy.config,self.policy.env(),logs,'real-force',0.2)
+        self.assertTrue(marker.exists())
+        receipt=json.loads((logs/'real-force.termination.json').read_text())
+        self.assertTrue(receipt['sigint_sent']);self.assertTrue(receipt['forced_kill'])
+        self.assertEqual(receipt['final_exit'],-9)
+
+    def test_interrupt_after_partial_write_preserves_without_retry(self):
+        self.ex.p3_check()
+        def interrupted(*args):
+            self.write(self.policy.state,'opaque partial fixture')
+            self.write(self.policy.config/'errored.tfstate','opaque recovery fixture')
+            raise b.Blocked('COMMAND_INTERRUPTED_PARTIAL_POSSIBLE')
+        self.ex.runner=interrupted
+        with self.assertRaisesRegex(b.Blocked,'INCIDENT_REQUIRED'):self.ex.apply()
+        backup=self.backups/'initial-ab9f141e83058209/preservation.receipt.json'
+        result=json.loads(backup.read_text())
+        self.assertEqual({x['source'] for x in result['artifacts']},{'billing.execution.tfstate','config/errored.tfstate'})
+        self.assertTrue(all(x.get('equal') for x in result['artifacts']))
+        with self.assertRaises(b.Blocked):self.ex.apply()
+        self.assertEqual(len(self.calls()),2)
+
+    def test_public_cli_failure_never_prints_private_stub_output(self):
+        self.ex.p3_check();self.scenario['terraform_fail']=True;self.save_scenario()
+        out=io.StringIO()
+        with mock.patch.object(b,'production_policy',return_value=self.policy),mock.patch.object(b.Execution,'check_checkout',return_value=None),mock.patch.object(b,'stamp',return_value=NOW),mock.patch('sys.stdout',new=out):
+            # Bind a production-default now factory for the injected safe fixture.
+            with mock.patch.object(b.Execution,'check_window',return_value=None):
+                self.assertEqual(b.main(['readback','--gate',str(self.gate_path),'--gate-sha256',b.hash_file(self.gate_path),'--operation','initial']),2)
+        self.assertNotIn(FIXTURE_ADDRESS,out.getvalue())
+        self.assertNotIn('Traceback',out.getvalue())
+
+    def test_recipient_private_fixture(self):
+        # This test also ensures the private-input format is one address only.
+        self.write(self.primary/'notification.private.tfvars.json',json.dumps({'budget_notification_emails':[FIXTURE_ADDRESS]}))
+        self.assertEqual(self.ex.private_recipient(),FIXTURE_ADDRESS)
+
+    def execution(self):
+        self.write(self.gate_path,json.dumps(self.gate))
+        # Reserved local synthetic input only; real durable/private input is never accessed.
+        self.write(self.primary/'notification.private.tfvars.json',json.dumps({'budget_notification_emails':[FIXTURE_ADDRESS]}))
+        ex=b.Execution(self.policy,now=lambda:NOW).load_gate(self.gate_path,b.hash_file(self.gate_path),'initial')
+        ex.check_checkout=lambda *args,**kwargs:None
+        return ex
+
+
+if __name__=='__main__':
+    os.umask(0o077)
+    unittest.main(verbosity=2)

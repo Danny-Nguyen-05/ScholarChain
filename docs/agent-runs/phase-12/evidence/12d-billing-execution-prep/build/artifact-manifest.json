@@ -1,0 +1,87 @@
+{
+  "generated_utc": "2026-10-31T17:09:40.536986+00:00",
+  "files": [
+    {
+      "path": "build-owner-report.txt",
+      "bytes": 2594,
+      "sha256": "273d1621821d9b13e869ed2a13cc8706ca918d397df9975b1e2b1454eb6e3cbc"
+    },
+    {
+      "path": "build-result.json",
+      "bytes": 7453,
+      "sha256": "8884af85544d161af9b83ddc6a21af14993dd4b801b63654bf929a783b196a84"
+    },
+    {
+      "path": "commands.json",
+      "bytes": 2482,
+      "sha256": "494718efbb1078fd39afda34105cc5868b4ac0f15201c81ce3a7ace9ea26520c"
+    },
+    {
+      "path": "expected-error-check.json",
+      "bytes": 2034,
+      "sha256": "c1a86a835af2c1b702c46207f58bac93d70e4d38b8139b6c5c8338367252ec30"
+    },
+    {
+      "path": "finalize.py",
+      "bytes": 5547,
+      "sha256": "45049efe516f47ed85fb441abcceb5c918f71c37a173ab9db2fc8aba3e8fd442"
+    },
+    {
+      "path": "freeze-after.json",
+      "bytes": 178,
+      "sha256": "4aa8c4e82a44b69de61696e4778b21022af21b1604c7f8fbe4cf502b89f4d141"
+    },
+    {
+      "path": "freeze-before.json",
+      "bytes": 178,
+      "sha256": "61d8d887f48a858e5606975711c4a4a775a26b65644699b4c04151ee8523977e"
+    },
+    {
+      "path": "gate-timing.json",
+      "bytes": 357,
+      "sha256": "6653ba8853822b1bc3160938e41b6c8ab376b35cec36fc5cfac04ca6245d0237"
+    },
+    {
+      "path": "java-version.log.txt",
+      "bytes": 171,
+      "sha256": "2fe83b0053132e4e834defa82250462f4c62733d29bf76b19ee1bb3c14b06b39"
+    },
+    {
+      "path": "run.py",
+      "bytes": 7249,
+      "sha256": "92c3fed0fe83022fcbbdff7c2864a4e67bdcbb0bda26b7a57cf1c91457496cdb"
+    },
+    {
+      "path": "sbt-check.log.gz",
+      "bytes": 93229,
+      "sha256": "5e095c0c982764bc3e1329e1d2e457b2d793ca75ec9baf848b511c0d2970bc78"
+    },
+    {
+      "path": "source-after.json",
+      "bytes": 373830,
+      "sha256": "21fe72df4a24d58ff34040eb883aac14ffe535c45f2efdd17e93c99da88ecd13"
+    },
+    {
+      "path": "source-before.json",
+      "bytes": 373830,
+      "sha256": "3244fb1c5c148de0d831af7f20d46e1419411bfa7b201b5f79065c7e16b60731"
+    },
+    {
+      "path": "xml-groups.json",
+      "bytes": 1047,
+      "sha256": "d317dba5823dafb44decf591eb66b78e35e4e00836257e03939d69c093502406"
+    },
+    {
+      "path": "xml-reports.json",
+      "bytes": 71939,
+      "sha256": "18557944abdf38bd372165293cc406566cb7761ad44d2c4e4eb36abb63541f29"
+    },
+    {
+      "path": "sbt-check.log.txt",
+      "bytes": 1718971,
+      "sha256": "b23b1f6064ce6905b69a8550027f640736baca4c7ee3e1e7909a41e7443c57f4",
+      "retained_as": "sbt-check.log.gz",
+      "encoding": "gzip; raw log alias, do not claim second physical retained copy"
+    }
+  ]
+}

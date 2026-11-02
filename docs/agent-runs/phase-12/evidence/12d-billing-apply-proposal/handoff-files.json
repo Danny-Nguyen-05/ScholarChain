@@ -1,0 +1,39 @@
+{
+  "observed_utc": "2026-11-01T20:34:56.296787+00:00",
+  "base_status_entries": 664,
+  "final_status_entries": 687,
+  "new_files": [
+    "docs/agent-runs/phase-12/evidence/12d-billing-apply-proposal/artifact-manifest.json",
+    "docs/agent-runs/phase-12/evidence/12d-billing-apply-proposal/assemble-public.py",
+    "docs/agent-runs/phase-12/evidence/12d-billing-apply-proposal/assembly-notes.json",
+    "docs/agent-runs/phase-12/evidence/12d-billing-apply-proposal/coordinator-report.txt",
+    "docs/agent-runs/phase-12/evidence/12d-billing-apply-proposal/diff-check-result.json",
+    "docs/agent-runs/phase-12/evidence/12d-billing-apply-proposal/diff-check.log.txt",
+    "docs/agent-runs/phase-12/evidence/12d-billing-apply-proposal/evidence-manifest.json",
+    "docs/agent-runs/phase-12/evidence/12d-billing-apply-proposal/final-status.log.txt",
+    "docs/agent-runs/phase-12/evidence/12d-billing-apply-proposal/handoff-files.json",
+    "docs/agent-runs/phase-12/evidence/12d-billing-apply-proposal/owner-report.txt",
+    "docs/agent-runs/phase-12/evidence/12d-billing-apply-proposal/preservation-check.json",
+    "docs/agent-runs/phase-12/evidence/12d-billing-apply-proposal/proposal.md",
+    "docs/agent-runs/phase-12/evidence/12d-billing-apply-proposal/public-address-scan.json",
+    "docs/agent-runs/phase-12/evidence/12d-billing-apply-proposal/sources.json",
+    "docs/agent-runs/phase-12/evidence/12d-billing-durable-plan-review-record/D1-sequencing-erratum.json",
+    "docs/agent-runs/phase-12/evidence/12d-billing-durable-plan-review-record/delegation.json",
+    "docs/agent-runs/phase-12/evidence/12d-billing-durable-plan-review-record/evidence-manifest.json",
+    "docs/agent-runs/phase-12/evidence/12d-billing-durable-plan-review-record/preflight-status.log.txt",
+    "docs/agent-runs/phase-12/evidence/12d-billing-durable-plan-review-record/preflight.json",
+    "docs/agent-runs/phase-12/evidence/12d-billing-durable-plan-review-record/record-prefix-check.json",
+    "docs/agent-runs/phase-12/evidence/12d-billing-durable-plan-review-record/source-preservation.json",
+    "docs/agent-runs/phase-12/evidence/12d-billing-durable-plan-review-record/user-supplied-review.txt",
+    "docs/agent-runs/phase-12/reviewer-prompt-12d-billing-apply-proposal.md"
+  ],
+  "new_file_count": 23,
+  "preexisting_status_entries_retained": true,
+  "five_append_only_records": [
+    "docs/agent-runs/phase-12/prompt.md",
+    "docs/agent-runs/phase-12/review.md",
+    "docs/agent-runs/phase-12/repairs.md",
+    "docs/agent-runs/phase-12/owner-report.md",
+    "docs/agent-runs/phase-12/test-report.md"
+  ]
+}

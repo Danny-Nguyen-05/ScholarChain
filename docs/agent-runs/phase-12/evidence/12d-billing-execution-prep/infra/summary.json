@@ -1,0 +1,48 @@
+{
+  "course": {
+    "runs": 40,
+    "assertions": 62,
+    "expected_failure_runs": 18
+  },
+  "billing": {
+    "runs": 7,
+    "assertions": 6,
+    "expected_failure_runs": 4
+  },
+  "proposal": {
+    "runs": 6,
+    "assertions": 3,
+    "expected_failure_runs": 5
+  },
+  "execution": {
+    "runs": 11,
+    "assertions": 5,
+    "expected_failure_runs": 8
+  },
+  "total": {
+    "runs": 64,
+    "assertions": 76,
+    "expected_failure_runs": 35
+  },
+  "commands": 22,
+  "final_results": {
+    "course": "Success! 40 passed, 0 failed.",
+    "billing": "Success! 7 passed, 0 failed.",
+    "proposal": "Success! 6 passed, 0 failed.",
+    "execution-final": "Success! 11 passed, 0 failed."
+  },
+  "red_result": "Failure! 9 passed, 2 failed.",
+  "toolchain": {
+    "binary": "/tmp/scholarchain-phase12b-repair1-infra/terraform",
+    "sha256": "899b3c0ca0d2669ebd67be4bcd98e84bd9a914ce2fb3897ad0b86c98cbf3c962"
+  },
+  "policy_source_inspection": {
+    "files": [
+      "infra/terraform/billing-execution/main.tf",
+      "infra/terraform/billing-execution/versions.tf",
+      "infra/terraform/billing-execution/variables.tf"
+    ],
+    "no_installation_blocks": true,
+    "basis": "source inspection, not output constants"
+  }
+}

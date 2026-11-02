@@ -1,0 +1,68 @@
+Verdict: APPROVE for P1 timing and provenance only. F1, F2 and F3 are closed. Combined with the earlier verification of the IAM and authentication evidence, P1 no longer blocks routing the read-only plan with durable state paths. This does not authorize an apply, an IAM change, spending, P2 closure or Phase 12D completion.
+
+What I checked
+Human record: 1,334 bytes, SHA abe3a50a…, matching what the coordinator reported.
+Hash chain:
+The first 538 bytes hash to f00a7159… and the first 591 bytes to d9ca3b90…. Both appends kept every earlier byte.
+Append 1 is exactly the dictated sentence, “I don’t really remember it was around 8-9pm I think”.
+Append 2 contains the two questions and the verbatim replies.
+4265d7a7… and f478affb… cannot be recomputed from the current file: the 9–10 PM edit changed bytes mid-file, so they aren’t prefixes. Six historical evidence files still cite those hashes unchanged, and nothing was rewritten.
+Manifests: the reconciliation manifest (12 files) and the bootstrap (24), authentication (13) and timing (3) manifests all match, with 0 mismatches.
+Phase records: all five keep their preflight prefixes, and their current hashes equal the “after” values in local-checks.json.
+Prior review: the review attachment (74b8c8bd…) is contained verbatim in review.md under the new P1 heading.
+Repository state: git diff --check is empty. git status shows 576 entries, matching handoff-files.json.
+F1 to F3
+F1 (timing) — CLOSED.
+The human now says the exact times are unavailable, with an approximate 8–9 PM. That fits the AWS creation times (20:01 operator, 20:23 role) and the setup evidence retained by 20:33, and it supersedes the contradicted 9–10 PM claim.
+The human answered “accept” to a question that explicitly named the 20:01–20:23 activity and the uncertain window and 60-minute compliance. That meets acceptance option (b) from my earlier review.
+The record is honest about uncertainty. It is not proof that the original window was met, and it is not prospective approval.
+The superseded 9–10 PM sentence stays at the top of the file by design, with the correction following it.
+F2 (authorship of the replacement paragraph) — CLOSED.
+The human answered “yes it is mine”.
+The packet honestly records that the original verbatim request is “not retained”.
+F3 (manifest for the identity-decision draft) — CLOSED.
+The new manifest lists exactly the 3 preexisting files and excludes itself; its SHA is a1e23530….
+The 3 files keep their original hashes and their mtimes from 17:47, 17:49 and 17:58 CDT.
+F4 — still deferred: the operator inventory and Terraform adoption of the manual IAM resources go to the adoption review, and the full refresh lifetime is still unverified.
+Findings
+G1 — Low — non-blocking for the read-only plan; must be resolved before any apply gate
+
+Where: docs/agent-runs/phase-12/billing-bootstrap-exception.md, from byte 592 to the end.
+Evidence: The human-owned record now contains question text written by the coordinator, plus the human’s replies transcribed by the agent. This was done under the explicit instruction “oh yeh can you update that window for me”, and both the questions and the replies are clearly labelled.
+Impact: This is a minor authorship ambiguity in a human record. It is not a content defect.
+Owner: human architect.
+Acceptance: Before any apply approval, the human confirms in their own words that the abe3a50a… file reflects their statements. Future human records should be typed by the human directly.
+G2 — Info
+
+The approximate 8–9 PM window and the “accept” answer document a deviation the human accepted. They do not prove compliance with the 60-minute cap.
+Live budget, delivery and EMR gates, P2, and the P3 pre-apply checks are all still open.
+Report fields
+STATUS: COMPLETE (recheck); verdict APPROVE for Phase 12D P1 timing/provenance ONLY — F1/F2/F3 closed; G1 Low (pre-apply), G2 Info
+OWNER: code-reviewer (independent, read-only)
+WORK ORDER: docs/agent-runs/phase-12/reviewer-prompt-12d-p1-timing-recheck.md; branch phase-12, HEAD 5ca8406bad5fe55f732458fa0cbd5d561ac83d8f; evidence docs/agent-runs/phase-12/evidence/12d-p1-timing-reconciliation/
+FILES CREATED: None
+FILES MODIFIED: None
+COMMANDS RUN: stat/shasum/cat of the human record and reconciliation packet; python3 -I prefix-hash chain, historical-citation, manifest (5 packets), F3 file hash/mtime, phase-record prefix/after-hash and review-containment checks; grep review.md headings; git diff --check; git status -uall count. No Terraform/AWS/IAM/login/console/build calls or private/state/raw-plan reads.
+TEST RESULTS: Not run (review only). Chain f00a7159(538)→d9ca3b90(591)→abe3a50a(1334) verified by prefix; 4265d7a7/f478affb preserved in historical evidence; all manifests 0 mismatches; 5/5 prefixes; diff --check empty.
+VALIDATION RESULTS: F1 closed (human-stated unavailable/approx 8–9 PM consistent with 20:01/20:23/20:33; explicit "accept" of acknowledged deviation); F2 closed ("yes it is mine"; original request honestly not retained); F3 closed (3 unchanged files manifested). G1 Low, G2 Info.
+ASSUMPTIONS: Transcribed replies are the human's own chat words; AWS times UTC−05:00 = Chicago CDT on Oct 31, 2026.
+RISKS: Original window/60-min compliance permanently unprovable (human-accepted); agent-transcribed text in human record (G1); F4 inventory/adoption/refresh; P2 durable plan absent; P3 pre-apply checks; all live billing/EMR gates.
+MANUAL ACTION REQUIRED: Human performs a fresh role-session login for the durable-path plan, re-enters the recipient via the hidden helper, and later launches the plan review; before any apply, confirms G1 in their own words.
+BLOCKED-ON OWNER: None for routing the read-only durable-path plan; human for G1 (pre-apply) and the apply gate
+BLOCKED-ON EVIDENCE: None for P1. For apply: durable-path plan checksum + independent review, G1 confirmation, P3 checks, human-written approval
+NEXT GATE: Fresh read-only durable-path plan (infra-engineer) with sanitized summary/new checksum, then user-launched independent review. No apply/IAM/spend.
+NEXT PROMPT
+Phase 12D — record P1 timing recheck APPROVE and run ONLY the fresh read-only durable-path billing plan. Fresh session. No apply, import, destroy, IAM change or spending.
+Repository /Users/danny/Documents/UIC/CS441/ScholarChain, branch phase-12, HEAD 5ca8406bad5fe55f732458fa0cbd5d561ac83d8f (uncommitted 12D work present).
+1. Append this recheck VERBATIM to docs/agent-runs/phase-12/review.md under "## Subphase 12D P1 timing/provenance recheck — independent review". Mark F1/F2/F3 closed and G1 (pre-apply human confirmation) and G2 open in repairs.md; append to prompt.md, owner-report.md and test-report.md. Verify all byte-prefixes. Never edit billing-bootstrap-exception.md or any human record.
+2. Route to infra-engineer (protected runner, same pattern as evidence/12d-billing-execution-plan/infra/run.py), packet evidence/12d-billing-durable-plan/:
+   a. Durable paths (human-selected): primary "/Users/danny/Library/Application Support/ScholarChain/terraform/billing-bootstrap", backups "/Users/danny/Library/Application Support/ScholarChain/terraform/billing-bootstrap-backups". Quote paths (they contain a space). Create only if absent, mode 0700; sensitive files 0600. Verify both are outside Git and not inside a cloud-synced folder; stop on any doubt. Record retention as selected (same-disk backup limitation disclosed). No tfstate may exist before the plan.
+   b. Copy the unchanged billing-bootstrap config from the repository source into a config/ subdirectory there; prove byte equality and record hashes. course.tfvars keeps enable_budget_resource=false; use the existing approved public inputs unchanged.
+   c. Human re-enters the recipient through the hidden getpass helper (O_EXCL, 0600) into the durable directory. Never echo, log, hash-publish or commit it.
+   d. The human performs a fresh `aws login --profile scholarchain-billing-deployer --region us-east-2` (role session selected), then pastes only the sanitized GetCallerIdentity Account/Arn. Stop unless the Arn starts with arn:aws:sts::530332961125:assumed-role/scholarchain-billing-deployer/. Do not read credentials, config or cache.
+   e. Pinned Terraform 1.13.5 / provider 6.44.0 with the existing lock: offline init/fmt/validate/test, then protected init and `terraform plan -input=false -no-color -detailed-exitcode -lock-timeout=30s -state="<primary>/billing.execution.tfstate" -var-file=<approved public> -var-file=<private recipient> -out="<primary>/billing.execution.tfplan"`, with TF_DATA_DIR="<primary>/tf-data", AWS_PROFILE=scholarchain-billing-deployer, AWS_REGION=us-east-2. Expect exit 2. Write show -json only to a protected 0600 file; publish only the sanitized summary. Assert exactly one create of aws_budgets_budget.project[0] with the same reviewed values (USD 200 COST/CUSTOM 2026-10-01→2027-01-01, credits/refunds excluded, five tags, three ACTUAL alerts at 50/80/100, one email subscriber each, no SNS) and 0 change/destroy/replace. Record the new plan SHA-256/bytes/modes, the exact argv/env/cwd, and that no tfstate exists afterward.
+   f. Mark the old /tmp plan 35e35914… as superseded. Do not delete it without explicit human approval.
+   g. Append-only records, manifests, 209-source freeze, pins/locks unchanged, git diff --check, and an address scan proving no recipient in Git.
+3. Prepare (do not launch) docs/agent-runs/phase-12/reviewer-prompt-12d-billing-durable-plan.md for a user-launched independent read-only review of the durable plan only.
+Forbidden: terraform apply/import/destroy/state mutation, IAM/console/account mutations, paid calls, credential/config/cache reads, raw-plan/private-input disclosure, writing human approvals or human records, launching reviewers, commits, pushes, Phase 13. The apply handoff (P3 checks, G1 confirmation, human-written approval naming the exact new checksum and window) remains a later gate.
+End with: "The P1 recheck is recorded and the durable-path read-only plan is prepared for independent review. I have stopped. Nothing has been applied."

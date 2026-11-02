@@ -1,0 +1,11 @@
+{
+  "checked_utc": "2026-11-01T20:34:56.301862+00:00",
+  "type": "Generic email-pattern scan ONLY; not exact-recipient verification",
+  "scope_units": 25,
+  "scope": "Both newly assembled public packets, reviewer prompt and five appended record suffixes",
+  "exclusions": "This count-only receipt and hash-only root manifests to avoid recursive mutation; original specialist manifest included",
+  "reserved_fixture_matches": 6,
+  "other_address_matches": 0,
+  "private_data_access": false,
+  "future_D2": "Exact-recipient check after final public assembly/freeze only in later explicitly authorized wrapper; rescan after content changes."
+}

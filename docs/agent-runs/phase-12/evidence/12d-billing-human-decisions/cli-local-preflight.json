@@ -1,0 +1,34 @@
+{
+  "kind": "User-authorized local-only CLI preflight; not execution approval",
+  "user_authorization_verbatim": "yes",
+  "authorized_question": "Check installed AWS CLI version and executable hash only; no login/AWS requests/credential reads/resource changes",
+  "observed_start_utc": "2026-11-02T01:33:09.736698+00:00",
+  "observed_end_utc": "2026-11-02T01:33:10.077736+00:00",
+  "argv": [
+    "/opt/homebrew/bin/aws",
+    "--version"
+  ],
+  "exit": 0,
+  "version_output": "aws-cli/2.35.4 Python/3.14.5 Darwin/25.6.0 source/arm64",
+  "configured_executable": "/opt/homebrew/bin/aws",
+  "resolved_executable": "/opt/homebrew/Cellar/awscli/2.35.4/libexec/bin/aws",
+  "sha256": "a0124776b581826399171820e7812f2965486e79605c07fc3e86dbe798baf3f9",
+  "bytes": 852,
+  "mode": "0o755",
+  "uid": 501,
+  "executable_stable": true,
+  "environment": {
+    "PATH": "/opt/homebrew/bin:/usr/bin:/bin:/usr/sbin:/sbin",
+    "HOME": "/Users/danny",
+    "AWS_CONFIG_FILE": "/dev/null",
+    "AWS_SHARED_CREDENTIALS_FILE": "/dev/null",
+    "AWS_EC2_METADATA_DISABLED": "true",
+    "AWS_MAX_ATTEMPTS": "1",
+    "AWS_PAGER": "",
+    "AWS_CLI_AUTO_PROMPT": "off"
+  },
+  "credential_configuration_inspection": false,
+  "live_requests": false,
+  "production_wrapper_invoked": false,
+  "limitations": "Only version and resolved launcher bytes were checked; CLI skeleton capability, runtime dependencies, effective permissions and AWS state remain unverified."
+}

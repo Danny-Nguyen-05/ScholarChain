@@ -1,0 +1,11 @@
+{
+  "confirmation": "h1-terminal-actor-confirmation.json",
+  "sha256": "c5bb51e2beaa7c5a463dffcbb2fda5848ec10ff652b831280a99ad6261189730",
+  "bytes": 1166,
+  "repairs_before_bytes": 57975,
+  "repairs_before_sha256": "6798f211d6c44fe511f13eba706825837248cfc61c7af6fcb3f06f11db64da49",
+  "repairs_prefix_preserved": true,
+  "repairs_after_sha256": "db8b9c7dc00d0f816fc1d97b7604bddefa8343875132809b1f04d1ab7d2cc023",
+  "human_record_unchanged": true,
+  "diff_check_exit": 0
+}

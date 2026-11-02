@@ -1,0 +1,14 @@
+{
+  "checked_utc": "2026-10-31",
+  "url": "https://docs.aws.amazon.com/service-authorization/latest/reference/list_budgets.html",
+  "scope": "N1 mandatory tagged-budget IAM permission wording only",
+  "actions": [
+    "budgets:ModifyBudget",
+    "budgets:TagResource",
+    "budgets:ViewBudget",
+    "budgets:ListTagsForResource",
+    "budgets:UntagResource"
+  ],
+  "live_permissions_verified": false,
+  "iam_policy_authored": false
+}

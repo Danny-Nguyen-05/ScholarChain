@@ -1,0 +1,159 @@
+{
+  "terraform": {
+    "passed": 53,
+    "failed": 0,
+    "assertions": 71,
+    "expected_failure_runs": 27
+  },
+  "static": {
+    "files": 69,
+    "findings": 0,
+    "self_tests": 4
+  },
+  "build": {
+    "status": "COMPLETE",
+    "scope": "12D preparation repair round 1 offline regression gate; no live compatibility claim",
+    "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+    "head": "5ca8406bad5fe55f732458fa0cbd5d561ac83d8f",
+    "freeze": "/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-12/evidence/12d-preparation-repair-1/source-freeze.json",
+    "freeze_sha256": "b11ccf2891d31dce9150cfde4c37c8e4da0b49b1ba2209cc6afaea980f428123",
+    "java": {
+      "label": "java-version",
+      "argv": [
+        "/bin/bash",
+        "-c",
+        "export JAVA_HOME=/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home\nexport PATH=\"$JAVA_HOME/bin:$PATH\"\nexport SBT_OPTS=\"-Dlogback.configurationFile=$PWD/docs/agent-runs/phase-04/xml-repair-logback.xml\"\njava -version"
+      ],
+      "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+      "environment": {
+        "JAVA_HOME": "/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home",
+        "PATH": "/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home/bin:/Users/danny/.codex/packages/app-server-daemon/releases/0.166.0-aarch64-apple-darwin/codex-path:/opt/homebrew/share/google-cloud-sdk/bin:/Users/danny/.opencode/bin:/Users/danny/.antigravity-ide/antigravity-ide/bin:/Users/danny/.local/bin:/opt/homebrew/opt/make/libexec/gnubin:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/pkg/env/global/bin:/Library/Apple/usr/bin:/opt/homebrew/bin:/Users/danny/.codex/tmp/arg0-macos/codex-arg0WGiAyg:/Users/danny/.codex/packages/app-server-daemon/releases/0.166.0-aarch64-apple-darwin/codex-path:/Users/danny/.codex/tmp/arg0-macos/codex-arg0sMvcSz:/Users/danny/.codex/packages/app-server-daemon/releases/0.165.0-aarch64-apple-darwin/codex-path:/Users/danny/.codex/tmp/arg0-macos/codex-arg0gPFAd7:/opt/homebrew/lib/node_modules/@openai/codex/node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/codex-path:/opt/homebrew/share/google-cloud-sdk/bin:/Users/danny/.opencode/bin:/Users/danny/.antigravity-ide/antigravity-ide/bin:/Users/danny/.local/bin:/opt/homebrew/opt/make/libexec/gnubin:/opt/homebrew/sbin:/Users/danny/.lmstudio/bin:/Applications/Warp.app/Contents/Resources/bin:/Users/danny/.lmstudio/bin",
+        "SBT_OPTS": "-Dlogback.configurationFile=/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-04/xml-repair-logback.xml"
+      },
+      "environment_capture": "Only selected non-secret variables; not an environment dump.",
+      "started_utc": "2026-10-31T02:37:36.855331+00:00",
+      "ended_utc": "2026-10-31T02:37:36.916094+00:00",
+      "start_ns": 1793414256855331000,
+      "end_ns": 1793414256916117000,
+      "exit_code": 0,
+      "wall_seconds": 0.060784,
+      "log": "java-version.log.txt",
+      "log_sha256": "2fe83b0053132e4e834defa82250462f4c62733d29bf76b19ee1bb3c14b06b39",
+      "log_bytes": 171
+    },
+    "build": {
+      "label": "sbt-check",
+      "argv": [
+        "/bin/bash",
+        "-c",
+        "export JAVA_HOME=/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home\nexport PATH=\"$JAVA_HOME/bin:$PATH\"\nexport SBT_OPTS=\"-Dlogback.configurationFile=$PWD/docs/agent-runs/phase-04/xml-repair-logback.xml\"\nsbt -batch check"
+      ],
+      "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+      "environment": {
+        "JAVA_HOME": "/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home",
+        "PATH": "/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home/bin:/Users/danny/.codex/packages/app-server-daemon/releases/0.166.0-aarch64-apple-darwin/codex-path:/opt/homebrew/share/google-cloud-sdk/bin:/Users/danny/.opencode/bin:/Users/danny/.antigravity-ide/antigravity-ide/bin:/Users/danny/.local/bin:/opt/homebrew/opt/make/libexec/gnubin:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/pkg/env/global/bin:/Library/Apple/usr/bin:/opt/homebrew/bin:/Users/danny/.codex/tmp/arg0-macos/codex-arg0WGiAyg:/Users/danny/.codex/packages/app-server-daemon/releases/0.166.0-aarch64-apple-darwin/codex-path:/Users/danny/.codex/tmp/arg0-macos/codex-arg0sMvcSz:/Users/danny/.codex/packages/app-server-daemon/releases/0.165.0-aarch64-apple-darwin/codex-path:/Users/danny/.codex/tmp/arg0-macos/codex-arg0gPFAd7:/opt/homebrew/lib/node_modules/@openai/codex/node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/codex-path:/opt/homebrew/share/google-cloud-sdk/bin:/Users/danny/.opencode/bin:/Users/danny/.antigravity-ide/antigravity-ide/bin:/Users/danny/.local/bin:/opt/homebrew/opt/make/libexec/gnubin:/opt/homebrew/sbin:/Users/danny/.lmstudio/bin:/Applications/Warp.app/Contents/Resources/bin:/Users/danny/.lmstudio/bin",
+        "SBT_OPTS": "-Dlogback.configurationFile=/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-04/xml-repair-logback.xml"
+      },
+      "environment_capture": "Only selected non-secret variables; not an environment dump.",
+      "started_utc": "2026-10-31T02:37:36.916331+00:00",
+      "ended_utc": "2026-10-31T02:50:16.799986+00:00",
+      "start_ns": 1793414256916331000,
+      "end_ns": 1793415016800049000,
+      "exit_code": 0,
+      "wall_seconds": 759.886027,
+      "log": "sbt-check.log.txt",
+      "log_sha256": "20ca0ec03b1d92a46b02bd384178ec8a43a5fffa26e6bc414bf432e9c2e6019e",
+      "log_bytes": 1719079
+    },
+    "snapshot_files_before": 1377,
+    "snapshot_files_after": 1377,
+    "snapshot_deltas": [],
+    "freeze_before": {
+      "files": 203,
+      "mismatches": [],
+      "freeze_sha256": "b11ccf2891d31dce9150cfde4c37c8e4da0b49b1ba2209cc6afaea980f428123",
+      "checked_at": "2026-10-31T02:37:36.671031+00:00"
+    },
+    "freeze_after": {
+      "files": 203,
+      "mismatches": [],
+      "freeze_sha256": "b11ccf2891d31dce9150cfde4c37c8e4da0b49b1ba2209cc6afaea980f428123",
+      "checked_at": "2026-10-31T02:50:17.000523+00:00"
+    },
+    "fresh_xml_count": 157,
+    "stale_xml_count": 1,
+    "xml_errors": [],
+    "test_totals": {
+      "tests": 1255,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "raw_log_sha256": "20ca0ec03b1d92a46b02bd384178ec8a43a5fffa26e6bc414bf432e9c2e6019e",
+    "gzip_sha256": "a16df5b1ac1dbcd51d3466ef810a6243cffbf4c0e8d963cbb05331e0f2e30889",
+    "gzip_bytes": 93364,
+    "error_lines": [
+      "[error] java.lang.RuntimeException: scholarchain check probe: injected format-stage failure",
+      "[error] \tat scala.sys.package$.error(package.scala:30)",
+      "[error] \tat $fc7244dbace165edcad1$.$anonfun$root$8(build.sbt:163)",
+      "[error] \tat scala.runtime.java8.JFunction0$mcV$sp.apply(JFunction0$mcV$sp.java:23)",
+      "[error] \tat sbt.std.Transform$$anon$3.$anonfun$apply$2(Transform.scala:47)",
+      "[error] \tat sbt.std.Transform$$anon$4.work(Transform.scala:69)",
+      "[error] \tat sbt.Execute.$anonfun$submit$2(Execute.scala:283)",
+      "[error] \tat sbt.internal.util.ErrorHandling$.wideConvert(ErrorHandling.scala:24)",
+      "[error] \tat sbt.Execute.work(Execute.scala:292)",
+      "[error] \tat sbt.Execute.$anonfun$submit$1(Execute.scala:283)",
+      "[error] \tat sbt.ConcurrentRestrictions$$anon$4.$anonfun$submitValid$1(ConcurrentRestrictions.scala:265)",
+      "[error] \tat sbt.CompletionService$$anon$2.call(CompletionService.scala:65)",
+      "[error] \tat java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)",
+      "[error] \tat java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:539)",
+      "[error] \tat java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)",
+      "[error] \tat java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)",
+      "[error] \tat java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)",
+      "[error] \tat java.base/java.lang.Thread.run(Thread.java:840)",
+      "[error] (checkProbeInjectFailure) scholarchain check probe: injected format-stage failure",
+      "[error] Total time: 0 s, completed Oct 30, 2026, 9:50:16 PM"
+    ],
+    "summary_lines": [
+      "[info] Total number of tests run: 207",
+      "[info] Tests: succeeded 207, failed 0, canceled 0, ignored 0, pending 0",
+      "[info] Total number of tests run: 64",
+      "[info] Tests: succeeded 64, failed 0, canceled 0, ignored 0, pending 0",
+      "[info] Total number of tests run: 39",
+      "[info] Tests: succeeded 39, failed 0, canceled 0, ignored 0, pending 0",
+      "[info] Total number of tests run: 38",
+      "[info] Tests: succeeded 38, failed 0, canceled 0, ignored 0, pending 0",
+      "[info] Total number of tests run: 80",
+      "[info] Tests: succeeded 80, failed 0, canceled 0, ignored 0, pending 0",
+      "[info] Total number of tests run: 107",
+      "[info] Tests: succeeded 107, failed 0, canceled 0, ignored 0, pending 0",
+      "[info] Total number of tests run: 40",
+      "[info] Tests: succeeded 40, failed 0, canceled 0, ignored 0, pending 0",
+      "[info] Total number of tests run: 667",
+      "[info] Tests: succeeded 667, failed 0, canceled 0, ignored 0, pending 0",
+      "[error] (checkProbeInjectFailure) scholarchain check probe: injected format-stage failure",
+      "[error] Total time: 0 s, completed Oct 30, 2026, 9:50:16 PM",
+      "[info] Total number of tests run: 13",
+      "[info] Tests: succeeded 13, failed 0, canceled 0, ignored 0, pending 0",
+      "[success] Total time: 751 s (12:31), completed Oct 30, 2026, 9:50:16 PM"
+    ],
+    "module_log_test_counts": [
+      207,
+      64,
+      39,
+      38,
+      80,
+      107,
+      40,
+      667,
+      13
+    ],
+    "module_log_tests_sum": 1255,
+    "module_log_matches_xml": true,
+    "selected_environment": {
+      "JAVA_HOME": "/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home",
+      "PATH": "/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home/bin:/Users/danny/.codex/packages/app-server-daemon/releases/0.166.0-aarch64-apple-darwin/codex-path:/opt/homebrew/share/google-cloud-sdk/bin:/Users/danny/.opencode/bin:/Users/danny/.antigravity-ide/antigravity-ide/bin:/Users/danny/.local/bin:/opt/homebrew/opt/make/libexec/gnubin:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/pkg/env/global/bin:/Library/Apple/usr/bin:/opt/homebrew/bin:/Users/danny/.codex/tmp/arg0-macos/codex-arg0WGiAyg:/Users/danny/.codex/packages/app-server-daemon/releases/0.166.0-aarch64-apple-darwin/codex-path:/Users/danny/.codex/tmp/arg0-macos/codex-arg0sMvcSz:/Users/danny/.codex/packages/app-server-daemon/releases/0.165.0-aarch64-apple-darwin/codex-path:/Users/danny/.codex/tmp/arg0-macos/codex-arg0gPFAd7:/opt/homebrew/lib/node_modules/@openai/codex/node_modules/@openai/codex-darwin-arm64/vendor/aarch64-apple-darwin/codex-path:/opt/homebrew/share/google-cloud-sdk/bin:/Users/danny/.opencode/bin:/Users/danny/.antigravity-ide/antigravity-ide/bin:/Users/danny/.local/bin:/opt/homebrew/opt/make/libexec/gnubin:/opt/homebrew/sbin:/Users/danny/.lmstudio/bin:/Applications/Warp.app/Contents/Resources/bin:/Users/danny/.lmstudio/bin",
+      "SBT_OPTS": "-Dlogback.configurationFile=/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-04/xml-repair-logback.xml"
+    }
+  }
+}

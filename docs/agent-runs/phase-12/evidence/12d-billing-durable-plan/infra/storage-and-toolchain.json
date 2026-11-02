@@ -1,0 +1,70 @@
+{
+  "created_utc": "2026-11-01T19:02:08.771762+00:00",
+  "primary": "/Users/danny/Library/Application Support/ScholarChain/terraform/billing-bootstrap",
+  "backups": "/Users/danny/Library/Application Support/ScholarChain/terraform/billing-bootstrap-backups",
+  "existing_parent_metadata": [
+    {
+      "path": "/",
+      "mode": "0o755",
+      "uid": 0,
+      "acl_metadata": "drwxr-xr-x  22 root  wheel  sunlnk 704 Aug 12 21:51 /\n"
+    },
+    {
+      "path": "/Users",
+      "mode": "0o755",
+      "uid": 0,
+      "acl_metadata": "drwxr-xr-x  5 root  admin  sunlnk 160 Aug 29 02:45 /Users\n"
+    },
+    {
+      "path": "/Users/danny",
+      "mode": "0o750",
+      "uid": 501,
+      "acl_metadata": "drwxr-x---+ 65 danny  staff  - 2080 Nov  1 13:01 /Users/danny\n 0: group:everyone deny delete\n"
+    },
+    {
+      "path": "/Users/danny/Library",
+      "mode": "0o700",
+      "uid": 501,
+      "acl_metadata": "drwx------@ 98 danny  staff  hidden 3136 Sep 23 21:04 /Users/danny/Library\n\tcom.apple.FinderInfo\t  32 \n 0: group:everyone deny delete\n"
+    },
+    {
+      "path": "/Users/danny/Library/Application Support",
+      "mode": "0o700",
+      "uid": 501,
+      "acl_metadata": "drwx------+ 87 danny  staff  - 2784 Oct 24 11:37 /Users/danny/Library/Application Support\n 0: group:everyone deny delete\n"
+    }
+  ],
+  "new_dirs_mode": "0700",
+  "data_mode": "0600",
+  "executables_mode": "0700",
+  "terraform_binary": "/Users/danny/Library/Application Support/ScholarChain/terraform/billing-bootstrap/toolchain/terraform-1.13.5",
+  "binary_sha256": "899b3c0ca0d2669ebd67be4bcd98e84bd9a914ce2fb3897ad0b86c98cbf3c962",
+  "terraform_pin": "1.13.5",
+  "aws_pin": "6.44.0",
+  "lock_sha256": "421b75245b0080edee2b434482ff348419a75d7a6b798d5218e0a0f9f723eaea",
+  "cli_config": "/Users/danny/Library/Application Support/ScholarChain/terraform/billing-bootstrap/toolchain/terraform.tfrc",
+  "cli_config_sha256": "bd77a0311cac1f89c0ea02f5b328aec41a93ae6f11ddcd7873c61eae6045361e",
+  "cli_config_public": "disable_checkpoint = true\nprovider_installation {\n filesystem_mirror {\n  path = \"/Users/danny/Library/Application Support/ScholarChain/terraform/billing-bootstrap/toolchain/provider-mirror\"\n  include = [\"registry.terraform.io/hashicorp/aws\"]\n }\n}\n",
+  "mirror": [
+    {
+      "path": "/Users/danny/Library/Application Support/ScholarChain/terraform/billing-bootstrap/toolchain/provider-mirror/registry.terraform.io/hashicorp/aws/6.44.0/darwin_arm64/terraform-provider-aws_v6.44.0_x5",
+      "source": "/tmp/scholarchain-phase12b-repair1-infra/mirror/registry.terraform.io/hashicorp/aws/6.44.0/darwin_arm64/terraform-provider-aws_v6.44.0_x5",
+      "sha256": "050fc3a7514d11585206c2a059be393ee54f50b9276ed1b092a1a975ae2afa73",
+      "bytes": 807186848,
+      "mode": "0o700",
+      "resolved": "/Users/danny/Library/Application Support/ScholarChain/terraform/billing-bootstrap/toolchain/provider-mirror/registry.terraform.io/hashicorp/aws/6.44.0/darwin_arm64/terraform-provider-aws_v6.44.0_x5"
+    },
+    {
+      "path": "/Users/danny/Library/Application Support/ScholarChain/terraform/billing-bootstrap/toolchain/provider-mirror/registry.terraform.io/hashicorp/aws/6.44.0/darwin_arm64/LICENSE.txt",
+      "source": "/tmp/scholarchain-phase12b-repair1-infra/mirror/registry.terraform.io/hashicorp/aws/6.44.0/darwin_arm64/LICENSE.txt",
+      "sha256": "588768dc819dc773d6914c22df7de8932cc7899c24188f5b09b013d86457e115",
+      "bytes": 16757,
+      "mode": "0o600",
+      "resolved": "/Users/danny/Library/Application Support/ScholarChain/terraform/billing-bootstrap/toolchain/provider-mirror/registry.terraform.io/hashicorp/aws/6.44.0/darwin_arm64/LICENSE.txt"
+    }
+  ],
+  "cloud_sync_assessment": "Physical Application Support path, no symlink or Git ancestor, outside recognized CloudStorage/Mobile Documents/Dropbox/OneDrive paths; no evidence of cloud synchronization. Filesystem metadata cannot rule out arbitrary third-party backup software.",
+  "retention": "State and backups through reviewed teardown/final reconciliation and human-approved cleanup; plans through supersession and human-approved cleanup. Same-disk backups do not protect disk failure.",
+  "backup_status": "Directory initialized empty. No resource state yet, no state backup claimed.",
+  "old_plan": "/tmp/scholarchain-phase12d-billing-execution-plan/billing.execution.tfplan untouched; superseded only after successful fresh plan"
+}

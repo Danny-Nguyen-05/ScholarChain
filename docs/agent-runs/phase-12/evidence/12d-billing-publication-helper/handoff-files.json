@@ -1,0 +1,39 @@
+{
+  "baseline_status_entries": 780,
+  "final_status_entries": 805,
+  "new_file_count": 25,
+  "new_files": [
+    "docs/agent-runs/phase-12/evidence/12d-billing-publication-helper/all-script-bindings.json",
+    "docs/agent-runs/phase-12/evidence/12d-billing-publication-helper/assemble-public.py",
+    "docs/agent-runs/phase-12/evidence/12d-billing-publication-helper/coordinator-notes.json",
+    "docs/agent-runs/phase-12/evidence/12d-billing-publication-helper/coordinator-report.txt",
+    "docs/agent-runs/phase-12/evidence/12d-billing-publication-helper/delegation.json",
+    "docs/agent-runs/phase-12/evidence/12d-billing-publication-helper/diff-check-result.json",
+    "docs/agent-runs/phase-12/evidence/12d-billing-publication-helper/evidence-manifest.json",
+    "docs/agent-runs/phase-12/evidence/12d-billing-publication-helper/final-status.log.txt",
+    "docs/agent-runs/phase-12/evidence/12d-billing-publication-helper/handoff-files.json",
+    "docs/agent-runs/phase-12/evidence/12d-billing-publication-helper/human-choice.json",
+    "docs/agent-runs/phase-12/evidence/12d-billing-publication-helper/infra/artifact-manifest.json",
+    "docs/agent-runs/phase-12/evidence/12d-billing-publication-helper/infra/offline-tests-attempt1.log.txt",
+    "docs/agent-runs/phase-12/evidence/12d-billing-publication-helper/infra/offline-tests-attempt2.log.txt",
+    "docs/agent-runs/phase-12/evidence/12d-billing-publication-helper/infra/offline-tests-attempt3.log.txt",
+    "docs/agent-runs/phase-12/evidence/12d-billing-publication-helper/infra/owner-report.txt",
+    "docs/agent-runs/phase-12/evidence/12d-billing-publication-helper/infra/result.json",
+    "docs/agent-runs/phase-12/evidence/12d-billing-publication-helper/infra/source-file-hashes.json",
+    "docs/agent-runs/phase-12/evidence/12d-billing-publication-helper/preflight-status.log.txt",
+    "docs/agent-runs/phase-12/evidence/12d-billing-publication-helper/preflight.json",
+    "docs/agent-runs/phase-12/evidence/12d-billing-publication-helper/preservation-check.json",
+    "docs/agent-runs/phase-12/evidence/12d-billing-publication-helper/public-address-scan.json",
+    "docs/agent-runs/phase-12/reviewer-prompt-12d-billing-publication-helper.md",
+    "scripts/billing/PUBLICATION.md",
+    "scripts/billing/publication_evidence.py",
+    "scripts/billing/tests/test_publication_evidence.py"
+  ],
+  "five_records_appended": [
+    "docs/agent-runs/phase-12/prompt.md",
+    "docs/agent-runs/phase-12/review.md",
+    "docs/agent-runs/phase-12/repairs.md",
+    "docs/agent-runs/phase-12/owner-report.md",
+    "docs/agent-runs/phase-12/test-report.md"
+  ]
+}

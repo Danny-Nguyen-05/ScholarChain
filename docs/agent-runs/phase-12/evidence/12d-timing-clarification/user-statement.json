@@ -1,0 +1,24 @@
+{
+  "recorded_utc": "2026-11-01T06:08:18.709391+00:00",
+  "kind": "Coordinator transcription of human timing clarification; not agent approval or edit of human record",
+  "latest_user_statement_verbatim": "that is my real time I have updated it",
+  "preceding_save_reply_verbatim": "Saved the clarification to this exact file",
+  "context": "User responds to repeated check of human record stating supervised9\u201310PM Chicago October31,2026. User explicitly confirms that the recorded window is the real time.",
+  "interpreted_user_confirmation": {
+    "actual_start_as_reported": "2026-10-31T21:00:00-05:00",
+    "actual_end_as_reported": "2026-10-31T22:00:00-05:00",
+    "timezone": "America/Chicago",
+    "provenance": "Human statement in chat referring to the window in their own file; not independently verified execution times"
+  },
+  "human_record": {
+    "path": "docs/agent-runs/phase-12/billing-bootstrap-exception.md",
+    "sha256": "f00a715960261cb5813baaba903c6c315f42e37a092d1aadb2f84608e0797f04",
+    "bytes": 538,
+    "agent_edited": false,
+    "text_still_calls_it_supervised_window": true
+  },
+  "unreconciled_evidence": "Operator/role creation screenshots display20:01/20:23UTC-05 October31. Human confirms21:00\u201322:00 actual window but did not provide an explanation for earlier displayed creation times. Do not infer timestamp errors or backdate actions. Independent reviewer must assess the discrepancy and scope/timing compliance.",
+  "P1_status": "Human actual-timing statement recorded; independent identity-review verdict pending. Not independently accepted or closed.",
+  "P2_status": "Durable location/retention selected; regeneration awaits independent P1 approval; no new plan",
+  "no_further_resave_requested": true
+}

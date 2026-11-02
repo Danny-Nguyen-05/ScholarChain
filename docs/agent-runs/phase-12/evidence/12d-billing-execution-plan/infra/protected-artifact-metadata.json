@@ -1,0 +1,88 @@
+{
+  "timestamp_utc": "2026-11-01T03:09:18.022780+00:00",
+  "artifacts": [
+    {
+      "path": "/tmp/scholarchain-phase12d-billing-execution-plan",
+      "mode": "0o700",
+      "uid": 501,
+      "gid": 0,
+      "symlink": false,
+      "regular_file": false,
+      "directory": true,
+      "mtime_ns": 1793502394049092366
+    },
+    {
+      "path": "/tmp/scholarchain-phase12d-billing-execution-plan/notification.private.tfvars.json",
+      "mode": "0o600",
+      "uid": 501,
+      "gid": 0,
+      "symlink": false,
+      "regular_file": true,
+      "directory": false,
+      "mtime_ns": 1793502275064703356,
+      "contents_read_or_hashed": false,
+      "size_omitted": true
+    },
+    {
+      "path": "/tmp/scholarchain-phase12d-billing-execution-plan/protected-init.log.txt",
+      "mode": "0o600",
+      "uid": 501,
+      "gid": 0,
+      "symlink": false,
+      "regular_file": true,
+      "directory": false,
+      "mtime_ns": 1793502389197618505,
+      "sha256": "0332e5a2014b4e3a832437119fe49036bc6a8355061e8def4e2d5ffc1c783808",
+      "bytes": 243
+    },
+    {
+      "path": "/tmp/scholarchain-phase12d-billing-execution-plan/real-plan.log.txt",
+      "mode": "0o600",
+      "uid": 501,
+      "gid": 0,
+      "symlink": false,
+      "regular_file": true,
+      "directory": false,
+      "mtime_ns": 1793502394043907135,
+      "sha256": "c23336f77fda43a5f5af2ef602aa8acd05fb7f57f7cd49f8ab010e1333ce6cd1",
+      "bytes": 2559
+    },
+    {
+      "path": "/tmp/scholarchain-phase12d-billing-execution-plan/protected-show.log.txt",
+      "mode": "0o600",
+      "uid": 501,
+      "gid": 0,
+      "symlink": false,
+      "regular_file": true,
+      "directory": false,
+      "mtime_ns": 1793502394049032283,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "/tmp/scholarchain-phase12d-billing-execution-plan/billing.execution.tfplan",
+      "mode": "0o600",
+      "uid": 501,
+      "gid": 0,
+      "symlink": false,
+      "regular_file": true,
+      "directory": false,
+      "mtime_ns": 1793502393979466351,
+      "sha256": "35e3591498a3708ff82617ff4ee382f3402bdcf0176a8d4c95e6260913d1cdc5",
+      "bytes": 6626
+    },
+    {
+      "path": "/tmp/scholarchain-phase12d-billing-execution-plan/billing.execution.plan.json",
+      "mode": "0o600",
+      "uid": 501,
+      "gid": 0,
+      "symlink": false,
+      "regular_file": true,
+      "directory": false,
+      "mtime_ns": 1793502395251714009,
+      "sha256": "da5ee0f6a00d9ad78b87cf31df9726e9b653bf90c5e849a9133c632772b21f8d",
+      "bytes": 10349
+    }
+  ],
+  "input_contents_or_hash_never_accessed": true
+}

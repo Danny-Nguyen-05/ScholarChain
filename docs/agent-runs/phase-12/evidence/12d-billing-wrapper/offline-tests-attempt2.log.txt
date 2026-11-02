@@ -1,0 +1,48 @@
+test_apply_exact_argv_env_and_space_paths (__main__.Features.test_apply_exact_argv_env_and_space_paths) ... FAIL
+test_apply_fail_preserves_all_recovery_including_errored (__main__.Features.test_apply_fail_preserves_all_recovery_including_errored) ... ok
+test_backup_fsync_failure_stops_no_readback_no_retry (__main__.Features.test_backup_fsync_failure_stops_no_readback_no_retry) ... ok
+test_backup_never_overwrites (__main__.Features.test_backup_never_overwrites) ... ok
+test_cli_rejects_dangerous_mode_and_root_overrides (__main__.Features.test_cli_rejects_dangerous_mode_and_root_overrides) ... ok
+test_copy_changed_source_rejected (__main__.Features.test_copy_changed_source_rejected) ... ok
+test_dirty_checkout_blocks (__main__.Features.test_dirty_checkout_blocks) ... ok
+test_duplicate_json_keys_rejected (__main__.Features.test_duplicate_json_keys_rejected) ... ok
+test_exact_notfound_accepted_only_known_operation (__main__.Features.test_exact_notfound_accepted_only_known_operation) ... ok
+test_expired_window_does_not_call_aws (__main__.Features.test_expired_window_does_not_call_aws) ... ok
+test_full_readback_safe_only (__main__.Features.test_full_readback_safe_only) ... ok
+test_gate_denies_wrong_identity_window_scope_binding (__main__.Features.test_gate_denies_wrong_identity_window_scope_binding) ... ok
+test_gate_hash_tamper_fails (__main__.Features.test_gate_hash_tamper_fails) ... ok
+test_global_operation_lock_stops_parallel_command (__main__.Features.test_global_operation_lock_stops_parallel_command) ... ok
+test_missing_filter_option_stops_before_live_request (__main__.Features.test_missing_filter_option_stops_before_live_request) ... ok
+test_no_prior_receipt_modes_do_not_call_aws (__main__.Features.test_no_prior_receipt_modes_do_not_call_aws) ... ok
+test_opaque_backup_hash_modes_fsync (__main__.Features.test_opaque_backup_hash_modes_fsync) ... ok
+test_owner_mismatch_rejected_before_process (__main__.Features.test_owner_mismatch_rejected_before_process) ... ok
+test_p3_error_classification_no_retry (__main__.Features.test_p3_error_classification_no_retry) ... ok
+test_p3_receipt_stale_and_cross_gate_binding_stop (__main__.Features.test_p3_receipt_stale_and_cross_gate_binding_stop) ... ok
+test_plan_hash_rejected_before_process (__main__.Features.test_plan_hash_rejected_before_process) ... ok
+test_plan_mode_rejected_before_process (__main__.Features.test_plan_mode_rejected_before_process) ... ok
+test_plan_size_mismatch_rejected (__main__.Features.test_plan_size_mismatch_rejected) ... ok
+test_postfreeze_scan_complete_snapshot_and_rerun (__main__.Features.test_postfreeze_scan_complete_snapshot_and_rerun) ... ok
+test_preexisting_state_and_recovery_stop (__main__.Features.test_preexisting_state_and_recovery_stop) ... ok
+test_private_recipient_not_in_cli_or_logs_receipts (__main__.Features.test_private_recipient_not_in_cli_or_logs_receipts) ... ok
+test_readback_command_mismatch_does_not_retry (__main__.Features.test_readback_command_mismatch_does_not_retry) ... ok
+test_readback_matrix_sanitizer_no_private_emission (__main__.Features.test_readback_matrix_sanitizer_no_private_emission) ... ok
+test_readback_needs_backup_receipt_and_unchanged_state (__main__.Features.test_readback_needs_backup_receipt_and_unchanged_state) ... ok
+test_recipient_private_fixture (__main__.Features.test_recipient_private_fixture) ... ok
+test_replayed_apply_readback_stages_fail_before_process (__main__.Features.test_replayed_apply_readback_stages_fail_before_process) ... ok
+test_symlink_copy_rejected (__main__.Features.test_symlink_copy_rejected) ... ok
+test_wrong_checkout_commit_blocks (__main__.Features.test_wrong_checkout_commit_blocks) ... ok
+
+======================================================================
+FAIL: test_apply_exact_argv_env_and_space_paths (__main__.Features.test_apply_exact_argv_env_and_space_paths)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/danny/Documents/UIC/CS441/ScholarChain/scripts/billing/tests/test_budget_execution.py", line 142, in test_apply_exact_argv_env_and_space_paths
+    self.assertEqual({k:v for k,v in last['env'].items() if k!='LC_CTYPE'},self.policy.env())
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'HOM[589 chars]MAX_ATTEMPTS': '1', '__CF_USER_TEXT_ENCODING': '0x1F5:0x0:0x0'} != {'HOM[589 chars]MAX_ATTEMPTS': '1'}
+Diff is 859 characters long. Set self.maxDiff to None to see it.
+
+----------------------------------------------------------------------
+Ran 33 tests in 10.949s
+
+FAILED (failures=1)

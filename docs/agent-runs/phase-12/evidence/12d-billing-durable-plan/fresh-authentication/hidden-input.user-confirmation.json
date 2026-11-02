@@ -1,0 +1,9 @@
+{
+  "recorded_utc": "2026-11-01T19:57:00.911190+00:00",
+  "user_pasted_output_verbatim": "python3 -I \"/Users/danny/Library/Application Support/ScholarChain/terraform/billing-bootstrap/save-recipient.py\"\nBudget notification email (hidden): \nRepeat notification email (hidden): \nPrivate notification input saved successfully.",
+  "private_recipient_not_in_message": true,
+  "helper_success_reported": true,
+  "human_process_exit_code": "Not captured; success text supplied",
+  "agent_private_file_content_hash_size_read": false,
+  "real_plan_goahead": "Coordinator authorized existing infra specialist to run read-only durable plan after exact fresh role identity and this success confirmation; no apply"
+}

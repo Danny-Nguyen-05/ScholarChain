@@ -1,0 +1,118 @@
+{
+  "recorded_at_utc": "2026-11-01T01:33:21.695920+00:00",
+  "owner": "coordinator",
+  "branch": "phase-12",
+  "head": "5ca8406bad5fe55f732458fa0cbd5d561ac83d8f",
+  "method": "Visual inspection of user-supplied screenshots and local read-only source/approval checks; no agent AWS account calls",
+  "human_exception": {
+    "path": "docs/agent-runs/phase-12/billing-bootstrap-exception.md",
+    "sha256": "4265d7a7e7076de75b50c467266187aeb418b09ccefb74be4fe5bcf958a31345",
+    "bytes": 537,
+    "preserved": true,
+    "fixed_window_replaced_by_user_requested_verbatim_append": true,
+    "actual_session_start_end": "Not yet supplied; human must record actual times afterward"
+  },
+  "referenced_proposal_sha256": "813c24fec06f32e84dc231de4e967340b47c2919fc458c0b1ddafb8e50dc200b",
+  "operator": {
+    "arn": "arn:aws:iam::530332961125:user/scholarchain-billing-operator",
+    "creation_time_displayed": "October 31, 2026, 20:01 (UTC-05:00)",
+    "passkey_assignment": "Success banner observed; MFA count 1",
+    "console_access": "Summary shows Enabled with MFA; subordinate Console password label shows Not enabled. Manage console access dialog offered Disable console access / Reset password. Actual sign-in untested; no password reset or access disable instructed.",
+    "tags": "Five values shown before creation; post-creation count 5 shown. Actual tag values not independently read back.",
+    "caller_policy": "Exact JSON supplied from reviewed Terraform source; pre-installation review summary observed. Complete installed JSON and final operator policy inventory not yet read back."
+  },
+  "role": {
+    "arn": "arn:aws:iam::530332961125:role/scholarchain-billing-deployer",
+    "creation_time_displayed": "October 31, 2026, 20:23 (UTC-05:00)",
+    "max_session_duration": "1 hour observed",
+    "tags": "Five values shown before creation; post-creation count 5 shown. Actual tag values not independently read back.",
+    "inline_policy_names_observed": [
+      "scholarchain-billing-browser-login",
+      "scholarchain-project-budget-management"
+    ],
+    "trust_readback": {
+      "statements": 1,
+      "principal": "arn:aws:iam::530332961125:user/scholarchain-billing-operator",
+      "effect": "Allow",
+      "action": "sts:AssumeRole",
+      "condition": {
+        "Bool": {
+          "aws:MultiFactorAuthPresent": "true"
+        }
+      },
+      "note": "AWS console normalized the one-element Action array to a string; equivalent to reviewed source."
+    },
+    "budget_policy": "Full exact five-action/single-budget-ARN JSON observed before installation; creation success banner and installed inline policy name observed. Full installed body readback pending.",
+    "login_policy": "Exact two-action/localhost resource/OAuthClientId JSON supplied from reviewed source; creation success banner and installed inline policy name observed. Full installed body readback pending."
+  },
+  "approved_source_freeze": {
+    "path": "docs/agent-runs/phase-12/evidence/12d-billing-policy-amendment/source-freeze.json",
+    "sha256": "f6cd6649d084cad038234f9ec476bead72a05e6e74124b9d77b86e4c8777ba1a",
+    "entries_checked": 209,
+    "sha_size_mtime_mismatches": []
+  },
+  "screenshots": [
+    {
+      "retained_path": "screenshots/operator-tags-before-creation.png",
+      "source_attachment_name": "codex-clipboard-9def62b4-e5c4-488c-a4e2-77f682c280b6.png",
+      "provenance": "User supplied in this chat; copied without modification",
+      "sha256": "49ccf0dac5829db0b0e4646115fbcea24bfd4d413421bb443b96112743c44bac"
+    },
+    {
+      "retained_path": "screenshots/operator-passkey-confirmation.png",
+      "source_attachment_name": "codex-clipboard-faa03b44-688e-473e-aead-2019cb0c2cb3.png",
+      "provenance": "User supplied in this chat; copied without modification",
+      "sha256": "f35e8eac823adfa7d74173c5bfe9d5e0a645ecbf96c707420d0c21af25e55b49"
+    },
+    {
+      "retained_path": "screenshots/caller-policy-review-summary.png",
+      "source_attachment_name": "codex-clipboard-4bc44656-3dd3-4d6d-a9f3-5f168461e077.png",
+      "provenance": "User supplied in this chat; copied without modification",
+      "sha256": "9812041bc707e76d6a290adc0aaf5f0e078e4f1b60840d0a563e7fccdedcd973"
+    },
+    {
+      "retained_path": "screenshots/role-tags-before-creation.png",
+      "source_attachment_name": "codex-clipboard-c563e2a8-012f-40c6-bf38-a22273a7fe52.png",
+      "provenance": "User supplied in this chat; copied without modification",
+      "sha256": "3f8e8966e63f9423bc81bf563e7de75806d531c7653fb288826fb6645567ed4e"
+    },
+    {
+      "retained_path": "screenshots/budget-policy-json-before-installation.png",
+      "source_attachment_name": "codex-clipboard-03571c70-4f4a-45a2-906f-736ad141ec8b.png",
+      "provenance": "User supplied in this chat; copied without modification",
+      "sha256": "111766f02720199f87ada85fe338b01bbd11c11d99f1db365efee527cb033191"
+    },
+    {
+      "retained_path": "screenshots/role-two-policies-confirmation.png",
+      "source_attachment_name": "codex-clipboard-96d428c0-e793-44b6-ab4d-188d7dca528c.png",
+      "provenance": "User supplied in this chat; copied without modification",
+      "sha256": "d6361703dbf1fedd6d600128d226c6dd04fc229abed236ee44d316e5a7f251bb"
+    },
+    {
+      "retained_path": "screenshots/role-trust-policy-readback.png",
+      "source_attachment_name": "codex-clipboard-3cbe956a-ef5b-471d-bba3-df6859fe76c1.png",
+      "provenance": "User supplied in this chat; copied without modification",
+      "sha256": "703679e481bc9443a13475a190c2a4936c56c34b543e9d3e5039afc7c86a103e"
+    }
+  ],
+  "not_performed": [
+    "Agent AWS/IAM/account calls or console control",
+    "Operator console sign-in or role-switch verification",
+    "CLI login or credential/config/cache reads",
+    "Terraform real plan/apply/import/destroy",
+    "Budget creation, notification delivery or cost-data verification",
+    "Paid model calls or EMR execution",
+    "Source edits, build or test execution",
+    "Review launch, commit or push"
+  ],
+  "remaining_checks": [
+    "Complete installed caller/budget/login policy JSON and user policy inventory readback",
+    "Post-creation tag value readback",
+    "Human logout and actual session times",
+    "Separately bounded operator MFA sign-in, role switch and temporary CLI login verification; no permission widening on failure",
+    "Fresh execution-identity budget plan, independent review and human approval before any billing apply",
+    "Active monitor, delivery proof, usable cost data and all live EMR prerequisites"
+  ],
+  "budget_and_emr": "USD 5 proposed spike cap, USD 10 remaining all-EMR reserve and USD 5.09 upper-window margin unchanged; no spending authorized",
+  "next_gate": "Finish read-only installation checks, then separately authorized authentication verification; no budget apply or paid work inferred"
+}

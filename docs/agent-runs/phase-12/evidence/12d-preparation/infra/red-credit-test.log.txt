@@ -1,0 +1,20 @@
+tests/budget.tftest.hcl... in progress
+  run "disabled_by_default"... pass
+  run "one_cumulative_before_credit_account_budget"... fail
+
+Error: Test assertion failed
+
+  on tests/budget.tftest.hcl line 33, in run "one_cumulative_before_credit_account_budget":
+  33:     condition     = !output.controls.budget.cost_types[0].include_credit && !output.controls.budget.cost_types[0].include_refund && output.controls.budget.cost_types[0].include_tax && output.controls.budget.cost_types[0].include_support && !output.controls.budget.cost_types[0].use_blended && !output.controls.budget.cost_types[0].use_amortized
+    ├────────────────
+
+
+Credits/refunds must not hide pre-credit project usage; include taxes and
+support.
+  run "cannot_enable_without_private_subscriber"... pass
+  run "cannot_raise_shared_budget"... pass
+  run "end_must_follow_start"... pass
+tests/budget.tftest.hcl... tearing down
+tests/budget.tftest.hcl... fail
+
+Failure! 4 passed, 1 failed.

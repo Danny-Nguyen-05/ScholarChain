@@ -1,0 +1,903 @@
+ASSUME-ROLE()                                                    ASSUME-ROLE()
+
+NNAAMMEE
+       assume-role -
+
+DDEESSCCRRIIPPTTIIOONN
+       Returns a set of temporary security credentials that you can use to
+       access Amazon Web Services resources. These temporary credentials
+       consist of an access key ID, a secret access key, and a security token.
+       Typically, you use AAssssuummeeRRoollee within your account or for cross-account
+       access. For a comparison of AAssssuummeeRRoollee with other API operations that
+       produce temporary credentials, see _R_e_q_u_e_s_t_i_n_g _T_e_m_p_o_r_a_r_y _S_e_c_u_r_i_t_y
+       _C_r_e_d_e_n_t_i_a_l_s and _C_o_m_p_a_r_e _S_T_S _c_r_e_d_e_n_t_i_a_l_s in the _I_A_M _U_s_e_r _G_u_i_d_e .
+          PPeerrmmiissssiioonnss
+
+       The temporary security credentials created by AAssssuummeeRRoollee can be used to
+       make API calls to any Amazon Web Services service with the following
+       exception: You cannot call the Amazon Web Services STS
+       GGeettFFeeddeerraattiioonnTTookkeenn or GGeettSSeessssiioonnTTookkeenn API operations.
+
+       (Optional) You can pass inline or managed session policies to this
+       operation. You can pass a single JSON policy document to use as an
+       inline session policy. You can also specify up to 10 managed policy
+       Amazon Resource Names (ARNs) to use as managed session policies. The
+       plaintext that you use for both inline and managed session policies
+       can't exceed 2,048 characters. Passing policies to this operation
+       returns new temporary credentials. The resulting session's permissions
+       are the intersection of the role's identity-based policy and the
+       session policies. You can use the role's temporary credentials in
+       subsequent Amazon Web Services API calls to access resources in the
+       account that owns the role. You cannot use session policies to grant
+       more permissions than those allowed by the identity-based policy of the
+       role that is being assumed. For more information, see _S_e_s_s_i_o_n _P_o_l_i_c_i_e_s
+       in the _I_A_M _U_s_e_r _G_u_i_d_e .
+
+       When you create a role, you create two policies: a role trust policy
+       that specifies _w_h_o can assume the role, and a permissions policy that
+       specifies _w_h_a_t can be done with the role. You specify the trusted
+       principal that is allowed to assume the role in the role trust policy.
+
+       To assume a role from a different account, your Amazon Web Services
+       account must be trusted by the role. The trust relationship is defined
+       in the role's trust policy when the role is created. That trust policy
+       states which accounts are allowed to delegate that access to users in
+       the account.
+
+       A user who wants to access a role in a different account must also have
+       permissions that are delegated from the account administrator. The
+       administrator must attach a policy that allows the user to call
+       AAssssuummeeRRoollee for the ARN of the role in the other account.
+
+       To allow a user to assume a role in the same account, you can do either
+       of the following:
+
+       +o Attach a policy to the user that allows the user to call AAssssuummeeRRoollee
+         (as long as the role's trust policy trusts the account).
+
+       +o Add the user as a principal directly in the role's trust policy.
+
+       You can do either because the role's trust policy acts as an IAM
+       resource-based policy. When a resource-based policy grants access to a
+       principal in the same account, no additional identity-based policy is
+       required. For more information about trust policies and resource-based
+       policies, see _I_A_M _P_o_l_i_c_i_e_s in the _I_A_M _U_s_e_r _G_u_i_d_e .
+          TTaaggss
+
+       (Optional) You can pass tag key-value pairs to your session. These tags
+       are called session tags. For more information about session tags, see
+       _P_a_s_s_i_n_g _S_e_s_s_i_o_n _T_a_g_s _i_n _S_T_S in the _I_A_M _U_s_e_r _G_u_i_d_e .
+
+       An administrator must grant you the permissions necessary to pass
+       session tags. The administrator can also create granular permissions to
+       allow you to pass only specific session tags. For more information, see
+       _T_u_t_o_r_i_a_l_: _U_s_i_n_g _T_a_g_s _f_o_r _A_t_t_r_i_b_u_t_e_-_B_a_s_e_d _A_c_c_e_s_s _C_o_n_t_r_o_l in the _I_A_M _U_s_e_r
+       _G_u_i_d_e .
+
+       You can set the session tags as transitive. Transitive tags persist
+       during role chaining. For more information, see _C_h_a_i_n_i_n_g _R_o_l_e_s _w_i_t_h
+       _S_e_s_s_i_o_n _T_a_g_s in the _I_A_M _U_s_e_r _G_u_i_d_e .
+          UUssiinngg MMFFAA wwiitthh AAssssuummeeRRoollee
+
+       (Optional) You can include multi-factor authentication (MFA)
+       information when you call AAssssuummeeRRoollee . This is useful for cross-account
+       scenarios to ensure that the user that assumes the role has been
+       authenticated with an Amazon Web Services MFA device. In that scenario,
+       the trust policy of the role being assumed includes a condition that
+       tests for MFA authentication. If the caller does not include valid MFA
+       information, the request to assume the role is denied. The condition in
+       a trust policy that tests for MFA authentication might look like the
+       following example.
+          ""CCoonnddiittiioonn"":: {{""BBooooll"":: {{""aawwss::MMuullttiiFFaaccttoorrAAuutthhPPrreesseenntt"":: ttrruuee}}}}
+
+       For more information, see _C_o_n_f_i_g_u_r_i_n_g _M_F_A_-_P_r_o_t_e_c_t_e_d _A_P_I _A_c_c_e_s_s in the
+       _I_A_M _U_s_e_r _G_u_i_d_e guide.
+
+       To use MFA with AAssssuummeeRRoollee , you pass values for the SSeerriiaallNNuummbbeerr and
+       TTookkeennCCooddee parameters. The SSeerriiaallNNuummbbeerr value identifies the user's
+       hardware or virtual MFA device. The TTookkeennCCooddee is the time-based
+       one-time password (TOTP) that the MFA device produces.
+
+       See also: AWS API Documentation
+
+SSYYNNOOPPSSIISS
+
+            assume-role
+          --role-arn <value>
+          --role-session-name <value>
+          [--policy-arns <value>]
+          [--policy <value>]
+          [--duration-seconds <value>]
+          [--tags <value>]
+          [--transitive-tag-keys <value>]
+          [--external-id <value>]
+          [--serial-number <value>]
+          [--token-code <value>]
+          [--source-identity <value>]
+          [--provided-contexts <value>]
+          [--cli-input-json | --cli-input-yaml]
+          [--generate-cli-skeleton <value>]
+          [--debug]
+          [--endpoint-url <value>]
+          [--no-verify-ssl]
+          [--no-paginate]
+          [--output <value>]
+          [--query <value>]
+          [--profile <value>]
+          [--region <value>]
+          [--version <value>]
+          [--color <value>]
+          [--no-sign-request]
+          [--ca-bundle <value>]
+          [--cli-read-timeout <value>]
+          [--cli-connect-timeout <value>]
+          [--cli-binary-format <value>]
+          [--no-cli-pager]
+          [--cli-auto-prompt]
+          [--no-cli-auto-prompt]
+          [--cli-error-format <value>]
+
+OOPPTTIIOONNSS
+       ----rroollee--aarrnn (string) [required]
+          The Amazon Resource Name (ARN) of the role to assume.
+
+          Constraints:
+
+          +o min: 2200
+
+          +o max: 22004488
+
+          +o pattern:
+            [[\\uu00000099\\uu000000AA\\uu000000DD\\uu00002200--\\uu000077EE\\uu00008855\\uu0000AA00--\\uuDD77FFFF\\uuEE000000--\\uuFFFFFFDD\\uu1100000000--\\uu1100FFFFFFFF]]++
+
+       ----rroollee--sseessssiioonn--nnaammee (string) [required]
+          An identifier for the assumed role session.
+
+          Use the role session name to uniquely identify a session when the
+          same role is assumed by different principals or for different
+          reasons. In cross-account scenarios, the role session name is
+          visible to, and can be logged by the account that owns the role. The
+          role session name is also used in the ARN of the assumed role
+          principal. This means that subsequent cross-account API requests
+          that use the temporary security credentials will expose the role
+          session name to the external account in their CloudTrail logs.
+
+          For security purposes, administrators can view this field in
+          _C_l_o_u_d_T_r_a_i_l _l_o_g_s to help identify who performed an action in Amazon
+          Web Services. Your administrator might require that you specify your
+          user name as the session name when you assume the role. For more
+          information, see ` ssttss::RRoolleeSSeessssiioonnNNaammee
+          _h_t_t_p_s_:_/_/_d_o_c_s_._a_w_s_._a_m_a_z_o_n_._c_o_m_/_I_A_M_/_l_a_t_e_s_t_/_U_s_e_r_G_u_i_d_e_/_r_e_f_e_r_e_n_c_e___p_o_l_i_c_i_e_s___i_a_m_-_c_o_n_d_i_t_i_o_n_-_k_e_y_s.html#ck_rolesessionname`__
+          .
+
+          The regex used to validate this parameter is a string of characters
+          consisting of upper- and lower-case alphanumeric characters with no
+          spaces. You can also include underscores or any of the following
+          characters: +=,.@-
+
+          Constraints:
+
+          +o min: 22
+
+          +o max: 6644
+
+          +o pattern: [[\\ww++==,,..@@--]]**
+
+       ----ppoolliiccyy--aarrnnss (list)
+          The Amazon Resource Names (ARNs) of the IAM managed policies that
+          you want to use as managed session policies. The policies must exist
+          in the same account as the role.
+
+          This parameter is optional. You can provide up to 10 managed policy
+          ARNs. However, the plaintext that you use for both inline and
+          managed session policies can't exceed 2,048 characters. For more
+          information about ARNs, see _A_m_a_z_o_n _R_e_s_o_u_r_c_e _N_a_m_e_s _(_A_R_N_s_) _a_n_d _A_m_a_z_o_n
+          _W_e_b _S_e_r_v_i_c_e_s _S_e_r_v_i_c_e _N_a_m_e_s_p_a_c_e_s in the Amazon Web Services General
+          Reference.
+
+          NNOOTTEE::
+             An Amazon Web Services conversion compresses the passed inline
+             session policy, managed policy ARNs, and session tags into a
+             packed binary format that has a separate limit. Your request can
+             fail for this limit even if your plaintext meets the other
+             requirements. The PPaacckkeeddPPoolliiccyySSiizzee response element indicates by
+             percentage how close the policies and tags for your request are
+             to the upper size limit.
+
+          Passing policies to this operation returns new temporary
+          credentials. The resulting session's permissions are the
+          intersection of the role's identity-based policy and the session
+          policies. You can use the role's temporary credentials in subsequent
+          Amazon Web Services API calls to access resources in the account
+          that owns the role. You cannot use session policies to grant more
+          permissions than those allowed by the identity-based policy of the
+          role that is being assumed. For more information, see _S_e_s_s_i_o_n
+          _P_o_l_i_c_i_e_s in the _I_A_M _U_s_e_r _G_u_i_d_e .
+
+          (structure)
+             A reference to the IAM managed policy that is passed as a session
+             policy for a role session or a federated user session.
+
+             arn -> (string)
+                The Amazon Resource Name (ARN) of the IAM managed policy to
+                use as a session policy for the role. For more information
+                about ARNs, see _A_m_a_z_o_n _R_e_s_o_u_r_c_e _N_a_m_e_s _(_A_R_N_s_) _a_n_d _A_m_a_z_o_n _W_e_b
+                _S_e_r_v_i_c_e_s _S_e_r_v_i_c_e _N_a_m_e_s_p_a_c_e_s in the _A_m_a_z_o_n _W_e_b _S_e_r_v_i_c_e_s _G_e_n_e_r_a_l
+                _R_e_f_e_r_e_n_c_e .
+
+                Constraints:
+
+                +o min: 2200
+
+                +o max: 22004488
+
+                +o pattern:
+                  [[\\uu00000099\\uu000000AA\\uu000000DD\\uu00002200--\\uu000077EE\\uu00008855\\uu0000AA00--\\uuDD77FFFF\\uuEE000000--\\uuFFFFFFDD\\uu1100000000--\\uu1100FFFFFFFF]]++
+
+       Shorthand Syntax:
+
+          arn=string ...
+
+       JSON Syntax:
+
+          [
+            {
+              "arn": "string"
+            }
+            ...
+          ]
+
+       ----ppoolliiccyy (string)
+          An IAM policy in JSON format that you want to use as an inline
+          session policy.
+
+          This parameter is optional. Passing policies to this operation
+          returns new temporary credentials. The resulting session's
+          permissions are the intersection of the role's identity-based policy
+          and the session policies. You can use the role's temporary
+          credentials in subsequent Amazon Web Services API calls to access
+          resources in the account that owns the role. You cannot use session
+          policies to grant more permissions than those allowed by the
+          identity-based policy of the role that is being assumed. For more
+          information, see _S_e_s_s_i_o_n _P_o_l_i_c_i_e_s in the _I_A_M _U_s_e_r _G_u_i_d_e .
+
+          The plaintext that you use for both inline and managed session
+          policies can't exceed 2,048 characters. The JSON policy characters
+          can be any ASCII character from the space character to the end of
+          the valid character list (u0020 through u00FF). It can also include
+          the tab (u0009), linefeed (u000A), and carriage return (u000D)
+          characters.
+
+          NNOOTTEE::
+             An Amazon Web Services conversion compresses the passed inline
+             session policy, managed policy ARNs, and session tags into a
+             packed binary format that has a separate limit. Your request can
+             fail for this limit even if your plaintext meets the other
+             requirements. The PPaacckkeeddPPoolliiccyySSiizzee response element indicates by
+             percentage how close the policies and tags for your request are
+             to the upper size limit.
+
+          For more information about role session permissions, see _S_e_s_s_i_o_n
+          _p_o_l_i_c_i_e_s .
+
+          Constraints:
+
+          +o min: 11
+
+          +o pattern: [[\\uu00000099\\uu000000AA\\uu000000DD\\uu00002200--\\uu0000FFFF]]++
+
+       ----dduurraattiioonn--sseeccoonnddss (integer)
+          The duration, in seconds, of the role session. The value specified
+          can range from 900 seconds (15 minutes) up to the maximum session
+          duration set for the role. The maximum session duration setting can
+          have a value from 1 hour to 12 hours. If you specify a value higher
+          than this setting or the administrator setting (whichever is lower),
+          the operation fails. For example, if you specify a session duration
+          of 12 hours, but your administrator set the maximum session duration
+          to 6 hours, your operation fails.
+
+          Role chaining limits your Amazon Web Services CLI or Amazon Web
+          Services API role session to a maximum of one hour. When you use the
+          AAssssuummeeRRoollee API operation to assume a role, you can specify the
+          duration of your role session with the DDuurraattiioonnSSeeccoonnddss parameter.
+          You can specify a parameter value of up to 43200 seconds (12 hours),
+          depending on the maximum session duration setting for your role.
+          However, if you assume a role using role chaining and provide a
+          DDuurraattiioonnSSeeccoonnddss parameter value greater than one hour, the operation
+          fails. To learn how to view the maximum value for your role, see
+          _U_p_d_a_t_e _t_h_e _m_a_x_i_m_u_m _s_e_s_s_i_o_n _d_u_r_a_t_i_o_n _f_o_r _a _r_o_l_e .
+
+          By default, the value is set to 33660000 seconds.
+
+          NNOOTTEE::
+             The DDuurraattiioonnSSeeccoonnddss parameter is separate from the duration of a
+             console session that you might request using the returned
+             credentials. The request to the federation endpoint for a console
+             sign-in token takes a SSeessssiioonnDDuurraattiioonn parameter that specifies
+             the maximum length of the console session. For more information,
+             see _C_r_e_a_t_i_n_g _a _U_R_L _t_h_a_t _E_n_a_b_l_e_s _F_e_d_e_r_a_t_e_d _U_s_e_r_s _t_o _A_c_c_e_s_s _t_h_e
+             _A_m_a_z_o_n _W_e_b _S_e_r_v_i_c_e_s _M_a_n_a_g_e_m_e_n_t _C_o_n_s_o_l_e in the _I_A_M _U_s_e_r _G_u_i_d_e .
+
+          Constraints:
+
+          +o min: 990000
+
+          +o max: 4433220000
+
+       ----ttaaggss (list)
+          A list of session tags that you want to pass. Each session tag
+          consists of a key name and an associated value. For more information
+          about session tags, see _T_a_g_g_i_n_g _A_m_a_z_o_n _W_e_b _S_e_r_v_i_c_e_s _S_T_S _S_e_s_s_i_o_n_s in
+          the _I_A_M _U_s_e_r _G_u_i_d_e .
+
+          This parameter is optional. You can pass up to 50 session tags. The
+          plaintext session tag keys can't exceed 128 characters, and the
+          values can't exceed 256 characters. For these and additional limits,
+          see _I_A_M _a_n_d _S_T_S _C_h_a_r_a_c_t_e_r _L_i_m_i_t_s in the _I_A_M _U_s_e_r _G_u_i_d_e .
+
+          NNOOTTEE::
+             An Amazon Web Services conversion compresses the passed inline
+             session policy, managed policy ARNs, and session tags into a
+             packed binary format that has a separate limit. Your request can
+             fail for this limit even if your plaintext meets the other
+             requirements. The PPaacckkeeddPPoolliiccyySSiizzee response element indicates by
+             percentage how close the policies and tags for your request are
+             to the upper size limit.
+
+          You can pass a session tag with the same key as a tag that is
+          already attached to the role. When you do, session tags override a
+          role tag with the same key.
+
+          Tag key-value pairs are not case sensitive, but case is preserved.
+          This means that you cannot have separate DDeeppaarrttmmeenntt and ddeeppaarrttmmeenntt
+          tag keys. Assume that the role has the DDeeppaarrttmmeenntt =``Marketing`` tag
+          and you pass the ddeeppaarrttmmeenntt =``engineering`` session tag. DDeeppaarrttmmeenntt
+          and ddeeppaarrttmmeenntt are not saved as separate tags, and the session tag
+          passed in the request takes precedence over the role tag.
+
+          Additionally, if you used temporary credentials to perform this
+          operation, the new session inherits any transitive session tags from
+          the calling session. If you pass a session tag with the same key as
+          an inherited tag, the operation fails. To view the inherited tags
+          for a session, see the CloudTrail logs. For more information, see
+          _V_i_e_w_i_n_g _S_e_s_s_i_o_n _T_a_g_s _i_n _C_l_o_u_d_T_r_a_i_l in the _I_A_M _U_s_e_r _G_u_i_d_e .
+
+          Constraints:
+
+          +o max: 5500
+
+          (structure)
+             You can pass custom key-value pair attributes when you assume a
+             role or federate a user. These are called session tags. You can
+             then use the session tags to control access to resources. For
+             more information, see _T_a_g_g_i_n_g _A_m_a_z_o_n _W_e_b _S_e_r_v_i_c_e_s _S_T_S _S_e_s_s_i_o_n_s in
+             the _I_A_M _U_s_e_r _G_u_i_d_e .
+
+             Key -> (string) [required]
+                The key for a session tag.
+
+                You can pass up to 50 session tags. The plain text session tag
+                keys can't exceed 128 characters. For these and additional
+                limits, see _I_A_M _a_n_d _S_T_S _C_h_a_r_a_c_t_e_r _L_i_m_i_t_s in the _I_A_M _U_s_e_r _G_u_i_d_e
+                .
+
+                Constraints:
+
+                +o min: 11
+
+                +o max: 112288
+
+                +o pattern: [[\\pp{{LL}}\\pp{{ZZ}}\\pp{{NN}}__..:://==++\\--@@]]++
+
+              Value -> (string) [required]
+                The value for a session tag.
+
+                You can pass up to 50 session tags. The plain text session tag
+                values can't exceed 256 characters. For these and additional
+                limits, see _I_A_M _a_n_d _S_T_S _C_h_a_r_a_c_t_e_r _L_i_m_i_t_s in the _I_A_M _U_s_e_r _G_u_i_d_e
+                .
+
+                Constraints:
+
+                +o min: 00
+
+                +o max: 225566
+
+                +o pattern: [[\\pp{{LL}}\\pp{{ZZ}}\\pp{{NN}}__..:://==++\\--@@]]**
+
+       Shorthand Syntax:
+
+          Key=string,Value=string ...
+
+       JSON Syntax:
+
+          [
+            {
+              "Key": "string",
+              "Value": "string"
+            }
+            ...
+          ]
+
+       ----ttrraannssiittiivvee--ttaagg--kkeeyyss (list)
+          A list of keys for session tags that you want to set as transitive.
+          If you set a tag key as transitive, the corresponding key and value
+          passes to subsequent sessions in a role chain. For more information,
+          see _C_h_a_i_n_i_n_g _R_o_l_e_s _w_i_t_h _S_e_s_s_i_o_n _T_a_g_s in the _I_A_M _U_s_e_r _G_u_i_d_e .
+
+          This parameter is optional. The transitive status of a session tag
+          does not impact its packed binary size.
+
+          If you choose not to specify a transitive tag key, then no tags are
+          passed from this session to any subsequent sessions.
+
+          Constraints:
+
+          +o max: 5500
+
+          (string)
+             Constraints:
+
+             +o min: 11
+
+             +o max: 112288
+
+             +o pattern: [[\\pp{{LL}}\\pp{{ZZ}}\\pp{{NN}}__..:://==++\\--@@]]++
+
+       Syntax:
+
+          "string" "string" ...
+
+       ----eexxtteerrnnaall--iidd (string)
+          A unique identifier that might be required when you assume a role in
+          another account. If the administrator of the account to which the
+          role belongs provided you with an external ID, then provide that
+          value in the EExxtteerrnnaallIIdd parameter. This value can be any string,
+          such as a passphrase or account number. A cross-account role is
+          usually set up to trust everyone in an account. Therefore, the
+          administrator of the trusting account might send an external ID to
+          the administrator of the trusted account. That way, only someone
+          with the ID can assume the role, rather than everyone in the
+          account. For more information about the external ID, see _H_o_w _t_o _U_s_e
+          _a_n _E_x_t_e_r_n_a_l _I_D _W_h_e_n _G_r_a_n_t_i_n_g _A_c_c_e_s_s _t_o _Y_o_u_r _A_m_a_z_o_n _W_e_b _S_e_r_v_i_c_e_s
+          _R_e_s_o_u_r_c_e_s _t_o _a _T_h_i_r_d _P_a_r_t_y in the _I_A_M _U_s_e_r _G_u_i_d_e .
+
+          The regex used to validate this parameter is a string of characters
+          consisting of upper- and lower-case alphanumeric characters with no
+          spaces. You can also include underscores or any of the following
+          characters: +=,.@:/-
+
+          Constraints:
+
+          +o min: 22
+
+          +o max: 11222244
+
+          +o pattern: [[\\ww++==,,..@@::\\//--]]**
+
+       ----sseerriiaall--nnuummbbeerr (string)
+          The identification number of the MFA device that is associated with
+          the user who is making the AAssssuummeeRRoollee call. Specify this value if
+          the trust policy of the role being assumed includes a condition that
+          requires MFA authentication. The value is either the serial number
+          for a hardware device (such as GGAAHHTT1122334455667788 ) or an Amazon Resource
+          Name (ARN) for a virtual device (such as
+          aarrnn::aawwss::iiaamm::::112233445566778899001122::mmffaa//uusseerr ).
+
+          The regex used to validate this parameter is a string of characters
+          consisting of upper- and lower-case alphanumeric characters with no
+          spaces. You can also include underscores or any of the following
+          characters: +=/:,.@-
+
+          Constraints:
+
+          +o min: 99
+
+          +o max: 225566
+
+          +o pattern: [[\\ww++==//::,,..@@--]]**
+
+       ----ttookkeenn--ccooddee (string)
+          The value provided by the MFA device, if the trust policy of the
+          role being assumed requires MFA. (In other words, if the policy
+          includes a condition that tests for MFA). If the role being assumed
+          requires MFA and if the TTookkeennCCooddee value is missing or expired, the
+          AAssssuummeeRRoollee call returns an "access denied" error.
+
+          The format for this parameter, as described by its regex pattern, is
+          a sequence of six numeric digits.
+
+          Constraints:
+
+          +o min: 66
+
+          +o max: 66
+
+          +o pattern: [[\\dd]]**
+
+       ----ssoouurrccee--iiddeennttiittyy (string)
+          The source identity specified by the principal that is calling the
+          AAssssuummeeRRoollee operation. The source identity value persists across
+          _c_h_a_i_n_e_d _r_o_l_e sessions.
+
+          You can require users to specify a source identity when they assume
+          a role. You do this by using the ` ssttss::SSoouurrcceeIIddeennttiittyy
+          _h_t_t_p_s_:_/_/_d_o_c_s_._a_w_s_._a_m_a_z_o_n_._c_o_m_/_I_A_M_/_l_a_t_e_s_t_/_U_s_e_r_G_u_i_d_e_/_r_e_f_e_r_e_n_c_e___p_o_l_i_c_i_e_s___c_o_n_d_i_t_i_o_n_-_k_e_y_s_._h_t_m_l_#_c_o_n_d_i_t_i_o_n_-_k_e_y_s-sourceidentity`__
+          condition key in a role trust policy. You can use source identity
+          information in CloudTrail logs to determine who took actions with a
+          role. You can use the aawwss::SSoouurrcceeIIddeennttiittyy condition key to further
+          control access to Amazon Web Services resources based on the value
+          of source identity. For more information about using source
+          identity, see _M_o_n_i_t_o_r _a_n_d _c_o_n_t_r_o_l _a_c_t_i_o_n_s _t_a_k_e_n _w_i_t_h _a_s_s_u_m_e_d _r_o_l_e_s
+          in the _I_A_M _U_s_e_r _G_u_i_d_e .
+
+          The regex used to validate this parameter is a string of characters
+          consisting of upper- and lower-case alphanumeric characters with no
+          spaces. You can also include underscores or any of the following
+          characters: +=,.@-. You cannot use a value that begins with the text
+          aawwss:: . This prefix is reserved for Amazon Web Services internal use.
+
+          Constraints:
+
+          +o min: 22
+
+          +o max: 6644
+
+          +o pattern: [[\\ww++==,,..@@--]]**
+
+       ----pprroovviiddeedd--ccoonntteexxttss (list)
+          A list of previously acquired trusted context assertions in the
+          format of a JSON array. The trusted context assertion is signed and
+          encrypted by Amazon Web Services STS.
+
+          The following is an example of a PPrroovviiddeeddCCoonntteexxtt value that includes
+          a single trusted context assertion and the ARN of the context
+          provider from which the trusted context assertion was generated.
+             [[{{""PPrroovviiddeerrAArrnn""::""aarrnn::aawwss::iiaamm::::aawwss::ccoonntteexxttPPrroovviiddeerr//IIddeennttiittyyCCeenntteerr"",,""CCoonntteexxttAAsssseerrttiioonn""::""ttrruusstteedd--ccoonntteexxtt--aasssseerrttiioonn""}}]]
+
+          Constraints:
+
+          +o min: 11
+
+          +o max: 55
+
+          (structure)
+             Contains information about the provided context. This includes
+             the signed and encrypted trusted context assertion and the
+             context provider ARN from which the trusted context assertion was
+             generated.
+
+             ProviderArn -> (string)
+                The context provider ARN from which the trusted context
+                assertion was generated.
+
+                Constraints:
+
+                +o min: 2200
+
+                +o max: 22004488
+
+                +o pattern:
+                  [[\\uu00000099\\uu000000AA\\uu000000DD\\uu00002200--\\uu000077EE\\uu00008855\\uu0000AA00--\\uuDD77FFFF\\uuEE000000--\\uuFFFFFFDD\\uu1100000000--\\uu1100FFFFFFFF]]++
+
+              ContextAssertion -> (string)
+                The signed and encrypted trusted context assertion generated
+                by the context provider. The trusted context assertion is
+                signed and encrypted by Amazon Web Services STS.
+
+                Constraints:
+
+                +o min: 44
+
+                +o max: 22004488
+
+       Shorthand Syntax:
+
+          ProviderArn=string,ContextAssertion=string ...
+
+       JSON Syntax:
+
+          [
+            {
+              "ProviderArn": "string",
+              "ContextAssertion": "string"
+            }
+            ...
+          ]
+
+       ----ccllii--iinnppuutt--jjssoonn | ----ccllii--iinnppuutt--yyaammll (string) Reads arguments from the
+       JSON string provided. The JSON string follows the format provided by
+       ----ggeenneerraattee--ccllii--sskkeelleettoonn. If other arguments are provided on the command
+       line, those values will override the JSON-provided values. It is not
+       possible to pass arbitrary binary values using a JSON-provided value as
+       the string will be taken literally. This may not be specified along
+       with ----ccllii--iinnppuutt--yyaammll.
+
+       ----ggeenneerraattee--ccllii--sskkeelleettoonn (string) Prints a JSON skeleton to standard
+       output without sending an API request. If provided with no value or the
+       value iinnppuutt, prints a sample input JSON that can be used as an argument
+       for ----ccllii--iinnppuutt--jjssoonn. Similarly, if provided yyaammll--iinnppuutt it will print a
+       sample input YAML that can be used with ----ccllii--iinnppuutt--yyaammll. If provided
+       with the value oouuttppuutt, it validates the command inputs and returns a
+       sample output JSON for that command. The generated JSON skeleton is not
+       stable between versions of the AWS CLI and there are no backwards
+       compatibility guarantees in the JSON skeleton generated.
+
+GGLLOOBBAALL OOPPTTIIOONNSS
+       ----ddeebbuugg (boolean)
+
+       Turn on debug logging.
+
+       ----eennddppooiinntt--uurrll (string)
+
+       Override command's default URL with the given URL.
+
+       ----nnoo--vveerriiffyy--ssssll (boolean)
+
+       By default, the AWS CLI uses SSL when communicating with AWS services.
+       For each SSL connection, the AWS CLI will verify SSL certificates. This
+       option overrides the default behavior of verifying SSL certificates.
+
+       ----nnoo--ppaaggiinnaattee (boolean)
+
+       Disable automatic pagination. If automatic pagination is disabled, the
+       AWS CLI will only make one call, for the first page of results.
+
+       ----oouuttppuutt (string)
+
+       The formatting style for command output.
+
+       +o json
+
+       +o text
+
+       +o table
+
+       +o yaml
+
+       +o yaml-stream
+
+       +o off
+
+       ----qquueerryy (string)
+
+       A JMESPath query to use in filtering the response data.
+
+       ----pprrooffiillee (string)
+
+       Use a specific profile from your credential file.
+
+       ----rreeggiioonn (string)
+
+       The region to use. Overrides config/env settings.
+
+       ----vveerrssiioonn (string)
+
+       Display the version of this tool.
+
+       ----ccoolloorr (string)
+
+       Turn on/off color output.
+
+       +o on
+
+       +o off
+
+       +o auto
+
+       ----nnoo--ssiiggnn--rreeqquueesstt (boolean)
+
+       Do not sign requests. Credentials will not be loaded if this argument
+       is provided.
+
+       ----ccaa--bbuunnddllee (string)
+
+       The CA certificate bundle to use when verifying SSL certificates.
+       Overrides config/env settings.
+
+       ----ccllii--rreeaadd--ttiimmeeoouutt (int)
+
+       The maximum socket read time in seconds. If the value is set to 0, the
+       socket read will be blocking and not timeout. The default value is 60
+       seconds.
+
+       ----ccllii--ccoonnnneecctt--ttiimmeeoouutt (int)
+
+       The maximum socket connect time in seconds. If the value is set to 0,
+       the socket connect will be blocking and not timeout. The default value
+       is 60 seconds.
+
+       ----ccllii--bbiinnaarryy--ffoorrmmaatt (string)
+
+       The formatting style to be used for binary blobs. The default format is
+       base64. The base64 format expects binary blobs to be provided as a
+       base64 encoded string. The raw-in-base64-out format preserves
+       compatibility with AWS CLI V1 behavior and binary values must be passed
+       literally. When providing contents from a file that map to a binary
+       blob ffiilleebb:://// will always be treated as binary and use the file
+       contents directly regardless of the ccllii--bbiinnaarryy--ffoorrmmaatt setting. When
+       using ffiillee:://// the file contents will need to properly formatted for the
+       configured ccllii--bbiinnaarryy--ffoorrmmaatt.
+
+       +o base64
+
+       +o raw-in-base64-out
+
+       ----nnoo--ccllii--ppaaggeerr (boolean)
+
+       Disable cli pager for output.
+
+       ----ccllii--aauuttoo--pprroommpptt (boolean)
+
+       Automatically prompt for CLI input parameters.
+
+       ----nnoo--ccllii--aauuttoo--pprroommpptt (boolean)
+
+       Disable automatically prompt for CLI input parameters.
+
+       ----ccllii--eerrrroorr--ffoorrmmaatt (string)
+
+       The formatting style for error output. By default, errors are displayed
+       in enhanced format.
+
+       +o legacy
+
+       +o json
+
+       +o yaml
+
+       +o text
+
+       +o table
+
+       +o enhanced
+
+EEXXAAMMPPLLEESS
+       NNOOTTEE::
+          To use the following examples, you must have the AWS CLI installed
+          and configured. See the _G_e_t_t_i_n_g _s_t_a_r_t_e_d _g_u_i_d_e in the _A_W_S _C_L_I _U_s_e_r
+          _G_u_i_d_e for more information.
+
+          Unless otherwise stated, all examples have unix-like quotation
+          rules. These examples will need to be adapted to your terminal's
+          quoting rules. See _U_s_i_n_g _q_u_o_t_a_t_i_o_n _m_a_r_k_s _w_i_t_h _s_t_r_i_n_g_s in the _A_W_S _C_L_I
+          _U_s_e_r _G_u_i_d_e .
+
+       TToo aassssuummee aa rroollee
+
+       The following aassssuummee--rroollee command retrieves a set of short-term
+       credentials for the IAM role ss33--aacccceessss--eexxaammppllee.
+
+          aws sts assume-role \
+              --role-arn arn:aws:iam::123456789012:role/xaccounts3access \
+              --role-session-name s3-access-example
+
+       Output:
+
+          {
+              "AssumedRoleUser": {
+                  "AssumedRoleId": "AROA3XFRBF535PLBIFPI4:s3-access-example",
+                  "Arn": "arn:aws:sts::123456789012:assumed-role/xaccounts3access/s3-access-example"
+              },
+              "Credentials": {
+                  "SecretAccessKey": "9drTJvcXLB89EXAMPLELB8923FB892xMFI",
+                  "SessionToken": "AQoXdzELDDY//////////wEaoAK1wvxJY12r2IrDFT2IvAzTCn3zHoZ7YNtpiQLF0MqZye/qwjzP2iEXAMPLEbw/m3hsj8VBTkPORGvr9jM5sgP+w9IZWZnU+LWhmg+a5fDi2oTGUYcdg9uexQ4mtCHIHfi4citgqZTgco40Yqr4lIlo4V2b2Dyauk0eYFNebHtYlFVgAUj+7Indz3LU0aTWk1WKIjHmmMCIoTkyYp/k7kUG7moeEYKSitwQIi6Gjn+nyzM+PtoA3685ixzv0R7i5rjQi0YE0lf1oeie3bDiNHncmzosRM6SFiPzSvp6h/32xQuZsjcypmwsPSDtTPYcs0+YN/8BRi2/IcrxSpnWEXAMPLEXSDFTAQAM6Dl9zR0tXoybnlrZIwMLlMi1Kcgo5OytwU=",
+                  "Expiration": "2016-03-15T00:05:07Z",
+                  "AccessKeyId": "ASIAJEXAMPLEXEG2JICEA"
+              }
+          }
+
+       The output of the command contains an access key, secret key, and
+       session token that you can use to authenticate to AWS.
+
+       For AWS CLI use, you can set up a named profile associated with a role.
+       When you use the profile, the AWS CLI will call assume-role and manage
+       credentials for you. For more information, see _U_s_e _a_n _I_A_M _r_o_l_e _i_n _t_h_e
+       _A_W_S _C_L_I in the _A_W_S _C_L_I _U_s_e_r _G_u_i_d_e.
+
+OOUUTTPPUUTT
+       Credentials -> (structure)
+          The temporary security credentials, which include an access key ID,
+          a secret access key, and a security (or session) token.
+
+          NNOOTTEE::
+             The size of the security token that STS API operations return is
+             not fixed. We strongly recommend that you make no assumptions
+             about the maximum size.
+
+          AccessKeyId -> (string) [required]
+             The access key ID that identifies the temporary security
+             credentials.
+
+             Constraints:
+
+             +o min: 1166
+
+             +o max: 112288
+
+             +o pattern: [[\\ww]]**
+
+          SecretAccessKey -> (string) [required]
+             The secret access key that can be used to sign requests.
+
+          SessionToken -> (string) [required]
+             The token that users must pass to the service API to use the
+             temporary credentials.
+
+          Expiration -> (timestamp) [required]
+             The date on which the current credentials expire.
+
+       AssumedRoleUser -> (structure)
+          The Amazon Resource Name (ARN) and the assumed role ID, which are
+          identifiers that you can use to refer to the resulting temporary
+          security credentials. For example, you can reference these
+          credentials as a principal in a resource-based policy by using the
+          ARN or assumed role ID. The ARN and ID include the RRoolleeSSeessssiioonnNNaammee
+          that you specified when you called AAssssuummeeRRoollee .
+
+          AssumedRoleId -> (string) [required]
+             A unique identifier that contains the role ID and the role
+             session name of the role that is being assumed. The role ID is
+             generated by Amazon Web Services when the role is created.
+
+             Constraints:
+
+             +o min: 22
+
+             +o max: 119933
+
+             +o pattern: [[\\ww++==,,..@@::--]]**
+
+          Arn -> (string) [required]
+             The ARN of the temporary security credentials that are returned
+             from the  AssumeRole action. For more information about ARNs and
+             how to use them in policies, see _I_A_M _I_d_e_n_t_i_f_i_e_r_s in the _I_A_M _U_s_e_r
+             _G_u_i_d_e .
+
+             Constraints:
+
+             +o min: 2200
+
+             +o max: 22004488
+
+             +o pattern:
+               [[\\uu00000099\\uu000000AA\\uu000000DD\\uu00002200--\\uu000077EE\\uu00008855\\uu0000AA00--\\uuDD77FFFF\\uuEE000000--\\uuFFFFFFDD\\uu1100000000--\\uu1100FFFFFFFF]]++
+
+       PackedPolicySize -> (integer)
+          A percentage value that indicates the packed size of the session
+          policies and session tags combined passed in the request. The
+          request fails if the packed size is greater than 100 percent, which
+          means the policies and tags exceeded the allowed space.
+
+          Constraints:
+
+          +o min: 00
+
+       SourceIdentity -> (string)
+          The source identity specified by the principal that is calling the
+          AAssssuummeeRRoollee operation.
+
+          You can require users to specify a source identity when they assume
+          a role. You do this by using the ssttss::SSoouurrcceeIIddeennttiittyy condition key in
+          a role trust policy. You can use source identity information in
+          CloudTrail logs to determine who took actions with a role. You can
+          use the aawwss::SSoouurrcceeIIddeennttiittyy condition key to further control access
+          to Amazon Web Services resources based on the value of source
+          identity. For more information about using source identity, see
+          _M_o_n_i_t_o_r _a_n_d _c_o_n_t_r_o_l _a_c_t_i_o_n_s _t_a_k_e_n _w_i_t_h _a_s_s_u_m_e_d _r_o_l_e_s in the _I_A_M _U_s_e_r
+          _G_u_i_d_e .
+
+          The regex used to validate this parameter is a string of characters
+          consisting of upper- and lower-case alphanumeric characters with no
+          spaces. You can also include underscores or any of the following
+          characters: =,.@-
+
+          Constraints:
+
+          +o min: 22
+
+          +o max: 6644
+
+          +o pattern: [[\\ww++==,,..@@--]]**
+
+                                                                 ASSUME-ROLE()

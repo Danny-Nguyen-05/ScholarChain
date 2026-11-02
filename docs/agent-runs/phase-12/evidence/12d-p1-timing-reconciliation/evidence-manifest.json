@@ -1,0 +1,67 @@
+{
+  "recorded_utc": "2026-11-01T17:24:45.782349+00:00",
+  "self_excluded": "evidence-manifest.json",
+  "count": 12,
+  "files": [
+    {
+      "path": "append-provenance.json",
+      "sha256": "b096beddc6d2f4706718e65af20246821c8b186b521ea7ac35c8e35f9c4ff2cf",
+      "bytes": 1227
+    },
+    {
+      "path": "coordinator-report.md",
+      "sha256": "3739fa29bf98424a0189e0c6d00fa23b83dec50411b61333cd39421ce46cf68b",
+      "bytes": 4170
+    },
+    {
+      "path": "final-status.log.txt",
+      "sha256": "5a42ee159fae6236f1eb4b571b68ceab18a65ddcdf9b23c88fbdef08814ff638",
+      "bytes": 50312
+    },
+    {
+      "path": "handoff-files.json",
+      "sha256": "f0597d56ccdfd2cffd071a1a27ede86c51952e0baac3fcc80105492241c941f3",
+      "bytes": 1093
+    },
+    {
+      "path": "handoff.md",
+      "sha256": "f85acabd1ce014767c907680d5d827e87f410f134df2a169a2e982a5bef54aad",
+      "bytes": 1326
+    },
+    {
+      "path": "human-file-check.json",
+      "sha256": "cce883be3948bd778f1bb9b4356a3924e85ac3557e7d645f411b753954de7bc2",
+      "bytes": 1049
+    },
+    {
+      "path": "human-replies.json",
+      "sha256": "fd5efd1e31bc6c718f54f953eee2a2010083d85b4c4a7279351dec85400a8a5b",
+      "bytes": 2206
+    },
+    {
+      "path": "local-checks.json",
+      "sha256": "31146c7bca8f060fd2548b7f3bc4187cd5dcf2c759a9937116bf8053c05fa774",
+      "bytes": 2493
+    },
+    {
+      "path": "preflight.json",
+      "sha256": "b051687434663d334c871c668f4bc5285e1e3333afd9602c90f7814221bcde2e",
+      "bytes": 1148
+    },
+    {
+      "path": "preliminary-checks.json",
+      "sha256": "1c53b05bb4189a142db424c6718738a5159241788eff0c2594a326d61788a73f",
+      "bytes": 812
+    },
+    {
+      "path": "repair-status.json",
+      "sha256": "f5af5ebbd4abe977aa7517e8b88d0ebe3e0bcaf3f3457e9b70ea25fbeaa2a5c0",
+      "bytes": 1077
+    },
+    {
+      "path": "user-supplied-external-review.txt",
+      "sha256": "74b8c8bd7e7addb7302ae9b575cc26c91d784ebe8d041191a2d196b68c0e3592",
+      "bytes": 14334
+    }
+  ]
+}

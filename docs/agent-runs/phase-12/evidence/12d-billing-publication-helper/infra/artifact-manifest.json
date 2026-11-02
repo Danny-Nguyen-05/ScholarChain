@@ -1,0 +1,36 @@
+{
+  "scope": "New public-only helper offline evidence; no raw private/runtime artifacts",
+  "self_excluded": true,
+  "files": [
+    {
+      "path": "offline-tests-attempt1.log.txt",
+      "bytes": 3951,
+      "sha256": "369df4f981c6451af8618dcd9d7d4fe9152c56cee20ed384dd325197088445e2"
+    },
+    {
+      "path": "offline-tests-attempt2.log.txt",
+      "bytes": 4595,
+      "sha256": "ffd02cfd1c42338a323e91bccdae536bbeca31df5961114c18dda6a109723e6c"
+    },
+    {
+      "path": "offline-tests-attempt3.log.txt",
+      "bytes": 4751,
+      "sha256": "dbf2edf5221fdeb35962c2a32fa00d5dce2b8cf573dd8c8bf4b67aadf18c8172"
+    },
+    {
+      "path": "owner-report.txt",
+      "bytes": 5537,
+      "sha256": "8dff5669e33821b773b9fbf2e58018f41030d738bb7dd1a673bae8a26b085c7e"
+    },
+    {
+      "path": "result.json",
+      "bytes": 4650,
+      "sha256": "c89137f856c2bcae95fc9999ff92c560a2b1e21d8b895f9e472a84bb526da0b6"
+    },
+    {
+      "path": "source-file-hashes.json",
+      "bytes": 1474,
+      "sha256": "e3f10efbbaa65a6d80c74a6fc216d558f5d3ad6a31b19015d8f482f2871afc75"
+    }
+  ]
+}

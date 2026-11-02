@@ -1,0 +1,88 @@
+{
+  "checked_at": "2026-10-31T02:51:08.338059+00:00",
+  "base_head": "5ca8406bad5fe55f732458fa0cbd5d561ac83d8f",
+  "baseline_files": 4019,
+  "unchanged_baseline_files": 3998,
+  "changed_baseline_paths": [
+    "docs/agent-runs/phase-12/evidence/12d-preparation/cost-proposal.md",
+    "docs/agent-runs/phase-12/evidence/12d-preparation/evidence-manifest.json",
+    "docs/agent-runs/phase-12/evidence/12d-preparation/handoff.md",
+    "docs/agent-runs/phase-12/evidence/12d-preparation/launch-dependencies.md",
+    "docs/agent-runs/phase-12/evidence/12d-preparation/next-steps.md",
+    "docs/agent-runs/phase-12/evidence/12d-preparation/security-self-review.md",
+    "docs/agent-runs/phase-12/evidence/12d-preparation/step-0-answers.md",
+    "docs/agent-runs/phase-12/evidence/12d-preparation/work-order.md",
+    "docs/agent-runs/phase-12/owner-report.md",
+    "docs/agent-runs/phase-12/prompt.md",
+    "docs/agent-runs/phase-12/repairs.md",
+    "docs/agent-runs/phase-12/review.md",
+    "docs/agent-runs/phase-12/test-report.md",
+    "infra/terraform/billing-bootstrap/README.md",
+    "infra/terraform/billing-bootstrap/main.tf",
+    "infra/terraform/billing-bootstrap/outputs.tf",
+    "infra/terraform/billing-bootstrap/tests/budget.tftest.hcl",
+    "infra/terraform/billing-bootstrap/variables.tf",
+    "infra/terraform/spikes/emr-spark/README.md",
+    "infra/terraform/spikes/emr-spark/tests/proposal.tftest.hcl",
+    "infra/terraform/spikes/emr-spark/variables.tf"
+  ],
+  "source_delta_count": 8,
+  "record_prefixes": [
+    {
+      "path": "docs/agent-runs/phase-12/owner-report.md",
+      "before_bytes": 35326,
+      "after_bytes": 41973,
+      "before_sha256": "a0c471baccb6ff91ddbd27000889a30c1290cec616692658643301c6e343db5c",
+      "after_sha256": "2e015fb5dad4587765da24e3adcf9809852a3cb170c2da404b162e82d15d73dd",
+      "preflight_prefix_preserved": true
+    },
+    {
+      "path": "docs/agent-runs/phase-12/prompt.md",
+      "before_bytes": 38058,
+      "after_bytes": 44002,
+      "before_sha256": "473972caa23a01f15b39d2208ae5bbec5ef06469a3002655f505e4a0d7ba5962",
+      "after_sha256": "124f258a1610bea4f4af5bddae300cd77a665ec61069d53f57795e31c8bf3e78",
+      "preflight_prefix_preserved": true
+    },
+    {
+      "path": "docs/agent-runs/phase-12/repairs.md",
+      "before_bytes": 21042,
+      "after_bytes": 25293,
+      "before_sha256": "4eace3fb37168a14ab167a6f11ed56af503c4d4f48a6ae7b9dc859e635f23259",
+      "after_sha256": "3cad3ea6406a209d5c48a2f9e139f88a313f174c276225a9bf67b352fb70c26d",
+      "preflight_prefix_preserved": true
+    },
+    {
+      "path": "docs/agent-runs/phase-12/review.md",
+      "before_bytes": 113873,
+      "after_bytes": 126444,
+      "before_sha256": "8b56dda33b282d9ecf538f86a51691281890e22ce0fff45ac08968f7b837e356",
+      "after_sha256": "4fb9ecb510d475bed447b166e9f4e834c2d35cefe4bbf2ceb488495b9ee863e8",
+      "preflight_prefix_preserved": true
+    },
+    {
+      "path": "docs/agent-runs/phase-12/test-report.md",
+      "before_bytes": 28566,
+      "after_bytes": 35213,
+      "before_sha256": "79ec542d8d9c1eb838f22c8b0f0e5b4cc511d77b4bd4dabdc033e0ef8a836cf6",
+      "after_sha256": "2d186d00a44b70843a677691c78761e7dea69da746c5d3b7ce33747372fce57f",
+      "preflight_prefix_preserved": true
+    }
+  ],
+  "source_freeze_matches": 203,
+  "source_freeze_mismatches": 0,
+  "original_preparation_artifacts_verified_using_archive": 80,
+  "refreshed_original_manifest_artifacts_verified": 80,
+  "repair_origin_artifacts_verified": {
+    "infra/retention-manifest.json": 36,
+    "build/artifact-manifest.json": 14
+  },
+  "review_verbatim_containment": true,
+  "new_environment_metadata_verified": true,
+  "main_and_all_locks_unchanged": true,
+  "human_owned_records_changed": false,
+  "out_of_scope_changes": [],
+  "all_assigned_subagents_completed": true,
+  "active_build_jobs": false,
+  "git_diff_check_exit": 0
+}

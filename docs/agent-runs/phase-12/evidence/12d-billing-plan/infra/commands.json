@@ -1,0 +1,320 @@
+[
+  {
+    "label": "course-init",
+    "argv": [
+      "/tmp/scholarchain-phase12b-repair1-infra/terraform",
+      "init",
+      "-backend=false",
+      "-input=false",
+      "-no-color",
+      "-lockfile=readonly"
+    ],
+    "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain/infra/terraform",
+    "environment": {
+      "TF_CLI_CONFIG_FILE": "/tmp/scholarchain-phase12b-repair1-infra/terraformrc"
+    },
+    "started_utc": "2026-10-31T03:23:21.406872+00:00",
+    "ended_utc": "2026-10-31T03:23:21.822380+00:00",
+    "wall_seconds": 0.41539795900462195,
+    "exit_code": 0,
+    "private_output": false,
+    "log": "course-init.log.txt",
+    "bytes": 677,
+    "sha256": "6fd242691fd6bbc7efe25549609a26c11107f98c3ae3cb12128985c21a261753"
+  },
+  {
+    "label": "course-fmt-check",
+    "argv": [
+      "/tmp/scholarchain-phase12b-repair1-infra/terraform",
+      "fmt",
+      "-check",
+      "-recursive"
+    ],
+    "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain/infra/terraform",
+    "environment": {
+      "TF_CLI_CONFIG_FILE": "/tmp/scholarchain-phase12b-repair1-infra/terraformrc"
+    },
+    "started_utc": "2026-10-31T03:23:21.822659+00:00",
+    "ended_utc": "2026-10-31T03:23:21.876615+00:00",
+    "wall_seconds": 0.05397333300788887,
+    "exit_code": 0,
+    "private_output": false,
+    "log": "course-fmt-check.log.txt",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "label": "course-validate",
+    "argv": [
+      "/tmp/scholarchain-phase12b-repair1-infra/terraform",
+      "validate",
+      "-no-color"
+    ],
+    "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain/infra/terraform",
+    "environment": {
+      "TF_CLI_CONFIG_FILE": "/tmp/scholarchain-phase12b-repair1-infra/terraformrc"
+    },
+    "started_utc": "2026-10-31T03:23:21.876915+00:00",
+    "ended_utc": "2026-10-31T03:23:27.766141+00:00",
+    "wall_seconds": 5.889289792001364,
+    "exit_code": 0,
+    "private_output": false,
+    "log": "course-validate.log.txt",
+    "bytes": 38,
+    "sha256": "f7997225125835fdd14060ac776d273f394b874f9a481b9e2122c83dc8adc5c1"
+  },
+  {
+    "label": "course-test",
+    "argv": [
+      "/tmp/scholarchain-phase12b-repair1-infra/terraform",
+      "test",
+      "-no-color"
+    ],
+    "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain/infra/terraform",
+    "environment": {
+      "TF_CLI_CONFIG_FILE": "/tmp/scholarchain-phase12b-repair1-infra/terraformrc"
+    },
+    "started_utc": "2026-10-31T03:23:27.766402+00:00",
+    "ended_utc": "2026-10-31T03:23:32.684228+00:00",
+    "wall_seconds": 4.917885249989922,
+    "exit_code": 0,
+    "private_output": false,
+    "log": "course-test.log.txt",
+    "bytes": 2466,
+    "sha256": "b5a4b9c9f15c4a6bebd3aaf0b60f81fbb9664f09e96ed9c8c713bc67c90264d5"
+  },
+  {
+    "label": "billing-init",
+    "argv": [
+      "/tmp/scholarchain-phase12b-repair1-infra/terraform",
+      "init",
+      "-backend=false",
+      "-input=false",
+      "-no-color",
+      "-lockfile=readonly"
+    ],
+    "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain/infra/terraform/billing-bootstrap",
+    "environment": {
+      "TF_CLI_CONFIG_FILE": "/tmp/scholarchain-phase12b-repair1-infra/terraformrc"
+    },
+    "started_utc": "2026-10-31T03:23:32.685723+00:00",
+    "ended_utc": "2026-10-31T03:23:32.967262+00:00",
+    "wall_seconds": 0.2815576250141021,
+    "exit_code": 0,
+    "private_output": false,
+    "log": "billing-init.log.txt",
+    "bytes": 595,
+    "sha256": "fa47f2a25afc25577c295cc0a696558f0a9e3ddbc7c4816dbf956c63ccf4d2a6"
+  },
+  {
+    "label": "billing-fmt-check",
+    "argv": [
+      "/tmp/scholarchain-phase12b-repair1-infra/terraform",
+      "fmt",
+      "-check",
+      "-recursive"
+    ],
+    "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain/infra/terraform/billing-bootstrap",
+    "environment": {
+      "TF_CLI_CONFIG_FILE": "/tmp/scholarchain-phase12b-repair1-infra/terraformrc"
+    },
+    "started_utc": "2026-10-31T03:23:32.967640+00:00",
+    "ended_utc": "2026-10-31T03:23:32.984431+00:00",
+    "wall_seconds": 0.016817625000840053,
+    "exit_code": 0,
+    "private_output": false,
+    "log": "billing-fmt-check.log.txt",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "label": "billing-validate",
+    "argv": [
+      "/tmp/scholarchain-phase12b-repair1-infra/terraform",
+      "validate",
+      "-no-color"
+    ],
+    "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain/infra/terraform/billing-bootstrap",
+    "environment": {
+      "TF_CLI_CONFIG_FILE": "/tmp/scholarchain-phase12b-repair1-infra/terraformrc"
+    },
+    "started_utc": "2026-10-31T03:23:32.984760+00:00",
+    "ended_utc": "2026-10-31T03:23:34.055013+00:00",
+    "wall_seconds": 1.0702876249997644,
+    "exit_code": 0,
+    "private_output": false,
+    "log": "billing-validate.log.txt",
+    "bytes": 38,
+    "sha256": "f7997225125835fdd14060ac776d273f394b874f9a481b9e2122c83dc8adc5c1"
+  },
+  {
+    "label": "billing-test",
+    "argv": [
+      "/tmp/scholarchain-phase12b-repair1-infra/terraform",
+      "test",
+      "-no-color"
+    ],
+    "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain/infra/terraform/billing-bootstrap",
+    "environment": {
+      "TF_CLI_CONFIG_FILE": "/tmp/scholarchain-phase12b-repair1-infra/terraformrc"
+    },
+    "started_utc": "2026-10-31T03:23:34.055325+00:00",
+    "ended_utc": "2026-10-31T03:23:34.975583+00:00",
+    "wall_seconds": 0.9202912499895319,
+    "exit_code": 0,
+    "private_output": false,
+    "log": "billing-test.log.txt",
+    "bytes": 483,
+    "sha256": "aca7bb50be9aa6e39085eb2d1ac166e100d61aaa15cf8c95ccf3e4a87becb78e"
+  },
+  {
+    "label": "proposal-init",
+    "argv": [
+      "/tmp/scholarchain-phase12b-repair1-infra/terraform",
+      "init",
+      "-backend=false",
+      "-input=false",
+      "-no-color",
+      "-lockfile=readonly"
+    ],
+    "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain/infra/terraform/spikes/emr-spark",
+    "environment": {
+      "TF_CLI_CONFIG_FILE": "/tmp/scholarchain-phase12b-repair1-infra/terraformrc"
+    },
+    "started_utc": "2026-10-31T03:23:34.976119+00:00",
+    "ended_utc": "2026-10-31T03:23:35.268890+00:00",
+    "wall_seconds": 0.29279824999684934,
+    "exit_code": 0,
+    "private_output": false,
+    "log": "proposal-init.log.txt",
+    "bytes": 595,
+    "sha256": "fa47f2a25afc25577c295cc0a696558f0a9e3ddbc7c4816dbf956c63ccf4d2a6"
+  },
+  {
+    "label": "proposal-fmt-check",
+    "argv": [
+      "/tmp/scholarchain-phase12b-repair1-infra/terraform",
+      "fmt",
+      "-check",
+      "-recursive"
+    ],
+    "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain/infra/terraform/spikes/emr-spark",
+    "environment": {
+      "TF_CLI_CONFIG_FILE": "/tmp/scholarchain-phase12b-repair1-infra/terraformrc"
+    },
+    "started_utc": "2026-10-31T03:23:35.269282+00:00",
+    "ended_utc": "2026-10-31T03:23:35.284832+00:00",
+    "wall_seconds": 0.015575500001432374,
+    "exit_code": 0,
+    "private_output": false,
+    "log": "proposal-fmt-check.log.txt",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "label": "proposal-validate",
+    "argv": [
+      "/tmp/scholarchain-phase12b-repair1-infra/terraform",
+      "validate",
+      "-no-color"
+    ],
+    "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain/infra/terraform/spikes/emr-spark",
+    "environment": {
+      "TF_CLI_CONFIG_FILE": "/tmp/scholarchain-phase12b-repair1-infra/terraformrc"
+    },
+    "started_utc": "2026-10-31T03:23:35.285117+00:00",
+    "ended_utc": "2026-10-31T03:23:36.271145+00:00",
+    "wall_seconds": 0.9860586249997141,
+    "exit_code": 0,
+    "private_output": false,
+    "log": "proposal-validate.log.txt",
+    "bytes": 38,
+    "sha256": "f7997225125835fdd14060ac776d273f394b874f9a481b9e2122c83dc8adc5c1"
+  },
+  {
+    "label": "proposal-test",
+    "argv": [
+      "/tmp/scholarchain-phase12b-repair1-infra/terraform",
+      "test",
+      "-no-color"
+    ],
+    "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain/infra/terraform/spikes/emr-spark",
+    "environment": {
+      "TF_CLI_CONFIG_FILE": "/tmp/scholarchain-phase12b-repair1-infra/terraformrc"
+    },
+    "started_utc": "2026-10-31T03:23:36.271506+00:00",
+    "ended_utc": "2026-10-31T03:23:37.269767+00:00",
+    "wall_seconds": 0.9983009579882491,
+    "exit_code": 0,
+    "private_output": false,
+    "log": "proposal-test.log.txt",
+    "bytes": 410,
+    "sha256": "18480c6550a16bf4a744305a7fd8394b3ce45408edb8bca2dbc9886482405037"
+  },
+  {
+    "label": "protected-init",
+    "argv": [
+      "/tmp/scholarchain-phase12b-repair1-infra/terraform",
+      "init",
+      "-backend=false",
+      "-input=false",
+      "-no-color",
+      "-lockfile=readonly"
+    ],
+    "cwd": "/tmp/scholarchain-phase12d-billing-plan/config",
+    "environment": {
+      "TF_CLI_CONFIG_FILE": "/tmp/scholarchain-phase12b-repair1-infra/terraformrc"
+    },
+    "started_utc": "2026-10-31T03:23:37.271823+00:00",
+    "ended_utc": "2026-10-31T03:23:37.858520+00:00",
+    "wall_seconds": 0.5867329159955261,
+    "exit_code": 0,
+    "private_output": true,
+    "log_location": "outside Git and curated evidence: /tmp/scholarchain-phase12d-billing-plan/protected-init.log.txt",
+    "diagnostic_policy": "Raw output not returned; private recipient may occur. Only sanitized plan fields are retained."
+  },
+  {
+    "label": "real-plan",
+    "argv": [
+      "/tmp/scholarchain-phase12b-repair1-infra/terraform",
+      "plan",
+      "-input=false",
+      "-no-color",
+      "-detailed-exitcode",
+      "-lock-timeout=30s",
+      "-var-file=/tmp/scholarchain-phase12d-billing-plan/public-plan-inputs.tfvars.json",
+      "-var-file=/tmp/scholarchain-phase12d-billing-plan/notification.private.tfvars.json",
+      "-out=/tmp/scholarchain-phase12d-billing-plan/billing.tfplan"
+    ],
+    "cwd": "/tmp/scholarchain-phase12d-billing-plan/config",
+    "environment": {
+      "TF_CLI_CONFIG_FILE": "/tmp/scholarchain-phase12b-repair1-infra/terraformrc"
+    },
+    "started_utc": "2026-10-31T03:23:37.859038+00:00",
+    "ended_utc": "2026-10-31T03:23:39.373234+00:00",
+    "wall_seconds": 1.5142379169992637,
+    "exit_code": 2,
+    "private_output": true,
+    "log_location": "outside Git and curated evidence: /tmp/scholarchain-phase12d-billing-plan/real-plan.log.txt",
+    "diagnostic_policy": "Raw output not returned; private recipient may occur. Only sanitized plan fields are retained."
+  },
+  {
+    "label": "show-json",
+    "argv": [
+      "/tmp/scholarchain-phase12b-repair1-infra/terraform",
+      "show",
+      "-json",
+      "/tmp/scholarchain-phase12d-billing-plan/billing.tfplan"
+    ],
+    "cwd": "/tmp/scholarchain-phase12d-billing-plan/config",
+    "environment": {
+      "TF_CLI_CONFIG_FILE": "/tmp/scholarchain-phase12b-repair1-infra/terraformrc"
+    },
+    "started_utc": "2026-10-31T03:23:39.373683+00:00",
+    "ended_utc": "2026-10-31T03:23:40.358641+00:00",
+    "wall_seconds": 0.9849823330005165,
+    "exit_code": 0,
+    "private_output": true,
+    "output_location": "outside Git and curated evidence: /tmp/scholarchain-phase12d-billing-plan/billing.plan.json"
+  }
+]

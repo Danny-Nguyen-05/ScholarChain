@@ -1,0 +1,187 @@
+--- a/infra/terraform/billing-execution/variables.tf
++++ b/infra/terraform/billing-execution/variables.tf
+@@ -1,3 +1,12 @@
++variable "aws_region" {
++  type        = string
++  default     = "us-east-2"
++  description = "Concrete same-device authentication region; syntax validation is not an availability check."
++  validation {
++    condition     = can(regex("^[a-z]{2}-[a-z]+-[1-9][0-9]*$", var.aws_region))
++    error_message = "Use one concrete region identifier such as us-east-2; wildcards and malformed identifiers are forbidden."
++  }
++}
+ variable "aws_account_id" {
+   type = string
+   validation {
+@@ -28,7 +37,7 @@
+   validation {
+     condition = var.operator_user_arn == null ? true : (
+       can(regex("^arn:aws:iam::${var.aws_account_id}:user/[A-Za-z0-9+=,.@_/-]+$", var.operator_user_arn)) &&
+-      !endswith(var.operator_user_arn, "/scholarchain-planner")
++      !endswith(lower(var.operator_user_arn), "/scholarchain-planner")
+     )
+     error_message = "Require a concrete same-account IAM user ARN, excluding root, roles, wildcards and scholarchain-planner."
+   }
+--- a/infra/terraform/billing-execution/main.tf
++++ b/infra/terraform/billing-execution/main.tf
+@@ -14,6 +14,22 @@
+         "budgets:UntagResource", "budgets:ListTagsForResource"
+       ]
+       Resource = [local.budget_arn]
++    }]
++  }
++  # Candidate B: attach this separate document only to the billing role.
++  # It grants same-device authentication, not additional budget/service access.
++  login_policy = {
++    Version = "2012-10-17"
++    Statement = [{
++      Sid      = "BillingRoleSameDeviceLogin"
++      Effect   = "Allow"
++      Action   = ["signin:AuthorizeOAuth2Access", "signin:CreateOAuth2Token"]
++      Resource = ["arn:aws:signin:${var.aws_region}:${var.aws_account_id}:oauth2/public-client/localhost"]
++      Condition = {
++        StringEquals = {
++          "signin:OAuthClientId" = "arn:aws:signin:::devtools/same-device"
++        }
++      }
+     }]
+   }
+   trust_policy = var.operator_user_arn == null ? null : {
+@@ -46,3 +62,7 @@
+ output "caller_policy_json" {
+   value = local.caller_policy == null ? null : jsonencode(local.caller_policy)
+ }
++output "login_policy_json" {
++  value       = jsonencode(local.login_policy)
++  description = "Separate candidate-B login document for the billing role only; nothing is attached or installed."
++}
+--- a/infra/terraform/billing-execution/README.md
++++ b/infra/terraform/billing-execution/README.md
+@@ -2,7 +2,7 @@
+ 
+ This root renders policy JSON only. Source inspection establishes that it contains no resource, data source, provider configuration, module or provisioner. Its tests inspect the rendered documents and input validation; tests do not prove the absence of AWS resources. No identity, role, permission, budget or session is created. The actual operator ARN is deliberately unset. No credential, state, private recipient or prior real plan is needed.
+ 
+-The proposed deployment role is `scholarchain-billing-deployer`, configurable by a concrete role name. Its only service permissions are five Budgets actions on one exact `arn:aws:budgets::<account>:budget/<name>` ARN. All account/budget inputs remain explicit; tests use synthetic identities. The caller and trust drafts remain null until a distinct same-account IAM user is supplied. `scholarchain-planner` is never trusted, elevated, given AssumeRole or repurposed.
++The proposed deployment role is `scholarchain-billing-deployer`, configurable by a concrete role name. Its budget service permissions are five Budgets actions on one exact `arn:aws:budgets::<account>:budget/<name>` ARN. A separate candidate-B login document proposes two Sign-In authentication actions for this billing role only; neither document is attached. All account/budget inputs remain explicit; tests use synthetic identities. The caller and trust drafts remain null until a distinct same-account IAM user is supplied. `scholarchain-planner` is never trusted, elevated, given AssumeRole or repurposed.
+ 
+ ## Permission audit — provider 6.44.0
+ 
+@@ -26,14 +26,30 @@
+ 
+ The proposed contract is a concrete same-account IAM user distinct from root and planner, with registered MFA. Trust permits only that user's `sts:AssumeRole` with strict `Bool aws:MultiFactorAuthPresent=true`; no IfExists fallback. The caller policy permits only the exact billing role with the same condition. The caller draft is an explicit audit boundary even where same-account direct trust can independently authorize the named user. No grant is installed here.
+ 
+-[AWS MFA API guidance](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_mfa_configure-api-require.html) describes MFA-aware AssumeRole/GetSessionToken requests. A later approved credential workflow must establish that the request satisfies this trust and returns only temporary role credentials. No long-lived access key is proposed. **Compatibility of browser-based `aws login` with this MFA condition remains unverified**; do not assume console MFA, root MFA or a federated session supplies that condition. [AWS condition-key documentation](https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_condition-keys.html#condition-keys-multifactorauthpresent) describes context-key availability. If the available login mechanism cannot satisfy it without a new credential arrangement, stop and route a separately reviewed trust/session design. Never weaken the condition silently or invent credentials.
++[AWS MFA API guidance](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_mfa_configure-api-require.html) places MFA enforcement at role assumption. Candidate B is the selected **offline design**: the dedicated IAM operator signs into the console with MFA, switches to the billing role through this unchanged strict trust/caller boundary, then `aws login` selects that already-assumed billing-role console session in a dedicated profile. The pinned SDK can consume the role's native `login_session`; no second AssumeRole, `mfa_serial` profile or credential-process bridge is part of B. The [CLI login reference](https://docs.aws.amazon.com/cli/latest/reference/login/) includes assumed-role selection and the [console-switch guide](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_use_switch-role-console.html) describes original-user authorization. This composition is inferred from documented components, **not verified live**. No login has occurred.
++
++Do not rely on an IAM-user OAuth session carrying MFA context into a later role assumption. [Condition-key documentation](https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_condition-keys.html#condition-keys-multifactorauthpresent) distinguishes MFA context from OAuth session identity. `GetCallerIdentity` and CloudTrail metadata alone do not prove MFA or least privilege. Candidate A, permanent IAM keys and Identity Center remain separately reviewed alternatives, never automatic fallbacks. Never weaken the strict condition silently or invent credentials.
++
++## Separate same-device login document — L1
++
++`login_policy_json` is proposed **only for attachment to the billing role**, not the operator or planner. It allows exactly `signin:AuthorizeOAuth2Access` and `signin:CreateOAuth2Token` on `arn:aws:signin:<region>:<account>:oauth2/public-client/localhost`. `aws_region` defaults to `us-east-2` and validates concrete `xx-name-number` syntax; this rejects wildcards, not unknown regional availability. Account remains an explicit validated input. The condition pins `signin:OAuthClientId` to `arn:aws:signin:::devtools/same-device`. That logical OAuth client ID is distinct from the policy's account/region-specific IAM resource ARN. No remote-client, console resource, wildcard or Sign-In administrative action is granted.
++
++The current [AWS managed policy](https://docs.aws.amazon.com/aws-managed-policy/latest/reference/SignInLocalDevelopmentAccess.html) grants those two actions using wildcard public-client resources. This draft narrows that shipped pattern. The [authorization reference](https://docs.aws.amazon.com/service-authorization/latest/reference/list_signin.html) also lists `console` resources, so exact-localhost scoping is a documentation-based inference requiring live acceptance. The extra client-ID condition may also cause a denial. **Stop for independent review on any denial**; never widen to console, `*`, another client, account or region automatically. No account-level console authorization policy is proposed. Adding this document does not alter or merge the exact five-action budget statement, trust or caller document.
++
++## Future operator console prerequisites — L2
++
++The user selected a **bootstrap-set console password without forced reset at first sign-in**, and an MFA device assigned by the separately authorized bootstrap actor before operator use. No `iam:ChangePassword` grant is authored. Passwords, MFA seeds/QR codes and one-time codes remain private with the human. The operator receives no MFA self-management grant. A later need to reset/change the password or manage MFA must go through the authorized bootstrap actor or a separately reviewed permission decision; this draft supplies no IAM self-service. Actual operator name/ARN, password, MFA device and setup are not established here. No console setup is authorized by selecting these documentation defaults.
++
++## Session expiry and fail-closed handling — L3
++
++The [CLI guide](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-sign-in.html) describes temporary credentials and refresh bounded by the principal's session duration, up to 12 hours. The console role session and proposed one-hour role maximum can shorten that; the complete refresh lifetime is unverified. If authentication expires mid-plan, stop and mark that attempt failed. Do not accept or reuse partial plan output. Under the separately authorized authentication window, the human reauthenticates only the dedicated billing-role profile, verifies the exact non-root/non-planner role, then reruns a fresh plan with a new checksum and the required review. Never fall back to root, planner, candidate A, a permanent key or Identity Center automatically. No cache, token or private profile content should be exposed. Session expiry and refresh do not stop billable resources.
+ 
+ For a future role, propose `max_session_duration=3600` seconds (IAM's minimum configurable maximum); request a shorter bounded STS session if supported by the selected authentication path. These durations are proposals and are not enforced by this output-only root. MFA-protected AssumeRole sessions and session expiry do not impose an AWS resource spending timeout.
+ 
+ ## Establishment strategy — human choice still required
+ 
+ 1. Preferred Terraform-first route: the human supplies an already authorized, non-root privileged bootstrap identity. A separately authored and reviewed Terraform IAM bootstrap would install only the named operator/role/policy/trust arrangement, with a fresh plan and human-written security-change approval. Such an identity has not been confirmed. This policy-only root cannot install its own permissions.
+-2. If root plus the read-only planner are the only available identities, strict Terraform-only bootstrap is blocked. Proposed exception for explicit human consideration: a one-time **human-performed account access bootstrap** using the MFA-protected root console to establish a new dedicated console operator, MFA, and the single billing role with the reviewed exact trust, execution and caller documents. No root access keys, no planner changes, no broad AdministratorAccess, no Organizations/Identity Center enablement and no project budget creation in that console step. The human would record the exact resources, session/login method and limits in their own approval. Later Terraform ownership/adoption of the IAM resources needs its own reviewed procedure and authorization; no ad hoc import or duplicate ownership. This is a proposed deviation from Terraform-only authorship, not an approved exception or instructions to execute now.
++2. If root plus the read-only planner are the only available identities, strict Terraform-only bootstrap is blocked. Proposed exception for explicit human consideration: a one-time **human-performed account access bootstrap** using the MFA-protected root console to establish a new dedicated console operator, MFA, and the single billing role with the reviewed exact trust, execution, caller and separate role-login documents. No root access keys, no planner changes, no broad AdministratorAccess, no Organizations/Identity Center enablement and no project budget creation in that console step. The human would record the exact resources, session/login method and limits in their own approval. Later Terraform ownership/adoption of the IAM resources needs its own reviewed procedure and authorization; no ad hoc import or duplicate ownership. This is a proposed deviation from Terraform-only authorship, not an approved exception or instructions to execute now.
+ 3. Stop until the human chooses a route, supplies the actual operator identity and authorizes the corresponding bounded IAM-establishment work order. A rejected/unworkable exception leaves the route blocked; it does not permit root-run Terraform. IAM provisioning permissions, any adoption procedure, credential setup and actual grants remain future reviewed work. The billing execution role itself receives no IAM provisioning permissions.
+ 
+ ## Later gates, not authorized here
+@@ -46,4 +62,4 @@
+ 
+ ## Local verification
+ 
+-Use the pinned Terraform 1.13.5/AWS 6.44.0 toolchain, `init -backend=false -input=false -no-color -lockfile=readonly`, `fmt -check -recursive`, `validate -no-color` and `test -no-color`. Tests use mock_provider aws with command=plan, synthetic inputs, exact JSON comparisons and rejected root/planner/foreign/wildcard/role identities. A scratch wildcard-budget-resource mutation must fail the exact-policy assertion; retain RED/GREEN evidence and repository before/after hashes. No real account plan is required by these checks.
++Use the pinned Terraform 1.13.5/AWS 6.44.0 toolchain, `init -backend=false -input=false -no-color -lockfile=readonly`, `fmt -check -recursive`, `validate -no-color` and `test -no-color`. Tests use mock_provider aws with command=plan, synthetic inputs, exact JSON comparisons, independent account/region bindings and rejected root/planner (case-insensitive, including paths)/foreign/wildcard/role identities. The original exact budget/trust/caller assertions remain. A scratch login-resource widening mutation must fail the exact login-policy assertion; retain RED/GREEN evidence with identical tests and unchanged repository source hashes. No real account plan is required by these checks.
+--- a/infra/terraform/billing-execution/tests/policy.tftest.hcl
++++ b/infra/terraform/billing-execution/tests/policy.tftest.hcl
+@@ -101,3 +101,77 @@
+   variables { operator_user_arn = "arn:aws:iam::111122223333:user/team/scholarchain-planner" }
+   expect_failures = [var.operator_user_arn]
+ }
++
++run "login_policy_is_exact_same_device_only" {
++  command = plan
++  assert {
++    condition = jsondecode(output.login_policy_json) == {
++      Version = "2012-10-17"
++      Statement = [{
++        Sid      = "BillingRoleSameDeviceLogin"
++        Effect   = "Allow"
++        Action   = ["signin:AuthorizeOAuth2Access", "signin:CreateOAuth2Token"]
++        Resource = ["arn:aws:signin:us-east-2:111122223333:oauth2/public-client/localhost"]
++        Condition = {
++          StringEquals = {
++            "signin:OAuthClientId" = "arn:aws:signin:::devtools/same-device"
++          }
++        }
++      }]
++    }
++    error_message = "Allow exactly the two login actions on one account/region localhost resource, pinned to the same-device client ID."
++  }
++}
++run "login_region_changes_only_authentication_binding" {
++  command = plan
++  variables { aws_region = "eu-west-1" }
++  assert {
++    condition     = jsondecode(output.login_policy_json).Statement[0].Resource == ["arn:aws:signin:eu-west-1:111122223333:oauth2/public-client/localhost"]
++    error_message = "Authentication region must bind the login resource exactly."
++  }
++  assert {
++    condition = jsondecode(output.execution_policy_json) == {
++      Version = "2012-10-17"
++      Statement = [{
++        Sid      = "ManageOnlyProjectBudget"
++        Effect   = "Allow"
++        Action   = ["budgets:ModifyBudget", "budgets:ViewBudget", "budgets:TagResource", "budgets:UntagResource", "budgets:ListTagsForResource"]
++        Resource = ["arn:aws:budgets::111122223333:budget/synthetic-project-budget"]
++      }]
++    }
++    error_message = "A login-region change must not broaden or merge the existing budget statement."
++  }
++}
++run "login_account_changes_independently" {
++  command = plan
++  variables { aws_account_id = "444455556666" }
++  assert {
++    condition     = jsondecode(output.login_policy_json).Statement[0].Resource == ["arn:aws:signin:us-east-2:444455556666:oauth2/public-client/localhost"]
++    error_message = "The configured account, not a constant or wildcard, must bind login access."
++  }
++}
++run "mixed_case_planner_cannot_be_operator" {
++  command = plan
++  variables { operator_user_arn = "arn:aws:iam::111122223333:user/ScHoLaRcHaIn-PlAnNeR" }
++  expect_failures = [var.operator_user_arn]
++}
++run "mixed_case_planner_under_path_cannot_be_operator" {
++  command = plan
++  variables { operator_user_arn = "arn:aws:iam::111122223333:user/team/SCHOLARCHAIN-PLANNER" }
++  expect_failures = [var.operator_user_arn]
++}
++run "wildcard_region_is_rejected" {
++  command = plan
++  variables { aws_region = "us-*-2" }
++  expect_failures = [var.aws_region]
++}
++run "question_mark_region_is_rejected" {
++  command = plan
++  variables { aws_region = "us-east-?" }
++  expect_failures = [var.aws_region]
++}
++run "malformed_region_is_rejected" {
++  command = plan
++  variables { aws_region = "us-east-2:console" }
++  expect_failures = [var.aws_region]
++}

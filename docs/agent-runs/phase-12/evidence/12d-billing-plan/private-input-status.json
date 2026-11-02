@@ -1,0 +1,9 @@
+{
+  "human_reported_saved": true,
+  "path": "/tmp/scholarchain-phase12d-billing-plan/notification.private.tfvars.json",
+  "regular_file": true,
+  "file_mode": "0600",
+  "directory_mode": "0700",
+  "contents_opened_by_agent": false,
+  "notification_recipient_logged": false
+}

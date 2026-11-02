@@ -1,0 +1,107 @@
+{
+  "timestamp_utc": "2026-11-01T19:57:07.665762+00:00",
+  "files": [
+    {
+      "path": "/Users/danny/Library/Application Support/ScholarChain/terraform/billing-bootstrap/billing.execution.tfplan",
+      "mode": "0o600",
+      "uid": 501,
+      "symlink": false,
+      "resolved": "/Users/danny/Library/Application Support/ScholarChain/terraform/billing-bootstrap/billing.execution.tfplan",
+      "bytes": 6631,
+      "sha256": "ab9f141e83058209263cf561eef1d102496ec7f534b88ce421620d8e0045f855"
+    },
+    {
+      "path": "/Users/danny/Library/Application Support/ScholarChain/terraform/billing-bootstrap/billing.execution.plan.json",
+      "mode": "0o600",
+      "uid": 501,
+      "symlink": false,
+      "resolved": "/Users/danny/Library/Application Support/ScholarChain/terraform/billing-bootstrap/billing.execution.plan.json",
+      "bytes": 10349,
+      "sha256": "a572befef93b3cfbdfe41fd6851800cf0bacaf7bd83778482052c2b48eef564b"
+    },
+    {
+      "path": "/Users/danny/Library/Application Support/ScholarChain/terraform/billing-bootstrap/protected-init.log.txt",
+      "mode": "0o600",
+      "uid": 501,
+      "symlink": false,
+      "resolved": "/Users/danny/Library/Application Support/ScholarChain/terraform/billing-bootstrap/protected-init.log.txt",
+      "bytes": 243,
+      "sha256": "0332e5a2014b4e3a832437119fe49036bc6a8355061e8def4e2d5ffc1c783808"
+    },
+    {
+      "path": "/Users/danny/Library/Application Support/ScholarChain/terraform/billing-bootstrap/real-plan.log.txt",
+      "mode": "0o600",
+      "uid": 501,
+      "symlink": false,
+      "resolved": "/Users/danny/Library/Application Support/ScholarChain/terraform/billing-bootstrap/real-plan.log.txt",
+      "bytes": 2559,
+      "sha256": "c23336f77fda43a5f5af2ef602aa8acd05fb7f57f7cd49f8ab010e1333ce6cd1"
+    },
+    {
+      "path": "/Users/danny/Library/Application Support/ScholarChain/terraform/billing-bootstrap/protected-show.log.txt",
+      "mode": "0o600",
+      "uid": 501,
+      "symlink": false,
+      "resolved": "/Users/danny/Library/Application Support/ScholarChain/terraform/billing-bootstrap/protected-show.log.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/danny/Library/Application Support/ScholarChain/terraform/billing-bootstrap/notification.private.tfvars.json",
+      "mode": "0o600",
+      "uid": 501,
+      "symlink": false,
+      "resolved": "/Users/danny/Library/Application Support/ScholarChain/terraform/billing-bootstrap/notification.private.tfvars.json",
+      "contents_read_or_hashed": false,
+      "size_withheld": true
+    },
+    {
+      "path": "/Users/danny/Library/Application Support/ScholarChain/terraform/billing-bootstrap/approved-public-inputs.tfvars.json",
+      "mode": "0o600",
+      "uid": 501,
+      "symlink": false,
+      "resolved": "/Users/danny/Library/Application Support/ScholarChain/terraform/billing-bootstrap/approved-public-inputs.tfvars.json",
+      "bytes": 446,
+      "sha256": "48f19c4526b63c8e194dcfeea8466591a0667c3a5956e06cdb31116e110a8e02"
+    },
+    {
+      "path": "/Users/danny/Library/Application Support/ScholarChain/terraform/billing-bootstrap/run.py",
+      "mode": "0o700",
+      "uid": 501,
+      "symlink": false,
+      "resolved": "/Users/danny/Library/Application Support/ScholarChain/terraform/billing-bootstrap/run.py",
+      "bytes": 12960,
+      "sha256": "942cb94ed6bad33067f4cf514fc1bf506ad149d14ea8ad508ff78d09de44b56f"
+    },
+    {
+      "path": "/Users/danny/Library/Application Support/ScholarChain/terraform/billing-bootstrap/save-recipient.py",
+      "mode": "0o700",
+      "uid": 501,
+      "symlink": false,
+      "resolved": "/Users/danny/Library/Application Support/ScholarChain/terraform/billing-bootstrap/save-recipient.py",
+      "bytes": 936,
+      "sha256": "849353011b7b7cc6e54a829dab05dd9d9eaf90b2d5a56d8092310eeaaa5fb352"
+    },
+    {
+      "path": "/Users/danny/Library/Application Support/ScholarChain/terraform/billing-bootstrap/toolchain/terraform.tfrc",
+      "mode": "0o600",
+      "uid": 501,
+      "symlink": false,
+      "resolved": "/Users/danny/Library/Application Support/ScholarChain/terraform/billing-bootstrap/toolchain/terraform.tfrc",
+      "bytes": 247,
+      "sha256": "bd77a0311cac1f89c0ea02f5b328aec41a93ae6f11ddcd7873c61eae6045361e"
+    },
+    {
+      "path": "/Users/danny/Library/Application Support/ScholarChain/terraform/billing-bootstrap/toolchain/terraform-1.13.5",
+      "mode": "0o700",
+      "uid": 501,
+      "symlink": false,
+      "resolved": "/Users/danny/Library/Application Support/ScholarChain/terraform/billing-bootstrap/toolchain/terraform-1.13.5",
+      "bytes": 94055488,
+      "sha256": "899b3c0ca0d2669ebd67be4bcd98e84bd9a914ce2fb3897ad0b86c98cbf3c962"
+    }
+  ],
+  "selected_state_path_exists": false,
+  "default_config_state_path_exists": false,
+  "remote_budget_absence": "not verified; local absence is not account inventory"
+}

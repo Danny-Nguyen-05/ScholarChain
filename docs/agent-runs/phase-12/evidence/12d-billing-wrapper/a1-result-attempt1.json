@@ -1,0 +1,20 @@
+{
+  "binary_sha256": "899b3c0ca0d2669ebd67be4bcd98e84bd9a914ce2fb3897ad0b86c98cbf3c962",
+  "scratch": "/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/scholarchain A1 state binding n68_7goq",
+  "checks": {
+    "state_at_absolute_path_with_spaces": true,
+    "no_config_default_state": true,
+    "no_workspace_state_directory": true,
+    "no_initial_backup": true,
+    "lock_removed": true,
+    "no_resource_state_in_tf_data_dir": true,
+    "only_expected_resource_state": true
+  },
+  "state_sha256": "90c3d6541e475b958c22ce68a173549dc36d1b06dc359cd349f0d33b6f3b9d76",
+  "private_or_real_state": false,
+  "aws_calls": 0,
+  "commands": 3,
+  "wrapper_apply_argv_builder_exercised": true,
+  "wrapper_private_runner_exercised": true,
+  "retention": "Isolated public-fixture scratch state/plan/raw logs retained outside Git; no cleanup performed."
+}

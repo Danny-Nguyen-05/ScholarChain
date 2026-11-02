@@ -1,0 +1,14 @@
+{
+  "recorded_utc": "2026-11-02T01:46:37.390190+00:00",
+  "scope": "Public helper authorship/testing preparation only",
+  "lookup_erratum": {
+    "command": "rg --files scripts/billing /tmp/scholarchain-phase12d-billing-publication-helper",
+    "exit": 2,
+    "reason": "New specialist scratch output directory did not yet exist; existing public script inventory printed. No contents/durable/private/live failure; no unsafe retry."
+  },
+  "no_new_human_decisions_inferred": true,
+  "actual_window_selected": false,
+  "R1_residual_risk_acceptance_pending": true,
+  "existing_5_scripts_immutable": true,
+  "historical_decisions": "G1 accuracy confirmation supplied; H1 human persistent Terminal chosen; local CLIpreflight separately authorized/performed; offline helper choice only in latest yes. No apply authority."
+}

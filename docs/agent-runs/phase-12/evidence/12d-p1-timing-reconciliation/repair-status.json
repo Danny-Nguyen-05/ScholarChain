@@ -1,0 +1,24 @@
+{
+  "F1": {
+    "status": "REPAIR PREPARED; INDEPENDENT RECHECK PENDING",
+    "evidence": "Uncertain human estimate and explicit retrospective deviation acceptance, verbatim/context-preserved under specific edit instruction",
+    "exact_times_or_compliance_invented": false
+  },
+  "F2": {
+    "status": "REPAIR PREPARED; INDEPENDENT RECHECK PENDING",
+    "evidence": "Original request not retained, human now affirms paragraph as their own; attribution retained in personal record and human-replies.json"
+  },
+  "F3": {
+    "status": "MANIFEST ADDED; INDEPENDENT RECHECK PENDING",
+    "original_files": 3,
+    "original_files_changed": 0,
+    "manifest": "docs/agent-runs/phase-12/evidence/12d-identity-decision-draft/evidence-manifest.json"
+  },
+  "F4": {
+    "status": "INFO DEFERRED",
+    "remaining": "Later operator inventory/manual-IAM adoption review and refresh lifetime evidence"
+  },
+  "P1_verdict_current": "REQUEST-CHANGES until new independent verdict",
+  "P2_status": "Not regenerated; waits P1 APPROVE and next prompt",
+  "apply_or_spending_authorized": false
+}

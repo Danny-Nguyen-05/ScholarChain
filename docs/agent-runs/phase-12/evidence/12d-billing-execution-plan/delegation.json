@@ -1,0 +1,7 @@
+{
+  "role": "infra-engineer",
+  "agent": "/root/infra_12d_execution_plan",
+  "scope": "Protected /tmp/scholarchain-phase12d-billing-execution-plan scratch helpers/copy/plan/sanitizer; no production-source or phase-evidence writes. No children/reviewers.",
+  "coordinator": "Owns docs/agent-runs/phase-12 assembled evidence and append-only reports.",
+  "start_state": "Private helper ready, real plan explicitly waiting for human Saved and coordinator go-ahead."
+}

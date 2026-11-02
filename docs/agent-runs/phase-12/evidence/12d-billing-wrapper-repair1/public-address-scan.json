@@ -1,0 +1,10 @@
+{
+  "type": "Generic email-pattern ONLY, not actual-recipient scan",
+  "scope_units": 34,
+  "scope": "Final two packets, five script files, recheck prompt and five appended suffixes",
+  "reserved_fixture_matches": 2,
+  "other_addresses": 0,
+  "exclusions": "Count-only receipt and hash-only root manifests",
+  "private_recipient_access": false,
+  "W3": "Final execution must separately prove coverage of all final record suffixes/public artifacts; current singlepacket runtime scanner insufficient alone."
+}

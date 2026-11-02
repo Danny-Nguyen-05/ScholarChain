@@ -1,0 +1,14 @@
+STATUS: COMPLETE
+OWNER: build-engineer
+WORK ORDER: Phase 12D billing-execution policy amendment offline full repository gate after the final source freeze; branch phase-12, HEAD 5ca8406bad5fe55f732458fa0cbd5d561ac83d8f. No source edits or live AWS work.
+FILES CREATED: Scratch-only /tmp/scholarchain-phase12d-policy-amendment-build outputs listed in artifact-manifest.json; no tracked files created.
+FILES MODIFIED: No source files. sbt generated ignored build outputs and the generated check marker as part of the authorized gate.
+COMMANDS RUN: Cwd /Users/danny/Documents/UIC/CS441/ScholarChain; export JAVA_HOME=/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home; export PATH="$JAVA_HOME/bin:$PATH"; export SBT_OPTS="-Dlogback.configurationFile=$PWD/docs/agent-runs/phase-04/xml-repair-logback.xml"; java -version (exit 0); sbt -batch check (exit 0). Exact argv, selected environment, timestamps, exits and log hashes: commands.json. Gate 2026-10-31T21:20:09.739445+00:00 through 2026-10-31T21:32:32.920642+00:00; wall 743.191955 s. Full inherited PATH is intentionally not recorded.
+TEST RESULTS: 1255 tests across 157 fresh XML reports; failures 0, errors 0, skips 0. Per-module log total 1255 equals XML. Stale XML reports excluded: 1; see xml-reports.json. Only expected checkProbeInjectFailure self-test error block: True (20 contiguous error lines).
+VALIDATION RESULTS: JDK 17.0.20.1; freeze SHA f6cd6649d084cad038234f9ec476bead72a05e6e74124b9d77b86e4c8777ba1a; 209 frozen files match before and after. Broad inputs 1383 before / 1383 after, deltas 0. Raw sbt log SHA e1a8bce426a50cf105c4e3bd9184c7237267215251c573ad9e2a6dc5cb90931b, 1721067 bytes; gzip SHA 3c05c13a735ba42f8efedfbd4c75fa63e68edd0216769c4c7fb4467670a431cd, 93341 bytes. Gzip decompression hash and size match the raw log.
+ASSUMPTIONS: The source freeze supplied by the coordinator defines the intended final Terraform and independent-test inputs. XML freshness is determined by mtime inside the recorded sbt window.
+RISKS: Local regression only. This gate proves no IAM authorization, MFA propagation, live budget accounting/delivery, EMR runtime compatibility or spending approval.
+MANUAL ACTION REQUIRED: Coordinator assembles evidence; user launches an independent read-only preparation review and chooses the next bounded identity-establishment work order.
+BLOCKED-ON OWNER: None for this build gate.
+BLOCKED-ON EVIDENCE: None for this build gate; all live gates remain open.
+NEXT GATE: Independent read-only review of billing-execution policy amendment only; no plan/apply, account call, live 12D, commit or push.

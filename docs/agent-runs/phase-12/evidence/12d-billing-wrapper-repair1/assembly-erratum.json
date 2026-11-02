@@ -1,0 +1,5 @@
+{
+  "first_assembly_exit": 1,
+  "reason": "git diff --check caught a newly added blank line at EOF after verbatim review. Appended a nonblank coordinator scope footer, preserving the full original byte prefix and verbatim review. No old record bytes rewritten.",
+  "scope": "Public evidence assembly only; subsequent checks repeated."
+}

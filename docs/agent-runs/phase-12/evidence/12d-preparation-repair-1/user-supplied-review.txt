@@ -1,0 +1,141 @@
+Verdict for PREPARATION ONLY: REQUEST-CHANGES. There is one blocking finding: the billing-bootstrap budget has no tags. Almost everything else you asked me to verify reproduced exactly. The live 12D spike stays blocked and none of this approves it.
+
+Review method: read-only Git, hash, XML and log checks, plus public AWS docs and the course README. I edited nothing and ran no builds, tests, Terraform or AWS calls.
+
+Findings (most severe first)
+
+F1 — Medium — BLOCKING (preparation)
+- Where: infra/terraform/billing-bootstrap/main.tf:1-5 and main.tf:9-49.
+- Evidence: The provider has no default_tags, and aws_budgets_budget.project has no tags.
+  - Plan §4 says "Tags on every resource: course, project, environment, owner and expiration date". The course Phase 12 Foundation section says "Required tags" and "Budget and cost-allocation tags where course accounts allow."
+  - The main root already does this on the same provider pin: providers.tf:5 sets default_tags, and modules/foundation/main.tf:28 sets tags = local.tags on its budget.
+  - The main README (infra/terraform/README.md:197) says a future bootstrap root "must supply … the five required tags".
+- Impact: The next step for this root is a real plan and then apply. As written, that plan would create an untagged resource that breaks a binding rule, and it would have to be planned again.
+- Owner: infra-engineer.
+- Acceptance check:
+  - Add the five required tags, either as validated variables or as provider default_tags.
+  - The expiration tag must reflect the budget's own retention through final reconciliation, not the stack's November 25 date.
+  - Add a mock plan assertion that checks all five tags.
+  - fmt, validate and test pass in all three roots; the static guard and git diff --check pass; there is a new freeze.
+
+F2 — Medium — non-blocking for preparation; must be resolved before any live approval
+- Where: docs/agent-runs/phase-12/evidence/12d-preparation/cost-proposal.md:15.
+- Evidence:
+  - That line says the 12C "USD15 EMR reserve is replaced by/contains this spike allocation". The wording is ambiguous.
+  - In 12C, evidence/12c/cost/cost-memo.md:64 says the USD 15 is the "provisional reserve for all EMR spikes/experiments".
+  - 12C's upper-window margin was only USD 5.09 (cost-calculations.json:237; review.md:1117).
+- Impact: Spending USD 10 on 12D leaves about USD 5 for all later EMR work in Phases 13 and 15. That includes the scale experiment of at least 1M edges. The human chose "use recommendations" without this consequence stated.
+- Owner:
+  - Coordinator: the cost-proposal and handoff disclosure.
+  - Human architect: deciding whether to accept the smaller remaining EMR reserve.
+- Acceptance check: The packet explicitly states:
+  - the remaining EMR reserve after the spike (USD 15 − 10 = USD 5);
+  - the USD 5.09 upper-window margin;
+  - that later EMR runs need a new allocation decision.
+
+F3 — Low — non-blocking
+- Where: infra/terraform/billing-bootstrap/main.tf:19-31 and billing-bootstrap/README.md:9.
+- Evidence: The "before credits" basis depends entirely on cost_types. The Budget API page that the README cites marks CostTypes as "This member has been deprecated". The README does not mention this.
+- Impact: The live service might not honour include_credit=false the way the mock does.
+- Owner: infra-engineer.
+- Acceptance check: The README discloses the deprecation. The post-apply readback step explicitly checks that credits and refunds are excluded, or it routes an alternative (Metrics/FilterExpression) for review.
+
+F4 — Low — non-blocking
+- Where: infra/terraform/spikes/emr-spark/main.tf:17-20 and tests/proposal.tftest.hcl:13.
+- Evidence: The test asserts the hard-coded constants aws_resources_declared = 0, launchable = false and the list length of 8. That is tautological under plan §6.9 (tests must not re-run the implementation's own logic). The zero-resource property is true: I inspected the source and found only one output, no resource, data, module, provider or provisioner. But the test does not prove it.
+- Owner:
+  - infra-engineer: README disclosure.
+  - test-engineer: an optional static check.
+- Acceptance check: Either README.md:44 says the zero-resource claim rests on inspection, or a static check fails if any such block appears under spikes/emr-spark.
+
+F5 — Low — non-blocking
+- Where: evidence/12d-preparation/infra/final-commands.json (all 14 records).
+- Evidence: The records hold argv, cwd, times and hashes but no environment. TF_CLI_CONFIG_FILE appears only in the prose of handoff.md:23; no evidence JSON contains it.
+- Owner: coordinator.
+- Acceptance check: Future command records include the non-secret environment variables, or a recorded erratum states this omission.
+
+F6 — Low — non-blocking
+- Where:
+  - handoff.md:5-27;
+  - launch-dependencies.md:5-13;
+  - cost-proposal.md:3-15;
+  - the 12D blocks appended to owner-report.md and test-report.md.
+- Evidence: Spaces have been stripped from the prose, for example "Freeze203 files at2026-…", "Mainfoundationbudget", "beforeinventory", "(13files)".
+- Impact: Readability only; every number I checked is correct.
+- Owner: coordinator.
+- Acceptance check: Clean up the untracked evidence. Correct the tracked records only through an appended erratum, because the prefixes are append-only.
+
+F7 — Medium — carried, pre-existing, NOT introduced by 12D, non-blocking here; routed to the human
+- Where: 69 tracked files since a83f62e and earlier, including:
+  - docs/agent-runs/phase-12/prompt.md:15,287,331;
+  - review.md (4 occurrences);
+  - evidence/12c/phase12-plan-at-start.md;
+  - Phase 7 evidence.
+- Evidence: A Google Drive CloudStorage/GoogleDrive-… source path embeds the account owner's Gmail address. I have not reproduced it here. The plan's shared-budget section says the signup Gmail must stay out of the graded repository. None of the 95 new 12D files and none of the appended text adds it. Prior reviews did not flag it.
+- Owner: human architect. Redaction or history rewriting is destructive and needs a human gate; agents must not rewrite prior records.
+- Acceptance check: A recorded human decision, either to accept, redact going forward, or rewrite history. Future prompts should cite the plan by a neutral path.
+
+Info
+- The three alert thresholds [50, 80, 100] are hard-coded at main.tf:33 with no rationale comment (plan §6.7). This can be folded into F1.
+- The static guard scans only .tf and .tfvars, so .tftest.hcl fixtures are not scanned. I scanned them by hand and found only example.invalid and 111122223333.
+- One stale XML report (TestRunMarkerSpec) is correctly excluded. That is disclosed only in gate-summary.json.
+
+What verified cleanly
+
+1. Budget:
+   - One account-wide budget: COST, CUSTOM period, USD 200 enforced by validation.
+   - Explicit start and end variables with no defaults; the end must be later than the start.
+   - No filters, which the test checks.
+   - include_credit and include_refund are false.
+   - Exactly three actual-spend alerts above 50%, 80% and 100% (GREATER_THAN, PERCENTAGE).
+   - A sensitive recipient set with a precondition, prevent_destroy, and enable_budget=false by default.
+   - The separate-state rules are documented (README.md:24), and the main root keeps enable_budget_resource=false (course.tfvars:7).
+   - The AWS API docs confirm CUSTOM is valid and that a budget is deleted after its end date.
+2. Proposal:
+   - No resources and no provisioners.
+   - launch_requested=true is always rejected.
+   - The README and self-review say the capacity limits are proposals, not enforcement, and that idle auto-termination is not a total-runtime clock.
+3. Disclosures:
+   - I confirmed every code claim:
+     - Phase6Main.scala:94-170 uses Java NIO.
+     - Phase6Export.scala:28-29 drops only the top-level run_id.
+     - Phase6Context.scala:20,28 keeps a nested context.runId.
+     - Phase6Main.scala:18-38 fingerprints class directories and JAR bytes differently.
+   - So the "same assembled JAR" requirement is correct. All of these are presented as prerequisites, not as observed live failures.
+4. Evidence reconciliation:
+   - Footprint: git status has 99 entries, matching handoff-files.json exactly (4 modified, 95 untracked). 3,924 tracked files with 3,920 unchanged.
+   - Records: all four record prefixes are byte-identical to HEAD; the diffs are additions only.
+   - Manifests:
+     - 81 evidence files: 80 in the manifest plus the manifest itself; all 80 hashes and byte counts match.
+     - The 38 infra-native artifacts match.
+     - 13 build-origin artifacts: 12 present and matching, plus the raw-log alias. Decompressing the gzip reproduces the raw SHA 9b244a2c… and 1,720,676 bytes.
+   - Freeze: all 203 frozen files and all 1,377 build-snapshot files still match today.
+   - XML: 157 reports fall inside the gate window and are unchanged on disk. Parsing them independently gives 1,255 tests, 0 failures/errors/skips.
+   - Build log: the 20 [error] lines are one contiguous block (lines 8201–8220), the checkProbeInjectFailure probe. The summary lines add up to 1,255. JDK is 17.0.20.1.
+   - Terraform logs: all 32 Terraform log hashes match. Final results: course 40 passed, billing 5, proposal 6.
+   - RED proof: the scratch copy of main.tf differs only at line 20 and fails at the intended assertion, budget.tftest.hcl:33 (4 passed, 1 failed). Repository hashes are identical to the RED proof's before and after values.
+   - Locks: both new lock files are byte-identical to the course lock.
+   - Plan copy: its SHA is b136cd3c…, matching plan-reference.json.
+5. Cost: USD 0.96 is labelled as compute only. Everything excluded is listed (EBS, NAT, IPv4, S3, logs, KMS, tax, delayed charges). The public price file reproduces (decompressed SHA 5d3736e4…, 606,679 bytes).
+6. No live activity found:
+   - review.md, the 12C evidence and the human records are unchanged.
+   - B1/B2/B3/R1 and N19/N20 are carried forward unchanged.
+   - No .tfstate exists in the new roots, and their .terraform/ folders are git-ignored.
+   - There is no human-gate.md, and no approval was written.
+
+Report fields
+
+STATUS: COMPLETE (review); verdict REQUEST-CHANGES for Phase 12D PREPARATION ONLY (1 blocking: F1)
+OWNER: code-reviewer (independent, read-only)
+WORK ORDER: Independent review of 12D offline preparation; branch phase-12, base/HEAD 5ca8406bad5fe55f732458fa0cbd5d561ac83d8f; evidence root docs/agent-runs/phase-12/evidence/12d-preparation/
+FILES CREATED: None
+FILES MODIFIED: None
+COMMANDS RUN: Read-only git (rev-parse, status -uall, diff/numstat/-U0, cat-file, show, ls-files, check-ignore, grep, log -S, diff --check); sha256/gzip -dc/wc/stat/diff/sed/grep; python3 -I hash, manifest, XML-parse and freeze reconciliation; public docs via aws-knowledge read_documentation (Budget, TimePeriod) and WebFetch of the raw course README (only the first 100,000 of 160,436 characters read; the github-readonly MCP failed to connect). No Terraform, sbt, AWS, credential, state or plan access.
+TEST RESULTS: Not re-run (read-only). Observed artifacts reconcile: Terraform 51/0, 69 assertions, 26 expected-failure runs; RED 4/1 at budget.tftest.hcl:33; sbt check 1,255 tests, 0 failures/errors/skips across 157 fresh XML reports.
+VALIDATION RESULTS: All hashes, counts, prefixes, freeze (203), snapshot (1,377), locks, plan copy and public price data verified; F1–F7 found.
+ASSUMPTIONS: The external plan matches its repository copy, per plan-reference.json. Course README text after character 100,000 was not read. Live AWS acceptance of CUSTOM periods and cost_types is unverified.
+RISKS: Untagged budget (F1); undisclosed reduction of the EMR reserve (F2); deprecated CostTypes (F3); pre-existing Gmail in tracked paths (F7). All live 12D prerequisites remain unmet.
+MANUAL ACTION REQUIRED: Human decides F2 (reduced EMR reserve) and F7 (handling of the address in tracked paths); human chooses the next bounded 12D continuation after a recheck APPROVE.
+BLOCKED-ON OWNER: infra-engineer (F1, F3, F4 README); coordinator (F2 text, F5, F6); human architect (F2 decision, F7, all live gates)
+BLOCKED-ON EVIDENCE: billing-bootstrap/main.tf:1-5,9-49; cost-proposal.md:15 vs 12c/cost/cost-memo.md:64; README.md:9; spikes/emr-spark/main.tf:17-20; final-commands.json; phase-12/prompt.md:15
+NEXT GATE: Repair round for F1 (and F2–F6 as scoped), then a user-launched independent recheck of preparation only. No live 12D, plan, apply or Phase 13.

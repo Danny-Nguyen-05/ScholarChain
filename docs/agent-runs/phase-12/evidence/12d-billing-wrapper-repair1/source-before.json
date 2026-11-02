@@ -1,0 +1,30 @@
+{
+  "recorded_utc": "2026-11-01T21:33:12.029022+00:00",
+  "files": [
+    {
+      "path": "scripts/billing/README.md",
+      "bytes": 11539,
+      "sha256": "ff39ee4d987d89a393c31963f1c8f2fe4dc12037bdb2bc50b7e6b44ea1c78ebf"
+    },
+    {
+      "path": "scripts/billing/budget_execution.py",
+      "bytes": 36540,
+      "sha256": "81fe564942a9f53ccf40236f32569a0f3fbdba13119c1ca3a23305d64c0039f0"
+    },
+    {
+      "path": "scripts/billing/reviewed-pins.json",
+      "bytes": 46174,
+      "sha256": "cb285259b7217bb4186ca80e74d376f215e4150396aa5fd66187d4e0dc96a753"
+    },
+    {
+      "path": "scripts/billing/tests/terraform_state_binding.py",
+      "bytes": 5340,
+      "sha256": "faaf64cd14192abbe45c1284617c26e7c1c2958ace61fcbcde955d8ac471a7c3"
+    },
+    {
+      "path": "scripts/billing/tests/test_budget_execution.py",
+      "bytes": 27551,
+      "sha256": "246093152aacb2dee57ef9b3db1edc4105a6395313830afffc032fe0d3a33c4e"
+    }
+  ]
+}

@@ -1,0 +1,111 @@
+{
+  "scope": "Public wrapper/offline handoff only",
+  "self_excluded": true,
+  "files": [
+    {
+      "path": "a1-attempt1.log.txt",
+      "bytes": 799,
+      "sha256": "c7d976feb37d47f10733b0de59b7e9a0557fba8bda151fbc0f823599578a96ce"
+    },
+    {
+      "path": "a1-attempt2.log.txt",
+      "bytes": 799,
+      "sha256": "df398a068caa9d6d85868e40248ee9da3c12f4a09eb4474c52149508531056f0"
+    },
+    {
+      "path": "a1-commands-attempt1.json",
+      "bytes": 5243,
+      "sha256": "4142b7895737cbd68fd6706a4ab969b5deb14b7b1b0215d891d386e6ceecf82b"
+    },
+    {
+      "path": "a1-commands.json",
+      "bytes": 5243,
+      "sha256": "4d3ea986ff5b1881cd793b27784b1740261923c91cdc1e7f8e0193cc068e20ab"
+    },
+    {
+      "path": "a1-result-attempt1.json",
+      "bytes": 853,
+      "sha256": "0c8a4e293cc7d8c4eb810a87214f2bb36fdacbdcf6de3d582c3ade8059153524"
+    },
+    {
+      "path": "a1-result.json",
+      "bytes": 853,
+      "sha256": "71ce72f70c09bfa7cfd2a1bd69e3d1f93c706a7eb8e6d9a4f9e683f3522c1a61"
+    },
+    {
+      "path": "artifact-manifest.json",
+      "bytes": 2198,
+      "sha256": "4e2528835b42fa5af7b0d7143b80c48f458c8f643406e8ff38489fdb4280a783"
+    },
+    {
+      "path": "assemble-public.py",
+      "bytes": 15476,
+      "sha256": "c8859d34df7a07817cae33b1510094ad89290895035ce5a4d7fac59f07c1948e"
+    },
+    {
+      "path": "coordinator-report.txt",
+      "bytes": 5425,
+      "sha256": "4698972497205ab8db2f52bd02ac37c13dce9927b67a267984e1161e2ced82bf"
+    },
+    {
+      "path": "diff-check-result.json",
+      "bytes": 127,
+      "sha256": "d0b55ab5929e4e1b63606e7c3eb67c4b88c5923c291430bab63610c6efb26151"
+    },
+    {
+      "path": "final-status.log.txt",
+      "bytes": 63408,
+      "sha256": "21107b483a13eefd7935be229557707a338e84bca63f13c415cfe8c1745a649d"
+    },
+    {
+      "path": "handoff-files.json",
+      "bytes": 3454,
+      "sha256": "c4187b3e90c7209f099da7629a408eb931e3e93858edefe21e717ef4f4f4bbf6"
+    },
+    {
+      "path": "offline-tests-attempt1.log.txt",
+      "bytes": 34869,
+      "sha256": "cc11f90934055752eb2f6b4fcefbbc46e1c24cc294f6d187124225f22bb8ae12"
+    },
+    {
+      "path": "offline-tests-attempt2.log.txt",
+      "bytes": 4628,
+      "sha256": "452dcfbdf72a77605126ef4df09abac495c78f1830393a1341e7f307e66038f4"
+    },
+    {
+      "path": "offline-tests-attempt3.log.txt",
+      "bytes": 3775,
+      "sha256": "57ff38248fd0096f217fb770d26c67caa1fe36c5bdc37b5d1a75bbbd92e214a7"
+    },
+    {
+      "path": "offline-tests-attempt4.log.txt",
+      "bytes": 4211,
+      "sha256": "e7becd715168b95311754194fa2f8db52572c411efe9e25abc7fc6ff36f4b7e5"
+    },
+    {
+      "path": "owner-report.txt",
+      "bytes": 6272,
+      "sha256": "a4812867533a44a32f600fa916063ecf45c5ce6235bced477faefa8ecc8cfc9e"
+    },
+    {
+      "path": "preservation-check.json",
+      "bytes": 1350,
+      "sha256": "bc6c9ae46b62bb1b7dfaeb181c5f32945ff1e8f3988a14d261a30260ade2d944"
+    },
+    {
+      "path": "public-address-scan.json",
+      "bytes": 763,
+      "sha256": "8ef196c474991940ce70a344648302a7e7877b8663356e91eb1daf9f7ccf6919"
+    },
+    {
+      "path": "result.json",
+      "bytes": 4812,
+      "sha256": "da03e11eddd7e2dbeb59a92fda65c274f06106abaea22268e0de83ee66fba698"
+    },
+    {
+      "path": "source-file-hashes.json",
+      "bytes": 887,
+      "sha256": "e89a6b92b67e2c3b00eaa40a8cc2c3d45c2c1bd5c5908c438b9ad1d87acec0ea"
+    }
+  ]
+}

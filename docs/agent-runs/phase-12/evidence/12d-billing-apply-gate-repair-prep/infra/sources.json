@@ -1,0 +1,125 @@
+{
+  "checked_user_date": "2026-10-31",
+  "timezone": "America/Chicago",
+  "method": "web open/find of public primary documentation/source only; no AWS account operation",
+  "successful": [
+    {
+      "id": "apply-doc",
+      "url": "https://developer.hashicorp.com/terraform/cli/v1.13.x/commands/apply",
+      "use": "1.13.x reference; legacy local state flags and saved-plan execution"
+    },
+    {
+      "id": "apply-source",
+      "url": "https://raw.githubusercontent.com/hashicorp/terraform/v1.13.5/internal/command/apply.go",
+      "use": "PrepareBackend applies CLI state arguments and loads saved backend"
+    },
+    {
+      "id": "meta-backend-source",
+      "url": "https://raw.githubusercontent.com/hashicorp/terraform/v1.13.5/internal/command/meta_backend.go",
+      "use": "BackendForLocalPlan/CLIOpts propagate state input/output/backup overrides"
+    },
+    {
+      "id": "local-source",
+      "url": "https://raw.githubusercontent.com/hashicorp/terraform/v1.13.5/internal/backend/local/backend.go",
+      "use": "StatePaths override priority and default backup semantics"
+    },
+    {
+      "id": "state-check-source",
+      "url": "https://raw.githubusercontent.com/hashicorp/terraform/v1.13.5/internal/backend/local/backend_local.go",
+      "use": "Local lock, state lineage/serial stale-plan checks"
+    },
+    {
+      "id": "apply-state-write-source",
+      "url": "https://raw.githubusercontent.com/hashicorp/terraform/v1.13.5/internal/backend/local/backend_apply.go",
+      "use": "State locking and persistence during apply; research only, no execution"
+    },
+    {
+      "id": "filesystem-source",
+      "url": "https://raw.githubusercontent.com/hashicorp/terraform/v1.13.5/internal/states/statemgr/filesystem.go",
+      "use": "Supplementary public state manager source; not executed"
+    },
+    {
+      "id": "meta-source",
+      "url": "https://raw.githubusercontent.com/hashicorp/terraform/v1.13.5/internal/command/meta.go",
+      "use": "Supplementary state flag metadata; not executed"
+    },
+    {
+      "id": "environment-doc",
+      "url": "https://developer.hashicorp.com/terraform/cli/v1.13.x/config/environment-variables",
+      "use": "TF_DATA_DIR consistency and environment flag behavior"
+    },
+    {
+      "id": "cli-config-doc",
+      "url": "https://developer.hashicorp.com/terraform/cli/v1.13.x/config/config-file",
+      "use": "Credential-free CLI config and filesystem mirror selection"
+    },
+    {
+      "id": "local-doc",
+      "url": "https://developer.hashicorp.com/terraform/language/backend/local",
+      "use": "Latest reference used only supplementary; pinned source controls version-specific conclusion"
+    },
+    {
+      "id": "lifecycle-doc",
+      "url": "https://developer.hashicorp.com/terraform/language/v1.13.x/meta-arguments/lifecycle",
+      "use": "prevent_destroy scope/limits"
+    },
+    {
+      "id": "describe-api",
+      "url": "https://docs.aws.amazon.com/aws-cost-management/latest/APIReference/API_budgets_DescribeBudget.html",
+      "use": "Exact-name request and documented NotFoundException HTTP400"
+    },
+    {
+      "id": "sts-api",
+      "url": "https://docs.aws.amazon.com/STS/latest/APIReference/API_GetCallerIdentity.html",
+      "use": "Caller account and ARN semantics"
+    },
+    {
+      "id": "describe-cli",
+      "url": "https://docs.aws.amazon.com/cli/latest/reference/budgets/describe-budget.html",
+      "use": "Public command syntax; installed client capabilities unverified"
+    }
+  ],
+  "failed_fetches": [
+    {
+      "url": "https://developer.hashicorp.com/terraform/language/v1.13.x/backend/local",
+      "result": "tool cache miss/internal error; no content; not relied upon"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/hashicorp/terraform/v1.13.5/internal/command/arguments/apply.go",
+      "result": "tool cache miss/internal error; no content; not relied upon"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/hashicorp/terraform/v1.13.5/internal/command/arguments/extended.go",
+      "result": "tool cache miss/internal error; no content; not relied upon"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/hashicorp/terraform/v1.13.5/website/docs/cli/commands/apply.mdx",
+      "result": "tool cache miss/internal error; no content; not relied upon"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/hashicorp/terraform/v1.13.5/website/docs/cli/config/environment-variables.mdx",
+      "result": "tool cache miss/internal error; no content; not relied upon"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/hashicorp/terraform/v1.13.5/internal/backend/local/cli.go",
+      "result": "tool cache miss/internal error; no content; not relied upon"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/hashicorp/terraform/v1.13.5/internal/command/arguments/state.go",
+      "result": "tool cache miss/internal error; no content; not relied upon"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/hashicorp/terraform/v1.13.5/internal/backend/local/backend_cli.go",
+      "result": "tool cache miss/internal error; no content; not relied upon"
+    },
+    {
+      "url": "https://github.com/hashicorp/terraform/tree/v1.13.5/internal/backend/local",
+      "result": "tool cache miss/internal error; no content; not relied upon"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/hashicorp/terraform/v1.13.5/internal/backend/local/backend_common.go",
+      "result": "tool cache miss/internal error; no content; not relied upon"
+    }
+  ],
+  "note": "Some failed source paths were guesses; they provide no evidence. Version-specific state-override conclusion is based on successful pinned apply.go/meta_backend.go/backend.go chain plus documented supported flags. No runtime demonstration was run."
+}

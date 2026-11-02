@@ -1,0 +1,17 @@
+{
+  "budget": {
+    "runs": 5,
+    "assertions": 4,
+    "expected_failure_runs": 3
+  },
+  "spike": {
+    "runs": 6,
+    "assertions": 3,
+    "expected_failure_runs": 5
+  },
+  "course": {
+    "runs": 40,
+    "assertions": 62,
+    "expected_failure_runs": 18
+  }
+}

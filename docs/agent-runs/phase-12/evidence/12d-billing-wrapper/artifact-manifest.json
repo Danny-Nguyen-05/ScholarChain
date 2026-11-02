@@ -1,0 +1,71 @@
+{
+  "scope": "Public authoring/offline test logs and metadata only; private A1 scratch state/plan/raw logs excluded",
+  "self_excluded": true,
+  "files": [
+    {
+      "path": "a1-attempt1.log.txt",
+      "bytes": 799,
+      "sha256": "c7d976feb37d47f10733b0de59b7e9a0557fba8bda151fbc0f823599578a96ce"
+    },
+    {
+      "path": "a1-attempt2.log.txt",
+      "bytes": 799,
+      "sha256": "df398a068caa9d6d85868e40248ee9da3c12f4a09eb4474c52149508531056f0"
+    },
+    {
+      "path": "a1-commands-attempt1.json",
+      "bytes": 5243,
+      "sha256": "4142b7895737cbd68fd6706a4ab969b5deb14b7b1b0215d891d386e6ceecf82b"
+    },
+    {
+      "path": "a1-commands.json",
+      "bytes": 5243,
+      "sha256": "4d3ea986ff5b1881cd793b27784b1740261923c91cdc1e7f8e0193cc068e20ab"
+    },
+    {
+      "path": "a1-result-attempt1.json",
+      "bytes": 853,
+      "sha256": "0c8a4e293cc7d8c4eb810a87214f2bb36fdacbdcf6de3d582c3ade8059153524"
+    },
+    {
+      "path": "a1-result.json",
+      "bytes": 853,
+      "sha256": "71ce72f70c09bfa7cfd2a1bd69e3d1f93c706a7eb8e6d9a4f9e683f3522c1a61"
+    },
+    {
+      "path": "offline-tests-attempt1.log.txt",
+      "bytes": 34869,
+      "sha256": "cc11f90934055752eb2f6b4fcefbbc46e1c24cc294f6d187124225f22bb8ae12"
+    },
+    {
+      "path": "offline-tests-attempt2.log.txt",
+      "bytes": 4628,
+      "sha256": "452dcfbdf72a77605126ef4df09abac495c78f1830393a1341e7f307e66038f4"
+    },
+    {
+      "path": "offline-tests-attempt3.log.txt",
+      "bytes": 3775,
+      "sha256": "57ff38248fd0096f217fb770d26c67caa1fe36c5bdc37b5d1a75bbbd92e214a7"
+    },
+    {
+      "path": "offline-tests-attempt4.log.txt",
+      "bytes": 4211,
+      "sha256": "e7becd715168b95311754194fa2f8db52572c411efe9e25abc7fc6ff36f4b7e5"
+    },
+    {
+      "path": "owner-report.txt",
+      "bytes": 6272,
+      "sha256": "a4812867533a44a32f600fa916063ecf45c5ce6235bced477faefa8ecc8cfc9e"
+    },
+    {
+      "path": "result.json",
+      "bytes": 4812,
+      "sha256": "da03e11eddd7e2dbeb59a92fda65c274f06106abaea22268e0de83ee66fba698"
+    },
+    {
+      "path": "source-file-hashes.json",
+      "bytes": 887,
+      "sha256": "e89a6b92b67e2c3b00eaa40a8cc2c3d45c2c1bd5c5908c438b9ad1d87acec0ea"
+    }
+  ]
+}

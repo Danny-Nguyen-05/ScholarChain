@@ -1,0 +1,13 @@
+# Proposed next work order — fresh billing-bootstrap plan only
+
+Status: PREPARED, NOT AUTHORIZED, NOT RUN. The authentication-only go-ahead does not authorize this plan.
+
+Use only infra/terraform/billing-bootstrap and the verified dedicated scholarchain-billing-deployer profile in account 530332961125, region us-east-2. Preserve the prior selected budget name scholarchain-project-budget, shared USD 200 ceiling, start 2026-10-01_00:00 UTC, end 2027-01-01_00:00 UTC, five required tags and three actual-spend notification thresholds (50/80/100%). Set enable_budget=true only in the private planning inputs so the plan can show the proposed budget. Keep the course foundation budget disabled; do not author or apply IAM changes.
+
+The human must re-enter the recipient privately outside Git; the deleted planner-bound plan/private directory is not reused. Do not ask for the email in chat or inspect credential/config/cache files. A separately authorized standard provider credential chain may consume the dedicated profile normally during planning; native provider-session compatibility remains a gate to observe, not a prior pass. A stale login stops the run until the human refreshes only the dedicated role-selected session. No fallback to root/planner, permanent keys or wider permissions.
+
+After the human's explicit read-only planning authorization and private-input readiness: prepare an isolated, protected working directory outside Git, with independent state and TF_DATA_DIR outside the repository. Use the retained pinned Terraform 1.13.5/AWS 6.44.0 toolchain. Run authorized init with the retained CLI configuration, then a read-only plan saving the protected binary outside Git. Protect recipient-containing logs, JSON and any state outside Git/evidence. Retain only approved sanitized outputs, exact commands/exits/counts, public tool versions, input-source hashes and plan SHA-256/bytes. No real plan, account inventory, private file or state has been read while preparing this proposal.
+
+Stop on an existing-budget conflict, missing authorization/permission, unexpected change/destroy/replacement, wrong caller, sensitive-output leak or expired session. Do not import, change IAM or work around a denial. Normal provider reads/credential operations are part of the proposed read-only plan; no Cost Explorer API, model call or resource-write operation is included.
+
+Return a concrete sanitized plan summary and checksum for user-launched independent review. An approved plan is not apply approval. Budget creation/readback, accounting basis, recipient delivery and usable cost data require subsequent separately bounded gates. All paid 12D and EMR execution remain unapproved.

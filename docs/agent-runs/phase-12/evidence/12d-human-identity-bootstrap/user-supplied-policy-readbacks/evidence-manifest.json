@@ -1,0 +1,25 @@
+{
+  "artifact_count": 4,
+  "artifacts": [
+    {
+      "path": "operator-caller-policy.json",
+      "sha256": "79f5a23c99f916558962bcfa5c3662f1572daea884b3ce8f4852f19ff0927612",
+      "bytes": 494
+    },
+    {
+      "path": "role-budget-policy.json",
+      "sha256": "75098a2e0a4c31fc505e62834ddfe0cd5c00e2587e94bf52b9a8f30a5f22fe57",
+      "bytes": 521
+    },
+    {
+      "path": "role-login-policy.json",
+      "sha256": "1ea29d7c3ce85663b8083b340c0f1397cdc833ecc0a0d00370d4667c97769a4a",
+      "bytes": 593
+    },
+    {
+      "path": "verification.json",
+      "sha256": "24228844928feed3d57c800cc24dbb1c813c3abe53b99b29292dab130673db38",
+      "bytes": 1744
+    }
+  ]
+}

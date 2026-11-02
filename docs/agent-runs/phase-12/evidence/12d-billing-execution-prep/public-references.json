@@ -1,0 +1,30 @@
+{
+  "checked_utc_date": "2026-10-31",
+  "sources": [
+    {
+      "url": "https://docs.aws.amazon.com/service-authorization/latest/reference/list_budgets.html",
+      "use": "Budgets API-to-IAM action mapping and exact budget resource support; legacy portal mappings require separate review."
+    },
+    {
+      "url": "https://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/migrate-granularaccess-whatis.html",
+      "use": "New accounts use granular billing permissions; legacy aws-portal namespace ended standard support July 2023; Budgets API access remains unaffected."
+    },
+    {
+      "url": "https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_mfa_configure-api-require.html",
+      "use": "MFA-conditioned AssumeRole and temporary credentials; federation and browser-login MFA context not inferred."
+    },
+    {
+      "url": "https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html",
+      "use": "Human temporary credentials, MFA, least privilege and protecting root credentials."
+    },
+    {
+      "url": "https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-sign-in.html",
+      "use": "Browser login generates temporary credentials and requires separate SignInLocalDevelopmentAccess; does not establish draft MFA-context compatibility."
+    },
+    {
+      "url": "https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-role.html",
+      "use": "Role source-profile and MFA-aware assumption; authentication setup still separate and unverified."
+    }
+  ],
+  "limitations": "Public documentation only; no account authorization, IAM policy evaluation, browser-login MFA propagation or live budget acceptance tested."
+}

@@ -1,0 +1,11 @@
+{
+  "method": "Reconstructed by removing the single added audit-link sentence; hash and bytes verified against coordinator preflight baseline. No independent pre-edit copy was captured by infra agent.",
+  "preflight": {
+    "path": "infra/terraform/billing-bootstrap/README.md",
+    "sha256": "f278eeffbaf66be3ea93b8edad86f4f842bb02de752679688deedcde520bbf7c",
+    "bytes": 7518,
+    "mtime_ns": 1793416963577412639
+  },
+  "reconstructed_sha256": "f278eeffbaf66be3ea93b8edad86f4f842bb02de752679688deedcde520bbf7c",
+  "current_sha256": "46506dade67af6ec882f4bbd81661d00d92c8f9d5bebe6f6ed1e47e2c30143a0"
+}

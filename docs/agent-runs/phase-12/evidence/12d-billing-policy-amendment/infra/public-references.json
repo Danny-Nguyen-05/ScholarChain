@@ -1,0 +1,17 @@
+[
+  {
+    "url": "https://docs.aws.amazon.com/aws-managed-policy/latest/reference/SignInLocalDevelopmentAccess.html",
+    "checked": "2026-10-31",
+    "use": "v3 two Sign-In actions on public-client resources; narrowed pattern remains live-unverified"
+  },
+  {
+    "url": "https://docs.aws.amazon.com/service-authorization/latest/reference/list_signin.html",
+    "checked": "2026-10-31",
+    "use": "Localhost resource and OAuthClientId condition; console resource also listed, no automatic widening"
+  },
+  {
+    "url": "https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-sign-in.html",
+    "checked": "2026-10-31",
+    "use": "Role-selected session, same-device scope and session duration; full composition remains inference"
+  }
+]

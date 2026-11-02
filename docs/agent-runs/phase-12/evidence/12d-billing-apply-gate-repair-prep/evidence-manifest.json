@@ -1,0 +1,117 @@
+{
+  "recorded_utc": "2026-11-01T03:32:36.799889+00:00",
+  "self_excluded": "evidence-manifest.json",
+  "count": 22,
+  "files": [
+    {
+      "path": "assemble.py",
+      "sha256": "d08596aedc7bf01781c7a7083358de958f86686cddb15d66894d5a1d045b9c73",
+      "bytes": 11958
+    },
+    {
+      "path": "coordinator-report.md",
+      "sha256": "0387c0cc8d38a3d4cf09a521d39e5abaca89b71a89ff915b0c6ceb2b09a24476",
+      "bytes": 5254
+    },
+    {
+      "path": "delegation.json",
+      "sha256": "ba53dba3746f6afab9d09e1c1b06035b774a7b0e0a919a560186e851be556291",
+      "bytes": 536
+    },
+    {
+      "path": "diff-check-result.json",
+      "sha256": "63803c088ebeb0d7c88d1da223bb40235efba593f1e4c1ec84398550586518dc",
+      "bytes": 220
+    },
+    {
+      "path": "diff-check.log.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "final-status.log.txt",
+      "sha256": "283e6b546dbbf07c615642d8c54273ca982272caa1b965122907163c05d3d226",
+      "bytes": 48696
+    },
+    {
+      "path": "finalize.py",
+      "sha256": "6824b6cecc0c8a62ca2e2f106440c31dbb477e992aacf6a375a4af498f764cab",
+      "bytes": 12699
+    },
+    {
+      "path": "handoff-files.json",
+      "sha256": "bb7887627f388096907501818c91386e5ba204f57cfd20663d7e04dc7335b4da",
+      "bytes": 1370
+    },
+    {
+      "path": "handoff.md",
+      "sha256": "135d01c6ded33e52f2712c4b9a8bcb069760ed8d21d9671db482534cadbc4f5c",
+      "bytes": 1163
+    },
+    {
+      "path": "human-inputs.json",
+      "sha256": "086b1a4d962831e7cb3236bd0289a9de32def0db59e3de15073e6ea7625ce875",
+      "bytes": 2128
+    },
+    {
+      "path": "infra/artifact-manifest.json",
+      "sha256": "7511109daa2ac45d66428534e0753592994b7a94f70278cf18f17ed42acb07de",
+      "bytes": 938
+    },
+    {
+      "path": "infra/owner-report.txt",
+      "sha256": "c717dc913be6b7b1b131389122c4e2d100ff94648c72b4c6a1273e5a62f7427c",
+      "bytes": 4751
+    },
+    {
+      "path": "infra/preflight-design.md",
+      "sha256": "5ae76ae1fabcff6be9202ed3973ea71b079ad0c902544477719521891c2ad504",
+      "bytes": 4777
+    },
+    {
+      "path": "infra/proposal.md",
+      "sha256": "b07d4655092583a595dd3f0762f874324cb8269c63608992aff4042162869f9a",
+      "bytes": 12103
+    },
+    {
+      "path": "infra/sources.json",
+      "sha256": "85b1ab469b9d249e91b2016f7f91f8244256e3563b65ca6c79f461f4ecb1dccf",
+      "bytes": 5792
+    },
+    {
+      "path": "local-validation.json",
+      "sha256": "bc72eafc957bb94538548f66aec068f163372631366467036fb7507da47f2330",
+      "bytes": 837
+    },
+    {
+      "path": "preflight-status.log.txt",
+      "sha256": "924e35f4a8aaa6ad51236045f51489e85c283fc23da1bcb2cef7edc221c2a344",
+      "bytes": 46581
+    },
+    {
+      "path": "preflight.json",
+      "sha256": "ca523dacdf75926e5c88ba1a6a7c9e8a271bb24526d47e9bc0f543c0aee04ffc",
+      "bytes": 22831
+    },
+    {
+      "path": "record-prefix-check.json",
+      "sha256": "2a8ed00b9c0e0a8f09d1b29fb183b2b206aa182f87cae06b185005f896f5ca4c",
+      "bytes": 1446
+    },
+    {
+      "path": "repair-status.json",
+      "sha256": "074e89d621baa596f7731cf7a61f9c4760ef840358b976a4f96a241e102763cc",
+      "bytes": 924
+    },
+    {
+      "path": "timing-followup.json",
+      "sha256": "cd320ca0127c3388d538c5c43e1c042703bc8c7b18188de6738f24055d8bb758",
+      "bytes": 692
+    },
+    {
+      "path": "user-supplied-external-review.txt",
+      "sha256": "9b812e81ca5b0804bf3e42cd3988a968aaa1f8006be2dccd28ecd16dc89cc1eb",
+      "bytes": 13712
+    }
+  ]
+}

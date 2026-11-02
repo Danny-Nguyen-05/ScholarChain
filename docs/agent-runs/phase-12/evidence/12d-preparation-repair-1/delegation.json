@@ -1,0 +1,29 @@
+{
+  "base_sha": "5ca8406bad5fe55f732458fa0cbd5d561ac83d8f",
+  "agents": [
+    {
+      "task": "/root/infra_12d_repair1",
+      "role": "infra-engineer",
+      "model": "inherited parent; not overridden; exact model identifier not exposed",
+      "paths": [
+        "infra/terraform/billing-bootstrap/**",
+        "infra/terraform/spikes/emr-spark/**"
+      ],
+      "status": "completed",
+      "active_jobs": false
+    },
+    {
+      "task": "/root/build_12d_repair1",
+      "role": "build-engineer",
+      "model": "inherited parent; not overridden; exact model identifier not exposed",
+      "paths": [
+        "scratch build evidence only"
+      ],
+      "status": "completed",
+      "source_edits": false,
+      "active_jobs": false
+    }
+  ],
+  "reviewers_launched": false,
+  "child_delegation_allowed": false
+}

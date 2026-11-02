@@ -1,0 +1,10 @@
+{
+  "fresh_reports": 157,
+  "totals": {
+    "tests": 1255,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "matches_build_agent": true
+}

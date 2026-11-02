@@ -1,0 +1,6 @@
+{
+  "origin_manifest": "artifact-manifest.json",
+  "raw_log_alias": "sbt-check.log.txt",
+  "retained_as": "sbt-check.log.gz",
+  "verification": "Decompress gzip and compare bytes/raw SHA with origin manifest. Omit only the duplicate uncompressed log."
+}

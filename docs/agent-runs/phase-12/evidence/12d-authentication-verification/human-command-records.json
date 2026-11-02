@@ -1,0 +1,42 @@
+[
+  {
+    "actor": "human",
+    "argv": [
+      "aws",
+      "login",
+      "--profile",
+      "scholarchain-billing-deployer",
+      "--region",
+      "us-east-2"
+    ],
+    "provenance": "Guided command; user reported yes login succeeds. Actual process invocation and exit code were not captured by the agent.",
+    "cwd": "Not reported",
+    "exit_code": null,
+    "success_reported": true,
+    "environment": "Not inspected; profile and region explicit in the guided command; no credential/config/cache inspection",
+    "actual_execution_timestamp": "Not reported"
+  },
+  {
+    "actor": "human",
+    "argv": [
+      "aws",
+      "sts",
+      "get-caller-identity",
+      "--profile",
+      "scholarchain-billing-deployer",
+      "--region",
+      "us-east-2",
+      "--query",
+      "{Account:Account,Arn:Arn}",
+      "--output",
+      "json",
+      "--no-cli-pager"
+    ],
+    "provenance": "User pasted the command and resulting Account/Arn JSON in chat; no agent execution.",
+    "cwd": "Not reported",
+    "exit_code": null,
+    "stdout_file": "caller-identity.user-supplied.json",
+    "environment": "Not inspected; profile and region explicit in the user-pasted command",
+    "actual_execution_timestamp": "Not reported"
+  }
+]

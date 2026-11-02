@@ -1,0 +1,32 @@
+{
+  "recorded_utc": "2026-11-01T19:04:28.288488+00:00",
+  "private_helper_source_inspected": true,
+  "helper_tty_hidden_getpass_warning_failclosed_exclusive_write_0600": true,
+  "human_fresh_identity_and_saved_pending": false,
+  "read_only_lookup_errata": [
+    {
+      "command_summary": "cat durable save-recipient.py and guessed scratch root approved-public-inputs.json",
+      "exit_code": 1,
+      "explanation": "Helper source read successfully; guessed public scratch filename did not exist yet. Correct safe path reported by specialist afterward. No private input or raw artifact accessed."
+    },
+    {
+      "command_summary": "Listed safe filenames then cat guessed primary/terraform.tfrc",
+      "exit_code": 1,
+      "explanation": "Public CLI config actually at primary/toolchain/terraform.tfrc; correct path/content obtained from storage-and-toolchain.json. No private config accessed."
+    },
+    {
+      "command_summary": "Safe inventory read plus guessed recipient-git-scan.json",
+      "exit_code": "Grouped shell returned0 because commands.json was final successful read; intermediate cat reported missing file",
+      "explanation": "Actual listed filename recipient-privacy-scan.json then read successfully; no private artifact accessed."
+    }
+  ],
+  "new_full_sbt_run": false,
+  "reason": "No behavior/source changes; all209referencefiles equal; relevant offline billing checks rerun by infra owner.",
+  "final_public_scan_erratum": {
+    "first_assembly_exit": 1,
+    "stage": "Public conventional-address fixture path allowlist",
+    "cause": "Three known reserved-fixture references in public runner/patch source were omitted from the allowed paths; no private recipient match or live-plan failure.",
+    "correction": "Inspect counts/domains only; all matches example.invalid, six exact known fixture source/reference paths allowed. Resume only final scan/inventory, no repeated report append/setup/test/plan.",
+    "all_public_nonfixture_matches": 0
+  }
+}
