@@ -77,6 +77,189 @@ def fixture_responses():
             'subscribers':{str(x):{'Subscribers':[{'SubscriptionType':'EMAIL','Address':FIXTURE_ADDRESS}]} for x in (50,80,100)}}
 
 
+def modern_budget_fixture():
+    budget = copy.deepcopy(fixture_responses()['describe-budget']['Budget'])
+    del budget['CostTypes']
+    del budget['CostFilters']
+    budget['Metrics'] = ['UnblendedCost']
+    budget['FilterExpression'] = {'Not': {'Dimensions': {
+        'Key': 'RECORD_TYPE', 'Values': ['Credit', 'Refund']}}}
+    return budget
+
+
+class CostScopeFeatures(unittest.TestCase):
+    def validate(self, budget):
+        responses = fixture_responses()
+        responses['describe-budget']['Budget'] = budget
+        return b.sanitize_readback(responses['describe-budget'], responses['list-tags-for-resource'],
+            responses['describe-notifications-for-budget'],
+            {int(k): v for k, v in responses['subscribers'].items()}, FIXTURE_ADDRESS)
+
+    def test_legacy_and_modern_scope_have_truthful_safe_receipt_fields(self):
+        legacy = fixture_responses()['describe-budget']['Budget']
+        for budget in (legacy, modern_budget_fixture()):
+            with self.subTest(legacy='CostTypes' in budget):
+                result = self.validate(budget)
+                self.assertTrue(result['cost_scope_match'])
+                self.assertTrue(result['scope_filters_absent'])
+                self.assertNotIn('cost_types_match', result)
+                self.assertNotIn('filters_absent', result)
+                self.assertNotIn(FIXTURE_ADDRESS, json.dumps(result))
+
+    def test_billing_view_must_be_absent_for_legacy_and_modern(self):
+        views = (None, '', f'arn:aws:billing::{b.ACCOUNT}:billingview/primary',
+                 f'arn:aws:billing::{b.ACCOUNT}:billingview/custom-synthetic',
+                 'arn:aws:billing::123456789012:billingview/primary',
+                 'malformed-view', False, 0, [], {})
+        for factory in (lambda: copy.deepcopy(fixture_responses()['describe-budget']['Budget']),
+                        modern_budget_fixture):
+            absent = factory()
+            self.assertNotIn('BillingViewArn', absent)
+            self.assertTrue(self.validate(absent)['scope_filters_absent'])
+            for view in views:
+                with self.subTest(legacy='CostTypes' in absent, view=view):
+                    budget = factory(); budget['BillingViewArn'] = view
+                    with self.assertRaisesRegex(b.Blocked, 'BILLING_VIEW_PRESENT'):
+                        b.validate_cost_scope(budget)
+                    with self.assertRaisesRegex(b.Blocked, 'BILLING_VIEW_PRESENT') as error:
+                        self.validate(budget)
+                    if type(view) is str and view:
+                        self.assertNotIn(view, str(error.exception))
+
+    def test_auto_adjust_and_planned_limits_are_forbidden_on_presence(self):
+        dynamic = {'AutoAdjustType': 'HISTORICAL',
+                   'HistoricalOptions': {'BudgetAdjustmentPeriod': 3}}
+        planned = {'1793491200': {'Amount': '350', 'Unit': 'USD'}}
+        for legacy in (False, True):
+            for key, realistic, code in (('AutoAdjustData', dynamic, 'AUTO_ADJUST_PRESENT'),
+                                         ('PlannedBudgetLimits', planned, 'PLANNED_LIMITS_PRESENT')):
+                for value in (realistic, None, {}, [], '', False, 0):
+                    with self.subTest(legacy=legacy, key=key, value=value):
+                        budget = (copy.deepcopy(fixture_responses()['describe-budget']['Budget'])
+                                  if legacy else modern_budget_fixture())
+                        budget[key] = value
+                        with self.assertRaisesRegex(b.Blocked, code): self.validate(budget)
+
+    def test_documented_observational_metadata_is_accepted_without_emission(self):
+        for legacy in (False, True):
+            with self.subTest(legacy=legacy):
+                budget = (copy.deepcopy(fixture_responses()['describe-budget']['Budget'])
+                          if legacy else modern_budget_fixture())
+                budget.update(CalculatedSpend={'ActualSpend': {'Amount': '17.25', 'Unit': 'USD'},
+                                               'ForecastedSpend': {'Amount': '28.75', 'Unit': 'USD'}},
+                              LastUpdatedTime=1793491200)
+                result = self.validate(budget)
+                self.assertTrue(result['cost_scope_match'])
+                output = json.dumps(result)
+                for private_value in ('17.25', '28.75', '1793491200', FIXTURE_ADDRESS):
+                    self.assertNotIn(private_value, output)
+
+    def test_unknown_budget_keys_and_wrong_budget_container_fail_closed(self):
+        for legacy in (False, True):
+            for key in ('UnknownBudgetField', 'NewScopeFilter', 'billingViewArn', 'PlannedBudgetLimit'):
+                with self.subTest(legacy=legacy, key=key):
+                    budget = (copy.deepcopy(fixture_responses()['describe-budget']['Budget'])
+                              if legacy else modern_budget_fixture())
+                    budget[key] = {'private': FIXTURE_ADDRESS}
+                    with self.assertRaisesRegex(b.Blocked, 'BUDGET_FIELD_UNSUPPORTED') as error:
+                        self.validate(budget)
+                    self.assertNotIn(FIXTURE_ADDRESS, str(error.exception))
+        for budget in (None, [], False, 'synthetic-budget'):
+            with self.subTest(container=budget):
+                with self.assertRaisesRegex(b.Blocked, 'BUDGET_RESPONSE_SHAPE'):
+                    self.validate(budget)
+
+    def test_only_documented_value_order_is_normalized(self):
+        budget = modern_budget_fixture()
+        budget['FilterExpression']['Not']['Dimensions']['Values'].reverse()
+        self.assertTrue(self.validate(budget)['cost_scope_match'])
+        budget['FilterExpression']['Not']['Dimensions']['MatchOptions'] = ['EQUALS']
+        with self.assertRaisesRegex(b.Blocked, 'FILTER_PRESENT'):
+            self.validate(budget)
+
+    def test_missing_or_untyped_cost_scope_never_implies_expected_flags(self):
+        for value in (None, {}, [], False, dict(b.COST_TYPES, IncludeCredit=0),
+                      dict(b.COST_TYPES, Unknown=True)):
+            with self.subTest(value=value):
+                budget = modern_budget_fixture(); budget['CostTypes'] = value
+                with self.assertRaisesRegex(b.Blocked, 'COST_TYPES'):
+                    self.validate(budget)
+        budget = modern_budget_fixture(); del budget['Metrics']
+        with self.assertRaisesRegex(b.Blocked, 'COST_SCOPE_UNVERIFIED'):
+            self.validate(budget)
+        budget = modern_budget_fixture(); del budget['FilterExpression']
+        with self.assertRaisesRegex(b.Blocked, 'COST_SCOPE_UNVERIFIED'):
+            self.validate(budget)
+
+    def test_wrong_unknown_duplicate_or_untyped_metrics_are_rejected(self):
+        values = (None, 'UnblendedCost', [], ['NetUnblendedCost'], ['BlendedCost'],
+                  ['AmortizedCost'], ['UNKNOWN'], ['UnblendedCost', 'UnblendedCost'],
+                  ['UnblendedCost', 'NetUnblendedCost'], [True], [{}])
+        for metrics in values:
+            for legacy in (False, True):
+                with self.subTest(metrics=metrics, legacy=legacy):
+                    budget = modern_budget_fixture() if not legacy else fixture_responses()['describe-budget']['Budget']
+                    budget['Metrics'] = metrics
+                    with self.assertRaisesRegex(b.Blocked, 'COST_METRIC'):
+                        self.validate(budget)
+
+    def test_extra_scope_filters_and_expression_shapes_are_rejected(self):
+        candidate = modern_budget_fixture()['FilterExpression']
+        expressions = (None, [], False, {}, {'And': [candidate]}, {'Or': [candidate]},
+            {'Not': {'Not': candidate}}, {'Not': {'Dimensions': {'Key': 'SERVICE', 'Values': ['Credit', 'Refund']}}},
+            dict(candidate, Tags={'Key': 'project'}), dict(candidate, Unknown=True),
+            {'Not': dict(candidate['Not'], DimensionsExtra={})},
+            {'Not': {'Dimensions': []}}, {'Not': {'Tags': {'Key': 'project'}}})
+        for expression in expressions:
+            with self.subTest(expression=expression):
+                budget = modern_budget_fixture(); budget['FilterExpression'] = expression
+                with self.assertRaises(b.Blocked): self.validate(budget)
+        for filters in (None, [], False, {'Service': ['synthetic-service']}, {'Unknown': []}):
+            with self.subTest(filters=filters):
+                budget = modern_budget_fixture(); budget['CostFilters'] = filters
+                with self.assertRaisesRegex(b.Blocked, 'FILTER_PRESENT'):
+                    self.validate(budget)
+
+    def test_exclusion_values_cannot_hide_duplicates_or_other_charge_types(self):
+        values = (None, 'Credit', [], ['Credit'], ['Refund'], ['Credit', 'Credit'],
+                  ['Credit', 'Refund', 'Tax'], ['Credit', 'Tax'], ['credit', 'Refund'],
+                  [False, 'Refund'], [{'Credit': True}, 'Refund'])
+        for excluded in values:
+            with self.subTest(excluded=excluded):
+                budget = modern_budget_fixture()
+                budget['FilterExpression']['Not']['Dimensions']['Values'] = excluded
+                with self.assertRaisesRegex(b.Blocked, 'FILTER_PRESENT'):
+                    self.validate(budget)
+
+    def test_dual_representations_must_agree_in_every_legacy_flag(self):
+        budget = modern_budget_fixture(); budget['CostTypes'] = dict(b.COST_TYPES)
+        self.assertTrue(self.validate(budget)['cost_scope_match'])
+        for key, expected in b.COST_TYPES.items():
+            with self.subTest(key=key):
+                conflicting = copy.deepcopy(budget)
+                conflicting['CostTypes'][key] = not expected
+                with self.assertRaisesRegex(b.Blocked, 'COST_TYPES'):
+                    self.validate(conflicting)
+
+    def test_new_representation_preserves_amount_date_tag_and_privacy_guards(self):
+        for name, mutate in (
+            ('amount', lambda r: r['describe-budget']['Budget']['BudgetLimit'].update(Amount='201')),
+            ('date', lambda r: r['describe-budget']['Budget']['TimePeriod'].update(End='2027-01-02T00:00:00Z')),
+            ('tag', lambda r: r['list-tags-for-resource']['ResourceTags'][0].update(Value='wrong')),
+            ('alert', lambda r: r['describe-notifications-for-budget']['Notifications'][0].update(Threshold=60)),
+            ('recipient', lambda r: r['subscribers']['50']['Subscribers'][0].update(Address='other@example.invalid')),
+            ('health', lambda r: r['describe-budget']['Budget']['HealthStatus'].update(Status='UNHEALTHY'))):
+            with self.subTest(name=name):
+                responses = fixture_responses(); responses['describe-budget']['Budget'] = modern_budget_fixture()
+                mutate(responses)
+                with self.assertRaises(b.Blocked) as error:
+                    b.sanitize_readback(responses['describe-budget'], responses['list-tags-for-resource'],
+                        responses['describe-notifications-for-budget'],
+                        {int(k): v for k, v in responses['subscribers'].items()}, FIXTURE_ADDRESS)
+                self.assertNotIn(FIXTURE_ADDRESS, str(error.exception))
+                self.assertNotIn(b.digest(FIXTURE_ADDRESS.encode()), str(error.exception))
+
+
 class Features(unittest.TestCase):
     def setUp(self):
         self.temp=tempfile.TemporaryDirectory(prefix='billing wrapper test ')
@@ -400,6 +583,30 @@ class Features(unittest.TestCase):
         self.assertEqual(len(self.calls()),9)
         with self.assertRaises(FileExistsError):self.ex.readback()
         self.assertEqual(len(self.calls()),9)
+
+    def test_modern_readback_uses_existing_bounded_requests_and_preserves_replay_guard(self):
+        self.p3_apply()
+        self.scenario['responses']['describe-budget']['Budget'] = modern_budget_fixture()
+        self.save_scenario()
+        result = self.ex.readback()['result']
+        self.assertTrue(result['cost_scope_match'])
+        self.assertTrue(result['scope_filters_absent'])
+        self.assertEqual(len(self.calls()), 9)
+        with self.assertRaises(FileExistsError): self.ex.readback()
+        self.assertEqual(len(self.calls()), 9)
+
+    def test_readback_rejects_billing_view_without_receipt_or_replay(self):
+        self.p3_apply()
+        budget = modern_budget_fixture()
+        budget['BillingViewArn'] = f'arn:aws:billing::{b.ACCOUNT}:billingview/custom-synthetic'
+        self.scenario['responses']['describe-budget']['Budget'] = budget
+        self.save_scenario()
+        with self.assertRaisesRegex(b.Blocked, 'BILLING_VIEW_PRESENT'):
+            self.ex.readback()
+        self.assertFalse((self.ex.op/'readback.receipt.json').exists())
+        self.assertEqual(len(self.calls()), 9)
+        with self.assertRaises(FileExistsError): self.ex.readback()
+        self.assertEqual(len(self.calls()), 9)
 
     def test_postfreeze_scan_complete_snapshot_and_rerun(self):
         self.p3_apply();self.ex.readback()

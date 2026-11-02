@@ -371,10 +371,56 @@ def utc_value(value):
     return date(value)
 
 
+def validate_cost_scope(budget):
+    """Accept only the two fixed representations of the reviewed cost scope.
+
+    The modern contract is unblended aggregation with exactly Credit/Refund
+    excluded and no other scope restriction. This is not a general expression
+    normalizer, and absent legacy fields are never interpreted as false flags.
+    """
+    # Even a primary-looking ARN requires an independently proven scope. This
+    # fixed account-wide contract accepts only absence, never guessed ARN forms.
+    require("BillingViewArn" not in budget, "BILLING_VIEW_PRESENT")
+    require(type(budget.get("CostFilters", {})) is dict
+            and budget.get("CostFilters", {}) == {}, "FILTER_PRESENT")
+    legacy = "CostTypes" in budget
+    if legacy:
+        costs = budget["CostTypes"]
+        require(type(costs) is dict and costs == COST_TYPES
+                and all(type(v) is bool for v in costs.values()), "COST_TYPES")
+    metrics = "Metrics" in budget
+    if metrics:
+        require(type(budget["Metrics"]) is list
+                and budget["Metrics"] == ["UnblendedCost"], "COST_METRIC")
+    expression = budget.get("FilterExpression", {})
+    require(type(expression) is dict, "FILTER_PRESENT")
+    if expression == {}:
+        # Only exact legacy flags can establish exclusions without an expression.
+        require(legacy, "COST_SCOPE_UNVERIFIED")
+        return
+    require(metrics, "COST_SCOPE_UNVERIFIED")
+    require(set(expression) == {"Not"} and type(expression["Not"]) is dict
+            and set(expression["Not"]) == {"Dimensions"}, "FILTER_PRESENT")
+    dimensions = expression["Not"]["Dimensions"]
+    require(type(dimensions) is dict and set(dimensions) == {"Key", "Values"}
+            and dimensions["Key"] == "RECORD_TYPE", "FILTER_PRESENT")
+    values = dimensions["Values"]
+    require(type(values) is list and len(values) == 2
+            and all(type(value) is str for value in values)
+            and set(values) == {"Credit", "Refund"}, "FILTER_PRESENT")
+
+
 def sanitize_readback(budget, tags, notifications, subscriber_responses, recipient):
     """Return booleans/counts only, or a fixed error code; never echo input fields."""
-    require(set(budget) == {"Budget"}, "BUDGET_RESPONSE_SHAPE")
+    require(type(budget) is dict and set(budget) == {"Budget"}, "BUDGET_RESPONSE_SHAPE")
     b = budget["Budget"]
+    require(type(b) is dict, "BUDGET_RESPONSE_SHAPE")
+    documented_fields = {"BudgetName", "BudgetType", "TimeUnit", "AutoAdjustData", "BillingViewArn",
+                         "BudgetLimit", "CalculatedSpend", "CostFilters", "CostTypes", "FilterExpression",
+                         "HealthStatus", "LastUpdatedTime", "Metrics", "PlannedBudgetLimits", "TimePeriod"}
+    require(set(b) <= documented_fields, "BUDGET_FIELD_UNSUPPORTED")
+    require("AutoAdjustData" not in b, "AUTO_ADJUST_PRESENT")
+    require("PlannedBudgetLimits" not in b, "PLANNED_LIMITS_PRESENT")
     require(b.get("BudgetName") == BUDGET and b.get("BudgetType") == "COST"
             and b.get("TimeUnit") == "CUSTOM", "BUDGET_IDENTITY_TYPE")
     try:
@@ -382,10 +428,7 @@ def sanitize_readback(budget, tags, notifications, subscriber_responses, recipie
                 and b["BudgetLimit"]["Unit"] == "USD", "BUDGET_AMOUNT")
     except (KeyError, InvalidOperation, TypeError):
         raise Blocked("BUDGET_AMOUNT") from None
-    require(b.get("CostTypes") == COST_TYPES
-            and all(type(v) is bool for v in b.get("CostTypes", {}).values()), "COST_TYPES")
-    require(b.get("CostFilters", {}) == {} and b.get("FilterExpression", {}) == {}, "FILTER_PRESENT")
-    # Explicit ShowFilterExpression request is mandatory; absent means no expression per API.
+    validate_cost_scope(b)
     require(utc_value(b.get("TimePeriod", {}).get("Start")) == date("2026-10-01T00:00:00Z")
             and utc_value(b.get("TimePeriod", {}).get("End")) == date("2027-01-01T00:00:00Z"),
             "BUDGET_DATE")
@@ -417,8 +460,8 @@ def sanitize_readback(budget, tags, notifications, subscriber_responses, recipie
         require(type(subs) is list and len(subs) == 1 and set(subs[0]) == {"SubscriptionType", "Address"}
                 and subs[0]["SubscriptionType"] == "EMAIL" and subs[0]["Address"] == recipient,
                 "SUBSCRIBER_DRIFT")
-    return {"budget_fields_match": True, "cost_types_match": True, "tags_match": True,
-            "dates_match": True, "account_request_matches": True, "filters_absent": True,
+    return {"budget_fields_match": True, "cost_scope_match": True, "tags_match": True,
+            "dates_match": True, "account_request_matches": True, "scope_filters_absent": True,
             "notification_count": 3, "email_subscribers_each": 1, "sns_subscribers": 0,
             "private_recipients_match": True, "health_reported": health is not None,
             "health_healthy_if_reported": health is not None,
