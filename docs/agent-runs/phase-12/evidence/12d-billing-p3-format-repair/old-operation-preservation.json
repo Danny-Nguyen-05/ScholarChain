@@ -1,0 +1,11 @@
+{
+  "checked_utc": "2026-11-02T03:05:32.982051+00:00",
+  "old_gate_sha256": "8222cf8ea45867315dd35c3903028f95fbbbce55cfba0f87f82bf77b1825c066",
+  "old_gate_unchanged": true,
+  "p3_started_journal_present": true,
+  "no_p3_success_or_apply_or_readback": true,
+  "no_resource_state": true,
+  "no_failed_journal_deletion_or_replay": true,
+  "raw_error_body_read_by_coordinator": false,
+  "new_AWS_calls": 0
+}

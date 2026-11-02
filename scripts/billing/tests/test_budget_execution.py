@@ -53,7 +53,10 @@ if operation=='describe-budget' and not (root/'billing.execution.tfstate').exist
  message='Specified budget does not exist.'
  if outcome=='mixed':message+=' AccessDenied credentials.'
  op='DescribeBudgets' if outcome=='wrong-operation' else 'DescribeBudget'
- print('An error occurred ('+error+') when calling the '+op+' operation: '+message,file=sys.stderr)
+ prefix='aws: [ERROR]: ' if scenario.get('p3_header')=='observed-zero' else ''
+ annotation=' (reached max retries: 0)' if scenario.get('p3_header')=='observed-zero' else ''
+ if scenario.get('p3_leading_lf'):print('',file=sys.stderr)
+ print(prefix+'An error occurred ('+error+') when calling the '+op+' operation'+annotation+': '+message,file=sys.stderr)
  sys.exit(254)
 responses=scenario['responses']
 if operation=='describe-subscribers-for-notification':
@@ -216,6 +219,80 @@ class Features(unittest.TestCase):
         self.scenario['unsupported']=True;self.save_scenario()
         with self.assertRaisesRegex(b.Blocked,'CLI_SHOW_FILTER_UNSUPPORTED'):self.ex.p3_check()
         self.assertEqual(len(self.calls()),1)
+
+    def test_p3_observed_zero_retry_header_accepts_without_retry(self):
+        self.scenario['p3_header']='observed-zero';self.scenario['p3_leading_lf']=True;self.save_scenario()
+        self.ex.p3_check()
+        self.assertTrue(self.ex.prior('p3-check')['result']['exact_name_absent'])
+        self.assertEqual(len(self.calls()),2)  # One offline capability + one exact request.
+        with self.assertRaises(FileExistsError):self.ex.p3_check()
+        self.assertEqual(len(self.calls()),2)
+
+    def test_p3_accepts_exactly_legacy_and_observed_headers(self):
+        legacy=b'An error occurred (NotFoundException) when calling the DescribeBudget operation'
+        observed=b'aws: [ERROR]: '+legacy+b' (reached max retries: 0)'
+        for header in (legacy,observed):
+            with self.subTest(accepted_header=header):
+                b.absence(254,b'',header+b': Public fixture budget does not exist.\n')
+        rejected=[b'aws: [ERROR]: '+legacy,legacy+b' (reached max retries: 0)',
+                  b'unknown: '+observed,b'aws: [WARNING]: '+legacy+b' (reached max retries: 0)']
+        rejected += [b'aws: [ERROR]: '+legacy+b' (reached max retries: '+count+b')'
+                     for count in (b'1',b'2',b'01',b'00',b'-1',b'0.0',b'unknown')]
+        for header in rejected:
+            with self.subTest(rejected_header=header):
+                with self.assertRaisesRegex(b.Blocked,'P3_NOT_EXACT_NOT_FOUND'):
+                    b.absence(254,b'',header+b': Public fixture only.\n')
+
+    def test_p3_only_observed_optional_leading_lf_layout(self):
+        legacy=b'An error occurred (NotFoundException) when calling the DescribeBudget operation'
+        observed=b'aws: [ERROR]: '+legacy+b' (reached max retries: 0)'
+        for header in (legacy,observed):
+            message=header+b': Public fixture budget does not exist.'
+            for leading in (b'',b'\n'):
+                for trailing in (b'',b'\n',b'\r\n'):
+                    with self.subTest(header=header,leading=leading,trailing=trailing):
+                        b.absence(254,b'',leading+message+trailing)
+            for leading in (b'\n\n',b'\r\n',b'\r',b'\n\r\n',b' \n'):
+                with self.subTest(rejected_leading=leading):
+                    with self.assertRaisesRegex(b.Blocked,'P3_NOT_EXACT_NOT_FOUND'):
+                        b.absence(254,b'',leading+message+b'\n')
+            for leading in (b'',b'\n'):
+                for trailing in (b'\n\n',b'\r\n\n',b'\n\r\n',b'\r',b'\r\r\n'):
+                    with self.subTest(leading=leading,rejected_trailing=trailing):
+                        with self.assertRaisesRegex(b.Blocked,'P3_NOT_EXACT_NOT_FOUND'):
+                            b.absence(254,b'',leading+message+trailing)
+            for body in (b'AccessDenied credentials.',b'ExpiredToken fixture.',b'TLS connect fixture.',
+                         b'Public fixture.\nAnother line.',b'\x1b[31mPublic fixture.',b' \t'):
+                with self.subTest(rejected_body=body):
+                    with self.assertRaises(b.Blocked):b.absence(254,b'',b'\n'+header+b': '+body+b'\n')
+
+    def test_p3_observed_header_preserves_all_error_guards(self):
+        header=b'aws: [ERROR]: An error occurred (NotFoundException) when calling the DescribeBudget operation (reached max retries: 0): '
+        cases=[(1,b'',header+b'Public fixture.\n'),(254,b'{}',header+b'Public fixture.\n'),
+               (254,b'',header.replace(b'NotFoundException',b'AccessDeniedException')+b'Public fixture.\n'),
+               (254,b'',header.replace(b'DescribeBudget',b'DescribeBudgets')+b'Public fixture.\n')]
+        cases += [(254,b'',header+body) for body in
+                  (b'',b'\n',b' \t\n',b'Public fixture.\nAnother line.\n',b'Public fixture.\n\n',
+                   b'\x1b[31mPublic fixture.\x1b[0m\n',b'AccessDenied credentials.\n',
+                   b'ExpiredToken fixture.\n',b'Throttling fixture.\n',b'TLS connect fixture.\n')]
+        for code,out,err in cases:
+            with self.subTest(code=code,out=out,err=err):
+                with self.assertRaises(b.Blocked):b.absence(code,out,err)
+
+    def test_p3_observed_denial_and_wrong_operation_never_retry(self):
+        self.scenario['p3_header']='observed-zero'
+        for outcome in ('denied','expired','throttled','mixed','wrong-operation'):
+            with self.subTest(outcome=outcome):
+                self.scenario['p3']=outcome;self.save_scenario()
+                self.gate['operation']='new-format-'+outcome
+                self.write(self.gate_path,json.dumps(self.gate))
+                ex=b.Execution(self.policy,now=lambda:NOW).load_gate(self.gate_path,b.hash_file(self.gate_path),self.gate['operation'])
+                ex.check_checkout=lambda *args,**kwargs:None
+                before=len(self.calls())
+                with self.assertRaises(b.Blocked):ex.p3_check()
+                self.assertEqual(len(self.calls())-before,2)
+                with self.assertRaises(FileExistsError):ex.p3_check()
+                self.assertEqual(len(self.calls())-before,2)
 
     def test_apply_fail_preserves_all_recovery_including_errored(self):
         self.ex.p3_check();self.scenario['terraform_fail']=True;self.save_scenario()
@@ -516,14 +593,34 @@ class Features(unittest.TestCase):
         self.assertTrue(all(x.get('equal') for x in receipt['artifacts']))
         self.assertEqual(len(self.calls()),3)
 
+    def signal_fixture_launcher(self, ready):
+        real_popen=b.subprocess.Popen
+        def launch(*args,**kwargs):
+            process=real_popen(*args,**kwargs)
+            try:
+                deadline=b.time.monotonic()+5
+                while not ready.exists():
+                    self.assertIsNone(process.poll(),'Signal fixture exited before readiness')
+                    self.assertLess(b.time.monotonic(),deadline,'Signal fixture readiness timeout')
+                    b.time.sleep(0.005)
+                return process
+            except BaseException:
+                if process.poll() is None:
+                    b.os.killpg(process.pid,b.signal.SIGKILL)
+                    process.wait(timeout=5)
+                raise
+        return launch
+
     def test_real_local_child_sigint_persists_fixture_before_exit(self):
         # This is a Python signal fixture named terraform, never real Terraform/AWS.
         child=self.primary/'toolchain/terraform-signal-fixture'
         state=self.primary/'signal-fixture-state'
-        self.write(child,"#!/usr/bin/env python3\nimport pathlib,signal,time\np=pathlib.Path("+repr(str(state))+")\ndef stop(sig,frame):\n p.write_bytes(b'opaque gracefully persisted fixture');p.chmod(0o600)\n raise SystemExit(0)\nsignal.signal(signal.SIGINT,stop)\nwhile True: time.sleep(0.01)\n",0o700)
+        ready=self.primary/'grace-fixture-ready'
+        self.write(child,"#!/usr/bin/env python3\nimport pathlib,signal,time\np=pathlib.Path("+repr(str(state))+")\ndef stop(sig,frame):\n p.write_bytes(b'opaque gracefully persisted fixture');p.chmod(0o600)\n raise SystemExit(0)\nsignal.signal(signal.SIGINT,stop)\npathlib.Path("+repr(str(ready))+").write_text('ready')\nwhile True: time.sleep(0.01)\n",0o700)
         logs=self.primary/'real signal logs';logs.mkdir(mode=0o700)
-        with self.assertRaisesRegex(b.Blocked,'COMMAND_TIMEOUT'):
-            b.PrivateRunner()([str(child),'apply'],self.policy.config,self.policy.env(),logs,'real-grace',0.2)
+        with mock.patch.object(b.subprocess,'Popen',side_effect=self.signal_fixture_launcher(ready)):
+            with self.assertRaisesRegex(b.Blocked,'COMMAND_TIMEOUT'):
+                b.PrivateRunner()([str(child),'apply'],self.policy.config,self.policy.env(),logs,'real-grace',0.2)
         self.assertTrue(state.exists())
         receipt=json.loads((logs/'real-grace.termination.json').read_text())
         self.assertTrue(receipt['graceful_exit']);self.assertFalse(receipt['forced_kill'])
@@ -531,11 +628,13 @@ class Features(unittest.TestCase):
     def test_real_local_child_forced_path_keeps_sigint_marker(self):
         child=self.primary/'toolchain/terraform-unresponsive-fixture'
         marker=self.primary/'sigint-marker'
-        self.write(child,"#!/usr/bin/env python3\nimport pathlib,signal,time\np=pathlib.Path("+repr(str(marker))+")\ndef stop(sig,frame):\n p.write_bytes(b'opaque SIGINT observed');p.chmod(0o600)\nsignal.signal(signal.SIGINT,stop)\nwhile True: time.sleep(0.01)\n",0o700)
+        ready=self.primary/'force-fixture-ready'
+        self.write(child,"#!/usr/bin/env python3\nimport pathlib,signal,time\np=pathlib.Path("+repr(str(marker))+")\ndef stop(sig,frame):\n p.write_bytes(b'opaque SIGINT observed');p.chmod(0o600)\nsignal.signal(signal.SIGINT,stop)\npathlib.Path("+repr(str(ready))+").write_text('ready')\nwhile True: time.sleep(0.01)\n",0o700)
         logs=self.primary/'real force logs';logs.mkdir(mode=0o700)
-        with mock.patch.object(b,'APPLY_GRACE_SECONDS',0.05):
-            with self.assertRaisesRegex(b.Blocked,'COMMAND_TIMEOUT'):
-                b.PrivateRunner()([str(child),'apply'],self.policy.config,self.policy.env(),logs,'real-force',0.2)
+        with mock.patch.object(b.subprocess,'Popen',side_effect=self.signal_fixture_launcher(ready)):
+            with mock.patch.object(b,'APPLY_GRACE_SECONDS',0.05):
+                with self.assertRaisesRegex(b.Blocked,'COMMAND_TIMEOUT'):
+                    b.PrivateRunner()([str(child),'apply'],self.policy.config,self.policy.env(),logs,'real-force',0.2)
         self.assertTrue(marker.exists())
         receipt=json.loads((logs/'real-force.termination.json').read_text())
         self.assertTrue(receipt['sigint_sent']);self.assertTrue(receipt['forced_kill'])

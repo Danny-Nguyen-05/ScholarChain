@@ -1,0 +1,14 @@
+{
+  "scope": "F1 only, authorized single exactcheck then false conditionalofflinebranch",
+  "public_lookup_erratum": {
+    "command": "rg --files /tmp/scholarchain-phase12d-p3-layout-check",
+    "exit": 2,
+    "reason": "New public scratch directory not yet created by incident owner; no private/live fault or unsafe retry."
+  },
+  "original_auth_record_source": "user-authorization.json",
+  "saved_stderr_check_count": 1,
+  "old_parser_sha256": "297830d412cefd53dc4938c06dc1b654b7188fcaa977cf10902123715f39c3fd",
+  "raw_body_never_published": true,
+  "private_acceptance_recheck_after_repair": false,
+  "new_live_calls": 0
+}

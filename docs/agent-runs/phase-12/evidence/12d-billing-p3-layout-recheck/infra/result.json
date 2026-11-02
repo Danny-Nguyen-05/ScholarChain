@@ -1,0 +1,182 @@
+{
+  "recorded_utc": "2026-11-02T04:28:27.914845+00:00",
+  "scope": "F1 conditional accepted=false offline narrow layout repair; no second actual saved-stderr check",
+  "final_tests": 51,
+  "failures": 0,
+  "errors": 0,
+  "source_files": [
+    {
+      "path": "scripts/billing/README.md",
+      "bytes": 16599,
+      "sha256": "995f39267bcdb9713e2b601bca8bfd89b8a0825ab097db4ad25f1df3c473645f"
+    },
+    {
+      "path": "scripts/billing/budget_execution.py",
+      "bytes": 40308,
+      "sha256": "a31852d14e80d970e2338f8a5d94320ea3ca3b89ec759584689d8331d446080b"
+    },
+    {
+      "path": "scripts/billing/tests/test_budget_execution.py",
+      "bytes": 42720,
+      "sha256": "e4bf56fd1e672a533370975beb9c3d200c40eff3c02570ea1fe8125e495f50fd"
+    }
+  ],
+  "all8bindings": [
+    {
+      "path": "scripts/billing/PUBLICATION.md",
+      "bytes": 12342,
+      "sha256": "dfc32dad40bc0b33a03018f6175f178941db8b3784fbfa5365b89a2e6b368648"
+    },
+    {
+      "path": "scripts/billing/README.md",
+      "bytes": 16599,
+      "sha256": "995f39267bcdb9713e2b601bca8bfd89b8a0825ab097db4ad25f1df3c473645f"
+    },
+    {
+      "path": "scripts/billing/budget_execution.py",
+      "bytes": 40308,
+      "sha256": "a31852d14e80d970e2338f8a5d94320ea3ca3b89ec759584689d8331d446080b"
+    },
+    {
+      "path": "scripts/billing/publication_evidence.py",
+      "bytes": 18539,
+      "sha256": "cb2edbb74ce1250282dd4a39ca5397c33e26490e18ae626187a900cf28be4580"
+    },
+    {
+      "path": "scripts/billing/reviewed-pins.json",
+      "bytes": 46174,
+      "sha256": "cb285259b7217bb4186ca80e74d376f215e4150396aa5fd66187d4e0dc96a753"
+    },
+    {
+      "path": "scripts/billing/tests/terraform_state_binding.py",
+      "bytes": 5340,
+      "sha256": "faaf64cd14192abbe45c1284617c26e7c1c2958ace61fcbcde955d8ac471a7c3"
+    },
+    {
+      "path": "scripts/billing/tests/test_budget_execution.py",
+      "bytes": 42720,
+      "sha256": "e4bf56fd1e672a533370975beb9c3d200c40eff3c02570ea1fe8125e495f50fd"
+    },
+    {
+      "path": "scripts/billing/tests/test_publication_evidence.py",
+      "bytes": 18627,
+      "sha256": "3adf9a30ae8fe72a77816ac100f1e70a295d053722fd2c8d7060e9568a10f6e6"
+    }
+  ],
+  "unchanged_five": [
+    {
+      "path": "scripts/billing/PUBLICATION.md",
+      "bytes": 12342,
+      "sha256": "dfc32dad40bc0b33a03018f6175f178941db8b3784fbfa5365b89a2e6b368648"
+    },
+    {
+      "path": "scripts/billing/publication_evidence.py",
+      "bytes": 18539,
+      "sha256": "cb2edbb74ce1250282dd4a39ca5397c33e26490e18ae626187a900cf28be4580"
+    },
+    {
+      "path": "scripts/billing/reviewed-pins.json",
+      "bytes": 46174,
+      "sha256": "cb285259b7217bb4186ca80e74d376f215e4150396aa5fd66187d4e0dc96a753"
+    },
+    {
+      "path": "scripts/billing/tests/terraform_state_binding.py",
+      "bytes": 5340,
+      "sha256": "faaf64cd14192abbe45c1284617c26e7c1c2958ace61fcbcde955d8ac471a7c3"
+    },
+    {
+      "path": "scripts/billing/tests/test_publication_evidence.py",
+      "bytes": 18627,
+      "sha256": "3adf9a30ae8fe72a77816ac100f1e70a295d053722fd2c8d7060e9568a10f6e6"
+    }
+  ],
+  "final_wrapper_sha256": "a31852d14e80d970e2338f8a5d94320ea3ca3b89ec759584689d8331d446080b",
+  "A1_final_wrapper_sha256": "a31852d14e80d970e2338f8a5d94320ea3ca3b89ec759584689d8331d446080b",
+  "A1_assertions": 7,
+  "A1_terraform_exits": [
+    0,
+    0,
+    0
+  ],
+  "attempts": [
+    {
+      "command": "python3 -I scripts/billing/tests/test_budget_execution.py > /tmp/scholarchain-phase12d-p3-layout-repair/offline-tests-attempt1.log.txt 2>&1",
+      "exit": 0,
+      "tests": 51,
+      "failures": 0,
+      "errors": 0,
+      "seconds_reported_by_unittest": 12.292
+    },
+    {
+      "command": [
+        "python3",
+        "-I",
+        "-"
+      ],
+      "inline_source": "from pathlib import Path\nimport importlib.util,sys,os,json\nsys.dont_write_bytecode=True;os.umask(0o077)\nsource=Path('scripts/billing/tests/terraform_state_binding.py').resolve()\nspec=importlib.util.spec_from_file_location('p3_layout_a1_regression',source);m=importlib.util.module_from_spec(spec);sys.modules[spec.name]=m;spec.loader.exec_module(m)\nout=Path('/tmp/scholarchain-phase12d-p3-layout-repair');result=m.run_test(out)\n(out/'a1-regression.stdout.json').write_text(json.dumps(result,sort_keys=True)+'\\n')\nprint(json.dumps({'checks_passed':sum(result['checks'].values()),'commands':result['commands'],'aws_calls':result['aws_calls']}))",
+      "exit": 0,
+      "terraform_calls": 3,
+      "terraform_exits": [
+        0,
+        0,
+        0
+      ],
+      "assertions": 7,
+      "output": "a1-regression.stdout.json",
+      "wrapper_sha256": "a31852d14e80d970e2338f8a5d94320ea3ca3b89ec759584689d8331d446080b"
+    }
+  ],
+  "authorized_initial_layout_result": {
+    "accepted": false,
+    "blocked_code": "P3_NOT_EXACT_NOT_FOUND",
+    "leading_newline_count": 1,
+    "trailing_newline_count": 1,
+    "crlf_present": false
+  },
+  "authorized_result_source": "/tmp/scholarchain-phase12d-p3-layout-check/result.json",
+  "real_input_rechecked_after_change": false,
+  "real_input_now_accepted_claim": false,
+  "budget_absence_claim": false,
+  "accepted_leading_layout": "Exactly zero or one leading LF before existing optional horizontal whitespace; no strip",
+  "unchanged_trailing_layout": "Zero or one trailing LF/CRLF",
+  "rejected_layouts": [
+    "twoleadingLF",
+    "leadingCRLF",
+    "leadingCR",
+    "mixedleadingLFCRLF",
+    "spacebeforeleadingLF",
+    "extratrailingblankLF/CRLF",
+    "baretrailingCR",
+    "multilinebody",
+    "mixedauth/transport",
+    "ANSI/blankbody"
+  ],
+  "local_stub_emits_confirmed_leading_lf": true,
+  "existing_guards_unchanged": [
+    "exacttwoheaders",
+    "stdoutblank",
+    "exit254",
+    "nonblankbody",
+    "noANSI",
+    "singlelinebody",
+    "mixeddenial/transportblocked",
+    "AWS_MAX_ATTEMPTS=1",
+    "no retry",
+    "exclusive stagejournal"
+  ],
+  "F2": "Existing test-only bounded child handler readiness handshake retained unchanged; production timings/assertions unchanged. Prior disclosure kept, not reopened.",
+  "live_or_private_access": {
+    "AWS_CLI_calls": 0,
+    "budget_wrapper_production_modes": 0,
+    "saved_private_stderr_reads": 0,
+    "actual_durable_input_state_plan_gate_journal_credentials_config_cache_access": false,
+    "realconfigTerraform_calls": 0,
+    "helper_tests_or_sbt": false
+  },
+  "retention": "Only test-ownedTemporaryDirectoryfixtures auto-cleaned; isolatedpublicA1scratch plan/state/rawlogs retained outsideGit. No old/tmpoutputs overwritten.",
+  "limitations": [
+    "The one authorized old-parser real-input check was accepted=false; changed parser evaluated only synthetic confirmed-layout fixtures.",
+    "No real-input final acceptance, service absence, retry or live execution claim.",
+    "Newuser-launchedreview/release/newpersonalexacthashgate/operation required before any freshP3."
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "type": "Generic pattern only; no actualrecipient comparison",
+  "scope": "Finalpacket/3modifiedsources/recheckprompt/5appendedsuffixes",
+  "units": 40,
+  "reserved_fixture_matches": 2,
+  "other_matches": 0,
+  "excluded": "Count-only receipt and hash-only root manifest; original nested manifests included",
+  "raw_private_message_body_published": false
+}

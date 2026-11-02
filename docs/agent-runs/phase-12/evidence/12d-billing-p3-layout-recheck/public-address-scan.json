@@ -1,0 +1,11 @@
+{
+  "type": "Genericpatternonly; not actualrecipient processing",
+  "scope": "Finalpacket/3modifiedsources/recheckprompt/5appendedsuffixes",
+  "units": 32,
+  "reservedfixturematches": 2,
+  "othermatches": 0,
+  "excluded": "Count-onlyreceipt/hash-onlyrootmanifest",
+  "rawbodypublished": false,
+  "privatecheck_count": 1,
+  "privatecheck_after_repair": false
+}

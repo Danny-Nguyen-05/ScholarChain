@@ -347,9 +347,15 @@ class PrivateRunner:
 def absence(code, stdout, stderr):
     require(stdout.strip() == b"", "P3_UNEXPECTED_STDOUT")
     require(code == 254, "P3_NOT_SERVICE_ERROR")
-    # Full-match a single AWS CLI service error, never HTTP status or substring matching.
-    require(re.fullmatch(rb"\s*An error occurred \(NotFoundException\) when calling the DescribeBudget operation: [^\r\n]+\s*", stderr)
-            is not None, "P3_NOT_EXACT_NOT_FOUND")
+    # Accept only the legacy header and the exact observed CLI zero-retry header.
+    # One optional leading LF matches the confirmed CLI layout, never arbitrary strip.
+    # No other prefix, positive retry count, ANSI, extra line or empty body.
+    header = (rb"(?:An error occurred \(NotFoundException\) when calling the DescribeBudget operation"
+              rb"|aws: \[ERROR\]: An error occurred \(NotFoundException\) when calling the DescribeBudget operation"
+              rb" \(reached max retries: 0\))")
+    match = re.fullmatch(rb"\n?[ \t]*" + header + rb": (?P<body>[^\r\n]+)(?:\r?\n)?", stderr)
+    require(match is not None and match.group("body").strip(b" \t")
+            and b"\x1b" not in stderr, "P3_NOT_EXACT_NOT_FOUND")
     require(not re.search(rb"AccessDenied|Expired|Throttl|SSL|TLS|connect|credential", stderr, re.I),
             "P3_MIXED_ERROR")
 

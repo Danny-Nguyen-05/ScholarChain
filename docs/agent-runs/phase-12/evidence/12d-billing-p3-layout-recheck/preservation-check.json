@@ -1,0 +1,95 @@
+{
+  "records": [
+    {
+      "path": "docs/agent-runs/phase-12/prompt.md",
+      "bytes": 84722,
+      "sha256": "b2457828ea2c9821f6de20de04d0cf62df936d89242cb1a14d50ebd2e331fc97",
+      "prefix_preserved": true,
+      "after_bytes": 85415,
+      "after_sha256": "2c8fbd0c15ff7466827837117debcb24ce5d8ee341d13c726d6f10facea79318"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/review.md",
+      "bytes": 250468,
+      "sha256": "e546de9164469d73ba5c9085b42d3fb327a383d0e1945b1da1b8d758cfe910c9",
+      "prefix_preserved": true,
+      "after_bytes": 250820,
+      "after_sha256": "731a36040eb875c8ef6e5d0befe1f96f334834157673316d5b8a9c96c07afd34"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/repairs.md",
+      "bytes": 64328,
+      "sha256": "968fe4e35290ab57e7b42a22fdda3d896086693fec9a63ed418599331d9f04ae",
+      "prefix_preserved": true,
+      "after_bytes": 66041,
+      "after_sha256": "7461f2cba749cd892a2f8660054d9c7673dc5e321cbd40a0c8f03d9103e0ed6c"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/owner-report.md",
+      "bytes": 136924,
+      "sha256": "f018f5ed6ec2c48e384bcefb5f440aaa041eaa5d7bd0c77748804696dc4ec654",
+      "prefix_preserved": true,
+      "after_bytes": 141704,
+      "after_sha256": "a1cdd963528e8ddcdd8120feaef9df80bd292287c6927649d0079b07929c2474"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/test-report.md",
+      "bytes": 130211,
+      "sha256": "03fafb943763bc5df37850a61fc0f7aa1aa59d195a22dc6f6a1e06b51f50a5bf",
+      "prefix_preserved": true,
+      "after_bytes": 134991,
+      "after_sha256": "a89c6435ef8245e8bcca0a3040680ada926636c032010464e3185f40c5a3bc08"
+    }
+  ],
+  "human_record": {
+    "path": "docs/agent-runs/phase-12/billing-bootstrap-exception.md",
+    "bytes": 1334,
+    "sha256": "abe3a50ad7167fa01227c73e15e92a422a50609f6313bdcc56404cb61765d71a"
+  },
+  "prior_packet_files_preserved": 42,
+  "source_hash_bytes_mtime_preserved": 209,
+  "all8bindings": [
+    {
+      "path": "scripts/billing/PUBLICATION.md",
+      "bytes": 12342,
+      "sha256": "dfc32dad40bc0b33a03018f6175f178941db8b3784fbfa5365b89a2e6b368648"
+    },
+    {
+      "path": "scripts/billing/README.md",
+      "bytes": 16599,
+      "sha256": "995f39267bcdb9713e2b601bca8bfd89b8a0825ab097db4ad25f1df3c473645f"
+    },
+    {
+      "path": "scripts/billing/budget_execution.py",
+      "bytes": 40308,
+      "sha256": "a31852d14e80d970e2338f8a5d94320ea3ca3b89ec759584689d8331d446080b"
+    },
+    {
+      "path": "scripts/billing/publication_evidence.py",
+      "bytes": 18539,
+      "sha256": "cb2edbb74ce1250282dd4a39ca5397c33e26490e18ae626187a900cf28be4580"
+    },
+    {
+      "path": "scripts/billing/reviewed-pins.json",
+      "bytes": 46174,
+      "sha256": "cb285259b7217bb4186ca80e74d376f215e4150396aa5fd66187d4e0dc96a753"
+    },
+    {
+      "path": "scripts/billing/tests/terraform_state_binding.py",
+      "bytes": 5340,
+      "sha256": "faaf64cd14192abbe45c1284617c26e7c1c2958ace61fcbcde955d8ac471a7c3"
+    },
+    {
+      "path": "scripts/billing/tests/test_budget_execution.py",
+      "bytes": 42720,
+      "sha256": "e4bf56fd1e672a533370975beb9c3d200c40eff3c02570ea1fe8125e495f50fd"
+    },
+    {
+      "path": "scripts/billing/tests/test_publication_evidence.py",
+      "bytes": 18627,
+      "sha256": "3adf9a30ae8fe72a77816ac100f1e70a295d053722fd2c8d7060e9568a10f6e6"
+    }
+  ],
+  "other5scripts_preserved": true,
+  "mismatches": []
+}

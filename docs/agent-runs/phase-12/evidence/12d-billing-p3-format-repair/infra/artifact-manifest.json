@@ -1,0 +1,71 @@
+{
+  "scope": "Offline parser repair public evidence only; no private response body or real state/plan",
+  "self_excluded": true,
+  "files": [
+    {
+      "path": "a1-commands.json",
+      "bytes": 5243,
+      "sha256": "b638ab663faf53758777f778138bbede073a726c603feefe88faa148b2d80231"
+    },
+    {
+      "path": "a1-regression.stdout.json",
+      "bytes": 799,
+      "sha256": "f1872d57a727393557a82eec4207f0869772b4fb9f1018c530e17bca37f21655"
+    },
+    {
+      "path": "a1-result.json",
+      "bytes": 853,
+      "sha256": "9d01e7e385719e469f451c13a5e7401e046dcd304472f046f50b87bedce6dce8"
+    },
+    {
+      "path": "after-readiness-commands.json",
+      "bytes": 506,
+      "sha256": "614b8ffdeb7674ac9a127b05c6b8b9418b7370cb0127561ae1c39686d6026a9b"
+    },
+    {
+      "path": "offline-tests-attempt1.log.txt",
+      "bytes": 6679,
+      "sha256": "fc82d22157548bec861bcb988a76bc2d0d2b9f86d6679fa81614c140caf1194d"
+    },
+    {
+      "path": "offline-tests-attempt2.log.txt",
+      "bytes": 7281,
+      "sha256": "3f9571d635905d66813b119a6931fb9476a94a6fdc508c7c47b12435562ace58"
+    },
+    {
+      "path": "offline-tests-attempt3.log.txt",
+      "bytes": 6070,
+      "sha256": "a1fb6b2e0265017b76b93740f146333ebeb06524f06d928a3b32864998524dcb"
+    },
+    {
+      "path": "owner-report.txt",
+      "bytes": 4055,
+      "sha256": "39e9bac588d5b1b09036e93ca9925b12ea3ae124f9860bcce997a479edfe0cee"
+    },
+    {
+      "path": "result.json",
+      "bytes": 8499,
+      "sha256": "3aa279781e83cfe4e69b4a99dd7ad579dab7e9bf92ae104ce35a4c0d2f8d568d"
+    },
+    {
+      "path": "signal-fixture-targeted-attempt1.log.txt",
+      "bytes": 232,
+      "sha256": "68f25c1f721869bdcb43fb17dbf353695fa3dff8646a27b9ae50125632bcd71f"
+    },
+    {
+      "path": "signal-fixtures-after-readiness.log.txt",
+      "bytes": 376,
+      "sha256": "84f63104e3167b50eeff7f0f164e8e5aba5b7ec5a963cfc684c73fcef02c87dd"
+    },
+    {
+      "path": "source-after.json",
+      "bytes": 1468,
+      "sha256": "5b0b192fa934f448f6f9e3f386541203bca7c1657fab443040b76a0c89c2181f"
+    },
+    {
+      "path": "source-before.json",
+      "bytes": 1468,
+      "sha256": "3b4aadb28eac61f9c590511f6fdc7b937c0f0d5662e2ddf7266839c0de658420"
+    }
+  ]
+}

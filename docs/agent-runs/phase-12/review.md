@@ -2288,3 +2288,160 @@ Verdict: APPROVE, for the helper and its offline tests only. This approval does 
     - canonical verify-before and verify-after results.
 14. NEXT GATE: The coordinator records this verdict and presents the remaining human decisions. Nothing runs automatically.
 End of helper/offline-test review; no production or execution authority.
+
+
+## Subphase 12D stopped-P3 CLI format repair — review pending
+
+No new independent source-review verdict yet. Sanitized incident diagnosis and offline repair prepared for user-launched review only. Failed operation remains unsuccessful and stopped; no retrospective absence receipt, retry or live authority.
+
+
+## Subphase 12D P3 format repair — independent review
+
+User-supplied external review, verbatim.
+
+Verdict: REQUEST-CHANGES, for the format repair and its offline regressions only. One blocking evidence gap: nothing shows that the repaired parser accepts the exact bytes of the stderr the real CLI saved. Everything else checks out. This approves no retry, commit, gate, login or live P3/apply.
+
+What checks out
+Failure and diagnosis. The P3 stopped with P3_NOT_EXACT_NOT_FOUND and exit 2.
+Local metadata: the P3-started journal exists. There is no P3 success receipt, apply or readback start, resource state or backup.
+Diagnosis output: fixed categories only: NotFoundException, DescribeBudget, the aws: [ERROR]: prefix and the (reached max retries: 0) annotation. It reports a single line with no ANSI and no positive retry count. It makes no claim that the budget is absent.
+Privacy: no message body, request ID, login URL or real address was published. The only addresses are reserved example.invalid fixtures.
+Parser (budget_execution.py:347-359). It accepts exactly two headers. The body must be non-blank and single-line, ANSI is rejected, stdout must be blank with exit 254, and the mixed-error guard is unchanged. AWS_MAX_ATTEMPTS=1 is unchanged (line 246) and the wrapper adds no retries.
+Rejected and tested: prefix-only, annotation-only, unknown or [WARNING] prefixes, and retry counts 1, 2, 01, 00, -1, 0.0 and unknown. The wrong error or operation is rejected, as are denied, expired, throttled, mixed, blank, multiline and ANSI cases.
+P3 path with the stub: one capability call plus one request. A replay hits FileExistsError and adds no calls.
+Tests.
+Full suite: the file has 50 test methods. The logs show attempt 1 at 1 failure, attempt 2 at 2 failures and attempt 3 at 50 passing with OK. The failures are disclosed, and the targeted run whose exit code was not captured is honestly recorded as null.
+Readiness handshake (test_budget_execution.py:572-590): test-only, with a 5-second limit and a group SIGKILL on failure. The graceful and forced assertions and production timings are unchanged.
+A1: ran on the final wrapper hash 297830d4… with 3 Terraform calls exiting 0/0/0 and 7 checks, output to a new scratch directory.
+Preservation.
+Scripts: all 8 future gate bindings match, and there are exactly 8 files under scripts/billing. Only the wrapper, its tests and the README changed; the other 5 files are unchanged.
+Phase records: all 5 prefixes match the committed HEAD versions, and the full hashes match.
+Human record and sources: the human record is still 1,334 bytes with SHA abe3a50a…. The 209 source files match on hash, bytes and mtime.
+Manifests and status: the three manifests (32, 13 and 5 entries) show 0 mismatches and exclude only themselves. Status is 42 entries (8 tracked + 34 new) from a clean base at 8903ce0. The tracked diff is only the 3 owned scripts and the 5 records, and git diff --check exits 0.
+Old gate and journal. The evidence says they are unchanged and will not be replayed, and nobody infers the window was extended. I did not inspect the private gate, as that is forbidden.
+Findings
+ID	Severity	Location	Evidence and impact	Owner	Acceptance	Blocking
+F1	Medium	budget_execution.py:355; test_budget_execution.py:58, :230-235	What changed: the old pattern allowed any leading and trailing whitespace (\s*…\s*). The new one allows only leading spaces or tabs and at most one trailing newline ([ \t]*…(?:\r?\n)?).
+What the evidence lacks: the diagnosis flags (singleline, full_fixed_aws_prefix_zero_retry_singleline_format_match) do not record the leading layout (newline or not) or how many trailing newlines there are, and the matching expression was not retained. The test stub’s print() never produces a leading newline. That is the same kind of gap between stub and real CLI that caused this failure.
+Impact: if the real stderr starts with a newline (older AWS CLI v2 releases printed a blank line before the error), the next fresh P3 fails closed again. That would burn a new personal gate, operation, window and login session. It is not a safety breach.	incident-responder (check); infra-engineer (adjust if needed)	1. With human authorization, run one in-memory check: call the final absence() (wrapper 297830d4…) on the same saved stderr. Publish only a boolean “accepted” plus counts of leading and trailing newlines.
+2. If it is rejected, infra narrowly allows exactly the observed layout and adds fixtures for it, accepted and rejected variants.
+3. Rerun the full offline suite, then a user-launched recheck.	Yes
+F2	Info	test_budget_execution.py:572-590	The signal fixtures that were previously accepted as passing had a startup race. The test-only readiness handshake fixes it without weakening any assertion. These tests now no longer cover a SIGINT arriving before the child installs its handler. That is irrelevant in production, where SIGINT is only sent at the apply timeout.	infra-engineer	None. Keep the disclosure.	No
+Report
+STATUS: REQUEST-CHANGES (F1) for the format repair and offline regressions only.
+OWNER: code-reviewer (read-only). F1 goes to incident-responder and infra-engineer.
+WORK ORDER: Phase 12D recheck of the stopped-P3 CLI format repair. HEAD is 8903ce0a….
+FILES CREATED: None.
+FILES MODIFIED: None.
+COMMANDS RUN:
+Read-only ls, cat, grep and git diff.
+git status, git show HEAD:<record> and git diff HEAD --name-only.
+python3 -I and shasum comparisons that only hash files.
+Nothing else: no tests, wrapper, helper, Terraform, AWS, CLI or private reads.
+TEST RESULTS: Not run by me. The retained full-suite logs show 1 failure, then 2 failures, then 50 passing with OK. The final targeted run of the 2 signal tests exited 0. A1: 7 checks with 3 Terraform calls exiting 0/0/0.
+VALIDATION RESULTS: All 8 bindings match; 5 prefixes match HEAD; human record and the 209 source files are unchanged; manifests show 0 mismatches; status reconciles at 42; diff check exits 0; only reserved addresses.
+ASSUMPTIONS: The sanitized diagnosis comes from the authentic saved stderr of operation billing-20261101-2030. I accepted the reported state of the old gate and journal as recorded.
+RISKS:
+F1: the next fresh P3 could fail closed again.
+The old operation stays stopped, and absence is not proven.
+W3 and R1 runtime evidence, and all live billing, F4 and EMR gates, remain open.
+MANUAL ACTION REQUIRED: The human decides whether to authorize the bounded check of the saved stderr that returns only a boolean and counts.
+BLOCKED-ON OWNER: incident-responder (with human authorization), then infra-engineer if an adjustment is needed.
+BLOCKED-ON EVIDENCE: a boolean showing the final absence() accepts the saved stderr, plus the newline counts, or a narrowly adjusted parser with fixtures for the observed layout.
+NEXT GATE: A user-launched recheck of F1 only. After that come the release commit, a clean checkout and a new personal gate and operation before any fresh P3.
+NEXT PROMPT
+ScholarChain Phase12D — F1 repair route ONLY (stopped-P3 format repair, REQUEST-CHANGES).
+
+Repository /Users/danny/Documents/UIC/CS441/ScholarChain; branch phase-12; HEAD 8903ce0a2c3765b9f77e1665cb9ffe2f484c1fbf; existing uncommitted repair retained. Read AGENTS.md, CLAUDE.md, docs/agents.md, docs/agent-runs/README.md.
+
+1. Record the user-supplied review verbatim (REQUEST-CHANGES; F1 Medium blocking, F2 Info) in a new evidence/12d-billing-p3-format-repair-review-record/ packet plus append-only suffixes to the five phase records. Prove prefixes, the 1334-byte human record (SHA abe3a50ad7167fa01227c73e15e92a422a50609f6313bdcc56404cb61765d71a), the 8 scripts/billing hashes and the 209 source files unchanged.
+2. Ask the human one question and wait: may incident-responder run one bounded, local, in-memory check that loads the final absence() from budget_execution.py SHA256 297830d412cefd53dc4938c06dc1b654b7188fcaa977cf10902123715f39c3fd and evaluates absence(254, b"", <same saved p3 describe-budget stderr>), publishing ONLY {accepted: bool, blocked_code or null, leading_newline_count: 0|1|>1, trailing_newline_count: 0|1|>1, crlf_present: bool}? No raw body, request ID, address or login URL; no AWS/CLI/login/Terraform/wrapper stage; no retry; old gate and journals untouched.
+3. If the human authorizes and accepted=true: add one fixture test in test_budget_execution.py reproducing the confirmed newline layout (owner infra-engineer; no production change), rerun the full offline suite with exact counts and exits, then stop for a user-launched recheck.
+   If accepted=false: route infra-engineer to allow exactly the observed layout (for example a single optional leading LF/CRLF only), keeping every other guard, with accepted and rejected fixtures (zero, one and two leading newlines; trailing variants). Rerun the full offline suite and the credential-free A1 to a new scratch directory; record before/after hashes and the 8 bindings. Then stop for a user-launched recheck.
+   If the human declines: record that the next fresh P3 may fail closed again, and stop.
+Forbidden: live P3/apply/readback, retry or replay of billing-20261101-2030, gate/journal/approval writes, AWS/CLI/login/console/Terraform-real-config calls, credential/config/cache/state/plan/durable reads beyond the single authorized stderr check, reviewer launch, commits/pushes, Phase13. Never disclose recipients. No absence claim.
+End of F1 REQUEST-CHANGES review; no retry or execution authority.
+
+
+## Subphase 12D F1 exact-input/layout repair — recheck pending
+
+No new independent verdict yet. One human-authorized old-parser check returned false with leading/trailingLF1/1/noCRLF; conditionalfalsebranch offline repair/tests prepared. Changed parser not reevaluated against private savedbytes; no actualabsence/retry/newgate authority inferred.
+
+
+## Subphase 12D F1 layout repair — independent recheck
+
+User-supplied external review, verbatim.
+
+Verdict: APPROVE, for the F1 layout repair and its offline regressions only. F1 is closed: it took the accepted=false branch my last review set out, and that branch is complete. This proves no budget absence and approves no commit, gate, login, retry or live P3/apply.
+
+F1 assessment
+Authorization came first. The human’s “yes” was recorded at 04:22:50Z (user-authorization.json). The check’s scratch files are dated 22:25 −0600, which is 04:25Z, so the check ran afterwards. The recorded time is when the coordinator wrote it down, not when the human replied; the record says so.
+The diagnostic script stayed in bounds (exact-check/exact-parser-check.py).
+Wrapper: it checks the old wrapper SHA 297830d4… before import and again after import, and the file’s identity stays stable (59–65). It creates no Policy or Execution object.
+Saved stderr: one bounded no-follow read, after checking the file is a regular single-link file with uid 501 and mode 0600 (67–78).
+Counting: newlines are counted on the raw bytes, with no strip (28–55).
+Evaluation: exactly one absence(254, b'', raw) call (85).
+Output: only the 5 prescribed fields: accepted=false, P3_NOT_EXACT_NOT_FOUND, leading 1, trailing 1, no CRLF. It publishes no body, size or hash.
+Count: the private check ran once, and never again after the repair.
+The repair is narrow (budget_execution.py:356). The only change is \n? in front of the existing [ \t]*. It allows a single leading LF and is narrower than the “LF/CRLF” example I gave. Both headers, the 0–1 trailing LF/CRLF rule, the non-blank single-line body, the ANSI, exit-254, blank-stdout and mixed-error guards, and AWS_MAX_ATTEMPTS=1 are all unchanged.
+Fixtures are hand-built from public text (test_budget_execution.py:56-59, :223-267).
+P3 path: the stub now emits the observed header with a leading LF and one trailing LF. It passes P3 with 2 calls, and a replay is blocked.
+Table-driven cases: leading '' and \n crossed with trailing '', \n and \r\n are accepted. Leading \n\n, \r\n, \r, \n\r\n and space-then-LF are rejected. Extra trailing blank lines and a bare CR are rejected. Denial, multiline, ANSI and blank bodies are rejected, including after a leading LF.
+Regressions ran after the final edit. The full suite ran 51 tests and passed with exit 0 in one attempt. A1 ran on wrapper a31852d4… with 3 Terraform calls exiting 0/0/0, 7 checks and 0 AWS calls, output to a new scratch directory.
+Preservation.
+Scripts: all 8 bindings match (8 files exist). Only the wrapper, its tests and the README changed; the helper, the pins and the A1 source are unchanged.
+Phase records: the 5 prefixes chain across all three packets (repair → review-record → now), and the full hashes match.
+Human record and sources: the human record is unchanged (1,334 bytes, abe3a50a…). The 209 source files match on hash, bytes and mtime.
+Manifests: all seven manifests in the three packets show 0 mismatches and nothing unlisted. The earlier failed and unknown attempts are kept in the earlier packet.
+Status and diff: status grew from 51 to 77 (+26), and the tracked diff is only the 3 scripts and the 5 records. git diff --check exits 0, and only reserved addresses appear.
+No overclaims. The evidence says plainly that the changed parser was not run on the real bytes, and it makes no claim about absence or acceptance. The old operation, gate and journal stay stopped.
+Findings
+ID	Severity	Location	Evidence and impact	Owner	Acceptance	Blocking
+L1	Low	budget_execution.py:356-360; exact-check/result.json	The gap: the old parser stopped at its first failure (exact match), so the mixed-error guard has never been run on the real message body. The new parser is not proven to accept the saved stderr; that is inferred from the newline counts and the earlier format flag, whose matching expression was not kept.
+Impact: a fresh P3 could still fail closed, costing a new gate, window and session. It is not a safety issue.	Human decision; incident-responder if authorized	Either accept the residual risk, or authorize one more bounded check on wrapper a31852d4… that returns only accepted and blocked_code.	No
+I1	Info	budget_execution.py:356	\n?[ \t]* also accepts a leading LF followed by spaces or tabs. That layout was not observed and is not tested. Leading horizontal whitespace was already allowed before, so this is harmless.	infra-engineer (optional)	Optional rejection fixture or tighter pattern in a later round.	No
+F2	Info (carried forward)	test_budget_execution.py signal readiness launcher	The test-only readiness handshake stays disclosed. Production timing and assertions are unchanged, and no new fix was made.	—	None.	No
+Report
+STATUS: APPROVE for the F1 layout repair and offline regressions only. F1 is closed; L1 and I1 are not blocking; F2 Info is carried forward.
+OWNER: code-reviewer (read-only). The repair belongs to infra-engineer, the check to incident-responder, and the evidence to the coordinator.
+WORK ORDER: Phase 12D F1 exact-input and layout recheck. HEAD is 8903ce0a….
+FILES CREATED: None.
+FILES MODIFIED: None.
+COMMANDS RUN:
+Read-only cat, sed, grep, find and git diff, plus git status and git diff --check.
+shasum, python3 -I hash and chain comparisons, and stat of the public scratch file times.
+The diagnostic script was not invoked and no private data was read.
+TEST RESULTS: Not run by me. The retained log shows 51 tests passing with OK and exit 0. A1: 7 checks, 3 Terraform calls exiting 0/0/0.
+VALIDATION RESULTS: 8 bindings match; prefixes chain across 3 packets; human record and 209 source files are unchanged; manifests show 0 mismatches; status reconciles (51 → 77); diff check exits 0; only reserved addresses.
+ASSUMPTIONS: The transcribed “yes” and the saved stderr are authentic. The scratch mtimes reflect when the check ran.
+RISKS:
+L1: the next P3 could fail closed.
+The old operation stays stopped, and absence is not proven.
+W3, R1 runtime evidence, and all live billing, F4 and EMR gates remain open.
+MANUAL ACTION REQUIRED: The human decides on L1, the source control for a new release covering all 8 files, a clean checkout, a new operation and dated window, and writes the gate personally.
+BLOCKED-ON OWNER: The human architect.
+BLOCKED-ON EVIDENCE:
+a release commit covering the 8 hashes and a clean canonical checkout;
+a new personal gate and operation;
+a valid window, session and identity;
+a fresh P3.
+NEXT GATE: The coordinator records this verdict and presents the release and gate decisions. Nothing runs automatically.
+NEXT PROMPT
+ScholarChain Phase12D — RECORD F1 recheck verdict and PRESENT new release/gate decisions ONLY.
+
+Repository /Users/danny/Documents/UIC/CS441/ScholarChain; branch phase-12; HEAD 8903ce0a2c3765b9f77e1665cb9ffe2f484c1fbf; uncommitted repair retained. Read AGENTS.md, CLAUDE.md, docs/agents.md, docs/agent-runs/README.md.
+
+1. Record the user-supplied recheck verbatim (APPROVE F1 layout/offline only; F1 CLOSED; L1 Low, I1 Info, F2 Info carried forward) in a new evidence/12d-billing-p3-layout-review-record/ packet plus append-only suffixes to the five phase records. Prove prefixes, the 1334-byte human record (SHA abe3a50ad7167fa01227c73e15e92a422a50609f6313bdcc56404cb61765d71a), the 209 source files, all prior packets and the 8 current scripts/billing hashes (budget_execution.py a31852d14e80d970e2338f8a5d94320ea3ca3b89ec759584689d8331d446080b; README.md 995f39267bcdb9713e2b601bca8bfd89b8a0825ab097db4ad25f1df3c473645f; tests/test_budget_execution.py e4bf56fd1e672a533370975beb9c3d200c40eff3c02570ea1fe8125e495f50fd; the other 5 unchanged). Self-excluding manifest, status/diff/generic-address checks. No reviewer launch.
+2. Prepare a public handoff (no gate written) listing the exact values a NEW personal gate must bind: source_commit (pending the human's commit), wrapper_files = all 8 hashes above, plan ab9f141e83058209263cf561eef1d102496ec7f534b88ce421620d8e0045f855, proposal and human-record SHAs, a NEW distinct operation id (never billing-20261101-2030), actor, account, profile, region, a dated window of at most 60 minutes America/Chicago, login and STS observation, aws_cli_sha256, public_packet_root. The old gate 8222cf8e… and its journals stay immutable and are never replayed or extended.
+3. Present the human with these concise choices together, then stop:
+   a. Commit the repair yourself (exact files: the 3 changed scripts plus the evidence and records) and confirm a clean canonical checkout, or defer.
+   b. L1: accept that the next fresh P3 may still fail closed, OR authorize one bounded in-memory check of wrapper a31852d4… against the same saved stderr returning only {accepted, blocked_code}.
+   c. R1 residual-risk acceptance (pending), in the human's own words.
+   d. The new operation id and dated window, and that the human personally writes the full gate.
+Forbidden: live P3/apply/readback/scan, retry or replay, private/durable/state/plan/credential/config/cache reads, AWS/CLI/login/Terraform calls, gate/journal/approval writes, commits/pushes by agents, Phase13. W3, R1 runtime and all live billing/F4/EMR gates stay OPEN. Never disclose recipients. Do not infer answers.
+End of F1 APPROVE review; no commit/gate/login/retry/live authority.
+
+
+## Subphase 12D L1 optional compatibility check — factual evidence
+
+Human selected boundedcheckoption from approvedF1review; exactresultacceptedtrue/blockedcodenull. No newindependentreviewverdict or sourcechange. PriorF1approval remainslimited; oldoperation staysfailed.

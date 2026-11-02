@@ -1,0 +1,47 @@
+{
+  "recorded_utc": "2026-11-02T04:54:40.014575+00:00",
+  "head": "8903ce0a2c3765b9f77e1665cb9ffe2f484c1fbf",
+  "status_entries": 88,
+  "records": [
+    {
+      "path": "docs/agent-runs/phase-12/prompt.md",
+      "bytes": 86143,
+      "sha256": "93c9f32883c7b2d164ebce74ec09b0317c2c1b22b23cb0290580504cfe27e9ec"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/review.md",
+      "bytes": 260159,
+      "sha256": "524c428d356e7f3dfeb1cbe428ab722a615bd0807fe84ba0dea05686e95f5230"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/repairs.md",
+      "bytes": 66864,
+      "sha256": "098530d1df022c7872832f0a6b53f86aee704209803a35b31b020e189394edf3"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/owner-report.md",
+      "bytes": 145725,
+      "sha256": "79e296448ee88ac0b3178564fab931e84d2df42876ea13c626dbf051afe18f9c"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/test-report.md",
+      "bytes": 139012,
+      "sha256": "04e9a0a9af886d42f26eb201cd4bbcf9fad8e61edb341487506b0b663a8dc184"
+    }
+  ],
+  "human_record": {
+    "path": "docs/agent-runs/phase-12/billing-bootstrap-exception.md",
+    "bytes": 1334,
+    "sha256": "abe3a50ad7167fa01227c73e15e92a422a50609f6313bdcc56404cb61765d71a"
+  },
+  "all8bindings": {
+    "scripts/billing/PUBLICATION.md": "dfc32dad40bc0b33a03018f6175f178941db8b3784fbfa5365b89a2e6b368648",
+    "scripts/billing/README.md": "995f39267bcdb9713e2b601bca8bfd89b8a0825ab097db4ad25f1df3c473645f",
+    "scripts/billing/budget_execution.py": "a31852d14e80d970e2338f8a5d94320ea3ca3b89ec759584689d8331d446080b",
+    "scripts/billing/publication_evidence.py": "cb2edbb74ce1250282dd4a39ca5397c33e26490e18ae626187a900cf28be4580",
+    "scripts/billing/reviewed-pins.json": "cb285259b7217bb4186ca80e74d376f215e4150396aa5fd66187d4e0dc96a753",
+    "scripts/billing/tests/terraform_state_binding.py": "faaf64cd14192abbe45c1284617c26e7c1c2958ace61fcbcde955d8ac471a7c3",
+    "scripts/billing/tests/test_budget_execution.py": "e4bf56fd1e672a533370975beb9c3d200c40eff3c02570ea1fe8125e495f50fd",
+    "scripts/billing/tests/test_publication_evidence.py": "3adf9a30ae8fe72a77816ac100f1e70a295d053722fd2c8d7060e9568a10f6e6"
+  }
+}

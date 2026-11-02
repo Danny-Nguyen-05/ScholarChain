@@ -1,0 +1,15 @@
+{
+  "kind": "User-supplied stopped P3 result, no private body retained",
+  "result": {
+    "status": "BLOCKED-ON",
+    "code": "P3_NOT_EXACT_NOT_FOUND"
+  },
+  "stopped_stage": "p3-check",
+  "user_reported_exit": 2,
+  "operation": "billing-20261101-2030",
+  "gate_sha256": "8222cf8ea45867315dd35c3903028f95fbbbce55cfba0f87f82bf77b1825c066",
+  "apply_not_started_by_metadata": true,
+  "new_live_calls": 0,
+  "original_gate_or_journal_modified": false,
+  "repair_scope": "Offline source parser/test repair only, then independent review; no rerun/continuedapply under old gate"
+}

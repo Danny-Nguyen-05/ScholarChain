@@ -1,0 +1,48 @@
+{
+  "recorded_utc": "2026-11-02T02:50:40.297082+00:00",
+  "kind": "User-reported failed P3 and local filesystem metadata only",
+  "reported_json": {
+    "status": "BLOCKED-ON",
+    "code": "P3_NOT_EXACT_NOT_FOUND"
+  },
+  "reported_stage_exit": 2,
+  "operation": "billing-20261101-2030",
+  "gate_sha256": "8222cf8ea45867315dd35c3903028f95fbbbce55cfba0f87f82bf77b1825c066",
+  "observed_metadata": {
+    "p3_started": {
+      "exists": true,
+      "mode": "0o600",
+      "uid": 501,
+      "symlink": false
+    },
+    "p3_success_receipt": {
+      "exists": false
+    },
+    "apply_started": {
+      "exists": false
+    },
+    "apply_success_receipt": {
+      "exists": false
+    },
+    "readback_started": {
+      "exists": false
+    },
+    "resource_state": {
+      "exists": false
+    },
+    "initial_backup_directory": {
+      "exists": false
+    },
+    "private_p3_stderr": {
+      "exists": true,
+      "mode": "0o600",
+      "uid": 501,
+      "symlink": false
+    }
+  },
+  "raw_private_response_read": false,
+  "new_live_calls": 0,
+  "apply_not_started": true,
+  "rerun_permitted": false,
+  "diagnosis_pending": "Local-only in-memory allowlisted AWS error-code/response-format classification; no raw text/recipient/requestIDs/loginhrefs published"
+}

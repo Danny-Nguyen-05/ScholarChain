@@ -1,0 +1,6 @@
+test_real_local_child_forced_path_keeps_sigint_marker (__main__.Features.test_real_local_child_forced_path_keeps_sigint_marker) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.266s
+
+OK

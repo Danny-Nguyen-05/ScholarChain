@@ -1,0 +1,11 @@
+{
+  "kind": "Coordinator transcription of human single-check authorization, not live approval",
+  "recorded_utc": "2026-11-02T04:22:50.755912+00:00",
+  "record_write_time_not_user_receipt": true,
+  "question_verbatim": "May the incident-responder run that single local, in-memory check? It will report only acceptance/error code, newline counts and a CRLF flag. No raw message will be shown, and no AWS request or retry will run.",
+  "user_response_verbatim": "yes",
+  "scope": "One bounded nofollow saved-stderr in-memory evaluation using exact finalabsence() hash297830d412cefd53dc4938c06dc1b654b7188fcaa977cf10902123715f39c3fd; only accepted/blocked_code/newlinebuckets/crlf output",
+  "live_calls_retries_gate_or_journal_writes_authorized": false,
+  "raw_body_or_address_publication_authorized": false,
+  "conditional_offline_repair_scope": "User-invoked review NEXT PROMPT branch on actual acceptance result; no branch inferred before check"
+}

@@ -684,3 +684,28 @@ Human answered “yes” to preparing/testing the offline evidence assembly/comp
 ## Subphase 12D — record helper APPROVE; remaining human decisions
 
 User-supplied review/NEXT GATE retained verbatim in evidence/12d-billing-publication-helper-review-record/user-supplied-review.txt. Record verdict and present sourcecontrol/clean canonical checkout covering all8billingfiles, R1residualrisk acceptance, datedwindow/personal-gate decisions. No automatic helper/private scan/publication/live work. Human remains gate author. No new implementation/reviewer/test/CLI/login/Terraform/AWS/durable/private access/commit/push.
+
+
+## Subphase 12D — stopped P3 format diagnosis and offline repair
+
+User reported approved human-run p3-check stopped with P3_NOT_EXACT_NOT_FOUND/exit2. Apply/readback never started, no local state/backup, no P3successreceipt. Incident-responder performed local-only in-memory fixed-category parsing of exact saved stderr; no raw body/IDs/addresses/loginURL persisted, no AWSretry. Exact observed known header is aws: [ERROR]: An error occurred (NotFoundException) when calling the DescribeBudget operation (reached max retries: 0): <opaque body>. Evidence sanitized in evidence/12d-billing-p3-format-repair/diagnosis/. Route infra-engineer /root/infra_12d_p3_format_repair for narrow two-header parser/offline feature repair and A1scratchregression, no originaljournal/gate/state modification or newlivecalls. Existing plainformat retained; unknown/prefix-only/plain-annotation/positivecount/mixederrors remain rejected. User-launched independent recheck before any newcommit/newgate/newoperation. No originalapproval extension inferred.
+
+
+## Subphase 12D — F1 saved-stderr layout check authorization
+
+User-supplied REQUEST-CHANGES/NEXT PROMPT retained verbatim in evidence/12d-billing-p3-format-repair-review-record/user-supplied-review.txt. Record review and ask one human question before any private access: authorize incident-responder one bounded local in-memory final absence() check on exact existing stderr, output accepted/blockedcode/leadingtrailingnewlinebuckets/CRLFflag only. No raw text/AWS/CLI/login/Terraform/wrapperstage/retry/gatejournalwrites. Wait for answer. If acceptedtrue later infraaddsconfirmedlayoutfixture/fullsuite only; iffalse narrowly adjustslayout plusfixtures/fullsuite/A1; ifdeclinedrecordriskandstop. No branch started now.
+
+
+## Subphase 12D — authorized F1 exact saved-stderr check and conditional repair
+
+Human answered “yes” to one bounded local in-memory finalabsence() check; exact context in evidence/12d-billing-p3-layout-recheck/user-authorization.json. Route incident-responder /root/incident_12d_p3_diagnosis to one evaluation using wrapperSHA297830d4… and exactexistingstderr, outputonlyaccepted/blockedcode/newlinebuckets/CRLFflag; source retained, rawbytesneverpublished. No productionmode/Policyinstantiation/privatebeyondstderr/livecall/oldgatejournalmutation. Conditionalreviewpromptbranch only after actualboolean; coordinatorassemblesevidence. No renewedexecutionapproval orwindowextension.
+
+
+## Subphase 12D — record F1 APPROVE; present new release/gate choices only
+
+User-supplied F1APPROVE/NEXT PROMPT retained verbatim in evidence/12d-billing-p3-layout-review-record/user-supplied-review.txt. Record/preserve all public evidence and prepare factual new-gate handoff (no gatewritten). Present together humancommit/defer, L1riskacceptance versus one more bounded2fieldprivatecheck authorization, R1ownwordsnewattemptdecision, distinctoperation/datedwindow/personalgate. Stop for answers. No privatecheck/read, agentcommit/push/staging, newgate/journal/approval write, login/CLI/Terraform/AWS/livecall/reviewer/Phase13. G1/H1/retention/helperchoices historical evidence preserved; no answer inferred for newattempt.
+
+
+## Subphase 12D — L1 finalparser check authorized and completed
+
+Human answered yes to one incident-responder finala31852d4…savedstderr in-memory check, outputonlyaccepted/blockedcode; exactcontext in evidence/12d-billing-final-parser-check/user-authorization.json. Incident performedoneboundednofollowread/oneunstrippedabsencecall, no Policy/Execution/stage/otherprivate/livecalls. Resultacceptedtrue/blockedcodenull. Record safeproof; resume one-at-a-time humanrelease/gate decisions, no codechange or extra privatecheck/reviewer/agentcommit/login/retry. User phase-statusquestion answered during work without replacingobjective.

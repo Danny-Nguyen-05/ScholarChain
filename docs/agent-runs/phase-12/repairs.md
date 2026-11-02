@@ -433,3 +433,43 @@ Human answered verbatim “yes” to remaining wrapper/Terminal crash risk under
 ## Subphase 12D — human source-control actor selected
 
 Human answered “yes” to personally making the Phase12commit with guidance. Exact context in evidence/12d-billing-human-decisions/source-control-choice.json. Agent prepares read-only file/hash checks and scoped commands only; user reviews staging and commits. No agent stage/commit/stash/reset; no actual releaseSHA/cleancheckout inferred until observed. All8billingfiles must be included. No execution/paidspike/Phase12completion authorized. Remaining personal datedwindow/exact-checksum gate and freshP3/W3actualevidence pending.
+
+
+## Subphase 12D — P3 runtime format blocker
+
+P3 stopped before apply with P3_NOT_EXACT_NOT_FOUND. Local metadata: p3started yes, no success/apply/readback/state/backup. Sanitized incident diagnosis confirms only fixed NotFoundException/DescribeBudget plus aws: [ERROR]: prefix and exact reached max retries: 0annotation, singleline/noANSI; no observed access-denied classification, effectivepermissions still not generally proven. This is unrecognized CLIheader, not a validated absence outcome. P3remainsunsuccessful, originalgate8222cf8e…/operationbilling-20261101-2030 immutable and cannotrerun. Infraowner preparing narrow offline source/test repair with no retries/IAM changes; independentreview/newsourcebinding/newpersonaloperationgate required before any laterP3/apply. W1/W2/A1/A2closed; W3/R1runtime evidence and all other live/EMR gates remain open.
+
+
+## Subphase 12D — P3 format repair evidence prepared
+
+Exact two-header parser repair prepared, not independently accepted yet. Final50offline wrapper features passed; final-wrapper-bound A1regression3calls0/0/0 and7checks passed. Existing real signal fixtures initially failed startup-readiness races (1then2failures); bounded test-only readiness handshake added, targeted2/full50thenpass, production timings/assertions unchanged. Failedtargeted individualexit unknown retained asnull, not invented. All8futuregate hashes recorded; onlywrapper/test/READMEmodified. No actualP3absence claim or newlivecall, oldgate/journal immutable; newreview/release/personalgate/operation required before anyfreshrequest. Other acceptedguards/helper and openW3/R1/F4/EMR gates unchanged.
+
+
+## Subphase 12D — F1 evidence gap REQUEST-CHANGES
+
+F1Medium blocking OPEN: finalparser has not been evaluated against exact savedstderr bytes/layout; fixedheaderdiagnostic flags and stubfixtures insufficient. Reviewer requires explicit human authorization for one exact in-memory absence(254,bempty,savedstderr) check returning only accepted/blockedcode/newlinecountbuckets/CRLFflag. No private reads performed this step; wait. F2Info keepsdisclosedtest-only readinessfix, no acceptanceaction. No oldP3absence/retry claim. W1/W2/A1/A2/helper accepted; all live gates remainopen. Conditionalrepairroute awaits humananswer andactualboolean, no productionchange assumed.
+
+
+## Subphase 12D — F1 bounded check authorized
+
+Human explicit “yes” authorizes only the saved-stderr in-memory check requested by reviewer. F1 remainsOPEN pendingresult andconditionalofflinefixture/fullsuite(andA1ifproductionchanges). No exactlayout/acceptance assumed, no P3absence/retry claim; oldoperation staysstopped. F2Info readinessfix disclosure retained.
+
+
+## Subphase 12D — F1 authorized exact check result and false branch
+
+Single incident-responder evaluation of oldfinal297830d4…absence() on original unstripped savedstderr returned accepted=false, P3_NOT_EXACT_NOT_FOUND, leadingnewline1/trailingnewline1/CRLFfalse. Exactprescribed5fieldresult plus publicsource showing no strip and one boundedosread retained in evidence/12d-billing-p3-layout-recheck/exact-check/. No further privatecheck performed or authorized. Route reviewerfalsebranch: optionaloneleadingLF only, keepstrictheader/body/exit/mixed/no-retry guards, layoutfixtures/fullsuite+A1. F1repairpendingindependentrecheck; originaloperationremainsfailed, no absenceclaim/newliveauthority.
+
+
+## Subphase 12D — F1 false-branch repair evidence prepared
+
+Allows exactly one optional leadingLF atbytezero, no strip or leadingCRLF/twoLF, existingtrailing0/1LF-CRLF and allheader/denial/exit/no-retry guards retained. Confirmed-layoutsyntheticstub/table fixtures added. Final51offlinefeatures/0fail/0error; pinnedA1regression3calls0/0/0and7checks onfinalwrapperSHAa31852d14e80d970e2338f8a5d94320ea3ca3b89ec759584689d8331d446080b. No secondrealstderrcheck or acceptedtrueclaim. F1preparedforindependentrecheck, F2Info disclosure retained. Existingfailedoperation staysstopped; newrelease/gate/operation/window required after review.
+
+
+## Subphase 12D — F1 independently CLOSED; new human choices pending
+
+Independent recheck APPROVES F1layout/offlineonly and CLOSES F1accepted=falsebranch. L1Low nonblocking: final mixed-error guard nottested on realbody; human chooses residualrisk or one more boundedfinala31852d4…savedstderrcheck publishingonlyaccepted/blockedcode. No check before authorization. I1Info optionalleadingLF-horizontalspace variant deferred, no codechange. F2Info readinessdisclosure retained. Human sourcecontrol/newall8release/cleancheckout, R1newattemptownwordsdecision, distinctoperation/datedwindow/personalgate pending. EarlierR1acceptance remainsrecorded but renewedcarryforward notinferred. Oldgate8222…/operation immutable/expired; no absence, commit, newgate, login or retry authority. W3/R1runtime/F4/live/EMR gates open.
+
+
+## Subphase 12D — L1 bounded finalcompatibility evidence supplied
+
+Authorized finalparsera31852d4…single savedstderr check returned exactly accepted=true/blocked_code=null. Safe diagnostic source/result/report retained in evidence/12d-billing-final-parser-check/incident/. No newlinecounts/inputhash/body/IDs/address/loginURL published. Source and originaloperation unchanged by incident. L1compatibility check option completed; this does not prove currentabsence/permission or successfulP3, nor reviveoldoperation. R1ownwordsnewattemptdecision/newrelease/cleancheckout/newpersonaloperation-windowgate and all liveconditions remain pending. No further code/test/actualprivatecheck necessary fromthisacceptedresult.

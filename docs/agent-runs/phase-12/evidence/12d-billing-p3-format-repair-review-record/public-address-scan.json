@@ -1,0 +1,7 @@
+{
+  "type": "Genericpatternonly",
+  "scope": "Newpacket and5appendedsuffixes; count/hash-onlyreceipts excluded",
+  "units": 12,
+  "matches": 0,
+  "privateprocessing": false
+}

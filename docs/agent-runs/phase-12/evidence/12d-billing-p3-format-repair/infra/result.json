@@ -1,0 +1,205 @@
+{
+  "recorded_utc": "2026-11-02T03:03:41.124235+00:00",
+  "scope": "Narrow offline P3 CLI header-format repair only; no actual stopped request reclassification/replay",
+  "final_tests": 50,
+  "failures": 0,
+  "errors": 0,
+  "source_files": [
+    {
+      "path": "scripts/billing/README.md",
+      "bytes": 15809,
+      "sha256": "ef026f4019ba2e15737729c714453eebce206892aecb2ae555fc70c7ab690321"
+    },
+    {
+      "path": "scripts/billing/budget_execution.py",
+      "bytes": 40222,
+      "sha256": "297830d412cefd53dc4938c06dc1b654b7188fcaa977cf10902123715f39c3fd"
+    },
+    {
+      "path": "scripts/billing/tests/test_budget_execution.py",
+      "bytes": 41030,
+      "sha256": "6d8926f9e91a1f455d887fed264666f0eac30b045133ee9354e13c925eca4ab1"
+    }
+  ],
+  "all8bindings": [
+    {
+      "path": "scripts/billing/PUBLICATION.md",
+      "bytes": 12342,
+      "sha256": "dfc32dad40bc0b33a03018f6175f178941db8b3784fbfa5365b89a2e6b368648"
+    },
+    {
+      "path": "scripts/billing/README.md",
+      "bytes": 15809,
+      "sha256": "ef026f4019ba2e15737729c714453eebce206892aecb2ae555fc70c7ab690321"
+    },
+    {
+      "path": "scripts/billing/budget_execution.py",
+      "bytes": 40222,
+      "sha256": "297830d412cefd53dc4938c06dc1b654b7188fcaa977cf10902123715f39c3fd"
+    },
+    {
+      "path": "scripts/billing/publication_evidence.py",
+      "bytes": 18539,
+      "sha256": "cb2edbb74ce1250282dd4a39ca5397c33e26490e18ae626187a900cf28be4580"
+    },
+    {
+      "path": "scripts/billing/reviewed-pins.json",
+      "bytes": 46174,
+      "sha256": "cb285259b7217bb4186ca80e74d376f215e4150396aa5fd66187d4e0dc96a753"
+    },
+    {
+      "path": "scripts/billing/tests/terraform_state_binding.py",
+      "bytes": 5340,
+      "sha256": "faaf64cd14192abbe45c1284617c26e7c1c2958ace61fcbcde955d8ac471a7c3"
+    },
+    {
+      "path": "scripts/billing/tests/test_budget_execution.py",
+      "bytes": 41030,
+      "sha256": "6d8926f9e91a1f455d887fed264666f0eac30b045133ee9354e13c925eca4ab1"
+    },
+    {
+      "path": "scripts/billing/tests/test_publication_evidence.py",
+      "bytes": 18627,
+      "sha256": "3adf9a30ae8fe72a77816ac100f1e70a295d053722fd2c8d7060e9568a10f6e6"
+    }
+  ],
+  "unchanged_five": [
+    {
+      "path": "scripts/billing/PUBLICATION.md",
+      "bytes": 12342,
+      "sha256": "dfc32dad40bc0b33a03018f6175f178941db8b3784fbfa5365b89a2e6b368648"
+    },
+    {
+      "path": "scripts/billing/publication_evidence.py",
+      "bytes": 18539,
+      "sha256": "cb2edbb74ce1250282dd4a39ca5397c33e26490e18ae626187a900cf28be4580"
+    },
+    {
+      "path": "scripts/billing/reviewed-pins.json",
+      "bytes": 46174,
+      "sha256": "cb285259b7217bb4186ca80e74d376f215e4150396aa5fd66187d4e0dc96a753"
+    },
+    {
+      "path": "scripts/billing/tests/terraform_state_binding.py",
+      "bytes": 5340,
+      "sha256": "faaf64cd14192abbe45c1284617c26e7c1c2958ace61fcbcde955d8ac471a7c3"
+    },
+    {
+      "path": "scripts/billing/tests/test_publication_evidence.py",
+      "bytes": 18627,
+      "sha256": "3adf9a30ae8fe72a77816ac100f1e70a295d053722fd2c8d7060e9568a10f6e6"
+    }
+  ],
+  "existing_failed_gate_and_journal_touched": false,
+  "final_wrapper_sha256": "297830d412cefd53dc4938c06dc1b654b7188fcaa977cf10902123715f39c3fd",
+  "A1_final_wrapper_sha256": "297830d412cefd53dc4938c06dc1b654b7188fcaa977cf10902123715f39c3fd",
+  "A1_assertions": 7,
+  "A1_terraform_exits": [
+    0,
+    0,
+    0
+  ],
+  "A1_wrapper_unchanged_after_run": true,
+  "A1_after_run_edits": "Only test-only signal-fixture readiness handshake; no later wrapper change.",
+  "attempts": [
+    {
+      "command": "python3 -I scripts/billing/tests/test_budget_execution.py > /tmp/scholarchain-phase12d-p3-format-repair/offline-tests-attempt1.log.txt 2>&1",
+      "exit": 1,
+      "tests": 50,
+      "failures": 1,
+      "errors": 0,
+      "reason": "Existing real forced-SIGINT fixture failed marker assertion: 0.2s deadline had no child handler-readiness handshake. All P3 features passed."
+    },
+    {
+      "command": "python3 -I scripts/billing/tests/test_budget_execution.py Features.test_real_local_child_forced_path_keeps_sigint_marker > /tmp/scholarchain-phase12d-p3-format-repair/signal-fixture-targeted-attempt1.log.txt 2>&1",
+      "exit": null,
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "reason": "Log says OK; command grouped with next fullsuite so individual process exit was not separately captured, not invented."
+    },
+    {
+      "command": "python3 -I scripts/billing/tests/test_budget_execution.py > /tmp/scholarchain-phase12d-p3-format-repair/offline-tests-attempt2.log.txt 2>&1",
+      "exit": 1,
+      "tests": 50,
+      "failures": 2,
+      "errors": 0,
+      "reason": "Both existing real local signal fixtures raced startup. Parent authorized bounded test-only readiness marker after child SIGINT handler install; parent waits at most5s, existing process/stop timeouts and assertions unchanged."
+    },
+    {
+      "argv": [
+        "python3",
+        "-I",
+        "scripts/billing/tests/test_budget_execution.py",
+        "Features.test_real_local_child_sigint_persists_fixture_before_exit",
+        "Features.test_real_local_child_forced_path_keeps_sigint_marker"
+      ],
+      "log": "signal-fixtures-after-readiness.log.txt",
+      "exit": 0
+    },
+    {
+      "argv": [
+        "python3",
+        "-I",
+        "scripts/billing/tests/test_budget_execution.py"
+      ],
+      "log": "offline-tests-attempt3.log.txt",
+      "exit": 0
+    },
+    {
+      "command": [
+        "python3",
+        "-I",
+        "-"
+      ],
+      "inline_source": "from pathlib import Path\nimport importlib.util,sys,os,json\nsys.dont_write_bytecode=True\nos.umask(0o077)\nsource=Path('scripts/billing/tests/terraform_state_binding.py').resolve()\nspec=importlib.util.spec_from_file_location('p3_format_a1_regression',source)\nm=importlib.util.module_from_spec(spec);sys.modules[spec.name]=m;spec.loader.exec_module(m)\nout=Path('/tmp/scholarchain-phase12d-p3-format-repair')\nresult=m.run_test(out)\n(out/'a1-regression.stdout.json').write_text(json.dumps(result,sort_keys=True)+'\\n')\nprint(json.dumps({'A1_regression_assertions_passed':sum(result['checks'].values()),'commands':result['commands'],'aws_calls':result['aws_calls']}))",
+      "exit": 0,
+      "terraform_calls": 3,
+      "terraform_exits": [
+        0,
+        0,
+        0
+      ],
+      "assertions": 7,
+      "note": "Ran after final wrapper parser edit, before test-only readiness repair; unchanged A1 source loaded through isolated import to new output directory. No old temporary output overwritten."
+    }
+  ],
+  "accepted_headers": [
+    "An error occurred (NotFoundException) when calling the DescribeBudget operation: <nonblank single-line opaque body>",
+    "aws: [ERROR]: An error occurred (NotFoundException) when calling the DescribeBudget operation (reached max retries: 0): <nonblank single-line opaque body>"
+  ],
+  "unchanged_security_guards": [
+    "stdout blank",
+    "CLIexit254",
+    "exactNotFoundException/DescribeBudget",
+    "mixed denial/expiry/transport rejected",
+    "AWS_MAX_ATTEMPTS=1",
+    "no retries",
+    "exclusive stopped-stage journal",
+    "same exact savedplan apply/backup/readback/scan gates"
+  ],
+  "rejections_tested": [
+    "unobserved prefix-only and annotation-only combinations",
+    "unknown prefixes",
+    "positive/ambiguous retry counts",
+    "wrongoperation and denied/expired/throttled/mixed responses",
+    "ANSI/multiline/blankbody",
+    "stdout content/non254 exit"
+  ],
+  "incident_provenance": "Only sanitized fixed-format confirmation read; actual private stderr body never accessed by this infra owner or embedded in fixture.",
+  "live_or_private_access": {
+    "AWS_CLI_calls": 0,
+    "budget_wrapper_production_modes": 0,
+    "actual_durable_plan_state_input_credentials_config_cache_access": false,
+    "failed_gate_or_stage_journal_modified": false,
+    "real_config_Terraform_calls": 0,
+    "sbt_or_helper_tests": false
+  },
+  "retention": "Only test-owned TemporaryDirectory fixtures auto-cleaned; isolated public A1 scratch plan/state/raw logs retained outsideGit.",
+  "limitations": [
+    "No validated live absence or actual create; original P3 remains failed and stopped.",
+    "Requires independent review, newreleasecommit/all8bindings and personal newgate/operation before any freshP3.",
+    "No automatic extension/reuse of prior window/session approval.",
+    "A1/W1/W2/A2 remain accepted; regressions do not reopen their independent review."
+  ]
+}

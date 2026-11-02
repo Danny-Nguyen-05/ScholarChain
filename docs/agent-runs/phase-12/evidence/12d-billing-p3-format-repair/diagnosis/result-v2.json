@@ -1,0 +1,21 @@
+{
+  "observed_utc": "2026-11-02T02:53:20.220870+00:00",
+  "scope": "Second pass over same single saved stderr; allowlisted tokens/format flags only",
+  "error_code": "NotFoundException",
+  "allowlisted_token_matches": [
+    "NotFoundException"
+  ],
+  "operation": "DescribeBudget",
+  "token_observation_not_validated_service_response": true,
+  "empty": false,
+  "singleline": true,
+  "multiline": false,
+  "ansi_present": false,
+  "json_object_shape": false,
+  "retry_annotation_present": true,
+  "standard_error_prefix_present": true,
+  "fixed_classification": "NOTFOUND_TOKEN_FORMAT_UNRECOGNIZED_NO_ABSENCE_CLAIM",
+  "raw_message_published": false,
+  "new_live_calls": 0,
+  "no_retry": true
+}

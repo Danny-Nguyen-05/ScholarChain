@@ -1,0 +1,387 @@
+{
+  "recorded_utc": "2026-11-02T02:55:25.993989+00:00",
+  "branch": "phase-12",
+  "head": "8903ce0a2c3765b9f77e1665cb9ffe2f484c1fbf",
+  "status_entries": 0,
+  "records": [
+    {
+      "path": "docs/agent-runs/phase-12/prompt.md",
+      "bytes": 82957,
+      "sha256": "2a7560fecdf8ffb58fd8bc05076073411fe097fc4795ae61f9bd4708e7a19fb7"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/review.md",
+      "bytes": 240683,
+      "sha256": "817f1a2f5e8bbe2e14aab8224f708e5918453a1f9e28c44c04eca76d386df660"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/repairs.md",
+      "bytes": 62012,
+      "sha256": "a0761a95557df12da26df538e9769a9b8153e2111ce8044afa8991bd2ea2588f"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/owner-report.md",
+      "bytes": 128856,
+      "sha256": "82dcb9f41fa94b08961314a51518881226580e2896ecea1cec47918a8efc7617"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/test-report.md",
+      "bytes": 122143,
+      "sha256": "70913a810e055f9e862f7cf3e05a6180b28a8712cef6cdbc319252c8e2942b91"
+    }
+  ],
+  "scripts": [
+    {
+      "path": "scripts/billing/PUBLICATION.md",
+      "bytes": 12342,
+      "sha256": "dfc32dad40bc0b33a03018f6175f178941db8b3784fbfa5365b89a2e6b368648"
+    },
+    {
+      "path": "scripts/billing/README.md",
+      "bytes": 14797,
+      "sha256": "c83e61880cebebf5bb6c17b2ba9c971fad302c17d81a4dec5c166be37d7b9391"
+    },
+    {
+      "path": "scripts/billing/budget_execution.py",
+      "bytes": 39844,
+      "sha256": "e8876abe58a787f9753793b822140cc311863c12373e09f79b8f367ebdfa3507"
+    },
+    {
+      "path": "scripts/billing/publication_evidence.py",
+      "bytes": 18539,
+      "sha256": "cb2edbb74ce1250282dd4a39ca5397c33e26490e18ae626187a900cf28be4580"
+    },
+    {
+      "path": "scripts/billing/reviewed-pins.json",
+      "bytes": 46174,
+      "sha256": "cb285259b7217bb4186ca80e74d376f215e4150396aa5fd66187d4e0dc96a753"
+    },
+    {
+      "path": "scripts/billing/tests/terraform_state_binding.py",
+      "bytes": 5340,
+      "sha256": "faaf64cd14192abbe45c1284617c26e7c1c2958ace61fcbcde955d8ac471a7c3"
+    },
+    {
+      "path": "scripts/billing/tests/test_budget_execution.py",
+      "bytes": 36221,
+      "sha256": "04dc9f32fe7e2bc8f59d6028785b6ace7978c39f392e7403cfc7b36fe143d34c"
+    },
+    {
+      "path": "scripts/billing/tests/test_publication_evidence.py",
+      "bytes": 18627,
+      "sha256": "3adf9a30ae8fe72a77816ac100f1e70a295d053722fd2c8d7060e9568a10f6e6"
+    }
+  ],
+  "human_record": {
+    "path": "docs/agent-runs/phase-12/billing-bootstrap-exception.md",
+    "bytes": 1334,
+    "sha256": "abe3a50ad7167fa01227c73e15e92a422a50609f6313bdcc56404cb61765d71a"
+  },
+  "prior_packet_manifests": [
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-wrapper/evidence-manifest.json",
+      "bytes": 3381,
+      "sha256": "a712fff611a3e4bacab1c58256838bf08ca8af8834063c7ee5dd2d6ceb0e1bea"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-wrapper/artifact-manifest.json",
+      "bytes": 2198,
+      "sha256": "4e2528835b42fa5af7b0d7143b80c48f458c8f643406e8ff38489fdb4280a783"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-execution-plan/evidence-manifest.json",
+      "bytes": 8666,
+      "sha256": "d169eaf5f3ac49e7925d670aacb60fd3f2360db3d591cef7f36a0361f822e481"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12b-repair-1/build-retention-manifest.json",
+      "bytes": 3750,
+      "sha256": "bd343b31e622e3fbd065fd8ae492648396f8a47d5125d2c8c3c85bfa1c0548dc"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-timing-clarification/evidence-manifest.json",
+      "bytes": 540,
+      "sha256": "5c68466d7c0818b4b19f9fa5ae6d794666c3f717857602aec653401642a4f90b"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-apply-proposal/evidence-manifest.json",
+      "bytes": 2084,
+      "sha256": "0a8457dd07f95e629a17b1331d0b21cd1edd95ea4d28e60cb803cbc170943e65"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-apply-proposal/artifact-manifest.json",
+      "bytes": 553,
+      "sha256": "98196f737c78cf027d59759a97ba0a7db1eac1fc41d9a86a1af064f8d823151f"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-apply-proposal-review-record/evidence-manifest.json",
+      "bytes": 1202,
+      "sha256": "5d2633e33404ffc226897ba420820b88c45f2994d1521afed71ce2c678d2bd2e"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-wrapper-review-record/evidence-manifest.json",
+      "bytes": 872,
+      "sha256": "36754c6fa198d9a1db45d2f4147d073fc08b7a3649dd5a1a9dee7a7007fa84e9"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-durable-plan-review-record/evidence-manifest.json",
+      "bytes": 1185,
+      "sha256": "31ab90560926745b4777fb70788411d60ea0cf5053cf1b9458dfd65ee850a9df"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-execution-prep/evidence-manifest.json",
+      "bytes": 11650,
+      "sha256": "ea7d963829e46167a1d2b5990c5a7c31a983199c77303ae493d76f40d9e62268"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-apply-gate-repair-prep/evidence-manifest.json",
+      "bytes": 3529,
+      "sha256": "33b4827e0e977fcdae4d3f8907ed0e9db54fb4f77b6eb88893a016e1a8f47a19"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12a/infra-command-manifest.json",
+      "bytes": 6409,
+      "sha256": "35f8582ddb78bff50442ffa007b582d85f3484824d864461135fc89b0fa1c0b0"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-authentication-verification/evidence-manifest.json",
+      "bytes": 2147,
+      "sha256": "e4070b4491bc174ee4858c5fde83eeb78ec1ce7c7ab49ab569a06ec2c4a0b153"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-policy-amendment/evidence-manifest.json",
+      "bytes": 12793,
+      "sha256": "119b41e0071d0ca32b115441a462b239ae935f2c251e6a6443322c4f62d06f91"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation-repair-1/evidence-manifest.json",
+      "bytes": 14071,
+      "sha256": "f26a6685e95432ed9fd46ad31b0e43106528c6da2319d08efdc225bb48322342"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12a-repair-1/infra-attempt1-mutation-manifest.json",
+      "bytes": 892,
+      "sha256": "9226f763d07ac01b796382ee6b1efac053437c9bdd2c9a5a8eb234b1eda83d9d"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12a-repair-1/infra-mutation-manifest.json",
+      "bytes": 1818,
+      "sha256": "7e005bc08b4c0473f6677e32f21d3863c849ddeb5ca5c103f6c48858c2ff3f54"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12a-repair-1/infra-command-manifest.json",
+      "bytes": 11292,
+      "sha256": "8ba75430cce207f80107bfa2677fca081fa6faac15976b3e280fa73ff88a1eba"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-execution-gate-review-record/evidence-manifest.json",
+      "bytes": 1296,
+      "sha256": "e7a7f982d90d515b317a63746d80ccac367de0a008732342c3fc9f895c2cfe96"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-p1-timing-reconciliation/evidence-manifest.json",
+      "bytes": 1990,
+      "sha256": "6a6632e45707dcfb9f9b2c86b2789f5e44810336b2f6204401902c0b7a4f108d"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-execution-gate-handoff/evidence-manifest.json",
+      "bytes": 2128,
+      "sha256": "459117e2c7f42142170103c2c66e8282f48ba486dba5decb9e476d2e15fb2572"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-login-path-evaluation/evidence-manifest.json",
+      "bytes": 6002,
+      "sha256": "1e0d9f57c4fc5b7e993597ac389a327d5c0e566f6e6c002101ce3478b00cb735"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-publication-helper-review-record/evidence-manifest.json",
+      "bytes": 1296,
+      "sha256": "dc725e1cd20e3b24a438ce9d303a4d4efb706686978e43db340784916be14fff"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-password-recovery-proposal/evidence-manifest.json",
+      "bytes": 526,
+      "sha256": "169409e06812446da37cdca5babce297699958073a8d037f37047642a0082bcd"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-plan/evidence-manifest.json",
+      "bytes": 7449,
+      "sha256": "0ec4f63f66c84828af6e60a3c9708021d3b79183d1271eb0a4b86164389af374"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-human-identity-bootstrap/evidence-manifest.json",
+      "bytes": 1631,
+      "sha256": "ab1f2746089c7f480a020587ab3dc8ad52b4e0efc65430743913cbe098b05a90"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-human-identity-bootstrap/current-evidence-manifest.json",
+      "bytes": 4415,
+      "sha256": "1b855ce0d022c4caff466f4c547e7c0454333503003f9c14fa552f0e412e130c"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation/evidence-manifest.json",
+      "bytes": 12930,
+      "sha256": "2633b93ad6a606286cb9fdc676d36b46aae34fabda128f0cd3ba160fdf9c76cd"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-durable-plan/evidence-manifest.json",
+      "bytes": 13732,
+      "sha256": "a98db357d8f03a42497ceb8bba7e6fabebc412064942acecc62f67c4ae2e6360"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-durable-plan/preparation-manifest.json",
+      "bytes": 3846,
+      "sha256": "e3a625dfe35800fcb6234f18d0bccf2433c558637c98a3b74e6376efd2bc22ac"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-wrapper-repair1/evidence-manifest.json",
+      "bytes": 3049,
+      "sha256": "80deba33d6822d7962855b5cf04196e5c3a3a27e1450bc72640ac2392f595883"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-wrapper-repair1/artifact-manifest.json",
+      "bytes": 1897,
+      "sha256": "9d3adb007d6deb2ff81b0b912b298148003cbe82fe0c88d83c452bbe95fdc401"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-publication-helper/evidence-manifest.json",
+      "bytes": 3270,
+      "sha256": "61be3441bd716f26a201c2116323da32d46c424c008102558e3d88767a793b92"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12c/evidence-manifest.json",
+      "bytes": 17270,
+      "sha256": "d65fb84e0311a7a22334ed36456bc3d4bf396aa7d95f4e86552e4f3b8a701c0c"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-identity-decision-draft/evidence-manifest.json",
+      "bytes": 716,
+      "sha256": "a1e2353016ff151f448eea82b83a42209a0c0162049e990f0a777f3584d7de8e"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12b/build-retention-manifest.json",
+      "bytes": 3593,
+      "sha256": "87b57e251525d7dcf362eadb3ea77413d71b4dff0eba332a7bb7f2625438929f"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12b/infra/compressed-log-manifest.json",
+      "bytes": 805,
+      "sha256": "dd402a9e537df67facaf622d3999429562ec10c3298dd885a2606db36bce707d"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12c/infra/retention-manifest.json",
+      "bytes": 6846,
+      "sha256": "40e0a06807fca67796452bca7d16573291ebe5f7b8ad89744fb61f15f5596bb2"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12c/cost/artifact-manifest.json",
+      "bytes": 1891,
+      "sha256": "0df98e9f67a93b2af756442df03e8ea30ab6c062a15c8948110d4ffc0397606e"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12c/cost/fetch-manifest.json",
+      "bytes": 9452,
+      "sha256": "1db4a433ed80ca117a5ebac2a6f5dffffdaa85850f74195530ae9e4dde87012b"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12c/static/retention-manifest.json",
+      "bytes": 4460,
+      "sha256": "b7fe79bc84a4099aafd64209a276059b9952be95a76d0e1dce4fb0061d547678"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12c/build/artifact-manifest.json",
+      "bytes": 1817,
+      "sha256": "c6590b9bb251897a9b3bc063acc8ed6d87d7f57731850841ebd51b7484cb3c33"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-publication-helper/infra/artifact-manifest.json",
+      "bytes": 1083,
+      "sha256": "1c898b1b2c40760c8384e8c45fd352f1728a71d00256ad4c617ba1b09205ca59"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-durable-plan/infra/artifact-manifest.json",
+      "bytes": 5157,
+      "sha256": "3982c5cae40d26705f329b724ed544209b24bcddf0302e0546786b355e93d4b3"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation/infra/retention-manifest.json",
+      "bytes": 6022,
+      "sha256": "e21ba274a06012ebc711c4ee48897ad17c9fab66300004b787df701d20dc9bff"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation/build/artifact-manifest.json",
+      "bytes": 1993,
+      "sha256": "1949668824d67a87d07a556b6f3ee7286031d602fa6ea995a1b2f6b9d55bb3ad"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-human-identity-bootstrap/user-supplied-policy-readbacks/evidence-manifest.json",
+      "bytes": 673,
+      "sha256": "6c2e6882e9a9dd7c6c71be29a8afd30b65fb6770ceca28eaf448017b22044c12"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-human-identity-bootstrap/tag-readbacks/evidence-manifest.json",
+      "bytes": 503,
+      "sha256": "281fc94b01a39adcaa1a9ddd427f2c0760bd9291c1d4daa819e1c56f101f33f4"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-plan/infra/artifact-manifest.json",
+      "bytes": 4184,
+      "sha256": "5c286ab620257b896fba2e11582db2e6192a9558cbf4b759ff31d92ded427999"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-login-path-evaluation/infra/artifact-manifest.json",
+      "bytes": 3834,
+      "sha256": "b2c13070492d32e702fa7db7666a2e92d68757641e5ec5ec3b793232fffb29bc"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation-repair-1/infra/retention-manifest.json",
+      "bytes": 5760,
+      "sha256": "dd44e2472c2526d8f25f5a0a749969853f50ab296143107578d2124c6d3cf548"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation-repair-1/original-notes/evidence-manifest.json",
+      "bytes": 12930,
+      "sha256": "23b279dade3eb016523e98bbce9f24e818cea72c19742e4c01dd429c84106875"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation-repair-1/build/artifact-manifest.json",
+      "bytes": 2206,
+      "sha256": "69cd10cc46377097e298305bb60e51bc23435cc0c0660ad059076ac1cedf4479"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-policy-amendment/infra/artifact-manifest.json",
+      "bytes": 7330,
+      "sha256": "69a15ee8c1cccbd460dc1476f1d8147aaf0932ffc03c42615e6936d8328c2213"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-policy-amendment/build/artifact-manifest.json",
+      "bytes": 2630,
+      "sha256": "11e583720a46fd0118cf0fc691f2b4e9ef1620a39ff8b3c0566257a3324ba26f"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-apply-gate-repair-prep/infra/artifact-manifest.json",
+      "bytes": 938,
+      "sha256": "7511109daa2ac45d66428534e0753592994b7a94f70278cf18f17ed42acb07de"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-execution-prep/infra/artifact-manifest.json",
+      "bytes": 5687,
+      "sha256": "05e737d4d6f0b8355d3c507ddac78eb2e69e84f86b0509df6d0b008c6f47d919"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-execution-prep/build/artifact-manifest.json",
+      "bytes": 2630,
+      "sha256": "3edf004d93adc407fc736e2a526ee87bf1486f69ae758e90b5bad0ee765aa2c7"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12b-repair-1/infra/command-manifest.json",
+      "bytes": 6763,
+      "sha256": "35539d6c573c9de8028cf841cb71a751db7db5b72dfccf26972f4229b5779a48"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-execution-plan/infra/artifact-manifest.json",
+      "bytes": 5202,
+      "sha256": "e48dcfb0d7dd3a9f53786c64602d4ee28284ed41856fff0fefc60c949a39ff2e"
+    }
+  ]
+}
