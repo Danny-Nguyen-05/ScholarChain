@@ -260,6 +260,60 @@ class CostScopeFeatures(unittest.TestCase):
                 self.assertNotIn(b.digest(FIXTURE_ADDRESS.encode()), str(error.exception))
 
 
+class NotificationReadCompatibility(unittest.TestCase):
+    def validate(self, responses):
+        return b.sanitize_readback(responses['describe-budget'], responses['list-tags-for-resource'],
+            responses['describe-notifications-for-budget'],
+            {int(k):v for k,v in responses['subscribers'].items()}, FIXTURE_ADDRESS)
+
+    def test_absent_percentage_all_mixed_and_ordered_are_supported(self):
+        for omitted in ((), (0,), (0, 1, 2)):
+            for order in ((0,1,2),(2,0,1)):
+                with self.subTest(omitted=omitted,order=order):
+                    responses=fixture_responses()
+                    notices=responses['describe-notifications-for-budget']['Notifications']
+                    for index in omitted: del notices[index]['ThresholdType']
+                    responses['describe-notifications-for-budget']['Notifications']=[notices[index] for index in order]
+                    result=self.validate(responses)
+                    self.assertEqual(result['notification_count'],3)
+                    self.assertTrue(result['private_recipients_match'])
+                    self.assertNotIn(FIXTURE_ADDRESS,json.dumps(result))
+                    self.assertNotIn(b.digest(FIXTURE_ADDRESS.encode()),json.dumps(result))
+
+    def test_present_invalid_threshold_type_never_defaults_to_percentage(self):
+        for value in ('ABSOLUTE_VALUE','',None,False,0,[],{},'percentage','UNKNOWN'):
+            with self.subTest(value=value):
+                responses=fixture_responses();responses['describe-notifications-for-budget']['Notifications'][0]['ThresholdType']=value
+                with self.assertRaisesRegex(b.Blocked,'NOTIFICATION_DRIFT'):self.validate(responses)
+
+    def test_missing_percentage_keeps_operator_kind_threshold_shape_guards(self):
+        cases=(('ComparisonOperator','LESS_THAN','NOTIFICATION_DRIFT'),('ComparisonOperator',None,'NOTIFICATION_DRIFT'),
+               ('NotificationType','FORECASTED','NOTIFICATION_DRIFT'),('NotificationType',None,'NOTIFICATION_DRIFT'),
+               ('Threshold',True,'NOTIFICATION_THRESHOLD'),('Threshold','50','NOTIFICATION_THRESHOLD'),
+               ('Threshold',60,'NOTIFICATION_THRESHOLD'),('Unknown',FIXTURE_ADDRESS,'NOTIFICATION_SHAPE'))
+        for key,value,code in cases:
+            with self.subTest(key=key,value=value):
+                responses=fixture_responses();notices=responses['describe-notifications-for-budget']['Notifications']
+                for notice in notices:del notice['ThresholdType']
+                notices[0][key]=value
+                with self.assertRaisesRegex(b.Blocked,code) as error:self.validate(responses)
+                self.assertNotIn(FIXTURE_ADDRESS,str(error.exception))
+        responses=fixture_responses();notices=responses['describe-notifications-for-budget']['Notifications']
+        for notice in notices:del notice['ThresholdType']
+        notices[1]['Threshold']=notices[0]['Threshold']
+        with self.assertRaisesRegex(b.Blocked,'NOTIFICATION_THRESHOLD'):self.validate(responses)
+        notices.pop()
+        with self.assertRaisesRegex(b.Blocked,'NOTIFICATION_COUNT'):self.validate(responses)
+
+    def test_absent_percentage_never_weakens_subscriber_or_alarm_privacy(self):
+        responses=fixture_responses()
+        for notice in responses['describe-notifications-for-budget']['Notifications']:
+            del notice['ThresholdType'];notice['NotificationState']='ALARM'
+        result=self.validate(responses);self.assertNotIn('ALARM',json.dumps(result))
+        responses['subscribers']['50']['Subscribers'][0]['Address']='wrong@example.invalid'
+        with self.assertRaisesRegex(b.Blocked,'SUBSCRIBER_DRIFT'):self.validate(responses)
+
+
 class Features(unittest.TestCase):
     def setUp(self):
         self.temp=tempfile.TemporaryDirectory(prefix='billing wrapper test ')

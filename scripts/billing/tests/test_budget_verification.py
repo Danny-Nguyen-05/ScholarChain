@@ -500,6 +500,24 @@ class Features(unittest.TestCase):
         with self.assertRaises(b.Blocked):self.ex.verify()
         self.assertFalse(self.ex.op.exists());self.assertEqual(self.calls,[]);self.unchanged_original()
 
+    def test_missing_percentage_readback_preserves_six_explicit_query_selectors(self):
+        for notification in self.values[2]['Notifications']:del notification['ThresholdType']
+        self.values[2]['Notifications'].reverse()
+        result=self.ex.verify()
+        self.assertEqual(len(self.calls),6)
+        self.assertEqual(result['result']['notification_count'],3)
+        self.assertTrue(result['result']['private_recipients_match'])
+        selectors=[json.loads(call['argv'][call['argv'].index('--notification')+1]) for call in self.calls[3:]]
+        self.assertEqual(selectors,[b.expected_notification(t) for t in (50,80,100)])
+        self.assertTrue(all(selector['ThresholdType']=='PERCENTAGE' for selector in selectors))
+        for private in (ADDRESS,b.digest(ADDRESS.encode())):self.assertNotIn(private,json.dumps(result))
+        self.unchanged_original()
+
+    def test_present_bad_threshold_type_blocks_after_six_without_receipt(self):
+        self.values[2]['Notifications'][0]['ThresholdType']='ABSOLUTE_VALUE'
+        with self.assertRaisesRegex(b.Blocked,'NOTIFICATION_DRIFT'):self.ex.verify()
+        self.assertEqual(len(self.calls),6);self.receipt_missing();self.unchanged_original()
+
     def test_main_only_exposes_readonly_modes_without_echoing_payloads(self):
         for mode in ('apply','p3-check','readback','destroy',ADDRESS):
             with self.subTest(mode=mode),mock.patch('builtins.print') as output:

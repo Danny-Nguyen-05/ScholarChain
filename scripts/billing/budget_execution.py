@@ -452,7 +452,10 @@ def sanitize_readback(budget, tags, notifications, subscriber_responses, recipie
         t = n.get("Threshold")
         require(type(t) in (int, float) and t in (50, 80, 100) and t not in seen,
                 "NOTIFICATION_THRESHOLD")
-        require(all(n.get(k) == v for k, v in expected_notification(t).items()), "NOTIFICATION_DRIFT")
+        # The pinned provider documents omitted PERCENTAGE on read. Only absence
+        # receives that meaning; an explicitly present invalid value still fails.
+        require(all(n.get(k, "PERCENTAGE" if k == "ThresholdType" else None) == v
+                    for k, v in expected_notification(t).items()), "NOTIFICATION_DRIFT")
         seen.add(t)
         r = subscriber_responses[t]
         require(not r.get("NextToken") and set(r) <= {"Subscribers", "NextToken"}, "SUBSCRIBER_PAGINATION_SHAPE")
