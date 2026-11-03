@@ -1,0 +1,12 @@
+{
+  "AWS_calls": 0,
+  "cleanup": [],
+  "completed_at": "2026-11-03T20:37:02.843634+00:00",
+  "exit": 1,
+  "expected_exit": 0,
+  "job_jar_sha256_after": "d52f11ebad5ec9e1ffdd1910d562023e934ce7ab62e7c74a5ffd650f8951b86b",
+  "job_jar_sha256_before": "d52f11ebad5ec9e1ffdd1910d562023e934ce7ab62e7c74a5ffd650f8951b86b",
+  "seconds": 0.505,
+  "stage": "baseline-a",
+  "timed_out": false
+}

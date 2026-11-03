@@ -1,0 +1,20 @@
+{
+  "followup_runtime_steps": [
+    "Generate upstream-complete fixture through unchanged HadoopPrepMain then Phase5Main --llm-mode disabled.",
+    "Preserve identical upstream files/manifests; generate two Spark configs differing only in allowed deployment paths/shuffle counts.",
+    "Use the one rebuilt packaged JAR for both Phase6Main CLI runs; invoke Phase12Readiness compare with both completed run roots and an exclusive output.",
+    "Run Phase12Readiness probe on a canonical shared absolute local directory; record local externalExecutorVerified=false honestly. A future distributed-required run must have a non-driver actual executor.",
+    "Bind loaded Spark/Scala class hashes to the resolved artifact/version inventory. Null reflection/Scala3 runtimeVersion is unknown, not inferred alignment."
+  ],
+  "java_requirement": "JDK17",
+  "kind": "Requested validation commands; NOT executed by spark owner",
+  "requested_sbt_commands": [
+    "sparkAnalytics/scalafmt",
+    "sparkAnalytics/Test/scalafmt",
+    "sparkAnalytics/Test/testOnly edu.uic.cs441.scholarchain.spark.Phase12ReadinessSpec",
+    "sparkAnalytics/sparkJobJar",
+    "check"
+  ],
+  "resource_provenance": "phase12/g1-dblp.xml explicitly says synthetic. It contains exactly9 DBLP-shaped works w1,w2,w9,w3,w4,w5,w6,w7,w8 over A\u2013J test labels, duplicate A in w9 and solo J in w8. Empty JSONL is exactly zero bytes. This tests G1 DBLP topology, not cross-source duplicate merging. Actual completed upstream artifacts must be genuinely produced, not authored.",
+  "same_jar_identity": "Phase6Main.codeFingerprint hashes the complete packaged code source for both its Spark result and core config classes. The same assembled JAR therefore gives identical codeVersion; byte-identical Hadoop/ER manifest bindings plus equal Spark logical configuration give the same runId including nested context.runId. Physical paths, checkpoint/output roots and shuffle partitions are excluded from logicalFingerprint. No original IDs, rows, provenance, completion markers or old runs are normalized/edited."
+}

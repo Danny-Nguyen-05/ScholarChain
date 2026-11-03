@@ -1,0 +1,107 @@
+{
+  "schemaVersion": "scholarchain.phase12-readiness.v1",
+  "stage": "probe",
+  "driver": {
+    "role": "driver",
+    "host": "Dannys-MacBook-Pro.local",
+    "pid": "31766",
+    "jvmStartTime": "1793738507162",
+    "executorId": "driver",
+    "javaVersion": "17.0.20.1",
+    "libraries": [
+      {
+        "component": "spark",
+        "className": "org.apache.spark.SparkContext",
+        "origin": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/apache/spark/spark-core_2.13/3.5.4/spark-core_2.13-3.5.4.jar",
+        "classSha256": "cf2ed70bbaeaf5fbe8c702dddf0059b0ea49b3d0badfe8b5de489f711bd2373f",
+        "codeSourceSha256": "2a4f5823aad3f99c9fddd77d0d4d4f3c6600dac5ea9a51d80bc6a2bc9e6561bf",
+        "runtimeVersion": "3.5.4",
+        "implementationVersion": "3.5.4"
+      },
+      {
+        "component": "scala-library",
+        "className": "scala.Option",
+        "origin": "/Users/danny/Documents/UIC/CS441/ScholarChain/modules/spark/target/spark-job_3-0.1.0-SNAPSHOT.jar",
+        "classSha256": "5fa95e069a844983b415ef613ce7b3f0c752be0804660ff12b7ffa6d7cf00cae",
+        "codeSourceSha256": "d52f11ebad5ec9e1ffdd1910d562023e934ce7ab62e7c74a5ffd650f8951b86b",
+        "runtimeVersion": "2.13.14",
+        "implementationVersion": null
+      },
+      {
+        "component": "scala-reflect",
+        "className": "scala.reflect.api.Universe",
+        "origin": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/scala-lang/scala-reflect/2.13.14/scala-reflect-2.13.14.jar",
+        "classSha256": "19837277a82a61227cd4e246065836b5a049d5dfe59bb6032bc42bea7391ff96",
+        "codeSourceSha256": "8846baaa8cf43b1b19725ab737abff145ca58d14a4d02e75d71ca8f7ca5f2926",
+        "runtimeVersion": null,
+        "implementationVersion": null
+      },
+      {
+        "component": "scala3-library",
+        "className": "scala.deriving.Mirror",
+        "origin": "/Users/danny/Documents/UIC/CS441/ScholarChain/modules/spark/target/spark-job_3-0.1.0-SNAPSHOT.jar",
+        "classSha256": "e48c633a515bdcb03a9b4422a0f9fb5778fae811ad3c84f94ecce1f1c45e5712",
+        "codeSourceSha256": "d52f11ebad5ec9e1ffdd1910d562023e934ce7ab62e7c74a5ffd650f8951b86b",
+        "runtimeVersion": null,
+        "implementationVersion": null
+      }
+    ]
+  },
+  "taskProcesses": [
+    {
+      "role": "executor-task",
+      "host": "Dannys-MacBook-Pro.local",
+      "pid": "31771",
+      "jvmStartTime": "1793738507929",
+      "executorId": "0",
+      "javaVersion": "17.0.20.1",
+      "libraries": [
+        {
+          "component": "spark",
+          "className": "org.apache.spark.SparkContext",
+          "origin": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/apache/spark/spark-core_2.13/3.5.4/spark-core_2.13-3.5.4.jar",
+          "classSha256": "cf2ed70bbaeaf5fbe8c702dddf0059b0ea49b3d0badfe8b5de489f711bd2373f",
+          "codeSourceSha256": "2a4f5823aad3f99c9fddd77d0d4d4f3c6600dac5ea9a51d80bc6a2bc9e6561bf",
+          "runtimeVersion": "3.5.4",
+          "implementationVersion": "3.5.4"
+        },
+        {
+          "component": "scala-library",
+          "className": "scala.Option",
+          "origin": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/probe-runtime-v2/spark-home/jars/000-scholarchain-job.jar",
+          "classSha256": "5fa95e069a844983b415ef613ce7b3f0c752be0804660ff12b7ffa6d7cf00cae",
+          "codeSourceSha256": "d52f11ebad5ec9e1ffdd1910d562023e934ce7ab62e7c74a5ffd650f8951b86b",
+          "runtimeVersion": "2.13.14",
+          "implementationVersion": null
+        },
+        {
+          "component": "scala-reflect",
+          "className": "scala.reflect.api.Universe",
+          "origin": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/scala-lang/scala-reflect/2.13.14/scala-reflect-2.13.14.jar",
+          "classSha256": "19837277a82a61227cd4e246065836b5a049d5dfe59bb6032bc42bea7391ff96",
+          "codeSourceSha256": "8846baaa8cf43b1b19725ab737abff145ca58d14a4d02e75d71ca8f7ca5f2926",
+          "runtimeVersion": null,
+          "implementationVersion": null
+        },
+        {
+          "component": "scala3-library",
+          "className": "scala.deriving.Mirror",
+          "origin": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/probe-runtime-v2/spark-home/jars/000-scholarchain-job.jar",
+          "classSha256": "e48c633a515bdcb03a9b4422a0f9fb5778fae811ad3c84f94ecce1f1c45e5712",
+          "codeSourceSha256": "d52f11ebad5ec9e1ffdd1910d562023e934ce7ab62e7c74a5ffd650f8951b86b",
+          "runtimeVersion": null,
+          "implementationVersion": null
+        }
+      ],
+      "proofFile": "executor-0.json",
+      "sharedToken": "8f1c1b66-538e-42a0-bd62-bb7fecc14da4"
+    }
+  ],
+  "sharedAbsoluteDirectory": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/probe-shared-v3",
+  "exchangeDirectory": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/probe-shared-v3/phase12-probe-8f1c1b66-538e-42a0-bd62-bb7fecc14da4",
+  "driverToTaskAndBackVerified": true,
+  "externalExecutorVerified": true,
+  "distributedRequired": true,
+  "cloudCompatibilityVerified": false,
+  "componentVersionQualification": "Null versions are unknown; match class/source hashes to the resolved build artifact inventory."
+}

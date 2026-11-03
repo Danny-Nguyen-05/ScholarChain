@@ -1,0 +1,27 @@
+{
+  "added_artifact": {
+    "NamespaceBinding_class_sha256": "1d2839ebfdd165022be428ba9350786922823992edea7a1611ab3705f826121e",
+    "artifact": "scala-xml_2.13-2.1.0.jar",
+    "bytes": 483090,
+    "path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/scala-lang/modules/scala-xml_2.13/2.1.0/scala-xml_2.13-2.1.0.jar",
+    "sha256": "d122cbf93115ee714570de6a9c18e53001fedb474911d4cb5091758ee51f053a"
+  },
+  "base_manifest": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/runtime-manifest.json",
+  "base_manifest_sha256": "1326889d71a974cfed06b014faccc28cf8726b0ad72f2526614dddb12f245114",
+  "base_runtime_modified": false,
+  "cloud_compatibility_verified": false,
+  "downloads": 0,
+  "job_jar_sha256": "d52f11ebad5ec9e1ffdd1910d562023e934ce7ab62e7c74a5ffd650f8951b86b",
+  "kind": "Probe-only standalone master UI runtime extension",
+  "prepared_at": "2026-11-03T20:40:07.735434+00:00",
+  "reason": "Attempt1 isolated local-cluster master startup failed ClassNotFound scala.xml.NamespaceBinding; existing build excludes scala-xml to avoid cross-version resolver conflicts. This explicit cached-only probe runtime extension changes no source or dependency ledger.",
+  "version_evidence": {
+    "artifact": "scala-xml_2.13",
+    "cached_pom": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/apache/spark/spark-core_2.13/3.5.4/spark-core_2.13-3.5.4.pom",
+    "group": "org.scala-lang.modules",
+    "public_primary_source": "https://repo.maven.apache.org/maven2/org/apache/spark/spark-core_2.13/3.5.4/spark-core_2.13-3.5.4.pom",
+    "scope": "compile",
+    "sha256": "d1372b7c7c607f08b576e668c1d93348e26cf57c6fed34a6b5cfa7bdb399ddc2",
+    "version": "2.1.0"
+  }
+}

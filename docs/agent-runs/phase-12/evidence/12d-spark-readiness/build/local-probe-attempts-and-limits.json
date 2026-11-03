@@ -1,0 +1,43 @@
+{
+  "probe_attempts": [
+    {
+      "attempt": 1,
+      "cause": "Missing scala.xml.NamespaceBinding in intentionally reduced cached runtime; standalone Master UI startup fails then rpc timeout; no source failure or cloud claim.",
+      "exit": 2,
+      "seconds": 121.035,
+      "success_report": false
+    },
+    {
+      "attempt": 2,
+      "cause": "Synthetic SPARK_HOME launcher requires SPARK_SCALA_VERSION2.13; automatic executor bootstrap restarts reached Spark defaultlimit before stop, no usertask result.",
+      "exit": 2,
+      "seconds": 1.047,
+      "success_report": false
+    },
+    {
+      "attempt": 3,
+      "correction": "Same cached-only probe-runtime-v2 adds ScalaXML2.1.0 proven by Spark3.5.4 cachedPOM; explicitSPARK_SCALA_VERSION2.13 and spark.deploy.maxExecutorRetries0; source/basebaselinecp unchanged.",
+      "exit": 0,
+      "seconds": 2.248,
+      "success_report": true
+    }
+  ],
+  "sandbox_process_query_failure": "First /bin/ps read-only query denied by sandbox; distinct escalated exactPIDquery succeeded and found bothdriver/executorabsent. No process killbyname or existing process mutation.",
+  "scope_limit": "Separate JVM and bidirectional identical local absolutePOSIXpath evidence only. Not multihost, EMR, YARN, remote sharedmount, distributed wholepipeline or cost/deadline proof.",
+  "source_references": [
+    {
+      "claim": "Workers in driver JVM but launched executors in separate JVMs.",
+      "url": "https://raw.githubusercontent.com/apache/spark/v3.5.4/core/src/main/scala/org/apache/spark/deploy/LocalSparkCluster.scala"
+    },
+    {
+      "claim": "SPARK_SCALA_VERSION supplies explicit binaryversion; otherwise sourcebuilddirs required.",
+      "lines": "210-225",
+      "url": "https://raw.githubusercontent.com/apache/spark/v3.5.4/launcher/src/main/java/org/apache/spark/launcher/AbstractCommandBuilder.java"
+    },
+    {
+      "claim": "Cached exact published POM declares ScalaXML_2.13 2.1.0 compiledependency; proofhash in scala-xml-cached-source-proof.json.",
+      "url": "https://repo.maven.apache.org/maven2/org/apache/spark/spark-core_2.13/3.5.4/spark-core_2.13-3.5.4.pom"
+    }
+  ],
+  "version_evidence": "Actualruntime/implementation values retained. NullScalaReflect/Scala3versions not filled by assertion;8actualclass/sourcehashes validated against namedversionedartifacts."
+}

@@ -480,3 +480,29 @@ Authorized finalparsera31852d4…single savedstderr check returned exactly accep
 REPAIRS: Original COST_TYPES failure led to accepted legacy/modern cost-scope guards, B1 absence-only BillingViewArn and L1 dynamic/unknown-field rejection. M1 filename default removed; L1 typo checks and L2 canonical hash derivation accepted. Failed verify-billing-20261102-01 NOTIFICATION_DRIFT is preserved/consumed. Authorized single diagnostic led to missing-only ThresholdType compatibility and D1 pinned source citation588–594. Current fresh verify succeeded without modifying the AWS budget. Deferred N1b/N2 remain optional.
 
 Packet: evidence/12d-publication-output-verify-billing-20261103-02/. Gate SHA256: 6e1e20c10049f6440f81d7aaccfb4e08600a3bd7d495027c7fa67b0af3062b84. Operation: verify-billing-20261103-02. Source: 1aa13d71489ebd605cee9b9931bf12de61c18bc3. Verification receipt SHA256: 42a74eee8a6202598b2175e67d8914d2cf4eeacefb000844e32f7df38438eb90. Delivery and Phase12D completion remain unverified/false. This suffix is published only after genuine zero-match same-window scan and verify-before, with verify-after proving exact final bytes.
+
+
+## Subphase 12D — offline Spark readiness and same-JAR local proof
+
+# Local runtime attempts and preserved failures
+
+No AWS request, Terraform command, private billing read or spending was performed in this readiness work.
+
+The first targeted sbt launch used unsupported launcher argument `-offline` and exited1 before compilation. The corrected launch used the sbt offline property and passed11 readiness tests. The first fullcheck then ran1253 current log-counted tests with one failure in the unchanged independent source fence. Spark owner added capped JavaRDD collection and replaced the new probe's Option emptiness spelling. Existing DataFrame helper methods and the independent guard were preserved. The repaired fast gate passed12 readiness tests and7 independent safety tests before packaging. The final fullcheck is recorded separately; the earlier failure is retained.
+
+Root's first packaged baseline started under the default sandbox and exited1 on a denied local Spark socket bind. It created a partial output directory. The first escalated retry stopped at the runner's exclusive-output guard before launching Java, because that partial directory existed. Its observed Python AssertionError is `Refuse run reuse or overwrite`. The original failed command/stdout/stderr/result and original config are retained. A new output/checkpoint pair (`g1-a-attempt2`) preserved that partial run. The actual escalated retry succeeded with the same JAR, logical settings and immutable upstream manifests. This is a local sandbox correction, not a pipeline repair or an AWS retry.
+
+The second baseline used separately relocated byte-identical upstream inputs and shufflePartitions2 instead of1. Both completed with exactly the same run ID and code fingerprint. The comparator read all28 completed Parquet datasets, recalculated counts and production logical hashes, compared schemas, and checked both full-row multiset differences. It did not normalize physical or nested provenance. Both runs reported zero integrity violations and rejects.
+
+The separate-JVM probe's first reduced runtime lacked scala.xml for Spark's standalone master UI; it exited2 without a success report. The second, separately prepared cached-only runtime added the exact POM-declared Scala XML2.1.0 artifact, then exited2 because the synthetic SPARK_HOME launcher needed an explicit Scala binary version. The third attempt added SPARK_SCALA_VERSION=2.13 and disabled executor bootstrap restarts. It passed with actual distinct driver/executor PIDs and matching loaded class/source hashes. These probe-only runtime changes did not change the baseline classpath, JAR, application sources or build dependencies. Exact logs, public primary references and cached-POM proof are retained in the build evidence. No cloud compatibility follows from this local cluster.
+
+The local threaded probe succeeded and truthfully reported externalExecutorVerified=false. Requiring a distributed executor under local[2] then exited2 as expected and created no success report. The positive separate-process probe proves same-machine file visibility only; a multi-host shared mount and EMR/YARN runtime still require later design, independent review and human execution gates.
+
+After the final fullcheck had exited0, the build evidence finalizer's first overly broad assertion treated any `[error]` log line as an outer build failure. The repository's passing CheckFailurePathSpec intentionally injects a nested failure to test that the success marker cannot be written on a failed check. The corrected finalizer distinguishes this expected nested output from the actual outer exit0, current158 XML reports/1267 passing tests and fresh marker. Both finalization scripts and the erratum are retained. No tests were rerun or output changed to repair this metadata parser.
+
+Raw sibling Spark event logs remain under ignored target directories. The evidence includes compressed raw driver logs, complete completed-export archives and byte inventories. No generated partial output, old attempt, event log or failed journal was deleted or overwritten.
+
+
+## Subphase 12D — independent offline readiness APPROVE recorded
+
+No blocking defects. The report references optional L1 without identified path/evidence/criteria; retain as unspecified follow-up. Optional test-coverage notes are preserved verbatim. No source repair or retest is required for acceptance.

@@ -1,0 +1,35 @@
+{
+  "argv": [
+    "/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home/bin/java",
+    "-Xmx1g",
+    "-Djava.net.preferIPv4Stack=true",
+    "-cp",
+    "/Users/danny/Documents/UIC/CS441/ScholarChain/modules/entity-resolution/target/scala-3.3.4/classes:/Users/danny/Documents/UIC/CS441/ScholarChain/modules/core/target/scala-3.3.4/classes:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/scala-lang/scala3-library_3/3.3.4/scala3-library_3-3.3.4.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/lihaoyi/upickle_3/4.0.2/upickle_3-4.0.2.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/slf4j/slf4j-api/2.0.16/slf4j-api-2.0.16.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/scala-lang/scala-library/2.13.14/scala-library-2.13.14.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/lihaoyi/ujson_3/4.0.2/ujson_3-4.0.2.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/lihaoyi/upack_3/4.0.2/upack_3-4.0.2.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/lihaoyi/upickle-implicits_3/4.0.2/upickle-implicits_3-4.0.2.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/lihaoyi/upickle-core_3/4.0.2/upickle-core_3-4.0.2.jar:/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/lihaoyi/geny_3/1.1.1/geny_3-1.1.1.jar",
+    "edu.uic.cs441.scholarchain.entityresolution.Phase5Main",
+    "resolve",
+    "--input",
+    "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/upstream/hadoop/1bfb86b5-ec1c-468b-a7e8-1e52a6c0ab83",
+    "--policy",
+    "/Users/danny/Documents/UIC/CS441/ScholarChain/modules/entity-resolution/src/main/resources/phase5-policy.v1.json",
+    "--config",
+    "/Users/danny/Documents/UIC/CS441/ScholarChain/modules/entity-resolution/src/main/resources/phase5-config.v1.json",
+    "--llm-mode",
+    "disabled",
+    "--output",
+    "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/upstream/er"
+  ],
+  "environment": {
+    "AWS_EC2_METADATA_DISABLED": "true",
+    "HOME": "/Users/danny",
+    "JAVA_HOME": "/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home",
+    "LANG": "en_US.UTF-8",
+    "LOGNAME": "danny",
+    "PATH": "/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home/bin:/usr/bin:/bin",
+    "SPARK_LOCAL_HOSTNAME": "127.0.0.1",
+    "SPARK_LOCAL_IP": "127.0.0.1",
+    "TMPDIR": "/private/tmp",
+    "USER": "danny"
+  },
+  "started_at": "2026-11-03T19:46:50.606576+00:00",
+  "timeout_seconds": 180
+}

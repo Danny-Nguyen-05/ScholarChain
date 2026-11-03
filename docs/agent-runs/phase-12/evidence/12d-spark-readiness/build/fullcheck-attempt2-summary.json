@@ -1,0 +1,33 @@
+{
+  "AWS_calls": 0,
+  "XML_files": 158,
+  "XML_test_sum_matches_log": true,
+  "build_source_edits": 0,
+  "completed_at": "2026-11-03T20:49:20.546703+00:00",
+  "dependency_version_changes": 0,
+  "errors": 0,
+  "expected_nested_checkFailurePath_injected_error": true,
+  "failures": 0,
+  "fullcheck_exit": 0,
+  "fullcheck_seconds": 723.885,
+  "fullcheck_tests": 1267,
+  "marker_bytes_sha256": "8256e5f7c18e3947574470b2abb5000147fce1d43a7646b5023b9ed91117de2a",
+  "marker_timestamp": "1793738960408",
+  "module_counts": {
+    "buildVerification": 13,
+    "core": 207,
+    "entityResolution": 39,
+    "hadoop": 64,
+    "independentTests": 667,
+    "rag": 107,
+    "services": 40,
+    "sparkAnalytics": 50,
+    "storage": 80
+  },
+  "packaged_artifact_before_fullcheck": "Candidate used for actual offline baselines; now gate validates unchangedsource/JAR retrospectively, not independentreview or releaseapproval.",
+  "postprocess_attempt1_error": "Overbroad parser rejected intentionally injected nested error; full outer gate itself exit0, corrected parser binds passing negative test and final marker.",
+  "private_reads": 0,
+  "same_packaged_job_jar_sha256": "d52f11ebad5ec9e1ffdd1910d562023e934ce7ab62e7c74a5ffd650f8951b86b",
+  "source_files_unchanged_during_gate": 420,
+  "test_marker_written_after_all_stages": true
+}

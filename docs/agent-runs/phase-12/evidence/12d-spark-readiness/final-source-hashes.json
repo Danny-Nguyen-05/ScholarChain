@@ -1,0 +1,40 @@
+{
+  "absent_at_HEAD": [
+    "modules/spark/src/main/scala/edu/uic/cs441/scholarchain/spark/Phase12Readiness.scala",
+    "modules/spark/src/test/scala/edu/uic/cs441/scholarchain/spark/Phase12ReadinessSpec.scala",
+    "modules/spark/src/main/resources/phase12/g1-dblp.xml",
+    "modules/spark/src/main/resources/phase12/empty.jsonl"
+  ],
+  "files": [
+    {
+      "bytes": 53584,
+      "path": "modules/spark/README.md",
+      "sha256": "958bd1409e6a4735ddb9e16f93ef457768ba6c0c7cfd8565fb216f0016a153c0"
+    },
+    {
+      "bytes": 1390,
+      "path": "modules/spark/src/main/scala/edu/uic/cs441/scholarchain/spark/BoundedActions.scala",
+      "sha256": "c53a1c72abeabd6335b07e6179b86ff759aa4244a61b4157ebb4a71d333ab7c2"
+    },
+    {
+      "bytes": 15641,
+      "path": "modules/spark/src/main/scala/edu/uic/cs441/scholarchain/spark/Phase12Readiness.scala",
+      "sha256": "7388e1b5fa38317701c25118f30c6e84463858af3e4b12e4e98569df2435c614"
+    },
+    {
+      "bytes": 12238,
+      "path": "modules/spark/src/test/scala/edu/uic/cs441/scholarchain/spark/Phase12ReadinessSpec.scala",
+      "sha256": "5bb4cdd5f94b1d323d281dcb11469c8a37c6c4f522c60c42b1087145c60c1eb6"
+    },
+    {
+      "bytes": 1594,
+      "path": "modules/spark/src/main/resources/phase12/g1-dblp.xml",
+      "sha256": "55e806990e062f7c36c251bc0cd0eb2ca55559c014f9eda0c86d9132f5b67d8a"
+    },
+    {
+      "bytes": 0,
+      "path": "modules/spark/src/main/resources/phase12/empty.jsonl",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ]
+}

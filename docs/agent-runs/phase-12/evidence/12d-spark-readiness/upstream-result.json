@@ -1,0 +1,15 @@
+{
+  "AWS_calls": 0,
+  "ER_exit": 0,
+  "ER_mode": "disabled",
+  "Hadoop_exit": 0,
+  "completion_markers_generated_by_unchanged_pipelines": true,
+  "er_manifest_sha256": "1528d2427db6d85a334267b767f270828395c3b236472ad47dcfd3aa2ccc0f34",
+  "er_root": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/upstream/er",
+  "er_run_id": "run:2d27047b-429a-4a0e-8d7a-8fd836ad1762",
+  "hadoop_manifest_sha256": "4229afab659562a35ff2b3a872be250d1d3e725ce114acac524cb16dbe8c5201",
+  "hadoop_root": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/upstream/hadoop/1bfb86b5-ec1c-468b-a7e8-1e52a6c0ab83",
+  "hadoop_run_id": "run:1bfb86b5-ec1c-468b-a7e8-1e52a6c0ab83",
+  "kind": "Observed genuine local upstream production using synthetic fixture",
+  "synthetic": true
+}

@@ -1,0 +1,72 @@
+{
+  "benchmarkPairs": [
+    {
+      "endpointKind": "dblp-name",
+      "left": "A",
+      "right": "G"
+    },
+    {
+      "endpointKind": "dblp-name",
+      "left": "A",
+      "right": "H"
+    }
+  ],
+  "checkpointDirectory": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/baseline/checkpoint-g1-a",
+  "checkpointInterval": 5,
+  "communityMaxIterations": 20,
+  "componentMaxIterations": 50,
+  "configSchemaVersion": "scholarchain.spark-analytics-config.v1",
+  "entityResolutionRunRoot": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/bundles/g1-a/er",
+  "failOnHardInvariant": true,
+  "graphPolicyVersion": "graph-v1",
+  "hadoopRunRoot": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/bundles/g1-a/hadoop",
+  "identityPolicyVersion": "identity-v1",
+  "kCoreMaxIterations": 50,
+  "maxHops": 6,
+  "maxTeamWorkLimit": 20,
+  "outputRoot": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/baseline/g1-a",
+  "pathSampleSourceCount": 32,
+  "representativePolicyVersion": "representative-v1",
+  "representativeWorkLimit": 5,
+  "sampledPathPairCount": 20,
+  "samplingSeed": 441,
+  "shufflePartitions": 1,
+  "windows": [
+    {
+      "comparisonOrder": null,
+      "endYear": null,
+      "startYear": null,
+      "windowId": "all-years"
+    },
+    {
+      "comparisonOrder": 0,
+      "endYear": 2009,
+      "startYear": null,
+      "windowId": "through-2009"
+    },
+    {
+      "comparisonOrder": 1,
+      "endYear": 2014,
+      "startYear": 2010,
+      "windowId": "2010-2014"
+    },
+    {
+      "comparisonOrder": 2,
+      "endYear": 2019,
+      "startYear": 2015,
+      "windowId": "2015-2019"
+    },
+    {
+      "comparisonOrder": 3,
+      "endYear": 2026,
+      "startYear": 2020,
+      "windowId": "2020-2026"
+    },
+    {
+      "comparisonOrder": null,
+      "endYear": 2026,
+      "startYear": 2015,
+      "windowId": "since-2015"
+    }
+  ]
+}

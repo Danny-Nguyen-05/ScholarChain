@@ -1,0 +1,52 @@
+[
+  {
+    "base_bytes": 94372,
+    "base_sha256": "f2027455c44581a76d61c611852673d4a7f471930dc541bd914dab19b20e404b",
+    "final_bytes": 94635,
+    "final_sha256": "666d15a5bfdbbdf15a66541c3b822a258d4e90edab680fcb05650c31f4916a2b",
+    "path": "docs/agent-runs/phase-12/prompt.md",
+    "suffix": "record-suffixes/prompt.md",
+    "suffix_bytes": 263,
+    "suffix_sha256": "d84f59d232e9350bc569b3f12c1b9a009b7f3480fbeaaea7b8de25cade41f6ca"
+  },
+  {
+    "base_bytes": 163402,
+    "base_sha256": "e4ca956132423516ce67c908160f3f32e5a2861045901a9c1e7056be34bd2951",
+    "final_bytes": 166645,
+    "final_sha256": "0dfe112c090d35d046663ce5ed9e6af842cf3baf91392b63fce9ff3ba1823b12",
+    "path": "docs/agent-runs/phase-12/owner-report.md",
+    "suffix": "record-suffixes/owner-report.md",
+    "suffix_bytes": 3243,
+    "suffix_sha256": "845bbc0961ca12a024055238ccc42b04b293a02221eddebb2531434313b95083"
+  },
+  {
+    "base_bytes": 148317,
+    "base_sha256": "db1832eecd44e3ab3ef0b563bb45832a2cb6a1dae2736949c1c07e8c3f38f40b",
+    "final_bytes": 148599,
+    "final_sha256": "613c3cfb64b1119c1c0e5117d47a2261e2e14132092440e451d5db4f5569059c",
+    "path": "docs/agent-runs/phase-12/test-report.md",
+    "suffix": "record-suffixes/test-report.md",
+    "suffix_bytes": 282,
+    "suffix_sha256": "9c7f30e1e4ce64623f3e5fdd2d3af54147959d4a407870906ba632cc9f821f79"
+  },
+  {
+    "base_bytes": 72826,
+    "base_sha256": "5f5cb3e1c94ba8cff555b9e1468356268dcee605ac9751e60bfcbd30e121dda0",
+    "final_bytes": 73135,
+    "final_sha256": "05c340dc73d0ce4d48a01feea64cb9de562a179a26b1e9b4417567e882e104a3",
+    "path": "docs/agent-runs/phase-12/repairs.md",
+    "suffix": "record-suffixes/repairs.md",
+    "suffix_bytes": 309,
+    "suffix_sha256": "0a8e933506b6c7a03961e76634b4f7935b5e9e35ff2530ef11a21906c26c2d53"
+  },
+  {
+    "base_bytes": 262435,
+    "base_sha256": "bf5609fa776198232820734ec10d39210f2cda548777aea2a1ea2cc3ed846679",
+    "final_bytes": 262864,
+    "final_sha256": "2d124a2da61b51314dff9127744225ec58ab676b52aeea681700adc33de8914c",
+    "path": "docs/agent-runs/phase-12/review.md",
+    "suffix": "record-suffixes/review.md",
+    "suffix_bytes": 429,
+    "suffix_sha256": "b05bdc6b00a46f9190ae2b02a53d2563879c932977352e180293499252871876"
+  }
+]

@@ -1,0 +1,34 @@
+
+
+## Subphase 12D — offline Spark readiness and same-JAR local proof
+
+# Phase12D — offline Spark technical readiness
+
+User work order: “alright let's move on” after explicit completion of commit/push4232ed12a7941c6c15d6f562f4f61fdd6928ebca and identification of offline EMR readiness as the next step. Branch phase-12. This is a coordinator transcription of bounded offline work, not a human live approval or a renewed billing gate.
+
+Owners and allowed paths:
+- spark-engineer /root/spark_12d_readiness: additive modules/spark readiness CLI/probe/comparator, synthetic G1 resources, module tests and README. Existing Phase6 pipeline/readers/export semantics and shared contracts remain unchanged. No child delegation.
+- build-engineer /root/build_12d_readiness: JDK17 packaging, bounded local toolchain/classpath checks and final deterministic gate. Build source changes only if a demonstrated owned prerequisite is routed; no dependency-version changes are presumed. Do not run concurrent sbt processes. No child delegation.
+- coordinator /root: this evidence directory, exact operational local input/config instantiation, existing CLI runs after packaging, evidence and final review handoff. Human records immutable; frozen billing packet and its existing exact record suffix history are preserved.
+
+Acceptance targets:
+1. Explicitly synthetic portable G1 A–J/w1…w9 inputs. Produce completed Hadoop and offline ER inputs through unchanged public pipeline entry points; never fabricate upstream completion markers or substitute historical real data. Retain source/config/hash/complete-run lineage and package/file inventory.
+2. Rebuild current Spark job JAR using existing verified task. Audit found old generated2026-10-22 JAR stale and without Phase6Main.class; it must not be used. Run full Phase6 CLI baseline using actual assembled JAR, not loose project class directories. Bind artifact SHA and actual loaded driver/runtime libraries. Use identical assembled bytes for any later comparator/runtime.
+3. Add bounded class-origin/shared-path probe which reports actually loaded Spark, scala-library, scala-reflect and scala3-library versions/origins on driver and task JVM. A local[*] task is one process and cannot pass a distributed-required gate. A local-cluster executor may demonstrate process separation locally, but cannot demonstrate multi-host EMR/YARN compatibility or shared mounts. No unsupported distributed claim.
+4. Full28-table comparison from actual completed Parquet runs with exact runId/codeVersion/upstream manifest hashes/logical configuration, schema, row counts and content hashes; no silent context.runId normalization, table omission or part-file-name comparison. Same assembled JAR and copied immutable upstream manifests avoid historical class-directory fingerprint differences.
+5. Document the common absolute POSIX mount needed by current NIO paths and Spark default-filesystem mapping. Actual remote/shared-filesystem proof remains a later deployment prerequisite. Do not change production path semantics to make the demonstration pass.
+6. Meaningful module feature tests for rejection paths and actual bounded local probe/comparison. Build owner runs targeted gates and final source-frozen JDK17 sbt check, then packages/tests artifact as appropriate. Report failures/retries exactly. Do not claim anything unrun.
+
+No AWS/account/CostExplorer/paid API, download of research data, private/recipient/state/plan/credential reads, Terraform plan/apply/destroy, IAM change, EMR resource, reviewer launch, commit/push or Phase13 work is authorized here. Public dependency/tool documentation may be read; prefer cached dependencies/offline sbt. Any missing tool/dependency is reported before changing external state.
+
+Billing state carried forward: independent publication/candidate review APPROVE and exact105-file commit/push are complete. Budget configured/verified and actual98-file scan passed with zero matches; human later reported recipient “verified”. That is activation testimony, not a proven spending-alert delivery. Same-disk backup limit and F4 inventory/conservative allowance remain open. Proposed USD5 spike cap, USD10 remaining all-EMR reserve and USD5.09 margin are planning constraints, not spending permission. Separate non-root deployment identity, isolated genuine plan, independent elapsed-lifetime termination mechanism and personal cap/region/types/counts/runtime/teardown gate remain mandatory. Original verification window is not renewed and started operations are never replayed.
+
+The prior publication review N1 (post-freeze runtime/source-control metadata archival) remains for the next separately authorized actual-recipient-scanned publication round. This offline readiness work does not retroactively scan that metadata or overwrite the98-file frozen packet. N2 older account-identifying path components remain a separate optional human decision; N3was satisfied by explicit inclusion of15ignored logs in4232ed1.
+
+Stop at an independent read-only readiness review handoff after implementing and verifying this bounded local work. Do not chain into live EMR authoring/execution or infer full Phase12D/Phase12 completion.
+
+## Owned integration repair and local scheduling clarification
+
+The first full source-frozen check completed with1253current log-counted tests and one failure in the unchanged independent Spark source fence; the new probe used direct JavaRDD collect outside BoundedActions and option isEmpty tokens. The Spark owner may add a capped JavaRDD helper to owned BoundedActions while preserving existing methods, route the probe through cap1, change the master-option spelling and add bounded-cap/overflow feature tests. The independent guard and historical Phase6 algorithms remain unchanged. Run targeted module plus exact independent safety suite before the fresh full check; preserve the first full failure and distinguish old XML files from tests actually run.
+
+The local machine's physical memory was read via /usr/sbin/sysctl -n hw.memsize as34359738368bytes (32GiB), with no source/data/config/credential reads. After repaired fast gates and a source freeze, packaging/runtime-classpath export may precede the full repository check to allow one bounded local[2] baseline process to overlap that check. The candidate JAR does not gain acceptance until the full final-source check succeeds. No concurrent sbt processes or source edits are allowed. At most one baseline, the full check and a small1executor probe may overlap; preserve each timeout/failure without substituting another source artifact under the same claimed evidence.

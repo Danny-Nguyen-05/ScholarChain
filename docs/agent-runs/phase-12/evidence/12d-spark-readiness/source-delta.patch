@@ -1,0 +1,831 @@
+diff --git a/modules/spark/README.md b/modules/spark/README.md
+index 5ddb18b..21ae1d3 100644
+--- a/modules/spark/README.md
++++ b/modules/spark/README.md
+@@ -190,3 +190,62 @@ An edge's `evidenceTable:String` is `edges/type=coauthored_with_support`; `evide
+ Unknown first/last collaboration years and unbounded window years become empty numeric cells, so Neptune omits those properties; no dates are fabricated and the frozen numeric-window domain contract is unchanged. NamedText properties remain losslessly available in `propertiesJson:String` rather than being dynamically expanded into potentially invalid CSV column names. Source `provenanceJson:String` and/or `contextJson:String` retain lineage. Existing Parquet tables, their ID formulas, and the four historical proposal manifests keep their existing shapes. The additional sidecar is the concrete CSV contract for the later storage loader; no AWS loader or reader executes here.
+ 
+ The new compiled export changes the code fingerprint and therefore future full-pipeline run IDs. Previously completed runs are not reopened or modified. Phase 7A validates bounded Spark-shaped fixtures; it does not claim a fresh real-data replay or live Neptune acceptance. The local NIO export-root limitation is inherited from `Phase6Export`; cluster/object-store publication remains a later gate.
++
++
++## Phase 12 offline readiness tools
++
++`Phase12Readiness` is an additive operational CLI. It changes no existing Phase 6 readers,
++ID formulas, provenance, completion markers or exports, and performs no AWS request.
++The resources `phase12/g1-dblp.xml` and `phase12/empty.jsonl` are explicitly synthetic inputs:
++nine DBLP-shaped G1 works with A–J test labels, including repeated A in w9 and solo J in w8.
++Use the unchanged Hadoop preparation and offline (`--llm-mode disabled`) Phase 5 pipeline to
++produce real completed upstream runs. Do not manufacture completion markers or replace real
++data with a claimed G1 run. This DBLP-only topology does not test cross-source duplicate merging.
++
++Build one current `sparkJobJar` using JDK 17. Use that exact JAR for both local and eventual
++remote `Phase6Main` invocations and for the comparison command. Copy the completed upstream
++files byte-for-byte; only deployment paths, checkpoints, output roots and shuffle counts may
++change in the Spark configuration. Its logical settings must remain equal. The same JAR and
++upstream/logical bindings produce the same run ID, including nested `context.runId`; there is
++no provenance normalization in this tool.
++
++Select this entry point with `spark-submit --class edu.uic.cs441.scholarchain.spark.Phase12Readiness`
++or an equivalent Java invocation with the same job JAR and the selected runtime dependencies.
++Positional commands are:
++
++```text
++probe SHARED_ABSOLUTE_DIRECTORY OUTPUT_JSON local|distributed
++compare LEFT_COMPLETED_SPARK_RUN RIGHT_COMPLETED_SPARK_RUN OUTPUT_JSON
++```
++
++Paths must be absolute and normalized, with existing non-symlink parent directories. Outputs
++are created exclusively, never overwritten. Probe creates a new random exchange directory
++and retains it on success or failure; no evidence cleanup is automatic. The probe observes
++Spark, Scala standard-library, reflection and Scala 3 class origins, class-byte SHA256 and
++code-source JAR SHA256 on the driver and an actual task. Spark and Scala standard-library
++runtime versions are observed directly. Reflection/Scala 3 runtime versions are explicitly
++null when unavailable; package implementation versions may also be null in the merged job
++JAR. The build owner must retain resolved artifact versions and their matching class hashes
++before claiming exact version alignment. Job-JAR filenames or expected pins are not measured
++component versions.
++
++The task reads a unique driver token, creates its own exclusive proof file at the same absolute
++path, and the driver verifies that exact proof. `distributed` additionally refuses executor ID
++`driver`, unavailable identity or the same host/PID as the driver. `local` records the actual
++result without upgrading it to distributed evidence. Neither a local task nor a distinct local
++worker JVM proves that EMR nodes share a mount. `cloudCompatibilityVerified` remains false.
++
++The proposed unchanged-application filesystem strategy requires a reviewed shared POSIX mount
++at the identical absolute path on driver and executors and Hadoop `fs.defaultFS=file:///`.
++The probe checks that default and bidirectional visibility, but the deployment must establish
++the mount, permissions, quotas, encryption and failure behavior. Bare paths under EMR's default
++HDFS, or separate executor-local `file:///` directories, are insufficient. No such mount is
++provisioned here; S3 is not automatically a Java NIO shared filesystem.
++
++Comparison checks both completion markers and exact semantic metadata, requires the current
++code fingerprint to match the runs, and requires the exact 28-table inventory. It reads actual
++Parquet, verifies schemas, recomputes every count and existing logical content hash, compares
++full row multisets in both directions (including `run_id` and nested provenance), and refuses
++stored-hash/count mismatches. It does not compare physical part filenames or operational event
++times. A passing same-machine comparison is local readiness evidence only; later cloud runtime,
++shared filesystem, independent deadline, spending and teardown gates remain open.
+diff --git a/modules/spark/src/main/scala/edu/uic/cs441/scholarchain/spark/BoundedActions.scala b/modules/spark/src/main/scala/edu/uic/cs441/scholarchain/spark/BoundedActions.scala
+index aa39df6..f410278 100644
+--- a/modules/spark/src/main/scala/edu/uic/cs441/scholarchain/spark/BoundedActions.scala
++++ b/modules/spark/src/main/scala/edu/uic/cs441/scholarchain/spark/BoundedActions.scala
+@@ -1,11 +1,25 @@
+ package edu.uic.cs441.scholarchain.spark
+ 
+ import org.apache.spark.sql.{DataFrame, Row}
++import org.apache.spark.api.java.JavaRDD
++import scala.jdk.CollectionConverters.*
+ 
+ /** The only production entry point for driver-side DataFrame actions. Graph tables remain
+   * distributed.
+   */
+ object BoundedActions {
++
++  /** A small operational Java API result, with an extra sentinel row to reject truncation. */
++  def cappedJava[A](values: JavaRDD[A], limit: Int): Vector[A] = {
++    require(
++      limit > 0 && limit < Int.MaxValue,
++      "positive non-overflowing driver result limit required"
++    )
++    val rows = values.take(limit + 1).asScala.toVector
++    require(rows.size <= limit, s"driver result exceeds limit $limit")
++    rows
++  }
++
+   def count(table: DataFrame): Long = table.count()
+ 
+   def exists(table: DataFrame): Boolean = table.limit(1).count() != 0L
+diff --git a/modules/spark/src/main/scala/edu/uic/cs441/scholarchain/spark/Phase12Readiness.scala b/modules/spark/src/main/scala/edu/uic/cs441/scholarchain/spark/Phase12Readiness.scala
+new file mode 100644
+index 0000000..921ac27
+--- /dev/null
++++ b/modules/spark/src/main/scala/edu/uic/cs441/scholarchain/spark/Phase12Readiness.scala
+@@ -0,0 +1,399 @@
++package edu.uic.cs441.scholarchain.spark
++
++import edu.uic.cs441.scholarchain.core.StableIds
++import java.lang.management.ManagementFactory
++import java.net.InetAddress
++import java.nio.charset.StandardCharsets.UTF_8
++import java.nio.file.{Files, Path, StandardOpenOption}
++import java.security.MessageDigest
++import java.util.UUID
++import java.util.jar.JarFile
++import org.apache.spark.{SparkEnv, TaskContext}
++import org.apache.spark.api.java.JavaSparkContext
++import org.apache.spark.api.java.function.FlatMapFunction
++import org.apache.spark.sql.{DataFrame, SparkSession}
++import scala.jdk.CollectionConverters.*
++import scala.util.Try
++
++/** Additive operational evidence for Phase 12. Never creates cloud resources or changes job IDs. */
++object Phase12Readiness {
++  private val marker = "_SCHOLARCHAIN_SPARK_COMPLETE"
++  private val semanticFields = Vector(
++    "runId",
++    "codeVersion",
++    "hadoopRunId",
++    "hadoopManifestHash",
++    "entityResolutionRunId",
++    "entityResolutionManifestHash",
++    "entityResolutionPolicyVersion",
++    "entityResolutionPolicyHash",
++    "logicalConfigFingerprint",
++    "identityPolicyVersion",
++    "representativePolicyVersion",
++    "graphPolicyVersion",
++    "windows",
++    "seed",
++    "contentHashMethod"
++  )
++  private[spark] val datasets: Set[String] = Set(
++    "nodes/type=researcher",
++    "nodes/type=author_mention",
++    "nodes/type=work",
++    "nodes/type=venue",
++    "nodes/type=institution",
++    "nodes/type=topic",
++    "nodes/type=work_sources",
++    "edges/type=authored",
++    "edges/type=resolves_to",
++    "edges/type=published_in",
++    "edges/type=affiliated_with",
++    "edges/type=has_topic",
++    "edges/type=coauthored_with",
++    "edges/type=coauthored_with_support",
++    "metrics/type=researcher_collaboration",
++    "metrics/type=components",
++    "metrics/type=component_summaries",
++    "metrics/type=communities",
++    "metrics/type=community_summaries",
++    "metrics/type=cross_community_edges",
++    "metrics/type=bridges",
++    "metrics/type=kcore",
++    "metrics/type=temporal_changes",
++    "metrics/type=path_length_estimate",
++    "path-evidence",
++    "semantic-summaries",
++    "integrity/violations",
++    "integrity/rejects"
++  )
++
++  private def digest(path: Path): String = {
++    val hash = MessageDigest.getInstance("SHA-256")
++    val input = Files.newInputStream(path)
++    try {
++      val buffer = new Array[Byte](65536)
++      var n = input.read(buffer)
++      while (n >= 0) {
++        if (n > 0) hash.update(buffer, 0, n)
++        n = input.read(buffer)
++      }
++      hash.digest().map(b => f"${b & 255}%02x").mkString
++    } finally input.close()
++  }
++
++  private[spark] def safeDirectory(path: Path): Path = {
++    require(path.isAbsolute && path.normalize() == path, "absolute normalized directory required")
++    var node: Path = path
++    while (node != null) {
++      require(!Files.isSymbolicLink(node), "symlink path refused")
++      node = node.getParent
++    }
++    require(Files.isDirectory(path), "existing directory required")
++    path
++  }
++
++  private[spark] def writeNew(path: Path, value: ujson.Value): Unit = {
++    require(path.isAbsolute && path.normalize() == path, "absolute normalized output required")
++    safeDirectory(path.getParent)
++    require(!Files.exists(path) && !Files.isSymbolicLink(path), "output already exists")
++    Files.writeString(
++      path,
++      value.render(indent = 2) + "\n",
++      UTF_8,
++      StandardOpenOption.CREATE_NEW,
++      StandardOpenOption.WRITE
++    )
++  }
++
++  private def session(name: String): SparkSession = {
++    val builder = SparkSession
++      .builder()
++      .appName(name)
++      .config("spark.ui.enabled", "false")
++      .config("spark.sql.session.timeZone", "UTC")
++      .config("spark.task.maxFailures", "1")
++    if (!sys.props.get("spark.master").isDefined && !sys.env.get("SPARK_MASTER").isDefined)
++      builder.master("local[2]")
++    builder.getOrCreate()
++  }
++
++  private[spark] def processSnapshot(role: String): ujson.Obj = {
++    val classes = Vector(
++      ("spark", "org.apache.spark.SparkContext", Some(org.apache.spark.SPARK_VERSION)),
++      ("scala-library", "scala.Option", Some(scala.util.Properties.versionNumberString)),
++      ("scala-reflect", "scala.reflect.api.Universe", None),
++      ("scala3-library", "scala.deriving.Mirror", None)
++    )
++    val sources = scala.collection.mutable.Map.empty[Path, String]
++    val libraries = classes.map { case (component, name, runtimeVersion) =>
++      val klass = Class.forName(name, false, Thread.currentThread().getContextClassLoader)
++      val location = Path.of(klass.getProtectionDomain.getCodeSource.getLocation.toURI)
++      val entry = name.replace('.', '/') + ".class"
++      val bytes =
++        if (Files.isDirectory(location)) Files.readAllBytes(location.resolve(entry))
++        else {
++          val jar = new JarFile(location.toFile)
++          try {
++            val item = jar.getJarEntry(entry)
++            require(item != null, "loaded class source entry unavailable")
++            val input = jar.getInputStream(item)
++            try input.readAllBytes()
++            finally input.close()
++          } finally jar.close()
++        }
++      val sourceHash =
++        if (Files.isRegularFile(location))
++          ujson.Str(sources.getOrElseUpdate(location, digest(location)))
++        else ujson.Null
++      ujson.Obj(
++        "component" -> component,
++        "className" -> name,
++        "origin" -> location.toString,
++        "classSha256" -> MessageDigest
++          .getInstance("SHA-256")
++          .digest(bytes)
++          .map(b => f"${b & 255}%02x")
++          .mkString,
++        "codeSourceSha256" -> sourceHash,
++        "runtimeVersion" -> runtimeVersion.map(ujson.Str(_)).getOrElse(ujson.Null),
++        "implementationVersion" -> Option(klass.getPackage.getImplementationVersion)
++          .map(ujson.Str(_))
++          .getOrElse(ujson.Null)
++      )
++    }
++    ujson.Obj(
++      "role" -> role,
++      "host" -> InetAddress.getLocalHost.getHostName,
++      "pid" -> ProcessHandle.current().pid().toString,
++      "jvmStartTime" -> ManagementFactory.getRuntimeMXBean.getStartTime.toString,
++      "executorId" -> Option(SparkEnv.get).map(_.executorId).getOrElse("unavailable"),
++      "javaVersion" -> System.getProperty("java.version"),
++      "libraries" -> ujson.Arr.from(libraries)
++    )
++  }
++
++  private[spark] def requireExternal(driver: ujson.Value, executor: ujson.Value): Unit = {
++    require(
++      executor("executorId").str != "driver" && executor("executorId").str != "unavailable",
++      "non-driver executor required"
++    )
++    require(
++      driver("host").str != executor("host").str || driver("pid").str != executor("pid").str,
++      "executor must run outside driver process"
++    )
++  }
++
++  def probe(shared: Path, output: Path, requireDistributed: Boolean): ujson.Value = {
++    safeDirectory(shared); safeDirectory(output.getParent)
++    require(!Files.exists(output) && !Files.isSymbolicLink(output), "output already exists")
++    val token = UUID.randomUUID().toString
++    val exchange = shared.resolve("phase12-probe-" + token)
++    Files.createDirectory(exchange)
++    Files.writeString(
++      exchange.resolve("driver-token.txt"),
++      token,
++      UTF_8,
++      StandardOpenOption.CREATE_NEW,
++      StandardOpenOption.WRITE
++    )
++    val spark = session("ScholarChain Phase12 runtime and filesystem probe")
++    try {
++      require(
++        spark.sparkContext.hadoopConfiguration.get("fs.defaultFS", "file:///") == "file:///",
++        "identical POSIX mount strategy requires fs.defaultFS=file:///"
++      )
++      val driver = processSnapshot("driver")
++      val sharedName = exchange.toString
++      val task = new FlatMapFunction[java.util.Iterator[Integer], String] {
++        override def call(ignored: java.util.Iterator[Integer]): java.util.Iterator[String] = {
++          val directory = Path.of(sharedName)
++          safeDirectory(directory)
++          require(
++            Files.readString(directory.resolve("driver-token.txt"), UTF_8) == token,
++            "executor cannot see driver shared token"
++          )
++          val snapshot = processSnapshot("executor-task")
++          val proof = "executor-" + TaskContext.get().taskAttemptId() + ".json"
++          snapshot("proofFile") = ujson.Str(proof)
++          snapshot("sharedToken") = ujson.Str(token)
++          writeNew(directory.resolve(proof), snapshot)
++          java.util.Collections.singletonList(snapshot.render()).iterator()
++        }
++      }
++      val reportRows = JavaSparkContext
++        .fromSparkContext(spark.sparkContext)
++        .parallelize(java.util.Collections.singletonList(Integer.valueOf(1)), 1)
++        .mapPartitions(task)
++      val reports = BoundedActions.cappedJava(reportRows, 1).map(ujson.read(_))
++      require(reports.size == 1, "exactly one task report required")
++      reports.foreach { report =>
++        require(report("sharedToken").str == token, "shared token mismatch")
++        val path = exchange.resolve(report("proofFile").str)
++        require(
++          ujson.read(Files.readString(path, UTF_8)) == report,
++          "driver cannot see executor shared proof"
++        )
++        if (requireDistributed) requireExternal(driver, report)
++      }
++      val external = reports.forall { report =>
++        Try(requireExternal(driver, report)).isSuccess
++      }
++      val result = ujson.Obj(
++        "schemaVersion" -> "scholarchain.phase12-readiness.v1",
++        "stage" -> "probe",
++        "driver" -> driver,
++        "taskProcesses" -> ujson.Arr.from(reports),
++        "sharedAbsoluteDirectory" -> shared.toString,
++        "exchangeDirectory" -> exchange.toString,
++        "driverToTaskAndBackVerified" -> true,
++        "externalExecutorVerified" -> external,
++        "distributedRequired" -> requireDistributed,
++        "cloudCompatibilityVerified" -> false,
++        "componentVersionQualification" -> "Null versions are unknown; match class/source hashes to the resolved build artifact inventory."
++      )
++      writeNew(output, result); result
++    } finally spark.stop()
++  }
++
++  private[spark] def completedMetadata(root: Path): ujson.Value = {
++    safeDirectory(root)
++    def text(name: String): String = {
++      val path = root.resolve(name)
++      require(
++        Files.isRegularFile(path) && !Files.isSymbolicLink(path),
++        "completed output file required"
++      )
++      Files.readString(path, UTF_8)
++    }
++    val manifest = text("run-manifest.json")
++    val metadata = text("run-metadata.json")
++    require(
++      text(marker) == StableIds.sha256Hex(manifest + "\n" + metadata) + "\n",
++      "completion hash mismatch"
++    )
++    val parsed = ujson.read(metadata)
++    require(ujson.read(manifest)("runId") == parsed("runId"), "manifest runId mismatch")
++    require(parsed("contentHashMethod").str == Phase6Export.hashMethod, "hash method mismatch")
++    parsed
++  }
++
++  private[spark] def requireSameSemantics(left: ujson.Value, right: ujson.Value): Unit = {
++    semanticFields.foreach { field =>
++      require(
++        left.obj.contains(field) && right.obj.contains(field) && left(field) == right(field),
++        "semantic metadata mismatch: " + field
++      )
++    }
++  }
++
++  private[spark] def tableInventory(metadata: ujson.Value): Map[String, ujson.Value] = {
++    val entries = metadata("tables").arr.toVector
++    val names = entries.map(_("dataset").str)
++    require(
++      names.size == names.distinct.size && names.toSet == datasets,
++      "exact 28-table inventory required"
++    )
++    entries.foreach { entry =>
++      require(entry("path").str == entry("dataset").str, "noncanonical table path")
++      require(entry("rowCount").str.toLong >= 0L, "nonnegative table count required")
++      require(entry("contentHash").str.matches("[0-9a-f]{64}"), "table hash required")
++    }
++    entries.map(row => row("dataset").str -> row).toMap
++  }
++
++  private[spark] def compareTable(
++      name: String,
++      left: DataFrame,
++      right: DataFrame,
++      expectedLeft: ujson.Value,
++      expectedRight: ujson.Value
++  ): ujson.Value = {
++    require(left.schema == right.schema, "table schema mismatch: " + name)
++    val leftCount = BoundedActions.count(left)
++    val rightCount = BoundedActions.count(right)
++    val leftHash = Phase6Export.logicalTableHash(left)
++    val rightHash = Phase6Export.logicalTableHash(right)
++    require(
++      leftCount == expectedLeft("rowCount").str.toLong &&
++        rightCount == expectedRight("rowCount").str.toLong,
++      "stored row count mismatch: " + name
++    )
++    require(
++      leftHash == expectedLeft("contentHash").str &&
++        rightHash == expectedRight("contentHash").str,
++      "stored logical hash mismatch: " + name
++    )
++    require(leftCount == rightCount && leftHash == rightHash, "logical table mismatch: " + name)
++    // The production logical hash excludes only physical run_id. Preserve it in this stronger
++    // bounded readiness equality as well; nested context/run IDs are never normalized.
++    require(
++      !BoundedActions.exists(left.exceptAll(right)) &&
++        !BoundedActions.exists(right.exceptAll(left)),
++      "full row multiset mismatch: " + name
++    )
++    ujson.Obj(
++      "dataset" -> name,
++      "rowCount" -> leftCount.toString,
++      "contentHash" -> leftHash,
++      "exactSchemaAndRowsMatch" -> true
++    )
++  }
++
++  def compare(left: Path, right: Path, output: Path): ujson.Value = {
++    safeDirectory(output.getParent)
++    require(!Files.exists(output) && !Files.isSymbolicLink(output), "output already exists")
++    val lm = completedMetadata(left); val rm = completedMetadata(right)
++    requireSameSemantics(lm, rm)
++    require(
++      lm("codeVersion").str == Phase6Main.codeFingerprint,
++      "comparison must use the same packaged code as both runs"
++    )
++    val lt = tableInventory(lm); val rt = tableInventory(rm)
++    val spark = session("ScholarChain Phase12 exact same-artifact comparison")
++    try {
++      val compared = datasets.toVector.sorted.map { name =>
++        val lp = left.resolve(name); val rp = right.resolve(name)
++        safeDirectory(lp); safeDirectory(rp)
++        compareTable(
++          name,
++          spark.read.parquet(lp.toString),
++          spark.read.parquet(rp.toString),
++          lt(name),
++          rt(name)
++        )
++      }
++      val result = ujson.Obj(
++        "schemaVersion" -> "scholarchain.phase12-readiness.v1",
++        "stage" -> "compare",
++        "runId" -> lm("runId"),
++        "codeVersion" -> lm("codeVersion"),
++        "hadoopManifestHash" -> lm("hadoopManifestHash"),
++        "entityResolutionManifestHash" -> lm("entityResolutionManifestHash"),
++        "logicalConfigFingerprint" -> lm("logicalConfigFingerprint"),
++        "tables" -> ujson.Arr.from(compared),
++        "tablesCompared" -> datasets.size,
++        "provenanceNormalization" -> "none",
++        "allExactRowsMatch" -> true,
++        "cloudCompatibilityVerified" -> false
++      )
++      writeNew(output, result); result
++    } finally spark.stop()
++  }
++
++  def run(args: Array[String]): Either[String, ujson.Value] = Try {
++    args.toVector match {
++      case Vector("probe", shared, output, mode) if Set("local", "distributed")(mode) =>
++        probe(Path.of(shared), Path.of(output), mode == "distributed")
++      case Vector("compare", left, right, output) =>
++        compare(Path.of(left), Path.of(right), Path.of(output))
++      case _ =>
++        throw new IllegalArgumentException(
++          "usage: probe SHARED_ABSOLUTE_DIRECTORY OUTPUT_JSON local|distributed OR compare LEFT_RUN RIGHT_RUN OUTPUT_JSON"
++        )
++    }
++  }.toEither.left.map(e => Option(e.getMessage).getOrElse(e.getClass.getSimpleName))
++
++  def main(args: Array[String]): Unit = run(args) match {
++    case Right(result) => println(result.render())
++    case Left(error)   => System.err.println(error); sys.exit(2)
++  }
++}
+diff --git a/modules/spark/src/test/scala/edu/uic/cs441/scholarchain/spark/Phase12ReadinessSpec.scala b/modules/spark/src/test/scala/edu/uic/cs441/scholarchain/spark/Phase12ReadinessSpec.scala
+new file mode 100644
+index 0000000..c06f4e5
+--- /dev/null
++++ b/modules/spark/src/test/scala/edu/uic/cs441/scholarchain/spark/Phase12ReadinessSpec.scala
+@@ -0,0 +1,300 @@
++package edu.uic.cs441.scholarchain.spark
++
++import edu.uic.cs441.scholarchain.core.StableIds
++import java.nio.charset.StandardCharsets.UTF_8
++import java.nio.file.{Files, Path}
++import org.apache.spark.sql.{Row, SparkSession}
++import org.apache.spark.api.java.JavaSparkContext
++import org.apache.spark.sql.types.*
++import org.scalatest.BeforeAndAfterAll
++import org.scalatest.funsuite.AnyFunSuite
++import scala.jdk.CollectionConverters.*
++
++class Phase12ReadinessSpec extends AnyFunSuite with BeforeAndAfterAll {
++  private var spark: SparkSession = _
++  private var root: Path = _
++  override protected def beforeAll(): Unit = {
++    root = Files.createTempDirectory("scholarchain-phase12-readiness-").toRealPath()
++    spark = SparkSession
++      .builder()
++      .master("local[2]")
++      .appName("Phase12 readiness feature tests")
++      .config("spark.ui.enabled", "false")
++      .config("spark.sql.shuffle.partitions", "2")
++      .config("spark.sql.warehouse.dir", root.resolve("warehouse").toString)
++      .getOrCreate()
++  }
++  override protected def afterAll(): Unit = {
++    try if (spark != null) spark.stop()
++    finally {
++      if (root != null) {
++        val walk = Files.walk(root)
++        try walk.iterator().asScala.toVector.reverse.foreach(Files.deleteIfExists(_))
++        finally walk.close()
++      }
++      super.afterAll()
++    }
++  }
++  private def process(host: String, pid: String, executor: String) =
++    ujson.Obj("host" -> host, "pid" -> pid, "executorId" -> executor)
++  private def frame(values: Vector[String]) = spark.createDataFrame(
++    values.map(v => Row(v, "run:unchanged")).asJava,
++    new StructType().add("value", StringType).add("run_id", StringType)
++  )
++  private def expected(df: org.apache.spark.sql.DataFrame) = ujson.Obj(
++    "rowCount" -> df.count().toString,
++    "contentHash" -> Phase6Export.logicalTableHash(df)
++  )
++  private def metadata: ujson.Obj = ujson.Obj(
++    "runId" -> "run:11111111-1111-4111-8111-111111111111",
++    "codeVersion" -> ("a" * 64),
++    "hadoopRunId" -> "run:hadoop",
++    "hadoopManifestHash" -> ("b" * 64),
++    "entityResolutionRunId" -> "run:er",
++    "entityResolutionManifestHash" -> ("c" * 64),
++    "entityResolutionPolicyVersion" -> "policy",
++    "entityResolutionPolicyHash" -> ("d" * 64),
++    "logicalConfigFingerprint" -> ("e" * 64),
++    "identityPolicyVersion" -> "identity",
++    "representativePolicyVersion" -> "representative",
++    "graphPolicyVersion" -> "graph",
++    "windows" -> ujson.Arr(ujson.Obj("windowId" -> "all-years")),
++    "seed" -> "7",
++    "contentHashMethod" -> Phase6Export.hashMethod,
++    "tables" -> ujson.Arr.from(
++      Phase12Readiness.datasets.toVector.sorted.map(name =>
++        ujson.Obj("dataset" -> name, "path" -> name, "rowCount" -> "0", "contentHash" -> ("f" * 64))
++      )
++    )
++  )
++
++  test("distributed proof rejects local tasks and executor-ID-only masquerading") {
++    val driver = process("machine", "100", "driver")
++    intercept[IllegalArgumentException](
++      Phase12Readiness.requireExternal(driver, process("machine", "100", "driver"))
++    )
++    intercept[IllegalArgumentException](
++      Phase12Readiness.requireExternal(driver, process("machine", "100", "1"))
++    )
++    intercept[IllegalArgumentException](
++      Phase12Readiness.requireExternal(driver, process("other", "200", "unavailable"))
++    )
++    Phase12Readiness.requireExternal(driver, process("machine", "101", "1"))
++    Phase12Readiness.requireExternal(driver, process("other", "100", "1"))
++  }
++
++  test("bounded Java results retain the cap and reject excess rows or overflowing bounds") {
++    val context = JavaSparkContext.fromSparkContext(spark.sparkContext)
++    val two = context.parallelize(Vector("one", "two").asJava, 2)
++    assert(BoundedActions.cappedJava(two, 2) == Vector("one", "two"))
++    assert(
++      BoundedActions.cappedJava(context.parallelize(Vector.empty[String].asJava, 1), 1).isEmpty
++    )
++    assert(
++      intercept[IllegalArgumentException](BoundedActions.cappedJava(two, 1)).getMessage
++        .contains("exceeds limit 1")
++    )
++    Vector(-1, 0, Int.MaxValue).foreach { invalid =>
++      assert(
++        intercept[IllegalArgumentException](BoundedActions.cappedJava(two, invalid)).getMessage
++          .contains("non-overflowing")
++      )
++    }
++  }
++
++  test("actual snapshots expose loaded class origins and hashes without invented versions") {
++    val observed = Phase12Readiness.processSnapshot("test")
++    assert(observed("pid").str == ProcessHandle.current().pid().toString)
++    val libraries = observed("libraries").arr.map(row => row("component").str -> row).toMap
++    assert(libraries.keySet == Set("spark", "scala-library", "scala-reflect", "scala3-library"))
++    libraries.values.foreach { row =>
++      assert(row("origin").str.nonEmpty)
++      assert(row("classSha256").str.matches("[0-9a-f]{64}"))
++    }
++    assert(libraries("spark")("runtimeVersion").str == spark.version)
++    assert(libraries("scala-library")("runtimeVersion").str.startsWith("2.13."))
++    assert(libraries("scala-reflect")("runtimeVersion") == ujson.Null)
++    assert(libraries("scala3-library")("runtimeVersion") == ujson.Null)
++  }
++
++  test("exclusive output rejects overwrite, relative destinations and symlink parents") {
++    val file = root.resolve("exclusive.json")
++    Phase12Readiness.writeNew(file, ujson.Obj("fresh" -> true))
++    intercept[IllegalArgumentException](
++      Phase12Readiness.writeNew(file, ujson.Obj("fresh" -> false))
++    )
++    assert(ujson.read(Files.readString(file))("fresh").bool)
++    intercept[IllegalArgumentException](
++      Phase12Readiness.writeNew(Path.of("relative/file.json"), ujson.Obj())
++    )
++    val link = root.resolve("linked-directory")
++    Files.createSymbolicLink(link, root)
++    intercept[IllegalArgumentException](
++      Phase12Readiness.writeNew(link.resolve("refused.json"), ujson.Obj())
++    )
++    Files.delete(link)
++  }
++
++  test("completion requires exact manifest and metadata bytes") {
++    val directory = Files.createDirectory(root.resolve("complete"))
++    val meta = metadata.render() + "\n"
++    val manifest = ujson.Obj("runId" -> metadata("runId")).render() + "\n"
++    Files.writeString(directory.resolve("run-manifest.json"), manifest, UTF_8)
++    Files.writeString(directory.resolve("run-metadata.json"), meta, UTF_8)
++    Files.writeString(
++      directory.resolve("_SCHOLARCHAIN_SPARK_COMPLETE"),
++      StableIds.sha256Hex(manifest + "\n" + meta) + "\n",
++      UTF_8
++    )
++    assert(Phase12Readiness.completedMetadata(directory)("runId") == metadata("runId"))
++    Files.writeString(directory.resolve("run-metadata.json"), meta + " ", UTF_8)
++    intercept[IllegalArgumentException](Phase12Readiness.completedMetadata(directory))
++  }
++
++  test("semantic bindings and nested windows must match without normalization") {
++    val left = metadata; val right = ujson.read(left.render())
++    right("physicalConfigFingerprint") = ujson.Str("different-placement")
++    Phase12Readiness.requireSameSemantics(left, right)
++    Vector(
++      "runId",
++      "codeVersion",
++      "hadoopManifestHash",
++      "entityResolutionManifestHash",
++      "logicalConfigFingerprint"
++    ).foreach { field =>
++      val changed = ujson.read(left.render()); changed(field) = ujson.Str("different")
++      intercept[IllegalArgumentException](Phase12Readiness.requireSameSemantics(left, changed))
++    }
++    val changedWindow = ujson.read(left.render())
++    changedWindow("windows")(0)("windowId") = ujson.Str("changed")
++    intercept[IllegalArgumentException](Phase12Readiness.requireSameSemantics(left, changedWindow))
++  }
++
++  test("table inventory rejects missing, duplicate and redirected datasets") {
++    assert(Phase12Readiness.tableInventory(metadata).size == 28)
++    val omitted = metadata; omitted("tables").arr.remove(0)
++    intercept[IllegalArgumentException](Phase12Readiness.tableInventory(omitted))
++    val duplicate = metadata; duplicate("tables").arr += duplicate("tables")(0)
++    intercept[IllegalArgumentException](Phase12Readiness.tableInventory(duplicate))
++    val redirected = metadata; redirected("tables")(0)("path") = ujson.Str("../elsewhere")
++    intercept[IllegalArgumentException](Phase12Readiness.tableInventory(redirected))
++  }
++
++  test("comparison recomputes counts and hashes instead of trusting metadata") {
++    val left = frame(Vector("a", "b")); val right = frame(Vector("b", "a"))
++    val expectedLeft = expected(left)
++    assert(
++      Phase12Readiness
++        .compareTable("fixture", left, right, expectedLeft, expected(right))(
++          "exactSchemaAndRowsMatch"
++        )
++        .bool
++    )
++    val corrupt = frame(Vector("a", "corrupt"))
++    intercept[IllegalArgumentException](
++      Phase12Readiness.compareTable("fixture", left, corrupt, expectedLeft, expectedLeft)
++    )
++    val falseCount = ujson.Obj("rowCount" -> "999", "contentHash" -> expectedLeft("contentHash"))
++    intercept[IllegalArgumentException](
++      Phase12Readiness.compareTable("fixture", left, right, falseCount, expected(right))
++    )
++  }
++
++  test("comparison rejects schemas, duplicates and physical run-ID drift") {
++    val left = frame(Vector("a", "b")); val duplicate = frame(Vector("a", "b", "b"))
++    intercept[IllegalArgumentException](
++      Phase12Readiness.compareTable("fixture", left, duplicate, expected(left), expected(duplicate))
++    )
++    val changedSchema = left.withColumnRenamed("value", "another")
++    intercept[IllegalArgumentException](
++      Phase12Readiness.compareTable(
++        "fixture",
++        left,
++        changedSchema,
++        expected(left),
++        expected(changedSchema)
++      )
++    )
++    val changedRun = left.withColumn("run_id", org.apache.spark.sql.functions.lit("run:changed"))
++    intercept[IllegalArgumentException](
++      Phase12Readiness.compareTable(
++        "fixture",
++        left,
++        changedRun,
++        expected(left),
++        expected(changedRun)
++      )
++    )
++  }
++
++  test("nested provenance run IDs are never discarded") {
++    val shape = new StructType()
++      .add("value", StringType)
++      .add("context", new StructType().add("runId", StringType))
++    val left = spark.createDataFrame(Vector(Row("x", Row("run:left"))).asJava, shape)
++    val right = spark.createDataFrame(Vector(Row("x", Row("run:right"))).asJava, shape)
++    intercept[IllegalArgumentException](
++      Phase12Readiness.compareTable("fixture", left, right, expected(left), expected(right))
++    )
++  }
++
++  test("portable synthetic G1 preserves nine works, duplicate authors and literal edge weights") {
++    val stream = getClass.getResourceAsStream("/phase12/g1-dblp.xml"); assert(stream != null)
++    val xml =
++      try new String(stream.readAllBytes(), UTF_8)
++      finally stream.close()
++    assert(xml.contains("Synthetic G1 readiness fixture"))
++    val works =
++      "(?s)<inproceedings key=\"conf/phase12-synthetic-g1/(w[0-9]+)\">(.*?)</inproceedings>".r
++        .findAllMatchIn(xml)
++        .map(m =>
++          m.group(1) -> "<author>(.*?)</author>".r
++            .findAllMatchIn(m.group(2))
++            .map(_.group(1))
++            .toVector
++        )
++        .toMap
++    assert(
++      works == Map(
++        "w1" -> Vector("A", "B", "C"),
++        "w2" -> Vector("A", "B"),
++        "w9" -> Vector("A", "A", "B"),
++        "w3" -> Vector("C", "D"),
++        "w4" -> Vector("D", "E", "F"),
++        "w5" -> Vector("E", "F"),
++        "w6" -> Vector("F", "G"),
++        "w7" -> Vector("H", "I"),
++        "w8" -> Vector("J")
++      )
++    )
++    val weights = works.values.toVector
++      .flatMap(_.distinct.sorted.combinations(2).map(_.mkString("-")))
++      .groupMapReduce(identity)(_ => 1)(_ + _)
++    assert(
++      weights == Map(
++        "A-B" -> 3,
++        "A-C" -> 1,
++        "B-C" -> 1,
++        "C-D" -> 1,
++        "D-E" -> 1,
++        "D-F" -> 1,
++        "E-F" -> 2,
++        "F-G" -> 1,
++        "H-I" -> 1
++      )
++    )
++    val empty = getClass.getResourceAsStream("/phase12/empty.jsonl"); assert(empty != null)
++    try assert(empty.readAllBytes().isEmpty)
++    finally empty.close()
++  }
++
++  test("CLI refuses unknown modes without writing evidence") {
++    assert(Phase12Readiness.run(Array("unknown")).isLeft)
++    assert(
++      Phase12Readiness
++        .run(Array("probe", root.toString, root.resolve("no.json").toString, "pretend"))
++        .isLeft
++    )
++    assert(!Files.exists(root.resolve("no.json")))
++  }
++}
+diff --git a/modules/spark/src/main/resources/phase12/g1-dblp.xml b/modules/spark/src/main/resources/phase12/g1-dblp.xml
+new file mode 100644
+index 0000000..cd55f4a
+--- /dev/null
++++ b/modules/spark/src/main/resources/phase12/g1-dblp.xml
+@@ -0,0 +1,14 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<!DOCTYPE dblp []>
++<!-- Synthetic G1 readiness fixture. A–J are test labels, not real researchers. -->
++<dblp>
++  <inproceedings key="conf/phase12-synthetic-g1/w1"><author>A</author><author>B</author><author>C</author><title>Synthetic G1 w1.</title><year>2015</year></inproceedings>
++  <inproceedings key="conf/phase12-synthetic-g1/w2"><author>A</author><author>B</author><title>Synthetic G1 w2.</title><year>2016</year></inproceedings>
++  <inproceedings key="conf/phase12-synthetic-g1/w9"><author>A</author><author>A</author><author>B</author><title>Synthetic G1 w9 duplicate author.</title><year>2016</year></inproceedings>
++  <inproceedings key="conf/phase12-synthetic-g1/w3"><author>C</author><author>D</author><title>Synthetic G1 w3.</title><year>2017</year></inproceedings>
++  <inproceedings key="conf/phase12-synthetic-g1/w4"><author>D</author><author>E</author><author>F</author><title>Synthetic G1 w4.</title><year>2018</year></inproceedings>
++  <inproceedings key="conf/phase12-synthetic-g1/w5"><author>E</author><author>F</author><title>Synthetic G1 w5.</title><year>2019</year></inproceedings>
++  <inproceedings key="conf/phase12-synthetic-g1/w6"><author>F</author><author>G</author><title>Synthetic G1 w6.</title><year>2020</year></inproceedings>
++  <inproceedings key="conf/phase12-synthetic-g1/w7"><author>H</author><author>I</author><title>Synthetic G1 w7.</title><year>2020</year></inproceedings>
++  <inproceedings key="conf/phase12-synthetic-g1/w8"><author>J</author><title>Synthetic G1 w8 solo.</title><year>2021</year></inproceedings>
++</dblp>
+diff --git a/modules/spark/src/main/resources/phase12/empty.jsonl b/modules/spark/src/main/resources/phase12/empty.jsonl
+new file mode 100644
+index 0000000..e69de29

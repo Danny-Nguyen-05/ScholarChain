@@ -1,0 +1,15 @@
+{
+  "allowance": "Local computation only; no AWS or spending authorization",
+  "baseline_deadline_seconds": 600,
+  "baseline_heap_max": "2GiB",
+  "baseline_master": "local[2]",
+  "concurrent_baseline_processes_max": 1,
+  "concurrent_sbt_processes_max": 1,
+  "full_gate_timeout_seconds": 1800,
+  "memory_headroom_limit": "Physical total is not available/free memory proof; avoid additional parallel jobs and preserve bounded failures.",
+  "optional_probe_executor_max": 1,
+  "physical_memory_bytes": 34359738368,
+  "probe_deadline_seconds": 180,
+  "probe_executor_heap_max": "512MiB",
+  "source": "Observed /usr/sbin/sysctl -n hw.memsize exit0"
+}

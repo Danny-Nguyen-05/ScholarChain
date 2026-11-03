@@ -190,3 +190,62 @@ An edge's `evidenceTable:String` is `edges/type=coauthored_with_support`; `evide
 Unknown first/last collaboration years and unbounded window years become empty numeric cells, so Neptune omits those properties; no dates are fabricated and the frozen numeric-window domain contract is unchanged. NamedText properties remain losslessly available in `propertiesJson:String` rather than being dynamically expanded into potentially invalid CSV column names. Source `provenanceJson:String` and/or `contextJson:String` retain lineage. Existing Parquet tables, their ID formulas, and the four historical proposal manifests keep their existing shapes. The additional sidecar is the concrete CSV contract for the later storage loader; no AWS loader or reader executes here.
 
 The new compiled export changes the code fingerprint and therefore future full-pipeline run IDs. Previously completed runs are not reopened or modified. Phase 7A validates bounded Spark-shaped fixtures; it does not claim a fresh real-data replay or live Neptune acceptance. The local NIO export-root limitation is inherited from `Phase6Export`; cluster/object-store publication remains a later gate.
+
+
+## Phase 12 offline readiness tools
+
+`Phase12Readiness` is an additive operational CLI. It changes no existing Phase 6 readers,
+ID formulas, provenance, completion markers or exports, and performs no AWS request.
+The resources `phase12/g1-dblp.xml` and `phase12/empty.jsonl` are explicitly synthetic inputs:
+nine DBLP-shaped G1 works with A–J test labels, including repeated A in w9 and solo J in w8.
+Use the unchanged Hadoop preparation and offline (`--llm-mode disabled`) Phase 5 pipeline to
+produce real completed upstream runs. Do not manufacture completion markers or replace real
+data with a claimed G1 run. This DBLP-only topology does not test cross-source duplicate merging.
+
+Build one current `sparkJobJar` using JDK 17. Use that exact JAR for both local and eventual
+remote `Phase6Main` invocations and for the comparison command. Copy the completed upstream
+files byte-for-byte; only deployment paths, checkpoints, output roots and shuffle counts may
+change in the Spark configuration. Its logical settings must remain equal. The same JAR and
+upstream/logical bindings produce the same run ID, including nested `context.runId`; there is
+no provenance normalization in this tool.
+
+Select this entry point with `spark-submit --class edu.uic.cs441.scholarchain.spark.Phase12Readiness`
+or an equivalent Java invocation with the same job JAR and the selected runtime dependencies.
+Positional commands are:
+
+```text
+probe SHARED_ABSOLUTE_DIRECTORY OUTPUT_JSON local|distributed
+compare LEFT_COMPLETED_SPARK_RUN RIGHT_COMPLETED_SPARK_RUN OUTPUT_JSON
+```
+
+Paths must be absolute and normalized, with existing non-symlink parent directories. Outputs
+are created exclusively, never overwritten. Probe creates a new random exchange directory
+and retains it on success or failure; no evidence cleanup is automatic. The probe observes
+Spark, Scala standard-library, reflection and Scala 3 class origins, class-byte SHA256 and
+code-source JAR SHA256 on the driver and an actual task. Spark and Scala standard-library
+runtime versions are observed directly. Reflection/Scala 3 runtime versions are explicitly
+null when unavailable; package implementation versions may also be null in the merged job
+JAR. The build owner must retain resolved artifact versions and their matching class hashes
+before claiming exact version alignment. Job-JAR filenames or expected pins are not measured
+component versions.
+
+The task reads a unique driver token, creates its own exclusive proof file at the same absolute
+path, and the driver verifies that exact proof. `distributed` additionally refuses executor ID
+`driver`, unavailable identity or the same host/PID as the driver. `local` records the actual
+result without upgrading it to distributed evidence. Neither a local task nor a distinct local
+worker JVM proves that EMR nodes share a mount. `cloudCompatibilityVerified` remains false.
+
+The proposed unchanged-application filesystem strategy requires a reviewed shared POSIX mount
+at the identical absolute path on driver and executors and Hadoop `fs.defaultFS=file:///`.
+The probe checks that default and bidirectional visibility, but the deployment must establish
+the mount, permissions, quotas, encryption and failure behavior. Bare paths under EMR's default
+HDFS, or separate executor-local `file:///` directories, are insufficient. No such mount is
+provisioned here; S3 is not automatically a Java NIO shared filesystem.
+
+Comparison checks both completion markers and exact semantic metadata, requires the current
+code fingerprint to match the runs, and requires the exact 28-table inventory. It reads actual
+Parquet, verifies schemas, recomputes every count and existing logical content hash, compares
+full row multisets in both directions (including `run_id` and nested provenance), and refuses
+stored-hash/count mismatches. It does not compare physical part filenames or operational event
+times. A passing same-machine comparison is local readiness evidence only; later cloud runtime,
+shared filesystem, independent deadline, spending and teardown gates remain open.

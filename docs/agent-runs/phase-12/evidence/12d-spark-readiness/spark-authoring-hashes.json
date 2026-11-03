@@ -1,0 +1,27 @@
+[
+  {
+    "bytes": 53584,
+    "path": "modules/spark/README.md",
+    "sha256": "958bd1409e6a4735ddb9e16f93ef457768ba6c0c7cfd8565fb216f0016a153c0"
+  },
+  {
+    "bytes": 14860,
+    "path": "modules/spark/src/main/scala/edu/uic/cs441/scholarchain/spark/Phase12Readiness.scala",
+    "sha256": "8a13cf53c582223bcafee66031382c1b3e561fe52fe47c7de0892fbdb6888664"
+  },
+  {
+    "bytes": 10676,
+    "path": "modules/spark/src/test/scala/edu/uic/cs441/scholarchain/spark/Phase12ReadinessSpec.scala",
+    "sha256": "b8556147a6cadc5f1fd62eef69b78105924ea3fed45e96988eafec7240f00380"
+  },
+  {
+    "bytes": 1594,
+    "path": "modules/spark/src/main/resources/phase12/g1-dblp.xml",
+    "sha256": "55e806990e062f7c36c251bc0cd0eb2ca55559c014f9eda0c86d9132f5b67d8a"
+  },
+  {
+    "bytes": 0,
+    "path": "modules/spark/src/main/resources/phase12/empty.jsonl",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+]
