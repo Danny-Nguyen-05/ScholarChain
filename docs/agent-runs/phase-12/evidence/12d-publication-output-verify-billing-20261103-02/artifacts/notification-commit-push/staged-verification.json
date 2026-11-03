@@ -1,0 +1,16 @@
+{
+  "authorization_verbatim": "yes please commit and push it",
+  "branch": "phase-12",
+  "base_head": "a9a52a91c1edaf5a584bd5b1f1affa2985795899",
+  "staged_files": {
+    "scripts/billing/README.md": "9350e010f92a26a045443c4ec9124e78b935644d73010483126d80637010e424",
+    "scripts/billing/budget_execution.py": "363caadaef042e8806cc168e273cfa22fc77c91f36af3c70e71aa2c24d945a9c",
+    "scripts/billing/tests/test_budget_execution.py": "b1702a42847317f262a81bdad9c0285cb45152bb7e81ac72eae1899650886c8f",
+    "scripts/billing/tests/test_budget_verification.py": "7a4c767a76709ec67dfde59a5402d8e7cc3624f88b10cdce84ceea086768a1b7"
+  },
+  "all_staged_hashes_match_approval": true,
+  "staged_diff_check_exit": 0,
+  "historical_tests_passed": 155,
+  "tests_rerun_for_commit": false,
+  "private_reads_or_AWS_calls": 0
+}

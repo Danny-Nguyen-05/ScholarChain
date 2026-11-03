@@ -1,0 +1,16 @@
+test_bad_metadata_receipt_cannot_publish_hash (__main__.Helpers.test_bad_metadata_receipt_cannot_publish_hash) ... ok
+test_exact_private_read_scope_and_counts (__main__.Helpers.test_exact_private_read_scope_and_counts) ... ok
+test_invalid_filename_and_cli_fail_before_source_or_private (__main__.Helpers.test_invalid_filename_and_cli_fail_before_source_or_private) ... ok
+test_lock_before_or_after_blocks_without_mutation (__main__.Helpers.test_lock_before_or_after_blocks_without_mutation) ... ok
+test_release_drift_after_validation_withholds_measured_hash (__main__.Helpers.test_release_drift_after_validation_withholds_measured_hash) ... ok
+test_semantically_tampered_receipt_blocks_even_when_first_read_hashes_it (__main__.Helpers.test_semantically_tampered_receipt_blocks_even_when_first_read_hashes_it) ... ok
+test_state_drift_blocks_and_is_never_parsed_or_modified (__main__.Helpers.test_state_drift_blocks_and_is_never_parsed_or_modified) ... ok
+test_success_uses_reviewed_linkage_and_modifies_nothing (__main__.Helpers.test_success_uses_reviewed_linkage_and_modifies_nothing) ... ok
+test_symlink_hardlink_wrong_gate_paths_fail_without_output_hash (__main__.Helpers.test_symlink_hardlink_wrong_gate_paths_fail_without_output_hash) ... ok
+test_wrong_pinned_hash_actual_public_check_rejects (__main__.Helpers.test_wrong_pinned_hash_actual_public_check_rejects) ... ok
+test_wrong_public_commit_dirty_tree_hash_stop_before_private (__main__.Helpers.test_wrong_public_commit_dirty_tree_hash_stop_before_private) ... ok
+
+----------------------------------------------------------------------
+Ran 11 tests in 1.454s
+
+OK

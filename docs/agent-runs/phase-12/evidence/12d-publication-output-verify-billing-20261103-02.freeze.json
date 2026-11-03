@@ -1,0 +1,495 @@
+{
+  "files": [
+    {
+      "bytes": 12342,
+      "path": "docs/agent-runs/phase-12/evidence/12d-publication-output-verify-billing-20261103-02/artifacts/accepted-source/PUBLICATION.md",
+      "sha256": "dfc32dad40bc0b33a03018f6175f178941db8b3784fbfa5365b89a2e6b368648"
+    },
+    {
+      "bytes": 25933,
+      "path": "docs/agent-runs/phase-12/evidence/12d-publication-output-verify-billing-20261103-02/artifacts/accepted-source/README.md",
+      "sha256": "9350e010f92a26a045443c4ec9124e78b935644d73010483126d80637010e424"
+    },
+    {
+      "bytes": 16508,
+      "path": "docs/agent-runs/phase-12/evidence/12d-publication-output-verify-billing-20261103-02/artifacts/accepted-source/VERIFICATION.md",
+      "sha256": "2b00ee61aa4503eeab2b279795029eb1e89a329a803194c278fc636919180760"
+    },
+    {
+      "bytes": 42833,
+      "path": "docs/agent-runs/phase-12/evidence/12d-publication-output-verify-billing-20261103-02/artifacts/accepted-source/budget_execution.py.txt",
+      "sha256": "363caadaef042e8806cc168e273cfa22fc77c91f36af3c70e71aa2c24d945a9c"
+    },
+    {
+      "bytes": 26399,
+      "path": "docs/agent-runs/phase-12/evidence/12d-publication-output-verify-billing-20261103-02/artifacts/accepted-source/budget_verification.py.txt",
+      "sha256": "95abbcc05bc8147a5be911b6e5ed5e558e9c08d985892caaff467881a78ab4a0"
+    },
+    {
+      "bytes": 18539,
+      "path": "docs/agent-runs/phase-12/evidence/12d-publication-output-verify-billing-20261103-02/artifacts/accepted-source/publication_evidence.py.txt",
+      "sha256": "cb2edbb74ce1250282dd4a39ca5397c33e26490e18ae626187a900cf28be4580"
+    },
+    {
+      "bytes": 46174,
+      "path": "docs/agent-runs/phase-12/evidence/12d-publication-output-verify-billing-20261103-02/artifacts/accepted-source/reviewed-pins.json",
+      "sha256": "cb285259b7217bb4186ca80e74d376f215e4150396aa5fd66187d4e0dc96a753"
+    },
+    {
+      "bytes": 5340,
+      "path": "docs/agent-runs/phase-12/evidence/12d-publication-output-verify-billing-20261103-02/artifacts/accepted-source/tests/terraform_state_binding.py.txt",
+      "sha256": "faaf64cd14192abbe45c1284617c26e7c1c2958ace61fcbcde955d8ac471a7c3"
+    },
+    {
+      "bytes": 58902,
+      "path": "docs/agent-runs/phase-12/evidence/12d-publication-output-verify-billing-20261103-02/artifacts/accepted-source/tests/test_budget_execution.py.txt",
+      "sha256": "b1702a42847317f262a81bdad9c0285cb45152bb7e81ac72eae1899650886c8f"
+    },
+    {
+      "bytes": 36834,
+      "path": "docs/agent-runs/phase-12/evidence/12d-publication-output-verify-billing-20261103-02/artifacts/accepted-source/tests/test_budget_verification.py.txt",
+      "sha256": "7a4c767a76709ec67dfde59a5402d8e7cc3624f88b10cdce84ceea086768a1b7"
+    },
+    {
+      "bytes": 18627,
+      "path": "docs/agent-runs/phase-12/evidence/12d-publication-output-verify-billing-20261103-02/artifacts/accepted-source/tests/test_publication_evidence.py.txt",
+      "sha256": "3adf9a30ae8fe72a77816ac100f1e70a295d053722fd2c8d7060e9568a10f6e6"
+    },
+    {
+      "bytes": 740,
+      "path": "docs/agent-runs/phase-12/evidence/12d-publication-output-verify-billing-20261103-02/artifacts/attempt02-preparation-20261102/human-authorization-chat-record.json",
+      "sha256": "5b97f14e2bd33753dcc829c5871557f1ae7a4fba0819a192225ca1017a23f7c3"
+    },
+    {
+      "bytes": 1139,
+      "path": "docs/agent-runs/phase-12/evidence/12d-publication-output-verify-billing-20261103-02/artifacts/attempt02-preparation-20261102/user-reported-execution-results.json",
+      "sha256": "32144df23df297f3fe7b6dbaafeff28724e3110b7b4a4dcbb3e4918604381ae2"
+    },
+    {
+      "bytes": 7038,
+      "path": "docs/agent-runs/phase-12/evidence/12d-publication-output-verify-billing-20261103-02/artifacts/coordinator-report.md",
+      "sha256": "cb61b98970c126646b996ccabbbc46a6f31d2cc7bef11f95e44df5a7b47f284c"
+    },
+    {
+      "bytes": 25009,
+      "path": "docs/agent-runs/phase-12/evidence/12d-publication-output-verify-billing-20261103-02/artifacts/copied-public-source-inventory.json",
+      "sha256": "6a8396ac37ea89605b66c536b02ba4c7b5cb8dfabdf4fd0b971c314c4c756888"
+    },
+    {
+      "bytes": 2755,
+      "path": "docs/agent-runs/phase-12/evidence/12d-publication-output-verify-billing-20261103-02/artifacts/costscope-approval-handoff/independent-approval-summary.json",
+      "sha256": "8b8e6b5258bbc1fd5d7b83b5624a5be59fb120a054201ed3cbe7387479cb1760"
+    },
+    {
+      "bytes": 330,
+      "path": "docs/agent-runs/phase-12/evidence/12d-publication-output-verify-billing-20261103-02/artifacts/costscope-commit-push/result.json",
+      "sha256": "aabef2fa74c771bfde4f9d91226511488f911ac1e9aedc7d5dc6b700f50151ba"
+    },
+    {
+      "bytes": 697,
+      "path": "docs/agent-runs/phase-12/evidence/12d-publication-output-verify-billing-20261103-02/artifacts/costscope-commit-push/staged-verification.json",
+      "sha256": "3e1b55dd7e451c4e97d0bb5c93a8530a508602e2477131ce3b0d9b4798b05845"
+    },
+    {
+      "bytes": 7647,
+      "path": "docs/agent-runs/phase-12/evidence/12d-publication-output-verify-billing-20261103-02/artifacts/costscope-repair/infra-engineer-report.md",
+      "sha256": "9e0a6a1e6dbf6af4e2f2a9b50fa3bbb10565bf1cb21dc41d4b1d2a142c8fa345"
+    },
+    {
+      "bytes": 7476,
+      "path": "docs/agent-runs/phase-12/evidence/12d-publication-output-verify-billing-20261103-02/artifacts/costscope-repair/post-create-verification-design.md",
+      "sha256": "8a2cd588ce5cecaa58002c5a3417c45274d12f319f5c019b173faa1bbe5b23c0"
+    },
+    {
+      "bytes": 2136,
+      "path": "docs/agent-runs/phase-12/evidence/12d-publication-output-verify-billing-20261103-02/artifacts/costscope-repair1/continuation-design-addendum.md",
+      "sha256": "02fdfe2d1bb0e082a4fe6e91a13e24744939b3ae8f823dc182786f3ca4cbf87e"
+    },
+    {
+      "bytes": 1221,
+      "path": "docs/agent-runs/phase-12/evidence/12d-publication-output-verify-billing-20261103-02/artifacts/costscope-repair1/final-script-hashes.json",
+      "sha256": "e2301ebda832944d6565aeb5c65a6b6d029503e6c8d7cee66bb7f6e519c7370f"
+    },
+    {
+      "bytes": 32776,
+      "path": "docs/agent-runs/phase-12/evidence/12d-publication-output-verify-billing-20261103-02/artifacts/costscope-repair1/full-head-diff.patch.txt",
+      "sha256": "6f45c4428a75786e3e172431c7b378141d3f95825c9bacd46e3948424986719c"
+    },
+    {
+      "bytes": 8544,
+      "path": "docs/agent-runs/phase-12/evidence/12d-publication-output-verify-billing-20261103-02/artifacts/costscope-repair1/infra-engineer-report.md",
+      "sha256": "06445f4af2492747e4c775fbbf26fe50de093693db95afdbb7437a299621ec5b"
+    },
+    {
+      "bytes": 4751,
+      "path": "docs/agent-runs/phase-12/evidence/12d-publication-output-verify-billing-20261103-02/artifacts/costscope-repair1/publication-tests.log",
+      "sha256": "1f4ff0c16800a8a5bf0ac04fa40f2f1d5abc95f2093fee842448b9895700977f"
+    },
+    {
+      "bytes": 325,
+      "path": "docs/agent-runs/phase-12/evidence/12d-publication-output-verify-billing-20261103-02/artifacts/costscope-repair1/structural-guard-check.json",
+      "sha256": "57d5a070ba79c999f2ae713fe75d359fb93a82a0290de4bbfa8821ab223e2b99"
+    },
+    {
+      "bytes": 567,
+      "path": "docs/agent-runs/phase-12/evidence/12d-publication-output-verify-billing-20261103-02/artifacts/costscope-repair1/test-results.json",
+      "sha256": "fc5dc0f5139122df27369000b4910db121cb7bb89fcc92561064364ab6ad1d23"
+    },
+    {
+      "bytes": 8437,
+      "path": "docs/agent-runs/phase-12/evidence/12d-publication-output-verify-billing-20261103-02/artifacts/costscope-repair1/wrapper-tests.log",
+      "sha256": "010f41932f745d599d40cf1351c1cf3c24f6ac131c46bd261adfc0857eeaa6f3"
+    },
+    {
+      "bytes": 1157,
+      "path": "docs/agent-runs/phase-12/evidence/12d-publication-output-verify-billing-20261103-02/artifacts/linkage-preflight-handoff/authorized-preflight-result.json",
+      "sha256": "0561d76898867d8ae7398db96908df6f940e6a44210f5d4fbc82387cf6339489"
+    },
+    {
+      "bytes": 790,
+      "path": "docs/agent-runs/phase-12/evidence/12d-publication-output-verify-billing-20261103-02/artifacts/linkage-preflight-proposal/final-hashes.json",
+      "sha256": "3976901f2fbd880d522c6c83649c947d12c3c2fbf961887e286667b53bb901a9"
+    },
+    {
+      "bytes": 4485,
+      "path": "docs/agent-runs/phase-12/evidence/12d-publication-output-verify-billing-20261103-02/artifacts/linkage-preflight-proposal/infra-engineer-report.md",
+      "sha256": "eac172df82136e15ca278e160aa7da342eca9cd1b45acb28e30e509cb6f8261d"
+    },
+    {
+      "bytes": 7142,
+      "path": "docs/agent-runs/phase-12/evidence/12d-publication-output-verify-billing-20261103-02/artifacts/linkage-preflight-proposal/preflight.py.txt",
+      "sha256": "c42322946ac08b3dc7ae44ee66d9e5de2901c87cd71cbd381309a2c764064e5c"
+    },
+    {
+      "bytes": 4550,
+      "path": "docs/agent-runs/phase-12/evidence/12d-publication-output-verify-billing-20261103-02/artifacts/linkage-preflight-proposal/proposed-read-scope.md",
+      "sha256": "78d9f0fcb4251c461306528e55da3d240dda51b8cc8bc3375b705788a84a6aea"
+    },
+    {
+      "bytes": 358,
+      "path": "docs/agent-runs/phase-12/evidence/12d-publication-output-verify-billing-20261103-02/artifacts/linkage-preflight-proposal/test-results.json",
+      "sha256": "e680458dd6d3a437db26406891124c08cdd333508a901e2072b3705433181cc8"
+    },
+    {
+      "bytes": 9402,
+      "path": "docs/agent-runs/phase-12/evidence/12d-publication-output-verify-billing-20261103-02/artifacts/linkage-preflight-proposal/test_preflight.py.txt",
+      "sha256": "a22acf5bfbfe0901b2d08ade09fc6dafb367f37891077ce2fb940aed68251214"
+    },
+    {
+      "bytes": 1621,
+      "path": "docs/agent-runs/phase-12/evidence/12d-publication-output-verify-billing-20261103-02/artifacts/linkage-preflight-proposal/tests-attempt1.log",
+      "sha256": "4e57ec0fc2737f3f2bb411cc44ba2e1634b46a8767c256b2d4c65abb93e78585"
+    },
+    {
+      "bytes": 18179,
+      "path": "docs/agent-runs/phase-12/evidence/12d-publication-output-verify-billing-20261103-02/artifacts/notification-citation-handoff/citation-erratum-and-baseline.json",
+      "sha256": "ce9072e141360dd33447b22b2d08b291521bcefe3881071ec16e3d6985b95ccc"
+    },
+    {
+      "bytes": 2470,
+      "path": "docs/agent-runs/phase-12/evidence/12d-publication-output-verify-billing-20261103-02/artifacts/notification-citation-handoff/coordinator-report.md",
+      "sha256": "89da7e1d921568fe2a58973da5677ee20afa2de46068c85eb213eab18ad08976"
+    },
+    {
+      "bytes": 6192,
+      "path": "docs/agent-runs/phase-12/evidence/12d-publication-output-verify-billing-20261103-02/artifacts/notification-citation-handoff/user-supplied-review.txt",
+      "sha256": "7e99195669cbfb6209abee5c882ef2e6b5c3f9b0bbdeb7cdb4aacc8b9e43a493"
+    },
+    {
+      "bytes": 2803,
+      "path": "docs/agent-runs/phase-12/evidence/12d-publication-output-verify-billing-20261103-02/artifacts/notification-citation-repair/citation-only.patch.txt",
+      "sha256": "964bac0c9f45ce0d2e422bc375bbcfcc0fff6b113612bc0c2da53073ebeaabcb"
+    },
+    {
+      "bytes": 221,
+      "path": "docs/agent-runs/phase-12/evidence/12d-publication-output-verify-billing-20261103-02/artifacts/notification-citation-repair/diff-check.json",
+      "sha256": "20a293c5f6639ee2967848d9c49710475e217ec8b81b4c371d9770f0a626a59f"
+    },
+    {
+      "bytes": 1681,
+      "path": "docs/agent-runs/phase-12/evidence/12d-publication-output-verify-billing-20261103-02/artifacts/notification-citation-repair/final-script-hashes.json",
+      "sha256": "ecc3f31e0e35800e3754c193a5ba31e5b8d0e85d340036dc014963fdeccda87f"
+    },
+    {
+      "bytes": 11283,
+      "path": "docs/agent-runs/phase-12/evidence/12d-publication-output-verify-billing-20261103-02/artifacts/notification-citation-repair/full-HEAD-delta.patch.txt",
+      "sha256": "981a28d3bf26326b84bc389d2339fadec082d6df3657edc5c49c421c9700a25d"
+    },
+    {
+      "bytes": 4106,
+      "path": "docs/agent-runs/phase-12/evidence/12d-publication-output-verify-billing-20261103-02/artifacts/notification-citation-repair/infra-engineer-report.md",
+      "sha256": "35270620101251af3a6b4d7100fd228fa573480c2666b99b748d89b5fa428397"
+    },
+    {
+      "bytes": 970,
+      "path": "docs/agent-runs/phase-12/evidence/12d-publication-output-verify-billing-20261103-02/artifacts/notification-citation-repair/raw-source-line-proof.json",
+      "sha256": "f54659142c071fd837736d291904950d2d08026164a6ea1751ede5b304047313"
+    },
+    {
+      "bytes": 380,
+      "path": "docs/agent-runs/phase-12/evidence/12d-publication-output-verify-billing-20261103-02/artifacts/notification-commit-push/result.json",
+      "sha256": "3917a089503c4133fbc5aed7c456df8b7a0c07373495109566dc4dffc058f68b"
+    },
+    {
+      "bytes": 809,
+      "path": "docs/agent-runs/phase-12/evidence/12d-publication-output-verify-billing-20261103-02/artifacts/notification-commit-push/staged-verification.json",
+      "sha256": "f46412ac9475064f4df0461cc0327c02d875423c350d50e5fbe81b5b1578f0e8"
+    },
+    {
+      "bytes": 7141,
+      "path": "docs/agent-runs/phase-12/evidence/12d-publication-output-verify-billing-20261103-02/artifacts/notification-compatibility-repair/infra-engineer-report.md",
+      "sha256": "6d462cf1db17e71792e536eae21992bb997a9cf5f6a70efdf521ec969f19cc13"
+    },
+    {
+      "bytes": 4751,
+      "path": "docs/agent-runs/phase-12/evidence/12d-publication-output-verify-billing-20261103-02/artifacts/notification-compatibility-repair/publication-tests-final.log",
+      "sha256": "520b5ea82c2ec14b34a1edf00b1dd4727d80d9835fb472bea13db0480766b473"
+    },
+    {
+      "bytes": 11254,
+      "path": "docs/agent-runs/phase-12/evidence/12d-publication-output-verify-billing-20261103-02/artifacts/notification-compatibility-repair/repair.patch.txt",
+      "sha256": "b2a37fb3422a0c8c9df06ecc9c6ba8e733194075b5283af6901637b0c1ab908b"
+    },
+    {
+      "bytes": 592,
+      "path": "docs/agent-runs/phase-12/evidence/12d-publication-output-verify-billing-20261103-02/artifacts/notification-compatibility-repair/structural-guard-check.json",
+      "sha256": "8ac74179d91d5bc285e897a468aa5686d014ea6a1485094319afa6805395fbc9"
+    },
+    {
+      "bytes": 821,
+      "path": "docs/agent-runs/phase-12/evidence/12d-publication-output-verify-billing-20261103-02/artifacts/notification-compatibility-repair/test-results.json",
+      "sha256": "c544afe8eb02c5252d9adc7d2fd0e2c0386c47975c3a19ce7a08f863fdae0a75"
+    },
+    {
+      "bytes": 6493,
+      "path": "docs/agent-runs/phase-12/evidence/12d-publication-output-verify-billing-20261103-02/artifacts/notification-compatibility-repair/verification-tests-final.log",
+      "sha256": "b53406214484e242192c4721bb8f6acbcd0cebc5d6ac0c873f928f0a9000c850"
+    },
+    {
+      "bytes": 9141,
+      "path": "docs/agent-runs/phase-12/evidence/12d-publication-output-verify-billing-20261103-02/artifacts/notification-compatibility-repair/wrapper-tests-final.log",
+      "sha256": "433ab2a83114857313fb35bf38cb07373a7220127a03240ba642ea24e78e7d0e"
+    },
+    {
+      "bytes": 2982,
+      "path": "docs/agent-runs/phase-12/evidence/12d-publication-output-verify-billing-20261103-02/artifacts/notification-diagnosis/authorized-diagnostic-result.json",
+      "sha256": "f7f4ca47b7c590de9e83f80e76ad79d843a11af05db3692ec12b0aa6064a1052"
+    },
+    {
+      "bytes": 5547,
+      "path": "docs/agent-runs/phase-12/evidence/12d-publication-output-verify-billing-20261103-02/artifacts/notification-diagnosis/check_notifications.py.txt",
+      "sha256": "e4f686e6cecf9eb1668702a942a3d7b3c450e364ade41d43cf7b1ff6f4675cf1"
+    },
+    {
+      "bytes": 954,
+      "path": "docs/agent-runs/phase-12/evidence/12d-publication-output-verify-billing-20261103-02/artifacts/notification-diagnosis/coordinator-projection-tests.log",
+      "sha256": "0531798ab6c6ea3ff232dda2b304f0b5f312d84e8ae42a133f9ea21031d770ff"
+    },
+    {
+      "bytes": 2156,
+      "path": "docs/agent-runs/phase-12/evidence/12d-publication-output-verify-billing-20261103-02/artifacts/notification-diagnosis/incident-responder-report.md",
+      "sha256": "c87d49e8cd3886f9c0d0ea8390e18b1d8fdc19280c8b863d2462a03d9bdde967"
+    },
+    {
+      "bytes": 1546,
+      "path": "docs/agent-runs/phase-12/evidence/12d-publication-output-verify-billing-20261103-02/artifacts/notification-diagnosis/proposed-read-scope.md",
+      "sha256": "90011e3b59c268abcbf60ffe4e1239468f2e7284424cc27bd6698e0a98bf1f17"
+    },
+    {
+      "bytes": 253,
+      "path": "docs/agent-runs/phase-12/evidence/12d-publication-output-verify-billing-20261103-02/artifacts/notification-diagnosis/test-results.json",
+      "sha256": "106c87a8a2f26edffbac3861089265604e1f675951770b211c0a8b5ae16c8dd7"
+    },
+    {
+      "bytes": 3372,
+      "path": "docs/agent-runs/phase-12/evidence/12d-publication-output-verify-billing-20261103-02/artifacts/notification-diagnosis/test_projection.py.txt",
+      "sha256": "5c7a7214ed472937d3d2e54193c8429105871ce583137135eebb0d3237d6e3a4"
+    },
+    {
+      "bytes": 3255,
+      "path": "docs/agent-runs/phase-12/evidence/12d-publication-output-verify-billing-20261103-02/artifacts/notification-release-handoff/approval-and-release-proposal.json",
+      "sha256": "12043d3c1fbb329e3addb8aec3f6a1d0b1f802dae39c47f046ddb674cc203ed0"
+    },
+    {
+      "bytes": 263481,
+      "path": "docs/agent-runs/phase-12/evidence/12d-publication-output-verify-billing-20261103-02/artifacts/preservation-baseline.json",
+      "sha256": "938aaa9ff502c52892facce1c57ecc7ef219236c2dbd1a68064b4a74ec29bc66"
+    },
+    {
+      "bytes": 2923,
+      "path": "docs/agent-runs/phase-12/evidence/12d-publication-output-verify-billing-20261103-02/artifacts/readonly-continuation-approval-handoff/approval-and-commit-proposal.json",
+      "sha256": "afd70460cd2f6cc96199d1d1bbaddec450f8d1bb9ed2a6b567ed8ba1451ed5b5"
+    },
+    {
+      "bytes": 10229,
+      "path": "docs/agent-runs/phase-12/evidence/12d-publication-output-verify-billing-20261103-02/artifacts/readonly-continuation-approval-handoff/user-supplied-review.txt",
+      "sha256": "2f68b70a45d61ec1c751eae0c8525f10e5e987315aed4e9c9c00d865892799cf"
+    },
+    {
+      "bytes": 263,
+      "path": "docs/agent-runs/phase-12/evidence/12d-publication-output-verify-billing-20261103-02/artifacts/readonly-continuation-commit-push/result.json",
+      "sha256": "1f66282dbce7a0985201cf1b27b6a396035d259d6abddec58c40b5db193a74e9"
+    },
+    {
+      "bytes": 613,
+      "path": "docs/agent-runs/phase-12/evidence/12d-publication-output-verify-billing-20261103-02/artifacts/readonly-continuation-commit-push/staged-verification.json",
+      "sha256": "fea8170f7486737deee50a71b4fa46acfba262bf976b83227f98d19f80021c18"
+    },
+    {
+      "bytes": 2080,
+      "path": "docs/agent-runs/phase-12/evidence/12d-publication-output-verify-billing-20261103-02/artifacts/readonly-continuation-recheck1-handoff/original-gate-filename-provenance.json",
+      "sha256": "5682843308f0e168792783a7b716f6a93dc2d57c2ebe7f67fb42c58e6f53d99a"
+    },
+    {
+      "bytes": 11962,
+      "path": "docs/agent-runs/phase-12/evidence/12d-publication-output-verify-billing-20261103-02/artifacts/readonly-continuation-recheck1-handoff/user-supplied-review.txt",
+      "sha256": "fcdd459f3032ea136b18dc99169cc624ce2501d90ea786d4a5455e17c0e085c4"
+    },
+    {
+      "bytes": 1681,
+      "path": "docs/agent-runs/phase-12/evidence/12d-publication-output-verify-billing-20261103-02/artifacts/readonly-continuation-repair1/final-script-hashes.json",
+      "sha256": "62b88f23a91d916af85e0114c540fe38d1916ee6103d22720931ff6d11251673"
+    },
+    {
+      "bytes": 80212,
+      "path": "docs/agent-runs/phase-12/evidence/12d-publication-output-verify-billing-20261103-02/artifacts/readonly-continuation-repair1/full-HEAD-new-files.patch.txt",
+      "sha256": "d8fe32477fb283c4182a6a9bf15fad641ee7fcad04aeeb5f21e167b2ebd779df"
+    },
+    {
+      "bytes": 8900,
+      "path": "docs/agent-runs/phase-12/evidence/12d-publication-output-verify-billing-20261103-02/artifacts/readonly-continuation-repair1/infra-engineer-report.md",
+      "sha256": "0eb938623b78021e3cf7ca4c5235096c61f53fdce5bcea5bfe4d0ccac349a889"
+    },
+    {
+      "bytes": 4751,
+      "path": "docs/agent-runs/phase-12/evidence/12d-publication-output-verify-billing-20261103-02/artifacts/readonly-continuation-repair1/publication-tests-attempt2.log",
+      "sha256": "776ffc3323a6a41d8cc91644e35fd16a19231e5841b10c09fb0e655ce6eb30ca"
+    },
+    {
+      "bytes": 1230,
+      "path": "docs/agent-runs/phase-12/evidence/12d-publication-output-verify-billing-20261103-02/artifacts/readonly-continuation-repair1/source-contract-check.json",
+      "sha256": "24a070222adc955a6cc43481039dca62c682a254b32fdd5ab31839d043ac4a05"
+    },
+    {
+      "bytes": 1163,
+      "path": "docs/agent-runs/phase-12/evidence/12d-publication-output-verify-billing-20261103-02/artifacts/readonly-continuation-repair1/test-results-attempt2.json",
+      "sha256": "a948a91e0648ac4cd99dd3b5888d728c8b80739b086a187c5289749f1519d450"
+    },
+    {
+      "bytes": 6165,
+      "path": "docs/agent-runs/phase-12/evidence/12d-publication-output-verify-billing-20261103-02/artifacts/readonly-continuation-repair1/verification-tests-attempt1.log",
+      "sha256": "4a36caa01404020a7749031c8372d416845db569b182f66aec9eb227cc471e4b"
+    },
+    {
+      "bytes": 6165,
+      "path": "docs/agent-runs/phase-12/evidence/12d-publication-output-verify-billing-20261103-02/artifacts/readonly-continuation-repair1/verification-tests-attempt2.log",
+      "sha256": "484c9a51bf003c09b8eb53a64bfd975e184f74c9e8b001f22230b1a2779b79a2"
+    },
+    {
+      "bytes": 8437,
+      "path": "docs/agent-runs/phase-12/evidence/12d-publication-output-verify-billing-20261103-02/artifacts/readonly-continuation-repair1/wrapper-tests-attempt2.log",
+      "sha256": "ab4286d6fff88c988e8cb08d81e3ce6de6ed002473c152bad1121644e6f1ff19"
+    },
+    {
+      "bytes": 8891,
+      "path": "docs/agent-runs/phase-12/evidence/12d-publication-output-verify-billing-20261103-02/artifacts/readonly-continuation/infra-engineer-report.md",
+      "sha256": "dc01c2d8c490fdf402eb19a215ddae994824c4cd272089d0ce3b8439260b0219"
+    },
+    {
+      "bytes": 1419,
+      "path": "docs/agent-runs/phase-12/evidence/12d-publication-output-verify-billing-20261103-02/artifacts/readonly-continuation/test-results-attempt4.json",
+      "sha256": "6f713dffd40b12e639969fe3a3ac7c20785d70af310a666cd170283db505904d"
+    },
+    {
+      "bytes": 1711,
+      "path": "docs/agent-runs/phase-12/evidence/12d-publication-output-verify-billing-20261103-02/artifacts/readonly-continuation/test-results.json",
+      "sha256": "06f95e844229e60e3aa80e2ff7cf4ae3c10c5a5922a56199cb869c1b661126ba"
+    },
+    {
+      "bytes": 3537,
+      "path": "docs/agent-runs/phase-12/evidence/12d-publication-output-verify-billing-20261103-02/artifacts/readonly-continuation/verification-tests-attempt1.log",
+      "sha256": "f987c96866162e6698f1397fbe21160fce953106668c9a9e9b8cd22aa41b6303"
+    },
+    {
+      "bytes": 4097,
+      "path": "docs/agent-runs/phase-12/evidence/12d-publication-output-verify-billing-20261103-02/artifacts/readonly-continuation/verification-tests-attempt2.log",
+      "sha256": "10bf70b3bfc87f234b24029bb866a5a31ce681c2c36d01efba712d24b4f1e4b5"
+    },
+    {
+      "bytes": 5430,
+      "path": "docs/agent-runs/phase-12/evidence/12d-publication-output-verify-billing-20261103-02/artifacts/readonly-continuation/verification-tests-attempt3.log",
+      "sha256": "bbaa4b637ba751649d24ccf7a6911084c84396ba92f03f963f12c75d9afc212b"
+    },
+    {
+      "bytes": 4681,
+      "path": "docs/agent-runs/phase-12/evidence/12d-publication-output-verify-billing-20261103-02/artifacts/readonly-continuation/verification-tests-attempt4.log",
+      "sha256": "38da2c9ea9a9eed4b77b522e16305215acba5321bc73934c12472bc30a568a54"
+    },
+    {
+      "bytes": 874,
+      "path": "docs/agent-runs/phase-12/evidence/12d-publication-output-verify-billing-20261103-02/artifacts/runtime-bindings.json",
+      "sha256": "7ee8210ddb61194492a08ba7334475358a77c2433a70acc5c220c14cef33790a"
+    },
+    {
+      "bytes": 369,
+      "path": "docs/agent-runs/phase-12/evidence/12d-publication-output-verify-billing-20261103-02/artifacts/verification-20261103-midday/fresh-human-identity.json",
+      "sha256": "fc797343e64520bcf522253e88f64bad16d1e50c1346c9d17719eb728057b5ba"
+    },
+    {
+      "bytes": 1488,
+      "path": "docs/agent-runs/phase-12/evidence/12d-publication-output-verify-billing-20261103-02/artifacts/verification-20261103-midday/updated-window-proposal.json",
+      "sha256": "9de0c9258116236478726dc2782e48af20f6e47f1b8f5751265d99ebbf448864"
+    },
+    {
+      "bytes": 585,
+      "path": "docs/agent-runs/phase-12/evidence/12d-publication-output-verify-billing-20261103-02/artifacts/verification-20261103-midday/validated-personal-gate.json",
+      "sha256": "21144142457748422e99e7e4ac8ffef7260695912ffaadf3e8dce5f1cbacb190"
+    },
+    {
+      "bytes": 1096,
+      "path": "docs/agent-runs/phase-12/evidence/12d-publication-output-verify-billing-20261103-02/artifacts/verification-20261103-midday/verify-public-stdout.json",
+      "sha256": "94bca7aed706c05999dbbe2ba0c38be72474bd5ca4bd42d81652c8842d4c575e"
+    },
+    {
+      "bytes": 1196,
+      "path": "docs/agent-runs/phase-12/evidence/12d-publication-output-verify-billing-20261103-02/artifacts/verification-receipt-canonical.json",
+      "sha256": "42a74eee8a6202598b2175e67d8914d2cf4eeacefb000844e32f7df38438eb90"
+    },
+    {
+      "bytes": 867,
+      "path": "docs/agent-runs/phase-12/evidence/12d-publication-output-verify-billing-20261103-02/artifacts/verification-window-proposal/user-reported-verification-failure.json",
+      "sha256": "b294cd50d54ec9fbe0c8e698bd9d230a5b70cf179b3620eeeda3aacdc0e78ab9"
+    },
+    {
+      "bytes": 28926,
+      "path": "docs/agent-runs/phase-12/evidence/12d-publication-output-verify-billing-20261103-02/publication-inventory.json",
+      "sha256": "d280d73f680886125421264643c757207324a4ccce2f102f50c14a3d977c26c1"
+    },
+    {
+      "bytes": 7641,
+      "path": "docs/agent-runs/phase-12/evidence/12d-publication-output-verify-billing-20261103-02/suffixes/owner-report.md.txt",
+      "sha256": "514422a92f85064feaf839dbbfc876a693419cc5bceffa2815c8962e4a433b88"
+    },
+    {
+      "bytes": 958,
+      "path": "docs/agent-runs/phase-12/evidence/12d-publication-output-verify-billing-20261103-02/suffixes/prompt.md.txt",
+      "sha256": "b4ea4677e86f898cdbff0e6216dd13a0a28ed21bda6814a35a7f33d40001b318"
+    },
+    {
+      "bytes": 1137,
+      "path": "docs/agent-runs/phase-12/evidence/12d-publication-output-verify-billing-20261103-02/suffixes/repairs.md.txt",
+      "sha256": "9b7ad7f90785856f866744ebf80f0c6531e4e6fb9ffcd5f3916f2179b942a58d"
+    },
+    {
+      "bytes": 1103,
+      "path": "docs/agent-runs/phase-12/evidence/12d-publication-output-verify-billing-20261103-02/suffixes/review.md.txt",
+      "sha256": "c3d2070da195b5db4a2a3bb2d4bdb890e1838c699cf85d8f45ebef86bbe4e607"
+    },
+    {
+      "bytes": 1262,
+      "path": "docs/agent-runs/phase-12/evidence/12d-publication-output-verify-billing-20261103-02/suffixes/test-report.md.txt",
+      "sha256": "0204c2330821203e0d68e17c39597fa7f45c32e371bf663e5b7baf73287056bc"
+    }
+  ],
+  "root": "docs/agent-runs/phase-12/evidence/12d-publication-output-verify-billing-20261103-02"
+}

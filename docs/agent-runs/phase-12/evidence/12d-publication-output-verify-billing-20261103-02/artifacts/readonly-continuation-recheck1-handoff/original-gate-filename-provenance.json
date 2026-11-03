@@ -1,0 +1,22 @@
+{
+  "kind": "Coordinator provenance record from existing chat and safe public metadata; not a new private check",
+  "original_filename": "approval-20261102-attempt02.json",
+  "full_original_path": "/Users/danny/Library/Application Support/ScholarChain/terraform/billing-bootstrap/approval-20261102-attempt02.json",
+  "source": "Earlier user-pasted Terminal command and its Gate saved/Gate SHA256 output in this same chat",
+  "user_output_verbatim": [
+    "Gate saved: /Users/danny/Library/Application Support/ScholarChain/terraform/billing-bootstrap/approval-20261102-attempt02.json",
+    "Gate SHA256: 4af82b7d800cc746fdd8f2abdc5882019b9bade87c9b771a6aa419b84df1b8b3"
+  ],
+  "later_user_command_context": "The human-run p3-check/apply/readback loop used this same billing_gate path and the same hash. Its P3/apply receipts bound the same hash. No filename was obtained by enumerating or reading private storage during verifier authoring.",
+  "prior_validation_metadata": "/tmp/scholarchain-phase12d-attempt02-preparation-20261102/validated-personal-gate.json",
+  "prior_validation_time_UTC": "2026-11-02T21:05:31.909811+00:00",
+  "prior_validation_limit": "The retained safe validation result reports hash/schema/mode/window success but omits the filename. The explicit path provenance is the user chat output and the then-authorized validation command, not an inference from that JSON alone.",
+  "review_gap_acknowledged": "The previous implementation used the chat-provided filename without including its provenance in the reviewed public packet. That omission created the M1 review gap.",
+  "repair_contract": "Human pins a safe direct-child original_gate_filename in a new gate; context/hash constraints remain fixed. No author-provided default, no arbitrary path selection, and no real gate written now.",
+  "unknowns": [
+    "Current presence, location and unchanged bytes are not newly verified.",
+    "The raw original apply-receipt file SHA remains unknown pending separately authorized bounded preflight."
+  ],
+  "new_private_reads_or_stats": 0,
+  "new_AWS_calls": 0
+}

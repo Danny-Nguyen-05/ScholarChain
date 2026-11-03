@@ -1,0 +1,13 @@
+{
+  "user_authorization_verbatim": "yes you can commit and push them.",
+  "branch": "phase-12",
+  "base_head": "4000889e244dacdb4c0445b2f6a93b24841a0ad7",
+  "staged_files": {
+    "scripts/billing/README.md": "b1e5fa3ebdcb9da3ee1968373757b96b173c54e0edf293aac203069d75cb8a2b",
+    "scripts/billing/budget_execution.py": "3930390b54fd08c2078f23b1fd1b0f08e3eb1a3ac7335f8fe6ffb430d70c4c8f",
+    "scripts/billing/tests/test_budget_execution.py": "d30346c7d903835f4fb3d2b215481d404ed449a1c94b938225c9d118f45586dd"
+  },
+  "staged_diff_check_exit": 0,
+  "all_staged_hashes_match_independent_review": true,
+  "scope": "Three approved source files only; no AWS/private action/continuation implementation"
+}

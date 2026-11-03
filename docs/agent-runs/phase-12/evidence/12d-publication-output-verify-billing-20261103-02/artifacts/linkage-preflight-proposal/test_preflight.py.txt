@@ -1,0 +1,119 @@
+#!/usr/bin/env python3
+"""Synthetic-only tests. Never invoke the proposed helper's real production linkage."""
+import copy
+from datetime import datetime,timezone
+import hashlib
+import importlib.util
+import io
+import json
+import os
+from pathlib import Path
+import sys
+import tempfile
+import unittest
+from contextlib import redirect_stdout
+from unittest import mock
+
+sys.dont_write_bytecode=True
+HERE=Path(__file__).resolve().parent
+REPO=Path('/Users/danny/Documents/UIC/CS441/ScholarChain')
+spec=importlib.util.spec_from_file_location('proposed_preflight',HERE/'preflight.py')
+h=importlib.util.module_from_spec(spec);spec.loader.exec_module(h)
+spec=importlib.util.spec_from_file_location('approved_synthetic_fixture',REPO/'scripts/billing/tests/test_budget_verification.py')
+f=importlib.util.module_from_spec(spec);sys.modules[spec.name]=f;spec.loader.exec_module(f)
+
+class Helpers(unittest.TestCase):
+    def setUp(self):
+        self.fixture=f.Features(methodName='test_exact_six_requests_safe_receipt_and_original_preservation')
+        self.fixture.setUp();self.v=f.v
+        self.hash_patch=mock.patch.object(h,'AWS_LAUNCHER_SHA',self.v.b.hash_file(self.fixture.aws));self.hash_patch.start()
+        self.before=self.snapshot()
+    def tearDown(self):self.hash_patch.stop();self.fixture.tearDown()
+    def snapshot(self):
+        return {str(p.relative_to(self.fixture.root)):p.read_bytes() for p in self.fixture.root.rglob('*') if p.is_file() and not p.is_symlink()}
+    def run_main(self,filename='approval-20261102-attempt02.json'):
+        output=io.StringIO()
+        with mock.patch.object(h,'source_check') as source, mock.patch.object(h,'load_verifier',return_value=self.v), \
+                mock.patch.object(self.v,'production_policy',return_value=self.fixture.policy), redirect_stdout(output):
+            status=h.main(['--original-gate-filename',filename])
+        return status,json.loads(output.getvalue()),source.call_count
+    def test_success_uses_reviewed_linkage_and_modifies_nothing(self):
+        status,result,checks=self.run_main()
+        self.assertEqual(status,0);self.assertEqual(checks,2)
+        self.assertEqual(result['original_apply_receipt_sha256'],self.v.b.hash_file(self.fixture.old/'apply.receipt.json'))
+        self.assertTrue(result['state_backup_match']);self.assertFalse(result['execution_authorized']);self.assertFalse(result['gate_created'])
+        self.assertEqual(self.snapshot(),self.before);self.assertFalse(self.fixture.ex.op.exists());self.assertEqual(self.fixture.calls,[])
+        text=json.dumps(result);self.assertNotIn(f.ADDRESS,text);self.assertNotIn(hashlib.sha256(f.ADDRESS.encode()).hexdigest(),text)
+    def test_exact_private_read_scope_and_counts(self):
+        opened=[];real=self.v.read_private;hashed=[];real_hash=self.v.b.hash_file
+        def read(path,uid):opened.append(str(path));return real(path,uid)
+        def digest(path):hashed.append(str(path));return real_hash(path)
+        with mock.patch.object(self.v,'read_private',side_effect=read),mock.patch.object(self.v.b,'hash_file',side_effect=digest):
+            status,result,checks=self.run_main()
+        self.assertEqual(status,0)
+        apply=str(self.fixture.old/'apply.receipt.json');gate=str(self.fixture.primary/'approval-20261102-attempt02.json')
+        self.assertEqual(opened.count(apply),2);self.assertEqual(opened.count(gate),1);self.assertEqual(len(opened),3)
+        self.assertEqual(hashed,[str(self.fixture.policy.state),str(self.fixture.backups/'initial-ab9f141e83058209/billing.execution.tfstate'),str(self.fixture.aws)])
+        self.assertNotIn(str(self.fixture.primary/'notification.private.tfvars.json'),opened+hashed)
+    def test_invalid_filename_and_cli_fail_before_source_or_private(self):
+        for filename in ('../approval-x.json','/tmp/approval-x.json','approval-sub/x.json','bad.json','approval-..json','fixture@example.invalid'):
+            with self.subTest(filename=filename),mock.patch.object(h,'source_check') as check,mock.patch.object(h,'load_verifier') as load:
+                output=io.StringIO()
+                with redirect_stdout(output):status=h.main(['--original-gate-filename',filename])
+                self.assertEqual(status,2);check.assert_not_called();load.assert_not_called();self.assertNotIn(filename,output.getvalue())
+        output=io.StringIO()
+        with mock.patch.object(h,'source_check') as check,redirect_stdout(output):status=h.main(['--override-primary','fixture@example.invalid'])
+        self.assertEqual(status,2);check.assert_not_called();self.assertNotIn('fixture@example.invalid',output.getvalue())
+    def test_wrong_public_commit_dirty_tree_hash_stop_before_private(self):
+        cases=[('commit',h.Refused('PUBLIC_SOURCE_COMMIT')),('dirty',h.Refused('PUBLIC_CHECKOUT_DIRTY')),('hash',h.Refused('PUBLIC_SOURCE_HASH'))]
+        for name,error in cases:
+            with self.subTest(case=name),mock.patch.object(h,'source_check',side_effect=error),mock.patch.object(h,'load_verifier') as load:
+                output=io.StringIO()
+                with redirect_stdout(output):status=h.main(['--original-gate-filename','approval-20261102-attempt02.json'])
+                self.assertEqual(status,2);load.assert_not_called();self.assertNotIn('original_apply_receipt_sha256',output.getvalue())
+        self.assertEqual(self.snapshot(),self.before)
+    def test_wrong_pinned_hash_actual_public_check_rejects(self):
+        wrong=dict(h.PUBLIC_FILES);wrong['scripts/billing/PUBLICATION.md']='0'*64
+        with mock.patch.object(h,'PUBLIC_FILES',wrong),self.assertRaisesRegex(h.Refused,'PUBLIC_SOURCE_HASH'):h.source_check()
+    def test_bad_metadata_receipt_cannot_publish_hash(self):
+        for value in (b'private@example.invalid',b'{}',b'{"stage":"apply","result":{"exit":0}}'):
+            with self.subTest(value=value):
+                self.fixture.write(self.fixture.old/'apply.receipt.json',value)
+                status,result,checks=self.run_main();self.assertEqual(status,2)
+                self.assertNotIn('original_apply_receipt_sha256',result)
+                self.assertNotIn(hashlib.sha256(value).hexdigest(),json.dumps(result));self.assertNotIn('private@example.invalid',json.dumps(result))
+    def test_semantically_tampered_receipt_blocks_even_when_first_read_hashes_it(self):
+        original=json.loads((self.fixture.old/'apply.receipt.json').read_bytes())
+        for key,value in [('stage','readback'),('actor_arn','wrong'),('operation','other')]:
+            with self.subTest(key=key):
+                changed=copy.deepcopy(original);changed[key]=value;self.fixture.write(self.fixture.old/'apply.receipt.json',json.dumps(changed).encode())
+                status,result,checks=self.run_main();self.assertEqual(status,2);self.assertNotIn('original_apply_receipt_sha256',result)
+    def test_state_drift_blocks_and_is_never_parsed_or_modified(self):
+        changed=b'opaque changed fixture state';self.fixture.write(self.fixture.policy.state,changed)
+        status,result,checks=self.run_main();self.assertEqual(status,2);self.assertNotIn('original_apply_receipt_sha256',result)
+        self.assertEqual(self.fixture.policy.state.read_bytes(),changed);self.assertFalse(self.fixture.ex.op.exists())
+    def test_symlink_hardlink_wrong_gate_paths_fail_without_output_hash(self):
+        for name,kind in [('approval-symlink.json','symbolic'),('approval-hardlink.json','hard')]:
+            with self.subTest(kind=kind):
+                target=self.fixture.primary/name;original=self.fixture.primary/'approval-20261102-attempt02.json'
+                if kind=='symbolic':target.symlink_to(original)
+                else:os.link(original,target)
+                status,result,checks=self.run_main(name);self.assertEqual(status,2);self.assertNotIn('original_apply_receipt_sha256',result);self.assertFalse(self.fixture.ex.op.exists())
+                target.unlink() # Synthetic fixture cleanup only.
+    def test_lock_before_or_after_blocks_without_mutation(self):
+        lock=self.fixture.primary/'.billing-wrapper-active.lock';self.fixture.write(lock,b'other synthetic owner')
+        status,result,checks=self.run_main();self.assertEqual(status,2);self.assertNotIn('original_apply_receipt_sha256',result)
+        self.assertEqual(lock.read_bytes(),b'other synthetic owner');lock.unlink()
+        real=self.v.Verification.linkage
+        def create_lock(ex):
+            result=real(ex);self.fixture.write(lock,b'new owner');return result
+        with mock.patch.object(self.v.Verification,'linkage',create_lock):status,result,checks=self.run_main()
+        self.assertEqual(status,2);self.assertNotIn('original_apply_receipt_sha256',result);self.assertEqual(lock.read_bytes(),b'new owner')
+    def test_release_drift_after_validation_withholds_measured_hash(self):
+        output=io.StringIO()
+        with mock.patch.object(h,'source_check',side_effect=[None,h.Refused('PUBLIC_SOURCE_HASH')]), \
+                mock.patch.object(h,'load_verifier',return_value=self.v),mock.patch.object(self.v,'production_policy',return_value=self.fixture.policy),redirect_stdout(output):
+            status=h.main(['--original-gate-filename','approval-20261102-attempt02.json'])
+        self.assertEqual(status,2);self.assertNotIn('original_apply_receipt_sha256',output.getvalue());self.assertEqual(self.snapshot(),self.before)
+
+if __name__=='__main__':unittest.main(verbosity=2)

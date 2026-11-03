@@ -1,0 +1,110 @@
+{
+  "kind": "Single human-authorized saved notification projection",
+  "authorization_verbatim": "yes",
+  "authorization_context": "Run the local alert diagnostic once; no AWS calls or changes; omit recipients, spending and alarm state",
+  "helper_sha256": "e4f686e6cecf9eb1668702a942a3d7b3c450e364ade41d43cf7b1ff6f4675cf1",
+  "exit": 0,
+  "recorded_UTC": "2026-11-03 03:38:14 UTC",
+  "result": {
+    "items": [
+      {
+        "ComparisonOperator": {
+          "actual": "GREATER_THAN",
+          "is_string": true,
+          "known": true,
+          "matches_expected": true,
+          "present": true
+        },
+        "NotificationType": {
+          "actual": "ACTUAL",
+          "is_string": true,
+          "known": true,
+          "matches_expected": true,
+          "present": true
+        },
+        "ThresholdType": {
+          "actual": null,
+          "is_string": false,
+          "known": false,
+          "matches_expected": false,
+          "present": false
+        },
+        "threshold": {
+          "actual": 100,
+          "is_number": true,
+          "matches_expected": true,
+          "present": true,
+          "recognized": true
+        },
+        "unknown_key_count": 0
+      },
+      {
+        "ComparisonOperator": {
+          "actual": "GREATER_THAN",
+          "is_string": true,
+          "known": true,
+          "matches_expected": true,
+          "present": true
+        },
+        "NotificationType": {
+          "actual": "ACTUAL",
+          "is_string": true,
+          "known": true,
+          "matches_expected": true,
+          "present": true
+        },
+        "ThresholdType": {
+          "actual": null,
+          "is_string": false,
+          "known": false,
+          "matches_expected": false,
+          "present": false
+        },
+        "threshold": {
+          "actual": 50,
+          "is_number": true,
+          "matches_expected": true,
+          "present": true,
+          "recognized": true
+        },
+        "unknown_key_count": 0
+      },
+      {
+        "ComparisonOperator": {
+          "actual": "GREATER_THAN",
+          "is_string": true,
+          "known": true,
+          "matches_expected": true,
+          "present": true
+        },
+        "NotificationType": {
+          "actual": "ACTUAL",
+          "is_string": true,
+          "known": true,
+          "matches_expected": true,
+          "present": true
+        },
+        "ThresholdType": {
+          "actual": null,
+          "is_string": false,
+          "known": false,
+          "matches_expected": false,
+          "present": false
+        },
+        "threshold": {
+          "actual": 80,
+          "is_number": true,
+          "matches_expected": true,
+          "present": true,
+          "recognized": true
+        },
+        "unknown_key_count": 0
+      }
+    ],
+    "notification_count": 3
+  },
+  "authorized_private_response_reads_consumed": 1,
+  "further_private_response_reads_authorized": false,
+  "AWS_calls": 0,
+  "budget_changed": false
+}

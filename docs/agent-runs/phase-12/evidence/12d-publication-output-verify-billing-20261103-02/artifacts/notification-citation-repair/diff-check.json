@@ -1,0 +1,6 @@
+{
+  "command": "git diff --check",
+  "exit": 0,
+  "tests_rerun": false,
+  "reason": "D1/N1 README citation/wording only; ten other billing files unchanged and prior155passing tests remain historical accepted evidence."
+}

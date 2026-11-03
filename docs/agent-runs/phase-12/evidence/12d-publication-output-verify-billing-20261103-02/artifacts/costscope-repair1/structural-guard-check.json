@@ -1,0 +1,10 @@
+{
+  "baseline": "Previous independently reviewed candidate12318bc0",
+  "only_changed_production_nodes": [
+    "validate_cost_scope",
+    "sanitize_readback"
+  ],
+  "no_nodes_added_or_removed": true,
+  "module_statements_unchanged": true,
+  "Execution_Policy_PrivateRunner_stop_apply_production_policy_main_unchanged": true
+}

@@ -1,0 +1,62 @@
+import importlib.util
+import json
+from pathlib import Path
+import sys
+import unittest
+
+sys.dont_write_bytecode = True
+path = Path(__file__).with_name('check_notifications.py')
+spec = importlib.util.spec_from_file_location('notification_projection', path)
+d = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(d)
+
+class ProjectionTests(unittest.TestCase):
+    def fixture(self):
+        return {'Notifications': [dict(NotificationType='ACTUAL', ComparisonOperator='GREATER_THAN',
+            Threshold=n, ThresholdType='PERCENTAGE', NotificationState='ALARM') for n in (50,80,100)]}
+
+    def test_expected_settings(self):
+        result=d.project(self.fixture())
+        self.assertEqual(result['notification_count'],3)
+        self.assertEqual([i['threshold']['actual'] for i in result['items']],[50,80,100])
+        self.assertTrue(all(i['ThresholdType']['matches_expected'] for i in result['items']))
+
+    def test_missing_optional_field_stays_missing(self):
+        obj=self.fixture();del obj['Notifications'][0]['ThresholdType']
+        item=d.project(obj)['items'][0]['ThresholdType']
+        self.assertFalse(item['present']);self.assertFalse(item['matches_expected']);self.assertIsNone(item['actual'])
+
+    def test_known_wrong_enum_is_projected(self):
+        obj=self.fixture();obj['Notifications'][0].update(NotificationType='FORECASTED',ComparisonOperator='LESS_THAN',ThresholdType='ABSOLUTE_VALUE')
+        result=d.project(obj)['items'][0]
+        for key in d.ENUMS:self.assertTrue(result[key]['known']);self.assertFalse(result[key]['matches_expected'])
+
+    def test_unknown_strings_and_alarm_never_echo(self):
+        obj=self.fixture();obj['Notifications'][0].update(NotificationType='secret@example.invalid',ComparisonOperator='private-marker',ThresholdType='unknown-marker',ExtraField='sensitive@example.invalid')
+        output=json.dumps(d.project(obj))
+        for value in ('secret@example.invalid','private-marker','unknown-marker','sensitive@example.invalid','ALARM','NotificationState','ExtraField'):
+            self.assertNotIn(value,output)
+        self.assertEqual(d.project(obj)['items'][0]['unknown_key_count'],1)
+
+    def test_threshold_unknown_and_boolean_never_numeric_echo(self):
+        for value in (True,False,None,'50',12345,{},[]):
+            obj=self.fixture();obj['Notifications'][0]['Threshold']=value
+            result=d.project(obj)['items'][0]['threshold']
+            self.assertFalse(result['recognized']);self.assertIsNone(result['actual'])
+
+    def test_wrong_types_and_count_cap(self):
+        for obj in (None,[],{}, {'Notifications':None},{'Notifications':[None]},{'Notifications':[{}]*11}):
+            with self.assertRaises(d.Refused):d.project(obj)
+        self.assertEqual(d.project({'Notifications':[{}]*10})['notification_count'],10)
+
+    def test_duplicate_json_keys_rejected(self):
+        with self.assertRaises(d.Refused):json.loads('{"Notifications":[],"Notifications":[]}',object_pairs_hook=d.unique)
+
+    def test_enum_wrong_types_are_null(self):
+        for value in (None,False,0,{},[]):
+            obj=self.fixture()
+            for key in d.ENUMS:obj['Notifications'][0][key]=value
+            item=d.project(obj)['items'][0]
+            for key in d.ENUMS:self.assertIsNone(item[key]['actual']);self.assertFalse(item[key]['known'])
+
+if __name__=='__main__':unittest.main(verbosity=2)

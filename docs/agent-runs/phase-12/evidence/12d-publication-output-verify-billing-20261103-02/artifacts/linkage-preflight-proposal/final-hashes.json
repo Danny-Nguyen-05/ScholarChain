@@ -1,0 +1,26 @@
+{
+  "infra-engineer-report.md": {
+    "bytes": 4485,
+    "sha256": "eac172df82136e15ca278e160aa7da342eca9cd1b45acb28e30e509cb6f8261d"
+  },
+  "preflight.py": {
+    "bytes": 7142,
+    "sha256": "c42322946ac08b3dc7ae44ee66d9e5de2901c87cd71cbd381309a2c764064e5c"
+  },
+  "proposed-read-scope.md": {
+    "bytes": 4550,
+    "sha256": "78d9f0fcb4251c461306528e55da3d240dda51b8cc8bc3375b705788a84a6aea"
+  },
+  "test-results.json": {
+    "bytes": 358,
+    "sha256": "e680458dd6d3a437db26406891124c08cdd333508a901e2072b3705433181cc8"
+  },
+  "test_preflight.py": {
+    "bytes": 9402,
+    "sha256": "a22acf5bfbfe0901b2d08ade09fc6dafb367f37891077ce2fb940aed68251214"
+  },
+  "tests-attempt1.log": {
+    "bytes": 1621,
+    "sha256": "4e57ec0fc2737f3f2bb411cc44ba2e1634b46a8767c256b2d4c65abb93e78585"
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "kind": "User-reported production wrapper results; private logs not inspected",
+  "operation": "billing-budget-attempt-02",
+  "gate_sha256": "4af82b7d800cc746fdd8f2abdc5882019b9bade87c9b771a6aa419b84df1b8b3",
+  "source_commit": "4000889e244dacdb4c0445b2f6a93b24841a0ad7",
+  "plan_sha256": "ab9f141e83058209263cf561eef1d102496ec7f534b88ce421620d8e0045f855",
+  "p3": {
+    "observed_at": "2026-11-02T21:11:05.710334+00:00",
+    "exact_name_absent": true,
+    "exit": 254,
+    "service_error": "NotFoundException"
+  },
+  "apply": {
+    "observed_at": "2026-11-02T21:11:15.851738+00:00",
+    "exit": 0,
+    "backup_verified": true,
+    "backup": {
+      "bytes": 40818,
+      "equal": true,
+      "fsync_completed": true,
+      "sha256": "271fe888595b6d71eedb649b7cdb87686ded0b3cbb1e2b9a19f76d7575be3f67"
+    },
+    "window_open_for_further_live": true
+  },
+  "readback": {
+    "status": "BLOCKED-ON",
+    "code": "COST_TYPES",
+    "exit": 2
+  },
+  "followup": "Stop; preserve existing resource/state/logs and gate journals. No replay, direct mutation, automatic rollback or cleanup. Prepare separately bounded local diagnosis request."
+}

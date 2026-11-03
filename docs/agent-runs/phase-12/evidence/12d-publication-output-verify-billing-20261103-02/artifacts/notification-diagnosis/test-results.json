@@ -1,0 +1,10 @@
+{
+  "command": "python3 -I /tmp/scholarchain-phase12d-notification-diagnosis/test_projection.py",
+  "tests": 8,
+  "failures": 0,
+  "errors": 0,
+  "exit": 0,
+  "actual_diagnostic_executed": false,
+  "actual_private_reads_or_stats": 0,
+  "AWS_calls": 0
+}

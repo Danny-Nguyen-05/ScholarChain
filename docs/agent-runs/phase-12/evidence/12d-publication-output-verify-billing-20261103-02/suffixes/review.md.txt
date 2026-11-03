@@ -1,0 +1,7 @@
+
+
+## Subphase 12D — fresh budget verification and frozen W3 publication
+
+REVIEW: Retained public evidence includes independent Option B M1/L1/L2 acceptance, earlier cost-scope approval summary, notification code acceptance with subsequent D1 README citation APPROVE summary, and their exact scope/limitations. No coordinator self-approval. Historical570–575 citation is expressly superseded by588–594. Actual runtime verify passed; scan/publication outcome must be established by external authentic scan receipt and helper verify-after, never by this pre-frozen suffix.
+
+Packet: evidence/12d-publication-output-verify-billing-20261103-02/. Gate SHA256: 6e1e20c10049f6440f81d7aaccfb4e08600a3bd7d495027c7fa67b0af3062b84. Operation: verify-billing-20261103-02. Source: 1aa13d71489ebd605cee9b9931bf12de61c18bc3. Verification receipt SHA256: 42a74eee8a6202598b2175e67d8914d2cf4eeacefb000844e32f7df38438eb90. Delivery and Phase12D completion remain unverified/false. This suffix is published only after genuine zero-match same-window scan and verify-before, with verify-after proving exact final bytes.

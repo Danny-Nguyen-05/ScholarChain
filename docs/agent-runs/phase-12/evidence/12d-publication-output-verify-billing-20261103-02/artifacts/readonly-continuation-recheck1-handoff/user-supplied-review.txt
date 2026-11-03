@@ -1,0 +1,135 @@
+Verdict: REQUEST-CHANGES, scoped to the offline Option B verifier, its tests, documentation and proposed workflow. The design and controls are sound, and the evidence reconciles. There is one blocking defect: the verifier hard-codes the location of the original human gate, and no public source supports that location. This review authorizes no private preflight, AWS reads, scan, publication, commit/push or phase completion.
+
+What checks out (verified against code, not prose)
+
+1. Read-only CLI.
+   - Modes: only verify and post-freeze-scan exist (budget_verification.py:362). Neither mode can run Terraform, apply, P3, import, refresh, destroy, a retry, or any command override.
+   - Fixed policy: the canonical verifier location is enforced, then the accepted core policy is used (:350-352). Test injection (policy, runner, clock) is reachable from Python only.
+   - No bytecode cache: dont_write_bytecode is set before the core module loads (:16-20), and no __pycache__ exists.
+2. New gate.
+   - Schema: exactly 31 fields (:34-40). Option B, a verify-… operation, and the plan, proposal and human-record pins are all required.
+   - Original bindings: the original operation, gate, source and wrapper must match fixed constants. The raw apply-receipt hash is a pinned SHA with no default, and the state hash and size are fixed (:127-130).
+   - Identity and window: the exact identity and STS projection are required. Permissions must be exactly the five read-only ones, the three human decisions must be True, and the window must satisfy start ≤ login ≤ STS ≤ now < end, at most 60 minutes (:131-140).
+   - Gate file: it must be a 0600 single-link file with a secure parent.
+3. Linkage.
+   - Apply receipt: exact schema and context, an observation time inside the old window and before the new one, exit 0, and backup metadata that matches exactly (:182-198).
+   - Original journals: zero-byte apply.started and readback.started, and no readback.receipt.json (:199-201).
+   - Locks: a Terraform lock blocks the run and is never deleted (:202-204).
+   - State and backup: both are checked by no-follow opaque hash and size, and state is never parsed (:205-207). The AWS CLI hash is pinned (:208).
+   - Concurrency: the new verifier takes the same exclusive .billing-wrapper-active.lock as the initial wrapper and removes it only if it still owns it (:213-223).
+4. Requests.
+   - Exactly six fixed requests: the budget request uses --show-filter-expression. Each request goes through the accepted argv builder and minimal environment (AWS_MAX_ATTEMPTS=1) with a timeout of at most 60 seconds, capped by the window.
+   - Failure handling: a nonzero exit, stderr, duplicate keys or NextToken each stop the run with no retry (:225-234).
+   - No replay: creating the operation directory is exclusive (:247), and so is the stage journal.
+   - Final rechecks: source, window and linkage are checked again before success (:262-271).
+5. Receipt.
+   - Contents: the new stage verify, option B, the new bindings, the original linkage, and the accepted sanitizer's output. That includes the cost scope, B1 (BillingViewArn must be absent), L1 (no dynamic limits or unknown Budget fields), dates, tags, alerts, subscribers and health.
+   - Privacy: no addresses, hashes or spend appear. delivery_verified and phase12d_complete stay false (:264, :291-302).
+   - Private checkpoint: a 0600 file binds the recipient input's identity to the receipt hash (:268). Its contents never appear publicly.
+6. Scan.
+   - Prerequisites: the scan requires the new verify receipt under the same gate and window, with the external hash pin, the checkpoint and unchanged linkage (:275-313). It never uses the original readback receipt.
+   - Packet checks: complete freeze, no duplicates, symlinks, escaping paths or hard links. File-size and total limits apply, and the private recipient is matched in memory, ignoring case (:317-334).
+   - Final checks: membership, bytes, manifest, checkout, window and verification are all checked again (:335-342).
+   - Output: the helper-compatible 10-key receipt, plus a private sidecar (:343-346).
+7. Tests. There are 38 meaningful tests covering:
+   - the six-request path and a failure at each step;
+   - hash and field tampering, journal and lock conflicts, and state drift;
+   - window expiry at every late checkpoint;
+   - B1/L1, the scan's leak, race, symlink and tamper cases, and a change to the private input, including a same-bytes replacement;
+   - full publication-helper integration, and main never echoing input.
+8. Evidence.
+   - Final runs: the logs show 38 verification tests, 65 wrapper tests and 39 publication tests, all passing, written at 16:33, after the last edit at 16:32:34. The earlier attempts (26, 31, then 34 with 1 failure, then 35) are retained, and A1 and sbt are not claimed.
+   - Snapshots and hashes: after/ and candidate/ match the working files (11 each, 0 mismatches), before/ matches HEAD, and the 11 final hashes match. The patch contains all three new files. The manifests (42 and 18 entries) show 0 mismatches.
+   - Preservation: the 1,247 tracked files (1,239 Phase 12 plus 8 billing), the 105 prior public evidence files, the 209 sources and the human record (1,334 bytes, abe3a50a…) are all unchanged.
+   - Repository state: the tracked diff is empty and only the three new paths are untracked.
+
+Findings
+
+Blocking
+
+ID: M1
+Severity: Medium
+Location: budget_verification.py:172; VERIFICATION.md:34; test_budget_verification.py:55
+Evidence and impact: The gap: the linkage reads the original gate from the hard-coded path PRIMARY/approval-20261102-attempt02.json. That name
+appears in no public evidence, committed history or prior handoff; only the three new files contain it. The owner and coordinator reports do not
+say where it came from.<br>Why it matters: this is an author-supplied default for an unknown private fact, which item 2 of the work order forbids.
+If the name came from inspecting private files, that is an undisclosed boundary breach.<br>Consequence if wrong: the hash pin prevents
+substitution, so the run fails closed, but only after the new operation journal is consumed, which costs a new gate, window and login.
+Owner: infra-engineer; coordinator (provenance)
+Acceptance: 1. State in the evidence how the path was chosen.<br>2. Unless a public, human-attested source establishes it, make it a human-pinned
+value. For example, add a gate field for the filename, constrained to a direct child of the primary directory with a fixed safe pattern, or require
+ confirmation in the separately authorized linkage preflight before the gate is written.<br>3. Add tests for a wrong path, a traversal or symlink
+path, and a correct path.<br>4. Rerun all three suites.
+
+Non-blocking (recommended before release)
+
+ID: L1
+Severity: Low
+Location: :305-313; :247-249; main at :373-375
+Evidence: The gap: the run claims its permanent journal before cheap checks that could fail on a simple typo. scan validates
+--verification-receipt-sha256 (even whether it was supplied) and the manifest hash format only after post-freeze-scan.started exists. main does not
+ require that flag. verify creates the operation directory before checking a typo'd receipt hash.<br>Consequence: a typo permanently burns the
+operation, forcing a new gate, window and six fresh requests.
+Owner: infra-engineer
+Acceptance: Check argument presence and hash formats before creating the journal (optionally also a read-only linkage pre-check), keeping the
+authoritative checks under the lock. Add tests.
+────────────────────────────────────────
+ID: L2
+Severity: Low
+Location: :264-272, :380; VERIFICATION.md:55
+Evidence: The gap: the scan needs the external SHA of the verify receipt file, but stdout prints json.dumps(…, sort_keys=True) on one line, while the
+file is written with indent=2 and a trailing newline. Hashing stdout gives the wrong value.<br>Consequence: the documentation never says how the
+human should derive the correct SHA without a private read.
+Owner: infra-engineer
+Acceptance: Document a deterministic re-serialization of the captured stdout (or emit the hash in fixed form), and test that it equals the file hash.
+────────────────────────────────────────
+ID: I1
+Severity: Info
+Location: :264
+Evidence: observed_at is the completion time of the receipt, not each request's time. VERIFICATION.md:51 calls it the "actual current observation
+time".
+Owner: infra-engineer (optional)
+Acceptance: Reword it as the completion time after six fresh requests.
+────────────────────────────────────────
+ID: I2
+Severity: Info
+Location: VERIFICATION.md:41
+Evidence: "Config symlinks/mode drift block" applies only to the config directory and its ancestors. The core check_files content checks are
+deliberately not run, which is acceptable for read-only requests.
+Owner: infra-engineer (optional)
+Acceptance: Clarify the wording.
+
+Runtime gate conditions (not code defects)
+- The raw hash of the original apply receipt and the original gate's location still need the separately authorized linkage preflight.
+- A new personal gate, window, login and STS observation are required.
+- Verify and scan, including packet assembly and transfer, must all fit inside one window of at most 60 minutes.
+- Absence-only BillingViewArn may fail closed even on a primary view.
+- Delivery, W3, F4, EMR, the same-disk backup and Phase 12 completion stay open.
+
+Report
+
+1. STATUS: REQUEST-CHANGES (M1) for the offline Option B verifier, tests, documentation and workflow only.
+2. OWNER: code-reviewer (read-only). M1, L1 and L2 go to infra-engineer, and M1's provenance question also to the coordinator.
+3. WORK ORDER: Phase 12D independent review of the Option B read-only verifier and scan (/tmp/scholarchain-phase12d-readonly-continuation-handoff/reviewer-prompt.md). Base 9dda6b43.
+4. FILES CREATED: None.
+5. FILES MODIFIED: None.
+6. COMMANDS RUN:
+   - Read-only git rev-parse, log, status, show, grep and log -S.
+   - shasum, stat, find, grep, sed and cat on the public /tmp evidence.
+   - python3 -I scripts that only compare hashes and manifests and create no files.
+   - Nothing else: no tests, scripts, AWS or private reads.
+7. TEST RESULTS: Not rerun by me. The logs show 38 verification, 65 wrapper and 39 publication tests, all passing with exit 0 after the final edits. The attempt-3 failure (1) is disclosed. A1 and sbt were not run.
+8. VALIDATION RESULTS: Hashes, snapshots, the patch and manifests reconcile with 0 mismatches. The 1,247-, 105- and 209-file checks and the human record match. There is no cache directory, and only the three new untracked paths exist.
+9. ASSUMPTIONS: The prior apply and diagnostic reports are authentic. The original gate location is unverified (M1).
+10. RISKS:
+    - M1: if the hard-coded original-gate path is wrong, the run fails closed and consumes the operation.
+    - L1: a typo can burn the operation and window.
+    - L2: the human may supply the wrong verification hash.
+    - The runtime gate conditions listed above remain.
+11. MANUAL ACTION REQUIRED: Ask infra-engineer and the coordinator to say where the original gate filename came from, then route M1 (and preferably L1 and L2) for an offline fix. Launch the recheck yourself.
+12. BLOCKED-ON OWNER: infra-engineer; coordinator for provenance.
+13. BLOCKED-ON EVIDENCE:
+    - provenance for the gate filename, or a human-pinned or preflight-confirmed path, with tests;
+    - full reruns of all three suites;
+    - new hashes for all 11 files.
+14. NEXT GATE: An independent recheck of M1 (plus L1 and L2 if they are addressed). After acceptance come source control, the authorized linkage preflight, and a personally written gate and window. Nothing executes automatically.

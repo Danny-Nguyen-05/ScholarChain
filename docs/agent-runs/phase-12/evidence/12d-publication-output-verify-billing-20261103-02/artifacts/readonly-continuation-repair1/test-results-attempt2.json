@@ -1,0 +1,46 @@
+{
+  "verification": {
+    "command": "python3 -I scripts/billing/tests/test_budget_verification.py",
+    "exit": 0,
+    "tests": 45,
+    "failures": 0,
+    "errors": 0,
+    "wall_seconds": 17.464
+  },
+  "wrapper": {
+    "command": "python3 -I scripts/billing/tests/test_budget_execution.py",
+    "exit": 0,
+    "tests": 65,
+    "failures": 0,
+    "errors": 0,
+    "wall_seconds": 14.805
+  },
+  "publication": {
+    "command": "python3 -I scripts/billing/tests/test_publication_evidence.py",
+    "exit": 0,
+    "tests": 39,
+    "failures": 0,
+    "errors": 0,
+    "wall_seconds": 0.423
+  },
+  "diff_check": {
+    "command": "git diff --check",
+    "exit": 0,
+    "limit": "Tracked files only; new-file whitespace separately checked."
+  },
+  "prior_attempts": [
+    {
+      "log": "verification-tests-attempt1.log",
+      "tests": 45,
+      "exit": 0,
+      "failures": 0,
+      "errors": 0,
+      "cause": "Passing first repair suite before strengthening L2 test to capture actual main stdout and correcting a guide escape."
+    }
+  ],
+  "AWS_calls": 0,
+  "Terraform_execution": 0,
+  "actual_private_access": false,
+  "sbt_check_run": false,
+  "A1_rerun": false
+}

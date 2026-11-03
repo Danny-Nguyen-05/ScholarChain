@@ -1,0 +1,14 @@
+{
+  "kind": "Updated window proposal for personal gate; NOT new execution authorization",
+  "window_provenance": "Starts at the actual already-observed fresh login. Human must personally authorize this updated dated window by saving the complete gate before verification. No earlier verification is authorized retrospectively.",
+  "previous_window_expired": "2026-11-03T09:31:00-06:00 through10:31:00-06:00",
+  "new_window_start": "2026-11-03T12:08:51-06:00",
+  "new_window_end": "2026-11-03T13:08:51-06:00",
+  "scope": "Six fixed fresh AWS budget/tag/notification/subscriber reads; unchanged local successful-apply/state-backup linkage; private recipient comparisons; final frozen evidence privacy scan and exact checked publication. No AWS mutation, create/apply/IAM/cleanup/EMR.",
+  "actor_and_publication_procedure": "Human foreground persistent Terminal runs accepted verifier and scan; coordinator prepares frozen public packet and exact five record suffixes, transfers packet/freeze only before scan, verifies-before then appends exact scanned suffixes and verifies-after. All inside the dated window; stop on failure/expiry, never replay a started operation.",
+  "original_linkage_preflight": "/tmp/scholarchain-phase12d-linkage-preflight-handoff/authorized-preflight-result.json",
+  "facts_sha256": "496ec50a0dff93fe68cd3fe8b066f357c93e0994e561cb56f60168f6ffdbb65d",
+  "fresh_login_reused_without_rerun": true,
+  "actual_gate_created": false,
+  "private_reads_or_AWS_calls": 0
+}
