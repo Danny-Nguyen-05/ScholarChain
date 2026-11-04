@@ -1,0 +1,581 @@
+{
+  "STATUS": "COMPLETE",
+  "OWNER": "coordinator",
+  "WORK ORDER": "Make sure we don't have any other Markdown file contain the reviewer prompt, okay?",
+  "observed_at": "2026-11-03T22:35:03.515676+00:00",
+  "base_head": "2d637c6707ecc66a489561dd179406b6ac622e93",
+  "scope": "Repository Markdown task-specific reviewer/rechecker prompts and embedded review-prompt templates. Runtime prompts, agent role definitions, review results and human decisions are preserved. No Git history rewrite.",
+  "deleted_file_count": 52,
+  "embedded_block_removal_count": 18,
+  "changes": [
+    {
+      "path": "docs/agent-runs/phase-05/prompt.md",
+      "action": "remove_embedded_block",
+      "before_sha256": "6331a8dd35cac3d8b92f2d3f0747a41514af3a60e03555dc668df958fbcf7a4a",
+      "before_bytes": 99060,
+      "removed_line_start": 386,
+      "removed_line_end": 447,
+      "removed_block_sha256": "b0d7e61594b95c8cf72f0364559ac55074bce3b6021d94e6b5473e6090888192",
+      "after_sha256": "22842520ee25fa3ee4b8ad24f118b3e164066e24cd90c29e5d345a7607a5b357",
+      "after_bytes": 95552
+    },
+    {
+      "path": "docs/agent-runs/phase-06/evidence/6de/repair-1/reviewer-prompt.md",
+      "action": "delete",
+      "before_sha256": "3d29e1d368d874e6acbc9c2143932c6f19f2f65b8ec429726141c5e00782c695",
+      "before_bytes": 6857
+    },
+    {
+      "path": "docs/agent-runs/phase-06/evidence/6de/reviewer-prompt.md",
+      "action": "delete",
+      "before_sha256": "870414c5fc2addf384f29bbbb1258b1ad4744bbbc0351d5ceef669f37f497734",
+      "before_bytes": 6750
+    },
+    {
+      "path": "docs/agent-runs/phase-06/evidence/6fg/repair-1/reviewer-prompt.md",
+      "action": "delete",
+      "before_sha256": "510a6637274c4f1af8949f8c813f2406ae5d56a48069dae443dd2e1342ad1dcb",
+      "before_bytes": 3716
+    },
+    {
+      "path": "docs/agent-runs/phase-06/evidence/6fg/reviewer-prompt.md",
+      "action": "delete",
+      "before_sha256": "0e198cea0adf466473b1a939bcc0795b4e58b5f0c3efd3086f0ee18a2d1ddb4a",
+      "before_bytes": 7391
+    },
+    {
+      "path": "docs/agent-runs/phase-06/evidence/6i/reviewer-prompt.md",
+      "action": "delete",
+      "before_sha256": "35efc78e6583b7e2c15e56a40cb340a80351a24613a4f212c710b58967b8d649",
+      "before_bytes": 10465
+    },
+    {
+      "path": "docs/agent-runs/phase-07/evidence/7a/phase7-plan.md",
+      "action": "remove_embedded_block",
+      "before_sha256": "b54aa12309007bf4758120d8297d1de2eccb497220d3f0de87dc5563fef74ebb",
+      "before_bytes": 31927,
+      "removed_line_start": 239,
+      "removed_line_end": 304,
+      "removed_block_sha256": "29613f17f132b4cac19f74e5a81847f4252b1e519a371654a86991aa375f7228",
+      "after_sha256": "de98e6f9da1c891b6459dec71b34ea586a73c6471ab7ea409b784c1b5acb2914",
+      "after_bytes": 28272
+    },
+    {
+      "path": "docs/agent-runs/phase-07/evidence/7a/repair-1/rechecker-prompt.md",
+      "action": "delete",
+      "before_sha256": "cdc2fa8d10164748715ae3c91f0f216638e9b302d89f6eeef21b03f355b14fcc",
+      "before_bytes": 8297
+    },
+    {
+      "path": "docs/agent-runs/phase-07/evidence/7a/reviewer-prompt.md",
+      "action": "delete",
+      "before_sha256": "01c9465582f89780c9c592b9f258d2e61433e91d8d27c28199f656b60fbb2938",
+      "before_bytes": 10622
+    },
+    {
+      "path": "docs/agent-runs/phase-07/evidence/7b/handoff.md",
+      "action": "remove_embedded_block",
+      "before_sha256": "a46a38b39b70628c99e9118b756b4ea9a840c696f3e8994b2af1d9516bd046c4",
+      "before_bytes": 9025,
+      "removed_line_start": 19,
+      "removed_line_end": 128,
+      "removed_block_sha256": "d3ba433010d6e9c80c930bcc52f425a56ad5a1520158827d003d5d44e60b1516",
+      "after_sha256": "20485197aab8efb75f9ec048640c6cea63187820540d8fe6ff22cf5e76df7176",
+      "after_bytes": 1470
+    },
+    {
+      "path": "docs/agent-runs/phase-07/evidence/7b/repair-1/handoff.md",
+      "action": "remove_embedded_block",
+      "before_sha256": "155704b3c280abafcc13256840d0bb5ede6dcd3d3018e3714e7cae64460d25f4",
+      "before_bytes": 8922,
+      "removed_line_start": 33,
+      "removed_line_end": 136,
+      "removed_block_sha256": "ba9ab1fa2e0912b62cf120255ffe95d9b22cb98a36ca72dc4f239aff94ec81cd",
+      "after_sha256": "5ac7f04180d276f25d6b3363eaa6ed6feb9ad5d0e8733d43fca30ce263d5c009",
+      "after_bytes": 2229
+    },
+    {
+      "path": "docs/agent-runs/phase-07/evidence/7b/repair-1/rechecker-prompt.md",
+      "action": "delete",
+      "before_sha256": "50c7818a2179aa57d86e72dc3cd418c96a6a594d3495ed6e54da6306e5d9f77b",
+      "before_bytes": 6760
+    },
+    {
+      "path": "docs/agent-runs/phase-07/evidence/7b/reviewer-prompt.md",
+      "action": "delete",
+      "before_sha256": "91ec792a07796d82e3b1868cfc99a09c5a26c61670a60463d1dcef56c718f55c",
+      "before_bytes": 7630
+    },
+    {
+      "path": "docs/agent-runs/phase-07/evidence/7c/handoff.md",
+      "action": "remove_embedded_block",
+      "before_sha256": "37182d8c47666dcdf35b9ff3d4417858262267528238299fa07efdda0eb35742",
+      "before_bytes": 8602,
+      "removed_line_start": 24,
+      "removed_line_end": 123,
+      "removed_block_sha256": "b1e49be5e4ee892274f19e0f6c7e2387ca4986896e25b63b226c4ab51bbf560d",
+      "after_sha256": "1c40b5136d01da302cf5cca67c96c22ae9151847b38fecca94796ff3ad1ff63e",
+      "after_bytes": 1811
+    },
+    {
+      "path": "docs/agent-runs/phase-07/evidence/7c/repair-1/handoff.md",
+      "action": "remove_embedded_block",
+      "before_sha256": "c8930d3a3975528502c5de4497ef1b18102f59c09d7ab144db5e702042913134",
+      "before_bytes": 7208,
+      "removed_line_start": 23,
+      "removed_line_end": 113,
+      "removed_block_sha256": "0ebb75d3ca6ca8ecacd6a1ccdaccc83b040b5197dc203c422561b35e50b3a5a0",
+      "after_sha256": "d563069512937f4e569113a17cf8c0917f676d2385cd91885be5b3048793c64b",
+      "after_bytes": 1586
+    },
+    {
+      "path": "docs/agent-runs/phase-07/evidence/7c/repair-1/rechecker-prompt.md",
+      "action": "delete",
+      "before_sha256": "c6501c4a0ae6acd6a8593c6c76a9aa328cb0fb76b8a487ad699725f3e8e0585c",
+      "before_bytes": 5689
+    },
+    {
+      "path": "docs/agent-runs/phase-07/evidence/7c/reviewer-prompt.md",
+      "action": "delete",
+      "before_sha256": "faec5acb3bb661e14c82b47f76f0bcff2e269952646e3f545afb46cc9a27738c",
+      "before_bytes": 6866
+    },
+    {
+      "path": "docs/agent-runs/phase-08/evidence/8a/phase8-plan.md",
+      "action": "remove_embedded_block",
+      "before_sha256": "14daa4a41ca151e161e9bf4b67a4c5e95f02ae3b0fdfdda51a9a6b5cbd1c9e27",
+      "before_bytes": 27615,
+      "removed_line_start": 219,
+      "removed_line_end": 284,
+      "removed_block_sha256": "0e2875a7acfade30451f56e40451d4fba807fe24800460bece6f15f6f8c2206a",
+      "after_sha256": "7fbcb138ed2cc859d35d1d1383bc61ba70c69091c35f7e6730d3a97c4cfb264f",
+      "after_bytes": 23918
+    },
+    {
+      "path": "docs/agent-runs/phase-08/evidence/8a/reviewer-prompt.md",
+      "action": "delete",
+      "before_sha256": "0a830e1d4a1897cac26c83aacf83954d3455701955b9e7cb97d70285a630f394",
+      "before_bytes": 9263
+    },
+    {
+      "path": "docs/agent-runs/phase-08/evidence/8a-r1/reviewer-prompt.md",
+      "action": "delete",
+      "before_sha256": "16954784bee957ecfbd4b202246f6f55d92b09cda2cb4d7c3e62ebf3cdb91df8",
+      "before_bytes": 11749
+    },
+    {
+      "path": "docs/agent-runs/phase-08/evidence/8b/phase8-plan.md",
+      "action": "remove_embedded_block",
+      "before_sha256": "14daa4a41ca151e161e9bf4b67a4c5e95f02ae3b0fdfdda51a9a6b5cbd1c9e27",
+      "before_bytes": 27615,
+      "removed_line_start": 219,
+      "removed_line_end": 284,
+      "removed_block_sha256": "0e2875a7acfade30451f56e40451d4fba807fe24800460bece6f15f6f8c2206a",
+      "after_sha256": "7fbcb138ed2cc859d35d1d1383bc61ba70c69091c35f7e6730d3a97c4cfb264f",
+      "after_bytes": 23918
+    },
+    {
+      "path": "docs/agent-runs/phase-08/evidence/8b/reviewer-prompt.md",
+      "action": "delete",
+      "before_sha256": "9880d0e12875fdbc5de96b198253a247eecc9c0f11d9e39ffeabfb9a6b7c18ab",
+      "before_bytes": 10085
+    },
+    {
+      "path": "docs/agent-runs/phase-08/evidence/8b-r1/phase8-plan.md",
+      "action": "remove_embedded_block",
+      "before_sha256": "14daa4a41ca151e161e9bf4b67a4c5e95f02ae3b0fdfdda51a9a6b5cbd1c9e27",
+      "before_bytes": 27615,
+      "removed_line_start": 219,
+      "removed_line_end": 284,
+      "removed_block_sha256": "0e2875a7acfade30451f56e40451d4fba807fe24800460bece6f15f6f8c2206a",
+      "after_sha256": "7fbcb138ed2cc859d35d1d1383bc61ba70c69091c35f7e6730d3a97c4cfb264f",
+      "after_bytes": 23918
+    },
+    {
+      "path": "docs/agent-runs/phase-08/evidence/8b-r1/reviewer-prompt.md",
+      "action": "delete",
+      "before_sha256": "e147194949e35831e628f941bdad5d5ab0bc4f081c03d515849335261170bd86",
+      "before_bytes": 9616
+    },
+    {
+      "path": "docs/agent-runs/phase-09/evidence/9a/plan-of-record.md",
+      "action": "remove_embedded_block",
+      "before_sha256": "8c16e8eeaf783ee47a484a0927cac372263335d664bac7ac0f5e470b33b5fcf8",
+      "before_bytes": 30085,
+      "removed_line_start": 220,
+      "removed_line_end": 285,
+      "removed_block_sha256": "162364f0ade81ee1136aa16864f248557a5f94be9c26882e9a2edb2dc4d77499",
+      "after_sha256": "33d75709ed4acb9f0f52b1010087fe0ada6d93a181ef3c7be0946c109e674554",
+      "after_bytes": 26243
+    },
+    {
+      "path": "docs/agent-runs/phase-09/evidence/9a/reviewer-prompt.md",
+      "action": "delete",
+      "before_sha256": "bb0baded8815bce4e88301b464ef5b9390f1ef928041170867a944dcfa3db16f",
+      "before_bytes": 11836
+    },
+    {
+      "path": "docs/agent-runs/phase-09/evidence/9a-r1/reviewer-prompt.md",
+      "action": "delete",
+      "before_sha256": "b5677c1c6bcd85d290acc0082c71748d4042be72d1589d0e7735c8c491ea08d0",
+      "before_bytes": 7209
+    },
+    {
+      "path": "docs/agent-runs/phase-09/evidence/9b/reviewer-prompt.md",
+      "action": "delete",
+      "before_sha256": "130a2e597820784e5be53412b5fa9297eff8bf668b3ebb46712d369ecddd0d38",
+      "before_bytes": 12269
+    },
+    {
+      "path": "docs/agent-runs/phase-09/evidence/9b-r1/reviewer-prompt.md",
+      "action": "delete",
+      "before_sha256": "86221ef78f1e13eabe824362789239b39e0b60ed75a1ba1229b37de5bd513c44",
+      "before_bytes": 11083
+    },
+    {
+      "path": "docs/agent-runs/phase-09/evidence/9c/reviewer-prompt.md",
+      "action": "delete",
+      "before_sha256": "3359f253993cd576d1e41eab2f084b89ae99d29b06e315d3e846e8242f204441",
+      "before_bytes": 11863
+    },
+    {
+      "path": "docs/agent-runs/phase-09/prompt.md",
+      "action": "remove_embedded_block",
+      "before_sha256": "6b19124a423afd9c7b390f00c66d010906ba10fffe85e696ef290087227e141a",
+      "before_bytes": 38401,
+      "removed_line_start": 224,
+      "removed_line_end": 289,
+      "removed_block_sha256": "162364f0ade81ee1136aa16864f248557a5f94be9c26882e9a2edb2dc4d77499",
+      "after_sha256": "aa42b0e460e6814b787a58c36a1da54ae2f81c8774982f8a6422fcc4099e21d6",
+      "after_bytes": 34559
+    },
+    {
+      "path": "docs/agent-runs/phase-10/evidence/10a-repair-1/reviewer-prompt.md",
+      "action": "delete",
+      "before_sha256": "0f4ce72dee2003e46faf45f37d6e038bf3156d434fd2244caa31b360959e33ef",
+      "before_bytes": 7498
+    },
+    {
+      "path": "docs/agent-runs/phase-10/evidence/10b/handoff.md",
+      "action": "remove_embedded_block",
+      "before_sha256": "4ff3ec378145525f61b46d38dd292adb6bc3c05301d73278e840d544d56f3b41",
+      "before_bytes": 14618,
+      "removed_line_start": 29,
+      "removed_line_end": 217,
+      "removed_block_sha256": "ccecf34c2bb78c9edaa04ac21eb1f07307f4d74fb4724bd89eb35ead593ecb14",
+      "after_sha256": "3dff1a042ca80a965d78ecec5f58393413a726bcdfa43c6cb19225e150d5341a",
+      "after_bytes": 1999
+    },
+    {
+      "path": "docs/agent-runs/phase-10/evidence/10b/reviewer-prompt.md",
+      "action": "delete",
+      "before_sha256": "d07713e94b1a083fee6545d05201f195be1c23103924cf05c327d4e18d04b9f9",
+      "before_bytes": 12699
+    },
+    {
+      "path": "docs/agent-runs/phase-10/evidence/10b-repair-1/handoff.md",
+      "action": "remove_embedded_block",
+      "before_sha256": "db27387b69372703a3110d9ffcbbd5d076a4a2b5632ad6c6dc31346a3a8cd988",
+      "before_bytes": 13600,
+      "removed_line_start": 31,
+      "removed_line_end": 202,
+      "removed_block_sha256": "bfae52d8d6b938bbb575137c3abe4b5a15eae93ec1e5c4b56a86ec26a4dcef65",
+      "after_sha256": "235c54ea496b9eee1797fe04a86da81c4b22fd60aef6a04d3afddc683d9d97a7",
+      "after_bytes": 2321
+    },
+    {
+      "path": "docs/agent-runs/phase-10/evidence/10b-repair-1/reviewer-prompt.md",
+      "action": "delete",
+      "before_sha256": "8bc9ba72d4c802eeb6b9e8c0e8a5e33667a994bdd2bbbd56b2e8572a3ba4e35a",
+      "before_bytes": 11359
+    },
+    {
+      "path": "docs/agent-runs/phase-10/evidence/10b-repair-2/handoff.md",
+      "action": "remove_embedded_block",
+      "before_sha256": "1e8f8ca2e3d562b6d5eef9893a295a0d859a91b2cdc0f1f3784c37cc16880493",
+      "before_bytes": 13713,
+      "removed_line_start": 30,
+      "removed_line_end": 192,
+      "removed_block_sha256": "8a7b0a747a770db34b28561bd024c6f9d85a0195fd953573abaaefe1d18f485b",
+      "after_sha256": "8a1b7f909710b5ed5ac816841814e7998609b3f5557732e41fc0bb2ff7b83dae",
+      "after_bytes": 2270
+    },
+    {
+      "path": "docs/agent-runs/phase-10/evidence/10b-repair-2/reviewer-prompt.md",
+      "action": "delete",
+      "before_sha256": "add1a960ea208345454002f785da67ba814939d507ab0d1b56997c61b11671de",
+      "before_bytes": 11523
+    },
+    {
+      "path": "docs/agent-runs/phase-10/prompt.md",
+      "action": "remove_embedded_block",
+      "before_sha256": "5cecf28bdd00601656920705659690ce537b605be861c00d1b1645e0ee74c5b5",
+      "before_bytes": 26273,
+      "removed_line_start": 215,
+      "removed_line_end": 280,
+      "removed_block_sha256": "845e8cc4193942f64b04ccff903d53c75cf4606ab7ac89a401789e40a515fd39",
+      "after_sha256": "6be6442809413d70eaaf2dbac4d091679c48b353f90f56cdf8869a235b6d8e40",
+      "after_bytes": 22449
+    },
+    {
+      "path": "docs/agent-runs/phase-10/reviewer-prompt.md",
+      "action": "delete",
+      "before_sha256": "c0a5cb76ef3b5a1d3b54ef5721469ded0ba824ccce74b42ee2b09e84dcdf69b0",
+      "before_bytes": 8026
+    },
+    {
+      "path": "docs/agent-runs/phase-11/prompt.md",
+      "action": "remove_embedded_block",
+      "before_sha256": "47d03864c60f94efab18f9dbaf904c6d4db1a2d34f3bde00ac92aedaf7e2c649",
+      "before_bytes": 30261,
+      "removed_line_start": 244,
+      "removed_line_end": 309,
+      "removed_block_sha256": "3331d9616289b4175dd31abd4281f32a726d1ff6a063047d33d20864c1a78f47",
+      "after_sha256": "48bd2f5f6f3ac86e88e6d9d4c6087bbe5dd814114b99207e2e736555f5420458",
+      "after_bytes": 26381
+    },
+    {
+      "path": "docs/agent-runs/phase-11/reviewer-prompt-11b.md",
+      "action": "delete",
+      "before_sha256": "51ed375623c90f801999ed2edc34672e8cecfe555a481dfad228efdef39f6bee",
+      "before_bytes": 9895
+    },
+    {
+      "path": "docs/agent-runs/phase-11/reviewer-prompt-11c-r1.md",
+      "action": "delete",
+      "before_sha256": "bcf244192be18b7a8180ebf9dd549f9b1dd7799afabb898077b7b8bec06daae9",
+      "before_bytes": 13256
+    },
+    {
+      "path": "docs/agent-runs/phase-11/reviewer-prompt-11c.md",
+      "action": "delete",
+      "before_sha256": "aa3fbdcd9852cf407cbc4c1a745b274b5b9ac50a49f6147a32ba3418244c9b85",
+      "before_bytes": 13338
+    },
+    {
+      "path": "docs/agent-runs/phase-11/reviewer-prompt.md",
+      "action": "delete",
+      "before_sha256": "f6b2a2855b11ad6e1a1bae73e37afc701b6d4cf9092deae3d79aa19c4c9e3d80",
+      "before_bytes": 7516
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12c/phase12-plan-at-start.md",
+      "action": "remove_embedded_block",
+      "before_sha256": "b136cd3c52e304c51fd87c85b96e2b24fe3e2a1f342482e7d7c6437de3198154",
+      "before_bytes": 43633,
+      "removed_line_start": 284,
+      "removed_line_end": 349,
+      "removed_block_sha256": "5d412bf137b1848caf500e0bc9c494094d1c41f41018cc97f393dd16d888de78",
+      "after_sha256": "a13dd64b0eca1e9d784c778a561c12fe7d5aac8186da88a7ddee4d9ae3a35fb6",
+      "after_bytes": 39757
+    },
+    {
+      "path": "docs/agent-runs/phase-12/prompt.md",
+      "action": "remove_embedded_block",
+      "before_sha256": "25bf63e4327cc8d02f0c6cb2ccc8aa43311da5bfc7652609d8317a2dc177e716",
+      "before_bytes": 97967,
+      "removed_line_start": 279,
+      "removed_line_end": 344,
+      "removed_block_sha256": "5d412bf137b1848caf500e0bc9c494094d1c41f41018cc97f393dd16d888de78",
+      "after_sha256": "8c323bdc050eadf01cdbdff6c35dc2f886388b5de7e60dcd6078572319d3103a",
+      "after_bytes": 94091
+    },
+    {
+      "path": "docs/agent-runs/phase-12/reviewer-prompt-12a-recheck-1.md",
+      "action": "delete",
+      "before_sha256": "061282f7f69ac170f203d726c15d1a455b6ed66fe5aac6f93f12c8a9603b975b",
+      "before_bytes": 7996
+    },
+    {
+      "path": "docs/agent-runs/phase-12/reviewer-prompt-12a.md",
+      "action": "delete",
+      "before_sha256": "2986088b0305155b407bd10101315d7461f38c5107132bdb4815d393770ca868",
+      "before_bytes": 11457
+    },
+    {
+      "path": "docs/agent-runs/phase-12/reviewer-prompt-12b-recheck-1.md",
+      "action": "delete",
+      "before_sha256": "1a32d801d9f4a69af27ceaa522c80efccc6f9b2a3639280106f6b7d2bfd78dd1",
+      "before_bytes": 8969
+    },
+    {
+      "path": "docs/agent-runs/phase-12/reviewer-prompt-12b.md",
+      "action": "delete",
+      "before_sha256": "5e8b568c00639dfb96773d11f564ebf3d645212cc8aa0cc2e9832f1a26537064",
+      "before_bytes": 12047
+    },
+    {
+      "path": "docs/agent-runs/phase-12/reviewer-prompt-12c.md",
+      "action": "delete",
+      "before_sha256": "8a52f4242cafae78adfe52f29060f846c9e61e7a999b4b4276881a1badf30c7c",
+      "before_bytes": 11199
+    },
+    {
+      "path": "docs/agent-runs/phase-12/reviewer-prompt-12d-billing-apply-proposal.md",
+      "action": "delete",
+      "before_sha256": "2c327ceb7523e706bf7d6ad2c6cb0770719d6904337bcab85a9ee0e2ce80b517",
+      "before_bytes": 5542
+    },
+    {
+      "path": "docs/agent-runs/phase-12/reviewer-prompt-12d-billing-durable-plan.md",
+      "action": "delete",
+      "before_sha256": "7cb94fa63db347c980c574056d81b809d529a2faaa855b3a4891145ebbad43e2",
+      "before_bytes": 4888
+    },
+    {
+      "path": "docs/agent-runs/phase-12/reviewer-prompt-12d-billing-execution-gate-handoff.md",
+      "action": "delete",
+      "before_sha256": "a47e51505a4c84ee74caede2f9d65c821664b2302d05392fcbaaa600f621c0b8",
+      "before_bytes": 5658
+    },
+    {
+      "path": "docs/agent-runs/phase-12/reviewer-prompt-12d-billing-execution-plan.md",
+      "action": "delete",
+      "before_sha256": "4f0bbf56d0c8b94cc0ddf07fcd72f4332b7c0166b554446ba13b0a0676322634",
+      "before_bytes": 3974
+    },
+    {
+      "path": "docs/agent-runs/phase-12/reviewer-prompt-12d-billing-execution-prep.md",
+      "action": "delete",
+      "before_sha256": "fb7f26ea25c93b730d78d5ef83801e944e846313d71895d42ad791be18bcf668",
+      "before_bytes": 6208
+    },
+    {
+      "path": "docs/agent-runs/phase-12/reviewer-prompt-12d-billing-p3-format-repair.md",
+      "action": "delete",
+      "before_sha256": "232ef146ccf5deec2db80824d062165de0be21c5d56f774005534915e71552c4",
+      "before_bytes": 5092
+    },
+    {
+      "path": "docs/agent-runs/phase-12/reviewer-prompt-12d-billing-p3-layout-recheck.md",
+      "action": "delete",
+      "before_sha256": "583ad795b4da56d68528acc1181396952ab032a3267879074985c0ff630551d3",
+      "before_bytes": 5057
+    },
+    {
+      "path": "docs/agent-runs/phase-12/reviewer-prompt-12d-billing-plan.md",
+      "action": "delete",
+      "before_sha256": "5b324e35985594dce9d71e78576474d4e86c5fa2dfae966000503acfdf7cc218",
+      "before_bytes": 5622
+    },
+    {
+      "path": "docs/agent-runs/phase-12/reviewer-prompt-12d-billing-policy-amendment.md",
+      "action": "delete",
+      "before_sha256": "a23b785a7f717a1ecc6331009b852fcf297935251a69d056b94b5013cc3ed83d",
+      "before_bytes": 6259
+    },
+    {
+      "path": "docs/agent-runs/phase-12/reviewer-prompt-12d-billing-publication-helper.md",
+      "action": "delete",
+      "before_sha256": "ba8683609da04c9f4e4981847c51b2640661ef69625c32c25b75d4c12f7ad43d",
+      "before_bytes": 6734
+    },
+    {
+      "path": "docs/agent-runs/phase-12/reviewer-prompt-12d-billing-wrapper-recheck-1.md",
+      "action": "delete",
+      "before_sha256": "f064ee34f73233c2242f2cd2d93df58d9c9ac48f777fbd57627e85a21eb415b0",
+      "before_bytes": 5230
+    },
+    {
+      "path": "docs/agent-runs/phase-12/reviewer-prompt-12d-billing-wrapper.md",
+      "action": "delete",
+      "before_sha256": "bc5fce7e6d23811e2a9c4778eac6c4d1b045bfa6af0cb81ea143e6a4210226fc",
+      "before_bytes": 6401
+    },
+    {
+      "path": "docs/agent-runs/phase-12/reviewer-prompt-12d-identity-establishment.md",
+      "action": "delete",
+      "before_sha256": "770fe13aded982ffe6c468d400c46751ebe98c51c2692ed29c1fd683156d75cc",
+      "before_bytes": 5354
+    },
+    {
+      "path": "docs/agent-runs/phase-12/reviewer-prompt-12d-login-path-evaluation.md",
+      "action": "delete",
+      "before_sha256": "2853472f002ae214660a021182fd856d063db0db1f26081a6cc7a5d3c7e5876b",
+      "before_bytes": 5926
+    },
+    {
+      "path": "docs/agent-runs/phase-12/reviewer-prompt-12d-p1-timing-recheck.md",
+      "action": "delete",
+      "before_sha256": "e6f490ac9b71af31828e341aa7397c2c8dbec53046dace2a98457fbe5daa969a",
+      "before_bytes": 4390
+    },
+    {
+      "path": "docs/agent-runs/phase-12/reviewer-prompt-12d-preparation-recheck-1.md",
+      "action": "delete",
+      "before_sha256": "896f5f47026608ac02a13a3b9dd8713b059dc0aa6e3a28afda462fc47cbe6743",
+      "before_bytes": 6074
+    },
+    {
+      "path": "docs/agent-runs/phase-12/reviewer-prompt-12d-preparation.md",
+      "action": "delete",
+      "before_sha256": "8c3588a6db683f52407b1ded228210a1ccb62adb858c620b59c9ec24b3b7a452",
+      "before_bytes": 5789
+    },
+    {
+      "path": "docs/agent-runs/phase-12/reviewer-prompt-12d-spark-readiness.md",
+      "action": "delete",
+      "before_sha256": "fb99c84e1c99447547688e03f976ac35e0ab27be8087a0545f31d12cec5a8215",
+      "before_bytes": 5292
+    }
+  ],
+  "protected_record_hashes_unchanged": {
+    "docs/agent-runs/phase-10/human-gate.md": "98dc3310d7c6b9aa082a690f4e050b0426c5c38d97aa728dbc2968b3f8021ee6",
+    "docs/agent-runs/phase-10/review.md": "23c2643c0cee8ad392561de38fb22acf701796e5a7001bff0088049b3db9e8c0",
+    "docs/agent-runs/phase-11/human-gate.md": "0414cc8b40eaf867823956dc5679d21af0e84595ae7b8e71f50102e323e62b29",
+    "docs/agent-runs/phase-11/review.md": "c98d799740df3fcfa3132821b76bcc8324359c9cf8877180618594f835b13358",
+    "docs/agent-runs/phase-05/human-gate.md": "94bb66f693dd02636ae4cc38baf709bc1b2cb9dcdcdcc2318251bbdf7658cb1e",
+    "docs/agent-runs/phase-05/review.md": "f612cff04e0113164b9f40e380a663f9980f6faeebc5d1c91d032dd4e823a1ab",
+    "docs/agent-runs/phase-02/accepted-commit.md": "c88516fb0313340ed2b855b8138694d1a1aee30d43c44f4ba8688aed36cc587e",
+    "docs/agent-runs/phase-02/human-gate.md": "bac751eba2accb6852c20f1f12321794c1328cde98f2b7add7c7ad942a9891e2",
+    "docs/agent-runs/phase-02/review.md": "ff618b8cf94646f10d2fb38720eca5be8dbc5e6cca1a2b799cfb34caaaaa7427",
+    "docs/agent-runs/phase-03/accepted-commit.md": "725f175f4d3737ffa4473ceeded3ba498c28057d2b95cd2d07f63a5ed8ce43f8",
+    "docs/agent-runs/phase-03/human-gate.md": "ee7620a22e4c4afab3688574d0b73f95d1482c754f2808e491b67206f6d2c4b3",
+    "docs/agent-runs/phase-03/review.md": "34fd5d396ed61eb80345e385ca1c9ff5c196aa602ce0063631a5a90ee245b868",
+    "docs/agent-runs/phase-04/accepted-commit.md": "633fe21195124451c40f94a0fe53abefd48a473b1377712eabd3715ae26a781d",
+    "docs/agent-runs/phase-04/human-gate.md": "4db8172c1ce3083ff660c0466ce4a034df08fa6c14e1cecb56684261daff8e0e",
+    "docs/agent-runs/phase-04/review.md": "76cff032f7dbd5957aebfd8be2024d8cebcf7b977bf38b603373d7d22dfc745c",
+    "docs/agent-runs/phase-12/billing-bootstrap-exception.md": "abe3a50ad7167fa01227c73e15e92a422a50609f6313bdcc56404cb61765d71a",
+    "docs/agent-runs/phase-12/review.md": "f46e14a7dfcf1a66b7254b6998366d3dfc6d5f372b5b1d0f832353163630a135",
+    "docs/agent-runs/phase-01/accepted-commit.md": "0bfc76551bcbceacc67f52efc8590e3da65625adbe8ecf0cf9d453687c47aae2",
+    "docs/agent-runs/phase-01/human-gate.md": "ee0a9c38a2b5e2eb047c38eb6861b2f938cdea00245f0ccd4b8928b35a995e48",
+    "docs/agent-runs/phase-01/review.md": "ea3feb5810b6e210581b179ae7ccd3efb389c7cbaf0fa29337f32374c408f161",
+    "docs/agent-runs/phase-06/human-gate.md": "24b4c5cc82e8126d81b2c7b176e3a87d427a4b7368055e85741ef9ac615a0304",
+    "docs/agent-runs/phase-06/review.md": "a7a243ebc3fc23ecc04bc7f612ec9a6eca02613b0c66f326a6a7f8113b4cd864",
+    "docs/agent-runs/phase-08/human-gate.md": "b8d8530504613a25659651942cd1f8330be63b6d2ccc03e06d32e9a86c95b755",
+    "docs/agent-runs/phase-08/review.md": "b05910d43870e38ff1ea5def125b3d8f6e413c536fef0999a3326f79eee6dd39",
+    "docs/agent-runs/phase-09/human-gate.md": "4cf3598f78d72f3e6d7f455eadd227843bf8a497c14878413356a2a1df888124",
+    "docs/agent-runs/phase-09/review.md": "a8e961da617af13c7bb314545520d4c27e87c790378925f9665316b092fd0af5",
+    "docs/agent-runs/phase-07/accepted-commit.md": "8f525749327ffda8962518224785b71ef72177d4f4321020187a0ad7600e05e2",
+    "docs/agent-runs/phase-07/human-gate.md": "475918160cbb41c32ef321250179737fa00fe112267397bf0bc37a165ae1017f",
+    "docs/agent-runs/phase-07/review.md": "9bf00d9bc5d76eee7c50af770912139a62a80e973406d0976688bd48e004b7e0",
+    "docs/agent-runs/phase-12/evidence/12d-spark-readiness/record-suffixes/review.md": "8f21dfedbcd10e0a77f75ee3d3da1af4ed5c8ef0f23b8cf8133931d24669977a",
+    "docs/agent-runs/phase-12/evidence/12d-emr-design-cost/record-suffixes/review.md": "3bb321756874078dad24e320e0f0daac1c9e91aeca504f809ddfbd3bc76e688d",
+    "docs/agent-runs/phase-12/evidence/12d-spark-readiness-review-record/record-suffixes/review.md": "b05bdc6b00a46f9190ae2b02a53d2563879c932977352e180293499252871876",
+    "docs/agent-runs/phase-05/evidence/phase5-human-acceptance/before-human-gate.md": "382f4698cc3f0cbdc0f5ec03f3c0124252e957ba45b3a22f8c1c6fb7338fc33a"
+  },
+  "COMMANDS RUN": [
+    "rg repository Markdown filename/content searches",
+    "Python SHA-256 checked targeted deletions and block removal",
+    "Git diff validation and final content rescan"
+  ],
+  "TEST RESULTS": "Documentation-only change; no application tests/build/cloud/private processing run.",
+  "VALIDATION RESULTS": {
+    "targeted_changes_verified": 70,
+    "markdown_files_scanned_after_cleanup": 506,
+    "remaining_prompt_filenames_or_blocks": 0,
+    "protected_human_and_review_records_unchanged": 33,
+    "current_proposal_manifest_entries_verified": 58,
+    "git_diff_check_exit": 0,
+    "unrelated_tracked_changes": 0
+  },
+  "ASSUMPTIONS": "Historical links and manifests describe files present at the time of their original run.",
+  "RISKS": [
+    "Historical links to removed files no longer resolve in the working tree. Recover historical contents from their recorded Git revisions.",
+    "Historical hash/preservation records remain unchanged as point-in-time evidence; this ledger explicitly records the later cleanup. The prior EMR proposal five-record append-only claim now has an authorized exception: its prompt.md prefix had an embedded template removed."
+  ],
+  "MANUAL ACTION REQUIRED": "None for this cleanup. Commit/push was not performed.",
+  "BLOCKED-ON OWNER": null,
+  "BLOCKED-ON EVIDENCE": null,
+  "NEXT GATE": "User review of cleanup; future reviewer prompts are chat-only."
+}

@@ -212,72 +212,7 @@ When you receive a prompt that came from the reviewer, first append the reviewer
 
 **Template you must complete and give to the user:**
 
-````text
-You are the independent, read-only code reviewer for ScholarChain Phase 10,
-Subphase [10X] [repair round N, if any], in:
-/Users/danny/Documents/UIC/CS441/ScholarChain
-
-Read, in order:
-1. AGENTS.md, CLAUDE.md, docs/agents.md, .claude/agents/code-reviewer.md,
-   docs/agent-runs/README.md.
-2. /Users/danny/Library/CloudStorage/GoogleDrive-cpnguyen0630@gmail.com/My Drive/plan/phase10.md — Sections 3–7 and
-   Subphase [10X] in Section 8 (scope, owners, open questions, tasks,
-   "Done when").
-3. The course Phase 10 specification:
-   https://github.com/0x1DOCD00D/ScholarChain/blob/main/README.md#phase-10-expose-the-runtime-through-restful-microservices
-4. docs/agent-runs/phase-10/prompt.md, owner-report.md and test-report.md
-   (Subphase [10X] sections), and evidence under
-   docs/agent-runs/phase-10/evidence/[10x]/.
-
-Checkpoint facts (filled in by the manager):
-- Branch: [branch]   Subphase base SHA: [sha]   Current HEAD: [sha]
-- Changed tracked files: [list]   Untracked files: [list]
-- User answers to Step 0 questions: [answers]
-- Commands run, exit codes, test counts: [exact results]
-- Evidence paths: [paths]
-- Known limitations / items deferred to later subphases: [list]
-- Prior findings and repair evidence (repair rounds only): [list]
-
-Review rules:
-- Read-only. Do not edit files, run builds or tests, call AWS or any
-  provider, change data, commit or push. Do not read secrets.
-- Inspect `git diff [base]` plus untracked files. Report ALL confirmed
-  findings in one pass.
-- Check, as applicable to Subphase [10X]: ownership (one writer per path,
-  per docs/agents.md and the plan's Section 5); no hardcoded
-  buckets/endpoints/account IDs/models; no secrets in files, logs or
-  evidence; honest evidence (claimed results match retained logs);
-  required tests exist and assert hand-derived expectations;
-  cloud/spend gates respected; lean-scope omissions recorded.
-- Also check for Phase 10: routes are thin; idempotency really uses conditional writes; auth on every non-health route; trace IDs on every error; no secrets in logs/responses; readiness differs from liveness; circuit breakers are tested; the four artifacts are independently buildable; the OpenAPI file matches the implemented routes.
-- Do not demand work the plan assigns to a later subphase; list it as
-  future scope. Distinguish blockers, nonblocking observations and
-  unverified gates.
-
-Return:
-1. VERDICT: APPROVE or REQUEST-CHANGES for Subphase [10X].
-2. Findings: severity, path:line, evidence/reasoning, impact, owning agent,
-   acceptance check, blocking yes/no.
-3. Report fields from docs/agent-runs/README.md.
-4. A NEXT PROMPT for the main agent, in one fenced code block, that I can
-   paste directly:
-   - If APPROVE: tell the main agent to (a) append this verdict verbatim to
-     docs/agent-runs/phase-10/review.md under "Subphase [10X]",
-     (b) confirm the user has committed Subphase [10X] (if not, ask the user),
-     (c) start Subphase [next] of /Users/danny/Library/CloudStorage/GoogleDrive-cpnguyen0630@gmail.com/My Drive/plan/phase10.md
-     (or, after the last subphase, tell the user Phase 10 is ready for their
-     human-gate and that Phase 11 is next), beginning with Step 0 questions,
-     (d) end with a new reviewer prompt per Section 10 without triggering
-     any reviewer, and (e) do ONLY that one subphase, then stop and end the
-     turn; do not start the subphase after it.
-   - If REQUEST-CHANGES: tell the main agent to (a) append this verdict
-     verbatim to review.md and the findings to repairs.md, (b) route each
-     blocking finding to its owning agent (listed), (c) rerun the affected
-     tests and the full sbt check on JDK 17, (d) not start the next
-     subphase, (e) return a recheck reviewer prompt per Section 10 without
-     triggering any reviewer, and (f) stop and end the turn after the
-     repair. Nonblocking findings are listed but not required.
-````
+Reviewer instructions removed at the user’s request; review prompts are provided in chat.
 
 ## 11. Final checklist (Phase 10 complete)
 
