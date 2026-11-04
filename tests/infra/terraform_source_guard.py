@@ -84,6 +84,23 @@ def tokens(source):
     return result
 
 
+# Exact actions with no IAM resource type, per the AWS Service Authorization Reference
+# (list_resourcegroupstaggingapi, list_emr, list_kms). Statement-level, exact match only:
+# no wildcards and no service-wide entries. A statement is exempt only if every action
+# is in this set (or is another already-exempt action).
+NO_RESOURCE_TYPE_ACTIONS = frozenset({
+    "tag:GetResources",
+    "elasticmapreduce:ListClusters",
+    "elasticmapreduce:ListSecurityConfigurations",
+    "elasticmapreduce:DescribeSecurityConfiguration",
+    "elasticmapreduce:CreateSecurityConfiguration",
+    "elasticmapreduce:DeleteSecurityConfiguration",
+    "elasticmapreduce:RunJobFlow",
+    "kms:CreateKey",
+    "kms:ListAliases",
+})
+
+
 def scan(path, source):
     ts = tokens(source)
     objects = [Object(0, len(ts))]
@@ -151,7 +168,8 @@ def scan(path, source):
             for resource in resources:
                 exception = inside_key_policy(obj_id) or actions == ["ecr:GetAuthorizationToken"]
                 exception = exception or bool(actions) and all(
-                    re.fullmatch(r"ec2:Describe[A-Za-z]+", a) for a in actions
+                    re.fullmatch(r"ec2:Describe[A-Za-z]+", a) or a in NO_RESOURCE_TYPE_ACTIONS
+                    for a in actions
                 )
                 broad = resource in ("*", "?")
                 if resource.startswith("arn:"):
@@ -228,6 +246,37 @@ class GuardExamples(unittest.TestCase):
           # Effect="Allow", Action=["iam:*"], Resource="*"
           /* acl="public-read" */'''
         self.assertEqual(scan("synthetic.tf", source), [])
+
+    def test_exact_no_resource_type_actions_pass_on_global_resource(self):
+        for action in sorted(NO_RESOURCE_TYPE_ACTIONS):
+            with self.subTest(action=action):
+                source = '{Effect="Allow", Action=["%s"], Resource="*"}' % action
+                self.assertEqual(scan("synthetic.tf", source), [])
+        multi = '{Effect="Allow", Action=["kms:CreateKey", "kms:ListAliases", "ec2:DescribeVpcs"], Resource=["*"]}'
+        self.assertEqual(scan("synthetic.tf", multi), [])
+
+    def test_no_resource_type_exemption_is_narrow(self):
+        examples = (
+            ('{Effect="Allow", Action=["kms:CreateKey", "kms:PutKeyPolicy"], Resource="*"}', "global-iam-resource"),
+            ('{Effect="Allow", Action=["tag:GetResources", "iam:CreateRole"], Resource="*"}', "global-iam-resource"),
+            ('{Effect="Allow", Action=["elasticmapreduce:*"], Resource="*"}', "wildcard-iam-action"),
+            ('{Effect="Allow", Action=["elasticmapreduce:*"], Resource="*"}', "global-iam-resource"),
+            ('{Effect="Allow", Action=["kms:Create*"], Resource="*"}', "wildcard-iam-action"),
+            ('{Effect="Allow", Action=["kms:Create*"], Resource="*"}', "global-iam-resource"),
+            ('{Effect="Allow", Action=["iam:CreateRole"], Resource="*"}', "global-iam-resource"),
+            ('{Effect="Allow", Action=["elasticmapreduce:TerminateJobFlows"], Resource="*"}', "global-iam-resource"),
+            ('{Effect="Allow", Action=["kms:CreateKey"], Resource=["arn:aws:kms:*:*:key/*"]}', "global-iam-resource"),
+        )
+        for source, category in examples:
+            with self.subTest(source=source, category=category):
+                self.assertIn(category, [f["category"] for f in scan("synthetic.tf", source)])
+
+    def test_neighbouring_rogue_allow_is_still_rejected_beside_exempt_action(self):
+        source = '''locals { statements = [
+          {Effect="Allow", Action=["kms:CreateKey"], Resource="*"},
+          {Effect="Allow", Action=["iam:PassRole"], Resource="*"}] }'''
+        found = scan("synthetic.tf", source)
+        self.assertEqual([(f["line"], f["category"]) for f in found], [(3, "global-iam-resource")])
 
 
 def main():

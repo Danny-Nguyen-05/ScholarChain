@@ -1,0 +1,44 @@
+{
+ "environment": {
+  "JAVA_HOME": "/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home",
+  "SBT_OPTS": "-Dlogback.configurationFile=$PWD/docs/agent-runs/phase-04/xml-repair-logback.xml",
+  "SPARK_LOCAL_IP": "127.0.0.1",
+  "AWS_EC2_METADATA_DISABLED": "true",
+  "terraform": "1.13.5 pinned toolchain, offline filesystem mirror hashicorp/aws 6.44.0",
+  "TF_DATA_DIR": "target/phase12d-spike-offline/tfdata-coord/<root> (no .terraform dir in source tree)"
+ },
+ "sbt_check_history": [
+  {"attempt": 1, "start": "2026-11-04T04:14:21Z", "end": "2026-11-04T04:26:59Z", "exit": 1,
+   "tests": "8 suites, 1253 succeeded, 1 failed: IndependentTerraformSourceSpec (15 literal-source guard findings in new deployer policy and spike kms.tf)",
+   "log": "gates/sbt-check-attempt1-failed.log.gz"},
+  {"attempt": 2, "start": "2026-11-04T04:38:04Z", "end": "2026-11-04T04:50:46Z", "exit": 0,
+   "tests": "9 suites, 1267 succeeded, 0 failed (pre-review tree)", "log": "gates/sbt-check-attempt2-prereview.log.gz"},
+  {"attempt": 3, "start": "2026-11-04T05:19:42Z", "end": "2026-11-04T05:31:51Z", "exit": 0,
+   "tests": "9 suites, 1267 succeeded, 0 failed (post-repair tree, B1-B3)", "marker": "build test marker updated 2026-11-03 23:31:51 CST (run end)",
+   "log": "gates/sbt-check-attempt3-postrepair.log.gz", "note": "[error] checkProbeInjectFailure lines are the build's expected self-test"},
+  {"attempt": 4, "start": "2026-11-04T05:49:36Z", "end": "2026-11-04T06:01:42Z", "exit": 0,
+   "tests": "9 suites, 1267 succeeded, 0 failed (post-R1-repair tree)", "marker": "build test marker updated 2026-11-04 00:01:42 CST (run end)",
+   "log": "gates/sbt-check-attempt4-r1repair.log.gz"}
+ ],
+ "post_r1_repair_coordinator_observed": "deployer fmt/validate/test exit 0/0/0, 23 passed; spike 0/0/0, 37 passed; script tests 60 OK; request bound exit 0 (561/1929/5610); guard self-test 0 and repo scan 0 findings. Logs in gates/*.txt are the post-R1 run.",
+ "post_repair_coordinator_observed": [
+  {"cmd": "terraform fmt -check -recursive; validate; test (infra/terraform/deployer)", "exit": [0, 0, 0], "result": "valid, 0 errors, 0 warnings; 22 passed, 0 failed (post-B1-B3 run; gates/tftest-deployer.txt was overwritten by the post-R1 run, which shows 23 passed)", "log": "gates/tftest-deployer.txt"},
+  {"cmd": "terraform fmt -check -recursive; validate; test (infra/terraform/spikes/emr-spark-isolated)", "exit": [0, 0, 0], "result": "valid, 0 errors, 0 warnings; 37 passed, 0 failed", "log": "gates/tftest-emr-spark-isolated.txt"},
+  {"cmd": "python3 -I -m unittest discover -s . -p 'test_*.py' (cwd scripts/phase12d-spike/tests)", "exit": 0, "result": "Ran 60 tests, OK", "log": "gates/unittest.txt"},
+  {"cmd": "python3 -I request_bound.py --check (cwd scripts/phase12d-spike)", "exit": 0,
+   "result": "PUT/LIST upper bound 561 (limit 1000; includes 252 from an unverified EMR log-pusher assumption), GET/HEAD 1929 (limit 10000), Terraform API calls 5610 (55 resources)", "log": "gates/request-bound.json"},
+  {"cmd": "python3 -I tests/infra/terraform_source_guard.py --self-test", "exit": 0, "log": "gates/guard-selftest.txt"},
+  {"cmd": "python3 -I tests/infra/terraform_source_guard.py --repo-root .", "exit": 0, "result": "88 files, 0 findings", "log": "gates/guard-repo.json"},
+  {"cmd": "bash -n on the 6 scripts under scripts/phase12d-spike", "exit": 0},
+  {"cmd": "shellcheck", "result": "not installed; shell lint unverified"},
+  {"cmd": "python3 -I cost-replay.py", "exit": 0, "result": "nominal USD 4.13; ancillary 24 h USD 5.50; ancillary 72 h USD 8.64; each extra day not destroyed USD 1.57 incl. tax; cap USD 10 (shape unchanged by repair)", "log": "cost-replay.json"}
+ ],
+ "pre_review_results_superseded": "deployer 18/18, spike 34/34, script tests 57 OK, Terraform API bound 5712 (56 resources)",
+ "build_engineer_local_runs": "build/runs/*/result.json. Probe (local-cluster[2,1,1024]) authEngineVersion 1 and 2: exit 0. G1 pipeline authEngineVersion 2 + io.encryption: exit 1 twice (ArrayIndexOutOfBoundsException in TorrentBroadcast.readBlocks during checkpoint read; root cause unknown). authEngineVersion 1: exit 0 twice, compare 28/28 tables exact twice.",
+ "subagents": [
+  {"role": "build-engineer", "model": "sonnet (Sonnet 5.5)", "effort": "high", "runs": 1},
+  {"role": "infra-engineer", "model": "sonnet (Sonnet 5.5)", "effort": "high", "runs": 3},
+  {"role": "test-engineer", "model": "sonnet (Sonnet 5.5)", "effort": "high", "runs": 1}
+ ],
+ "no_cloud": "No AWS API call, login, credential/state/tfvars read, real plan or apply, resource creation or spending occurred."
+}

@@ -1,0 +1,884 @@
+{
+ "c-classload-probe-v1": {
+  "grep_regex": "\\[class,load\\] (scala\\.Predef\\$|scala\\.collection\\.immutable\\.List|org\\.apache\\.spark\\.SparkContext) source: ",
+  "roles": {
+   "driver": {
+    "class_load_lines": 9978,
+    "matched_lines": [
+     "[0.079s][info][class,load] org.apache.spark.SparkContext source: file:<RUNTIME>/jars/spark-core_2.13-3.5.4.jar",
+     "[0.084s][info][class,load] scala.collection.immutable.List source: file:<RUNTIME>/jars/scala-library-2.13.14.jar",
+     "[0.255s][info][class,load] scala.Predef$ source: file:<RUNTIME>/jars/scala-library-2.13.14.jar"
+    ],
+    "scala_class_loads_from_file_source": 834,
+    "scala_loads_from_unexpected_source": [],
+    "lines_mentioning__2.12": 0
+   },
+   "executor-0-0000": {
+    "class_load_lines": 7369,
+    "matched_lines": [
+     "[0.099s][info][class,load] scala.Predef$ source: file:<RUNTIME>/jars/scala-library-2.13.14.jar",
+     "[0.104s][info][class,load] scala.collection.immutable.List source: file:<RUNTIME>/jars/scala-library-2.13.14.jar",
+     "[0.957s][info][class,load] org.apache.spark.SparkContext source: file:<RUNTIME>/jars/spark-core_2.13-3.5.4.jar"
+    ],
+    "scala_class_loads_from_file_source": 749,
+    "scala_loads_from_unexpected_source": [],
+    "lines_mentioning__2.12": 0
+   },
+   "executor-1-0000": {
+    "class_load_lines": 6478,
+    "matched_lines": [
+     "[0.091s][info][class,load] scala.Predef$ source: file:<RUNTIME>/jars/scala-library-2.13.14.jar",
+     "[0.095s][info][class,load] scala.collection.immutable.List source: file:<RUNTIME>/jars/scala-library-2.13.14.jar",
+     "[0.967s][info][class,load] org.apache.spark.SparkContext source: file:<RUNTIME>/jars/spark-core_2.13-3.5.4.jar"
+    ],
+    "scala_class_loads_from_file_source": 650,
+    "scala_loads_from_unexpected_source": [],
+    "lines_mentioning__2.12": 0
+   }
+  },
+  "total_log_lines": 24220,
+  "total_raw_bytes": 4116158,
+  "total_gz_bytes": 259878,
+  "per_file": [
+   {
+    "file": "logs/driver.stdout.txt",
+    "lines": 9979,
+    "raw_bytes": 1738289,
+    "gz_bytes": 107190
+   },
+   {
+    "file": "logs/driver.stderr.txt",
+    "lines": 269,
+    "raw_bytes": 36051,
+    "gz_bytes": 5445
+   },
+   {
+    "file": "worker/app-20261103220140-0000/0/stderr",
+    "lines": 68,
+    "raw_bytes": 10429,
+    "gz_bytes": 2500
+   },
+   {
+    "file": "worker/app-20261103220140-0000/0/stdout",
+    "lines": 7369,
+    "raw_bytes": 1239018,
+    "gz_bytes": 75997
+   },
+   {
+    "file": "worker/app-20261103220140-0000/1/stderr",
+    "lines": 57,
+    "raw_bytes": 9127,
+    "gz_bytes": 2215
+   },
+   {
+    "file": "worker/app-20261103220140-0000/1/stdout",
+    "lines": 6478,
+    "raw_bytes": 1083244,
+    "gz_bytes": 66531
+   }
+  ]
+ },
+ "c-classload-probe-v2": {
+  "grep_regex": "\\[class,load\\] (scala\\.Predef\\$|scala\\.collection\\.immutable\\.List|org\\.apache\\.spark\\.SparkContext) source: ",
+  "roles": {
+   "driver": {
+    "class_load_lines": 9990,
+    "matched_lines": [
+     "[0.073s][info][class,load] org.apache.spark.SparkContext source: file:<RUNTIME>/jars/spark-core_2.13-3.5.4.jar",
+     "[0.078s][info][class,load] scala.collection.immutable.List source: file:<RUNTIME>/jars/scala-library-2.13.14.jar",
+     "[0.233s][info][class,load] scala.Predef$ source: file:<RUNTIME>/jars/scala-library-2.13.14.jar"
+    ],
+    "scala_class_loads_from_file_source": 834,
+    "scala_loads_from_unexpected_source": [],
+    "lines_mentioning__2.12": 0
+   },
+   "executor-0-0000": {
+    "class_load_lines": 6476,
+    "matched_lines": [
+     "[0.101s][info][class,load] scala.Predef$ source: file:<RUNTIME>/jars/scala-library-2.13.14.jar",
+     "[0.105s][info][class,load] scala.collection.immutable.List source: file:<RUNTIME>/jars/scala-library-2.13.14.jar",
+     "[1.042s][info][class,load] org.apache.spark.SparkContext source: file:<RUNTIME>/jars/spark-core_2.13-3.5.4.jar"
+    ],
+    "scala_class_loads_from_file_source": 650,
+    "scala_loads_from_unexpected_source": [],
+    "lines_mentioning__2.12": 0
+   },
+   "executor-1-0000": {
+    "class_load_lines": 7360,
+    "matched_lines": [
+     "[0.104s][info][class,load] scala.Predef$ source: file:<RUNTIME>/jars/scala-library-2.13.14.jar",
+     "[0.110s][info][class,load] scala.collection.immutable.List source: file:<RUNTIME>/jars/scala-library-2.13.14.jar",
+     "[1.044s][info][class,load] org.apache.spark.SparkContext source: file:<RUNTIME>/jars/spark-core_2.13-3.5.4.jar"
+    ],
+    "scala_class_loads_from_file_source": 749,
+    "scala_loads_from_unexpected_source": [],
+    "lines_mentioning__2.12": 0
+   }
+  },
+  "total_log_lines": 24222,
+  "total_raw_bytes": 4116905,
+  "total_gz_bytes": 260374,
+  "per_file": [
+   {
+    "file": "logs/driver.stdout.txt",
+    "lines": 9991,
+    "raw_bytes": 1739831,
+    "gz_bytes": 107399
+   },
+   {
+    "file": "logs/driver.stderr.txt",
+    "lines": 269,
+    "raw_bytes": 36054,
+    "gz_bytes": 5428
+   },
+   {
+    "file": "worker/app-20261103220142-0000/0/stderr",
+    "lines": 58,
+    "raw_bytes": 9175,
+    "gz_bytes": 2251
+   },
+   {
+    "file": "worker/app-20261103220142-0000/0/stdout",
+    "lines": 6476,
+    "raw_bytes": 1083110,
+    "gz_bytes": 66635
+   },
+   {
+    "file": "worker/app-20261103220142-0000/1/stderr",
+    "lines": 68,
+    "raw_bytes": 10429,
+    "gz_bytes": 2492
+   },
+   {
+    "file": "worker/app-20261103220142-0000/1/stdout",
+    "lines": 7360,
+    "raw_bytes": 1238306,
+    "gz_bytes": 76169
+   }
+  ]
+ },
+ "b-compare-v1": {
+  "tablesCompared": 28,
+  "allExactRowsMatch": true,
+  "tables_exact_match": 28,
+  "table_count": 28,
+  "provenanceNormalization": "none",
+  "rowCounts_sum": 587
+ },
+ "b-compare-v1-run2": {
+  "tablesCompared": 28,
+  "allExactRowsMatch": true,
+  "tables_exact_match": 28,
+  "table_count": 28,
+  "provenanceNormalization": "none",
+  "rowCounts_sum": 587
+ },
+ "auth-a-probe-v2": {
+  "files": {
+   "logs/driver.stdout.txt": {
+    "lines": 1,
+    "bytes": 4544,
+    "gz_bytes": 1148,
+    "authentication_enabled_lines": 0,
+    "AuthRpcHandler_challenges": 0,
+    "AuthRpcHandler_success": 0,
+    "crypto_flags_in_executor_cmd": []
+   },
+   "logs/driver.stderr.txt": {
+    "lines": 269,
+    "bytes": 36004,
+    "gz_bytes": 5372,
+    "authentication_enabled_lines": 6,
+    "AuthRpcHandler_challenges": 12,
+    "AuthRpcHandler_success": 12,
+    "crypto_flags_in_executor_cmd": [
+     [
+      "spark.authenticate",
+      "true"
+     ],
+     [
+      "spark.network.crypto.authEngineVersion",
+      "2"
+     ],
+     [
+      "spark.network.crypto.enabled",
+      "true"
+     ],
+     [
+      "spark.network.crypto.saslFallback",
+      "false"
+     ]
+    ]
+   },
+   "worker/app-20261103215552-0000/0/stderr": {
+    "lines": 68,
+    "bytes": 10408,
+    "gz_bytes": 2476,
+    "authentication_enabled_lines": 2,
+    "AuthRpcHandler_challenges": 0,
+    "AuthRpcHandler_success": 0,
+    "crypto_flags_in_executor_cmd": [
+     [
+      "spark.authenticate",
+      "true"
+     ],
+     [
+      "spark.network.crypto.authEngineVersion",
+      "2"
+     ],
+     [
+      "spark.network.crypto.enabled",
+      "true"
+     ],
+     [
+      "spark.network.crypto.saslFallback",
+      "false"
+     ]
+    ]
+   },
+   "worker/app-20261103215552-0000/0/stdout": {
+    "lines": 0,
+    "bytes": 0,
+    "gz_bytes": 20,
+    "authentication_enabled_lines": 0,
+    "AuthRpcHandler_challenges": 0,
+    "AuthRpcHandler_success": 0,
+    "crypto_flags_in_executor_cmd": []
+   },
+   "worker/app-20261103215552-0000/1/stderr": {
+    "lines": 56,
+    "bytes": 9008,
+    "gz_bytes": 2174,
+    "authentication_enabled_lines": 2,
+    "AuthRpcHandler_challenges": 0,
+    "AuthRpcHandler_success": 0,
+    "crypto_flags_in_executor_cmd": [
+     [
+      "spark.authenticate",
+      "true"
+     ],
+     [
+      "spark.network.crypto.authEngineVersion",
+      "2"
+     ],
+     [
+      "spark.network.crypto.enabled",
+      "true"
+     ],
+     [
+      "spark.network.crypto.saslFallback",
+      "false"
+     ]
+    ]
+   },
+   "worker/app-20261103215552-0000/1/stdout": {
+    "lines": 0,
+    "bytes": 0,
+    "gz_bytes": 20,
+    "authentication_enabled_lines": 0,
+    "AuthRpcHandler_challenges": 0,
+    "AuthRpcHandler_success": 0,
+    "crypto_flags_in_executor_cmd": []
+   }
+  },
+  "exit": 0,
+  "seconds": 2.2862619580118917,
+  "total_lines": 394,
+  "total_raw_bytes": 59964,
+  "total_gz_bytes": 11210,
+  "tasks_finished_by_executor": {
+   "worker/app-20261103215552-0000/0/stderr": 1,
+   "worker/app-20261103215552-0000/1/stderr": 0
+  }
+ },
+ "auth-a-probe-v1": {
+  "files": {
+   "logs/driver.stdout.txt": {
+    "lines": 1,
+    "bytes": 4544,
+    "gz_bytes": 1147,
+    "authentication_enabled_lines": 0,
+    "AuthRpcHandler_challenges": 0,
+    "AuthRpcHandler_success": 0,
+    "crypto_flags_in_executor_cmd": []
+   },
+   "logs/driver.stderr.txt": {
+    "lines": 268,
+    "bytes": 35757,
+    "gz_bytes": 5352,
+    "authentication_enabled_lines": 6,
+    "AuthRpcHandler_challenges": 12,
+    "AuthRpcHandler_success": 12,
+    "crypto_flags_in_executor_cmd": [
+     [
+      "spark.authenticate",
+      "true"
+     ],
+     [
+      "spark.network.crypto.authEngineVersion",
+      "1"
+     ],
+     [
+      "spark.network.crypto.enabled",
+      "true"
+     ],
+     [
+      "spark.network.crypto.saslFallback",
+      "false"
+     ]
+    ]
+   },
+   "worker/app-20261103220137-0000/0/stderr": {
+    "lines": 57,
+    "bytes": 9106,
+    "gz_bytes": 2202,
+    "authentication_enabled_lines": 2,
+    "AuthRpcHandler_challenges": 0,
+    "AuthRpcHandler_success": 0,
+    "crypto_flags_in_executor_cmd": [
+     [
+      "spark.authenticate",
+      "true"
+     ],
+     [
+      "spark.network.crypto.authEngineVersion",
+      "1"
+     ],
+     [
+      "spark.network.crypto.enabled",
+      "true"
+     ],
+     [
+      "spark.network.crypto.saslFallback",
+      "false"
+     ]
+    ]
+   },
+   "worker/app-20261103220137-0000/0/stdout": {
+    "lines": 0,
+    "bytes": 0,
+    "gz_bytes": 20,
+    "authentication_enabled_lines": 0,
+    "AuthRpcHandler_challenges": 0,
+    "AuthRpcHandler_success": 0,
+    "crypto_flags_in_executor_cmd": []
+   },
+   "worker/app-20261103220137-0000/1/stderr": {
+    "lines": 68,
+    "bytes": 10404,
+    "gz_bytes": 2487,
+    "authentication_enabled_lines": 2,
+    "AuthRpcHandler_challenges": 0,
+    "AuthRpcHandler_success": 0,
+    "crypto_flags_in_executor_cmd": [
+     [
+      "spark.authenticate",
+      "true"
+     ],
+     [
+      "spark.network.crypto.authEngineVersion",
+      "1"
+     ],
+     [
+      "spark.network.crypto.enabled",
+      "true"
+     ],
+     [
+      "spark.network.crypto.saslFallback",
+      "false"
+     ]
+    ]
+   },
+   "worker/app-20261103220137-0000/1/stdout": {
+    "lines": 0,
+    "bytes": 0,
+    "gz_bytes": 20,
+    "authentication_enabled_lines": 0,
+    "AuthRpcHandler_challenges": 0,
+    "AuthRpcHandler_success": 0,
+    "crypto_flags_in_executor_cmd": []
+   }
+  },
+  "exit": 0,
+  "seconds": 2.4037792079907376,
+  "total_lines": 394,
+  "total_raw_bytes": 59811,
+  "total_gz_bytes": 11228,
+  "tasks_finished_by_executor": {
+   "worker/app-20261103220137-0000/0/stderr": 0,
+   "worker/app-20261103220137-0000/1/stderr": 1
+  }
+ },
+ "auth-b-g1-pipeline-v1": {
+  "files": {
+   "logs/driver.stdout.txt": {
+    "lines": 1,
+    "bytes": 232,
+    "gz_bytes": 190,
+    "authentication_enabled_lines": 0,
+    "AuthRpcHandler_challenges": 0,
+    "AuthRpcHandler_success": 0,
+    "crypto_flags_in_executor_cmd": []
+   },
+   "logs/driver.stderr.txt": {
+    "lines": 45605,
+    "bytes": 6273017,
+    "gz_bytes": 453642,
+    "authentication_enabled_lines": 6,
+    "AuthRpcHandler_challenges": 13,
+    "AuthRpcHandler_success": 13,
+    "crypto_flags_in_executor_cmd": [
+     [
+      "spark.authenticate",
+      "true"
+     ],
+     [
+      "spark.network.crypto.authEngineVersion",
+      "1"
+     ],
+     [
+      "spark.network.crypto.enabled",
+      "true"
+     ],
+     [
+      "spark.network.crypto.saslFallback",
+      "false"
+     ]
+    ]
+   },
+   "worker/app-20261103220029-0000/0/stderr": {
+    "lines": 19403,
+    "bytes": 1778478,
+    "gz_bytes": 123807,
+    "authentication_enabled_lines": 2,
+    "AuthRpcHandler_challenges": 1,
+    "AuthRpcHandler_success": 1,
+    "crypto_flags_in_executor_cmd": [
+     [
+      "spark.authenticate",
+      "true"
+     ],
+     [
+      "spark.network.crypto.authEngineVersion",
+      "1"
+     ],
+     [
+      "spark.network.crypto.enabled",
+      "true"
+     ],
+     [
+      "spark.network.crypto.saslFallback",
+      "false"
+     ]
+    ]
+   },
+   "worker/app-20261103220029-0000/0/stdout": {
+    "lines": 0,
+    "bytes": 0,
+    "gz_bytes": 20,
+    "authentication_enabled_lines": 0,
+    "AuthRpcHandler_challenges": 0,
+    "AuthRpcHandler_success": 0,
+    "crypto_flags_in_executor_cmd": []
+   },
+   "worker/app-20261103220029-0000/1/stderr": {
+    "lines": 20745,
+    "bytes": 1823282,
+    "gz_bytes": 126296,
+    "authentication_enabled_lines": 2,
+    "AuthRpcHandler_challenges": 1,
+    "AuthRpcHandler_success": 1,
+    "crypto_flags_in_executor_cmd": [
+     [
+      "spark.authenticate",
+      "true"
+     ],
+     [
+      "spark.network.crypto.authEngineVersion",
+      "1"
+     ],
+     [
+      "spark.network.crypto.enabled",
+      "true"
+     ],
+     [
+      "spark.network.crypto.saslFallback",
+      "false"
+     ]
+    ]
+   },
+   "worker/app-20261103220029-0000/1/stdout": {
+    "lines": 0,
+    "bytes": 0,
+    "gz_bytes": 20,
+    "authentication_enabled_lines": 0,
+    "AuthRpcHandler_challenges": 0,
+    "AuthRpcHandler_success": 0,
+    "crypto_flags_in_executor_cmd": []
+   }
+  },
+  "exit": 0,
+  "seconds": 48.802518708020216,
+  "total_lines": 85754,
+  "total_raw_bytes": 9875009,
+  "total_gz_bytes": 703975,
+  "tasks_finished_by_executor": {
+   "worker/app-20261103220029-0000/0/stderr": 1007,
+   "worker/app-20261103220029-0000/1/stderr": 986
+  }
+ },
+ "auth-b-g1-pipeline-v1-run2": {
+  "files": {
+   "logs/driver.stdout.txt": {
+    "lines": 1,
+    "bytes": 237,
+    "gz_bytes": 193,
+    "authentication_enabled_lines": 0,
+    "AuthRpcHandler_challenges": 0,
+    "AuthRpcHandler_success": 0,
+    "crypto_flags_in_executor_cmd": []
+   },
+   "logs/driver.stderr.txt": {
+    "lines": 45546,
+    "bytes": 6265002,
+    "gz_bytes": 451931,
+    "authentication_enabled_lines": 6,
+    "AuthRpcHandler_challenges": 13,
+    "AuthRpcHandler_success": 13,
+    "crypto_flags_in_executor_cmd": [
+     [
+      "spark.authenticate",
+      "true"
+     ],
+     [
+      "spark.network.crypto.authEngineVersion",
+      "1"
+     ],
+     [
+      "spark.network.crypto.enabled",
+      "true"
+     ],
+     [
+      "spark.network.crypto.saslFallback",
+      "false"
+     ]
+    ]
+   },
+   "worker/app-20261103220145-0000/0/stderr": {
+    "lines": 19152,
+    "bytes": 1783218,
+    "gz_bytes": 126029,
+    "authentication_enabled_lines": 2,
+    "AuthRpcHandler_challenges": 1,
+    "AuthRpcHandler_success": 1,
+    "crypto_flags_in_executor_cmd": [
+     [
+      "spark.authenticate",
+      "true"
+     ],
+     [
+      "spark.network.crypto.authEngineVersion",
+      "1"
+     ],
+     [
+      "spark.network.crypto.enabled",
+      "true"
+     ],
+     [
+      "spark.network.crypto.saslFallback",
+      "false"
+     ]
+    ]
+   },
+   "worker/app-20261103220145-0000/0/stdout": {
+    "lines": 0,
+    "bytes": 0,
+    "gz_bytes": 20,
+    "authentication_enabled_lines": 0,
+    "AuthRpcHandler_challenges": 0,
+    "AuthRpcHandler_success": 0,
+    "crypto_flags_in_executor_cmd": []
+   },
+   "worker/app-20261103220145-0000/1/stderr": {
+    "lines": 20675,
+    "bytes": 1783878,
+    "gz_bytes": 121614,
+    "authentication_enabled_lines": 2,
+    "AuthRpcHandler_challenges": 1,
+    "AuthRpcHandler_success": 1,
+    "crypto_flags_in_executor_cmd": [
+     [
+      "spark.authenticate",
+      "true"
+     ],
+     [
+      "spark.network.crypto.authEngineVersion",
+      "1"
+     ],
+     [
+      "spark.network.crypto.enabled",
+      "true"
+     ],
+     [
+      "spark.network.crypto.saslFallback",
+      "false"
+     ]
+    ]
+   },
+   "worker/app-20261103220145-0000/1/stdout": {
+    "lines": 0,
+    "bytes": 0,
+    "gz_bytes": 20,
+    "authentication_enabled_lines": 0,
+    "AuthRpcHandler_challenges": 0,
+    "AuthRpcHandler_success": 0,
+    "crypto_flags_in_executor_cmd": []
+   }
+  },
+  "exit": 0,
+  "seconds": 46.738778083003126,
+  "total_lines": 85374,
+  "total_raw_bytes": 9832335,
+  "total_gz_bytes": 699807,
+  "tasks_finished_by_executor": {
+   "worker/app-20261103220145-0000/0/stderr": 1023,
+   "worker/app-20261103220145-0000/1/stderr": 969
+  }
+ },
+ "auth-b-g1-pipeline-v2": {
+  "files": {
+   "logs/driver.stdout.txt": {
+    "lines": 0,
+    "bytes": 0,
+    "gz_bytes": 20,
+    "authentication_enabled_lines": 0,
+    "AuthRpcHandler_challenges": 0,
+    "AuthRpcHandler_success": 0,
+    "crypto_flags_in_executor_cmd": []
+   },
+   "logs/driver.stderr.txt": {
+    "lines": 33348,
+    "bytes": 4628323,
+    "gz_bytes": 340958,
+    "authentication_enabled_lines": 6,
+    "AuthRpcHandler_challenges": 13,
+    "AuthRpcHandler_success": 13,
+    "crypto_flags_in_executor_cmd": [
+     [
+      "spark.authenticate",
+      "true"
+     ],
+     [
+      "spark.network.crypto.authEngineVersion",
+      "2"
+     ],
+     [
+      "spark.network.crypto.enabled",
+      "true"
+     ],
+     [
+      "spark.network.crypto.saslFallback",
+      "false"
+     ]
+    ]
+   },
+   "worker/app-20261103215624-0000/0/stderr": {
+    "lines": 9546,
+    "bytes": 1104979,
+    "gz_bytes": 79948,
+    "authentication_enabled_lines": 2,
+    "AuthRpcHandler_challenges": 1,
+    "AuthRpcHandler_success": 1,
+    "crypto_flags_in_executor_cmd": [
+     [
+      "spark.authenticate",
+      "true"
+     ],
+     [
+      "spark.network.crypto.authEngineVersion",
+      "2"
+     ],
+     [
+      "spark.network.crypto.enabled",
+      "true"
+     ],
+     [
+      "spark.network.crypto.saslFallback",
+      "false"
+     ]
+    ]
+   },
+   "worker/app-20261103215624-0000/0/stdout": {
+    "lines": 0,
+    "bytes": 0,
+    "gz_bytes": 20,
+    "authentication_enabled_lines": 0,
+    "AuthRpcHandler_challenges": 0,
+    "AuthRpcHandler_success": 0,
+    "crypto_flags_in_executor_cmd": []
+   },
+   "worker/app-20261103215624-0000/1/stderr": {
+    "lines": 10641,
+    "bytes": 1226725,
+    "gz_bytes": 87999,
+    "authentication_enabled_lines": 2,
+    "AuthRpcHandler_challenges": 1,
+    "AuthRpcHandler_success": 1,
+    "crypto_flags_in_executor_cmd": [
+     [
+      "spark.authenticate",
+      "true"
+     ],
+     [
+      "spark.network.crypto.authEngineVersion",
+      "2"
+     ],
+     [
+      "spark.network.crypto.enabled",
+      "true"
+     ],
+     [
+      "spark.network.crypto.saslFallback",
+      "false"
+     ]
+    ]
+   },
+   "worker/app-20261103215624-0000/1/stdout": {
+    "lines": 0,
+    "bytes": 0,
+    "gz_bytes": 20,
+    "authentication_enabled_lines": 0,
+    "AuthRpcHandler_challenges": 0,
+    "AuthRpcHandler_success": 0,
+    "crypto_flags_in_executor_cmd": []
+   }
+  },
+  "exit": 1,
+  "seconds": 38.50480329198763,
+  "total_lines": 53535,
+  "total_raw_bytes": 6960027,
+  "total_gz_bytes": 508965,
+  "tasks_finished_by_executor": {
+   "worker/app-20261103215624-0000/0/stderr": 644,
+   "worker/app-20261103215624-0000/1/stderr": 749
+  }
+ },
+ "auth-b-g1-pipeline-v2-rerun": {
+  "files": {
+   "logs/driver.stdout.txt": {
+    "lines": 0,
+    "bytes": 0,
+    "gz_bytes": 20,
+    "authentication_enabled_lines": 0,
+    "AuthRpcHandler_challenges": 0,
+    "AuthRpcHandler_success": 0,
+    "crypto_flags_in_executor_cmd": []
+   },
+   "logs/driver.stderr.txt": {
+    "lines": 42594,
+    "bytes": 5866382,
+    "gz_bytes": 425402,
+    "authentication_enabled_lines": 6,
+    "AuthRpcHandler_challenges": 13,
+    "AuthRpcHandler_success": 13,
+    "crypto_flags_in_executor_cmd": [
+     [
+      "spark.authenticate",
+      "true"
+     ],
+     [
+      "spark.network.crypto.authEngineVersion",
+      "2"
+     ],
+     [
+      "spark.network.crypto.enabled",
+      "true"
+     ],
+     [
+      "spark.network.crypto.saslFallback",
+      "false"
+     ]
+    ]
+   },
+   "worker/app-20261103215943-0000/0/stderr": {
+    "lines": 19338,
+    "bytes": 1663152,
+    "gz_bytes": 114022,
+    "authentication_enabled_lines": 2,
+    "AuthRpcHandler_challenges": 1,
+    "AuthRpcHandler_success": 1,
+    "crypto_flags_in_executor_cmd": [
+     [
+      "spark.authenticate",
+      "true"
+     ],
+     [
+      "spark.network.crypto.authEngineVersion",
+      "2"
+     ],
+     [
+      "spark.network.crypto.enabled",
+      "true"
+     ],
+     [
+      "spark.network.crypto.saslFallback",
+      "false"
+     ]
+    ]
+   },
+   "worker/app-20261103215943-0000/0/stdout": {
+    "lines": 0,
+    "bytes": 0,
+    "gz_bytes": 20,
+    "authentication_enabled_lines": 0,
+    "AuthRpcHandler_challenges": 0,
+    "AuthRpcHandler_success": 0,
+    "crypto_flags_in_executor_cmd": []
+   },
+   "worker/app-20261103215943-0000/1/stderr": {
+    "lines": 18310,
+    "bytes": 1657077,
+    "gz_bytes": 116380,
+    "authentication_enabled_lines": 2,
+    "AuthRpcHandler_challenges": 1,
+    "AuthRpcHandler_success": 1,
+    "crypto_flags_in_executor_cmd": [
+     [
+      "spark.authenticate",
+      "true"
+     ],
+     [
+      "spark.network.crypto.authEngineVersion",
+      "2"
+     ],
+     [
+      "spark.network.crypto.enabled",
+      "true"
+     ],
+     [
+      "spark.network.crypto.saslFallback",
+      "false"
+     ]
+    ]
+   },
+   "worker/app-20261103215943-0000/1/stdout": {
+    "lines": 0,
+    "bytes": 0,
+    "gz_bytes": 20,
+    "authentication_enabled_lines": 0,
+    "AuthRpcHandler_challenges": 0,
+    "AuthRpcHandler_success": 0,
+    "crypto_flags_in_executor_cmd": []
+   }
+  },
+  "exit": 1,
+  "seconds": 45.866786583006615,
+  "total_lines": 80242,
+  "total_raw_bytes": 9186611,
+  "total_gz_bytes": 655864,
+  "tasks_finished_by_executor": {
+   "worker/app-20261103215943-0000/0/stderr": 877,
+   "worker/app-20261103215943-0000/1/stderr": 927
+  }
+ }
+}

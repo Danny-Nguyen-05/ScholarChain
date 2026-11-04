@@ -1,0 +1,63 @@
+{
+  "name": "x-diag-ioenc-only",
+  "stage": "pipeline",
+  "security": "file:/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-spike-offline/conf/diag-io-encryption-only.conf",
+  "classload": false,
+  "exit": 0,
+  "timed_out": false,
+  "started_at": "2026-11-04T03:58:50.887446+00:00",
+  "seconds": 46.23454729199875,
+  "driver_stdout_sha256": "2c4c169f6b96a257e0f44b97c0292444ca4ca58f1d87ecef3787c29463472cc1",
+  "driver_stderr_sha256": "31c266a38e06c9d9f7b4be489c5939cc9c389847453fca25c923ff907061381e",
+  "secret_occurrences_in_run_files": 0,
+  "log_files": [
+    {
+      "source": "logs/driver.stdout.txt",
+      "bytes": 233,
+      "lines": 1,
+      "raw_sha256": "2c4c169f6b96a257e0f44b97c0292444ca4ca58f1d87ecef3787c29463472cc1",
+      "gz": "logs-gz/driver.stdout.txt.gz",
+      "gz_sha256": "d0b24e429f30fda841a143f22a72d50d12acb24243132eb3b3d9f913de6f8f4a"
+    },
+    {
+      "source": "logs/driver.stderr.txt",
+      "bytes": 6360823,
+      "lines": 46216,
+      "raw_sha256": "31c266a38e06c9d9f7b4be489c5939cc9c389847453fca25c923ff907061381e",
+      "gz": "logs-gz/driver.stderr.txt.gz",
+      "gz_sha256": "c28f7d1c8c32636c18207e502a3389f9cedded0fb8f462a6bb4f6cb372de3107"
+    },
+    {
+      "source": "worker/app-20261103215851-0000/0/stderr",
+      "bytes": 1781187,
+      "lines": 20115,
+      "raw_sha256": "eeb8d2e3a1fea5080516fa6f19c14aa4d207ef549df5793f810b0b5237d28e75",
+      "gz": "logs-gz/worker-app-20261103215851-0000_0_stderr.gz",
+      "gz_sha256": "7b211ba01965ae156fea08ef598210a68166060d9fe5b79b20053cf1b951aea8"
+    },
+    {
+      "source": "worker/app-20261103215851-0000/0/stdout",
+      "bytes": 0,
+      "lines": 0,
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "gz": "logs-gz/worker-app-20261103215851-0000_0_stdout.gz",
+      "gz_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "source": "worker/app-20261103215851-0000/1/stderr",
+      "bytes": 1827369,
+      "lines": 20121,
+      "raw_sha256": "5b4d83d0c5e56d988451099b39174fe88500f86b3b6c5e5831f86ed33e8f6ad2",
+      "gz": "logs-gz/worker-app-20261103215851-0000_1_stderr.gz",
+      "gz_sha256": "6c0e1d1c7273dd08160146d3fa58cc996d82f0b897eaebccbd52ad80cd41c488"
+    },
+    {
+      "source": "worker/app-20261103215851-0000/1/stdout",
+      "bytes": 0,
+      "lines": 0,
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "gz": "logs-gz/worker-app-20261103215851-0000_1_stdout.gz",
+      "gz_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    }
+  ]
+}

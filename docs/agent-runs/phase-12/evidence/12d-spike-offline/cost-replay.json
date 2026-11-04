@@ -1,0 +1,80 @@
+{
+ "rates_source": "../12d-emr-design-cost/selected-rates.json",
+ "cap_usd": "10",
+ "scenarios": {
+  "nominal_ancillary_3h": {
+   "ancillary_hours": "3",
+   "lines": {
+    "ec2_compute": "0.7680000000",
+    "emr_surcharge": "0.1920000000",
+    "ebs_gp3": "0.03047619047619047619047619048",
+    "nat_hours": "0.135",
+    "public_ipv4": "0.0150000000",
+    "nat_data": "0.090",
+    "internet_out": "0.09",
+    "efs_storage": "0.006696428571428571428571428571",
+    "efs_io": "0.2700000000",
+    "s3_storage": "0.0001026785714285714285714285714",
+    "s3_requests": "0.0090000000",
+    "kms_key_full_month": "1.0000000000",
+    "kms_requests": "0.0930000000"
+   },
+   "subtotal": "2.699275297619047619047619048",
+   "total_with_tax_and_reserve": "4.13",
+   "within_cap": true
+  },
+  "ancillary_24h": {
+   "ancillary_hours": "24",
+   "lines": {
+    "ec2_compute": "0.7680000000",
+    "emr_surcharge": "0.1920000000",
+    "ebs_gp3": "0.03047619047619047619047619048",
+    "nat_hours": "1.080",
+    "public_ipv4": "0.1200000000",
+    "nat_data": "0.090",
+    "internet_out": "0.09",
+    "efs_storage": "0.05357142857142857142857142857",
+    "efs_io": "0.2700000000",
+    "s3_storage": "0.0008214285714285714285714285714",
+    "s3_requests": "0.0090000000",
+    "kms_key_full_month": "1.0000000000",
+    "kms_requests": "0.0930000000"
+   },
+   "subtotal": "3.796869047619047619047619048",
+   "total_with_tax_and_reserve": "5.50",
+   "within_cap": true
+  },
+  "ancillary_72h": {
+   "ancillary_hours": "72",
+   "lines": {
+    "ec2_compute": "0.7680000000",
+    "emr_surcharge": "0.1920000000",
+    "ebs_gp3": "0.03047619047619047619047619048",
+    "nat_hours": "3.240",
+    "public_ipv4": "0.3600000000",
+    "nat_data": "0.090",
+    "internet_out": "0.09",
+    "efs_storage": "0.1607142857142857142857142857",
+    "efs_io": "0.2700000000",
+    "s3_storage": "0.002464285714285714285714285714",
+    "s3_requests": "0.0090000000",
+    "kms_key_full_month": "1.0000000000",
+    "kms_requests": "0.0930000000"
+   },
+   "subtotal": "6.305654761904761904761904762",
+   "total_with_tax_and_reserve": "8.64",
+   "within_cap": true
+  }
+ },
+ "per_extra_day_if_not_destroyed": {
+  "lines": {
+   "nat_gateway_24h": "1.080",
+   "public_ipv4_24h": "0.1200000000",
+   "efs_storage_5gb_24h": "0.05357142857142857142857142857",
+   "s3_storage_1gb_24h": "0.0008214285714285714285714285714",
+   "kms_key": "0"
+  },
+  "subtotal": "1.254392857142857142857142858",
+  "with_tax": "1.57"
+ }
+}

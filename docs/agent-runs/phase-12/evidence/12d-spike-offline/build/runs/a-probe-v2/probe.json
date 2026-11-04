@@ -1,0 +1,107 @@
+{
+  "schemaVersion": "scholarchain.phase12-readiness.v1",
+  "stage": "probe",
+  "driver": {
+    "role": "driver",
+    "host": "Dannys-MacBook-Pro.local",
+    "pid": "38047",
+    "jvmStartTime": "1793764552124",
+    "executorId": "driver",
+    "javaVersion": "17.0.20.1",
+    "libraries": [
+      {
+        "component": "spark",
+        "className": "org.apache.spark.SparkContext",
+        "origin": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-spike-offline/run/ex1/scholarchain-runtime/jars/spark-core_2.13-3.5.4.jar",
+        "classSha256": "cf2ed70bbaeaf5fbe8c702dddf0059b0ea49b3d0badfe8b5de489f711bd2373f",
+        "codeSourceSha256": "1c2cd0502db711ab090f4e0531eac5a4f23b5d6a61907825b24995809f9437fd",
+        "runtimeVersion": "3.5.4",
+        "implementationVersion": "3.5.4"
+      },
+      {
+        "component": "scala-library",
+        "className": "scala.Option",
+        "origin": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-spike-offline/run/ex1/scholarchain-runtime/jars/scala-library-2.13.14.jar",
+        "classSha256": "5fa95e069a844983b415ef613ce7b3f0c752be0804660ff12b7ffa6d7cf00cae",
+        "codeSourceSha256": "43e0ca1583df1966eaf02f0fbddcfb3784b995dd06bfc907209347758ce4b7e3",
+        "runtimeVersion": "2.13.14",
+        "implementationVersion": null
+      },
+      {
+        "component": "scala-reflect",
+        "className": "scala.reflect.api.Universe",
+        "origin": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-spike-offline/run/ex1/scholarchain-runtime/jars/scala-reflect-2.13.14.jar",
+        "classSha256": "19837277a82a61227cd4e246065836b5a049d5dfe59bb6032bc42bea7391ff96",
+        "codeSourceSha256": "8846baaa8cf43b1b19725ab737abff145ca58d14a4d02e75d71ca8f7ca5f2926",
+        "runtimeVersion": null,
+        "implementationVersion": null
+      },
+      {
+        "component": "scala3-library",
+        "className": "scala.deriving.Mirror",
+        "origin": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-spike-offline/run/ex1/scholarchain-runtime/application/scholarchain-job.jar",
+        "classSha256": "e48c633a515bdcb03a9b4422a0f9fb5778fae811ad3c84f94ecce1f1c45e5712",
+        "codeSourceSha256": "d52f11ebad5ec9e1ffdd1910d562023e934ce7ab62e7c74a5ffd650f8951b86b",
+        "runtimeVersion": null,
+        "implementationVersion": null
+      }
+    ]
+  },
+  "taskProcesses": [
+    {
+      "role": "executor-task",
+      "host": "Dannys-MacBook-Pro.local",
+      "pid": "38055",
+      "jvmStartTime": "1793764552904",
+      "executorId": "0",
+      "javaVersion": "17.0.20.1",
+      "libraries": [
+        {
+          "component": "spark",
+          "className": "org.apache.spark.SparkContext",
+          "origin": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-spike-offline/run/ex1/scholarchain-runtime/jars/spark-core_2.13-3.5.4.jar",
+          "classSha256": "cf2ed70bbaeaf5fbe8c702dddf0059b0ea49b3d0badfe8b5de489f711bd2373f",
+          "codeSourceSha256": "1c2cd0502db711ab090f4e0531eac5a4f23b5d6a61907825b24995809f9437fd",
+          "runtimeVersion": "3.5.4",
+          "implementationVersion": "3.5.4"
+        },
+        {
+          "component": "scala-library",
+          "className": "scala.Option",
+          "origin": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-spike-offline/run/ex1/scholarchain-runtime/jars/scala-library-2.13.14.jar",
+          "classSha256": "5fa95e069a844983b415ef613ce7b3f0c752be0804660ff12b7ffa6d7cf00cae",
+          "codeSourceSha256": "43e0ca1583df1966eaf02f0fbddcfb3784b995dd06bfc907209347758ce4b7e3",
+          "runtimeVersion": "2.13.14",
+          "implementationVersion": null
+        },
+        {
+          "component": "scala-reflect",
+          "className": "scala.reflect.api.Universe",
+          "origin": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-spike-offline/run/ex1/scholarchain-runtime/jars/scala-reflect-2.13.14.jar",
+          "classSha256": "19837277a82a61227cd4e246065836b5a049d5dfe59bb6032bc42bea7391ff96",
+          "codeSourceSha256": "8846baaa8cf43b1b19725ab737abff145ca58d14a4d02e75d71ca8f7ca5f2926",
+          "runtimeVersion": null,
+          "implementationVersion": null
+        },
+        {
+          "component": "scala3-library",
+          "className": "scala.deriving.Mirror",
+          "origin": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-spike-offline/run/ex1/scholarchain-runtime/work/app-20261103215552-0000/0/./scholarchain-job.jar",
+          "classSha256": "e48c633a515bdcb03a9b4422a0f9fb5778fae811ad3c84f94ecce1f1c45e5712",
+          "codeSourceSha256": "d52f11ebad5ec9e1ffdd1910d562023e934ce7ab62e7c74a5ffd650f8951b86b",
+          "runtimeVersion": null,
+          "implementationVersion": null
+        }
+      ],
+      "proofFile": "executor-0.json",
+      "sharedToken": "f42fd64c-feca-433c-9ad0-15abd2d007ff"
+    }
+  ],
+  "sharedAbsoluteDirectory": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-spike-offline/run/a-probe-v2/shared",
+  "exchangeDirectory": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-spike-offline/run/a-probe-v2/shared/phase12-probe-f42fd64c-feca-433c-9ad0-15abd2d007ff",
+  "driverToTaskAndBackVerified": true,
+  "externalExecutorVerified": true,
+  "distributedRequired": true,
+  "cloudCompatibilityVerified": false,
+  "componentVersionQualification": "Null versions are unknown; match class/source hashes to the resolved build artifact inventory."
+}

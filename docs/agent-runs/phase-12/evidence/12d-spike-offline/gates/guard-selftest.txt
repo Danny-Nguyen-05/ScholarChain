@@ -1,0 +1,12 @@
+test_allows_scoped_globs_and_statement_local_exceptions (__main__.GuardExamples.test_allows_scoped_globs_and_statement_local_exceptions) ... ok
+test_exact_no_resource_type_actions_pass_on_global_resource (__main__.GuardExamples.test_exact_no_resource_type_actions_pass_on_global_resource) ... ok
+test_neighbouring_rogue_allow_is_still_rejected_beside_exempt_action (__main__.GuardExamples.test_neighbouring_rogue_allow_is_still_rejected_beside_exempt_action) ... ok
+test_no_resource_type_exemption_is_narrow (__main__.GuardExamples.test_no_resource_type_exemption_is_narrow) ... ok
+test_rejects_global_resources_and_public_access (__main__.GuardExamples.test_rejects_global_resources_and_public_access) ... ok
+test_rejects_wildcard_allow_beside_valid_deny_and_key_policy (__main__.GuardExamples.test_rejects_wildcard_allow_beside_valid_deny_and_key_policy) ... ok
+test_secret_findings_do_not_echo_values (__main__.GuardExamples.test_secret_findings_do_not_echo_values) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.001s
+
+OK
