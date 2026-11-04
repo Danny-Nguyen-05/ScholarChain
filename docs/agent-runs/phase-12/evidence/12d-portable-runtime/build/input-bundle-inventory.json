@@ -1,0 +1,528 @@
+{
+  "source": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/bundles/g1-a",
+  "relocated_inputs": "/tmp/sc-runtime-test-20261103/inputs/g1",
+  "members": [
+    {
+      "path": "er/_SCHOLARCHAIN_RESOLUTION_COMPLETE",
+      "bytes": 65,
+      "sha256": "d7b93df57ad5374a5c9c7f50988d00a9550bd8eaa8ac8d0181d84765de7b12f0",
+      "mode": "0o600"
+    },
+    {
+      "path": "er/audit-details.jsonl",
+      "bytes": 6647,
+      "sha256": "55f036afbb2060bbba5aa1bcd556bda93db9f85032ffd65ebe79ff35619d4c12",
+      "mode": "0o600"
+    },
+    {
+      "path": "er/diagnostics.jsonl",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mode": "0o600"
+    },
+    {
+      "path": "er/effective-config.json",
+      "bytes": 914,
+      "sha256": "993e86654b5b808c20c89375e30d723afbbd7c12cba6dd0abfea06bf45efb24a",
+      "mode": "0o600"
+    },
+    {
+      "path": "er/effective-policy.json",
+      "bytes": 1487,
+      "sha256": "9ae06dde1270c5c340d5cb30a453f398111c611ac7ad2a0302b776cbe5c8bc2a",
+      "mode": "0o600"
+    },
+    {
+      "path": "er/evidence.jsonl",
+      "bytes": 211156,
+      "sha256": "33142d42f67b85f7f4b003351ee32e63f941ee3327252cf961997cb49fd6ba7c",
+      "mode": "0o600"
+    },
+    {
+      "path": "er/researcher/accepted-links.jsonl",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mode": "0o600"
+    },
+    {
+      "path": "er/researcher/accepted.jsonl",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mode": "0o600"
+    },
+    {
+      "path": "er/researcher/conflict.jsonl",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mode": "0o600"
+    },
+    {
+      "path": "er/researcher/grouping-constraints.json",
+      "bytes": 4326,
+      "sha256": "b000c9226c6769af26babc1a21b87456c425f0545b3075c2c8a6ef90e1563154",
+      "mode": "0o600"
+    },
+    {
+      "path": "er/researcher/rejected.jsonl",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mode": "0o600"
+    },
+    {
+      "path": "er/researcher/unresolved.jsonl",
+      "bytes": 70643,
+      "sha256": "89979088f9ec363b7877ecbcdd0648d2d7858ec4128be21f0e993983a5f2a7ea",
+      "mode": "0o600"
+    },
+    {
+      "path": "er/resolution-manifest.json",
+      "bytes": 3703,
+      "sha256": "1528d2427db6d85a334267b767f270828395c3b236472ad47dcfd3aa2ccc0f34",
+      "mode": "0o600"
+    },
+    {
+      "path": "er/work/accepted-links.jsonl",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mode": "0o600"
+    },
+    {
+      "path": "er/work/accepted.jsonl",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mode": "0o600"
+    },
+    {
+      "path": "er/work/conflict.jsonl",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mode": "0o600"
+    },
+    {
+      "path": "er/work/grouping-constraints.json",
+      "bytes": 1988,
+      "sha256": "325f45a94395c7f4e669a5f1af01dd4ee7755a43a3e131cde39997bd6c702437",
+      "mode": "0o600"
+    },
+    {
+      "path": "er/work/rejected.jsonl",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mode": "0o600"
+    },
+    {
+      "path": "er/work/unresolved.jsonl",
+      "bytes": 42067,
+      "sha256": "4421b5ad1b44cdfd3f06d1e45c69b767bfb3279f9d09dce6315c2048c5e9e752",
+      "mode": "0o600"
+    },
+    {
+      "path": "hadoop/._SCHOLARCHAIN_COMPLETE.crc",
+      "bytes": 36,
+      "sha256": "c80dacf4c86fdcbab09e33592a5d08124228c3f0c5b78168e934fbea79f24778",
+      "mode": "0o644"
+    },
+    {
+      "path": "hadoop/.counter-summary.json.crc",
+      "bytes": 12,
+      "sha256": "d333499c6ca0df58ccfdecf835b04270a18cc57dd7a6af99d08065dda3959455",
+      "mode": "0o644"
+    },
+    {
+      "path": "hadoop/.run-manifest.json.crc",
+      "bytes": 24,
+      "sha256": "f39830c1aae833255519383a45bb1de228d5cc287f709d4f8e07f9baf9a7176d",
+      "mode": "0o644"
+    },
+    {
+      "path": "hadoop/_SCHOLARCHAIN_COMPLETE",
+      "bytes": 3298,
+      "sha256": "35275db5f763fe931cffa7d6fada49287fa65f702bd3fb271600ea3ec4db5442",
+      "mode": "0o644"
+    },
+    {
+      "path": "hadoop/counter-summary.json",
+      "bytes": 199,
+      "sha256": "d886d566652dd0b6588535dd100dd53e70e2bd2bb4067b9d4ab2814acd1d61c0",
+      "mode": "0o644"
+    },
+    {
+      "path": "hadoop/export/._SUCCESS.crc",
+      "bytes": 8,
+      "sha256": "1d44f510ec2ed7595badbec80583316defc14e8dd89130d719724149adfaa07d",
+      "mode": "0o644"
+    },
+    {
+      "path": "hadoop/export/.part-r-00000.crc",
+      "bytes": 8,
+      "sha256": "1d44f510ec2ed7595badbec80583316defc14e8dd89130d719724149adfaa07d",
+      "mode": "0o644"
+    },
+    {
+      "path": "hadoop/export/_SUCCESS",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mode": "0o644"
+    },
+    {
+      "path": "hadoop/export/part-r-00000",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mode": "0o644"
+    },
+    {
+      "path": "hadoop/export/snapshot=hadoop-prep/run=1bfb86b5-ec1c-468b-a7e8-1e52a6c0ab83/match-candidate/.part-r-00000.crc",
+      "bytes": 420,
+      "sha256": "d51fc6c554170150de675d05704f4455dd11607e53557b2c95d414116336b6ff",
+      "mode": "0o644"
+    },
+    {
+      "path": "hadoop/export/snapshot=hadoop-prep/run=1bfb86b5-ec1c-468b-a7e8-1e52a6c0ab83/match-candidate/part-r-00000",
+      "bytes": 52320,
+      "sha256": "d81b2c77b2c23792ab244e9319733f6dbbbc36b2d720425efed4a8da8cef35a6",
+      "mode": "0o644"
+    },
+    {
+      "path": "hadoop/export/snapshot=phase12d-g1-synthetic-v1/run=1bfb86b5-ec1c-468b-a7e8-1e52a6c0ab83/author-mention/.part-r-00000.crc",
+      "bytes": 128,
+      "sha256": "d03700fe19c78b3060d0c96cae86e89a6ec3488a22e54aef262951df1ea305d9",
+      "mode": "0o644"
+    },
+    {
+      "path": "hadoop/export/snapshot=phase12d-g1-synthetic-v1/run=1bfb86b5-ec1c-468b-a7e8-1e52a6c0ab83/author-mention/part-r-00000",
+      "bytes": 15120,
+      "sha256": "4938716e0ce9cd48195bda2c80145216d0775482695808748950f8033a4cd4fe",
+      "mode": "0o644"
+    },
+    {
+      "path": "hadoop/export/snapshot=phase12d-g1-synthetic-v1/run=1bfb86b5-ec1c-468b-a7e8-1e52a6c0ab83/authorship/.part-r-00000.crc",
+      "bytes": 108,
+      "sha256": "bc445b3ac06057fba89e64cb80ecd072943259d1bf7a44aed54afeb1ee082b3c",
+      "mode": "0o644"
+    },
+    {
+      "path": "hadoop/export/snapshot=phase12d-g1-synthetic-v1/run=1bfb86b5-ec1c-468b-a7e8-1e52a6c0ab83/authorship/part-r-00000",
+      "bytes": 12780,
+      "sha256": "63f1e4e8970e471c1bb8c1a8dc28805eceac619201e4a4bf913c6d63fa17e26f",
+      "mode": "0o644"
+    },
+    {
+      "path": "hadoop/export/snapshot=phase12d-g1-synthetic-v1/run=1bfb86b5-ec1c-468b-a7e8-1e52a6c0ab83/graph-edge/.part-r-00000.crc",
+      "bytes": 128,
+      "sha256": "64f9deac6fa4480a07c93fc7a776fff023fa3a0ef4cf6e56913a89c24653d782",
+      "mode": "0o644"
+    },
+    {
+      "path": "hadoop/export/snapshot=phase12d-g1-synthetic-v1/run=1bfb86b5-ec1c-468b-a7e8-1e52a6c0ab83/graph-edge/part-r-00000",
+      "bytes": 15340,
+      "sha256": "c24bbbccaabc2d92a3a5096ce084b2218c36a2120710b2d0c43659de6578a64c",
+      "mode": "0o644"
+    },
+    {
+      "path": "hadoop/export/snapshot=phase12d-g1-synthetic-v1/run=1bfb86b5-ec1c-468b-a7e8-1e52a6c0ab83/index/.part-r-00000.crc",
+      "bytes": 60,
+      "sha256": "3790ee15d3a7a79934604a6e581d76828adec26533f1eae82e43ee3364cae3ee",
+      "mode": "0o644"
+    },
+    {
+      "path": "hadoop/export/snapshot=phase12d-g1-synthetic-v1/run=1bfb86b5-ec1c-468b-a7e8-1e52a6c0ab83/index/part-r-00000",
+      "bytes": 6183,
+      "sha256": "013b8a8b535be608cca3ea2250bb611c7ffed0e67cfb21810ef6841001948b20",
+      "mode": "0o644"
+    },
+    {
+      "path": "hadoop/export/snapshot=phase12d-g1-synthetic-v1/run=1bfb86b5-ec1c-468b-a7e8-1e52a6c0ab83/pair/.part-r-00000.crc",
+      "bytes": 88,
+      "sha256": "d3666f606391fc64ee38ce8c14c1137895088e998e2cc2fe9ffc6836107b9e42",
+      "mode": "0o644"
+    },
+    {
+      "path": "hadoop/export/snapshot=phase12d-g1-synthetic-v1/run=1bfb86b5-ec1c-468b-a7e8-1e52a6c0ab83/pair/part-r-00000",
+      "bytes": 10178,
+      "sha256": "75ac8525b8f8e104a0709f91c631b94b09a85a33ef67ba98f14abae1baf7d67f",
+      "mode": "0o644"
+    },
+    {
+      "path": "hadoop/export/snapshot=phase12d-g1-synthetic-v1/run=1bfb86b5-ec1c-468b-a7e8-1e52a6c0ab83/team/.part-r-00000.crc",
+      "bytes": 56,
+      "sha256": "96cec75e7787f4f3243b9f29e3f3e39baa032d59edaf64159132e2ce935e9c7f",
+      "mode": "0o644"
+    },
+    {
+      "path": "hadoop/export/snapshot=phase12d-g1-synthetic-v1/run=1bfb86b5-ec1c-468b-a7e8-1e52a6c0ab83/team/part-r-00000",
+      "bytes": 5888,
+      "sha256": "d5a220e7c8bd143cf33ce1c46d9e7c9679869f86194ebaf0b4244ba0f7662516",
+      "mode": "0o644"
+    },
+    {
+      "path": "hadoop/export/snapshot=phase12d-g1-synthetic-v1/run=1bfb86b5-ec1c-468b-a7e8-1e52a6c0ab83/work/.part-r-00000.crc",
+      "bytes": 180,
+      "sha256": "aba752a20684006b1d215db42d2476bba9767c629cb88ed38a9769d57b0bd183",
+      "mode": "0o644"
+    },
+    {
+      "path": "hadoop/export/snapshot=phase12d-g1-synthetic-v1/run=1bfb86b5-ec1c-468b-a7e8-1e52a6c0ab83/work/part-r-00000",
+      "bytes": 21752,
+      "sha256": "0e8b873126f16c2344ba0dbf255c2acdee706b27e6bef145cc52fc0aaa9bb018",
+      "mode": "0o644"
+    },
+    {
+      "path": "hadoop/intermediate/j01/._SUCCESS.crc",
+      "bytes": 8,
+      "sha256": "1d44f510ec2ed7595badbec80583316defc14e8dd89130d719724149adfaa07d",
+      "mode": "0o644"
+    },
+    {
+      "path": "hadoop/intermediate/j01/.part-r-00000.crc",
+      "bytes": 188,
+      "sha256": "ab9881b523e46b7daee32f17b905ee4328b93ea9a7d57f51f46fdd9cc922708f",
+      "mode": "0o644"
+    },
+    {
+      "path": "hadoop/intermediate/j01/_SUCCESS",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mode": "0o644"
+    },
+    {
+      "path": "hadoop/intermediate/j01/part-r-00000",
+      "bytes": 22988,
+      "sha256": "546857421659f00f8882c014bd01b7ce09fc88d1ec64255df572c0ed9658a2cc",
+      "mode": "0o644"
+    },
+    {
+      "path": "hadoop/intermediate/j02/._SUCCESS.crc",
+      "bytes": 8,
+      "sha256": "1d44f510ec2ed7595badbec80583316defc14e8dd89130d719724149adfaa07d",
+      "mode": "0o644"
+    },
+    {
+      "path": "hadoop/intermediate/j02/.part-r-00000.crc",
+      "bytes": 8,
+      "sha256": "1d44f510ec2ed7595badbec80583316defc14e8dd89130d719724149adfaa07d",
+      "mode": "0o644"
+    },
+    {
+      "path": "hadoop/intermediate/j02/_SUCCESS",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mode": "0o644"
+    },
+    {
+      "path": "hadoop/intermediate/j02/part-r-00000",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mode": "0o644"
+    },
+    {
+      "path": "hadoop/intermediate/j03/._SUCCESS.crc",
+      "bytes": 8,
+      "sha256": "1d44f510ec2ed7595badbec80583316defc14e8dd89130d719724149adfaa07d",
+      "mode": "0o644"
+    },
+    {
+      "path": "hadoop/intermediate/j03/.part-r-00000.crc",
+      "bytes": 76,
+      "sha256": "1f98e7593e90c4167ba90981c25c1871440b635e0a9f9c892f6cff0e0c646229",
+      "mode": "0o644"
+    },
+    {
+      "path": "hadoop/intermediate/j03/_SUCCESS",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mode": "0o644"
+    },
+    {
+      "path": "hadoop/intermediate/j03/part-r-00000",
+      "bytes": 8247,
+      "sha256": "7e4a58885e3b59bdbf4e1f48bb5beb0f6eb644a58c76acb37c546c041e3b5f0c",
+      "mode": "0o644"
+    },
+    {
+      "path": "hadoop/intermediate/j04/._SUCCESS.crc",
+      "bytes": 8,
+      "sha256": "1d44f510ec2ed7595badbec80583316defc14e8dd89130d719724149adfaa07d",
+      "mode": "0o644"
+    },
+    {
+      "path": "hadoop/intermediate/j04/.part-r-00000.crc",
+      "bytes": 288,
+      "sha256": "298b30815cc058fbfff23cc6e555c25c395aa28bb54808401f6556f7d0fdf5d4",
+      "mode": "0o644"
+    },
+    {
+      "path": "hadoop/intermediate/j04/_SUCCESS",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mode": "0o644"
+    },
+    {
+      "path": "hadoop/intermediate/j04/part-r-00000",
+      "bytes": 35832,
+      "sha256": "44508d1dbb3f79a4b67241b4c53960369928b402cf6c647acbf0c975dc5d7606",
+      "mode": "0o644"
+    },
+    {
+      "path": "hadoop/intermediate/j05/._SUCCESS.crc",
+      "bytes": 8,
+      "sha256": "1d44f510ec2ed7595badbec80583316defc14e8dd89130d719724149adfaa07d",
+      "mode": "0o644"
+    },
+    {
+      "path": "hadoop/intermediate/j05/.part-r-00000.crc",
+      "bytes": 296,
+      "sha256": "8287dc488c63519bbc17ae20056ca5282b54d5e83f04dd631ea7b06dbb7dd186",
+      "mode": "0o644"
+    },
+    {
+      "path": "hadoop/intermediate/j05/_SUCCESS",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mode": "0o644"
+    },
+    {
+      "path": "hadoop/intermediate/j05/part-r-00000",
+      "bytes": 36553,
+      "sha256": "0b6a894a6ae50fe04d3e313a8e6349c6b3676aec4f35213f9d26ab9e4c597632",
+      "mode": "0o644"
+    },
+    {
+      "path": "hadoop/intermediate/j06/._SUCCESS.crc",
+      "bytes": 8,
+      "sha256": "1d44f510ec2ed7595badbec80583316defc14e8dd89130d719724149adfaa07d",
+      "mode": "0o644"
+    },
+    {
+      "path": "hadoop/intermediate/j06/.part-r-00000.crc",
+      "bytes": 476,
+      "sha256": "e5ed9d1d32f43ce3fc74ebd9057ef2b0c8f4bb05a04cc1d81e3c0187bec0667c",
+      "mode": "0o644"
+    },
+    {
+      "path": "hadoop/intermediate/j06/_SUCCESS",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mode": "0o644"
+    },
+    {
+      "path": "hadoop/intermediate/j06/part-r-00000",
+      "bytes": 59772,
+      "sha256": "ec1a266dd48d75f2245fdc3cf8ed4222cc317e2036f76615a4a1f79faf4de1f7",
+      "mode": "0o644"
+    },
+    {
+      "path": "hadoop/intermediate/j07/._SUCCESS.crc",
+      "bytes": 8,
+      "sha256": "1d44f510ec2ed7595badbec80583316defc14e8dd89130d719724149adfaa07d",
+      "mode": "0o644"
+    },
+    {
+      "path": "hadoop/intermediate/j07/.part-r-00000.crc",
+      "bytes": 188,
+      "sha256": "5ce27c9173a6d0cd36375c80c11885790e6cf073eaaf95cd47594f45b786c1d6",
+      "mode": "0o644"
+    },
+    {
+      "path": "hadoop/intermediate/j07/_SUCCESS",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mode": "0o644"
+    },
+    {
+      "path": "hadoop/intermediate/j07/part-r-00000",
+      "bytes": 22645,
+      "sha256": "df4b34e1f8bd677c13dc8e074e214db300a2685d07ee7c18b21a58cf9874419b",
+      "mode": "0o644"
+    },
+    {
+      "path": "hadoop/intermediate/j08/._SUCCESS.crc",
+      "bytes": 8,
+      "sha256": "1d44f510ec2ed7595badbec80583316defc14e8dd89130d719724149adfaa07d",
+      "mode": "0o644"
+    },
+    {
+      "path": "hadoop/intermediate/j08/.part-r-00000.crc",
+      "bytes": 104,
+      "sha256": "f4de1a163b5fa4c31206b19a1914295c5a3c5cbb88e07d2824c5bb723698cf1d",
+      "mode": "0o644"
+    },
+    {
+      "path": "hadoop/intermediate/j08/_SUCCESS",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mode": "0o644"
+    },
+    {
+      "path": "hadoop/intermediate/j08/part-r-00000",
+      "bytes": 12040,
+      "sha256": "b6af36cd677bb1c5a580cd492dda76b3c678ef09f724fe67a9265fbebc3b7fe5",
+      "mode": "0o644"
+    },
+    {
+      "path": "hadoop/run-manifest.json",
+      "bytes": 1823,
+      "sha256": "4229afab659562a35ff2b3a872be250d1d3e725ce114acac524cb16dbe8c5201",
+      "mode": "0o644"
+    },
+    {
+      "path": "hadoop/stats/.j05-attempt_local1443358164_0005_r_000000_0.txt.crc",
+      "bytes": 12,
+      "sha256": "1a95d09d8f2fa057b438d204489401842cdde7c13f6e19950a3cc2d25a6cc607",
+      "mode": "0o644"
+    },
+    {
+      "path": "hadoop/stats/.j07-attempt_local508603516_0007_m_000000_0.txt.crc",
+      "bytes": 12,
+      "sha256": "50aaea3c02a3e5ad00fda5adc0cae131765d3c30f5f04b1472b666efe13e0d7d",
+      "mode": "0o644"
+    },
+    {
+      "path": "hadoop/stats/.j08-attempt_local1658311740_0008_m_000000_0.txt.crc",
+      "bytes": 12,
+      "sha256": "039c6ce0ff86b3d718c572420d9c31e55364903e102c0878e542e223c780fdc7",
+      "mode": "0o644"
+    },
+    {
+      "path": "hadoop/stats/j05-attempt_local1443358164_0005_r_000000_0.txt",
+      "bytes": 35,
+      "sha256": "050edc7fe14991a5aaad2c0ef972e81c57f47f64a5948d945a1d0fb2db62f2da",
+      "mode": "0o644"
+    },
+    {
+      "path": "hadoop/stats/j07-attempt_local508603516_0007_m_000000_0.txt",
+      "bytes": 14,
+      "sha256": "daeeb0c46a7cd2351afbb3f244337f8f944b7d98068a23d3afe28c572a7f7d2d",
+      "mode": "0o644"
+    },
+    {
+      "path": "hadoop/stats/j08-attempt_local1658311740_0008_m_000000_0.txt",
+      "bytes": 23,
+      "sha256": "74664b24f9901e52690f88d464de4a50f154c681c40a1bf0587a6fa1c15ced16",
+      "mode": "0o644"
+    },
+    {
+      "path": "inputs/empty.jsonl",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mode": "0o644"
+    },
+    {
+      "path": "inputs/g1-dblp.xml",
+      "bytes": 1594,
+      "sha256": "55e806990e062f7c36c251bc0cd0eb2ca55559c014f9eda0c86d9132f5b67d8a",
+      "mode": "0o644"
+    }
+  ],
+  "files": 85,
+  "expanded_bytes": 690600,
+  "artifact": {
+    "name": "scholarchain-g1-upstream-inputs.tgz",
+    "path": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-portable-runtime-20261103/artifacts/scholarchain-g1-upstream-inputs.tgz",
+    "bytes": 66755,
+    "sha256": "e05931ab0eec2fc66b1a0d0ab33e5b4c070faf81afcb66fc00208287b85ab558"
+  },
+  "symlinks": 0,
+  "hardlinks": 0,
+  "byte_identical": true,
+  "archive_members_match": 85
+}

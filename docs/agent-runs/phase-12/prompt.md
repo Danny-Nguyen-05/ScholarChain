@@ -714,3 +714,8 @@ Stop at an independently reviewable design/cost proposal and the next bounded wo
 ## Subphase 12D — EMR cost scenario L1 wording repair
 
 User returned REQUEST-CHANGES for one L1 wording defect. Apply the reviewer’s offered relabeling option: ancillary resources active 24 h total (21 h beyond nominal), USD7.52. Keep model quantities/arithmetic, all launch flags and live gates unchanged. Refresh evidence and return a narrow recheck prompt in chat only.
+
+
+## Subphase12D — offline portable runtime and request inventory
+
+User said “alright let's go”, accepting the bounded offline portable-runtime/request-inventory task. See evidence/12d-portable-runtime/work-order.md. Preserve exact reviewed job/G1, source/human records; perform public verification/portable packaging/local tests and request assessment only. Additional bounded encrypted-RPC checks exposed a launch-readiness blocker; no security setting/version/application change or live continuation authorized.

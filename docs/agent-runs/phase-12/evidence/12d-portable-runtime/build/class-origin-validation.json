@@ -1,0 +1,91 @@
+{
+  "report_path": "/private/tmp/sc-runtime-test-20261103/results/probe-distributed.json",
+  "driver_pid": "4219",
+  "executor_pids": [
+    "4225"
+  ],
+  "external_executor_verified": true,
+  "all_origins_under_relocated_runtime": true,
+  "checks": [
+    {
+      "process_role": "driver",
+      "pid": "4219",
+      "component": "spark",
+      "origin": "/private/tmp/sc-runtime-test-20261103/scholarchain-runtime/jars/spark-core_2.13-3.5.4.jar",
+      "codeSourceSha256": "1c2cd0502db711ab090f4e0531eac5a4f23b5d6a61907825b24995809f9437fd",
+      "classSha256": "cf2ed70bbaeaf5fbe8c702dddf0059b0ea49b3d0badfe8b5de489f711bd2373f",
+      "runtimeVersion": "3.5.4",
+      "validated": true
+    },
+    {
+      "process_role": "driver",
+      "pid": "4219",
+      "component": "scala-library",
+      "origin": "/private/tmp/sc-runtime-test-20261103/scholarchain-runtime/jars/scala-library-2.13.14.jar",
+      "codeSourceSha256": "43e0ca1583df1966eaf02f0fbddcfb3784b995dd06bfc907209347758ce4b7e3",
+      "classSha256": "5fa95e069a844983b415ef613ce7b3f0c752be0804660ff12b7ffa6d7cf00cae",
+      "runtimeVersion": "2.13.14",
+      "validated": true
+    },
+    {
+      "process_role": "driver",
+      "pid": "4219",
+      "component": "scala-reflect",
+      "origin": "/private/tmp/sc-runtime-test-20261103/scholarchain-runtime/jars/scala-reflect-2.13.14.jar",
+      "codeSourceSha256": "8846baaa8cf43b1b19725ab737abff145ca58d14a4d02e75d71ca8f7ca5f2926",
+      "classSha256": "19837277a82a61227cd4e246065836b5a049d5dfe59bb6032bc42bea7391ff96",
+      "runtimeVersion": null,
+      "validated": true
+    },
+    {
+      "process_role": "driver",
+      "pid": "4219",
+      "component": "scala3-library",
+      "origin": "/private/tmp/sc-runtime-test-20261103/scholarchain-runtime/application/scholarchain-job.jar",
+      "codeSourceSha256": "d52f11ebad5ec9e1ffdd1910d562023e934ce7ab62e7c74a5ffd650f8951b86b",
+      "classSha256": "e48c633a515bdcb03a9b4422a0f9fb5778fae811ad3c84f94ecce1f1c45e5712",
+      "runtimeVersion": null,
+      "validated": true
+    },
+    {
+      "process_role": "executor-task",
+      "pid": "4225",
+      "component": "spark",
+      "origin": "/private/tmp/sc-runtime-test-20261103/scholarchain-runtime/jars/spark-core_2.13-3.5.4.jar",
+      "codeSourceSha256": "1c2cd0502db711ab090f4e0531eac5a4f23b5d6a61907825b24995809f9437fd",
+      "classSha256": "cf2ed70bbaeaf5fbe8c702dddf0059b0ea49b3d0badfe8b5de489f711bd2373f",
+      "runtimeVersion": "3.5.4",
+      "validated": true
+    },
+    {
+      "process_role": "executor-task",
+      "pid": "4225",
+      "component": "scala-library",
+      "origin": "/private/tmp/sc-runtime-test-20261103/scholarchain-runtime/jars/scala-library-2.13.14.jar",
+      "codeSourceSha256": "43e0ca1583df1966eaf02f0fbddcfb3784b995dd06bfc907209347758ce4b7e3",
+      "classSha256": "5fa95e069a844983b415ef613ce7b3f0c752be0804660ff12b7ffa6d7cf00cae",
+      "runtimeVersion": "2.13.14",
+      "validated": true
+    },
+    {
+      "process_role": "executor-task",
+      "pid": "4225",
+      "component": "scala-reflect",
+      "origin": "/private/tmp/sc-runtime-test-20261103/scholarchain-runtime/jars/scala-reflect-2.13.14.jar",
+      "codeSourceSha256": "8846baaa8cf43b1b19725ab737abff145ca58d14a4d02e75d71ca8f7ca5f2926",
+      "classSha256": "19837277a82a61227cd4e246065836b5a049d5dfe59bb6032bc42bea7391ff96",
+      "runtimeVersion": null,
+      "validated": true
+    },
+    {
+      "process_role": "executor-task",
+      "pid": "4225",
+      "component": "scala3-library",
+      "origin": "/private/tmp/sc-runtime-test-20261103/scholarchain-runtime/work/app-20261103185201-0000/0/scholarchain-job.jar",
+      "codeSourceSha256": "d52f11ebad5ec9e1ffdd1910d562023e934ce7ab62e7c74a5ffd650f8951b86b",
+      "classSha256": "e48c633a515bdcb03a9b4422a0f9fb5778fae811ad3c84f94ecce1f1c45e5712",
+      "runtimeVersion": null,
+      "validated": true
+    }
+  ]
+}

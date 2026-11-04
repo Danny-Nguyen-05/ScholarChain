@@ -1,0 +1,18 @@
+{
+  "observed_at": "2026-11-04T02:21:40.865975+00:00",
+  "base_head": "99c8b923ea245b20447de641b417dbb883313cee",
+  "reviewed_manifest_sha256": "f60da14cc8477a9972c99fb9efbbdae4ab1a3646c1f4a2bafb73020ada2a3239",
+  "reviewed_entries_checked": 115,
+  "mismatches": 0,
+  "supplied_review_bytes": 7456,
+  "supplied_review_sha256": "1d13a2671070640e6e53c34a908903047bb65cdaf16b61017ed05483d5016359",
+  "verdict": "APPROVE for offline candidate only",
+  "blocking_findings": 0,
+  "N1": "OPEN before staging: job mode0600 / actor readability",
+  "N2": "Attempt1 inferred authorization; only attempt2 explicit DEBUG",
+  "human_record_bytes": 1334,
+  "human_record_sha256": "abe3a50ad7167fa01227c73e15e92a422a50609f6313bdcc56404cb61765d71a",
+  "git_diff_check_exit": 0,
+  "commit_push_authorized_this_step": false,
+  "scripts_tests_live_commands_run": false
+}

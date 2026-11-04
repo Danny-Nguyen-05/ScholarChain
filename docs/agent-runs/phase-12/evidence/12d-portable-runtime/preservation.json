@@ -1,0 +1,14 @@
+{
+  "base_head": "99c8b923ea245b20447de641b417dbb883313cee",
+  "tracked_baseline_files": 5074,
+  "tracked_files_unchanged": 5069,
+  "canonical_records_with_exact_append": 5,
+  "human_record_bytes": 1334,
+  "human_record_sha256": "abe3a50ad7167fa01227c73e15e92a422a50609f6313bdcc56404cb61765d71a",
+  "owner_curated_entries_verified": 77,
+  "tracked_source_changes": 0,
+  "new_paths_confined_to_new_packet": true,
+  "prior_evidence_files_within_packet_preserved": true,
+  "previous_reviewed_manifests_are_historical_commit_snapshots": "99c8b923ea245b20447de641b417dbb883313cee; canonical phase records now have the explicitly inventoried suffixes.",
+  "all_launch_costfit_flags_false": true
+}

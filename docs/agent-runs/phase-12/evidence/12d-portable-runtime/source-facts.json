@@ -1,0 +1,81 @@
+[
+  {
+    "source": "https://docs.aws.amazon.com/AmazonS3/latest/userguide/mpuoverview.html",
+    "name": "s3-multipart",
+    "accessed_at": "2026-11-04T00:36:30.674069+00:00",
+    "decoded_sha256": "9a93ae3eeeaa4d681c6872b1b74a185d00b5851928f2b89746036487a6ae7292",
+    "facts": [
+      "A successful multipart upload requires initiation, each part and completion; part retransmission adds requests.",
+      "Unfinished multipart parts remain stored until completed or explicitly aborted. Multipart listing and copies need separate inventory."
+    ]
+  },
+  {
+    "source": "https://docs.aws.amazon.com/AmazonS3/latest/userguide/qfacts.html",
+    "name": "s3-multipart-limits",
+    "accessed_at": "2026-11-04T00:36:30.618476+00:00",
+    "decoded_sha256": "56a02572e3b220e2a1caabbec7eb335d7dac42ed86e9af2fbfeab98819edbd74",
+    "facts": [
+      "Use a conditional64MiB part size and count ceil(bytes/partsize); actual transfer-client configuration remains unimplemented."
+    ]
+  },
+  {
+    "source": "https://docs.aws.amazon.com/AmazonS3/latest/userguide/UsingKMSEncryption.html",
+    "name": "s3-kms",
+    "accessed_at": "2026-11-04T00:36:30.577933+00:00",
+    "decoded_sha256": "289d0c0d98acfb20cc820adb44bae9c76da2eed3228a3d355fad11f79c8ba217",
+    "facts": [
+      "SSE-KMS uploads require GenerateDataKey, downloads require Decrypt and multipart requires both permissions.",
+      "The one-KMS-per-S3-operation proposal is a modeling envelope, not a documented universal hard operation maximum. Do not deduct bucket-key/cache benefits."
+    ]
+  },
+  {
+    "source": "https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-encryption-enable.html",
+    "name": "emr-certificates",
+    "accessed_at": "2026-11-04T00:36:30.713972+00:00",
+    "decoded_sha256": "5052d4e9781093acedaa0f75f9914fd30536ecc7b4c6d2f87dcbc5997e98d83d",
+    "facts": [
+      "EMR4.8.0\u20137.10.0 supports PEMzip or a custom certificate provider, while EMR-managed certificates begin7.11.0.",
+      "A PEMzip requires privateKey.pem and certificateChain.pem; trust and hostnames need explicit handling. The AWS self-signed example is a proof-of-concept, not production approval. No key is generated/read here."
+    ]
+  },
+  {
+    "source": "https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-plan-storage.html",
+    "name": "emr-storage",
+    "accessed_at": "2026-11-04T00:36:31.158154+00:00",
+    "decoded_sha256": "6b6a29091b7f3b9d8e688b59ed407e1cf659646ddc47f89c42373bf2619d4c71",
+    "facts": [
+      "The default xlarge table lists two32GiB additional data volumes per EBS-only instance.",
+      "Require explicit one32GiB gp3 data disk plus explicit32GiB gp3 root on each of the two nodes, and verify four total volumes in plan/inventory."
+    ]
+  },
+  {
+    "source": "https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_testing-policies.html",
+    "name": "iam-simulator",
+    "accessed_at": "2026-11-04T00:36:30.816223+00:00",
+    "decoded_sha256": "2ad71e783a35db0a331dd4236cdbbf226ba0c6f4bbe8fe7ab164b2025ce4e0e0",
+    "facts": [
+      "AWS policy simulation does not make the simulated service request and has documented differences from actual service behavior.",
+      "Local mocks/policy tests do not prove actual EMR tagging or consistency; any later simulator API call remains separately gated account access."
+    ]
+  },
+  {
+    "source": "https://raw.githubusercontent.com/apache/spark/v3.5.4/docs/running-on-yarn.md",
+    "name": "spark-yarn-v3.5.4",
+    "accessed_at": "2026-11-04T00:36:35.146933+00:00",
+    "decoded_sha256": "95ea340ade2e5c0b760b520d7bd366f9b9131a7c318f135ea32c0f23dd7e3bf7",
+    "facts": [
+      "With-Hadoop Spark normally omits the cluster Hadoop classpath; explicitly keep populateHadoopClasspath=false for the isolated runtime.",
+      "If neither yarn.archive nor yarn.jars is set Spark can build/upload a JAR zip for distributed cache. Count any separate S3 staging object; do not assume it costs no bytes or requests."
+    ]
+  },
+  {
+    "source": "https://raw.githubusercontent.com/apache/spark/v3.5.4/docs/security.md",
+    "name": "spark-security-v3.5.4",
+    "accessed_at": "2026-11-04T00:36:31.591623+00:00",
+    "decoded_sha256": "5fdf3fb7fe56f5ee651a4d13efb84d1d8b04ebc5969a75479dbbe15a4a9abe06",
+    "facts": [
+      "Spark authentication and RPC encryption are not automatic. The pinned security document describes authEngineVersion2 and authenticated AES/GCM mode.",
+      "Local spill encryption does not protect every application output file; EMR configuration and POSIX filesystem protections remain separate requirements."
+    ]
+  }
+]

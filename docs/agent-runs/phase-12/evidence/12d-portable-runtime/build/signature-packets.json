@@ -1,0 +1,13 @@
+{
+  "command": [
+    "/opt/homebrew/bin/gpg",
+    "--homedir",
+    "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-portable-runtime-20261103/gnupg",
+    "--batch",
+    "--list-packets",
+    "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-portable-runtime-20261103/downloads/spark.asc"
+  ],
+  "exit": 0,
+  "stdout": "# off=0 ctb=89 tag=2 hlen=3 plen=563\n:signature packet: algo 1, keyid 2541488DA93FE4B4\n\tversion 4, created 1734410048, md5len 0, sigclass 0x00\n\tdigest algo 10, begin of digest 67 da\n\thashed subpkt 33 len 21 (issuer fpr v4 19F745C40A0E550420BB2C522541488DA93FE4B4)\n\thashed subpkt 2 len 4 (sig created 2024-12-17)\n\tsubpkt 16 len 8 (issuer key ID 2541488DA93FE4B4)\n\tdata: [4095 bits]\n",
+  "stderr": "gpg: keybox '/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-portable-runtime-20261103/gnupg/pubring.kbx' created\n"
+}

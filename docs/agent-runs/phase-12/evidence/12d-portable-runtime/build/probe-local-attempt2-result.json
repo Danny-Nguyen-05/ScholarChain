@@ -1,0 +1,13 @@
+{
+  "stage": "probe-local",
+  "exit": 2,
+  "timed_out": false,
+  "started_at": "2026-11-04T00:50:28.549627+00:00",
+  "completed_at": "2026-11-04T00:50:28.989543+00:00",
+  "seconds": 0.4398453750181943,
+  "process_id": 4025,
+  "stdout_bytes": 0,
+  "stderr_bytes": 276,
+  "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "stderr_sha256": "debcebf0f2aa9e3f645173a9ed3e7afe31375e2b5e209a37967dfb0c04f906b4"
+}

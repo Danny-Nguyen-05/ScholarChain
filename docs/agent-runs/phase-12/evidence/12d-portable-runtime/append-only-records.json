@@ -1,0 +1,47 @@
+[
+  {
+    "path": "docs/agent-runs/phase-12/owner-report.md",
+    "base_bytes": 175233,
+    "base_sha256": "22e1ed30538cd39c1f778199adf40b65856ad9b40688c15ad73b9bb988d0f49f",
+    "suffix_bytes": 6340,
+    "suffix_sha256": "db18adfa47ac6037256743a15f6de02047dbd210f87605b71952375ccc5220cd",
+    "final_bytes": 181573,
+    "final_sha256": "89f7ab44bbbf0a2f907ec6456cba43852cac4f666521fcddc514aa8b5ed7c733"
+  },
+  {
+    "path": "docs/agent-runs/phase-12/prompt.md",
+    "base_bytes": 94470,
+    "base_sha256": "0de03fca41d4d56ecddb8c5af348a28bc7cc8c2e7a7dd02f79f12d3bfebd6171",
+    "suffix_bytes": 521,
+    "suffix_sha256": "39176cef7a9e7126e2ea11d35329d78371b57f287275dc2a889cd10632f86e0c",
+    "final_bytes": 94991,
+    "final_sha256": "78ef95638c80a09ed05421d1a6050ef674605b0151678fabeabf40acafeb92d8"
+  },
+  {
+    "path": "docs/agent-runs/phase-12/repairs.md",
+    "base_bytes": 76196,
+    "base_sha256": "cb8dc5bfee22a6851ee0506821e123d79519bffbde2f444de948ef3a92402ee8",
+    "suffix_bytes": 574,
+    "suffix_sha256": "acd72d2249ac78f8807d735c9c4247b625e2add8858f495b4be1ce31c5c41865",
+    "final_bytes": 76770,
+    "final_sha256": "316b2ee721eec67045733cb24ebaa7c8ff2f7a866f51e715d8523a97c1194c35"
+  },
+  {
+    "path": "docs/agent-runs/phase-12/review.md",
+    "base_bytes": 263997,
+    "base_sha256": "b77ae549944524166e578937d8381c5d23a037519e316ba47d10c5af1ea7afad",
+    "suffix_bytes": 468,
+    "suffix_sha256": "a8a94f4432314b19e0217c29b5e14e822421d493fdffcd9360a19aa09f596126",
+    "final_bytes": 264465,
+    "final_sha256": "598374bb85534286d12744980b69711bf702fdb8874a633e8fb1b6e01ad1d57d"
+  },
+  {
+    "path": "docs/agent-runs/phase-12/test-report.md",
+    "base_bytes": 150000,
+    "base_sha256": "9de3467bd763608a294f57f48a0383017a4416a44c83ad611cb0f90387e181c3",
+    "suffix_bytes": 607,
+    "suffix_sha256": "0ba18e133c87f34b3f07c440245ee7792dcc966a483c9b48f786c6c3e04c3074",
+    "final_bytes": 150607,
+    "final_sha256": "3ef53cfe6e593b0097167a023c95cd84faf622f27d7061bb3a45333d8bb84fc5"
+  }
+]

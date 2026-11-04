@@ -1,0 +1,13 @@
+{
+  "stage": "probe-distributed",
+  "exit": 0,
+  "timed_out": false,
+  "started_at": "2026-11-04T00:52:01.075176+00:00",
+  "completed_at": "2026-11-04T00:52:03.102412+00:00",
+  "seconds": 2.0271812500141095,
+  "process_id": 4219,
+  "stdout_bytes": 4104,
+  "stderr_bytes": 14922,
+  "stdout_sha256": "83fc531640a3d98a30feba262dcf9fa1b28e7dad4c35a1126ee7dfa7ac655700",
+  "stderr_sha256": "aea98d8e38aa45f8152070b0ffdb8fcd5cbc5f0dd3e170db178149ebdca8d521"
+}

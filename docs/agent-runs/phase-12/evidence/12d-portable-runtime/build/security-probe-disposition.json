@@ -1,0 +1,82 @@
+{
+  "security_probe_success_report_exists": false,
+  "attempts": [
+    {
+      "stage": "probe-security",
+      "exit": 2,
+      "timed_out": false,
+      "started_at": "2026-11-04T00:54:59.793189+00:00",
+      "completed_at": "2026-11-04T00:56:00.756273+00:00",
+      "seconds": 60.96370304102311,
+      "process_id": 5273,
+      "stdout_bytes": 0,
+      "stderr_bytes": 11737,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "e8298d937024963bfb54256ec70d0e9c9bf0ac69cc64b8f04b7d8124d2997caa"
+    },
+    {
+      "stage": "probe-security",
+      "exit": 2,
+      "timed_out": false,
+      "started_at": "2026-11-04T01:00:36.896574+00:00",
+      "completed_at": "2026-11-04T01:01:37.864645+00:00",
+      "seconds": 60.96869137499016,
+      "process_id": 5782,
+      "stdout_bytes": 0,
+      "stderr_bytes": 18019,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "ef827641e8d99fc51228db8455228900a2e7788c60d6421e96c36964e2a7ec5f"
+    }
+  ],
+  "required_flags": {
+    "spark.authenticate": true,
+    "spark.network.crypto.enabled": true,
+    "spark.network.crypto.authEngineVersion": 2,
+    "spark.network.crypto.cipher": "AES/GCM/NoPadding",
+    "spark.network.crypto.saslFallback": false,
+    "spark.io.encryption.enabled": true,
+    "spark.ui.enabled": false
+  },
+  "public_test_fixture_only": true,
+  "adaptive_attempt_explicit_env_and_config_match": true,
+  "observed": "Both Master AuthRpcHandler connections reported authorization successful; client/Worker registration then remained unanswered until all masters unresponsive. No executor/task was launched. Root cause unknown.",
+  "unsupported_claims_not_made": [
+    "missing/incorrect secret",
+    "unsupported setting",
+    "Spark bug",
+    "native cipher failure",
+    "EMR/YARN/Linux capability"
+  ],
+  "source_bindings": [
+    {
+      "path": "security-source/AuthEngine.java",
+      "bytes": 12283,
+      "sha256": "5239f99dc48f4c8c88591de6334c79ce08dafb2318a1b6e06faa894ae6e4998e"
+    },
+    {
+      "path": "security-source/GcmTransportCipher.java",
+      "bytes": 19152,
+      "sha256": "97c1f1da47d905c73e27805ff05d03c97b47d971f7323354a963c9249bb4d445"
+    },
+    {
+      "path": "security-source/LocalSparkCluster.scala",
+      "bytes": 4269,
+      "sha256": "e49b669a7f40ae5bc24cfd67f39a474281fdaffbd6a4ec512387f9d6ec780242"
+    },
+    {
+      "path": "security-source/SecurityManager.scala",
+      "bytes": 15639,
+      "sha256": "7b1f64cd4a846acb9269da6fe998fe7d7e2e0c25444d9c744f4c90c2901b4f1c"
+    },
+    {
+      "path": "security-source/TransportConf.java",
+      "bytes": 17746,
+      "sha256": "f4c723d32f4b7754976cfe712ac85c8dc126786f8ee29a7900a49786464dc54c"
+    },
+    {
+      "path": "security-source/fetch-manifest.json",
+      "bytes": 1835,
+      "sha256": "2d2d49cb0a35b2b1503eb4188f6daeb98d6224bc133f0f585a0d6c1200a74419"
+    }
+  ]
+}

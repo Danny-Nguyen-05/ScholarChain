@@ -1,0 +1,5 @@
+{
+  "exit": 1,
+  "reason": "Public-key import returned nonzero because GPG agent Unix socket path under long target-directory GNUPGHOME exceeded platform filename length. No user keyring accessed. Retry uses fresh short /tmp/sc-gpg-20261103.",
+  "stderr": "gpg: public key imported; cannot connect to gpg-agent: File name too long"
+}

@@ -1,0 +1,94 @@
+{
+  "objects": [
+    {
+      "object_id": "runtime-including-unchanged-job",
+      "status": "measured",
+      "staging_variant": "both",
+      "local_path": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-portable-runtime-20261103/artifacts/scholarchain-spark3.5.4-scala2.13.14-java17-runtime.tgz",
+      "bytes": 321876762,
+      "sha256": "1253946aa35cf8082f601b2146db75bbb79902a6c2f10da0b159473afc8fa21e",
+      "planned_consumers": 2,
+      "uploaded": false
+    },
+    {
+      "object_id": "optional-separate-yarn-jars",
+      "status": "measured",
+      "staging_variant": "runtime_plus_optional_yarn_archive",
+      "local_path": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-portable-runtime-20261103/artifacts/scholarchain-spark3.5.4-scala2.13.14-yarn-jars.zip",
+      "bytes": 310978586,
+      "sha256": "c57b4f5e3c3de3bbc1878d48d8a5367276a37ddf2449504c509764b57155255d",
+      "planned_consumers": 2,
+      "uploaded": false
+    },
+    {
+      "object_id": "g1-upstream-input-bundle",
+      "status": "measured",
+      "staging_variant": "both",
+      "local_path": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-portable-runtime-20261103/artifacts/scholarchain-g1-upstream-inputs.tgz",
+      "bytes": 66755,
+      "sha256": "e05931ab0eec2fc66b1a0d0ab33e5b4c070faf81afcb66fc00208287b85ab558",
+      "planned_consumers": 2,
+      "uploaded": false
+    },
+    {
+      "object_id": "public-provenance-metadata",
+      "status": "reserved_not_measured",
+      "staging_variant": "both",
+      "bytes": 1048576,
+      "sha256": null,
+      "local_path": null,
+      "planned_consumers": 2,
+      "uploaded": false,
+      "assumption": "Future actual manifest/checksum/provenance object, capped only by this unimplemented proposal."
+    },
+    {
+      "object_id": "bootstrap-and-config",
+      "status": "reserved_not_measured",
+      "staging_variant": "both",
+      "bytes": 65536,
+      "sha256": null,
+      "local_path": null,
+      "planned_consumers": 2,
+      "uploaded": false,
+      "assumption": "Future bootstrap/config artifact; actual bytes and dependencies unknown."
+    },
+    {
+      "object_id": "protected-pem-zip",
+      "status": "reserved_not_measured",
+      "staging_variant": "both",
+      "bytes": 65536,
+      "sha256": null,
+      "local_path": null,
+      "planned_consumers": 2,
+      "uploaded": false,
+      "assumption": "Future protected certificate input; no key/certificate generated or read; source/acceptance remains a gate."
+    },
+    {
+      "object_id": "result-and-log-archive",
+      "status": "reserved_not_measured",
+      "staging_variant": "both",
+      "bytes": 250000000,
+      "sha256": null,
+      "local_path": null,
+      "planned_consumers": 0,
+      "uploaded": false,
+      "assumption": "Future aggregate outputs/log/evidence archive only; does not pretend EMR internal log creation is bounded."
+    },
+    {
+      "object_id": "controller-storage-reservation",
+      "status": "reserved_not_measured",
+      "staging_variant": "both",
+      "bytes": 1048576,
+      "sha256": null,
+      "local_path": null,
+      "planned_consumers": 2,
+      "uploaded": false,
+      "assumption": "Conditional reservation for initial controller/control payload and versions; later reads/writes/versions not counted by this single-object hypothesis."
+    }
+  ],
+  "object_names_are_inventory_labels_not_cloud_resources": true,
+  "request_model_scope": "Conditional artifact transfers only; reserved byte sizes and client attempts are not implemented/enforced limits. RuntimeTGZ already includes the job JAR, so it is not charged twice. SeparateYARNarchive is an alternative unselected additional object.",
+  "current_s3_storage_model_bytes": 1000000000,
+  "cloud_staging_selected": false,
+  "whole_attempt_request_bounds_proven": false
+}

@@ -1,0 +1,588 @@
+{
+  "base_head": "99c8b923ea245b20447de641b417dbb883313cee",
+  "scope": "Every file in this evidence directory plus five appended canonical phase records. Manifest excludes itself; large ignored runtime binaries are hash-referenced, prior committed evidence is bound by baseline rather than copied.",
+  "files": [
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-portable-runtime/README.md",
+      "bytes": 2872,
+      "sha256": "8120ee21cf36c057cb047407b1f938c144b4a706438775e757c591fa4faaee9b"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-portable-runtime/append-only-records.json",
+      "bytes": 2012,
+      "sha256": "553061186db6621ef602b7b1573c44210538fd9a245fff94a9d85b0a2eeb48f7"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-portable-runtime/baseline.json",
+      "bytes": 1095789,
+      "sha256": "b6f3e575a96be7468b91ce185f28bbf1b792a21996beba9e165a3943a5075ace"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-portable-runtime/build/class-origin-validation.json",
+      "bytes": 3893,
+      "sha256": "90ad94aca703e68109134d7c9972c7d443b0ba059185f13a07054aba0554061b"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-portable-runtime/build/compare-command.json",
+      "bytes": 2129,
+      "sha256": "c8be4f90838b77e65917d92a0d55c7ec1d7d03cc53d40db057ecb5476f574cd1"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-portable-runtime/build/compare-result.json",
+      "bytes": 446,
+      "sha256": "b6c932bcd28a56ec70fb9313fa9248f52487690d4b7d7c7fc73f918c0ef86bb2"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-portable-runtime/build/compare.stderr.txt.gz",
+      "bytes": 95207,
+      "sha256": "27cd2b5a5b3f24987fdbd77e2bf41bcdceb222e8b8766d82f3190dd8aeafcb39"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-portable-runtime/build/compare.stdout.txt.gz",
+      "bytes": 1652,
+      "sha256": "e33d50f64eb9fd1d585d9adda1ec2f6a35d0d9787b3de0079a2d35e39aaea3cb"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-portable-runtime/build/curated-copy-manifest.json",
+      "bytes": 13074,
+      "sha256": "f1b2b80d230471147212cf145f9b1086aadec3d2e4b45656f8530f9aaf9b6acd"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-portable-runtime/build/fetch-manifest.json",
+      "bytes": 3240,
+      "sha256": "887980cd6e2805195d166c7b7c0c78baa35f8ac9b64f2db7bfb814533d078281"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-portable-runtime/build/fetch-public-runtime.py",
+      "bytes": 2169,
+      "sha256": "ba651da24a5065e25b0ad662193286db7027c88a4d56f8ce4a6c693d38e20328"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-portable-runtime/build/fetch-security-source.py",
+      "bytes": 1326,
+      "sha256": "ebe46d34c547ed948f3786328eb2bf417213f7f73083799ae3cd9672a6887d29"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-portable-runtime/build/fetch-signer-reference.py",
+      "bytes": 1105,
+      "sha256": "6d1aa19a17118d51bbec6946d27c641279edfe3270add030f5b6568fd574485a"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-portable-runtime/build/final-runtime-byte-validation.json",
+      "bytes": 272,
+      "sha256": "ac7e8280eb7be1d82202f3d36641f909267242d7c7abca07ee31749f3b5c401c"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-portable-runtime/build/harness-final-hashes.json",
+      "bytes": 1367,
+      "sha256": "0ee353e6ede143876a2875ebcc7964c1af3cc157cc24b2ee4eaf9bade2ecc8b3"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-portable-runtime/build/input-bundle-inventory.json",
+      "bytes": 18106,
+      "sha256": "a05dde9c37e4165f199da2c560f595dd1114cc1f818ffac39f8c778af1d7d248"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-portable-runtime/build/input-extraction-validation.json",
+      "bytes": 533,
+      "sha256": "60557c8a701e65b224765330265986a92562de1ae3265f282f6ae75ebbf80054"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-portable-runtime/build/observed-results/comparison.json",
+      "bytes": 6488,
+      "sha256": "a1209709a01ea8c963a4e16d9580b669b1b22b56e38c3a1133d258391f060d70"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-portable-runtime/build/observed-results/probe-distributed.json",
+      "bytes": 5035,
+      "sha256": "d7cebe7cefda1c94073ecadf855bdf4c058ad85f7579be801e90a27caa9acae0"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-portable-runtime/build/observed-results/probe-local.json",
+      "bytes": 5009,
+      "sha256": "2e58fa21d612072c3d96171b31475b06c58689bf93bde2ee9b85bd944d78ef21"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-portable-runtime/build/official-member-inventory.json",
+      "bytes": 521069,
+      "sha256": "ac48f7eb0c76c6e9058696772e3e3e8854902b6ca98b49fe6276178e85c6f094"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-portable-runtime/build/owned-process-exit-validation.json",
+      "bytes": 426,
+      "sha256": "bafe550cc9f8cc1dd8f4934452d9d3af71d4445e6cf85ba30411b614e2e31499"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-portable-runtime/build/owner-report.md",
+      "bytes": 7676,
+      "sha256": "27b423621f61df67fc78c197c263db16091ee7e5bb08ddc3493176e78e57b49a"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-portable-runtime/build/package-artifacts.json",
+      "bytes": 1506,
+      "sha256": "86df48de4021aa26fb5602e2e8cbc92f845c48c603fb28ecfba97299983091d6"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-portable-runtime/build/package-runtime.py",
+      "bytes": 3810,
+      "sha256": "02afa2f7b7dec284d5c293d3f6907727537785b2693e32347f3e7b3ae0848592"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-portable-runtime/build/pipeline-command.json",
+      "bytes": 1857,
+      "sha256": "46146accfb071732f99b184e54ffa67f402ea004ebe7cc8886472bf97a3f627f"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-portable-runtime/build/pipeline-result.json",
+      "bytes": 446,
+      "sha256": "22df3f33ee6c04755c51201cfc138ce1470f09d5885bdcf7d0fd5fee79f87d27"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-portable-runtime/build/pipeline.stderr.txt.gz",
+      "bytes": 371017,
+      "sha256": "d4c6f35fcc000edae292022881d25c3320a97509fadef09e01d340c74d234446"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-portable-runtime/build/pipeline.stdout.txt.gz",
+      "bytes": 152,
+      "sha256": "369943b3e058e5ec8b0847a3f496028033ddd03423d8324b73425fc9a5f4c826"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-portable-runtime/build/prepare-inputs-and-tests.py",
+      "bytes": 2509,
+      "sha256": "e81e1d0b25426fed90872ebbe2ecbe7e0e40dfc84ce7b0805275134453d86c54"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-portable-runtime/build/prepare-runtime.py",
+      "bytes": 4584,
+      "sha256": "42f459c89c673c22c487082d67d2894f31694b67eabe28bd6bfdfc12a8803130"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-portable-runtime/build/probe-distributed-command.json",
+      "bytes": 2237,
+      "sha256": "fb0e409fad699f8a69a8856ab28ef7a6cf5689cda66201019bbb69fa36d4de8f"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-portable-runtime/build/probe-distributed-result.json",
+      "bytes": 454,
+      "sha256": "5de21e13c8575b45e4a50a5cabad6f16a93f35b53efb79a6cf1e2c460e4bc8f2"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-portable-runtime/build/probe-distributed.stderr.txt.gz",
+      "bytes": 3304,
+      "sha256": "f4d40fd886f2e75c43c2e1e0bbd2040e4fb077b69861765f710684a969daa1bd"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-portable-runtime/build/probe-distributed.stdout.txt.gz",
+      "bytes": 1107,
+      "sha256": "8470390ddf1390c43bbfebf8636edfaea98fdda116483b264fa3ef75c31e1d38"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-portable-runtime/build/probe-local-attempt2-command.json",
+      "bytes": 1951,
+      "sha256": "72d77e8f10bc529d384cba073c61b3b114ab86cd667d0ef1d6d742d8cc5994dc"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-portable-runtime/build/probe-local-attempt2-result.json",
+      "bytes": 443,
+      "sha256": "fa464544bb8b712cc15571c90d0d2fa96d992309f71da6a3f4ab7c3034c5c6e8"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-portable-runtime/build/probe-local-attempt2.stderr.txt.gz",
+      "bytes": 206,
+      "sha256": "b5b250a328cfbee0e62242a90c889eab7187cad3ce69e762ab5149a6163b39e6"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-portable-runtime/build/probe-local-attempt2.stdout.txt.gz",
+      "bytes": 20,
+      "sha256": "ac73670af3abed54ac6fb4695131f4099be9fbe39d6076c5d0264a6bbdae9d83"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-portable-runtime/build/probe-local-attempt3-command.json",
+      "bytes": 1951,
+      "sha256": "f25ceca3e6c0ff0c5591e056cd49b26eead348b5c18269a98810eab8f4b8f25a"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-portable-runtime/build/probe-local-attempt3-result.json",
+      "bytes": 447,
+      "sha256": "1f0d40315371bf8775aee0bf39454c06efe6cdc9861167a50d5323c259832670"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-portable-runtime/build/probe-local-attempt3.stderr.txt.gz",
+      "bytes": 2250,
+      "sha256": "53134db52e134b802b14c83fc22eb4cc0ce6fb8815bfa6268ba78b3c2e452b57"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-portable-runtime/build/probe-local-attempt3.stdout.txt.gz",
+      "bytes": 1076,
+      "sha256": "a82705cdc50e0af13b25d7e1a59a288d143fcfdb3da4a2f9fc00b3b2dd5a5f71"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-portable-runtime/build/probe-local-command.json",
+      "bytes": 1879,
+      "sha256": "75f37ddfde81fab15fd24a6fee06fc2627bb40e7f34def9e0201eecfcf3ee240"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-portable-runtime/build/probe-local-result.json",
+      "bytes": 443,
+      "sha256": "ad4c7c84ce239e5930e5416734d0af78d4a9085d22a5a571088461bb54168371"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-portable-runtime/build/probe-local.stderr.txt.gz",
+      "bytes": 206,
+      "sha256": "e54af60ac6d70caaf0b368aafdeb77452e00a423cd0968636771e8e5124262e6"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-portable-runtime/build/probe-local.stdout.txt.gz",
+      "bytes": 20,
+      "sha256": "ac73670af3abed54ac6fb4695131f4099be9fbe39d6076c5d0264a6bbdae9d83"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-portable-runtime/build/probe-security-attempt2-command.json",
+      "bytes": 3359,
+      "sha256": "f45bad64a7bcaf7c32905b8e31b45d385038a79892b73a97af543861b183a347"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-portable-runtime/build/probe-security-attempt2-result.json",
+      "bytes": 447,
+      "sha256": "68009e02f614d5260d5578fd4f19df0a66396e133d192efe0046fa1780f4607b"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-portable-runtime/build/probe-security-attempt2.stderr.txt.gz",
+      "bytes": 3640,
+      "sha256": "a8dbb077a1546516bedb3e1a08d290637dbe1e8efaa2cae866a95eddb7636dfa"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-portable-runtime/build/probe-security-attempt2.stdout.txt.gz",
+      "bytes": 20,
+      "sha256": "ac73670af3abed54ac6fb4695131f4099be9fbe39d6076c5d0264a6bbdae9d83"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-portable-runtime/build/probe-security-command.json",
+      "bytes": 2693,
+      "sha256": "3e3bccd43d7ea61e46087b3c8cca51b11104ad8e667b49fe39c88aa4590da998"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-portable-runtime/build/probe-security-result.json",
+      "bytes": 447,
+      "sha256": "f67be7db8d19631e2c9ac326d121258f531a52361b518111d4f7694af897a05d"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-portable-runtime/build/probe-security.stderr.txt.gz",
+      "bytes": 2561,
+      "sha256": "b07a52009651afb749c2340fbe8746788faab24e9b18849ded82a4accf11d763"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-portable-runtime/build/probe-security.stdout.txt.gz",
+      "bytes": 20,
+      "sha256": "ac73670af3abed54ac6fb4695131f4099be9fbe39d6076c5d0264a6bbdae9d83"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-portable-runtime/build/public-verification/apache-spark-docker-release-template.py",
+      "bytes": 4180,
+      "sha256": "52df3a915880c6c2a59c62a9d8c75d883870910cf017365f56531507645540b0"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-portable-runtime/build/public-verification/spark-KEYS",
+      "bytes": 158357,
+      "sha256": "b2e63a30551d27bf497b3c5646539f54846a4e448070ec0b42cbab769786d213"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-portable-runtime/build/public-verification/spark.asc",
+      "bytes": 833,
+      "sha256": "53748e8fd7a1d8d8b73ddc1c8d96218f9180f7936e9efe84aefa95527dac4d5e"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-portable-runtime/build/public-verification/spark.sha512",
+      "bytes": 168,
+      "sha256": "449749c0f82c0e0de31861bc6519b90ee64d3d634ee38b981d15890d8ee09e94"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-portable-runtime/build/public-verification/yangjie01.asc",
+      "bytes": 3591,
+      "sha256": "50a986c82e6b02b088c6d81c13a8cbe1affc68e40c4781076c973184c850c2af"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-portable-runtime/build/relocated-g1-config.json",
+      "bytes": 1804,
+      "sha256": "29bea56e2f36195ddc1575ff014d61719cfb8efbd92cbfc01b1c8e20c2befcee"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-portable-runtime/build/relocation-validation.json",
+      "bytes": 438,
+      "sha256": "d50b5135c6a019902da50bf965387805fcaa142df756a83ba4a93cbd7b1bae89"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-portable-runtime/build/run-relocated-test-before-security-adaptive.py",
+      "bytes": 4523,
+      "sha256": "4c1f7a544c2e1d0ca2654baccc62b7e678bd003e06f0d430f7ce702f580f273e"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-portable-runtime/build/run-relocated-test-before-security.py",
+      "bytes": 3834,
+      "sha256": "d17ff61ce383175bf0097f749723206382a7cd363bde52998ae79a6328dc6c3a"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-portable-runtime/build/run-relocated-test.py",
+      "bytes": 5427,
+      "sha256": "2b78b019fcb6f980357ead0a429f3da743f10bcb576cd0500bf8c6d5e7320246"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-portable-runtime/build/runtime-file-inventory.json",
+      "bytes": 73510,
+      "sha256": "46c32c74e96efb1f65b33e8a1322fc64e87eca7b3120fcfd64b7b918238b5656"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-portable-runtime/build/security-debug-log4j2.properties",
+      "bytes": 656,
+      "sha256": "e387bd5a1f16d57aa904890e76418ed7e283f35e9350c8586d1cac778d3e5050"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-portable-runtime/build/security-probe-disposition.json",
+      "bytes": 2950,
+      "sha256": "0516c94cd26c56bcb8e0875f7b67d331cb1681dbf678d4136b47faf483529c0c"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-portable-runtime/build/security-source/AuthEngine.java",
+      "bytes": 12283,
+      "sha256": "5239f99dc48f4c8c88591de6334c79ce08dafb2318a1b6e06faa894ae6e4998e"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-portable-runtime/build/security-source/GcmTransportCipher.java",
+      "bytes": 19152,
+      "sha256": "97c1f1da47d905c73e27805ff05d03c97b47d971f7323354a963c9249bb4d445"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-portable-runtime/build/security-source/LocalSparkCluster.scala",
+      "bytes": 4269,
+      "sha256": "e49b669a7f40ae5bc24cfd67f39a474281fdaffbd6a4ec512387f9d6ec780242"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-portable-runtime/build/security-source/SecurityManager.scala",
+      "bytes": 15639,
+      "sha256": "7b1f64cd4a846acb9269da6fe998fe7d7e2e0c25444d9c744f4c90c2901b4f1c"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-portable-runtime/build/security-source/TransportConf.java",
+      "bytes": 17746,
+      "sha256": "f4c723d32f4b7754976cfe712ac85c8dc126786f8ee29a7900a49786464dc54c"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-portable-runtime/build/security-source/fetch-manifest.json",
+      "bytes": 1835,
+      "sha256": "2d2d49cb0a35b2b1503eb4188f6daeb98d6224bc133f0f585a0d6c1200a74419"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-portable-runtime/build/signature-packets.json",
+      "bytes": 890,
+      "sha256": "e387d66c5ef1d80d12bd3d6d62b78e24db8bcf9fe955d3324b53ac9e6b503fad"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-portable-runtime/build/signature-verification-attempt1.json",
+      "bytes": 334,
+      "sha256": "633aea1771d7303586776f97d1f504c9ef5a481aa028d036b467a83b65a332e8"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-portable-runtime/build/signature-verification-attempt2.json",
+      "bytes": 359,
+      "sha256": "32c43536d3e4e42323c5d93b3f4da2dfb4cb3a493995b10f273465c85ccee191"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-portable-runtime/build/signature-verification.json",
+      "bytes": 2336,
+      "sha256": "5d1f395028ac3c14dc0a5bbffccbc179ed388659f2f5d6f4be9b7984695a1999"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-portable-runtime/build/signer-reference-fetch.json",
+      "bytes": 651,
+      "sha256": "c8d2dd8e011ef219b8896f8a2fd9399d3d484ada6c2664510fa578784ca560fe"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-portable-runtime/build/source-and-toolchain-freeze.json",
+      "bytes": 73916,
+      "sha256": "c8114bae7b76135a3a1db9857b1219e8fc2c819fe9887724000f169fdbebcf5b"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-portable-runtime/build/yarn-archive-member-inventory.json",
+      "bytes": 61376,
+      "sha256": "92ae18d6640f18a3b73553e3eca190de5e63a840f746caf2d2391bbd739ead95"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-portable-runtime/completed-export-inventory.json",
+      "bytes": 81401,
+      "sha256": "ed02fc35f603e6f51f87095f5ca1f878f5b0e2d00e2b9ce1a9a6bb842f68ed4e"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-portable-runtime/completed-portable-local-exports.tar.gz",
+      "bytes": 185284,
+      "sha256": "5967321ddec59b6d60f04062aa63ad97546528986c76c7f56f5bfa22233d3f4a"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-portable-runtime/coordinator-report.md",
+      "bytes": 6271,
+      "sha256": "bbde8c56ff530c647f9c9bff7526b8cf376ed7c11091705dc728b34da5b7b868"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-portable-runtime/g1-upstream-inputs.tgz",
+      "bytes": 66755,
+      "sha256": "e05931ab0eec2fc66b1a0d0ab33e5b4c070faf81afcb66fc00208287b85ab558"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-portable-runtime/implementation-constraints.md",
+      "bytes": 4146,
+      "sha256": "56f88033eafd80e52aa4e03e956276e74d7f5e8f4d80db3616360c3cc9021a07"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-portable-runtime/portable-pipeline-event-log-1.jsonl.gz",
+      "bytes": 11283159,
+      "sha256": "7fcddd12bbad8f698b271641a7b5eb5cef55b2a653098345381178a491222965"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-portable-runtime/preservation.json",
+      "bytes": 691,
+      "sha256": "5bd84dc58373f2b9cc6cfe7358e641452519ea02b2f777e9bb52e12291219473"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-portable-runtime/public-sources/emr-certificates.response.gz",
+      "bytes": 8271,
+      "sha256": "56490a7f4ce5279181544842e40196ded1e22a3ed93922fca7c0426408c0dd9c"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-portable-runtime/public-sources/emr-storage.response.gz",
+      "bytes": 5752,
+      "sha256": "afae24c16f3b8c2507c13cb649ef06bd210c3eb11403d26364ded258dfab3e52"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-portable-runtime/public-sources/fetch-manifest.json",
+      "bytes": 4730,
+      "sha256": "a8e3a0aa3391ddb75acc53a3d25468b4def4d59fe7af81fb9682faa7ac2b403a"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-portable-runtime/public-sources/fetch-public-documents.py",
+      "bytes": 2358,
+      "sha256": "8e59c582cd91b776f666d608023b9a99610de4d141dbc5d44b757a0d76b136ae"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-portable-runtime/public-sources/iam-simulator.response.gz",
+      "bytes": 6229,
+      "sha256": "2bebd739343611128b4f70b515d65db86c39d7246175a8563dc68ff72909c1d7"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-portable-runtime/public-sources/s3-kms.response.gz",
+      "bytes": 9568,
+      "sha256": "b5f3320265ce17062c6f5afb38d6fa95ac84a84c854ab1aced036d0a4b2ff768"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-portable-runtime/public-sources/s3-multipart-limits.response.gz",
+      "bytes": 3489,
+      "sha256": "96fc972f5d00ee0c44cdb879065be722fe7240cd95a0437c837cf2afa9a027fe"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-portable-runtime/public-sources/s3-multipart.response.gz",
+      "bytes": 11135,
+      "sha256": "9e199f38b229bb887b916445c54761975028b9140ded5a992e7d5c13649a62b5"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-portable-runtime/public-sources/spark-security-v3.5.4.response.gz",
+      "bytes": 11245,
+      "sha256": "8c6a544a6741724db15259dd8d15c729a9a21eef63032985ebe60575ba33cad4"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-portable-runtime/public-sources/spark-yarn-v3.5.4.response.gz",
+      "bytes": 15397,
+      "sha256": "a8a077dfedc8c81a4ee2746211ba7164f65243f81a12693e8ff89fb76cbc40c9"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-portable-runtime/record-suffixes/owner-report.md",
+      "bytes": 6340,
+      "sha256": "db18adfa47ac6037256743a15f6de02047dbd210f87605b71952375ccc5220cd"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-portable-runtime/record-suffixes/prompt.md",
+      "bytes": 521,
+      "sha256": "39176cef7a9e7126e2ea11d35329d78371b57f287275dc2a889cd10632f86e0c"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-portable-runtime/record-suffixes/repairs.md",
+      "bytes": 574,
+      "sha256": "acd72d2249ac78f8807d735c9c4247b625e2add8858f495b4be1ce31c5c41865"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-portable-runtime/record-suffixes/review.md",
+      "bytes": 468,
+      "sha256": "a8a94f4432314b19e0217c29b5e14e822421d493fdffcd9360a19aa09f596126"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-portable-runtime/record-suffixes/test-report.md",
+      "bytes": 607,
+      "sha256": "0ba18e133c87f34b3f07c440245ee7792dcc966a483c9b48f786c6c3e04c3074"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-portable-runtime/request-and-cost-assessment.md",
+      "bytes": 6458,
+      "sha256": "5f9ca8d59c0d3ee41267dd67c46d1ac2a2a35c0c1263df793439eb5d3509dbef"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-portable-runtime/request-inventory-replay.py",
+      "bytes": 6472,
+      "sha256": "fe21cf9ade9c6a1b3e950e4ace80b15b331d1e1708c6d899cc4b886337084f82"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-portable-runtime/request-inventory.json",
+      "bytes": 17187,
+      "sha256": "e0298d4d07cbb875e95109e38ffcad4d29ade60926a0059d73ff26db67fac515"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-portable-runtime/source-facts.json",
+      "bytes": 4597,
+      "sha256": "2fb9c1ca81fbb1a77c85cd54a6a378fa58a504514aac8edc9bf4c46e57d535f4"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-portable-runtime/staging-object-inputs.json",
+      "bytes": 3836,
+      "sha256": "091ed5bdc1d6e2a4616572ef9ae8255bfe3199206d8696b0564aeb68803045a8"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-portable-runtime/validation.json",
+      "bytes": 21142,
+      "sha256": "f476eedb390bd90a568a7189faf5597195c67361b1cb0b5f0192cc29879b9b85"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-portable-runtime/work-order.md",
+      "bytes": 1673,
+      "sha256": "9866f6b54608c2c97e1b44b3798d27f15c97d590df405cb27a36be118d032505"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/owner-report.md",
+      "bytes": 181573,
+      "sha256": "89f7ab44bbbf0a2f907ec6456cba43852cac4f666521fcddc514aa8b5ed7c733"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/prompt.md",
+      "bytes": 94991,
+      "sha256": "78ef95638c80a09ed05421d1a6050ef674605b0151678fabeabf40acafeb92d8"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/repairs.md",
+      "bytes": 76770,
+      "sha256": "316b2ee721eec67045733cb24ebaa7c8ff2f7a866f51e715d8523a97c1194c35"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/review.md",
+      "bytes": 264465,
+      "sha256": "598374bb85534286d12744980b69711bf702fdb8874a633e8fb1b6e01ad1d57d"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/test-report.md",
+      "bytes": 150607,
+      "sha256": "3ef53cfe6e593b0097167a023c95cd84faf622f27d7061bb3a45333d8bb84fc5"
+    }
+  ],
+  "launch_authorized": false,
+  "linux_emr_yarn_verified": false,
+  "authenticated_gcm_verified": false,
+  "whole_attempt_request_bounds_proven": false,
+  "lower_request_candidate_selected": false,
+  "independent_review_approved": false,
+  "phase12d_complete": false
+}

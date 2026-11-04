@@ -1,0 +1,39 @@
+{
+  "sha512_matches": true,
+  "signer_fingerprint": "19F745C40A0E550420BB2C522541488DA93FE4B4",
+  "independent_signer_binding": "Apache spark-docker repository commit6b917ced4279dd7b3a33a81a08db37b3f27e037b tools/template.py maps3.5.4 to this exact fingerprint; public committer key retrieved independently from people.apache.org/keys/committer/yangjie01.asc. TLS/provenance trust, not Web-of-Trust assertion.",
+  "gpgv_agent_free": true,
+  "commands": [
+    {
+      "command": [
+        "/opt/homebrew/bin/gpg",
+        "--homedir",
+        "/tmp/sc-gpg-20261103",
+        "--batch",
+        "--no-autostart",
+        "--with-colons",
+        "--fingerprint",
+        "19F745C40A0E550420BB2C522541488DA93FE4B4"
+      ],
+      "exit": 0,
+      "stdout": "tru::1:1793752817:0:3:1:5\npub:-:4096:1:2541488DA93FE4B4:1733302920:::-:::scESC::::::23::0:\nfpr:::::::::19F745C40A0E550420BB2C522541488DA93FE4B4:\nuid:-::::1733302920::ABE0E80EB43657B8B8836FB2C5FA5B19603E711B::Jie Yang (CODE SIGNING KEY for ASF) <yangjie01@apache.org>::::::::::0:\nsub:-:4096:1:1EE3054E389960AD:1733302920::::::e::::::23:\nfpr:::::::::9D1A9077BE5EB9AD1E8F47031EE3054E389960AD:\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/opt/homebrew/bin/gpgv",
+        "--homedir",
+        "/tmp/sc-gpg-20261103",
+        "--keyring",
+        "/tmp/sc-gpg-20261103/pubring.kbx",
+        "--status-fd",
+        "1",
+        "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-portable-runtime-20261103/downloads/spark.asc",
+        "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-portable-runtime-20261103/downloads/spark-3.5.4-bin-hadoop3-scala2.13.tgz"
+      ],
+      "exit": 0,
+      "stdout": "[GNUPG:] NEWSIG\n[GNUPG:] KEY_CONSIDERED 19F745C40A0E550420BB2C522541488DA93FE4B4 0\n[GNUPG:] SIG_ID dpu2AFUWT1cZg23g+9Bn0Q3R9Rg 2024-12-17 1734410048\n[GNUPG:] GOODSIG 2541488DA93FE4B4 Jie Yang (CODE SIGNING KEY for ASF) <yangjie01@apache.org>\n[GNUPG:] VALIDSIG 19F745C40A0E550420BB2C522541488DA93FE4B4 2024-12-17 1734410048 0 4 0 1 10 00 19F745C40A0E550420BB2C522541488DA93FE4B4\n",
+      "stderr": "gpgv: Signature made Mon Dec 16 22:34:08 2024 CST\ngpgv:                using RSA key 19F745C40A0E550420BB2C522541488DA93FE4B4\ngpgv: Good signature from \"Jie Yang (CODE SIGNING KEY for ASF) <yangjie01@apache.org>\"\n"
+    }
+  ]
+}

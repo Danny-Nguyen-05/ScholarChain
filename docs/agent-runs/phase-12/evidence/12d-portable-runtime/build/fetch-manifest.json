@@ -1,0 +1,58 @@
+[
+  {
+    "name": "spark.sha512",
+    "url": "https://archive.apache.org/dist/spark/spark-3.5.4/spark-3.5.4-bin-hadoop3-scala2.13.tgz.sha512",
+    "final_url": "https://archive.apache.org/dist/spark/spark-3.5.4/spark-3.5.4-bin-hadoop3-scala2.13.tgz.sha512",
+    "status": 200,
+    "bytes": 168,
+    "sha256": "449749c0f82c0e0de31861bc6519b90ee64d3d634ee38b981d15890d8ee09e94",
+    "sha512": "c5d4003bc8cdb40ec0df055033f570014b2dc918c27324233ddca1e8c2a9aa069964a273cae4d3dc394373c982303c9147f521c3daa2d3d924a6c9d344ba79cd",
+    "started_at": "2026-11-04T00:34:12.551367+00:00",
+    "completed_at": "2026-11-04T00:34:13.081873+00:00",
+    "size_limit": 65536,
+    "elapsed_seconds": 0.5304371670063119,
+    "path": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-portable-runtime-20261103/downloads/spark.sha512"
+  },
+  {
+    "name": "spark.asc",
+    "url": "https://archive.apache.org/dist/spark/spark-3.5.4/spark-3.5.4-bin-hadoop3-scala2.13.tgz.asc",
+    "final_url": "https://archive.apache.org/dist/spark/spark-3.5.4/spark-3.5.4-bin-hadoop3-scala2.13.tgz.asc",
+    "status": 200,
+    "bytes": 833,
+    "sha256": "53748e8fd7a1d8d8b73ddc1c8d96218f9180f7936e9efe84aefa95527dac4d5e",
+    "sha512": "198bebf98e09634908c30d67b84fc57db8fe7ef299922a75ecef3a7400c07a8df32ff0f5709bd3342e0a874b3f48c172da08f9b6c10d24c5f5a9629b20223e41",
+    "started_at": "2026-11-04T00:34:13.082309+00:00",
+    "completed_at": "2026-11-04T00:34:13.608351+00:00",
+    "size_limit": 65536,
+    "elapsed_seconds": 0.526077709015226,
+    "path": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-portable-runtime-20261103/downloads/spark.asc"
+  },
+  {
+    "name": "spark-KEYS",
+    "url": "https://downloads.apache.org/spark/KEYS",
+    "final_url": "https://downloads.apache.org/spark/KEYS",
+    "status": 200,
+    "bytes": 158357,
+    "sha256": "b2e63a30551d27bf497b3c5646539f54846a4e448070ec0b42cbab769786d213",
+    "sha512": "f3f019405e9a4c745f1be1d10137b8274d2db6c53a345bd83574ad4170200a7d8e3f3a534f416cfb7a1e9b6ccc6c69873fcc225ae59d641bac74fb3aff847d2d",
+    "started_at": "2026-11-04T00:34:13.609004+00:00",
+    "completed_at": "2026-11-04T00:34:21.738745+00:00",
+    "size_limit": 8388608,
+    "elapsed_seconds": 8.129859292006586,
+    "path": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-portable-runtime-20261103/downloads/spark-KEYS"
+  },
+  {
+    "name": "spark-3.5.4-bin-hadoop3-scala2.13.tgz",
+    "url": "https://archive.apache.org/dist/spark/spark-3.5.4/spark-3.5.4-bin-hadoop3-scala2.13.tgz",
+    "final_url": "https://archive.apache.org/dist/spark/spark-3.5.4/spark-3.5.4-bin-hadoop3-scala2.13.tgz",
+    "status": 200,
+    "bytes": 409857842,
+    "sha256": "ec4985fbc5e5e3119379d522665eacbde413f850f1a12df6f4b7b0b505b3581f",
+    "sha512": "9691435f42525a34d67564d397fed1a2380d27dcd5bfd309cd77eb8c26e6cc7a3fdfc4c8b8c501bb8740ee36dd8562b3c15e6bba7c75ea12899fbf5136442a91",
+    "started_at": "2026-11-04T00:34:21.739483+00:00",
+    "completed_at": "2026-11-04T00:35:54.235895+00:00",
+    "size_limit": 536870912,
+    "elapsed_seconds": 92.4974942089757,
+    "path": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-portable-runtime-20261103/downloads/spark-3.5.4-bin-hadoop3-scala2.13.tgz"
+  }
+]

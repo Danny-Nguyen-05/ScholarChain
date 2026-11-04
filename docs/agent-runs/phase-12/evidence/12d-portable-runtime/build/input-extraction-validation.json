@@ -1,0 +1,10 @@
+{
+  "archive_sha256": "e05931ab0eec2fc66b1a0d0ab33e5b4c070faf81afcb66fc00208287b85ab558",
+  "destination": "/private/tmp/sc-runtime-test-20261103/extracted-inputs/g1",
+  "members_extracted": 85,
+  "expanded_bytes": 690600,
+  "path_type_size_hash_and_mode_validation": true,
+  "symlinks": 0,
+  "hardlinks": 0,
+  "pipeline_input_relation": "Pipeline inputs are separately copied from the accepted source; all85files were bytecompared against source and this archive. This independent safe extraction also matches every source hash."
+}

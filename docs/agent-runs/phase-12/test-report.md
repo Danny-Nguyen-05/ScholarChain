@@ -686,3 +686,8 @@ STATUS: COMPLETE for offline cost/provenance checks only. Current replay-cost.py
 ## Subphase 12D — EMR cost scenario L1 wording repair
 
 Offline replay exit0,28 rates/five scenarios matched. Independent label-only JSON/AST,3-to24hour/21beyond,8x guard-count and five Fraction arithmetic/upward-cent checks pass. An initial exact-total-equality harness assertion failed due5e-28USD finite Decimal rounding; the disclosed1e-22 tolerance fixes the harness only. See evidence/12d-emr-design-cost/l1-wording-repair/validation.json. No sbt/A1/production/live gate rerun.
+
+
+## Subphase12D — offline portable runtime and request inventory
+
+Offline ordinary local/separate-JVM probes pass; fullG1 local[2] jobs1–11 and all28table comparison pass without normalization. Two encryptedRPC attempts exit2 after authentication, no executor/successreceipt; rootcauseunknown. Conditional request boundary/range/retry/invalid-input checks pass. Completed239productfiles/raw184489197byte eventlog retained separately and verified. No sbt/A1/fullproduction rerun;1267historical. See evidence/12d-portable-runtime/build/owner-report.md and validation.json for all exact failures/results.

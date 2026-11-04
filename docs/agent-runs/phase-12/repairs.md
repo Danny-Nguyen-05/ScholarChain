@@ -528,3 +528,8 @@ No full source/test/build suite was rerun for this public document/calculation p
 ## Subphase 12D — EMR cost scenario L1 wording repair
 
 L1: repaired with offered wording option, awaiting independent recheck. USD7.52 models24hours total,21hours beyond3hour nominal; no27hour/additional24hour scenario claimed. Rates, quantities and figures unchanged. Canary/certificates/explicit EBS review observations remain later implementation obligations. No review result is fabricated.
+
+
+## Subphase12D — offline portable runtime and request inventory
+
+Carried currentfindings: ordinaryportableclasspaths/G1 validated; authenticatedAES-GCM registration remains unresolved after two bounded tests. Missingsecret/unsupportedflag/nativebug/Sparkbug diagnoses are not established. Lower-requestcase unselected because service/log/control/KMSbounds notimplemented. No-extra-cluster canary, paidcertificate-service exclusion/protectedPEMmechanism and explicitEBSvolume configuration recorded for futurework. No source/live repair started beyond this bounded task.

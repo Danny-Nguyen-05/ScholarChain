@@ -1,0 +1,5 @@
+{
+  "exit": 1,
+  "reason": "Public-key import into short temporary keyring imported the public key, then returned nonzero because sandbox blocked gpg-agent IPC. No signature accepted on this attempt; use agent-free gpgv against only the dedicated public keybox.",
+  "stderr": "gpg: public key imported; cannot connect to gpg-agent: IPC connect call failed"
+}

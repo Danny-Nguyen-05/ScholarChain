@@ -1,0 +1,30 @@
+{
+  "created_at": "2026-11-04T00:46:57.073885+00:00",
+  "files": [
+    {
+      "path": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-portable-runtime-20261103/artifacts/scholarchain-spark3.5.4-scala2.13.14-java17-runtime.tgz",
+      "name": "scholarchain-spark3.5.4-scala2.13.14-java17-runtime.tgz",
+      "bytes": 321876762,
+      "sha256": "1253946aa35cf8082f601b2146db75bbb79902a6c2f10da0b159473afc8fa21e",
+      "uncompressed_regular_bytes": 347564755,
+      "regular_members": 378,
+      "role": "Portable JVM runtime plus unchanged application job; candidate staging object, no live strategy selected"
+    },
+    {
+      "path": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-portable-runtime-20261103/artifacts/scholarchain-spark3.5.4-scala2.13.14-yarn-jars.zip",
+      "name": "scholarchain-spark3.5.4-scala2.13.14-yarn-jars.zip",
+      "bytes": 310978586,
+      "sha256": "c57b4f5e3c3de3bbc1878d48d8a5367276a37ddf2449504c509764b57155255d",
+      "uncompressed_regular_bytes": 335444411,
+      "regular_members": 254,
+      "role": "Optional separate spark.yarn.archive with all runtime JARs at archive root; additional object, not silently included in runtime TGZ staging cost"
+    }
+  ],
+  "both_archives_compressed_bytes": 632855348,
+  "cloud_staging_selected": false,
+  "spark_shell_supported": false,
+  "java17_bundled": false,
+  "symlinks": 0,
+  "hardlinks": 0,
+  "application_jar_sha256": "d52f11ebad5ec9e1ffdd1910d562023e934ce7ab62e7c74a5ffd650f8951b86b"
+}

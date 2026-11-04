@@ -1,0 +1,20 @@
+from pathlib import Path
+from datetime import datetime,timezone
+import os,sys,json,subprocess,time,signal,hashlib
+repo=Path('/Users/danny/Documents/UIC/CS441/ScholarChain');ev=Path('/tmp/scholarchain-phase12d-portable-runtime-build-20261103');local=Path('/tmp/sc-runtime-test-20261103').resolve();spark=local/'scholarchain-runtime';job=spark/'application/scholarchain-job.jar';java='/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home';stage=sys.argv[1];tag=stage+(('-'+sys.argv[2]) if len(sys.argv)>2 else '');assert stage in ['probe-local','probe-distributed','pipeline','compare'];master='local-cluster[1,1,1024]' if stage=='probe-distributed' else 'local[2]'
+env={'PATH':java+'/bin:/usr/bin:/bin','JAVA_HOME':java,'LANG':'en_US.UTF-8','SPARK_HOME':str(spark),'SPARK_CONF_DIR':str(spark/'conf'),'SPARK_LOCAL_IP':'127.0.0.1','SPARK_LOCAL_HOSTNAME':'127.0.0.1','SPARK_SCALA_VERSION':'2.13','SPARK_WORKER_DIR':str(local/'worker'),'SPARK_LOG_DIR':str(local/'logs'),'TMPDIR':'/private/tmp','AWS_EC2_METADATA_DISABLED':'true','SPARK_SUBMIT_OPTS':'-Djava.net.preferIPv4Stack=true'}
+conf={'spark.ui.enabled':'false','spark.driver.host':'127.0.0.1','spark.driver.bindAddress':'127.0.0.1','spark.hadoop.fs.defaultFS':'file:///','spark.task.maxFailures':'1','spark.yarn.populateHadoopClasspath':'false','spark.dynamicAllocation.enabled':'false','spark.shuffle.service.enabled':'false'}
+if stage=='probe-distributed':conf.update({'spark.executor.memory':'512m','spark.executor.cores':'1','spark.cores.max':'1','spark.rpc.netty.dispatcher.numThreads':'2','spark.deploy.maxExecutorRetries':'0'})
+main='edu.uic.cs441.scholarchain.spark.Phase6Main' if stage=='pipeline' else 'edu.uic.cs441.scholarchain.spark.Phase12Readiness'
+args=[str(local/'config/spark-g1-portable.json')] if stage=='pipeline' else ['compare',str(repo/'target/phase12d-readiness-20261103/baseline/g1-a-attempt2/run:2047866e-0b89-4047-9a31-dccb2515c68d'),str(local/'outputs/g1-portable/run:2047866e-0b89-4047-9a31-dccb2515c68d'),str(local/'results/comparison.json')] if stage=='compare' else ['probe',str(local/('shared-'+stage)),str(local/('results/'+stage+'.json')),'distributed' if stage=='probe-distributed' else 'local']
+cmd=[str(spark/'bin/spark-submit'),'--master',master,'--driver-memory','2g','--class',main]
+for k,v in conf.items():cmd+=['--conf',k+'='+v]
+cmd +=[str(job),*args];timeout=600 if stage=='pipeline' else 180;started=datetime.now(timezone.utc).isoformat();start=time.monotonic();command={'stage':stage,'command':cmd,'environment':env,'cwd':str(local),'timeout_seconds':timeout,'started_at':started,'job_jar_sha256':hashlib.sha256(job.read_bytes()).hexdigest()};(ev/(tag+'-command.json')).write_text(json.dumps(command,indent=2)+'\n');stdout=ev/(tag+'.stdout.txt');stderr=ev/(tag+'.stderr.txt');assert not stdout.exists() and not stderr.exists()
+with stdout.open('xb') as out,stderr.open('xb') as err:
+ proc=subprocess.Popen(cmd,cwd=local,env=env,stdout=out,stderr=err,start_new_session=True)
+ try:code=proc.wait(timeout=timeout);timed_out=False
+ except subprocess.TimeoutExpired:
+  timed_out=True;os.killpg(proc.pid,signal.SIGTERM)
+  try:code=proc.wait(timeout=20)
+  except subprocess.TimeoutExpired:os.killpg(proc.pid,signal.SIGKILL);code=proc.wait(timeout=10)
+result={'stage':stage,'exit':code,'timed_out':timed_out,'started_at':started,'completed_at':datetime.now(timezone.utc).isoformat(),'seconds':time.monotonic()-start,'process_id':proc.pid,'stdout_bytes':stdout.stat().st_size,'stderr_bytes':stderr.stat().st_size,'stdout_sha256':hashlib.sha256(stdout.read_bytes()).hexdigest(),'stderr_sha256':hashlib.sha256(stderr.read_bytes()).hexdigest()};(ev/(tag+'-result.json')).write_text(json.dumps(result,indent=2)+'\n');print(json.dumps(result));print(stderr.read_text()[-1800:] if code else stdout.read_text()[-800:]);raise SystemExit(code)

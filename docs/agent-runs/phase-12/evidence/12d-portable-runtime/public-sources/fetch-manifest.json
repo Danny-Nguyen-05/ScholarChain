@@ -1,0 +1,98 @@
+[
+  {
+    "name": "s3-multipart",
+    "url": "https://docs.aws.amazon.com/AmazonS3/latest/userguide/mpuoverview.html",
+    "final_url": "https://docs.aws.amazon.com/AmazonS3/latest/userguide/mpuoverview.html",
+    "started_at": "2026-11-04T00:36:30.402230+00:00",
+    "completed_at": "2026-11-04T00:36:30.674069+00:00",
+    "http_status": 200,
+    "decoded_bytes": 53241,
+    "decoded_sha256": "9a93ae3eeeaa4d681c6872b1b74a185d00b5851928f2b89746036487a6ae7292",
+    "saved_sha256": "9e199f38b229bb887b916445c54761975028b9140ded5a992e7d5c13649a62b5",
+    "max_bytes": 2097152
+  },
+  {
+    "name": "s3-multipart-limits",
+    "url": "https://docs.aws.amazon.com/AmazonS3/latest/userguide/qfacts.html",
+    "final_url": "https://docs.aws.amazon.com/AmazonS3/latest/userguide/qfacts.html",
+    "started_at": "2026-11-04T00:36:30.402494+00:00",
+    "completed_at": "2026-11-04T00:36:30.618476+00:00",
+    "http_status": 200,
+    "decoded_bytes": 13834,
+    "decoded_sha256": "56a02572e3b220e2a1caabbec7eb335d7dac42ed86e9af2fbfeab98819edbd74",
+    "saved_sha256": "96fc972f5d00ee0c44cdb879065be722fe7240cd95a0437c837cf2afa9a027fe",
+    "max_bytes": 2097152
+  },
+  {
+    "name": "s3-kms",
+    "url": "https://docs.aws.amazon.com/AmazonS3/latest/userguide/UsingKMSEncryption.html",
+    "final_url": "https://docs.aws.amazon.com/AmazonS3/latest/userguide/UsingKMSEncryption.html",
+    "started_at": "2026-11-04T00:36:30.402574+00:00",
+    "completed_at": "2026-11-04T00:36:30.577933+00:00",
+    "http_status": 200,
+    "decoded_bytes": 42599,
+    "decoded_sha256": "289d0c0d98acfb20cc820adb44bae9c76da2eed3228a3d355fad11f79c8ba217",
+    "saved_sha256": "b5f3320265ce17062c6f5afb38d6fa95ac84a84c854ab1aced036d0a4b2ff768",
+    "max_bytes": 2097152
+  },
+  {
+    "name": "emr-certificates",
+    "url": "https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-encryption-enable.html",
+    "final_url": "https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-encryption-enable.html",
+    "started_at": "2026-11-04T00:36:30.402630+00:00",
+    "completed_at": "2026-11-04T00:36:30.713972+00:00",
+    "http_status": 200,
+    "decoded_bytes": 33021,
+    "decoded_sha256": "5052d4e9781093acedaa0f75f9914fd30536ecc7b4c6d2f87dcbc5997e98d83d",
+    "saved_sha256": "56490a7f4ce5279181544842e40196ded1e22a3ed93922fca7c0426408c0dd9c",
+    "max_bytes": 2097152
+  },
+  {
+    "name": "emr-storage",
+    "url": "https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-plan-storage.html",
+    "final_url": "https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-plan-storage.html",
+    "started_at": "2026-11-04T00:36:30.577974+00:00",
+    "completed_at": "2026-11-04T00:36:31.158154+00:00",
+    "http_status": 200,
+    "decoded_bytes": 24954,
+    "decoded_sha256": "6b6a29091b7f3b9d8e688b59ed407e1cf659646ddc47f89c42373bf2619d4c71",
+    "saved_sha256": "afae24c16f3b8c2507c13cb649ef06bd210c3eb11403d26364ded258dfab3e52",
+    "max_bytes": 2097152
+  },
+  {
+    "name": "iam-simulator",
+    "url": "https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_testing-policies.html",
+    "final_url": "https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_testing-policies.html",
+    "started_at": "2026-11-04T00:36:30.618501+00:00",
+    "completed_at": "2026-11-04T00:36:30.816223+00:00",
+    "http_status": 200,
+    "decoded_bytes": 25122,
+    "decoded_sha256": "2ad71e783a35db0a331dd4236cdbbf226ba0c6f4bbe8fe7ab164b2025ce4e0e0",
+    "saved_sha256": "2bebd739343611128b4f70b515d65db86c39d7246175a8563dc68ff72909c1d7",
+    "max_bytes": 2097152
+  },
+  {
+    "name": "spark-yarn-v3.5.4",
+    "url": "https://raw.githubusercontent.com/apache/spark/v3.5.4/docs/running-on-yarn.md",
+    "final_url": "https://raw.githubusercontent.com/apache/spark/v3.5.4/docs/running-on-yarn.md",
+    "started_at": "2026-11-04T00:36:30.674120+00:00",
+    "completed_at": "2026-11-04T00:36:35.146933+00:00",
+    "http_status": 200,
+    "decoded_bytes": 53243,
+    "decoded_sha256": "95ea340ade2e5c0b760b520d7bd366f9b9131a7c318f135ea32c0f23dd7e3bf7",
+    "saved_sha256": "a8a077dfedc8c81a4ee2746211ba7164f65243f81a12693e8ff89fb76cbc40c9",
+    "max_bytes": 2097152
+  },
+  {
+    "name": "spark-security-v3.5.4",
+    "url": "https://raw.githubusercontent.com/apache/spark/v3.5.4/docs/security.md",
+    "final_url": "https://raw.githubusercontent.com/apache/spark/v3.5.4/docs/security.md",
+    "started_at": "2026-11-04T00:36:30.714017+00:00",
+    "completed_at": "2026-11-04T00:36:31.591623+00:00",
+    "http_status": 200,
+    "decoded_bytes": 40267,
+    "decoded_sha256": "5fdf3fb7fe56f5ee651a4d13efb84d1d8b04ebc5969a75479dbbe15a4a9abe06",
+    "saved_sha256": "8c6a544a6741724db15259dd8d15c729a9a21eef63032985ebe60575ba33cad4",
+    "max_bytes": 2097152
+  }
+]
