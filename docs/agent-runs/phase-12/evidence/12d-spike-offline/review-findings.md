@@ -158,3 +158,13 @@ Carried items, listed once:
 
 28. `bootstrap.sh:163`: the resolved path is not validated for the properties format. A newline in an alternatives target could inject spark-defaults lines. The current EMR paths are system-controlled. Reject unsafe characters and add a regression test.
 29. `bootstrap.sh:162`: the JAVA_HOME removal does not match leading whitespace or tab separators. The appended values take precedence, and the Terraform output contains neither key. Match every separator, and test that each key occurs exactly once.
+
+## Live-found addendum 4 (2026-11-04): Hadoop codec override (attempt 4 G1 failure)
+
+In attempt 4 the probe passed and G1 failed with `Compression codec com.hadoop.compression.lzo.LzoCodec not found`. EMR's node `io.compression.codecs` lists the LZO codecs, and the portable runtime has no LZO jar. See `../12d-spike-live/attempt4-runtime-proven-g1-codec.md`.
+
+- **Repair (infra-engineer):** `infra/terraform/spikes/emr-spark-isolated/main.tf:60` adds `spark.hadoop.io.compression.codecs` with the Gzip, Default, BZip2 and Snappy codecs. All four classes were verified offline in the runtime's `hadoop-client-api-3.3.4.jar`. The bootstrap rewrite keeps the line, which the extended bootstrap test asserts. A new mock test checks the exact line and that `lzo` appears nowhere; spike 38/38.
+- **Coordinator offline scan:** all 1,055 EMR Hadoop properties from the attempt-4 event log were checked against the classes in the runtime jars.
+  - 70 class references are missing from the runtime. Nearly all are filesystem implementations for unused schemes (s3, s3a, abfs, gs and others), YARN server-side classes, or the old-API `mapred.output.committer.class = DirectFileOutputCommitter`.
+  - G1 uses only `file:///`, and it writes only through DataFrame `.parquet(...)` on the new-API commit protocol. Nothing in `modules/spark` uses `saveAsTextFile` or `saveAsHadoop*`. So no other missing class is expected on G1's path. This is an inference, not a live proof.
+- **Gates:** spike 38/38, deployer 29/29, scripts 70 OK, guard 0 findings. `sbt check` attempt 10 was running when the review began.

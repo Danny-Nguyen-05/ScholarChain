@@ -92,3 +92,13 @@ The human gave all of the following in chat; the coordinator transcribed it.
 - **Run window:** from now until 17:30 CST. This is the coordinator's proposed end time, which the human approved in chat ("I approve that new windows so don't worry"). The destroy must complete inside the window. If the run can't finish, destroy anyway.
 
 Approved attempt 4 - Danny Nguyen (chat, 2026-11-04 14:12 CST)
+
+## Amendment 4 (2026-11-04, about 14:55 CST)
+
+The human gave all of the following in chat; the coordinator transcribed it.
+
+- **Attempt 4:** the Scala 2.13 runtime is proven on EMR, on the driver and executors. The G1 step failed on EMR's LZO entry in `io.compression.codecs`. Everything was destroyed in two passes and the inventory was clean. See `attempt4-runtime-proven-g1-codec.md`.
+- **Approved: attempt 5 today**, after a reviewed fix that sets `spark.hadoop.io.compression.codecs` without the LZO codecs. The fix is limited to the spike root and its scripts, with no IAM change. Shape, cap, single cluster, teardown, accepted risks and the division of work are the same as before.
+- **Run window:** unchanged, until 17:30 CST. The destroy must finish within the window.
+
+Approved attempt 5 - Danny Nguyen (chat answer "Yes, attempt 5 today", 2026-11-04)

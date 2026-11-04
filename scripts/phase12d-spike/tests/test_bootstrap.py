@@ -244,7 +244,7 @@ class BootstrapTests(ShimTestCase):
             self.assertEqual(h.read().strip(), self.java_home)
 
     def test_spark_defaults_get_the_resolved_java_home_not_a_hardcoded_one(self):
-        self.put(f"s3/{BUCKET}/staging/config/spark-defaults.conf", "spark.authenticate true\nspark.executorEnv.JAVA_HOME /usr/lib/jvm/java-17-amazon-corretto\n")
+        self.put(f"s3/{BUCKET}/staging/config/spark-defaults.conf", "spark.authenticate true\nspark.hadoop.io.compression.codecs org.apache.hadoop.io.compress.GzipCodec,org.apache.hadoop.io.compress.SnappyCodec\nspark.executorEnv.JAVA_HOME /usr/lib/jvm/java-17-amazon-corretto\n")
         home = self.fake_java(os.path.join(self.jvm, "jre-17"))
         r = self.run_bs(self.no_java_arg())
         self.assertEqual(r.returncode, 0, r.stderr)
@@ -254,6 +254,8 @@ class BootstrapTests(ShimTestCase):
         self.assertIn(f"spark.executorEnv.JAVA_HOME {home}\n", text)
         self.assertNotIn("java-17-amazon-corretto", text)
         self.assertIn("spark.authenticate true", text)
+        # other generated lines (here the codec override) survive the JAVA_HOME rewrite
+        self.assertIn("spark.hadoop.io.compression.codecs org.apache.hadoop.io.compress.GzipCodec,org.apache.hadoop.io.compress.SnappyCodec\n", text)
 
     def test_wrong_java_version_fails(self):
         write_exec(os.path.join(self.java_home, "bin", "java"), '#!/bin/bash\necho \'openjdk version "11.0.1"\' >&2\n')

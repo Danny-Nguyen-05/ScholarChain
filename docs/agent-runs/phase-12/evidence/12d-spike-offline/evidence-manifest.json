@@ -286,8 +286,8 @@
  },
  {
   "path": "gates.json",
-  "bytes": 8396,
-  "sha256": "cb07759e1e13040bda6dea2377c3a8b30aeae5d677540798ce7470214ff2f2a0"
+  "bytes": 8867,
+  "sha256": "a1bc4f847fb9be3c0a71e3c508aa6333e99e5f552ebd9db46da3cdd2cf19f435"
  },
  {
   "path": "gates/guard-repo.json",
@@ -308,6 +308,11 @@
   "path": "gates/sbt-check-attempt1-failed.log.gz",
   "bytes": 92682,
   "sha256": "e3df3e0b02c3b174403372393ee88918a31d53e76d53b730eeca418373b744f6"
+ },
+ {
+  "path": "gates/sbt-check-attempt10-codec.log.gz",
+  "bytes": 93272,
+  "sha256": "eb816157cdf9b68299252111bd33410f81f49155125bae2f7a0e2e2d047224d1"
  },
  {
   "path": "gates/sbt-check-attempt2-prereview.log.gz",
@@ -356,13 +361,13 @@
  },
  {
   "path": "gates/tftest-emr-spark-isolated.txt",
-  "bytes": 1917,
-  "sha256": "1926da4123e294b5c41e73e4150af16ff378e9f88070b4f0c4280db6bf061fa6"
+  "bytes": 1980,
+  "sha256": "3b642576fb12d8e811bcbe17edfe399da91e7c583bdf822da8b40b0c765dfd5f"
  },
  {
   "path": "gates/unittest.txt",
   "bytes": 170,
-  "sha256": "8bbb7e35b1e30fbe9286d718b378b45d3fe9497560f23b5512685dd75792cfb0"
+  "sha256": "705c28e1bbdda8b2e78024e36a5b6fb92f5d77f5337c4b255e42bf1689eacd74"
  },
  {
   "path": "report.md",
@@ -371,13 +376,13 @@
  },
  {
   "path": "review-findings.md",
-  "bytes": 18430,
-  "sha256": "28903ac8f291dd9a89a59a0b3d9039150cef83ef83bd0bf26f6125a382b7579e"
+  "bytes": 20024,
+  "sha256": "dfb3f2ba0bb46363a904d0253a42ab0c2050d44861635c8187c2cbfb6003c848"
  },
  {
   "path": "source-hashes.json",
   "bytes": 7513,
-  "sha256": "a2f6f9672f4cd1ddc0dbc4ba28388d1762821c70d1b6957b21222aa030bdcabc"
+  "sha256": "87d7e3ad231a1e3f4db7f9870d6d2b85350f11f740efb6fcb5c1bb4d7f92f5d9"
  },
  {
   "path": "work-order.md",

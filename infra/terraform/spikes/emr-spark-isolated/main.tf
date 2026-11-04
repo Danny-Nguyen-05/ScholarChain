@@ -53,6 +53,11 @@ locals {
     "spark.yarn.jars"                    = "local:${local.runtime_dir}/jars/*"
     "spark.yarn.populateHadoopClasspath" = "false"
     "spark.hadoop.fs.defaultFS"          = "file:///"
+    # The EMR node's Hadoop conf lists com.hadoop.compression.lzo.LzoCodec/LzopCodec, which the
+    # portable runtime (intentionally) does not contain: the G1 step failed in
+    # CompressionCodecFactory with "Compression codec ... LzoCodec not found" (live attempt 4).
+    # Override with the four codecs that ARE in hadoop-client-api-3.3.4.jar.
+    "spark.hadoop.io.compression.codecs" = "org.apache.hadoop.io.compress.GzipCodec,org.apache.hadoop.io.compress.DefaultCodec,org.apache.hadoop.io.compress.BZip2Codec,org.apache.hadoop.io.compress.SnappyCodec"
     # With fs.defaultFS=file:/// the default staging dir would sit on the
     # primary's local disk, which the ApplicationMaster on the core node cannot
     # localize. EFS is mounted at the same path on both nodes.

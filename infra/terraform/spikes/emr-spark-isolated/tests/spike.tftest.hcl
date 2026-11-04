@@ -381,6 +381,19 @@ run "spark_defaults_content" {
 
 # ---- rendered G1 config ---------------------------------------------------------------
 
+run "spark_defaults_override_the_emr_lzo_codec_list" {
+  command = apply
+
+  assert {
+    condition     = strcontains(output.spark_defaults, "spark.hadoop.io.compression.codecs org.apache.hadoop.io.compress.GzipCodec,org.apache.hadoop.io.compress.DefaultCodec,org.apache.hadoop.io.compress.BZip2Codec,org.apache.hadoop.io.compress.SnappyCodec\n")
+    error_message = "The generated defaults must carry the exact four-codec list (live attempt 4: the EMR default names LzoCodec, absent from the portable runtime)."
+  }
+  assert {
+    condition     = !strcontains(lower(output.spark_defaults), "lzo")
+    error_message = "No LZO codec or class anywhere in the generated defaults."
+  }
+}
+
 run "g1_config_only_changes_path_prefixes" {
   command = apply
 

@@ -24,6 +24,7 @@ tests/spike.tftest.hcl... in progress
   run "ebs_layout_is_exactly_four_volumes_128_gib"... pass
   run "steps_use_the_custom_runtime_under_timeout"... pass
   run "spark_defaults_content"... pass
+  run "spark_defaults_override_the_emr_lzo_codec_list"... pass
   run "g1_config_only_changes_path_prefixes"... pass
   run "bucket_is_private_encrypted_and_destroyable"... pass
   run "kms_and_security_configuration"... pass
@@ -39,4 +40,4 @@ tests/spike.tftest.hcl... in progress
 tests/spike.tftest.hcl... tearing down
 tests/spike.tftest.hcl... pass
 
-Success! 37 passed, 0 failed.
+Success! 38 passed, 0 failed.
