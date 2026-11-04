@@ -168,3 +168,13 @@ In attempt 4 the probe passed and G1 failed with `Compression codec com.hadoop.c
   - 70 class references are missing from the runtime. Nearly all are filesystem implementations for unused schemes (s3, s3a, abfs, gs and others), YARN server-side classes, or the old-API `mapred.output.committer.class = DirectFileOutputCommitter`.
   - G1 uses only `file:///`, and it writes only through DataFrame `.parquet(...)` on the new-API commit protocol. Nothing in `modules/spark` uses `saveAsTextFile` or `saveAsHadoop*`. So no other missing class is expected on G1's path. This is an inference, not a live proof.
 - **Gates:** spike 38/38, deployer 29/29, scripts 70 OK, guard 0 findings. `sbt check` attempt 10 was running when the review began.
+
+Addendum 4 review (human, separate session, 2026-11-04): **APPROVE-WITH-NONBLOCKING**, with no blocking findings.
+- The codec override is correct: all four classes are in `hadoop-client-api-3.3.4`, and Parquet selects its own codec.
+- The bootstrap keeps the line, and the mock test is meaningful.
+- The coordinator's inference is reasonable, but stays an inference until G1 completes live.
+- Replay: bootstrap tests 21/21; scoped `git diff --check` passed.
+
+30. Carried: the spike README at line 40 wrongly says Hadoop's Snappy codec needs native libhadoop. In Hadoop 3.3.4 it uses `org.xerial.snappy.Snappy`, and the factory instantiates codecs rather than only loading the class. Correct the explanation.
+
+31. Carried (live attempt 5): `scripts/phase12d-spike/collect-evidence.sh` exits 1 on macOS. macOS `tar` would not extract the 28 `._SUCCESS.crc` entries, and `set -e` then stopped the script before it checked each file. The tarball sha256 had already verified, and a Python `tarfile` extraction verified 241/241 files. Use a portable extractor and add a test with `._`-prefixed members.

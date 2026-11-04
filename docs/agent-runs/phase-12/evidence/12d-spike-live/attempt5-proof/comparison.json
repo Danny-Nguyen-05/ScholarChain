@@ -1,0 +1,183 @@
+{
+ "schemaVersion": "scholarchain.phase12-readiness.v1",
+ "stage": "compare",
+ "runId": "run:2047866e-0b89-4047-9a31-dccb2515c68d",
+ "codeVersion": "a4c1ad605d41260056db83459bc5c867df52685f541ab1337926f36dbb697c86",
+ "hadoopManifestHash": "4229afab659562a35ff2b3a872be250d1d3e725ce114acac524cb16dbe8c5201",
+ "entityResolutionManifestHash": "1528d2427db6d85a334267b767f270828395c3b236472ad47dcfd3aa2ccc0f34",
+ "logicalConfigFingerprint": "241744c21566fe6817f8a9bd1dc904f9f6a3cbc429ae649414a67b9db71671ea",
+ "tables": [
+  {
+   "dataset": "edges/type=affiliated_with",
+   "rowCount": "0",
+   "contentHash": "b65d1c858e201a02ff6abb5ff896b03cda3bcdb3865b9b591a537597ce17a928",
+   "exactSchemaAndRowsMatch": true
+  },
+  {
+   "dataset": "edges/type=authored",
+   "rowCount": "19",
+   "contentHash": "58809d9073bd1d4e1a177f8b352ce4ed2b62d7550dcf6e89597968aa8ca57f96",
+   "exactSchemaAndRowsMatch": true
+  },
+  {
+   "dataset": "edges/type=coauthored_with",
+   "rowCount": "27",
+   "contentHash": "c1a930ea3954e83307fc010c2082a66b889c5baeda185d48f3d200d8de82e8f0",
+   "exactSchemaAndRowsMatch": true
+  },
+  {
+   "dataset": "edges/type=coauthored_with_support",
+   "rowCount": "36",
+   "contentHash": "cd9a330303ff6729b9010a51455b2bb99f75d0702fc5e73d930dee0e200acd16",
+   "exactSchemaAndRowsMatch": true
+  },
+  {
+   "dataset": "edges/type=has_topic",
+   "rowCount": "0",
+   "contentHash": "b65d1c858e201a02ff6abb5ff896b03cda3bcdb3865b9b591a537597ce17a928",
+   "exactSchemaAndRowsMatch": true
+  },
+  {
+   "dataset": "edges/type=published_in",
+   "rowCount": "0",
+   "contentHash": "b65d1c858e201a02ff6abb5ff896b03cda3bcdb3865b9b591a537597ce17a928",
+   "exactSchemaAndRowsMatch": true
+  },
+  {
+   "dataset": "edges/type=resolves_to",
+   "rowCount": "20",
+   "contentHash": "ca8be30078bd469bf3a6d2e168dc871d02df286752529269db3aec8c2a7a8734",
+   "exactSchemaAndRowsMatch": true
+  },
+  {
+   "dataset": "integrity/rejects",
+   "rowCount": "0",
+   "contentHash": "b65d1c858e201a02ff6abb5ff896b03cda3bcdb3865b9b591a537597ce17a928",
+   "exactSchemaAndRowsMatch": true
+  },
+  {
+   "dataset": "integrity/violations",
+   "rowCount": "0",
+   "contentHash": "b65d1c858e201a02ff6abb5ff896b03cda3bcdb3865b9b591a537597ce17a928",
+   "exactSchemaAndRowsMatch": true
+  },
+  {
+   "dataset": "metrics/type=bridges",
+   "rowCount": "31",
+   "contentHash": "8816a3928d0e70801886db8269ecfb9acdda0657c893a798db9cb74ed89915e0",
+   "exactSchemaAndRowsMatch": true
+  },
+  {
+   "dataset": "metrics/type=communities",
+   "rowCount": "31",
+   "contentHash": "35287564c66643a7c1a6aed067b6d77ce0002f6b5ceea941de08f67943caa097",
+   "exactSchemaAndRowsMatch": true
+  },
+  {
+   "dataset": "metrics/type=community_summaries",
+   "rowCount": "23",
+   "contentHash": "d7106c4cdc13997fc12a79e0578ef447904db7c10a9b6f60f4486a5592b676f4",
+   "exactSchemaAndRowsMatch": true
+  },
+  {
+   "dataset": "metrics/type=component_summaries",
+   "rowCount": "10",
+   "contentHash": "b7c5626e7795c4145feb4584cfde653449517747f8005a066975a0de75bcfbdb",
+   "exactSchemaAndRowsMatch": true
+  },
+  {
+   "dataset": "metrics/type=components",
+   "rowCount": "31",
+   "contentHash": "598436ea846c326ec3bdcfe96b803d2965ea488110139adb13ab0f4c5fbb864c",
+   "exactSchemaAndRowsMatch": true
+  },
+  {
+   "dataset": "metrics/type=cross_community_edges",
+   "rowCount": "16",
+   "contentHash": "f1cdb25b8003fbebad206eefe0ff445a1f1d35b8098f10650682284ca64ab69a",
+   "exactSchemaAndRowsMatch": true
+  },
+  {
+   "dataset": "metrics/type=kcore",
+   "rowCount": "31",
+   "contentHash": "cbb90b1055ccbc5d7e9c94fd6b099b35f6bc1fabc4065d6e4348e2273882d014",
+   "exactSchemaAndRowsMatch": true
+  },
+  {
+   "dataset": "metrics/type=path_length_estimate",
+   "rowCount": "4",
+   "contentHash": "b8def922ff736360ac7ed86ca6a2e95370baebeafbee49fcd9cf66b0db6fb698",
+   "exactSchemaAndRowsMatch": true
+  },
+  {
+   "dataset": "metrics/type=researcher_collaboration",
+   "rowCount": "31",
+   "contentHash": "cbb90b1055ccbc5d7e9c94fd6b099b35f6bc1fabc4065d6e4348e2273882d014",
+   "exactSchemaAndRowsMatch": true
+  },
+  {
+   "dataset": "metrics/type=temporal_changes",
+   "rowCount": "16",
+   "contentHash": "55b416f09110168f530c3bd0d15a0d4c3e993a21f061e083f46ed81857ca0d14",
+   "exactSchemaAndRowsMatch": true
+  },
+  {
+   "dataset": "nodes/type=author_mention",
+   "rowCount": "20",
+   "contentHash": "74344c061790cae766b19594117848a682dbdae54f03d82c1894fde967b8002c",
+   "exactSchemaAndRowsMatch": true
+  },
+  {
+   "dataset": "nodes/type=institution",
+   "rowCount": "0",
+   "contentHash": "b65d1c858e201a02ff6abb5ff896b03cda3bcdb3865b9b591a537597ce17a928",
+   "exactSchemaAndRowsMatch": true
+  },
+  {
+   "dataset": "nodes/type=researcher",
+   "rowCount": "10",
+   "contentHash": "696931606b0e86e5ff0219fb06db54b677aa2e86484c47de2c7127ef6f81afde",
+   "exactSchemaAndRowsMatch": true
+  },
+  {
+   "dataset": "nodes/type=topic",
+   "rowCount": "0",
+   "contentHash": "b65d1c858e201a02ff6abb5ff896b03cda3bcdb3865b9b591a537597ce17a928",
+   "exactSchemaAndRowsMatch": true
+  },
+  {
+   "dataset": "nodes/type=venue",
+   "rowCount": "0",
+   "contentHash": "b65d1c858e201a02ff6abb5ff896b03cda3bcdb3865b9b591a537597ce17a928",
+   "exactSchemaAndRowsMatch": true
+  },
+  {
+   "dataset": "nodes/type=work",
+   "rowCount": "9",
+   "contentHash": "50cc653e62118de5a2cc6423a128cc444bb4af80819b97be3300a68b80736913",
+   "exactSchemaAndRowsMatch": true
+  },
+  {
+   "dataset": "nodes/type=work_sources",
+   "rowCount": "9",
+   "contentHash": "d840f40db7917da744ed4ab5dd362822150f69c5eaa556e185f94ba74fed65f8",
+   "exactSchemaAndRowsMatch": true
+  },
+  {
+   "dataset": "path-evidence",
+   "rowCount": "66",
+   "contentHash": "900ccfb67adcb301b372c7c1bdfab981f7b0961856a8605328fd7fdd0acc9e80",
+   "exactSchemaAndRowsMatch": true
+  },
+  {
+   "dataset": "semantic-summaries",
+   "rowCount": "147",
+   "contentHash": "ca92c86320ca7d5eb9aefd02a6a5f8acc889012a9298f37016852ec736ad8278",
+   "exactSchemaAndRowsMatch": true
+  }
+ ],
+ "tablesCompared": 28,
+ "provenanceNormalization": "none",
+ "allExactRowsMatch": true,
+ "cloudCompatibilityVerified": false
+}

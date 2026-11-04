@@ -1,0 +1,26 @@
+{
+ "Id": "j-0488507R153M668H5I3",
+ "Name": "scholarchain-spike-emr-cluster",
+ "Status": {
+  "State": "TERMINATED",
+  "StateChangeReason": {
+   "Code": "ALL_STEPS_COMPLETED",
+   "Message": "Steps completed"
+  },
+  "Timeline": {
+   "CreationDateTime": "2026-11-04T15:18:09.502000-06:00",
+   "ReadyDateTime": "2026-11-04T15:22:27.267000-06:00",
+   "EndDateTime": "2026-11-04T15:29:14.343000-06:00"
+  }
+ },
+ "ReleaseLabel": "emr-7.8.0",
+ "NormalizedInstanceHours": 16,
+ "Applications": [
+  {
+   "Name": "Hadoop",
+   "Version": "3.4.1"
+  }
+ ],
+ "AutoTerminate": true,
+ "TerminationProtected": false
+}

@@ -1,0 +1,56 @@
+[
+ {
+  "file": "attempt5-emr-logs/containers/application_1793827261394_0001/container_1793827261394_0001_01_000001/stdout.gz",
+  "matches": 3,
+  "sources": [
+   "file:/opt/scholarchain-runtime/jars/scala-library-2.13.14.jar",
+   "file:/opt/scholarchain-runtime/jars/spark-core_2.13-3.5.4.jar"
+  ],
+  "mentions_2_12": false
+ },
+ {
+  "file": "attempt5-emr-logs/containers/application_1793827261394_0001/container_1793827261394_0001_01_000002/stdout.gz",
+  "matches": 3,
+  "sources": [
+   "file:/opt/scholarchain-runtime/jars/scala-library-2.13.14.jar",
+   "file:/opt/scholarchain-runtime/jars/spark-core_2.13-3.5.4.jar"
+  ],
+  "mentions_2_12": false
+ },
+ {
+  "file": "attempt5-emr-logs/containers/application_1793827261394_0001/container_1793827261394_0001_01_000003/stdout.gz",
+  "matches": 3,
+  "sources": [
+   "file:/opt/scholarchain-runtime/jars/scala-library-2.13.14.jar",
+   "file:/opt/scholarchain-runtime/jars/spark-core_2.13-3.5.4.jar"
+  ],
+  "mentions_2_12": false
+ },
+ {
+  "file": "attempt5-emr-logs/containers/application_1793827261394_0002/container_1793827261394_0002_01_000001/stdout.gz",
+  "matches": 3,
+  "sources": [
+   "file:/opt/scholarchain-runtime/jars/scala-library-2.13.14.jar",
+   "file:/opt/scholarchain-runtime/jars/spark-core_2.13-3.5.4.jar"
+  ],
+  "mentions_2_12": false
+ },
+ {
+  "file": "attempt5-emr-logs/containers/application_1793827261394_0002/container_1793827261394_0002_01_000002/stdout.gz",
+  "matches": 3,
+  "sources": [
+   "file:/opt/scholarchain-runtime/jars/scala-library-2.13.14.jar",
+   "file:/opt/scholarchain-runtime/jars/spark-core_2.13-3.5.4.jar"
+  ],
+  "mentions_2_12": false
+ },
+ {
+  "file": "attempt5-emr-logs/containers/application_1793827261394_0002/container_1793827261394_0002_01_000003/stdout.gz",
+  "matches": 3,
+  "sources": [
+   "file:/opt/scholarchain-runtime/jars/scala-library-2.13.14.jar",
+   "file:/opt/scholarchain-runtime/jars/spark-core_2.13-3.5.4.jar"
+  ],
+  "mentions_2_12": false
+ }
+]
