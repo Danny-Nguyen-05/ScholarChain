@@ -1,0 +1,16 @@
+{
+  "observed_at": "2026-11-03T22:41:36.763459+00:00",
+  "review_original_manifest_sha256": "60025aeb471b62756355b28d91fa3a4179277b2256f37f4245976466717d9556",
+  "review_original_entries": 59,
+  "pre_repair_current_entries": 58,
+  "difference": "User separately requested deletion of all Markdown review prompts before this review was returned. Current manifest refresh preserves that explicit cleanup; it does not recreate a prompt or claim old append-only preservation still holds.",
+  "historical_records_not_rewritten": [
+    "prior-cost-model/*",
+    "validation-result.json",
+    "preservation.json",
+    "append-only-records.json",
+    "infra/*"
+  ],
+  "candidate_owner_wording_corrected": true,
+  "no_new_review_prompt_file": true
+}

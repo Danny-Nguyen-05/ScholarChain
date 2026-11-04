@@ -1,0 +1,52 @@
+[
+  {
+    "path": "docs/agent-runs/phase-12/prompt.md",
+    "bytes": 94470,
+    "sha256": "0de03fca41d4d56ecddb8c5af348a28bc7cc8c2e7a7dd02f79f12d3bfebd6171",
+    "pre_repair_binding": {
+      "bytes": 94091,
+      "sha256": "8c323bdc050eadf01cdbdff6c35dc2f886388b5de7e60dcd6078572319d3103a"
+    },
+    "suffix_path": "docs/agent-runs/phase-12/evidence/12d-emr-design-cost/l1-wording-repair/record-suffixes/prompt.md"
+  },
+  {
+    "path": "docs/agent-runs/phase-12/owner-report.md",
+    "bytes": 175233,
+    "sha256": "22e1ed30538cd39c1f778199adf40b65856ad9b40688c15ad73b9bb988d0f49f",
+    "pre_repair_binding": {
+      "bytes": 171910,
+      "sha256": "218e5c69ff201cd0115acc0a60171590b2dd829e6e9a5197b70ada7e2b5ef8ad"
+    },
+    "suffix_path": "docs/agent-runs/phase-12/evidence/12d-emr-design-cost/l1-wording-repair/record-suffixes/owner-report.md"
+  },
+  {
+    "path": "docs/agent-runs/phase-12/test-report.md",
+    "bytes": 150000,
+    "sha256": "9de3467bd763608a294f57f48a0383017a4416a44c83ad611cb0f90387e181c3",
+    "pre_repair_binding": {
+      "bytes": 149513,
+      "sha256": "2c5f8b9eba99aa6d23a65c3b04ad1a20413098a386db1fc291ca9aea5d8461d8"
+    },
+    "suffix_path": "docs/agent-runs/phase-12/evidence/12d-emr-design-cost/l1-wording-repair/record-suffixes/test-report.md"
+  },
+  {
+    "path": "docs/agent-runs/phase-12/repairs.md",
+    "bytes": 76196,
+    "sha256": "cb8dc5bfee22a6851ee0506821e123d79519bffbde2f444de948ef3a92402ee8",
+    "pre_repair_binding": {
+      "bytes": 75797,
+      "sha256": "aae14c2f898db841035ac59f7e37dffbeec590ac41e3f78fd696650bebcdf2d0"
+    },
+    "suffix_path": "docs/agent-runs/phase-12/evidence/12d-emr-design-cost/l1-wording-repair/record-suffixes/repairs.md"
+  },
+  {
+    "path": "docs/agent-runs/phase-12/review.md",
+    "bytes": 263997,
+    "sha256": "b77ae549944524166e578937d8381c5d23a037519e316ba47d10c5af1ea7afad",
+    "pre_repair_binding": {
+      "bytes": 263519,
+      "sha256": "f46e14a7dfcf1a66b7254b6998366d3dfc6d5f372b5b1d0f832353163630a135"
+    },
+    "suffix_path": "docs/agent-runs/phase-12/evidence/12d-emr-design-cost/l1-wording-repair/record-suffixes/review.md"
+  }
+]

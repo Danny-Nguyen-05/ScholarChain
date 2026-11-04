@@ -1,0 +1,827 @@
+{
+  "alarm_month": {
+    "attributes": {
+      "alarmType": "Standard",
+      "group": "Alarm",
+      "groupDescription": "CloudWatch Alarms",
+      "location": "US East (Ohio)",
+      "locationType": "AWS Region",
+      "operation": "",
+      "regionCode": "us-east-2",
+      "servicecode": "AmazonCloudWatch",
+      "servicename": "AmazonCloudWatch",
+      "usagetype": "USE2-CW:AlarmMonitorUsage"
+    },
+    "catalog_version": "20261007115540",
+    "dimension": {
+      "appliesTo": [],
+      "beginRange": "0",
+      "description": "$0.10 per alarm metric month (standard resolution) - US East (Ohio)",
+      "endRange": "Inf",
+      "pricePerUnit": {
+        "USD": "0.1000000000"
+      },
+      "rateCode": "28VSMYRVQXUWCTMA.JRTCKXETXF.6YS6EN2CT7",
+      "unit": "Alarms"
+    },
+    "publication_date": "2026-10-07T11:55:40Z",
+    "retrieved_at": "2026-11-03T21:41:39.209660+00:00",
+    "sku": "28VSMYRVQXUWCTMA",
+    "source_decoded_sha256": "a63198fe9401b27344b8f7824c1254b2cc5c22024497a7f696534b2321914ed0",
+    "unit": "Alarms",
+    "url": "https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonCloudWatch/current/us-east-2/index.json",
+    "usd": "0.1000000000"
+  },
+  "ebs_gp3_gb_month": {
+    "location": "US East (Ohio)",
+    "manifest": {
+      "ETLIngestionTriggerDate": "2026-11-03T18:10:41Z",
+      "accessType": "publish",
+      "currencyCode": "USD",
+      "esIndex": "plc-ec2-usd-20261103181041",
+      "hawkFilePublicationDate": "2026-11-03T18:10:41Z",
+      "isMapped": "true",
+      "serviceId": "ec2",
+      "source": "ebs"
+    },
+    "retrieved_at": "2026-11-03T21:49:46.134728+00:00",
+    "selected_record": {
+      "RegionlessRateCode": "rfOvvXHDAJRZK8rCe8ThxmpU_7SjA3m6T5_yeV0z0FQ",
+      "price": "0.0800000000",
+      "rateCode": "M6UGCCQ3CDJQAA37.JRTCKXETXF.6YS6EN2CT7"
+    },
+    "source_decoded_sha256": "28cbb7a27844c305dbcb1e74f6c6bd1686dd0a38893375f5df9506d43992cd39",
+    "unit": "GB-month",
+    "url": "https://b0.p.awsstatic.com/pricing/2.0/meteredUnitMaps/ec2/USD/current/ebs.json",
+    "usd": "0.0800000000"
+  },
+  "ec2_hour": {
+    "location": "US East (Ohio)",
+    "manifest": {
+      "ETLIngestionTriggerDate": "2026-11-03T18:10:41Z",
+      "accessType": "publish",
+      "currencyCode": "USD",
+      "hawkFilePublicationDate": "2026-11-03T18:10:41Z",
+      "serviceId": "ec2",
+      "source": "ec2-ondemand-without-sec-sel"
+    },
+    "retrieved_at": "2026-11-03T21:41:38.740724+00:00",
+    "selected_record": {
+      "Instance Family": "General purpose",
+      "Instance Type": "m5.xlarge",
+      "License Model": "No License required",
+      "Location": "US East (Ohio)",
+      "Memory": "16 GiB",
+      "Network Performance": "Up to 10 Gigabit",
+      "Operating System": "Linux",
+      "Pre Installed S/W": "NA",
+      "Storage": "EBS only",
+      "plc:InstanceFamily": "General Purpose",
+      "plc:OperatingSystem": "Linux",
+      "price": "0.1920000000",
+      "rateCode": "QVDGKAHRZKNRS5BV.JRTCKXETXF.6YS6EN2CT7",
+      "vCPU": "4"
+    },
+    "source_decoded_sha256": "a460cac2cd2c6f928d2e74eb502f9d02f98c159629c5acb68e7559c4e609dd34",
+    "unit": "instance-hour",
+    "url": "https://b0.p.awsstatic.com/pricing/2.0/meteredUnitMaps/ec2/USD/current/ec2-ondemand-without-sec-sel/US%20East%20(Ohio)/Linux/index.json",
+    "usd": "0.1920000000"
+  },
+  "efs_gb_month": {
+    "attributes": {
+      "location": "US East (Ohio)",
+      "locationType": "AWS Region",
+      "operation": "",
+      "regionCode": "us-east-2",
+      "servicecode": "AmazonEFS",
+      "servicename": "Amazon Elastic File System",
+      "storageClass": "General Purpose",
+      "usagetype": "USE2-TimedStorage-ByteHrs"
+    },
+    "catalog_version": "20260911124425",
+    "dimension": {
+      "appliesTo": [],
+      "beginRange": "0",
+      "description": "USD $0.30 per GB-Mo for Standard storage (USE2)",
+      "endRange": "Inf",
+      "pricePerUnit": {
+        "USD": "0.3000000000"
+      },
+      "rateCode": "R3JWPWRUN558WBDE.JRTCKXETXF.6YS6EN2CT7",
+      "unit": "GB-Mo"
+    },
+    "publication_date": "2026-09-11T12:44:25Z",
+    "retrieved_at": "2026-11-03T21:41:38.667278+00:00",
+    "sku": "R3JWPWRUN558WBDE",
+    "source_decoded_sha256": "c1d2b7ffc3369a7bdaf555fd7bf21a96d3f9ad81abfc6289b19415c4521b4029",
+    "unit": "GB-Mo",
+    "url": "https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonEFS/current/us-east-2/index.json",
+    "usd": "0.3000000000"
+  },
+  "efs_read_gb": {
+    "attributes": {
+      "accessType": "Read",
+      "location": "US East (Ohio)",
+      "locationType": "AWS Region",
+      "operation": "Read",
+      "regionCode": "us-east-2",
+      "servicecode": "AmazonEFS",
+      "servicename": "Amazon Elastic File System",
+      "storageClass": "EFS Storage",
+      "usagetype": "USE2-ETDataAccess-Bytes"
+    },
+    "catalog_version": "20260911124425",
+    "dimension": {
+      "appliesTo": [],
+      "beginRange": "0",
+      "description": "USD $0.03 per GB for Elastic Throughput reads (USE2)",
+      "endRange": "Inf",
+      "pricePerUnit": {
+        "USD": "0.0300000000"
+      },
+      "rateCode": "VJW3RV7UAGE5H43T.JRTCKXETXF.6YS6EN2CT7",
+      "unit": "GB"
+    },
+    "publication_date": "2026-09-11T12:44:25Z",
+    "retrieved_at": "2026-11-03T21:41:38.667278+00:00",
+    "sku": "VJW3RV7UAGE5H43T",
+    "source_decoded_sha256": "c1d2b7ffc3369a7bdaf555fd7bf21a96d3f9ad81abfc6289b19415c4521b4029",
+    "unit": "GB",
+    "url": "https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonEFS/current/us-east-2/index.json",
+    "usd": "0.0300000000"
+  },
+  "efs_write_gb": {
+    "attributes": {
+      "accessType": "Write",
+      "location": "US East (Ohio)",
+      "locationType": "AWS Region",
+      "operation": "Write",
+      "regionCode": "us-east-2",
+      "servicecode": "AmazonEFS",
+      "servicename": "Amazon Elastic File System",
+      "storageClass": "EFS Storage",
+      "usagetype": "USE2-ETDataAccess-Bytes"
+    },
+    "catalog_version": "20260911124425",
+    "dimension": {
+      "appliesTo": [],
+      "beginRange": "0",
+      "description": "USD $0.06 per GB for Elastic Throughput writes (USE2)",
+      "endRange": "Inf",
+      "pricePerUnit": {
+        "USD": "0.0600000000"
+      },
+      "rateCode": "WPR45BR95CQVQZU2.JRTCKXETXF.6YS6EN2CT7",
+      "unit": "GB"
+    },
+    "publication_date": "2026-09-11T12:44:25Z",
+    "retrieved_at": "2026-11-03T21:41:38.667278+00:00",
+    "sku": "WPR45BR95CQVQZU2",
+    "source_decoded_sha256": "c1d2b7ffc3369a7bdaf555fd7bf21a96d3f9ad81abfc6289b19415c4521b4029",
+    "unit": "GB",
+    "url": "https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonEFS/current/us-east-2/index.json",
+    "usd": "0.0600000000"
+  },
+  "emr_hour": {
+    "attributes": {
+      "instanceFamily": "General purpose",
+      "instanceType": "m5.xlarge",
+      "location": "US East (Ohio)",
+      "locationType": "AWS Region",
+      "operation": "",
+      "regionCode": "us-east-2",
+      "servicecode": "ElasticMapReduce",
+      "servicename": "Amazon Elastic MapReduce",
+      "softwareType": "EMR",
+      "usagetype": "USE2-BoxUsage:m5.xlarge"
+    },
+    "catalog_version": "20261103003757",
+    "dimension": {
+      "appliesTo": [],
+      "beginRange": "0",
+      "description": "$0.048 per hour for EMR m5.xlarge",
+      "endRange": "Inf",
+      "pricePerUnit": {
+        "USD": "0.0480000000"
+      },
+      "rateCode": "VXMPRBP5JU7WEE96.JRTCKXETXF.6YS6EN2CT7",
+      "unit": "Hrs"
+    },
+    "publication_date": "2026-11-03T00:37:57Z",
+    "retrieved_at": "2026-11-03T21:41:38.882445+00:00",
+    "sku": "VXMPRBP5JU7WEE96",
+    "source_decoded_sha256": "9102a78bf53bceda1a27560c2cbc46d5028725587855d5ecacfe4ca0586bb4b1",
+    "unit": "Hrs",
+    "url": "https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/ElasticMapReduce/current/us-east-2/index.json",
+    "usd": "0.0480000000"
+  },
+  "endpoint_gb": {
+    "attributes": {
+      "endpointType": "PrivateLink",
+      "group": "VPCE:VpcEndpoint",
+      "groupDescription": "Charge for per GB data processed by VPC Endpoints",
+      "location": "US East (Ohio)",
+      "locationType": "AWS Region",
+      "operation": "VpcEndpoint",
+      "regionCode": "us-east-2",
+      "servicecode": "AmazonVPC",
+      "servicename": "Amazon Virtual Private Cloud",
+      "usagetype": "USE2-VpcEndpoint-Bytes"
+    },
+    "catalog_version": "20261103000947",
+    "dimension": {
+      "appliesTo": [],
+      "beginRange": "0",
+      "description": "$0.01 per GB for upto 1 PB monthly data processed by VPC Endpoints",
+      "endRange": "1048576",
+      "pricePerUnit": {
+        "USD": "0.0100000000"
+      },
+      "rateCode": "7FYQG974DNVUNVKW.JRTCKXETXF.D7RZ6WCPVW",
+      "unit": "GB"
+    },
+    "publication_date": "2026-11-03T00:09:47Z",
+    "retrieved_at": "2026-11-03T21:41:38.708658+00:00",
+    "sku": "7FYQG974DNVUNVKW",
+    "source_decoded_sha256": "3ab51b8f0793c73df5081bed50d648c411d890e4383c9b0f236110d53d65bb1b",
+    "unit": "GB",
+    "url": "https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonVPC/current/us-east-2/index.json",
+    "usd": "0.0100000000"
+  },
+  "endpoint_hour": {
+    "attributes": {
+      "endpointType": "PrivateLink",
+      "group": "VPCE:VpcEndpoint",
+      "groupDescription": "Hourly charge for VPC Endpoints",
+      "location": "US East (Ohio)",
+      "locationType": "AWS Region",
+      "operation": "VpcEndpoint",
+      "regionCode": "us-east-2",
+      "servicecode": "AmazonVPC",
+      "servicename": "Amazon Virtual Private Cloud",
+      "usagetype": "USE2-VpcEndpoint-Hours"
+    },
+    "catalog_version": "20261103000947",
+    "dimension": {
+      "appliesTo": [],
+      "beginRange": "0",
+      "description": "$0.01 per VPC Endpoint Hour",
+      "endRange": "Inf",
+      "pricePerUnit": {
+        "USD": "0.0100000000"
+      },
+      "rateCode": "P2Q7Y6KZKKFAHEVG.JRTCKXETXF.6YS6EN2CT7",
+      "unit": "Hrs"
+    },
+    "publication_date": "2026-11-03T00:09:47Z",
+    "retrieved_at": "2026-11-03T21:41:38.708658+00:00",
+    "sku": "P2Q7Y6KZKKFAHEVG",
+    "source_decoded_sha256": "3ab51b8f0793c73df5081bed50d648c411d890e4383c9b0f236110d53d65bb1b",
+    "unit": "Hrs",
+    "url": "https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonVPC/current/us-east-2/index.json",
+    "usd": "0.0100000000"
+  },
+  "internet_out_gb": {
+    "basis": "Published Ohio worked example, not an account quote or separate regional SKU.",
+    "retrieved_at": "2026-11-03T21:41:39.311614+00:00",
+    "source_decoded_sha256": "4b828fb89585f1f3681075fdca3737d057f07a25fd6f3076ea8bbfcfa11b3266",
+    "unit": "GB",
+    "url": "https://aws.amazon.com/vpc/pricing/",
+    "usd": ".09"
+  },
+  "ipv4_hour": {
+    "attributes": {
+      "group": "VPCPublicIPv4Address",
+      "groupDescription": "Hourly charge for In-use Public IPv4 Addresses",
+      "location": "US East (Ohio)",
+      "locationType": "AWS Region",
+      "operation": "",
+      "regionCode": "us-east-2",
+      "servicecode": "AmazonVPC",
+      "servicename": "Amazon Virtual Private Cloud",
+      "usagetype": "USE2-PublicIPv4:InUseAddress"
+    },
+    "catalog_version": "20261103000947",
+    "dimension": {
+      "appliesTo": [],
+      "beginRange": "0",
+      "description": "$0.005 per In-use public IPv4 address per hour",
+      "endRange": "Inf",
+      "pricePerUnit": {
+        "USD": "0.0050000000"
+      },
+      "rateCode": "8HFJK44D9234XNWA.JRTCKXETXF.6YS6EN2CT7",
+      "unit": "Hrs"
+    },
+    "publication_date": "2026-11-03T00:09:47Z",
+    "retrieved_at": "2026-11-03T21:41:38.708658+00:00",
+    "sku": "8HFJK44D9234XNWA",
+    "source_decoded_sha256": "3ab51b8f0793c73df5081bed50d648c411d890e4383c9b0f236110d53d65bb1b",
+    "unit": "Hrs",
+    "url": "https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonVPC/current/us-east-2/index.json",
+    "usd": "0.0050000000"
+  },
+  "kms_key_month": {
+    "attributes": {
+      "location": "US East (Ohio)",
+      "locationType": "AWS Region",
+      "operation": "",
+      "regionCode": "us-east-2",
+      "servicecode": "awskms",
+      "servicename": "AWS Key Management Service",
+      "usagetype": "us-east-2-KMS-Keys"
+    },
+    "catalog_version": "20261026201814",
+    "dimension": {
+      "appliesTo": [],
+      "beginRange": "0",
+      "description": "$1 per customer managed KMS key version in US East (Ohio)",
+      "endRange": "Inf",
+      "pricePerUnit": {
+        "USD": "1.0000000000"
+      },
+      "rateCode": "FEMX7ZQ4DJ6QE2KP.JRTCKXETXF.6YS6EN2CT7",
+      "unit": "Keys"
+    },
+    "publication_date": "2026-10-26T20:18:14Z",
+    "retrieved_at": "2026-11-03T21:41:38.946070+00:00",
+    "sku": "FEMX7ZQ4DJ6QE2KP",
+    "source_decoded_sha256": "9042850a2498f311ea630aa22cda604a45e34dd4fcf6511aa35c079ba63c4e0d",
+    "unit": "Keys",
+    "url": "https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/awskms/current/us-east-2/index.json",
+    "usd": "1.0000000000"
+  },
+  "kms_request": {
+    "attributes": {
+      "group": "awskms-APIRequest-All",
+      "groupDescription": "All AWS KMS API requests",
+      "location": "US East (Ohio)",
+      "locationType": "AWS Region",
+      "operation": "",
+      "regionCode": "us-east-2",
+      "servicecode": "awskms",
+      "servicename": "AWS Key Management Service",
+      "usagetype": "us-east-2-KMS-Requests"
+    },
+    "catalog_version": "20261026201814",
+    "dimension": {
+      "appliesTo": [],
+      "beginRange": "0",
+      "description": "$0.03 per 10000 KMS requests in US East (Ohio)",
+      "endRange": "Inf",
+      "pricePerUnit": {
+        "USD": "0.0000030000"
+      },
+      "rateCode": "9XXHSZC4PS7S6AY2.JRTCKXETXF.6YS6EN2CT7",
+      "unit": "Requests"
+    },
+    "publication_date": "2026-10-26T20:18:14Z",
+    "retrieved_at": "2026-11-03T21:41:38.946070+00:00",
+    "sku": "9XXHSZC4PS7S6AY2",
+    "source_decoded_sha256": "9042850a2498f311ea630aa22cda604a45e34dd4fcf6511aa35c079ba63c4e0d",
+    "unit": "Requests",
+    "url": "https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/awskms/current/us-east-2/index.json",
+    "usd": "0.0000030000"
+  },
+  "lambda_gb_second": {
+    "attributes": {
+      "group": "AWS-Lambda-Duration",
+      "groupDescription": "Invocation duration weighted by memory assigned to function, measured in GB-s",
+      "location": "US East (Ohio)",
+      "locationType": "AWS Region",
+      "operation": "",
+      "regionCode": "us-east-2",
+      "servicecode": "AWSLambda",
+      "servicename": "AWS Lambda",
+      "usagetype": "USE2-Lambda-GB-Second"
+    },
+    "catalog_version": "20261030234255",
+    "dimension": {
+      "appliesTo": [],
+      "beginRange": "0",
+      "description": "AWS Lambda - Total Compute - US East (Ohio)-Tier-1",
+      "endRange": "6000000000",
+      "pricePerUnit": {
+        "USD": "0.0000166667"
+      },
+      "rateCode": "3BYZH4NKJN8TJUQ6.JRTCKXETXF.CUKFZ388N3",
+      "unit": "Lambda-GB-Second"
+    },
+    "publication_date": "2026-10-30T23:42:55Z",
+    "retrieved_at": "2026-11-03T21:41:39.107328+00:00",
+    "sku": "3BYZH4NKJN8TJUQ6",
+    "source_decoded_sha256": "5c56c29b28091ccf1cbb21e52281ebb6f234068a78864def1f32c843d204e4eb",
+    "unit": "Lambda-GB-Second",
+    "url": "https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AWSLambda/current/us-east-2/index.json",
+    "usd": "0.0000166667"
+  },
+  "lambda_request": {
+    "attributes": {
+      "group": "AWS-Lambda-Requests",
+      "groupDescription": "Invocation call for a Lambda function",
+      "location": "US East (Ohio)",
+      "locationType": "AWS Region",
+      "operation": "",
+      "regionCode": "us-east-2",
+      "servicecode": "AWSLambda",
+      "servicename": "AWS Lambda",
+      "usagetype": "USE2-Request"
+    },
+    "catalog_version": "20261030234255",
+    "dimension": {
+      "appliesTo": [],
+      "beginRange": "0",
+      "description": "AWS Lambda - Total Requests - US East (Ohio)",
+      "endRange": "Inf",
+      "pricePerUnit": {
+        "USD": "0.0000002000"
+      },
+      "rateCode": "ZEA64MMVK5QRB5TC.JRTCKXETXF.6YS6EN2CT7",
+      "unit": "Request"
+    },
+    "publication_date": "2026-10-30T23:42:55Z",
+    "retrieved_at": "2026-11-03T21:41:39.107328+00:00",
+    "sku": "ZEA64MMVK5QRB5TC",
+    "source_decoded_sha256": "5c56c29b28091ccf1cbb21e52281ebb6f234068a78864def1f32c843d204e4eb",
+    "unit": "Request",
+    "url": "https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AWSLambda/current/us-east-2/index.json",
+    "usd": "0.0000002000"
+  },
+  "log_ingest_gb": {
+    "attributes": {
+      "group": "Ingested Logs",
+      "groupDescription": "Existing system, application, and custom log files",
+      "location": "US East (Ohio)",
+      "locationType": "AWS Region",
+      "logsDestination": "Amazon CloudWatch Logs",
+      "operation": "PutLogEvents",
+      "regionCode": "us-east-2",
+      "servicecode": "AmazonCloudWatch",
+      "servicename": "AmazonCloudWatch",
+      "usagetype": "USE2-DataProcessing-Bytes",
+      "version": "Current"
+    },
+    "catalog_version": "20261007115540",
+    "dimension": {
+      "appliesTo": [],
+      "beginRange": "0",
+      "description": "$0.50 per GB custom log data ingested in Standard log class - US East (Ohio)",
+      "endRange": "Inf",
+      "pricePerUnit": {
+        "USD": "0.5000000000"
+      },
+      "rateCode": "5T6Z6V26DSR7SZ49.JRTCKXETXF.6YS6EN2CT7",
+      "unit": "GB"
+    },
+    "publication_date": "2026-10-07T11:55:40Z",
+    "retrieved_at": "2026-11-03T21:41:39.209660+00:00",
+    "sku": "5T6Z6V26DSR7SZ49",
+    "source_decoded_sha256": "a63198fe9401b27344b8f7824c1254b2cc5c22024497a7f696534b2321914ed0",
+    "unit": "GB",
+    "url": "https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonCloudWatch/current/us-east-2/index.json",
+    "usd": "0.5000000000"
+  },
+  "log_store_gb_month": {
+    "attributes": {
+      "group": "Amazon CloudWatch Standard Storage pricing current",
+      "groupDescription": "Amazon CloudWatch Logs Storage Current version",
+      "location": "US East (Ohio)",
+      "locationType": "AWS Region",
+      "operation": "",
+      "regionCode": "us-east-2",
+      "servicecode": "AmazonCloudWatch",
+      "servicename": "AmazonCloudWatch",
+      "storageMedia": "Amazon S3",
+      "usagetype": "USE2-TimedStorage-ByteHrs",
+      "version": "Current"
+    },
+    "catalog_version": "20261007115540",
+    "dimension": {
+      "appliesTo": [],
+      "beginRange": "0",
+      "description": "$0.03 per GB-mo of log storage - US East (Ohio)",
+      "endRange": "Inf",
+      "pricePerUnit": {
+        "USD": "0.0300000000"
+      },
+      "rateCode": "X7X4WD4A95NDR9U5.JRTCKXETXF.6YS6EN2CT7",
+      "unit": "GB-Mo"
+    },
+    "publication_date": "2026-10-07T11:55:40Z",
+    "retrieved_at": "2026-11-03T21:41:39.209660+00:00",
+    "sku": "X7X4WD4A95NDR9U5",
+    "source_decoded_sha256": "a63198fe9401b27344b8f7824c1254b2cc5c22024497a7f696534b2321914ed0",
+    "unit": "GB-Mo",
+    "url": "https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonCloudWatch/current/us-east-2/index.json",
+    "usd": "0.0300000000"
+  },
+  "metric_month": {
+    "attributes": {
+      "group": "Metric",
+      "groupDescription": "CloudWatch Custom Metrics",
+      "location": "US East (Ohio)",
+      "locationType": "AWS Region",
+      "operation": "",
+      "regionCode": "us-east-2",
+      "servicecode": "AmazonCloudWatch",
+      "servicename": "AmazonCloudWatch",
+      "usagetype": "USE2-CW:MetricMonitorUsage"
+    },
+    "catalog_version": "20261007115540",
+    "dimension": {
+      "appliesTo": [],
+      "beginRange": "0",
+      "description": "$0.30 per metric-month for the first 10,000 metrics - US East (Ohio)",
+      "endRange": "10000",
+      "pricePerUnit": {
+        "USD": "0.3000000000"
+      },
+      "rateCode": "XK7C3D2X45XTHURD.JRTCKXETXF.A6VD9GXV7W",
+      "unit": "Metrics"
+    },
+    "publication_date": "2026-10-07T11:55:40Z",
+    "retrieved_at": "2026-11-03T21:41:39.209660+00:00",
+    "sku": "XK7C3D2X45XTHURD",
+    "source_decoded_sha256": "a63198fe9401b27344b8f7824c1254b2cc5c22024497a7f696534b2321914ed0",
+    "unit": "Metrics",
+    "url": "https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonCloudWatch/current/us-east-2/index.json",
+    "usd": "0.3000000000"
+  },
+  "nat_gb": {
+    "basis": "Published Ohio worked example, not an account quote or separate regional SKU.",
+    "retrieved_at": "2026-11-03T21:41:39.311614+00:00",
+    "source_decoded_sha256": "4b828fb89585f1f3681075fdca3737d057f07a25fd6f3076ea8bbfcfa11b3266",
+    "unit": "GB",
+    "url": "https://aws.amazon.com/vpc/pricing/",
+    "usd": ".045"
+  },
+  "nat_hour": {
+    "basis": "Published Ohio worked example, not an account quote or separate regional SKU.",
+    "retrieved_at": "2026-11-03T21:41:39.311614+00:00",
+    "source_decoded_sha256": "4b828fb89585f1f3681075fdca3737d057f07a25fd6f3076ea8bbfcfa11b3266",
+    "unit": "gateway-hour",
+    "url": "https://aws.amazon.com/vpc/pricing/",
+    "usd": ".045"
+  },
+  "s3_gb_month": {
+    "attributes": {
+      "availability": "99.99%",
+      "durability": "99.999999999%",
+      "location": "US East (Ohio)",
+      "locationType": "AWS Region",
+      "operation": "",
+      "regionCode": "us-east-2",
+      "servicecode": "AmazonS3",
+      "servicename": "Amazon Simple Storage Service",
+      "storageClass": "General Purpose",
+      "usagetype": "USE2-TimedStorage-ByteHrs",
+      "volumeType": "Standard"
+    },
+    "catalog_version": "20261015173540",
+    "dimension": {
+      "appliesTo": [],
+      "beginRange": "0",
+      "description": "$0.023 per GB - first 50 TB / month of storage used",
+      "endRange": "51200",
+      "pricePerUnit": {
+        "USD": "0.0230000000"
+      },
+      "rateCode": "YPGKVRB2EKTVDJDT.JRTCKXETXF.PGHJ3S3EYE",
+      "unit": "GB-Mo"
+    },
+    "publication_date": "2026-10-15T17:35:40Z",
+    "retrieved_at": "2026-11-03T21:41:39.067854+00:00",
+    "sku": "YPGKVRB2EKTVDJDT",
+    "source_decoded_sha256": "52b93329ad3e132d8195b27b027907322a7a142fafef301d55073605826452da",
+    "unit": "GB-Mo",
+    "url": "https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonS3/current/us-east-2/index.json",
+    "usd": "0.0230000000"
+  },
+  "s3_get": {
+    "attributes": {
+      "group": "S3-API-Tier2",
+      "groupDescription": "GET and all other requests",
+      "location": "US East (Ohio)",
+      "locationType": "AWS Region",
+      "operation": "",
+      "regionCode": "us-east-2",
+      "servicecode": "AmazonS3",
+      "servicename": "Amazon Simple Storage Service",
+      "usagetype": "USE2-Requests-Tier2"
+    },
+    "catalog_version": "20261015173540",
+    "dimension": {
+      "appliesTo": [],
+      "beginRange": "0",
+      "description": "$0.004 per 10,000 GET and all other requests",
+      "endRange": "Inf",
+      "pricePerUnit": {
+        "USD": "0.0000004000"
+      },
+      "rateCode": "DJEKB32FV4HNZJZY.JRTCKXETXF.6YS6EN2CT7",
+      "unit": "Requests"
+    },
+    "publication_date": "2026-10-15T17:35:40Z",
+    "retrieved_at": "2026-11-03T21:41:39.067854+00:00",
+    "sku": "DJEKB32FV4HNZJZY",
+    "source_decoded_sha256": "52b93329ad3e132d8195b27b027907322a7a142fafef301d55073605826452da",
+    "unit": "Requests",
+    "url": "https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonS3/current/us-east-2/index.json",
+    "usd": "0.0000004000"
+  },
+  "s3_put": {
+    "attributes": {
+      "group": "S3-API-Tier1",
+      "groupDescription": "PUT/COPY/POST or LIST requests",
+      "location": "US East (Ohio)",
+      "locationType": "AWS Region",
+      "operation": "",
+      "regionCode": "us-east-2",
+      "servicecode": "AmazonS3",
+      "servicename": "Amazon Simple Storage Service",
+      "usagetype": "USE2-Requests-Tier1"
+    },
+    "catalog_version": "20261015173540",
+    "dimension": {
+      "appliesTo": [],
+      "beginRange": "0",
+      "description": "$0.005 per 1,000 PUT, COPY, POST, or LIST requests",
+      "endRange": "Inf",
+      "pricePerUnit": {
+        "USD": "0.0000050000"
+      },
+      "rateCode": "GJKK9PMSTKPNGZS9.JRTCKXETXF.6YS6EN2CT7",
+      "unit": "Requests"
+    },
+    "publication_date": "2026-10-15T17:35:40Z",
+    "retrieved_at": "2026-11-03T21:41:39.067854+00:00",
+    "sku": "GJKK9PMSTKPNGZS9",
+    "source_decoded_sha256": "52b93329ad3e132d8195b27b027907322a7a142fafef301d55073605826452da",
+    "unit": "Requests",
+    "url": "https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonS3/current/us-east-2/index.json",
+    "usd": "0.0000050000"
+  },
+  "scheduler_invocation": {
+    "attributes": {
+      "invocation": "Scheduled Invocation",
+      "location": "US East (Ohio)",
+      "locationType": "AWS Region",
+      "operation": "Invocation",
+      "regionCode": "us-east-2",
+      "servicecode": "AWSEvents",
+      "servicename": "CloudWatch Events",
+      "timeWindow": "N/A",
+      "usagetype": "USE2-ScheduledInvocation"
+    },
+    "catalog_version": "20260924163903",
+    "dimension": {
+      "appliesTo": [],
+      "beginRange": "14000000",
+      "description": "$1.00 per million scheduled invocations in US East (Ohio)",
+      "endRange": "Inf",
+      "pricePerUnit": {
+        "USD": "0.0000010000"
+      },
+      "rateCode": "534HQFPF6VT4G9Y5.JRTCKXETXF.AGTZK4FFDN",
+      "unit": "Invocations"
+    },
+    "publication_date": "2026-09-24T16:39:03Z",
+    "retrieved_at": "2026-11-03T21:41:39.109109+00:00",
+    "sku": "534HQFPF6VT4G9Y5",
+    "source_decoded_sha256": "1fedc8cc588813237deb6a63a49dd886bc20ff1adb73896596ef6cbf119378d5",
+    "unit": "Invocations",
+    "url": "https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AWSEvents/current/us-east-2/index.json",
+    "usd": "0.0000010000"
+  },
+  "sns_email": {
+    "attributes": {
+      "description": "Charged for each 64KB chunk of published data",
+      "endpointType": "SMTP",
+      "location": "US East (Ohio)",
+      "locationType": "AWS Region",
+      "operation": "",
+      "regionCode": "us-east-2",
+      "servicecode": "AmazonSNS",
+      "servicename": "Amazon Simple Notification Service",
+      "usagetype": "USE2-DeliveryAttempts-SMTP"
+    },
+    "catalog_version": "20260915151944",
+    "dimension": {
+      "appliesTo": [],
+      "beginRange": "1000",
+      "description": "$2.00 per 100,000 Amazon SNS Email/Email-JSON Notifications thereafter",
+      "endRange": "Inf",
+      "pricePerUnit": {
+        "USD": "0.0000200000"
+      },
+      "rateCode": "GZME75EE8UXWS6VZ.JRTCKXETXF.MUBTP6UPGZ",
+      "unit": "Notifications"
+    },
+    "publication_date": "2026-09-15T15:19:44Z",
+    "retrieved_at": "2026-11-03T21:47:46.148559+00:00",
+    "sku": "GZME75EE8UXWS6VZ",
+    "source_decoded_sha256": "ccd545f8502f82821c441c920fb46e63a38b0ff91383bb65a41af4da4c6f2d9e",
+    "unit": "Notifications",
+    "url": "https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonSNS/current/us-east-2/index.json",
+    "usd": "0.0000200000"
+  },
+  "sns_publish": {
+    "attributes": {
+      "group": "SNS-Requests-Tier1",
+      "groupDescription": "Amazon SNS API Requests",
+      "location": "US East (Ohio)",
+      "locationType": "AWS Region",
+      "operation": "",
+      "regionCode": "us-east-2",
+      "servicecode": "AmazonSNS",
+      "servicename": "Amazon Simple Notification Service",
+      "usagetype": "USE2-Requests-Tier1"
+    },
+    "catalog_version": "20260915151944",
+    "dimension": {
+      "appliesTo": [],
+      "beginRange": "1000000",
+      "description": "$0.50 per 1,000,000 Amazon SNS API Requests per month thereafter",
+      "endRange": "Inf",
+      "pricePerUnit": {
+        "USD": "0.0000005000"
+      },
+      "rateCode": "X7V4MHE7G6GM98JT.JRTCKXETXF.VNJQCFJPS4",
+      "unit": "Requests"
+    },
+    "publication_date": "2026-09-15T15:19:44Z",
+    "retrieved_at": "2026-11-03T21:47:46.148559+00:00",
+    "sku": "X7V4MHE7G6GM98JT",
+    "source_decoded_sha256": "ccd545f8502f82821c441c920fb46e63a38b0ff91383bb65a41af4da4c6f2d9e",
+    "unit": "Requests",
+    "url": "https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonSNS/current/us-east-2/index.json",
+    "usd": "0.0000005000"
+  },
+  "sqs_request": {
+    "attributes": {
+      "group": "SQS-APIRequest-Tier1",
+      "groupDescription": "Amazon SQS Requests",
+      "location": "US East (Ohio)",
+      "locationType": "AWS Region",
+      "messageDeliveryFrequency": "At Least Once",
+      "messageDeliveryOrder": "Not Guaranteed",
+      "operation": "",
+      "queueType": "Standard",
+      "regionCode": "us-east-2",
+      "servicecode": "AWSQueueService",
+      "servicename": "Amazon Simple Queue Service",
+      "usagetype": "USE2-Requests-Tier1"
+    },
+    "catalog_version": "20260911124607",
+    "dimension": {
+      "appliesTo": [],
+      "beginRange": "0",
+      "description": "$0.40 per million Amazon SQS standard requests in Tier1 in US East (Ohio)",
+      "endRange": "100000000000",
+      "pricePerUnit": {
+        "USD": "0.0000004000"
+      },
+      "rateCode": "9C8YFGPNBKF9HP9A.JRTCKXETXF.VXGXCWQKTY",
+      "unit": "Requests"
+    },
+    "publication_date": "2026-09-11T12:46:07Z",
+    "retrieved_at": "2026-11-03T21:47:46.123485+00:00",
+    "sku": "9C8YFGPNBKF9HP9A",
+    "source_decoded_sha256": "f78db035d72477c7972e79cfaa9120a595900313b67dc210a1ba4ea17f4141f8",
+    "unit": "Requests",
+    "url": "https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AWSQueueService/current/us-east-2/index.json",
+    "usd": "0.0000004000"
+  },
+  "state_transition": {
+    "attributes": {
+      "group": "SFN-StateTransitions",
+      "groupDescription": "Number of State Transitions",
+      "location": "US East (Ohio)",
+      "locationType": "AWS Region",
+      "operation": "",
+      "regionCode": "us-east-2",
+      "servicecode": "AmazonStates",
+      "servicename": "AWS Step Functions",
+      "usagetype": "USE2-StateTransition"
+    },
+    "catalog_version": "20260911124511",
+    "dimension": {
+      "appliesTo": [],
+      "beginRange": "0",
+      "description": "$0.000025 per state transition",
+      "endRange": "Inf",
+      "pricePerUnit": {
+        "USD": "0.0000250000"
+      },
+      "rateCode": "PEWNRD5EMPQPHCAQ.JRTCKXETXF.6YS6EN2CT7",
+      "unit": "StateTransitions"
+    },
+    "publication_date": "2026-09-11T12:45:11Z",
+    "retrieved_at": "2026-11-03T21:41:39.238488+00:00",
+    "sku": "PEWNRD5EMPQPHCAQ",
+    "source_decoded_sha256": "9aa30e50a7acc3e6d0cd1c4692c10b845fae1bf48a3450b189d8ef6fde3c0bf9",
+    "unit": "StateTransitions",
+    "url": "https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonStates/current/us-east-2/index.json",
+    "usd": "0.0000250000"
+  }
+}

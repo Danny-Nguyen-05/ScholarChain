@@ -1,0 +1,28 @@
+[
+  {
+    "catalog_version": "20260911124607",
+    "completed_at": "2026-11-03T21:47:46.123485+00:00",
+    "decoded_bytes": 9449,
+    "decoded_sha256": "f78db035d72477c7972e79cfaa9120a595900313b67dc210a1ba4ea17f4141f8",
+    "http_status": 200,
+    "name": "sqs",
+    "publication_date": "2026-09-11T12:46:07Z",
+    "requested_at": "2026-11-03T21:47:45.828522+00:00",
+    "response_sha256": "f78db035d72477c7972e79cfaa9120a595900313b67dc210a1ba4ea17f4141f8",
+    "saved": "sqs.response.gz",
+    "url": "https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AWSQueueService/current/us-east-2/index.json"
+  },
+  {
+    "catalog_version": "20260915151944",
+    "completed_at": "2026-11-03T21:47:46.148559+00:00",
+    "decoded_bytes": 51765,
+    "decoded_sha256": "ccd545f8502f82821c441c920fb46e63a38b0ff91383bb65a41af4da4c6f2d9e",
+    "http_status": 200,
+    "name": "sns",
+    "publication_date": "2026-09-15T15:19:44Z",
+    "requested_at": "2026-11-03T21:47:45.828750+00:00",
+    "response_sha256": "ccd545f8502f82821c441c920fb46e63a38b0ff91383bb65a41af4da4c6f2d9e",
+    "saved": "sns.response.gz",
+    "url": "https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonSNS/current/us-east-2/index.json"
+  }
+]

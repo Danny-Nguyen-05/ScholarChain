@@ -1,0 +1,142 @@
+[
+  {
+    "accessed_at": "2026-11-03T21:47:30.350001+00:00",
+    "fact_summary": "EMR7.8.0 lists Hadoop3.4.1, Scala2.12.18, Spark3.5.4-amzn-0 and default Corretto17; standard support through2027-03-06. Candidate justification only, not regional account availability.",
+    "id": "emr780",
+    "type": "primary public documentation",
+    "url": "https://docs.aws.amazon.com/emr/latest/ReleaseGuide/emr-780-release.html"
+  },
+  {
+    "accessed_at": "2026-11-03T21:47:30.350001+00:00",
+    "fact_summary": "YARN conf directory, client versus cluster mode, prebuilt with-Hadoop classpath isolation and spark.yarn.archive/jars are documented. Hosted3.5.4 page404; pinned Apache source was read instead.",
+    "id": "yarn354",
+    "type": "primary public documentation",
+    "url": "https://raw.githubusercontent.com/apache/spark/v3.5.4/docs/running-on-yarn.md"
+  },
+  {
+    "accessed_at": "2026-11-03T21:47:30.350001+00:00",
+    "fact_summary": "Bootstrap runs before managed applications; nonzero causes instance failure/reallocation and may terminate cluster. Shutdown hooks are not guaranteed on node errors.",
+    "id": "bootstrap",
+    "type": "primary public documentation",
+    "url": "https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-plan-bootstrap.html"
+  },
+  {
+    "accessed_at": "2026-11-03T21:47:30.350001+00:00",
+    "fact_summary": "Private subnet and S3gateway endpoint support, required AWS buckets/ALrepo reachability, distinct service-access security group; release8 control-plane endpoint change is not assumed for7.8.",
+    "id": "private-subnet",
+    "type": "primary public documentation",
+    "url": "https://docs.aws.amazon.com/en_en/emr/latest/ManagementGuide/emr-clusters-in-a-vpc.html"
+  },
+  {
+    "accessed_at": "2026-11-03T21:47:30.350001+00:00",
+    "fact_summary": "Restricted S3endpoint policy must allow required EMR and AmazonLinux buckets, not merely project artifacts.",
+    "id": "private-s3",
+    "type": "primary public documentation",
+    "url": "https://docs.aws.amazon.com/us_en/emr/latest/ManagementGuide/private-subnet-iampolicy.html"
+  },
+  {
+    "accessed_at": "2026-11-03T21:47:30.350001+00:00",
+    "fact_summary": "Private managed primary/core/service-access group distinctions and EMR-managed rule additions must be accounted for.",
+    "id": "security-groups",
+    "type": "primary public documentation",
+    "url": "https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-man-sec-groups.html"
+  },
+  {
+    "accessed_at": "2026-11-03T21:47:30.350001+00:00",
+    "fact_summary": "Access point constrains root and POSIX identity; mount target is required and security group attaches there.",
+    "id": "efs-accesspoint",
+    "type": "primary public documentation",
+    "url": "https://docs.aws.amazon.com/efs/latest/ug/efs-access-points.html"
+  },
+  {
+    "accessed_at": "2026-11-03T21:47:30.350001+00:00",
+    "fact_summary": "IAM ClientMount/ClientWrite and file system policy can scope access; default anonymous policy is unsuitable; TLS/accesspoint condition keys exist.",
+    "id": "efs-iam",
+    "type": "primary public documentation",
+    "url": "https://docs.aws.amazon.com/efs/latest/ug/iam-access-control-nfs-efs.html"
+  },
+  {
+    "accessed_at": "2026-11-03T21:47:30.350001+00:00",
+    "fact_summary": "EFS mount helper supports TLS for NFS transport; its local mount watchdog is not an EMR lifetime controller.",
+    "id": "efs-tls",
+    "type": "primary public documentation",
+    "url": "https://docs.aws.amazon.com/efs/latest/ug/encryption-in-transit.html"
+  },
+  {
+    "accessed_at": "2026-11-03T21:47:30.350001+00:00",
+    "fact_summary": "EMR symmetricKMS must be regional; node profile and EMRservice role have different encryption permissions, including EBS-related grants.",
+    "id": "emr-encryption",
+    "type": "primary public documentation",
+    "url": "https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-encryption-enable.html"
+  },
+  {
+    "accessed_at": "2026-11-03T21:47:30.350001+00:00",
+    "fact_summary": "Auto-termination responds to idleness; busy YARN jobs are not covered. Metricscollector publicAPI access requirements matter in private subnet.",
+    "id": "idle",
+    "type": "primary public documentation",
+    "url": "https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-auto-termination-policy.html"
+  },
+  {
+    "accessed_at": "2026-11-03T21:47:30.350001+00:00",
+    "fact_summary": "Termination is asynchronous and described as taking1\u20135minutes depending on configuration, not an instantaneousbillingstop guarantee.",
+    "id": "terminate",
+    "type": "primary public documentation",
+    "url": "https://docs.aws.amazon.com/emr/latest/APIReference/API_TerminateJobFlows.html"
+  },
+  {
+    "accessed_at": "2026-11-03T21:47:30.350001+00:00",
+    "fact_summary": "EMR documents conditional TerminateJobFlows via elasticmapreduce:ResourceTag and warns tag mutation can bypass intent. Example policies are demonstrations, not production policies.",
+    "id": "tag-access",
+    "type": "primary public documentation",
+    "url": "https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-fine-grained-cluster-access.html"
+  },
+  {
+    "accessed_at": "2026-11-03T21:47:30.350001+00:00",
+    "fact_summary": "Scheduleprecision60seconds, not hard realtime; fixedUTC avoidsDST ambiguity.",
+    "id": "scheduler",
+    "type": "primary public documentation",
+    "url": "https://docs.aws.amazon.com/scheduler/latest/UserGuide/schedule-types.html"
+  },
+  {
+    "accessed_at": "2026-11-03T21:47:30.350001+00:00",
+    "fact_summary": "Universal targets specify SDK service/action with execution role; read-only actions are unsupported. Lambda may perform required readback.",
+    "id": "universal",
+    "type": "primary public documentation",
+    "url": "https://docs.aws.amazon.com/scheduler/latest/UserGuide/managing-targets-universal.html"
+  },
+  {
+    "accessed_at": "2026-11-03T21:47:30.350001+00:00",
+    "fact_summary": "Throttledinvocations may be delayed; publisheddefaults are not observed accountquota headroom.",
+    "id": "scheduler-quotas",
+    "type": "primary public documentation",
+    "url": "https://docs.aws.amazon.com/scheduler/latest/UserGuide/scheduler-quotas.html"
+  },
+  {
+    "accessed_at": "2026-11-03T21:47:30.350001+00:00",
+    "fact_summary": "Retry behavior depends on synchronous/asynchronousinvoker and may delay; idempotence is necessary.",
+    "id": "lambda-retry",
+    "type": "primary public documentation",
+    "url": "https://docs.aws.amazon.com/lambda/latest/dg/invocation-retries.html"
+  },
+  {
+    "accessed_at": "2026-11-03T21:47:30.350001+00:00",
+    "fact_summary": "Authentication/RPC encryption/spill settings and YARN per-application secret distribution depend on secure YARN RPC. Customruntime mustconfigure explicitly.",
+    "id": "spark-security",
+    "type": "primary public documentation",
+    "url": "https://raw.githubusercontent.com/apache/spark/v3.5.4/docs/security.md"
+  },
+  {
+    "accessed_at": "2026-11-03T21:47:30.350001+00:00",
+    "fact_summary": "EMRsecurityconfiguration covers specificmanagedstorage/transit mechanisms; do not assume customSpark inheritsmanageddefaults.",
+    "id": "emr-data-encryption",
+    "type": "primary public documentation",
+    "url": "https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-data-encryption-options.html"
+  },
+  {
+    "accessed_at": "2026-11-03T21:47:30.350001+00:00",
+    "fact_summary": "Elasticmeteringincludes metadata/dataand minimumNFSrequestbytes; currentpage also listsOneZoneElastic. RecommendRegional forproposal without claimingOneZoneunsupported.",
+    "id": "efs-performance",
+    "type": "primary public documentation",
+    "url": "https://docs.aws.amazon.com/efs/latest/ug/performance.html"
+  }
+]

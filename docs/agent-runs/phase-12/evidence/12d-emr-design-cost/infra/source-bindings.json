@@ -1,0 +1,46 @@
+{
+  "base_head": "2d637c6707ecc66a489561dd179406b6ac622e93",
+  "files": [
+    {
+      "bytes": 9918,
+      "path": "infra/terraform/spikes/emr-spark/README.md",
+      "sha256": "3068cace639b8d759af9217d20d78fce0f998cb69e71bfad49740253afa7c282"
+    },
+    {
+      "bytes": 1626,
+      "path": "infra/terraform/spikes/emr-spark/main.tf",
+      "sha256": "1712fd5aa97439f35ddcf9d5edc1bfdf31f70a8dc785c25cfd0c829b180fc056"
+    },
+    {
+      "bytes": 1367,
+      "path": "infra/terraform/spikes/emr-spark/variables.tf",
+      "sha256": "e8773844b8a6faa5c307c6db08ef540f5d072366a51a1284e524822653ffcd49"
+    },
+    {
+      "bytes": 3462,
+      "path": "infra/terraform/modules/emr/main.tf",
+      "sha256": "b945543bcb85469e6a0d5b03ab7856b926c23f0447dfeab95505d298d3f7280b"
+    },
+    {
+      "bytes": 6375,
+      "path": "docs/agent-runs/phase-06/evidence/6a/emr-compatibility.md",
+      "sha256": "d538ae383740d33edca1484beb888f437f2e49e31feecc96943506a9c00a7c25"
+    },
+    {
+      "bytes": 4149,
+      "path": "docs/agent-runs/phase-12/evidence/12d-spark-readiness/filesystem-and-runtime-design.md",
+      "sha256": "88c4a6373599c45e8a0ca9d6513ca3452fdc028fdab03e42892dcbc9caf740fe"
+    },
+    {
+      "bytes": 91176,
+      "path": "docs/agent-runs/phase-12/evidence/12d-spark-readiness/runtime/runtime-manifest.json",
+      "sha256": "1326889d71a974cfed06b014faccc28cf8726b0ad72f2526614dddb12f245114"
+    },
+    {
+      "bytes": 6488,
+      "path": "docs/agent-runs/phase-12/evidence/12d-spark-readiness/exact-comparison.json",
+      "sha256": "a1209709a01ea8c963a4e16d9580b669b1b22b56e38c3a1133d258391f060d70"
+    }
+  ],
+  "observed_at": "2026-11-03T21:47:30.350001+00:00"
+}

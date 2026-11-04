@@ -1,0 +1,27 @@
+[
+  {
+    "bytes": 23609,
+    "path": "design-proposal.md",
+    "sha256": "4448933148ee88262f1da09f33f25c7ed2520a4652deb489487d43b6f87f2831"
+  },
+  {
+    "bytes": 6052,
+    "path": "owner-report.md",
+    "sha256": "390a138114bce77a82207cbc87b10aae1247c706ee41c6682301383e24d3b20d"
+  },
+  {
+    "bytes": 2493,
+    "path": "resource-quantity-contract.json",
+    "sha256": "72b79394ae6bfa944478e6d7d94fd4dd8a507753e71b5088978bea2424c170c9"
+  },
+  {
+    "bytes": 1676,
+    "path": "source-bindings.json",
+    "sha256": "c0ca60e938c1d34c9b1c2f3eff0d46b48fc48ebdc5fa325dec77efb2fb2bb684"
+  },
+  {
+    "bytes": 7735,
+    "path": "sources.json",
+    "sha256": "139a7e5b52f4fb5ff6e06983c5f83f361f8c1a08f77dd5b43788619a23448377"
+  }
+]

@@ -1,0 +1,48 @@
+{
+  "Terraform_commands_run": false,
+  "account_calls_run": false,
+  "command": [
+    "python3",
+    "-I",
+    "/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-12/evidence/12d-emr-design-cost/replay-cost.py"
+  ],
+  "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+  "exit": 0,
+  "infra_manifest_entries_checked": 5,
+  "infra_manifest_mismatches": 0,
+  "observed_at": "2026-11-03T22:04:40.811938+00:00",
+  "production_tests_run": false,
+  "stderr": "",
+  "stdout": {
+    "deterministic_replay": "matched",
+    "launch_authorized": false,
+    "rates": 28,
+    "scenarios": [
+      {
+        "name": "bounded_nominal_proposal",
+        "usd": "5.30",
+        "within_cap": false
+      },
+      {
+        "name": "io_and_log_sensitivity",
+        "usd": "6.21",
+        "within_cap": false
+      },
+      {
+        "name": "retention_90_days",
+        "usd": "8.54",
+        "within_cap": false
+      },
+      {
+        "name": "ancillary_cleanup_delayed_24h",
+        "usd": "7.52",
+        "within_cap": false
+      },
+      {
+        "name": "lower_request_candidate_unverified",
+        "usd": "4.82",
+        "within_cap": true
+      }
+    ]
+  }
+}

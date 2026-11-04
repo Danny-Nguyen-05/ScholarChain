@@ -1,0 +1,18 @@
+
+
+## Subphase 12D — EMR cost scenario L1 wording repair
+
+STATUS: COMPLETE for the offline L1 label repair; independent L1 recheck pending.
+OWNER: coordinator.
+WORK ORDER: User-supplied REQUEST-CHANGES, L1 only. Choose the offered relabeling option; preserve quantities, rates, arithmetic and no-launch conclusion.
+FILES CREATED: l1-wording-repair/ contains the full user-supplied review, pre-repair hashes/snapshots, narrow offline validation and current bindings.
+FILES MODIFIED: The current replay scenario name, calculation JSON name, cost table, coordinator/owner wording, matching candidate suffix, README and current evidence manifest; five phase records receive this repair/review handoff. Earlier human records and review results are preserved.
+COMMANDS RUN: python3 -I -B replay-cost.py; python3 -I -B l1-wording-repair/validate-wording-repair.py; public artifact/hash comparisons; git diff --check. Exact argv/results are in validation.json.
+TEST RESULTS: Deterministic replay passes: 28 saved public rates, five scenarios, no network/writes. Narrow independent checks pass: only calculation JSON name differs; replay AST identical after normalizing that one name; 24 total minus 3 nominal equals 21 hours; guard counts scale by eight; all five Fraction-checked totals are unchanged. Initial independent harness attempt failed on an exact-equality assertion for finite Decimal component sums (5e-28 USD); corrected to the already disclosed 1e-22 tolerance, without changing the model or figures. No production tests, A1, sbt, Terraform or live checks rerun; 1267 tests remain historical.
+VALIDATION RESULTS: Current scenario is “ancillary resources active 24 h total (21 h beyond nominal)” at USD7.52. It is not a 24-hour additional delay. Nominal5.30, I/O6.21, retention8.54 and lower-request4.82 remain unchanged. Quantities/rates/technical design unchanged. Earlier validation-result.json, prior-cost-model/ and before/ copies retain historical wording and are superseded on this label only. Fresh manifest covers current files and hashes.
+ASSUMPTIONS: The review describes the original 59-entry manifest60025aeb and five append-only records, before the user separately authorized repository-wide Markdown reviewer-prompt cleanup. That cleanup and its baseline exceptions remain disclosed in reviewer-prompt-removal.json; no deleted prompt is recreated and no historical preservation claim is silently renewed.
+RISKS: No live cost fit is certified: nominalUSD5.30 exceedsUSD5; lower-request quantities unproven. Reviewer observations on a no-extra-cluster canary, transit-certificate mechanism/cost (Private CA not priced) and explicit data-volume layout are carried to later implementation; no new mechanism or spending selected here. Guard/cleanup, runtime compatibility, F4, identity, real plan, personal gate and phase completion remain open.
+MANUAL ACTION REQUIRED: User launches an independent L1-only recheck using the prompt supplied in chat.
+BLOCKED-ON OWNER: code-reviewer for independent recheck; no self-approval.
+BLOCKED-ON EVIDENCE: Independent acceptance of corrected label and refreshed current manifest.
+NEXT GATE: L1-only recheck. No login/private processing/account request/scan/publication/plan/spend/cleanup/commit/push or Phase12 completion.

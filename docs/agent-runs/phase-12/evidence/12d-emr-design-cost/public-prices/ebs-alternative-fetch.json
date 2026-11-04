@@ -1,0 +1,18 @@
+[
+  {
+    "bounded_public_HTTP": true,
+    "completed_at": "2026-11-03T21:45:57.230958+00:00",
+    "error": "HTTP Error 404: Not Found",
+    "error_type": "HTTPError",
+    "requested_at": "2026-11-03T21:45:56.932705+00:00",
+    "url": "https://b0.p.awsstatic.com/pricing/2.0/meteredUnitMaps/ec2/USD/current/ebs/index.json"
+  },
+  {
+    "bounded_public_HTTP": true,
+    "completed_at": "2026-11-03T21:45:57.507155+00:00",
+    "error": "HTTP Error 404: Not Found",
+    "error_type": "HTTPError",
+    "requested_at": "2026-11-03T21:45:57.230970+00:00",
+    "url": "https://b0.p.awsstatic.com/pricing/2.0/meteredUnitMaps/ec2/ebs/USD/current/index.json"
+  }
+]

@@ -2462,3 +2462,13 @@ STATUS: COMPLETE for preparing the offline readiness review handoff; no readines
 ## Subphase 12D — independent offline readiness APPROVE recorded
 
 Independent verdict: APPROVE for offline readiness only,0 blockers. Full verbatim report: evidence/12d-spark-readiness-review-record/user-supplied-review.txt. No source-control, live or Phase12 completion authorization. Original candidate preparation-time flags remain preserved; new approval is recorded externally. Next gate: human source-control decision.
+
+
+## Subphase 12D — public EMR design and complete cost proposal
+
+STATUS: COMPLETE for preparing the EMR design/cost proposal review handoff; no new verdict exists. The prior offlineSpark readiness APPROVE/commit2d637c6 remains scoped to that release. New design uses public sources only and does not certify cost fit: nominal5.30 exceeds proposed5; lower-request4.82 is unselected/unproven. Read evidence/12d-emr-design-cost and reviewer-prompt-12d-emr-design-cost.md. Human launches independent read-only review; no agent approves its own proposal. No source-control/live/account/plan/spend/cleanup/Phase12 completion authority follows automatically.
+
+
+## Subphase 12D — EMR cost scenario L1 wording repair
+
+User-supplied external verdict: REQUEST-CHANGES (L1 only). Full supplied text retained at evidence/12d-emr-design-cost/l1-wording-repair/user-supplied-review.txt. Coordinator repaired the label; no independent recheck verdict exists yet. Reviewer’s60025aeb/59-entry/prefix observations describe the pre-prompt-cleanup snapshot; later user-authorized cleanup is separately recorded. No prompt Markdown file recreated.

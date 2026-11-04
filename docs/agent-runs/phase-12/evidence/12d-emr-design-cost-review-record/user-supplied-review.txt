@@ -1,0 +1,52 @@
+**Verdict: APPROVE for L1.** The $7.52 scenario is now labelled consistently as “ancillary resources active 24 h total (21 h beyond nominal)”, and nothing else in the cost model changed.
+
+### What I checked
+
+1. **Label consistency.**
+   - `cost-proposal.md:35`, `README.md:21` and the current calculation JSON all use the new label.
+   - In the calculation JSON, `ancillary_hours` is 24 against the nominal 3, so 21 hours beyond nominal.
+   - The only current file with the old name is `validation-result.json:37`, which `snapshot-note.json` and the README declare as a historical, superseded record. The `before/` and `prior-cost-model/` copies are historical too.
+   - The validator script contains the old name only as the string it checks against.
+2. **Name-only change.**
+   - Comparing `cost-calculations.json` with l1-wording-repair/before/cost-calculations.json shows exactly one difference: `/scenarios/3/name`.
+   - `replay-cost.py` has an identical AST to before/replay-cost.py once that one string is normalized; without normalizing, they differ.
+3. **Nothing else changed.**
+   - My Fraction recomputation still gives 5.30, 6.21, 8.54, 7.52 and 4.82.
+   - All launch, cost-fit and allowance flags are false.
+   - Six files are byte-identical to the pre-repair manifest: `selected-rates.json`, infra/design-proposal.md, `next-work-order-proposal.md`, infra/resource-quantity-contract.json, the errata and `work-order.md`.
+4. **Manifest.** SHA is `4b26e186…489c7d`, and all 79 entries match with none missing.
+5. **History.**
+   - `snapshot-note.json` and the manifest record the sequence: the 59-entry state (`60025aeb`) I reviewed, then 58 entries after the authorized removal of the review-prompt file, then the repair.
+   - No review-prompt file was recreated.
+   - Four records (owner report, repairs, review, test report) are each exactly HEAD + EMR suffix + L1 suffix.
+   - The owner-report EMR suffix was corrected in place before any commit. The old version is preserved in `before/` (HEAD + old suffix), and the coordinator report discloses the change.
+
+### Outside L1 (not part of this verdict)
+
+The separate prompt cleanup (docs/agent-runs/phase-12/reviewer-prompt-removal.json) deleted 52 tracked files and removed 18 embedded blocks from committed records. As a result, docs/agent-runs/phase-12/prompt.md no longer starts with its HEAD content, so the earlier “append-only records” claim no longer holds for that file.
+
+The ledger quotes your request (“Make sure we don’t have any other Markdown file contain the reviewer prompt”), and the scope is disclosed. Because it rewrites committed record history across phases 5–12, I’d give it its own review and explicit acceptance before any commit. It does not affect L1.
+
+### Report fields
+
+- **STATUS:** APPROVE (L1 only).
+- **OWNER:** code-reviewer.
+- **WORK ORDER:** L1 recheck prompt pasted in chat.
+- **FILES CREATED:** None.
+- **FILES MODIFIED:** None.
+- **COMMANDS RUN:**
+  - Read-only `git status`, `diff` and `show`, plus `shasum` and `grep`.
+  - In-memory `python3 -I -B` checks: manifest, record composition, JSON diff, AST comparison and Fraction arithmetic.
+  - I ran no scripts, tests, Terraform or AWS commands.
+- **TEST RESULTS:** None run. `validation.json` records the coordinator’s runs: replay and validator both exit 0, after two initial failures that are disclosed.
+- **VALIDATION RESULTS:** As above.
+- **ASSUMPTIONS:** The `before/` snapshots are the pre-repair bytes, as their bindings state.
+- **RISKS:** Unchanged:
+  - The nominal $5.30 exceeds the $5 cap.
+  - The guard and cleanup are unimplemented.
+  - The canary scope, Private CA and data-volume notes carry forward.
+  - The prompt cleanup needs its own acceptance.
+- **MANUAL ACTION REQUIRED:** Your decision on the prompt-cleanup changes before any commit.
+- **BLOCKED-ON OWNER:** Human, for source control and the cleanup’s acceptance.
+- **BLOCKED-ON EVIDENCE:** None for L1.
+- **NEXT GATE:** Your source-control decision, then the offline portable-runtime and request-inventory task. This approval does not authorize execution, spending, commit or push, or Phase 12 completion.
