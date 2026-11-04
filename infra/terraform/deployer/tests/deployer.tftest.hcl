@@ -521,3 +521,39 @@ run "boundary_ec2_mutations_are_tag_conditioned_like_emr_v2" {
   }
 }
 
+# ---- same-device `aws login` for the deployer role
+
+run "login_policy_is_exact_and_independent_of_permission_sets" {
+  command = plan
+
+  assert {
+    condition = jsondecode(aws_iam_role_policy.login.policy).Statement == [{
+      Sid       = "DeployerSameDeviceLogin"
+      Effect    = "Allow"
+      Action    = ["signin:AuthorizeOAuth2Access", "signin:CreateOAuth2Token"]
+      Resource  = ["arn:aws:signin:us-east-2:111122223333:oauth2/public-client/localhost"]
+      Condition = { StringEquals = { "signin:OAuthClientId" = "arn:aws:signin:::devtools/same-device" } }
+    }]
+    error_message = "Exactly the two signin actions on the localhost public-client ARN with the same-device client condition."
+  }
+  assert {
+    condition     = !strcontains(aws_iam_role_policy.login.policy, "signin:*") && !strcontains(aws_iam_role_policy.login.policy, "\"*\"")
+    error_message = "No signin:* and no '*' resource."
+  }
+  assert {
+    condition = alltrue([
+      for k, p in aws_iam_policy.permission_set :
+      !strcontains(p.policy, "signin:")
+    ]) && !strcontains(aws_iam_policy.spike_boundary[0].policy, "signin:")
+    error_message = "The permission sets and the boundary carry no signin actions; login is a separate policy."
+  }
+}
+
+run "login_policy_exists_as_its_own_resource_not_a_permission_set_part" {
+  command = plan
+
+  assert {
+    condition     = aws_iam_role_policy.login.name == "scholarchain-deployer-same-device-login" && !contains(keys(aws_iam_policy.permission_set), "spike-emr--login")
+    error_message = "The login policy is a separate inline policy, outside enabled_permission_sets."
+  }
+}

@@ -65,3 +65,18 @@ R1 is closed. The reviewer ran 12 R1 mutations, of which 11 were caught. All 46 
 18. **Overstated wording:** `deployer/README.md:69` says node code cannot terminate a foreign instance, which is untrue for EMR-tagged instances. It also overstates the security-group stack-tag requirement for creates. There is no impact beyond the spike, because the subnet must carry the stack tag.
 19. **Stale evidence lines:** the `gates.json` post-repair deployer count and `report.md:3` status were corrected by the coordinator after this review.
 20. **Test gap:** the tag-condition test checks that keys are present, not that their value is `"true"`.
+
+## Post-approval addendum (2026-11-04): deployer `aws login` permission
+
+When the human tried `aws login` for the operator user, the coordinator found that the `scholarchain-deployer` role had no signin permissions, so `aws login --profile scholarchain-deployer` would fail in Step C.
+
+- **Change (infra-engineer):** `infra/terraform/deployer/main.tf` adds `aws_iam_role_policy.login`. It grants `signin:AuthorizeOAuth2Access` and `signin:CreateOAuth2Token` on `arn:aws:signin:us-east-2:<account>:oauth2/public-client/localhost`, with `signin:OAuthClientId = arn:aws:signin:::devtools/same-device`. This matches the installed billing-role login policy.
+- **Tests:** 2 new tests (deployer 25/25); a mutation widening the resource to `*` failed as expected.
+- **Gates:** `sbt check` attempt 5 exit 0, 1267/0.
+- **Status:** awaiting independent review before the deployer apply.
+- **Operator login:** the operator user's own CLI login permission is handled by the human as a manual inline policy during the `IAMFullAccess` window, removed at the end of the window.
+
+Addendum review (human, separate session, 2026-11-04 10:56): **APPROVE-WITH-NONBLOCKING**, with no blocking findings. The policy content matches the readback, and scratch mutations (an extra action, a widened resource, a changed client condition) all failed. Replay: deployer 25/25, spike 37/37, guard 7/7 self-tests and 0 findings. All 46 source and 73 evidence hashes match.
+
+21. **Carried:** the login policy's attachment target is untested (`deployer.tftest.hcl:556`); retargeting `login.role` still passes. Add an assertion that ties it to the deployer role.
+22. **Fixed by the coordinator:** `gates.json` attempt 5 now reads "9 sbt result groups (158 Scala suites)" instead of "9 suites". The same wording in attempts 2 to 4 refers to result groups.

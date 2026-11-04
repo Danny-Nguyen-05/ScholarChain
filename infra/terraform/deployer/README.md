@@ -10,6 +10,7 @@ Nothing here has been planned against, or applied to, AWS. The human applies thi
 |---|---|
 | `aws_iam_role.deployer` | trust: exactly `operator_principal_arn`, condition `aws:MultiFactorAuthPresent = true`; `max_session_duration = 3600` |
 | `aws_iam_policy.permission_set["spike-emr--emr"]`, `--network`, `--storage`, `--iam` | the `spike-emr` permission set, split in four documents because a managed policy is limited to 6144 characters (tests assert every document stays below it) |
+| `aws_iam_role_policy.login` (`scholarchain-deployer-same-device-login`) | inline policy for same-device `aws login`, always attached whatever `enabled_permission_sets` holds; see below |
 | `aws_iam_policy.spike_boundary` (`scholarchain-spike-emr-boundary`) | permissions boundary that every spike IAM role must carry |
 | `aws_iam_role_policy_attachment.permission_set[...]` | attaches the four documents |
 
@@ -25,6 +26,10 @@ Outputs: `role_arn`, `spike_permissions_boundary_arn` (pass to the spike root as
 | `role_name` | default `scholarchain-deployer`; must match `^scholarchain-...` and must not be `scholarchain-billing-deployer` |
 | `enabled_permission_sets` | default `["spike-emr"]`; an unknown name fails a lifecycle precondition on the role |
 | `owner` | tag |
+
+## Same-device login (`aws login`)
+
+The human signs in with `aws login --profile scholarchain-deployer` (browser OAuth on the same device), which needs sign-in permissions on the role itself. `aws_iam_role_policy.login` grants exactly `signin:AuthorizeOAuth2Access` and `signin:CreateOAuth2Token` on `arn:aws:signin:us-east-2:<account>:oauth2/public-client/localhost`, conditioned on `signin:OAuthClientId = arn:aws:signin:::devtools/same-device`. It is separate from the permission sets (every set needs it), mirrors the already installed and reviewed billing-role login policy (`docs/agent-runs/phase-12/evidence/12d-human-identity-bootstrap/user-supplied-policy-readbacks/role-login-policy.json`), grants sign-in only (no `signin:*`, no `*` resource), and is not added to `operator_caller_policy_json`; the operator's own login is handled separately. AWS documents these two actions as the OAuth permissions in the IAM policy: https://aws.amazon.com/blogs/security/introducing-oauth-support-for-aws-mcp-server/ . The `aws login` flow itself was not run or tested here.
 
 ## Extending for Phase 14 (no restructuring)
 

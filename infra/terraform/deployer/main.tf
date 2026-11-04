@@ -40,6 +40,24 @@ locals {
     }]
   }
 
+  # Same-device `aws login` (browser OAuth) for this role. Independent of the
+  # permission sets because every set needs it. Mirrors the reviewed billing-role login
+  # policy in docs/agent-runs/phase-12/evidence/12d-human-identity-bootstrap/
+  # user-supplied-policy-readbacks/role-login-policy.json. It grants sign-in only.
+  # https://aws.amazon.com/blogs/security/introducing-oauth-support-for-aws-mcp-server/
+  login_policy = {
+    Version = "2012-10-17"
+    Statement = [{
+      Sid      = "DeployerSameDeviceLogin"
+      Effect   = "Allow"
+      Action   = ["signin:AuthorizeOAuth2Access", "signin:CreateOAuth2Token"]
+      Resource = ["arn:aws:signin:${var.region}:${var.account_id}:oauth2/public-client/localhost"]
+      Condition = {
+        StringEquals = { "signin:OAuthClientId" = "arn:aws:signin:::devtools/same-device" }
+      }
+    }]
+  }
+
   known_sets   = keys(local.permission_sets)
   unknown_sets = [for s in var.enabled_permission_sets : s if !contains(local.known_sets, s)]
 
@@ -87,3 +105,11 @@ resource "aws_iam_role_policy_attachment" "permission_set" {
   role       = aws_iam_role.deployer.name
   policy_arn = aws_iam_policy.permission_set[each.key].arn
 }
+
+# Always attached, whatever enabled_permission_sets contains.
+resource "aws_iam_role_policy" "login" {
+  name   = "${var.role_name}-same-device-login"
+  role   = aws_iam_role.deployer.id
+  policy = jsonencode(local.login_policy)
+}
+
