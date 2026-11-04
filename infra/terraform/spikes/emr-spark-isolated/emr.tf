@@ -41,7 +41,6 @@ locals {
     "--collect-key", local.key_collect,
     "--efs-id", aws_efs_file_system.spike.id,
     "--access-point-id", aws_efs_access_point.spike.id,
-    "--java-home", local.java_home,
   ]
 
   # Every Spark step is wrapped by run-step.sh, which sets the runtime

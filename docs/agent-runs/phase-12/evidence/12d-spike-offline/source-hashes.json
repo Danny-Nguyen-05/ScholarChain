@@ -46,8 +46,8 @@
  },
  {
   "path": "infra/terraform/spikes/emr-spark-isolated/README.md",
-  "bytes": 19144,
-  "sha256": "5860e848f24799e2b4abc1a12add3cac7be6e6ad42cfbd427e977084b6b104d7"
+  "bytes": 20025,
+  "sha256": "98103c5265ac65bacb32bd6cdfa50ec40580c9c761fb3a55edf7aa0ea143118a"
  },
  {
   "path": "infra/terraform/spikes/emr-spark-isolated/efs.tf",
@@ -56,8 +56,8 @@
  },
  {
   "path": "infra/terraform/spikes/emr-spark-isolated/emr.tf",
-  "bytes": 6840,
-  "sha256": "adc673e1872a445274818ee27ba00beaa377aad69f847248499cebbafdfa02fc"
+  "bytes": 6804,
+  "sha256": "73b5f0806797148ab0d51c44c05d497b215a05f494f3c7134da64aa9ed8cea34"
  },
  {
   "path": "infra/terraform/spikes/emr-spark-isolated/iam.tf",
@@ -71,8 +71,8 @@
  },
  {
   "path": "infra/terraform/spikes/emr-spark-isolated/main.tf",
-  "bytes": 4594,
-  "sha256": "238f68c8aa67cd6f6fd5317a0e4bc227c4d3117fdf6b741fb189944ac88b22f9"
+  "bytes": 4455,
+  "sha256": "5a0840ec455bbb8357fb3a49628a7de30047586030da226a64de5a8ae9f21b64"
  },
  {
   "path": "infra/terraform/spikes/emr-spark-isolated/network.tf",
@@ -111,8 +111,8 @@
  },
  {
   "path": "infra/terraform/spikes/emr-spark-isolated/tests/spike.tftest.hcl",
-  "bytes": 29725,
-  "sha256": "6a8caf20e761f044f31543888b8dc764d2d52cdb1dd8b35eee3edd6c20464cba"
+  "bytes": 29730,
+  "sha256": "30eda18700648c3eaf1cacba55a2ab38db9893a4f47b0e6cafd95acba52a5d17"
  },
  {
   "path": "infra/terraform/spikes/emr-spark-isolated/variables.tf",
@@ -126,8 +126,8 @@
  },
  {
   "path": "scripts/phase12d-spike/README.md",
-  "bytes": 4562,
-  "sha256": "f58377ca94f8e8c240291d9a91a66064524c382e731bd36d0aea905aa02a6e22"
+  "bytes": 4936,
+  "sha256": "da3c6f5f27b5942fb47499b273828521bff33449a239f320f0972d62e22a322b"
  },
  {
   "path": "scripts/phase12d-spike/collect-evidence.sh",
@@ -136,8 +136,8 @@
  },
  {
   "path": "scripts/phase12d-spike/emr/bootstrap.sh",
-  "bytes": 7072,
-  "sha256": "41e74ddaee9aeae215c6aa788e14acd30d4e3b98303cb10926e16d74cb02a933"
+  "bytes": 8835,
+  "sha256": "41bef4d399224a909316fbecd50cdf734d0a6497aab5058ae5360982c26cd667"
  },
  {
   "path": "scripts/phase12d-spike/emr/collect-results.sh",
@@ -146,8 +146,8 @@
  },
  {
   "path": "scripts/phase12d-spike/emr/run-step.sh",
-  "bytes": 1031,
-  "sha256": "99823c9a476ef92cf5ba2970c50a65371edd1c340df4c43d7fa8cbcb93da9d23"
+  "bytes": 1465,
+  "sha256": "8e380726cd6bc24f25241d9eddfe2087e9c229685d6e6d0494f9f5e511c6abe6"
  },
  {
   "path": "scripts/phase12d-spike/inventory.sh",
@@ -186,8 +186,8 @@
  },
  {
   "path": "scripts/phase12d-spike/tests/test_bootstrap.py",
-  "bytes": 8716,
-  "sha256": "6c7003510eae8e23abe52c544294bd4839ec503368cc48086f532a4f4fd64823"
+  "bytes": 12937,
+  "sha256": "3525a365d4538b27188e800ec7a456d7dab08465847d93cdc4b89fcd10116e37"
  },
  {
   "path": "scripts/phase12d-spike/tests/test_collect_evidence.py",
@@ -211,8 +211,8 @@
  },
  {
   "path": "scripts/phase12d-spike/tests/test_step_scripts.py",
-  "bytes": 3123,
-  "sha256": "eb0dd782b9628b442ce631c7ee06554f93784fb53ac3cb85174063feee097a87"
+  "bytes": 3998,
+  "sha256": "cd1114d1e5a105fa04ecad8bac2e68f277333771df5f11db619ae6e390ae53e6"
  },
  {
   "path": "scripts/phase12d-spike/tests/test_terraform_static.py",

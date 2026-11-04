@@ -10,9 +10,14 @@
   "sha256": "0373da189d619aeac06fd11b4ca060cc88bdf5c498bc908535aedd5d92c5d821"
  },
  {
+  "path": "attempt3-bootstrap-java-path.md",
+  "bytes": 4052,
+  "sha256": "ff23e53b07d95a870bde7d640592bd5188e3343a1aecfc7634b6015e2fd8e5db"
+ },
+ {
   "path": "human-approval.md",
-  "bytes": 6579,
-  "sha256": "7d9194eecc369c5fa3b583efc33bdc202e6b8ec10222db4b32ccf0013ea4f405"
+  "bytes": 8741,
+  "sha256": "a2ddf0fb07daf513d9833f35fc27153eb644bf3ae5f04403485b511c67fee7f9"
  },
  {
   "path": "work-order.md",

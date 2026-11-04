@@ -76,6 +76,14 @@
    "exit": 0,
    "tests": "9 sbt result groups, 1267 tests succeeded, 0 failed (after live attempt-2 boundary launch-dependency fix)",
    "log": "gates/sbt-check-attempt8-ami.log.gz"
+  },
+  {
+   "attempt": 9,
+   "start": "2026-11-04T20:17:34Z",
+   "end": "2026-11-04T20:30:12Z",
+   "exit": 0,
+   "tests": "9 sbt result groups, 1267 tests succeeded, 0 failed (after live attempt-3 Java detection fix)",
+   "log": "gates/sbt-check-attempt9-java.log.gz"
   }
  ],
  "parent_fix_coordinator_observed": "After live attempt 1 (see ../12d-spike-live/attempt1-partial-apply.md): deployer adds Ec2CreateOnExistingStackParents and EfsCreateAccessPointOnStackFileSystem (resource-tag conditioned). Deployer fmt/validate/test 0/0/0, 26 passed; spike 37 passed (unchanged); script tests 60 OK; guard self-test 0, repo scan 0 findings. gates/*.txt are this run.",
@@ -164,5 +172,6 @@
  ],
  "no_cloud": "No AWS API call, login, credential/state/tfvars read, real plan or apply, resource creation or spending occurred.",
  "l1_repair_coordinator_observed": "CreateAccessPoint now has a single Allow (EfsCreateAccessPointOnStackFileSystemWithStackTag) requiring region + aws:ResourceTag + aws:RequestTag stack; removed from EfsCreateFileSystemWithStackTag. Deployer fmt/validate/test 0/0/0, 27 passed; spike 37; script tests 60 OK; guard 0 findings. gates/*.txt are this run.",
- "ami_fix_coordinator_observed": "Boundary V2ExistingLaunchDependencies (RunInstances/CreateFleet on image/ami-*, key-pair, capacity-reservation, dedicated-host, fleet, placement-group/EMR_*; region only, mirroring v2 ResourcesToLaunchEC2); V2CreateNewWithEmrRequestTag limited to new instance/volume/ENI/SG; launch-template grants dropped; SpikeKeyDescribeViaEc2; ec2:DisassociateAddress on stack-tagged elastic-ip. Deployer 29/29; spike 37; script tests 60 OK; guard 0 findings. gates/*.txt are this run."
+ "ami_fix_coordinator_observed": "Boundary V2ExistingLaunchDependencies (RunInstances/CreateFleet on image/ami-*, key-pair, capacity-reservation, dedicated-host, fleet, placement-group/EMR_*; region only, mirroring v2 ResourcesToLaunchEC2); V2CreateNewWithEmrRequestTag limited to new instance/volume/ENI/SG; launch-template grants dropped; SpikeKeyDescribeViaEc2; ec2:DisassociateAddress on stack-tagged elastic-ip. Deployer 29/29; spike 37; script tests 60 OK; guard 0 findings. gates/*.txt are this run.",
+ "java_fix_coordinator_observed": "bootstrap.sh resolves Java 17 at run time; run-step reads the resolved path; Terraform no longer hard-codes JAVA_HOME. Spike 37/37; deployer 29/29; script tests 70 OK; bash -n ok; request bound unchanged; guard 0 findings. gates/*.txt are this run."
 }

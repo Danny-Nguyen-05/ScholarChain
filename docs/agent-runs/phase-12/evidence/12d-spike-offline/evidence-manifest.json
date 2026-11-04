@@ -286,8 +286,8 @@
  },
  {
   "path": "gates.json",
-  "bytes": 7842,
-  "sha256": "3de2da2cea723a1a2f912a118b782f1efa1408b54f12b939a0993c4819717f30"
+  "bytes": 8396,
+  "sha256": "cb07759e1e13040bda6dea2377c3a8b30aeae5d677540798ce7470214ff2f2a0"
  },
  {
   "path": "gates/guard-repo.json",
@@ -345,6 +345,11 @@
   "sha256": "695454b5d05dbd2a9027c4419b23de836c3c6656076179ba7f97fe73d1ec4714"
  },
  {
+  "path": "gates/sbt-check-attempt9-java.log.gz",
+  "bytes": 93484,
+  "sha256": "4869a2bf8ad2ef86066d7b34f05c470828d75f0238a9281bc8457c03d62ae094"
+ },
+ {
   "path": "gates/tftest-deployer.txt",
   "bytes": 1964,
   "sha256": "e97c56247780be85ade05ed08ea9a634484ae6f62d568d7ed692d529ec58d94a"
@@ -356,8 +361,8 @@
  },
  {
   "path": "gates/unittest.txt",
-  "bytes": 160,
-  "sha256": "79c775df8be408ce81714a2c89472c7b79009ffd5312596c45b06d759f2e15c9"
+  "bytes": 170,
+  "sha256": "8bbb7e35b1e30fbe9286d718b378b45d3fe9497560f23b5512685dd75792cfb0"
  },
  {
   "path": "report.md",
@@ -366,13 +371,13 @@
  },
  {
   "path": "review-findings.md",
-  "bytes": 16026,
-  "sha256": "d9335e5713ad4240e61ffff17f52438fbc435adfc0345e91619eed50b90dfafb"
+  "bytes": 18430,
+  "sha256": "28903ac8f291dd9a89a59a0b3d9039150cef83ef83bd0bf26f6125a382b7579e"
  },
  {
   "path": "source-hashes.json",
-  "bytes": 7512,
-  "sha256": "2e15a490d23025f86e8dd161eabc9df885426da850d978570d16a57cde69d424"
+  "bytes": 7513,
+  "sha256": "a2f6f9672f4cd1ddc0dbc4ba28388d1762821c70d1b6957b21222aa030bdcabc"
  },
  {
   "path": "work-order.md",

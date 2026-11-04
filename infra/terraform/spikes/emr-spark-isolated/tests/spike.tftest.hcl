@@ -358,8 +358,8 @@ run "spark_defaults_content" {
     error_message = "Staging must be on the shared EFS mount."
   }
   assert {
-    condition     = strcontains(output.spark_defaults, "spark.yarn.appMasterEnv.JAVA_HOME /usr/lib/jvm/java-17-amazon-corretto\n") && strcontains(output.spark_defaults, "spark.executorEnv.JAVA_HOME /usr/lib/jvm/java-17-amazon-corretto\n")
-    error_message = "AM and executors use the documented Corretto 17 path."
+    condition     = !strcontains(output.spark_defaults, "JAVA_HOME") && !strcontains(output.spark_defaults, "java-17-amazon-corretto")
+    error_message = "The generated defaults hard-code no JAVA_HOME: the bootstrap resolves Java 17 per node (live attempt 3: the documented Corretto path does not exist on EMR 7.8.0)."
   }
   assert {
     condition     = strcontains(output.spark_defaults, "spark.executor.instances 2\n") && strcontains(output.spark_defaults, "spark.executor.cores 1\n") && strcontains(output.spark_defaults, "spark.task.maxFailures 1\n") && strcontains(output.spark_defaults, "spark.yarn.maxAppAttempts 1\n") && strcontains(output.spark_defaults, "spark.dynamicAllocation.enabled false\n") && strcontains(output.spark_defaults, "spark.shuffle.service.enabled false\n")

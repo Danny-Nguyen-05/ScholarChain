@@ -72,3 +72,23 @@ The human gave all of the following in chat; the coordinator transcribed it.
 - **Approved: retry attempt 2,** with the same shape, cap, single cluster, teardown and accepted risks as above, finishing by 15:20 CST. The human runs the Terraform apply and destroy commands in their own terminal, because Claude Code's permission classifier blocks the agent from running them. The deploy-engineer plans, checks the plan rule, monitors, collects, compares and inventories. Terraform uses the `scholarchain-deployer-tf` credential_process profile.
 
 Approved attempt 2 - Danny Nguyen (chat answer "Approve attempt 2", 2026-11-04 12:36 CST)
+
+## Amendment 2 (2026-11-04 13:56 CST)
+
+The human gave all of the following in chat; the coordinator transcribed it.
+
+- **Attempt 2:** the EMR cluster failed validation. CloudTrail showed the boundary denying `ec2:RunInstances` on the AMI, and no instance was launched. Everything was destroyed and the inventory was clean. See `attempt2-validation-failure.md`.
+- **Third manual IAM window:** `IAMFullAccess` and `scholarchain-operator-cli-login` were added again; root was used only in the console. Root was also used separately, read-only, to view CloudTrail Event history. The reviewed boundary fix (commit `35e868a`) was applied, updating only `aws_iam_policy.spike_boundary[0]` and `permission_set["spike-emr--network"]` ("0 added, 2 changed, 0 destroyed"). Both policies were removed again; the human reported "removed" at about 13:56 CST.
+- **Approved: attempt 3, starting now,** with the same shape, cap, single cluster, teardown and accepted risks, and the same division of work as Amendment 1. It must finish, including destroy, by 15:20 CST. If it can't finish in time, destroy anyway.
+
+Approved attempt 3 - Danny Nguyen (chat answer "removed, start the attempt 3 now", 2026-11-04 13:56 CST)
+
+## Amendment 3 (2026-11-04 14:12 CST)
+
+The human gave all of the following in chat; the coordinator transcribed it.
+
+- **Attempt 3:** both instances launched (the IAM fix was proven live). The bootstrap exited with code 4: the hard-coded Java path is absent on EMR 7.8.0. Everything was destroyed in two passes, and the inventory was clean. See `attempt3-bootstrap-java-path.md`.
+- **Approved: attempt 4 today**, after a reviewed Java-detection fix limited to the spike root and its scripts, with no deployer or IAM change. It keeps the same shape, cap, single cluster, teardown, accepted risks and division of work as Amendments 1 and 2.
+- **Run window:** from now until 17:30 CST. This is the coordinator's proposed end time, which the human approved in chat ("I approve that new windows so don't worry"). The destroy must complete inside the window. If the run can't finish, destroy anyway.
+
+Approved attempt 4 - Danny Nguyen (chat, 2026-11-04 14:12 CST)

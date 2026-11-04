@@ -60,7 +60,17 @@ class BootstrapTests(ShimTestCase):
         self.add_shim("dnf", "exit 0")
         self.add_shim("mount", 'for last; do :; done; echo "fs $last efs rw 0 0" >> "$SC_PROC_MOUNTS"; exit 0')
         self.add_shim("sha256sum", 'exec shasum -a 256 "$@"')
+        # a PATH `java` that is Java 11, so the `command -v java` candidate never finds a real JDK
+        write_exec(os.path.join(self.bin, "java"), '#!/bin/bash\necho \'openjdk version "11.0.2"\' >&2\n')
+        self.jvm = os.path.join(self.tmp, "jvm")
+        self.alt = os.path.join(self.tmp, "alternatives-jre")
+        self.java_file = os.path.join(self.tmp, "java-home-file")
         # logging aws wrapper: order log is shared through SHIM_ORDER_LOG (fake_aws appends)
+
+    def fake_java(self, home, major="17"):
+        os.makedirs(os.path.join(home, "bin"), exist_ok=True)
+        write_exec(os.path.join(home, "bin", "java"), f'#!/bin/bash\necho \'openjdk version "{major}.0.13" 2024\' >&2\n')
+        return home
 
     def args(self, runtime_sha=None, max_minutes="120", allowance="5", extra=None):
         a = [
@@ -84,6 +94,7 @@ class BootstrapTests(ShimTestCase):
             SC_SPIKE_BIN=os.path.join(self.opt, "scholarchain-spike", "bin"),
             SC_MNT=self.mnt, SC_PROC_MOUNTS=self.proc_mounts, SC_PROC_UPTIME=self.uptime,
             SC_INSTANCE_JSON=self.instance_json, SC_WORK=os.path.join(self.tmp, "work"),
+            SC_JVM_DIR=self.jvm, SC_ALT_JRE=self.alt, SC_JAVA_HOME_FILE=self.java_file,
         )
 
     def test_arms_shutdown_before_any_download(self):
@@ -171,6 +182,78 @@ class BootstrapTests(ShimTestCase):
         r = self.run_bs(self.args())
         self.assertEqual(r.returncode, 5)
         self.assertIn("not a mount point", r.stderr)
+
+    def no_java_arg(self):
+        a = self.args()
+        i = a.index("--java-home")
+        del a[i:i + 2]
+        return a
+
+    def test_resolves_jre17_when_only_it_exists(self):
+        home = self.fake_java(os.path.join(self.jvm, "jre-17"))
+        r = self.run_bs(self.no_java_arg())
+        self.assertEqual(r.returncode, 0, r.stderr)
+        with open(self.java_file) as h:
+            self.assertEqual(h.read().strip(), home)
+        self.assertIn(f"resolved JAVA_HOME={home}", r.stderr)
+
+    def test_falls_back_to_the_alternatives_symlink(self):
+        real = self.fake_java(os.path.join(self.tmp, "real-jre"))
+        os.symlink(real, self.alt)
+        r = self.run_bs(self.no_java_arg())
+        self.assertEqual(r.returncode, 0, r.stderr)
+        with open(self.java_file) as h:
+            self.assertEqual(h.read().strip(), os.path.realpath(real))
+
+    def test_corretto_directory_is_a_candidate_after_jre17(self):
+        self.fake_java(os.path.join(self.jvm, "java-17-amazon-corretto"))
+        r = self.run_bs(self.no_java_arg())
+        self.assertEqual(r.returncode, 0, r.stderr)
+        with open(self.java_file) as h:
+            self.assertTrue(h.read().strip().endswith("java-17-amazon-corretto"))
+
+    def test_rejects_a_java11_candidate_and_takes_the_next_valid_one(self):
+        self.fake_java(os.path.join(self.jvm, "jre-17"), major="11")
+        good = self.fake_java(os.path.join(self.jvm, "java-17-amazon-corretto"))
+        r = self.run_bs(self.no_java_arg())
+        self.assertEqual(r.returncode, 0, r.stderr)
+        with open(self.java_file) as h:
+            self.assertEqual(h.read().strip(), good)
+
+    def test_only_java11_exits_4_and_lists_the_candidates(self):
+        self.fake_java(os.path.join(self.jvm, "jre-17"), major="11")
+        r = self.run_bs(self.no_java_arg())
+        self.assertEqual(r.returncode, 4)
+        self.assertIn("candidates tried:", r.stderr)
+        self.assertIn("jre-17", r.stderr)
+        self.assertIn("java-17-amazon-corretto", r.stderr)
+        self.assertNotIn("mount -t efs", " ".join(self.order()))
+
+    def test_no_java_at_all_exits_4_and_the_deadline_was_armed_first(self):
+        r = self.run_bs(self.no_java_arg())
+        self.assertEqual(r.returncode, 4)
+        order = self.order()
+        self.assertTrue(order[1].startswith("shutdown -h +"), order[:3])
+        self.assertFalse(os.path.exists(self.java_file))
+
+    def test_explicit_java_home_wins_when_valid(self):
+        self.fake_java(os.path.join(self.jvm, "jre-17"))
+        r = self.run_bs(self.args())
+        self.assertEqual(r.returncode, 0, r.stderr)
+        with open(self.java_file) as h:
+            self.assertEqual(h.read().strip(), self.java_home)
+
+    def test_spark_defaults_get_the_resolved_java_home_not_a_hardcoded_one(self):
+        self.put(f"s3/{BUCKET}/staging/config/spark-defaults.conf", "spark.authenticate true\nspark.executorEnv.JAVA_HOME /usr/lib/jvm/java-17-amazon-corretto\n")
+        home = self.fake_java(os.path.join(self.jvm, "jre-17"))
+        r = self.run_bs(self.no_java_arg())
+        self.assertEqual(r.returncode, 0, r.stderr)
+        with open(os.path.join(self.opt, "scholarchain-runtime", "conf", "spark-defaults.conf")) as h:
+            text = h.read()
+        self.assertIn(f"spark.yarn.appMasterEnv.JAVA_HOME {home}\n", text)
+        self.assertIn(f"spark.executorEnv.JAVA_HOME {home}\n", text)
+        self.assertNotIn("java-17-amazon-corretto", text)
+        self.assertIn("spark.authenticate true", text)
 
     def test_wrong_java_version_fails(self):
         write_exec(os.path.join(self.java_home, "bin", "java"), '#!/bin/bash\necho \'openjdk version "11.0.1"\' >&2\n')

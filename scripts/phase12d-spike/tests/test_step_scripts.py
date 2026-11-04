@@ -13,15 +13,29 @@ BUCKET = "scholarchain-spike-emr-111122223333-us-east-2"
 class RunStepTests(ShimTestCase):
     def test_wraps_command_in_timeout_with_runtime_env(self):
         self.add_shim("timeout", 'echo "JAVA_HOME=$JAVA_HOME SPARK_HOME=$SPARK_HOME SCALA=$SPARK_SCALA_VERSION CP=${CLASSPATH:-unset}" >> "$SHIM_ORDER_LOG"; shift; shift; exec "$@"')
-        r = self.run_script(RUN_STEP, ["300", "echo", "hello"], CLASSPATH="/stock/emr/lib/*")
+        r = self.run_script(RUN_STEP, ["300", "echo", "hello"], CLASSPATH="/stock/emr/lib/*", SC_JAVA_HOME="/usr/lib/jvm/jre-17")
         self.assertEqual(r.returncode, 0, r.stderr)
         order = self.order()
         self.assertEqual(order[0], "timeout --kill-after=60 300 echo hello")
-        self.assertIn("JAVA_HOME=/usr/lib/jvm/java-17-amazon-corretto", order[1])
+        self.assertIn("JAVA_HOME=/usr/lib/jvm/jre-17", order[1])
         self.assertIn("SPARK_HOME=/opt/scholarchain-runtime", order[1])
         self.assertIn("SCALA=2.13", order[1])
         self.assertIn("CP=unset", order[1])
         self.assertIn("hello", r.stdout)
+
+    def test_uses_the_java_home_the_bootstrap_resolved(self):
+        self.add_shim("timeout", 'echo "JAVA_HOME=$JAVA_HOME PATH0=${PATH%%:*}" >> "$SHIM_ORDER_LOG"; shift; shift; exec "$@"')
+        jf = os.path.join(self.tmp, "java-home")
+        with open(jf, "w") as h:
+            h.write("/etc/alternatives/jre-resolved\n")
+        r = self.run_script(RUN_STEP, ["60", "true"], SC_JAVA_HOME_FILE=jf)
+        self.assertEqual(r.returncode, 0, r.stderr)
+        self.assertIn("JAVA_HOME=/etc/alternatives/jre-resolved PATH0=/etc/alternatives/jre-resolved/bin", self.order()[1])
+
+    def test_refuses_to_run_without_a_resolved_java_home(self):
+        r = self.run_script(RUN_STEP, ["60", "true"], SC_JAVA_HOME_FILE=os.path.join(self.tmp, "absent"))
+        self.assertEqual(r.returncode, 4)
+        self.assertIn("bootstrap did not complete", r.stderr)
 
     def test_rejects_non_numeric_timeout(self):
         r = self.run_script(RUN_STEP, ["abc", "true"])

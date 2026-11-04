@@ -27,9 +27,6 @@ locals {
   spike_bin    = "/opt/scholarchain-spike/bin"
   job_jar      = "${local.runtime_dir}/application/scholarchain-job.jar"
   spark_submit = "${local.runtime_dir}/bin/spark-submit"
-  # Documented Corretto 17 path on EMR 7.x
-  # (https://repost.aws/knowledge-center/emr-spark-classnotfoundexception).
-  java_home = "/usr/lib/jvm/java-17-amazon-corretto"
 
   # Dedicated POSIX identity enforced by the EFS access point.
   efs_uid      = 1500
@@ -59,19 +56,19 @@ locals {
     # With fs.defaultFS=file:/// the default staging dir would sit on the
     # primary's local disk, which the ApplicationMaster on the core node cannot
     # localize. EFS is mounted at the same path on both nodes.
-    "spark.yarn.stagingDir"             = "file://${local.mnt}/staging"
-    "spark.yarn.appMasterEnv.JAVA_HOME" = local.java_home
-    "spark.executorEnv.JAVA_HOME"       = local.java_home
-    "spark.executor.instances"          = "2"
-    "spark.executor.cores"              = "1"
-    "spark.executor.memory"             = "3g"
-    "spark.driver.cores"                = "1"
-    "spark.driver.memory"               = "3g"
-    "spark.dynamicAllocation.enabled"   = "false"
-    "spark.shuffle.service.enabled"     = "false"
-    "spark.task.maxFailures"            = "1"
-    "spark.yarn.maxAppAttempts"         = "1"
-    "spark.ui.enabled"                  = "false"
+    "spark.yarn.stagingDir" = "file://${local.mnt}/staging"
+    # spark.yarn.appMasterEnv.JAVA_HOME and spark.executorEnv.JAVA_HOME are NOT set here: the
+    # bootstrap resolves Java 17 on each node and appends them to the node-local file.
+    "spark.executor.instances"        = "2"
+    "spark.executor.cores"            = "1"
+    "spark.executor.memory"           = "3g"
+    "spark.driver.cores"              = "1"
+    "spark.driver.memory"             = "3g"
+    "spark.dynamicAllocation.enabled" = "false"
+    "spark.shuffle.service.enabled"   = "false"
+    "spark.task.maxFailures"          = "1"
+    "spark.yarn.maxAppAttempts"       = "1"
+    "spark.ui.enabled"                = "false"
     # AES-CTR network crypto (default cipher, cipher key unset). AES-GCM is not used.
     # authEngineVersion=1 per the build-engineer's local runs: version 2 with
     # io encryption failed the G1 pipeline twice (ArrayIndexOutOfBounds in

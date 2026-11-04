@@ -133,3 +133,28 @@ Carried items, listed once:
 25. A passed spike role can now launch any AMI and instance type, but only into the spike's tagged subnet and security group. This is v2 parity; the cost risk is bounded by the cap and the same-session destroy. Optional tightening: an `ec2:Owner` condition on the AMI.
 26. Unverified live: `kms:ResourceAliases` on EC2-initiated CreateGrant, and EMR's later security-group rule calls. Both fail closed. EC2 reports only the first denied resource.
 27. The reviewer corrected their own earlier re-review: the claimed request-tag security-group bypass does not exist, because request tags don't apply to existing resources.
+
+## Live-found addendum 3 (2026-11-04): bootstrap Java detection (attempt 3 root cause)
+
+Attempt 3 launched both instances. The bootstrap then exited with code 4: `no java at /usr/lib/jvm/java-17-amazon-corretto/bin/java`. The node's environment showed `JAVA_HOME=/etc/alternatives/jre` and `/usr/lib/jvm/jre-17` (`../12d-spike-live/attempt3-bootstrap-java-path.md`).
+
+- **Repair (infra-engineer):**
+  - `scripts/phase12d-spike/emr/bootstrap.sh:134-151` resolves Java 17 at runtime: an explicit `--java-home`, then `jre-17`, the corretto directories, the `/etc/alternatives/jre` target, and the java on `PATH`. A candidate is accepted only if it reports major version 17; otherwise the script exits 4 and lists the candidates tried.
+  - The resolved path is written to `/opt/scholarchain-spike/java-home` and used to rewrite the node-local spark-defaults for the AM and executor JAVA_HOME.
+  - `run-step.sh` reads that file, and refuses to run without it.
+  - Terraform no longer hard-codes JAVA_HOME or passes `--java-home`.
+  - Deadline arming is still first.
+- **Tests:** bootstrap 21, step scripts 7, all script tests 70 OK. Spike root 37/37, deployer 29/29 (unchanged), guard 0 findings, request bound unchanged.
+- **Assumption:** both nodes use the same AMI, so the path resolved on the primary is valid on the core node.
+- **Status:** reviewed.
+
+Addendum 3 review (human, separate session, 2026-11-04): **APPROVE-WITH-NONBLOCKING**, with no blocking findings.
+- The candidate order matches the EMR layout. The version check accepts 17 and rejects 170. Deadline arming still comes first.
+- `run-step` propagation is correct. The same-AMI assumption is reasonable.
+- Terraform has no hard-coded JAVA_HOME. Object keys and the request manifest are unchanged.
+- No other definite node-path failure was found. The reviewer replayed 70/70 script tests and spike 37/37.
+
+Carried items, listed once:
+
+28. `bootstrap.sh:163`: the resolved path is not validated for the properties format. A newline in an alternatives target could inject spark-defaults lines. The current EMR paths are system-controlled. Reject unsafe characters and add a regression test.
+29. `bootstrap.sh:162`: the JAVA_HOME removal does not match leading whitespace or tab separators. The appended values take precedence, and the Terraform output contains neither key. Match every separator, and test that each key occurs exactly once.
