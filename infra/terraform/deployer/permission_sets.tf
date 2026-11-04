@@ -216,7 +216,7 @@ locals {
           "ec2:DisassociateRouteTable", "ec2:DeleteSecurityGroup", "ec2:AuthorizeSecurityGroupIngress",
           "ec2:AuthorizeSecurityGroupEgress", "ec2:RevokeSecurityGroupIngress", "ec2:RevokeSecurityGroupEgress",
           "ec2:ModifySecurityGroupRules", "ec2:DeleteNatGateway", "ec2:DeleteVpcEndpoints",
-          "ec2:ModifyVpcEndpoint", "ec2:ReleaseAddress",
+          "ec2:ModifyVpcEndpoint", "ec2:ReleaseAddress", "ec2:DisassociateAddress",
         ]
         Resource  = concat(local.ec2_resources, [local.ec2_rule_arn])
         Condition = { StringEquals = merge(local.c_region, local.c_res_stack) }
@@ -507,45 +507,52 @@ locals {
       # Existing resources must carry for-use-with-amazon-emr-managed-policies=true; the
       # subnet, security group and VPC must also carry the stack tag (Terraform tags them
       # at creation through provider default_tags). New instances, volumes and ENIs must be
-      # created with the same request tag. VPC-endpoint, placement-group and launch-template
-      # version actions of v2 are left out: this cluster does not use them.
+      # created with the same request tag. Existing launch dependencies (AMI, key pair, ...) cannot
+      # take request tags and mirror v2 ResourcesToLaunchEC2 (region only). v2's VPC-endpoint,
+      # launch-template and placement-group-create parts are left out: the cluster uses none.
       {
         # v2 CreateInTaggedNetwork + CreateSecurityGroupInVPCWithEMRTags: launching into,
         # or creating a group in, an EXISTING tagged subnet/security group/VPC.
         Sid    = "V2UseTaggedNetwork"
         Effect = "Allow"
         Action = [
-          "ec2:CreateNetworkInterface", "ec2:RunInstances", "ec2:CreateFleet",
-          "ec2:CreateLaunchTemplate", "ec2:CreateSecurityGroup",
+          "ec2:CreateNetworkInterface", "ec2:RunInstances", "ec2:CreateFleet", "ec2:CreateSecurityGroup",
         ]
         Resource  = ["${local.arn_ec2}:subnet/*", "${local.arn_ec2}:security-group/*", "${local.arn_ec2}:vpc/*"]
         Condition = { StringEquals = merge(local.c_region, local.c_res_emr_tag, local.c_res_stack) }
       },
       {
-        # v2 CreateWithEMRTaggedLaunchTemplate + ManageEMRTaggedResources (launch templates).
-        Sid       = "V2UseTaggedLaunchTemplate"
-        Effect    = "Allow"
-        Action    = ["ec2:CreateFleet", "ec2:RunInstances", "ec2:DeleteLaunchTemplate"]
-        Resource  = ["${local.arn_ec2}:launch-template/*"]
-        Condition = { StringEquals = merge(local.c_region, local.c_res_emr_tag) }
-      },
-      {
-        # v2 CreateEMRTaggedLaunchTemplate / CreateEMRTaggedInstancesAndVolumes /
-        # CreateNetworkInterfaceNeededForPrivateSubnet / default security group, and
-        # ResourcesToLaunchEC2 (which v2 leaves unconditioned; here it carries the tag too).
+        # NEW resources only (v2 CreateEMRTaggedInstancesAndVolumes,
+        # CreateNetworkInterfaceNeededForPrivateSubnet, default security group): the request
+        # tags apply to the resource being created, so they are required here.
         Sid    = "V2CreateNewWithEmrRequestTag"
         Effect = "Allow"
         Action = [
-          "ec2:RunInstances", "ec2:CreateFleet", "ec2:CreateLaunchTemplate", "ec2:CreateNetworkInterface",
-          "ec2:CreateSecurityGroup",
+          "ec2:RunInstances", "ec2:CreateNetworkInterface", "ec2:CreateSecurityGroup",
         ]
         Resource = [
           "${local.arn_ec2}:instance/*", "${local.arn_ec2}:volume/*", "${local.arn_ec2}:network-interface/*",
-          "${local.arn_ec2}:launch-template/*", "${local.arn_ec2}:security-group/*",
-          "arn:aws:ec2:${local.region}::image/ami-*", "${local.arn_ec2}:key-pair/*",
-          "${local.arn_ec2}:capacity-reservation/*", "${local.arn_ec2}:fleet/*", "${local.arn_ec2}:dedicated-host/*",
+          "${local.arn_ec2}:security-group/*",
         ]
         Condition = { StringEquals = merge(local.c_region, local.c_req_emr_tag) }
+      },
+      {
+        # EXISTING launch dependencies, mirroring v2 ResourcesToLaunchEC2 (region only, as
+        # in v2): a request tag never applies to an existing AMI or key pair, so a request-tag
+        # condition on them can never match (live attempt 2: RunInstances on an image ARN
+        # was denied by the boundary). Launching still needs the stack-tagged subnet and
+        # security group (V2UseTaggedNetwork) and tagged new instances, volumes and ENIs
+        # (V2CreateNewWithEmrRequestTag), so this grant does not widen reach. v2's
+        # launch-template and resource-group parts are left out: the observed request uses neither.
+        Sid    = "V2ExistingLaunchDependencies"
+        Effect = "Allow"
+        Action = ["ec2:RunInstances", "ec2:CreateFleet"]
+        Resource = [
+          "arn:aws:ec2:${local.region}::image/ami-*", "${local.arn_ec2}:key-pair/*",
+          "${local.arn_ec2}:capacity-reservation/*", "${local.arn_ec2}:dedicated-host/*",
+          "${local.arn_ec2}:fleet/*", "${local.arn_ec2}:placement-group/EMR_*",
+        ]
+        Condition = { StringEquals = local.c_region }
       },
       {
         # v2 ManageEMRTaggedResources (instances, ENIs).
@@ -571,10 +578,10 @@ locals {
         Sid      = "V2TagOnCreateOnly"
         Effect   = "Allow"
         Action   = ["ec2:CreateTags"]
-        Resource = ["${local.arn_ec2}:instance/*", "${local.arn_ec2}:volume/*", "${local.arn_ec2}:network-interface/*", "${local.arn_ec2}:launch-template/*", "${local.arn_ec2}:security-group/*"]
+        Resource = ["${local.arn_ec2}:instance/*", "${local.arn_ec2}:volume/*", "${local.arn_ec2}:network-interface/*", "${local.arn_ec2}:security-group/*"]
         Condition = {
           StringEquals = merge(local.c_region, {
-            "ec2:CreateAction" = ["RunInstances", "CreateFleet", "CreateLaunchTemplate", "CreateNetworkInterface", "CreateSecurityGroup"]
+            "ec2:CreateAction" = ["RunInstances", "CreateNetworkInterface", "CreateSecurityGroup"]
           })
         }
       },
@@ -583,7 +590,7 @@ locals {
         Sid      = "V2DeleteTagsOnEmrTaggedResources"
         Effect   = "Allow"
         Action   = ["ec2:DeleteTags"]
-        Resource = ["${local.arn_ec2}:instance/*", "${local.arn_ec2}:volume/*", "${local.arn_ec2}:network-interface/*", "${local.arn_ec2}:launch-template/*"]
+        Resource = ["${local.arn_ec2}:instance/*", "${local.arn_ec2}:volume/*", "${local.arn_ec2}:network-interface/*"]
         Condition = {
           StringEquals = merge(local.c_region, local.c_res_emr_tag)
         }
@@ -622,6 +629,16 @@ locals {
           # deployer cannot alias a key unless that key's own policy lets it.
           "ForAnyValue:StringEquals" = { "kms:ResourceAliases" = local.spike_key_alias }
         }
+      },
+      {
+        # Read-only key metadata EC2 reads when it attaches an encrypted volume; kept
+        # independent of the alias condition so that one unverified condition-key support
+        # cannot fail the launch. No data or grant action is allowed this way.
+        Sid       = "SpikeKeyDescribeViaEc2"
+        Effect    = "Allow"
+        Action    = ["kms:DescribeKey"]
+        Resource  = ["${local.arn_kms}:key/*"]
+        Condition = { StringEquals = merge(local.c_region, { "kms:ViaService" = "ec2.${local.region}.amazonaws.com" }) }
       },
       {
         # Cluster auto-termination (layer 4) needs these from the instance profile:

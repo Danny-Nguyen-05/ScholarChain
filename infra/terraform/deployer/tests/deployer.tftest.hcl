@@ -462,17 +462,21 @@ run "boundary_ec2_mutations_are_tag_conditioned_like_emr_v2" {
   command = plan
 
   # Every non-Describe EC2 statement: CreateTags needs ec2:CreateAction; everything else needs
-  # the EMR managed-policies tag as a resource tag (existing) or request tag (new).
+  # the EMR managed-policies tag as a resource tag (existing) or request tag (new), except the
+  # launch-dependency statement, whose resources are untaggable existing AMI/key-pair/... types.
   assert {
     condition = alltrue([
       for st in jsondecode(aws_iam_policy.spike_boundary[0].policy).Statement :
       !anytrue([for a in st.Action : startswith(a, "ec2:") && !startswith(a, "ec2:Describe")]) || (
         st.Action == ["ec2:CreateTags"]
         ? can(st.Condition.StringEquals["ec2:CreateAction"])
-        : (can(st.Condition.StringEquals["aws:ResourceTag/for-use-with-amazon-emr-managed-policies"]) || can(st.Condition.StringEquals["aws:RequestTag/for-use-with-amazon-emr-managed-policies"]))
+        : (
+          can(st.Condition.StringEquals["aws:ResourceTag/for-use-with-amazon-emr-managed-policies"]) || can(st.Condition.StringEquals["aws:RequestTag/for-use-with-amazon-emr-managed-policies"]) ||
+          (st.Sid == "V2ExistingLaunchDependencies" && toset(st.Action) == toset(["ec2:RunInstances", "ec2:CreateFleet"]) && alltrue([for r in st.Resource : anytrue([for t in ["image/ami-", "key-pair/", "capacity-reservation/", "dedicated-host/", "fleet/", "placement-group/EMR_"] : strcontains(r, t)])]))
+        )
       )
     ])
-    error_message = "Every non-Describe EC2 boundary statement needs an EMR-tag (resource or request) condition, or ec2:CreateAction for CreateTags."
+    error_message = "Every non-Describe EC2 boundary statement needs an EMR-tag (resource or request) condition, or ec2:CreateAction for CreateTags, or be the launch-dependency statement over untaggable existing types."
   }
   # Actions that are not creates act on EXISTING resources and need the resource tag.
   assert {
@@ -648,6 +652,104 @@ run "create_access_point_requires_both_stack_tags_everywhere" {
       st if st.Effect == "Allow" && contains(st.Action, "elasticfilesystem:CreateAccessPoint")
     ]) == 1
     error_message = "Exactly one Allow grants CreateAccessPoint."
+  }
+}
+
+# ---- live attempt 2: RunInstances request shape. The EMR service role launched with tag
+# specifications for instance, network-interface and volume (EMR tag + stack tag) into the stack
+# subnet with the stack security group, using an existing AMI and an encrypted volume.
+# A request tag applies only to the resource being created: existing AMI/subnet/security group
+# can match only on region or on their own resource tags.
+
+run "run_instances_request_shape_matches_a_boundary_statement_for_every_resource_type" {
+  command = plan
+
+  assert {
+    condition = alltrue([
+      for c in [
+        { t = "instance", ctx = "new" },
+        { t = "volume", ctx = "new" },
+        { t = "network-interface", ctx = "new" },
+        { t = "subnet", ctx = "existing" },
+        { t = "security-group", ctx = "existing" },
+        { t = "key-pair", ctx = "bare" },
+        { t = "capacity-reservation", ctx = "bare" },
+      ] :
+      anytrue([
+        for st in jsondecode(aws_iam_policy.spike_boundary[0].policy).Statement :
+        st.Effect == "Allow" && contains(st.Action, "ec2:RunInstances") && contains(st.Resource, "arn:aws:ec2:us-east-2:111122223333:${c.t}/*") &&
+        length(keys(st.Condition)) == 1 && alltrue([
+          for k, v in st.Condition.StringEquals : try((c.ctx == "new" ? {
+            "aws:RequestedRegion"                                     = "us-east-2"
+            "aws:RequestTag/for-use-with-amazon-emr-managed-policies" = "true"
+            "aws:RequestTag/scholarchain:stack"                       = "spike-emr"
+            } : c.ctx == "existing" ? {
+            "aws:RequestedRegion"                                      = "us-east-2"
+            "aws:ResourceTag/for-use-with-amazon-emr-managed-policies" = "true"
+            "aws:ResourceTag/scholarchain:stack"                       = "spike-emr"
+          } : { "aws:RequestedRegion" = "us-east-2" })[k] == v, false)
+        ])
+      ])
+    ])
+    error_message = "Each RunInstances resource type must be matched by a boundary Allow whose conditions are all satisfiable: request tags only for new instance/volume/ENI, resource tags only for the existing subnet and security group, region only for untaggable existing types."
+  }
+  # The AMI has an account-less ARN and no tags to match: region only.
+  assert {
+    condition = anytrue([
+      for st in jsondecode(aws_iam_policy.spike_boundary[0].policy).Statement :
+      st.Effect == "Allow" && contains(st.Action, "ec2:RunInstances") && contains(st.Resource, "arn:aws:ec2:us-east-2::image/ami-*") && st.Condition == { StringEquals = { "aws:RequestedRegion" = "us-east-2" } }
+    ])
+    error_message = "RunInstances on an existing image ARN must be allowed on the region condition alone."
+  }
+  # Existing-resource types never depend on a request tag.
+  assert {
+    condition = alltrue([
+      for st in jsondecode(aws_iam_policy.spike_boundary[0].policy).Statement :
+      !anytrue([for r in st.Resource : anytrue([for t in [":image/", ":key-pair/", ":capacity-reservation/", ":dedicated-host/", ":placement-group/", ":subnet/", ":vpc/"] : strcontains(r, t)])]) || !can(st.Condition.StringEquals["aws:RequestTag/for-use-with-amazon-emr-managed-policies"])
+    ])
+    error_message = "Boundary statements that name existing-resource types (image, key pair, capacity reservation, dedicated host, placement group, subnet, vpc) must not require a request tag."
+  }
+  # New instances, volumes and ENIs are never allowed without the request tag.
+  assert {
+    condition = alltrue([
+      for st in jsondecode(aws_iam_policy.spike_boundary[0].policy).Statement :
+      st.Effect != "Allow" || !contains(st.Action, "ec2:RunInstances") || !anytrue([for r in st.Resource : anytrue([for t in [":instance/", ":volume/", ":network-interface/"] : strcontains(r, t)])]) || st.Condition.StringEquals["aws:RequestTag/for-use-with-amazon-emr-managed-policies"] == "true"
+    ])
+    error_message = "RunInstances on new instance, volume and ENI resources requires aws:RequestTag for-use-with-amazon-emr-managed-policies."
+  }
+  # Encrypted volumes: the key conditions the boundary uses.
+  assert {
+    condition = anytrue([
+      for st in jsondecode(aws_iam_policy.spike_boundary[0].policy).Statement :
+      alltrue([for a in ["kms:CreateGrant", "kms:GenerateDataKeyWithoutPlaintext", "kms:Decrypt", "kms:DescribeKey"] : contains(st.Action, a)]) && st.Condition["ForAnyValue:StringEquals"]["kms:ResourceAliases"] == "alias/scholarchain-spike-emr-key"
+      ]) && anytrue([
+      for st in jsondecode(aws_iam_policy.spike_boundary[0].policy).Statement :
+      st.Action == ["kms:DescribeKey"] && st.Condition.StringEquals["kms:ViaService"] == "ec2.us-east-2.amazonaws.com"
+    ])
+    error_message = "KMS: CreateGrant, GenerateDataKeyWithoutPlaintext, Decrypt by key alias; DescribeKey also via EC2."
+  }
+  assert {
+    condition = anytrue([
+      for st in jsondecode(aws_iam_policy.spike_boundary[0].policy).Statement :
+      st.Action == ["iam:PassRole"] && st.Condition.StringEquals["iam:PassedToService"] == ["ec2.amazonaws.com"]
+    ])
+    error_message = "The instance-profile role may be passed to EC2 (RunInstances with an instance profile needs iam:PassRole; instance-profile is not an EC2 resource type)."
+  }
+  assert {
+    condition     = length(aws_iam_policy.spike_boundary[0].policy) < 6144
+    error_message = "The boundary must stay below the managed-policy limit."
+  }
+}
+
+run "disassociate_address_is_allowed_on_stack_elastic_ips" {
+  command = plan
+
+  assert {
+    condition = anytrue([
+      for st in flatten([for k, p in aws_iam_policy.permission_set : jsondecode(p.policy).Statement]) :
+      st.Effect == "Allow" && contains(st.Action, "ec2:DisassociateAddress") && contains(st.Resource, "arn:aws:ec2:us-east-2:111122223333:elastic-ip/*") && st.Condition.StringEquals["aws:ResourceTag/scholarchain:stack"] == "spike-emr" && st.Condition.StringEquals["aws:RequestedRegion"] == "us-east-2"
+    ])
+    error_message = "ec2:DisassociateAddress on stack-tagged elastic IPs (the reference lists elastic-ip, network-interface and instance as optional resource types, no association type)."
   }
 }
 

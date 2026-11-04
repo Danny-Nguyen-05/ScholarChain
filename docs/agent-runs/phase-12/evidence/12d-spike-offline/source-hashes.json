@@ -6,8 +6,8 @@
  },
  {
   "path": "infra/terraform/deployer/README.md",
-  "bytes": 16610,
-  "sha256": "794df3c1807c5fb57be525a3359a531b5014bbc6684d8aa01127b85fee7a0b60"
+  "bytes": 17819,
+  "sha256": "b8bcf0a36f1c54c6a2e46ef9552f976ce5ba8cb612c1dc97b2014be3a6fd0db1"
  },
  {
   "path": "infra/terraform/deployer/main.tf",
@@ -21,13 +21,13 @@
  },
  {
   "path": "infra/terraform/deployer/permission_sets.tf",
-  "bytes": 30850,
-  "sha256": "1e3188797e9e6253c42417ae6ad3ea2a133ff26e3713d29be22e634b55f8a4fb"
+  "bytes": 31788,
+  "sha256": "7ce3eb63803f16c7103e5699e89977aba096801f9ba0dec8ba06a9ec6b02b3c5"
  },
  {
   "path": "infra/terraform/deployer/tests/deployer.tftest.hcl",
-  "bytes": 30053,
-  "sha256": "38ffb2739b064a971cff17d658c0e5bb5286de03a35b933e426e3dd0421027af"
+  "bytes": 36697,
+  "sha256": "f3d4f48316550d831bc774890c8fcb69afabe453513e2c794868196dd48ec285"
  },
  {
   "path": "infra/terraform/deployer/variables.tf",

@@ -105,3 +105,31 @@ Live-found addendum review (human, separate session, 2026-11-04 12:00): **BLOCK*
 L1 repair (infra-engineer): CreateAccessPoint is now allowed only by `EfsCreateAccessPointOnStackFileSystemWithStackTag` (`permission_sets.tf:328`), which requires the region, the stack ResourceTag and the stack RequestTag. It was removed from `EfsCreateFileSystemWithStackTag`, whose request-tag-only condition had also allowed CreateAccessPoint on a foreign file system. A new test fails on either mutation (deployer 27/27). `sbt check` attempt 7 exit 0, 1267/0. Awaiting re-review.
 
 L1 re-review (human, separate session, 2026-11-04): **APPROVE**. No new findings; L1 is closed. The reviewer replayed deployer 27/27, spike 37/37 and the guard (0 findings). Mutations that remove either tag or the region, or restore the request-only Allow, all fail. Manifests match 75/75 and 3/3; source hashes 45/45 (the tfvars example was left unread).
+
+## Live-found addendum 2 (2026-11-04): boundary launch dependencies (attempt 2 root cause)
+
+CloudTrail showed the EMR service role denied `ec2:RunInstances` on `image/ami-*` by the permissions boundary (`../12d-spike-live/attempt2-validation-failure.md`). The boundary had put `aws:RequestTag` on existing launch dependencies.
+
+- **Repair (infra-engineer, `deployer/permission_sets.tf`):**
+  - `V2ExistingLaunchDependencies` (around `:547`) mirrors v2 `ResourcesToLaunchEC2` with a region-only condition.
+  - `V2CreateNewWithEmrRequestTag` (around `:528`) is limited to new resources.
+  - Launch-template grants are dropped; the observed request used none.
+  - `SpikeKeyDescribeViaEc2` is added.
+  - `ec2:DisassociateAddress` is added on stack-tagged EIPs (around `:219`).
+- **Tests:** deployer 29/29. A new RunInstances request-shape test fails if the AMI statement regains the request tag.
+- **Gates:** `sbt check` attempt 8 exit 0, 1267/0.
+- **Coordinator note for the reviewer:** attempt 2's DisassociateAddress denial named the resource `arn:aws:ec2:us-east-2:<acct>:*/*`, not an elastic-ip ARN, so the tag-scoped grant may not cover that call. A second destroy pass succeeded once the NAT gateway was gone. The same two-pass destroy is the documented fallback.
+- **Status:** reviewed.
+
+Addendum 2 review (human, separate session, 2026-11-04): **APPROVE-WITH-NONBLOCKING**, with no blocking findings.
+- The fix widens nothing: launches still need the stack-tagged subnet and security group and tagged new resources. The CreateFleet grant is inert, since no launch-template grant remains.
+- The RunInstances audit is complete for the observed request.
+- The reviewer ran 10 targeted mutations; all were caught.
+- All hashes match (46 source, 76 offline evidence, 4 live evidence), and there are no 12-digit numbers in the live evidence.
+
+Carried items, listed once:
+
+24. The `DisassociateAddress` grant (`permission_sets.tf:219`) probably won't fix the destroy, because the denial named the resource `*/*`. Do not widen the grant to `*`. Keep the two-pass destroy as the documented procedure.
+25. A passed spike role can now launch any AMI and instance type, but only into the spike's tagged subnet and security group. This is v2 parity; the cost risk is bounded by the cap and the same-session destroy. Optional tightening: an `ec2:Owner` condition on the AMI.
+26. Unverified live: `kms:ResourceAliases` on EC2-initiated CreateGrant, and EMR's later security-group rule calls. Both fail closed. EC2 reports only the first denied resource.
+27. The reviewer corrected their own earlier re-review: the claimed request-tag security-group bypass does not exist, because request tags don't apply to existing resources.

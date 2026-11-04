@@ -286,8 +286,8 @@
  },
  {
   "path": "gates.json",
-  "bytes": 7054,
-  "sha256": "a609fc22b8b700237ebbdc9e5e6ea28e4dce082cbb991d21ba6e6a5f1fc20739"
+  "bytes": 7842,
+  "sha256": "3de2da2cea723a1a2f912a118b782f1efa1408b54f12b939a0993c4819717f30"
  },
  {
   "path": "gates/guard-repo.json",
@@ -340,9 +340,14 @@
   "sha256": "729cbc51fb9509a96c7f9e103125684e9d64c776b96c0e3d0229d660bbc6d8a8"
  },
  {
+  "path": "gates/sbt-check-attempt8-ami.log.gz",
+  "bytes": 93377,
+  "sha256": "695454b5d05dbd2a9027c4419b23de836c3c6656076179ba7f97fe73d1ec4714"
+ },
+ {
   "path": "gates/tftest-deployer.txt",
-  "bytes": 1798,
-  "sha256": "5ebfbe936506ef1efa0f0638fb513988ed11e9f6d1ef110a85e11d48fe440da2"
+  "bytes": 1964,
+  "sha256": "e97c56247780be85ade05ed08ea9a634484ae6f62d568d7ed692d529ec58d94a"
  },
  {
   "path": "gates/tftest-emr-spark-isolated.txt",
@@ -352,7 +357,7 @@
  {
   "path": "gates/unittest.txt",
   "bytes": 160,
-  "sha256": "f4483b410e7facfe3ea9bd02615310802c6c7a7a85a8928f25206626fc7a305b"
+  "sha256": "79c775df8be408ce81714a2c89472c7b79009ffd5312596c45b06d759f2e15c9"
  },
  {
   "path": "report.md",
@@ -361,13 +366,13 @@
  },
  {
   "path": "review-findings.md",
-  "bytes": 13307,
-  "sha256": "4b71ae329587660e31e42c4fc1f2c0dcd7d0c214e46f6eb09d1f0b09fa7523f6"
+  "bytes": 16026,
+  "sha256": "d9335e5713ad4240e61ffff17f52438fbc435adfc0345e91619eed50b90dfafb"
  },
  {
   "path": "source-hashes.json",
   "bytes": 7512,
-  "sha256": "ab0e02cde740f4586e93936a8e5e57cbf9c26f7579208cd22c1f0e0840c5bc8c"
+  "sha256": "2e15a490d23025f86e8dd161eabc9df885426da850d978570d16a57cde69d424"
  },
  {
   "path": "work-order.md",

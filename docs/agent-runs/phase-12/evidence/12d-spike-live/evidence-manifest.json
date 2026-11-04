@@ -5,9 +5,14 @@
   "sha256": "57713f381b40edd8e5cfea305b4c89ab034333bbf87d16264a3e83cc653b39fd"
  },
  {
+  "path": "attempt2-validation-failure.md",
+  "bytes": 4345,
+  "sha256": "0373da189d619aeac06fd11b4ca060cc88bdf5c498bc908535aedd5d92c5d821"
+ },
+ {
   "path": "human-approval.md",
-  "bytes": 5140,
-  "sha256": "f2be0d4f898dd94f893ae2420c7aae0d7aeeb8fb33e4a0fee19092e23f09e27b"
+  "bytes": 6579,
+  "sha256": "7d9194eecc369c5fa3b583efc33bdc202e6b8ec10222db4b32ccf0013ea4f405"
  },
  {
   "path": "work-order.md",

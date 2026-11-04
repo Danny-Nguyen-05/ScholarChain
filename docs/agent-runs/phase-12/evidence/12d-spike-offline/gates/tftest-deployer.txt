@@ -26,7 +26,9 @@ tests/deployer.tftest.hcl... in progress
   run "login_policy_exists_as_its_own_resource_not_a_permission_set_part"... pass
   run "every_spike_create_and_attach_call_is_allowed_on_its_existing_parents"... pass
   run "create_access_point_requires_both_stack_tags_everywhere"... pass
+  run "run_instances_request_shape_matches_a_boundary_statement_for_every_resource_type"... pass
+  run "disassociate_address_is_allowed_on_stack_elastic_ips"... pass
 tests/deployer.tftest.hcl... tearing down
 tests/deployer.tftest.hcl... pass
 
-Success! 27 passed, 0 failed.
+Success! 29 passed, 0 failed.

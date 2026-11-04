@@ -62,3 +62,13 @@ Not authorized: any second cluster, a changed shape, region or instance type, Do
 Approved - Danny Nguyen, 2026-11-04 11:16 CST
 
 (The human gave the approval wording and all values in chat. The coordinator transcribed them into this file at the human's request.)
+
+## Amendment 1 (2026-11-04 12:36 CST)
+
+The human gave all of the following in chat; the coordinator transcribed it.
+
+- **Attempt 1** failed before any EMR cluster existed: an IAM parent-resource gap plus a credential refresh failure. Its 27 partial resources were destroyed, and the read-only inventory was clean. See `attempt1-partial-apply.md`.
+- **Second manual IAM window:** `IAMFullAccess` and `scholarchain-operator-cli-login` were added again to `scholarchain-billing-operator`, root again used only in the console. The reviewed deployer fix (commit `7963b87`) was applied: plan `0 to add, 2 to change, 0 to destroy`, sha256 `2c59e40e7c3973203622864c17284bba8d489f892bf9fd31d90e73450a353037`, updating only `permission_set["spike-emr--network"]` and `["spike-emr--storage"]`. Both policies were removed again. The window closed at about 12:35 CST, the time reported in chat.
+- **Approved: retry attempt 2,** with the same shape, cap, single cluster, teardown and accepted risks as above, finishing by 15:20 CST. The human runs the Terraform apply and destroy commands in their own terminal, because Claude Code's permission classifier blocks the agent from running them. The deploy-engineer plans, checks the plan rule, monitors, collects, compares and inventories. Terraform uses the `scholarchain-deployer-tf` credential_process profile.
+
+Approved attempt 2 - Danny Nguyen (chat answer "Approve attempt 2", 2026-11-04 12:36 CST)
