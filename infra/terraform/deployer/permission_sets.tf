@@ -173,6 +173,25 @@ locals {
         Condition = { StringEquals = merge(local.c_region, local.c_req_stack) }
       },
       {
+        # The same create calls are also authorized against EXISTING parent/referenced
+        # resources (Service Authorization Reference, list_ec2): CreateSubnet,
+        # CreateRouteTable and CreateSecurityGroup on the vpc; CreateVpcEndpoint on the vpc
+        # and route table; CreateNatGateway on the subnet, elastic IP and vpc. A request tag
+        # never applies to those, so they need the stack resource tag. A new resource has no
+        # tag yet, so this statement cannot authorize creating one.
+        Sid    = "Ec2CreateOnExistingStackParents"
+        Effect = "Allow"
+        Action = [
+          "ec2:CreateSubnet", "ec2:CreateRouteTable", "ec2:CreateSecurityGroup",
+          "ec2:CreateNatGateway", "ec2:CreateVpcEndpoint",
+        ]
+        Resource = [
+          "${local.arn_ec2}:vpc/*", "${local.arn_ec2}:subnet/*", "${local.arn_ec2}:route-table/*",
+          "${local.arn_ec2}:elastic-ip/*", "${local.arn_ec2}:security-group/*",
+        ]
+        Condition = { StringEquals = merge(local.c_region, local.c_res_stack) }
+      },
+      {
         Sid      = "Ec2TagOnCreateOnly"
         Effect   = "Allow"
         Action   = ["ec2:CreateTags"]
@@ -290,13 +309,27 @@ locals {
         Condition = { StringEquals = local.c_region }
       },
       {
-        Sid      = "EfsCreateWithStackTag"
+        # CreateFileSystem only. CreateAccessPoint is deliberately not here: with a request tag
+        # alone it would be allowed on a FOREIGN file system.
+        Sid      = "EfsCreateFileSystemWithStackTag"
         Effect   = "Allow"
-        Action   = ["elasticfilesystem:CreateFileSystem", "elasticfilesystem:CreateAccessPoint"]
-        Resource = ["${local.arn_efs}:file-system/*", "${local.arn_efs}:access-point/*"]
+        Action   = ["elasticfilesystem:CreateFileSystem"]
+        Resource = ["${local.arn_efs}:file-system/*"]
         Condition = {
           StringEquals = merge(local.c_region, local.c_req_stack)
         }
+      },
+      {
+        # The reference authorizes CreateAccessPoint against the file-system resource only
+        # (list_efs); there is no separate new-access-point authorization. So BOTH tags are
+        # required: the stack resource tag keeps it off foreign file systems, and the stack
+        # request tag keeps the access point from being created untagged (omitting tags would
+        # also skip the TagResource check, API_CreateAccessPoint).
+        Sid       = "EfsCreateAccessPointOnStackFileSystemWithStackTag"
+        Effect    = "Allow"
+        Action    = ["elasticfilesystem:CreateAccessPoint"]
+        Resource  = ["${local.arn_efs}:file-system/*"]
+        Condition = { StringEquals = merge(local.c_region, local.c_res_stack, local.c_req_stack) }
       },
       {
         # Tag-on-create only: the elasticfilesystem:CreateAction key is absent from a

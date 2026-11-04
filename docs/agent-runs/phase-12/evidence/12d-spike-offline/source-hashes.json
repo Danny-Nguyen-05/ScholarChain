@@ -6,8 +6,8 @@
  },
  {
   "path": "infra/terraform/deployer/README.md",
-  "bytes": 12947,
-  "sha256": "e76a5df8a7acc5b229f59d38162c1b0fbd36cb756bfaeff049b805ad907c71c7"
+  "bytes": 16610,
+  "sha256": "794df3c1807c5fb57be525a3359a531b5014bbc6684d8aa01127b85fee7a0b60"
  },
  {
   "path": "infra/terraform/deployer/main.tf",
@@ -21,13 +21,13 @@
  },
  {
   "path": "infra/terraform/deployer/permission_sets.tf",
-  "bytes": 28925,
-  "sha256": "7792bc8a2fa7fb43750b2452a7d0cef0ea900bea35629bfe5be4d6313c3a8495"
+  "bytes": 30850,
+  "sha256": "1e3188797e9e6253c42417ae6ad3ea2a133ff26e3713d29be22e634b55f8a4fb"
  },
  {
   "path": "infra/terraform/deployer/tests/deployer.tftest.hcl",
-  "bytes": 24897,
-  "sha256": "60b39dd7993e8215fcd8a74db84c0e392fa9ace244c062f61bb41c44ff6e422c"
+  "bytes": 30053,
+  "sha256": "38ffb2739b064a971cff17d658c0e5bb5286de03a35b933e426e3dd0421027af"
  },
  {
   "path": "infra/terraform/deployer/variables.tf",
@@ -126,8 +126,8 @@
  },
  {
   "path": "scripts/phase12d-spike/README.md",
-  "bytes": 2176,
-  "sha256": "042c3edf24b8fa6ca81a9ae5f81cc4beecb4e22b222dc0fa5f4f4826a7f5516c"
+  "bytes": 4562,
+  "sha256": "f58377ca94f8e8c240291d9a91a66064524c382e731bd36d0aea905aa02a6e22"
  },
  {
   "path": "scripts/phase12d-spike/collect-evidence.sh",

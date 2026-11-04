@@ -557,3 +557,97 @@ run "login_policy_exists_as_its_own_resource_not_a_permission_set_part" {
     error_message = "The login policy is a separate inline policy, outside enabled_permission_sets."
   }
 }
+
+# ---- live-apply AccessDenied: create/attach calls are also authorized against EXISTING
+# parent resources, which need the stack ResourceTag (a request tag never applies to them).
+# Resource types per call: Service Authorization Reference list_ec2 / list_efs.
+
+run "every_spike_create_and_attach_call_is_allowed_on_its_existing_parents" {
+  command = plan
+
+  assert {
+    condition = alltrue([
+      for c in [
+        { a = "ec2:CreateSubnet", t = "vpc" },
+        { a = "ec2:CreateRouteTable", t = "vpc" },
+        { a = "ec2:CreateSecurityGroup", t = "vpc" },
+        { a = "ec2:CreateVpcEndpoint", t = "vpc" },
+        { a = "ec2:CreateVpcEndpoint", t = "route-table" },
+        { a = "ec2:CreateNatGateway", t = "subnet" },
+        { a = "ec2:CreateNatGateway", t = "elastic-ip" },
+        { a = "ec2:AttachInternetGateway", t = "vpc" },
+        { a = "ec2:AttachInternetGateway", t = "internet-gateway" },
+        { a = "ec2:AssociateRouteTable", t = "route-table" },
+        { a = "ec2:AssociateRouteTable", t = "subnet" },
+        { a = "ec2:CreateRoute", t = "route-table" },
+        { a = "ec2:DeleteRoute", t = "route-table" },
+        { a = "ec2:AuthorizeSecurityGroupIngress", t = "security-group" },
+        { a = "ec2:AuthorizeSecurityGroupEgress", t = "security-group" },
+        { a = "ec2:RevokeSecurityGroupIngress", t = "security-group" },
+        { a = "ec2:ModifyVpcAttribute", t = "vpc" },
+        { a = "ec2:CreateNetworkInterface", t = "subnet" },
+        { a = "ec2:CreateNetworkInterface", t = "security-group" },
+        { a = "ec2:DeleteNatGateway", t = "natgateway" },
+        { a = "ec2:ReleaseAddress", t = "elastic-ip" },
+        { a = "ec2:DeleteVpcEndpoints", t = "vpc-endpoint" },
+        { a = "ec2:DeleteSubnet", t = "subnet" },
+        { a = "ec2:DeleteVpc", t = "vpc" },
+      ] :
+      anytrue([
+        for st in flatten([for k, p in aws_iam_policy.permission_set : jsondecode(p.policy).Statement]) :
+        st.Effect == "Allow" && contains(st.Action, c.a) && contains(st.Resource, "arn:aws:ec2:us-east-2:111122223333:${c.t}/*") &&
+        try(st.Condition.StringEquals["aws:ResourceTag/scholarchain:stack"], "") == "spike-emr" && try(st.Condition.StringEquals["aws:RequestedRegion"], "") == "us-east-2"
+      ])
+    ])
+    error_message = "Every EC2 call the spike root makes must be allowed on each existing parent/referenced resource type with the stack ResourceTag and the region condition."
+  }
+  assert {
+    condition = alltrue([
+      for c in [
+        { a = "elasticfilesystem:CreateAccessPoint", t = "file-system" },
+        { a = "elasticfilesystem:CreateMountTarget", t = "file-system" },
+        { a = "elasticfilesystem:PutFileSystemPolicy", t = "file-system" },
+        { a = "elasticfilesystem:PutBackupPolicy", t = "file-system" },
+        { a = "elasticfilesystem:DeleteMountTarget", t = "file-system" },
+      ] :
+      anytrue([
+        for st in flatten([for k, p in aws_iam_policy.permission_set : jsondecode(p.policy).Statement]) :
+        st.Effect == "Allow" && contains(st.Action, c.a) && contains(st.Resource, "arn:aws:elasticfilesystem:us-east-2:111122223333:${c.t}/*") &&
+        try(st.Condition.StringEquals["aws:ResourceTag/scholarchain:stack"], "") == "spike-emr"
+      ])
+    ])
+    error_message = "EFS calls that act on an existing file system need the stack ResourceTag."
+  }
+  # The parent statement cannot create anything new and tags are still create-only.
+  assert {
+    condition = alltrue([
+      for st in flatten([for k, p in aws_iam_policy.permission_set : jsondecode(p.policy).Statement]) :
+      st.Sid != "Ec2CreateOnExistingStackParents" || (!can(st.Condition.StringEquals["aws:RequestTag/scholarchain:stack"]) && !contains(st.Action, "ec2:CreateTags") && !contains(st.Action, "ec2:CreateVpc") && !contains(st.Resource, "*"))
+    ])
+    error_message = "The parent statement is ResourceTag-only, names no wildcard resource, and grants no CreateTags or CreateVpc."
+  }
+}
+
+run "create_access_point_requires_both_stack_tags_everywhere" {
+  command = plan
+
+  assert {
+    condition = alltrue([
+      for st in flatten([for k, p in aws_iam_policy.permission_set : jsondecode(p.policy).Statement]) :
+      st.Effect != "Allow" || !contains(st.Action, "elasticfilesystem:CreateAccessPoint") || (
+        try(st.Condition.StringEquals["aws:RequestTag/scholarchain:stack"], "") == "spike-emr" &&
+        try(st.Condition.StringEquals["aws:ResourceTag/scholarchain:stack"], "") == "spike-emr" &&
+        try(st.Condition.StringEquals["aws:RequestedRegion"], "") == "us-east-2"
+      )
+    ])
+    error_message = "Every Allow of elasticfilesystem:CreateAccessPoint must carry BOTH the stack request tag and the stack resource tag (plus region): a request tag alone allows foreign file systems, a resource tag alone allows untagged access points."
+  }
+  assert {
+    condition = length([
+      for st in flatten([for k, p in aws_iam_policy.permission_set : jsondecode(p.policy).Statement]) :
+      st if st.Effect == "Allow" && contains(st.Action, "elasticfilesystem:CreateAccessPoint")
+    ]) == 1
+    error_message = "Exactly one Allow grants CreateAccessPoint."
+  }
+}
+

@@ -69,6 +69,32 @@ Sources (Service Authorization Reference): https://docs.aws.amazon.com/service-a
 
 S3 has no tag condition used here; bucket scoping is the name prefix plus region.
 
+### Create and attach calls: actions, resources authorized, condition
+
+A create or attach call is authorized against every resource type the Service Authorization Reference lists for it, not only the new resource. A request tag applies to the resource being created; **existing parents are matched on their resource tag.** A live run failed with AccessDenied on `ec2:CreateSubnet`, `CreateRouteTable` and `CreateSecurityGroup` on the VPC because only the request-tag statement existed. Sources: https://docs.aws.amazon.com/service-authorization/latest/reference/list_ec2.html and https://docs.aws.amazon.com/service-authorization/latest/reference/list_efs.html . All rows add `aws:RequestedRegion = us-east-2`; "stack" is `scholarchain:stack = spike-emr`.
+
+| Action | Resources it is authorized against | Condition |
+|---|---|---|
+| `ec2:CreateVpc` | new `vpc` | request tag stack |
+| `ec2:CreateSubnet` | new `subnet`; existing `vpc` | request tag stack; resource tag stack |
+| `ec2:CreateInternetGateway`, `ec2:AllocateAddress` | new `internet-gateway`, `elastic-ip` | request tag stack |
+| `ec2:CreateRouteTable` | new `route-table`; existing `vpc` | request tag stack; resource tag stack |
+| `ec2:CreateSecurityGroup` | new `security-group`; existing `vpc` | request tag stack; resource tag stack |
+| `ec2:CreateNatGateway` | new `natgateway`; existing `subnet`, `elastic-ip` (and `vpc`) | request tag stack; resource tag stack |
+| `ec2:CreateVpcEndpoint` | new `vpc-endpoint`; existing `vpc`, `route-table` | request tag stack; resource tag stack |
+| `ec2:AttachInternetGateway` | existing `internet-gateway`, `vpc` | resource tag stack |
+| `ec2:AssociateRouteTable`, `CreateRoute`, `DeleteRoute` | existing `route-table` (and `subnet`) | resource tag stack |
+| `ec2:AuthorizeSecurityGroupIngress/Egress` | existing `security-group`; new `security-group-rule` (only when the request carries tags) | resource tag stack; request tag stack |
+| `ec2:ModifyVpcAttribute`, `DeleteVpc`, `DeleteSubnet`, `DeleteNatGateway`, `ReleaseAddress`, `DeleteVpcEndpoints`, `Revoke*` | the existing resource named | resource tag stack |
+| `ec2:CreateTags` | the resource being created, as part of a create call | `ec2:CreateAction` in the create actions, plus request tag stack (never post-hoc) |
+| `ec2:CreateNetworkInterface` (EFS mount target) | existing `subnet`, `security-group`; the new ENI | resource tag stack; ENI region-only (see above) |
+| `elasticfilesystem:CreateFileSystem` | new `file-system` | request tag stack (CreateAccessPoint is not in this statement) |
+| `elasticfilesystem:CreateAccessPoint` | the existing `file-system` only (the reference lists no separate access-point resource for this action) | resource tag stack **and** request tag stack, both required: the resource tag keeps it off foreign file systems, the request tag keeps the access point from being created untagged (https://docs.aws.amazon.com/efs/latest/APIReference/API_CreateAccessPoint.html) |
+| `elasticfilesystem:CreateMountTarget` and the other file-system actions | existing `file-system` | resource tag stack |
+| `elasticfilesystem:TagResource` | the resource being created | `elasticfilesystem:CreateAction` plus request tag stack |
+
+The statement for the existing parents (`Ec2CreateOnExistingStackParents`) is resource-tag-only and names no wildcard resource; a new resource has no tag yet, so it cannot authorize a create. The mock test `every_spike_create_and_attach_call_is_allowed_on_its_existing_parents` checks each row against the rendered policy. Policy sizes after this change: emr 2574, iam 3314, network 4543, storage 5236, boundary 5672 characters (limit 6144).
+
 ### Spike boundary
 
 `scholarchain-spike-emr-boundary` allows only what the two spike roles may ever use: the EC2 actions of `AmazonEMRServicePolicy_v2`, mirrored statement by statement with its tag conditions (https://docs.aws.amazon.com/aws-managed-policy/latest/reference/AmazonEMRServicePolicy_v2.html): actions on existing resources (terminate, modify, delete, security-group authorize/revoke, launching into a subnet or security group) require `aws:ResourceTag/for-use-with-amazon-emr-managed-policies = true`, and for subnets, security groups and the VPC also `aws:ResourceTag/scholarchain:stack = spike-emr` (Terraform tags them at creation through provider `default_tags`); creating instances, volumes, network interfaces, launch templates and security groups requires `aws:RequestTag/for-use-with-amazon-emr-managed-policies = true`; `ec2:CreateTags` only with `ec2:CreateAction`; `ec2:Describe*` on `*`. v2's VPC-endpoint, placement-group and launch-template-version statements are left out because this cluster does not use them (if EMR turns out to need one, the launch fails closed and a human decides). The intersection with v2 means node code on a spike role cannot open a foreign security group, terminate a foreign instance or launch into a foreign subnet, S3 `GetObject`/`PutObject`/`AbortMultipartUpload`/`ListBucket` on spike buckets, KMS data-key and grant actions on keys aliased `alias/scholarchain-spike-emr-key` (alias, not tag), EMR `Get/Put/RemoveAutoTerminationPolicy` on stack-tagged clusters (the idle timeout does not work without them on the instance profile: https://repost.aws/knowledge-center/emr-troubleshoot-cluster-termination), EFS `ClientMount`/`ClientWrite`, and `iam:PassRole` of spike roles to EC2. The boundary does not include `iam:*`, STS, budgets or other services, so even a mistaken inline policy on a spike role cannot reach them. Policy size: the boundary is 5672 characters of the 6144 limit, so any further statement needs merging.

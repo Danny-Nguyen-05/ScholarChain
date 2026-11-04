@@ -1,0 +1,17 @@
+[
+ {
+  "path": "attempt1-partial-apply.md",
+  "bytes": 2932,
+  "sha256": "57713f381b40edd8e5cfea305b4c89ab034333bbf87d16264a3e83cc653b39fd"
+ },
+ {
+  "path": "human-approval.md",
+  "bytes": 5140,
+  "sha256": "f2be0d4f898dd94f893ae2420c7aae0d7aeeb8fb33e4a0fee19092e23f09e27b"
+ },
+ {
+  "path": "work-order.md",
+  "bytes": 1648,
+  "sha256": "900213ea005e488dc41549f2801b84c24f704cccb84efe1b84747690dff086a4"
+ }
+]

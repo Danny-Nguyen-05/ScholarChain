@@ -24,7 +24,9 @@ tests/deployer.tftest.hcl... in progress
   run "boundary_ec2_mutations_are_tag_conditioned_like_emr_v2"... pass
   run "login_policy_is_exact_and_independent_of_permission_sets"... pass
   run "login_policy_exists_as_its_own_resource_not_a_permission_set_part"... pass
+  run "every_spike_create_and_attach_call_is_allowed_on_its_existing_parents"... pass
+  run "create_access_point_requires_both_stack_tags_everywhere"... pass
 tests/deployer.tftest.hcl... tearing down
 tests/deployer.tftest.hcl... pass
 
-Success! 25 passed, 0 failed.
+Success! 27 passed, 0 failed.

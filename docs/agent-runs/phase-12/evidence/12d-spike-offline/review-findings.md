@@ -80,3 +80,28 @@ Addendum review (human, separate session, 2026-11-04 10:56): **APPROVE-WITH-NONB
 
 21. **Carried:** the login policy's attachment target is untested (`deployer.tftest.hcl:556`); retargeting `login.role` still passes. Add an assertion that ties it to the deployer role.
 22. **Fixed by the coordinator:** `gates.json` attempt 5 now reads "9 sbt result groups (158 Scala suites)" instead of "9 suites". The same wording in attempts 2 to 4 refers to result groups.
+
+## Live-found addendum (2026-11-04): parent-resource create permissions and credential refresh
+
+Live attempt 1 failed before any cluster existed (`../12d-spike-live/attempt1-partial-apply.md`). The spike's create calls are also authorized against existing parent resources (the VPC, and for some calls the subnet, route table, elastic IP and security group). A request-tag condition never applies to an existing parent, so those calls were denied.
+
+- **Change (infra-engineer):** `infra/terraform/deployer/permission_sets.tf` adds:
+  - `Ec2CreateOnExistingStackParents`: CreateSubnet, CreateRouteTable, CreateSecurityGroup, CreateNatGateway and CreateVpcEndpoint on stack-tagged `vpc`, `subnet`, `route-table`, `elastic-ip` and `security-group`, with `aws:ResourceTag/scholarchain:stack` plus the region condition;
+  - `EfsCreateAccessPointOnStackFileSystem`.
+  A new resource has no tag yet, so these statements cannot authorize creating one. CreateTags is still CreateAction-only.
+- **Tests:** a new 3-assertion test covers 24 EC2 and 5 EFS call/parent pairs (deployer 26/26). Removing `vpc/*` makes it fail.
+- **Credentials:** the operator run method is documented in `scripts/phase12d-spike/README.md`: a `credential_process` profile, `scholarchain-deployer-tf`. At the human's request, the coordinator appended that profile to the human's `~/.aws/config` (append only, nothing else read). The human verified it resolves to `assumed-role/scholarchain-deployer`.
+- **Gates:** `sbt check` attempt 6 exit 0, 1267/0.
+- **Status:** awaiting independent review, then a human deployer re-apply in an admin window.
+
+Live-found addendum review (human, separate session, 2026-11-04 12:00): **BLOCK**. The EC2 parent grants, the audit completeness, the `credential_process` method, the evidence and the hashes were all verified.
+
+| ID | Finding | Owner | Repair |
+|---|---|---|---|
+| L1 | `EfsCreateAccessPointOnStackFileSystem` (`permission_sets.tf:326`) allows an untagged access point on a stack-tagged file system. CreateAccessPoint is authorized against the file system only, and omitting tags skips TagResource. | infra-engineer | Require both the request and resource stack tags. Add a negative test. Correct `README.md:92`. |
+
+23. **Carried:** `git diff --check` reports extra blank lines at EOF in `deployer.tftest.hcl:630` and `scripts/phase12d-spike/README.md:48`.
+
+L1 repair (infra-engineer): CreateAccessPoint is now allowed only by `EfsCreateAccessPointOnStackFileSystemWithStackTag` (`permission_sets.tf:328`), which requires the region, the stack ResourceTag and the stack RequestTag. It was removed from `EfsCreateFileSystemWithStackTag`, whose request-tag-only condition had also allowed CreateAccessPoint on a foreign file system. A new test fails on either mutation (deployer 27/27). `sbt check` attempt 7 exit 0, 1267/0. Awaiting re-review.
+
+L1 re-review (human, separate session, 2026-11-04): **APPROVE**. No new findings; L1 is closed. The reviewer replayed deployer 27/27, spike 37/37 and the guard (0 findings). Mutations that remove either tag or the region, or restore the request-only Allow, all fail. Manifests match 75/75 and 3/3; source hashes 45/45 (the tfvars example was left unread).

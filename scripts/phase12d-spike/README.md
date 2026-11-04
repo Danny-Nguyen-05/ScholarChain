@@ -25,3 +25,24 @@ bash -n ../*.sh ../emr/*.sh
 ```
 
 `shellcheck` was not available when these were written; run it when installed.
+
+## Operator run method: Terraform and `aws login` credentials
+
+Terraform's AWS provider does not refresh `aws login` credentials by itself: a live run hit `ExpiredToken` in the middle of the multipart upload of the 321 MB runtime. Give Terraform a `credential_process` profile so the provider re-runs the CLI whenever its credentials expire. The human adds this to their **own** `~/.aws/config` (no agent edits it):
+
+```
+[profile scholarchain-deployer-tf]
+credential_process = aws configure export-credentials --profile scholarchain-deployer --format process
+region = us-east-2
+```
+
+Then, after `aws login --profile scholarchain-deployer`, run Terraform with `AWS_PROFILE=scholarchain-deployer-tf` (and keep `AWS_REGION=us-east-2` for the scripts above).
+
+What the documentation says (read 2026-11-04; none of it was executed here):
+
+* `aws configure export-credentials --format process` exists. `process` is its default format and prints JSON "in the schema expected by the `credential_process` config value", so a tool that supports `credential_process` can use the CLI's own credential resolution, and the page gives `credential_process = aws configure export-credentials --profile myprofile` as the example: https://docs.aws.amazon.com/cli/latest/reference/configure/export-credentials.html
+* The `aws login` announcement lists the same route for older SDKs that lack the console login provider: "support credentials delivered by `aws login` by using the credential_process provider with the AWS CLI": https://aws.amazon.com/blogs/security/simplified-developer-access-to-aws-with-aws-login/
+* `aws login` credentials are short-lived (15 minutes) and the CLI and SDKs refresh them from the cached refresh token for up to 12 hours: https://docs.aws.amazon.com/sdkref/latest/guide/feature-login-credentials.html
+
+Limits to expect: whether `export-credentials` resolves a `login_session` profile that also assumes the deployer role was not tested here. If the first Terraform call fails with a credential error, stop and check `aws sts get-caller-identity --profile scholarchain-deployer-tf` (it should name the deployer role session). The deployer role's `max_session_duration` is 3600 seconds, so a single run must finish within an hour of the last role assumption, or credentials will need a fresh `aws login`; keep the multipart upload of the runtime in mind when sizing the run.
+
