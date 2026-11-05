@@ -1,0 +1,73 @@
+{
+  "owner_coordinator_freeze_mismatches": [],
+  "version_file_count": 14,
+  "exact_pins_match": true,
+  "lock_byte_identical_to_base": true,
+  "coverage_counts": {
+    "runs": 31,
+    "assertions": 51,
+    "expected_failure_cases": 16
+  },
+  "final_test_summary": [
+    [
+      "31",
+      "0"
+    ]
+  ],
+  "plan_only_mock_all_files": true,
+  "negative_cases": [
+    {
+      "name": "graph-write",
+      "summary": [
+        [
+          "30",
+          "1"
+        ]
+      ],
+      "intended_diagnostic": true,
+      "init_exit": 0,
+      "test_exit": 1
+    },
+    {
+      "name": "public-neptune",
+      "summary": [
+        [
+          "30",
+          "1"
+        ]
+      ],
+      "intended_diagnostic": true,
+      "init_exit": 0,
+      "test_exit": 1
+    },
+    {
+      "name": "flatten-dashboard",
+      "summary": [
+        [
+          "30",
+          "1"
+        ]
+      ],
+      "intended_diagnostic": true,
+      "init_exit": 0,
+      "test_exit": 1
+    }
+  ],
+  "coordinator_post_build_evidence_check": {
+    "timestamp_utc": "2026-10-29T02:08:05.023384+00:00",
+    "xml_reports_checked": 156,
+    "xml_counts": {
+      "tests": 1253,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "xml_hash_mismatches": [],
+    "source_records_unchanged": 521,
+    "infra_artifacts_checked": 70,
+    "build_artifacts_checked": 12,
+    "all_raw_logs_git_visible": true,
+    "tracked_changed_count": 17,
+    "untracked_count": 129
+  }
+}

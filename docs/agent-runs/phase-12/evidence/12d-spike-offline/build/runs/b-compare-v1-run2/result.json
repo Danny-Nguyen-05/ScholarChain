@@ -1,0 +1,31 @@
+{
+  "name": "b-compare-v1-run2",
+  "stage": "compare",
+  "security": "v1",
+  "classload": false,
+  "exit": 0,
+  "timed_out": false,
+  "started_at": "2026-11-04T04:02:46.155571+00:00",
+  "seconds": 11.67380512499949,
+  "driver_stdout_sha256": "6b4ea40ba775cb76ccdfb54f36651aec02df03380c5278843ed7969985b14a07",
+  "driver_stderr_sha256": "ff3c342cc01c599aee25338cee2ae171cfb21535d76d354c87a87589f3c3874e",
+  "secret_occurrences_in_run_files": 0,
+  "log_files": [
+    {
+      "source": "logs/driver.stdout.txt",
+      "bytes": 5260,
+      "lines": 1,
+      "raw_sha256": "6b4ea40ba775cb76ccdfb54f36651aec02df03380c5278843ed7969985b14a07",
+      "gz": "logs-gz/driver.stdout.txt.gz",
+      "gz_sha256": "9c5372f7015418e31e373659c9b0186454adc9edf8dc07c0b9eaba07040c5c43"
+    },
+    {
+      "source": "logs/driver.stderr.txt",
+      "bytes": 1682582,
+      "lines": 13596,
+      "raw_sha256": "ff3c342cc01c599aee25338cee2ae171cfb21535d76d354c87a87589f3c3874e",
+      "gz": "logs-gz/driver.stderr.txt.gz",
+      "gz_sha256": "ca6bb6f9ec74d662439d645f8417293a00738d811c61b19137cf2cf0d2a024ee"
+    }
+  ]
+}

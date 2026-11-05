@@ -1,0 +1,67 @@
+[
+  {
+    "rate_name": "ipv4_address_hour",
+    "usd": 0.005,
+    "unit": "Hrs",
+    "sku": "8HFJK44D9234XNWA",
+    "attributes": {
+      "servicecode": "AmazonVPC",
+      "location": "US East (Ohio)",
+      "locationType": "AWS Region",
+      "group": "VPCPublicIPv4Address",
+      "groupDescription": "Hourly charge for In-use Public IPv4 Addresses",
+      "usagetype": "USE2-PublicIPv4:InUseAddress",
+      "operation": "",
+      "regionCode": "us-east-2",
+      "servicename": "Amazon Virtual Private Cloud"
+    },
+    "rate_dimension": {
+      "rateCode": "8HFJK44D9234XNWA.JRTCKXETXF.6YS6EN2CT7",
+      "beginRange": "0",
+      "endRange": "Inf",
+      "unit": "Hrs",
+      "pricePerUnit": {
+        "USD": "0.0050000000"
+      },
+      "appliesTo": []
+    },
+    "source_url": "https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonVPC/current/us-east-2/index.json",
+    "source_sha256": "d39be27486a06c9769bc61dd77206d8d9f8a95a9495986fe42d1b93a23e0f2e4",
+    "retrieved_utc": "2026-10-30T17:33:14.525533+00:00",
+    "catalog_version": "20261016224321",
+    "publication_date": "2026-10-16T22:43:21Z"
+  },
+  {
+    "rate_name": "emr_m5_xlarge_surcharge_hour",
+    "usd": 0.048,
+    "unit": "Hrs",
+    "sku": "VXMPRBP5JU7WEE96",
+    "attributes": {
+      "servicecode": "ElasticMapReduce",
+      "location": "US East (Ohio)",
+      "locationType": "AWS Region",
+      "instanceType": "m5.xlarge",
+      "instanceFamily": "General purpose",
+      "usagetype": "USE2-BoxUsage:m5.xlarge",
+      "operation": "",
+      "regionCode": "us-east-2",
+      "servicename": "Amazon Elastic MapReduce",
+      "softwareType": "EMR"
+    },
+    "rate_dimension": {
+      "rateCode": "VXMPRBP5JU7WEE96.JRTCKXETXF.6YS6EN2CT7",
+      "beginRange": "0",
+      "endRange": "Inf",
+      "unit": "Hrs",
+      "pricePerUnit": {
+        "USD": "0.0480000000"
+      },
+      "appliesTo": []
+    },
+    "source_url": "https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/ElasticMapReduce/current/us-east-2/index.json",
+    "source_sha256": "689f965f8994a6f575284205e840ed5253b56567c5a99a8449bfe5ddb0fefa3e",
+    "retrieved_utc": "2026-10-30T17:33:12.485329+00:00",
+    "catalog_version": "20261029061137",
+    "publication_date": "2026-10-29T06:11:37Z"
+  }
+]

@@ -1,0 +1,251 @@
+[
+  {
+    "name": "cli-login",
+    "url": "https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-sign-in.html",
+    "checked_utc": "2026-10-31T17:32:02.194510+00:00",
+    "http_status": 200,
+    "resolved_url": "https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-sign-in.html",
+    "bytes": 28965,
+    "sha256": "de03a2382073690783d0d749ee43fcd6e583e8f6992a420bb4d26d0f37d8cc4f",
+    "retained_as": null,
+    "retention": "Digest-only reference; no full documentation page retained."
+  },
+  {
+    "name": "cli-login-reference",
+    "url": "https://docs.aws.amazon.com/cli/latest/reference/login/",
+    "checked_utc": "2026-10-31T17:32:02.488689+00:00",
+    "http_status": 200,
+    "resolved_url": "https://docs.aws.amazon.com/cli/latest/reference/login/",
+    "bytes": 24630,
+    "sha256": "c566ce4c2b3794a24b2c069e53bfa096c5922eef9472b5a6e297d345dd9a89c5",
+    "retained_as": null,
+    "retention": "Digest-only reference; no full documentation page retained."
+  },
+  {
+    "name": "cli-login-troubleshooting",
+    "url": "https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-sign-in-troubleshoot.html",
+    "checked_utc": "2026-10-31T17:32:02.718817+00:00",
+    "http_status": 200,
+    "resolved_url": "https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-sign-in-troubleshoot.html",
+    "bytes": 19192,
+    "sha256": "cb90fb1bd04cd0eeea8c3e26d56c86a6885119bde70bec0f60b1ab70ab3ac48d",
+    "retained_as": null,
+    "retention": "Digest-only reference; no full documentation page retained."
+  },
+  {
+    "name": "iam-condition-keys",
+    "url": "https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_condition-keys.html",
+    "checked_utc": "2026-10-31T17:32:02.998870+00:00",
+    "http_status": 200,
+    "resolved_url": "https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_condition-keys.html",
+    "bytes": 324509,
+    "sha256": "941f162c522dfa3a75306ae6b29a8221e50714b83fd4cf5dd676ecc1cc6c8965",
+    "retained_as": null,
+    "retention": "Digest-only reference; no full documentation page retained."
+  },
+  {
+    "name": "iam-console-switch",
+    "url": "https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_use_switch-role-console.html",
+    "checked_utc": "2026-10-31T17:32:03.374305+00:00",
+    "http_status": 200,
+    "resolved_url": "https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_use_switch-role-console.html",
+    "bytes": 25291,
+    "sha256": "e3b895c2d86f22dff483bb1364daee91c7f932036596f38cd614c2562d59b12a",
+    "retained_as": null,
+    "retention": "Digest-only reference; no full documentation page retained."
+  },
+  {
+    "name": "iam-mfa-api",
+    "url": "https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_mfa_configure-api-require.html",
+    "checked_utc": "2026-10-31T17:32:03.541872+00:00",
+    "http_status": 200,
+    "resolved_url": "https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_mfa_configure-api-require.html",
+    "bytes": 43938,
+    "sha256": "8acedfc35a6a8e1293c6920d6468dcbe318101c30c70b296f83e897110a5c411",
+    "retained_as": null,
+    "retention": "Digest-only reference; no full documentation page retained."
+  },
+  {
+    "name": "sts-assume-role",
+    "url": "https://docs.aws.amazon.com/STS/latest/APIReference/API_AssumeRole.html",
+    "checked_utc": "2026-10-31T17:32:03.832092+00:00",
+    "http_status": 200,
+    "resolved_url": "https://docs.aws.amazon.com/STS/latest/APIReference/API_AssumeRole.html",
+    "bytes": 51463,
+    "sha256": "d1de70745400954a5b13113677f2a5c962178d5bc8b2c844b08d5161e4d8d0e3",
+    "retained_as": null,
+    "retention": "Digest-only reference; no full documentation page retained."
+  },
+  {
+    "name": "sts-get-session-token",
+    "url": "https://docs.aws.amazon.com/STS/latest/APIReference/API_GetSessionToken.html",
+    "checked_utc": "2026-10-31T17:32:04.146901+00:00",
+    "http_status": 200,
+    "resolved_url": "https://docs.aws.amazon.com/STS/latest/APIReference/API_GetSessionToken.html",
+    "bytes": 27286,
+    "sha256": "f782a1dd0f333e651341a92a57ac442d04c2381a580f70ce622bf1a1b7f59d18",
+    "retained_as": null,
+    "retention": "Digest-only reference; no full documentation page retained."
+  },
+  {
+    "name": "signin-actions",
+    "url": "https://docs.aws.amazon.com/service-authorization/latest/reference/list_signin.html",
+    "checked_utc": "2026-10-31T17:32:04.351278+00:00",
+    "http_status": 200,
+    "resolved_url": "https://docs.aws.amazon.com/service-authorization/latest/reference/list_signin.html",
+    "bytes": 45983,
+    "sha256": "56fbb3bbcd2f521dc2b5477df749640158ec1771a81f0728bc0480d9bae5627d",
+    "retained_as": null,
+    "retention": "Digest-only reference; no full documentation page retained."
+  },
+  {
+    "name": "signin-managed-policy",
+    "url": "https://docs.aws.amazon.com/aws-managed-policy/latest/reference/SignInLocalDevelopmentAccess.html",
+    "checked_utc": "2026-10-31T17:32:04.588254+00:00",
+    "http_status": 200,
+    "resolved_url": "https://docs.aws.amazon.com/aws-managed-policy/latest/reference/SignInLocalDevelopmentAccess.html",
+    "bytes": 15570,
+    "sha256": "32a3c47b824d4d64540d8b355a2857541110cc8c52cea908a7d43c73fd653472",
+    "retained_as": null,
+    "retention": "Digest-only reference; no full documentation page retained."
+  },
+  {
+    "name": "startup-short-lived",
+    "url": "https://docs.aws.amazon.com/prescriptive-guidance/latest/aws-startup-security-baseline/acct-13.html",
+    "checked_utc": "2026-10-31T17:32:04.816052+00:00",
+    "http_status": 200,
+    "resolved_url": "https://docs.aws.amazon.com/prescriptive-guidance/latest/aws-startup-security-baseline/acct-13.html",
+    "bytes": 15818,
+    "sha256": "3381657c8b50c39cd177984680bbf3f83b43c5bb8345d9d0c89354e313cfdc24",
+    "retained_as": null,
+    "retention": "Digest-only reference; no full documentation page retained."
+  },
+  {
+    "name": "provider-go-mod",
+    "url": "https://raw.githubusercontent.com/hashicorp/terraform-provider-aws/v6.44.0/go.mod",
+    "checked_utc": "2026-10-31T17:32:05.014758+00:00",
+    "http_status": 200,
+    "resolved_url": "https://raw.githubusercontent.com/hashicorp/terraform-provider-aws/v6.44.0/go.mod",
+    "bytes": 21663,
+    "sha256": "990ed19270b5199ae1657a9045b139c26f9e4c5bab5b80e852bf905cdd8641e8",
+    "retained_as": "provider-go.mod.txt"
+  },
+  {
+    "name": "cli-public-login-utils",
+    "url": "https://raw.githubusercontent.com/aws/aws-cli/2.35.4/awscli/customizations/login/utils.py",
+    "checked_utc": "2026-10-31T17:32:05.222703+00:00",
+    "http_status": 200,
+    "resolved_url": "https://raw.githubusercontent.com/aws/aws-cli/2.35.4/awscli/customizations/login/utils.py",
+    "bytes": 11480,
+    "sha256": "e8f79b5dfc19bc59b466f0e21455d9954374e4440b102833819bbddcaae0557d",
+    "retained_as": null,
+    "retention": "Digest-only reference; no full documentation page retained."
+  },
+  {
+    "name": "cli-public-credentials",
+    "url": "https://raw.githubusercontent.com/aws/aws-cli/2.35.4/awscli/botocore/credentials.py",
+    "checked_utc": "2026-10-31T17:32:05.448694+00:00",
+    "http_status": 200,
+    "resolved_url": "https://raw.githubusercontent.com/aws/aws-cli/2.35.4/awscli/botocore/credentials.py",
+    "bytes": 99431,
+    "sha256": "5ebbc23d4bd72aa632ce3288d0936ca2297431c9b9255f4b56989688e27a18db",
+    "retained_as": null,
+    "retention": "Digest-only reference; no full documentation page retained."
+  },
+  {
+    "name": "sts-comparison",
+    "url": "https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_sts-comparison.html",
+    "checked_utc": "2026-10-31T17:33:17.285333+00:00",
+    "http_status": 200,
+    "resolved_url": "https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_sts-comparison.html",
+    "bytes": 22837,
+    "sha256": "673f112facfcefbd6c490adf664c6aa305b8da3ac673ae2f203d288c80b876cb",
+    "retained_as": null
+  },
+  {
+    "name": "sdk-resolve-credentials",
+    "url": "https://raw.githubusercontent.com/aws/aws-sdk-go-v2/config/v1.32.17/config/resolve_credentials.go",
+    "checked_utc": "2026-10-31T17:33:17.498573+00:00",
+    "http_status": 200,
+    "resolved_url": "https://raw.githubusercontent.com/aws/aws-sdk-go-v2/config/v1.32.17/config/resolve_credentials.go",
+    "bytes": 20674,
+    "sha256": "8c1aa778dbcffef7adbc428071ff167c5e72152059acdc3cf0962fa604cbc10a",
+    "retained_as": "sdk-resolve-credentials.go.txt"
+  },
+  {
+    "name": "sdk-login-credentials",
+    "url": "https://raw.githubusercontent.com/aws/aws-sdk-go-v2/credentials/v1.19.16/credentials/logincreds/provider.go",
+    "checked_utc": "2026-10-31T17:33:17.777180+00:00",
+    "http_status": 200,
+    "resolved_url": "https://raw.githubusercontent.com/aws/aws-sdk-go-v2/credentials/v1.19.16/credentials/logincreds/provider.go",
+    "bytes": 4614,
+    "sha256": "2b14b12a56b65d8d4eb025dbb0ddc3135c467c08657023ae5d926c220b051be1",
+    "retained_as": "sdk-login-credentials.go.txt"
+  },
+  {
+    "name": "sdk-config-shared",
+    "url": "https://raw.githubusercontent.com/aws/aws-sdk-go-v2/config/v1.32.17/config/shared_config.go",
+    "checked_utc": "2026-10-31T17:33:17.935919+00:00",
+    "http_status": 200,
+    "resolved_url": "https://raw.githubusercontent.com/aws/aws-sdk-go-v2/config/v1.32.17/config/shared_config.go",
+    "bytes": 52588,
+    "sha256": "7029627de3a1df8d9e4c2a7a8f44089f48e45f7226eb2041a7009cb92039038f",
+    "retained_as": "sdk-config-shared.go.txt"
+  },
+  {
+    "name": "provider-base-credentials",
+    "url": "https://raw.githubusercontent.com/hashicorp/aws-sdk-go-base/v2.0.0-beta.72/credentials.go",
+    "checked_utc": "2026-10-31T17:33:37.801719+00:00",
+    "http_status": 200,
+    "resolved_url": "https://raw.githubusercontent.com/hashicorp/aws-sdk-go-base/v2.0.0-beta.72/credentials.go",
+    "bytes": 7732,
+    "sha256": "cacdae185c32dc5f4a15f33571923c1805aa604a996eed8ea14516f998e714f3",
+    "retained_as": "provider-base-credentials.go.txt"
+  },
+  {
+    "name": "sdk-login-token",
+    "url": "https://raw.githubusercontent.com/aws/aws-sdk-go-v2/credentials/v1.19.16/credentials/logincreds/token.go",
+    "checked_utc": "2026-10-31T17:34:55.325170+00:00",
+    "http_status": 200,
+    "resolved_url": "https://raw.githubusercontent.com/aws/aws-sdk-go-v2/credentials/v1.19.16/credentials/logincreds/token.go",
+    "bytes": 3385,
+    "sha256": "d093fbd26a2bc5f9daf32026e874327590f67b7aa3294ac745183a55c9563651",
+    "retained_as": "sdk-login-token.go.txt"
+  },
+  {
+    "name": "sdk-login-cache",
+    "url": "https://raw.githubusercontent.com/aws/aws-sdk-go-v2/credentials/v1.19.16/credentials/logincreds/token_cache.go",
+    "checked_utc": "2026-10-31T17:34:55.493092+00:00",
+    "error": "HTTP Error 404: Not Found"
+  },
+  {
+    "name": "cli-credential-process",
+    "url": "https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-sourcing-external.html",
+    "checked_utc": "2026-10-31T17:34:55.629429+00:00",
+    "http_status": 200,
+    "resolved_url": "https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-sourcing-external.html",
+    "bytes": 18588,
+    "sha256": "db1dc59a9192bbb7c9cd763e9acd3a3a7c3695745351b1fdd566226fa31657e1",
+    "retained_as": null
+  },
+  {
+    "name": "provider-base-aws-config",
+    "url": "https://raw.githubusercontent.com/hashicorp/aws-sdk-go-base/v2.0.0-beta.72/aws_config.go",
+    "checked_utc": "2026-10-31T17:35:46.856181+00:00",
+    "http_status": 200,
+    "resolved_url": "https://raw.githubusercontent.com/hashicorp/aws-sdk-go-base/v2.0.0-beta.72/aws_config.go",
+    "bytes": 15113,
+    "sha256": "edd73f3c523e3176b03a757f4a4a08625f4effc7fd7d1ed9d25b5c40b31a3e60",
+    "retained_as": "provider-base-aws-config.go.txt"
+  },
+  {
+    "name": "provider-base-config",
+    "url": "https://raw.githubusercontent.com/hashicorp/aws-sdk-go-base/v2.0.0-beta.72/config.go",
+    "checked_utc": "2026-10-31T17:35:47.114315+00:00",
+    "http_status": 200,
+    "resolved_url": "https://raw.githubusercontent.com/hashicorp/aws-sdk-go-base/v2.0.0-beta.72/config.go",
+    "bytes": 899,
+    "sha256": "d2376f5407ad8564cd1059dce384b1d0257437fe537c60a0664eb03517ad0d74",
+    "retained_as": "provider-base-config.go.txt"
+  }
+]

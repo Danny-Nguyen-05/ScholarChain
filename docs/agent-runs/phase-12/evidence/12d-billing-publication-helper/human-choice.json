@@ -1,0 +1,10 @@
+{
+  "kind": "Coordinator transcription of user preparation choice; not human execution gate",
+  "recorded_utc": "2026-11-02T01:44:01.225008+00:00",
+  "question_verbatim": "Next: may the infra owner prepare and test the offline helper that assembles the final evidence and checks it matches what gets published? Recommended to reduce manual work. It will need independent review and will make no AWS calls.",
+  "user_response_verbatim": "yes",
+  "authorized_scope": "Offline public evidence assembly/comparison helper authorship and meaningful offline tests only; user-launched independent review",
+  "no_live_or_private_access": true,
+  "window_selected": false,
+  "no_apply_approval": true
+}

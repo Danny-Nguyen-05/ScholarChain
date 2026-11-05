@@ -1,0 +1,7 @@
+{
+  "source_freeze": "docs/agent-runs/phase-12/evidence/12d-billing-policy-amendment/source-freeze.json",
+  "freeze_sha256": "f6cd6649d084cad038234f9ec476bead72a05e6e74124b9d77b86e4c8777ba1a",
+  "files_checked": 209,
+  "sha_size_mtime_mismatches": [],
+  "note": "No source changes proposed; prior build/test results historical only."
+}

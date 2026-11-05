@@ -1,0 +1,118 @@
+[
+  {
+    "label": "offline-init",
+    "argv": [
+      "/Users/danny/Library/Application Support/ScholarChain/terraform/billing-bootstrap/toolchain/terraform-1.13.5",
+      "init",
+      "-backend=false",
+      "-input=false",
+      "-no-color",
+      "-lockfile=readonly"
+    ],
+    "cwd": "/Users/danny/Library/Application Support/ScholarChain/terraform/billing-bootstrap/config",
+    "environment": {
+      "HOME": "/Users/danny",
+      "PATH": "/opt/homebrew/bin:/usr/bin:/bin:/usr/sbin:/sbin",
+      "TF_CLI_CONFIG_FILE": "/Users/danny/Library/Application Support/ScholarChain/terraform/billing-bootstrap/toolchain/terraform.tfrc",
+      "TF_IN_AUTOMATION": "1",
+      "AWS_EC2_METADATA_DISABLED": "true",
+      "AWS_PAGER": "",
+      "AWS_CONFIG_FILE": "/dev/null",
+      "AWS_SHARED_CREDENTIALS_FILE": "/dev/null",
+      "TF_DATA_DIR": "/Users/danny/Library/Application Support/ScholarChain/terraform/billing-bootstrap/offline-tf-data"
+    },
+    "started_utc": "2026-11-01T19:02:26.455436+00:00",
+    "ended_utc": "2026-11-01T19:02:29.802504+00:00",
+    "wall_seconds": 3.3469982919923496,
+    "exit_code": 0,
+    "log": "/tmp/scholarchain-phase12d-billing-durable-plan-handoff/safe/offline-init.log.txt",
+    "log_sha256": "0332e5a2014b4e3a832437119fe49036bc6a8355061e8def4e2d5ffc1c783808",
+    "log_bytes": 243,
+    "raw_private": false
+  },
+  {
+    "label": "offline-fmt-check",
+    "argv": [
+      "/Users/danny/Library/Application Support/ScholarChain/terraform/billing-bootstrap/toolchain/terraform-1.13.5",
+      "fmt",
+      "-check",
+      "-recursive"
+    ],
+    "cwd": "/Users/danny/Library/Application Support/ScholarChain/terraform/billing-bootstrap/config",
+    "environment": {
+      "HOME": "/Users/danny",
+      "PATH": "/opt/homebrew/bin:/usr/bin:/bin:/usr/sbin:/sbin",
+      "TF_CLI_CONFIG_FILE": "/Users/danny/Library/Application Support/ScholarChain/terraform/billing-bootstrap/toolchain/terraform.tfrc",
+      "TF_IN_AUTOMATION": "1",
+      "AWS_EC2_METADATA_DISABLED": "true",
+      "AWS_PAGER": "",
+      "AWS_CONFIG_FILE": "/dev/null",
+      "AWS_SHARED_CREDENTIALS_FILE": "/dev/null",
+      "TF_DATA_DIR": "/Users/danny/Library/Application Support/ScholarChain/terraform/billing-bootstrap/offline-tf-data"
+    },
+    "started_utc": "2026-11-01T19:02:29.802971+00:00",
+    "ended_utc": "2026-11-01T19:02:29.820758+00:00",
+    "wall_seconds": 0.017799749999539927,
+    "exit_code": 0,
+    "log": "/tmp/scholarchain-phase12d-billing-durable-plan-handoff/safe/offline-fmt-check.log.txt",
+    "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "log_bytes": 0,
+    "raw_private": false
+  },
+  {
+    "label": "offline-validate",
+    "argv": [
+      "/Users/danny/Library/Application Support/ScholarChain/terraform/billing-bootstrap/toolchain/terraform-1.13.5",
+      "validate",
+      "-no-color"
+    ],
+    "cwd": "/Users/danny/Library/Application Support/ScholarChain/terraform/billing-bootstrap/config",
+    "environment": {
+      "HOME": "/Users/danny",
+      "PATH": "/opt/homebrew/bin:/usr/bin:/bin:/usr/sbin:/sbin",
+      "TF_CLI_CONFIG_FILE": "/Users/danny/Library/Application Support/ScholarChain/terraform/billing-bootstrap/toolchain/terraform.tfrc",
+      "TF_IN_AUTOMATION": "1",
+      "AWS_EC2_METADATA_DISABLED": "true",
+      "AWS_PAGER": "",
+      "AWS_CONFIG_FILE": "/dev/null",
+      "AWS_SHARED_CREDENTIALS_FILE": "/dev/null",
+      "TF_DATA_DIR": "/Users/danny/Library/Application Support/ScholarChain/terraform/billing-bootstrap/offline-tf-data"
+    },
+    "started_utc": "2026-11-01T19:02:29.821061+00:00",
+    "ended_utc": "2026-11-01T19:02:35.717901+00:00",
+    "wall_seconds": 5.896873999998206,
+    "exit_code": 0,
+    "log": "/tmp/scholarchain-phase12d-billing-durable-plan-handoff/safe/offline-validate.log.txt",
+    "log_sha256": "f7997225125835fdd14060ac776d273f394b874f9a481b9e2122c83dc8adc5c1",
+    "log_bytes": 38,
+    "raw_private": false
+  },
+  {
+    "label": "offline-test",
+    "argv": [
+      "/Users/danny/Library/Application Support/ScholarChain/terraform/billing-bootstrap/toolchain/terraform-1.13.5",
+      "test",
+      "-no-color"
+    ],
+    "cwd": "/Users/danny/Library/Application Support/ScholarChain/terraform/billing-bootstrap/config",
+    "environment": {
+      "HOME": "/Users/danny",
+      "PATH": "/opt/homebrew/bin:/usr/bin:/bin:/usr/sbin:/sbin",
+      "TF_CLI_CONFIG_FILE": "/Users/danny/Library/Application Support/ScholarChain/terraform/billing-bootstrap/toolchain/terraform.tfrc",
+      "TF_IN_AUTOMATION": "1",
+      "AWS_EC2_METADATA_DISABLED": "true",
+      "AWS_PAGER": "",
+      "AWS_CONFIG_FILE": "/dev/null",
+      "AWS_SHARED_CREDENTIALS_FILE": "/dev/null",
+      "TF_DATA_DIR": "/Users/danny/Library/Application Support/ScholarChain/terraform/billing-bootstrap/offline-tf-data"
+    },
+    "started_utc": "2026-11-01T19:02:35.718238+00:00",
+    "ended_utc": "2026-11-01T19:02:36.622609+00:00",
+    "wall_seconds": 0.9044094169803429,
+    "exit_code": 0,
+    "log": "/tmp/scholarchain-phase12d-billing-durable-plan-handoff/safe/offline-test.log.txt",
+    "log_sha256": "aca7bb50be9aa6e39085eb2d1ac166e100d61aaa15cf8c95ccf3e4a87becb78e",
+    "log_bytes": 483,
+    "raw_private": false
+  }
+]

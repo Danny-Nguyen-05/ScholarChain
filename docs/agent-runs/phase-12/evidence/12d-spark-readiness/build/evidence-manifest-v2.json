@@ -1,0 +1,1852 @@
+[
+  {
+    "bytes": 1013,
+    "path": "audit-command-erratum.md",
+    "sha256": "b120f59cac0b91e12f1057dd011bda33c90c73b88f88f36009bd9d2c67602c06"
+  },
+  {
+    "bytes": 7478,
+    "path": "build-engineer-report.md",
+    "sha256": "fa6452c153d19c82f43a436a4cded99a439b78e6012764d000a2e3140804d3ba"
+  },
+  {
+    "bytes": 1286,
+    "path": "er-compile-classpath.txt",
+    "sha256": "7d279fac4655693037c44a5934d55a8761ea276e1db3fc81b545a331eff61987"
+  },
+  {
+    "bytes": 3769,
+    "path": "finalize-fullcheck-attempt2-v2.py",
+    "sha256": "96b25cb0905ecc82227816697ff00b2d43b8c7d27fce71a5f2d6e4b018f06afe"
+  },
+  {
+    "bytes": 3364,
+    "path": "finalize-fullcheck-attempt2.py",
+    "sha256": "9c1b2bb9de58d3e4891c933437c8c36f54802c111d9827b9a39ceaf38d69000d"
+  },
+  {
+    "bytes": 697,
+    "path": "fullcheck-attempt1-summary.json",
+    "sha256": "c59e43aff941b0bcf091a9b4498ca26494a7ca909b7f8ef02185c3e4abe205e6"
+  },
+  {
+    "bytes": 4661,
+    "path": "fullcheck-attempt1-xml/build-verification/target/test-reports/TEST-scholarchain.build.AwsIntegrationExclusionSentinelSpec.xml",
+    "sha256": "7cb93c4d35d5a532e53eb2f9218e93d2a302ff4844d025bd77367fe659b77e8d"
+  },
+  {
+    "bytes": 4862,
+    "path": "fullcheck-attempt1-xml/build-verification/target/test-reports/TEST-scholarchain.build.AwsIntegrationPolicySpec.xml",
+    "sha256": "86c10c298d2e6ee59c903d28f75d7cc61fbe743c9b8b8f1bbd2398e051c66166"
+  },
+  {
+    "bytes": 4848,
+    "path": "fullcheck-attempt1-xml/build-verification/target/test-reports/TEST-scholarchain.build.CheckFailurePathSpec.xml",
+    "sha256": "d1e7bcfe82f9fb0afb36fbcd457a1961115ad5d3beeb6348ec4c30ce2c885475"
+  },
+  {
+    "bytes": 5087,
+    "path": "fullcheck-attempt1-xml/build-verification/target/test-reports/TEST-scholarchain.build.HadoopBundleMergeSpec.xml",
+    "sha256": "9658e6b04cbf25056651adcda40e552638fc161ea18036b77a835c01c19dbd42"
+  },
+  {
+    "bytes": 4849,
+    "path": "fullcheck-attempt1-xml/build-verification/target/test-reports/TEST-scholarchain.build.Java17GuardSpec.xml",
+    "sha256": "d50b2ba00ed808aa377ace67b68e572ab84fccfeb74fe1744c5bf48273888b38"
+  },
+  {
+    "bytes": 5699,
+    "path": "fullcheck-attempt1-xml/build-verification/target/test-reports/TEST-scholarchain.build.ServiceDistributionSpec.xml",
+    "sha256": "891ce2a2ae57b8ffcf5dfac9f3826219c40b0053c37863b08896bdc5e5b6842f"
+  },
+  {
+    "bytes": 5054,
+    "path": "fullcheck-attempt1-xml/build-verification/target/test-reports/TEST-scholarchain.build.SparkJobJarSpec.xml",
+    "sha256": "f894615583df64f724fdb8075779018ac55b4040e1263e87cdfb785e8f0e1d60"
+  },
+  {
+    "bytes": 4843,
+    "path": "fullcheck-attempt1-xml/build-verification/target/test-reports/TEST-scholarchain.build.TestRunMarkerSpec.xml",
+    "sha256": "8b177c624f3689225c8d8e374e6ab49db3df682590cd74282b2206370b3ab798"
+  },
+  {
+    "bytes": 6370,
+    "path": "fullcheck-attempt1-xml/modules/core/target/test-reports/TEST-edu.uic.cs441.scholarchain.core.ConfigLoaderSpec.xml",
+    "sha256": "d40640e1cb954938dad6989c80cfd4e8d5e94cb625e8b097faa88c9da4f92954"
+  },
+  {
+    "bytes": 10806,
+    "path": "fullcheck-attempt1-xml/modules/core/target/test-reports/TEST-edu.uic.cs441.scholarchain.core.ContractRepairSpec.xml",
+    "sha256": "d58f87b3459b57aeac57e173f140e06fc4d738dfa5424c259fa25463b7934a3c"
+  },
+  {
+    "bytes": 7837,
+    "path": "fullcheck-attempt1-xml/modules/core/target/test-reports/TEST-edu.uic.cs441.scholarchain.core.EmbeddingContractSpec.xml",
+    "sha256": "79972da0f20e84978c2a483f3f2a9e4812aaa992d5559cfa4aec2d3c29827ef2"
+  },
+  {
+    "bytes": 8217,
+    "path": "fullcheck-attempt1-xml/modules/core/target/test-reports/TEST-edu.uic.cs441.scholarchain.core.Phase4ContractSpec.xml",
+    "sha256": "3123a2fad9691b81e0449c0f2e9be0658cfa992ef597425b78aa153d0510f295"
+  },
+  {
+    "bytes": 5681,
+    "path": "fullcheck-attempt1-xml/modules/core/target/test-reports/TEST-edu.uic.cs441.scholarchain.core.ResolutionAuthoritySpec.xml",
+    "sha256": "d37e5291c64ce04b1f2058cebe89cae0d104227130758530a9c630193eebeb7c"
+  },
+  {
+    "bytes": 6883,
+    "path": "fullcheck-attempt1-xml/modules/core/target/test-reports/TEST-edu.uic.cs441.scholarchain.core.ResolutionContractSpec.xml",
+    "sha256": "4b05c4dc755ca188a41ea3f2672d974e860d5fcb2b427e8a792bc50601b0573f"
+  },
+  {
+    "bytes": 6467,
+    "path": "fullcheck-attempt1-xml/modules/core/target/test-reports/TEST-edu.uic.cs441.scholarchain.core.ResolutionGroundingSpec.xml",
+    "sha256": "d8fde8b052688dae846bb5834d2f8c042abd675e194bf2fead80c5d2aadb4a04"
+  },
+  {
+    "bytes": 7180,
+    "path": "fullcheck-attempt1-xml/modules/core/target/test-reports/TEST-edu.uic.cs441.scholarchain.core.Runtime9CContractSpec.xml",
+    "sha256": "4e22729e98e24b2d7a541d6b14e64384af44225f1de41e6d764d1144632d9d78"
+  },
+  {
+    "bytes": 7971,
+    "path": "fullcheck-attempt1-xml/modules/core/target/test-reports/TEST-edu.uic.cs441.scholarchain.core.RuntimeBundlePartitionSpec.xml",
+    "sha256": "536c9faa503040184158890dcfb2df63c314114cf62c287e5a03d48937fec30a"
+  },
+  {
+    "bytes": 8477,
+    "path": "fullcheck-attempt1-xml/modules/core/target/test-reports/TEST-edu.uic.cs441.scholarchain.core.RuntimeContractSpec.xml",
+    "sha256": "e0f6884dfe1359cefbc87f2d4fef80e047243164da371a1e7777b7e52b94f0e4"
+  },
+  {
+    "bytes": 6756,
+    "path": "fullcheck-attempt1-xml/modules/core/target/test-reports/TEST-edu.uic.cs441.scholarchain.core.RuntimeEvidenceIdSpec.xml",
+    "sha256": "49fe853f8f540509cc56b9ef7829591708e2d46ec1e54a08ba3446646c5cb442"
+  },
+  {
+    "bytes": 5853,
+    "path": "fullcheck-attempt1-xml/modules/core/target/test-reports/TEST-edu.uic.cs441.scholarchain.core.SerializationContractSpec.xml",
+    "sha256": "ee8f85aefdeb7811bd71cb644cc483073f3a264a994606ac01aacf557f5e3359"
+  },
+  {
+    "bytes": 8030,
+    "path": "fullcheck-attempt1-xml/modules/core/target/test-reports/TEST-edu.uic.cs441.scholarchain.core.SparkAnalyticsContractSpec.xml",
+    "sha256": "85980473c88ecea429034ed5099dbba79385d5cd79d0b29421b4f0b3bb9b8d42"
+  },
+  {
+    "bytes": 6781,
+    "path": "fullcheck-attempt1-xml/modules/core/target/test-reports/TEST-edu.uic.cs441.scholarchain.core.StableIdSpec.xml",
+    "sha256": "4eba17eaacee559a3762bcd3972030e0162cafd6cc9bdd46b4f47ed068641ca1"
+  },
+  {
+    "bytes": 11131,
+    "path": "fullcheck-attempt1-xml/modules/core/target/test-reports/TEST-edu.uic.cs441.scholarchain.core.ValidationSpec.xml",
+    "sha256": "b6d380970ff84c79c38632cccc6e266d4def83614a4c3e77ec4a9327e943c3b8"
+  },
+  {
+    "bytes": 5200,
+    "path": "fullcheck-attempt1-xml/modules/core/target/test-reports/TEST-edu.uic.cs441.scholarchain.core.WorkSourceEvidenceSpec.xml",
+    "sha256": "0844c1a76f63c1d793330724a86bc0451b8a67751eee1f29c6de87bacbe64f9f"
+  },
+  {
+    "bytes": 7368,
+    "path": "fullcheck-attempt1-xml/modules/core/target/test-reports/TEST-edu.uic.cs441.scholarchain.resolutionconsumer.ResolutionAuthorityConsumerSpec.xml",
+    "sha256": "a968fb830745363bcdd92e00482e70b256d8f475e181cf19fa68c426c66a5a3b"
+  },
+  {
+    "bytes": 6034,
+    "path": "fullcheck-attempt1-xml/modules/entity-resolution/target/test-reports/TEST-edu.uic.cs441.scholarchain.entityresolution.ComparableEvidenceSpec.xml",
+    "sha256": "f0403fc9f8c62e3911f92e2d5b542f3427d8a74298f06144162d37f3d79eeb79"
+  },
+  {
+    "bytes": 5807,
+    "path": "fullcheck-attempt1-xml/modules/entity-resolution/target/test-reports/TEST-edu.uic.cs441.scholarchain.entityresolution.LiveDemoExportSpec.xml",
+    "sha256": "dffefe42855265f59c0463afb46e55a139e1e190fb7ad6a3901f40b3cf9778d4"
+  },
+  {
+    "bytes": 8199,
+    "path": "fullcheck-attempt1-xml/modules/entity-resolution/target/test-reports/TEST-edu.uic.cs441.scholarchain.entityresolution.OfflineResolutionSpec.xml",
+    "sha256": "0d549ceced49d469a01cca050d0c8a48461a70b179a043503e19f1fcd8b31f28"
+  },
+  {
+    "bytes": 5809,
+    "path": "fullcheck-attempt1-xml/modules/entity-resolution/target/test-reports/TEST-edu.uic.cs441.scholarchain.entityresolution.ProviderResponseDiagnosticSpec.xml",
+    "sha256": "7f72258566db4ccff85d9d2c9c8f97481a0fa3e5d6ff3dab1e35ba43d366a88f"
+  },
+  {
+    "bytes": 6066,
+    "path": "fullcheck-attempt1-xml/modules/entity-resolution/target/test-reports/TEST-edu.uic.cs441.scholarchain.entityresolution.RequestEligibilitySpec.xml",
+    "sha256": "9f1e138aea97de8458c8c366cdca030fbf5386437819b656b694ccd0cf74f347"
+  },
+  {
+    "bytes": 6590,
+    "path": "fullcheck-attempt1-xml/modules/entity-resolution/target/test-reports/TEST-edu.uic.cs441.scholarchain.entityresolution.ReviewReadinessSpec.xml",
+    "sha256": "f468ed7ac2a38b162c874262b8ea1678abb1677fe7755dc68a0bf34c0763d725"
+  },
+  {
+    "bytes": 6105,
+    "path": "fullcheck-attempt1-xml/modules/hadoop/target/test-reports/TEST-edu.uic.cs441.scholarchain.hadoop.DblpXmlRegressionSpec.xml",
+    "sha256": "15521a3d811ddac40fba7f470349aae4e5e29a1da804f8096f729a24245e503d"
+  },
+  {
+    "bytes": 11233,
+    "path": "fullcheck-attempt1-xml/modules/hadoop/target/test-reports/TEST-edu.uic.cs441.scholarchain.hadoop.HadoopPrepReviewSpec.xml",
+    "sha256": "c104da27ae2d00573bbabb975d655ef1dadc488fd85f7ee021b68d49926989f4"
+  },
+  {
+    "bytes": 8746,
+    "path": "fullcheck-attempt1-xml/modules/hadoop/target/test-reports/TEST-edu.uic.cs441.scholarchain.hadoop.HadoopPrepSpec.xml",
+    "sha256": "ccb730116f174bb1dfd25d38cc0d2d845efbbf76e937dc47022d43ac25e7a728"
+  },
+  {
+    "bytes": 6906,
+    "path": "fullcheck-attempt1-xml/modules/hadoop/target/test-reports/TEST-edu.uic.cs441.scholarchain.hadoop.SourceEvidenceRegressionSpec.xml",
+    "sha256": "fa5d1219c424977758097dc70ac3c1294fd3df6d04f4b9d15f390727e918e609"
+  },
+  {
+    "bytes": 5548,
+    "path": "fullcheck-attempt1-xml/modules/rag/target/test-reports/TEST-edu.uic.cs441.scholarchain.rag.Embedding8BRepairSpec.xml",
+    "sha256": "91b1fe50f46b59e5d611c5c2996ae3191788d7ae50663348946cde8cf60d2197"
+  },
+  {
+    "bytes": 9028,
+    "path": "fullcheck-attempt1-xml/modules/rag/target/test-reports/TEST-edu.uic.cs441.scholarchain.rag.EmbeddingRagSpec.xml",
+    "sha256": "5e8f97d7b2f8ad0b25b72898ddc7927299c6adfa9584359ad9d9b653e8d122bc"
+  },
+  {
+    "bytes": 5525,
+    "path": "fullcheck-attempt1-xml/modules/rag/target/test-reports/TEST-edu.uic.cs441.scholarchain.rag.EmbeddingRetrievalSpec.xml",
+    "sha256": "73a524c44074a2b43f906f6914ec81f9b955c928a33ad3214725b1be318df2f1"
+  },
+  {
+    "bytes": 6023,
+    "path": "fullcheck-attempt1-xml/modules/rag/target/test-reports/TEST-edu.uic.cs441.scholarchain.rag.EmbeddingSmokeGuardSpec.xml",
+    "sha256": "93ce8fd791d5ab8481e989379cae14a3fe17cce5564d07c9c4aef3670da09e89"
+  },
+  {
+    "bytes": 5753,
+    "path": "fullcheck-attempt1-xml/modules/rag/target/test-reports/TEST-edu.uic.cs441.scholarchain.rag.LiveEmbeddingGuardSpec.xml",
+    "sha256": "ba43d8385e300ec381685ed9f8be6e4a42d37bbf31767b0dcbfcbf7e0f0c8b55"
+  },
+  {
+    "bytes": 9422,
+    "path": "fullcheck-attempt1-xml/modules/rag/target/test-reports/TEST-edu.uic.cs441.scholarchain.rag.Runtime9ARepairSpec.xml",
+    "sha256": "40bb52bbcb7ffefbc8f4b6692d933815a35deb81aa8db45dfd6504adfe32c62d"
+  },
+  {
+    "bytes": 9190,
+    "path": "fullcheck-attempt1-xml/modules/rag/target/test-reports/TEST-edu.uic.cs441.scholarchain.rag.Runtime9ASpec.xml",
+    "sha256": "b38ecabfcb2362f2fcc718c64143f3817ac32a094a2b1363ba29edbce2d14a4b"
+  },
+  {
+    "bytes": 8483,
+    "path": "fullcheck-attempt1-xml/modules/rag/target/test-reports/TEST-edu.uic.cs441.scholarchain.rag.Runtime9BSpec.xml",
+    "sha256": "78d96ab9c43c90e1382716272b36931e05989cf7c85d917af15ee01f252d0e5c"
+  },
+  {
+    "bytes": 8320,
+    "path": "fullcheck-attempt1-xml/modules/rag/target/test-reports/TEST-edu.uic.cs441.scholarchain.rag.Runtime9CSpec.xml",
+    "sha256": "b04f0c2e636fc6face6e74485dc0d2ad00f54904352d9f17d790bce15b4f2cab"
+  },
+  {
+    "bytes": 6006,
+    "path": "fullcheck-attempt1-xml/modules/services/target/test-reports/TEST-edu.uic.cs441.scholarchain.services.GraphRequestDeadlineSpec.xml",
+    "sha256": "ceb37361060d3949fd269dcd54f2e83b201deec88ae2cd0592355df440cd2d92"
+  },
+  {
+    "bytes": 6029,
+    "path": "fullcheck-attempt1-xml/modules/services/target/test-reports/TEST-edu.uic.cs441.scholarchain.services.GraphTransportBudgetSpec.xml",
+    "sha256": "53ff260ec357a5148bbba84c605df005ec291178f98255205bb43e145f0eb82b"
+  },
+  {
+    "bytes": 5534,
+    "path": "fullcheck-attempt1-xml/modules/services/target/test-reports/TEST-edu.uic.cs441.scholarchain.services.RetriedSessionCreationSpec.xml",
+    "sha256": "ba9d484e03aa48cfde79660bf40c330aac8ebfa9ee6554df05a00828f6287e5c"
+  },
+  {
+    "bytes": 5772,
+    "path": "fullcheck-attempt1-xml/modules/services/target/test-reports/TEST-edu.uic.cs441.scholarchain.services.RuntimeWorkflowAdapterSpec.xml",
+    "sha256": "698ba710a359215bd94604412407fafdda1d6c3756f89d48553eec134df2fd58"
+  },
+  {
+    "bytes": 7525,
+    "path": "fullcheck-attempt1-xml/modules/services/target/test-reports/TEST-edu.uic.cs441.scholarchain.services.ServiceFoundationSpec.xml",
+    "sha256": "e27a03aca5649c61eb0ac3971b6fd86109b2624670e363014a8207c8a0055336"
+  },
+  {
+    "bytes": 6364,
+    "path": "fullcheck-attempt1-xml/modules/services/target/test-reports/TEST-edu.uic.cs441.scholarchain.services.Services10BSpec.xml",
+    "sha256": "2c60b1e154984d5eabea2ea6a1f6072cc2d64e647e651db35e2a5b5332a48d9e"
+  },
+  {
+    "bytes": 5882,
+    "path": "fullcheck-attempt1-xml/modules/services/target/test-reports/TEST-edu.uic.cs441.scholarchain.services.SessionBindingRecoverySpec.xml",
+    "sha256": "be0bfea94d3dbe53de9b0d18f685d0e37d437c003984da52d34c6bdc1ccd5f8b"
+  },
+  {
+    "bytes": 7208,
+    "path": "fullcheck-attempt1-xml/modules/spark/target/test-reports/TEST-edu.uic.cs441.scholarchain.spark.Phase12ReadinessSpec.xml",
+    "sha256": "f2aba31d8aea89c5494ca29fef5380c3e7e2e8cd4c4a87d7f0a552784f0232eb"
+  },
+  {
+    "bytes": 8102,
+    "path": "fullcheck-attempt1-xml/modules/spark/target/test-reports/TEST-edu.uic.cs441.scholarchain.spark.Phase6CJobsSpec.xml",
+    "sha256": "49ffc4714f2b5d76afe3a8c8d0a6601de84905aba2d06f736875e6df917a93dc"
+  },
+  {
+    "bytes": 7444,
+    "path": "fullcheck-attempt1-xml/modules/spark/target/test-reports/TEST-edu.uic.cs441.scholarchain.spark.Phase6DEJobsSpec.xml",
+    "sha256": "fc495702396bcc9039ccc3efcfe61d261010422f248ddea3b0221429d9c185e7"
+  },
+  {
+    "bytes": 6219,
+    "path": "fullcheck-attempt1-xml/modules/spark/target/test-reports/TEST-edu.uic.cs441.scholarchain.spark.Phase6FGJobsSpec.xml",
+    "sha256": "66193e5690463d941af1de4a69ea9de2582e8e322c43d5e5f395fae1c5442d0c"
+  },
+  {
+    "bytes": 5727,
+    "path": "fullcheck-attempt1-xml/modules/spark/target/test-reports/TEST-edu.uic.cs441.scholarchain.spark.Phase7NeptuneExportSpec.xml",
+    "sha256": "1641956dc4e86353cea504de510b69630dd1736282c913d38c8496e1ff2a37f0"
+  },
+  {
+    "bytes": 5023,
+    "path": "fullcheck-attempt1-xml/modules/spark/target/test-reports/TEST-edu.uic.cs441.scholarchain.spark.SparkSmokeSpec.xml",
+    "sha256": "1878d33ab95e7aa76ab844ef0d93b2646ecdbfadf58810165ac978077bd69a0b"
+  },
+  {
+    "bytes": 4805,
+    "path": "fullcheck-attempt1-xml/modules/storage/target/test-reports/TEST-edu.uic.cs441.scholarchain.storage.AwsIntegrationSpec.xml",
+    "sha256": "dee8fd87f30886781f5a9bd64666f57d758306f8bb64e7d44acec343f690b070"
+  },
+  {
+    "bytes": 5989,
+    "path": "fullcheck-attempt1-xml/modules/storage/target/test-reports/TEST-edu.uic.cs441.scholarchain.storage.AwsLiveGraphCleanupSpec.xml",
+    "sha256": "03e2f3fd44bb0c668e9c1da2bc43890cc3af92a428fef26d735431a72f006fb0"
+  },
+  {
+    "bytes": 5745,
+    "path": "fullcheck-attempt1-xml/modules/storage/target/test-reports/TEST-edu.uic.cs441.scholarchain.storage.AwsLivePolicySpec.xml",
+    "sha256": "9f7221719f5ff4d92ca3a92f199d0bbe5a8795f594e040884f5cf77ab356e6cc"
+  },
+  {
+    "bytes": 6290,
+    "path": "fullcheck-attempt1-xml/modules/storage/target/test-reports/TEST-edu.uic.cs441.scholarchain.storage.EmbeddingGroupStateSpec.xml",
+    "sha256": "7b73a29d603516183d8fd358a3bd2d9d14d9bac6f2a7f773ec9f0aa00f3dabd7"
+  },
+  {
+    "bytes": 7889,
+    "path": "fullcheck-attempt1-xml/modules/storage/target/test-reports/TEST-edu.uic.cs441.scholarchain.storage.EmbeddingStorageSpec.xml",
+    "sha256": "591e87a74ede469def5b854cd5124b770e093ac1aca9aa4bc4ddececcb4450ac"
+  },
+  {
+    "bytes": 6198,
+    "path": "fullcheck-attempt1-xml/modules/storage/target/test-reports/TEST-edu.uic.cs441.scholarchain.storage.NeptuneRepairSpec.xml",
+    "sha256": "8cf37af1694b3213f63cf513df1a6f30722ae96dd4ed2c249ad2bbccec38c10a"
+  },
+  {
+    "bytes": 5509,
+    "path": "fullcheck-attempt1-xml/modules/storage/target/test-reports/TEST-edu.uic.cs441.scholarchain.storage.ParquetManifestSpec.xml",
+    "sha256": "053dd71dbd0793cc5b3946c4bdfe17c7bb98aafe0eb1bf24bcad0c4ca7af2579"
+  },
+  {
+    "bytes": 6191,
+    "path": "fullcheck-attempt1-xml/modules/storage/target/test-reports/TEST-edu.uic.cs441.scholarchain.storage.Phase7BFeaturesSpec.xml",
+    "sha256": "54bfce6471aa38db6900571f0d3e04b83f6c19a9970cc377026ff7a4a4e0be94"
+  },
+  {
+    "bytes": 8528,
+    "path": "fullcheck-attempt1-xml/modules/storage/target/test-reports/TEST-edu.uic.cs441.scholarchain.storage.RuntimeArtifactStorageSpec.xml",
+    "sha256": "4231f4019e77b2469d107dadf06a1bf30b6c582dc3f22a2be606e72bf55de492"
+  },
+  {
+    "bytes": 8013,
+    "path": "fullcheck-attempt1-xml/modules/storage/target/test-reports/TEST-edu.uic.cs441.scholarchain.storage.RuntimeAuditStorageSpec.xml",
+    "sha256": "06241529224801ff8207d349925203c864d629a839309836b878daba40a48171"
+  },
+  {
+    "bytes": 6682,
+    "path": "fullcheck-attempt1-xml/modules/storage/target/test-reports/TEST-edu.uic.cs441.scholarchain.storage.StorageFeatureSpec.xml",
+    "sha256": "03697c5b2f8c02344ddf4db9b47040012b524b99820d45bb1e05675fda443a5c"
+  },
+  {
+    "bytes": 5028,
+    "path": "fullcheck-attempt1-xml/project/verification/target/test-reports/TEST-scholarchain.build.TestRunMarkerSpec.xml",
+    "sha256": "f4c447c49b9799f51ace10b834f9315d7e459d0f6d0f385a08f8ab1d76c80c65"
+  },
+  {
+    "bytes": 5861,
+    "path": "fullcheck-attempt1-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.AdversarialBlockingReplaySpec.xml",
+    "sha256": "3da2fa65e55795acdc284fbbf2fc2294023b7ccae3549ea0c55adc5c3dad0c01"
+  },
+  {
+    "bytes": 6827,
+    "path": "fullcheck-attempt1-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.AdversarialDataPlaneSpec.xml",
+    "sha256": "120e3da641af407479fbe511d922fe78ad2bb2a3887bc4a4bdafb8d75e2b02b9"
+  },
+  {
+    "bytes": 5620,
+    "path": "fullcheck-attempt1-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.AdversarialGraphShapesSpec.xml",
+    "sha256": "e4488b2aa5d6757a833d8fdba4132ff844177a18d349227c9f6065d950e60cf6"
+  },
+  {
+    "bytes": 5683,
+    "path": "fullcheck-attempt1-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.AdversarialRuntimeBoundarySpec.xml",
+    "sha256": "7ac476474e49a954ecd911f3d2f1795aa78c9ffb37239a8a3f03cfdc78d3029e"
+  },
+  {
+    "bytes": 6728,
+    "path": "fullcheck-attempt1-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.AdversarialRuntimeHttpSpec.xml",
+    "sha256": "5fb701dea030d22c9c3b0c800125d246d33875e98b72efc0913b449355a41483"
+  },
+  {
+    "bytes": 7035,
+    "path": "fullcheck-attempt1-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.AdversarialRuntimeWorkflowSpec.xml",
+    "sha256": "ee8f4e0e121db89e2cdcf1861c8541c1b750d18c08d3ee2f1184a56ae65424ee"
+  },
+  {
+    "bytes": 6367,
+    "path": "fullcheck-attempt1-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentCandidateDerivationSpec.xml",
+    "sha256": "0294c97de5821d20b4bba4af29d33be0a2ff93b5231ffe895eaf612630f653e4"
+  },
+  {
+    "bytes": 6986,
+    "path": "fullcheck-attempt1-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentDblpJsonSpec.xml",
+    "sha256": "8f6d5671bec107b6b14941b1276a7dec6f9cde8c6f729b694508e82b770dfa31"
+  },
+  {
+    "bytes": 5741,
+    "path": "fullcheck-attempt1-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentDblpXmlAdversarialSpec.xml",
+    "sha256": "8f64814d8e309e712cdbb5129b28284021cb75314165c3f5337597afe2725c36"
+  },
+  {
+    "bytes": 8855,
+    "path": "fullcheck-attempt1-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentDblpXmlRepairSpec.xml",
+    "sha256": "ac683d30f8239c03e603e2701c79360523440649c028908c9d6eb59104d136c6"
+  },
+  {
+    "bytes": 5684,
+    "path": "fullcheck-attempt1-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentEmbedding8BFailureSpec.xml",
+    "sha256": "48ed73a0026399d56359b04011bd66c2700f54a24cf3fd9031aa1de314604392"
+  },
+  {
+    "bytes": 5621,
+    "path": "fullcheck-attempt1-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentEmbedding8BGuardSpec.xml",
+    "sha256": "8f055002a889fd6fed625fbd4da6908b3cc08d18b1778ee0f0e08db43c874bc7"
+  },
+  {
+    "bytes": 5158,
+    "path": "fullcheck-attempt1-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentEmbedding8BPipelineSpec.xml",
+    "sha256": "d51c19fa29f6c3acbf127ca010b4fd88898dcc4c722900f0da70060b2f47dce5"
+  },
+  {
+    "bytes": 5408,
+    "path": "fullcheck-attempt1-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentEmbedding8BSmokeSpec.xml",
+    "sha256": "a44a4954bb1adbee83ad0d2d177a86099728499a34b5c85b9898b7c9907a5f6e"
+  },
+  {
+    "bytes": 6612,
+    "path": "fullcheck-attempt1-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentEmbeddingContractSpec.xml",
+    "sha256": "c55ed38e43c64c9982f1338a32393ac077b903280e5c3297c4a4f8e3b46b95e2"
+  },
+  {
+    "bytes": 5922,
+    "path": "fullcheck-attempt1-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentEmbeddingRenderingSpec.xml",
+    "sha256": "2b4f2909fe22e1c9d8c409606c7f4445e9a2edc6c5afc5632cd965e79aa0f3d9"
+  },
+  {
+    "bytes": 6722,
+    "path": "fullcheck-attempt1-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentEmbeddingSlotRepairSpec.xml",
+    "sha256": "7c64d2a420874fe6fa212e2ee9c5771134947d6977f87d7726e4d6cef3df0013"
+  },
+  {
+    "bytes": 6363,
+    "path": "fullcheck-attempt1-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentEmbeddingStorageSpec.xml",
+    "sha256": "c095f507d2960c3e55603397849aa0db1dcecb02e9194c0cfd15cd278ef65486"
+  },
+  {
+    "bytes": 5907,
+    "path": "fullcheck-attempt1-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentEvaluationAdapterSpec.xml",
+    "sha256": "ddce575bf9214daafedfd351da40611e8d2b616966dfc9290f143f77a6bd0533"
+  },
+  {
+    "bytes": 5866,
+    "path": "fullcheck-attempt1-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentEvaluationCliSpec.xml",
+    "sha256": "50ec4e5a0e61b9e6fd19c3d21cbfb43c6a8e7c584aa07cea204c005c8dcafb92"
+  },
+  {
+    "bytes": 5395,
+    "path": "fullcheck-attempt1-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentEvaluationCohortSpec.xml",
+    "sha256": "9e3f3e0a319730831140a2f3c7748fb1d9e9413b2bcddea89b7f3963402e2751"
+  },
+  {
+    "bytes": 6123,
+    "path": "fullcheck-attempt1-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentEvaluationSpec.xml",
+    "sha256": "025ac7a0c9fc747c696ba35c3246d9d784a5f2c009bdde03504ebdd2157a0698"
+  },
+  {
+    "bytes": 6288,
+    "path": "fullcheck-attempt1-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentGoldLabelsSpec.xml",
+    "sha256": "09f4e2853e3814e6b888b058640677bfbf32ddd05d1ea7e4380aac1e14c93607"
+  },
+  {
+    "bytes": 7582,
+    "path": "fullcheck-attempt1-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentHadoopPipelineSpec.xml",
+    "sha256": "2bb86a9e9305844db3ae8171261771d2958e5595f84894d595fa9a57b3bf4b67"
+  },
+  {
+    "bytes": 6128,
+    "path": "fullcheck-attempt1-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentIdentifierNormalizationSpec.xml",
+    "sha256": "29e7273f1f6c25f78b8ad9a56ec7fd9b9c9e9937e05a34dfe2e3de835cb658eb"
+  },
+  {
+    "bytes": 6389,
+    "path": "fullcheck-attempt1-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentLiveAdjudicatorSpec.xml",
+    "sha256": "0bf5802a7a31ca8c3d1c15c6c4788fd722251f895a22626a266548323b918a70"
+  },
+  {
+    "bytes": 6088,
+    "path": "fullcheck-attempt1-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentLiveBudgetSpec.xml",
+    "sha256": "4ae7adb7cfc914045b31d4298e800276afb46f400f823198fbde02f16e849558"
+  },
+  {
+    "bytes": 5592,
+    "path": "fullcheck-attempt1-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentLiveCacheSpec.xml",
+    "sha256": "5de44e34934664f9684cc0373a743efe7c1339d5662acb5c3563e0c2278d4be4"
+  },
+  {
+    "bytes": 6671,
+    "path": "fullcheck-attempt1-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentLiveCredentialPreflightSpec.xml",
+    "sha256": "05f04512526fb23e96188f70e3659fc76278287251f828a0191ce140b4a4e7ae"
+  },
+  {
+    "bytes": 5386,
+    "path": "fullcheck-attempt1-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentLiveCredentialsSpec.xml",
+    "sha256": "2e49326a0160a454cecdc33bbc09d34c3bb548d3172cffb4face19bee3cc98a3"
+  },
+  {
+    "bytes": 6920,
+    "path": "fullcheck-attempt1-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentLiveDevelopmentSpec.xml",
+    "sha256": "c130bdd52cf3eb44948a483fda08dce862fedbe1438839456c472418ad5c4c87"
+  },
+  {
+    "bytes": 6192,
+    "path": "fullcheck-attempt1-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentLiveResponseDiagnosticSpec.xml",
+    "sha256": "a690dd3e4d523b12f33f5c84952785d515bc072ed2b22fed1f49978474c9307c"
+  },
+  {
+    "bytes": 7190,
+    "path": "fullcheck-attempt1-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentOfflineAdjudicationSpec.xml",
+    "sha256": "7d3fa44c28a835dc4944dc141a1a756935307101ed661b1b75be6e2476e4f8fd"
+  },
+  {
+    "bytes": 7233,
+    "path": "fullcheck-attempt1-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentOpenAIResponsesSpec.xml",
+    "sha256": "73a16740bb851c49ae7de06e874ef6505ad3864ee31ead99a51fe2e89b726b48"
+  },
+  {
+    "bytes": 6560,
+    "path": "fullcheck-attempt1-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentPhase4BlockerSpec.xml",
+    "sha256": "40ab5700ca1a41b3ed1328165b5783317f26ed12f78450682ddcd1ff73d40829"
+  },
+  {
+    "bytes": 6106,
+    "path": "fullcheck-attempt1-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentPhase4EvidenceSpec.xml",
+    "sha256": "d4efbe2d9536dfac9208fa03c7491356bc9e39b93824e559d2f9ec26b39c1d7c"
+  },
+  {
+    "bytes": 6299,
+    "path": "fullcheck-attempt1-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentPhase6CGraphSpec.xml",
+    "sha256": "9a328b3ebb5d831aed49954b44dcccd14ce57a1850ee2d009f007dd518fe031d"
+  },
+  {
+    "bytes": 7225,
+    "path": "fullcheck-attempt1-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentPhase6DEGraphSpec.xml",
+    "sha256": "06e653e920bc0b15a3e4a02480c0b5db4944b4220c2f68cd6fad08fd57547ba5"
+  },
+  {
+    "bytes": 6880,
+    "path": "fullcheck-attempt1-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentPhase6FGSpec.xml",
+    "sha256": "9c23fe145f26428f6e75c97a98979689c719a1a036e593f5b1755a4db0aceba5"
+  },
+  {
+    "bytes": 5123,
+    "path": "fullcheck-attempt1-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentPhase6PipelineSpec.xml",
+    "sha256": "05474f99da3ea3c94e3f63df68723edd5e2ca2d331c9f9b564df2cbb3bbda11c"
+  },
+  {
+    "bytes": 11536,
+    "path": "fullcheck-attempt1-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentPhase6SafetySpec.xml",
+    "sha256": "e592addccbe9f717842ccbb613d64e627d5e52fb5f3e8741afb1363ad491d741"
+  },
+  {
+    "bytes": 6296,
+    "path": "fullcheck-attempt1-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentPrepReaderSpec.xml",
+    "sha256": "b8f9be0a8fd3f8612fe880a83fe1197a46817557618e8a6d11719d9b694a9d39"
+  },
+  {
+    "bytes": 8463,
+    "path": "fullcheck-attempt1-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentRequestEligibilitySpec.xml",
+    "sha256": "a1215ff979f914a6839c1024964e5cde32833ca58990e5ac09f8ef1e85fae720"
+  },
+  {
+    "bytes": 9205,
+    "path": "fullcheck-attempt1-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentResolutionContractSpec.xml",
+    "sha256": "ef6c9350217d7167cc7ad16cd48951b9882bd4ccdd2edfa2dd9e758c3aef8b2c"
+  },
+  {
+    "bytes": 6909,
+    "path": "fullcheck-attempt1-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentResolutionEngineSpec.xml",
+    "sha256": "51f3a6353c3e5a8753784634030ea1641567231e76c5d2d33074efa8c1eb93bf"
+  },
+  {
+    "bytes": 6428,
+    "path": "fullcheck-attempt1-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentResolutionExportSpec.xml",
+    "sha256": "9ae054d66cc8f26715c7c5abac2c03c7fd9601a81b91068f3a9317b8fbfb8ae5"
+  },
+  {
+    "bytes": 6172,
+    "path": "fullcheck-attempt1-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentResolutionFeaturesSpec.xml",
+    "sha256": "d0e1aca89fa9bac65fdba64ad5fa4bffbd0cea5fe872f28bd56d7613bebe930a"
+  },
+  {
+    "bytes": 6383,
+    "path": "fullcheck-attempt1-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentResolutionInputSpec.xml",
+    "sha256": "01e6b7dcedb87f3d3eecc1a9e94e070f2cb2677da13b5b5b2f7968fae5d54ce0"
+  },
+  {
+    "bytes": 6368,
+    "path": "fullcheck-attempt1-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentResolutionPolicySpec.xml",
+    "sha256": "44c9f4a3270ac0ea98476ca46eb13591eef7c46dee20776862305b12e7c600eb"
+  },
+  {
+    "bytes": 5151,
+    "path": "fullcheck-attempt1-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentResolutionPrepBridgeRepairSpec.xml",
+    "sha256": "aab0f8cf495a9ecd70c287ff65c9db8cedc76375aa0040e64719a302dd632e27"
+  },
+  {
+    "bytes": 6400,
+    "path": "fullcheck-attempt1-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentResolutionRepairSpec.xml",
+    "sha256": "d3a757119a7f9515df1b33520f7e11bcec33c94ada0c38e61ee4f4f01cf9606d"
+  },
+  {
+    "bytes": 6348,
+    "path": "fullcheck-attempt1-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentResolutionRunSpec.xml",
+    "sha256": "2c704532b7550ec9436af20cfdb504e701750aff5539fee14a3e7939d6bb9ac8"
+  },
+  {
+    "bytes": 5657,
+    "path": "fullcheck-attempt1-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentRetainedReviewInputSpec.xml",
+    "sha256": "7ff0a8cd4a8e4bd8a8cfbfaedf7cc085b4a01b95989b5537faeec2eaeb5f8e31"
+  },
+  {
+    "bytes": 5680,
+    "path": "fullcheck-attempt1-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentReviewBindingRepairSpec.xml",
+    "sha256": "c6d191eaae7db43f039886825cff973b43d30f32cc84b2666f56d14d626e32ce"
+  },
+  {
+    "bytes": 6647,
+    "path": "fullcheck-attempt1-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentReviewQueueSpec.xml",
+    "sha256": "024fcf11436709668bf7dbf62e3e8a07ed57215b734cd8f68325a9877f75ffe8"
+  },
+  {
+    "bytes": 5154,
+    "path": "fullcheck-attempt1-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentRuntime9AArtifactPipelineSpec.xml",
+    "sha256": "aae426d9970718a4de5f5a782b6b5c1b3fa19824ab01b31cd862067a0add8f37"
+  },
+  {
+    "bytes": 5840,
+    "path": "fullcheck-attempt1-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentRuntime9AEvidenceSpec.xml",
+    "sha256": "1cb0ca062491d3f83be81ed73032f2076b3b1a7ada8dcd0e6d6a2605ce69ca4d"
+  },
+  {
+    "bytes": 7538,
+    "path": "fullcheck-attempt1-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentRuntime9APlannerSpec.xml",
+    "sha256": "35c7e1d32fb2ebe095161ad782df463e56f7543fe4eebdff4e6053374992098b"
+  },
+  {
+    "bytes": 14385,
+    "path": "fullcheck-attempt1-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentRuntime9ARepairPlannerSpec.xml",
+    "sha256": "969b7ad8f96ade7f565127b421a7757f3b307ac929c1484d61b13ad286eb22c5"
+  },
+  {
+    "bytes": 6152,
+    "path": "fullcheck-attempt1-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentRuntime9ARepairResolverSpec.xml",
+    "sha256": "55c1653ead2a95a479885989e4a51383f8cb929638449e48a9d387b6393112fd"
+  },
+  {
+    "bytes": 6359,
+    "path": "fullcheck-attempt1-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentRuntime9AResolverSpec.xml",
+    "sha256": "f0178ae135fcbf0886f9473c7b9442dfd9c6e3d6d024bb2a5a16f7a56fb2b23a"
+  },
+  {
+    "bytes": 7386,
+    "path": "fullcheck-attempt1-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentRuntime9BEvidenceSpec.xml",
+    "sha256": "395bda17cac4e47ebe5ec4f408c792e07aa95c1245b51e044dda12771d3d7e79"
+  },
+  {
+    "bytes": 6615,
+    "path": "fullcheck-attempt1-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentRuntime9BSemanticSpec.xml",
+    "sha256": "78870406e22ec9b2e88cbc13eb581aed0e3990d68904897cf8b44235178dd35f"
+  },
+  {
+    "bytes": 12997,
+    "path": "fullcheck-attempt1-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentRuntime9BStagesSpec.xml",
+    "sha256": "a17bf2841b423a1f3809ee9c9995f4f177eae0b401a1a964f90de41780dddd0f"
+  },
+  {
+    "bytes": 8108,
+    "path": "fullcheck-attempt1-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentRuntime9BWorkflowSpec.xml",
+    "sha256": "b175cbac8428232b06761d324a21994468319cfe9f63ae195ab761781da286f2"
+  },
+  {
+    "bytes": 9395,
+    "path": "fullcheck-attempt1-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentRuntime9CBenchmarkSpec.xml",
+    "sha256": "45f544e40e0c8b88342eaed9226f3266d2f3ebf230abb390e13a274d0c5bd776"
+  },
+  {
+    "bytes": 8145,
+    "path": "fullcheck-attempt1-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentRuntime9CSynthesisSpec.xml",
+    "sha256": "fc7b07921fd539cfd7a7e733117478a2b0e0b0c3be4dbaedfcaa47413fec0da7"
+  },
+  {
+    "bytes": 6580,
+    "path": "fullcheck-attempt1-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentRuntime9CTrustSpec.xml",
+    "sha256": "805e4d1b425973cd8be83079dc36827a8c3349339a2348aa1e01eeb5991c415e"
+  },
+  {
+    "bytes": 14028,
+    "path": "fullcheck-attempt1-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentRuntime9CVerificationSpec.xml",
+    "sha256": "f5ae1fe8dd7485685077d9e8bac67abb5388ecdd49c7cde69a6b678499a19712"
+  },
+  {
+    "bytes": 7611,
+    "path": "fullcheck-attempt1-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentRuntime9CWorkflowSpec.xml",
+    "sha256": "2e3ba1bc5d0070a8835cf4af584ff6abf44966edf209e3294fc0195cee2774e4"
+  },
+  {
+    "bytes": 5892,
+    "path": "fullcheck-attempt1-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentServices10AResilienceSpec.xml",
+    "sha256": "9fb46a38b1a53bfc01e872b50b8880db0788fdaca4156563b16d2ddfd4ba0212"
+  },
+  {
+    "bytes": 8761,
+    "path": "fullcheck-attempt1-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentServices10ASpec.xml",
+    "sha256": "93c4016e0badd0fc5d9e3332594120de5b1fecf80738ca5c413f569079f1fe43"
+  },
+  {
+    "bytes": 5935,
+    "path": "fullcheck-attempt1-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentServices10BDeadlineSpec.xml",
+    "sha256": "4d6fb86eaced4e905d3c9fb23b161aa4e29dc7e66b20852303160d34e589bcb9"
+  },
+  {
+    "bytes": 5671,
+    "path": "fullcheck-attempt1-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentServices10BEqualBudgetSpec.xml",
+    "sha256": "393640389ce756cf20091b2a5d2c625c95b799e8068e660ac1ab7782b2dd27d5"
+  },
+  {
+    "bytes": 5866,
+    "path": "fullcheck-attempt1-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentServices10BGraphSpec.xml",
+    "sha256": "eaa9196aedeaf5b63a93c5a5ca4a3afdf52d129f187fc4d48f9380e7d5d275a8"
+  },
+  {
+    "bytes": 7028,
+    "path": "fullcheck-attempt1-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentServices10BLifecycleSpec.xml",
+    "sha256": "a219213dcaaa139d8e5453dc140b5fdddc158391bd31e5e2601ca3ad6564dcaf"
+  },
+  {
+    "bytes": 5381,
+    "path": "fullcheck-attempt1-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentServices10BStructureSpec.xml",
+    "sha256": "74306738cf73a3410b73d751c8ed9fccdeb8e176c782767f632ea7b01fc876f6"
+  },
+  {
+    "bytes": 5637,
+    "path": "fullcheck-attempt1-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentServices10BWorkerSpec.xml",
+    "sha256": "ac7fd644da700b862290e6978c7441387b023965d78c3c187dfa67f0650cc006"
+  },
+  {
+    "bytes": 5094,
+    "path": "fullcheck-attempt1-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentSparkSessionSpec.xml",
+    "sha256": "4f110c527382e4dae6c22585f266798e976303560570c710fdd13e7ffd683c26"
+  },
+  {
+    "bytes": 7681,
+    "path": "fullcheck-attempt1-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentStorageGraphLoaderSpec.xml",
+    "sha256": "8126b9956a8abd7e9df81808e12b1087f2a9b58ca4c6f1e02d402d8688b9ee27"
+  },
+  {
+    "bytes": 6156,
+    "path": "fullcheck-attempt1-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentStorageGraphReaderSpec.xml",
+    "sha256": "2d52b9222da86496cf3ae9b9fbc0ca570a5e0e97d083a5f4904bcbcbcd4363de"
+  },
+  {
+    "bytes": 6906,
+    "path": "fullcheck-attempt1-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentStorageHardeningSpec.xml",
+    "sha256": "7d7fa000385a760a92f7f9453a1597ddb4266d4e36484004a20890619af58a9f"
+  },
+  {
+    "bytes": 5660,
+    "path": "fullcheck-attempt1-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentStorageLiveExclusionSpec.xml",
+    "sha256": "cb0e70ad9c9a4b71a8ca1401132a22b600c6dd9f0c2d57c44ffa44034d66d0cd"
+  },
+  {
+    "bytes": 6121,
+    "path": "fullcheck-attempt1-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentStorageLoaderSpec.xml",
+    "sha256": "608f4aa5ccdcb1c64ffdb66bb3785769d3f6835f29e12caecdcb7c3ad87b31ff"
+  },
+  {
+    "bytes": 5375,
+    "path": "fullcheck-attempt1-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentStorageParquetSpec.xml",
+    "sha256": "bb764152c26dbb7a20e1d21e7e4ad6c817ad7ff314fd4c4d16543ff8d835873a"
+  },
+  {
+    "bytes": 7065,
+    "path": "fullcheck-attempt1-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentStoragePortsSpec.xml",
+    "sha256": "9ac49f65331b85b9ce5e28f24476fdcd2a0d74f27578388c652e495d23ec0bbc"
+  },
+  {
+    "bytes": 6875,
+    "path": "fullcheck-attempt1-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentStorageRuntimeFenceSpec.xml",
+    "sha256": "75216f551500c883efaa713acd589be298391b1890db253814c3dd0fb11519fe"
+  },
+  {
+    "bytes": 8791,
+    "path": "fullcheck-attempt1-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentStorageSdkSpec.xml",
+    "sha256": "7b41564feae2bed2571a45eecc92b9e232b919a1d1a001e835dec104ea7e6362"
+  },
+  {
+    "bytes": 7388,
+    "path": "fullcheck-attempt1-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentStorageVectorSpec.xml",
+    "sha256": "1e74013270a20153285bd378b47d268d837c6526aa29ee883c5c0e20dba5ad2f"
+  },
+  {
+    "bytes": 5361,
+    "path": "fullcheck-attempt1-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentTerraformSourceSpec.xml",
+    "sha256": "3098ab20e02d4a9b18f7340a154a8243b7792062cfd2cf455d71c2193b951b9a"
+  },
+  {
+    "bytes": 43988,
+    "path": "fullcheck-attempt1-xml-summary.json",
+    "sha256": "9b4505ed551b9391e92adcf8ac5a919631571f0b511914198946444be53406e4"
+  },
+  {
+    "bytes": 915,
+    "path": "fullcheck-attempt2-command.json",
+    "sha256": "d207b1118266a33b7ff3560cbc353696e02477a2fe39c8a29af188f580d6f90b"
+  },
+  {
+    "bytes": 122,
+    "path": "fullcheck-attempt2-result.json",
+    "sha256": "89aaa02f27882afdee9221a5198e3c4880808cef73fa2b094312db2631304b5b"
+  },
+  {
+    "bytes": 108302,
+    "path": "fullcheck-attempt2-source-freeze.json",
+    "sha256": "88202b3a60b4260a866f2c1995b375a8e592445056a1e0a43bffec6689cc6a47"
+  },
+  {
+    "bytes": 1319,
+    "path": "fullcheck-attempt2-summary.json",
+    "sha256": "50a417b2458e462a22d3f6197b47abf32a44a9da21c99de2c914efb675c41d80"
+  },
+  {
+    "bytes": 4783,
+    "path": "fullcheck-attempt2-xml/build-verification/target/test-reports/TEST-scholarchain.build.AwsIntegrationExclusionSentinelSpec.xml",
+    "sha256": "150504fbbeb5afcfbfe8e65e2c1f29185af65aaf44bb8db618bf00c00402d48c"
+  },
+  {
+    "bytes": 4984,
+    "path": "fullcheck-attempt2-xml/build-verification/target/test-reports/TEST-scholarchain.build.AwsIntegrationPolicySpec.xml",
+    "sha256": "e4ee407058b5a0a62feb2271bb5122072557cceca492671893990d7968a1a418"
+  },
+  {
+    "bytes": 4970,
+    "path": "fullcheck-attempt2-xml/build-verification/target/test-reports/TEST-scholarchain.build.CheckFailurePathSpec.xml",
+    "sha256": "75dcdabfc52e005f6f230573ba6c4090612e79642eca8fcba0278d72dae6a852"
+  },
+  {
+    "bytes": 5209,
+    "path": "fullcheck-attempt2-xml/build-verification/target/test-reports/TEST-scholarchain.build.HadoopBundleMergeSpec.xml",
+    "sha256": "0659d8204b616b8b6870330eacab1ddb8ed5c773fbf86507a6df003178781b14"
+  },
+  {
+    "bytes": 4971,
+    "path": "fullcheck-attempt2-xml/build-verification/target/test-reports/TEST-scholarchain.build.Java17GuardSpec.xml",
+    "sha256": "66488617676e847c1426a494ce97a710749f8fc7088d5d97a7072c8f481b214f"
+  },
+  {
+    "bytes": 5821,
+    "path": "fullcheck-attempt2-xml/build-verification/target/test-reports/TEST-scholarchain.build.ServiceDistributionSpec.xml",
+    "sha256": "1a022b4189a44445254b0bb352cca9632b37680119d1712b44a10e86fc08104b"
+  },
+  {
+    "bytes": 5176,
+    "path": "fullcheck-attempt2-xml/build-verification/target/test-reports/TEST-scholarchain.build.SparkJobJarSpec.xml",
+    "sha256": "089dfeed42865d1b5fae593b5de7c448a2868d2342f429f10dc49592b64b0263"
+  },
+  {
+    "bytes": 4965,
+    "path": "fullcheck-attempt2-xml/build-verification/target/test-reports/TEST-scholarchain.build.TestRunMarkerSpec.xml",
+    "sha256": "b2855924dbfa0d0b364e4934644faecaa92e010fba4a90dd86977953c95486f3"
+  },
+  {
+    "bytes": 6302,
+    "path": "fullcheck-attempt2-xml/modules/core/target/test-reports/TEST-edu.uic.cs441.scholarchain.core.ConfigLoaderSpec.xml",
+    "sha256": "a66f0bffa9865e50a4f7c5d0179324bf38bbdc935536aca770e62ca9bd07af29"
+  },
+  {
+    "bytes": 10737,
+    "path": "fullcheck-attempt2-xml/modules/core/target/test-reports/TEST-edu.uic.cs441.scholarchain.core.ContractRepairSpec.xml",
+    "sha256": "397b06e5f01c69e87de9154b5b98bcf6dabbc501a8c7ee2728d21a435085bb3c"
+  },
+  {
+    "bytes": 7765,
+    "path": "fullcheck-attempt2-xml/modules/core/target/test-reports/TEST-edu.uic.cs441.scholarchain.core.EmbeddingContractSpec.xml",
+    "sha256": "3a79263515c99dbd62773d13b0490a36e3877d19bb5f45f10584724885f3307d"
+  },
+  {
+    "bytes": 8151,
+    "path": "fullcheck-attempt2-xml/modules/core/target/test-reports/TEST-edu.uic.cs441.scholarchain.core.Phase4ContractSpec.xml",
+    "sha256": "1a924841f9305c8902875567a9a9daed3ed5c733c29af2c5c795e3d9b76f312b"
+  },
+  {
+    "bytes": 5613,
+    "path": "fullcheck-attempt2-xml/modules/core/target/test-reports/TEST-edu.uic.cs441.scholarchain.core.ResolutionAuthoritySpec.xml",
+    "sha256": "d0f633499607bff77e73bab5ba79f147f1225231b1c58da17d60c13885ba12c7"
+  },
+  {
+    "bytes": 6812,
+    "path": "fullcheck-attempt2-xml/modules/core/target/test-reports/TEST-edu.uic.cs441.scholarchain.core.ResolutionContractSpec.xml",
+    "sha256": "48f1fe0651ade647cd96b4d0acbc84d6cb9e11a0d3bbf044d7c06e02f482cb8f"
+  },
+  {
+    "bytes": 6395,
+    "path": "fullcheck-attempt2-xml/modules/core/target/test-reports/TEST-edu.uic.cs441.scholarchain.core.ResolutionGroundingSpec.xml",
+    "sha256": "fbac4a8af12c0c1db8d920785d4087c183b0bc4e3cd52214ede86a34cea5c1e5"
+  },
+  {
+    "bytes": 7112,
+    "path": "fullcheck-attempt2-xml/modules/core/target/test-reports/TEST-edu.uic.cs441.scholarchain.core.Runtime9CContractSpec.xml",
+    "sha256": "d857a0c9757fcf04dd3372e644e1201984f2b1372a52a79d1c80ea43dea824b1"
+  },
+  {
+    "bytes": 7899,
+    "path": "fullcheck-attempt2-xml/modules/core/target/test-reports/TEST-edu.uic.cs441.scholarchain.core.RuntimeBundlePartitionSpec.xml",
+    "sha256": "49a8417f4faa5bf6e0b6e3e4e07d122035541b9e17aed9d016962ec3a9e5a40b"
+  },
+  {
+    "bytes": 8405,
+    "path": "fullcheck-attempt2-xml/modules/core/target/test-reports/TEST-edu.uic.cs441.scholarchain.core.RuntimeContractSpec.xml",
+    "sha256": "7c248cf3d6195dd2f3ed55875ff6baf7319d9fbee38240c651b456687466585b"
+  },
+  {
+    "bytes": 6684,
+    "path": "fullcheck-attempt2-xml/modules/core/target/test-reports/TEST-edu.uic.cs441.scholarchain.core.RuntimeEvidenceIdSpec.xml",
+    "sha256": "b32085c91b67c15f2326097d068c0fe8c1cba4e24eb1653ef6c61bd66a35245c"
+  },
+  {
+    "bytes": 5783,
+    "path": "fullcheck-attempt2-xml/modules/core/target/test-reports/TEST-edu.uic.cs441.scholarchain.core.SerializationContractSpec.xml",
+    "sha256": "a0ee11905e1f004011105d929ad954b2d52010c6a32cdf39882fccb72ceb4e3f"
+  },
+  {
+    "bytes": 7957,
+    "path": "fullcheck-attempt2-xml/modules/core/target/test-reports/TEST-edu.uic.cs441.scholarchain.core.SparkAnalyticsContractSpec.xml",
+    "sha256": "9bbe95727fa19231315a872cb95400632430c5a80ee720b801cecb4f7ffd65b1"
+  },
+  {
+    "bytes": 6711,
+    "path": "fullcheck-attempt2-xml/modules/core/target/test-reports/TEST-edu.uic.cs441.scholarchain.core.StableIdSpec.xml",
+    "sha256": "6cd1ec4fdda1d5db62fbc474b0969561a2e32ba76597c183dfde40b58a3a2ed6"
+  },
+  {
+    "bytes": 11057,
+    "path": "fullcheck-attempt2-xml/modules/core/target/test-reports/TEST-edu.uic.cs441.scholarchain.core.ValidationSpec.xml",
+    "sha256": "e22f664f5466bb3d3af45e79cdddfab900deb4411dff7652405ca7e0be95a544"
+  },
+  {
+    "bytes": 5130,
+    "path": "fullcheck-attempt2-xml/modules/core/target/test-reports/TEST-edu.uic.cs441.scholarchain.core.WorkSourceEvidenceSpec.xml",
+    "sha256": "0a332dbabfaa6a568142634e0e17f9ace3d5758d138f3bf4eb47586cab816d2f"
+  },
+  {
+    "bytes": 7292,
+    "path": "fullcheck-attempt2-xml/modules/core/target/test-reports/TEST-edu.uic.cs441.scholarchain.resolutionconsumer.ResolutionAuthorityConsumerSpec.xml",
+    "sha256": "880f3814e3fda494578fddd71f0dd83f1816333bf1dbd9f446373b8cb81eeefa"
+  },
+  {
+    "bytes": 5964,
+    "path": "fullcheck-attempt2-xml/modules/entity-resolution/target/test-reports/TEST-edu.uic.cs441.scholarchain.entityresolution.ComparableEvidenceSpec.xml",
+    "sha256": "871a1cf4c8406b66251c8232cbc6f27b0b12f77ccadf326e583566076d5f1627"
+  },
+  {
+    "bytes": 5737,
+    "path": "fullcheck-attempt2-xml/modules/entity-resolution/target/test-reports/TEST-edu.uic.cs441.scholarchain.entityresolution.LiveDemoExportSpec.xml",
+    "sha256": "be70465a2d28fdec6c070049da12645a73e50a890429e22c146549f2a598bccd"
+  },
+  {
+    "bytes": 8128,
+    "path": "fullcheck-attempt2-xml/modules/entity-resolution/target/test-reports/TEST-edu.uic.cs441.scholarchain.entityresolution.OfflineResolutionSpec.xml",
+    "sha256": "b2c0cd50ce2803c51b562c800aecabf00d83b8a57758dedbc1f326d3477c3b58"
+  },
+  {
+    "bytes": 5740,
+    "path": "fullcheck-attempt2-xml/modules/entity-resolution/target/test-reports/TEST-edu.uic.cs441.scholarchain.entityresolution.ProviderResponseDiagnosticSpec.xml",
+    "sha256": "c54ec92bc7036d9872d54d0efa8a330d18f617cf1944c25940132ec072ad32b9"
+  },
+  {
+    "bytes": 5998,
+    "path": "fullcheck-attempt2-xml/modules/entity-resolution/target/test-reports/TEST-edu.uic.cs441.scholarchain.entityresolution.RequestEligibilitySpec.xml",
+    "sha256": "5f08f79405f36240ac0b264dd2f38447cd38e91288cf7553866f1986eb4d84c5"
+  },
+  {
+    "bytes": 6518,
+    "path": "fullcheck-attempt2-xml/modules/entity-resolution/target/test-reports/TEST-edu.uic.cs441.scholarchain.entityresolution.ReviewReadinessSpec.xml",
+    "sha256": "18656fd34b6dfaef4c4c8cdcd3d9b0b0d68de5a890bf1f4f905d5cd09e188409"
+  },
+  {
+    "bytes": 6031,
+    "path": "fullcheck-attempt2-xml/modules/hadoop/target/test-reports/TEST-edu.uic.cs441.scholarchain.hadoop.DblpXmlRegressionSpec.xml",
+    "sha256": "dc51fc6ff0bd0c8141d852c986015d324f2c199ef3339b3156aca8b3e550ba95"
+  },
+  {
+    "bytes": 11165,
+    "path": "fullcheck-attempt2-xml/modules/hadoop/target/test-reports/TEST-edu.uic.cs441.scholarchain.hadoop.HadoopPrepReviewSpec.xml",
+    "sha256": "d11a2b8d4321a5d9cc911d2c6fd5ae48c852390c942fed5c7eaf772a620ddb20"
+  },
+  {
+    "bytes": 8675,
+    "path": "fullcheck-attempt2-xml/modules/hadoop/target/test-reports/TEST-edu.uic.cs441.scholarchain.hadoop.HadoopPrepSpec.xml",
+    "sha256": "7c3ae059b099037b19a2abeaf6ef54a55d5d9f6780b089bb68d7e1992232ed57"
+  },
+  {
+    "bytes": 6832,
+    "path": "fullcheck-attempt2-xml/modules/hadoop/target/test-reports/TEST-edu.uic.cs441.scholarchain.hadoop.SourceEvidenceRegressionSpec.xml",
+    "sha256": "44c379edb8ecae1d68af2212266d7da687c7672d7497662b410f4c8d6faa1682"
+  },
+  {
+    "bytes": 5478,
+    "path": "fullcheck-attempt2-xml/modules/rag/target/test-reports/TEST-edu.uic.cs441.scholarchain.rag.Embedding8BRepairSpec.xml",
+    "sha256": "162002485a554443dc37a130ad9a66f2af319db98e2c7a6f05625815777901bb"
+  },
+  {
+    "bytes": 8950,
+    "path": "fullcheck-attempt2-xml/modules/rag/target/test-reports/TEST-edu.uic.cs441.scholarchain.rag.EmbeddingRagSpec.xml",
+    "sha256": "4535764cfd786748a8af1c354d94c7aff5d4d64977b29de558f3b88874b97f44"
+  },
+  {
+    "bytes": 5456,
+    "path": "fullcheck-attempt2-xml/modules/rag/target/test-reports/TEST-edu.uic.cs441.scholarchain.rag.EmbeddingRetrievalSpec.xml",
+    "sha256": "3a5bb5d2b11277aa3fc4103b387d7beac90d5d3a9cfcd8141a11567e4686ab70"
+  },
+  {
+    "bytes": 5954,
+    "path": "fullcheck-attempt2-xml/modules/rag/target/test-reports/TEST-edu.uic.cs441.scholarchain.rag.EmbeddingSmokeGuardSpec.xml",
+    "sha256": "ed75971912605c8299ce05d77e462e1b9e0fe97cf31e24eabcdfe6fb042f84b5"
+  },
+  {
+    "bytes": 5681,
+    "path": "fullcheck-attempt2-xml/modules/rag/target/test-reports/TEST-edu.uic.cs441.scholarchain.rag.LiveEmbeddingGuardSpec.xml",
+    "sha256": "8aa4a87f8529974c09867e29d70372e0a927bcf3914b3cdbed69183f390656a4"
+  },
+  {
+    "bytes": 9353,
+    "path": "fullcheck-attempt2-xml/modules/rag/target/test-reports/TEST-edu.uic.cs441.scholarchain.rag.Runtime9ARepairSpec.xml",
+    "sha256": "015ec719b6daad46364c818341956107ee148f46d067213f850ade754949575d"
+  },
+  {
+    "bytes": 9122,
+    "path": "fullcheck-attempt2-xml/modules/rag/target/test-reports/TEST-edu.uic.cs441.scholarchain.rag.Runtime9ASpec.xml",
+    "sha256": "d22d86a318b939e2a9721e12c9fa03cc986788b7033f0bae90f5d0736cabfce6"
+  },
+  {
+    "bytes": 8414,
+    "path": "fullcheck-attempt2-xml/modules/rag/target/test-reports/TEST-edu.uic.cs441.scholarchain.rag.Runtime9BSpec.xml",
+    "sha256": "590f7e0897353c01a8800ab85a828ff59b25d1e948e7d2bff976658f129f6ed7"
+  },
+  {
+    "bytes": 8250,
+    "path": "fullcheck-attempt2-xml/modules/rag/target/test-reports/TEST-edu.uic.cs441.scholarchain.rag.Runtime9CSpec.xml",
+    "sha256": "51fb857f772078c940cab73b11922695f1dfb45c4edba36a2e63203920ca993f"
+  },
+  {
+    "bytes": 5935,
+    "path": "fullcheck-attempt2-xml/modules/services/target/test-reports/TEST-edu.uic.cs441.scholarchain.services.GraphRequestDeadlineSpec.xml",
+    "sha256": "4fd11bb562a68904df2c4c20218c7fbc1500d295cff88b206ac6dabeb1f31810"
+  },
+  {
+    "bytes": 5962,
+    "path": "fullcheck-attempt2-xml/modules/services/target/test-reports/TEST-edu.uic.cs441.scholarchain.services.GraphTransportBudgetSpec.xml",
+    "sha256": "c8bf3cef161f4a9d8a966444aee3adc433ef571cef5606e1b1dacfe5b6d4cc48"
+  },
+  {
+    "bytes": 5465,
+    "path": "fullcheck-attempt2-xml/modules/services/target/test-reports/TEST-edu.uic.cs441.scholarchain.services.RetriedSessionCreationSpec.xml",
+    "sha256": "73f4f447e3e358420ba2d559a6715189660aae72ec3670cf7e717779e6709bd1"
+  },
+  {
+    "bytes": 5702,
+    "path": "fullcheck-attempt2-xml/modules/services/target/test-reports/TEST-edu.uic.cs441.scholarchain.services.RuntimeWorkflowAdapterSpec.xml",
+    "sha256": "5ae3247019388a6ef0789638b247665410ed1d85b1cf70853b05466e05fc034e"
+  },
+  {
+    "bytes": 7449,
+    "path": "fullcheck-attempt2-xml/modules/services/target/test-reports/TEST-edu.uic.cs441.scholarchain.services.ServiceFoundationSpec.xml",
+    "sha256": "f3694c7b4bd863e263336989b0484dff231d89e44bb27f99e9900f8aa3289043"
+  },
+  {
+    "bytes": 6290,
+    "path": "fullcheck-attempt2-xml/modules/services/target/test-reports/TEST-edu.uic.cs441.scholarchain.services.Services10BSpec.xml",
+    "sha256": "94e34e192a63b94c6abb38dfc47bbc77c7f2ed5f173db9aff55df23b6b1409fb"
+  },
+  {
+    "bytes": 5813,
+    "path": "fullcheck-attempt2-xml/modules/services/target/test-reports/TEST-edu.uic.cs441.scholarchain.services.SessionBindingRecoverySpec.xml",
+    "sha256": "67565db67c035633544204aba4f3fed1b65a48ceefeb0be1877d1681d3f1da9e"
+  },
+  {
+    "bytes": 7369,
+    "path": "fullcheck-attempt2-xml/modules/spark/target/test-reports/TEST-edu.uic.cs441.scholarchain.spark.Phase12ReadinessSpec.xml",
+    "sha256": "6c8c5548e1ffce4e5bf0efe6e8291cff57ead5d582d37930d2a3c8ebe34ceba7"
+  },
+  {
+    "bytes": 8031,
+    "path": "fullcheck-attempt2-xml/modules/spark/target/test-reports/TEST-edu.uic.cs441.scholarchain.spark.Phase6CJobsSpec.xml",
+    "sha256": "79ef686c5697b38cfea0c9c5b2a386d23ea30ea56d152ec0ca9c79f603b2328c"
+  },
+  {
+    "bytes": 7374,
+    "path": "fullcheck-attempt2-xml/modules/spark/target/test-reports/TEST-edu.uic.cs441.scholarchain.spark.Phase6DEJobsSpec.xml",
+    "sha256": "defa89ead54481aa008dc12649294b6efa76f23054d401de75765791b2c2585f"
+  },
+  {
+    "bytes": 6150,
+    "path": "fullcheck-attempt2-xml/modules/spark/target/test-reports/TEST-edu.uic.cs441.scholarchain.spark.Phase6FGJobsSpec.xml",
+    "sha256": "554db7ca5aac1aa254deb396cfa4ff5e05402e8e5bbdb51c66fa8ae58d16f44c"
+  },
+  {
+    "bytes": 5655,
+    "path": "fullcheck-attempt2-xml/modules/spark/target/test-reports/TEST-edu.uic.cs441.scholarchain.spark.Phase7NeptuneExportSpec.xml",
+    "sha256": "ea218ed4417ba29c442176c9f3c56a101e8bf0b4b3bb5e1b9c9f058c27a6c213"
+  },
+  {
+    "bytes": 4953,
+    "path": "fullcheck-attempt2-xml/modules/spark/target/test-reports/TEST-edu.uic.cs441.scholarchain.spark.SparkSmokeSpec.xml",
+    "sha256": "39c4ecf40d4d6ac6a85d60d32ed8d1da7beca10c4a6d85aa0cd8d5a96a96302d"
+  },
+  {
+    "bytes": 4735,
+    "path": "fullcheck-attempt2-xml/modules/storage/target/test-reports/TEST-edu.uic.cs441.scholarchain.storage.AwsIntegrationSpec.xml",
+    "sha256": "4dcbd3693bd5e8006923933c20db0993fe70865878180383a820a696129e6127"
+  },
+  {
+    "bytes": 5919,
+    "path": "fullcheck-attempt2-xml/modules/storage/target/test-reports/TEST-edu.uic.cs441.scholarchain.storage.AwsLiveGraphCleanupSpec.xml",
+    "sha256": "034ffe0e2ea4d1c6d4aef694490ebfd3de268997ba68c06cc9912f843f1b2cc0"
+  },
+  {
+    "bytes": 5674,
+    "path": "fullcheck-attempt2-xml/modules/storage/target/test-reports/TEST-edu.uic.cs441.scholarchain.storage.AwsLivePolicySpec.xml",
+    "sha256": "5db89257240391f6654033387437fa813ef57900dc0a5721e98b1ba1eeca4eaa"
+  },
+  {
+    "bytes": 6219,
+    "path": "fullcheck-attempt2-xml/modules/storage/target/test-reports/TEST-edu.uic.cs441.scholarchain.storage.EmbeddingGroupStateSpec.xml",
+    "sha256": "20903623e98a298db1cb1d5b81ad70ae511013485161dcb8e6e7f1efc4a0c2f3"
+  },
+  {
+    "bytes": 7820,
+    "path": "fullcheck-attempt2-xml/modules/storage/target/test-reports/TEST-edu.uic.cs441.scholarchain.storage.EmbeddingStorageSpec.xml",
+    "sha256": "4b6f3f20a3b53fe8f36e13b349ab2e5f4fa76f8d67e547e1a172f1781f9a39e3"
+  },
+  {
+    "bytes": 6127,
+    "path": "fullcheck-attempt2-xml/modules/storage/target/test-reports/TEST-edu.uic.cs441.scholarchain.storage.NeptuneRepairSpec.xml",
+    "sha256": "44535dda065b6f1278f56315fcf0713aefea3f89611dc2563d3e144b6cf81beb"
+  },
+  {
+    "bytes": 5437,
+    "path": "fullcheck-attempt2-xml/modules/storage/target/test-reports/TEST-edu.uic.cs441.scholarchain.storage.ParquetManifestSpec.xml",
+    "sha256": "d676989026abc9be935eb181d2aace68e9b1b42875e7b85091570774b9c4b2a6"
+  },
+  {
+    "bytes": 6119,
+    "path": "fullcheck-attempt2-xml/modules/storage/target/test-reports/TEST-edu.uic.cs441.scholarchain.storage.Phase7BFeaturesSpec.xml",
+    "sha256": "42047fd3a64aa724a592aaff95b43c467eef74c8f91bff405a7de3dfdcfe6b04"
+  },
+  {
+    "bytes": 8459,
+    "path": "fullcheck-attempt2-xml/modules/storage/target/test-reports/TEST-edu.uic.cs441.scholarchain.storage.RuntimeArtifactStorageSpec.xml",
+    "sha256": "b8dd957694eb1034383b0b50ba2788431336523e6d2ec2c370b13d54750f9c3e"
+  },
+  {
+    "bytes": 7938,
+    "path": "fullcheck-attempt2-xml/modules/storage/target/test-reports/TEST-edu.uic.cs441.scholarchain.storage.RuntimeAuditStorageSpec.xml",
+    "sha256": "9eb54106195859d311409df98746f95d2e50318b1dedd201354a41701100ed2a"
+  },
+  {
+    "bytes": 6610,
+    "path": "fullcheck-attempt2-xml/modules/storage/target/test-reports/TEST-edu.uic.cs441.scholarchain.storage.StorageFeatureSpec.xml",
+    "sha256": "40dc59babd9e99b48cf3b40925329ca814ca42417c05d06ac2c252c2d060fc7c"
+  },
+  {
+    "bytes": 5791,
+    "path": "fullcheck-attempt2-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.AdversarialBlockingReplaySpec.xml",
+    "sha256": "85871f4164662ec916adf21fa7cbf6e7cbfbec73123f33ec2adcda2d8c4e0780"
+  },
+  {
+    "bytes": 6755,
+    "path": "fullcheck-attempt2-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.AdversarialDataPlaneSpec.xml",
+    "sha256": "44b6cde85c624be3ef5cce9e51684aea2cb390d5b69faedb186abb7b7e664027"
+  },
+  {
+    "bytes": 5550,
+    "path": "fullcheck-attempt2-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.AdversarialGraphShapesSpec.xml",
+    "sha256": "50fb4461d21ed03984a3f9e650a9cb88d3d16f98bbcdaa7ff603209209cb543b"
+  },
+  {
+    "bytes": 5615,
+    "path": "fullcheck-attempt2-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.AdversarialRuntimeBoundarySpec.xml",
+    "sha256": "7ecd12e69a7bb277f02876544f45a7dff2b5eff5b6a75d4216e64c01e0b5b7f0"
+  },
+  {
+    "bytes": 6658,
+    "path": "fullcheck-attempt2-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.AdversarialRuntimeHttpSpec.xml",
+    "sha256": "2b9ea260667ddf195ec313540a8a621b6cd19f024374183a0780202dd24439d6"
+  },
+  {
+    "bytes": 6966,
+    "path": "fullcheck-attempt2-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.AdversarialRuntimeWorkflowSpec.xml",
+    "sha256": "3affd7dc9891efb0253874aa34a3e033dc1058a10e17ced881d57be50869f3c5"
+  },
+  {
+    "bytes": 6296,
+    "path": "fullcheck-attempt2-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentCandidateDerivationSpec.xml",
+    "sha256": "de83eed4e5250f046424bd2c12d606c52395abbc0730da2763d6132dd13f2d7b"
+  },
+  {
+    "bytes": 6916,
+    "path": "fullcheck-attempt2-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentDblpJsonSpec.xml",
+    "sha256": "529750e456ff9252de815c8366f3673d1e708ae63780fc044a1f4df003a7a0b2"
+  },
+  {
+    "bytes": 5671,
+    "path": "fullcheck-attempt2-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentDblpXmlAdversarialSpec.xml",
+    "sha256": "c16606070d9797df7a394d8e41ab1fe24c746f6210f986bfcad9ccaaafba40f5"
+  },
+  {
+    "bytes": 8783,
+    "path": "fullcheck-attempt2-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentDblpXmlRepairSpec.xml",
+    "sha256": "0bddbbe090c8e907b53034da563510309dc406894a9af539215125766ce27497"
+  },
+  {
+    "bytes": 5614,
+    "path": "fullcheck-attempt2-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentEmbedding8BFailureSpec.xml",
+    "sha256": "0a668f226be941e2146a93e7493ae0da8c92026773ee97c5726294defac0a0e3"
+  },
+  {
+    "bytes": 5552,
+    "path": "fullcheck-attempt2-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentEmbedding8BGuardSpec.xml",
+    "sha256": "d6bc25ac249e1371022f793d6e243d7543bf64704a46c4092829be2bb815e8c8"
+  },
+  {
+    "bytes": 5088,
+    "path": "fullcheck-attempt2-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentEmbedding8BPipelineSpec.xml",
+    "sha256": "31709ed73705ddbe8e7a64d6d566d8a4c0639290da18d8fe981939f99f2d7283"
+  },
+  {
+    "bytes": 5338,
+    "path": "fullcheck-attempt2-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentEmbedding8BSmokeSpec.xml",
+    "sha256": "1a090f6e6cb643ba84deb2776d7748cb113143cfd71f0802c2b96d5999d36ac9"
+  },
+  {
+    "bytes": 6542,
+    "path": "fullcheck-attempt2-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentEmbeddingContractSpec.xml",
+    "sha256": "703fca5294b3376622b1ed57810f79ee494d90e0ef724d4ded6bd0d4b2101bd9"
+  },
+  {
+    "bytes": 5852,
+    "path": "fullcheck-attempt2-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentEmbeddingRenderingSpec.xml",
+    "sha256": "20c6d3f7c53f2d64fa85f8c786c29aeebc9180281ed29d343621a369e383dfcf"
+  },
+  {
+    "bytes": 6652,
+    "path": "fullcheck-attempt2-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentEmbeddingSlotRepairSpec.xml",
+    "sha256": "c0f4de1a2950555a0198a47a2886cf5e036fe8442bb72ce2727eb8cfe61ff105"
+  },
+  {
+    "bytes": 6294,
+    "path": "fullcheck-attempt2-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentEmbeddingStorageSpec.xml",
+    "sha256": "0d691b6557c73165af50b32a8da4c2d6155851bd30f9ee7608e4db229e0567e2"
+  },
+  {
+    "bytes": 5838,
+    "path": "fullcheck-attempt2-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentEvaluationAdapterSpec.xml",
+    "sha256": "c63f9f0a614053dc7485d751680b30b77d6bf5f98a039185142762ceb513d08d"
+  },
+  {
+    "bytes": 5795,
+    "path": "fullcheck-attempt2-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentEvaluationCliSpec.xml",
+    "sha256": "c70508e5c597493257cac345305df199fef060028c30cf5cff1d2bedd289bd58"
+  },
+  {
+    "bytes": 5326,
+    "path": "fullcheck-attempt2-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentEvaluationCohortSpec.xml",
+    "sha256": "f89f94cc91c414518751b69dc088f198f5294de4297eb6c9380b49099710c2b0"
+  },
+  {
+    "bytes": 6051,
+    "path": "fullcheck-attempt2-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentEvaluationSpec.xml",
+    "sha256": "7cd01724cdb772a139d2f2a692bf398ccb9c266ee2180c3f3e3d8f41ef991791"
+  },
+  {
+    "bytes": 6220,
+    "path": "fullcheck-attempt2-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentGoldLabelsSpec.xml",
+    "sha256": "a5f2e3ca95d1e4f32fe7d9cfcd482b5090e226739cbcafdee8eff579eefc6efa"
+  },
+  {
+    "bytes": 7515,
+    "path": "fullcheck-attempt2-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentHadoopPipelineSpec.xml",
+    "sha256": "e076601ba65abe04598a9891b8fa5878c6a1f7a64a437f78f44c711dffae20f2"
+  },
+  {
+    "bytes": 6058,
+    "path": "fullcheck-attempt2-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentIdentifierNormalizationSpec.xml",
+    "sha256": "36fe8de4c8d5cf35eb3f9ea0ebf83bde32a7df9d3576896820e08138044dcb9f"
+  },
+  {
+    "bytes": 6319,
+    "path": "fullcheck-attempt2-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentLiveAdjudicatorSpec.xml",
+    "sha256": "ce9d814a78f6077ea34738f35109965c6578cba3166533f136fdf2f5b0d5467e"
+  },
+  {
+    "bytes": 6018,
+    "path": "fullcheck-attempt2-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentLiveBudgetSpec.xml",
+    "sha256": "d7dd2c86cce48fe99a95c49624698a6ca785f600bcad1c83a60718ddccaa80cd"
+  },
+  {
+    "bytes": 5522,
+    "path": "fullcheck-attempt2-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentLiveCacheSpec.xml",
+    "sha256": "f39511584185066c49b4a153600498b3404a2d3bec504d91b14ccec38e6f7e45"
+  },
+  {
+    "bytes": 6599,
+    "path": "fullcheck-attempt2-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentLiveCredentialPreflightSpec.xml",
+    "sha256": "f1e30641c0186555c99d17bd25994147384e7fae274d913a18be474430ae695a"
+  },
+  {
+    "bytes": 5312,
+    "path": "fullcheck-attempt2-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentLiveCredentialsSpec.xml",
+    "sha256": "e164aa6f449d408a2ad237aaf2bcbe8c2d0edb0354c25935610e60aab547bc3c"
+  },
+  {
+    "bytes": 6851,
+    "path": "fullcheck-attempt2-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentLiveDevelopmentSpec.xml",
+    "sha256": "62367639e28e1972c57b5e1f3126e06fef0d81b6b1d1409ed7c959cd90343386"
+  },
+  {
+    "bytes": 6122,
+    "path": "fullcheck-attempt2-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentLiveResponseDiagnosticSpec.xml",
+    "sha256": "8300c78aeb1ae25c1a80dde7c4ae965e12bff760459828ffc4076fd8bcf96360"
+  },
+  {
+    "bytes": 7120,
+    "path": "fullcheck-attempt2-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentOfflineAdjudicationSpec.xml",
+    "sha256": "9f97d7530e0853fe99c1d66a3ce0390ee9343864f763388636b1316529faac0a"
+  },
+  {
+    "bytes": 7164,
+    "path": "fullcheck-attempt2-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentOpenAIResponsesSpec.xml",
+    "sha256": "315e3a54993ad51ed2f6acdd2caef75c62ea5c99f66d970f5fb29a09bb2f8448"
+  },
+  {
+    "bytes": 6492,
+    "path": "fullcheck-attempt2-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentPhase4BlockerSpec.xml",
+    "sha256": "996e1f84e4471cc5c2b96b66e34e852ec3427f95b0ce8ceb30bdcb534ad72188"
+  },
+  {
+    "bytes": 6037,
+    "path": "fullcheck-attempt2-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentPhase4EvidenceSpec.xml",
+    "sha256": "44fe953ee537e480a8eb9dda2ebb4f6337b2891d519eeded727f26617c56b652"
+  },
+  {
+    "bytes": 6228,
+    "path": "fullcheck-attempt2-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentPhase6CGraphSpec.xml",
+    "sha256": "1789545beb06ba8f75de0f7993fdf03a48293f4dfcf73cc2b6de52ada394e375"
+  },
+  {
+    "bytes": 7156,
+    "path": "fullcheck-attempt2-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentPhase6DEGraphSpec.xml",
+    "sha256": "ec706d92692f6480a11b1736b9126d24f8646ea06e589708fc4df870ed4e6eb8"
+  },
+  {
+    "bytes": 6810,
+    "path": "fullcheck-attempt2-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentPhase6FGSpec.xml",
+    "sha256": "fbcd30b1f18ccc06b5899dc8f5218908c13eac7ee61e5e5a1b2610f2a56d6ac0"
+  },
+  {
+    "bytes": 5053,
+    "path": "fullcheck-attempt2-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentPhase6PipelineSpec.xml",
+    "sha256": "f75b23d6a427cbefbff57d959e1d0dd62775b6bf0c17cac6ff8c629a8fb6e677"
+  },
+  {
+    "bytes": 6588,
+    "path": "fullcheck-attempt2-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentPhase6SafetySpec.xml",
+    "sha256": "7f2348976cf08a5cd3064dd94be0488e1a96c5a312b8215ae99f93b9bff53328"
+  },
+  {
+    "bytes": 6227,
+    "path": "fullcheck-attempt2-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentPrepReaderSpec.xml",
+    "sha256": "2e83b7237f9b1893bc8dbfb419f17399d585289dd9a17bd0c363d71ab370deaa"
+  },
+  {
+    "bytes": 8395,
+    "path": "fullcheck-attempt2-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentRequestEligibilitySpec.xml",
+    "sha256": "a88e7963f168b371768a7cb55cf0172d0f657ef603afddc3f007707ddffb8bd6"
+  },
+  {
+    "bytes": 9134,
+    "path": "fullcheck-attempt2-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentResolutionContractSpec.xml",
+    "sha256": "b75f93b84e3015a4f4c7e2b0d37d9d29955e6405fe14d4f301de4a4d71ecc2a9"
+  },
+  {
+    "bytes": 6838,
+    "path": "fullcheck-attempt2-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentResolutionEngineSpec.xml",
+    "sha256": "faaafb485e2fc579c57c64cca3480dbdba608d8ecb0f577e362cd17001aacde1"
+  },
+  {
+    "bytes": 6359,
+    "path": "fullcheck-attempt2-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentResolutionExportSpec.xml",
+    "sha256": "19f64e9b406f96135eb25d6e0cbabcd49e7181c9ee2fad562c953a4a68365c54"
+  },
+  {
+    "bytes": 6100,
+    "path": "fullcheck-attempt2-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentResolutionFeaturesSpec.xml",
+    "sha256": "d83ae346aa986cf32a0ef8642cbfd44bed8f114a26c7eac771a14d61fe839240"
+  },
+  {
+    "bytes": 6311,
+    "path": "fullcheck-attempt2-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentResolutionInputSpec.xml",
+    "sha256": "ab79c2b6e01c03d90dd9f9560abde7dd7f576c824cf992edb9f07910fe1cf46d"
+  },
+  {
+    "bytes": 6294,
+    "path": "fullcheck-attempt2-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentResolutionPolicySpec.xml",
+    "sha256": "6f1136f4429f24eb40c977d65b3700a87e39180a749dedda338e27d0985ec546"
+  },
+  {
+    "bytes": 5085,
+    "path": "fullcheck-attempt2-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentResolutionPrepBridgeRepairSpec.xml",
+    "sha256": "c7d38b778033cbd60a42806d8066dbabdb38d4e2dbaeed0809077de4014a926a"
+  },
+  {
+    "bytes": 6328,
+    "path": "fullcheck-attempt2-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentResolutionRepairSpec.xml",
+    "sha256": "c4b9c162d711d1483ac17abe2b3ff1af9648dde42c6863c6b0cb9b3870c1085a"
+  },
+  {
+    "bytes": 6278,
+    "path": "fullcheck-attempt2-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentResolutionRunSpec.xml",
+    "sha256": "ee7cff07daa628b32307a2ac2701e506ee57d9e13ca94bff715b0b0e8cf20091"
+  },
+  {
+    "bytes": 5587,
+    "path": "fullcheck-attempt2-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentRetainedReviewInputSpec.xml",
+    "sha256": "78131a7202ea1f8a014712f23bbb5565248bac3da6d827bf4e4c1b7124b23bb2"
+  },
+  {
+    "bytes": 5611,
+    "path": "fullcheck-attempt2-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentReviewBindingRepairSpec.xml",
+    "sha256": "b50f4f4860c4c8749f50e658d7c747d56e209ef8570b25a457f1461810e6d1c3"
+  },
+  {
+    "bytes": 6580,
+    "path": "fullcheck-attempt2-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentReviewQueueSpec.xml",
+    "sha256": "f1f72c7bde29495edbcc67cbaa1265c05647e1df9a5ab92ba03b06b5deb7c8b0"
+  },
+  {
+    "bytes": 5084,
+    "path": "fullcheck-attempt2-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentRuntime9AArtifactPipelineSpec.xml",
+    "sha256": "769f87412d1552094fe5324408810d63bbd63fc897f5f1b3433449523245d74d"
+  },
+  {
+    "bytes": 5768,
+    "path": "fullcheck-attempt2-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentRuntime9AEvidenceSpec.xml",
+    "sha256": "758f85a0c4542c334655eb6031d47311f2f63361683f9b1c4d45d1ecdb89afc1"
+  },
+  {
+    "bytes": 7458,
+    "path": "fullcheck-attempt2-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentRuntime9APlannerSpec.xml",
+    "sha256": "28c5d22b0099922606da1985386ec1f11b66ef8689d9f59959f37f4c43fb3534"
+  },
+  {
+    "bytes": 14315,
+    "path": "fullcheck-attempt2-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentRuntime9ARepairPlannerSpec.xml",
+    "sha256": "ac02115b56646becff0c8a5164fc540a252b350a25cdee275c0981b1f2a5ac1f"
+  },
+  {
+    "bytes": 6083,
+    "path": "fullcheck-attempt2-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentRuntime9ARepairResolverSpec.xml",
+    "sha256": "19fcdac09ec2cff2e296cb23bba5374b3f439e1fc0592bdfd383601cf635dafd"
+  },
+  {
+    "bytes": 6287,
+    "path": "fullcheck-attempt2-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentRuntime9AResolverSpec.xml",
+    "sha256": "6b7259f04682ac0ccea5036b7695ea355b0356d29b2a35ab24fe0db8ecd1da2c"
+  },
+  {
+    "bytes": 7314,
+    "path": "fullcheck-attempt2-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentRuntime9BEvidenceSpec.xml",
+    "sha256": "4926bb7bbee56e2e7f8a68f3fef1a36b175afb3546545b277da783cc94c04516"
+  },
+  {
+    "bytes": 6547,
+    "path": "fullcheck-attempt2-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentRuntime9BSemanticSpec.xml",
+    "sha256": "3569ad888b8decb966eb073ad77ebc1c9978cbee2bc6cdc0046b9ef7abb4f1cf"
+  },
+  {
+    "bytes": 12926,
+    "path": "fullcheck-attempt2-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentRuntime9BStagesSpec.xml",
+    "sha256": "3a5684c1a2dab0d1f0097e7fa7867c488834ac1c2a5d7ed8e564fdce135b540f"
+  },
+  {
+    "bytes": 8039,
+    "path": "fullcheck-attempt2-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentRuntime9BWorkflowSpec.xml",
+    "sha256": "544750b60b0e46b809e626a966e4a465783504b7a8478c9dbc774fed5e06f997"
+  },
+  {
+    "bytes": 9323,
+    "path": "fullcheck-attempt2-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentRuntime9CBenchmarkSpec.xml",
+    "sha256": "6b0d850bd5c306557e6826082407edb1029156b68d360aed78f290f7f0395573"
+  },
+  {
+    "bytes": 8079,
+    "path": "fullcheck-attempt2-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentRuntime9CSynthesisSpec.xml",
+    "sha256": "194fe5836244f4cd01391655a7cd27e38496a06f3571bd8bbf4d19b302bb40f2"
+  },
+  {
+    "bytes": 6514,
+    "path": "fullcheck-attempt2-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentRuntime9CTrustSpec.xml",
+    "sha256": "afca24f3c77b8f8760fef7bb5b6fccf8faacf6802963bf37f838012294ab3843"
+  },
+  {
+    "bytes": 13962,
+    "path": "fullcheck-attempt2-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentRuntime9CVerificationSpec.xml",
+    "sha256": "e35f8148da0dd090ec4462d16c855b70210c8f259e81935ed490cb5843e1dce1"
+  },
+  {
+    "bytes": 7539,
+    "path": "fullcheck-attempt2-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentRuntime9CWorkflowSpec.xml",
+    "sha256": "e6dcb20204788bca8809d57a07508cbcf237743684153edc17b15004cd784e97"
+  },
+  {
+    "bytes": 5821,
+    "path": "fullcheck-attempt2-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentServices10AResilienceSpec.xml",
+    "sha256": "516befad4defdb3594cc19bbbc1f2f1f309e835cd6e4bf9ce0a8976aa6b71016"
+  },
+  {
+    "bytes": 8692,
+    "path": "fullcheck-attempt2-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentServices10ASpec.xml",
+    "sha256": "0de3f5d5b5ed5bf6302c0a640496eb4e5a83d6694556180b8ae06491449cc9d2"
+  },
+  {
+    "bytes": 5866,
+    "path": "fullcheck-attempt2-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentServices10BDeadlineSpec.xml",
+    "sha256": "2b7d039b318b639746ccbd17892b59efbbabfd26dd585816be6121a69d0ddae1"
+  },
+  {
+    "bytes": 5601,
+    "path": "fullcheck-attempt2-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentServices10BEqualBudgetSpec.xml",
+    "sha256": "de621cc1e1b3deb8a53f00d3a017815f3ea16cba5682fc81002ed4def4a461ba"
+  },
+  {
+    "bytes": 5795,
+    "path": "fullcheck-attempt2-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentServices10BGraphSpec.xml",
+    "sha256": "ed4f69d31f678a1032e048eb98033f2539f973989649e6e5fa391396c988d0eb"
+  },
+  {
+    "bytes": 6957,
+    "path": "fullcheck-attempt2-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentServices10BLifecycleSpec.xml",
+    "sha256": "a96344450b427050c5ca9b955b61a2640f1721c063e4138db4977d5394fb738c"
+  },
+  {
+    "bytes": 5311,
+    "path": "fullcheck-attempt2-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentServices10BStructureSpec.xml",
+    "sha256": "3aab41dbfb1b03d4b4b42dc0460b82f1ac2cad906fec0ea992ca6d72ef5b923c"
+  },
+  {
+    "bytes": 5566,
+    "path": "fullcheck-attempt2-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentServices10BWorkerSpec.xml",
+    "sha256": "4e29673626aea19cd3135bc657af3f320124babae0454c28893f63f99d1dfcb2"
+  },
+  {
+    "bytes": 5024,
+    "path": "fullcheck-attempt2-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentSparkSessionSpec.xml",
+    "sha256": "34f5233ab174d2847fcc339cdd0a2f918cf96e82867729e74c99f0bb57632d05"
+  },
+  {
+    "bytes": 7610,
+    "path": "fullcheck-attempt2-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentStorageGraphLoaderSpec.xml",
+    "sha256": "d2bdd4689219bf6a9b4e03ff5d62e797c2bacbc82dc3e8f01547203998f9e693"
+  },
+  {
+    "bytes": 6087,
+    "path": "fullcheck-attempt2-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentStorageGraphReaderSpec.xml",
+    "sha256": "76c86f0fb2bb242214f703a5e0c8d2e3ac8efb2852bfbd50c7905b8da106aa39"
+  },
+  {
+    "bytes": 6835,
+    "path": "fullcheck-attempt2-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentStorageHardeningSpec.xml",
+    "sha256": "b07569cd6b1f767a24dcacc4b7cd746704c0183a300307cb75fa356b850bc974"
+  },
+  {
+    "bytes": 5592,
+    "path": "fullcheck-attempt2-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentStorageLiveExclusionSpec.xml",
+    "sha256": "1a0bed665823da4b486592f8cd7464ac38702e7b42a28ad7061f05907c44a382"
+  },
+  {
+    "bytes": 6051,
+    "path": "fullcheck-attempt2-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentStorageLoaderSpec.xml",
+    "sha256": "86e2a5d7ff713abfdd08aa80395c21203cf1fa2694b4f428033b107ef1c44c10"
+  },
+  {
+    "bytes": 5304,
+    "path": "fullcheck-attempt2-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentStorageParquetSpec.xml",
+    "sha256": "105967d533131dc41e436a6141d046c104804098e129a764d1c6d8593aac2eaf"
+  },
+  {
+    "bytes": 6995,
+    "path": "fullcheck-attempt2-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentStoragePortsSpec.xml",
+    "sha256": "03fb48aca9fcbd074fd78cfd9c7a6e2d8d67013419f5c60da9b39ae76e14b54c"
+  },
+  {
+    "bytes": 6811,
+    "path": "fullcheck-attempt2-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentStorageRuntimeFenceSpec.xml",
+    "sha256": "053b342f3f835ab39163be8e29aa3774fe189cc862a448e3ac34fa984d4b66c9"
+  },
+  {
+    "bytes": 8717,
+    "path": "fullcheck-attempt2-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentStorageSdkSpec.xml",
+    "sha256": "b1df7abdcc3b4c0bbd67906e5bceab2b0e68393a3b3c0a9049b1e3cab0872774"
+  },
+  {
+    "bytes": 7312,
+    "path": "fullcheck-attempt2-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentStorageVectorSpec.xml",
+    "sha256": "816f3c90c47123e7206d914ee1bd3a9b0b6045017ccfe42d81cd94854dec36ae"
+  },
+  {
+    "bytes": 5292,
+    "path": "fullcheck-attempt2-xml/tests/target/test-reports/TEST-edu.uic.cs441.scholarchain.independent.IndependentTerraformSourceSpec.xml",
+    "sha256": "3a7f05eb3d621d63efb7a15949635dc87c6cd956983a68ead1103db6ebe2e45e"
+  },
+  {
+    "bytes": 43399,
+    "path": "fullcheck-attempt2-xml-summary.json",
+    "sha256": "ffd49bffe9db281dc325e84fc4eaa7f96eaf00418d18985ac696388d15074848"
+  },
+  {
+    "bytes": 1720070,
+    "path": "fullcheck-attempt2.log.txt",
+    "sha256": "5bb6ca91cbd7e0bcf9e4493307f40f199030769f89610d95fe57d5f4501e7683"
+  },
+  {
+    "bytes": 999,
+    "path": "fullcheck-package-attempt1-command.json",
+    "sha256": "18defe25b4efd9e53d04cc75fd6fc0ca4642a790163cd0e40224dbf1d6ef7546"
+  },
+  {
+    "bytes": 122,
+    "path": "fullcheck-package-attempt1-result.json",
+    "sha256": "fdecae0d12d1154a3c35ea414af3ab01cf67ab59e235ef91721bf76668e9e479"
+  },
+  {
+    "bytes": 1718791,
+    "path": "fullcheck-package-attempt1.log.txt",
+    "sha256": "74cf85bcecb4a0d00f8f03df48f7d1e587083e35095c24b27b8101d623ec2be1"
+  },
+  {
+    "bytes": 108252,
+    "path": "fullcheck-source-freeze.json",
+    "sha256": "5b99473e31def5fc3e0e3e31f3e53a490bcad1836271091d6ed1e2f208ccbb97"
+  },
+  {
+    "bytes": 16384,
+    "path": "hadoop-compile-classpath.txt",
+    "sha256": "0c43b38cc1a1e45ba3649715931d90dafca01aed0dcf6226c08995ea6a1784c6"
+  },
+  {
+    "bytes": 22826,
+    "path": "local-cluster-probe-command.json",
+    "sha256": "98e639a432f988cc5a405fdb55506b630a2a219d7712ff67ed4f73e9ac3c9a00"
+  },
+  {
+    "bytes": 239,
+    "path": "local-cluster-probe-result.json",
+    "sha256": "2c24a68d8c3cb63dbfa08e7d56061a8c744ace1ea5a3988390b3da0699b3b801"
+  },
+  {
+    "bytes": 22998,
+    "path": "local-cluster-probe-v2-command.json",
+    "sha256": "d28a07b4d1c218c64c1c0d98d719284e21f9e76c70e8be4dedf3cdebeb52ba84"
+  },
+  {
+    "bytes": 237,
+    "path": "local-cluster-probe-v2-result.json",
+    "sha256": "9c5a7ebe665ee01eea3aca0d7b388bf398442b4b3e0274deac2b68454f5d9d80"
+  },
+  {
+    "bytes": 46793,
+    "path": "local-cluster-probe-v2.log.txt",
+    "sha256": "8978084af1806fbf0ca4fc5c4d3505c0b24d7a7330b954e2c65463fc4b21baa4"
+  },
+  {
+    "bytes": 23076,
+    "path": "local-cluster-probe-v3-command.json",
+    "sha256": "7e2599bd38133f029977cadf1af0ceadd5dc6231b2bbb61fabd2816ff1154eb3"
+  },
+  {
+    "bytes": 340,
+    "path": "local-cluster-probe-v3-result.json",
+    "sha256": "844b3aeaf33f360989b8f4cb13def6a6d9874a055c8ba61ff8e4a19acb745fc5"
+  },
+  {
+    "bytes": 19968,
+    "path": "local-cluster-probe-v3.log.txt",
+    "sha256": "0283b60654962a535330d91978a99b7d2ff0f464affb2c4af30c52b0c5c9b496"
+  },
+  {
+    "bytes": 9819,
+    "path": "local-cluster-probe.log.txt",
+    "sha256": "0b67e04f2fc3ace03d39e3ddb7aab65de44075a0d2d108917bea18f86538298c"
+  },
+  {
+    "bytes": 5123,
+    "path": "local-cluster-v3-class-origin-validation.json",
+    "sha256": "5b34e0d877f8fd590987ea2d0a38ad604a3ffeb5b46ac247dc899c9defd11ef1"
+  },
+  {
+    "bytes": 2349,
+    "path": "local-probe-attempts-and-limits.json",
+    "sha256": "3083c041ae66b0ed1b2a53736056e0b2043c2251caa06cce867d27c7758cad20"
+  },
+  {
+    "bytes": 631,
+    "path": "package-runtime-binding.json",
+    "sha256": "bf8ef9c33317084781f54c3346982812bb08b5881361574f57a0b05d1b395108"
+  },
+  {
+    "bytes": 4581,
+    "path": "prepare-runtime.py",
+    "sha256": "d92465781f4448bccf0f78495d3f5f326ec265bcf298dcd7547941704f8cb080"
+  },
+  {
+    "bytes": 6772,
+    "path": "repair-targeted-IndependentPhase6SafetySpec.xml",
+    "sha256": "c16896726d1a9491d43dd0714f489d133b6a6850ce953e7c2a91c69d0bf4263f"
+  },
+  {
+    "bytes": 7597,
+    "path": "repair-targeted-Phase12ReadinessSpec.xml",
+    "sha256": "85ce477740c8a86bc2a1cb625ccad140763ca3edc7dd84489543263183188427"
+  },
+  {
+    "bytes": 1248,
+    "path": "repair-targeted-package-attempt1-command.json",
+    "sha256": "0f2a3558a616d10c62958d6cbbb6fd0ff655c80d2b820affe03f64f7c0efa564"
+  },
+  {
+    "bytes": 121,
+    "path": "repair-targeted-package-attempt1-result.json",
+    "sha256": "e7814b7ff4580b50dc45bc8c4c92b9e9064f6f37fef5366574ba7394944e9174"
+  },
+  {
+    "bytes": 25280,
+    "path": "repair-targeted-package-attempt1.log.txt",
+    "sha256": "db7b1f2baddbed2709d4bbf21056b08e137e10319b4331156d1d72da21a1be6f"
+  },
+  {
+    "bytes": 2033,
+    "path": "run-fullcheck-attempt2.py",
+    "sha256": "a784928a16bfca2c8a5f64dee1d4fd93780e07fc292487450c9058558131b781"
+  },
+  {
+    "bytes": 2169,
+    "path": "run-fullcheck-package-attempt1.py",
+    "sha256": "e235e5cd65e1c9493d458686a01d2ed1ded3759d276ec55e6dfd709b895a336c"
+  },
+  {
+    "bytes": 4369,
+    "path": "run-local-cluster-probe-v2.py",
+    "sha256": "d1e2211f8084a7519a65b29c679e542c5bc14fc486e54e75197d0da48a7bc630"
+  },
+  {
+    "bytes": 4436,
+    "path": "run-local-cluster-probe-v3.py",
+    "sha256": "e7fe91f169a804db5f39f08e0a78adbe31eb91da9d52155f344dd6d98b3bc052"
+  },
+  {
+    "bytes": 4345,
+    "path": "run-local-cluster-probe.py",
+    "sha256": "db6c784145a6788fefd2731aa1cdb769a6d2520ee3aed5583aabdc6eaa80bef9"
+  },
+  {
+    "bytes": 2427,
+    "path": "run-repair-targeted-package-attempt1.py",
+    "sha256": "ba10da5f76dcd219277d6deb42bf310c8dea64ac55293e92cca87270a161c53a"
+  },
+  {
+    "bytes": 2283,
+    "path": "run-targeted-attempt1.py",
+    "sha256": "76dde4177f83b1ebf0eb382a8751c989341751ca687b8a36245a2bb9608e6d53"
+  },
+  {
+    "bytes": 2306,
+    "path": "run-targeted-attempt2.py",
+    "sha256": "d6e29eb08acef49d93b498c6319c8448902911a3087b4649d4eb05e0b9d82876"
+  },
+  {
+    "bytes": 1756,
+    "path": "scala-xml-cached-source-proof.json",
+    "sha256": "5b46d754dffc00861a10f7cd6681e0264b367a8b585cefd423e0da557c5e868c"
+  },
+  {
+    "bytes": 21013,
+    "path": "spark-external-classpath.txt",
+    "sha256": "8bf68702523381d2c19835fe404bd606869cccc90199389c9960c66b5744d3fa"
+  },
+  {
+    "bytes": 7281,
+    "path": "targeted-Phase12ReadinessSpec.xml",
+    "sha256": "63b066b2ed18e407483911f204a4bfb533fee163abfe0c91a7629f4fe7d591a6"
+  },
+  {
+    "bytes": 1132,
+    "path": "targeted-attempt1-command.json",
+    "sha256": "8d33e27962ed1aa246c825fb0c3533830c3e9114d7a45ec2b3a7dd65daf3464d"
+  },
+  {
+    "bytes": 120,
+    "path": "targeted-attempt1-result.json",
+    "sha256": "5498f9c5ffd8e0b41f114a3f6be4797c8cd7a9a7467f7ee449be1d1ce49de961"
+  },
+  {
+    "bytes": 650,
+    "path": "targeted-attempt1.log.txt",
+    "sha256": "d98f7a7f3dc3584a349071897e280c466ae3cc7f270155cc9aa95c7c30f83aee"
+  },
+  {
+    "bytes": 1155,
+    "path": "targeted-attempt2-command.json",
+    "sha256": "3b785e20c1703a1e6cf17cbb1fdf5ccf7acc093b13fbc00cbfce9ad2533e1d67"
+  },
+  {
+    "bytes": 121,
+    "path": "targeted-attempt2-result.json",
+    "sha256": "7c968563dc35ef4c4c798a11edddbb4c30373f7807890d10fdf89f4ec5fb731b"
+  },
+  {
+    "bytes": 20394,
+    "path": "targeted-attempt2.log.txt",
+    "sha256": "ded0f9224d1a86f314a6fa0fd5720e61220844ee1c861478207e3c6004940b26"
+  }
+]

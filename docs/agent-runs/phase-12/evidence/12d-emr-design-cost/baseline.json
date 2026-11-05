@@ -1,0 +1,40 @@
+{
+  "authorization": "User: Yeah, let\u2019s do it. In reply to design/cost proposal only; no login or AWS execution.",
+  "base_head": "2d637c6707ecc66a489561dd179406b6ac622e93",
+  "initial_worktree_clean": true,
+  "observed_at": "2026-11-03T21:40:46.797174+00:00",
+  "protected_readiness_release": "2d637c6707ecc66a489561dd179406b6ac622e93",
+  "record_bases": [
+    {
+      "bytes": 94635,
+      "path": "docs/agent-runs/phase-12/prompt.md",
+      "sha256": "666d15a5bfdbbdf15a66541c3b822a258d4e90edab680fcb05650c31f4916a2b"
+    },
+    {
+      "bytes": 166645,
+      "path": "docs/agent-runs/phase-12/owner-report.md",
+      "sha256": "0dfe112c090d35d046663ce5ed9e6af842cf3baf91392b63fce9ff3ba1823b12"
+    },
+    {
+      "bytes": 148599,
+      "path": "docs/agent-runs/phase-12/test-report.md",
+      "sha256": "613c3cfb64b1119c1c0e5117d47a2261e2e14132092440e451d5db4f5569059c"
+    },
+    {
+      "bytes": 73135,
+      "path": "docs/agent-runs/phase-12/repairs.md",
+      "sha256": "05c340dc73d0ce4d48a01feea64cb9de562a179a26b1e9b4417567e882e104a3"
+    },
+    {
+      "bytes": 262864,
+      "path": "docs/agent-runs/phase-12/review.md",
+      "sha256": "2d124a2da61b51314dff9127744225ec58ab676b52aeea681700adc33de8914c"
+    },
+    {
+      "bytes": 1334,
+      "path": "docs/agent-runs/phase-12/billing-bootstrap-exception.md",
+      "sha256": "abe3a50ad7167fa01227c73e15e92a422a50609f6313bdcc56404cb61765d71a"
+    }
+  ],
+  "tree": "12572baa05061075fa6910a75507d66d9310b473"
+}

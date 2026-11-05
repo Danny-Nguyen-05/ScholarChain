@@ -1,0 +1,137 @@
+#!/usr/bin/env python3
+"""Proposed one-shot LOCAL linkage preflight; execute only after separate human permission."""
+import argparse
+from datetime import datetime, timezone
+import hashlib
+import importlib.util
+import json
+import os
+from pathlib import Path
+import re
+import stat
+import subprocess
+import sys
+
+sys.dont_write_bytecode = True
+REPO = Path('/Users/danny/Documents/UIC/CS441/ScholarChain')
+SOURCE_COMMIT = 'a9a52a91c1edaf5a584bd5b1f1affa2985795899'
+AWS_LAUNCHER_SHA = 'a0124776b581826399171820e7812f2965486e79605c07fc3e86dbe798baf3f9'
+PUBLIC_FILES = {
+    "scripts/billing/PUBLICATION.md": "dfc32dad40bc0b33a03018f6175f178941db8b3784fbfa5365b89a2e6b368648",
+    "scripts/billing/README.md": "b1e5fa3ebdcb9da3ee1968373757b96b173c54e0edf293aac203069d75cb8a2b",
+    "scripts/billing/VERIFICATION.md": "2b00ee61aa4503eeab2b279795029eb1e89a329a803194c278fc636919180760",
+    "scripts/billing/budget_execution.py": "3930390b54fd08c2078f23b1fd1b0f08e3eb1a3ac7335f8fe6ffb430d70c4c8f",
+    "scripts/billing/budget_verification.py": "95abbcc05bc8147a5be911b6e5ed5e558e9c08d985892caaff467881a78ab4a0",
+    "scripts/billing/publication_evidence.py": "cb2edbb74ce1250282dd4a39ca5397c33e26490e18ae626187a900cf28be4580",
+    "scripts/billing/reviewed-pins.json": "cb285259b7217bb4186ca80e74d376f215e4150396aa5fd66187d4e0dc96a753",
+    "scripts/billing/tests/terraform_state_binding.py": "faaf64cd14192abbe45c1284617c26e7c1c2958ace61fcbcde955d8ac471a7c3",
+    "scripts/billing/tests/test_budget_execution.py": "d30346c7d903835f4fb3d2b215481d404ed449a1c94b938225c9d118f45586dd",
+    "scripts/billing/tests/test_budget_verification.py": "3dc78220aed3724343429ec5fb331d3427233b9ad92fc8adc7ddf4f62ec74527",
+    "scripts/billing/tests/test_publication_evidence.py": "3adf9a30ae8fe72a77816ac100f1e70a295d053722fd2c8d7060e9568a10f6e6"
+}
+
+class Refused(Exception):
+    pass
+
+def need(value, code):
+    if not value:
+        raise Refused(code)
+
+class PublicParser(argparse.ArgumentParser):
+    def error(self, message):
+        raise Refused('CLI_ARGUMENTS')
+
+def validate_filename(value):
+    need(type(value) is str and re.fullmatch(r'approval-[A-Za-z0-9_-]{1,96}\.json', value) is not None,
+         'ORIGINAL_GATE_FILENAME')
+    return value
+
+def public_bytes(path):
+    # Pinned public source only, no credential/config/private path.
+    for parent in (path.parent, *path.parent.parents):
+        need(not stat.S_ISLNK(parent.lstat().st_mode), 'PUBLIC_SOURCE_SYMLINK')
+    fd = os.open(path, os.O_RDONLY | os.O_NOFOLLOW)
+    try:
+        before=os.fstat(fd)
+        need(stat.S_ISREG(before.st_mode) and before.st_nlink == 1 and before.st_size <= 1024*1024,
+             'PUBLIC_SOURCE_TYPE_SIZE')
+        data=bytearray()
+        while True:
+            chunk=os.read(fd,65536)
+            if not chunk: break
+            data.extend(chunk);need(len(data)<=1024*1024,'PUBLIC_SOURCE_TYPE_SIZE')
+        def identity(st):return (st.st_dev,st.st_ino,st.st_size,st.st_mtime_ns,st.st_ctime_ns)
+        need(identity(before)==identity(os.fstat(fd))==identity(path.lstat()),'PUBLIC_SOURCE_CHANGED')
+        return bytes(data)
+    finally:
+        os.close(fd)
+
+def source_check():
+    env={'HOME':'/Users/danny','PATH':'/usr/bin:/bin'}
+    def git(*args):
+        result=subprocess.run(['/usr/bin/git','-C',str(REPO),*args],env=env,
+                              capture_output=True,stdin=subprocess.DEVNULL,timeout=10)
+        need(result.returncode==0,'PUBLIC_GIT_CHECK')
+        return result.stdout
+    need(git('rev-parse','HEAD').decode().strip()==SOURCE_COMMIT,'PUBLIC_SOURCE_COMMIT')
+    need(git('status','--porcelain=v1','-z','--untracked-files=all')==b'','PUBLIC_CHECKOUT_DIRTY')
+    actual={str(p.relative_to(REPO)) for p in (REPO/'scripts/billing').rglob('*') if p.is_file()}
+    need(actual==set(PUBLIC_FILES),'PUBLIC_SOURCE_SET')
+    for rel,expected in PUBLIC_FILES.items():
+        git('ls-files','--error-unmatch','--',rel)
+        need(hashlib.sha256(public_bytes(REPO/rel)).hexdigest()==expected,'PUBLIC_SOURCE_HASH')
+
+def load_verifier():
+    spec=importlib.util.spec_from_file_location('approved_local_preflight_verifier',REPO/'scripts/billing/budget_verification.py')
+    module=importlib.util.module_from_spec(spec);sys.modules[spec.name]=module;spec.loader.exec_module(module)
+    return module
+
+def check_linkage(filename, verifier, policy, now):
+    """Python injection is for synthetic tests only; main supplies fixed production policy."""
+    filename=validate_filename(filename)
+    lock=policy.primary/'.billing-wrapper-active.lock'
+    need(not os.path.lexists(lock),'WRAPPER_ACTIVE')
+    original_receipt=policy.primary/'operations'/verifier.ORIGINAL_OPERATION/'apply.receipt.json'
+    raw=verifier.read_private(original_receipt,policy.uid)
+    raw_sha=hashlib.sha256(raw).hexdigest()
+    # These are narrow in-memory LINKAGE ARGUMENTS, not an execution gate or approval.
+    arguments={'original_gate_filename':filename,'original_apply_receipt_sha256':raw_sha,
+               'aws_cli_sha256':AWS_LAUNCHER_SHA,'window_start':now.isoformat()}
+    ex=verifier.Verification(policy)
+    ex.gate=arguments
+    linked=ex.linkage()  # Only the accepted read-only metadata/opaque-hash method, no stage.
+    need(linked=={'original_operation':verifier.ORIGINAL_OPERATION,
+                  'original_gate_sha256':verifier.ORIGINAL_GATE_SHA,
+                  'original_apply_receipt_sha256':raw_sha,'state_backup_verified':True},'LINKAGE_RESULT')
+    need(not os.path.lexists(lock),'WRAPPER_ACTIVE')
+    return {'status':'LOCAL_LINKAGE_VALIDATED','source_commit':SOURCE_COMMIT,
+            'original_operation':verifier.ORIGINAL_OPERATION,
+            'original_gate_sha256':verifier.ORIGINAL_GATE_SHA,
+            'original_apply_receipt_sha256':raw_sha,
+            'original_gate_context_match':True,'state_backup_match':True,'aws_cli_launcher_hash_match':True,
+            'active_wrapper_absent_at_checks':True,'AWS_calls':0,'private_recipient_read':False,
+            'execution_authorized':False,'gate_created':False,'files_modified':False}
+
+def main(argv=None):
+    try:
+        parser=PublicParser(description=__doc__)
+        parser.add_argument('--original-gate-filename',required=True)
+        args=parser.parse_args(argv)
+        validate_filename(args.original_gate_filename)
+        source_check()  # Must finish before importing a policy or touching private storage.
+        verifier=load_verifier()
+        policy=verifier.production_policy()
+        result=check_linkage(args.original_gate_filename,verifier,policy,datetime.now(timezone.utc))
+        source_check()  # Do not publish a newly measured hash if public release drifted.
+        print(json.dumps(result,sort_keys=True))
+        return 0
+    except Refused as error:
+        print(json.dumps({'status':'BLOCKED-ON','code':str(error)},sort_keys=True))
+        return 2
+    except Exception:
+        # No private-derived exception text, identifiers, bodies or raw hash on failure.
+        print(json.dumps({'status':'BLOCKED-ON','code':'LINKAGE_PREFLIGHT_FAILED'},sort_keys=True))
+        return 2
+
+if __name__=='__main__':
+    raise SystemExit(main())

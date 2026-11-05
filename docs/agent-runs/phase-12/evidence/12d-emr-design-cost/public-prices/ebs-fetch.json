@@ -1,0 +1,9 @@
+{
+  "anonymous_public_HTTP": true,
+  "completed_at": "2026-11-03T21:45:08.681900+00:00",
+  "derivation": "EBS pricing page data-token-paths ec2/ebs and official meteredUnitMaps endpoint; Ohio region.",
+  "error": "HTTP Error 404: Not Found",
+  "error_type": "HTTPError",
+  "requested_at": "2026-11-03T21:45:08.209013+00:00",
+  "url": "https://b0.p.awsstatic.com/pricing/2.0/meteredUnitMaps/ec2/USD/current/ebs/US%20East%20(Ohio)/index.json"
+}

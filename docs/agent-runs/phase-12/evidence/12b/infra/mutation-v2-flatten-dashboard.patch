@@ -1,0 +1,10 @@
+--- a/modules/observability/main.tf
++++ b/modules/observability/main.tf
+@@ -1,6 +1,6 @@
+ locals {
+   services            = toset(["query-api", "graph-service", "semantic-service", "embedding-worker"])
+-  task_metrics        = concat([for service in local.services : [for metric in ["DesiredTaskCount", "RunningTaskCount", "PendingTaskCount"] : ["ECS/ContainerInsights", metric, "ClusterName", var.name_prefix, "ServiceName", service]]]...)
++  task_metrics        = flatten([for service in local.services : [for metric in ["DesiredTaskCount", "RunningTaskCount", "PendingTaskCount"] : ["ECS/ContainerInsights", metric, "ClusterName", var.name_prefix, "ServiceName", service]]])
+   utilization_metrics = concat([for service in local.services : [for metric in ["CPUUtilization", "MemoryUtilization"] : ["AWS/ECS", metric, "ClusterName", var.name_prefix, "ServiceName", service]]]...)
+   table_metrics       = concat([for name in values(var.table_names) : [for metric in ["ConsumedReadCapacityUnits", "ConsumedWriteCapacityUnits", "ReadThrottleEvents", "WriteThrottleEvents"] : ["AWS/DynamoDB", metric, "TableName", name]]]...)
+   neptune_metrics     = var.neptune_identifier == null ? [] : [for metric in ["CPUUtilization", "ServerlessDatabaseCapacity", "NCUUtilization"] : ["AWS/Neptune", metric, "DBClusterIdentifier", var.neptune_identifier]]

@@ -1,0 +1,7 @@
+{
+  "release_and_relocated_static_files_checked_each": 378,
+  "mismatches": 0,
+  "job_jar_unchanged": true,
+  "source_jar_sha256": "d52f11ebad5ec9e1ffdd1910d562023e934ce7ab62e7c74a5ffd650f8951b86b",
+  "extra_local_runtime_work_directories_are_not_release_members": true
+}

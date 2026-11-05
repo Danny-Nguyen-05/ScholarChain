@@ -1,0 +1,13 @@
+{
+  "stage": "pipeline",
+  "exit": 0,
+  "timed_out": false,
+  "started_at": "2026-11-04T00:52:01.836679+00:00",
+  "completed_at": "2026-11-04T00:52:32.543492+00:00",
+  "seconds": 30.707066417002352,
+  "process_id": 4227,
+  "stdout_bytes": 181,
+  "stderr_bytes": 5959964,
+  "stdout_sha256": "d951e3b67367ea90c0cdba5e6e0f6162f2596fb7179a0d667fa84156587f3544",
+  "stderr_sha256": "30f4b62274554550fbeedeff501e1e17d8647071eb2f082c071d2783c91f3171"
+}

@@ -1,0 +1,247 @@
+{
+  "recorded_utc": "2026-11-02T04:14:12.510467+00:00",
+  "head": "8903ce0a2c3765b9f77e1665cb9ffe2f484c1fbf",
+  "branch": "phase-12",
+  "status_entries": 42,
+  "records": [
+    {
+      "path": "docs/agent-runs/phase-12/prompt.md",
+      "bytes": 83998,
+      "sha256": "82597801be813bce69c4cd4a46de8d3884a640ca96bfe732261c3cbde8fcd10f"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/review.md",
+      "bytes": 240994,
+      "sha256": "0cceb345316af772ffbc776dad2512e8ef81d1ffdbd3f52a9a15160a4178378e"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/repairs.md",
+      "bytes": 63656,
+      "sha256": "9d696b30402641e7873801dd1d1f23a132eb26e4394d516cb90129b7a8bd66dd"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/owner-report.md",
+      "bytes": 133916,
+      "sha256": "9a77a9b034857139f2f12d6625010d85233cacbdfcd28edb9aa5808394db80ec"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/test-report.md",
+      "bytes": 127203,
+      "sha256": "280b3904686071bc5817098fb0b837304144a2ea5525fd96d0aed3d5a1e577a2"
+    }
+  ],
+  "scripts": [
+    {
+      "path": "scripts/billing/PUBLICATION.md",
+      "bytes": 12342,
+      "sha256": "dfc32dad40bc0b33a03018f6175f178941db8b3784fbfa5365b89a2e6b368648"
+    },
+    {
+      "path": "scripts/billing/README.md",
+      "bytes": 15809,
+      "sha256": "ef026f4019ba2e15737729c714453eebce206892aecb2ae555fc70c7ab690321"
+    },
+    {
+      "path": "scripts/billing/budget_execution.py",
+      "bytes": 40222,
+      "sha256": "297830d412cefd53dc4938c06dc1b654b7188fcaa977cf10902123715f39c3fd"
+    },
+    {
+      "path": "scripts/billing/publication_evidence.py",
+      "bytes": 18539,
+      "sha256": "cb2edbb74ce1250282dd4a39ca5397c33e26490e18ae626187a900cf28be4580"
+    },
+    {
+      "path": "scripts/billing/reviewed-pins.json",
+      "bytes": 46174,
+      "sha256": "cb285259b7217bb4186ca80e74d376f215e4150396aa5fd66187d4e0dc96a753"
+    },
+    {
+      "path": "scripts/billing/tests/terraform_state_binding.py",
+      "bytes": 5340,
+      "sha256": "faaf64cd14192abbe45c1284617c26e7c1c2958ace61fcbcde955d8ac471a7c3"
+    },
+    {
+      "path": "scripts/billing/tests/test_budget_execution.py",
+      "bytes": 41030,
+      "sha256": "6d8926f9e91a1f455d887fed264666f0eac30b045133ee9354e13c925eca4ab1"
+    },
+    {
+      "path": "scripts/billing/tests/test_publication_evidence.py",
+      "bytes": 18627,
+      "sha256": "3adf9a30ae8fe72a77816ac100f1e70a295d053722fd2c8d7060e9568a10f6e6"
+    }
+  ],
+  "human_record": {
+    "path": "docs/agent-runs/phase-12/billing-bootstrap-exception.md",
+    "bytes": 1334,
+    "sha256": "abe3a50ad7167fa01227c73e15e92a422a50609f6313bdcc56404cb61765d71a"
+  },
+  "prior_repair_files": [
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-p3-format-repair/coordinator-report.txt",
+      "bytes": 4988,
+      "sha256": "80884ba5df52da97f75da54112d5888a84a5d910f4ffb5cceaa849b8c4300bae"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-p3-format-repair/delegation.json",
+      "bytes": 656,
+      "sha256": "84a8c1ab387a2c451c02e1390b3a44e9bd97bca35d5b843b8dece12cadbb7c7d"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-p3-format-repair/diagnosis/artifact-manifest.json",
+      "bytes": 853,
+      "sha256": "9f78b38955a7e116f256a6d3c1ce0c9e72a928c35f6738909852ce4db1735774"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-p3-format-repair/diagnosis/format-confirmation.json",
+      "bytes": 320,
+      "sha256": "527c332151f4f9c9427725b71468df3ed2e2bab24b9f35ca2e474f9d270d4383"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-p3-format-repair/diagnosis/owner-report.txt",
+      "bytes": 2987,
+      "sha256": "8179d150ea1b6164f5d24b0248354748804863bb5ca1c8ae9fddda14f6701fa1"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-p3-format-repair/diagnosis/result-final.json",
+      "bytes": 810,
+      "sha256": "069e44b6b8a35bf7feb1adb754bb5a538bfbe65df495c10b90c231b31cedf46e"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-p3-format-repair/diagnosis/result-v2.json",
+      "bytes": 695,
+      "sha256": "5872156023ff2b359ef99e267a1b9f0acb1756b4364a15127c99af795a90f887"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-p3-format-repair/diagnosis/result.json",
+      "bytes": 542,
+      "sha256": "1dbcaeddbc29efab5ea3a203dff7afbbf980bcc03a0cef131f14b229ae60c4be"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-p3-format-repair/diff-check-result.json",
+      "bytes": 145,
+      "sha256": "0f0d4e9a7a7b9b673b872e637821b5d89269b231594ed4fae224ce6c0af9daba"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-p3-format-repair/evidence-manifest.json",
+      "bytes": 5261,
+      "sha256": "187568e8b4d186c177bddbfc01f9580a1555723ca7d4ca0fd4c721782caeb68d"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-p3-format-repair/final-status.log.txt",
+      "bytes": 3466,
+      "sha256": "908d60da204b7ec0d44341eec5e8a0c2fb91fc65dbf70114880813192b46bf55"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-p3-format-repair/handoff-files.json",
+      "bytes": 3803,
+      "sha256": "b58dbd8b95b46b0bc340a56b78b355a6b1616cd78b683dce8a69cb49331fca68"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-p3-format-repair/infra/a1-commands.json",
+      "bytes": 5243,
+      "sha256": "b638ab663faf53758777f778138bbede073a726c603feefe88faa148b2d80231"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-p3-format-repair/infra/a1-regression.stdout.json",
+      "bytes": 799,
+      "sha256": "f1872d57a727393557a82eec4207f0869772b4fb9f1018c530e17bca37f21655"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-p3-format-repair/infra/a1-result.json",
+      "bytes": 853,
+      "sha256": "9d01e7e385719e469f451c13a5e7401e046dcd304472f046f50b87bedce6dce8"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-p3-format-repair/infra/after-readiness-commands.json",
+      "bytes": 506,
+      "sha256": "614b8ffdeb7674ac9a127b05c6b8b9418b7370cb0127561ae1c39686d6026a9b"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-p3-format-repair/infra/artifact-manifest.json",
+      "bytes": 2212,
+      "sha256": "cfbc371dc6f3a11e859a7472ca54dfb4e36376c0ebcc6bfd504fc91a4bb72c15"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-p3-format-repair/infra/offline-tests-attempt1.log.txt",
+      "bytes": 6679,
+      "sha256": "fc82d22157548bec861bcb988a76bc2d0d2b9f86d6679fa81614c140caf1194d"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-p3-format-repair/infra/offline-tests-attempt2.log.txt",
+      "bytes": 7281,
+      "sha256": "3f9571d635905d66813b119a6931fb9476a94a6fdc508c7c47b12435562ace58"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-p3-format-repair/infra/offline-tests-attempt3.log.txt",
+      "bytes": 6070,
+      "sha256": "a1fb6b2e0265017b76b93740f146333ebeb06524f06d928a3b32864998524dcb"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-p3-format-repair/infra/owner-report.txt",
+      "bytes": 4055,
+      "sha256": "39e9bac588d5b1b09036e93ca9925b12ea3ae124f9860bcce997a479edfe0cee"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-p3-format-repair/infra/result.json",
+      "bytes": 8499,
+      "sha256": "3aa279781e83cfe4e69b4a99dd7ad579dab7e9bf92ae104ce35a4c0d2f8d568d"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-p3-format-repair/infra/signal-fixture-targeted-attempt1.log.txt",
+      "bytes": 232,
+      "sha256": "68f25c1f721869bdcb43fb17dbf353695fa3dff8646a27b9ae50125632bcd71f"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-p3-format-repair/infra/signal-fixtures-after-readiness.log.txt",
+      "bytes": 376,
+      "sha256": "84f63104e3167b50eeff7f0f164e8e5aba5b7ec5a963cfc684c73fcef02c87dd"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-p3-format-repair/infra/source-after.json",
+      "bytes": 1468,
+      "sha256": "5b0b192fa934f448f6f9e3f386541203bca7c1657fab443040b76a0c89c2181f"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-p3-format-repair/infra/source-before.json",
+      "bytes": 1468,
+      "sha256": "3b4aadb28eac61f9c590511f6fdc7b937c0f0d5662e2ddf7266839c0de658420"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-p3-format-repair/old-operation-preservation.json",
+      "bytes": 405,
+      "sha256": "620342a04af3d09f62384abda6a52195bab6de32e7511d4bfc630feb56790d23"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-p3-format-repair/p3-local-metadata.json",
+      "bytes": 1253,
+      "sha256": "33ef58d50dcbe10c48a66ff8bfd9fa856c89b50f696821a745e93d6a6a6fac38"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-p3-format-repair/preflight-status.log.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-p3-format-repair/preflight.json",
+      "bytes": 15991,
+      "sha256": "13fb736d42c94e5b8d49b3e90bb53e315d0a6550a247375e236d6cda0d0027cf"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-p3-format-repair/preservation-check.json",
+      "bytes": 3384,
+      "sha256": "aa4821a30ff5331fd7d2a88aefd7e2ced790673da5f651b650475daf05c6519e"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-p3-format-repair/public-address-scan.json",
+      "bytes": 360,
+      "sha256": "ae9ace70e91d83855b6032c90ab9dd25ee48f7f93e62b55820ebfc49ba6ba7b8"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-p3-format-repair/user-failure.json",
+      "bytes": 576,
+      "sha256": "adc59445f49f63db47543cfe551c91ba3477e210051af85ceefd1cb713c8bb87"
+    }
+  ]
+}

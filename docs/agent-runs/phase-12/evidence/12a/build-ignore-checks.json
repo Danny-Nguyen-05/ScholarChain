@@ -1,0 +1,271 @@
+{
+  "command": "git check-ignore --no-index -q PATH (plus -v for matching rule)",
+  "total": 33,
+  "passed": 33,
+  "results": [
+    {
+      "path": "infra/terraform/.terraform/providers/example",
+      "expected_ignored": true,
+      "actual_ignored": true,
+      "exit_code": 0,
+      "rule": ".gitignore:31:.terraform/\tinfra/terraform/.terraform/providers/example",
+      "pass": true
+    },
+    {
+      "path": "infra/terraform/modules/example/.terraform/providers/example",
+      "expected_ignored": true,
+      "actual_ignored": true,
+      "exit_code": 0,
+      "rule": ".gitignore:31:.terraform/\tinfra/terraform/modules/example/.terraform/providers/example",
+      "pass": true
+    },
+    {
+      "path": "infra/terraform/terraform.tfstate",
+      "expected_ignored": true,
+      "actual_ignored": true,
+      "exit_code": 0,
+      "rule": ".gitignore:32:*.tfstate\tinfra/terraform/terraform.tfstate",
+      "pass": true
+    },
+    {
+      "path": "infra/terraform/terraform.tfstate.backup",
+      "expected_ignored": true,
+      "actual_ignored": true,
+      "exit_code": 0,
+      "rule": ".gitignore:33:*.tfstate.*\tinfra/terraform/terraform.tfstate.backup",
+      "pass": true
+    },
+    {
+      "path": "infra/terraform/terraform.tfstate.123.backup",
+      "expected_ignored": true,
+      "actual_ignored": true,
+      "exit_code": 0,
+      "rule": ".gitignore:33:*.tfstate.*\tinfra/terraform/terraform.tfstate.123.backup",
+      "pass": true
+    },
+    {
+      "path": "infra/terraform/.terraform.tfstate.lock.info",
+      "expected_ignored": true,
+      "actual_ignored": true,
+      "exit_code": 0,
+      "rule": ".gitignore:34:.terraform.tfstate.lock.info\tinfra/terraform/.terraform.tfstate.lock.info",
+      "pass": true
+    },
+    {
+      "path": "infra/terraform/course.tfplan",
+      "expected_ignored": true,
+      "actual_ignored": true,
+      "exit_code": 0,
+      "rule": ".gitignore:40:*.tfplan\tinfra/terraform/course.tfplan",
+      "pass": true
+    },
+    {
+      "path": "infra/terraform/course.tfplan.json",
+      "expected_ignored": true,
+      "actual_ignored": true,
+      "exit_code": 0,
+      "rule": ".gitignore:41:*.tfplan.*\tinfra/terraform/course.tfplan.json",
+      "pass": true
+    },
+    {
+      "path": "infra/terraform/tfplan",
+      "expected_ignored": true,
+      "actual_ignored": true,
+      "exit_code": 0,
+      "rule": ".gitignore:42:tfplan\tinfra/terraform/tfplan",
+      "pass": true
+    },
+    {
+      "path": "infra/terraform/tfplan.json",
+      "expected_ignored": true,
+      "actual_ignored": true,
+      "exit_code": 0,
+      "rule": ".gitignore:43:tfplan.*\tinfra/terraform/tfplan.json",
+      "pass": true
+    },
+    {
+      "path": "infra/terraform/.plans/example.bin",
+      "expected_ignored": true,
+      "actual_ignored": true,
+      "exit_code": 0,
+      "rule": ".gitignore:44:/infra/terraform/**/.plans/\tinfra/terraform/.plans/example.bin",
+      "pass": true
+    },
+    {
+      "path": "infra/terraform/plan",
+      "expected_ignored": true,
+      "actual_ignored": true,
+      "exit_code": 0,
+      "rule": ".gitignore:45:/infra/terraform/**/plan\tinfra/terraform/plan",
+      "pass": true
+    },
+    {
+      "path": "infra/terraform/plan.out",
+      "expected_ignored": true,
+      "actual_ignored": true,
+      "exit_code": 0,
+      "rule": ".gitignore:46:/infra/terraform/**/plan.out\tinfra/terraform/plan.out",
+      "pass": true
+    },
+    {
+      "path": "infra/terraform/plan.json",
+      "expected_ignored": true,
+      "actual_ignored": true,
+      "exit_code": 0,
+      "rule": ".gitignore:47:/infra/terraform/**/plan.json\tinfra/terraform/plan.json",
+      "pass": true
+    },
+    {
+      "path": "infra/terraform/plan.txt",
+      "expected_ignored": true,
+      "actual_ignored": true,
+      "exit_code": 0,
+      "rule": ".gitignore:48:/infra/terraform/**/plan.txt\tinfra/terraform/plan.txt",
+      "pass": true
+    },
+    {
+      "path": "infra/terraform/terraform-plan.json",
+      "expected_ignored": true,
+      "actual_ignored": true,
+      "exit_code": 0,
+      "rule": ".gitignore:49:/infra/terraform/**/terraform-plan.*\tinfra/terraform/terraform-plan.json",
+      "pass": true
+    },
+    {
+      "path": "infra/terraform/spikes/example/plan.json",
+      "expected_ignored": true,
+      "actual_ignored": true,
+      "exit_code": 0,
+      "rule": ".gitignore:47:/infra/terraform/**/plan.json\tinfra/terraform/spikes/example/plan.json",
+      "pass": true
+    },
+    {
+      "path": "infra/terraform/local.tfvars",
+      "expected_ignored": true,
+      "actual_ignored": true,
+      "exit_code": 0,
+      "rule": ".gitignore:52:*.tfvars\tinfra/terraform/local.tfvars",
+      "pass": true
+    },
+    {
+      "path": "infra/terraform/local.tfvars.json",
+      "expected_ignored": true,
+      "actual_ignored": true,
+      "exit_code": 0,
+      "rule": ".gitignore:53:*.tfvars.json\tinfra/terraform/local.tfvars.json",
+      "pass": true
+    },
+    {
+      "path": "infra/terraform/course.auto.tfvars",
+      "expected_ignored": true,
+      "actual_ignored": true,
+      "exit_code": 0,
+      "rule": ".gitignore:52:*.tfvars\tinfra/terraform/course.auto.tfvars",
+      "pass": true
+    },
+    {
+      "path": "infra/terraform/override.tf",
+      "expected_ignored": true,
+      "actual_ignored": true,
+      "exit_code": 0,
+      "rule": ".gitignore:57:override.tf\tinfra/terraform/override.tf",
+      "pass": true
+    },
+    {
+      "path": "infra/terraform/service_override.tf",
+      "expected_ignored": true,
+      "actual_ignored": true,
+      "exit_code": 0,
+      "rule": ".gitignore:59:*_override.tf\tinfra/terraform/service_override.tf",
+      "pass": true
+    },
+    {
+      "path": "infra/terraform/crash.123.log",
+      "expected_ignored": true,
+      "actual_ignored": true,
+      "exit_code": 0,
+      "rule": ".gitignore:36:crash.*.log\tinfra/terraform/crash.123.log",
+      "pass": true
+    },
+    {
+      "path": "infra/terraform/.terraform.lock.hcl",
+      "expected_ignored": false,
+      "actual_ignored": false,
+      "exit_code": 1,
+      "rule": "",
+      "pass": true
+    },
+    {
+      "path": "infra/terraform/modules/example/.terraform.lock.hcl",
+      "expected_ignored": false,
+      "actual_ignored": false,
+      "exit_code": 1,
+      "rule": "",
+      "pass": true
+    },
+    {
+      "path": "infra/terraform/tests/foundation.tftest.hcl",
+      "expected_ignored": false,
+      "actual_ignored": false,
+      "exit_code": 1,
+      "rule": "",
+      "pass": true
+    },
+    {
+      "path": "infra/terraform/environments/course.tfvars",
+      "expected_ignored": false,
+      "actual_ignored": false,
+      "exit_code": 1,
+      "rule": ".gitignore:56:!/infra/terraform/environments/course.tfvars\tinfra/terraform/environments/course.tfvars",
+      "pass": true
+    },
+    {
+      "path": "infra/terraform/main.tf",
+      "expected_ignored": false,
+      "actual_ignored": false,
+      "exit_code": 1,
+      "rule": "",
+      "pass": true
+    },
+    {
+      "path": "infra/terraform/variables.tf",
+      "expected_ignored": false,
+      "actual_ignored": false,
+      "exit_code": 1,
+      "rule": "",
+      "pass": true
+    },
+    {
+      "path": "infra/terraform/README.md",
+      "expected_ignored": false,
+      "actual_ignored": false,
+      "exit_code": 1,
+      "rule": "",
+      "pass": true
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12a/plan-summary.json",
+      "expected_ignored": false,
+      "actual_ignored": false,
+      "exit_code": 1,
+      "rule": "",
+      "pass": true
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12a/plan-checksum.txt",
+      "expected_ignored": false,
+      "actual_ignored": false,
+      "exit_code": 1,
+      "rule": "",
+      "pass": true
+    },
+    {
+      "path": "infra/terraform/course.plan",
+      "expected_ignored": true,
+      "actual_ignored": true,
+      "exit_code": 0,
+      "rule": ".gitignore:39:*.plan\tinfra/terraform/course.plan",
+      "pass": true
+    }
+  ]
+}

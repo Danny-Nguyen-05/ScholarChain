@@ -1,0 +1,17 @@
+{
+  "recorded_utc": "2026-11-01T17:19:51.205190+00:00",
+  "human_record": "docs/agent-runs/phase-12/billing-bootstrap-exception.md",
+  "before_sha256": "f00a715960261cb5813baaba903c6c315f42e37a092d1aadb2f84608e0797f04",
+  "before_bytes": 538,
+  "after_sha256": "d9ca3b904fdadf7fea004deab2d7332cab0a0a5e35484093117fa9cc2f53c497",
+  "after_bytes": 591,
+  "prior_prefix_preserved": true,
+  "new_text_verbatim": "I don't really remember it was around 8-9pm I think",
+  "author_of_new_statement": "Human user; agent performed explicitly requested verbatim append",
+  "actual_exact_times": "Unavailable/uncertain as reported by human; approximate8\u20139PM is not exact start/end proof",
+  "window_or_duration_deviation_acceptance": "Not supplied; do not infer",
+  "replacement_paragraph_human_attribution": "Not yet affirmed",
+  "F1_status": "OPEN pending personal deviation decision/explicit reconciliation and independent recheck",
+  "F2_status": "OPEN pending human attribution",
+  "F3_status": "Manifest added; current three hashes/bytes verified"
+}

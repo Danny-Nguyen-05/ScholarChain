@@ -1,0 +1,104 @@
+{
+  "total_recorded_commands": 48,
+  "nonzero_commands": [
+    {
+      "name": "fmt-development-1",
+      "exit_code": 2,
+      "log": "fmt-development-1.log"
+    },
+    {
+      "name": "init-development-1",
+      "exit_code": 1,
+      "log": "init-development-1.log"
+    },
+    {
+      "name": "validate-development-1",
+      "exit_code": 1,
+      "log": "validate-development-1.log"
+    },
+    {
+      "name": "test-development-1",
+      "exit_code": 1,
+      "log": "test-development-1.log"
+    },
+    {
+      "name": "test-development-2",
+      "exit_code": 1,
+      "log": "test-development-2.log"
+    },
+    {
+      "name": "test-debug-json",
+      "exit_code": 1,
+      "log": "test-debug-json.log"
+    },
+    {
+      "name": "fmt-development-6",
+      "exit_code": 2,
+      "log": "fmt-development-6.log"
+    },
+    {
+      "name": "validate-development-3",
+      "exit_code": 1,
+      "log": "validate-development-3.log"
+    },
+    {
+      "name": "test-development-4",
+      "exit_code": 1,
+      "log": "test-development-4.log"
+    },
+    {
+      "name": "test-development-5",
+      "exit_code": 1,
+      "log": "test-development-5.log"
+    },
+    {
+      "name": "test-development-7",
+      "exit_code": 1,
+      "log": "test-development-7.log"
+    },
+    {
+      "name": "test-development-8",
+      "exit_code": 1,
+      "log": "test-development-8.log"
+    },
+    {
+      "name": "mutation-graph-write-init",
+      "exit_code": 1,
+      "log": "mutation-graph-write-init.log"
+    },
+    {
+      "name": "mutation-graph-write-test",
+      "exit_code": 1,
+      "log": "mutation-graph-write-test.log"
+    },
+    {
+      "name": "negative-helper",
+      "exit_code": 1,
+      "log": "negative-helper.log"
+    },
+    {
+      "name": "mutation-v2-graph-write-test",
+      "exit_code": 1,
+      "log": "mutation-v2-graph-write-test.log"
+    },
+    {
+      "name": "mutation-v2-public-neptune-test",
+      "exit_code": 1,
+      "log": "mutation-v2-public-neptune-test.log"
+    },
+    {
+      "name": "mutation-v2-flatten-dashboard-test",
+      "exit_code": 1,
+      "log": "mutation-v2-flatten-dashboard-test.log"
+    }
+  ],
+  "known_inspection_notes": [
+    "Initial read named nonexistent modules/network/security.tf; actual SGs are in main.tf. This produced a harmless cat diagnostic in tool transcript.",
+    "Initial provider-schema extraction command (exit0) preceded the logged runner; bounded extract retained with full-schema SHA256.",
+    "Authoring helpers were executed via Python (observed exits0); helper scripts remain in scratch. Their stdout was empty.",
+    "Native mock12A needed additional12B index/bucket fixtures because newly connected vector policies otherwise remained unknown in plan.",
+    "Initial registry discovery timed out; full verified installed package mirrored locally, including LICENSE.txt. A first incomplete mirror correctly failed lock h1 verification in scratch; no lock/pin workaround was made.",
+    "Debug JSON and redirected stdout copy are byte-identical aliases; retain one gzip and its raw/compressed hash manifest."
+  ],
+  "final_state": "All required final local gates pass; negative mutations each produce correct real assertion failures."
+}

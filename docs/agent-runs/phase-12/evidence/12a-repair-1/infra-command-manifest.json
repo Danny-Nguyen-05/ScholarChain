@@ -1,0 +1,279 @@
+{
+  "commands": [
+    {
+      "label": "B1 regression before permission removal",
+      "command": [
+        "/tmp/scholarchain-phase12a-infra-toolchain/terraform",
+        "-chdir=infra/terraform",
+        "test",
+        "-no-color"
+      ],
+      "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+      "exit_code": 1,
+      "log": "/tmp/scholarchain-phase12a-repair1-infra-b1-red.log",
+      "sha256": "f804288e19b33e0a6910d76e386c3156d86cf7cc6f611b7e7afd4deb09ce5e81",
+      "notes": "12passed/1failed at the newly added EMR no-DDB assertion; legacy DDB grant still present."
+    },
+    {
+      "label": "development formatting",
+      "command": [
+        "/tmp/scholarchain-phase12a-infra-toolchain/terraform",
+        "-chdir=infra/terraform",
+        "fmt",
+        "-recursive"
+      ],
+      "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+      "exit_code": null,
+      "log": "/tmp/scholarchain-phase12a-repair1-infra-fmt-write.log",
+      "sha256": "67b93995f92f63ac9dff0da8fb11b3acb4e0f2734cf6d185d5c1606004a7ee92",
+      "notes": "Exit not separately captured because formatting and init shared one shell block; block exit0. Final independent fmt-check gate records0 below."
+    },
+    {
+      "label": "initial repair init",
+      "command": [
+        "/tmp/scholarchain-phase12a-infra-toolchain/terraform",
+        "-chdir=infra/terraform",
+        "init",
+        "-backend=false",
+        "-input=false",
+        "-no-color"
+      ],
+      "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+      "exit_code": 0,
+      "log": "/tmp/scholarchain-phase12a-repair1-infra-init.log",
+      "sha256": "6fd242691fd6bbc7efe25549609a26c11107f98c3ae3cb12128985c21a261753"
+    },
+    {
+      "label": "initial repaired green test",
+      "command": [
+        "/tmp/scholarchain-phase12a-infra-toolchain/terraform",
+        "test",
+        "-no-color"
+      ],
+      "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain/infra/terraform",
+      "exit_code": 0,
+      "log": "/tmp/scholarchain-phase12a-repair1-infra-test-initial.log",
+      "sha256": "7cb6be1995c6c4bb1abac1df0c1cd19b06b06fb0409f68ecae3207cf6c25a14f",
+      "notes": "13passed/0failed after B1/B2 edits; before later B1 wildcard-action guard tightening."
+    },
+    {
+      "label": "mutation helper attempt1",
+      "command": [
+        "python3",
+        "/tmp/scholarchain-phase12a-repair1-infra-mutations.py"
+      ],
+      "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+      "exit_code": 1,
+      "notes": "Script at this point retained as mutations-attempt1.py. Data-route mock test correctly failed12/1, but harness compared wrapped diagnostic text literally and failed postprocessing. No repository source changed."
+    },
+    {
+      "label": "mutation-data-map-init",
+      "command": [
+        "/tmp/scholarchain-phase12a-infra-toolchain/terraform",
+        "init",
+        "-backend=false",
+        "-input=false",
+        "-no-color"
+      ],
+      "cwd": "/tmp/scholarchain-phase12a-repair1-infra-data-map-z0su6d4h",
+      "exit_code": 0,
+      "log": "/tmp/scholarchain-phase12a-repair1-infra-attempt1-mutation-data-map-init.log",
+      "sha256": "f43033ae5960b69d4ae12baa5aff96299990b7de7ef13b5c704995bac2ede29a",
+      "attempt": 1
+    },
+    {
+      "label": "mutation-data-map-test",
+      "command": [
+        "/tmp/scholarchain-phase12a-infra-toolchain/terraform",
+        "test",
+        "-no-color"
+      ],
+      "cwd": "/tmp/scholarchain-phase12a-repair1-infra-data-map-z0su6d4h",
+      "exit_code": 1,
+      "log": "/tmp/scholarchain-phase12a-repair1-infra-attempt1-mutation-data-map-test.log",
+      "sha256": "6ba18aac6a72acdb5860c813152db3b2c68eed2111683acdbc5e01d1051760ec",
+      "attempt": 1
+    },
+    {
+      "label": "corrected mutation helper",
+      "command": [
+        "python3",
+        "/tmp/scholarchain-phase12a-repair1-infra-mutations.py"
+      ],
+      "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+      "exit_code": 0,
+      "notes": "Whitespace-normalized diagnostics; two isolated negative mutations each observed12passed/1failed. Mutation code and patches retained; no repository source changed."
+    },
+    {
+      "label": "mutation-data-map-init",
+      "command": [
+        "/tmp/scholarchain-phase12a-infra-toolchain/terraform",
+        "init",
+        "-backend=false",
+        "-input=false",
+        "-no-color"
+      ],
+      "cwd": "/tmp/scholarchain-phase12a-repair1-infra-data-map-c1zl2w_s",
+      "exit_code": 0,
+      "log": "/tmp/scholarchain-phase12a-repair1-infra-mutation-data-map-init.log",
+      "sha256": "f43033ae5960b69d4ae12baa5aff96299990b7de7ef13b5c704995bac2ede29a"
+    },
+    {
+      "label": "mutation-data-map-test",
+      "command": [
+        "/tmp/scholarchain-phase12a-infra-toolchain/terraform",
+        "test",
+        "-no-color"
+      ],
+      "cwd": "/tmp/scholarchain-phase12a-repair1-infra-data-map-c1zl2w_s",
+      "exit_code": 1,
+      "log": "/tmp/scholarchain-phase12a-repair1-infra-mutation-data-map-test.log",
+      "sha256": "6ba18aac6a72acdb5860c813152db3b2c68eed2111683acdbc5e01d1051760ec"
+    },
+    {
+      "label": "mutation-rogue-resource-init",
+      "command": [
+        "/tmp/scholarchain-phase12a-infra-toolchain/terraform",
+        "init",
+        "-backend=false",
+        "-input=false",
+        "-no-color"
+      ],
+      "cwd": "/tmp/scholarchain-phase12a-repair1-infra-rogue-resource-5kzpm2av",
+      "exit_code": 0,
+      "log": "/tmp/scholarchain-phase12a-repair1-infra-mutation-rogue-resource-init.log",
+      "sha256": "f43033ae5960b69d4ae12baa5aff96299990b7de7ef13b5c704995bac2ede29a"
+    },
+    {
+      "label": "mutation-rogue-resource-test",
+      "command": [
+        "/tmp/scholarchain-phase12a-infra-toolchain/terraform",
+        "test",
+        "-no-color"
+      ],
+      "cwd": "/tmp/scholarchain-phase12a-repair1-infra-rogue-resource-5kzpm2av",
+      "exit_code": 1,
+      "log": "/tmp/scholarchain-phase12a-repair1-infra-mutation-rogue-resource-test.log",
+      "sha256": "8c75af8974937b18663fc0aab1298f04708c8e94f53dafbde4e5ef2a6ee1af5b"
+    },
+    {
+      "label": "final gate helper",
+      "command": [
+        "python3",
+        "/tmp/scholarchain-phase12a-repair1-infra-final-gates.py"
+      ],
+      "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+      "exit_code": 0,
+      "notes": "After final B1 assertion rejects both all DDB actions and wildcard actions. Each exact CLI command/result follows."
+    },
+    {
+      "label": "init-final",
+      "command": [
+        "/tmp/scholarchain-phase12a-infra-toolchain/terraform",
+        "init",
+        "-backend=false",
+        "-input=false",
+        "-no-color"
+      ],
+      "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain/infra/terraform",
+      "exit_code": 0,
+      "log": "/tmp/scholarchain-phase12a-repair1-infra-init-final.log",
+      "sha256": "6fd242691fd6bbc7efe25549609a26c11107f98c3ae3cb12128985c21a261753"
+    },
+    {
+      "label": "fmt-final",
+      "command": [
+        "/tmp/scholarchain-phase12a-infra-toolchain/terraform",
+        "fmt",
+        "-check",
+        "-recursive"
+      ],
+      "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain/infra/terraform",
+      "exit_code": 0,
+      "log": "/tmp/scholarchain-phase12a-repair1-infra-fmt-final.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "validate-final",
+      "command": [
+        "/tmp/scholarchain-phase12a-infra-toolchain/terraform",
+        "validate",
+        "-no-color"
+      ],
+      "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain/infra/terraform",
+      "exit_code": 0,
+      "log": "/tmp/scholarchain-phase12a-repair1-infra-validate-final.log",
+      "sha256": "f7997225125835fdd14060ac776d273f394b874f9a481b9e2122c83dc8adc5c1"
+    },
+    {
+      "label": "test-final",
+      "command": [
+        "/tmp/scholarchain-phase12a-infra-toolchain/terraform",
+        "test",
+        "-no-color"
+      ],
+      "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain/infra/terraform",
+      "exit_code": 0,
+      "log": "/tmp/scholarchain-phase12a-repair1-infra-test-final.log",
+      "sha256": "7cb6be1995c6c4bb1abac1df0c1cd19b06b06fb0409f68ecae3207cf6c25a14f"
+    },
+    {
+      "label": "tracked whitespace check",
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+      "exit_code": 0,
+      "log": "/tmp/scholarchain-phase12a-repair1-infra-diff-check.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "notes": "Untracked Terraform formatting independently checked by native final fmt-check; repair delta inspected against pre-edit41-file copy."
+    }
+  ],
+  "artifacts": {
+    "baseline-hashes.json": {
+      "path": "/tmp/scholarchain-phase12a-repair1-infra-baseline-hashes.json",
+      "sha256": "3ab92bf3d3aaaae720c8a6ed5ae8fef7d31d7a8b84396b899461c21e0bd72b0d"
+    },
+    "source-freeze.json": {
+      "path": "/tmp/scholarchain-phase12a-repair1-infra-source-freeze.json",
+      "sha256": "e00074e7405225537cd77c174c729b0be6b4e1ff859e30960dfd57935463ba1d"
+    },
+    "repair.patch": {
+      "path": "/tmp/scholarchain-phase12a-repair1-infra-repair.patch",
+      "sha256": "e27c967a869eff435f72b861b6130e0eed90741bdde96657d64062c256059307"
+    },
+    "mutation-data-map.patch": {
+      "path": "/tmp/scholarchain-phase12a-repair1-infra-mutation-data-map.patch",
+      "sha256": "1ce19bfe58ff5f24c1806df0150286a145673120666cd01d8ef81fa3dc2fa31b"
+    },
+    "mutation-rogue-resource.patch": {
+      "path": "/tmp/scholarchain-phase12a-repair1-infra-mutation-rogue-resource.patch",
+      "sha256": "0916807be7814617e909a774335aecf671d1264ec87a92bfb19c643ef199441c"
+    },
+    "mutation-source-unchanged.json": {
+      "path": "/tmp/scholarchain-phase12a-repair1-infra-mutation-source-unchanged.json",
+      "sha256": "8205133440eee49362e4eb226843898b8610426f423c6b6469bd3fedbaf54766"
+    },
+    "mutations.py": {
+      "path": "/tmp/scholarchain-phase12a-repair1-infra-mutations.py",
+      "sha256": "9088655eb5d68ebb0aac15c914b7e17c0a4adb528ab7216b4dd179a2da7140c2"
+    },
+    "mutations-attempt1.py": {
+      "path": "/tmp/scholarchain-phase12a-repair1-infra-mutations-attempt1.py",
+      "sha256": "07f22947b647f161a57b8be785d125a9dc4fd352f1a84e18ca4049c007bd57b9"
+    },
+    "final-gates.py": {
+      "path": "/tmp/scholarchain-phase12a-repair1-infra-final-gates.py",
+      "sha256": "bbf839c539bb54db9ad4fac2b26c55faf75ed3b0e59c5b0321b70eb892ff6a6e"
+    }
+  },
+  "source_freeze_at_utc": "2026-10-28T21:33:23.682294+00:00",
+  "notes": [
+    "All Terraform tests used mock_provider aws with command=plan; no live Terraform plan/apply/destroy/import or AWS CLI/API command was invoked.",
+    "Scratch roots reused the initialized provider via a providers-directory symlink; state,credential and secret files were not read/copied.",
+    "Only the5 listed B1/B2 files differ from the41-file pre-repair baseline. N1\u2013N8 are carried, not independently repaired.",
+    "Mutation-source-unchanged snapshot predates the final B1 wildcard guard adjustment; final source-freeze is authoritative. B2 implementation and assertions did not change after negative mutation runs."
+  ]
+}

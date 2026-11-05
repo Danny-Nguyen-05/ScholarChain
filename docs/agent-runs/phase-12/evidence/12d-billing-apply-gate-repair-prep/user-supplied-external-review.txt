@@ -1,0 +1,113 @@
+Verdict for the FRESH READ-ONLY BILLING EXECUTION-IDENTITY PLAN ONLY: APPROVE. The plan proposes exactly the approved budget, and every claim in the packet reproduced.
+
+However, the apply handoff is not ready. Two Medium findings and one Low finding must be resolved before any apply gate. This approval does not authorize an apply, an IAM change, spending or completing Phase 12D.
+
+Review method: read-only Git, hash and sanitized-log checks. I hashed the plan binary without opening it. I made no Terraform, AWS, login or build calls, and did not read the private input, raw plan JSON, raw logs, config, caches or state.
+
+What verified
+Footprint:
+git status has 533 entries, matching handoff-files.json. Its 55 new paths are all present; the only one outside this packet is the reviewer prompt.
+Of 4,397 preflight files, only the 4 coordinator records changed. They keep their HEAD and preflight prefixes, and review.md is unchanged.
+Unchanged inputs:
+The human exception record (4265d7a7…) and all earlier packet manifests still match; the bootstrap packet has 24 entries in its current manifest.
+All 209 frozen files match on hash, size and mtime. course.tfvars still has enable_budget_resource = false.
+All 17 pins and the 4 identical lock files are unchanged. The 7 config copies in evidence and the 5 in /tmp/…/config equal the source.
+Commands (10):
+Sandbox attempt: init 0, fmt 0, validate 1. The failure was a provider plugin handshake (“Failed to read any lines from plugin’s stdout”), not a source problem.
+Retry: init 0, fmt 0, validate 0, test 0 (billing 7/0, 6 assertions, 4 expected-failure runs).
+Protected run: init 0, plan exit 2, show 0.
+The 7 retained offline logs match their hashes. The 3 protected logs are correctly kept private.
+No new sbt run is claimed.
+Plan inputs:
+The environment uses AWS_PROFILE=scholarchain-billing-deployer and a dedicated TF_DATA_DIR.
+The plan argv passes an explicit -state path, the public tfvars, the private tfvars and -out.
+Sanitized plan:
+one create (aws_budgets_budget.project[0]), with 0 changes, destroys or replacements;
+account 530332961125, USD 200 COST/CUSTOM, from 2026-10-01 to 2027-01-01, no filters;
+credits and refunds excluded, the five approved tags;
+three ACTUAL/GREATER_THAN/PERCENTAGE alerts at 50, 80 and 100 percent, each with one email subscriber and no SNS.
+Plan binary: SHA 35e35914…cdc5, 6,626 bytes. The directory is 0700, files are 0600, and no state file exists.
+Recipient handling:
+save-recipient.py reads the address hidden via getpass, writes it with O_EXCL at mode 0600 and never echoes it.
+run.py projects only counts and allowlisted fields, and its assertions fail closed.
+No address appears in Git, apart from the two reserved example.invalid fixtures in the copied tests.
+Installed identity, spot-checked: the three installed policy documents the user pasted (caller, budget, login) are exactly the reviewed templates with the real account, role, budget and region substituted. The caller ARN the user pasted is assumed-role/scholarchain-billing-deployer/scholarchain-billing-operator.
+Limitations, honestly disclosed: the provider-resolved identity was not independently queried, remote budget absence was not verified, and the plan does not prove live create or tag permission or that AWS accepts the settings.
+Findings
+P1 — Medium — blocks the apply gate, not this plan
+
+Where:
+docs/agent-runs/phase-12/review.md: the last section is the offline policy amendment, and its bytes are unchanged since then;
+the evidence folders 12d-identity-decision-draft/, 12d-human-identity-bootstrap/ and 12d-authentication-verification/;
+billing-bootstrap-exception.md.
+Evidence:
+These three packets record a live, human-performed security change under a human-written exception, but no independent review of them exists.
+My check above covers only the pasted policy documents. I did not review the screenshots, the full scope of the exception, the final operator permission inventory (user-reported as “one policy”), or the earlier console-password label discrepancy.
+The exception record says “I will record the actual start and end afterward”, and completion.json still says “Not supplied”.
+Impact: An apply would rely on an identity whose establishment was never independently checked against the exception’s limits.
+Owner:
+coordinator: route a user-launched independent review of the three packets;
+human architect: record the actual session start and end personally, or record that they can’t.
+Acceptance check: Before any apply approval, an independent read-only review of the three packets is appended to review.md, and the human’s own record states the actual setup timing, or a reason it can’t be given.
+P2 — Medium — blocks the apply gate
+
+Where: infra/commands.json, the real-plan record: -state=/tmp/scholarchain-phase12d-billing-execution-plan/billing.execution.tfstate, with TF_DATA_DIR and the saved plan also under /tmp.
+Evidence: macOS clears /tmp on reboot, and its daily maintenance script removes old files there.
+Impact: After an apply, the only Terraform state for a prevent_destroy, account-wide budget could vanish. That would leave the budget unmanaged, so a later plan would try to create a duplicate, and the README’s “sole owner” claim would break. The saved plan could also disappear before the apply. The state will also contain the recipient address.
+Owner:
+human architect: choose the location;
+infra-engineer / coordinator: regenerate the plan.
+Acceptance check:
+Choose a durable, protected state location: mode 0700, outside Git and outside any cloud-synced folder, with an explicit backup and retention decision.
+Recommended: regenerate the plan with that exact -state path and TF_DATA_DIR, then record the new checksum and get it reviewed.
+The apply handoff must name the exact argv, cwd, -state path, TF_DATA_DIR and config copies, all byte-identical to the plan’s.
+P3 — Low — non-blocking, but required in the apply handoff
+
+Where: infra/plan-summary.json (remote_budget_absence_verified: false).
+Evidence: The last account inventory was the planner’s describe-budgets on 2026-10-31 at about 03:20 UTC, which found 0 budgets.
+Impact: If the budget already exists, CreateBudget fails rather than overwriting, so the failure is safe. But it would waste the apply window, and the fix must never be an improvised terraform import.
+Owner: coordinator, with a human-authorized read-only check.
+Acceptance check: Inside the authorized apply window, immediately before the apply:
+Check the exact budget name read-only and record the result.
+Record the non-sensitive caller ARN.
+Stop if the budget exists or the caller is not the exact billing role.
+Info
+
+The sandbox validate failure and its retry outside the sandbox are disclosed and preserved, not overwritten.
+The resolved provider identity relies on the account guard plus the earlier user STS check. Capturing it is folded into P3.
+Report fields
+STATUS: COMPLETE (review); verdict APPROVE for the Phase 12D fresh billing execution-identity READ-ONLY PLAN ONLY; apply handoff blocked by P1 and P2
+OWNER: code-reviewer (independent, read-only)
+WORK ORDER: docs/agent-runs/phase-12/reviewer-prompt-12d-billing-execution-plan.md; branch phase-12, base/HEAD 5ca8406bad5fe55f732458fa0cbd5d561ac83d8f; evidence docs/agent-runs/phase-12/evidence/12d-billing-execution-plan/
+FILES CREATED: None
+FILES MODIFIED: None
+COMMANDS RUN: Read-only git (status -uall, diff numstat/-U0/--check, show HEAD:, grep of review.md headings); stat/ls for modes; opaque shasum of the saved plan; shasum comparison of config copies; python3 -I for inventory, baseline, prefixes, all 12D packet manifests, the 31-entry infra manifest, 10 command records and 7 retained logs, the 209-file freeze (hash/size/mtime), sanitized summary and inputs; reads of public helper and runner sources, bootstrap/authentication observations and pasted policy readbacks; address/Drive-path scan. No Terraform/AWS/login/console/sbt calls; no private input, raw plan, raw log, config, cache or state access.
+TEST RESULTS: Not re-run. Observed: billing tests 7 passed/0 failed (6 assertions, 4 expected-failure runs) after the disclosed sandbox handshake failure; protected init 0, plan 2, show 0. Earlier 72-test and 1,255-test results are historical.
+VALIDATION RESULTS: Footprint 533, baseline 4,397/4, 5 record prefixes, all packet manifests, 209-file freeze, 17 pins, 4 locks, config copies, plan checksum/size/modes, sanitized fields and recipient handling verified; installed policy readbacks match the reviewed templates. P1/P2 Medium (apply gate), P3 Low, Info.
+ASSUMPTIONS: The sanitized summary was produced by run.py from the protected plan JSON as recorded. Human-supplied screenshots and readbacks are accurate. Not independently reviewed here (P1).
+RISKS: Unreviewed identity bootstrap and missing session times (P1); volatile /tmp state and plan (P2); unverified remote budget absence (P3); live create/tag permission, CUSTOM/CostTypes/tag acceptance, refresh lifetime, monitor, delivery, cost data and remaining allowance unverified; all EMR gates open.
+MANUAL ACTION REQUIRED: Human records actual bootstrap session timing; user launches an independent review of the three identity packets; human chooses a durable protected state location; any apply needs a human-written approval of an exact reviewed plan checksum.
+BLOCKED-ON OWNER: Human architect (P1 timing, P2 location, apply gate); coordinator (P1 review routing, P3 check design); infra-engineer (P2 plan regeneration)
+BLOCKED-ON EVIDENCE: review.md (no entries for the three identity packets); 12d-human-identity-bootstrap/completion/completion.json ("actual_session_start_end": not supplied); 12d-billing-execution-plan/infra/commands.json real-plan -state=/tmp/...
+NEXT GATE: Resolve P1 and P2, then a bounded ownership/state and exact-plan apply handoff for human-written approval. No mutation before that approval.
+NEXT PROMPT
+Phase 12D — record billing execution-identity plan review and prepare a bounded ownership/state and exact-plan apply handoff. Fresh session. No AWS mutation, apply, IAM change or spending in this turn.
+Repository /Users/danny/Documents/UIC/CS441/ScholarChain, branch phase-12, base/HEAD 5ca8406bad5fe55f732458fa0cbd5d561ac83d8f (uncommitted 12D work present).
+
+1. Coordinator: append this independent review (verdict APPROVE for the read-only execution-identity plan only; P1/P2 Medium blocking the apply gate; P3 Low; Info) VERBATIM to docs/agent-runs/phase-12/review.md under "## Subphase 12D fresh billing execution-identity plan — independent review". Append P1–P3 to repairs.md with owners. Append this work order to prompt.md. Append only; never edit billing-bootstrap-exception.md or any human record.
+
+2. Ask the human, wait, and record answers only as coordinator transcriptions (never approvals):
+   a. P1: (i) Please record the actual bootstrap session start/end (Chicago time) in your own words in your own record, or state that it cannot be reconstructed. The agent will not write or edit that record. (ii) Will you launch an independent read-only review of 12d-identity-decision-draft, 12d-human-identity-bootstrap and 12d-authentication-verification? The coordinator prepares only the reviewer prompt; it never launches the reviewer.
+   b. P2: choose a durable protected location for this root's state and TF_DATA_DIR: mode 0700, outside Git, outside any cloud-synced folder, and not /tmp. Also give a backup/retention decision. The state will contain the private recipient.
+   c. Confirm whether to regenerate the read-only plan with that exact state path (recommended), using the same approved inputs and a freshly re-entered private recipient via the hidden helper.
+
+3. Only after (a)(i) is recorded by the human, the identity-packet review returns APPROVE, and (b)/(c) are answered, prepare (offline) the bounded apply handoff document for the human. It must contain:
+   - the exact regenerated plan path, SHA-256, size, cwd, config-copy hashes, -state path and TF_DATA_DIR; apply argv = `terraform apply` of that saved plan only, with the identical -state and environment; no -var or -target;
+   - a pre-apply read-only check inside the approved window (P3): non-sensitive caller ARN must equal arn:aws:sts::530332961125:assumed-role/scholarchain-billing-deployer/<session>, and an exact-name budget absence check through an approved identity; stop on mismatch or presence, with no import;
+   - stop conditions: auth expiry mid-run (fail closed; no partial reuse), any Access Denied (no widening), any plan-staleness error (regenerate and re-review);
+   - post-apply read-back plan: budget amount, CUSTOM dates, before-credit cost types, five tags, three ACTUAL alerts and subscriber count, without printing the recipient; private delivery confirmation by the human; state file mode/location/backup;
+   - unchanged items: USD 5 proposed spike cap, USD 10 remaining EMR reserve, USD 5.09 margin, all EMR gates, B1/B2/B3/R1, N19/N20.
+   The handoff is a proposal. The human writes any apply approval personally, naming the exact plan SHA-256 and window, before any mutation. The apply executor is the deploy-engineer role, and it acts only after that written approval.
+
+Forbidden in this turn: terraform apply/destroy/import, AWS/IAM/console mutations, paid calls, credential/config/cache/state/private-input/raw-plan reads, writing human-gate.md, approvals or exception records, launching reviewers, commits, pushes, Phase 13.
+End with: "The billing execution-identity plan review is recorded. I have stopped and will not start the apply handoff until P1 and P2 are resolved and I receive the next prompt."

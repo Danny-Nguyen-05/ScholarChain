@@ -1,0 +1,11 @@
+{
+  "checked_at": "2026-10-31T03:24:30.417330+00:00",
+  "exact_expected_budget_fields": true,
+  "expected_notifications": true,
+  "all_tags_match": true,
+  "filters_absent": true,
+  "prior_state_empty": true,
+  "no_state_created": true,
+  "recipient_values_inspected": false,
+  "plan_sha256": "06543aa59e0438f4bcf42cc0941d1ffd840c10fd64929d2027e73192a6f53f57"
+}

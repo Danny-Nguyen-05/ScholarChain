@@ -1,0 +1,45 @@
+{
+  "recorded_utc": "2026-11-02T04:28:27.914621+00:00",
+  "files": [
+    {
+      "path": "scripts/billing/PUBLICATION.md",
+      "bytes": 12342,
+      "sha256": "dfc32dad40bc0b33a03018f6175f178941db8b3784fbfa5365b89a2e6b368648"
+    },
+    {
+      "path": "scripts/billing/README.md",
+      "bytes": 16599,
+      "sha256": "995f39267bcdb9713e2b601bca8bfd89b8a0825ab097db4ad25f1df3c473645f"
+    },
+    {
+      "path": "scripts/billing/budget_execution.py",
+      "bytes": 40308,
+      "sha256": "a31852d14e80d970e2338f8a5d94320ea3ca3b89ec759584689d8331d446080b"
+    },
+    {
+      "path": "scripts/billing/publication_evidence.py",
+      "bytes": 18539,
+      "sha256": "cb2edbb74ce1250282dd4a39ca5397c33e26490e18ae626187a900cf28be4580"
+    },
+    {
+      "path": "scripts/billing/reviewed-pins.json",
+      "bytes": 46174,
+      "sha256": "cb285259b7217bb4186ca80e74d376f215e4150396aa5fd66187d4e0dc96a753"
+    },
+    {
+      "path": "scripts/billing/tests/terraform_state_binding.py",
+      "bytes": 5340,
+      "sha256": "faaf64cd14192abbe45c1284617c26e7c1c2958ace61fcbcde955d8ac471a7c3"
+    },
+    {
+      "path": "scripts/billing/tests/test_budget_execution.py",
+      "bytes": 42720,
+      "sha256": "e4bf56fd1e672a533370975beb9c3d200c40eff3c02570ea1fe8125e495f50fd"
+    },
+    {
+      "path": "scripts/billing/tests/test_publication_evidence.py",
+      "bytes": 18627,
+      "sha256": "3adf9a30ae8fe72a77816ac100f1e70a295d053722fd2c8d7060e9568a10f6e6"
+    }
+  ]
+}

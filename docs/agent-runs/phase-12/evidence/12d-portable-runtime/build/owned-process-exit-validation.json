@@ -1,0 +1,23 @@
+{
+  "observed_at": "2026-11-04T01:03:35.189055+00:00",
+  "command": [
+    "/bin/ps",
+    "-p",
+    "4219,4225,4227,5117,5273,5782",
+    "-o",
+    "pid=,comm="
+  ],
+  "exit": 1,
+  "stdout": "",
+  "stderr": "",
+  "pids_checked": [
+    4219,
+    4225,
+    4227,
+    5117,
+    5273,
+    5782
+  ],
+  "all_absent": true,
+  "scope": "Only exact PIDs from this task; no kill-by-name, process cleanup or unrelated process mutation."
+}

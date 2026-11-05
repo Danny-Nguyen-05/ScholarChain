@@ -1,0 +1,16 @@
+{
+  "observed_utc": "2026-11-02T02:52:26.450837+00:00",
+  "scope": "Single exact saved P3 stderr, bounded nofollow in-memory classification only",
+  "error_code": "UNKNOWN",
+  "operation": "UNKNOWN",
+  "empty": false,
+  "singleline": true,
+  "multiline": false,
+  "ansi_present": false,
+  "standard_service_error_header": false,
+  "fixed_classification": "OTHER_OR_UNKNOWN_SERVICE_FAILURE_ABSENCE_UNPROVEN",
+  "raw_message_published": false,
+  "new_live_calls": 0,
+  "no_retry": true,
+  "actual_private_input_state_credentials_read": false
+}

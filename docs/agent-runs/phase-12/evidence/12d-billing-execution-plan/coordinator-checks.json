@@ -1,0 +1,28 @@
+{
+  "recorded_utc": "2026-11-01T03:16:53.193325+00:00",
+  "safe_manifest_artifacts": 31,
+  "safe_manifest_sha256": "e48dcfb0d7dd3a9f53786c64602d4ee28284ed41856fff0fefc60c949a39ff2e",
+  "sanitized_summary_checked": true,
+  "source_reference_paths_equal": 209,
+  "foundation_budget_disabled": true,
+  "foundation_tfvars": "infra/terraform/environments/course.tfvars",
+  "no_account_inventory_call": true,
+  "no_private_raw_artifact_opened_by_coordinator": true,
+  "specialist_no_running_jobs_or_children_reported": true,
+  "read_only_lookup_errata": [
+    "Earlier preflight cat requested nonexistent billing-bootstrap/providers.tf; main.tf holds provider. Earlier listing of deleted old private planner directory exited 2.",
+    "Coordinator cat requested nonexistent safe/private-artifact-metadata.json and returned 1; actual safe/protected-artifact-metadata.json then read successfully.",
+    "Coordinator rg requested nonexistent infra/terraform/course.tfvars and exited 2; rg --files found environments/course.tfvars, disabled flag confirmed.",
+    "Collapsed git status --short reports directories; final inventory uses --untracked-files=all, matching preflight entry semantics."
+  ],
+  "report_cleanup": "Specialist corrected unreviewed scratch owner-report command spacing and regenerated its manifest before assembly; no source/live commands changed.",
+  "final_public_privacy_scan": {
+    "initial_strict_no_address_assertion_exit": 1,
+    "explanation": "Strict scan found two reserved-example-domain addresses in a byte-identical copy of preexisting public budget mock tests; these are fixtures, not private input.",
+    "fixture_path": "infra/config-copies/tests/budget.tftest.hcl",
+    "fixture_matches_preexisting_source_bytes": true,
+    "reserved_example_domain_match_count": 2,
+    "other_address_shaped_matches": 0,
+    "private_input_never_read_for_comparison": true
+  }
+}

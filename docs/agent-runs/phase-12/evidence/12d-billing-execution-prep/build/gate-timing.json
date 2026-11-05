@@ -1,0 +1,9 @@
+{
+  "freeze_timestamp": "2026-10-31T16:56:11.517506+00:00",
+  "freeze_sha256": "ec96c67541385151f69ebea29b2c574e13dbdd4c37f43f197bd6551e166005b7",
+  "newest_frozen_mtime_ns": 1793465757698053005,
+  "gate_start_ns": 1793465829567577000,
+  "gate_end_ns": 1793466574929331000,
+  "gate_started_after_freeze": true,
+  "all_frozen_inputs_older_than_gate": true
+}

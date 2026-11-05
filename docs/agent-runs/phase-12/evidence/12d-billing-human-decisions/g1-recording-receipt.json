@@ -1,0 +1,12 @@
+{
+  "confirmation_file": "g1-user-confirmation.json",
+  "bytes": 1276,
+  "sha256": "e429a39a61cafd5fdd5cc694088c84ecb81883bf659baf9b9cb6cb2f45db2932",
+  "repairs_prefix_preserved": true,
+  "repairs_before_bytes": 56540,
+  "repairs_before_sha256": "40ac0d8b17d419e556d07b96988916a04d13712a367069fcf9aa5e5a7f8704b1",
+  "repairs_after_sha256": "ed225ae2bc20f6fe45fd79cf78fdca4723e289952946f67382b2062caa31648d",
+  "original_human_record_unchanged": true,
+  "diff_check_exit": 0,
+  "live_or_dependent_work": false
+}

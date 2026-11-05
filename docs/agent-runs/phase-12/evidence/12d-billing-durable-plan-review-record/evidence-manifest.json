@@ -1,0 +1,41 @@
+{
+  "scope": "Public proposal-only handoff",
+  "self_excluded": true,
+  "files": [
+    {
+      "path": "D1-sequencing-erratum.json",
+      "bytes": 2080,
+      "sha256": "205996f78e3b10335ad42a77d80952478ea5eebb7df1273af607ff3c7a6261b7"
+    },
+    {
+      "path": "delegation.json",
+      "bytes": 343,
+      "sha256": "ff10fd20cc2e7025e33e04089f1f91711364959e199162644edba6c1ad9815e1"
+    },
+    {
+      "path": "preflight-status.log.txt",
+      "bytes": 58527,
+      "sha256": "b2cecdb7a7a0d32329a7ce83759faddde5c95382d37c7b27f4c45f365571e357"
+    },
+    {
+      "path": "preflight.json",
+      "bytes": 19959,
+      "sha256": "4cb18a841839d0605ee61308ff3f73c68914e756d246bbc5ce80f482990e7398"
+    },
+    {
+      "path": "record-prefix-check.json",
+      "bytes": 2006,
+      "sha256": "56592eef6fb8ac376838b539e9dc17de99a7f21e537bcb4fed7696b7f6a4cf01"
+    },
+    {
+      "path": "source-preservation.json",
+      "bytes": 474,
+      "sha256": "e4bca4c8417fda56f3ea476e7881edf36f7ced4bd00e0de5a623fb4cff1acf44"
+    },
+    {
+      "path": "user-supplied-review.txt",
+      "bytes": 11869,
+      "sha256": "013e5dbe9cbfbc50a6fa27d78a92caa51d5ef54fa538375d6b6cb8c756e6c883"
+    }
+  ]
+}

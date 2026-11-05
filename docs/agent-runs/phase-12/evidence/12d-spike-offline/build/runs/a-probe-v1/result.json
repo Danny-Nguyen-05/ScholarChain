@@ -1,0 +1,63 @@
+{
+  "name": "a-probe-v1",
+  "stage": "probe",
+  "security": "v1",
+  "classload": false,
+  "exit": 0,
+  "timed_out": false,
+  "started_at": "2026-11-04T04:01:36.966887+00:00",
+  "seconds": 2.4037792079907376,
+  "driver_stdout_sha256": "94501a426627359a627967369903a5e100cf584f68821162e4c5f15511d03afd",
+  "driver_stderr_sha256": "df301f6eb65c4a1614ef6953c6a6577bed09fc8d1003336de9c8fb679a0e1fec",
+  "secret_occurrences_in_run_files": 0,
+  "log_files": [
+    {
+      "source": "logs/driver.stdout.txt",
+      "bytes": 4544,
+      "lines": 1,
+      "raw_sha256": "94501a426627359a627967369903a5e100cf584f68821162e4c5f15511d03afd",
+      "gz": "logs-gz/driver.stdout.txt.gz",
+      "gz_sha256": "35694b2079a8fdce7a31b2073cf64b9bfecabfcbab42b197b87c32c3df7ee368"
+    },
+    {
+      "source": "logs/driver.stderr.txt",
+      "bytes": 35757,
+      "lines": 268,
+      "raw_sha256": "df301f6eb65c4a1614ef6953c6a6577bed09fc8d1003336de9c8fb679a0e1fec",
+      "gz": "logs-gz/driver.stderr.txt.gz",
+      "gz_sha256": "48bc2c5efb065f50399bbec59338395c6b1914c022d8adc68689476414835eac"
+    },
+    {
+      "source": "worker/app-20261103220137-0000/0/stderr",
+      "bytes": 9106,
+      "lines": 57,
+      "raw_sha256": "380fd2246b078ac35468862ea2d5664038a08925be7c67b02693cc7c1004ba03",
+      "gz": "logs-gz/worker-app-20261103220137-0000_0_stderr.gz",
+      "gz_sha256": "88f4232ae110ce64f8313679402277d66c8e684e9731baeff0937060464ed087"
+    },
+    {
+      "source": "worker/app-20261103220137-0000/0/stdout",
+      "bytes": 0,
+      "lines": 0,
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "gz": "logs-gz/worker-app-20261103220137-0000_0_stdout.gz",
+      "gz_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "source": "worker/app-20261103220137-0000/1/stderr",
+      "bytes": 10404,
+      "lines": 68,
+      "raw_sha256": "53ec3a4028e3c71272841a017d81a0bde1faa3d900f8a94e61fca2b334ae747f",
+      "gz": "logs-gz/worker-app-20261103220137-0000_1_stderr.gz",
+      "gz_sha256": "1bb4e84c8f3ed68b07ef624c99f2ca4eb82ce60d31e0bd452a823208bdc22950"
+    },
+    {
+      "source": "worker/app-20261103220137-0000/1/stdout",
+      "bytes": 0,
+      "lines": 0,
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "gz": "logs-gz/worker-app-20261103220137-0000_1_stdout.gz",
+      "gz_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    }
+  ]
+}

@@ -1,0 +1,136 @@
+{
+  "created_at": "2026-10-31T03:24:30.419009+00:00",
+  "privacy_scope": "sanitized artifacts only; private input/raw plan/JSON/logs excluded",
+  "files": [
+    {
+      "path": "README.before.md",
+      "bytes": 6916,
+      "sha256": "3115e492ba4dbce6faae16370ea12ad2f84ea8cc962bd3f9bd63c37577106435"
+    },
+    {
+      "path": "README.delta.patch",
+      "bytes": 4104,
+      "sha256": "43ce37cf1843d3beee35a888717ae27f3aba1491a7fc4103ac8f4dd9db5ee6be"
+    },
+    {
+      "path": "approved-public-inputs.json",
+      "bytes": 307,
+      "sha256": "7830925d9d124bf374897682237198f5686160094dab4eab801229c7500a91fe"
+    },
+    {
+      "path": "billing-fmt-check.log.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "billing-init.log.txt",
+      "bytes": 595,
+      "sha256": "fa47f2a25afc25577c295cc0a696558f0a9e3ddbc7c4816dbf956c63ccf4d2a6"
+    },
+    {
+      "path": "billing-test.log.txt",
+      "bytes": 483,
+      "sha256": "aca7bb50be9aa6e39085eb2d1ac166e100d61aaa15cf8c95ccf3e4a87becb78e"
+    },
+    {
+      "path": "billing-validate.log.txt",
+      "bytes": 38,
+      "sha256": "f7997225125835fdd14060ac776d273f394b874f9a481b9e2122c83dc8adc5c1"
+    },
+    {
+      "path": "commands.json",
+      "bytes": 11115,
+      "sha256": "6923fdca80d10d15d53f815cbce63c2af5482fdf8a8bd631063cb6b713977478"
+    },
+    {
+      "path": "course-fmt-check.log.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "course-init.log.txt",
+      "bytes": 677,
+      "sha256": "6fd242691fd6bbc7efe25549609a26c11107f98c3ae3cb12128985c21a261753"
+    },
+    {
+      "path": "course-test.log.txt",
+      "bytes": 2466,
+      "sha256": "b5a4b9c9f15c4a6bebd3aaf0b60f81fbb9664f09e96ed9c8c713bc67c90264d5"
+    },
+    {
+      "path": "course-validate.log.txt",
+      "bytes": 38,
+      "sha256": "f7997225125835fdd14060ac776d273f394b874f9a481b9e2122c83dc8adc5c1"
+    },
+    {
+      "path": "documentation-reference.json",
+      "bytes": 434,
+      "sha256": "cb6314ad7a962e0369bc511a7c880b73380df843403175fc6464c2af970e2fdc"
+    },
+    {
+      "path": "owner-report.txt",
+      "bytes": 3863,
+      "sha256": "c151b1d74056c0a5089d2b12cb482df66d936c32bdd85f2c5b074bb5f9e681ca"
+    },
+    {
+      "path": "plan-inputs-after.json",
+      "bytes": 1899,
+      "sha256": "6af7bf6d64eefe1426002025382b375e72d9c2fd20266cfe539507b4dee67ef7"
+    },
+    {
+      "path": "plan-inputs-before.json",
+      "bytes": 2391,
+      "sha256": "3b605d7dbd367d8516bcc0e2cc9dc5c243876c9d947020067c5f101abbe412b1"
+    },
+    {
+      "path": "plan-summary.json",
+      "bytes": 2318,
+      "sha256": "48b9e4ca1e2f2777c66fc3f9289aae7f32c545e9c97ff2d90e1e31cd3e5e8001"
+    },
+    {
+      "path": "proposal-fmt-check.log.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "proposal-init.log.txt",
+      "bytes": 595,
+      "sha256": "fa47f2a25afc25577c295cc0a696558f0a9e3ddbc7c4816dbf956c63ccf4d2a6"
+    },
+    {
+      "path": "proposal-test.log.txt",
+      "bytes": 410,
+      "sha256": "18480c6550a16bf4a744305a7fd8394b3ce45408edb8bca2dbc9886482405037"
+    },
+    {
+      "path": "proposal-validate.log.txt",
+      "bytes": 38,
+      "sha256": "f7997225125835fdd14060ac776d273f394b874f9a481b9e2122c83dc8adc5c1"
+    },
+    {
+      "path": "run.py",
+      "bytes": 10097,
+      "sha256": "c5722eb06b27e0d3a669275821050a1244957d04ed6879c946fa18ea76850897"
+    },
+    {
+      "path": "safe-summary-validation.json",
+      "bytes": 362,
+      "sha256": "fe6eaf356ec5146e63672df690311518adad355fbeb4f08c83e82bfc002b4171"
+    },
+    {
+      "path": "source-after.json",
+      "bytes": 17630,
+      "sha256": "948347db67e28cfb8b392c0fbb0c74317bfcbc04f2eb1efd1e1deb210cd99a4c"
+    },
+    {
+      "path": "source-before.json",
+      "bytes": 17560,
+      "sha256": "2f53bde23c28a2236f92673b680ad45cb59e8a048790938057a80a1f637dfd23"
+    },
+    {
+      "path": "test-counts.json",
+      "bytes": 370,
+      "sha256": "5d0aee1d16259fb6de3e49a50ee3b57e7be45dd8820a742ce9965dbe666c157c"
+    }
+  ]
+}

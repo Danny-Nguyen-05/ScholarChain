@@ -1,0 +1,20 @@
+{
+  "baseline_entries": 77,
+  "final_entries": 88,
+  "newfile_count": 11,
+  "newfiles": [
+    "docs/agent-runs/phase-12/evidence/12d-billing-p3-layout-review-record/coordinator-report.txt",
+    "docs/agent-runs/phase-12/evidence/12d-billing-p3-layout-review-record/evidence-manifest.json",
+    "docs/agent-runs/phase-12/evidence/12d-billing-p3-layout-review-record/final-status.log.txt",
+    "docs/agent-runs/phase-12/evidence/12d-billing-p3-layout-review-record/handoff-files.json",
+    "docs/agent-runs/phase-12/evidence/12d-billing-p3-layout-review-record/new-gate-binding-reference.json",
+    "docs/agent-runs/phase-12/evidence/12d-billing-p3-layout-review-record/new-release-handoff.md",
+    "docs/agent-runs/phase-12/evidence/12d-billing-p3-layout-review-record/preflight-status.log.txt",
+    "docs/agent-runs/phase-12/evidence/12d-billing-p3-layout-review-record/preflight.json",
+    "docs/agent-runs/phase-12/evidence/12d-billing-p3-layout-review-record/preservation-check.json",
+    "docs/agent-runs/phase-12/evidence/12d-billing-p3-layout-review-record/public-address-scan.json",
+    "docs/agent-runs/phase-12/evidence/12d-billing-p3-layout-review-record/user-supplied-review.txt"
+  ],
+  "diff_check_exit": 0,
+  "agent_git_mutations": false
+}

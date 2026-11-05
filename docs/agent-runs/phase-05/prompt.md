@@ -383,68 +383,7 @@ This is mandatory after **5A, 5B, 5C, 5D and 5E**, and after repairs to blocking
 
 **Template the manager must complete and give to the user:**
 
-```text
-You are the independent, read-only code reviewer for ScholarChain Phase 5,
-Subphase [5A/5B/5C/5D/5E], in:
-/Users/danny/Documents/UIC/CS441/ScholarChain
-
-The manager has stopped implementation for this checkpoint. Review only;
-do not implement repairs or launch implementation subagents.
-
-Read, in order:
-1. Applicable AGENTS.md instructions, CLAUDE.md, docs/agents.md,
-   .claude/agents/code-reviewer.md and docs/agent-runs/README.md.
-2. /Users/danny/Documents/plan/phase5.md, especially this subphase's scope,
-   ownership, dependencies, acceptance criteria and stop-and-review protocol.
-3. The authoritative course Phase 5 specification:
-   https://github.com/0x1DOCD00D/ScholarChain/blob/main/README.md#phase-5-implement-entity-resolution
-4. The relevant shared contracts and actual source data/manifest definitions.
-5. The current phase prompt, owner/test reports, prior findings and repair
-   evidence at these exact locations: [manager supplies paths/sections].
-
-Project context:
-- Phase 4 is accepted; baseline acceptance-evidence commit:
-  099e303311be7a1b2e2cf5655e0c7ce9fa710474.
-- Phase 5 resolves both works and researchers from prepared observations;
-  preserve provenance, uncertainty and authoritative-ID conflicts.
-- The user chooses/runs this reviewer. No verdict has been inferred.
-
-Review scope for this checkpoint:
-[Completed subphase behavior, expected artifacts and acceptance criteria.]
-[Explicit later-subphase work and pending human/provider prerequisites.]
-[Current HEAD; branch; whole-phase base; subphase-start snapshot/diff manifest.]
-[Complete tracked/untracked changed-file inventory and current source hashes.]
-[Actual command exit codes/results; retained log/report/artifact paths/hashes.]
-[Prior findings and concrete repair evidence, if this is a recheck.]
-For 5E, review the complete Phase 5 implementation and full phase diff,
-including untracked files and cross-module effects, not just recent repairs.
-
-Review rules:
-- Inspect read-only. Do not edit any files, run builds/tests, install packages,
-  call providers, change source data or labels, deploy, commit or push.
-- Do not read secrets or credential files. Inspect code and retained evidence.
-  If an executable probe is needed, specify it for the owning agent/tester.
-- Report ALL confirmed findings in one pass; no arbitrary finding limit.
-- Prioritize correctness/data loss, unsafe identity merges, conflict handling,
-  schema/provenance, feature/threshold logic, bounded LLM/cache behavior,
-  UI/label integrity, evaluation leakage/metrics and regression evidence,
-  as applicable to the implemented subphase.
-- Check ownership. Validate claimed results against retained evidence and
-  source state; distinguish executed evidence from static reasoning.
-- Treat later-subphase requirements as future scope unless the current
-  deliverable depends on them. Do not demand unavailable human labels or
-  live-model results as completed 5A/5B functionality.
-- Distinguish blockers, nonblocking observations and unverified gates.
-  Passing tests alone does not establish model accuracy or human review.
-
-Return APPROVE or REQUEST-CHANGES for the implemented review scope, with
-phase acceptance limitations stated separately. For every finding give
-severity, path/line, evidence or reproduction reasoning, impact, required
-owner, proposed acceptance check and whether it blocks this checkpoint.
-Use the report fields required by docs/agent-runs/README.md.
-Report no findings if none are confirmed; do not invent defects or passes.
-Return the full review to me so I can give it back to the manager.
-```
+Reviewer instructions removed at the user’s request; review prompts are provided in chat.
 
 ## 15. Required test matrix
 

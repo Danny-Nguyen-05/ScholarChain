@@ -1,0 +1,15 @@
+{
+  "AWS_calls": 0,
+  "attempt": "attempt1",
+  "cleanup": [],
+  "completed_at": "2026-11-03T20:43:59.773517+00:00",
+  "exit": 0,
+  "expected_exit": 0,
+  "job_jar_sha256_after": "d52f11ebad5ec9e1ffdd1910d562023e934ce7ab62e7c74a5ffd650f8951b86b",
+  "job_jar_sha256_before": "d52f11ebad5ec9e1ffdd1910d562023e934ce7ab62e7c74a5ffd650f8951b86b",
+  "output_exists": true,
+  "output_sha256": "85e8e89aaa2f3d6aa73dd6aa9e624716b26fca924b9cc7e6adcb12c38e3069f3",
+  "seconds": 1.339,
+  "stage": "probe-local",
+  "timed_out": false
+}

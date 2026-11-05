@@ -1,0 +1,11 @@
+{
+  "kind": "Human-pasted OptionB verify result; private logs not inspected",
+  "operation": "verify-billing-20261102-01",
+  "gate_sha256": "d815276312374350b86259003592af3b2d352de8a9f5222902c9b93766e9c3ea",
+  "source_commit": "a9a52a91c1edaf5a584bd5b1f1affa2985795899",
+  "status": "BLOCKED-ON",
+  "code": "NOTIFICATION_DRIFT",
+  "exit": 2,
+  "source_path_inference": "Approved sanitize_readback reaches this code only after budget amount/type/cost scope/BillingView absence/dynamic-limit guards/dates/tags and notification count/threshold checks passed. This does not establish all notifications/subscribers/health or full verification.",
+  "followup": "Stop; preserve gate/window/originalsuccessfulapply/statebackup/newverifyjournal/logs. No replay/fabricatedverifyreceipt/scan/publication or mutation. Prepare one separately authorized saved-alert projection."
+}

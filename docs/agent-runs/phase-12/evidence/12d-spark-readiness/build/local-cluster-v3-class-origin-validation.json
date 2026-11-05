@@ -1,0 +1,105 @@
+{
+  "cloud_compatibility_verified": false,
+  "component_class_and_source_hash_checks": [
+    {
+      "actual_class_sha256": "cf2ed70bbaeaf5fbe8c702dddf0059b0ea49b3d0badfe8b5de489f711bd2373f",
+      "actual_implementationVersion": "3.5.4",
+      "actual_runtimeVersion": "3.5.4",
+      "artifact_class_hash_equal": true,
+      "component": "spark",
+      "pid": "31766",
+      "resolved_versioned_artifact": "spark-core_2.13-3.5.4.jar",
+      "role": "driver",
+      "version_basis": "Actual runtime field when available; otherwise exact class bytes match the named versioned resolved artifact. Not inferred from merged job JAR name."
+    },
+    {
+      "actual_class_sha256": "5fa95e069a844983b415ef613ce7b3f0c752be0804660ff12b7ffa6d7cf00cae",
+      "actual_implementationVersion": null,
+      "actual_runtimeVersion": "2.13.14",
+      "artifact_class_hash_equal": true,
+      "component": "scala-library",
+      "pid": "31766",
+      "resolved_versioned_artifact": "scala-library-2.13.14.jar",
+      "role": "driver",
+      "version_basis": "Actual runtime field when available; otherwise exact class bytes match the named versioned resolved artifact. Not inferred from merged job JAR name."
+    },
+    {
+      "actual_class_sha256": "19837277a82a61227cd4e246065836b5a049d5dfe59bb6032bc42bea7391ff96",
+      "actual_implementationVersion": null,
+      "actual_runtimeVersion": null,
+      "artifact_class_hash_equal": true,
+      "component": "scala-reflect",
+      "pid": "31766",
+      "resolved_versioned_artifact": "scala-reflect-2.13.14.jar",
+      "role": "driver",
+      "version_basis": "Actual runtime field when available; otherwise exact class bytes match the named versioned resolved artifact. Not inferred from merged job JAR name."
+    },
+    {
+      "actual_class_sha256": "e48c633a515bdcb03a9b4422a0f9fb5778fae811ad3c84f94ecce1f1c45e5712",
+      "actual_implementationVersion": null,
+      "actual_runtimeVersion": null,
+      "artifact_class_hash_equal": true,
+      "component": "scala3-library",
+      "pid": "31766",
+      "resolved_versioned_artifact": "scala3-library_3-3.3.4.jar",
+      "role": "driver",
+      "version_basis": "Actual runtime field when available; otherwise exact class bytes match the named versioned resolved artifact. Not inferred from merged job JAR name."
+    },
+    {
+      "actual_class_sha256": "cf2ed70bbaeaf5fbe8c702dddf0059b0ea49b3d0badfe8b5de489f711bd2373f",
+      "actual_implementationVersion": "3.5.4",
+      "actual_runtimeVersion": "3.5.4",
+      "artifact_class_hash_equal": true,
+      "component": "spark",
+      "pid": "31771",
+      "resolved_versioned_artifact": "spark-core_2.13-3.5.4.jar",
+      "role": "executor-task",
+      "version_basis": "Actual runtime field when available; otherwise exact class bytes match the named versioned resolved artifact. Not inferred from merged job JAR name."
+    },
+    {
+      "actual_class_sha256": "5fa95e069a844983b415ef613ce7b3f0c752be0804660ff12b7ffa6d7cf00cae",
+      "actual_implementationVersion": null,
+      "actual_runtimeVersion": "2.13.14",
+      "artifact_class_hash_equal": true,
+      "component": "scala-library",
+      "pid": "31771",
+      "resolved_versioned_artifact": "scala-library-2.13.14.jar",
+      "role": "executor-task",
+      "version_basis": "Actual runtime field when available; otherwise exact class bytes match the named versioned resolved artifact. Not inferred from merged job JAR name."
+    },
+    {
+      "actual_class_sha256": "19837277a82a61227cd4e246065836b5a049d5dfe59bb6032bc42bea7391ff96",
+      "actual_implementationVersion": null,
+      "actual_runtimeVersion": null,
+      "artifact_class_hash_equal": true,
+      "component": "scala-reflect",
+      "pid": "31771",
+      "resolved_versioned_artifact": "scala-reflect-2.13.14.jar",
+      "role": "executor-task",
+      "version_basis": "Actual runtime field when available; otherwise exact class bytes match the named versioned resolved artifact. Not inferred from merged job JAR name."
+    },
+    {
+      "actual_class_sha256": "e48c633a515bdcb03a9b4422a0f9fb5778fae811ad3c84f94ecce1f1c45e5712",
+      "actual_implementationVersion": null,
+      "actual_runtimeVersion": null,
+      "artifact_class_hash_equal": true,
+      "component": "scala3-library",
+      "pid": "31771",
+      "resolved_versioned_artifact": "scala3-library_3-3.3.4.jar",
+      "role": "executor-task",
+      "version_basis": "Actual runtime field when available; otherwise exact class bytes match the named versioned resolved artifact. Not inferred from merged job JAR name."
+    }
+  ],
+  "driver_executor_separate_JVM": true,
+  "driver_pid": "31766",
+  "executor_id": "0",
+  "executor_pid": "31771",
+  "first_sandbox_process_query": "Denied before final validation; corrected read-only query under escalation",
+  "job_jar_sha256": "d52f11ebad5ec9e1ffdd1910d562023e934ce7ab62e7c74a5ffd650f8951b86b",
+  "local_shared_absolute_path_exchange": true,
+  "owned_driver_executor_processes_absent_after_exit": true,
+  "process_query_exit": 1,
+  "remote_shared_mount_verified": false,
+  "v3_exit": 0,
+  "validated_at": "2026-11-03T20:43:10.122961+00:00"
+}

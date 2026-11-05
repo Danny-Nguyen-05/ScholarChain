@@ -1,0 +1,16 @@
+tests/policy.tftest.hcl... in progress
+  run "budget_policy_is_exact_and_complete"... pass
+  run "trust_and_caller_require_exact_distinct_mfa_operator"... pass
+  run "different_budget_is_bound_independently"... pass
+  run "planner_cannot_be_operator"... pass
+  run "root_cannot_be_operator"... pass
+  run "foreign_account_cannot_be_operator"... pass
+  run "wildcard_cannot_be_operator"... pass
+  run "wildcard_cannot_be_budget"... pass
+  run "role_cannot_replace_user_mfa_contract"... pass
+  run "invalid_account_is_rejected"... pass
+  run "planner_under_path_cannot_be_operator"... pass
+tests/policy.tftest.hcl... tearing down
+tests/policy.tftest.hcl... pass
+
+Success! 11 passed, 0 failed.

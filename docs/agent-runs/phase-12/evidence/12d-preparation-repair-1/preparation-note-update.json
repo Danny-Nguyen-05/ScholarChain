@@ -1,0 +1,45 @@
+{
+  "updated_at": "2026-10-31T02:39:01.292169+00:00",
+  "old_manifest_archived": "original-notes/evidence-manifest.json",
+  "changed_original_artifacts": [
+    {
+      "path": "cost-proposal.md",
+      "original_sha256": "a3ed6a36de7de9c198fba763a60e09d335e2cd63b08ded2f7db081acd2cdc454",
+      "new_sha256": "2c563e7287d7045d568a2d4e276886955f05084da1505bbca9a0e29920175d79"
+    },
+    {
+      "path": "handoff.md",
+      "original_sha256": "8284abb4f46eb905885881dc9a75ad23ac8f09ffbcb5157875caa4ece08e4698",
+      "new_sha256": "644abb6d1dd8e2d3cf59efc920dceefe2f3150c8a4a802a7cf5b7e63596bd119"
+    },
+    {
+      "path": "launch-dependencies.md",
+      "original_sha256": "7c0d24265dbf03fd17a45b3c330b8af695838d9dcdf5af7529366505625683d8",
+      "new_sha256": "c27678581741d885cbac7c909ad5362a1e6e02a6bfe98ac34e75ca12aa46eb2b"
+    },
+    {
+      "path": "next-steps.md",
+      "original_sha256": "3b845f0d9e0f1756ee6245e1cc07b3f5b4ace53772b17d936cb42a0c2f1262c3",
+      "new_sha256": "b6c1895802c1ccba11cb304af1d11e72b8ad34bae64bd92b76fe5dbd4e862dbb"
+    },
+    {
+      "path": "security-self-review.md",
+      "original_sha256": "eaef155189eade555364b84eb0879b311e7b0c3fb957df6e606c8d734b30d344",
+      "new_sha256": "90bff2cfea536e7a806db7df5ffc755f8f9e810e02d7e8b0d057ed622be3125c"
+    },
+    {
+      "path": "step-0-answers.md",
+      "original_sha256": "4de976aaa02002cf30291b7e732608daf064dc405b4402ab2ee0f2267889d010",
+      "new_sha256": "efc564079bebd729c3b2c58ecd018341d5dc2997dd4185836b228ed0aa84ab52"
+    },
+    {
+      "path": "work-order.md",
+      "original_sha256": "ed9095a32adb05e69a5e082976cc87e2287d6d89caff43df2cf4cf366a4c9314",
+      "new_sha256": "8065624a4c6a3fd747abd4df85e6d319da7fcca9d71a3ea904aba0095df19074"
+    }
+  ],
+  "historical_native_build_logs_modified": false,
+  "historical_freezes_modified": false,
+  "original_handoff_inventory_modified": false,
+  "new_manifest_sha256": "2633b93ad6a606286cb9fdc676d36b46aae34fabda128f0cd3ba160fdf9c76cd"
+}

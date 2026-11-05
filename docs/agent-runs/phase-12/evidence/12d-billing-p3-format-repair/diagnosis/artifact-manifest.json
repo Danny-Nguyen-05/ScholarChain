@@ -1,0 +1,31 @@
+{
+  "scope": "Sanitized fixed-category diagnostic only",
+  "self_excluded": true,
+  "files": [
+    {
+      "path": "format-confirmation.json",
+      "bytes": 320,
+      "sha256": "527c332151f4f9c9427725b71468df3ed2e2bab24b9f35ca2e474f9d270d4383"
+    },
+    {
+      "path": "owner-report.txt",
+      "bytes": 2987,
+      "sha256": "8179d150ea1b6164f5d24b0248354748804863bb5ca1c8ae9fddda14f6701fa1"
+    },
+    {
+      "path": "result-final.json",
+      "bytes": 810,
+      "sha256": "069e44b6b8a35bf7feb1adb754bb5a538bfbe65df495c10b90c231b31cedf46e"
+    },
+    {
+      "path": "result-v2.json",
+      "bytes": 695,
+      "sha256": "5872156023ff2b359ef99e267a1b9f0acb1756b4364a15127c99af795a90f887"
+    },
+    {
+      "path": "result.json",
+      "bytes": 542,
+      "sha256": "1dbcaeddbc29efab5ea3a203dff7afbbf980bcc03a0cef131f14b229ae60c4be"
+    }
+  ]
+}

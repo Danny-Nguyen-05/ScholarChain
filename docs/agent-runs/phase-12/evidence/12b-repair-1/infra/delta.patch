@@ -1,0 +1,49 @@
+--- a/infra/terraform/tests/phase12b.tftest.hcl
++++ b/infra/terraform/tests/phase12b.tftest.hcl
+@@ -98,6 +98,14 @@
+ run "inactive_defaults_and_vector_contract" {
+   command = plan
+   assert {
++    condition = length([for statement in jsondecode(output.iam_controls.kms_policy).Statement : statement if try(statement.Principal.Service, "") == "indexing.s3vectors.amazonaws.com" && statement.Effect == "Allow" && statement.Action == ["kms:Decrypt"] && statement.Resource == "*" && try(statement.Condition, {}) == {
++      StringEquals               = { "aws:SourceAccount" = "111122223333" }
++      ArnLike                    = { "aws:SourceArn" = "arn:aws:s3vectors:us-east-1:111122223333:bucket/scholarchain-course-111122223333-vectors" }
++      "ForAnyValue:StringEquals" = { "kms:EncryptionContextKeys" = ["aws:s3vectors:arn", "aws:s3vectors:resource-id"] }
++    }]) == 1 && length(jsondecode(output.iam_controls.kms_policy).Statement) == 2
++    error_message = "B3: The project CMK must allow exactly one S3 Vectors indexing service decrypt grant, restricted to the expected account, exact vector bucket ARN and S3 Vectors encryption context keys."
++  }
++  assert {
+     condition     = !output.phase12b_controls.runtime.enabled && length(output.phase12b_controls.runtime.services) == 0 && length(output.phase12b_controls.runtime.scaling_targets) == 0 && !output.phase12b_controls.emr.enabled && output.phase12b_controls.emr.cluster == null && !output.phase12b_controls.neptune.enabled
+     error_message = "Pending composition/runtime/engine selections must create no EMR cluster, Neptune or ECS tasks/services/scaling targets."
+   }
+--- a/infra/terraform/README.md
++++ b/infra/terraform/README.md
+@@ -415,3 +415,9 @@
+ Serverless with live revalidation deferred to12C.
+ [Regional public price file](https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonNeptune/current/us-east-2/index.json),
+ [AWS sizing/cost guidance](https://docs.aws.amazon.com/prescriptive-guidance/latest/neptune-well-architected-framework/cost-optimization-pillar.html).
++
++B3 CMK control: the key policy grants only `kms:Decrypt` to
++`indexing.s3vectors.amazonaws.com`, restricted to the configured account, exact
++project vector-bucket ARN and S3 Vectors encryption-context keys. `Resource="*"`
++in this key policy means this CMK only; the account-root delegation is unchanged.
++[AWS S3 Vectors encryption requirements](https://docs.aws.amazon.com/AmazonS3/latest/userguide/s3-vectors-data-encryption.html).
+--- a/infra/terraform/modules/identity/main.tf
++++ b/infra/terraform/modules/identity/main.tf
+@@ -119,6 +119,17 @@
+       Principal = { AWS = local.root_arn }
+       Action    = distinct(local.key_admin_actions)
+       Resource  = "*"
++      }, {
++      Sid       = "AllowS3VectorsServicePrincipal"
++      Effect    = "Allow"
++      Principal = { Service = "indexing.s3vectors.amazonaws.com" }
++      Action    = ["kms:Decrypt"]
++      Resource  = "*" # This CMK only, as required by a KMS key policy.
++      Condition = {
++        StringEquals               = { "aws:SourceAccount" = var.aws_account_id }
++        ArnLike                    = { "aws:SourceArn" = "arn:aws:s3vectors:${var.aws_region}:${var.aws_account_id}:bucket/${var.name_prefix}-${var.aws_account_id}-vectors" }
++        "ForAnyValue:StringEquals" = { "kms:EncryptionContextKeys" = ["aws:s3vectors:arn", "aws:s3vectors:resource-id"] }
++      }
+     }]
+   })
+   tags = var.tags

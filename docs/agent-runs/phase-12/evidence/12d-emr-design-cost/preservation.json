@@ -1,0 +1,24 @@
+{
+  "AWS_account_calls": 0,
+  "all_launch_flags_false": true,
+  "base_head": "2d637c6707ecc66a489561dd179406b6ac622e93",
+  "current_cost_replay_matches": true,
+  "full_build_rerun": false,
+  "git_diff_check_exit": 0,
+  "human_record_bytes": 1334,
+  "human_record_sha256": "abe3a50ad7167fa01227c73e15e92a422a50609f6313bdcc56404cb61765d71a",
+  "infra_manifest_mismatches": 0,
+  "new_paths_confined_to_proposal": true,
+  "observed_at": "2026-11-03T22:07:55.408422+00:00",
+  "production_source_changes": 0,
+  "record_prefixes_equal_base_commit": true,
+  "reviewed_readiness_source_files_unchanged": 6,
+  "tracked_outside_five_records_unchanged_by_git_comparison": true,
+  "tracked_paths_modified": [
+    "docs/agent-runs/phase-12/owner-report.md",
+    "docs/agent-runs/phase-12/prompt.md",
+    "docs/agent-runs/phase-12/repairs.md",
+    "docs/agent-runs/phase-12/review.md",
+    "docs/agent-runs/phase-12/test-report.md"
+  ]
+}

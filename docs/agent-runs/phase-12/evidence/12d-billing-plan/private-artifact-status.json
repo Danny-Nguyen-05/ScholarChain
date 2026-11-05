@@ -1,0 +1,13 @@
+{
+  "directory_mode": "0o700",
+  "artifact_modes": {
+    "billing.tfplan": "0o600",
+    "billing.plan.json": "0o600",
+    "real-plan.log.txt": "0o600",
+    "notification.private.tfvars.json": "0o600"
+  },
+  "plan_sha256_verified": true,
+  "raw_json_or_logs_inspected": false,
+  "private_input_inspected_or_hashed": false,
+  "curated_non_synthetic_email_findings": 0
+}

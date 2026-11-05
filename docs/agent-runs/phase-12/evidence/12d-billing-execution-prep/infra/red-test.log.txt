@@ -1,0 +1,73 @@
+tests/policy.tftest.hcl... in progress
+  run "budget_policy_is_exact_and_complete"... fail
+
+Error: Test assertion failed
+
+  on tests/policy.tftest.hcl line 10, in run "budget_policy_is_exact_and_complete":
+  10:     condition = jsondecode(output.execution_policy_json) == {
+  11:       Version = "2012-10-17"
+  12:       Statement = [{
+  13:         Sid      = "ManageOnlyProjectBudget"
+  14:         Effect   = "Allow"
+  15:         Action   = ["budgets:ModifyBudget", "budgets:ViewBudget", "budgets:TagResource", "budgets:UntagResource", "budgets:ListTagsForResource"]
+  16:         Resource = ["arn:aws:budgets::111122223333:budget/synthetic-project-budget"]
+  17:       }]
+  18:     }
+    ├────────────────
+    │ Diff:
+    │ --- actual
+    │ +++ expected
+    │   {
+    │     "Statement": [
+    │       {
+    │         "Action": [
+    │           "budgets:ModifyBudget",
+    │           "budgets:ViewBudget",
+    │           "budgets:TagResource",
+    │           "budgets:UntagResource",
+    │           "budgets:ListTagsForResource"
+    │         ],
+    │         "Effect": "Allow",
+    │         "Resource": [
+    │ -         "*"
+    │ +         "arn:aws:budgets::111122223333:budget/synthetic-project-budget"
+    │         ],
+    │         "Sid": "ManageOnlyProjectBudget"
+    │       }
+    │     ],
+    │     "Version": "2012-10-17"
+    │   }
+
+
+Allow only the five required Budgets IAM actions on the single project
+budget; no global console, IAM or paid-service grant.
+  run "trust_and_caller_require_exact_distinct_mfa_operator"... pass
+  run "different_budget_is_bound_independently"... fail
+
+Error: Test assertion failed
+
+  on tests/policy.tftest.hcl line 60, in run "different_budget_is_bound_independently":
+  60:     condition     = jsondecode(output.execution_policy_json).Statement[0].Resource == ["arn:aws:budgets::111122223333:budget/other-synthetic-budget"]
+    ├────────────────
+    │ Diff:
+    │ --- actual
+    │ +++ expected
+    │   [
+    │ -   "*"
+    │ +   "arn:aws:budgets::111122223333:budget/other-synthetic-budget"
+    │   ]
+
+
+Changing the budget input must change its exact permission boundary.
+  run "planner_cannot_be_operator"... pass
+  run "root_cannot_be_operator"... pass
+  run "foreign_account_cannot_be_operator"... pass
+  run "wildcard_cannot_be_operator"... pass
+  run "wildcard_cannot_be_budget"... pass
+  run "role_cannot_replace_user_mfa_contract"... pass
+  run "invalid_account_is_rejected"... pass
+  run "planner_under_path_cannot_be_operator"... pass
+tests/policy.tftest.hcl... tearing down
+tests/policy.tftest.hcl... fail
+
+Failure! 9 passed, 2 failed.

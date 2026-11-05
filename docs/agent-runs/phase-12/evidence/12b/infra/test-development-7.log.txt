@@ -1,0 +1,436 @@
+tests/phase12a.tftest.hcl... in progress
+  run "course_data_safety"... pass
+  run "network_role_boundaries"... pass
+  run "runtime_identity_boundaries"... pass
+  run "cleanup_is_explicit_and_ttl_is_narrow"... pass
+  run "persistent_data_has_no_intermediate_expiration"... pass
+  run "configured_secrets_are_arn_only_and_per_service"... pass
+  run "invalid_account_is_rejected"... pass
+  run "invalid_budget_is_rejected"... pass
+  run "wrong_region_az_is_rejected"... pass
+  run "duplicate_az_is_rejected"... pass
+  run "malformed_secret_reference_is_rejected"... pass
+  run "optional_bootstrap_preserves_state"... pass
+  run "budget_requires_actual_subscribers"... pass
+tests/phase12a.tftest.hcl... tearing down
+tests/phase12a.tftest.hcl... pass
+tests/phase12b.tftest.hcl... in progress
+  run "inactive_defaults_and_vector_contract"... pass
+  run "dashboard_metric_shapes_and_route_ownership"... fail
+
+Error: Unsupported attribute
+
+  on tests/phase12b.tftest.hcl line 128, in run "dashboard_metric_shapes_and_route_ownership":
+ 128:     condition     = alltrue([for path in fileset(path.module, "**/*.tf") : startswith(path, "modules/network/") || length(regexall("resource\\s+\"aws_(route|route_table|route_table_association|default_route_table|main_route_table_association)\"", file("${path.module}/${path}"))) == 0])
+
+Can't access attributes on a primitive-typed value (string).
+
+Error: Unsupported attribute
+
+  on tests/phase12b.tftest.hcl line 128, in run "dashboard_metric_shapes_and_route_ownership":
+ 128:     condition     = alltrue([for path in fileset(path.module, "**/*.tf") : startswith(path, "modules/network/") || length(regexall("resource\\s+\"aws_(route|route_table|route_table_association|default_route_table|main_route_table_association)\"", file("${path.module}/${path}"))) == 0])
+
+Can't access attributes on a primitive-typed value (string).
+
+Error: Unsupported attribute
+
+  on tests/phase12b.tftest.hcl line 128, in run "dashboard_metric_shapes_and_route_ownership":
+ 128:     condition     = alltrue([for path in fileset(path.module, "**/*.tf") : startswith(path, "modules/network/") || length(regexall("resource\\s+\"aws_(route|route_table|route_table_association|default_route_table|main_route_table_association)\"", file("${path.module}/${path}"))) == 0])
+
+Can't access attributes on a primitive-typed value (string).
+
+Error: Unsupported attribute
+
+  on tests/phase12b.tftest.hcl line 128, in run "dashboard_metric_shapes_and_route_ownership":
+ 128:     condition     = alltrue([for path in fileset(path.module, "**/*.tf") : startswith(path, "modules/network/") || length(regexall("resource\\s+\"aws_(route|route_table|route_table_association|default_route_table|main_route_table_association)\"", file("${path.module}/${path}"))) == 0])
+
+Can't access attributes on a primitive-typed value (string).
+
+Error: Unsupported attribute
+
+  on tests/phase12b.tftest.hcl line 128, in run "dashboard_metric_shapes_and_route_ownership":
+ 128:     condition     = alltrue([for path in fileset(path.module, "**/*.tf") : startswith(path, "modules/network/") || length(regexall("resource\\s+\"aws_(route|route_table|route_table_association|default_route_table|main_route_table_association)\"", file("${path.module}/${path}"))) == 0])
+
+Can't access attributes on a primitive-typed value (string).
+
+Error: Unsupported attribute
+
+  on tests/phase12b.tftest.hcl line 128, in run "dashboard_metric_shapes_and_route_ownership":
+ 128:     condition     = alltrue([for path in fileset(path.module, "**/*.tf") : startswith(path, "modules/network/") || length(regexall("resource\\s+\"aws_(route|route_table|route_table_association|default_route_table|main_route_table_association)\"", file("${path.module}/${path}"))) == 0])
+
+Can't access attributes on a primitive-typed value (string).
+
+Error: Unsupported attribute
+
+  on tests/phase12b.tftest.hcl line 128, in run "dashboard_metric_shapes_and_route_ownership":
+ 128:     condition     = alltrue([for path in fileset(path.module, "**/*.tf") : startswith(path, "modules/network/") || length(regexall("resource\\s+\"aws_(route|route_table|route_table_association|default_route_table|main_route_table_association)\"", file("${path.module}/${path}"))) == 0])
+
+Can't access attributes on a primitive-typed value (string).
+
+Error: Unsupported attribute
+
+  on tests/phase12b.tftest.hcl line 128, in run "dashboard_metric_shapes_and_route_ownership":
+ 128:     condition     = alltrue([for path in fileset(path.module, "**/*.tf") : startswith(path, "modules/network/") || length(regexall("resource\\s+\"aws_(route|route_table|route_table_association|default_route_table|main_route_table_association)\"", file("${path.module}/${path}"))) == 0])
+
+Can't access attributes on a primitive-typed value (string).
+
+Error: Unsupported attribute
+
+  on tests/phase12b.tftest.hcl line 128, in run "dashboard_metric_shapes_and_route_ownership":
+ 128:     condition     = alltrue([for path in fileset(path.module, "**/*.tf") : startswith(path, "modules/network/") || length(regexall("resource\\s+\"aws_(route|route_table|route_table_association|default_route_table|main_route_table_association)\"", file("${path.module}/${path}"))) == 0])
+
+Can't access attributes on a primitive-typed value (string).
+
+Error: Unsupported attribute
+
+  on tests/phase12b.tftest.hcl line 128, in run "dashboard_metric_shapes_and_route_ownership":
+ 128:     condition     = alltrue([for path in fileset(path.module, "**/*.tf") : startswith(path, "modules/network/") || length(regexall("resource\\s+\"aws_(route|route_table|route_table_association|default_route_table|main_route_table_association)\"", file("${path.module}/${path}"))) == 0])
+
+Can't access attributes on a primitive-typed value (string).
+
+Error: Unsupported attribute
+
+  on tests/phase12b.tftest.hcl line 128, in run "dashboard_metric_shapes_and_route_ownership":
+ 128:     condition     = alltrue([for path in fileset(path.module, "**/*.tf") : startswith(path, "modules/network/") || length(regexall("resource\\s+\"aws_(route|route_table|route_table_association|default_route_table|main_route_table_association)\"", file("${path.module}/${path}"))) == 0])
+
+Can't access attributes on a primitive-typed value (string).
+
+Error: Unsupported attribute
+
+  on tests/phase12b.tftest.hcl line 128, in run "dashboard_metric_shapes_and_route_ownership":
+ 128:     condition     = alltrue([for path in fileset(path.module, "**/*.tf") : startswith(path, "modules/network/") || length(regexall("resource\\s+\"aws_(route|route_table|route_table_association|default_route_table|main_route_table_association)\"", file("${path.module}/${path}"))) == 0])
+
+Can't access attributes on a primitive-typed value (string).
+
+Error: Unsupported attribute
+
+  on tests/phase12b.tftest.hcl line 128, in run "dashboard_metric_shapes_and_route_ownership":
+ 128:     condition     = alltrue([for path in fileset(path.module, "**/*.tf") : startswith(path, "modules/network/") || length(regexall("resource\\s+\"aws_(route|route_table|route_table_association|default_route_table|main_route_table_association)\"", file("${path.module}/${path}"))) == 0])
+
+Can't access attributes on a primitive-typed value (string).
+
+Error: Unsupported attribute
+
+  on tests/phase12b.tftest.hcl line 128, in run "dashboard_metric_shapes_and_route_ownership":
+ 128:     condition     = alltrue([for path in fileset(path.module, "**/*.tf") : startswith(path, "modules/network/") || length(regexall("resource\\s+\"aws_(route|route_table|route_table_association|default_route_table|main_route_table_association)\"", file("${path.module}/${path}"))) == 0])
+
+Can't access attributes on a primitive-typed value (string).
+
+Error: Unsupported attribute
+
+  on tests/phase12b.tftest.hcl line 128, in run "dashboard_metric_shapes_and_route_ownership":
+ 128:     condition     = alltrue([for path in fileset(path.module, "**/*.tf") : startswith(path, "modules/network/") || length(regexall("resource\\s+\"aws_(route|route_table|route_table_association|default_route_table|main_route_table_association)\"", file("${path.module}/${path}"))) == 0])
+
+Can't access attributes on a primitive-typed value (string).
+
+Error: Unsupported attribute
+
+  on tests/phase12b.tftest.hcl line 128, in run "dashboard_metric_shapes_and_route_ownership":
+ 128:     condition     = alltrue([for path in fileset(path.module, "**/*.tf") : startswith(path, "modules/network/") || length(regexall("resource\\s+\"aws_(route|route_table|route_table_association|default_route_table|main_route_table_association)\"", file("${path.module}/${path}"))) == 0])
+
+Can't access attributes on a primitive-typed value (string).
+
+Error: Unsupported attribute
+
+  on tests/phase12b.tftest.hcl line 128, in run "dashboard_metric_shapes_and_route_ownership":
+ 128:     condition     = alltrue([for path in fileset(path.module, "**/*.tf") : startswith(path, "modules/network/") || length(regexall("resource\\s+\"aws_(route|route_table|route_table_association|default_route_table|main_route_table_association)\"", file("${path.module}/${path}"))) == 0])
+
+Can't access attributes on a primitive-typed value (string).
+
+Error: Unsupported attribute
+
+  on tests/phase12b.tftest.hcl line 128, in run "dashboard_metric_shapes_and_route_ownership":
+ 128:     condition     = alltrue([for path in fileset(path.module, "**/*.tf") : startswith(path, "modules/network/") || length(regexall("resource\\s+\"aws_(route|route_table|route_table_association|default_route_table|main_route_table_association)\"", file("${path.module}/${path}"))) == 0])
+
+Can't access attributes on a primitive-typed value (string).
+
+Error: Unsupported attribute
+
+  on tests/phase12b.tftest.hcl line 128, in run "dashboard_metric_shapes_and_route_ownership":
+ 128:     condition     = alltrue([for path in fileset(path.module, "**/*.tf") : startswith(path, "modules/network/") || length(regexall("resource\\s+\"aws_(route|route_table|route_table_association|default_route_table|main_route_table_association)\"", file("${path.module}/${path}"))) == 0])
+
+Can't access attributes on a primitive-typed value (string).
+
+Error: Unsupported attribute
+
+  on tests/phase12b.tftest.hcl line 128, in run "dashboard_metric_shapes_and_route_ownership":
+ 128:     condition     = alltrue([for path in fileset(path.module, "**/*.tf") : startswith(path, "modules/network/") || length(regexall("resource\\s+\"aws_(route|route_table|route_table_association|default_route_table|main_route_table_association)\"", file("${path.module}/${path}"))) == 0])
+
+Can't access attributes on a primitive-typed value (string).
+
+Error: Unsupported attribute
+
+  on tests/phase12b.tftest.hcl line 128, in run "dashboard_metric_shapes_and_route_ownership":
+ 128:     condition     = alltrue([for path in fileset(path.module, "**/*.tf") : startswith(path, "modules/network/") || length(regexall("resource\\s+\"aws_(route|route_table|route_table_association|default_route_table|main_route_table_association)\"", file("${path.module}/${path}"))) == 0])
+
+Can't access attributes on a primitive-typed value (string).
+
+Error: Unsupported attribute
+
+  on tests/phase12b.tftest.hcl line 128, in run "dashboard_metric_shapes_and_route_ownership":
+ 128:     condition     = alltrue([for path in fileset(path.module, "**/*.tf") : startswith(path, "modules/network/") || length(regexall("resource\\s+\"aws_(route|route_table|route_table_association|default_route_table|main_route_table_association)\"", file("${path.module}/${path}"))) == 0])
+
+Can't access attributes on a primitive-typed value (string).
+
+Error: Unsupported attribute
+
+  on tests/phase12b.tftest.hcl line 128, in run "dashboard_metric_shapes_and_route_ownership":
+ 128:     condition     = alltrue([for path in fileset(path.module, "**/*.tf") : startswith(path, "modules/network/") || length(regexall("resource\\s+\"aws_(route|route_table|route_table_association|default_route_table|main_route_table_association)\"", file("${path.module}/${path}"))) == 0])
+
+Can't access attributes on a primitive-typed value (string).
+
+Error: Unsupported attribute
+
+  on tests/phase12b.tftest.hcl line 128, in run "dashboard_metric_shapes_and_route_ownership":
+ 128:     condition     = alltrue([for path in fileset(path.module, "**/*.tf") : startswith(path, "modules/network/") || length(regexall("resource\\s+\"aws_(route|route_table|route_table_association|default_route_table|main_route_table_association)\"", file("${path.module}/${path}"))) == 0])
+
+Can't access attributes on a primitive-typed value (string).
+
+Error: Unsupported attribute
+
+  on tests/phase12b.tftest.hcl line 128, in run "dashboard_metric_shapes_and_route_ownership":
+ 128:     condition     = alltrue([for path in fileset(path.module, "**/*.tf") : startswith(path, "modules/network/") || length(regexall("resource\\s+\"aws_(route|route_table|route_table_association|default_route_table|main_route_table_association)\"", file("${path.module}/${path}"))) == 0])
+
+Can't access attributes on a primitive-typed value (string).
+
+Error: Unsupported attribute
+
+  on tests/phase12b.tftest.hcl line 128, in run "dashboard_metric_shapes_and_route_ownership":
+ 128:     condition     = alltrue([for path in fileset(path.module, "**/*.tf") : startswith(path, "modules/network/") || length(regexall("resource\\s+\"aws_(route|route_table|route_table_association|default_route_table|main_route_table_association)\"", file("${path.module}/${path}"))) == 0])
+
+Can't access attributes on a primitive-typed value (string).
+
+Error: Unsupported attribute
+
+  on tests/phase12b.tftest.hcl line 128, in run "dashboard_metric_shapes_and_route_ownership":
+ 128:     condition     = alltrue([for path in fileset(path.module, "**/*.tf") : startswith(path, "modules/network/") || length(regexall("resource\\s+\"aws_(route|route_table|route_table_association|default_route_table|main_route_table_association)\"", file("${path.module}/${path}"))) == 0])
+
+Can't access attributes on a primitive-typed value (string).
+
+Error: Unsupported attribute
+
+  on tests/phase12b.tftest.hcl line 128, in run "dashboard_metric_shapes_and_route_ownership":
+ 128:     condition     = alltrue([for path in fileset(path.module, "**/*.tf") : startswith(path, "modules/network/") || length(regexall("resource\\s+\"aws_(route|route_table|route_table_association|default_route_table|main_route_table_association)\"", file("${path.module}/${path}"))) == 0])
+
+Can't access attributes on a primitive-typed value (string).
+
+Error: Unsupported attribute
+
+  on tests/phase12b.tftest.hcl line 128, in run "dashboard_metric_shapes_and_route_ownership":
+ 128:     condition     = alltrue([for path in fileset(path.module, "**/*.tf") : startswith(path, "modules/network/") || length(regexall("resource\\s+\"aws_(route|route_table|route_table_association|default_route_table|main_route_table_association)\"", file("${path.module}/${path}"))) == 0])
+
+Can't access attributes on a primitive-typed value (string).
+
+Error: Unsupported attribute
+
+  on tests/phase12b.tftest.hcl line 128, in run "dashboard_metric_shapes_and_route_ownership":
+ 128:     condition     = alltrue([for path in fileset(path.module, "**/*.tf") : startswith(path, "modules/network/") || length(regexall("resource\\s+\"aws_(route|route_table|route_table_association|default_route_table|main_route_table_association)\"", file("${path.module}/${path}"))) == 0])
+
+Can't access attributes on a primitive-typed value (string).
+
+Error: Unsupported attribute
+
+  on tests/phase12b.tftest.hcl line 128, in run "dashboard_metric_shapes_and_route_ownership":
+ 128:     condition     = alltrue([for path in fileset(path.module, "**/*.tf") : startswith(path, "modules/network/") || length(regexall("resource\\s+\"aws_(route|route_table|route_table_association|default_route_table|main_route_table_association)\"", file("${path.module}/${path}"))) == 0])
+
+Can't access attributes on a primitive-typed value (string).
+
+Error: Unsupported attribute
+
+  on tests/phase12b.tftest.hcl line 128, in run "dashboard_metric_shapes_and_route_ownership":
+ 128:     condition     = alltrue([for path in fileset(path.module, "**/*.tf") : startswith(path, "modules/network/") || length(regexall("resource\\s+\"aws_(route|route_table|route_table_association|default_route_table|main_route_table_association)\"", file("${path.module}/${path}"))) == 0])
+
+Can't access attributes on a primitive-typed value (string).
+
+Error: Unsupported attribute
+
+  on tests/phase12b.tftest.hcl line 128, in run "dashboard_metric_shapes_and_route_ownership":
+ 128:     condition     = alltrue([for path in fileset(path.module, "**/*.tf") : startswith(path, "modules/network/") || length(regexall("resource\\s+\"aws_(route|route_table|route_table_association|default_route_table|main_route_table_association)\"", file("${path.module}/${path}"))) == 0])
+
+Can't access attributes on a primitive-typed value (string).
+
+Error: Unsupported attribute
+
+  on tests/phase12b.tftest.hcl line 128, in run "dashboard_metric_shapes_and_route_ownership":
+ 128:     condition     = alltrue([for path in fileset(path.module, "**/*.tf") : startswith(path, "modules/network/") || length(regexall("resource\\s+\"aws_(route|route_table|route_table_association|default_route_table|main_route_table_association)\"", file("${path.module}/${path}"))) == 0])
+
+Can't access attributes on a primitive-typed value (string).
+
+Error: Unsupported attribute
+
+  on tests/phase12b.tftest.hcl line 128, in run "dashboard_metric_shapes_and_route_ownership":
+ 128:     condition     = alltrue([for path in fileset(path.module, "**/*.tf") : startswith(path, "modules/network/") || length(regexall("resource\\s+\"aws_(route|route_table|route_table_association|default_route_table|main_route_table_association)\"", file("${path.module}/${path}"))) == 0])
+
+Can't access attributes on a primitive-typed value (string).
+
+Error: Unsupported attribute
+
+  on tests/phase12b.tftest.hcl line 128, in run "dashboard_metric_shapes_and_route_ownership":
+ 128:     condition     = alltrue([for path in fileset(path.module, "**/*.tf") : startswith(path, "modules/network/") || length(regexall("resource\\s+\"aws_(route|route_table|route_table_association|default_route_table|main_route_table_association)\"", file("${path.module}/${path}"))) == 0])
+
+Can't access attributes on a primitive-typed value (string).
+
+Error: Unsupported attribute
+
+  on tests/phase12b.tftest.hcl line 128, in run "dashboard_metric_shapes_and_route_ownership":
+ 128:     condition     = alltrue([for path in fileset(path.module, "**/*.tf") : startswith(path, "modules/network/") || length(regexall("resource\\s+\"aws_(route|route_table|route_table_association|default_route_table|main_route_table_association)\"", file("${path.module}/${path}"))) == 0])
+
+Can't access attributes on a primitive-typed value (string).
+
+Error: Unsupported attribute
+
+  on tests/phase12b.tftest.hcl line 128, in run "dashboard_metric_shapes_and_route_ownership":
+ 128:     condition     = alltrue([for path in fileset(path.module, "**/*.tf") : startswith(path, "modules/network/") || length(regexall("resource\\s+\"aws_(route|route_table|route_table_association|default_route_table|main_route_table_association)\"", file("${path.module}/${path}"))) == 0])
+
+Can't access attributes on a primitive-typed value (string).
+
+Error: Unsupported attribute
+
+  on tests/phase12b.tftest.hcl line 128, in run "dashboard_metric_shapes_and_route_ownership":
+ 128:     condition     = alltrue([for path in fileset(path.module, "**/*.tf") : startswith(path, "modules/network/") || length(regexall("resource\\s+\"aws_(route|route_table|route_table_association|default_route_table|main_route_table_association)\"", file("${path.module}/${path}"))) == 0])
+
+Can't access attributes on a primitive-typed value (string).
+
+Error: Unsupported attribute
+
+  on tests/phase12b.tftest.hcl line 128, in run "dashboard_metric_shapes_and_route_ownership":
+ 128:     condition     = alltrue([for path in fileset(path.module, "**/*.tf") : startswith(path, "modules/network/") || length(regexall("resource\\s+\"aws_(route|route_table|route_table_association|default_route_table|main_route_table_association)\"", file("${path.module}/${path}"))) == 0])
+
+Can't access attributes on a primitive-typed value (string).
+
+Error: Unsupported attribute
+
+  on tests/phase12b.tftest.hcl line 128, in run "dashboard_metric_shapes_and_route_ownership":
+ 128:     condition     = alltrue([for path in fileset(path.module, "**/*.tf") : startswith(path, "modules/network/") || length(regexall("resource\\s+\"aws_(route|route_table|route_table_association|default_route_table|main_route_table_association)\"", file("${path.module}/${path}"))) == 0])
+
+Can't access attributes on a primitive-typed value (string).
+
+Error: Unsupported attribute
+
+  on tests/phase12b.tftest.hcl line 128, in run "dashboard_metric_shapes_and_route_ownership":
+ 128:     condition     = alltrue([for path in fileset(path.module, "**/*.tf") : startswith(path, "modules/network/") || length(regexall("resource\\s+\"aws_(route|route_table|route_table_association|default_route_table|main_route_table_association)\"", file("${path.module}/${path}"))) == 0])
+
+Can't access attributes on a primitive-typed value (string).
+
+Error: Unsupported attribute
+
+  on tests/phase12b.tftest.hcl line 128, in run "dashboard_metric_shapes_and_route_ownership":
+ 128:     condition     = alltrue([for path in fileset(path.module, "**/*.tf") : startswith(path, "modules/network/") || length(regexall("resource\\s+\"aws_(route|route_table|route_table_association|default_route_table|main_route_table_association)\"", file("${path.module}/${path}"))) == 0])
+
+Can't access attributes on a primitive-typed value (string).
+
+Error: Unsupported attribute
+
+  on tests/phase12b.tftest.hcl line 128, in run "dashboard_metric_shapes_and_route_ownership":
+ 128:     condition     = alltrue([for path in fileset(path.module, "**/*.tf") : startswith(path, "modules/network/") || length(regexall("resource\\s+\"aws_(route|route_table|route_table_association|default_route_table|main_route_table_association)\"", file("${path.module}/${path}"))) == 0])
+
+Can't access attributes on a primitive-typed value (string).
+
+Error: Unsupported attribute
+
+  on tests/phase12b.tftest.hcl line 128, in run "dashboard_metric_shapes_and_route_ownership":
+ 128:     condition     = alltrue([for path in fileset(path.module, "**/*.tf") : startswith(path, "modules/network/") || length(regexall("resource\\s+\"aws_(route|route_table|route_table_association|default_route_table|main_route_table_association)\"", file("${path.module}/${path}"))) == 0])
+
+Can't access attributes on a primitive-typed value (string).
+
+Error: Unsupported attribute
+
+  on tests/phase12b.tftest.hcl line 128, in run "dashboard_metric_shapes_and_route_ownership":
+ 128:     condition     = alltrue([for path in fileset(path.module, "**/*.tf") : startswith(path, "modules/network/") || length(regexall("resource\\s+\"aws_(route|route_table|route_table_association|default_route_table|main_route_table_association)\"", file("${path.module}/${path}"))) == 0])
+
+Can't access attributes on a primitive-typed value (string).
+
+Error: Unsupported attribute
+
+  on tests/phase12b.tftest.hcl line 128, in run "dashboard_metric_shapes_and_route_ownership":
+ 128:     condition     = alltrue([for path in fileset(path.module, "**/*.tf") : startswith(path, "modules/network/") || length(regexall("resource\\s+\"aws_(route|route_table|route_table_association|default_route_table|main_route_table_association)\"", file("${path.module}/${path}"))) == 0])
+
+Can't access attributes on a primitive-typed value (string).
+
+Error: Unsupported attribute
+
+  on tests/phase12b.tftest.hcl line 128, in run "dashboard_metric_shapes_and_route_ownership":
+ 128:     condition     = alltrue([for path in fileset(path.module, "**/*.tf") : startswith(path, "modules/network/") || length(regexall("resource\\s+\"aws_(route|route_table|route_table_association|default_route_table|main_route_table_association)\"", file("${path.module}/${path}"))) == 0])
+
+Can't access attributes on a primitive-typed value (string).
+
+Error: Unsupported attribute
+
+  on tests/phase12b.tftest.hcl line 128, in run "dashboard_metric_shapes_and_route_ownership":
+ 128:     condition     = alltrue([for path in fileset(path.module, "**/*.tf") : startswith(path, "modules/network/") || length(regexall("resource\\s+\"aws_(route|route_table|route_table_association|default_route_table|main_route_table_association)\"", file("${path.module}/${path}"))) == 0])
+
+Can't access attributes on a primitive-typed value (string).
+
+Error: Unsupported attribute
+
+  on tests/phase12b.tftest.hcl line 128, in run "dashboard_metric_shapes_and_route_ownership":
+ 128:     condition     = alltrue([for path in fileset(path.module, "**/*.tf") : startswith(path, "modules/network/") || length(regexall("resource\\s+\"aws_(route|route_table|route_table_association|default_route_table|main_route_table_association)\"", file("${path.module}/${path}"))) == 0])
+
+Can't access attributes on a primitive-typed value (string).
+
+Error: Unsupported attribute
+
+  on tests/phase12b.tftest.hcl line 128, in run "dashboard_metric_shapes_and_route_ownership":
+ 128:     condition     = alltrue([for path in fileset(path.module, "**/*.tf") : startswith(path, "modules/network/") || length(regexall("resource\\s+\"aws_(route|route_table|route_table_association|default_route_table|main_route_table_association)\"", file("${path.module}/${path}"))) == 0])
+
+Can't access attributes on a primitive-typed value (string).
+
+Error: Unsupported attribute
+
+  on tests/phase12b.tftest.hcl line 128, in run "dashboard_metric_shapes_and_route_ownership":
+ 128:     condition     = alltrue([for path in fileset(path.module, "**/*.tf") : startswith(path, "modules/network/") || length(regexall("resource\\s+\"aws_(route|route_table|route_table_association|default_route_table|main_route_table_association)\"", file("${path.module}/${path}"))) == 0])
+
+Can't access attributes on a primitive-typed value (string).
+
+Error: Unsupported attribute
+
+  on tests/phase12b.tftest.hcl line 128, in run "dashboard_metric_shapes_and_route_ownership":
+ 128:     condition     = alltrue([for path in fileset(path.module, "**/*.tf") : startswith(path, "modules/network/") || length(regexall("resource\\s+\"aws_(route|route_table|route_table_association|default_route_table|main_route_table_association)\"", file("${path.module}/${path}"))) == 0])
+
+Can't access attributes on a primitive-typed value (string).
+
+Error: Unsupported attribute
+
+  on tests/phase12b.tftest.hcl line 128, in run "dashboard_metric_shapes_and_route_ownership":
+ 128:     condition     = alltrue([for path in fileset(path.module, "**/*.tf") : startswith(path, "modules/network/") || length(regexall("resource\\s+\"aws_(route|route_table|route_table_association|default_route_table|main_route_table_association)\"", file("${path.module}/${path}"))) == 0])
+
+Can't access attributes on a primitive-typed value (string).
+
+Error: Unsupported attribute
+
+  on tests/phase12b.tftest.hcl line 128, in run "dashboard_metric_shapes_and_route_ownership":
+ 128:     condition     = alltrue([for path in fileset(path.module, "**/*.tf") : startswith(path, "modules/network/") || length(regexall("resource\\s+\"aws_(route|route_table|route_table_association|default_route_table|main_route_table_association)\"", file("${path.module}/${path}"))) == 0])
+
+Can't access attributes on a primitive-typed value (string).
+
+Error: Unsupported attribute
+
+  on tests/phase12b.tftest.hcl line 128, in run "dashboard_metric_shapes_and_route_ownership":
+ 128:     condition     = alltrue([for path in fileset(path.module, "**/*.tf") : startswith(path, "modules/network/") || length(regexall("resource\\s+\"aws_(route|route_table|route_table_association|default_route_table|main_route_table_association)\"", file("${path.module}/${path}"))) == 0])
+
+Can't access attributes on a primitive-typed value (string).
+
+Error: Unsupported attribute
+
+  on tests/phase12b.tftest.hcl line 128, in run "dashboard_metric_shapes_and_route_ownership":
+ 128:     condition     = alltrue([for path in fileset(path.module, "**/*.tf") : startswith(path, "modules/network/") || length(regexall("resource\\s+\"aws_(route|route_table|route_table_association|default_route_table|main_route_table_association)\"", file("${path.module}/${path}"))) == 0])
+
+Can't access attributes on a primitive-typed value (string).
+  run "private_neptune_and_read_only_graph"... skip
+  run "scoped_embedding_producer_and_models"... skip
+  run "bounded_runtime_scaling_and_secret_wiring"... skip
+  run "https_has_no_http_fallback"... skip
+  run "bounded_emr_mock_runtime_only"... skip
+  run "runtime_cannot_activate_without_composition"... skip
+  run "emr_cannot_activate_without_runtime"... skip
+  run "neptune_requires_matching_engine_family"... skip
+  run "vector_dimension_migration_is_not_silent"... skip
+  run "emr_delete_cannot_reach_raw"... skip
+  run "neptune_rejects_missing_engine"... skip
+  run "emr_rejects_global_write_policy"... skip
+  run "model_wildcards_are_rejected"... skip
+  run "vector_writer_scopes_exact_indexes"... skip
+tests/phase12b.tftest.hcl... tearing down
+tests/phase12b.tftest.hcl... fail
+
+Failure! 14 passed, 1 failed, 14 skipped.

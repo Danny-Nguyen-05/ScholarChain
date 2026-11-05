@@ -1,0 +1,394 @@
+{
+  "plan_started_utc": "2026-10-30T17:35:01.643348+00:00",
+  "plan_finished_utc": "2026-10-30T17:35:03.365136+00:00",
+  "plan_sha256": "1e0eb776c6bebe0aea4a0d7070dbc2328953d7cc001e921b9ac674eb8b6bbd34",
+  "config_inputs": [
+    {
+      "path": "infra/terraform/.terraform.lock.hcl",
+      "sha256": "421b75245b0080edee2b434482ff348419a75d7a6b798d5218e0a0f9f723eaea",
+      "bytes": 1406,
+      "mtime_ns": 1793213376307087886
+    },
+    {
+      "path": "infra/terraform/environments/course.tfvars",
+      "sha256": "074db42250c2f7e61ff3c6b3bdaee62a14d91eafd0d5f3419d419f01afa7306b",
+      "bytes": 1466,
+      "mtime_ns": 1793238589021100570
+    },
+    {
+      "path": "infra/terraform/main.tf",
+      "sha256": "d5e5b3c2f3e0075f2562609ad2ce5f5573f116bd39f1c0235b3b84153b27341c",
+      "bytes": 6467,
+      "mtime_ns": 1793238251533659055
+    },
+    {
+      "path": "infra/terraform/modules/datalake/main.tf",
+      "sha256": "33a1f9d21962c285f597a4e17a74535af186ab52a741c045b663717f4f7bf9bf",
+      "bytes": 2835,
+      "mtime_ns": 1793213526882056884
+    },
+    {
+      "path": "infra/terraform/modules/datalake/outputs.tf",
+      "sha256": "c04264c35b25d7dbde8e0ebef4c0d0f0a8eec82c20fb38e1a2a868cae7f8c07d",
+      "bytes": 810,
+      "mtime_ns": 1793213238560782999
+    },
+    {
+      "path": "infra/terraform/modules/datalake/variables.tf",
+      "sha256": "f34c80bf90187a86eff99db8bee280872f6b21da339ce5a3a3386d2629b4083a",
+      "bytes": 362,
+      "mtime_ns": 1793213526842104173
+    },
+    {
+      "path": "infra/terraform/modules/datalake/versions.tf",
+      "sha256": "38c0d27255f1ccf0c6f57b6854b80e5bcecde516ebfbcdfbd7ae95ad220ba0a1",
+      "bytes": 150,
+      "mtime_ns": 1793213192477053788
+    },
+    {
+      "path": "infra/terraform/modules/dynamodb/main.tf",
+      "sha256": "a6ba78a8127de3f6df9c2cf42b9f397f18ea3dc239fed0b20c5e718d8d91c120",
+      "bytes": 1751,
+      "mtime_ns": 1793213526882742096
+    },
+    {
+      "path": "infra/terraform/modules/dynamodb/outputs.tf",
+      "sha256": "3d8b58ed4096f3d53c8620673fa44ff015029176064823aa342cfefd490f4820",
+      "bytes": 776,
+      "mtime_ns": 1793213238560923083
+    },
+    {
+      "path": "infra/terraform/modules/dynamodb/variables.tf",
+      "sha256": "d3927de45e5a434c8b30dd941283ed080ad29b14909d16cd0158b5a89df65641",
+      "bytes": 265,
+      "mtime_ns": 1793213238560831499
+    },
+    {
+      "path": "infra/terraform/modules/dynamodb/versions.tf",
+      "sha256": "38c0d27255f1ccf0c6f57b6854b80e5bcecde516ebfbcdfbd7ae95ad220ba0a1",
+      "bytes": 150,
+      "mtime_ns": 1793213192477116955
+    },
+    {
+      "path": "infra/terraform/modules/emr/main.tf",
+      "sha256": "b945543bcb85469e6a0d5b03ab7856b926c23f0447dfeab95505d298d3f7280b",
+      "bytes": 3462,
+      "mtime_ns": 1793238117855541991
+    },
+    {
+      "path": "infra/terraform/modules/emr/outputs.tf",
+      "sha256": "4fd3461366fed94fcbf0d5823e07fdddf8fcf460a1692d2d75e30d9b9e884db5",
+      "bytes": 334,
+      "mtime_ns": 1793237875477586406
+    },
+    {
+      "path": "infra/terraform/modules/emr/variables.tf",
+      "sha256": "97fbff11089034711095904b83a950da2af5faa1d02416a6ff48e66dea76fc16",
+      "bytes": 663,
+      "mtime_ns": 1793237735950918497
+    },
+    {
+      "path": "infra/terraform/modules/emr/versions.tf",
+      "sha256": "38c0d27255f1ccf0c6f57b6854b80e5bcecde516ebfbcdfbd7ae95ad220ba0a1",
+      "bytes": 150,
+      "mtime_ns": 1793237735950804330
+    },
+    {
+      "path": "infra/terraform/modules/foundation/bootstrap/main.tf",
+      "sha256": "c26429519d1a02fa5263532856b9cc7a154974e4798039599c54bc7936356d15",
+      "bytes": 1990,
+      "mtime_ns": 1793213663313873385
+    },
+    {
+      "path": "infra/terraform/modules/foundation/bootstrap/outputs.tf",
+      "sha256": "fdc3ff0702da0eb128deb35fdab6cda02b96507354ad41fcc3dd5a4b54e9f2c0",
+      "bytes": 960,
+      "mtime_ns": 1793213639349164208
+    },
+    {
+      "path": "infra/terraform/modules/foundation/bootstrap/variables.tf",
+      "sha256": "ebc3bedbb4957baf5692e19b227df77f44e83ce1c107702375105d493c110b76",
+      "bytes": 693,
+      "mtime_ns": 1793213814742421048
+    },
+    {
+      "path": "infra/terraform/modules/foundation/bootstrap/versions.tf",
+      "sha256": "38c0d27255f1ccf0c6f57b6854b80e5bcecde516ebfbcdfbd7ae95ad220ba0a1",
+      "bytes": 150,
+      "mtime_ns": 1793213639307417029
+    },
+    {
+      "path": "infra/terraform/modules/foundation/main.tf",
+      "sha256": "28a5dd65c502cd18d039da4d35c92964fae4fac74909a69fbc9ea8b1984b77d2",
+      "bytes": 1095,
+      "mtime_ns": 1793213526841978840
+    },
+    {
+      "path": "infra/terraform/modules/foundation/outputs.tf",
+      "sha256": "bfbab11ed31c4a9d0aec8fef35b926fecd04f3964fe849cd044b412a4ccddf8e",
+      "bytes": 266,
+      "mtime_ns": 1793213526842045715
+    },
+    {
+      "path": "infra/terraform/modules/foundation/variables.tf",
+      "sha256": "38f1a007c2de96f671eb980a466140835e7f88dfe89519607e6da0784dc0b553",
+      "bytes": 486,
+      "mtime_ns": 1793213526841908589
+    },
+    {
+      "path": "infra/terraform/modules/foundation/versions.tf",
+      "sha256": "38c0d27255f1ccf0c6f57b6854b80e5bcecde516ebfbcdfbd7ae95ad220ba0a1",
+      "bytes": 150,
+      "mtime_ns": 1793213192476835287
+    },
+    {
+      "path": "infra/terraform/modules/identity/main.tf",
+      "sha256": "c1563654848f6a74364f07a71b96f89643d44636486c4087c0e17e72c4461bd9",
+      "bytes": 11807,
+      "mtime_ns": 1793381650221455182
+    },
+    {
+      "path": "infra/terraform/modules/identity/outputs.tf",
+      "sha256": "217bc41d2b4875dfe4632b5dc6836a852a2a49864e94f96365f93baf5154779f",
+      "bytes": 2010,
+      "mtime_ns": 1793381650156122102
+    },
+    {
+      "path": "infra/terraform/modules/identity/phase12b.tf",
+      "sha256": "8bdcded40d94bfd8f14680ff47dc27ceaba3272b7667a5eab595dfb99ceab5c5",
+      "bytes": 3169,
+      "mtime_ns": 1793381650155957808
+    },
+    {
+      "path": "infra/terraform/modules/identity/variables.tf",
+      "sha256": "2ac1550de1cff2e1d66322cae32022f5c6e12ed9f043ed5463d5aa52f3e5c6a9",
+      "bytes": 968,
+      "mtime_ns": 1793237875345375243
+    },
+    {
+      "path": "infra/terraform/modules/identity/versions.tf",
+      "sha256": "38c0d27255f1ccf0c6f57b6854b80e5bcecde516ebfbcdfbd7ae95ad220ba0a1",
+      "bytes": 150,
+      "mtime_ns": 1793213192476986163
+    },
+    {
+      "path": "infra/terraform/modules/messaging/main.tf",
+      "sha256": "3088aba1f4c77017fa7bc91e6d0a16b55b9ce4bc1e71f580b4e310c55f82d679",
+      "bytes": 1553,
+      "mtime_ns": 1793213526886989910
+    },
+    {
+      "path": "infra/terraform/modules/messaging/outputs.tf",
+      "sha256": "9f104df2f4af14ba20b018aeef1f53367fc789f535892587ca2ee580380e4d61",
+      "bytes": 864,
+      "mtime_ns": 1793213238561074459
+    },
+    {
+      "path": "infra/terraform/modules/messaging/variables.tf",
+      "sha256": "2c2d1fda57e9b1d9a3c17aefe195992e2009e6ca508c6479cb404cda49176163",
+      "bytes": 1077,
+      "mtime_ns": 1793213526842226299
+    },
+    {
+      "path": "infra/terraform/modules/messaging/versions.tf",
+      "sha256": "38c0d27255f1ccf0c6f57b6854b80e5bcecde516ebfbcdfbd7ae95ad220ba0a1",
+      "bytes": 150,
+      "mtime_ns": 1793213192477198539
+    },
+    {
+      "path": "infra/terraform/modules/neptune/main.tf",
+      "sha256": "750243dab1a6c928f03ef6e19588282dcd6df65c535beebc8006497e234f9a0e",
+      "bytes": 2690,
+      "mtime_ns": 1793238727015663765
+    },
+    {
+      "path": "infra/terraform/modules/neptune/outputs.tf",
+      "sha256": "68b2c4272cddc85a109029e09dde4708e72e012e6e0b6752c07a87a2945cf3f5",
+      "bytes": 553,
+      "mtime_ns": 1793238251533190803
+    },
+    {
+      "path": "infra/terraform/modules/neptune/variables.tf",
+      "sha256": "8104b8c01fb7f99651331aad39935b3bbf5415c2950bb1bf3bc64048ea078152",
+      "bytes": 717,
+      "mtime_ns": 1793238674817387979
+    },
+    {
+      "path": "infra/terraform/modules/neptune/versions.tf",
+      "sha256": "38c0d27255f1ccf0c6f57b6854b80e5bcecde516ebfbcdfbd7ae95ad220ba0a1",
+      "bytes": 150,
+      "mtime_ns": 1793237577398289118
+    },
+    {
+      "path": "infra/terraform/modules/network/main.tf",
+      "sha256": "6cad9d6dbbc48de09917987f92eb45154381f2d3e62d1122ab50c72c4a132b9f",
+      "bytes": 10968,
+      "mtime_ns": 1793237875487742107
+    },
+    {
+      "path": "infra/terraform/modules/network/outputs.tf",
+      "sha256": "a95f6380671e574c175b83149a86f4b9ad8f00b53c8aaac0f62b9ea291aea96e",
+      "bytes": 1785,
+      "mtime_ns": 1793237875488109525
+    },
+    {
+      "path": "infra/terraform/modules/network/variables.tf",
+      "sha256": "85ce3718b5a1d47ec6fda18303d40fb7a73805645f1648bd4318d956aca42890",
+      "bytes": 742,
+      "mtime_ns": 1793213286805849309
+    },
+    {
+      "path": "infra/terraform/modules/network/versions.tf",
+      "sha256": "38c0d27255f1ccf0c6f57b6854b80e5bcecde516ebfbcdfbd7ae95ad220ba0a1",
+      "bytes": 150,
+      "mtime_ns": 1793213192476918705
+    },
+    {
+      "path": "infra/terraform/modules/observability/main.tf",
+      "sha256": "31676c7b5cf8727f8adf513a23a80a162a4d598cde0951baf79ce2539a4d0d72",
+      "bytes": 10104,
+      "mtime_ns": 1793381650234106468
+    },
+    {
+      "path": "infra/terraform/modules/observability/outputs.tf",
+      "sha256": "6ae4abe662395ec15f0ae45633039768b17f7b79d0dc847826ac6a7ec191cf47",
+      "bytes": 551,
+      "mtime_ns": 1793238674817592311
+    },
+    {
+      "path": "infra/terraform/modules/observability/variables.tf",
+      "sha256": "ab92f1860f336384e763d9b275c548a8e7b1a33ed4b2bdf8663a2e1215615745",
+      "bytes": 626,
+      "mtime_ns": 1793238251533887430
+    },
+    {
+      "path": "infra/terraform/modules/observability/versions.tf",
+      "sha256": "38c0d27255f1ccf0c6f57b6854b80e5bcecde516ebfbcdfbd7ae95ad220ba0a1",
+      "bytes": 150,
+      "mtime_ns": 1793237787326609371
+    },
+    {
+      "path": "infra/terraform/modules/runtime/compute.tf",
+      "sha256": "6864e3fc7336b16110a28ed24853bbe6c830bdc86baaae9d1dc341cfd575f978",
+      "bytes": 8706,
+      "mtime_ns": 1793238251533315970
+    },
+    {
+      "path": "infra/terraform/modules/runtime/main.tf",
+      "sha256": "da2a0cdf7270d0a8b3ab65223c869753700e11a6a3ed635ac6fccc5bdf8422df",
+      "bytes": 549,
+      "mtime_ns": 1793237675617518711
+    },
+    {
+      "path": "infra/terraform/modules/runtime/outputs.tf",
+      "sha256": "7035f6ad7a97ef66b17a2b8b36321538407666d65893838718d128b02f498849",
+      "bytes": 1410,
+      "mtime_ns": 1793237875492130372
+    },
+    {
+      "path": "infra/terraform/modules/runtime/variables.tf",
+      "sha256": "4cbae506c1b1371ef255fce80c96397708b3930e1f23fc0ca90ca56451835458",
+      "bytes": 1250,
+      "mtime_ns": 1793237675617775711
+    },
+    {
+      "path": "infra/terraform/modules/runtime/versions.tf",
+      "sha256": "38c0d27255f1ccf0c6f57b6854b80e5bcecde516ebfbcdfbd7ae95ad220ba0a1",
+      "bytes": 150,
+      "mtime_ns": 1793213192477279248
+    },
+    {
+      "path": "infra/terraform/modules/s3vectors/main.tf",
+      "sha256": "ef6d6dd8396e6fbe910f45d59cacd497afc757be788b5b9280410e2948ac18ed",
+      "bytes": 1671,
+      "mtime_ns": 1793238434517332797
+    },
+    {
+      "path": "infra/terraform/modules/s3vectors/outputs.tf",
+      "sha256": "f610026e936d2d9bf6103dee0e13d4cff602690a789fc4a38b60bfb0f421c9d5",
+      "bytes": 365,
+      "mtime_ns": 1793237577398783203
+    },
+    {
+      "path": "infra/terraform/modules/s3vectors/variables.tf",
+      "sha256": "c2cf7f01b63b666f26afe5a3f29473284072d84c5a30c4934afa379dbc497142",
+      "bytes": 343,
+      "mtime_ns": 1793238434462740442
+    },
+    {
+      "path": "infra/terraform/modules/s3vectors/versions.tf",
+      "sha256": "38c0d27255f1ccf0c6f57b6854b80e5bcecde516ebfbcdfbd7ae95ad220ba0a1",
+      "bytes": 150,
+      "mtime_ns": 1793237577398610286
+    },
+    {
+      "path": "infra/terraform/modules/workflow/main.tf",
+      "sha256": "ef7859b8c8f62ce1be701bf5f66de45cb7b89a4a2a31378b3a7fa902cdd4f08a",
+      "bytes": 3546,
+      "mtime_ns": 1793381650156506690
+    },
+    {
+      "path": "infra/terraform/modules/workflow/outputs.tf",
+      "sha256": "ad976377003ccb94e5be9e2c8e28849178795d47fbc89ece2cc1b1fedd65133a",
+      "bytes": 419,
+      "mtime_ns": 1793237577399105788
+    },
+    {
+      "path": "infra/terraform/modules/workflow/variables.tf",
+      "sha256": "b06680fa2e6c66d8597cc7545e312a3caf308d319070de3778060806bb11b303",
+      "bytes": 357,
+      "mtime_ns": 1793237577398976121
+    },
+    {
+      "path": "infra/terraform/modules/workflow/versions.tf",
+      "sha256": "38c0d27255f1ccf0c6f57b6854b80e5bcecde516ebfbcdfbd7ae95ad220ba0a1",
+      "bytes": 150,
+      "mtime_ns": 1793237577398902204
+    },
+    {
+      "path": "infra/terraform/outputs.tf",
+      "sha256": "483145548635204f79f3db4e9aedb4a6c7e0d90fd4ba4ae474bffec9b0c41f29",
+      "bytes": 1425,
+      "mtime_ns": 1793237875494070254
+    },
+    {
+      "path": "infra/terraform/phase12b-variables.tf",
+      "sha256": "ec120c11bb0ec5195015153ce49eab285f9954d7280007b908056acc77abe9d3",
+      "bytes": 8785,
+      "mtime_ns": 1793381650245867284
+    },
+    {
+      "path": "infra/terraform/phase12b.tf",
+      "sha256": "9ee3bff8c367d4748e9e558dc59557a7c6f6ba0e4a46fa27ba85b8a3f080925e",
+      "bytes": 6960,
+      "mtime_ns": 1793238726966817894
+    },
+    {
+      "path": "infra/terraform/providers.tf",
+      "sha256": "665ed676e139cd00e9e7b7bb744a217aeb16d40d4d5cabe13187150c088c2296",
+      "bytes": 192,
+      "mtime_ns": 1793213188127603532
+    },
+    {
+      "path": "infra/terraform/variables.tf",
+      "sha256": "654032b61eaae460f2e817afb7794bcad09f36a01dc54520de1e74772590b056",
+      "bytes": 10151,
+      "mtime_ns": 1793213814753822150
+    },
+    {
+      "path": "infra/terraform/versions.tf",
+      "sha256": "38c0d27255f1ccf0c6f57b6854b80e5bcecde516ebfbcdfbd7ae95ad220ba0a1",
+      "bytes": 150,
+      "mtime_ns": 1793213188127543448
+    }
+  ],
+  "private_input": {
+    "path": "/tmp/scholarchain-phase12c-infra/course-plan.inputs.tfvars",
+    "bytes": 287,
+    "sha256": "f046690f5d8d4c3889c1aeee4c8263e11ef8709782d381216cf76972adaf8d55",
+    "mtime_ns": 1793381701617841830
+  },
+  "all_config_mtimes_precede_plan": true,
+  "readme_changed_after_plan": true,
+  "note": "Only README documentation changed after plan. Actual .tf/.tfvars/lock hashes and private input are recorded; no provider configuration change occurred after plan."
+}

@@ -1,0 +1,12 @@
+[
+  {
+    "name": "graph-write",
+    "cwd": "/tmp/scholarchain-phase12b-infra/mutation-graph-write",
+    "changed_file": "modules/identity/phase12b.tf",
+    "init_exit": 1,
+    "test_exit": 1,
+    "expected_diagnostic": "The graph role must have only explicit read/query-control access",
+    "matched": false,
+    "repository_source_unchanged": true
+  }
+]

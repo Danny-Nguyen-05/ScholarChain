@@ -1,0 +1,17 @@
+variable "name_prefix" { type = string }
+variable "enabled" { type = bool }
+variable "engine_version" { type = string }
+variable "parameter_family" { type = string }
+variable "min_capacity" { type = number }
+variable "max_capacity" { type = number }
+variable "backup_days" { type = number }
+variable "cleanup_mode" { type = bool }
+variable "kms_key_arn" { type = string }
+variable "subnet_ids" { type = list(string) }
+variable "security_group_id" { type = string }
+variable "loader_role_arn" { type = string }
+variable "port" { type = number }
+variable "aws_region" { type = string }
+variable "aws_account_id" { type = string }
+variable "tags" { type = map(string) }
+variable "audit_log_group_name" { type = string }

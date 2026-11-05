@@ -1,0 +1,9 @@
+{
+  "agent": "/root/infra_12d_apply_proposal",
+  "role": "infra-engineer",
+  "model": "Inherited parent, exact native version not exposed",
+  "ownership": "scripts/billing/** only, plus public scratch report/logs",
+  "repair_scope": "W1/W2 and offline regressions only; A1/A2 remain accepted; W3 execution-gate carryforward",
+  "children_or_reviewers": false,
+  "real_live_or_private_access_authorized": false
+}

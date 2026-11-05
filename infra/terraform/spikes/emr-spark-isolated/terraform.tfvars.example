@@ -1,0 +1,12 @@
+# Example only. Copy to a file OUTSIDE the repository (or an ignored name) and
+# fill in. No real identifiers belong in tracked files.
+account_id               = "<12-digit-account-id>"
+owner                    = "<owner-name>"
+expiration_date          = "<YYYY-MM-DD>"
+permissions_boundary_arn = "arn:aws:iam::<12-digit-account-id>:policy/scholarchain-spike-emr-boundary"
+deployer_role_arn        = "arn:aws:iam::<12-digit-account-id>:role/scholarchain-deployer"
+
+# Local artifacts; the plan fails if either sha256 differs from the pinned value.
+runtime_tgz_path        = "<repo>/target/phase12d-runtime-repair-20261103/artifacts/scholarchain-spark3.5.4-scala2.13.14-java17-runtime.tgz"
+inputs_tgz_path         = "<repo>/docs/agent-runs/phase-12/evidence/12d-portable-runtime/g1-upstream-inputs.tgz"
+g1_config_template_path = "<repo>/docs/agent-runs/phase-12/evidence/12d-portable-runtime/build/relocated-g1-config.json"

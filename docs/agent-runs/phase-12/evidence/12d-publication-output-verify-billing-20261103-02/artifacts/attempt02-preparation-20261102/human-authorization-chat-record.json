@@ -1,0 +1,16 @@
+{
+  "kind": "Verbatim chat authorization record; not an executable gate",
+  "user_statement": "I approve and authorize",
+  "in_reply_to": {
+    "operation": "billing-budget-attempt-02",
+    "source_commit": "4000889e244dacdb4c0445b2f6a93b24841a0ad7",
+    "window_start": "2026-11-02T14:45:00-06:00",
+    "window_end": "2026-11-02T15:45:00-06:00",
+    "scope": "Exact-name absence check, approved saved-plan USD200 budget creation, local state backup and preservation, fixed readback, final frozen evidence scan; human foreground Terminal supervision and disclosed crash risk."
+  },
+  "recorded_at_UTC": "2026-11-02T20:51:08Z",
+  "fresh_login_observation": null,
+  "fresh_STS_observation": null,
+  "gate_written": false,
+  "live_calls": 0
+}

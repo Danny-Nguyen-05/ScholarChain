@@ -1,0 +1,17 @@
+{
+  "command": [
+    "python3",
+    "/tmp/scholarchain-phase12b-build-run.py",
+    "--freeze",
+    "/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-12/evidence/12b/infra-source-freeze.json"
+  ],
+  "exit_code": 1,
+  "stage": "preflight source inventory before java/sbt",
+  "observed_error": "AssertionError: Frozen source mismatches: ['infra/terraform/.gitkeep']",
+  "cause": "Prepared scratch enumeration omitted the authored .gitkeep file.",
+  "resolution": "Updated only /tmp runner to include .gitkeep; rerun matched all67 frozen sources and launched gate.",
+  "repo_source_changes": false,
+  "java_executed": false,
+  "sbt_executed": false,
+  "exact_diagnostic": "Traceback (most recent call last):\n  File \"/tmp/scholarchain-phase12b-build-run.py\", line 61, in <module>\n    assert not mismatches,f'Frozen source mismatches: {mismatches}'\n           ^^^^^^^^^^^^^^\nAssertionError: Frozen source mismatches: ['infra/terraform/.gitkeep']\n"
+}

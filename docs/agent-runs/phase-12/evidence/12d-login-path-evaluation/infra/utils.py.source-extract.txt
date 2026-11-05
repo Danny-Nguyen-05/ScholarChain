@@ -1,0 +1,64 @@
+
+# Source lines 34-45
+34: 
+35: 
+36: class LoginType(Enum):
+37:     SAME_DEVICE = 1
+38:     CROSS_DEVICE = 2
+39: 
+40: 
+41: CLIENT_ID = {
+42:     LoginType.SAME_DEVICE: 'arn:aws:signin:::devtools/same-device',
+43:     LoginType.CROSS_DEVICE: 'arn:aws:signin:::devtools/cross-device',
+44: }
+45: 
+
+# Source lines 127-153
+127:         if response is None or 'tokenOutput' not in response:
+128:             raise LoginAuthorizationCodeError(
+129:                 error_msg='Failed to retrieve an access token.'
+130:             )
+131: 
+132:         output = response.get('tokenOutput')
+133: 
+134:         expires_timestamp = datetime.datetime.now(
+135:             tzutc()
+136:         ) + datetime.timedelta(seconds=output['expiresIn'])
+137:         login_session = self._extract_login_session_from_id_token(
+138:             output['idToken']
+139:         )
+140:         account_id = self._extract_account_id_from_login_session(login_session)
+141: 
+142:         token = {
+143:             'accessToken': {
+144:                 'accessKeyId': output['accessToken']['accessKeyId'],
+145:                 'secretAccessKey': output['accessToken']['secretAccessKey'],
+146:                 'sessionToken': output['accessToken']['sessionToken'],
+147:                 'accountId': account_id,
+148:                 'expiresAt': expires_timestamp.strftime('%Y-%m-%dT%H:%M:%SZ'),
+149:             },
+150:             'tokenType': output['tokenType'],
+151:             'clientId': client_id,
+152:             'refreshToken': output['refreshToken'],
+153:             'idToken': output['idToken'],
+
+# Source lines 179-197
+179:     @staticmethod
+180:     def _extract_login_session_from_id_token(id_token):
+181:         # Extract the subject arn from the JWT payload
+182:         parts = id_token.split('.')
+183:         if len(parts) != 3:
+184:             raise ValueError('Invalid JWT token - cannot extract payload')
+185:         payload_bytes = base64_url_decode(parts[1])
+186:         payload_json = json.loads(payload_bytes)
+187: 
+188:         if 'sub' not in payload_json:
+189:             raise ValueError('Invalid JWT token - missing sub')
+190: 
+191:         return payload_json['sub']
+192: 
+193:     @staticmethod
+194:     def _extract_account_id_from_login_session(login_session):
+195:         login_session_arn = ArnParser().parse_arn(login_session)
+196: 
+197:         return login_session_arn['account']

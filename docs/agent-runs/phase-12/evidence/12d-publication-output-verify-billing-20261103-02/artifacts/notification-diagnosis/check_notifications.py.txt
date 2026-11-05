@@ -1,0 +1,129 @@
+#!/usr/bin/env python3
+"""Proposed notification-only saved-response projection. Separate authorization required."""
+import hashlib
+import json
+import os
+from pathlib import Path
+import stat
+import sys
+
+SOURCES = {
+    Path('/Users/danny/Documents/UIC/CS441/ScholarChain/scripts/billing/budget_verification.py'): '95abbcc05bc8147a5be911b6e5ed5e558e9c08d985892caaff467881a78ab4a0',
+    Path('/Users/danny/Documents/UIC/CS441/ScholarChain/scripts/billing/budget_execution.py'): '3930390b54fd08c2078f23b1fd1b0f08e3eb1a3ac7335f8fe6ffb430d70c4c8f',
+}
+SAVED = Path('/Users/danny/Library/Application Support/ScholarChain/terraform/billing-bootstrap/operations/verify-billing-20261102-01/verify-notifications.stdout')
+UID = 501
+LIMIT = 8 * 1024 * 1024
+ENUMS = {
+    'NotificationType': (('ACTUAL', 'FORECASTED'), 'ACTUAL'),
+    'ComparisonOperator': (('GREATER_THAN', 'LESS_THAN', 'EQUAL_TO'), 'GREATER_THAN'),
+    'ThresholdType': (('PERCENTAGE', 'ABSOLUTE_VALUE'), 'PERCENTAGE'),
+}
+KNOWN_KEYS = {'NotificationType', 'ComparisonOperator', 'Threshold', 'ThresholdType', 'NotificationState'}
+
+class Refused(Exception):
+    pass
+
+def require(ok, code):
+    if not ok:
+        raise Refused(code)
+
+def identity(st):
+    return (st.st_dev, st.st_ino, st.st_size, st.st_mtime_ns, st.st_ctime_ns)
+
+def unique(pairs):
+    result = {}
+    for key, value in pairs:
+        require(key not in result, 'DUPLICATE_JSON_KEY')
+        result[key] = value
+    return result
+
+def bounded_read(fd, limit):
+    before = os.fstat(fd)
+    require(stat.S_ISREG(before.st_mode) and before.st_size <= limit, 'FILE_TYPE_OR_SIZE')
+    data = bytearray()
+    while True:
+        chunk = os.read(fd, min(65536, limit + 1 - len(data)))
+        if not chunk:
+            break
+        data.extend(chunk)
+        require(len(data) <= limit, 'FILE_SIZE_LIMIT')
+    require(identity(before) == identity(os.fstat(fd)), 'FILE_CHANGED')
+    return bytes(data), before
+
+def enum_projection(item, key):
+    enums, expected = ENUMS[key]
+    value = item.get(key)
+    is_string = type(value) is str
+    known = is_string and value in enums
+    return {'present': key in item, 'is_string': is_string, 'known': known,
+            'actual': value if known else None, 'matches_expected': known and value == expected}
+
+def project(obj):
+    require(type(obj) is dict, 'NOTIFICATIONS_RESPONSE_SHAPE')
+    values = obj.get('Notifications')
+    require(type(values) is list and len(values) <= 10, 'NOTIFICATIONS_LIST_SHAPE')
+    items = []
+    for item in values:
+        require(type(item) is dict, 'NOTIFICATION_ITEM_SHAPE')
+        threshold = item.get('Threshold')
+        is_number = type(threshold) in (int, float)
+        known = is_number and threshold in (50, 80, 100)
+        result = {'threshold': {'present': 'Threshold' in item, 'is_number': is_number,
+                                'recognized': known, 'matches_expected': known, 'actual': int(threshold) if known else None},
+                  'unknown_key_count': len(set(item) - KNOWN_KEYS)}
+        for key in ENUMS:
+            result[key] = enum_projection(item, key)
+        items.append(result)
+    return {'notification_count': len(values), 'items': items}
+
+def main():
+    for source, expected in SOURCES.items():
+        fd = os.open(source, os.O_RDONLY | os.O_NOFOLLOW)
+        try:
+            raw_source, before = bounded_read(fd, 1024 * 1024)
+            require(identity(before) == identity(source.lstat()), 'SOURCE_CHANGED')
+        finally:
+            os.close(fd)
+        require(hashlib.sha256(raw_source).hexdigest() == expected, 'SOURCE_HASH')
+    # Traverse the one fixed path through no-follow directory descriptors.
+    directory_fd = os.open('/', os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW)
+    try:
+        for part in SAVED.parts[1:-1]:
+            next_fd = os.open(part, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW, dir_fd=directory_fd)
+            os.close(directory_fd)
+            directory_fd = next_fd
+            if part in ('billing-bootstrap', 'operations', 'verify-billing-20261102-01'):
+                st = os.fstat(directory_fd)
+                require(st.st_uid == UID and stat.S_IMODE(st.st_mode) == 0o700, 'DIRECTORY_MODE_OWNER')
+        fd = os.open(SAVED.name, os.O_RDONLY | os.O_NOFOLLOW, dir_fd=directory_fd)
+        try:
+            st = os.fstat(fd)
+            require(st.st_uid == UID and stat.S_ISREG(st.st_mode)
+                    and stat.S_IMODE(st.st_mode) == 0o600 and st.st_nlink == 1,
+                    'FILE_MODE_OWNER')
+            # Exactly one saved private response is opened/read, in memory only.
+            raw, before = bounded_read(fd, LIMIT)
+            require(identity(before) == identity(os.stat(SAVED.name, dir_fd=directory_fd, follow_symlinks=False)),
+                    'FILE_REPLACED')
+        finally:
+            os.close(fd)
+    finally:
+        os.close(directory_fd)
+    try:
+        obj = json.loads(raw, object_pairs_hook=unique,
+                         parse_constant=lambda _: (_ for _ in ()).throw(ValueError()))
+    except (ValueError, UnicodeError, TypeError, RecursionError):
+        raise Refused('INVALID_JSON') from None
+    return project(obj)
+
+if __name__ == '__main__':
+    try:
+        output = main()
+    except Refused as exc:
+        print(json.dumps({'status': 'BLOCKED-ON', 'code': str(exc)}, sort_keys=True))
+        sys.exit(2)
+    except BaseException:
+        print(json.dumps({'status': 'BLOCKED-ON', 'code': 'LOCAL_DIAGNOSTIC_FAILED'}, sort_keys=True))
+        sys.exit(2)
+    print(json.dumps(output, sort_keys=True))

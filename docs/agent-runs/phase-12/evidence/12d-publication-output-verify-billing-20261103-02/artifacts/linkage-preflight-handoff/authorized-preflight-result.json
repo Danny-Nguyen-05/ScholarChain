@@ -1,0 +1,25 @@
+{
+  "kind": "Single explicitly authorized local linkage preflight",
+  "authorization_verbatim": "Yes, please.",
+  "helper_sha256": "c42322946ac08b3dc7ae44ee66d9e5de2901c87cd71cbd381309a2c764064e5c",
+  "exit": 0,
+  "recorded_UTC": "2026-11-03 02:47:10 UTC",
+  "result": {
+    "AWS_calls": 0,
+    "active_wrapper_absent_at_checks": true,
+    "aws_cli_launcher_hash_match": true,
+    "execution_authorized": false,
+    "files_modified": false,
+    "gate_created": false,
+    "original_apply_receipt_sha256": "b7923fb39a277b80dbbfb162abdcdcdbdb9cb748a24f34be5de44b4964dfb6b1",
+    "original_gate_context_match": true,
+    "original_gate_sha256": "4af82b7d800cc746fdd8f2abdc5882019b9bade87c9b771a6aa419b84df1b8b3",
+    "original_operation": "billing-budget-attempt-02",
+    "private_recipient_read": false,
+    "source_commit": "a9a52a91c1edaf5a584bd5b1f1affa2985795899",
+    "state_backup_match": true,
+    "status": "LOCAL_LINKAGE_VALIDATED"
+  },
+  "scope": "Original gate/apply metadata, opaque state/backup hashes, launcher hash only; no notification recipient read, cloud calls, file changes or new execution gate",
+  "authorized_invocations_consumed": 1
+}

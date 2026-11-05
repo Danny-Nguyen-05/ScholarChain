@@ -1,0 +1,15 @@
+{
+  "xml_report_count": 156,
+  "xml_hash_mismatches": [],
+  "all_xml_fresh_as_recorded": true,
+  "test_counts": {
+    "tests": 1253,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "retained_raw_log_hash_matches": true,
+  "success_summary_present": true,
+  "expected_probe_failure_present": true,
+  "current_gitignore_sha256": "0978fb0878cf23456a1fade40eeb6458215a275d3e91ff89dcf260b36c3a5160"
+}

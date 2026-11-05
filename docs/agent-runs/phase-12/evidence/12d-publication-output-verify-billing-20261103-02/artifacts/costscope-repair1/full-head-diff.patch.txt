@@ -1,0 +1,358 @@
+diff --git a/scripts/billing/README.md b/scripts/billing/README.md
+index a82e747..0080c53 100644
+--- a/scripts/billing/README.md
++++ b/scripts/billing/README.md
+@@ -19,10 +19,42 @@ A clean source-controlled execution checkout and the human gate need not occupy
+ - `p3-check` checks the gate, clean execution checkout, pinned durable paths/hashes/modes, absence of all resource/recovery/backup/workspace-state/lock files, and a fresh exact human identity. It creates an exclusive operation directory. An offline `describe-budget --generate-cli-skeleton input` check must expose `ShowFilterExpression` before any live request. It then issues only exact-name DescribeBudget. Only CLI exit254 with the full anchored `NotFoundException` from `DescribeBudget`, no stdout and no mixed transport/auth indication, qualifies as absence. Exists, denial, expiry, malformed/blank output, wrong operation, network failures and unsupported capability all stop. The reviewed IAM permission basis is `budgets:ViewBudget` on the exact budget ARN; no nonexistent IAM action is invented and no policy is widened.
+ - `apply` requires the same gate/operation and fresh P3 receipt, rechecks the clean sources/context and no state, and reserves the fixed initial backup directory exclusively. It uses exactly the approved saved-plan argv with absolute `-state`, preserving locking and no `-state-out`, variable or planning flags. A saved-plan invocation executes without a second Terraform prompt; the human gate is therefore checked first. The apply allowance is separately capped at300 seconds rather than the60-second read limit, and before launch it reserves80 seconds of the human window (60 graceful-stop +5 forced-reap +15 local-preservation headroom). A shorter remaining window reduces the apply allowance; no apply starts without positive allowance beyond that reserve. After exit0, opaque no-follow state copying with fsync, stable identity and source/copy hashes completes immediately before checking window expiry or attempting readback. Local backup/preservation is unconditional even if the human window expires during completion; the successful apply/backup receipt then records no further live allowance and the mode stops. No AWS/readback continues after expiry. Receipt files contain metadata only.
+ - On any apply/backup error or interruption, further live calls stop. The bounded local preservation branch explicitly covers primary state, `.backup`, Terraform lock info and **config/errored.tfstate**, plus other scoped state/recovery artifacts. Copies use exclusive0600 names; files are not parsed, printed, edited, retried or deleted. Failed/incomplete preservation is an incident requiring human routing. A failed apply may have created resources even if no state was saved. The wrapper never imports, destroys, force-unlocks or rolls back. For Terraform apply, timeout or user interruption first sends one SIGINT only to the Terraform parent, leaving providers alive for Terraform's graceful stop/state persistence. It waits at most60 seconds without sending a second Terraform interrupt; repeated user interrupts do not restart that deadline. Only if Terraform is still running after that grace does it force-kill the isolated process group and allow up to5 seconds for reap. A private fixed-schema termination receipt records graceful versus forced/unknown exit. Forced termination can still leave cloud resources without complete state: preserve everything available and route an incident; never retry/adopt automatically. Read-only child timeouts keep their bounded group-cancellation path.
+-- `readback` requires the successful apply receipt and unchanged current/backup opaque hashes. It issues six fixed bounded requests in four operation families: budget, tags, notifications, subscribers for each of50/80/100. Paginated/truncated responses stop without another page or retry. It checks USD200 COST/CUSTOM, exact UTC dates, all11 CostTypes, no filters, exact five tags, exactly three ACTUAL/GREATER_THAN/PERCENTAGE notifications and one matching private EMAIL/zero SNS each. Output is a fixed allowlist of booleans/counts and stage metadata; no addresses, address hashes, spending totals, service error text or raw objects are emitted. Health is reported only as booleans; unknown/unhealthy status blocks verification. Delivery remains unverified until the human privately confirms what they actually observe.
++- `readback` requires the successful apply receipt and unchanged current/backup opaque hashes. It issues six fixed bounded requests in four operation families: budget, tags, notifications, subscribers for each of50/80/100. Paginated/truncated responses stop without another page or retry. It checks USD200 COST/CUSTOM, exact UTC dates, the strict cost-scope contract below, exact five tags, exactly three ACTUAL/GREATER_THAN/PERCENTAGE notifications and one matching private EMAIL/zero SNS each. Output is a fixed allowlist of booleans/counts and stage metadata; no addresses, address hashes, spending totals, service error text or raw objects are emitted. Health is reported only as booleans; unknown/unhealthy status blocks verification. Delivery remains unverified until the human privately confirms what they actually observe.
+ 
+ Persistent stage-started journals prohibit replay after a failed or completed stage; gate/operation/plan/caller binding prevents cross-gate receipt reuse. A separate exclusive wrapper concurrency lock prevents overlapping stages and is removed only by its owning process. Terraform lock files are never removed by wrapper logic. Subsequent changes are outside this initial-create wrapper and need their own reviewed plan, gate and pre/post versioned backups.
+ 
++## Strict cost-scope representation contract — proposed repair
++
++This offline repair requires independent acceptance before execution. [AWS Budget](https://docs.aws.amazon.com/aws-cost-management/latest/APIReference/API_budgets_Budget.html) marks `CostTypes` and `CostFilters` deprecated/optional and defines newer `Metrics` and `FilterExpression` fields. [AWS's compatibility explanation](https://aws.amazon.com/blogs/aws-cloud-financial-management/improving-accuracy-for-your-cloud-budgeting-with-new-features-in-aws-budgets/) describes responses containing only the newer representation. Missing legacy flags do not mean eleven false values.
++
++The proposed fixed contract accepts exact legacy flags, or exactly `Metrics: ["UnblendedCost"]` with a sole `Not -> Dimensions` expression whose only keys are `Key: "RECORD_TYPE"` and `Values: ["Credit", "Refund"]`. The two distinct values may be reversed: [ExpressionDimensionValues](https://docs.aws.amazon.com/aws-cost-management/latest/APIReference/API_budgets_ExpressionDimensionValues.html) defines matching at least one value, and [Expression](https://docs.aws.amazon.com/aws-cost-management/latest/APIReference/API_budgets_Expression.html) defines `Not`. No general expression normalization is implemented. Explicit `MatchOptions`, extra operators/keys/values, other dimensions, arbitrary scope filters, malformed or unknown metrics, and absent modern metric/exclusion evidence are rejected. `CostFilters`, if present, must be an empty object. Legacy flags, if present alongside the new fields, must still match all eleven booleans exactly. A conflicting legacy field cannot be overridden by the newer representation. A metric supplied alongside legacy flags must also be exactly `UnblendedCost`.
++
++Billing-view policy is **absence only**: any `BillingViewArn` key is rejected, including null, empty, malformed, custom, another account's view, or a primary-looking ARN. [AWS's billing-view guide](https://docs.aws.amazon.com/cost-management/latest/userguide/access-data-budgets.html) explains that a budget attached to a view tracks that view's scope. This verifier does not prove a supplied view's scope or infer safety from an ARN suffix, account substring or syntactic form. A returned primary-view ARN will therefore fail closed too. Neither authorized diagnostic projected this field, so its value in the saved response remains unknown. This offline repair does not inspect it or authorize another read.
++
++The Budget object's field names are allowlisted to the fifteen keys documented by the [Budget API](https://docs.aws.amazon.com/aws-cost-management/latest/APIReference/API_budgets_Budget.html): `BudgetName`, `BudgetType`, `TimeUnit`, `AutoAdjustData`, `BillingViewArn`, `BudgetLimit`, `CalculatedSpend`, `CostFilters`, `CostTypes`, `FilterExpression`, `HealthStatus`, `LastUpdatedTime`, `Metrics`, `PlannedBudgetLimits`, and `TimePeriod`. Unknown keys fail closed. In addition to the billing-view rule, any presence of `AutoAdjustData` or `PlannedBudgetLimits` is rejected, even null or empty, because this contract requires a fixed USD200 limit. Known observational metadata such as `CalculatedSpend` and `LastUpdatedTime` can remain in the response, but its values are never published. The existing checks still govern required fields and health.
++
++The all-eleven mapping below is an engineering inference from the [CostTypes meanings](https://docs.aws.amazon.com/aws-cost-management/latest/APIReference/API_budgets_CostTypes.html), the [separate aggregation and charge-type controls](https://docs.aws.amazon.com/cost-management/latest/userguide/bcm-lite-use-budget.html), and [AWS charge-type terminology](https://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/manage-cost-categories.html). It is not an AWS-published conversion table or a claim that these synthetic tests prove service accounting. Independent review must accept this precise inference before any post-create continuation; unresolved equivalence stays a blocker.
++
++The [reviewed Terraform input](/Users/danny/Documents/UIC/CS441/ScholarChain/infra/terraform/billing-bootstrap/main.tf:28) specifies the eleven legacy cost flags and no scope filters. The separately human-authorized safe projections reported the corresponding saved AWS response as exactly `UnblendedCost` plus the sole Credit/Refund exclusion, with the legacy cost fields absent. In light of [AWS's explanation of returned translated configurations](https://aws.amazon.com/blogs/aws-cloud-financial-management/improving-accuracy-for-your-cloud-budgeting-with-new-features-in-aws-budgets/), this supports the mapping with the observed service representation of the reviewed input. It establishes neither empirical accounting accuracy nor all remaining budget properties, and this repair did not reopen the private response.
++
++| Approved legacy flag | Proposed modern evidence |
++| --- | --- |
++| `IncludeCredit=false` | Exactly the `Credit` record type is excluded. |
++| `IncludeRefund=false` | Exactly the `Refund` record type is excluded. |
++| `IncludeDiscount=true` | Discount charge types are not excluded; aggregation remains unblended. |
++| `IncludeOtherSubscription=true` | Non-RI subscription charges are not excluded. |
++| `IncludeRecurring=true` | Recurring reservation charges are not excluded. |
++| `IncludeSubscription=true` | Subscription charges are not excluded. |
++| `IncludeSupport=true` | Support charges are not excluded. |
++| `IncludeTax=true` | Taxes are not excluded. |
++| `IncludeUpfront=true` | Upfront reservation charges are not excluded. |
++| `UseAmortized=false` | Only unblended aggregation is accepted. |
++| `UseBlended=false` | Only unblended aggregation is accepted. |
++
++The successful result now uses `cost_scope_match` and `scope_filters_absent` instead of `cost_types_match` and `filters_absent`. This avoids claiming an old field exists or that the expected charge-type exclusion expression is absent. Here `scope_filters_absent` means no scope restriction beyond the approved charge exclusion; it requires the billing-view absence rule as well. Both are fixed booleans; no raw expression, metric, address or accounting value is published. Future continuation and W3 contracts must use these new names and must not treat old receipts as interchangeable. Other result fields are unchanged.
++
++The human-run `billing-budget-attempt-02` created the budget and verified its state backup before readback stopped. These are reported observations, not a successful full readback. This validator repair does not clear/replay that operation, create a missing receipt, authorize another apply, or supply a continuation/scan mechanism. Original gate, stage journals, state and backup remain preserved. A distinct, independently reviewed post-create verification/publication path and new human scope decision are required; neither saved-response verification nor fresh live readback is automatically selected.
++
+ P3 error-format compatibility is deliberately narrow: it accepts the legacy `An error occurred (NotFoundException) when calling the DescribeBudget operation: <body>` header and the observed CLI header `aws: [ERROR]: An error occurred (NotFoundException) when calling the DescribeBudget operation (reached max retries: 0): <body>`. The body must be nonblank and single-line. Exactly zero or one leading LF is accepted, matching the human-authorized layout check; two leading LFs, leading CRLF/CR, extra blank lines and arbitrary whitespace stripping are not accepted. The previously supported trailing layout remains zero or one LF/CRLF. ANSI, other prefix/annotation combinations, positive or ambiguous retry counts, wrong operations, non254 exits, stdout content and mixed auth/transport errors remain blocked. The zero annotation does not enable retries: `AWS_MAX_ATTEMPTS=1` remains unchanged. Synthetic fixture tests cover both formats and the rejection cases; no private response body is embedded in tests. This repair does not retroactively validate the stopped `billing-20261101-2030` attempt or authorize its replay. A reviewed new release and personally written gate/new operation are required before any fresh P3; the old gate and stage journals remain untouched.
+ 
+ ## Final public packet scan
+diff --git a/scripts/billing/budget_execution.py b/scripts/billing/budget_execution.py
+index ca439d7..276cdc6 100644
+--- a/scripts/billing/budget_execution.py
++++ b/scripts/billing/budget_execution.py
+@@ -371,10 +371,56 @@ def utc_value(value):
+     return date(value)
+ 
+ 
++def validate_cost_scope(budget):
++    """Accept only the two fixed representations of the reviewed cost scope.
++
++    The modern contract is unblended aggregation with exactly Credit/Refund
++    excluded and no other scope restriction. This is not a general expression
++    normalizer, and absent legacy fields are never interpreted as false flags.
++    """
++    # Even a primary-looking ARN requires an independently proven scope. This
++    # fixed account-wide contract accepts only absence, never guessed ARN forms.
++    require("BillingViewArn" not in budget, "BILLING_VIEW_PRESENT")
++    require(type(budget.get("CostFilters", {})) is dict
++            and budget.get("CostFilters", {}) == {}, "FILTER_PRESENT")
++    legacy = "CostTypes" in budget
++    if legacy:
++        costs = budget["CostTypes"]
++        require(type(costs) is dict and costs == COST_TYPES
++                and all(type(v) is bool for v in costs.values()), "COST_TYPES")
++    metrics = "Metrics" in budget
++    if metrics:
++        require(type(budget["Metrics"]) is list
++                and budget["Metrics"] == ["UnblendedCost"], "COST_METRIC")
++    expression = budget.get("FilterExpression", {})
++    require(type(expression) is dict, "FILTER_PRESENT")
++    if expression == {}:
++        # Only exact legacy flags can establish exclusions without an expression.
++        require(legacy, "COST_SCOPE_UNVERIFIED")
++        return
++    require(metrics, "COST_SCOPE_UNVERIFIED")
++    require(set(expression) == {"Not"} and type(expression["Not"]) is dict
++            and set(expression["Not"]) == {"Dimensions"}, "FILTER_PRESENT")
++    dimensions = expression["Not"]["Dimensions"]
++    require(type(dimensions) is dict and set(dimensions) == {"Key", "Values"}
++            and dimensions["Key"] == "RECORD_TYPE", "FILTER_PRESENT")
++    values = dimensions["Values"]
++    require(type(values) is list and len(values) == 2
++            and all(type(value) is str for value in values)
++            and set(values) == {"Credit", "Refund"}, "FILTER_PRESENT")
++
++
+ def sanitize_readback(budget, tags, notifications, subscriber_responses, recipient):
+     """Return booleans/counts only, or a fixed error code; never echo input fields."""
+-    require(set(budget) == {"Budget"}, "BUDGET_RESPONSE_SHAPE")
++    require(type(budget) is dict and set(budget) == {"Budget"}, "BUDGET_RESPONSE_SHAPE")
+     b = budget["Budget"]
++    require(type(b) is dict, "BUDGET_RESPONSE_SHAPE")
++    documented_fields = {"BudgetName", "BudgetType", "TimeUnit", "AutoAdjustData", "BillingViewArn",
++                         "BudgetLimit", "CalculatedSpend", "CostFilters", "CostTypes", "FilterExpression",
++                         "HealthStatus", "LastUpdatedTime", "Metrics", "PlannedBudgetLimits", "TimePeriod"}
++    require(set(b) <= documented_fields, "BUDGET_FIELD_UNSUPPORTED")
++    require("AutoAdjustData" not in b, "AUTO_ADJUST_PRESENT")
++    require("PlannedBudgetLimits" not in b, "PLANNED_LIMITS_PRESENT")
+     require(b.get("BudgetName") == BUDGET and b.get("BudgetType") == "COST"
+             and b.get("TimeUnit") == "CUSTOM", "BUDGET_IDENTITY_TYPE")
+     try:
+@@ -382,10 +428,7 @@ def sanitize_readback(budget, tags, notifications, subscriber_responses, recipie
+                 and b["BudgetLimit"]["Unit"] == "USD", "BUDGET_AMOUNT")
+     except (KeyError, InvalidOperation, TypeError):
+         raise Blocked("BUDGET_AMOUNT") from None
+-    require(b.get("CostTypes") == COST_TYPES
+-            and all(type(v) is bool for v in b.get("CostTypes", {}).values()), "COST_TYPES")
+-    require(b.get("CostFilters", {}) == {} and b.get("FilterExpression", {}) == {}, "FILTER_PRESENT")
+-    # Explicit ShowFilterExpression request is mandatory; absent means no expression per API.
++    validate_cost_scope(b)
+     require(utc_value(b.get("TimePeriod", {}).get("Start")) == date("2026-10-01T00:00:00Z")
+             and utc_value(b.get("TimePeriod", {}).get("End")) == date("2027-01-01T00:00:00Z"),
+             "BUDGET_DATE")
+@@ -417,8 +460,8 @@ def sanitize_readback(budget, tags, notifications, subscriber_responses, recipie
+         require(type(subs) is list and len(subs) == 1 and set(subs[0]) == {"SubscriptionType", "Address"}
+                 and subs[0]["SubscriptionType"] == "EMAIL" and subs[0]["Address"] == recipient,
+                 "SUBSCRIBER_DRIFT")
+-    return {"budget_fields_match": True, "cost_types_match": True, "tags_match": True,
+-            "dates_match": True, "account_request_matches": True, "filters_absent": True,
++    return {"budget_fields_match": True, "cost_scope_match": True, "tags_match": True,
++            "dates_match": True, "account_request_matches": True, "scope_filters_absent": True,
+             "notification_count": 3, "email_subscribers_each": 1, "sns_subscribers": 0,
+             "private_recipients_match": True, "health_reported": health is not None,
+             "health_healthy_if_reported": health is not None,
+diff --git a/scripts/billing/tests/test_budget_execution.py b/scripts/billing/tests/test_budget_execution.py
+index b84e602..e0604a8 100644
+--- a/scripts/billing/tests/test_budget_execution.py
++++ b/scripts/billing/tests/test_budget_execution.py
+@@ -77,6 +77,189 @@ def fixture_responses():
+             'subscribers':{str(x):{'Subscribers':[{'SubscriptionType':'EMAIL','Address':FIXTURE_ADDRESS}]} for x in (50,80,100)}}
+ 
+ 
++def modern_budget_fixture():
++    budget = copy.deepcopy(fixture_responses()['describe-budget']['Budget'])
++    del budget['CostTypes']
++    del budget['CostFilters']
++    budget['Metrics'] = ['UnblendedCost']
++    budget['FilterExpression'] = {'Not': {'Dimensions': {
++        'Key': 'RECORD_TYPE', 'Values': ['Credit', 'Refund']}}}
++    return budget
++
++
++class CostScopeFeatures(unittest.TestCase):
++    def validate(self, budget):
++        responses = fixture_responses()
++        responses['describe-budget']['Budget'] = budget
++        return b.sanitize_readback(responses['describe-budget'], responses['list-tags-for-resource'],
++            responses['describe-notifications-for-budget'],
++            {int(k): v for k, v in responses['subscribers'].items()}, FIXTURE_ADDRESS)
++
++    def test_legacy_and_modern_scope_have_truthful_safe_receipt_fields(self):
++        legacy = fixture_responses()['describe-budget']['Budget']
++        for budget in (legacy, modern_budget_fixture()):
++            with self.subTest(legacy='CostTypes' in budget):
++                result = self.validate(budget)
++                self.assertTrue(result['cost_scope_match'])
++                self.assertTrue(result['scope_filters_absent'])
++                self.assertNotIn('cost_types_match', result)
++                self.assertNotIn('filters_absent', result)
++                self.assertNotIn(FIXTURE_ADDRESS, json.dumps(result))
++
++    def test_billing_view_must_be_absent_for_legacy_and_modern(self):
++        views = (None, '', f'arn:aws:billing::{b.ACCOUNT}:billingview/primary',
++                 f'arn:aws:billing::{b.ACCOUNT}:billingview/custom-synthetic',
++                 'arn:aws:billing::123456789012:billingview/primary',
++                 'malformed-view', False, 0, [], {})
++        for factory in (lambda: copy.deepcopy(fixture_responses()['describe-budget']['Budget']),
++                        modern_budget_fixture):
++            absent = factory()
++            self.assertNotIn('BillingViewArn', absent)
++            self.assertTrue(self.validate(absent)['scope_filters_absent'])
++            for view in views:
++                with self.subTest(legacy='CostTypes' in absent, view=view):
++                    budget = factory(); budget['BillingViewArn'] = view
++                    with self.assertRaisesRegex(b.Blocked, 'BILLING_VIEW_PRESENT'):
++                        b.validate_cost_scope(budget)
++                    with self.assertRaisesRegex(b.Blocked, 'BILLING_VIEW_PRESENT') as error:
++                        self.validate(budget)
++                    if type(view) is str and view:
++                        self.assertNotIn(view, str(error.exception))
++
++    def test_auto_adjust_and_planned_limits_are_forbidden_on_presence(self):
++        dynamic = {'AutoAdjustType': 'HISTORICAL',
++                   'HistoricalOptions': {'BudgetAdjustmentPeriod': 3}}
++        planned = {'1793491200': {'Amount': '350', 'Unit': 'USD'}}
++        for legacy in (False, True):
++            for key, realistic, code in (('AutoAdjustData', dynamic, 'AUTO_ADJUST_PRESENT'),
++                                         ('PlannedBudgetLimits', planned, 'PLANNED_LIMITS_PRESENT')):
++                for value in (realistic, None, {}, [], '', False, 0):
++                    with self.subTest(legacy=legacy, key=key, value=value):
++                        budget = (copy.deepcopy(fixture_responses()['describe-budget']['Budget'])
++                                  if legacy else modern_budget_fixture())
++                        budget[key] = value
++                        with self.assertRaisesRegex(b.Blocked, code): self.validate(budget)
++
++    def test_documented_observational_metadata_is_accepted_without_emission(self):
++        for legacy in (False, True):
++            with self.subTest(legacy=legacy):
++                budget = (copy.deepcopy(fixture_responses()['describe-budget']['Budget'])
++                          if legacy else modern_budget_fixture())
++                budget.update(CalculatedSpend={'ActualSpend': {'Amount': '17.25', 'Unit': 'USD'},
++                                               'ForecastedSpend': {'Amount': '28.75', 'Unit': 'USD'}},
++                              LastUpdatedTime=1793491200)
++                result = self.validate(budget)
++                self.assertTrue(result['cost_scope_match'])
++                output = json.dumps(result)
++                for private_value in ('17.25', '28.75', '1793491200', FIXTURE_ADDRESS):
++                    self.assertNotIn(private_value, output)
++
++    def test_unknown_budget_keys_and_wrong_budget_container_fail_closed(self):
++        for legacy in (False, True):
++            for key in ('UnknownBudgetField', 'NewScopeFilter', 'billingViewArn', 'PlannedBudgetLimit'):
++                with self.subTest(legacy=legacy, key=key):
++                    budget = (copy.deepcopy(fixture_responses()['describe-budget']['Budget'])
++                              if legacy else modern_budget_fixture())
++                    budget[key] = {'private': FIXTURE_ADDRESS}
++                    with self.assertRaisesRegex(b.Blocked, 'BUDGET_FIELD_UNSUPPORTED') as error:
++                        self.validate(budget)
++                    self.assertNotIn(FIXTURE_ADDRESS, str(error.exception))
++        for budget in (None, [], False, 'synthetic-budget'):
++            with self.subTest(container=budget):
++                with self.assertRaisesRegex(b.Blocked, 'BUDGET_RESPONSE_SHAPE'):
++                    self.validate(budget)
++
++    def test_only_documented_value_order_is_normalized(self):
++        budget = modern_budget_fixture()
++        budget['FilterExpression']['Not']['Dimensions']['Values'].reverse()
++        self.assertTrue(self.validate(budget)['cost_scope_match'])
++        budget['FilterExpression']['Not']['Dimensions']['MatchOptions'] = ['EQUALS']
++        with self.assertRaisesRegex(b.Blocked, 'FILTER_PRESENT'):
++            self.validate(budget)
++
++    def test_missing_or_untyped_cost_scope_never_implies_expected_flags(self):
++        for value in (None, {}, [], False, dict(b.COST_TYPES, IncludeCredit=0),
++                      dict(b.COST_TYPES, Unknown=True)):
++            with self.subTest(value=value):
++                budget = modern_budget_fixture(); budget['CostTypes'] = value
++                with self.assertRaisesRegex(b.Blocked, 'COST_TYPES'):
++                    self.validate(budget)
++        budget = modern_budget_fixture(); del budget['Metrics']
++        with self.assertRaisesRegex(b.Blocked, 'COST_SCOPE_UNVERIFIED'):
++            self.validate(budget)
++        budget = modern_budget_fixture(); del budget['FilterExpression']
++        with self.assertRaisesRegex(b.Blocked, 'COST_SCOPE_UNVERIFIED'):
++            self.validate(budget)
++
++    def test_wrong_unknown_duplicate_or_untyped_metrics_are_rejected(self):
++        values = (None, 'UnblendedCost', [], ['NetUnblendedCost'], ['BlendedCost'],
++                  ['AmortizedCost'], ['UNKNOWN'], ['UnblendedCost', 'UnblendedCost'],
++                  ['UnblendedCost', 'NetUnblendedCost'], [True], [{}])
++        for metrics in values:
++            for legacy in (False, True):
++                with self.subTest(metrics=metrics, legacy=legacy):
++                    budget = modern_budget_fixture() if not legacy else fixture_responses()['describe-budget']['Budget']
++                    budget['Metrics'] = metrics
++                    with self.assertRaisesRegex(b.Blocked, 'COST_METRIC'):
++                        self.validate(budget)
++
++    def test_extra_scope_filters_and_expression_shapes_are_rejected(self):
++        candidate = modern_budget_fixture()['FilterExpression']
++        expressions = (None, [], False, {}, {'And': [candidate]}, {'Or': [candidate]},
++            {'Not': {'Not': candidate}}, {'Not': {'Dimensions': {'Key': 'SERVICE', 'Values': ['Credit', 'Refund']}}},
++            dict(candidate, Tags={'Key': 'project'}), dict(candidate, Unknown=True),
++            {'Not': dict(candidate['Not'], DimensionsExtra={})},
++            {'Not': {'Dimensions': []}}, {'Not': {'Tags': {'Key': 'project'}}})
++        for expression in expressions:
++            with self.subTest(expression=expression):
++                budget = modern_budget_fixture(); budget['FilterExpression'] = expression
++                with self.assertRaises(b.Blocked): self.validate(budget)
++        for filters in (None, [], False, {'Service': ['synthetic-service']}, {'Unknown': []}):
++            with self.subTest(filters=filters):
++                budget = modern_budget_fixture(); budget['CostFilters'] = filters
++                with self.assertRaisesRegex(b.Blocked, 'FILTER_PRESENT'):
++                    self.validate(budget)
++
++    def test_exclusion_values_cannot_hide_duplicates_or_other_charge_types(self):
++        values = (None, 'Credit', [], ['Credit'], ['Refund'], ['Credit', 'Credit'],
++                  ['Credit', 'Refund', 'Tax'], ['Credit', 'Tax'], ['credit', 'Refund'],
++                  [False, 'Refund'], [{'Credit': True}, 'Refund'])
++        for excluded in values:
++            with self.subTest(excluded=excluded):
++                budget = modern_budget_fixture()
++                budget['FilterExpression']['Not']['Dimensions']['Values'] = excluded
++                with self.assertRaisesRegex(b.Blocked, 'FILTER_PRESENT'):
++                    self.validate(budget)
++
++    def test_dual_representations_must_agree_in_every_legacy_flag(self):
++        budget = modern_budget_fixture(); budget['CostTypes'] = dict(b.COST_TYPES)
++        self.assertTrue(self.validate(budget)['cost_scope_match'])
++        for key, expected in b.COST_TYPES.items():
++            with self.subTest(key=key):
++                conflicting = copy.deepcopy(budget)
++                conflicting['CostTypes'][key] = not expected
++                with self.assertRaisesRegex(b.Blocked, 'COST_TYPES'):
++                    self.validate(conflicting)
++
++    def test_new_representation_preserves_amount_date_tag_and_privacy_guards(self):
++        for name, mutate in (
++            ('amount', lambda r: r['describe-budget']['Budget']['BudgetLimit'].update(Amount='201')),
++            ('date', lambda r: r['describe-budget']['Budget']['TimePeriod'].update(End='2027-01-02T00:00:00Z')),
++            ('tag', lambda r: r['list-tags-for-resource']['ResourceTags'][0].update(Value='wrong')),
++            ('alert', lambda r: r['describe-notifications-for-budget']['Notifications'][0].update(Threshold=60)),
++            ('recipient', lambda r: r['subscribers']['50']['Subscribers'][0].update(Address='other@example.invalid')),
++            ('health', lambda r: r['describe-budget']['Budget']['HealthStatus'].update(Status='UNHEALTHY'))):
++            with self.subTest(name=name):
++                responses = fixture_responses(); responses['describe-budget']['Budget'] = modern_budget_fixture()
++                mutate(responses)
++                with self.assertRaises(b.Blocked) as error:
++                    b.sanitize_readback(responses['describe-budget'], responses['list-tags-for-resource'],
++                        responses['describe-notifications-for-budget'],
++                        {int(k): v for k, v in responses['subscribers'].items()}, FIXTURE_ADDRESS)
++                self.assertNotIn(FIXTURE_ADDRESS, str(error.exception))
++                self.assertNotIn(b.digest(FIXTURE_ADDRESS.encode()), str(error.exception))
++
++
+ class Features(unittest.TestCase):
+     def setUp(self):
+         self.temp=tempfile.TemporaryDirectory(prefix='billing wrapper test ')
+@@ -401,6 +584,30 @@ class Features(unittest.TestCase):
+         with self.assertRaises(FileExistsError):self.ex.readback()
+         self.assertEqual(len(self.calls()),9)
+ 
++    def test_modern_readback_uses_existing_bounded_requests_and_preserves_replay_guard(self):
++        self.p3_apply()
++        self.scenario['responses']['describe-budget']['Budget'] = modern_budget_fixture()
++        self.save_scenario()
++        result = self.ex.readback()['result']
++        self.assertTrue(result['cost_scope_match'])
++        self.assertTrue(result['scope_filters_absent'])
++        self.assertEqual(len(self.calls()), 9)
++        with self.assertRaises(FileExistsError): self.ex.readback()
++        self.assertEqual(len(self.calls()), 9)
++
++    def test_readback_rejects_billing_view_without_receipt_or_replay(self):
++        self.p3_apply()
++        budget = modern_budget_fixture()
++        budget['BillingViewArn'] = f'arn:aws:billing::{b.ACCOUNT}:billingview/custom-synthetic'
++        self.scenario['responses']['describe-budget']['Budget'] = budget
++        self.save_scenario()
++        with self.assertRaisesRegex(b.Blocked, 'BILLING_VIEW_PRESENT'):
++            self.ex.readback()
++        self.assertFalse((self.ex.op/'readback.receipt.json').exists())
++        self.assertEqual(len(self.calls()), 9)
++        with self.assertRaises(FileExistsError): self.ex.readback()
++        self.assertEqual(len(self.calls()), 9)
++
+     def test_postfreeze_scan_complete_snapshot_and_rerun(self):
+         self.p3_apply();self.ex.readback()
+         packet=self.repo/'docs/agent-runs/phase-12/evidence/fixture'

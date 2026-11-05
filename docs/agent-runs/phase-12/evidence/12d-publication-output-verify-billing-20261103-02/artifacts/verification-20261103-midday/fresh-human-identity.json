@@ -1,0 +1,11 @@
+{
+  "source": "Human-pasted Terminal observations; login URL excluded",
+  "login_at": "2026-11-03T18:08:51Z",
+  "login_exit": 0,
+  "human_sts_observed_at": "2026-11-03T18:14:02Z",
+  "human_sts_exit": 0,
+  "human_sts": {
+    "Account": "530332961125",
+    "Arn": "arn:aws:sts::530332961125:assumed-role/scholarchain-billing-deployer/scholarchain-billing-operator"
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "completed_at": "2026-11-03T21:49:46.134728+00:00",
+  "content_encoding": "gzip",
+  "decoded_bytes": 594588,
+  "decoded_sha256": "28cbb7a27844c305dbcb1e74f6c6bd1686dd0a38893375f5df9506d43992cd39",
+  "derivation": "AWS pricing page token ec2/ebs, official pricing-loader: ${endpoint}/${service}/USD/current/${table}.json; loader read, never executed.",
+  "http_status": 200,
+  "requested_at": "2026-11-03T21:49:45.904649+00:00",
+  "response_sha256": "a3c0c41051e09583331ba4488a0d5ee8dd6426ebe478be399b23f97c192327f4",
+  "saved": "ebs.response.gz",
+  "url": "https://b0.p.awsstatic.com/pricing/2.0/meteredUnitMaps/ec2/USD/current/ebs.json"
+}

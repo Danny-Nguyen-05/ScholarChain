@@ -1,0 +1,27 @@
+{
+  "current_billing_tests": {
+    "passed": 7,
+    "failed": 0,
+    "assertions": 6,
+    "expected_failure_runs": 4
+  },
+  "current_full_sbt_run": false,
+  "reason": "No source or behavior changes. All 209 reference source SHA/bytes/mtimes match; complete preflight baseline also reconciled. Relevant billing gates were rerun.",
+  "historical_sbt": {
+    "evidence": "docs/agent-runs/phase-12/evidence/12d-billing-policy-amendment/build/",
+    "tests": 1255,
+    "fresh_xml": 157,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0,
+    "stale_xml_excluded": 1,
+    "raw_log_sha256": "e1a8bce426a50cf105c4e3bd9184c7237267215251c573ad9e2a6dc5cb90931b"
+  },
+  "historical_four_root_tests": {
+    "passed": 72,
+    "failed": 0,
+    "assertions": 80,
+    "expected_failure_runs": 40
+  },
+  "historical_results_are_not_new_runs": true
+}

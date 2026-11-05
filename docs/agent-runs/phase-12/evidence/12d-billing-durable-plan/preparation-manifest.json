@@ -1,0 +1,112 @@
+{
+  "recorded_utc": "2026-11-01T19:12:21.497646+00:00",
+  "scope": "Public setup/offline checkpoint only; live plan not run",
+  "count": 21,
+  "files": [
+    {
+      "path": "infra-preparation/approved-public-inputs.json",
+      "sha256": "48f19c4526b63c8e194dcfeea8466591a0667c3a5956e06cdb31116e110a8e02",
+      "bytes": 446
+    },
+    {
+      "path": "infra-preparation/commands.json",
+      "sha256": "e9c74a823ec67fb6aea81b32d87a91ce13c8afd9de0fab793ded43de5f5f7368",
+      "bytes": 5217
+    },
+    {
+      "path": "infra-preparation/config-copies/.terraform.lock.hcl",
+      "sha256": "421b75245b0080edee2b434482ff348419a75d7a6b798d5218e0a0f9f723eaea",
+      "bytes": 1406
+    },
+    {
+      "path": "infra-preparation/config-copies/README.md",
+      "sha256": "46506dade67af6ec882f4bbd81661d00d92c8f9d5bebe6f6ed1e47e2c30143a0",
+      "bytes": 7866
+    },
+    {
+      "path": "infra-preparation/config-copies/main.tf",
+      "sha256": "5e69e4235e417c72968097af6050f66c434fd1d1049ee0f655d1b6635e101549",
+      "bytes": 2215
+    },
+    {
+      "path": "infra-preparation/config-copies/outputs.tf",
+      "sha256": "e729e4b3d6523074f293b95c9a5f85fc03c8eec0f8a40928c24a1c227ce3174f",
+      "bytes": 1005
+    },
+    {
+      "path": "infra-preparation/config-copies/tests/budget.tftest.hcl",
+      "sha256": "8f79abffe3fe71e4a6736dddf461a0c8a7c136cdd7a5bf29394185e81da4550b",
+      "bytes": 3984
+    },
+    {
+      "path": "infra-preparation/config-copies/variables.tf",
+      "sha256": "3e37054f1187192ae3188052d52630e50a3db950ce7436b639d98ef066a8c937",
+      "bytes": 3033
+    },
+    {
+      "path": "infra-preparation/config-copies/versions.tf",
+      "sha256": "38c0d27255f1ccf0c6f57b6854b80e5bcecde516ebfbcdfbd7ae95ad220ba0a1",
+      "bytes": 150
+    },
+    {
+      "path": "infra-preparation/config-provenance-after-offline.json",
+      "sha256": "e5f8e23eb54b4185a2e9ea1c9a5c3e4314d5f0b614581da281620abfb672692a",
+      "bytes": 2258
+    },
+    {
+      "path": "infra-preparation/config-provenance-before.json",
+      "sha256": "d3072e74d5105e552f783f7a16bdb0c87e92a51b99fda2dd3866f1a5a5d78f76",
+      "bytes": 2532
+    },
+    {
+      "path": "infra-preparation/offline-fmt-check.log.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "infra-preparation/offline-init.log.txt",
+      "sha256": "0332e5a2014b4e3a832437119fe49036bc6a8355061e8def4e2d5ffc1c783808",
+      "bytes": 243
+    },
+    {
+      "path": "infra-preparation/offline-storage-metadata.json",
+      "sha256": "d112881a994da44870b86a5be5419136ff776270d44895a2db09bc45556cdd80",
+      "bytes": 6615
+    },
+    {
+      "path": "infra-preparation/offline-test.log.txt",
+      "sha256": "aca7bb50be9aa6e39085eb2d1ac166e100d61aaa15cf8c95ccf3e4a87becb78e",
+      "bytes": 483
+    },
+    {
+      "path": "infra-preparation/offline-validate.log.txt",
+      "sha256": "f7997225125835fdd14060ac776d273f394b874f9a481b9e2122c83dc8adc5c1",
+      "bytes": 38
+    },
+    {
+      "path": "infra-preparation/run.py",
+      "sha256": "942cb94ed6bad33067f4cf514fc1bf506ad149d14ea8ad508ff78d09de44b56f",
+      "bytes": 12960
+    },
+    {
+      "path": "infra-preparation/save-recipient.py",
+      "sha256": "849353011b7b7cc6e54a829dab05dd9d9eaf90b2d5a56d8092310eeaaa5fb352",
+      "bytes": 936
+    },
+    {
+      "path": "infra-preparation/setup.py",
+      "sha256": "0b5d797c43cfe48df77a93dc33d6a62fc0970c55953ef0222371957a7236f810",
+      "bytes": 6259
+    },
+    {
+      "path": "infra-preparation/storage-and-toolchain.json",
+      "sha256": "2f1d646752f7ddf7249dfb5927cf1e1d591e5995bf08fb00d7a95f4866f96c1e",
+      "bytes": 4425
+    },
+    {
+      "path": "infra-preparation/test-counts.json",
+      "sha256": "a77599ea7462bcc23c86be1e13c83ad33c306214e448681cbd1bb65ba07c1c48",
+      "bytes": 95
+    }
+  ]
+}

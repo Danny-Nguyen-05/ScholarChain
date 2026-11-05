@@ -1,0 +1,9 @@
+{
+  "type": "Generic email-pattern only; not actual-recipient scan",
+  "scope": "Finalnewpacket/new3sources/reviewerprompt/fiveappendedsuffixes",
+  "units": 28,
+  "reserved_fixture_matches": 2,
+  "other_matches": 0,
+  "private_access": false,
+  "exclusions": "Count-only scan receipt and hash-only root manifest; no arbitrary prose exclusion"
+}

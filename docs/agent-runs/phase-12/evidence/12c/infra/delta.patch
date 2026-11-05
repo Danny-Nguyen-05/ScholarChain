@@ -1,0 +1,578 @@
+diff --git a/infra/terraform/README.md b/infra/terraform/README.md
+index d71e9b6..d37d37f 100644
+--- a/infra/terraform/README.md
++++ b/infra/terraform/README.md
+@@ -1,12 +1,14 @@
+-# ScholarChain Terraform — Phase12A and12B
++# ScholarChain Terraform — Phase12A–12C
+ 
+ This tree authors the12A foundation plus12B Neptune, native S3 Vectors, bounded EMR,
+ ECS/Fargate/discovery/HTTPS ALB, autoscaling, observability, and a functional
+-Step Functions embedding-dispatch workflow. This is source with offline mock
+-validation, **not a deployment or an apply-ready runtime**. No AWS account/profile,
+-region or budget has been supplied. Nothing was applied or called a paid model.
+-Neptune, EMR and ECS service activation default off pending explicit inputs below.
+-The user accepted all12B Step0 recommendations and asked for an account reminder.
++Step Functions embedding-dispatch workflow. Phase12C adds the selected control
++repairs and a real read-only plan, **not a deployment or an apply-ready runtime**.
++The user supplied account/profile inputs privately, selected Ohio (`us-east-2`)
++and a shared USD200 project ceiling before credits. Nothing was applied or called
++a paid model. Neptune, EMR and ECS service activation remain off pending the
++explicit prerequisites below. Budget creation/notification and Cost Explorer
++activation remain separate pre-spend account setup gates.
+ 
+ ## Local checks without an AWS account
+ 
+@@ -49,13 +51,14 @@ supplied before a real plan can proceed:
+ | `aws_profile` | Local profile name only, configured by the human; never credentials |
+ | `availability_zones` | Two distinct actual AZ names in the chosen region |
+ | `deployment_trusted_principal_arn` | Approved existing IAM role/user permitted to assume the separate deployment role |
+-| `budget_limit_usd` | Positive human-selected total spending ceiling; no amount has been approved |
++| `budget_limit_usd` | USD200 shared project ceiling before credits; no deployment/spend approval implied |
+ 
+-When 12C is ready, tell the user to create/configure the AWS account and provide
+-these values and permission for read-only planning. If the user moves the optional
+-12D spike earlier, that spike needs the account first plus its own written dollar,
+-instance, duration and teardown approval. Do not run a live plan, create credentials,
+-or infer a budget from the test fixtures.
++The account is now configured and12C read-only planning was explicitly authorized.
++Live values remain outside Git; never inspect credential files or print session
++credentials. The optional12D spike still needs its own written dollar, instance,
++duration and teardown approval plus active pre-spend monitoring. The selected
++read-only plan authorizes no apply, credential creation or paid model/Cost Explorer
++request. Do not infer live inputs or spending authority from mock fixtures.
+ 
+ Resource names derive from the configurable `project`/`environment` prefix.
+ Bucket names additionally use the supplied account ID for global uniqueness;
+@@ -91,10 +94,18 @@ scope; GovCloud/China would require a separately reviewed configuration.
+ 
+ The optional monthly AWS Budget filters the project tag. It is an **alert**, not
+ a hard spending stop or a full-stack cost estimate; a multi-month window can incur
+-charges across multiple monthly limits. The human's total budget and 7–10 day
+-working duration still need the 12C estimate and experiment controls. Do not claim
+-the configuration fits an unselected budget. Budget tags/filter activation and
+-permissions are unverified until an account is available.
++charges across multiple monthly limits. The selected USD200 ceiling is shared
++across all cloud phases, including early spikes, optional9C smoke and retained
++evidence. Cost November15–24 as the base case and November11–24 as the upper case;
++actual deployment/runtime remains separately approved. The default plan keeps this
++budget disabled: the early account-wide monitoring bootstrap is a separate,
++human-approved Terraform work order, and must not depend on project tags already
++being active. Do not duplicate or manage one budget from two Terraform states.
++Pass the subscriber address privately through `TF_VAR_budget_notification_emails`
++or an ignored local tfvars file; never put it in committed course.tfvars or logs.
++State, plan binaries/JSON and unredacted outputs remain outside Git/evidence.
++Billing reports lag; runtime/capacity/request limits enforce each run, not a
++Cost Explorer query. No cost-fit or active-notification claim follows from a plan.
+ 
+ ## Module boundaries and security controls
+ 
+@@ -260,10 +271,12 @@ The user chose offline module authoring before the preferred12D spike.
+ `emr_config.enabled=true` requires an explicit release label, reviewed bootstrap
+ S3 URI, TLS certificate bundle URI, proven runtime reference and acknowledgment.
+ It also requires nonempty `emr_service_policy_json`; the12A service role is trust-only
+-without it. The policy rejects wildcard actions and global write resources; only
+-concrete EC2 Describe actions may use `Resource=["*"]`, because those read APIs do
+-not support resource scoping. Future-resource ARN suffixes and selected control-plane
+-permissions still require a concrete12C security review. No broad managed policy
++without it. The policy rejects wildcard actions and wildcard ARN partition,
++service, region or account segments; only concrete EC2 Describe actions may use
++literal `Resource=["*"]`, because those read APIs do not support resource scoping.
++Concrete region/account ARN prefixes may retain a reviewed future-resource suffix
++such as `instance/*`; that does not authorize EMR activation. Selected control-plane
++permissions still require a concrete security review before a live runtime. No broad managed policy
+ is silently attached. The synthetic test policy permits DescribeInstances only:
+ it is a configuration fixture, deliberately **not enough to launch a real cluster**.
+ Real IAM effectiveness, service connectivity, certificates and runtime are unverified.
+@@ -338,9 +351,10 @@ avoid copying manifest/document payloads; native execution metrics remain charte
+ 12C owns the real non-destructive plan/checksum, regional quota/engine/model checks,
+ pricing against the actual user budget, and full security preparation.12D remains
+ a separately approved runtime experiment; no spike root or live action is authored
+-here. Create/configure the AWS account before12C, or before an earlier approved12D.
+-Account/profile/region/budget, actual AZs, certificate and image publication remain
+-pending. Deployment roles remain separate and not granted generic provisioning rights.
++here. Account/profile inputs, Ohio AZs and the shared budget were supplied for
++read-only12C planning; certificate, image publication, actual live service access,
++quotas and runtime prerequisites remain separately gated. Deployment roles remain
++separate and not granted generic provisioning rights.
+ 
+ Step Functions is now present following the user's12B answer, addressing N8's
+ previous omission. This does not constitute instructor acceptance of the whole
+@@ -409,15 +423,67 @@ Additional12B primary references:
+ For cost comparison only, the public Ohio offer file checked during12B lists
+ standard `db.t4g.medium` atUSD0.093/hour and Serverless atUSD0.1608/NCU-hour.
+ At1–2.5NCUs that isUSD0.1608–0.402/hour for compute alone, before storage,I/O,
+-network and other services. Ohio is NOT a selected deployment region and these
+-prices do not establish budget fit or free-tier eligibility. AWS discourages
++network and other services. These are retained12B comparison prices, not the
++12C dated estimate or a free-tier eligibility claim. Ohio is now selected for
++read-only planning; revalidate each price for the actual activation window. AWS discourages
+ small T-family instances for openCypher/performance testing; accepted sizing is
+ Serverless with live revalidation deferred to12C.
+ [Regional public price file](https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonNeptune/current/us-east-2/index.json),
+ [AWS sizing/cost guidance](https://docs.aws.amazon.com/prescriptive-guidance/latest/neptune-well-architected-framework/cost-optimization-pillar.html).
+ 
+ B3 CMK control: the key policy grants only `kms:Decrypt` to
+-`indexing.s3vectors.amazonaws.com`, restricted to the configured account, exact
+-project vector-bucket ARN and S3 Vectors encryption-context keys. `Resource="*"`
++`indexing.s3vectors.amazonaws.com`, restricted to the configured account, the
++project vector-bucket ARN plus its `/index/*` descendants, and the documented
++S3 Vectors encryption-context keys. `Resource="*"`
+ in this key policy means this CMK only; the account-root delegation is unchanged.
+ [AWS S3 Vectors encryption requirements](https://docs.aws.amazon.com/AmazonS3/latest/userguide/s3-vectors-data-encryption.html).
++
++
++## Phase12C control repairs and plan boundary
++
++The selected follow-ups N9/N10/N11/N12/N14/N17 are exercised by the new mock
++requirements in `tests/phase12c.tftest.hcl`; original12A/12B safety runs remain.
++
++- N9: EBS CMK permissions belong to the EMR **service role**, not the EC2 instance
++  role. When EMR is explicitly activated, a separate policy permits only this
++  project's key: Decrypt, DescribeKey, GenerateDataKeyWithoutPlaintext and the
++  explicit ReEncryptFrom/ReEncryptTo actions. CreateGrant is separate and requires
++  `kms:GrantIsForAWSResource=true`. EMR-ready service output depends on this policy.
++  The EC2 data role retains its S3 key-use scope and still has no DynamoDB access.
++- N10: malformed or wildcard ARN service/region/account prefixes are rejected,
++  including `arn:*` and `arn:aws:ec2:*:*:instance/*`. Concrete future-ID suffixes
++  remain subject to activation review; only concrete EC2 Describe actions get the
++  literal global-resource exception. A mock Describe-only fixture is not a usable
++  real provisioning policy.
++- N11/N12: dashboard construction omits the EMR and Neptune widgets when their
++  source is null. When enabled, Neptune native client/server error rates use
++  DBClusterIdentifier and Average. DynamoDB conditional-write failures use
++  TableName/Sum; successful-request latency uses TableName/Operation/Average,
++  with seven adapter-relevant operations for each of six tables. Missing telemetry
++  and application publisher requirements are unchanged.
++- N14: the workflow checks IsPresent before IsString in an ordered And condition;
++  a missing workItem reaches InvalidWork rather than evaluating a missing string.
++- N17: service indexing decrypt is allowed for exactly this project's vector
++  bucket and its index descendants; principal, action, account and encryption
++  context restrictions remain strict. Actual service-supplied SourceArn and KMS
++  behavior still require the Phase14 smoke test.
++
++The default read-only plan proposes171 managed creates, zero changes, zero destroys
++and zero replacements, with Neptune, EMR, ECS runtime and the budget resource off.
++The binary, JSON and private input file are outside Git. A fresh-state plan proves
++no route replacements are proposed; it is not a resource inventory or proof of
++IAM effectiveness. Policies that depend on future ARNs are honestly unknown until
++apply; source and mock contracts establish their intended scopes.
++
++N15 remains disclosed: ALB-to-query and internal query-to-graph/semantic traffic
++uses HTTP inside the VPC. N16 remains deferred: Phase13 must supply authorized
++loader/writer/StartExecution callers; no principal here can start a Neptune loader
++or write pipeline tables as a pipeline loader. Live composition, application metric
++publication, EMR runtime compatibility, actual model access and spend authorization
++are not established by this plan. N13 and optional N3/N4/N6 were not expanded.
++
++[EMR service-role EBS encryption](https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-encryption-enable.html),
++[EBS minimum key actions and grant condition](https://docs.aws.amazon.com/ebs/latest/userguide/ebs-encryption-requirements.html),
++[Neptune native metrics](https://docs.aws.amazon.com/neptune/latest/userguide/cw-metrics.html),
++[DynamoDB metric dimensions](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/metrics-dimensions.html),
++[Step Functions ordered IsPresent/IsString guard](https://docs.aws.amazon.com/step-functions/latest/dg/state-choice.html).
+diff --git a/infra/terraform/modules/identity/main.tf b/infra/terraform/modules/identity/main.tf
+index d4bac05..6bb642d 100644
+--- a/infra/terraform/modules/identity/main.tf
++++ b/infra/terraform/modules/identity/main.tf
+@@ -126,8 +126,11 @@ resource "aws_kms_key" "data" {
+       Action    = ["kms:Decrypt"]
+       Resource  = "*" # This CMK only, as required by a KMS key policy.
+       Condition = {
+-        StringEquals               = { "aws:SourceAccount" = var.aws_account_id }
+-        ArnLike                    = { "aws:SourceArn" = "arn:aws:s3vectors:${var.aws_region}:${var.aws_account_id}:bucket/${var.name_prefix}-${var.aws_account_id}-vectors" }
++        StringEquals = { "aws:SourceAccount" = var.aws_account_id }
++        ArnLike = { "aws:SourceArn" = [
++          "arn:aws:s3vectors:${var.aws_region}:${var.aws_account_id}:bucket/${var.name_prefix}-${var.aws_account_id}-vectors",
++          "arn:aws:s3vectors:${var.aws_region}:${var.aws_account_id}:bucket/${var.name_prefix}-${var.aws_account_id}-vectors/index/*"
++        ] }
+         "ForAnyValue:StringEquals" = { "kms:EncryptionContextKeys" = ["aws:s3vectors:arn", "aws:s3vectors:resource-id"] }
+       }
+     }]
+diff --git a/infra/terraform/modules/identity/outputs.tf b/infra/terraform/modules/identity/outputs.tf
+index 3fd529f..3c12a9b 100644
+--- a/infra/terraform/modules/identity/outputs.tf
++++ b/infra/terraform/modules/identity/outputs.tf
+@@ -12,15 +12,16 @@ output "role_arns" {
+ }
+ output "controls" {
+   value = {
+-    task_policies      = { for k, p in aws_iam_role_policy.task : k => p.policy }
+-    execution_policies = { for k, p in aws_iam_role_policy.execution : k => p.policy }
+-    loader_policy      = aws_iam_role_policy.neptune_loader.policy
+-    emr_data_policy    = aws_iam_role_policy.emr_data.policy
+-    emr_control_policy = try(aws_iam_role_policy.emr_control[0].policy, null)
+-    kms_policy         = aws_kms_key.data.policy
+-    kms_rotation       = aws_kms_key.data.enable_key_rotation
+-    deployment_trust   = aws_iam_role.deployment.assume_role_policy
+-    task_trust         = { for k, r in aws_iam_role.task : k => r.assume_role_policy }
++    task_policies       = { for k, p in aws_iam_role_policy.task : k => p.policy }
++    execution_policies  = { for k, p in aws_iam_role_policy.execution : k => p.policy }
++    loader_policy       = aws_iam_role_policy.neptune_loader.policy
++    emr_data_policy     = aws_iam_role_policy.emr_data.policy
++    emr_control_policy  = try(aws_iam_role_policy.emr_control[0].policy, null)
++    emr_disk_encryption = try({ role = aws_iam_role_policy.emr_disk_encryption[0].role, policy = aws_iam_role_policy.emr_disk_encryption[0].policy, service_role_id = aws_iam_role.emr_service.id }, null)
++    kms_policy          = aws_kms_key.data.policy
++    kms_rotation        = aws_kms_key.data.enable_key_rotation
++    deployment_trust    = aws_iam_role.deployment.assume_role_policy
++    task_trust          = { for k, r in aws_iam_role.task : k => r.assume_role_policy }
+   }
+ }
+ 
+@@ -31,9 +32,9 @@ output "runtime_ready_roles" {
+ }
+ output "emr_ready_service_arn" {
+   value      = aws_iam_role.emr_service.arn
+-  depends_on = [aws_iam_role_policy.emr_control]
++  depends_on = [aws_iam_role_policy.emr_control, aws_iam_role_policy.emr_disk_encryption]
+ }
+ output "emr_ready_profile_arn" {
+   value      = aws_iam_instance_profile.emr.arn
+-  depends_on = [aws_iam_role_policy.emr_data, aws_iam_role_policy.emr_disk_encryption]
++  depends_on = [aws_iam_role_policy.emr_data]
+ }
+diff --git a/infra/terraform/modules/identity/phase12b.tf b/infra/terraform/modules/identity/phase12b.tf
+index 43dced2..ab08c48 100644
+--- a/infra/terraform/modules/identity/phase12b.tf
++++ b/infra/terraform/modules/identity/phase12b.tf
+@@ -31,11 +31,14 @@ resource "aws_iam_role_policy" "emr_control" {
+   role   = aws_iam_role.emr_service.id
+   policy = var.emr_service_policy_json
+ }
++# EBS encryption is performed through the EMR service role. The EC2 role keeps
++# only its S3 data-key permissions; EBS grants are limited to this project CMK.
+ resource "aws_iam_role_policy" "emr_disk_encryption" {
+   count = var.enable_emr && var.emr_service_policy_json != null ? 1 : 0
+   name  = "project-encrypted-emr-disks"
+-  role  = aws_iam_role.emr_ec2.id
+-  policy = jsonencode({ Version = "2012-10-17", Statement = [{
+-    Effect = "Allow", Action = ["kms:CreateGrant"], Resource = [aws_kms_key.data.arn], Condition = { Bool = { "kms:GrantIsForAWSResource" = "true" } }
+-  }] })
++  role  = aws_iam_role.emr_service.id
++  policy = jsonencode({ Version = "2012-10-17", Statement = [
++    { Sid = "UseProjectKeyForEbs", Effect = "Allow", Action = ["kms:Decrypt", "kms:DescribeKey", "kms:GenerateDataKeyWithoutPlaintext", "kms:ReEncryptFrom", "kms:ReEncryptTo"], Resource = [aws_kms_key.data.arn] },
++    { Sid = "GrantOnlyAwsResourceUseOfProjectKey", Effect = "Allow", Action = ["kms:CreateGrant"], Resource = [aws_kms_key.data.arn], Condition = { Bool = { "kms:GrantIsForAWSResource" = "true" } } }
++  ] })
+ }
+diff --git a/infra/terraform/modules/observability/main.tf b/infra/terraform/modules/observability/main.tf
+index 0b253ba..6c80b88 100644
+--- a/infra/terraform/modules/observability/main.tf
++++ b/infra/terraform/modules/observability/main.tf
+@@ -1,10 +1,13 @@
+ locals {
+-  services            = toset(["query-api", "graph-service", "semantic-service", "embedding-worker"])
+-  task_metrics        = concat([for service in local.services : [for metric in ["DesiredTaskCount", "RunningTaskCount", "PendingTaskCount"] : ["ECS/ContainerInsights", metric, "ClusterName", var.name_prefix, "ServiceName", service]]]...)
+-  utilization_metrics = concat([for service in local.services : [for metric in ["CPUUtilization", "MemoryUtilization"] : ["AWS/ECS", metric, "ClusterName", var.name_prefix, "ServiceName", service]]]...)
+-  table_metrics       = concat([for name in values(var.table_names) : [for metric in ["ConsumedReadCapacityUnits", "ConsumedWriteCapacityUnits", "ReadThrottleEvents", "WriteThrottleEvents"] : ["AWS/DynamoDB", metric, "TableName", name]]]...)
+-  neptune_metrics     = var.neptune_identifier == null ? [] : [for metric in ["CPUUtilization", "ServerlessDatabaseCapacity", "NCUUtilization"] : ["AWS/Neptune", metric, "DBClusterIdentifier", var.neptune_identifier]]
+-  emr_metrics         = var.emr_cluster_id == null ? [] : [for metric in ["CoreNodesRunning", "TaskNodesRunning", "CoreNodesPending", "TaskNodesPending", "TotalNodesRequested", "TotalNodesRunning"] : ["AWS/ElasticMapReduce", metric, "JobFlowId", var.emr_cluster_id]]
++  services              = toset(["query-api", "graph-service", "semantic-service", "embedding-worker"])
++  task_metrics          = concat([for service in local.services : [for metric in ["DesiredTaskCount", "RunningTaskCount", "PendingTaskCount"] : ["ECS/ContainerInsights", metric, "ClusterName", var.name_prefix, "ServiceName", service]]]...)
++  utilization_metrics   = concat([for service in local.services : [for metric in ["CPUUtilization", "MemoryUtilization"] : ["AWS/ECS", metric, "ClusterName", var.name_prefix, "ServiceName", service]]]...)
++  table_metrics         = concat([for name in values(var.table_names) : [for metric in ["ConsumedReadCapacityUnits", "ConsumedWriteCapacityUnits", "ReadThrottleEvents", "WriteThrottleEvents"] : ["AWS/DynamoDB", metric, "TableName", name]]]...)
++  conditional_metrics   = [for name in values(var.table_names) : ["AWS/DynamoDB", "ConditionalCheckFailedRequests", "TableName", name]]
++  latency_metrics       = concat([for name in values(var.table_names) : [for operation in ["GetItem", "PutItem", "UpdateItem", "DeleteItem", "Query", "BatchGetItem", "BatchWriteItem"] : ["AWS/DynamoDB", "SuccessfulRequestLatency", "TableName", name, "Operation", operation]]]...)
++  neptune_error_metrics = var.neptune_identifier == null ? [] : [for metric in ["TotalClientErrorsPerSec", "TotalServerErrorsPerSec"] : ["AWS/Neptune", metric, "DBClusterIdentifier", var.neptune_identifier]]
++  neptune_metrics       = var.neptune_identifier == null ? [] : [for metric in ["CPUUtilization", "ServerlessDatabaseCapacity", "NCUUtilization"] : ["AWS/Neptune", metric, "DBClusterIdentifier", var.neptune_identifier]]
++  emr_metrics           = var.emr_cluster_id == null ? [] : [for metric in ["CoreNodesRunning", "TaskNodesRunning", "CoreNodesPending", "TaskNodesPending", "TotalNodesRequested", "TotalNodesRunning"] : ["AWS/ElasticMapReduce", metric, "JobFlowId", var.emr_cluster_id]]
+ }
+ resource "aws_cloudwatch_log_group" "service" {
+   for_each          = local.services
+@@ -19,7 +22,7 @@ resource "aws_cloudwatch_log_group" "neptune_audit" {
+ }
+ resource "aws_cloudwatch_dashboard" "elasticity" {
+   dashboard_name = "${var.name_prefix}-elasticity"
+-  dashboard_body = jsonencode({ widgets = [
++  dashboard_body = jsonencode({ widgets = concat([
+     { type = "text", x = 0, y = 0, width = 24, height = 3, properties = { markdown = "# ScholarChain elasticity\nNative metrics appear after activation. Custom panels and alarms require a verified Phase13/14 publisher; missing data is not zero errors. EMR native metrics have300-second cadence. No LLM dollar cost is inferred from tokens. The custom publisher contract is documented in README.md." } },
+     { type = "metric", x = 0, y = 3, width = 12, height = 6, properties = { title = "ECS desired/running/pending tasks", region = var.aws_region, period = 60, stat = "Average", metrics = local.task_metrics } },
+     { type = "metric", x = 12, y = 3, width = 12, height = 6, properties = { title = "ECS CPU and memory utilization (%)", region = var.aws_region, period = 60, stat = "Average", metrics = local.utilization_metrics } },
+@@ -28,8 +31,6 @@ resource "aws_cloudwatch_dashboard" "elasticity" {
+       ["AWS/SQS", "ApproximateNumberOfMessagesVisible", "QueueName", "${var.name_prefix}-embedding-dlq"]
+     ] } },
+     { type = "metric", x = 12, y = 9, width = 12, height = 6, properties = { title = "Oldest embedding message age (seconds)", region = var.aws_region, period = 60, stat = "Maximum", metrics = [["AWS/SQS", "ApproximateAgeOfOldestMessage", "QueueName", var.queue_name]] } },
+-    { type = "metric", x = 0, y = 15, width = 12, height = 6, properties = { title = "EMR running/pending/requested nodes", region = var.aws_region, period = 300, stat = "Average", metrics = local.emr_metrics } },
+-    { type = "metric", x = 12, y = 15, width = 12, height = 6, properties = { title = "Neptune capacity and utilization", region = var.aws_region, period = 60, stat = "Average", metrics = local.neptune_metrics } },
+     { type = "metric", x = 0, y = 21, width = 24, height = 6, properties = { title = "DynamoDB capacity units and table throttle events", region = var.aws_region, period = 60, stat = "Sum", metrics = local.table_metrics } },
+     { type = "metric", x = 0, y = 27, width = 12, height = 6, properties = { title = "API p50/p95/p99 latency (publisher required)", region = var.aws_region, period = 60, metrics = [for p in ["p50", "p95", "p99"] : [var.application_namespace, "RequestLatencySeconds", "Service", "query-api", { stat = p }]] } },
+     { type = "metric", x = 12, y = 27, width = 12, height = 6, properties = { title = "Graph/vector/LLM p95 latency (publisher required)", region = var.aws_region, period = 60, metrics = [
+@@ -51,7 +52,16 @@ resource "aws_cloudwatch_dashboard" "elasticity" {
+       ["AWS/States", "ExecutionsFailed", "StateMachineArn", var.workflow_arn],
+       ["AWS/States", "ExecutionsTimedOut", "StateMachineArn", var.workflow_arn]
+     ] } }
+-  ] })
++    ],
++    var.emr_cluster_id == null ? [] : [{ type = "metric", x = 0, y = 15, width = 12, height = 6, properties = { title = "EMR running/pending/requested nodes", region = var.aws_region, period = 300, stat = "Average", metrics = local.emr_metrics } }],
++    var.neptune_identifier == null ? [] : [{ type = "metric", x = 12, y = 15, width = 12, height = 6, properties = { title = "Neptune capacity and utilization", region = var.aws_region, period = 60, stat = "Average", metrics = local.neptune_metrics } },
++      { type = "metric", x = 0, y = 57, width = 24, height = 6, properties = { title = "Neptune client/server errors per second", region = var.aws_region, period = 60, stat = "Average", metrics = local.neptune_error_metrics } }
++    ],
++    [
++      { type = "metric", x = 0, y = 45, width = 24, height = 6, properties = { title = "DynamoDB conditional write failures", region = var.aws_region, period = 60, stat = "Sum", metrics = local.conditional_metrics } },
++      { type = "metric", x = 0, y = 51, width = 24, height = 6, properties = { title = "DynamoDB successful request latency (milliseconds)", region = var.aws_region, period = 60, stat = "Average", metrics = local.latency_metrics } }
++    ]
++  ) })
+ }
+ resource "aws_cloudwatch_metric_alarm" "queue_age" {
+   alarm_name          = "${var.name_prefix}-embedding-age"
+diff --git a/infra/terraform/modules/workflow/main.tf b/infra/terraform/modules/workflow/main.tf
+index fa3e2e5..e37bcc9 100644
+--- a/infra/terraform/modules/workflow/main.tf
++++ b/infra/terraform/modules/workflow/main.tf
+@@ -29,7 +29,7 @@ resource "aws_sfn_state_machine" "embedding_dispatch" {
+     StartAt        = "ValidateWork"
+     TimeoutSeconds = 120
+     States = {
+-      ValidateWork = { Type = "Choice", Choices = [{ Variable = "$.workItem", IsString = true, Next = "Enqueue" }], Default = "InvalidWork" }
++      ValidateWork = { Type = "Choice", Choices = [{ And = [{ Variable = "$.workItem", IsPresent = true }, { Variable = "$.workItem", IsString = true }], Next = "Enqueue" }], Default = "InvalidWork" }
+       InvalidWork  = { Type = "Fail", Error = "InvalidEmbeddingWork", Cause = "workItem must be a serialized EmbeddingWorkItem string" }
+       Enqueue = {
+         Type       = "Task", Resource = "arn:aws:states:::sqs:sendMessage", TimeoutSeconds = 20,
+diff --git a/infra/terraform/phase12b-variables.tf b/infra/terraform/phase12b-variables.tf
+index 143f7ee..600af5c 100644
+--- a/infra/terraform/phase12b-variables.tf
++++ b/infra/terraform/phase12b-variables.tf
+@@ -195,9 +195,19 @@ variable "emr_service_policy_json" {
+ 
+   description = "Explicit scoped control-plane policy supplied only after selecting runtime/network. No default broad managed-policy attachment. Activation refuses a trust-only service role."
+   validation {
+-    condition = var.emr_service_policy_json == null ? true : try(length(jsondecode(var.emr_service_policy_json).Statement) > 0 && alltrue(flatten([for s in jsondecode(var.emr_service_policy_json).Statement : [for a in s.Action : !strcontains(a, "*")]])) && alltrue([for st in jsondecode(var.emr_service_policy_json).Statement : alltrue([for arn in st.Resource : arn != "*" || alltrue([for a in st.Action : startswith(a, "ec2:Describe")])])]), false)
+-
+-    error_message = "Supply a nonempty IAM policy with concrete action lists; only EC2 Describe APIs may use global resources; explain scoped future-ID ARN suffixes in the12C review."
++    condition = var.emr_service_policy_json == null ? true : try(
++      length(jsondecode(var.emr_service_policy_json).Statement) > 0 &&
++      alltrue([for st in jsondecode(var.emr_service_policy_json).Statement :
++        length(st.Action) > 0 && length(st.Resource) > 0 &&
++        alltrue([for action in st.Action : !can(regex("[?*]", action))]) &&
++        alltrue([for arn in st.Resource :
++          arn == "*" ? alltrue([for action in st.Action : startswith(action, "ec2:Describe")]) :
++          can(regex("^arn:aws:[a-z0-9-]+:[a-z0-9-]*:([0-9]{12})?:.+$", arn))
++        ])
++    ]), false)
++
++
++    error_message = "Supply nonempty concrete action/resource lists. ARN partition, service, region and account segments cannot contain wildcards; only literal global resources for EC2 Describe APIs are allowed. Review scoped future-ID resource suffixes before activation."
+   }
+ }
+ 
+diff --git a/infra/terraform/tests/phase12b.tftest.hcl b/infra/terraform/tests/phase12b.tftest.hcl
+index b42f3b0..54479c9 100644
+--- a/infra/terraform/tests/phase12b.tftest.hcl
++++ b/infra/terraform/tests/phase12b.tftest.hcl
+@@ -100,10 +100,10 @@ run "inactive_defaults_and_vector_contract" {
+   assert {
+     condition = length([for statement in jsondecode(output.iam_controls.kms_policy).Statement : statement if try(statement.Principal.Service, "") == "indexing.s3vectors.amazonaws.com" && statement.Effect == "Allow" && statement.Action == ["kms:Decrypt"] && statement.Resource == "*" && try(statement.Condition, {}) == {
+       StringEquals               = { "aws:SourceAccount" = "111122223333" }
+-      ArnLike                    = { "aws:SourceArn" = "arn:aws:s3vectors:us-east-1:111122223333:bucket/scholarchain-course-111122223333-vectors" }
++      ArnLike                    = { "aws:SourceArn" = ["arn:aws:s3vectors:us-east-1:111122223333:bucket/scholarchain-course-111122223333-vectors", "arn:aws:s3vectors:us-east-1:111122223333:bucket/scholarchain-course-111122223333-vectors/index/*"] }
+       "ForAnyValue:StringEquals" = { "kms:EncryptionContextKeys" = ["aws:s3vectors:arn", "aws:s3vectors:resource-id"] }
+     }]) == 1 && length(jsondecode(output.iam_controls.kms_policy).Statement) == 2
+-    error_message = "B3: The project CMK must allow exactly one S3 Vectors indexing service decrypt grant, restricted to the expected account, exact vector bucket ARN and S3 Vectors encryption context keys."
++    error_message = "B3: The project CMK must allow exactly one S3 Vectors indexing service decrypt grant, restricted to the expected account, project vector bucket and index ARNs and S3 Vectors encryption context keys."
+   }
+   assert {
+     condition     = !output.phase12b_controls.runtime.enabled && length(output.phase12b_controls.runtime.services) == 0 && length(output.phase12b_controls.runtime.scaling_targets) == 0 && !output.phase12b_controls.emr.enabled && output.phase12b_controls.emr.cluster == null && !output.phase12b_controls.neptune.enabled
+@@ -129,7 +129,7 @@ run "inactive_defaults_and_vector_contract" {
+ run "dashboard_metric_shapes_and_route_ownership" {
+   command = plan
+   assert {
+-    condition     = alltrue(flatten([for w in jsondecode(output.phase12b_controls.observability.dashboard).widgets : [for m in try(w.properties.metrics, []) : can(m[0]) && can(m[1])]])) && length([for m in jsondecode(output.phase12b_controls.observability.dashboard).widgets[7].properties.metrics : m if m[0] == "AWS/DynamoDB" && contains(["ReadThrottleEvents", "WriteThrottleEvents"], m[1]) && m[2] == "TableName" && length(m) == 4]) == 12
++    condition     = alltrue(flatten([for w in jsondecode(output.phase12b_controls.observability.dashboard).widgets : [for m in try(w.properties.metrics, []) : can(m[0]) && can(m[1])]])) && length([for m in one([for w in jsondecode(output.phase12b_controls.observability.dashboard).widgets : w.properties.metrics if try(w.properties.title, "") == "DynamoDB capacity units and table throttle events"]) : m if m[0] == "AWS/DynamoDB" && contains(["ReadThrottleEvents", "WriteThrottleEvents"], m[1]) && m[2] == "TableName" && length(m) == 4]) == 12
+     error_message = "CloudWatch metrics must be arrays (not recursively flattened strings); each of six tables gets correctly dimensioned read/write throttle-event series."
+   }
+   assert {
+--- /dev/null
++++ b/infra/terraform/tests/phase12c.tftest.hcl
+@@ -0,0 +1,194 @@
++# All identifiers in this file are synthetic mock fixtures. No AWS client runs.
++# Plan-only runs: never remove the mock_provider or change command to apply.
++mock_provider "aws" {
++  override_during = plan
++  mock_resource "aws_kms_key" {
++    defaults = {
++      arn    = "arn:aws:kms:us-east-1:111122223333:key/00000000-0000-0000-0000-000000000001"
++      key_id = "00000000-0000-0000-0000-000000000001"
++    }
++  }
++  mock_resource "aws_s3_bucket" {
++    defaults = { arn = "arn:aws:s3:::synthetic-phase12a-bucket", id = "synthetic-phase12a-bucket" }
++  }
++  mock_resource "aws_dynamodb_table" {
++    defaults = { arn = "arn:aws:dynamodb:us-east-1:111122223333:table/synthetic-phase12a-table" }
++  }
++  mock_resource "aws_sqs_queue" {
++    defaults = {
++      arn = "arn:aws:sqs:us-east-1:111122223333:synthetic-phase12a-queue"
++      id  = "https://sqs.us-east-1.amazonaws.com/111122223333/synthetic-phase12a-queue"
++      url = "https://sqs.us-east-1.amazonaws.com/111122223333/synthetic-phase12a-queue"
++    }
++  }
++  mock_resource "aws_sfn_state_machine" { defaults = { arn = "arn:aws:states:us-east-1:111122223333:stateMachine:scholarchain-course-embedding-dispatch" } }
++  mock_resource "aws_emr_cluster" { defaults = { id = "j-SYNTHETIC12C" } }
++  mock_resource "aws_iam_role" { defaults = { arn = "arn:aws:iam::111122223333:role/synthetic-phase12b-role" } }
++  mock_resource "aws_s3vectors_vector_bucket" { defaults = { vector_bucket_arn = "arn:aws:s3vectors:us-east-1:111122223333:bucket/synthetic-vectors" } }
++  mock_resource "aws_neptune_cluster" { defaults = { cluster_resource_id = "cluster-synthetic-graph", endpoint = "synthetic.cluster.neptune.amazonaws.com", reader_endpoint = "synthetic.cluster-ro.neptune.amazonaws.com" } }
++  mock_resource "aws_ecs_cluster" { defaults = { id = "arn:aws:ecs:us-east-1:111122223333:cluster/scholarchain-course" } }
++  mock_resource "aws_ecs_task_definition" { defaults = { arn = "arn:aws:ecs:us-east-1:111122223333:task-definition/synthetic-service:1" } }
++  mock_resource "aws_ecr_repository" { defaults = { arn = "arn:aws:ecr:us-east-1:111122223333:repository/synthetic-phase12b-repo", repository_url = "111122223333.dkr.ecr.us-east-1.amazonaws.com/synthetic-phase12b-repo" } }
++  mock_resource "aws_lb" { defaults = { arn = "arn:aws:elasticloadbalancing:us-east-1:111122223333:loadbalancer/app/synthetic/1234567890123456" } }
++  mock_resource "aws_lb_target_group" { defaults = { arn = "arn:aws:elasticloadbalancing:us-east-1:111122223333:targetgroup/synthetic/1234567890123456" } }
++  mock_resource "aws_service_discovery_service" { defaults = { arn = "arn:aws:servicediscovery:us-east-1:111122223333:service/srv-synthetic" } }
++  mock_resource "aws_vpc_endpoint" {
++    defaults = { prefix_list_id = "pl-synthetic" }
++  }
++}
++# Distinct IDs make resource-backed routing comparisons meaningful in mock plans.
++override_resource {
++  target          = module.network.aws_route_table.public
++  override_during = plan
++  values          = { id = "rtb-synthetic-public" }
++}
++override_resource {
++  target          = module.network.aws_route_table.application
++  override_during = plan
++  values          = { id = "rtb-synthetic-application" }
++}
++override_resource {
++  target          = module.network.aws_route_table.data
++  override_during = plan
++  values          = { id = "rtb-synthetic-data" }
++}
++variables {
++  aws_account_id                   = "111122223333"
++  aws_region                       = "us-east-1"
++  aws_profile                      = "synthetic-not-a-real-profile"
++  availability_zones               = ["us-east-1a", "us-east-1b"]
++  deployment_trusted_principal_arn = "arn:aws:iam::111122223333:role/synthetic-architect"
++  budget_limit_usd                 = 50 # Synthetic validation input, not the user's budget.
++}
++override_resource {
++  target          = module.s3vectors.aws_s3vectors_index.document["researcher-profile-v1"]
++  override_during = plan
++  values          = { index_arn = "arn:aws:s3vectors:us-east-1:111122223333:bucket/synthetic-vectors/index/researcher-profile-v1" }
++}
++override_resource {
++  target          = module.s3vectors.aws_s3vectors_index.document["collaboration-community-v1"]
++  override_during = plan
++  values          = { index_arn = "arn:aws:s3vectors:us-east-1:111122223333:bucket/synthetic-vectors/index/collaboration-community-v1" }
++}
++override_resource {
++  target          = module.s3vectors.aws_s3vectors_index.document["paper-abstract-v1"]
++  override_during = plan
++  values          = { index_arn = "arn:aws:s3vectors:us-east-1:111122223333:bucket/synthetic-vectors/index/paper-abstract-v1" }
++}
++override_resource {
++  target          = module.s3vectors.aws_s3vectors_index.document["collaboration-path-v1"]
++  override_during = plan
++  values          = { index_arn = "arn:aws:s3vectors:us-east-1:111122223333:bucket/synthetic-vectors/index/collaboration-path-v1" }
++}
++override_resource {
++  target          = module.s3vectors.aws_s3vectors_index.document["topic-institution-summary-v1"]
++  override_during = plan
++  values          = { index_arn = "arn:aws:s3vectors:us-east-1:111122223333:bucket/synthetic-vectors/index/topic-institution-summary-v1" }
++}
++override_resource {
++  target          = module.messaging.aws_sqs_queue.embedding
++  override_during = plan
++  values          = { arn = "arn:aws:sqs:us-east-1:111122223333:synthetic-work", url = "https://sqs.us-east-1.amazonaws.com/111122223333/synthetic-work", id = "https://sqs.us-east-1.amazonaws.com/111122223333/synthetic-work" }
++}
++override_resource {
++  target          = module.messaging.aws_sqs_queue.dead_letter
++  override_during = plan
++  values          = { arn = "arn:aws:sqs:us-east-1:111122223333:synthetic-dlq", url = "https://sqs.us-east-1.amazonaws.com/111122223333/synthetic-dlq", id = "https://sqs.us-east-1.amazonaws.com/111122223333/synthetic-dlq" }
++}
++
++# Phase12C requirements. Every run uses only the mock provider above.
++run "s3vectors_key_covers_project_bucket_and_indexes" {
++  command = plan
++  assert {
++    condition = length([for st in jsondecode(output.iam_controls.kms_policy).Statement : st if try(st.Principal.Service, "") == "indexing.s3vectors.amazonaws.com" && st.Effect == "Allow" && st.Action == ["kms:Decrypt"] && st.Resource == "*" && try(st.Condition, {}) == {
++      StringEquals               = { "aws:SourceAccount" = "111122223333" }
++      ArnLike                    = { "aws:SourceArn" = ["arn:aws:s3vectors:us-east-1:111122223333:bucket/scholarchain-course-111122223333-vectors", "arn:aws:s3vectors:us-east-1:111122223333:bucket/scholarchain-course-111122223333-vectors/index/*"] }
++      "ForAnyValue:StringEquals" = { "kms:EncryptionContextKeys" = ["aws:s3vectors:arn", "aws:s3vectors:resource-id"] }
++    }]) == 1 && length(jsondecode(output.iam_controls.kms_policy).Statement) == 2
++    error_message = "N17: Indexing decrypt requires exactly this project's bucket and index ARN paths, account and documented context; no wider key grant."
++  }
++}
++run "disabled_sources_have_no_empty_dashboard_widgets" {
++  command = plan
++  assert {
++    condition     = alltrue([for w in jsondecode(output.phase12b_controls.observability.dashboard).widgets : try(length(w.properties.metrics) > 0, true)]) && length([for w in jsondecode(output.phase12b_controls.observability.dashboard).widgets : w if can(regex("^(EMR |Neptune )", try(w.properties.title, "")))]) == 0
++    error_message = "N11: Disabled EMR/Neptune must omit their widgets; no metric widget may have an empty metric array."
++  }
++}
++run "dynamodb_native_failure_and_latency_panels" {
++  command = plan
++  assert {
++    condition     = length([for w in jsondecode(output.phase12b_controls.observability.dashboard).widgets : w if try(w.properties.title, "") == "DynamoDB conditional write failures" && try(w.properties.stat, "") == "Sum" && try(length(w.properties.metrics), 0) == 6 && alltrue([for m in w.properties.metrics : m[0] == "AWS/DynamoDB" && m[1] == "ConditionalCheckFailedRequests" && m[2] == "TableName" && length(m) == 4])]) == 1
++    error_message = "N12: All six tables need native conditional-write failure counts with TableName and Sum."
++  }
++  assert {
++    condition     = length([for w in jsondecode(output.phase12b_controls.observability.dashboard).widgets : w if try(w.properties.title, "") == "DynamoDB successful request latency (milliseconds)" && try(w.properties.stat, "") == "Average" && try(length(w.properties.metrics), 0) == 42 && alltrue([for m in w.properties.metrics : m[0] == "AWS/DynamoDB" && m[1] == "SuccessfulRequestLatency" && m[2] == "TableName" && m[4] == "Operation" && contains(["GetItem", "PutItem", "UpdateItem", "DeleteItem", "Query", "BatchGetItem", "BatchWriteItem"], m[5]) && length(m) == 6])]) == 1
++    error_message = "N12: Six tables and seven adapter operations need native successful latency with TableName/Operation and Average."
++  }
++}
++run "neptune_native_errors_when_enabled" {
++  command = plan
++  variables {
++    neptune_enabled          = true
++    neptune_engine_version   = "1.4.6.3"
++    neptune_parameter_family = "neptune1.4"
++  }
++  assert {
++    condition     = length([for w in jsondecode(output.phase12b_controls.observability.dashboard).widgets : w if try(w.properties.title, "") == "Neptune client/server errors per second" && try(w.properties.stat, "") == "Average" && try(length(w.properties.metrics), 0) == 2 && toset([for m in w.properties.metrics : m[1]]) == toset(["TotalClientErrorsPerSec", "TotalServerErrorsPerSec"]) && alltrue([for m in w.properties.metrics : m[0] == "AWS/Neptune" && m[2] == "DBClusterIdentifier" && m[3] == "scholarchain-course-graph" && length(m) == 4])]) == 1
++    error_message = "N12: Active Neptune needs correctly dimensioned native client/server error-rate series, averaged per second."
++  }
++  assert {
++    condition     = length([for w in jsondecode(output.phase12b_controls.observability.dashboard).widgets : w if try(w.properties.title, "") == "Neptune capacity and utilization"]) == 1 && alltrue([for w in jsondecode(output.phase12b_controls.observability.dashboard).widgets : try(length(w.properties.metrics) > 0, true)])
++    error_message = "N11: An active Neptune writer retains its capacity widget without introducing empty EMR widgets."
++  }
++}
++run "emr_service_role_owns_ebs_key_permissions" {
++  command = plan
++  variables {
++    emr_config              = { enabled = true, release_label = "emr-7.8.0", runtime_reference = "SYNTHETIC-NOT-LIVE-RUNTIME-PROOF", runtime_verified = true, bootstrap_uri = "s3://synthetic-artifacts/bootstrap/spark-213.sh", tls_certificate_uri = "s3://synthetic-artifacts/tls/synthetic.zip" }
++    emr_service_policy_json = "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Effect\":\"Allow\",\"Action\":[\"ec2:DescribeInstances\"],\"Resource\":[\"*\"]}]}"
++  }
++  override_resource {
++    target          = module.identity.aws_iam_role.emr_service
++    override_during = plan
++    values          = { id = "synthetic-emr-service", arn = "arn:aws:iam::111122223333:role/synthetic-emr-service" }
++  }
++  override_resource {
++    target          = module.identity.aws_iam_role.emr_ec2
++    override_during = plan
++    values          = { id = "synthetic-emr-ec2", arn = "arn:aws:iam::111122223333:role/synthetic-emr-ec2" }
++  }
++  assert {
++    condition     = output.iam_controls.emr_disk_encryption.role == "synthetic-emr-service" && length(jsondecode(output.iam_controls.emr_disk_encryption.policy).Statement) == 2 && length([for st in jsondecode(output.iam_controls.emr_disk_encryption.policy).Statement : st if st.Action == ["kms:CreateGrant"] && st.Resource == ["arn:aws:kms:us-east-1:111122223333:key/00000000-0000-0000-0000-000000000001"] && try(st.Condition.Bool["kms:GrantIsForAWSResource"], "false") == "true"]) == 1 && length([for st in jsondecode(output.iam_controls.emr_disk_encryption.policy).Statement : st if toset(st.Action) == toset(["kms:Decrypt", "kms:DescribeKey", "kms:GenerateDataKeyWithoutPlaintext", "kms:ReEncryptFrom", "kms:ReEncryptTo"]) && st.Resource == ["arn:aws:kms:us-east-1:111122223333:key/00000000-0000-0000-0000-000000000001"]]) == 1
++    error_message = "N9: The EMR service role, not the EC2 role, needs only the project CMK's explicit EBS actions and AWS-resource-conditioned CreateGrant."
++  }
++  assert {
++    condition     = length([for w in jsondecode(output.phase12b_controls.observability.dashboard).widgets : w if try(w.properties.title, "") == "EMR running/pending/requested nodes"]) == 1 && alltrue([for w in jsondecode(output.phase12b_controls.observability.dashboard).widgets : try(length(w.properties.metrics) > 0, true)])
++    error_message = "N11: Active EMR retains its native nodes widget while inactive Neptune widgets are absent."
++  }
++}
++run "missing_work_item_reaches_invalid_work" {
++  command = plan
++  assert {
++    condition     = try(jsondecode(output.phase12b_controls.workflow.definition).States.ValidateWork.Choices[0], {}) == { And = [{ Variable = "$.workItem", IsPresent = true }, { Variable = "$.workItem", IsString = true }], Next = "Enqueue" } && jsondecode(output.phase12b_controls.workflow.definition).States.ValidateWork.Default == "InvalidWork" && jsondecode(output.phase12b_controls.workflow.definition).States.InvalidWork.Error == "InvalidEmbeddingWork"
++    error_message = "N14: Guard IsString with IsPresent in that order so missing input routes to InvalidWork without States.Runtime."
++  }
++}
++run "emr_rejects_wildcard_region_account" {
++  command = plan
++  variables { emr_service_policy_json = "{\"Statement\":[{\"Effect\":\"Allow\",\"Action\":[\"ec2:TerminateInstances\"],\"Resource\":[\"arn:aws:ec2:*:*:instance/*\"]}]}" }
++  expect_failures = [var.emr_service_policy_json]
++}
++run "emr_rejects_wildcard_arn_service" {
++  command = plan
++  variables { emr_service_policy_json = "{\"Statement\":[{\"Effect\":\"Allow\",\"Action\":[\"iam:PassRole\"],\"Resource\":[\"arn:*\"]}]}" }
++  expect_failures = [var.emr_service_policy_json]
++}
++run "emr_accepts_scoped_future_resource_suffix" {
++  command = plan
++  variables { emr_service_policy_json = "{\"Statement\":[{\"Effect\":\"Allow\",\"Action\":[\"ec2:TerminateInstances\"],\"Resource\":[\"arn:aws:ec2:us-east-1:111122223333:instance/*\"]},{\"Effect\":\"Allow\",\"Action\":[\"iam:PassRole\"],\"Resource\":[\"arn:aws:iam::111122223333:role/scoped-emr-*\"]}]}" }
++  assert {
++    condition     = !output.phase12b_controls.emr.enabled
++    error_message = "Scoped future-ID suffixes may be reviewed as inputs without activating EMR."
++  }
++}

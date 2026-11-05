@@ -1,0 +1,9 @@
+{
+  "source_artifact": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-portable-runtime-20261103/artifacts/scholarchain-spark3.5.4-scala2.13.14-java17-runtime.tgz",
+  "source_sha256": "1253946aa35cf8082f601b2146db75bbb79902a6c2f10da0b159473afc8fa21e",
+  "relocated_root": "/tmp/sc-runtime-test-20261103/scholarchain-runtime",
+  "file_hash_and_mode_matches": 378,
+  "symlinks": 0,
+  "hardlinks": 0,
+  "old_cache_links": 0
+}

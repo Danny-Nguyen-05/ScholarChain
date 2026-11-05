@@ -1,0 +1,34 @@
+tests/deployer.tftest.hcl... in progress
+  run "trust_requires_mfa_and_exact_principal"... pass
+  run "four_spike_policies_each_under_the_managed_policy_limit"... pass
+  run "no_wildcard_actions_anywhere"... pass
+  run "regional_statements_carry_the_region_condition"... pass
+  run "iam_statements_only_touch_the_spike_prefix"... pass
+  run "passrole_boundary_and_attach_conditions"... pass
+  run "nothing_for_billing_or_budgets"... pass
+  run "run_job_flow_requires_stack_and_emr_managed_tags"... pass
+  run "boundary_policy_name_and_output"... pass
+  run "unknown_permission_set_is_rejected"... pass
+  run "empty_permission_set_list_is_rejected"... pass
+  run "wildcard_operator_is_rejected"... pass
+  run "account_root_operator_is_rejected"... pass
+  run "foreign_account_operator_is_rejected"... pass
+  run "region_other_than_ohio_is_rejected"... pass
+  run "billing_deployer_name_is_rejected"... pass
+  run "bad_account_id_is_rejected"... pass
+  run "resource_star_only_for_actions_without_a_resource_type_or_ec2_describe"... pass
+  run "boundary_cannot_be_rewritten_or_assumed_around"... pass
+  run "tags_apply_only_at_creation_and_nothing_unconditioned"... pass
+  run "kms_administration_is_in_the_key_policy_not_iam"... pass
+  run "boundary_tags_on_create_only_and_auto_termination_actions"... pass
+  run "boundary_ec2_mutations_are_tag_conditioned_like_emr_v2"... pass
+  run "login_policy_is_exact_and_independent_of_permission_sets"... pass
+  run "login_policy_exists_as_its_own_resource_not_a_permission_set_part"... pass
+  run "every_spike_create_and_attach_call_is_allowed_on_its_existing_parents"... pass
+  run "create_access_point_requires_both_stack_tags_everywhere"... pass
+  run "run_instances_request_shape_matches_a_boundary_statement_for_every_resource_type"... pass
+  run "disassociate_address_is_allowed_on_stack_elastic_ips"... pass
+tests/deployer.tftest.hcl... tearing down
+tests/deployer.tftest.hcl... pass
+
+Success! 29 passed, 0 failed.

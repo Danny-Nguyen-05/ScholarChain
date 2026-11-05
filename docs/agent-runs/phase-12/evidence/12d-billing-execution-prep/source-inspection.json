@@ -1,0 +1,111 @@
+{
+  "timestamp": "2026-10-31T16:57:56.515358+00:00",
+  "pins": [
+    {
+      "path": "infra/terraform/billing-bootstrap/versions.tf",
+      "terraform_exact": true,
+      "aws_exact": true
+    },
+    {
+      "path": "infra/terraform/billing-execution/versions.tf",
+      "terraform_exact": true,
+      "aws_exact": true
+    },
+    {
+      "path": "infra/terraform/modules/datalake/versions.tf",
+      "terraform_exact": true,
+      "aws_exact": true
+    },
+    {
+      "path": "infra/terraform/modules/dynamodb/versions.tf",
+      "terraform_exact": true,
+      "aws_exact": true
+    },
+    {
+      "path": "infra/terraform/modules/emr/versions.tf",
+      "terraform_exact": true,
+      "aws_exact": true
+    },
+    {
+      "path": "infra/terraform/modules/foundation/bootstrap/versions.tf",
+      "terraform_exact": true,
+      "aws_exact": true
+    },
+    {
+      "path": "infra/terraform/modules/foundation/versions.tf",
+      "terraform_exact": true,
+      "aws_exact": true
+    },
+    {
+      "path": "infra/terraform/modules/identity/versions.tf",
+      "terraform_exact": true,
+      "aws_exact": true
+    },
+    {
+      "path": "infra/terraform/modules/messaging/versions.tf",
+      "terraform_exact": true,
+      "aws_exact": true
+    },
+    {
+      "path": "infra/terraform/modules/neptune/versions.tf",
+      "terraform_exact": true,
+      "aws_exact": true
+    },
+    {
+      "path": "infra/terraform/modules/network/versions.tf",
+      "terraform_exact": true,
+      "aws_exact": true
+    },
+    {
+      "path": "infra/terraform/modules/observability/versions.tf",
+      "terraform_exact": true,
+      "aws_exact": true
+    },
+    {
+      "path": "infra/terraform/modules/runtime/versions.tf",
+      "terraform_exact": true,
+      "aws_exact": true
+    },
+    {
+      "path": "infra/terraform/modules/s3vectors/versions.tf",
+      "terraform_exact": true,
+      "aws_exact": true
+    },
+    {
+      "path": "infra/terraform/modules/workflow/versions.tf",
+      "terraform_exact": true,
+      "aws_exact": true
+    },
+    {
+      "path": "infra/terraform/spikes/emr-spark/versions.tf",
+      "terraform_exact": true,
+      "aws_exact": true
+    },
+    {
+      "path": "infra/terraform/versions.tf",
+      "terraform_exact": true,
+      "aws_exact": true
+    }
+  ],
+  "locks": [
+    {
+      "path": "infra/terraform/.terraform.lock.hcl",
+      "sha256": "421b75245b0080edee2b434482ff348419a75d7a6b798d5218e0a0f9f723eaea"
+    },
+    {
+      "path": "infra/terraform/billing-bootstrap/.terraform.lock.hcl",
+      "sha256": "421b75245b0080edee2b434482ff348419a75d7a6b798d5218e0a0f9f723eaea"
+    },
+    {
+      "path": "infra/terraform/spikes/emr-spark/.terraform.lock.hcl",
+      "sha256": "421b75245b0080edee2b434482ff348419a75d7a6b798d5218e0a0f9f723eaea"
+    },
+    {
+      "path": "infra/terraform/billing-execution/.terraform.lock.hcl",
+      "sha256": "421b75245b0080edee2b434482ff348419a75d7a6b798d5218e0a0f9f723eaea"
+    }
+  ],
+  "policy_root_forbidden_blocks": [],
+  "basis": "Source inspection, not a test of output constants; no installed IAM identity inferred.",
+  "private_previous_directory_exists": false
+}

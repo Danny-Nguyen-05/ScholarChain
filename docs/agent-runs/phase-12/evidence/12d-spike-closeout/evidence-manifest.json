@@ -1,0 +1,26 @@
+{
+ "folder": "docs/agent-runs/phase-12/evidence/12d-spike-closeout",
+ "generated": "2026-11-04",
+ "files": [
+  {
+   "path": "carried-findings.md",
+   "bytes": 5531,
+   "sha256": "a90993a0887982aa0ef4d97a8fa77a0b6a7df09400b61c36e9e336fba5e8dfaf"
+  },
+  {
+   "path": "decision-12-10.md",
+   "bytes": 6667,
+   "sha256": "c8df8aace4a5f5e1b4844c35270b84dd2fe7111cc1d8e5a4958e8ea3d2b04bad"
+  },
+  {
+   "path": "human-gate-handoff.md",
+   "bytes": 4653,
+   "sha256": "a53d7348736cdfeb754ed2ccb174bf56a1cd33b4e27b523afe3fca5c572c20dd"
+  },
+  {
+   "path": "report.md",
+   "bytes": 8907,
+   "sha256": "8d323a22fe06e433bf6390328adfd98245b05220957f72e10486627196ca1fb4"
+  }
+ ]
+}

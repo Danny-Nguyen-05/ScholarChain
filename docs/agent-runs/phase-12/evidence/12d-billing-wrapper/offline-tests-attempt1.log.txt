@@ -1,0 +1,485 @@
+test_apply_exact_argv_env_and_space_paths (__main__.Features.test_apply_exact_argv_env_and_space_paths) ... ERROR
+test_apply_fail_preserves_all_recovery_including_errored (__main__.Features.test_apply_fail_preserves_all_recovery_including_errored) ... ERROR
+test_backup_fsync_failure_stops_no_readback_no_retry (__main__.Features.test_backup_fsync_failure_stops_no_readback_no_retry) ... ERROR
+test_backup_never_overwrites (__main__.Features.test_backup_never_overwrites) ... ERROR
+test_cli_rejects_dangerous_mode_and_root_overrides (__main__.Features.test_cli_rejects_dangerous_mode_and_root_overrides) ... ok
+test_copy_changed_source_rejected (__main__.Features.test_copy_changed_source_rejected) ... ok
+test_dirty_checkout_blocks (__main__.Features.test_dirty_checkout_blocks) ... ok
+test_duplicate_json_keys_rejected (__main__.Features.test_duplicate_json_keys_rejected) ... ok
+test_exact_notfound_accepted_only_known_operation (__main__.Features.test_exact_notfound_accepted_only_known_operation) ... ERROR
+test_expired_window_does_not_call_aws (__main__.Features.test_expired_window_does_not_call_aws) ... FAIL
+test_full_readback_safe_only (__main__.Features.test_full_readback_safe_only) ... ERROR
+test_gate_denies_wrong_identity_window_scope_binding (__main__.Features.test_gate_denies_wrong_identity_window_scope_binding) ... ok
+test_gate_hash_tamper_fails (__main__.Features.test_gate_hash_tamper_fails) ... ok
+test_global_operation_lock_stops_parallel_command (__main__.Features.test_global_operation_lock_stops_parallel_command) ... ERROR
+test_missing_filter_option_stops_before_live_request (__main__.Features.test_missing_filter_option_stops_before_live_request) ... FAIL
+test_no_prior_receipt_modes_do_not_call_aws (__main__.Features.test_no_prior_receipt_modes_do_not_call_aws) ... ok
+test_opaque_backup_hash_modes_fsync (__main__.Features.test_opaque_backup_hash_modes_fsync) ... ERROR
+test_owner_mismatch_rejected_before_process (__main__.Features.test_owner_mismatch_rejected_before_process) ... ok
+test_p3_error_classification_no_retry (__main__.Features.test_p3_error_classification_no_retry) ... 
+  test_p3_error_classification_no_retry (__main__.Features.test_p3_error_classification_no_retry) (outcome='denied') ... FAIL
+  test_p3_error_classification_no_retry (__main__.Features.test_p3_error_classification_no_retry) (outcome='expired') ... FAIL
+  test_p3_error_classification_no_retry (__main__.Features.test_p3_error_classification_no_retry) (outcome='throttled') ... FAIL
+  test_p3_error_classification_no_retry (__main__.Features.test_p3_error_classification_no_retry) (outcome='malformed') ... FAIL
+  test_p3_error_classification_no_retry (__main__.Features.test_p3_error_classification_no_retry) (outcome='blank') ... FAIL
+  test_p3_error_classification_no_retry (__main__.Features.test_p3_error_classification_no_retry) (outcome='exists') ... FAIL
+  test_p3_error_classification_no_retry (__main__.Features.test_p3_error_classification_no_retry) (outcome='mixed') ... FAIL
+  test_p3_error_classification_no_retry (__main__.Features.test_p3_error_classification_no_retry) (outcome='network') ... FAIL
+  test_p3_error_classification_no_retry (__main__.Features.test_p3_error_classification_no_retry) (outcome='wrong-operation') ... FAIL
+test_p3_receipt_stale_and_cross_gate_binding_stop (__main__.Features.test_p3_receipt_stale_and_cross_gate_binding_stop) ... ERROR
+test_plan_hash_rejected_before_process (__main__.Features.test_plan_hash_rejected_before_process) ... ok
+test_plan_mode_rejected_before_process (__main__.Features.test_plan_mode_rejected_before_process) ... ok
+test_plan_size_mismatch_rejected (__main__.Features.test_plan_size_mismatch_rejected) ... FAIL
+test_postfreeze_scan_complete_snapshot_and_rerun (__main__.Features.test_postfreeze_scan_complete_snapshot_and_rerun) ... ERROR
+test_preexisting_state_and_recovery_stop (__main__.Features.test_preexisting_state_and_recovery_stop) ... ok
+test_private_recipient_not_in_cli_or_logs_receipts (__main__.Features.test_private_recipient_not_in_cli_or_logs_receipts) ... ERROR
+test_readback_command_mismatch_does_not_retry (__main__.Features.test_readback_command_mismatch_does_not_retry) ... ERROR
+test_readback_matrix_sanitizer_no_private_emission (__main__.Features.test_readback_matrix_sanitizer_no_private_emission) ... ok
+test_readback_needs_backup_receipt_and_unchanged_state (__main__.Features.test_readback_needs_backup_receipt_and_unchanged_state) ... ERROR
+test_recipient_private_fixture (__main__.Features.test_recipient_private_fixture) ... ERROR
+test_replayed_apply_readback_stages_fail_before_process (__main__.Features.test_replayed_apply_readback_stages_fail_before_process) ... ERROR
+test_symlink_copy_rejected (__main__.Features.test_symlink_copy_rejected) ... ok
+test_wrong_checkout_commit_blocks (__main__.Features.test_wrong_checkout_commit_blocks) ... ok
+
+======================================================================
+ERROR: test_apply_exact_argv_env_and_space_paths (__main__.Features.test_apply_exact_argv_env_and_space_paths)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/danny/Documents/UIC/CS441/ScholarChain/scripts/billing/tests/test_budget_execution.py", line 146, in test_apply_exact_argv_env_and_space_paths
+    self.p3_apply();calls=self.calls();last=calls[-1]
+    ~~~~~~~~~~~~~^^
+  File "/Users/danny/Documents/UIC/CS441/ScholarChain/scripts/billing/tests/test_budget_execution.py", line 143, in p3_apply
+    def p3_apply(self):self.ex.p3_check();return self.ex.apply()
+                       ~~~~~~~~~~~~~~~~^^
+  File "/Users/danny/Documents/UIC/CS441/ScholarChain/scripts/billing/budget_execution.py", line 511, in p3_check
+    self.check_checkout(); self.check_files(); self.no_state(); self.check_window()
+                           ~~~~~~~~~~~~~~~~^^
+  File "/Users/danny/Documents/UIC/CS441/ScholarChain/scripts/billing/budget_execution.py", line 429, in check_files
+    secure_dir(p.primary, p.uid); secure_dir(p.backups, p.uid)
+    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/Users/danny/Documents/UIC/CS441/ScholarChain/scripts/billing/budget_execution.py", line 96, in secure_dir
+    require(not stat.S_ISLNK(st.st_mode), "SYMLINK_DIRECTORY")
+    ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/danny/Documents/UIC/CS441/ScholarChain/scripts/billing/budget_execution.py", line 51, in require
+    raise Blocked(code)
+budget_execution.Blocked: SYMLINK_DIRECTORY
+
+======================================================================
+ERROR: test_apply_fail_preserves_all_recovery_including_errored (__main__.Features.test_apply_fail_preserves_all_recovery_including_errored)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/danny/Documents/UIC/CS441/ScholarChain/scripts/billing/tests/test_budget_execution.py", line 231, in test_apply_fail_preserves_all_recovery_including_errored
+    self.ex.p3_check();self.scenario['terraform_fail']=True;self.save_scenario()
+    ~~~~~~~~~~~~~~~~^^
+  File "/Users/danny/Documents/UIC/CS441/ScholarChain/scripts/billing/budget_execution.py", line 511, in p3_check
+    self.check_checkout(); self.check_files(); self.no_state(); self.check_window()
+                           ~~~~~~~~~~~~~~~~^^
+  File "/Users/danny/Documents/UIC/CS441/ScholarChain/scripts/billing/budget_execution.py", line 429, in check_files
+    secure_dir(p.primary, p.uid); secure_dir(p.backups, p.uid)
+    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/Users/danny/Documents/UIC/CS441/ScholarChain/scripts/billing/budget_execution.py", line 96, in secure_dir
+    require(not stat.S_ISLNK(st.st_mode), "SYMLINK_DIRECTORY")
+    ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/danny/Documents/UIC/CS441/ScholarChain/scripts/billing/budget_execution.py", line 51, in require
+    raise Blocked(code)
+budget_execution.Blocked: SYMLINK_DIRECTORY
+
+======================================================================
+ERROR: test_backup_fsync_failure_stops_no_readback_no_retry (__main__.Features.test_backup_fsync_failure_stops_no_readback_no_retry)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/danny/Documents/UIC/CS441/ScholarChain/scripts/billing/tests/test_budget_execution.py", line 244, in test_backup_fsync_failure_stops_no_readback_no_retry
+    self.ex.p3_check()
+    ~~~~~~~~~~~~~~~~^^
+  File "/Users/danny/Documents/UIC/CS441/ScholarChain/scripts/billing/budget_execution.py", line 511, in p3_check
+    self.check_checkout(); self.check_files(); self.no_state(); self.check_window()
+                           ~~~~~~~~~~~~~~~~^^
+  File "/Users/danny/Documents/UIC/CS441/ScholarChain/scripts/billing/budget_execution.py", line 429, in check_files
+    secure_dir(p.primary, p.uid); secure_dir(p.backups, p.uid)
+    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/Users/danny/Documents/UIC/CS441/ScholarChain/scripts/billing/budget_execution.py", line 96, in secure_dir
+    require(not stat.S_ISLNK(st.st_mode), "SYMLINK_DIRECTORY")
+    ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/danny/Documents/UIC/CS441/ScholarChain/scripts/billing/budget_execution.py", line 51, in require
+    raise Blocked(code)
+budget_execution.Blocked: SYMLINK_DIRECTORY
+
+======================================================================
+ERROR: test_backup_never_overwrites (__main__.Features.test_backup_never_overwrites)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/danny/Documents/UIC/CS441/ScholarChain/scripts/billing/tests/test_budget_execution.py", line 256, in test_backup_never_overwrites
+    self.ex.p3_check()
+    ~~~~~~~~~~~~~~~~^^
+  File "/Users/danny/Documents/UIC/CS441/ScholarChain/scripts/billing/budget_execution.py", line 511, in p3_check
+    self.check_checkout(); self.check_files(); self.no_state(); self.check_window()
+                           ~~~~~~~~~~~~~~~~^^
+  File "/Users/danny/Documents/UIC/CS441/ScholarChain/scripts/billing/budget_execution.py", line 429, in check_files
+    secure_dir(p.primary, p.uid); secure_dir(p.backups, p.uid)
+    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/Users/danny/Documents/UIC/CS441/ScholarChain/scripts/billing/budget_execution.py", line 96, in secure_dir
+    require(not stat.S_ISLNK(st.st_mode), "SYMLINK_DIRECTORY")
+    ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/danny/Documents/UIC/CS441/ScholarChain/scripts/billing/budget_execution.py", line 51, in require
+    raise Blocked(code)
+budget_execution.Blocked: SYMLINK_DIRECTORY
+
+======================================================================
+ERROR: test_exact_notfound_accepted_only_known_operation (__main__.Features.test_exact_notfound_accepted_only_known_operation)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/danny/Documents/UIC/CS441/ScholarChain/scripts/billing/tests/test_budget_execution.py", line 218, in test_exact_notfound_accepted_only_known_operation
+    self.ex.p3_check()
+    ~~~~~~~~~~~~~~~~^^
+  File "/Users/danny/Documents/UIC/CS441/ScholarChain/scripts/billing/budget_execution.py", line 511, in p3_check
+    self.check_checkout(); self.check_files(); self.no_state(); self.check_window()
+                           ~~~~~~~~~~~~~~~~^^
+  File "/Users/danny/Documents/UIC/CS441/ScholarChain/scripts/billing/budget_execution.py", line 429, in check_files
+    secure_dir(p.primary, p.uid); secure_dir(p.backups, p.uid)
+    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/Users/danny/Documents/UIC/CS441/ScholarChain/scripts/billing/budget_execution.py", line 96, in secure_dir
+    require(not stat.S_ISLNK(st.st_mode), "SYMLINK_DIRECTORY")
+    ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/danny/Documents/UIC/CS441/ScholarChain/scripts/billing/budget_execution.py", line 51, in require
+    raise Blocked(code)
+budget_execution.Blocked: SYMLINK_DIRECTORY
+
+======================================================================
+ERROR: test_full_readback_safe_only (__main__.Features.test_full_readback_safe_only)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/danny/Documents/UIC/CS441/ScholarChain/scripts/billing/tests/test_budget_execution.py", line 156, in test_full_readback_safe_only
+    self.p3_apply();safe=self.ex.readback();text=json.dumps(safe)
+    ~~~~~~~~~~~~~^^
+  File "/Users/danny/Documents/UIC/CS441/ScholarChain/scripts/billing/tests/test_budget_execution.py", line 143, in p3_apply
+    def p3_apply(self):self.ex.p3_check();return self.ex.apply()
+                       ~~~~~~~~~~~~~~~~^^
+  File "/Users/danny/Documents/UIC/CS441/ScholarChain/scripts/billing/budget_execution.py", line 511, in p3_check
+    self.check_checkout(); self.check_files(); self.no_state(); self.check_window()
+                           ~~~~~~~~~~~~~~~~^^
+  File "/Users/danny/Documents/UIC/CS441/ScholarChain/scripts/billing/budget_execution.py", line 429, in check_files
+    secure_dir(p.primary, p.uid); secure_dir(p.backups, p.uid)
+    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/Users/danny/Documents/UIC/CS441/ScholarChain/scripts/billing/budget_execution.py", line 96, in secure_dir
+    require(not stat.S_ISLNK(st.st_mode), "SYMLINK_DIRECTORY")
+    ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/danny/Documents/UIC/CS441/ScholarChain/scripts/billing/budget_execution.py", line 51, in require
+    raise Blocked(code)
+budget_execution.Blocked: SYMLINK_DIRECTORY
+
+======================================================================
+ERROR: test_global_operation_lock_stops_parallel_command (__main__.Features.test_global_operation_lock_stops_parallel_command)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/danny/Documents/UIC/CS441/ScholarChain/scripts/billing/tests/test_budget_execution.py", line 375, in test_global_operation_lock_stops_parallel_command
+    self.ex.p3_check()
+    ~~~~~~~~~~~~~~~~^^
+  File "/Users/danny/Documents/UIC/CS441/ScholarChain/scripts/billing/budget_execution.py", line 511, in p3_check
+    self.check_checkout(); self.check_files(); self.no_state(); self.check_window()
+                           ~~~~~~~~~~~~~~~~^^
+  File "/Users/danny/Documents/UIC/CS441/ScholarChain/scripts/billing/budget_execution.py", line 429, in check_files
+    secure_dir(p.primary, p.uid); secure_dir(p.backups, p.uid)
+    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/Users/danny/Documents/UIC/CS441/ScholarChain/scripts/billing/budget_execution.py", line 96, in secure_dir
+    require(not stat.S_ISLNK(st.st_mode), "SYMLINK_DIRECTORY")
+    ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/danny/Documents/UIC/CS441/ScholarChain/scripts/billing/budget_execution.py", line 51, in require
+    raise Blocked(code)
+budget_execution.Blocked: SYMLINK_DIRECTORY
+
+======================================================================
+ERROR: test_opaque_backup_hash_modes_fsync (__main__.Features.test_opaque_backup_hash_modes_fsync)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/danny/Documents/UIC/CS441/ScholarChain/scripts/billing/tests/test_budget_execution.py", line 163, in test_opaque_backup_hash_modes_fsync
+    self.ex.p3_check()
+    ~~~~~~~~~~~~~~~~^^
+  File "/Users/danny/Documents/UIC/CS441/ScholarChain/scripts/billing/budget_execution.py", line 511, in p3_check
+    self.check_checkout(); self.check_files(); self.no_state(); self.check_window()
+                           ~~~~~~~~~~~~~~~~^^
+  File "/Users/danny/Documents/UIC/CS441/ScholarChain/scripts/billing/budget_execution.py", line 429, in check_files
+    secure_dir(p.primary, p.uid); secure_dir(p.backups, p.uid)
+    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/Users/danny/Documents/UIC/CS441/ScholarChain/scripts/billing/budget_execution.py", line 96, in secure_dir
+    require(not stat.S_ISLNK(st.st_mode), "SYMLINK_DIRECTORY")
+    ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/danny/Documents/UIC/CS441/ScholarChain/scripts/billing/budget_execution.py", line 51, in require
+    raise Blocked(code)
+budget_execution.Blocked: SYMLINK_DIRECTORY
+
+======================================================================
+ERROR: test_p3_receipt_stale_and_cross_gate_binding_stop (__main__.Features.test_p3_receipt_stale_and_cross_gate_binding_stop)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/danny/Documents/UIC/CS441/ScholarChain/scripts/billing/tests/test_budget_execution.py", line 296, in test_p3_receipt_stale_and_cross_gate_binding_stop
+    self.ex.p3_check()
+    ~~~~~~~~~~~~~~~~^^
+  File "/Users/danny/Documents/UIC/CS441/ScholarChain/scripts/billing/budget_execution.py", line 511, in p3_check
+    self.check_checkout(); self.check_files(); self.no_state(); self.check_window()
+                           ~~~~~~~~~~~~~~~~^^
+  File "/Users/danny/Documents/UIC/CS441/ScholarChain/scripts/billing/budget_execution.py", line 429, in check_files
+    secure_dir(p.primary, p.uid); secure_dir(p.backups, p.uid)
+    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/Users/danny/Documents/UIC/CS441/ScholarChain/scripts/billing/budget_execution.py", line 96, in secure_dir
+    require(not stat.S_ISLNK(st.st_mode), "SYMLINK_DIRECTORY")
+    ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/danny/Documents/UIC/CS441/ScholarChain/scripts/billing/budget_execution.py", line 51, in require
+    raise Blocked(code)
+budget_execution.Blocked: SYMLINK_DIRECTORY
+
+======================================================================
+ERROR: test_postfreeze_scan_complete_snapshot_and_rerun (__main__.Features.test_postfreeze_scan_complete_snapshot_and_rerun)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/danny/Documents/UIC/CS441/ScholarChain/scripts/billing/tests/test_budget_execution.py", line 338, in test_postfreeze_scan_complete_snapshot_and_rerun
+    self.p3_apply();self.ex.readback()
+    ~~~~~~~~~~~~~^^
+  File "/Users/danny/Documents/UIC/CS441/ScholarChain/scripts/billing/tests/test_budget_execution.py", line 143, in p3_apply
+    def p3_apply(self):self.ex.p3_check();return self.ex.apply()
+                       ~~~~~~~~~~~~~~~~^^
+  File "/Users/danny/Documents/UIC/CS441/ScholarChain/scripts/billing/budget_execution.py", line 511, in p3_check
+    self.check_checkout(); self.check_files(); self.no_state(); self.check_window()
+                           ~~~~~~~~~~~~~~~~^^
+  File "/Users/danny/Documents/UIC/CS441/ScholarChain/scripts/billing/budget_execution.py", line 429, in check_files
+    secure_dir(p.primary, p.uid); secure_dir(p.backups, p.uid)
+    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/Users/danny/Documents/UIC/CS441/ScholarChain/scripts/billing/budget_execution.py", line 96, in secure_dir
+    require(not stat.S_ISLNK(st.st_mode), "SYMLINK_DIRECTORY")
+    ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/danny/Documents/UIC/CS441/ScholarChain/scripts/billing/budget_execution.py", line 51, in require
+    raise Blocked(code)
+budget_execution.Blocked: SYMLINK_DIRECTORY
+
+======================================================================
+ERROR: test_private_recipient_not_in_cli_or_logs_receipts (__main__.Features.test_private_recipient_not_in_cli_or_logs_receipts)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/danny/Documents/UIC/CS441/ScholarChain/scripts/billing/tests/test_budget_execution.py", line 359, in test_private_recipient_not_in_cli_or_logs_receipts
+    self.p3_apply();self.ex.readback()
+    ~~~~~~~~~~~~~^^
+  File "/Users/danny/Documents/UIC/CS441/ScholarChain/scripts/billing/tests/test_budget_execution.py", line 143, in p3_apply
+    def p3_apply(self):self.ex.p3_check();return self.ex.apply()
+                       ~~~~~~~~~~~~~~~~^^
+  File "/Users/danny/Documents/UIC/CS441/ScholarChain/scripts/billing/budget_execution.py", line 511, in p3_check
+    self.check_checkout(); self.check_files(); self.no_state(); self.check_window()
+                           ~~~~~~~~~~~~~~~~^^
+  File "/Users/danny/Documents/UIC/CS441/ScholarChain/scripts/billing/budget_execution.py", line 429, in check_files
+    secure_dir(p.primary, p.uid); secure_dir(p.backups, p.uid)
+    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/Users/danny/Documents/UIC/CS441/ScholarChain/scripts/billing/budget_execution.py", line 96, in secure_dir
+    require(not stat.S_ISLNK(st.st_mode), "SYMLINK_DIRECTORY")
+    ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/danny/Documents/UIC/CS441/ScholarChain/scripts/billing/budget_execution.py", line 51, in require
+    raise Blocked(code)
+budget_execution.Blocked: SYMLINK_DIRECTORY
+
+======================================================================
+ERROR: test_readback_command_mismatch_does_not_retry (__main__.Features.test_readback_command_mismatch_does_not_retry)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/danny/Documents/UIC/CS441/ScholarChain/scripts/billing/tests/test_budget_execution.py", line 331, in test_readback_command_mismatch_does_not_retry
+    self.p3_apply();self.scenario['responses']['describe-budget']['Budget']['CostTypes']['IncludeTax']=False;self.save_scenario()
+    ~~~~~~~~~~~~~^^
+  File "/Users/danny/Documents/UIC/CS441/ScholarChain/scripts/billing/tests/test_budget_execution.py", line 143, in p3_apply
+    def p3_apply(self):self.ex.p3_check();return self.ex.apply()
+                       ~~~~~~~~~~~~~~~~^^
+  File "/Users/danny/Documents/UIC/CS441/ScholarChain/scripts/billing/budget_execution.py", line 511, in p3_check
+    self.check_checkout(); self.check_files(); self.no_state(); self.check_window()
+                           ~~~~~~~~~~~~~~~~^^
+  File "/Users/danny/Documents/UIC/CS441/ScholarChain/scripts/billing/budget_execution.py", line 429, in check_files
+    secure_dir(p.primary, p.uid); secure_dir(p.backups, p.uid)
+    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/Users/danny/Documents/UIC/CS441/ScholarChain/scripts/billing/budget_execution.py", line 96, in secure_dir
+    require(not stat.S_ISLNK(st.st_mode), "SYMLINK_DIRECTORY")
+    ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/danny/Documents/UIC/CS441/ScholarChain/scripts/billing/budget_execution.py", line 51, in require
+    raise Blocked(code)
+budget_execution.Blocked: SYMLINK_DIRECTORY
+
+======================================================================
+ERROR: test_readback_needs_backup_receipt_and_unchanged_state (__main__.Features.test_readback_needs_backup_receipt_and_unchanged_state)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/danny/Documents/UIC/CS441/ScholarChain/scripts/billing/tests/test_budget_execution.py", line 305, in test_readback_needs_backup_receipt_and_unchanged_state
+    self.ex.p3_check()
+    ~~~~~~~~~~~~~~~~^^
+  File "/Users/danny/Documents/UIC/CS441/ScholarChain/scripts/billing/budget_execution.py", line 511, in p3_check
+    self.check_checkout(); self.check_files(); self.no_state(); self.check_window()
+                           ~~~~~~~~~~~~~~~~^^
+  File "/Users/danny/Documents/UIC/CS441/ScholarChain/scripts/billing/budget_execution.py", line 429, in check_files
+    secure_dir(p.primary, p.uid); secure_dir(p.backups, p.uid)
+    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/Users/danny/Documents/UIC/CS441/ScholarChain/scripts/billing/budget_execution.py", line 96, in secure_dir
+    require(not stat.S_ISLNK(st.st_mode), "SYMLINK_DIRECTORY")
+    ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/danny/Documents/UIC/CS441/ScholarChain/scripts/billing/budget_execution.py", line 51, in require
+    raise Blocked(code)
+budget_execution.Blocked: SYMLINK_DIRECTORY
+
+======================================================================
+ERROR: test_recipient_private_fixture (__main__.Features.test_recipient_private_fixture)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/danny/Documents/UIC/CS441/ScholarChain/scripts/billing/tests/test_budget_execution.py", line 406, in test_recipient_private_fixture
+    self.assertEqual(self.ex.private_recipient(),FIXTURE_ADDRESS)
+                     ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/Users/danny/Documents/UIC/CS441/ScholarChain/scripts/billing/budget_execution.py", line 578, in private_recipient
+    file_meta(f, self.p.uid)
+    ~~~~~~~~~^^^^^^^^^^^^^^^
+  File "/Users/danny/Documents/UIC/CS441/ScholarChain/scripts/billing/budget_execution.py", line 104, in file_meta
+    secure_dir(path.parent, uid)
+    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/Users/danny/Documents/UIC/CS441/ScholarChain/scripts/billing/budget_execution.py", line 96, in secure_dir
+    require(not stat.S_ISLNK(st.st_mode), "SYMLINK_DIRECTORY")
+    ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/danny/Documents/UIC/CS441/ScholarChain/scripts/billing/budget_execution.py", line 51, in require
+    raise Blocked(code)
+budget_execution.Blocked: SYMLINK_DIRECTORY
+
+======================================================================
+ERROR: test_replayed_apply_readback_stages_fail_before_process (__main__.Features.test_replayed_apply_readback_stages_fail_before_process)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/danny/Documents/UIC/CS441/ScholarChain/scripts/billing/tests/test_budget_execution.py", line 288, in test_replayed_apply_readback_stages_fail_before_process
+    self.p3_apply();before=len(self.calls())
+    ~~~~~~~~~~~~~^^
+  File "/Users/danny/Documents/UIC/CS441/ScholarChain/scripts/billing/tests/test_budget_execution.py", line 143, in p3_apply
+    def p3_apply(self):self.ex.p3_check();return self.ex.apply()
+                       ~~~~~~~~~~~~~~~~^^
+  File "/Users/danny/Documents/UIC/CS441/ScholarChain/scripts/billing/budget_execution.py", line 511, in p3_check
+    self.check_checkout(); self.check_files(); self.no_state(); self.check_window()
+                           ~~~~~~~~~~~~~~~~^^
+  File "/Users/danny/Documents/UIC/CS441/ScholarChain/scripts/billing/budget_execution.py", line 429, in check_files
+    secure_dir(p.primary, p.uid); secure_dir(p.backups, p.uid)
+    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/Users/danny/Documents/UIC/CS441/ScholarChain/scripts/billing/budget_execution.py", line 96, in secure_dir
+    require(not stat.S_ISLNK(st.st_mode), "SYMLINK_DIRECTORY")
+    ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/danny/Documents/UIC/CS441/ScholarChain/scripts/billing/budget_execution.py", line 51, in require
+    raise Blocked(code)
+budget_execution.Blocked: SYMLINK_DIRECTORY
+
+======================================================================
+FAIL: test_expired_window_does_not_call_aws (__main__.Features.test_expired_window_does_not_call_aws)
+----------------------------------------------------------------------
+budget_execution.Blocked: SYMLINK_DIRECTORY
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/danny/Documents/UIC/CS441/ScholarChain/scripts/billing/tests/test_budget_execution.py", line 400, in test_expired_window_does_not_call_aws
+    with self.assertRaisesRegex(b.Blocked,'WINDOW_EXPIRED'):self.ex.p3_check()
+         ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "WINDOW_EXPIRED" does not match "SYMLINK_DIRECTORY"
+
+======================================================================
+FAIL: test_missing_filter_option_stops_before_live_request (__main__.Features.test_missing_filter_option_stops_before_live_request)
+----------------------------------------------------------------------
+budget_execution.Blocked: SYMLINK_DIRECTORY
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/danny/Documents/UIC/CS441/ScholarChain/scripts/billing/tests/test_budget_execution.py", line 227, in test_missing_filter_option_stops_before_live_request
+    with self.assertRaisesRegex(b.Blocked,'CLI_SHOW_FILTER_UNSUPPORTED'):self.ex.p3_check()
+         ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "CLI_SHOW_FILTER_UNSUPPORTED" does not match "SYMLINK_DIRECTORY"
+
+======================================================================
+FAIL: test_p3_error_classification_no_retry (__main__.Features.test_p3_error_classification_no_retry) (outcome='denied')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/danny/Documents/UIC/CS441/ScholarChain/scripts/billing/tests/test_budget_execution.py", line 213, in test_p3_error_classification_no_retry
+    self.assertEqual(len(self.calls())-before,2)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 2
+
+======================================================================
+FAIL: test_p3_error_classification_no_retry (__main__.Features.test_p3_error_classification_no_retry) (outcome='expired')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/danny/Documents/UIC/CS441/ScholarChain/scripts/billing/tests/test_budget_execution.py", line 213, in test_p3_error_classification_no_retry
+    self.assertEqual(len(self.calls())-before,2)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 2
+
+======================================================================
+FAIL: test_p3_error_classification_no_retry (__main__.Features.test_p3_error_classification_no_retry) (outcome='throttled')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/danny/Documents/UIC/CS441/ScholarChain/scripts/billing/tests/test_budget_execution.py", line 213, in test_p3_error_classification_no_retry
+    self.assertEqual(len(self.calls())-before,2)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 2
+
+======================================================================
+FAIL: test_p3_error_classification_no_retry (__main__.Features.test_p3_error_classification_no_retry) (outcome='malformed')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/danny/Documents/UIC/CS441/ScholarChain/scripts/billing/tests/test_budget_execution.py", line 213, in test_p3_error_classification_no_retry
+    self.assertEqual(len(self.calls())-before,2)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 2
+
+======================================================================
+FAIL: test_p3_error_classification_no_retry (__main__.Features.test_p3_error_classification_no_retry) (outcome='blank')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/danny/Documents/UIC/CS441/ScholarChain/scripts/billing/tests/test_budget_execution.py", line 213, in test_p3_error_classification_no_retry
+    self.assertEqual(len(self.calls())-before,2)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 2
+
+======================================================================
+FAIL: test_p3_error_classification_no_retry (__main__.Features.test_p3_error_classification_no_retry) (outcome='exists')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/danny/Documents/UIC/CS441/ScholarChain/scripts/billing/tests/test_budget_execution.py", line 213, in test_p3_error_classification_no_retry
+    self.assertEqual(len(self.calls())-before,2)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 2
+
+======================================================================
+FAIL: test_p3_error_classification_no_retry (__main__.Features.test_p3_error_classification_no_retry) (outcome='mixed')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/danny/Documents/UIC/CS441/ScholarChain/scripts/billing/tests/test_budget_execution.py", line 213, in test_p3_error_classification_no_retry
+    self.assertEqual(len(self.calls())-before,2)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 2
+
+======================================================================
+FAIL: test_p3_error_classification_no_retry (__main__.Features.test_p3_error_classification_no_retry) (outcome='network')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/danny/Documents/UIC/CS441/ScholarChain/scripts/billing/tests/test_budget_execution.py", line 213, in test_p3_error_classification_no_retry
+    self.assertEqual(len(self.calls())-before,2)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 2
+
+======================================================================
+FAIL: test_p3_error_classification_no_retry (__main__.Features.test_p3_error_classification_no_retry) (outcome='wrong-operation')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/danny/Documents/UIC/CS441/ScholarChain/scripts/billing/tests/test_budget_execution.py", line 213, in test_p3_error_classification_no_retry
+    self.assertEqual(len(self.calls())-before,2)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 2
+
+======================================================================
+FAIL: test_plan_size_mismatch_rejected (__main__.Features.test_plan_size_mismatch_rejected)
+----------------------------------------------------------------------
+budget_execution.Blocked: SYMLINK_DIRECTORY
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/danny/Documents/UIC/CS441/ScholarChain/scripts/billing/tests/test_budget_execution.py", line 190, in test_plan_size_mismatch_rejected
+    with self.assertRaisesRegex(b.Blocked,'PLAN_SIZE'):self.ex.p3_check()
+         ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "PLAN_SIZE" does not match "SYMLINK_DIRECTORY"
+
+----------------------------------------------------------------------
+Ran 33 tests in 0.091s
+
+FAILED (failures=12, errors=15)

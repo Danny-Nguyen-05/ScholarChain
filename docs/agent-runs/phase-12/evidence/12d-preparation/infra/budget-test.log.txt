@@ -1,0 +1,24 @@
+tests/budget.tftest.hcl... in progress
+  run "disabled_by_default"... pass
+  run "one_cumulative_before_credit_account_budget"... fail
+
+Error: Output refers to sensitive values
+
+  on outputs.tf line 2:
+   2: output "controls" {
+
+To reduce the risk of accidentally exporting sensitive data that was intended
+to be only internal, Terraform requires that any root module output
+containing sensitive data be explicitly marked as sensitive, to confirm your
+intent.
+
+If you do intend to export this data, annotate the output value as sensitive
+by adding the following argument:
+    sensitive = true
+  run "cannot_enable_without_private_subscriber"... skip
+  run "cannot_raise_shared_budget"... skip
+  run "end_must_follow_start"... skip
+tests/budget.tftest.hcl... tearing down
+tests/budget.tftest.hcl... fail
+
+Failure! 1 passed, 1 failed, 3 skipped.

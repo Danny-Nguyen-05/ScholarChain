@@ -1,0 +1,166 @@
+{
+  "scope": "Sanitized stopped-P3 diagnosis and offline source repair only",
+  "self_excluded": true,
+  "files": [
+    {
+      "path": "coordinator-report.txt",
+      "bytes": 4988,
+      "sha256": "80884ba5df52da97f75da54112d5888a84a5d910f4ffb5cceaa849b8c4300bae"
+    },
+    {
+      "path": "delegation.json",
+      "bytes": 656,
+      "sha256": "84a8c1ab387a2c451c02e1390b3a44e9bd97bca35d5b843b8dece12cadbb7c7d"
+    },
+    {
+      "path": "diagnosis/artifact-manifest.json",
+      "bytes": 853,
+      "sha256": "9f78b38955a7e116f256a6d3c1ce0c9e72a928c35f6738909852ce4db1735774"
+    },
+    {
+      "path": "diagnosis/format-confirmation.json",
+      "bytes": 320,
+      "sha256": "527c332151f4f9c9427725b71468df3ed2e2bab24b9f35ca2e474f9d270d4383"
+    },
+    {
+      "path": "diagnosis/owner-report.txt",
+      "bytes": 2987,
+      "sha256": "8179d150ea1b6164f5d24b0248354748804863bb5ca1c8ae9fddda14f6701fa1"
+    },
+    {
+      "path": "diagnosis/result-final.json",
+      "bytes": 810,
+      "sha256": "069e44b6b8a35bf7feb1adb754bb5a538bfbe65df495c10b90c231b31cedf46e"
+    },
+    {
+      "path": "diagnosis/result-v2.json",
+      "bytes": 695,
+      "sha256": "5872156023ff2b359ef99e267a1b9f0acb1756b4364a15127c99af795a90f887"
+    },
+    {
+      "path": "diagnosis/result.json",
+      "bytes": 542,
+      "sha256": "1dbcaeddbc29efab5ea3a203dff7afbbf980bcc03a0cef131f14b229ae60c4be"
+    },
+    {
+      "path": "diff-check-result.json",
+      "bytes": 145,
+      "sha256": "0f0d4e9a7a7b9b673b872e637821b5d89269b231594ed4fae224ce6c0af9daba"
+    },
+    {
+      "path": "final-status.log.txt",
+      "bytes": 3466,
+      "sha256": "908d60da204b7ec0d44341eec5e8a0c2fb91fc65dbf70114880813192b46bf55"
+    },
+    {
+      "path": "handoff-files.json",
+      "bytes": 3803,
+      "sha256": "b58dbd8b95b46b0bc340a56b78b355a6b1616cd78b683dce8a69cb49331fca68"
+    },
+    {
+      "path": "infra/a1-commands.json",
+      "bytes": 5243,
+      "sha256": "b638ab663faf53758777f778138bbede073a726c603feefe88faa148b2d80231"
+    },
+    {
+      "path": "infra/a1-regression.stdout.json",
+      "bytes": 799,
+      "sha256": "f1872d57a727393557a82eec4207f0869772b4fb9f1018c530e17bca37f21655"
+    },
+    {
+      "path": "infra/a1-result.json",
+      "bytes": 853,
+      "sha256": "9d01e7e385719e469f451c13a5e7401e046dcd304472f046f50b87bedce6dce8"
+    },
+    {
+      "path": "infra/after-readiness-commands.json",
+      "bytes": 506,
+      "sha256": "614b8ffdeb7674ac9a127b05c6b8b9418b7370cb0127561ae1c39686d6026a9b"
+    },
+    {
+      "path": "infra/artifact-manifest.json",
+      "bytes": 2212,
+      "sha256": "cfbc371dc6f3a11e859a7472ca54dfb4e36376c0ebcc6bfd504fc91a4bb72c15"
+    },
+    {
+      "path": "infra/offline-tests-attempt1.log.txt",
+      "bytes": 6679,
+      "sha256": "fc82d22157548bec861bcb988a76bc2d0d2b9f86d6679fa81614c140caf1194d"
+    },
+    {
+      "path": "infra/offline-tests-attempt2.log.txt",
+      "bytes": 7281,
+      "sha256": "3f9571d635905d66813b119a6931fb9476a94a6fdc508c7c47b12435562ace58"
+    },
+    {
+      "path": "infra/offline-tests-attempt3.log.txt",
+      "bytes": 6070,
+      "sha256": "a1fb6b2e0265017b76b93740f146333ebeb06524f06d928a3b32864998524dcb"
+    },
+    {
+      "path": "infra/owner-report.txt",
+      "bytes": 4055,
+      "sha256": "39e9bac588d5b1b09036e93ca9925b12ea3ae124f9860bcce997a479edfe0cee"
+    },
+    {
+      "path": "infra/result.json",
+      "bytes": 8499,
+      "sha256": "3aa279781e83cfe4e69b4a99dd7ad579dab7e9bf92ae104ce35a4c0d2f8d568d"
+    },
+    {
+      "path": "infra/signal-fixture-targeted-attempt1.log.txt",
+      "bytes": 232,
+      "sha256": "68f25c1f721869bdcb43fb17dbf353695fa3dff8646a27b9ae50125632bcd71f"
+    },
+    {
+      "path": "infra/signal-fixtures-after-readiness.log.txt",
+      "bytes": 376,
+      "sha256": "84f63104e3167b50eeff7f0f164e8e5aba5b7ec5a963cfc684c73fcef02c87dd"
+    },
+    {
+      "path": "infra/source-after.json",
+      "bytes": 1468,
+      "sha256": "5b0b192fa934f448f6f9e3f386541203bca7c1657fab443040b76a0c89c2181f"
+    },
+    {
+      "path": "infra/source-before.json",
+      "bytes": 1468,
+      "sha256": "3b4aadb28eac61f9c590511f6fdc7b937c0f0d5662e2ddf7266839c0de658420"
+    },
+    {
+      "path": "old-operation-preservation.json",
+      "bytes": 405,
+      "sha256": "620342a04af3d09f62384abda6a52195bab6de32e7511d4bfc630feb56790d23"
+    },
+    {
+      "path": "p3-local-metadata.json",
+      "bytes": 1253,
+      "sha256": "33ef58d50dcbe10c48a66ff8bfd9fa856c89b50f696821a745e93d6a6a6fac38"
+    },
+    {
+      "path": "preflight-status.log.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "preflight.json",
+      "bytes": 15991,
+      "sha256": "13fb736d42c94e5b8d49b3e90bb53e315d0a6550a247375e236d6cda0d0027cf"
+    },
+    {
+      "path": "preservation-check.json",
+      "bytes": 3384,
+      "sha256": "aa4821a30ff5331fd7d2a88aefd7e2ced790673da5f651b650475daf05c6519e"
+    },
+    {
+      "path": "public-address-scan.json",
+      "bytes": 360,
+      "sha256": "ae9ace70e91d83855b6032c90ab9dd25ee48f7f93e62b55820ebfc49ba6ba7b8"
+    },
+    {
+      "path": "user-failure.json",
+      "bytes": 576,
+      "sha256": "adc59445f49f63db47543cfe551c91ba3477e210051af85ceefd1cb713c8bb87"
+    }
+  ]
+}

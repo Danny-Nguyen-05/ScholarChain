@@ -1,0 +1,32 @@
+{
+  "recorded_utc": "2026-11-01T20:21:48.884177+00:00",
+  "kind": "Append-only coordinator provenance correction; earlier evidence left unchanged",
+  "finding": "D1 Low non-blocking for reviewed read-only plan",
+  "record_write_time_UTC": "2026-11-01T19:57:00.911190+00:00",
+  "record_write_meaning": "This is when coordinator wrote the user-confirmation JSON, not a receipt or execution timestamp.",
+  "user_reply_receipt_time_UTC": null,
+  "receipt_time_reason": "Not captured by available user-message/tool record; cannot infer it from file write time.",
+  "human_helper_execution_time_UTC": null,
+  "human_helper_exit_code": null,
+  "unknown_human_fields_not_invented": true,
+  "logical_sequence_from_session_history": [
+    "User pasted hidden-helper success text",
+    "Coordinator followup authorized infra specialist read-only live plan",
+    "Specialist ran protected init/plan/show",
+    "Coordinator wrote hidden-input.user-confirmation.json"
+  ],
+  "logical_order_not_independent_timestamp_proof": true,
+  "runner_metadata_before_plan_UTC": "2026-11-01T19:56:50.384782+00:00",
+  "runner_metadata_evidence": {
+    "path": "/Users/danny/Library/Application Support/ScholarChain/terraform/billing-bootstrap/notification.private.tfvars.json",
+    "mode": "0600",
+    "present": true,
+    "contents_read_or_hashed": false
+  },
+  "plan_start_UTC": "2026-11-01T19:56:51.004322+00:00",
+  "plan_end_UTC": "2026-11-01T19:56:52.779621+00:00",
+  "earlier_absent_metadata_check": "Prior public metadata check recorded file absent before human helper use; it is not a claim file remained absent at plan time. Its19:54:37Z time is reviewer-reported metadata, not user receipt time.",
+  "mitigation": "Runner required private file presence/regular type/owner0600 before plan. This supports safety, not independent proof of actual user reply time.",
+  "correction": "Previous phrase after this success confirmation describes observed message ordering only. Original JSON retained as written; record-write time must not be interpreted as user-reply receipt.",
+  "no_backdating": true
+}

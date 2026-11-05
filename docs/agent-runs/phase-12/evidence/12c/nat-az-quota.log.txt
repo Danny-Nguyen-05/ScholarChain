@@ -1,0 +1,5 @@
+{
+    "Name": "NAT gateways per Availability Zone",
+    "Value": 5.0,
+    "Code": "L-FE5A380F"
+}

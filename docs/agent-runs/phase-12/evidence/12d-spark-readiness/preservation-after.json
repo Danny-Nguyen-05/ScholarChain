@@ -1,0 +1,18 @@
+{
+  "artifact_sha256": "d52f11ebad5ec9e1ffdd1910d562023e934ce7ab62e7c74a5ffd650f8951b86b",
+  "base_head": "4232ed12a7941c6c15d6f562f4f61fdd6928ebca",
+  "completed_and_build_archives_member_checks": "all hash/size/type/path checks passed",
+  "exact_record_appends": 5,
+  "final_source_files": 6,
+  "frozen_billing_packet_preserved_by_tracked_blob_comparison": true,
+  "git_diff_check_exit": 0,
+  "human_record_bytes": 1334,
+  "human_record_sha256": "abe3a50ad7167fa01227c73e15e92a422a50609f6313bdcc56404cb61765d71a",
+  "new_actual_recipient_scan": false,
+  "observed_at": "2026-11-03T20:56:12.035171+00:00",
+  "private_reads": 0,
+  "source_before_matches_HEAD": true,
+  "source_mismatches": 0,
+  "tracked_blobs_accounted_for": 4912,
+  "unchanged_non_spark_tracked_blobs": 4907
+}

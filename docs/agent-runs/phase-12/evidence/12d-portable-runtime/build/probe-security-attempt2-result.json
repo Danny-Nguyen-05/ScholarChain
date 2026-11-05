@@ -1,0 +1,13 @@
+{
+  "stage": "probe-security",
+  "exit": 2,
+  "timed_out": false,
+  "started_at": "2026-11-04T01:00:36.896574+00:00",
+  "completed_at": "2026-11-04T01:01:37.864645+00:00",
+  "seconds": 60.96869137499016,
+  "process_id": 5782,
+  "stdout_bytes": 0,
+  "stderr_bytes": 18019,
+  "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "stderr_sha256": "ef827641e8d99fc51228db8455228900a2e7788c60d6421e96c36964e2a7ec5f"
+}

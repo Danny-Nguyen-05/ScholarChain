@@ -1,0 +1,39 @@
+{
+  "manifest_version": 1,
+  "description": "Staged S3 objects of the Phase 12D isolated EMR spike, for the per-attempt request upper bound. Every aws_s3_object in infra/terraform/spikes/emr-spark-isolated must be listed here (request_bound.py enforces it).",
+  "limits": {"put_list_per_attempt": 1000, "get_head_per_attempt": 10000},
+  "assumptions": {
+    "provider_upload_part_bytes": 5242880,
+    "provider_upload_note": "terraform-provider-aws 6.44.0 aws_s3_object uploads through the AWS SDK for Go v2 s3 manager Uploader (symbols feature/s3/manager.Uploader.Upload and s3.resourceObjectUpload observed by `strings` on the provider binary). The manager default part size is 5 MiB (SDK default, not observed in the binary); the 64 MiB figure in the work order applies only if the provider overrides it, which was not observed. 5 MiB is used because it is the larger request count.",
+    "terraform_object_tagging_puts_per_object": 1,
+    "cli_part_bytes": 8388608,
+    "cli_note": "AWS CLI v2 default multipart_threshold and multipart_chunksize are 8 MiB; used for node downloads, the collect upload and the evidence download.",
+    "retry_multiplier": 3,
+    "terraform_read_cycles": 3,
+    "bucket_resource_get_calls_per_read": 30,
+    "bucket_config_put_calls": 7,
+    "object_get_head_calls_per_read": 2,
+    "destroy_extra_list_calls": 2,
+    "destroy_delete_post_batch": 1000,
+    "bucket_objects_at_destroy_besides_staged": 2,
+    "emr_log_distinct_objects": 200,
+    "collect_max_bytes": 67108864,
+    "collect_extra_put_objects": 1,
+    "evidence_list_calls": 4,
+    "emr_log_pusher_interval_minutes": 5,
+    "emr_log_pusher_changed_objects_per_interval": 8,
+    "emr_log_pusher_final_flush_objects": 60,
+    "emr_log_pusher_note": "ASSUMPTION, not observed: EMR pushes new or changed log files about every 5 minutes (documented interval) and the number of changed objects per push is not documented. 8 per push plus a 60-object final flush is a stated estimate. The retry multiplier is NOT applied to it because the estimate is already pessimistic; changing it changes the bound linearly.",
+    "max_cluster_minutes": 120,
+    "terraform_api_calls_per_resource": {"create": 6, "read": 8, "delete": 4}
+  },
+  "staged_objects": [
+    {"id": "runtime", "terraform_resource": "aws_s3_object.runtime", "key": "staging/runtime/scholarchain-runtime.tgz", "bytes": 321876735, "bytes_source": "observed size of target/phase12d-runtime-repair-20261103/artifacts/scholarchain-spark3.5.4-scala2.13.14-java17-runtime.tgz", "consumers": ["primary", "core"], "downloader": "cli", "sha256": "789a9684f91527dfd9b97d56acce9dbfe5dd4c328299542245da92968f916de5"},
+    {"id": "inputs", "terraform_resource": "aws_s3_object.inputs", "key": "staging/inputs/g1-upstream-inputs.tgz", "bytes": 66755, "bytes_source": "observed size of g1-upstream-inputs.tgz", "consumers": ["primary"], "downloader": "cli", "sha256": "e05931ab0eec2fc66b1a0d0ab33e5b4c070faf81afcb66fc00208287b85ab558"},
+    {"id": "bootstrap", "terraform_resource": "aws_s3_object.bootstrap", "key": "staging/bootstrap/bootstrap.sh", "max_bytes": 65536, "repo_file": "emr/bootstrap.sh", "consumers": ["primary", "core"], "downloader": "emr"},
+    {"id": "run_step", "terraform_resource": "aws_s3_object.run_step", "key": "staging/bin/run-step.sh", "max_bytes": 65536, "repo_file": "emr/run-step.sh", "consumers": ["primary", "core"], "downloader": "cli"},
+    {"id": "collect_results", "terraform_resource": "aws_s3_object.collect_results", "key": "staging/bin/collect-results.sh", "max_bytes": 65536, "repo_file": "emr/collect-results.sh", "consumers": ["primary", "core"], "downloader": "cli"},
+    {"id": "g1_config", "terraform_resource": "aws_s3_object.g1_config", "key": "staging/config/spark-g1-portable.json", "max_bytes": 65536, "consumers": ["primary"], "downloader": "cli"},
+    {"id": "spark_defaults", "terraform_resource": "aws_s3_object.spark_defaults", "key": "staging/config/spark-defaults.conf", "max_bytes": 65536, "consumers": ["primary", "core"], "downloader": "cli"}
+  ]
+}

@@ -1,0 +1,111 @@
+[
+  {
+    "argv": [
+      "/tmp/scholarchain-phase12b-repair1-infra/terraform",
+      "init",
+      "-backend=false",
+      "-input=false",
+      "-no-color"
+    ],
+    "cwd": "/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/scholarchain A1 state binding nce5lcos/config",
+    "environment": {
+      "HOME": "/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/scholarchain A1 state binding nce5lcos/empty home",
+      "PATH": "/usr/bin:/bin",
+      "TF_DATA_DIR": "/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/scholarchain A1 state binding nce5lcos/tf working data",
+      "TF_CLI_CONFIG_FILE": "/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/scholarchain A1 state binding nce5lcos/no-network.tfrc",
+      "TF_IN_AUTOMATION": "1",
+      "CHECKPOINT_DISABLE": "1",
+      "AWS_EC2_METADATA_DISABLED": "true",
+      "AWS_CONFIG_FILE": "/dev/null",
+      "AWS_SHARED_CREDENTIALS_FILE": "/dev/null",
+      "AWS_PAGER": ""
+    },
+    "exit": 0,
+    "private_log_metadata": [
+      {
+        "path": "/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/scholarchain A1 state binding nce5lcos/private logs 0/a1.stderr",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/scholarchain A1 state binding nce5lcos/private logs 0/a1.stdout",
+        "bytes": 137,
+        "sha256": "0a76ebfb281fb244a932d2a80767e4bfba4c04b015e729e6670963e9a784d0bd"
+      }
+    ]
+  },
+  {
+    "argv": [
+      "/tmp/scholarchain-phase12b-repair1-infra/terraform",
+      "plan",
+      "-input=false",
+      "-no-color",
+      "-lock-timeout=30s",
+      "-state=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/scholarchain A1 state binding nce5lcos/billing.execution.tfstate",
+      "-out=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/scholarchain A1 state binding nce5lcos/billing.execution.tfplan"
+    ],
+    "cwd": "/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/scholarchain A1 state binding nce5lcos/config",
+    "environment": {
+      "HOME": "/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/scholarchain A1 state binding nce5lcos/empty home",
+      "PATH": "/usr/bin:/bin",
+      "TF_DATA_DIR": "/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/scholarchain A1 state binding nce5lcos/tf working data",
+      "TF_CLI_CONFIG_FILE": "/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/scholarchain A1 state binding nce5lcos/no-network.tfrc",
+      "TF_IN_AUTOMATION": "1",
+      "CHECKPOINT_DISABLE": "1",
+      "AWS_EC2_METADATA_DISABLED": "true",
+      "AWS_CONFIG_FILE": "/dev/null",
+      "AWS_SHARED_CREDENTIALS_FILE": "/dev/null",
+      "AWS_PAGER": ""
+    },
+    "exit": 0,
+    "private_log_metadata": [
+      {
+        "path": "/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/scholarchain A1 state binding nce5lcos/private logs 1/a1.stderr",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/scholarchain A1 state binding nce5lcos/private logs 1/a1.stdout",
+        "bytes": 570,
+        "sha256": "619b2b71f9b339966b032f29c4598a4c2fcd5c8afae353f4ade05742d9ec145c"
+      }
+    ]
+  },
+  {
+    "argv": [
+      "/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/scholarchain A1 state binding nce5lcos/toolchain/terraform-1.13.5",
+      "apply",
+      "-input=false",
+      "-no-color",
+      "-lock-timeout=30s",
+      "-state=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/scholarchain A1 state binding nce5lcos/billing.execution.tfstate",
+      "/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/scholarchain A1 state binding nce5lcos/billing.execution.tfplan"
+    ],
+    "cwd": "/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/scholarchain A1 state binding nce5lcos/config",
+    "environment": {
+      "HOME": "/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/scholarchain A1 state binding nce5lcos/empty home",
+      "PATH": "/usr/bin:/bin",
+      "TF_DATA_DIR": "/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/scholarchain A1 state binding nce5lcos/tf working data",
+      "TF_CLI_CONFIG_FILE": "/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/scholarchain A1 state binding nce5lcos/no-network.tfrc",
+      "TF_IN_AUTOMATION": "1",
+      "CHECKPOINT_DISABLE": "1",
+      "AWS_EC2_METADATA_DISABLED": "true",
+      "AWS_CONFIG_FILE": "/dev/null",
+      "AWS_SHARED_CREDENTIALS_FILE": "/dev/null",
+      "AWS_PAGER": ""
+    },
+    "exit": 0,
+    "private_log_metadata": [
+      {
+        "path": "/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/scholarchain A1 state binding nce5lcos/private logs 2/a1.stderr",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/scholarchain A1 state binding nce5lcos/private logs 2/a1.stdout",
+        "bytes": 313,
+        "sha256": "4bcd9bca660eae68e7b8a649683d71fc9a830e7f3fb58d1263d14c8bdbb5f5c7"
+      }
+    ]
+  }
+]

@@ -1,0 +1,445 @@
+{
+  "base_head": "2d637c6707ecc66a489561dd179406b6ac622e93",
+  "design_review_approved": false,
+  "excluded_only": "This evidence-manifest.json to avoid a self-hash cycle. Immutable prior evidence/source bindings are referenced and checked, not copied into this proposal.",
+  "files": [
+    {
+      "bytes": 3637,
+      "path": "docs/agent-runs/phase-12/evidence/12d-emr-design-cost/README.md",
+      "sha256": "35f79e89f7ac30c6931fc2dcf373b371a9c8a9038cb8863699c0b6054fa8cb17"
+    },
+    {
+      "bytes": 2241,
+      "path": "docs/agent-runs/phase-12/evidence/12d-emr-design-cost/append-only-records.json",
+      "sha256": "eb8b5facc180925c76168fbf2fa59db5eb64e5ea98b6d89a45bce4fd16fa5eb9"
+    },
+    {
+      "bytes": 1477,
+      "path": "docs/agent-runs/phase-12/evidence/12d-emr-design-cost/baseline.json",
+      "sha256": "07c9e1eee29e629b9fbf90282a60b949fb95ed332ef0d3bdbc42f2616287da00"
+    },
+    {
+      "bytes": 5237,
+      "path": "docs/agent-runs/phase-12/evidence/12d-emr-design-cost/coordinator-report.md",
+      "sha256": "df6e00843a7b8d5d96da8d01bf41568d4389d26cfdffac2b2e14125b3643870d"
+    },
+    {
+      "bytes": 40908,
+      "path": "docs/agent-runs/phase-12/evidence/12d-emr-design-cost/cost-calculations.json",
+      "sha256": "8b25e1f3846cd58ddf8884fcd8a0bc119bfa5bc0200f3864cc1cd8f5901e932d"
+    },
+    {
+      "bytes": 9691,
+      "path": "docs/agent-runs/phase-12/evidence/12d-emr-design-cost/cost-proposal.md",
+      "sha256": "c7d8e80949709b0e9eb3a8f66d413a193582b4490a0918c851f18f2bcf0aa9c3"
+    },
+    {
+      "bytes": 3640,
+      "path": "docs/agent-runs/phase-12/evidence/12d-emr-design-cost/fetch-public-prices.py",
+      "sha256": "3d3e2f1a01ef2740db884a3464d4fcb48718f6e7be8acce3d982b4481462374e"
+    },
+    {
+      "bytes": 23609,
+      "path": "docs/agent-runs/phase-12/evidence/12d-emr-design-cost/infra/design-proposal.md",
+      "sha256": "4448933148ee88262f1da09f33f25c7ed2520a4652deb489487d43b6f87f2831"
+    },
+    {
+      "bytes": 725,
+      "path": "docs/agent-runs/phase-12/evidence/12d-emr-design-cost/infra/evidence-manifest.json",
+      "sha256": "484ceab795e2aaf4b1f20231d1f3d206c7e1c2c685d7e24311af1e1331d494be"
+    },
+    {
+      "bytes": 6052,
+      "path": "docs/agent-runs/phase-12/evidence/12d-emr-design-cost/infra/owner-report.md",
+      "sha256": "390a138114bce77a82207cbc87b10aae1247c706ee41c6682301383e24d3b20d"
+    },
+    {
+      "bytes": 2493,
+      "path": "docs/agent-runs/phase-12/evidence/12d-emr-design-cost/infra/resource-quantity-contract.json",
+      "sha256": "72b79394ae6bfa944478e6d7d94fd4dd8a507753e71b5088978bea2424c170c9"
+    },
+    {
+      "bytes": 1676,
+      "path": "docs/agent-runs/phase-12/evidence/12d-emr-design-cost/infra/source-bindings.json",
+      "sha256": "c0ca60e938c1d34c9b1c2f3eff0d46b48fc48ebdc5fa325dec77efb2fb2bb684"
+    },
+    {
+      "bytes": 7735,
+      "path": "docs/agent-runs/phase-12/evidence/12d-emr-design-cost/infra/sources.json",
+      "sha256": "139a7e5b52f4fb5ff6e06983c5f83f361f8c1a08f77dd5b43788619a23448377"
+    },
+    {
+      "bytes": 2944,
+      "path": "docs/agent-runs/phase-12/evidence/12d-emr-design-cost/l1-wording-repair/before/README.md",
+      "sha256": "0540882777980039763b4a0ea43d8fc5f9b74332121aaeed51bbb89d59ef1794"
+    },
+    {
+      "bytes": 2241,
+      "path": "docs/agent-runs/phase-12/evidence/12d-emr-design-cost/l1-wording-repair/before/append-only-records.json",
+      "sha256": "eb8b5facc180925c76168fbf2fa59db5eb64e5ea98b6d89a45bce4fd16fa5eb9"
+    },
+    {
+      "bytes": 5197,
+      "path": "docs/agent-runs/phase-12/evidence/12d-emr-design-cost/l1-wording-repair/before/coordinator-report.md",
+      "sha256": "6b70550079cde431bb81dd489cc11428da72ef7781360016363700caf7b85170"
+    },
+    {
+      "bytes": 40878,
+      "path": "docs/agent-runs/phase-12/evidence/12d-emr-design-cost/l1-wording-repair/before/cost-calculations.json",
+      "sha256": "a8520802baf6f9841bed7a3b50439a389acde3105a7c6b6d90172235a5a7d3d8"
+    },
+    {
+      "bytes": 9665,
+      "path": "docs/agent-runs/phase-12/evidence/12d-emr-design-cost/l1-wording-repair/before/cost-proposal.md",
+      "sha256": "ead4541c5e74f674c9d0fc9ef88c3ab6f8cfe0a92ae9c0c6afb509c9eda9d119"
+    },
+    {
+      "bytes": 14180,
+      "path": "docs/agent-runs/phase-12/evidence/12d-emr-design-cost/l1-wording-repair/before/evidence-manifest.json",
+      "sha256": "4c6e312f4f5d3c8ef8568c17c69e5e8dad0d4ed1a5dd1d62af073ef4e3c2ecb2"
+    },
+    {
+      "bytes": 171910,
+      "path": "docs/agent-runs/phase-12/evidence/12d-emr-design-cost/l1-wording-repair/before/phase-owner-report.md",
+      "sha256": "218e5c69ff201cd0115acc0a60171590b2dd829e6e9a5197b70ada7e2b5ef8ad"
+    },
+    {
+      "bytes": 5265,
+      "path": "docs/agent-runs/phase-12/evidence/12d-emr-design-cost/l1-wording-repair/before/record-suffixes/owner-report.md",
+      "sha256": "0c52431f2f3e3be1291858cd247f646b99bf37e1e7fea9d15bfdf576dd239a2a"
+    },
+    {
+      "bytes": 13982,
+      "path": "docs/agent-runs/phase-12/evidence/12d-emr-design-cost/l1-wording-repair/before/replay-cost.py",
+      "sha256": "a0e5f5f7d231f2041761f2eced6d3addebe88f3c9c5a41d78022ad957baf36e3"
+    },
+    {
+      "bytes": 800301,
+      "path": "docs/agent-runs/phase-12/evidence/12d-emr-design-cost/l1-wording-repair/before-bindings.json",
+      "sha256": "eebdb96980708f902af46fbeb326042dfca0626c009251c7c24aab8ddc530fbb"
+    },
+    {
+      "bytes": 3354,
+      "path": "docs/agent-runs/phase-12/evidence/12d-emr-design-cost/l1-wording-repair/coordinator-report.md",
+      "sha256": "58bb29c17f687b6eafe5b1b710f60197f0f4861c85605a0062ac038da723e51a"
+    },
+    {
+      "bytes": 2133,
+      "path": "docs/agent-runs/phase-12/evidence/12d-emr-design-cost/l1-wording-repair/current-record-bindings.json",
+      "sha256": "eb62a86393be5859da56cd1eff3a3ada0a19e368c46683656049e24a3693f5c6"
+    },
+    {
+      "bytes": 3283,
+      "path": "docs/agent-runs/phase-12/evidence/12d-emr-design-cost/l1-wording-repair/record-suffixes/owner-report.md",
+      "sha256": "93a6141b79495f1cf1de22f4ab2a584a5fb29a082c67b4f4f8413a9c2f2ee8a7"
+    },
+    {
+      "bytes": 379,
+      "path": "docs/agent-runs/phase-12/evidence/12d-emr-design-cost/l1-wording-repair/record-suffixes/prompt.md",
+      "sha256": "cb811bc9ffde707015016aec43c4f7e50a63050e9c46fea238385b01d9376c7e"
+    },
+    {
+      "bytes": 399,
+      "path": "docs/agent-runs/phase-12/evidence/12d-emr-design-cost/l1-wording-repair/record-suffixes/repairs.md",
+      "sha256": "dfb1ddfe3e2b4afbead2631b811154383e979dc91127ee36c24d9db6a6958b75"
+    },
+    {
+      "bytes": 478,
+      "path": "docs/agent-runs/phase-12/evidence/12d-emr-design-cost/l1-wording-repair/record-suffixes/review.md",
+      "sha256": "e4816a7cebd2299d862381d52fb6fb5f700694182ec2997de7b1b4607e8c0b9a"
+    },
+    {
+      "bytes": 487,
+      "path": "docs/agent-runs/phase-12/evidence/12d-emr-design-cost/l1-wording-repair/record-suffixes/test-report.md",
+      "sha256": "e00e539402b48283e9e7982d09545aa83018e5e6dc1180ff4e21a8d2206e3bf7"
+    },
+    {
+      "bytes": 741,
+      "path": "docs/agent-runs/phase-12/evidence/12d-emr-design-cost/l1-wording-repair/snapshot-note.json",
+      "sha256": "61961dc0f65e786e28f9e82ee268a4e4f72afcb3613b2a691124792397fc96ea"
+    },
+    {
+      "bytes": 8320,
+      "path": "docs/agent-runs/phase-12/evidence/12d-emr-design-cost/l1-wording-repair/user-supplied-review.txt",
+      "sha256": "46787bc9cabc2377b87004c570ff9b51e39cb005d5209c5b30e45655ae8d44a0"
+    },
+    {
+      "bytes": 2854,
+      "path": "docs/agent-runs/phase-12/evidence/12d-emr-design-cost/l1-wording-repair/validate-wording-repair.py",
+      "sha256": "de14aa895a7946c02d611cd24157a75329a4ac37e0e81e2db464c106591d9454"
+    },
+    {
+      "bytes": 3314,
+      "path": "docs/agent-runs/phase-12/evidence/12d-emr-design-cost/l1-wording-repair/validation.json",
+      "sha256": "62b19ae528aa440a4806316d5f6f223dbc51b2ec4b4826bf8c2478b6e205d8f8"
+    },
+    {
+      "bytes": 3869,
+      "path": "docs/agent-runs/phase-12/evidence/12d-emr-design-cost/next-work-order-proposal.md",
+      "sha256": "d619cad3dd6c6d8d76e3ee7ecfc3b1349aa50e0783700e5d8857287e1531e256"
+    },
+    {
+      "bytes": 923,
+      "path": "docs/agent-runs/phase-12/evidence/12d-emr-design-cost/preservation.json",
+      "sha256": "e515b4e4cb033a96a2ec420f5545de69265ff02966c26693a352535c9e089228"
+    },
+    {
+      "bytes": 32815,
+      "path": "docs/agent-runs/phase-12/evidence/12d-emr-design-cost/prior-cost-model/cost-calculations.json",
+      "sha256": "72889909bdf186035ebac0b48feb94b79a1be309e9f260514c6d921c2a5b5996"
+    },
+    {
+      "bytes": 13284,
+      "path": "docs/agent-runs/phase-12/evidence/12d-emr-design-cost/prior-cost-model/replay-cost.py",
+      "sha256": "f6656d3e29884eccb942676c2341bc60bf62fcb5670961f92affedceab8a4e1d"
+    },
+    {
+      "bytes": 30259,
+      "path": "docs/agent-runs/phase-12/evidence/12d-emr-design-cost/prior-cost-model/selected-rates.json",
+      "sha256": "7b6cf57668c62547440b91cac3ec0ede97c7264483eb5baaa9aa66af1e63c2d8"
+    },
+    {
+      "bytes": 18262,
+      "path": "docs/agent-runs/phase-12/evidence/12d-emr-design-cost/public-fetch-summary.json",
+      "sha256": "14e6e8297a4ebf0e0e23ea4374371e38369011c7322fc4483b32a5e6671d9800"
+    },
+    {
+      "bytes": 28320,
+      "path": "docs/agent-runs/phase-12/evidence/12d-emr-design-cost/public-prices/cloudwatch.response.gz",
+      "sha256": "6ae01dd58f162f3719f6167307d98dcaabe4a5d5ef4494253c345954805ce6ca"
+    },
+    {
+      "bytes": 655,
+      "path": "docs/agent-runs/phase-12/evidence/12d-emr-design-cost/public-prices/ebs-alternative-fetch.json",
+      "sha256": "1bd3d4901977664a733f3235a7ff5a5bb1af304cc33af08e781ed0ef9401425b"
+    },
+    {
+      "bytes": 644,
+      "path": "docs/agent-runs/phase-12/evidence/12d-emr-design-cost/public-prices/ebs-correct-fetch.json",
+      "sha256": "434f457ccc638751f324eaf7908deb788d74ee2ff80f515a9bfbe417c32e135e"
+    },
+    {
+      "bytes": 443,
+      "path": "docs/agent-runs/phase-12/evidence/12d-emr-design-cost/public-prices/ebs-fetch.json",
+      "sha256": "da5fbff7024f4fe3d4b259ecbcfa9a0cc538e573df0250c05697fadb84d9bf3c"
+    },
+    {
+      "bytes": 58525,
+      "path": "docs/agent-runs/phase-12/evidence/12d-emr-design-cost/public-prices/ebs-page.response.gz",
+      "sha256": "1062e591e536ce15fa5082b30e5e48eed8970d395228c657cea560ae40809501"
+    },
+    {
+      "bytes": 37725,
+      "path": "docs/agent-runs/phase-12/evidence/12d-emr-design-cost/public-prices/ebs.response.gz",
+      "sha256": "315e3c4cae72e16718dc63cea42c12df2fe69120a95938838f08a5696f595618"
+    },
+    {
+      "bytes": 49336,
+      "path": "docs/agent-runs/phase-12/evidence/12d-emr-design-cost/public-prices/ec2-linux-ohio.response.gz",
+      "sha256": "e0ecda4cbcb44c3f835caed458bddf7950af943520ca5ae1cc4475844cf90838"
+    },
+    {
+      "bytes": 55360,
+      "path": "docs/agent-runs/phase-12/evidence/12d-emr-design-cost/public-prices/efs-page.response.gz",
+      "sha256": "29d380b742abbf2039df7f67f1c448349d84249ad96fc4577a5cb1d8d2bc9a11"
+    },
+    {
+      "bytes": 1831,
+      "path": "docs/agent-runs/phase-12/evidence/12d-emr-design-cost/public-prices/efs.response.gz",
+      "sha256": "c8ed44123654e33906dc7eb288161611cd816df0d513da9ca3d518b6ce78651d"
+    },
+    {
+      "bytes": 55195,
+      "path": "docs/agent-runs/phase-12/evidence/12d-emr-design-cost/public-prices/emr.response.gz",
+      "sha256": "6d509fd4ad49a5f8875909876c6f1a3eccd220ae21dc4a021145f2dd172f6d1a"
+    },
+    {
+      "bytes": 3032,
+      "path": "docs/agent-runs/phase-12/evidence/12d-emr-design-cost/public-prices/eventbridge.response.gz",
+      "sha256": "b2d45cb0b21fae88d5485b4782231b98c565eeb403c3e556d347b32eb4d530d6"
+    },
+    {
+      "bytes": 13917,
+      "path": "docs/agent-runs/phase-12/evidence/12d-emr-design-cost/public-prices/fetch-manifest.json",
+      "sha256": "948bc0ee15fb543c188d559e2c6882f233027cf4a5439536314401b9f90ba5c1"
+    },
+    {
+      "bytes": 1212,
+      "path": "docs/agent-runs/phase-12/evidence/12d-emr-design-cost/public-prices/guard-services-fetch.json",
+      "sha256": "721664a580ff677ce0ddaddc3ce938b1705aa039fb9ae457bb92eba3dca23c59"
+    },
+    {
+      "bytes": 51430,
+      "path": "docs/agent-runs/phase-12/evidence/12d-emr-design-cost/public-prices/kms-page.response.gz",
+      "sha256": "5a459e823c0bbb28ad9bea0d53ffe39c857eefbbd618188af226eaac1c7dc868"
+    },
+    {
+      "bytes": 2037,
+      "path": "docs/agent-runs/phase-12/evidence/12d-emr-design-cost/public-prices/kms.response.gz",
+      "sha256": "f27b9e2baec69a2046870d8c80e8f74e96f569cf5991944ab46fce51d42f6523"
+    },
+    {
+      "bytes": 47061,
+      "path": "docs/agent-runs/phase-12/evidence/12d-emr-design-cost/public-prices/lambda.response.gz",
+      "sha256": "1025146374ea8730825293ba9cb8351d9580d1037d1c46868f01b3dd290b49ac"
+    },
+    {
+      "bytes": 460,
+      "path": "docs/agent-runs/phase-12/evidence/12d-emr-design-cost/public-prices/pricing-loader-fetch.json",
+      "sha256": "4e75bfeec7e8d96e72ec8a75f0899b4b3ec052527829edf6fae7c993b9b43ae1"
+    },
+    {
+      "bytes": 144918,
+      "path": "docs/agent-runs/phase-12/evidence/12d-emr-design-cost/public-prices/pricing-loader.response.gz",
+      "sha256": "b6e1c739e9e3a7e65f4b87d0bb144da4c639934df599b1a31b3dc036cba2a574"
+    },
+    {
+      "bytes": 37205,
+      "path": "docs/agent-runs/phase-12/evidence/12d-emr-design-cost/public-prices/s3.response.gz",
+      "sha256": "3e7855db9648779eaf5708e40478307951ca76a583d68eebf98a5d56dbf0387f"
+    },
+    {
+      "bytes": 8049,
+      "path": "docs/agent-runs/phase-12/evidence/12d-emr-design-cost/public-prices/sns.response.gz",
+      "sha256": "9fca5bfc1c385d5bb6d4532daf3410f9f837399f4dddc5e11a338b62197f6830"
+    },
+    {
+      "bytes": 2251,
+      "path": "docs/agent-runs/phase-12/evidence/12d-emr-design-cost/public-prices/sqs.response.gz",
+      "sha256": "f22eb70e40b0911c104534f83c870eb4d0b09fe0dbd3352bd94c8d623fb5ff1d"
+    },
+    {
+      "bytes": 1711,
+      "path": "docs/agent-runs/phase-12/evidence/12d-emr-design-cost/public-prices/states.response.gz",
+      "sha256": "b6d581e263ac54fc2188ac739a348acb040489dfd75e9c0d0c066c8ed7da1db6"
+    },
+    {
+      "bytes": 57438,
+      "path": "docs/agent-runs/phase-12/evidence/12d-emr-design-cost/public-prices/vpc-page.response.gz",
+      "sha256": "ae6323933d1f941515f0a1baba975798651d5e5d767d3ac14a99fc932e87efd3"
+    },
+    {
+      "bytes": 6552,
+      "path": "docs/agent-runs/phase-12/evidence/12d-emr-design-cost/public-prices/vpc.response.gz",
+      "sha256": "8597d04bfa4a17ca786f6c4a8f6253ecb2d6a5b3f691c433c77921107cfc4f06"
+    },
+    {
+      "bytes": 5305,
+      "path": "docs/agent-runs/phase-12/evidence/12d-emr-design-cost/record-suffixes/owner-report.md",
+      "sha256": "eea5cd6a345173431e19a1c8914e3264c2c5898e6aa6256dd7f5040c3d612b46"
+    },
+    {
+      "bytes": 3332,
+      "path": "docs/agent-runs/phase-12/evidence/12d-emr-design-cost/record-suffixes/prompt.md",
+      "sha256": "5f6174fb4bed35596eff7cca18f53c530bdbdc104b2583667e74b386f456e071"
+    },
+    {
+      "bytes": 2662,
+      "path": "docs/agent-runs/phase-12/evidence/12d-emr-design-cost/record-suffixes/repairs.md",
+      "sha256": "19bde38eeb2c8045605c02696c879f294977bd5f0802919c4ab8e97448c3aeb3"
+    },
+    {
+      "bytes": 655,
+      "path": "docs/agent-runs/phase-12/evidence/12d-emr-design-cost/record-suffixes/review.md",
+      "sha256": "3bb321756874078dad24e320e0f0daac1c9e91aeca504f809ddfbd3bc76e688d"
+    },
+    {
+      "bytes": 914,
+      "path": "docs/agent-runs/phase-12/evidence/12d-emr-design-cost/record-suffixes/test-report.md",
+      "sha256": "cdb561116373c4158119813efdef5a0768607fb0225493b95a11170dbad6a5a5"
+    },
+    {
+      "bytes": 14012,
+      "path": "docs/agent-runs/phase-12/evidence/12d-emr-design-cost/replay-cost.py",
+      "sha256": "acd8f23684f3dc4607302cee9fe1732bf2f7946f28b6e2d5a776dfb8f37ae1a3"
+    },
+    {
+      "bytes": 2594,
+      "path": "docs/agent-runs/phase-12/evidence/12d-emr-design-cost/research-and-calculation-errata.md",
+      "sha256": "8b861bfe147199bcee20c3a5d38b16505b31a907f9f046293dbb8a885fe6e6a1"
+    },
+    {
+      "bytes": 30259,
+      "path": "docs/agent-runs/phase-12/evidence/12d-emr-design-cost/selected-rates.json",
+      "sha256": "7b6cf57668c62547440b91cac3ec0ede97c7264483eb5baaa9aa66af1e63c2d8"
+    },
+    {
+      "bytes": 1176,
+      "path": "docs/agent-runs/phase-12/evidence/12d-emr-design-cost/validation-result.json",
+      "sha256": "162a8614b1bb63283c211e9bb402605a3c633f5f544dd896ec43d366b2eb2d38"
+    },
+    {
+      "bytes": 3264,
+      "path": "docs/agent-runs/phase-12/evidence/12d-emr-design-cost/work-order.md",
+      "sha256": "8a448a835bfac797299079cf5928fef8134b401d2a416f15cb5a75edf4f3e4a1"
+    },
+    {
+      "bytes": 175233,
+      "path": "docs/agent-runs/phase-12/owner-report.md",
+      "sha256": "22e1ed30538cd39c1f778199adf40b65856ad9b40688c15ad73b9bb988d0f49f"
+    },
+    {
+      "bytes": 94470,
+      "path": "docs/agent-runs/phase-12/prompt.md",
+      "sha256": "0de03fca41d4d56ecddb8c5af348a28bc7cc8c2e7a7dd02f79f12d3bfebd6171"
+    },
+    {
+      "bytes": 76196,
+      "path": "docs/agent-runs/phase-12/repairs.md",
+      "sha256": "cb8dc5bfee22a6851ee0506821e123d79519bffbde2f444de948ef3a92402ee8"
+    },
+    {
+      "bytes": 263997,
+      "path": "docs/agent-runs/phase-12/review.md",
+      "sha256": "b77ae549944524166e578937d8381c5d23a037519e316ba47d10c5af1ea7afad"
+    },
+    {
+      "bytes": 150000,
+      "path": "docs/agent-runs/phase-12/test-report.md",
+      "sha256": "9de3467bd763608a294f57f48a0383017a4416a44c83ad611cb0f90387e181c3"
+    }
+  ],
+  "l1_wording_repair": {
+    "before_snapshots_and_records": "l1-wording-repair/",
+    "current_entry_count": 79,
+    "historical_preservation_records_are_pre_cleanup_and_pre_repair": true,
+    "no_prompt_file_recreated": true,
+    "previous_manifest_sha256": "4c6e312f4f5d3c8ef8568c17c69e5e8dad0d4ed1a5dd1d62af073ef4e3c2ecb2",
+    "review_original_manifest_sha256": "60025aeb471b62756355b28d91fa3a4179277b2256f37f4245976466717d9556",
+    "scope": "Label only: ancillary resources active24h total,21h beyond nominal; USD7.52 unchanged. Independent recheck pending."
+  },
+  "launch_authorized": false,
+  "phase12d_complete": false,
+  "subsequent_repository_prompt_cleanup": {
+    "historical_preservation_records_are_pre_cleanup": true,
+    "ledger_path": "docs/agent-runs/phase-12/reviewer-prompt-removal.json",
+    "ledger_sha256": "e78faac80df0dd5dea5acf7e0c5633e3e50cbf0d0c020c81ca0fef03228cf812",
+    "previous_manifest_sha256": "e2af8a88a11025133d5ee3677a4b41068ddbd2a7d0dfda9802156f5d222b04c6",
+    "refreshed_entries_previous_bindings": [
+      {
+        "bytes": 2490,
+        "path": "docs/agent-runs/phase-12/evidence/12d-emr-design-cost/README.md",
+        "sha256": "9c89a609be4b39abb86bfc0bf20e4c057e8652fd405af7d05770621cff60c7a7"
+      },
+      {
+        "bytes": 97967,
+        "path": "docs/agent-runs/phase-12/prompt.md",
+        "sha256": "25bf63e4327cc8d02f0c6cb2ccc8aa43311da5bfc7652609d8317a2dc177e716"
+      }
+    ]
+  },
+  "user_requested_prompt_removal": {
+    "current_entries": 58,
+    "delivery": "Chat only; no replacement review-prompt file created.",
+    "observed_at": "2026-11-03T22:25:22.552985+00:00",
+    "previous_entries": 59,
+    "previous_manifest_sha256": "60025aeb471b62756355b28d91fa3a4179277b2256f37f4245976466717d9556",
+    "readme_link_updated": true,
+    "removed_entry": {
+      "bytes": 6144,
+      "path": "docs/agent-runs/phase-12/reviewer-prompt-12d-emr-design-cost.md",
+      "sha256": "341458ba695ddd1d6986daaeb5bc049c2ea8985f090c673633223696ad7f5e1f"
+    },
+    "request": "delete the reviewerprompt md for me"
+  }
+}

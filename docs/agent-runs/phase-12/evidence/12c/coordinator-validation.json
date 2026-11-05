@@ -1,0 +1,67 @@
+{
+  "created_utc": "2026-10-30T18:37:49.551314+00:00",
+  "base_sha": "3b0855b9657a72b30e8ac43bd484161a9b886c79",
+  "baseline_files": 3813,
+  "unchanged_baseline_files": 3801,
+  "changed_baseline_paths": [
+    "docs/agent-runs/phase-12/owner-report.md",
+    "docs/agent-runs/phase-12/prompt.md",
+    "docs/agent-runs/phase-12/repairs.md",
+    "docs/agent-runs/phase-12/test-report.md",
+    "infra/terraform/README.md",
+    "infra/terraform/modules/identity/main.tf",
+    "infra/terraform/modules/identity/outputs.tf",
+    "infra/terraform/modules/identity/phase12b.tf",
+    "infra/terraform/modules/observability/main.tf",
+    "infra/terraform/modules/workflow/main.tf",
+    "infra/terraform/phase12b-variables.tf",
+    "infra/terraform/tests/phase12b.tftest.hcl"
+  ],
+  "prefix_preserved_records": [
+    "docs/agent-runs/phase-12/owner-report.md",
+    "docs/agent-runs/phase-12/prompt.md",
+    "docs/agent-runs/phase-12/repairs.md",
+    "docs/agent-runs/phase-12/test-report.md"
+  ],
+  "prior_phase12_files_unchanged": 248,
+  "human_gate_files_verified_untouched": [
+    {
+      "path": "docs/agent-runs/phase-08/human-gate.md",
+      "bytes": 3457,
+      "sha256": "b8d8530504613a25659651942cd1f8330be63b6d2ccc03e06d32e9a86c95b755",
+      "mtime_ns": 1793381004729978645
+    },
+    {
+      "path": "docs/agent-runs/phase-09/human-gate.md",
+      "bytes": 3466,
+      "sha256": "4cf3598f78d72f3e6d7f455eadd227843bf8a497c14878413356a2a1df888124",
+      "mtime_ns": 1793381004785333717
+    },
+    {
+      "path": "docs/agent-runs/phase-10/human-gate.md",
+      "bytes": 3023,
+      "sha256": "98dc3310d7c6b9aa082a690f4e050b0426c5c38d97aa728dbc2968b3f8021ee6",
+      "mtime_ns": 1793381004851414451
+    },
+    {
+      "path": "docs/agent-runs/phase-11/human-gate.md",
+      "bytes": 3382,
+      "sha256": "0414cc8b40eaf867823956dc5679d21af0e84595ae7b8e71f50102e323e62b29",
+      "mtime_ns": 1793381013841069740
+    }
+  ],
+  "freeze_files": 190,
+  "freeze_current_mismatches": 0,
+  "pins_files_verified": 14,
+  "lock_unchanged": true,
+  "gitignore_unchanged": true,
+  "native_and_coordinator_logs_verified": 28,
+  "private_plan_outputs_metadata_only": 2,
+  "literal_notification_email_absent": true,
+  "retained_existing_drive_path_mentions_only": [
+    "phase12-plan-at-start.md",
+    "reviewer-work-order-12c.txt"
+  ],
+  "build_processes_remaining": 0,
+  "note": "Coordinator complete XML collection is build/build-validation.json; original runner result retained unchanged."
+}

@@ -1,0 +1,42 @@
+{
+  "records": [
+    {
+      "path": "docs/agent-runs/phase-12/prompt.md",
+      "preflight_prefix_preserved": true,
+      "head_prefix_preserved": true,
+      "current_sha256": "67fb9d2eccd8e9ddfd0fe6d35a3f1c5dea91e031ce033a059efeb06cb67ec894",
+      "current_bytes": 72909
+    },
+    {
+      "path": "docs/agent-runs/phase-12/review.md",
+      "preflight_prefix_preserved": true,
+      "head_prefix_preserved": true,
+      "current_sha256": "6b39f772df2fdefa36f262396199284fb3c27562da1000052877cc1211aa3766",
+      "current_bytes": 175385
+    },
+    {
+      "path": "docs/agent-runs/phase-12/repairs.md",
+      "preflight_prefix_preserved": true,
+      "head_prefix_preserved": true,
+      "current_sha256": "55fd90adb74b99b9cf60e6f22d4c6d416501096858c3eef698a3e289d0d3d561",
+      "current_bytes": 45693
+    },
+    {
+      "path": "docs/agent-runs/phase-12/owner-report.md",
+      "preflight_prefix_preserved": true,
+      "head_prefix_preserved": true,
+      "current_sha256": "01562777836f341e68cc29b4f55eece5aab7003b4e409e8bcc88d1af1c0ac5f6",
+      "current_bytes": 80322
+    },
+    {
+      "path": "docs/agent-runs/phase-12/test-report.md",
+      "preflight_prefix_preserved": true,
+      "head_prefix_preserved": true,
+      "current_sha256": "2436d5cdf90feef70ad0f32f26fa0f5be4f6f19ab38e2ccb30f5baad7ceb0dd8",
+      "current_bytes": 73609
+    }
+  ],
+  "count": 5,
+  "prior_packet_files_preserved": 96,
+  "human_record_agent_writes": 0
+}

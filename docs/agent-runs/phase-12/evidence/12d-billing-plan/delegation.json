@@ -1,0 +1,13 @@
+{
+  "task": "/root/infra_12d_billing_plan",
+  "role": "infra-engineer",
+  "model": "inherited parent; no override; exact identifier not exposed",
+  "source_ownership": [
+    "infra/terraform/billing-bootstrap/README.md"
+  ],
+  "execution": "authorized native checks and real read-only plan, protected outside-Git copy",
+  "status": "completed",
+  "active_jobs": false,
+  "child_agents_allowed": false,
+  "reviewers_launched": false
+}

@@ -1,0 +1,30 @@
+{
+  "url": "https://raw.githubusercontent.com/hashicorp/terraform-provider-aws/v6.44.0/internal/service/budgets/budget.go",
+  "source_sha256": "519c457b7d2bfa06cdef8a9177f01370bbffbf683ff7a27eb6f0afdcd553d596",
+  "source_bytes": 45499,
+  "line_number_basis": "Actual raw UTF-8 source splitlines, one-based; not web-rendered indexed lines",
+  "fallback_range": [
+    588,
+    594
+  ],
+  "if_empty_line": 588,
+  "observation_comment_line": 589,
+  "percentage_assignment_line": 591,
+  "different_value_branch_lines": [
+    592,
+    594
+  ],
+  "short_excerpt_25words_or_less": [
+    {
+      "line": 588,
+      "text": "if notification.ThresholdType == \"\" {"
+    },
+    {
+      "line": 591,
+      "text": "tfMap[\"threshold_type\"] = awstypes.ThresholdTypePercentage"
+    }
+  ],
+  "whole_source_retained": false,
+  "actual_private_reads": 0,
+  "prior_default_sandbox_fetch": "Failed DNS resolution before any source was fetched; no README edit occurred in that attempt."
+}

@@ -1,0 +1,13 @@
+{
+  "observed_at": "2026-11-04T00:08:28.049463+00:00",
+  "base_head": "2d637c6707ecc66a489561dd179406b6ac622e93",
+  "reviewed_manifest_sha256": "4b26e186a8cae55c2f2074e58e8e827f6d2f19dac546799769043d8501489c7d",
+  "reviewed_entries_checked": 79,
+  "mismatches": 0,
+  "human_record_bytes": 1334,
+  "human_record_sha256": "abe3a50ad7167fa01227c73e15e92a422a50609f6313bdcc56404cb61765d71a",
+  "git_diff_check_exit": 0,
+  "verdict": "APPROVE for L1 only",
+  "commit_push_performed": false,
+  "production_or_live_commands_run": false
+}

@@ -1,0 +1,2 @@
+
+aws: [ERROR]: In function length(), invalid type for value: None, expected one of: ['string', 'array', 'object'], received: "null"

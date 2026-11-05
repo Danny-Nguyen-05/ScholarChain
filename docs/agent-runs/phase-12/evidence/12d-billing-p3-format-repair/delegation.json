@@ -1,0 +1,11 @@
+{
+  "incident_agent": "/root/incident_12d_p3_diagnosis",
+  "incident_scope": "One saved private stderr classified in-memory to fixed safe categories only; metadata/source reads, no live calls or raw publication",
+  "infra_agent": "/root/infra_12d_p3_format_repair",
+  "infra_scope": "Only budget_execution.py, test_budget_execution.py and bounded README note; offline suite and isolated pinnedterraform_data A1 regression",
+  "model": "Inherited parent, exact native version not exposed",
+  "coordinator_owns_phase_evidence": true,
+  "children_or_reviewers": false,
+  "failed_operation_gate_journal_immutable": true,
+  "new_live_calls_authorized": false
+}

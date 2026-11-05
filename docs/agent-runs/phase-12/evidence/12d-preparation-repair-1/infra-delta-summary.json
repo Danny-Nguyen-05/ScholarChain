@@ -1,0 +1,21 @@
+{
+  "original_source_count": 13,
+  "changed_sources": [
+    "infra/terraform/billing-bootstrap/outputs.tf",
+    "infra/terraform/billing-bootstrap/main.tf",
+    "infra/terraform/billing-bootstrap/README.md",
+    "infra/terraform/billing-bootstrap/variables.tf",
+    "infra/terraform/billing-bootstrap/tests/budget.tftest.hcl",
+    "infra/terraform/spikes/emr-spark/README.md",
+    "infra/terraform/spikes/emr-spark/variables.tf",
+    "infra/terraform/spikes/emr-spark/tests/proposal.tftest.hcl"
+  ],
+  "unchanged_sources": [
+    "infra/terraform/billing-bootstrap/versions.tf",
+    "infra/terraform/billing-bootstrap/.terraform.lock.hcl",
+    "infra/terraform/spikes/emr-spark/main.tf",
+    "infra/terraform/spikes/emr-spark/versions.tf",
+    "infra/terraform/spikes/emr-spark/.terraform.lock.hcl"
+  ],
+  "original_hashes_equal_repair_preflight": true
+}

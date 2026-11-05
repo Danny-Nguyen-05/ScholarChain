@@ -1,0 +1,39 @@
+tests/budget.tftest.hcl... in progress
+  run "disabled_by_default"... pass
+  run "one_cumulative_before_credit_account_budget"... fail
+
+Error: Test assertion failed
+
+  on tests/budget.tftest.hcl line 39, in run "one_cumulative_before_credit_account_budget":
+  39:     condition = output.controls.budget.tags == tomap({
+  40:       course          = "SYNTH441"
+  41:       project         = "tag-probe"
+  42:       environment     = "offline"
+  43:       owner           = "synthetic-owner"
+  44:       expiration_date = "2027-01-01"
+  45:     })
+    ├────────────────
+    │ Diff:
+    │ --- actual
+    │ +++ expected
+    │ - "(sensitive value)"
+    │ + {
+    │ +   "course": "SYNTH441",
+    │ +   "environment": "offline",
+    │ +   "expiration_date": "2027-01-01",
+    │ +   "owner": "synthetic-owner",
+    │ +   "project": "tag-probe"
+    │ + }
+
+
+The budget resource must carry all five configured ownership tags, with
+expiration tied to its reconciliation end.
+  run "cannot_enable_without_private_subscriber"... pass
+  run "cannot_raise_shared_budget"... pass
+  run "end_must_follow_start"... pass
+  run "expiration_follows_budget_reconciliation_end"... pass
+  run "blank_required_tag_is_rejected"... pass
+tests/budget.tftest.hcl... tearing down
+tests/budget.tftest.hcl... fail
+
+Failure! 6 passed, 1 failed.

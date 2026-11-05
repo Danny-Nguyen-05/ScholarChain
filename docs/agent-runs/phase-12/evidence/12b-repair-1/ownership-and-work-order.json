@@ -1,0 +1,45 @@
+{
+  "timestamp_utc": "2026-10-29T15:34:58.703109+00:00",
+  "base_sha": "a83f62e9af56058a170075f98c4e027d039567ec",
+  "branch": "phase-12",
+  "user_request": "Fix all blockings bug for me",
+  "questions": "No questions for this repair round",
+  "only_blocker": "B3",
+  "nonblocking_not_repaired": [
+    "N9",
+    "N10",
+    "N11",
+    "N12",
+    "N13",
+    "N14",
+    "N15",
+    "N16"
+  ],
+  "owners": [
+    {
+      "role": "coordinator",
+      "native_id": "/root",
+      "paths": [
+        "docs/agent-runs/phase-12/**"
+      ]
+    },
+    {
+      "role": "infra-engineer",
+      "native_id": "/root/infra_12b",
+      "paths": [
+        "infra/terraform/**"
+      ]
+    },
+    {
+      "role": "build-engineer",
+      "native_id": "/root/build_12a",
+      "paths": [
+        "no authored edits; required full gate/ignored generated marker only"
+      ]
+    }
+  ],
+  "models": "exact inherited identifiers unavailable",
+  "no_reviewer_invoked": true,
+  "no_cloud_calls_or_spend": true,
+  "approval_files": "human-owned, not edited"
+}

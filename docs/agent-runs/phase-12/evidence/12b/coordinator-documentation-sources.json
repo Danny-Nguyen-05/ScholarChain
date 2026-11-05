@@ -1,0 +1,86 @@
+{
+  "timestamp_utc": "2026-10-29T01:35:00.738586+00:00",
+  "purpose": "Primary public documentation research only, not account AWS API access. Content hashes identify retrieved documentation; raw pages are not retained as local gate evidence. No free-tier or budget-fit claim.",
+  "sources": [
+    {
+      "title": "ECS queue backlog per task",
+      "url": "https://docs.aws.amazon.com/AmazonECS/latest/developerguide/service-autoscaling-queue.html",
+      "http_status": 200,
+      "bytes": 29397,
+      "sha256_fetched_bytes": "37e2ed955a4cace9aad72e6610e869e9a61bbb31b7ca5f6d71e05473db64ec02"
+    },
+    {
+      "title": "Neptune query action separation",
+      "url": "https://docs.aws.amazon.com/neptune/latest/userguide/iam-data-access-policies.html",
+      "http_status": 200,
+      "bytes": 21772,
+      "sha256_fetched_bytes": "d0cf9e7459c1fe598c48e1d97b8a3d6355fbfd4df8b2b7bdac80969162af1983"
+    },
+    {
+      "title": "ALB S3 log encryption constraint",
+      "url": "https://docs.aws.amazon.com/elasticloadbalancing/latest/application/enable-access-logging.html",
+      "http_status": 200,
+      "bytes": 45024,
+      "sha256_fetched_bytes": "b244b289f1fe678fbed84e423ec42c67a6b4a22af92e57f990a0cb90d317e6f5"
+    },
+    {
+      "title": "Provider 6.44 Neptune cluster",
+      "url": "https://raw.githubusercontent.com/hashicorp/terraform-provider-aws/v6.44.0/website/docs/r/neptune_cluster.html.markdown",
+      "http_status": 200,
+      "bytes": 10059,
+      "sha256_fetched_bytes": "356640e22ea907be0606b7082b77705fe2e305690b1b0ced13e8f0a179929c5d"
+    },
+    {
+      "title": "Provider 6.44 Neptune instance",
+      "url": "https://raw.githubusercontent.com/hashicorp/terraform-provider-aws/v6.44.0/website/docs/r/neptune_cluster_instance.html.markdown",
+      "http_status": 200,
+      "bytes": 6280,
+      "sha256_fetched_bytes": "28334edf7d8657834880df523bf92ad51b2dce9f4d0bb962166d9713b1fd4399"
+    },
+    {
+      "title": "Provider 6.44 S3 Vectors index",
+      "url": "https://raw.githubusercontent.com/hashicorp/terraform-provider-aws/v6.44.0/website/docs/r/s3vectors_index.html.markdown",
+      "http_status": 200,
+      "bytes": 4028,
+      "sha256_fetched_bytes": "3b4d2f12003a7c42301ee2903a7167a76364d7c553b68a90eebb7aa45720d18f"
+    },
+    {
+      "title": "Ohio illustrative Neptune prices",
+      "url": "https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonNeptune/current/us-east-2/index.json",
+      "http_status": 200,
+      "bytes": 369434,
+      "sha256_fetched_bytes": "2c9081216d1e37345a90e47415e2679ee915919b8564dfd6843e67c3f3060485",
+      "publication_date": "2026-09-11T12:44:56Z",
+      "selected_rates": [
+        {
+          "usage_type": "USE2-InstanceUsage:db.t4g.medium",
+          "region": "us-east-2",
+          "rates": [
+            {
+              "unit": "Hrs",
+              "USD": "0.0930000000"
+            }
+          ]
+        },
+        {
+          "usage_type": "USE2-Neptune:ServerlessUsage",
+          "region": "us-east-2",
+          "rates": [
+            {
+              "unit": "NCU-hr",
+              "USD": "0.1608000000"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Step Functions execution-role CMK permissions and encryption-context scope",
+      "url": "https://docs.aws.amazon.com/step-functions/latest/dg/encryption-at-rest.html",
+      "http_status": 200,
+      "bytes": 65517,
+      "sha256_fetched_bytes": "9559088b2fe9d4e9e5fcbafd518d55c39c7ed93e3adb3d541dbde4837de94dd9",
+      "consulted_at_utc": "2026-10-29T01:39:54.381690+00:00"
+    }
+  ]
+}

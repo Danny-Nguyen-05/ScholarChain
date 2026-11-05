@@ -1,0 +1,10 @@
+{
+  "agent": "/root/infra_12d_publication_helper",
+  "role": "infra-engineer",
+  "model": "Inherited parent, exact native version not exposed",
+  "sole_writes": "New scripts/billing/publication_evidence.py, tests/test_publication_evidence.py and PUBLICATION.md (or equivalent new filenames); public scratch report/logs",
+  "existing_five_scripts_immutable": true,
+  "coordinator_owns_evidence": true,
+  "children_or_reviewers": false,
+  "scope": "Offline public helper authoring and fixture tests only; no private/live operations or publication"
+}

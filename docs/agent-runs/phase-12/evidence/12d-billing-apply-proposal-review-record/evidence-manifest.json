@@ -1,0 +1,41 @@
+{
+  "scope": "Public wrapper/offline handoff only",
+  "self_excluded": true,
+  "files": [
+    {
+      "path": "delegation.json",
+      "bytes": 378,
+      "sha256": "6f97d53b398ce32bdb41f42918b30109b65ebab8bbe3d3d3c3131fe12c6c5e34"
+    },
+    {
+      "path": "observed-status-after-delegation.log.txt",
+      "bytes": 60605,
+      "sha256": "13deceffd8732973b8a051051360fa8082ba86deda58b83448bc882ea0a46fd4"
+    },
+    {
+      "path": "preflight-status.log.txt",
+      "bytes": 60567,
+      "sha256": "9cd834bd2e969ae57c636818589281ca1bfcbaa067383111af1ec8c3b3e2e068"
+    },
+    {
+      "path": "preflight.json",
+      "bytes": 25031,
+      "sha256": "f7e4e8829aadc8ee3e78289c9911f514653f751cbd25fc266ad6c2eae67f4b55"
+    },
+    {
+      "path": "process-notes.json",
+      "bytes": 2808,
+      "sha256": "811cf694209e5d394e5e03401cdad3c5ee64d11d56e7b73238d5d410cb4a5abd"
+    },
+    {
+      "path": "record-prefix-check.json",
+      "bytes": 1719,
+      "sha256": "8bf18958bfcbdcf4bbca29e78d3b847e622439c8cc43286b2550e95f77aa3674"
+    },
+    {
+      "path": "user-supplied-review.txt",
+      "bytes": 12563,
+      "sha256": "b21958b1e4a213609b65bbf0bdd16a51dd2c2bffc1dbe789df38f4236139ffd0"
+    }
+  ]
+}

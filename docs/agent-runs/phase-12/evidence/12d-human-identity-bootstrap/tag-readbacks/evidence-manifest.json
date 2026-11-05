@@ -1,0 +1,20 @@
+{
+  "artifact_count": 3,
+  "artifacts": [
+    {
+      "path": "operator-tags.png",
+      "sha256": "7e85b2b5c125cf836f39a7d8e1f9607d1089726953f0db3ca3ee42c43594a8f1",
+      "bytes": 253876
+    },
+    {
+      "path": "role-tags.png",
+      "sha256": "fdbbcb69bd9045b70597765db301024676c12a14f40aa2effcc589f6ec0a15db",
+      "bytes": 302630
+    },
+    {
+      "path": "verification.json",
+      "sha256": "d43109b15e965ab1c69dcdbe08cbfe78eedad761287d60700fb85dc13193f0a2",
+      "bytes": 1018
+    }
+  ]
+}

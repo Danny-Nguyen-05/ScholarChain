@@ -1,0 +1,41 @@
+{
+  "branch": "phase-12",
+  "head": "649b13b9bb40b0b6218bf7f2b71ab9d541c7aafe",
+  "base_sha": "649b13b9bb40b0b6218bf7f2b71ab9d541c7aafe",
+  "git_status": {
+    "command": "git status --short",
+    "exit_code": 0,
+    "stdout": " M .gitignore\n?? docs/agent-runs/phase-12/\n?? infra/terraform/.terraform.lock.hcl\n?? infra/terraform/README.md\n?? infra/terraform/environments/\n?? infra/terraform/main.tf\n?? infra/terraform/modules/\n?? infra/terraform/outputs.tf\n?? infra/terraform/providers.tf\n?? infra/terraform/tests/\n?? infra/terraform/variables.tf\n?? infra/terraform/versions.tf\n"
+  },
+  "git_diff_check": {
+    "command": "git diff --check",
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  "source_hash_mismatches": [],
+  "source_file_set_unchanged": true,
+  "infra_file_count": 41,
+  "old_report_prefix_or_artifact_mismatches": [],
+  "original12a_document_count": 40,
+  "gitignore_unchanged": true,
+  "unexpected_changed_paths": [],
+  "full_gate_exit_code": 0,
+  "post_freeze_gate_ordering": true,
+  "source_unchanged_during_full_gate": true,
+  "xml_hash_mismatches": [],
+  "full_raw_log_hash_matches": true,
+  "counts": {
+    "tests": 1253,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "xml_report_count": 156,
+  "untracked_count": 134,
+  "reviewer_launched": false,
+  "agents_report_no_owned_running_jobs": true,
+  "final_handoff_inventory_matches": true,
+  "implementation_agents_confirmed_completed": true,
+  "final_tracked_diff_check_exit_code": 0
+}

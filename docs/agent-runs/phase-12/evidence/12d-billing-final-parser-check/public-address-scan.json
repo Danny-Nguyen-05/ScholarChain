@@ -1,0 +1,8 @@
+{
+  "type": "Genericpatternonly",
+  "scope": "Newpacket/5recordsuffixes; count/hash-onlyreceipts excluded",
+  "units": 17,
+  "matches": 0,
+  "actual_recipient_processing": false,
+  "private_errorbody_published": false
+}

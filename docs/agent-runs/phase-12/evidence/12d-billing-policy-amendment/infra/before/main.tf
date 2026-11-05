@@ -1,0 +1,48 @@
+# Policy documents only: no AWS resource, data source, provider configuration,
+# module, provisioner or credential lookup is needed to render these drafts.
+locals {
+  budget_arn = "arn:aws:budgets::${var.aws_account_id}:budget/${var.budget_name}"
+  role_arn   = "arn:aws:iam::${var.aws_account_id}:role/${var.deployment_role_name}"
+  execution_policy = {
+    Version = "2012-10-17"
+    Statement = [{
+      Sid    = "ManageOnlyProjectBudget"
+      Effect = "Allow"
+      # Provider 6.44.0 uses all five across create/read/update/tag reconciliation.
+      Action = [
+        "budgets:ModifyBudget", "budgets:ViewBudget", "budgets:TagResource",
+        "budgets:UntagResource", "budgets:ListTagsForResource"
+      ]
+      Resource = [local.budget_arn]
+    }]
+  }
+  trust_policy = var.operator_user_arn == null ? null : {
+    Version = "2012-10-17"
+    Statement = [{
+      Sid       = "DistinctOperatorWithMFA"
+      Effect    = "Allow"
+      Principal = { AWS = var.operator_user_arn }
+      Action    = ["sts:AssumeRole"]
+      Condition = { Bool = { "aws:MultiFactorAuthPresent" = "true" } }
+    }]
+  }
+  caller_policy = var.operator_user_arn == null ? null : {
+    Version = "2012-10-17"
+    Statement = [{
+      Sid       = "AssumeOnlyBillingRoleWithMFA"
+      Effect    = "Allow"
+      Action    = ["sts:AssumeRole"]
+      Resource  = [local.role_arn]
+      Condition = { Bool = { "aws:MultiFactorAuthPresent" = "true" } }
+    }]
+  }
+}
+output "execution_policy_json" {
+  value = jsonencode(local.execution_policy)
+}
+output "trust_policy_json" {
+  value = local.trust_policy == null ? null : jsonencode(local.trust_policy)
+}
+output "caller_policy_json" {
+  value = local.caller_policy == null ? null : jsonencode(local.caller_policy)
+}

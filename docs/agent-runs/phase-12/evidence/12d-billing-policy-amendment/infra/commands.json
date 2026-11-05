@@ -1,0 +1,528 @@
+[
+  {
+    "label": "development-format",
+    "argv": [
+      "/tmp/scholarchain-phase12b-repair1-infra/terraform",
+      "fmt",
+      "-recursive"
+    ],
+    "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain/infra/terraform/billing-execution",
+    "environment": {
+      "PATH": "/opt/homebrew/bin:/usr/bin:/bin",
+      "LANG": "C",
+      "TF_CLI_CONFIG_FILE": "/tmp/scholarchain-phase12b-repair1-infra/terraformrc",
+      "AWS_EC2_METADATA_DISABLED": "true",
+      "AWS_CONFIG_FILE": "/dev/null",
+      "AWS_SHARED_CREDENTIALS_FILE": "/dev/null"
+    },
+    "started_utc": "2026-10-31T21:18:54.065924+00:00",
+    "ended_utc": "2026-10-31T21:18:54.118184+00:00",
+    "wall_seconds": 0.052148,
+    "exit_code": 0,
+    "log": "development-format.log.txt",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "label": "course-init",
+    "argv": [
+      "/tmp/scholarchain-phase12b-repair1-infra/terraform",
+      "init",
+      "-backend=false",
+      "-input=false",
+      "-no-color",
+      "-lockfile=readonly"
+    ],
+    "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain/infra/terraform",
+    "environment": {
+      "PATH": "/opt/homebrew/bin:/usr/bin:/bin",
+      "LANG": "C",
+      "TF_CLI_CONFIG_FILE": "/tmp/scholarchain-phase12b-repair1-infra/terraformrc",
+      "AWS_EC2_METADATA_DISABLED": "true",
+      "AWS_CONFIG_FILE": "/dev/null",
+      "AWS_SHARED_CREDENTIALS_FILE": "/dev/null"
+    },
+    "started_utc": "2026-10-31T21:18:54.118415+00:00",
+    "ended_utc": "2026-10-31T21:18:54.522593+00:00",
+    "wall_seconds": 0.404203,
+    "exit_code": 0,
+    "log": "course-init.log.txt",
+    "bytes": 677,
+    "sha256": "6fd242691fd6bbc7efe25549609a26c11107f98c3ae3cb12128985c21a261753"
+  },
+  {
+    "label": "course-fmt-check",
+    "argv": [
+      "/tmp/scholarchain-phase12b-repair1-infra/terraform",
+      "fmt",
+      "-check",
+      "-recursive"
+    ],
+    "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain/infra/terraform",
+    "environment": {
+      "PATH": "/opt/homebrew/bin:/usr/bin:/bin",
+      "LANG": "C",
+      "TF_CLI_CONFIG_FILE": "/tmp/scholarchain-phase12b-repair1-infra/terraformrc",
+      "AWS_EC2_METADATA_DISABLED": "true",
+      "AWS_CONFIG_FILE": "/dev/null",
+      "AWS_SHARED_CREDENTIALS_FILE": "/dev/null"
+    },
+    "started_utc": "2026-10-31T21:18:54.522793+00:00",
+    "ended_utc": "2026-10-31T21:18:54.581103+00:00",
+    "wall_seconds": 0.058337,
+    "exit_code": 0,
+    "log": "course-fmt-check.log.txt",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "label": "course-validate",
+    "argv": [
+      "/tmp/scholarchain-phase12b-repair1-infra/terraform",
+      "validate",
+      "-no-color"
+    ],
+    "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain/infra/terraform",
+    "environment": {
+      "PATH": "/opt/homebrew/bin:/usr/bin:/bin",
+      "LANG": "C",
+      "TF_CLI_CONFIG_FILE": "/tmp/scholarchain-phase12b-repair1-infra/terraformrc",
+      "AWS_EC2_METADATA_DISABLED": "true",
+      "AWS_CONFIG_FILE": "/dev/null",
+      "AWS_SHARED_CREDENTIALS_FILE": "/dev/null"
+    },
+    "started_utc": "2026-10-31T21:18:54.581323+00:00",
+    "ended_utc": "2026-10-31T21:18:56.356837+00:00",
+    "wall_seconds": 1.775572,
+    "exit_code": 0,
+    "log": "course-validate.log.txt",
+    "bytes": 38,
+    "sha256": "f7997225125835fdd14060ac776d273f394b874f9a481b9e2122c83dc8adc5c1"
+  },
+  {
+    "label": "course-test",
+    "argv": [
+      "/tmp/scholarchain-phase12b-repair1-infra/terraform",
+      "test",
+      "-no-color"
+    ],
+    "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain/infra/terraform",
+    "environment": {
+      "PATH": "/opt/homebrew/bin:/usr/bin:/bin",
+      "LANG": "C",
+      "TF_CLI_CONFIG_FILE": "/tmp/scholarchain-phase12b-repair1-infra/terraformrc",
+      "AWS_EC2_METADATA_DISABLED": "true",
+      "AWS_CONFIG_FILE": "/dev/null",
+      "AWS_SHARED_CREDENTIALS_FILE": "/dev/null"
+    },
+    "started_utc": "2026-10-31T21:18:56.357174+00:00",
+    "ended_utc": "2026-10-31T21:19:01.716213+00:00",
+    "wall_seconds": 5.35914,
+    "exit_code": 0,
+    "log": "course-test.log.txt",
+    "bytes": 2466,
+    "sha256": "b5a4b9c9f15c4a6bebd3aaf0b60f81fbb9664f09e96ed9c8c713bc67c90264d5"
+  },
+  {
+    "label": "billing-init",
+    "argv": [
+      "/tmp/scholarchain-phase12b-repair1-infra/terraform",
+      "init",
+      "-backend=false",
+      "-input=false",
+      "-no-color",
+      "-lockfile=readonly"
+    ],
+    "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain/infra/terraform/billing-bootstrap",
+    "environment": {
+      "PATH": "/opt/homebrew/bin:/usr/bin:/bin",
+      "LANG": "C",
+      "TF_CLI_CONFIG_FILE": "/tmp/scholarchain-phase12b-repair1-infra/terraformrc",
+      "AWS_EC2_METADATA_DISABLED": "true",
+      "AWS_CONFIG_FILE": "/dev/null",
+      "AWS_SHARED_CREDENTIALS_FILE": "/dev/null"
+    },
+    "started_utc": "2026-10-31T21:19:01.716603+00:00",
+    "ended_utc": "2026-10-31T21:19:02.011344+00:00",
+    "wall_seconds": 0.294771,
+    "exit_code": 0,
+    "log": "billing-init.log.txt",
+    "bytes": 595,
+    "sha256": "fa47f2a25afc25577c295cc0a696558f0a9e3ddbc7c4816dbf956c63ccf4d2a6"
+  },
+  {
+    "label": "billing-fmt-check",
+    "argv": [
+      "/tmp/scholarchain-phase12b-repair1-infra/terraform",
+      "fmt",
+      "-check",
+      "-recursive"
+    ],
+    "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain/infra/terraform/billing-bootstrap",
+    "environment": {
+      "PATH": "/opt/homebrew/bin:/usr/bin:/bin",
+      "LANG": "C",
+      "TF_CLI_CONFIG_FILE": "/tmp/scholarchain-phase12b-repair1-infra/terraformrc",
+      "AWS_EC2_METADATA_DISABLED": "true",
+      "AWS_CONFIG_FILE": "/dev/null",
+      "AWS_SHARED_CREDENTIALS_FILE": "/dev/null"
+    },
+    "started_utc": "2026-10-31T21:19:02.011722+00:00",
+    "ended_utc": "2026-10-31T21:19:02.030262+00:00",
+    "wall_seconds": 0.018561,
+    "exit_code": 0,
+    "log": "billing-fmt-check.log.txt",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "label": "billing-validate",
+    "argv": [
+      "/tmp/scholarchain-phase12b-repair1-infra/terraform",
+      "validate",
+      "-no-color"
+    ],
+    "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain/infra/terraform/billing-bootstrap",
+    "environment": {
+      "PATH": "/opt/homebrew/bin:/usr/bin:/bin",
+      "LANG": "C",
+      "TF_CLI_CONFIG_FILE": "/tmp/scholarchain-phase12b-repair1-infra/terraformrc",
+      "AWS_EC2_METADATA_DISABLED": "true",
+      "AWS_CONFIG_FILE": "/dev/null",
+      "AWS_SHARED_CREDENTIALS_FILE": "/dev/null"
+    },
+    "started_utc": "2026-10-31T21:19:02.030514+00:00",
+    "ended_utc": "2026-10-31T21:19:03.128033+00:00",
+    "wall_seconds": 1.097617,
+    "exit_code": 0,
+    "log": "billing-validate.log.txt",
+    "bytes": 38,
+    "sha256": "f7997225125835fdd14060ac776d273f394b874f9a481b9e2122c83dc8adc5c1"
+  },
+  {
+    "label": "billing-test",
+    "argv": [
+      "/tmp/scholarchain-phase12b-repair1-infra/terraform",
+      "test",
+      "-no-color"
+    ],
+    "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain/infra/terraform/billing-bootstrap",
+    "environment": {
+      "PATH": "/opt/homebrew/bin:/usr/bin:/bin",
+      "LANG": "C",
+      "TF_CLI_CONFIG_FILE": "/tmp/scholarchain-phase12b-repair1-infra/terraformrc",
+      "AWS_EC2_METADATA_DISABLED": "true",
+      "AWS_CONFIG_FILE": "/dev/null",
+      "AWS_SHARED_CREDENTIALS_FILE": "/dev/null"
+    },
+    "started_utc": "2026-10-31T21:19:03.128502+00:00",
+    "ended_utc": "2026-10-31T21:19:04.055333+00:00",
+    "wall_seconds": 0.926865,
+    "exit_code": 0,
+    "log": "billing-test.log.txt",
+    "bytes": 483,
+    "sha256": "aca7bb50be9aa6e39085eb2d1ac166e100d61aaa15cf8c95ccf3e4a87becb78e"
+  },
+  {
+    "label": "proposal-init",
+    "argv": [
+      "/tmp/scholarchain-phase12b-repair1-infra/terraform",
+      "init",
+      "-backend=false",
+      "-input=false",
+      "-no-color",
+      "-lockfile=readonly"
+    ],
+    "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain/infra/terraform/spikes/emr-spark",
+    "environment": {
+      "PATH": "/opt/homebrew/bin:/usr/bin:/bin",
+      "LANG": "C",
+      "TF_CLI_CONFIG_FILE": "/tmp/scholarchain-phase12b-repair1-infra/terraformrc",
+      "AWS_EC2_METADATA_DISABLED": "true",
+      "AWS_CONFIG_FILE": "/dev/null",
+      "AWS_SHARED_CREDENTIALS_FILE": "/dev/null"
+    },
+    "started_utc": "2026-10-31T21:19:04.055737+00:00",
+    "ended_utc": "2026-10-31T21:19:04.350861+00:00",
+    "wall_seconds": 0.295152,
+    "exit_code": 0,
+    "log": "proposal-init.log.txt",
+    "bytes": 595,
+    "sha256": "fa47f2a25afc25577c295cc0a696558f0a9e3ddbc7c4816dbf956c63ccf4d2a6"
+  },
+  {
+    "label": "proposal-fmt-check",
+    "argv": [
+      "/tmp/scholarchain-phase12b-repair1-infra/terraform",
+      "fmt",
+      "-check",
+      "-recursive"
+    ],
+    "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain/infra/terraform/spikes/emr-spark",
+    "environment": {
+      "PATH": "/opt/homebrew/bin:/usr/bin:/bin",
+      "LANG": "C",
+      "TF_CLI_CONFIG_FILE": "/tmp/scholarchain-phase12b-repair1-infra/terraformrc",
+      "AWS_EC2_METADATA_DISABLED": "true",
+      "AWS_CONFIG_FILE": "/dev/null",
+      "AWS_SHARED_CREDENTIALS_FILE": "/dev/null"
+    },
+    "started_utc": "2026-10-31T21:19:04.351124+00:00",
+    "ended_utc": "2026-10-31T21:19:04.368483+00:00",
+    "wall_seconds": 0.01738,
+    "exit_code": 0,
+    "log": "proposal-fmt-check.log.txt",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "label": "proposal-validate",
+    "argv": [
+      "/tmp/scholarchain-phase12b-repair1-infra/terraform",
+      "validate",
+      "-no-color"
+    ],
+    "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain/infra/terraform/spikes/emr-spark",
+    "environment": {
+      "PATH": "/opt/homebrew/bin:/usr/bin:/bin",
+      "LANG": "C",
+      "TF_CLI_CONFIG_FILE": "/tmp/scholarchain-phase12b-repair1-infra/terraformrc",
+      "AWS_EC2_METADATA_DISABLED": "true",
+      "AWS_CONFIG_FILE": "/dev/null",
+      "AWS_SHARED_CREDENTIALS_FILE": "/dev/null"
+    },
+    "started_utc": "2026-10-31T21:19:04.368761+00:00",
+    "ended_utc": "2026-10-31T21:19:05.333213+00:00",
+    "wall_seconds": 0.964493,
+    "exit_code": 0,
+    "log": "proposal-validate.log.txt",
+    "bytes": 38,
+    "sha256": "f7997225125835fdd14060ac776d273f394b874f9a481b9e2122c83dc8adc5c1"
+  },
+  {
+    "label": "proposal-test",
+    "argv": [
+      "/tmp/scholarchain-phase12b-repair1-infra/terraform",
+      "test",
+      "-no-color"
+    ],
+    "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain/infra/terraform/spikes/emr-spark",
+    "environment": {
+      "PATH": "/opt/homebrew/bin:/usr/bin:/bin",
+      "LANG": "C",
+      "TF_CLI_CONFIG_FILE": "/tmp/scholarchain-phase12b-repair1-infra/terraformrc",
+      "AWS_EC2_METADATA_DISABLED": "true",
+      "AWS_CONFIG_FILE": "/dev/null",
+      "AWS_SHARED_CREDENTIALS_FILE": "/dev/null"
+    },
+    "started_utc": "2026-10-31T21:19:05.333485+00:00",
+    "ended_utc": "2026-10-31T21:19:06.218218+00:00",
+    "wall_seconds": 0.884772,
+    "exit_code": 0,
+    "log": "proposal-test.log.txt",
+    "bytes": 410,
+    "sha256": "18480c6550a16bf4a744305a7fd8394b3ce45408edb8bca2dbc9886482405037"
+  },
+  {
+    "label": "execution-init",
+    "argv": [
+      "/tmp/scholarchain-phase12b-repair1-infra/terraform",
+      "init",
+      "-backend=false",
+      "-input=false",
+      "-no-color",
+      "-lockfile=readonly"
+    ],
+    "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain/infra/terraform/billing-execution",
+    "environment": {
+      "PATH": "/opt/homebrew/bin:/usr/bin:/bin",
+      "LANG": "C",
+      "TF_CLI_CONFIG_FILE": "/tmp/scholarchain-phase12b-repair1-infra/terraformrc",
+      "AWS_EC2_METADATA_DISABLED": "true",
+      "AWS_CONFIG_FILE": "/dev/null",
+      "AWS_SHARED_CREDENTIALS_FILE": "/dev/null"
+    },
+    "started_utc": "2026-10-31T21:19:06.218590+00:00",
+    "ended_utc": "2026-10-31T21:19:06.513185+00:00",
+    "wall_seconds": 0.294626,
+    "exit_code": 0,
+    "log": "execution-init.log.txt",
+    "bytes": 595,
+    "sha256": "fa47f2a25afc25577c295cc0a696558f0a9e3ddbc7c4816dbf956c63ccf4d2a6"
+  },
+  {
+    "label": "execution-fmt-check",
+    "argv": [
+      "/tmp/scholarchain-phase12b-repair1-infra/terraform",
+      "fmt",
+      "-check",
+      "-recursive"
+    ],
+    "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain/infra/terraform/billing-execution",
+    "environment": {
+      "PATH": "/opt/homebrew/bin:/usr/bin:/bin",
+      "LANG": "C",
+      "TF_CLI_CONFIG_FILE": "/tmp/scholarchain-phase12b-repair1-infra/terraformrc",
+      "AWS_EC2_METADATA_DISABLED": "true",
+      "AWS_CONFIG_FILE": "/dev/null",
+      "AWS_SHARED_CREDENTIALS_FILE": "/dev/null"
+    },
+    "started_utc": "2026-10-31T21:19:06.513559+00:00",
+    "ended_utc": "2026-10-31T21:19:06.532141+00:00",
+    "wall_seconds": 0.018603,
+    "exit_code": 0,
+    "log": "execution-fmt-check.log.txt",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "label": "execution-validate",
+    "argv": [
+      "/tmp/scholarchain-phase12b-repair1-infra/terraform",
+      "validate",
+      "-no-color"
+    ],
+    "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain/infra/terraform/billing-execution",
+    "environment": {
+      "PATH": "/opt/homebrew/bin:/usr/bin:/bin",
+      "LANG": "C",
+      "TF_CLI_CONFIG_FILE": "/tmp/scholarchain-phase12b-repair1-infra/terraformrc",
+      "AWS_EC2_METADATA_DISABLED": "true",
+      "AWS_CONFIG_FILE": "/dev/null",
+      "AWS_SHARED_CREDENTIALS_FILE": "/dev/null"
+    },
+    "started_utc": "2026-10-31T21:19:06.532401+00:00",
+    "ended_utc": "2026-10-31T21:19:07.508090+00:00",
+    "wall_seconds": 0.97572,
+    "exit_code": 0,
+    "log": "execution-validate.log.txt",
+    "bytes": 38,
+    "sha256": "f7997225125835fdd14060ac776d273f394b874f9a481b9e2122c83dc8adc5c1"
+  },
+  {
+    "label": "execution-test",
+    "argv": [
+      "/tmp/scholarchain-phase12b-repair1-infra/terraform",
+      "test",
+      "-no-color"
+    ],
+    "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain/infra/terraform/billing-execution",
+    "environment": {
+      "PATH": "/opt/homebrew/bin:/usr/bin:/bin",
+      "LANG": "C",
+      "TF_CLI_CONFIG_FILE": "/tmp/scholarchain-phase12b-repair1-infra/terraformrc",
+      "AWS_EC2_METADATA_DISABLED": "true",
+      "AWS_CONFIG_FILE": "/dev/null",
+      "AWS_SHARED_CREDENTIALS_FILE": "/dev/null"
+    },
+    "started_utc": "2026-10-31T21:19:07.508327+00:00",
+    "ended_utc": "2026-10-31T21:19:08.423923+00:00",
+    "wall_seconds": 0.915633,
+    "exit_code": 0,
+    "log": "execution-test.log.txt",
+    "bytes": 1120,
+    "sha256": "28d9dfcfad25f96e0dd5fc4b8eb26b3d58752ec6a89d416d7f418f08b8462ef1"
+  },
+  {
+    "label": "red-login-init",
+    "argv": [
+      "/tmp/scholarchain-phase12b-repair1-infra/terraform",
+      "init",
+      "-backend=false",
+      "-input=false",
+      "-no-color",
+      "-lockfile=readonly"
+    ],
+    "cwd": "/tmp/scholarchain-phase12d-policy-amendment-infra/red-tree",
+    "environment": {
+      "PATH": "/opt/homebrew/bin:/usr/bin:/bin",
+      "LANG": "C",
+      "TF_CLI_CONFIG_FILE": "/tmp/scholarchain-phase12b-repair1-infra/terraformrc",
+      "AWS_EC2_METADATA_DISABLED": "true",
+      "AWS_CONFIG_FILE": "/dev/null",
+      "AWS_SHARED_CREDENTIALS_FILE": "/dev/null"
+    },
+    "started_utc": "2026-10-31T21:19:53.585835+00:00",
+    "ended_utc": "2026-10-31T21:19:54.155297+00:00",
+    "wall_seconds": 0.569383,
+    "exit_code": 0,
+    "log": "red-login-init.log.txt",
+    "bytes": 634,
+    "sha256": "f4d1ec406f0625699db92137da4eeaa17a9a9a2671c2b282501554c5e540ff01"
+  },
+  {
+    "label": "red-login-test",
+    "argv": [
+      "/tmp/scholarchain-phase12b-repair1-infra/terraform",
+      "test",
+      "-no-color"
+    ],
+    "cwd": "/tmp/scholarchain-phase12d-policy-amendment-infra/red-tree",
+    "environment": {
+      "PATH": "/opt/homebrew/bin:/usr/bin:/bin",
+      "LANG": "C",
+      "TF_CLI_CONFIG_FILE": "/tmp/scholarchain-phase12b-repair1-infra/terraformrc",
+      "AWS_EC2_METADATA_DISABLED": "true",
+      "AWS_CONFIG_FILE": "/dev/null",
+      "AWS_SHARED_CREDENTIALS_FILE": "/dev/null"
+    },
+    "started_utc": "2026-10-31T21:19:54.155495+00:00",
+    "ended_utc": "2026-10-31T21:19:55.060407+00:00",
+    "wall_seconds": 0.904942,
+    "exit_code": 1,
+    "log": "red-login-test.log.txt",
+    "bytes": 4131,
+    "sha256": "441dadc2afb979d096c1a6c46c3057dcbd0805088816f350266ec233242bec68"
+  },
+  {
+    "label": "red-e1-init",
+    "argv": [
+      "/tmp/scholarchain-phase12b-repair1-infra/terraform",
+      "init",
+      "-backend=false",
+      "-input=false",
+      "-no-color",
+      "-lockfile=readonly"
+    ],
+    "cwd": "/tmp/scholarchain-phase12d-policy-amendment-infra/red-e1-tree",
+    "environment": {
+      "PATH": "/opt/homebrew/bin:/usr/bin:/bin",
+      "LANG": "C",
+      "TF_CLI_CONFIG_FILE": "/tmp/scholarchain-phase12b-repair1-infra/terraformrc",
+      "AWS_EC2_METADATA_DISABLED": "true",
+      "AWS_CONFIG_FILE": "/dev/null",
+      "AWS_SHARED_CREDENTIALS_FILE": "/dev/null"
+    },
+    "started_utc": "2026-10-31T21:19:55.086333+00:00",
+    "ended_utc": "2026-10-31T21:19:55.655495+00:00",
+    "wall_seconds": 0.569178,
+    "exit_code": 0,
+    "log": "red-e1-init.log.txt",
+    "bytes": 634,
+    "sha256": "f4d1ec406f0625699db92137da4eeaa17a9a9a2671c2b282501554c5e540ff01"
+  },
+  {
+    "label": "red-e1-test",
+    "argv": [
+      "/tmp/scholarchain-phase12b-repair1-infra/terraform",
+      "test",
+      "-no-color"
+    ],
+    "cwd": "/tmp/scholarchain-phase12d-policy-amendment-infra/red-e1-tree",
+    "environment": {
+      "PATH": "/opt/homebrew/bin:/usr/bin:/bin",
+      "LANG": "C",
+      "TF_CLI_CONFIG_FILE": "/tmp/scholarchain-phase12b-repair1-infra/terraformrc",
+      "AWS_EC2_METADATA_DISABLED": "true",
+      "AWS_CONFIG_FILE": "/dev/null",
+      "AWS_SHARED_CREDENTIALS_FILE": "/dev/null"
+    },
+    "started_utc": "2026-10-31T21:19:55.655709+00:00",
+    "ended_utc": "2026-10-31T21:19:56.549889+00:00",
+    "wall_seconds": 0.894206,
+    "exit_code": 1,
+    "log": "red-e1-test.log.txt",
+    "bytes": 1393,
+    "sha256": "41425fa266e6bbf0182598590aaa7be13cd164be66f46ebb4e2ce65c17a6a652"
+  }
+]

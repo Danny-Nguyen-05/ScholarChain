@@ -1,0 +1,58 @@
+{
+  "archived_before_changes": [
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation/cost-proposal.md",
+      "archived_as": "docs/agent-runs/phase-12/evidence/12d-preparation-repair-1/original-notes/cost-proposal.md",
+      "bytes": 2682,
+      "sha256": "a3ed6a36de7de9c198fba763a60e09d335e2cd63b08ded2f7db081acd2cdc454"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation/handoff.md",
+      "archived_as": "docs/agent-runs/phase-12/evidence/12d-preparation-repair-1/original-notes/handoff.md",
+      "bytes": 4083,
+      "sha256": "8284abb4f46eb905885881dc9a75ad23ac8f09ffbcb5157875caa4ece08e4698"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation/launch-dependencies.md",
+      "archived_as": "docs/agent-runs/phase-12/evidence/12d-preparation-repair-1/original-notes/launch-dependencies.md",
+      "bytes": 5322,
+      "sha256": "7c0d24265dbf03fd17a45b3c330b8af695838d9dcdf5af7529366505625683d8"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation/security-self-review.md",
+      "archived_as": "docs/agent-runs/phase-12/evidence/12d-preparation-repair-1/original-notes/security-self-review.md",
+      "bytes": 2142,
+      "sha256": "eaef155189eade555364b84eb0879b311e7b0c3fb957df6e606c8d734b30d344"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation/step-0-answers.md",
+      "archived_as": "docs/agent-runs/phase-12/evidence/12d-preparation-repair-1/original-notes/step-0-answers.md",
+      "bytes": 2341,
+      "sha256": "4de976aaa02002cf30291b7e732608daf064dc405b4402ab2ee0f2267889d010"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation/work-order.md",
+      "archived_as": "docs/agent-runs/phase-12/evidence/12d-preparation-repair-1/original-notes/work-order.md",
+      "bytes": 1552,
+      "sha256": "ed9095a32adb05e69a5e082976cc87e2287d6d89caff43df2cf4cf366a4c9314"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation/next-steps.md",
+      "archived_as": "docs/agent-runs/phase-12/evidence/12d-preparation-repair-1/original-notes/next-steps.md",
+      "bytes": 2464,
+      "sha256": "3b845f0d9e0f1756ee6245e1cc07b3f5b4ace53772b17d936cb42a0c2f1262c3"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation/evidence-manifest.json",
+      "archived_as": "docs/agent-runs/phase-12/evidence/12d-preparation-repair-1/original-notes/evidence-manifest.json",
+      "bytes": 12930,
+      "sha256": "23b279dade3eb016523e98bbce9f24e818cea72c19742e4c01dd429c84106875"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-preparation/handoff-files.json",
+      "archived_as": "docs/agent-runs/phase-12/evidence/12d-preparation-repair-1/original-notes/handoff-files.json",
+      "bytes": 12362,
+      "sha256": "0bc34bb77fd302af6dd48398fb409e8239f5b0a92e583c503127a63461d37120"
+    }
+  ]
+}

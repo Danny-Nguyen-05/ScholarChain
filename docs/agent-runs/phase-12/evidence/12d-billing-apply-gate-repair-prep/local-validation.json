@@ -1,0 +1,18 @@
+{
+  "recorded_utc": "2026-11-01T03:32:36.799889+00:00",
+  "review_attachment_verbatim": true,
+  "earlier_packet_files_preserved": 96,
+  "source_reference_209_hash_bytes_mtime_equal": true,
+  "source_changes": 0,
+  "current_terraform_aws_build_test_calls": 0,
+  "tests_not_rerun_reason": "Only coordinator evidence and offline proposal/review-prompt documents authored; no behavior or production source changed. Prior test results remain historical.",
+  "specialist_manifest_artifacts": 4,
+  "specialist_manifest_sha256": "7511109daa2ac45d66428534e0753592994b7a94f70278cf18f17ed42acb07de",
+  "durable_paths_created": false,
+  "private_input_requested_or_read": false,
+  "replacement_plan_generated": false,
+  "actual_apply_handoff_prepared": false,
+  "aws_mutations": 0,
+  "reviewer_launched": false,
+  "running_specialist_jobs": false
+}

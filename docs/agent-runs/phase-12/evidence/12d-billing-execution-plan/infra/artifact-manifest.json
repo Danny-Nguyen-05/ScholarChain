@@ -1,0 +1,162 @@
+{
+  "created_utc": "2026-11-01T03:13:08.735844+00:00",
+  "artifact_count": 31,
+  "files": [
+    {
+      "path": "approved-public-inputs.json",
+      "sha256": "48f19c4526b63c8e194dcfeea8466591a0667c3a5956e06cdb31116e110a8e02",
+      "bytes": 446
+    },
+    {
+      "path": "attempt-reconciliation.json",
+      "sha256": "7b41c723d2da87bc734bafa6355f1052a625cc1a681cabc41d33a1bcee6680c4",
+      "bytes": 680
+    },
+    {
+      "path": "commands.json",
+      "sha256": "cf170b095993a27f5190d3fd2cf54dc83c2ce4497e4e354f816dcc450839af74",
+      "bytes": 12139
+    },
+    {
+      "path": "config-copies/.terraform.lock.hcl",
+      "sha256": "421b75245b0080edee2b434482ff348419a75d7a6b798d5218e0a0f9f723eaea",
+      "bytes": 1406
+    },
+    {
+      "path": "config-copies/README.md",
+      "sha256": "46506dade67af6ec882f4bbd81661d00d92c8f9d5bebe6f6ed1e47e2c30143a0",
+      "bytes": 7866
+    },
+    {
+      "path": "config-copies/main.tf",
+      "sha256": "5e69e4235e417c72968097af6050f66c434fd1d1049ee0f655d1b6635e101549",
+      "bytes": 2215
+    },
+    {
+      "path": "config-copies/outputs.tf",
+      "sha256": "e729e4b3d6523074f293b95c9a5f85fc03c8eec0f8a40928c24a1c227ce3174f",
+      "bytes": 1005
+    },
+    {
+      "path": "config-copies/tests/budget.tftest.hcl",
+      "sha256": "8f79abffe3fe71e4a6736dddf461a0c8a7c136cdd7a5bf29394185e81da4550b",
+      "bytes": 3984
+    },
+    {
+      "path": "config-copies/variables.tf",
+      "sha256": "3e37054f1187192ae3188052d52630e50a3db950ce7436b639d98ef066a8c937",
+      "bytes": 3033
+    },
+    {
+      "path": "config-copies/versions.tf",
+      "sha256": "38c0d27255f1ccf0c6f57b6854b80e5bcecde516ebfbcdfbd7ae95ad220ba0a1",
+      "bytes": 150
+    },
+    {
+      "path": "config-provenance-after-offline.json",
+      "sha256": "bdea2857024e435afb8ea3c5b59f8c4f6cdbe6db8866f9cb66b0b9b479409cff",
+      "bytes": 2258
+    },
+    {
+      "path": "config-provenance-before.json",
+      "sha256": "e93ddaf9a8883a149e155943a0128fd8e0be5a15860ea55c119bbb56c801480c",
+      "bytes": 2587
+    },
+    {
+      "path": "offline-fmt-check-retry.log.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "offline-fmt-check.log.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "offline-init-retry.log.txt",
+      "sha256": "93e6d8afa8d5f52652c8fb18e0d6900bca6e2e38e731e16b7416d1d672657428",
+      "bytes": 204
+    },
+    {
+      "path": "offline-init.log.txt",
+      "sha256": "0332e5a2014b4e3a832437119fe49036bc6a8355061e8def4e2d5ffc1c783808",
+      "bytes": 243
+    },
+    {
+      "path": "offline-test-retry.log.txt",
+      "sha256": "aca7bb50be9aa6e39085eb2d1ac166e100d61aaa15cf8c95ccf3e4a87becb78e",
+      "bytes": 483
+    },
+    {
+      "path": "offline-validate-retry.log.txt",
+      "sha256": "f7997225125835fdd14060ac776d273f394b874f9a481b9e2122c83dc8adc5c1",
+      "bytes": 38
+    },
+    {
+      "path": "offline-validate.log.txt",
+      "sha256": "410f0fb4134e77d08b978d5659b641af582addeb977ccfde6629ab50a46cb590",
+      "bytes": 1039
+    },
+    {
+      "path": "owner-report.txt",
+      "sha256": "fc6c9bbc2408ccd22748a8a566d0fb88fa749c006283f2938aac1b90969b2fd9",
+      "bytes": 5151
+    },
+    {
+      "path": "plan-inputs-after.json",
+      "sha256": "a28e3920eee1586fd738ab3987a424104191ddc08770742af2517d087c7c5ecc",
+      "bytes": 2446
+    },
+    {
+      "path": "plan-inputs-before.json",
+      "sha256": "7faaaeeef8143e48a87b56b941577a99cab8f84085388bc020cf16cd52ae2f95",
+      "bytes": 2807
+    },
+    {
+      "path": "plan-summary.json",
+      "sha256": "073066f849282d884df0dc52662d1ea294e1be59977e4457e884fa5331b7a475",
+      "bytes": 2750
+    },
+    {
+      "path": "privacy-and-scope.json",
+      "sha256": "3ea286cfa452d145bade785e5a8d27e696058fc512c603ae200d24cf513873a7",
+      "bytes": 1130
+    },
+    {
+      "path": "protected-artifact-metadata.json",
+      "sha256": "8c5784197df02ce033adff844dec5867e1c41c5b146a639ca137e6d1e03148c5",
+      "bytes": 2639
+    },
+    {
+      "path": "run.py",
+      "sha256": "5254fcb286011d53def2205151d9aaa1770ec7dd3668f1946fabf368e9545eef",
+      "bytes": 10777
+    },
+    {
+      "path": "runner-failure.json",
+      "sha256": "d060e4266133eab77ba8c556365069287514b3e43610391fe447e4e0a48058dd",
+      "bytes": 158
+    },
+    {
+      "path": "safe-summary-validation.json",
+      "sha256": "e6700309c74d74103e7ee47b0a6d3442dcc064f28c7f852c64e7e807a92ca3e8",
+      "bytes": 540
+    },
+    {
+      "path": "save-recipient.py",
+      "sha256": "165b7a4e9c19f42cac0557d8133dcbd88d2c2fc853d7e16f63b2acd67c83a0ee",
+      "bytes": 904
+    },
+    {
+      "path": "test-counts.json",
+      "sha256": "a77599ea7462bcc23c86be1e13c83ad33c306214e448681cbd1bb65ba07c1c48",
+      "bytes": 95
+    },
+    {
+      "path": "toolchain.json",
+      "sha256": "d076d18b33040ad4ca9dcace7934af3ed912b0615b2c4d69b2228baf0fc9dae1",
+      "bytes": 327
+    }
+  ],
+  "exclusions": "Recipient input has metadata only with no hash/size/content. Protected raw plan/JSON/logs have metadata/hash/bytes only; no content curated. Provider data and external state excluded."
+}

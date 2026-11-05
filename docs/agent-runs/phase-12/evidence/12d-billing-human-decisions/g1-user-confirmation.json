@@ -1,0 +1,32 @@
+{
+  "kind": "Coordinator transcription of user-supplied statement; not an agent-authored human decision or execution approval",
+  "recorded_utc": "2026-11-02T01:32:22.144276+00:00",
+  "recorded_time_meaning": "Coordinator record-write time only; user message receipt/execution time not captured",
+  "user_message_time": null,
+  "question_context": "Read the bootstrap record and tell me in your own words whether it accurately reflects what you told me; this confirms the existing record and does not authorize AWS changes.",
+  "user_response_verbatim": "yes it is accurate",
+  "bound_record": {
+    "path": "docs/agent-runs/phase-12/billing-bootstrap-exception.md",
+    "bytes": 1334,
+    "sha256": "abe3a50ad7167fa01227c73e15e92a422a50609f6313bdcc56404cb61765d71a"
+  },
+  "original_record_modified": false,
+  "scope": "G1 accuracy confirmation received only",
+  "not_authorized": [
+    "CLI preflight",
+    "helper authorship",
+    "commit",
+    "login",
+    "Terraform apply",
+    "AWS requests",
+    "spending"
+  ],
+  "remaining_decisions": [
+    "sourcecontrol/clean canonical checkout",
+    "local-only CLI preflight authorization",
+    "H1 actor/mechanism",
+    "H2 window/tooling",
+    "R1 residual-risk acceptance",
+    "personal exact-checksum execution gate"
+  ]
+}

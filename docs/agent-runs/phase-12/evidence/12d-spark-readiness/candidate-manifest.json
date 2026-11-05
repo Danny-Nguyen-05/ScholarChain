@@ -1,0 +1,554 @@
+{
+  "AWS_calls": 0,
+  "base_head": "4232ed12a7941c6c15d6f562f4f61fdd6928ebca",
+  "excluded_only": "This candidate-manifest.json to avoid a self-hash cycle. Generated JAR/runtime/raw event logs remain ignored, represented by explicit recorded artifact provenance and completed export archives; these are not claimed source-controlled files.",
+  "files": [
+    {
+      "bytes": 1334,
+      "path": "docs/agent-runs/phase-12/billing-bootstrap-exception.md",
+      "sha256": "abe3a50ad7167fa01227c73e15e92a422a50609f6313bdcc56404cb61765d71a"
+    },
+    {
+      "bytes": 3232,
+      "path": "docs/agent-runs/phase-12/evidence/12d-spark-readiness/README.md",
+      "sha256": "b0fe10d922681d16bde50c6b6ed1398a19452a03c1d748db40ba90dcd8891ea2"
+    },
+    {
+      "bytes": 2397,
+      "path": "docs/agent-runs/phase-12/evidence/12d-spark-readiness/append-only-records.json",
+      "sha256": "82ba644d5767d11cb0dd297cb61a9a18f5fbe27027ac432bf16d71bd0544b453"
+    },
+    {
+      "bytes": 967337,
+      "path": "docs/agent-runs/phase-12/evidence/12d-spark-readiness/baseline.json",
+      "sha256": "51b88a964e511d8fae6cf40823f918919cb84d30d9c4de2fa77f89116bfd8f0d"
+    },
+    {
+      "bytes": 92572,
+      "path": "docs/agent-runs/phase-12/evidence/12d-spark-readiness/build/archive-inventory.json",
+      "sha256": "f9bf49034756e5a42a187ceee1a29466c12822c909f42a53446875270cbf2d36"
+    },
+    {
+      "bytes": 7478,
+      "path": "docs/agent-runs/phase-12/evidence/12d-spark-readiness/build/build-engineer-report.md",
+      "sha256": "fa6452c153d19c82f43a436a4cded99a439b78e6012764d000a2e3140804d3ba"
+    },
+    {
+      "bytes": 478433,
+      "path": "docs/agent-runs/phase-12/evidence/12d-spark-readiness/build/commands-tests-and-attempts.tar.gz",
+      "sha256": "b8785f39caedc03d3076857301bc4bf084ae396ad76cfcc8d5b20fa3bb811153"
+    },
+    {
+      "bytes": 87554,
+      "path": "docs/agent-runs/phase-12/evidence/12d-spark-readiness/build/evidence-manifest-v2.json",
+      "sha256": "ebc421b4329d456a66e2bfd32ee0f9761677fc9a5805f04d89efaab3972a62f2"
+    },
+    {
+      "bytes": 915,
+      "path": "docs/agent-runs/phase-12/evidence/12d-spark-readiness/build/fullcheck-attempt2-command.json",
+      "sha256": "d207b1118266a33b7ff3560cbc353696e02477a2fe39c8a29af188f580d6f90b"
+    },
+    {
+      "bytes": 122,
+      "path": "docs/agent-runs/phase-12/evidence/12d-spark-readiness/build/fullcheck-attempt2-result.json",
+      "sha256": "89aaa02f27882afdee9221a5198e3c4880808cef73fa2b094312db2631304b5b"
+    },
+    {
+      "bytes": 108302,
+      "path": "docs/agent-runs/phase-12/evidence/12d-spark-readiness/build/fullcheck-attempt2-source-freeze.json",
+      "sha256": "88202b3a60b4260a866f2c1995b375a8e592445056a1e0a43bffec6689cc6a47"
+    },
+    {
+      "bytes": 1319,
+      "path": "docs/agent-runs/phase-12/evidence/12d-spark-readiness/build/fullcheck-attempt2-summary.json",
+      "sha256": "50a417b2458e462a22d3f6197b47abf32a44a9da21c99de2c914efb675c41d80"
+    },
+    {
+      "bytes": 5123,
+      "path": "docs/agent-runs/phase-12/evidence/12d-spark-readiness/build/local-cluster-v3-class-origin-validation.json",
+      "sha256": "5b34e0d877f8fd590987ea2d0a38ad604a3ffeb5b46ac247dc899c9defd11ef1"
+    },
+    {
+      "bytes": 2349,
+      "path": "docs/agent-runs/phase-12/evidence/12d-spark-readiness/build/local-probe-attempts-and-limits.json",
+      "sha256": "3083c041ae66b0ed1b2a53736056e0b2043c2251caa06cce867d27c7758cad20"
+    },
+    {
+      "bytes": 631,
+      "path": "docs/agent-runs/phase-12/evidence/12d-spark-readiness/build/package-runtime-binding.json",
+      "sha256": "bf8ef9c33317084781f54c3346982812bb08b5881361574f57a0b05d1b395108"
+    },
+    {
+      "bytes": 1756,
+      "path": "docs/agent-runs/phase-12/evidence/12d-spark-readiness/build/scala-xml-cached-source-proof.json",
+      "sha256": "5b46d754dffc00861a10f7cd6681e0264b367a8b585cefd423e0da557c5e868c"
+    },
+    {
+      "bytes": 3964,
+      "path": "docs/agent-runs/phase-12/evidence/12d-spark-readiness/build-initial-audit-report.md",
+      "sha256": "6034b5ba7cbdabe99105b59ec7fdedaa3aff4b1e243f232cb6955c804d7bfc2d"
+    },
+    {
+      "bytes": 248369,
+      "path": "docs/agent-runs/phase-12/evidence/12d-spark-readiness/completed-export-inventory.json",
+      "sha256": "b976faa286d54ff01a1cb3acea72de9b36c0e935c464bfbd4abfe498eb764be8"
+    },
+    {
+      "bytes": 365366,
+      "path": "docs/agent-runs/phase-12/evidence/12d-spark-readiness/completed-local-exports.tar.gz",
+      "sha256": "f6d7cb3aba0a1d98ce9155697a99d083e55bd3c714b483f7dce249979fd362a3"
+    },
+    {
+      "bytes": 6356,
+      "path": "docs/agent-runs/phase-12/evidence/12d-spark-readiness/coordinator-report.md",
+      "sha256": "a950e6916f9a044269999434a5e9d43f7a44e3865ec88a9240bfc02795a6b9bb"
+    },
+    {
+      "bytes": 6488,
+      "path": "docs/agent-runs/phase-12/evidence/12d-spark-readiness/exact-comparison.json",
+      "sha256": "a1209709a01ea8c963a4e16d9580b669b1b22b56e38c3a1133d258391f060d70"
+    },
+    {
+      "bytes": 4149,
+      "path": "docs/agent-runs/phase-12/evidence/12d-spark-readiness/filesystem-and-runtime-design.md",
+      "sha256": "88c4a6373599c45e8a0ca9d6513ca3452fdc028fdab03e42892dcbc9caf740fe"
+    },
+    {
+      "bytes": 1545,
+      "path": "docs/agent-runs/phase-12/evidence/12d-spark-readiness/final-source-hashes.json",
+      "sha256": "8ba542cae55c246bbe2cb4bdb53c8c2ba6f6da08df695f3cd16d10665442d8e9"
+    },
+    {
+      "bytes": 2139,
+      "path": "docs/agent-runs/phase-12/evidence/12d-spark-readiness/input-generation-plan.json",
+      "sha256": "3686ebca2911e278c3fe16c7ef477e382a42f7997bac34a22bd2f4b9d2aadf81"
+    },
+    {
+      "bytes": 646,
+      "path": "docs/agent-runs/phase-12/evidence/12d-spark-readiness/local-resource-bound.json",
+      "sha256": "abcbd34a9f17aa70fcc28413ba698cbd2f947ca81b085985e349cb66b2ec60fc"
+    },
+    {
+      "bytes": 4032,
+      "path": "docs/agent-runs/phase-12/evidence/12d-spark-readiness/local-run-repairs.md",
+      "sha256": "81ab0f9d29b1e53eaec6b76bb2147db487152cb0b354115e2643fc873291fc92"
+    },
+    {
+      "bytes": 1977,
+      "path": "docs/agent-runs/phase-12/evidence/12d-spark-readiness/operational-configs/spark-g1-a-attempt1.json",
+      "sha256": "a2977849f82dd186c00c56a5d055ce9287b6ab67017749b1d551d980c2753749"
+    },
+    {
+      "bytes": 1995,
+      "path": "docs/agent-runs/phase-12/evidence/12d-spark-readiness/operational-configs/spark-g1-a.json",
+      "sha256": "250080c329eaf2c9a14fdad58b1539dc46066cf7ef8017f6c8e2e0ff935081d2"
+    },
+    {
+      "bytes": 1977,
+      "path": "docs/agent-runs/phase-12/evidence/12d-spark-readiness/operational-configs/spark-g1-b.json",
+      "sha256": "5e0bbac8f356a945139c686bae9c220f99712b36310315c8d6b329bc18c6b774"
+    },
+    {
+      "bytes": 21479,
+      "path": "docs/agent-runs/phase-12/evidence/12d-spark-readiness/packaged-runs/baseline-a-attempt2-command.json",
+      "sha256": "b42d7a78119c3a8d3ae82b44a5240c6206cee6654cb831739ebd756ac77805f0"
+    },
+    {
+      "bytes": 739,
+      "path": "docs/agent-runs/phase-12/evidence/12d-spark-readiness/packaged-runs/baseline-a-attempt2-result.json",
+      "sha256": "7054a1bde1caeb7fd515a2367ee9c2ac9a2ca5d94bc9d86a1df36e1a539fde7a"
+    },
+    {
+      "bytes": 327415,
+      "path": "docs/agent-runs/phase-12/evidence/12d-spark-readiness/packaged-runs/baseline-a-attempt2.stderr.txt.gz",
+      "sha256": "1950703327d2fce5b413dc3803d8492b8b00ae8d13997cd431f369361ca8752b"
+    },
+    {
+      "bytes": 185,
+      "path": "docs/agent-runs/phase-12/evidence/12d-spark-readiness/packaged-runs/baseline-a-attempt2.stdout.txt.gz",
+      "sha256": "19549216cdd00b3b8efa3a9954b8836cd0dc52e9a0ad102350135acd2009e1c6"
+    },
+    {
+      "bytes": 21479,
+      "path": "docs/agent-runs/phase-12/evidence/12d-spark-readiness/packaged-runs/baseline-a-command.json",
+      "sha256": "d5e3ea45a50870f1a82526e8a33b3da9a8c489442addad6899081e91dd10b602"
+    },
+    {
+      "bytes": 383,
+      "path": "docs/agent-runs/phase-12/evidence/12d-spark-readiness/packaged-runs/baseline-a-result.json",
+      "sha256": "81a462307f222b2dcd298e311777407831d1c6c3f489effbb7baf61906111851"
+    },
+    {
+      "bytes": 1104,
+      "path": "docs/agent-runs/phase-12/evidence/12d-spark-readiness/packaged-runs/baseline-a.stderr.txt.gz",
+      "sha256": "dd6426b8fbe6c2ef0aeda38519b607e66d92b0b46e02bdc06ac9c807ff53cfd2"
+    },
+    {
+      "bytes": 20,
+      "path": "docs/agent-runs/phase-12/evidence/12d-spark-readiness/packaged-runs/baseline-a.stdout.txt.gz",
+      "sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "bytes": 21479,
+      "path": "docs/agent-runs/phase-12/evidence/12d-spark-readiness/packaged-runs/baseline-b-attempt1-command.json",
+      "sha256": "405a46731cdd6e297793c74a40838e7e48d8ec12a3312f9358d338e432d047ba"
+    },
+    {
+      "bytes": 730,
+      "path": "docs/agent-runs/phase-12/evidence/12d-spark-readiness/packaged-runs/baseline-b-attempt1-result.json",
+      "sha256": "892de62e742f3261897bc7339290615d12932e1977114fb841d5b5c09305c295"
+    },
+    {
+      "bytes": 349530,
+      "path": "docs/agent-runs/phase-12/evidence/12d-spark-readiness/packaged-runs/baseline-b-attempt1.stderr.txt.gz",
+      "sha256": "c4f3780818c769f6511f124fdf340e1dfc69ed0e10763ff19757562ceda1867d"
+    },
+    {
+      "bytes": 180,
+      "path": "docs/agent-runs/phase-12/evidence/12d-spark-readiness/packaged-runs/baseline-b-attempt1.stdout.txt.gz",
+      "sha256": "fe38f9e8347b8351edc68a5b0dcd5cd44ff196a7c52eff10e6bd772ee8c7c1f3"
+    },
+    {
+      "bytes": 21800,
+      "path": "docs/agent-runs/phase-12/evidence/12d-spark-readiness/packaged-runs/compare-attempt1-command.json",
+      "sha256": "ff1071d7942a9f35e34ee7aca010a1ed82b2451b76eb576414e944b188340547"
+    },
+    {
+      "bytes": 518,
+      "path": "docs/agent-runs/phase-12/evidence/12d-spark-readiness/packaged-runs/compare-attempt1-result.json",
+      "sha256": "b931f10bba83d3b34af5501e178adb5b57e4c7a0adb1845309cf70bca93f4793"
+    },
+    {
+      "bytes": 86888,
+      "path": "docs/agent-runs/phase-12/evidence/12d-spark-readiness/packaged-runs/compare-attempt1.stderr.txt.gz",
+      "sha256": "9fa94234caddd254b11a0367491a1ddfaf37e57004a5806057556289ede4f713"
+    },
+    {
+      "bytes": 1646,
+      "path": "docs/agent-runs/phase-12/evidence/12d-spark-readiness/packaged-runs/compare-attempt1.stdout.txt.gz",
+      "sha256": "9c5372f7015418e31e373659c9b0186454adc9edf8dc07c0b9eaba07040c5c43"
+    },
+    {
+      "bytes": 21618,
+      "path": "docs/agent-runs/phase-12/evidence/12d-spark-readiness/packaged-runs/probe-local-attempt1-command.json",
+      "sha256": "64f224ea45772ec80040067d75fba5296bc830ace2afb84f00ed598e2eb658d2"
+    },
+    {
+      "bytes": 521,
+      "path": "docs/agent-runs/phase-12/evidence/12d-spark-readiness/packaged-runs/probe-local-attempt1-result.json",
+      "sha256": "205a1cf3b56db596af73f30c52ad90c7355e1ce9111585edecfd27a85bb1dc08"
+    },
+    {
+      "bytes": 1990,
+      "path": "docs/agent-runs/phase-12/evidence/12d-spark-readiness/packaged-runs/probe-local-attempt1.stderr.txt.gz",
+      "sha256": "e783e01eabab4086f2f3811bff9d1092cb452c37b97b6f4e52677a2d50956a05"
+    },
+    {
+      "bytes": 1131,
+      "path": "docs/agent-runs/phase-12/evidence/12d-spark-readiness/packaged-runs/probe-local-attempt1.stdout.txt.gz",
+      "sha256": "0240868c7909b01c78b38e958a566fcf1fd38514040d9e29812b5dcc7474a358"
+    },
+    {
+      "bytes": 21651,
+      "path": "docs/agent-runs/phase-12/evidence/12d-spark-readiness/packaged-runs/probe-local-negative-attempt1-command.json",
+      "sha256": "02e6396edfc382d85ec21876af12b2b69f27351405eabc204aaeb9cd646c7b80"
+    },
+    {
+      "bytes": 444,
+      "path": "docs/agent-runs/phase-12/evidence/12d-spark-readiness/packaged-runs/probe-local-negative-attempt1-result.json",
+      "sha256": "d7b1ac46fb8dfff8c9c5c6fec1b234a29815e3527e9071a6349d71e637c573d0"
+    },
+    {
+      "bytes": 2011,
+      "path": "docs/agent-runs/phase-12/evidence/12d-spark-readiness/packaged-runs/probe-local-negative-attempt1.stderr.txt.gz",
+      "sha256": "a8f31365c14fc0d9ac0a2ff97a65823ee3815678aaffad13be280cec3a162094"
+    },
+    {
+      "bytes": 20,
+      "path": "docs/agent-runs/phase-12/evidence/12d-spark-readiness/packaged-runs/probe-local-negative-attempt1.stdout.txt.gz",
+      "sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "bytes": 8660,
+      "path": "docs/agent-runs/phase-12/evidence/12d-spark-readiness/packaged-runs/retained-log-inventory.json",
+      "sha256": "6c83b985e9439141d9423572364867de1c9b7ae6cdf4567524be535bdadb5189"
+    },
+    {
+      "bytes": 6807,
+      "path": "docs/agent-runs/phase-12/evidence/12d-spark-readiness/packaged-runs/run-packaged.py",
+      "sha256": "8b4a454f1297be64c066f4ab80b8ef24950bc01ab16fbaf489ede7138d6cd956"
+    },
+    {
+      "bytes": 34066,
+      "path": "docs/agent-runs/phase-12/evidence/12d-spark-readiness/portable-bundle-copies.json",
+      "sha256": "8a106767c0a6fd4e6951f0af92642c1d0253818bad68a76dabb1ee5bb65101f9"
+    },
+    {
+      "bytes": 17652,
+      "path": "docs/agent-runs/phase-12/evidence/12d-spark-readiness/portable-bundle-manifest.json",
+      "sha256": "c014b63d143e8a05aefdcb18e49d300066f1fa9797e05b0e1d94961b86679116"
+    },
+    {
+      "bytes": 66963,
+      "path": "docs/agent-runs/phase-12/evidence/12d-spark-readiness/portable-g1-bundle.tar.gz",
+      "sha256": "ab89b02829ca98154b710f4d5ef327e56b74bce1a311283c082c5e4b3a8f629e"
+    },
+    {
+      "bytes": 778,
+      "path": "docs/agent-runs/phase-12/evidence/12d-spark-readiness/preservation-after.json",
+      "sha256": "bd5e815844b6ce0f209aad9f1f604331e670951fe88e3b4ed2b62820a4d54877"
+    },
+    {
+      "bytes": 970,
+      "path": "docs/agent-runs/phase-12/evidence/12d-spark-readiness/preservation-before.json",
+      "sha256": "068698716515b9befeda5d19134513fdddd526c91c22a74ec813fe29219cb10b"
+    },
+    {
+      "bytes": 5071,
+      "path": "docs/agent-runs/phase-12/evidence/12d-spark-readiness/probes/local-class-origin-validation.json",
+      "sha256": "efd4b05906ac7d14a92a1fa3e575b94bafaac171296f445231e9ce225aa96843"
+    },
+    {
+      "bytes": 5366,
+      "path": "docs/agent-runs/phase-12/evidence/12d-spark-readiness/probes/local-cluster-probe.json",
+      "sha256": "ca8b02b591102cda8d886898b21f0be84a2931753c66aede13f957f36c4de5b8"
+    },
+    {
+      "bytes": 5295,
+      "path": "docs/agent-runs/phase-12/evidence/12d-spark-readiness/probes/probe-local.json",
+      "sha256": "85e8e89aaa2f3d6aa73dd6aa9e624716b26fca924b9cc7e6adcb12c38e3069f3"
+    },
+    {
+      "bytes": 6428,
+      "path": "docs/agent-runs/phase-12/evidence/12d-spark-readiness/record-suffixes/owner-report.md",
+      "sha256": "a9ca321fb62c4aa968e9f123754b7542e5d555a3ae7fec1669e667a0cc14dc26"
+    },
+    {
+      "bytes": 6633,
+      "path": "docs/agent-runs/phase-12/evidence/12d-spark-readiness/record-suffixes/prompt.md",
+      "sha256": "74a2cb88064e0ff4e2e658e0ee1673edfcda67ad2a07a8a71ebf0ba45e223247"
+    },
+    {
+      "bytes": 4104,
+      "path": "docs/agent-runs/phase-12/evidence/12d-spark-readiness/record-suffixes/repairs.md",
+      "sha256": "303cd94ab8a02b4b4337ddd767efaf106c57b0ba10a60f31b3aa53b8d3a7d71d"
+    },
+    {
+      "bytes": 897,
+      "path": "docs/agent-runs/phase-12/evidence/12d-spark-readiness/record-suffixes/review.md",
+      "sha256": "8f21dfedbcd10e0a77f75ee3d3da1af4ed5c8ef0f23b8cf8133931d24669977a"
+    },
+    {
+      "bytes": 4435,
+      "path": "docs/agent-runs/phase-12/evidence/12d-spark-readiness/record-suffixes/test-report.md",
+      "sha256": "507b9cd0d74035e8e46bc70e2ab1d2c8fb414c269c77249e0a2518d19b43ee5f"
+    },
+    {
+      "bytes": 19354,
+      "path": "docs/agent-runs/phase-12/evidence/12d-spark-readiness/runtime/driver-classpath.txt",
+      "sha256": "3961f30a6a2783acbd4a7008addb9a3ce062905043799d7332e7bc754ae3a059"
+    },
+    {
+      "bytes": 1756,
+      "path": "docs/agent-runs/phase-12/evidence/12d-spark-readiness/runtime/probe-only-runtime-manifest.json",
+      "sha256": "5b46d754dffc00861a10f7cd6681e0264b367a8b585cefd423e0da557c5e868c"
+    },
+    {
+      "bytes": 91176,
+      "path": "docs/agent-runs/phase-12/evidence/12d-spark-readiness/runtime/runtime-manifest.json",
+      "sha256": "1326889d71a974cfed06b014faccc28cf8726b0ad72f2526614dddb12f245114"
+    },
+    {
+      "bytes": 53584,
+      "path": "docs/agent-runs/phase-12/evidence/12d-spark-readiness/source-after/modules/spark/README.md",
+      "sha256": "958bd1409e6a4735ddb9e16f93ef457768ba6c0c7cfd8565fb216f0016a153c0"
+    },
+    {
+      "bytes": 0,
+      "path": "docs/agent-runs/phase-12/evidence/12d-spark-readiness/source-after/modules/spark/src/main/resources/phase12/empty.jsonl",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 1594,
+      "path": "docs/agent-runs/phase-12/evidence/12d-spark-readiness/source-after/modules/spark/src/main/resources/phase12/g1-dblp.xml",
+      "sha256": "55e806990e062f7c36c251bc0cd0eb2ca55559c014f9eda0c86d9132f5b67d8a"
+    },
+    {
+      "bytes": 1390,
+      "path": "docs/agent-runs/phase-12/evidence/12d-spark-readiness/source-after/modules/spark/src/main/scala/edu/uic/cs441/scholarchain/spark/BoundedActions.scala",
+      "sha256": "c53a1c72abeabd6335b07e6179b86ff759aa4244a61b4157ebb4a71d333ab7c2"
+    },
+    {
+      "bytes": 15641,
+      "path": "docs/agent-runs/phase-12/evidence/12d-spark-readiness/source-after/modules/spark/src/main/scala/edu/uic/cs441/scholarchain/spark/Phase12Readiness.scala",
+      "sha256": "7388e1b5fa38317701c25118f30c6e84463858af3e4b12e4e98569df2435c614"
+    },
+    {
+      "bytes": 12238,
+      "path": "docs/agent-runs/phase-12/evidence/12d-spark-readiness/source-after/modules/spark/src/test/scala/edu/uic/cs441/scholarchain/spark/Phase12ReadinessSpec.scala",
+      "sha256": "5bb4cdd5f94b1d323d281dcb11469c8a37c6c4f522c60c42b1087145c60c1eb6"
+    },
+    {
+      "bytes": 49517,
+      "path": "docs/agent-runs/phase-12/evidence/12d-spark-readiness/source-before/modules/spark/README.md",
+      "sha256": "9c6af6edfde4ae69d85fd99edbca345116df6c96df5b0e474380cae8f5b84a59"
+    },
+    {
+      "bytes": 884,
+      "path": "docs/agent-runs/phase-12/evidence/12d-spark-readiness/source-before/modules/spark/src/main/scala/edu/uic/cs441/scholarchain/spark/BoundedActions.scala",
+      "sha256": "fdbc6ffae9baf16f4ec0faca367bac061acd3ba8ab450f26954a57ef3c9869c5"
+    },
+    {
+      "bytes": 38076,
+      "path": "docs/agent-runs/phase-12/evidence/12d-spark-readiness/source-delta.patch",
+      "sha256": "f76199f98d85cc2c6580702ccb7c2e689fa97554ea26f256788df7c506b71133"
+    },
+    {
+      "bytes": 927,
+      "path": "docs/agent-runs/phase-12/evidence/12d-spark-readiness/spark-authoring-hashes.json",
+      "sha256": "1a3612db454f5ea2d4deebefe68718a6e9c2ab698325bac0fd44bfcba9d274b1"
+    },
+    {
+      "bytes": 5045,
+      "path": "docs/agent-runs/phase-12/evidence/12d-spark-readiness/spark-authoring-report.md",
+      "sha256": "52e41f2485a68dbf4a69b3240442e81c041b5d78745c56a65a2b8c3282d06c33"
+    },
+    {
+      "bytes": 5876,
+      "path": "docs/agent-runs/phase-12/evidence/12d-spark-readiness/spark-owner-report.md",
+      "sha256": "63bf7919def7f11e0b036756a3ea74d27d26b5535f246043e57d7d9a17bdfa62"
+    },
+    {
+      "bytes": 2070,
+      "path": "docs/agent-runs/phase-12/evidence/12d-spark-readiness/spark-requested-validation.json",
+      "sha256": "8392402c0375a89d77837eb2cd6fd030a80825fac6cb54ad62005741a6227c54"
+    },
+    {
+      "bytes": 1600,
+      "path": "docs/agent-runs/phase-12/evidence/12d-spark-readiness/spark-source-fence-repair1.json",
+      "sha256": "9a85e2b807fe6d014e89fa744b16b4d9fca289b206157f6526b25274c9ce1a8c"
+    },
+    {
+      "bytes": 4363,
+      "path": "docs/agent-runs/phase-12/evidence/12d-spark-readiness/test-report.md",
+      "sha256": "40533d4cb4c71fcc524bc0927bfb6a57fae35772c8c660dc0760422041745d3d"
+    },
+    {
+      "bytes": 2637,
+      "path": "docs/agent-runs/phase-12/evidence/12d-spark-readiness/upstream/er-command.json",
+      "sha256": "399c9c2f985e6e454381fd00735737e97c71b23322df6635db508f3cca6cd3d5"
+    },
+    {
+      "bytes": 147,
+      "path": "docs/agent-runs/phase-12/evidence/12d-spark-readiness/upstream/er-result.json",
+      "sha256": "7ebfc1fcf41829c4302873a6ea9a2524564f2882c3b5f527b3230ef7e11da5a3"
+    },
+    {
+      "bytes": 0,
+      "path": "docs/agent-runs/phase-12/evidence/12d-spark-readiness/upstream/er.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 279,
+      "path": "docs/agent-runs/phase-12/evidence/12d-spark-readiness/upstream/er.stdout.txt",
+      "sha256": "9da17b14a2873887c9eb88fb364db02a8ee13f5f2adfd9304bad84d43d4e85e3"
+    },
+    {
+      "bytes": 18269,
+      "path": "docs/agent-runs/phase-12/evidence/12d-spark-readiness/upstream/hadoop-command.json",
+      "sha256": "39de97084b04678f2b8a0ba1a4f01d8e9ecbaef0a1aac27eab5b5fc222adb264"
+    },
+    {
+      "bytes": 148,
+      "path": "docs/agent-runs/phase-12/evidence/12d-spark-readiness/upstream/hadoop-result.json",
+      "sha256": "5688b438ac8567a7b3cb4f402531035770cd4e88d9c452d110d83c591b71402a"
+    },
+    {
+      "bytes": 186,
+      "path": "docs/agent-runs/phase-12/evidence/12d-spark-readiness/upstream/hadoop.stderr.txt",
+      "sha256": "2c58b87a0350a39bb1c3b5f4891defeeb9a785e84aa11a466dc9ddb21253bf58"
+    },
+    {
+      "bytes": 4538,
+      "path": "docs/agent-runs/phase-12/evidence/12d-spark-readiness/upstream/hadoop.stdout.txt",
+      "sha256": "209c89b2464a6475138e89be041bb718468a04e507d7c8667be834ca403daf94"
+    },
+    {
+      "bytes": 4335,
+      "path": "docs/agent-runs/phase-12/evidence/12d-spark-readiness/upstream/run-upstream.py",
+      "sha256": "8d5db129be8f3f6ce8b20943d51ea72512930198b736faa4f4bee3ca2e32cf40"
+    },
+    {
+      "bytes": 819,
+      "path": "docs/agent-runs/phase-12/evidence/12d-spark-readiness/upstream-result.json",
+      "sha256": "9e3a6d7dc930d198358b80c89013bed78f6b1478e850aecb8f460e96e2d5f6f7"
+    },
+    {
+      "bytes": 6561,
+      "path": "docs/agent-runs/phase-12/evidence/12d-spark-readiness/work-order.md",
+      "sha256": "75587ddcecff827a42fff1ce381485524faf66176286e2655b95533bc2fab9ec"
+    },
+    {
+      "bytes": 163402,
+      "path": "docs/agent-runs/phase-12/owner-report.md",
+      "sha256": "e4ca956132423516ce67c908160f3f32e5a2861045901a9c1e7056be34bd2951"
+    },
+    {
+      "bytes": 94372,
+      "path": "docs/agent-runs/phase-12/prompt.md",
+      "sha256": "f2027455c44581a76d61c611852673d4a7f471930dc541bd914dab19b20e404b"
+    },
+    {
+      "bytes": 72826,
+      "path": "docs/agent-runs/phase-12/repairs.md",
+      "sha256": "5f5cb3e1c94ba8cff555b9e1468356268dcee605ac9751e60bfcbd30e121dda0"
+    },
+    {
+      "bytes": 262435,
+      "path": "docs/agent-runs/phase-12/review.md",
+      "sha256": "bf5609fa776198232820734ec10d39210f2cda548777aea2a1ea2cc3ed846679"
+    },
+    {
+      "bytes": 5292,
+      "path": "docs/agent-runs/phase-12/reviewer-prompt-12d-spark-readiness.md",
+      "sha256": "fb99c84e1c99447547688e03f976ac35e0ab27be8087a0545f31d12cec5a8215"
+    },
+    {
+      "bytes": 148317,
+      "path": "docs/agent-runs/phase-12/test-report.md",
+      "sha256": "db1832eecd44e3ab3ef0b563bb45832a2cb6a1dae2736949c1c07e8c3f38f40b"
+    },
+    {
+      "bytes": 53584,
+      "path": "modules/spark/README.md",
+      "sha256": "958bd1409e6a4735ddb9e16f93ef457768ba6c0c7cfd8565fb216f0016a153c0"
+    },
+    {
+      "bytes": 0,
+      "path": "modules/spark/src/main/resources/phase12/empty.jsonl",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 1594,
+      "path": "modules/spark/src/main/resources/phase12/g1-dblp.xml",
+      "sha256": "55e806990e062f7c36c251bc0cd0eb2ca55559c014f9eda0c86d9132f5b67d8a"
+    },
+    {
+      "bytes": 1390,
+      "path": "modules/spark/src/main/scala/edu/uic/cs441/scholarchain/spark/BoundedActions.scala",
+      "sha256": "c53a1c72abeabd6335b07e6179b86ff759aa4244a61b4157ebb4a71d333ab7c2"
+    },
+    {
+      "bytes": 15641,
+      "path": "modules/spark/src/main/scala/edu/uic/cs441/scholarchain/spark/Phase12Readiness.scala",
+      "sha256": "7388e1b5fa38317701c25118f30c6e84463858af3e4b12e4e98569df2435c614"
+    },
+    {
+      "bytes": 12238,
+      "path": "modules/spark/src/test/scala/edu/uic/cs441/scholarchain/spark/Phase12ReadinessSpec.scala",
+      "sha256": "5bb4cdd5f94b1d323d281dcb11469c8a37c6c4f522c60c42b1087145c60c1eb6"
+    }
+  ],
+  "phase12d_complete": false,
+  "readiness_review_approved": false
+}

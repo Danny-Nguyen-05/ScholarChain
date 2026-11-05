@@ -1,0 +1,94 @@
+{
+  "sanitized_at_utc": "2026-11-01T19:56:54.064243+00:00",
+  "terraform_version": "1.13.5",
+  "plan_exit_code": 2,
+  "plan_path": "/Users/danny/Library/Application Support/ScholarChain/terraform/billing-bootstrap/billing.execution.tfplan",
+  "plan_sha256": "ab9f141e83058209263cf561eef1d102496ec7f534b88ce421620d8e0045f855",
+  "plan_bytes": 6631,
+  "counts": {
+    "add": 1,
+    "change": 0,
+    "destroy": 0,
+    "replace": 0
+  },
+  "resources": [
+    {
+      "address": "aws_budgets_budget.project[0]",
+      "type": "aws_budgets_budget",
+      "actions": [
+        "create"
+      ]
+    }
+  ],
+  "budget": {
+    "account_id": "530332961125",
+    "name": "scholarchain-project-budget",
+    "budget_type": "COST",
+    "limit_amount": "200",
+    "limit_unit": "USD",
+    "time_unit": "CUSTOM",
+    "time_period_start": "2026-10-01_00:00",
+    "time_period_end": "2027-01-01_00:00",
+    "cost_types": [
+      {
+        "include_credit": false,
+        "include_discount": true,
+        "include_other_subscription": true,
+        "include_recurring": true,
+        "include_refund": false,
+        "include_subscription": true,
+        "include_support": true,
+        "include_tax": true,
+        "include_upfront": true,
+        "use_amortized": false,
+        "use_blended": false
+      }
+    ],
+    "cost_filter": null,
+    "filter_expression": [],
+    "tags": {
+      "course": "CS441",
+      "environment": "course",
+      "expiration_date": "2027-01-01",
+      "owner": "danny",
+      "project": "scholarchain"
+    }
+  },
+  "notifications": [
+    {
+      "comparison": "GREATER_THAN",
+      "threshold": 50,
+      "threshold_type": "PERCENTAGE",
+      "notification_type": "ACTUAL",
+      "subscriber_count": 1,
+      "sns_subscriber_count": 0
+    },
+    {
+      "comparison": "GREATER_THAN",
+      "threshold": 80,
+      "threshold_type": "PERCENTAGE",
+      "notification_type": "ACTUAL",
+      "subscriber_count": 1,
+      "sns_subscriber_count": 0
+    },
+    {
+      "comparison": "GREATER_THAN",
+      "threshold": 100,
+      "threshold_type": "PERCENTAGE",
+      "notification_type": "ACTUAL",
+      "subscriber_count": 1,
+      "sns_subscriber_count": 0
+    }
+  ],
+  "privacy": {
+    "raw_plan_json_retained_outside_git": true,
+    "private_recipient_values_retained_in_safe_summary": false,
+    "private_input_contents_read_or_hashed": false,
+    "plan_and_raw_logs_can_contain_recipient": true
+  },
+  "provider_identity": "provider allowed_account_ids pins account; profile supplied; user separately verified exact billing assumed-role ARN before this work; no standalone identity call repeated",
+  "remote_budget_absence_verified": false,
+  "fresh_local_state_does_not_prove_remote_absence": true,
+  "local_state_file_exists_after_plan": false,
+  "applied": false
+}

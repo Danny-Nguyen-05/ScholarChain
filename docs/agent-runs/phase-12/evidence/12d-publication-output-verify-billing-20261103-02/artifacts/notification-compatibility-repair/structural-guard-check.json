@@ -1,0 +1,18 @@
+{
+  "changed_production_definitions": [
+    "sanitize_readback"
+  ],
+  "new_or_removed_definitions": [],
+  "outgoing_expected_notification_unchanged": true,
+  "initial_wrapper_Execution_Policy_PrivateRunner_stop_apply_main_unchanged": true,
+  "separate_verifier_production_file_unchanged": true,
+  "changed_paths": [
+    "scripts/billing/README.md",
+    "scripts/billing/budget_execution.py",
+    "scripts/billing/tests/test_budget_execution.py",
+    "scripts/billing/tests/test_budget_verification.py"
+  ],
+  "all11bindings_recorded": true,
+  "private_reads_or_stats": 0,
+  "AWS_calls": 0
+}

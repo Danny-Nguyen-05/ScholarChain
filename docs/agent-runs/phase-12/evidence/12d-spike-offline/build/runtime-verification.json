@@ -1,0 +1,36 @@
+{
+  "tgz": "target/phase12d-runtime-repair-20261103/artifacts/scholarchain-spark3.5.4-scala2.13.14-java17-runtime.tgz",
+  "sha256": "789a9684f91527dfd9b97d56acce9dbfe5dd4c328299542245da92968f916de5",
+  "expected_sha256": "789a9684f91527dfd9b97d56acce9dbfe5dd4c328299542245da92968f916de5",
+  "sha256_match": true,
+  "member_count": 378,
+  "file_member_count": 378,
+  "jar_count": 255,
+  "top_dirs": [
+    "scholarchain-runtime"
+  ],
+  "job_jar": {
+    "member": "scholarchain-runtime/application/scholarchain-job.jar",
+    "mode_octal": "0o644",
+    "mode_is_0644": true,
+    "sha256": "d52f11ebad5ec9e1ffdd1910d562023e934ce7ab62e7c74a5ffd650f8951b86b",
+    "expected_sha256": "d52f11ebad5ec9e1ffdd1910d562023e934ce7ab62e7c74a5ffd650f8951b86b",
+    "sha256_match": true
+  },
+  "scala_and_spark_core_jars": [
+    "scholarchain-runtime/jars/scala-collection-compat_2.13-2.7.0.jar",
+    "scholarchain-runtime/jars/scala-library-2.13.14.jar",
+    "scholarchain-runtime/jars/scala-parallel-collections_2.13-1.0.4.jar",
+    "scholarchain-runtime/jars/scala-parser-combinators_2.13-2.3.0.jar",
+    "scholarchain-runtime/jars/scala-reflect-2.13.14.jar",
+    "scholarchain-runtime/jars/scala-xml_2.13-2.1.0.jar",
+    "scholarchain-runtime/jars/spark-core_2.13-3.5.4.jar"
+  ],
+  "scala_library_jars": [
+    "scholarchain-runtime/jars/scala-library-2.13.14.jar"
+  ],
+  "jars_with__2.12": [],
+  "scala_library_2.12_jars": [],
+  "assert_no__2.12_jar": true,
+  "assert_no_scala_library_2.12": true
+}

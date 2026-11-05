@@ -1,0 +1,47 @@
+{
+  "timestamp_utc": "2026-10-29T15:49:25.658386+00:00",
+  "base_sha": "a83f62e9af56058a170075f98c4e027d039567ec",
+  "branch": "phase-12",
+  "head": "a83f62e9af56058a170075f98c4e027d039567ec",
+  "repair_changed_infra_paths": [
+    "infra/terraform/README.md",
+    "infra/terraform/modules/identity/main.tf",
+    "infra/terraform/tests/phase12b.tftest.hcl"
+  ],
+  "new_infra_files": 0,
+  "all_frozen_source_hash_bytes_mtime_match": true,
+  "frozen_file_count": 67,
+  "pre_repair_baseline_count": 265,
+  "preservation_errors": [],
+  "append_only_prefixes_preserved": [
+    "docs/agent-runs/phase-12/owner-report.md",
+    "docs/agent-runs/phase-12/repairs.md",
+    "docs/agent-runs/phase-12/review.md",
+    "docs/agent-runs/phase-12/test-report.md"
+  ],
+  "prior_12b_evidence_files_preserved": 103,
+  "noninfra_source_files_unchanged": 455,
+  "out_of_scope_paths": [],
+  "human_owned_changed_paths": [],
+  "tracked_changed_count": 18,
+  "untracked_count": 184,
+  "infra_artifacts_checked": 25,
+  "native_command_logs_checked": 11,
+  "build": {
+    "gate_exit_code": 0,
+    "counts": {
+      "tests": 1253,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "xml_report_count": 156,
+    "fresh_xml_report_count": 156,
+    "source_unchanged": true,
+    "all_snapshot_file_count": 521,
+    "start_after_freeze": true,
+    "start_after_all_source_mtimes": true,
+    "xml_log_count_agrees": true,
+    "log_sha256": "71fd8fd868bb90de21164ca405cebda22123fba06453d0d0072e9ee5499fb16b"
+  }
+}

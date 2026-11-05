@@ -1,0 +1,4 @@
+{
+    "Account": "530332961125",
+    "Arn": "arn:aws:iam::530332961125:user/scholarchain-planner"
+}

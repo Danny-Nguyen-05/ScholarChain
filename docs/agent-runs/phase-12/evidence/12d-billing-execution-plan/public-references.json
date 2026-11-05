@@ -1,0 +1,21 @@
+{
+  "access_context": "Primary documentation browsed during this work order, client date October 31, 2026",
+  "references": [
+    {
+      "url": "https://developer.hashicorp.com/terraform/cli/v1.13.x/commands/plan",
+      "use": "Pinned CLI version: plan proposes changes; -out retains a sensitive plan; detailed-exitcode 2 means proposed changes."
+    },
+    {
+      "url": "https://raw.githubusercontent.com/hashicorp/terraform-provider-aws/v6.44.0/website/docs/index.html.markdown",
+      "use": "Pinned provider profile/configuration precedence and allowed_account_ids guard. Named profile is not immutable resolved-ARN proof."
+    },
+    {
+      "url": "https://aws.amazon.com/aws-cost-management/aws-budgets/pricing/",
+      "use": "Standard budget monitoring and notifications are free under published pricing. This proposed budget has no Budget Actions or reports. USD200 is the monitoring threshold, not a purchase or hard cutoff."
+    }
+  ],
+  "lookup_limitations": [
+    "Registry 6.44.0 documentation page required JavaScript; pinned raw provider documentation used instead. Latest Terraform page replaced with pinned 1.13.x documentation."
+  ],
+  "actual_current_account_cost_and_remaining_allowance_verified": false
+}

@@ -1,0 +1,53 @@
+[
+  {
+    "label": "init-final",
+    "command": [
+      "/tmp/scholarchain-phase12a-infra-toolchain/terraform",
+      "init",
+      "-backend=false",
+      "-input=false",
+      "-no-color"
+    ],
+    "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain/infra/terraform",
+    "exit_code": 0,
+    "log": "/tmp/scholarchain-phase12a-repair1-infra-init-final.log",
+    "sha256": "6fd242691fd6bbc7efe25549609a26c11107f98c3ae3cb12128985c21a261753"
+  },
+  {
+    "label": "fmt-final",
+    "command": [
+      "/tmp/scholarchain-phase12a-infra-toolchain/terraform",
+      "fmt",
+      "-check",
+      "-recursive"
+    ],
+    "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain/infra/terraform",
+    "exit_code": 0,
+    "log": "/tmp/scholarchain-phase12a-repair1-infra-fmt-final.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "label": "validate-final",
+    "command": [
+      "/tmp/scholarchain-phase12a-infra-toolchain/terraform",
+      "validate",
+      "-no-color"
+    ],
+    "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain/infra/terraform",
+    "exit_code": 0,
+    "log": "/tmp/scholarchain-phase12a-repair1-infra-validate-final.log",
+    "sha256": "f7997225125835fdd14060ac776d273f394b874f9a481b9e2122c83dc8adc5c1"
+  },
+  {
+    "label": "test-final",
+    "command": [
+      "/tmp/scholarchain-phase12a-infra-toolchain/terraform",
+      "test",
+      "-no-color"
+    ],
+    "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain/infra/terraform",
+    "exit_code": 0,
+    "log": "/tmp/scholarchain-phase12a-repair1-infra-test-final.log",
+    "sha256": "7cb6be1995c6c4bb1abac1df0c1cd19b06b06fb0409f68ecae3207cf6c25a14f"
+  }
+]

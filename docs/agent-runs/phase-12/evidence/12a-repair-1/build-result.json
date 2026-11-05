@@ -1,0 +1,69 @@
+{
+  "owner": "build-engineer",
+  "native_task": "/root/build_12a",
+  "model": "inherited; exact model identifier not exposed",
+  "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+  "start_epoch": 1793223258.242954,
+  "start_utc": "2026-10-28T21:34:18.242955+00:00",
+  "environment": {
+    "JAVA_HOME": "/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home",
+    "SBT_OPTS": "-Dlogback.configurationFile=/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-04/xml-repair-logback.xml"
+  },
+  "path_prefix": "/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home/bin",
+  "commands": [
+    [
+      "java",
+      "-version"
+    ],
+    [
+      "sbt",
+      "-batch",
+      "check"
+    ]
+  ],
+  "freeze_path": "/tmp/scholarchain-phase12a-repair1-infra-source-freeze.json",
+  "freeze_sha256": "e00074e7405225537cd77c174c729b0be6b4e1ff859e30960dfd57935463ba1d",
+  "freeze_epoch": 1793223203.682294,
+  "max_source_mtime_epoch": 1793223161.9012697,
+  "start_after_freeze": true,
+  "start_after_all_source_mtimes": true,
+  "frozen_source_count": 41,
+  "frozen_hash_mismatches": [],
+  "source_before_path": "/tmp/scholarchain-phase12a-repair1-build-source-before.json",
+  "results": [
+    {
+      "argv": [
+        "java",
+        "-version"
+      ],
+      "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+      "start_epoch": 1793223258.24311,
+      "exit_code": 0,
+      "elapsed_seconds": 0.045,
+      "log": "/tmp/scholarchain-phase12a-repair1-build-java-version.log",
+      "log_sha256": "2fe83b0053132e4e834defa82250462f4c62733d29bf76b19ee1bb3c14b06b39",
+      "log_bytes": 171
+    },
+    {
+      "argv": [
+        "sbt",
+        "-batch",
+        "check"
+      ],
+      "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+      "start_epoch": 1793223258.2887309,
+      "exit_code": 0,
+      "elapsed_seconds": 729.463,
+      "log": "/tmp/scholarchain-phase12a-repair1-build-sbt-check.log",
+      "log_sha256": "390b4f7ad2c62309a3df98f1fe0f9ad8abfdd1f599ea879a264d175dfe07fc3a",
+      "log_bytes": 1721183
+    }
+  ],
+  "end_utc": "2026-10-28T21:46:27.766216+00:00",
+  "elapsed_seconds": 729.523,
+  "source_after_path": "/tmp/scholarchain-phase12a-repair1-build-source-after.json",
+  "source_changed_paths": [],
+  "source_unchanged": true,
+  "git_branch_head_unchanged": true,
+  "gate_exit_code": 0
+}

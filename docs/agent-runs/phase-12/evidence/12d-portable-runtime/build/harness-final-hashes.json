@@ -1,0 +1,47 @@
+[
+  {
+    "path": "fetch-public-runtime.py",
+    "bytes": 2169,
+    "sha256": "ba651da24a5065e25b0ad662193286db7027c88a4d56f8ce4a6c693d38e20328"
+  },
+  {
+    "path": "fetch-security-source.py",
+    "bytes": 1326,
+    "sha256": "ebe46d34c547ed948f3786328eb2bf417213f7f73083799ae3cd9672a6887d29"
+  },
+  {
+    "path": "fetch-signer-reference.py",
+    "bytes": 1105,
+    "sha256": "6d1aa19a17118d51bbec6946d27c641279edfe3270add030f5b6568fd574485a"
+  },
+  {
+    "path": "package-runtime.py",
+    "bytes": 3810,
+    "sha256": "02afa2f7b7dec284d5c293d3f6907727537785b2693e32347f3e7b3ae0848592"
+  },
+  {
+    "path": "prepare-inputs-and-tests.py",
+    "bytes": 2509,
+    "sha256": "e81e1d0b25426fed90872ebbe2ecbe7e0e40dfc84ce7b0805275134453d86c54"
+  },
+  {
+    "path": "prepare-runtime.py",
+    "bytes": 4584,
+    "sha256": "42f459c89c673c22c487082d67d2894f31694b67eabe28bd6bfdfc12a8803130"
+  },
+  {
+    "path": "run-relocated-test-before-security-adaptive.py",
+    "bytes": 4523,
+    "sha256": "4c1f7a544c2e1d0ca2654baccc62b7e678bd003e06f0d430f7ce702f580f273e"
+  },
+  {
+    "path": "run-relocated-test-before-security.py",
+    "bytes": 3834,
+    "sha256": "d17ff61ce383175bf0097f749723206382a7cd363bde52998ae79a6328dc6c3a"
+  },
+  {
+    "path": "run-relocated-test.py",
+    "bytes": 5427,
+    "sha256": "2b78b019fcb6f980357ead0a429f3da743f10bcb576cd0500bf8c6d5e7320246"
+  }
+]

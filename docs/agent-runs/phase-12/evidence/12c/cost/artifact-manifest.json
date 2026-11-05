@@ -1,0 +1,53 @@
+{
+  "created_utc": "2026-10-30T17:43:21.798061+00:00",
+  "artifacts": [
+    {
+      "path": "/tmp/scholarchain-phase12c-cost/cost-memo.md",
+      "name": "cost-memo.md",
+      "bytes": 11028,
+      "sha256": "d883a60c166203e203574f3a2ea924eb765753ae3fc47ba16d673fdbd34e1a22"
+    },
+    {
+      "path": "/tmp/scholarchain-phase12c-cost/cost-calculations.json",
+      "name": "cost-calculations.json",
+      "bytes": 11557,
+      "sha256": "69d635841bf6371a4474bb72b04790cfb5c6fdd9ca41b2d63f04221db73541a8"
+    },
+    {
+      "path": "/tmp/scholarchain-phase12c-cost/curated-price-evidence.json",
+      "name": "curated-price-evidence.json",
+      "bytes": 47512,
+      "sha256": "ec3e8c6abec375d28feb10ed33dcf8433e0859191a477b5e6a226f0abfe5ab73"
+    },
+    {
+      "path": "/tmp/scholarchain-phase12c-cost/fetch-manifest.json",
+      "name": "fetch-manifest.json",
+      "bytes": 9452,
+      "sha256": "1db4a433ed80ca117a5ebac2a6f5dffffdaa85850f74195530ae9e4dde87012b"
+    },
+    {
+      "path": "/tmp/scholarchain-phase12c-cost/build_cost_evidence.py",
+      "name": "build_cost_evidence.py",
+      "bytes": 11923,
+      "sha256": "9b9b9d53f987d5c464ea0157b73178af52eaa09599a1f9b6b436ef6b2c7042cc"
+    },
+    {
+      "path": "/tmp/scholarchain-phase12c-cost/plan-reference.json",
+      "name": "plan-reference.json",
+      "bytes": 762,
+      "sha256": "a592da9df8881fb05a9419c14ed539d94991397e44a07e9d5db7da6110cb6f8c"
+    },
+    {
+      "path": "/tmp/scholarchain-phase12c-cost/research-commands.md",
+      "name": "research-commands.md",
+      "bytes": 2528,
+      "sha256": "0150db61cc583e6ae4abe3fcfb2645c5fe5cc42efb117cbc767379d4457408e4"
+    },
+    {
+      "path": "/tmp/scholarchain-phase12c-cost/offline-replay-proof.json",
+      "name": "offline-replay-proof.json",
+      "bytes": 361,
+      "sha256": "6d9c002c1a7c02f7cd44ba05bb5cd0fc4e111d8b38c8c708b8d18e0097447896"
+    }
+  ]
+}

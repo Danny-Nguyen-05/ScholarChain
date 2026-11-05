@@ -1,0 +1,170 @@
+[
+  {
+    "encoding": "identity",
+    "evidence": "packaged-runs/baseline-a-attempt2-command.json",
+    "original_bytes": 21479,
+    "original_path": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/logs/baseline-a-attempt2-command.json",
+    "original_sha256": "b42d7a78119c3a8d3ae82b44a5240c6206cee6654cb831739ebd756ac77805f0"
+  },
+  {
+    "encoding": "identity",
+    "evidence": "packaged-runs/baseline-a-attempt2-result.json",
+    "original_bytes": 739,
+    "original_path": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/logs/baseline-a-attempt2-result.json",
+    "original_sha256": "7054a1bde1caeb7fd515a2367ee9c2ac9a2ca5d94bc9d86a1df36e1a539fde7a"
+  },
+  {
+    "encoding": "gzip",
+    "evidence": "packaged-runs/baseline-a-attempt2.stderr.txt.gz",
+    "original_bytes": 5639312,
+    "original_path": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/logs/baseline-a-attempt2.stderr.txt",
+    "original_sha256": "d6421d6407b03559396a8e0ad8fa73984b36be078379ac5c629f45ee4eb5d3a6"
+  },
+  {
+    "encoding": "gzip",
+    "evidence": "packaged-runs/baseline-a-attempt2.stdout.txt.gz",
+    "original_bytes": 227,
+    "original_path": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/logs/baseline-a-attempt2.stdout.txt",
+    "original_sha256": "d461fcdfb0bf6cd462d222a7481de04ad3d3dba87a9c1c2b4fb415c6af9ad2c1"
+  },
+  {
+    "encoding": "identity",
+    "evidence": "packaged-runs/baseline-a-command.json",
+    "original_bytes": 21479,
+    "original_path": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/logs/baseline-a-command.json",
+    "original_sha256": "d5e3ea45a50870f1a82526e8a33b3da9a8c489442addad6899081e91dd10b602"
+  },
+  {
+    "encoding": "identity",
+    "evidence": "packaged-runs/baseline-a-result.json",
+    "original_bytes": 383,
+    "original_path": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/logs/baseline-a-result.json",
+    "original_sha256": "81a462307f222b2dcd298e311777407831d1c6c3f489effbb7baf61906111851"
+  },
+  {
+    "encoding": "gzip",
+    "evidence": "packaged-runs/baseline-a.stderr.txt.gz",
+    "original_bytes": 3725,
+    "original_path": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/logs/baseline-a.stderr.txt",
+    "original_sha256": "6dc2f92ca0237f9f6f70a57eb9afe8894c425cc757ce7e0bc4d82958b62d6b97"
+  },
+  {
+    "encoding": "gzip",
+    "evidence": "packaged-runs/baseline-a.stdout.txt.gz",
+    "original_bytes": 0,
+    "original_path": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/logs/baseline-a.stdout.txt",
+    "original_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "encoding": "identity",
+    "evidence": "packaged-runs/baseline-b-attempt1-command.json",
+    "original_bytes": 21479,
+    "original_path": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/logs/baseline-b-attempt1-command.json",
+    "original_sha256": "405a46731cdd6e297793c74a40838e7e48d8ec12a3312f9358d338e432d047ba"
+  },
+  {
+    "encoding": "identity",
+    "evidence": "packaged-runs/baseline-b-attempt1-result.json",
+    "original_bytes": 730,
+    "original_path": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/logs/baseline-b-attempt1-result.json",
+    "original_sha256": "892de62e742f3261897bc7339290615d12932e1977114fb841d5b5c09305c295"
+  },
+  {
+    "encoding": "gzip",
+    "evidence": "packaged-runs/baseline-b-attempt1.stderr.txt.gz",
+    "original_bytes": 5969871,
+    "original_path": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/logs/baseline-b-attempt1.stderr.txt",
+    "original_sha256": "4c7c6fbfe6c9e1396877190d617980e4cb0dc64509e6cad7022f266d2812661c"
+  },
+  {
+    "encoding": "gzip",
+    "evidence": "packaged-runs/baseline-b-attempt1.stdout.txt.gz",
+    "original_bytes": 218,
+    "original_path": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/logs/baseline-b-attempt1.stdout.txt",
+    "original_sha256": "79d0e3fad1613051dc5801e7605944d7e264bbad74d97e26709724cecd0b4dcc"
+  },
+  {
+    "encoding": "identity",
+    "evidence": "packaged-runs/compare-attempt1-command.json",
+    "original_bytes": 21800,
+    "original_path": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/logs/compare-attempt1-command.json",
+    "original_sha256": "ff1071d7942a9f35e34ee7aca010a1ed82b2451b76eb576414e944b188340547"
+  },
+  {
+    "encoding": "identity",
+    "evidence": "packaged-runs/compare-attempt1-result.json",
+    "original_bytes": 518,
+    "original_path": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/logs/compare-attempt1-result.json",
+    "original_sha256": "b931f10bba83d3b34af5501e178adb5b57e4c7a0adb1845309cf70bca93f4793"
+  },
+  {
+    "encoding": "gzip",
+    "evidence": "packaged-runs/compare-attempt1.stderr.txt.gz",
+    "original_bytes": 1676328,
+    "original_path": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/logs/compare-attempt1.stderr.txt",
+    "original_sha256": "98b144ad85afc1d324415db5bac292ff8591d519270886981955b6da4aaed212"
+  },
+  {
+    "encoding": "gzip",
+    "evidence": "packaged-runs/compare-attempt1.stdout.txt.gz",
+    "original_bytes": 5260,
+    "original_path": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/logs/compare-attempt1.stdout.txt",
+    "original_sha256": "6b4ea40ba775cb76ccdfb54f36651aec02df03380c5278843ed7969985b14a07"
+  },
+  {
+    "encoding": "identity",
+    "evidence": "packaged-runs/probe-local-attempt1-command.json",
+    "original_bytes": 21618,
+    "original_path": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/logs/probe-local-attempt1-command.json",
+    "original_sha256": "64f224ea45772ec80040067d75fba5296bc830ace2afb84f00ed598e2eb658d2"
+  },
+  {
+    "encoding": "identity",
+    "evidence": "packaged-runs/probe-local-attempt1-result.json",
+    "original_bytes": 521,
+    "original_path": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/logs/probe-local-attempt1-result.json",
+    "original_sha256": "205a1cf3b56db596af73f30c52ad90c7355e1ce9111585edecfd27a85bb1dc08"
+  },
+  {
+    "encoding": "gzip",
+    "evidence": "packaged-runs/probe-local-attempt1.stderr.txt.gz",
+    "original_bytes": 7017,
+    "original_path": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/logs/probe-local-attempt1.stderr.txt",
+    "original_sha256": "bc9f184f55a2f46214e9abd87163a178f410455520e3d1fed826feb6f894f268"
+  },
+  {
+    "encoding": "gzip",
+    "evidence": "packaged-runs/probe-local-attempt1.stdout.txt.gz",
+    "original_bytes": 4364,
+    "original_path": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/logs/probe-local-attempt1.stdout.txt",
+    "original_sha256": "55d00b6cf1249572a9d9ae1e04aeb5821a1b72e1729bc9b590f2113404002bc3"
+  },
+  {
+    "encoding": "identity",
+    "evidence": "packaged-runs/probe-local-negative-attempt1-command.json",
+    "original_bytes": 21651,
+    "original_path": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/logs/probe-local-negative-attempt1-command.json",
+    "original_sha256": "02e6396edfc382d85ec21876af12b2b69f27351405eabc204aaeb9cd646c7b80"
+  },
+  {
+    "encoding": "identity",
+    "evidence": "packaged-runs/probe-local-negative-attempt1-result.json",
+    "original_bytes": 444,
+    "original_path": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/logs/probe-local-negative-attempt1-result.json",
+    "original_sha256": "d7b1ac46fb8dfff8c9c5c6fec1b234a29815e3527e9071a6349d71e637c573d0"
+  },
+  {
+    "encoding": "gzip",
+    "evidence": "packaged-runs/probe-local-negative-attempt1.stderr.txt.gz",
+    "original_bytes": 7066,
+    "original_path": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/logs/probe-local-negative-attempt1.stderr.txt",
+    "original_sha256": "43c145c567478e95a59ab3311cacdb8add81d7c638e54427db3a2d81f638b206"
+  },
+  {
+    "encoding": "gzip",
+    "evidence": "packaged-runs/probe-local-negative-attempt1.stdout.txt.gz",
+    "original_bytes": 0,
+    "original_path": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/logs/probe-local-negative-attempt1.stdout.txt",
+    "original_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+]

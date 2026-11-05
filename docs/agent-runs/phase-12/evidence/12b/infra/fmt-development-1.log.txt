@@ -1,0 +1,63 @@
+main.tf
+modules/emr/main.tf
+modules/emr/outputs.tf
+modules/identity/main.tf
+modules/identity/outputs.tf
+modules/identity/phase12b.tf
+modules/neptune/outputs.tf
+modules/network/main.tf
+modules/network/outputs.tf
+modules/observability/main.tf
+modules/observability/outputs.tf
+modules/runtime/compute.tf
+modules/runtime/outputs.tf
+modules/s3vectors/main.tf
+outputs.tf
+[31m[31m╷[0m[0m
+[31m│[0m [0m[1m[31mError: [0m[0m[1mInvalid single-argument block definition[0m
+[31m│[0m [0m
+[31m│[0m [0m[0m  on phase12b-variables.tf line 2, in variable "neptune_enabled":
+[31m│[0m [0m   2: variable "neptune_enabled" { type = bool [4mdefault[0m = false description = "Select engine/family before provisioning; no inferred regional engine availability." }[0m
+[31m│[0m [0m
+[31m│[0m [0mA single-line block definition must end with a closing brace immediately
+[31m│[0m [0mafter its single argument definition.
+[31m╵[0m[0m
+[0m[0m
+[31m[31m╷[0m[0m
+[31m│[0m [0m[1m[31mError: [0m[0m[1mInvalid escape sequence[0m
+[31m│[0m [0m
+[31m│[0m [0m[0m  on phase12b.tf line 21, in resource "terraform_data" "phase12b_guard":
+[31m│[0m [0m  21:    condition = !var.emr_config.enabled || (var.emr_config.runtime_verified && var.emr_service_policy_json!=null && try(length(var.emr_config.runtime_reference)>0,false) && can(regex("^emr-[0-9]+[4m\.[0m[0-9]+\.[0-9]+$",var.emr_config.release_label)) && can(regex("^s3://[^/]+/.+",var.emr_config.bootstrap_uri)) && can(regex("^s3://[^/]+/.+",var.emr_config.tls_certificate_uri)))[0m
+[31m│[0m [0m
+[31m│[0m [0mThe symbol "." is not a valid escape sequence selector.
+[31m╵[0m[0m
+[0m[0m
+[31m[31m╷[0m[0m
+[31m│[0m [0m[1m[31mError: [0m[0m[1mInvalid escape sequence[0m
+[31m│[0m [0m
+[31m│[0m [0m[0m  on phase12b.tf line 21, in resource "terraform_data" "phase12b_guard":
+[31m│[0m [0m  21:    condition = !var.emr_config.enabled || (var.emr_config.runtime_verified && var.emr_service_policy_json!=null && try(length(var.emr_config.runtime_reference)>0,false) && can(regex("^emr-[0-9]+\.[0-9]+[4m\.[0m[0-9]+$",var.emr_config.release_label)) && can(regex("^s3://[^/]+/.+",var.emr_config.bootstrap_uri)) && can(regex("^s3://[^/]+/.+",var.emr_config.tls_certificate_uri)))[0m
+[31m│[0m [0m
+[31m│[0m [0mThe symbol "." is not a valid escape sequence selector.
+[31m╵[0m[0m
+[0m[0m
+[31m[31m╷[0m[0m
+[31m│[0m [0m[1m[31mError: [0m[0m[1mInvalid single-argument block definition[0m
+[31m│[0m [0m
+[31m│[0m [0m[0m  on modules/neptune/main.tf line 12, in resource "aws_neptune_cluster_parameter_group" "data":
+[31m│[0m [0m  12:  parameter { name = "neptune_enable_audit_log" [4mvalue[0m = "1" }[0m
+[31m│[0m [0m
+[31m│[0m [0mA single-line block definition must end with a closing brace immediately
+[31m│[0m [0mafter its single argument definition.
+[31m╵[0m[0m
+[0m[0m
+[31m[31m╷[0m[0m
+[31m│[0m [0m[1m[31mError: [0m[0m[1mInvalid single-argument block definition[0m
+[31m│[0m [0m
+[31m│[0m [0m[0m  on modules/workflow/main.tf line 49, in resource "aws_sfn_state_machine" "embedding_dispatch":
+[31m│[0m [0m  49:  encryption_configuration { type = "CUSTOMER_MANAGED_KMS_KEY" [4mkms_key_id[0m = var.kms_key_arn }[0m
+[31m│[0m [0m
+[31m│[0m [0mA single-line block definition must end with a closing brace immediately
+[31m│[0m [0mafter its single argument definition.
+[31m╵[0m[0m
+[0m[0m

@@ -1,0 +1,77 @@
+{
+  "timestamp": "2026-10-31T17:10:06.123123+00:00",
+  "baseline_files": 4155,
+  "unchanged_baseline_files": 4150,
+  "changed_baseline_paths": [
+    "docs/agent-runs/phase-12/owner-report.md",
+    "docs/agent-runs/phase-12/prompt.md",
+    "docs/agent-runs/phase-12/repairs.md",
+    "docs/agent-runs/phase-12/test-report.md",
+    "infra/terraform/billing-bootstrap/README.md"
+  ],
+  "prefixes": [
+    {
+      "path": "docs/agent-runs/phase-12/owner-report.md",
+      "bytes": 47429,
+      "sha256": "9650eeffe78d9ebd4bd69c054fd0c3cd06b07ddec9d36edb3dd43d1ee5efdd10",
+      "new_bytes": 53131,
+      "new_sha256": "69830f562be9fa5e63ddd55da18fd76ae728167cb6e09823cdcd8a77a48ab4ba",
+      "prefix_preserved": true
+    },
+    {
+      "path": "docs/agent-runs/phase-12/prompt.md",
+      "bytes": 50184,
+      "sha256": "4ec733dea7385afbf5dc8c2ff8c8d2cfed06fdf93d261962d0de239258062179",
+      "new_bytes": 51858,
+      "new_sha256": "ba776b34d22751fe183aaa8cbcb1d84e96475b1a0582ec73e98a021737e60fb8",
+      "prefix_preserved": true
+    },
+    {
+      "path": "docs/agent-runs/phase-12/repairs.md",
+      "bytes": 29701,
+      "sha256": "c57409bd0c4427800f219a67db88b3a7a6410ed01b06db3051b55be68f1103c7",
+      "new_bytes": 30653,
+      "new_sha256": "3fbda0fe2d709963e857eca2760039d9fbc57eb9000bb5b0e824d19fce1d0899",
+      "prefix_preserved": true
+    },
+    {
+      "path": "docs/agent-runs/phase-12/review.md",
+      "bytes": 136083,
+      "sha256": "a88b20cb2146d60803d5d718b6e23ec89cbbf27db08e38cce08ff86a78362b08",
+      "new_bytes": 136083,
+      "new_sha256": "a88b20cb2146d60803d5d718b6e23ec89cbbf27db08e38cce08ff86a78362b08",
+      "prefix_preserved": true
+    },
+    {
+      "path": "docs/agent-runs/phase-12/test-report.md",
+      "bytes": 40669,
+      "sha256": "a16d0aeb7c60d1d1af75942ee000d83662551b36f9efa5d7febf607f39bb2366",
+      "new_bytes": 46372,
+      "new_sha256": "2237f73a286ae312c4bc46f839c8e6401eeba80eaf7b9b5457f5784004b413e1",
+      "prefix_preserved": true
+    }
+  ],
+  "prior_packets": {
+    "12d-preparation/": {
+      "files": 81,
+      "mismatches": []
+    },
+    "12d-preparation-repair-1/": {
+      "files": 87,
+      "mismatches": []
+    },
+    "12d-billing-plan/": {
+      "files": 47,
+      "mismatches": []
+    },
+    "12c/": {
+      "files": 106,
+      "mismatches": []
+    }
+  },
+  "freeze_files": 209,
+  "freeze_sha256": "ec96c67541385151f69ebea29b2c574e13dbdd4c37f43f197bd6551e166005b7",
+  "freeze_mismatches": [],
+  "head": "5ca8406bad5fe55f732458fa0cbd5d561ac83d8f",
+  "private_old_directory_exists": false
+}

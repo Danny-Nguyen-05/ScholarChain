@@ -1,0 +1,9 @@
+{
+  "observed_utc": "2026-11-02T02:54:57.116862+00:00",
+  "exact_zero_retry_annotation_header_present": true,
+  "positive_retry_annotation_header_present": false,
+  "full_fixed_aws_prefix_zero_retry_singleline_format_match": true,
+  "raw_body_emitted": false,
+  "retrospective_absence_claim": false,
+  "live_calls": 0
+}

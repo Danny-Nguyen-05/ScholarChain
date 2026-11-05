@@ -1,0 +1,17 @@
+{
+  "baseline_status_entries": 42,
+  "final_status_entries": 51,
+  "newfiles": [
+    "docs/agent-runs/phase-12/evidence/12d-billing-p3-format-repair-review-record/coordinator-report.txt",
+    "docs/agent-runs/phase-12/evidence/12d-billing-p3-format-repair-review-record/evidence-manifest.json",
+    "docs/agent-runs/phase-12/evidence/12d-billing-p3-format-repair-review-record/final-status.log.txt",
+    "docs/agent-runs/phase-12/evidence/12d-billing-p3-format-repair-review-record/handoff-files.json",
+    "docs/agent-runs/phase-12/evidence/12d-billing-p3-format-repair-review-record/preflight-status.log.txt",
+    "docs/agent-runs/phase-12/evidence/12d-billing-p3-format-repair-review-record/preflight.json",
+    "docs/agent-runs/phase-12/evidence/12d-billing-p3-format-repair-review-record/preservation-check.json",
+    "docs/agent-runs/phase-12/evidence/12d-billing-p3-format-repair-review-record/public-address-scan.json",
+    "docs/agent-runs/phase-12/evidence/12d-billing-p3-format-repair-review-record/user-supplied-review.txt"
+  ],
+  "newfile_count": 9,
+  "git_diff_check_exit": 0
+}

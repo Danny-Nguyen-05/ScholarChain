@@ -1,0 +1,180 @@
+[
+  {
+    "argv": [
+      "/tmp/scholarchain-phase12b-repair1-infra/terraform",
+      "init",
+      "-backend=false",
+      "-input=false",
+      "-no-color",
+      "-lockfile=readonly"
+    ],
+    "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain/infra/terraform/billing-bootstrap",
+    "environment": {
+      "TF_CLI_CONFIG_FILE": "/tmp/scholarchain-phase12b-repair1-infra/terraformrc"
+    },
+    "started_utc": "2026-10-31T02:35:53.455144+00:00",
+    "ended_utc": "2026-10-31T02:35:53.884182+00:00",
+    "exit_code": 0,
+    "log": "development-budget-init.log.txt",
+    "sha256": "fa47f2a25afc25577c295cc0a696558f0a9e3ddbc7c4816dbf956c63ccf4d2a6",
+    "bytes": 595
+  },
+  {
+    "argv": [
+      "/tmp/scholarchain-phase12b-repair1-infra/terraform",
+      "fmt",
+      "-recursive"
+    ],
+    "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain/infra/terraform/billing-bootstrap",
+    "environment": {
+      "TF_CLI_CONFIG_FILE": "/tmp/scholarchain-phase12b-repair1-infra/terraformrc"
+    },
+    "started_utc": "2026-10-31T02:35:53.884259+00:00",
+    "ended_utc": "2026-10-31T02:35:53.905004+00:00",
+    "exit_code": 0,
+    "log": "development-budget-fmt.log.txt",
+    "sha256": "5f8208a8f216e652f9353685eebcacfc0e70fc631129bc9bf4f5b596863b94c4",
+    "bytes": 24
+  },
+  {
+    "argv": [
+      "/tmp/scholarchain-phase12b-repair1-infra/terraform",
+      "fmt",
+      "-check",
+      "-recursive"
+    ],
+    "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain/infra/terraform/billing-bootstrap",
+    "environment": {
+      "TF_CLI_CONFIG_FILE": "/tmp/scholarchain-phase12b-repair1-infra/terraformrc"
+    },
+    "started_utc": "2026-10-31T02:35:53.905043+00:00",
+    "ended_utc": "2026-10-31T02:35:53.923531+00:00",
+    "exit_code": 0,
+    "log": "development-budget-fmt-check.log.txt",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "argv": [
+      "/tmp/scholarchain-phase12b-repair1-infra/terraform",
+      "validate",
+      "-no-color"
+    ],
+    "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain/infra/terraform/billing-bootstrap",
+    "environment": {
+      "TF_CLI_CONFIG_FILE": "/tmp/scholarchain-phase12b-repair1-infra/terraformrc"
+    },
+    "started_utc": "2026-10-31T02:35:53.923575+00:00",
+    "ended_utc": "2026-10-31T02:35:55.275709+00:00",
+    "exit_code": 0,
+    "log": "development-budget-validate.log.txt",
+    "sha256": "f7997225125835fdd14060ac776d273f394b874f9a481b9e2122c83dc8adc5c1",
+    "bytes": 38
+  },
+  {
+    "argv": [
+      "/tmp/scholarchain-phase12b-repair1-infra/terraform",
+      "test",
+      "-no-color"
+    ],
+    "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain/infra/terraform/billing-bootstrap",
+    "environment": {
+      "TF_CLI_CONFIG_FILE": "/tmp/scholarchain-phase12b-repair1-infra/terraformrc"
+    },
+    "started_utc": "2026-10-31T02:35:55.275789+00:00",
+    "ended_utc": "2026-10-31T02:35:56.216766+00:00",
+    "exit_code": 0,
+    "log": "development-budget-test.log.txt",
+    "sha256": "aca7bb50be9aa6e39085eb2d1ac166e100d61aaa15cf8c95ccf3e4a87becb78e",
+    "bytes": 483
+  },
+  {
+    "argv": [
+      "/tmp/scholarchain-phase12b-repair1-infra/terraform",
+      "init",
+      "-backend=false",
+      "-input=false",
+      "-no-color",
+      "-lockfile=readonly"
+    ],
+    "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain/infra/terraform/spikes/emr-spark",
+    "environment": {
+      "TF_CLI_CONFIG_FILE": "/tmp/scholarchain-phase12b-repair1-infra/terraformrc"
+    },
+    "started_utc": "2026-10-31T02:35:56.216830+00:00",
+    "ended_utc": "2026-10-31T02:35:56.510558+00:00",
+    "exit_code": 0,
+    "log": "development-spike-init.log.txt",
+    "sha256": "fa47f2a25afc25577c295cc0a696558f0a9e3ddbc7c4816dbf956c63ccf4d2a6",
+    "bytes": 595
+  },
+  {
+    "argv": [
+      "/tmp/scholarchain-phase12b-repair1-infra/terraform",
+      "fmt",
+      "-recursive"
+    ],
+    "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain/infra/terraform/spikes/emr-spark",
+    "environment": {
+      "TF_CLI_CONFIG_FILE": "/tmp/scholarchain-phase12b-repair1-infra/terraformrc"
+    },
+    "started_utc": "2026-10-31T02:35:56.510608+00:00",
+    "ended_utc": "2026-10-31T02:35:56.527208+00:00",
+    "exit_code": 0,
+    "log": "development-spike-fmt.log.txt",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "argv": [
+      "/tmp/scholarchain-phase12b-repair1-infra/terraform",
+      "fmt",
+      "-check",
+      "-recursive"
+    ],
+    "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain/infra/terraform/spikes/emr-spark",
+    "environment": {
+      "TF_CLI_CONFIG_FILE": "/tmp/scholarchain-phase12b-repair1-infra/terraformrc"
+    },
+    "started_utc": "2026-10-31T02:35:56.527249+00:00",
+    "ended_utc": "2026-10-31T02:35:56.543987+00:00",
+    "exit_code": 0,
+    "log": "development-spike-fmt-check.log.txt",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "argv": [
+      "/tmp/scholarchain-phase12b-repair1-infra/terraform",
+      "validate",
+      "-no-color"
+    ],
+    "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain/infra/terraform/spikes/emr-spark",
+    "environment": {
+      "TF_CLI_CONFIG_FILE": "/tmp/scholarchain-phase12b-repair1-infra/terraformrc"
+    },
+    "started_utc": "2026-10-31T02:35:56.544028+00:00",
+    "ended_utc": "2026-10-31T02:35:57.507678+00:00",
+    "exit_code": 0,
+    "log": "development-spike-validate.log.txt",
+    "sha256": "f7997225125835fdd14060ac776d273f394b874f9a481b9e2122c83dc8adc5c1",
+    "bytes": 38
+  },
+  {
+    "argv": [
+      "/tmp/scholarchain-phase12b-repair1-infra/terraform",
+      "test",
+      "-no-color"
+    ],
+    "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain/infra/terraform/spikes/emr-spark",
+    "environment": {
+      "TF_CLI_CONFIG_FILE": "/tmp/scholarchain-phase12b-repair1-infra/terraformrc"
+    },
+    "started_utc": "2026-10-31T02:35:57.507725+00:00",
+    "ended_utc": "2026-10-31T02:35:58.390175+00:00",
+    "exit_code": 0,
+    "log": "development-spike-test.log.txt",
+    "sha256": "18480c6550a16bf4a744305a7fd8394b3ce45408edb8bca2dbc9886482405037",
+    "bytes": 410
+  }
+]

@@ -1,0 +1,82 @@
+Verdict: APPROVE for this offline portable-runtime and request-inventory candidate. I found no evidence defects, and all seven checks pass.
+1. Official archive and Scala 2.13.14 overlay: pass.
+   - The recorded SHA512 matches the saved spark.sha512 file.
+   - The signature’s issuer fingerprint, parsed in memory, is 19F745C4…FE4B4. The fingerprint I computed from yangjie01.asc is the same.
+   - The Apache spark-docker template.py:52 maps 3.5.4 to that fingerprint, and Spark KEYS lists it.
+   - Both failed key-import attempts are kept on record.
+   - The overlay is explicit: Scala 2.13.8 library, reflect and compiler JARs removed, 2.13.14 library and reflect added. The 2.13.14 hashes and the job hash appear in the committed 12d-spark-readiness/runtime/runtime-manifest.json.
+   - The docs say plainly that the derived bundle is “locally pinned, not Apache-signed as a whole”.
+2. Unchanged JAR, safe packaging, complete inventories: pass.
+   - The job JAR is still d52f11eb….
+   - The packaging scripts reject absolute paths, .., links, setuid/setgid bits and overwrites (they open files with xb), and they enforce size and count bounds.
+   - The runtime inventory lists 378 files totalling 347,564,755 bytes. 374 of them match the official members by hash and mode. The other four are the job JAR, the two Scala overlay JARs and RUNTIME-NOTES.txt.
+   - The optional YARN ZIP’s 254 members match the runtime jars/ directory exactly.
+   - Relocation validation shows 0 symlinks, 0 hard links and 0 cache links.
+3. Separate-JVM sentinel versus full pipeline: pass.
+   - The sentinel ran as local-cluster[1,1,1024] with driver PID 4219 and executor PID 4225, and passed 8 class-origin checks.
+   - The full pipeline and the comparison both ran in local[2]. The event log’s spark.master confirms local[2].
+   - comparison.json covers 28 tables, all exact, with provenanceNormalization: none and no false flags.
+   - Its stdout matches the file, and the file is byte-identical to the committed 12d-spark-readiness/exact-comparison.json (a1209709…).
+   - All 8 runs’ gzipped stdout/stderr logs match their recorded byte counts and SHAs.
+4. Encrypted-RPC failures: pass.
+   - Both probes exited 2 at about 61 s with “All masters are unresponsive”.
+   - Neither log shows an executor added or a task, and there is no success report.
+   - Attempt 2’s debug logging shows Authorization successful and then no registration. Attempt 1 shows only that the connection’s bootstrap step finished.
+   - No root cause is claimed, and the unsupported_claims_not_made list is explicit.
+5. Request counts: pass.
+   - I recomputed every count independently: 18/38/46 and 25/44/60; ×3 gives 54/114/138 and 75/132/180.
+   - Stored-once bytes are 574,171,741 and 885,150,327. Measured bytes (321,943,517) and reserved bytes (252,228,224) are kept separate.
+   - The saved inventory equals the recorded replay output.
+   - Whole-attempt PUT/LIST, GET/HEAD and KMS bounds are null. The USD 4.82 alternative is neither selected nor proven, and USD 5.30 is still above USD 5.
+6. Preservation and records: pass.
+   - The 239 export files match the inventory paths and hashes.
+   - The event-log gzip decompresses to exactly 184,489,197 bytes with the matching SHA, and the log runs from start to application end. It contains only Hadoop default configuration and redacted placeholders, no secret values.
+   - Each of the five records is exactly its HEAD content plus its suffix.
+   - git diff --stat shows 38 insertions and no deletions, and git diff --check is clean.
+   - The human record is still abe3a50a…. 5,074 files are tracked and only the five records are modified.
+   - The canary, certificate and EBS conditions are carried forward. The facts behind them (EMR 4.8.0–7.10.0 supports only a PEM zip or a custom provider, and an xlarge instance defaults to two 32 GiB volumes) match the saved AWS pages. All 8 public-source hashes match.
+7. Manifest: pass.
+   - SHA is f60da14c…a3239, and all 115 entries match.
+   - That is the 110 packet files plus the 5 records, with only the manifest itself excluded.
+   - The 77-entry build manifest (f1b2b80d…) and all 9 script hashes also match.
+- Blocking: None.
+- Non-blocking, launch readiness:
+  - N1. In the runtime inventory, application/scholarchain-job.jar has mode 0o600. Every other file is 0o644 or 0o755, and the mode isn’t mentioned anywhere.
+    - Impact: if the archive is unpacked by one user on EMR or YARN and run by another, the job JAR may be unreadable.
+    - Owner: build-engineer.
+    - Acceptance: before any staging, either the mode is intentional and documented, or a later packaging step sets 0o644 with re-inventoried hashes.
+- Informational:
+  - N2. “Authorization succeeded” for security attempt 1 is inferred from the connection bootstrap completing. Only attempt 2 has the debug line. The inference is reasonable, but the wording should stay attributed that way.
+These are carried forward and are not evidence defects:
+- AES-GCM authenticated transport is blocked.
+- Nothing is proven on Linux, EMR 7.8, YARN or multi-host EFS.
+- Whole-attempt S3, KMS and logging request bounds are unknown.
+- The guard, cleanup and no-extra-cluster canary are unimplemented.
+- The protected PEM source and its acceptance are open.
+- The explicit 4-volume, 128 GiB plan is still to be proven.
+- F4, the account allowance and the human gate are open.
+- The ignored local runtime archives are on the same disk and need retention or reproduction before any handoff.
+- USD 5.30 exceeds USD 5.
+None of this approval implies secure EMR readiness, cost-cap compliance or Phase 12 completion.
+- STATUS: APPROVE, for the offline candidate only.
+- OWNER: code-reviewer, read-only.
+- WORK ORDER: Phase 12D offline portable-runtime and request-inventory review, base 99c8b923, instructions given in chat.
+- FILES CREATED: None.
+- FILES MODIFIED: None.
+- COMMANDS RUN:
+  - Read-only Git: rev-parse, status, diff --stat/--check, ls-files, show.
+  - shasum, grep, cat, ls.
+  - In-memory python3 -I -B checks: manifests, JSON, OpenPGP packet parsing, bounded reads of the tar and gzip files, and arithmetic.
+  - I did not run scripts, tests, gpg, Docker, AWS or Terraform, and did not access the network.
+- TEST RESULTS: None run. The recorded results are as reported:
+  - local probe exited 0 on attempt 3, after two harness failures;
+  - separate-JVM probe exited 0;
+  - pipeline exited 0 in 30.707 s and the comparison exited 0 in 10.954 s;
+  - both security probes exited 2.
+- VALIDATION RESULTS: All seven items above pass.
+- ASSUMPTIONS: I did not read the ignored target/ binaries. Their bytes are trusted through the recorded hashes and the in-packet inventories. The gpgv result comes from the recorded output, backed by my independent fingerprint and issuer checks.
+- RISKS: The launch-readiness conditions above, plus N1.
+- MANUAL ACTION REQUIRED: Your source-control decision for this packet and the five record appends.
+- BLOCKED-ON OWNER: Build/infra owner for the separate offline AES-GCM diagnosis and N1. Human for security design and live gates.
+- BLOCKED-ON EVIDENCE: None for this offline approval. An executor success receipt under authenticated AES-GCM is required before any secure-readiness claim.
+- NEXT GATE: Your commit decision, then the separately scoped offline transport diagnosis. No execution, spending, account access or Phase 12 completion is authorized.

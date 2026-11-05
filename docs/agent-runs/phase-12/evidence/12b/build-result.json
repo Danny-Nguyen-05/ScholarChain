@@ -1,0 +1,75 @@
+{
+  "owner": "build-engineer",
+  "native_task": "/root/build_12a",
+  "phase": "12B",
+  "model": "inherited; exact model identifier not exposed",
+  "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+  "start_epoch": 1793238835.210667,
+  "start_utc": "2026-10-29T01:53:55.210670+00:00",
+  "branch": "phase-12",
+  "head": "a83f62e9af56058a170075f98c4e027d039567ec",
+  "environment": {
+    "JAVA_HOME": "/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home",
+    "SBT_OPTS": "-Dlogback.configurationFile=/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-04/xml-repair-logback.xml"
+  },
+  "path_prefix": "/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home/bin",
+  "commands": [
+    [
+      "java",
+      "-version"
+    ],
+    [
+      "sbt",
+      "-batch",
+      "check"
+    ]
+  ],
+  "freeze_path": "/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-12/evidence/12b/infra-source-freeze.json",
+  "freeze_sha256": "b059a9eeeb7dfb7026550cd92c6618cd3047469c4e77b81ec1920a5f3746dc71",
+  "freeze_epoch": 1793238809.995439,
+  "max_source_mtime_epoch": 1793238727.0156639,
+  "start_after_freeze": true,
+  "start_after_all_source_mtimes": true,
+  "frozen_source_count": 67,
+  "infra_source_count": 67,
+  "tracked_source_count": 454,
+  "all_snapshot_file_count": 521,
+  "frozen_hash_mismatches": [],
+  "source_before_path": "/tmp/scholarchain-phase12b-build-source-before.json",
+  "results": [
+    {
+      "argv": [
+        "java",
+        "-version"
+      ],
+      "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+      "start_epoch": 1793238835.210809,
+      "exit_code": 0,
+      "elapsed_seconds": 0.059,
+      "log": "/tmp/scholarchain-phase12b-build-java-version.log",
+      "log_sha256": "2fe83b0053132e4e834defa82250462f4c62733d29bf76b19ee1bb3c14b06b39",
+      "log_bytes": 171
+    },
+    {
+      "argv": [
+        "sbt",
+        "-batch",
+        "check"
+      ],
+      "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+      "start_epoch": 1793238835.269931,
+      "exit_code": 0,
+      "elapsed_seconds": 721.485,
+      "log": "/tmp/scholarchain-phase12b-build-sbt-check.log",
+      "log_sha256": "72d8f26147b49d7c3cc5cf017183c33eab52e7c4c969c955b3d5033b5030d8a8",
+      "log_bytes": 1720149
+    }
+  ],
+  "end_utc": "2026-10-29T02:05:56.825878+00:00",
+  "elapsed_seconds": 721.615,
+  "source_after_path": "/tmp/scholarchain-phase12b-build-source-after.json",
+  "source_changed_paths": [],
+  "source_unchanged": true,
+  "git_branch_head_unchanged": true,
+  "gate_exit_code": 0
+}

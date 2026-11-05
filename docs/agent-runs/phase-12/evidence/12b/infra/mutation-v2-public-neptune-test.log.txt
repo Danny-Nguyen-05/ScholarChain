@@ -1,0 +1,54 @@
+tests/phase12a.tftest.hcl... in progress
+  run "course_data_safety"... pass
+  run "network_role_boundaries"... pass
+  run "runtime_identity_boundaries"... pass
+  run "cleanup_is_explicit_and_ttl_is_narrow"... pass
+  run "persistent_data_has_no_intermediate_expiration"... pass
+  run "configured_secrets_are_arn_only_and_per_service"... pass
+  run "invalid_account_is_rejected"... pass
+  run "invalid_budget_is_rejected"... pass
+  run "wrong_region_az_is_rejected"... pass
+  run "duplicate_az_is_rejected"... pass
+  run "malformed_secret_reference_is_rejected"... pass
+  run "optional_bootstrap_preserves_state"... pass
+  run "budget_requires_actual_subscribers"... pass
+tests/phase12a.tftest.hcl... tearing down
+tests/phase12a.tftest.hcl... pass
+tests/phase12b.tftest.hcl... in progress
+  run "inactive_defaults_and_vector_contract"... pass
+  run "dashboard_metric_shapes_and_route_ownership"... pass
+  run "private_neptune_and_read_only_graph"... fail
+
+Error: Test assertion failed
+
+  on tests/phase12b.tftest.hcl line 140, in run "private_neptune_and_read_only_graph":
+ 140:     condition     = output.phase12b_controls.neptune.cluster.storage_encrypted && output.phase12b_controls.neptune.cluster.iam_database_authentication_enabled && output.phase12b_controls.neptune.cluster.deletion_protection && !output.phase12b_controls.neptune.cluster.skip_final_snapshot && output.phase12b_controls.neptune.cluster.backup_retention_period == 7 && !output.phase12b_controls.neptune.instance.publicly_accessible && output.phase12b_controls.neptune.instance.instance_class == "db.serverless" && one(output.phase12b_controls.neptune.cluster.serverless_v2_scaling_configuration).min_capacity == 1 && one(output.phase12b_controls.neptune.cluster.serverless_v2_scaling_configuration).max_capacity == 2.5
+    ├────────────────
+    │ Diff:
+    │ --- actual
+    │ +++ expected
+    │ - false
+    │ + true
+
+
+Neptune must be private, IAM-authenticated, encrypted, backed up, protected
+and bounded to1-2.5NCU.
+  run "scoped_embedding_producer_and_models"... pass
+  run "bounded_runtime_scaling_and_secret_wiring"... pass
+  run "https_has_no_http_fallback"... pass
+  run "bounded_emr_mock_runtime_only"... pass
+  run "runtime_cannot_activate_without_composition"... pass
+  run "emr_cannot_activate_without_runtime"... pass
+  run "neptune_requires_matching_engine_family"... pass
+  run "vector_dimension_migration_is_not_silent"... pass
+  run "emr_delete_cannot_reach_raw"... pass
+  run "neptune_rejects_missing_engine"... pass
+  run "emr_rejects_global_write_policy"... pass
+  run "model_wildcards_are_rejected"... pass
+  run "vector_writer_scopes_exact_indexes"... pass
+  run "vector_pointer_metadata_contract_is_required"... pass
+  run "graph_replicas_require_shared_cursor_key"... pass
+tests/phase12b.tftest.hcl... tearing down
+tests/phase12b.tftest.hcl... fail
+
+Failure! 30 passed, 1 failed.

@@ -1,0 +1,36 @@
+{
+  "recorded_utc": "2026-11-01T17:19:51.205190+00:00",
+  "branch": "phase-12",
+  "head": "5ca8406bad5fe55f732458fa0cbd5d561ac83d8f",
+  "records": [
+    {
+      "path": "docs/agent-runs/phase-12/prompt.md",
+      "bytes": 73338,
+      "sha256": "265be4b8cf845c2adb654e85d2d7bb7dec0dce2e87196ad981e422c9144d8cfd"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/review.md",
+      "bytes": 175385,
+      "sha256": "6b39f772df2fdefa36f262396199284fb3c27562da1000052877cc1211aa3766"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/repairs.md",
+      "bytes": 46199,
+      "sha256": "f7a25c474201e0a82d26637419f5896fb3961c5037cb45016131fe1bd00676d1"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/owner-report.md",
+      "bytes": 82815,
+      "sha256": "ab846da4f5b3871f6647eb512a26e3077c2effa449f84c183a57413b8fbe8b4a"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/test-report.md",
+      "bytes": 76102,
+      "sha256": "528175673ebe7623bf14ef9d673c0b52fcffb3ef053a41395c33afd0d04abc07"
+    }
+  ],
+  "human_record_before": {
+    "sha256": "f00a715960261cb5813baaba903c6c315f42e37a092d1aadb2f84608e0797f04",
+    "bytes": 538
+  }
+}

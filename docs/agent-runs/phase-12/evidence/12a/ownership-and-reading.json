@@ -1,0 +1,73 @@
+{
+  "files": [
+    {
+      "path": "AGENTS.md",
+      "sha256": "13c64f8d8d1119d1aec4e2e50382463592f2b0a76e77354146161001b1b5095b"
+    },
+    {
+      "path": "CLAUDE.md",
+      "sha256": "92f9d1d3955993f8e5a9a19e447e6bc1ec0928a8df4e1fa1b2fb0d4653618071"
+    },
+    {
+      "path": "docs/agents.md",
+      "sha256": "12db98e77642d2e44498ba19f128f68e047a2bf790cad161808d98f9c26a3992"
+    },
+    {
+      "path": ".claude/agents/infra-engineer.md",
+      "sha256": "1baee58b2b8561fb3607b51ff995d022e79c41acab998b63c37e5a284f546fb7"
+    },
+    {
+      "path": "docs/agent-runs/README.md",
+      "sha256": "c15f9645a30253e582feb498561601977f1031d04dbede3315c16a123ef3cf8e"
+    },
+    {
+      "path": "scripts/phase4-emr-smoke.sh",
+      "sha256": "03e11fc6b77360ee705c816185fab5b492041d70b72c58d1307f900e815f3036"
+    },
+    {
+      "path": "scripts/README.md",
+      "sha256": "07c0d23e4391212cc34a0149658a174540fad3cf3038f70828accd1dc4da7aa3"
+    },
+    {
+      "path": "docs/agent-runs/phase-06/evidence/6a/emr-compatibility.md",
+      "sha256": "d538ae383740d33edca1484beb888f437f2e49e31feecc96943506a9c00a7c25"
+    },
+    {
+      "path": "modules/storage/README.md",
+      "sha256": "0e7dd3cc55e88808b67118fa3dfe828d634ba48d7f863a081e5316e20400ef32"
+    },
+    {
+      "path": "modules/rag/README.md",
+      "sha256": "f71d74513a83778d3336205ab24ba8361e4e29229f70729c20167d33694542a2"
+    },
+    {
+      "path": "modules/services/README.md",
+      "sha256": "103a391decb399e501f351f5c6d979fc5b8300a06ef69dde5d7e538b8e369046"
+    }
+  ],
+  "delegation": [
+    {
+      "native_id": "/root/infra_12a",
+      "role": "infra-engineer",
+      "model": "Inherited; exact identifier not exposed by tool",
+      "assigned_paths": [
+        "infra/terraform/**"
+      ],
+      "handoff_to": "coordinator assembles docs/agent-runs/phase-12/**"
+    },
+    {
+      "native_id": "/root/build_12a",
+      "role": "build-engineer",
+      "model": "Inherited; exact identifier not exposed by tool",
+      "assigned_paths": [
+        ".gitignore",
+        ".claude/.last-test-run (ignored generated successful-gate marker)"
+      ],
+      "handoff_to": "coordinator assembles docs/agent-runs/phase-12/**"
+    }
+  ],
+  "coordinator_assigned_paths": [
+    "docs/agent-runs/phase-12/** (excluding human decisions)"
+  ],
+  "reviewer_launched": false
+}

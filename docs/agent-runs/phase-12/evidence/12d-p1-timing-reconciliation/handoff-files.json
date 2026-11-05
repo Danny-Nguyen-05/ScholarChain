@@ -1,0 +1,33 @@
+{
+  "branch": "phase-12",
+  "head": "5ca8406bad5fe55f732458fa0cbd5d561ac83d8f",
+  "evidence_files": [
+    "append-provenance.json",
+    "coordinator-report.md",
+    "evidence-manifest.json",
+    "final-status.log.txt",
+    "handoff-files.json",
+    "handoff.md",
+    "human-file-check.json",
+    "human-replies.json",
+    "local-checks.json",
+    "preflight.json",
+    "preliminary-checks.json",
+    "repair-status.json",
+    "user-supplied-external-review.txt"
+  ],
+  "new_other_files": [
+    "docs/agent-runs/phase-12/evidence/12d-identity-decision-draft/evidence-manifest.json",
+    "docs/agent-runs/phase-12/reviewer-prompt-12d-p1-timing-recheck.md"
+  ],
+  "append_only_phase_records": [
+    "docs/agent-runs/phase-12/prompt.md",
+    "docs/agent-runs/phase-12/review.md",
+    "docs/agent-runs/phase-12/repairs.md",
+    "docs/agent-runs/phase-12/owner-report.md",
+    "docs/agent-runs/phase-12/test-report.md"
+  ],
+  "explicitly_authorized_human_text_append": "docs/agent-runs/phase-12/billing-bootstrap-exception.md",
+  "earlier_uncommitted_work_retained": true,
+  "status_entries": 576
+}

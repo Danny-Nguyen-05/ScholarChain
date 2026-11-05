@@ -1,0 +1,12 @@
+{
+  "recorded_utc": "2026-11-01T17:19:51.205190+00:00",
+  "F2_original_replacement_paragraph_request": "not retained",
+  "available_context_limit": "Earlier coordinator records and compacted summaries describe an exact user request, but the original verbatim chat request is not present in available session messages. The paragraph itself in the file is not proof of its request provenance.",
+  "historical_assertions_not_rewritten": true,
+  "F2_status": "OPEN until human affirms original replacement paragraph or original verbatim request becomes available",
+  "new_explicit_user_edit_request_verbatim": "oh yeh can you update that window for me, I enter the wrong time",
+  "assistant_clarification": "Assistant offered to append the human\u2019s own words verbatim, preserving prior text, and requested corrected timing or uncertainty/deviation statement and paragraph attribution.",
+  "new_human_timing_statement_verbatim": "I don't really remember it was around 8-9pm I think",
+  "scope": "Explicit current user request overrides general no-agent-edit restriction only for this dictated append. No times selected, backdating, exception approval or retrospective acceptance invented.",
+  "human_record_append_only": true
+}

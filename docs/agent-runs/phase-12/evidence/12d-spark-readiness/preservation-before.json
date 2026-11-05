@@ -1,0 +1,39 @@
+{
+  "base_head": "4232ed12a7941c6c15d6f562f4f61fdd6928ebca",
+  "git_diff_check_exit": 0,
+  "mismatches": [],
+  "non_spark_tracked_blobs_checked": 4912,
+  "record_bases": [
+    {
+      "bytes": 87739,
+      "matches_original": true,
+      "path": "docs/agent-runs/phase-12/prompt.md"
+    },
+    {
+      "bytes": 261538,
+      "matches_original": true,
+      "path": "docs/agent-runs/phase-12/review.md"
+    },
+    {
+      "bytes": 68722,
+      "matches_original": true,
+      "path": "docs/agent-runs/phase-12/repairs.md"
+    },
+    {
+      "bytes": 156974,
+      "matches_original": true,
+      "path": "docs/agent-runs/phase-12/owner-report.md"
+    },
+    {
+      "bytes": 143882,
+      "matches_original": true,
+      "path": "docs/agent-runs/phase-12/test-report.md"
+    },
+    {
+      "bytes": 1334,
+      "matches_original": true,
+      "path": "docs/agent-runs/phase-12/billing-bootstrap-exception.md"
+    }
+  ],
+  "stage": "before new readiness record appends"
+}

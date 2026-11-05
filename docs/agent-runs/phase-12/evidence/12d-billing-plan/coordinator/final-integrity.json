@@ -1,0 +1,59 @@
+{
+  "checked_at": "2026-10-31T03:28:42.264550+00:00",
+  "baseline_files": 4107,
+  "unchanged_baseline_files": 4102,
+  "changed_baseline_paths": [
+    "docs/agent-runs/phase-12/owner-report.md",
+    "docs/agent-runs/phase-12/prompt.md",
+    "docs/agent-runs/phase-12/repairs.md",
+    "docs/agent-runs/phase-12/test-report.md",
+    "infra/terraform/billing-bootstrap/README.md"
+  ],
+  "prefixes": [
+    {
+      "path": "docs/agent-runs/phase-12/owner-report.md",
+      "old_bytes": 41973,
+      "new_bytes": 47429,
+      "old_sha256": "2e015fb5dad4587765da24e3adcf9809852a3cb170c2da404b162e82d15d73dd",
+      "new_sha256": "9650eeffe78d9ebd4bd69c054fd0c3cd06b07ddec9d36edb3dd43d1ee5efdd10",
+      "prefix_preserved": true
+    },
+    {
+      "path": "docs/agent-runs/phase-12/prompt.md",
+      "old_bytes": 46569,
+      "new_bytes": 47268,
+      "old_sha256": "882e6a9b62ce34ef88e4eb8c1164a02dc1d52b0eba8f02a94f9ddf6d40a41f75",
+      "new_sha256": "556fa921e598a8b6025c50037336d1882c4da3c07f9bf0c208640a317dfd0f45",
+      "prefix_preserved": true
+    },
+    {
+      "path": "docs/agent-runs/phase-12/repairs.md",
+      "old_bytes": 27018,
+      "new_bytes": 27639,
+      "old_sha256": "1f875fac2fb51195e7255b7d1f6b4a4cd4abc853ea55eb2b9b47e8682ab1dc57",
+      "new_sha256": "414dc807bdf828e1c99246e2e27eef814d3772040496648dd1d3192891523170",
+      "prefix_preserved": true
+    },
+    {
+      "path": "docs/agent-runs/phase-12/test-report.md",
+      "old_bytes": 35213,
+      "new_bytes": 40669,
+      "old_sha256": "2d186d00a44b70843a677691c78761e7dea69da746c5d3b7ce33747372fce57f",
+      "new_sha256": "a16d0aeb7c60d1d1af75942ee000d83662551b36f9efa5d7febf607f39bb2366",
+      "prefix_preserved": true
+    }
+  ],
+  "source_freeze_matches": 203,
+  "source_freeze_mismatches": 0,
+  "curated_infra_artifacts_verified": 26,
+  "prior_approved_repair_artifacts_unchanged": 86,
+  "actual_plan_config_copies_verified": 5,
+  "private_input_contents_inspected_or_hashed": false,
+  "saved_plan_sha_verified": true,
+  "all_assigned_agents_completed": true,
+  "active_jobs": false,
+  "out_of_scope_changes": [],
+  "git_diff_check_exit": 0,
+  "new_sbt_run": false,
+  "final_checked_at": "2026-10-31T03:33:18.376373+00:00"
+}

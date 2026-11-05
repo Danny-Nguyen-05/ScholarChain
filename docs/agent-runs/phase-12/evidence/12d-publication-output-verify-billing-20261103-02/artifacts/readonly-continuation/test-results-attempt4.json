@@ -1,0 +1,55 @@
+{
+  "verification": {
+    "command": "python3 -I scripts/billing/tests/test_budget_verification.py",
+    "exit": 0,
+    "tests": 35,
+    "failures": 0,
+    "errors": 0,
+    "wall_seconds": 14.054
+  },
+  "wrapper": {
+    "command": "python3 -I scripts/billing/tests/test_budget_execution.py",
+    "exit": 0,
+    "tests": 65,
+    "failures": 0,
+    "errors": 0,
+    "wall_seconds": 12.68
+  },
+  "publication": {
+    "command": "python3 -I scripts/billing/tests/test_publication_evidence.py",
+    "exit": 0,
+    "tests": 39,
+    "failures": 0,
+    "errors": 0,
+    "wall_seconds": 0.431
+  },
+  "diff_check": {
+    "command": "git diff --check",
+    "exit": 0
+  },
+  "prior_attempts": [
+    {
+      "log": "verification-tests-attempt1.log",
+      "tests": 26,
+      "exit": 0
+    },
+    {
+      "log": "verification-tests-attempt2.log",
+      "tests": 31,
+      "exit": 0
+    },
+    {
+      "log": "verification-tests-attempt3.log",
+      "tests": 34,
+      "exit": 1,
+      "failures": 1,
+      "errors": 0,
+      "cause": "After private checkpoint binding was added, tampered receipt correctly failed earlier PRIVATE_INPUT_CHANGED; test still expected old later VERIFY_RECEIPT_RESULT. Assertion corrected; separate rebound-checkpoint test retains nonboolean result guard coverage."
+    }
+  ],
+  "AWS_calls": 0,
+  "Terraform_execution": 0,
+  "actual_private_access": false,
+  "sbt_check_run": false,
+  "A1_rerun": false
+}

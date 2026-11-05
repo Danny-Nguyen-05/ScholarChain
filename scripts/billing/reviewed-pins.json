@@ -1,0 +1,1115 @@
+{
+  "plan_sha256": "ab9f141e83058209263cf561eef1d102496ec7f534b88ce421620d8e0045f855",
+  "plan_bytes": 6631,
+  "terraform_sha256": "899b3c0ca0d2669ebd67be4bcd98e84bd9a914ce2fb3897ad0b86c98cbf3c962",
+  "provider_sha256": "050fc3a7514d11585206c2a059be393ee54f50b9276ed1b092a1a975ae2afa73",
+  "cli_config_sha256": "bd77a0311cac1f89c0ea02f5b328aec41a93ae6f11ddcd7873c61eae6045361e",
+  "public_input_sha256": "48f19c4526b63c8e194dcfeea8466591a0667c3a5956e06cdb31116e110a8e02",
+  "human_record_sha256": "abe3a50ad7167fa01227c73e15e92a422a50609f6313bdcc56404cb61765d71a",
+  "proposal_sha256": "d97abf57f30f72a3c66502a998e3962c4f2b4a2f28797237fd464a5b5d8113d5",
+  "config": [
+    {
+      "source": "infra/terraform/billing-bootstrap/README.md",
+      "copy_relative": "config/README.md",
+      "sha256": "46506dade67af6ec882f4bbd81661d00d92c8f9d5bebe6f6ed1e47e2c30143a0",
+      "bytes": 7866,
+      "mtime_ns": 1793465718737488124,
+      "copy_sha256": "46506dade67af6ec882f4bbd81661d00d92c8f9d5bebe6f6ed1e47e2c30143a0"
+    },
+    {
+      "source": "infra/terraform/billing-bootstrap/main.tf",
+      "copy_relative": "config/main.tf",
+      "sha256": "5e69e4235e417c72968097af6050f66c434fd1d1049ee0f655d1b6635e101549",
+      "bytes": 2215,
+      "mtime_ns": 1793414130514184875,
+      "copy_sha256": "5e69e4235e417c72968097af6050f66c434fd1d1049ee0f655d1b6635e101549"
+    },
+    {
+      "source": "infra/terraform/billing-bootstrap/outputs.tf",
+      "copy_relative": "config/outputs.tf",
+      "sha256": "e729e4b3d6523074f293b95c9a5f85fc03c8eec0f8a40928c24a1c227ce3174f",
+      "bytes": 1005,
+      "mtime_ns": 1793414130514426581,
+      "copy_sha256": "e729e4b3d6523074f293b95c9a5f85fc03c8eec0f8a40928c24a1c227ce3174f"
+    },
+    {
+      "source": "infra/terraform/billing-bootstrap/variables.tf",
+      "copy_relative": "config/variables.tf",
+      "sha256": "3e37054f1187192ae3188052d52630e50a3db950ce7436b639d98ef066a8c937",
+      "bytes": 3033,
+      "mtime_ns": 1793414130514329374,
+      "copy_sha256": "3e37054f1187192ae3188052d52630e50a3db950ce7436b639d98ef066a8c937"
+    },
+    {
+      "source": "infra/terraform/billing-bootstrap/versions.tf",
+      "copy_relative": "config/versions.tf",
+      "sha256": "38c0d27255f1ccf0c6f57b6854b80e5bcecde516ebfbcdfbd7ae95ad220ba0a1",
+      "bytes": 150,
+      "mtime_ns": 1793396913408180297,
+      "copy_sha256": "38c0d27255f1ccf0c6f57b6854b80e5bcecde516ebfbcdfbd7ae95ad220ba0a1"
+    },
+    {
+      "source": "infra/terraform/billing-bootstrap/tests/budget.tftest.hcl",
+      "copy_relative": "config/tests/budget.tftest.hcl",
+      "sha256": "8f79abffe3fe71e4a6736dddf461a0c8a7c136cdd7a5bf29394185e81da4550b",
+      "bytes": 3984,
+      "mtime_ns": 1793414153902787015,
+      "copy_sha256": "8f79abffe3fe71e4a6736dddf461a0c8a7c136cdd7a5bf29394185e81da4550b"
+    },
+    {
+      "source": "infra/terraform/billing-bootstrap/.terraform.lock.hcl",
+      "copy_relative": "config/.terraform.lock.hcl",
+      "sha256": "421b75245b0080edee2b434482ff348419a75d7a6b798d5218e0a0f9f723eaea",
+      "bytes": 1406,
+      "mtime_ns": 1793396913427340179,
+      "copy_sha256": "421b75245b0080edee2b434482ff348419a75d7a6b798d5218e0a0f9f723eaea"
+    }
+  ],
+  "source_freeze": [
+    {
+      "path": "infra/terraform/.gitkeep",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "infra/terraform/.terraform.lock.hcl",
+      "bytes": 1406,
+      "sha256": "421b75245b0080edee2b434482ff348419a75d7a6b798d5218e0a0f9f723eaea"
+    },
+    {
+      "path": "infra/terraform/README.md",
+      "bytes": 37941,
+      "sha256": "c6860ef0b245ab841fc6aab02cee1739eabdfbd4bce0381284176450ae992044"
+    },
+    {
+      "path": "infra/terraform/billing-bootstrap/.terraform.lock.hcl",
+      "bytes": 1406,
+      "sha256": "421b75245b0080edee2b434482ff348419a75d7a6b798d5218e0a0f9f723eaea"
+    },
+    {
+      "path": "infra/terraform/billing-bootstrap/README.md",
+      "bytes": 7866,
+      "sha256": "46506dade67af6ec882f4bbd81661d00d92c8f9d5bebe6f6ed1e47e2c30143a0"
+    },
+    {
+      "path": "infra/terraform/billing-bootstrap/main.tf",
+      "bytes": 2215,
+      "sha256": "5e69e4235e417c72968097af6050f66c434fd1d1049ee0f655d1b6635e101549"
+    },
+    {
+      "path": "infra/terraform/billing-bootstrap/outputs.tf",
+      "bytes": 1005,
+      "sha256": "e729e4b3d6523074f293b95c9a5f85fc03c8eec0f8a40928c24a1c227ce3174f"
+    },
+    {
+      "path": "infra/terraform/billing-bootstrap/tests/budget.tftest.hcl",
+      "bytes": 3984,
+      "sha256": "8f79abffe3fe71e4a6736dddf461a0c8a7c136cdd7a5bf29394185e81da4550b"
+    },
+    {
+      "path": "infra/terraform/billing-bootstrap/variables.tf",
+      "bytes": 3033,
+      "sha256": "3e37054f1187192ae3188052d52630e50a3db950ce7436b639d98ef066a8c937"
+    },
+    {
+      "path": "infra/terraform/billing-bootstrap/versions.tf",
+      "bytes": 150,
+      "sha256": "38c0d27255f1ccf0c6f57b6854b80e5bcecde516ebfbcdfbd7ae95ad220ba0a1"
+    },
+    {
+      "path": "infra/terraform/billing-execution/.terraform.lock.hcl",
+      "bytes": 1406,
+      "sha256": "421b75245b0080edee2b434482ff348419a75d7a6b798d5218e0a0f9f723eaea"
+    },
+    {
+      "path": "infra/terraform/billing-execution/README.md",
+      "bytes": 13972,
+      "sha256": "31ad53427d2dc696ae1bc4710d141d5ae3f9e19deddba723611aab06f451128a"
+    },
+    {
+      "path": "infra/terraform/billing-execution/main.tf",
+      "bytes": 2555,
+      "sha256": "40c60e9c3bc2c279759f3244bc971be898d4e29efb49b6e4c181e213f0f83c66"
+    },
+    {
+      "path": "infra/terraform/billing-execution/tests/policy.tftest.hcl",
+      "bytes": 6861,
+      "sha256": "d38c30f791afab15f05021b7fd2ce4c0ad58ea728a5649acf214a95f63b59e09"
+    },
+    {
+      "path": "infra/terraform/billing-execution/variables.tf",
+      "bytes": 1765,
+      "sha256": "2008eeb6f42e684b45c45ca69da6f96859e3009ba6d5661663dfe1b6f4f8527d"
+    },
+    {
+      "path": "infra/terraform/billing-execution/versions.tf",
+      "bytes": 150,
+      "sha256": "38c0d27255f1ccf0c6f57b6854b80e5bcecde516ebfbcdfbd7ae95ad220ba0a1"
+    },
+    {
+      "path": "infra/terraform/environments/course.tfvars",
+      "bytes": 1466,
+      "sha256": "074db42250c2f7e61ff3c6b3bdaee62a14d91eafd0d5f3419d419f01afa7306b"
+    },
+    {
+      "path": "infra/terraform/main.tf",
+      "bytes": 6467,
+      "sha256": "d5e5b3c2f3e0075f2562609ad2ce5f5573f116bd39f1c0235b3b84153b27341c"
+    },
+    {
+      "path": "infra/terraform/modules/datalake/main.tf",
+      "bytes": 2835,
+      "sha256": "33a1f9d21962c285f597a4e17a74535af186ab52a741c045b663717f4f7bf9bf"
+    },
+    {
+      "path": "infra/terraform/modules/datalake/outputs.tf",
+      "bytes": 810,
+      "sha256": "c04264c35b25d7dbde8e0ebef4c0d0f0a8eec82c20fb38e1a2a868cae7f8c07d"
+    },
+    {
+      "path": "infra/terraform/modules/datalake/variables.tf",
+      "bytes": 362,
+      "sha256": "f34c80bf90187a86eff99db8bee280872f6b21da339ce5a3a3386d2629b4083a"
+    },
+    {
+      "path": "infra/terraform/modules/datalake/versions.tf",
+      "bytes": 150,
+      "sha256": "38c0d27255f1ccf0c6f57b6854b80e5bcecde516ebfbcdfbd7ae95ad220ba0a1"
+    },
+    {
+      "path": "infra/terraform/modules/dynamodb/main.tf",
+      "bytes": 1751,
+      "sha256": "a6ba78a8127de3f6df9c2cf42b9f397f18ea3dc239fed0b20c5e718d8d91c120"
+    },
+    {
+      "path": "infra/terraform/modules/dynamodb/outputs.tf",
+      "bytes": 776,
+      "sha256": "3d8b58ed4096f3d53c8620673fa44ff015029176064823aa342cfefd490f4820"
+    },
+    {
+      "path": "infra/terraform/modules/dynamodb/variables.tf",
+      "bytes": 265,
+      "sha256": "d3927de45e5a434c8b30dd941283ed080ad29b14909d16cd0158b5a89df65641"
+    },
+    {
+      "path": "infra/terraform/modules/dynamodb/versions.tf",
+      "bytes": 150,
+      "sha256": "38c0d27255f1ccf0c6f57b6854b80e5bcecde516ebfbcdfbd7ae95ad220ba0a1"
+    },
+    {
+      "path": "infra/terraform/modules/emr/main.tf",
+      "bytes": 3462,
+      "sha256": "b945543bcb85469e6a0d5b03ab7856b926c23f0447dfeab95505d298d3f7280b"
+    },
+    {
+      "path": "infra/terraform/modules/emr/outputs.tf",
+      "bytes": 334,
+      "sha256": "4fd3461366fed94fcbf0d5823e07fdddf8fcf460a1692d2d75e30d9b9e884db5"
+    },
+    {
+      "path": "infra/terraform/modules/emr/variables.tf",
+      "bytes": 663,
+      "sha256": "97fbff11089034711095904b83a950da2af5faa1d02416a6ff48e66dea76fc16"
+    },
+    {
+      "path": "infra/terraform/modules/emr/versions.tf",
+      "bytes": 150,
+      "sha256": "38c0d27255f1ccf0c6f57b6854b80e5bcecde516ebfbcdfbd7ae95ad220ba0a1"
+    },
+    {
+      "path": "infra/terraform/modules/foundation/bootstrap/main.tf",
+      "bytes": 1990,
+      "sha256": "c26429519d1a02fa5263532856b9cc7a154974e4798039599c54bc7936356d15"
+    },
+    {
+      "path": "infra/terraform/modules/foundation/bootstrap/outputs.tf",
+      "bytes": 960,
+      "sha256": "fdc3ff0702da0eb128deb35fdab6cda02b96507354ad41fcc3dd5a4b54e9f2c0"
+    },
+    {
+      "path": "infra/terraform/modules/foundation/bootstrap/variables.tf",
+      "bytes": 693,
+      "sha256": "ebc3bedbb4957baf5692e19b227df77f44e83ce1c107702375105d493c110b76"
+    },
+    {
+      "path": "infra/terraform/modules/foundation/bootstrap/versions.tf",
+      "bytes": 150,
+      "sha256": "38c0d27255f1ccf0c6f57b6854b80e5bcecde516ebfbcdfbd7ae95ad220ba0a1"
+    },
+    {
+      "path": "infra/terraform/modules/foundation/main.tf",
+      "bytes": 1095,
+      "sha256": "28a5dd65c502cd18d039da4d35c92964fae4fac74909a69fbc9ea8b1984b77d2"
+    },
+    {
+      "path": "infra/terraform/modules/foundation/outputs.tf",
+      "bytes": 266,
+      "sha256": "bfbab11ed31c4a9d0aec8fef35b926fecd04f3964fe849cd044b412a4ccddf8e"
+    },
+    {
+      "path": "infra/terraform/modules/foundation/variables.tf",
+      "bytes": 486,
+      "sha256": "38f1a007c2de96f671eb980a466140835e7f88dfe89519607e6da0784dc0b553"
+    },
+    {
+      "path": "infra/terraform/modules/foundation/versions.tf",
+      "bytes": 150,
+      "sha256": "38c0d27255f1ccf0c6f57b6854b80e5bcecde516ebfbcdfbd7ae95ad220ba0a1"
+    },
+    {
+      "path": "infra/terraform/modules/identity/main.tf",
+      "bytes": 11807,
+      "sha256": "c1563654848f6a74364f07a71b96f89643d44636486c4087c0e17e72c4461bd9"
+    },
+    {
+      "path": "infra/terraform/modules/identity/outputs.tf",
+      "bytes": 2010,
+      "sha256": "217bc41d2b4875dfe4632b5dc6836a852a2a49864e94f96365f93baf5154779f"
+    },
+    {
+      "path": "infra/terraform/modules/identity/phase12b.tf",
+      "bytes": 3169,
+      "sha256": "8bdcded40d94bfd8f14680ff47dc27ceaba3272b7667a5eab595dfb99ceab5c5"
+    },
+    {
+      "path": "infra/terraform/modules/identity/variables.tf",
+      "bytes": 968,
+      "sha256": "2ac1550de1cff2e1d66322cae32022f5c6e12ed9f043ed5463d5aa52f3e5c6a9"
+    },
+    {
+      "path": "infra/terraform/modules/identity/versions.tf",
+      "bytes": 150,
+      "sha256": "38c0d27255f1ccf0c6f57b6854b80e5bcecde516ebfbcdfbd7ae95ad220ba0a1"
+    },
+    {
+      "path": "infra/terraform/modules/messaging/main.tf",
+      "bytes": 1553,
+      "sha256": "3088aba1f4c77017fa7bc91e6d0a16b55b9ce4bc1e71f580b4e310c55f82d679"
+    },
+    {
+      "path": "infra/terraform/modules/messaging/outputs.tf",
+      "bytes": 864,
+      "sha256": "9f104df2f4af14ba20b018aeef1f53367fc789f535892587ca2ee580380e4d61"
+    },
+    {
+      "path": "infra/terraform/modules/messaging/variables.tf",
+      "bytes": 1077,
+      "sha256": "2c2d1fda57e9b1d9a3c17aefe195992e2009e6ca508c6479cb404cda49176163"
+    },
+    {
+      "path": "infra/terraform/modules/messaging/versions.tf",
+      "bytes": 150,
+      "sha256": "38c0d27255f1ccf0c6f57b6854b80e5bcecde516ebfbcdfbd7ae95ad220ba0a1"
+    },
+    {
+      "path": "infra/terraform/modules/neptune/main.tf",
+      "bytes": 2690,
+      "sha256": "750243dab1a6c928f03ef6e19588282dcd6df65c535beebc8006497e234f9a0e"
+    },
+    {
+      "path": "infra/terraform/modules/neptune/outputs.tf",
+      "bytes": 553,
+      "sha256": "68b2c4272cddc85a109029e09dde4708e72e012e6e0b6752c07a87a2945cf3f5"
+    },
+    {
+      "path": "infra/terraform/modules/neptune/variables.tf",
+      "bytes": 717,
+      "sha256": "8104b8c01fb7f99651331aad39935b3bbf5415c2950bb1bf3bc64048ea078152"
+    },
+    {
+      "path": "infra/terraform/modules/neptune/versions.tf",
+      "bytes": 150,
+      "sha256": "38c0d27255f1ccf0c6f57b6854b80e5bcecde516ebfbcdfbd7ae95ad220ba0a1"
+    },
+    {
+      "path": "infra/terraform/modules/network/main.tf",
+      "bytes": 10968,
+      "sha256": "6cad9d6dbbc48de09917987f92eb45154381f2d3e62d1122ab50c72c4a132b9f"
+    },
+    {
+      "path": "infra/terraform/modules/network/outputs.tf",
+      "bytes": 1785,
+      "sha256": "a95f6380671e574c175b83149a86f4b9ad8f00b53c8aaac0f62b9ea291aea96e"
+    },
+    {
+      "path": "infra/terraform/modules/network/variables.tf",
+      "bytes": 742,
+      "sha256": "85ce3718b5a1d47ec6fda18303d40fb7a73805645f1648bd4318d956aca42890"
+    },
+    {
+      "path": "infra/terraform/modules/network/versions.tf",
+      "bytes": 150,
+      "sha256": "38c0d27255f1ccf0c6f57b6854b80e5bcecde516ebfbcdfbd7ae95ad220ba0a1"
+    },
+    {
+      "path": "infra/terraform/modules/observability/main.tf",
+      "bytes": 10104,
+      "sha256": "31676c7b5cf8727f8adf513a23a80a162a4d598cde0951baf79ce2539a4d0d72"
+    },
+    {
+      "path": "infra/terraform/modules/observability/outputs.tf",
+      "bytes": 551,
+      "sha256": "6ae4abe662395ec15f0ae45633039768b17f7b79d0dc847826ac6a7ec191cf47"
+    },
+    {
+      "path": "infra/terraform/modules/observability/variables.tf",
+      "bytes": 626,
+      "sha256": "ab92f1860f336384e763d9b275c548a8e7b1a33ed4b2bdf8663a2e1215615745"
+    },
+    {
+      "path": "infra/terraform/modules/observability/versions.tf",
+      "bytes": 150,
+      "sha256": "38c0d27255f1ccf0c6f57b6854b80e5bcecde516ebfbcdfbd7ae95ad220ba0a1"
+    },
+    {
+      "path": "infra/terraform/modules/runtime/compute.tf",
+      "bytes": 8706,
+      "sha256": "6864e3fc7336b16110a28ed24853bbe6c830bdc86baaae9d1dc341cfd575f978"
+    },
+    {
+      "path": "infra/terraform/modules/runtime/main.tf",
+      "bytes": 549,
+      "sha256": "da2a0cdf7270d0a8b3ab65223c869753700e11a6a3ed635ac6fccc5bdf8422df"
+    },
+    {
+      "path": "infra/terraform/modules/runtime/outputs.tf",
+      "bytes": 1410,
+      "sha256": "7035f6ad7a97ef66b17a2b8b36321538407666d65893838718d128b02f498849"
+    },
+    {
+      "path": "infra/terraform/modules/runtime/variables.tf",
+      "bytes": 1250,
+      "sha256": "4cbae506c1b1371ef255fce80c96397708b3930e1f23fc0ca90ca56451835458"
+    },
+    {
+      "path": "infra/terraform/modules/runtime/versions.tf",
+      "bytes": 150,
+      "sha256": "38c0d27255f1ccf0c6f57b6854b80e5bcecde516ebfbcdfbd7ae95ad220ba0a1"
+    },
+    {
+      "path": "infra/terraform/modules/s3vectors/main.tf",
+      "bytes": 1671,
+      "sha256": "ef6d6dd8396e6fbe910f45d59cacd497afc757be788b5b9280410e2948ac18ed"
+    },
+    {
+      "path": "infra/terraform/modules/s3vectors/outputs.tf",
+      "bytes": 365,
+      "sha256": "f610026e936d2d9bf6103dee0e13d4cff602690a789fc4a38b60bfb0f421c9d5"
+    },
+    {
+      "path": "infra/terraform/modules/s3vectors/variables.tf",
+      "bytes": 343,
+      "sha256": "c2cf7f01b63b666f26afe5a3f29473284072d84c5a30c4934afa379dbc497142"
+    },
+    {
+      "path": "infra/terraform/modules/s3vectors/versions.tf",
+      "bytes": 150,
+      "sha256": "38c0d27255f1ccf0c6f57b6854b80e5bcecde516ebfbcdfbd7ae95ad220ba0a1"
+    },
+    {
+      "path": "infra/terraform/modules/workflow/main.tf",
+      "bytes": 3546,
+      "sha256": "ef7859b8c8f62ce1be701bf5f66de45cb7b89a4a2a31378b3a7fa902cdd4f08a"
+    },
+    {
+      "path": "infra/terraform/modules/workflow/outputs.tf",
+      "bytes": 419,
+      "sha256": "ad976377003ccb94e5be9e2c8e28849178795d47fbc89ece2cc1b1fedd65133a"
+    },
+    {
+      "path": "infra/terraform/modules/workflow/variables.tf",
+      "bytes": 357,
+      "sha256": "b06680fa2e6c66d8597cc7545e312a3caf308d319070de3778060806bb11b303"
+    },
+    {
+      "path": "infra/terraform/modules/workflow/versions.tf",
+      "bytes": 150,
+      "sha256": "38c0d27255f1ccf0c6f57b6854b80e5bcecde516ebfbcdfbd7ae95ad220ba0a1"
+    },
+    {
+      "path": "infra/terraform/outputs.tf",
+      "bytes": 1425,
+      "sha256": "483145548635204f79f3db4e9aedb4a6c7e0d90fd4ba4ae474bffec9b0c41f29"
+    },
+    {
+      "path": "infra/terraform/phase12b-variables.tf",
+      "bytes": 8785,
+      "sha256": "ec120c11bb0ec5195015153ce49eab285f9954d7280007b908056acc77abe9d3"
+    },
+    {
+      "path": "infra/terraform/phase12b.tf",
+      "bytes": 6960,
+      "sha256": "9ee3bff8c367d4748e9e558dc59557a7c6f6ba0e4a46fa27ba85b8a3f080925e"
+    },
+    {
+      "path": "infra/terraform/providers.tf",
+      "bytes": 192,
+      "sha256": "665ed676e139cd00e9e7b7bb744a217aeb16d40d4d5cabe13187150c088c2296"
+    },
+    {
+      "path": "infra/terraform/spikes/emr-spark/.terraform.lock.hcl",
+      "bytes": 1406,
+      "sha256": "421b75245b0080edee2b434482ff348419a75d7a6b798d5218e0a0f9f723eaea"
+    },
+    {
+      "path": "infra/terraform/spikes/emr-spark/README.md",
+      "bytes": 9918,
+      "sha256": "3068cace639b8d759af9217d20d78fce0f998cb69e71bfad49740253afa7c282"
+    },
+    {
+      "path": "infra/terraform/spikes/emr-spark/main.tf",
+      "bytes": 1626,
+      "sha256": "1712fd5aa97439f35ddcf9d5edc1bfdf31f70a8dc785c25cfd0c829b180fc056"
+    },
+    {
+      "path": "infra/terraform/spikes/emr-spark/tests/proposal.tftest.hcl",
+      "bytes": 1844,
+      "sha256": "6d1aa447935e1c09d3e425d8a2769de8f4806417f96643e3b22c427a466f7c4e"
+    },
+    {
+      "path": "infra/terraform/spikes/emr-spark/variables.tf",
+      "bytes": 1367,
+      "sha256": "e8773844b8a6faa5c307c6db08ef540f5d072366a51a1284e524822653ffcd49"
+    },
+    {
+      "path": "infra/terraform/spikes/emr-spark/versions.tf",
+      "bytes": 150,
+      "sha256": "38c0d27255f1ccf0c6f57b6854b80e5bcecde516ebfbcdfbd7ae95ad220ba0a1"
+    },
+    {
+      "path": "infra/terraform/tests/phase12a.tftest.hcl",
+      "bytes": 16324,
+      "sha256": "2629073c572587dd16e65be5e31325e07106bb7d7d8b40fa794ddf71cdf23b6e"
+    },
+    {
+      "path": "infra/terraform/tests/phase12b.tftest.hcl",
+      "bytes": 28856,
+      "sha256": "01d787a8ce04796fab91713422ae58fdecfb8aab683f549098cf46719175d0f7"
+    },
+    {
+      "path": "infra/terraform/tests/phase12c.tftest.hcl",
+      "bytes": 14339,
+      "sha256": "4450bcbe1aa3673ae953e227b0f488e9c2a64c9d3e7f8d91e441d8299f80c08b"
+    },
+    {
+      "path": "infra/terraform/variables.tf",
+      "bytes": 10151,
+      "sha256": "654032b61eaae460f2e817afb7794bcad09f36a01dc54520de1e74772590b056"
+    },
+    {
+      "path": "infra/terraform/versions.tf",
+      "bytes": 150,
+      "sha256": "38c0d27255f1ccf0c6f57b6854b80e5bcecde516ebfbcdfbd7ae95ad220ba0a1"
+    },
+    {
+      "path": "tests/.gitkeep",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "tests/browser/phase5c-repaired-real-load-cua.js",
+      "bytes": 1693,
+      "sha256": "7ae3f1508c323d8c3d2529fc1986ea169c3b40aa6e2245065ea8aadb670e5bb1"
+    },
+    {
+      "path": "tests/browser/phase5c-repaired-real-load-observed.json",
+      "bytes": 1936,
+      "sha256": "7bc1d8e69c3a4ba9babd191b13817bd4fcc7dd9a1a4228535ee12be7ba33f707"
+    },
+    {
+      "path": "tests/browser/phase5c-review-cua.js",
+      "bytes": 4506,
+      "sha256": "758ac3d31b5742cf905d1b9ba292fe0c0df0b157b55f5a30046e37b13c9e1dcb"
+    },
+    {
+      "path": "tests/browser/phase5c-review-observed.json",
+      "bytes": 2386,
+      "sha256": "b82ee89d128697593f9f8fe22f8055bd2fff7dee9cab1d1c894b2623e6e31da0"
+    },
+    {
+      "path": "tests/infra/README.md",
+      "bytes": 1718,
+      "sha256": "9cd8f380d78d2ccdb3566018360651254635bd34dc9b799d841105b37dc6b256"
+    },
+    {
+      "path": "tests/infra/terraform_source_guard.py",
+      "bytes": 11700,
+      "sha256": "17cf7941d48c71f571088669b1da3ec435c16951f1e4a6865274c14186de70ca"
+    },
+    {
+      "path": "tests/src/test/resources/phase6/empty.jsonl",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "tests/src/test/resources/phase6/tiny-pipeline.xml",
+      "bytes": 619,
+      "sha256": "2aa9e7fe734ebb17ec2c9e5e02b548ab1e48ab37d638fdc2cd99376873ada36b"
+    },
+    {
+      "path": "tests/src/test/resources/storage/metrics-conflict.json",
+      "bytes": 1261,
+      "sha256": "88ea19534d65d4ef3968f6f3adfc41790498bd3a57fb06eaf97b76550a955d20"
+    },
+    {
+      "path": "tests/src/test/resources/storage/metrics.json",
+      "bytes": 1260,
+      "sha256": "9175c1bbb965aa9e649e2eeff773371a0ceaf68c6d36d1f23793b0b31203ba1f"
+    },
+    {
+      "path": "tests/src/test/resources/storage/researcher-invalid.json",
+      "bytes": 759,
+      "sha256": "2ccbdf78f3f68ec2d4e5321cc9eb0cf5793a5ebec9b8fc5ee7d9065728e4e2ca"
+    },
+    {
+      "path": "tests/src/test/resources/storage/researcher.json",
+      "bytes": 766,
+      "sha256": "afcfdab74bd7beaf45bfc38073f4de5e0afb72814374d8058f2dc196039d41f5"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/AdversarialBlockingReplaySpec.scala",
+      "bytes": 5710,
+      "sha256": "00a8bd1bdbe2f00872c93dca662f8baeea7c027b80d1b77a735de32f4982ca6a"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/AdversarialDataPlaneSpec.scala",
+      "bytes": 7321,
+      "sha256": "8d870222eeecdad4ef58e214ef34175a914fea69a21cda51f8db3599836e7e31"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/AdversarialGraphShapesSpec.scala",
+      "bytes": 12846,
+      "sha256": "78fa802cfd5226f0edb4c081d1ebaeaac09fff682a0ec0c7d1eda970c12dcba3"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/AdversarialRuntimeBoundarySpec.scala",
+      "bytes": 3495,
+      "sha256": "6b8c4dd7114a366c52d69494339b668c8d5d06beb1b3bb41e589d8424653db7c"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/AdversarialRuntimeFixture.scala",
+      "bytes": 6619,
+      "sha256": "e8bf0dd1a0c028e1048cae20f794f97694e141039e59f76e43ec0c46fc8c5a02"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/AdversarialRuntimeHttpSpec.scala",
+      "bytes": 14131,
+      "sha256": "2a84e062d58525be65bcae58a2639ebb5b2b56f266e3fa364b61a986cc1550d0"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/AdversarialRuntimeWorkflowSpec.scala",
+      "bytes": 7391,
+      "sha256": "8ff0b02e59b3104a62295e5900e44359e297bf3005aef7cb8e7378b88b2809ef"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentCandidateDerivationSpec.scala",
+      "bytes": 6778,
+      "sha256": "2b1a69e44b1775c39253e8b32daebdcca933732609be9c6f3d6d8d7741662f2b"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentCompletedPrepFixture.scala",
+      "bytes": 4890,
+      "sha256": "45e5fc887d3b29514283611dc6b85a52cdfb4661a9b285bde1459cf16ca6f302"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentDblpJsonSpec.scala",
+      "bytes": 9538,
+      "sha256": "de3fa0e8868e57c0e86c97beed9a1b537e1bd9e4d4ba8b1bbdb95ee7b986139b"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentDblpXmlAdversarialSpec.scala",
+      "bytes": 6473,
+      "sha256": "e62c58defaa07ccef02cd56b49458aa9927ea09722dc2c780051e006c7fa2cd4"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentDblpXmlRepairSpec.scala",
+      "bytes": 10450,
+      "sha256": "9db455d1469b84853ff42402ca78df7aa52b613827ecc645b8e582da03b21a9b"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentEmbedding8BFailureSpec.scala",
+      "bytes": 5841,
+      "sha256": "eabeb7cad06369fbfaffbac86a38b25df9aba6791cbbd5dbd9077bd4ad1c7b73"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentEmbedding8BGuardSpec.scala",
+      "bytes": 7442,
+      "sha256": "8a6cc864b442c5462e67ea17f4b7813ce39ca318278e3cad76909c6d95bfa1ce"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentEmbedding8BPipelineSpec.scala",
+      "bytes": 10756,
+      "sha256": "e632d2454d60a5b47fb88d609af5d1082c26b4382d2a6c997806474f060115b5"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentEmbedding8BSmokeSpec.scala",
+      "bytes": 5251,
+      "sha256": "2a7c2022ba06ba14390a73bce89232ee92bc454c36231da924b90a764d2c14c8"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentEmbeddingContractSpec.scala",
+      "bytes": 7078,
+      "sha256": "78f4298efbe55d6beb94e63e0612f58b6c69d1d2ab89b1dc09e800594f5c307b"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentEmbeddingG1ExportMain.scala",
+      "bytes": 8405,
+      "sha256": "cf15990d6c35f58e6642ad41a919bf6946f40e561761e18729f576b4e7431d3a"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentEmbeddingLocalReplayMain.scala",
+      "bytes": 6543,
+      "sha256": "28d0bed5ab59b242395d59094443c568bcd79d72f4ea3ad54bcdc3cfdc100846"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentEmbeddingRenderingSpec.scala",
+      "bytes": 4225,
+      "sha256": "475842bb3ccdffc34ec8ccee70cd59f1a4f7eb01cb560532923c1ec4ebb97919"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentEmbeddingSlotRepairSpec.scala",
+      "bytes": 16248,
+      "sha256": "4a9ed31ce41b98d0423fc4a3235c6008f85bc42cd866171a78d5e8552fe99ac6"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentEmbeddingStorageSpec.scala",
+      "bytes": 9403,
+      "sha256": "951a7463586f794ae1e786b3ba0f7d97109c5bfaeda1f5f420e158ef77d3bd6c"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentEvaluationAdapterSpec.scala",
+      "bytes": 8707,
+      "sha256": "379a8dd3b823fd31425a3e11f03746d9ba9caa118da4eec99ca3456647e1fb4d"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentEvaluationCliSpec.scala",
+      "bytes": 8859,
+      "sha256": "1b81bb20499a30e2c542fd9b79c986be01a0c076d0e1831c098e63c4acc9cabf"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentEvaluationCohortSpec.scala",
+      "bytes": 4342,
+      "sha256": "62f8978d830719383a3f2621dbe5a195dad71ab89e60e5d7aa9dbbdc68f8a7e6"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentEvaluationSpec.scala",
+      "bytes": 7377,
+      "sha256": "ca6714e19d8402c61a38313e415aed315b7ca74ff983a51407cfd4975f24f5f1"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentGoldLabelsSpec.scala",
+      "bytes": 4780,
+      "sha256": "1ad9338a27004b9522ea7508f771717efd430787c1c436b55d3b856e49e33431"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentHadoopPipelineSpec.scala",
+      "bytes": 21173,
+      "sha256": "d522a7fcdbd595e86170ea180de89f8b524ac9a5eab72253cd2902ea89f02382"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentIdentifierNormalizationSpec.scala",
+      "bytes": 4034,
+      "sha256": "bd4ca2b0a5cb22b87dbbb7c0c84788f18b361bd6c895fc6cb5fc5c4e6cc119d7"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentLiveAdjudicatorSpec.scala",
+      "bytes": 5612,
+      "sha256": "f8843f5a1aae55da03069878140950654f38cac737a085fffc5781e1dcb68fdf"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentLiveBudgetSpec.scala",
+      "bytes": 3895,
+      "sha256": "80cd6bdb017734b4def96bc25d4128eb63176ca96616ccd894f05a028771c707"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentLiveCacheSpec.scala",
+      "bytes": 4063,
+      "sha256": "405858daccd07c6e9369b74e5cd49174d2bb93522c69e07f1988c4282c982d15"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentLiveCredentialPreflightSpec.scala",
+      "bytes": 3819,
+      "sha256": "46d68217eca54ee14aef5099d225f31be95d533d2541442251f6785dd10d6a62"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentLiveCredentialsSpec.scala",
+      "bytes": 1324,
+      "sha256": "9af62100a3ed5fb4b1c263ca929478e9693e0912fde14d03bffcb2005e58de5c"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentLiveDevelopmentSpec.scala",
+      "bytes": 13812,
+      "sha256": "74cd5ac5a04315b7f04d2fbf882fbd7d2530a68ab2923f19774c8c0e95da6e92"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentLiveFixtures.scala",
+      "bytes": 3979,
+      "sha256": "80d6bebab54e9325e4d9dd7bc9adaaab9878a04b5220ea45eb880127bd0ce1ce"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentLiveResponseDiagnosticSpec.scala",
+      "bytes": 7740,
+      "sha256": "657fab52917e99be6a353965256b0e016b5f1dbdf153d7664ccbc99a7a4bb524"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentOfflineAdjudicationSpec.scala",
+      "bytes": 12785,
+      "sha256": "e4c1dc1f52f7c02466518b1a6f5a5bd296fc7b0295012dd3551c7c423bcf7668"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentOpenAIResponsesSpec.scala",
+      "bytes": 6990,
+      "sha256": "417c370aca763821d1abe095f7eeec9438591240d57b419ba136b802bc9d0514"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentPhase4BlockerSpec.scala",
+      "bytes": 14132,
+      "sha256": "ab1fea1ab7fb9bd1169c437e13a6e374dcc1a8600db008e368254cfd37c38f67"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentPhase4EvidenceSpec.scala",
+      "bytes": 13137,
+      "sha256": "6274c2eb50f4a313b8725491c2465f0ca2830f8cbc5d4e1cca047558ae3471d3"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentPhase6CGraphSpec.scala",
+      "bytes": 16485,
+      "sha256": "f8de5aa1d58170085a5c316ff9e1235d9f23e89e85627d718f02960a529a7e72"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentPhase6DEGraphSpec.scala",
+      "bytes": 24430,
+      "sha256": "32f03f01d67d38dcb24fc58f315320becc2a7f75aa06ed872bed0b76e7d88833"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentPhase6FGFixtures.scala",
+      "bytes": 4289,
+      "sha256": "9b90bc7e8c957edc16e37105c154f14cfb07caad302c6d81f69b79fb27756939"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentPhase6FGSpec.scala",
+      "bytes": 24303,
+      "sha256": "5d902b7d354df5aabbfd2a5b536f74f9b6dacf4a7f78e925e5bcdbcaee1f6dc4"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentPhase6G1.scala",
+      "bytes": 6533,
+      "sha256": "358f067d268e6a588d1f04583a1a6bfdf180fcefeeadf13e76138193515e931d"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentPhase6PipelineSpec.scala",
+      "bytes": 6260,
+      "sha256": "b6983ae282939e76c79cd92c7795001a51604f5b39248a1a535c6973cac8530a"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentPhase6SafetySpec.scala",
+      "bytes": 14555,
+      "sha256": "ca95bf9261bffc23cdf14352dc28b1b86c5a02c30cc0202fc61e0e623173756c"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentPrepReaderSpec.scala",
+      "bytes": 5286,
+      "sha256": "959916095d05e1ae04aaaddd88cef180f5249674d41630c06c56503de88d46fe"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentRequestEligibilitySpec.scala",
+      "bytes": 22844,
+      "sha256": "724f254947ceafb943aab35422efa27a8552f7c40fd40ba13b287e188026fcd4"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentResolutionContractSpec.scala",
+      "bytes": 27980,
+      "sha256": "813cd28f83bd3e030e9a162089b1f4077339a684bfed464e2912649c309570da"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentResolutionEngineSpec.scala",
+      "bytes": 10548,
+      "sha256": "cda7cc0a553331d8cd6d5673db83f51403b376b7bd8d817bbc34e3dddae8b035"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentResolutionExportSpec.scala",
+      "bytes": 10514,
+      "sha256": "fb8c7cf7d281dce426d156d8c7b109b897ba2b518d07c54d089df4e50fd53180"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentResolutionFeaturesSpec.scala",
+      "bytes": 3676,
+      "sha256": "337bea46a01ede76b7d41ef0ad8530e2ad46427375b512f3816a4ff3fc3a3044"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentResolutionFixtures.scala",
+      "bytes": 5114,
+      "sha256": "de6aafb3b8b9227ef1fb8dfa87988e83520ca1c6f673be8f842040c7ab0937bb"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentResolutionInputSpec.scala",
+      "bytes": 6033,
+      "sha256": "566ad57d213f4dff4e5a1bd1178c32b694dc29562569c5f75d258e6131cac1b0"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentResolutionPolicySpec.scala",
+      "bytes": 4209,
+      "sha256": "8508fdffb554254e112760fd272f9556d347449b7e730c7f08d0e6e9d075a9fe"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentResolutionPrepBridgeRepairSpec.scala",
+      "bytes": 3876,
+      "sha256": "cb23a3caafdada7812180490204c979c84fc95d3182e25b003b3168f967ed3ed"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentResolutionRepairSpec.scala",
+      "bytes": 7606,
+      "sha256": "cd1c4e1c98e112333deaa1883c72b9ea0029ea5252a1866de36536cdb9ce52a4"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentResolutionRunSpec.scala",
+      "bytes": 10607,
+      "sha256": "f8a8d5a7aa69992b7fa55a70476db02b4ad984cefe332a14aee91687cde9cb9e"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentRetainedReviewInputMain.scala",
+      "bytes": 2648,
+      "sha256": "aff1dab7650a94724bf01ec1e1e5f21c4836a8d921c544b25b558ee6d9feef3d"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentRetainedReviewInputSpec.scala",
+      "bytes": 3653,
+      "sha256": "59511dd884280e27ac4598400394e0cc82abd58dc3299b7513d48c42430bcd06"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentReviewBindingRepairSpec.scala",
+      "bytes": 4809,
+      "sha256": "71d558ef27c113b1d4966f1bcd01811c9fe3be6fb31aa128bf88d0d0ca95df90"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentReviewBrowserFixtureMain.scala",
+      "bytes": 2772,
+      "sha256": "b3eb33163c40c03391ce404f9c1d85ec6ca79865f5606c71fa5b4ffc95e360d5"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentReviewFixtures.scala",
+      "bytes": 4007,
+      "sha256": "a2697430920b1085910f246bf4abe05a9083020fc1970e7947bce5fecfc4606f"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentReviewQueueSpec.scala",
+      "bytes": 8274,
+      "sha256": "074ce5c7c31d8da94642d22d46db107bb67a08c8230454fccf8572b6603b6a81"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentRuntime9AArtifactPipelineSpec.scala",
+      "bytes": 5840,
+      "sha256": "883f1c33f40216816f99b7bec7216598018fc011bf945f187389564027b192b8"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentRuntime9AEvidenceSpec.scala",
+      "bytes": 3857,
+      "sha256": "b99344b9ba305af594c6d62e8c44be7f35bcb0ccbfed625d820033c689d26a7f"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentRuntime9APlannerSpec.scala",
+      "bytes": 8887,
+      "sha256": "47e36a5b5afc1292bd91fbfba71529f903cafad598eb13560a0578743aa7c9b9"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentRuntime9ARepairPlannerSpec.scala",
+      "bytes": 11583,
+      "sha256": "a51ab457dcdb1d3e1e61c98bcc69e01a05ba2afe3506fee577fe982252859aef"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentRuntime9ARepairResolverSpec.scala",
+      "bytes": 7791,
+      "sha256": "e5d42da2f5caf0401891aa31516ef0e605d802e3ce44d36d43d6b7aba0d6bd60"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentRuntime9AResolverSpec.scala",
+      "bytes": 4868,
+      "sha256": "bd142272a585237568478751db5192113cee618c38cc2c8b9add80d6b47211fe"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentRuntime9BEvidenceSpec.scala",
+      "bytes": 10554,
+      "sha256": "31c8c550d336c81d15fbb1343153f9cc11b5e8efe2162aad1511c7334380e480"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentRuntime9BFixture.scala",
+      "bytes": 14437,
+      "sha256": "eb345279754f5c78c45c42fb074b3caed96c7b24e147b1a4ee5a19d4ffdb2f22"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentRuntime9BSemanticSpec.scala",
+      "bytes": 8208,
+      "sha256": "b4e70a04fbc7640f632fda40b4c0d248ebd7ce60d15e22f7d034deff767ed52a"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentRuntime9BStagesSpec.scala",
+      "bytes": 22665,
+      "sha256": "2046af4629e73e88b193fb998be031d9e0d8a34430182139e5c8ce38b4c66bb0"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentRuntime9BWorkflowSpec.scala",
+      "bytes": 15286,
+      "sha256": "6ccbe1efecfd440de40fddd43236061b6c140ba14c0390e16568a0feb18a2196"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentRuntime9CBenchmarkSpec.scala",
+      "bytes": 6815,
+      "sha256": "c02c445779c06d19cef4c1dd0b33058a7160395d9781ec809dad11204100164f"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentRuntime9CFixture.scala",
+      "bytes": 9089,
+      "sha256": "6ca1056d9dc53b71da9958bf19eeaba4be822c44dedbbcbf9ed1c4960593d575"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentRuntime9CSynthesisSpec.scala",
+      "bytes": 6456,
+      "sha256": "4b800e11ce6878ad47dc306731535bc636ac73ff27987cec8b9154cc63fc0338"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentRuntime9CTrustSpec.scala",
+      "bytes": 7382,
+      "sha256": "09e9c595c22ee81cb345f73e70782a328b406081e9009b2eb880f8be0ab4c47f"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentRuntime9CVerificationSpec.scala",
+      "bytes": 16162,
+      "sha256": "f9f8eff2d32c6e9336e30fa918d239cd9d091deee849281020115ca45c34acca"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentRuntime9CWorkflowSpec.scala",
+      "bytes": 12843,
+      "sha256": "b63a24f72e6cdd6961284a7bbbde2fd983c08ab49c695923f102750ec2325253"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentServices10AResilienceSpec.scala",
+      "bytes": 5747,
+      "sha256": "62b6c0544401b3eac0396a5ec335f7f0f6e201eba9d4a8c1814f6c65f9fb1991"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentServices10ASpec.scala",
+      "bytes": 19861,
+      "sha256": "fa0d22e6343d2a109edc2028725749d178796c6c7365778674f2b5e5a0cb2886"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentServices10BDeadlineSpec.scala",
+      "bytes": 9964,
+      "sha256": "1ba67b80f1f845fa4532b5569867230ec4b62d04d469690b3d8ef1ed324708b9"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentServices10BEqualBudgetSpec.scala",
+      "bytes": 6622,
+      "sha256": "be0722ac59baa29abd0cb69f5b62d51365eff979536cbb07797b63008f8cd0f9"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentServices10BFixture.scala",
+      "bytes": 5963,
+      "sha256": "27a148b01e2ff3697ba19a18f4bd5b015953460ae7ca7e12ad7628fb93bd4e60"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentServices10BGraphSpec.scala",
+      "bytes": 5362,
+      "sha256": "eabb986108c962f29b3c3e27f611156fce4ddc4d363200b6aff405e34f793ee7"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentServices10BLifecycleSpec.scala",
+      "bytes": 16190,
+      "sha256": "1b4627fdb634ad54ba4344336ef33422108220a71af82b712852d7a70e9d11a1"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentServices10BStructureSpec.scala",
+      "bytes": 2600,
+      "sha256": "4f66cce24e4e71fa920827108778b389633e7ac94b275ba446ddc196c8e555d6"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentServices10BWorkerSpec.scala",
+      "bytes": 5158,
+      "sha256": "b6260fef175bac9e9276db400135db36b8bb8a45cce3b4426085cdd2de510682"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentSparkSessionSpec.scala",
+      "bytes": 575,
+      "sha256": "2664809f532bc8a4591a968fa025ebf1d815d0c8519a433f5f7d6715cbe15e75"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentStorage7BSupport.scala",
+      "bytes": 1809,
+      "sha256": "faf886946e831b469cc446ce0ff1625c04f76da055e829e8f00e9feee538b21c"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentStorageFixtures.scala",
+      "bytes": 1973,
+      "sha256": "44cded8da79c58f6cc50c353837e81dcd8c13690f4bac1f83baa7905c505e86d"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentStorageGraphFixture.scala",
+      "bytes": 7995,
+      "sha256": "b218beca382de31739c3e1cabd061e072ac07169bfb2ffa5e2e8bd43b7ae79a8"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentStorageGraphLoaderSpec.scala",
+      "bytes": 19075,
+      "sha256": "58449d513963a4888c95f924be42684dd47835efa64a8216e2b481a6611238ab"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentStorageGraphReaderSpec.scala",
+      "bytes": 7068,
+      "sha256": "d2bdece1ad10eaf7b4805daeb8fb03c83dfaa9575c9d826652fa8a9a9fe83942"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentStorageHardeningSpec.scala",
+      "bytes": 11595,
+      "sha256": "e37cd65d6e7d2e7afa0c789d59e69e5f4390499e8492a0903eee6d498949cecc"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentStorageLiveExclusionSpec.scala",
+      "bytes": 3336,
+      "sha256": "86c300751b8e62ce5d2bbe6c074264bf05c4e78000c2d2ff2c2ad2c43120db9e"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentStorageLoaderSpec.scala",
+      "bytes": 8943,
+      "sha256": "bf0d3169c5520dfd247b6383c2440d976e7aba237ef05413c85f5adbc25ad51b"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentStorageParquetSpec.scala",
+      "bytes": 10659,
+      "sha256": "63d1c42c48f486de7f53b13209cbff10319105e9a7859c9167af09b5a2f9cce2"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentStoragePortsSpec.scala",
+      "bytes": 10292,
+      "sha256": "901f2615ca5acdad7bb58e7bd176b95c492ba7b9cfcb0093809cdb8c9841c802"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentStorageRuntimeFenceSpec.scala",
+      "bytes": 6831,
+      "sha256": "a9e9b000ab94401ddd99375424767a4dd9e4a4b2779712efd70f0fa7b9bd423a"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentStorageSdkSpec.scala",
+      "bytes": 23163,
+      "sha256": "38818b8d7fdc4b2044dc75c65112e0e36ad9b2512ea32018a831de709d17cd76"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentStorageVectorSpec.scala",
+      "bytes": 13075,
+      "sha256": "a815b135e03a33b47f64c78018710ae0940096b1ff7396c1af0b481ec6b7a1e6"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentTerraformSourceSpec.scala",
+      "bytes": 1006,
+      "sha256": "658d3c795663aedeac892a80acb4eaf9189828bf1248b80601238ca2197bec4a"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/IndependentTestSupport.scala",
+      "bytes": 5173,
+      "sha256": "b41a9c88a8dc7b6cd1bef435c57b64d3288f2f948b0c491c166c8787ffd76f0f"
+    },
+    {
+      "path": "tests/src/test/scala/edu/uic/cs441/scholarchain/independent/RuntimeGraphFence.scala",
+      "bytes": 5706,
+      "sha256": "20b6f3754767b24721a5266efafeb2151de92020da9c3f6a83ffef5f0e381650"
+    }
+  ]
+}

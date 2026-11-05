@@ -1,0 +1,119 @@
+{
+  "checked_user_date": "2026-11-01",
+  "timezone": "America/Chicago",
+  "method": "Public primary web browsing and public repository evidence reads only; no AWS account or Terraform execution.",
+  "successful": [
+    {
+      "id": "terraform-apply-1.13",
+      "url": "https://developer.hashicorp.com/terraform/cli/v1.13.x/commands/apply",
+      "use": "Saved plan executes without confirmation; local state legacy flags are accepted."
+    },
+    {
+      "id": "pinned-apply",
+      "url": "https://raw.githubusercontent.com/hashicorp/terraform/v1.13.5/internal/command/apply.go",
+      "use": "PrepareBackend state arguments precede saved backend selection."
+    },
+    {
+      "id": "pinned-meta-backend",
+      "url": "https://raw.githubusercontent.com/hashicorp/terraform/v1.13.5/internal/command/meta_backend.go",
+      "use": "BackendForLocalPlan and backendCLIOpts propagate state overrides."
+    },
+    {
+      "id": "pinned-local-backend",
+      "url": "https://raw.githubusercontent.com/hashicorp/terraform/v1.13.5/internal/backend/local/backend.go",
+      "use": "StatePaths CLI override priority, output=input default, default backup suffix."
+    },
+    {
+      "id": "latest-local-supplement",
+      "url": "https://developer.hashicorp.com/terraform/language/backend/local",
+      "use": "Supplementary latest docs; pinned source controls version conclusion."
+    },
+    {
+      "id": "budgets-authorizations",
+      "url": "https://docs.aws.amazon.com/service-authorization/latest/reference/list_budgets.html",
+      "use": "Operation-to-IAM mappings and exact budget ARN type; reviewed policy already has narrow read permissions."
+    },
+    {
+      "id": "budgets-machine-authorization",
+      "url": "https://servicereference.us-east-1.amazonaws.com/v1/budgets/budgets.json",
+      "use": "Primary programmatic service authorization reference opened as supplementary cross-check."
+    },
+    {
+      "id": "describe-budget",
+      "url": "https://docs.aws.amazon.com/aws-cost-management/latest/APIReference/API_budgets_DescribeBudget.html",
+      "use": "Exact account/name request, ShowFilterExpression, response fields and NotFoundException versus other HTTP400 errors."
+    },
+    {
+      "id": "describe-notifications",
+      "url": "https://docs.aws.amazon.com/aws-cost-management/latest/APIReference/API_budgets_DescribeNotificationsForBudget.html",
+      "use": "Exact account/name and paginated notification response."
+    },
+    {
+      "id": "describe-subscribers",
+      "url": "https://docs.aws.amazon.com/aws-cost-management/latest/APIReference/API_budgets_DescribeSubscribersForNotification.html",
+      "use": "Exact account/name/notification request and recipient-bearing paginated response."
+    },
+    {
+      "id": "list-tags",
+      "url": "https://docs.aws.amazon.com/aws-cost-management/latest/APIReference/API_budgets_ListTagsForResource.html",
+      "use": "Exact ARN request and tag array response."
+    },
+    {
+      "id": "cost-console-permissions",
+      "url": "https://docs.aws.amazon.com/cost-management/latest/userguide/billing-permissions-ref.html",
+      "use": "Console-oriented legacy overview; not used to infer additional API permissions or policy widening."
+    }
+  ],
+  "failed_or_redirected_fetches": [
+    {
+      "url": "https://docs.aws.amazon.com/service-authorization/latest/reference/list_awsbudgetservice.html",
+      "result": "No usable content: cache miss/internal error or generic-reference redirect; not relied on."
+    },
+    {
+      "url": "https://docs.aws.amazon.com/service-authorization/latest/reference/list_awsbudgets.html",
+      "result": "No usable content: cache miss/internal error or generic-reference redirect; not relied on."
+    },
+    {
+      "url": "https://docs.aws.amazon.com/service-authorization/latest/reference/list_awsbilling.html",
+      "result": "No usable content: cache miss/internal error or generic-reference redirect; not relied on."
+    },
+    {
+      "url": "https://developer.hashicorp.com/terraform/cli/v1.13.x/commands/arguments#state-out-filename",
+      "result": "No usable content: cache miss/internal error or generic-reference redirect; not relied on."
+    },
+    {
+      "url": "https://developer.hashicorp.com/terraform/language/v1.13.x/backend/local",
+      "result": "No usable content: cache miss/internal error or generic-reference redirect; not relied on."
+    },
+    {
+      "url": "https://raw.githubusercontent.com/hashicorp/terraform/v1.13.5/internal/command/arguments/apply.go",
+      "result": "No usable content: cache miss/internal error or generic-reference redirect; not relied on."
+    },
+    {
+      "url": "https://raw.githubusercontent.com/hashicorp/terraform/v1.13.5/internal/command/arguments/extended.go",
+      "result": "No usable content: cache miss/internal error or generic-reference redirect; not relied on."
+    },
+    {
+      "url": "https://raw.githubusercontent.com/hashicorp/terraform/v1.13.5/website/docs/language/backend/local.mdx",
+      "result": "No usable content: cache miss/internal error or generic-reference redirect; not relied on."
+    },
+    {
+      "url": "https://docs.hashicorp.com/terraform/language/v1.13.x/backend/local",
+      "result": "No usable content: cache miss/internal error or generic-reference redirect; not relied on."
+    },
+    {
+      "url": "https://github.com/hashicorp/terraform/blob/v1.13.5/internal/command/arguments/apply.go",
+      "result": "No usable content: cache miss/internal error or generic-reference redirect; not relied on."
+    },
+    {
+      "url": "https://github.com/hashicorp/terraform/blob/v1.13.5/internal/command/meta.go",
+      "result": "No usable content: cache miss/internal error or generic-reference redirect; not relied on."
+    },
+    {
+      "url": "https://github.com/hashicorp/terraform/blob/v1.13.5/internal/backend/local/backend.go",
+      "result": "No usable content: cache miss/internal error or generic-reference redirect; not relied on."
+    }
+  ],
+  "prior_pinned_research": "docs/agent-runs/phase-12/evidence/12d-billing-apply-gate-repair-prep/infra/sources.json; successful pinned implementation freshly reopened here.",
+  "installed_cli_capabilities": "Not executed/verified; future offline script review must resolve before live checks."
+}

@@ -1,0 +1,73 @@
+[
+  {
+    "label": "static-guard",
+    "argv": [
+      "python3",
+      "-B",
+      "tests/infra/terraform_source_guard.py",
+      "--repo-root",
+      "/Users/danny/Documents/UIC/CS441/ScholarChain"
+    ],
+    "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+    "environment": {},
+    "started_utc": "2026-10-31T16:56:11.359658+00:00",
+    "ended_utc": "2026-10-31T16:56:11.433167+00:00",
+    "wall_seconds": 0.073401,
+    "exit_code": 0,
+    "log": "static-guard.log.txt",
+    "bytes": 70,
+    "sha256": "ff754fd2ec08b82ffdc72b5d02a7e70c49d160f2552ddc8b3ef282b89ac54957"
+  },
+  {
+    "label": "static-guard-self-test",
+    "argv": [
+      "python3",
+      "-B",
+      "tests/infra/terraform_source_guard.py",
+      "--self-test"
+    ],
+    "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+    "environment": {},
+    "started_utc": "2026-10-31T16:56:11.433243+00:00",
+    "ended_utc": "2026-10-31T16:56:11.467023+00:00",
+    "wall_seconds": 0.033796,
+    "exit_code": 0,
+    "log": "static-guard-self-test.log.txt",
+    "bytes": 636,
+    "sha256": "c40a6ed13297b5c4e9856ae01d570b73a4249910d9c71af2214c54001b44581d"
+  },
+  {
+    "label": "diff-check",
+    "argv": [
+      "git",
+      "diff",
+      "--check"
+    ],
+    "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+    "environment": {},
+    "started_utc": "2026-10-31T16:56:11.467093+00:00",
+    "ended_utc": "2026-10-31T16:56:11.476775+00:00",
+    "wall_seconds": 0.009705,
+    "exit_code": 0,
+    "log": "diff-check.log.txt",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "label": "final-record-diff-check",
+    "argv": [
+      "git",
+      "diff",
+      "--check"
+    ],
+    "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+    "environment": {},
+    "started_utc": "2026-10-31T17:10:05.986581+00:00",
+    "ended_utc": "2026-10-31T17:10:05.997708+00:00",
+    "wall_seconds": 0.011044,
+    "exit_code": 0,
+    "log": "final-record-diff-check.log.txt",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+]

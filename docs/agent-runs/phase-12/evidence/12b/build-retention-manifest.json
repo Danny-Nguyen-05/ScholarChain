@@ -1,0 +1,80 @@
+{
+  "timestamp_utc": "2026-10-29T02:06:22.197622+00:00",
+  "records": [
+    {
+      "source": "/tmp/scholarchain-phase12b-build-start.json",
+      "retained_path": "docs/agent-runs/phase-12/evidence/12b/build-start.json",
+      "bytes": 1445,
+      "sha256": "9d96972b06002a27a430ab3e7a96b45c5b22a0d607c66ebb8291c34777e9f6e7"
+    },
+    {
+      "source": "/tmp/scholarchain-phase12b-build-result.json",
+      "retained_path": "docs/agent-runs/phase-12/evidence/12b/build-result.json",
+      "bytes": 2550,
+      "sha256": "90a9457b00ccb2dd8b06fe75133fe98a8b6f6abbce6914506e1b027dc9320a3a"
+    },
+    {
+      "source": "/tmp/scholarchain-phase12b-build-validation.json",
+      "retained_path": "docs/agent-runs/phase-12/evidence/12b/build-validation.json",
+      "bytes": 69368,
+      "sha256": "c09263ae0de68ef5305417ebfd932d2238097b556c6078947ba214a3698c79da"
+    },
+    {
+      "source": "/tmp/scholarchain-phase12b-build-source-before.json",
+      "retained_path": "docs/agent-runs/phase-12/evidence/12b/build-source-before.json",
+      "bytes": 186459,
+      "sha256": "a2b6bda29ff3d97c06e98567ac53f267f069c3c571bd22f64d12d28ed07c3b70"
+    },
+    {
+      "source": "/tmp/scholarchain-phase12b-build-source-after.json",
+      "retained_path": "docs/agent-runs/phase-12/evidence/12b/build-source-after.json",
+      "bytes": 186459,
+      "sha256": "c66145d3a027e8d9faaec0a3e54ba22ca3923a5f5f0f4ec7686a21d14aecdb7c"
+    },
+    {
+      "source": "/tmp/scholarchain-phase12b-build-java-version.log",
+      "retained_path": "docs/agent-runs/phase-12/evidence/12b/java-version.log.txt",
+      "bytes": 171,
+      "sha256": "2fe83b0053132e4e834defa82250462f4c62733d29bf76b19ee1bb3c14b06b39"
+    },
+    {
+      "source": "/tmp/scholarchain-phase12b-build-sbt-check-excerpt.txt",
+      "retained_path": "docs/agent-runs/phase-12/evidence/12b/sbt-check-excerpt.txt",
+      "bytes": 3270,
+      "sha256": "5d0e955bc8141048b5fd6a8438a9e46fa86e9b4fb5ce871d6247d86244855506"
+    },
+    {
+      "source": "/tmp/scholarchain-phase12b-build-preflight-retry.json",
+      "retained_path": "docs/agent-runs/phase-12/evidence/12b/build-preflight-retry.json",
+      "bytes": 970,
+      "sha256": "9c6138c91910819c9f8144c8037df3c3bf7738c1c41b616e77fc746731e20de9"
+    },
+    {
+      "source": "/tmp/scholarchain-phase12b-build-run.py",
+      "retained_path": "docs/agent-runs/phase-12/evidence/12b/build-run.py",
+      "bytes": 6923,
+      "sha256": "27be9349a44b92ad07e87d726e7d8f191ee0c9ac608a76462754eee2e698121e"
+    },
+    {
+      "source": "/tmp/scholarchain-phase12b-build-collect.py",
+      "retained_path": "docs/agent-runs/phase-12/evidence/12b/build-collect.py",
+      "bytes": 5134,
+      "sha256": "679303f73c8b127811d4bb833b97735daff53f523df2737708e624252b18f470"
+    },
+    {
+      "source": "/tmp/scholarchain-phase12b-build-sbt-check.log",
+      "retained_path": "docs/agent-runs/phase-12/evidence/12b/sbt-check.log.gz",
+      "raw_bytes": 1720149,
+      "raw_sha256": "72d8f26147b49d7c3cc5cf017183c33eab52e7c4c969c955b3d5033b5030d8a8",
+      "compressed_bytes": 93051,
+      "compressed_sha256": "bf621ed681c6c919019c544a125f246e2945d8ced1533368589253057d88f2e7"
+    },
+    {
+      "source": "/tmp/scholarchain-phase12b-build-owner-report.txt",
+      "retained_path": "docs/agent-runs/phase-12/evidence/12b/build-owner-report.txt",
+      "bytes": 3644,
+      "sha256": "bf3352abc11ce6bc55ad1ed5c5ef160ed1c5c5b7734cf2b3534e1fb90b39c465"
+    }
+  ],
+  "raw_logs_are_byte_identical": "java log uses .log.txt due repository *.log ignore; full sbt log retained gzip with raw and compressed SHA256."
+}

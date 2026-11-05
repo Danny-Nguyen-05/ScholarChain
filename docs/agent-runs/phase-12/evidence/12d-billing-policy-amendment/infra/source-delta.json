@@ -1,0 +1,38 @@
+[
+  {
+    "path": "infra/terraform/billing-execution/.terraform.lock.hcl",
+    "before_sha256": "421b75245b0080edee2b434482ff348419a75d7a6b798d5218e0a0f9f723eaea",
+    "after_sha256": "421b75245b0080edee2b434482ff348419a75d7a6b798d5218e0a0f9f723eaea",
+    "changed": false
+  },
+  {
+    "path": "infra/terraform/billing-execution/versions.tf",
+    "before_sha256": "38c0d27255f1ccf0c6f57b6854b80e5bcecde516ebfbcdfbd7ae95ad220ba0a1",
+    "after_sha256": "38c0d27255f1ccf0c6f57b6854b80e5bcecde516ebfbcdfbd7ae95ad220ba0a1",
+    "changed": false
+  },
+  {
+    "path": "infra/terraform/billing-execution/variables.tf",
+    "before_sha256": "5b72c1c3f07417d87c4c6de047c8b4e14f404ecfe01ff5e5525d8831c8798488",
+    "after_sha256": "2008eeb6f42e684b45c45ca69da6f96859e3009ba6d5661663dfe1b6f4f8527d",
+    "changed": true
+  },
+  {
+    "path": "infra/terraform/billing-execution/main.tf",
+    "before_sha256": "443138096ad5e5a1522dbd98ad8c88c8dda7db4aed402045a39fc0d143f27a31",
+    "after_sha256": "40c60e9c3bc2c279759f3244bc971be898d4e29efb49b6e4c181e213f0f83c66",
+    "changed": true
+  },
+  {
+    "path": "infra/terraform/billing-execution/README.md",
+    "before_sha256": "3d0a0e9441dda224f7e715b674f3192b0ca4de1c440bb4e1cd50a054ee3d8f4a",
+    "after_sha256": "31ad53427d2dc696ae1bc4710d141d5ae3f9e19deddba723611aab06f451128a",
+    "changed": true
+  },
+  {
+    "path": "infra/terraform/billing-execution/tests/policy.tftest.hcl",
+    "before_sha256": "a634de99569f1c5e6cec1cefe97195d0985eb95316d061be87cdfea8ad2b2b66",
+    "after_sha256": "d38c30f791afab15f05021b7fd2ce4c0ad58ea728a5649acf214a95f63b59e09",
+    "changed": true
+  }
+]

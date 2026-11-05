@@ -1,0 +1,86 @@
+Verdict: APPROVE for the apply proposal only. D1 is closed. Nothing here authorizes an apply, IAM change, spending, a live call or Phase 12D completion. G1, G2, F4, P3, B1/B2/B3/R1/N19/N20 and all live billing and EMR gates stay open.
+
+Item results
+Recording and preservation pass.
+The durable-plan review is appended verbatim to review.md under its own heading. The attachment is retained as user-supplied-review.txt (013e5dbe…).
+All five phase records keep both the current prefix and the original durable-plan preflight prefix. Each “before” hash equals the previous “after” hash.
+The human record is still 1,334 bytes with SHA abe3a50a…. The 83 durable-packet files and 209 source files are unchanged (SHA, bytes and mtime).
+Manifests reconcile with 0 mismatches: apply root 13 entries, specialist artifacts 3, review-record 7. Each manifest excludes itself.
+git status shows 687 entries, which is 664 + 23 new. git diff --check exits 0.
+My own email-pattern scan of both new packets, the reviewer prompt and the five appended sections found only synthetic@example.invalid.
+D1 is closed. D1-sequencing-erratum.json records 19:57:00Z as the coordinator’s write time only. It leaves the user’s reply time and the helper’s run time and exit null, invents no timestamps, and leaves earlier evidence unchanged. D2 and D3 are correctly treated as information:
+the current scan is labelled generic only;
+the exact-recipient scan is deferred until after final assembly, with a rescan on any later change (proposal.md:129);
+D3 needs no action.
+Scope and binding are correct (proposal.md:7–9, 24, 102). The proposal covers only aws_budgets_budget.project[0], as a single create in account 530332961125, profile scholarchain-billing-deployer, region us-east-2. The plan binding is 6,631 bytes, 0600, uid 501, SHA ab9f141e…. Any mismatch or unexpected state stops the run. Replanning, adopting, importing, applying the main environment and the old /tmp plan are all excluded.
+The execution context is identical to the planned one (proposal.md:30–47).
+Every hash matches the reviewed durable-plan values: binary, provider, CLI config, lock, public inputs and the seven sources.
+The environment is minimal and explicit, there is no runtime /tmp dependency, and no credential override or init/upgrade is allowed.
+The apply argv is a proposal only: separate argument elements, an absolute -state, no -state-out, -var, -target or -auto-approve.
+The pinned-source reasoning holds, with a gap (see A1). I fetched the cited v1.13.5 files. PrepareBackend calls applyStateArguments before BackendForLocalPlan. backendCLIOpts passes StatePath, StateOutPath and StateBackupPath. Local StatePaths puts the overrides first, defaults the output to the input path, and defaults the backup to output plus .backup.
+The P3 checks are sound (proposal.md:61–86).
+The STS check is fresh and run by the human.
+The exact-name DescribeBudget counts absence only on an anchored NotFoundException from DescribeBudget. Denial, expiry, an unknown response or a present budget all stop the run.
+The permission basis checks out: the reviewed policy grants ViewBudget, ModifyBudget, TagResource, UntagResource and ListTagsForResource on the exact budget ARN (infra/terraform/billing-execution/main.tf:13-16).
+The proposal forbids widening IAM or falling back to root.
+Whether the installed CLI supports --show-filter-expression is correctly left as a blocking question for the future wrapper.
+Backup, failure handling and readbacks are acceptable (proposal.md:110–131).
+Backup: an exclusively created 0700 directory per operation; a no-follow, byte-for-byte 0600 copy with fsync and hash/identity equality before any readback; no claim of backing up a prior state that never existed.
+Failure handling: on partial failure, only opaque local preservation, then stop, with no retry, import, destroy, state edit, refresh or rollback.
+Readbacks: compare all 11 CostTypes, the five tags, exact UTC dates, no filters, and 3 notifications × 1 EMAIL / 0 SNS. Only booleans and counts are published. Delivery is confirmed privately by the human, and the proposal says plainly that no spend will be manufactured to test delivery.
+Non-claims are correct. No wrapper exists yet, and its authorship, offline tests, independent review, clean checkout and source control are listed as blocking (proposal.md:17–18). No new tests are claimed. Same-disk storage and the retention choice are stated explicitly.
+Findings
+A1 — Low — does not block this proposal; blocks execution.
+
+Where: evidence/12d-billing-apply-proposal/proposal.md:104
+Evidence: Two links in the state-binding argument are missing:
+the source that copies the CLI options into the local backend’s Override* fields (CLIInit, in internal/backend/local) is not cited;
+the fetch of the argument parser (internal/command/arguments/apply.go) failed, according to sources.json.
+Static source is also not runtime proof that a saved-plan apply honours an absolute -state path containing spaces.
+
+Owner: infra-engineer.
+Acceptance: an offline feature test of the wrapper with the pinned 1.13.5 binary. It must use a credential-free scratch config with terraform_data and never touch the durable primary. It must show:
+plan, then a saved-plan apply with the same -state="<path with space>", writes state only at that path;
+no config/terraform.tfstate, no terraform.tfstate.d and no .backup file at initial create;
+the lock file is removed afterwards;
+TF_DATA_DIR holds no resource state.
+A2 — Info — non-blocking.
+
+Where: proposal.md:23, 113
+Evidence: Recovery files are covered only generically. When Terraform cannot persist state, it writes errored.tfstate into the working directory (primary/config).
+Owner: infra-engineer.
+Acceptance: the wrapper’s preservation branch and its offline tests name errored.tfstate in the working directory explicitly. The file is copied opaquely, never read, and the run stops.
+Report fields
+STATUS: COMPLETE (review); verdict APPROVE for Phase12D bounded billing APPLY PROPOSAL ONLY; D1 closed; A1 Low (execution-blocking), A2 Info
+OWNER: code-reviewer (independent, read-only)
+WORK ORDER: docs/agent-runs/phase-12/reviewer-prompt-12d-billing-apply-proposal.md; branch phase-12, HEAD 5ca8406bad5fe55f732458fa0cbd5d561ac83d8f; evidence/12d-billing-apply-proposal/ and evidence/12d-billing-durable-plan-review-record/
+FILES CREATED: None
+FILES MODIFIED: None
+COMMANDS RUN: ls/find/wc/cat/tail/grep of public packets, records and infra/terraform/billing-execution/main.tf; python3 -I manifest, preservation (83 packet/209 source), prefix-chain, verbatim, git status and email-pattern checks; git diff --check; WebFetch of three cited pinned Terraform v1.13.5 source files (public). No Terraform/AWS/IAM/login/console, durable/private storage, state, raw plan or credential access; no scripts invoked.
+TEST RESULTS: Not run (review). No new tests claimed by packet; seven mock passes and full sbt remain historical.
+VALIDATION RESULTS: Verdict verbatim; 5/5 prefixes (current and original preflight); human record 1334 B/abe3a50a; 83+209 unchanged; manifests 13/3/7 with 0 mismatches; status 687=664+23; diff --check 0; only reserved fixture address. Proposal binds one create to plan ab9f141e…/6631 B/0600/uid501 with identical durable context and hashes; P3 anchored NotFoundException; permission basis matches the reviewed policy; backup, failure and readback design is sound; non-claims are accurate. Pinned source supports -state binding (A1 gap).
+ASSUMPTIONS: Cited AWS operation mappings are current; the installed role policy equals the reviewed rendered policy (verified in prior P1 review); WebFetch summaries reflect the pinned source accurately.
+RISKS: Runtime -state binding unproven (A1); recovery-file naming (A2); CLI --show-filter-expression capability unknown; live create/tag/CUSTOM/CostTypes acceptance, delivery, remote absence, refresh lifetime, F4, current spend/EMR unverified; one-hour role session must cover P3+apply+backup+readbacks; same-disk backup; alerts are not caps.
+MANUAL ACTION REQUIRED: None now. Later: human source-control/clean-checkout decision, own-words G1 affirmation, personally written exact-checksum/actor/window gate; human login and STS; private delivery confirmation.
+BLOCKED-ON OWNER: None for wrapper authorship. Execution: infra-engineer (wrapper + A1/A2 tests), user-launched reviewer, human architect (source control, G1, gate), deploy-engineer afterwards
+BLOCKED-ON EVIDENCE: Approved source-controlled wrapper with offline tests incl. A1/A2, independent script review APPROVE, clean execution checkout, G1, human-written gate, fresh in-window P3
+NEXT GATE: Record verdict; bounded wrapper authorship + offline tests; user-launched independent script review. No live calls or apply.
+NEXT PROMPT
+Phase 12D — record APPLY PROPOSAL APPROVE and author ONLY the bounded execution/backup/sanitizer wrapper with offline tests. Fresh session. Nothing live.
+Repository /Users/danny/Documents/UIC/CS441/ScholarChain, branch phase-12, HEAD 5ca8406bad5fe55f732458fa0cbd5d561ac83d8f (uncommitted work retained; no commit, push or clean-tree exception).
+
+1. Append this review VERBATIM to docs/agent-runs/phase-12/review.md under "## Subphase 12D billing apply proposal — independent review". In repairs.md: D1 closed; A1 Low open (execution-blocking), A2 Info open; G1/G2/F4/P3/B1/B2/B3/R1/N19/N20 open. Append to prompt.md, owner-report.md and test-report.md; verify all five byte prefixes. Retain the attachment verbatim in a new evidence/12d-billing-apply-proposal-review-record/ packet with manifest. Never edit the human record or write approvals.
+
+2. Route infra-engineer to author, under scripts/billing/ (infra-engineer territory), a source-controlled wrapper implementing evidence/12d-billing-apply-proposal/proposal.md exactly, reviewed-hash pinned:
+   a. Modes: p3-check (STS result supplied by the human; exact-name describe-budget with anchored NotFoundException parsing), apply (preconditions, the exact proposed argv, immediate exclusive 0600 backup with fsync/hash/identity receipts), readback (four narrow reads, allowlisted comparisons, booleans/counts only), and post-freeze exact-recipient scan receipt. Full argv arrays, minimal env, umask 077, exclusive private logs, no retries, stop on any error, no printing of private data.
+   b. Preservation branch explicitly covers primary state, any .backup file, lock info and config/errored.tfstate (A2): opaque copy, never read, then stop.
+   c. Offline feature tests under scripts/billing/tests/ run with python3 -I, using stub terraform/aws executables and temp dirs: argv/env exactness; plan hash/mode/owner mismatch stops; pre-existing state stops; NotFoundException vs AccessDenied/expired/throttled/malformed/blank/exists outcomes; missing --show-filter-expression support → BLOCKED-ON; backup equality/fsync and failure paths; readback mismatches (extra notification, SNS subscriber, changed CostTypes, filter present, tag drift, date drift); sanitizer never emits address or hash; scan rerun after content change.
+   d. A1 test: pinned Terraform 1.13.5 with a credential-free scratch config (terraform_data only; scratch dir with a space in its path; never the durable primary). Saved-plan apply with absolute -state writes state only there: no config/terraform.tfstate, no terraform.tfstate.d, no .backup at initial create, lock removed, no resource state in TF_DATA_DIR.
+   e. Do not touch the durable primary/backups, private input, plan or AWS. Run only the offline tests and report exact counts. Record the script SHA256 values for the future gate.
+
+3. Prepare (do not launch) docs/agent-runs/phase-12/reviewer-prompt-12d-billing-wrapper.md for a user-launched independent script/test review only.
+
+Carry to the concrete execution gate, unresolved: the human's source-control/commit and clean-checkout decision, own-words G1 affirmation, and a personally written gate naming plan SHA ab9f141e83058209263cf561eef1d102496ec7f534b88ce421620d8e0045f855, actor/role/profile/account, dated window/timezone, proposal and wrapper SHAs.
+
+Forbidden: any AWS/IAM/login/console/paid call, terraform plan/apply/import/destroy against any real config or state, durable/private storage access, credential/config/cache reads, writing human approvals or records, launching reviewers, commits, pushes, Phase 13.
+End with: "The apply-proposal verdict is recorded and the wrapper with offline tests is prepared for independent review. I have stopped. Nothing live was executed."

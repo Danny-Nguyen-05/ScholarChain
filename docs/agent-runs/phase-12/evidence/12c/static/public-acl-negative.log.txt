@@ -1,0 +1,11 @@
+{
+  "scope": "literal-source-only",
+  "files": 1,
+  "findings": [
+    {
+      "path": "infra/terraform/unsafe.tf",
+      "line": 1,
+      "category": "public-bucket-acl"
+    }
+  ]
+}

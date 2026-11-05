@@ -1,0 +1,55 @@
+{
+  "preflight_prefixes": [
+    {
+      "path": "docs/agent-runs/phase-12/owner-report.md",
+      "old_bytes": 69970,
+      "old_sha256": "0aefede357bd6a359a01b85a31472f24a97067d6301c98bc44db57b34bb7216b",
+      "prefix_preserved": true,
+      "new_bytes": 75007,
+      "new_sha256": "d400a8faf3e02f73a1ad3bca924ae4435d1f4bbd219bdd2ca9e0d103ca1cf8f3"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/prompt.md",
+      "old_bytes": 70274,
+      "old_sha256": "310b07b6856beccca81ea10b431ba2ad6fa2d0a64d6e1d8f6380d7d085c9d3bd",
+      "prefix_preserved": true,
+      "new_bytes": 71469,
+      "new_sha256": "7512fb1ca914f0ede92b419829a2d5c38cabc02a0d87e742faaf4a4c624183ec"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/repairs.md",
+      "old_bytes": 43507,
+      "old_sha256": "4c6828dcb7ca6d0411dd29ae7d8f686c7fb163579b8adb7fb96f018f34f332ac",
+      "prefix_preserved": true,
+      "new_bytes": 44070,
+      "new_sha256": "5b37e12db35c66e835309ce825343fdf7c223f0266bbdc97d149f3e6b27f8561"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/test-report.md",
+      "old_bytes": 63257,
+      "old_sha256": "6fc4214fc4b8b601c4170a5969469e758667483b16d064cbb688b56e0d2dc0e6",
+      "prefix_preserved": true,
+      "new_bytes": 68294,
+      "new_sha256": "6c8844d2254515ade8e9dc9578a67a3a11cb108dfb5e495a4a4156140b1c1544"
+    }
+  ],
+  "head_prefixes": [
+    {
+      "path": "docs/agent-runs/phase-12/owner-report.md",
+      "preserved": true
+    },
+    {
+      "path": "docs/agent-runs/phase-12/prompt.md",
+      "preserved": true
+    },
+    {
+      "path": "docs/agent-runs/phase-12/repairs.md",
+      "preserved": true
+    },
+    {
+      "path": "docs/agent-runs/phase-12/test-report.md",
+      "preserved": true
+    }
+  ],
+  "review_and_human_records_unchanged": true
+}

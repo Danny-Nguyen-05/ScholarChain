@@ -1,0 +1,128 @@
+diff --git a/scripts/billing/README.md b/scripts/billing/README.md
+index 0080c53..ba836e4 100644
+--- a/scripts/billing/README.md
++++ b/scripts/billing/README.md
+@@ -84,3 +84,13 @@ The repair changes only Terraform stopping/time budgets and unconditional local
+ Pinned Terraform1.13.5 sources explain the graceful shutdown rationale: [commands.go](https://raw.githubusercontent.com/hashicorp/terraform/v1.13.5/commands.go) routes interrupts into ShutdownCh; [meta.go](https://raw.githubusercontent.com/hashicorp/terraform/v1.13.5/internal/command/meta.go) calls Stop on the first interrupt and Cancel on the next; [backend_apply.go](https://raw.githubusercontent.com/hashicorp/terraform/v1.13.5/internal/backend/local/backend_apply.go) persists returned state and provides errored.tfstate fallback. The wrapper sends only the first interrupt and preserves opaque state regardless of the operation result. This mitigates W1; it cannot guarantee cloud recovery after a genuinely unresponsive process or forced kill.
+ 
+ F1 layout recheck: the single human-authorized in-memory check on the previous parser returned accepted=false, one leading LF, one trailing LF and no CRLF. This narrow repair uses only synthetic fixtures reproducing those published layout facts; the saved private response is not re-evaluated with changed code, and no new real-input acceptance or budget-absence claim is made. F2 remains disclosed: test-only readiness markers wait for child handlers, while production timeout/shutdown behavior and assertions are unchanged.
++
++## Notification read compatibility — omitted percentage type
++
++The reviewed Terraform notification inputs explicitly set `threshold_type = "PERCENTAGE"` (see [the public bootstrap configuration](../../infra/terraform/billing-bootstrap/main.tf)). A separately human-authorized one-shot projection of the failed verification's saved notifications reported exactly three ACTUAL/GREATER_THAN alerts at100/50/80 with `ThresholdType` absent, not an explicit empty or different value. That narrow observation did not inspect recipients or authorize another private read.
++
++The pinned AWS provider6.44.0 has an explicit read-side compatibility branch in [budget.go, lines588–594](https://github.com/hashicorp/terraform-provider-aws/blob/v6.44.0/internal/service/budgets/budget.go#L588-L594): when its SDK field is empty it restores PERCENTAGE, whose comment observes that the API seems to omit the field for that setting. The [AWS Notification API](https://docs.aws.amazon.com/aws-cost-management/latest/APIReference/API_budgets_Notification.html) also defines ThresholdType as optional. This is primary implementation evidence of service read behavior, not a universal formal default guarantee for arbitrary notifications.
++
++The sanitizer therefore accepts an ABSENT ThresholdType key as PERCENTAGE only within the existing fixed exact ACTUAL/GREATER_THAN50/80/100 notification contract. If present, the value must still be exactly PERCENTAGE; explicit empty, null, wrong type, ABSOLUTE_VALUE, unknown and case variants fail closed. All three unique thresholds, allowed keys, subscriber/date/tag/cost-scope/BillingView/limit/health/privacy guards are unchanged. Outgoing subscriber selectors from `expected_notification` continue to explicitly include ThresholdType PERCENTAGE; the fix does not alter any request, retry, gate, journal or receipt contract.
++
++Synthetic pure and six-request verifier regressions cover absent-all, mixed, reordered and explicit values, negative fields, duplicate/nonnumeric/boolean thresholds, subscriber mismatch and privacy. No real response is re-evaluated while authoring. The failed `verify-billing-20261102-01` namespace remains consumed and untouched; any future verification needs the accepted new release, a distinct operation and a new personal gate/window/session. No settings change, apply replay, state adoption or success receipt is implied by this offline repair.
+diff --git a/scripts/billing/budget_execution.py b/scripts/billing/budget_execution.py
+index 276cdc6..a2883a7 100644
+--- a/scripts/billing/budget_execution.py
++++ b/scripts/billing/budget_execution.py
+@@ -452,7 +452,10 @@ def sanitize_readback(budget, tags, notifications, subscriber_responses, recipie
+         t = n.get("Threshold")
+         require(type(t) in (int, float) and t in (50, 80, 100) and t not in seen,
+                 "NOTIFICATION_THRESHOLD")
+-        require(all(n.get(k) == v for k, v in expected_notification(t).items()), "NOTIFICATION_DRIFT")
++        # The pinned provider documents omitted PERCENTAGE on read. Only absence
++        # receives that meaning; an explicitly present invalid value still fails.
++        require(all(n.get(k, "PERCENTAGE" if k == "ThresholdType" else None) == v
++                    for k, v in expected_notification(t).items()), "NOTIFICATION_DRIFT")
+         seen.add(t)
+         r = subscriber_responses[t]
+         require(not r.get("NextToken") and set(r) <= {"Subscribers", "NextToken"}, "SUBSCRIBER_PAGINATION_SHAPE")
+diff --git a/scripts/billing/tests/test_budget_execution.py b/scripts/billing/tests/test_budget_execution.py
+index e0604a8..37c1338 100644
+--- a/scripts/billing/tests/test_budget_execution.py
++++ b/scripts/billing/tests/test_budget_execution.py
+@@ -260,6 +260,60 @@ class CostScopeFeatures(unittest.TestCase):
+                 self.assertNotIn(b.digest(FIXTURE_ADDRESS.encode()), str(error.exception))
+ 
+ 
++class NotificationReadCompatibility(unittest.TestCase):
++    def validate(self, responses):
++        return b.sanitize_readback(responses['describe-budget'], responses['list-tags-for-resource'],
++            responses['describe-notifications-for-budget'],
++            {int(k):v for k,v in responses['subscribers'].items()}, FIXTURE_ADDRESS)
++
++    def test_absent_percentage_all_mixed_and_ordered_are_supported(self):
++        for omitted in ((), (0,), (0, 1, 2)):
++            for order in ((0,1,2),(2,0,1)):
++                with self.subTest(omitted=omitted,order=order):
++                    responses=fixture_responses()
++                    notices=responses['describe-notifications-for-budget']['Notifications']
++                    for index in omitted: del notices[index]['ThresholdType']
++                    responses['describe-notifications-for-budget']['Notifications']=[notices[index] for index in order]
++                    result=self.validate(responses)
++                    self.assertEqual(result['notification_count'],3)
++                    self.assertTrue(result['private_recipients_match'])
++                    self.assertNotIn(FIXTURE_ADDRESS,json.dumps(result))
++                    self.assertNotIn(b.digest(FIXTURE_ADDRESS.encode()),json.dumps(result))
++
++    def test_present_invalid_threshold_type_never_defaults_to_percentage(self):
++        for value in ('ABSOLUTE_VALUE','',None,False,0,[],{},'percentage','UNKNOWN'):
++            with self.subTest(value=value):
++                responses=fixture_responses();responses['describe-notifications-for-budget']['Notifications'][0]['ThresholdType']=value
++                with self.assertRaisesRegex(b.Blocked,'NOTIFICATION_DRIFT'):self.validate(responses)
++
++    def test_missing_percentage_keeps_operator_kind_threshold_shape_guards(self):
++        cases=(('ComparisonOperator','LESS_THAN','NOTIFICATION_DRIFT'),('ComparisonOperator',None,'NOTIFICATION_DRIFT'),
++               ('NotificationType','FORECASTED','NOTIFICATION_DRIFT'),('NotificationType',None,'NOTIFICATION_DRIFT'),
++               ('Threshold',True,'NOTIFICATION_THRESHOLD'),('Threshold','50','NOTIFICATION_THRESHOLD'),
++               ('Threshold',60,'NOTIFICATION_THRESHOLD'),('Unknown',FIXTURE_ADDRESS,'NOTIFICATION_SHAPE'))
++        for key,value,code in cases:
++            with self.subTest(key=key,value=value):
++                responses=fixture_responses();notices=responses['describe-notifications-for-budget']['Notifications']
++                for notice in notices:del notice['ThresholdType']
++                notices[0][key]=value
++                with self.assertRaisesRegex(b.Blocked,code) as error:self.validate(responses)
++                self.assertNotIn(FIXTURE_ADDRESS,str(error.exception))
++        responses=fixture_responses();notices=responses['describe-notifications-for-budget']['Notifications']
++        for notice in notices:del notice['ThresholdType']
++        notices[1]['Threshold']=notices[0]['Threshold']
++        with self.assertRaisesRegex(b.Blocked,'NOTIFICATION_THRESHOLD'):self.validate(responses)
++        notices.pop()
++        with self.assertRaisesRegex(b.Blocked,'NOTIFICATION_COUNT'):self.validate(responses)
++
++    def test_absent_percentage_never_weakens_subscriber_or_alarm_privacy(self):
++        responses=fixture_responses()
++        for notice in responses['describe-notifications-for-budget']['Notifications']:
++            del notice['ThresholdType'];notice['NotificationState']='ALARM'
++        result=self.validate(responses);self.assertNotIn('ALARM',json.dumps(result))
++        responses['subscribers']['50']['Subscribers'][0]['Address']='wrong@example.invalid'
++        with self.assertRaisesRegex(b.Blocked,'SUBSCRIBER_DRIFT'):self.validate(responses)
++
++
+ class Features(unittest.TestCase):
+     def setUp(self):
+         self.temp=tempfile.TemporaryDirectory(prefix='billing wrapper test ')
+diff --git a/scripts/billing/tests/test_budget_verification.py b/scripts/billing/tests/test_budget_verification.py
+index 7c10988..014c5cc 100644
+--- a/scripts/billing/tests/test_budget_verification.py
++++ b/scripts/billing/tests/test_budget_verification.py
+@@ -500,6 +500,24 @@ class Features(unittest.TestCase):
+         with self.assertRaises(b.Blocked):self.ex.verify()
+         self.assertFalse(self.ex.op.exists());self.assertEqual(self.calls,[]);self.unchanged_original()
+ 
++    def test_missing_percentage_readback_preserves_six_explicit_query_selectors(self):
++        for notification in self.values[2]['Notifications']:del notification['ThresholdType']
++        self.values[2]['Notifications'].reverse()
++        result=self.ex.verify()
++        self.assertEqual(len(self.calls),6)
++        self.assertEqual(result['result']['notification_count'],3)
++        self.assertTrue(result['result']['private_recipients_match'])
++        selectors=[json.loads(call['argv'][call['argv'].index('--notification')+1]) for call in self.calls[3:]]
++        self.assertEqual(selectors,[b.expected_notification(t) for t in (50,80,100)])
++        self.assertTrue(all(selector['ThresholdType']=='PERCENTAGE' for selector in selectors))
++        for private in (ADDRESS,b.digest(ADDRESS.encode())):self.assertNotIn(private,json.dumps(result))
++        self.unchanged_original()
++
++    def test_present_bad_threshold_type_blocks_after_six_without_receipt(self):
++        self.values[2]['Notifications'][0]['ThresholdType']='ABSOLUTE_VALUE'
++        with self.assertRaisesRegex(b.Blocked,'NOTIFICATION_DRIFT'):self.ex.verify()
++        self.assertEqual(len(self.calls),6);self.receipt_missing();self.unchanged_original()
++
+     def test_main_only_exposes_readonly_modes_without_echoing_payloads(self):
+         for mode in ('apply','p3-check','readback','destroy',ADDRESS):
+             with self.subTest(mode=mode),mock.patch('builtins.print') as output:

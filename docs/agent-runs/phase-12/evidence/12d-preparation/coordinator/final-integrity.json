@@ -1,0 +1,63 @@
+{
+  "checked_at": "2026-10-30T22:06:40.843053+00:00",
+  "base_head": "5ca8406bad5fe55f732458fa0cbd5d561ac83d8f",
+  "baseline_files": 3924,
+  "unchanged_baseline_files": 3920,
+  "only_changed_baseline_paths": [
+    "docs/agent-runs/phase-12/owner-report.md",
+    "docs/agent-runs/phase-12/prompt.md",
+    "docs/agent-runs/phase-12/repairs.md",
+    "docs/agent-runs/phase-12/test-report.md"
+  ],
+  "prefix_proofs": [
+    {
+      "path": "docs/agent-runs/phase-12/owner-report.md",
+      "old_bytes": 30417,
+      "new_bytes": 35326,
+      "old_sha256": "7261405df21ce115db873671cc37902d2e0250acf0d4dd9eed44a1c9d1f5cdf8",
+      "new_sha256": "a0c471baccb6ff91ddbd27000889a30c1290cec616692658643301c6e343db5c",
+      "old_prefix_preserved": true
+    },
+    {
+      "path": "docs/agent-runs/phase-12/prompt.md",
+      "old_bytes": 37477,
+      "new_bytes": 38058,
+      "old_sha256": "10d74f1f295bc159c63f07e9a13f5c57d247e811f780b9e58335a14445ae996c",
+      "new_sha256": "473972caa23a01f15b39d2208ae5bbec5ef06469a3002655f505e4a0d7ba5962",
+      "old_prefix_preserved": true
+    },
+    {
+      "path": "docs/agent-runs/phase-12/repairs.md",
+      "old_bytes": 19545,
+      "new_bytes": 21042,
+      "old_sha256": "be7478a5f014ed92c07cd2f353b50f1e7e36243e9ca01e079c148f2bdaf9a196",
+      "new_sha256": "4eace3fb37168a14ab167a6f11ed56af503c4d4f48a6ae7b9dc859e635f23259",
+      "old_prefix_preserved": true
+    },
+    {
+      "path": "docs/agent-runs/phase-12/test-report.md",
+      "old_bytes": 23657,
+      "new_bytes": 28566,
+      "old_sha256": "1f8b6016e5358eaa36416edeeb97a4cf05c2f48d9ba0c2a5abbfe19b03e29d61",
+      "new_sha256": "79ec542d8d9c1eb838f22c8b0f0e5b4cc511d77b4bd4dabdc033e0ef8a836cf6",
+      "old_prefix_preserved": true
+    }
+  ],
+  "frozen_files": 203,
+  "frozen_mismatches": 0,
+  "origin_artifacts_verified": {
+    "infra/retention-manifest.json": 38,
+    "build/artifact-manifest.json": 13
+  },
+  "build_raw_log_gzip_alias": true,
+  "terraform_reused_binary_sha256": "899b3c0ca0d2669ebd67be4bcd98e84bd9a914ce2fb3897ad0b86c98cbf3c962",
+  "toolchain_reinstalled": false,
+  "out_of_scope_changes": [],
+  "human_owned_records_changed": false,
+  "prior_12c_evidence_unchanged": true,
+  "review_md_unchanged": true,
+  "git_diff_check_exit": 0,
+  "all_assigned_subagents_completed": true,
+  "build_active_process_record_exists": false,
+  "final_checked_at": "2026-10-30T22:08:22.837374+00:00"
+}

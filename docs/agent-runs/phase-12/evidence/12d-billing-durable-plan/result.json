@@ -1,0 +1,27 @@
+{
+  "completed_utc": "2026-11-01T20:04:38.307956+00:00",
+  "scope": "Fresh durable-path read-only billing plan only",
+  "plan_sha256": "ab9f141e83058209263cf561eef1d102496ec7f534b88ce421620d8e0045f855",
+  "plan_bytes": 6631,
+  "counts": {
+    "add": 1,
+    "change": 0,
+    "destroy": 0,
+    "replace": 0
+  },
+  "applied": false,
+  "profile": "scholarchain-billing-deployer",
+  "state_path": "/Users/danny/Library/Application Support/ScholarChain/terraform/billing-bootstrap/billing.execution.tfstate",
+  "plan_path": "/Users/danny/Library/Application Support/ScholarChain/terraform/billing-bootstrap/billing.execution.tfplan",
+  "TF_DATA_DIR": "/Users/danny/Library/Application Support/ScholarChain/terraform/billing-bootstrap/tf-data",
+  "cwd": "/Users/danny/Library/Application Support/ScholarChain/terraform/billing-bootstrap/config",
+  "old_tmp_plan": "Superseded; retained untouched, not deleted",
+  "P1": "APPROVE; F1/F2/F3 closed by independent review",
+  "P2": "Durable-plan evidence prepared; independent review pending; not self-closed",
+  "G1": "Human own-words affirmation of abe3a50a record required before any apply",
+  "G2": "Accepted timing uncertainty/deviation does not prove original60minute compliance",
+  "P3": "In-window exact caller and exact-name remote budget absence checks still unrun",
+  "password_detour": "User withdrew recovery proposal and reported access; no agent reset, no human reset reported or inferred",
+  "live_budget_or_delivery_proof": false,
+  "no_jobs_running": true
+}

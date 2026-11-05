@@ -1,0 +1,515 @@
+{
+  "recorded_utc": "2026-11-01T03:29:57.086363+00:00",
+  "branch": "phase-12",
+  "head": "5ca8406bad5fe55f732458fa0cbd5d561ac83d8f",
+  "records": [
+    {
+      "path": "docs/agent-runs/phase-12/prompt.md",
+      "bytes": 71469,
+      "sha256": "7512fb1ca914f0ede92b419829a2d5c38cabc02a0d87e742faaf4a4c624183ec"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/review.md",
+      "bytes": 161496,
+      "sha256": "03c1e9faa4133cfdc2d7dc7d09db17d4453d8bb153b7e8ca1d678d1ccf92aaa6"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/repairs.md",
+      "bytes": 44070,
+      "sha256": "5b37e12db35c66e835309ce825343fdf7c223f0266bbdc97d149f3e6b27f8561"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/owner-report.md",
+      "bytes": 75007,
+      "sha256": "d400a8faf3e02f73a1ad3bca924ae4435d1f4bbd219bdd2ca9e0d103ca1cf8f3"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/test-report.md",
+      "bytes": 68294,
+      "sha256": "6c8844d2254515ade8e9dc9578a67a3a11cb108dfb5e495a4a4156140b1c1544"
+    }
+  ],
+  "earlier_packet_file_count": 96,
+  "earlier_packet_files": [
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-identity-decision-draft/bootstrap-exception-proposal.md",
+      "bytes": 6407,
+      "sha256": "813c24fec06f32e84dc231de4e967340b47c2919fc458c0b1ddafb8e50dc200b"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-identity-decision-draft/human-record-verification.json",
+      "bytes": 1499,
+      "sha256": "0e0a88cf08fe39cdb6a4f157f7cb7de32c423a7321a21446fe8e2a51217bcf70"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-identity-decision-draft/selection-transcript.md",
+      "bytes": 1052,
+      "sha256": "2e4f301b410468fdc8ab7e3403a9f4fdb003f01877ad71290fb3941547a19923"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-human-identity-bootstrap/completion/authentication-verification-proposal.md",
+      "bytes": 4716,
+      "sha256": "f72eaa1f533285d682cdad654aeb348852e9e575c132ed652132d0c3d540754b"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-human-identity-bootstrap/completion/completion.json",
+      "bytes": 1304,
+      "sha256": "ab2ac0e663e14ecc2a9a71d8a81c1f3d97bd03ee7dfa852368aa470853653c6e"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-human-identity-bootstrap/completion/coordinator-report.md",
+      "bytes": 2736,
+      "sha256": "29a789713f48e172d4bbf1bdb2ba966fd190d58eb1c869c71b267480ce08ea92"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-human-identity-bootstrap/completion/diff-check.log.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-human-identity-bootstrap/completion/user-confirmation.md",
+      "bytes": 949,
+      "sha256": "eb0104689c045519987404393b2b6bd8b10807fc7c2800b07f352214dc35f779"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-human-identity-bootstrap/coordinator-report.md",
+      "bytes": 2619,
+      "sha256": "486934611500b2bce61153c5cc8cdd25e40ccc426c88d0421828371a9ab6c714"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-human-identity-bootstrap/current-evidence-manifest.json",
+      "bytes": 4415,
+      "sha256": "1b855ce0d022c4caff466f4c547e7c0454333503003f9c14fa552f0e412e130c"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-human-identity-bootstrap/evidence-manifest.json",
+      "bytes": 1631,
+      "sha256": "ab1f2746089c7f480a020587ab3dc8ad52b4e0efc65430743913cbe098b05a90"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-human-identity-bootstrap/observations.json",
+      "bytes": 6839,
+      "sha256": "e9a42168fce9e5783b5c53b2f39d2a835a34acd6a9b226934c73df5aec20656e"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-human-identity-bootstrap/screenshots/budget-policy-json-before-installation.png",
+      "bytes": 522577,
+      "sha256": "111766f02720199f87ada85fe338b01bbd11c11d99f1db365efee527cb033191"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-human-identity-bootstrap/screenshots/caller-policy-review-summary.png",
+      "bytes": 314515,
+      "sha256": "9812041bc707e76d6a290adc0aaf5f0e078e4f1b60840d0a563e7fccdedcd973"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-human-identity-bootstrap/screenshots/operator-passkey-confirmation.png",
+      "bytes": 517531,
+      "sha256": "f35e8eac823adfa7d74173c5bfe9d5e0a645ecbf96c707420d0c21af25e55b49"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-human-identity-bootstrap/screenshots/operator-tags-before-creation.png",
+      "bytes": 305522,
+      "sha256": "49ccf0dac5829db0b0e4646115fbcea24bfd4d413421bb443b96112743c44bac"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-human-identity-bootstrap/screenshots/role-tags-before-creation.png",
+      "bytes": 302742,
+      "sha256": "3f8e8966e63f9423bc81bf563e7de75806d531c7653fb288826fb6645567ed4e"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-human-identity-bootstrap/screenshots/role-trust-policy-readback.png",
+      "bytes": 288636,
+      "sha256": "703679e481bc9443a13475a190c2a4936c56c34b543e9d3e5039afc7c86a103e"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-human-identity-bootstrap/screenshots/role-two-policies-confirmation.png",
+      "bytes": 636535,
+      "sha256": "d6361703dbf1fedd6d600128d226c6dd04fc229abed236ee44d316e5a7f251bb"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-human-identity-bootstrap/tag-readbacks/evidence-manifest.json",
+      "bytes": 503,
+      "sha256": "281fc94b01a39adcaa1a9ddd427f2c0760bd9291c1d4daa819e1c56f101f33f4"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-human-identity-bootstrap/tag-readbacks/operator-tags.png",
+      "bytes": 253876,
+      "sha256": "7e85b2b5c125cf836f39a7d8e1f9607d1089726953f0db3ca3ee42c43594a8f1"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-human-identity-bootstrap/tag-readbacks/role-tags.png",
+      "bytes": 302630,
+      "sha256": "fdbbcb69bd9045b70597765db301024676c12a14f40aa2effcc589f6ec0a15db"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-human-identity-bootstrap/tag-readbacks/verification.json",
+      "bytes": 1018,
+      "sha256": "d43109b15e965ab1c69dcdbe08cbfe78eedad761287d60700fb85dc13193f0a2"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-human-identity-bootstrap/user-supplied-policy-readbacks/evidence-manifest.json",
+      "bytes": 673,
+      "sha256": "6c2e6882e9a9dd7c6c71be29a8afd30b65fb6770ceca28eaf448017b22044c12"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-human-identity-bootstrap/user-supplied-policy-readbacks/operator-caller-policy.json",
+      "bytes": 494,
+      "sha256": "79f5a23c99f916558962bcfa5c3662f1572daea884b3ce8f4852f19ff0927612"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-human-identity-bootstrap/user-supplied-policy-readbacks/role-budget-policy.json",
+      "bytes": 521,
+      "sha256": "75098a2e0a4c31fc505e62834ddfe0cd5c00e2587e94bf52b9a8f30a5f22fe57"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-human-identity-bootstrap/user-supplied-policy-readbacks/role-login-policy.json",
+      "bytes": 593,
+      "sha256": "1ea29d7c3ce85663b8083b340c0f1397cdc833ecc0a0d00370d4667c97769a4a"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-human-identity-bootstrap/user-supplied-policy-readbacks/verification.json",
+      "bytes": 1744,
+      "sha256": "24228844928feed3d57c800cc24dbb1c813c3abe53b99b29292dab130673db38"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-authentication-verification/caller-identity.user-supplied.json",
+      "bytes": 147,
+      "sha256": "7e89cdb80d9d422a65b1d49acbe8222046bb136779a066c93f01abec32e6ac78"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-authentication-verification/coordinator-report.md",
+      "bytes": 4330,
+      "sha256": "397fcba82af058401d750a628b3a2065c8bd22c23c21ae805e529182d5b749c2"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-authentication-verification/diff-check.log.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-authentication-verification/evidence-manifest.json",
+      "bytes": 2147,
+      "sha256": "e4070b4491bc174ee4858c5fde83eeb78ec1ce7c7ab49ab569a06ec2c4a0b153"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-authentication-verification/handoff-files.json",
+      "bytes": 64745,
+      "sha256": "07414cc5ad9a2f57405ed87140bbee8dfecfbeace8dea07a8d63806310da42bd"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-authentication-verification/human-command-records.json",
+      "bytes": 1237,
+      "sha256": "89dd89b9121aa34a12fbdc51b1c55898e8b71116898a4ce8e44ee593e0ca654c"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-authentication-verification/human-record-preservation.json",
+      "bytes": 211,
+      "sha256": "ba3a9b11af7221633a3c8e53ffd476ab4ad8c93910b34e29e9ecd69663e0323f"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-authentication-verification/local-checks.json",
+      "bytes": 571,
+      "sha256": "98e0bcadee2f8ed7b8637e1d8283a185dd134dd58727b2059aef9399cd96d7a3"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-authentication-verification/next-billing-plan-proposal.md",
+      "bytes": 2695,
+      "sha256": "447ca09fae187bc53489aa423f01a05e41d2b4331531b6f2446a627af9436bd2"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-authentication-verification/report-prefix-check.json",
+      "bytes": 1307,
+      "sha256": "8cb5fe76ff09d0b7c44086085dc028710fb8845f81fa4a3a5f1e92c8179a6bcf"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-authentication-verification/result.json",
+      "bytes": 2840,
+      "sha256": "03b847b1b80d94999955e68ab98e695951c74529e3202db1d20ce0e9fb7380bf"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-authentication-verification/screenshots/billing-role-console-display.png",
+      "bytes": 1018520,
+      "sha256": "971fc20d1465c0a66e9f77b075e739feedd521c72c0f35b112cfd48e19fef8c8"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-authentication-verification/screenshots/operator-console-sign-in.png",
+      "bytes": 733554,
+      "sha256": "32d715d464a35bb6099ba5db9abb97750f9e0fa94b47133794f2d191eb87ac01"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-authentication-verification/user-go-ahead-transcription.json",
+      "bytes": 1552,
+      "sha256": "c7ea597cb49334ccb2323481ef60c12841f57f191e6f1621281f6eca13a96eaa"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-execution-plan/assemble.py",
+      "bytes": 22159,
+      "sha256": "27570ecfabafce6b9549b2d3f77bebfca184f1da9f6ff326b612e6f4044e58e0"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-execution-plan/confirmed-inputs.json",
+      "bytes": 1381,
+      "sha256": "fa490586d1d80707a64f99f49d2192f71f1b6f3fa5db6d3f85291e3474c3697c"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-execution-plan/coordinator-checks.json",
+      "bytes": 1891,
+      "sha256": "033089ec45cbd4af6ce9c228db7f6a4020f6307a8d24b2667f36c8dc97b83ddf"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-execution-plan/coordinator-report.md",
+      "bytes": 4966,
+      "sha256": "d90285c63bacbe22f893d7843dba6fa8c7ebab9eff57ba4fba93e50f1cb59c42"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-execution-plan/delegation.json",
+      "bytes": 464,
+      "sha256": "caebc1cd7869cac7d4138db160ea39cedc1b20ebabcbfe2ac5aa0d425e657d88"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-execution-plan/diff-check-result.json",
+      "bytes": 248,
+      "sha256": "ce252331512ad2742b9d7cd6712121df342f3a002bf05e7be0e28759663baf04"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-execution-plan/diff-check.log.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-execution-plan/evidence-manifest.json",
+      "bytes": 8666,
+      "sha256": "d169eaf5f3ac49e7925d670aacb60fd3f2360db3d591cef7f36a0361f822e481"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-execution-plan/final-integrity.json",
+      "bytes": 898,
+      "sha256": "6ef7809e92a93d7dd8a0354a371bda64752ea5b6c9e4726d3a9f10fe62ed2b6c"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-execution-plan/final-status.log.txt",
+      "bytes": 46494,
+      "sha256": "bbff60a90bf48b2e652c8d44cb4c14186dd84267807fb57c57dacdce38f1d50a"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-execution-plan/handoff-files.json",
+      "bytes": 7645,
+      "sha256": "c048db61666781b4a839fada81bef25f2e1d0ff7a0adf2445f714acc27d8d944"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-execution-plan/handoff.md",
+      "bytes": 1632,
+      "sha256": "90ee053bd382b77fbfa348c31994297bd32932a64ed5b25f86907099c0174a89"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-execution-plan/human-input-completion.json",
+      "bytes": 456,
+      "sha256": "874ed2db5818c2011160c0137b008b7c8bb099009053883f214a1e25fb6c3e90"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-execution-plan/infra/approved-public-inputs.json",
+      "bytes": 446,
+      "sha256": "48f19c4526b63c8e194dcfeea8466591a0667c3a5956e06cdb31116e110a8e02"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-execution-plan/infra/artifact-manifest.json",
+      "bytes": 5202,
+      "sha256": "e48dcfb0d7dd3a9f53786c64602d4ee28284ed41856fff0fefc60c949a39ff2e"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-execution-plan/infra/attempt-reconciliation.json",
+      "bytes": 680,
+      "sha256": "7b41c723d2da87bc734bafa6355f1052a625cc1a681cabc41d33a1bcee6680c4"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-execution-plan/infra/commands.json",
+      "bytes": 12139,
+      "sha256": "cf170b095993a27f5190d3fd2cf54dc83c2ce4497e4e354f816dcc450839af74"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-execution-plan/infra/config-copies/.terraform.lock.hcl",
+      "bytes": 1406,
+      "sha256": "421b75245b0080edee2b434482ff348419a75d7a6b798d5218e0a0f9f723eaea"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-execution-plan/infra/config-copies/README.md",
+      "bytes": 7866,
+      "sha256": "46506dade67af6ec882f4bbd81661d00d92c8f9d5bebe6f6ed1e47e2c30143a0"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-execution-plan/infra/config-copies/main.tf",
+      "bytes": 2215,
+      "sha256": "5e69e4235e417c72968097af6050f66c434fd1d1049ee0f655d1b6635e101549"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-execution-plan/infra/config-copies/outputs.tf",
+      "bytes": 1005,
+      "sha256": "e729e4b3d6523074f293b95c9a5f85fc03c8eec0f8a40928c24a1c227ce3174f"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-execution-plan/infra/config-copies/tests/budget.tftest.hcl",
+      "bytes": 3984,
+      "sha256": "8f79abffe3fe71e4a6736dddf461a0c8a7c136cdd7a5bf29394185e81da4550b"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-execution-plan/infra/config-copies/variables.tf",
+      "bytes": 3033,
+      "sha256": "3e37054f1187192ae3188052d52630e50a3db950ce7436b639d98ef066a8c937"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-execution-plan/infra/config-copies/versions.tf",
+      "bytes": 150,
+      "sha256": "38c0d27255f1ccf0c6f57b6854b80e5bcecde516ebfbcdfbd7ae95ad220ba0a1"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-execution-plan/infra/config-provenance-after-offline.json",
+      "bytes": 2258,
+      "sha256": "bdea2857024e435afb8ea3c5b59f8c4f6cdbe6db8866f9cb66b0b9b479409cff"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-execution-plan/infra/config-provenance-before.json",
+      "bytes": 2587,
+      "sha256": "e93ddaf9a8883a149e155943a0128fd8e0be5a15860ea55c119bbb56c801480c"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-execution-plan/infra/offline-fmt-check-retry.log.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-execution-plan/infra/offline-fmt-check.log.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-execution-plan/infra/offline-init-retry.log.txt",
+      "bytes": 204,
+      "sha256": "93e6d8afa8d5f52652c8fb18e0d6900bca6e2e38e731e16b7416d1d672657428"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-execution-plan/infra/offline-init.log.txt",
+      "bytes": 243,
+      "sha256": "0332e5a2014b4e3a832437119fe49036bc6a8355061e8def4e2d5ffc1c783808"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-execution-plan/infra/offline-test-retry.log.txt",
+      "bytes": 483,
+      "sha256": "aca7bb50be9aa6e39085eb2d1ac166e100d61aaa15cf8c95ccf3e4a87becb78e"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-execution-plan/infra/offline-validate-retry.log.txt",
+      "bytes": 38,
+      "sha256": "f7997225125835fdd14060ac776d273f394b874f9a481b9e2122c83dc8adc5c1"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-execution-plan/infra/offline-validate.log.txt",
+      "bytes": 1039,
+      "sha256": "410f0fb4134e77d08b978d5659b641af582addeb977ccfde6629ab50a46cb590"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-execution-plan/infra/owner-report.txt",
+      "bytes": 5151,
+      "sha256": "fc6c9bbc2408ccd22748a8a566d0fb88fa749c006283f2938aac1b90969b2fd9"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-execution-plan/infra/plan-inputs-after.json",
+      "bytes": 2446,
+      "sha256": "a28e3920eee1586fd738ab3987a424104191ddc08770742af2517d087c7c5ecc"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-execution-plan/infra/plan-inputs-before.json",
+      "bytes": 2807,
+      "sha256": "7faaaeeef8143e48a87b56b941577a99cab8f84085388bc020cf16cd52ae2f95"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-execution-plan/infra/plan-summary.json",
+      "bytes": 2750,
+      "sha256": "073066f849282d884df0dc52662d1ea294e1be59977e4457e884fa5331b7a475"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-execution-plan/infra/privacy-and-scope.json",
+      "bytes": 1130,
+      "sha256": "3ea286cfa452d145bade785e5a8d27e696058fc512c603ae200d24cf513873a7"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-execution-plan/infra/protected-artifact-metadata.json",
+      "bytes": 2639,
+      "sha256": "8c5784197df02ce033adff844dec5867e1c41c5b146a639ca137e6d1e03148c5"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-execution-plan/infra/run.py",
+      "bytes": 10777,
+      "sha256": "5254fcb286011d53def2205151d9aaa1770ec7dd3668f1946fabf368e9545eef"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-execution-plan/infra/runner-failure.json",
+      "bytes": 158,
+      "sha256": "d060e4266133eab77ba8c556365069287514b3e43610391fe447e4e0a48058dd"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-execution-plan/infra/safe-summary-validation.json",
+      "bytes": 540,
+      "sha256": "e6700309c74d74103e7ee47b0a6d3442dcc064f28c7f852c64e7e807a92ca3e8"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-execution-plan/infra/save-recipient.py",
+      "bytes": 904,
+      "sha256": "165b7a4e9c19f42cac0557d8133dcbd88d2c2fc853d7e16f63b2acd67c83a0ee"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-execution-plan/infra/test-counts.json",
+      "bytes": 95,
+      "sha256": "a77599ea7462bcc23c86be1e13c83ad33c306214e448681cbd1bb65ba07c1c48"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-execution-plan/infra/toolchain.json",
+      "bytes": 327,
+      "sha256": "d076d18b33040ad4ca9dcace7934af3ed912b0615b2c4d69b2228baf0fc9dae1"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-execution-plan/preflight-baseline.json",
+      "bytes": 1110349,
+      "sha256": "94d904555ea0d75c2c11ad9fc97b5a449ff5d28898b4adb05cfafca871b6a731"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-execution-plan/preflight-status.log.txt",
+      "bytes": 41506,
+      "sha256": "4cc41ab4497a8d757176fd0ce2996240dfd27d16b5c39c8d05cdbb97dec6580d"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-execution-plan/prompt-append-provenance.json",
+      "bytes": 258,
+      "sha256": "49f34d3232e39af246ad8a3e674c71cfb9cb99779b7a6c47bf7bd21145424f63"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-execution-plan/public-references.json",
+      "bytes": 1232,
+      "sha256": "83871265f7b77cc529e7264a88e4dedf98a3d76ab56f17d8d803bf5994c5f110"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-execution-plan/regression-reference.json",
+      "bytes": 833,
+      "sha256": "1c99ef7ff0bc7fa6b691ac80bd7b0ba5e38ae8f613afbd17315031e85b1e1a2e"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-execution-plan/report-prefix-check.json",
+      "bytes": 1780,
+      "sha256": "f20533b4b6360cea9f0872903b0c05040f17e544df9c5f50c30318db36f65570"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-execution-plan/source-freeze.json",
+      "bytes": 51496,
+      "sha256": "4307b430307aa0865a1c181328b81aae15081c1444b620d71410ba983a276692"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-execution-plan/source-reference-check.json",
+      "bytes": 336,
+      "sha256": "7f348089a3ea67cd4bf8839d7c45f3a8b8c1665a75ab38f727b4c4dcb3f2c4f8"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-execution-plan/work-order.json",
+      "bytes": 1958,
+      "sha256": "74018365cc848879b18c77a6d877f687702d6d23ec3e83b1b1f361a51912b609"
+    }
+  ]
+}

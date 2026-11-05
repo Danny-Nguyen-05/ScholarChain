@@ -1,0 +1,14 @@
+{
+  "scanned_source_files": 39,
+  "secret_hygiene_patterns": {
+    "secret_values_or_versions": [],
+    "inline_aws_credentials": [],
+    "private_key_marker": []
+  },
+  "scope": "Authored *.tf,course.tfvars,*.tftest.hcl only; no state,credential files,.env or provider cache read. Pattern checks are not a secret scanner.",
+  "iam": "Reviewed explicit Allow actions/resource references in modules/identity/main.tf; universal TLS wildcard Deny only; ECR auth and KMS-key-policy exceptions documented. Graph no-write invariant asserted by mock test.",
+  "encryption": "Inspected project CMK with rotation, S3/KMS, DDB/KMS+PITR, SQS/KMS,ECR/KMS; optional bootstrap AWS-managed AES256/DDB encryption. All checked in mock assertions.",
+  "public_access": "Inspected all S3 public access blocks, owner-enforced ACLs,TLS denies,default SG revocation,role SG links,data routes,no public instance IPs. No actual AWS exposure claim.",
+  "deletion": "Inspected literal S3 prevent_destroy,default force_destroy=false,native table protection,explicit cleanup controls; bootstrap additionally protected. Human-controlled source change required for S3 teardown.",
+  "scanner": "Neither Trivy nor Checkov available at coordinator preflight. Manual fallback only; no independent security approval."
+}

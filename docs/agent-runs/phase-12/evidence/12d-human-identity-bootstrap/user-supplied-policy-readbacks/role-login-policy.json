@@ -1,0 +1,21 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "BillingRoleSameDeviceLogin",
+            "Effect": "Allow",
+            "Action": [
+                "signin:AuthorizeOAuth2Access",
+                "signin:CreateOAuth2Token"
+            ],
+            "Resource": [
+                "arn:aws:signin:us-east-2:530332961125:oauth2/public-client/localhost"
+            ],
+            "Condition": {
+                "StringEquals": {
+                    "signin:OAuthClientId": "arn:aws:signin:::devtools/same-device"
+                }
+            }
+        }
+    ]
+}

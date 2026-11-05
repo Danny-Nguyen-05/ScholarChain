@@ -1,0 +1,9 @@
+variable "name_prefix" { type = string }
+variable "aws_account_id" { type = string }
+variable "aws_region" { type = string }
+variable "queue_arn" { type = string }
+variable "queue_url" { type = string }
+variable "dlq_arn" { type = string }
+variable "dlq_url" { type = string }
+variable "kms_key_arn" { type = string }
+variable "tags" { type = map(string) }

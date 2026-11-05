@@ -1,0 +1,44 @@
+{
+  "recorded_at_utc": "2026-11-01T02:44:39.020285+00:00",
+  "status": "COMPLETE for the selected human-performed authentication-only verification; not Phase 12D completion",
+  "identity_check": "Expected account and billing-role ARN match user-supplied output",
+  "user_identity_result": {
+    "Account": "530332961125",
+    "Arn": "arn:aws:sts::530332961125:assumed-role/scholarchain-billing-deployer/scholarchain-billing-operator"
+  },
+  "observed_chain": {
+    "operator_console": "User screenshot shows scholarchain-billing-operator in account 530332961125",
+    "role_switch": "User screenshot shows ScholarChain Billing display name following exact-role switch guidance; display alias alone was not treated as definitive ARN proof",
+    "cli_login": "User explicitly reported success",
+    "cli_role_identity": "User-pasted GetCallerIdentity Account/Arn matches the exact billing role"
+  },
+  "mfa_limit": "GetCallerIdentity is not standalone proof of MFA. This result is assessed alongside the earlier exact-operator strict-MFA trust readback and the human-reported console-role flow. No MFA bypass or condition-removal test was performed.",
+  "remaining_unverified": [
+    "Pinned Terraform/AWS Go SDK consumption of this native login session",
+    "Complete OAuth refresh and expiration lifetime",
+    "Live budget-management/tagging permissions and CUSTOM/CostTypes acceptance",
+    "Active monitor and alert delivery",
+    "Usable cost data and remaining shared allowance",
+    "All live EMR technical, plan, cost and execution/teardown gates"
+  ],
+  "human_command_exit_codes": "Not captured; none invented",
+  "source_or_iam_edits": "None in authentication-only verification",
+  "agent_account_or_login_calls": 0,
+  "screenshots": [
+    {
+      "path": "screenshots/operator-console-sign-in.png",
+      "source_attachment_name": "codex-clipboard-f0a74204-4560-4f9b-8948-c50c6ae236fa.png",
+      "sha256": "32d715d464a35bb6099ba5db9abb97750f9e0fa94b47133794f2d191eb87ac01",
+      "provenance": "Unmodified user-provided screenshot"
+    },
+    {
+      "path": "screenshots/billing-role-console-display.png",
+      "source_attachment_name": "codex-clipboard-25d39d7b-4bf3-49b3-a2e3-f87727da2f42.png",
+      "sha256": "971fc20d1465c0a66e9f77b075e739feedd521c72c0f35b112cfd48e19fef8c8",
+      "provenance": "Unmodified user-provided screenshot"
+    }
+  ],
+  "root_setup_timing": "Earlier human-bootstrap actual start/end remain unsupplied; session duration not verified. No timing is backdated.",
+  "budget_status": "No budget creation authorized or performed by this verification; no active monitor verified",
+  "next_gate": "Separately authorized fresh billing-bootstrap execution-identity read-only plan, private recipient supplied outside Git, checksum and independent review; any apply needs its own human-written approval"
+}

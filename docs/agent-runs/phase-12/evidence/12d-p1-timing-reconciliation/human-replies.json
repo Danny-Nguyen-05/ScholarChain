@@ -1,0 +1,28 @@
+{
+  "recorded_utc": "2026-11-01T17:22:56.149471+00:00",
+  "kind": "Explicitly authorized recording of human replies with exact question context; not agent-authored acceptance or new apply authority",
+  "user_edit_authorization_verbatim": "oh yeh can you update that window for me, I enter the wrong time",
+  "timing_statement_verbatim": "I don't really remember it was around 8-9pm I think",
+  "questions_and_human_replies": [
+    {
+      "question_verbatim": "Since exact times are uncertain, please state in your own words whether you personally accept or reject the window/60-minute deviation, acknowledging the AWS-displayed setup activity at 20:01\u201320:23 on October 31. I\u2019ll append your answer verbatim under your instruction; this is a retrospective record only, not permission to apply or spend.",
+      "answer_verbatim": "accept"
+    },
+    {
+      "question_verbatim": "Please state whether the existing \u201cThis replaces the fixed clock window\u2026\u201d paragraph expresses your own statement. The original verbatim chat request is unavailable, so this attribution is the remaining F2 question. I\u2019ll append your answer verbatim.",
+      "answer_verbatim": "yes it is mine"
+    }
+  ],
+  "recording_method": "Appended verbatim answers and exact questions for context; earlier record bytes preserved; no replacement start/end invented",
+  "human_record": {
+    "path": "docs/agent-runs/phase-12/billing-bootstrap-exception.md",
+    "before_sha256": "d9ca3b904fdadf7fea004deab2d7332cab0a0a5e35484093117fa9cc2f53c497",
+    "before_bytes": 591,
+    "after_sha256": "abe3a50ad7167fa01227c73e15e92a422a50609f6313bdcc56404cb61765d71a",
+    "after_bytes": 1334,
+    "prefix_preserved": true
+  },
+  "acceptance_scope": "Human acknowledges uncertain actual times and accepts the retrospective window/60-minute deviation in response to the AWS20:01\u201320:23 question; this is not proof of historical compliance and not approval to apply/spend.",
+  "replacement_paragraph_attribution": "Human affirms original paragraph as their statement; original historic verbatim request remains not retained.",
+  "independent_recheck_status": "Pending; coordinator does not approve its own repair."
+}

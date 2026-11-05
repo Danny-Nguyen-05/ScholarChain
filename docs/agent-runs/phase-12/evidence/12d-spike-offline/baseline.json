@@ -1,0 +1,44 @@
+{
+ "observed_at": "2026-11-04T03:51:04.014079+00:00",
+ "head": "b4207c8df58957e02e45ca054438a7b2557dcb6c",
+ "branch": "phase-12",
+ "status_porcelain": [
+  "?? docs/agent-runs/phase-12/evidence/12d-runtime-guard-repair/",
+  "?? docs/agent-runs/phase-12/evidence/12d-spike-offline/"
+ ],
+ "preexisting_inputs": [
+  {
+   "path": "target/phase12d-runtime-repair-20261103/artifacts/scholarchain-spark3.5.4-scala2.13.14-java17-runtime.tgz",
+   "bytes": 321876735,
+   "sha256": "789a9684f91527dfd9b97d56acce9dbfe5dd4c328299542245da92968f916de5"
+  },
+  {
+   "path": "target/phase12d-runtime-repair-20261103/artifacts/scholarchain-spark3.5.4-scala2.13.14-yarn-jars.zip",
+   "bytes": 310978586,
+   "sha256": "c57b4f5e3c3de3bbc1878d48d8a5367276a37ddf2449504c509764b57155255d"
+  },
+  {
+   "path": "docs/agent-runs/phase-12/evidence/12d-portable-runtime/g1-upstream-inputs.tgz",
+   "bytes": 66755,
+   "sha256": "e05931ab0eec2fc66b1a0d0ab33e5b4c070faf81afcb66fc00208287b85ab558"
+  },
+  {
+   "path": "docs/agent-runs/phase-12/evidence/12d-runtime-guard-repair/work-order.md",
+   "bytes": 1928,
+   "sha256": "7a96c76d235b16374da22324dc1c6f19a89db743171fb4dc7a505a3c95ffbce7"
+  },
+  {
+   "path": "docs/agent-runs/phase-12/evidence/12d-runtime-guard-repair/baseline.json",
+   "bytes": 1121433,
+   "sha256": "9468f402d42bea04f7920fddaadd198abd0c143370497255ef6e5d185544d116"
+  }
+ ],
+ "job_jar": {
+  "member": "scholarchain-runtime/application/scholarchain-job.jar",
+  "mode": "0644",
+  "bytes": 11732592,
+  "sha256": "d52f11ebad5ec9e1ffdd1910d562023e934ce7ab62e7c74a5ffd650f8951b86b"
+ },
+ "local_baseline_run": "target/phase12d-readiness-20261103/baseline/g1-a-attempt2/run:2047866e-0b89-4047-9a31-dccb2515c68d",
+ "terraform": "~/Library/Application Support/ScholarChain/terraform/billing-bootstrap/toolchain/terraform-1.13.5 (v1.13.5, darwin_arm64), aws provider 6.44.0 from filesystem mirror"
+}

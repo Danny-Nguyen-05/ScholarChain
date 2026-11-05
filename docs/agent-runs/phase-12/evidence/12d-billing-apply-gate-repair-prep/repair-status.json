@@ -1,0 +1,23 @@
+{
+  "P1": {
+    "severity": "Medium",
+    "blocks": "apply gate",
+    "status": "OPEN",
+    "prepared": "Independent user-launched reviewer prompt; exact review recorded; human timing follow-up transcribed",
+    "remaining": "Human timing/unavailability reason saved and assessed; independent identity review APPROVE"
+  },
+  "P2": {
+    "severity": "Medium",
+    "blocks": "apply gate",
+    "status": "OPEN",
+    "prepared": "Human storage/retention choices and offline durable config/toolchain/state/backup/regeneration proposal",
+    "remaining": "After P1 prerequisites, fresh durable-path read-only plan/new checksum and independent review"
+  },
+  "P3": {
+    "severity": "Low",
+    "status": "DESIGN PREPARED; LIVE CHECK UNRUN",
+    "remaining": "Inside separately authorized apply window, exact-role caller and exact-name absence checks; fail closed"
+  },
+  "apply_authorized": false,
+  "all_blockers_closed": false
+}

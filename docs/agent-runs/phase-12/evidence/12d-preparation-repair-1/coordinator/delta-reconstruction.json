@@ -1,0 +1,84 @@
+{
+  "argv": [
+    "patch",
+    "-R",
+    "-p1",
+    "-i",
+    "/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-12/evidence/12d-preparation-repair-1/infra/delta.patch"
+  ],
+  "cwd": "/tmp/scholarchain-phase12d-repair1-reverse-proof",
+  "environment_overrides": {},
+  "started_utc": "2026-10-31T02:43:57.080042+00:00",
+  "ended_utc": "2026-10-31T02:43:57.086036+00:00",
+  "exit_code": 0,
+  "log": "reverse-patch.log.txt",
+  "log_sha256": "469dc41162d33fcf46a0a63d9531d39b5e733c7fa9bd65eebb898abc59afdccf",
+  "files": [
+    {
+      "path": "infra/terraform/billing-bootstrap/outputs.tf",
+      "reconstructed_sha256": "901fc28ccefbe1d2c0d3a072fb96f331bc4aca1435aef5ba011cd5fd38e51061",
+      "matches_original": true
+    },
+    {
+      "path": "infra/terraform/billing-bootstrap/main.tf",
+      "reconstructed_sha256": "ad4401620136370fd7bd2af1d4ac9c836385d685e301d408fb455057b74fac3b",
+      "matches_original": true
+    },
+    {
+      "path": "infra/terraform/billing-bootstrap/versions.tf",
+      "reconstructed_sha256": "38c0d27255f1ccf0c6f57b6854b80e5bcecde516ebfbcdfbd7ae95ad220ba0a1",
+      "matches_original": true
+    },
+    {
+      "path": "infra/terraform/billing-bootstrap/README.md",
+      "reconstructed_sha256": "a892cfe7aff07813b93af67634b46dae5e881d2ef4c747c0d682ee14bacd04a5",
+      "matches_original": true
+    },
+    {
+      "path": "infra/terraform/billing-bootstrap/variables.tf",
+      "reconstructed_sha256": "5e5c0058b7b7cb5d03aa03e389a95d8d135f657d49bcf5ffa0f4c67e64193f93",
+      "matches_original": true
+    },
+    {
+      "path": "infra/terraform/billing-bootstrap/.terraform.lock.hcl",
+      "reconstructed_sha256": "421b75245b0080edee2b434482ff348419a75d7a6b798d5218e0a0f9f723eaea",
+      "matches_original": true
+    },
+    {
+      "path": "infra/terraform/billing-bootstrap/tests/budget.tftest.hcl",
+      "reconstructed_sha256": "963ec6b12f4713b0b672e08ae5e94202be0316366da252209d8febdce2e0b55f",
+      "matches_original": true
+    },
+    {
+      "path": "infra/terraform/spikes/emr-spark/main.tf",
+      "reconstructed_sha256": "1712fd5aa97439f35ddcf9d5edc1bfdf31f70a8dc785c25cfd0c829b180fc056",
+      "matches_original": true
+    },
+    {
+      "path": "infra/terraform/spikes/emr-spark/versions.tf",
+      "reconstructed_sha256": "38c0d27255f1ccf0c6f57b6854b80e5bcecde516ebfbcdfbd7ae95ad220ba0a1",
+      "matches_original": true
+    },
+    {
+      "path": "infra/terraform/spikes/emr-spark/README.md",
+      "reconstructed_sha256": "98de19494a756a80a20728a30cfb87c5853c0601e1ce9bed32ee5cd527c97102",
+      "matches_original": true
+    },
+    {
+      "path": "infra/terraform/spikes/emr-spark/variables.tf",
+      "reconstructed_sha256": "33c0c41b0d0983f8c457c06a7d3ded19ebc37f409186a3cb1cb54d8e8155dc5c",
+      "matches_original": true
+    },
+    {
+      "path": "infra/terraform/spikes/emr-spark/.terraform.lock.hcl",
+      "reconstructed_sha256": "421b75245b0080edee2b434482ff348419a75d7a6b798d5218e0a0f9f723eaea",
+      "matches_original": true
+    },
+    {
+      "path": "infra/terraform/spikes/emr-spark/tests/proposal.tftest.hcl",
+      "reconstructed_sha256": "bfe5310f41c04d678a69dfd69d4506c0f9dfae8dc3b141d227db6d6047654ee9",
+      "matches_original": true
+    }
+  ],
+  "repository_source_mutated": false
+}

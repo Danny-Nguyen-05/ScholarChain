@@ -1,0 +1,36 @@
+{
+  "cap_cases": [
+    "exact two rows at cap2",
+    "empty at cap1",
+    "two rows exceed cap1",
+    "negative bound",
+    "zero bound",
+    "Int.MaxValue overflow refusal"
+  ],
+  "existing_BoundedActions_methods_unchanged": true,
+  "files": [
+    {
+      "bytes": 1390,
+      "path": "modules/spark/src/main/scala/edu/uic/cs441/scholarchain/spark/BoundedActions.scala",
+      "sha256": "c53a1c72abeabd6335b07e6179b86ff759aa4244a61b4157ebb4a71d333ab7c2"
+    },
+    {
+      "bytes": 15641,
+      "path": "modules/spark/src/main/scala/edu/uic/cs441/scholarchain/spark/Phase12Readiness.scala",
+      "sha256": "7388e1b5fa38317701c25118f30c6e84463858af3e4b12e4e98569df2435c614"
+    },
+    {
+      "bytes": 12238,
+      "path": "modules/spark/src/test/scala/edu/uic/cs441/scholarchain/spark/Phase12ReadinessSpec.scala",
+      "sha256": "5bb4cdd5f94b1d323d281dcb11469c8a37c6c4f522c60c42b1087145c60c1eb6"
+    }
+  ],
+  "fix": "Use !isDefined for Option presence; collect bounded operational Java result through additive BoundedActions.cappedJava cap1 using take(limit+1) sentinel. Existing BoundedActions method suffixes are byte-equal to HEAD.",
+  "git_diff_check_exit": 0,
+  "independent_guard_modified": false,
+  "kind": "Owner-authored source-fence integration repair before formatter, tests not run by owner",
+  "sbt_run_by_owner": false,
+  "source_edit_release": "Build owner reported fullcheck ended19:58:50UTC, sourcefreeze420unchanged",
+  "tests_authored": 12,
+  "trigger": "Build owner fullcheck attempt1 exit1: IndependentPhase6SafetySpec rejected new probe direct .isEmpty and .collect calls"
+}

@@ -1,0 +1,13 @@
+{
+  "stage": "compare",
+  "exit": 0,
+  "timed_out": false,
+  "started_at": "2026-11-04T00:53:53.859530+00:00",
+  "completed_at": "2026-11-04T00:54:04.813166+00:00",
+  "seconds": 10.953689083980862,
+  "process_id": 5117,
+  "stdout_bytes": 5260,
+  "stderr_bytes": 1668049,
+  "stdout_sha256": "6b4ea40ba775cb76ccdfb54f36651aec02df03380c5278843ed7969985b14a07",
+  "stderr_sha256": "b68e33c64191d76f1723879593ef48824c41df6c63e8647e606b48b2f1310d73"
+}

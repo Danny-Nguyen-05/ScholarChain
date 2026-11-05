@@ -1,0 +1,232 @@
+[
+ {
+  "path": "infra/terraform/deployer/.terraform.lock.hcl",
+  "bytes": 281,
+  "sha256": "bddef902248f61757314280dabdf36b9711cb05e1d23a98f6aa291189d1579d5"
+ },
+ {
+  "path": "infra/terraform/deployer/README.md",
+  "bytes": 17819,
+  "sha256": "b8bcf0a36f1c54c6a2e46ef9552f976ce5ba8cb612c1dc97b2014be3a6fd0db1"
+ },
+ {
+  "path": "infra/terraform/deployer/main.tf",
+  "bytes": 4119,
+  "sha256": "353e9291fab8e46120860b48587b7c9855a3cb37a823cffef90e203855caf10c"
+ },
+ {
+  "path": "infra/terraform/deployer/outputs.tf",
+  "bytes": 759,
+  "sha256": "9f31e97a683eb134ab9635132e6ce366960980af873d93f07a4c0c58b9745274"
+ },
+ {
+  "path": "infra/terraform/deployer/permission_sets.tf",
+  "bytes": 31788,
+  "sha256": "7ce3eb63803f16c7103e5699e89977aba096801f9ba0dec8ba06a9ec6b02b3c5"
+ },
+ {
+  "path": "infra/terraform/deployer/tests/deployer.tftest.hcl",
+  "bytes": 36697,
+  "sha256": "f3d4f48316550d831bc774890c8fcb69afabe453513e2c794868196dd48ec285"
+ },
+ {
+  "path": "infra/terraform/deployer/variables.tf",
+  "bytes": 2381,
+  "sha256": "ea0deafd5167be044b4895cc1313adb4b6d56c8baa61465fa061a8566f0daf2e"
+ },
+ {
+  "path": "infra/terraform/deployer/versions.tf",
+  "bytes": 150,
+  "sha256": "38c0d27255f1ccf0c6f57b6854b80e5bcecde516ebfbcdfbd7ae95ad220ba0a1"
+ },
+ {
+  "path": "infra/terraform/spikes/emr-spark-isolated/.terraform.lock.hcl",
+  "bytes": 281,
+  "sha256": "bddef902248f61757314280dabdf36b9711cb05e1d23a98f6aa291189d1579d5"
+ },
+ {
+  "path": "infra/terraform/spikes/emr-spark-isolated/README.md",
+  "bytes": 21018,
+  "sha256": "cbb5a926f5f0de338eb3a1d4685a921e4c50d1efa34b46752ced47605ee129c3"
+ },
+ {
+  "path": "infra/terraform/spikes/emr-spark-isolated/efs.tf",
+  "bytes": 1852,
+  "sha256": "e144153269cdb60dbec2458ca9f6e6c97310ca1c0b35109d5c287bf9662f6bae"
+ },
+ {
+  "path": "infra/terraform/spikes/emr-spark-isolated/emr.tf",
+  "bytes": 6804,
+  "sha256": "73b5f0806797148ab0d51c44c05d497b215a05f494f3c7134da64aa9ed8cea34"
+ },
+ {
+  "path": "infra/terraform/spikes/emr-spark-isolated/iam.tf",
+  "bytes": 4217,
+  "sha256": "02ec9f90c6345efaa47c10285d0c18ac5eba201b722560276b206d27be5e2836"
+ },
+ {
+  "path": "infra/terraform/spikes/emr-spark-isolated/kms.tf",
+  "bytes": 4504,
+  "sha256": "094b1eb1faf9d30d41d76de7808838f384f6ff8bd7aa032a1539e1d54ee0a295"
+ },
+ {
+  "path": "infra/terraform/spikes/emr-spark-isolated/main.tf",
+  "bytes": 5014,
+  "sha256": "ec91220ebc54b4252a1900aa9251c280c48ba61195ca01c1672cbb801a879db6"
+ },
+ {
+  "path": "infra/terraform/spikes/emr-spark-isolated/network.tf",
+  "bytes": 2769,
+  "sha256": "3ef6f296846ed148cc793246f4fa25eaa916b489951a556bf4c4f61c012a1a90"
+ },
+ {
+  "path": "infra/terraform/spikes/emr-spark-isolated/outputs.tf",
+  "bytes": 1616,
+  "sha256": "dcac50430b876be690a4f16fcfe53614ef8bd9791178f74c7e5c1d7189b2462f"
+ },
+ {
+  "path": "infra/terraform/spikes/emr-spark-isolated/s3.tf",
+  "bytes": 5281,
+  "sha256": "18dbb5673c2dc6c18a5de2b453edbc3b634674ea2b3fc1a7532f300b99a017a2"
+ },
+ {
+  "path": "infra/terraform/spikes/emr-spark-isolated/security_groups.tf",
+  "bytes": 6258,
+  "sha256": "e4395a297486c246e0ba8e70b57d7bdd2340b0a04c5852400b819cae194d8be2"
+ },
+ {
+  "path": "infra/terraform/spikes/emr-spark-isolated/terraform.tfvars.example",
+  "bytes": 922,
+  "sha256": "d195921a4cf73c40d24990e94b781dc78c22bd5a85d45ee31d705024619aa8b4"
+ },
+ {
+  "path": "infra/terraform/spikes/emr-spark-isolated/tests/fixtures/inputs-fixture.bin",
+  "bytes": 60,
+  "sha256": "96be983944a6f8c96eeb8499410dbfd89e03fe1e8b0a4c2facd3f87ba8c17f88"
+ },
+ {
+  "path": "infra/terraform/spikes/emr-spark-isolated/tests/fixtures/runtime-fixture.bin",
+  "bytes": 61,
+  "sha256": "3cdbba1642f4fa67dee2a3d68b95263c0155f21e6c05735ce428ecac875ab782"
+ },
+ {
+  "path": "infra/terraform/spikes/emr-spark-isolated/tests/spike.tftest.hcl",
+  "bytes": 30414,
+  "sha256": "f5dc92bff6206fe3f28ba8dc3ee0e1cccd6144902e9b1d730b508b54599813d8"
+ },
+ {
+  "path": "infra/terraform/spikes/emr-spark-isolated/variables.tf",
+  "bytes": 9460,
+  "sha256": "b09dd4c91f4c074403522ad5705777bef1f78d9e9e356220838e2bc95ecebc7f"
+ },
+ {
+  "path": "infra/terraform/spikes/emr-spark-isolated/versions.tf",
+  "bytes": 150,
+  "sha256": "38c0d27255f1ccf0c6f57b6854b80e5bcecde516ebfbcdfbd7ae95ad220ba0a1"
+ },
+ {
+  "path": "scripts/phase12d-spike/README.md",
+  "bytes": 4936,
+  "sha256": "da3c6f5f27b5942fb47499b273828521bff33449a239f320f0972d62e22a322b"
+ },
+ {
+  "path": "scripts/phase12d-spike/collect-evidence.sh",
+  "bytes": 3160,
+  "sha256": "44d2ea2652d3689373d9d2f4cd0330f380a85c8b13101abf2c0d0b936ce8b203"
+ },
+ {
+  "path": "scripts/phase12d-spike/emr/bootstrap.sh",
+  "bytes": 8835,
+  "sha256": "41bef4d399224a909316fbecd50cdf734d0a6497aab5058ae5360982c26cd667"
+ },
+ {
+  "path": "scripts/phase12d-spike/emr/collect-results.sh",
+  "bytes": 2047,
+  "sha256": "2ad0ab196c8618d77a783587c598bc9f581765d275048ee8c342f13a846e3c75"
+ },
+ {
+  "path": "scripts/phase12d-spike/emr/run-step.sh",
+  "bytes": 1465,
+  "sha256": "8e380726cd6bc24f25241d9eddfe2087e9c229685d6e6d0494f9f5e511c6abe6"
+ },
+ {
+  "path": "scripts/phase12d-spike/inventory.sh",
+  "bytes": 2816,
+  "sha256": "ddae237efc35235553a39129a0642612136fe15e26cc1d714ab685d97fc2e22c"
+ },
+ {
+  "path": "scripts/phase12d-spike/inventory_eval.py",
+  "bytes": 8200,
+  "sha256": "f1fd7b9a2f45bdde04f7bd14e7d0deaeb1e6a13c723260c1fb1cd0237b27ef9c"
+ },
+ {
+  "path": "scripts/phase12d-spike/preflight.sh",
+  "bytes": 2063,
+  "sha256": "dc1f93793ed81dec5390a001ad9ff9d6313e4c57757209befda780915348f088"
+ },
+ {
+  "path": "scripts/phase12d-spike/request-manifest.json",
+  "bytes": 4050,
+  "sha256": "fd1a8c1d3e79a48a58c4a2a628a1d7305447a3238d17d7484e916e65eb9d2136"
+ },
+ {
+  "path": "scripts/phase12d-spike/request_bound.py",
+  "bytes": 7472,
+  "sha256": "b117b3d8cf7aceadbf1e37ade9eb2b03da1363ba5332835deee70412b1c462bc"
+ },
+ {
+  "path": "scripts/phase12d-spike/tests/fake_aws.py",
+  "bytes": 3824,
+  "sha256": "1b534ae69c86e3aa777af430b6bbfda0bf285369a6f3f601ae1af1e41609adde"
+ },
+ {
+  "path": "scripts/phase12d-spike/tests/helpers.py",
+  "bytes": 2491,
+  "sha256": "3f938e60e754bcbcdd1695ce3cdb71e6546eab031c00d3f4a50a36fcf4d6cf9f"
+ },
+ {
+  "path": "scripts/phase12d-spike/tests/test_bootstrap.py",
+  "bytes": 13293,
+  "sha256": "961bbe4430c30b110ff9372aeaccd877f07c1a2d4d9a8016e181c0f8d57b4700"
+ },
+ {
+  "path": "scripts/phase12d-spike/tests/test_collect_evidence.py",
+  "bytes": 3453,
+  "sha256": "e3b174aa48ff98995326392f37cf678d71eccde07831029ecd6d5a2776129578"
+ },
+ {
+  "path": "scripts/phase12d-spike/tests/test_inventory.py",
+  "bytes": 6403,
+  "sha256": "8262fdedc48ad71afd80c32c30b87044285a63e4985b77611338f2c069d1b2c5"
+ },
+ {
+  "path": "scripts/phase12d-spike/tests/test_preflight.py",
+  "bytes": 3014,
+  "sha256": "555edfd6a94c476eae01128c0c0935e57dcf6bac92f502d77f3847e5ca0487d3"
+ },
+ {
+  "path": "scripts/phase12d-spike/tests/test_request_bound.py",
+  "bytes": 3882,
+  "sha256": "5b18c41091c89d725f58437eeab5e32379a2ed9cb9d621cb86e21f76d1abb074"
+ },
+ {
+  "path": "scripts/phase12d-spike/tests/test_step_scripts.py",
+  "bytes": 3998,
+  "sha256": "cd1114d1e5a105fa04ecad8bac2e68f277333771df5f11db619ae6e390ae53e6"
+ },
+ {
+  "path": "scripts/phase12d-spike/tests/test_terraform_static.py",
+  "bytes": 1490,
+  "sha256": "32f976693877742972af97431620edb2d06d56a0d4b2740bcd1b50826df76e11"
+ },
+ {
+  "path": "tests/infra/README.md",
+  "bytes": 2862,
+  "sha256": "673716ecf8328d814b92dad50014668767f2a4684088368a9e37912139b9cbf9"
+ },
+ {
+  "path": "tests/infra/terraform_source_guard.py",
+  "bytes": 14636,
+  "sha256": "44f5fd0133cc7f8b92fe078b9e3b8f9fd35fe8770e990211f802491b0fb70ed3"
+ }
+]

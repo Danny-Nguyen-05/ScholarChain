@@ -1,0 +1,220 @@
+--- a/infra/terraform/billing-bootstrap/outputs.tf
++++ b/infra/terraform/billing-bootstrap/outputs.tf
+@@ -15,6 +15,7 @@
+       filters    = budget.cost_filter
+       expression = budget.filter_expression
+       cost_types = budget.cost_types
++      tags       = budget.tags
+       notifications = [for n in budget.notification : {
+         comparison = n.comparison_operator
+         threshold  = n.threshold
+--- a/infra/terraform/billing-bootstrap/main.tf
++++ b/infra/terraform/billing-bootstrap/main.tf
+@@ -2,6 +2,14 @@
+   region              = var.aws_region
+   profile             = var.aws_profile
+   allowed_account_ids = [var.aws_account_id]
++}
++
++locals {
++  # This monitor outlives the stack: its date follows retention/reconciliation,
++  # never the main stack's provisional November 25 expiration.
++  required_tags = merge(var.resource_tags, {
++    expiration_date = try(formatdate("YYYY-MM-DD", "${replace(var.project_period_end_utc, "_", "T")}:00Z"), "")
++  })
+ }
+ 
+ # A fixed CUSTOM period prevents an October/November monthly reset from
+@@ -16,6 +24,7 @@
+   time_unit         = "CUSTOM"
+   time_period_start = var.project_period_start_utc
+   time_period_end   = var.project_period_end_utc
++  tags              = local.required_tags
+   cost_types {
+     include_credit             = false
+     include_refund             = false
+@@ -29,6 +38,8 @@
+     use_amortized              = false
+     use_blended                = false
+   }
++  # User-selected actual-spend alerts: 50/80/100% of the same USD 200
++  # ceiling (USD 100/160/200); monitoring only, not a spending stop.
+   dynamic "notification" {
+     for_each = toset([50, 80, 100])
+     content {
+--- a/infra/terraform/billing-bootstrap/README.md
++++ b/infra/terraform/billing-bootstrap/README.md
+@@ -7,6 +7,10 @@
+ AWS deletes a budget and its notifications after its end date. Choose an end that covers the retention period and final billing reconciliation; review/extend it before expiration if required. Do not infer that the November 25 submission deadline ends storage spending. No date is selected or automatically approved here. Live acceptance of the custom date range and alert delivery remains unverified.
+ 
+ The [AWS Budget API](https://docs.aws.amazon.com/aws-cost-management/latest/APIReference/API_budgets_Budget.html) documents `CUSTOM`, cost filters and time-period behavior. The [TimePeriod API](https://docs.aws.amazon.com/aws-cost-management/latest/APIReference/API_budgets_TimePeriod.html) documents expiration. Provider [6.44.0 resource documentation](https://registry.terraform.io/providers/hashicorp/aws/6.44.0/docs/resources/budgets_budget) and its [versioned implementation](https://github.com/hashicorp/terraform-provider-aws/blob/v6.44.0/internal/service/budgets/budget.go) support these fields. Checked during 12D preparation; documentation is not live proof.
++
++The AWS Budget API marks **CostTypes as deprecated**. This pinned configuration still authors `include_credit=false` and `include_refund=false`, but mock plans cannot prove that the live service honors that accounting basis. After a separately approved apply, read back the exact budget's `CostTypes`, `TimePeriod`, amount and notifications using an approved identity and a recipient-free output projection. Require both `IncludeCredit=false` and `IncludeRefund=false`, as well as the expected tax/support and unblended settings, before accepting the monitor as the pre-spend gate. Check the configured basis in the Billing console as needed. If the service omits, changes or does not honor these fields, **stop before paid work** and route a `Metrics`/`FilterExpression` accounting alternative for independent review and human approval; do not silently switch to net costs or declare the before-credit gate passed.
++
++The five required resource tags are applied directly to the budget. `resource_tags` supplies validated `course`, `project`, `environment` and `owner` values, defaulting to the human-selected `CS441`, `scholarchain`, `course` and `danny`. Their values must be nonblank and contain no email address. `expiration_date` is derived from the explicit budget end timestamp and therefore follows retention/final reconciliation, not the main stack's November 25 date. The date is a tag, not permission to delete anything. Extend both the budget period and derived tag through an approved change if retention continues. The mock test checks the actual budget resource's complete tag map with synthetic values different from those defaults, and checks a changed reconciliation end.
+ 
+ Supply `aws_account_id`, `aws_profile`, `aws_region`, a nonpersonal unique `budget_name`, `project_period_start_utc` and `project_period_end_utc`. The AWS date format is `YYYY-MM-DD_HH:MM` UTC. The exact notification recipient is private: supply `TF_VAR_budget_notification_emails` interactively without shell history, or an ignored `*.local.tfvars` outside Git. Do not echo it or commit it. Do not read credential files, root keys or session caches. Saved plans and state may contain the recipient even though the input is sensitive; keep both outside Git and evidence and avoid unredacted Terraform logs.
+ 
+--- a/infra/terraform/billing-bootstrap/variables.tf
++++ b/infra/terraform/billing-bootstrap/variables.tf
+@@ -53,3 +53,23 @@
+     error_message = "Supply at most ten valid private notification addresses."
+   }
+ }
++
++variable "resource_tags" {
++  type = object({
++    course      = string
++    project     = string
++    environment = string
++    owner       = string
++  })
++  default = {
++    course      = "CS441"
++    project     = "scholarchain"
++    environment = "course"
++    owner       = "danny"
++  }
++  description = "Human-selected ownership tags; expiration_date is derived from the budget's required retention/reconciliation end. No email addresses."
++  validation {
++    condition     = alltrue([for value in values(var.resource_tags) : length(trimspace(value)) > 0 && length(value) <= 256 && !strcontains(value, "@")])
++    error_message = "All four ownership tags are required, nonblank, at most 256 characters and must not contain email addresses."
++  }
++}
+--- a/infra/terraform/billing-bootstrap/tests/budget.tftest.hcl
++++ b/infra/terraform/billing-bootstrap/tests/budget.tftest.hcl
+@@ -5,10 +5,16 @@
+   }
+ }
+ variables {
+-  aws_account_id           = "111122223333"
+-  aws_profile              = "synthetic-no-login"
+-  aws_region               = "us-east-2"
+-  budget_name              = "synthetic-project-budget"
++  aws_account_id = "111122223333"
++  aws_profile    = "synthetic-no-login"
++  aws_region     = "us-east-2"
++  budget_name    = "synthetic-project-budget"
++  resource_tags = {
++    course      = "SYNTH441"
++    project     = "tag-probe"
++    environment = "offline"
++    owner       = "synthetic-owner"
++  }
+   project_period_start_utc = "2026-10-01_00:00"
+   project_period_end_utc   = "2027-01-01_00:00"
+ }
+@@ -28,6 +34,16 @@
+   assert {
+     condition     = output.controls.budget.account_id == "111122223333" && tonumber(output.controls.budget.amount) == 200 && output.controls.budget.currency == "USD" && output.controls.budget.period == "CUSTOM" && output.controls.budget.start == "2026-10-01_00:00" && output.controls.budget.end == "2027-01-01_00:00" && length(output.controls.budget.filters) == 0 && length(output.controls.budget.expression) == 0
+     error_message = "One account-wide USD 200 CUSTOM period must cover October and November without a reset or tag filter."
++  }
++  assert {
++    condition = output.controls.budget.tags == tomap({
++      course          = "SYNTH441"
++      project         = "tag-probe"
++      environment     = "offline"
++      owner           = "synthetic-owner"
++      expiration_date = "2027-01-01"
++    })
++    error_message = "The budget resource must carry all five configured ownership tags, with expiration tied to its reconciliation end."
+   }
+   assert {
+     condition     = !output.controls.budget.cost_types[0].include_credit && !output.controls.budget.cost_types[0].include_refund && output.controls.budget.cost_types[0].include_tax && output.controls.budget.cost_types[0].include_support && !output.controls.budget.cost_types[0].use_blended && !output.controls.budget.cost_types[0].use_amortized
+@@ -53,3 +69,28 @@
+   variables { project_period_end_utc = "2026-09-01_00:00" }
+   expect_failures = [var.project_period_end_utc]
+ }
++
++run "expiration_follows_budget_reconciliation_end" {
++  command = plan
++  variables {
++    enable_budget              = true
++    budget_notification_emails = ["synthetic@example.invalid"]
++    project_period_end_utc     = "2027-02-03_06:00"
++  }
++  assert {
++    condition     = output.controls.budget.tags["expiration_date"] == "2027-02-03"
++    error_message = "Budget expiration must follow its own retention/reconciliation end, not the stack's November 25 date."
++  }
++}
++run "blank_required_tag_is_rejected" {
++  command = plan
++  variables {
++    resource_tags = {
++      course      = "SYNTH441"
++      project     = "tag-probe"
++      environment = "offline"
++      owner       = " "
++    }
++  }
++  expect_failures = [var.resource_tags]
++}
+--- a/infra/terraform/spikes/emr-spark/README.md
++++ b/infra/terraform/spikes/emr-spark/README.md
+@@ -2,7 +2,10 @@
+ 
+ This directory contains **zero AWS resources**. It exports a reviewable proposal and rejects `launch_requested=true` unconditionally. No executable bootstrap, cluster, network or deployment permission is created. It is not a completed feasibility spike, a runnable EMR configuration, a verified cost fit or approval to spend. The main course Terraform root remains untouched.
+ 
+-The user selected the recommendations: test EMR on EC2 first using a separately installed Spark 3.5.4 / Scala 2.13 distribution; propose exactly **one primary and one core `m5.xlarge` in `us-east-2`**, no task/Spot nodes; a **USD 10 suballocation of the shared USD 200** and **two hours total cluster runtime including retries**. Stop after the first attempt. EMR Serverless or any alternate shape requires another decision. The instance type is a proposal requiring current price, regional availability, quota and exact approval checks, not a proven compatible runtime.
++The user selected the recommendations: test EMR on EC2 first using a separately installed Spark 3.5.4 / Scala 2.13 distribution; propose exactly **one primary and one core `m5.xlarge` in `us-east-2`**, no task/Spot nodes; a **USD 5 suballocation of the shared USD 200** and **two hours total cluster runtime including retries**. Stop after the first attempt. EMR Serverless or any alternate shape requires another decision. The instance type is a proposal requiring current price, regional availability, quota and exact approval checks, not a proven compatible runtime.
++
++Repair round 1 lowers the proposed spike cap from USD 10 to **USD 5**. The existing USD 15 reserve covers all EMR spikes and experiments: the former USD 10 allocation would leave USD 5; the chosen USD 5 allocation leaves USD 10 for later EMR work. The 12C upper-window margin remains only USD 5.09. Later EMR runs, including the scale experiment, need a new allocation decision and full cost verification. This change neither increases the shared USD 200 ceiling nor approves spending.
++
+ 
+ ## Launch blockers found in the current application
+ 
+@@ -26,7 +29,7 @@
+ 
+ Before launch, require a separately reviewed Terraform-authored deadline mechanism, independent of the submitting terminal, with permission limited to terminating this exact spike cluster and tested failure handling. Set its deadline and begin teardown early enough to reserve termination time within the proposed two-hour total; measure from resource creation/startup, not only from Spark job start. Cover bootstrap failure, submission failure, pending/active YARN jobs, connection loss and cleanup failure. An account alert is delayed monitoring, not a runtime or dollar enforcement mechanism. If termination cannot be verified or headroom cannot be established, do not launch. A launch-time runtime limit does not guarantee that AWS billing stops instantaneously.
+ 
+-A pre-run cost review must include EC2 plus EMR surcharges for both nodes, startup/termination, EBS, NAT/public IPv4 if used, S3 requests/storage, logs, KMS, data transfer, taxes, retained evidence and an uncertainty reserve. The coordinator retains source-dated public pricing separately. Reconcile delayed spend plus estimated unreported charges and existing commitments before reserving USD 10. Stop rather than infer credits or a monthly reset add budget. No paid Cost Explorer query is authorized.
++A pre-run cost review must include EC2 plus EMR surcharges for both nodes, startup/termination, EBS, NAT/public IPv4 if used, S3 requests/storage, logs, KMS, data transfer, taxes, retained evidence and an uncertainty reserve. The coordinator retains source-dated public pricing separately. Reconcile delayed spend plus estimated unreported charges and existing commitments before reserving USD 5. Stop rather than infer credits or a monthly reset add budget. No paid Cost Explorer query is authorized.
+ 
+ Required prerequisites: verify the account-wide USD 200 monitor and three actual-spend recipients/thresholds; human-enable Cost Explorer; establish conservative remaining budget; obtain a non-root deployment identity with short-lived credentials and reviewed scoped permissions; inspect a genuine isolated plan and checksum; obtain independent review; and have the human record the exact cap, Ohio region, instance types/counts, maximum runtime, one-attempt scope and teardown. This preparation writes no human approval or IAM grant and never upgrades the planner.
+ 
+@@ -41,4 +44,6 @@
+ /tmp/scholarchain-phase12b-repair1-infra/terraform test -no-color
+ ```
+ 
++The **zero-resource claim rests on source inspection**, not on the plan assertion of `aws_resources_declared=0`, `launchable=false` or a prerequisite-list length. Those are output constants; checking them does not prove the absence of Terraform resource, data, module, provider or provisioner blocks. Current inspection finds none in this root. Reinspect every source file before any continuation; no independent static absence check was assigned in this round.
++
+ All native tests are mock-provider, plan-only. They check the offline proposal and rejection of changed limits/launch intent; they do **not** test a cluster, IAM effectiveness, security groups, distributed execution, actual costs or cleanup. No apply/destroy/account call is part of these checks.
+--- a/infra/terraform/spikes/emr-spark/variables.tf
++++ b/infra/terraform/spikes/emr-spark/variables.tf
+@@ -16,10 +16,10 @@
+ }
+ variable "spike_allowance_usd" {
+   type    = number
+-  default = 10
++  default = 5
+   validation {
+-    condition     = var.spike_allowance_usd > 0 && var.spike_allowance_usd <= 10
+-    error_message = "The proposed allowance is at most USD 10 from the shared USD 200, never an additional budget."
++    condition     = var.spike_allowance_usd > 0 && var.spike_allowance_usd <= 5
++    error_message = "The proposed allowance is at most USD 5 from the shared USD 200, never an additional budget."
+   }
+ }
+ variable "maximum_total_runtime_hours" {
+--- a/infra/terraform/spikes/emr-spark/tests/proposal.tftest.hcl
++++ b/infra/terraform/spikes/emr-spark/tests/proposal.tftest.hcl
+@@ -6,8 +6,8 @@
+     error_message = "The proposal is exactly one primary and one core m5.xlarge in Ohio, no task or Spot nodes, one attempt."
+   }
+   assert {
+-    condition     = output.proposal.maximum_total_runtime_hours == 2 && output.proposal.spike_allowance_usd == 10 && output.proposal.shared_project_ceiling_usd == 200
+-    error_message = "The proposed two-hour/USD 10 envelope is part of the shared USD 200."
++    condition     = output.proposal.maximum_total_runtime_hours == 2 && output.proposal.spike_allowance_usd == 5 && output.proposal.shared_project_ceiling_usd == 200
++    error_message = "The proposed two-hour/USD 5 envelope is part of the shared USD 200."
+   }
+   assert {
+     condition     = !output.proposal.launchable && !output.proposal.live_compatibility_verified && output.proposal.aws_resources_declared == 0 && length(output.proposal.unresolved_prerequisites) == 8
+@@ -21,7 +21,7 @@
+ }
+ run "cannot_raise_spike_allowance" {
+   command = plan
+-  variables { spike_allowance_usd = 11 }
++  variables { spike_allowance_usd = 6 }
+   expect_failures = [var.spike_allowance_usd]
+ }
+ run "cannot_extend_runtime" {

@@ -1,0 +1,16 @@
+{
+  "aws_account_id": "530332961125",
+  "aws_profile": "scholarchain-billing-deployer",
+  "aws_region": "us-east-2",
+  "budget_name": "scholarchain-project-budget",
+  "project_period_start_utc": "2026-10-01_00:00",
+  "project_period_end_utc": "2027-01-01_00:00",
+  "budget_limit_usd": 200,
+  "enable_budget": true,
+  "resource_tags": {
+    "course": "CS441",
+    "project": "scholarchain",
+    "environment": "course",
+    "owner": "danny"
+  }
+}

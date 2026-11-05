@@ -1,0 +1,18 @@
+{
+  "kind": "Coordinator transcription of human preparation choice only",
+  "recorded_utc": "2026-11-02T01:35:52.375566+00:00",
+  "time_meaning": "Record-write time, not user-message receipt or future execution time",
+  "question_verbatim": "Next: once execution is approved, will you run the approved commands in Terminal with my guidance and keep Terminal open and the computer awake until the backup finishes?",
+  "user_response_verbatim": "yes",
+  "stage_actor": "Human launches later approved commands in persistent foreground Terminal; coordinator/deploy owner supplies guidance and checks within their assigned roles",
+  "terminal_supervision": "Keep Terminal open and computer awake until backup finishes",
+  "live_execution_authorized": false,
+  "scope_limit": "Actor/mechanism choice H1 only; no login/CLI/wrapper/AWS/helper/commit execution authorized by this reply",
+  "R1_residual_risk_acceptance": "Not inferred; separate explicit decision remains",
+  "remaining_decisions": [
+    "sourcecontrol/clean canonical checkout",
+    "H2 offline tooling and dated window",
+    "R1 residual-risk acceptance",
+    "personal exact-checksum execution gate"
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "confirmation": "r1-residual-risk-confirmation.json",
+  "bytes": 1270,
+  "sha256": "9739a961df622d436dbec242c86b275758ecdcdbe5e3923c902ba3ecec76d0bd",
+  "repairs_before_bytes": 60764,
+  "repairs_before_sha256": "a9caa0eb5bd44f148f7b9f35f9865ee31c1a98aed17b9461b33e9a0a83ca70f2",
+  "repairs_prefix_preserved": true,
+  "repairs_after_sha256": "ead2d68b9bc74bfcb872bbb587b9c31aa19dc3ec701bcd7127475cd55038b8dc",
+  "human_record_unchanged": true,
+  "diff_check_exit": 0,
+  "execution_performed": false
+}

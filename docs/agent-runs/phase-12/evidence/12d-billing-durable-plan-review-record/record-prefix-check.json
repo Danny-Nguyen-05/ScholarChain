@@ -1,0 +1,52 @@
+{
+  "checked_utc": "2026-11-01T20:34:56.245855+00:00",
+  "records": [
+    {
+      "path": "docs/agent-runs/phase-12/prompt.md",
+      "before_bytes": 77390,
+      "before_sha256": "bd10826f61e6bc2506ce05e69a8dccd2a4e8d718576cedb5a5f03cdf213807a9",
+      "prefix_preserved": true,
+      "head_prefix_preserved": true,
+      "after_bytes": 78601,
+      "after_sha256": "7e61c06eb22f01dec22d333e85f9c55f8fe850795ff344866958becb8423a8f6"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/review.md",
+      "before_bytes": 200284,
+      "before_sha256": "dde08c2c63fd7b352ff82f64ec613a2b76817322886cbbf0c0f0f95b0c2be412",
+      "prefix_preserved": true,
+      "head_prefix_preserved": true,
+      "after_bytes": 212374,
+      "after_sha256": "7a4eddbf78d6131ba1898d46bf5b545a7d5504296e61deae9b698a0db5325c9e"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/repairs.md",
+      "before_bytes": 50480,
+      "before_sha256": "4095e2b5d0fe07485df5d2b9babb00faa316e9e49d59bc0246f1000be21e6c38",
+      "prefix_preserved": true,
+      "head_prefix_preserved": true,
+      "after_bytes": 52030,
+      "after_sha256": "47f9c7a4e64b2f645a03c2ae7f3252d178c03d1b3b1f5da197d671f4f2c72ed9"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/owner-report.md",
+      "before_bytes": 98009,
+      "before_sha256": "b23d87af6676a7a05b535f90769f892d87c8f9b650bb07825f3749de9050ba3e",
+      "prefix_preserved": true,
+      "head_prefix_preserved": true,
+      "after_bytes": 102646,
+      "after_sha256": "432665c64ae34664354888d4187eafccd4f11af29d0ebdf77b9cc09b065c1bf9"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/test-report.md",
+      "before_bytes": 91296,
+      "before_sha256": "02bd08c4802eb1313a0818d4f86729afc5c890df2a0910a4fabb30b6a087c331",
+      "prefix_preserved": true,
+      "head_prefix_preserved": true,
+      "after_bytes": 95933,
+      "after_sha256": "15ad43eabe41d9ea2701b3fa722bc7df17f2b5e29937ee618c77a17d0f24d43e"
+    }
+  ],
+  "review_verbatim": true,
+  "human_record_unchanged": true
+}

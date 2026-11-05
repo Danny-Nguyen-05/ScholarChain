@@ -1,0 +1,126 @@
+{
+  "source": "/tmp/scholarchain-phase12d-runtime-repair-build-20261103",
+  "skipped": [],
+  "files": [
+    {
+      "path": "bytecode/AuthClientBootstrap.javap.txt",
+      "bytes": 11459,
+      "sha256": "5de91bec668f0c2ae8db30e623bcee26c9cca016f456b6f455f4655011c14bd6"
+    },
+    {
+      "path": "bytecode/AuthEngine.javap.txt",
+      "bytes": 22200,
+      "sha256": "de809998eba961af3f4683e99ba7eb1f08e98f26fd969d4af9eb85ec29327c9f"
+    },
+    {
+      "path": "bytecode/AuthRpcHandler.javap.txt",
+      "bytes": 15112,
+      "sha256": "edd18d3590394a0191d0ffb34ce9e9f63f0a527936d33078c8df3d0a1d6dacfe"
+    },
+    {
+      "path": "bytecode/GcmTransportCipher-DecryptionHandler.javap.txt",
+      "bytes": 16947,
+      "sha256": "52460f36a260d2d49214fcb7acab11dd3cab234e861768420730f7fedd89b772"
+    },
+    {
+      "path": "bytecode/GcmTransportCipher-EncryptionHandler.javap.txt",
+      "bytes": 3486,
+      "sha256": "f98e4c9b157b31763fa03cd6da1233c0c133115d2df381f161182db1598f4c74"
+    },
+    {
+      "path": "bytecode/GcmTransportCipher-GcmEncryptedMessage.javap.txt",
+      "bytes": 25227,
+      "sha256": "aa1d90a92f2791d5f8d7f7259d48244898be039870386ad18b133123600cd9bf"
+    },
+    {
+      "path": "bytecode/GcmTransportCipher.javap.txt",
+      "bytes": 4316,
+      "sha256": "787ac17fe26d084e35e81440d0d86bb01c906a4c3da869a788c919dc4a0b4c82"
+    },
+    {
+      "path": "bytecode/TransportConf.javap.txt",
+      "bytes": 33063,
+      "sha256": "9bb2e7b7d6c4c80b642fedd963ffe64343302a1a026069f463c8ae8838ec2411"
+    },
+    {
+      "path": "bytecode/secondary-commands.json",
+      "bytes": 2041,
+      "sha256": "eebc4be5489c8ed1067cde9c4b962bb9cbbe3b554e1bc806f2c1898f6d8f80a5"
+    },
+    {
+      "path": "classes/org/apache/spark/network/crypto/ScholarChainGcmProbe$Sink.class",
+      "bytes": 871,
+      "sha256": "b4ba4a5238dcb35906cb995fcc172d2557e528161f276ff672de9feede65759c"
+    },
+    {
+      "path": "classes/org/apache/spark/network/crypto/ScholarChainGcmProbe.class",
+      "bytes": 4126,
+      "sha256": "86d5ebc8b59031d9a83d267bed6a8f35c0ef2288220973c72c0962365a6d4f4c"
+    },
+    {
+      "path": "gcm-embedded-diagnostic.json",
+      "bytes": 1697,
+      "sha256": "456784492d479c5f131b1fab9cced4db760c7277756297896b19facedeeee4fd"
+    },
+    {
+      "path": "gcm-sequential-diagnostic.json",
+      "bytes": 1895,
+      "sha256": "1a30d029939cc24466122c53f5ed5e6bf7be754f76da42e184156391348191f4"
+    },
+    {
+      "path": "java/ScholarChainGcmProbe.java",
+      "bytes": 4574,
+      "sha256": "1e2ce0dc207142d254167e2af271c828e9797d838255d7fd72a1071f841e337c"
+    },
+    {
+      "path": "mode-repair.json",
+      "bytes": 361,
+      "sha256": "426351ec923811570cd00d96f1fec2ee628782fc72cc367ea92cc7c96f540d8a"
+    },
+    {
+      "path": "package-artifacts.json",
+      "bytes": 1502,
+      "sha256": "5ced4ac5b8d8ef8e7bfe22646c38357b8dd6a26500843651b4c3d5ca8cf8f12f"
+    },
+    {
+      "path": "package-runtime.py",
+      "bytes": 3808,
+      "sha256": "d6bc8673640f0d66dddb3d68e06c184d0ddc35eff3c96068585215464edc88c5"
+    },
+    {
+      "path": "probe-distributed-command.json",
+      "bytes": 2255,
+      "sha256": "6d8dfd9e8f440cae36e0844a6713baa6c915096ecc8123262884741d5a813ad9"
+    },
+    {
+      "path": "probe-distributed-result.json",
+      "bytes": 454,
+      "sha256": "1cdc8092cd1c33b71fa01ef16ea889c743dc5d848a5e15c4426e20ca190134d5"
+    },
+    {
+      "path": "probe-distributed.stderr.txt",
+      "bytes": 14930,
+      "sha256": "00e4f228896f4c6e3674cc0a1bda7975ca259238aa65d2ded140089a3f726229"
+    },
+    {
+      "path": "probe-distributed.stdout.txt",
+      "bytes": 4126,
+      "sha256": "a4da7e9995602caa8c38f8bd7c908a400b08d61eaebf439b5d200cca1595d16a"
+    },
+    {
+      "path": "relocation-validation.json",
+      "bytes": 438,
+      "sha256": "9615f6b853a71e4b8f4c230d1a49e1901439cc6397e56324c3c1c2f28539d191"
+    },
+    {
+      "path": "run-relocated-test.py",
+      "bytes": 3834,
+      "sha256": "14a159fb4288acdbfaca0aa676e970ebd69a9a75cfec07ce6b5e48d264373e32"
+    },
+    {
+      "path": "runtime-file-inventory.json",
+      "bytes": 73747,
+      "sha256": "96f76b6a9f990dfb90f88ebcbf45eeabde62b8113c57900bdd3485f7bc2dd730"
+    }
+  ]
+}

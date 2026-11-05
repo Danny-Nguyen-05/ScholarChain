@@ -1,0 +1,12 @@
+{
+  "aws_s3vectors_vector_bucket": {
+    "encryption_configuration": true,
+    "tags": true,
+    "resource_present": true
+  },
+  "aws_s3vectors_index": {
+    "encryption_configuration": true,
+    "tags": true,
+    "resource_present": true
+  }
+}

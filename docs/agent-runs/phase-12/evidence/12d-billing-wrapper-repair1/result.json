@@ -1,0 +1,175 @@
+{
+  "recorded_utc": "2026-11-01T21:38:35.330256+00:00",
+  "scope": "W1/W2 wrapper repair and offline regression only. A1/A2 already independently accepted/closed; regression does not reopen them.",
+  "attempts": [
+    {
+      "command": [
+        "python3",
+        "-I",
+        "scripts/billing/tests/test_budget_execution.py"
+      ],
+      "exit": 0,
+      "log": "offline-tests-attempt1.log.txt",
+      "tests": 46,
+      "failures": 0,
+      "errors": 0,
+      "seconds_reported_by_unittest": 8.751
+    },
+    {
+      "command": [
+        "python3",
+        "-I",
+        "scripts/billing/tests/terraform_state_binding.py"
+      ],
+      "exit": 0,
+      "log": "a1-regression-attempt1.log.txt",
+      "terraform_calls": 3,
+      "terraform_exits": [
+        0,
+        0,
+        0
+      ],
+      "assertions": 7,
+      "output_directory_erratum": true,
+      "commands": "a1-wrong-output-a1-commands.json",
+      "result": "a1-wrong-output-a1-result.json"
+    },
+    {
+      "command": [
+        "python3",
+        "-I",
+        "-"
+      ],
+      "exit": 0,
+      "terraform_calls": 3,
+      "terraform_exits": [
+        0,
+        0,
+        0
+      ],
+      "assertions": 7,
+      "commands": "a1-commands.json",
+      "result": "a1-result.json",
+      "final_wrapper_sha256": "e8876abe58a787f9753793b822140cc311863c12373e09f79b8f367ebdfa3507",
+      "inline_driver_summary": "from isolated importlib load of scripts/billing/tests/terraform_state_binding.py: module.run_test(Path(\"/tmp/scholarchain-phase12d-billing-wrapper-repair1\")); sys.dont_write_bytecode=True; os.umask(0o077). Exact invocations and output are in a1-commands.json and a1-result.json."
+    }
+  ],
+  "final_feature_tests": 46,
+  "final_feature_failures": 0,
+  "final_feature_errors": 0,
+  "new_features": 9,
+  "final_A1_regression_assertions": 7,
+  "source_files": [
+    {
+      "path": "scripts/billing/README.md",
+      "bytes": 14797,
+      "sha256": "c83e61880cebebf5bb6c17b2ba9c971fad302c17d81a4dec5c166be37d7b9391"
+    },
+    {
+      "path": "scripts/billing/budget_execution.py",
+      "bytes": 39844,
+      "sha256": "e8876abe58a787f9753793b822140cc311863c12373e09f79b8f367ebdfa3507"
+    },
+    {
+      "path": "scripts/billing/reviewed-pins.json",
+      "bytes": 46174,
+      "sha256": "cb285259b7217bb4186ca80e74d376f215e4150396aa5fd66187d4e0dc96a753"
+    },
+    {
+      "path": "scripts/billing/tests/terraform_state_binding.py",
+      "bytes": 5340,
+      "sha256": "faaf64cd14192abbe45c1284617c26e7c1c2958ace61fcbcde955d8ac471a7c3"
+    },
+    {
+      "path": "scripts/billing/tests/test_budget_execution.py",
+      "bytes": 36221,
+      "sha256": "04dc9f32fe7e2bc8f59d6028785b6ace7978c39f392e7403cfc7b36fe143d34c"
+    }
+  ],
+  "source_changes": [
+    {
+      "path": "scripts/billing/README.md",
+      "changed": true,
+      "before_sha256": "ff39ee4d987d89a393c31963f1c8f2fe4dc12037bdb2bc50b7e6b44ea1c78ebf",
+      "after_sha256": "c83e61880cebebf5bb6c17b2ba9c971fad302c17d81a4dec5c166be37d7b9391"
+    },
+    {
+      "path": "scripts/billing/budget_execution.py",
+      "changed": true,
+      "before_sha256": "81fe564942a9f53ccf40236f32569a0f3fbdba13119c1ca3a23305d64c0039f0",
+      "after_sha256": "e8876abe58a787f9753793b822140cc311863c12373e09f79b8f367ebdfa3507"
+    },
+    {
+      "path": "scripts/billing/reviewed-pins.json",
+      "changed": false,
+      "before_sha256": "cb285259b7217bb4186ca80e74d376f215e4150396aa5fd66187d4e0dc96a753",
+      "after_sha256": "cb285259b7217bb4186ca80e74d376f215e4150396aa5fd66187d4e0dc96a753"
+    },
+    {
+      "path": "scripts/billing/tests/terraform_state_binding.py",
+      "changed": false,
+      "before_sha256": "faaf64cd14192abbe45c1284617c26e7c1c2958ace61fcbcde955d8ac471a7c3",
+      "after_sha256": "faaf64cd14192abbe45c1284617c26e7c1c2958ace61fcbcde955d8ac471a7c3"
+    },
+    {
+      "path": "scripts/billing/tests/test_budget_execution.py",
+      "changed": true,
+      "before_sha256": "246093152aacb2dee57ef9b3db1edc4105a6395313830afffc032fe0d3a33c4e",
+      "after_sha256": "04dc9f32fe7e2bc8f59d6028785b6ace7978c39f392e7403cfc7b36fe143d34c"
+    }
+  ],
+  "final_wrapper_sha256": "e8876abe58a787f9753793b822140cc311863c12373e09f79b8f367ebdfa3507",
+  "W1": {
+    "status": "Repair prepared for independent recheck, not self-approved",
+    "terraform_apply_initial_signal": "SIGINT to Terraform parent only",
+    "grace_seconds": 60,
+    "force": "SIGKILL to isolated group only after grace timeout; uncertain-state incident",
+    "forced_reap_seconds": 5,
+    "read_timeout_seconds": 60,
+    "apply_timeout_seconds": 300,
+    "window_headroom_seconds": 80,
+    "retries": 0,
+    "tests": "Mocked signal order, graceful/forced/repeated KeyboardInterrupt, real local Python child signal fixtures, separate time budgets/headroom."
+  },
+  "W2": {
+    "status": "Repair prepared for independent recheck, not self-approved",
+    "normal_backup_before_window_check": true,
+    "expired_window_exit0_test": "Canonical billing.execution.tfstate backup exists, hashes equal, receipt verified; further readback blocked without a new cloud call.",
+    "partial_window_and_interrupt_test": "Opaque partial/recovery state preserved; no retry."
+  },
+  "carryforward": {
+    "A1": "Accepted/closed; regression passed",
+    "A2": "Accepted/closed; preservation regression passed",
+    "W3": "Execution gate must freeze final byte-equal phase-record suffix copies or separately reviewed broader scanner; no claim packet scan covers later appends.",
+    "W4": "Info with no detail supplied; no invented action."
+  },
+  "errata": [
+    {
+      "action": "First A1 regression invoked existing script __main__, which hardcodes old scratch output.",
+      "modified_old_scratch_only": [
+        "/tmp/scholarchain-phase12d-billing-wrapper/a1-commands.json",
+        "/tmp/scholarchain-phase12d-billing-wrapper/a1-result.json"
+      ],
+      "consequence": "Those two old temporary public metadata files were overwritten; old scratch manifest no longer reconciles. They were not restored or disguised. Fresh outputs copied into this new packet with wrong-output labels, then proper new-output rerun performed.",
+      "prior_repository_packets": "No prior repository packet modified by specialist; coordinator verifies135 earlier public packet files separately."
+    }
+  ],
+  "live_access": {
+    "aws_or_iam_calls": 0,
+    "real_terraform_config_calls": 0,
+    "actual_durable_primary_or_backups_access": false,
+    "actual_plan_private_input_credentials_or_cache_access": false,
+    "new_sbt_run": false
+  },
+  "retention": "Isolated public-fixture scratch state/plan/raw logs retained outside Git; no cleanup performed.",
+  "fixture_cleanup": "TemporaryDirectory feature fixtures removed automatically; both isolated public A1 regression scratch roots retained outside Git. No real artifact cleanup.",
+  "static_checks": {
+    "python_ast_files": 3,
+    "source_inventory_files": 5,
+    "accepted_pins_and_A1_source_unchanged": true
+  },
+  "final_offline_tests": 46,
+  "final_failures": 0,
+  "final_errors": 0,
+  "final_A1_assertions": 7
+}

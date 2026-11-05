@@ -1,0 +1,75 @@
+{
+  "created_utc": "2026-10-31T02:50:39.386349+00:00",
+  "files": [
+    {
+      "path": "build-owner-report.txt",
+      "bytes": 2511,
+      "sha256": "71bf6be97eed3a727e49d8d1e0f9473c0f05425804e8b5d4b436a55e2d2c915a"
+    },
+    {
+      "path": "build-result.json",
+      "bytes": 11667,
+      "sha256": "c67b1970997e3354c709f830b72f516bedd2f63b4cb180b3effaadc07eeb5c1b"
+    },
+    {
+      "path": "commands.json",
+      "bytes": 5284,
+      "sha256": "b1ce9da88bcb6a7dd8df693d35eab040adff76beeb14285dd171fbb52278876a"
+    },
+    {
+      "path": "expected-error-check.json",
+      "bytes": 368,
+      "sha256": "51d44c71f4289c7fdfb0e76473ef89893da4e6e35ea189b05c769f1c6bb818dc"
+    },
+    {
+      "path": "freeze-after.json",
+      "bytes": 178,
+      "sha256": "39797b423812ed81e7cc3836bfb71cfbcc6351aa35dc2c8321d1cd0669927d6c"
+    },
+    {
+      "path": "freeze-before.json",
+      "bytes": 178,
+      "sha256": "0f954a4411ff6ed6fd28f4d8565116bbe53fa123eb0e9b1c9adb4118b5d46785"
+    },
+    {
+      "path": "java-version.log.txt",
+      "bytes": 171,
+      "sha256": "2fe83b0053132e4e834defa82250462f4c62733d29bf76b19ee1bb3c14b06b39"
+    },
+    {
+      "path": "run.py",
+      "bytes": 7218,
+      "sha256": "e71116c9c79e0001377d1b61ef26213376cf20ff210464c68f80d05f5b3d7fea"
+    },
+    {
+      "path": "sbt-check.log.gz",
+      "bytes": 93364,
+      "sha256": "a16df5b1ac1dbcd51d3466ef810a6243cffbf4c0e8d963cbb05331e0f2e30889"
+    },
+    {
+      "path": "sbt-check.log.txt",
+      "bytes": 1719079,
+      "sha256": "20ca0ec03b1d92a46b02bd384178ec8a43a5fffa26e6bc414bf432e9c2e6019e"
+    },
+    {
+      "path": "source-after.json",
+      "bytes": 372502,
+      "sha256": "eba139925f87b59f16fbb0af85b03a525db0ada952acf4fd47f6b3066fa4bd84"
+    },
+    {
+      "path": "source-before.json",
+      "bytes": 372502,
+      "sha256": "62f332bfd049795a30d24efa112664b18d7237b5c8666acf799664503908456e"
+    },
+    {
+      "path": "xml-groups.json",
+      "bytes": 1047,
+      "sha256": "d317dba5823dafb44decf591eb66b78e35e4e00836257e03939d69c093502406"
+    },
+    {
+      "path": "xml-reports.json",
+      "bytes": 71939,
+      "sha256": "3b5554645b722d53e5aee8149f84cb1c69471de3874176a1811540d4a5e75941"
+    }
+  ]
+}

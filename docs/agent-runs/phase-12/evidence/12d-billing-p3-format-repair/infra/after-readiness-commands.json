@@ -1,0 +1,22 @@
+[
+  {
+    "argv": [
+      "python3",
+      "-I",
+      "scripts/billing/tests/test_budget_execution.py",
+      "Features.test_real_local_child_sigint_persists_fixture_before_exit",
+      "Features.test_real_local_child_forced_path_keeps_sigint_marker"
+    ],
+    "log": "signal-fixtures-after-readiness.log.txt",
+    "exit": 0
+  },
+  {
+    "argv": [
+      "python3",
+      "-I",
+      "scripts/billing/tests/test_budget_execution.py"
+    ],
+    "log": "offline-tests-attempt3.log.txt",
+    "exit": 0
+  }
+]

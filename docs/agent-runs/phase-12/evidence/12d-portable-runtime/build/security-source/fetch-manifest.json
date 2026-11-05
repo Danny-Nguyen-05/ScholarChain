@@ -1,0 +1,42 @@
+[
+  {
+    "name": "LocalSparkCluster.scala",
+    "url": "https://raw.githubusercontent.com/apache/spark/v3.5.4/core/src/main/scala/org/apache/spark/deploy/LocalSparkCluster.scala",
+    "bytes": 4269,
+    "sha256": "e49b669a7f40ae5bc24cfd67f39a474281fdaffbd6a4ec512387f9d6ec780242",
+    "status": 200,
+    "retrieved_at": "2026-11-04T00:58:23.655164+00:00"
+  },
+  {
+    "name": "SecurityManager.scala",
+    "url": "https://raw.githubusercontent.com/apache/spark/v3.5.4/core/src/main/scala/org/apache/spark/SecurityManager.scala",
+    "bytes": 15639,
+    "sha256": "7b1f64cd4a846acb9269da6fe998fe7d7e2e0c25444d9c744f4c90c2901b4f1c",
+    "status": 200,
+    "retrieved_at": "2026-11-04T00:58:24.309972+00:00"
+  },
+  {
+    "name": "AuthEngine.java",
+    "url": "https://raw.githubusercontent.com/apache/spark/v3.5.4/common/network-common/src/main/java/org/apache/spark/network/crypto/AuthEngine.java",
+    "bytes": 12283,
+    "sha256": "5239f99dc48f4c8c88591de6334c79ce08dafb2318a1b6e06faa894ae6e4998e",
+    "status": 200,
+    "retrieved_at": "2026-11-04T00:58:24.712938+00:00"
+  },
+  {
+    "name": "GcmTransportCipher.java",
+    "url": "https://raw.githubusercontent.com/apache/spark/v3.5.4/common/network-common/src/main/java/org/apache/spark/network/crypto/GcmTransportCipher.java",
+    "bytes": 19152,
+    "sha256": "97c1f1da47d905c73e27805ff05d03c97b47d971f7323354a963c9249bb4d445",
+    "status": 200,
+    "retrieved_at": "2026-11-04T00:58:25.317208+00:00"
+  },
+  {
+    "name": "TransportConf.java",
+    "url": "https://raw.githubusercontent.com/apache/spark/v3.5.4/common/network-common/src/main/java/org/apache/spark/network/util/TransportConf.java",
+    "bytes": 17746,
+    "sha256": "f4c723d32f4b7754976cfe712ac85c8dc126786f8ee29a7900a49786464dc54c",
+    "status": 200,
+    "retrieved_at": "2026-11-04T00:58:27.531854+00:00"
+  }
+]

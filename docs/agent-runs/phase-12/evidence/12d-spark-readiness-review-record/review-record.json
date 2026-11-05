@@ -1,0 +1,21 @@
+{
+  "blocking_findings": 0,
+  "candidate_entries_checked_before_record_appends": 109,
+  "candidate_manifest_sha256": "3a6c7adc1511063fae3d68263e47718e3416e277933640a79fbd93574f7f4438",
+  "candidate_mismatches_before_record_appends": 0,
+  "finding_details_limit": "Supplied text references optional L1 but contains no separately identified L1 location, evidence or acceptance criteria. Preserve as unspecified nonblocking follow-up; do not invent or claim it closed. Three unnumbered test-coverage notes are retained verbatim.",
+  "historical_candidate_flags": "readiness_review_approved=false remains a truthful preparation-time flag in the preserved reviewed manifest; this external verdict records subsequent approval without rewriting that manifest.",
+  "human_record_sha256": "abe3a50ad7167fa01227c73e15e92a422a50609f6313bdcc56404cb61765d71a",
+  "live_actions_authorized": false,
+  "new_tests_run": false,
+  "observed_at": "2026-11-03T21:26:42.312068+00:00",
+  "phase12d_complete": false,
+  "reported_informational_notes": 4,
+  "reported_low_findings": 1,
+  "review_bytes": 5983,
+  "review_sha256": "6176937b2c1f8eff44de120bd5b11db546d41a768e12e3d59ce875812c51653b",
+  "scope": "Offline readiness only",
+  "source_attachment": "/Users/danny/.codex/attachments/013e8988-f2bf-4383-8cc8-f61a536f9bac/Pasted text.txt",
+  "source_control_authorized": false,
+  "verdict": "APPROVE"
+}

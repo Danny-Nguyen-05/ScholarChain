@@ -1,0 +1,8 @@
+patching file 'infra/terraform/billing-bootstrap/outputs.tf'
+patching file 'infra/terraform/billing-bootstrap/main.tf'
+patching file 'infra/terraform/billing-bootstrap/README.md'
+patching file 'infra/terraform/billing-bootstrap/variables.tf'
+patching file 'infra/terraform/billing-bootstrap/tests/budget.tftest.hcl'
+patching file 'infra/terraform/spikes/emr-spark/README.md'
+patching file 'infra/terraform/spikes/emr-spark/variables.tf'
+patching file 'infra/terraform/spikes/emr-spark/tests/proposal.tftest.hcl'

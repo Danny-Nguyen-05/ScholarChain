@@ -1,0 +1,31 @@
+{
+  "name": "a-probe-v2",
+  "stage": "probe",
+  "security": "v2",
+  "classload": false,
+  "exit": 2,
+  "timed_out": false,
+  "started_at": "2026-11-04T03:54:37.388393+00:00",
+  "seconds": 0.6135183330043219,
+  "driver_stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "driver_stderr_sha256": "1c54a5cd34b8534c78e7550b17eb0f57bd0ee5b01999bec05095428b632c3188",
+  "secret_occurrences_in_run_files": 0,
+  "log_files": [
+    {
+      "source": "logs/driver.stdout.txt",
+      "bytes": 0,
+      "lines": 0,
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "gz": "logs-gz/driver.stdout.txt.gz",
+      "gz_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "source": "logs/driver.stderr.txt",
+      "bytes": 5728,
+      "lines": 52,
+      "raw_sha256": "1c54a5cd34b8534c78e7550b17eb0f57bd0ee5b01999bec05095428b632c3188",
+      "gz": "logs-gz/driver.stderr.txt.gz",
+      "gz_sha256": "20761f2338323e1363dad0aa380bdc20e5096365714de3110f2d499dc4b3cfd6"
+    }
+  ]
+}

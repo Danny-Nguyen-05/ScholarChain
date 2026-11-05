@@ -1,0 +1,88 @@
+{
+  "checks": [
+    {
+      "class_sha256": "cf2ed70bbaeaf5fbe8c702dddf0059b0ea49b3d0badfe8b5de489f711bd2373f",
+      "component": "spark",
+      "observed_code_source_sha256": "2a4f5823aad3f99c9fddd77d0d4d4f3c6600dac5ea9a51d80bc6a2bc9e6561bf",
+      "observed_origin": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/apache/spark/spark-core_2.13/3.5.4/spark-core_2.13-3.5.4.jar",
+      "observed_runtime_version": "3.5.4",
+      "resolved_artifact": "spark-core_2.13-3.5.4.jar",
+      "resolved_artifact_sha256": "2a4f5823aad3f99c9fddd77d0d4d4f3c6600dac5ea9a51d80bc6a2bc9e6561bf",
+      "role": "driver"
+    },
+    {
+      "class_sha256": "5fa95e069a844983b415ef613ce7b3f0c752be0804660ff12b7ffa6d7cf00cae",
+      "component": "scala-library",
+      "observed_code_source_sha256": "d52f11ebad5ec9e1ffdd1910d562023e934ce7ab62e7c74a5ffd650f8951b86b",
+      "observed_origin": "/Users/danny/Documents/UIC/CS441/ScholarChain/modules/spark/target/spark-job_3-0.1.0-SNAPSHOT.jar",
+      "observed_runtime_version": "2.13.14",
+      "resolved_artifact": "scala-library-2.13.14.jar",
+      "resolved_artifact_sha256": "43e0ca1583df1966eaf02f0fbddcfb3784b995dd06bfc907209347758ce4b7e3",
+      "role": "driver"
+    },
+    {
+      "class_sha256": "19837277a82a61227cd4e246065836b5a049d5dfe59bb6032bc42bea7391ff96",
+      "component": "scala-reflect",
+      "observed_code_source_sha256": "8846baaa8cf43b1b19725ab737abff145ca58d14a4d02e75d71ca8f7ca5f2926",
+      "observed_origin": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/scala-lang/scala-reflect/2.13.14/scala-reflect-2.13.14.jar",
+      "observed_runtime_version": null,
+      "resolved_artifact": "scala-reflect-2.13.14.jar",
+      "resolved_artifact_sha256": "8846baaa8cf43b1b19725ab737abff145ca58d14a4d02e75d71ca8f7ca5f2926",
+      "role": "driver"
+    },
+    {
+      "class_sha256": "e48c633a515bdcb03a9b4422a0f9fb5778fae811ad3c84f94ecce1f1c45e5712",
+      "component": "scala3-library",
+      "observed_code_source_sha256": "d52f11ebad5ec9e1ffdd1910d562023e934ce7ab62e7c74a5ffd650f8951b86b",
+      "observed_origin": "/Users/danny/Documents/UIC/CS441/ScholarChain/modules/spark/target/spark-job_3-0.1.0-SNAPSHOT.jar",
+      "observed_runtime_version": null,
+      "resolved_artifact": "scala3-library_3-3.3.4.jar",
+      "resolved_artifact_sha256": "d95184acfcd814da2e051378e4962c653f4b468f4086452ab427af030482bd3c",
+      "role": "driver"
+    },
+    {
+      "class_sha256": "cf2ed70bbaeaf5fbe8c702dddf0059b0ea49b3d0badfe8b5de489f711bd2373f",
+      "component": "spark",
+      "observed_code_source_sha256": "2a4f5823aad3f99c9fddd77d0d4d4f3c6600dac5ea9a51d80bc6a2bc9e6561bf",
+      "observed_origin": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/apache/spark/spark-core_2.13/3.5.4/spark-core_2.13-3.5.4.jar",
+      "observed_runtime_version": "3.5.4",
+      "resolved_artifact": "spark-core_2.13-3.5.4.jar",
+      "resolved_artifact_sha256": "2a4f5823aad3f99c9fddd77d0d4d4f3c6600dac5ea9a51d80bc6a2bc9e6561bf",
+      "role": "executor-task"
+    },
+    {
+      "class_sha256": "5fa95e069a844983b415ef613ce7b3f0c752be0804660ff12b7ffa6d7cf00cae",
+      "component": "scala-library",
+      "observed_code_source_sha256": "d52f11ebad5ec9e1ffdd1910d562023e934ce7ab62e7c74a5ffd650f8951b86b",
+      "observed_origin": "/Users/danny/Documents/UIC/CS441/ScholarChain/modules/spark/target/spark-job_3-0.1.0-SNAPSHOT.jar",
+      "observed_runtime_version": "2.13.14",
+      "resolved_artifact": "scala-library-2.13.14.jar",
+      "resolved_artifact_sha256": "43e0ca1583df1966eaf02f0fbddcfb3784b995dd06bfc907209347758ce4b7e3",
+      "role": "executor-task"
+    },
+    {
+      "class_sha256": "19837277a82a61227cd4e246065836b5a049d5dfe59bb6032bc42bea7391ff96",
+      "component": "scala-reflect",
+      "observed_code_source_sha256": "8846baaa8cf43b1b19725ab737abff145ca58d14a4d02e75d71ca8f7ca5f2926",
+      "observed_origin": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/scala-lang/scala-reflect/2.13.14/scala-reflect-2.13.14.jar",
+      "observed_runtime_version": null,
+      "resolved_artifact": "scala-reflect-2.13.14.jar",
+      "resolved_artifact_sha256": "8846baaa8cf43b1b19725ab737abff145ca58d14a4d02e75d71ca8f7ca5f2926",
+      "role": "executor-task"
+    },
+    {
+      "class_sha256": "e48c633a515bdcb03a9b4422a0f9fb5778fae811ad3c84f94ecce1f1c45e5712",
+      "component": "scala3-library",
+      "observed_code_source_sha256": "d52f11ebad5ec9e1ffdd1910d562023e934ce7ab62e7c74a5ffd650f8951b86b",
+      "observed_origin": "/Users/danny/Documents/UIC/CS441/ScholarChain/modules/spark/target/spark-job_3-0.1.0-SNAPSHOT.jar",
+      "observed_runtime_version": null,
+      "resolved_artifact": "scala3-library_3-3.3.4.jar",
+      "resolved_artifact_sha256": "d95184acfcd814da2e051378e4962c653f4b468f4086452ab427af030482bd3c",
+      "role": "executor-task"
+    }
+  ],
+  "class_checks": 8,
+  "cloud_compatibility_verified": false,
+  "local_threaded_executor_is_driver": true,
+  "null_runtime_versions_preserved": true
+}

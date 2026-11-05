@@ -1,0 +1,17 @@
+{
+  "kind": "Coordinator transcription of human preparation/risk choice; not execution approval",
+  "recorded_utc": "2026-11-02T02:09:16.407359+00:00",
+  "time_meaning": "Coordinator record-write time only; actual user receipt/future execution time not inferred",
+  "question_context_verbatim": "Next, one decision: even with Terminal kept open, a crash could leave AWS work completed without a complete local state backup. If execution is interrupted, we would stop and review the situation before attempting recovery.",
+  "question_verbatim": "Do you accept that remaining risk under the supervised-Terminal procedure? Reply yes or no.",
+  "user_response_verbatim": "yes",
+  "scope": "R1 residual wrapper-death/state-backup risk acceptance under human-supervised persistent Terminal, stop and review before recovery",
+  "bound_procedure": "docs/agent-runs/phase-12/evidence/12d-billing-execution-gate-handoff/handoff.md: R1 persistent-terminal operating procedure",
+  "apply_or_spending_authorized": false,
+  "remaining": [
+    "reviewed release commit and clean canonical checkout covering all8billingfiles",
+    "actual dated execution window and personal exact-checksum/actor gate",
+    "fresh in-window MFA/STS/P3",
+    "actual W3 scan/publication evidence"
+  ]
+}

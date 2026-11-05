@@ -1,0 +1,21 @@
+{
+  "recorded_utc": "2026-11-01T06:08:18.709391+00:00",
+  "human_record_preserved": true,
+  "human_record_sha256": "f00a715960261cb5813baaba903c6c315f42e37a092d1aadb2f84608e0797f04",
+  "review_md_preserved": true,
+  "phase_record_prefixes_preserved": [
+    "prompt.md",
+    "repairs.md",
+    "owner-report.md",
+    "test-report.md"
+  ],
+  "reviewer_prompt_prefix_preserved": true,
+  "diff_check_argv": [
+    "git",
+    "diff",
+    "--check"
+  ],
+  "diff_check_exit_code": 0,
+  "diff_check_output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "aws_terraform_build_calls": 0
+}

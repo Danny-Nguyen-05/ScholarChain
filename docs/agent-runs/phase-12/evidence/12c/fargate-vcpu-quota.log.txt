@@ -1,0 +1,5 @@
+{
+    "Name": "Fargate On-Demand vCPU resource count",
+    "Value": 6.0,
+    "Code": "L-3032A538"
+}

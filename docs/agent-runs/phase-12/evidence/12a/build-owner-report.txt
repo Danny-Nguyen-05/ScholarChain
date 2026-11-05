@@ -1,0 +1,31 @@
+STATUS: COMPLETE
+OWNER: build-engineer; native task /root/build_12a; exact inherited model identifier not exposed
+WORK ORDER: Phase 12A .gitignore Terraform hygiene and mandatory repository sbt check only. Branch phase-12; base/current HEAD 649b13b9bb40b0b6218bf7f2b71ab9d541c7aafe.
+FILES CREATED: No authored repository files. Evidence under /tmp/scholarchain-phase12a-build-*.
+FILES MODIFIED: .gitignore (34 additions); ignored generated .claude/.last-test-run updated by successful sbt gate. No application/build source changes.
+COMMANDS RUN:
+  - Read AGENTS.md, docs/agents.md, .claude/agents/build-engineer.md, docs/agent-runs/README.md, supplied phase12.md, .gitignore; git status --short, git branch --show-current, git rev-parse HEAD: initial read command exit 0.
+  - git check-ignore --no-index -q PATH and git check-ignore --no-index -v PATH for 33 representative paths; Python matrix wrapper exit 0. Quiet exit 0 means ignored, 1 means visible. All expected outcomes passed. Earlier 32-case matrix also passed before adding *.plan.
+  - Environment for both java and sbt commands: JAVA_HOME=/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home; PATH=$JAVA_HOME/bin:$PATH; SBT_OPTS=-Dlogback.configurationFile=$PWD/docs/agent-runs/phase-04/xml-repair-logback.xml; cwd /Users/danny/Documents/UIC/CS441/ScholarChain. Passed explicitly in the Python subprocess environment; no credential environment values printed.
+  - java -version: exit 0, 0.024s; OpenJDK 17.0.20.1 Homebrew.
+  - sbt -batch check: exit 0; 722.354s wall, 720s sbt; sbt 1.10.7. Full log /tmp/scholarchain-phase12a-build-sbt-check.log.
+  - Python XML/log/hash reconciliation: exit 0; current build targets (modules/*, tests, build-verification, root). A legacy stale report under project/verification/target is explicitly excluded because buildVerification is configured at build-verification/target. Correct final count reconciles exactly with test summaries.
+  - git diff --check -- .gitignore: exit 0.
+  - git status --short -- .gitignore; git diff --numstat -- .gitignore; git --version: exit 0; git 2.54.0.
+TEST RESULTS: Ignore matrix 33/33 passed; full repository gate 1,253 tests passed in 156 suites/reports, 0 failures, errors or skips. All 156 XML report mtimes are newer than gate start; log summaries total 1,253. No *** FAILED *** marker. Expected checkProbeInjectFailure injected format-stage error/stack is the required self-test; overall exit 0 and TestRunMarker observed.
+VALIDATION RESULTS: Terraform providers/cache, local state/backups/lock info, *.plan/*.tfplan, conventional tfplan/plan raw outputs, .plans/, local variable files and overrides ignored. .terraform.lock.hcl, *.tftest.hcl, Terraform source, nonsecret environments/course.tfvars and plan summary/checksum evidence remain visible. .gitignore SHA256 0978fb0878cf23456a1fade40eeb6458215a275d3e91ff89dcf260b36c3a5160. Full sbt log 1,719,573 bytes; SHA256 aa3fc6b34ee2797205a4199ef6a7d37c87bb7f14b1a4ed3b25c76d0d20b20af1. exec session 19857 exited and closed; no owned builds/jobs remain.
+ASSUMPTIONS: Only environments/course.tfvars is the approved nonsecret tracked variable example. Other tfvars are local by default. Ignore checks assert path behavior without creating plan/state/variable files.
+RISKS: Git ignores are naming-based protection; arbitrary output names require following documented .plans/ or *.tfplan conventions. gitignore does not remove any already tracked secret material. Scanner/AWS/provider gates are outside this owner work order.
+MANUAL ACTION REQUIRED: Coordinator retain evidence in docs; user-launched independent 12A review then user commit. No commit/push or AWS command executed.
+BLOCKED-ON OWNER: none
+BLOCKED-ON EVIDENCE: none
+NEXT GATE: Independent Phase 12A review; stop at 12A.
+
+Evidence files:
+/tmp/scholarchain-phase12a-build-start.json
+/tmp/scholarchain-phase12a-build-result.json
+/tmp/scholarchain-phase12a-build-validation.json
+/tmp/scholarchain-phase12a-build-ignore-checks.json
+/tmp/scholarchain-phase12a-build-java-version.log
+/tmp/scholarchain-phase12a-build-sbt-check.log
+/tmp/scholarchain-phase12a-build-sbt-check-excerpt.txt

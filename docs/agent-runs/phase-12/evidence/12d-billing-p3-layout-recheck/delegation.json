@@ -1,0 +1,13 @@
+{
+  "incident_agent": "/root/incident_12d_p3_diagnosis",
+  "scope": "One exact absence(254,bempty,savedstderr) in-memory evaluation and newlinebuckets only; no productionmode or additionalprivate reads",
+  "wrapper_sha256": "297830d412cefd53dc4938c06dc1b654b7188fcaa977cf10902123715f39c3fd",
+  "human_authorized": true,
+  "rawbody_publication": false,
+  "children_or_reviewers": false,
+  "model": "Inherited parent, exact native version not exposed",
+  "conditional_infra_agent": "/root/infra_12d_p3_format_repair",
+  "coordinator_owns_phase_evidence": true,
+  "observed_result_branch": "accepted=false; optional one leading LF only, fixtures/fullsuite/A1",
+  "second_saved_response_check_authorized": false
+}

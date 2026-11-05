@@ -1,0 +1,56 @@
+{
+  "scope": "F1approvalrecord/newreleaseandgatechoicesonly",
+  "self_excluded": true,
+  "files": [
+    {
+      "path": "coordinator-report.txt",
+      "bytes": 3958,
+      "sha256": "afd868bc3a077008f26bcb4deb0220568a1491b0a10edf58f6b9be05a59c8525"
+    },
+    {
+      "path": "final-status.log.txt",
+      "bytes": 7811,
+      "sha256": "b974abd5a02fc39212641bf1bfd984550473f7170e46195ae774919c0429047f"
+    },
+    {
+      "path": "handoff-files.json",
+      "bytes": 1253,
+      "sha256": "609749073489c190948a4f7f5f7d28b3215159d65a8f20227d6d392477c5619a"
+    },
+    {
+      "path": "new-gate-binding-reference.json",
+      "bytes": 2382,
+      "sha256": "fd7dd0621d6231f36401cb684df1075b6e482216cc92f0283b0ea7aa49a9ec41"
+    },
+    {
+      "path": "new-release-handoff.md",
+      "bytes": 8308,
+      "sha256": "a08274077028db4714baedcb0730e553f1fe0bb218ca0a36ae196f5e804f150a"
+    },
+    {
+      "path": "preflight-status.log.txt",
+      "bytes": 6753,
+      "sha256": "8704a6cc431987302f6d75d913bfcdba90285b0043b85ea186297a316653e75a"
+    },
+    {
+      "path": "preflight.json",
+      "bytes": 258326,
+      "sha256": "83cca6b83bea3932e3d7467922f1af6b7aa218adaee8ee0d2297c66eadcdd9af"
+    },
+    {
+      "path": "preservation-check.json",
+      "bytes": 1911,
+      "sha256": "5bb81f3a90d3d29da5cee3b5d434c2811dd692bc86bf52fa5580c4dad8260204"
+    },
+    {
+      "path": "public-address-scan.json",
+      "bytes": 175,
+      "sha256": "7776edae2500416548d61ec745cb4158fa54ba053c90d2cc51aa2e532b8df157"
+    },
+    {
+      "path": "user-supplied-review.txt",
+      "bytes": 9167,
+      "sha256": "d7ebf75cc933b9a71e185f150b030fdf2d9b5dc14f35db7d31014f26a917f8b1"
+    }
+  ]
+}

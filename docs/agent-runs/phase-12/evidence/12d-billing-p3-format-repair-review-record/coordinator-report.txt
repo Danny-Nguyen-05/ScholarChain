@@ -1,0 +1,14 @@
+STATUS: BLOCKED-ON human authorization for F1 single saved-stderr check; review recording complete, no conditional repair branch started.
+OWNER: coordinator /root phase evidence. Incident-responder only after human authorization; infra-engineer only after observed result. No agent/reviewer launched this step.
+WORK ORDER: User-supplied F1Medium blocking REQUEST-CHANGES/F2Info and NEXT PROMPT. Record verbatim/preserve evidence, ask one human question and wait; no private check before answer. Branch phase-12, HEAD8903ce0a2c3765b9f77e1665cb9ffe2f484c1fbf, preflight42entries.
+FILES CREATED: evidence/12d-billing-p3-format-repair-review-record/** under docs/agent-runs/phase-12/; exact manifest/inventory retained.
+FILES MODIFIED: Five phase-record append-only suffixes. No scripts/humanrecord/oldrepairpacket/gate/journal changes.
+COMMANDS RUN: cat userattachment; git HEAD/status/diff; python3 -I public snapshot/hash/byte/mtime/prefix/verbatim/report/manifest/generic-address checks. No failed commands, private stderr/durable/state/plan/credential/config/cache read, helper/wrapper/test/build/Terraform/AWS/CLI/login call, human approval write, commit/push/reviewer launch.
+TEST RESULTS: Not run; awaiting explicit human authorization. Existing50wrapperpasses/7A1checks historical; no exactstderr parser-acceptance result yet.
+VALIDATION RESULTS: Review retained/appended verbatim; five current record prefixes,1334bytehumanrecord/abe3a50a,8script hashes/bytes and209sourcehash/bytes/mtime unchanged; priorrepairpacket files preserved. Final manifest/status/diff/generic-pattern checks retained. No privatebody/newlinecount/acceptance inferred from priorflags.
+ASSUMPTIONS: Supplied review describes the missing exact-byte evidence; no assumption that currentparser succeeds or that any particular newline layout exists. No user consent inferred from simply pasting review whose NEXT PROMPT explicitly requires asking.
+RISKS: AnotherfreshP3could failclosed until exactlayout tested. Originaloperation/gate remain stopped/immutable; no budgetabsence proof. W3/R1runtime, source/newgate/window/identity and all live/F4/EMRconditions remain.
+MANUAL ACTION REQUIRED: Human answers one bounded local-check authorization question. Only accepted/blockedcode ornull/leadingtrailingnewlinebuckets/CRLFflag may be published; no rawbody/IDs/address/loginURL. No login/apply/retry requested.
+BLOCKED-ON OWNER: Human architect for explicit checkauthorization; then incident-responder for oneinmemory check and infraowner for conditionaloffline fixtures/repair.
+BLOCKED-ON EVIDENCE: Human answer, finalparser exactsavedstderr acceptance boolean and layoutcounts; later conditionalfixtures/fullsuite(andA1ifproductionchanges) and user-launched F1recheck. None manufactured.
+NEXT GATE: Wait for human answer in normal chat. Do not launch diagnosis/repair/reviewer or read private data until authorized. Original stoppedoperation is never replayed.

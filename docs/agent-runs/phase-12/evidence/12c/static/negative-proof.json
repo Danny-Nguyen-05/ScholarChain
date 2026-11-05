@@ -1,0 +1,22 @@
+{
+  "fixture_class": "all synthetic, never applied",
+  "final_negative_cases": 3,
+  "final_expected_exit_codes": [
+    1,
+    1,
+    1
+  ],
+  "intended_categories": [
+    "wildcard-iam-action",
+    "public-bucket-acl",
+    "secret-shaped-literal"
+  ],
+  "infra_files_before_after": 68,
+  "infra_snapshots_equal": true,
+  "source_files_scanned": 62,
+  "finding_output_fields": [
+    "path",
+    "line",
+    "category"
+  ]
+}

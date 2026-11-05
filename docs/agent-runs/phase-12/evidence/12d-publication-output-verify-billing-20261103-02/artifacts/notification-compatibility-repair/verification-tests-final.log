@@ -1,0 +1,52 @@
+test_b1_l1_and_cost_scope_guards_preserved (__main__.Features.test_b1_l1_and_cost_scope_guards_preserved) ... ok
+test_captured_public_stdout_canonical_hash_matches_private_receipt (__main__.Features.test_captured_public_stdout_canonical_hash_matches_private_receipt) ... ok
+test_changed_private_input_between_verify_and_scan_blocks (__main__.Features.test_changed_private_input_between_verify_and_scan_blocks) ... ok
+test_cheap_scan_hash_errors_do_not_consume_journal (__main__.Features.test_cheap_scan_hash_errors_do_not_consume_journal) ... ok
+test_config_symlink_and_mode_block (__main__.Features.test_config_symlink_and_mode_block) ... ok
+test_dirty_wrong_commit_and_source_drift_block_before_requests (__main__.Features.test_dirty_wrong_commit_and_source_drift_block_before_requests) ... ok
+test_each_request_failure_stops_without_retry_or_success_receipt (__main__.Features.test_each_request_failure_stops_without_retry_or_success_receipt) ... ok
+test_exact_six_requests_safe_receipt_and_original_preservation (__main__.Features.test_exact_six_requests_safe_receipt_and_original_preservation) ... ok
+test_expired_and_future_identity_window_rejected (__main__.Features.test_expired_and_future_identity_window_rejected) ... ok
+test_expiry_during_final_linkage_prevents_success_receipt (__main__.Features.test_expiry_during_final_linkage_prevents_success_receipt) ... ok
+test_expiry_during_final_scan_checks_prevents_receipt (__main__.Features.test_expiry_during_final_scan_checks_prevents_receipt) ... ok
+test_expiry_during_private_checkpoint_write_prevents_success (__main__.Features.test_expiry_during_private_checkpoint_write_prevents_success) ... ok
+test_explicit_verification_hash_pin_rejects_substitution (__main__.Features.test_explicit_verification_hash_pin_rejects_substitution) ... ok
+test_final_state_drift_without_receipt (__main__.Features.test_final_state_drift_without_receipt) ... ok
+test_final_window_and_state_drift_block_after_six_without_receipt (__main__.Features.test_final_window_and_state_drift_block_after_six_without_receipt) ... ok
+test_frozen_file_content_tamper_blocks (__main__.Features.test_frozen_file_content_tamper_blocks) ... ok
+test_gate_hardlink_and_symlink_rejected (__main__.Features.test_gate_hardlink_and_symlink_rejected) ... ok
+test_human_pinned_gate_symlink_rejected_before_operation_reservation (__main__.Features.test_human_pinned_gate_symlink_rejected_before_operation_reservation) ... ok
+test_invalid_original_receipt_fields_block_even_when_rehashed (__main__.Features.test_invalid_original_receipt_fields_block_even_when_rehashed) ... ok
+test_linkage_change_after_stage_started_is_consumed_and_never_retried (__main__.Features.test_linkage_change_after_stage_started_is_consumed_and_never_retried) ... ok
+test_main_only_exposes_readonly_modes_without_echoing_payloads (__main__.Features.test_main_only_exposes_readonly_modes_without_echoing_payloads) ... ok
+test_mismatched_original_gate_name_or_hash_does_not_reserve_operation (__main__.Features.test_mismatched_original_gate_name_or_hash_does_not_reserve_operation) ... ok
+test_missing_percentage_readback_preserves_six_explicit_query_selectors (__main__.Features.test_missing_percentage_readback_preserves_six_explicit_query_selectors) ... ok
+test_missing_scan_pin_stops_cli_before_gate_read (__main__.Features.test_missing_scan_pin_stops_cli_before_gate_read) ... ok
+test_new_gate_rejects_old_namespace_mutation_permissions_and_unknown_fields (__main__.Features.test_new_gate_rejects_old_namespace_mutation_permissions_and_unknown_fields) ... ok
+test_nonboolean_safe_result_is_rejected_even_with_checkpoint_rebinding (__main__.Features.test_nonboolean_safe_result_is_rejected_even_with_checkpoint_rebinding) ... ok
+test_nonempty_original_journal_blocks (__main__.Features.test_nonempty_original_journal_blocks) ... ok
+test_original_gate_filename_is_human_pinned_basename_only (__main__.Features.test_original_gate_filename_is_human_pinned_basename_only) ... ok
+test_original_gate_or_journal_conflict_blocks (__main__.Features.test_original_gate_or_journal_conflict_blocks) ... ok
+test_pagination_malformed_duplicates_or_stderr_stop_without_receipt (__main__.Features.test_pagination_malformed_duplicates_or_stderr_stop_without_receipt) ... ok
+test_present_bad_threshold_type_blocks_after_six_without_receipt (__main__.Features.test_present_bad_threshold_type_blocks_after_six_without_receipt) ... ok
+test_private_input_change_during_scan_blocks_before_receipt (__main__.Features.test_private_input_change_during_scan_blocks_before_receipt) ... ok
+test_public_directory_ancestor_symlink_blocks (__main__.Features.test_public_directory_ancestor_symlink_blocks) ... ok
+test_public_helper_full_before_and_after_integration (__main__.Features.test_public_helper_full_before_and_after_integration) ... ok
+test_same_bytes_private_input_replacement_blocks (__main__.Features.test_same_bytes_private_input_replacement_blocks) ... ok
+test_scan_changed_verification_receipt_is_not_accepted (__main__.Features.test_scan_changed_verification_receipt_is_not_accepted) ... ok
+test_scan_final_membership_race_blocks (__main__.Features.test_scan_final_membership_race_blocks) ... ok
+test_scan_happy_receipt_matches_unchanged_public_helper_contract (__main__.Features.test_scan_happy_receipt_matches_unchanged_public_helper_contract) ... ok
+test_scan_recipient_leak_or_incomplete_packet_blocks (__main__.Features.test_scan_recipient_leak_or_incomplete_packet_blocks) ... ok
+test_scan_symlink_ancestor_blocks (__main__.Features.test_scan_symlink_ancestor_blocks) ... ok
+test_scan_tampered_or_duplicate_manifest_entry_blocks (__main__.Features.test_scan_tampered_or_duplicate_manifest_entry_blocks) ... ok
+test_scan_unlisted_member_blocks (__main__.Features.test_scan_unlisted_member_blocks) ... ok
+test_scan_without_verification_cannot_succeed (__main__.Features.test_scan_without_verification_cannot_succeed) ... ok
+test_scan_wrong_manifest_scalar_types_block (__main__.Features.test_scan_wrong_manifest_scalar_types_block) ... ok
+test_shared_lock_and_terraform_lock_block_without_removal (__main__.Features.test_shared_lock_and_terraform_lock_block_without_removal) ... ok
+test_state_and_backup_change_block (__main__.Features.test_state_and_backup_change_block) ... ok
+test_wrong_original_receipt_hash_blocks_all_requests (__main__.Features.test_wrong_original_receipt_hash_blocks_all_requests) ... ok
+
+----------------------------------------------------------------------
+Ran 47 tests in 22.873s
+
+OK

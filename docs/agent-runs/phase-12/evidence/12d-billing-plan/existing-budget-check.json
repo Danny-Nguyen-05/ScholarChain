@@ -1,0 +1,26 @@
+{
+  "argv": [
+    "aws",
+    "budgets",
+    "describe-budgets",
+    "--account-id",
+    "530332961125",
+    "--profile",
+    "scholarchain-planner",
+    "--region",
+    "us-east-2",
+    "--query",
+    "{Count:length(Budgets || `[]`),Matching:Budgets[?BudgetName=='scholarchain-project-budget'].{Name:BudgetName,Amount:BudgetLimit.Amount,Currency:BudgetLimit.Unit,Period:TimeUnit}}",
+    "--output",
+    "json",
+    "--no-cli-pager"
+  ],
+  "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+  "environment_overrides": {},
+  "started_utc": "2026-10-31T03:20:13.862455+00:00",
+  "ended_utc": "2026-10-31T03:20:14.877482+00:00",
+  "wall_seconds": 1.0149543750012526,
+  "exit_code": 0,
+  "log": "existing-budget-check.log.txt",
+  "sha256": "1906a3b50f5b99114ee8b2933bf596ab2262b3d876a866b3cb5b975c98582125"
+}

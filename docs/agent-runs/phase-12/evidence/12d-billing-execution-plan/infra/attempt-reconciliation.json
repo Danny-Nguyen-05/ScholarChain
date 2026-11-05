@@ -1,0 +1,8 @@
+{
+  "first_attempt": "Offline init0 and fmt0 followed by validate1 under sandbox; provider plugin handshake failed before schema load. Not a source failure. No AWS calls used (config/credential paths /dev/null).",
+  "retry": "Authorized same pinned gates outside sandbox: init0/fmt0/validate0/test0;7passed0failed. Initial evidence preserved, no policies/source changed.",
+  "runner_failure_json": "Records caught RuntimeError from first sandbox validate only; superseded by explicit retry command records, not overwritten.",
+  "live_success": "protected-init0,real-plan2,protected-show0;plan only.",
+  "source_modified": false,
+  "private_input_read_or_hashed_by_agent": false
+}

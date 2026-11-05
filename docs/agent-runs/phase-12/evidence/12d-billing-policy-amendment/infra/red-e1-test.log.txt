@@ -1,0 +1,32 @@
+tests/policy.tftest.hcl... in progress
+  run "budget_policy_is_exact_and_complete"... pass
+  run "trust_and_caller_require_exact_distinct_mfa_operator"... pass
+  run "different_budget_is_bound_independently"... pass
+  run "planner_cannot_be_operator"... pass
+  run "root_cannot_be_operator"... pass
+  run "foreign_account_cannot_be_operator"... pass
+  run "wildcard_cannot_be_operator"... pass
+  run "wildcard_cannot_be_budget"... pass
+  run "role_cannot_replace_user_mfa_contract"... pass
+  run "invalid_account_is_rejected"... pass
+  run "planner_under_path_cannot_be_operator"... pass
+  run "login_policy_is_exact_same_device_only"... pass
+  run "login_region_changes_only_authentication_binding"... pass
+  run "login_account_changes_independently"... pass
+  run "mixed_case_planner_cannot_be_operator"... fail
+
+Error: Missing expected failure
+
+  on tests/policy.tftest.hcl line 156, in run "mixed_case_planner_cannot_be_operator":
+ 156:   expect_failures = [var.operator_user_arn]
+
+The checkable object, var.operator_user_arn, was expected to report an error
+but did not.
+  run "mixed_case_planner_under_path_cannot_be_operator"... skip
+  run "wildcard_region_is_rejected"... skip
+  run "question_mark_region_is_rejected"... skip
+  run "malformed_region_is_rejected"... skip
+tests/policy.tftest.hcl... tearing down
+tests/policy.tftest.hcl... fail
+
+Failure! 14 passed, 1 failed, 4 skipped.

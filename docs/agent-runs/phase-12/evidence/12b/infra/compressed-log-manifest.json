@@ -1,0 +1,18 @@
+[
+  {
+    "raw_path": "/tmp/scholarchain-phase12b-infra/test-debug-json.log",
+    "raw_bytes": 57477613,
+    "raw_sha256": "5ee832d6fbb7de9c7803ea2d5a34c830ceb8c7bb311097db098bc97ba9c9216c",
+    "retained_path": "/tmp/scholarchain-phase12b-infra/test-debug-json.log.gz",
+    "compressed_bytes": 1822428,
+    "compressed_sha256": "e84ec93a976e0e6fb9eab1a988f3ec6af6a530a363a7343bf5127d03ba715bc7"
+  },
+  {
+    "raw_path": "/tmp/scholarchain-phase12b-infra/test-debug-output.log",
+    "raw_bytes": 57477613,
+    "raw_sha256": "5ee832d6fbb7de9c7803ea2d5a34c830ceb8c7bb311097db098bc97ba9c9216c",
+    "retained_path": "/tmp/scholarchain-phase12b-infra/test-debug-output.log.gz",
+    "compressed_bytes": 1822428,
+    "compressed_sha256": "e84ec93a976e0e6fb9eab1a988f3ec6af6a530a363a7343bf5127d03ba715bc7"
+  }
+]

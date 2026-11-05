@@ -1,0 +1,13 @@
+{
+  "checked_utc": "2026-11-01T20:04:38.307956+00:00",
+  "before_reference": "source-freeze-before.json",
+  "before_sha256": "0209af58b477a3dee8a34c1329aa669b4c551aefbe1385790078b981e214283a",
+  "checked_files": 209,
+  "hash_bytes_mtime_mismatches": [],
+  "no_source_or_pin_lock_changes": true,
+  "new_sbt_run": false,
+  "historical_sbt_reference": "docs/agent-runs/phase-12/evidence/12d-billing-policy-amendment/build/",
+  "historical_sbt_tests": 1255,
+  "historical_fresh_xml": 157,
+  "historical_failures_errors_skips": 0
+}

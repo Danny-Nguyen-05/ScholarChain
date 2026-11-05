@@ -1,0 +1,76 @@
+Verdict: REQUEST-CHANGES. One blocking doc finding. The code change is correct.
+
+The README's main source citation points to the wrong lines. In the pinned v6.44.0 budget.go, lines 570–575 handle the error from fetching notifications. The ThresholdType fallback is at lines 588–594. The coordinator prompt repeats the same wrong range. Fix it before the release is committed and a gate binds the README hash; fixing it later would change that hash and need another review.
+
+Findings
+
+ID: D1
+Severity: Low
+Path:line: scripts/billing/README.md:92
+Evidence: Cites "budget.go, lines570–575" and anchors #L570-L575. At tag v6.44.0, line 588 is if notification.ThresholdType == "" {, line 589 is the
+comment "The AWS API doesn't seem to return a ThresholdType if it's set to PERCENTAGE", and line 591 sets ThresholdTypePercentage.
+Owner: infra-engineer
+Acceptance: Change the text and anchor to lines 588–594 (#L588-L594). Re-record the README hash, all 11 bindings and the manifests. No code or test
+change.
+Blocking: Yes
+────────────────────────────────────────
+ID: N1
+Severity: Info
+Path:line: scripts/billing/README.md:92
+Evidence: The provider comment says the API "doesn't seem to return" the field, so it is an observation, not a documented guarantee. "documenting the
+API's omission" overstates it slightly. The next sentence's caveat ("not a universal formal default guarantee") covers this.
+Owner: infra-engineer
+Acceptance: Optionally reword to "observes" in the same edit as D1.
+Blocking: No
+────────────────────────────────────────
+ID: N2
+Severity: Info
+Path:line: scripts/billing/tests/test_budget_execution.py:292-296
+Evidence: The tests set the other notification fields to an explicit None, but never delete them. Deleting them is still rejected: other keys default
+to None, which never matches the expected values, and a missing Threshold fails NOTIFICATION_THRESHOLD.
+Owner: infra-engineer
+Acceptance: Optional test that deletes those fields.
+Blocking: No
+
+Assessment of the five review items
+
+1. Narrow rule holds. budget_execution.py:457 substitutes PERCENTAGE only when the ThresholdType key is missing; other keys still default to None.
+   - Explicit '', None, False, 0, [], {}, ABSOLUTE_VALUE, percentage and UNKNOWN are all rejected (test at :284-288).
+   - Nothing is popped, dropped or normalized. The allowed-key set at :450 and the threshold check at :453-454 are unchanged.
+   - Basis strength: the pinned provider source, the AWS docs marking the field optional, and main.tf:48 explicitly requesting PERCENTAGE. Extra corroboration (inferred from source order): the failed run only reached sanitize_readback after all three subscriber lookups succeeded, and those lookups send an explicit PERCENTAGE selector (budget_verification.py:268-273).
+2. Other guards intact. An AST comparison against HEAD shows sanitize_readback is the only changed definition, with none added or removed. expected_notification (:363-365) still sends explicit PERCENTAGE. budget_verification.py is unchanged (95abbcc0…), as is publication_evidence.py.
+3. Regressions meaningful.
+   - Four new pure test methods cover omitted-all/one/none, reordering, bad explicit values, operator/FORECASTED/boolean/string/60 thresholds, duplicates, count, unknown keys, subscriber drift and alarm-state privacy.
+   - Two new verifier tests run all six queries: missing types pass with selectors exactly [expected_notification(t) for t in (50,80,100)], and ABSOLUTE_VALUE blocks with no receipt.
+   - Test counts went from 65 to 69 (wrapper), 45 to 47 (verification) and stayed at 39 (publication), all OK. The logs (21:40:40 and 21:40:55) postdate the edits (21:40:03). No A1, sbt or real-response re-evaluation is claimed.
+4. Bindings reconcile. HEAD is a9a52a9. Only the 4 reported paths are modified and nothing is untracked. git diff is byte-identical to repair.patch (b2a37fb3…).
+   - All 11 hashes match the working tree, the candidate copies and the after/ copies.
+   - The before/ copies match the HEAD versions of the same files.
+   - Manifests: 35/35, 18/18 and 5/5 entries verified, 0 mismatches. No __pycache__.
+5. No live or private actions. The diagnostic record shows one consumed read and no further reads authorized. The failed verify-billing-20261102-01 record is preserved, with no receipt fabricated and no replay. The README states that a new release, a distinct operation and a new gate are required.
+
+Report fields
+
+- STATUS: REQUEST-CHANGES (D1 only).
+- OWNER: code-reviewer.
+- WORK ORDER: /tmp/scholarchain-phase12d-notification-compatibility-handoff/reviewer-prompt.md: read-only review of the omitted-ThresholdType compatibility repair.
+- FILES CREATED: None.
+- FILES MODIFIED: None.
+- COMMANDS RUN:
+  - Reads of the public evidence and handoff directories, the diagnosis folder and the human-reported failure facts.
+  - git rev-parse, git status, git diff, git show HEAD: and git ls-files.
+  - shasum, cmp and stat on public files.
+  - Inline python3 -I -B AST and manifest checks that wrote no files.
+  - Public fetches of the pinned provider budget.go (WebFetch and curl to stdout).
+- TEST RESULTS: None run by me. The owner logs show 47/69/39 OK (155 total).
+- VALIDATION RESULTS: As above. The code and tests are correct; the citation is wrong.
+- ASSUMPTIONS:
+  - The diagnostic's "absent" means the key is missing, not present as null.
+  - The provider comment reflects observed service behavior.
+- RISKS:
+  - The changed code has not processed a real response.
+  - Alert, subscriber and delivery proof, W3, F4, EMR, phase completion and the same-disk backup limitation remain open.
+- MANUAL ACTION REQUIRED: Route D1 to infra-engineer, then launch a recheck limited to the README hash and re-recorded bindings.
+- BLOCKED-ON OWNER: infra-engineer (D1), then code-reviewer recheck.
+- BLOCKED-ON EVIDENCE: A corrected citation plus refreshed hashes and manifests.
+- NEXT GATE: A recheck of D1 only. This verdict authorizes no private read, AWS call, scan, publication, source-control action or new gate.

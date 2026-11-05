@@ -1,0 +1,107 @@
+[
+  {
+    "label": "cli-version",
+    "argv": [
+      "/opt/homebrew/bin/aws",
+      "--version"
+    ],
+    "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+    "environment": {
+      "PATH": "/opt/homebrew/bin:/usr/bin:/bin",
+      "LANG": "C",
+      "AWS_CONFIG_FILE": "/dev/null",
+      "AWS_SHARED_CREDENTIALS_FILE": "/dev/null",
+      "AWS_EC2_METADATA_DISABLED": "true",
+      "AWS_CLI_AUTO_PROMPT": "off",
+      "AWS_PAGER": "",
+      "PAGER": "cat"
+    },
+    "started_utc": "2026-10-31T17:32:01.395851+00:00",
+    "ended_utc": "2026-10-31T17:32:01.698518+00:00",
+    "wall_seconds": 0.30241,
+    "exit_code": 0,
+    "log": "cli-version.log.txt",
+    "sha256": "c76ae111a93df17db4f9e91d7eacbe5f267045d3cb34316e1592c207d0d1a019",
+    "bytes": 56
+  },
+  {
+    "label": "cli-login-help",
+    "argv": [
+      "/opt/homebrew/bin/aws",
+      "login",
+      "help"
+    ],
+    "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+    "environment": {
+      "PATH": "/opt/homebrew/bin:/usr/bin:/bin",
+      "LANG": "C",
+      "AWS_CONFIG_FILE": "/dev/null",
+      "AWS_SHARED_CREDENTIALS_FILE": "/dev/null",
+      "AWS_EC2_METADATA_DISABLED": "true",
+      "AWS_CLI_AUTO_PROMPT": "off",
+      "AWS_PAGER": "",
+      "PAGER": "cat"
+    },
+    "started_utc": "2026-10-31T17:32:01.698704+00:00",
+    "ended_utc": "2026-10-31T17:32:01.924723+00:00",
+    "wall_seconds": 0.226039,
+    "exit_code": 0,
+    "log": "cli-login-help.log.txt",
+    "sha256": "2f88b8a6666456db321a3087d8ff0bd15b9cf9b91b5a09c413e36380cbf52a4b",
+    "bytes": 7543
+  },
+  {
+    "label": "cli-assume-role-help",
+    "argv": [
+      "/opt/homebrew/bin/aws",
+      "sts",
+      "assume-role",
+      "help"
+    ],
+    "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+    "environment": {
+      "PATH": "/opt/homebrew/bin:/usr/bin:/bin",
+      "LANG": "C",
+      "AWS_CONFIG_FILE": "/dev/null",
+      "AWS_SHARED_CREDENTIALS_FILE": "/dev/null",
+      "AWS_EC2_METADATA_DISABLED": "true",
+      "AWS_CLI_AUTO_PROMPT": "off",
+      "AWS_PAGER": "",
+      "PAGER": "cat"
+    },
+    "started_utc": "2026-10-31T17:32:01.924909+00:00",
+    "ended_utc": "2026-10-31T17:32:02.194316+00:00",
+    "wall_seconds": 0.269423,
+    "exit_code": 0,
+    "log": "cli-assume-role-help.log.txt",
+    "sha256": "f3acd0b5f921ef3759ee32921def341d9a92a23a82b29b791443aecde199426b",
+    "bytes": 43746
+  },
+  {
+    "label": "cli-export-credentials-help",
+    "argv": [
+      "/opt/homebrew/bin/aws",
+      "configure",
+      "export-credentials",
+      "help"
+    ],
+    "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+    "environment": {
+      "PATH": "/opt/homebrew/bin:/usr/bin:/bin",
+      "LANG": "C",
+      "AWS_CONFIG_FILE": "/dev/null",
+      "AWS_SHARED_CREDENTIALS_FILE": "/dev/null",
+      "AWS_EC2_METADATA_DISABLED": "true",
+      "AWS_CLI_AUTO_PROMPT": "off",
+      "AWS_PAGER": "",
+      "PAGER": "cat"
+    },
+    "started_utc": "2026-10-31T17:37:40.080305+00:00",
+    "ended_utc": "2026-10-31T17:37:40.360812+00:00",
+    "wall_seconds": 0.280386,
+    "exit_code": 0,
+    "log": "cli-export-credentials-help.log.txt",
+    "sha256": "87da56359907d262df36b8f7ba65d408c4af2df9d6bb76f2f2bfaef36acd61dd",
+    "bytes": 6360
+  }
+]

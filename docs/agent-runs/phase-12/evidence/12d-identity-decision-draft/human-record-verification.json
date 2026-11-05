@@ -1,0 +1,21 @@
+{
+  "kind": "coordinator read-only verification of human-authored exception; not an approval authored by the agent",
+  "checked_at_utc": "2026-10-31T22:58:20.261805+00:00",
+  "human_record": "docs/agent-runs/phase-12/billing-bootstrap-exception.md",
+  "human_record_sha256": "f478affba41090749c80f2351a1b1b7f9dc085461eabe770b878252284661dbd",
+  "human_record_bytes": 325,
+  "referenced_proposal": "docs/agent-runs/phase-12/evidence/12d-identity-decision-draft/bootstrap-exception-proposal.md",
+  "referenced_proposal_sha256": "813c24fec06f32e84dc231de4e967340b47c2919fc458c0b1ddafb8e50dc200b",
+  "recorded_actor": "Danny personally; MFA-protected root console",
+  "window_start": "2026-10-31T19:00:00-05:00",
+  "window_end": "2026-10-31T20:00:00-05:00",
+  "window_start_utc": "2026-11-01T00:00:00+00:00",
+  "window_end_utc": "2026-11-01T01:00:00+00:00",
+  "window_active_at_check": false,
+  "scope": "Only the operator and billing role and exact policy/password/MFA/tag setup described in the referenced proposal",
+  "excluded": "Agent console/account/login actions, budget creation, spending, real Terraform plan/apply, and later authentication verification",
+  "observed_aws_changes": "None observed; no AWS account calls made",
+  "human_record_modified": false,
+  "next_step": "Human follows the manual setup guidance within the recorded window; no repeated approval of the selected scope required",
+  "public_reference": "https://docs.aws.amazon.com/IAM/latest/UserGuide/id_users_create.html"
+}

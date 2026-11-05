@@ -1,0 +1,14 @@
+{
+  "commit": "1aa13d71489ebd605cee9b9931bf12de61c18bc3",
+  "branch": "phase-12",
+  "remote_verified": true,
+  "checkout_clean": true,
+  "commit_exit": 0,
+  "push_exit": 0,
+  "ls_remote_exit": 0,
+  "files_committed": 4,
+  "all11_approved_bindings_preserved": true,
+  "historical_tests_passed": 155,
+  "private_reads_or_AWS_calls": 0,
+  "old_failed_verification_replayed": false
+}

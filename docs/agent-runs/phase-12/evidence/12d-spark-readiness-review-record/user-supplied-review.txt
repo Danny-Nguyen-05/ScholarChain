@@ -1,0 +1,53 @@
+Verdict: APPROVE, for offline readiness only. Nothing blocks acceptance; I have one low-severity finding and four informational notes.
+1. Code and bounded collection.
+   - The six candidate files match their recorded hashes and source-after/ copies, and source-delta.patch reconciles with them (four of the six files are new and untracked).
+   - Outside these six files and the five records, every tracked file is unchanged, including Phase 6 code, independent tests, the build, billing and Terraform.
+   - cappedJava (BoundedActions.scala:13-21) requires a limit above 0 and below Int.MaxValue, fetches limit+1 rows and refuses any excess. The four existing helpers are untouched.
+   - The comparator works as required:
+     - It checks that both completion markers and the semantic metadata match.
+     - It requires the exact 28-table inventory, recomputes counts and logical hashes, and compares full rows in both directions without normalizing any run ID.
+   - The independent source fence (IndependentPhase6SafetySpec) is unchanged. The first-run failure was fixed in the new file by routing collection through BoundedActions and replacing Option.isEmpty with !isDefined; that is correct for Option, not a weakening.
+2. Tests and the final gate.
+   - Phase12ReadinessSpec has 12 meaningful success and refusal tests.
+   - The 158 final XML reports sum to 1,267 tests with 0 failures or errors, and all are timestamped inside the final run (20:37–20:49Z). The nine “succeeded” lines in the log also sum to 1,267. Phase12ReadinessSpec contributes 12 of Spark’s 50.
+   - The log ends with TestRunMarker and then [success]. The [error] lines come from the intentional nested failure-path probe, which runs before that.
+   - The marker timestamp (20:49:20.408Z) falls inside the run. All 420 files in the gate’s source freeze still match.
+3. Synthetic inputs. The G1 XML declares itself synthetic, with labels A–J. The ER run used a deterministic fake provider with a $0 spend limit. The bundle archive’s 90 files match its manifest, and both relocated copies (85 files each) are byte-identical. The Hadoop and ER manifest hashes in the bundle equal the lineage recorded by both Spark runs.
+4. Same-JAR comparison.
+   - All six packaged commands use one identical 146-JAR classpath with the fresh JAR (d52f11eb…) first and no class directories, matching driver-classpath.txt. The JAR hash was identical before and after every run.
+   - The two configs differ only in physical paths and shuffle setting (1 versus 2).
+   - The completed-export archive holds 478 files, all matching the inventory. Both runs’ markers recompute correctly; they share run ID run:2047866e…, code version a4c1ad60… and the logical fingerprint. Their physical fingerprints differ, and all 28 table counts and hashes agree with exact-comparison.json (SHA a1209709…).
+5. Executor evidence.
+   - In the separate-process probe the driver (PID 31766) and executor (31771, executor ID 0) are distinct, the file exchange worked both ways, and distributedRequired was true.
+   - The eight class and source-JAR hash checks match the resolved artifacts recorded in the evidence; I did not open the local dependency cache. Null version metadata stays null.
+   - The local positive probe reports externalExecutorVerified=false. The negative probe failed with “non-driver executor required”, exited 2 and wrote no output.
+   - The failed attempts are retained, and all 24 log hashes match after decompression.
+6. Limits. No record or document claims EMR, YARN, multi-host mounts or a distributed full pipeline. The README states the common POSIX mount plus fs.defaultFS=file:/// requirement and that S3 is not a shared Java filesystem.
+7. Preservation.
+   - Each of the five records is exactly its HEAD content plus its suffix.
+   - The human record is unchanged (1,334 bytes, SHA abe3a50a…). The 98-file budget packet is tracked and unchanged.
+   - The candidate manifest’s 109 entries all match, covering every visible path. The 372-member build archive matches its inventory, and the loose copies equal their archive members.
+- the completion test tampers only with the metadata file, not the manifest, the marker, a run-ID mismatch or the hash method;
+- probe() and compare() are never run end to end under sbt (each stops its Spark session);
+- codeSourceSha256 is not asserted.
+- STATUS: APPROVE (offline readiness only).
+- OWNER: code-reviewer.
+- WORK ORDER: docs/agent-runs/phase-12/reviewer-prompt-12d-spark-readiness.md.
+- FILES CREATED: None.
+- FILES MODIFIED: None.
+- COMMANDS RUN:
+  - Read-only git rev-parse, log, status, diff, show and ls-files.
+  - shasum and stat.
+  - Inline python3 -I -B checks, all in memory: hashes, JSON, XML, tar and gzip members, marker recomputation and patch reconstruction.
+  - Reads of the source, tests, build alias and fence.
+- TEST RESULTS: Nothing run by me. The recorded final gate shows 1,267 passing tests, and I reconciled that from the XML and the log.
+- VALIDATION RESULTS: As above. I found no mismatch anywhere.
+- ASSUMPTIONS:
+  - The recorded process output is genuine.
+  - The class-hash matches against cached artifacts are taken from the evidence, since I did not read the dependency cache.
+  - I did not recompute Parquet hashes or row comparisons myself.
+- RISKS: Same-machine evidence only. EMR/YARN, shared mounts, F4, the non-root identity, the lifetime guard, the isolated plan, the budget and runtime gate, teardown and after-inventory all remain open. Recipient activation does not prove that a spending alert is delivered.
+- MANUAL ACTION REQUIRED: Your source-control decision, which should include the four untracked source files. Optionally, route L1 to the coordinator.
+- BLOCKED-ON OWNER: Human, then infra and deploy for the live prerequisites.
+- BLOCKED-ON EVIDENCE: None for offline readiness.
+- NEXT GATE: Your source-control decision. This approval does not authorize a commit, push or any live or EMR action.

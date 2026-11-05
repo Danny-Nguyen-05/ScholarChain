@@ -1,0 +1,28 @@
+{
+  "recorded_utc": "2026-11-01T03:29:57.086363+00:00",
+  "user_request_verbatim": "Fix all blocking bugs",
+  "review_attachment_sha256": "9b812e81ca5b0804bf3e42cd3988a968aaa1f8006be2dccd28ecd16dc89cc1eb",
+  "timing_reply_verbatim": "Timing recorded personally",
+  "storage_reply_verbatim": "Use these local paths and retention",
+  "regeneration_reply_verbatim": "Yes, regenerate after prerequisites pass",
+  "kind": "Coordinator transcription, not human approval or timing record",
+  "selected_primary_directory": "/Users/danny/Library/Application Support/ScholarChain/terraform/billing-bootstrap",
+  "selected_backup_directory": "/Users/danny/Library/Application Support/ScholarChain/terraform/billing-bootstrap-backups",
+  "directory_mode": "0700",
+  "sensitive_file_mode": "0600",
+  "retention": "State and versioned backups until reviewed budget teardown and human-approved cleanup; plans until superseded and cleanup approved; no automatic deletion. Same-disk backup does not protect against disk failure.",
+  "human_record": {
+    "path": "docs/agent-runs/phase-12/billing-bootstrap-exception.md",
+    "prior_historical_sha256": "4265d7a7e7076de75b50c467266187aeb418b09ccefb74be4fe5bcf958a31345",
+    "observed_current_sha256": "f00a715960261cb5813baaba903c6c315f42e37a092d1aadb2f84608e0797f04",
+    "agent_wrote_record": false,
+    "observed_change": "Human-reported edit changes supervised window7\u20138PM to9\u201310PM; promise to record actual times afterward remains.",
+    "status": "Clarification requested; actual start/end and duration not inferred."
+  },
+  "identity_review": "User-launched review required; no verdict yet",
+  "plan_regeneration": "Conditionally authorized after prerequisites; not run",
+  "preparation_errata": [
+    "Initial assembly stdin script failed to parse due to a non-ASCII bytes literal (exit1); no code executed or files changed. Corrected UTF-8 encoding before this assembly.",
+    "Read-only lookup requested nonexistent identity-decision-draft/observations.json; actual packet files were listed and read instead. Initial rg for nested AGENTS.md found no matches (exit1)."
+  ]
+}

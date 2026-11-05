@@ -1,0 +1,50 @@
+[
+  {
+    "label": "java-version",
+    "argv": [
+      "/bin/bash",
+      "-c",
+      "export JAVA_HOME=/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home\nexport PATH=\"$JAVA_HOME/bin:$PATH\"\nexport SBT_OPTS=\"-Dlogback.configurationFile=$PWD/docs/agent-runs/phase-04/xml-repair-logback.xml\"\njava -version"
+    ],
+    "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+    "environment": {
+      "JAVA_HOME": "/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home",
+      "PATH_prefix": "/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home/bin",
+      "SBT_OPTS": "-Dlogback.configurationFile=/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-04/xml-repair-logback.xml"
+    },
+    "environment_capture": "Only JAVA_HOME, SBT_OPTS and the prepended JDK bin prefix; inherited PATH intentionally omitted.",
+    "started_utc": "2026-10-31T16:57:09.507387+00:00",
+    "ended_utc": "2026-10-31T16:57:09.567340+00:00",
+    "start_ns": 1793465829507386000,
+    "end_ns": 1793465829567361000,
+    "exit_code": 0,
+    "wall_seconds": 0.059973,
+    "log": "java-version.log.txt",
+    "log_sha256": "2fe83b0053132e4e834defa82250462f4c62733d29bf76b19ee1bb3c14b06b39",
+    "log_bytes": 171
+  },
+  {
+    "label": "sbt-check",
+    "argv": [
+      "/bin/bash",
+      "-c",
+      "export JAVA_HOME=/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home\nexport PATH=\"$JAVA_HOME/bin:$PATH\"\nexport SBT_OPTS=\"-Dlogback.configurationFile=$PWD/docs/agent-runs/phase-04/xml-repair-logback.xml\"\nsbt -batch check"
+    ],
+    "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+    "environment": {
+      "JAVA_HOME": "/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home",
+      "PATH_prefix": "/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home/bin",
+      "SBT_OPTS": "-Dlogback.configurationFile=/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-04/xml-repair-logback.xml"
+    },
+    "environment_capture": "Only JAVA_HOME, SBT_OPTS and the prepended JDK bin prefix; inherited PATH intentionally omitted.",
+    "started_utc": "2026-10-31T16:57:09.567577+00:00",
+    "ended_utc": "2026-10-31T17:09:34.929280+00:00",
+    "start_ns": 1793465829567577000,
+    "end_ns": 1793466574929331000,
+    "exit_code": 0,
+    "wall_seconds": 745.357813,
+    "log": "sbt-check.log.txt",
+    "log_sha256": "b23b1f6064ce6905b69a8550027f640736baca4c7ee3e1e7909a41e7443c57f4",
+    "log_bytes": 1718971
+  }
+]

@@ -1,0 +1,17 @@
+{
+  "changed": [
+    "infra/terraform/tests/phase12b.tftest.hcl",
+    "infra/terraform/README.md",
+    "infra/terraform/modules/identity/main.tf"
+  ],
+  "new": [],
+  "exactly_expected_three": true,
+  "original12b_freeze_changed": [
+    "infra/terraform/tests/phase12b.tftest.hcl",
+    "infra/terraform/README.md",
+    "infra/terraform/modules/identity/main.tf"
+  ],
+  "account_root_statement_unchanged": true,
+  "pins_lock_unchanged": true,
+  "no_other_infra_change": true
+}

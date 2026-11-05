@@ -1,0 +1,23 @@
+{
+  "baseline_entries": 88,
+  "final_entries": 102,
+  "newfiles": [
+    "docs/agent-runs/phase-12/evidence/12d-billing-final-parser-check/coordinator-report.txt",
+    "docs/agent-runs/phase-12/evidence/12d-billing-final-parser-check/evidence-manifest.json",
+    "docs/agent-runs/phase-12/evidence/12d-billing-final-parser-check/final-status.log.txt",
+    "docs/agent-runs/phase-12/evidence/12d-billing-final-parser-check/handoff-files.json",
+    "docs/agent-runs/phase-12/evidence/12d-billing-final-parser-check/incident/artifact-manifest.json",
+    "docs/agent-runs/phase-12/evidence/12d-billing-final-parser-check/incident/exact-final-parser-check.py",
+    "docs/agent-runs/phase-12/evidence/12d-billing-final-parser-check/incident/owner-report.txt",
+    "docs/agent-runs/phase-12/evidence/12d-billing-final-parser-check/incident/result.json",
+    "docs/agent-runs/phase-12/evidence/12d-billing-final-parser-check/preflight-status.log.txt",
+    "docs/agent-runs/phase-12/evidence/12d-billing-final-parser-check/preflight.json",
+    "docs/agent-runs/phase-12/evidence/12d-billing-final-parser-check/preservation-check.json",
+    "docs/agent-runs/phase-12/evidence/12d-billing-final-parser-check/public-address-scan.json",
+    "docs/agent-runs/phase-12/evidence/12d-billing-final-parser-check/public-source-before.json",
+    "docs/agent-runs/phase-12/evidence/12d-billing-final-parser-check/user-authorization.json"
+  ],
+  "newfile_count": 14,
+  "diff_check_exit": 0,
+  "scriptchanges_during_task": 0
+}

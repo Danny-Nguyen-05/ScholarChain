@@ -1,0 +1,30 @@
+{
+  "base_sha": "5ca8406bad5fe55f732458fa0cbd5d561ac83d8f",
+  "agents": [
+    {
+      "task": "/root/infra_12d_prep",
+      "role": "infra-engineer",
+      "model": "inherited parent model; no override; exact runtime identifier not exposed",
+      "paths": [
+        "infra/terraform/billing-bootstrap/**",
+        "infra/terraform/spikes/emr-spark/**"
+      ],
+      "execution": "offline authoring and mock validation only; no live calls; complete",
+      "status": "completed",
+      "active_jobs": false
+    },
+    {
+      "task": "/root/build_12d_prep",
+      "role": "build-engineer",
+      "model": "inherited parent model; no override; exact runtime identifier not exposed",
+      "paths": [
+        "scratch build evidence only"
+      ],
+      "execution": "full JDK17 gate after source freeze; no source edits",
+      "status": "completed",
+      "active_jobs": false
+    }
+  ],
+  "reviewers_launched": false,
+  "child_delegation_allowed": false
+}

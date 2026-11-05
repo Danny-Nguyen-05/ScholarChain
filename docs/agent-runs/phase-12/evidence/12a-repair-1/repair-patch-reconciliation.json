@@ -1,0 +1,37 @@
+{
+  "method": "Reverse unified repair patch in memory against current source; compare reconstructed pre-repair SHA256 with original reviewed41-file freeze. No source files written.",
+  "files": [
+    {
+      "path": "infra/terraform/README.md",
+      "reconstructed_before_sha256": "49e3409a157f6827c15446533df522ec4960544341c7b8496c3b12631a706af0",
+      "before_hash_matches_reviewed_source": true,
+      "current_after_sha256": "ba082972f1cbe1e01184237e1ef7a2a57a247a5536d54995820dc1b48c7e8494"
+    },
+    {
+      "path": "infra/terraform/modules/identity/main.tf",
+      "reconstructed_before_sha256": "0febf0c1df35b08fab4c00bcbffbe210a9943ec79cafda6aea10a750166bfad9",
+      "before_hash_matches_reviewed_source": true,
+      "current_after_sha256": "df18d1335ed58911d8eca606e4ee3260d7aaac8f4f8595fcabd5780350ca4348"
+    },
+    {
+      "path": "infra/terraform/modules/network/main.tf",
+      "reconstructed_before_sha256": "aa844103eeb3993c380ec76ed1f6f8276668a3147cf7fd81c5382da639ae83ea",
+      "before_hash_matches_reviewed_source": true,
+      "current_after_sha256": "50a484e03cee844ebe868d081af62ee70db7c32222fc6261edfa1ba5d0de1f7e"
+    },
+    {
+      "path": "infra/terraform/modules/network/outputs.tf",
+      "reconstructed_before_sha256": "74bf84ff311f023f662229da65188062542eaa06f0ae3478ee235124c3e35a74",
+      "before_hash_matches_reviewed_source": true,
+      "current_after_sha256": "1000e6df44170da6e3466796b672a5ef131ea25830cf8ce2ad823226bdfd60db"
+    },
+    {
+      "path": "infra/terraform/tests/phase12a.tftest.hcl",
+      "reconstructed_before_sha256": "a1133894c1b1e225d6f29a7b9fa56cb38ee5eabd1ee94a2503092570382a3d95",
+      "before_hash_matches_reviewed_source": true,
+      "current_after_sha256": "b283766c1b0fb1e93a09c2bb9cbbbf5d65f5418d1679b34f226dd6415e5ee9eb"
+    }
+  ],
+  "all_before_hashes_match": true,
+  "file_count": 5
+}

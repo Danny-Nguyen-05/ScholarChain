@@ -1,0 +1,17 @@
+[
+  {
+    "block": "execution_policy",
+    "byte_identical": true,
+    "sha256": "325f3731f8239da267e5957799aa2663cc3cd723e375134b715f8b6f04bff5e5"
+  },
+  {
+    "block": "trust_policy",
+    "byte_identical": true,
+    "sha256": "408f67b9ad996933c6377e9e9df45b78c8e6700226f6cbd36e3d322bcb110af8"
+  },
+  {
+    "block": "caller_policy",
+    "byte_identical": true,
+    "sha256": "f13d4d3e1503a77f7f4cf9546dd8f5e1229301de0f8dc801edbdacb1f6f0d75c"
+  }
+]

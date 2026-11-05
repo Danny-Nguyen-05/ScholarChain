@@ -1,0 +1,16 @@
+{
+  "infra/terraform/tests/phase12a.tftest.hcl": {
+    "runs": 13,
+    "assertions": 29,
+    "expected_failure_cases": 6,
+    "all_runs_plan": true,
+    "mock_provider_aws": true
+  },
+  "infra/terraform/tests/phase12b.tftest.hcl": {
+    "runs": 18,
+    "assertions": 22,
+    "expected_failure_cases": 10,
+    "all_runs_plan": true,
+    "mock_provider_aws": true
+  }
+}

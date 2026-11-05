@@ -1,0 +1,8 @@
+{
+  "source": "complete user-supplied review and accompanying repair prompt, preserved as supplied; duplicate test command and trailing tip retained",
+  "raw_bytes": 30860,
+  "sha256": "0935e52eb365e9685225b5f18f282bfb8a51ca5eeee7a3728baedb79aa84a1fb",
+  "appended_verbatim_under": "Subphase 12B / user-supplied external review",
+  "append_matches_raw_exactly": true,
+  "raw_hash_matches": true
+}

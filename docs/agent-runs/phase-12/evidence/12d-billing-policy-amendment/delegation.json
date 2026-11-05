@@ -1,0 +1,7 @@
+{
+  "infra_agent": "/root/infra_12d_policy_amendment",
+  "source_scope": "infra/terraform/billing-execution/** only",
+  "coordinator": "phase evidence/append-only records",
+  "build": "full JDK17 gate after source freeze, no source edits",
+  "reviewer": "none launched; user launches independently"
+}

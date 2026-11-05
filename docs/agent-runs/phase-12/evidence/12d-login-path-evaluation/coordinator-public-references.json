@@ -1,0 +1,56 @@
+{
+  "checked_utc": "2026-10-31T17:36:51.479978+00:00",
+  "method": "Public web documentation only; no account or credential use",
+  "sources": [
+    {
+      "url": "https://docs.aws.amazon.com/prescriptive-guidance/latest/aws-startup-security-baseline/acct-13.html",
+      "use": "AWS recommends browser-based temporary credentials with IAM-user MFA; does not prove all downstream MFA context."
+    },
+    {
+      "url": "https://docs.aws.amazon.com/cli/latest/reference/login/",
+      "use": "CLI example explicitly selects an assumed-role session; supports role-first candidate composition."
+    },
+    {
+      "url": "https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_use_switch-role-console.html",
+      "use": "Console switch uses original identity; root cannot switch; user and role permissions are not cumulative."
+    },
+    {
+      "url": "https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_mfa_configure-api-require.html",
+      "use": "Strict MFA trust at role-assumption boundary and distinction from subsequent role session calls."
+    },
+    {
+      "url": "https://docs.aws.amazon.com/STS/latest/APIReference/API_AssumeRole.html",
+      "use": "AssumeRole accepts explicit SerialNumber/TokenCode; no execution in this evaluation."
+    },
+    {
+      "url": "https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_sts-comparison.html",
+      "use": "AssumeRole supports temporary callers/MFA; GetSessionToken is not an acceptable no-long-lived-key shortcut."
+    },
+    {
+      "url": "https://docs.aws.amazon.com/aws-managed-policy/latest/reference/SignInLocalDevelopmentAccess.html",
+      "use": "Current managed policy v3 lists both AuthorizeOAuth2Access and CreateOAuth2Token; its wildcard scope is not the recommended exact project scope."
+    },
+    {
+      "url": "https://docs.aws.amazon.com/service-authorization/latest/reference/list_signin.html",
+      "use": "Both login actions support the localhost client resource; actual grant remains unimplemented and unverified."
+    },
+    {
+      "url": "https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-sign-in.html",
+      "use": "Named login profiles, temporary session handling and required login permissions."
+    },
+    {
+      "url": "https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_condition-keys.html",
+      "use": "SignInSessionArn identifies OAuth origin; it does not establish MFA. MultiFactorAuthPresent context is separate."
+    },
+    {
+      "url": "https://docs.aws.amazon.com/en_en/IAM/latest/UserGuide/cloudtrail-integration.html",
+      "use": "CloudTrail MFA fields must not be conflated with IAM condition evaluation on subsequent role requests."
+    }
+  ],
+  "unsuccessful_discovery_urls": [
+    "https://docs.aws.amazon.com/cli/latest/userguide/cli-authentication-console.html",
+    "https://docs.aws.amazon.com/service-authorization/latest/reference/list_awssign-in.html"
+  ],
+  "failed_url_disposition": "Not relied upon; correct CLI sign-in and list_signin pages used instead.",
+  "confidence": "Documented components and source inspection; complete deployed flow is an inference requiring later explicit live verification."
+}

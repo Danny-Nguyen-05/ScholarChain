@@ -1,0 +1,53 @@
+{
+  "timestamp": "2026-10-31T03:23:37.858885+00:00",
+  "config": [
+    {
+      "source": "infra/terraform/billing-bootstrap/.terraform.lock.hcl",
+      "copy": "/tmp/scholarchain-phase12d-billing-plan/config/.terraform.lock.hcl",
+      "sha256": "421b75245b0080edee2b434482ff348419a75d7a6b798d5218e0a0f9f723eaea",
+      "copy_sha256": "421b75245b0080edee2b434482ff348419a75d7a6b798d5218e0a0f9f723eaea",
+      "bytes": 1406,
+      "source_mtime_ns": 1793396913427340179
+    },
+    {
+      "source": "infra/terraform/billing-bootstrap/main.tf",
+      "copy": "/tmp/scholarchain-phase12d-billing-plan/config/main.tf",
+      "sha256": "5e69e4235e417c72968097af6050f66c434fd1d1049ee0f655d1b6635e101549",
+      "copy_sha256": "5e69e4235e417c72968097af6050f66c434fd1d1049ee0f655d1b6635e101549",
+      "bytes": 2215,
+      "source_mtime_ns": 1793414130514184875
+    },
+    {
+      "source": "infra/terraform/billing-bootstrap/outputs.tf",
+      "copy": "/tmp/scholarchain-phase12d-billing-plan/config/outputs.tf",
+      "sha256": "e729e4b3d6523074f293b95c9a5f85fc03c8eec0f8a40928c24a1c227ce3174f",
+      "copy_sha256": "e729e4b3d6523074f293b95c9a5f85fc03c8eec0f8a40928c24a1c227ce3174f",
+      "bytes": 1005,
+      "source_mtime_ns": 1793414130514426581
+    },
+    {
+      "source": "infra/terraform/billing-bootstrap/variables.tf",
+      "copy": "/tmp/scholarchain-phase12d-billing-plan/config/variables.tf",
+      "sha256": "3e37054f1187192ae3188052d52630e50a3db950ce7436b639d98ef066a8c937",
+      "copy_sha256": "3e37054f1187192ae3188052d52630e50a3db950ce7436b639d98ef066a8c937",
+      "bytes": 3033,
+      "source_mtime_ns": 1793414130514329374
+    },
+    {
+      "source": "infra/terraform/billing-bootstrap/versions.tf",
+      "copy": "/tmp/scholarchain-phase12d-billing-plan/config/versions.tf",
+      "sha256": "38c0d27255f1ccf0c6f57b6854b80e5bcecde516ebfbcdfbd7ae95ad220ba0a1",
+      "copy_sha256": "38c0d27255f1ccf0c6f57b6854b80e5bcecde516ebfbcdfbd7ae95ad220ba0a1",
+      "bytes": 150,
+      "source_mtime_ns": 1793396913408180297
+    }
+  ],
+  "public_input_sha256": "7830925d9d124bf374897682237198f5686160094dab4eab801229c7500a91fe",
+  "private_input_stat_only": {
+    "path": "/tmp/scholarchain-phase12d-billing-plan/notification.private.tfvars.json",
+    "mode": "0600",
+    "mtime_ns": 1793416796508930276,
+    "contents_read_or_hashed": false
+  },
+  "prior_state_file_exists": false
+}

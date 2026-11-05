@@ -1,0 +1,50 @@
+{
+  "source": "Previously reviewed public source/evidence only; no installed CLI/durable inspection",
+  "plan_sha256": "ab9f141e83058209263cf561eef1d102496ec7f534b88ce421620d8e0045f855",
+  "plan_bytes": 6631,
+  "proposal": {
+    "path": "docs/agent-runs/phase-12/evidence/12d-billing-apply-proposal/proposal.md",
+    "bytes": 25228,
+    "sha256": "d97abf57f30f72a3c66502a998e3962c4f2b4a2f28797237fd464a5b5d8113d5"
+  },
+  "scripts": [
+    {
+      "path": "scripts/billing/README.md",
+      "bytes": 14797,
+      "sha256": "c83e61880cebebf5bb6c17b2ba9c971fad302c17d81a4dec5c166be37d7b9391"
+    },
+    {
+      "path": "scripts/billing/budget_execution.py",
+      "bytes": 39844,
+      "sha256": "e8876abe58a787f9753793b822140cc311863c12373e09f79b8f367ebdfa3507"
+    },
+    {
+      "path": "scripts/billing/reviewed-pins.json",
+      "bytes": 46174,
+      "sha256": "cb285259b7217bb4186ca80e74d376f215e4150396aa5fd66187d4e0dc96a753"
+    },
+    {
+      "path": "scripts/billing/tests/terraform_state_binding.py",
+      "bytes": 5340,
+      "sha256": "faaf64cd14192abbe45c1284617c26e7c1c2958ace61fcbcde955d8ac471a7c3"
+    },
+    {
+      "path": "scripts/billing/tests/test_budget_execution.py",
+      "bytes": 36221,
+      "sha256": "04dc9f32fe7e2bc8f59d6028785b6ace7978c39f392e7403cfc7b36fe143d34c"
+    }
+  ],
+  "human_record": {
+    "path": "docs/agent-runs/phase-12/billing-bootstrap-exception.md",
+    "bytes": 1334,
+    "sha256": "abe3a50ad7167fa01227c73e15e92a422a50609f6313bdcc56404cb61765d71a"
+  },
+  "terraform_sha256": "899b3c0ca0d2669ebd67be4bcd98e84bd9a914ce2fb3897ad0b86c98cbf3c962",
+  "provider_sha256": "050fc3a7514d11585206c2a059be393ee54f50b9276ed1b092a1a975ae2afa73",
+  "cli_config_sha256": "bd77a0311cac1f89c0ea02f5b328aec41a93ae6f11ddcd7873c61eae6045361e",
+  "release_commit": null,
+  "actual_aws_cli_sha256": null,
+  "actual_aws_cli_version": null,
+  "window": null,
+  "personal_gate_written": false
+}

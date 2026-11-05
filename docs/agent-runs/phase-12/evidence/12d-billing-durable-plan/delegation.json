@@ -1,0 +1,9 @@
+{
+  "agent": "/root/infra_12d_durable_plan",
+  "role": "infra-engineer",
+  "model": "Inherited parent; exact native model version not exposed by spawn result",
+  "writes": "Selected durable primary/backups and public scratch handoff only; no repository/source writes",
+  "coordinator": "Owns all assembled phase evidence",
+  "real_plan_gate": "Explicit coordinator goahead only after fresh human identity match and private Saved",
+  "children_or_reviewers_allowed": false
+}

@@ -1,0 +1,12 @@
+{
+  "recorded_utc": "2026-11-01T19:01:51.027002+00:00",
+  "user_request_source": "Pasted attachment expressly designated by user as containing the request",
+  "attachment_sha256": "16b57d9ddaeeb371b2e577fa2e3dbff86fc5a4cb7324b9271c15a7114171da90",
+  "scope": "Fresh read-only durable-path budget plan only; user-requested local setup/authentication prerequisites",
+  "public_inputs_reference": "docs/agent-runs/phase-12/evidence/12d-billing-execution-plan/infra/approved-public-inputs.json",
+  "storage_selection_reference": "docs/agent-runs/phase-12/evidence/12d-billing-apply-gate-repair-prep/human-inputs.json",
+  "fresh_login_and_hidden_recipient": "Pending; real plan must wait",
+  "apply_authorized": false,
+  "human_record_writes": false,
+  "supersede_old_plan_only_after_new_success": true
+}

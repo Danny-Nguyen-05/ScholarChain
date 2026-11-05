@@ -1,0 +1,74 @@
+
+Warning: Argument is deprecated
+
+  with module.runtime.aws_service_discovery_service.http,
+  on modules/runtime/compute.tf line 30, in resource "aws_service_discovery_service" "http":
+  30:   health_check_custom_config { failure_threshold = 1 }
+
+failure_threshold is deprecated. The argument is no longer supported by AWS
+and the value is always set to 1. The attribute will be removed in a future
+major version.
+
+Error: Inconsistent conditional result types
+
+  on modules/identity/phase12b.tf line 5, in locals:
+   5:     service == "graph-service" && var.neptune_data_arn != null ? [{
+   6:       Sid      = "ReadOnlyNeptuneGraph", Effect = "Allow",
+   7:       Action   = ["neptune-db:ReadDataViaQuery", "neptune-db:GetQueryStatus", "neptune-db:CancelQuery"],
+   8:       Resource = [var.neptune_data_arn], Condition = { StringEquals = { "neptune-db:QueryLanguage" = "OpenCypher" } }
+   9:       }, {
+  10:       Sid = "ReadNeptuneEngineStatus", Effect = "Allow", Action = ["neptune-db:GetEngineStatus"], Resource = [var.neptune_data_arn]
+  11:     }] : [],
+    ├────────────────
+    │ var.neptune_data_arn is a string
+
+The true and false result expressions must have consistent types. The 'true'
+tuple has length 2, but the 'false' tuple has length 0.
+
+Error: Inconsistent conditional result types
+
+  on modules/identity/phase12b.tf line 5, in locals:
+   5:     service == "graph-service" && var.neptune_data_arn != null ? [{
+   6:       Sid      = "ReadOnlyNeptuneGraph", Effect = "Allow",
+   7:       Action   = ["neptune-db:ReadDataViaQuery", "neptune-db:GetQueryStatus", "neptune-db:CancelQuery"],
+   8:       Resource = [var.neptune_data_arn], Condition = { StringEquals = { "neptune-db:QueryLanguage" = "OpenCypher" } }
+   9:       }, {
+  10:       Sid = "ReadNeptuneEngineStatus", Effect = "Allow", Action = ["neptune-db:GetEngineStatus"], Resource = [var.neptune_data_arn]
+  11:     }] : [],
+    ├────────────────
+    │ var.neptune_data_arn is a string
+
+The true and false result expressions must have consistent types. The 'true'
+tuple has length 2, but the 'false' tuple has length 0.
+
+Error: Inconsistent conditional result types
+
+  on modules/identity/phase12b.tf line 5, in locals:
+   5:     service == "graph-service" && var.neptune_data_arn != null ? [{
+   6:       Sid      = "ReadOnlyNeptuneGraph", Effect = "Allow",
+   7:       Action   = ["neptune-db:ReadDataViaQuery", "neptune-db:GetQueryStatus", "neptune-db:CancelQuery"],
+   8:       Resource = [var.neptune_data_arn], Condition = { StringEquals = { "neptune-db:QueryLanguage" = "OpenCypher" } }
+   9:       }, {
+  10:       Sid = "ReadNeptuneEngineStatus", Effect = "Allow", Action = ["neptune-db:GetEngineStatus"], Resource = [var.neptune_data_arn]
+  11:     }] : [],
+    ├────────────────
+    │ var.neptune_data_arn is a string
+
+The true and false result expressions must have consistent types. The 'true'
+tuple has length 2, but the 'false' tuple has length 0.
+
+Error: Inconsistent conditional result types
+
+  on modules/identity/phase12b.tf line 5, in locals:
+   5:     service == "graph-service" && var.neptune_data_arn != null ? [{
+   6:       Sid      = "ReadOnlyNeptuneGraph", Effect = "Allow",
+   7:       Action   = ["neptune-db:ReadDataViaQuery", "neptune-db:GetQueryStatus", "neptune-db:CancelQuery"],
+   8:       Resource = [var.neptune_data_arn], Condition = { StringEquals = { "neptune-db:QueryLanguage" = "OpenCypher" } }
+   9:       }, {
+  10:       Sid = "ReadNeptuneEngineStatus", Effect = "Allow", Action = ["neptune-db:GetEngineStatus"], Resource = [var.neptune_data_arn]
+  11:     }] : [],
+    ├────────────────
+    │ var.neptune_data_arn is a string
+
+The true and false result expressions must have consistent types. The 'true'
+tuple has length 2, but the 'false' tuple has length 0.

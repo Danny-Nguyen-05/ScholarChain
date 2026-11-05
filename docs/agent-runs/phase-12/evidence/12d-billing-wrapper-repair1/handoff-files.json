@@ -1,0 +1,46 @@
+{
+  "baseline_status_entries": 723,
+  "final_status_entries": 750,
+  "new_file_count": 27,
+  "new_files": [
+    "docs/agent-runs/phase-12/evidence/12d-billing-wrapper-repair1/a1-commands.json",
+    "docs/agent-runs/phase-12/evidence/12d-billing-wrapper-repair1/a1-regression-attempt1.log.txt",
+    "docs/agent-runs/phase-12/evidence/12d-billing-wrapper-repair1/a1-result.json",
+    "docs/agent-runs/phase-12/evidence/12d-billing-wrapper-repair1/a1-wrong-output-a1-commands.json",
+    "docs/agent-runs/phase-12/evidence/12d-billing-wrapper-repair1/a1-wrong-output-a1-result.json",
+    "docs/agent-runs/phase-12/evidence/12d-billing-wrapper-repair1/artifact-manifest.json",
+    "docs/agent-runs/phase-12/evidence/12d-billing-wrapper-repair1/assembly-erratum.json",
+    "docs/agent-runs/phase-12/evidence/12d-billing-wrapper-repair1/coordinator-report.txt",
+    "docs/agent-runs/phase-12/evidence/12d-billing-wrapper-repair1/diff-check-result.json",
+    "docs/agent-runs/phase-12/evidence/12d-billing-wrapper-repair1/evidence-manifest.json",
+    "docs/agent-runs/phase-12/evidence/12d-billing-wrapper-repair1/final-status.log.txt",
+    "docs/agent-runs/phase-12/evidence/12d-billing-wrapper-repair1/handoff-files.json",
+    "docs/agent-runs/phase-12/evidence/12d-billing-wrapper-repair1/offline-tests-attempt1.log.txt",
+    "docs/agent-runs/phase-12/evidence/12d-billing-wrapper-repair1/owner-report.txt",
+    "docs/agent-runs/phase-12/evidence/12d-billing-wrapper-repair1/preservation-check.json",
+    "docs/agent-runs/phase-12/evidence/12d-billing-wrapper-repair1/public-address-scan.json",
+    "docs/agent-runs/phase-12/evidence/12d-billing-wrapper-repair1/result.json",
+    "docs/agent-runs/phase-12/evidence/12d-billing-wrapper-repair1/source-after.json",
+    "docs/agent-runs/phase-12/evidence/12d-billing-wrapper-repair1/source-before.json",
+    "docs/agent-runs/phase-12/evidence/12d-billing-wrapper-repair1/sources.json",
+    "docs/agent-runs/phase-12/evidence/12d-billing-wrapper-review-record/delegation.json",
+    "docs/agent-runs/phase-12/evidence/12d-billing-wrapper-review-record/evidence-manifest.json",
+    "docs/agent-runs/phase-12/evidence/12d-billing-wrapper-review-record/preflight-status.log.txt",
+    "docs/agent-runs/phase-12/evidence/12d-billing-wrapper-review-record/preflight.json",
+    "docs/agent-runs/phase-12/evidence/12d-billing-wrapper-review-record/record-prefix-check.json",
+    "docs/agent-runs/phase-12/evidence/12d-billing-wrapper-review-record/user-supplied-review.txt",
+    "docs/agent-runs/phase-12/reviewer-prompt-12d-billing-wrapper-recheck-1.md"
+  ],
+  "three_modified_scripts": [
+    "scripts/billing/README.md",
+    "scripts/billing/budget_execution.py",
+    "scripts/billing/tests/test_budget_execution.py"
+  ],
+  "five_append_only_records": [
+    "docs/agent-runs/phase-12/prompt.md",
+    "docs/agent-runs/phase-12/review.md",
+    "docs/agent-runs/phase-12/repairs.md",
+    "docs/agent-runs/phase-12/owner-report.md",
+    "docs/agent-runs/phase-12/test-report.md"
+  ]
+}

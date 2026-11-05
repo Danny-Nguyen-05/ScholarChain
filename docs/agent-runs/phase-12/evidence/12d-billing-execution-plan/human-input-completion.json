@@ -1,0 +1,9 @@
+{
+  "recorded_utc": "2026-11-01T03:16:53.193325+00:00",
+  "public_input_confirmation_verbatim": "everything is good",
+  "private_helper_reply_verbatim": "Saved",
+  "private_helper_command": "python3 -I /tmp/scholarchain-phase12d-billing-execution-plan/save-recipient.py",
+  "exact_recipient_not_captured": true,
+  "human_command_exit_code": "not separately captured; human reported success",
+  "private_file_contents_hash_and_size_not_in_evidence": true
+}

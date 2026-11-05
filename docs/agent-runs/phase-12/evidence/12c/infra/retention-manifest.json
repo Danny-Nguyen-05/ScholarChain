@@ -1,0 +1,182 @@
+{
+  "created_utc": "2026-10-30T17:41:14.734311+00:00",
+  "curated": [
+    {
+      "name": "commands.jsonl",
+      "source": "/tmp/scholarchain-phase12c-infra/commands.jsonl",
+      "bytes": 7852,
+      "sha256": "c6942509641182d87fbd6899c78a5e1e9bd218399aa93b1c03d7755a2d1a4cb7"
+    },
+    {
+      "name": "coverage-counts.json",
+      "source": "/tmp/scholarchain-phase12c-infra/coverage-counts.json",
+      "bytes": 394,
+      "sha256": "310cf52eccd46fd0d47af9ac3ff29012e7d0b372c5b8d4e3c4164ee99459d192"
+    },
+    {
+      "name": "delta.patch",
+      "source": "/tmp/scholarchain-phase12c-infra/delta.patch",
+      "bytes": 46361,
+      "sha256": "0835b9c95147d2e46a171d5d3c4a99c831ee37367a154e1c6e70b1c338dfb802"
+    },
+    {
+      "name": "final-diff-check.log.txt",
+      "source": "/tmp/scholarchain-phase12c-infra/final-diff-check.log.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "final-fmt-check.log.txt",
+      "source": "/tmp/scholarchain-phase12c-infra/final-fmt-check.log.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "final-init.log.txt",
+      "source": "/tmp/scholarchain-phase12c-infra/final-init.log.txt",
+      "bytes": 677,
+      "sha256": "6fd242691fd6bbc7efe25549609a26c11107f98c3ae3cb12128985c21a261753"
+    },
+    {
+      "name": "final-test.log.txt",
+      "source": "/tmp/scholarchain-phase12c-infra/final-test.log.txt",
+      "bytes": 2466,
+      "sha256": "b5a4b9c9f15c4a6bebd3aaf0b60f81fbb9664f09e96ed9c8c713bc67c90264d5"
+    },
+    {
+      "name": "final-validate.log.txt",
+      "source": "/tmp/scholarchain-phase12c-infra/final-validate.log.txt",
+      "bytes": 38,
+      "sha256": "f7997225125835fdd14060ac776d273f394b874f9a481b9e2122c83dc8adc5c1"
+    },
+    {
+      "name": "fmt-development.log.txt",
+      "source": "/tmp/scholarchain-phase12c-infra/fmt-development.log.txt",
+      "bytes": 77,
+      "sha256": "78748e6b274377bf5c589efec65d305982f5f175c8e108dfae310ddd9e445d73"
+    },
+    {
+      "name": "green-development.log.txt",
+      "source": "/tmp/scholarchain-phase12c-infra/green-development.log.txt",
+      "bytes": 2466,
+      "sha256": "b5a4b9c9f15c4a6bebd3aaf0b60f81fbb9664f09e96ed9c8c713bc67c90264d5"
+    },
+    {
+      "name": "init-development.log.txt",
+      "source": "/tmp/scholarchain-phase12c-infra/init-development.log.txt",
+      "bytes": 677,
+      "sha256": "6fd242691fd6bbc7efe25549609a26c11107f98c3ae3cb12128985c21a261753"
+    },
+    {
+      "name": "owner-report.md",
+      "source": "/tmp/scholarchain-phase12c-infra/owner-report.md",
+      "bytes": 5293,
+      "sha256": "6ceb1b87d761283ad0468193f130e4cf5655c6a5e2ee6d9cb99f5e851edbf9ca"
+    },
+    {
+      "name": "plan-input-provenance.json",
+      "source": "/tmp/scholarchain-phase12c-infra/plan-input-provenance.json",
+      "bytes": 14297,
+      "sha256": "77ba8cc3c05a9e096097896153c51458e0bc66367be3b3b6ae50cb35bd9b4879"
+    },
+    {
+      "name": "plan-summary.json",
+      "source": "/tmp/scholarchain-phase12c-infra/plan-summary.json",
+      "bytes": 47562,
+      "sha256": "702f283a02e2ea49b5c81b4dd9ffd975b259f80885213a89e05ef5473a151400"
+    },
+    {
+      "name": "red-init.log.txt",
+      "source": "/tmp/scholarchain-phase12c-infra/red-init.log.txt",
+      "bytes": 1179,
+      "sha256": "bea09208d94de22b2d864999cb48dcdeb3bd7a1c12723069af42a1fe9269b976"
+    },
+    {
+      "name": "red-proof.json",
+      "source": "/tmp/scholarchain-phase12c-infra/red-proof.json",
+      "bytes": 1206,
+      "sha256": "3f2b6fec232ffa6c6e5d1de9c37e48bb81266386e299733111c1963234ba6802"
+    },
+    {
+      "name": "red-repository-before.json",
+      "source": "/tmp/scholarchain-phase12c-infra/red-repository-before.json",
+      "bytes": 6111,
+      "sha256": "e644f24f9cd941b5e3d432ef050eb97033595235c232b0ec02e924cd5e784478"
+    },
+    {
+      "name": "red-repository-unchanged.json",
+      "source": "/tmp/scholarchain-phase12c-infra/red-repository-unchanged.json",
+      "bytes": 173,
+      "sha256": "f71ff9f29f96e82d6b6e1ebe7530e6ddab0ba71c5e87c25d21633809ea0c30e9"
+    },
+    {
+      "name": "red-reproduce.py",
+      "source": "/tmp/scholarchain-phase12c-infra/red-reproduce.py",
+      "bytes": 2027,
+      "sha256": "c3e7415380c7fe72228bc428ff1a3cadfe6671968baae7b7bd3b32f5b99b1933"
+    },
+    {
+      "name": "red-test-v2.log.txt",
+      "source": "/tmp/scholarchain-phase12c-infra/red-test-v2.log.txt",
+      "bytes": 8827,
+      "sha256": "0789b6c0879c25b0a4c6578331adc37dfdb67afd16842ceabb7e19fa59616cef"
+    },
+    {
+      "name": "red-test.log.txt",
+      "source": "/tmp/scholarchain-phase12c-infra/red-test.log.txt",
+      "bytes": 8388,
+      "sha256": "cfcd988d771521366079d7cda66a996a5d06c12c94edd91717f0a3e8b85777e8"
+    },
+    {
+      "name": "source-before.json",
+      "source": "/tmp/scholarchain-phase12c-infra/source-before.json",
+      "bytes": 14477,
+      "sha256": "2e925f519b6a3dffff7cab3c514f49d8bbf5bfb02d88bc5bb14f4a65c7978a34"
+    },
+    {
+      "name": "source-final.json",
+      "source": "/tmp/scholarchain-phase12c-infra/source-final.json",
+      "bytes": 14694,
+      "sha256": "6d638713023fc4bdcf70a255e36c4a2e9ba768385f270262ec3d6acbd3a43a23"
+    },
+    {
+      "name": "test-first-fmt.log.txt",
+      "source": "/tmp/scholarchain-phase12c-infra/test-first-fmt.log.txt",
+      "bytes": 54,
+      "sha256": "12077395a36b95a6575fcff4320fc93936482826b85d638b6b8dfab8b4c39627"
+    },
+    {
+      "name": "toolchain-provenance.json",
+      "source": "/tmp/scholarchain-phase12c-infra/toolchain-provenance.json",
+      "bytes": 827,
+      "sha256": "c701540e5d314d5834fdcd5bec96297e95c772b785a33ef12b927f831fb249c0"
+    }
+  ],
+  "private_outside_git": [
+    {
+      "name": "course-plan.inputs.tfvars",
+      "path": "/tmp/scholarchain-phase12c-infra/course-plan.inputs.tfvars",
+      "bytes": 287,
+      "sha256": "f046690f5d8d4c3889c1aeee4c8263e11ef8709782d381216cf76972adaf8d55"
+    },
+    {
+      "name": "course.plan.json",
+      "path": "/tmp/scholarchain-phase12c-infra/course.plan.json",
+      "bytes": 456320,
+      "sha256": "9de6d608959b88c3ac7e3bbfc88544a853e0a1396f9236fd4e91b05e71a7ee74"
+    },
+    {
+      "name": "course.tfplan",
+      "path": "/tmp/scholarchain-phase12c-infra/course.tfplan",
+      "bytes": 68686,
+      "sha256": "1e0eb776c6bebe0aea4a0d7070dbc2328953d7cc001e921b9ac674eb8b6bbd34"
+    },
+    {
+      "name": "plan-attempt-1.log.txt",
+      "path": "/tmp/scholarchain-phase12c-infra/plan-attempt-1.log.txt",
+      "bytes": 264716,
+      "sha256": "47fe32e71493e96ea8a2c9e85ebf6c01030033b7dd9112d73ea2ac1b8a12e72b"
+    }
+  ],
+  "policy": "Copy only curated entries. Do not copy raw plan stdout, binary, JSON or private input into Git/evidence. Preserve bytes of native log files."
+}

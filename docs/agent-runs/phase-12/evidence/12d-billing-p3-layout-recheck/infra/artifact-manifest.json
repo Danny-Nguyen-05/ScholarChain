@@ -1,0 +1,46 @@
+{
+  "scope": "F1layout syntheticoffline evidence only; no rawprivate response or actualstate/plan",
+  "self_excluded": true,
+  "files": [
+    {
+      "path": "a1-commands.json",
+      "bytes": 5243,
+      "sha256": "3cb8fa20521a2fb95f2b958d0931ea3032ba48c21a7f0ac4d36d562856897cae"
+    },
+    {
+      "path": "a1-regression.stdout.json",
+      "bytes": 799,
+      "sha256": "32763c4fa38171498b91dc2bd49a8d45ac96150f75d1a254ba15affca616703c"
+    },
+    {
+      "path": "a1-result.json",
+      "bytes": 853,
+      "sha256": "e16d529e769460a655ad0dd7e734ccbacc3b17bff839555091f8d7af53fc9b9a"
+    },
+    {
+      "path": "offline-tests-attempt1.log.txt",
+      "bytes": 6195,
+      "sha256": "8bab785bc3aa8e75355fb362724cdb5f50c716ece69efac45414572917b225e1"
+    },
+    {
+      "path": "owner-report.txt",
+      "bytes": 4097,
+      "sha256": "ffdcd95fdc6f89e3d1f8b12eb74f5a5e8b8397083433dd1adf1494252a474d0d"
+    },
+    {
+      "path": "result.json",
+      "bytes": 6851,
+      "sha256": "df0735b974b2249e17612eef09e94cd27728b0b2b2047fabf77acbed4a82c825"
+    },
+    {
+      "path": "source-after.json",
+      "bytes": 1468,
+      "sha256": "2450f99f1ea662d8686a73716afc2ecdc567d5d6c73269e5f7032a0d0edd0ee6"
+    },
+    {
+      "path": "source-before.json",
+      "bytes": 1468,
+      "sha256": "46d17166d2fc5b54ca49d0a1b426a7578acabe4158dc8f9a17bdd8ed5c96dd70"
+    }
+  ]
+}

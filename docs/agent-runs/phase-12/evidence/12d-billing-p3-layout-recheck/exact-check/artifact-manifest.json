@@ -1,0 +1,21 @@
+{
+  "scope": "Authorized exact-parser check; only prescribed result plus public diagnostic source/report",
+  "self_excluded": true,
+  "files": [
+    {
+      "path": "exact-parser-check.py",
+      "bytes": 3488,
+      "sha256": "ff1c414360c1461faf2b65e8fa74bf3f3d9c005d5a65d28da1f34b4969cb2018"
+    },
+    {
+      "path": "owner-report.txt",
+      "bytes": 3573,
+      "sha256": "a1ea0c138776523fb2ddfeef8157ff2a3e76afcb109c01069f7e71c7163fd1f0"
+    },
+    {
+      "path": "result.json",
+      "bytes": 154,
+      "sha256": "d09c0590dfd0f7e5dc19e5622d6e0bd33c6d304727825d8bfbc1224b03a29dc3"
+    }
+  ]
+}

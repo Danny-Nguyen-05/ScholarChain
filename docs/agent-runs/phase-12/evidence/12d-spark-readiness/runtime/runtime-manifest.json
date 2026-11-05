@@ -1,0 +1,1510 @@
+{
+  "AWS_calls": 0,
+  "downloads": 0,
+  "driver_classpath_file": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/driver-classpath.txt",
+  "driver_job_jar_first": true,
+  "excluded_bundled_user_libraries": [
+    {
+      "all_classes_already_bundled": true,
+      "artifact": "scala3-library_3-3.3.4.jar",
+      "bytes": 1250639,
+      "class_count": 562,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/scala-lang/scala3-library_3/3.3.4/scala3-library_3-3.3.4.jar",
+      "sha256": "d95184acfcd814da2e051378e4962c653f4b468f4086452ab427af030482bd3c"
+    },
+    {
+      "all_classes_already_bundled": true,
+      "artifact": "upickle_3-4.0.2.jar",
+      "bytes": 106552,
+      "class_count": 28,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/lihaoyi/upickle_3/4.0.2/upickle_3-4.0.2.jar",
+      "sha256": "b19a95c92c2d104ab2feb8ce68dacca1271adce6dcf90d8a40488af3f03dfdfd"
+    },
+    {
+      "all_classes_already_bundled": true,
+      "artifact": "slf4j-api-2.0.16.jar",
+      "bytes": 69435,
+      "class_count": 55,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/slf4j/slf4j-api/2.0.16/slf4j-api-2.0.16.jar",
+      "sha256": "a12578dde1ba00bd9b816d388a0b879928d00bab3c83c240f7013bf4196c579a"
+    },
+    {
+      "all_classes_already_bundled": true,
+      "artifact": "scala-library-2.13.14.jar",
+      "bytes": 5924141,
+      "class_count": 2889,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/scala-lang/scala-library/2.13.14/scala-library-2.13.14.jar",
+      "sha256": "43e0ca1583df1966eaf02f0fbddcfb3784b995dd06bfc907209347758ce4b7e3"
+    },
+    {
+      "all_classes_already_bundled": true,
+      "artifact": "ujson_3-4.0.2.jar",
+      "bytes": 264717,
+      "class_count": 77,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/lihaoyi/ujson_3/4.0.2/ujson_3-4.0.2.jar",
+      "sha256": "df9ee61d9c154f999a95ac1a36d9151f5f296931c946bdf4534d858ea49eaede"
+    },
+    {
+      "all_classes_already_bundled": true,
+      "artifact": "upack_3-4.0.2.jar",
+      "bytes": 139746,
+      "class_count": 57,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/lihaoyi/upack_3/4.0.2/upack_3-4.0.2.jar",
+      "sha256": "294b2cf0a4ba6a2803412f0b9a3dbbc2dc1dc420a48c3746d582c7f3f16a4181"
+    },
+    {
+      "all_classes_already_bundled": true,
+      "artifact": "upickle-implicits_3-4.0.2.jar",
+      "bytes": 288681,
+      "class_count": 95,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/lihaoyi/upickle-implicits_3/4.0.2/upickle-implicits_3-4.0.2.jar",
+      "sha256": "58bea28a70561054701074ca2f7fcc7a4b1abbe2ef7cb5017708e995b61d36ba"
+    },
+    {
+      "all_classes_already_bundled": true,
+      "artifact": "upickle-core_3-4.0.2.jar",
+      "bytes": 352543,
+      "class_count": 160,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/lihaoyi/upickle-core_3/4.0.2/upickle-core_3-4.0.2.jar",
+      "sha256": "a32dbb59e24c68423b58a0365974f5ab96906714d789c5b3ec7d3ff74325421f"
+    },
+    {
+      "all_classes_already_bundled": true,
+      "artifact": "geny_3-1.1.1.jar",
+      "bytes": 102389,
+      "class_count": 37,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/lihaoyi/geny_3/1.1.1/geny_3-1.1.1.jar",
+      "sha256": "39658649f90b631a4fd63187724f16ba8a045e1b10a513528f34517fb2edf98b"
+    }
+  ],
+  "external_artifacts": [
+    {
+      "all_classes_already_bundled": true,
+      "artifact": "scala3-library_3-3.3.4.jar",
+      "bytes": 1250639,
+      "class_count": 562,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/scala-lang/scala3-library_3/3.3.4/scala3-library_3-3.3.4.jar",
+      "sha256": "d95184acfcd814da2e051378e4962c653f4b468f4086452ab427af030482bd3c"
+    },
+    {
+      "all_classes_already_bundled": true,
+      "artifact": "upickle_3-4.0.2.jar",
+      "bytes": 106552,
+      "class_count": 28,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/lihaoyi/upickle_3/4.0.2/upickle_3-4.0.2.jar",
+      "sha256": "b19a95c92c2d104ab2feb8ce68dacca1271adce6dcf90d8a40488af3f03dfdfd"
+    },
+    {
+      "all_classes_already_bundled": true,
+      "artifact": "slf4j-api-2.0.16.jar",
+      "bytes": 69435,
+      "class_count": 55,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/slf4j/slf4j-api/2.0.16/slf4j-api-2.0.16.jar",
+      "sha256": "a12578dde1ba00bd9b816d388a0b879928d00bab3c83c240f7013bf4196c579a"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "spark-sql_2.13-3.5.4.jar",
+      "bytes": 9892912,
+      "class_count": 2843,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/apache/spark/spark-sql_2.13/3.5.4/spark-sql_2.13-3.5.4.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/spark-sql_2.13-3.5.4.jar",
+      "sha256": "f5a36b54d98b9ac4cc0d7ead9359f1e2bf179977415d1c9ba78e27da1a89cded"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "scala-reflect-2.13.14.jar",
+      "bytes": 3788294,
+      "class_count": 1491,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/scala-lang/scala-reflect/2.13.14/scala-reflect-2.13.14.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/scala-reflect-2.13.14.jar",
+      "sha256": "8846baaa8cf43b1b19725ab737abff145ca58d14a4d02e75d71ca8f7ca5f2926"
+    },
+    {
+      "all_classes_already_bundled": true,
+      "artifact": "scala-library-2.13.14.jar",
+      "bytes": 5924141,
+      "class_count": 2889,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/scala-lang/scala-library/2.13.14/scala-library-2.13.14.jar",
+      "sha256": "43e0ca1583df1966eaf02f0fbddcfb3784b995dd06bfc907209347758ce4b7e3"
+    },
+    {
+      "all_classes_already_bundled": true,
+      "artifact": "ujson_3-4.0.2.jar",
+      "bytes": 264717,
+      "class_count": 77,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/lihaoyi/ujson_3/4.0.2/ujson_3-4.0.2.jar",
+      "sha256": "df9ee61d9c154f999a95ac1a36d9151f5f296931c946bdf4534d858ea49eaede"
+    },
+    {
+      "all_classes_already_bundled": true,
+      "artifact": "upack_3-4.0.2.jar",
+      "bytes": 139746,
+      "class_count": 57,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/lihaoyi/upack_3/4.0.2/upack_3-4.0.2.jar",
+      "sha256": "294b2cf0a4ba6a2803412f0b9a3dbbc2dc1dc420a48c3746d582c7f3f16a4181"
+    },
+    {
+      "all_classes_already_bundled": true,
+      "artifact": "upickle-implicits_3-4.0.2.jar",
+      "bytes": 288681,
+      "class_count": 95,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/lihaoyi/upickle-implicits_3/4.0.2/upickle-implicits_3-4.0.2.jar",
+      "sha256": "58bea28a70561054701074ca2f7fcc7a4b1abbe2ef7cb5017708e995b61d36ba"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "rocksdbjni-8.3.2.jar",
+      "bytes": 59326387,
+      "class_count": 239,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/rocksdb/rocksdbjni/8.3.2/rocksdbjni-8.3.2.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/rocksdbjni-8.3.2.jar",
+      "sha256": "289cafede18172b2a477833485360f938fb82f5fc2c4aaaf2801a8b62f8e153b"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "univocity-parsers-2.9.1.jar",
+      "bytes": 447005,
+      "class_count": 273,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/univocity/univocity-parsers/2.9.1/univocity-parsers-2.9.1.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/univocity-parsers-2.9.1.jar",
+      "sha256": "31685122d5e392e98672ed6009a95a4c1623ca1185567bd44ee94527d454e5c3"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "spark-sketch_2.13-3.5.4.jar",
+      "bytes": 30824,
+      "class_count": 12,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/apache/spark/spark-sketch_2.13/3.5.4/spark-sketch_2.13-3.5.4.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/spark-sketch_2.13-3.5.4.jar",
+      "sha256": "b9c14e533f08c277096eb5fbf9edfe860c8497991cda5e8c64b8e993a5db2f91"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "spark-core_2.13-3.5.4.jar",
+      "bytes": 14854126,
+      "class_count": 4980,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/apache/spark/spark-core_2.13/3.5.4/spark-core_2.13-3.5.4.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/spark-core_2.13-3.5.4.jar",
+      "sha256": "2a4f5823aad3f99c9fddd77d0d4d4f3c6600dac5ea9a51d80bc6a2bc9e6561bf"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "spark-catalyst_2.13-3.5.4.jar",
+      "bytes": 12943968,
+      "class_count": 4224,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/apache/spark/spark-catalyst_2.13/3.5.4/spark-catalyst_2.13-3.5.4.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/spark-catalyst_2.13-3.5.4.jar",
+      "sha256": "11dc02136d07725c71fcc7ca8412d06d39380fb8e51c21e0a36e84a9eed4729f"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "spark-tags_2.13-3.5.4.jar",
+      "bytes": 15167,
+      "class_count": 11,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/apache/spark/spark-tags_2.13/3.5.4/spark-tags_2.13-3.5.4.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/spark-tags_2.13-3.5.4.jar",
+      "sha256": "94b0f469f69dfe8b1321217c5535401db1b6f4fe5905fe8ca9e3fe4c2feb1aa5"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "scala-parallel-collections_2.13-1.0.4.jar",
+      "bytes": 1127123,
+      "class_count": 372,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/scala-lang/modules/scala-parallel-collections_2.13/1.0.4/scala-parallel-collections_2.13-1.0.4.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/scala-parallel-collections_2.13-1.0.4.jar",
+      "sha256": "68f266c4fa37cb20a76e905ad940e241190ce288b7e4a9877f1dd1261cd1a9a7"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "orc-core-1.9.5-shaded-protobuf.jar",
+      "bytes": 2831103,
+      "class_count": 1209,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/apache/orc/orc-core/1.9.5/orc-core-1.9.5-shaded-protobuf.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/orc-core-1.9.5-shaded-protobuf.jar",
+      "sha256": "bddd435a9f3c7fc4092a45e33e7d9c1a36d075ebf3037bc97ad0a8bcdf71323a"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "orc-mapreduce-1.9.5-shaded-protobuf.jar",
+      "bytes": 1710749,
+      "class_count": 705,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/apache/orc/orc-mapreduce/1.9.5/orc-mapreduce-1.9.5-shaded-protobuf.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/orc-mapreduce-1.9.5-shaded-protobuf.jar",
+      "sha256": "0b096edccbb4a5d6a445fb9a1130b9a5fe8248cf8f84fc6e6bad4c8adbed9681"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "hive-storage-api-2.8.1.jar",
+      "bytes": 258346,
+      "class_count": 122,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/apache/hive/hive-storage-api/2.8.1/hive-storage-api-2.8.1.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/hive-storage-api-2.8.1.jar",
+      "sha256": "2bb77d246a9724a371301049239c6e53039efe4136b0ed34ee5a9c7b3cd861d8"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "parquet-column-1.13.1.jar",
+      "bytes": 2027128,
+      "class_count": 1317,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/apache/parquet/parquet-column/1.13.1/parquet-column-1.13.1.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/parquet-column-1.13.1.jar",
+      "sha256": "3ff4222b5da77cc85e3fee623ff9779f991a1a0987125e68bc642ff913ec5612"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "parquet-hadoop-1.13.1.jar",
+      "bytes": 1004811,
+      "class_count": 502,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/apache/parquet/parquet-hadoop/1.13.1/parquet-hadoop-1.13.1.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/parquet-hadoop-1.13.1.jar",
+      "sha256": "5b86f191d0bbfe866d194bd1a336fa79d049d342fb7a05aefcf31ea266792a40"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "jackson-databind-2.15.2.jar",
+      "bytes": 1620088,
+      "class_count": 776,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/fasterxml/jackson/core/jackson-databind/2.15.2/jackson-databind-2.15.2.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/jackson-databind-2.15.2.jar",
+      "sha256": "0eb2fdad6e40ab8832a78c9b22f58196dd970594e8d3d5a26ead87847c4f3a96"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "xbean-asm9-shaded-4.23.jar",
+      "bytes": 262591,
+      "class_count": 107,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/apache/xbean/xbean-asm9-shaded/4.23/xbean-asm9-shaded-4.23.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/xbean-asm9-shaded-4.23.jar",
+      "sha256": "0a9f790cd4759b7fb83fb6872504c73d669f72e731d9681f3e2da7ed3232c467"
+    },
+    {
+      "all_classes_already_bundled": true,
+      "artifact": "upickle-core_3-4.0.2.jar",
+      "bytes": 352543,
+      "class_count": 160,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/lihaoyi/upickle-core_3/4.0.2/upickle-core_3-4.0.2.jar",
+      "sha256": "a32dbb59e24c68423b58a0365974f5ab96906714d789c5b3ec7d3ff74325421f"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "avro-1.11.2.jar",
+      "bytes": 612317,
+      "class_count": 424,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/apache/avro/avro/1.11.2/avro-1.11.2.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/avro-1.11.2.jar",
+      "sha256": "31fa41e47437b2a4168fd57a24a19c687b7347b4ed01388f4779362085b2f92a"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "avro-mapred-1.11.2.jar",
+      "bytes": 188465,
+      "class_count": 120,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/apache/avro/avro-mapred/1.11.2/avro-mapred-1.11.2.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/avro-mapred-1.11.2.jar",
+      "sha256": "930b6b3dc811e45621ff2a32bbb190f2925e2cfed9419f94b78578075a838041"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "chill_2.13-0.10.0.jar",
+      "bytes": 212772,
+      "class_count": 106,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/twitter/chill_2.13/0.10.0/chill_2.13-0.10.0.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/chill_2.13-0.10.0.jar",
+      "sha256": "b6507cab344bf8a86bf8bd3987cef15a35c096570eb31893f760d4754de4d8b1"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "chill-java-0.10.0.jar",
+      "bytes": 58683,
+      "class_count": 52,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/twitter/chill-java/0.10.0/chill-java-0.10.0.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/chill-java-0.10.0.jar",
+      "sha256": "52afd3c1256d6f89293ba616c0c9ebf11191bb9e8159cd0c1cfdc99e5e0c5ffe"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "hadoop-client-api-3.3.4.jar",
+      "bytes": 19458635,
+      "class_count": 8784,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/apache/hadoop/hadoop-client-api/3.3.4/hadoop-client-api-3.3.4.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/hadoop-client-api-3.3.4.jar",
+      "sha256": "e513d71b78086b5caaa439f4402b43e20df01446d56b66084ad419452878701c"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "hadoop-client-runtime-3.3.4.jar",
+      "bytes": 30085504,
+      "class_count": 18230,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/apache/hadoop/hadoop-client-runtime/3.3.4/hadoop-client-runtime-3.3.4.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/hadoop-client-runtime-3.3.4.jar",
+      "sha256": "9377a68071137ae5f5c8cdc2ed20d6f904a1df4d06df26b47ed8872a1b0d8d47"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "spark-launcher_2.13-3.5.4.jar",
+      "bytes": 79236,
+      "class_count": 34,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/apache/spark/spark-launcher_2.13/3.5.4/spark-launcher_2.13-3.5.4.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/spark-launcher_2.13-3.5.4.jar",
+      "sha256": "d409063609fc6ef84b067e643872be876614b01ab22d3672e2cdf195c70e9368"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "spark-kvstore_2.13-3.5.4.jar",
+      "bytes": 84200,
+      "class_count": 40,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/apache/spark/spark-kvstore_2.13/3.5.4/spark-kvstore_2.13-3.5.4.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/spark-kvstore_2.13-3.5.4.jar",
+      "sha256": "e2593efc40dba5ab8c711f73e61d7a5406b0c9d8e93c3862b41bad71ba7d24eb"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "spark-network-common_2.13-3.5.4.jar",
+      "bytes": 2434034,
+      "class_count": 1741,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/apache/spark/spark-network-common_2.13/3.5.4/spark-network-common_2.13-3.5.4.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/spark-network-common_2.13-3.5.4.jar",
+      "sha256": "c2ca3071c1d5438902ef3970ab4e04ef080e48113ec357acd01a64a26079b1a2"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "spark-network-shuffle_2.13-3.5.4.jar",
+      "bytes": 177704,
+      "class_count": 90,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/apache/spark/spark-network-shuffle_2.13/3.5.4/spark-network-shuffle_2.13-3.5.4.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/spark-network-shuffle_2.13-3.5.4.jar",
+      "sha256": "aa7ef1f86a5d2b52045609a62f912a3862c9c7f7d76a31ac733e8918e604c51e"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "spark-unsafe_2.13-3.5.4.jar",
+      "bytes": 54776,
+      "class_count": 21,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/apache/spark/spark-unsafe_2.13/3.5.4/spark-unsafe_2.13-3.5.4.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/spark-unsafe_2.13-3.5.4.jar",
+      "sha256": "0e74c4a970e5faa8dd17aaf630839fafbb08a0db776cf5c79797bdb6e0e234ac"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "spark-common-utils_2.13-3.5.4.jar",
+      "bytes": 246974,
+      "class_count": 96,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/apache/spark/spark-common-utils_2.13/3.5.4/spark-common-utils_2.13-3.5.4.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/spark-common-utils_2.13-3.5.4.jar",
+      "sha256": "9d047f7a6b2bacbd6c07b3853616d952961d5eef4fa4df2c40d99722b57bd603"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "activation-1.1.1.jar",
+      "bytes": 69409,
+      "class_count": 38,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/javax/activation/activation/1.1.1/activation-1.1.1.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/activation-1.1.1.jar",
+      "sha256": "ae475120e9fcd99b4b00b38329bd61cdc5eb754eee03fe66c01f50e137724f99"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "curator-recipes-2.13.0.jar",
+      "bytes": 283653,
+      "class_count": 211,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/apache/curator/curator-recipes/2.13.0/curator-recipes-2.13.0.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/curator-recipes-2.13.0.jar",
+      "sha256": "22be05c1a3e6c5ede22e77372b08dc631a3b93b64acb7f682537ea65a6ddba06"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "zookeeper-3.6.3.jar",
+      "bytes": 1254153,
+      "class_count": 669,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/apache/zookeeper/zookeeper/3.6.3/zookeeper-3.6.3.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/zookeeper-3.6.3.jar",
+      "sha256": "ac44de96d37a80d463c1e01aaa2ea86b19490fa17a37438d14491456c0e4a911"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "jakarta.servlet-api-4.0.3.jar",
+      "bytes": 82872,
+      "class_count": 85,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/jakarta/servlet/jakarta.servlet-api/4.0.3/jakarta.servlet-api-4.0.3.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/jakarta.servlet-api-4.0.3.jar",
+      "sha256": "6d93010ca93301383c5ca960d55611a5c91798da1efb0f1fe9356f27831bf499"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "commons-codec-1.16.1.jar",
+      "bytes": 365463,
+      "class_count": 109,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/commons-codec/commons-codec/1.16.1/commons-codec-1.16.1.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/commons-codec-1.16.1.jar",
+      "sha256": "ec87bfb55f22cbd1b21e2190eeda28b2b312ed2a431ee49fbdcc01812d04a5e4"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "commons-compress-1.23.0.jar",
+      "bytes": 1062555,
+      "class_count": 562,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/apache/commons/commons-compress/1.23.0/commons-compress-1.23.0.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/commons-compress-1.23.0.jar",
+      "sha256": "c267f17160e9ef662b4d78b7f29dca7c82b15c5cff2cb6a9865ef4ab3dd5b787"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "commons-lang3-3.12.0.jar",
+      "bytes": 587402,
+      "class_count": 345,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/apache/commons/commons-lang3/3.12.0/commons-lang3-3.12.0.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/commons-lang3-3.12.0.jar",
+      "sha256": "d919d904486c037f8d193412da0c92e22a9fa24230b9d67a57855c5c31c7e94e"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "commons-math3-3.6.1.jar",
+      "bytes": 2213560,
+      "class_count": 1301,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/apache/commons/commons-math3/3.6.1/commons-math3-3.6.1.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/commons-math3-3.6.1.jar",
+      "sha256": "1e56d7b058d28b65abd256b8458e3885b674c1d588fa43cd7d1cbb9c7ef2b308"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "commons-text-1.10.0.jar",
+      "bytes": 238400,
+      "class_count": 154,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/apache/commons/commons-text/1.10.0/commons-text-1.10.0.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/commons-text-1.10.0.jar",
+      "sha256": "770cd903fa7b604d1f7ef7ba17f84108667294b2b478be8ed1af3bffb4ae0018"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "commons-io-2.16.1.jar",
+      "bytes": 508826,
+      "class_count": 346,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/commons-io/commons-io/2.16.1/commons-io-2.16.1.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/commons-io-2.16.1.jar",
+      "sha256": "f41f7baacd716896447ace9758621f62c1c6b0a91d89acee488da26fc477c84f"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "commons-collections-3.2.2.jar",
+      "bytes": 588337,
+      "class_count": 460,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/commons-collections/commons-collections/3.2.2/commons-collections-3.2.2.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/commons-collections-3.2.2.jar",
+      "sha256": "eeeae917917144a68a741d4c0dff66aa5c5c5fd85593ff217bced3fc8ca783b8"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "commons-collections4-4.4.jar",
+      "bytes": 751914,
+      "class_count": 524,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/apache/commons/commons-collections4/4.4/commons-collections4-4.4.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/commons-collections4-4.4.jar",
+      "sha256": "1df8b9430b5c8ed143d7815e403e33ef5371b2400aadbe9bda0883762e0846d1"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "jsr305-3.0.2.jar",
+      "bytes": 19936,
+      "class_count": 35,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/google/code/findbugs/jsr305/3.0.2/jsr305-3.0.2.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/jsr305-3.0.2.jar",
+      "sha256": "766ad2a0783f2687962c8ad74ceecc38a28b9f72a2d085ee438b7813e928d0c7"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "compress-lzf-1.1.2.jar",
+      "bytes": 81831,
+      "class_count": 42,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/ning/compress-lzf/1.1.2/compress-lzf-1.1.2.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/compress-lzf-1.1.2.jar",
+      "sha256": "a9a76c85a3cef3a22d4c0e8647a1449b638885f2ceb4d8c9f66df3c677cc228e"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "snappy-java-1.1.10.5.jar",
+      "bytes": 2299797,
+      "class_count": 40,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/xerial/snappy/snappy-java/1.1.10.5/snappy-java-1.1.10.5.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/snappy-java-1.1.10.5.jar",
+      "sha256": "0f3f1857ed33116583f480b4df5c0218836c47bfbc9c6221c0d73f356decf37b"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "lz4-java-1.8.0.jar",
+      "bytes": 682804,
+      "class_count": 80,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/lz4/lz4-java/1.8.0/lz4-java-1.8.0.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/lz4-java-1.8.0.jar",
+      "sha256": "d74a3334fb35195009b338a951f918203d6bbca3d1d359033dc33edd1cadc9ef"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "zstd-jni-1.5.5-4.jar",
+      "bytes": 5940719,
+      "class_count": 33,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/github/luben/zstd-jni/1.5.5-4/zstd-jni-1.5.5-4.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/zstd-jni-1.5.5-4.jar",
+      "sha256": "e234c9ccbe9e36e19cc36c633d15f4a461f1bdc985d66662a2abbaa89859e522"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "RoaringBitmap-0.9.45.jar",
+      "bytes": 443362,
+      "class_count": 173,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/roaringbitmap/RoaringBitmap/0.9.45/RoaringBitmap-0.9.45.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/RoaringBitmap-0.9.45.jar",
+      "sha256": "f3a88f1684b6a1622c1f4f4dbaac4f9fdb7d640e2abf37469a0a2d01a9ea1932"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "scala-collection-compat_2.13-2.7.0.jar",
+      "bytes": 5596,
+      "class_count": 6,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/scala-lang/modules/scala-collection-compat_2.13/2.7.0/scala-collection-compat_2.13-2.7.0.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/scala-collection-compat_2.13-2.7.0.jar",
+      "sha256": "936510670822c634f34ef793ef937a75e220f28824e591b220867c2f14943ad6"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "json4s-jackson_2.13-3.7.0-M11.jar",
+      "bytes": 37085,
+      "class_count": 20,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/json4s/json4s-jackson_2.13/3.7.0-M11/json4s-jackson_2.13-3.7.0-M11.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/json4s-jackson_2.13-3.7.0-M11.jar",
+      "sha256": "cad020769db5d5a7df5bca1030303d69a986c714250c71e8ec29d7f185839852"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "jersey-client-2.40.jar",
+      "bytes": 301876,
+      "class_count": 184,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/glassfish/jersey/core/jersey-client/2.40/jersey-client-2.40.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/jersey-client-2.40.jar",
+      "sha256": "fdeaa03c46a8a0c7618a751617c6beccdebc8082d0e992c0c7965bc50fd7daa0"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "jersey-common-2.40.jar",
+      "bytes": 1230119,
+      "class_count": 895,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/glassfish/jersey/core/jersey-common/2.40/jersey-common-2.40.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/jersey-common-2.40.jar",
+      "sha256": "dac402e730e12816ba72b1fe3107301efb0a589ca65617255d86bc5b705080fe"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "jersey-server-2.40.jar",
+      "bytes": 950564,
+      "class_count": 607,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/glassfish/jersey/core/jersey-server/2.40/jersey-server-2.40.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/jersey-server-2.40.jar",
+      "sha256": "ffa6c93f15f9543158841e0d7e102c3ba9bd6f845db2dde0aad3518bc417d178"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "jersey-container-servlet-2.40.jar",
+      "bytes": 32298,
+      "class_count": 8,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/glassfish/jersey/containers/jersey-container-servlet/2.40/jersey-container-servlet-2.40.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/jersey-container-servlet-2.40.jar",
+      "sha256": "f16fc54ca51c0964a9a187e277dce0fa36b296c3d02b02bd685589b5f2766ed2"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "jersey-container-servlet-core-2.40.jar",
+      "bytes": 73256,
+      "class_count": 44,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/glassfish/jersey/containers/jersey-container-servlet-core/2.40/jersey-container-servlet-core-2.40.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/jersey-container-servlet-core-2.40.jar",
+      "sha256": "689909c8dbcebdbd91e80f79e057115904c02f7ee04dff9aabadc66243760fc0"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "jersey-hk2-2.40.jar",
+      "bytes": 78477,
+      "class_count": 46,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/glassfish/jersey/inject/jersey-hk2/2.40/jersey-hk2-2.40.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/jersey-hk2-2.40.jar",
+      "sha256": "e5f69ac32a5c82e0603fb90b689bf9ef0ba237b3ba4f2bba3159f7d8c756b397"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "netty-all-4.1.96.Final.jar",
+      "bytes": 4468,
+      "class_count": 0,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/io/netty/netty-all/4.1.96.Final/netty-all-4.1.96.Final.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/netty-all-4.1.96.Final.jar",
+      "sha256": "88909513ab90dd1456488b99a8544b071a9137f0eb15e1c62848b6aef96fc917"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "netty-transport-native-epoll-4.1.96.Final-linux-x86_64.jar",
+      "bytes": 38970,
+      "class_count": 0,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/io/netty/netty-transport-native-epoll/4.1.96.Final/netty-transport-native-epoll-4.1.96.Final-linux-x86_64.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/netty-transport-native-epoll-4.1.96.Final-linux-x86_64.jar",
+      "sha256": "9363c8131744931d54db62d03922563aa5ddc96db53910beb9c2953bfa8bca34"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "netty-transport-native-epoll-4.1.96.Final-linux-aarch_64.jar",
+      "bytes": 40475,
+      "class_count": 0,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/io/netty/netty-transport-native-epoll/4.1.96.Final/netty-transport-native-epoll-4.1.96.Final-linux-aarch_64.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/netty-transport-native-epoll-4.1.96.Final-linux-aarch_64.jar",
+      "sha256": "1f02bf3599366231064ee99fc8c621eb97eaac1e40ba472ffe4de968eb186b7e"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "netty-transport-native-kqueue-4.1.96.Final-osx-aarch_64.jar",
+      "bytes": 25400,
+      "class_count": 0,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/io/netty/netty-transport-native-kqueue/4.1.96.Final/netty-transport-native-kqueue-4.1.96.Final-osx-aarch_64.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/netty-transport-native-kqueue-4.1.96.Final-osx-aarch_64.jar",
+      "sha256": "c5e228db77b235fc3e2df0afe0128904022893f1db5395fb8bd44257ada268c5"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "netty-transport-native-kqueue-4.1.96.Final-osx-x86_64.jar",
+      "bytes": 24665,
+      "class_count": 0,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/io/netty/netty-transport-native-kqueue/4.1.96.Final/netty-transport-native-kqueue-4.1.96.Final-osx-x86_64.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/netty-transport-native-kqueue-4.1.96.Final-osx-x86_64.jar",
+      "sha256": "89f1a331da4fd49d39ac83e03f4cdb04417bd7ce32f522ef2eb670e09225add6"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "stream-2.9.6.jar",
+      "bytes": 178149,
+      "class_count": 79,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/clearspring/analytics/stream/2.9.6/stream-2.9.6.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/stream-2.9.6.jar",
+      "sha256": "d61aebbea8a08148c3aca6b03464495a4bbf9d362205d54ea5f6b443af73afdf"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "metrics-core-4.2.19.jar",
+      "bytes": 129647,
+      "class_count": 104,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/io/dropwizard/metrics/metrics-core/4.2.19/metrics-core-4.2.19.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/metrics-core-4.2.19.jar",
+      "sha256": "fa967bc2b37c8bff5bc377e60e439504fd9df5d335c7a42b37212403250023df"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "metrics-jvm-4.2.19.jar",
+      "bytes": 24683,
+      "class_count": 16,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/io/dropwizard/metrics/metrics-jvm/4.2.19/metrics-jvm-4.2.19.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/metrics-jvm-4.2.19.jar",
+      "sha256": "996a602152db07aa5cbc669265b564099c20acef2508ec5e717f20b98b5acbc5"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "metrics-json-4.2.19.jar",
+      "bytes": 17037,
+      "class_count": 11,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/io/dropwizard/metrics/metrics-json/4.2.19/metrics-json-4.2.19.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/metrics-json-4.2.19.jar",
+      "sha256": "cfbccdfd8fc073dbbd47ae734785c0a2a12a00c0c3903549719fc416e8b646c6"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "metrics-graphite-4.2.19.jar",
+      "bytes": 23890,
+      "class_count": 11,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/io/dropwizard/metrics/metrics-graphite/4.2.19/metrics-graphite-4.2.19.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/metrics-graphite-4.2.19.jar",
+      "sha256": "53d5417288b0e2a390d379a6f784210b43ebfbaa0a1f3349e2638a35bc2c0877"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "metrics-jmx-4.2.19.jar",
+      "bytes": 21568,
+      "class_count": 19,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/io/dropwizard/metrics/metrics-jmx/4.2.19/metrics-jmx-4.2.19.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/metrics-jmx-4.2.19.jar",
+      "sha256": "d51c124b6e1ec77b7711dffd4b46b47db529074ff522b49f2343c7c2e82798af"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "jackson-module-scala_2.13-2.15.2.jar",
+      "bytes": 518681,
+      "class_count": 244,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/fasterxml/jackson/module/jackson-module-scala_2.13/2.15.2/jackson-module-scala_2.13-2.15.2.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/jackson-module-scala_2.13-2.15.2.jar",
+      "sha256": "4705c84e6b247a61379ae7ee5df47045ac5d81b505a20222cac0f5f44e838ee4"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "ivy-2.5.1.jar",
+      "bytes": 1398591,
+      "class_count": 773,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/apache/ivy/ivy/2.5.1/ivy-2.5.1.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/ivy-2.5.1.jar",
+      "sha256": "793120f8c9058aede475b093651aa5307603c1518180772c104562a0ed2e9feb"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "oro-2.0.8.jar",
+      "bytes": 65261,
+      "class_count": 62,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/oro/oro/2.0.8/oro-2.0.8.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/oro-2.0.8.jar",
+      "sha256": "e00ccdad5df7eb43fdee44232ef64602bf63807c2d133a7be83ba09fd49af26e"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "pickle-1.3.jar",
+      "bytes": 54279,
+      "class_count": 28,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/net/razorvine/pickle/1.3/pickle-1.3.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/pickle-1.3.jar",
+      "sha256": "259aca378cbcee48797d047169e573666640312a188e2428a03cb19b0fbc7664"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "py4j-0.10.9.7.jar",
+      "bytes": 124506,
+      "class_count": 68,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/net/sf/py4j/py4j/0.10.9.7/py4j-0.10.9.7.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/py4j-0.10.9.7.jar",
+      "sha256": "4d67d584e7b0f456deedffbd3f43047efd6748ff3d13b443abb61ec54cf7af13"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "commons-crypto-1.1.0.jar",
+      "bytes": 166244,
+      "class_count": 52,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/apache/commons/commons-crypto/1.1.0/commons-crypto-1.1.0.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/commons-crypto-1.1.0.jar",
+      "sha256": "44dc28551cdba731658090d9b10d2eead9839c269d70cdcd7d56c0423df5227f"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "spark-sql-api_2.13-3.5.4.jar",
+      "bytes": 1805975,
+      "class_count": 781,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/apache/spark/spark-sql-api_2.13/3.5.4/spark-sql-api_2.13-3.5.4.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/spark-sql-api_2.13-3.5.4.jar",
+      "sha256": "3a89753be08038f3d027f994d993b07a3f0a217ef74bb842adcabeaee8579bc1"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "janino-3.1.9.jar",
+      "bytes": 958840,
+      "class_count": 517,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/codehaus/janino/janino/3.1.9/janino-3.1.9.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/janino-3.1.9.jar",
+      "sha256": "7df88d90aa165ab48bdebea425fa009eeef04918c82e98cdbea5e747e114508d"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "commons-compiler-3.1.9.jar",
+      "bytes": 173752,
+      "class_count": 144,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/codehaus/janino/commons-compiler/3.1.9/commons-compiler-3.1.9.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/commons-compiler-3.1.9.jar",
+      "sha256": "d988a3ebc17188e9a1a3efadd8e958b90eb995c4fcc077292a5dfe5fe1109d25"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "datasketches-java-3.3.0.jar",
+      "bytes": 832024,
+      "class_count": 343,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/apache/datasketches/datasketches-java/3.3.0/datasketches-java-3.3.0.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/datasketches-java-3.3.0.jar",
+      "sha256": "d1bf7b4ed14058f244fe7a85f7ae69f42de452b7e7c0cc26b735be40770e5901"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "orc-shims-1.9.5.jar",
+      "bytes": 29012,
+      "class_count": 23,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/apache/orc/orc-shims/1.9.5/orc-shims-1.9.5.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/orc-shims-1.9.5.jar",
+      "sha256": "aa9c453becf92b54d4360954fbdd57c20da3eaae0f1738148cbecf93181e94bd"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "aircompressor-0.27.jar",
+      "bytes": 254937,
+      "class_count": 124,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/io/airlift/aircompressor/0.27/aircompressor-0.27.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/aircompressor-0.27.jar",
+      "sha256": "fdbef3137a28f63bb0cb93487803080ede746a4ec3d421e36c6f0c305c35e5e4"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "annotations-17.0.0.jar",
+      "bytes": 19014,
+      "class_count": 39,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/jetbrains/annotations/17.0.0/annotations-17.0.0.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/annotations-17.0.0.jar",
+      "sha256": "195fb0da046d55bb042e91543484cf1da68b02bb7afbfe031f229e45ac84b3f2"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "threeten-extra-1.7.1.jar",
+      "bytes": 256667,
+      "class_count": 105,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/threeten/threeten-extra/1.7.1/threeten-extra-1.7.1.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/threeten-extra-1.7.1.jar",
+      "sha256": "9bbcbe09a631320bdc3325bbb04c93068473bc0e04b85e2ef3e42314d5a7dacf"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "parquet-common-1.13.1.jar",
+      "bytes": 97009,
+      "class_count": 83,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/apache/parquet/parquet-common/1.13.1/parquet-common-1.13.1.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/parquet-common-1.13.1.jar",
+      "sha256": "4a2d7a8eb395bbc8d202fa74b272e45374a1034b351028824ad46925366297ea"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "parquet-encoding-1.13.1.jar",
+      "bytes": 849213,
+      "class_count": 305,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/apache/parquet/parquet-encoding/1.13.1/parquet-encoding-1.13.1.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/parquet-encoding-1.13.1.jar",
+      "sha256": "0c921d275bbcc31552ee94d383ea38b2615110790d59f11ad07ffe5f3f0c23b3"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "audience-annotations-0.13.0.jar",
+      "bytes": 20891,
+      "class_count": 13,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/apache/yetus/audience-annotations/0.13.0/audience-annotations-0.13.0.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/audience-annotations-0.13.0.jar",
+      "sha256": "3bfbb397b06f63a2a0a361f62ed32cf199bd92ddd48ea99281f4987edec9777b"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "parquet-format-structures-1.13.1.jar",
+      "bytes": 726071,
+      "class_count": 442,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/apache/parquet/parquet-format-structures/1.13.1/parquet-format-structures-1.13.1.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/parquet-format-structures-1.13.1.jar",
+      "sha256": "57b3e31e9502a1121dc481a3017fc2f20d1d6116da82dd58155a69b10b28e1e6"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "parquet-jackson-1.13.1.jar",
+      "bytes": 2017388,
+      "class_count": 905,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/apache/parquet/parquet-jackson/1.13.1/parquet-jackson-1.13.1.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/parquet-jackson-1.13.1.jar",
+      "sha256": "d1e66f2a392d1777425688d3439b7f57d08c4404a81ae95bb247a16cfc773da1"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "jackson-annotations-2.15.2.jar",
+      "bytes": 75567,
+      "class_count": 72,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/fasterxml/jackson/core/jackson-annotations/2.15.2/jackson-annotations-2.15.2.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/jackson-annotations-2.15.2.jar",
+      "sha256": "04e21f94dcfee4b078fa5a5f53047b785aaba69d19de392f616e7a7fe5d3882f"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "jackson-core-2.15.2.jar",
+      "bytes": 549207,
+      "class_count": 195,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/fasterxml/jackson/core/jackson-core/2.15.2/jackson-core-2.15.2.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/jackson-core-2.15.2.jar",
+      "sha256": "303c99e82b1faa91a0bae5d8fbeb56f7e2adf9b526a900dd723bf140d62bd4b4"
+    },
+    {
+      "all_classes_already_bundled": true,
+      "artifact": "geny_3-1.1.1.jar",
+      "bytes": 102389,
+      "class_count": 37,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/lihaoyi/geny_3/1.1.1/geny_3-1.1.1.jar",
+      "sha256": "39658649f90b631a4fd63187724f16ba8a045e1b10a513528f34517fb2edf98b"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "avro-ipc-1.11.2.jar",
+      "bytes": 185432,
+      "class_count": 63,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/apache/avro/avro-ipc/1.11.2/avro-ipc-1.11.2.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/avro-ipc-1.11.2.jar",
+      "sha256": "810dc8f137a98de150dee029ae7991190ec898a09383c4d908346f711994ff2d"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "kryo-shaded-4.0.2.jar",
+      "bytes": 410874,
+      "class_count": 240,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/esotericsoftware/kryo-shaded/4.0.2/kryo-shaded-4.0.2.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/kryo-shaded-4.0.2.jar",
+      "sha256": "a4899f57fef456b9ec66f730e7b493ecb3dc494cc5758721ed9c18416fd2d3b6"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "commons-logging-1.1.3.jar",
+      "bytes": 62050,
+      "class_count": 28,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/commons-logging/commons-logging/1.1.3/commons-logging-1.1.3.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/commons-logging-1.1.3.jar",
+      "sha256": "70903f6fc82e9908c8da9f20443f61d90f0870a312642991fe8462a0b9391784"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "leveldbjni-all-1.8.jar",
+      "bytes": 1045744,
+      "class_count": 75,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/fusesource/leveldbjni/leveldbjni-all/1.8/leveldbjni-all-1.8.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/leveldbjni-all-1.8.jar",
+      "sha256": "c297213b0e6f9392305952753f3099a4c02e70b3656266fe01867e7b6c160ffe"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "tink-1.9.0.jar",
+      "bytes": 2168533,
+      "class_count": 1122,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/google/crypto/tink/tink/1.9.0/tink-1.9.0.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/tink-1.9.0.jar",
+      "sha256": "8faf92d116a0ba138ee4e99a7418e985897818c2f6a9d4c01b8fe6b07db60eb7"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "jul-to-slf4j-2.0.7.jar",
+      "bytes": 5655,
+      "class_count": 1,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/slf4j/jul-to-slf4j/2.0.7/jul-to-slf4j-2.0.7.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/jul-to-slf4j-2.0.7.jar",
+      "sha256": "eaba65483bb38c93e68d557a19e5738962322de1946545dbf40e5e32f6293008"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "jcl-over-slf4j-2.0.7.jar",
+      "bytes": 21143,
+      "class_count": 8,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/slf4j/jcl-over-slf4j/2.0.7/jcl-over-slf4j-2.0.7.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/jcl-over-slf4j-2.0.7.jar",
+      "sha256": "41806757e1d26dae5d6db2ca7d4a5176eed2d6e709cd86564d4a11dab0601742"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "log4j-slf4j2-impl-2.20.0.jar",
+      "bytes": 26430,
+      "class_count": 11,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/apache/logging/log4j/log4j-slf4j2-impl/2.20.0/log4j-slf4j2-impl-2.20.0.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/log4j-slf4j2-impl-2.20.0.jar",
+      "sha256": "b8dd3e4ea9cffa18db5f301cd8c539158662e691efd4701aa87b4d09961bd8b0"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "log4j-api-2.20.0.jar",
+      "bytes": 313296,
+      "class_count": 191,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/apache/logging/log4j/log4j-api/2.20.0/log4j-api-2.20.0.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/log4j-api-2.20.0.jar",
+      "sha256": "2f43eea679ea66f14ca0f13fec2a8600ac124f5a5231dcb4df8393eddcb97550"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "log4j-core-2.20.0.jar",
+      "bytes": 1847550,
+      "class_count": 1211,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/apache/logging/log4j/log4j-core/2.20.0/log4j-core-2.20.0.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/log4j-core-2.20.0.jar",
+      "sha256": "6137df848cdaed9f4d5076f75513c6c85da80b953f4e7acca38098b770763f55"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "log4j-1.2-api-2.20.0.jar",
+      "bytes": 344375,
+      "class_count": 197,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/apache/logging/log4j/log4j-1.2-api/2.20.0/log4j-1.2-api-2.20.0.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/log4j-1.2-api-2.20.0.jar",
+      "sha256": "89d761af83de7e08e3c1916bc757242cedbbc1f38fb76fd13f89ef36b2671a45"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "curator-framework-2.13.0.jar",
+      "bytes": 201965,
+      "class_count": 177,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/apache/curator/curator-framework/2.13.0/curator-framework-2.13.0.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/curator-framework-2.13.0.jar",
+      "sha256": "db084e5e0fed0548a8128f12a3e7a15c875c9595e75316c9578d64e77375c4a9"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "zookeeper-jute-3.6.3.jar",
+      "bytes": 250399,
+      "class_count": 110,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/apache/zookeeper/zookeeper-jute/3.6.3/zookeeper-jute-3.6.3.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/zookeeper-jute-3.6.3.jar",
+      "sha256": "6f463ade2b777f81e6c3e145b3fc03d4b39131b73dcf8c7f4b89ac4b1bacc9c5"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "shims-0.9.45.jar",
+      "bytes": 2551,
+      "class_count": 2,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/roaringbitmap/shims/0.9.45/shims-0.9.45.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/shims-0.9.45.jar",
+      "sha256": "4af32f9523c6249ad00d76b69129f59ad22976ef8cff86b6dd5479f6a64cec8d"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "json4s-core_2.13-3.7.0-M11.jar",
+      "bytes": 530321,
+      "class_count": 249,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/json4s/json4s-core_2.13/3.7.0-M11/json4s-core_2.13-3.7.0-M11.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/json4s-core_2.13-3.7.0-M11.jar",
+      "sha256": "b3db09cd8b78eef923bac4c1c9afb5e561e388d7e3b31b41f7e40959c1c5c39a"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "jakarta.ws.rs-api-2.1.6.jar",
+      "bytes": 140376,
+      "class_count": 137,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/jakarta/ws/rs/jakarta.ws.rs-api/2.1.6/jakarta.ws.rs-api-2.1.6.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/jakarta.ws.rs-api-2.1.6.jar",
+      "sha256": "4cea299c846c8a6e6470cbfc2f7c391bc29b9caa2f9264ac1064ba91691f4adf"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "jakarta.inject-2.6.1.jar",
+      "bytes": 18140,
+      "class_count": 6,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/glassfish/hk2/external/jakarta.inject/2.6.1/jakarta.inject-2.6.1.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/jakarta.inject-2.6.1.jar",
+      "sha256": "5e88c123b3e41bca788b2683118867d9b6dec714247ea91c588aed46a36ee24f"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "jakarta.annotation-api-1.3.5.jar",
+      "bytes": 25058,
+      "class_count": 15,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/jakarta/annotation/jakarta.annotation-api/1.3.5/jakarta.annotation-api-1.3.5.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/jakarta.annotation-api-1.3.5.jar",
+      "sha256": "85fb03fc054cdf4efca8efd9b6712bbb418e1ab98241c4539c8585bbc23e1b8a"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "osgi-resource-locator-1.0.3.jar",
+      "bytes": 19479,
+      "class_count": 12,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/glassfish/hk2/osgi-resource-locator/1.0.3/osgi-resource-locator-1.0.3.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/osgi-resource-locator-1.0.3.jar",
+      "sha256": "aab5d7849f7cfcda2cc7c541ba1bd365151d42276f151c825387245dfde3dd74"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "jakarta.validation-api-2.0.2.jar",
+      "bytes": 91930,
+      "class_count": 143,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/jakarta/validation/jakarta.validation-api/2.0.2/jakarta.validation-api-2.0.2.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/jakarta.validation-api-2.0.2.jar",
+      "sha256": "b42d42428f3d922c892a909fa043287d577c0c5b165ad9b7d568cebf87fc9ea4"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "hk2-locator-2.6.1.jar",
+      "bytes": 203358,
+      "class_count": 99,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/glassfish/hk2/hk2-locator/2.6.1/hk2-locator-2.6.1.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/hk2-locator-2.6.1.jar",
+      "sha256": "febc668deb9f2000c76bd4918d8086c0a4c74d07bd0c60486b72c6bd38b62874"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "javassist-3.29.2-GA.jar",
+      "bytes": 794137,
+      "class_count": 426,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/javassist/javassist/3.29.2-GA/javassist-3.29.2-GA.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/javassist-3.29.2-GA.jar",
+      "sha256": "a90ddb25135df9e57ea9bd4e224e219554929758f9bae9965f29f81d60a3293f"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "netty-buffer-4.1.96.Final.jar",
+      "bytes": 306489,
+      "class_count": 138,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/io/netty/netty-buffer/4.1.96.Final/netty-buffer-4.1.96.Final.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/netty-buffer-4.1.96.Final.jar",
+      "sha256": "1dee6f5b4aa485339d49525ec3689463f724785fc35e7db02f9e46cbdecbe335"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "netty-codec-4.1.96.Final.jar",
+      "bytes": 344788,
+      "class_count": 213,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/io/netty/netty-codec/4.1.96.Final/netty-codec-4.1.96.Final.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/netty-codec-4.1.96.Final.jar",
+      "sha256": "07305d3e565fc01da310f1c8ea7935c08e42ff1977590f2d44fc1305cb470d60"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "netty-codec-http-4.1.96.Final.jar",
+      "bytes": 656598,
+      "class_count": 386,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/io/netty/netty-codec-http/4.1.96.Final/netty-codec-http-4.1.96.Final.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/netty-codec-http-4.1.96.Final.jar",
+      "sha256": "b64808027d7d18c59126ff3a33012c43ac58a0798c1cd1e765f6f71a3fd4ff76"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "netty-codec-http2-4.1.96.Final.jar",
+      "bytes": 483284,
+      "class_count": 279,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/io/netty/netty-codec-http2/4.1.96.Final/netty-codec-http2-4.1.96.Final.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/netty-codec-http2-4.1.96.Final.jar",
+      "sha256": "6eb87af9a396ba21a6cbbbd047c4b3139f40ded2feefba4632802e94c0ef24dd"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "netty-codec-socks-4.1.96.Final.jar",
+      "bytes": 120974,
+      "class_count": 107,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/io/netty/netty-codec-socks/4.1.96.Final/netty-codec-socks-4.1.96.Final.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/netty-codec-socks-4.1.96.Final.jar",
+      "sha256": "29de9bb7fe9633fcc3d2f8246293f8692aa5e5bd7ee2a425a0f211d5e6b493b8"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "netty-common-4.1.96.Final.jar",
+      "bytes": 659926,
+      "class_count": 492,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/io/netty/netty-common/4.1.96.Final/netty-common-4.1.96.Final.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/netty-common-4.1.96.Final.jar",
+      "sha256": "da104e80db830922eaf860eb1c5e957cd1d124068253d02e9c7a7843bc66427a"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "netty-handler-4.1.96.Final.jar",
+      "bytes": 557737,
+      "class_count": 357,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/io/netty/netty-handler/4.1.96.Final/netty-handler-4.1.96.Final.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/netty-handler-4.1.96.Final.jar",
+      "sha256": "574ebef95a16053246ab692773d75d8bd7907b709e1083a096fa6ab2a6d6c2b3"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "netty-transport-native-unix-common-4.1.96.Final.jar",
+      "bytes": 43897,
+      "class_count": 32,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/io/netty/netty-transport-native-unix-common/4.1.96.Final/netty-transport-native-unix-common-4.1.96.Final.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/netty-transport-native-unix-common-4.1.96.Final.jar",
+      "sha256": "4f96297a06a544a4cdb6fe6af8b868640f100fa96969e2196be216bd41adef13"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "netty-handler-proxy-4.1.96.Final.jar",
+      "bytes": 25486,
+      "class_count": 12,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/io/netty/netty-handler-proxy/4.1.96.Final/netty-handler-proxy-4.1.96.Final.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/netty-handler-proxy-4.1.96.Final.jar",
+      "sha256": "4832bbbab1daac36ecd04d2ed2dc586c4a57b4604d89145a2de487ff5b00e4cd"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "netty-resolver-4.1.96.Final.jar",
+      "bytes": 37791,
+      "class_count": 29,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/io/netty/netty-resolver/4.1.96.Final/netty-resolver-4.1.96.Final.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/netty-resolver-4.1.96.Final.jar",
+      "sha256": "54951fae449fa343038fc57855abf5822918d52ca5a302a421f327cad9c75cf1"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "netty-transport-4.1.96.Final.jar",
+      "bytes": 489581,
+      "class_count": 367,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/io/netty/netty-transport/4.1.96.Final/netty-transport-4.1.96.Final.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/netty-transport-4.1.96.Final.jar",
+      "sha256": "8fe3afbe8b094a7b9f1eb27becf1cf017e5572343c1744d2b6040d5f331e84e3"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "netty-transport-classes-epoll-4.1.96.Final.jar",
+      "bytes": 147152,
+      "class_count": 67,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/io/netty/netty-transport-classes-epoll/4.1.96.Final/netty-transport-classes-epoll-4.1.96.Final.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/netty-transport-classes-epoll-4.1.96.Final.jar",
+      "sha256": "1591b3ea061932677dc2bab6cb7d82e8f1837a52b3c781f4daa99984ec87a9cd"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "netty-transport-classes-kqueue-4.1.96.Final.jar",
+      "bytes": 108433,
+      "class_count": 50,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/io/netty/netty-transport-classes-kqueue/4.1.96.Final/netty-transport-classes-kqueue-4.1.96.Final.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/netty-transport-classes-kqueue-4.1.96.Final.jar",
+      "sha256": "f2f1fab3b297aee20a3922c79b548c8b4b72bb10b635375434c108ee05f29430"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "paranamer-2.8.jar",
+      "bytes": 34654,
+      "class_count": 21,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/thoughtworks/paranamer/paranamer/2.8/paranamer-2.8.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/paranamer-2.8.jar",
+      "sha256": "688cb118a6021d819138e855208c956031688be4b47a24bb615becc63acedf07"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "scala-parser-combinators_2.13-2.3.0.jar",
+      "bytes": 189332,
+      "class_count": 86,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/scala-lang/modules/scala-parser-combinators_2.13/2.3.0/scala-parser-combinators_2.13-2.3.0.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/scala-parser-combinators_2.13-2.3.0.jar",
+      "sha256": "077b0709d44ff23b9ca143beb8c267822afead2db84822414796687339829ac0"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "antlr4-runtime-4.9.3.jar",
+      "bytes": 336742,
+      "class_count": 220,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/antlr/antlr4-runtime/4.9.3/antlr4-runtime-4.9.3.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/antlr4-runtime-4.9.3.jar",
+      "sha256": "131a6594969bc4f321d652ea2a33bc0e378ca312685ef87791b2c60b29d01ea5"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "arrow-vector-12.0.1.jar",
+      "bytes": 1878304,
+      "class_count": 703,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/apache/arrow/arrow-vector/12.0.1/arrow-vector-12.0.1.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/arrow-vector-12.0.1.jar",
+      "sha256": "0ca927fb749772077d488a901ec977ff9428a6836a053b12b470adf822b1fd72"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "arrow-memory-netty-12.0.1.jar",
+      "bytes": 39487,
+      "class_count": 14,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/apache/arrow/arrow-memory-netty/12.0.1/arrow-memory-netty-12.0.1.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/arrow-memory-netty-12.0.1.jar",
+      "sha256": "f3d45c3ca7ef7f9b3bbf6d8b68126d630fe3f538614fda00f95ec66f7d3aa051"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "datasketches-memory-2.1.0.jar",
+      "bytes": 129774,
+      "class_count": 71,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/apache/datasketches/datasketches-memory/2.1.0/datasketches-memory-2.1.0.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/datasketches-memory-2.1.0.jar",
+      "sha256": "9d6cc5e06449c6bd61bba5eb7db30bb93583591300332a09ce615198bf86fb23"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "xz-1.9.jar",
+      "bytes": 116013,
+      "class_count": 116,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/tukaani/xz/1.9/xz-1.9.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/xz-1.9.jar",
+      "sha256": "211b306cfc44f8f96df3a0a3ddaf75ba8c5289eed77d60d72f889bb855f535e5"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "minlog-1.3.0.jar",
+      "bytes": 5711,
+      "class_count": 2,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/esotericsoftware/minlog/1.3.0/minlog-1.3.0.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/minlog-1.3.0.jar",
+      "sha256": "f7b399d3a5478a4f3e0d98bd1c9f47766119c66414bc33aa0f6cde0066f24cc2"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "objenesis-2.5.1.jar",
+      "bytes": 54391,
+      "class_count": 43,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/objenesis/objenesis/2.5.1/objenesis-2.5.1.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/objenesis-2.5.1.jar",
+      "sha256": "b043f03e466752f7f03e2326a3b13a49b7c649f8f2a2dc87715827e24f73d9c6"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "gson-2.10.1.jar",
+      "bytes": 283367,
+      "class_count": 217,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/google/code/gson/gson/2.10.1/gson-2.10.1.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/gson-2.10.1.jar",
+      "sha256": "4241c14a7727c34feea6507ec801318a3d4a90f070e4525681079fb94ee4c593"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "protobuf-java-3.19.6.jar",
+      "bytes": 1664824,
+      "class_count": 676,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/google/protobuf/protobuf-java/3.19.6/protobuf-java-3.19.6.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/protobuf-java-3.19.6.jar",
+      "sha256": "6a9a2dff91dcf71f85be71ae971f6164b5a631dcd34bff08f0618535ca44ad02"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "joda-time-2.12.5.jar",
+      "bytes": 637993,
+      "class_count": 247,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/joda-time/joda-time/2.12.5/joda-time-2.12.5.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/joda-time-2.12.5.jar",
+      "sha256": "10628411ecb40c4634196c544f34681abdeef826f377096357433d1f9a135bc6"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "curator-client-2.13.0.jar",
+      "bytes": 2423157,
+      "class_count": 1737,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/apache/curator/curator-client/2.13.0/curator-client-2.13.0.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/curator-client-2.13.0.jar",
+      "sha256": "62ab2201b5b9af63b215a4e6829dbe7d553a0805cfb0b1a665f9b49da8270c51"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "json4s-ast_2.13-3.7.0-M11.jar",
+      "bytes": 91558,
+      "class_count": 56,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/json4s/json4s-ast_2.13/3.7.0-M11/json4s-ast_2.13-3.7.0-M11.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/json4s-ast_2.13-3.7.0-M11.jar",
+      "sha256": "c694b60c77ddc9e33a849f156ff25ac77c052a64d5cce5fd180c2c160d7ac923"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "json4s-scalap_2.13-3.7.0-M11.jar",
+      "bytes": 358366,
+      "class_count": 141,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/json4s/json4s-scalap_2.13/3.7.0-M11/json4s-scalap_2.13-3.7.0-M11.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/json4s-scalap_2.13-3.7.0-M11.jar",
+      "sha256": "108a024adcf76527a7e8d4d209519121fb640166092d139c6198031eba6cb64a"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "aopalliance-repackaged-2.6.1.jar",
+      "bytes": 27006,
+      "class_count": 26,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/glassfish/hk2/external/aopalliance-repackaged/2.6.1/aopalliance-repackaged-2.6.1.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/aopalliance-repackaged-2.6.1.jar",
+      "sha256": "bad77f9278d753406360af9e4747bd9b3161554ea9cd3d62411a0ae1f2c141fd"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "hk2-api-2.6.1.jar",
+      "bytes": 200223,
+      "class_count": 176,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/glassfish/hk2/hk2-api/2.6.1/hk2-api-2.6.1.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/hk2-api-2.6.1.jar",
+      "sha256": "c2cb80a01e58440ae57d5ee59af4d4d94e5180e04aff112b0cb611c07d61e773"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "hk2-utils-2.6.1.jar",
+      "bytes": 131590,
+      "class_count": 80,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/glassfish/hk2/hk2-utils/2.6.1/hk2-utils-2.6.1.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/hk2-utils-2.6.1.jar",
+      "sha256": "30727f79086452fdefdab08451d982c2082aa239d9f75cdeb1ba271e3c887036"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "arrow-format-12.0.1.jar",
+      "bytes": 110232,
+      "class_count": 93,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/apache/arrow/arrow-format/12.0.1/arrow-format-12.0.1.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/arrow-format-12.0.1.jar",
+      "sha256": "ff08f69204e0a26b409a1c501197ba956f2fe044e53f1f4889025ec7622d7787"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "arrow-memory-core-12.0.1.jar",
+      "bytes": 111010,
+      "class_count": 68,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/apache/arrow/arrow-memory-core/12.0.1/arrow-memory-core-12.0.1.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/arrow-memory-core-12.0.1.jar",
+      "sha256": "25e23b9762ddce71fb9876a1794056a7dfc64f453c608763160fcc1852c62c3f"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "jackson-datatype-jsr310-2.15.1.jar",
+      "bytes": 122937,
+      "class_count": 58,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/fasterxml/jackson/datatype/jackson-datatype-jsr310/2.15.1/jackson-datatype-jsr310-2.15.1.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/jackson-datatype-jsr310-2.15.1.jar",
+      "sha256": "54b17558e5e7b6219403e79c8544fc7a8013c46609cb7e354d2d3c1f999eb99f"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "flatbuffers-java-1.12.0.jar",
+      "bytes": 64873,
+      "class_count": 45,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/google/flatbuffers/flatbuffers-java/1.12.0/flatbuffers-java-1.12.0.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/flatbuffers-java-1.12.0.jar",
+      "sha256": "3f8c088b4dd04a9858721f2e162508c94db0dd86f961e306ee63ef2eda871bf7"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "guava-16.0.1.jar",
+      "bytes": 2228009,
+      "class_count": 1678,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/com/google/guava/guava/16.0.1/guava-16.0.1.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/guava-16.0.1.jar",
+      "sha256": "a896857d07845d38c7dc5bbc0457b6d9b0f62ecffda010e5e9ec12d561f676d3"
+    },
+    {
+      "all_classes_already_bundled": false,
+      "artifact": "netty-transport-native-epoll-4.1.96.Final.jar",
+      "bytes": 5663,
+      "class_count": 0,
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/io/netty/netty-transport-native-epoll/4.1.96.Final/netty-transport-native-epoll-4.1.96.Final.jar",
+      "runtime_link": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/netty-transport-native-epoll-4.1.96.Final.jar",
+      "sha256": "33d8f491e47a5a365a9bab0c279ae3d47313f00f305c3d0333ae7fdba6762786"
+    }
+  ],
+  "job_jar": {
+    "bytes": 11732592,
+    "copy_sha256": "d52f11ebad5ec9e1ffdd1910d562023e934ce7ab62e7c74a5ffd650f8951b86b",
+    "isolated_executor_copy": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home/jars/000-scholarchain-job.jar",
+    "path": "/Users/danny/Documents/UIC/CS441/ScholarChain/modules/spark/target/spark-job_3-0.1.0-SNAPSHOT.jar",
+    "sha256": "d52f11ebad5ec9e1ffdd1910d562023e934ce7ab62e7c74a5ffd650f8951b86b"
+  },
+  "kind": "Local isolated runtime assembled from actual cached sbt Provided dependency classpath; NOT EMR distribution or upstream binary release",
+  "no_loose_application_class_directories": true,
+  "prepared_at": "2026-11-03T20:36:28.903897+00:00",
+  "runtime_jars": 146,
+  "scala_libraries_not_duplicated": true,
+  "spark_home": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-readiness-20261103/runtime/spark-home",
+  "target_class_artifact_reference": [
+    {
+      "bundled_class_matches": true,
+      "className": "scala.deriving.Mirror",
+      "class_sha256": "e48c633a515bdcb03a9b4422a0f9fb5778fae811ad3c84f94ecce1f1c45e5712",
+      "component": "scala3-library",
+      "resolved_artifact": "scala3-library_3-3.3.4.jar",
+      "resolved_artifact_sha256": "d95184acfcd814da2e051378e4962c653f4b468f4086452ab427af030482bd3c",
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/scala-lang/scala3-library_3/3.3.4/scala3-library_3-3.3.4.jar"
+    },
+    {
+      "bundled_class_matches": false,
+      "className": "scala.reflect.api.Universe",
+      "class_sha256": "19837277a82a61227cd4e246065836b5a049d5dfe59bb6032bc42bea7391ff96",
+      "component": "scala-reflect",
+      "resolved_artifact": "scala-reflect-2.13.14.jar",
+      "resolved_artifact_sha256": "8846baaa8cf43b1b19725ab737abff145ca58d14a4d02e75d71ca8f7ca5f2926",
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/scala-lang/scala-reflect/2.13.14/scala-reflect-2.13.14.jar"
+    },
+    {
+      "bundled_class_matches": true,
+      "className": "scala.Option",
+      "class_sha256": "5fa95e069a844983b415ef613ce7b3f0c752be0804660ff12b7ffa6d7cf00cae",
+      "component": "scala-library",
+      "resolved_artifact": "scala-library-2.13.14.jar",
+      "resolved_artifact_sha256": "43e0ca1583df1966eaf02f0fbddcfb3784b995dd06bfc907209347758ce4b7e3",
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/scala-lang/scala-library/2.13.14/scala-library-2.13.14.jar"
+    },
+    {
+      "bundled_class_matches": false,
+      "className": "org.apache.spark.SparkContext",
+      "class_sha256": "cf2ed70bbaeaf5fbe8c702dddf0059b0ea49b3d0badfe8b5de489f711bd2373f",
+      "component": "spark",
+      "resolved_artifact": "spark-core_2.13-3.5.4.jar",
+      "resolved_artifact_sha256": "2a4f5823aad3f99c9fddd77d0d4d4f3c6600dac5ea9a51d80bc6a2bc9e6561bf",
+      "resolved_path": "/Users/danny/Library/Caches/Coursier/v1/https/repo1.maven.org/maven2/org/apache/spark/spark-core_2.13/3.5.4/spark-core_2.13-3.5.4.jar"
+    }
+  ]
+}

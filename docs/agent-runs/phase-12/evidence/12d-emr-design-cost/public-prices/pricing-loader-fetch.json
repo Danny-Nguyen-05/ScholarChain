@@ -1,0 +1,9 @@
+{
+  "decoded_bytes": 478332,
+  "decoded_sha256": "99aa8d5b6a8e3e527efaa12d1ce1ac57e86badf3ab1b81240bb517a7214f780c",
+  "http_status": 200,
+  "purpose": "Read official pricing loader URL construction only; never execute JavaScript.",
+  "requested_at": "2026-11-03T21:49:05.085510+00:00",
+  "response_sha256": "b4c70fabd19f00b7eb12be07d1e2ccaefadcd78e86213861f303f728c2e6e940",
+  "url": "https://b0.p.awsstatic.com/client-side-script/static/js/main.bundle.js"
+}

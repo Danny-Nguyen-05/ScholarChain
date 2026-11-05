@@ -1,0 +1,456 @@
+{
+  "recorded_utc": "2026-11-01T20:21:48.884177+00:00",
+  "head": "5ca8406bad5fe55f732458fa0cbd5d561ac83d8f",
+  "branch": "phase-12",
+  "status_entries": 664,
+  "records": [
+    {
+      "path": "docs/agent-runs/phase-12/prompt.md",
+      "bytes": 77390,
+      "sha256": "bd10826f61e6bc2506ce05e69a8dccd2a4e8d718576cedb5a5f03cdf213807a9"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/review.md",
+      "bytes": 200284,
+      "sha256": "dde08c2c63fd7b352ff82f64ec613a2b76817322886cbbf0c0f0f95b0c2be412"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/repairs.md",
+      "bytes": 50480,
+      "sha256": "4095e2b5d0fe07485df5d2b9babb00faa316e9e49d59bc0246f1000be21e6c38"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/owner-report.md",
+      "bytes": 98009,
+      "sha256": "b23d87af6676a7a05b535f90769f892d87c8f9b650bb07825f3749de9050ba3e"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/test-report.md",
+      "bytes": 91296,
+      "sha256": "02bd08c4802eb1313a0818d4f86729afc5c890df2a0910a4fabb30b6a087c331"
+    }
+  ],
+  "human_record": {
+    "path": "docs/agent-runs/phase-12/billing-bootstrap-exception.md",
+    "sha256": "abe3a50ad7167fa01227c73e15e92a422a50609f6313bdcc56404cb61765d71a",
+    "bytes": 1334
+  },
+  "durable_packet_files": [
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-durable-plan/assemble-final.py",
+      "bytes": 21854,
+      "sha256": "54b8dbfa3847910522336b93cdcad70965f6003fd85b876bbea2732ecb562565"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-durable-plan/complete-manifest.py",
+      "bytes": 1495,
+      "sha256": "73719e803454d48e5ce92c217bebd2e9eb8dec3bd77daa6cb38fce94b6dad80c"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-durable-plan/coordinator-preparation-notes.json",
+      "bytes": 1986,
+      "sha256": "86e464d930d7f38017d0933e41198052bf018fb37135f27b8dcf25d84297166e"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-durable-plan/coordinator-report.md",
+      "bytes": 5125,
+      "sha256": "a2cb1f832628ace2cc24a24e74705067264ee8fb537f9e465e033836bff628f0"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-durable-plan/delegation.json",
+      "bytes": 474,
+      "sha256": "c8fa7e9282c5201b6c196683cd9aa01ac715fcc9f6553a0cdacd279781bf0cb3"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-durable-plan/diff-check-result.json",
+      "bytes": 220,
+      "sha256": "63803c088ebeb0d7c88d1da223bb40235efba593f1e4c1ec84398550586518dc"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-durable-plan/diff-check.log.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-durable-plan/evidence-manifest.json",
+      "bytes": 13732,
+      "sha256": "a98db357d8f03a42497ceb8bba7e6fabebc412064942acecc62f67c4ae2e6360"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-durable-plan/final-integrity.json",
+      "bytes": 540,
+      "sha256": "70e7f29214378f8f753a97f466710e120539f7a36e5965f6894a2bdb8c0b7857"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-durable-plan/final-status.log.txt",
+      "bytes": 58527,
+      "sha256": "b2cecdb7a7a0d32329a7ce83759faddde5c95382d37c7b27f4c45f365571e357"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-durable-plan/fresh-authentication/billing-role-console.png",
+      "bytes": 1088835,
+      "sha256": "ff034882e217e01e3f1619ca75f214e46328660d184a20c6ab53bc57db385012"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-durable-plan/fresh-authentication/caller-identity.user-supplied.json",
+      "bytes": 951,
+      "sha256": "8bede95643490677dffd71eeff292a8b389cbcfe109fa6ed0b27b129644ec6b0"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-durable-plan/fresh-authentication/hidden-input.user-confirmation.json",
+      "bytes": 710,
+      "sha256": "38a4e4dfe0d871307a33e008c533d77854470284946896b4a1ce7a97949736d8"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-durable-plan/fresh-authentication/observations.json",
+      "bytes": 1241,
+      "sha256": "cce915ea295a207113fd934445d033513f8d556ea700d61c6640a25c7cb78116"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-durable-plan/fresh-authentication/operator-console.png",
+      "bytes": 1029425,
+      "sha256": "a4be15e0d21d5022f2477d8d522253c5bbe0ae712fd1658a80d4c9c107901963"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-durable-plan/fresh-authentication/private-input-metadata-check.json",
+      "bytes": 225,
+      "sha256": "e15240081f8e3cace563dfd0f160dbdc26df814934fd6a644d4c4a3979869c45"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-durable-plan/handoff-files.json",
+      "bytes": 12814,
+      "sha256": "7a1ac9cd3127154b1fb392fb80a7b7aa07b01a300d26ee56632d4a85bfb18466"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-durable-plan/handoff.md",
+      "bytes": 1330,
+      "sha256": "dab18b841e9e504920a291abf89d273304724088533f31a03cb5cd4309aa954a"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-durable-plan/infra/approved-public-inputs.json",
+      "bytes": 446,
+      "sha256": "48f19c4526b63c8e194dcfeea8466591a0667c3a5956e06cdb31116e110a8e02"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-durable-plan/infra/artifact-manifest.json",
+      "bytes": 5157,
+      "sha256": "3982c5cae40d26705f329b724ed544209b24bcddf0302e0546786b355e93d4b3"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-durable-plan/infra/commands.json",
+      "bytes": 10223,
+      "sha256": "d19e718fecb1e9c9d53cc01acaf527aee4d7db39ab243067635de75e9aa28d88"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-durable-plan/infra/config-copies/.terraform.lock.hcl",
+      "bytes": 1406,
+      "sha256": "421b75245b0080edee2b434482ff348419a75d7a6b798d5218e0a0f9f723eaea"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-durable-plan/infra/config-copies/README.md",
+      "bytes": 7866,
+      "sha256": "46506dade67af6ec882f4bbd81661d00d92c8f9d5bebe6f6ed1e47e2c30143a0"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-durable-plan/infra/config-copies/main.tf",
+      "bytes": 2215,
+      "sha256": "5e69e4235e417c72968097af6050f66c434fd1d1049ee0f655d1b6635e101549"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-durable-plan/infra/config-copies/outputs.tf",
+      "bytes": 1005,
+      "sha256": "e729e4b3d6523074f293b95c9a5f85fc03c8eec0f8a40928c24a1c227ce3174f"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-durable-plan/infra/config-copies/tests/budget.tftest.hcl",
+      "bytes": 3984,
+      "sha256": "8f79abffe3fe71e4a6736dddf461a0c8a7c136cdd7a5bf29394185e81da4550b"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-durable-plan/infra/config-copies/variables.tf",
+      "bytes": 3033,
+      "sha256": "3e37054f1187192ae3188052d52630e50a3db950ce7436b639d98ef066a8c937"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-durable-plan/infra/config-copies/versions.tf",
+      "bytes": 150,
+      "sha256": "38c0d27255f1ccf0c6f57b6854b80e5bcecde516ebfbcdfbd7ae95ad220ba0a1"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-durable-plan/infra/config-provenance-after-offline.json",
+      "bytes": 2258,
+      "sha256": "e5f8e23eb54b4185a2e9ea1c9a5c3e4314d5f0b614581da281620abfb672692a"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-durable-plan/infra/config-provenance-before.json",
+      "bytes": 2532,
+      "sha256": "d3072e74d5105e552f783f7a16bdb0c87e92a51b99fda2dd3866f1a5a5d78f76"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-durable-plan/infra/final-provider-targets.json",
+      "bytes": 4050,
+      "sha256": "ed14e1b431b4a9fb541b9e46109c1bb8bd8e16a4c4c7bde01956f2830a547ffe"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-durable-plan/infra/finalize.py",
+      "bytes": 8683,
+      "sha256": "990c79f42f9bc1fc994ba27894e71e486b43d84e1af117dc3e83ec4dd0728a85"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-durable-plan/infra/offline-fmt-check.log.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-durable-plan/infra/offline-init.log.txt",
+      "bytes": 243,
+      "sha256": "0332e5a2014b4e3a832437119fe49036bc6a8355061e8def4e2d5ffc1c783808"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-durable-plan/infra/offline-storage-metadata.json",
+      "bytes": 6615,
+      "sha256": "d112881a994da44870b86a5be5419136ff776270d44895a2db09bc45556cdd80"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-durable-plan/infra/offline-test.log.txt",
+      "bytes": 483,
+      "sha256": "aca7bb50be9aa6e39085eb2d1ac166e100d61aaa15cf8c95ccf3e4a87becb78e"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-durable-plan/infra/offline-validate.log.txt",
+      "bytes": 38,
+      "sha256": "f7997225125835fdd14060ac776d273f394b874f9a481b9e2122c83dc8adc5c1"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-durable-plan/infra/owner-report.txt",
+      "bytes": 4256,
+      "sha256": "ca669e25fef90cc4400a54c7471a743b41e4088faa5876470151e601d7e769fb"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-durable-plan/infra/patch-runner.py",
+      "bytes": 2478,
+      "sha256": "91d02a8cb3390c67ebde6609d031a6529529d8c7e993fa1348f61ff981e66206"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-durable-plan/infra/plan-inputs-after.json",
+      "bytes": 2446,
+      "sha256": "262643f44e09ecc9aee4585ca9bb00bf702705925d2bb1f4b44267721f9f953e"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-durable-plan/infra/plan-inputs-before.json",
+      "bytes": 2871,
+      "sha256": "a4ea5a0d383868bd4f06b449f4e0433f937030d35b5df078a562d6a904c2da62"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-durable-plan/infra/plan-summary.json",
+      "bytes": 2782,
+      "sha256": "0f79169ac0dbd1454f1be5219d235a8c989d3b9f2f30b4427cdfc266b19f0ecb"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-durable-plan/infra/privacy-and-scope.json",
+      "bytes": 1419,
+      "sha256": "bfce5a24344ead9049d0e2f399d1d696715d166d6009d579cbb14eaae146f92d"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-durable-plan/infra/protected-artifact-metadata.json",
+      "bytes": 4953,
+      "sha256": "73bd259d90324b5c7b62d84f5e4415e54ca969de48d62dd264462b9100836353"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-durable-plan/infra/recipient-privacy-scan.json",
+      "bytes": 725,
+      "sha256": "d184096adcab3e7b500be27e00d35ca6c3d574bb184eb096fa69588b3ba717bd"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-durable-plan/infra/run.py",
+      "bytes": 12960,
+      "sha256": "942cb94ed6bad33067f4cf514fc1bf506ad149d14ea8ad508ff78d09de44b56f"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-durable-plan/infra/safe-summary-validation.json",
+      "bytes": 540,
+      "sha256": "e6700309c74d74103e7ee47b0a6d3442dcc064f28c7f852c64e7e807a92ca3e8"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-durable-plan/infra/save-recipient.py",
+      "bytes": 936,
+      "sha256": "849353011b7b7cc6e54a829dab05dd9d9eaf90b2d5a56d8092310eeaaa5fb352"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-durable-plan/infra/setup.py",
+      "bytes": 6259,
+      "sha256": "0b5d797c43cfe48df77a93dc33d6a62fc0970c55953ef0222371957a7236f810"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-durable-plan/infra/storage-and-toolchain.json",
+      "bytes": 4425,
+      "sha256": "2f1d646752f7ddf7249dfb5927cf1e1d591e5995bf08fb00d7a95f4866f96c1e"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-durable-plan/infra/test-counts.json",
+      "bytes": 95,
+      "sha256": "a77599ea7462bcc23c86be1e13c83ad33c306214e448681cbd1bb65ba07c1c48"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-durable-plan/infra-preparation/approved-public-inputs.json",
+      "bytes": 446,
+      "sha256": "48f19c4526b63c8e194dcfeea8466591a0667c3a5956e06cdb31116e110a8e02"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-durable-plan/infra-preparation/commands.json",
+      "bytes": 5217,
+      "sha256": "e9c74a823ec67fb6aea81b32d87a91ce13c8afd9de0fab793ded43de5f5f7368"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-durable-plan/infra-preparation/config-copies/.terraform.lock.hcl",
+      "bytes": 1406,
+      "sha256": "421b75245b0080edee2b434482ff348419a75d7a6b798d5218e0a0f9f723eaea"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-durable-plan/infra-preparation/config-copies/README.md",
+      "bytes": 7866,
+      "sha256": "46506dade67af6ec882f4bbd81661d00d92c8f9d5bebe6f6ed1e47e2c30143a0"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-durable-plan/infra-preparation/config-copies/main.tf",
+      "bytes": 2215,
+      "sha256": "5e69e4235e417c72968097af6050f66c434fd1d1049ee0f655d1b6635e101549"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-durable-plan/infra-preparation/config-copies/outputs.tf",
+      "bytes": 1005,
+      "sha256": "e729e4b3d6523074f293b95c9a5f85fc03c8eec0f8a40928c24a1c227ce3174f"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-durable-plan/infra-preparation/config-copies/tests/budget.tftest.hcl",
+      "bytes": 3984,
+      "sha256": "8f79abffe3fe71e4a6736dddf461a0c8a7c136cdd7a5bf29394185e81da4550b"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-durable-plan/infra-preparation/config-copies/variables.tf",
+      "bytes": 3033,
+      "sha256": "3e37054f1187192ae3188052d52630e50a3db950ce7436b639d98ef066a8c937"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-durable-plan/infra-preparation/config-copies/versions.tf",
+      "bytes": 150,
+      "sha256": "38c0d27255f1ccf0c6f57b6854b80e5bcecde516ebfbcdfbd7ae95ad220ba0a1"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-durable-plan/infra-preparation/config-provenance-after-offline.json",
+      "bytes": 2258,
+      "sha256": "e5f8e23eb54b4185a2e9ea1c9a5c3e4314d5f0b614581da281620abfb672692a"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-durable-plan/infra-preparation/config-provenance-before.json",
+      "bytes": 2532,
+      "sha256": "d3072e74d5105e552f783f7a16bdb0c87e92a51b99fda2dd3866f1a5a5d78f76"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-durable-plan/infra-preparation/offline-fmt-check.log.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-durable-plan/infra-preparation/offline-init.log.txt",
+      "bytes": 243,
+      "sha256": "0332e5a2014b4e3a832437119fe49036bc6a8355061e8def4e2d5ffc1c783808"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-durable-plan/infra-preparation/offline-storage-metadata.json",
+      "bytes": 6615,
+      "sha256": "d112881a994da44870b86a5be5419136ff776270d44895a2db09bc45556cdd80"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-durable-plan/infra-preparation/offline-test.log.txt",
+      "bytes": 483,
+      "sha256": "aca7bb50be9aa6e39085eb2d1ac166e100d61aaa15cf8c95ccf3e4a87becb78e"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-durable-plan/infra-preparation/offline-validate.log.txt",
+      "bytes": 38,
+      "sha256": "f7997225125835fdd14060ac776d273f394b874f9a481b9e2122c83dc8adc5c1"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-durable-plan/infra-preparation/run.py",
+      "bytes": 12960,
+      "sha256": "942cb94ed6bad33067f4cf514fc1bf506ad149d14ea8ad508ff78d09de44b56f"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-durable-plan/infra-preparation/save-recipient.py",
+      "bytes": 936,
+      "sha256": "849353011b7b7cc6e54a829dab05dd9d9eaf90b2d5a56d8092310eeaaa5fb352"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-durable-plan/infra-preparation/setup.py",
+      "bytes": 6259,
+      "sha256": "0b5d797c43cfe48df77a93dc33d6a62fc0970c55953ef0222371957a7236f810"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-durable-plan/infra-preparation/storage-and-toolchain.json",
+      "bytes": 4425,
+      "sha256": "2f1d646752f7ddf7249dfb5927cf1e1d591e5995bf08fb00d7a95f4866f96c1e"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-durable-plan/infra-preparation/test-counts.json",
+      "bytes": 95,
+      "sha256": "a77599ea7462bcc23c86be1e13c83ad33c306214e448681cbd1bb65ba07c1c48"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-durable-plan/input-wait-checkpoint.md",
+      "bytes": 2981,
+      "sha256": "cdacdf43247d634f3ecf8c095a1845442c3b2d90bb724db540f9a696d6adccd4"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-durable-plan/preflight-status.log.txt",
+      "bytes": 50312,
+      "sha256": "5a42ee159fae6236f1eb4b571b68ceab18a65ddcdf9b23c88fbdef08814ff638"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-durable-plan/preflight.json",
+      "bytes": 32091,
+      "sha256": "c42c1ba18491389659c2063471adf293915b533ac395252f2060e244aa874606"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-durable-plan/preparation-manifest.json",
+      "bytes": 3846,
+      "sha256": "e3a625dfe35800fcb6234f18d0bccf2433c558637c98a3b74e6376efd2bc22ac"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-durable-plan/public-address-scan.json",
+      "bytes": 894,
+      "sha256": "ec54dcf4e2b6d56d2d8c744ed9865a138355aeddb9cf2bad9098baa4404a47c6"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-durable-plan/record-prefix-check.json",
+      "bytes": 1999,
+      "sha256": "ee0eccba63c876808ae123c2b4891d5e221d0c55c4180922a31b4578126bf9ee"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-durable-plan/result.json",
+      "bytes": 1514,
+      "sha256": "6c19e8a2e6621ee63ed58c2d8b237cf481748ff6c3926f9ffcc27d8e57d64833"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-durable-plan/source-freeze-after.json",
+      "bytes": 527,
+      "sha256": "957ed46053c4dd78dab230d6f62c344c8406fd01bceb6fdb255c5097777acd01"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-durable-plan/source-freeze-before.json",
+      "bytes": 51481,
+      "sha256": "0209af58b477a3dee8a34c1329aa669b4c551aefbe1385790078b981e214283a"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-durable-plan/user-supplied-p1-approval.txt",
+      "bytes": 10165,
+      "sha256": "16b57d9ddaeeb371b2e577fa2e3dbff86fc5a4cb7324b9271c15a7114171da90"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-billing-durable-plan/work-order.json",
+      "bytes": 800,
+      "sha256": "7aab6c877b3e9337037141311fa7e526ef8a62a0d06592b07939ee4a37978619"
+    }
+  ],
+  "durable_packet_file_count": 83
+}

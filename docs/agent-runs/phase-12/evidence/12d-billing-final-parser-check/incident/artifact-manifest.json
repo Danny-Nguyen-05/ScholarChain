@@ -1,0 +1,21 @@
+{
+  "scope": "Incident-owned public source/result/report only; parent-owned authorization/preflight artifacts assembled separately",
+  "self_excluded": true,
+  "files": [
+    {
+      "path": "exact-final-parser-check.py",
+      "bytes": 2341,
+      "sha256": "911ea1d585223f27ad980f7092e13a6280f3e643280dbdb4e10e588c1297dabc"
+    },
+    {
+      "path": "result.json",
+      "bytes": 47,
+      "sha256": "e501d4de49c12ecc2930966983f5a629b3a44201355067c6ce4f18f8e0d0b64e"
+    },
+    {
+      "path": "owner-report.txt",
+      "bytes": 3337,
+      "sha256": "222d7366a5b36a0d24367906432040e607a2aa5daecdc5b2466b85aabfd0459e"
+    }
+  ]
+}

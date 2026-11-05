@@ -1,0 +1,5 @@
+{
+  "url": "https://b0.p.awsstatic.com/pricing/2.0/meteredUnitMaps/ec2/USD/current/ec2-ondemand-without-sec-sel/US%20East%20(Ohio)/Linux/index.json",
+  "retrieved_at": "2026-10-30T21:47:35.341855+00:00",
+  "error": "'utf-8' codec can't decode byte 0x8b in position 1: invalid start byte"
+}

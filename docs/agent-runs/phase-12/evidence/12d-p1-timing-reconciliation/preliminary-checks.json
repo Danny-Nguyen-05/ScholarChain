@@ -1,0 +1,18 @@
+{
+  "recorded_utc": "2026-11-01T17:21:26.548471+00:00",
+  "F3_three_existing_files_unchanged": true,
+  "F3_new_manifest_sha256": "a1e2353016ff151f448eea82b83a42209a0c0162049e990f0a777f3584d7de8e",
+  "source_reference_209_equal": true,
+  "phase_record_preflight_prefixes_equal": [
+    "docs/agent-runs/phase-12/prompt.md",
+    "docs/agent-runs/phase-12/review.md",
+    "docs/agent-runs/phase-12/repairs.md",
+    "docs/agent-runs/phase-12/owner-report.md",
+    "docs/agent-runs/phase-12/test-report.md"
+  ],
+  "human_record_prior_prefix_preserved": true,
+  "human_record_only_verbatim_authorized_append": true,
+  "source_or_IAM_changes": 0,
+  "tests_or_live_commands_run": 0,
+  "tests_not_run_reason": "Only documentation/evidence and explicitly dictated human-text append; no code or feature behavior changed."
+}

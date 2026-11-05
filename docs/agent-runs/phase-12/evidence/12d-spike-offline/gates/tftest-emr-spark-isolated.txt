@@ -1,0 +1,43 @@
+tests/spike.tftest.hcl... in progress
+  run "pinned_shape"... pass
+  run "rejects_changed_region"... pass
+  run "rejects_changed_release"... pass
+  run "rejects_changed_primary_type"... pass
+  run "rejects_changed_core_type"... pass
+  run "rejects_two_core_nodes"... pass
+  run "rejects_two_primary_nodes"... pass
+  run "rejects_task_nodes"... pass
+  run "rejects_spot"... pass
+  run "rejects_instance_fleets"... pass
+  run "rejects_autoscaling"... pass
+  run "rejects_max_minutes_above_120"... pass
+  run "rejects_changed_cap"... pass
+  run "rejects_second_attempt"... pass
+  run "rejects_bad_expiration_date"... pass
+  run "rejects_foreign_boundary"... pass
+  run "step_timeouts_must_fit_the_deadline"... pass
+  run "runtime_sha_mismatch_fails"... pass
+  run "inputs_sha_mismatch_fails"... pass
+  run "missing_runtime_file_fails"... pass
+  run "no_public_ips_no_key_no_ssh"... pass
+  run "termination_layers_and_shape"... pass
+  run "ebs_layout_is_exactly_four_volumes_128_gib"... pass
+  run "steps_use_the_custom_runtime_under_timeout"... pass
+  run "spark_defaults_content"... pass
+  run "spark_defaults_override_the_emr_lzo_codec_list"... pass
+  run "g1_config_only_changes_path_prefixes"... pass
+  run "bucket_is_private_encrypted_and_destroyable"... pass
+  run "kms_and_security_configuration"... pass
+  run "efs_is_encrypted_without_backup_and_restricted"... pass
+  run "iam_roles_carry_the_boundary_and_prefix"... pass
+  run "instance_profile_policy_has_no_wildcard_resources"... pass
+  run "key_policy_names_only_known_principals"... pass
+  run "required_tags_come_from_provider_default_tags"... pass
+  run "key_policy_has_only_enumerated_actions_and_can_be_administered"... pass
+  run "key_administration_is_granted_to_the_deployer_role_in_the_key_policy"... pass
+  run "rejects_bad_deployer_role_arn"... pass
+  run "rejects_foreign_account_deployer_role_arn"... pass
+tests/spike.tftest.hcl... tearing down
+tests/spike.tftest.hcl... pass
+
+Success! 38 passed, 0 failed.

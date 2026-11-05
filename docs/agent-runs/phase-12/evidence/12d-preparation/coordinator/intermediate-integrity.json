@@ -1,0 +1,16 @@
+{
+  "checked_at": "2026-10-30T21:55:07.318337+00:00",
+  "frozen_files": 203,
+  "freeze_mismatches": [],
+  "baseline_files": 3924,
+  "baseline_changes_so_far": [
+    "docs/agent-runs/phase-12/prompt.md",
+    "docs/agent-runs/phase-12/repairs.md"
+  ],
+  "lock_hashes": {
+    "infra/terraform/.terraform.lock.hcl": "421b75245b0080edee2b434482ff348419a75d7a6b798d5218e0a0f9f723eaea",
+    "infra/terraform/billing-bootstrap/.terraform.lock.hcl": "421b75245b0080edee2b434482ff348419a75d7a6b798d5218e0a0f9f723eaea",
+    "infra/terraform/spikes/emr-spark/.terraform.lock.hcl": "421b75245b0080edee2b434482ff348419a75d7a6b798d5218e0a0f9f723eaea"
+  },
+  "notes": "Intermediate validation while build runs; final validation will supersede this check."
+}

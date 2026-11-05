@@ -1,0 +1,23 @@
+{
+  "course": {
+    "passed": 40,
+    "failed": 0,
+    "runs": 40,
+    "assertions": 62,
+    "expected_failure_runs": 18
+  },
+  "billing": {
+    "passed": 7,
+    "failed": 0,
+    "runs": 7,
+    "assertions": 6,
+    "expected_failure_runs": 4
+  },
+  "proposal": {
+    "passed": 6,
+    "failed": 0,
+    "runs": 6,
+    "assertions": 3,
+    "expected_failure_runs": 5
+  }
+}

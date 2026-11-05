@@ -1,0 +1,98 @@
+[
+  {
+    "path": "/Users/danny/Library/Application Support/ScholarChain/terraform/billing-bootstrap",
+    "mode": "0o700",
+    "uid": 501,
+    "symlink": false,
+    "resolved": "/Users/danny/Library/Application Support/ScholarChain/terraform/billing-bootstrap",
+    "acl": "drwx------@ 9 danny  staff  - 288 Nov  1 13:02 /Users/danny/Library/Application Support/ScholarChain/terraform/billing-bootstrap\n\tcom.apple.provenance\t 11 \n"
+  },
+  {
+    "path": "/Users/danny/Library/Application Support/ScholarChain/terraform/billing-bootstrap-backups",
+    "mode": "0o700",
+    "uid": 501,
+    "symlink": false,
+    "resolved": "/Users/danny/Library/Application Support/ScholarChain/terraform/billing-bootstrap-backups",
+    "acl": "drwx------@ 2 danny  staff  - 64 Nov  1 13:02 /Users/danny/Library/Application Support/ScholarChain/terraform/billing-bootstrap-backups\n\tcom.apple.provenance\t11 \n"
+  },
+  {
+    "path": "/Users/danny/Library/Application Support/ScholarChain/terraform/billing-bootstrap/config",
+    "mode": "0o700",
+    "uid": 501,
+    "symlink": false,
+    "resolved": "/Users/danny/Library/Application Support/ScholarChain/terraform/billing-bootstrap/config",
+    "acl": "drwx------@ 9 danny  staff  - 288 Nov  1 13:02 /Users/danny/Library/Application Support/ScholarChain/terraform/billing-bootstrap/config\n\tcom.apple.provenance\t 11 \n"
+  },
+  {
+    "path": "/Users/danny/Library/Application Support/ScholarChain/terraform/billing-bootstrap/toolchain",
+    "mode": "0o700",
+    "uid": 501,
+    "symlink": false,
+    "resolved": "/Users/danny/Library/Application Support/ScholarChain/terraform/billing-bootstrap/toolchain",
+    "acl": "drwx------@ 5 danny  staff  - 160 Nov  1 13:02 /Users/danny/Library/Application Support/ScholarChain/terraform/billing-bootstrap/toolchain\n\tcom.apple.provenance\t 11 \n"
+  },
+  {
+    "path": "/Users/danny/Library/Application Support/ScholarChain/terraform/billing-bootstrap/toolchain/provider-mirror",
+    "mode": "0o700",
+    "uid": 501,
+    "symlink": false,
+    "resolved": "/Users/danny/Library/Application Support/ScholarChain/terraform/billing-bootstrap/toolchain/provider-mirror",
+    "acl": "drwx------@ 3 danny  staff  - 96 Nov  1 13:02 /Users/danny/Library/Application Support/ScholarChain/terraform/billing-bootstrap/toolchain/provider-mirror\n\tcom.apple.provenance\t11 \n"
+  },
+  {
+    "path": "/Users/danny/Library/Application Support/ScholarChain/terraform/billing-bootstrap/tf-data",
+    "mode": "0o700",
+    "uid": 501,
+    "symlink": false,
+    "resolved": "/Users/danny/Library/Application Support/ScholarChain/terraform/billing-bootstrap/tf-data",
+    "acl": "drwx------@ 2 danny  staff  - 64 Nov  1 13:02 /Users/danny/Library/Application Support/ScholarChain/terraform/billing-bootstrap/tf-data\n\tcom.apple.provenance\t11 \n"
+  },
+  {
+    "path": "/Users/danny/Library/Application Support/ScholarChain/terraform/billing-bootstrap/offline-tf-data",
+    "mode": "0o700",
+    "uid": 501,
+    "symlink": false,
+    "resolved": "/Users/danny/Library/Application Support/ScholarChain/terraform/billing-bootstrap/offline-tf-data",
+    "acl": "drwx------@ 3 danny  staff  - 96 Nov  1 13:02 /Users/danny/Library/Application Support/ScholarChain/terraform/billing-bootstrap/offline-tf-data\n\tcom.apple.provenance\t11 \n"
+  },
+  {
+    "path": "/Users/danny/Library/Application Support/ScholarChain/terraform/billing-bootstrap/offline-tf-data/providers/registry.terraform.io",
+    "mode": "0o700",
+    "uid": 501,
+    "symlink": false,
+    "resolved": "/Users/danny/Library/Application Support/ScholarChain/terraform/billing-bootstrap/offline-tf-data/providers/registry.terraform.io",
+    "acl": "drwx------@ 3 danny  staff  - 96 Nov  1 13:02 /Users/danny/Library/Application Support/ScholarChain/terraform/billing-bootstrap/offline-tf-data/providers/registry.terraform.io\n\tcom.apple.provenance\t11 \n"
+  },
+  {
+    "path": "/Users/danny/Library/Application Support/ScholarChain/terraform/billing-bootstrap/offline-tf-data/providers/registry.terraform.io/hashicorp",
+    "mode": "0o700",
+    "uid": 501,
+    "symlink": false,
+    "resolved": "/Users/danny/Library/Application Support/ScholarChain/terraform/billing-bootstrap/offline-tf-data/providers/registry.terraform.io/hashicorp",
+    "acl": "drwx------@ 3 danny  staff  - 96 Nov  1 13:02 /Users/danny/Library/Application Support/ScholarChain/terraform/billing-bootstrap/offline-tf-data/providers/registry.terraform.io/hashicorp\n\tcom.apple.provenance\t11 \n"
+  },
+  {
+    "path": "/Users/danny/Library/Application Support/ScholarChain/terraform/billing-bootstrap/offline-tf-data/providers/registry.terraform.io/hashicorp/aws",
+    "mode": "0o700",
+    "uid": 501,
+    "symlink": false,
+    "resolved": "/Users/danny/Library/Application Support/ScholarChain/terraform/billing-bootstrap/offline-tf-data/providers/registry.terraform.io/hashicorp/aws",
+    "acl": "drwx------@ 3 danny  staff  - 96 Nov  1 13:02 /Users/danny/Library/Application Support/ScholarChain/terraform/billing-bootstrap/offline-tf-data/providers/registry.terraform.io/hashicorp/aws\n\tcom.apple.provenance\t11 \n"
+  },
+  {
+    "path": "/Users/danny/Library/Application Support/ScholarChain/terraform/billing-bootstrap/offline-tf-data/providers/registry.terraform.io/hashicorp/aws/6.44.0",
+    "mode": "0o700",
+    "uid": 501,
+    "symlink": false,
+    "resolved": "/Users/danny/Library/Application Support/ScholarChain/terraform/billing-bootstrap/offline-tf-data/providers/registry.terraform.io/hashicorp/aws/6.44.0",
+    "acl": "drwx------@ 3 danny  staff  - 96 Nov  1 13:02 /Users/danny/Library/Application Support/ScholarChain/terraform/billing-bootstrap/offline-tf-data/providers/registry.terraform.io/hashicorp/aws/6.44.0\n\tcom.apple.provenance\t11 \n"
+  },
+  {
+    "path": "/Users/danny/Library/Application Support/ScholarChain/terraform/billing-bootstrap/offline-tf-data/providers/registry.terraform.io/hashicorp/aws/6.44.0/darwin_arm64",
+    "mode": "0o700",
+    "uid": 501,
+    "symlink": true,
+    "resolved": "/Users/danny/Library/Application Support/ScholarChain/terraform/billing-bootstrap/toolchain/provider-mirror/registry.terraform.io/hashicorp/aws/6.44.0/darwin_arm64",
+    "acl": "lrwx------@ 1 danny  staff  - 163 Nov  1 13:02 /Users/danny/Library/Application Support/ScholarChain/terraform/billing-bootstrap/offline-tf-data/providers/registry.terraform.io/hashicorp/aws/6.44.0/darwin_arm64 -> /Users/danny/Library/Application Support/ScholarChain/terraform/billing-bootstrap/toolchain/provider-mirror/registry.terraform.io/hashicorp/aws/6.44.0/darwin_arm64\n\tcom.apple.provenance\t 11 \n"
+  }
+]

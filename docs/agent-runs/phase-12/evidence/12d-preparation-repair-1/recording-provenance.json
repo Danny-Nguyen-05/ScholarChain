@@ -1,0 +1,32 @@
+{
+  "records": [
+    {
+      "path": "docs/agent-runs/phase-12/review.md",
+      "old_bytes": 113873,
+      "new_bytes": 126444,
+      "old_sha256": "8b56dda33b282d9ecf538f86a51691281890e22ce0fff45ac08968f7b837e356",
+      "new_sha256": "4fb9ecb510d475bed447b166e9f4e834c2d35cefe4bbf2ceb488495b9ee863e8",
+      "prefix_preserved": true
+    },
+    {
+      "path": "docs/agent-runs/phase-12/prompt.md",
+      "old_bytes": 38058,
+      "new_bytes": 42145,
+      "old_sha256": "473972caa23a01f15b39d2208ae5bbec5ef06469a3002655f505e4a0d7ba5962",
+      "new_sha256": "bf8c30fc0c0c124ddb2efd843ff99104f78fdf9aa250299714152bfe8af3db99",
+      "prefix_preserved": true
+    },
+    {
+      "path": "docs/agent-runs/phase-12/repairs.md",
+      "old_bytes": 21042,
+      "new_bytes": 22901,
+      "old_sha256": "4eace3fb37168a14ab167a6f11ed56af503c4d4f48a6ae7b9dc859e635f23259",
+      "new_sha256": "ae7aea220f7fdeb04f57f61250542121a2af779101fc0b1b4d2209fc77b6b6f7",
+      "prefix_preserved": true
+    }
+  ],
+  "review_sha256": "b01b4fe6c2cbb489c705249d7276c67efc0355ee941c4bd508538f5d5119653c",
+  "review_bytes": 12477,
+  "work_order_sha256": "9646c6e308cab59af4d6a79bec92e712e7bc35377b2201b8c2a68ff83366129e",
+  "review_scope": "entire review through14-field report; NEXT PROMPT separately appended to prompt.md"
+}

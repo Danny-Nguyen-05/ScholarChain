@@ -1,0 +1,4 @@
+{
+    "Account": "530332961125",
+    "Arn": "arn:aws:sts::530332961125:assumed-role/scholarchain-billing-deployer/scholarchain-billing-operator"
+}

@@ -1,0 +1,24 @@
+{
+  "command": [
+    "/opt/homebrew/bin/sbt",
+    "-batch",
+    "set ThisBuild / offline := true",
+    "check"
+  ],
+  "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+  "environment": {
+    "HOME": "/Users/danny",
+    "USER": "danny",
+    "LOGNAME": "danny",
+    "PATH": "/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home/bin:/opt/homebrew/bin:/usr/bin:/bin:/usr/sbin:/sbin",
+    "JAVA_HOME": "/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home",
+    "TMPDIR": "/private/tmp",
+    "LANG": "en_US.UTF-8",
+    "SPARK_LOCAL_IP": "127.0.0.1",
+    "SPARK_LOCAL_HOSTNAME": "127.0.0.1",
+    "AWS_EC2_METADATA_DISABLED": "true",
+    "SBT_OPTS": "-Dsbt.offline=true -Dsbt.supershell=false -Dlogback.configurationFile=/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-04/xml-repair-logback.xml"
+  },
+  "start": "2026-11-03T20:37:16.682546+00:00",
+  "timeout_seconds": 1800
+}

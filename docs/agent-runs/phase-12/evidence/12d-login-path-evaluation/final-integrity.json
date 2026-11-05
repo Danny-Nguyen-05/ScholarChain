@@ -1,0 +1,85 @@
+{
+  "timestamp": "2026-10-31T17:40:32.494657+00:00",
+  "baseline_files": 4235,
+  "unchanged_baseline_files": 4231,
+  "changed_baseline_paths": [
+    "docs/agent-runs/phase-12/owner-report.md",
+    "docs/agent-runs/phase-12/prompt.md",
+    "docs/agent-runs/phase-12/repairs.md",
+    "docs/agent-runs/phase-12/test-report.md"
+  ],
+  "prefixes": [
+    {
+      "path": "docs/agent-runs/phase-12/prompt.md",
+      "bytes": 55111,
+      "sha256": "cfb5662ebfd29e68c3d51eb8ccc2a0b422a8139d03d3079015b6c8fd33dbbdab",
+      "new_bytes": 57445,
+      "new_sha256": "9364b54ea3c99776ce1977ee37adfab8d1db8a410deec016d57c1bac02dacd56",
+      "preflight_prefix_preserved": true,
+      "HEAD_prefix_preserved": true
+    },
+    {
+      "path": "docs/agent-runs/phase-12/repairs.md",
+      "bytes": 32814,
+      "sha256": "620c23d7bab2ad0a9084ff83db84342aa7599d4b1a3c45d86d554b823cd69dd4",
+      "new_bytes": 34396,
+      "new_sha256": "3106bc33d368ccd0316ac9038c1dbb7be33d53128a1217f6221e69b9ee858017",
+      "preflight_prefix_preserved": true,
+      "HEAD_prefix_preserved": true
+    },
+    {
+      "path": "docs/agent-runs/phase-12/owner-report.md",
+      "bytes": 53131,
+      "sha256": "69830f562be9fa5e63ddd55da18fd76ae728167cb6e09823cdcd8a77a48ab4ba",
+      "new_bytes": 58703,
+      "new_sha256": "ea2f2e8e572218d1a6e73ead61c478fd09847890600eb595e75b06bef1887f20",
+      "preflight_prefix_preserved": true,
+      "HEAD_prefix_preserved": true
+    },
+    {
+      "path": "docs/agent-runs/phase-12/test-report.md",
+      "bytes": 46372,
+      "sha256": "2237f73a286ae312c4bc46f839c8e6401eeba80eaf7b9b5457f5784004b413e1",
+      "new_bytes": 51957,
+      "new_sha256": "310b22b244e64011575caab4df066e3c649febc33cff1a72f68903d5c1aba56b",
+      "preflight_prefix_preserved": true,
+      "HEAD_prefix_preserved": true
+    },
+    {
+      "path": "docs/agent-runs/phase-12/review.md",
+      "bytes": 145008,
+      "sha256": "0aa1b235f0259242f5b98a0298e7d06869c52cb8a27604c0ca93d29459f75aca",
+      "new_bytes": 145008,
+      "new_sha256": "0aa1b235f0259242f5b98a0298e7d06869c52cb8a27604c0ca93d29459f75aca",
+      "preflight_prefix_preserved": true,
+      "HEAD_prefix_preserved": true
+    }
+  ],
+  "prior_packets": {
+    "12c": {
+      "files": 106,
+      "mismatches": []
+    },
+    "12d-preparation": {
+      "files": 81,
+      "mismatches": []
+    },
+    "12d-preparation-repair-1": {
+      "files": 87,
+      "mismatches": []
+    },
+    "12d-billing-plan": {
+      "files": 47,
+      "mismatches": []
+    },
+    "12d-billing-execution-prep": {
+      "files": 73,
+      "mismatches": []
+    }
+  },
+  "frozen_source_files": 209,
+  "previous_build_inputs": 1383,
+  "source_mismatches": [],
+  "head": "5ca8406bad5fe55f732458fa0cbd5d561ac83d8f",
+  "no_new_live_or_test_gate_claimed": true
+}

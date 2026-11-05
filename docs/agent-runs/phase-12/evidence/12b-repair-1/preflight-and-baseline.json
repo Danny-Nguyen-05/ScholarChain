@@ -1,0 +1,1368 @@
+{
+  "timestamp_utc": "2026-10-29T15:32:57.746146+00:00",
+  "base_sha": "a83f62e9af56058a170075f98c4e027d039567ec",
+  "branch": "phase-12",
+  "commands": [
+    {
+      "argv": [
+        "git",
+        "status",
+        "--short"
+      ],
+      "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+      "exit_code": 0,
+      "stdout": " M docs/agent-runs/phase-12/owner-report.md\n M docs/agent-runs/phase-12/prompt.md\n M docs/agent-runs/phase-12/repairs.md\n M docs/agent-runs/phase-12/test-report.md\n M infra/terraform/README.md\n M infra/terraform/environments/course.tfvars\n M infra/terraform/main.tf\n M infra/terraform/modules/identity/main.tf\n M infra/terraform/modules/identity/outputs.tf\n M infra/terraform/modules/identity/variables.tf\n M infra/terraform/modules/network/main.tf\n M infra/terraform/modules/network/outputs.tf\n M infra/terraform/modules/runtime/main.tf\n M infra/terraform/modules/runtime/outputs.tf\n M infra/terraform/modules/runtime/variables.tf\n M infra/terraform/outputs.tf\n M infra/terraform/tests/phase12a.tftest.hcl\n?? docs/agent-runs/phase-12/evidence/12b/\n?? docs/agent-runs/phase-12/reviewer-prompt-12b.md\n?? infra/terraform/modules/emr/\n?? infra/terraform/modules/identity/phase12b.tf\n?? infra/terraform/modules/neptune/\n?? infra/terraform/modules/observability/\n?? infra/terraform/modules/runtime/compute.tf\n?? infra/terraform/modules/s3vectors/\n?? infra/terraform/modules/workflow/\n?? infra/terraform/phase12b-variables.tf\n?? infra/terraform/phase12b.tf\n?? infra/terraform/tests/phase12b.tftest.hcl\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "branch",
+        "--show-current"
+      ],
+      "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+      "exit_code": 0,
+      "stdout": "phase-12\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+      "exit_code": 0,
+      "stdout": "a83f62e9af56058a170075f98c4e027d039567ec\n",
+      "stderr": ""
+    }
+  ],
+  "repair_scope": "B3 only; N9-N16 recorded, not repaired; no reviewer, commit/push or AWS call",
+  "files": {
+    ".gitignore": {
+      "sha256": "0978fb0878cf23456a1fade40eeb6458215a275d3e91ff89dcf260b36c3a5160",
+      "bytes": 1095,
+      "mtime_ns": 1793213289722073970
+    },
+    "docs/agent-runs/phase-12/evidence/12a-repair-1/README.md": {
+      "sha256": "40a2d207d71840da3b1b977736e7aa5102445cc1243c8c1cc2cffa117d9f515f",
+      "bytes": 4000,
+      "mtime_ns": 1793223600482711970
+    },
+    "docs/agent-runs/phase-12/evidence/12a-repair-1/build-collect.py": {
+      "sha256": "5895a2c201be0f307924e40bcbac0e3869b32b49534c4139b13481208b14f26e",
+      "bytes": 4264,
+      "mtime_ns": 1793224146945950729
+    },
+    "docs/agent-runs/phase-12/evidence/12a-repair-1/build-java-version.txt": {
+      "sha256": "2fe83b0053132e4e834defa82250462f4c62733d29bf76b19ee1bb3c14b06b39",
+      "bytes": 171,
+      "mtime_ns": 1793224146946678808
+    },
+    "docs/agent-runs/phase-12/evidence/12a-repair-1/build-owner-report.txt": {
+      "sha256": "91701bd92776e29990bbf37e88707a3580d3a2796c613b332be379bf75a50613",
+      "bytes": 3422,
+      "mtime_ns": 1793224146947473887
+    },
+    "docs/agent-runs/phase-12/evidence/12a-repair-1/build-result.json": {
+      "sha256": "97fd41fc79475cfdb0ffbe61521b0402888d0d1988c8e434a07d0a21a3a6543c",
+      "bytes": 2344,
+      "mtime_ns": 1793224146946804891
+    },
+    "docs/agent-runs/phase-12/evidence/12a-repair-1/build-run.py": {
+      "sha256": "b47b75763b703794aace5994e95e6fc9270867bd8e52bf9dbca8f9db85127bf2",
+      "bytes": 4224,
+      "mtime_ns": 1793224146947078014
+    },
+    "docs/agent-runs/phase-12/evidence/12a-repair-1/build-sbt-check-excerpt.txt": {
+      "sha256": "39654db1763699ca604ba5afbb135f92f8489f780dcce10884ca191e46d6fcd3",
+      "bytes": 3270,
+      "mtime_ns": 1793224146946161186
+    },
+    "docs/agent-runs/phase-12/evidence/12a-repair-1/build-source-after.json": {
+      "sha256": "ab1f9d7398410f708e25488ed91d98326d8497dc8ed4151fbf862e4bea66ec94",
+      "bytes": 10278,
+      "mtime_ns": 1793224146947276722
+    },
+    "docs/agent-runs/phase-12/evidence/12a-repair-1/build-source-before.json": {
+      "sha256": "fa2154c75203cb74f011919ee59badaf02988f89825d66e4591a7fb3032ec8eb",
+      "bytes": 10278,
+      "mtime_ns": 1793224146946537726
+    },
+    "docs/agent-runs/phase-12/evidence/12a-repair-1/build-start.json": {
+      "sha256": "ba61088ee72abf082ea77dfe3a8aa1f43f37a2a3ce5d9f67b663340bbdf487e4",
+      "bytes": 1215,
+      "mtime_ns": 1793224146946930640
+    },
+    "docs/agent-runs/phase-12/evidence/12a-repair-1/build-validation.json": {
+      "sha256": "37e8dbc4cd0f692b8bded38585fb07fbcbc14855e7102c4029ef420e2fc90c55",
+      "bytes": 68988,
+      "mtime_ns": 1793224146946324352
+    },
+    "docs/agent-runs/phase-12/evidence/12a-repair-1/coordinator-final-validation.json": {
+      "sha256": "2df955d4e42f80452c7a272050c70a97c1a84e9f64a7ff1ec2ca943af270a2d0",
+      "bytes": 1497,
+      "mtime_ns": 1793224188277726006
+    },
+    "docs/agent-runs/phase-12/evidence/12a-repair-1/coordinator-source-validation.json": {
+      "sha256": "a1845d92d91ece0244c4154a45569efcd81601b93543e8b768856e742699a8f4",
+      "bytes": 743,
+      "mtime_ns": 1793223266499889860
+    },
+    "docs/agent-runs/phase-12/evidence/12a-repair-1/handoff-files.json": {
+      "sha256": "77a7743c3ec10f29471cdf4041e47ea4f65d62739d6af5a442b23a810db5a449",
+      "bytes": 9633,
+      "mtime_ns": 1793224147032869541
+    },
+    "docs/agent-runs/phase-12/evidence/12a-repair-1/infra-attempt1-mutation-data-map-init.txt": {
+      "sha256": "f43033ae5960b69d4ae12baa5aff96299990b7de7ef13b5c704995bac2ede29a",
+      "bytes": 985,
+      "mtime_ns": 1793223333733120097
+    },
+    "docs/agent-runs/phase-12/evidence/12a-repair-1/infra-attempt1-mutation-data-map-test.txt": {
+      "sha256": "6ba18aac6a72acdb5860c813152db3b2c68eed2111683acdbc5e01d1051760ec",
+      "bytes": 1269,
+      "mtime_ns": 1793223333731419523
+    },
+    "docs/agent-runs/phase-12/evidence/12a-repair-1/infra-attempt1-mutation-manifest.json": {
+      "sha256": "9226f763d07ac01b796382ee6b1efac053437c9bdd2c9a5a8eb234b1eda83d9d",
+      "bytes": 892,
+      "mtime_ns": 1793223333732395143
+    },
+    "docs/agent-runs/phase-12/evidence/12a-repair-1/infra-b1-red.txt": {
+      "sha256": "f804288e19b33e0a6910d76e386c3156d86cf7cc6f611b7e7afd4deb09ce5e81",
+      "bytes": 3318,
+      "mtime_ns": 1793223333732270435
+    },
+    "docs/agent-runs/phase-12/evidence/12a-repair-1/infra-baseline-hashes.json": {
+      "sha256": "3ab92bf3d3aaaae720c8a6ed5ae8fef7d31d7a8b84396b899461c21e0bd72b0d",
+      "bytes": 4739,
+      "mtime_ns": 1793223333735293960
+    },
+    "docs/agent-runs/phase-12/evidence/12a-repair-1/infra-command-manifest.json": {
+      "sha256": "8ba75430cce207f80107bfa2677fca081fa6faac15976b3e280fa73ff88a1eba",
+      "bytes": 11292,
+      "mtime_ns": 1793223333733657594
+    },
+    "docs/agent-runs/phase-12/evidence/12a-repair-1/infra-coverage.json": {
+      "sha256": "b25de69e6f8713a0c914b1756bb2d51a8e87f0729e93ec535e7295b0edd2a282",
+      "bytes": 1992,
+      "mtime_ns": 1793223333734625005
+    },
+    "docs/agent-runs/phase-12/evidence/12a-repair-1/infra-diff-check.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "mtime_ns": 1793223333734327757
+    },
+    "docs/agent-runs/phase-12/evidence/12a-repair-1/infra-evidence-reconciliation.json": {
+      "sha256": "c5b0fd6275ed35e42779d6c8b530b7be52116367e430f3d236e7a09388f14c8a",
+      "bytes": 1244,
+      "mtime_ns": 1793223333736414620
+    },
+    "docs/agent-runs/phase-12/evidence/12a-repair-1/infra-final-command-results.json": {
+      "sha256": "dc872e77abcf8dcb7f39acd9c1ff05185614aa1840b57e3f84258fd6a30998c9",
+      "bytes": 1678,
+      "mtime_ns": 1793223333731559272
+    },
+    "docs/agent-runs/phase-12/evidence/12a-repair-1/infra-final-gates.py": {
+      "sha256": "bbf839c539bb54db9ad4fac2b26c55faf75ed3b0e59c5b0321b70eb892ff6a6e",
+      "bytes": 1065,
+      "mtime_ns": 1793223333731718146
+    },
+    "docs/agent-runs/phase-12/evidence/12a-repair-1/infra-fmt-final.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "mtime_ns": 1793223333735015795
+    },
+    "docs/agent-runs/phase-12/evidence/12a-repair-1/infra-fmt-write.txt": {
+      "sha256": "67b93995f92f63ac9dff0da8fb11b3acb4e0f2734cf6d185d5c1606004a7ee92",
+      "bytes": 50,
+      "mtime_ns": 1793223333732132269
+    },
+    "docs/agent-runs/phase-12/evidence/12a-repair-1/infra-init-final.txt": {
+      "sha256": "6fd242691fd6bbc7efe25549609a26c11107f98c3ae3cb12128985c21a261753",
+      "bytes": 677,
+      "mtime_ns": 1793223333732551225
+    },
+    "docs/agent-runs/phase-12/evidence/12a-repair-1/infra-init.txt": {
+      "sha256": "6fd242691fd6bbc7efe25549609a26c11107f98c3ae3cb12128985c21a261753",
+      "bytes": 677,
+      "mtime_ns": 1793223333734928462
+    },
+    "docs/agent-runs/phase-12/evidence/12a-repair-1/infra-mutation-data-map-init.txt": {
+      "sha256": "f43033ae5960b69d4ae12baa5aff96299990b7de7ef13b5c704995bac2ede29a",
+      "bytes": 985,
+      "mtime_ns": 1793223333733247180
+    },
+    "docs/agent-runs/phase-12/evidence/12a-repair-1/infra-mutation-data-map-test.txt": {
+      "sha256": "6ba18aac6a72acdb5860c813152db3b2c68eed2111683acdbc5e01d1051760ec",
+      "bytes": 1269,
+      "mtime_ns": 1793223333731003400
+    },
+    "docs/agent-runs/phase-12/evidence/12a-repair-1/infra-mutation-data-map.patch": {
+      "sha256": "1ce19bfe58ff5f24c1806df0150286a145673120666cd01d8ef81fa3dc2fa31b",
+      "bytes": 484,
+      "mtime_ns": 1793223333733936009
+    },
+    "docs/agent-runs/phase-12/evidence/12a-repair-1/infra-mutation-manifest.json": {
+      "sha256": "7e005bc08b4c0473f6677e32f21d3863c849ddeb5ca5c103f6c48858c2ff3f54",
+      "bytes": 1818,
+      "mtime_ns": 1793223333734221466
+    },
+    "docs/agent-runs/phase-12/evidence/12a-repair-1/infra-mutation-rogue-resource-init.txt": {
+      "sha256": "f43033ae5960b69d4ae12baa5aff96299990b7de7ef13b5c704995bac2ede29a",
+      "bytes": 985,
+      "mtime_ns": 1793223333733786302
+    },
+    "docs/agent-runs/phase-12/evidence/12a-repair-1/infra-mutation-rogue-resource-test.txt": {
+      "sha256": "8c75af8974937b18663fc0aab1298f04708c8e94f53dafbde4e5ef2a6ee1af5b",
+      "bytes": 1819,
+      "mtime_ns": 1793223333731993478
+    },
+    "docs/agent-runs/phase-12/evidence/12a-repair-1/infra-mutation-rogue-resource.patch": {
+      "sha256": "0916807be7814617e909a774335aecf671d1264ec87a92bfb19c643ef199441c",
+      "bytes": 318,
+      "mtime_ns": 1793223333731269107
+    },
+    "docs/agent-runs/phase-12/evidence/12a-repair-1/infra-mutation-source-unchanged.json": {
+      "sha256": "8205133440eee49362e4eb226843898b8610426f423c6b6469bd3fedbaf54766",
+      "bytes": 4240,
+      "mtime_ns": 1793223333733410512
+    },
+    "docs/agent-runs/phase-12/evidence/12a-repair-1/infra-mutations-attempt1.py": {
+      "sha256": "07f22947b647f161a57b8be785d125a9dc4fd352f1a84e18ca4049c007bd57b9",
+      "bytes": 3559,
+      "mtime_ns": 1793223333732679266
+    },
+    "docs/agent-runs/phase-12/evidence/12a-repair-1/infra-mutations.py": {
+      "sha256": "9088655eb5d68ebb0aac15c914b7e17c0a4adb528ab7216b4dd179a2da7140c2",
+      "bytes": 3483,
+      "mtime_ns": 1793223333735144877
+    },
+    "docs/agent-runs/phase-12/evidence/12a-repair-1/infra-owner-report.md": {
+      "sha256": "f248d73bea3ae8baf5982ce9187e903e3b8290872f784e8726ac3a0da082e388",
+      "bytes": 5011,
+      "mtime_ns": 1793223333734787046
+    },
+    "docs/agent-runs/phase-12/evidence/12a-repair-1/infra-repair.patch": {
+      "sha256": "e27c967a869eff435f72b861b6130e0eed90741bdde96657d64062c256059307",
+      "bytes": 8898,
+      "mtime_ns": 1793223333732992639
+    },
+    "docs/agent-runs/phase-12/evidence/12a-repair-1/infra-source-freeze.json": {
+      "sha256": "e00074e7405225537cd77c174c729b0be6b4e1ff859e30960dfd57935463ba1d",
+      "bytes": 6280,
+      "mtime_ns": 1793223333734082050
+    },
+    "docs/agent-runs/phase-12/evidence/12a-repair-1/infra-test-final.txt": {
+      "sha256": "7cb6be1995c6c4bb1abac1df0c1cd19b06b06fb0409f68ecae3207cf6c25a14f",
+      "bytes": 777,
+      "mtime_ns": 1793223333734452590
+    },
+    "docs/agent-runs/phase-12/evidence/12a-repair-1/infra-test-initial.txt": {
+      "sha256": "7cb6be1995c6c4bb1abac1df0c1cd19b06b06fb0409f68ecae3207cf6c25a14f",
+      "bytes": 777,
+      "mtime_ns": 1793223333731851104
+    },
+    "docs/agent-runs/phase-12/evidence/12a-repair-1/infra-validate-final.txt": {
+      "sha256": "f7997225125835fdd14060ac776d273f394b874f9a481b9e2122c83dc8adc5c1",
+      "bytes": 38,
+      "mtime_ns": 1793223333732808224
+    },
+    "docs/agent-runs/phase-12/evidence/12a-repair-1/preflight.json": {
+      "sha256": "ed0d1ba91e97fc339c5fed282c7130de47f03cf6f9f8c90e2a205bd8c256a08f",
+      "bytes": 16865,
+      "mtime_ns": 1793223655681085688
+    },
+    "docs/agent-runs/phase-12/evidence/12a-repair-1/repair-patch-reconciliation.json": {
+      "sha256": "7e95abf491f85715ca04d8d0c13c1d6a1aeaee25945549dc111dfeac28a1a612",
+      "bytes": 1862,
+      "mtime_ns": 1793223438389516912
+    },
+    "docs/agent-runs/phase-12/evidence/12a-repair-1/review-provenance.json": {
+      "sha256": "d042c01657b941259133c4ad7879d06f3ee8fef88a3011ce3eeb74282b8858fb",
+      "bytes": 772,
+      "mtime_ns": 1793223015150600962
+    },
+    "docs/agent-runs/phase-12/evidence/12a-repair-1/sbt-check.log.gz": {
+      "sha256": "6f448694d2da4726479037306d2a4f55035b24f05eea67035f5f22288c129f0f",
+      "bytes": 93195,
+      "mtime_ns": 1793224019164037389
+    },
+    "docs/agent-runs/phase-12/evidence/12a-repair-1/sbt-log-integrity.json": {
+      "sha256": "804d18e9cf19df65cf7726d2fa0fd4b564bd2c2df82cc6ece8125ce835d730ae",
+      "bytes": 334,
+      "mtime_ns": 1793224019164716677
+    },
+    "docs/agent-runs/phase-12/evidence/12a/README.md": {
+      "sha256": "d03be067c09e5b6bd167174adfa81e2f59b90ff28b54d98eff9a9f8894b09ccb",
+      "bytes": 2336,
+      "mtime_ns": 1793214159587878785
+    },
+    "docs/agent-runs/phase-12/evidence/12a/authority-reading.json": {
+      "sha256": "23e0fa9f293a5496c512a7b155a048c5b654ffd286674270b6d9e3b33ca1dec6",
+      "bytes": 1310,
+      "mtime_ns": 1793213044685498793
+    },
+    "docs/agent-runs/phase-12/evidence/12a/build-evidence-reconciliation.json": {
+      "sha256": "e13e35ba50f331e5140b50a7d061246496faefbffe0fa9380b455b8f42de4f7e",
+      "bytes": 408,
+      "mtime_ns": 1793213854100364562
+    },
+    "docs/agent-runs/phase-12/evidence/12a/build-ignore-checks.json": {
+      "sha256": "f21678e7a1942846ff8cc4f5c51c8a4e2a7129ce1478420083551895c9223e04",
+      "bytes": 7978,
+      "mtime_ns": 1793213816209839074
+    },
+    "docs/agent-runs/phase-12/evidence/12a/build-owner-report.txt": {
+      "sha256": "cf713d2d6612ab9e4d3bcca7ac7f5040f0e05503ffb685b021a2f86e338c55eb",
+      "bytes": 4140,
+      "mtime_ns": 1793213854093324233
+    },
+    "docs/agent-runs/phase-12/evidence/12a/build-result.json": {
+      "sha256": "e8acf4568d0779582f609075e4a2a0d97dd98396816c17d9c4e47539267ceb15",
+      "bytes": 1391,
+      "mtime_ns": 1793213816209500280
+    },
+    "docs/agent-runs/phase-12/evidence/12a/build-sbt-check-excerpt.txt": {
+      "sha256": "e93a65e25623d04b4aed76d0a8f6fdb70e78a65ae72a80c1bcef675871d1d81e",
+      "bytes": 3270,
+      "mtime_ns": 1793213816209976075
+    },
+    "docs/agent-runs/phase-12/evidence/12a/build-start.json": {
+      "sha256": "f14d737aa83040518289e87facf086ce176c13f91ae3b357fbcf2b544984e4fa",
+      "bytes": 686,
+      "mtime_ns": 1793213816209383030
+    },
+    "docs/agent-runs/phase-12/evidence/12a/build-validation.json": {
+      "sha256": "75c040161bd9d86446c2325b4634c53d66578a36cb044f01ccf98a7fcde6224a",
+      "bytes": 61870,
+      "mtime_ns": 1793213816209607781
+    },
+    "docs/agent-runs/phase-12/evidence/12a/coordinator-validation.json": {
+      "sha256": "26d28a0837da7e977adc5ee76e5cfd8555e2eacda13d43a160237dcd91467989",
+      "bytes": 7915,
+      "mtime_ns": 1793214169631105576
+    },
+    "docs/agent-runs/phase-12/evidence/12a/handoff-files.json": {
+      "sha256": "30f3d2dec3bc97928fda87c6df14b6ccf051dc801e541c50595c503ad4429e61",
+      "bytes": 5145,
+      "mtime_ns": 1793214159624331698
+    },
+    "docs/agent-runs/phase-12/evidence/12a/infra-command-manifest.json": {
+      "sha256": "35f8582ddb78bff50442ffa007b582d85f3484824d864461135fc89b0fa1c0b0",
+      "bytes": 6409,
+      "mtime_ns": 1793214159587258074
+    },
+    "docs/agent-runs/phase-12/evidence/12a/infra-coverage.json": {
+      "sha256": "72d372a8fc666e7bd5207819d47095bfa8e4027c2b41cf6ffaa70efaedb3a1f4",
+      "bytes": 1592,
+      "mtime_ns": 1793214159587424866
+    },
+    "docs/agent-runs/phase-12/evidence/12a/infra-final-command-results.json": {
+      "sha256": "d53614c7edc4f575722af7505ae8cea5311c4d8df015ed76f031c72268bf1de3",
+      "bytes": 757,
+      "mtime_ns": 1793213985611009896
+    },
+    "docs/agent-runs/phase-12/evidence/12a/infra-fmt-development-2.txt": {
+      "sha256": "940dea2ecc1a544d60f06b3c9d1a11627943a747f7a23e0b076b17272fe4591c",
+      "bytes": 87,
+      "mtime_ns": 1793213985612211527
+    },
+    "docs/agent-runs/phase-12/evidence/12a/infra-fmt-development.txt": {
+      "sha256": "01aab073c2af7f21b60d1743a936d7c013f11e6eff9b91eabd506ae0e049add5",
+      "bytes": 29,
+      "mtime_ns": 1793213985611753316
+    },
+    "docs/agent-runs/phase-12/evidence/12a/infra-fmt-final.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "mtime_ns": 1793213985612345860
+    },
+    "docs/agent-runs/phase-12/evidence/12a/infra-init-2.txt": {
+      "sha256": "af5bba909a82b8c4c53e4edc59e78f0eb597589ca75de0cc80e050fdfc6215f1",
+      "bytes": 766,
+      "mtime_ns": 1793213985610265518
+    },
+    "docs/agent-runs/phase-12/evidence/12a/infra-init.txt": {
+      "sha256": "c71a49cf2b74aa57053344d367d7529a5d5a7d3b3d6ac5838b3b8bb322491517",
+      "bytes": 1191,
+      "mtime_ns": 1793213985612036276
+    },
+    "docs/agent-runs/phase-12/evidence/12a/infra-manual-checklist.json": {
+      "sha256": "52bcdcd0f47f904e4f6b42cdfea1b65739d16d4f979bf4d1e03e0eed64a568fc",
+      "bytes": 1284,
+      "mtime_ns": 1793213985612480986
+    },
+    "docs/agent-runs/phase-12/evidence/12a/infra-native-vector-schema-check.json": {
+      "sha256": "5cf6c51fdb67cf255485e52b831ea2cc9d691095a3027621a426b846599ca454",
+      "bytes": 244,
+      "mtime_ns": 1793213985610827062
+    },
+    "docs/agent-runs/phase-12/evidence/12a/infra-owner-report.md": {
+      "sha256": "3f90833032cc175795192ff3eafc8d45366f8ea5f66e08c28d923da889f8c5a4",
+      "bytes": 6923,
+      "mtime_ns": 1793214159587011364
+    },
+    "docs/agent-runs/phase-12/evidence/12a/infra-source-freeze.json": {
+      "sha256": "3ab92bf3d3aaaae720c8a6ed5ae8fef7d31d7a8b84396b899461c21e0bd72b0d",
+      "bytes": 4739,
+      "mtime_ns": 1793214159587582325
+    },
+    "docs/agent-runs/phase-12/evidence/12a/infra-test-1.txt": {
+      "sha256": "d5794d34a7addf6de18f550871bd73d26a8859c7e127139e6483add32a62d860",
+      "bytes": 3435,
+      "mtime_ns": 1793213985611588024
+    },
+    "docs/agent-runs/phase-12/evidence/12a/infra-test-2.txt": {
+      "sha256": "7cb6be1995c6c4bb1abac1df0c1cd19b06b06fb0409f68ecae3207cf6c25a14f",
+      "bytes": 777,
+      "mtime_ns": 1793213985611177105
+    },
+    "docs/agent-runs/phase-12/evidence/12a/infra-validate-1.txt": {
+      "sha256": "f7997225125835fdd14060ac776d273f394b874f9a481b9e2122c83dc8adc5c1",
+      "bytes": 38,
+      "mtime_ns": 1793213985610559520
+    },
+    "docs/agent-runs/phase-12/evidence/12a/infra-validate-2.txt": {
+      "sha256": "f7997225125835fdd14060ac776d273f394b874f9a481b9e2122c83dc8adc5c1",
+      "bytes": 38,
+      "mtime_ns": 1793213985610104267
+    },
+    "docs/agent-runs/phase-12/evidence/12a/infra-validate-final.txt": {
+      "sha256": "f7997225125835fdd14060ac776d273f394b874f9a481b9e2122c83dc8adc5c1",
+      "bytes": 38,
+      "mtime_ns": 1793213985609879475
+    },
+    "docs/agent-runs/phase-12/evidence/12a/java-version.txt": {
+      "sha256": "2fe83b0053132e4e834defa82250462f4c62733d29bf76b19ee1bb3c14b06b39",
+      "bytes": 171,
+      "mtime_ns": 1793213816210175409
+    },
+    "docs/agent-runs/phase-12/evidence/12a/ownership-and-reading.json": {
+      "sha256": "80eda5b6209b2a85f958c5e726b1f51ea5e68db0adeb3e2fe1e92d053488b7f6",
+      "bytes": 2328,
+      "mtime_ns": 1793213305356712370
+    },
+    "docs/agent-runs/phase-12/evidence/12a/preflight.json": {
+      "sha256": "f692223b0d079e01e9d273ae1a00df582898eeccd368e47924e5e52f55a1c6c6",
+      "bytes": 1372,
+      "mtime_ns": 1793213002482676286
+    },
+    "docs/agent-runs/phase-12/evidence/12a/sbt-check.log.gz": {
+      "sha256": "7852a0d7ffa32ba6635f4799b379d93e5929400fb0b2ffaa1d1dc1ae5acd6a54",
+      "bytes": 93120,
+      "mtime_ns": 1793213816219532125
+    },
+    "docs/agent-runs/phase-12/evidence/12a/sbt-log-integrity.json": {
+      "sha256": "9a8a78771fe871a229ca4e08fd5dea686be1d20f7418072c7b8070f7f1df32fd",
+      "bytes": 388,
+      "mtime_ns": 1793213816220124628
+    },
+    "docs/agent-runs/phase-12/evidence/12a/step-0-answers.md": {
+      "sha256": "cac7cd42ffaa4de4da3ea4f2635d40310ea25a8b693c9bbc3fb7a562a3182356",
+      "bytes": 1659,
+      "mtime_ns": 1793213002482933746
+    },
+    "docs/agent-runs/phase-12/evidence/12a/terraform-1.13.5-official-checksums.txt": {
+      "sha256": "2866ed8d8bc60dd12e29fbdc2ba8a41080097664f9fed6b90c6dfd48dd58f62c",
+      "bytes": 1392,
+      "mtime_ns": 1793213985613010988
+    },
+    "docs/agent-runs/phase-12/evidence/12a/terraform-cli-install.json": {
+      "sha256": "2233001891ef93147776d3522a9e89d110fbfe276adabe9754e4450b2dfeb12c",
+      "bytes": 410,
+      "mtime_ns": 1793213985612763696
+    },
+    "docs/agent-runs/phase-12/evidence/12b/build-collect.py": {
+      "sha256": "679303f73c8b127811d4bb833b97735daff53f523df2737708e624252b18f470",
+      "bytes": 5134,
+      "mtime_ns": 1793239234389141899
+    },
+    "docs/agent-runs/phase-12/evidence/12b/build-owner-report.txt": {
+      "sha256": "bf3352abc11ce6bc55ad1ed5c5ef160ed1c5c5b7734cf2b3534e1fb90b39c465",
+      "bytes": 3644,
+      "mtime_ns": 1793239600987917721
+    },
+    "docs/agent-runs/phase-12/evidence/12b/build-preflight-retry.json": {
+      "sha256": "9c6138c91910819c9f8144c8037df3c3bf7738c1c41b616e77fc746731e20de9",
+      "bytes": 970,
+      "mtime_ns": 1793238879476942270
+    },
+    "docs/agent-runs/phase-12/evidence/12b/build-result.json": {
+      "sha256": "90a9457b00ccb2dd8b06fe75133fe98a8b6f6abbce6914506e1b027dc9320a3a",
+      "bytes": 2550,
+      "mtime_ns": 1793239556825960418
+    },
+    "docs/agent-runs/phase-12/evidence/12b/build-retention-manifest.json": {
+      "sha256": "87b57e251525d7dcf362eadb3ea77413d71b4dff0eba332a7bb7f2625438929f",
+      "bytes": 3593,
+      "mtime_ns": 1793239647362066518
+    },
+    "docs/agent-runs/phase-12/evidence/12b/build-run.py": {
+      "sha256": "27be9349a44b92ad07e87d726e7d8f191ee0c9ac608a76462754eee2e698121e",
+      "bytes": 6923,
+      "mtime_ns": 1793238835142191788
+    },
+    "docs/agent-runs/phase-12/evidence/12b/build-source-after.json": {
+      "sha256": "c66145d3a027e8d9faaec0a3e54ba22ca3923a5f5f0f4ec7686a21d14aecdb7c",
+      "bytes": 186459,
+      "mtime_ns": 1793239556825642420
+    },
+    "docs/agent-runs/phase-12/evidence/12b/build-source-before.json": {
+      "sha256": "a2b6bda29ff3d97c06e98567ac53f267f069c3c571bd22f64d12d28ed07c3b70",
+      "bytes": 186459,
+      "mtime_ns": 1793238835210544550
+    },
+    "docs/agent-runs/phase-12/evidence/12b/build-start.json": {
+      "sha256": "9d96972b06002a27a430ab3e7a96b45c5b22a0d607c66ebb8291c34777e9f6e7",
+      "bytes": 1445,
+      "mtime_ns": 1793238835210797923
+    },
+    "docs/agent-runs/phase-12/evidence/12b/build-validation.json": {
+      "sha256": "c09263ae0de68ef5305417ebfd932d2238097b556c6078947ba214a3698c79da",
+      "bytes": 69368,
+      "mtime_ns": 1793239560720791257
+    },
+    "docs/agent-runs/phase-12/evidence/12b/coordinator-dependency-routing.md": {
+      "sha256": "662707e0e5c8e7506a57590a517223e3fe70f434b52934474641af4b97d5b1d1",
+      "bytes": 2240,
+      "mtime_ns": 1793238620069867104
+    },
+    "docs/agent-runs/phase-12/evidence/12b/coordinator-diff-check.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "mtime_ns": 1793239684980686409
+    },
+    "docs/agent-runs/phase-12/evidence/12b/coordinator-documentation-sources.json": {
+      "sha256": "d6fffe36bfbed4d1b9afe6a131399d5d6b70dcb345faede0c63d576fa3e5e40d",
+      "bytes": 3565,
+      "mtime_ns": 1793237994382021243
+    },
+    "docs/agent-runs/phase-12/evidence/12b/coordinator-final-commands.json": {
+      "sha256": "2b35a3d42b76410b67835327e095f0663e25d10fd66a2490dba3668b0c1d21a0",
+      "bytes": 2572,
+      "mtime_ns": 1793239684980945324
+    },
+    "docs/agent-runs/phase-12/evidence/12b/coordinator-final-validation.json": {
+      "sha256": "d23d4ced4d5a95aa1c838b3c55a84d4146744732764ee6e1d7a3d93cf61dac6c",
+      "bytes": 10892,
+      "mtime_ns": 1793239815698732094
+    },
+    "docs/agent-runs/phase-12/evidence/12b/coordinator-finalize-reports.py": {
+      "sha256": "07c9aaed2e1b3b9e6338669d9f867b17403783156f66b3f21d9f3b1ff8a21932",
+      "bytes": 16645,
+      "mtime_ns": 1793239647361126567
+    },
+    "docs/agent-runs/phase-12/evidence/12b/coordinator-freeze.py": {
+      "sha256": "a712bceb5952af6a3091f5ea8ecb05e826b97f401b798458d6cf3a500232a70d",
+      "bytes": 1825,
+      "mtime_ns": 1793238543540760001
+    },
+    "docs/agent-runs/phase-12/evidence/12b/coordinator-verify.py": {
+      "sha256": "bed65c72975d44740b2a8449f6246672263593f0fefbe2072ab9d13c026ffb41",
+      "bytes": 3370,
+      "mtime_ns": 1793238104325776582
+    },
+    "docs/agent-runs/phase-12/evidence/12b/handoff-files.json": {
+      "sha256": "c20d576d905a94310d7d4a6ae0ad6d949fb8af86a4a21a0c4e2c02b16633af33",
+      "bytes": 10830,
+      "mtime_ns": 1793239725980681407
+    },
+    "docs/agent-runs/phase-12/evidence/12b/handoff.md": {
+      "sha256": "0fbc1a351a06d58b82a3520527dcf52eeb7108b9100009b07a82e7a5f018577d",
+      "bytes": 4970,
+      "mtime_ns": 1793239725981242694
+    },
+    "docs/agent-runs/phase-12/evidence/12b/infra-gate-reconciliation.json": {
+      "sha256": "7e94e58759a904912c1675a141a79763abb8ceffe4b42c0a16bb5effe1fd4fe1",
+      "bytes": 1454,
+      "mtime_ns": 1793239685023674451
+    },
+    "docs/agent-runs/phase-12/evidence/12b/infra-retention-validation.json": {
+      "sha256": "de20aedf485cdebfefc6243c08848ec11c4c8925e4a1c127c89485cf61268829",
+      "bytes": 30894,
+      "mtime_ns": 1793239519219982762
+    },
+    "docs/agent-runs/phase-12/evidence/12b/infra-source-freeze.json": {
+      "sha256": "b059a9eeeb7dfb7026550cd92c6618cd3047469c4e77b81ec1920a5f3746dc71",
+      "bytes": 14817,
+      "mtime_ns": 1793238809995886155
+    },
+    "docs/agent-runs/phase-12/evidence/12b/infra/AmazonEMRServicePolicy_v2.json": {
+      "sha256": "7eb74e21ec1bb7bebb6419724cbf179a2b8bc139c576618852ffd60636834bba",
+      "bytes": 10179,
+      "mtime_ns": 1793237696192761542
+    },
+    "docs/agent-runs/phase-12/evidence/12b/infra/commands.json": {
+      "sha256": "ad671c7ee536bd8bd3bce9bb916294d50031f7f1c986af8e539f6287a13e20ed",
+      "bytes": 29275,
+      "mtime_ns": 1793238876031599994
+    },
+    "docs/agent-runs/phase-12/evidence/12b/infra/compressed-log-manifest.json": {
+      "sha256": "dd402a9e537df67facaf622d3999429562ec10c3298dd885a2606db36bce707d",
+      "bytes": 805,
+      "mtime_ns": 1793238794910123777
+    },
+    "docs/agent-runs/phase-12/evidence/12b/infra/curated-artifacts.json": {
+      "sha256": "2009de24025efd8b27b8a8b1bd2e46101c78335a580d16ee21d3ae7c8cb21f25",
+      "bytes": 16450,
+      "mtime_ns": 1793238955369026108
+    },
+    "docs/agent-runs/phase-12/evidence/12b/infra/development-attempts.json": {
+      "sha256": "828cb7dded6ab2f282430c83a2d0fdafc3cb92fd92471e67612a3c99957a246a",
+      "bytes": 3200,
+      "mtime_ns": 1793238876453239520
+    },
+    "docs/agent-runs/phase-12/evidence/12b/infra/final-diff-check.log.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "mtime_ns": 1793238777032150615
+    },
+    "docs/agent-runs/phase-12/evidence/12b/infra/final-fmt-check.log.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "mtime_ns": 1793238771674267238
+    },
+    "docs/agent-runs/phase-12/evidence/12b/infra/final-init.log.txt": {
+      "sha256": "6fd242691fd6bbc7efe25549609a26c11107f98c3ae3cb12128985c21a261753",
+      "bytes": 677,
+      "mtime_ns": 1793238771608765037
+    },
+    "docs/agent-runs/phase-12/evidence/12b/infra/final-test.log.txt": {
+      "sha256": "ca01f69508557980b51362a8604057df04133c62bfde441b57c2f95383cda6bc",
+      "bytes": 1838,
+      "mtime_ns": 1793238777002047598
+    },
+    "docs/agent-runs/phase-12/evidence/12b/infra/final-validate.log.txt": {
+      "sha256": "f7997225125835fdd14060ac776d273f394b874f9a481b9e2122c83dc8adc5c1",
+      "bytes": 38,
+      "mtime_ns": 1793238773156359717
+    },
+    "docs/agent-runs/phase-12/evidence/12b/infra/fmt-development-1.log.txt": {
+      "sha256": "672485e4b1b33fc4b8d8cecfefcec5a370f8fb778f062e644bf78df27946dd9a",
+      "bytes": 3526,
+      "mtime_ns": 1793237875504196622
+    },
+    "docs/agent-runs/phase-12/evidence/12b/infra/fmt-development-10.log.txt": {
+      "sha256": "3e7b5e03882277db11978f10895866369b492e41110c950a0e9ce9547b37f949",
+      "bytes": 86,
+      "mtime_ns": 1793238434531544762
+    },
+    "docs/agent-runs/phase-12/evidence/12b/infra/fmt-development-11.log.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "mtime_ns": 1793238443204665899
+    },
+    "docs/agent-runs/phase-12/evidence/12b/infra/fmt-development-12.log.txt": {
+      "sha256": "5c4412a6f558da1cdbd8e099b50ca037f54768eb52a5c7613b8d596ae8d5f732",
+      "bytes": 27,
+      "mtime_ns": 1793238589052583906
+    },
+    "docs/agent-runs/phase-12/evidence/12b/infra/fmt-development-13.log.txt": {
+      "sha256": "69e02857dea57a92f5ad1d219b381b0b30dd48015ce707243aa194834bb7e7ef",
+      "bytes": 38,
+      "mtime_ns": 1793238674888029880
+    },
+    "docs/agent-runs/phase-12/evidence/12b/infra/fmt-development-14.log.txt": {
+      "sha256": "421259867be3040589d84346dca5d7e94d295d426a97ea63d5ffae5d2f71b786",
+      "bytes": 24,
+      "mtime_ns": 1793238727037212848
+    },
+    "docs/agent-runs/phase-12/evidence/12b/infra/fmt-development-2.log.txt": {
+      "sha256": "6daca4fff242216b558c7e504084e429012d0a6790e4df07ce809cf850b053e2",
+      "bytes": 83,
+      "mtime_ns": 1793237889420279067
+    },
+    "docs/agent-runs/phase-12/evidence/12b/infra/fmt-development-3.log.txt": {
+      "sha256": "a41384767c7670b31bceaf144c0451bd63f4ef2789f23383cede8a50d181737e",
+      "bytes": 26,
+      "mtime_ns": 1793237994819610371
+    },
+    "docs/agent-runs/phase-12/evidence/12b/infra/fmt-development-4.log.txt": {
+      "sha256": "4543d631a896e854987867c620470733f3dbc4ee2e890bff982ebf35e4be4b1d",
+      "bytes": 29,
+      "mtime_ns": 1793238007681358193
+    },
+    "docs/agent-runs/phase-12/evidence/12b/infra/fmt-development-5.log.txt": {
+      "sha256": "cf0e2cc958df385e89457c6e77844ad91b47a423944b74d11753d426a794e9e6",
+      "bytes": 100,
+      "mtime_ns": 1793238117882344332
+    },
+    "docs/agent-runs/phase-12/evidence/12b/infra/fmt-development-6.log.txt": {
+      "sha256": "5c0e01dbbc1e875bd165ea328c040e75e61f0a366140e2b1257d99079a2fd956",
+      "bytes": 1102,
+      "mtime_ns": 1793238251600472118
+    },
+    "docs/agent-runs/phase-12/evidence/12b/infra/fmt-development-7.log.txt": {
+      "sha256": "9c8331d488287e3a380c918f91aeb000fd9600fbbabc130a220a1396d92fdc87",
+      "bytes": 22,
+      "mtime_ns": 1793238264732703702
+    },
+    "docs/agent-runs/phase-12/evidence/12b/infra/fmt-development-8.log.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "mtime_ns": 1793238284178560565
+    },
+    "docs/agent-runs/phase-12/evidence/12b/infra/fmt-development-9.log.txt": {
+      "sha256": "c4eb9e0b40b7351b0915f5d82599525cd7a01e54b1a8dab5fe65b25bd6c70538",
+      "bytes": 56,
+      "mtime_ns": 1793238388150855010
+    },
+    "docs/agent-runs/phase-12/evidence/12b/infra/infra-tracked-diff.patch": {
+      "sha256": "933518548a50857f70cedecb6ccd73788c6906c878097f82f9b2a2a34136b53b",
+      "bytes": 35071,
+      "mtime_ns": 1793238876321239376
+    },
+    "docs/agent-runs/phase-12/evidence/12b/infra/init-development-1.log.txt": {
+      "sha256": "b475b3d040af3eb25638a5f17d912c4c5470728c80bb293500fb0dec367d16e4",
+      "bytes": 873,
+      "mtime_ns": 1793237900476855560
+    },
+    "docs/agent-runs/phase-12/evidence/12b/infra/init-local-mirror.log.txt": {
+      "sha256": "6fd242691fd6bbc7efe25549609a26c11107f98c3ae3cb12128985c21a261753",
+      "bytes": 677,
+      "mtime_ns": 1793238468419112626
+    },
+    "docs/agent-runs/phase-12/evidence/12b/infra/log-name-map.json": {
+      "sha256": "30f50569d8b6eaaf70e6892d6d4a8e65ed30eb240ba4b186cf4820513cf76538",
+      "bytes": 9773,
+      "mtime_ns": 1793239519220322384
+    },
+    "docs/agent-runs/phase-12/evidence/12b/infra/mirror-provenance.json": {
+      "sha256": "1474b821d11a96aa27c94fd0d79ad5f7874cc9a72a0f45311013f527e967f044",
+      "bytes": 1141,
+      "mtime_ns": 1793238748847078501
+    },
+    "docs/agent-runs/phase-12/evidence/12b/infra/mutation-graph-write-init.log.txt": {
+      "sha256": "6545a713c228f0dc92ae5a34526f8587feecb26f45982fa5410903494fbafaa6",
+      "bytes": 1133,
+      "mtime_ns": 1793238727411193992
+    },
+    "docs/agent-runs/phase-12/evidence/12b/infra/mutation-graph-write-test.log.txt": {
+      "sha256": "9a85df7abb5cfe79f14cfa6fd0c95a6d779d700460c578f100d7f712d03a3730",
+      "bytes": 144,
+      "mtime_ns": 1793238727457291676
+    },
+    "docs/agent-runs/phase-12/evidence/12b/infra/mutation-graph-write.patch": {
+      "sha256": "562dd0ce701e2ff47d760702058f7278161459da53bc4cc392dc0632321a13db",
+      "bytes": 715,
+      "mtime_ns": 1793238727094396530
+    },
+    "docs/agent-runs/phase-12/evidence/12b/infra/mutation-source-unchanged.json": {
+      "sha256": "8f1c4b8951326729e3f26f3847f6b9c00f936430095c2c3c08217f7a2c003250",
+      "bytes": 15846,
+      "mtime_ns": 1793238762205051247
+    },
+    "docs/agent-runs/phase-12/evidence/12b/infra/mutation-v2-flatten-dashboard-init.log.txt": {
+      "sha256": "bea09208d94de22b2d864999cb48dcdeb3bd7a1c12723069af42a1fe9269b976",
+      "bytes": 1179,
+      "mtime_ns": 1793238758355090815
+    },
+    "docs/agent-runs/phase-12/evidence/12b/infra/mutation-v2-flatten-dashboard-test.log.txt": {
+      "sha256": "454f40cb9bb4ea0c5bf1ab9b32112eab5307b64e500b262d56a38ba7005ab112",
+      "bytes": 2705,
+      "mtime_ns": 1793238762199247000
+    },
+    "docs/agent-runs/phase-12/evidence/12b/infra/mutation-v2-flatten-dashboard.patch": {
+      "sha256": "4afe7b1766fe491f6b6e6fd6474242829bec276986144397914febb426bf5d32",
+      "bytes": 1343,
+      "mtime_ns": 1793238757771396086
+    },
+    "docs/agent-runs/phase-12/evidence/12b/infra/mutation-v2-graph-write-init.log.txt": {
+      "sha256": "bea09208d94de22b2d864999cb48dcdeb3bd7a1c12723069af42a1fe9269b976",
+      "bytes": 1179,
+      "mtime_ns": 1793238749495076648
+    },
+    "docs/agent-runs/phase-12/evidence/12b/infra/mutation-v2-graph-write-test.log.txt": {
+      "sha256": "5125b02fefba3433fc8ae04b28d4df1f38ff07ba8716778578e76f138e280545",
+      "bytes": 2695,
+      "mtime_ns": 1793238753320486433
+    },
+    "docs/agent-runs/phase-12/evidence/12b/infra/mutation-v2-graph-write.patch": {
+      "sha256": "562dd0ce701e2ff47d760702058f7278161459da53bc4cc392dc0632321a13db",
+      "bytes": 715,
+      "mtime_ns": 1793238748912136080
+    },
+    "docs/agent-runs/phase-12/evidence/12b/infra/mutation-v2-public-neptune-init.log.txt": {
+      "sha256": "bea09208d94de22b2d864999cb48dcdeb3bd7a1c12723069af42a1fe9269b976",
+      "bytes": 1179,
+      "mtime_ns": 1793238753916125487
+    },
+    "docs/agent-runs/phase-12/evidence/12b/infra/mutation-v2-public-neptune-test.log.txt": {
+      "sha256": "ddda269e81e14e73c6784914776c548c70506e3006f79fd469852b4c0f753c3d",
+      "bytes": 2919,
+      "mtime_ns": 1793238757759270888
+    },
+    "docs/agent-runs/phase-12/evidence/12b/infra/mutation-v2-public-neptune.patch": {
+      "sha256": "8f26e26edc8044b8a8b39007ef4a873c86ac4c1cc0c203801707ed8b80c47182",
+      "bytes": 440,
+      "mtime_ns": 1793238753332505631
+    },
+    "docs/agent-runs/phase-12/evidence/12b/infra/negative-helper-v2.log.txt": {
+      "sha256": "55791c7fe899087bb04d81c4c20b4595418389cb0478c237f26b4ee2996ca795",
+      "bytes": 890,
+      "mtime_ns": 1793238762207951183
+    },
+    "docs/agent-runs/phase-12/evidence/12b/infra/negative-helper.log.txt": {
+      "sha256": "97475baa8bc8f1d53bcdd956d2a5d8f854f9bf223f0773e964dc66d5118a3fb7",
+      "bytes": 825,
+      "mtime_ns": 1793238727470643697
+    },
+    "docs/agent-runs/phase-12/evidence/12b/infra/negative-results-v2.json": {
+      "sha256": "ffe3dae1b4e09f207fc4dd14c62c2c1ea6b36d3134c85aa620dd0ddac057b579",
+      "bytes": 1010,
+      "mtime_ns": 1793238762203286677
+    },
+    "docs/agent-runs/phase-12/evidence/12b/infra/negative-results.json": {
+      "sha256": "0e8a8e89d2fa2e05ea39e7e8f5bd0bdbf09080e7924cc60f8398fe90271acf4d",
+      "bytes": 356,
+      "mtime_ns": 1793238727461149688
+    },
+    "docs/agent-runs/phase-12/evidence/12b/infra/negative_cases.py": {
+      "sha256": "db2b4c77ad0cf4563ab7da74bb91e8f35b8760011875596884514f2dc964099f",
+      "bytes": 3662,
+      "mtime_ns": 1793238748847202125
+    },
+    "docs/agent-runs/phase-12/evidence/12b/infra/owner-report.md": {
+      "sha256": "425eb532a0411884b72e2d987eb5755f0308a3841bcc6ee8e3e4906da3ba0788",
+      "bytes": 7044,
+      "mtime_ns": 1793238955341084366
+    },
+    "docs/agent-runs/phase-12/evidence/12b/infra/provider-schema-extract.json": {
+      "sha256": "ca26f1c4c2d26dda4039b5117c453ca47e636fa7fa503148aa4dc8f637850f1f",
+      "bytes": 148453,
+      "mtime_ns": 1793238876449962379
+    },
+    "docs/agent-runs/phase-12/evidence/12b/infra/run.py": {
+      "sha256": "5234416dfa2411f393416f51d764752c59f241caf334e4997b6e2c2d339dd5b9",
+      "bytes": 887,
+      "mtime_ns": 1793238468098186982
+    },
+    "docs/agent-runs/phase-12/evidence/12b/infra/source-freeze.json": {
+      "sha256": "560c1764c4861ab4a74b831b9e5a28a62f69030b2485444c75e151ab867e380a",
+      "bytes": 13671,
+      "mtime_ns": 1793238794275900439
+    },
+    "docs/agent-runs/phase-12/evidence/12b/infra/source-hygiene.json": {
+      "sha256": "6248ad4e5996f59dfae7f301202764e8940340a46648353a13b5067bfca159fc",
+      "bytes": 1222,
+      "mtime_ns": 1793238794921645188
+    },
+    "docs/agent-runs/phase-12/evidence/12b/infra/source-scope.json": {
+      "sha256": "5b46ee44cbd3fa995537199a0692845f63be758ce8ea69b729700cdbb13a7622",
+      "bytes": 2094,
+      "mtime_ns": 1793238876313284521
+    },
+    "docs/agent-runs/phase-12/evidence/12b/infra/terraformrc": {
+      "sha256": "c362343f53066ebfd5ae04797f8e5bdb60a133bbe74e02dded63c43828bf9f08",
+      "bytes": 151,
+      "mtime_ns": 1793238467835441954
+    },
+    "docs/agent-runs/phase-12/evidence/12b/infra/test-coverage.json": {
+      "sha256": "f38435c85cf58c8f6bd2d5c0febe89002d02ebf2cfae467b4f65621eef9be19a",
+      "bytes": 368,
+      "mtime_ns": 1793238794276808307
+    },
+    "docs/agent-runs/phase-12/evidence/12b/infra/test-debug-json.log.gz": {
+      "sha256": "e84ec93a976e0e6fb9eab1a988f3ec6af6a530a363a7343bf5127d03ba715bc7",
+      "bytes": 1822428,
+      "mtime_ns": 1793238794571054820
+    },
+    "docs/agent-runs/phase-12/evidence/12b/infra/test-development-1.log.txt": {
+      "sha256": "7b1b4def04eb8c35f1ad541d97bc46e68e0212f2014d38ba2e226a8e715b1e5f",
+      "bytes": 9342,
+      "mtime_ns": 1793237995873142033
+    },
+    "docs/agent-runs/phase-12/evidence/12b/infra/test-development-10.log.txt": {
+      "sha256": "ca01f69508557980b51362a8604057df04133c62bfde441b57c2f95383cda6bc",
+      "bytes": 1838,
+      "mtime_ns": 1793238683538958846
+    },
+    "docs/agent-runs/phase-12/evidence/12b/infra/test-development-2.log.txt": {
+      "sha256": "4ec828a3bffbe30aa5a9b81da6cab8dec9f0e73a172987ef3ec8784b5f31d882",
+      "bytes": 3802,
+      "mtime_ns": 1793238011261268661
+    },
+    "docs/agent-runs/phase-12/evidence/12b/infra/test-development-3.log.txt": {
+      "sha256": "1629e5117322c7e5d58850fb1d4ad9777569d9971676f9455971f1fefbec89dd",
+      "bytes": 1469,
+      "mtime_ns": 1793238120986376540
+    },
+    "docs/agent-runs/phase-12/evidence/12b/infra/test-development-4.log.txt": {
+      "sha256": "db79cf25ecc1927b469399ee833ee77a7e3f5db24ec297fe79a6dd7ebc98849a",
+      "bytes": 1029,
+      "mtime_ns": 1793238251680015849
+    },
+    "docs/agent-runs/phase-12/evidence/12b/infra/test-development-5.log.txt": {
+      "sha256": "5c3d82bfb053c0a3837c08bf6b68d278907754b07eace672ad9ae27ffeb404ef",
+      "bytes": 2022,
+      "mtime_ns": 1793238268374979343
+    },
+    "docs/agent-runs/phase-12/evidence/12b/infra/test-development-6.log.txt": {
+      "sha256": "1629e5117322c7e5d58850fb1d4ad9777569d9971676f9455971f1fefbec89dd",
+      "bytes": 1469,
+      "mtime_ns": 1793238287367009521
+    },
+    "docs/agent-runs/phase-12/evidence/12b/infra/test-development-7.log.txt": {
+      "sha256": "7b332597978b552a45d060d8db4bfbd6bcac3a1ebfb5890997bfe7cf0b89a130",
+      "bytes": 29149,
+      "mtime_ns": 1793238390539130217
+    },
+    "docs/agent-runs/phase-12/evidence/12b/infra/test-development-8.log.txt": {
+      "sha256": "d363b0578226f837cf28da2c4341b793afa0d00a022c012c0271638c0eb106c0",
+      "bytes": 29210,
+      "mtime_ns": 1793238436929358793
+    },
+    "docs/agent-runs/phase-12/evidence/12b/infra/test-development-9.log.txt": {
+      "sha256": "87e32035413618827995258bb95625ff6d6b573375dea80229a2b20cd95f292f",
+      "bytes": 1781,
+      "mtime_ns": 1793238446946723841
+    },
+    "docs/agent-runs/phase-12/evidence/12b/infra/toolchain-version.log.txt": {
+      "sha256": "5d3100f59cca63307c83f2fd1e4c669f9621be555281cdac250763c7d54bc621",
+      "bytes": 180,
+      "mtime_ns": 1793238876031050707
+    },
+    "docs/agent-runs/phase-12/evidence/12b/infra/validate-development-1.log.txt": {
+      "sha256": "ffa7741e05ec31e4804b328109e1601073348f9e2c4d915729c4b421246e2ad3",
+      "bytes": 3930,
+      "mtime_ns": 1793237902104356611
+    },
+    "docs/agent-runs/phase-12/evidence/12b/infra/validate-development-2.log.txt": {
+      "sha256": "f7997225125835fdd14060ac776d273f394b874f9a481b9e2122c83dc8adc5c1",
+      "bytes": 38,
+      "mtime_ns": 1793238009170273142
+    },
+    "docs/agent-runs/phase-12/evidence/12b/infra/validate-development-3.log.txt": {
+      "sha256": "db79cf25ecc1927b469399ee833ee77a7e3f5db24ec297fe79a6dd7ebc98849a",
+      "bytes": 1029,
+      "mtime_ns": 1793238251640094837
+    },
+    "docs/agent-runs/phase-12/evidence/12b/infra/validate-development-4.log.txt": {
+      "sha256": "f7997225125835fdd14060ac776d273f394b874f9a481b9e2122c83dc8adc5c1",
+      "bytes": 38,
+      "mtime_ns": 1793238266216686051
+    },
+    "docs/agent-runs/phase-12/evidence/12b/infra/validate-development-5.log.txt": {
+      "sha256": "f7997225125835fdd14060ac776d273f394b874f9a481b9e2122c83dc8adc5c1",
+      "bytes": 38,
+      "mtime_ns": 1793238679738780564
+    },
+    "docs/agent-runs/phase-12/evidence/12b/input-contracts.json": {
+      "sha256": "aa4a61d577bcb524c635202381cca3e5cf55ea3d66f162df49ec2a4d71cce433",
+      "bytes": 23538,
+      "mtime_ns": 1793238620069670274
+    },
+    "docs/agent-runs/phase-12/evidence/12b/java-version.log.txt": {
+      "sha256": "2fe83b0053132e4e834defa82250462f4c62733d29bf76b19ee1bb3c14b06b39",
+      "bytes": 171,
+      "mtime_ns": 1793238835266316827
+    },
+    "docs/agent-runs/phase-12/evidence/12b/non-infra-source-baseline.json": {
+      "sha256": "f19fd010821080e4a8c26b5d5b2e34d67275c0237c4fcaecd6d111650fc6ffd8",
+      "bytes": 70714,
+      "mtime_ns": 1793237594445818432
+    },
+    "docs/agent-runs/phase-12/evidence/12b/preflight-and-ownership.json": {
+      "sha256": "7cc9296501790003ab3eaaf45eba12138edc3e1180bc53002a3445944f5501d9",
+      "bytes": 2038,
+      "mtime_ns": 1793238289421072038
+    },
+    "docs/agent-runs/phase-12/evidence/12b/prior-records-baseline.json": {
+      "sha256": "709bcbb62316094da65352a8819116e07fb7fb7d261d6d84a6f25934d8d8dce4",
+      "bytes": 17653,
+      "mtime_ns": 1793237739899120022
+    },
+    "docs/agent-runs/phase-12/evidence/12b/sbt-check-excerpt.txt": {
+      "sha256": "5d0e955bc8141048b5fd6a8438a9e46fa86e9b4fb5ce871d6247d86244855506",
+      "bytes": 3270,
+      "mtime_ns": 1793239560716023044
+    },
+    "docs/agent-runs/phase-12/evidence/12b/sbt-check.log.gz": {
+      "sha256": "bf621ed681c6c919019c544a125f246e2945d8ced1533368589253057d88f2e7",
+      "bytes": 93051,
+      "mtime_ns": 1793239582194994169
+    },
+    "docs/agent-runs/phase-12/evidence/12b/step-0-answers.md": {
+      "sha256": "48b88250b8be09fe26215dceefdbf5c124cd86ac96d9fe84cb722ce3ec247741",
+      "bytes": 6247,
+      "mtime_ns": 1793237485916590873
+    },
+    "docs/agent-runs/phase-12/owner-report.md": {
+      "sha256": "c6fab41612e9d56e91697c0f428b12d9908b3ddc63871951ba2709bdf416c760",
+      "bytes": 18272,
+      "mtime_ns": 1793239647388773812
+    },
+    "docs/agent-runs/phase-12/prompt.md": {
+      "sha256": "cd927753078cf675d1a7a0bf76692127ee7c07f9c749390a8d42369c0bcfc1b4",
+      "bytes": 35573,
+      "mtime_ns": 1793237486016849759
+    },
+    "docs/agent-runs/phase-12/repairs.md": {
+      "sha256": "045ffb34ae7e406bc2100c78d5d63931cab33578d8fda25e923a71ad920ec5ae",
+      "bytes": 10166,
+      "mtime_ns": 1793239122612566034
+    },
+    "docs/agent-runs/phase-12/review.md": {
+      "sha256": "d477625988b6a3777afb5e7b0fe473839d1a5cd13045f3e8371f8a27c9bd9855",
+      "bytes": 42124,
+      "mtime_ns": 1793236126427397445
+    },
+    "docs/agent-runs/phase-12/reviewer-prompt-12a-recheck-1.md": {
+      "sha256": "061282f7f69ac170f203d726c15d1a455b6ed66fe5aac6f93f12c8a9603b975b",
+      "bytes": 7996,
+      "mtime_ns": 1793224188236008686
+    },
+    "docs/agent-runs/phase-12/reviewer-prompt-12a.md": {
+      "sha256": "2986088b0305155b407bd10101315d7461f38c5107132bdb4815d393770ca868",
+      "bytes": 11457,
+      "mtime_ns": 1793214159624102030
+    },
+    "docs/agent-runs/phase-12/reviewer-prompt-12b.md": {
+      "sha256": "5e8b568c00639dfb96773d11f564ebf3d645212cc8aa0cc2e9832f1a26537064",
+      "bytes": 12047,
+      "mtime_ns": 1793239725981021029
+    },
+    "docs/agent-runs/phase-12/test-report.md": {
+      "sha256": "fd01036ca5c1dfe86e465c9f0ee9a8768a6991db6fda876219e66cadda57fcf1",
+      "bytes": 13770,
+      "mtime_ns": 1793239647388988268
+    },
+    "infra/terraform/.gitkeep": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "mtime_ns": 1791159770015343448
+    },
+    "infra/terraform/.terraform.lock.hcl": {
+      "sha256": "421b75245b0080edee2b434482ff348419a75d7a6b798d5218e0a0f9f723eaea",
+      "bytes": 1406,
+      "mtime_ns": 1793213376307087886
+    },
+    "infra/terraform/README.md": {
+      "sha256": "be07b28288c23494f97a749f749ea391e868e05086bdc149619f37d76372b7eb",
+      "bytes": 32740,
+      "mtime_ns": 1793238674817903058
+    },
+    "infra/terraform/environments/course.tfvars": {
+      "sha256": "074db42250c2f7e61ff3c6b3bdaee62a14d91eafd0d5f3419d419f01afa7306b",
+      "bytes": 1466,
+      "mtime_ns": 1793238589021100570
+    },
+    "infra/terraform/main.tf": {
+      "sha256": "d5e5b3c2f3e0075f2562609ad2ce5f5573f116bd39f1c0235b3b84153b27341c",
+      "bytes": 6467,
+      "mtime_ns": 1793238251533659055
+    },
+    "infra/terraform/modules/datalake/main.tf": {
+      "sha256": "33a1f9d21962c285f597a4e17a74535af186ab52a741c045b663717f4f7bf9bf",
+      "bytes": 2835,
+      "mtime_ns": 1793213526882056884
+    },
+    "infra/terraform/modules/datalake/outputs.tf": {
+      "sha256": "c04264c35b25d7dbde8e0ebef4c0d0f0a8eec82c20fb38e1a2a868cae7f8c07d",
+      "bytes": 810,
+      "mtime_ns": 1793213238560782999
+    },
+    "infra/terraform/modules/datalake/variables.tf": {
+      "sha256": "f34c80bf90187a86eff99db8bee280872f6b21da339ce5a3a3386d2629b4083a",
+      "bytes": 362,
+      "mtime_ns": 1793213526842104173
+    },
+    "infra/terraform/modules/datalake/versions.tf": {
+      "sha256": "38c0d27255f1ccf0c6f57b6854b80e5bcecde516ebfbcdfbd7ae95ad220ba0a1",
+      "bytes": 150,
+      "mtime_ns": 1793213192477053788
+    },
+    "infra/terraform/modules/dynamodb/main.tf": {
+      "sha256": "a6ba78a8127de3f6df9c2cf42b9f397f18ea3dc239fed0b20c5e718d8d91c120",
+      "bytes": 1751,
+      "mtime_ns": 1793213526882742096
+    },
+    "infra/terraform/modules/dynamodb/outputs.tf": {
+      "sha256": "3d8b58ed4096f3d53c8620673fa44ff015029176064823aa342cfefd490f4820",
+      "bytes": 776,
+      "mtime_ns": 1793213238560923083
+    },
+    "infra/terraform/modules/dynamodb/variables.tf": {
+      "sha256": "d3927de45e5a434c8b30dd941283ed080ad29b14909d16cd0158b5a89df65641",
+      "bytes": 265,
+      "mtime_ns": 1793213238560831499
+    },
+    "infra/terraform/modules/dynamodb/versions.tf": {
+      "sha256": "38c0d27255f1ccf0c6f57b6854b80e5bcecde516ebfbcdfbd7ae95ad220ba0a1",
+      "bytes": 150,
+      "mtime_ns": 1793213192477116955
+    },
+    "infra/terraform/modules/emr/main.tf": {
+      "sha256": "b945543bcb85469e6a0d5b03ab7856b926c23f0447dfeab95505d298d3f7280b",
+      "bytes": 3462,
+      "mtime_ns": 1793238117855541991
+    },
+    "infra/terraform/modules/emr/outputs.tf": {
+      "sha256": "4fd3461366fed94fcbf0d5823e07fdddf8fcf460a1692d2d75e30d9b9e884db5",
+      "bytes": 334,
+      "mtime_ns": 1793237875477586406
+    },
+    "infra/terraform/modules/emr/variables.tf": {
+      "sha256": "97fbff11089034711095904b83a950da2af5faa1d02416a6ff48e66dea76fc16",
+      "bytes": 663,
+      "mtime_ns": 1793237735950918497
+    },
+    "infra/terraform/modules/emr/versions.tf": {
+      "sha256": "38c0d27255f1ccf0c6f57b6854b80e5bcecde516ebfbcdfbd7ae95ad220ba0a1",
+      "bytes": 150,
+      "mtime_ns": 1793237735950804330
+    },
+    "infra/terraform/modules/foundation/bootstrap/main.tf": {
+      "sha256": "c26429519d1a02fa5263532856b9cc7a154974e4798039599c54bc7936356d15",
+      "bytes": 1990,
+      "mtime_ns": 1793213663313873385
+    },
+    "infra/terraform/modules/foundation/bootstrap/outputs.tf": {
+      "sha256": "fdc3ff0702da0eb128deb35fdab6cda02b96507354ad41fcc3dd5a4b54e9f2c0",
+      "bytes": 960,
+      "mtime_ns": 1793213639349164208
+    },
+    "infra/terraform/modules/foundation/bootstrap/variables.tf": {
+      "sha256": "ebc3bedbb4957baf5692e19b227df77f44e83ce1c107702375105d493c110b76",
+      "bytes": 693,
+      "mtime_ns": 1793213814742421048
+    },
+    "infra/terraform/modules/foundation/bootstrap/versions.tf": {
+      "sha256": "38c0d27255f1ccf0c6f57b6854b80e5bcecde516ebfbcdfbd7ae95ad220ba0a1",
+      "bytes": 150,
+      "mtime_ns": 1793213639307417029
+    },
+    "infra/terraform/modules/foundation/main.tf": {
+      "sha256": "28a5dd65c502cd18d039da4d35c92964fae4fac74909a69fbc9ea8b1984b77d2",
+      "bytes": 1095,
+      "mtime_ns": 1793213526841978840
+    },
+    "infra/terraform/modules/foundation/outputs.tf": {
+      "sha256": "bfbab11ed31c4a9d0aec8fef35b926fecd04f3964fe849cd044b412a4ccddf8e",
+      "bytes": 266,
+      "mtime_ns": 1793213526842045715
+    },
+    "infra/terraform/modules/foundation/variables.tf": {
+      "sha256": "38f1a007c2de96f671eb980a466140835e7f88dfe89519607e6da0784dc0b553",
+      "bytes": 486,
+      "mtime_ns": 1793213526841908589
+    },
+    "infra/terraform/modules/foundation/versions.tf": {
+      "sha256": "38c0d27255f1ccf0c6f57b6854b80e5bcecde516ebfbcdfbd7ae95ad220ba0a1",
+      "bytes": 150,
+      "mtime_ns": 1793213192476835287
+    },
+    "infra/terraform/modules/identity/main.tf": {
+      "sha256": "22df879e9897d13f175e93b24f87a3787dc4c3bb831adc1623226ecd7ca48fdb",
+      "bytes": 11015,
+      "mtime_ns": 1793237875482779882
+    },
+    "infra/terraform/modules/identity/outputs.tf": {
+      "sha256": "dab78cb2fd72b4bc328f8824f3c56a2e4e54b832b2ad72697dd59eba077ac9ed",
+      "bytes": 1798,
+      "mtime_ns": 1793238251578078540
+    },
+    "infra/terraform/modules/identity/phase12b.tf": {
+      "sha256": "7cb0788990d8e6ecff81e340b66a18cc0b6eaa57bdeb7c85c4132af8d43be239",
+      "bytes": 2745,
+      "mtime_ns": 1793238117860320965
+    },
+    "infra/terraform/modules/identity/variables.tf": {
+      "sha256": "2ac1550de1cff2e1d66322cae32022f5c6e12ed9f043ed5463d5aa52f3e5c6a9",
+      "bytes": 968,
+      "mtime_ns": 1793237875345375243
+    },
+    "infra/terraform/modules/identity/versions.tf": {
+      "sha256": "38c0d27255f1ccf0c6f57b6854b80e5bcecde516ebfbcdfbd7ae95ad220ba0a1",
+      "bytes": 150,
+      "mtime_ns": 1793213192476986163
+    },
+    "infra/terraform/modules/messaging/main.tf": {
+      "sha256": "3088aba1f4c77017fa7bc91e6d0a16b55b9ce4bc1e71f580b4e310c55f82d679",
+      "bytes": 1553,
+      "mtime_ns": 1793213526886989910
+    },
+    "infra/terraform/modules/messaging/outputs.tf": {
+      "sha256": "9f104df2f4af14ba20b018aeef1f53367fc789f535892587ca2ee580380e4d61",
+      "bytes": 864,
+      "mtime_ns": 1793213238561074459
+    },
+    "infra/terraform/modules/messaging/variables.tf": {
+      "sha256": "2c2d1fda57e9b1d9a3c17aefe195992e2009e6ca508c6479cb404cda49176163",
+      "bytes": 1077,
+      "mtime_ns": 1793213526842226299
+    },
+    "infra/terraform/modules/messaging/versions.tf": {
+      "sha256": "38c0d27255f1ccf0c6f57b6854b80e5bcecde516ebfbcdfbd7ae95ad220ba0a1",
+      "bytes": 150,
+      "mtime_ns": 1793213192477198539
+    },
+    "infra/terraform/modules/neptune/main.tf": {
+      "sha256": "750243dab1a6c928f03ef6e19588282dcd6df65c535beebc8006497e234f9a0e",
+      "bytes": 2690,
+      "mtime_ns": 1793238727015663765
+    },
+    "infra/terraform/modules/neptune/outputs.tf": {
+      "sha256": "68b2c4272cddc85a109029e09dde4708e72e012e6e0b6752c07a87a2945cf3f5",
+      "bytes": 553,
+      "mtime_ns": 1793238251533190803
+    },
+    "infra/terraform/modules/neptune/variables.tf": {
+      "sha256": "8104b8c01fb7f99651331aad39935b3bbf5415c2950bb1bf3bc64048ea078152",
+      "bytes": 717,
+      "mtime_ns": 1793238674817387979
+    },
+    "infra/terraform/modules/neptune/versions.tf": {
+      "sha256": "38c0d27255f1ccf0c6f57b6854b80e5bcecde516ebfbcdfbd7ae95ad220ba0a1",
+      "bytes": 150,
+      "mtime_ns": 1793237577398289118
+    },
+    "infra/terraform/modules/network/main.tf": {
+      "sha256": "6cad9d6dbbc48de09917987f92eb45154381f2d3e62d1122ab50c72c4a132b9f",
+      "bytes": 10968,
+      "mtime_ns": 1793237875487742107
+    },
+    "infra/terraform/modules/network/outputs.tf": {
+      "sha256": "a95f6380671e574c175b83149a86f4b9ad8f00b53c8aaac0f62b9ea291aea96e",
+      "bytes": 1785,
+      "mtime_ns": 1793237875488109525
+    },
+    "infra/terraform/modules/network/variables.tf": {
+      "sha256": "85ce3718b5a1d47ec6fda18303d40fb7a73805645f1648bd4318d956aca42890",
+      "bytes": 742,
+      "mtime_ns": 1793213286805849309
+    },
+    "infra/terraform/modules/network/versions.tf": {
+      "sha256": "38c0d27255f1ccf0c6f57b6854b80e5bcecde516ebfbcdfbd7ae95ad220ba0a1",
+      "bytes": 150,
+      "mtime_ns": 1793213192476918705
+    },
+    "infra/terraform/modules/observability/main.tf": {
+      "sha256": "7ea33250abb3d97d838994a73b8f079ed86eff8539b2383f0c7ec9f983d80129",
+      "bytes": 8680,
+      "mtime_ns": 1793238388133727326
+    },
+    "infra/terraform/modules/observability/outputs.tf": {
+      "sha256": "6ae4abe662395ec15f0ae45633039768b17f7b79d0dc847826ac6a7ec191cf47",
+      "bytes": 551,
+      "mtime_ns": 1793238674817592311
+    },
+    "infra/terraform/modules/observability/variables.tf": {
+      "sha256": "ab92f1860f336384e763d9b275c548a8e7b1a33ed4b2bdf8663a2e1215615745",
+      "bytes": 626,
+      "mtime_ns": 1793238251533887430
+    },
+    "infra/terraform/modules/observability/versions.tf": {
+      "sha256": "38c0d27255f1ccf0c6f57b6854b80e5bcecde516ebfbcdfbd7ae95ad220ba0a1",
+      "bytes": 150,
+      "mtime_ns": 1793237787326609371
+    },
+    "infra/terraform/modules/runtime/compute.tf": {
+      "sha256": "6864e3fc7336b16110a28ed24853bbe6c830bdc86baaae9d1dc341cfd575f978",
+      "bytes": 8706,
+      "mtime_ns": 1793238251533315970
+    },
+    "infra/terraform/modules/runtime/main.tf": {
+      "sha256": "da2a0cdf7270d0a8b3ab65223c869753700e11a6a3ed635ac6fccc5bdf8422df",
+      "bytes": 549,
+      "mtime_ns": 1793237675617518711
+    },
+    "infra/terraform/modules/runtime/outputs.tf": {
+      "sha256": "7035f6ad7a97ef66b17a2b8b36321538407666d65893838718d128b02f498849",
+      "bytes": 1410,
+      "mtime_ns": 1793237875492130372
+    },
+    "infra/terraform/modules/runtime/variables.tf": {
+      "sha256": "4cbae506c1b1371ef255fce80c96397708b3930e1f23fc0ca90ca56451835458",
+      "bytes": 1250,
+      "mtime_ns": 1793237675617775711
+    },
+    "infra/terraform/modules/runtime/versions.tf": {
+      "sha256": "38c0d27255f1ccf0c6f57b6854b80e5bcecde516ebfbcdfbd7ae95ad220ba0a1",
+      "bytes": 150,
+      "mtime_ns": 1793213192477279248
+    },
+    "infra/terraform/modules/s3vectors/main.tf": {
+      "sha256": "ef6d6dd8396e6fbe910f45d59cacd497afc757be788b5b9280410e2948ac18ed",
+      "bytes": 1671,
+      "mtime_ns": 1793238434517332797
+    },
+    "infra/terraform/modules/s3vectors/outputs.tf": {
+      "sha256": "f610026e936d2d9bf6103dee0e13d4cff602690a789fc4a38b60bfb0f421c9d5",
+      "bytes": 365,
+      "mtime_ns": 1793237577398783203
+    },
+    "infra/terraform/modules/s3vectors/variables.tf": {
+      "sha256": "c2cf7f01b63b666f26afe5a3f29473284072d84c5a30c4934afa379dbc497142",
+      "bytes": 343,
+      "mtime_ns": 1793238434462740442
+    },
+    "infra/terraform/modules/s3vectors/versions.tf": {
+      "sha256": "38c0d27255f1ccf0c6f57b6854b80e5bcecde516ebfbcdfbd7ae95ad220ba0a1",
+      "bytes": 150,
+      "mtime_ns": 1793237577398610286
+    },
+    "infra/terraform/modules/workflow/main.tf": {
+      "sha256": "70ae11a3a2cfc9e77cff2a25d3545233eeec0931d6c829299146a50dd689ed3e",
+      "bytes": 3487,
+      "mtime_ns": 1793238284108869117
+    },
+    "infra/terraform/modules/workflow/outputs.tf": {
+      "sha256": "ad976377003ccb94e5be9e2c8e28849178795d47fbc89ece2cc1b1fedd65133a",
+      "bytes": 419,
+      "mtime_ns": 1793237577399105788
+    },
+    "infra/terraform/modules/workflow/variables.tf": {
+      "sha256": "b06680fa2e6c66d8597cc7545e312a3caf308d319070de3778060806bb11b303",
+      "bytes": 357,
+      "mtime_ns": 1793237577398976121
+    },
+    "infra/terraform/modules/workflow/versions.tf": {
+      "sha256": "38c0d27255f1ccf0c6f57b6854b80e5bcecde516ebfbcdfbd7ae95ad220ba0a1",
+      "bytes": 150,
+      "mtime_ns": 1793237577398902204
+    },
+    "infra/terraform/outputs.tf": {
+      "sha256": "483145548635204f79f3db4e9aedb4a6c7e0d90fd4ba4ae474bffec9b0c41f29",
+      "bytes": 1425,
+      "mtime_ns": 1793237875494070254
+    },
+    "infra/terraform/phase12b-variables.tf": {
+      "sha256": "cb6a0237a6548ddd149208d0e8262cae9d70ceeb6e875ad631e633da1d85cc54",
+      "bytes": 8552,
+      "mtime_ns": 1793238434520295932
+    },
+    "infra/terraform/phase12b.tf": {
+      "sha256": "9ee3bff8c367d4748e9e558dc59557a7c6f6ba0e4a46fa27ba85b8a3f080925e",
+      "bytes": 6960,
+      "mtime_ns": 1793238726966817894
+    },
+    "infra/terraform/providers.tf": {
+      "sha256": "665ed676e139cd00e9e7b7bb744a217aeb16d40d4d5cabe13187150c088c2296",
+      "bytes": 192,
+      "mtime_ns": 1793213188127603532
+    },
+    "infra/terraform/tests/phase12a.tftest.hcl": {
+      "sha256": "2629073c572587dd16e65be5e31325e07106bb7d7d8b40fa794ddf71cdf23b6e",
+      "bytes": 16324,
+      "mtime_ns": 1793238117812959969
+    },
+    "infra/terraform/tests/phase12b.tftest.hcl": {
+      "sha256": "01b5583d95169d4c2c59069b149cbfddcd508fb5dd9abc097e7175db12c65cb1",
+      "bytes": 27669,
+      "mtime_ns": 1793238674885176277
+    },
+    "infra/terraform/variables.tf": {
+      "sha256": "654032b61eaae460f2e817afb7794bcad09f36a01dc54520de1e74772590b056",
+      "bytes": 10151,
+      "mtime_ns": 1793213814753822150
+    },
+    "infra/terraform/versions.tf": {
+      "sha256": "38c0d27255f1ccf0c6f57b6854b80e5bcecde516ebfbcdfbd7ae95ad220ba0a1",
+      "bytes": 150,
+      "mtime_ns": 1793213188127543448
+    }
+  }
+}

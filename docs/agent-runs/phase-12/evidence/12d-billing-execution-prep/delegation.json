@@ -1,0 +1,7 @@
+{
+  "infra_agent": "/root/infra_12d_execution_prep",
+  "source_owner": "infra-engineer",
+  "scope": "infra/terraform billing policy-only draft and billing-bootstrap README; no live operations",
+  "build_owner": "build-engineer after final freeze",
+  "reviewer": "none launched; user must launch independent reviewer"
+}

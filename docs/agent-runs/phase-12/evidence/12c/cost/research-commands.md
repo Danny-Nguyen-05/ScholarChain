@@ -1,0 +1,12 @@
+# Research commands and provenance
+
+Working directory for repository reads: /Users/danny/Documents/UIC/CS441/ScholarChain. Scratch output directory: /tmp/scholarchain-phase12c-cost. Tool calls used Python 3 standard library and the public web tool; no credential files, environment values or AWS account API were inspected.
+
+- Read external phase12.md shared budget section and Git-visible Terraform course vars, runtime, datalake, DynamoDB, observability, workflow and EMR source with cat/sed/rg. The first batched rg referenced nonexistent modules/registry/main.tf and modules/storage/main.tf; it exited 2 after useful output. Those paths were not treated as evidence. Subsequent reads used existing module paths.
+- Fetch public regional AWS static price lists with Python urllib.request.urlopen(url, timeout=25), capped at 8,000,001 bytes; parse JSON, record bytes/SHA-256/catalog version/publication time. Each catalog URL, retrieval time, hash or HTTP failure is in fetch-manifest.json. No signing/authentication or paid pricing-query API was used.
+- Open public official AWS product price pages with web.run for Neptune, Fargate, VPC, ALB; public search for Cloud Map and Titan V2. These are supporting pages; numeric Ohio product rates come from the curated regional SKU records.
+- Small EC2 public pricing-map discovery URLs returned 404; ec2 metadata.json could be downloaded, but no per-instance Ohio map was located. The huge EC2 regional catalog was deliberately not fetched. EC2/EBS component prices remain unverified; no complete EMR cost is claimed.
+- Read coordinator-provided sanitized plan summary /tmp/scholarchain-phase12c-infra/plan-summary.json to reconcile actual selected resource counts; its source SHA-256 and plan checksum are in plan-reference.json. No raw plan JSON was read.
+- `python3 /tmp/scholarchain-phase12c-cost/build_cost_evidence.py` recomputes selected price evidence and numeric estimates from the scratch public catalogs and plan-reference.json; when the catalogs are absent, it uses the retained curated-price-evidence.json rates for offline reproduction. The helper locates inputs beside itself. Source catalogs stay scratch; curated-price-evidence.json includes enough SKU metadata/URL/hash to refetch and reproduce the rates. Calculated timestamp varies on replay.
+
+Curated artifacts are sufficient for handoff; do not copy all catalogs, HTML or JavaScript discovery files into the repository. Failed lookups are preserved as failures, not represented as pricing checks that passed.

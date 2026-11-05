@@ -1,0 +1,33 @@
+{
+  "checked_user_date": "2026-11-01",
+  "timezone": "America/Chicago",
+  "method": "Public primary source/docs browsing only; no AWS account call.",
+  "sources": [
+    {
+      "url": "https://developer.hashicorp.com/terraform/cli/v1.13.x/commands/apply",
+      "note": "Saved apply semantics; supplementary unchanged execution binding."
+    },
+    {
+      "url": "https://raw.githubusercontent.com/hashicorp/terraform/v1.13.5/commands.go",
+      "note": "makeShutdownCh forwards received interrupts to command shutdown channel."
+    },
+    {
+      "url": "https://raw.githubusercontent.com/hashicorp/terraform/v1.13.5/internal/command/meta.go",
+      "note": "RunOperation calls Stop at first interrupt; a second calls Cancel; wrapper intentionally sends just first interrupt."
+    },
+    {
+      "url": "https://raw.githubusercontent.com/hashicorp/terraform/v1.13.5/internal/backend/local/backend_apply.go",
+      "note": "Apply returns state and WriteAndPersist; errored.tfstate fallback on failed persistence, explaining graceful-stop and opaque preservation rationale."
+    }
+  ],
+  "lookup_limitations": [
+    {
+      "url": "https://raw.githubusercontent.com/hashicorp/terraform/v1.13.5/signals_unix.go",
+      "result": "Cache miss; no content; not relied upon."
+    },
+    {
+      "operation": "find PersistState/WriteState in backend_apply.go",
+      "result": "Exact spellings did not match; later WriteAndPersist/fallback source inspected."
+    }
+  ]
+}

@@ -1,0 +1,95 @@
+Verdict: APPROVE, scoped to M1, the offline regressions, and the related L1, L2, I1 and I2 fixes. M1, L1 and L2 are all closed. Approval authorizes no private preflight, AWS reads, scan, publication, source control or phase completion.
+
+M1: closed
+
+- Human-pinned filename. The gate now has a 32nd field, original_gate_filename, with no default (budget_verification.py:40).
+  - Allowed names: it must match exactly approval-[A-Za-z0-9_-]{1,96}\.json. That allows only a basename directly in the fixed primary directory: no slash, no traversal, no dot-segments, nothing absolute (:128-130).
+  - How it is read: only as PRIMARY/<pin> through the existing secure-parent, 0600, single-link, no-follow read (:180).
+  - Unchanged constraints: the fixed old-gate SHA and context checks are the same as before (:181-189), so only the exact old gate bytes can link.
+- Provenance. original-gate-filename-provenance.json quotes your earlier "Gate saved" and "Gate SHA256" lines from chat. It says no private storage was inspected during authoring and owns up to the earlier packet omission. VERIFICATION.md:64-69 states that the historical path is provenance only, not a claim the file currently exists. The coordinator's quote comes from your chat, so you are the right person to confirm it. In any case, the code no longer depends on that provenance.
+- Tests (test_budget_verification.py:430-471, :497-501).
+  - Rejected values: wrong types, empty, absolute, traversal, subdirectory, dot-segment and wrong-case names.
+  - Wrong file: a missing file or a file whose hash is wrong fails without reserving an operation, and the correct name then succeeds with 6 calls.
+  - Symlinked pin: rejected before reservation.
+  - No private access: only synthetic fixtures are used.
+
+L1: closed
+
+- CLI checks first. The CLI checks the gate SHA format and, for a scan, that all scan arguments are present with valid hash formats, before the production policy loads or the gate is read (:392-398). The test confirms the policy is never called.
+- Verify pre-checks. verify runs read-only pre-checks before op.mkdir: the active-lock check, linkage and the window (:255-257). The authoritative linkage check then repeats under the lock and must equal the pre-check result (:261-262).
+- Scan pre-checks. scan validates hash formats, checkout, lock absence, the expected verification-receipt hash, the external manifest hash and the window before claiming its journal (:319-329). All the checks under the lock are unchanged.
+- Tests cover all of the following:
+  - typos leave no journal (6 cases);
+  - a race after the journal is claimed leaves the stage consumed with no retry;
+  - the wrapper-active check now fails with WRAPPER_ACTIVE before reservation;
+  - the expiry tests were renumbered for the extra linkage call.
+
+L2: closed
+
+- Fix. canonical_receipt_bytes (:47-49) is used for the checkpoint (:280). VERIFICATION.md:71-88 gives a recipe that reads only captured public stdout.
+- Test (:483-495). It captures the real main stdout, and the canonical re-serialization equals the private receipt file's hash. The raw stdout hash differs, and no address appears. The guide clearly separates this from any recipient hash, and nothing is added to the output or the CLI modes.
+
+I1 and I2: addressed
+
+VERIFICATION.md:52 now calls observed_at the completion time after the six requests. VERIFICATION.md:42 limits the config claim to the directory and its ancestors and says the core check_files content checks are deliberately not run.
+
+Evidence (verified)
+
+- Hashes and repository state.
+  - Candidates: the three files match 95abbcc0… (verifier), 3dc78220… (tests) and 2b00ee61… (guide), and all 11 final hashes match.
+  - Snapshots: after/ and candidate/ both have 11 files with 0 mismatches, and before/ equals the previously reviewed candidate.
+  - Repository: the tracked diff is empty, only the 3 new untracked paths exist, and there is no cache directory.
+- Tests. The final logs show 45 verification, 65 wrapper and 39 publication tests, all passing, written at 19:54:34–49, after the last edit at 19:54:15. The test file has 45 test methods. The two earlier passing attempts are retained with their causes, and A1 and sbt are correctly not claimed.
+- Manifests. All four packets (42, 19, 42 and 18 entries) show 0 mismatches.
+- Preservation. The 62 reviewed-pack files, the 105 earlier public files, the 1,247 tracked files, the 209 sources and the human record (1,334 bytes, abe3a50a…) are all unchanged. The previous review is kept verbatim.
+
+Findings
+
+No blocking defects.
+
+┌─────┬──────────┬─────────────────────────────────────┬─────────────────────────────────────────────────────┬──────────────────┬──────────────┐
+│ ID  │ Severity │              Location               │                      Evidence                       │      Owner       │  Acceptance  │
+├─────┼──────────┼─────────────────────────────────────┼─────────────────────────────────────────────────────┼──────────────────┼──────────────┤
+│     │          │                                     │ An alternate safe filename holding the exact old    │ infra-engineer   │ Optional     │
+│ N1  │ Info     │ test_budget_verification.py:441-452 │ bytes is accepted by design (the hash pin governs), │ (optional)       │ positive     │
+│     │          │                                     │  but no test exercises it.                          │                  │ test.        │
+├─────┼──────────┼─────────────────────────────────────┼─────────────────────────────────────────────────────┼──────────────────┼──────────────┤
+│     │          │                                     │ Between the lock-free pre-check and the lease there │                  │              │
+│ N2  │ Info     │ budget_verification.py:255-258,     │  is a small window. If the wrapper lock appears in  │ —                │ None.        │
+│     │          │ :324-329                            │ it, the stage is still consumed. That fails closed  │                  │              │
+│     │          │                                     │ and is disclosed in VERIFICATION.md:42.             │                  │              │
+└─────┴──────────┴─────────────────────────────────────┴─────────────────────────────────────────────────────┴──────────────────┴──────────────┘
+
+Runtime gate conditions (unchanged):
+- The authorized linkage preflight must confirm the current old-gate file and the raw hash of the original apply receipt.
+- An accepted release covering all 11 files is required, along with a personally written 32-field gate, a dated window, and a fresh login and STS observation.
+- Verify, packet assembly, transfer and scan must all fit inside one window of at most 60 minutes.
+- Absence-only BillingViewArn may fail closed.
+- Delivery, W3, F4, EMR, the same-disk backup and Phase 12 completion stay open, and the original readback is never replayed or given a fabricated success receipt.
+
+Report
+
+1. STATUS: APPROVE for M1, the offline regressions and L1/L2/I1/I2 only. M1, L1 and L2 are closed.
+2. OWNER: code-reviewer (read-only). The repair belongs to infra-engineer and the provenance and evidence to the coordinator.
+3. WORK ORDER: Phase 12D Option B verifier recheck 1 (/tmp/scholarchain-phase12d-readonly-continuation-recheck1-handoff/reviewer-prompt.md). Base 9dda6b43.
+4. FILES CREATED: None.
+5. FILES MODIFIED: None.
+6. COMMANDS RUN:
+   - Read-only git rev-parse, status and diff --quiet.
+   - shasum, stat, find, diff, grep, sed and cat on public /tmp evidence.
+   - python3 -I scripts that only compare hashes and manifests and create no files.
+   - Nothing else: no tests, scripts, AWS or private reads.
+7. TEST RESULTS: Not rerun by me. The final logs show 45, 65 and 39 tests passing with OK and exit 0, all after the final edits. There were no failed runs in this round. A1 and sbt were not run.
+8. VALIDATION RESULTS: Hashes, snapshots and the four manifests reconcile with 0 mismatches. The 62-, 105-, 1,247- and 209-file checks and the human record match. The tracked diff is empty and only the 3 new paths exist.
+9. ASSUMPTIONS: The coordinator's quotation of your chat output is accurate. The code no longer depends on it.
+10. RISKS:
+    - N2: the narrow race between pre-check and lock is fail-closed.
+    - The runtime gate conditions listed above remain.
+11. MANUAL ACTION REQUIRED: You handle source control for the 11-file release. You then authorize the bounded linkage preflight, and personally write the 32-field gate and dated window.
+12. BLOCKED-ON OWNER: Human architect.
+13. BLOCKED-ON EVIDENCE:
+    - a committed, accepted release with a clean checkout;
+    - preflight confirmation of the original gate file and the raw apply-receipt hash;
+    - the new gate, window and session;
+    - truthful verify and scan receipts.
+14. NEXT GATE: The coordinator records this verdict and presents your source-control and preflight-authorization decisions. Nothing executes automatically.

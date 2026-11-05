@@ -1,0 +1,20 @@
+{
+  "files": [
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-portable-runtime-review-record/coordinator-report.md",
+      "bytes": 3132,
+      "sha256": "1c5d7b884d571974d5389fc552c8e36c6656a6d03e5ab9461d7155ae0065b355"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-portable-runtime-review-record/user-supplied-review.txt",
+      "bytes": 7456,
+      "sha256": "1d13a2671070640e6e53c34a908903047bb65cdaf16b61017ed05483d5016359"
+    },
+    {
+      "path": "docs/agent-runs/phase-12/evidence/12d-portable-runtime-review-record/validation.json",
+      "bytes": 851,
+      "sha256": "5b299063bea32d05f7dad0ca1b9a6dc513afd58c348c1fe953cf0701dee63f6a"
+    }
+  ],
+  "excluded": "This manifest only. Approved115-entry packet remains unchanged."
+}

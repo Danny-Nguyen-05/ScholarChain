@@ -1,0 +1,302 @@
+{
+  "calculated_utc": "2026-10-30T17:43:21.742885+00:00",
+  "region": "us-east-2",
+  "currency": "USD",
+  "budget_before_credits": 200,
+  "actual_spend_verified": false,
+  "rates": {
+    "neptune_ncu_hour": 0.1608,
+    "neptune_storage_gb_month": 0.1,
+    "neptune_io_request": 2e-07,
+    "neptune_extra_backup_gb_month": 0.021,
+    "fargate_vcpu_hour": 0.04048,
+    "fargate_gib_hour": 0.004445,
+    "fargate_extra_ephemeral_gb_hour": 0.000111,
+    "ipv4_address_hour": 0.005,
+    "interface_endpoint_az_hour": 0.01,
+    "alb_hour": 0.0225,
+    "alb_lcu_hour": 0.008,
+    "kms_key_month": 1.0,
+    "kms_request": 3e-06,
+    "cloudwatch_dashboard_month": 3.0,
+    "cloudwatch_alarm_metric_month": 0.1,
+    "cloudwatch_custom_metric_month": 0.3,
+    "cloudwatch_log_ingest_gb": 0.5,
+    "cloudwatch_log_storage_gb_month": 0.03,
+    "secret_month": 0.4,
+    "secret_api_request": 5e-06,
+    "ddb_read_request_unit": 1.25e-07,
+    "ddb_write_request_unit": 6.25e-07,
+    "ddb_storage_gb_month": 0.25,
+    "ddb_pitr_gb_month": 0.2,
+    "s3_storage_gb_month": 0.023,
+    "s3_put_request": 5e-06,
+    "s3_get_request": 4e-07,
+    "vector_storage_gb_month": 0.06,
+    "vector_put_gb": 0.2,
+    "vector_query_request": 2.5e-06,
+    "vector_query_processed_gb_tier1": 3.906e-06,
+    "vector_query_returned_gb": 0.01,
+    "vector_tier1_api_request": 5.5e-05,
+    "sqs_standard_request": 4e-07,
+    "sfn_standard_transition": 2.5e-05,
+    "cloudmap_resource_month": 0.1,
+    "cloudmap_api_request": 1e-06,
+    "route53_hosted_zone_month": 0.5,
+    "ecr_storage_gb_month": 0.1,
+    "titan_v2_per_1000_input_tokens": 2e-05,
+    "emr_m5_xlarge_surcharge_hour": 0.048,
+    "emr_m5_2xlarge_surcharge_hour": 0.096,
+    "nat_gateway_hour": 0.045,
+    "nat_processed_gb": 0.045,
+    "cost_explorer_primary_view_api_request": 0.01
+  },
+  "assumptions": {
+    "pricing_month_hours": 720,
+    "full_month_fixed_allowance": {
+      "one_kms_key": 1,
+      "one_dashboard": 3,
+      "five_standard_alarm_metric_equivalents": 0.5,
+      "one_private_hosted_zone": 0.5
+    },
+    "nat_processed_gb": 10,
+    "s3_gb_including_versions": 10,
+    "s3_puts": 20000,
+    "s3_gets": 100000,
+    "ecr_gb": 4,
+    "ddb_total_gb_including_gsi": 1,
+    "ddb_read_units": 100000,
+    "ddb_write_units": 100000,
+    "log_ingested_gb": 1,
+    "max_log_storage_gb": 1,
+    "active_custom_and_container_metric_equivalents": 80,
+    "secrets_count": 4,
+    "secret_api_requests": 10000,
+    "kms_requests": 100000,
+    "vector_storage_gb": 0.1,
+    "vector_put_gb": 0.1,
+    "vector_query_requests": 10000,
+    "vector_query_processed_gb_total": 10000,
+    "vector_query_returned_gb_total": 1,
+    "vector_tier1_control_requests": 1000,
+    "sqs_requests": 100000,
+    "sfn_transitions": 10000,
+    "titan_v2_input_tokens": 10000000,
+    "neptune_storage_gb": 1,
+    "neptune_io_requests": 1000000,
+    "neptune_extra_backup_gb": 1,
+    "alb_lcu_average": 1,
+    "alb_public_ipv4_minimum": 2,
+    "http_cloudmap_resources_min": 3,
+    "http_cloudmap_resources_max": 6,
+    "cloudmap_api_requests": 10000,
+    "additional_full_month_s3_retention_gb": 10,
+    "additional_full_month_vector_retention_gb": 0.1,
+    "additional_full_month_kms_key": 1,
+    "additional_full_month_ecr_retention_gb": 4,
+    "emr_all_spikes_experiments_provisional_reserve": 15,
+    "synthesis_9c_15_16_provisional_reserve": 20,
+    "unreported_usage_tax_and_other_uncertainty_reserve": 20
+  },
+  "results": [
+    {
+      "window": {
+        "name": "base",
+        "start_cst": "2026-11-15T00:00:00-06:00",
+        "end_cst": "2026-11-24T23:00:00-06:00",
+        "hours": 239
+      },
+      "primary_fixed_allowance": {
+        "nat_gateway": 10.754999999999999,
+        "nat_eip": 1.195,
+        "full_month_key_dashboard_alarm_zone_allowance": 5.0
+      },
+      "primary_zero_workload_subtotal": 16.95,
+      "primary_illustrative_usage": {
+        "nat_data": 0.44999999999999996,
+        "s3_storage": 0.07634722222222222,
+        "s3_requests": 0.14,
+        "ecr_storage": 0.13277777777777777,
+        "ddb_storage_pitr": 0.149375,
+        "ddb_requests": 0.075,
+        "log_ingest_storage": 0.5099583333333333,
+        "kms_requests": 0.3,
+        "vector_workload": 0.15105166666666667,
+        "sqs": 0.04,
+        "sfn": 0.25
+      },
+      "primary_with_illustrative_usage": 19.22451,
+      "active_illustrative_usage": {
+        "80_metric_equivalents": 7.966666666666666,
+        "four_secrets_full_month_allowance": 1.6,
+        "secret_requests": 0.05,
+        "cloudmap_api": 0.01,
+        "neptune_storage_io_extra_backup": 0.24016527777777777,
+        "titan_10m_tokens": 0.2
+      },
+      "activated": {
+        "minimum": {
+          "ncu": 1,
+          "fargate_tasks": 4,
+          "fixed_active": {
+            "neptune_compute": 38.4312,
+            "fargate_compute": 23.598860000000002,
+            "alb_plus_one_lcu_plus_two_ipv4": 9.6795,
+            "cloudmap_resource_full_month_allowance": 0.30000000000000004
+          },
+          "fixed_primary_plus_active_subtotal": 88.95956,
+          "illustrative_usage_total": 12.341341944444443,
+          "one_extra_month_retention_allowance": 1.6360000000000001,
+          "unpriced_approved_run_and_uncertainty_reserves": {
+            "emr": 15,
+            "synthesis": 20,
+            "unreported_tax_other": 20
+          },
+          "total_with_illustrative_usage_retention_and_reserves": 157.93690194444443,
+          "headroom_against_200": 42.06309805555557,
+          "within_200_under_assumptions": true
+        },
+        "sustained_authored_maximum": {
+          "ncu": 2.5,
+          "fargate_tasks": 10,
+          "fixed_active": {
+            "neptune_compute": 96.078,
+            "fargate_compute": 58.997150000000005,
+            "alb_plus_one_lcu_plus_two_ipv4": 9.6795,
+            "cloudmap_resource_full_month_allowance": 0.6000000000000001
+          },
+          "fixed_primary_plus_active_subtotal": 182.30465,
+          "illustrative_usage_total": 12.341341944444443,
+          "one_extra_month_retention_allowance": 1.6360000000000001,
+          "unpriced_approved_run_and_uncertainty_reserves": {
+            "emr": 15,
+            "synthesis": 20,
+            "unreported_tax_other": 20
+          },
+          "total_with_illustrative_usage_retention_and_reserves": 251.28199194444446,
+          "headroom_against_200": -51.28199194444446,
+          "within_200_under_assumptions": false
+        }
+      },
+      "one_additional_interface_service_two_az_cost_excluding_data": 4.78
+    },
+    {
+      "window": {
+        "name": "upper_duration",
+        "start_cst": "2026-11-11T00:00:00-06:00",
+        "end_cst": "2026-11-24T23:00:00-06:00",
+        "hours": 335
+      },
+      "primary_fixed_allowance": {
+        "nat_gateway": 15.075,
+        "nat_eip": 1.675,
+        "full_month_key_dashboard_alarm_zone_allowance": 5.0
+      },
+      "primary_zero_workload_subtotal": 21.75,
+      "primary_illustrative_usage": {
+        "nat_data": 0.44999999999999996,
+        "s3_storage": 0.10701388888888888,
+        "s3_requests": 0.14,
+        "ecr_storage": 0.18611111111111112,
+        "ddb_storage_pitr": 0.209375,
+        "ddb_requests": 0.075,
+        "log_ingest_storage": 0.5139583333333333,
+        "kms_requests": 0.3,
+        "vector_workload": 0.1518516666666667,
+        "sqs": 0.04,
+        "sfn": 0.25
+      },
+      "primary_with_illustrative_usage": 24.17331,
+      "active_illustrative_usage": {
+        "80_metric_equivalents": 11.166666666666666,
+        "four_secrets_full_month_allowance": 1.6,
+        "secret_requests": 0.05,
+        "cloudmap_api": 0.01,
+        "neptune_storage_io_extra_backup": 0.2562986111111111,
+        "titan_10m_tokens": 0.2
+      },
+      "activated": {
+        "minimum": {
+          "ncu": 1,
+          "fargate_tasks": 4,
+          "fixed_active": {
+            "neptune_compute": 53.868,
+            "fargate_compute": 33.0779,
+            "alb_plus_one_lcu_plus_two_ipv4": 13.5675,
+            "cloudmap_resource_full_month_allowance": 0.30000000000000004
+          },
+          "fixed_primary_plus_active_subtotal": 122.5634,
+          "illustrative_usage_total": 15.706275277777777,
+          "one_extra_month_retention_allowance": 1.6360000000000001,
+          "unpriced_approved_run_and_uncertainty_reserves": {
+            "emr": 15,
+            "synthesis": 20,
+            "unreported_tax_other": 20
+          },
+          "total_with_illustrative_usage_retention_and_reserves": 194.90567527777776,
+          "headroom_against_200": 5.09432472222224,
+          "within_200_under_assumptions": true
+        },
+        "sustained_authored_maximum": {
+          "ncu": 2.5,
+          "fargate_tasks": 10,
+          "fixed_active": {
+            "neptune_compute": 134.67,
+            "fargate_compute": 82.69475000000001,
+            "alb_plus_one_lcu_plus_two_ipv4": 13.5675,
+            "cloudmap_resource_full_month_allowance": 0.6000000000000001
+          },
+          "fixed_primary_plus_active_subtotal": 253.28225,
+          "illustrative_usage_total": 15.706275277777777,
+          "one_extra_month_retention_allowance": 1.6360000000000001,
+          "unpriced_approved_run_and_uncertainty_reserves": {
+            "emr": 15,
+            "synthesis": 20,
+            "unreported_tax_other": 20
+          },
+          "total_with_illustrative_usage_retention_and_reserves": 325.6245252777778,
+          "headroom_against_200": -125.62452527777782,
+          "within_200_under_assumptions": false
+        }
+      },
+      "one_additional_interface_service_two_az_cost_excluding_data": 6.7
+    }
+  ],
+  "caveats": [
+    "No costs are observed account charges. No AWS account or paid API was queried.",
+    "Full-month key/dashboard/alarm/zone allowances are conservative reservations; actual prorating/free allowances may reduce bills. Other storage/metric estimates use720h/month for comparison; actual calendar proration can differ.",
+    "Fixed primary shape has Neptune/EMR/runtime disabled but still creates NAT/EIP, Cloud Map private namespace, dashboard/alarms, CMK and empty stores.",
+    "Illustrative workload counts are modeling assumptions, not approved live caps or feature readiness.",
+    "Unknown actual baseline spend, tax, transfer volume, LCU/load/IP scaling, telemetry cardinality, runtime/synthesis model, EMR compatibility and unreported billing prevent a verified fit.",
+    "EMR reserve is provisional, not a priced runtime: EMR m5.xlarge surcharge0.048/h plus EC2 price and EBS. Underlying EC2/EBS prices were not independently revalidated in this research.",
+    "All retained S3 evidence/key access dependencies must remain until instructor archival requirements are met."
+  ],
+  "observed_plan_reference": {
+    "summary_sha256": "702f283a02e2ea49b5c81b4dd9ffd975b259f80885213a89e05ef5473a151400",
+    "plan_sha256": "1e0eb776c6bebe0aea4a0d7070dbc2328953d7cc001e921b9ac674eb8b6bbd34",
+    "managed_creates": 171,
+    "aws_managed_creates": 169,
+    "terraform_data_creates": 2,
+    "change": 0,
+    "destroy": 0,
+    "replacement": 0,
+    "resources_by_module": {
+      "module.datalake": 49,
+      "module.dynamodb": 6,
+      "module.identity": 25,
+      "module.messaging": 5,
+      "module.network": 58,
+      "module.observability": 10,
+      "module.runtime": 6,
+      "module.s3vectors": 7,
+      "module.workflow": 3,
+      "root": 2
+    },
+    "primary_activation_flags": {
+      "neptune_enabled": false,
+      "runtime_enabled": false,
+      "emr_enabled": false,
+      "enable_budget_resource": false
+    }
+  }
+}

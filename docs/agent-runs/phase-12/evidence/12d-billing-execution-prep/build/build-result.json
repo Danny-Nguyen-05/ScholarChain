@@ -1,0 +1,146 @@
+{
+  "status": "COMPLETE",
+  "scope": "12D billing execution preparation offline regression gate; no live authorization or compatibility claim",
+  "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+  "head": "5ca8406bad5fe55f732458fa0cbd5d561ac83d8f",
+  "freeze": "/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-12/evidence/12d-billing-execution-prep/source-freeze.json",
+  "freeze_sha256": "ec96c67541385151f69ebea29b2c574e13dbdd4c37f43f197bd6551e166005b7",
+  "java": {
+    "label": "java-version",
+    "argv": [
+      "/bin/bash",
+      "-c",
+      "export JAVA_HOME=/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home\nexport PATH=\"$JAVA_HOME/bin:$PATH\"\nexport SBT_OPTS=\"-Dlogback.configurationFile=$PWD/docs/agent-runs/phase-04/xml-repair-logback.xml\"\njava -version"
+    ],
+    "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+    "environment": {
+      "JAVA_HOME": "/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home",
+      "PATH_prefix": "/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home/bin",
+      "SBT_OPTS": "-Dlogback.configurationFile=/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-04/xml-repair-logback.xml"
+    },
+    "environment_capture": "Only JAVA_HOME, SBT_OPTS and the prepended JDK bin prefix; inherited PATH intentionally omitted.",
+    "started_utc": "2026-10-31T16:57:09.507387+00:00",
+    "ended_utc": "2026-10-31T16:57:09.567340+00:00",
+    "start_ns": 1793465829507386000,
+    "end_ns": 1793465829567361000,
+    "exit_code": 0,
+    "wall_seconds": 0.059973,
+    "log": "java-version.log.txt",
+    "log_sha256": "2fe83b0053132e4e834defa82250462f4c62733d29bf76b19ee1bb3c14b06b39",
+    "log_bytes": 171
+  },
+  "build": {
+    "label": "sbt-check",
+    "argv": [
+      "/bin/bash",
+      "-c",
+      "export JAVA_HOME=/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home\nexport PATH=\"$JAVA_HOME/bin:$PATH\"\nexport SBT_OPTS=\"-Dlogback.configurationFile=$PWD/docs/agent-runs/phase-04/xml-repair-logback.xml\"\nsbt -batch check"
+    ],
+    "cwd": "/Users/danny/Documents/UIC/CS441/ScholarChain",
+    "environment": {
+      "JAVA_HOME": "/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home",
+      "PATH_prefix": "/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home/bin",
+      "SBT_OPTS": "-Dlogback.configurationFile=/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-04/xml-repair-logback.xml"
+    },
+    "environment_capture": "Only JAVA_HOME, SBT_OPTS and the prepended JDK bin prefix; inherited PATH intentionally omitted.",
+    "started_utc": "2026-10-31T16:57:09.567577+00:00",
+    "ended_utc": "2026-10-31T17:09:34.929280+00:00",
+    "start_ns": 1793465829567577000,
+    "end_ns": 1793466574929331000,
+    "exit_code": 0,
+    "wall_seconds": 745.357813,
+    "log": "sbt-check.log.txt",
+    "log_sha256": "b23b1f6064ce6905b69a8550027f640736baca4c7ee3e1e7909a41e7443c57f4",
+    "log_bytes": 1718971
+  },
+  "snapshot_files_before": 1383,
+  "snapshot_files_after": 1383,
+  "snapshot_deltas": [],
+  "freeze_before": {
+    "files": 209,
+    "mismatches": [],
+    "freeze_sha256": "ec96c67541385151f69ebea29b2c574e13dbdd4c37f43f197bd6551e166005b7",
+    "checked_at": "2026-10-31T16:57:09.318670+00:00"
+  },
+  "freeze_after": {
+    "files": 209,
+    "mismatches": [],
+    "freeze_sha256": "ec96c67541385151f69ebea29b2c574e13dbdd4c37f43f197bd6551e166005b7",
+    "checked_at": "2026-10-31T17:09:35.140920+00:00"
+  },
+  "fresh_xml_count": 157,
+  "stale_xml_count": 1,
+  "xml_errors": [],
+  "test_totals": {
+    "tests": 1255,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "raw_log_sha256": "b23b1f6064ce6905b69a8550027f640736baca4c7ee3e1e7909a41e7443c57f4",
+  "gzip_sha256": "5e095c0c982764bc3e1329e1d2e457b2d793ca75ec9baf848b511c0d2970bc78",
+  "gzip_bytes": 93229,
+  "error_lines": [
+    "[error] java.lang.RuntimeException: scholarchain check probe: injected format-stage failure",
+    "[error] \tat scala.sys.package$.error(package.scala:30)",
+    "[error] \tat $fc7244dbace165edcad1$.$anonfun$root$8(build.sbt:163)",
+    "[error] \tat scala.runtime.java8.JFunction0$mcV$sp.apply(JFunction0$mcV$sp.java:23)",
+    "[error] \tat sbt.std.Transform$$anon$3.$anonfun$apply$2(Transform.scala:47)",
+    "[error] \tat sbt.std.Transform$$anon$4.work(Transform.scala:69)",
+    "[error] \tat sbt.Execute.$anonfun$submit$2(Execute.scala:283)",
+    "[error] \tat sbt.internal.util.ErrorHandling$.wideConvert(ErrorHandling.scala:24)",
+    "[error] \tat sbt.Execute.work(Execute.scala:292)",
+    "[error] \tat sbt.Execute.$anonfun$submit$1(Execute.scala:283)",
+    "[error] \tat sbt.ConcurrentRestrictions$$anon$4.$anonfun$submitValid$1(ConcurrentRestrictions.scala:265)",
+    "[error] \tat sbt.CompletionService$$anon$2.call(CompletionService.scala:65)",
+    "[error] \tat java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)",
+    "[error] \tat java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:539)",
+    "[error] \tat java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)",
+    "[error] \tat java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)",
+    "[error] \tat java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)",
+    "[error] \tat java.base/java.lang.Thread.run(Thread.java:840)",
+    "[error] (checkProbeInjectFailure) scholarchain check probe: injected format-stage failure",
+    "[error] Total time: 0 s, completed Oct 31, 2026, 12:09:34 PM"
+  ],
+  "summary_lines": [
+    "[info] Total number of tests run: 207",
+    "[info] Tests: succeeded 207, failed 0, canceled 0, ignored 0, pending 0",
+    "[info] Total number of tests run: 64",
+    "[info] Tests: succeeded 64, failed 0, canceled 0, ignored 0, pending 0",
+    "[info] Total number of tests run: 39",
+    "[info] Tests: succeeded 39, failed 0, canceled 0, ignored 0, pending 0",
+    "[info] Total number of tests run: 38",
+    "[info] Tests: succeeded 38, failed 0, canceled 0, ignored 0, pending 0",
+    "[info] Total number of tests run: 80",
+    "[info] Tests: succeeded 80, failed 0, canceled 0, ignored 0, pending 0",
+    "[info] Total number of tests run: 107",
+    "[info] Tests: succeeded 107, failed 0, canceled 0, ignored 0, pending 0",
+    "[info] Total number of tests run: 40",
+    "[info] Tests: succeeded 40, failed 0, canceled 0, ignored 0, pending 0",
+    "[info] Total number of tests run: 667",
+    "[info] Tests: succeeded 667, failed 0, canceled 0, ignored 0, pending 0",
+    "[error] (checkProbeInjectFailure) scholarchain check probe: injected format-stage failure",
+    "[error] Total time: 0 s, completed Oct 31, 2026, 12:09:34 PM",
+    "[info] Total number of tests run: 13",
+    "[info] Tests: succeeded 13, failed 0, canceled 0, ignored 0, pending 0",
+    "[success] Total time: 743 s (12:23), completed Oct 31, 2026, 12:09:34 PM"
+  ],
+  "module_log_test_counts": [
+    207,
+    64,
+    39,
+    38,
+    80,
+    107,
+    40,
+    667,
+    13
+  ],
+  "module_log_tests_sum": 1255,
+  "module_log_matches_xml": true,
+  "selected_environment": {
+    "JAVA_HOME": "/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home",
+    "PATH_prefix": "/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home/bin",
+    "SBT_OPTS": "-Dlogback.configurationFile=/Users/danny/Documents/UIC/CS441/ScholarChain/docs/agent-runs/phase-04/xml-repair-logback.xml"
+  }
+}

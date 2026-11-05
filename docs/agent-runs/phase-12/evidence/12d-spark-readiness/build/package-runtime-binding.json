@@ -1,0 +1,16 @@
+{
+  "Phase12Readiness_packaged": true,
+  "Phase6Main_packaged": true,
+  "Spark_Hadoop_Logback_classes_excluded": true,
+  "bytes": 11732592,
+  "entries": 5246,
+  "fullcheck_pending": true,
+  "job_jar": "/Users/danny/Documents/UIC/CS441/ScholarChain/modules/spark/target/spark-job_3-0.1.0-SNAPSHOT.jar",
+  "observed_at": "2026-11-03T20:44:06.296480+00:00",
+  "project_thin_entries_bytecompared": 1059,
+  "same_artifact_used_by_baseline_and_probe": true,
+  "sha256": "d52f11ebad5ec9e1ffdd1910d562023e934ce7ab62e7c74a5ffd650f8951b86b",
+  "targeted_exit": 0,
+  "targeted_independent_safety_tests": 7,
+  "targeted_readiness_tests": 12
+}

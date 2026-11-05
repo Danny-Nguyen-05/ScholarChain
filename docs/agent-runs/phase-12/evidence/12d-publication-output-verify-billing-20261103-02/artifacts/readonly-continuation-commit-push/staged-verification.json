@@ -1,0 +1,12 @@
+{
+  "authorization_verbatim": "yes please commit and push them. Then we'll keep going",
+  "base_head": "9dda6b4325d373c1fa275b6d9a5613b62d36cede",
+  "branch": "phase-12",
+  "staged_files": {
+    "scripts/billing/VERIFICATION.md": "2b00ee61aa4503eeab2b279795029eb1e89a329a803194c278fc636919180760",
+    "scripts/billing/budget_verification.py": "95abbcc05bc8147a5be911b6e5ed5e558e9c08d985892caaff467881a78ab4a0",
+    "scripts/billing/tests/test_budget_verification.py": "3dc78220aed3724343429ec5fb331d3427233b9ad92fc8adc7ddf4f62ec74527"
+  },
+  "staged_diff_check_exit": 0,
+  "staged_approved_hashes_match": true
+}

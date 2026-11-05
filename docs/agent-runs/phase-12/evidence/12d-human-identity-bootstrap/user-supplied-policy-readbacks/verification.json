@@ -1,0 +1,28 @@
+{
+  "recorded_at_utc": "2026-11-01T02:08:28.506544+00:00",
+  "provenance": "The user pasted these three documents from the installed policies in this chat. JSON formatting standardized; policy values preserved. No agent AWS API/account call or credential access.",
+  "comparison": "Policy fields match the previously reviewed billing-execution/main.tf templates for account 530332961125, region us-east-2, role scholarchain-billing-deployer and budget scholarchain-project-budget.",
+  "role_trust": "Separately read back from the retained user screenshot. Exact operator principal, one Allow sts:AssumeRole statement, strict MFA Bool=true. AWS normalized Action to a string; equivalent to the reviewed one-element list.",
+  "source_freeze": {
+    "entries_checked": 209,
+    "sha_size_mtime_mismatches": []
+  },
+  "checks": {
+    "login_exact_two_actions": true,
+    "login_exact_localhost_resource": true,
+    "login_client_id_condition": true,
+    "budget_exact_five_actions": true,
+    "budget_exact_single_arn": true,
+    "caller_exact_one_action": true,
+    "caller_exact_single_role_arn": true,
+    "caller_strict_mfa": true
+  },
+  "limits": [
+    "User-reported readbacks are not an independent account inventory.",
+    "Post-creation tag values and final operator policy inventory still need human confirmation.",
+    "Actual operator sign-in, passkey authentication, role switch, CLI login and refresh behavior remain untested.",
+    "Actual setup start/end and root logout have not been reported.",
+    "No budget creation, real plan/apply, spending, review launch, commit or push authorized by this record."
+  ],
+  "prior_observations": "../observations.json records earlier observations as of their capture; preserved unchanged."
+}

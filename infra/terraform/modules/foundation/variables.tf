@@ -1,0 +1,11 @@
+variable "name_prefix" { type = string }
+variable "course" { type = string }
+variable "project" { type = string }
+variable "environment" { type = string }
+variable "owner" { type = string }
+variable "expiration_date" { type = string }
+variable "additional_tags" { type = map(string) }
+variable "budget_limit_usd" { type = number }
+variable "enable_budget" { type = bool }
+variable "notification_emails" { type = set(string) }
+variable "notification_threshold_percent" { type = number }

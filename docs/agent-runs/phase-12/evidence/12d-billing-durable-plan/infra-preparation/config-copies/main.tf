@@ -1,0 +1,60 @@
+provider "aws" {
+  region              = var.aws_region
+  profile             = var.aws_profile
+  allowed_account_ids = [var.aws_account_id]
+}
+
+locals {
+  # This monitor outlives the stack: its date follows retention/reconciliation,
+  # never the main stack's provisional November 25 expiration.
+  required_tags = merge(var.resource_tags, {
+    expiration_date = try(formatdate("YYYY-MM-DD", "${replace(var.project_period_end_utc, "_", "T")}:00Z"), "")
+  })
+}
+
+# A fixed CUSTOM period prevents an October/November monthly reset from
+# presenting two separate USD 200 allowances. No region/service/tag filters.
+resource "aws_budgets_budget" "project" {
+  count             = var.enable_budget ? 1 : 0
+  account_id        = var.aws_account_id
+  name              = var.budget_name
+  budget_type       = "COST"
+  limit_amount      = tostring(var.budget_limit_usd)
+  limit_unit        = "USD"
+  time_unit         = "CUSTOM"
+  time_period_start = var.project_period_start_utc
+  time_period_end   = var.project_period_end_utc
+  tags              = local.required_tags
+  cost_types {
+    include_credit             = false
+    include_refund             = false
+    include_discount           = true
+    include_other_subscription = true
+    include_recurring          = true
+    include_subscription       = true
+    include_support            = true
+    include_tax                = true
+    include_upfront            = true
+    use_amortized              = false
+    use_blended                = false
+  }
+  # User-selected actual-spend alerts: 50/80/100% of the same USD 200
+  # ceiling (USD 100/160/200); monitoring only, not a spending stop.
+  dynamic "notification" {
+    for_each = toset([50, 80, 100])
+    content {
+      comparison_operator        = "GREATER_THAN"
+      threshold                  = notification.value
+      threshold_type             = "PERCENTAGE"
+      notification_type          = "ACTUAL"
+      subscriber_email_addresses = var.budget_notification_emails
+    }
+  }
+  lifecycle {
+    prevent_destroy = true
+    precondition {
+      condition     = length(var.budget_notification_emails) > 0
+      error_message = "Enabling the budget requires a private notification recipient."
+    }
+  }
+}

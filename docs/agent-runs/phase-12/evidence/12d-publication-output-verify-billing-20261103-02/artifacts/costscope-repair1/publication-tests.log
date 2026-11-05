@@ -1,0 +1,44 @@
+test_assembly_never_changes_destinations (__main__.PublicationFeatures.test_assembly_never_changes_destinations) ... ok
+test_binary_input_rejected (__main__.PublicationFeatures.test_binary_input_rejected) ... ok
+test_changed_freeze_rejected (__main__.PublicationFeatures.test_changed_freeze_rejected) ... ok
+test_changed_packet_requires_rescan (__main__.PublicationFeatures.test_changed_packet_requires_rescan) ... ok
+test_cli_error_never_emits_untrusted_payload (__main__.PublicationFeatures.test_cli_error_never_emits_untrusted_payload) ... ok
+test_cli_success_never_emits_address_or_record_content (__main__.PublicationFeatures.test_cli_success_never_emits_address_or_record_content) ... ok
+test_destination_changes_during_verification_rejected (__main__.PublicationFeatures.test_destination_changes_during_verification_rejected) ... ok
+test_duplicate_artifact_rejected (__main__.PublicationFeatures.test_duplicate_artifact_rejected) ... ok
+test_duplicate_freeze_entry_rejected (__main__.PublicationFeatures.test_duplicate_freeze_entry_rejected) ... ok
+test_empty_suffix_allowed_and_exact (__main__.PublicationFeatures.test_empty_suffix_allowed_and_exact) ... ok
+test_exclusive_files_private_modes_and_fsync (__main__.PublicationFeatures.test_exclusive_files_private_modes_and_fsync) ... ok
+test_expected_gate_and_operation_fail_closed (__main__.PublicationFeatures.test_expected_gate_and_operation_fail_closed) ... ok
+test_extra_packet_file_requires_rescan (__main__.PublicationFeatures.test_extra_packet_file_requires_rescan) ... ok
+test_extra_unscanned_append_rejected_after (__main__.PublicationFeatures.test_extra_unscanned_append_rejected_after) ... ok
+test_extra_unscanned_append_rejected_before (__main__.PublicationFeatures.test_extra_unscanned_append_rejected_before) ... ok
+test_fsync_failure_stops_without_publication (__main__.PublicationFeatures.test_fsync_failure_stops_without_publication) ... ok
+test_happy_before_after_all_five_exact_suffixes (__main__.PublicationFeatures.test_happy_before_after_all_five_exact_suffixes) ... ok
+test_hardlink_input_rejected (__main__.PublicationFeatures.test_hardlink_input_rejected) ... ok
+test_invalid_utf8_rejected (__main__.PublicationFeatures.test_invalid_utf8_rejected) ... ok
+test_manifest_complete_and_wrapper_compatible (__main__.PublicationFeatures.test_manifest_complete_and_wrapper_compatible) ... ok
+test_missing_fifth_record_rejected (__main__.PublicationFeatures.test_missing_fifth_record_rejected) ... ok
+test_missing_packet_file_stops (__main__.PublicationFeatures.test_missing_packet_file_stops) ... ok
+test_missing_suffix_or_base_edit_after_rejected (__main__.PublicationFeatures.test_missing_suffix_or_base_edit_after_rejected) ... ok
+test_oversized_input_stops_before_output (__main__.PublicationFeatures.test_oversized_input_stops_before_output) ... ok
+test_packet_symlink_rejected (__main__.PublicationFeatures.test_packet_symlink_rejected) ... ok
+test_paths_private_binary_and_escape_rejected (__main__.PublicationFeatures.test_paths_private_binary_and_escape_rejected) ... ok
+test_receipt_matrix_fail_closed (__main__.PublicationFeatures.test_receipt_matrix_fail_closed) ... ok
+test_refrozen_artifact_inventory_omission_rejected (__main__.PublicationFeatures.test_refrozen_artifact_inventory_omission_rejected) ... ok
+test_refrozen_duplicate_artifact_inventory_rejected (__main__.PublicationFeatures.test_refrozen_duplicate_artifact_inventory_rejected) ... ok
+test_refrozen_extra_destination_rejected (__main__.PublicationFeatures.test_refrozen_extra_destination_rejected) ... ok
+test_repeat_assembly_never_overwrites (__main__.PublicationFeatures.test_repeat_assembly_never_overwrites) ... ok
+test_scan_receipt_location_restricted (__main__.PublicationFeatures.test_scan_receipt_location_restricted) ... ok
+test_separate_workspace_transfer_validates_canonical_bases (__main__.PublicationFeatures.test_separate_workspace_transfer_validates_canonical_bases) ... ok
+test_source_changes_during_assembly_rejected (__main__.PublicationFeatures.test_source_changes_during_assembly_rejected) ... ok
+test_symlink_ancestor_rejected (__main__.PublicationFeatures.test_symlink_ancestor_rejected) ... ok
+test_symlink_leaf_rejected (__main__.PublicationFeatures.test_symlink_leaf_rejected) ... ok
+test_unknown_request_field_and_duplicate_json_rejected (__main__.PublicationFeatures.test_unknown_request_field_and_duplicate_json_rejected) ... ok
+test_unlisted_staging_file_rejected (__main__.PublicationFeatures.test_unlisted_staging_file_rejected) ... ok
+test_untrusted_cli_parse_error_has_no_payload (__main__.PublicationFeatures.test_untrusted_cli_parse_error_has_no_payload) ... ok
+
+----------------------------------------------------------------------
+Ran 39 tests in 0.429s
+
+OK

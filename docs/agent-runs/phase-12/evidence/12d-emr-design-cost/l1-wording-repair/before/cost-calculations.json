@@ -1,0 +1,1163 @@
+{
+  "account_spend_observed": false,
+  "currency": "USD",
+  "kms_request_coupling": "Conservatively allow one KMS operation per proposed S3 PUT/GET request unit plus 20000 non-S3/other operations; no bucket-key or cache reduction assumed. This is a planning envelope, not an observed API request count or complete proof of an upper bound.",
+  "launch_authorized": false,
+  "launch_cost_fit_verified": false,
+  "month_conversion": "672-hour denominator is deliberately conservative planning arithmetic (28 days), not a claim about AWS invoice proration. Retention744h=31days. Exact dates/billing must be rechecked before approval.",
+  "observed_prices_only": true,
+  "quantities_are_proposals_not_measurements": true,
+  "rate_tiers": "Paid marginal rates are used even where free tiers exist; no credit, free-tier, prepaid commitment or monthly reset is deducted.",
+  "remaining_allowance_verified": false,
+  "scenarios": [
+    {
+      "arithmetic_within_proposed_cap": false,
+      "display_total_usd": "5.30",
+      "launch_authorized": false,
+      "line_items": [
+        {
+          "component": "EC2",
+          "formula": "2 nodes * 2 hours",
+          "quantity": "4",
+          "rate": "ec2_hour",
+          "usd": "0.7680000000"
+        },
+        {
+          "component": "EMR surcharge",
+          "formula": "2 nodes * 2 hours",
+          "quantity": "4",
+          "rate": "emr_hour",
+          "usd": "0.1920000000"
+        },
+        {
+          "component": "All root+data EBS",
+          "formula": "128 GB * ancillary hours / 672; baseline IOPS/throughput only",
+          "quantity": "0.5714285714285714285714285714",
+          "rate": "ebs_gp3_gb_month",
+          "usd": "0.04571428571428571428571428571"
+        },
+        {
+          "component": "NAT gateway",
+          "formula": "one zonal gateway; each partial gateway hour rounded up",
+          "quantity": "3",
+          "rate": "nat_hour",
+          "usd": "0.135"
+        },
+        {
+          "component": "NAT processed data",
+          "formula": "proposed processed GB; S3 gateway traffic excluded",
+          "quantity": "2",
+          "rate": "nat_gb",
+          "usd": "0.090"
+        },
+        {
+          "component": "NAT public IPv4",
+          "formula": "one EIP; conservatively round up hours",
+          "quantity": "3",
+          "rate": "ipv4_hour",
+          "usd": "0.0150000000"
+        },
+        {
+          "component": "Regional EFS Standard",
+          "formula": "GB * ancillary hours / 672",
+          "quantity": "0.02232142857142857142857142857",
+          "rate": "efs_gb_month",
+          "usd": "0.006696428571428571428571428571"
+        },
+        {
+          "component": "EFS elastic reads",
+          "formula": "metered GB INCLUDING operation minimums; not raw file bytes",
+          "quantity": "5",
+          "rate": "efs_read_gb",
+          "usd": "0.1500000000"
+        },
+        {
+          "component": "EFS elastic writes",
+          "formula": "metered GB INCLUDING operation minimums; not raw file bytes",
+          "quantity": "2",
+          "rate": "efs_write_gb",
+          "usd": "0.1200000000"
+        },
+        {
+          "component": "S3 Standard evidence retention",
+          "formula": "all versions/artifacts/logs GB * retained hours / 672",
+          "quantity": "1.107142857142857142857142857",
+          "rate": "s3_gb_month",
+          "usd": "0.02546428571428571428571428571"
+        },
+        {
+          "component": "S3 PUT/LIST incl control",
+          "formula": "all artifact/log/controller PUT and LIST units",
+          "quantity": "10000",
+          "rate": "s3_put",
+          "usd": "0.0500000000"
+        },
+        {
+          "component": "S3 GET incl control",
+          "formula": "all artifact/log/controller GET and HEAD units",
+          "quantity": "100000",
+          "rate": "s3_get",
+          "usd": "0.0400000000"
+        },
+        {
+          "component": "Retained CMK",
+          "formula": "key count * retained hours / 672; one nonrotated key version",
+          "quantity": "1.107142857142857142857142857",
+          "rate": "kms_key_month",
+          "usd": "1.107142857142857142857142857"
+        },
+        {
+          "component": "KMS requests",
+          "formula": "bill every proposed request; no free tier assumed",
+          "quantity": "130000",
+          "rate": "kms_request",
+          "usd": "0.3900000000"
+        },
+        {
+          "component": "CloudWatch ingest",
+          "formula": "all cluster/guard/controller log ingestion GB",
+          "quantity": "0.25",
+          "rate": "log_ingest_gb",
+          "usd": "0.125000000000"
+        },
+        {
+          "component": "CloudWatch retention",
+          "formula": "conservatively retain all uncompressed GB for retained hours / 672",
+          "quantity": "0.2767857142857142857142857143",
+          "rate": "log_store_gb_month",
+          "usd": "0.008303571428571428571428571429"
+        },
+        {
+          "component": "CloudWatch standard alarms",
+          "formula": "alarm count * retained hours / 672",
+          "quantity": "2.214285714285714285714285714",
+          "rate": "alarm_month",
+          "usd": "0.2214285714285714285714285714"
+        },
+        {
+          "component": "Guard custom metric",
+          "formula": "metric count * active hours / 672",
+          "quantity": "0.004464285714285714285714285714",
+          "rate": "metric_month",
+          "usd": "0.001339285714285714285714285714"
+        },
+        {
+          "component": "Lambda watchdog+cleanup duration",
+          "formula": "all invocation GB-seconds incl cold starts/retries",
+          "quantity": "2700.00",
+          "rate": "lambda_gb_second",
+          "usd": "0.045000090000"
+        },
+        {
+          "component": "Lambda invocations",
+          "formula": "all invocations incl retries",
+          "quantity": "360",
+          "rate": "lambda_request",
+          "usd": "0.0000720000"
+        },
+        {
+          "component": "Scheduler invocations",
+          "formula": "use positive paid marginal tier; no entitlement deduction",
+          "quantity": "360",
+          "rate": "scheduler_invocation",
+          "usd": "0.0003600000"
+        },
+        {
+          "component": "StepFunctions Standard cleanup",
+          "formula": "all transitions incl retries/catches; no Express workflow",
+          "quantity": "200",
+          "rate": "state_transition",
+          "usd": "0.0050000000"
+        },
+        {
+          "component": "SQS Standard DLQ",
+          "formula": "64KiB request units incl sends/receives/deletes",
+          "quantity": "1000",
+          "rate": "sqs_request",
+          "usd": "0.0004000000"
+        },
+        {
+          "component": "SNS incident publish",
+          "formula": "small standard messages; paid marginal tier",
+          "quantity": "20",
+          "rate": "sns_publish",
+          "usd": "0.0000100000"
+        },
+        {
+          "component": "SNS incident email",
+          "formula": "paid marginal email deliveries; recipient/delivery unverified",
+          "quantity": "20",
+          "rate": "sns_email",
+          "usd": "0.0004000000"
+        },
+        {
+          "component": "Internet data out",
+          "formula": "proposed total egress; no free data allowance assumed",
+          "quantity": "1",
+          "rate": "internet_out_gb",
+          "usd": "0.09"
+        }
+      ],
+      "modeled_headroom_usd": "-0.290414219642857142857142858",
+      "modeled_total_usd": "5.290414219642857142857142858",
+      "name": "bounded_nominal_proposal",
+      "proposed_cap_usd": "5",
+      "quantities": {
+        "alarms": "2",
+        "ancillary_hours": "3",
+        "cluster_hours": "2",
+        "custom_metrics": "1",
+        "ebs_gb": "128",
+        "efs_gb": "5",
+        "efs_read_gb": "5",
+        "efs_write_gb": "2",
+        "internet_out_gb": "1",
+        "kms_keys": "1",
+        "kms_requests": "130000",
+        "lambda_gb": ".25",
+        "lambda_invocations": "360",
+        "lambda_seconds": "30",
+        "logs_gb": ".25",
+        "month_denominator_hours": "672",
+        "nat_gb": "2",
+        "nodes": 2,
+        "retention_hours": "744",
+        "s3_gb": "1",
+        "s3_get_requests": "100000",
+        "s3_put_requests": "10000",
+        "scheduler_invocations": "360",
+        "sns_notifications": "20",
+        "sqs_requests": "1000",
+        "state_transitions": "200",
+        "tax_planning_fraction": ".25",
+        "uncertainty_reserve_usd": ".75"
+      },
+      "subtotal_usd": "3.632331375714285714285714286",
+      "tax_planning_usd": "0.9080828439285714285714285715",
+      "uncertainty_reserve_usd": "0.75"
+    },
+    {
+      "arithmetic_within_proposed_cap": false,
+      "display_total_usd": "6.21",
+      "launch_authorized": false,
+      "line_items": [
+        {
+          "component": "EC2",
+          "formula": "2 nodes * 2 hours",
+          "quantity": "4",
+          "rate": "ec2_hour",
+          "usd": "0.7680000000"
+        },
+        {
+          "component": "EMR surcharge",
+          "formula": "2 nodes * 2 hours",
+          "quantity": "4",
+          "rate": "emr_hour",
+          "usd": "0.1920000000"
+        },
+        {
+          "component": "All root+data EBS",
+          "formula": "128 GB * ancillary hours / 672; baseline IOPS/throughput only",
+          "quantity": "0.5714285714285714285714285714",
+          "rate": "ebs_gp3_gb_month",
+          "usd": "0.04571428571428571428571428571"
+        },
+        {
+          "component": "NAT gateway",
+          "formula": "one zonal gateway; each partial gateway hour rounded up",
+          "quantity": "3",
+          "rate": "nat_hour",
+          "usd": "0.135"
+        },
+        {
+          "component": "NAT processed data",
+          "formula": "proposed processed GB; S3 gateway traffic excluded",
+          "quantity": "2",
+          "rate": "nat_gb",
+          "usd": "0.090"
+        },
+        {
+          "component": "NAT public IPv4",
+          "formula": "one EIP; conservatively round up hours",
+          "quantity": "3",
+          "rate": "ipv4_hour",
+          "usd": "0.0150000000"
+        },
+        {
+          "component": "Regional EFS Standard",
+          "formula": "GB * ancillary hours / 672",
+          "quantity": "0.02232142857142857142857142857",
+          "rate": "efs_gb_month",
+          "usd": "0.006696428571428571428571428571"
+        },
+        {
+          "component": "EFS elastic reads",
+          "formula": "metered GB INCLUDING operation minimums; not raw file bytes",
+          "quantity": "10",
+          "rate": "efs_read_gb",
+          "usd": "0.3000000000"
+        },
+        {
+          "component": "EFS elastic writes",
+          "formula": "metered GB INCLUDING operation minimums; not raw file bytes",
+          "quantity": "5",
+          "rate": "efs_write_gb",
+          "usd": "0.3000000000"
+        },
+        {
+          "component": "S3 Standard evidence retention",
+          "formula": "all versions/artifacts/logs GB * retained hours / 672",
+          "quantity": "1.107142857142857142857142857",
+          "rate": "s3_gb_month",
+          "usd": "0.02546428571428571428571428571"
+        },
+        {
+          "component": "S3 PUT/LIST incl control",
+          "formula": "all artifact/log/controller PUT and LIST units",
+          "quantity": "10000",
+          "rate": "s3_put",
+          "usd": "0.0500000000"
+        },
+        {
+          "component": "S3 GET incl control",
+          "formula": "all artifact/log/controller GET and HEAD units",
+          "quantity": "100000",
+          "rate": "s3_get",
+          "usd": "0.0400000000"
+        },
+        {
+          "component": "Retained CMK",
+          "formula": "key count * retained hours / 672; one nonrotated key version",
+          "quantity": "1.107142857142857142857142857",
+          "rate": "kms_key_month",
+          "usd": "1.107142857142857142857142857"
+        },
+        {
+          "component": "KMS requests",
+          "formula": "bill every proposed request; no free tier assumed",
+          "quantity": "130000",
+          "rate": "kms_request",
+          "usd": "0.3900000000"
+        },
+        {
+          "component": "CloudWatch ingest",
+          "formula": "all cluster/guard/controller log ingestion GB",
+          "quantity": "1",
+          "rate": "log_ingest_gb",
+          "usd": "0.5000000000"
+        },
+        {
+          "component": "CloudWatch retention",
+          "formula": "conservatively retain all uncompressed GB for retained hours / 672",
+          "quantity": "1.107142857142857142857142857",
+          "rate": "log_store_gb_month",
+          "usd": "0.03321428571428571428571428571"
+        },
+        {
+          "component": "CloudWatch standard alarms",
+          "formula": "alarm count * retained hours / 672",
+          "quantity": "2.214285714285714285714285714",
+          "rate": "alarm_month",
+          "usd": "0.2214285714285714285714285714"
+        },
+        {
+          "component": "Guard custom metric",
+          "formula": "metric count * active hours / 672",
+          "quantity": "0.004464285714285714285714285714",
+          "rate": "metric_month",
+          "usd": "0.001339285714285714285714285714"
+        },
+        {
+          "component": "Lambda watchdog+cleanup duration",
+          "formula": "all invocation GB-seconds incl cold starts/retries",
+          "quantity": "2700.00",
+          "rate": "lambda_gb_second",
+          "usd": "0.045000090000"
+        },
+        {
+          "component": "Lambda invocations",
+          "formula": "all invocations incl retries",
+          "quantity": "360",
+          "rate": "lambda_request",
+          "usd": "0.0000720000"
+        },
+        {
+          "component": "Scheduler invocations",
+          "formula": "use positive paid marginal tier; no entitlement deduction",
+          "quantity": "360",
+          "rate": "scheduler_invocation",
+          "usd": "0.0003600000"
+        },
+        {
+          "component": "StepFunctions Standard cleanup",
+          "formula": "all transitions incl retries/catches; no Express workflow",
+          "quantity": "200",
+          "rate": "state_transition",
+          "usd": "0.0050000000"
+        },
+        {
+          "component": "SQS Standard DLQ",
+          "formula": "64KiB request units incl sends/receives/deletes",
+          "quantity": "1000",
+          "rate": "sqs_request",
+          "usd": "0.0004000000"
+        },
+        {
+          "component": "SNS incident publish",
+          "formula": "small standard messages; paid marginal tier",
+          "quantity": "20",
+          "rate": "sns_publish",
+          "usd": "0.0000100000"
+        },
+        {
+          "component": "SNS incident email",
+          "formula": "paid marginal email deliveries; recipient/delivery unverified",
+          "quantity": "20",
+          "rate": "sns_email",
+          "usd": "0.0004000000"
+        },
+        {
+          "component": "Internet data out",
+          "formula": "proposed total egress; no free data allowance assumed",
+          "quantity": "1",
+          "rate": "internet_out_gb",
+          "usd": "0.09"
+        }
+      ],
+      "modeled_headroom_usd": "-1.202802612500000000000000001",
+      "modeled_total_usd": "6.202802612500000000000000001",
+      "name": "io_and_log_sensitivity",
+      "proposed_cap_usd": "5",
+      "quantities": {
+        "alarms": "2",
+        "ancillary_hours": "3",
+        "cluster_hours": "2",
+        "custom_metrics": "1",
+        "ebs_gb": "128",
+        "efs_gb": "5",
+        "efs_read_gb": "10",
+        "efs_write_gb": "5",
+        "internet_out_gb": "1",
+        "kms_keys": "1",
+        "kms_requests": "130000",
+        "lambda_gb": ".25",
+        "lambda_invocations": "360",
+        "lambda_seconds": "30",
+        "logs_gb": "1",
+        "month_denominator_hours": "672",
+        "nat_gb": "2",
+        "nodes": 2,
+        "retention_hours": "744",
+        "s3_gb": "1",
+        "s3_get_requests": "100000",
+        "s3_put_requests": "10000",
+        "scheduler_invocations": "360",
+        "sns_notifications": "20",
+        "sqs_requests": "1000",
+        "state_transitions": "200",
+        "tax_planning_fraction": ".25",
+        "uncertainty_reserve_usd": ".75"
+      },
+      "subtotal_usd": "4.362242090000000000000000001",
+      "tax_planning_usd": "1.090560522500000000000000000",
+      "uncertainty_reserve_usd": "0.75"
+    },
+    {
+      "arithmetic_within_proposed_cap": false,
+      "display_total_usd": "8.54",
+      "launch_authorized": false,
+      "line_items": [
+        {
+          "component": "EC2",
+          "formula": "2 nodes * 2 hours",
+          "quantity": "4",
+          "rate": "ec2_hour",
+          "usd": "0.7680000000"
+        },
+        {
+          "component": "EMR surcharge",
+          "formula": "2 nodes * 2 hours",
+          "quantity": "4",
+          "rate": "emr_hour",
+          "usd": "0.1920000000"
+        },
+        {
+          "component": "All root+data EBS",
+          "formula": "128 GB * ancillary hours / 672; baseline IOPS/throughput only",
+          "quantity": "0.5714285714285714285714285714",
+          "rate": "ebs_gp3_gb_month",
+          "usd": "0.04571428571428571428571428571"
+        },
+        {
+          "component": "NAT gateway",
+          "formula": "one zonal gateway; each partial gateway hour rounded up",
+          "quantity": "3",
+          "rate": "nat_hour",
+          "usd": "0.135"
+        },
+        {
+          "component": "NAT processed data",
+          "formula": "proposed processed GB; S3 gateway traffic excluded",
+          "quantity": "2",
+          "rate": "nat_gb",
+          "usd": "0.090"
+        },
+        {
+          "component": "NAT public IPv4",
+          "formula": "one EIP; conservatively round up hours",
+          "quantity": "3",
+          "rate": "ipv4_hour",
+          "usd": "0.0150000000"
+        },
+        {
+          "component": "Regional EFS Standard",
+          "formula": "GB * ancillary hours / 672",
+          "quantity": "0.02232142857142857142857142857",
+          "rate": "efs_gb_month",
+          "usd": "0.006696428571428571428571428571"
+        },
+        {
+          "component": "EFS elastic reads",
+          "formula": "metered GB INCLUDING operation minimums; not raw file bytes",
+          "quantity": "5",
+          "rate": "efs_read_gb",
+          "usd": "0.1500000000"
+        },
+        {
+          "component": "EFS elastic writes",
+          "formula": "metered GB INCLUDING operation minimums; not raw file bytes",
+          "quantity": "2",
+          "rate": "efs_write_gb",
+          "usd": "0.1200000000"
+        },
+        {
+          "component": "S3 Standard evidence retention",
+          "formula": "all versions/artifacts/logs GB * retained hours / 672",
+          "quantity": "3.214285714285714285714285714",
+          "rate": "s3_gb_month",
+          "usd": "0.07392857142857142857142857142"
+        },
+        {
+          "component": "S3 PUT/LIST incl control",
+          "formula": "all artifact/log/controller PUT and LIST units",
+          "quantity": "10000",
+          "rate": "s3_put",
+          "usd": "0.0500000000"
+        },
+        {
+          "component": "S3 GET incl control",
+          "formula": "all artifact/log/controller GET and HEAD units",
+          "quantity": "100000",
+          "rate": "s3_get",
+          "usd": "0.0400000000"
+        },
+        {
+          "component": "Retained CMK",
+          "formula": "key count * retained hours / 672; one nonrotated key version",
+          "quantity": "3.214285714285714285714285714",
+          "rate": "kms_key_month",
+          "usd": "3.214285714285714285714285714"
+        },
+        {
+          "component": "KMS requests",
+          "formula": "bill every proposed request; no free tier assumed",
+          "quantity": "130000",
+          "rate": "kms_request",
+          "usd": "0.3900000000"
+        },
+        {
+          "component": "CloudWatch ingest",
+          "formula": "all cluster/guard/controller log ingestion GB",
+          "quantity": "0.25",
+          "rate": "log_ingest_gb",
+          "usd": "0.125000000000"
+        },
+        {
+          "component": "CloudWatch retention",
+          "formula": "conservatively retain all uncompressed GB for retained hours / 672",
+          "quantity": "0.8035714285714285714285714286",
+          "rate": "log_store_gb_month",
+          "usd": "0.02410714285714285714285714286"
+        },
+        {
+          "component": "CloudWatch standard alarms",
+          "formula": "alarm count * retained hours / 672",
+          "quantity": "6.428571428571428571428571429",
+          "rate": "alarm_month",
+          "usd": "0.6428571428571428571428571429"
+        },
+        {
+          "component": "Guard custom metric",
+          "formula": "metric count * active hours / 672",
+          "quantity": "0.004464285714285714285714285714",
+          "rate": "metric_month",
+          "usd": "0.001339285714285714285714285714"
+        },
+        {
+          "component": "Lambda watchdog+cleanup duration",
+          "formula": "all invocation GB-seconds incl cold starts/retries",
+          "quantity": "2700.00",
+          "rate": "lambda_gb_second",
+          "usd": "0.045000090000"
+        },
+        {
+          "component": "Lambda invocations",
+          "formula": "all invocations incl retries",
+          "quantity": "360",
+          "rate": "lambda_request",
+          "usd": "0.0000720000"
+        },
+        {
+          "component": "Scheduler invocations",
+          "formula": "use positive paid marginal tier; no entitlement deduction",
+          "quantity": "360",
+          "rate": "scheduler_invocation",
+          "usd": "0.0003600000"
+        },
+        {
+          "component": "StepFunctions Standard cleanup",
+          "formula": "all transitions incl retries/catches; no Express workflow",
+          "quantity": "200",
+          "rate": "state_transition",
+          "usd": "0.0050000000"
+        },
+        {
+          "component": "SQS Standard DLQ",
+          "formula": "64KiB request units incl sends/receives/deletes",
+          "quantity": "1000",
+          "rate": "sqs_request",
+          "usd": "0.0004000000"
+        },
+        {
+          "component": "SNS incident publish",
+          "formula": "small standard messages; paid marginal tier",
+          "quantity": "20",
+          "rate": "sns_publish",
+          "usd": "0.0000100000"
+        },
+        {
+          "component": "SNS incident email",
+          "formula": "paid marginal email deliveries; recipient/delivery unverified",
+          "quantity": "20",
+          "rate": "sns_email",
+          "usd": "0.0004000000"
+        },
+        {
+          "component": "Internet data out",
+          "formula": "proposed total egress; no free data allowance assumed",
+          "quantity": "1",
+          "rate": "internet_out_gb",
+          "usd": "0.09"
+        }
+      ],
+      "modeled_headroom_usd": "-3.531463326785714285714285715",
+      "modeled_total_usd": "8.531463326785714285714285715",
+      "name": "retention_90_days",
+      "proposed_cap_usd": "5",
+      "quantities": {
+        "alarms": "2",
+        "ancillary_hours": "3",
+        "cluster_hours": "2",
+        "custom_metrics": "1",
+        "ebs_gb": "128",
+        "efs_gb": "5",
+        "efs_read_gb": "5",
+        "efs_write_gb": "2",
+        "internet_out_gb": "1",
+        "kms_keys": "1",
+        "kms_requests": "130000",
+        "lambda_gb": ".25",
+        "lambda_invocations": "360",
+        "lambda_seconds": "30",
+        "logs_gb": ".25",
+        "month_denominator_hours": "672",
+        "nat_gb": "2",
+        "nodes": 2,
+        "retention_hours": "2160",
+        "s3_gb": "1",
+        "s3_get_requests": "100000",
+        "s3_put_requests": "10000",
+        "scheduler_invocations": "360",
+        "sns_notifications": "20",
+        "sqs_requests": "1000",
+        "state_transitions": "200",
+        "tax_planning_fraction": ".25",
+        "uncertainty_reserve_usd": ".75"
+      },
+      "subtotal_usd": "6.225170661428571428571428572",
+      "tax_planning_usd": "1.556292665357142857142857143",
+      "uncertainty_reserve_usd": "0.75"
+    },
+    {
+      "arithmetic_within_proposed_cap": false,
+      "display_total_usd": "7.52",
+      "launch_authorized": false,
+      "line_items": [
+        {
+          "component": "EC2",
+          "formula": "2 nodes * 2 hours",
+          "quantity": "4",
+          "rate": "ec2_hour",
+          "usd": "0.7680000000"
+        },
+        {
+          "component": "EMR surcharge",
+          "formula": "2 nodes * 2 hours",
+          "quantity": "4",
+          "rate": "emr_hour",
+          "usd": "0.1920000000"
+        },
+        {
+          "component": "All root+data EBS",
+          "formula": "128 GB * ancillary hours / 672; baseline IOPS/throughput only",
+          "quantity": "4.571428571428571428571428571",
+          "rate": "ebs_gp3_gb_month",
+          "usd": "0.3657142857142857142857142857"
+        },
+        {
+          "component": "NAT gateway",
+          "formula": "one zonal gateway; each partial gateway hour rounded up",
+          "quantity": "24",
+          "rate": "nat_hour",
+          "usd": "1.080"
+        },
+        {
+          "component": "NAT processed data",
+          "formula": "proposed processed GB; S3 gateway traffic excluded",
+          "quantity": "2",
+          "rate": "nat_gb",
+          "usd": "0.090"
+        },
+        {
+          "component": "NAT public IPv4",
+          "formula": "one EIP; conservatively round up hours",
+          "quantity": "24",
+          "rate": "ipv4_hour",
+          "usd": "0.1200000000"
+        },
+        {
+          "component": "Regional EFS Standard",
+          "formula": "GB * ancillary hours / 672",
+          "quantity": "0.1785714285714285714285714286",
+          "rate": "efs_gb_month",
+          "usd": "0.05357142857142857142857142858"
+        },
+        {
+          "component": "EFS elastic reads",
+          "formula": "metered GB INCLUDING operation minimums; not raw file bytes",
+          "quantity": "5",
+          "rate": "efs_read_gb",
+          "usd": "0.1500000000"
+        },
+        {
+          "component": "EFS elastic writes",
+          "formula": "metered GB INCLUDING operation minimums; not raw file bytes",
+          "quantity": "2",
+          "rate": "efs_write_gb",
+          "usd": "0.1200000000"
+        },
+        {
+          "component": "S3 Standard evidence retention",
+          "formula": "all versions/artifacts/logs GB * retained hours / 672",
+          "quantity": "1.107142857142857142857142857",
+          "rate": "s3_gb_month",
+          "usd": "0.02546428571428571428571428571"
+        },
+        {
+          "component": "S3 PUT/LIST incl control",
+          "formula": "all artifact/log/controller PUT and LIST units",
+          "quantity": "10000",
+          "rate": "s3_put",
+          "usd": "0.0500000000"
+        },
+        {
+          "component": "S3 GET incl control",
+          "formula": "all artifact/log/controller GET and HEAD units",
+          "quantity": "100000",
+          "rate": "s3_get",
+          "usd": "0.0400000000"
+        },
+        {
+          "component": "Retained CMK",
+          "formula": "key count * retained hours / 672; one nonrotated key version",
+          "quantity": "1.107142857142857142857142857",
+          "rate": "kms_key_month",
+          "usd": "1.107142857142857142857142857"
+        },
+        {
+          "component": "KMS requests",
+          "formula": "bill every proposed request; no free tier assumed",
+          "quantity": "130000",
+          "rate": "kms_request",
+          "usd": "0.3900000000"
+        },
+        {
+          "component": "CloudWatch ingest",
+          "formula": "all cluster/guard/controller log ingestion GB",
+          "quantity": "0.25",
+          "rate": "log_ingest_gb",
+          "usd": "0.125000000000"
+        },
+        {
+          "component": "CloudWatch retention",
+          "formula": "conservatively retain all uncompressed GB for retained hours / 672",
+          "quantity": "0.2767857142857142857142857143",
+          "rate": "log_store_gb_month",
+          "usd": "0.008303571428571428571428571429"
+        },
+        {
+          "component": "CloudWatch standard alarms",
+          "formula": "alarm count * retained hours / 672",
+          "quantity": "2.214285714285714285714285714",
+          "rate": "alarm_month",
+          "usd": "0.2214285714285714285714285714"
+        },
+        {
+          "component": "Guard custom metric",
+          "formula": "metric count * active hours / 672",
+          "quantity": "0.03571428571428571428571428571",
+          "rate": "metric_month",
+          "usd": "0.01071428571428571428571428571"
+        },
+        {
+          "component": "Lambda watchdog+cleanup duration",
+          "formula": "all invocation GB-seconds incl cold starts/retries",
+          "quantity": "21600.00",
+          "rate": "lambda_gb_second",
+          "usd": "0.360000720000"
+        },
+        {
+          "component": "Lambda invocations",
+          "formula": "all invocations incl retries",
+          "quantity": "2880",
+          "rate": "lambda_request",
+          "usd": "0.0005760000"
+        },
+        {
+          "component": "Scheduler invocations",
+          "formula": "use positive paid marginal tier; no entitlement deduction",
+          "quantity": "2880",
+          "rate": "scheduler_invocation",
+          "usd": "0.0028800000"
+        },
+        {
+          "component": "StepFunctions Standard cleanup",
+          "formula": "all transitions incl retries/catches; no Express workflow",
+          "quantity": "1600",
+          "rate": "state_transition",
+          "usd": "0.0400000000"
+        },
+        {
+          "component": "SQS Standard DLQ",
+          "formula": "64KiB request units incl sends/receives/deletes",
+          "quantity": "1000",
+          "rate": "sqs_request",
+          "usd": "0.0004000000"
+        },
+        {
+          "component": "SNS incident publish",
+          "formula": "small standard messages; paid marginal tier",
+          "quantity": "20",
+          "rate": "sns_publish",
+          "usd": "0.0000100000"
+        },
+        {
+          "component": "SNS incident email",
+          "formula": "paid marginal email deliveries; recipient/delivery unverified",
+          "quantity": "20",
+          "rate": "sns_email",
+          "usd": "0.0004000000"
+        },
+        {
+          "component": "Internet data out",
+          "formula": "proposed total egress; no free data allowance assumed",
+          "quantity": "1",
+          "rate": "internet_out_gb",
+          "usd": "0.09"
+        }
+      ],
+      "modeled_headroom_usd": "-2.514507507142857142857142858",
+      "modeled_total_usd": "7.514507507142857142857142858",
+      "name": "ancillary_cleanup_delayed_24h",
+      "proposed_cap_usd": "5",
+      "quantities": {
+        "alarms": "2",
+        "ancillary_hours": "24",
+        "cluster_hours": "2",
+        "custom_metrics": "1",
+        "ebs_gb": "128",
+        "efs_gb": "5",
+        "efs_read_gb": "5",
+        "efs_write_gb": "2",
+        "internet_out_gb": "1",
+        "kms_keys": "1",
+        "kms_requests": "130000",
+        "lambda_gb": ".25",
+        "lambda_invocations": "2880",
+        "lambda_seconds": "30",
+        "logs_gb": ".25",
+        "month_denominator_hours": "672",
+        "nat_gb": "2",
+        "nodes": 2,
+        "retention_hours": "744",
+        "s3_gb": "1",
+        "s3_get_requests": "100000",
+        "s3_put_requests": "10000",
+        "scheduler_invocations": "2880",
+        "sns_notifications": "20",
+        "sqs_requests": "1000",
+        "state_transitions": "1600",
+        "tax_planning_fraction": ".25",
+        "uncertainty_reserve_usd": ".75"
+      },
+      "subtotal_usd": "5.411606005714285714285714286",
+      "tax_planning_usd": "1.352901501428571428571428572",
+      "uncertainty_reserve_usd": "0.75"
+    },
+    {
+      "arithmetic_within_proposed_cap": true,
+      "display_total_usd": "4.82",
+      "launch_authorized": false,
+      "line_items": [
+        {
+          "component": "EC2",
+          "formula": "2 nodes * 2 hours",
+          "quantity": "4",
+          "rate": "ec2_hour",
+          "usd": "0.7680000000"
+        },
+        {
+          "component": "EMR surcharge",
+          "formula": "2 nodes * 2 hours",
+          "quantity": "4",
+          "rate": "emr_hour",
+          "usd": "0.1920000000"
+        },
+        {
+          "component": "All root+data EBS",
+          "formula": "128 GB * ancillary hours / 672; baseline IOPS/throughput only",
+          "quantity": "0.5714285714285714285714285714",
+          "rate": "ebs_gp3_gb_month",
+          "usd": "0.04571428571428571428571428571"
+        },
+        {
+          "component": "NAT gateway",
+          "formula": "one zonal gateway; each partial gateway hour rounded up",
+          "quantity": "3",
+          "rate": "nat_hour",
+          "usd": "0.135"
+        },
+        {
+          "component": "NAT processed data",
+          "formula": "proposed processed GB; S3 gateway traffic excluded",
+          "quantity": "2",
+          "rate": "nat_gb",
+          "usd": "0.090"
+        },
+        {
+          "component": "NAT public IPv4",
+          "formula": "one EIP; conservatively round up hours",
+          "quantity": "3",
+          "rate": "ipv4_hour",
+          "usd": "0.0150000000"
+        },
+        {
+          "component": "Regional EFS Standard",
+          "formula": "GB * ancillary hours / 672",
+          "quantity": "0.02232142857142857142857142857",
+          "rate": "efs_gb_month",
+          "usd": "0.006696428571428571428571428571"
+        },
+        {
+          "component": "EFS elastic reads",
+          "formula": "metered GB INCLUDING operation minimums; not raw file bytes",
+          "quantity": "5",
+          "rate": "efs_read_gb",
+          "usd": "0.1500000000"
+        },
+        {
+          "component": "EFS elastic writes",
+          "formula": "metered GB INCLUDING operation minimums; not raw file bytes",
+          "quantity": "2",
+          "rate": "efs_write_gb",
+          "usd": "0.1200000000"
+        },
+        {
+          "component": "S3 Standard evidence retention",
+          "formula": "all versions/artifacts/logs GB * retained hours / 672",
+          "quantity": "1.107142857142857142857142857",
+          "rate": "s3_gb_month",
+          "usd": "0.02546428571428571428571428571"
+        },
+        {
+          "component": "S3 PUT/LIST incl control",
+          "formula": "all artifact/log/controller PUT and LIST units",
+          "quantity": "1000",
+          "rate": "s3_put",
+          "usd": "0.0050000000"
+        },
+        {
+          "component": "S3 GET incl control",
+          "formula": "all artifact/log/controller GET and HEAD units",
+          "quantity": "10000",
+          "rate": "s3_get",
+          "usd": "0.0040000000"
+        },
+        {
+          "component": "Retained CMK",
+          "formula": "key count * retained hours / 672; one nonrotated key version",
+          "quantity": "1.107142857142857142857142857",
+          "rate": "kms_key_month",
+          "usd": "1.107142857142857142857142857"
+        },
+        {
+          "component": "KMS requests",
+          "formula": "bill every proposed request; no free tier assumed",
+          "quantity": "31000",
+          "rate": "kms_request",
+          "usd": "0.0930000000"
+        },
+        {
+          "component": "CloudWatch ingest",
+          "formula": "all cluster/guard/controller log ingestion GB",
+          "quantity": "0.25",
+          "rate": "log_ingest_gb",
+          "usd": "0.125000000000"
+        },
+        {
+          "component": "CloudWatch retention",
+          "formula": "conservatively retain all uncompressed GB for retained hours / 672",
+          "quantity": "0.2767857142857142857142857143",
+          "rate": "log_store_gb_month",
+          "usd": "0.008303571428571428571428571429"
+        },
+        {
+          "component": "CloudWatch standard alarms",
+          "formula": "alarm count * retained hours / 672",
+          "quantity": "2.214285714285714285714285714",
+          "rate": "alarm_month",
+          "usd": "0.2214285714285714285714285714"
+        },
+        {
+          "component": "Guard custom metric",
+          "formula": "metric count * active hours / 672",
+          "quantity": "0.004464285714285714285714285714",
+          "rate": "metric_month",
+          "usd": "0.001339285714285714285714285714"
+        },
+        {
+          "component": "Lambda watchdog+cleanup duration",
+          "formula": "all invocation GB-seconds incl cold starts/retries",
+          "quantity": "2700.00",
+          "rate": "lambda_gb_second",
+          "usd": "0.045000090000"
+        },
+        {
+          "component": "Lambda invocations",
+          "formula": "all invocations incl retries",
+          "quantity": "360",
+          "rate": "lambda_request",
+          "usd": "0.0000720000"
+        },
+        {
+          "component": "Scheduler invocations",
+          "formula": "use positive paid marginal tier; no entitlement deduction",
+          "quantity": "360",
+          "rate": "scheduler_invocation",
+          "usd": "0.0003600000"
+        },
+        {
+          "component": "StepFunctions Standard cleanup",
+          "formula": "all transitions incl retries/catches; no Express workflow",
+          "quantity": "200",
+          "rate": "state_transition",
+          "usd": "0.0050000000"
+        },
+        {
+          "component": "SQS Standard DLQ",
+          "formula": "64KiB request units incl sends/receives/deletes",
+          "quantity": "1000",
+          "rate": "sqs_request",
+          "usd": "0.0004000000"
+        },
+        {
+          "component": "SNS incident publish",
+          "formula": "small standard messages; paid marginal tier",
+          "quantity": "20",
+          "rate": "sns_publish",
+          "usd": "0.0000100000"
+        },
+        {
+          "component": "SNS incident email",
+          "formula": "paid marginal email deliveries; recipient/delivery unverified",
+          "quantity": "20",
+          "rate": "sns_email",
+          "usd": "0.0004000000"
+        },
+        {
+          "component": "Internet data out",
+          "formula": "proposed total egress; no free data allowance assumed",
+          "quantity": "1",
+          "rate": "internet_out_gb",
+          "usd": "0.09"
+        }
+      ],
+      "modeled_headroom_usd": "0.182085780357142857142857142",
+      "modeled_total_usd": "4.817914219642857142857142858",
+      "name": "lower_request_candidate_unverified",
+      "proposed_cap_usd": "5",
+      "quantities": {
+        "alarms": "2",
+        "ancillary_hours": "3",
+        "cluster_hours": "2",
+        "custom_metrics": "1",
+        "ebs_gb": "128",
+        "efs_gb": "5",
+        "efs_read_gb": "5",
+        "efs_write_gb": "2",
+        "internet_out_gb": "1",
+        "kms_keys": "1",
+        "kms_requests": "31000",
+        "lambda_gb": ".25",
+        "lambda_invocations": "360",
+        "lambda_seconds": "30",
+        "logs_gb": ".25",
+        "month_denominator_hours": "672",
+        "nat_gb": "2",
+        "nodes": 2,
+        "retention_hours": "744",
+        "s3_gb": "1",
+        "s3_get_requests": "10000",
+        "s3_put_requests": "1000",
+        "scheduler_invocations": "360",
+        "sns_notifications": "20",
+        "sqs_requests": "1000",
+        "state_transitions": "200",
+        "tax_planning_fraction": ".25",
+        "uncertainty_reserve_usd": ".75"
+      },
+      "subtotal_usd": "3.254331375714285714285714286",
+      "tax_planning_usd": "0.8135828439285714285714285715",
+      "uncertainty_reserve_usd": "0.75"
+    }
+  ],
+  "tax_conversion": "25% is a sensitivity allowance selected for this proposal, NOT observed tax jurisdiction/rate. Higher applicable taxes invalidate this modeled fit.",
+  "unpriced_zero_choices": [
+    "No public node IPs, only one NAT EIP priced",
+    "No interface endpoints selected; NAT+S3 gateway route",
+    "No EFS IA/archive/backup/replication/provisioned throughput",
+    "No snapshots, extra EBS provisioned performance, Spot/task nodes",
+    "No EKS/Serverless/Bedrock/database resources",
+    "No extra shared course infrastructure assumed"
+  ],
+  "unresolved": [
+    "Account-wide current and delayed spend/commitments (F4)",
+    "Exact planned resource quantities and provider defaults",
+    "Actual metered EFS I/O and network/log/request volumes",
+    "Dependency/artifact hashes and runtime archive size",
+    "Actual applicable taxes and support charges if any",
+    "Independent cluster/ancillary cleanup correctness and exact-ID binding",
+    "Retention decision and post-retention archival/cleanup authority",
+    "Region/quota/capacity, IAM effectiveness and custom runtime compatibility"
+  ]
+}

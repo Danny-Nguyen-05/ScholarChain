@@ -1,0 +1,80 @@
+{
+  "timestamp_utc": "2026-10-29T15:48:56.322358+00:00",
+  "records": [
+    {
+      "source": "/tmp/scholarchain-phase12b-repair1-build-start.json",
+      "retained_path": "docs/agent-runs/phase-12/evidence/12b-repair-1/build-start.json",
+      "bytes": 1477,
+      "sha256": "1ac3c6cf12aecc27840d981dd273caec0b352ccac7bc0d6ea5d03b96aac51bcb"
+    },
+    {
+      "source": "/tmp/scholarchain-phase12b-repair1-build-result.json",
+      "retained_path": "docs/agent-runs/phase-12/evidence/12b-repair-1/build-result.json",
+      "bytes": 2605,
+      "sha256": "91e28bfba5783dfcd3c822c616885cd5c1bd831a2fa5c6c988fd16081bf2b3b7"
+    },
+    {
+      "source": "/tmp/scholarchain-phase12b-repair1-build-validation.json",
+      "retained_path": "docs/agent-runs/phase-12/evidence/12b-repair-1/build-validation.json",
+      "bytes": 69435,
+      "sha256": "f077a6b4b7b64a6f0c3e234666433215977a982051076ac013a5531bdfbd9b3b"
+    },
+    {
+      "source": "/tmp/scholarchain-phase12b-repair1-build-source-before.json",
+      "retained_path": "docs/agent-runs/phase-12/evidence/12b-repair-1/build-source-before.json",
+      "bytes": 186462,
+      "sha256": "3dcee08869f8c39acdae0f6b8aea91c34c9d45546794a9a750a7a81939849efb"
+    },
+    {
+      "source": "/tmp/scholarchain-phase12b-repair1-build-source-after.json",
+      "retained_path": "docs/agent-runs/phase-12/evidence/12b-repair-1/build-source-after.json",
+      "bytes": 186462,
+      "sha256": "9137538c9dbdcb354a4fbf603c3130fcbb5f63f9e37f4d2282ca63f501f5bc0e"
+    },
+    {
+      "source": "/tmp/scholarchain-phase12b-repair1-build-java-version.log",
+      "retained_path": "docs/agent-runs/phase-12/evidence/12b-repair-1/java-version.log.txt",
+      "bytes": 171,
+      "sha256": "2fe83b0053132e4e834defa82250462f4c62733d29bf76b19ee1bb3c14b06b39"
+    },
+    {
+      "source": "/tmp/scholarchain-phase12b-repair1-build-sbt-check-excerpt.txt",
+      "retained_path": "docs/agent-runs/phase-12/evidence/12b-repair-1/sbt-check-excerpt.txt",
+      "bytes": 3272,
+      "sha256": "38d546e322d5d946da0142e8e15e07599f9c9b077397a16b9b7837762d7929a8"
+    },
+    {
+      "source": "/tmp/scholarchain-phase12b-repair1-build-attempts.json",
+      "retained_path": "docs/agent-runs/phase-12/evidence/12b-repair-1/build-attempts.json",
+      "bytes": 536,
+      "sha256": "044e4f0eae57802c43778460c4c89dd2429047e6307532638c4b0307cd4bbb1e"
+    },
+    {
+      "source": "/tmp/scholarchain-phase12b-repair1-build-run.py",
+      "retained_path": "docs/agent-runs/phase-12/evidence/12b-repair-1/build-run.py",
+      "bytes": 6945,
+      "sha256": "49ed83c99c9b95f3530ada6f22ad13f3a3ca18d9711140d84219b82c9a33e616"
+    },
+    {
+      "source": "/tmp/scholarchain-phase12b-repair1-build-collect.py",
+      "retained_path": "docs/agent-runs/phase-12/evidence/12b-repair-1/build-collect.py",
+      "bytes": 5139,
+      "sha256": "328814e90a7bb62c0ea8d87d917cbcc8fd394d5d57cee3cee0e744e804921d57"
+    },
+    {
+      "source": "/tmp/scholarchain-phase12b-repair1-build-sbt-check.log",
+      "retained_path": "docs/agent-runs/phase-12/evidence/12b-repair-1/sbt-check.log.gz",
+      "raw_bytes": 1719202,
+      "raw_sha256": "71fd8fd868bb90de21164ca405cebda22123fba06453d0d0072e9ee5499fb16b",
+      "compressed_bytes": 93393,
+      "compressed_sha256": "9c1f8a89bc8cb3c31c3aad9ae5cd9c24c0456fd5c0ba3482df00151487b102c2"
+    },
+    {
+      "source": "/tmp/scholarchain-phase12b-repair1-build-owner-report.txt",
+      "retained_path": "docs/agent-runs/phase-12/evidence/12b-repair-1/build-owner-report.txt",
+      "bytes": 3527,
+      "sha256": "601ee11c1e321d861c37ef66fb89aaae3811190ad7f0e3381dc9e4cc7cea7190"
+    }
+  ],
+  "raw_log_note": "Java raw log uses .log.txt; sbt full raw retained compressed with raw and compressed hashes."
+}

@@ -1,0 +1,109 @@
+202:     def providers(self, profile_name, disable_env_vars=False):
+203:         return [
+204:             self._create_web_identity_provider(
+205:                 profile_name,
+206:                 disable_env_vars,
+207:             ),
+208:             self._create_sso_provider(profile_name),
+209:             self._create_shared_credential_provider(profile_name),
+210:             self._create_login_provider(profile_name),
+211:             self._create_process_provider(profile_name),
+212:             self._create_config_provider(profile_name),
+213:         ]
+260:     def _create_login_provider(self, profile_name):
+261:         return LoginProvider(
+262:             token_cache=self._signin_token_cache,
+263:             load_config=lambda: self._session.full_config,
+264:             profile_name=profile_name,
+265:             client_creator=self._session.create_client,
+266:         )
+267: 
+268: 
+269: def get_credentials(session):
+270:     resolver = create_credential_resolver(session)
+915:         self._add_account_id_to_response(response)
+916:         return response
+917: 
+918:     def _assume_role_kwargs(self):
+919:         """Get the arguments for assume role based on current configuration."""
+920:         assume_role_kwargs = deepcopy(self._assume_kwargs)
+921: 
+922:         mfa_serial = assume_role_kwargs.get('SerialNumber')
+923: 
+924:         if mfa_serial is not None:
+925:             prompt = f'Enter MFA code for {mfa_serial}: '
+926:             token_code = self._mfa_prompter(prompt)
+927:             assume_role_kwargs['TokenCode'] = token_code
+928: 
+929:         duration_seconds = assume_role_kwargs.get('DurationSeconds')
+930: 
+931:         if duration_seconds is not None:
+932:             assume_role_kwargs['DurationSeconds'] = duration_seconds
+933: 
+1638:         role_session_name = role_config.get('role_session_name')
+1639:         if role_session_name is not None:
+1640:             extra_args['RoleSessionName'] = role_session_name
+1641: 
+1642:         external_id = role_config.get('external_id')
+1643:         if external_id is not None:
+1644:             extra_args['ExternalId'] = external_id
+1645: 
+1646:         mfa_serial = role_config.get('mfa_serial')
+1647:         if mfa_serial is not None:
+1648:             extra_args['SerialNumber'] = mfa_serial
+1649: 
+1650:         duration_seconds = role_config.get('duration_seconds')
+1651:         if duration_seconds is not None:
+1652:             extra_args['DurationSeconds'] = duration_seconds
+1653: 
+1654:         fetcher = AssumeRoleCredentialFetcher(
+1655:             client_creator=self._client_creator,
+1656:             source_credentials=source_credentials,
+1657:             role_arn=role_config['role_arn'],
+1658:             extra_args=extra_args,
+1659:             mfa_prompter=self._prompter,
+1660:             cache=self.cache,
+1661:         )
+1662:         fetcher.feature_ids = self._feature_ids.copy()
+1663:         refresher = fetcher.fetch_credentials
+1664:         if mfa_serial is not None:
+1665:             refresher = create_mfa_serial_refresher(refresher)
+1666: 
+1667:         self._feature_ids.add('CREDENTIALS_STS_ASSUME_ROLE')
+1668:         register_feature_ids(self._feature_ids)
+1669:         # The initial credentials are empty and the expiration time is set
+1670:         # to now so that we can delay the call to assume role until it is
+1671:         # strictly needed.
+1806:     def _resolve_credentials_from_profile(self, profile_name):
+1807:         profiles = self._loaded_config.get('profiles', {})
+1808:         profile = profiles[profile_name]
+1809:         self._feature_ids.add('CREDENTIALS_PROFILE')
+1810:         if (
+1811:             self._has_static_credentials(profile)
+1812:             and not self._profile_provider_builder
+1813:         ):
+1814:             # This is only here for backwards compatibility. If this provider
+1815:             # isn't given a profile provider builder we still want to be able
+1816:             # to handle the basic static credential case as we would before the
+1817:             # profile provider builder parameter was added.
+1818:             return self._resolve_static_credentials_from_profile(profile)
+1819:         elif self._has_static_credentials(
+1820:             profile
+1821:         ) or not self._has_assume_role_config_vars(profile):
+1822:             profile_providers = self._profile_provider_builder.providers(
+1823:                 profile_name=profile_name,
+1824:                 disable_env_vars=True,
+1825:             )
+1826:             profile_chain = CredentialResolver(profile_providers)
+1827:             credentials = profile_chain.load_credentials()
+1828:             if credentials is None:
+1829:                 error_message = (
+1830:                     'The source profile "%s" must have credentials.'
+1831:                 )
+1832:                 raise InvalidConfigError(
+1833:                     error_msg=error_message % profile_name,
+1834:                 )
+1835:             return credentials
+1836: 
+1837:         return self._load_creds_via_assume_role(profile_name)
+1838: 

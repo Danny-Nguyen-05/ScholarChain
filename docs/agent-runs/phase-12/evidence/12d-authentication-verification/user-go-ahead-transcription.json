@@ -1,0 +1,26 @@
+{
+  "recorded_at_utc": "2026-11-01T02:30:59.552170+00:00",
+  "kind": "Coordinator transcription of an explicit user go-ahead in chat; not an agent-authored human-gate/approval file",
+  "user_message_verbatim": "alright let's do it. guide me step by step how to do it",
+  "selected_checklist": "docs/agent-runs/phase-12/evidence/12d-human-identity-bootstrap/completion/authentication-verification-proposal.md",
+  "selected_checklist_sha256": "f72eaa1f533285d682cdad654aeb348852e9e575c132ed652132d0c3d540754b",
+  "scope": "One human-performed operator password/passkey sign-in, exact billing-role switch, dedicated same-device CLI login and sanitized GetCallerIdentity check; agent provides guidance and retains non-secret results only",
+  "account": "530332961125",
+  "authentication_region": "us-east-2",
+  "operator": "scholarchain-billing-operator",
+  "role": "scholarchain-billing-deployer",
+  "proposed_dedicated_profile": "scholarchain-billing-deployer",
+  "excluded": [
+    "Agent AWS account calls or console operation",
+    "Credential/config/cache file inspection",
+    "IAM/password/MFA/tag changes",
+    "Root or planner authentication",
+    "Terraform plan/apply/import/destroy",
+    "Budget creation or billing inventory",
+    "Paid/model/EMR calls",
+    "Phase 13",
+    "Commit or push"
+  ],
+  "state_at_recording": "Guidance starting; no operator authentication, role switch, CLI login or identity result observed yet",
+  "failure_rule": "Stop on denial or wrong identity; no permission widening or alternate credential path inferred"
+}

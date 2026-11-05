@@ -1,0 +1,11 @@
+--- a/modules/neptune/main.tf
++++ b/modules/neptune/main.tf
+@@ -54,7 +54,7 @@
+   instance_class               = "db.serverless"
+   neptune_parameter_group_name = aws_neptune_parameter_group.data[0].name
+   neptune_subnet_group_name    = aws_neptune_subnet_group.data[0].name
+-  publicly_accessible          = false
++  publicly_accessible          = true
+   auto_minor_version_upgrade   = false
+   tags                         = var.tags
+ }

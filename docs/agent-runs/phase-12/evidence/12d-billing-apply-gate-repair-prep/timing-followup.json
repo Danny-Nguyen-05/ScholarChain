@@ -1,0 +1,11 @@
+{
+  "recorded_utc": "2026-11-01T03:32:36.799889+00:00",
+  "user_followup_reply_verbatim": "Actual timing and discrepancy clarified in my file",
+  "human_record_path": "docs/agent-runs/phase-12/billing-bootstrap-exception.md",
+  "observed_sha256": "f00a715960261cb5813baaba903c6c315f42e37a092d1aadb2f84608e0797f04",
+  "further_file_change_observed": false,
+  "assessment": "Human reports clarification saved, but on-disk file remains unchanged from supervised9\u201310PM text and still promises actual times afterward. Clarification not observed.",
+  "agent_edited_human_record": false,
+  "historical_records_not_rewritten": true,
+  "timing_acceptance_by_independent_reviewer_pending": true
+}

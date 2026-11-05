@@ -1,0 +1,11 @@
+tests/proposal.tftest.hcl... in progress
+  run "bounded_single_attempt_proposal"... pass
+  run "launch_is_unconditionally_blocked"... pass
+  run "cannot_raise_spike_allowance"... pass
+  run "cannot_extend_runtime"... pass
+  run "cannot_change_instance_shape"... pass
+  run "cannot_change_region"... pass
+tests/proposal.tftest.hcl... tearing down
+tests/proposal.tftest.hcl... pass
+
+Success! 6 passed, 0 failed.

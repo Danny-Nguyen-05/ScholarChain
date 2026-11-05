@@ -1,0 +1,46 @@
+{
+  "scripts/billing/PUBLICATION.md": {
+    "bytes": 12342,
+    "sha256": "dfc32dad40bc0b33a03018f6175f178941db8b3784fbfa5365b89a2e6b368648"
+  },
+  "scripts/billing/README.md": {
+    "bytes": 23530,
+    "sha256": "b1e5fa3ebdcb9da3ee1968373757b96b173c54e0edf293aac203069d75cb8a2b"
+  },
+  "scripts/billing/VERIFICATION.md": {
+    "bytes": 16508,
+    "sha256": "2b00ee61aa4503eeab2b279795029eb1e89a329a803194c278fc636919180760"
+  },
+  "scripts/billing/budget_execution.py": {
+    "bytes": 42602,
+    "sha256": "3930390b54fd08c2078f23b1fd1b0f08e3eb1a3ac7335f8fe6ffb430d70c4c8f"
+  },
+  "scripts/billing/budget_verification.py": {
+    "bytes": 26399,
+    "sha256": "95abbcc05bc8147a5be911b6e5ed5e558e9c08d985892caaff467881a78ab4a0"
+  },
+  "scripts/billing/publication_evidence.py": {
+    "bytes": 18539,
+    "sha256": "cb2edbb74ce1250282dd4a39ca5397c33e26490e18ae626187a900cf28be4580"
+  },
+  "scripts/billing/reviewed-pins.json": {
+    "bytes": 46174,
+    "sha256": "cb285259b7217bb4186ca80e74d376f215e4150396aa5fd66187d4e0dc96a753"
+  },
+  "scripts/billing/tests/terraform_state_binding.py": {
+    "bytes": 5340,
+    "sha256": "faaf64cd14192abbe45c1284617c26e7c1c2958ace61fcbcde955d8ac471a7c3"
+  },
+  "scripts/billing/tests/test_budget_execution.py": {
+    "bytes": 55192,
+    "sha256": "d30346c7d903835f4fb3d2b215481d404ed449a1c94b938225c9d118f45586dd"
+  },
+  "scripts/billing/tests/test_budget_verification.py": {
+    "bytes": 35620,
+    "sha256": "3dc78220aed3724343429ec5fb331d3427233b9ad92fc8adc7ddf4f62ec74527"
+  },
+  "scripts/billing/tests/test_publication_evidence.py": {
+    "bytes": 18627,
+    "sha256": "3adf9a30ae8fe72a77816ac100f1e70a295d053722fd2c8d7060e9568a10f6e6"
+  }
+}

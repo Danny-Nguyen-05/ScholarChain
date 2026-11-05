@@ -1,0 +1,14 @@
+{
+  "prior_gate": "docs/agent-runs/phase-12/evidence/12d-preparation-repair-1/build/build-result.json",
+  "prior_tests": 1255,
+  "prior_fresh_xml": 157,
+  "prior_failures": 0,
+  "new_full_sbt_run": false,
+  "reason": "Only documentation changed; no Scala/build/test/fixture/TF configuration behavior changed. Current Terraform native checks and the real plan are the relevant gates.",
+  "prior_snapshot_files": 1377,
+  "unchanged_prior_snapshot_files": 1376,
+  "only_snapshot_change": [
+    "infra/terraform/billing-bootstrap/README.md"
+  ],
+  "scope_note": "Prior gate remains historical evidence, not a claim of a post-current-freeze sbt run."
+}

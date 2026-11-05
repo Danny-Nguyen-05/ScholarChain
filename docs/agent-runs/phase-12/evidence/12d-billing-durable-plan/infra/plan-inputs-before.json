@@ -1,0 +1,64 @@
+{
+  "timestamp_utc": "2026-11-01T19:56:50.384782+00:00",
+  "config": [
+    {
+      "source": "infra/terraform/billing-bootstrap/README.md",
+      "sha256": "46506dade67af6ec882f4bbd81661d00d92c8f9d5bebe6f6ed1e47e2c30143a0",
+      "bytes": 7866,
+      "mtime_ns": 1793465718737488124,
+      "copy_sha256": "46506dade67af6ec882f4bbd81661d00d92c8f9d5bebe6f6ed1e47e2c30143a0"
+    },
+    {
+      "source": "infra/terraform/billing-bootstrap/main.tf",
+      "sha256": "5e69e4235e417c72968097af6050f66c434fd1d1049ee0f655d1b6635e101549",
+      "bytes": 2215,
+      "mtime_ns": 1793414130514184875,
+      "copy_sha256": "5e69e4235e417c72968097af6050f66c434fd1d1049ee0f655d1b6635e101549"
+    },
+    {
+      "source": "infra/terraform/billing-bootstrap/outputs.tf",
+      "sha256": "e729e4b3d6523074f293b95c9a5f85fc03c8eec0f8a40928c24a1c227ce3174f",
+      "bytes": 1005,
+      "mtime_ns": 1793414130514426581,
+      "copy_sha256": "e729e4b3d6523074f293b95c9a5f85fc03c8eec0f8a40928c24a1c227ce3174f"
+    },
+    {
+      "source": "infra/terraform/billing-bootstrap/variables.tf",
+      "sha256": "3e37054f1187192ae3188052d52630e50a3db950ce7436b639d98ef066a8c937",
+      "bytes": 3033,
+      "mtime_ns": 1793414130514329374,
+      "copy_sha256": "3e37054f1187192ae3188052d52630e50a3db950ce7436b639d98ef066a8c937"
+    },
+    {
+      "source": "infra/terraform/billing-bootstrap/versions.tf",
+      "sha256": "38c0d27255f1ccf0c6f57b6854b80e5bcecde516ebfbcdfbd7ae95ad220ba0a1",
+      "bytes": 150,
+      "mtime_ns": 1793396913408180297,
+      "copy_sha256": "38c0d27255f1ccf0c6f57b6854b80e5bcecde516ebfbcdfbd7ae95ad220ba0a1"
+    },
+    {
+      "source": "infra/terraform/billing-bootstrap/tests/budget.tftest.hcl",
+      "sha256": "8f79abffe3fe71e4a6736dddf461a0c8a7c136cdd7a5bf29394185e81da4550b",
+      "bytes": 3984,
+      "mtime_ns": 1793414153902787015,
+      "copy_sha256": "8f79abffe3fe71e4a6736dddf461a0c8a7c136cdd7a5bf29394185e81da4550b"
+    },
+    {
+      "source": "infra/terraform/billing-bootstrap/.terraform.lock.hcl",
+      "sha256": "421b75245b0080edee2b434482ff348419a75d7a6b798d5218e0a0f9f723eaea",
+      "bytes": 1406,
+      "mtime_ns": 1793396913427340179,
+      "copy_sha256": "421b75245b0080edee2b434482ff348419a75d7a6b798d5218e0a0f9f723eaea"
+    }
+  ],
+  "public_input_sha256": "48f19c4526b63c8e194dcfeea8466591a0667c3a5956e06cdb31116e110a8e02",
+  "private_input_metadata_only": {
+    "path": "/Users/danny/Library/Application Support/ScholarChain/terraform/billing-bootstrap/notification.private.tfvars.json",
+    "mode": "0600",
+    "present": true,
+    "contents_read_or_hashed": false
+  },
+  "local_state_path": "/Users/danny/Library/Application Support/ScholarChain/terraform/billing-bootstrap/billing.execution.tfstate",
+  "local_state_existed": false,
+  "existing_remote_budget_inventory": "not queried; fresh local state does not establish budget absence"
+}
