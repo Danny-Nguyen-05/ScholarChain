@@ -1972,7 +1972,7 @@ What I verified
 I re-hashed the plan file without decoding it: 6,631 bytes, SHA ab9f141e…f855, mode 0600.
 The sanitized summary shows only aws_budgets_budget.project[0] as a create: 1 add, 0 change, 0 destroy, 0 replace.
 It is identical field for field to the previously approved summary; only the path, SHA, byte count and timestamp differ. That covers:
-account 530332961125 and name scholarchain-project-budget;
+account <acct> and name scholarchain-project-budget;
 USD 200, COST, CUSTOM, 2026-10-01_00:00 → 2027-01-01_00:00;
 credits and refunds excluded, all other cost types as authored;
 no filters;
@@ -2006,7 +2006,7 @@ No new sbt claim: the earlier full sbt result is labeled as historical.
 Errata: the coordinator disclosed three wrong-filename lookups and one first-run failure of its address-scan allowlist. None hides a source or live failure.
 4. Identity and privacy
 
-Screenshots: the operator console shows scholarchain-billing-operator and the role console shows “ScholarChain Billing”, both in account 530332961125. Neither shows a password or the recipient.
+Screenshots: the operator console shows scholarchain-billing-operator and the role console shows “ScholarChain Billing”, both in account <acct>. Neither shows a password or the recipient.
 Caller identity: the user-pasted STS result shows the exact assumed-role/scholarchain-billing-deployer/… ARN. It is labeled as user-supplied, not as an agent API call.
 Hidden-input helper: it requires a terminal, hides input with getpass, uses exclusive create at 0600, and fails closed.
 Recipient protection:
@@ -2081,7 +2081,7 @@ D1 is closed. D1-sequencing-erratum.json records 19:57:00Z as the coordinator’
 the current scan is labelled generic only;
 the exact-recipient scan is deferred until after final assembly, with a rescan on any later change (proposal.md:129);
 D3 needs no action.
-Scope and binding are correct (proposal.md:7–9, 24, 102). The proposal covers only aws_budgets_budget.project[0], as a single create in account 530332961125, profile scholarchain-billing-deployer, region us-east-2. The plan binding is 6,631 bytes, 0600, uid 501, SHA ab9f141e…. Any mismatch or unexpected state stops the run. Replanning, adopting, importing, applying the main environment and the old /tmp plan are all excluded.
+Scope and binding are correct (proposal.md:7–9, 24, 102). The proposal covers only aws_budgets_budget.project[0], as a single create in account <acct>, profile scholarchain-billing-deployer, region us-east-2. The plan binding is 6,631 bytes, 0600, uid 501, SHA ab9f141e…. Any mismatch or unexpected state stops the run. Replanning, adopting, importing, applying the main environment and the old /tmp plan are all excluded.
 The execution context is identical to the planned one (proposal.md:30–47).
 Every hash matches the reviewed durable-plan values: binary, provider, CLI config, lock, public inputs and the seven sources.
 The environment is minimal and explicit, there is no runtime /tmp dependency, and no credential override or init/upgrade is allowed.
@@ -2477,3 +2477,27 @@ User-supplied external verdict: REQUEST-CHANGES (L1 only). Full supplied text re
 ## Subphase12D — offline portable runtime and request inventory
 
 Offline portable-runtime/request-inventory candidate prepared; no new reviewer verdict. Same job/source and all28table comparison preserved. SecurityRPC failure and incompletewholeattempt request/cost bounds disclosed rather than folded into success. User launches independent read-only review using chat-only instructions; no saved promptfile and no automatic commit, AWSaction or phasecompletion.
+
+
+## Subphase 12D — EMR Spark feasibility spike reviews (user-supplied external reviews)
+
+By the human's lean-evidence decision, these verdicts are recorded in evidence/12d-spike-offline/review-findings.md, not verbatim here:
+- Step A: BLOCK (B1–B4), then BLOCK (R1), then APPROVE-WITH-NONBLOCKING;
+- login addendum: APPROVE-WITH-NONBLOCKING;
+- parent-permission addendum: BLOCK (L1), then APPROVE;
+- launch-dependency addendum: APPROVE-WITH-NONBLOCKING;
+- Java addendum: APPROVE-WITH-NONBLOCKING;
+- codec addendum: APPROVE-WITH-NONBLOCKING.
+The Step D closeout review is recorded below.
+
+Step D closeout review (user-supplied external review, 2026-11-04): **BLOCK**.
+- **P2:** `report.md:58` overstated termination assurance by calling all four layers proven live. Only steps-then-terminate and timer arming were observed. Timer expiry, idle timeout and the collect-failure termination path were not.
+- **P3:** `carried-findings.md:57` counted the superseded item 13 as closed live. The correct totals are 22 open, 4 closed live, 3 fixed, 1 superseded and 1 no action.
+All other checks passed: comparison figures, hashes, the cost model, the 12-10 derivation and gaps, the item mapping, append-only boundaries, no secrets in new text, and the manifest.
+
+Step D closeout recheck (user-supplied external review, 2026-11-04): **APPROVE**, with no remaining findings.
+- P2 is closed: `report.md:60` separates the observed termination paths from the unobserved ones and restores the best-effort timer limitation.
+- P3 is closed: `carried-findings.md:7` defines "superseded", and the totals are 22/4/3/1/1 = 31.
+- The decision and handoff files match their prior hashes. The handoff hash ends `…20dd`; the recheck request's `…bad` was a transcription error.
+- Append-only prefixes, manifest hashes, the secret scan and `git diff --check` all pass. Human-owned records and earlier evidence are unchanged.
+This approves the Step D documentation only, not the human Phase 12 gate.

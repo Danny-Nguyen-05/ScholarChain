@@ -691,3 +691,8 @@ Offline replay exit0,28 rates/five scenarios matched. Independent label-only JSO
 ## Subphase12D — offline portable runtime and request inventory
 
 Offline ordinary local/separate-JVM probes pass; fullG1 local[2] jobs1–11 and all28table comparison pass without normalization. Two encryptedRPC attempts exit2 after authentication, no executor/successreceipt; rootcauseunknown. Conditional request boundary/range/retry/invalid-input checks pass. Completed239productfiles/raw184489197byte eventlog retained separately and verified. No sbt/A1/fullproduction rerun;1267historical. See evidence/12d-portable-runtime/build/owner-report.md and validation.json for all exact failures/results.
+
+
+## Subphase 12D — EMR Spark feasibility spike (Steps A–D) closeout
+
+Offline gates, last observed at source 2d38f0f: deployer mock tests 29/29, spike mock tests 38/38, script tests 70 OK, source guard 0 findings, `sbt check` attempt 10 exit 0 (1,267 succeeded, 0 failed, JDK 17). The full history is in evidence/12d-spike-offline/gates.json. Live attempt 5: probe, g1 and collect all COMPLETED. Driver and executor class origins are Scala 2.13 only (6 JVMs, 0 mentions of 2.12). The comparison gave allExactRowsMatch=true on 28/28 tables and 587 rows, with no normalization. Attempts 1–4 failed for the root causes recorded in evidence/12d-spike-live/attempt1–4. No tests were re-run in Step D.

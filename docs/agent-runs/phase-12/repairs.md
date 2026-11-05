@@ -533,3 +533,15 @@ L1: repaired with offered wording option, awaiting independent recheck. USD7.52 
 ## Subphase12D — offline portable runtime and request inventory
 
 Carried currentfindings: ordinaryportableclasspaths/G1 validated; authenticatedAES-GCM registration remains unresolved after two bounded tests. Missingsecret/unsupportedflag/nativebug/Sparkbug diagnoses are not established. Lower-requestcase unselected because service/log/control/KMSbounds notimplemented. No-extra-cluster canary, paidcertificate-service exclusion/protectedPEMmechanism and explicitEBSvolume configuration recorded for futurework. No source/live repair started beyond this bounded task.
+
+
+## Subphase 12D — EMR Spark feasibility spike repairs and carried findings
+
+These blocking findings were closed by reviewed repairs: B1–B4, R1 and L1 from Step A review, and the four live-found addenda (parent permissions, launch dependencies, Java detection, codec override). Nonblocking items 1–31 are listed once and carried, with final status, owner and close-by in evidence/12d-spike-closeout/carried-findings.md. 22 remain open. Item 17 must close before Phase 14 or any other EMR cluster in us-east-2. N1 stays unverified (no S3 output through Spark). N9 is proven in the spike root only.
+
+Step D review BLOCK (2026-11-04), routed to the coordinator, which owns the documentation:
+- **P2 repaired:** the termination claim is narrowed to the observed paths, and the best-effort timer caveat is restored.
+- **P3 repaired:** item 13 is reclassified as superseded, and the totals are corrected.
+Both await independent recheck.
+
+Step D recheck APPROVE (2026-11-04): P2 and P3 are independently verified closed. No findings remain for Step D. The Phase 12 human gate is pending.

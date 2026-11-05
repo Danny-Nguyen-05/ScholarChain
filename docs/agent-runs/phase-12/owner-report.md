@@ -745,3 +745,21 @@ MANUAL ACTION REQUIRED: None for completed offline work. User independently revi
 BLOCKED-ON OWNER: Build/infra owner for bounded transport diagnosis and future implementation; human for any runtime/security design, source-control and live decisions.
 BLOCKED-ON EVIDENCE: Independent review; authenticatedAES-GCM executor capability, later Linux/EMR/YARN/remoteEFS/request/guard proofs and live gates. No fabricated success receipt.
 NEXT GATE: Independent read-only offline packet review, then separately scoped offline transport/infra work. No commit/push, reviewer launch, private processing, account call, plan/apply, cluster/canary, spending, infrastructure cleanup or Phase12 completion.
+
+
+## Subphase 12D — EMR Spark feasibility spike (Steps A–D) closeout
+
+STATUS: COMPLETE. The runtime is proven live: attempt 5 ran on 2026-11-04 on EMR 7.8.0 with the custom Spark 3.5.4 / Scala 2.13.14 runtime, and G1 matched the local baseline on 28/28 tables. Everything was destroyed and the after-inventory is clean. Independent review of Step D is pending.
+OWNER: coordinator, assembling the build-engineer, infra-engineer, test-engineer and deploy-engineer reports (Sonnet 5.5, high effort). No subagent was launched in Step D.
+WORK ORDER: evidence/12d-spike-offline/work-order.md and evidence/12d-spike-live/work-order.md, under evidence/12d-spike-live/human-approval.md and its Amendments 1–4.
+FILES CREATED: evidence/12d-spike-offline/**, evidence/12d-spike-live/** and evidence/12d-spike-closeout/**. The spike source is in infra/terraform/deployer/, infra/terraform/spikes/emr-spark-isolated/, scripts/phase12d-spike/ and tests/infra/terraform_source_guard.py (commits through 2d38f0f; Step C evidence in 2d2d224).
+FILES MODIFIED: this pointer section, plus pointer sections in test-report.md, repairs.md and review.md.
+COMMANDS RUN: see evidence/12d-spike-offline/gates.json and the attempt files in evidence/12d-spike-live/. The human ran every apply and destroy.
+TEST RESULTS: see test-report.md.
+VALIDATION RESULTS: evidence/12d-spike-closeout/report.md has the verification table.
+ASSUMPTIONS: cost is modeled at about USD 5.35 or less, under the USD 10 cap. Billing is not yet reconciled.
+RISKS: evidence/12d-spike-closeout/decision-12-10.md lists gaps G1–G6. evidence/12d-spike-closeout/carried-findings.md has 22 open nonblocking items; item 17 must close before Phase 14.
+MANUAL ACTION REQUIRED: evidence/12d-spike-closeout/human-gate-handoff.md.
+BLOCKED-ON OWNER: none.
+BLOCKED-ON EVIDENCE: none.
+NEXT GATE: independent review of Step D, then the human writes human-gate.md and commit.txt.
