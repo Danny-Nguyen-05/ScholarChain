@@ -135,8 +135,7 @@ while [[ $# -gt 0 ]]; do
   case "$1" in
     --env | --region | --profile | --evidence-dir | --confirm | --plan | --image-revision)
       if [[ $# -lt 2 ]]; then
-        echo "cleanup.sh: $1 needs a value" >&2
-        exit 2
+        sc_usage_exit "cleanup.sh" "$1 needs a value"
       fi
       case "$1" in
         --env) ENV_NAME="$2" ;;
@@ -162,8 +161,7 @@ while [[ $# -gt 0 ]]; do
       exit 0
       ;;
     *)
-      echo "cleanup.sh: unknown argument: $1 (see --help)" >&2
-      exit 2
+      sc_usage_exit "cleanup.sh" "unknown argument: $1 (see --help)"
       ;;
   esac
 done

@@ -1,0 +1,18 @@
+{
+  "crossref": {
+    "retrieval": "2026-10-05",
+    "snapshot": "crossref-snapshot-1"
+  },
+  "dblp": {
+    "retrieval": "2026-10-05",
+    "snapshot": "dblp-snapshot-1"
+  },
+  "openalex": {
+    "retrieval": "2026-10-05",
+    "snapshot": "openalex-snapshot-1"
+  },
+  "orcid": {
+    "retrieval": "2026-10-05",
+    "snapshot": "orcid-snapshot-1"
+  }
+}

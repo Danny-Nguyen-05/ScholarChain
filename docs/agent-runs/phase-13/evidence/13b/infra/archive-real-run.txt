@@ -1,0 +1,21 @@
+$ scripts/archive-evidence.sh --phase 13 --label 13b-real-v1 --include test-reports=<in>/test-reports --include experiment-outputs=<in>/experiment-outputs --include release-metadata=<G5 runtime tgz> --include release-metadata=<services.jar> --external-location ... --dest-root <temp> --tar --s3-prefix s3://example-bucket/phase13 --region us-east-2
+STEP: start
+[2026-11-06T07:13:40Z] [20261106T071340Z-40535] INFO script=archive-evidence.sh mode=local-archive run_id=20261106T071340Z-40535 repo_root=/Users/danny/Documents/UIC/CS441/ScholarChain
+STEP: archive-inputs
+STEP: archive-scan
+ARCHIVE-SCAN: copy=7 external=2
+STEP: archive-write
+ARCHIVE-WRITTEN: phase-13/evidence/13b-real-v1 copied=7 indexed-external=2 skipped-metadata=0
+ARCHIVE-INDEX: <tmp>/dest-root/phase-13/evidence/13b-real-v1/INDEX.json
+STEP: archive-tar
+ARCHIVE-TAR: 13b-real-v1.tar.gz members=8 no ._ or .DS_Store member (checked with python tarfile and tar -tzf, COPYFILE_DISABLE=1) sha256=ff7c3429fcaa6422fa1c62bbd8978a51d051371ca275732dc33a1e095ffdffc3
+STEP: archive-verify
+ARCHIVE-VERIFIED: 7 copied file(s) match their recorded sha256, no metadata member, no account id, secret or credential shape
+STEP: archive-s3-plan
+[2026-11-06T07:13:41Z] [20261106T071340Z-40535] INFO DRY RUN ONLY: nothing is uploaded; a human may run these commands after reviewing the index
+DRY-RUN CMD: timeout=3600s aws s3 cp <tmp>/dest-root/phase-13/evidence/13b-real-v1 s3://example-bucket/phase13/phase-13/evidence/13b-real-v1/ --recursive --checksum-algorithm SHA256 --region us-east-2 
+ARCHIVE-TAR-SHA256: ff7c3429fcaa6422fa1c62bbd8978a51d051371ca275732dc33a1e095ffdffc3 13b-real-v1.tar.gz
+DRY-RUN CMD: timeout=3600s aws s3 cp <tmp>/dest-root/phase-13/evidence/13b-real-v1.tar.gz s3://example-bucket/phase13/phase-13/evidence/13b-real-v1.tar.gz --checksum-algorithm SHA256 --region us-east-2 
+STEP: archive-complete
+RESULT: PASS evidence directory <tmp>/dest-root/phase-13/evidence/13b-real-v1 written and verified; tar <tmp>/dest-root/phase-13/evidence/13b-real-v1.tar.gz
+exit=0

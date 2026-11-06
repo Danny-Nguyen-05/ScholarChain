@@ -1,0 +1,17 @@
+test_bash_syntax_error_fails_the_shell_gate (test_check.CheckFastGatesTests.test_bash_syntax_error_fails_the_shell_gate) ... ok
+test_broken_hook_fails_the_hooks_gate (test_check.CheckFastGatesTests.test_broken_hook_fails_the_hooks_gate) ... ok
+test_broken_json_fails_the_constitution_gate (test_check.CheckFastGatesTests.test_broken_json_fails_the_constitution_gate) ... ok
+test_clean_fast_gates_pass_and_run_ends_partial_listing_skipped_gates (test_check.CheckFastGatesTests.test_clean_fast_gates_pass_and_run_ends_partial_listing_skipped_gates) ... ok
+test_documented_fixture_prefix_is_excluded_from_json_parsing (test_check.CheckFastGatesTests.test_documented_fixture_prefix_is_excluded_from_json_parsing) ... ok
+test_missing_constitution_file_fails (test_check.CheckFastGatesTests.test_missing_constitution_file_fails) ... ok
+test_python_gate_does_not_leave_bytecode_in_the_repo (test_check.CheckFastGatesTests.test_python_gate_does_not_leave_bytecode_in_the_repo) ... ok
+test_python_syntax_error_fails_the_python_gate (test_check.CheckFastGatesTests.test_python_syntax_error_fails_the_python_gate) ... ok
+test_real_repository_fast_gates_pass (test_check.CheckFastGatesTests.test_real_repository_fast_gates_pass)
+The real checkout: constitution, hooks, shell and python gates all pass. ... ok
+test_shellcheck_finding_fails_the_shell_gate (test_check.CheckFastGatesTests.test_shellcheck_finding_fails_the_shell_gate) ... ok
+test_untracked_new_script_is_also_checked (test_check.CheckFastGatesTests.test_untracked_new_script_is_also_checked) ... ok
+
+----------------------------------------------------------------------
+Ran 11 tests in 12.313s
+
+OK

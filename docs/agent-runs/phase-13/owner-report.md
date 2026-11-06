@@ -367,3 +367,160 @@ NEXT GATE: Orchestrator full seven-gate clean-snapshot check.sh and JDK 17 sbt c
   - sbt 806 s: 40, 667, 18 + 1 canceled; 0 failed.
   - Snapshot identity: 5372 compared, 0 differing.
 - **Deferred run now done:** this completes the full seven-gate run that was deferred in round 3.
+
+**13A closeout:** review 5 = APPROVE. On the user's instruction, the orchestrator committed 13A as `52c2e2178662d98103387483b82cd775dc713445` and pushed it to `origin/phase-13`.
+
+## Subphase 13B — smoke, bounded pipeline, experiment, archive
+
+The base SHA is `52c2e21`. The Step 0 answers (all defaults) are recorded in `prompt.md`. Subagents ran on model `sonnet` (Sonnet 5.5), effort `high`.
+
+### infra-engineer (native ID `a358b5a36c593001b`)
+
+```text
+STATUS: COMPLETE (pending independent review and human gates)
+OWNER: infra-engineer
+WORK ORDER: 13B tasks 1–4, 6, 7, plus adding tests/scripts as a required check.sh suite (prompt.md "Subphase 13B").
+FILES CREATED:
+- Scripts: scripts/smoke-test.sh, smoke-local.sh, run-bounded-pipeline.sh, run-experiment.sh, archive-evidence.sh.
+- Libraries: scripts/lib/budget.py, pipeline.py, run_approval.py, experiment.py, smoke_client.py, archive.py.
+- Config: scripts/config/emr-pricing.conf, scripts/config/spark-12-10.conf.
+- Tests: scripts/tests/pipeline_helpers.py, test_pipeline.py (66), test_budget.py (16), test_experiment.py (21), test_smoke.py (25), test_archive.py (25).
+- Fixtures: scripts/tests/fixtures/{experiment,pipeline}/*.json.
+FILES MODIFIED:
+- scripts/README.md (Subphase 13B section).
+- scripts/check.sh (discover:tests/scripts is the fourth required suite).
+- scripts/config/release.conf (13B pins).
+- scripts/lib/common.sh (pinned keys; sc_load_pricing).
+- scripts/phase12d-spike/collect-evidence.sh and its test (item 31, +3 tests).
+- scripts/tests/fake_tool.py, test_check.py (+9), test_syntax.py.
+COMMANDS RUN (evidence/13b/infra/):
+- Public, read-only, credential-free fetch of the AWS Price List bulk files for us-east-2 (EC2 CSV streamed and filtered; EMR JSON).
+- bash -n + shellcheck on all 19 *.sh under scripts/.
+- cd scripts/tests && python3 -I -m unittest discover -s . -p 'test_*.py' -v
+- Dry runs and refusals of the pipeline and experiment scripts.
+- smoke-test.sh against a stub server.
+- smoke-local.sh against the REAL query-api in offline-synthetic mode.
+- archive-evidence.sh real run into a temp dir.
+- check.sh --only constitution,hooks,shell,python,terraform,script-tests
+- check.sh --only constitution,hooks,shell,python,terraform
+TEST RESULTS:
+- shellcheck: 19 files, 0 findings.
+- scripts/tests: Ran 722 tests in 1069.080s, OK, 0 skips (560 from 13A plus 162 added).
+- phase12d-spike suite: 73 OK.
+- Item 31: the 3 new tests fail against the pre-fix script (item31-before-fix.txt) and pass after the fix.
+- Two mutation checks were observed: a no-op YARN kill, and removing the class-origin re-check. Each makes its tests fail.
+VALIDATION RESULTS:
+- Pipeline dry run (exit 0): 6 `aws emr add-steps` commands with full step bodies. The Spark step carries every decision 12-10 setting, the driver and executor class-origin step comes before it, and the YARN tag kill, timeouts and auto-termination are all printed.
+- Estimate: ESTIMATE-USD 1.08 = 3 × (0.192 + 0.048) × 1.5 h.
+- Guard binaries logged 0 calls across all dry runs and refusals.
+- Refusals, each exit 3 before any cloud call: capacity, G6 cap (5.76 > 3.00), budget, reducerCount ceiling, and --execute with unconfirmed pricing (step g6-gate).
+- Experiment: the committed fixture dry-runs. Untracked, modified, missing-budget and missing-teardown manifests are refused with exit 3.
+- Smoke stub: healthy and async pass. Readiness, evidence, idempotency and error-path failures each exit 4 with their own STEP marker.
+- REAL local query-api smoke: all 6 checks PASS, and no key appears in the output.
+- Archive: 7 files copied, 2 indexed externally (including the G5 tgz, sha256 789a96…6de5), 0 `._` members, S3 commands printed only.
+- check.sh partial run: 6/6 gates PASS, RESULT: PARTIAL. Its exit code was not captured. A second partial run without script-tests showed exit 5.
+- Bug self-found and fixed: APPROVED_ACTION is now matched against the action being run.
+ASSUMPTIONS:
+- The G6 estimate excludes EBS, EFS, S3, NAT and transfer.
+- Rates retrieved 2026-11-06 for us-east-2: m5.xlarge 0.192 + 0.048 USD/h, m5.2xlarge 0.384 + 0.096 USD/h (EC2 + EMR). These are the only types the Terraform variables allow.
+- Pins include capacity 4, runtime 180 min, idle ≤ 3600 s, and the Phase 4 ceilings.
+- The class-origin check uses the existing Phase12Readiness probe.
+- Item 31's real root cause: the `._SUCCESS.crc` entries are Hadoop checksum files, which macOS bsdtar mistakes for AppleDouble metadata. The fix is a Python tarfile extractor plus COPYFILE_DISABLE=1.
+RISKS:
+- Live behaviour first proven in Phase 15: HadoopPrepMain on EFS file:// paths, YARN -appTags list/kill, G2 shuffle tracking, staging on EFS, ER output layout.
+- The Phase 4 ceilings are tight for experiments.
+- A ledger slot is consumed even by a failed run.
+- The scripts are guard rails, not a spending limiter.
+- scripts/tests now takes about 18 min.
+MANUAL ACTION REQUIRED:
+- Human: review scripts/config/emr-pricing.conf and set EMR_PRICING_CONFIRMED_BY_HUMAN=true. Until then every --execute refuses.
+- Human: write the Phase 15 approval records and pre-spend receipts at run time.
+BLOCKED-ON OWNER:
+- build-engineer: there is no packaged entity-resolution JAR. packageRelease builds the Hadoop, Spark and service artifacts only, so the ER step needs a human-supplied --er-jar and cannot run live yet.
+- infra-engineer 13C: the bootstrap must write the Java home file and install the runtime and job JAR at the pinned paths, and EFS must be mounted at PIPELINE_EFS_MOUNT.
+- test-engineer: populate tests/scripts.
+BLOCKED-ON EVIDENCE: no live run. G2, G3, G4 and the real YARN kill are unproven until Phase 15. Pricing is unconfirmed by the human.
+NEXT GATE: test-engineer tests/scripts, then the orchestrator's full check.sh and sbt check, then the user-launched review.
+```
+
+### test-engineer (native ID `a1d71a413c7b49f15`)
+
+```text
+STATUS: COMPLETE with 5 findings (D1 defect; O1–O4 ambiguities), each recorded as an expectedFailure test
+OWNER: test-engineer
+WORK ORDER: 13B task 5. Independent fake-binary tests derived from the contract (README, --help, plan §7/§9, Step 0 answers); implementation was read only to find test seams.
+FILES CREATED:
+- tests/scripts/sc_support.py (self-contained fakes; nothing imported from scripts/tests)
+- tests/scripts/test_pipeline_refusals.py (52), test_pipeline_dryrun.py (16), test_pipeline_execute.py (14), test_pipeline_bodies.py (19), test_experiment.py (22), test_smoke.py (23), test_archive.py (31), test_regression_13a.py (17)
+FILES MODIFIED: none
+COMMANDS RUN (evidence/13b/test/):
+- python3 -I -m unittest discover -s tests/scripts -p 'test_*.py' -v
+- the check.sh runner: python3 -I scripts/lib/suite_run.py --start-dir tests/scripts --pattern 'test_*.py'
+TEST RESULTS:
+- Ran 194 tests, OK (expected failures=5), 0 skips, exit 0.
+- suite_run: SUITE-SUMMARY ran=194 executed=194 skipped=0.
+VALIDATION RESULTS: every §9 row and required case is mapped to named tests (the full table is in the agent report, summarized in test-report.md).
+DEFECTS / AMBIGUITIES (owner infra-engineer):
+- D1: --max-runtime-minutes is documented as 10..180, but values under about 20 are refused (per-step 60 s floor).
+- O1: an unknown APPROVED_* key is ignored instead of refused.
+- O2: archive redaction misses generic secret/token/password assignments.
+- O3: option-parse errors print no STEP/RESULT line (all 10 scripts).
+- O4: the redaction name rule misses *_API_KEY.
+RISKS:
+- No mutation testing against scripts (not this agent's territory).
+- Real EMR JSON shapes and the probe JSON are exercised only through fakes.
+- The suite takes about 8 minutes.
+NEXT GATE: infra-engineer repairs D1 and O1–O4; test-engineer flips the expectedFailure tests; the orchestrator runs the full check.
+```
+
+### infra-engineer follow-up: D1, O1–O4 (same agent, context kept)
+
+```text
+STATUS: COMPLETE
+FILES CREATED: scripts/tests/test_13b_repairs.py (22)
+FILES MODIFIED:
+- scripts/lib/{common.sh, redact.py, run_approval.py, archive.py, pipeline.py}
+- scripts/config/release.conf (PIPELINE_MIN_STEP_SECONDS=30)
+- all 11 scripts (sc_usage_exit)
+- deploy.sh (unknown-key refusal)
+- scripts/README.md
+- scripts/tests/test_deploy.py (+1)
+CHANGES:
+- D1: the step floor is lowered to a pinned 30 s, so 10..180 minutes is really accepted (9 is refused).
+- O1: an unknown APPROVED_* key is refused in run_approval.py and in the 13A deploy.sh parser (rollback and cleanup use it).
+- O2: generic secret/token/password/api-key assignments are redacted and verified. A quadratic regex found during this work was made linear and is tested at under 5 s on 1 MiB inputs.
+- O3: STEP: start, STEP: usage and RESULT: REFUSED step=usage, exit 2, in all 11 scripts.
+- O4: API_KEY and *_KEY names are redacted everywhere.
+TEST RESULTS (evidence/13b/infra/*-r1.txt):
+- shellcheck: 19 files, 0 findings.
+- scripts/tests: Ran 745, FAILED (failures=1). The only failure was test_real_repository_fast_gates_pass, caused by the orchestrator's evidence copy retain_pipeline.sh (SC2004). The orchestrator renamed it to .sh.txt, and the re-run of CheckFastGatesTests was 11 OK.
+- tests/scripts: Ran 194, FAILED (unexpected successes=5). These are exactly the five finding tests, so the fixes are confirmed.
+```
+
+### test-engineer follow-up (same agent, context kept)
+
+```text
+STATUS: COMPLETE
+FILES MODIFIED: tests/scripts/test_pipeline_refusals.py, test_pipeline_execute.py, test_archive.py, test_regression_13a.py
+CHANGES:
+- The five evidence tests are now normal tests, tightened to the resolved contract: D1 10 accepted / 9 and 181 refused; O1 exit 3 at approval-record; O2 redaction both ways; O3 usage markers; O4 API_KEY/_KEY.
+- Added: test_prose_in_the_record_is_still_ignored, plus a UsageErrors class covering all 11 scripts (3 tests).
+TEST RESULTS: Ran 198 tests in 547.027s, OK, 0 skips, 0 expected failures.
+```
+
+### Orchestrator (13B)
+
+- **Records:** Step 0 answers and routing are in `prompt.md`. Evidence is retained under `evidence/13b/{infra,test,orchestrator}/`.
+- **Evidence fix:** the orchestrator renamed copied `.sh` helper files in the evidence to `.sh.txt`. They had tripped the shellcheck gate.
+- **Working-tree `sbt -batch check`, JDK 17:** exit 0, 792 s, 0 failed.
+- **Full seven-gate clean-snapshot `scripts/check.sh`** (local commit `0a5bd0d3…`):
+  - Result: `RESULT: PASS gates=7`, exit 0.
+  - script-tests: 745 + 73 + 155 + 198 executed, 0 skipped.
+  - sbt: 0 failed.
+  - Snapshot identity: 5409 compared, 0 differing.
+- **Scope:** changes are limited to `scripts/**`, `tests/scripts/**` and `docs/agent-runs/phase-13/**`. No build, module or Terraform file changed in 13B.
+- **Not done in 13B (disclosed):**
+  - The ER JAR packaging task (build-engineer). Routed as BLOCKED-ON, not implemented.
+  - Human pricing confirmation.
+
+**Orchestrator decision.** To avoid a review round on known findings, D1 and O1–O4 are fixed inside 13B using the stricter reading of each: unknown keys are refused, redaction is broadened, parse errors print markers, API keys are redacted, and the documented runtime minimum matches the behaviour. They go to the same infra-engineer, with its context kept.

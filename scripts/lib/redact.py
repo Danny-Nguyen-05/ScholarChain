@@ -16,7 +16,7 @@ Usage:
 What is redacted
   * every value listed in --values-file ("S<TAB>value" -> <redacted>, "A<TAB>value" -> <acct>)
   * the value of every environment variable whose NAME contains SECRET, TOKEN, PASSWORD,
-    ACCESS_KEY, CREDENTIAL or PRIVATE_VARS (value length >= 4) -> <redacted>
+    ACCESS_KEY, API_KEY, CREDENTIAL or PRIVATE_VARS, or ends in _KEY (value length >= 4) -> <redacted>
   * any standalone 12-digit run (an AWS account ID, including inside ECR registry hosts)
     -> <acct>; runs bounded by letters or digits are left alone so 64-hex checksums survive
 
@@ -27,7 +27,7 @@ import os
 import re
 import sys
 
-SECRET_NAME = re.compile(r"(SECRET|TOKEN|PASSWORD|ACCESS_KEY|CREDENTIAL|PRIVATE_VARS)")
+SECRET_NAME = re.compile(r"(SECRET|TOKEN|PASSWORD|ACCESS_KEY|API_KEY|CREDENTIAL|PRIVATE_VARS|_KEY$)")
 ACCOUNT_RE = re.compile(r"(?<![0-9A-Za-z])[0-9]{12}(?![0-9A-Za-z])")
 QUOTED = re.compile(r'"((?:[^"\\\n]|\\.)*)"')
 MIN_VALUE_LEN = 4

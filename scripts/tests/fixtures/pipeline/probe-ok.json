@@ -1,0 +1,100 @@
+{
+  "cloudCompatibilityVerified": false,
+  "distributedRequired": true,
+  "driver": {
+    "executorId": "driver",
+    "host": "ip-10-0-0-1",
+    "javaVersion": "17.0.21",
+    "libraries": [
+      {
+        "className": "org.apache.spark.SparkContext",
+        "classSha256": "1111111111111111111111111111111111111111111111111111111111111111",
+        "codeSourceSha256": "2222222222222222222222222222222222222222222222222222222222222222",
+        "component": "spark",
+        "implementationVersion": null,
+        "origin": "/opt/scholarchain-runtime/jars/spark-core_2.13-3.5.4.jar",
+        "runtimeVersion": "3.5.4"
+      },
+      {
+        "className": "scala.Option",
+        "classSha256": "3333333333333333333333333333333333333333333333333333333333333333",
+        "codeSourceSha256": "4444444444444444444444444444444444444444444444444444444444444444",
+        "component": "scala-library",
+        "implementationVersion": null,
+        "origin": "/opt/scholarchain-runtime/jars/scala-library-2.13.14.jar",
+        "runtimeVersion": "2.13.14"
+      },
+      {
+        "className": "scala.reflect.api.Universe",
+        "classSha256": "5555555555555555555555555555555555555555555555555555555555555555",
+        "codeSourceSha256": "6666666666666666666666666666666666666666666666666666666666666666",
+        "component": "scala-reflect",
+        "implementationVersion": null,
+        "origin": "/opt/scholarchain-runtime/jars/scala-reflect-2.13.14.jar",
+        "runtimeVersion": null
+      },
+      {
+        "className": "scala.deriving.Mirror",
+        "classSha256": "7777777777777777777777777777777777777777777777777777777777777777",
+        "codeSourceSha256": "JOB_SHA_PLACEHOLDER",
+        "component": "scala3-library",
+        "implementationVersion": null,
+        "origin": "/opt/scholarchain-runtime/application/scholarchain-job.jar",
+        "runtimeVersion": null
+      }
+    ],
+    "pid": "111",
+    "role": "driver"
+  },
+  "driverToTaskAndBackVerified": true,
+  "externalExecutorVerified": true,
+  "schemaVersion": "scholarchain.phase12-readiness.v1",
+  "stage": "probe",
+  "taskProcesses": [
+    {
+      "executorId": "2",
+      "host": "ip-10-0-0-2",
+      "javaVersion": "17.0.21",
+      "libraries": [
+        {
+          "className": "org.apache.spark.SparkContext",
+          "classSha256": "1111111111111111111111111111111111111111111111111111111111111111",
+          "codeSourceSha256": "2222222222222222222222222222222222222222222222222222222222222222",
+          "component": "spark",
+          "implementationVersion": null,
+          "origin": "/opt/scholarchain-runtime/jars/spark-core_2.13-3.5.4.jar",
+          "runtimeVersion": "3.5.4"
+        },
+        {
+          "className": "scala.Option",
+          "classSha256": "3333333333333333333333333333333333333333333333333333333333333333",
+          "codeSourceSha256": "4444444444444444444444444444444444444444444444444444444444444444",
+          "component": "scala-library",
+          "implementationVersion": null,
+          "origin": "/opt/scholarchain-runtime/jars/scala-library-2.13.14.jar",
+          "runtimeVersion": "2.13.14"
+        },
+        {
+          "className": "scala.reflect.api.Universe",
+          "classSha256": "5555555555555555555555555555555555555555555555555555555555555555",
+          "codeSourceSha256": "6666666666666666666666666666666666666666666666666666666666666666",
+          "component": "scala-reflect",
+          "implementationVersion": null,
+          "origin": "/opt/scholarchain-runtime/jars/scala-reflect-2.13.14.jar",
+          "runtimeVersion": null
+        },
+        {
+          "className": "scala.deriving.Mirror",
+          "classSha256": "7777777777777777777777777777777777777777777777777777777777777777",
+          "codeSourceSha256": "JOB_SHA_PLACEHOLDER",
+          "component": "scala3-library",
+          "implementationVersion": null,
+          "origin": "/opt/scholarchain-runtime/application/scholarchain-job.jar",
+          "runtimeVersion": null
+        }
+      ],
+      "pid": "222",
+      "role": "executor-task"
+    }
+  ]
+}

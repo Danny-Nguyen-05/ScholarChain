@@ -1,0 +1,13 @@
+$ scripts/run-experiment.sh --manifest <repo>/experiments/fixture/missing-budget.json --cluster-id j-ABC123DEF456
+exit=3
+----- stdout
+STEP: start
+[2026-11-06T07:12:56Z] [20261106T071256Z-39743] INFO script=run-experiment.sh mode=dry-run run_id=20261106T071256Z-39743 repo_root=/private<repo>
+STEP: inputs
+STEP: manifest-committed
+[2026-11-06T07:12:56Z] [20261106T071256Z-39743] INFO manifest experiments/fixture/missing-budget.json is tracked and identical to HEAD 4901566caf71ab9cfdecd45752432eabf47a457a (sha256 774eb2351368e1079a9c881a98db7ceef6abd26fa7ef58a5184cf6910e7761f3)
+STEP: manifest-schema
+RESULT: REFUSED step=manifest-schema reason=the manifest is invalid or lacks a required budget or teardown section: EXPERIMENT-REFUSED: the budget section is required (max_usd, max_runtime_minutes, max_capacity, region)
+----- stderr
+[2026-11-06T07:12:56Z] [20261106T071256Z-39743] ERROR EXPERIMENT-REFUSED: the budget section is required (max_usd, max_runtime_minutes, max_capacity, region)
+[2026-11-06T07:12:56Z] [20261106T071256Z-39743] ERROR refused at step manifest-schema: the manifest is invalid or lacks a required budget or teardown section: EXPERIMENT-REFUSED: the budget section is required (max_usd, max_runtime_minutes, max_capacity, region)

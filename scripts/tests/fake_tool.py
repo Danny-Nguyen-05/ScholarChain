@@ -197,6 +197,12 @@ def aws(args):
             return int(os.environ["FAKE_STS_RC"])
         print(account)
         return 0
+    if svc == "emr":
+        return emr(op, args)
+    if (svc, op) == ("s3", "ls"):  # `aws s3 ls --recursive --summarize` as the stage-in body reads it
+        print("Total Objects: 1")
+        print("   Total Size: %s" % os.environ.get("FAKE_S3_TOTAL", "1024"))
+        return 0
     if (svc, op) == ("ecr", "describe-repositories"):
         return int(os.environ.get("FAKE_ECR_REPO_RC", "0"))
     if (svc, op) == ("ecr", "describe-images"):
@@ -242,6 +248,44 @@ def aws(args):
         return 0
     if (svc, op) == ("resourcegroupstaggingapi", "get-resources"):
         print(os.environ.get("FAKE_TAG_JSON", json.dumps({"ResourceTagMappingList": []})))
+        return 0
+    return 0
+
+
+def emr(op, args):
+    """Fake `aws emr ...` for the Subphase 13B tests. Read-only calls print JSON; add-steps records the exact --steps
+    JSON in $FAKE_LOG.steps and returns s-FAKE<n>; describe-step state comes from FAKE_EMR_STEP_STATE_<n> (or
+    FAKE_EMR_STEP_STATE, default COMPLETED)."""
+    cluster = flag_value(args, "--cluster-id")
+    if op == "describe-cluster":
+        print(json.dumps({"Cluster": {"Id": os.environ.get("FAKE_EMR_CLUSTER_ID", cluster), "Status": {"State": os.environ.get("FAKE_EMR_STATE", "WAITING")}}}))
+        return 0
+    if op == "get-auto-termination-policy":
+        idle = os.environ.get("FAKE_EMR_IDLE", "900")
+        print(json.dumps({} if idle == "none" else {"AutoTerminationPolicy": {"IdleTimeout": int(idle)}}))
+        return 0
+    if op == "list-instance-groups":
+        default = [
+            {"InstanceGroupType": "MASTER", "InstanceType": "m5.xlarge", "RequestedInstanceCount": 1, "RunningInstanceCount": 1},
+            {"InstanceGroupType": "CORE", "InstanceType": "m5.xlarge", "RequestedInstanceCount": 1, "RunningInstanceCount": 1},
+            {"InstanceGroupType": "TASK", "InstanceType": "m5.xlarge", "RequestedInstanceCount": 0, "RunningInstanceCount": 0},
+        ]
+        groups = json.loads(os.environ["FAKE_EMR_GROUPS"]) if os.environ.get("FAKE_EMR_GROUPS") else default
+        print(json.dumps({"InstanceGroups": groups}))
+        return 0
+    if op == "add-steps":
+        path = os.environ.get("FAKE_LOG", "") + ".steps"
+        count = 0
+        if os.path.exists(path):
+            with open(path, encoding="utf-8") as handle:
+                count = sum(1 for _ in handle)
+        with open(path, "a", encoding="utf-8") as handle:
+            handle.write(flag_value(args, "--steps") + "\n")
+        print("s-FAKE%d" % (count + 1))
+        return int(os.environ.get("FAKE_EMR_ADD_RC", "0"))
+    if op == "describe-step":
+        number = flag_value(args, "--step-id").replace("s-FAKE", "")
+        print(os.environ.get("FAKE_EMR_STEP_STATE_" + number) or os.environ.get("FAKE_EMR_STEP_STATE", "COMPLETED"))
         return 0
     return 0
 

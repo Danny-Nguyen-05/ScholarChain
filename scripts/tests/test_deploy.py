@@ -361,6 +361,21 @@ class DeployApprovalRecordTests(DeployBase):
                 self.assertEqual(self.calls("aws"), [])
                 self.assertEqual(self.calls("docker"), [])
 
+    def test_an_unknown_approved_key_is_refused_while_prose_is_ignored(self):
+        """Repair round 13B (O1): any extra APPROVED_* key refuses; text that is not an APPROVED_* line is ignored."""
+        self.arrange("push")
+        for index, line in enumerate(("APPROVED_UNKNOWN_KEY=1\n", "APPROVED_COMMITT=%s\n" % ("a" * 40), "  APPROVED_STAGEE = push\n")):
+            with self.subTest(line):
+                self.approval = self.write_approval(self.record_text(extra=line), name="unknown-%d.md" % index)
+                result = self.execute()
+                self.assert_refused(result, "approval-record")
+                self.assertIn("unknown key APPROVED_", result.out)
+                self.assertEqual(self.calls("aws"), [])
+                self.assertEqual(self.calls("docker"), [])
+        self.approval = self.write_approval(self.record_text(extra="Notes: APPROVED_UNKNOWN_KEY=1 is only mentioned here.\n"), name="prose.md")
+        result = self.execute()
+        self.assertNotIn("unknown key", result.out)
+
     def test_stage_is_required_and_validated(self):
         result = self.run_script("deploy.sh", "--plan", self.plan, "--region", REGION)
         self.assertEqual(result.rc, 2, result.out)

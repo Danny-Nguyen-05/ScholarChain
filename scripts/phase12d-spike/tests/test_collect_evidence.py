@@ -15,15 +15,16 @@ def sha(data):
 
 
 class CollectEvidenceTests(ShimTestCase):
-    def stage_results(self, tamper_manifest=False, tamper_file=False):
+    def stage_results(self, tamper_manifest=False, tamper_file=False, extra_files=None, extra_members=()):
         probe = b'{"probe":"ok"}\n'
         files = {"results/probe-distributed.json": probe, "outputs/g1/table.jsonl": b"row\n"}
+        files.update(extra_files or {})
         manifest = "".join(f"{sha(v)}  {k}\n" for k, v in sorted(files.items()))
         if tamper_file:
             manifest = manifest.replace(sha(probe), "0" * 64)
         buf = io.BytesIO()
         with tarfile.open(fileobj=buf, mode="w:gz") as tar:
-            for name, data in list(files.items()) + [("files-manifest.sha256", manifest.encode())]:
+            for name, data in list(files.items()) + [("files-manifest.sha256", manifest.encode())] + list(extra_members):
                 info = tarfile.TarInfo(name)
                 info.size = len(data)
                 tar.addfile(info, io.BytesIO(data))
@@ -46,6 +47,35 @@ class CollectEvidenceTests(ShimTestCase):
         self.assertIn("results/scholarchain-spike-results.tar.gz", manifest)
         self.assertIn("emr-logs/j-1/node/i-1/controller.gz", manifest)
         self.assertIn("results-extracted/results/probe-distributed.json", manifest)
+
+    def test_item_31_extracts_hadoop_crc_files_that_macos_tar_mistakes_for_appledouble(self):
+        # Hadoop writes real checksum files named ._SUCCESS.crc; bsdtar on macOS refuses to restore them
+        # ("Failed to restore metadata", exit 1) and `set -e` then stopped the script (live attempt 5).
+        extra = {"outputs/g1/_SUCCESS": b"", "outputs/g1/._SUCCESS.crc": b"crc\x00\x00\x00\x00", "outputs/g1/.part-0.snappy.parquet.crc": b"crc1"}
+        self.stage_results(extra_files=extra)
+        dest = os.path.join(self.tmp, "evidence")
+        r = self.run_ce(dest)
+        self.assertEqual(r.returncode, 0, r.stderr + r.stdout)
+        self.assertIn("verified 5 extracted file(s)", r.stdout)
+        crc = os.path.join(dest, "results-extracted", "outputs", "g1", "._SUCCESS.crc")
+        self.assertTrue(os.path.isfile(crc), "the ._SUCCESS.crc member must be extracted verbatim")
+        with open(crc, "rb") as handle:
+            self.assertEqual(handle.read(), b"crc\x00\x00\x00\x00")
+        with open(os.path.join(dest, "evidence-manifest.sha256")) as handle:
+            self.assertIn("results-extracted/outputs/g1/._SUCCESS.crc", handle.read())
+
+    def test_item_31_the_script_does_not_extract_with_the_system_tar_and_disables_mac_metadata(self):
+        with open(SCRIPT, encoding="utf-8") as handle:
+            text = handle.read()
+        self.assertNotRegex(text, r"(?m)^\s*tar\s+-x")
+        self.assertIn("COPYFILE_DISABLE=1", text)
+
+    def test_unsafe_tar_members_are_refused(self):
+        self.stage_results(extra_members=[("../escape.txt", b"x")])
+        r = self.run_ce(os.path.join(self.tmp, "evidence"))
+        self.assertEqual(r.returncode, 3)
+        self.assertIn("could not be extracted safely", r.stderr)
+        self.assertFalse(os.path.exists(os.path.join(self.tmp, "escape.txt")))
 
     def test_fails_on_tarball_manifest_mismatch(self):
         self.stage_results(tamper_manifest=True)

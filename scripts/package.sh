@@ -90,8 +90,7 @@ while [[ $# -gt 0 ]]; do
       exit 0
       ;;
     *)
-      echo "package.sh: unknown argument: $1 (see --help)" >&2
-      exit 2
+      sc_usage_exit "package.sh" "unknown argument: $1 (see --help)"
       ;;
   esac
 done

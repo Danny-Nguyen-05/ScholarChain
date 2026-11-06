@@ -1,0 +1,40 @@
+{
+  "budget": {
+    "max_capacity": 3,
+    "max_runtime_minutes": 90,
+    "max_usd": 2.5,
+    "region": "us-east-2"
+  },
+  "description": "Fixture manifest for the script tests only. It is not an experiment and names no real bucket.",
+  "id": "fixture-exp-a",
+  "metrics": {
+    "locations": [
+      "s3://fixture-bucket/metrics/fixture-exp-a/"
+    ]
+  },
+  "pipeline": {
+    "artifact_sha256": {
+      "er-config": "11a8f53ff8f4c0847ab8546bf9b9e449cbc8ba01f59f71da6d95e8a923cdbdb4",
+      "er-jar": "5b27764eac3ed64418fe0219db75fa62db719c61cbfdca265ad60fc40921ba77",
+      "er-policy": "22d5a4d55e09e007fcf0457037650376e5f56c5af81d29e5c64b2deafdbd77f8",
+      "hadoop-libjars": "2205108dd635c5001e27a4c9d0cad8ec3a22e1a41ca766b77d475637b05a16b4",
+      "hadoop-submit-jar": "6f17d9738240ea4f0e8568e732b969812374be0476ef24b694bad1bf25f895b0",
+      "job-jar": "2f0994d5b7d614d2fb9baebc36f7558528bbece2c0c0f92410595a7adb502352",
+      "spark-config-template": "049518035b3aecaf92b5f177e267e5c541b81c6e909879b907c737cf46bcdcc4"
+    },
+    "core_count": 1,
+    "datasets_manifest": "fixture-inputs/datasets.json",
+    "er_config": "s3://fixture-bucket/artifacts/er-config.json",
+    "er_jar": "s3://fixture-bucket/artifacts/er.jar",
+    "er_policy": "s3://fixture-bucket/artifacts/er-policy.json",
+    "hadoop_config": "fixture-inputs/prep-config.json",
+    "hadoop_libjars": "s3://fixture-bucket/artifacts/hadoop-bundle.jar",
+    "hadoop_submit_jar": "s3://fixture-bucket/artifacts/hadoop-submit.jar",
+    "input_prefix": "s3://fixture-bucket/inputs",
+    "instance_type": "m5.xlarge",
+    "max_task_count": 1,
+    "output_prefix": "s3://fixture-bucket/outputs",
+    "spark_config_template": "s3://fixture-bucket/artifacts/spark-template.json"
+  },
+  "schema": "scholarchain.experiment-manifest.v1"
+}

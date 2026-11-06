@@ -187,3 +187,94 @@ Dry-run outcomes:
 ### Unverified (repair round 4)
 
 All live paths remain unverified, including the real state v4 layout used for runtime-live detection.
+
+# Subphase 13B
+
+The base SHA is `52c2e21`. Evidence is in `evidence/13b/{infra,test,orchestrator}/`. All commands ran locally. There was no AWS call, no EMR step, no real Terraform plan or apply, and no image push.
+
+## Gates
+
+| Gate | Command | Observed result | Evidence |
+|---|---|---|---|
+| Shell syntax | `bash -n` + `shellcheck -x -P SCRIPTDIR` on all 19 `*.sh` under `scripts/` (23 tracked or untracked repo-wide; none under `docs/`) | 0 failures, 0 findings | `infra/shell-gates-r1.txt` |
+| scripts/tests (infra) | `cd scripts/tests && python3 -I -m unittest discover -s . -p 'test_*.py' -v` | `Ran 745`, 1 failure (see below) | `infra/unittest-scripts-tests-r1.txt`, `infra/unittest-test_check-fast-r1.txt` |
+| tests/scripts (independent) | `python3 -I -m unittest discover -s tests/scripts -p 'test_*.py' -v` | `Ran 198 tests in 547.027s`, `OK`, 0 skips, 0 expected failures | `test/unittest-tests-scripts-v-r1.txt` |
+| sbt check (working tree) | `sbt -batch check` (JDK 17) | exit 0, 792 s, 0 failed | `orchestrator/sbt-check-worktree-excerpt.txt` |
+| **check.sh full, clean snapshot** | `scripts/check.sh` (default seven gates) in a fresh copy, local commit `0a5bd0d3` | see "Clean-snapshot result" below | `orchestrator/check-full-clean-snapshot.txt` |
+
+### Clean-snapshot result
+
+The full seven-gate `scripts/check.sh` in the clean snapshot ended `RESULT: PASS gates=7`, `exit=0`, 09:52:26Z–10:38:10Z (2026-11-06 UTC).
+
+| Gate | Result |
+|---|---|
+| constitution, hooks, shell, python | PASS |
+| terraform (116 s) | roots passed 7, 19, 29, 38, 6 and 40 |
+| script-tests (1793 s) | `scripts/tests` 745, `phase12d-spike` 73, billing 69 / 47 / 39, `tests/scripts` 198 executed. Every suite had 0 skipped tests and 0 skipped classes. The required real-Terraform classes ran. |
+| sbt (827 s) | 40, 667, 18 + 1 canceled; 0 failed |
+
+Snapshot identity: 5409 files compared, 0 different (`orchestrator/snapshot-identity.txt`).
+
+The one `scripts/tests` failure was `test_real_repository_fast_gates_pass`, caused by the orchestrator's evidence copy `retain_pipeline.sh` (SC2004). It was renamed to `.sh.txt`, and the re-run of `CheckFastGatesTests` was 11 OK.
+
+## Behaviour evidence (infra-engineer, `evidence/13b/infra/`)
+
+**Pipeline**
+- Dry run (`pipeline-dry-run-full.txt`, exit 0):
+  - 6 `aws emr add-steps` commands are printed, never run.
+  - The Spark step carries every decision 12-10 setting, with the driver and executor class-origin step before it.
+  - The YARN tag kill on timeout, the step timeouts and the auto-termination checks are all printed.
+  - `ESTIMATE-USD: 1.08`.
+- Refusals, each exit 3 with no cloud call (`guard-aws-calls.txt` is empty):
+  - capacity;
+  - the G6 per-run cap (5.76 > 3.00);
+  - budget;
+  - a Phase 4 ceiling;
+  - `--execute` with unconfirmed pricing (`pipeline-execute-refused-unconfirmed-pricing.txt`).
+
+**Experiment** (temp git repo)
+- The committed fixture manifest dry-runs.
+- Untracked, modified, missing-budget and missing-teardown manifests are each refused with exit 3.
+
+**Smoke**
+- Stub server: healthy and async pass. Readiness, evidence, idempotency and error-path failures each exit 4 with their own STEP marker.
+- **Real local `query-api`** (offline-synthetic, throwaway key, only its sha256 passed to the service): all 6 checks PASS, and no key appears in the output (`smoke-local-real.txt`).
+
+**Archive** (`archive-real-run.txt`, real run into a temp dir)
+- 7 files copied, 2 indexed externally; the G5 tgz is indexed with sha256 `789a96…6de5`.
+- The tar has 0 `._` members; S3 commands are printed only.
+
+**Carried items**
+- Item 31: the 3 new tests fail on the pre-fix script (`item31-before-fix.txt`) and pass after the fix.
+- Item 1 (YARN kill by run tag on exit 124, 137 or 143) is proven against fakes. A mutation check (a no-op kill) makes the test fail.
+
+## Test-matrix coverage (plan §9, 13B rows)
+
+Independent `tests/scripts` (198 tests) covers every row:
+- pipeline ceilings and G6 refusals (per-run cap, cumulative 9.50, 3 runs, unconfirmed or missing rates);
+- each approval key mismatch, and the APPROVED_ACTION cross-use both ways;
+- an unknown `APPROVED_*` key;
+- pre-spend refusals, including expiry mid-run;
+- cluster refusals;
+- forced auto-termination and the runtime cap in the printed commands;
+- YARN kill by tag;
+- the Spark 12-10 settings and the class-origin gate;
+- no `create-cluster` or `run-job-flow` (the Terraform-only rule);
+- experiment manifest refusals and record fields;
+- smoke pass/fail markers;
+- archive thresholds (1 MiB inclusive), no `._`, no overwrite, redaction;
+- usage errors with markers in all 11 scripts;
+- no canary secret in any output;
+- 13A regressions.
+
+The full mapping table is in the test-engineer report, summarized in `owner-report.md`.
+
+## Findings fixed inside 13B
+
+The independent tests found D1, O1, O2, O3 and O4. All five were fixed by infra-engineer and their tests converted to normal tests. That left 0 expected failures (see `owner-report.md`).
+
+## Unverified
+
+- Every live path: an EMR step, HadoopPrepMain on EFS `file://`, real YARN `-appTags` list and kill, G2/G3/G4, the real class-origin probe output, and real ECS/S3 behaviour.
+- Pricing has not been confirmed by the human (`EMR_PRICING_CONFIRMED_BY_HUMAN=false`).
+- The ER step has no packaged JAR yet (build-engineer gap).

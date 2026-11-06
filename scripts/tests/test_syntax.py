@@ -10,10 +10,15 @@ import unittest
 
 from helpers import REAL_REPO, SCRIPTS_DIR
 
-SCRIPTS = ["check.sh", "package.sh", "plan.sh", "deploy.sh", "rollback.sh", "cleanup.sh"]
+SCRIPTS_13A = ["check.sh", "package.sh", "plan.sh", "deploy.sh", "rollback.sh", "cleanup.sh"]
+SCRIPTS_13B = ["smoke-test.sh", "smoke-local.sh", "run-bounded-pipeline.sh", "run-experiment.sh", "archive-evidence.sh"]
+SCRIPTS = SCRIPTS_13A + SCRIPTS_13B
 SHELL_FILES = SCRIPTS + ["lib/common.sh"]
-PY_FILES = ["lib/timeout.py", "lib/tools.py", "lib/plan_summary.py", "lib/redact.py", "lib/verify.py", "lib/safeio.py", "lib/state_bind.py", "lib/records.py"]
-CLOUD_SCRIPTS = ["plan.sh", "deploy.sh", "rollback.sh", "cleanup.sh"]
+PY_FILES = [
+    "lib/timeout.py", "lib/tools.py", "lib/plan_summary.py", "lib/redact.py", "lib/verify.py", "lib/safeio.py", "lib/state_bind.py", "lib/records.py",
+    "lib/budget.py", "lib/pipeline.py", "lib/run_approval.py", "lib/experiment.py", "lib/smoke_client.py", "lib/archive.py",
+]
+CLOUD_SCRIPTS = ["plan.sh", "deploy.sh", "rollback.sh", "cleanup.sh", "run-bounded-pipeline.sh"]
 
 
 def read(rel):
@@ -170,7 +175,7 @@ class ConfigurationTests(unittest.TestCase):
     def test_the_required_script_test_suites_are_pinned_in_check_sh_not_in_the_config(self):
         self.assertNotIn("SCRIPT_TEST_SUITES", parse_conf())
         check = read("check.sh")
-        self.assertIn('REQUIRED_SUITES="discover:scripts/tests discover:scripts/phase12d-spike/tests files:scripts/billing/tests"', check)
+        self.assertIn('REQUIRED_SUITES="discover:scripts/tests discover:scripts/phase12d-spike/tests files:scripts/billing/tests discover:tests/scripts"', check)
         self.assertNotIn("${SCRIPT_TEST_SUITES", check)
 
     def test_the_preservation_policy_covers_every_preserved_class_the_user_decided(self):

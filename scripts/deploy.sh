@@ -212,8 +212,7 @@ while [[ $# -gt 0 ]]; do
   case "$1" in
     --plan | --region | --approval | --prespend | --manifest | --push-record | --reuse-images | --image-revision | --source-commit | --stage | --profile)
       if [[ $# -lt 2 ]]; then
-        echo "deploy.sh: $1 needs a value" >&2
-        exit 2
+        sc_usage_exit "deploy.sh" "$1 needs a value"
       fi
       case "$1" in
         --plan) PLAN="$2" ;;
@@ -243,8 +242,7 @@ while [[ $# -gt 0 ]]; do
       exit 0
       ;;
     *)
-      echo "deploy.sh: unknown argument: $1 (see --help)" >&2
-      exit 2
+      sc_usage_exit "deploy.sh" "unknown argument: $1 (see --help)"
       ;;
   esac
 done
@@ -372,6 +370,12 @@ _approval_absent() {
 _approval_value APPROVED_STAGE '^(base-apply|push|runtime-apply|cleanup-prepare)$'
 APPROVED_STAGE="${APPROVAL_VALUE}"
 # The stage decides which other lines are required, so it is compared first.
+# An unknown APPROVED_* key (a misspelt or foreign key) refuses: other text in the record is ignored, extra keys are not.
+UNKNOWN_KEY="$(grep -E '^[[:space:]]*APPROVED_[A-Za-z0-9_]*[[:space:]]*=' "${APPROVAL}" | sed -E 's/^[[:space:]]*(APPROVED_[A-Za-z0-9_]*).*/\1/' |
+  grep -Ev '^(APPROVED_STAGE|APPROVED_COMMIT|APPROVED_ACCOUNT_SHA256|APPROVED_REGION|APPROVED_ENVIRONMENT|APPROVED_PRESPEND_SHA256|APPROVED_PLAN_SHA256|APPROVED_RECEIPT_SHA256)$' | head -n 1 || true)"
+if [[ -n "${UNKNOWN_KEY}" ]]; then
+  sc_refuse "${EX_REFUSED}" "approval record has an unknown key ${UNKNOWN_KEY}: any extra APPROVED_* key refuses"
+fi
 sc_step "stage-match"
 if [[ "${STAGE}" != "${APPROVED_STAGE}" ]]; then
   sc_refuse "${EX_REFUSED}" "--stage ${STAGE} != APPROVED_STAGE ${APPROVED_STAGE}; each Phase 14 step needs its own approval record"

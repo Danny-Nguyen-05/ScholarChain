@@ -1,0 +1,16 @@
+$ scripts/run-bounded-pipeline.sh --cluster-id j-ABC123DEF456 --region us-east-2 --instance-type m5.xlarge --core-count 1 --max-task-count 1 --max-runtime-minutes 90 --budget-usd 2.50 --input-prefix s3://example-bucket/inputs --output-prefix s3://example-bucket/outputs --hadoop-submit-jar s3://example-bucket/art/hadoop-submit.jar --hadoop-libjars s3://example-bucket/art/hadoop-bundle.jar --hadoop-config /private/tmp/claude-501/-Users-danny-Documents-UIC-CS441-ScholarChain/a33708d1-0340-4fdc-adea-063ab78a782e/scratchpad/13b-infra/prep-over.json --er-jar /opt/art/er.jar --er-policy <fixtures>/er-policy.json --er-config <fixtures>/er-config.json --spark-config-template <fixtures>/spark-template.json --datasets-manifest <fixtures>/datasets.json --artifact-sha256 hadoop-submit-jar=ca978112ca1bbdcafac231b39a23dc4da786eff8147c4e72b9807785afee48bb --artifact-sha256 hadoop-libjars=3e23e8160039594a33894f6564e1b1348bbd7a0088d42c4acb73eeaed59c009d --artifact-sha256 er-jar=2e7d2c03a9507ae265ecf5b5356885a53393a2029d241394997265a1a25aefc6 --artifact-sha256 job-jar=5e8c9902207afaeb7120430c585a445f21e92932081d64bc99f80e4925bcb002 --run-id bp-dryrun-13b-005
+exit=3
+----- stdout
+STEP: start
+[2026-11-06T07:12:41Z] [20261106T071241Z-39217] INFO script=run-bounded-pipeline.sh mode=dry-run run_id=20261106T071241Z-39217 repo_root=/Users/danny/Documents/UIC/CS441/ScholarChain
+STEP: inputs
+STEP: terraform-only
+[2026-11-06T07:12:41Z] [20261106T071241Z-39217] INFO this script submits steps to the existing cluster j-ABC123DEF456; it never creates, resizes or deletes infrastructure (no create-cluster, run-job-flow or Terraform command)
+STEP: g6-estimate
+[2026-11-06T07:12:41Z] [20261106T071241Z-39217] INFO G6 estimate: {"ec2_rate_usd_per_hour": "0.192", "emr_rate_usd_per_hour": "0.048", "estimate_usd": "1.08", "formula": "instances x (EC2 on-demand + EMR uplift) x max_runtime_hours, rounded up to the cent", "hourly_usd": "0.720", "instance_type": "m5.xlarge", "instances": 3, "max_runtime_minutes": 90}
+ESTIMATE-USD: 1.08
+G6-CAPS: per-run=3 USD live-runs=3 cumulative=9.50 USD pricing-confirmed-by-human=false rates-retrieved=2026-11-06 region=us-east-2
+STEP: plan
+RESULT: REFUSED step=plan reason=PIPELINE-REFUSED: ceiling rejected the prep config prep-over.json: reducerCount 9 exceeds ceiling 8
+----- stderr
+[2026-11-06T07:12:41Z] [20261106T071241Z-39217] ERROR refused at step plan: PIPELINE-REFUSED: ceiling rejected the prep config prep-over.json: reducerCount 9 exceeds ceiling 8

@@ -56,3 +56,53 @@ Still pending human decisions: A2; the approval-format additions (`APPROVED_RECE
 | `build-engineer` | `build.sbt`, `project/**`, `Dockerfile` | 6A F6: Java 17 guard on every packaging task; a single release-packaging alias for `package.sh`; build-owned tests |
 | `infra-engineer` | `scripts/**` | `check.sh`, `package.sh`, `plan.sh`, `deploy.sh`, `rollback.sh`, `cleanup.sh`, `scripts/lib/**`, `scripts/config/**`, `scripts/tests/**`, `scripts/README.md` |
 | orchestrator | `docs/agent-runs/phase-13/**` (except human-owned files) | evidence assembly, reports, reviewer prompt |
+
+## Subphase 13B — smoke, bounded pipeline (Hadoop, ER, Spark), experiment, archive
+
+Scope: Subphase 13B only. No live AWS action, no real plan or apply, no reviewer launch. Subagents use model `sonnet` (Sonnet 5.5), effort `high`, at the user's request.
+
+### Preflight (observed 2026-11-06)
+
+- Branch `phase-13`. 13B base SHA: `52c2e2178662d98103387483b82cd775dc713445`. That is the 13A commit, which the user asked the orchestrator to commit and push to `origin/phase-13`.
+- `git status --short` was empty.
+- `java -version` (JDK 17 env): `openjdk version "17.0.20.1" 2026-08-18`.
+
+### Step 0 answers (user, 2026-11-06: "Use all defaults")
+
+1. **Smoke-test target.** Two levels:
+   - a local stub server for fast failure-path tests;
+   - one real local run against `query-api` in `SCHOLARCHAIN_SERVICE_MODE=offline-synthetic`. It covers health, readiness, the supported fixture question, an evidence fetch, a repeated request with the same `Idempotency-Key`, and one expected 401.
+2. **Smoke API key.** The test generates a throwaway key, and only its sha256 reaches the service. `smoke-test.sh` reads the key from an environment variable (for example `SCHOLARCHAIN_SMOKE_API_KEY`) and never prints it.
+3. **Pipeline step form.** Three steps run on the Terraform-created cluster, and the script creates no infrastructure:
+   - Hadoop prep: `HadoopPrepMain`, as in Phase 4.
+   - Entity resolution: `Phase5Main`, a single-JVM step on the master using the bootstrap Java 17.
+   - Spark: the Phase 6 job via `spark-submit`, YARN cluster mode, with the decision 12-10 settings and a driver and executor class-origin check first.
+
+   Data moves EFS ⇄ S3 through copy steps (G1 option ii).
+4. **G6 caps.**
+   - The cost estimate is instances × reviewed hourly rate × maximum runtime.
+   - A run is refused when its estimate exceeds USD 3, when 3 live runs are already used, or when the cumulative total would exceed USD 9.50. The estimate is printed before any `--execute`.
+   - Rates live in config with their pricing source URL and retrieval date. They are read from public pricing pages (read-only), and the human confirms them. Until the human confirms, `--execute` is refused.
+   - The run count is kept in an ignored local ledger.
+5. **Pipeline and experiment approval record.** The same `KEY=value` format as 13A, at a path passed by flag. It names the manifest hash, budget, region, maximum capacity, maximum runtime and teardown, plus a pre-spend receipt.
+6. **Experiment manifests.**
+   - The schema lives with the scripts, and the tests use fixture manifests only.
+   - Real manifests are written in Phase 15 by `experiment-engineer` under `experiments/`.
+   - "Committed" means tracked and unchanged at HEAD. A manifest without budget and teardown sections is rejected.
+7. **Evidence archive target (13-4).**
+   - Small files go to `docs/agent-runs/phase-NN/evidence/`.
+   - Files over 1 MB get a sha256 and a recorded Drive or S3 location instead of being committed.
+   - The S3 prefix is dry-run only.
+8. **Carried item 1.** Each run tags its YARN application with the run ID, and the hard runtime cap kills that application by tag, not only the client. The cluster's auto-termination stays set.
+9. **Carried item 31.** New archives are built without macOS `._` metadata files. The same fix goes into `scripts/phase12d-spike/collect-evidence.sh`.
+10. **test-engineer.** Independent tests go under `tests/scripts/` (Python). infra-engineer adds that folder as a required suite in `check.sh`.
+11. **Subagent model.** The default was Opus 5.5 high. The user then chose **Sonnet 5.5 high**.
+12. **Verification.** Fast checks during the work, then one full seven-gate clean-snapshot `check.sh` and a JDK 17 `sbt check` at the end.
+
+### Routing (13B)
+
+| Agent | Paths | Task |
+|---|---|---|
+| `infra-engineer` | `scripts/**` | `smoke-test.sh`, `run-bounded-pipeline.sh`, `run-experiment.sh`, `archive-evidence.sh`; items 1 and 31; `scripts/tests/**`; README; adding `tests/scripts` as a required suite in `check.sh` |
+| `test-engineer` | `tests/scripts/**` | independent dry-run tests with fake binaries |
+| orchestrator | `docs/agent-runs/phase-13/**` | evidence, reports, reviewer prompt |

@@ -1,0 +1,21 @@
+# bash -n and shellcheck -x -P SCRIPTDIR (2026-11-06T08:36:35Z)
+scripts/archive-evidence.sh                          shellcheck-exit=0 findings=0
+scripts/check.sh                                     shellcheck-exit=0 findings=0
+scripts/cleanup.sh                                   shellcheck-exit=0 findings=0
+scripts/deploy.sh                                    shellcheck-exit=0 findings=0
+scripts/lib/common.sh                                shellcheck-exit=0 findings=0
+scripts/package.sh                                   shellcheck-exit=0 findings=0
+scripts/phase12d-spike/collect-evidence.sh           shellcheck-exit=0 findings=0
+scripts/phase12d-spike/emr/bootstrap.sh              shellcheck-exit=0 findings=0
+scripts/phase12d-spike/emr/collect-results.sh        shellcheck-exit=0 findings=0
+scripts/phase12d-spike/emr/run-step.sh               shellcheck-exit=0 findings=0
+scripts/phase12d-spike/inventory.sh                  shellcheck-exit=0 findings=0
+scripts/phase12d-spike/preflight.sh                  shellcheck-exit=0 findings=0
+scripts/phase4-emr-smoke.sh                          shellcheck-exit=0 findings=0
+scripts/plan.sh                                      shellcheck-exit=0 findings=0
+scripts/rollback.sh                                  shellcheck-exit=0 findings=0
+scripts/run-bounded-pipeline.sh                      shellcheck-exit=0 findings=0
+scripts/run-experiment.sh                            shellcheck-exit=0 findings=0
+scripts/smoke-local.sh                               shellcheck-exit=0 findings=0
+scripts/smoke-test.sh                                shellcheck-exit=0 findings=0
+files=19 failures=0

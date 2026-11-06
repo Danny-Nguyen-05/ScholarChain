@@ -1,0 +1,10 @@
+$ scripts/run-experiment.sh --manifest <repo>/experiments/fixture/untracked.json --cluster-id j-ABC123DEF456
+exit=3
+----- stdout
+STEP: start
+[2026-11-06T07:12:56Z] [20261106T071256Z-39673] INFO script=run-experiment.sh mode=dry-run run_id=20261106T071256Z-39673 repo_root=/private<repo>
+STEP: inputs
+STEP: manifest-committed
+RESULT: REFUSED step=manifest-committed reason=experiments/fixture/untracked.json is not tracked by git (untracked or ignored): commit it first
+----- stderr
+[2026-11-06T07:12:56Z] [20261106T071256Z-39673] ERROR refused at step manifest-committed: experiments/fixture/untracked.json is not tracked by git (untracked or ignored): commit it first

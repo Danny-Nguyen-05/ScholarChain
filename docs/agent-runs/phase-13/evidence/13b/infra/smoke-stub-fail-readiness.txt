@@ -1,0 +1,12 @@
+$ SCHOLARCHAIN_SMOKE_API_KEY=<throwaway> scripts/smoke-test.sh --url <stub>   stub flags={'ready_fail': True}
+exit=4
+STEP: start
+[2026-11-06T07:12:59Z] [20261106T071259Z-40003] INFO script=smoke-test.sh mode=smoke run_id=20261106T071259Z-40003 repo_root=/Users/danny/Documents/UIC/CS441/ScholarChain
+STEP: inputs
+[2026-11-06T07:12:59Z] [20261106T071259Z-40003] INFO target http://127.0.0.1:<port>; the API key is read from SCHOLARCHAIN_SMOKE_API_KEY and is never printed
+STEP: smoke-healthz
+CHECK-OK: healthz: GET /healthz 200 status=alive
+STEP: smoke-readyz
+CHECK-FAILED: readyz: GET /readyz returned 503, expected 200 (the service is not ready)
+RESULT: FAIL step=smoke-readyz reason=readyz check failed
+[2026-11-06T07:13:00Z] [20261106T071259Z-40003] ERROR failed at step smoke-readyz: readyz check failed

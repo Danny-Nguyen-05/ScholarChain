@@ -141,8 +141,7 @@ while [[ $# -gt 0 ]]; do
   case "$1" in
     --env | --region | --profile | --previous-manifest | --mode | --previous-commit | --deployed-manifest | --deployed-push-record | --stage | --plan | --approval | --prespend)
       if [[ $# -lt 2 ]]; then
-        echo "rollback.sh: $1 needs a value" >&2
-        exit 2
+        sc_usage_exit "rollback.sh" "$1 needs a value"
       fi
       case "$1" in
         --env) ENV_NAME="$2" ;;
@@ -169,8 +168,7 @@ while [[ $# -gt 0 ]]; do
       exit 0
       ;;
     *)
-      echo "rollback.sh: unknown argument: $1 (see --help)" >&2
-      exit 2
+      sc_usage_exit "rollback.sh" "unknown argument: $1 (see --help)"
       ;;
   esac
 done

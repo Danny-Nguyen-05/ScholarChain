@@ -97,7 +97,7 @@ sc_redact() {
   local text="$1" name val s
   while IFS= read -r name; do
     case "${name}" in
-      *SECRET* | *TOKEN* | *PASSWORD* | *ACCESS_KEY* | *CREDENTIAL* | *PRIVATE_VARS)
+      *SECRET* | *TOKEN* | *PASSWORD* | *ACCESS_KEY* | *API_KEY* | *_KEY | *CREDENTIAL* | *PRIVATE_VARS)
         val="${!name:-}"
         if [[ ${#val} -ge 4 ]]; then
           text="${text//"${val}"/<redacted>}"
@@ -153,6 +153,15 @@ sc_fail() {
   shift
   sc_err "failed at step ${SC_STEP}: $*"
   sc_result FAIL "step=${SC_STEP} reason=$*" "${code}"
+}
+
+# sc_usage_exit SCRIPT MESSAGE: an option-parsing error BEFORE sc_init (unknown flag, flag without a value). Prints the
+# greppable markers and exactly one RESULT line, then exits 2, so every script ends with one RESULT line even on bad usage.
+sc_usage_exit() {
+  printf 'STEP: start\nSTEP: usage\n'
+  printf '%s: %s\n' "$1" "$(sc_redact "$2")" >&2
+  printf 'RESULT: REFUSED step=usage reason=%s\n' "$(sc_redact "$2")"
+  exit "${EX_USAGE}"
 }
 
 sc_usage_error() {
@@ -227,7 +236,7 @@ sc_init() {
 
 # Integrity and safety pins: always taken from the config file; a same-named environment variable
 # is ignored (and announced). Tests point at a fixture file with SCHOLARCHAIN_CONFIG_FILE instead.
-SC_PINNED_KEYS=" TERRAFORM_STATE_FILE CLEANUP_PROTECTION_RULES CLEANUP_PREPARE_ALLOWED_ATTRS REQUIRED_TERRAFORM_VERSION RUNTIME_ARCHIVE_EXPECTED_SHA256 RUNTIME_ARCHIVE_EXPECTED_SIZE IMAGE_PLATFORM ECS_ARCH_SOURCE APPROVAL_RECORD_PATH SERVICE_ARTIFACTS PLAN_DIR PRESPEND_MAX_AGE_HOURS PRESPEND_MIN_HEADROOM_USD CLEANUP_PRESERVE_TYPE_RULES CLEANUP_PRESERVE_ADDRESS_RULES CLEANUP_TEARDOWN_ADDRESS_RULES RUNTIME_LIVE_MODULE RUNTIME_LIVE_INDICATOR_TYPES RUNTIME_LIVE_PROTECTED_TYPES "
+SC_PINNED_KEYS=" TERRAFORM_STATE_FILE CLEANUP_PROTECTION_RULES CLEANUP_PREPARE_ALLOWED_ATTRS REQUIRED_TERRAFORM_VERSION RUNTIME_ARCHIVE_EXPECTED_SHA256 RUNTIME_ARCHIVE_EXPECTED_SIZE IMAGE_PLATFORM ECS_ARCH_SOURCE APPROVAL_RECORD_PATH SERVICE_ARTIFACTS PLAN_DIR PRESPEND_MAX_AGE_HOURS PRESPEND_MIN_HEADROOM_USD CLEANUP_PRESERVE_TYPE_RULES CLEANUP_PRESERVE_ADDRESS_RULES CLEANUP_TEARDOWN_ADDRESS_RULES RUNTIME_LIVE_MODULE RUNTIME_LIVE_INDICATOR_TYPES RUNTIME_LIVE_PROTECTED_TYPES EMR_MAX_RUN_USD EMR_MAX_LIVE_RUNS EMR_CUMULATIVE_CAP_USD EMR_LEDGER_PATH PIPELINE_PRICING_FILE RUN_APPROVAL_RECORD_PATH PIPELINE_SPARK_CONF_FILE PIPELINE_RUNS_DIR EXPERIMENT_RUNS_DIR PIPELINE_EFS_MOUNT PIPELINE_RUNTIME_DIR PIPELINE_JOB_JAR_PATH PIPELINE_JAVA_HOME_FILE PIPELINE_EXPECTED_SPARK_VERSION PIPELINE_EXPECTED_SCALA_VERSION PIPELINE_MAX_CAPACITY PIPELINE_MAX_RUNTIME_MINUTES PIPELINE_MAX_IDLE_TIMEOUT_SECONDS PIPELINE_STEP_WEIGHTS PIPELINE_MIN_STEP_SECONDS PIPELINE_MAX_INPUT_BYTES PIPELINE_MAX_COPYOUT_BYTES PIPELINE_CEILING_MAX_LOCAL_SAMPLE_RECORDS PIPELINE_CEILING_REDUCER_COUNT PIPELINE_CEILING_MAX_CANDIDATE_BLOCK_SIZE PIPELINE_CEILING_MAX_CANDIDATE_PAIRS_PER_BLOCK PIPELINE_CEILING_MAX_AUTHOR_TEAM_SIZE PIPELINE_CEILING_MAX_RECORD_BYTES PIPELINE_CEILING_MAX_XML_ENTITY_EXPANSION PIPELINE_ER_XMX PIPELINE_MAX_EXECUTORS_PER_NODE ARCHIVE_MAX_COPY_BYTES "
 
 # sc_load_config: read the config file without executing it. Pinned keys ignore the environment;
 # every other key may be overridden by a same-named environment variable (announced).
@@ -274,6 +283,45 @@ sc_load_config() {
   fi
   if [[ -n "${SC_CFG_OVERRIDES}" ]]; then
     printf 'CONFIG-OVERRIDE: environment overrides config for:%s\n' "${SC_CFG_OVERRIDES}"
+  fi
+}
+
+# sc_load_pricing: reads the pinned EMR pricing file (PIPELINE_PRICING_FILE) without executing it. Every key is
+# pinned: a same-named environment variable is ignored (announced). SCHOLARCHAIN_PRICING_FILE replaces the
+# file ONLY together with the announced test-only SCHOLARCHAIN_CONFIG_FILE (otherwise ignored, announced).
+sc_load_pricing() {
+  local file="${REPO_ROOT}/${PIPELINE_PRICING_FILE}" line key val ignored="" name
+  # An inherited rate or pricing variable can never stand in for a missing line of the pinned file.
+  while IFS= read -r name; do
+    case "${name}" in
+      EMR_RATE_* | EMR_PRICING_*)
+        ignored="${ignored} ${name}"
+        unset "${name}"
+        ;;
+    esac
+  done < <(compgen -e)
+  if [[ -n "${SCHOLARCHAIN_PRICING_FILE:-}" ]]; then
+    if [[ -n "${SCHOLARCHAIN_CONFIG_FILE:-}" ]]; then
+      file="${SCHOLARCHAIN_PRICING_FILE}"
+      printf 'PRICING-FILE: using %s instead of the repository pricing file (test-only SCHOLARCHAIN_PRICING_FILE)\n' "${file}"
+    else
+      printf 'PRICING-FILE-IGNORED: SCHOLARCHAIN_PRICING_FILE is honoured only together with the test-only SCHOLARCHAIN_CONFIG_FILE\n'
+    fi
+  fi
+  if [[ ! -f "${file}" ]]; then
+    printf 'RESULT: REFUSED step=pricing reason=missing pricing file %s\n' "${file}"
+    SC_RESULT_DONE=1
+    exit "${EX_REFUSED}"
+  fi
+  while IFS= read -r line || [[ -n "${line}" ]]; do
+    if [[ "${line}" =~ ^(EMR_[A-Z0-9_]*)=(.*)$ ]]; then
+      key="${BASH_REMATCH[1]}"
+      val="${BASH_REMATCH[2]}"
+      printf -v "${key}" '%s' "${val}"
+    fi
+  done <"${file}"
+  if [[ -n "${ignored}" ]]; then
+    printf 'CONFIG-IGNORED: pinned pricing settings cannot be overridden by the environment:%s\n' "${ignored}"
   fi
 }
 
