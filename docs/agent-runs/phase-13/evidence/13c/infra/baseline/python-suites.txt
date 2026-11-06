@@ -1,0 +1,17 @@
+== scripts/tests
+...................................................................................................................................................................................................................................................== scripts/phase12d-spike/tests
+.........................................................................
+----------------------------------------------------------------------
+Ran 73 tests in 40.781s
+
+OK
+SUITE-SUMMARY ran=73 executed=73 skipped_tests=0 skipped_classes=0 failures=0 errors=0
+== tests/scripts
+STDERR(tail)=[2026-11-06T15:21:05Z] [20261106T152104Z-22458] ERROR G6 gate: the run ledger /private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc13b-ngx8uz3r/home/.scholarchain/emr-ledger/runs.jsonl does not exist; the human creates it once with run-bounded-pipeline.sh --init-ledger (an absent ledger is never read as zero runs)
+[2026-11-06T15:21:05Z] [20261106T152104Z-22458] ERROR refused at step g6-gate: G6 gate refused --execute: the run ledger /private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc13b-ngx8uz3r/home/.scholarchain/emr-ledger/runs.jsonl does not exist; the human creates it once with run-bounded-pipeline.sh --init-ledger (an absent ledger is never read as zero runs)
+
+----------------------------------------------------------------------
+Ran 198 tests in 306.945s
+
+FAILED (failures=105, errors=5)
+SUITE-SUMMARY ran=198 executed=198 skipped_tests=0 skipped_classes=0 failures=105 errors=5

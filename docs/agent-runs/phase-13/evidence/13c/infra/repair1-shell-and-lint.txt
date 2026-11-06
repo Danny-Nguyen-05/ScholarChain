@@ -1,0 +1,7 @@
+command: shellcheck -x -P SCRIPTDIR scripts/emr/sc-step.sh scripts/emr/bootstrap.sh scripts/run-bounded-pipeline.sh scripts/lib/common.sh
+shellcheck exit code: 0 (0 findings)
+bash -n ok: scripts/emr/sc-step.sh
+bash -n ok: scripts/emr/bootstrap.sh
+bash -n ok: scripts/run-bounded-pipeline.sh
+bash -n ok: scripts/lib/common.sh
+py_compile ok

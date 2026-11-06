@@ -1,0 +1,53 @@
+$ scripts/smoke-local.sh
+STEP: start
+[2026-11-06T07:13:11Z] [20261106T071311Z-40317] INFO script=smoke-local.sh mode=local run_id=20261106T071311Z-40317 repo_root=/Users/danny/Documents/UIC/CS441/ScholarChain
+STEP: inputs
+STEP: jdk17
+[2026-11-06T07:13:11Z] [20261106T071311Z-40317] INFO JDK 17 ready: openjdk version "17.0.20.1" 2026-08-18 JAVA_HOME=/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home
+STEP: distribution
+[2026-11-06T07:13:11Z] [20261106T071311Z-40317] INFO distribution: modules/services/target/distribution (services.jar sha256 5332734cb9d4b500289000d02747fdd1a971d17ffeacad5c2ca3047db34acb4f)
+STEP: throwaway-credentials
+[2026-11-06T07:13:12Z] [20261106T071311Z-40317] INFO generated a throwaway API key (not printed); only its sha256 reaches the service; port 65070
+STEP: start-service
+[2026-11-06T07:13:12Z] [20261106T071311Z-40317] INFO query-api started (offline-synthetic, pid 40377, hard cap 300s)
+STEP: wait-healthy
+[2026-11-06T07:13:13Z] [20261106T071311Z-40317] INFO healthy after ~1s
+STEP: run-smoke-test
+smoke| STEP: start
+smoke| [2026-11-06T07:13:13Z] [20261106T071313Z-40399] INFO script=smoke-test.sh mode=smoke run_id=20261106T071313Z-40399 repo_root=/Users/danny/Documents/UIC/CS441/ScholarChain
+smoke| STEP: inputs
+smoke| [2026-11-06T07:13:13Z] [20261106T071313Z-40399] INFO target http://127.0.0.1:65070; the API key is read from SCHOLARCHAIN_SMOKE_API_KEY and is never printed
+smoke| STEP: smoke-healthz
+smoke| CHECK-OK: healthz: GET /healthz 200 status=alive
+smoke| STEP: smoke-readyz
+smoke| CHECK-OK: readyz: GET /readyz 200 status=ready
+smoke| STEP: smoke-query
+smoke| CHECK-OK: query: POST /v1/query 200 queryId=qry-b09b8f95e60cf6bf43460fc9666d40235be4fe770dd837c83add00fd0666d1c7 claims=1 evidence_ids=1
+smoke| STEP: smoke-evidence
+smoke| CHECK-OK: evidence: GET /v1/evidence/{id} 200 evidenceId matches, source=SCHOLARCHAIN, provenance present
+smoke| STEP: smoke-idempotency
+smoke| CHECK-OK: idempotency: repeat with the same Idempotency-Key returned the same queryId and the same 1 evidence id(s)
+smoke| STEP: smoke-error-path
+smoke| CHECK-OK: error-path: POST /v1/query without a key and with an invalid key both returned 401 UNAUTHORIZED
+smoke| STEP: smoke-complete
+smoke| RESULT: PASS all 6 checks passed against http://127.0.0.1:65070
+SERVICE-LOG-EXCERPT (redacted, last 15 lines):
+  | log4j:WARN Please initialize the log4j system properly.
+  | log4j:WARN See http://logging.apache.org/log4j/1.2/faq.html#noconfig for more info.
+  | 01:13:13.425 [XNIO-1 task-2] INFO scholarchain.http -- {"event":"http_request","requestId":"req-cb620d64-1f84-4aed-8df9-47f456a0e8f5","traceId":"trace-32157584-622c-4a26-8ca5-1f7bccb28f5d","route":"/healthz","status":200,"elapsedMs":"0"}
+  | 01:13:13.679 [XNIO-1 task-2] INFO scholarchain.http -- {"event":"http_request","requestId":"req-1193da4f-98cb-4898-ae6c-d1f0e4628bde","traceId":"trace-4d5d85f1-3873-4225-ac9f-2fa9ef121900","route":"/healthz","status":200,"elapsedMs":"0"}
+  | 01:13:13.783 [XNIO-1 task-2] INFO scholarchain.http -- {"event":"http_request","requestId":"req-64cf9874-3883-46b7-b575-9447c1f06a22","traceId":"trace-a8d1803e-f8c1-4240-8559-65fa3ff4e73f","route":"/readyz","status":200,"elapsedMs":"0"}
+  | 01:13:13.993 [scholarchain-runtime-worker] INFO scholarchain.runtime.stage -- {"event":"runtime-stage-outcome","stage":"resolver","traceId":"plan:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa","runId":"run:55555555-5555-4555-8555-<acct>","outcome":"resolved","planId":"plan:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"}
+  | 01:13:13.998 [scholarchain-runtime-worker] INFO scholarchain.runtime.stage -- {"event":"runtime-stage-outcome","stage":"semantic","traceId":"plan:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa","runId":"run:55555555-5555-4555-8555-<acct>","outcome":"missing","planId":"plan:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"}
+  | 01:13:14.002 [scholarchain-runtime-worker] INFO scholarchain.runtime.stage -- {"event":"runtime-stage-outcome","stage":"metrics","traceId":"plan:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa","runId":"run:55555555-5555-4555-8555-<acct>","outcome":"ready","planId":"plan:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"}
+  | 01:13:14.075 [XNIO-1 task-2] INFO scholarchain.http -- {"event":"http_request","requestId":"req-b27e4772-ae19-4794-b3b9-c825d0ff50c6","traceId":"trace-9a920abc-06f3-42d7-950d-192e79caedf5","route":"/v1/query","status":200,"elapsedMs":"187"}
+  | 01:13:14.185 [XNIO-1 task-2] INFO scholarchain.http -- {"event":"http_request","requestId":"req-1d40e0ae-b93f-429c-8ec0-f1b49a9301d3","traceId":"trace-7e2b1457-9e62-4c23-8ac6-22230f524fbb","route":"unmatched","status":200,"elapsedMs":"2"}
+  | 01:13:14.293 [XNIO-1 task-2] INFO scholarchain.http -- {"event":"http_request","requestId":"req-02eb0a71-e29b-4f1f-9b80-46f0cc741d35","traceId":"trace-4fd10cc3-e6c4-4881-b553-f2c08c91a7a7","route":"unmatched","status":200,"elapsedMs":"0"}
+  | 01:13:14.295 [XNIO-1 task-2] INFO scholarchain.http -- {"event":"http_request","requestId":"req-d8b37560-b931-4e66-9edc-2f8e935372ec","traceId":"trace-dcbd1292-2e77-4d1b-892d-d598a95583e4","route":"/v1/query","status":200,"elapsedMs":"1"}
+  | 01:13:14.296 [XNIO-1 task-2] INFO scholarchain.http -- {"event":"http_request","requestId":"req-2018587a-8422-4466-b48c-f842a397f6fd","traceId":"trace-16a04803-dcaf-4973-bea1-8ddfaed9af92","route":"unmatched","status":200,"elapsedMs":"0"}
+  | 01:13:14.402 [XNIO-1 task-2] INFO scholarchain.http -- {"event":"http_request","requestId":"req-bfdfb5cc-da63-4d4b-84ae-1a42de43620e","traceId":"trace-1c68b704-a424-4cf1-90be-7b2761bd19fa","route":"/v1/query","status":401,"elapsedMs":"0"}
+  | 01:13:14.402 [XNIO-1 task-2] INFO scholarchain.http -- {"event":"http_request","requestId":"req-419b2c7c-39cd-4a2d-a16c-4ba0af328544","traceId":"trace-29412eca-54a6-44d8-b99a-2cc411357831","route":"/v1/query","status":401,"elapsedMs":"0"}
+STEP: stop-service
+[2026-11-06T07:13:14Z] [20261106T071311Z-40317] INFO service stopped
+RESULT: PASS local offline-synthetic query-api passed all smoke checks on 127.0.0.1:65070
+exit=0

@@ -23,8 +23,13 @@ resource "aws_kms_key" "spike" {
     Version = "2012-10-17"
     Statement = [
       {
-        # The account root delegates to IAM (the deployer role), limited to the
-        # administration and use actions the spike needs, including deletion.
+        # Standard key-policy delegation: with the account root named, an IAM policy in this account can grant
+        # the listed actions on this key (limited to the administration and use actions the spike needs, including
+        # deletion, so the key can never become unmanageable). It is a breadth, not a dependency: the deployer role
+        # does not rely on it (the statements below grant it key administration and use directly, and its IAM
+        # policy grants no key-level action), and any other principal whose IAM policy allows these actions
+        # could use the key (accepted in this single-user course account; the spike roles are held to the key
+        # alias by the permissions boundary).
         Sid       = "AccountRootAdministersAndDelegates"
         Effect    = "Allow"
         Principal = { AWS = "arn:aws:iam::${var.account_id}:root" }
@@ -74,10 +79,20 @@ resource "aws_kms_key" "spike" {
         Principal = { AWS = local.service_role_arn }
         Action = [
           "kms:Encrypt", "kms:Decrypt", "kms:ReEncryptFrom", "kms:ReEncryptTo", "kms:GenerateDataKey",
-          "kms:GenerateDataKeyWithoutPlaintext", "kms:DescribeKey", "kms:CreateGrant", "kms:ListGrants",
-          "kms:RevokeGrant",
+          "kms:GenerateDataKeyWithoutPlaintext", "kms:DescribeKey", "kms:ListGrants", "kms:RevokeGrant",
         ]
         Resource = "*"
+      },
+      {
+        # Carried item 5: CreateGrant is its own statement so it can carry kms:GrantIsForAWSResource, which is true only
+        # when an AWS service (EC2, for the encrypted EBS volumes) creates the grant on the caller's behalf. The service
+        # role therefore cannot create a grant for an arbitrary grantee. Same shape as the EMR documentation's key policy.
+        Sid       = "EmrServiceRoleCreateGrantForAwsResourcesOnly"
+        Effect    = "Allow"
+        Principal = { AWS = local.service_role_arn }
+        Action    = ["kms:CreateGrant"]
+        Resource  = "*"
+        Condition = { Bool = { "kms:GrantIsForAWSResource" = "true" } }
       },
       {
         Sid       = "InstanceProfileDataKeyUse"

@@ -1,0 +1,40 @@
+# files:
+scripts/check.sh
+scripts/cleanup.sh
+scripts/deploy.sh
+scripts/lib/common.sh
+scripts/package.sh
+scripts/plan.sh
+scripts/rollback.sh
+.claude/hooks/format-scala.sh
+.claude/hooks/guard-dangerous.sh
+.claude/hooks/validate-agent-files.sh
+.claude/hooks/verify-tests-ran.sh
+scripts/phase12d-spike/collect-evidence.sh
+scripts/phase12d-spike/emr/bootstrap.sh
+scripts/phase12d-spike/emr/collect-results.sh
+scripts/phase12d-spike/emr/run-step.sh
+scripts/phase12d-spike/inventory.sh
+scripts/phase12d-spike/preflight.sh
+scripts/phase4-emr-smoke.sh
+# bash -n
+bash -n ok: scripts/check.sh
+bash -n ok: scripts/cleanup.sh
+bash -n ok: scripts/deploy.sh
+bash -n ok: scripts/lib/common.sh
+bash -n ok: scripts/package.sh
+bash -n ok: scripts/plan.sh
+bash -n ok: scripts/rollback.sh
+bash -n ok: .claude/hooks/format-scala.sh
+bash -n ok: .claude/hooks/guard-dangerous.sh
+bash -n ok: .claude/hooks/validate-agent-files.sh
+bash -n ok: .claude/hooks/verify-tests-ran.sh
+bash -n ok: scripts/phase12d-spike/collect-evidence.sh
+bash -n ok: scripts/phase12d-spike/emr/bootstrap.sh
+bash -n ok: scripts/phase12d-spike/emr/collect-results.sh
+bash -n ok: scripts/phase12d-spike/emr/run-step.sh
+bash -n ok: scripts/phase12d-spike/inventory.sh
+bash -n ok: scripts/phase12d-spike/preflight.sh
+bash -n ok: scripts/phase4-emr-smoke.sh
+# shellcheck -x -P SCRIPTDIR (shellcheck version: 0.11.0)
+shellcheck exit=0

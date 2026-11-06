@@ -1,0 +1,12 @@
+== .
+[0mtests/phase12c.tftest.hcl... [32mpass[0m[0m
+
+[32mSuccess![0m[0m 40 passed, 0 failed.
+== deployer
+[0mtests/deployer.tftest.hcl... [32mpass[0m[0m
+
+[32mSuccess![0m[0m 29 passed, 0 failed.
+== spikes/emr-spark-isolated
+[0mtests/spike.tftest.hcl... [32mpass[0m[0m
+
+[32mSuccess![0m[0m 38 passed, 0 failed.

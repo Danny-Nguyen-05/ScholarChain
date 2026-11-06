@@ -1,0 +1,14 @@
+{
+  "compressionCodec": "none",
+  "configSchemaVersion": "scholarchain.hadoop-prep.v1",
+  "executionMode": "local",
+  "intermediateCompressionEnabled": false,
+  "maxAuthorTeamSize": 16,
+  "maxCandidateBlockSize": 32,
+  "maxCandidatePairsPerBlock": 128,
+  "maxLocalSampleRecords": 100,
+  "maxRecordBytes": 1048576,
+  "maxXmlEntityExpansion": 1048576,
+  "outputRoot": "target/phase4-runs",
+  "reducerCount": 1
+}

@@ -1,0 +1,7 @@
+{
+  "checkpointDirectory": "PLACEHOLDER",
+  "entityResolutionRunRoot": "PLACEHOLDER",
+  "hadoopRunRoot": "PLACEHOLDER",
+  "outputRoot": "PLACEHOLDER",
+  "shufflePartitions": 4
+}

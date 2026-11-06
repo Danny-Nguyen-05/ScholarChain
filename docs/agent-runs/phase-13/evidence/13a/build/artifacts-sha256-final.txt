@@ -1,0 +1,5 @@
+12162464 7ff95fefb47048253aa15638e553d7c4ad5aa9c276946fddc076a5cd91e55bfe modules/hadoop/target/scala-3.3.4/hadoop-submit_3-0.1.0-SNAPSHOT.jar
+12144487 76a1b455ce22d38cc3325592a7d10bc52d2d89b208655eb7b8e6ca484154838a modules/hadoop/target/scala-3.3.4/hadoop-dependency-bundle_3-0.1.0-SNAPSHOT.jar
+11732222 3146343fd3bef03b4db7935e0d5ddb0990d71ab61ee1562635c414b2882bb460 modules/spark/target/spark-job_3-0.1.0-SNAPSHOT.jar
+436716 5332734cb9d4b500289000d02747fdd1a971d17ffeacad5c2ca3047db34acb4f modules/services/target/distribution/services.jar
+896357 f96fd62a611d3d726f1e5d472c2774abd2648a9f0779d5ec13a308ae8ad0587e modules/hadoop/target/scala-3.3.4/hadoop_3-0.1.0-SNAPSHOT.jar

@@ -1,0 +1,11 @@
+# EXCERPT (orchestrator, 13C repair round 1, finding C4): intermediate failing run kept as summary only.
+# original: test_experiment-run3.txt,   129881 bytes, sha256 9e14fcc6a933441de2ae40a6dda49b4c4e0e4b53e8dd4d489d1ea01a3154d92d; full log retained locally under target/phase13c-infra-evidence/ (git-ignored).
+# context: intermediate run during 13C; superseded by later passing runs (see test-report.md).
+# failing tests (FAIL/ERROR lines):
+   1 FAIL: test_a_committed_unchanged_manifest_dry_runs_and_delegates_the_pipeline
+   2 FAIL: test_every_invalid_budget_or_teardown_member_is_rejected
+   1 FAIL: test_the_same_gates_as_the_pipeline_apply
+# result lines:
+Ran 21 tests in 40.208s
+FAILED (failures=4)
+SUITE-SUMMARY ran=21 executed=21 skipped_tests=0 skipped_classes=0 failures=4 errors=0

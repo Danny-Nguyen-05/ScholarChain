@@ -1,0 +1,18 @@
+# cwd: /private/tmp/claude-501/-Users-danny-Documents-UIC-CS441-ScholarChain/a33708d1-0340-4fdc-adea-063ab78a782e/scratchpad/13a-clean-snapshot-r2/scripts/tests (clean snapshot c93c376; providers now present from the check.sh terraform gate init)
+# command: python3 -I -m unittest discover -s . -p test_terraform_state_binding.py -v
+../../infra/terraform/.terraform/providers
+test_a_missing_state_is_refused_before_apply_and_no_new_state_appears (test_terraform_state_binding.RealStateBindingTests.test_a_missing_state_is_refused_before_apply_and_no_new_state_appears) ... ok
+test_a_state_changed_after_the_plan_is_refused_before_apply (test_terraform_state_binding.RealStateBindingTests.test_a_state_changed_after_the_plan_is_refused_before_apply) ... ok
+test_a_state_with_a_different_lineage_is_refused_before_apply_and_left_untouched (test_terraform_state_binding.RealStateBindingTests.test_a_state_with_a_different_lineage_is_refused_before_apply_and_left_untouched) ... ok
+test_an_ignored_override_file_in_the_worktree_cannot_change_what_the_rollback_loads (test_terraform_state_binding.RealStateBindingTests.test_an_ignored_override_file_in_the_worktree_cannot_change_what_the_rollback_loads)
+R3 with real terraform: an ignored override.tf that would rename the input is not in the git archive. ... ok
+test_the_approved_rollback_applies_to_the_live_state (test_terraform_state_binding.RealStateBindingTests.test_the_approved_rollback_applies_to_the_live_state) ... ok
+test_the_rollback_plans_against_the_existing_state_not_a_fresh_one (test_terraform_state_binding.RealStateBindingTests.test_the_rollback_plans_against_the_existing_state_not_a_fresh_one) ... ok
+test_without_the_live_state_the_same_rollback_would_have_proposed_to_create_the_existing_resource (test_terraform_state_binding.RealStateBindingTests.test_without_the_live_state_the_same_rollback_would_have_proposed_to_create_the_existing_resource)
+The control: a fresh (absent) state plans a create for the resource the live stack already has. ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 55.263s
+
+OK
+exit=0

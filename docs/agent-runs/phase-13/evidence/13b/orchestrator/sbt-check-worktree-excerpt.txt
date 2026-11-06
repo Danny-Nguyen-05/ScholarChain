@@ -1,0 +1,18 @@
+# Orchestrator: sbt -batch check on JDK 17 in the real working tree (13B final tree), 2026-11-06
+# env: JAVA_HOME=/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home; PATH=$JAVA_HOME/bin:$PATH; SBT_OPTS=-Dlogback.configurationFile=$PWD/docs/agent-runs/phase-04/xml-repair-logback.xml
+# excerpt; the checkProbe line is the expected self-test
+openjdk version "17.0.20.1" 2026-08-18
+[info] Tests: succeeded 207, failed 0, canceled 0, ignored 0, pending 0
+[info] Tests: succeeded 64, failed 0, canceled 0, ignored 0, pending 0
+[info] Tests: succeeded 39, failed 0, canceled 0, ignored 0, pending 0
+[info] Tests: succeeded 50, failed 0, canceled 0, ignored 0, pending 0
+[info] Tests: succeeded 80, failed 0, canceled 0, ignored 0, pending 0
+[info] Tests: succeeded 107, failed 0, canceled 0, ignored 0, pending 0
+[info] Tests: succeeded 40, failed 0, canceled 0, ignored 0, pending 0
+[info] Tests: succeeded 667, failed 0, canceled 0, ignored 0, pending 0
+[error] java.lang.RuntimeException: scholarchain check probe: injected format-stage failure
+[error] (checkProbeInjectFailure) scholarchain check probe: injected format-stage failure
+[error] Total time: 0 s, completed Nov 6, 2026, 3:51:16 AM
+[info] Tests: succeeded 18, failed 0, canceled 1, ignored 0, pending 0
+[success] Total time: 792 s (13:12), completed Nov 6, 2026, 3:51:16 AM
+exit=0

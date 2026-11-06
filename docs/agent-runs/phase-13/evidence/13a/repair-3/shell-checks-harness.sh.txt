@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+# bash -n and shellcheck -x -P SCRIPTDIR on every shell file under scripts/ (tracked or new), run from the repo root.
+set -uo pipefail
+cd /Users/danny/Documents/UIC/CS441/ScholarChain
+files=()
+while IFS= read -r f; do files+=("$f"); done < <(git ls-files -co --exclude-standard -- 'scripts/*.sh' | sort -u)
+echo "# shellcheck $(shellcheck --version | sed -n 2p)"
+echo "# ${#files[@]} files:"
+printf '#   %s\n' "${files[@]}"
+bad=0
+for f in "${files[@]}"; do
+  if ! bash -n "$f"; then
+    echo "BASH-N FAIL $f"
+    bad=1
+  fi
+done
+echo "bash -n: ${#files[@]} files, failures=${bad}"
+shellcheck -x -P SCRIPTDIR "${files[@]}"
+echo "shellcheck exit=$?"

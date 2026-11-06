@@ -257,19 +257,21 @@ Activation flags do not authorize any cloud action; the human gates still apply.
 | --- | --- |
 | Neptune | One private serverless writer, IAM authentication, project CMK, audit export, subnet/cluster/instance parameter groups,7-day backups,1–2.5NCU, deletion protection and final snapshot outside cleanup. `neptune_enabled=false` until the user selects `neptune_engine_version` and matching `neptune_parameter_family`; no implicit latest engine or regional support claim. |
 | Vectors | Native vector bucket and exactly five float32 indexes,256 dimensions,cosine,project CMK,TLS Deny. Names match `VectorIndexes` in `modules/storage/.../Phase7Configs.scala:86-93`; planned dimension/metric match `modules/rag/README.md:57-61`. Every index marks exactly `textS3Uri` non-filterable, matching `VectorAdapterConfig` (`Phase7Configs.scala:67`) and live ingest/query GetIndex preflight. Changing dimension/metric/metadata requires an explicitly reviewed index migration. Literal `prevent_destroy=true` remains on bucket AND indexes even in cleanup. |
-| EMR | Disabled by default. One primary plus one core, at most two task nodes, on-demand only, managed scaling uses1–3 worker instances (primary excluded), one-core ceiling, idle termination1800s, bounded instance choices,encrypted local disks/S3 and in-transit TLS. |
+| EMR | Disabled by default. 13C: one primary plus one core on `emr-7.8.0` with applications `["Hadoop"]` only and the portable Spark runtime installed by `scripts/emr/bootstrap.sh`; **no task nodes and no managed scaling unless tfvars enable them**, at most one task node, `m5.xlarge` only (G3/G6 caps below); on-demand only; idle termination at most 900 s; encrypted S3, local disks and EBS; **in-transit TLS disabled** (disclosed limitation below); an encrypted EFS staging file system (G1 option ii). See "Phase 13C" below. |
 | ECS | One cluster with Container Insights and private DNS. Four Fargate service/task definitions are declared behind `runtime_enabled=false`. Default active task shape is512CPU/1024MiB. HTTP services min1/max2 and worker min1/max4. Each HTTP service has CPU target60%; worker uses visible SQS messages divided by RunningTaskCount, target10/task. No service OR scaling target exists while disabled. |
 | Ingress | No HTTP listener. HTTPS443 requires an existing same-account/region ACM ARN and approved CIDRs. Certificate remains unset and CIDRs empty. ALB access logging is intentionally OFF because the existing logs bucket uses SSE-KMS; ALB/S3 server access logs require an SSE-S3 destination. Ordinary application/EMR logs can still use that bucket. |
 | Workflow | Standard Step Functions dispatches one serialized EmbeddingWorkItem to the fixed embedding queue, with120s overall timeout,20s tasks, two retries and fixed DLQ failure routing. The separate `embedding-producer` execution identity trusts only this exact state machine/account and has queue-only SendMessage plus CMK rights. The Phase13 pipeline invokes it; no caller identity/StartExecution grant or production enqueue caller is invented here. |
 | Bedrock | Embedding participants only may InvokeModel on configured TitanV2 foundation-model ARN. `synthesis_model_id=null` means no query-api invocation grant. Model IDs are configurable, never wildcard; actual regional availability/model access is unverified. |
 | Logs/alarms | Service and Neptune audit groups retain7 days using CloudWatch's default service encryption. Queue age>300s, API/graph p95>5s, API errors>5%; missing data remains missing. SNS targets default empty; alarm resources alone do not notify a person. |
 
-**EMR runtime and permissions remain unresolved.** The Phase6A compatibility memo
+**EMR runtime (decision 12-10, ported in Phase 13C) and permissions.** The Phase6A compatibility memo
 (`docs/agent-runs/phase-06/evidence/6a/emr-compatibility.md`) records that the
-repository's Scala3 / spark-sql_2.13 job is not proven on stock EMR Scala2.12.
-The user chose offline module authoring before the preferred12D spike.
-`emr_config.enabled=true` requires an explicit release label, reviewed bootstrap
-S3 URI, TLS certificate bundle URI, proven runtime reference and acknowledgment.
+repository's Scala3 / spark-sql_2.13 job is not proven on stock EMR Scala2.12; the
+12D spike proved a bootstrap-installed portable Spark 3.5.4 / Scala 2.13.14 runtime on
+Java 17, and 13C ported that configuration to `modules/emr` (section "Phase 13C" below).
+`emr_config.enabled=true` requires a proven runtime reference, the bootstrap S3 URI and
+its sha256, the runtime archive S3 URI (G5) and the job JAR S3 URI and sha256, all in the
+project artifacts bucket, and acknowledgment (`runtime_verified`).
 It also requires nonempty `emr_service_policy_json`; the12A service role is trust-only
 without it. The policy rejects wildcard actions and wildcard ARN partition,
 service, region or account segments; only concrete EC2 Describe actions may use
@@ -279,7 +281,7 @@ such as `instance/*`; that does not authorize EMR activation. Selected control-p
 permissions still require a concrete security review before a live runtime. No broad managed policy
 is silently attached. The synthetic test policy permits DescribeInstances only:
 it is a configuration fixture, deliberately **not enough to launch a real cluster**.
-Real IAM effectiveness, service connectivity, certificates and runtime are unverified.
+Real IAM effectiveness, service connectivity and runtime are unverified.
 
 Private EMR service communication uses SG references on8443/9443; the existing
 HTTPS443 egress reaches AWS/S3. All route and route-table resources remain inside
@@ -487,3 +489,80 @@ are not established by this plan. N13 and optional N3/N4/N6 were not expanded.
 [Neptune native metrics](https://docs.aws.amazon.com/neptune/latest/userguide/cw-metrics.html),
 [DynamoDB metric dimensions](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/metrics-dimensions.html),
 [Step Functions ordered IsPresent/IsString guard](https://docs.aws.amazon.com/step-functions/latest/dg/state-choice.html).
+
+## Phase 13C: main EMR module on decision 12-10 (Subphase 13C; nothing applied, no live AWS call)
+
+`modules/emr` now matches the proven spike (`spikes/emr-spark-isolated/`) and decision 12-10
+(`docs/agent-runs/phase-12/evidence/12d-spike-closeout/decision-12-10.md`).
+
+| Item | What the module does | Where it is tested |
+| --- | --- | --- |
+| Release and applications | `emr-7.8.0` (a validated tfvars value, pinned), `applications = ["Hadoop"]` only: the stock Spark 3.5.4-amzn / Scala 2.12 is never installed | `tests/phase13c.tftest.hcl` `main_emr_matches_decision_12_10`, `release_label_other_than_emr_7_8_0_is_rejected` |
+| Bootstrap | the real `scripts/emr/bootstrap.sh` (a human uploads it in Phase 14); Terraform passes its S3 URI and sha256, the runtime archive URI and sha256 (G5), the job JAR URI and sha256, the rendered spark-defaults with its sha256, the EFS ids and optional `extra_artifacts` (step scripts and config, each with sha256 and an allowed destination) | `bootstrap_args` assertions; `scripts/tests/test_emr_bootstrap.py` (36 tests) |
+| Spark settings | rendered by the module (variable `spark_defaults`, validated): `spark.yarn.jars=local:/opt/scholarchain-runtime/jars/*`, `populateHadoopClasspath=false`, codecs without LZO, `spark.authenticate`, AES-CTR with `authEngineVersion=1`, IO encryption, G2 `spark.dynamicAllocation.shuffleTracking.enabled=true`, YARN cluster mode (set by the pipeline step). JAVA_HOME is resolved on each node by the bootstrap and never rendered | `spark_settings_rendered_by_the_module_equal_scripts_config_spark_12_10_conf` FAILS when the rendered text differs from `scripts/config/spark-12-10.conf` (same keys, same values, 22 settings) |
+| Node paths | runtime `/opt/scholarchain-runtime`, job JAR under it, Java-home file `/opt/scholarchain-spike/java-home`, step-program directory `/opt/scholarchain-spike/bin` (`PIPELINE_STEP_BIN_DIR`), EFS mount `/mnt/scholarchain`: the values pinned in `scripts/config/release.conf` | `node_paths_equal_the_pinned_release_conf_paths`, `emr_step_programs_are_pinned_artifacts_in_the_release_conf_directory` |
+| EMR step programs (finding C1) | EMR accepts at most 10,280 characters per step argument, so the step runner `sc-step.sh` and three Python programs are installed on the primary node as sha256-pinned `extra_artifacts` in `/opt/scholarchain-spike/bin/` and each EMR step is only a short launcher plus parameters (see `scripts/README.md`). `infra/terraform/emr-step-programs.json` (inside the root, so the plan materialization contains it) pins the hashes; the root guard requires every program exactly once with that hash and directory when `emr_config.enabled` | `emr_without_the_step_programs_is_rejected`, `a_step_program_with_a_stale_sha256_is_rejected`, `a_step_program_installed_in_the_wrong_directory_is_rejected`, `a_missing_step_program_is_rejected`, `a_step_program_listed_twice_is_rejected`; the manifest equals `filesha256` of the files under `scripts/emr/` (asserted in the test) |
+| EFS staging (G1 option ii) | encrypted with the project CMK, elastic throughput, backups disabled, one mount target, a security group admitting NFS 2049 only from the EMR group (with a matching NFS-only egress rule on the EMR group), an access point fixing uid/gid 1500 and the root directory, and a file-system policy that denies non-TLS and admits the EMR instance role only through the access point. Created under the same flag as the cluster | `efs_staging_is_ported_and_scoped`, `emr_disabled_by_default_creates_nothing` |
+| Instance-role policy | EFS client only through the access point; EMR auto-termination actions only on clusters carrying the stack tag | `instance_role_policy_is_scoped_to_the_access_point_and_the_stack_tag` |
+
+### Disclosed limitation: EMR in-transit TLS is disabled (human decision, 13C Step 0)
+
+The previous module enabled EMR in-transit TLS with a PEM certificate bundle. That combination is
+**untested with the custom runtime** and Phase 13 cannot test it live, so TLS is off (`EnableInTransitEncryption=false`,
+no `tls_certificate_uri` input). What stays on: S3 SSE-KMS and local-disk/EBS encryption with the project CMK (at rest),
+Spark authentication, AES-CTR network encryption (`authEngineVersion=1`; AES-GCM is not used) and Spark IO encryption.
+What is not encrypted in transit: Hadoop and YARN RPC and shuffle traffic outside Spark's own crypto, between nodes inside
+the private subnet (the EMR security group admits only its own members and the service-access group). The test
+`tls_is_disabled_and_at_rest_encryption_stays_on` pins this state, so re-enabling TLS is a reviewed change, not drift.
+
+### G2, G3, G5 and the G6 cap cross-check
+
+* **G2** dynamic allocation uses shuffle tracking (no yarn-shuffle JAR). First proven live in Phase 15.
+* **G3** `max_task_nodes` defaults to 0 and managed scaling to off; both are enabled only through `emr_config` in tfvars, with
+  validated caps: `max_task_nodes` at most 1, `task_node_count` at most `max_task_nodes`, `managed_scaling_max_capacity`
+  (core plus task, primary excluded) at most `1 + max_task_nodes`, idle timeout 60 to 900 s, instance type `m5.xlarge`.
+* **G6 cross-check.** The estimate the scripts use is instances x (EC2 + EMR rate) x (maximum runtime + idle timeout). Under the
+  pinned rates (m5.xlarge 0.192 + 0.048 USD/h), 180 minutes and 900 s, three instances cost 2.34 USD and four cost 3.12 USD,
+  above the 3 USD per-run cap, so the Terraform bound is **one** task node (not the 12B bound of two). m5.2xlarge is rejected
+  because even primary + core cost 3.12 USD. `terraform_caps_stay_inside_the_g6_per_run_cap_under_the_pinned_rates` reads
+  `scripts/config/release.conf` and `emr-pricing.conf` and fails if the largest permitted cluster exceeds `EMR_MAX_RUN_USD`, if
+  a fourth instance would not exceed it (so the bound is no longer the tightest), or if the idle timeout exceeds the script cap.
+  `scripts/config/release.conf` keeps `PIPELINE_MAX_CAPACITY=4`, so the scripts still accept up to four instances and refuse by
+  estimate. Prices are public list prices and `EMR_PRICING_CONFIRMED_BY_HUMAN` stays `false`.
+* **Task group EBS.** The task instance group pins gp3, the configured size and 3000 IOPS like the core group. `hashicorp/aws` 6.44.0 has no `throughput` argument on `aws_emr_instance_group.ebs_config` (it exists only on the cluster's primary and core groups, checked with `terraform providers schema`), so gp3's 125 MiB/s baseline is the unpinned default there.
+* **G5** the bootstrap downloads the runtime archive from `runtime_archive_uri` and verifies `runtime_archive_sha256`
+  (default `789a9684f91527dfd9b97d56acce9dbfe5dd4c328299542245da92968f916de5`) before extracting it; nothing is uploaded
+  before Phase 14. Every artifact URI must lie in the project artifacts bucket (the bucket the EMR instance role reads).
+
+### Bootstrap inputs (what the human supplies in Phase 14, in an ignored `*.local.tfvars`)
+
+`emr_config = { enabled = true, runtime_reference, runtime_verified = true, bootstrap_uri, bootstrap_sha256, runtime_archive_uri,
+job_jar_uri, job_jar_sha256, extra_artifacts = [{ uri, sha256, dest }] }` plus `emr_service_policy_json`. `extra_artifacts` MUST
+contain the four EMR step programs (finding C1), each once, at `dest = "/opt/scholarchain-spike/bin/<name>"` with the `sha256`
+printed by `python3 -I scripts/lib/pipeline.py step-manifest` (the file `emr-step-programs.json`): `sc-step.sh`,
+`sc-ceiling-check.py`, `sc-class-origin-verify.py` and `sc-render-spark-config.py`, uploaded from `scripts/emr/` at the approved
+commit. The guard refuses any other hash. `runtime_archive_sha256` must equal the decision 12-10 pin (carried finding C2); it is
+validated at the root variable and in the module, so a tfvars override cannot install a different runtime. The bootstrap script's own
+hash is passed as `--self-sha256`: EMR downloads the script, so this is drift detection, not tamper protection (the artifact
+hashes share the same trust root, the reviewed tfvars). The bootstrap's installed paths are the ones pinned in `scripts/config/release.conf`, so
+changing a path means changing `scripts/config/release.conf`, the module `node_paths` and the tests together.
+
+### Carried item 17 (closed) and the other IAM items
+
+The deployer's spike boundary now requires the stack tag (`scholarchain:stack = spike-emr`) as well as the EMR managed-policies
+tag for `ec2:TerminateInstances`, `ec2:ModifyInstanceAttribute`, `ec2:DeleteNetworkInterface` and `ec2:DeleteTags` on
+`instance/*`, `network-interface/*` (and `volume/*`); it grants no launch-template action, and the test fails if one without the stack
+tag is ever added. Because EMR propagates cluster tags to the instances it launches, the main cluster carries `scholarchain:stack`
+(`emr_config.stack_tag_value`, default `main-emr`) and the EMR managed-policies tag (kept because the supplied service policy follows
+AmazonEMRServicePolicy_v2's tag conditions). Not verified live: the tag on the ENI that EMR creates for service access in a private
+subnet; if its delete is denied, the human reviews it. See `deployer/README.md` for items 2, 14, 16 and 18. Item 5: the spike key policy and the
+main service-role policy give `kms:CreateGrant` only with `kms:GrantIsForAWSResource=true`. Items 15 and 30 are wording fixes; item
+23 removes extra blank lines at the end of two files.
+
+Destroy still needs **two passes** because of the `aws_eip.nat` `DisassociateAddress` 403 (carried item 24); the grant is not widened.
+
+### Tests added or changed in 13C
+
+`tests/phase13c.tftest.hcl` (28 runs); `tests/phase12b.tftest.hcl` and `phase12c.tftest.hcl` follow the new `emr_config` shape (Hadoop only,
+TLS off, idle 900); `deployer/tests/deployer.tftest.hcl` adds the item 2, 14, 16 and 17 negative tests; `spikes/emr-spark-isolated/tests/spike.tftest.hcl`
+adds the item 5 and 16 tests. Each negative test was shown to FAIL on the old policy by a temporary mutation (recorded in the 13C evidence).

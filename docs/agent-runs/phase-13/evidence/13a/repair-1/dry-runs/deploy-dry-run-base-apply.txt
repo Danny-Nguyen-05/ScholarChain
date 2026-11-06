@@ -1,0 +1,38 @@
+# exit code: 0
+CONFIG-FILE: using /var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-j4gkud6z/fixture-release.conf instead of the repository config (test-only SCHOLARCHAIN_CONFIG_FILE)
+STEP: start
+[2026-11-05T21:10:28Z] [20261105T211028Z-23735] INFO script=deploy.sh mode=dry-run run_id=20261105T211028Z-23735 repo_root=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-j4gkud6z/repo
+STEP: inputs
+STEP: terraform-version
+[2026-11-05T21:10:28Z] [20261105T211028Z-23735] INFO terraform 1.13.5 accepted (binary: terraform)
+STEP: clean-tree
+[2026-11-05T21:10:28Z] [20261105T211028Z-23735] INFO clean tree at 385ecf654adb0073ea3f16c126954e55a732ee08
+STEP: approval-record
+[2026-11-05T21:10:28Z] [20261105T211028Z-23735] INFO approval record parsed (6 required lines, each exactly once)
+STEP: stage-match
+STEP: commit-match
+STEP: region-match
+STEP: prespend-receipt
+pre-spend receipt ok: monitoring active, snapshot 1.0 h old, headroom 150.25 USD
+STEP: plan-checksum
+[2026-11-05T21:10:28Z] [20261105T211028Z-23735] INFO plan sha256 matches the approval record (verified private copy; the copy is what is applied)
+STEP: plan-provenance
+plan provenance ok: receipt binds plan sha256, clean source commit, account, region, environment and revision
+STEP: plan-inspect
+CMD: timeout=900s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 terraform -chdir=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-j4gkud6z/repo/infra/terraform show -json /var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-j4gkud6z/sc-tmp.WC7SNs/copy-base-apply.tfplan-23735-2 
+saved plan target ok: provider region us-east-2, account hash matches, image_revision none
+STEP: release-manifest
+[2026-11-05T21:10:28Z] [20261105T211028Z-23735] INFO base-apply pushes no image: the release manifest is not used
+STEP: runtime-archive
+[2026-11-05T21:10:28Z] [20261105T211028Z-23735] INFO runtime archive verified: size=20 sha256=db7d099da57f11bb06775f583eabca5b1a3f4f47c4bcfc9b97ed48a789d21e00
+STEP: account-check
+DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws sts get-caller-identity --region us-east-2 --query Account --output text 
+[2026-11-05T21:10:28Z] [20261105T211028Z-23735] INFO dry run: the account comparison runs only with --execute, before any mutating command
+STEP: terraform-apply
+DRY-RUN CMD: timeout=3600s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 terraform -chdir=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-j4gkud6z/repo/infra/terraform apply -input=false -lock-timeout=60s /var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-j4gkud6z/sc-tmp.WC7SNs/copy-base-apply.tfplan-23735-2 
+STEP: runtime-archive-upload
+DRY-RUN CMD: timeout=3600s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws s3 cp /var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-j4gkud6z/runtime.tgz s3://bucket-test/key/runtime.tgz --region us-east-2 --only-show-errors --checksum-algorithm SHA256 --metadata sha256=db7d099da57f11bb06775f583eabca5b1a3f4f47c4bcfc9b97ed48a789d21e00 
+DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws s3api head-object --region us-east-2 --bucket bucket-test --key key/runtime.tgz --query \[ContentLength\,Metadata.sha256\] --output text 
+STEP: write-deploy-manifest
+[2026-11-05T21:10:28Z] [20261105T211028Z-23735] INFO dry run: would write target/release/385ecf654adb0073ea3f16c126954e55a732ee08/deploy-manifest-base-apply-20261105T211028Z-23735.json (stage, digests, task-definition ARNs, plan sha256, commit, region, account sha256)
+RESULT: DRY-RUN all local checks passed (stage base-apply: approval record, pre-spend receipt, plan, provenance); no mutating command was run

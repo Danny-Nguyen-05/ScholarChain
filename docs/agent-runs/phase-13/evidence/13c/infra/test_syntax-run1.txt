@@ -1,0 +1,6 @@
+....................
+----------------------------------------------------------------------
+Ran 20 tests in 5.804s
+
+OK
+SUITE-SUMMARY ran=20 executed=20 skipped_tests=0 skipped_classes=0 failures=0 errors=0

@@ -1,0 +1,3 @@
+# Orchestrator (2026-11-06T21:48:14Z): working-tree sources vs the 13C repair-round-1 clean snapshot (local commit 3093334fc04ebd5b3acef729bc5ded174bc16470) used for repair1-verification.txt
+# for each path in git ls-files -co --exclude-standard (excluding docs/agent-runs/phase-13/): cmp -s <path> <snapshot>/<path>
+compared=5437 differing=0

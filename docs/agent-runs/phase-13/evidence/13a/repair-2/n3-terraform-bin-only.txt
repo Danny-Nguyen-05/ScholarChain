@@ -1,0 +1,14 @@
+$ env -i HOME=$HOME PATH=/usr/bin:/bin TERRAFORM_BIN=/opt/homebrew/bin/terraform /opt/homebrew/bin/python3 -I -m unittest discover -s . -p test_terraform_r1.py -v
+terraform on that PATH: none
+test_a_fixture_of_the_real_repository_holds_only_tracked_files (test_terraform_r1.FixtureBuilderTests.test_a_fixture_of_the_real_repository_holds_only_tracked_files) ... ok
+test_only_tracked_sources_are_copied (test_terraform_r1.FixtureBuilderTests.test_only_tracked_sources_are_copied) ... ok
+test_synthetic_ignored_private_files_are_absent_from_the_fixture (test_terraform_r1.FixtureBuilderTests.test_synthetic_ignored_private_files_are_absent_from_the_fixture) ... ok
+test_the_repaired_working_tree_test_file_content_is_used (test_terraform_r1.FixtureBuilderTests.test_the_repaired_working_tree_test_file_content_is_used) ... ok
+A skip is not a pass: this asserts a SUCCESSFUL terraform test run with a valid in-module route. ... ok
+test_clean_fixture_passes (test_terraform_r1.RouteOwnershipTest.test_clean_fixture_passes) ... ok
+test_route_resource_under_spikes_is_accepted (test_terraform_r1.RouteOwnershipTest.test_route_resource_under_spikes_is_accepted) ... ok
+test_stray_route_outside_network_module_still_fails_r1 (test_terraform_r1.RouteOwnershipTest.test_stray_route_outside_network_module_still_fails_r1) ... ok
+Fixture rebuilt from a throwaway git checkout that holds ignored private files: they are absent. ... ok
+test_the_fixture_is_isolated_from_the_real_checkout (test_terraform_r1.RouteOwnershipTest.test_the_fixture_is_isolated_from_the_real_checkout) ... ok
+Ran 10 tests in 24.388s
+OK

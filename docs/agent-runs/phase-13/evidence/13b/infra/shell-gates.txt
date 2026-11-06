@@ -1,0 +1,22 @@
+# bash -n and shellcheck -x -P SCRIPTDIR on every *.sh under scripts/ (2026-11-06T06:53:45Z)
+shellcheck version: 0.11.0
+scripts/archive-evidence.sh                             bash-n=ok shellcheck-exit=0 findings=0
+scripts/check.sh                                        bash-n=ok shellcheck-exit=0 findings=0
+scripts/cleanup.sh                                      bash-n=ok shellcheck-exit=0 findings=0
+scripts/deploy.sh                                       bash-n=ok shellcheck-exit=0 findings=0
+scripts/lib/common.sh                                   bash-n=ok shellcheck-exit=0 findings=0
+scripts/package.sh                                      bash-n=ok shellcheck-exit=0 findings=0
+scripts/phase12d-spike/collect-evidence.sh              bash-n=ok shellcheck-exit=0 findings=0
+scripts/phase12d-spike/emr/bootstrap.sh                 bash-n=ok shellcheck-exit=0 findings=0
+scripts/phase12d-spike/emr/collect-results.sh           bash-n=ok shellcheck-exit=0 findings=0
+scripts/phase12d-spike/emr/run-step.sh                  bash-n=ok shellcheck-exit=0 findings=0
+scripts/phase12d-spike/inventory.sh                     bash-n=ok shellcheck-exit=0 findings=0
+scripts/phase12d-spike/preflight.sh                     bash-n=ok shellcheck-exit=0 findings=0
+scripts/phase4-emr-smoke.sh                             bash-n=ok shellcheck-exit=0 findings=0
+scripts/plan.sh                                         bash-n=ok shellcheck-exit=0 findings=0
+scripts/rollback.sh                                     bash-n=ok shellcheck-exit=0 findings=0
+scripts/run-bounded-pipeline.sh                         bash-n=ok shellcheck-exit=0 findings=0
+scripts/run-experiment.sh                               bash-n=ok shellcheck-exit=0 findings=0
+scripts/smoke-local.sh                                  bash-n=ok shellcheck-exit=0 findings=0
+scripts/smoke-test.sh                                   bash-n=ok shellcheck-exit=0 findings=0
+files=19 failures=0

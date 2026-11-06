@@ -12,10 +12,20 @@ enable_budget_resource = false # Pending account support and real budget.
 # Never put access keys, tokens, secret values, or state/plan content here.
 
 # Accepted12B local authoring choices. These flags authorize no cloud action.
-neptune_enabled                     = false # Explicit engine/family still pending.
-runtime_enabled                     = false # Current service entrypoints do not compose live AWS stores.
-runtime_composition_verified        = false
-emr_config                          = { enabled = false } # Release/runtime/bootstrap remain unselected.
+neptune_enabled              = false # Explicit engine/family still pending.
+runtime_enabled              = false # Current service entrypoints do not compose live AWS stores.
+runtime_composition_verified = false
+# 13C: decision 12-10 values. G3: no task nodes and no managed scaling unless these are changed (caps: at most one task
+# node, validated against the G6 per-run cap); the idle timeout is at most 900 s. Disabled until Phase 14: the bootstrap,
+# runtime archive (G5) and job JAR S3 URIs and their sha256 values are supplied then, in an ignored *.local.tfvars.
+emr_config = {
+  enabled                 = false
+  release_label           = "emr-7.8.0"
+  max_task_nodes          = 0
+  task_node_count         = 0
+  managed_scaling_enabled = false
+  idle_timeout_seconds    = 900
+}
 neptune_min_ncu                     = 1
 neptune_max_ncu                     = 2.5
 neptune_backup_days                 = 7

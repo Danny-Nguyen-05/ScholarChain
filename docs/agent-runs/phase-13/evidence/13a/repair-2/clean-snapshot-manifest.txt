@@ -1,0 +1,37 @@
+Clean snapshot for repair round 2 (orchestrator, 2026-11-05)
+
+Built from `git ls-files -co --exclude-standard` (tracked plus non-ignored untracked files). That is base 8bee663040ba4e66b1edc1676d5346621c3f7384 plus the uncommitted 13A, repair-1 and repair-2 changes.
+
+Ignored files were excluded: target/, .terraform/, *.local.tfvars, the generated test marker, and saved plans.
+
+Copied with `rsync --from0 --files-from` into a fresh scratch directory. Then `git init` and one local snapshot commit, c93c3763058e47bffd8d5267ed06244fe452bc5a. That commit exists only in the temporary scratch repo. File count: 5419.
+
+Command (in the snapshot root): scripts/check.sh
+Result: RESULT: PASS gates=7, exit=0. Start 2026-11-06T01:54:09Z, end 2026-11-06T02:23:49Z.
+
+| Gate | Result |
+|---|---|
+| constitution | PASS |
+| hooks | PASS |
+| shell | PASS |
+| python | PASS |
+| script-tests | PASS, 827 s |
+| sbt | PASS, 798 s |
+| terraform | PASS, 148 s |
+
+script-tests suites:
+- scripts/tests: Ran 427, 426 executed, 1 skipped (see the note below)
+- phase12d-spike: 70 executed
+- billing test_budget_execution: 69 executed
+- billing test_budget_verification: 47 executed
+- billing test_publication_evidence: 39 executed
+
+sbt test summaries: 40/0, 667/0, 18 with 1 canceled (the optional live JDK probe)/0.
+
+terraform roots: 7, 19, 29, 38, 6 and 40 passed, 0 failed each.
+
+Note on the one skip. In a fresh snapshot, `test_terraform_state_binding.py` (7 real-Terraform R1 tests) skips at class level: it needs `infra/terraform/.terraform/providers`, which only exists after the terraform gate's `init`, and the script-tests gate runs before that gate. That is why 427 ran instead of 434.
+
+After the full run, providers were present in the snapshot. The orchestrator then ran `cd scripts/tests && python3 -I -m unittest discover -s . -p test_terraform_state_binding.py -v` in the snapshot: Ran 7 tests, OK, 0 skipped, exit 0 (`state-binding-in-snapshot.txt`). infra-engineer's working-tree run also executed all 434 tests with 0 skipped (`unittest-full.txt`).
+
+Post-run identity check: `cmp` of every working-tree source file outside docs/agent-runs/phase-13 against the snapshot gave compared=5367, differing=0.

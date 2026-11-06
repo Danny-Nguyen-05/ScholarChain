@@ -1,0 +1,234 @@
+# 13C repair round 1, finding C1: dry run at maximum-length realistic values (63-character bucket, 895-character prefix and
+# references, 64-character run id, 32-character cluster id suffix, 128-character dataset tokens). Fake binaries, no cloud call.
+# produced by: SC_ARG_LENGTH_EVIDENCE=<file> python3 -m unittest test_c1_step_args.MaximumLengthTests.test_retained_dry_run_prints_every_argument_length
+# (cd scripts/tests). Lines kept from the dry run stdout: STEP:, PLAN: run-id, PLAN: step-, PLAN: artifact-sha256, STEP-ARG-LENGTHS:, STEP-ARG-LIMIT:, STEP-TIMEOUT:, RUN-CONFIG-SHA256:, G6-STATUS:, RESULT:
+
+STEP: start
+STEP: inputs
+STEP: terraform-only
+STEP: g6-estimate
+STEP: plan
+PLAN: run-id: bp-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+PLAN: artifact-sha256 er-config: 11a8f53ff8f4c0847ab8546bf9b9e449cbc8ba01f59f71da6d95e8a923cdbdb4
+PLAN: artifact-sha256 er-jar: 5b27764eac3ed64418fe0219db75fa62db719c61cbfdca265ad60fc40921ba77
+PLAN: artifact-sha256 er-policy: 22d5a4d55e09e007fcf0457037650376e5f56c5af81d29e5c64b2deafdbd77f8
+PLAN: artifact-sha256 hadoop-config: 85782e03a171aae47f63e8e6ef71ef9131773f520acba26b681d6d85a1551a5c
+PLAN: artifact-sha256 hadoop-libjars: 2205108dd635c5001e27a4c9d0cad8ec3a22e1a41ca766b77d475637b05a16b4
+PLAN: artifact-sha256 hadoop-submit-jar: 6f17d9738240ea4f0e8568e732b969812374be0476ef24b694bad1bf25f895b0
+PLAN: artifact-sha256 job-jar: 8437efb23a74e92c39090ae9c6d5cc35e9b952dc8ae87c4b30c692f3329c437a
+PLAN: artifact-sha256 spark-config-template: 049518035b3aecaf92b5f177e267e5c541b81c6e909879b907c737cf46bcdcc4
+PLAN: step-bin-dir: /opt/scholarchain-spike/bin
+PLAN: step-program-sha256 sc-ceiling-check.py: 57e9543cd94d5924bfb4bb8cec150ad755ba251ee5b6822275d9bc7a56d10b5c
+PLAN: step-program-sha256 sc-class-origin-verify.py: 5df9197a60fe41530859377518609b67c70eec60c93c8256e6742ad5ffd17a79
+PLAN: step-program-sha256 sc-render-spark-config.py: 5d606d4883a0d4e4d869ff7f69ab56317743a4912940ac34e5c80337a8fa056c
+PLAN: step-program-sha256 sc-step.sh: ad7258d1221344de2b065bff18dc5d21356a1fb71b52e21dc52b47e499b99ed3
+RUN-CONFIG-SHA256: aae8208f3e9ebdb3e5408e76154e7400b2001aabd2948cfe3e4f5773f0e83e64
+STEP: arg-limit
+STEP-ARG-LENGTHS: stage-in limit=10280 count=14 max=978 total=1586 lengths=4,2,293,7,64,8,16,13,71,68,21,978,16,25
+STEP-ARG-LENGTHS: hadoop-prep limit=10280 count=27 max=997 total=4176 lengths=4,2,293,7,64,11,17,13,71,68,21,997,79,994,76,104,75,43,79,142,143,146,147,146,147,143,144
+STEP-ARG-LENGTHS: entity-resolution limit=10280 count=19 max=993 total=3833 lengths=4,2,293,7,64,17,17,13,71,68,21,48,9,982,75,993,78,993,78
+STEP-ARG-LENGTHS: spark-class-origin limit=10280 count=41 max=293 total=2124 lengths=4,2,293,7,64,18,16,13,71,68,21,48,37,66,76,15,28,30,84,65,51,45,211,34,44,51,50,43,47,63,46,49,33,35,31,33,35,38,33,62,64
+STEP-ARG-LENGTHS: spark-job limit=10280 count=44 max=997 total=3268 lengths=4,2,293,7,64,9,17,13,71,68,21,48,37,66,76,15,28,30,84,78,997,77,65,51,45,211,34,44,51,50,43,47,63,46,49,33,35,31,33,35,38,33,62,64
+STEP-ARG-LENGTHS: copy-out limit=10280 count=14 max=1043 total=1653 lengths=4,2,293,7,64,8,16,13,71,68,21,1043,16,27
+STEP-ARG-LIMIT: no step argument exceeds 10280 characters (PIPELINE_STEP_ARG_MAX_CHARS, pinned; the EMR HadoopJarStepConfig.Args limit); checked before any cloud call, the ledger reservation and the approval
+STEP: g6-gate
+G6-STATUS: --execute would be refused (1 reason(s) above); this dry run still printed every command
+STEP: approval-record
+STEP: prespend-receipt
+STEP: account-check
+STEP: cluster-check
+STEP: step-stage-in
+STEP-TIMEOUT: stage-in 270s (the whole step body, including every copy, runs on the node under timeout --kill-after=60s in its own process group, which is sent TERM and then KILL after the grace on timeout or cancel; YARN applications are also killed by tag when it fires)
+STEP: step-hadoop-prep
+STEP-TIMEOUT: hadoop-prep 1080s (the whole step body, including every copy, runs on the node under timeout --kill-after=60s in its own process group, which is sent TERM and then KILL after the grace on timeout or cancel; YARN applications are also killed by tag when it fires)
+STEP: step-entity-resolution
+STEP-TIMEOUT: entity-resolution 1080s (the whole step body, including every copy, runs on the node under timeout --kill-after=60s in its own process group, which is sent TERM and then KILL after the grace on timeout or cancel; YARN applications are also killed by tag when it fires)
+STEP: step-spark-class-origin
+STEP-TIMEOUT: spark-class-origin 270s (the whole step body, including every copy, runs on the node under timeout --kill-after=60s in its own process group, which is sent TERM and then KILL after the grace on timeout or cancel; YARN applications are also killed by tag when it fires)
+STEP: step-spark-job
+STEP-TIMEOUT: spark-job 2160s (the whole step body, including every copy, runs on the node under timeout --kill-after=60s in its own process group, which is sent TERM and then KILL after the grace on timeout or cancel; YARN applications are also killed by tag when it fires)
+STEP: step-copy-out
+STEP-TIMEOUT: copy-out 540s (the whole step body, including every copy, runs on the node under timeout --kill-after=60s in its own process group, which is sent TERM and then KILL after the grace on timeout or cancel; YARN applications are also killed by tag when it fires)
+STEP: dry-run-complete
+RESULT: DRY-RUN run=bp-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa steps=6 run_config_sha256=aae8208f3e9ebdb3e5408e76154e7400b2001aabd2948cfe3e4f5773f0e83e64 estimate_usd=1.26; no aws, hadoop or spark command was run and nothing was written
+
+# per-argument lengths (KEY and length only; the EMR limit is 10280 characters per argument)
+step stage-in: 14 arguments, longest 978, total 1586
+  arg[ 0] bash                            4
+  arg[ 1] -c                              2
+  arg[ 2] launcher                      293
+  arg[ 3] sc-step                         7
+  arg[ 4] ad7258d1221344de2b065bff18dc5d21356a1fb71b52e21dc52b47e499b99ed3     64
+  arg[ 5] stage-in                        8
+  arg[ 6] STEP_SECONDS                   16
+  arg[ 7] KILL_AFTER                     13
+  arg[ 8] RUN_ID                         71
+  arg[ 9] TAG                            68
+  arg[10] MNT                            21
+  arg[11] INPUT_PREFIX                  978
+  arg[12] REGION                         16
+  arg[13] MAX_INPUT_BYTES                25
+step hadoop-prep: 27 arguments, longest 997, total 4176
+  arg[ 0] bash                            4
+  arg[ 1] -c                              2
+  arg[ 2] launcher                      293
+  arg[ 3] sc-step                         7
+  arg[ 4] ad7258d1221344de2b065bff18dc5d21356a1fb71b52e21dc52b47e499b99ed3     64
+  arg[ 5] hadoop-prep                    11
+  arg[ 6] STEP_SECONDS                   17
+  arg[ 7] KILL_AFTER                     13
+  arg[ 8] RUN_ID                         71
+  arg[ 9] TAG                            68
+  arg[10] MNT                            21
+  arg[11] SUBMIT_JAR_REF                997
+  arg[12] SUBMIT_JAR_SHA                 79
+  arg[13] LIBJARS_REF                   994
+  arg[14] LIBJARS_SHA                    76
+  arg[15] CONFIG_REF                    104
+  arg[16] CONFIG_SHA                     75
+  arg[17] CEILINGS                       43
+  arg[18] CEILING_PY_SHA                 79
+  arg[19] DBLP_SNAPSHOT                 142
+  arg[20] DBLP_RETRIEVAL                143
+  arg[21] OPENALEX_SNAPSHOT             146
+  arg[22] OPENALEX_RETRIEVAL            147
+  arg[23] CROSSREF_SNAPSHOT             146
+  arg[24] CROSSREF_RETRIEVAL            147
+  arg[25] ORCID_SNAPSHOT                143
+  arg[26] ORCID_RETRIEVAL               144
+step entity-resolution: 19 arguments, longest 993, total 3833
+  arg[ 0] bash                            4
+  arg[ 1] -c                              2
+  arg[ 2] launcher                      293
+  arg[ 3] sc-step                         7
+  arg[ 4] ad7258d1221344de2b065bff18dc5d21356a1fb71b52e21dc52b47e499b99ed3     64
+  arg[ 5] entity-resolution              17
+  arg[ 6] STEP_SECONDS                   17
+  arg[ 7] KILL_AFTER                     13
+  arg[ 8] RUN_ID                         71
+  arg[ 9] TAG                            68
+  arg[10] MNT                            21
+  arg[11] JAVA_HOME_FILE                 48
+  arg[12] ER_XMX                          9
+  arg[13] ER_JAR_REF                    982
+  arg[14] ER_JAR_SHA                     75
+  arg[15] ER_POLICY_REF                 993
+  arg[16] ER_POLICY_SHA                  78
+  arg[17] ER_CONFIG_REF                 993
+  arg[18] ER_CONFIG_SHA                  78
+step spark-class-origin: 41 arguments, longest 293, total 2124
+  arg[ 0] bash                            4
+  arg[ 1] -c                              2
+  arg[ 2] launcher                      293
+  arg[ 3] sc-step                         7
+  arg[ 4] ad7258d1221344de2b065bff18dc5d21356a1fb71b52e21dc52b47e499b99ed3     64
+  arg[ 5] spark-class-origin             18
+  arg[ 6] STEP_SECONDS                   16
+  arg[ 7] KILL_AFTER                     13
+  arg[ 8] RUN_ID                         71
+  arg[ 9] TAG                            68
+  arg[10] MNT                            21
+  arg[11] JAVA_HOME_FILE                 48
+  arg[12] RUNTIME_DIR                    37
+  arg[13] JOB_JAR                        66
+  arg[14] JOB_JAR_SHA                    76
+  arg[15] MAX_EXECUTORS                  15
+  arg[16] EXPECTED_SPARK_VERSION         28
+  arg[17] EXPECTED_SCALA_VERSION         30
+  arg[18] CLASS_ORIGIN_PY_SHA            84
+  arg[19] SPARK_CONF                     65
+  arg[20] SPARK_CONF                     51
+  arg[21] SPARK_CONF                     45
+  arg[22] SPARK_CONF                    211
+  arg[23] SPARK_CONF                     34
+  arg[24] SPARK_CONF                     44
+  arg[25] SPARK_CONF                     51
+  arg[26] SPARK_CONF                     50
+  arg[27] SPARK_CONF                     43
+  arg[28] SPARK_CONF                     47
+  arg[29] SPARK_CONF                     63
+  arg[30] SPARK_CONF                     46
+  arg[31] SPARK_CONF                     49
+  arg[32] SPARK_CONF                     33
+  arg[33] SPARK_CONF                     35
+  arg[34] SPARK_CONF                     31
+  arg[35] SPARK_CONF                     33
+  arg[36] SPARK_CONF                     35
+  arg[37] SPARK_CONF                     38
+  arg[38] SPARK_CONF                     33
+  arg[39] SPARK_CONF                     62
+  arg[40] SPARK_CONF                     64
+step spark-job: 44 arguments, longest 997, total 3268
+  arg[ 0] bash                            4
+  arg[ 1] -c                              2
+  arg[ 2] launcher                      293
+  arg[ 3] sc-step                         7
+  arg[ 4] ad7258d1221344de2b065bff18dc5d21356a1fb71b52e21dc52b47e499b99ed3     64
+  arg[ 5] spark-job                       9
+  arg[ 6] STEP_SECONDS                   17
+  arg[ 7] KILL_AFTER                     13
+  arg[ 8] RUN_ID                         71
+  arg[ 9] TAG                            68
+  arg[10] MNT                            21
+  arg[11] JAVA_HOME_FILE                 48
+  arg[12] RUNTIME_DIR                    37
+  arg[13] JOB_JAR                        66
+  arg[14] JOB_JAR_SHA                    76
+  arg[15] MAX_EXECUTORS                  15
+  arg[16] EXPECTED_SPARK_VERSION         28
+  arg[17] EXPECTED_SCALA_VERSION         30
+  arg[18] CLASS_ORIGIN_PY_SHA            84
+  arg[19] RENDER_PY_SHA                  78
+  arg[20] TEMPLATE_REF                  997
+  arg[21] TEMPLATE_SHA                   77
+  arg[22] SPARK_CONF                     65
+  arg[23] SPARK_CONF                     51
+  arg[24] SPARK_CONF                     45
+  arg[25] SPARK_CONF                    211
+  arg[26] SPARK_CONF                     34
+  arg[27] SPARK_CONF                     44
+  arg[28] SPARK_CONF                     51
+  arg[29] SPARK_CONF                     50
+  arg[30] SPARK_CONF                     43
+  arg[31] SPARK_CONF                     47
+  arg[32] SPARK_CONF                     63
+  arg[33] SPARK_CONF                     46
+  arg[34] SPARK_CONF                     49
+  arg[35] SPARK_CONF                     33
+  arg[36] SPARK_CONF                     35
+  arg[37] SPARK_CONF                     31
+  arg[38] SPARK_CONF                     33
+  arg[39] SPARK_CONF                     35
+  arg[40] SPARK_CONF                     38
+  arg[41] SPARK_CONF                     33
+  arg[42] SPARK_CONF                     62
+  arg[43] SPARK_CONF                     64
+step copy-out: 14 arguments, longest 1043, total 1653
+  arg[ 0] bash                            4
+  arg[ 1] -c                              2
+  arg[ 2] launcher                      293
+  arg[ 3] sc-step                         7
+  arg[ 4] ad7258d1221344de2b065bff18dc5d21356a1fb71b52e21dc52b47e499b99ed3     64
+  arg[ 5] copy-out                        8
+  arg[ 6] STEP_SECONDS                   16
+  arg[ 7] KILL_AFTER                     13
+  arg[ 8] RUN_ID                         71
+  arg[ 9] TAG                            68
+  arg[10] MNT                            21
+  arg[11] OUTPUT_PREFIX                1043
+  arg[12] REGION                         16
+  arg[13] MAX_COPYOUT_BYTES              27
+all six steps: total 16640 characters over 159 arguments
+
+# old step form versus new (the length of the EMR step argument that carried the program text)
+# old = the 13C wrap_body form reviewed in review 1: ONE `bash -c <body>` argument, measured by re-running the reviewed generator
+#       (the reviewer's estimates from fixture values were spark-job ~11.8 KB and class-origin ~10.2 KB; this reproduces 11,857 and 10,229)
+# new = longest argument of the new form, at the same maximum-length values as above; every argument is checked against the limit 10280
+step                  old (fixture) old (max values)  new longest new args / total chars
+stage-in                       3023             4065          978             14 / 1586
+hadoop-prep                    6566             9450          997             27 / 4176
+entity-resolution              4094             7012          993             19 / 3833
+spark-class-origin            10229            10385          293             41 / 2124  OVER LIMIT
+spark-job                     11857            12951          997             44 / 3268  OVER LIMIT
+copy-out                       3797             4891         1043             14 / 1653
+old max-value note: the old hadoop-config reference was a short node path (/home/hadoop/prep-config.json), as the old form accepted; the new run above used a 104-character local temp path.

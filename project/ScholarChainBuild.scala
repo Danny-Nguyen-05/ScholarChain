@@ -17,7 +17,8 @@ object ScholarChainBuild {
   val checkTask = taskKey[Unit]("Format check, compile, test, contract tests, markTestRun")
   val checkProbeInjectFailure =
     taskKey[Unit]("No-op unless -Dscholarchain.checkProbe.fail=true (check failure-path probe)")
-  val checkJava17 = taskKey[Unit]("Fail check unless the sbt JVM is Java 17")
+  val checkJava17 =
+    taskKey[Unit]("Fail check and every packaging task unless the sbt JVM is Java 17")
   val dockerLocalImage = taskKey[Unit]("Build the local services container image")
   val serviceDistribution = taskKey[File]("Package services JAR and runtime dependency JARs")
   val hadoopLocalClasspath =
@@ -95,6 +96,7 @@ object ScholarChainBuild {
       storageProject: ProjectReference
   ): Seq[Setting[_]] = Seq(
     serviceDistribution := {
+      checkJava17.value
       val appJar = (Compile / packageBin).value
       val dependencies = (Runtime / externalDependencyClasspath).value.files ++ Seq(
         (coreProject / Compile / packageBin).value,
@@ -112,6 +114,12 @@ object ScholarChainBuild {
       )
       output
     }
+  )
+
+  /** Every assembly entry point must run the Java 17 guard before it writes an artifact. */
+  val assemblyJava17GuardSettings: Seq[Setting[_]] = Seq(
+    assembly := assembly.dependsOn(checkJava17).value,
+    assemblyPackageDependency := assemblyPackageDependency.dependsOn(checkJava17).value
   )
 
   private val sparkMavenOrg = "org.apache.spark"
@@ -148,6 +156,7 @@ object ScholarChainBuild {
       }
     },
     sparkJobJar := {
+      checkJava17.value
       val coreJar = (coreProject / Compile / packageBin).value
       val sparkJar = (Compile / packageBin).value
       val bundle = assemblyPackageDependency.value
@@ -157,7 +166,7 @@ object ScholarChainBuild {
       streams.value.log.info(s"Verified Spark job JAR: ${output.getAbsolutePath}")
       output
     }
-  )
+  ) ++ assemblyJava17GuardSettings
 
   private val hadoopMavenOrg = "org.apache.hadoop"
   private val submitJarForbiddenLibMarkers = Vector(
@@ -195,6 +204,7 @@ object ScholarChainBuild {
       }
     },
     hadoopDependencyBundle := {
+      checkJava17.value
       val coreJar = (coreProject / Compile / packageBin).value
       val _ = assemblyPackageDependency.value
       val bundle = (assemblyPackageDependency / assemblyOutputPath).value
@@ -203,6 +213,7 @@ object ScholarChainBuild {
       bundle
     },
     hadoopSubmitJar := {
+      checkJava17.value
       val thinJar = (Compile / packageBin).value
       val bundle = hadoopDependencyBundle.value
       val submitName =
@@ -211,7 +222,7 @@ object ScholarChainBuild {
       writeHadoopSubmitJar(thinJar, bundle, out, streams.value.log)
       out
     }
-  )
+  ) ++ assemblyJava17GuardSettings
 
   private def mergeCoreJarIntoBundle(bundle: File, coreJar: File, log: sbt.util.Logger): Unit = {
     HadoopBundleMerge.merge(bundle, coreJar)
@@ -446,7 +457,12 @@ object ScholarChainBuild {
     digest.digest().map(b => f"${b & 0xff}%02x").mkString
   }
 
-  lazy val commonSettings: Seq[Setting[_]] = Seq(
+  /** Jar packaging of any module (thin jars feed every release artifact) runs the guard first. */
+  val packageJava17GuardSettings: Seq[Setting[_]] = Seq(
+    Compile / packageBin := (Compile / packageBin).dependsOn(checkJava17).value
+  )
+
+  lazy val commonSettings: Seq[Setting[_]] = packageJava17GuardSettings ++ Seq(
     scalaVersion := Versions.scala3,
     scalacOptions ++= Seq("-deprecation", "-feature"),
     libraryDependencies ++= Seq(

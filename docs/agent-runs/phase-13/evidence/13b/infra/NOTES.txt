@@ -1,0 +1,16 @@
+13B infra-engineer retained outputs (observed 2026-11-06). Raw files are in this directory.
+
+shell-gates.txt                    bash -n and shellcheck -x -P SCRIPTDIR on every *.sh under scripts/: 19 files, 0 failures, 0 findings
+unittest-scripts-tests.txt         cd scripts/tests && python3 -I -m unittest discover -s . -p 'test_*.py' -v: Ran 722 tests in 1069.080s, OK, 0 skips
+pipeline-dry-run-full.txt          run-bounded-pipeline.sh dry run (full printout incl. the Spark step body and every aws emr add-steps command)
+pipeline-refused-*.txt             refusals before any cloud call (capacity, G6 per-run cap, budget, Phase 4 ceiling); guard-aws-calls.log is empty (guard aws/yarn/hadoop/spark-submit/terraform on PATH were never called)
+pipeline-execute-refused-unconfirmed-pricing.txt   --execute with the committed EMR_PRICING_CONFIRMED_BY_HUMAN=false: refused at step g6-gate, exit 3
+experiment-*.txt                   run-experiment.sh in a TEMP git repo: committed fixture manifest dry run; refused untracked / modified / missing budget / missing teardown
+smoke-stub-*.txt                   smoke-test.sh against the local stub server: healthy, async, and four failure modes (exit 4, last STEP marker = failed check)
+smoke-local-real.txt               scripts/smoke-local.sh: REAL query-api from modules/services/target/distribution, offline-synthetic, throwaway key (only its sha256 passed): all 6 checks PASS
+archive-real-run.txt, archive-real/ archive-evidence.sh real run on local evidence into a TEMP dir (INDEX.json, tar with no ._ member, S3 command printed only); the G5 runtime tgz is indexed (not copied) with sha256 789a9684... matching decision 12-10
+check-partial.txt                  scripts/check.sh --only constitution,hooks,shell,python,terraform,script-tests: all six gates PASS, "RESULT: PARTIAL passed=6 skipped: sbt", and "SUITE-PENDING: required suite tests/scripts does not exist yet".
+                                   CAVEAT: the exit code of THAT run was not captured (my wrapper echoed $? after a command substitution, so check-partial.end shows 0 wrongly). The exit code 5 is observed in check-partial-fast.txt/.exit (gates constitution,hooks,shell,python,terraform): exit=5, RESULT: PARTIAL.
+item31-before-fix.txt              the 3 new item 31 tests FAIL against the pre-fix collect-evidence.sh (git HEAD version) and pass after the fix
+mutation checks (observed in a scratch copy): (1) making kill_tagged a no-op fails test_item_1_the_runtime_cap_kills_the_yarn_application_by_tag for exits 124, 137, 143; (2) removing the class-origin re-check from the spark-job body fails test_a_failing_class_origin_result_stops_the_spark_job_before_spark_submit and test_the_class_origin_check_precedes_the_spark_job_and_is_fail_closed_in_both_steps
+pricing/                           public Price List files used for the rates (EMR us-east-2 JSON, offer index); the EC2 CSV (442 MB) was streamed and filtered, not stored

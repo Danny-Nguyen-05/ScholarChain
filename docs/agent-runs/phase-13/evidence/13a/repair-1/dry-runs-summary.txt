@@ -1,0 +1,10 @@
+plan-dry-run.txt                   exit=0  RESULT: DRY-RUN no aws or terraform command was run; re-run with --execute (approval point 4) to pla
+plan-dry-run-source-commit.txt     exit=0  RESULT: DRY-RUN no aws or terraform command was run; re-run with --execute (approval point 4) to pla
+deploy-dry-run-base-apply.txt      exit=0  RESULT: DRY-RUN all local checks passed (stage base-apply: approval record, pre-spend receipt, plan,
+deploy-dry-run-push.txt            exit=0  RESULT: DRY-RUN all local checks passed (stage push: approval record, pre-spend receipt, plan, prove
+deploy-dry-run-runtime-apply.txt   exit=0  RESULT: DRY-RUN all local checks passed (stage runtime-apply: approval record, pre-spend receipt, pl
+rollback-dry-run-app.txt           exit=0  RESULT: DRY-RUN rollback verified locally; nothing was run; approval point 1 (a new Phase 14 record 
+rollback-dry-run-infra.txt         exit=0  RESULT: DRY-RUN rollback verified locally; nothing was run; approval point 1 (a new Phase 14 record 
+cleanup-dry-run.txt                exit=0  RESULT: DRY-RUN no aws or terraform command was run; --execute lists the destructive actions first, 
+deploy-refused-stale-prespend.txt  exit=3  RESULT: REFUSED step=prespend-receipt reason=pre-spend receipt rejected: no push, apply or upload wi
+deploy-refused-dirty-tree.txt      exit=3  RESULT: REFUSED step=clean-tree reason=work tree is dirty (dirty: 1 path(s), for example stray-untra

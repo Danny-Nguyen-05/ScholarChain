@@ -1,0 +1,8 @@
+STEP: start
+[2026-11-05T19:04:49Z] [20261105T190449Z-32786] INFO script=deploy.sh mode=dry-run run_id=20261105T190449Z-32786 repo_root=/Users/danny/Documents/UIC/CS441/ScholarChain
+STEP: inputs
+STEP: terraform-version
+[2026-11-05T19:04:50Z] [20261105T190449Z-32786] INFO terraform 1.13.5 accepted (binary: terraform)
+STEP: clean-tree
+[2026-11-05T19:04:50Z] [20261105T190449Z-32786] ERROR refused at step clean-tree: work tree is dirty; commit or stash everything (including untracked files) before deploying
+RESULT: REFUSED step=clean-tree reason=work tree is dirty; commit or stash everything (including untracked files) before deploying

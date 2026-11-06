@@ -1,0 +1,18 @@
+# bash -n and shellcheck on every *.sh under scripts/ (2026-11-06T04:53:52Z)
+ShellCheck - shell script analysis tool
+version: 0.11.0
+checked scripts/check.sh
+checked scripts/cleanup.sh
+checked scripts/deploy.sh
+checked scripts/lib/common.sh
+checked scripts/package.sh
+checked scripts/phase12d-spike/collect-evidence.sh
+checked scripts/phase12d-spike/emr/bootstrap.sh
+checked scripts/phase12d-spike/emr/collect-results.sh
+checked scripts/phase12d-spike/emr/run-step.sh
+checked scripts/phase12d-spike/inventory.sh
+checked scripts/phase12d-spike/preflight.sh
+checked scripts/phase4-emr-smoke.sh
+checked scripts/plan.sh
+checked scripts/rollback.sh
+files=14 failures=0

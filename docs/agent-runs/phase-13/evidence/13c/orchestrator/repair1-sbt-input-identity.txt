@@ -1,0 +1,2 @@
+# Orchestrator: sbt inputs (git ls-files -co --exclude-standard -- build.sbt project modules .scalafmt.conf) in the repair-round-1 working tree vs the 13C clean snapshot (local commit 919a3026a1185dad0f49e351c189c5e54b40d973) whose sbt gate passed; cmp -s per path, plus a check that no snapshot path is missing now
+compared=335 differing=0

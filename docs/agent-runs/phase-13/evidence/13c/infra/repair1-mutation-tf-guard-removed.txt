@@ -1,0 +1,9 @@
+MUTATION (Terraform): the C1 precondition (EMR step programs must be installed once with the sha256 pinned in emr-step-programs.json) was removed from
+terraform_data.phase12b_guard in infra/terraform/phase12b.tf (restored byte-identical afterwards).
+command: cd infra/terraform && terraform test -filter=tests/phase13c.tftest.hcl
+result (a failing run stops the file; the 6 later runs are skipped):
+  run "emr_without_the_step_programs_is_rejected"... fail
+│ Error: Missing expected failure
+│  510:   expect_failures = [terraform_data.phase12b_guard]
+tests/phase13c.tftest.hcl... fail
+Failure! 30 passed, 1 failed, 6 skipped.

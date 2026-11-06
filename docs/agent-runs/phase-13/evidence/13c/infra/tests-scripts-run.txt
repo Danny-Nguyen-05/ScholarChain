@@ -1,0 +1,59 @@
+# EXCERPT (orchestrator, 13C repair round 1, finding C4): intermediate failing run kept as summary only.
+# original: tests-scripts-run.txt,   362933 bytes, sha256 99a68d48098d5a1a35e5b3ad3b09a4a1bbb25d644073553a3d1994ad64cdf690; full log retained locally under target/phase13c-infra-evidence/ (git-ignored).
+# context: intermediate run during 13C; superseded by later passing runs (see test-report.md).
+# failing tests (FAIL/ERROR lines):
+   1 FAIL: test_a_clean_body_runs_the_client_and_issues_no_kill_when_nothing_is_running
+   1 FAIL: test_a_tag_that_matches_no_application_kills_nothing
+   1 FAIL: test_account_mismatch_is_detected_after_sts_and_before_the_cluster_is_described
+   1 FAIL: test_add_steps_failure_is_an_aws_failure_exit_5
+   1 FAIL: test_api_key_named_variables_are_redacted_from_shown_aws_output_by_every_script
+   1 FAIL: test_aws_failure_output_is_redacted_before_it_is_shown
+   1 FAIL: test_aws_failures_before_anything_paid
+   1 FAIL: test_budget_is_compared_numerically
+   4 FAIL: test_cluster_not_waiting_or_running
+   1 FAIL: test_cluster_without_auto_termination_policy
+   1 FAIL: test_cumulative_total_above_nine_fifty_is_refused_and_exactly_nine_fifty_is_allowed
+   1 FAIL: test_describe_cluster_returning_another_cluster_id
+   1 FAIL: test_describe_step_failure_cancels_the_step_and_exits_5
+   1 FAIL: test_dirty_work_tree_refuses_before_the_record_is_read
+  11 FAIL: test_each_documented_class_origin_violation_blocks_the_job
+  11 FAIL: test_each_mismatching_key_refuses_with_exit_3_and_a_step_marker
+   1 FAIL: test_environment_cannot_confirm_pricing_or_inject_rates
+   1 FAIL: test_estimate_formula_is_instances_times_hourly_rate_times_hours_rounded_up
+   1 FAIL: test_every_aws_call_is_bounded_by_a_timeout_in_the_printed_command
+   3 FAIL: test_failed_cancelled_or_interrupted_step_stops_the_run_with_exit_4
+   1 FAIL: test_green_execute_records_commit_limits_region_and_metric_locations
+   1 FAIL: test_green_run_submits_six_steps_in_order_then_passes
+   1 FAIL: test_hadoop_body_refuses_an_artifact_whose_sha256_differs_before_any_client_runs
+   3 FAIL: test_hadoop_prep_cap_exit_124_137_143_each_kills_the_tagged_applications
+   1 FAIL: test_hard_runtime_cap_cancels_the_running_step_and_exits_124
+   1 FAIL: test_headroom_exactly_twenty_and_snapshot_within_a_day_pass
+   1 FAIL: test_idle_timeout_outside_sixty_to_cap
+   1 FAIL: test_java_that_is_not_17_or_a_missing_java_home_file_blocks_the_job
+   1 FAIL: test_job_needs_exactly_one_completed_hadoop_run_and_er_output
+   1 FAIL: test_ledger_manifest_and_result_are_written_and_hold_the_required_provenance
+   1 FAIL: test_manifest_key_is_refused_for_a_pipeline_record
+   1 FAIL: test_max_idle_seconds_flag_can_only_tighten
+   1 FAIL: test_missing_approval_file_refuses
+  12 FAIL: test_missing_duplicate_extra_or_malformed_lines_refuse
+   1 FAIL: test_missing_receipt_refuses
+   1 FAIL: test_no_canary_secret_or_raw_account_id_in_output_or_retained_files
+   1 FAIL: test_no_probe_result_blocks_the_job
+   1 FAIL: test_only_the_literal_default_record_path_is_exempt_from_the_dirty_tree_refusal
+   1 FAIL: test_other_instance_type_or_more_nodes_than_approved
+   1 FAIL: test_prose_in_the_record_is_still_ignored
+   1 FAIL: test_receipt_edited_after_approval_refuses
+   1 FAIL: test_receipt_expiring_mid_run_stops_before_the_next_submission
+   1 FAIL: test_second_run_with_the_same_run_id_never_overwrites_the_first_manifest
+   1 FAIL: test_spark_job_cap_kills_the_tagged_applications
+  10 FAIL: test_stale_future_unmonitored_low_headroom_and_non_numeric_receipts_refuse
+   1 FAIL: test_two_recorded_runs_still_allow_a_third
+   3 FAIL: test_unknown_approved_key_is_refused_as_an_extra_key
+   1 FAIL: test_unknown_step_state_fails_closed_and_asks_emr_to_cancel
+   1 FAIL: test_verification_precedes_any_submission_and_nothing_infrastructural_is_called
+   1 FAIL: test_wrong_packaged_job_jar_on_the_node_blocks_the_job
+# result lines:
+Ran 198 tests in 373.616s
+FAILED (failures=99)
+SUITE-SUMMARY ran=198 executed=198 skipped_tests=0 skipped_classes=0 failures=99 errors=0
+exit=1

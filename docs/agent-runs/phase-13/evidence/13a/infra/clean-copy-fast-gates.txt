@@ -1,0 +1,74 @@
+STEP: start
+[2026-11-05T17:56:44Z] [20261105T175644Z-38802] INFO script=check.sh mode=real-run run_id=20261105T175644Z-38802 repo_root=/private/tmp/claude-501/-Users-danny-Documents-UIC-CS441-ScholarChain/a33708d1-0340-4fdc-adea-063ab78a782e/scratchpad/clean-copy.SZEaF7
+[2026-11-05T17:56:44Z] [20261105T175644Z-38802] INFO logs: /private/tmp/claude-501/-Users-danny-Documents-UIC-CS441-ScholarChain/a33708d1-0340-4fdc-adea-063ab78a782e/scratchpad/clean-copy.SZEaF7/target/check-logs/20261105T175644Z-38802
+STEP: gate-constitution
+[2026-11-05T17:56:44Z] [20261105T175644Z-38802] INFO present: AGENTS.md
+[2026-11-05T17:56:44Z] [20261105T175644Z-38802] INFO present: CLAUDE.md
+[2026-11-05T17:56:44Z] [20261105T175644Z-38802] INFO present: docs/agents.md
+[2026-11-05T17:56:44Z] [20261105T175644Z-38802] INFO present: docs/agent-runs/README.md
+[2026-11-05T17:56:44Z] [20261105T175644Z-38802] INFO present: .claude/settings.json
+[2026-11-05T17:56:44Z] [20261105T175644Z-38802] INFO present: .claude/ownership-audit.json
+[2026-11-05T17:56:44Z] [20261105T175644Z-38802] INFO present: .mcp.json
+[2026-11-05T17:56:44Z] [20261105T175644Z-38802] INFO present: .claude/agents/*.md
+[2026-11-05T17:56:44Z] [20261105T175644Z-38802] INFO 2012 JSON files parse
+GATE: constitution PASS (0s)
+STEP: gate-hooks
+CMD: timeout=120s bash -n .claude/hooks/format-scala.sh 
+CMD: timeout=120s bash -n .claude/hooks/guard-dangerous.sh 
+CMD: timeout=120s bash -n .claude/hooks/validate-agent-files.sh 
+CMD: timeout=120s bash -n .claude/hooks/verify-tests-ran.sh 
+CMD: timeout=300s shellcheck -x -P SCRIPTDIR .claude/hooks/format-scala.sh .claude/hooks/guard-dangerous.sh .claude/hooks/validate-agent-files.sh .claude/hooks/verify-tests-ran.sh 
+[2026-11-05T17:56:44Z] [20261105T175644Z-38802] INFO hooks: 4 scripts checked (bash -n + shellcheck)
+GATE: hooks PASS (0s)
+STEP: gate-shell
+CMD: timeout=120s bash -n .claude/hooks/format-scala.sh 
+CMD: timeout=120s bash -n .claude/hooks/guard-dangerous.sh 
+CMD: timeout=120s bash -n .claude/hooks/validate-agent-files.sh 
+CMD: timeout=120s bash -n .claude/hooks/verify-tests-ran.sh 
+CMD: timeout=120s bash -n scripts/check.sh 
+CMD: timeout=120s bash -n scripts/cleanup.sh 
+CMD: timeout=120s bash -n scripts/deploy.sh 
+CMD: timeout=120s bash -n scripts/lib/common.sh 
+CMD: timeout=120s bash -n scripts/package.sh 
+CMD: timeout=120s bash -n scripts/phase12d-spike/collect-evidence.sh 
+CMD: timeout=120s bash -n scripts/phase12d-spike/emr/bootstrap.sh 
+CMD: timeout=120s bash -n scripts/phase12d-spike/emr/collect-results.sh 
+CMD: timeout=120s bash -n scripts/phase12d-spike/emr/run-step.sh 
+CMD: timeout=120s bash -n scripts/phase12d-spike/inventory.sh 
+CMD: timeout=120s bash -n scripts/phase12d-spike/preflight.sh 
+CMD: timeout=120s bash -n scripts/phase4-emr-smoke.sh 
+CMD: timeout=120s bash -n scripts/plan.sh 
+CMD: timeout=120s bash -n scripts/rollback.sh 
+CMD: timeout=300s shellcheck -x -P SCRIPTDIR .claude/hooks/format-scala.sh .claude/hooks/guard-dangerous.sh .claude/hooks/validate-agent-files.sh .claude/hooks/verify-tests-ran.sh scripts/check.sh scripts/cleanup.sh scripts/deploy.sh scripts/lib/common.sh scripts/package.sh scripts/phase12d-spike/collect-evidence.sh scripts/phase12d-spike/emr/bootstrap.sh scripts/phase12d-spike/emr/collect-results.sh scripts/phase12d-spike/emr/run-step.sh scripts/phase12d-spike/inventory.sh scripts/phase12d-spike/preflight.sh scripts/phase4-emr-smoke.sh scripts/plan.sh scripts/rollback.sh 
+[2026-11-05T17:56:47Z] [20261105T175644Z-38802] INFO shell: 18 scripts checked (bash -n + shellcheck)
+GATE: shell PASS (3s)
+STEP: gate-python
+CMD: timeout=120s python3 -I -X pycache_prefix=/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T//sc-tmp.ZxOh7m -m py_compile scripts/billing/budget_execution.py scripts/billing/budget_verification.py scripts/billing/publication_evidence.py scripts/billing/tests/terraform_state_binding.py scripts/billing/tests/test_budget_execution.py scripts/billing/tests/test_budget_verification.py scripts/billing/tests/test_publication_evidence.py scripts/lib/plan_summary.py scripts/lib/timeout.py scripts/lib/tools.py scripts/phase12d-spike/inventory_eval.py scripts/phase12d-spike/request_bound.py scripts/phase12d-spike/tests/fake_aws.py scripts/phase12d-spike/tests/helpers.py scripts/phase12d-spike/tests/test_bootstrap.py scripts/phase12d-spike/tests/test_collect_evidence.py scripts/phase12d-spike/tests/test_inventory.py scripts/phase12d-spike/tests/test_preflight.py scripts/phase12d-spike/tests/test_request_bound.py scripts/phase12d-spike/tests/test_step_scripts.py scripts/phase12d-spike/tests/test_terraform_static.py scripts/tests/fake_tool.py scripts/tests/helpers.py scripts/tests/test_check.py scripts/tests/test_cleanup.py scripts/tests/test_deploy.py scripts/tests/test_package.py scripts/tests/test_plan.py scripts/tests/test_rollback.py scripts/tests/test_safety.py scripts/tests/test_syntax.py scripts/tests/test_timeout.py 
+[2026-11-05T17:56:47Z] [20261105T175644Z-38802] INFO python: 32 files compile
+GATE: python PASS (0s)
+STEP: gate-script-tests
+CMD: timeout=3600s python3 -I -X pycache_prefix=/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T//sc-tmp.ZxOh7m -m unittest discover -s scripts/tests -p test_\*.py 
+[2026-11-05T17:58:33Z] [20261105T175644Z-38802] INFO suite scripts/tests: Ran 140 tests in 105.484s OK
+CMD: timeout=3600s python3 -I -X pycache_prefix=/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T//sc-tmp.ZxOh7m -m unittest discover -s scripts/phase12d-spike/tests -p test_\*.py 
+[2026-11-05T17:59:19Z] [20261105T175644Z-38802] INFO suite scripts/phase12d-spike/tests: Ran 70 tests in 45.829s OK
+CMD: timeout=3600s python3 -I -X pycache_prefix=/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T//sc-tmp.ZxOh7m /private/tmp/claude-501/-Users-danny-Documents-UIC-CS441-ScholarChain/a33708d1-0340-4fdc-adea-063ab78a782e/scratchpad/clean-copy.SZEaF7/scripts/billing/tests/test_budget_execution.py 
+[2026-11-05T17:59:32Z] [20261105T175644Z-38802] INFO suite file scripts/billing/tests/test_budget_execution.py: OK
+CMD: timeout=3600s python3 -I -X pycache_prefix=/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T//sc-tmp.ZxOh7m /private/tmp/claude-501/-Users-danny-Documents-UIC-CS441-ScholarChain/a33708d1-0340-4fdc-adea-063ab78a782e/scratchpad/clean-copy.SZEaF7/scripts/billing/tests/test_budget_verification.py 
+[2026-11-05T17:59:53Z] [20261105T175644Z-38802] INFO suite file scripts/billing/tests/test_budget_verification.py: OK
+CMD: timeout=3600s python3 -I -X pycache_prefix=/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T//sc-tmp.ZxOh7m /private/tmp/claude-501/-Users-danny-Documents-UIC-CS441-ScholarChain/a33708d1-0340-4fdc-adea-063ab78a782e/scratchpad/clean-copy.SZEaF7/scripts/billing/tests/test_publication_evidence.py 
+[2026-11-05T17:59:54Z] [20261105T175644Z-38802] INFO suite file scripts/billing/tests/test_publication_evidence.py: OK
+GATE: script-tests PASS (187s)
+STEP: summary
+GATE SUMMARY
+  gate           state time
+  constitution   PASS  0s
+  hooks          PASS  0s
+  shell          PASS  3s
+  python         PASS  0s
+  script-tests   PASS  187s
+  sbt            SKIP  -
+  terraform      SKIP  -
+[2026-11-05T17:59:54Z] [20261105T175644Z-38802] WARN not a full pass: gates skipped: sbt terraform
+RESULT: PARTIAL passed=5 skipped: sbt terraform
+scripts/check.sh --only constitution,hooks,shell,python,script-tests  70.12s user 39.33s system 57% cpu 3:10.40 total
+exit=0

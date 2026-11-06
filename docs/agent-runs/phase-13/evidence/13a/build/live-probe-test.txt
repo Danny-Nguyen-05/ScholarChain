@@ -1,0 +1,21 @@
+# Evidence excerpt (renamed from live-probe-test.log because *.log is git-ignored; N2). Command (build-engineer, 2026-11-05):
+# JDK 17 env + SCHOLARCHAIN_NON17_JAVA_HOME=/opt/homebrew/opt/openjdk@27/libexec/openjdk.jdk/Contents/Home: sbt -batch "buildVerification/testOnly scholarchain.build.PackagingJava17GuardSpec scholarchain.build.Java17GuardSpec"
+
+[info] welcome to sbt 1.10.7 (Homebrew Java 17.0.20.1)
+[info] loading settings for project scholarchain-build from plugins.sbt...
+[info] loading project definition from /Users/danny/Documents/UIC/CS441/ScholarChain/project
+[info] loading settings for project root from build.sbt...
+[info] set current project to root (in build file:/Users/danny/Documents/UIC/CS441/ScholarChain/)
+[info] PackagingJava17GuardSpec:
+[info] - the shared guard rejects every specification version except exactly 17
+[info] - checkJava17 is defined once, build-wide, from the shared guard
+[info] - each packaging task body runs checkJava17 before it builds anything
+[info] - assembly entry points and module jars depend on checkJava17
+[info] - packaging aliases start with the guard and packageRelease builds the four release artifacts
+[info] - packageRelease under a non-17 JVM fails fast with the guard message (optional live probe)
+[info] Run completed in 5 seconds, 783 milliseconds.
+[info] Total number of tests run: 6
+[info] Suites: completed 1, aborted 0
+[info] Tests: succeeded 6, failed 0, canceled 0, ignored 0, pending 0
+[info] All tests passed.
+[success] Total time: 6 s, completed Nov 5, 2026, 11:04:30 AM

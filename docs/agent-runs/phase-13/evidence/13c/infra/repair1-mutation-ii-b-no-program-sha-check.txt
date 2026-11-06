@@ -1,0 +1,18 @@
+MUTATION: (ii-b) skip the on-node sha256 verification of the installed Python step programs in sc-step.sh (verify_program no longer compares the hash)
+file: scripts/emr/sc-step.sh
+replaced: 'printf \'%s  %s\\n\' "$2" "$1" | sha256sum -c --status - || die "sha256 mismatch for the installed step program ${1##*/}"'
+with: ':'
+manifest regenerated for the mutated file: True
+command: cd scripts/tests && python3 -m unittest test_c1_step_args.InstalledProgramTests
+FAIL: test_a_tampered_python_program_is_refused_before_it_runs (test_c1_step_args.InstalledProgramTests.test_a_tampered_python_program_is_refused_before_it_runs) (step='hadoop-prep', program='sc-ceiling-check.py')
+AssertionError: 0 == 0 : 
+FAIL: test_a_tampered_python_program_is_refused_before_it_runs (test_c1_step_args.InstalledProgramTests.test_a_tampered_python_program_is_refused_before_it_runs) (step='spark-class-origin', program='sc-class-origin-verify.py')
+AssertionError: 'sha256 mismatch for the installed step program sc-class-origin-verify.py' not found in 'CLASS-ORIGIN-FAILED: probe result unreadable: FileNotFoundError\n'
+FAIL: test_a_tampered_python_program_is_refused_before_it_runs (test_c1_step_args.InstalledProgramTests.test_a_tampered_python_program_is_refused_before_it_runs) (step='spark-job', program='sc-render-spark-config.py')
+AssertionError: 0 == 0 : CLASS-ORIGIN-OK: the driver and 1 executor report(s) agree on Spark 3.5.4, Scala 2.13.14 and the packaged job jar
+FAIL: test_a_tampered_python_program_is_refused_before_it_runs (test_c1_step_args.InstalledProgramTests.test_a_tampered_python_program_is_refused_before_it_runs) (step='spark-job', program='sc-class-origin-verify.py')
+AssertionError: 0 == 0 : CLASS-ORIGIN-OK: the driver and 1 executor report(s) agree on Spark 3.5.4, Scala 2.13.14 and the packaged job jar
+Ran 6 tests in 16.222s
+FAILED (failures=4)
+exit code: 1
+files restored byte-identical: True

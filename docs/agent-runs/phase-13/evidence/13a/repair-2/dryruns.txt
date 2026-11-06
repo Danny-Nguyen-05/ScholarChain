@@ -1,0 +1,275 @@
+====================================================================================================
+# plan.sh dry run
+  STEP: start
+  STEP: inputs
+  STEP: output-paths
+  STEP: terraform-version
+  STEP: materialize-source
+  STEP: account-identity
+  DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 TF_DATA_DIR=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-cetmw3hk/repo/target/plans/20261106
+  STEP: terraform-init
+  DRY-RUN CMD: timeout=900s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 TF_DATA_DIR=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-cetmw3hk/repo/target/plans/20261106
+  STEP: terraform-plan
+  DRY-RUN CMD: timeout=1800s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 TF_DATA_DIR=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-cetmw3hk/repo/target/plans/2026110
+  STEP: terraform-show
+  DRY-RUN CMD: timeout=900s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 TF_DATA_DIR=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-cetmw3hk/repo/target/plans/20261106
+  STEP: terraform-show-text
+  DRY-RUN CMD: timeout=900s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 TF_DATA_DIR=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-cetmw3hk/repo/target/plans/20261106
+  STEP: plan-receipt
+  RESULT: DRY-RUN no aws or terraform command was run and no file was written; re-run with --execute (approval point 4) to plan
+  exit code: 0
+  fake-tool calls recorded (1): [('terraform', 'version')]
+====================================================================================================
+# deploy.sh --stage base-apply dry run
+  STEP: start
+  STEP: inputs
+  STEP: terraform-version
+  STEP: clean-tree
+  STEP: approval-record
+  STEP: stage-match
+  STEP: approval-record
+  STEP: commit-match
+  STEP: region-match
+  STEP: environment-match
+  STEP: prespend-receipt
+  STEP: plan-checksum
+  STEP: plan-provenance
+  STEP: state-binding
+  STEP: plan-inspect
+  [2026-11-06T01:23:36Z] [20261106T012336Z-55547] INFO dry run: the inspection of the verified plan is DEFERRED to --execute (nothing beyond the version probe runs now); it will materialize b653bb1a045aeed475c4a90cb5b7f1c933356656, compare it
+  DRY-RUN CMD: timeout=900s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 TF_DATA_DIR=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-cetmw3hk/repo/target/plans/20261106
+  DRY-RUN CMD: timeout=900s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 TF_DATA_DIR=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-cetmw3hk/repo/target/plans/20261106
+  STEP: release-manifest
+  STEP: runtime-archive
+  STEP: account-check
+  DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws sts get-caller-identity --region us-east-2 --query Account --output text 
+  STEP: terraform-apply
+  DRY-RUN CMD: timeout=3600s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 TF_DATA_DIR=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-cetmw3hk/repo/target/plans/2026110
+  STEP: runtime-archive-upload
+  DRY-RUN CMD: timeout=3600s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws s3 cp <private-copy-of-the-runtime-archive> s3://bucket-test/key/runtime.tgz --region us-east-2 --only-show-errors --checksum-algorithm SHA256 --metada
+  DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws s3api head-object --region us-east-2 --bucket bucket-test --key key/runtime.tgz --query \[ContentLength\,Metadata.sha256\] --output text 
+  STEP: write-deploy-manifest
+  RESULT: DRY-RUN all local checks passed (stage base-apply: approval record, pre-spend receipt, plan, receipt, state binding); no mutating command was run
+  exit code: 0
+  fake-tool calls recorded (1): [('terraform', 'version')]
+====================================================================================================
+# deploy.sh --stage push dry run
+  STEP: start
+  STEP: inputs
+  STEP: terraform-version
+  STEP: clean-tree
+  STEP: approval-record
+  STEP: stage-match
+  STEP: approval-record
+  STEP: commit-match
+  STEP: region-match
+  STEP: environment-match
+  STEP: prespend-receipt
+  STEP: release-manifest
+  STEP: runtime-archive
+  STEP: push-record-path
+  STEP: account-check
+  DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws sts get-caller-identity --region us-east-2 --query Account --output text 
+  STEP: ecr-repositories-exist
+  DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws ecr describe-repositories --region us-east-2 --repository-names scholarchain-course/query-api --query repositories\[0\].repositoryName --output text 
+  DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws ecr describe-repositories --region us-east-2 --repository-names scholarchain-course/graph-service --query repositories\[0\].repositoryName --output text
+  DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws ecr describe-repositories --region us-east-2 --repository-names scholarchain-course/semantic-service --query repositories\[0\].repositoryName --output t
+  DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws ecr describe-repositories --region us-east-2 --repository-names scholarchain-course/embedding-worker --query repositories\[0\].repositoryName --output t
+  STEP: verify-local-images
+  DRY-RUN CMD: timeout=60s docker image inspect scholarchain-query-api:b653bb1a045aeed475c4a90cb5b7f1c933356656 
+  DRY-RUN CMD: timeout=60s docker image inspect scholarchain-graph-service:b653bb1a045aeed475c4a90cb5b7f1c933356656 
+  DRY-RUN CMD: timeout=60s docker image inspect scholarchain-semantic-service:b653bb1a045aeed475c4a90cb5b7f1c933356656 
+  DRY-RUN CMD: timeout=60s docker image inspect scholarchain-embedding-worker:b653bb1a045aeed475c4a90cb5b7f1c933356656 
+  STEP: ecr-login
+  DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws ecr get-login-password --region us-east-2 
+  DRY-RUN CMD: timeout=120s docker login --username AWS --password-stdin <acct>.dkr.ecr.us-east-2.amazonaws.com 
+  STEP: push-images
+  DRY-RUN CMD: timeout=120s docker tag sha256:b692b414d44e79dcc1726c2fade1f68001f047287fc14615f6d0180fa196496a <acct>.dkr.ecr.us-east-2.amazonaws.com/scholarchain-course/query-api:b653bb1a045aeed475c4a90cb5b7f1c933356656 
+  DRY-RUN CMD: timeout=1800s docker push <acct>.dkr.ecr.us-east-2.amazonaws.com/scholarchain-course/query-api:b653bb1a045aeed475c4a90cb5b7f1c933356656 
+  DRY-RUN CMD: timeout=120s docker tag sha256:f6e9544c12fce9263d67ba335667a26e703198b6a17ace8f511491bdb961f8cd <acct>.dkr.ecr.us-east-2.amazonaws.com/scholarchain-course/graph-service:b653bb1a045aeed475c4a90cb5b7f1c933356656 
+  DRY-RUN CMD: timeout=1800s docker push <acct>.dkr.ecr.us-east-2.amazonaws.com/scholarchain-course/graph-service:b653bb1a045aeed475c4a90cb5b7f1c933356656 
+  DRY-RUN CMD: timeout=120s docker tag sha256:b794dcdb160485b1a6c0f7543d72948fd9235683a9b80d1c75bbf9bb2c4f0409 <acct>.dkr.ecr.us-east-2.amazonaws.com/scholarchain-course/semantic-service:b653bb1a045aeed475c4a90cb5b7f1c933356656 
+  DRY-RUN CMD: timeout=1800s docker push <acct>.dkr.ecr.us-east-2.amazonaws.com/scholarchain-course/semantic-service:b653bb1a045aeed475c4a90cb5b7f1c933356656 
+  DRY-RUN CMD: timeout=120s docker tag sha256:b749e3a7f8188da899656719cda171c28ef8e9fbe26e50a530e28206a775834c <acct>.dkr.ecr.us-east-2.amazonaws.com/scholarchain-course/embedding-worker:b653bb1a045aeed475c4a90cb5b7f1c933356656 
+  DRY-RUN CMD: timeout=1800s docker push <acct>.dkr.ecr.us-east-2.amazonaws.com/scholarchain-course/embedding-worker:b653bb1a045aeed475c4a90cb5b7f1c933356656 
+  STEP: record-digests
+  DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws ecr describe-images --region us-east-2 --repository-name scholarchain-course/query-api --image-ids imageTag=b653bb1a045aeed475c4a90cb5b7f1c933356656 --q
+  DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws ecr describe-images --region us-east-2 --repository-name scholarchain-course/graph-service --image-ids imageTag=b653bb1a045aeed475c4a90cb5b7f1c933356656
+  DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws ecr describe-images --region us-east-2 --repository-name scholarchain-course/semantic-service --image-ids imageTag=b653bb1a045aeed475c4a90cb5b7f1c933356
+  DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws ecr describe-images --region us-east-2 --repository-name scholarchain-course/embedding-worker --image-ids imageTag=b653bb1a045aeed475c4a90cb5b7f1c933356
+  STEP: write-push-record
+  STEP: write-deploy-manifest
+  RESULT: DRY-RUN all local checks passed (stage push: approval record, pre-spend receipt); no mutating command was run
+  exit code: 0
+  fake-tool calls recorded (1): [('terraform', 'version')]
+====================================================================================================
+# deploy.sh --stage runtime-apply dry run
+  STEP: start
+  STEP: inputs
+  STEP: terraform-version
+  STEP: clean-tree
+  STEP: approval-record
+  STEP: stage-match
+  STEP: approval-record
+  STEP: commit-match
+  STEP: region-match
+  STEP: environment-match
+  STEP: prespend-receipt
+  STEP: plan-checksum
+  STEP: plan-provenance
+  STEP: state-binding
+  STEP: plan-inspect
+  [2026-11-06T01:23:37Z] [20261106T012337Z-56388] INFO dry run: the inspection of the verified plan is DEFERRED to --execute (nothing beyond the version probe runs now); it will materialize b653bb1a045aeed475c4a90cb5b7f1c933356656, compare it
+  DRY-RUN CMD: timeout=900s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 TF_DATA_DIR=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-cetmw3hk/repo/target/plans/20261106
+  DRY-RUN CMD: timeout=900s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 TF_DATA_DIR=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-cetmw3hk/repo/target/plans/20261106
+  STEP: release-manifest
+  STEP: runtime-archive
+  STEP: push-record
+  STEP: account-check
+  DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws sts get-caller-identity --region us-east-2 --query Account --output text 
+  STEP: ecr-repositories-exist
+  DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws ecr describe-repositories --region us-east-2 --repository-names scholarchain-course/query-api --query repositories\[0\].repositoryName --output text 
+  DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws ecr describe-repositories --region us-east-2 --repository-names scholarchain-course/graph-service --query repositories\[0\].repositoryName --output text
+  DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws ecr describe-repositories --region us-east-2 --repository-names scholarchain-course/semantic-service --query repositories\[0\].repositoryName --output t
+  DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws ecr describe-repositories --region us-east-2 --repository-names scholarchain-course/embedding-worker --query repositories\[0\].repositoryName --output t
+  STEP: verify-registry-images
+  DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws ecr describe-images --region us-east-2 --repository-name scholarchain-course/query-api --image-ids imageTag=b653bb1a045aeed475c4a90cb5b7f1c933356656 --q
+  DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws ecr describe-images --region us-east-2 --repository-name scholarchain-course/graph-service --image-ids imageTag=b653bb1a045aeed475c4a90cb5b7f1c933356656
+  DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws ecr describe-images --region us-east-2 --repository-name scholarchain-course/semantic-service --image-ids imageTag=b653bb1a045aeed475c4a90cb5b7f1c933356
+  DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws ecr describe-images --region us-east-2 --repository-name scholarchain-course/embedding-worker --image-ids imageTag=b653bb1a045aeed475c4a90cb5b7f1c933356
+  STEP: terraform-apply
+  DRY-RUN CMD: timeout=3600s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 TF_DATA_DIR=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-cetmw3hk/repo/target/plans/2026110
+  STEP: record-ecs
+  DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws ecs describe-services --region us-east-2 --cluster scholarchain-course --services query-api graph-service semantic-service embedding-worker --query serv
+  DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws ecs describe-task-definition --region us-east-2 --task-definition <query-api-task-definition-arn> --query taskDefinition.containerDefinitions\[\].image 
+  DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws ecs describe-task-definition --region us-east-2 --task-definition <graph-service-task-definition-arn> --query taskDefinition.containerDefinitions\[\].im
+  DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws ecs describe-task-definition --region us-east-2 --task-definition <semantic-service-task-definition-arn> --query taskDefinition.containerDefinitions\[\]
+  DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws ecs describe-task-definition --region us-east-2 --task-definition <embedding-worker-task-definition-arn> --query taskDefinition.containerDefinitions\[\]
+  STEP: write-deploy-manifest
+  RESULT: DRY-RUN all local checks passed (stage runtime-apply: approval record, pre-spend receipt, plan, receipt, state binding); no mutating command was run
+  exit code: 0
+  fake-tool calls recorded (1): [('terraform', 'version')]
+====================================================================================================
+# REFUSAL: runtime-apply without a push record
+  STEP: start
+  STEP: inputs
+  STEP: terraform-version
+  STEP: clean-tree
+  STEP: approval-record
+  STEP: stage-match
+  STEP: approval-record
+  STEP: commit-match
+  STEP: region-match
+  STEP: environment-match
+  STEP: prespend-receipt
+  STEP: plan-checksum
+  STEP: plan-provenance
+  STEP: state-binding
+  STEP: plan-inspect
+  [2026-11-06T01:23:38Z] [20261106T012337Z-56847] INFO dry run: the inspection of the verified plan is DEFERRED to --execute (nothing beyond the version probe runs now); it will materialize b653bb1a045aeed475c4a90cb5b7f1c933356656, compare it
+  DRY-RUN CMD: timeout=900s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 TF_DATA_DIR=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-cetmw3hk/repo/target/plans/20261106
+  DRY-RUN CMD: timeout=900s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 TF_DATA_DIR=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-cetmw3hk/repo/target/plans/20261106
+  STEP: release-manifest
+  STEP: runtime-archive
+  STEP: push-record
+  RESULT: REFUSED step=push-record reason=no push record for this commit (target/release/b653bb1a045aeed475c4a90cb5b7f1c933356656/push-record.json): run the separately approved --stage push first; a registry tag that was not pushed and verifi
+  exit code: 3
+  fake-tool calls recorded (1): [('terraform', 'version')]
+====================================================================================================
+# rollback.sh app dry run
+  STEP: start
+  STEP: inputs
+  STEP: terraform-version
+  STEP: previous-manifest
+  STEP: verify-registry-digests
+  DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws ecr describe-images --region us-east-2 --repository-name scholarchain-course/query-api --image-ids imageTag=cccccccccccccccccccccccccccccccccccccccc --q
+  DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws ecr describe-images --region us-east-2 --repository-name scholarchain-course/graph-service --image-ids imageTag=cccccccccccccccccccccccccccccccccccccccc
+  DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws ecr describe-images --region us-east-2 --repository-name scholarchain-course/semantic-service --image-ids imageTag=ccccccccccccccccccccccccccccccccccccc
+  DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws ecr describe-images --region us-east-2 --repository-name scholarchain-course/embedding-worker --image-ids imageTag=ccccccccccccccccccccccccccccccccccccc
+  STEP: delegate-plan
+  CMD: bash /Users/danny/Documents/UIC/CS441/ScholarChain/scripts/plan.sh --env course --region us-east-2 --profile <profile> --image-revision cccccccccccccccccccccccccccccccccccccccc 
+  STEP: delegate-deploy
+  DRY-RUN CMD: scripts/deploy.sh --region us-east-2 --plan <rollback-plan-file-printed-by-plan.sh-as-PLAN-FILE> --profile <profile> --stage runtime-apply --reuse-images /var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-cetmw3hk/pre
+  RESULT: DRY-RUN rollback verified locally; nothing was run; approval point 1 (a new Phase 14 record and pre-spend receipt) is required before deploy
+  exit code: 0
+  fake-tool calls recorded (2): [('terraform', 'version'), ('terraform', 'version')]
+====================================================================================================
+# rollback.sh infra dry run
+  STEP: start
+  STEP: inputs
+  STEP: terraform-version
+  STEP: previous-commit
+  STEP: delegate-plan
+  CMD: bash /Users/danny/Documents/UIC/CS441/ScholarChain/scripts/plan.sh --env course --region us-east-2 --profile <profile> --source-commit b653bb1a045aeed475c4a90cb5b7f1c933356656 
+  STEP: delegate-deploy
+  DRY-RUN CMD: scripts/deploy.sh --region us-east-2 --plan <rollback-plan-file-printed-by-plan.sh-as-PLAN-FILE> --profile <profile> --stage base-apply --source-commit b653bb1a045aeed475c4a90cb5b7f1c933356656 --skip-runtime-archive --execute 
+  RESULT: DRY-RUN rollback verified locally; nothing was run; approval point 1 (a new Phase 14 record and pre-spend receipt) is required before deploy
+  exit code: 0
+  fake-tool calls recorded (2): [('terraform', 'version'), ('terraform', 'version')]
+====================================================================================================
+# cleanup.sh dry run (listing)
+  STEP: start
+  STEP: inputs
+  STEP: terraform-version
+  STEP: preserve-list
+  TEARDOWN-RULES addresses: module.runtime.,module.emr.,module.neptune.,module.dynamodb.,module.messaging.,module.workflow.,module.network.,module.identity.aws_iam_role.task,module.identity.aws_iam_role.execution,module.identity.aws_iam_role.
+  PROTECTION-RULES: aws_neptune_cluster:deletion_protection=true,aws_lb:enable_deletion_protection=true,aws_dynamodb_table:deletion_protection_enabled=true,aws_ecr_repository:force_delete=false
+  STEP: output-paths
+  STEP: source
+  STEP: before-inventory
+  DRY-RUN CMD: timeout=900s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 terraform -chdir=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-cetmw3hk/repo/infra
+  DRY-RUN CMD: timeout=900s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 TF_DATA_DIR=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-cetmw3hk/repo/target/pla
+  DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws resourcegroupstaggingapi get-resources --region us-east-2 --tag-filters Key=project,Values=scholarchain Key=environment,Values=course --output json 
+  STEP: protection-check
+  [2026-11-06T01:23:39Z] [20261106T012339Z-57694] INFO execute (1: listing) refuses with PREPARE-REQUIRED while a teardown resource still has deletion protection (CLEANUP_PROTECTION_RULES); the check reads the current state:
+  DRY-RUN CMD: timeout=900s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 TF_DATA_DIR=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-cetmw3hk/repo/target/pla
+  STEP: destroy-commands
+  DRY-RUN CMD: timeout=1800s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 TF_DATA_DIR=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-cetmw3hk/repo/target/pl
+  DRY-RUN CMD: timeout=900s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 TF_DATA_DIR=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-cetmw3hk/repo/target/pla
+  DRY-RUN CMD: timeout=900s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 TF_DATA_DIR=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-cetmw3hk/repo/target/pla
+  DRY-RUN CMD: timeout=3600s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 TF_DATA_DIR=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-cetmw3hk/repo/target/pl
+  STEP: after-inventory
+  DRY-RUN CMD: timeout=900s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 terraform -chdir=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-cetmw3hk/repo/infra
+  DRY-RUN CMD: timeout=900s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 TF_DATA_DIR=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-cetmw3hk/repo/target/pla
+  DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws resourcegroupstaggingapi get-resources --region us-east-2 --tag-filters Key=project,Values=scholarchain Key=environment,Values=course --output json 
+  RESULT: DRY-RUN no aws or terraform command was run and no file was written; --execute lists the destructive actions first, then needs --confirm <token> --plan <file>
+  exit code: 0
+  fake-tool calls recorded (1): [('terraform', 'version')]
+====================================================================================================
+# cleanup.sh --prepare dry run
+  STEP: start
+  STEP: inputs
+  STEP: terraform-version
+  STEP: preserve-list
+  TEARDOWN-RULES addresses: module.runtime.,module.emr.,module.neptune.,module.dynamodb.,module.messaging.,module.workflow.,module.network.,module.identity.aws_iam_role.task,module.identity.aws_iam_role.execution,module.identity.aws_iam_role.
+  PROTECTION-RULES: aws_neptune_cluster:deletion_protection=true,aws_lb:enable_deletion_protection=true,aws_dynamodb_table:deletion_protection_enabled=true,aws_ecr_repository:force_delete=false
+  STEP: output-paths
+  STEP: source
+  STEP: protection-check
+  DRY-RUN CMD: timeout=900s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 TF_DATA_DIR=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-cetmw3hk/repo/target/pla
+  STEP: prepare-plan
+  DRY-RUN CMD: timeout=1800s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 TF_DATA_DIR=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-cetmw3hk/repo/target/pl
+  DRY-RUN CMD: timeout=900s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 TF_DATA_DIR=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-cetmw3hk/repo/target/pla
+  DRY-RUN CMD: timeout=900s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 TF_DATA_DIR=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-cetmw3hk/repo/target/pla
+  RESULT: DRY-RUN no aws or terraform command was run and no file was written; --prepare --execute plans the deletion-protection release (nothing is applied)
+  exit code: 0
+  fake-tool calls recorded (1): [('terraform', 'version')]
+====================================================================================================
+# REFUSAL: plan.sh --plan-out with a pre-existing symlink at the .json name
+  STEP: start
+  STEP: inputs
+  STEP: output-paths
+  RESULT: REFUSED step=output-paths reason=SAFEIO-REFUSED: a path component is a symlink: target/plans/x.tfplan.json
+  exit code: 3
+  fake-tool calls recorded (0): []
+====================================================================================================
+# REFUSAL: plan.sh --execute without a live state file
+  STEP: start
+  STEP: inputs
+  STEP: output-paths
+  STEP: terraform-version
+  STEP: materialize-source
+  CMD: git archive --format=tar b653bb1a045aeed475c4a90cb5b7f1c933356656 infra/terraform | tar -x -C <run-dir>/source/b653bb1a045aeed475c4a90cb5b7f1c933356656
+  RESULT: REFUSED step=materialize-source reason=the live state file infra/terraform/terraform.tfstate does not exist: a plan against a missing state would propose to create resources that already exist (use plan.sh --expect-new-state only fo
+  exit code: 3
+  fake-tool calls recorded (1): [('terraform', 'version')]

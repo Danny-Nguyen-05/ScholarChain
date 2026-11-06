@@ -1,0 +1,20 @@
+# exit code: 3
+CONFIG-FILE: using /var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-j4gkud6z/fixture-release.conf instead of the repository config (test-only SCHOLARCHAIN_CONFIG_FILE)
+STEP: start
+[2026-11-05T21:10:31Z] [20261105T211031Z-25080] INFO script=deploy.sh mode=execute run_id=20261105T211031Z-25080 repo_root=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-j4gkud6z/repo
+STEP: inputs
+STEP: terraform-version
+[2026-11-05T21:10:31Z] [20261105T211031Z-25080] INFO terraform 1.13.5 accepted (binary: terraform)
+STEP: clean-tree
+[2026-11-05T21:10:31Z] [20261105T211031Z-25080] INFO clean tree at 385ecf654adb0073ea3f16c126954e55a732ee08
+STEP: approval-record
+[2026-11-05T21:10:31Z] [20261105T211031Z-25080] INFO approval record parsed (6 required lines, each exactly once)
+STEP: stage-match
+STEP: commit-match
+STEP: region-match
+STEP: prespend-receipt
+PRESPEND-CHECK-FAILED: cost snapshot is 60021.2 h old; at most 24.0 h is accepted
+RESULT: REFUSED step=prespend-receipt reason=pre-spend receipt rejected: no push, apply or upload will run
+
+# --- stderr ---
+[2026-11-05T21:10:31Z] [20261105T211031Z-25080] ERROR refused at step prespend-receipt: pre-spend receipt rejected: no push, apply or upload will run

@@ -1,0 +1,14 @@
+$ scripts/run-bounded-pipeline.sh --cluster-id j-ABC123DEF456 --region us-east-2 --instance-type m5.xlarge --core-count 1 --max-task-count 1 --max-runtime-minutes 90 --budget-usd 2.50 --input-prefix s3://example-bucket/inputs --output-prefix s3://example-bucket/outputs --hadoop-submit-jar s3://example-bucket/art/hadoop-submit.jar --hadoop-libjars s3://example-bucket/art/hadoop-bundle.jar --hadoop-config <fixtures>/prep-config.json --er-jar /opt/art/er.jar --er-policy <fixtures>/er-policy.json --er-config <fixtures>/er-config.json --spark-config-template <fixtures>/spark-template.json --datasets-manifest <fixtures>/datasets.json --artifact-sha256 hadoop-submit-jar=ca978112ca1bbdcafac231b39a23dc4da786eff8147c4e72b9807785afee48bb --artifact-sha256 hadoop-libjars=3e23e8160039594a33894f6564e1b1348bbd7a0088d42c4acb73eeaed59c009d --artifact-sha256 er-jar=2e7d2c03a9507ae265ecf5b5356885a53393a2029d241394997265a1a25aefc6 --artifact-sha256 job-jar=5e8c9902207afaeb7120430c585a445f21e92932081d64bc99f80e4925bcb002 --instance-type m5.2xlarge --core-count 3 --max-task-count 0 --max-runtime-minutes 180 --budget-usd 3 --run-id bp-dryrun-13b-003
+exit=3
+----- stdout
+STEP: start
+[2026-11-06T07:12:40Z] [20261106T071240Z-39099] INFO script=run-bounded-pipeline.sh mode=dry-run run_id=20261106T071240Z-39099 repo_root=/Users/danny/Documents/UIC/CS441/ScholarChain
+STEP: inputs
+STEP: terraform-only
+[2026-11-06T07:12:40Z] [20261106T071240Z-39099] INFO this script submits steps to the existing cluster j-ABC123DEF456; it never creates, resizes or deletes infrastructure (no create-cluster, run-job-flow or Terraform command)
+STEP: g6-estimate
+RESULT: REFUSED step=g6-estimate reason=the G6 cost guard refuses this run configuration (see G6-REFUSED above)
+----- stderr
+[2026-11-06T07:12:40Z] [20261106T071240Z-39099] ERROR G6-REFUSED: estimate 5.76 USD exceeds the per-run cap 3.00 USD
+[2026-11-06T07:12:40Z] [20261106T071240Z-39099] ERROR G6-REFUSED: estimate 5.76 USD exceeds the declared budget 3.00 USD
+[2026-11-06T07:12:40Z] [20261106T071240Z-39099] ERROR refused at step g6-estimate: the G6 cost guard refuses this run configuration (see G6-REFUSED above)

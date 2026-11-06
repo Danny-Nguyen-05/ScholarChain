@@ -753,3 +753,154 @@ run "disassociate_address_is_allowed_on_stack_elastic_ips" {
   }
 }
 
+# ---- Phase 13C carried items 2, 14, 16 and 17: each negative test fails on the policy it replaced -----------------------------
+
+run "item_17_boundary_instance_and_eni_mutations_require_the_stack_tag" {
+  command = plan
+
+  # Every boundary Allow that can act on an EXISTING instance, network interface or launch template (anything other than the
+  # create calls, which are scoped by request tags) must require the stack resource tag, so a passed spike role cannot
+  # terminate, modify, untag or delete another stack's EMR-tagged resources.
+  assert {
+    condition = alltrue([
+      for st in jsondecode(aws_iam_policy.spike_boundary[0].policy).Statement :
+      st.Effect != "Allow" || !anytrue([for r in st.Resource : anytrue([for t in [":instance/", ":network-interface/", ":launch-template/"] : strcontains(r, t)])]) ||
+      alltrue([for a in st.Action : contains(["ec2:RunInstances", "ec2:CreateNetworkInterface", "ec2:CreateSecurityGroup", "ec2:CreateFleet", "ec2:CreateTags"], a)]) ||
+      try(st.Condition.StringEquals["aws:ResourceTag/scholarchain:stack"], "") == "spike-emr"
+    ])
+    error_message = "Item 17: a boundary statement that can act on an existing instance, network-interface or launch-template must require aws:ResourceTag/scholarchain:stack = spike-emr (the EMR managed-policies tag alone reaches every EMR cluster in the account)."
+  }
+  assert {
+    condition = anytrue([
+      for st in jsondecode(aws_iam_policy.spike_boundary[0].policy).Statement :
+      st.Sid == "V2ManageTaggedInstancesAndEnis" && toset(st.Action) == toset(["ec2:DeleteNetworkInterface", "ec2:ModifyInstanceAttribute", "ec2:TerminateInstances"]) &&
+      toset(st.Resource) == toset(["arn:aws:ec2:us-east-2:111122223333:network-interface/*", "arn:aws:ec2:us-east-2:111122223333:instance/*"]) &&
+      st.Condition.StringEquals["aws:ResourceTag/scholarchain:stack"] == "spike-emr" && st.Condition.StringEquals["aws:ResourceTag/for-use-with-amazon-emr-managed-policies"] == "true" && st.Condition.StringEquals["aws:RequestedRegion"] == "us-east-2"
+    ])
+    error_message = "Item 17: terminate, modify-attribute and ENI delete need the stack tag, the EMR tag and the region."
+  }
+  assert {
+    condition = anytrue([
+      for st in jsondecode(aws_iam_policy.spike_boundary[0].policy).Statement :
+      st.Action == ["ec2:DeleteTags"] && st.Condition.StringEquals["aws:ResourceTag/scholarchain:stack"] == "spike-emr" && st.Condition.StringEquals["aws:ResourceTag/for-use-with-amazon-emr-managed-policies"] == "true"
+    ])
+    error_message = "Item 17: removing tags is a modification and needs the stack tag too."
+  }
+  assert {
+    condition = alltrue([
+      for st in jsondecode(aws_iam_policy.spike_boundary[0].policy).Statement :
+      !anytrue([for a in st.Action : strcontains(lower(a), "launchtemplate") && !startswith(a, "ec2:Describe")]) || try(st.Condition.StringEquals["aws:ResourceTag/scholarchain:stack"], "") == "spike-emr"
+    ])
+    error_message = "Item 17: no launch-template action may be granted without the stack tag (v2's launch-template statements are deliberately left out of the boundary)."
+  }
+  assert {
+    condition     = length(aws_iam_policy.spike_boundary[0].policy) < 6144
+    error_message = "The tightened boundary must stay below the managed-policy limit."
+  }
+}
+
+run "item_2_eni_delete_and_modify_are_scoped_to_the_region_and_account" {
+  command = plan
+
+  assert {
+    condition = length([
+      for st in flatten(concat([for k, p in aws_iam_policy.permission_set : jsondecode(p.policy).Statement], jsondecode(aws_iam_policy.spike_boundary[0].policy).Statement)) :
+      st if st.Effect == "Allow" && anytrue([for a in st.Action : contains(["ec2:DeleteNetworkInterface", "ec2:ModifyNetworkInterfaceAttribute"], a)])
+    ]) >= 2
+    error_message = "The ENI delete/modify grants exist (a vacuous pass is not accepted)."
+  }
+  assert {
+    condition = alltrue([
+      for st in flatten(concat([for k, p in aws_iam_policy.permission_set : jsondecode(p.policy).Statement], jsondecode(aws_iam_policy.spike_boundary[0].policy).Statement)) :
+      st.Effect != "Allow" || !anytrue([for a in st.Action : contains(["ec2:DeleteNetworkInterface", "ec2:ModifyNetworkInterfaceAttribute"], a)]) || (
+        alltrue([for r in st.Resource : startswith(r, "arn:aws:ec2:us-east-2:111122223333:network-interface/") || startswith(r, "arn:aws:ec2:us-east-2:111122223333:instance/")]) && try(st.Condition.StringEquals["aws:RequestedRegion"], "") == "us-east-2"
+      )
+    ])
+    error_message = "Item 2: every Allow of ec2:DeleteNetworkInterface or ec2:ModifyNetworkInterfaceAttribute names network-interface (or, in the boundary, instance) ARNs of this region and account and pins aws:RequestedRegion to us-east-2."
+  }
+}
+
+run "item_14_kms_tag_resource_is_limited_to_the_spike_tag_keys" {
+  command = plan
+
+  assert {
+    condition = length([
+      for st in flatten([for k, p in aws_iam_policy.permission_set : jsondecode(p.policy).Statement]) :
+      st if st.Effect == "Allow" && contains(st.Action, "kms:TagResource")
+    ]) == 1
+    error_message = "Exactly one Allow grants kms:TagResource."
+  }
+  assert {
+    condition = alltrue([
+      for st in flatten([for k, p in aws_iam_policy.permission_set : jsondecode(p.policy).Statement]) :
+      st.Effect != "Allow" || !contains(st.Action, "kms:TagResource") || (
+        toset(st.Condition["ForAllValues:StringEquals"]["aws:TagKeys"]) == toset(["course", "project", "environment", "owner", "expiration", "scholarchain:stack", "for-use-with-amazon-emr-managed-policies", "Name"]) &&
+        st.Condition.StringEquals["aws:RequestTag/scholarchain:stack"] == "spike-emr" && st.Condition.StringEquals["aws:RequestedRegion"] == "us-east-2"
+      )
+    ])
+    error_message = "Item 14: kms:TagResource is limited to the eight tag keys of the spike root (aws:TagKeys, ForAllValues) with the stack request tag; a statement without the key restriction must fail this test."
+  }
+}
+
+run "item_14_a_wildcard_or_missing_tag_key_list_is_rejected" {
+  command = plan
+  variables {
+    spike_kms_tag_keys = ["*"]
+  }
+  expect_failures = [var.spike_kms_tag_keys]
+}
+
+run "item_14_the_tag_key_list_must_keep_the_stack_key" {
+  command = plan
+  variables {
+    spike_kms_tag_keys = ["course", "owner"]
+  }
+  expect_failures = [var.spike_kms_tag_keys]
+}
+
+run "item_16_create_role_is_limited_to_the_two_spike_roles_and_the_trust_policy_stays_fixed" {
+  command = plan
+
+  assert {
+    condition = anytrue([
+      for st in jsondecode(aws_iam_policy.permission_set["spike-emr--iam"].policy).Statement :
+      st.Effect == "Allow" && st.Action == ["iam:CreateRole"] &&
+      toset(st.Resource) == toset(["arn:aws:iam::111122223333:role/scholarchain-spike-emr-service", "arn:aws:iam::111122223333:role/scholarchain-spike-emr-instance"]) && length(st.Resource) == 2 &&
+      st.Condition.StringEquals["iam:PermissionsBoundary"] == "arn:aws:iam::111122223333:policy/scholarchain-spike-emr-boundary" && st.Condition.StringEquals["aws:RequestTag/scholarchain:stack"] == "spike-emr"
+    ])
+    error_message = "Item 16: iam:CreateRole names exactly the two spike role ARNs (no prefix wildcard), with the boundary and stack tag required."
+  }
+  assert {
+    condition = alltrue([
+      for st in flatten([for k, p in aws_iam_policy.permission_set : jsondecode(p.policy).Statement]) :
+      st.Effect != "Allow" || (!contains(st.Action, "iam:UpdateAssumeRolePolicy") && (!contains(st.Action, "iam:CreateRole") || alltrue([for r in st.Resource : !strcontains(r, "*")])))
+    ])
+    error_message = "Item 16: no Allow of iam:UpdateAssumeRolePolicy anywhere, and iam:CreateRole never on a wildcard resource."
+  }
+  assert {
+    condition = anytrue([
+      for st in jsondecode(aws_iam_policy.permission_set["spike-emr--iam"].policy).Statement :
+      st.Effect == "Deny" && contains(st.Action, "iam:UpdateAssumeRolePolicy") && contains(st.Action, "iam:PutRolePermissionsBoundary") && contains(st.Action, "iam:DeleteRolePermissionsBoundary")
+      ]) && anytrue([
+      for st in jsondecode(aws_iam_policy.permission_set["spike-emr--iam"].policy).Statement :
+      st.Effect == "Deny" && st.Action == ["sts:AssumeRole"]
+    ])
+    error_message = "Item 16: the trust policy cannot be changed after creation and the deployer cannot assume a spike role."
+  }
+}
+
+run "item_16_role_names_outside_the_spike_prefix_or_a_prefix_wildcard_are_rejected" {
+  command = plan
+  variables {
+    spike_role_names = ["scholarchain-spike-emr-*", "scholarchain-spike-emr-instance"]
+  }
+  expect_failures = [var.spike_role_names]
+}
+
+run "item_16_only_two_role_names_are_accepted" {
+  command = plan
+  variables {
+    spike_role_names = ["scholarchain-spike-emr-service", "scholarchain-spike-emr-instance", "scholarchain-spike-emr-extra"]
+  }
+  expect_failures = [var.spike_role_names]
+}

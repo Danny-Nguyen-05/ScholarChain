@@ -6,7 +6,7 @@
 # downloaded. Bounded: each download is tried at most 3 times; no polling.
 #
 # Usage: collect-evidence.sh --bucket <name> --dest <dir> [--region us-east-2]
-# Exit: 0 ok, 3 manifest mismatch, 4 download failed, 64 usage.
+# Exit: 0 ok, 3 manifest mismatch or unsafe tarball, 4 download failed, 64 usage.
 set -euo pipefail
 
 BUCKET="" DEST="" REGION="us-east-2"
@@ -58,7 +58,34 @@ echo "results tarball sha256 verified: ${actual}"
 
 EXTRACT="$DEST/results-extracted"
 rm -rf "$EXTRACT"; mkdir -p "$EXTRACT"
-tar -xzf "$TAR" -C "$EXTRACT"
+# Item 31 (carried 12D finding): macOS bsdtar treats Hadoop's real ._SUCCESS.crc checksum files as AppleDouble
+# metadata ("Failed to restore metadata", exit 1, the file is not extracted), so `tar -xzf` cannot be used here.
+# Python tarfile extracts every member verbatim, refusing absolute paths, "..", links and special files.
+# COPYFILE_DISABLE=1 also stops any tar this script or its callers start from adding "._" members to NEW archives.
+export COPYFILE_DISABLE=1
+python3 -I - "$TAR" "$EXTRACT" <<'PY' || { echo "results tarball could not be extracted safely" >&2; exit 3; }
+import os
+import sys
+import tarfile
+
+archive_path, dest = sys.argv[1], os.path.realpath(sys.argv[2])
+with tarfile.open(archive_path, "r:gz") as archive:
+    members = archive.getmembers()
+    for member in members:
+        target = os.path.realpath(os.path.join(dest, member.name))
+        if os.path.isabs(member.name) or ".." in member.name.split("/") or not (target == dest or target.startswith(dest + os.sep)):
+            raise SystemExit("unsafe member path: %s" % member.name)
+        if not (member.isreg() or member.isdir()):
+            raise SystemExit("unsupported member type: %s" % member.name)
+    for member in members:
+        target = os.path.join(dest, member.name)
+        if member.isdir():
+            os.makedirs(target, exist_ok=True)
+            continue
+        os.makedirs(os.path.dirname(target), exist_ok=True)
+        with archive.extractfile(member) as source, open(target, "xb") as out:
+            out.write(source.read())
+PY
 if [ ! -f "$EXTRACT/files-manifest.sha256" ]; then echo "files-manifest.sha256 missing inside the tarball" >&2; exit 3; fi
 count=0
 while IFS= read -r line; do

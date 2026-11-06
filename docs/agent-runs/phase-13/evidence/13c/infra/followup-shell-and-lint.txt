@@ -1,0 +1,3 @@
+shellcheck exit=0
+py_compile ok
+diff-check exit=0

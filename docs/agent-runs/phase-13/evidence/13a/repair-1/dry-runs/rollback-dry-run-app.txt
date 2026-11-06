@@ -1,0 +1,52 @@
+# exit code: 0
+CONFIG-FILE: using /var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-j4gkud6z/fixture-release.conf instead of the repository config (test-only SCHOLARCHAIN_CONFIG_FILE)
+STEP: start
+[2026-11-05T21:10:29Z] [20261105T211029Z-24472] INFO script=rollback.sh mode=dry-run run_id=20261105T211029Z-24472 repo_root=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-j4gkud6z/repo
+STEP: inputs
+STEP: terraform-version
+[2026-11-05T21:10:29Z] [20261105T211029Z-24472] INFO terraform 1.13.5 accepted (binary: terraform)
+STEP: previous-manifest
+deploy manifest ok: image_revision=cccccccccccccccccccccccccccccccccccccccc
+[2026-11-05T21:10:30Z] [20261105T211029Z-24472] INFO rolling back to image revision cccccccccccccccccccccccccccccccccccccccc
+[2026-11-05T21:10:30Z] [20261105T211029Z-24472] INFO recorded: query-api scholarchain-course/query-api:cccccccccccccccccccccccccccccccccccccccc sha256:c6902fe0597eb49bf3584d9fb2a7757feb7bc61326707adb1c0af085b0e06ec8
+[2026-11-05T21:10:30Z] [20261105T211029Z-24472] INFO recorded: graph-service scholarchain-course/graph-service:cccccccccccccccccccccccccccccccccccccccc sha256:d04afe981d1e25ca5d97f4570a8c5c80867063bd049d4d7297fa10353ee9c468
+[2026-11-05T21:10:30Z] [20261105T211029Z-24472] INFO recorded: semantic-service scholarchain-course/semantic-service:cccccccccccccccccccccccccccccccccccccccc sha256:652f592d785d0d1fc10316f7f34b605d1d06f8d248662b9f6eda7176eb03d05c
+[2026-11-05T21:10:30Z] [20261105T211029Z-24472] INFO recorded: embedding-worker scholarchain-course/embedding-worker:cccccccccccccccccccccccccccccccccccccccc sha256:701d02c7ff448966ab0edfbbda19458e8b1bf8d977ff4110a96372cc56e55185
+STEP: verify-registry-digests
+DRY-RUN CMD: timeout=120s env AWS_PROFILE=scholarchain-deployer-tf AWS_REGION=us-east-2 AWS_PAGER= aws ecr describe-images --region us-east-2 --repository-name scholarchain-course/query-api --image-ids imageTag=cccccccccccccccccccccccccccccccccccccccc --query imageDetails\[0\].imageDigest --output text 
+[2026-11-05T21:10:30Z] [20261105T211029Z-24472] INFO dry run: would require scholarchain-course/query-api:cccccccccccccccccccccccccccccccccccccccc to resolve to sha256:c6902fe0597eb49bf3584d9fb2a7757feb7bc61326707adb1c0af085b0e06ec8
+DRY-RUN CMD: timeout=120s env AWS_PROFILE=scholarchain-deployer-tf AWS_REGION=us-east-2 AWS_PAGER= aws ecr describe-images --region us-east-2 --repository-name scholarchain-course/graph-service --image-ids imageTag=cccccccccccccccccccccccccccccccccccccccc --query imageDetails\[0\].imageDigest --output text 
+[2026-11-05T21:10:30Z] [20261105T211029Z-24472] INFO dry run: would require scholarchain-course/graph-service:cccccccccccccccccccccccccccccccccccccccc to resolve to sha256:d04afe981d1e25ca5d97f4570a8c5c80867063bd049d4d7297fa10353ee9c468
+DRY-RUN CMD: timeout=120s env AWS_PROFILE=scholarchain-deployer-tf AWS_REGION=us-east-2 AWS_PAGER= aws ecr describe-images --region us-east-2 --repository-name scholarchain-course/semantic-service --image-ids imageTag=cccccccccccccccccccccccccccccccccccccccc --query imageDetails\[0\].imageDigest --output text 
+[2026-11-05T21:10:30Z] [20261105T211029Z-24472] INFO dry run: would require scholarchain-course/semantic-service:cccccccccccccccccccccccccccccccccccccccc to resolve to sha256:652f592d785d0d1fc10316f7f34b605d1d06f8d248662b9f6eda7176eb03d05c
+DRY-RUN CMD: timeout=120s env AWS_PROFILE=scholarchain-deployer-tf AWS_REGION=us-east-2 AWS_PAGER= aws ecr describe-images --region us-east-2 --repository-name scholarchain-course/embedding-worker --image-ids imageTag=cccccccccccccccccccccccccccccccccccccccc --query imageDetails\[0\].imageDigest --output text 
+[2026-11-05T21:10:30Z] [20261105T211029Z-24472] INFO dry run: would require scholarchain-course/embedding-worker:cccccccccccccccccccccccccccccccccccccccc to resolve to sha256:701d02c7ff448966ab0edfbbda19458e8b1bf8d977ff4110a96372cc56e55185
+STEP: delegate-plan
+[2026-11-05T21:10:30Z] [20261105T211029Z-24472] INFO re-plan through plan.sh (dry run shown below; it performs no aws or terraform command)
+CMD: bash /Users/danny/Documents/UIC/CS441/ScholarChain/scripts/plan.sh --env course --region us-east-2 --profile scholarchain-deployer-tf --plan-out /private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-j4gkud6z/repo/target/plans/rollback-course-cccccccccccccccccccccccccccccccccccccccc.tfplan --image-revision cccccccccccccccccccccccccccccccccccccccc 
+  | CONFIG-FILE: using /var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-j4gkud6z/fixture-release.conf instead of the repository config (test-only SCHOLARCHAIN_CONFIG_FILE)
+  | STEP: start
+  | [2026-11-05T21:10:30Z] [20261105T211030Z-24617] INFO script=plan.sh mode=dry-run run_id=20261105T211030Z-24617 repo_root=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-j4gkud6z/repo
+  | STEP: inputs
+  | STEP: output-paths
+  | [2026-11-05T21:10:30Z] [20261105T211030Z-24617] INFO plan outputs stay inside target/plans (ignored, private): plan, .json, .txt, .log, receipt
+  | STEP: terraform-version
+  | [2026-11-05T21:10:30Z] [20261105T211030Z-24617] INFO terraform 1.13.5 accepted (binary: terraform)
+  | [2026-11-05T21:10:30Z] [20261105T211030Z-24617] INFO env=course region=us-east-2 source_commit=385ecf654adb0073ea3f16c126954e55a732ee08 scripts_commit=385ecf654adb0073ea3f16c126954e55a732ee08 clean=true plan=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-j4gkud6z/repo/target/plans/rollback-course-cccccccccccccccccccccccccccccccccccccccc.tfplan
+  | STEP: account-identity
+  | DRY-RUN CMD: timeout=120s env AWS_PROFILE=scholarchain-deployer-tf AWS_REGION=us-east-2 TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 aws sts get-caller-identity --region us-east-2 --query Account --output text 
+  | STEP: terraform-init
+  | DRY-RUN CMD: timeout=900s env AWS_PROFILE=scholarchain-deployer-tf AWS_REGION=us-east-2 TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 terraform -chdir=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-j4gkud6z/repo/infra/terraform init -input=false 
+  | STEP: terraform-plan
+  | DRY-RUN CMD: timeout=1800s env AWS_PROFILE=scholarchain-deployer-tf AWS_REGION=us-east-2 TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 terraform -chdir=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-j4gkud6z/repo/infra/terraform plan -input=false -lock-timeout=60s -var-file=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-j4gkud6z/repo/infra/terraform/environments/course.tfvars -var-file=<redacted> -var=aws_region=us-east-2 -var=aws_profile=scholarchain-deployer-tf -var=image_revision=cccccccccccccccccccccccccccccccccccccccc -out=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-j4gkud6z/repo/target/plans/rollback-course-cccccccccccccccccccccccccccccccccccccccc.tfplan 
+  | STEP: terraform-show
+  | DRY-RUN CMD: timeout=900s env AWS_PROFILE=scholarchain-deployer-tf AWS_REGION=us-east-2 TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 terraform -chdir=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-j4gkud6z/repo/infra/terraform show -json /private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-j4gkud6z/repo/target/plans/rollback-course-cccccccccccccccccccccccccccccccccccccccc.tfplan 
+  | STEP: terraform-show-text
+  | DRY-RUN CMD: timeout=900s env AWS_PROFILE=scholarchain-deployer-tf AWS_REGION=us-east-2 TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 terraform -chdir=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-j4gkud6z/repo/infra/terraform show -no-color /private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-j4gkud6z/repo/target/plans/rollback-course-cccccccccccccccccccccccccccccccccccccccc.tfplan 
+  | STEP: plan-receipt
+  | [2026-11-05T21:10:30Z] [20261105T211030Z-24617] INFO dry run: would check the saved plan's region, account and image_revision, print PLAN-TEXT (path and sha256 of target/plans/rollback-course-cccccccccccccccccccccccccccccccccccccccc.tfplan.txt), print every PLAN-ACTION, and write the receipt target/plans/rollback-course-cccccccccccccccccccccccccccccccccccccccc.tfplan.receipt.json
+  | RESULT: DRY-RUN no aws or terraform command was run; re-run with --execute (approval point 4) to plan
+STEP: delegate-deploy
+[2026-11-05T21:10:30Z] [20261105T211029Z-24472] INFO then, after the human writes a NEW approval record (and a fresh pre-spend receipt) for the rollback plan:
+DRY-RUN CMD: scripts/deploy.sh --region us-east-2 --plan /private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-j4gkud6z/repo/target/plans/rollback-course-cccccccccccccccccccccccccccccccccccccccc.tfplan --profile scholarchain-deployer-tf --stage runtime-apply --reuse-images /var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-j4gkud6z/previous-deploy-manifest.json --execute 
+RESULT: DRY-RUN rollback verified locally; nothing was run; approval point 1 (a new Phase 14 record and pre-spend receipt) is required before deploy

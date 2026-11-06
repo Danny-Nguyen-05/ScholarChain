@@ -1,0 +1,97 @@
+##### deploy.sh dry run, REAL repo (dirty tree) with synthetic record -> expected refusal
+STEP: start
+[2026-11-05T17:56:02Z] [20261105T175602Z-37728] INFO script=deploy.sh mode=dry-run run_id=20261105T175602Z-37728 repo_root=/Users/danny/Documents/UIC/CS441/ScholarChain
+STEP: inputs
+STEP: terraform-version
+[2026-11-05T17:56:02Z] [20261105T175602Z-37728] INFO terraform 1.13.5 accepted (binary: terraform)
+STEP: clean-tree
+[2026-11-05T17:56:02Z] [20261105T175602Z-37728] ERROR refused at step clean-tree: work tree is dirty; commit or stash everything (including untracked files) before deploying
+RESULT: REFUSED step=clean-tree reason=work tree is dirty; commit or stash everything (including untracked files) before deploying
+exit=3
+
+##### deploy.sh dry run, clean synthetic repo, fully matching record -> expected DRY-RUN pass
+CONFIG-OVERRIDE: environment overrides config for: RUNTIME_ARCHIVE_EXPECTED_SHA256 RUNTIME_ARCHIVE_EXPECTED_SIZE
+STEP: start
+[2026-11-05T17:56:02Z] [20261105T175602Z-37779] INFO script=deploy.sh mode=dry-run run_id=20261105T175602Z-37779 repo_root=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-13a-evidence-siejvte8/repo
+STEP: inputs
+STEP: terraform-version
+[2026-11-05T17:56:02Z] [20261105T175602Z-37779] INFO terraform 1.13.5 accepted (binary: terraform)
+STEP: clean-tree
+[2026-11-05T17:56:02Z] [20261105T175602Z-37779] INFO clean tree at eaa9747e59100d570ac7605fb8b778de2fae5d48
+STEP: approval-record
+[2026-11-05T17:56:02Z] [20261105T175602Z-37779] INFO approval record parsed (4 required lines, each exactly once)
+STEP: commit-match
+STEP: region-match
+STEP: plan-checksum
+[2026-11-05T17:56:02Z] [20261105T175602Z-37779] INFO plan sha256 matches the approval record
+STEP: release-manifest
+release manifest ok: commit=HEAD, clean, linux/amd64, all images present
+[2026-11-05T17:56:02Z] [20261105T175602Z-37779] WARN no plan receipt next to the plan file; image_revision cross-check skipped
+STEP: runtime-archive
+[2026-11-05T17:56:02Z] [20261105T175602Z-37779] INFO runtime archive verified: size=9 sha256=b3cc0475bb78a5026098858e9889acf666d31062d513d303314eca31d36e72f2
+STEP: account-check
+DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws sts get-caller-identity --region us-east-2 --query Account --output text 
+[2026-11-05T17:56:02Z] [20261105T175602Z-37779] INFO dry run: the account comparison runs only with --execute, before any mutating command
+STEP: ecr-repositories-exist
+DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws ecr describe-repositories --region us-east-2 --repository-names scholarchain-course/query-api --query repositories\[0\].repositoryName --output text 
+DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws ecr describe-repositories --region us-east-2 --repository-names scholarchain-course/graph-service --query repositories\[0\].repositoryName --output text 
+DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws ecr describe-repositories --region us-east-2 --repository-names scholarchain-course/semantic-service --query repositories\[0\].repositoryName --output text 
+DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws ecr describe-repositories --region us-east-2 --repository-names scholarchain-course/embedding-worker --query repositories\[0\].repositoryName --output text 
+STEP: ecr-login
+DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws ecr get-login-password --region us-east-2 
+DRY-RUN CMD: timeout=120s docker login --username AWS --password-stdin <acct>.dkr.ecr.us-east-2.amazonaws.com 
+STEP: push-images
+DRY-RUN CMD: timeout=120s docker tag scholarchain-query-api:eaa9747e59100d570ac7605fb8b778de2fae5d48 <acct>.dkr.ecr.us-east-2.amazonaws.com/scholarchain-course/query-api:eaa9747e59100d570ac7605fb8b778de2fae5d48 
+DRY-RUN CMD: timeout=1800s docker push <acct>.dkr.ecr.us-east-2.amazonaws.com/scholarchain-course/query-api:eaa9747e59100d570ac7605fb8b778de2fae5d48 
+DRY-RUN CMD: timeout=120s docker tag scholarchain-graph-service:eaa9747e59100d570ac7605fb8b778de2fae5d48 <acct>.dkr.ecr.us-east-2.amazonaws.com/scholarchain-course/graph-service:eaa9747e59100d570ac7605fb8b778de2fae5d48 
+DRY-RUN CMD: timeout=1800s docker push <acct>.dkr.ecr.us-east-2.amazonaws.com/scholarchain-course/graph-service:eaa9747e59100d570ac7605fb8b778de2fae5d48 
+DRY-RUN CMD: timeout=120s docker tag scholarchain-semantic-service:eaa9747e59100d570ac7605fb8b778de2fae5d48 <acct>.dkr.ecr.us-east-2.amazonaws.com/scholarchain-course/semantic-service:eaa9747e59100d570ac7605fb8b778de2fae5d48 
+DRY-RUN CMD: timeout=1800s docker push <acct>.dkr.ecr.us-east-2.amazonaws.com/scholarchain-course/semantic-service:eaa9747e59100d570ac7605fb8b778de2fae5d48 
+DRY-RUN CMD: timeout=120s docker tag scholarchain-embedding-worker:eaa9747e59100d570ac7605fb8b778de2fae5d48 <acct>.dkr.ecr.us-east-2.amazonaws.com/scholarchain-course/embedding-worker:eaa9747e59100d570ac7605fb8b778de2fae5d48 
+DRY-RUN CMD: timeout=1800s docker push <acct>.dkr.ecr.us-east-2.amazonaws.com/scholarchain-course/embedding-worker:eaa9747e59100d570ac7605fb8b778de2fae5d48 
+STEP: record-digests
+DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws ecr describe-images --region us-east-2 --repository-name scholarchain-course/query-api --image-ids imageTag=eaa9747e59100d570ac7605fb8b778de2fae5d48 --query imageDetails\[0\].imageDigest --output text 
+DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws ecr describe-images --region us-east-2 --repository-name scholarchain-course/graph-service --image-ids imageTag=eaa9747e59100d570ac7605fb8b778de2fae5d48 --query imageDetails\[0\].imageDigest --output text 
+DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws ecr describe-images --region us-east-2 --repository-name scholarchain-course/semantic-service --image-ids imageTag=eaa9747e59100d570ac7605fb8b778de2fae5d48 --query imageDetails\[0\].imageDigest --output text 
+DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws ecr describe-images --region us-east-2 --repository-name scholarchain-course/embedding-worker --image-ids imageTag=eaa9747e59100d570ac7605fb8b778de2fae5d48 --query imageDetails\[0\].imageDigest --output text 
+STEP: terraform-apply
+DRY-RUN CMD: timeout=3600s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 terraform -chdir=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-13a-evidence-siejvte8/repo/infra/terraform apply -input=false -lock-timeout=60s /private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-13a-evidence-siejvte8/synthetic.tfplan 
+STEP: runtime-archive-upload
+DRY-RUN CMD: timeout=3600s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws s3 cp /var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-13a-evidence-siejvte8/runtime-archive-synthetic.tgz s3://example-bucket/key/runtime.tgz --region us-east-2 --only-show-errors --checksum-algorithm SHA256 --metadata sha256=b3cc0475bb78a5026098858e9889acf666d31062d513d303314eca31d36e72f2 
+DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws s3api head-object --region us-east-2 --bucket example-bucket --key key/runtime.tgz --query \[ContentLength\,Metadata.sha256\] --output text 
+STEP: record-ecs
+DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws ecs describe-services --region us-east-2 --cluster scholarchain-course --services query-api graph-service semantic-service embedding-worker --query services\[\].\[serviceName\,taskDefinition\] --output text 
+STEP: write-deploy-manifest
+[2026-11-05T17:56:02Z] [20261105T175602Z-37779] INFO dry run: would write target/release/eaa9747e59100d570ac7605fb8b778de2fae5d48/deploy-manifest-20261105T175602Z-37779.json (deployed digests, task-definition revisions, plan sha256, commit, region, account sha256)
+RESULT: DRY-RUN all local checks passed (commit, region, plan checksum, release manifest, runtime archive); no mutating command was run
+exit=0
+
+##### deploy.sh dry run, clean synthetic repo, wrong plan checksum -> expected refusal
+STEP: start
+[2026-11-05T17:56:02Z] [20261105T175602Z-38016] INFO script=deploy.sh mode=dry-run run_id=20261105T175602Z-38016 repo_root=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-13a-evidence-siejvte8/repo
+STEP: inputs
+STEP: terraform-version
+[2026-11-05T17:56:03Z] [20261105T175602Z-38016] INFO terraform 1.13.5 accepted (binary: terraform)
+STEP: clean-tree
+[2026-11-05T17:56:03Z] [20261105T175602Z-38016] INFO clean tree at eaa9747e59100d570ac7605fb8b778de2fae5d48
+STEP: approval-record
+[2026-11-05T17:56:03Z] [20261105T175602Z-38016] INFO approval record parsed (4 required lines, each exactly once)
+STEP: commit-match
+STEP: region-match
+STEP: plan-checksum
+[2026-11-05T17:56:03Z] [20261105T175602Z-38016] ERROR refused at step plan-checksum: plan sha256 bd6e026e4bac3896a85ad048878be30672cee38850381432cdc2c2b84f1c5e76 != APPROVED_PLAN_SHA256 0000000000000000000000000000000000000000000000000000000000000000
+RESULT: REFUSED step=plan-checksum reason=plan sha256 bd6e026e4bac3896a85ad048878be30672cee38850381432cdc2c2b84f1c5e76 != APPROVED_PLAN_SHA256 0000000000000000000000000000000000000000000000000000000000000000
+exit=3
+
+##### deploy.sh, missing record -> expected refusal
+STEP: start
+[2026-11-05T17:56:03Z] [20261105T175603Z-38098] INFO script=deploy.sh mode=dry-run run_id=20261105T175603Z-38098 repo_root=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-13a-evidence-siejvte8/repo
+STEP: inputs
+STEP: terraform-version
+[2026-11-05T17:56:03Z] [20261105T175603Z-38098] INFO terraform 1.13.5 accepted (binary: terraform)
+STEP: clean-tree
+[2026-11-05T17:56:03Z] [20261105T175603Z-38098] INFO clean tree at eaa9747e59100d570ac7605fb8b778de2fae5d48
+STEP: approval-record
+[2026-11-05T17:56:03Z] [20261105T175603Z-38098] ERROR refused at step approval-record: approval record not found: /var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-13a-evidence-siejvte8/none.md
+RESULT: REFUSED step=approval-record reason=approval record not found: /var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-13a-evidence-siejvte8/none.md
+exit=3

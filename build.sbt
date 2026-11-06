@@ -5,6 +5,9 @@ import scholarchain.build.ServiceDistribution
 
 ThisBuild / organization := "edu.uic.cs441.scholarchain"
 ThisBuild / version := "0.1.0-SNAPSHOT"
+// One guard for check and for every packaging task (resolved by delegation in all projects).
+ThisBuild / checkJava17 :=
+  scholarchain.build.Java17Guard.requireJava17(sys.props("java.specification.version"))
 
 lazy val buildVerification =
   project
@@ -162,8 +165,6 @@ lazy val root =
         if (sys.props.get("scholarchain.checkProbe.fail").contains("true"))
           sys.error("scholarchain check probe: injected format-stage failure")
       },
-      checkJava17 :=
-        scholarchain.build.Java17Guard.requireJava17(sys.props("java.specification.version")),
       contractTest := Def.taskDyn {
         if (sys.props.get("scholarchain.checkProbe.fail").contains("true"))
           Def.task(())
@@ -221,6 +222,7 @@ lazy val root =
         )
         .value,
       dockerLocalImage := {
+        checkJava17.value
         val _ = (services / serviceDistribution).value
         import sys.process._
         ServiceDistribution.artifacts.foreach { case (artifact, mainClass) =>
@@ -245,9 +247,16 @@ lazy val root =
 
 addCommandAlias("fmt", ";all scalafmtAll; scalafmtSbt")
 addCommandAlias("check", "checkTask")
+// Every packaging alias starts with checkJava17 so a non-17 sbt JVM fails before any artifact is
+// produced; the packaging tasks also depend on the same guard when invoked directly.
 addCommandAlias(
   "packageJobs",
-  ";hadoop/package; hadoop/hadoopDependencyBundle; sparkAnalytics/sparkJobJar"
+  ";checkJava17; hadoop/package; hadoop/hadoopDependencyBundle; sparkAnalytics/sparkJobJar"
+)
+addCommandAlias(
+  "packageRelease",
+  ";checkJava17; hadoop/hadoopSubmitJar; hadoop/hadoopDependencyBundle; " +
+    "sparkAnalytics/sparkJobJar; services/serviceDistribution"
 )
 addCommandAlias("sparkJobJar", "sparkAnalytics/sparkJobJar")
 addCommandAlias("dockerLocal", "dockerLocalImage")

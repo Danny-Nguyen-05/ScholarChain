@@ -1,0 +1,9 @@
+bash -n OK check.sh
+bash -n OK package.sh
+bash -n OK plan.sh
+bash -n OK deploy.sh
+bash -n OK rollback.sh
+bash -n OK cleanup.sh
+bash -n OK lib/common.sh
+--- shellcheck -x -P SCRIPTDIR
+shellcheck exit 0

@@ -1,0 +1,15 @@
+command: terraform fmt -check -recursive (infra/terraform)
+exit code: 0
+command: terraform validate
+Success! The configuration is valid.
+
+command: terraform test (main root)
+tests/phase12a.tftest.hcl... pass
+tests/phase12b.tftest.hcl... pass
+tests/phase12c.tftest.hcl... pass
+tests/phase13c.tftest.hcl... pass
+Success! 77 passed, 0 failed.
+phase12a: Success! 13 passed, 0 failed.
+phase12b: Success! 18 passed, 0 failed.
+phase12c: Success! 9 passed, 0 failed.
+phase13c: Success! 37 passed, 0 failed.

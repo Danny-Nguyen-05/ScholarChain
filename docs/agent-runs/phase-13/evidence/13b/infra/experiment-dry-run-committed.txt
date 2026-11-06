@@ -1,0 +1,699 @@
+$ scripts/run-experiment.sh --manifest <repo>/experiments/fixture/manifest.json --cluster-id j-ABC123DEF456
+exit=0
+----- stdout
+STEP: start
+[2026-11-06T07:12:53Z] [20261106T071253Z-39407] INFO script=run-experiment.sh mode=dry-run run_id=20261106T071253Z-39407 repo_root=/private<repo>
+STEP: inputs
+STEP: manifest-committed
+[2026-11-06T07:12:53Z] [20261106T071253Z-39407] INFO manifest experiments/fixture/manifest.json is tracked and identical to HEAD 099234d37067a5bc42a831f676094cdf87561048 (sha256 76e9510385294c39aa68264350d630f14a4986b7ef1f28799d0d7b38fa63367a)
+STEP: manifest-schema
+[2026-11-06T07:12:53Z] [20261106T071253Z-39407] INFO manifest fixture-exp-a is valid: max_usd=2.5 max_runtime_minutes=90 max_capacity=3 region=us-east-2 idle_timeout_seconds<=900
+STEP: run-record
+EXPERIMENT-RECORD: experiment=fixture-exp-a commit=099234d37067a5bc42a831f676094cdf87561048 manifest=experiments/fixture/manifest.json manifest_sha256=76e9510385294c39aa68264350d630f14a4986b7ef1f28799d0d7b38fa63367a region=us-east-2 start_utc=2026-11-06T07:12:53Z
+EXPERIMENT-LIMITS: max_usd=2.5 max_runtime_minutes=90 max_capacity=3 region=us-east-2 idle_timeout_seconds<=900
+EXPERIMENT-METRIC-LOCATION: s3://fixture-bucket/metrics/fixture-exp-a/
+EXPERIMENT-APPROVAL-LINE: APPROVED_ACTION=run-experiment
+EXPERIMENT-APPROVAL-LINE: APPROVED_MANIFEST_SHA256=76e9510385294c39aa68264350d630f14a4986b7ef1f28799d0d7b38fa63367a
+STEP: delegate-pipeline
+[2026-11-06T07:12:54Z] [20261106T071253Z-39407] INFO delegating to run-bounded-pipeline.sh (run id fixture-exp-a-20261106T071253Z-39407)
+pipeline| STEP: start
+pipeline| [2026-11-06T07:12:54Z] [20261106T071254Z-39474] INFO script=run-bounded-pipeline.sh mode=dry-run run_id=20261106T071254Z-39474 repo_root=/private<repo>
+pipeline| STEP: inputs
+pipeline| STEP: terraform-only
+pipeline| [2026-11-06T07:12:54Z] [20261106T071254Z-39474] INFO this script submits steps to the existing cluster j-ABC123DEF456; it never creates, resizes or deletes infrastructure (no create-cluster, run-job-flow or Terraform command)
+pipeline| STEP: g6-estimate
+pipeline| [2026-11-06T07:12:54Z] [20261106T071254Z-39474] INFO G6 estimate: {"ec2_rate_usd_per_hour": "0.192", "emr_rate_usd_per_hour": "0.048", "estimate_usd": "1.08", "formula": "instances x (EC2 on-demand + EMR uplift) x max_runtime_hours, rounded up to the cent", "hourly_usd": "0.720", "instance_type": "m5.xlarge", "instances": 3, "max_runtime_minutes": 90}
+pipeline| ESTIMATE-USD: 1.08
+pipeline| G6-CAPS: per-run=3 USD live-runs=3 cumulative=9.50 USD pricing-confirmed-by-human=false rates-retrieved=2026-11-06 region=us-east-2
+pipeline| STEP: plan
+pipeline| PLAN: run-id: fixture-exp-a-20261106T071253Z-39407
+pipeline| PLAN: yarn-tag: fixture-exp-a-20261106T071253Z-39407
+pipeline| PLAN: cluster-id: j-ABC123DEF456
+pipeline| PLAN: region: us-east-2
+pipeline| PLAN: instance-type: m5.xlarge primary=1 core=1 max-task=1 max-capacity=3
+pipeline| PLAN: max-runtime-minutes: 90
+pipeline| PLAN: budget-usd: 2.5
+pipeline| PLAN: estimate-usd: 1.08 (instances x (EC2 on-demand + EMR uplift) x max_runtime_hours, rounded up to the cent)
+pipeline| PLAN: teardown: auto-termination (the cluster must have an auto-termination idle timeout of at most 900 s)
+pipeline| PLAN: input-prefix: s3://fixture-bucket/inputs
+pipeline| PLAN: output-prefix: s3://fixture-bucket/outputs/fixture-exp-a-20261106T071253Z-39407/
+pipeline| PLAN: artifact-sha256 er-config: 11a8f53ff8f4c0847ab8546bf9b9e449cbc8ba01f59f71da6d95e8a923cdbdb4
+pipeline| PLAN: artifact-sha256 er-jar: 5b27764eac3ed64418fe0219db75fa62db719c61cbfdca265ad60fc40921ba77
+pipeline| PLAN: artifact-sha256 er-policy: 22d5a4d55e09e007fcf0457037650376e5f56c5af81d29e5c64b2deafdbd77f8
+pipeline| PLAN: artifact-sha256 hadoop-config: 85782e03a171aae47f63e8e6ef71ef9131773f520acba26b681d6d85a1551a5c
+pipeline| PLAN: artifact-sha256 hadoop-libjars: 2205108dd635c5001e27a4c9d0cad8ec3a22e1a41ca766b77d475637b05a16b4
+pipeline| PLAN: artifact-sha256 hadoop-submit-jar: 6f17d9738240ea4f0e8568e732b969812374be0476ef24b694bad1bf25f895b0
+pipeline| PLAN: artifact-sha256 job-jar: 2f0994d5b7d614d2fb9baebc36f7558528bbece2c0c0f92410595a7adb502352
+pipeline| PLAN: artifact-sha256 spark-config-template: 049518035b3aecaf92b5f177e267e5c541b81c6e909879b907c737cf46bcdcc4
+pipeline| PLAN: spark-conf-sha256: 1376ea432d71c5cacfd131b1bf7020bf55777dddac2c0d69a2f6b94e06d985fc
+pipeline| PLAN: datasets-manifest-sha256: b3e6ea50bc07e3f8bf3afdea13985a1e6fdd845157edc22db1f7b9a167524fa6
+pipeline| PLAN: dataset dblp: snapshot=dblp-snapshot-1 retrieval=2026-10-05
+pipeline| PLAN: dataset openalex: snapshot=openalex-snapshot-1 retrieval=2026-10-05
+pipeline| PLAN: dataset crossref: snapshot=crossref-snapshot-1 retrieval=2026-10-05
+pipeline| PLAN: dataset orcid: snapshot=orcid-snapshot-1 retrieval=2026-10-05
+pipeline| PLAN: ceilings: maxLocalSampleRecords<=1000 reducerCount<=8 maxCandidateBlockSize<=256 maxCandidatePairsPerBlock<=4096 maxAuthorTeamSize<=64 maxRecordBytes<=8388608 maxXmlEntityExpansion<=8388608
+pipeline| PLAN: data-ceilings: input<=268435456 bytes copy-out<=268435456 bytes
+pipeline| PLAN: step stage-in: timeout=270s
+pipeline| PLAN: step hadoop-prep: timeout=1080s
+pipeline| PLAN: step entity-resolution: timeout=1080s
+pipeline| PLAN: step spark-class-origin: timeout=270s
+pipeline| PLAN: step spark-job: timeout=2160s
+pipeline| PLAN: step copy-out: timeout=540s
+pipeline| RUN-CONFIG-SHA256: 0f3d2b49fc459f869907564a302edf6cb680031a1efdb1881f88557dac67106a
+pipeline| TEARDOWN: forced auto-termination: the cluster must have an idle timeout of at most 900s (checked with --execute: aws emr get-auto-termination-policy)
+pipeline| YARN-TAG: fixture-exp-a-20261106T071253Z-39407 (the hard runtime cap kills the YARN application by this tag)
+pipeline| STEP: g6-gate
+pipeline| LEDGER: live_runs=0 of 3 cumulative_usd=0.00 this_run_usd=1.08 cap_usd=9.50
+pipeline| [2026-11-06T07:12:54Z] [20261106T071254Z-39474] WARN G6 status: --execute would be REFUSED: pricing is not confirmed by the human (EMR_PRICING_CONFIRMED_BY_HUMAN is not true in scripts/config/emr-pricing.conf)
+pipeline| G6-STATUS: --execute would be refused (1 reason(s) above); this dry run still printed every command
+pipeline| STEP: approval-record
+pipeline| [2026-11-06T07:12:54Z] [20261106T071254Z-39474] INFO dry run: with --execute the approval record docs/agent-runs/phase-15/human-gate.md must name exactly these lines (each once, KEY=value):
+pipeline| APPROVAL-LINE: APPROVED_ACTION=run-experiment
+pipeline| APPROVAL-LINE: APPROVED_COMMIT=099234d37067a5bc42a831f676094cdf87561048
+pipeline| APPROVAL-LINE: APPROVED_ACCOUNT_SHA256=<sha256 of the 12-digit account id string, no newline>
+pipeline| APPROVAL-LINE: APPROVED_REGION=us-east-2
+pipeline| APPROVAL-LINE: APPROVED_CLUSTER_ID=j-ABC123DEF456
+pipeline| APPROVAL-LINE: APPROVED_RUN_CONFIG_SHA256=0f3d2b49fc459f869907564a302edf6cb680031a1efdb1881f88557dac67106a
+pipeline| APPROVAL-LINE: APPROVED_MANIFEST_SHA256=76e9510385294c39aa68264350d630f14a4986b7ef1f28799d0d7b38fa63367a
+pipeline| APPROVAL-LINE: APPROVED_BUDGET_USD=2.5
+pipeline| APPROVAL-LINE: APPROVED_MAX_CAPACITY=3
+pipeline| APPROVAL-LINE: APPROVED_MAX_RUNTIME_MINUTES=90
+pipeline| APPROVAL-LINE: APPROVED_TEARDOWN=auto-termination
+pipeline| APPROVAL-LINE: APPROVED_PRESPEND_SHA256=<sha256 of the pre-spend receipt the human wrote>
+pipeline| STEP: prespend-receipt
+pipeline| [2026-11-06T07:12:54Z] [20261106T071254Z-39474] INFO dry run: the pre-spend receipt would be verified now and re-verified immediately before each step submission
+pipeline| STEP: account-check
+pipeline| DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws sts get-caller-identity --region us-east-2 --query Account --output text 
+pipeline| [2026-11-06T07:12:54Z] [20261106T071254Z-39474] INFO dry run: the account comparison runs only with --execute, before any paid operation
+pipeline| STEP: cluster-check
+pipeline| DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws emr describe-cluster --region us-east-2 --cluster-id j-ABC123DEF456 --output json 
+pipeline| DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws emr get-auto-termination-policy --region us-east-2 --cluster-id j-ABC123DEF456 --output json 
+pipeline| DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws emr list-instance-groups --region us-east-2 --cluster-id j-ABC123DEF456 --output json 
+pipeline| [2026-11-06T07:12:54Z] [20261106T071254Z-39474] INFO dry run: --execute requires a WAITING or RUNNING cluster WITH an auto-termination idle timeout (60..900 s) and only m5.xlarge groups within primary=1 core<=1 task<=1
+pipeline| STEP: step-stage-in
+pipeline| STEP-TIMEOUT: stage-in 270s (the body runs under timeout; YARN applications are killed by tag when it fires)
+pipeline| STEP-BODY-BEGIN: stage-in
+pipeline| set -euo pipefail
+pipeline| STEP_NAME=stage-in
+pipeline| RUN_ID=fixture-exp-a-20261106T071253Z-39407
+pipeline| TAG=fixture-exp-a-20261106T071253Z-39407
+pipeline| MNT=/mnt/scholarchain
+pipeline| RUN_ROOT="${MNT}/runs/${RUN_ID}"
+pipeline| KILL_AFTER=60
+pipeline| log() { printf 'STEP-LOG %s: %s\n' "${STEP_NAME}" "$*"; }
+pipeline| die() { printf 'STEP-FAIL %s: %s\n' "${STEP_NAME}" "$*" >&2; exit 1; }
+pipeline| require_mount() { grep -q " ${MNT} " "${SC_PROC_MOUNTS:-/proc/mounts}" || die "${MNT} is not a mount point: refusing to use a local directory"; }
+pipeline| localize() {
+pipeline|   local src="$1" dest="$2" want="$3"
+pipeline|   case "${src}" in
+pipeline|     s3://*|s3a://*|s3n://*|hdfs://*) hadoop fs -copyToLocal "${src}" "${dest}" ;;
+pipeline|     *) if [[ -f "${src}" ]]; then cp -- "${src}" "${dest}"; else die "source is not a regular file: ${src}"; fi ;;
+pipeline|   esac
+pipeline|   printf '%s  %s\n' "${want}" "${dest}" | sha256sum -c --status - || die "sha256 mismatch for ${src}"
+pipeline| }
+pipeline| require_mount
+pipeline| DEST="${RUN_ROOT}/inputs"
+pipeline| [[ ! -e "${RUN_ROOT}" ]] || die "${RUN_ROOT} already exists: a run directory is never reused"
+pipeline| PREFIX=s3://fixture-bucket/inputs/
+pipeline| REGION=us-east-2
+pipeline| MAX_BYTES=268435456
+pipeline| TOTAL="$(aws s3 ls "${PREFIX}" --recursive --summarize --region "${REGION}" | awk '/Total Size:/{print $3}')"
+pipeline| [[ "${TOTAL}" =~ ^[0-9]+$ ]] || die "could not read the staged input size"
+pipeline| [[ "${TOTAL}" -le "${MAX_BYTES}" ]] || die "input ${TOTAL} bytes exceeds the ${MAX_BYTES} byte ceiling"
+pipeline| mkdir -p "${DEST}"
+pipeline| aws s3 cp "${PREFIX}" "${DEST}/" --recursive --region "${REGION}" --only-show-errors
+pipeline| log "staged ${TOTAL} bytes from ${PREFIX} to ${DEST}"
+pipeline| STEP-BODY-END: stage-in
+pipeline| DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws emr add-steps --region us-east-2 --cluster-id j-ABC123DEF456 --steps \[\{\"Name\":\"ScholarChain-fixture-exp-a-20261106T071253Z-39407-stage-in\"\,\"ActionOnFailure\":\"CONTINUE\"\,\"HadoopJarStep\":\{\"Jar\":\"command-runner.jar\"\,\"Args\":\[\"bash\"\,\"-c\"\,\"set\ -euo\ pipefail\\nSTEP_NAME=stage-in\\nRUN_ID=fixture-exp-a-20261106T071253Z-39407\\nTAG=fixture-exp-a-20261106T071253Z-39407\\nMNT=/mnt/scholarchain\\nRUN_ROOT=\\\"\$\{MNT\}/runs/\$\{RUN_ID\}\\\"\\nKILL_AFTER=60\\nlog\(\)\ \{\ printf\ \'STEP-LOG\ %s:\ %s\\\\n\'\ \\\"\$\{STEP_NAME\}\\\"\ \\\"\$\*\\\"\;\ \}\\ndie\(\)\ \{\ printf\ \'STEP-FAIL\ %s:\ %s\\\\n\'\ \\\"\$\{STEP_NAME\}\\\"\ \\\"\$\*\\\"\ \>\&2\;\ exit\ 1\;\ \}\\nrequire_mount\(\)\ \{\ grep\ -q\ \\\"\ \$\{MNT\}\ \\\"\ \\\"\$\{SC_PROC_MOUNTS:-/proc/mounts\}\\\"\ \|\|\ die\ \\\"\$\{MNT\}\ is\ not\ a\ mount\ point:\ refusing\ to\ use\ a\ local\ directory\\\"\;\ \}\\nlocalize\(\)\ \{\\n\ \ local\ src=\\\"\$1\\\"\ dest=\\\"\$2\\\"\ want=\\\"\$3\\\"\\n\ \ case\ \\\"\$\{src\}\\\"\ in\\n\ \ \ \ s3://\*\|s3a://\*\|s3n://\*\|hdfs://\*\)\ hadoop\ fs\ -copyToLocal\ \\\"\$\{src\}\\\"\ \\\"\$\{dest\}\\\"\ \;\;\\n\ \ \ \ \*\)\ if\ \[\[\ -f\ \\\"\$\{src\}\\\"\ \]\]\;\ then\ cp\ --\ \\\"\$\{src\}\\\"\ \\\"\$\{dest\}\\\"\;\ else\ die\ \\\"source\ is\ not\ a\ regular\ file:\ \$\{src\}\\\"\;\ fi\ \;\;\\n\ \ esac\\n\ \ printf\ \'%s\ \ %s\\\\n\'\ \\\"\$\{want\}\\\"\ \\\"\$\{dest\}\\\"\ \|\ sha256sum\ -c\ --status\ -\ \|\|\ die\ \\\"sha256\ mismatch\ for\ \$\{src\}\\\"\\n\}\\nrequire_mount\\nDEST=\\\"\$\{RUN_ROOT\}/inputs\\\"\\n\[\[\ \!\ -e\ \\\"\$\{RUN_ROOT\}\\\"\ \]\]\ \|\|\ die\ \\\"\$\{RUN_ROOT\}\ already\ exists:\ a\ run\ directory\ is\ never\ reused\\\"\\nPREFIX=s3://fixture-bucket/inputs/\\nREGION=us-east-2\\nMAX_BYTES=268435456\\nTOTAL=\\\"\$\(aws\ s3\ ls\ \\\"\$\{PREFIX\}\\\"\ --recursive\ --summarize\ --region\ \\\"\$\{REGION\}\\\"\ \|\ awk\ \'/Total\ Size:/\{print\ \$3\}\'\)\\\"\\n\[\[\ \\\"\$\{TOTAL\}\\\"\ =~\ \^\[0-9\]+\$\ \]\]\ \|\|\ die\ \\\"could\ not\ read\ the\ staged\ input\ size\\\"\\n\[\[\ \\\"\$\{TOTAL\}\\\"\ -le\ \\\"\$\{MAX_BYTES\}\\\"\ \]\]\ \|\|\ die\ \\\"input\ \$\{TOTAL\}\ bytes\ exceeds\ the\ \$\{MAX_BYTES\}\ byte\ ceiling\\\"\\nmkdir\ -p\ \\\"\$\{DEST\}\\\"\\naws\ s3\ cp\ \\\"\$\{PREFIX\}\\\"\ \\\"\$\{DEST\}/\\\"\ --recursive\ --region\ \\\"\$\{REGION\}\\\"\ --only-show-errors\\nlog\ \\\"staged\ \$\{TOTAL\}\ bytes\ from\ \$\{PREFIX\}\ to\ \$\{DEST\}\\\"\\n\"\]\}\}\] 
+pipeline| STEP: step-hadoop-prep
+pipeline| STEP-TIMEOUT: hadoop-prep 1080s (the body runs under timeout; YARN applications are killed by tag when it fires)
+pipeline| STEP-BODY-BEGIN: hadoop-prep
+pipeline| set -euo pipefail
+pipeline| STEP_NAME=hadoop-prep
+pipeline| RUN_ID=fixture-exp-a-20261106T071253Z-39407
+pipeline| TAG=fixture-exp-a-20261106T071253Z-39407
+pipeline| MNT=/mnt/scholarchain
+pipeline| RUN_ROOT="${MNT}/runs/${RUN_ID}"
+pipeline| KILL_AFTER=60
+pipeline| log() { printf 'STEP-LOG %s: %s\n' "${STEP_NAME}" "$*"; }
+pipeline| die() { printf 'STEP-FAIL %s: %s\n' "${STEP_NAME}" "$*" >&2; exit 1; }
+pipeline| require_mount() { grep -q " ${MNT} " "${SC_PROC_MOUNTS:-/proc/mounts}" || die "${MNT} is not a mount point: refusing to use a local directory"; }
+pipeline| localize() {
+pipeline|   local src="$1" dest="$2" want="$3"
+pipeline|   case "${src}" in
+pipeline|     s3://*|s3a://*|s3n://*|hdfs://*) hadoop fs -copyToLocal "${src}" "${dest}" ;;
+pipeline|     *) if [[ -f "${src}" ]]; then cp -- "${src}" "${dest}"; else die "source is not a regular file: ${src}"; fi ;;
+pipeline|   esac
+pipeline|   printf '%s  %s\n' "${want}" "${dest}" | sha256sum -c --status - || die "sha256 mismatch for ${src}"
+pipeline| }
+pipeline| # Item 1: timeout kills only the client, not the YARN application. List the applications that carry
+pipeline| # the run id as their tag and kill each one.
+pipeline| kill_tagged() {
+pipeline|   local apps app
+pipeline|   apps="$(yarn application -list -appStates NEW,NEW_SAVING,SUBMITTED,ACCEPTED,RUNNING -appTags "${TAG}" 2>/dev/null | awk '/^application_/{print $1}' || true)"
+pipeline|   for app in ${apps}; do
+pipeline|     log "killing YARN application ${app} (tag ${TAG})"
+pipeline|     yarn application -kill "${app}" || true
+pipeline|   done
+pipeline| }
+pipeline| trap 'kill_tagged' EXIT
+pipeline| trap 'kill_tagged; exit 143' TERM INT
+pipeline| run_bounded() {
+pipeline|   local secs="$1" rc=0
+pipeline|   shift
+pipeline|   timeout --kill-after="${KILL_AFTER}" "${secs}" "$@" || rc=$?
+pipeline|   if [[ "${rc}" -eq 124 || "${rc}" -eq 137 || "${rc}" -eq 143 ]]; then
+pipeline|     log "runtime cap reached (exit ${rc}): killing the YARN application tagged ${TAG}"
+pipeline|     kill_tagged
+pipeline|   fi
+pipeline|   return "${rc}"
+pipeline| }
+pipeline| require_mount
+pipeline| WORK="$(mktemp -d "${TMPDIR:-/tmp}/scholarchain-bounded.XXXXXX")"
+pipeline| localize s3://fixture-bucket/artifacts/hadoop-submit.jar "${WORK}/job.jar" 6f17d9738240ea4f0e8568e732b969812374be0476ef24b694bad1bf25f895b0
+pipeline| localize s3://fixture-bucket/artifacts/hadoop-bundle.jar "${WORK}/bundle.jar" 2205108dd635c5001e27a4c9d0cad8ec3a22e1a41ca766b77d475637b05a16b4
+pipeline| localize fixture-inputs/prep-config.json "${WORK}/prep-config.json" 85782e03a171aae47f63e8e6ef71ef9131773f520acba26b681d6d85a1551a5c
+pipeline| command -v python3 >/dev/null 2>&1 || die "python3 is required to enforce the ceilings"
+pipeline| python3 - "${WORK}/prep-config.json" 1000 8 256 4096 64 8388608 8388608 <<'SCHOLARCHAIN_CEILING_PY'
+pipeline| import json
+pipeline| import sys
+pipeline| 
+pipeline| FIELDS = (
+pipeline|     "maxLocalSampleRecords",
+pipeline|     "reducerCount",
+pipeline|     "maxCandidateBlockSize",
+pipeline|     "maxCandidatePairsPerBlock",
+pipeline|     "maxAuthorTeamSize",
+pipeline|     "maxRecordBytes",
+pipeline|     "maxXmlEntityExpansion",
+pipeline| )
+pipeline| 
+pipeline| 
+pipeline| def fail(message):
+pipeline|     sys.stderr.write("bounded-pipeline: %s\n" % (message,))
+pipeline|     raise SystemExit(1)
+pipeline| 
+pipeline| 
+pipeline| def reject_non_finite(token):
+pipeline|     raise ValueError("non-finite JSON number: %s" % (token,))
+pipeline| 
+pipeline| 
+pipeline| def json_number(value):
+pipeline|     if isinstance(value, bool):
+pipeline|         return None
+pipeline|     if isinstance(value, int):
+pipeline|         return value
+pipeline|     if isinstance(value, float):
+pipeline|         if value != value or value == float("inf") or value == float("-inf"):
+pipeline|             return None
+pipeline|         return value
+pipeline|     return None
+pipeline| 
+pipeline| 
+pipeline| if len(sys.argv) != 2 + len(FIELDS):
+pipeline|     fail("ceiling check expected a config path and %d ceilings" % (len(FIELDS),))
+pipeline| limits = []
+pipeline| for field, raw in zip(FIELDS, sys.argv[2:]):
+pipeline|     if not raw.isdigit():
+pipeline|         fail("ceiling for %s is not an integer" % (field,))
+pipeline|     limits.append(int(raw))
+pipeline| try:
+pipeline|     with open(sys.argv[1], encoding="utf-8") as handle:
+pipeline|         data = json.load(handle, parse_constant=reject_non_finite)
+pipeline| except Exception as error:
+pipeline|     fail("prep config is not valid JSON: %s" % (error,))
+pipeline| if not isinstance(data, dict):
+pipeline|     fail("prep config root must be a JSON object")
+pipeline| for field, limit in zip(FIELDS, limits):
+pipeline|     if field not in data:
+pipeline|         fail("missing numeric field: %s" % (field,))
+pipeline|     number = json_number(data[field])
+pipeline|     if number is None:
+pipeline|         fail("%s must be a JSON number" % (field,))
+pipeline|     if number > limit:
+pipeline|         fail("%s %s exceeds ceiling %s" % (field, number, limit))
+pipeline| SCHOLARCHAIN_CEILING_PY
+pipeline| export HADOOP_CLASSPATH="${WORK}/bundle.jar${HADOOP_CLASSPATH:+:$HADOOP_CLASSPATH}"
+pipeline| IN="${RUN_ROOT}/inputs"
+pipeline| OUT="${RUN_ROOT}/hadoop"
+pipeline| [[ ! -e "${OUT}" ]] || die "${OUT} already exists"
+pipeline| run_bounded 1080 hadoop jar "${WORK}/job.jar" edu.uic.cs441.scholarchain.hadoop.HadoopPrepMain \
+pipeline|   "-Dmapreduce.job.tags=${TAG}" -libjars "${WORK}/bundle.jar" \
+pipeline|   --once --execution-mode cluster --run-id "${RUN_ID}" \
+pipeline|   --output-root "file://${OUT}" --config "${WORK}/prep-config.json" \
+pipeline|   --dblp "file://${IN}/datasets/samples/dblp/linked-records.xml" --dblp-snapshot dblp-snapshot-1 --dblp-retrieval 2026-10-05 \
+pipeline|   --openalex "file://${IN}/datasets/samples/openalex/works.jsonl" --openalex-snapshot openalex-snapshot-1 --openalex-retrieval 2026-10-05 \
+pipeline|   --crossref "file://${IN}/datasets/samples/crossref/works.jsonl" --crossref-snapshot crossref-snapshot-1 --crossref-retrieval 2026-10-05 \
+pipeline|   --orcid "file://${IN}/datasets/samples/orcid/records.jsonl" --orcid-snapshot orcid-snapshot-1 --orcid-retrieval 2026-10-05
+pipeline| STEP-BODY-END: hadoop-prep
+pipeline| DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws emr add-steps --region us-east-2 --cluster-id j-ABC123DEF456 --steps \[\{\"Name\":\"ScholarChain-fixture-exp-a-20261106T071253Z-39407-hadoop-prep\"\,\"ActionOnFailure\":\"CONTINUE\"\,\"HadoopJarStep\":\{\"Jar\":\"command-runner.jar\"\,\"Args\":\[\"bash\"\,\"-c\"\,\"set\ -euo\ pipefail\\nSTEP_NAME=hadoop-prep\\nRUN_ID=fixture-exp-a-20261106T071253Z-39407\\nTAG=fixture-exp-a-20261106T071253Z-39407\\nMNT=/mnt/scholarchain\\nRUN_ROOT=\\\"\$\{MNT\}/runs/\$\{RUN_ID\}\\\"\\nKILL_AFTER=60\\nlog\(\)\ \{\ printf\ \'STEP-LOG\ %s:\ %s\\\\n\'\ \\\"\$\{STEP_NAME\}\\\"\ \\\"\$\*\\\"\;\ \}\\ndie\(\)\ \{\ printf\ \'STEP-FAIL\ %s:\ %s\\\\n\'\ \\\"\$\{STEP_NAME\}\\\"\ \\\"\$\*\\\"\ \>\&2\;\ exit\ 1\;\ \}\\nrequire_mount\(\)\ \{\ grep\ -q\ \\\"\ \$\{MNT\}\ \\\"\ \\\"\$\{SC_PROC_MOUNTS:-/proc/mounts\}\\\"\ \|\|\ die\ \\\"\$\{MNT\}\ is\ not\ a\ mount\ point:\ refusing\ to\ use\ a\ local\ directory\\\"\;\ \}\\nlocalize\(\)\ \{\\n\ \ local\ src=\\\"\$1\\\"\ dest=\\\"\$2\\\"\ want=\\\"\$3\\\"\\n\ \ case\ \\\"\$\{src\}\\\"\ in\\n\ \ \ \ s3://\*\|s3a://\*\|s3n://\*\|hdfs://\*\)\ hadoop\ fs\ -copyToLocal\ \\\"\$\{src\}\\\"\ \\\"\$\{dest\}\\\"\ \;\;\\n\ \ \ \ \*\)\ if\ \[\[\ -f\ \\\"\$\{src\}\\\"\ \]\]\;\ then\ cp\ --\ \\\"\$\{src\}\\\"\ \\\"\$\{dest\}\\\"\;\ else\ die\ \\\"source\ is\ not\ a\ regular\ file:\ \$\{src\}\\\"\;\ fi\ \;\;\\n\ \ esac\\n\ \ printf\ \'%s\ \ %s\\\\n\'\ \\\"\$\{want\}\\\"\ \\\"\$\{dest\}\\\"\ \|\ sha256sum\ -c\ --status\ -\ \|\|\ die\ \\\"sha256\ mismatch\ for\ \$\{src\}\\\"\\n\}\\n#\ Item\ 1:\ timeout\ kills\ only\ the\ client\,\ not\ the\ YARN\ application.\ List\ the\ applications\ that\ carry\\n#\ the\ run\ id\ as\ their\ tag\ and\ kill\ each\ one.\\nkill_tagged\(\)\ \{\\n\ \ local\ apps\ app\\n\ \ apps=\\\"\$\(yarn\ application\ -list\ -appStates\ NEW\,NEW_SAVING\,SUBMITTED\,ACCEPTED\,RUNNING\ -appTags\ \\\"\$\{TAG\}\\\"\ 2\>/dev/null\ \|\ awk\ \'/\^application_/\{print\ \$1\}\'\ \|\|\ true\)\\\"\\n\ \ for\ app\ in\ \$\{apps\}\;\ do\\n\ \ \ \ log\ \\\"killing\ YARN\ application\ \$\{app\}\ \(tag\ \$\{TAG\}\)\\\"\\n\ \ \ \ yarn\ application\ -kill\ \\\"\$\{app\}\\\"\ \|\|\ true\\n\ \ done\\n\}\\ntrap\ \'kill_tagged\'\ EXIT\\ntrap\ \'kill_tagged\;\ exit\ 143\'\ TERM\ INT\\nrun_bounded\(\)\ \{\\n\ \ local\ secs=\\\"\$1\\\"\ rc=0\\n\ \ shift\\n\ \ timeout\ --kill-after=\\\"\$\{KILL_AFTER\}\\\"\ \\\"\$\{secs\}\\\"\ \\\"\$@\\\"\ \|\|\ rc=\$\?\\n\ \ if\ \[\[\ \\\"\$\{rc\}\\\"\ -eq\ 124\ \|\|\ \\\"\$\{rc\}\\\"\ -eq\ 137\ \|\|\ \\\"\$\{rc\}\\\"\ -eq\ 143\ \]\]\;\ then\\n\ \ \ \ log\ \\\"runtime\ cap\ reached\ \(exit\ \$\{rc\}\):\ killing\ the\ YARN\ application\ tagged\ \$\{TAG\}\\\"\\n\ \ \ \ kill_tagged\\n\ \ fi\\n\ \ return\ \\\"\$\{rc\}\\\"\\n\}\\nrequire_mount\\nWORK=\\\"\$\(mktemp\ -d\ \\\"\$\{TMPDIR:-/tmp\}/scholarchain-bounded.XXXXXX\\\"\)\\\"\\nlocalize\ s3://fixture-bucket/artifacts/hadoop-submit.jar\ \\\"\$\{WORK\}/job.jar\\\"\ 6f17d9738240ea4f0e8568e732b969812374be0476ef24b694bad1bf25f895b0\\nlocalize\ s3://fixture-bucket/artifacts/hadoop-bundle.jar\ \\\"\$\{WORK\}/bundle.jar\\\"\ 2205108dd635c5001e27a4c9d0cad8ec3a22e1a41ca766b77d475637b05a16b4\\nlocalize\ fixture-inputs/prep-config.json\ \\\"\$\{WORK\}/prep-config.json\\\"\ 85782e03a171aae47f63e8e6ef71ef9131773f520acba26b681d6d85a1551a5c\\ncommand\ -v\ python3\ \>/dev/null\ 2\>\&1\ \|\|\ die\ \\\"python3\ is\ required\ to\ enforce\ the\ ceilings\\\"\\npython3\ -\ \\\"\$\{WORK\}/prep-config.json\\\"\ 1000\ 8\ 256\ 4096\ 64\ 8388608\ 8388608\ \<\<\'SCHOLARCHAIN_CEILING_PY\'\\nimport\ json\\nimport\ sys\\n\\nFIELDS\ =\ \(\\n\ \ \ \ \\\"maxLocalSampleRecords\\\"\,\\n\ \ \ \ \\\"reducerCount\\\"\,\\n\ \ \ \ \\\"maxCandidateBlockSize\\\"\,\\n\ \ \ \ \\\"maxCandidatePairsPerBlock\\\"\,\\n\ \ \ \ \\\"maxAuthorTeamSize\\\"\,\\n\ \ \ \ \\\"maxRecordBytes\\\"\,\\n\ \ \ \ \\\"maxXmlEntityExpansion\\\"\,\\n\)\\n\\n\\ndef\ fail\(message\):\\n\ \ \ \ sys.stderr.write\(\\\"bounded-pipeline:\ %s\\\\n\\\"\ %\ \(message\,\)\)\\n\ \ \ \ raise\ SystemExit\(1\)\\n\\n\\ndef\ reject_non_finite\(token\):\\n\ \ \ \ raise\ ValueError\(\\\"non-finite\ JSON\ number:\ %s\\\"\ %\ \(token\,\)\)\\n\\n\\ndef\ json_number\(value\):\\n\ \ \ \ if\ isinstance\(value\,\ bool\):\\n\ \ \ \ \ \ \ \ return\ None\\n\ \ \ \ if\ isinstance\(value\,\ int\):\\n\ \ \ \ \ \ \ \ return\ value\\n\ \ \ \ if\ isinstance\(value\,\ float\):\\n\ \ \ \ \ \ \ \ if\ value\ \!=\ value\ or\ value\ ==\ float\(\\\"inf\\\"\)\ or\ value\ ==\ float\(\\\"-inf\\\"\):\\n\ \ \ \ \ \ \ \ \ \ \ \ return\ None\\n\ \ \ \ \ \ \ \ return\ value\\n\ \ \ \ return\ None\\n\\n\\nif\ len\(sys.argv\)\ \!=\ 2\ +\ len\(FIELDS\):\\n\ \ \ \ fail\(\\\"ceiling\ check\ expected\ a\ config\ path\ and\ %d\ ceilings\\\"\ %\ \(len\(FIELDS\)\,\)\)\\nlimits\ =\ \[\]\\nfor\ field\,\ raw\ in\ zip\(FIELDS\,\ sys.argv\[2:\]\):\\n\ \ \ \ if\ not\ raw.isdigit\(\):\\n\ \ \ \ \ \ \ \ fail\(\\\"ceiling\ for\ %s\ is\ not\ an\ integer\\\"\ %\ \(field\,\)\)\\n\ \ \ \ limits.append\(int\(raw\)\)\\ntry:\\n\ \ \ \ with\ open\(sys.argv\[1\]\,\ encoding=\\\"utf-8\\\"\)\ as\ handle:\\n\ \ \ \ \ \ \ \ data\ =\ json.load\(handle\,\ parse_constant=reject_non_finite\)\\nexcept\ Exception\ as\ error:\\n\ \ \ \ fail\(\\\"prep\ config\ is\ not\ valid\ JSON:\ %s\\\"\ %\ \(error\,\)\)\\nif\ not\ isinstance\(data\,\ dict\):\\n\ \ \ \ fail\(\\\"prep\ config\ root\ must\ be\ a\ JSON\ object\\\"\)\\nfor\ field\,\ limit\ in\ zip\(FIELDS\,\ limits\):\\n\ \ \ \ if\ field\ not\ in\ data:\\n\ \ \ \ \ \ \ \ fail\(\\\"missing\ numeric\ field:\ %s\\\"\ %\ \(field\,\)\)\\n\ \ \ \ number\ =\ json_number\(data\[field\]\)\\n\ \ \ \ if\ number\ is\ None:\\n\ \ \ \ \ \ \ \ fail\(\\\"%s\ must\ be\ a\ JSON\ number\\\"\ %\ \(field\,\)\)\\n\ \ \ \ if\ number\ \>\ limit:\\n\ \ \ \ \ \ \ \ fail\(\\\"%s\ %s\ exceeds\ ceiling\ %s\\\"\ %\ \(field\,\ number\,\ limit\)\)\\nSCHOLARCHAIN_CEILING_PY\\nexport\ HADOOP_CLASSPATH=\\\"\$\{WORK\}/bundle.jar\$\{HADOOP_CLASSPATH:+:\$HADOOP_CLASSPATH\}\\\"\\nIN=\\\"\$\{RUN_ROOT\}/inputs\\\"\\nOUT=\\\"\$\{RUN_ROOT\}/hadoop\\\"\\n\[\[\ \!\ -e\ \\\"\$\{OUT\}\\\"\ \]\]\ \|\|\ die\ \\\"\$\{OUT\}\ already\ exists\\\"\\nrun_bounded\ 1080\ hadoop\ jar\ \\\"\$\{WORK\}/job.jar\\\"\ edu.uic.cs441.scholarchain.hadoop.HadoopPrepMain\ \\\\\\n\ \ \\\"-Dmapreduce.job.tags=\$\{TAG\}\\\"\ -libjars\ \\\"\$\{WORK\}/bundle.jar\\\"\ \\\\\\n\ \ --once\ --execution-mode\ cluster\ --run-id\ \\\"\$\{RUN_ID\}\\\"\ \\\\\\n\ \ --output-root\ \\\"file://\$\{OUT\}\\\"\ --config\ \\\"\$\{WORK\}/prep-config.json\\\"\ \\\\\\n\ \ --dblp\ \\\"file://\$\{IN\}/datasets/samples/dblp/linked-records.xml\\\"\ --dblp-snapshot\ dblp-snapshot-1\ --dblp-retrieval\ 2026-10-05\ \\\\\\n\ \ --openalex\ \\\"file://\$\{IN\}/datasets/samples/openalex/works.jsonl\\\"\ --openalex-snapshot\ openalex-snapshot-1\ --openalex-retrieval\ 2026-10-05\ \\\\\\n\ \ --crossref\ \\\"file://\$\{IN\}/datasets/samples/crossref/works.jsonl\\\"\ --crossref-snapshot\ crossref-snapshot-1\ --crossref-retrieval\ 2026-10-05\ \\\\\\n\ \ --orcid\ \\\"file://\$\{IN\}/datasets/samples/orcid/records.jsonl\\\"\ --orcid-snapshot\ orcid-snapshot-1\ --orcid-retrieval\ 2026-10-05\\n\"\]\}\}\] 
+pipeline| STEP: step-entity-resolution
+pipeline| STEP-TIMEOUT: entity-resolution 1080s (the body runs under timeout; YARN applications are killed by tag when it fires)
+pipeline| STEP-BODY-BEGIN: entity-resolution
+pipeline| set -euo pipefail
+pipeline| STEP_NAME=entity-resolution
+pipeline| RUN_ID=fixture-exp-a-20261106T071253Z-39407
+pipeline| TAG=fixture-exp-a-20261106T071253Z-39407
+pipeline| MNT=/mnt/scholarchain
+pipeline| RUN_ROOT="${MNT}/runs/${RUN_ID}"
+pipeline| KILL_AFTER=60
+pipeline| log() { printf 'STEP-LOG %s: %s\n' "${STEP_NAME}" "$*"; }
+pipeline| die() { printf 'STEP-FAIL %s: %s\n' "${STEP_NAME}" "$*" >&2; exit 1; }
+pipeline| require_mount() { grep -q " ${MNT} " "${SC_PROC_MOUNTS:-/proc/mounts}" || die "${MNT} is not a mount point: refusing to use a local directory"; }
+pipeline| localize() {
+pipeline|   local src="$1" dest="$2" want="$3"
+pipeline|   case "${src}" in
+pipeline|     s3://*|s3a://*|s3n://*|hdfs://*) hadoop fs -copyToLocal "${src}" "${dest}" ;;
+pipeline|     *) if [[ -f "${src}" ]]; then cp -- "${src}" "${dest}"; else die "source is not a regular file: ${src}"; fi ;;
+pipeline|   esac
+pipeline|   printf '%s  %s\n' "${want}" "${dest}" | sha256sum -c --status - || die "sha256 mismatch for ${src}"
+pipeline| }
+pipeline| require_mount
+pipeline| JAVA_HOME_FILE=/opt/scholarchain-spike/java-home
+pipeline| [[ -r "${JAVA_HOME_FILE}" ]] || die "no resolved Java 17 home (${JAVA_HOME_FILE} missing): the bootstrap did not complete"
+pipeline| JAVA_HOME="$(head -n 1 "${JAVA_HOME_FILE}")"
+pipeline| [[ -n "${JAVA_HOME}" && -x "${JAVA_HOME}/bin/java" ]] || die "the resolved Java home is not usable"
+pipeline| "${JAVA_HOME}/bin/java" -version 2>&1 | grep -Eq 'version "17(\.|")' || die "the resolved Java is not 17"
+pipeline| export JAVA_HOME
+pipeline| WORK="$(mktemp -d "${TMPDIR:-/tmp}/scholarchain-bounded.XXXXXX")"
+pipeline| localize s3://fixture-bucket/artifacts/er.jar "${WORK}/er.jar" 5b27764eac3ed64418fe0219db75fa62db719c61cbfdca265ad60fc40921ba77
+pipeline| localize s3://fixture-bucket/artifacts/er-policy.json "${WORK}/policy.json" 22d5a4d55e09e007fcf0457037650376e5f56c5af81d29e5c64b2deafdbd77f8
+pipeline| localize s3://fixture-bucket/artifacts/er-config.json "${WORK}/config.json" 11a8f53ff8f4c0847ab8546bf9b9e449cbc8ba01f59f71da6d95e8a923cdbdb4
+pipeline| HADOOP_MARKERS="$(find "${RUN_ROOT}/hadoop" -maxdepth 4 -name _SCHOLARCHAIN_COMPLETE -print)"
+pipeline| [[ "$(printf '%s\n' "${HADOOP_MARKERS}" | grep -c .)" -eq 1 ]] || die "expected exactly one completed run under ${RUN_ROOT}/hadoop"
+pipeline| HADOOP_RUN="$(dirname "${HADOOP_MARKERS}")"
+pipeline| ER_OUT="${RUN_ROOT}/er/run"
+pipeline| [[ ! -e "${ER_OUT}" ]] || die "${ER_OUT} already exists"
+pipeline| mkdir -p "${RUN_ROOT}/er"
+pipeline| # Single-JVM step on the primary node (Phase5Main has no distributed mode); Java 17 was resolved at bootstrap.
+pipeline| timeout --kill-after="${KILL_AFTER}" 1080 "${JAVA_HOME}/bin/java" -Xmx3g -cp "${WORK}/er.jar" edu.uic.cs441.scholarchain.entityresolution.Phase5Main resolve \
+pipeline|   --input "${HADOOP_RUN}" --policy "${WORK}/policy.json" --config "${WORK}/config.json" \
+pipeline|   --llm-mode disabled --output "${ER_OUT}"
+pipeline| STEP-BODY-END: entity-resolution
+pipeline| DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws emr add-steps --region us-east-2 --cluster-id j-ABC123DEF456 --steps \[\{\"Name\":\"ScholarChain-fixture-exp-a-20261106T071253Z-39407-entity-resolution\"\,\"ActionOnFailure\":\"CONTINUE\"\,\"HadoopJarStep\":\{\"Jar\":\"command-runner.jar\"\,\"Args\":\[\"bash\"\,\"-c\"\,\"set\ -euo\ pipefail\\nSTEP_NAME=entity-resolution\\nRUN_ID=fixture-exp-a-20261106T071253Z-39407\\nTAG=fixture-exp-a-20261106T071253Z-39407\\nMNT=/mnt/scholarchain\\nRUN_ROOT=\\\"\$\{MNT\}/runs/\$\{RUN_ID\}\\\"\\nKILL_AFTER=60\\nlog\(\)\ \{\ printf\ \'STEP-LOG\ %s:\ %s\\\\n\'\ \\\"\$\{STEP_NAME\}\\\"\ \\\"\$\*\\\"\;\ \}\\ndie\(\)\ \{\ printf\ \'STEP-FAIL\ %s:\ %s\\\\n\'\ \\\"\$\{STEP_NAME\}\\\"\ \\\"\$\*\\\"\ \>\&2\;\ exit\ 1\;\ \}\\nrequire_mount\(\)\ \{\ grep\ -q\ \\\"\ \$\{MNT\}\ \\\"\ \\\"\$\{SC_PROC_MOUNTS:-/proc/mounts\}\\\"\ \|\|\ die\ \\\"\$\{MNT\}\ is\ not\ a\ mount\ point:\ refusing\ to\ use\ a\ local\ directory\\\"\;\ \}\\nlocalize\(\)\ \{\\n\ \ local\ src=\\\"\$1\\\"\ dest=\\\"\$2\\\"\ want=\\\"\$3\\\"\\n\ \ case\ \\\"\$\{src\}\\\"\ in\\n\ \ \ \ s3://\*\|s3a://\*\|s3n://\*\|hdfs://\*\)\ hadoop\ fs\ -copyToLocal\ \\\"\$\{src\}\\\"\ \\\"\$\{dest\}\\\"\ \;\;\\n\ \ \ \ \*\)\ if\ \[\[\ -f\ \\\"\$\{src\}\\\"\ \]\]\;\ then\ cp\ --\ \\\"\$\{src\}\\\"\ \\\"\$\{dest\}\\\"\;\ else\ die\ \\\"source\ is\ not\ a\ regular\ file:\ \$\{src\}\\\"\;\ fi\ \;\;\\n\ \ esac\\n\ \ printf\ \'%s\ \ %s\\\\n\'\ \\\"\$\{want\}\\\"\ \\\"\$\{dest\}\\\"\ \|\ sha256sum\ -c\ --status\ -\ \|\|\ die\ \\\"sha256\ mismatch\ for\ \$\{src\}\\\"\\n\}\\nrequire_mount\\nJAVA_HOME_FILE=/opt/scholarchain-spike/java-home\\n\[\[\ -r\ \\\"\$\{JAVA_HOME_FILE\}\\\"\ \]\]\ \|\|\ die\ \\\"no\ resolved\ Java\ 17\ home\ \(\$\{JAVA_HOME_FILE\}\ missing\):\ the\ bootstrap\ did\ not\ complete\\\"\\nJAVA_HOME=\\\"\$\(head\ -n\ 1\ \\\"\$\{JAVA_HOME_FILE\}\\\"\)\\\"\\n\[\[\ -n\ \\\"\$\{JAVA_HOME\}\\\"\ \&\&\ -x\ \\\"\$\{JAVA_HOME\}/bin/java\\\"\ \]\]\ \|\|\ die\ \\\"the\ resolved\ Java\ home\ is\ not\ usable\\\"\\n\\\"\$\{JAVA_HOME\}/bin/java\\\"\ -version\ 2\>\&1\ \|\ grep\ -Eq\ \'version\ \\\"17\(\\\\.\|\\\"\)\'\ \|\|\ die\ \\\"the\ resolved\ Java\ is\ not\ 17\\\"\\nexport\ JAVA_HOME\\nWORK=\\\"\$\(mktemp\ -d\ \\\"\$\{TMPDIR:-/tmp\}/scholarchain-bounded.XXXXXX\\\"\)\\\"\\nlocalize\ s3://fixture-bucket/artifacts/er.jar\ \\\"\$\{WORK\}/er.jar\\\"\ 5b27764eac3ed64418fe0219db75fa62db719c61cbfdca265ad60fc40921ba77\\nlocalize\ s3://fixture-bucket/artifacts/er-policy.json\ \\\"\$\{WORK\}/policy.json\\\"\ 22d5a4d55e09e007fcf0457037650376e5f56c5af81d29e5c64b2deafdbd77f8\\nlocalize\ s3://fixture-bucket/artifacts/er-config.json\ \\\"\$\{WORK\}/config.json\\\"\ 11a8f53ff8f4c0847ab8546bf9b9e449cbc8ba01f59f71da6d95e8a923cdbdb4\\nHADOOP_MARKERS=\\\"\$\(find\ \\\"\$\{RUN_ROOT\}/hadoop\\\"\ -maxdepth\ 4\ -name\ _SCHOLARCHAIN_COMPLETE\ -print\)\\\"\\n\[\[\ \\\"\$\(printf\ \'%s\\\\n\'\ \\\"\$\{HADOOP_MARKERS\}\\\"\ \|\ grep\ -c\ .\)\\\"\ -eq\ 1\ \]\]\ \|\|\ die\ \\\"expected\ exactly\ one\ completed\ run\ under\ \$\{RUN_ROOT\}/hadoop\\\"\\nHADOOP_RUN=\\\"\$\(dirname\ \\\"\$\{HADOOP_MARKERS\}\\\"\)\\\"\\nER_OUT=\\\"\$\{RUN_ROOT\}/er/run\\\"\\n\[\[\ \!\ -e\ \\\"\$\{ER_OUT\}\\\"\ \]\]\ \|\|\ die\ \\\"\$\{ER_OUT\}\ already\ exists\\\"\\nmkdir\ -p\ \\\"\$\{RUN_ROOT\}/er\\\"\\n#\ Single-JVM\ step\ on\ the\ primary\ node\ \(Phase5Main\ has\ no\ distributed\ mode\)\;\ Java\ 17\ was\ resolved\ at\ bootstrap.\\ntimeout\ --kill-after=\\\"\$\{KILL_AFTER\}\\\"\ 1080\ \\\"\$\{JAVA_HOME\}/bin/java\\\"\ -Xmx3g\ -cp\ \\\"\$\{WORK\}/er.jar\\\"\ edu.uic.cs441.scholarchain.entityresolution.Phase5Main\ resolve\ \\\\\\n\ \ --input\ \\\"\$\{HADOOP_RUN\}\\\"\ --policy\ \\\"\$\{WORK\}/policy.json\\\"\ --config\ \\\"\$\{WORK\}/config.json\\\"\ \\\\\\n\ \ --llm-mode\ disabled\ --output\ \\\"\$\{ER_OUT\}\\\"\\n\"\]\}\}\] 
+pipeline| STEP: step-spark-class-origin
+pipeline| STEP-TIMEOUT: spark-class-origin 270s (the body runs under timeout; YARN applications are killed by tag when it fires)
+pipeline| STEP-BODY-BEGIN: spark-class-origin
+pipeline| set -euo pipefail
+pipeline| STEP_NAME=spark-class-origin
+pipeline| RUN_ID=fixture-exp-a-20261106T071253Z-39407
+pipeline| TAG=fixture-exp-a-20261106T071253Z-39407
+pipeline| MNT=/mnt/scholarchain
+pipeline| RUN_ROOT="${MNT}/runs/${RUN_ID}"
+pipeline| KILL_AFTER=60
+pipeline| log() { printf 'STEP-LOG %s: %s\n' "${STEP_NAME}" "$*"; }
+pipeline| die() { printf 'STEP-FAIL %s: %s\n' "${STEP_NAME}" "$*" >&2; exit 1; }
+pipeline| require_mount() { grep -q " ${MNT} " "${SC_PROC_MOUNTS:-/proc/mounts}" || die "${MNT} is not a mount point: refusing to use a local directory"; }
+pipeline| localize() {
+pipeline|   local src="$1" dest="$2" want="$3"
+pipeline|   case "${src}" in
+pipeline|     s3://*|s3a://*|s3n://*|hdfs://*) hadoop fs -copyToLocal "${src}" "${dest}" ;;
+pipeline|     *) if [[ -f "${src}" ]]; then cp -- "${src}" "${dest}"; else die "source is not a regular file: ${src}"; fi ;;
+pipeline|   esac
+pipeline|   printf '%s  %s\n' "${want}" "${dest}" | sha256sum -c --status - || die "sha256 mismatch for ${src}"
+pipeline| }
+pipeline| # Item 1: timeout kills only the client, not the YARN application. List the applications that carry
+pipeline| # the run id as their tag and kill each one.
+pipeline| kill_tagged() {
+pipeline|   local apps app
+pipeline|   apps="$(yarn application -list -appStates NEW,NEW_SAVING,SUBMITTED,ACCEPTED,RUNNING -appTags "${TAG}" 2>/dev/null | awk '/^application_/{print $1}' || true)"
+pipeline|   for app in ${apps}; do
+pipeline|     log "killing YARN application ${app} (tag ${TAG})"
+pipeline|     yarn application -kill "${app}" || true
+pipeline|   done
+pipeline| }
+pipeline| trap 'kill_tagged' EXIT
+pipeline| trap 'kill_tagged; exit 143' TERM INT
+pipeline| run_bounded() {
+pipeline|   local secs="$1" rc=0
+pipeline|   shift
+pipeline|   timeout --kill-after="${KILL_AFTER}" "${secs}" "$@" || rc=$?
+pipeline|   if [[ "${rc}" -eq 124 || "${rc}" -eq 137 || "${rc}" -eq 143 ]]; then
+pipeline|     log "runtime cap reached (exit ${rc}): killing the YARN application tagged ${TAG}"
+pipeline|     kill_tagged
+pipeline|   fi
+pipeline|   return "${rc}"
+pipeline| }
+pipeline| require_mount
+pipeline| JAVA_HOME_FILE=/opt/scholarchain-spike/java-home
+pipeline| [[ -r "${JAVA_HOME_FILE}" ]] || die "no resolved Java 17 home (${JAVA_HOME_FILE} missing): the bootstrap did not complete"
+pipeline| JAVA_HOME="$(head -n 1 "${JAVA_HOME_FILE}")"
+pipeline| [[ -n "${JAVA_HOME}" && -x "${JAVA_HOME}/bin/java" ]] || die "the resolved Java home is not usable"
+pipeline| "${JAVA_HOME}/bin/java" -version 2>&1 | grep -Eq 'version "17(\.|")' || die "the resolved Java is not 17"
+pipeline| export JAVA_HOME
+pipeline| RUNTIME=/opt/scholarchain-runtime
+pipeline| JOB_JAR=/opt/scholarchain-runtime/application/scholarchain-job.jar
+pipeline| # The portable runtime only: never the stock EMR Spark or Hadoop classpath.
+pipeline| export SPARK_HOME="${RUNTIME}" SPARK_CONF_DIR="${RUNTIME}/conf" SPARK_SCALA_VERSION=2.13
+pipeline| export HADOOP_CONF_DIR="${HADOOP_CONF_DIR:-/etc/hadoop/conf}" YARN_CONF_DIR="${HADOOP_CONF_DIR:-/etc/hadoop/conf}"
+pipeline| export PATH="${JAVA_HOME}/bin:${PATH:-/usr/local/bin:/usr/bin:/bin}"
+pipeline| unset CLASSPATH SPARK_DIST_CLASSPATH HADOOP_CLASSPATH SPARK_CLASSPATH || true
+pipeline| printf '%s  %s\n' 2f0994d5b7d614d2fb9baebc36f7558528bbece2c0c0f92410595a7adb502352 "${JOB_JAR}" | sha256sum -c --status - || die "the packaged job jar on this node does not have the approved sha256"
+pipeline| PROBE_SHARED="${RUN_ROOT}/probe"
+pipeline| PROBE_OUT="${RUN_ROOT}/results/class-origin.json"
+pipeline| mkdir -p "${PROBE_SHARED}" "${RUN_ROOT}/results" "${MNT}/staging"
+pipeline| # Driver AND executor class-origin probe (Phase12Readiness distributed): fails closed on any version difference.
+pipeline| run_bounded 270 \
+pipeline| "${SPARK_HOME}/bin/spark-submit" --master yarn --deploy-mode cluster --name scholarchain-class-origin-fixture-exp-a-20261106T071253Z-39407 \
+pipeline|   --class edu.uic.cs441.scholarchain.spark.Phase12Readiness \
+pipeline|   --conf "spark.yarn.tags=${TAG}" \
+pipeline|   --conf "spark.yarn.stagingDir=file://${MNT}/staging" \
+pipeline|   --conf "spark.yarn.appMasterEnv.JAVA_HOME=${JAVA_HOME}" \
+pipeline|   --conf "spark.executorEnv.JAVA_HOME=${JAVA_HOME}" \
+pipeline|   --conf spark.dynamicAllocation.maxExecutors=4 \
+pipeline|   --conf 'spark.yarn.jars=local:/opt/scholarchain-runtime/jars/*' \
+pipeline|   --conf spark.yarn.populateHadoopClasspath=false \
+pipeline|   --conf spark.hadoop.fs.defaultFS=file:/// \
+pipeline|   --conf spark.hadoop.io.compression.codecs=org.apache.hadoop.io.compress.GzipCodec,org.apache.hadoop.io.compress.DefaultCodec,org.apache.hadoop.io.compress.BZip2Codec,org.apache.hadoop.io.compress.SnappyCodec \
+pipeline|   --conf spark.authenticate=true \
+pipeline|   --conf spark.network.crypto.enabled=true \
+pipeline|   --conf spark.network.crypto.authEngineVersion=1 \
+pipeline|   --conf spark.network.crypto.saslFallback=false \
+pipeline|   --conf spark.io.encryption.enabled=true \
+pipeline|   --conf spark.dynamicAllocation.enabled=true \
+pipeline|   --conf spark.dynamicAllocation.shuffleTracking.enabled=true \
+pipeline|   --conf spark.shuffle.service.enabled=false \
+pipeline|   --conf spark.dynamicAllocation.minExecutors=1 \
+pipeline|   --conf spark.executor.cores=1 \
+pipeline|   --conf spark.executor.memory=3g \
+pipeline|   --conf spark.driver.cores=1 \
+pipeline|   --conf spark.driver.memory=3g \
+pipeline|   --conf spark.task.maxFailures=1 \
+pipeline|   --conf spark.yarn.maxAppAttempts=1 \
+pipeline|   --conf spark.ui.enabled=false \
+pipeline|   --conf spark.driver.extraJavaOptions=-Xlog:class+load=info \
+pipeline|   --conf spark.executor.extraJavaOptions=-Xlog:class+load=info \
+pipeline|   "local:${JOB_JAR}" \
+pipeline|   probe "${PROBE_SHARED}" "${PROBE_OUT}" distributed
+pipeline| python3 - "${RUN_ROOT}/results/class-origin.json" 3.5.4 2.13.14 /opt/scholarchain-runtime/jars "${JOB_JAR}" 2f0994d5b7d614d2fb9baebc36f7558528bbece2c0c0f92410595a7adb502352 <<'SCHOLARCHAIN_CLASS_ORIGIN_PY'
+pipeline| import json
+pipeline| import os
+pipeline| import sys
+pipeline| 
+pipeline| 
+pipeline| def fail(message):
+pipeline|     sys.stderr.write("CLASS-ORIGIN-FAILED: %s\n" % (message,))
+pipeline|     raise SystemExit(1)
+pipeline| 
+pipeline| 
+pipeline| if len(sys.argv) != 7:
+pipeline|     fail("expected: probe-json spark-version scala-version jar-dir job-jar job-sha256")
+pipeline| probe, spark_v, scala_v, jar_dir, job_jar, job_sha = sys.argv[1:7]
+pipeline| try:
+pipeline|     with open(probe, encoding="utf-8") as handle:
+pipeline|         doc = json.load(handle)
+pipeline| except Exception as error:
+pipeline|     fail("probe result unreadable: %s" % type(error).__name__)
+pipeline| if not isinstance(doc, dict) or doc.get("schemaVersion") != "scholarchain.phase12-readiness.v1" or doc.get("stage") != "probe":
+pipeline|     fail("not a Phase 12 readiness probe result")
+pipeline| if doc.get("externalExecutorVerified") is not True or doc.get("distributedRequired") is not True:
+pipeline|     fail("the executor was not verified outside the driver process")
+pipeline| driver = doc.get("driver")
+pipeline| tasks = doc.get("taskProcesses")
+pipeline| if not isinstance(driver, dict) or not isinstance(tasks, list) or not tasks:
+pipeline|     fail("the driver or executor report is missing")
+pipeline| need = ("spark", "scala-library", "scala-reflect", "scala3-library")
+pipeline| reports = [("driver", driver)] + [("executor-%s" % t.get("executorId"), t) for t in tasks if isinstance(t, dict)]
+pipeline| parsed = {}
+pipeline| prefix = jar_dir.rstrip("/") + "/"
+pipeline| for role, report in reports:
+pipeline|     if not str(report.get("javaVersion", "")).startswith("17."):
+pipeline|         fail("%s runs Java %s, not 17" % (role, report.get("javaVersion")))
+pipeline|     if role != "driver" and report.get("executorId") in (None, "driver", "unavailable"):
+pipeline|         fail("%s is not an executor process" % role)
+pipeline|     libs = {}
+pipeline|     for lib in report.get("libraries") or []:
+pipeline|         if isinstance(lib, dict):
+pipeline|             libs[lib.get("component")] = lib
+pipeline|     for component in need:
+pipeline|         if component not in libs:
+pipeline|             fail("%s report lacks %s" % (role, component))
+pipeline|     if libs["spark"].get("runtimeVersion") != spark_v:
+pipeline|         fail("%s Spark version %s differs from the required %s" % (role, libs["spark"].get("runtimeVersion"), spark_v))
+pipeline|     if libs["scala-library"].get("runtimeVersion") != scala_v:
+pipeline|         fail("%s Scala library version %s differs from the packaged job's %s" % (role, libs["scala-library"].get("runtimeVersion"), scala_v))
+pipeline|     for component in ("spark", "scala-library", "scala-reflect"):
+pipeline|         origin = str(libs[component].get("origin"))
+pipeline|         if not origin.startswith(prefix):
+pipeline|             fail("%s loaded %s from %s, outside the runtime jar directory %s" % (role, component, origin, jar_dir))
+pipeline|     if not os.path.basename(str(libs["spark"]["origin"])).endswith("-%s.jar" % spark_v):
+pipeline|         fail("%s Spark origin %s is not a %s jar" % (role, libs["spark"]["origin"], spark_v))
+pipeline|     if os.path.basename(str(libs["scala-library"]["origin"])) != "scala-library-%s.jar" % scala_v:
+pipeline|         fail("%s Scala library origin %s is not scala-library-%s.jar" % (role, libs["scala-library"]["origin"], scala_v))
+pipeline|     s3 = libs["scala3-library"]
+pipeline|     if s3.get("origin") != job_jar or s3.get("codeSourceSha256") != job_sha:
+pipeline|         fail("%s scala3-library is not loaded from the packaged job jar with the approved sha256" % role)
+pipeline|     parsed[role] = libs
+pipeline| base = parsed["driver"]
+pipeline| for role, libs in parsed.items():
+pipeline|     for component in need:
+pipeline|         for field in ("origin", "classSha256", "codeSourceSha256"):
+pipeline|             if libs[component].get(field) != base[component].get(field):
+pipeline|                 fail("%s differs between the driver and %s for %s" % (field, role, component))
+pipeline| print("CLASS-ORIGIN-OK: the driver and %d executor report(s) agree on Spark %s, Scala %s and the packaged job jar" % (len(tasks), spark_v, scala_v))
+pipeline| SCHOLARCHAIN_CLASS_ORIGIN_PY
+pipeline| STEP-BODY-END: spark-class-origin
+pipeline| DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws emr add-steps --region us-east-2 --cluster-id j-ABC123DEF456 --steps \[\{\"Name\":\"ScholarChain-fixture-exp-a-20261106T071253Z-39407-spark-class-origin\"\,\"ActionOnFailure\":\"CONTINUE\"\,\"HadoopJarStep\":\{\"Jar\":\"command-runner.jar\"\,\"Args\":\[\"bash\"\,\"-c\"\,\"set\ -euo\ pipefail\\nSTEP_NAME=spark-class-origin\\nRUN_ID=fixture-exp-a-20261106T071253Z-39407\\nTAG=fixture-exp-a-20261106T071253Z-39407\\nMNT=/mnt/scholarchain\\nRUN_ROOT=\\\"\$\{MNT\}/runs/\$\{RUN_ID\}\\\"\\nKILL_AFTER=60\\nlog\(\)\ \{\ printf\ \'STEP-LOG\ %s:\ %s\\\\n\'\ \\\"\$\{STEP_NAME\}\\\"\ \\\"\$\*\\\"\;\ \}\\ndie\(\)\ \{\ printf\ \'STEP-FAIL\ %s:\ %s\\\\n\'\ \\\"\$\{STEP_NAME\}\\\"\ \\\"\$\*\\\"\ \>\&2\;\ exit\ 1\;\ \}\\nrequire_mount\(\)\ \{\ grep\ -q\ \\\"\ \$\{MNT\}\ \\\"\ \\\"\$\{SC_PROC_MOUNTS:-/proc/mounts\}\\\"\ \|\|\ die\ \\\"\$\{MNT\}\ is\ not\ a\ mount\ point:\ refusing\ to\ use\ a\ local\ directory\\\"\;\ \}\\nlocalize\(\)\ \{\\n\ \ local\ src=\\\"\$1\\\"\ dest=\\\"\$2\\\"\ want=\\\"\$3\\\"\\n\ \ case\ \\\"\$\{src\}\\\"\ in\\n\ \ \ \ s3://\*\|s3a://\*\|s3n://\*\|hdfs://\*\)\ hadoop\ fs\ -copyToLocal\ \\\"\$\{src\}\\\"\ \\\"\$\{dest\}\\\"\ \;\;\\n\ \ \ \ \*\)\ if\ \[\[\ -f\ \\\"\$\{src\}\\\"\ \]\]\;\ then\ cp\ --\ \\\"\$\{src\}\\\"\ \\\"\$\{dest\}\\\"\;\ else\ die\ \\\"source\ is\ not\ a\ regular\ file:\ \$\{src\}\\\"\;\ fi\ \;\;\\n\ \ esac\\n\ \ printf\ \'%s\ \ %s\\\\n\'\ \\\"\$\{want\}\\\"\ \\\"\$\{dest\}\\\"\ \|\ sha256sum\ -c\ --status\ -\ \|\|\ die\ \\\"sha256\ mismatch\ for\ \$\{src\}\\\"\\n\}\\n#\ Item\ 1:\ timeout\ kills\ only\ the\ client\,\ not\ the\ YARN\ application.\ List\ the\ applications\ that\ carry\\n#\ the\ run\ id\ as\ their\ tag\ and\ kill\ each\ one.\\nkill_tagged\(\)\ \{\\n\ \ local\ apps\ app\\n\ \ apps=\\\"\$\(yarn\ application\ -list\ -appStates\ NEW\,NEW_SAVING\,SUBMITTED\,ACCEPTED\,RUNNING\ -appTags\ \\\"\$\{TAG\}\\\"\ 2\>/dev/null\ \|\ awk\ \'/\^application_/\{print\ \$1\}\'\ \|\|\ true\)\\\"\\n\ \ for\ app\ in\ \$\{apps\}\;\ do\\n\ \ \ \ log\ \\\"killing\ YARN\ application\ \$\{app\}\ \(tag\ \$\{TAG\}\)\\\"\\n\ \ \ \ yarn\ application\ -kill\ \\\"\$\{app\}\\\"\ \|\|\ true\\n\ \ done\\n\}\\ntrap\ \'kill_tagged\'\ EXIT\\ntrap\ \'kill_tagged\;\ exit\ 143\'\ TERM\ INT\\nrun_bounded\(\)\ \{\\n\ \ local\ secs=\\\"\$1\\\"\ rc=0\\n\ \ shift\\n\ \ timeout\ --kill-after=\\\"\$\{KILL_AFTER\}\\\"\ \\\"\$\{secs\}\\\"\ \\\"\$@\\\"\ \|\|\ rc=\$\?\\n\ \ if\ \[\[\ \\\"\$\{rc\}\\\"\ -eq\ 124\ \|\|\ \\\"\$\{rc\}\\\"\ -eq\ 137\ \|\|\ \\\"\$\{rc\}\\\"\ -eq\ 143\ \]\]\;\ then\\n\ \ \ \ log\ \\\"runtime\ cap\ reached\ \(exit\ \$\{rc\}\):\ killing\ the\ YARN\ application\ tagged\ \$\{TAG\}\\\"\\n\ \ \ \ kill_tagged\\n\ \ fi\\n\ \ return\ \\\"\$\{rc\}\\\"\\n\}\\nrequire_mount\\nJAVA_HOME_FILE=/opt/scholarchain-spike/java-home\\n\[\[\ -r\ \\\"\$\{JAVA_HOME_FILE\}\\\"\ \]\]\ \|\|\ die\ \\\"no\ resolved\ Java\ 17\ home\ \(\$\{JAVA_HOME_FILE\}\ missing\):\ the\ bootstrap\ did\ not\ complete\\\"\\nJAVA_HOME=\\\"\$\(head\ -n\ 1\ \\\"\$\{JAVA_HOME_FILE\}\\\"\)\\\"\\n\[\[\ -n\ \\\"\$\{JAVA_HOME\}\\\"\ \&\&\ -x\ \\\"\$\{JAVA_HOME\}/bin/java\\\"\ \]\]\ \|\|\ die\ \\\"the\ resolved\ Java\ home\ is\ not\ usable\\\"\\n\\\"\$\{JAVA_HOME\}/bin/java\\\"\ -version\ 2\>\&1\ \|\ grep\ -Eq\ \'version\ \\\"17\(\\\\.\|\\\"\)\'\ \|\|\ die\ \\\"the\ resolved\ Java\ is\ not\ 17\\\"\\nexport\ JAVA_HOME\\nRUNTIME=/opt/scholarchain-runtime\\nJOB_JAR=/opt/scholarchain-runtime/application/scholarchain-job.jar\\n#\ The\ portable\ runtime\ only:\ never\ the\ stock\ EMR\ Spark\ or\ Hadoop\ classpath.\\nexport\ SPARK_HOME=\\\"\$\{RUNTIME\}\\\"\ SPARK_CONF_DIR=\\\"\$\{RUNTIME\}/conf\\\"\ SPARK_SCALA_VERSION=2.13\\nexport\ HADOOP_CONF_DIR=\\\"\$\{HADOOP_CONF_DIR:-/etc/hadoop/conf\}\\\"\ YARN_CONF_DIR=\\\"\$\{HADOOP_CONF_DIR:-/etc/hadoop/conf\}\\\"\\nexport\ PATH=\\\"\$\{JAVA_HOME\}/bin:\$\{PATH:-/usr/local/bin:/usr/bin:/bin\}\\\"\\nunset\ CLASSPATH\ SPARK_DIST_CLASSPATH\ HADOOP_CLASSPATH\ SPARK_CLASSPATH\ \|\|\ true\\nprintf\ \'%s\ \ %s\\\\n\'\ 2f0994d5b7d614d2fb9baebc36f7558528bbece2c0c0f92410595a7adb502352\ \\\"\$\{JOB_JAR\}\\\"\ \|\ sha256sum\ -c\ --status\ -\ \|\|\ die\ \\\"the\ packaged\ job\ jar\ on\ this\ node\ does\ not\ have\ the\ approved\ sha256\\\"\\nPROBE_SHARED=\\\"\$\{RUN_ROOT\}/probe\\\"\\nPROBE_OUT=\\\"\$\{RUN_ROOT\}/results/class-origin.json\\\"\\nmkdir\ -p\ \\\"\$\{PROBE_SHARED\}\\\"\ \\\"\$\{RUN_ROOT\}/results\\\"\ \\\"\$\{MNT\}/staging\\\"\\n#\ Driver\ AND\ executor\ class-origin\ probe\ \(Phase12Readiness\ distributed\):\ fails\ closed\ on\ any\ version\ difference.\\nrun_bounded\ 270\ \\\\\\n\\\"\$\{SPARK_HOME\}/bin/spark-submit\\\"\ --master\ yarn\ --deploy-mode\ cluster\ --name\ scholarchain-class-origin-fixture-exp-a-20261106T071253Z-39407\ \\\\\\n\ \ --class\ edu.uic.cs441.scholarchain.spark.Phase12Readiness\ \\\\\\n\ \ --conf\ \\\"spark.yarn.tags=\$\{TAG\}\\\"\ \\\\\\n\ \ --conf\ \\\"spark.yarn.stagingDir=file://\$\{MNT\}/staging\\\"\ \\\\\\n\ \ --conf\ \\\"spark.yarn.appMasterEnv.JAVA_HOME=\$\{JAVA_HOME\}\\\"\ \\\\\\n\ \ --conf\ \\\"spark.executorEnv.JAVA_HOME=\$\{JAVA_HOME\}\\\"\ \\\\\\n\ \ --conf\ spark.dynamicAllocation.maxExecutors=4\ \\\\\\n\ \ --conf\ \'spark.yarn.jars=local:/opt/scholarchain-runtime/jars/\*\'\ \\\\\\n\ \ --conf\ spark.yarn.populateHadoopClasspath=false\ \\\\\\n\ \ --conf\ spark.hadoop.fs.defaultFS=file:///\ \\\\\\n\ \ --conf\ spark.hadoop.io.compression.codecs=org.apache.hadoop.io.compress.GzipCodec\,org.apache.hadoop.io.compress.DefaultCodec\,org.apache.hadoop.io.compress.BZip2Codec\,org.apache.hadoop.io.compress.SnappyCodec\ \\\\\\n\ \ --conf\ spark.authenticate=true\ \\\\\\n\ \ --conf\ spark.network.crypto.enabled=true\ \\\\\\n\ \ --conf\ spark.network.crypto.authEngineVersion=1\ \\\\\\n\ \ --conf\ spark.network.crypto.saslFallback=false\ \\\\\\n\ \ --conf\ spark.io.encryption.enabled=true\ \\\\\\n\ \ --conf\ spark.dynamicAllocation.enabled=true\ \\\\\\n\ \ --conf\ spark.dynamicAllocation.shuffleTracking.enabled=true\ \\\\\\n\ \ --conf\ spark.shuffle.service.enabled=false\ \\\\\\n\ \ --conf\ spark.dynamicAllocation.minExecutors=1\ \\\\\\n\ \ --conf\ spark.executor.cores=1\ \\\\\\n\ \ --conf\ spark.executor.memory=3g\ \\\\\\n\ \ --conf\ spark.driver.cores=1\ \\\\\\n\ \ --conf\ spark.driver.memory=3g\ \\\\\\n\ \ --conf\ spark.task.maxFailures=1\ \\\\\\n\ \ --conf\ spark.yarn.maxAppAttempts=1\ \\\\\\n\ \ --conf\ spark.ui.enabled=false\ \\\\\\n\ \ --conf\ spark.driver.extraJavaOptions=-Xlog:class+load=info\ \\\\\\n\ \ --conf\ spark.executor.extraJavaOptions=-Xlog:class+load=info\ \\\\\\n\ \ \\\"local:\$\{JOB_JAR\}\\\"\ \\\\\\n\ \ probe\ \\\"\$\{PROBE_SHARED\}\\\"\ \\\"\$\{PROBE_OUT\}\\\"\ distributed\\npython3\ -\ \\\"\$\{RUN_ROOT\}/results/class-origin.json\\\"\ 3.5.4\ 2.13.14\ /opt/scholarchain-runtime/jars\ \\\"\$\{JOB_JAR\}\\\"\ 2f0994d5b7d614d2fb9baebc36f7558528bbece2c0c0f92410595a7adb502352\ \<\<\'SCHOLARCHAIN_CLASS_ORIGIN_PY\'\\nimport\ json\\nimport\ os\\nimport\ sys\\n\\n\\ndef\ fail\(message\):\\n\ \ \ \ sys.stderr.write\(\\\"CLASS-ORIGIN-FAILED:\ %s\\\\n\\\"\ %\ \(message\,\)\)\\n\ \ \ \ raise\ SystemExit\(1\)\\n\\n\\nif\ len\(sys.argv\)\ \!=\ 7:\\n\ \ \ \ fail\(\\\"expected:\ probe-json\ spark-version\ scala-version\ jar-dir\ job-jar\ job-sha256\\\"\)\\nprobe\,\ spark_v\,\ scala_v\,\ jar_dir\,\ job_jar\,\ job_sha\ =\ sys.argv\[1:7\]\\ntry:\\n\ \ \ \ with\ open\(probe\,\ encoding=\\\"utf-8\\\"\)\ as\ handle:\\n\ \ \ \ \ \ \ \ doc\ =\ json.load\(handle\)\\nexcept\ Exception\ as\ error:\\n\ \ \ \ fail\(\\\"probe\ result\ unreadable:\ %s\\\"\ %\ type\(error\).__name__\)\\nif\ not\ isinstance\(doc\,\ dict\)\ or\ doc.get\(\\\"schemaVersion\\\"\)\ \!=\ \\\"scholarchain.phase12-readiness.v1\\\"\ or\ doc.get\(\\\"stage\\\"\)\ \!=\ \\\"probe\\\":\\n\ \ \ \ fail\(\\\"not\ a\ Phase\ 12\ readiness\ probe\ result\\\"\)\\nif\ doc.get\(\\\"externalExecutorVerified\\\"\)\ is\ not\ True\ or\ doc.get\(\\\"distributedRequired\\\"\)\ is\ not\ True:\\n\ \ \ \ fail\(\\\"the\ executor\ was\ not\ verified\ outside\ the\ driver\ process\\\"\)\\ndriver\ =\ doc.get\(\\\"driver\\\"\)\\ntasks\ =\ doc.get\(\\\"taskProcesses\\\"\)\\nif\ not\ isinstance\(driver\,\ dict\)\ or\ not\ isinstance\(tasks\,\ list\)\ or\ not\ tasks:\\n\ \ \ \ fail\(\\\"the\ driver\ or\ executor\ report\ is\ missing\\\"\)\\nneed\ =\ \(\\\"spark\\\"\,\ \\\"scala-library\\\"\,\ \\\"scala-reflect\\\"\,\ \\\"scala3-library\\\"\)\\nreports\ =\ \[\(\\\"driver\\\"\,\ driver\)\]\ +\ \[\(\\\"executor-%s\\\"\ %\ t.get\(\\\"executorId\\\"\)\,\ t\)\ for\ t\ in\ tasks\ if\ isinstance\(t\,\ dict\)\]\\nparsed\ =\ \{\}\\nprefix\ =\ jar_dir.rstrip\(\\\"/\\\"\)\ +\ \\\"/\\\"\\nfor\ role\,\ report\ in\ reports:\\n\ \ \ \ if\ not\ str\(report.get\(\\\"javaVersion\\\"\,\ \\\"\\\"\)\).startswith\(\\\"17.\\\"\):\\n\ \ \ \ \ \ \ \ fail\(\\\"%s\ runs\ Java\ %s\,\ not\ 17\\\"\ %\ \(role\,\ report.get\(\\\"javaVersion\\\"\)\)\)\\n\ \ \ \ if\ role\ \!=\ \\\"driver\\\"\ and\ report.get\(\\\"executorId\\\"\)\ in\ \(None\,\ \\\"driver\\\"\,\ \\\"unavailable\\\"\):\\n\ \ \ \ \ \ \ \ fail\(\\\"%s\ is\ not\ an\ executor\ process\\\"\ %\ role\)\\n\ \ \ \ libs\ =\ \{\}\\n\ \ \ \ for\ lib\ in\ report.get\(\\\"libraries\\\"\)\ or\ \[\]:\\n\ \ \ \ \ \ \ \ if\ isinstance\(lib\,\ dict\):\\n\ \ \ \ \ \ \ \ \ \ \ \ libs\[lib.get\(\\\"component\\\"\)\]\ =\ lib\\n\ \ \ \ for\ component\ in\ need:\\n\ \ \ \ \ \ \ \ if\ component\ not\ in\ libs:\\n\ \ \ \ \ \ \ \ \ \ \ \ fail\(\\\"%s\ report\ lacks\ %s\\\"\ %\ \(role\,\ component\)\)\\n\ \ \ \ if\ libs\[\\\"spark\\\"\].get\(\\\"runtimeVersion\\\"\)\ \!=\ spark_v:\\n\ \ \ \ \ \ \ \ fail\(\\\"%s\ Spark\ version\ %s\ differs\ from\ the\ required\ %s\\\"\ %\ \(role\,\ libs\[\\\"spark\\\"\].get\(\\\"runtimeVersion\\\"\)\,\ spark_v\)\)\\n\ \ \ \ if\ libs\[\\\"scala-library\\\"\].get\(\\\"runtimeVersion\\\"\)\ \!=\ scala_v:\\n\ \ \ \ \ \ \ \ fail\(\\\"%s\ Scala\ library\ version\ %s\ differs\ from\ the\ packaged\ job\'s\ %s\\\"\ %\ \(role\,\ libs\[\\\"scala-library\\\"\].get\(\\\"runtimeVersion\\\"\)\,\ scala_v\)\)\\n\ \ \ \ for\ component\ in\ \(\\\"spark\\\"\,\ \\\"scala-library\\\"\,\ \\\"scala-reflect\\\"\):\\n\ \ \ \ \ \ \ \ origin\ =\ str\(libs\[component\].get\(\\\"origin\\\"\)\)\\n\ \ \ \ \ \ \ \ if\ not\ origin.startswith\(prefix\):\\n\ \ \ \ \ \ \ \ \ \ \ \ fail\(\\\"%s\ loaded\ %s\ from\ %s\,\ outside\ the\ runtime\ jar\ directory\ %s\\\"\ %\ \(role\,\ component\,\ origin\,\ jar_dir\)\)\\n\ \ \ \ if\ not\ os.path.basename\(str\(libs\[\\\"spark\\\"\]\[\\\"origin\\\"\]\)\).endswith\(\\\"-%s.jar\\\"\ %\ spark_v\):\\n\ \ \ \ \ \ \ \ fail\(\\\"%s\ Spark\ origin\ %s\ is\ not\ a\ %s\ jar\\\"\ %\ \(role\,\ libs\[\\\"spark\\\"\]\[\\\"origin\\\"\]\,\ spark_v\)\)\\n\ \ \ \ if\ os.path.basename\(str\(libs\[\\\"scala-library\\\"\]\[\\\"origin\\\"\]\)\)\ \!=\ \\\"scala-library-%s.jar\\\"\ %\ scala_v:\\n\ \ \ \ \ \ \ \ fail\(\\\"%s\ Scala\ library\ origin\ %s\ is\ not\ scala-library-%s.jar\\\"\ %\ \(role\,\ libs\[\\\"scala-library\\\"\]\[\\\"origin\\\"\]\,\ scala_v\)\)\\n\ \ \ \ s3\ =\ libs\[\\\"scala3-library\\\"\]\\n\ \ \ \ if\ s3.get\(\\\"origin\\\"\)\ \!=\ job_jar\ or\ s3.get\(\\\"codeSourceSha256\\\"\)\ \!=\ job_sha:\\n\ \ \ \ \ \ \ \ fail\(\\\"%s\ scala3-library\ is\ not\ loaded\ from\ the\ packaged\ job\ jar\ with\ the\ approved\ sha256\\\"\ %\ role\)\\n\ \ \ \ parsed\[role\]\ =\ libs\\nbase\ =\ parsed\[\\\"driver\\\"\]\\nfor\ role\,\ libs\ in\ parsed.items\(\):\\n\ \ \ \ for\ component\ in\ need:\\n\ \ \ \ \ \ \ \ for\ field\ in\ \(\\\"origin\\\"\,\ \\\"classSha256\\\"\,\ \\\"codeSourceSha256\\\"\):\\n\ \ \ \ \ \ \ \ \ \ \ \ if\ libs\[component\].get\(field\)\ \!=\ base\[component\].get\(field\):\\n\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ fail\(\\\"%s\ differs\ between\ the\ driver\ and\ %s\ for\ %s\\\"\ %\ \(field\,\ role\,\ component\)\)\\nprint\(\\\"CLASS-ORIGIN-OK:\ the\ driver\ and\ %d\ executor\ report\(s\)\ agree\ on\ Spark\ %s\,\ Scala\ %s\ and\ the\ packaged\ job\ jar\\\"\ %\ \(len\(tasks\)\,\ spark_v\,\ scala_v\)\)\\nSCHOLARCHAIN_CLASS_ORIGIN_PY\\n\"\]\}\}\] 
+pipeline| STEP: step-spark-job
+pipeline| STEP-TIMEOUT: spark-job 2160s (the body runs under timeout; YARN applications are killed by tag when it fires)
+pipeline| STEP-BODY-BEGIN: spark-job
+pipeline| set -euo pipefail
+pipeline| STEP_NAME=spark-job
+pipeline| RUN_ID=fixture-exp-a-20261106T071253Z-39407
+pipeline| TAG=fixture-exp-a-20261106T071253Z-39407
+pipeline| MNT=/mnt/scholarchain
+pipeline| RUN_ROOT="${MNT}/runs/${RUN_ID}"
+pipeline| KILL_AFTER=60
+pipeline| log() { printf 'STEP-LOG %s: %s\n' "${STEP_NAME}" "$*"; }
+pipeline| die() { printf 'STEP-FAIL %s: %s\n' "${STEP_NAME}" "$*" >&2; exit 1; }
+pipeline| require_mount() { grep -q " ${MNT} " "${SC_PROC_MOUNTS:-/proc/mounts}" || die "${MNT} is not a mount point: refusing to use a local directory"; }
+pipeline| localize() {
+pipeline|   local src="$1" dest="$2" want="$3"
+pipeline|   case "${src}" in
+pipeline|     s3://*|s3a://*|s3n://*|hdfs://*) hadoop fs -copyToLocal "${src}" "${dest}" ;;
+pipeline|     *) if [[ -f "${src}" ]]; then cp -- "${src}" "${dest}"; else die "source is not a regular file: ${src}"; fi ;;
+pipeline|   esac
+pipeline|   printf '%s  %s\n' "${want}" "${dest}" | sha256sum -c --status - || die "sha256 mismatch for ${src}"
+pipeline| }
+pipeline| # Item 1: timeout kills only the client, not the YARN application. List the applications that carry
+pipeline| # the run id as their tag and kill each one.
+pipeline| kill_tagged() {
+pipeline|   local apps app
+pipeline|   apps="$(yarn application -list -appStates NEW,NEW_SAVING,SUBMITTED,ACCEPTED,RUNNING -appTags "${TAG}" 2>/dev/null | awk '/^application_/{print $1}' || true)"
+pipeline|   for app in ${apps}; do
+pipeline|     log "killing YARN application ${app} (tag ${TAG})"
+pipeline|     yarn application -kill "${app}" || true
+pipeline|   done
+pipeline| }
+pipeline| trap 'kill_tagged' EXIT
+pipeline| trap 'kill_tagged; exit 143' TERM INT
+pipeline| run_bounded() {
+pipeline|   local secs="$1" rc=0
+pipeline|   shift
+pipeline|   timeout --kill-after="${KILL_AFTER}" "${secs}" "$@" || rc=$?
+pipeline|   if [[ "${rc}" -eq 124 || "${rc}" -eq 137 || "${rc}" -eq 143 ]]; then
+pipeline|     log "runtime cap reached (exit ${rc}): killing the YARN application tagged ${TAG}"
+pipeline|     kill_tagged
+pipeline|   fi
+pipeline|   return "${rc}"
+pipeline| }
+pipeline| require_mount
+pipeline| JAVA_HOME_FILE=/opt/scholarchain-spike/java-home
+pipeline| [[ -r "${JAVA_HOME_FILE}" ]] || die "no resolved Java 17 home (${JAVA_HOME_FILE} missing): the bootstrap did not complete"
+pipeline| JAVA_HOME="$(head -n 1 "${JAVA_HOME_FILE}")"
+pipeline| [[ -n "${JAVA_HOME}" && -x "${JAVA_HOME}/bin/java" ]] || die "the resolved Java home is not usable"
+pipeline| "${JAVA_HOME}/bin/java" -version 2>&1 | grep -Eq 'version "17(\.|")' || die "the resolved Java is not 17"
+pipeline| export JAVA_HOME
+pipeline| RUNTIME=/opt/scholarchain-runtime
+pipeline| JOB_JAR=/opt/scholarchain-runtime/application/scholarchain-job.jar
+pipeline| # The portable runtime only: never the stock EMR Spark or Hadoop classpath.
+pipeline| export SPARK_HOME="${RUNTIME}" SPARK_CONF_DIR="${RUNTIME}/conf" SPARK_SCALA_VERSION=2.13
+pipeline| export HADOOP_CONF_DIR="${HADOOP_CONF_DIR:-/etc/hadoop/conf}" YARN_CONF_DIR="${HADOOP_CONF_DIR:-/etc/hadoop/conf}"
+pipeline| export PATH="${JAVA_HOME}/bin:${PATH:-/usr/local/bin:/usr/bin:/bin}"
+pipeline| unset CLASSPATH SPARK_DIST_CLASSPATH HADOOP_CLASSPATH SPARK_CLASSPATH || true
+pipeline| printf '%s  %s\n' 2f0994d5b7d614d2fb9baebc36f7558528bbece2c0c0f92410595a7adb502352 "${JOB_JAR}" | sha256sum -c --status - || die "the packaged job jar on this node does not have the approved sha256"
+pipeline| # Fail closed again here: the Spark job never starts without a passing class-origin result for this run.
+pipeline| [[ -f "${RUN_ROOT}/results/class-origin.json" ]] || die "no class-origin result for this run: refusing to start the Spark job"
+pipeline| python3 - "${RUN_ROOT}/results/class-origin.json" 3.5.4 2.13.14 /opt/scholarchain-runtime/jars "${JOB_JAR}" 2f0994d5b7d614d2fb9baebc36f7558528bbece2c0c0f92410595a7adb502352 <<'SCHOLARCHAIN_CLASS_ORIGIN_PY'
+pipeline| import json
+pipeline| import os
+pipeline| import sys
+pipeline| 
+pipeline| 
+pipeline| def fail(message):
+pipeline|     sys.stderr.write("CLASS-ORIGIN-FAILED: %s\n" % (message,))
+pipeline|     raise SystemExit(1)
+pipeline| 
+pipeline| 
+pipeline| if len(sys.argv) != 7:
+pipeline|     fail("expected: probe-json spark-version scala-version jar-dir job-jar job-sha256")
+pipeline| probe, spark_v, scala_v, jar_dir, job_jar, job_sha = sys.argv[1:7]
+pipeline| try:
+pipeline|     with open(probe, encoding="utf-8") as handle:
+pipeline|         doc = json.load(handle)
+pipeline| except Exception as error:
+pipeline|     fail("probe result unreadable: %s" % type(error).__name__)
+pipeline| if not isinstance(doc, dict) or doc.get("schemaVersion") != "scholarchain.phase12-readiness.v1" or doc.get("stage") != "probe":
+pipeline|     fail("not a Phase 12 readiness probe result")
+pipeline| if doc.get("externalExecutorVerified") is not True or doc.get("distributedRequired") is not True:
+pipeline|     fail("the executor was not verified outside the driver process")
+pipeline| driver = doc.get("driver")
+pipeline| tasks = doc.get("taskProcesses")
+pipeline| if not isinstance(driver, dict) or not isinstance(tasks, list) or not tasks:
+pipeline|     fail("the driver or executor report is missing")
+pipeline| need = ("spark", "scala-library", "scala-reflect", "scala3-library")
+pipeline| reports = [("driver", driver)] + [("executor-%s" % t.get("executorId"), t) for t in tasks if isinstance(t, dict)]
+pipeline| parsed = {}
+pipeline| prefix = jar_dir.rstrip("/") + "/"
+pipeline| for role, report in reports:
+pipeline|     if not str(report.get("javaVersion", "")).startswith("17."):
+pipeline|         fail("%s runs Java %s, not 17" % (role, report.get("javaVersion")))
+pipeline|     if role != "driver" and report.get("executorId") in (None, "driver", "unavailable"):
+pipeline|         fail("%s is not an executor process" % role)
+pipeline|     libs = {}
+pipeline|     for lib in report.get("libraries") or []:
+pipeline|         if isinstance(lib, dict):
+pipeline|             libs[lib.get("component")] = lib
+pipeline|     for component in need:
+pipeline|         if component not in libs:
+pipeline|             fail("%s report lacks %s" % (role, component))
+pipeline|     if libs["spark"].get("runtimeVersion") != spark_v:
+pipeline|         fail("%s Spark version %s differs from the required %s" % (role, libs["spark"].get("runtimeVersion"), spark_v))
+pipeline|     if libs["scala-library"].get("runtimeVersion") != scala_v:
+pipeline|         fail("%s Scala library version %s differs from the packaged job's %s" % (role, libs["scala-library"].get("runtimeVersion"), scala_v))
+pipeline|     for component in ("spark", "scala-library", "scala-reflect"):
+pipeline|         origin = str(libs[component].get("origin"))
+pipeline|         if not origin.startswith(prefix):
+pipeline|             fail("%s loaded %s from %s, outside the runtime jar directory %s" % (role, component, origin, jar_dir))
+pipeline|     if not os.path.basename(str(libs["spark"]["origin"])).endswith("-%s.jar" % spark_v):
+pipeline|         fail("%s Spark origin %s is not a %s jar" % (role, libs["spark"]["origin"], spark_v))
+pipeline|     if os.path.basename(str(libs["scala-library"]["origin"])) != "scala-library-%s.jar" % scala_v:
+pipeline|         fail("%s Scala library origin %s is not scala-library-%s.jar" % (role, libs["scala-library"]["origin"], scala_v))
+pipeline|     s3 = libs["scala3-library"]
+pipeline|     if s3.get("origin") != job_jar or s3.get("codeSourceSha256") != job_sha:
+pipeline|         fail("%s scala3-library is not loaded from the packaged job jar with the approved sha256" % role)
+pipeline|     parsed[role] = libs
+pipeline| base = parsed["driver"]
+pipeline| for role, libs in parsed.items():
+pipeline|     for component in need:
+pipeline|         for field in ("origin", "classSha256", "codeSourceSha256"):
+pipeline|             if libs[component].get(field) != base[component].get(field):
+pipeline|                 fail("%s differs between the driver and %s for %s" % (field, role, component))
+pipeline| print("CLASS-ORIGIN-OK: the driver and %d executor report(s) agree on Spark %s, Scala %s and the packaged job jar" % (len(tasks), spark_v, scala_v))
+pipeline| SCHOLARCHAIN_CLASS_ORIGIN_PY
+pipeline| HADOOP_MARKERS="$(find "${RUN_ROOT}/hadoop" -maxdepth 4 -name _SCHOLARCHAIN_COMPLETE -print)"
+pipeline| [[ "$(printf '%s\n' "${HADOOP_MARKERS}" | grep -c .)" -eq 1 ]] || die "expected exactly one completed run under ${RUN_ROOT}/hadoop"
+pipeline| HADOOP_RUN="$(dirname "${HADOOP_MARKERS}")"
+pipeline| ER_RUN="${RUN_ROOT}/er/run"
+pipeline| [[ -d "${ER_RUN}" ]] || die "no entity-resolution output at ${ER_RUN}"
+pipeline| SPARK_OUT="${RUN_ROOT}/spark"
+pipeline| [[ ! -e "${SPARK_OUT}" ]] || die "${SPARK_OUT} already exists"
+pipeline| mkdir -p "${SPARK_OUT}" "${RUN_ROOT}/spark-checkpoint" "${RUN_ROOT}/config" "${MNT}/staging"
+pipeline| WORK="$(mktemp -d "${TMPDIR:-/tmp}/scholarchain-bounded.XXXXXX")"
+pipeline| localize s3://fixture-bucket/artifacts/spark-template.json "${WORK}/spark-template.json" 049518035b3aecaf92b5f177e267e5c541b81c6e909879b907c737cf46bcdcc4
+pipeline| python3 - "${WORK}/spark-template.json" "${RUN_ROOT}/config/spark-config.json" "${HADOOP_RUN}" "${ER_RUN}" "${SPARK_OUT}" "${RUN_ROOT}/spark-checkpoint" <<'SCHOLARCHAIN_RENDER_PY'
+pipeline| import json
+pipeline| import sys
+pipeline| 
+pipeline| template, out, hadoop_run, er_run, output_root, checkpoint = sys.argv[1:7]
+pipeline| with open(template, encoding="utf-8") as handle:
+pipeline|     document = json.load(handle)
+pipeline| if not isinstance(document, dict):
+pipeline|     raise SystemExit("spark config template must be a JSON object")
+pipeline| overrides = {
+pipeline|     "hadoopRunRoot": hadoop_run,
+pipeline|     "entityResolutionRunRoot": er_run,
+pipeline|     "outputRoot": output_root,
+pipeline|     "checkpointDirectory": checkpoint,
+pipeline| }
+pipeline| for key in overrides:
+pipeline|     if key not in document:
+pipeline|         raise SystemExit("spark config template lacks the key %s" % key)
+pipeline| document.update(overrides)
+pipeline| with open(out, "x", encoding="utf-8") as handle:
+pipeline|     json.dump(document, handle, indent=2, sort_keys=True)
+pipeline|     handle.write("\n")
+pipeline| SCHOLARCHAIN_RENDER_PY
+pipeline| run_bounded 2160 \
+pipeline| "${SPARK_HOME}/bin/spark-submit" --master yarn --deploy-mode cluster --name scholarchain-bounded-fixture-exp-a-20261106T071253Z-39407 \
+pipeline|   --class edu.uic.cs441.scholarchain.spark.Phase6Main \
+pipeline|   --conf "spark.yarn.tags=${TAG}" \
+pipeline|   --conf "spark.yarn.stagingDir=file://${MNT}/staging" \
+pipeline|   --conf "spark.yarn.appMasterEnv.JAVA_HOME=${JAVA_HOME}" \
+pipeline|   --conf "spark.executorEnv.JAVA_HOME=${JAVA_HOME}" \
+pipeline|   --conf spark.dynamicAllocation.maxExecutors=4 \
+pipeline|   --conf 'spark.yarn.jars=local:/opt/scholarchain-runtime/jars/*' \
+pipeline|   --conf spark.yarn.populateHadoopClasspath=false \
+pipeline|   --conf spark.hadoop.fs.defaultFS=file:/// \
+pipeline|   --conf spark.hadoop.io.compression.codecs=org.apache.hadoop.io.compress.GzipCodec,org.apache.hadoop.io.compress.DefaultCodec,org.apache.hadoop.io.compress.BZip2Codec,org.apache.hadoop.io.compress.SnappyCodec \
+pipeline|   --conf spark.authenticate=true \
+pipeline|   --conf spark.network.crypto.enabled=true \
+pipeline|   --conf spark.network.crypto.authEngineVersion=1 \
+pipeline|   --conf spark.network.crypto.saslFallback=false \
+pipeline|   --conf spark.io.encryption.enabled=true \
+pipeline|   --conf spark.dynamicAllocation.enabled=true \
+pipeline|   --conf spark.dynamicAllocation.shuffleTracking.enabled=true \
+pipeline|   --conf spark.shuffle.service.enabled=false \
+pipeline|   --conf spark.dynamicAllocation.minExecutors=1 \
+pipeline|   --conf spark.executor.cores=1 \
+pipeline|   --conf spark.executor.memory=3g \
+pipeline|   --conf spark.driver.cores=1 \
+pipeline|   --conf spark.driver.memory=3g \
+pipeline|   --conf spark.task.maxFailures=1 \
+pipeline|   --conf spark.yarn.maxAppAttempts=1 \
+pipeline|   --conf spark.ui.enabled=false \
+pipeline|   --conf spark.driver.extraJavaOptions=-Xlog:class+load=info \
+pipeline|   --conf spark.executor.extraJavaOptions=-Xlog:class+load=info \
+pipeline|   "local:${JOB_JAR}" \
+pipeline|   "${RUN_ROOT}/config/spark-config.json"
+pipeline| STEP-BODY-END: spark-job
+pipeline| DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws emr add-steps --region us-east-2 --cluster-id j-ABC123DEF456 --steps \[\{\"Name\":\"ScholarChain-fixture-exp-a-20261106T071253Z-39407-spark-job\"\,\"ActionOnFailure\":\"CONTINUE\"\,\"HadoopJarStep\":\{\"Jar\":\"command-runner.jar\"\,\"Args\":\[\"bash\"\,\"-c\"\,\"set\ -euo\ pipefail\\nSTEP_NAME=spark-job\\nRUN_ID=fixture-exp-a-20261106T071253Z-39407\\nTAG=fixture-exp-a-20261106T071253Z-39407\\nMNT=/mnt/scholarchain\\nRUN_ROOT=\\\"\$\{MNT\}/runs/\$\{RUN_ID\}\\\"\\nKILL_AFTER=60\\nlog\(\)\ \{\ printf\ \'STEP-LOG\ %s:\ %s\\\\n\'\ \\\"\$\{STEP_NAME\}\\\"\ \\\"\$\*\\\"\;\ \}\\ndie\(\)\ \{\ printf\ \'STEP-FAIL\ %s:\ %s\\\\n\'\ \\\"\$\{STEP_NAME\}\\\"\ \\\"\$\*\\\"\ \>\&2\;\ exit\ 1\;\ \}\\nrequire_mount\(\)\ \{\ grep\ -q\ \\\"\ \$\{MNT\}\ \\\"\ \\\"\$\{SC_PROC_MOUNTS:-/proc/mounts\}\\\"\ \|\|\ die\ \\\"\$\{MNT\}\ is\ not\ a\ mount\ point:\ refusing\ to\ use\ a\ local\ directory\\\"\;\ \}\\nlocalize\(\)\ \{\\n\ \ local\ src=\\\"\$1\\\"\ dest=\\\"\$2\\\"\ want=\\\"\$3\\\"\\n\ \ case\ \\\"\$\{src\}\\\"\ in\\n\ \ \ \ s3://\*\|s3a://\*\|s3n://\*\|hdfs://\*\)\ hadoop\ fs\ -copyToLocal\ \\\"\$\{src\}\\\"\ \\\"\$\{dest\}\\\"\ \;\;\\n\ \ \ \ \*\)\ if\ \[\[\ -f\ \\\"\$\{src\}\\\"\ \]\]\;\ then\ cp\ --\ \\\"\$\{src\}\\\"\ \\\"\$\{dest\}\\\"\;\ else\ die\ \\\"source\ is\ not\ a\ regular\ file:\ \$\{src\}\\\"\;\ fi\ \;\;\\n\ \ esac\\n\ \ printf\ \'%s\ \ %s\\\\n\'\ \\\"\$\{want\}\\\"\ \\\"\$\{dest\}\\\"\ \|\ sha256sum\ -c\ --status\ -\ \|\|\ die\ \\\"sha256\ mismatch\ for\ \$\{src\}\\\"\\n\}\\n#\ Item\ 1:\ timeout\ kills\ only\ the\ client\,\ not\ the\ YARN\ application.\ List\ the\ applications\ that\ carry\\n#\ the\ run\ id\ as\ their\ tag\ and\ kill\ each\ one.\\nkill_tagged\(\)\ \{\\n\ \ local\ apps\ app\\n\ \ apps=\\\"\$\(yarn\ application\ -list\ -appStates\ NEW\,NEW_SAVING\,SUBMITTED\,ACCEPTED\,RUNNING\ -appTags\ \\\"\$\{TAG\}\\\"\ 2\>/dev/null\ \|\ awk\ \'/\^application_/\{print\ \$1\}\'\ \|\|\ true\)\\\"\\n\ \ for\ app\ in\ \$\{apps\}\;\ do\\n\ \ \ \ log\ \\\"killing\ YARN\ application\ \$\{app\}\ \(tag\ \$\{TAG\}\)\\\"\\n\ \ \ \ yarn\ application\ -kill\ \\\"\$\{app\}\\\"\ \|\|\ true\\n\ \ done\\n\}\\ntrap\ \'kill_tagged\'\ EXIT\\ntrap\ \'kill_tagged\;\ exit\ 143\'\ TERM\ INT\\nrun_bounded\(\)\ \{\\n\ \ local\ secs=\\\"\$1\\\"\ rc=0\\n\ \ shift\\n\ \ timeout\ --kill-after=\\\"\$\{KILL_AFTER\}\\\"\ \\\"\$\{secs\}\\\"\ \\\"\$@\\\"\ \|\|\ rc=\$\?\\n\ \ if\ \[\[\ \\\"\$\{rc\}\\\"\ -eq\ 124\ \|\|\ \\\"\$\{rc\}\\\"\ -eq\ 137\ \|\|\ \\\"\$\{rc\}\\\"\ -eq\ 143\ \]\]\;\ then\\n\ \ \ \ log\ \\\"runtime\ cap\ reached\ \(exit\ \$\{rc\}\):\ killing\ the\ YARN\ application\ tagged\ \$\{TAG\}\\\"\\n\ \ \ \ kill_tagged\\n\ \ fi\\n\ \ return\ \\\"\$\{rc\}\\\"\\n\}\\nrequire_mount\\nJAVA_HOME_FILE=/opt/scholarchain-spike/java-home\\n\[\[\ -r\ \\\"\$\{JAVA_HOME_FILE\}\\\"\ \]\]\ \|\|\ die\ \\\"no\ resolved\ Java\ 17\ home\ \(\$\{JAVA_HOME_FILE\}\ missing\):\ the\ bootstrap\ did\ not\ complete\\\"\\nJAVA_HOME=\\\"\$\(head\ -n\ 1\ \\\"\$\{JAVA_HOME_FILE\}\\\"\)\\\"\\n\[\[\ -n\ \\\"\$\{JAVA_HOME\}\\\"\ \&\&\ -x\ \\\"\$\{JAVA_HOME\}/bin/java\\\"\ \]\]\ \|\|\ die\ \\\"the\ resolved\ Java\ home\ is\ not\ usable\\\"\\n\\\"\$\{JAVA_HOME\}/bin/java\\\"\ -version\ 2\>\&1\ \|\ grep\ -Eq\ \'version\ \\\"17\(\\\\.\|\\\"\)\'\ \|\|\ die\ \\\"the\ resolved\ Java\ is\ not\ 17\\\"\\nexport\ JAVA_HOME\\nRUNTIME=/opt/scholarchain-runtime\\nJOB_JAR=/opt/scholarchain-runtime/application/scholarchain-job.jar\\n#\ The\ portable\ runtime\ only:\ never\ the\ stock\ EMR\ Spark\ or\ Hadoop\ classpath.\\nexport\ SPARK_HOME=\\\"\$\{RUNTIME\}\\\"\ SPARK_CONF_DIR=\\\"\$\{RUNTIME\}/conf\\\"\ SPARK_SCALA_VERSION=2.13\\nexport\ HADOOP_CONF_DIR=\\\"\$\{HADOOP_CONF_DIR:-/etc/hadoop/conf\}\\\"\ YARN_CONF_DIR=\\\"\$\{HADOOP_CONF_DIR:-/etc/hadoop/conf\}\\\"\\nexport\ PATH=\\\"\$\{JAVA_HOME\}/bin:\$\{PATH:-/usr/local/bin:/usr/bin:/bin\}\\\"\\nunset\ CLASSPATH\ SPARK_DIST_CLASSPATH\ HADOOP_CLASSPATH\ SPARK_CLASSPATH\ \|\|\ true\\nprintf\ \'%s\ \ %s\\\\n\'\ 2f0994d5b7d614d2fb9baebc36f7558528bbece2c0c0f92410595a7adb502352\ \\\"\$\{JOB_JAR\}\\\"\ \|\ sha256sum\ -c\ --status\ -\ \|\|\ die\ \\\"the\ packaged\ job\ jar\ on\ this\ node\ does\ not\ have\ the\ approved\ sha256\\\"\\n#\ Fail\ closed\ again\ here:\ the\ Spark\ job\ never\ starts\ without\ a\ passing\ class-origin\ result\ for\ this\ run.\\n\[\[\ -f\ \\\"\$\{RUN_ROOT\}/results/class-origin.json\\\"\ \]\]\ \|\|\ die\ \\\"no\ class-origin\ result\ for\ this\ run:\ refusing\ to\ start\ the\ Spark\ job\\\"\\npython3\ -\ \\\"\$\{RUN_ROOT\}/results/class-origin.json\\\"\ 3.5.4\ 2.13.14\ /opt/scholarchain-runtime/jars\ \\\"\$\{JOB_JAR\}\\\"\ 2f0994d5b7d614d2fb9baebc36f7558528bbece2c0c0f92410595a7adb502352\ \<\<\'SCHOLARCHAIN_CLASS_ORIGIN_PY\'\\nimport\ json\\nimport\ os\\nimport\ sys\\n\\n\\ndef\ fail\(message\):\\n\ \ \ \ sys.stderr.write\(\\\"CLASS-ORIGIN-FAILED:\ %s\\\\n\\\"\ %\ \(message\,\)\)\\n\ \ \ \ raise\ SystemExit\(1\)\\n\\n\\nif\ len\(sys.argv\)\ \!=\ 7:\\n\ \ \ \ fail\(\\\"expected:\ probe-json\ spark-version\ scala-version\ jar-dir\ job-jar\ job-sha256\\\"\)\\nprobe\,\ spark_v\,\ scala_v\,\ jar_dir\,\ job_jar\,\ job_sha\ =\ sys.argv\[1:7\]\\ntry:\\n\ \ \ \ with\ open\(probe\,\ encoding=\\\"utf-8\\\"\)\ as\ handle:\\n\ \ \ \ \ \ \ \ doc\ =\ json.load\(handle\)\\nexcept\ Exception\ as\ error:\\n\ \ \ \ fail\(\\\"probe\ result\ unreadable:\ %s\\\"\ %\ type\(error\).__name__\)\\nif\ not\ isinstance\(doc\,\ dict\)\ or\ doc.get\(\\\"schemaVersion\\\"\)\ \!=\ \\\"scholarchain.phase12-readiness.v1\\\"\ or\ doc.get\(\\\"stage\\\"\)\ \!=\ \\\"probe\\\":\\n\ \ \ \ fail\(\\\"not\ a\ Phase\ 12\ readiness\ probe\ result\\\"\)\\nif\ doc.get\(\\\"externalExecutorVerified\\\"\)\ is\ not\ True\ or\ doc.get\(\\\"distributedRequired\\\"\)\ is\ not\ True:\\n\ \ \ \ fail\(\\\"the\ executor\ was\ not\ verified\ outside\ the\ driver\ process\\\"\)\\ndriver\ =\ doc.get\(\\\"driver\\\"\)\\ntasks\ =\ doc.get\(\\\"taskProcesses\\\"\)\\nif\ not\ isinstance\(driver\,\ dict\)\ or\ not\ isinstance\(tasks\,\ list\)\ or\ not\ tasks:\\n\ \ \ \ fail\(\\\"the\ driver\ or\ executor\ report\ is\ missing\\\"\)\\nneed\ =\ \(\\\"spark\\\"\,\ \\\"scala-library\\\"\,\ \\\"scala-reflect\\\"\,\ \\\"scala3-library\\\"\)\\nreports\ =\ \[\(\\\"driver\\\"\,\ driver\)\]\ +\ \[\(\\\"executor-%s\\\"\ %\ t.get\(\\\"executorId\\\"\)\,\ t\)\ for\ t\ in\ tasks\ if\ isinstance\(t\,\ dict\)\]\\nparsed\ =\ \{\}\\nprefix\ =\ jar_dir.rstrip\(\\\"/\\\"\)\ +\ \\\"/\\\"\\nfor\ role\,\ report\ in\ reports:\\n\ \ \ \ if\ not\ str\(report.get\(\\\"javaVersion\\\"\,\ \\\"\\\"\)\).startswith\(\\\"17.\\\"\):\\n\ \ \ \ \ \ \ \ fail\(\\\"%s\ runs\ Java\ %s\,\ not\ 17\\\"\ %\ \(role\,\ report.get\(\\\"javaVersion\\\"\)\)\)\\n\ \ \ \ if\ role\ \!=\ \\\"driver\\\"\ and\ report.get\(\\\"executorId\\\"\)\ in\ \(None\,\ \\\"driver\\\"\,\ \\\"unavailable\\\"\):\\n\ \ \ \ \ \ \ \ fail\(\\\"%s\ is\ not\ an\ executor\ process\\\"\ %\ role\)\\n\ \ \ \ libs\ =\ \{\}\\n\ \ \ \ for\ lib\ in\ report.get\(\\\"libraries\\\"\)\ or\ \[\]:\\n\ \ \ \ \ \ \ \ if\ isinstance\(lib\,\ dict\):\\n\ \ \ \ \ \ \ \ \ \ \ \ libs\[lib.get\(\\\"component\\\"\)\]\ =\ lib\\n\ \ \ \ for\ component\ in\ need:\\n\ \ \ \ \ \ \ \ if\ component\ not\ in\ libs:\\n\ \ \ \ \ \ \ \ \ \ \ \ fail\(\\\"%s\ report\ lacks\ %s\\\"\ %\ \(role\,\ component\)\)\\n\ \ \ \ if\ libs\[\\\"spark\\\"\].get\(\\\"runtimeVersion\\\"\)\ \!=\ spark_v:\\n\ \ \ \ \ \ \ \ fail\(\\\"%s\ Spark\ version\ %s\ differs\ from\ the\ required\ %s\\\"\ %\ \(role\,\ libs\[\\\"spark\\\"\].get\(\\\"runtimeVersion\\\"\)\,\ spark_v\)\)\\n\ \ \ \ if\ libs\[\\\"scala-library\\\"\].get\(\\\"runtimeVersion\\\"\)\ \!=\ scala_v:\\n\ \ \ \ \ \ \ \ fail\(\\\"%s\ Scala\ library\ version\ %s\ differs\ from\ the\ packaged\ job\'s\ %s\\\"\ %\ \(role\,\ libs\[\\\"scala-library\\\"\].get\(\\\"runtimeVersion\\\"\)\,\ scala_v\)\)\\n\ \ \ \ for\ component\ in\ \(\\\"spark\\\"\,\ \\\"scala-library\\\"\,\ \\\"scala-reflect\\\"\):\\n\ \ \ \ \ \ \ \ origin\ =\ str\(libs\[component\].get\(\\\"origin\\\"\)\)\\n\ \ \ \ \ \ \ \ if\ not\ origin.startswith\(prefix\):\\n\ \ \ \ \ \ \ \ \ \ \ \ fail\(\\\"%s\ loaded\ %s\ from\ %s\,\ outside\ the\ runtime\ jar\ directory\ %s\\\"\ %\ \(role\,\ component\,\ origin\,\ jar_dir\)\)\\n\ \ \ \ if\ not\ os.path.basename\(str\(libs\[\\\"spark\\\"\]\[\\\"origin\\\"\]\)\).endswith\(\\\"-%s.jar\\\"\ %\ spark_v\):\\n\ \ \ \ \ \ \ \ fail\(\\\"%s\ Spark\ origin\ %s\ is\ not\ a\ %s\ jar\\\"\ %\ \(role\,\ libs\[\\\"spark\\\"\]\[\\\"origin\\\"\]\,\ spark_v\)\)\\n\ \ \ \ if\ os.path.basename\(str\(libs\[\\\"scala-library\\\"\]\[\\\"origin\\\"\]\)\)\ \!=\ \\\"scala-library-%s.jar\\\"\ %\ scala_v:\\n\ \ \ \ \ \ \ \ fail\(\\\"%s\ Scala\ library\ origin\ %s\ is\ not\ scala-library-%s.jar\\\"\ %\ \(role\,\ libs\[\\\"scala-library\\\"\]\[\\\"origin\\\"\]\,\ scala_v\)\)\\n\ \ \ \ s3\ =\ libs\[\\\"scala3-library\\\"\]\\n\ \ \ \ if\ s3.get\(\\\"origin\\\"\)\ \!=\ job_jar\ or\ s3.get\(\\\"codeSourceSha256\\\"\)\ \!=\ job_sha:\\n\ \ \ \ \ \ \ \ fail\(\\\"%s\ scala3-library\ is\ not\ loaded\ from\ the\ packaged\ job\ jar\ with\ the\ approved\ sha256\\\"\ %\ role\)\\n\ \ \ \ parsed\[role\]\ =\ libs\\nbase\ =\ parsed\[\\\"driver\\\"\]\\nfor\ role\,\ libs\ in\ parsed.items\(\):\\n\ \ \ \ for\ component\ in\ need:\\n\ \ \ \ \ \ \ \ for\ field\ in\ \(\\\"origin\\\"\,\ \\\"classSha256\\\"\,\ \\\"codeSourceSha256\\\"\):\\n\ \ \ \ \ \ \ \ \ \ \ \ if\ libs\[component\].get\(field\)\ \!=\ base\[component\].get\(field\):\\n\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ fail\(\\\"%s\ differs\ between\ the\ driver\ and\ %s\ for\ %s\\\"\ %\ \(field\,\ role\,\ component\)\)\\nprint\(\\\"CLASS-ORIGIN-OK:\ the\ driver\ and\ %d\ executor\ report\(s\)\ agree\ on\ Spark\ %s\,\ Scala\ %s\ and\ the\ packaged\ job\ jar\\\"\ %\ \(len\(tasks\)\,\ spark_v\,\ scala_v\)\)\\nSCHOLARCHAIN_CLASS_ORIGIN_PY\\nHADOOP_MARKERS=\\\"\$\(find\ \\\"\$\{RUN_ROOT\}/hadoop\\\"\ -maxdepth\ 4\ -name\ _SCHOLARCHAIN_COMPLETE\ -print\)\\\"\\n\[\[\ \\\"\$\(printf\ \'%s\\\\n\'\ \\\"\$\{HADOOP_MARKERS\}\\\"\ \|\ grep\ -c\ .\)\\\"\ -eq\ 1\ \]\]\ \|\|\ die\ \\\"expected\ exactly\ one\ completed\ run\ under\ \$\{RUN_ROOT\}/hadoop\\\"\\nHADOOP_RUN=\\\"\$\(dirname\ \\\"\$\{HADOOP_MARKERS\}\\\"\)\\\"\\nER_RUN=\\\"\$\{RUN_ROOT\}/er/run\\\"\\n\[\[\ -d\ \\\"\$\{ER_RUN\}\\\"\ \]\]\ \|\|\ die\ \\\"no\ entity-resolution\ output\ at\ \$\{ER_RUN\}\\\"\\nSPARK_OUT=\\\"\$\{RUN_ROOT\}/spark\\\"\\n\[\[\ \!\ -e\ \\\"\$\{SPARK_OUT\}\\\"\ \]\]\ \|\|\ die\ \\\"\$\{SPARK_OUT\}\ already\ exists\\\"\\nmkdir\ -p\ \\\"\$\{SPARK_OUT\}\\\"\ \\\"\$\{RUN_ROOT\}/spark-checkpoint\\\"\ \\\"\$\{RUN_ROOT\}/config\\\"\ \\\"\$\{MNT\}/staging\\\"\\nWORK=\\\"\$\(mktemp\ -d\ \\\"\$\{TMPDIR:-/tmp\}/scholarchain-bounded.XXXXXX\\\"\)\\\"\\nlocalize\ s3://fixture-bucket/artifacts/spark-template.json\ \\\"\$\{WORK\}/spark-template.json\\\"\ 049518035b3aecaf92b5f177e267e5c541b81c6e909879b907c737cf46bcdcc4\\npython3\ -\ \\\"\$\{WORK\}/spark-template.json\\\"\ \\\"\$\{RUN_ROOT\}/config/spark-config.json\\\"\ \\\"\$\{HADOOP_RUN\}\\\"\ \\\"\$\{ER_RUN\}\\\"\ \\\"\$\{SPARK_OUT\}\\\"\ \\\"\$\{RUN_ROOT\}/spark-checkpoint\\\"\ \<\<\'SCHOLARCHAIN_RENDER_PY\'\\nimport\ json\\nimport\ sys\\n\\ntemplate\,\ out\,\ hadoop_run\,\ er_run\,\ output_root\,\ checkpoint\ =\ sys.argv\[1:7\]\\nwith\ open\(template\,\ encoding=\\\"utf-8\\\"\)\ as\ handle:\\n\ \ \ \ document\ =\ json.load\(handle\)\\nif\ not\ isinstance\(document\,\ dict\):\\n\ \ \ \ raise\ SystemExit\(\\\"spark\ config\ template\ must\ be\ a\ JSON\ object\\\"\)\\noverrides\ =\ \{\\n\ \ \ \ \\\"hadoopRunRoot\\\":\ hadoop_run\,\\n\ \ \ \ \\\"entityResolutionRunRoot\\\":\ er_run\,\\n\ \ \ \ \\\"outputRoot\\\":\ output_root\,\\n\ \ \ \ \\\"checkpointDirectory\\\":\ checkpoint\,\\n\}\\nfor\ key\ in\ overrides:\\n\ \ \ \ if\ key\ not\ in\ document:\\n\ \ \ \ \ \ \ \ raise\ SystemExit\(\\\"spark\ config\ template\ lacks\ the\ key\ %s\\\"\ %\ key\)\\ndocument.update\(overrides\)\\nwith\ open\(out\,\ \\\"x\\\"\,\ encoding=\\\"utf-8\\\"\)\ as\ handle:\\n\ \ \ \ json.dump\(document\,\ handle\,\ indent=2\,\ sort_keys=True\)\\n\ \ \ \ handle.write\(\\\"\\\\n\\\"\)\\nSCHOLARCHAIN_RENDER_PY\\nrun_bounded\ 2160\ \\\\\\n\\\"\$\{SPARK_HOME\}/bin/spark-submit\\\"\ --master\ yarn\ --deploy-mode\ cluster\ --name\ scholarchain-bounded-fixture-exp-a-20261106T071253Z-39407\ \\\\\\n\ \ --class\ edu.uic.cs441.scholarchain.spark.Phase6Main\ \\\\\\n\ \ --conf\ \\\"spark.yarn.tags=\$\{TAG\}\\\"\ \\\\\\n\ \ --conf\ \\\"spark.yarn.stagingDir=file://\$\{MNT\}/staging\\\"\ \\\\\\n\ \ --conf\ \\\"spark.yarn.appMasterEnv.JAVA_HOME=\$\{JAVA_HOME\}\\\"\ \\\\\\n\ \ --conf\ \\\"spark.executorEnv.JAVA_HOME=\$\{JAVA_HOME\}\\\"\ \\\\\\n\ \ --conf\ spark.dynamicAllocation.maxExecutors=4\ \\\\\\n\ \ --conf\ \'spark.yarn.jars=local:/opt/scholarchain-runtime/jars/\*\'\ \\\\\\n\ \ --conf\ spark.yarn.populateHadoopClasspath=false\ \\\\\\n\ \ --conf\ spark.hadoop.fs.defaultFS=file:///\ \\\\\\n\ \ --conf\ spark.hadoop.io.compression.codecs=org.apache.hadoop.io.compress.GzipCodec\,org.apache.hadoop.io.compress.DefaultCodec\,org.apache.hadoop.io.compress.BZip2Codec\,org.apache.hadoop.io.compress.SnappyCodec\ \\\\\\n\ \ --conf\ spark.authenticate=true\ \\\\\\n\ \ --conf\ spark.network.crypto.enabled=true\ \\\\\\n\ \ --conf\ spark.network.crypto.authEngineVersion=1\ \\\\\\n\ \ --conf\ spark.network.crypto.saslFallback=false\ \\\\\\n\ \ --conf\ spark.io.encryption.enabled=true\ \\\\\\n\ \ --conf\ spark.dynamicAllocation.enabled=true\ \\\\\\n\ \ --conf\ spark.dynamicAllocation.shuffleTracking.enabled=true\ \\\\\\n\ \ --conf\ spark.shuffle.service.enabled=false\ \\\\\\n\ \ --conf\ spark.dynamicAllocation.minExecutors=1\ \\\\\\n\ \ --conf\ spark.executor.cores=1\ \\\\\\n\ \ --conf\ spark.executor.memory=3g\ \\\\\\n\ \ --conf\ spark.driver.cores=1\ \\\\\\n\ \ --conf\ spark.driver.memory=3g\ \\\\\\n\ \ --conf\ spark.task.maxFailures=1\ \\\\\\n\ \ --conf\ spark.yarn.maxAppAttempts=1\ \\\\\\n\ \ --conf\ spark.ui.enabled=false\ \\\\\\n\ \ --conf\ spark.driver.extraJavaOptions=-Xlog:class+load=info\ \\\\\\n\ \ --conf\ spark.executor.extraJavaOptions=-Xlog:class+load=info\ \\\\\\n\ \ \\\"local:\$\{JOB_JAR\}\\\"\ \\\\\\n\ \ \\\"\$\{RUN_ROOT\}/config/spark-config.json\\\"\\n\"\]\}\}\] 
+pipeline| STEP: step-copy-out
+pipeline| STEP-TIMEOUT: copy-out 540s (the body runs under timeout; YARN applications are killed by tag when it fires)
+pipeline| STEP-BODY-BEGIN: copy-out
+pipeline| set -euo pipefail
+pipeline| STEP_NAME=copy-out
+pipeline| RUN_ID=fixture-exp-a-20261106T071253Z-39407
+pipeline| TAG=fixture-exp-a-20261106T071253Z-39407
+pipeline| MNT=/mnt/scholarchain
+pipeline| RUN_ROOT="${MNT}/runs/${RUN_ID}"
+pipeline| KILL_AFTER=60
+pipeline| log() { printf 'STEP-LOG %s: %s\n' "${STEP_NAME}" "$*"; }
+pipeline| die() { printf 'STEP-FAIL %s: %s\n' "${STEP_NAME}" "$*" >&2; exit 1; }
+pipeline| require_mount() { grep -q " ${MNT} " "${SC_PROC_MOUNTS:-/proc/mounts}" || die "${MNT} is not a mount point: refusing to use a local directory"; }
+pipeline| localize() {
+pipeline|   local src="$1" dest="$2" want="$3"
+pipeline|   case "${src}" in
+pipeline|     s3://*|s3a://*|s3n://*|hdfs://*) hadoop fs -copyToLocal "${src}" "${dest}" ;;
+pipeline|     *) if [[ -f "${src}" ]]; then cp -- "${src}" "${dest}"; else die "source is not a regular file: ${src}"; fi ;;
+pipeline|   esac
+pipeline|   printf '%s  %s\n' "${want}" "${dest}" | sha256sum -c --status - || die "sha256 mismatch for ${src}"
+pipeline| }
+pipeline| require_mount
+pipeline| PREFIX=s3://fixture-bucket/outputs/fixture-exp-a-20261106T071253Z-39407
+pipeline| REGION=us-east-2
+pipeline| MAX_BYTES=268435456
+pipeline| TOTAL=0
+pipeline| for part in hadoop er spark results config; do
+pipeline|   [[ -d "${RUN_ROOT}/${part}" ]] || continue
+pipeline|   SIZE="$(du -sk "${RUN_ROOT}/${part}" | awk '{print $1 * 1024}')"
+pipeline|   TOTAL=$((TOTAL + SIZE))
+pipeline| done
+pipeline| [[ "${TOTAL}" -le "${MAX_BYTES}" ]] || die "copy-out ${TOTAL} bytes exceeds the ${MAX_BYTES} byte ceiling"
+pipeline| MANIFEST="${RUN_ROOT}/copyout-manifest.sha256"
+pipeline| [[ ! -e "${MANIFEST}" ]] || die "${MANIFEST} already exists"
+pipeline| ( cd "${RUN_ROOT}" && find hadoop er spark results config -type f -print 2>/dev/null | LC_ALL=C sort | while IFS= read -r f; do
+pipeline|     printf '%s  %s\n' "$(sha256sum "${f}" | cut -d' ' -f1)" "${f}"
+pipeline|   done ) > "${MANIFEST}"
+pipeline| for part in hadoop er spark results config; do
+pipeline|   [[ -d "${RUN_ROOT}/${part}" ]] || continue
+pipeline|   aws s3 cp "${RUN_ROOT}/${part}/" "${PREFIX}/${part}/" --recursive --region "${REGION}" --only-show-errors
+pipeline| done
+pipeline| aws s3 cp "${MANIFEST}" "${PREFIX}/copyout-manifest.sha256" --region "${REGION}" --only-show-errors
+pipeline| log "copied ${TOTAL} bytes (hadoop, er, spark, results, config) to ${PREFIX}"
+pipeline| STEP-BODY-END: copy-out
+pipeline| DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws emr add-steps --region us-east-2 --cluster-id j-ABC123DEF456 --steps \[\{\"Name\":\"ScholarChain-fixture-exp-a-20261106T071253Z-39407-copy-out\"\,\"ActionOnFailure\":\"CONTINUE\"\,\"HadoopJarStep\":\{\"Jar\":\"command-runner.jar\"\,\"Args\":\[\"bash\"\,\"-c\"\,\"set\ -euo\ pipefail\\nSTEP_NAME=copy-out\\nRUN_ID=fixture-exp-a-20261106T071253Z-39407\\nTAG=fixture-exp-a-20261106T071253Z-39407\\nMNT=/mnt/scholarchain\\nRUN_ROOT=\\\"\$\{MNT\}/runs/\$\{RUN_ID\}\\\"\\nKILL_AFTER=60\\nlog\(\)\ \{\ printf\ \'STEP-LOG\ %s:\ %s\\\\n\'\ \\\"\$\{STEP_NAME\}\\\"\ \\\"\$\*\\\"\;\ \}\\ndie\(\)\ \{\ printf\ \'STEP-FAIL\ %s:\ %s\\\\n\'\ \\\"\$\{STEP_NAME\}\\\"\ \\\"\$\*\\\"\ \>\&2\;\ exit\ 1\;\ \}\\nrequire_mount\(\)\ \{\ grep\ -q\ \\\"\ \$\{MNT\}\ \\\"\ \\\"\$\{SC_PROC_MOUNTS:-/proc/mounts\}\\\"\ \|\|\ die\ \\\"\$\{MNT\}\ is\ not\ a\ mount\ point:\ refusing\ to\ use\ a\ local\ directory\\\"\;\ \}\\nlocalize\(\)\ \{\\n\ \ local\ src=\\\"\$1\\\"\ dest=\\\"\$2\\\"\ want=\\\"\$3\\\"\\n\ \ case\ \\\"\$\{src\}\\\"\ in\\n\ \ \ \ s3://\*\|s3a://\*\|s3n://\*\|hdfs://\*\)\ hadoop\ fs\ -copyToLocal\ \\\"\$\{src\}\\\"\ \\\"\$\{dest\}\\\"\ \;\;\\n\ \ \ \ \*\)\ if\ \[\[\ -f\ \\\"\$\{src\}\\\"\ \]\]\;\ then\ cp\ --\ \\\"\$\{src\}\\\"\ \\\"\$\{dest\}\\\"\;\ else\ die\ \\\"source\ is\ not\ a\ regular\ file:\ \$\{src\}\\\"\;\ fi\ \;\;\\n\ \ esac\\n\ \ printf\ \'%s\ \ %s\\\\n\'\ \\\"\$\{want\}\\\"\ \\\"\$\{dest\}\\\"\ \|\ sha256sum\ -c\ --status\ -\ \|\|\ die\ \\\"sha256\ mismatch\ for\ \$\{src\}\\\"\\n\}\\nrequire_mount\\nPREFIX=s3://fixture-bucket/outputs/fixture-exp-a-20261106T071253Z-39407\\nREGION=us-east-2\\nMAX_BYTES=268435456\\nTOTAL=0\\nfor\ part\ in\ hadoop\ er\ spark\ results\ config\;\ do\\n\ \ \[\[\ -d\ \\\"\$\{RUN_ROOT\}/\$\{part\}\\\"\ \]\]\ \|\|\ continue\\n\ \ SIZE=\\\"\$\(du\ -sk\ \\\"\$\{RUN_ROOT\}/\$\{part\}\\\"\ \|\ awk\ \'\{print\ \$1\ \*\ 1024\}\'\)\\\"\\n\ \ TOTAL=\$\(\(TOTAL\ +\ SIZE\)\)\\ndone\\n\[\[\ \\\"\$\{TOTAL\}\\\"\ -le\ \\\"\$\{MAX_BYTES\}\\\"\ \]\]\ \|\|\ die\ \\\"copy-out\ \$\{TOTAL\}\ bytes\ exceeds\ the\ \$\{MAX_BYTES\}\ byte\ ceiling\\\"\\nMANIFEST=\\\"\$\{RUN_ROOT\}/copyout-manifest.sha256\\\"\\n\[\[\ \!\ -e\ \\\"\$\{MANIFEST\}\\\"\ \]\]\ \|\|\ die\ \\\"\$\{MANIFEST\}\ already\ exists\\\"\\n\(\ cd\ \\\"\$\{RUN_ROOT\}\\\"\ \&\&\ find\ hadoop\ er\ spark\ results\ config\ -type\ f\ -print\ 2\>/dev/null\ \|\ LC_ALL=C\ sort\ \|\ while\ IFS=\ read\ -r\ f\;\ do\\n\ \ \ \ printf\ \'%s\ \ %s\\\\n\'\ \\\"\$\(sha256sum\ \\\"\$\{f\}\\\"\ \|\ cut\ -d\'\ \'\ -f1\)\\\"\ \\\"\$\{f\}\\\"\\n\ \ done\ \)\ \>\ \\\"\$\{MANIFEST\}\\\"\\nfor\ part\ in\ hadoop\ er\ spark\ results\ config\;\ do\\n\ \ \[\[\ -d\ \\\"\$\{RUN_ROOT\}/\$\{part\}\\\"\ \]\]\ \|\|\ continue\\n\ \ aws\ s3\ cp\ \\\"\$\{RUN_ROOT\}/\$\{part\}/\\\"\ \\\"\$\{PREFIX\}/\$\{part\}/\\\"\ --recursive\ --region\ \\\"\$\{REGION\}\\\"\ --only-show-errors\\ndone\\naws\ s3\ cp\ \\\"\$\{MANIFEST\}\\\"\ \\\"\$\{PREFIX\}/copyout-manifest.sha256\\\"\ --region\ \\\"\$\{REGION\}\\\"\ --only-show-errors\\nlog\ \\\"copied\ \$\{TOTAL\}\ bytes\ \(hadoop\,\ er\,\ spark\,\ results\,\ config\)\ to\ \$\{PREFIX\}\\\"\\n\"\]\}\}\] 
+pipeline| STEP: dry-run-complete
+pipeline| RESULT: DRY-RUN run=fixture-exp-a-20261106T071253Z-39407 steps=6 run_config_sha256=0f3d2b49fc459f869907564a302edf6cb680031a1efdb1881f88557dac67106a estimate_usd=1.08; no aws, hadoop or spark command was run and nothing was written
+RESULT: DRY-RUN experiment=fixture-exp-a manifest_sha256=76e9510385294c39aa68264350d630f14a4986b7ef1f28799d0d7b38fa63367a; the delegated pipeline dry run ran no aws, hadoop or spark command and nothing was written
+----- stderr

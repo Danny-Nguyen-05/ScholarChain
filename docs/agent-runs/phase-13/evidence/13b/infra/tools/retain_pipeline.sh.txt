@@ -1,0 +1,49 @@
+#!/usr/bin/env bash
+# Retained dry runs and refusals of run-bounded-pipeline.sh in the REAL repository (reads only; a guard `aws` on PATH proves no call).
+set -uo pipefail
+REAL=/Users/danny/Documents/UIC/CS441/ScholarChain
+S=/private/tmp/claude-501/-Users-danny-Documents-UIC-CS441-ScholarChain/a33708d1-0340-4fdc-adea-063ab78a782e/scratchpad/13b-infra
+F=$S/fixtures
+GUARD=$S/guard-bin
+mkdir -p "$GUARD"
+cat >"$GUARD/aws" <<EOF
+#!/bin/bash
+echo "GUARD aws called: \$*" >> "$S/guard-aws-calls.log"
+exit 99
+EOF
+cp "$GUARD/aws" "$GUARD/hadoop"; cp "$GUARD/aws" "$GUARD/yarn"; cp "$GUARD/aws" "$GUARD/spark-submit"; cp "$GUARD/aws" "$GUARD/terraform"
+chmod +x "$GUARD"/*
+: >"$S/guard-aws-calls.log"
+sha() { printf '%s' "$1" | shasum -a 256 | awk '{print $1}'; }
+BASE=(--cluster-id j-ABC123DEF456 --region us-east-2 --instance-type m5.xlarge --core-count 1 --max-task-count 1 --max-runtime-minutes 90 --budget-usd 2.50
+  --input-prefix s3://example-bucket/inputs --output-prefix s3://example-bucket/outputs
+  --hadoop-submit-jar s3://example-bucket/art/hadoop-submit.jar --hadoop-libjars s3://example-bucket/art/hadoop-bundle.jar
+  --hadoop-config "$F/prep-config.json" --er-jar /opt/art/er.jar --er-policy "$F/er-policy.json" --er-config "$F/er-config.json"
+  --spark-config-template "$F/spark-template.json" --datasets-manifest "$F/datasets.json"
+  --artifact-sha256 "hadoop-submit-jar=$(sha a)" --artifact-sha256 "hadoop-libjars=$(sha b)" --artifact-sha256 "er-jar=$(sha c)" --artifact-sha256 "job-jar=$(sha job)")
+run() { # label args...
+  local label="$1"; shift
+  local out="$S/$label.txt"
+  env -i PATH="$GUARD:/usr/bin:/bin:/opt/homebrew/bin" HOME="$HOME" LC_ALL=C bash "$REAL/scripts/run-bounded-pipeline.sh" "$@" >"$out.stdout" 2>"$out.stderr"
+  local rc=$?
+  { echo "\$ scripts/run-bounded-pipeline.sh $*" | sed "s#$F#<fixtures>#g"; echo "exit=$rc"; echo "----- stdout"; cat "$out.stdout"; echo "----- stderr"; cat "$out.stderr"; } | sed "s#$F#<fixtures>#g" >"$out"
+  rm -f "$out.stdout" "$out.stderr"
+  echo "$label exit=$rc"
+}
+run pipeline-dry-run-full "${BASE[@]}" --run-id bp-dryrun-13b-001
+# refusals (all before any cloud call)
+run pipeline-refused-capacity "${BASE[@]}" --core-count 3 --max-task-count 2 --budget-usd 3 --run-id bp-dryrun-13b-002
+run pipeline-refused-g6-cap "${BASE[@]}" --instance-type m5.2xlarge --core-count 3 --max-task-count 0 --max-runtime-minutes 180 --budget-usd 3 --run-id bp-dryrun-13b-003
+run pipeline-refused-budget "${BASE[@]}" --budget-usd 0.50 --run-id bp-dryrun-13b-004
+cp "$F/prep-config.json" "$S/prep-over.json"
+python3 - "$S/prep-over.json" <<'PY'
+import json, sys
+p = sys.argv[1]
+d = json.load(open(p)); d["reducerCount"] = 9; json.dump(d, open(p, "w"))
+PY
+OVER=("${BASE[@]}")
+for i in "${!OVER[@]}"; do if [[ "${OVER[$i]}" == "$F/prep-config.json" ]]; then OVER[$i]="$S/prep-over.json"; fi; done
+run pipeline-refused-ceiling "${OVER[@]}" --run-id bp-dryrun-13b-005
+# --execute with the committed (unconfirmed) pricing: refused by the G6 gate before any cloud call
+run pipeline-execute-refused-unconfirmed-pricing "${BASE[@]}" --profile approved-profile --execute --run-id bp-dryrun-13b-006
+echo "guard calls: $(wc -l <"$S/guard-aws-calls.log" | tr -d ' ')"

@@ -145,7 +145,7 @@ run "neptune_native_errors_when_enabled" {
 run "emr_service_role_owns_ebs_key_permissions" {
   command = plan
   variables {
-    emr_config              = { enabled = true, release_label = "emr-7.8.0", runtime_reference = "SYNTHETIC-NOT-LIVE-RUNTIME-PROOF", runtime_verified = true, bootstrap_uri = "s3://synthetic-artifacts/bootstrap/spark-213.sh", tls_certificate_uri = "s3://synthetic-artifacts/tls/synthetic.zip" }
+    emr_config              = { enabled = true, runtime_reference = "SYNTHETIC-NOT-LIVE-RUNTIME-PROOF", runtime_verified = true, bootstrap_uri = "s3://scholarchain-course-111122223333-artifacts/bootstrap/bootstrap.sh", bootstrap_sha256 = "1111111111111111111111111111111111111111111111111111111111111111", runtime_archive_uri = "s3://scholarchain-course-111122223333-artifacts/runtime/scholarchain-runtime.tgz", job_jar_uri = "s3://scholarchain-course-111122223333-artifacts/jobs/scholarchain-job.jar", job_jar_sha256 = "2222222222222222222222222222222222222222222222222222222222222222", extra_artifacts = [for n, s in jsondecode(file("emr-step-programs.json")).programs : { uri = "s3://scholarchain-course-111122223333-artifacts/steps/${n}", sha256 = s, dest = "/opt/scholarchain-spike/bin/${n}" }] }
     emr_service_policy_json = "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Effect\":\"Allow\",\"Action\":[\"ec2:DescribeInstances\"],\"Resource\":[\"*\"]}]}"
   }
   override_resource {

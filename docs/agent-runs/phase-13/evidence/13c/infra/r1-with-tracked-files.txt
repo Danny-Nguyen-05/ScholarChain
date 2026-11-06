@@ -1,0 +1,4 @@
+test_terraform_r1.py rerun with `git add -N` on the two new Terraform files (reverted with `git reset` afterwards):
+Ran 10 tests in 23.563s  OK   SUITE-SUMMARY ran=10 executed=10 skipped_tests=0 skipped_classes=0 failures=0 errors=0
+The 7 failures in final-scripts-tests.txt (RouteOwnershipTest) come only from the fixture being built from `git ls-files` while
+infra/terraform/modules/emr/efs.tf was still untracked ("Reference to undeclared resource aws_efs_file_system.staging").

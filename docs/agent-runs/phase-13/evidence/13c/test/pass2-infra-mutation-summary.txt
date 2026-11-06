@@ -1,0 +1,53 @@
+infra scratch-copy mutations recorded: 52 | all caught by new suite: True
+deployer:boundary_emr_tag_false                      by=['item17_boundary_stack_tag', 'tag_condition_values'] existing_tf_test_caught=True
+deployer:create_key_condition_stripped               by=['request_tag_only_actions', 'wildcard_resource_allows_are_conditioned'] existing_tf_test_caught=True
+deployer:create_key_request_tag_dropped              by=['request_tag_only_actions'] existing_tf_test_caught=False
+deployer:create_role_prefix_wildcard                 by=['item16_role_creation_and_trust'] existing_tf_test_caught=True
+deployer:create_role_without_boundary                by=['item16_role_creation_and_trust'] existing_tf_test_caught=True
+deployer:delete_tags_without_stack_tag               by=['item17_boundary_stack_tag'] existing_tf_test_caught=True
+deployer:emr_request_tag_value_false                 by=['request_tag_only_actions', 'tag_condition_values'] existing_tf_test_caught=True
+deployer:emr_resource_tag_value_false                by=['item17_boundary_stack_tag', 'tag_condition_values'] existing_tf_test_caught=True
+deployer:eni_wildcard_region_arn                     by=['item2_eni_region_scope'] existing_tf_test_caught=True
+deployer:eni_without_region_condition                by=['item2_eni_region_scope'] existing_tf_test_caught=True
+deployer:kms_tag_keys_widened                        by=['item14_kms_tag_resource'] existing_tf_test_caught=True
+deployer:kms_tag_resource_no_stack_tag               by=['item14_kms_tag_resource'] existing_tf_test_caught=True
+deployer:kms_tag_resource_unrestricted_keys          by=['item14_kms_tag_resource'] existing_tf_test_caught=True
+deployer:launch_template_delete_emr_tag_only         by=['item17_boundary_stack_tag'] existing_tf_test_caught=True
+deployer:login_retargeted_to_billing_role            by=['login_attachment'] existing_tf_test_caught=False
+deployer:login_retargeted_to_second_role             by=['attachments_target_deployer_role', 'login_attachment'] existing_tf_test_caught=False
+deployer:run_job_flow_emr_tag_dropped                by=['request_tag_only_actions'] existing_tf_test_caught=True
+deployer:stack_tag_value_changed                     by=['item14_kms_tag_resource', 'item16_role_creation_and_trust', 'item17_boundary_stack_tag', 'request_tag_only_actions', 'tag_condition_values'] existing_tf_test_caught=True
+deployer:update_assume_role_policy_allowed           by=['item16_role_creation_and_trust'] existing_tf_test_caught=True
+deployer:update_assume_role_policy_not_denied        by=['item16_role_creation_and_trust'] existing_tf_test_caught=True
+deployer:v2_manage_without_stack_tag                 by=['item17_boundary_stack_tag'] existing_tf_test_caught=True
+emrmodule:applications_hadoop_spark                  by=['cluster_decision_12_10'] existing_tf_test_caught=None
+emrmodule:at_rest_off                                by=['security_configuration'] existing_tf_test_caught=None
+emrmodule:auto_termination_unconditioned             by=['node_policy'] existing_tf_test_caught=None
+emrmodule:efs_rule_cidr_source                       by=['efs_nfs_from_emr_only'] existing_tf_test_caught=None
+emrmodule:efs_world_rule                             by=['efs_nfs_from_emr_only', 'inventory'] existing_tf_test_caught=None
+emrmodule:g3_defaults_on                             by=['g3_defaults', 'inventory'] existing_tf_test_caught=None
+emrmodule:in_transit_on                              by=['security_configuration'] existing_tf_test_caught=None
+emrmodule:primary_iops_removed                       by=['ebs_pinned'] existing_tf_test_caught=None
+emrmodule:runtime_hash_pin_changed                   by=['bootstrap_arguments'] existing_tf_test_caught=None
+emrmodule:shuffle_tracking_off                       by=validation: Decision 12-10 requires existing_tf_test_caught=None
+emrmodule:spark_memory_changed                       by=['spark_settings_equal_conf'] existing_tf_test_caught=None
+emrmodule:stack_tag_removed                          by=['stack_tag'] existing_tf_test_caught=None
+spike:cluster_stack_tag_override                     by=['tags_all'] existing_tf_test_caught=False
+spike:create_grant_condition_false                   by=['item5_service_role_create_grant'] existing_tf_test_caught=True
+spike:create_grant_unconditioned                     by=['item5_service_role_create_grant'] existing_tf_test_caught=True
+spike:create_grant_without_condition                 by=['item5_service_role_create_grant'] existing_tf_test_caught=True
+spike:default_sg_readded                             by=['default_security_group_absent', 'forbidden_families', 'inventory'] existing_tf_test_caught=False
+spike:default_tag_expiration_dropped                 by=['tags_all'] existing_tf_test_caught=True
+spike:get_object_bucket_wide                         by=['instance_policy_exact', 's3_get_object_scope'] existing_tf_test_caught=False
+spike:get_object_wildcard_action                     by=['instance_policy_exact'] existing_tf_test_caught=True
+spike:gp3_iops_changed                               by=['ebs_pinned'] existing_tf_test_caught=False
+spike:gp3_unpinned                                   by=['ebs_pinned'] existing_tf_test_caught=False
+spike:iam_role_owner_override                        by=['tags_all'] existing_tf_test_caught=False
+spike:instance_role_create_grant                     by=['item5_service_role_create_grant'] existing_tf_test_caught=True
+spike:instance_trust_account_principal               by=['item16_trust_service_principals_only'] existing_tf_test_caught=True
+spike:second_kms_key                                 by=['inventory', 'single_kms_key'] existing_tf_test_caught=False
+spike:service_trust_extra_service                    by=['item16_trust_service_principals_only'] existing_tf_test_caught=True
+spike:sns_sqs_added                                  by=['forbidden_families', 'inventory'] existing_tf_test_caught=False
+spike:ssh_from_world_rule                            by=['inventory', 'security_group_rules'] existing_tf_test_caught=False
+spike:ssh_inline_ingress_block                       by=['security_group_rules'] existing_tf_test_caught=False
+spike:ssh_legacy_rule                                by=['forbidden_families', 'inventory', 'security_group_rules'] existing_tf_test_caught=False

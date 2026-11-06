@@ -1,0 +1,443 @@
+# Evidence excerpt (renamed from packageRelease-jdk17-final.log because *.log is git-ignored; N2). Command (build-engineer, 2026-11-05):
+# JDK 17 env: sbt -batch core/clean hadoop/clean sparkAnalytics/clean services/clean rag/clean storage/clean packageRelease   # observed exit 0
+
+[info] welcome to sbt 1.10.7 (Homebrew Java 17.0.20.1)
+[info] loading settings for project scholarchain-build from plugins.sbt...
+[info] loading project definition from /Users/danny/Documents/UIC/CS441/ScholarChain/project
+[info] compiling 8 Scala sources to /Users/danny/Documents/UIC/CS441/ScholarChain/project/target/scala-2.12/sbt-1.0/classes ...
+[info] done compiling
+[info] loading settings for project root from build.sbt...
+[info] set current project to root (in build file:/Users/danny/Documents/UIC/CS441/ScholarChain/)
+[success] Total time: 0 s, completed Nov 5, 2026, 11:07:25 AM
+[success] Total time: 0 s, completed Nov 5, 2026, 11:07:25 AM
+[success] Total time: 0 s, completed Nov 5, 2026, 11:07:25 AM
+[success] Total time: 0 s, completed Nov 5, 2026, 11:07:25 AM
+[success] Total time: 0 s, completed Nov 5, 2026, 11:07:25 AM
+[success] Total time: 0 s, completed Nov 5, 2026, 11:07:25 AM
+[success] Total time: 0 s, completed Nov 5, 2026, 11:07:26 AM
+[info] compiling 26 Scala sources to /Users/danny/Documents/UIC/CS441/ScholarChain/modules/core/target/scala-3.3.4/classes ...
+[info] done compiling
+[info] compiling 9 Scala sources to /Users/danny/Documents/UIC/CS441/ScholarChain/modules/hadoop/target/scala-3.3.4/classes ...
+[warn] -- Deprecation Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/hadoop/src/main/scala/edu/uic/cs441/scholarchain/hadoop/HadoopIO.scala:84:9 
+[warn] 84 |      fs.isFile(path)
+[warn]    |      ^^^^^^^^^
+[warn]    |method isFile in class FileSystem is deprecated: see corresponding Javadoc for more information.
+[warn] -- [E194] Potential Issue Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/hadoop/src/main/scala/edu/uic/cs441/scholarchain/hadoop/JsonSources.scala:1510:8 
+[warn] 1510 |    def objOpt: Option[ujson.Obj] = value match {
+[warn]      |        ^
+[warn]      |Extension method objOpt will never be selected
+[warn]      |because Value already has a member with the same name and compatible parameter types.
+[warn]      |
+[warn]      | longer explanation available when compiling with `-explain`
+[warn] -- [E194] Potential Issue Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/hadoop/src/main/scala/edu/uic/cs441/scholarchain/hadoop/JsonSources.scala:1514:8 
+[warn] 1514 |    def arrOpt: Option[ujson.Arr] = value match {
+[warn]      |        ^
+[warn]      |Extension method arrOpt will never be selected
+[warn]      |because Value already has a member with the same name and compatible parameter types.
+[warn]      |
+[warn]      | longer explanation available when compiling with `-explain`
+[warn] -- [E194] Potential Issue Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/hadoop/src/main/scala/edu/uic/cs441/scholarchain/hadoop/JsonSources.scala:1518:8 
+[warn] 1518 |    def strOpt: Option[String] = value match {
+[warn]      |        ^
+[warn]      |Extension method strOpt will never be selected
+[warn]      |because Value already has a member with the same name and compatible parameter types.
+[warn]      |
+[warn]      | longer explanation available when compiling with `-explain`
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/hadoop/src/main/scala/edu/uic/cs441/scholarchain/hadoop/JsonSources.scala:112:6 
+[warn] 112 |      return Vector(malformed(locator, snapshot, runId, RejectReasonCode.MalformedRecord, "object"))
+[warn]     |      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[warn]     |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/hadoop/src/main/scala/edu/uic/cs441/scholarchain/hadoop/JsonSources.scala:237:8 
+[warn] 237 |        return Vector(
+[warn]     |        ^
+[warn]     |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] 238 |          fieldReject(
+[warn] 239 |            SourceType.OpenAlex,
+[warn] 240 |            locator,
+[warn] 241 |            snapshot,
+[warn] 242 |            runId,
+[warn] 243 |            RejectReasonCode.MissingRequiredField,
+[warn] 244 |            "author"
+[warn] 245 |          )
+[warn] 246 |        )
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/hadoop/src/main/scala/edu/uic/cs441/scholarchain/hadoop/JsonSources.scala:251:8 
+[warn] 251 |        return Vector(
+[warn]     |        ^
+[warn]     |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] 252 |          fieldReject(
+[warn] 253 |            SourceType.OpenAlex,
+[warn] 254 |            locator,
+[warn] 255 |            snapshot,
+[warn] 256 |            runId,
+[warn] 257 |            RejectReasonCode.InvalidIdentifier,
+[warn] 258 |            orcidRaw.get
+[warn] 259 |          )
+[warn] 260 |        )
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/hadoop/src/main/scala/edu/uic/cs441/scholarchain/hadoop/JsonSources.scala:264:8 
+[warn] 264 |        return Vector(
+[warn]     |        ^
+[warn]     |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] 265 |          fieldReject(
+[warn] 266 |            SourceType.OpenAlex,
+[warn] 267 |            locator,
+[warn] 268 |            snapshot,
+[warn] 269 |            runId,
+[warn] 270 |            RejectReasonCode.InvalidIdentifier,
+[warn] 271 |            authorIdRaw.get
+[warn] 272 |          )
+[warn] 273 |        )
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/hadoop/src/main/scala/edu/uic/cs441/scholarchain/hadoop/JsonSources.scala:497:6 
+[warn] 497 |      return Vector(malformed(locator, snapshot, runId, RejectReasonCode.MalformedRecord, "object"))
+[warn]     |      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[warn]     |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/hadoop/src/main/scala/edu/uic/cs441/scholarchain/hadoop/JsonSources.scala:555:8 
+[warn] 555 |        return Vector(
+[warn]     |        ^
+[warn]     |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] 556 |          fieldReject(
+[warn] 557 |            SourceType.Crossref,
+[warn] 558 |            locator,
+[warn] 559 |            snapshot,
+[warn] 560 |            runId,
+[warn] 561 |            RejectReasonCode.MissingRequiredField,
+[warn] 562 |            "author"
+[warn] 563 |          )
+[warn] 564 |        )
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/hadoop/src/main/scala/edu/uic/cs441/scholarchain/hadoop/JsonSources.scala:569:8 
+[warn] 569 |        return Vector(
+[warn]     |        ^
+[warn]     |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] 570 |          fieldReject(
+[warn] 571 |            SourceType.Crossref,
+[warn] 572 |            locator,
+[warn] 573 |            snapshot,
+[warn] 574 |            runId,
+[warn] 575 |            RejectReasonCode.InvalidIdentifier,
+[warn] 576 |            orcidRaw.getOrElse("")
+[warn] 577 |          )
+[warn] 578 |        )
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/hadoop/src/main/scala/edu/uic/cs441/scholarchain/hadoop/JsonSources.scala:599:29 
+[warn] 599 |        case Left(reject) => return Vector(reject)
+[warn]     |                             ^^^^^^^^^^^^^^^^^^^^^
+[warn]     |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/hadoop/src/main/scala/edu/uic/cs441/scholarchain/hadoop/JsonSources.scala:768:8 
+[warn] 768 |        return Left(
+[warn]     |        ^
+[warn]     |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] 769 |          fieldReject(
+[warn] 770 |            SourceType.Crossref,
+[warn] 771 |            provenance.sourceRecordId,
+[warn] 772 |            snapshot,
+[warn] 773 |            provenance.runId,
+[warn] 774 |            RejectReasonCode.SchemaFailure,
+[warn] 775 |            MentionAffiliation.rejectedOrganizationName
+[warn] 776 |          )
+[warn] 777 |        )
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/hadoop/src/main/scala/edu/uic/cs441/scholarchain/hadoop/JsonSources.scala:783:8 
+[warn] 783 |        return Left(
+[warn]     |        ^
+[warn]     |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] 784 |          fieldReject(
+[warn] 785 |            SourceType.Crossref,
+[warn] 786 |            provenance.sourceRecordId,
+[warn] 787 |            snapshot,
+[warn] 788 |            provenance.runId,
+[warn] 789 |            RejectReasonCode.InvalidIdentifier,
+[warn] 790 |            rorRaw.orElse(ringRaw).getOrElse("affiliation")
+[warn] 791 |          )
+[warn] 792 |        )
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/hadoop/src/main/scala/edu/uic/cs441/scholarchain/hadoop/JsonSources.scala:834:6 
+[warn] 834 |      return Vector(malformed(locator, snapshot, runId, RejectReasonCode.MalformedRecord, "object"))
+[warn]     |      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[warn]     |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/hadoop/src/main/scala/edu/uic/cs441/scholarchain/hadoop/JsonSources.scala:1009:12 
+[warn] 1009 |            return Some(
+[warn]      |            ^
+[warn]      |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] 1010 |              Left(
+[warn] 1011 |                fieldReject(
+[warn] 1012 |                  SourceType.Orcid,
+[warn] 1013 |                  sourceRecordId,
+[warn] 1014 |                  snapshot,
+[warn] 1015 |                  runId,
+[warn] 1016 |                  RejectReasonCode.InvalidIdentifier,
+[warn] 1017 |                  "doi"
+[warn] 1018 |                )
+[warn] 1019 |              )
+[warn] 1020 |            )
+[warn] 16 warnings found
+[info] done compiling
+[info] 24 file(s) merged using strategy 'Discard' (Run the task at debug level to see the details)
+[info] Built: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/hadoop/target/scala-3.3.4/hadoop-dependency-bundle_3-0.1.0-SNAPSHOT.jar
+[info] Jar hash: 76f5dd8a209b39d0034c52d65b8788558f59d930
+[info] Merged core module JAR into dependency bundle: core_3-0.1.0-SNAPSHOT.jar
+[info] Verified non-Hadoop dependency bundle: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/hadoop/target/scala-3.3.4/hadoop-dependency-bundle_3-0.1.0-SNAPSHOT.jar
+[info] Verified Hadoop submit JAR: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/hadoop/target/scala-3.3.4/hadoop-submit_3-0.1.0-SNAPSHOT.jar
+[info] RunJar lib entry: lib/hadoop-dependency-bundle_3-0.1.0-SNAPSHOT.jar
+[success] Total time: 17 s, completed Nov 5, 2026, 11:07:42 AM
+[info] Assembly jar up to date: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/hadoop/target/scala-3.3.4/hadoop-dependency-bundle_3-0.1.0-SNAPSHOT.jar
+[info] Merged core module JAR into dependency bundle: core_3-0.1.0-SNAPSHOT.jar
+[info] Verified non-Hadoop dependency bundle: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/hadoop/target/scala-3.3.4/hadoop-dependency-bundle_3-0.1.0-SNAPSHOT.jar
+[success] Total time: 1 s, completed Nov 5, 2026, 11:07:43 AM
+[info] compiling 14 Scala sources to /Users/danny/Documents/UIC/CS441/ScholarChain/modules/spark/target/scala-3.3.4/classes ...
+[info] done compiling
+[warn] multiple main classes detected: run 'show discoveredMainClasses' to see the list
+[info] 13 file(s) merged using strategy 'Discard' (Run the task at debug level to see the details)
+[info] Built: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/spark/target/scala-3.3.4/spark-dependency-bundle_3-0.1.0-SNAPSHOT.jar
+[info] Jar hash: f521e8f167cd6e1a5306fea1c278a187d01596f2
+[info] Verified Spark job JAR: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/spark/target/spark-job_3-0.1.0-SNAPSHOT.jar
+[success] Total time: 3 s, completed Nov 5, 2026, 11:07:46 AM
+[info] compiling 30 Scala sources to /Users/danny/Documents/UIC/CS441/ScholarChain/modules/storage/target/scala-3.3.4/classes ...
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/DynamoStorage.scala:200:26 
+[warn] 200 |          case None    => return RowCodec.map(responseResult)(_ => Rejected("batch-unavailable"))
+[warn]     |                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[warn]     |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/DynamoStorage.scala:208:30 
+[warn] 208 |          case Rejected(c) => return Rejected(c)
+[warn]     |                              ^^^^^^^^^^^^^^^^^^
+[warn]     |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/DynamoStorage.scala:209:30 
+[warn] 209 |          case _           => return Rejected("batch-decode-failed")
+[warn]     |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[warn]     |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/DynamoStorage.scala:226:50 
+[warn] 226 |              Thread.currentThread().interrupt(); return Rejected("interrupted")
+[warn]     |                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[warn]     |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/DynamoStorage.scala:230:28 
+[warn] 230 |      if (pending.nonEmpty) return Retried(retried, Rejected("unprocessed-keys-exhausted"))
+[warn]     |                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[warn]     |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/InMemoryStorage.scala:78:40 
+[warn] 78 |      if (!StorageResult.successful(r)) return r match {
+[warn]    |                                        ^
+[warn]    |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] 79 |        case Rejected(c) => Rejected(c); case _ => Rejected("object-upload-failed")
+[warn] 80 |      }
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/IndexedEvidenceBundleStore.scala:81:10 
+[warn] 81 |          return Rejected("evidence-item-id-conflict")
+[warn]    |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[warn]    |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/IndexedEvidenceBundleStore.scala:82:31 
+[warn] 82 |        case Rejected(code) => return Rejected(code)
+[warn]    |                               ^^^^^^^^^^^^^^^^^^^^^
+[warn]    |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/IndexedEvidenceBundleStore.scala:83:31 
+[warn] 83 |        case _              => return Rejected("evidence-item-index-unavailable")
+[warn]    |                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[warn]    |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/IndexedEvidenceBundleStore.scala:93:44 
+[warn] 93 |          if (bytes.size > maxPointerBytes) return Rejected("evidence-item-pointer-bound")
+[warn]    |                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[warn]    |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/IndexedEvidenceBundleStore.scala:98:14 
+[warn] 98 |              return Rejected("evidence-item-index-write-failed")
+[warn]    |              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[warn]    |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/IndexedEvidenceBundleStore.scala:101:18 
+[warn] 101 |        case _ => return Rejected("evidence-item-id-conflict")
+[warn]     |                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[warn]     |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/NeptuneGraphLoader.scala:119:19 
+[warn] 119 |        .getOrElse(return fail("loader-job-registry-unavailable"))
+[warn]     |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[warn]     |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/NeptuneGraphLoader.scala:142:58 
+[warn] 142 |        val id = StorageResult.value(submitted).getOrElse(return fail("neptune-submit-failed"))
+[warn]     |                                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[warn]     |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/NeptuneGraphLoader.scala:144:10 
+[warn] 144 |          return fail("loader-job-registry-failed")
+[warn]     |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[warn]     |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/RuntimeAuditStore.scala:141:59 
+[warn] 141 |      if (RuntimeAuditValidation.check(envelope).nonEmpty) return Rejected("invalid-audit-envelope")
+[warn]     |                                                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[warn]     |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/RuntimeAuditStore.scala:143:45 
+[warn] 143 |      if (bytes.size > config.maxAuditBytes) return Rejected("audit-envelope-byte-bound")
+[warn]     |                                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[warn]     |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/RuntimeAuditStore.scala:154:8 
+[warn] 154 |        return Rejected("audit-pointer-byte-bound")
+[warn]     |        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[warn]     |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/RuntimeAuditStore.scala:156:46 
+[warn] 156 |        case Found(old) if old == envelope => return Unchanged(envelope)
+[warn]     |                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^
+[warn]     |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/RuntimeAuditStore.scala:157:46 
+[warn] 157 |        case Found(_)                      => return Rejected("audit-query-content-conflict")
+[warn]     |                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[warn]     |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/RuntimeAuditStore.scala:159:46 
+[warn] 159 |        case _                             => return Rejected("audit-existing-record-unavailable")
+[warn]     |                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[warn]     |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/RuntimeAuditStore.scala:162:47 
+[warn] 162 |      if (!StorageResult.successful(uploaded)) return Rejected("audit-object-write-failed")
+[warn]     |                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[warn]     |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/RuntimeAuditStore.scala:164:8 
+[warn] 164 |        return Rejected("audit-object-write-verification-failed")
+[warn]     |        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[warn]     |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/RuntimeAuditStore.scala:168:47 
+[warn] 168 |        StorageResult.value(created).getOrElse(return Rejected("audit-session-create-failed"))
+[warn]     |                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[warn]     |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/RuntimeAuditStore.scala:169:45 
+[warn] 169 |      if (!owned(session, envelope.queryId)) return Rejected("audit-session-ownership-mismatch")
+[warn]     |                                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[warn]     |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/RuntimeAuditStore.scala:171:8 
+[warn] 171 |        return readSession(session, envelope.queryId) match {
+[warn]     |        ^
+[warn]     |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] 172 |          case Found(old) if old == envelope => Unchanged(envelope)
+[warn] 173 |          case Found(_)                      => Rejected("audit-query-content-conflict")
+[warn] 174 |          case _                             => Rejected("audit-session-publication-conflict")
+[warn] 175 |        }
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/S3VectorStore.scala:272:82 
+[warn] 272 |      StorageResult.value(result) match { case Some(v) => out ++= v; case None => return result }
+[warn]     |                                                                                  ^^^^^^^^^^^^^
+[warn]     |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/S3VectorStore.scala:323:34 
+[warn] 323 |          if (!seen.add(v.key())) return Rejected("duplicate-vector-result")
+[warn]     |                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[warn]     |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/storage/src/main/scala/edu/uic/cs441/scholarchain/storage/StorageRows.scala:275:44 
+[warn] 275 |          case Found(old) if old == next => return Unchanged(next)
+[warn]     |                                            ^^^^^^^^^^^^^^^^^^^^^^
+[warn]     |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] 29 warnings found
+[info] done compiling
+[info] compiling 23 Scala sources to /Users/danny/Documents/UIC/CS441/ScholarChain/modules/rag/target/scala-3.3.4/classes ...
+[warn] -- Deprecation Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/rag/src/main/scala/edu/uic/cs441/scholarchain/rag/LiveEmbeddingIngestMain.scala:255:7 
+[warn] 253 |    val overrideConfig = ClientOverrideConfiguration
+[warn] 254 |      .builder()
+[warn] 255 |      .retryPolicy(RetryPolicy.none())
+[warn]     |                         ^
+[warn]     |method retryPolicy in trait Builder is deprecated: see corresponding Javadoc for more information.
+[warn] -- Deprecation Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/rag/src/main/scala/edu/uic/cs441/scholarchain/rag/LiveEmbeddingSmokeMain.scala:230:7 
+[warn] 228 |    val overrides = ClientOverrideConfiguration
+[warn] 229 |      .builder()
+[warn] 230 |      .retryPolicy(RetryPolicy.none())
+[warn]     |                    ^
+[warn]     |method retryPolicy in trait Builder is deprecated: see corresponding Javadoc for more information.
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/rag/src/main/scala/edu/uic/cs441/scholarchain/rag/AnswerSynthesisAgent.scala:64:26 
+[warn] 64 |      if (remaining <= 0) return SynthesisResult.Abstained("synthesis-deadline", usage)
+[warn]    |                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[warn]    |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/rag/src/main/scala/edu/uic/cs441/scholarchain/rag/AnswerSynthesisAgent.scala:79:12 
+[warn] 79 |            return SynthesisResult.Failed("synthesis-interrupted")
+[warn]    |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[warn]    |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/rag/src/main/scala/edu/uic/cs441/scholarchain/rag/AnswerSynthesisAgent.scala:80:30 
+[warn] 80 |          case NonFatal(_) => return SynthesisResult.Failed("synthesis-client-failure")
+[warn]    |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[warn]    |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/rag/src/main/scala/edu/uic/cs441/scholarchain/rag/AnswerSynthesisAgent.scala:84:10 
+[warn] 84 |          return SynthesisResult.Abstained("synthesis-unavailable", usage)
+[warn]    |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[warn]    |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/rag/src/main/scala/edu/uic/cs441/scholarchain/rag/AnswerSynthesisAgent.scala:96:12 
+[warn] 96 |            return SynthesisResult.Abstained("synthesis-model-mismatch", usage)
+[warn]    |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[warn]    |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/rag/src/main/scala/edu/uic/cs441/scholarchain/rag/AnswerSynthesisAgent.scala:101:18 
+[warn] 101 |                  return SynthesisResult.Abstained("synthesis-deadline", usage)
+[warn]     |                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[warn]     |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/rag/src/main/scala/edu/uic/cs441/scholarchain/rag/AnswerSynthesisAgent.scala:102:16 
+[warn] 102 |                return SynthesisResult.Proposed(proposal)
+[warn]     |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[warn]     |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/rag/src/main/scala/edu/uic/cs441/scholarchain/rag/AnswerSynthesisAgent.scala:125:59 
+[warn] 125 |      if (RuntimeContractValidation.claim(typed).nonEmpty) return None
+[warn]     |                                                           ^^^^^^^^^^^
+[warn]     |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/rag/src/main/scala/edu/uic/cs441/scholarchain/rag/EvidenceBuilderAgent.scala:71:10 
+[warn] 71 |          return EvidenceBuildResult.Missing("essential-ranking-evidence-context-budget")
+[warn]    |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[warn]    |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/rag/src/main/scala/edu/uic/cs441/scholarchain/rag/ResearcherResolverAgent.scala:49:29 
+[warn] 49 |      plan.runtime.getOrElse(return ResolverResult.Failed("missing-runtime-query-options"))
+[warn]    |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[warn]    |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/rag/src/main/scala/edu/uic/cs441/scholarchain/rag/ResearcherResolverAgent.scala:56:8 
+[warn] 56 |        return ResolverResult.Failed("resolver-deadline")
+[warn]    |        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[warn]    |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/rag/src/main/scala/edu/uic/cs441/scholarchain/rag/ResearcherResolverAgent.scala:59:36 
+[warn] 59 |        catch { case NonFatal(_) => return ResolverResult.Failed("resolver-cache-failure") }
+[warn]    |                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[warn]    |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/rag/src/main/scala/edu/uic/cs441/scholarchain/rag/ResearcherResolverAgent.scala:61:8 
+[warn] 61 |        return ResolverResult.Failed("resolver-deadline")
+[warn]    |        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[warn]    |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/rag/src/main/scala/edu/uic/cs441/scholarchain/rag/ResearcherResolverAgent.scala:65:21 
+[warn] 65 |        case None => return ResolverResult.Failed("resolver-cache-unavailable")
+[warn]    |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[warn]    |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/rag/src/main/scala/edu/uic/cs441/scholarchain/rag/ResearcherResolverAgent.scala:78:8 
+[warn] 78 |        return ResolverResult.Failed("resolver-invalid-source-row")
+[warn]    |        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[warn]    |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/rag/src/main/scala/edu/uic/cs441/scholarchain/rag/ResearcherResolverAgent.scala:91:40 
+[warn] 91 |            catch { case NonFatal(_) => return ResolverResult.Failed("resolver-context-failure") }
+[warn]    |                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[warn]    |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/rag/src/main/scala/edu/uic/cs441/scholarchain/rag/ResearcherResolverAgent.scala:93:12 
+[warn] 93 |            return ResolverResult.Failed("resolver-deadline")
+[warn]    |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[warn]    |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/rag/src/main/scala/edu/uic/cs441/scholarchain/rag/ResearcherResolverAgent.scala:110:22 
+[warn] 110 |            case _ => return ResolverResult.Failed("resolver-context-unavailable")
+[warn]     |                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[warn]     |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/rag/src/main/scala/edu/uic/cs441/scholarchain/rag/ResearcherResolverAgent.scala:143:10 
+[warn] 143 |          return ResolverResult.Failed("resolver-invalid-candidate-summary")
+[warn]     |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[warn]     |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/rag/src/main/scala/edu/uic/cs441/scholarchain/rag/ResearcherResolverAgent.scala:147:25 
+[warn] 147 |      if (found.isEmpty) return ResolverResult.NotFound(name)
+[warn]     |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[warn]     |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/rag/src/main/scala/edu/uic/cs441/scholarchain/rag/ResearcherResolverAgent.scala:149:8 
+[warn] 149 |        return ResolverResult.Ambiguous(
+[warn]     |        ^
+[warn]     |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] 150 |          name,
+[warn] 151 |          found,
+[warn] 152 |          totalCandidateCount,
+[warn] 153 |          totalCandidateCount > found.size
+[warn] 154 |        )
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/rag/src/main/scala/edu/uic/cs441/scholarchain/rag/RuntimeWorkflowMain.scala:96:17 
+[warn] 96 |      .getOrElse(return Left("runtime-assets-unavailable"))
+[warn]    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[warn]    |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/rag/src/main/scala/edu/uic/cs441/scholarchain/rag/RuntimeWorkflowMain.scala:99:22 
+[warn] 99 |      .fold(reason => return Left(reason), identity)
+[warn]    |                      ^^^^^^^^^^^^^^^^^^^
+[warn]    |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] 25 warnings found
+[info] done compiling
+[warn] multiple main classes detected: run 'show discoveredMainClasses' to see the list
+[info] compiling 13 Scala sources to /Users/danny/Documents/UIC/CS441/ScholarChain/modules/services/target/scala-3.3.4/classes ...
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/services/src/main/scala/edu/uic/cs441/scholarchain/services/GraphApi.scala:315:65 
+[warn] 315 |          if (System.nanoTime() - started >= timeout * 1000000L) return Left(ApiError.graphDeadline)
+[warn]     |                                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[warn]     |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] -- Warning: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/services/src/main/scala/edu/uic/cs441/scholarchain/services/GraphApi.scala:331:10 
+[warn] 331 |          return Left(
+[warn]     |          ^
+[warn]     |Non local returns are no longer supported; use `boundary` and `boundary.break` in `scala.util` instead
+[warn] 332 |            ApiError(422, "PATH_EXPANSION_TRUNCATED", "The bounded path expansion is incomplete.")
+[warn] 333 |          )
+[warn] two warnings found
+[info] done compiling
+[warn] multiple main classes detected: run 'show discoveredMainClasses' to see the list
+[info] Verified four-artifact service distribution: /Users/danny/Documents/UIC/CS441/ScholarChain/modules/services/target/distribution
+[success] Total time: 6 s, completed Nov 5, 2026, 11:07:52 AM

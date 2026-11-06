@@ -1,0 +1,17 @@
+# rollback.sh --env course --region us-east-2 --mode infra --previous-commit <prev> (dry run; fixture state: 4-partial-lb-without-services-no-binding)
+# exit=3 last_step=runtime-state non-version tool calls=0
+CONFIG-FILE: using <fixture-tmp>/fixture-release.conf instead of the repository config (test-only SCHOLARCHAIN_CONFIG_FILE)
+STEP: start
+[2026-11-06T05:09:22Z] [20261106T050922Z-16171] INFO script=rollback.sh mode=dry-run run_id=20261106T050922Z-16171 repo_root=/private<fixture-tmp>/repo
+STEP: inputs
+STEP: terraform-version
+[2026-11-06T05:09:22Z] [20261106T050922Z-16171] INFO terraform 1.13.5 accepted (binary: terraform)
+STEP: previous-commit
+[2026-11-06T05:09:22Z] [20261106T050922Z-16171] INFO infrastructure rollback: the CURRENT scripts (HEAD 9957ca37cc8bf5107a80b038424fd95e4d8022a9) run against infra/terraform as committed at e2c391c9f8cd5009e379034cca1c6a45166f4f76, materialized read-only; no checkout is needed and the previous tree need not contain scripts/
+STEP: runtime-state
+[2026-11-06T05:09:22Z] [20261106T050922Z-16171] INFO RUNTIME-LIVE: partial (3 deployed-runtime indicator instance(s) of module.runtime in the live state: aws_ecs_service=0 aws_lb=1 aws_lb_target_group=1 aws_lb_listener=1; a complete runtime has aws_ecs_service=4 aws_lb=1 aws_lb_target_group=1 aws_lb_listener=0-1)
+[2026-11-06T05:09:22Z] [20261106T050922Z-16171] INFO RUNTIME-LIVE-CHECK-FAILED: the live state holds an INCOMPLETE runtime (some, but not all, of the deployed-runtime resources): it is neither runtime-disabled nor a complete live runtime, so no rollback or base-apply plan can be shown to keep or to leave it as it is; refusing (fail closed). Inspect the state and route the recovery to the human architect
+RESULT: REFUSED step=runtime-state reason=RUNTIME-LIVE-CHECK-FAILED: the live state holds an INCOMPLETE runtime (some, but not all, of the deployed-runtime resources): it is neither runtime-disabled nor a complete live runtime, so no rollback or base-apply plan can be shown to keep or to leave it as it is; refusing (fail closed). Inspect the state and route the recovery to the human architect
+
+# stderr
+[2026-11-06T05:09:22Z] [20261106T050922Z-16171] ERROR refused at step runtime-state: RUNTIME-LIVE-CHECK-FAILED: the live state holds an INCOMPLETE runtime (some, but not all, of the deployed-runtime resources): it is neither runtime-disabled nor a complete live runtime, so no rollback or base-apply plan can be shown to keep or to leave it as it is; refusing (fail closed). Inspect the state and route the recovery to the human architect
