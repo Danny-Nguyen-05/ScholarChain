@@ -1,0 +1,19 @@
+# EXCERPT (orchestrator, 13C repair round 1, finding C4): intermediate failing run kept as summary only.
+# original: pipeline-run2.txt,   139283 bytes, sha256 50cb5f137bd419c606a1ca2a4a29d68385972d233914106483300ff84e785c6b; full log retained locally under target/phase13c-infra-evidence/ (git-ignored).
+# context: intermediate run during 13C; superseded by later passing runs (see test-report.md).
+# failing tests (FAIL/ERROR lines):
+   1 FAIL: test_a_cluster_without_auto_termination_is_refused_before_any_step
+   1 FAIL: test_a_complete_execute_run_submits_the_six_steps_reserves_the_ledger_and_writes_private_records
+   1 FAIL: test_a_lowered_per_run_cap_in_the_test_config_is_honoured
+   2 FAIL: test_cluster_state_idle_timeout_type_and_capacity_are_verified
+   1 FAIL: test_dry_run_prints_every_command_and_runs_nothing
+   1 FAIL: test_g6_budget_above_the_cap_or_below_the_estimate_refuses
+   1 FAIL: test_g6_each_execute_adds_one_ledger_line_so_the_fourth_run_is_refused
+   1 FAIL: test_g6_environment_variables_cannot_confirm_pricing_or_set_rates
+   1 FAIL: test_g6_estimate_over_the_per_run_cap_refuses_even_a_dry_run
+   1 FAIL: test_g6_the_cumulative_estimate_may_not_exceed_9_50
+   1 FAIL: test_the_estimate_is_hand_derived_and_printed_before_anything_else_is_planned
+# result lines:
+Ran 66 tests in 179.583s
+FAILED (failures=12)
+SUITE-SUMMARY ran=66 executed=66 skipped_tests=0 skipped_classes=0 failures=12 errors=0

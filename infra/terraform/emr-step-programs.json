@@ -1,0 +1,9 @@
+{
+  "bin_dir": "/opt/scholarchain-spike/bin",
+  "programs": {
+    "sc-ceiling-check.py": "57e9543cd94d5924bfb4bb8cec150ad755ba251ee5b6822275d9bc7a56d10b5c",
+    "sc-class-origin-verify.py": "5df9197a60fe41530859377518609b67c70eec60c93c8256e6742ad5ffd17a79",
+    "sc-render-spark-config.py": "5d606d4883a0d4e4d869ff7f69ab56317743a4912940ac34e5c80337a8fa056c",
+    "sc-step.sh": "ad7258d1221344de2b065bff18dc5d21356a1fb71b52e21dc52b47e499b99ed3"
+  }
+}

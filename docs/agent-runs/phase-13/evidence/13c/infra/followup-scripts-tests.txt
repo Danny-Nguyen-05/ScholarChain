@@ -1,0 +1,188 @@
+..................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................FFFFFFF.........................................
+======================================================================
+FAIL: test_a_valid_route_inside_modules_network_is_accepted_and_the_run_succeeds (test_terraform_r1.RouteOwnershipTest.test_a_valid_route_inside_modules_network_is_accepted_and_the_run_succeeds)
+A skip is not a pass: this asserts a SUCCESSFUL terraform test run with a valid in-module route.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/danny/Documents/UIC/CS441/ScholarChain/scripts/tests/test_terraform_r1.py", line 226, in test_a_valid_route_inside_modules_network_is_accepted_and_the_run_succeeds
+    self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0 : tests/phase12b.tftest.hcl... in progress
+  run "inactive_defaults_and_vector_contract"... fail
+  run "dashboard_metric_shapes_and_route_ownership"... skip
+  run "private_neptune_and_read_only_graph"... skip
+  run "scoped_embedding_producer_and_models"... skip
+  run "bounded_runtime_scaling_and_secret_wiring"... skip
+  run "https_has_no_http_fallback"... skip
+  run "bounded_emr_mock_runtime_only"... skip
+  run "runtime_cannot_activate_without_composition"... skip
+  run "emr_cannot_activate_without_runtime"... skip
+  run "neptune_requires_matching_engine_family"... skip
+  run "vector_dimension_migration_is_not_silent"... skip
+  run "emr_delete_cannot_reach_raw"... skip
+  run "neptune_rejects_missing_engine"... skip
+  run "emr_rejects_global_write_policy"... skip
+  run "model_wildcards_are_rejected"... skip
+  run "vector_writer_scopes_exact_indexes"... skip
+  run "vector_pointer_metadata_contract_is_required"... skip
+  run "graph_replicas_require_shared_cursor_key"... skip
+tests/phase12b.tftest.hcl... tearing down
+tests/phase12b.tftest.hcl... fail
+
+Failure! 0 passed, 1 failed, 17 skipped.
+
+Error: Reference to undeclared resource
+
+  on modules/emr/main.tf line 20, in locals:
+  20:     "--efs-id", aws_efs_file_system.staging[0].id, "--access-point-id", aws_efs_access_point.staging[0].id,
+
+A managed resource "aws_efs_file_system" "staging" has not been declared in
+module.emr.
+
+Error: Reference to undeclared resource
+
+  on modules/emr/main.tf line 20, in locals:
+  20:     "--efs-id", aws_efs_file_system.staging[0].id, "--access-point-id", aws_efs_access_point.staging[0].id,
+
+A managed resource "aws_efs_access_point" "staging" has not been declared in
+module.emr.
+
+
+======================================================================
+FAIL: test_clean_fixture_passes (test_terraform_r1.RouteOwnershipTest.test_clean_fixture_passes)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/danny/Documents/UIC/CS441/ScholarChain/scripts/tests/test_terraform_r1.py", line 200, in test_clean_fixture_passes
+    self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0 : tests/phase12b.tftest.hcl... in progress
+  run "inactive_defaults_and_vector_contract"... fail
+  run "dashboard_metric_shapes_and_route_ownership"... skip
+  run "private_neptune_and_read_only_graph"... skip
+  run "scoped_embedding_producer_and_models"... skip
+  run "bounded_runtime_scaling_and_secret_wiring"... skip
+  run "https_has_no_http_fallback"... skip
+  run "bounded_emr_mock_runtime_only"... skip
+  run "runtime_cannot_activate_without_composition"... skip
+  run "emr_cannot_activate_without_runtime"... skip
+  run "neptune_requires_matching_engine_family"... skip
+  run "vector_dimension_migration_is_not_silent"... skip
+  run "emr_delete_cannot_reach_raw"... skip
+  run "neptune_rejects_missing_engine"... skip
+  run "emr_rejects_global_write_policy"... skip
+  run "model_wildcards_are_rejected"... skip
+  run "vector_writer_scopes_exact_indexes"... skip
+  run "vector_pointer_metadata_contract_is_required"... skip
+  run "graph_replicas_require_shared_cursor_key"... skip
+tests/phase12b.tftest.hcl... tearing down
+tests/phase12b.tftest.hcl... fail
+
+Failure! 0 passed, 1 failed, 17 skipped.
+
+Error: Reference to undeclared resource
+
+  on modules/emr/main.tf line 20, in locals:
+  20:     "--efs-id", aws_efs_file_system.staging[0].id, "--access-point-id", aws_efs_access_point.staging[0].id,
+
+A managed resource "aws_efs_file_system" "staging" has not been declared in
+module.emr.
+
+Error: Reference to undeclared resource
+
+  on modules/emr/main.tf line 20, in locals:
+  20:     "--efs-id", aws_efs_file_system.staging[0].id, "--access-point-id", aws_efs_access_point.staging[0].id,
+
+A managed resource "aws_efs_access_point" "staging" has not been declared in
+module.emr.
+
+
+======================================================================
+FAIL: test_route_resource_under_spikes_is_accepted (test_terraform_r1.RouteOwnershipTest.test_route_resource_under_spikes_is_accepted)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/danny/Documents/UIC/CS441/ScholarChain/scripts/tests/test_terraform_r1.py", line 220, in test_route_resource_under_spikes_is_accepted
+    self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0 : tests/phase12b.tftest.hcl... in progress
+  run "inactive_defaults_and_vector_contract"... fail
+  run "dashboard_metric_shapes_and_route_ownership"... skip
+  run "private_neptune_and_read_only_graph"... skip
+  run "scoped_embedding_producer_and_models"... skip
+  run "bounded_runtime_scaling_and_secret_wiring"... skip
+  run "https_has_no_http_fallback"... skip
+  run "bounded_emr_mock_runtime_only"... skip
+  run "runtime_cannot_activate_without_composition"... skip
+  run "emr_cannot_activate_without_runtime"... skip
+  run "neptune_requires_matching_engine_family"... skip
+  run "vector_dimension_migration_is_not_silent"... skip
+  run "emr_delete_cannot_reach_raw"... skip
+  run "neptune_rejects_missing_engine"... skip
+  run "emr_rejects_global_write_policy"... skip
+  run "model_wildcards_are_rejected"... skip
+  run "vector_writer_scopes_exact_indexes"... skip
+  run "vector_pointer_metadata_contract_is_required"... skip
+  run "graph_replicas_require_shared_cursor_key"... skip
+tests/phase12b.tftest.hcl... tearing down
+tests/phase12b.tftest.hcl... fail
+
+Failure! 0 passed, 1 failed, 17 skipped.
+
+Error: Reference to undeclared resource
+
+  on modules/emr/main.tf line 20, in locals:
+  20:     "--efs-id", aws_efs_file_system.staging[0].id, "--access-point-id", aws_efs_access_point.staging[0].id,
+
+A managed resource "aws_efs_file_system" "staging" has not been declared in
+module.emr.
+
+Error: Reference to undeclared resource
+
+  on modules/emr/main.tf line 20, in locals:
+  20:     "--efs-id", aws_efs_file_system.staging[0].id, "--access-point-id", aws_efs_access_point.staging[0].id,
+
+A managed resource "aws_efs_access_point" "staging" has not been declared in
+module.emr.
+
+
+======================================================================
+FAIL: test_stray_route_outside_network_module_still_fails_r1 (test_terraform_r1.RouteOwnershipTest.test_stray_route_outside_network_module_still_fails_r1) [stray/route.tf]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/danny/Documents/UIC/CS441/ScholarChain/scripts/tests/test_terraform_r1.py", line 213, in test_stray_route_outside_network_module_still_fails_r1
+    self.assertIn(R1, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'R1 requires every authored route and route-table resource to stay inside' not found in 'tests/phase12b.tftest.hcl... in progress\n  run "inactive_defaults_and_vector_contract"... fail\n  run "dashboard_metric_shapes_and_route_ownership"... skip\n  run "private_neptune_and_read_only_graph"... skip\n  run "scoped_embedding_producer_and_models"... skip\n  run "bounded_runtime_scaling_and_secret_wiring"... skip\n  run "https_has_no_http_fallback"... skip\n  run "bounded_emr_mock_runtime_only"... skip\n  run "runtime_cannot_activate_without_composition"... skip\n  run "emr_cannot_activate_without_runtime"... skip\n  run "neptune_requires_matching_engine_family"... skip\n  run "vector_dimension_migration_is_not_silent"... skip\n  run "emr_delete_cannot_reach_raw"... skip\n  run "neptune_rejects_missing_engine"... skip\n  run "emr_rejects_global_write_policy"... skip\n  run "model_wildcards_are_rejected"... skip\n  run "vector_writer_scopes_exact_indexes"... skip\n  run "vector_pointer_metadata_contract_is_required"... skip\n  run "graph_replicas_require_shared_cursor_key"... skip\ntests/phase12b.tftest.hcl... tearing down\ntests/phase12b.tftest.hcl... fail\n\nFailure! 0 passed, 1 failed, 17 skipped.\n\nError: Reference to undeclared resource\n\n  on modules/emr/main.tf line 20, in locals:\n  20:     "--efs-id", aws_efs_file_system.staging[0].id, "--access-point-id", aws_efs_access_point.staging[0].id,\n\nA managed resource "aws_efs_file_system" "staging" has not been declared in\nmodule.emr.\n\nError: Reference to undeclared resource\n\n  on modules/emr/main.tf line 20, in locals:\n  20:     "--efs-id", aws_efs_file_system.staging[0].id, "--access-point-id", aws_efs_access_point.staging[0].id,\n\nA managed resource "aws_efs_access_point" "staging" has not been declared in\nmodule.emr.\n'
+
+======================================================================
+FAIL: test_stray_route_outside_network_module_still_fails_r1 (test_terraform_r1.RouteOwnershipTest.test_stray_route_outside_network_module_still_fails_r1) [modules/other/rt.tf]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/danny/Documents/UIC/CS441/ScholarChain/scripts/tests/test_terraform_r1.py", line 213, in test_stray_route_outside_network_module_still_fails_r1
+    self.assertIn(R1, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'R1 requires every authored route and route-table resource to stay inside' not found in 'tests/phase12b.tftest.hcl... in progress\n  run "inactive_defaults_and_vector_contract"... fail\n  run "dashboard_metric_shapes_and_route_ownership"... skip\n  run "private_neptune_and_read_only_graph"... skip\n  run "scoped_embedding_producer_and_models"... skip\n  run "bounded_runtime_scaling_and_secret_wiring"... skip\n  run "https_has_no_http_fallback"... skip\n  run "bounded_emr_mock_runtime_only"... skip\n  run "runtime_cannot_activate_without_composition"... skip\n  run "emr_cannot_activate_without_runtime"... skip\n  run "neptune_requires_matching_engine_family"... skip\n  run "vector_dimension_migration_is_not_silent"... skip\n  run "emr_delete_cannot_reach_raw"... skip\n  run "neptune_rejects_missing_engine"... skip\n  run "emr_rejects_global_write_policy"... skip\n  run "model_wildcards_are_rejected"... skip\n  run "vector_writer_scopes_exact_indexes"... skip\n  run "vector_pointer_metadata_contract_is_required"... skip\n  run "graph_replicas_require_shared_cursor_key"... skip\ntests/phase12b.tftest.hcl... tearing down\ntests/phase12b.tftest.hcl... fail\n\nFailure! 0 passed, 1 failed, 17 skipped.\n\nError: Reference to undeclared resource\n\n  on modules/emr/main.tf line 20, in locals:\n  20:     "--efs-id", aws_efs_file_system.staging[0].id, "--access-point-id", aws_efs_access_point.staging[0].id,\n\nA managed resource "aws_efs_file_system" "staging" has not been declared in\nmodule.emr.\n\nError: Reference to undeclared resource\n\n  on modules/emr/main.tf line 20, in locals:\n  20:     "--efs-id", aws_efs_file_system.staging[0].id, "--access-point-id", aws_efs_access_point.staging[0].id,\n\nA managed resource "aws_efs_access_point" "staging" has not been declared in\nmodule.emr.\n'
+
+======================================================================
+FAIL: test_stray_route_outside_network_module_still_fails_r1 (test_terraform_r1.RouteOwnershipTest.test_stray_route_outside_network_module_still_fails_r1) [stray2/assoc.tf]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/danny/Documents/UIC/CS441/ScholarChain/scripts/tests/test_terraform_r1.py", line 213, in test_stray_route_outside_network_module_still_fails_r1
+    self.assertIn(R1, result.stdout + result.stderr)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'R1 requires every authored route and route-table resource to stay inside' not found in 'tests/phase12b.tftest.hcl... in progress\n  run "inactive_defaults_and_vector_contract"... fail\n  run "dashboard_metric_shapes_and_route_ownership"... skip\n  run "private_neptune_and_read_only_graph"... skip\n  run "scoped_embedding_producer_and_models"... skip\n  run "bounded_runtime_scaling_and_secret_wiring"... skip\n  run "https_has_no_http_fallback"... skip\n  run "bounded_emr_mock_runtime_only"... skip\n  run "runtime_cannot_activate_without_composition"... skip\n  run "emr_cannot_activate_without_runtime"... skip\n  run "neptune_requires_matching_engine_family"... skip\n  run "vector_dimension_migration_is_not_silent"... skip\n  run "emr_delete_cannot_reach_raw"... skip\n  run "neptune_rejects_missing_engine"... skip\n  run "emr_rejects_global_write_policy"... skip\n  run "model_wildcards_are_rejected"... skip\n  run "vector_writer_scopes_exact_indexes"... skip\n  run "vector_pointer_metadata_contract_is_required"... skip\n  run "graph_replicas_require_shared_cursor_key"... skip\ntests/phase12b.tftest.hcl... tearing down\ntests/phase12b.tftest.hcl... fail\n\nFailure! 0 passed, 1 failed, 17 skipped.\n\nError: Reference to undeclared resource\n\n  on modules/emr/main.tf line 20, in locals:\n  20:     "--efs-id", aws_efs_file_system.staging[0].id, "--access-point-id", aws_efs_access_point.staging[0].id,\n\nA managed resource "aws_efs_file_system" "staging" has not been declared in\nmodule.emr.\n\nError: Reference to undeclared resource\n\n  on modules/emr/main.tf line 20, in locals:\n  20:     "--efs-id", aws_efs_file_system.staging[0].id, "--access-point-id", aws_efs_access_point.staging[0].id,\n\nA managed resource "aws_efs_access_point" "staging" has not been declared in\nmodule.emr.\n'
+
+======================================================================
+FAIL: test_stray_route_outside_network_module_still_fails_r1 (test_terraform_r1.RouteOwnershipTest.test_stray_route_outside_network_module_still_fails_r1)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/danny/Documents/UIC/CS441/ScholarChain/scripts/tests/test_terraform_r1.py", line 215, in test_stray_route_outside_network_module_still_fails_r1
+    self.assertEqual(self.r1().returncode, 0, "back to clean")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0 : back to clean
+
+----------------------------------------------------------------------
+Ran 831 tests in 1264.070s
+
+FAILED (failures=7)
+SUITE-SUMMARY ran=831 executed=831 skipped_tests=0 skipped_classes=0 failures=7 errors=0
+exit=1

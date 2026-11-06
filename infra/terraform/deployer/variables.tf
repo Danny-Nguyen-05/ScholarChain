@@ -58,3 +58,23 @@ variable "owner" {
     error_message = "owner must be non-empty."
   }
 }
+
+variable "spike_kms_tag_keys" {
+  description = "The only tag keys kms:TagResource may apply (carried item 14). They are the keys of the spike root's provider default_tags plus Name; kms:TagResource is needed in IAM only so kms:CreateKey can carry its tags, so it is limited to these keys."
+  type        = list(string)
+  default     = ["course", "project", "environment", "owner", "expiration", "scholarchain:stack", "for-use-with-amazon-emr-managed-policies", "Name"]
+  validation {
+    condition     = contains(var.spike_kms_tag_keys, "scholarchain:stack") && length(var.spike_kms_tag_keys) == length(distinct(var.spike_kms_tag_keys)) && alltrue([for k in var.spike_kms_tag_keys : length(k) > 0 && !strcontains(k, "*") && !strcontains(k, "?") && !startswith(lower(k), "aws:")])
+    error_message = "spike_kms_tag_keys must be distinct literal keys (no wildcard, no aws: prefix) and include scholarchain:stack."
+  }
+}
+
+variable "spike_role_names" {
+  description = "The exact names of the two IAM roles the spike root may create (carried item 16). iam:CreateRole is limited to these ARNs instead of the whole scholarchain-spike-emr-* prefix, so the deployer can create only the roles the spike needs."
+  type        = list(string)
+  default     = ["scholarchain-spike-emr-service", "scholarchain-spike-emr-instance"]
+  validation {
+    condition     = length(var.spike_role_names) == 2 && length(var.spike_role_names) == length(distinct(var.spike_role_names)) && alltrue([for n in var.spike_role_names : can(regex("^scholarchain-spike-emr-[a-z0-9-]+$", n))])
+    error_message = "spike_role_names must be exactly two distinct names matching scholarchain-spike-emr-[a-z0-9-]+."
+  }
+}

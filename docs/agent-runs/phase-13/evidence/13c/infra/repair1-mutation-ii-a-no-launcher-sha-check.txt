@@ -1,0 +1,12 @@
+MUTATION: (ii-a) skip the on-node sha256 verification of the installed step runner in the launcher (the launcher no longer compares the hash)
+file: scripts/lib/pipeline.py
+replaced: ' | sha256sum -c --status - || "'
+with: ' | cat >/dev/null || "'
+manifest regenerated for the mutated file: False
+command: cd scripts/tests && python3 -m unittest test_c1_step_args.InstalledProgramTests
+FAIL: test_a_tampered_runner_is_refused_by_the_launcher_and_nothing_runs (test_c1_step_args.InstalledProgramTests.test_a_tampered_runner_is_refused_by_the_launcher_and_nothing_runs)
+AssertionError: 0 != 1 : STEP-LOG stage-in: staged 1024 bytes from s3://fixture-bucket/inputs/ to /var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-fnahp2pp/node/mnt/runs/bp-test-0001/inputs
+Ran 6 tests in 19.059s
+FAILED (failures=1)
+exit code: 1
+files restored byte-identical: True

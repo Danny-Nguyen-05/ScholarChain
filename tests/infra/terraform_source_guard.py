@@ -101,6 +101,17 @@ NO_RESOURCE_TYPE_ACTIONS = frozenset({
 })
 
 
+# Actions with no IAM resource type are scoped ONLY by request tags (and the region): an Allow for them with no
+# Condition, an empty Condition, or a literal Condition without an aws:RequestTag/ key is an unscoped grant (12D
+# review item 10: kms:CreateKey on "*" with the condition stripped used to pass). A condition built from locals or
+# functions (merge(...)) cannot be evaluated by this literal-source check and is accepted here; the rendered
+# policy is asserted by tests/infra/test_deployer_hardening.py.
+REQUEST_TAG_SCOPED_ACTIONS = frozenset({
+    "kms:CreateKey",
+    "elasticmapreduce:RunJobFlow",
+})
+
+
 def scan(path, source):
     ts = tokens(source)
     objects = [Object(0, len(ts))]
@@ -144,6 +155,19 @@ def scan(path, source):
             obj_id = objects[obj_id].parent
         return False
 
+    def condition_is_unscoped(obj_id):
+        """True when a statement has no usable Condition for a request-tag-scoped action (see above)."""
+        obj = objects[obj_id]
+        if "condition" not in obj.fields:
+            return True
+        start = obj.fields["condition"]
+        end = min([v for v in obj.fields.values() if v > start] + [obj.end])
+        span = ts[start + 2 : end]
+        if not [t for t in span if t.quoted or t.value not in ("{", "}", "[", "]", ",", "null")]:
+            return True  # Condition = {} or null
+        literal = [t.value for t in span if t.quoted]
+        return bool(literal) and not any(v.lower().startswith("aws:requesttag/") for v in literal)
+
     findings = set()
 
     def report(category, position):
@@ -163,6 +187,9 @@ def scan(path, source):
             if any(a in ("*", "?") for a in actions):
                 key = "action" if "action" in obj.fields else "actions"
                 report("wildcard-iam-action", ts[obj.fields[key]].start)
+            if any(a in REQUEST_TAG_SCOPED_ACTIONS for a in actions) and condition_is_unscoped(obj_id):
+                key = "action" if "action" in obj.fields else "actions"
+                report("unconditioned-request-scoped-action", ts[obj.fields[key]].start)
             resource_key = "resource" if "resource" in obj.fields else "resources"
             resources = values(obj_id, resource_key)
             for resource in resources:
@@ -248,11 +275,12 @@ class GuardExamples(unittest.TestCase):
         self.assertEqual(scan("synthetic.tf", source), [])
 
     def test_exact_no_resource_type_actions_pass_on_global_resource(self):
+        scoped = ', Condition={StringEquals={"aws:RequestTag/scholarchain:stack"="spike-emr"}}'
         for action in sorted(NO_RESOURCE_TYPE_ACTIONS):
             with self.subTest(action=action):
-                source = '{Effect="Allow", Action=["%s"], Resource="*"}' % action
+                source = '{Effect="Allow", Action=["%s"], Resource="*"%s}' % (action, scoped)
                 self.assertEqual(scan("synthetic.tf", source), [])
-        multi = '{Effect="Allow", Action=["kms:CreateKey", "kms:ListAliases", "ec2:DescribeVpcs"], Resource=["*"]}'
+        multi = '{Effect="Allow", Action=["kms:CreateKey", "kms:ListAliases", "ec2:DescribeVpcs"], Resource=["*"]%s}' % scoped
         self.assertEqual(scan("synthetic.tf", multi), [])
 
     def test_no_resource_type_exemption_is_narrow(self):
@@ -273,10 +301,40 @@ class GuardExamples(unittest.TestCase):
 
     def test_neighbouring_rogue_allow_is_still_rejected_beside_exempt_action(self):
         source = '''locals { statements = [
-          {Effect="Allow", Action=["kms:CreateKey"], Resource="*"},
+          {Effect="Allow", Action=["kms:CreateKey"], Resource="*", Condition={StringEquals={"aws:RequestTag/x"="y"}}},
           {Effect="Allow", Action=["iam:PassRole"], Resource="*"}] }'''
         found = scan("synthetic.tf", source)
         self.assertEqual([(f["line"], f["category"]) for f in found], [(3, "global-iam-resource")])
+
+    def test_request_tag_scoped_actions_must_keep_a_request_tag_condition(self):
+        """12D item 10: a condition-stripped or weakened statement is rejected; a request-tag condition passes."""
+        rejected = (
+            '{Effect="Allow", Action=["kms:CreateKey"], Resource="*"}',
+            '{Effect="Allow", Action=["kms:CreateKey"], Resource=["*"], Condition={}}',
+            '{Effect="Allow", Action=["kms:CreateKey"], Resource=["*"], Condition=null}',
+            '{Effect="Allow", Action=["kms:CreateKey"], Resource="*", Condition={StringEquals={"aws:RequestedRegion"="us-east-2"}}}',
+            '{Effect="Allow", Action=["elasticmapreduce:RunJobFlow"], Resource="*"}',
+            '{Effect="Allow", Action=["elasticmapreduce:RunJobFlow"], Resource="*", Condition={StringEquals={"aws:RequestedRegion"="us-east-2"}}}',
+            '{"Effect":"Allow","Action":["kms:CreateKey"],"Resource":"*"}',
+            '{Effect="Allow", Action=["kms:CreateKey", "kms:ListAliases"], Resource="*"}',
+        )
+        for source in rejected:
+            with self.subTest(source=source):
+                self.assertIn("unconditioned-request-scoped-action", [f["category"] for f in scan("synthetic.tf", source)])
+        accepted = (
+            '{Effect="Allow", Action=["kms:CreateKey"], Resource="*", Condition={StringEquals={"aws:RequestTag/scholarchain:stack"="spike-emr"}}}',
+            '{Effect="Allow", Action=["elasticmapreduce:RunJobFlow"], Resource="*", Condition={StringEquals={"aws:RequestedRegion"="us-east-2", "aws:RequestTag/scholarchain:stack"="spike-emr"}}}',
+            '{Effect="Allow", Action=["kms:CreateKey"], Resource="*", Condition={StringEquals=merge(local.c_region, local.c_req_stack)}}',
+            '{"Effect":"Allow","Action":["kms:CreateKey"],"Resource":"*","Condition":{"StringEquals":{"aws:RequestTag/x":"y"}}}',
+            '{Effect="Deny", Action=["kms:CreateKey"], Resource="*"}',
+        )
+        for source in accepted:
+            with self.subTest(source=source):
+                self.assertEqual(scan("synthetic.tf", source), [])
+
+    def test_unconditioned_finding_reports_only_path_line_and_category(self):
+        found = scan("synthetic.tf", '{Effect="Allow", Action=["kms:CreateKey"], Resource="*"}')
+        self.assertEqual(found, [{"path": "synthetic.tf", "line": 1, "category": "unconditioned-request-scoped-action"}])
 
 
 def main():

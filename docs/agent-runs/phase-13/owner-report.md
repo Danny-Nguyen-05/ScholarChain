@@ -524,3 +524,84 @@ TEST RESULTS: Ran 198 tests in 547.027s, OK, 0 skips, 0 expected failures.
   - Human pricing confirmation.
 
 **Orchestrator decision.** To avoid a review round on known findings, D1 and O1–O4 are fixed inside 13B using the stricter reading of each: unknown keys are refused, redaction is broadened, parse errors print markers, API keys are redacted, and the documented runtime minimum matches the behaviour. They go to the same infra-engineer, with its context kept.
+
+## Subphase 13C — main EMR module port and pre-Phase-14 hardening
+
+Base `56144457f38e29b7c6211e040dd1fb15270a50bf`. Subagents: model `sonnet` (Sonnet 5.5), effort high. No live AWS call, no real plan, no apply, no upload, no commit by any agent. Raw agent outputs: `evidence/13c/infra/` and `evidence/13c/test/`.
+
+### infra-engineer (native ID `a3efc2dff12cb1d72`)
+
+- STATUS: COMPLETE (with the follow-up below).
+- WORK ORDER: `prompt.md` "Subphase 13C" (tasks A–E).
+- FILES CREATED: `infra/terraform/modules/emr/efs.tf`; `infra/terraform/tests/phase13c.tftest.hcl`; `scripts/emr/bootstrap.sh`; `scripts/tests/test_emr_bootstrap.py`; `scripts/tests/test_13c_pipeline.py`.
+- FILES MODIFIED:
+  - Terraform: `infra/terraform/modules/emr/{main,variables,outputs}.tf`, `modules/identity/outputs.tf`, `phase12b.tf`, `phase12b-variables.tf`, `environments/course.tfvars`, `tests/{phase12b,phase12c}.tftest.hcl`, `deployer/{permission_sets.tf,variables.tf,README.md}`, `deployer/tests/deployer.tftest.hcl`, `spikes/emr-spark-isolated/{kms.tf,README.md}`, `spikes/emr-spark-isolated/tests/spike.tftest.hcl`, `README.md`.
+  - Scripts: `scripts/check.sh`, `scripts/config/release.conf`, `scripts/lib/{budget,pipeline}.py`, `scripts/run-bounded-pipeline.sh`, `scripts/README.md`, `scripts/phase12d-spike/README.md`, `scripts/tests/{fake_tool,pipeline_helpers,test_budget,test_check,test_experiment,test_pipeline,test_syntax}.py`.
+- WHAT CHANGED:
+  - EMR module (decision 12-10): applications `["Hadoop"]`; release `emr-7.8.0` pinned by validation; in-transit TLS off (PEM config and `tls_certificate_uri` removed), at-rest S3 SSE-KMS and local-disk/EBS encryption kept; Spark settings a validated module variable rendered to spark-defaults, with a test that fails on any difference from `scripts/config/spark-12-10.conf` (22 keys, G2 `shuffleTracking.enabled=true`); EFS staging (encrypted, NFS only from the EMR group, scoped access point, file-system policy); task nodes 0 and managed scaling off by default, enabled only by tfvars; idle timeout 60–900 s; `scholarchain:stack` tag on the cluster.
+  - Bootstrap `scripts/emr/bootstrap.sh` (ported from the spike): shutdown timer first; runtime sha256 verified before extract (G5 S3 URI from tfvars); job JAR by URI and sha256; spark-defaults and every artifact sha-checked (item 8); Java 17 resolved at run time and validated for the properties format (item 28); `JAVA_HOME` removed across every separator (item 29); pinned install paths equal `release.conf`; EFS mounted at `/mnt/scholarchain`; fails closed.
+  - G6 consequence of the B3 decision: with the 900 s idle tail, 4 × m5.xlarge for 180 min estimates USD 3.12 (> 3), so the Terraform caps allow at most 1 task node and only m5.xlarge. `PIPELINE_MAX_CAPACITY` stays 4 in the scripts, which refuse by estimate.
+  - IAM: item 17 closed (stack tag required on terminate, modify-attribute, ENI delete and DeleteTags; no launch-template action granted); item 2 already region-scoped at base, now pinned by a test; item 5 closed (separate CreateGrant statement with `kms:GrantIsForAWSResource=true`; main module equivalent pinned); item 14 closed (`ForAllValues:StringEquals aws:TagKeys` = the 8 spike keys); item 16 **mitigated only** (IAM has no condition key on the trust document: `iam:CreateRole` limited to the two spike role ARNs, `UpdateAssumeRolePolicy` denied, trust policies asserted to name only EMR/EC2 service principals); wording items 15, 18, 23 (infra part), 30 fixed; item 24 untouched.
+  - Scripts: B1 on-node `timeout --kill-after` for every step body; B2 ledger at `~/.scholarchain/emr-ledger/runs.jsonl`, absent ledger refuses `--execute`, explicit `--init-ledger`; B3 idle tail in the estimate, `PIPELINE_MAX_IDLE_TIMEOUT_SECONDS=900`; B4 single-use approvals (approval sha256 in the ledger); B5 stale exemption removed; `discover:tests/infra` added as a required suite (per-suite timeout 3600 s).
+- TEST RESULTS (agent-observed, first report): terraform test main 68, deployer 37, spike 40, billing-bootstrap 7, billing-execution 19 (all 0 failed); `scripts/tests` 825 with 7 RouteOwnershipTest failures caused only by the untracked `efs.tf` (10/10 with the files intent-added); phase12d-spike 73; shellcheck 0 findings; 37 mutations, all detected and reverted.
+- RISKS (live-unverified): item 17 may block cleanup of an EMR service-access ENI if EMR does not stack-tag it (Phase 14 watch item); EFS utils and S3 downloads need EMR egress; bootstrap argument size assumed within EMR limits; item 16 partial.
+
+### test-engineer (native ID `a84e5eb9fb55228c1`)
+
+- Pass 1: new `tests/infra/` suite for carried gaps 6, 7, 10, 12, 20, 21 (60 tests). `tests/infra/terraform_source_guard.py` now inspects conditions (new category `unconditioned-request-scoped-action`; the old guard fails 9 of 11 new tests). 21 mutations on scratch copies, all caught; 14 of them survived the roots' pre-existing tests.
+- Pass 2: repaired `tests/scripts` for the human-approved B1–B4 changes (99 of 198 had failed against 13C behaviour), with every USD value re-derived by hand (confirming 1.26 and 3.12; 171/172/173 min boundary 2.98/3.00/3.01); new `tests/scripts/test_bootstrap_13c.py` and `test_pipeline_ledger_13c.py`; new `tests/infra/test_iam_items_13c.py` and `test_emr_module_13c.py`. 52 infra and 13 script mutations, all caught. Found three production defects (below).
+- Pass 3: replaced the throughput `expectedFailure` with a normal test that also asserts the provider schema has no `throughput` on `aws_emr_instance_group.ebs_config`; added independent tests for the copy-out and process-group fixes. Final: `tests/infra` SUITE-SUMMARY ran=126 executed=126 skipped=0 failures=0 errors=0; `tests/scripts` ran=256 executed=256 skipped=0 failures=0 errors=0; 0 expected failures.
+- Noted, not changed: `scripts/billing/reviewed-pins.json` (human-pinned) holds stale size/sha256 pins for `tests/infra/terraform_source_guard.py` and `tests/infra/README.md`; they were already stale at the 13C base.
+
+### infra-engineer follow-up (same agent, context kept)
+
+- Defect 1 (copy-out exits 1 silently when a part directory is missing): fixed; the manifest is built only from present parts, with explicit `STEP-FAIL` markers for "nothing to copy out" and a manifest error; 3 new tests.
+- Defect 3 (a TERM-ignoring grandchild outlives a timed-out step): fixed; the wrapper runs the body in its own process group and sends TERM then KILL to the group on timeout, cancel or failure, printing `STEP-WARN` if members were left; YARN kill-by-tag unchanged; new tests with a TERM-ignoring grandchild.
+- Defect 2 (task group gp3 throughput not pinned): **not possible**: the aws provider 6.44.0 schema has no `throughput` on `aws_emr_instance_group.ebs_config`. The task group pins gp3, size, iops 3000 and volumes 1; throughput stays at the gp3 baseline (125 MiB/s). Documented in the module and the infra README, and asserted by both agents' tests.
+- Results: main root terraform test 69 passed; `scripts/tests` 831 with the same 7 untracked-file R1 failures (10/10 when intent-added); `tests/scripts` 251 OK; shellcheck 0; three mutations detected.
+
+### Orchestrator (13C)
+
+- Recorded the Step 0 answers, the routing and the user's parallel-verification decision in `prompt.md`; the 13B verdict in `review.md`.
+- Committed and pushed 13B as `56144457f38e29b7c6211e040dd1fb15270a50bf` at the user's request.
+- Interim working-tree `sbt -batch check` on JDK 17 after test-engineer pass 1: exit 0, 768 s (orchestrator-observed; log not retained in evidence, it was superseded by the final run).
+- Wrote `evidence/13c/carried-findings-status.md` (Phase 13 status of every 12D carried item; the Phase 12 file is unchanged).
+- Copied agent evidence into `evidence/13c/{infra,test}/`; scanned it: no 12-digit number, no key material, no script/Terraform copies.
+- Final verification: see `test-report.md` "Subphase 13C".
+
+## Subphase 13C — repair round 1
+
+Source: `review.md` "Subphase 13C" Review 1 (REQUEST-CHANGES), findings C1–C4; repair table in `repairs.md`. Base `56144457f38e29b7c6211e040dd1fb15270a50bf`; all 13C and repair work uncommitted. Subagents: model `sonnet` (Sonnet 5.5), effort high. No live AWS call, no real plan, no apply, no upload, no commit by any agent. Raw outputs: `evidence/13c/infra/repair1-*` and `evidence/13c/test/repair1-*`.
+
+### infra-engineer (native ID `a7469a5c62b4c34ac`, fresh context): C1, C2, C3
+
+- STATUS: COMPLETE.
+- FILES CREATED: `scripts/emr/sc-step.sh` (installed step runner: the B1 wrapper and the six step bodies); `scripts/emr/sc-ceiling-check.py`, `scripts/emr/sc-class-origin-verify.py`, `scripts/emr/sc-render-spark-config.py` (the formerly embedded programs); `infra/terraform/emr-step-programs.json` (Terraform-side sha256 pin of the four programs and `bin_dir`); `scripts/tests/test_c1_step_args.py` (25 tests).
+- FILES MODIFIED: `scripts/lib/pipeline.py`, `scripts/lib/common.sh` (`SC_PINNED_KEYS` gains `PIPELINE_STEP_BIN_DIR`, `PIPELINE_STEP_ARG_MAX_CHARS`), `scripts/run-bounded-pipeline.sh`, `scripts/config/release.conf`, `scripts/emr/bootstrap.sh` (header comment only), `scripts/README.md`, `scripts/tests/{pipeline_helpers,test_pipeline,test_13c_pipeline,test_syntax}.py`, `infra/terraform/{phase12b,phase12b-variables}.tf`, `infra/terraform/modules/emr/variables.tf`, `infra/terraform/tests/{phase13c,phase12b,phase12c}.tftest.hcl`, `infra/terraform/README.md`.
+- C1 design: each EMR step is `bash -c <293-character launcher> sc-step <sha256 of sc-step.sh> <STEP> KEY=VALUE...`, one parameter per argument. The launcher verifies the installed `sc-step.sh` against the sha256 computed from the repository file and execs it, or exits 1 running nothing; the runner verifies each Python program against its `*_PY_SHA` parameter before running it. These hashes are in the run config, so the human's `APPROVED_RUN_CONFIG_SHA256` pins the installed programs. Parameter keys are an allow-list per step (unknown, duplicate or missing key is `STEP-FAIL`; values are never evaluated). The four programs are installed by the existing bootstrap `--artifact` mechanism into the pinned `/opt/scholarchain-spike/bin`; bootstrap logic is unchanged. B1, item 1, the class-origin fail-closed checks and the 22 decision 12-10 settings are the same code moved into `sc-step.sh`.
+- C1 guard: `PIPELINE_STEP_ARG_MAX_CHARS=10280` pinned in `release.conf` (environment ignored; clamped to 1000..10280, so it can be lowered, never raised). `build_plan` checks every argument of every step at `STEP: arg-limit` (after `plan`, before `g6-gate`, the ledger reservation and the approval); a violation is exit 3 `STEP-ARG-TOO-LONG`, in the dry run and `--execute` alike. `STEP-PROGRAM-DRIFT` refuses a plan if `emr-step-programs.json` differs from `scripts/emr/`; the root Terraform guard requires `emr_config.extra_artifacts` to install each program exactly once at `<bin_dir>/<name>` with that sha256.
+- Lengths at maximum realistic values (63-character bucket, 895-character prefixes, 64-character run id, 128-character dataset tokens): longest argument per step stage-in 978, hadoop-prep 997, entity-resolution 993, spark-class-origin 293, spark-job 997, copy-out 1,043 (old single argument at the same values: 4,065 / 9,450 / 7,012 / 10,385 / 12,951 / 4,891). `evidence/13c/infra/repair1-dry-run-arg-lengths.txt`.
+- C2: `runtime_archive_sha256` must equal the decision 12-10 pin (`789a9684…6de5`) in the root `emr_config` and the module `config`; a negative and a positive run added to `phase13c.tftest.hcl`.
+- C3: the `release.conf` ledger comment now names `~/.scholarchain/emr-ledger/runs.jsonl`, outside the repository.
+- TEST RESULTS (agent-observed): `scripts/tests` SUITE-SUMMARY ran=856 executed=856 skipped=0 failures=0 errors=0 (with a temporary `git add -N` of the three untracked Terraform files, reset afterwards); shellcheck 0 findings on four scripts; main root `terraform fmt -check`, `validate` and `test` 77 passed 0 failed (phase12a 13, phase12b 18, phase12c 9, phase13c 37). Mutations, each restored byte-identically: length check removed (8 failures), launcher sha compare skipped (caught), program sha check no-op (4 failures), Terraform guard precondition removed (caught).
+- RISKS: bootstrap installation of the four artifacts, the on-node launcher and the process-group kill are live-unverified (Phase 14/15); a verify-then-exec window on root-owned mode-755 files (same trust root as the bootstrap `--self-sha256`); any edit under `scripts/emr/sc-*` needs `pipeline.py step-manifest --write` and new tfvars hashes (drift is refused offline).
+- MANUAL ACTION (Phase 14 human): add the four step programs to `emr_config.extra_artifacts` in `*.local.tfvars` with the sha256 values printed by `python3 -I scripts/lib/pipeline.py step-manifest`.
+
+### test-engineer (native ID `a84e5eb9fb55228c1`, context kept)
+
+- STATUS: COMPLETE. Edited only `tests/**`.
+- FILES CREATED: `tests/scripts/test_step_arg_limit_13c.py` (20 tests).
+- FILES MODIFIED: `tests/scripts/sc_support.py` (fixture copies `emr-step-programs.json`, installs `scripts/emr/sc-*` on a fake node and points `PIPELINE_STEP_BIN_DIR` at it; fake `timeout` models the new wrapper form), `tests/scripts/test_pipeline_bodies.py`, `tests/scripts/test_pipeline_dryrun.py` (4 tests rewritten to assert Args parameters and runner facts; body behaviour still executed), `tests/infra/test_emr_module_13c.py`.
+- New independent C1 test: a maximum-length dry run measured by its own shlex parse (every Args string ≤ 10,280 and equal to the `STEP-ARG-LENGTHS` marker); launcher and parameter boundaries (10,280 accepted, 10,281 refused with exit 3 and an empty fake-binary log); `--execute` over the limit leaves the ledger byte-identical and the approval unconsumed; pinned limits 999/10281/0/20000 refused and 1000 accepted; tampered, missing or different `sc-step.sh` and tampered Python programs refused on the node before any client call; unknown/duplicate/missing parameters refused; `$(touch ...)` in a value never evaluated.
+- C2 tests: a changed default is refused by the C2 validation; changing both occurrences is still caught by the independent bootstrap-arguments check; another valid, a short and an upper-case hash are refused in the module.
+- MUTATION: in a scratch copy `if len(arg) > limit:` replaced by `if False:`; both boundary tests fail (`(0, 'DRY-RUN') != (3, 'REFUSED')`); restored byte-identical (sha256 `fc013fea…1f19`), real tree unchanged. `evidence/13c/test/repair1-mutation-arg-limit.txt`.
+- TEST RESULTS (agent-observed): `tests/scripts` SUITE-SUMMARY ran=276 executed=276 skipped=0 failures=0 errors=0, exit 0; `tests/infra` ran=128 executed=128 skipped=0 failures=0 errors=0, exit 0.
+- Noted strictness change: `test_every_step_is_printed_with_the_wrapper_parameters_and_its_derived_seconds` now asserts STEP_SECONDS/KILL_AFTER as Args parameters (hand-derived 180/720/720/180/1440/360 and 60) because the wrapper text is no longer in the printed command.
+
+### Orchestrator (13C repair round 1)
+
+- Appended review 1 verbatim to `review.md`; logged C1–C4 in `repairs.md`.
+- C4 (orchestrator-owned evidence): replaced four intermediate failing logs in `evidence/13c/infra/` with excerpts carrying the original size, sha256, FAIL counts and result lines; the full logs remain in the git-ignored `target/`.
+- Copied `target/phase13c-infra-evidence/repair1-*` (without the `.full` logs) and `target/phase13c-test-evidence/repair1-*` into `evidence/13c/{infra,test}/`; scanned: no 12-digit number, no key material.
+- Checked scope: test-engineer changed only `tests/**`; infra-engineer only `scripts/**` and `infra/terraform/**`; no `build.sbt`, `project/**` or `modules/**` change.
+- Verification and the sbt-reuse proof: see `test-report.md` "Subphase 13C — repair round 1".

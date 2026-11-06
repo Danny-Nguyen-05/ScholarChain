@@ -4,6 +4,7 @@ binaries only; no network, no credentials, no cloud call. Expectations are hand-
 import hashlib
 import json
 import os
+import shlex
 import shutil
 import stat
 import subprocess
@@ -16,6 +17,44 @@ FIXTURES = os.path.join(SCRIPTS_DIR, "tests", "fixtures")
 PIPELINE_FIXTURES = os.path.join(FIXTURES, "pipeline")
 JOB_SHA = hashlib.sha256(b"job-jar-bytes").hexdigest()
 ARTIFACT_NAMES = ("hadoop-submit-jar", "hadoop-libjars", "er-jar", "er-policy", "er-config", "spark-config-template")
+
+
+REAL_TIMEOUT_PY = r'''import os, signal, subprocess, sys, time
+# `timeout --kill-after=K SECS CMD...` in its WORST realistic form: it signals only its direct child (no process-group
+# signalling) and exits 124 on a timeout (137 when it had to KILL). A grandchild that ignores TERM survives it, which is what
+# the step wrapper's own process-group kill must cope with.
+args = sys.argv[1:]
+kill_after = 0.0
+if args and args[0].startswith("--kill-after="):
+    kill_after = float(args.pop(0).split("=", 1)[1])
+secs = float(args.pop(0))
+proc = subprocess.Popen(args)
+
+
+def forward(signum, _frame):
+    try:
+        proc.send_signal(signum)
+    except ProcessLookupError:
+        pass
+
+
+for name in ("SIGTERM", "SIGINT", "SIGHUP", "SIGQUIT"):
+    signal.signal(getattr(signal, name), forward)
+deadline = time.time() + secs
+while proc.poll() is None and time.time() < deadline:
+    time.sleep(0.05)
+if proc.poll() is not None:
+    sys.exit(proc.returncode)
+proc.send_signal(signal.SIGTERM)
+end = time.time() + kill_after
+while proc.poll() is None and time.time() < end:
+    time.sleep(0.05)
+if proc.poll() is None:
+    proc.kill()
+    proc.wait()
+    sys.exit(137)
+sys.exit(124)
+'''
 
 
 def sha_text(text):
@@ -49,6 +88,9 @@ class PipelineFixture(Fixture):
             shutil.copy(os.path.join(PIPELINE_FIXTURES, name), os.path.join(self.inputs, name))
         self.prep_config = os.path.join(self.inputs, "prep-config.json")
         self.datasets = os.path.join(self.inputs, "datasets.json")
+        # 13C finding B2: an absent ledger refuses --execute, so the fixture starts with the initialised, empty ledger the
+        # human would have created with --init-ledger (tests of the absent case remove it).
+        self.write_ledger([])
 
     # ---- pricing -------------------------------------------------------------------------------------------------
     def set_pricing(self, confirmed=True, drop=(), **replace):
@@ -147,12 +189,14 @@ class PipelineFixture(Fixture):
             handle.write("\n".join(lines) + "\n" + raw_extra)
         return path
 
-    def ready(self, pricing_confirmed=True, record_override=None, prespend_override=None, **over):
+    def ready(self, pricing_confirmed=True, record_override=None, prespend_override=None, serial=None, **over):
         """Pricing confirmed, receipt written, approval record matching the dry run. Returns the execute argument list."""
         self.set_pricing(confirmed=pricing_confirmed)
         run_sha = self.run_config_sha(**over)
         prespend_path, prespend_sha = self.write_prespend(**(prespend_override or {}))
-        record = self.write_record(self.approval_lines(run_sha, prespend_sha, **(record_override or {})))
+        # An approval record is single-use (finding B4): a test that executes twice gives each record its own serial line
+        # (text that is not an APPROVED_* line is ignored by the parser, so it only changes the file's sha256).
+        record = self.write_record(self.approval_lines(run_sha, prespend_sha, **(record_override or {})), raw_extra=("Approval serial: %s\n" % serial) if serial is not None else "")
         self.prespend_path = prespend_path
         self.record_path = record
         self.prespend_sha = prespend_sha
@@ -181,14 +225,19 @@ class PipelineFixture(Fixture):
             return [json.loads(line)[0] for line in handle if line.strip()]
 
     def ledger_path(self):
-        return os.path.join(self.repo, "target", "emr-ledger", "runs.jsonl")
+        """13C finding B2: the ledger lives under HOME (the fixture sets HOME to its temp dir), outside the repository."""
+        return os.path.join(self.tmp, ".scholarchain", "emr-ledger", "runs.jsonl")
 
-    def write_ledger(self, estimates):
+    def write_ledger(self, estimates, approvals=None, init=True):
+        """An initialised ledger holding one reservation per estimate (each with a distinct earlier approval sha256)."""
         path = self.ledger_path()
         os.makedirs(os.path.dirname(path), exist_ok=True)
         with open(path, "w", encoding="utf-8") as handle:
+            if init:
+                handle.write(json.dumps({"event": "init", "initialized_by": "fixture", "initialized_utc": "2026-11-01T00:00:00Z"}) + "\n")
             for index, value in enumerate(estimates):
-                handle.write(json.dumps({"event": "reserve", "run_id": "earlier-%d" % index, "action": "run-bounded-pipeline", "estimate_usd": value, "run_config_sha256": "0" * 64, "reserved_utc": "2026-11-01T00:00:00Z"}) + "\n")
+                approval = (approvals or {}).get(index, hashlib.sha256(("earlier-approval-%d" % index).encode()).hexdigest())
+                handle.write(json.dumps({"event": "reserve", "run_id": "earlier-%d" % index, "action": "run-bounded-pipeline", "estimate_usd": value, "run_config_sha256": "0" * 64, "approval_record_sha256": approval, "reserved_utc": "2026-11-01T00:00:00Z"}) + "\n")
 
     def tree_clean(self):
         return subprocess.run(["git", "-C", self.repo, "status", "--porcelain=v1", "--untracked-files=all"], capture_output=True, text=True).stdout.strip() == ""
@@ -206,6 +255,13 @@ class PipelineFixture(Fixture):
         self.javafile = os.path.join(base, "java-home")
         self.jobjar = os.path.join(self.runtime, "application", "scholarchain-job.jar")
         self.procmounts = os.path.join(base, "mounts")
+        # Finding C1: the bootstrap installs the step runner and its Python programs (sha256-pinned --artifact files) here; the
+        # EMR step's launcher runs the installed runner from the pinned PIPELINE_STEP_BIN_DIR (node_config points it here).
+        self.stepbin = os.path.join(base, "step-bin")
+        os.makedirs(self.stepbin, exist_ok=True)
+        for program in sorted(os.listdir(os.path.join(SCRIPTS_DIR, "emr"))):
+            if program.startswith("sc-"):
+                shutil.copy2(os.path.join(SCRIPTS_DIR, "emr", program), os.path.join(self.stepbin, program))
         for directory in (self.mnt, os.path.join(self.runtime, "application"), os.path.join(self.runtime, "bin"), os.path.join(self.runtime, "jars"), self.nodebin, os.path.join(self.javahome, "bin")):
             os.makedirs(directory, exist_ok=True)
         with open(self.jobjar, "wb") as handle:
@@ -222,13 +278,18 @@ class PipelineFixture(Fixture):
             '#!/bin/bash\necho "spark-submit $*" >> "%s"\nif [ -n "${FAKE_PROBE_SRC:-}" ]; then n=$#; out="${@:$((n-1)):1}"; cp "$FAKE_PROBE_SRC" "$out"; fi\nexit 0\n' % self.nodelog,
         )
         # GNU timeout shim: FAKE_TIMEOUT_RC=124 simulates the cap firing; otherwise it runs the command.
-        write_exec(os.path.join(self.nodebin, "timeout"), '#!/bin/bash\necho "timeout $*" >> "%s"\nshift 2\nif [ -n "${FAKE_TIMEOUT_RC:-}" ]; then exit "$FAKE_TIMEOUT_RC"; fi\nexec "$@"\n' % self.nodelog)
+        # 13C (finding B1): the step wrapper runs the body as `timeout ... bash FILE`; that call always runs the body, and
+        # FAKE_TIMEOUT_RC applies to the inner client call (hadoop jar, spark-submit, java), as before.
+        write_exec(os.path.join(self.nodebin, "timeout"), '#!/bin/bash\necho "timeout $*" >> "%s"\nshift 2\nif [ "$1" = "bash" ]; then exec "$@"; fi\nif [ -n "${FAKE_TIMEOUT_RC:-}" ]; then exit "$FAKE_TIMEOUT_RC"; fi\nexec "$@"\n' % self.nodelog)
+        # A faithful `timeout --kill-after=K SECS CMD...` (GNU semantics: own process group, TERM at SECS, KILL after K,
+        # exit 124) for the B1 hang tests; the node bin dir shadows it with the logging shim above unless FAKE_REAL_TIMEOUT=1.
+        write_exec(os.path.join(self.nodebin, "timeout-real"), '#!/usr/bin/env python3\n' + REAL_TIMEOUT_PY)
         write_exec(
             os.path.join(self.nodebin, "yarn"),
             '#!/bin/bash\necho "yarn $*" >> "%s"\nif [ -n "${FAKE_YARN_APP:-}" ] && [ "$1 $2" = "application -list" ]; then\n'
             '  echo "Total number of applications:1"\n  echo "application_1700000000000_0007  scholarchain  SPARK  user  default  RUNNING"\nfi\nexit 0\n' % self.nodelog,
         )
-        write_exec(os.path.join(self.nodebin, "hadoop"), '#!/bin/bash\necho "hadoop $*" >> "%s"\nexit 0\n' % self.nodelog)
+        write_exec(os.path.join(self.nodebin, "hadoop"), '#!/bin/bash\necho "hadoop $*" >> "%s"\nif [ -n "${FAKE_HADOOP_HANG:-}" ] && [ "$1 $2" = "fs -copyToLocal" ]; then exec sleep 600; fi\nexit 0\n' % self.nodelog)
         # sha256sum is not on stock macOS: a python shim for `sha256sum -c --status -` and `sha256sum FILE`.
         write_exec(
             os.path.join(self.nodebin, "sha256sum"),
@@ -259,6 +320,7 @@ class PipelineFixture(Fixture):
             "PIPELINE_RUNTIME_DIR": self.runtime,
             "PIPELINE_JOB_JAR_PATH": self.jobjar,
             "PIPELINE_JAVA_HOME_FILE": self.javafile,
+            "PIPELINE_STEP_BIN_DIR": self.stepbin,
         }
         values.update(extra)
         return self.use_config(**values)
@@ -270,6 +332,19 @@ class PipelineFixture(Fixture):
         begin = "STEP-BODY-BEGIN: %s\n" % name
         end = "STEP-BODY-END: %s\n" % name
         return result.stdout.split(begin, 1)[1].split(end, 1)[0]
+
+    def step_argv(self, name, **over):
+        """The EMR step's HadoopJarStepConfig.Args list for one step, parsed from the printed command (shell words)."""
+        return shlex.split(self.step_body(name, **over).replace("\\\n", " "))
+
+    def step_text(self, name, **over):
+        """Everything that decides what a step does: the printed command (launcher and parameters) plus the text of the
+        installed step programs it runs. Used where a test asserts program text rather than behaviour."""
+        text = self.step_body(name, **over)
+        for program in sorted(os.listdir(os.path.join(SCRIPTS_DIR, "emr"))):
+            if program.startswith("sc-"):
+                text += "\n" + read(os.path.join(SCRIPTS_DIR, "emr", program))
+        return text
 
     def run_body(self, body, extra_env=None):
         env = dict(self.body_env_cache)

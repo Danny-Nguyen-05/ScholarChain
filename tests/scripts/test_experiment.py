@@ -246,6 +246,8 @@ class ExperimentExecute(Base):
         """Approval + receipt for an experiment run; derives the run configuration hash from the delegated dry run."""
         pre = fx.write_prespend()
         env = fx.exec_env()
+        if not fx.ledger_path.exists():
+            fx.write_ledger([])  # 13C B2: the run ledger must exist (created once by --init-ledger) before any --execute
         dry = self.dry(fx, env=env)
         self.assertEqual(dry.rc, 0, dry.describe())
         run_cfg = None

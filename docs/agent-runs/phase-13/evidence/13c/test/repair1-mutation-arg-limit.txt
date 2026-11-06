@@ -1,0 +1,7 @@
+pipeline.py (real tree) sha256 before: fc013feafc75bd54af12fb6003ffa14ba89b7deaa9439a237e5ed74d0dab1f19
+scratch copy mutated (check `if len(arg) > limit:` replaced by `if False:`) sha256: cd9b7544ec48b5cca2cb40e47df933bedadbe5c758d29d5d726da98921e7ebb7
+MUTATED   launcher boundary   -> test FAILS as required: Tuples differ: (0, 'DRY-RUN') != (3, 'REFUSED')
+MUTATED   parameter boundary  -> test FAILS as required: Tuples differ: (0, 'DRY-RUN') != (3, 'REFUSED')
+restored byte-identical: True (sha256 fc013feafc75bd54af12fb6003ffa14ba89b7deaa9439a237e5ed74d0dab1f19)
+RESTORED  launcher boundary / parameter boundary -> both PASS
+pipeline.py (real tree) sha256 after:  fc013feafc75bd54af12fb6003ffa14ba89b7deaa9439a237e5ed74d0dab1f19  unchanged: True

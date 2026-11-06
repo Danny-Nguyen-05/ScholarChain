@@ -39,6 +39,8 @@ locals {
   ec2_resources   = [for t in local.ec2_create_kind : "${local.arn_ec2}:${t}/*"]
   ec2_rule_arn    = "${local.arn_ec2}:security-group-rule/*"
   role_arns       = ["${local.arn_iam}:role/${local.spike_prefix}*"]
+  # Carried item 16: iam:CreateRole is limited to exactly the roles the spike root creates.
+  role_create_arns = [for n in var.spike_role_names : "${local.arn_iam}:role/${n}"]
   # Services the spike roles may be passed to.
   pass_services = ["elasticmapreduce.amazonaws.com", "ec2.amazonaws.com"]
 
@@ -273,16 +275,21 @@ locals {
         }
       },
       {
-        # Needed so CreateKey can attach its tags. Deliberately broad on key/*: no IAM
-        # statement or boundary in this root keys off a KMS tag (key administration
-        # and use are granted by the key policy to the deployer role ARN, and the
-        # boundary uses kms:ResourceAliases), so tagging a foreign key gains nothing.
+        # Needed so CreateKey can attach its tags (the API checks kms:TagResource on the new key). The key does not
+        # exist yet, so it cannot be scoped by resource, and kms:CreateKey has no resource type either: its request-tag
+        # condition is the only scope, so creating the key UNTAGGED (which would need no TagResource) would mean dropping
+        # that condition. Carried item 14 therefore restricts the TAG KEYS: only the spike root's own keys
+        # (var.spike_kms_tag_keys) with the stack request tag. Residual, accepted: the deployer can still set those
+        # eight keys on a foreign key; no IAM statement or boundary here keys off a KMS tag (key administration and use
+        # are granted by the key policy to the deployer role ARN, the boundary uses kms:ResourceAliases), so that
+        # gains nothing beyond cost-allocation tag noise.
         Sid      = "KmsTagOnCreate"
         Effect   = "Allow"
         Action   = ["kms:TagResource"]
         Resource = ["${local.arn_kms}:key/*"]
         Condition = {
-          StringEquals = merge(local.c_region, local.c_req_stack)
+          StringEquals                = merge(local.c_region, local.c_req_stack)
+          "ForAllValues:StringEquals" = { "aws:TagKeys" = var.spike_kms_tag_keys }
         }
       },
       {
@@ -387,10 +394,18 @@ locals {
     Version = "2012-10-17"
     Statement = [
       {
+        # Carried item 16. IAM has no condition key that inspects the trust (assume-role) policy document, so a trust
+        # policy naming another principal cannot be refused here. What this statement does instead: (1) only the two
+        # role names the spike root creates, not the whole prefix; (2) the boundary and the stack tag are required, so
+        # a role with a foreign trust policy can still reach only the boundary's stack-tagged EMR/EC2 resources, the
+        # spike bucket and the spike key alias (carried item 17 closed the reach to other EMR clusters); (3) the
+        # trust policy cannot be changed afterwards (DenyBoundaryRemovalOnSpikeRoles denies iam:UpdateAssumeRolePolicy)
+        # and the deployer itself can never assume a spike role (DenyAssumingSpikeRoles). The spike root's tests assert
+        # that its own trust policies name only the EMR and EC2 service principals.
         Sid      = "CreateSpikeRolesOnlyWithBoundaryAndTag"
         Effect   = "Allow"
         Action   = ["iam:CreateRole"]
-        Resource = local.role_arns
+        Resource = local.role_create_arns
         Condition = {
           StringEquals = merge(local.c_req_stack, { "iam:PermissionsBoundary" = local.spike_boundary_arn })
         }
@@ -555,12 +570,18 @@ locals {
         Condition = { StringEquals = local.c_region }
       },
       {
-        # v2 ManageEMRTaggedResources (instances, ENIs).
+        # v2 ManageEMRTaggedResources (instances, ENIs), tightened by carried item 17: v2 requires only the EMR
+        # managed-policies tag, which every EMR cluster in the account carries, so a passed spike role could terminate or
+        # modify another stack's cluster nodes and ENIs. The stack tag is also required. EMR propagates the cluster's
+        # tags (the spike root's provider default_tags, including the stack tag) to the instances it launches, and the
+        # RunInstances tag specifications for instance, volume and network-interface carry both tags (live attempt 2),
+        # so the spike's own nodes still match. Not verified live: the service-access ENI that EMR creates in a private
+        # subnet is tagged by EMR; if its delete is denied the human reviews it (README, "Spike boundary").
         Sid       = "V2ManageTaggedInstancesAndEnis"
         Effect    = "Allow"
         Action    = ["ec2:DeleteNetworkInterface", "ec2:ModifyInstanceAttribute", "ec2:TerminateInstances"]
         Resource  = ["${local.arn_ec2}:network-interface/*", "${local.arn_ec2}:instance/*"]
-        Condition = { StringEquals = merge(local.c_region, local.c_res_emr_tag) }
+        Condition = { StringEquals = merge(local.c_region, local.c_res_emr_tag, local.c_res_stack) }
       },
       {
         # v2 ManageSecurityGroups.
@@ -586,13 +607,14 @@ locals {
         }
       },
       {
-        # Removing tags never widens access; limited to EMR-managed resources.
+        # Removing tags is a modification (it could strip another stack's stack tag), so it needs the EMR tag AND the
+        # stack tag (carried item 17).
         Sid      = "V2DeleteTagsOnEmrTaggedResources"
         Effect   = "Allow"
         Action   = ["ec2:DeleteTags"]
         Resource = ["${local.arn_ec2}:instance/*", "${local.arn_ec2}:volume/*", "${local.arn_ec2}:network-interface/*"]
         Condition = {
-          StringEquals = merge(local.c_region, local.c_res_emr_tag)
+          StringEquals = merge(local.c_region, local.c_res_emr_tag, local.c_res_stack)
         }
       },
       {

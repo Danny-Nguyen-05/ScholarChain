@@ -1,0 +1,11 @@
+shellcheck exit=0
+bash -n ok scripts/emr/bootstrap.sh
+bash -n ok scripts/run-bounded-pipeline.sh
+bash -n ok scripts/check.sh
+py_compile ok
+diff-check exit=0
+infra/terraform/modules/emr/efs.tf
+infra/terraform/tests/phase13c.tftest.hcl
+scripts/emr/bootstrap.sh
+scripts/tests/test_13c_pipeline.py
+scripts/tests/test_emr_bootstrap.py

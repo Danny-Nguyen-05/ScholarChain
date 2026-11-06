@@ -13,10 +13,11 @@ from helpers import REAL_REPO, SCRIPTS_DIR
 SCRIPTS_13A = ["check.sh", "package.sh", "plan.sh", "deploy.sh", "rollback.sh", "cleanup.sh"]
 SCRIPTS_13B = ["smoke-test.sh", "smoke-local.sh", "run-bounded-pipeline.sh", "run-experiment.sh", "archive-evidence.sh"]
 SCRIPTS = SCRIPTS_13A + SCRIPTS_13B
-SHELL_FILES = SCRIPTS + ["lib/common.sh"]
+SHELL_FILES = SCRIPTS + ["lib/common.sh", "emr/bootstrap.sh", "emr/sc-step.sh"]
 PY_FILES = [
     "lib/timeout.py", "lib/tools.py", "lib/plan_summary.py", "lib/redact.py", "lib/verify.py", "lib/safeio.py", "lib/state_bind.py", "lib/records.py",
     "lib/budget.py", "lib/pipeline.py", "lib/run_approval.py", "lib/experiment.py", "lib/smoke_client.py", "lib/archive.py",
+    "emr/sc-ceiling-check.py", "emr/sc-class-origin-verify.py", "emr/sc-render-spark-config.py",
 ]
 CLOUD_SCRIPTS = ["plan.sh", "deploy.sh", "rollback.sh", "cleanup.sh", "run-bounded-pipeline.sh"]
 
@@ -175,7 +176,7 @@ class ConfigurationTests(unittest.TestCase):
     def test_the_required_script_test_suites_are_pinned_in_check_sh_not_in_the_config(self):
         self.assertNotIn("SCRIPT_TEST_SUITES", parse_conf())
         check = read("check.sh")
-        self.assertIn('REQUIRED_SUITES="discover:scripts/tests discover:scripts/phase12d-spike/tests files:scripts/billing/tests discover:tests/scripts"', check)
+        self.assertIn('REQUIRED_SUITES="discover:scripts/tests discover:scripts/phase12d-spike/tests files:scripts/billing/tests discover:tests/scripts discover:tests/infra"', check)
         self.assertNotIn("${SCRIPT_TEST_SUITES", check)
 
     def test_the_preservation_policy_covers_every_preserved_class_the_user_decided(self):

@@ -1,0 +1,3 @@
+# Orchestrator (2026-11-06T23:18:15Z): working-tree sources vs the 13C final clean snapshot (local commit 564f399a89182cee5a6941e9749d4b11ca90d83b) used for final-check-full-clean-snapshot.txt
+# for each path in git ls-files -co --exclude-standard (excluding docs/agent-runs/phase-13/): cmp -s <path> <snapshot>/<path>
+compared=5437 differing=0

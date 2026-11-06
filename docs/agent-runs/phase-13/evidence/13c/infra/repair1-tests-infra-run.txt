@@ -1,0 +1,6 @@
+command: python3 -I scripts/lib/suite_run.py --start-dir tests/infra --pattern 'test_*.py'
+FAIL: test_the_runtime_hash_pin_changed_is_caught (test_emr_module_13c.EmrModuleMutations.test_the_runtime_hash_pin_changed_is_caught)
+Ran 126 tests in 377.502s
+FAILED (failures=1)
+SUITE-SUMMARY ran=126 executed=126 skipped_tests=0 skipped_classes=0 failures=1 errors=0
+exit code: 1

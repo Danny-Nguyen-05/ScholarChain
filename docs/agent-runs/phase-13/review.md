@@ -288,3 +288,163 @@ Unverified (live, Phase 15): EMR steps, hadoop fs S3 access, HadoopPrepMain on E
 Future scope: 13C (EMR module port to 12-10, TLS decision, IAM items 2/5/14/16/17, test gaps 6/7/10/12/20/21); the ER JAR packaging is BLOCKED-ON build-engineer.
 
 The full review the user pasted also includes the findings table (B1 Medium, B2 Medium, B3 Low, B4 Low, B5 Trivial; none blocking) and the report fields. STATUS: COMPLETE; BLOCKED-ON OWNER: build-engineer (ER JAR packaging, already disclosed); NEXT GATE: user commit of 13B, then Subphase 13C Step 0.
+
+## Subphase 13C
+
+### Review 1 — user-supplied external review — REQUEST-CHANGES (pasted by the user on 2026-11-06; reproduced verbatim)
+
+1. VERDICT: REQUEST-CHANGES — Subphase 13C (base 56144457f38e29b7c6211e040dd1fb15270a50bf, 13C uncommitted)
+Most of 13C meets its acceptance criteria:
+
+EMR module and decision 12-10: the main module matches decision 12-10.
+TLS decision: in-transit TLS is off and disclosed. At-rest encryption stays on.
+Spark settings: the module renders exactly the 22 keys in scripts/config/spark-12-10.conf, and a test fails if they drift.
+Gaps G1–G3 and G5:
+G1: EFS staging, with a TLS-only, access-point-scoped file-system policy.
+G2: shuffle tracking.
+G3: task nodes and managed scaling off by default; caps are checked against the G6 cost limits.
+G5: the runtime archive comes from a tfvars S3 URI with its sha256 pinned.
+IAM items:
+Item 17: the stack tag is required on terminate, modify, ENI delete and DeleteTags.
+Items 2, 5 and 14: closed, each with a negative test.
+Item 16: honestly disclosed as a mitigation only.
+Test gaps 6, 7, 10, 12, 20 and 21: closed.
+Bootstrap items 8, 28 and 29: closed.
+13B findings B2–B5: meet their acceptance checks.
+Safety defaults: dry run is still the default and --init-ledger makes no cloud call. Tests used a temporary HOME; ~/.scholarchain does not exist on this machine.
+Secrets and IDs: no real account ID or secret anywhere. The only 12-digit numbers are the synthetic 111122223333, 555555555555 and 000000000001.
+Evidence: the claimed results match the retained logs:
+RESULT: PASS gates=7, exit 0.
+Script suites 831 / 73 / 69 / 47 / 39 / 256 / 126, all executed, none skipped.
+Terraform tests 7 / 19 / 37 / 40 / 6 / 69.
+sbt 40 / 667 / 18 (+1 canceled), 0 failed.
+Snapshot identity 5430 / 0.
+One defect blocks approval: the B1 change makes the Spark job step impossible to submit to EMR.
+
+2. Findings
+#	Severity	Path:line	Evidence and reasoning	Impact	Owner	Acceptance check	Blocking
+C1	High	scripts/lib/pipeline.py:633-686 (wrap_body), :694 ("Args": ["bash","-c",body]), :840	Each string in an EMR step’s Args may be at most 10,280 characters (AWS API reference, HadoopJarStepConfig.Args). The retained 13B dry run (evidence/13b/infra/pipeline-dry-run-full.txt:442) has a spark-job body of 10,279 characters, using short fixture values. 13C’s wrap_body puts the whole body inside a 37-line wrapper of about 1.6 KB. That makes the spark-job argument about 11.8 KB, over the limit; class-origin is about 10.2 KB, right at it. Real bucket and prefix names make both longer. No test bounds the length, and 13C keeps no full dry run of the wrapped bodies.	In Phase 15 --execute, the steps are submitted one at a time. The ledger slot and the single-use approval are used up first. Stage-in, Hadoop prep and ER then run and bill. Only then does add-steps for spark-job fail with a ValidationException, so one of the three funded runs is lost.	infra-engineer (scripts/**); test-engineer for an independent test in tests/scripts	(a) The plan builder refuses, before any cloud call and also in the dry run, any step argument longer than 10,280 characters. (b) Every step is brought under the limit, for example by installing the wrapper and the large Python snippets as sha-pinned files through the bootstrap’s --artifact into /opt/scholarchain-spike/bin, or by passing a sha-verified body file. (c) Fake-binary tests use maximum-length realistic values (63-character bucket names, long prefixes, a 64-character run id). (d) A 13C dry run is retained that prints each step’s argument length.	Yes
+C2	Low	infra/terraform/modules/emr/variables.tf:20, phase12b-variables.tf (runtime_archive_sha256)	The decision 12-10 runtime hash is only a default. Validation checks that a tfvars value is 64-character hex, not that it equals the pinned hash, and the test checks only the default.	A tfvars override would install a different runtime. The class-origin check fails closed later, but only at run time, after spend.	infra-engineer	A validation requiring equality with the pinned hash (or with RUNTIME_ARCHIVE_EXPECTED_SHA256 from release.conf), plus a negative test.	No
+C3	Trivial	scripts/config/release.conf:193	The comment still says the ledger is “git-ignored … Written only below target/”, but the path is now ~/.scholarchain/emr-ledger/runs.jsonl.	Misleading documentation.	infra-engineer	Correct the comment.	No
+C4	Low	docs/agent-runs/phase-13/evidence/13c/infra/{pipeline-run1.txt (330 KB), tests-scripts-run.txt (363 KB), pipeline-run2.txt (139 KB), test_experiment-run3.txt (130 KB)}	These are full intermediate failing-test logs with local temporary paths, about 1 MB in total. Plan §6.11 says evidence stays lean.	Repository bloat. Nothing secret was found.	orchestrator	Replace them with failure excerpts and summary lines, keeping the commands and exit codes.	No
+Pending human decisions:
+
+Confirm EMR pricing (EMR_PRICING_CONFIRMED_BY_HUMAN stays false).
+Initialise the ledger before Phase 15.
+The deferred 13A items: decision A2, the approval-format additions, and where live state lives.
+Refresh the stale pins in scripts/billing/reviewed-pins.json (stale at base).
+The ER JAR packaging (BLOCKED-ON build-engineer).
+Not verified live (Phase 14/15):
+
+The bootstrap on real nodes: runtime install, Java resolution, the EFS tls,iam mount, amazon-efs-utils and S3 egress.
+The item 17 stack tag on ENIs that EMR creates.
+The process-group kill and the cancel-steps signal on a node.
+Effective deployer permissions.
+G2, G3 and G4.
+Future scope:
+
+Item 25, an optional tightening.
+The main stack’s EMR service policy is user-supplied, follows AmazonEMRServicePolicy_v2’s tag conditions and has no stack-tag condition. Review it at the Phase 14 pre-flight.
+3. Report fields
+STATUS: COMPLETE (review); verdict REQUEST-CHANGES
+OWNER: code-reviewer
+WORK ORDER: Phase 13 Subphase 13C independent review (user-supplied prompt, 2026-11-06)
+FILES CREATED: none
+FILES MODIFIED: none
+COMMANDS RUN: read-only git diff/status/log, grep/awk/sed over sources and retained evidence; AWS documentation read (HadoopJarStepConfig, BootstrapActionConfig); no build, test, AWS account or provider call
+TEST RESULTS: not run (read-only); retained logs match the claims (check.sh PASS gates=7 exit 0; suites 831/73/69/47/39/256/126; terraform 7/19/37/40/6/69; sbt 0 failed; worktree sbt exit 0, 764 s)
+VALIDATION RESULTS: C1 blocking (EMR step Args length); C2–C4 nonblocking
+ASSUMPTIONS: the wrapper's static size (~1.5–1.7 KB) was measured from source, not by running the code; the 13B body length was measured from retained dry-run evidence
+RISKS: one funded Phase 15 run is lost if C1 is not fixed; live-unverified items as listed
+MANUAL ACTION REQUIRED: pricing confirmation, ledger init, A2/approval-format/live-state decisions, reviewed-pins refresh, ER JAR packaging decision
+BLOCKED-ON OWNER: infra-engineer (C1); build-engineer (ER JAR, pre-existing)
+BLOCKED-ON EVIDENCE: evidence/13b/infra/pipeline-dry-run-full.txt:442 (spark-job body 10,279 chars); scripts/lib/pipeline.py:633-694
+NEXT GATE: C1 repair, then a recheck review of 13C repair round 1
+
+### Review 2 — repair round 1 recheck — APPROVE (user-supplied external review, pasted by the user on 2026-11-06; reproduced verbatim)
+
+1. VERDICT: APPROVE — Subphase 13C repair round 1
+Base and HEAD are 56144457f38e29b7c6211e040dd1fb15270a50bf, with the work uncommitted. All four prior findings (C1–C4) are fixed, and the claimed results match the retained logs. One small nonblocking issue remains, listed as R1 below.
+
+C1 — the EMR step argument limit is fixed:
+
+New step form: each step’s Args are now bash -c <293-char launcher> sc-step <sha> <STEP> KEY=VALUE… (scripts/lib/pipeline.py:267-342).
+Launcher: it checks the installed sc-step.sh against a sha256 computed from the repository file and refuses to run if the file is missing or different. It then execs the runner, with $0/$1 handled correctly.
+Length check:
+check_arg_lengths (pipeline.py:361) runs inside the plan builder, before the g6-gate step, the ledger and the approval (run-bounded-pipeline.sh:362-383).
+The limit is pinned at 10,280 and can only be lowered within 1000..10280 (pipeline.py:476).
+At maximum realistic values, the longest argument in the retained dry run is 1,043 characters (evidence/13c/infra/repair1-dry-run-arg-lengths.txt:27-33).
+B1 is preserved: the whole body still runs under timeout --kill-after in its own process group, with TERM, then KILL after the grace period, and a STEP-WARN message (scripts/emr/sc-step.sh:117-150).
+Item 1 is preserved: YARN applications are still killed by tag on EXIT/TERM and when the cap fires.
+Class-origin is preserved: the check still fails closed in both steps, and the job is gated before spark-submit. The verifier is line-for-line the base 13B snippet.
+The 22 decision 12-10 settings are preserved: they still come from spark-12-10.conf, and the forbidden-key check is still at pipeline.py:195. The order of the --conf flags is unchanged.
+Parameters are safe:
+Each step accepts only its allow-listed keys; an unknown, duplicated or missing key is refused.
+Inherited environment variables are unset first, so they cannot stand in for a missing parameter.
+Values are never evaluated.
+Each Python program is checked against its own sha256 before it runs.
+Pinned in Terraform: phase12b.tf:34 requires each of the four programs exactly once in extra_artifacts, at bin_dir/name with the sha from emr-step-programs.json. Tests cover a wrong sha, a wrong destination, a missing program and a duplicate.
+Drift is refused offline: pipeline.py refuses a plan when the programs and the manifest disagree (STEP-PROGRAM-DRIFT, pipeline.py:147).
+Tests:
+scripts/tests/test_c1_step_args.py (25 tests) and the independent tests/scripts/test_step_arg_limit_13c.py (20 tests).
+They cover the 10,280 / 10,281 boundary, --execute leaving the ledger and approval untouched, tampered or missing programs, and the allow-list.
+The mutation evidence shows the boundary tests catch a disabled check, and the source was restored byte-identically.
+Test rewrites are sound: the dry-run assertions moved from body text to Args parameters plus the pinned runner text. The behaviour itself is still exercised in test_pipeline_bodies.py:501-560 and test_13c_pipeline.py:113-212.
+C2 is fixed: runtime_archive_sha256 must equal the 12-10 pin in both the root config and the module config (phase12b-variables.tf:142, modules/emr/variables.tf:93).
+
+C3 is fixed: the ledger comment is corrected (release.conf:192-195).
+
+C4 is fixed: no evidence file under evidence/13c/infra/ is larger than 100 KB.
+
+Other checks:
+
+Ownership: each path has one writer. infra-engineer wrote scripts/** and infra/terraform/**; test-engineer wrote only tests/**.
+No account ID or secret: the only 12-digit numbers are synthetic.
+No live cloud command ran: tests ran with credentials and profiles unset, and AWS_EC2_METADATA_DISABLED=true.
+Evidence matches the claims:
+Terraform tests 7 / 19 / 37 / 40 / 6 / 77.
+Test suites 856 / 276 / 128 / 73, plus 69 / 47 / 39 OK.
+Snapshot identity 5437 / 0.
+sbt inputs identical: 335 / 0 paths unchanged.
+2. Findings
+#	Severity	Path:line	Evidence	Impact	Owner	Acceptance check	Blocking
+R1	Low	docs/agent-runs/phase-13/evidence/13c/infra/repair1-tests-scripts-run.txt:1-8, …/repair1-tests-scripts-with-manifest-copied.txt	These are failing tests/scripts runs from before test-engineer adapted the fixtures (ERROR/FAIL lines). The first file has no label saying it is an intermediate run. Neither file is mentioned in owner-report.md or test-report.md.	A reader could mistake them for current results.	orchestrator	Add a one-line “intermediate, superseded by test/repair1-scripts-suite-run.txt” header to both files, or mention them in the repair-round report.	No
+Not verified live (Phase 14/15):
+
+The bootstrap actually installing the four programs on a node.
+command-runner.jar running bash -c with the launcher.
+The process-group kill and the EMR cancel signal on a node.
+The EFS mount.
+The item 17 stack tag on ENIs that EMR creates.
+G2–G4.
+The 10,280 limit itself, which is taken from the AWS documentation and not observed live.
+Accepted and disclosed: between the launcher’s sha check and the exec there is a short window, on root-owned mode-755 files.
+
+Future scope (Phase 14):
+
+The human adds the four programs to emr_config.extra_artifacts in *.local.tfvars. The Terraform guard refuses a plan without them.
+Review the EMR service policy at the pre-flight.
+Pending human decisions:
+
+Pricing confirmation.
+Ledger init before Phase 15.
+Decision A2, the approval-format additions and where live state lives.
+The reviewed-pins refresh.
+The ER JAR packaging (BLOCKED-ON build-engineer).
+Not yet run: the seven-gate scripts/check.sh as one command, and a fresh sbt check. Your recorded preference is one full check after approval. Section 11 requires a fresh sbt check on JDK 17.
+
+3. Report fields
+STATUS: COMPLETE (review); verdict APPROVE
+OWNER: code-reviewer
+WORK ORDER: Phase 13 Subphase 13C repair round 1 independent review (user-supplied prompt, 2026-11-06)
+FILES CREATED: none
+FILES MODIFIED: none
+COMMANDS RUN: read-only git rev-parse/status/diff/show, grep/sed/awk/cat/wc/ls over sources, plan and retained evidence; no build, test, AWS or provider call
+TEST RESULTS: not run (read-only); retained logs match the claims: terraform 7/19/37/40/6/77; scripts/tests 856, tests/scripts 276, tests/infra 128, spike 73 (all executed, 0 skipped/failed/errored); billing 69/47/39 OK; check.sh --skip sbt,script-tests exit 5 PARTIAL passed=5 (by design); snapshot 5437/0; sbt inputs 335/0 against the 13C snapshot whose sbt gate passed
+VALIDATION RESULTS: C1–C4 fixed; R1 nonblocking
+ASSUMPTIONS: the 10,280-character limit comes from the AWS API reference; behaviour on real EMR is unverified
+RISKS: node-side behaviour of the launcher, runner and bootstrap install is unproven until Phase 14/15; any later edit under scripts/emr/sc-* needs `pipeline.py step-manifest --write` and new tfvars hashes
+MANUAL ACTION REQUIRED: one full check.sh plus a fresh sbt check on JDK 17; human-gate.md and commit.txt (human only); pricing confirmation; ledger init; A2, approval-format and live-state decisions; reviewed-pins refresh; extra_artifacts in *.local.tfvars at Phase 14
+BLOCKED-ON OWNER: build-engineer (ER JAR packaging, pre-existing)
+BLOCKED-ON EVIDENCE: none new
+NEXT GATE: full verification, then the Phase 13 human gate (13C is the last subphase)

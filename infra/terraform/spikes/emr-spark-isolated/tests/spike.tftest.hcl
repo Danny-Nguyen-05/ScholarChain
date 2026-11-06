@@ -652,3 +652,59 @@ run "rejects_foreign_account_deployer_role_arn" {
   expect_failures = [var.deployer_role_arn]
 }
 
+# ---- Phase 13C carried items 5 and 16 ---------------------------------------------------------------------------------------
+
+run "item_5_the_service_role_may_create_kms_grants_only_for_aws_resources" {
+  command = apply
+
+  assert {
+    condition = length([
+      for st in jsondecode(aws_kms_key.spike.policy).Statement :
+      st if st.Principal.AWS == "arn:aws:iam::111122223333:role/scholarchain-spike-emr-service" && contains(st.Action, "kms:CreateGrant")
+    ]) == 1
+    error_message = "Exactly one key-policy statement grants kms:CreateGrant to the service role."
+  }
+  assert {
+    condition = alltrue([
+      for st in jsondecode(aws_kms_key.spike.policy).Statement :
+      st.Principal.AWS != "arn:aws:iam::111122223333:role/scholarchain-spike-emr-service" || !contains(st.Action, "kms:CreateGrant") || (
+        st.Action == ["kms:CreateGrant"] && try(st.Condition.Bool["kms:GrantIsForAWSResource"], "false") == "true"
+      )
+    ])
+    error_message = "Item 5: the service role's kms:CreateGrant carries kms:GrantIsForAWSResource = true (a grant for an arbitrary grantee is refused); a statement without the condition must fail this test."
+  }
+  assert {
+    condition = alltrue([
+      for st in jsondecode(aws_kms_key.spike.policy).Statement :
+      st.Principal.AWS != "arn:aws:iam::111122223333:role/scholarchain-spike-emr-instance" || !contains(st.Action, "kms:CreateGrant")
+    ])
+    error_message = "The instance role never creates grants."
+  }
+  assert {
+    condition = alltrue([
+      for st in jsondecode(aws_kms_key.spike.policy).Statement :
+      st.Principal.AWS != "arn:aws:iam::111122223333:role/scholarchain-spike-emr-service" || toset(st.Action) == toset(["kms:CreateGrant"]) || toset(st.Action) == toset(["kms:Encrypt", "kms:Decrypt", "kms:ReEncryptFrom", "kms:ReEncryptTo", "kms:GenerateDataKey", "kms:GenerateDataKeyWithoutPlaintext", "kms:DescribeKey", "kms:ListGrants", "kms:RevokeGrant"])
+    ])
+    error_message = "The service role keeps exactly its former EBS-encryption actions, with CreateGrant split out."
+  }
+}
+
+run "item_16_the_spike_roles_trust_only_the_emr_and_ec2_service_principals" {
+  command = apply
+
+  assert {
+    condition     = length(jsondecode(aws_iam_role.service.assume_role_policy).Statement) == 1 && jsondecode(aws_iam_role.service.assume_role_policy).Statement[0].Principal == { Service = "elasticmapreduce.amazonaws.com" } && jsondecode(aws_iam_role.service.assume_role_policy).Statement[0].Action == "sts:AssumeRole" && jsondecode(aws_iam_role.service.assume_role_policy).Statement[0].Condition.StringEquals["aws:SourceAccount"] == "111122223333" && jsondecode(aws_iam_role.service.assume_role_policy).Statement[0].Condition.ArnLike["aws:SourceArn"] == "arn:aws:elasticmapreduce:us-east-2:111122223333:*"
+    error_message = "Item 16: the service role trusts only the EMR service principal, for this account and region."
+  }
+  assert {
+    condition     = length(jsondecode(aws_iam_role.instance.assume_role_policy).Statement) == 1 && jsondecode(aws_iam_role.instance.assume_role_policy).Statement[0].Principal == { Service = "ec2.amazonaws.com" } && jsondecode(aws_iam_role.instance.assume_role_policy).Statement[0].Action == "sts:AssumeRole"
+    error_message = "Item 16: the instance role trusts only the EC2 service principal."
+  }
+  assert {
+    condition = alltrue([
+      for r in [aws_iam_role.service.assume_role_policy, aws_iam_role.instance.assume_role_policy] :
+      !strcontains(r, "\"AWS\"") && !strcontains(r, "Federated") && !strcontains(r, "arn:aws:iam::") && !strcontains(r, ":root")
+    ])
+    error_message = "Item 16: no AWS, federated or account-root principal appears in either trust policy."
+  }
+}

@@ -14,6 +14,7 @@ Usage: scripts/run-bounded-pipeline.sh --cluster-id J-ID --region R --instance-t
          --hadoop-submit-jar REF --hadoop-libjars REF --hadoop-config FILE --er-jar REF --er-policy REF --er-config REF
          --spark-config-template REF --datasets-manifest FILE --artifact-sha256 NAME=HEX [...] [--run-id ID]
          [--approval FILE] [--prespend FILE] [--profile P] [--execute] [--help]
+       scripts/run-bounded-pipeline.sh --init-ledger
 
 Purpose
   Submit the bounded ScholarChain pipeline to an EXISTING EMR cluster created by Terraform (it never calls
@@ -58,6 +59,7 @@ Inputs (flags; there are no defaults for these)
                          tighten PIPELINE_MAX_IDLE_TIMEOUT_SECONDS); the value is part of the run configuration
   --delegated-from-experiment SHA   internal: set by run-experiment.sh; the record must then be a run-experiment
                          record whose APPROVED_MANIFEST_SHA256 equals SHA (do not use it by hand)
+  --init-ledger  create the run ledger once (who and when), then exit; refuses when it exists; needs no other argument
   --run-id ID    default bp-<UTC time>-<pid>; also the YARN tag and the EFS run directory name (never reused)
   --approval FILE    approval record (default RUN_APPROVAL_RECORD_PATH); --prespend FILE pre-spend receipt
                      (default PRESPEND_RECEIPT_DEFAULT_PATH); --profile P or AWS_PROFILE for --execute
@@ -72,17 +74,45 @@ Modes
   --execute   human approval point 2 (plan Section 7.3). Needs an approval record, the pre-spend receipt, confirmed
               pricing and the G6 gates below.
 
+Step form and the EMR argument limit (finding C1)
+  EMR accepts at most 10,280 characters per string in a step's HadoopJarStepConfig.Args (PIPELINE_STEP_ARG_MAX_CHARS, pinned;
+  it may be lowered, never raised). Each step is therefore `bash -c <short launcher> sc-step <sha256> <STEP> KEY=VALUE...`
+  (about 1 KB at most per argument): the static runner scripts/emr/sc-step.sh (the on-node timeout wrapper and the six step
+  bodies) and three small Python programs (ceiling check, class-origin verifier, spark-config renderer) are installed on
+  the primary node by the bootstrap action as sha256-pinned --artifact files in PIPELINE_STEP_BIN_DIR, and the launcher
+  verifies the runner against the sha256 computed here from the repository file (fail closed) before it runs it; the runner
+  verifies each Python program the same way. The plan builder refuses (exit 3, STEP: arg-limit, STEP-ARG-TOO-LONG naming
+  the step, argument and length) any argument over the limit BEFORE any cloud call, the ledger reservation and the
+  approval; the dry run prints every argument length (STEP-ARG-LENGTHS) and runs the same check. The Terraform side pins the
+  same hashes (infra/terraform/emr-step-programs.json); a drifted manifest is refused (STEP-PROGRAM-DRIFT).
+
 Ceilings and refusals (all before any cloud call)
+  Every step body, including stage-in, copy-out and the localize copies, runs on the node under
+  `timeout --kill-after=PIPELINE_KILL_AFTER_SECONDS <its timeout_seconds>`, in its own process group: on timeout, failure or
+  cancel the wrapper sends TERM to the whole group and KILL after the grace, so a grandchild that ignores TERM cannot outlive
+  the step; YARN-submitting bodies also kill the YARN application by run tag when that timeout fires or on TERM.
   Phase 4 ceilings on the prep config (maxLocalSampleRecords<=1000 reducerCount<=8 maxCandidateBlockSize<=256
   maxCandidatePairsPerBlock<=4096 maxAuthorTeamSize<=64 maxRecordBytes<=8388608 maxXmlEntityExpansion<=8388608),
   input and copy-out byte ceilings, capacity <= PIPELINE_MAX_CAPACITY, runtime <= PIPELINE_MAX_RUNTIME_MINUTES.
 
 G6 cost guard
-  estimate = (instances x (EC2 on-demand + EMR uplift rate)) x maximum runtime hours, printed in the dry run and
-  before --execute. --execute is REFUSED when the estimate exceeds EMR_MAX_RUN_USD (3) or the declared budget, when the
-  ignored local ledger (EMR_LEDGER_PATH) already holds EMR_MAX_LIVE_RUNS (3) live runs, when the cumulative estimate
-  would exceed EMR_CUMULATIVE_CAP_USD (9.50), when a reviewed rate is missing (never read as zero), or while
-  EMR_PRICING_CONFIRMED_BY_HUMAN is not true (a human flips it after checking the sources).
+  estimate = instances x (EC2 on-demand + EMR uplift rate) x (maximum runtime + the auto-termination idle timeout
+  PIPELINE_MAX_IDLE_TIMEOUT_SECONDS, 900 s) hours: the idle tail before the cluster stops is billed too. It is printed in
+  the dry run and before --execute. --execute is REFUSED when the estimate exceeds EMR_MAX_RUN_USD (3) or the declared
+  budget, when the run ledger already holds EMR_MAX_LIVE_RUNS (3) live runs, when the cumulative estimate would exceed
+  EMR_CUMULATIVE_CAP_USD (9.50), when a reviewed rate is missing (never read as zero), when the ledger does not exist, when
+  the approval record already started a run, or while EMR_PRICING_CONFIRMED_BY_HUMAN is not true (a human flips it after
+  checking the sources).
+
+Run ledger (EMR_LEDGER_PATH, default ~/.scholarchain/emr-ledger/runs.jsonl, expanded against HOME)
+  It lives OUTSIDE the repository and outside sbt's target/, so `sbt clean`, `git clean` and a fresh clone cannot erase it.
+  An ABSENT ledger refuses --execute: it is never read as zero runs. The human creates it once with
+      scripts/run-bounded-pipeline.sh --init-ledger
+  which records who and when and REFUSES when the ledger already exists (a script never resets the spend record). Deleting
+  the file by hand is the only reset and reopens the caps: do it only deliberately.
+  Approvals are SINGLE-USE: a reservation stores the sha256 of the approval record, and a later run with the same record
+  is refused even after a failed run (a failed run may have spent money). Write a new record (change any text, for example
+  a serial line; text that is not an APPROVED_* line is ignored by the parser) for each run.
 
 Human approval record (--execute): KEY=value lines, each exactly once, no quotes or spaces; other text is ignored
   APPROVED_ACTION=run-bounded-pipeline        APPROVED_COMMIT=<HEAD, 40 hex>       APPROVED_ACCOUNT_SHA256=<64 hex>
@@ -97,7 +127,8 @@ Human approval record (--execute): KEY=value lines, each exactly once, no quotes
 
 Human approval points (plan Section 7.3)
   2. --execute: an approval record naming the run configuration, budget, region, capacity, maximum runtime and
-     teardown, plus a pre-spend receipt. A reviewed dry run is not approval to execute.
+     teardown, plus a pre-spend receipt. A reviewed dry run is not approval to execute. --init-ledger is a local file
+     creation by the human, not a cloud action.
 
 Exit codes
   0    success, or the dry run completed
@@ -124,6 +155,7 @@ RUN_ID_OPT="" IDLE_MAX_OPT=""
 APPROVAL="" PRESPEND="" DELEGATED_MANIFEST_SHA=""
 ARTIFACT_SHAS=()
 EXECUTE=0
+INIT_LEDGER=0
 while [[ $# -gt 0 ]]; do
   case "$1" in
     --cluster-id | --region | --instance-type | --core-count | --max-task-count | --max-runtime-minutes | --budget-usd | --input-prefix | --output-prefix | --hadoop-submit-jar | --hadoop-libjars | --hadoop-config | --er-jar | --er-policy | --er-config | --spark-config-template | --datasets-manifest | --artifact-sha256 | --run-id | --approval | --prespend | --profile | --max-idle-seconds | --delegated-from-experiment)
@@ -166,6 +198,10 @@ while [[ $# -gt 0 ]]; do
       EXECUTE=0
       shift
       ;;
+    --init-ledger)
+      INIT_LEDGER=1
+      shift
+      ;;
     -h | --help)
       usage
       exit 0
@@ -178,6 +214,34 @@ done
 
 sc_init "run-bounded-pipeline.sh"
 sc_load_pricing
+
+# The ledger lives outside the repository: EMR_LEDGER_PATH is expanded from a leading ~/ against HOME (finding B2).
+[[ -n "${HOME:-}" && "${HOME}" == /* ]] || sc_usage_error "HOME must be an absolute path: the run ledger lives under it"
+LEDGER_ABS="${EMR_LEDGER_PATH}"
+case "${LEDGER_ABS}" in
+  [~]/*) LEDGER_ABS="${HOME}/${LEDGER_ABS#[~]/}" ;;
+esac
+LEDGER_WITHIN="${HOME}/.scholarchain"
+case "${LEDGER_ABS}" in
+  "${LEDGER_WITHIN}"/*) ;;
+  *) sc_usage_error "EMR_LEDGER_PATH must be under ~/.scholarchain/ (found ${EMR_LEDGER_PATH})" ;;
+esac
+
+if [[ "${INIT_LEDGER}" -eq 1 ]]; then
+  [[ "${EXECUTE}" -eq 0 ]] || sc_usage_error "--init-ledger takes no other mode flag"
+  [[ ${#ARTIFACT_SHAS[@]} -eq 0 && -z "${CLUSTER_ID}${INSTANCE_TYPE}${CORE_COUNT}${RUNTIME_MIN}${BUDGET}" ]] || sc_usage_error "--init-ledger takes no other argument"
+  sc_banner "init-ledger"
+  sc_step "ledger-init"
+  sc_require_tool python3
+  INIT_RC=0
+  INIT_OUT="$(python3 -I "${SC_LIB_DIR}/budget.py" ledger-init --root "${HOME}" --within-name ".scholarchain under HOME" --within "${LEDGER_WITHIN}" \
+    --ledger "${LEDGER_ABS}" --repo-root "${REPO_ROOT}" --initialized-by "$(id -un)" --initialized-utc "$(sc_now)")" || INIT_RC=$?
+  if [[ "${INIT_RC}" -ne 0 ]]; then
+    sc_refuse "${EX_REFUSED}" "${INIT_OUT}"
+  fi
+  sc_info "${INIT_OUT}"
+  sc_result PASS "ledger initialised at ${EMR_LEDGER_PATH}; this is a local file, no cloud call was made" "${EX_OK}"
+fi
 if [[ "${EXECUTE}" -eq 1 ]]; then
   DRY_RUN=0
   sc_banner "execute"
@@ -238,7 +302,7 @@ EMR_VAR="EMR_RATE_EMR_${TYPE_KEY}"
 sc_mktemp ESTIMATE_FILE
 EST_RC=0
 python3 -I "${SC_LIB_DIR}/budget.py" estimate --instance-type "${INSTANCE_TYPE}" --primary-count 1 --core-count "${CORE_COUNT}" \
-  --task-count "${TASK_COUNT}" --minutes "${RUNTIME_MIN}" --ec2-rate "${!EC2_VAR:-}" --emr-rate "${!EMR_VAR:-}" \
+  --task-count "${TASK_COUNT}" --minutes "${RUNTIME_MIN}" --idle-seconds "${IDLE_MAX}" --ec2-rate "${!EC2_VAR:-}" --emr-rate "${!EMR_VAR:-}" \
   --max-run-usd "${EMR_MAX_RUN_USD}" --budget-usd "${BUDGET}" >"${ESTIMATE_FILE}" || EST_RC=$?
 ESTIMATE_AVAILABLE=1
 case "${EST_RC}" in
@@ -287,11 +351,15 @@ PLAN_OUT="$(python3 -I "${SC_LIB_DIR}/pipeline.py" plan --out "${PLAN_FILE}" --r
   --max-capacity-cap "${PIPELINE_MAX_CAPACITY}" --max-runtime-cap "${PIPELINE_MAX_RUNTIME_MINUTES}" --max-input-bytes "${PIPELINE_MAX_INPUT_BYTES}" \
   --max-copyout-bytes "${PIPELINE_MAX_COPYOUT_BYTES}" --max-idle-timeout-seconds "${IDLE_MAX}" \
   --max-executors-per-node "${PIPELINE_MAX_EXECUTORS_PER_NODE}" --kill-after-seconds "${PIPELINE_KILL_AFTER_SECONDS}" --min-step-seconds "${PIPELINE_MIN_STEP_SECONDS}" \
+  --step-bin-dir "${PIPELINE_STEP_BIN_DIR}" --step-arg-max-chars "${PIPELINE_STEP_ARG_MAX_CHARS}" \
   --ceiling-0 "${PIPELINE_CEILING_MAX_LOCAL_SAMPLE_RECORDS}" --ceiling-1 "${PIPELINE_CEILING_REDUCER_COUNT}" \
   --ceiling-2 "${PIPELINE_CEILING_MAX_CANDIDATE_BLOCK_SIZE}" --ceiling-3 "${PIPELINE_CEILING_MAX_CANDIDATE_PAIRS_PER_BLOCK}" \
   --ceiling-4 "${PIPELINE_CEILING_MAX_AUTHOR_TEAM_SIZE}" --ceiling-5 "${PIPELINE_CEILING_MAX_RECORD_BYTES}" \
   --ceiling-6 "${PIPELINE_CEILING_MAX_XML_ENTITY_EXPANSION}" ${sha_args[@]+"${sha_args[@]}"})" || PLAN_RC=$?
 if [[ "${PLAN_RC}" -ne 0 ]]; then
+  case "${PLAN_OUT}" in
+    *STEP-ARG-TOO-LONG*) sc_step "arg-limit" ;;
+  esac
   sc_refuse "${EX_REFUSED}" "${PLAN_OUT:-the plan could not be built}"
 fi
 RUN_CONFIG_SHA="$(python3 -I "${SC_LIB_DIR}/pipeline.py" show --plan "${PLAN_FILE}" --what run-config-sha256)"
@@ -304,11 +372,20 @@ printf 'RUN-CONFIG-SHA256: %s\n' "${RUN_CONFIG_SHA}"
 printf 'TEARDOWN: forced auto-termination: the cluster must have an idle timeout of at most %ss (checked with --execute: aws emr get-auto-termination-policy)\n' "${IDLE_MAX}"
 printf 'YARN-TAG: %s (the hard runtime cap kills the YARN application by this tag)\n' "${RUN}"
 
+# Finding C1: EMR accepts at most 10,280 characters per step argument. The plan builder has already refused anything longer
+# (before this point, hence before the ledger reservation and before any approval is consumed); print every length.
+sc_step "arg-limit"
+idx=0
+while [[ "${idx}" -lt "${STEP_COUNT}" ]]; do
+  printf 'STEP-ARG-LENGTHS: %s\n' "$(python3 -I "${SC_LIB_DIR}/pipeline.py" show --plan "${PLAN_FILE}" --what "step-arglens:${idx}")"
+  idx=$((idx + 1))
+done
+printf 'STEP-ARG-LIMIT: no step argument exceeds %s characters (PIPELINE_STEP_ARG_MAX_CHARS, pinned; the EMR HadoopJarStepConfig.Args limit); checked before any cloud call, the ledger reservation and the approval\n' "${PIPELINE_STEP_ARG_MAX_CHARS}"
+
 # ---------------------------------------------------------------------------------------------
 # G6 gates (ledger, pricing confirmation). In a dry run they are reported; with --execute they refuse.
 # ---------------------------------------------------------------------------------------------
 sc_step "g6-gate"
-LEDGER_ABS="${REPO_ROOT}/${EMR_LEDGER_PATH}"
 G6_PROBLEMS=()
 if [[ "${EMR_PRICING_CONFIRMED_BY_HUMAN:-false}" != "true" ]]; then
   G6_PROBLEMS+=("pricing is not confirmed by the human (EMR_PRICING_CONFIRMED_BY_HUMAN is not true in ${PIPELINE_PRICING_FILE})")
@@ -317,7 +394,7 @@ if [[ "${ESTIMATE_AVAILABLE}" -eq 0 ]]; then
   G6_PROBLEMS+=("no reviewed hourly rate for ${INSTANCE_TYPE} (${EC2_VAR} / ${EMR_VAR}): the estimate cannot be computed and is never read as zero")
 else
   LEDGER_RC=0
-  LEDGER_OUT="$(python3 -I "${SC_LIB_DIR}/budget.py" ledger-check --ledger "${LEDGER_ABS}" --estimate "${ESTIMATE_USD}" \
+  LEDGER_OUT="$(python3 -I "${SC_LIB_DIR}/budget.py" ledger-check --ledger "${LEDGER_ABS}" --repo-root "${REPO_ROOT}" --estimate "${ESTIMATE_USD}" \
     --max-runs "${EMR_MAX_LIVE_RUNS}" --cumulative-cap "${EMR_CUMULATIVE_CAP_USD}")" || LEDGER_RC=$?
   if [[ "${LEDGER_RC}" -eq 0 ]]; then
     printf '%s\n' "${LEDGER_OUT}"
@@ -413,6 +490,14 @@ if [[ "${EXECUTE}" -eq 1 ]]; then
   fi
   APPROVAL_SHA="$(sc_sha256 "${APPROVAL}")"
   sc_info "approval record matches the commit, region, cluster, run configuration, budget, capacity, runtime and teardown"
+  # Finding B4: an approval is single-use. The ledger holds the sha256 of every record that started a run.
+  USED_RC=0
+  USED_OUT="$(python3 -I "${SC_LIB_DIR}/budget.py" ledger-check --ledger "${LEDGER_ABS}" --repo-root "${REPO_ROOT}" --estimate "${ESTIMATE_USD}" \
+    --max-runs "${EMR_MAX_LIVE_RUNS}" --cumulative-cap "${EMR_CUMULATIVE_CAP_USD}" --approval-sha256 "${APPROVAL_SHA}")" || USED_RC=$?
+  if [[ "${USED_RC}" -ne 0 ]]; then
+    sc_refuse "${EX_REFUSED}" "${USED_OUT#G6-REFUSED: }"
+  fi
+  sc_info "approval record sha256 ${APPROVAL_SHA} has not started a run before (single-use)"
 
   sc_step "prespend-receipt"
   [[ -f "${PRESPEND}" ]] || sc_refuse "${EX_REFUSED}" "pre-spend receipt not found: ${PRESPEND#"${REPO_ROOT}"/} (the human writes it; see scripts/README.md)"
@@ -502,7 +587,7 @@ _print_step() {
   seconds="$(python3 -I "${SC_LIB_DIR}/pipeline.py" show --plan "${PLAN_FILE}" --what "step-seconds:${index}")"
   json="$(python3 -I "${SC_LIB_DIR}/pipeline.py" show --plan "${PLAN_FILE}" --what "step-json:${index}")"
   sc_step "step-${name}"
-  printf 'STEP-TIMEOUT: %s %ss (the body runs under timeout; YARN applications are killed by tag when it fires)\n' "${name}" "${seconds}"
+  printf 'STEP-TIMEOUT: %s %ss (the whole step body, including every copy, runs on the node under timeout --kill-after=%ss in its own process group, which is sent TERM and then KILL after the grace on timeout or cancel; YARN applications are also killed by tag when it fires)\n' "${name}" "${seconds}" "${PIPELINE_KILL_AFTER_SECONDS}"
   printf 'STEP-BODY-BEGIN: %s\n' "${name}"
   python3 -I "${SC_LIB_DIR}/pipeline.py" show --plan "${PLAN_FILE}" --what "step-body:${index}" | sc_redact_stream
   printf 'STEP-BODY-END: %s\n' "${name}"
@@ -522,12 +607,10 @@ fi
 
 # ---- --execute: reserve the G6 ledger slot, write the private manifest, submit and watch each step ----
 sc_step "ledger-reserve"
-sc_safeio ensure-dir --root "${REPO_ROOT}" --within-name "target" --within "${REPO_ROOT}/target" --path "$(dirname "${LEDGER_ABS}")"
-sc_require_ignored "${LEDGER_ABS}"
 RES_RC=0
-RES_OUT="$(python3 -I "${SC_LIB_DIR}/budget.py" ledger-reserve --root "${REPO_ROOT}" --ledger "${LEDGER_ABS}" --run-id "${RUN}" \
+RES_OUT="$(python3 -I "${SC_LIB_DIR}/budget.py" ledger-reserve --root "${HOME}" --ledger "${LEDGER_ABS}" --repo-root "${REPO_ROOT}" --run-id "${RUN}" \
   --estimate "${ESTIMATE_USD}" --max-runs "${EMR_MAX_LIVE_RUNS}" --cumulative-cap "${EMR_CUMULATIVE_CAP_USD}" --action "${ACTION}" \
-  --run-config-sha256 "${RUN_CONFIG_SHA}" --reserved-utc "$(sc_now)")" || RES_RC=$?
+  --run-config-sha256 "${RUN_CONFIG_SHA}" --approval-sha256 "${APPROVAL_SHA}" --reserved-utc "$(sc_now)")" || RES_RC=$?
 if [[ "${RES_RC}" -ne 0 ]]; then
   sc_refuse "${EX_REFUSED}" "ledger reservation refused: ${RES_OUT}"
 fi

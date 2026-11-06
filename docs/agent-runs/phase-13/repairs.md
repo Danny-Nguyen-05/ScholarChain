@@ -218,3 +218,16 @@ Still pending human decisions:
 - A2.
 - The approval-format additions, including a carried rollback using `APPROVED_STAGE=runtime-apply` with `APPROVED_COMMIT=PREV`.
 - The live-state location.
+
+## Subphase 13C — repair round 1
+
+Source: review 1 of Subphase 13C (REQUEST-CHANGES), recorded verbatim in `review.md`. User instruction (2026-11-06): "Fix blockings bugs for me". The cheap nonblocking items C2–C4 are included.
+
+| ID | Severity | Blocking | Owner | Acceptance check |
+|---|---|---|---|---|
+| C1 | High | yes | infra-engineer (`scripts/**`, any `infra/terraform/**` wiring); test-engineer for an independent `tests/scripts` test | (a) the plan builder refuses, before any cloud call and in the dry run, any step argument longer than 10,280 characters; (b) every step is under the limit without weakening B1 (on-node whole-body timeout and process-group kill) or item 1 (YARN kill by tag); (c) fake-binary tests use maximum-length realistic values (63-character buckets, long prefixes, 64-character run id); (d) a 13C dry run printing each step's argument length is retained under `evidence/13c/` |
+| C2 | Low | no | infra-engineer | `runtime_archive_sha256` must equal the decision 12-10 / `release.conf` pin; negative test |
+| C3 | Trivial | no | infra-engineer | correct the stale ledger comment at `scripts/config/release.conf:193` |
+| C4 | Low | no | orchestrator | replace the ~1 MB intermediate failing logs in `evidence/13c/infra/` with excerpts and summary lines, keeping commands and exit codes |
+
+Verification scope (user preference recorded in 13A round 3): rerun `scripts/tests`, `tests/scripts`, `tests/infra` and the affected Terraform roots; the sbt check is reused from 13C with proof that no `build.sbt`, `project/**` or `modules/**` input changed, unless such an input changes.

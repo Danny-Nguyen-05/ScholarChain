@@ -67,7 +67,7 @@ class CommittedManifestTests(ExperimentFixture):
         self.assertEqual([l for l in result.stdout.splitlines() if l.startswith("pipeline| STEP: step-")], ["pipeline| STEP: step-" + n for n in STEPS])
         self.assertIn("pipeline| RESULT: DRY-RUN", result.stdout)
         self.assertEqual(len([l for l in result.stdout.splitlines() if "pipeline| DRY-RUN CMD:" in l and "emr add-steps" in l]), 6)
-        self.assertIn("pipeline| ESTIMATE-USD: 1.08", result.stdout)
+        self.assertIn("pipeline| ESTIMATE-USD: 1.26", result.stdout)
         self.assertIn("pipeline| APPROVAL-LINE: APPROVED_ACTION=run-experiment", result.stdout)
         self.assertEqual(self.calls(), [])
         self.assertTrue(self.tree_clean())
@@ -153,8 +153,8 @@ class ManifestSchemaTests(ExperimentFixture):
             "empty teardown": (lambda d: d.update(teardown={}), "teardown.mode is required"),
             "teardown without idle timeout": (lambda d: d["teardown"].pop("max_idle_timeout_seconds"), "teardown.max_idle_timeout_seconds is required"),
             "teardown mode none": (lambda d: d["teardown"].update(mode="none"), "teardown.mode must be auto-termination"),
-            "idle timeout above the cap": (lambda d: d["teardown"].update(max_idle_timeout_seconds=7200), "from 60 to 3600"),
-            "idle timeout below 60": (lambda d: d["teardown"].update(max_idle_timeout_seconds=30), "from 60 to 3600"),
+            "idle timeout above the cap": (lambda d: d["teardown"].update(max_idle_timeout_seconds=7200), "from 60 to 900"),
+            "idle timeout below 60": (lambda d: d["teardown"].update(max_idle_timeout_seconds=30), "from 60 to 900"),
             "teardown not an object": (lambda d: d.update(teardown="auto-termination"), "the teardown section is required"),
             "budget not an object": (lambda d: d.update(budget=[1]), "the budget section is required"),
             "unknown top-level key": (lambda d: d.update(cluster_id=CLUSTER), "unknown top-level key: cluster_id"),
@@ -261,7 +261,7 @@ class ExperimentExecuteTests(ExperimentFixture):
         self.write_ledger(["0.50", "0.50", "0.50"])
         self.refused(self.experiment(*args), "3 live EMR runs")
         # a stale pre-spend receipt
-        os.remove(self.ledger_path())
+        self.write_ledger([])  # a fresh, initialised ledger
         args = self.ready()
         self.write_prespend()  # same name: unchanged; now make it stale and re-hash
         stale_path, stale_sha = self.write_prespend(cost_snapshot_utc="2020-01-01T00:00:00Z")

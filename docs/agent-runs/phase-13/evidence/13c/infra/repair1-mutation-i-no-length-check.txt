@@ -1,0 +1,25 @@
+MUTATION: (i) remove the C1 step-argument length check from build_plan
+file: scripts/lib/pipeline.py
+replaced: '        check_arg_lengths(name, argv, arg_limit)\n'
+with: '        pass  # MUTATION (i): length check removed\n'
+command: cd scripts/tests && python3 -m unittest test_c1_step_args.OversizeRefusalTests
+FAIL: test_an_oversized_argument_is_refused_with_exit_3_before_any_cloud_call (test_c1_step_args.OversizeRefusalTests.test_an_oversized_argument_is_refused_with_exit_3_before_any_cloud_call)
+AssertionError: 0 != 3 : STEP: start
+FAIL: test_every_step_is_checked_not_only_the_first (test_c1_step_args.OversizeRefusalTests.test_every_step_is_checked_not_only_the_first) [stage-in]
+AssertionError: 0 != 3 : STEP: start
+FAIL: test_every_step_is_checked_not_only_the_first (test_c1_step_args.OversizeRefusalTests.test_every_step_is_checked_not_only_the_first) [hadoop-prep]
+AssertionError: 0 != 3 : STEP: start
+FAIL: test_every_step_is_checked_not_only_the_first (test_c1_step_args.OversizeRefusalTests.test_every_step_is_checked_not_only_the_first) [spark-job]
+AssertionError: 0 != 3 : STEP: start
+FAIL: test_every_step_is_checked_not_only_the_first (test_c1_step_args.OversizeRefusalTests.test_every_step_is_checked_not_only_the_first) [copy-out]
+AssertionError: 0 != 3 : STEP: start
+FAIL: test_execute_refuses_before_the_ledger_the_approval_and_any_aws_call (test_c1_step_args.OversizeRefusalTests.test_execute_refuses_before_the_ledger_the_approval_and_any_aws_call)
+AssertionError: 'STEP-ARG-TOO-LONG: step entity-resolution argument' not found in 'STEP: start\n[2026-11-06T19:57:08Z] [20261106T195708Z-75997] INFO script=run-bounded-pipeline.sh mode=execute run_id=20261106T195708Z-75997 repo_root=/privat
+FAIL: test_the_boundary_exactly_at_the_limit_passes_and_one_over_is_refused (test_c1_step_args.OversizeRefusalTests.test_the_boundary_exactly_at_the_limit_passes_and_one_over_is_refused)
+AssertionError: 0 != 3 : STEP: start
+FAIL: test_the_pinned_limit_can_be_lowered_but_not_raised (test_c1_step_args.OversizeRefusalTests.test_the_pinned_limit_can_be_lowered_but_not_raised)
+AssertionError: 0 != 3 : CONFIG-FILE: using /var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-dgf4pggx/fixture-release.conf instead of the repository config (test-only SCHOLARCHAIN_CONFIG_FILE)
+Ran 6 tests in 13.658s
+FAILED (failures=8)
+exit code: 1
+file restored byte-identical: True

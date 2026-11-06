@@ -21,6 +21,8 @@ output "controls" {
     kms_policy          = aws_kms_key.data.policy
     kms_rotation        = aws_kms_key.data.enable_key_rotation
     deployment_trust    = aws_iam_role.deployment.assume_role_policy
+    emr_service_trust   = aws_iam_role.emr_service.assume_role_policy
+    emr_ec2_trust       = aws_iam_role.emr_ec2.assume_role_policy
     task_trust          = { for k, r in aws_iam_role.task : k => r.assume_role_policy }
   }
 }
@@ -38,3 +40,5 @@ output "emr_ready_profile_arn" {
   value      = aws_iam_instance_profile.emr.arn
   depends_on = [aws_iam_role_policy.emr_data]
 }
+
+output "emr_ec2_role_name" { value = aws_iam_role.emr_ec2.name }

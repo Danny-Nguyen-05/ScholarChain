@@ -12,7 +12,9 @@ section 7.2 (class-origin check before the real Spark job, fail closed, Java 17 
 import hashlib
 import json
 import os
+import signal
 import subprocess
+import time
 import unittest
 from pathlib import Path
 
@@ -23,9 +25,9 @@ APPS = "application_1700000000000_0001,application_1700000000000_0002"
 
 
 class Harness:
-    def __init__(self, test, **cfg_over):
+    def __init__(self, test, patch=None, **cfg_over):
         self.test = test
-        self.fx = S.Fixture(test)
+        self.fx = S.Fixture(test, patch=patch)
         a = self.fx.aux
         self.mnt = a / "mnt"
         self.runtime = a / "runtime"
@@ -68,10 +70,10 @@ class Harness:
         env.update(extra)
         return env
 
-    def run_body(self, name, **extra):
+    def run_body(self, name, timeout=120, **extra):
         self.fx.log.write_text("")
         done = subprocess.run(["bash", "-c", S.extract_body(self.dry, name)], env=self.body_env(**extra), cwd=str(self.fx.repo),
-                              capture_output=True, text=True, timeout=120)
+                              capture_output=True, text=True, timeout=timeout)
         return done, self.fx.calls()
 
     # probe document in the shape the Phase 12 readiness job reports (README: driver and executor, Java 17, pinned
@@ -113,6 +115,20 @@ def argv_of(calls, tool):
     return [c["argv"] for c in calls if c["tool"] == tool]
 
 
+def is_step_wrapper(argv):
+    """The B1 step-level wrapper: `timeout --kill-after=N SECONDS bash <step bin>/sc-step.sh __body STEP KEY=VALUE...`."""
+    return len(argv) >= 5 and argv[0].startswith("--kill-after=") and argv[2] == "bash" and argv[3].endswith("/sc-step.sh") and argv[4] == "__body"
+
+
+def step_wrappers(calls):
+    return [a for a in argv_of(calls, "timeout") if is_step_wrapper(a)]
+
+
+def inner_timeouts(calls):
+    """Every other `timeout` call: the client wrapper (`run_bounded`) inside a YARN-submitting body."""
+    return [a for a in argv_of(calls, "timeout") if not is_step_wrapper(a)]
+
+
 class YarnKillByTag(unittest.TestCase):
     """Carried item 1: when the runtime cap fires, the body kills the YARN application tagged with the run id."""
 
@@ -134,18 +150,21 @@ class YarnKillByTag(unittest.TestCase):
                 h = Harness(self)
                 done, calls = h.run_body("hadoop-prep", SC_FAKE_TIMEOUT_MODE="exit:%d" % code)
                 self.check_kill(done, calls, code)
-                timeouts = argv_of(calls, "timeout")
+                timeouts = inner_timeouts(calls)
                 self.assertEqual(len(timeouts), 1)
                 self.assertIn("HadoopPrepMain", " ".join(timeouts[0]))
                 self.assertIn("-Dmapreduce.job.tags=%s" % TAG, timeouts[0])
                 self.assertIn("720", timeouts[0], "the step timeout derived from the runtime cap must wrap the client")
+                # B1: the whole body also runs under the step wrapper: 20% of 3600 s = 720 s, kill-after 60 s
+                self.assertEqual([a[:3] for a in step_wrappers(calls)], [["--kill-after=60", "720", "bash"]])
 
     def test_spark_job_cap_kills_the_tagged_applications(self):
         h = Harness(self)
         h.stage_for_spark_job()
         done, calls = h.run_body("spark-job", SC_FAKE_TIMEOUT_MODE="exit:124")
         self.check_kill(done, calls, 124)
-        wrapped = argv_of(calls, "timeout")[0]
+        wrapped = inner_timeouts(calls)[0]
+        self.assertEqual([a[:3] for a in step_wrappers(calls)], [["--kill-after=60", "1440", "bash"]], "40% of 3600 s")
         self.assertTrue(any(a.endswith("/bin/spark-submit") for a in wrapped))
         self.assertIn("spark.yarn.tags=%s" % TAG, wrapped)
 
@@ -167,7 +186,8 @@ class YarnKillByTag(unittest.TestCase):
         h = Harness(self)
         done, calls = h.run_body("hadoop-prep", SC_FAKE_YARN_APPS="")
         self.assertEqual(done.returncode, 0, done.stdout + done.stderr)
-        self.assertEqual(len(argv_of(calls, "timeout")), 1)
+        self.assertEqual(len(inner_timeouts(calls)), 1)
+        self.assertEqual(len(step_wrappers(calls)), 1)
         self.assertTrue([a for a in argv_of(calls, "hadoop") if a[:1] == ["jar"]])
         self.assertEqual([a for a in argv_of(calls, "yarn") if a[:2] == ["application", "-kill"]], [])
 
@@ -178,7 +198,7 @@ class YarnKillByTag(unittest.TestCase):
         self.assertNotEqual(done.returncode, 0)
         self.assertIn("sha256 mismatch", done.stderr)
         self.assertEqual([a for a in argv_of(calls, "hadoop") if a[:1] == ["jar"]], [])
-        self.assertEqual(argv_of(calls, "timeout"), [])
+        self.assertEqual(inner_timeouts(calls), [])
 
     def test_hadoop_body_repeats_the_phase4_ceiling_check_on_the_cluster(self):
         h = Harness(self)
@@ -248,6 +268,33 @@ class StageInAndCopyOut(unittest.TestCase):
         self.assertEqual(targets, sorted(["s3://outbucket/data/out/%s/%s/" % (TAG, p) for p in ("hadoop", "er", "spark", "results", "config")]
                                          + ["s3://outbucket/data/out/%s/copyout-manifest.sha256" % TAG]))
 
+    def test_copy_out_of_a_partial_run_lists_and_copies_only_the_parts_that_exist(self):
+        """13C fix: a salvaged run may lack some of hadoop, er, spark, results, config; the manifest and the copies cover
+        exactly the present parts and the step succeeds."""
+        h = Harness(self)
+        contents = {"results/d.txt": b"results", "config/e.json": b"{}"}
+        for rel, data in contents.items():
+            p = h.run_root / rel
+            p.parent.mkdir(parents=True, exist_ok=True)
+            p.write_bytes(data)
+        done, calls = h.run_body("copy-out")
+        self.assertEqual(done.returncode, 0, done.stdout + done.stderr)
+        self.assertNotIn("STEP-FAIL", done.stderr)
+        manifest = (h.run_root / "copyout-manifest.sha256").read_text().splitlines()
+        self.assertEqual(sorted(manifest), sorted("%s  %s" % (hashlib.sha256(d).hexdigest(), r) for r, d in contents.items()))
+        targets = sorted(a[3] for a in argv_of(calls, "aws") if a[:2] == ["s3", "cp"])
+        self.assertEqual(targets, sorted(["s3://outbucket/data/out/%s/results/" % TAG, "s3://outbucket/data/out/%s/config/" % TAG,
+                                          "s3://outbucket/data/out/%s/copyout-manifest.sha256" % TAG]))
+
+    def test_copy_out_with_no_part_present_fails_with_an_explicit_marker_and_copies_nothing(self):
+        h = Harness(self)
+        h.run_root.mkdir(parents=True)
+        done, calls = h.run_body("copy-out")
+        self.assertEqual(done.returncode, 1, done.stdout + done.stderr)
+        self.assertIn("STEP-FAIL copy-out: nothing to copy out", done.stderr)
+        self.assertEqual([a for a in argv_of(calls, "aws") if a[:2] == ["s3", "cp"]], [])
+        self.assertFalse((h.run_root / "copyout-manifest.sha256").exists())
+
     def test_copy_out_refuses_results_over_the_byte_ceiling(self):
         h = Harness(self, PIPELINE_MAX_COPYOUT_BYTES="2048")
         big = h.run_root / "results" / "big.bin"
@@ -275,7 +322,7 @@ class SparkJobClassOriginGate(unittest.TestCase):
         done, calls = h.run_body("spark-job")
         self.assertNotEqual(done.returncode, 0, "the spark job body must fail closed\n" + done.stdout + done.stderr)
         self.assertEqual(argv_of(calls, "spark-submit"), [], "spark-submit must not run after a failed class-origin gate")
-        self.assertEqual(argv_of(calls, "timeout"), [])
+        self.assertEqual(inner_timeouts(calls), [])
         if needle:
             self.assertIn(needle, done.stderr)
         return done
@@ -365,6 +412,202 @@ class SparkJobClassOriginGate(unittest.TestCase):
         h.stage_for_spark_job()
         (h.run_root / "er" / "run").rmdir()
         self.expect_blocked(h, "no entity-resolution output")
+
+
+class StepBodyOnNodeTimeout(unittest.TestCase):
+    """13C finding B1: EVERY step body (stage-in and copy-out included, not only the YARN submit) runs on the node under
+    `timeout --kill-after=<PIPELINE_KILL_AFTER_SECONDS> <its timeout_seconds> bash FILE`, so a hung copy is killed.
+
+    The `timeout` fake can enforce a short real deadline with GNU semantics (SC_FAKE_OUTER_TIMEOUT_MODE=real): the
+    recorded argv carries the true duration (asserted below), the enforced one is shortened so the test is fast. A hung
+    `aws s3 cp` is a fake that records its pid and sleeps; the test then proves the process is gone."""
+
+    REAL = {"SC_FAKE_OUTER_TIMEOUT_MODE": "real", "SC_FAKE_TIMEOUT_REAL_SECONDS": "2", "SC_FAKE_TIMEOUT_REAL_KILL_AFTER": "1"}
+
+    def hang_env(self, h, **extra):
+        pidfile = h.fx.aux / "hang.pids"
+        pidfile.write_text("")
+        env = dict(self.REAL, SC_FAKE_AWS_HANG="s3 cp", SC_FAKE_HANG_PIDFILE=str(pidfile))
+        env.update(extra)
+        return pidfile, env
+
+    @staticmethod
+    def pids(pidfile):
+        return [int(x) for x in pidfile.read_text().split()]
+
+    def assert_dead(self, pids):
+        self.assertTrue(pids, "the hung copy never started, so the test proves nothing")
+        for pid in pids:
+            for _ in range(50):
+                try:
+                    os.kill(pid, 0)
+                except ProcessLookupError:
+                    break
+                time.sleep(0.1)
+            else:
+                self.fail("the hung process %d is still alive after the step timeout" % pid)
+
+    def stage_copy_out_inputs(self, h):
+        # all five parts must exist: the manifest `find hadoop er spark results config` exits 1 on a missing directory
+        # (see the report: copy-out is silent-exit-1 when one part is absent although the copy loop skips it)
+        for rel, data in {"hadoop/a.txt": b"h", "er/b.txt": b"e", "spark/c.txt": b"s", "results/d.txt": b"r", "config/e.json": b"{}"}.items():
+            p = h.run_root / rel
+            p.parent.mkdir(parents=True, exist_ok=True)
+            p.write_bytes(data)
+
+    def test_every_step_is_printed_with_the_wrapper_parameters_and_its_derived_seconds(self):
+        """Hand-derived: max runtime 60 min = 3600 s; weights 5/20/20/5/40/10 -> 180, 720, 720, 180, 1440, 360 s; kill-after 60.
+        C1 form: the seconds travel as STEP_SECONDS / KILL_AFTER parameters of the sha256-pinned runner, whose wrapper is
+        `timeout --kill-after=KILL_AFTER STEP_SECONDS bash SELF __body STEP ...`."""
+        h = Harness(self)
+        program = S.installed_program(h.fx, "sc-step.sh")
+        self.assertIn('timeout --kill-after="${KILL_AFTER}" "${STEP_SECONDS}" bash "${SELF}" __body "${STEP_NAME}"', program)
+        for name, seconds in (("stage-in", 180), ("hadoop-prep", 720), ("entity-resolution", 720), ("spark-class-origin", 180),
+                              ("spark-job", 1440), ("copy-out", 360)):
+            with self.subTest(step=name):
+                params = S.step_params(S.step_args(h.dry, name))
+                self.assertEqual(params["STEP_SECONDS"], [str(seconds)])
+                self.assertEqual(params["KILL_AFTER"], ["60"])
+                self.assertRegex(h.dry.out, r"STEP-TIMEOUT: %s %ds " % (name, seconds))
+
+    def scenario_hung_copy_is_killed(self, step, seconds, patch=None):
+        """Run `step` with a hanging `aws s3 cp` under the (fake, GNU-semantics) on-node timeout; assert it was killed."""
+        h = Harness(self, patch=patch)
+        if step == "copy-out":
+            self.stage_copy_out_inputs(h)
+        pidfile, env = self.hang_env(h)
+        self.addCleanup(self.reap, pidfile)
+        try:
+            done, calls = h.run_body(step, timeout=20, **env)
+        except subprocess.TimeoutExpired:
+            self.fail("the %s body did not return: the hung copy was NOT killed by an on-node timeout" % step)
+        self.assertEqual(done.returncode, 124, done.stdout + done.stderr)
+        self.assertIn("STEP-FAIL %s: exceeded the %ds step timeout (exit 124)" % (step, seconds), done.stderr)
+        self.assertEqual([a[:3] for a in step_wrappers(calls)], [["--kill-after=60", str(seconds), "bash"]])
+        self.assert_dead(self.pids(pidfile))
+        return calls
+
+    def reap(self, pidfile):
+        """Never leave a hung fake behind, even when a (mutation) case proves the body did not kill it."""
+        try:
+            for pid in self.pids(pidfile):
+                try:
+                    os.kill(pid, signal.SIGKILL)
+                except ProcessLookupError:
+                    pass
+        except OSError:
+            pass
+
+    def test_a_hanging_copy_in_stage_in_is_killed_by_the_on_node_timeout(self):
+        calls = self.scenario_hung_copy_is_killed("stage-in", 180)
+        self.assertEqual(inner_timeouts(calls), [], "stage-in has no client wrapper: only the step wrapper can kill the hung copy")
+
+    def test_mutation_without_the_step_wrapper_a_hung_stage_in_and_copy_out_are_not_killed(self):
+        def drop_wrapper(scripts):
+            path = scripts / "emr" / "sc-step.sh"
+            text = path.read_text()
+            old = 'timeout --kill-after="${KILL_AFTER}" "${STEP_SECONDS}" bash "${SELF}" __body'
+            self.assertIn(old, text, "mutation anchor moved: update the mutation")
+            path.write_text(text.replace(old, 'bash "${SELF}" __body', 1))
+        for step, seconds in (("stage-in", 180), ("copy-out", 360)):
+            with self.subTest(step=step):
+                with self.assertRaises(AssertionError):
+                    self.scenario_hung_copy_is_killed(step, seconds, patch=drop_wrapper)
+
+    def test_a_hanging_copy_in_copy_out_is_killed_by_the_on_node_timeout(self):
+        self.scenario_hung_copy_is_killed("copy-out", 360)
+
+    @staticmethod
+    def run_with_short_grace(h, step, env):
+        """Run the printed step command with its KILL_AFTER=60 parameter edited to 2 (the pinned value would make the test wait a minute)."""
+        body = S.extract_body(h.dry, step)
+        assert "KILL_AFTER=60" in body
+        h.fx.log.write_text("")
+        done = subprocess.run(["bash", "-c", body.replace("KILL_AFTER=60", "KILL_AFTER=2", 1)], env=h.body_env(**env),
+                              cwd=str(h.fx.repo), capture_output=True, text=True, timeout=40)
+        return done, h.fx.calls()
+
+    def scenario_term_ignoring_grandchild_is_dead(self, patch=None):
+        """After a step timeout a grandchild that ignores SIGTERM must not outlive the step: the step wrapper kills the whole
+        process group (TERM, then KILL after the grace) and says so with STEP-WARN. The `timeout` fake follows coreutils
+        semantics (it exits once its direct child is gone), so only the wrapper's group kill can reap the grandchild."""
+        h = Harness(self, patch=patch)
+        pidfile, env = self.hang_env(h, SC_FAKE_HANG_IGNORE_TERM="1")
+        self.addCleanup(self.reap, pidfile)
+        try:
+            done, calls = self.run_with_short_grace(h, "stage-in", env)
+        except subprocess.TimeoutExpired:
+            self.fail("the step body did not return")
+        self.assertIn("STEP-FAIL stage-in: exceeded the 180s step timeout", done.stderr)
+        self.assertIn(done.returncode, (124, 137), done.stdout + done.stderr)
+        self.assertEqual([a[:3] for a in step_wrappers(calls)], [["--kill-after=2", "180", "bash"]])
+        self.assert_dead(self.pids(pidfile))
+        return done
+
+    def test_a_term_ignoring_grandchild_is_dead_after_a_step_timeout_and_the_wrapper_says_so(self):
+        done = self.scenario_term_ignoring_grandchild_is_dead()
+        self.assertIn("STEP-WARN stage-in", done.stderr)
+
+    def test_a_grandchild_that_obeys_term_leaves_no_warning(self):
+        h = Harness(self)
+        pidfile, env = self.hang_env(h)
+        self.addCleanup(self.reap, pidfile)
+        done, _ = self.run_with_short_grace(h, "stage-in", env)
+        self.assertEqual(done.returncode, 124, done.stdout + done.stderr)
+        self.assertNotIn("STEP-WARN", done.stderr)
+        self.assert_dead(self.pids(pidfile))
+
+    def test_mutation_without_the_group_kill_a_term_ignoring_grandchild_survives(self):
+        def patch(scripts):
+            path = scripts / "emr" / "sc-step.sh"
+            text = path.read_text()
+            old = "\n    kill_group KILL\n"
+            self.assertIn(old, text, "mutation anchor moved: update the mutation")
+            path.write_text(text.replace(old, "\n    true\n", 1))
+        with self.assertRaises(AssertionError):
+            self.scenario_term_ignoring_grandchild_is_dead(patch=patch)
+
+    def test_a_step_that_finishes_in_time_passes_through_its_own_exit_status(self):
+        h = Harness(self)
+        done, calls = h.run_body("stage-in", **self.REAL)
+        self.assertEqual(done.returncode, 0, done.stdout + done.stderr)
+        self.assertNotIn("STEP-FAIL", done.stderr)
+        self.assertEqual(len(step_wrappers(calls)), 1)
+        h2 = Harness(self)
+        h2.fx.update_scenario(s3_total_size=268435457)
+        done, _ = h2.run_body("stage-in", **self.REAL)
+        self.assertEqual(done.returncode, 1, "an ordinary die() keeps exit 1 and is not mislabelled as a timeout")
+        self.assertIn("exceeds", done.stderr)
+        self.assertNotIn("exceeded the", done.stderr)
+
+    def test_term_sent_to_the_step_is_forwarded_and_the_hung_copy_dies(self):
+        """EMR cancel-steps sends an interrupt to the step process; the wrapper must forward it to the timeout process."""
+        h = Harness(self)
+        pidfile, env = self.hang_env(h, SC_FAKE_TIMEOUT_REAL_SECONDS="100")
+        h.fx.log.write_text("")
+        proc = subprocess.Popen(["bash", "-c", S.extract_body(h.dry, "stage-in")], env=h.body_env(**env), cwd=str(h.fx.repo),
+                                stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, start_new_session=True)
+        try:
+            for _ in range(100):
+                if pidfile.read_text().strip():
+                    break
+                time.sleep(0.1)
+            self.assertTrue(pidfile.read_text().strip(), "the copy never started")
+            os.kill(proc.pid, signal.SIGTERM)
+            out, err = proc.communicate(timeout=30)
+        finally:
+            if proc.poll() is None:
+                proc.kill()
+        self.assertEqual(proc.returncode, 143, out + err)
+        self.assert_dead(self.pids(pidfile))
+
+    def test_a_yarn_body_still_kills_the_tagged_application_when_the_step_timeout_fires(self):
+        """Item 1 together with B1: a hung hadoop client under the step wrapper ends with the YARN kill by run tag."""
+        h = Harness(self)
+        done, calls = h.run_body("hadoop-prep", SC_FAKE_TIMEOUT_MODE="exit:124")
+        self.assertEqual(done.returncode, 124, done.stdout + done.stderr)
+        self.assertEqual({a[2] for a in argv_of(calls, "yarn") if a[:2] == ["application", "-kill"]}, set(APPS.split(",")))
+        self.assertEqual(len(step_wrappers(calls)), 1)
 
 
 if __name__ == "__main__":

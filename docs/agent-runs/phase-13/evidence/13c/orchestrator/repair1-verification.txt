@@ -1,0 +1,40 @@
+# Orchestrator: Subphase 13C repair round 1 verification in a clean snapshot (local commit 3093334fc04ebd5b3acef729bc5ded174bc16470 of git ls-files -co --exclude-standard).
+# JDK 17 env; parallel jobs (user decision 13C). sbt skipped: inputs unchanged, see repair1-sbt-input-identity.txt.
+## job summary
+billing-tests start=2026-11-06T21:24:10Z end=2026-11-06T21:24:50Z exit=0 cmd=billing
+spike-tests start=2026-11-06T21:24:10Z end=2026-11-06T21:25:05Z exit=0 cmd=python3 -I scripts/lib/suite_run.py --start-dir scripts/phase12d-spike/tests --pattern test_*.py
+gates start=2026-11-06T21:24:10Z end=2026-11-06T21:26:12Z exit=5 cmd=scripts/check.sh --skip sbt,script-tests
+tests-infra start=2026-11-06T21:26:12Z end=2026-11-06T21:32:47Z exit=0 cmd=python3 -I scripts/lib/suite_run.py --start-dir tests/infra --pattern test_*.py
+tests-scripts start=2026-11-06T21:24:10Z end=2026-11-06T21:38:42Z exit=0 cmd=python3 -I scripts/lib/suite_run.py --start-dir tests/scripts --pattern test_*.py
+scripts-tests start=2026-11-06T21:24:10Z end=2026-11-06T21:47:56Z exit=0 cmd=python3 -I scripts/lib/suite_run.py --start-dir scripts/tests --pattern test_*.py
+ALL-DONE
+## scripts/check.sh --skip sbt,script-tests (ANSI stripped, GATE/terraform/RESULT lines)
+GATE: constitution PASS (1s)
+GATE: hooks PASS (0s)
+GATE: shell PASS (8s)
+GATE: python PASS (1s)
+CMD: timeout=900s env -u AWS_PROFILE -u AWS_DEFAULT_PROFILE -u AWS_ACCESS_KEY_ID -u AWS_SECRET_ACCESS_KEY -u AWS_SESSION_TOKEN AWS_EC2_METADATA_DISABLED=true AWS_CONFIG_FILE=/dev/null AWS_SHARED_CREDENTIALS_FILE=/dev/null TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 terraform -chdir=infra/terraform test 
+[2026-11-06T21:26:12Z] [20261106T212410Z-6579] INFO terraform: Success! 7 passed, 0 failed.
+[2026-11-06T21:26:12Z] [20261106T212410Z-6579] INFO terraform: Success! 19 passed, 0 failed.
+[2026-11-06T21:26:12Z] [20261106T212410Z-6579] INFO terraform: Success! 37 passed, 0 failed.
+[2026-11-06T21:26:12Z] [20261106T212410Z-6579] INFO terraform: Success! 40 passed, 0 failed.
+[2026-11-06T21:26:12Z] [20261106T212410Z-6579] INFO terraform: Success! 6 passed, 0 failed.
+[2026-11-06T21:26:12Z] [20261106T212410Z-6579] INFO terraform: Success! 77 passed, 0 failed.
+GATE: terraform PASS (112s)
+GATE SUMMARY
+RESULT: PARTIAL passed=5 skipped: script-tests sbt
+## suite summaries
+scripts-tests: Ran 856 tests in 1425.254s | SUITE-SUMMARY ran=856 executed=856 skipped_tests=0 skipped_classes=0 failures=0 errors=0
+tests-scripts: Ran 276 tests in 871.891s | SUITE-SUMMARY ran=276 executed=276 skipped_tests=0 skipped_classes=0 failures=0 errors=0
+tests-infra: Ran 128 tests in 394.842s | SUITE-SUMMARY ran=128 executed=128 skipped_tests=0 skipped_classes=0 failures=0 errors=0
+spike-tests: Ran 73 tests in 54.910s | SUITE-SUMMARY ran=73 executed=73 skipped_tests=0 skipped_classes=0 failures=0 errors=0
+## scripts/billing/tests (one python3 -I process per file)
+## scripts/billing/tests/test_budget_execution.py
+Ran 69 tests in 14.423s
+OK
+## scripts/billing/tests/test_budget_verification.py
+Ran 47 tests in 24.173s
+OK
+## scripts/billing/tests/test_publication_evidence.py
+Ran 39 tests in 0.392s
+OK

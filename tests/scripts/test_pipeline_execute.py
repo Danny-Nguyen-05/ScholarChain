@@ -70,11 +70,14 @@ class PipelineExecute(unittest.TestCase):
         fx = self.fx()
         r = fx.execute(secrets=True)
         self.assertEqual(r.rc, 0, r.describe())
-        ledger = (fx.repo / "target/emr-ledger/runs.jsonl").read_text().splitlines()
-        self.assertEqual(len(ledger), 1)
-        entry = json.loads(ledger[0])
+        records = fx.ledger_records()
+        self.assertEqual([x["event"] for x in records], ["init", "reserve"])
+        entry = records[1]
         self.assertEqual(entry["run_id"], "bp-test-run-1")
-        self.assertEqual(entry["estimate_usd"], "0.48")
+        self.assertEqual(entry["estimate_usd"], "0.60")  # 2 x 0.240 x (3600 + 900) / 3600, derived by hand
+        self.assertEqual(entry["approval_record_sha256"], S.sha256_file(fx.aux / "approval.md"), "B4: the reservation records the approval hash")
+        self.assertFalse(str(fx.ledger_path).startswith(str(fx.repo)), "B2: the ledger lives outside the repository")
+        self.assertEqual(str(fx.ledger_path), str(fx.home / ".scholarchain/emr-ledger/runs.jsonl"))
         run_dir = fx.repo / "target/pipeline-runs/bp-test-run-1"
         manifest = json.loads((run_dir / "run-manifest.json").read_text())
         result = json.loads((run_dir / "run-result.json").read_text())
@@ -134,7 +137,8 @@ class PipelineExecute(unittest.TestCase):
         self.assertEqual(first.rc, 0, first.describe())
         path = fx.repo / "target/pipeline-runs/bp-test-run-1/run-manifest.json"
         before = path.read_bytes()
-        args, env = fx.exec_ready()
+        # B4: a second run needs a NEW approval record; the run directory and manifest are still never reused
+        args, env = fx.exec_ready(serial=2, approval_name="approval-2.md")
         fx.log.write_text("")
         again = fx.run("run-bounded-pipeline.sh", args, env)
         self.assertNotEqual(again.rc, 0, again.describe())
@@ -159,7 +163,7 @@ class PipelineExecute(unittest.TestCase):
                 self.assertTrue(r.grep(r"^STEP-RESULT: hadoop-prep s-FAKE0002 %s" % state))
                 result = (fx.repo / "target/pipeline-runs/bp-test-run-1/run-result.json").read_text()
                 self.assertIn(state, result)
-                self.assertTrue((fx.repo / "target/emr-ledger/runs.jsonl").read_text().strip(), "a failed run still counts against the ledger")
+                self.assertEqual(len(fx.reservations()), 1, "a failed run still counts against the ledger")
 
     def test_unknown_step_state_fails_closed_and_asks_emr_to_cancel(self):
         fx, r = self.failing_step("EXPLODED", step="stage-in")

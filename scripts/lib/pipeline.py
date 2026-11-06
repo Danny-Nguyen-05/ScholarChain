@@ -6,7 +6,9 @@
                                 and the canonical run configuration. Writes one JSON document (mode 0600) to FILE and
                                 prints nothing else. Refusals print "PIPELINE-REFUSED: <reason>" and exit 1.
   show --plan FILE --what W     print one field of a plan: run-config-sha256 | summary | step-count |
-                                step-name:N | step-seconds:N | step-json:N | step-body:N | field:KEY
+                                step-name:N | step-seconds:N | step-json:N | step-body:N | step-args:N |
+                                step-arglens:N | field:KEY
+  step-manifest [--write|--check]  the sha256 pin of the installed step programs (infra/terraform/emr-step-programs.json)
   verify-class-origin ...       the driver and executor class-origin verifier, exactly the program the cluster
                                 step runs (argv: probe-json spark-version scala-version jar-dir job-jar job-sha256)
   write-manifest --root R --out FILE --plan FILE --kind planned|result [...]
@@ -20,7 +22,10 @@ Design notes
   * The run configuration is canonical JSON (sorted keys, no spaces). Its sha256 is what the human approves
     (APPROVED_RUN_CONFIG_SHA256). It holds everything that decides what the run does and costs, and nothing volatile
     (no run id, no clock, no commit).
-  * Every cluster-side body runs through `bash -c` on the primary node (command-runner.jar), like phase4-emr-smoke.sh.
+  * Every cluster-side step is `bash -c <short launcher> sc-step <sha256> <STEP> KEY=VALUE...` on the primary node
+    (command-runner.jar). The launcher verifies the bootstrap-installed runner scripts/emr/sc-step.sh against the sha256
+    computed here and execs it (finding C1: EMR allows at most 10,280 characters per step argument, so the static program
+    text is installed, not embedded). The plan builder refuses any argument over the pinned limit.
   * Item 1 (carried 12D finding): `timeout` kills only the client. Every YARN-submitting body therefore tags the YARN
     application with the run id and, when the runtime cap fires or the step is interrupted, lists the applications by
     that tag and kills each one (yarn application -list -appTags <run-id>; yarn application -kill <id>).
@@ -38,17 +43,7 @@ SCHEMA_CONFIG = "scholarchain.bounded-run-config.v1"
 SCHEMA_MANIFEST = "scholarchain.bounded-run-manifest.v1"
 SCHEMA_RESULT = "scholarchain.bounded-run-result.v1"
 STEP_ORDER = ("stage-in", "hadoop-prep", "entity-resolution", "spark-class-origin", "spark-job", "copy-out")
-HADOOP_MAIN = "edu.uic.cs441.scholarchain.hadoop.HadoopPrepMain"
-ER_MAIN = "edu.uic.cs441.scholarchain.entityresolution.Phase5Main"
-SPARK_MAIN = "edu.uic.cs441.scholarchain.spark.Phase6Main"
-PROBE_MAIN = "edu.uic.cs441.scholarchain.spark.Phase12Readiness"
 SOURCES = ("dblp", "openalex", "crossref", "orcid")
-SAMPLE_FILES = {
-    "dblp": "datasets/samples/dblp/linked-records.xml",
-    "openalex": "datasets/samples/openalex/works.jsonl",
-    "crossref": "datasets/samples/crossref/works.jsonl",
-    "orcid": "datasets/samples/orcid/records.jsonl",
-}
 # Same field list and order as scripts/phase4-emr-smoke.sh (a test compares them).
 CEILING_FIELDS = (
     "maxLocalSampleRecords",
@@ -108,157 +103,61 @@ def q(value):
 
 
 # ---------------------------------------------------------------------------------------------------------------------
-# The Phase 4 ceiling program and the class-origin verifier. Each is ONE program run locally (tests, dry run) and on the
-# cluster master (embedded in the step body as a quoted heredoc), so what is tested is what runs.
+# The installed step programs (finding C1). The step runner, the Phase 4 ceiling program, the class-origin verifier and the
+# spark-config renderer are FILES under scripts/emr/. Each is ONE program run locally (tests, dry run) and on the cluster
+# primary node as a bootstrap-installed, sha256-verified copy, so what is tested is what runs. Their sha256 values are part of
+# the approved run configuration and of infra/terraform/emr-step-programs.json (the Terraform guard compares the tfvars
+# artifact hashes with that manifest).
 # ---------------------------------------------------------------------------------------------------------------------
-CEILING_PY = '''import json
-import sys
-
-FIELDS = (
-    "maxLocalSampleRecords",
-    "reducerCount",
-    "maxCandidateBlockSize",
-    "maxCandidatePairsPerBlock",
-    "maxAuthorTeamSize",
-    "maxRecordBytes",
-    "maxXmlEntityExpansion",
-)
-
-
-def fail(message):
-    sys.stderr.write("bounded-pipeline: %s\\n" % (message,))
-    raise SystemExit(1)
+EMR_DIR = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "emr"))
+STEP_MANIFEST = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "infra", "terraform", "emr-step-programs.json"))
+STEP_SCRIPT = "sc-step.sh"
+CEILING_PROGRAM = "sc-ceiling-check.py"
+CLASS_ORIGIN_PROGRAM = "sc-class-origin-verify.py"
+RENDER_PROGRAM = "sc-render-spark-config.py"
+STEP_PROGRAMS = (STEP_SCRIPT, CEILING_PROGRAM, CLASS_ORIGIN_PROGRAM, RENDER_PROGRAM)
+# AWS API reference, HadoopJarStepConfig.Args: every string may be at most 10,280 characters. The pinned release.conf key
+# PIPELINE_STEP_ARG_MAX_CHARS may lower the limit; it may never raise it above what EMR accepts.
+EMR_API_ARG_LIMIT = 10280
+SAFE_NODE_DIR = re.compile(r"^/[A-Za-z0-9_.+/-]+$")
 
 
-def reject_non_finite(token):
-    raise ValueError("non-finite JSON number: %s" % (token,))
+def program_path(name):
+    return os.path.join(EMR_DIR, name)
 
 
-def json_number(value):
-    if isinstance(value, bool):
-        return None
-    if isinstance(value, int):
-        return value
-    if isinstance(value, float):
-        if value != value or value == float("inf") or value == float("-inf"):
-            return None
-        return value
-    return None
+def program_text(name):
+    with open(program_path(name), encoding="utf-8") as handle:
+        return handle.read()
 
 
-if len(sys.argv) != 2 + len(FIELDS):
-    fail("ceiling check expected a config path and %d ceilings" % (len(FIELDS),))
-limits = []
-for field, raw in zip(FIELDS, sys.argv[2:]):
-    if not raw.isdigit():
-        fail("ceiling for %s is not an integer" % (field,))
-    limits.append(int(raw))
-try:
-    with open(sys.argv[1], encoding="utf-8") as handle:
-        data = json.load(handle, parse_constant=reject_non_finite)
-except Exception as error:
-    fail("prep config is not valid JSON: %s" % (error,))
-if not isinstance(data, dict):
-    fail("prep config root must be a JSON object")
-for field, limit in zip(FIELDS, limits):
-    if field not in data:
-        fail("missing numeric field: %s" % (field,))
-    number = json_number(data[field])
-    if number is None:
-        fail("%s must be a JSON number" % (field,))
-    if number > limit:
-        fail("%s %s exceeds ceiling %s" % (field, number, limit))
-'''
-
-CLASS_ORIGIN_PY = '''import json
-import os
-import sys
+def program_shas():
+    """sha256 of every installed step program, computed from the repository files."""
+    try:
+        return {name: sha256_file(program_path(name)) for name in STEP_PROGRAMS}
+    except OSError as error:
+        raise Refused("a step program under scripts/emr/ cannot be read (%s)" % type(error).__name__)
 
 
-def fail(message):
-    sys.stderr.write("CLASS-ORIGIN-FAILED: %s\\n" % (message,))
-    raise SystemExit(1)
+def step_manifest(bin_dir, shas):
+    return {"bin_dir": bin_dir, "programs": shas}
 
 
-if len(sys.argv) != 7:
-    fail("expected: probe-json spark-version scala-version jar-dir job-jar job-sha256")
-probe, spark_v, scala_v, jar_dir, job_jar, job_sha = sys.argv[1:7]
-try:
-    with open(probe, encoding="utf-8") as handle:
-        doc = json.load(handle)
-except Exception as error:
-    fail("probe result unreadable: %s" % type(error).__name__)
-if not isinstance(doc, dict) or doc.get("schemaVersion") != "scholarchain.phase12-readiness.v1" or doc.get("stage") != "probe":
-    fail("not a Phase 12 readiness probe result")
-if doc.get("externalExecutorVerified") is not True or doc.get("distributedRequired") is not True:
-    fail("the executor was not verified outside the driver process")
-driver = doc.get("driver")
-tasks = doc.get("taskProcesses")
-if not isinstance(driver, dict) or not isinstance(tasks, list) or not tasks:
-    fail("the driver or executor report is missing")
-need = ("spark", "scala-library", "scala-reflect", "scala3-library")
-reports = [("driver", driver)] + [("executor-%s" % t.get("executorId"), t) for t in tasks if isinstance(t, dict)]
-parsed = {}
-prefix = jar_dir.rstrip("/") + "/"
-for role, report in reports:
-    if not str(report.get("javaVersion", "")).startswith("17."):
-        fail("%s runs Java %s, not 17" % (role, report.get("javaVersion")))
-    if role != "driver" and report.get("executorId") in (None, "driver", "unavailable"):
-        fail("%s is not an executor process" % role)
-    libs = {}
-    for lib in report.get("libraries") or []:
-        if isinstance(lib, dict):
-            libs[lib.get("component")] = lib
-    for component in need:
-        if component not in libs:
-            fail("%s report lacks %s" % (role, component))
-    if libs["spark"].get("runtimeVersion") != spark_v:
-        fail("%s Spark version %s differs from the required %s" % (role, libs["spark"].get("runtimeVersion"), spark_v))
-    if libs["scala-library"].get("runtimeVersion") != scala_v:
-        fail("%s Scala library version %s differs from the packaged job's %s" % (role, libs["scala-library"].get("runtimeVersion"), scala_v))
-    for component in ("spark", "scala-library", "scala-reflect"):
-        origin = str(libs[component].get("origin"))
-        if not origin.startswith(prefix):
-            fail("%s loaded %s from %s, outside the runtime jar directory %s" % (role, component, origin, jar_dir))
-    if not os.path.basename(str(libs["spark"]["origin"])).endswith("-%s.jar" % spark_v):
-        fail("%s Spark origin %s is not a %s jar" % (role, libs["spark"]["origin"], spark_v))
-    if os.path.basename(str(libs["scala-library"]["origin"])) != "scala-library-%s.jar" % scala_v:
-        fail("%s Scala library origin %s is not scala-library-%s.jar" % (role, libs["scala-library"]["origin"], scala_v))
-    s3 = libs["scala3-library"]
-    if s3.get("origin") != job_jar or s3.get("codeSourceSha256") != job_sha:
-        fail("%s scala3-library is not loaded from the packaged job jar with the approved sha256" % role)
-    parsed[role] = libs
-base = parsed["driver"]
-for role, libs in parsed.items():
-    for component in need:
-        for field in ("origin", "classSha256", "codeSourceSha256"):
-            if libs[component].get(field) != base[component].get(field):
-                fail("%s differs between the driver and %s for %s" % (field, role, component))
-print("CLASS-ORIGIN-OK: the driver and %d executor report(s) agree on Spark %s, Scala %s and the packaged job jar" % (len(tasks), spark_v, scala_v))
-'''
-
-RENDER_PY = '''import json
-import sys
-
-template, out, hadoop_run, er_run, output_root, checkpoint = sys.argv[1:7]
-with open(template, encoding="utf-8") as handle:
-    document = json.load(handle)
-if not isinstance(document, dict):
-    raise SystemExit("spark config template must be a JSON object")
-overrides = {
-    "hadoopRunRoot": hadoop_run,
-    "entityResolutionRunRoot": er_run,
-    "outputRoot": output_root,
-    "checkpointDirectory": checkpoint,
-}
-for key in overrides:
-    if key not in document:
-        raise SystemExit("spark config template lacks the key %s" % key)
-document.update(overrides)
-with open(out, "x", encoding="utf-8") as handle:
-    json.dump(document, handle, indent=2, sort_keys=True)
-    handle.write("\\n")
-'''
+def check_step_manifest(shas):
+    """The reviewed Terraform-side pin (infra/terraform/emr-step-programs.json) must name exactly the repository files' hashes,
+    so a Terraform plan and this run configuration can never disagree about the installed programs. (The node directory is
+    compared with PIPELINE_STEP_BIN_DIR by the tests and by tests/phase13c.tftest.hcl, not here: the offline tests point the
+    pinned directory at a fake node.)"""
+    try:
+        with open(STEP_MANIFEST, encoding="utf-8") as handle:
+            manifest = json.load(handle)
+    except (OSError, ValueError):
+        raise Refused("STEP-PROGRAM-DRIFT: infra/terraform/emr-step-programs.json is missing or not valid JSON")
+    if not isinstance(manifest, dict) or manifest.get("programs") != shas:
+        raise Refused(
+            "STEP-PROGRAM-DRIFT: infra/terraform/emr-step-programs.json differs from the files under scripts/emr/; "
+            "regenerate it with `python3 -I scripts/lib/pipeline.py step-manifest --write` and update the tfvars artifact hashes"
+        )
 
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -304,7 +203,7 @@ def check_hadoop_config(path, ceilings):
     import subprocess
 
     completed = subprocess.run(
-        [sys.executable, "-I", "-c", CEILING_PY, path] + [str(ceilings[field]) for field in CEILING_FIELDS],
+        [sys.executable, "-I", program_path(CEILING_PROGRAM), path] + [str(ceilings[field]) for field in CEILING_FIELDS],
         capture_output=True,
         text=True,
     )
@@ -358,279 +257,127 @@ def hash_artifacts(refs, supplied):
 
 
 # ---------------------------------------------------------------------------------------------------------------------
-# Step bodies (run on the primary node under `bash -c`)
+# Step commands (finding C1). Each EMR step is `bash -c <launcher> sc-step <sha256> <STEP> KEY=VALUE...`: a short static
+# launcher, the sha256 of the installed step runner (computed here from scripts/emr/sc-step.sh) and the per-run parameters
+# as separate arguments. The launcher verifies the installed runner against that sha256 on the node (fail closed) and then
+# execs it; the runner (scripts/emr/sc-step.sh) is the B1 wrapper (on-node `timeout --kill-after`, own process group, TERM
+# then KILL, STEP-WARN) plus the six step bodies, and verifies each installed Python program against its own sha256 before
+# running it. No step argument comes near EMR's 10,280 character limit; build_plan still refuses any that would.
 # ---------------------------------------------------------------------------------------------------------------------
-def prelude(name, cfg, yarn):
-    kill = cfg["kill_after_seconds"]
-    lines = [
-        "set -euo pipefail",
-        "STEP_NAME=%s" % q(name),
-        "RUN_ID=%s" % q(cfg["run_id"]),
-        "TAG=%s" % q(cfg["yarn_tag"]),
-        "MNT=%s" % q(cfg["efs_mount"]),
-        'RUN_ROOT="${MNT}/runs/${RUN_ID}"',
-        "KILL_AFTER=%s" % q(kill),
-        "log() { printf 'STEP-LOG %s: %s\\n' \"${STEP_NAME}\" \"$*\"; }",
-        "die() { printf 'STEP-FAIL %s: %s\\n' \"${STEP_NAME}\" \"$*\" >&2; exit 1; }",
-        'require_mount() { grep -q " ${MNT} " "${SC_PROC_MOUNTS:-/proc/mounts}" || die "${MNT} is not a mount point: refusing to use a local directory"; }',
-        "localize() {",
-        '  local src="$1" dest="$2" want="$3"',
-        '  case "${src}" in',
-        '    s3://*|s3a://*|s3n://*|hdfs://*) hadoop fs -copyToLocal "${src}" "${dest}" ;;',
-        '    *) if [[ -f "${src}" ]]; then cp -- "${src}" "${dest}"; else die "source is not a regular file: ${src}"; fi ;;',
-        "  esac",
-        '  printf \'%s  %s\\n\' "${want}" "${dest}" | sha256sum -c --status - || die "sha256 mismatch for ${src}"',
-        "}",
+LAUNCHER = (
+    "set -euo pipefail; f=%s; want=\"$1\"; shift; "
+    "printf '%%s  %%s\\n' \"${want}\" \"${f}\" | sha256sum -c --status - || "
+    "{ printf 'STEP-FAIL sc-step: sha256 mismatch for %%s: the installed step runner is not the approved one\\n' \"${f}\" >&2; exit 1; }; "
+    "exec bash \"${f}\" \"$@\""
+)
+
+
+def launcher(step_bin_dir):
+    return LAUNCHER % q(step_bin_dir.rstrip("/") + "/" + STEP_SCRIPT)
+
+
+def kv(key, value):
+    return "%s=%s" % (key, value)
+
+
+def step_params(name, cfg):
+    """The KEY=VALUE parameters of one step, in a stable order. The allow-list per step is in scripts/emr/sc-step.sh."""
+    sha = cfg["artifact_sha256"]
+    refs = cfg["refs"]
+    programs = cfg["step_programs_sha256"]
+    params = [
+        kv("STEP_SECONDS", cfg["step_seconds"][name]),
+        kv("KILL_AFTER", cfg["kill_after_seconds"]),
+        kv("RUN_ID", cfg["run_id"]),
+        kv("TAG", cfg["yarn_tag"]),
+        kv("MNT", cfg["efs_mount"]),
     ]
-    if yarn:
-        lines += [
-            "# Item 1: timeout kills only the client, not the YARN application. List the applications that carry",
-            "# the run id as their tag and kill each one.",
-            "kill_tagged() {",
-            "  local apps app",
-            '  apps="$(yarn application -list -appStates NEW,NEW_SAVING,SUBMITTED,ACCEPTED,RUNNING -appTags "${TAG}" 2>/dev/null | awk \'/^application_/{print $1}\' || true)"',
-            "  for app in ${apps}; do",
-            '    log "killing YARN application ${app} (tag ${TAG})"',
-            '    yarn application -kill "${app}" || true',
-            "  done",
-            "}",
-            "trap 'kill_tagged' EXIT",
-            "trap 'kill_tagged; exit 143' TERM INT",
-            "run_bounded() {",
-            '  local secs="$1" rc=0',
-            "  shift",
-            '  timeout --kill-after="${KILL_AFTER}" "${secs}" "$@" || rc=$?',
-            '  if [[ "${rc}" -eq 124 || "${rc}" -eq 137 || "${rc}" -eq 143 ]]; then',
-            '    log "runtime cap reached (exit ${rc}): killing the YARN application tagged ${TAG}"',
-            "    kill_tagged",
-            "  fi",
-            '  return "${rc}"',
-            "}",
+    if name == "stage-in":
+        params += [kv("INPUT_PREFIX", cfg["input_prefix"].rstrip("/") + "/"), kv("REGION", cfg["region"]), kv("MAX_INPUT_BYTES", cfg["max_input_bytes"])]
+    elif name == "hadoop-prep":
+        params += [
+            kv("SUBMIT_JAR_REF", refs["hadoop-submit-jar"]),
+            kv("SUBMIT_JAR_SHA", sha["hadoop-submit-jar"]),
+            kv("LIBJARS_REF", refs["hadoop-libjars"]),
+            kv("LIBJARS_SHA", sha["hadoop-libjars"]),
+            kv("CONFIG_REF", refs["hadoop-config"]),
+            kv("CONFIG_SHA", sha["hadoop-config"]),
+            kv("CEILINGS", " ".join(str(cfg["ceilings"][field]) for field in CEILING_FIELDS)),
+            kv("CEILING_PY_SHA", programs[CEILING_PROGRAM]),
         ]
-    return lines
+        for source in SOURCES:
+            params += [kv(source.upper() + "_SNAPSHOT", cfg["datasets"][source]["snapshot"]), kv(source.upper() + "_RETRIEVAL", cfg["datasets"][source]["retrieval"])]
+    elif name == "entity-resolution":
+        params += [
+            kv("JAVA_HOME_FILE", cfg["java_home_file"]),
+            kv("ER_XMX", cfg["er_xmx"]),
+            kv("ER_JAR_REF", refs["er-jar"]),
+            kv("ER_JAR_SHA", sha["er-jar"]),
+            kv("ER_POLICY_REF", refs["er-policy"]),
+            kv("ER_POLICY_SHA", sha["er-policy"]),
+            kv("ER_CONFIG_REF", refs["er-config"]),
+            kv("ER_CONFIG_SHA", sha["er-config"]),
+        ]
+    elif name in ("spark-class-origin", "spark-job"):
+        params += [
+            kv("JAVA_HOME_FILE", cfg["java_home_file"]),
+            kv("RUNTIME_DIR", cfg["runtime_dir"]),
+            kv("JOB_JAR", cfg["job_jar_path"]),
+            kv("JOB_JAR_SHA", sha["job-jar"]),
+            kv("MAX_EXECUTORS", cfg["max_executors"]),
+            kv("EXPECTED_SPARK_VERSION", cfg["expected_spark_version"]),
+            kv("EXPECTED_SCALA_VERSION", cfg["expected_scala_version"]),
+            kv("CLASS_ORIGIN_PY_SHA", programs[CLASS_ORIGIN_PROGRAM]),
+        ]
+        if name == "spark-job":
+            params += [kv("RENDER_PY_SHA", programs[RENDER_PROGRAM]), kv("TEMPLATE_REF", refs["spark-config-template"]), kv("TEMPLATE_SHA", sha["spark-config-template"])]
+        params += [kv("SPARK_CONF", "%s=%s" % (key, value)) for key, value in cfg["spark_conf"]]
+    elif name == "copy-out":
+        params += [kv("OUTPUT_PREFIX", cfg["output_prefix"].rstrip("/") + "/" + cfg["run_id"]), kv("REGION", cfg["region"]), kv("MAX_COPYOUT_BYTES", cfg["max_copyout_bytes"])]
+    return params
 
 
-def java_lines(cfg):
-    return [
-        "JAVA_HOME_FILE=%s" % q(cfg["java_home_file"]),
-        '[[ -r "${JAVA_HOME_FILE}" ]] || die "no resolved Java 17 home (${JAVA_HOME_FILE} missing): the bootstrap did not complete"',
-        'JAVA_HOME="$(head -n 1 "${JAVA_HOME_FILE}")"',
-        '[[ -n "${JAVA_HOME}" && -x "${JAVA_HOME}/bin/java" ]] || die "the resolved Java home is not usable"',
-        '"${JAVA_HOME}/bin/java" -version 2>&1 | grep -Eq \'version "17(\\.|")\' || die "the resolved Java is not 17"',
-        "export JAVA_HOME",
-    ]
+def step_args(name, cfg):
+    """The EMR step's HadoopJarStepConfig.Args list for one step."""
+    return ["bash", "-c", launcher(cfg["step_bin_dir"]), "sc-step", cfg["step_programs_sha256"][STEP_SCRIPT], name] + step_params(name, cfg)
 
 
-def body_stage_in(cfg):
-    lines = prelude("stage-in", cfg, False)
-    lines += [
-        "require_mount",
-        'DEST="${RUN_ROOT}/inputs"',
-        '[[ ! -e "${RUN_ROOT}" ]] || die "${RUN_ROOT} already exists: a run directory is never reused"',
-        "PREFIX=%s" % q(cfg["input_prefix"].rstrip("/") + "/"),
-        "REGION=%s" % q(cfg["region"]),
-        "MAX_BYTES=%s" % q(cfg["max_input_bytes"]),
-        'TOTAL="$(aws s3 ls "${PREFIX}" --recursive --summarize --region "${REGION}" | awk \'/Total Size:/{print $3}\')"',
-        '[[ "${TOTAL}" =~ ^[0-9]+$ ]] || die "could not read the staged input size"',
-        '[[ "${TOTAL}" -le "${MAX_BYTES}" ]] || die "input ${TOTAL} bytes exceeds the ${MAX_BYTES} byte ceiling"',
-        'mkdir -p "${DEST}"',
-        'aws s3 cp "${PREFIX}" "${DEST}/" --recursive --region "${REGION}" --only-show-errors',
-        'log "staged ${TOTAL} bytes from ${PREFIX} to ${DEST}"',
-    ]
-    return "\n".join(lines) + "\n"
+def render_command(args):
+    """The step as a readable shell command (printed in the dry run); `bash -c <this text>` runs exactly what EMR would."""
+    return " \\\n  ".join(q(arg) for arg in args) + "\n"
 
 
-def body_hadoop_prep(cfg):
-    ceilings = cfg["ceilings"]
-    inputs = cfg["datasets"]
-    lines = prelude("hadoop-prep", cfg, True)
-    lines += [
-        "require_mount",
-        'WORK="$(mktemp -d "${TMPDIR:-/tmp}/scholarchain-bounded.XXXXXX")"',
-        'localize %s "${WORK}/job.jar" %s' % (q(cfg["refs"]["hadoop-submit-jar"]), q(cfg["artifact_sha256"]["hadoop-submit-jar"])),
-        'localize %s "${WORK}/bundle.jar" %s' % (q(cfg["refs"]["hadoop-libjars"]), q(cfg["artifact_sha256"]["hadoop-libjars"])),
-        'localize %s "${WORK}/prep-config.json" %s' % (q(cfg["refs"]["hadoop-config"]), q(cfg["artifact_sha256"]["hadoop-config"])),
-        'command -v python3 >/dev/null 2>&1 || die "python3 is required to enforce the ceilings"',
-        'python3 - "${WORK}/prep-config.json" ' + " ".join(str(ceilings[f]) for f in CEILING_FIELDS) + " <<'SCHOLARCHAIN_CEILING_PY'",
-    ]
-    lines += CEILING_PY.rstrip("\n").split("\n")
-    lines += [
-        "SCHOLARCHAIN_CEILING_PY",
-        'export HADOOP_CLASSPATH="${WORK}/bundle.jar${HADOOP_CLASSPATH:+:$HADOOP_CLASSPATH}"',
-        'IN="${RUN_ROOT}/inputs"',
-        'OUT="${RUN_ROOT}/hadoop"',
-        '[[ ! -e "${OUT}" ]] || die "${OUT} already exists"',
-        "run_bounded %s hadoop jar \"${WORK}/job.jar\" %s \\" % (q(cfg["step_seconds"]["hadoop-prep"]), q(HADOOP_MAIN)),
-        '  "-Dmapreduce.job.tags=${TAG}" -libjars "${WORK}/bundle.jar" \\',
-        '  --once --execution-mode cluster --run-id "${RUN_ID}" \\',
-        '  --output-root "file://${OUT}" --config "${WORK}/prep-config.json" \\',
-    ]
-    last = len(SOURCES) - 1
-    for index, source in enumerate(SOURCES):
-        tail = " \\" if index < last else ""
-        lines.append(
-            '  --%s "file://${IN}/%s" --%s-snapshot %s --%s-retrieval %s%s'
-            % (source, SAMPLE_FILES[source], source, q(inputs[source]["snapshot"]), source, q(inputs[source]["retrieval"]), tail)
-        )
-    return "\n".join(lines) + "\n"
+def arg_lengths(args):
+    return [len(arg) for arg in args]
 
 
-def discover_lines(tag_dir, var):
-    return [
-        '%s_MARKERS="$(find "${RUN_ROOT}/%s" -maxdepth 4 -name _SCHOLARCHAIN_COMPLETE -print)"' % (var, tag_dir),
-        '[[ "$(printf \'%%s\\n\' "${%s_MARKERS}" | grep -c .)" -eq 1 ]] || die "expected exactly one completed run under ${RUN_ROOT}/%s"' % (var, tag_dir),
-        '%s_RUN="$(dirname "${%s_MARKERS}")"' % (var, var),
-    ]
+def arg_name(arg):
+    match = re.match(r"^([A-Z][A-Z0-9_]*)=", arg)
+    if match:
+        return match.group(1)
+    return "launcher" if arg.startswith("set -euo pipefail") else "argument"
 
 
-def body_er(cfg):
-    lines = prelude("entity-resolution", cfg, False)
-    lines += ["require_mount"]
-    lines += java_lines(cfg)
-    lines += [
-        'WORK="$(mktemp -d "${TMPDIR:-/tmp}/scholarchain-bounded.XXXXXX")"',
-        'localize %s "${WORK}/er.jar" %s' % (q(cfg["refs"]["er-jar"]), q(cfg["artifact_sha256"]["er-jar"])),
-        'localize %s "${WORK}/policy.json" %s' % (q(cfg["refs"]["er-policy"]), q(cfg["artifact_sha256"]["er-policy"])),
-        'localize %s "${WORK}/config.json" %s' % (q(cfg["refs"]["er-config"]), q(cfg["artifact_sha256"]["er-config"])),
-    ]
-    lines += discover_lines("hadoop", "HADOOP")
-    lines += [
-        'ER_OUT="${RUN_ROOT}/er/run"',
-        '[[ ! -e "${ER_OUT}" ]] || die "${ER_OUT} already exists"',
-        'mkdir -p "${RUN_ROOT}/er"',
-        "# Single-JVM step on the primary node (Phase5Main has no distributed mode); Java 17 was resolved at bootstrap.",
-        'timeout --kill-after="${KILL_AFTER}" %s "${JAVA_HOME}/bin/java" -Xmx%s -cp "${WORK}/er.jar" %s resolve \\'
-        % (q(cfg["step_seconds"]["entity-resolution"]), cfg["er_xmx"], q(ER_MAIN)),
-        '  --input "${HADOOP_RUN}" --policy "${WORK}/policy.json" --config "${WORK}/config.json" \\',
-        '  --llm-mode disabled --output "${ER_OUT}"',
-    ]
-    return "\n".join(lines) + "\n"
+def check_arg_lengths(name, args, limit):
+    """Finding C1: refuse before any cloud call when a step argument exceeds the pinned EMR limit."""
+    for index, arg in enumerate(args):
+        if len(arg) > limit:
+            raise Refused(
+                "STEP-ARG-TOO-LONG: step %s argument %d (%s) has %d characters, over the limit of %d (EMR HadoopJarStepConfig.Args allows at most %d per string); nothing was submitted"
+                % (name, index, arg_name(arg), len(arg), limit, EMR_API_ARG_LIMIT)
+            )
 
 
-def spark_env_lines(cfg, name):
-    lines = prelude(name, cfg, True)
-    lines += ["require_mount"]
-    lines += java_lines(cfg)
-    lines += [
-        "RUNTIME=%s" % q(cfg["runtime_dir"]),
-        "JOB_JAR=%s" % q(cfg["job_jar_path"]),
-        "# The portable runtime only: never the stock EMR Spark or Hadoop classpath.",
-        'export SPARK_HOME="${RUNTIME}" SPARK_CONF_DIR="${RUNTIME}/conf" SPARK_SCALA_VERSION=2.13',
-        'export HADOOP_CONF_DIR="${HADOOP_CONF_DIR:-/etc/hadoop/conf}" YARN_CONF_DIR="${HADOOP_CONF_DIR:-/etc/hadoop/conf}"',
-        'export PATH="${JAVA_HOME}/bin:${PATH:-/usr/local/bin:/usr/bin:/bin}"',
-        "unset CLASSPATH SPARK_DIST_CLASSPATH HADOOP_CLASSPATH SPARK_CLASSPATH || true",
-        "printf '%s  %s\\n' " + q(cfg["artifact_sha256"]["job-jar"]) + ' "${JOB_JAR}" | sha256sum -c --status - || die "the packaged job jar on this node does not have the approved sha256"',
-    ]
-    return lines
+def length_line(name, args, limit):
+    lengths = arg_lengths(args)
+    return "%s limit=%d count=%d max=%d total=%d lengths=%s" % (name, limit, len(lengths), max(lengths), sum(lengths), ",".join(str(n) for n in lengths))
 
 
-def spark_submit_lines(cfg, name, main, args_lines):
-    confs = []
-    for key, value in cfg["spark_conf"]:
-        confs.append("  --conf %s \\" % q("%s=%s" % (key, value)))
-    lines = [
-        '"${SPARK_HOME}/bin/spark-submit" --master yarn --deploy-mode cluster --name %s \\' % q("scholarchain-%s-%s" % (name, cfg["run_id"])),
-        "  --class %s \\" % q(main),
-        '  --conf "spark.yarn.tags=${TAG}" \\',
-        '  --conf "spark.yarn.stagingDir=file://${MNT}/staging" \\',
-        '  --conf "spark.yarn.appMasterEnv.JAVA_HOME=${JAVA_HOME}" \\',
-        '  --conf "spark.executorEnv.JAVA_HOME=${JAVA_HOME}" \\',
-        "  --conf %s \\" % q("spark.dynamicAllocation.maxExecutors=%s" % cfg["max_executors"]),
-    ]
-    lines += confs
-    lines += ['  "local:${JOB_JAR}" \\'] + args_lines
-    return lines
-
-
-def body_class_origin(cfg):
-    lines = spark_env_lines(cfg, "spark-class-origin")
-    lines += [
-        'PROBE_SHARED="${RUN_ROOT}/probe"',
-        'PROBE_OUT="${RUN_ROOT}/results/class-origin.json"',
-        'mkdir -p "${PROBE_SHARED}" "${RUN_ROOT}/results" "${MNT}/staging"',
-        "# Driver AND executor class-origin probe (Phase12Readiness distributed): fails closed on any version difference.",
-        "run_bounded %s \\" % q(cfg["step_seconds"]["spark-class-origin"]),
-    ]
-    lines += spark_submit_lines(cfg, "class-origin", PROBE_MAIN, ['  probe "${PROBE_SHARED}" "${PROBE_OUT}" distributed'])
-    lines += verify_lines(cfg)
-    return "\n".join(lines) + "\n"
-
-
-def verify_lines(cfg):
-    return [
-        'python3 - "${RUN_ROOT}/results/class-origin.json" %s %s %s "${JOB_JAR}" %s <<\'SCHOLARCHAIN_CLASS_ORIGIN_PY\''
-        % (q(cfg["expected_spark_version"]), q(cfg["expected_scala_version"]), q(cfg["runtime_dir"].rstrip("/") + "/jars"), q(cfg["artifact_sha256"]["job-jar"]))
-    ] + CLASS_ORIGIN_PY.rstrip("\n").split("\n") + ["SCHOLARCHAIN_CLASS_ORIGIN_PY"]
-
-
-def body_spark_job(cfg):
-    lines = spark_env_lines(cfg, "spark-job")
-    lines += [
-        "# Fail closed again here: the Spark job never starts without a passing class-origin result for this run.",
-        '[[ -f "${RUN_ROOT}/results/class-origin.json" ]] || die "no class-origin result for this run: refusing to start the Spark job"',
-    ]
-    lines += verify_lines(cfg)
-    lines += discover_lines("hadoop", "HADOOP")
-    lines += [
-        'ER_RUN="${RUN_ROOT}/er/run"',
-        '[[ -d "${ER_RUN}" ]] || die "no entity-resolution output at ${ER_RUN}"',
-        'SPARK_OUT="${RUN_ROOT}/spark"',
-        '[[ ! -e "${SPARK_OUT}" ]] || die "${SPARK_OUT} already exists"',
-        'mkdir -p "${SPARK_OUT}" "${RUN_ROOT}/spark-checkpoint" "${RUN_ROOT}/config" "${MNT}/staging"',
-        'WORK="$(mktemp -d "${TMPDIR:-/tmp}/scholarchain-bounded.XXXXXX")"',
-        'localize %s "${WORK}/spark-template.json" %s' % (q(cfg["refs"]["spark-config-template"]), q(cfg["artifact_sha256"]["spark-config-template"])),
-        'python3 - "${WORK}/spark-template.json" "${RUN_ROOT}/config/spark-config.json" "${HADOOP_RUN}" "${ER_RUN}" "${SPARK_OUT}" "${RUN_ROOT}/spark-checkpoint" <<\'SCHOLARCHAIN_RENDER_PY\'',
-    ]
-    lines += RENDER_PY.rstrip("\n").split("\n")
-    lines += ["SCHOLARCHAIN_RENDER_PY", "run_bounded %s \\" % q(cfg["step_seconds"]["spark-job"])]
-    lines += spark_submit_lines(cfg, "bounded", SPARK_MAIN, ['  "${RUN_ROOT}/config/spark-config.json"'])
-    return "\n".join(lines) + "\n"
-
-
-def body_copy_out(cfg):
-    lines = prelude("copy-out", cfg, False)
-    lines += [
-        "require_mount",
-        "PREFIX=%s" % q(cfg["output_prefix"].rstrip("/") + "/" + cfg["run_id"]),
-        "REGION=%s" % q(cfg["region"]),
-        "MAX_BYTES=%s" % q(cfg["max_copyout_bytes"]),
-        'TOTAL=0',
-        'for part in hadoop er spark results config; do',
-        '  [[ -d "${RUN_ROOT}/${part}" ]] || continue',
-        '  SIZE="$(du -sk "${RUN_ROOT}/${part}" | awk \'{print $1 * 1024}\')"',
-        '  TOTAL=$((TOTAL + SIZE))',
-        "done",
-        '[[ "${TOTAL}" -le "${MAX_BYTES}" ]] || die "copy-out ${TOTAL} bytes exceeds the ${MAX_BYTES} byte ceiling"',
-        'MANIFEST="${RUN_ROOT}/copyout-manifest.sha256"',
-        '[[ ! -e "${MANIFEST}" ]] || die "${MANIFEST} already exists"',
-        '( cd "${RUN_ROOT}" && find hadoop er spark results config -type f -print 2>/dev/null | LC_ALL=C sort | while IFS= read -r f; do',
-        "    printf '%s  %s\\n' \"$(sha256sum \"${f}\" | cut -d' ' -f1)\" \"${f}\"",
-        '  done ) > "${MANIFEST}"',
-        'for part in hadoop er spark results config; do',
-        '  [[ -d "${RUN_ROOT}/${part}" ]] || continue',
-        '  aws s3 cp "${RUN_ROOT}/${part}/" "${PREFIX}/${part}/" --recursive --region "${REGION}" --only-show-errors',
-        "done",
-        'aws s3 cp "${MANIFEST}" "${PREFIX}/copyout-manifest.sha256" --region "${REGION}" --only-show-errors',
-        'log "copied ${TOTAL} bytes (hadoop, er, spark, results, config) to ${PREFIX}"',
-    ]
-    return "\n".join(lines) + "\n"
-
-
-BODIES = {
-    "stage-in": body_stage_in,
-    "hadoop-prep": body_hadoop_prep,
-    "entity-resolution": body_er,
-    "spark-class-origin": body_class_origin,
-    "spark-job": body_spark_job,
-    "copy-out": body_copy_out,
-}
-
-
-def step_json(name, run_id, body):
+def step_json(name, run_id, args):
     step = {
         "Name": ("ScholarChain-%s-%s" % (run_id, name))[:256],
         "ActionOnFailure": "CONTINUE",
-        "HadoopJarStep": {"Jar": "command-runner.jar", "Args": ["bash", "-c", body]},
+        "HadoopJarStep": {"Jar": "command-runner.jar", "Args": args},
     }
     return json.dumps([step], separators=(",", ":"))
 
@@ -720,6 +467,16 @@ def build_plan(args):
         if problem:
             raise Refused("ceiling rejected the prep config %s: %s" % (os.path.basename(refs["hadoop-config"]), problem))
     spark_conf = read_spark_conf(args.spark_conf_file)
+    # Finding C1: the installed step programs. Their sha256 values come from the repository files, are cross-checked with the
+    # Terraform-side manifest, and become part of the approved run configuration.
+    step_bin_dir = args.step_bin_dir or ""
+    if not SAFE_NODE_DIR.match(step_bin_dir) or ".." in step_bin_dir.split("/") or "//" in step_bin_dir or step_bin_dir.endswith("/"):
+        raise Refused("PIPELINE_STEP_BIN_DIR must be a plain absolute node directory without '..' or a trailing slash")
+    arg_limit = args.step_arg_max_chars
+    if arg_limit < 1000 or arg_limit > EMR_API_ARG_LIMIT:
+        raise Refused("PIPELINE_STEP_ARG_MAX_CHARS %d must be from 1000 to %d (the EMR HadoopJarStepConfig.Args limit)" % (arg_limit, EMR_API_ARG_LIMIT))
+    step_programs = program_shas()
+    check_step_manifest(step_programs)
     datasets = read_datasets(need(args, "datasets_manifest", "--datasets-manifest"))
     weights = parse_weights(args.step_weights)
     total_seconds = args.max_runtime_minutes * 60
@@ -763,6 +520,8 @@ def build_plan(args):
         "expected_spark_version": args.expected_spark_version,
         "expected_scala_version": args.expected_scala_version,
         "max_executors": max_executors,
+        "step_bin_dir": step_bin_dir,
+        "step_programs_sha256": step_programs,
         "kill_after_seconds": args.kill_after_seconds,
         "step_seconds": step_seconds,
         "steps": list(STEP_ORDER),
@@ -776,8 +535,19 @@ def build_plan(args):
     runtime_cfg["yarn_tag"] = run_id
     steps = []
     for name in STEP_ORDER:
-        body = BODIES[name](runtime_cfg)
-        steps.append({"name": name, "timeout_seconds": step_seconds[name], "body": body, "add_steps_json": step_json(name, run_id, body)})
+        argv = step_args(name, runtime_cfg)
+        check_arg_lengths(name, argv, arg_limit)
+        steps.append(
+            {
+                "name": name,
+                "timeout_seconds": step_seconds[name],
+                "args": argv,
+                "arg_lengths": arg_lengths(argv),
+                "arg_limit": arg_limit,
+                "body": render_command(argv),
+                "add_steps_json": step_json(name, run_id, argv),
+            }
+        )
     return {
         "schema": "scholarchain.bounded-run-plan.v1",
         "run_id": run_id,
@@ -826,6 +596,11 @@ def cmd_show(args):
         print(plan["steps"][int(what.split(":")[1])]["timeout_seconds"])
     elif what.startswith("step-json:"):
         print(plan["steps"][int(what.split(":")[1])]["add_steps_json"])
+    elif what.startswith("step-args:"):
+        print(json.dumps(plan["steps"][int(what.split(":")[1])]["args"], separators=(",", ":")))
+    elif what.startswith("step-arglens:"):
+        step = plan["steps"][int(what.split(":")[1])]
+        print(length_line(step["name"], step["args"], step["arg_limit"]))
     elif what.startswith("step-body:"):
         sys.stdout.write(plan["steps"][int(what.split(":")[1])]["body"])
     elif what.startswith("field:"):
@@ -848,6 +623,9 @@ def cmd_show(args):
         print("output-prefix: %s/%s/" % (config["output_prefix"].rstrip("/"), plan["run_id"]))
         for name, value in sorted(config["artifact_sha256"].items()):
             print("artifact-sha256 %s: %s" % (name, value))
+        print("step-bin-dir: %s" % config["step_bin_dir"])
+        for name, value in sorted(config["step_programs_sha256"].items()):
+            print("step-program-sha256 %s: %s" % (name, value))
         print("spark-conf-sha256: %s" % config["spark_conf_sha256"])
         print("datasets-manifest-sha256: %s" % config["datasets_manifest_sha256"])
         for source in SOURCES:
@@ -864,7 +642,29 @@ def cmd_show(args):
 
 def cmd_verify_class_origin(args):
     sys.argv = ["class-origin"] + list(args.argv)
-    exec(compile(CLASS_ORIGIN_PY, "class-origin-verifier", "exec"), {"__name__": "__main__"})
+    exec(compile(program_text(CLASS_ORIGIN_PROGRAM), CLASS_ORIGIN_PROGRAM, "exec"), {"__name__": "__main__"})
+    return 0
+
+
+def cmd_step_manifest(args):
+    text = json.dumps(step_manifest(args.step_bin_dir, program_shas()), indent=2, sort_keys=True) + "\n"
+    if args.check:
+        try:
+            with open(STEP_MANIFEST, encoding="utf-8") as handle:
+                current = handle.read()
+        except OSError:
+            current = None
+        if current != text:
+            print("STEP-PROGRAM-DRIFT: infra/terraform/emr-step-programs.json differs from scripts/emr/ (run with --write)")
+            return 1
+        print("step manifest ok")
+        return 0
+    if args.write:
+        with open(STEP_MANIFEST, "w", encoding="utf-8") as handle:
+            handle.write(text)
+        print("wrote infra/terraform/emr-step-programs.json")
+        return 0
+    sys.stdout.write(text)
     return 0
 
 
@@ -1014,10 +814,10 @@ def build_parser():
         "run-id", "action", "region", "cluster-id", "instance-type", "budget-usd", "input-prefix", "output-prefix", "hadoop-submit-jar",
         "hadoop-libjars", "hadoop-config", "er-jar", "er-policy", "er-config", "spark-config-template", "datasets-manifest",
         "spark-conf-file", "efs-mount", "runtime-dir", "job-jar-path", "java-home-file", "er-xmx", "expected-spark-version",
-        "expected-scala-version", "step-weights", "runtime-archive-sha256", "estimate-json",
+        "expected-scala-version", "step-weights", "runtime-archive-sha256", "estimate-json", "step-bin-dir",
     ):
         p.add_argument("--" + name)
-    for name in ("core-count", "max-task-count", "max-runtime-minutes", "max-capacity-cap", "max-runtime-cap", "max-input-bytes", "max-copyout-bytes", "max-idle-timeout-seconds", "max-executors-per-node", "kill-after-seconds", "min-step-seconds"):
+    for name in ("core-count", "max-task-count", "max-runtime-minutes", "max-capacity-cap", "max-runtime-cap", "max-input-bytes", "max-copyout-bytes", "max-idle-timeout-seconds", "max-executors-per-node", "kill-after-seconds", "min-step-seconds", "step-arg-max-chars"):
         p.add_argument("--" + name, type=int, required=True)
     for index in range(len(CEILING_FIELDS)):
         p.add_argument("--ceiling-%d" % index, required=True)
@@ -1030,6 +830,11 @@ def build_parser():
     p = sub.add_parser("verify-class-origin")
     p.add_argument("argv", nargs=argparse.REMAINDER)
     p.set_defaults(fn=cmd_verify_class_origin)
+    p = sub.add_parser("step-manifest")
+    p.add_argument("--step-bin-dir", default="/opt/scholarchain-spike/bin")
+    p.add_argument("--write", action="store_true", help="write infra/terraform/emr-step-programs.json instead of printing it")
+    p.add_argument("--check", action="store_true", help="exit 1 when the committed manifest differs from scripts/emr/")
+    p.set_defaults(fn=cmd_step_manifest)
     p = sub.add_parser("check-hadoop-config")
     p.add_argument("file")
     p.add_argument("--ceiling", action="append", required=True)

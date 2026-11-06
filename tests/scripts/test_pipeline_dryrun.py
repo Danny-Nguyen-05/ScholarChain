@@ -93,19 +93,25 @@ class PipelineDryRun(unittest.TestCase):
         self.assertLessEqual(sum(got2.values()), 120 * 60)
 
     def test_yarn_submitting_bodies_run_under_timeout_with_the_run_id_as_yarn_tag_and_kill_by_tag(self):
+        """C1 form: the step passes TAG, STEP_SECONDS and KILL_AFTER as parameters; the installed runner (the sha256-pinned
+        program the step executes) does the timeout and the kill by tag. The behaviour is proven by running it in
+        test_pipeline_bodies (YarnKillByTag); here the parameters and the pinned program text are checked."""
+        program = S.installed_program(self.fx, "sc-step.sh")
         for name in ("hadoop-prep", "spark-class-origin", "spark-job"):
-            body = S.extract_body(self.run_, name)
-            self.assertIn("TAG=bp-test-run-1", body, name)
-            self.assertRegex(body, r"timeout --kill-after=", name)
-            self.assertIn("yarn application -list", body, name)
-            self.assertIn("-appTags", body, name)
-            self.assertIn("yarn application -kill", body, name)
-            for code in ("124", "137", "143"):
-                self.assertIn(code, body, "%s must treat exit %s as the runtime cap firing" % (name, code))
-            self.assertRegex(body, r"trap '[^']*kill_tagged[^']*' EXIT", name)
-            self.assertRegex(body, r"trap '[^']*kill_tagged[^']*' TERM", name)
-        self.assertIn("-Dmapreduce.job.tags=${TAG}", S.extract_body(self.run_, "hadoop-prep"))
-        self.assertIn("spark.yarn.tags=${TAG}", S.extract_body(self.run_, "spark-job"))
+            params = S.step_params(S.step_args(self.run_, name))
+            self.assertEqual(params["TAG"], ["bp-test-run-1"], name)
+            self.assertEqual(params["KILL_AFTER"], ["60"], name)
+            self.assertEqual(params["STEP_SECONDS"], [str(S.STEP_SECONDS[name])], name)
+        self.assertRegex(program, r"timeout --kill-after=")
+        self.assertIn("yarn application -list", program)
+        self.assertIn("-appTags", program)
+        self.assertIn("yarn application -kill", program)
+        for code in ("124", "137", "143"):
+            self.assertIn(code, program, "the runner must treat exit %s as the runtime cap firing" % code)
+        self.assertRegex(program, r"trap '[^']*kill_tagged[^']*' EXIT")
+        self.assertRegex(program, r"trap '[^']*kill_tagged[^']*' TERM")
+        self.assertIn("-Dmapreduce.job.tags=${TAG}", program)
+        self.assertIn("spark.yarn.tags=${TAG}", program)
 
     # ----- Terraform-only rule -----
     def test_no_infrastructure_creating_command_is_ever_printed(self):
@@ -113,6 +119,7 @@ class PipelineDryRun(unittest.TestCase):
         printed = [l for l in r.lines() if l.startswith("DRY-RUN CMD") or l.startswith("CMD:")]
         for name in S.STEP_NAMES:
             printed += S.extract_body(r, name).splitlines()
+            printed += S.installed_program(self.fx, "sc-step.sh").splitlines()  # the program every step executes
         banned = re.compile(r"create-cluster|run-job-flow|terminate-clusters|modify-instance-(groups|fleet)|set-termination-protection|"
                             r"put-auto-termination-policy|add-instance-(groups|fleet)|terraform\s+(apply|destroy|plan|init)|"
                             r"aws\s+emr\s+create|aws\s+ec2\s+run-instances|aws\s+ec2\s+terminate")
@@ -121,8 +128,10 @@ class PipelineDryRun(unittest.TestCase):
 
     # ----- Spark step: decision 12-10 and class origin -----
     def test_spark_job_step_carries_the_decision_12_10_settings(self):
-        body = S.extract_body(self.run_, "spark-job")
-        self.assertRegex(body, r"--master yarn --deploy-mode cluster")
+        """C1 form: the settings travel as SPARK_CONF=key=value parameters (read from scripts/config/spark-12-10.conf); the pinned
+        runner turns each into a spark-submit --conf. The spark-submit argv itself is asserted by running the step."""
+        args = S.step_args(self.run_, "spark-job")
+        confs = S.step_params(args)["SPARK_CONF"]
         required = [
             "spark.yarn.jars=local:/opt/scholarchain-runtime/jars/*",
             "spark.yarn.populateHadoopClasspath=false",
@@ -135,49 +144,65 @@ class PipelineDryRun(unittest.TestCase):
             "spark.shuffle.service.enabled=false",
         ]
         for prop in required:
-            self.assertIn(prop, body, "decision 12-10 property missing from the spark-submit command: " + prop)
-        codec = re.search(r"spark\.hadoop\.io\.compression\.codecs=(\S+)", body)
-        self.assertIsNotNone(codec, "the codec override is missing")
-        self.assertNotIn("lzo", codec.group(1).lower(), "the codec list must not name LZO codecs")
-        self.assertNotIn("spark.authenticate.secret", body, "no Spark secret may be set in the command")
-        self.assertRegex(body, r"JAVA_HOME")  # Java 17 resolved at run time, passed to AM and executors
-        self.assertNotRegex(body, r"JAVA_HOME=/usr/lib/jvm|JAVA_HOME=/opt/(?!scholarchain)")
+            self.assertIn(prop, confs, "decision 12-10 property missing from the step parameters: " + prop)
+        codec = [c for c in confs if c.startswith("spark.hadoop.io.compression.codecs=")]
+        self.assertEqual(len(codec), 1, "the codec override is missing")
+        self.assertNotIn("lzo", codec[0].lower(), "the codec list must not name LZO codecs")
+        self.assertFalse([c for c in confs if c.startswith("spark.authenticate.secret")], "no Spark secret may be set")
+        self.assertFalse([c for c in confs if "JAVA_HOME" in c], "JAVA_HOME is resolved at run time, never configured here")
+        params = S.step_params(args)
+        self.assertEqual(params["JAVA_HOME_FILE"], ["/opt/scholarchain-spike/java-home"])
+        self.assertNotRegex(" ".join(args[6:]), r"JAVA_HOME=/usr/lib/jvm|JAVA_HOME=/opt/(?!scholarchain)")
+        program = S.installed_program(self.fx, "sc-step.sh")
+        self.assertIn("--master yarn --deploy-mode cluster", program)
+        self.assertIn("spark.yarn.appMasterEnv.JAVA_HOME=${JAVA_HOME}", program)
+        self.assertIn("spark.executorEnv.JAVA_HOME=${JAVA_HOME}", program)
 
     def test_class_origin_check_runs_before_the_spark_job_both_as_a_step_and_inside_the_job_body(self):
         r = self.run_
         order = [s for s in r.steps() if s.startswith("step-")]
         self.assertLess(order.index("step-spark-class-origin"), order.index("step-spark-job"))
-        probe = S.extract_body(r, "spark-class-origin")
-        self.assertIn("Phase12Readiness", probe)
-        self.assertIn("distributed", probe)
-        self.assertIn("--master yarn", probe)
-        self.assertIn("scala3-library", probe)
-        job = S.extract_body(r, "spark-job")
-        check = job.index("class-origin.json")
-        self.assertLess(check, job.index("spark-submit"), "the class-origin check must precede the job's spark-submit")
-        self.assertIn("scala3-library", job)
-        self.assertIn("CLASS-ORIGIN-FAILED", job)
-        self.assertLess(job.index("CLASS-ORIGIN-FAILED"), job.index("--deploy-mode cluster"))
+        verifier_sha = S.sha256_file(self.fx.stepbin / "sc-class-origin-verify.py")
+        probe = S.step_params(S.step_args(r, "spark-class-origin"))
+        job = S.step_params(S.step_args(r, "spark-job"))
+        for params in (probe, job):
+            self.assertEqual(params["CLASS_ORIGIN_PY_SHA"], [verifier_sha], "both steps verify with the pinned verifier program")
+            self.assertEqual(params["EXPECTED_SPARK_VERSION"], ["3.5.4"])
+            self.assertEqual(params["EXPECTED_SCALA_VERSION"], ["2.13.14"])
+        program = S.installed_program(self.fx, "sc-step.sh")
+        self.assertIn("Phase12Readiness", program)
+        self.assertIn("distributed", program)
+        class_origin_body = program[program.index("body_spark_class_origin() {"):program.index("body_spark_job() {")]
+        self.assertIn('--master yarn', program)
+        self.assertLess(class_origin_body.index("build_spark_cmd"), class_origin_body.index("verify_class_origin"))
+        job_body = program[program.index("body_spark_job() {"):program.index("body_copy_out() {")]
+        self.assertLess(job_body.index("verify_class_origin"), job_body.index('build_spark_cmd "${SPARK_MAIN}"'),
+                        "the class-origin check must precede the job's spark-submit")
+        self.assertIn("scala3-library", S.installed_program(self.fx, "sc-class-origin-verify.py"))
+        self.assertIn("CLASS-ORIGIN-FAILED", S.installed_program(self.fx, "sc-class-origin-verify.py"))
 
     def test_hadoop_and_er_step_forms(self):
         r = self.run_
-        hadoop = S.extract_body(r, "hadoop-prep")
-        for token in ("HadoopPrepMain", "--once", "--execution-mode cluster", '--run-id "${RUN_ID}"', "file://"):
-            self.assertIn(token, hadoop)
+        hadoop = S.step_params(S.step_args(r, "hadoop-prep"))
         for source, info in S.DATASETS.items():
-            self.assertIn("--%s-snapshot %s" % (source, info["snapshot"]), hadoop)
-            self.assertIn("--%s-retrieval %s" % (source, info["retrieval"]), hadoop)
-        er = S.extract_body(r, "entity-resolution")
-        self.assertIn("Phase5Main", er)
-        self.assertIn("resolve", er)
-        self.assertIn("--llm-mode disabled", er)
-        self.assertIn("JAVA_HOME_FILE", er)
-        self.assertNotRegex(er, r"/usr/lib/jvm|java-17-|jdk-17", "Java 17 must be resolved at run time, never hard-coded")
-        stage_in = S.extract_body(r, "stage-in")
-        self.assertIn("aws s3 cp", stage_in)
-        copy_out = S.extract_body(r, "copy-out")
-        self.assertIn("aws s3 cp", copy_out)
-        self.assertIn("sha256", copy_out)
+            self.assertEqual(hadoop[source.upper() + "_SNAPSHOT"], [info["snapshot"]])
+            self.assertEqual(hadoop[source.upper() + "_RETRIEVAL"], [info["retrieval"]])
+        self.assertEqual(hadoop["CEILINGS"], ["1000 8 256 4096 64 8388608 8388608"])
+        program = S.installed_program(self.fx, "sc-step.sh")
+        for token in ("HadoopPrepMain", "--once", "--execution-mode cluster", '--run-id "${RUN_ID}"', "file://"):
+            self.assertIn(token, program)
+        er = S.step_params(S.step_args(r, "entity-resolution"))
+        self.assertEqual(er["JAVA_HOME_FILE"], ["/opt/scholarchain-spike/java-home"])
+        for token in ("Phase5Main", "resolve", "--llm-mode disabled"):
+            self.assertIn(token, program)
+        self.assertNotRegex(" ".join(S.step_args(r, "entity-resolution")[6:]) + program, r"/usr/lib/jvm|java-17-|jdk-17",
+                            "Java 17 must be resolved at run time, never hard-coded")
+        stage_in = S.step_params(S.step_args(r, "stage-in"))
+        self.assertEqual(stage_in["INPUT_PREFIX"], ["s3://inbucket/data/in/"])
+        copy_out = S.step_params(S.step_args(r, "copy-out"))
+        self.assertEqual(copy_out["OUTPUT_PREFIX"], ["s3://outbucket/data/out/bp-test-run-1"])
+        self.assertIn("aws s3 cp", program)
+        self.assertIn("sha256", program)
 
     def test_dry_run_prints_dataset_snapshots_run_id_yarn_tag_and_outputs(self):
         r = self.run_

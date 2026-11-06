@@ -1,0 +1,4 @@
+   9     raise InfraNotReady(
+   1 FAILED (failures=8, errors=1)
+   1 Ran 8 tests in 0.238s
+   9 infra_support.InfraNotReady: root infra/terraform/deployer is not initialised (no /private/tmp/claude-501/-Users-danny-Documents-UIC-CS441-ScholarChain/a33708d1-0340-4fdc-adea-063ab78a782e/scratchpad/fakerepo/infra/terraform/deployer/.terraform/providers). These tests reuse the providers that the check.sh terraform gate installs; run `scripts/check.sh --only terraform` (or `terraform init -backend=false` in that root) first. This is a failure, not a skip.

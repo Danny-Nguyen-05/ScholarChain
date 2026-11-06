@@ -278,3 +278,123 @@ The independent tests found D1, O1, O2, O3 and O4. All five were fixed by infra-
 - Every live path: an EMR step, HadoopPrepMain on EFS `file://`, real YARN `-appTags` list and kill, G2/G3/G4, the real class-origin probe output, and real ECS/S3 behaviour.
 - Pricing has not been confirmed by the human (`EMR_PRICING_CONFIRMED_BY_HUMAN=false`).
 - The ER step has no packaged JAR yet (build-engineer gap).
+
+## Subphase 13C — final verification
+
+Base `56144457f38e29b7c6211e040dd1fb15270a50bf`; all 13C work uncommitted at handoff. By user decision the clean-snapshot `check.sh` and the working-tree `sbt check` ran in parallel; both are full runs.
+
+### Gates (orchestrator-observed)
+
+| Gate | Result | Evidence |
+|---|---|---|
+| Full default seven-gate `scripts/check.sh` in a clean snapshot (local commit `919a3026a1185dad0f49e351c189c5e54b40d973`), 2026-11-06T18:13:15Z–19:10:35Z | `RESULT: PASS gates=7`, exit 0 | `evidence/13c/orchestrator/check-full-clean-snapshot.txt` |
+| terraform gate (142 s) | 7 / 19 / 37 / 40 / 6 / 69 passed, 0 failed (deployer 37, spike 40, main 69) | same |
+| script-tests gate (2515 s) | `scripts/tests` 831; `scripts/phase12d-spike/tests` 73; billing 69 / 47 / 39; `tests/scripts` 256; `tests/infra` 126. Every suite: all executed, 0 skipped tests, 0 skipped classes, 0 failures. SUITE-REQUIRED `RealStateBindingTests` executed=7, `RouteOwnershipTest` executed=6 | same |
+| sbt gate (773 s) | 40 / 667 / 18 (+1 canceled), 0 failed | same |
+| Snapshot identity (working tree vs snapshot, excluding `docs/agent-runs/phase-13/`) | compared=5430 differing=0 | `evidence/13c/orchestrator/snapshot-identity.txt` |
+| Working-tree `sbt -batch check`, JDK 17.0.20.1 | exit 0, 764 s, 0 failed in every group | `evidence/13c/orchestrator/sbt-check-worktree-excerpt.txt` |
+
+The `[error] (checkProbeInjectFailure)` line in the sbt output is the build's own injected-failure probe, as in 13A and 13B.
+
+### Agent-observed results (raw logs in `evidence/13c/infra/` and `evidence/13c/test/`)
+
+- infra-engineer: shellcheck 0 findings; terraform fmt/validate clean on every root; 37 + 3 mutations detected and reverted (`mutation-results.jsonl`, `followup-mutation-results.jsonl`).
+- test-engineer: pass 1 (60 tests, 21 mutations), pass 2 (52 infra + 13 script mutations), pass 3 final `tests/infra` 126 and `tests/scripts` 256, 0 skips, 0 expected failures (`pass3-*`).
+
+### Test-matrix coverage (plan §9 and 13C "Done when")
+
+| Requirement | Covered by |
+|---|---|
+| Main EMR module matches decision 12-10 | `infra/terraform/tests/phase13c.tftest.hcl` (Hadoop only, emr-7.8.0, Spark settings equal `spark-12-10.conf`, TLS off/at-rest on, EFS, G3 defaults, G6 caps, idle ≤ 900); independent `tests/infra/test_emr_module_13c.py` |
+| Item 17 and items 2, 5, 14, 16, each with a test that fails on the old policy | deployer/spike/phase13c runs plus `tests/infra/test_iam_items_13c.py`; mutations in both agents' evidence. Item 16 is a mitigation (no IAM condition key on the trust document) |
+| Test gaps 6, 7, 10, 12, 20, 21 | `tests/infra/test_spike_hardening.py`, `test_deployer_hardening.py`, `test_guard_conditions.py`, `test_static_sources.py` |
+| Bootstrap items 8, 28, 29 | `scripts/tests/test_emr_bootstrap.py`; independent `tests/scripts/test_bootstrap_13c.py` |
+| 13B findings B1–B5 | `scripts/tests/test_13c_pipeline.py`, `test_budget.py`, `test_check.py`; independent `tests/scripts/test_pipeline_ledger_13c.py`, `test_pipeline_bodies.py`, `test_pipeline_refusals.py` |
+| Fake-binary dry-run contract and refusals unchanged | full `scripts/tests` and `tests/scripts` suites |
+| Nothing applied | no apply, plan with real credentials, upload or AWS call by any agent or the orchestrator |
+
+### Findings fixed inside 13C
+
+test-engineer pass 2 found three production defects; two were fixed by infra-engineer (copy-out with missing parts; TERM-ignoring grandchild after a step timeout). The third (task-group gp3 throughput) is a provider limitation: `aws_emr_instance_group.ebs_config` has no `throughput` in hashicorp/aws 6.44.0; it is documented and asserted by a schema test.
+
+### Unverified (live)
+
+The bootstrap on real EMR nodes (runtime install, Java resolution, EFS mount, `amazon-efs-utils` and S3 egress from the private subnet), the item 17 stack-tag condition against EMR-created ENIs, the process-group kill and EMR cancel-steps signalling on a node, the effective deployer permissions, G2/G3/G4. Pricing is still unconfirmed by the human. No real plan was run.
+
+## Subphase 13C — repair round 1
+
+Base `56144457f38e29b7c6211e040dd1fb15270a50bf`; all 13C and repair work uncommitted. Findings C1–C4 from 13C review 1 (`review.md`, `repairs.md`).
+
+### Gates (orchestrator-observed)
+
+Clean snapshot of `git ls-files -co --exclude-standard` (local commit `3093334fc04ebd5b3acef729bc5ded174bc16470`), JDK 17 environment, jobs in parallel (user decision 13C), 2026-11-06T21:24:10Z–21:47:56Z. Evidence: `evidence/13c/orchestrator/repair1-verification.txt`.
+
+| Command (in the snapshot) | Exit | Result |
+|---|---|---|
+| `scripts/check.sh --skip sbt,script-tests` | 5 (PARTIAL by design: two gates skipped and run separately below) | constitution, hooks, shell, python, terraform PASS; terraform test 7 / 19 / 37 / 40 / 6 / 77 passed, 0 failed (main root 77 = 69 + 8 new) |
+| `python3 -I scripts/lib/suite_run.py --start-dir scripts/tests --pattern 'test_*.py'` | 0 | ran=856 executed=856 skipped_tests=0 skipped_classes=0 failures=0 errors=0 (13C: 831; +25 `test_c1_step_args.py`) |
+| `python3 -I scripts/lib/suite_run.py --start-dir tests/scripts --pattern 'test_*.py'` | 0 | ran=276 executed=276 skipped 0, failures=0 errors=0 (13C: 256; +20 `test_step_arg_limit_13c.py`) |
+| `python3 -I scripts/lib/suite_run.py --start-dir tests/infra --pattern 'test_*.py'` (after the terraform gate) | 0 | ran=128 executed=128 skipped 0, failures=0 errors=0 (13C: 126) |
+| `python3 -I scripts/lib/suite_run.py --start-dir scripts/phase12d-spike/tests --pattern 'test_*.py'` | 0 | ran=73 executed=73 skipped 0, failures=0 errors=0 |
+| `python3 -I scripts/billing/tests/test_{budget_execution,budget_verification,publication_evidence}.py` (one process per file, as check.sh does) | 0 | 69 / 47 / 39 OK |
+| Snapshot identity (working tree vs snapshot, excluding `docs/agent-runs/phase-13/`) | — | compared=5437 differing=0 (`evidence/13c/orchestrator/repair1-snapshot-identity.txt`) |
+
+The snapshot is a committed git repository, so `RouteOwnershipTest` sees the untracked `efs.tf`, `emr-step-programs.json` and `phase13c.tftest.hcl` and passes there without `git add -N`.
+
+**sbt gate: reused, not rerun.** No `build.sbt`, `project/**`, `modules/**` or `.scalafmt.conf` input changed in this round: 335 such paths compared against the 13C clean snapshot `919a3026…` whose sbt gate passed (40 / 667 / 18 (+1 canceled), 0 failed; `evidence/13c/orchestrator/check-full-clean-snapshot.txt`), 0 differing, none missing; `git status --porcelain` and `git diff 5614445` on those paths are empty (`evidence/13c/orchestrator/repair1-sbt-input-identity.txt`). This follows the user's recorded preference for repair rounds (skip sbt when its inputs are unchanged; one full `check.sh` after approval). The seven-gate default `check.sh` was therefore not rerun as one command in this round.
+
+### Agent-observed results
+
+- infra-engineer: `scripts/tests` 856 OK; shellcheck 0 findings; main root fmt/validate/test 77 passed; four mutations caught and restored byte-identically (`evidence/13c/infra/repair1-mutation-*.txt`); maximum-length dry run with per-argument lengths (`evidence/13c/infra/repair1-dry-run-arg-lengths.txt`).
+- test-engineer: `tests/scripts` 276 OK, `tests/infra` 128 OK; arg-limit mutation caught and restored (`evidence/13c/test/repair1-*.txt`).
+
+### Repair coverage
+
+| Finding | Acceptance check | Covered by |
+|---|---|---|
+| C1 (High, blocking) | (a) refusal before any cloud call, dry run and execute | `STEP: arg-limit` before `g6-gate`, ledger and approval; `scripts/tests/test_c1_step_args.py` `OversizeRefusalTests`; independent `tests/scripts/test_step_arg_limit_13c.py` (10,281 refused with exit 3, empty fake-binary log; `--execute` leaves the ledger byte-identical and the approval unconsumed) |
+| | (b) every step under the limit without weakening B1 or item 1 | longest argument 1,043 characters at maximum values; B1 wrapper and process-group kill, YARN kill by tag and class-origin fail-closed moved verbatim into `scripts/emr/sc-step.sh` and still exercised by `tests/scripts/test_pipeline_bodies.py` (31 tests) running the printed command against installed programs; launcher and program sha checks with tamper tests |
+| | (c) maximum-length realistic fixture values | 63-character bucket, ~900-character keys, 64-character run id, `j-` + 32, 128-character dataset tokens; launcher and parameter boundaries at exactly 10,280 / 10,281 |
+| | (d) retained dry run with per-step argument lengths | `evidence/13c/infra/repair1-dry-run-arg-lengths.txt` (`STEP-ARG-LENGTHS` lines and an old-vs-new table) |
+| C2 (Low) | runtime hash must equal the 12-10 pin; negative test | root and module validations; `phase13c.tftest.hcl` negative + positive runs; `tests/infra/test_emr_module_13c.py` (three cases) |
+| C3 (Trivial) | ledger comment corrected | `scripts/config/release.conf` comment names `~/.scholarchain/emr-ledger/runs.jsonl` |
+| C4 (Low) | ~1 MB failing logs replaced by excerpts | `evidence/13c/infra/{pipeline-run1,pipeline-run2,tests-scripts-run,test_experiment-run3}.txt` excerpts with original size and sha256; directory 232K |
+
+### Unverified (live)
+
+Unchanged from 13C, plus: the bootstrap installing the four step programs on real nodes, the on-node launcher and runner under `command-runner.jar`, and AL2023 `sha256sum`/`python3` availability. The 10,280-character limit is taken from the review and AWS documentation, not observed live.
+
+Addendum (after the handoff, to clear the Claude Code stale-marker Stop hook): working-tree `sbt -batch check` on JDK 17 with no source change since the snapshot: exit 0, 724 s; groups 207 / 64 / 39 / 50 / 80 / 107 / 40 / 667 / 18 (+1 canceled) succeeded, 0 failed; the only `[error]` line is the build's injected `checkProbeInjectFailure` probe. `evidence/13c/orchestrator/repair1-sbt-check-worktree-excerpt.txt`.
+
+## Subphase 13C — final verification (after the repair round 1 APPROVE)
+
+Base `56144457f38e29b7c6211e040dd1fb15270a50bf`; all 13C work uncommitted. Requested by the reviewer's next prompt (Review 2) and the user's recorded "one full check after approval"; satisfies plan Section 11 "fresh `sbt check` on JDK 17". No AWS credentials, no cloud call.
+
+| Item | Result | Evidence |
+|---|---|---|
+| Command | `scripts/check.sh` (default seven gates, no `--only`/`--skip`) in a clean snapshot of `git ls-files -co --exclude-standard` (local commit `564f399a89182cee5a6941e9749d4b11ca90d83b`); JDK 17.0.20.1; 2026-11-06T22:16:29Z–23:18:03Z | `evidence/13c/orchestrator/final-check-full-clean-snapshot.txt` (ANSI stripped) |
+| Exit / result | exit 0, `RESULT: PASS gates=7` | same |
+| constitution, hooks, shell, python | PASS (1 s, 0 s, 7 s, 1 s) | same |
+| terraform (114 s) | 7 / 19 / 37 / 40 / 6 / 77 passed, 0 failed | same |
+| script-tests (2795 s) | `scripts/tests` 856; `scripts/phase12d-spike/tests` 73; billing 69 / 47 / 39; `tests/scripts` 276; `tests/infra` 128. Every suite all executed, 0 skipped tests, 0 skipped classes, OK. SUITE-REQUIRED `RealStateBindingTests` executed=7, `RouteOwnershipTest` executed=6 | same |
+| sbt (776 s) | 40 / 667 / 18 (+1 canceled) succeeded, 0 failed; the `[error] (checkProbeInjectFailure)` line is the build's injected probe | same |
+| Snapshot identity (working tree vs snapshot, excluding `docs/agent-runs/phase-13/`) | compared=5437 differing=0 | `evidence/13c/orchestrator/final-snapshot-identity.txt` |
+
+R1 (nonblocking, Review 2): `evidence/13c/infra/repair1-tests-scripts-run.txt` and `repair1-tests-scripts-with-manifest-copied.txt` now start with a one-line "INTERMEDIATE … superseded" header.
+
+### Plan Section 11 checklist (orchestrator status; the human gate is the user's)
+
+| Item | Status | Evidence |
+|---|---|---|
+| Each subphase reviewed by a user-launched reviewer; verdicts in `review.md` | done | `review.md`: 13A Review 5 APPROVE, 13B Review 1 APPROVE, 13C Review 2 APPROVE |
+| A clean checkout runs all non-cloud validation through `check.sh` | done | `evidence/13c/orchestrator/final-check-full-clean-snapshot.txt` |
+| Terraform planning scripted; plan checksum archived by the script | done (offline; no real plan run) | `scripts/plan.sh`; `evidence/13a/infra/dryrun-plan.txt`; 13A test-report |
+| Deployment refuses without the documented human approval (tested refusals) | done | `scripts/tests` deploy refusal tests; `evidence/13a/orchestrator/deploy-dirty-refusal.txt`, `evidence/13a/infra/dryrun-deploy.txt` |
+| Smoke exercises a bounded collaboration query and an evidence fetch | done locally (offline-synthetic service); live smoke is Phase 14 | `evidence/13b/infra/smoke-local-real.txt`, `smoke-stub-*.txt` |
+| Spark EMR step and Hadoop/ER steps in `run-bounded-pipeline.sh`; dry runs retained; live run is Phase 15 experiment A | done | `evidence/13b/infra/pipeline-dry-run-full.txt`, `evidence/13c/infra/repair1-dry-run-arg-lengths.txt` |
+| Every cloud-touching script defaults to dry run; none executed live | done | fake-binary suites; no live call recorded in any owner report |
+| Main EMR module matches decision 12-10; TLS decision; G1, G5, G6 recorded | done | `infra/terraform/tests/phase13c.tftest.hcl`; `prompt.md` Step 0 (13A, 13C) |
+| Items 17, 2, 5, 14, 16 closed with negative tests; gaps 6, 7, 10, 12, 20, 21 and script items 1, 31 closed | done; 16 mitigated only (no IAM condition key on the trust document) | `evidence/13c/carried-findings-status.md` |
+| `scripts/README.md` lists prerequisites, environment names, approval points, evidence and rollback | done | `scripts/README.md` |
+| Fresh JDK 17 `sbt check` passes; reviewer APPROVE; human wrote `human-gate.md` and `commit.txt` | sbt and APPROVE done; **human gate open** | this section; `review.md` |
+| Next action: Phase 14 pre-flight | not started (by instruction) | — |

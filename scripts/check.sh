@@ -29,18 +29,19 @@ Gates (default: all, in this order)
                  never rewritten), validate, and test where tests/ exists. It runs BEFORE script-tests
                  on purpose: its init installs the providers the real-Terraform script tests need, so a
                  clean checkout runs them instead of skipping them
-  script-tests   scripts/tests (through scripts/lib/suite_run.py), scripts/phase12d-spike/tests and
-                 scripts/billing/tests/test_*.py (one process per file) and tests/scripts (the test-engineer's
-                 independent script tests). The list is PINNED in this
+  script-tests   scripts/tests (through scripts/lib/suite_run.py), scripts/phase12d-spike/tests,
+                 scripts/billing/tests/test_*.py (one process per file), tests/scripts (the test-engineer's
+                 independent script tests) and tests/infra (the independent Terraform tests). The list is PINNED in this
                  script: an omitted suite fails, and a suite that EXECUTES zero tests fails. Executed =
                  unittest "Ran N" minus the METHOD-level skips (a class-level skip adds one skip but no
                  test to "Ran"); skipped classes are listed separately. In a DEFAULT FULL RUN (no
                  --only/--skip) the real-Terraform classes test_terraform_state_binding.RealStateBindingTests
                  and test_terraform_r1.RouteOwnershipTest must EXECUTE: a skip or a missing class fails the
                  gate (a skip is not a pass). A partial run only warns about them (it is never a pass anyway).
-                 tests/scripts is REQUIRED in a default full run: a missing directory, or one that executes
-                 no test, fails the gate. Until the test-engineer populates it, a PARTIAL run only warns
-                 (SUITE-PENDING) and still ends RESULT: PARTIAL, never a pass
+                 tests/scripts and tests/infra (the test-engineer's independent Terraform-root tests, which run
+                 `terraform test`/`plan` on scratch copies of the roots, so the terraform gate must have initialised them)
+                 are REQUIRED: a missing directory, or one that executes no test, fails the gate in a default full run
+                 and in a partial one alike (the old SUITE-PENDING allowance is gone)
   sbt            sbt -batch check under JDK 17 (scalafmt, Test/compile, tests, contract tests,
                  markTestRun)
 
@@ -274,15 +275,15 @@ if [[ -z "${SELECT_ONLY}" && -z "${SKIP_LIST}" ]]; then
 fi
 
 # The REQUIRED script test suites are pinned here (not in the config file, not overridable from the
-# environment): a default run always runs all four, an omitted suite fails the gate, and a suite that
+# environment): a default run always runs all five, an omitted suite fails the gate, and a suite that
 # executes zero tests fails the gate. discover:<dir> = unittest discover; files:<dir> = one python3 -I
 # process per test_*.py (the billing suites interfere with each other when loaded by one discover
 # process; terraform_state_binding.py is excluded because it applies scratch Terraform state).
-# tests/scripts holds the test-engineer's independent script tests (Subphase 13B); it is REQUIRED in a default full
-# run (a missing directory, or one that executes no test, fails the gate). Until the test-engineer populates it, a
-# PARTIAL run (--only/--skip, never a pass anyway) only warns about it: SUITE-PENDING.
-REQUIRED_SUITES="discover:scripts/tests discover:scripts/phase12d-spike/tests files:scripts/billing/tests discover:tests/scripts"
-PENDING_UNTIL_POPULATED="tests/scripts"
+# tests/scripts holds the test-engineer's independent script tests (Subphase 13B) and tests/infra its independent
+# Terraform-root tests (Subphase 13C; they run terraform on scratch copies of the roots, so the terraform gate runs
+# first). Both are REQUIRED: a missing directory, or one that executes no test, fails the gate (13C finding B5 removed
+# the stale SUITE-PENDING exemption that let a partial run skip a missing suite).
+REQUIRED_SUITES="discover:scripts/tests discover:scripts/phase12d-spike/tests files:scripts/billing/tests discover:tests/scripts discover:tests/infra"
 SUITE_OVERRIDE=0
 
 # _suite_executed LOG: prints the number of tests EXECUTED from plain `python3 file.py` unittest output ("Ran N" minus
@@ -313,10 +314,6 @@ gate_script_tests() {
     kind="${suite%%:*}"
     dir="${suite#*:}"
     if [[ ! -d "${REPO_ROOT}/${dir}" ]]; then
-      if [[ "${dir}" == "${PENDING_UNTIL_POPULATED}" && "${FULL_RUN}" -eq 0 && "${SUITE_OVERRIDE}" -eq 0 ]]; then
-        sc_warn "SUITE-PENDING: required suite ${dir} does not exist yet (the test-engineer populates it); a default full run FAILS until it does"
-        continue
-      fi
       sc_err "required test suite directory missing: ${dir}"
       rc=1
       continue
@@ -345,8 +342,6 @@ gate_script_tests() {
                 *) sc_warn "required real-Terraform class did not run (not enforced in a partial run): ${f}" ;;
               esac
             done || true
-          elif [[ "${dir}" == "${PENDING_UNTIL_POPULATED}" && "${FULL_RUN}" -eq 0 && "${SUITE_OVERRIDE}" -eq 0 ]]; then
-            sc_warn "SUITE-PENDING: suite ${dir} executed no test yet (the test-engineer populates it); a default full run FAILS until it does"
           else
             sc_err "suite ${dir} executed zero tests: an empty suite is a failure"
             rc=1

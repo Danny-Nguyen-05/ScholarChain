@@ -12,9 +12,11 @@ from helpers import REAL_REPO, SCRIPTS_DIR, Fixture
 
 
 REQUIRED_SUITE_DIRS = ("scripts/tests", "scripts/phase12d-spike/tests", "scripts/billing/tests")
-# Subphase 13B: the test-engineer's independent script tests are a fourth REQUIRED discover suite. It is enforced in a
-# default full run; a partial run only warns while it is not populated yet (SUITE-PENDING).
+# Subphase 13B/13C: the test-engineer's independent script tests (tests/scripts) and Terraform tests (tests/infra) are the
+# fourth and fifth REQUIRED discover suites. Both are enforced in a default full run and in a partial one alike: the 13B
+# SUITE-PENDING allowance was removed (finding B5).
 TEST_ENGINEER_SUITE = "tests/scripts"
+TEST_ENGINEER_SUITES = ("tests/scripts", "tests/infra")
 REQUIRED_TF_FILES = {
     "scripts/tests/test_terraform_state_binding.py": "RealStateBindingTests",
     "scripts/tests/test_terraform_r1.py": "RouteOwnershipTest",
@@ -48,7 +50,8 @@ class CheckBase(Fixture):
         self.write(".claude/hooks/ok.sh", '#!/usr/bin/env bash\nset -euo pipefail\necho "ok"\n', 0o755)
         for suite in REQUIRED_SUITE_DIRS:
             self.write("%s/test_one.py" % suite, PASSING_TEST)
-        self.write("%s/test_one.py" % TEST_ENGINEER_SUITE, PASSING_TEST)
+        for suite in TEST_ENGINEER_SUITES:
+            self.write("%s/test_one.py" % suite, PASSING_TEST)
         for path, class_name in REQUIRED_TF_FILES.items():
             self.write(path, required_class_module(class_name, PASSING_BODY))
         self.write("scripts/ok.sh", '#!/usr/bin/env bash\nset -euo pipefail\nname="x"\necho "${name}"\n', 0o755)
@@ -243,74 +246,93 @@ class CheckScriptTestGateTests(CheckBase):
 
 
 class CheckTestEngineerSuiteTests(CheckBase):
-    """13B: tests/scripts is a pinned REQUIRED suite (discover). The directory is created by the test-engineer, so these
-    tests simulate it inside the fixture repository; nothing under the real tests/** is touched."""
+    """13B/13C: tests/scripts and tests/infra are pinned REQUIRED suites (discover). The directories are created by the
+    test-engineer, so these tests simulate them inside the fixture repository; nothing under the real tests/** is touched.
+    Finding B5: there is no SUITE-PENDING exemption any more, so a missing or empty suite fails every run that reaches it."""
 
-    def remove_suite(self):
-        shutil.rmtree(os.path.join(self.repo, TEST_ENGINEER_SUITE))
+    def remove_suite(self, suite):
+        shutil.rmtree(os.path.join(self.repo, suite))
 
-    def test_the_suite_is_pinned_in_check_sh_as_a_discover_suite(self):
+    def test_both_suites_are_pinned_in_check_sh_as_discover_suites(self):
         with open(os.path.join(SCRIPTS_DIR, "check.sh"), encoding="utf-8") as handle:
             text = handle.read()
-        self.assertIn("discover:tests/scripts", text.split("REQUIRED_SUITES=", 1)[1].splitlines()[0])
+        pinned = text.split("REQUIRED_SUITES=", 1)[1].splitlines()[0]
+        self.assertIn("discover:tests/scripts", pinned)
+        self.assertIn("discover:tests/infra", pinned)
 
-    def test_a_populated_suite_is_run_and_reports_executed_tests(self):
+    def test_the_stale_pending_exemption_is_gone_from_check_sh(self):
+        with open(os.path.join(SCRIPTS_DIR, "check.sh"), encoding="utf-8") as handle:
+            text = handle.read()
+        for needle in ("PENDING_UNTIL_POPULATED", "SUITE-PENDING: suite", "SUITE-PENDING: required"):
+            self.assertNotIn(needle, text)
+
+    def test_populated_suites_are_run_and_report_executed_tests(self):
         result = self.check("--only", "script-tests")
         self.assertEqual(result.rc, 5, result.out)  # PARTIAL by --only; the gate itself passes
         self.assertEqual(self.gate_line(result, "script-tests").split()[2], "PASS", result.out)
-        self.assertIn("suite tests/scripts: Ran 1 test", result.out)
+        for suite in TEST_ENGINEER_SUITES:
+            self.assertIn("suite %s: Ran 1 test" % suite, result.out)
         self.assertNotIn("SUITE-PENDING", result.out)
 
-    def test_a_default_full_run_fails_when_the_suite_directory_is_missing(self):
+    def test_a_default_full_run_fails_when_a_suite_directory_is_missing(self):
         self.must_have_shellcheck()
-        self.remove_suite()
-        result = self.check()
-        self.assertEqual(result.rc, 4, result.out)
-        self.assertIn("required test suite directory missing: tests/scripts", result.out)
-        self.assertEqual(self.gate_line(result, "script-tests").split()[2], "FAIL")
-        self.assertTrue(result.result_line().startswith("RESULT: FAIL"), result.result_line())
+        for suite in TEST_ENGINEER_SUITES:
+            with self.subTest(suite):
+                self.setUp()
+                self.remove_suite(suite)
+                result = self.check()
+                self.assertEqual(result.rc, 4, result.out)
+                self.assertIn("required test suite directory missing: %s" % suite, result.out)
+                self.assertEqual(self.gate_line(result, "script-tests").split()[2], "FAIL")
+                self.assertTrue(result.result_line().startswith("RESULT: FAIL"), result.result_line())
 
-    def test_a_default_full_run_fails_when_the_suite_executes_zero_tests(self):
+    def test_a_default_full_run_fails_when_a_suite_executes_zero_tests(self):
         self.must_have_shellcheck()
-        self.write("%s/test_one.py" % TEST_ENGINEER_SUITE, NO_TESTS)
-        result = self.check()
-        self.assertEqual(result.rc, 4, result.out)
-        self.assertIn("suite tests/scripts executed zero tests: an empty suite is a failure", result.out)
+        for suite in TEST_ENGINEER_SUITES:
+            with self.subTest(suite):
+                self.setUp()
+                self.write("%s/test_one.py" % suite, NO_TESTS)
+                result = self.check()
+                self.assertEqual(result.rc, 4, result.out)
+                self.assertIn("suite %s executed zero tests: an empty suite is a failure" % suite, result.out)
 
-    def test_a_partial_run_only_warns_while_the_suite_is_missing_and_never_passes(self):
-        self.remove_suite()
-        result = self.check("--only", "script-tests")
-        self.assertEqual(result.rc, 5, result.out)
-        self.assertIn("SUITE-PENDING: required suite tests/scripts does not exist yet", result.out)
-        self.assertEqual(self.gate_line(result, "script-tests").split()[2], "PASS", result.out)
-        self.assertTrue(result.result_line().startswith("RESULT: PARTIAL"), result.result_line())
+    def test_a_partial_run_also_fails_a_missing_suite(self):
+        for suite in TEST_ENGINEER_SUITES:
+            with self.subTest(suite):
+                self.setUp()
+                self.remove_suite(suite)
+                result = self.check("--only", "script-tests")
+                self.assertEqual(result.rc, 4, result.out)
+                self.assertIn("required test suite directory missing: %s" % suite, result.out)
+                self.assertEqual(self.gate_line(result, "script-tests").split()[2], "FAIL")
+                self.assertNotIn("SUITE-PENDING", result.out)
 
-    def test_a_partial_run_only_warns_while_the_suite_executes_no_test(self):
-        self.write("%s/test_one.py" % TEST_ENGINEER_SUITE, NO_TESTS)
-        result = self.check("--only", "script-tests")
-        self.assertEqual(result.rc, 5, result.out)
-        self.assertIn("SUITE-PENDING: suite tests/scripts executed no test yet", result.out)
+    def test_a_partial_run_also_fails_a_suite_that_executes_no_test(self):
+        for suite in TEST_ENGINEER_SUITES:
+            with self.subTest(suite):
+                self.setUp()
+                self.write("%s/test_one.py" % suite, NO_TESTS)
+                result = self.check("--only", "script-tests")
+                self.assertEqual(result.rc, 4, result.out)
+                self.assertIn("suite %s executed zero tests: an empty suite is a failure" % suite, result.out)
 
     def test_a_populated_failing_suite_fails_even_a_partial_run(self):
-        self.write("%s/test_bad.py" % TEST_ENGINEER_SUITE, "import unittest\nclass T(unittest.TestCase):\n    def test_a(self):\n        self.fail('boom')\n")
-        result = self.check("--only", "script-tests")
-        self.assertEqual(result.rc, 4, result.out)
-        self.assertIn("suite failed: tests/scripts", result.out)
+        for suite in TEST_ENGINEER_SUITES:
+            with self.subTest(suite):
+                self.setUp()
+                self.write("%s/test_bad.py" % suite, "import unittest\nclass T(unittest.TestCase):\n    def test_a(self):\n        self.fail('boom')\n")
+                result = self.check("--only", "script-tests")
+                self.assertEqual(result.rc, 4, result.out)
+                self.assertIn("suite failed: %s" % suite, result.out)
 
-    def test_the_pending_allowance_does_not_extend_to_the_other_required_suites(self):
-        self.remove_suite()
-        shutil.rmtree(os.path.join(self.repo, "scripts/billing/tests"))
-        result = self.check("--only", "script-tests")
-        self.assertEqual(result.rc, 4, result.out)
-        self.assertIn("required test suite directory missing: scripts/billing/tests", result.out)
-
-    def test_the_environment_cannot_make_a_default_run_treat_the_suite_as_pending(self):
+    def test_the_environment_cannot_make_a_run_treat_a_suite_as_pending(self):
         self.must_have_shellcheck()
-        self.remove_suite()
-        for name in ("PENDING_UNTIL_POPULATED", "FULL_RUN", "TEST_ENGINEER_SUITE"):
+        self.remove_suite("tests/infra")
+        for name in ("PENDING_UNTIL_POPULATED", "FULL_RUN", "TEST_ENGINEER_SUITE", "REQUIRED_SUITES"):
             with self.subTest(name):
                 result = self.check(**{name: "x"})
                 self.assertEqual(result.rc, 4, result.out)
+                self.assertIn("required test suite directory missing: tests/infra", result.out)
 
 
 class CheckRequiredRealTerraformTests(CheckBase):

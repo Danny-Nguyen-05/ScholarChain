@@ -263,16 +263,20 @@ run "https_has_no_http_fallback" {
 run "bounded_emr_mock_runtime_only" {
   command = plan
   variables {
-    emr_config              = { enabled = true, release_label = "emr-7.8.0", runtime_reference = "SYNTHETIC-NOT-LIVE-RUNTIME-PROOF", runtime_verified = true, bootstrap_uri = "s3://synthetic-artifacts/bootstrap/spark-213.sh", tls_certificate_uri = "s3://synthetic-artifacts/tls/synthetic.zip" }
+    emr_config              = { enabled = true, runtime_reference = "SYNTHETIC-NOT-LIVE-RUNTIME-PROOF", runtime_verified = true, bootstrap_uri = "s3://scholarchain-course-111122223333-artifacts/bootstrap/bootstrap.sh", bootstrap_sha256 = "1111111111111111111111111111111111111111111111111111111111111111", runtime_archive_uri = "s3://scholarchain-course-111122223333-artifacts/runtime/scholarchain-runtime.tgz", job_jar_uri = "s3://scholarchain-course-111122223333-artifacts/jobs/scholarchain-job.jar", job_jar_sha256 = "2222222222222222222222222222222222222222222222222222222222222222", extra_artifacts = [for n, s in jsondecode(file("emr-step-programs.json")).programs : { uri = "s3://scholarchain-course-111122223333-artifacts/steps/${n}", sha256 = s, dest = "/opt/scholarchain-spike/bin/${n}" }] }
     emr_service_policy_json = "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Effect\":\"Allow\",\"Action\":[\"ec2:DescribeInstances\"],\"Resource\":[\"*\"]}]}"
   }
   assert {
-    condition     = output.phase12b_controls.emr.cluster.applications == toset(["Hadoop", "Spark"]) && one(output.phase12b_controls.emr.cluster.master_instance_group).instance_count == 1 && one(output.phase12b_controls.emr.cluster.core_instance_group).instance_count == 1 && one(output.phase12b_controls.emr.scaling.compute_limits).minimum_capacity_units == 1 && one(output.phase12b_controls.emr.scaling.compute_limits).maximum_capacity_units == 3 && one(output.phase12b_controls.emr.scaling.compute_limits).maximum_core_capacity_units == 1 && one(output.phase12b_controls.emr.scaling.compute_limits).maximum_ondemand_capacity_units == 3
-    error_message = "EMR has one primary plus1-3 on-demand workers, at most one core and at most two task nodes."
+    condition     = output.phase12b_controls.emr.cluster.applications == toset(["Hadoop"]) && one(output.phase12b_controls.emr.cluster.master_instance_group).instance_count == 1 && one(output.phase12b_controls.emr.cluster.core_instance_group).instance_count == 1
+    error_message = "13C: EMR installs Hadoop only (decision 12-10), one primary and one core node."
   }
   assert {
-    condition     = one(output.phase12b_controls.emr.cluster.auto_termination_policy).idle_timeout == 1800 && one(output.phase12b_controls.emr.cluster.master_instance_group).bid_price == null && one(output.phase12b_controls.emr.cluster.core_instance_group).bid_price == null && jsondecode(output.phase12b_controls.emr.security.configuration).EncryptionConfiguration.EnableInTransitEncryption && jsondecode(output.phase12b_controls.emr.security.configuration).EncryptionConfiguration.EnableAtRestEncryption
-    error_message = "EMR must have finite idle termination, no Spot bids and explicit in-transit/at-rest encryption."
+    condition     = output.phase12b_controls.emr.scaling == null && length(output.phase12b_controls.emr.task_groups) == 0
+    error_message = "13C/G3: task nodes and managed scaling are OFF by default."
+  }
+  assert {
+    condition     = one(output.phase12b_controls.emr.cluster.auto_termination_policy).idle_timeout == 900 && one(output.phase12b_controls.emr.cluster.master_instance_group).bid_price == null && one(output.phase12b_controls.emr.cluster.core_instance_group).bid_price == null && !jsondecode(output.phase12b_controls.emr.security.configuration).EncryptionConfiguration.EnableInTransitEncryption && jsondecode(output.phase12b_controls.emr.security.configuration).EncryptionConfiguration.EnableAtRestEncryption
+    error_message = "EMR must have finite idle termination, no Spot bids, at-rest encryption and (13C decision) in-transit TLS disabled."
   }
 }
 run "runtime_cannot_activate_without_composition" {

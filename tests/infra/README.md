@@ -46,3 +46,34 @@ JSON, `aws_iam_policy_document` defaults, heredoc/encoded policy documents, dyna
 interpolation scope, effective permissions or live service behavior. Native
 Terraform feature tests and the disclosed manual security review remain required.
 The synthetic cases test unsafe fixtures without changing repository infrastructure.
+
+## Request-tag-scoped actions must keep a condition (Phase 13C, review item 10)
+
+`kms:CreateKey` and `elasticmapreduce:RunJobFlow` have no IAM resource type, so only request tags (and the region)
+scope them. The guard therefore also reports `unconditioned-request-scoped-action` for an Allow statement that
+names either action and has no `Condition`, an empty or `null` Condition, or a literal Condition with no
+`aws:RequestTag/` key. A Condition built from locals or functions (for example `merge(local.c_region,
+local.c_req_stack)`) cannot be evaluated by a literal-source check and is accepted here; the rendered policy
+conditions, including the exact tag values, are asserted by `test_deployer_hardening.py`.
+
+## Phase 13C test modules (`python3 -m unittest discover -s tests/infra -v`)
+
+Offline and deterministic; they need terraform 1.13.5 and the providers that the `scripts/check.sh` terraform gate
+installs in each root (a root that was not initialised makes them FAIL, never skip). Every mutation edits a scratch
+copy under a temporary directory, never the repository.
+
+- `test_spike_hardening.py`: spike root, review items 6 (mutation cases), 7 (`tags_all`) and 12.
+- `test_deployer_hardening.py`: deployer root, items 10 (rendered conditions), 20 (tag values) and 21 (login attachment).
+- `test_guard_conditions.py`: the guard inspects conditions (item 10).
+- `test_static_sources.py`: text-only checks, item 12 (default security group) and the HCL scanner they use.
+- `infra_support.py`, `spike_checks.py`, `deployer_checks.py`, `hcl_text.py`, `tftests/*.tftest.hcl`: support. The
+  plan view is a real offline `terraform plan` (fake static credentials, `skip_*` flags, closed proxy); the state
+  view is a `mock_provider` apply. Set `SC_INFRA_EVIDENCE_FILE` to keep a JSON-lines record of each mutation result.
+
+## Second pass (Phase 13C): IAM items and the ported EMR module
+
+- `test_iam_items_13c.py`: carried findings 2, 5 (spike key policy and main project key), 14, 16 and 17, each with scratch-copy mutations.
+- `test_emr_module_13c.py`: the main EMR module (decision 12-10, TLS off, G2/G3, G6 bounds computed from `scripts/config`,
+  EFS NFS-only, stack tag) through a scratch wrapper root; one `expectedFailure` documents a production finding
+  (the optional task group does not pin `throughput`) and turns into a failure once that is fixed, prompting its removal.
+- `emr_module_checks.py`, `tftests/emr_module_snapshot.tftest.hcl`: support.

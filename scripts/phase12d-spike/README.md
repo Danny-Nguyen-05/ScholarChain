@@ -45,4 +45,3 @@ What the documentation says (read 2026-11-04; none of it was executed here):
 * `aws login` credentials are short-lived (15 minutes) and the CLI and SDKs refresh them from the cached refresh token for up to 12 hours: https://docs.aws.amazon.com/sdkref/latest/guide/feature-login-credentials.html
 
 Limits to expect: whether `export-credentials` resolves a `login_session` profile that also assumes the deployer role was not tested here. If the first Terraform call fails with a credential error, stop and check `aws sts get-caller-identity --profile scholarchain-deployer-tf` (it should name the deployer role session). The deployer role's `max_session_duration` is 3600 seconds, so a single run must finish within an hour of the last role assumption, or credentials will need a fresh `aws login`; keep the multipart upload of the runtime in mind when sizing the run.
-

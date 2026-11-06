@@ -143,22 +143,56 @@ class PipelineCeilingRefusals(Base):
 class PipelineG6Refusals(Base):
     """Step 0 answer 4: USD 3 per run, 3 live runs, USD 9.50 cumulative, estimate printed, unconfirmed pricing refuses."""
 
-    def test_estimate_formula_is_instances_times_hourly_rate_times_hours_rounded_up(self):
+    def test_estimate_formula_is_instances_times_hourly_rate_times_runtime_plus_idle_tail_rounded_up(self):
+        """13C finding B3, derived by hand from scripts/config/emr-pricing.conf (m5.xlarge EC2 0.192 + EMR 0.048 =
+        0.240 USD per instance-hour; m5.2xlarge 0.384 + 0.096 = 0.480) and release.conf (idle cap 900 s):
+        estimate = instances x hourly x (runtime_minutes x 60 + 900) / 3600, rounded UP to the cent."""
         fx = self.fx()
-        # 2 instances x (0.192 + 0.048) x 1 h = 0.48
+        # 2 instances x 0.240 x (3600 + 900) / 3600 = 0.48 x 1.25 = 0.60
         run = fx.dry()
-        self.assertIn("ESTIMATE-USD: 0.48", run.out)
-        # 2 x 0.24 x 11/60 = 0.088 -> rounded UP to the cent = 0.09
+        self.assertIn("ESTIMATE-USD: 0.60", run.out)
+        # 2 x 0.240 x (660 + 900) / 3600 = 0.48 x 0.43333.. = 0.208 -> rounded UP to the cent = 0.21
         run = fx.dry(max_runtime_minutes=11)
-        self.assertIn("ESTIMATE-USD: 0.09", run.out)
-        # m5.2xlarge, 4 instances x (0.384 + 0.096) x 1.5 h = 2.88
-        run = fx.dry(instance_type="m5.2xlarge", core_count=3, max_runtime_minutes=90)
+        self.assertIn("ESTIMATE-USD: 0.21", run.out)
+        # m5.2xlarge, 4 instances x 0.480 x (4500 + 900) / 3600 = 1.92 x 1.5 = 2.88
+        run = fx.dry(instance_type="m5.2xlarge", core_count=3, max_runtime_minutes=75)
         self.assertEqual(run.rc, 0, run.describe())
         self.assertIn("ESTIMATE-USD: 2.88", run.out)
+        # 3 x 0.240 x (5400 + 900) / 3600 = 0.72 x 1.75 = 1.26 (core 2, 90 minutes)
+        run = fx.dry(core_count=2, max_runtime_minutes=90)
+        self.assertIn("ESTIMATE-USD: 1.26", run.out)
+
+    def test_the_idle_tail_is_part_of_the_estimate_and_follows_max_idle_seconds(self):
+        """B3: with the default 900 s idle cap the estimate is 0.60 (not 0.48 = no tail). A tighter --max-idle-seconds
+        shrinks the tail: 2 x 0.240 x (3600 + S) / 3600 -> S=60: 0.488 -> 0.49; S=300: 0.52; S=600: 0.56; S=900: 0.60."""
+        fx = self.fx()
+        for idle, want in ((60, "0.49"), (300, "0.52"), (600, "0.56"), (900, "0.60")):
+            with self.subTest(idle=idle):
+                self.assertIn("ESTIMATE-USD: %s" % want, fx.dry(max_idle_seconds=idle).out)
+        self.assertNotIn("ESTIMATE-USD: 0.48", fx.dry().out, "the idle tail must not be dropped from the estimate")
+
+    def test_idle_tail_changes_which_runs_pass_the_three_dollar_cap(self):
+        """B3 boundary values (4 x m5.xlarge = 0.960 USD per hour, runtime in minutes M): the billed time is 60M + 900 s.
+        M=171: 10260 + 900 = 11160 s -> 0.96 x 3.1 = 2.976 -> 2.98 (allowed).
+        M=172: 11220 s -> 0.96 x 3.11666.. = 2.992 -> rounded UP to 3.00: exactly the cap, which is not above it (allowed).
+        M=173: 11280 s -> 0.96 x 3.13333.. = 3.008 -> 3.01 (refused, although 173 minutes alone cost only 2.77).
+        M=180 (the runtime maximum): 11700 s -> 0.96 x 3.25 = 3.12 (refused)."""
+        fx = self.fx()
+        for minutes, want in ((171, "2.98"), (172, "3.00")):
+            with self.subTest(allowed=minutes):
+                ok = fx.dry(core_count=3, max_runtime_minutes=minutes)
+                self.assertEqual((ok.rc, ok.status), (0, "DRY-RUN"), ok.describe())
+                self.assertIn("ESTIMATE-USD: %s" % want, ok.out)
+        for minutes, want in ((173, "3.01"), (180, "3.12")):
+            with self.subTest(refused=minutes):
+                over = fx.dry(core_count=3, max_runtime_minutes=minutes)
+                self.assert_refused(over)
+                self.assertIn("G6", over.text)
+                self.assertIn(want, over.text)
 
     def test_estimate_above_the_three_dollar_cap_is_refused_even_in_a_dry_run(self):
         fx = self.fx()
-        # 4 x 0.48 x 2 h = 3.84 > 3
+        # 4 x 0.48 x (7200 + 900) / 3600 = 1.92 x 2.25 = 4.32 > 3
         run = fx.dry(instance_type="m5.2xlarge", core_count=3, max_runtime_minutes=120, budget_usd=3)
         self.assert_refused(run)
         self.assertIn("G6", run.text)
@@ -166,7 +200,9 @@ class PipelineG6Refusals(Base):
     def test_declared_budget_above_cap_or_below_estimate_is_refused(self):
         fx = self.fx()
         self.assert_refused(fx.dry(budget_usd="3.01"))
-        self.assert_refused(fx.dry(budget_usd="0.40"))  # estimate 0.48
+        self.assert_refused(fx.dry(budget_usd="0.50"))  # estimate 0.60 (with the idle tail)
+        self.assert_refused(fx.dry(budget_usd="0.59"))
+        self.assertEqual(fx.dry(budget_usd="0.60").rc, 0, "a budget equal to the estimate is allowed")
 
     def test_fourth_run_is_refused_on_execute_and_reported_in_a_dry_run(self):
         fx = self.fx()
@@ -185,11 +221,11 @@ class PipelineG6Refusals(Base):
         self.assertEqual(run.rc, 0, run.describe())
 
     def test_cumulative_total_above_nine_fifty_is_refused_and_exactly_nine_fifty_is_allowed(self):
-        # this run: 4 instances x (0.384 + 0.096) x 1.5 h = 2.88
-        big = dict(instance_type="m5.2xlarge", core_count=3, max_runtime_minutes=90)
+        # this run: 4 instances x 0.480 x (4500 + 900) / 3600 = 2.88
+        big = dict(instance_type="m5.2xlarge", core_count=3, max_runtime_minutes=75)
         over = self.fx()
         over.write_ledger(["3.40", "3.40"])  # 6.80 + 2.88 = 9.68 > 9.50
-        run = over.execute(pipeline_over=big, capacity="4", runtime="90")
+        run = over.execute(pipeline_over=big, capacity="4", runtime="75")
         self.assert_refused(run, step="g6-gate")
         self.assertIn("cumulative", run.text)
         exact = self.fx()
@@ -197,13 +233,13 @@ class PipelineG6Refusals(Base):
             {"InstanceGroupType": "MASTER", "InstanceType": "m5.2xlarge", "RequestedInstanceCount": 1, "RunningInstanceCount": 1},
             {"InstanceGroupType": "CORE", "InstanceType": "m5.2xlarge", "RequestedInstanceCount": 3, "RunningInstanceCount": 3}]})
         exact.write_ledger(["3.00", "3.62"])  # 6.62 + 2.88 = 9.50, which is not above the cap
-        run = exact.execute(pipeline_over=big, capacity="4", runtime="90")
+        run = exact.execute(pipeline_over=big, capacity="4", runtime="75")
         self.assertEqual(run.rc, 0, run.describe())
         self.assertIn("LEDGER-RESERVED", run.out)
 
     def test_unreadable_ledger_is_never_read_as_empty(self):
         fx = self.fx()
-        path = fx.repo / "target/emr-ledger/runs.jsonl"
+        path = fx.ledger_path
         path.parent.mkdir(parents=True)
         path.write_text("this is not json\n")
         self.assert_refused(fx.execute(), step="g6-gate")
@@ -232,7 +268,7 @@ class PipelineG6Refusals(Base):
                                                       "EMR_RATE_EC2_M5_XLARGE": "0.0001"})
         self.assert_refused(run, step="g6-gate")
         self.assertIn("CONFIG-IGNORED", run.out)
-        self.assertIn("ESTIMATE-USD: 0.48", run.out)
+        self.assertIn("ESTIMATE-USD: 0.60", run.out)
 
     def test_missing_rate_is_never_zero(self):
         fx = self.fx()
@@ -349,7 +385,7 @@ class PipelineApprovalRefusals(Base):
                 self.assertEqual(len(run.results()), 1)
                 # nothing paid may have happened and no step may have been submitted
                 self.assertEqual(S.count_calls(run.calls, "aws", "emr", "add-steps"), 0)
-                self.assertFalse((fx.repo / "target/emr-ledger/runs.jsonl").exists(), "a ledger slot was reserved on a refused run")
+                self.assertEqual(fx.reservations(), [], "a ledger slot was reserved on a refused run")
                 if key != "APPROVED_ACCOUNT_SHA256":
                     self.assertEqual(run.aws_verbs(), [], "a mismatch in %s must be caught before the first aws call" % key)
 
@@ -401,7 +437,7 @@ class PipelineApprovalRefusals(Base):
                 self.assertEqual(S.last_step(run), "approval-record", run.describe())
                 self.assertEqual(len(run.results()), 1)
                 self.assertEqual(run.calls, [], "no aws call may precede an approval-record refusal")
-                self.assertFalse((fx.repo / "target/emr-ledger/runs.jsonl").exists())
+                self.assertEqual(fx.reservations(), [])
 
     def test_prose_in_the_record_is_still_ignored(self):
         fx = self.fx()
@@ -558,7 +594,7 @@ class PipelineClusterRefusals(Base):
         self.assertEqual(run.status, "FAIL", run.describe())
         self.assertEqual(S.last_step(run), "cluster-check", run.describe())
         self.assertEqual(S.count_calls(run.calls, "aws", "emr", "add-steps"), 0)
-        self.assertFalse((fx.repo / "target/emr-ledger/runs.jsonl").exists(), "nothing may be reserved or paid before the cluster check passes")
+        self.assertEqual(fx.reservations(), [], "nothing may be reserved or paid before the cluster check passes")
         return run
 
     def test_cluster_not_waiting_or_running(self):

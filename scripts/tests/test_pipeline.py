@@ -2,7 +2,7 @@
 the YARN kill by tag (carried item 1), the driver and executor class-origin check, Terraform-only behaviour.
 
 Fake aws/yarn/hadoop/spark-submit/timeout binaries only. Every expected value is hand-derived from the requirement, never
-read back from the implementation: estimate = instances x (EC2 + EMR rate) x hours, for example 3 x (0.192 + 0.048) x 1.5 h = 1.08.
+read back from the implementation: estimate = instances x (EC2 + EMR rate) x (runtime + idle tail) hours, for example 3 x (0.192 + 0.048) x (1.5 h + 900 s) = 1.26.
 """
 import datetime
 import json
@@ -50,7 +50,8 @@ class DryRunTests(PipelineFixture):
             verbs.append(m.group(1))
         self.assertEqual(verbs, ["sts get-caller-identity", "emr describe-cluster", "emr get-auto-termination-policy", "emr list-instance-groups"] + ["emr add-steps"] * 6)
         self.assertTrue(self.tree_clean(), "a dry run writes nothing into the repository")
-        self.assertFalse(os.path.exists(self.ledger_path()))
+        with open(self.ledger_path(), encoding="utf-8") as handle:
+            self.assertEqual(len(handle.readlines()), 1, "a dry run reserves nothing: the ledger still holds only its init record")
         self.assertFalse(os.path.exists(os.path.join(self.repo, "target", "pipeline-runs")))
 
     def test_step_markers_are_in_order(self):
@@ -62,13 +63,13 @@ class DryRunTests(PipelineFixture):
         self.assertLess(steps.index("cluster-check"), steps.index("step-stage-in"))
 
     def test_the_estimate_is_hand_derived_and_printed_before_anything_else_is_planned(self):
-        # 1 primary + 1 core + 1 task = 3 x (0.192 + 0.048) x 90/60 h = 1.08
+        # 1 primary + 1 core + 1 task = 3 x (0.192 + 0.048) x (90 min + 900 s idle tail = 1.75 h) = 1.26
         result = self.dry()
-        self.assertIn("ESTIMATE-USD: 1.08", result.stdout)
+        self.assertIn("ESTIMATE-USD: 1.26", result.stdout)
         self.assertLess(result.stdout.index("ESTIMATE-USD:"), result.stdout.index("RUN-CONFIG-SHA256:"))
-        # m5.2xlarge, 1 core, 0 task = 2 x (0.384 + 0.096) x 1 h = 0.96
-        two = self.dry(**{"--instance-type": "m5.2xlarge", "--max-task-count": "0", "--max-runtime-minutes": "60", "--budget-usd": "1"})
-        self.assertIn("ESTIMATE-USD: 0.96", two.stdout, two.out)
+        # m5.2xlarge, 1 core, 0 task = 2 x (0.384 + 0.096) x (60 min + 900 s = 1.25 h) = 1.20
+        two = self.dry(**{"--instance-type": "m5.2xlarge", "--max-task-count": "0", "--max-runtime-minutes": "60", "--budget-usd": "1.50"})
+        self.assertIn("ESTIMATE-USD: 1.20", two.stdout, two.out)
         self.assertEqual(two.rc, 0, two.out)
 
     def test_the_run_configuration_hash_is_stable_and_changes_with_anything_that_matters(self):
@@ -81,7 +82,9 @@ class DryRunTests(PipelineFixture):
                 self.assertNotEqual(first, self.run_config_sha(**change))
 
     def test_the_spark_step_carries_every_decision_12_10_setting(self):
-        body = self.step_body("spark-job")
+        # Finding C1: the settings are SPARK_CONF=key=value parameters of the printed step; the spark-submit assembly is in the
+        # installed runner, so the text asserted here is the printed step plus the installed programs (step_text).
+        body = self.step_text("spark-job")
         for needle in (
             "spark-submit",
             "--master yarn --deploy-mode cluster",
@@ -110,13 +113,15 @@ class DryRunTests(PipelineFixture):
         )
         self.assertNotIn("lzo", body.lower())
         # tags are the run id; maxExecutors = (1 core + 1 task) x 2 per node = 4
-        self.assertIn("spark.dynamicAllocation.maxExecutors=4", body)
+        self.assertIn("MAX_EXECUTORS=4", body)
+        self.assertIn('spark.dynamicAllocation.maxExecutors=${MAX_EXECUTORS}', body)
         self.assertIn("TAG=%s" % RUN, body)
+        self.assertEqual(len([w for w in self.step_argv("spark-job") if w.startswith("SPARK_CONF=")]), 22, "all 22 decision 12-10 settings travel as parameters")
 
     def test_java_17_is_resolved_at_run_time_never_hard_coded(self):
         result = self.dry()
         for name in ("entity-resolution", "spark-class-origin", "spark-job"):
-            body = self.step_body(name)
+            body = self.step_text(name)
             self.assertIn('JAVA_HOME="$(head -n 1 "${JAVA_HOME_FILE}")"', body, name)
             self.assertIn("JAVA_HOME_FILE=/opt/scholarchain-spike/java-home", body, name)
         for needle in ("/usr/lib/jvm", "java-17-amazon-corretto", "corretto", "jre-17"):
@@ -125,19 +130,25 @@ class DryRunTests(PipelineFixture):
     def test_the_class_origin_check_precedes_the_spark_job_and_is_fail_closed_in_both_steps(self):
         steps = [s for s in self.dry().steps() if s.startswith("step-")]
         self.assertLess(steps.index("step-spark-class-origin"), steps.index("step-spark-job"))
-        probe = self.step_body("spark-class-origin")
+        probe = self.step_text("spark-class-origin")
         self.assertIn("edu.uic.cs441.scholarchain.spark.Phase12Readiness", probe)
-        self.assertRegex(probe, r'probe "\$\{PROBE_SHARED\}" "\$\{PROBE_OUT\}" distributed')
+        self.assertRegex(probe, r'probe "\$\{probe_shared\}" "\$\{probe_out\}" distributed')
         self.assertIn("CLASS-ORIGIN-FAILED", probe)
-        self.assertIn("3.5.4 2.13.14 /opt/scholarchain-runtime/jars", probe)
-        self.assertIn(JOB_SHA, probe)
-        job = self.step_body("spark-job")
+        argv = self.step_argv("spark-class-origin")
+        for word in ("EXPECTED_SPARK_VERSION=3.5.4", "EXPECTED_SCALA_VERSION=2.13.14", "RUNTIME_DIR=/opt/scholarchain-runtime", "JOB_JAR_SHA=" + JOB_SHA):
+            self.assertIn(word, argv)
+        self.assertIn("CLASS_ORIGIN_PY_SHA=" + sha256_bytes(open(os.path.join(SCRIPTS_DIR, "emr", "sc-class-origin-verify.py"), "rb").read()), argv, "the verifier's sha256 is a parameter of both steps")
+        job = self.step_text("spark-job")
         self.assertIn("CLASS-ORIGIN-FAILED", job)
         self.assertIn("refusing to start the Spark job", job)
-        self.assertLess(job.index("CLASS-ORIGIN-FAILED"), job.index("spark-submit"))
-        for body in (probe, job):
-            self.assertIn("scala3-library", body)
-            self.assertIn("scala-reflect", body)
+        runner = read(os.path.join(SCRIPTS_DIR, "emr", "sc-step.sh"))
+        body = runner[runner.index("body_spark_job() {"):runner.index("body_copy_out() {")]
+        self.assertLess(body.index("refusing to start the Spark job"), body.index("verify_class_origin"))
+        self.assertLess(body.index("verify_class_origin"), body.index('build_spark_cmd "${SPARK_MAIN}"'))
+        self.assertLess(body.index('build_spark_cmd "${SPARK_MAIN}"'), body.index('run_bounded "${STEP_SECONDS}" "${SPARK_CMD[@]}"'))
+        for text in (probe, job):
+            self.assertIn("scala3-library", text)
+            self.assertIn("scala-reflect", text)
 
     def test_forced_auto_termination_runtime_cap_and_yarn_tag_are_printed(self):
         result = self.dry()
@@ -153,7 +164,7 @@ class DryRunTests(PipelineFixture):
             total += seconds
         self.assertLessEqual(total, 90 * 60)
         for name in ("hadoop-prep", "spark-class-origin", "spark-job"):
-            body = self.step_body(name)
+            body = self.step_text(name)
             self.assertIn("timeout --kill-after=", body)
             self.assertIn("yarn application -list -appStates NEW,NEW_SAVING,SUBMITTED,ACCEPTED,RUNNING -appTags", body)
             self.assertIn("yarn application -kill", body)
@@ -166,7 +177,7 @@ class DryRunTests(PipelineFixture):
                 for word in FORBIDDEN_INFRA_WORDS:
                     self.assertNotIn(word, line)
         for name in STEPS:
-            body = self.step_body(name)
+            body = self.step_text(name)
             for word in FORBIDDEN_INFRA_WORDS + ("terraform",):
                 self.assertNotIn(word, body, name)
         self.assertNotIn("terraform", " ".join(a for _n, a in self.calls()))
@@ -234,19 +245,24 @@ class RefusalTests(PipelineFixture):
         self.refused(self.dry(**{"--output-prefix": "http://x/y"}), "--output-prefix must be s3://bucket/non-empty-prefix")
 
     def test_g6_estimate_over_the_per_run_cap_refuses_even_a_dry_run(self):
-        # m5.2xlarge, 1 + 3 core = 4 nodes x 0.48 x 3 h = 5.76 USD > 3
+        # m5.2xlarge, 1 + 3 core = 4 nodes x 0.48 x (180 min + 900 s = 3.25 h) = 6.24 USD > 3
         self.refused(
             self.dry(**{"--instance-type": "m5.2xlarge", "--core-count": "3", "--max-task-count": "0", "--max-runtime-minutes": "180", "--budget-usd": "3"}),
-            "G6-REFUSED", "estimate 5.76 USD exceeds the per-run cap 3.00 USD",
+            "G6-REFUSED", "estimate 6.24 USD exceeds the per-run cap 3.00 USD",
+        )
+        # the pinned worst case, 4 x m5.xlarge for 180 min: 4 x 0.24 x 3.25 h = 3.12 USD > 3 (13B reviewer finding B3)
+        self.refused(
+            self.dry(**{"--core-count": "2", "--max-task-count": "1", "--max-runtime-minutes": "180", "--budget-usd": "3"}),
+            "G6-REFUSED", "estimate 3.12 USD exceeds the per-run cap 3.00 USD",
         )
 
     def test_g6_budget_above_the_cap_or_below_the_estimate_refuses(self):
         self.refused(self.dry(**{"--budget-usd": "3.50"}), "the declared budget 3.50 USD exceeds the per-run cap 3.00 USD")
-        self.refused(self.dry(**{"--budget-usd": "0.50"}), "estimate 1.08 USD exceeds the declared budget 0.50 USD")
+        self.refused(self.dry(**{"--budget-usd": "0.50"}), "estimate 1.26 USD exceeds the declared budget 0.50 USD")
 
     def test_a_lowered_per_run_cap_in_the_test_config_is_honoured(self):
         self.use_config(EMR_MAX_RUN_USD="1")
-        self.refused(self.dry(), "estimate 1.08 USD exceeds the per-run cap 1.00 USD")
+        self.refused(self.dry(), "estimate 1.26 USD exceeds the per-run cap 1.00 USD")
 
     def test_usage_errors_exit_2(self):
         for flag in ("--cluster-id", "--region", "--instance-type", "--core-count", "--max-runtime-minutes", "--budget-usd", "--input-prefix", "--hadoop-config", "--datasets-manifest"):
@@ -310,14 +326,17 @@ class ExecuteGateTests(PipelineFixture):
         self.assertEqual([s["Name"] for s in steps], ["ScholarChain-%s-%s" % (RUN, n) for n in STEPS])
         dry = self.dry()
         for index, name in enumerate(STEPS):
-            body = steps[index]["HadoopJarStep"]["Args"][2]
-            self.assertIn(body, dry.stdout, "the submitted body is exactly the body the dry run printed")
+            args = steps[index]["HadoopJarStep"]["Args"]
+            self.assertEqual(args, self.step_argv(name), "the submitted arguments are exactly the command the dry run printed")
+            self.assertEqual(args[:2], ["bash", "-c"])
+            self.assertTrue(all(len(a) <= 10280 for a in args), "every submitted argument is within the EMR limit")
             self.assertEqual(steps[index]["HadoopJarStep"]["Jar"], "command-runner.jar")
         with open(self.ledger_path(), encoding="utf-8") as handle:
             ledger = [json.loads(l) for l in handle]
-        self.assertEqual(len(ledger), 1)
-        self.assertEqual(ledger[0]["estimate_usd"], "1.08")
-        self.assertEqual(ledger[0]["run_id"], RUN)
+        self.assertEqual([entry["event"] for entry in ledger], ["init", "reserve"])
+        self.assertEqual(ledger[1]["estimate_usd"], "1.26")
+        self.assertEqual(ledger[1]["run_id"], RUN)
+        self.assertEqual(ledger[1]["approval_record_sha256"], sha256_bytes(read(self.record_path).encode()), "the reservation stores the approval record sha256 (finding B4)")
         run_dir = os.path.join(self.repo, "target", "pipeline-runs", RUN)
         manifest_path = os.path.join(run_dir, "run-manifest.json")
         with open(manifest_path, encoding="utf-8") as handle:
@@ -495,7 +514,7 @@ class ExecuteGateTests(PipelineFixture):
         result = self.execute(args, EMR_PRICING_CONFIRMED_BY_HUMAN="true", EMR_RATE_EC2_M5_XLARGE="0.0001")
         self.refused(result, "pricing is not confirmed")
         self.assertIn("CONFIG-IGNORED: pinned pricing settings cannot be overridden by the environment", result.stdout)
-        self.assertIn("ESTIMATE-USD: 1.08", result.stdout)
+        self.assertIn("ESTIMATE-USD: 1.26", result.stdout)
 
     def test_g6_missing_rates_refuse_execute_and_are_never_read_as_zero(self):
         self.set_pricing(drop=("EMR_RATE_EC2_M5_XLARGE", "EMR_RATE_EMR_M5_XLARGE"))
@@ -523,9 +542,9 @@ class ExecuteGateTests(PipelineFixture):
 
     def test_g6_the_cumulative_estimate_may_not_exceed_9_50(self):
         args = self.ready()
-        self.write_ledger(["4.50", "4.00"])  # 8.50 + 1.08 = 9.58 > 9.50
-        self.refused(self.execute(args), "cumulative estimate 9.58 USD (recorded 8.50 + this run 1.08) would exceed the cap 9.50 USD")
-        self.write_ledger(["4.50", "3.90"])  # 8.40 + 1.08 = 9.48 <= 9.50: allowed
+        self.write_ledger(["4.50", "4.00"])  # 8.50 + 1.26 = 9.76 > 9.50
+        self.refused(self.execute(args), "cumulative estimate 9.76 USD (recorded 8.50 + this run 1.26) would exceed the cap 9.50 USD")
+        self.write_ledger(["4.50", "3.74"])  # 8.24 + 1.26 = 9.50 <= 9.50: allowed (the cap is inclusive)
         self.setUp_clean()
         self.assertEqual(self.execute(args).rc, 0)
 
@@ -538,12 +557,12 @@ class ExecuteGateTests(PipelineFixture):
 
     def test_g6_each_execute_adds_one_ledger_line_so_the_fourth_run_is_refused(self):
         for index in range(3):
-            args = self.ready(**{"--run-id": "bp-test-%04d" % (index + 10)})
+            args = self.ready(serial=index, **{"--run-id": "bp-test-%04d" % (index + 10)})
             self.setUp_clean()
             self.assertEqual(self.execute(args).rc, 0, index)
         with open(self.ledger_path(), encoding="utf-8") as handle:
-            self.assertEqual(len(handle.readlines()), 3)
-        args = self.ready(**{"--run-id": "bp-test-0099"})
+            self.assertEqual(len(handle.readlines()), 4, "the init record and three reservations")
+        args = self.ready(serial=99, **{"--run-id": "bp-test-0099"})
         self.setUp_clean()
         self.refused(self.execute(args), "3 live EMR runs")
 
@@ -555,7 +574,8 @@ class ExecuteGateTests(PipelineFixture):
         self.assertIn("NO auto-termination policy", result.out)
         self.assertEqual(self.emr_ops(), ["describe-cluster", "get-auto-termination-policy", "list-instance-groups"])
         self.assertEqual(self.submitted_steps(), [])
-        self.assertFalse(os.path.exists(self.ledger_path()), "no ledger slot is reserved for a refused run")
+        with open(self.ledger_path(), encoding="utf-8") as handle:
+            self.assertEqual(len(handle.readlines()), 1, "no ledger slot is reserved for a refused run")
 
     def test_cluster_state_idle_timeout_type_and_capacity_are_verified(self):
         def groups(core=1, task=0, kind="m5.xlarge", master=1):
@@ -569,8 +589,10 @@ class ExecuteGateTests(PipelineFixture):
 
         cases = {
             "terminated cluster": ({"FAKE_EMR_STATE": "TERMINATED"}, "the cluster state is TERMINATED"),
-            "idle timeout above the cap": ({"FAKE_EMR_IDLE": "7200"}, "idle timeout 7200 s is outside 60..3600 s"),
-            "idle timeout below 60": ({"FAKE_EMR_IDLE": "30"}, "outside 60..3600"),
+            "idle timeout above the cap": ({"FAKE_EMR_IDLE": "7200"}, "idle timeout 7200 s is outside 60..900 s"),
+            "idle timeout one above the 900 s cap (finding B3)": ({"FAKE_EMR_IDLE": "901"}, "idle timeout 901 s is outside 60..900 s"),
+            "the former 3600 s cap is refused now": ({"FAKE_EMR_IDLE": "3600"}, "idle timeout 3600 s is outside 60..900 s"),
+            "idle timeout below 60": ({"FAKE_EMR_IDLE": "30"}, "outside 60..900"),
             "other instance type": ({"FAKE_EMR_GROUPS": groups(kind="m5.2xlarge")}, "uses m5.2xlarge, not the approved m5.xlarge"),
             "more core nodes than approved": ({"FAKE_EMR_GROUPS": groups(core=2)}, "CORE group has 2 instances, above the approved 1"),
             "more task nodes than approved": ({"FAKE_EMR_GROUPS": groups(task=2)}, "TASK group has 2 instances, above the approved 1"),

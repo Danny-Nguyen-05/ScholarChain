@@ -1,0 +1,7 @@
+............................................................
+----------------------------------------------------------------------
+Ran 60 tests in 142.635s
+
+OK
+SUITE-SUMMARY ran=60 executed=60 skipped_tests=0 skipped_classes=0 failures=0 errors=0
+python3 -I -X  scripts/lib/suite_run.py --start-dir tests/infra --pattern   289.90s user 28.68s system 222% cpu 2:23.21 total

@@ -8,6 +8,7 @@ through the log. Behaviour is driven by FAKE_* environment variables (see the br
 No network access, no real credentials, no real cloud call.
 """
 import hashlib
+import time
 import json
 import os
 import sys
@@ -190,6 +191,17 @@ def aws(args):
             continue
         cleaned.append(arg)
     svc, op = (cleaned + ["", ""])[:2]
+    # 13C (finding B1): FAKE_AWS_HANG=cp hangs `aws s3 cp` (the copies of stage-in and copy-out) until it is killed.
+    if svc == "s3" and op == os.environ.get("FAKE_AWS_HANG", "-"):
+        if os.environ.get("FAKE_AWS_IGNORE_TERM"):
+            # a stuck copy that ignores SIGTERM: only SIGKILL ends it; its pid is recorded for the test
+            import signal
+
+            signal.signal(signal.SIGTERM, signal.SIG_IGN)
+        if os.environ.get("FAKE_AWS_PIDFILE"):
+            with open(os.environ["FAKE_AWS_PIDFILE"], "w", encoding="utf-8") as handle:
+                handle.write(str(os.getpid()))
+        time.sleep(600)
     account = os.environ.get("FAKE_ACCOUNT_ID", "123456789012")
     if (svc, op) == ("sts", "get-caller-identity"):
         if os.environ.get("FAKE_STS_RC"):

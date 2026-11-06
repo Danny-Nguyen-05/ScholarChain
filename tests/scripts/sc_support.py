@@ -65,6 +65,8 @@ DATASETS = {
     "crossref": {"snapshot": "cr-2026-01", "retrieval": "2026-01-04"},
     "orcid": {"snapshot": "or-2026-01", "retrieval": "2026-01-05"},
 }
+# 60-minute maximum runtime = 3600 s, weights 5/20/20/5/40/10 (scripts/config/release.conf): hand-derived per-step seconds
+STEP_SECONDS = {"stage-in": 180, "hadoop-prep": 720, "entity-resolution": 720, "spark-class-origin": 180, "spark-job": 1440, "copy-out": 360}
 STEP_NAMES = ["stage-in", "hadoop-prep", "entity-resolution", "spark-class-origin", "spark-job", "copy-out"]
 ARTIFACT_NAMES = [
     "hadoop-submit-jar", "hadoop-libjars", "er-jar", "job-jar", "er-policy", "er-config", "spark-config-template",
@@ -75,7 +77,7 @@ ARTIFACT_NAMES = [
 # ---------------------------------------------------------------------------------------------------------------
 
 FAKE_TEMPLATE = r'''#!__PY__
-import hashlib, json, os, subprocess, sys
+import hashlib, json, os, signal, subprocess, sys, time
 TOOL = __TOOL__
 ARGV = sys.argv[1:]
 LOG = os.environ.get("SC_FAKE_LOG")
@@ -120,6 +122,16 @@ def aws():
         sys.stderr.write("fake aws: refusing every call\n")
         sys.exit(99)
     override(key)
+    if os.environ.get("SC_FAKE_AWS_HANG") == key:
+        # B1 tests: a copy that never returns (a stalled transfer). It records its pid so a test can prove it was killed.
+        pidfile = os.environ.get("SC_FAKE_HANG_PIDFILE")
+        if pidfile:
+            with open(pidfile, "a") as handle:
+                handle.write("%d\n" % os.getpid())
+        if os.environ.get("SC_FAKE_HANG_IGNORE_TERM"):
+            signal.signal(signal.SIGTERM, signal.SIG_IGN)
+        time.sleep(600)
+        sys.exit(0)
     if key == "sts get-caller-identity":
         print(SCEN.get("account", "__ACCOUNT__"))
     elif key == "emr describe-cluster":
@@ -207,16 +219,62 @@ def yarn():
 
 def timeout():
     args = list(ARGV)
+    kill_after = None
     while args and args[0].startswith("-"):
         flag = args.pop(0)
-        if flag in ("-k", "-s") and args:
+        if flag.startswith("--kill-after="):
+            kill_after = flag.split("=", 1)[1]
+        elif flag in ("-k", "--kill-after") and args:
+            kill_after = args.pop(0)
+        elif flag == "-s" and args:
             args.pop(0)
-    if not args:
+    if len(args) < 2:
         sys.exit(125)
-    args.pop(0)  # the duration
-    mode = os.environ.get("SC_FAKE_TIMEOUT_MODE", "pass")
+    duration = args.pop(0)
+    # The step-level wrapper (finding B1, installed form of C1) is `timeout --kill-after=N SECONDS bash <bin>/sc-step.sh __body STEP ...`.
+    outer = len(args) >= 3 and args[0] == "bash" and args[1].endswith("/sc-step.sh") and args[2] == "__body"
+    mode = os.environ.get("SC_FAKE_OUTER_TIMEOUT_MODE" if outer else "SC_FAKE_TIMEOUT_MODE", "pass")
     if mode.startswith("exit:"):
         sys.exit(int(mode.split(":", 1)[1]))
+    if mode == "real":
+        # Enforce a short real deadline with GNU timeout semantics: the command runs in timeout's OWN process group (timeout
+        # is the group leader, the child inherits the group, there is no new session), the deadline sends TERM to that group,
+        # then KILL to the group after the grace period only if the direct child is still running, and exits 124. So a
+        # grandchild that ignores TERM survives once the direct child is gone, exactly as with coreutils. TERM or INT
+        # received are forwarded to the group. SC_FAKE_TIMEOUT_REAL_SECONDS replaces the (minutes-long) real duration; the
+        # recorded argv still carries the true one.
+        limit = float(os.environ.get("SC_FAKE_TIMEOUT_REAL_SECONDS", duration))
+        grace = float(os.environ.get("SC_FAKE_TIMEOUT_REAL_KILL_AFTER", kill_after or "1"))
+        try:
+            os.setpgid(0, 0)
+        except OSError:
+            pass
+        group = os.getpgrp()
+        child = subprocess.Popen(args)
+        state = {"cleanup": False}
+
+        def forward(signum, frame):
+            if state["cleanup"]:
+                return
+            state["cleanup"] = True
+            os.killpg(group, signum)
+
+        signal.signal(signal.SIGTERM, forward)
+        signal.signal(signal.SIGINT, forward)
+
+        def status(rc):
+            return 128 - rc if rc < 0 else rc
+
+        try:
+            sys.exit(status(child.wait(timeout=limit)))
+        except subprocess.TimeoutExpired:
+            state["cleanup"] = True
+            os.killpg(group, signal.SIGTERM)
+            try:
+                child.wait(timeout=grace)
+            except subprocess.TimeoutExpired:
+                os.killpg(group, signal.SIGKILL)  # also ends this process, as GNU timeout does
+            sys.exit(124)  # GNU timeout reports 124 when the command was stopped after the deadline
     sys.exit(subprocess.call(args))
 
 
@@ -331,7 +389,7 @@ def now_utc():
 
 
 class Fixture:
-    def __init__(self, test, infra=False):
+    def __init__(self, test, infra=False, patch=None):
         self.test = test
         self.root = Path(tempfile.mkdtemp(prefix="sc13b-")).resolve()
         test.addCleanup(shutil.rmtree, str(self.root), True)
@@ -354,6 +412,23 @@ class Fixture:
             SRC_SCRIPTS, self.repo / "scripts",
             ignore=shutil.ignore_patterns("tests", "phase12d-spike", "billing", "__pycache__", "*.pyc"),
         )
+        if patch is not None:
+            patch(self.repo / "scripts")  # mutation cases: edit the fixture's COPY of the scripts, never the repository
+        # C1: the Terraform-side pin of the installed step programs must exist in the fixture repository (the plan refuses with
+        # STEP-PROGRAM-DRIFT otherwise), and the fake NODE installs scripts/emr/sc-* into a step bin directory.
+        manifest = self.repo / "infra/terraform/emr-step-programs.json"
+        manifest.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copyfile(REPO / "infra/terraform/emr-step-programs.json", manifest)
+        if patch is not None:
+            # a mutation case may edit a step program: re-pin the manifest to the fixture's (mutated) copies so the plan still
+            # builds and the mutation is judged by behaviour, not by STEP-PROGRAM-DRIFT
+            pinned = json.loads(manifest.read_text())
+            actual = {p.name: sha256_file(p) for p in sorted((self.repo / "scripts" / "emr").glob("sc-*"))}
+            if pinned["programs"] != actual:
+                pinned["programs"] = actual
+                manifest.write_text(json.dumps(pinned, indent=2, sort_keys=True) + "\n")
+        self.stepbin = self.aux / "stepbin"
+        self.install_step_programs()
         self.write(self.repo / ".gitignore", "target/\n__pycache__/\n*.pyc\n")
         self.write(self.repo / "docs" / "agent-runs" / "README.md", "fixture placeholder so the default archive destination root exists\n")
         self.write_json(self.repo / "inputs" / "prep.json", SAFE_PREP)
@@ -369,6 +444,14 @@ class Fixture:
         self.git("add", "-A")
         self.git("commit", "-q", "-m", "fixture base")
         self.write_scenario({})
+
+    def install_step_programs(self):
+        """The fake primary node: the bootstrap installs scripts/emr/sc-* (the fixture's copy) into the step bin directory."""
+        self.stepbin.mkdir(parents=True, exist_ok=True)
+        for src in sorted((self.repo / "scripts" / "emr").glob("sc-*")):
+            target = self.stepbin / src.name
+            shutil.copyfile(src, target)
+            target.chmod(0o755)
 
     # ----- files -----
     @staticmethod
@@ -444,6 +527,7 @@ class Fixture:
         """A full copy of the repository config with KEY=value lines appended (later lines win), used only through the
         documented test-only SCHOLARCHAIN_CONFIG_FILE."""
         text = (self.repo / "scripts/config/release.conf").read_text()
+        overrides = dict({"PIPELINE_STEP_BIN_DIR": str(self.stepbin)}, **overrides)  # the fake node's step bin directory
         text += "\n" + "\n".join("%s=%s" % (k, v) for k, v in overrides.items()) + "\n"
         return self.write(self.aux / "test-release.conf", text)
 
@@ -570,18 +654,51 @@ class Fixture:
         path.write_text(text)
         return path
 
-    def write_ledger(self, estimates):
-        path = self.repo / "target/emr-ledger/runs.jsonl"
+    # ----- the run ledger (13C finding B2): outside the repository, under HOME, created only by --init-ledger -----
+    LEDGER_REL = ".scholarchain/emr-ledger/runs.jsonl"
+
+    @property
+    def ledger_path(self):
+        return self.home / self.LEDGER_REL
+
+    def write_ledger(self, estimates=(), approvals=None, init=True):
+        """Write an INITIALISED ledger directly (a hand-made fixture, independent of --init-ledger): the init record
+        scripts/lib/budget.py documents (event, initialized_by, initialized_utc) then one reserve record per estimate.
+        approvals optionally gives the approval_record_sha256 of each reserve record."""
+        path = self.ledger_path
         path.parent.mkdir(parents=True, exist_ok=True)
         with open(path, "w") as handle:
+            if init:
+                handle.write(json.dumps({"event": "init", "initialized_by": "fixture", "initialized_utc": "2026-11-01T00:00:00Z"}) + "\n")
             for i, est in enumerate(estimates):
-                handle.write(json.dumps({"event": "reserve", "run_id": "old-%d" % i, "action": "run-bounded-pipeline",
-                                         "estimate_usd": est, "run_config_sha256": HEX64, "reserved_utc": "2026-11-01T00:00:00Z"}) + "\n")
+                entry = {"event": "reserve", "run_id": "old-%d" % i, "action": "run-bounded-pipeline", "estimate_usd": est,
+                         "run_config_sha256": HEX64, "reserved_utc": "2026-11-01T00:00:00Z"}
+                if approvals:
+                    entry["approval_record_sha256"] = approvals[i]
+                handle.write(json.dumps(entry) + "\n")
         return path
 
+    def ledger_records(self):
+        if not self.ledger_path.exists():
+            return []
+        return [json.loads(line) for line in self.ledger_path.read_text().splitlines() if line.strip()]
+
+    def reservations(self):
+        """The reserve records in the ledger (an absent ledger has none)."""
+        return [r for r in self.ledger_records() if r.get("event") == "reserve"]
+
     def exec_ready(self, approval_over=None, approval_drop=(), prespend_mods=None, pipeline_over=None, env_over=None, config=None,
-                   duplicate=(), extra_lines=(), raw_transform=None, action="run-bounded-pipeline", **approval_kw):
-        """Builds everything a green --execute needs, with optional single-point sabotage. Returns (args, env)."""
+                   duplicate=(), extra_lines=(), raw_transform=None, action="run-bounded-pipeline", ledger=True, serial=None,
+                   approval_name="approval.md", **approval_kw):
+        """Builds everything a green --execute needs, with optional single-point sabotage. Returns (args, env).
+
+        ledger=True initialises the run ledger first when none exists (a green run needs one; B2). ledger=False leaves
+        it absent. Approvals are single-use (B4): a second record for the same fixture needs a different text, so pass
+        a distinct serial (a prose line the parser ignores) and approval_name."""
+        if ledger and not self.ledger_path.exists():
+            self.write_ledger([])
+        if serial is not None:
+            extra_lines = tuple(extra_lines) + ("Record serial: %s" % serial,)
         pre = self.write_prespend(**(prespend_mods or {}))
         env = self.exec_env(**(config or {}))
         if env_over:
@@ -589,7 +706,7 @@ class Fixture:
         dry = self.dry(extra_env=env, **(pipeline_over or {}))
         assert dry.rc == 0, "the dry run used to derive the approval record failed\n" + dry.describe()
         values = self.approval_values(dry, action=action, prespend=pre, **approval_kw)
-        approval = self.write_approval(values, override=approval_over, drop=approval_drop, duplicate=duplicate,
+        approval = self.write_approval(values, name=approval_name, override=approval_over, drop=approval_drop, duplicate=duplicate,
                                        extra_lines=extra_lines, raw_transform=raw_transform)
         args = self.full_args(**(pipeline_over or {})) + ["--approval", str(approval), "--prespend", str(pre), "--execute"]
         return args, env
@@ -627,6 +744,27 @@ def extract_body(run, name):
     i = text.index(begin) + len(begin)
     j = text.index(end, i)
     return text[i:j] + "\n"
+
+
+def step_args(run, name):
+    """The EMR step's HadoopJarStepConfig.Args reconstructed from the dry run's printed command (one word per line, joined with
+    backslash-newline): the exact argument list EMR would receive."""
+    import shlex
+    return shlex.split(extract_body(run, name).replace("\\\n", " "))
+
+
+def step_params(args):
+    """KEY -> [values] of the KEY=VALUE words after the step name (args[6:])."""
+    out = {}
+    for word in args[6:]:
+        key, _, value = word.partition("=")
+        out.setdefault(key, []).append(value)
+    return out
+
+
+def installed_program(fx, name):
+    """Text of a step program on the fixture's fake node."""
+    return (fx.stepbin / name).read_text()
 
 
 def count_calls(calls, tool, first=None, second=None):

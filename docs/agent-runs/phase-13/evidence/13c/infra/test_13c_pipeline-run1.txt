@@ -1,0 +1,45 @@
+...FE...................
+======================================================================
+ERROR: test_a_term_sent_to_the_wrapper_is_forwarded_to_the_timed_body (test_13c_pipeline.B1HangTests.test_a_term_sent_to_the_wrapper_is_forwarded_to_the_timed_body)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/danny/Documents/UIC/CS441/ScholarChain/scripts/tests/test_13c_pipeline.py", line 87, in run_real
+    out, err = proc.communicate(timeout=60)
+               ~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.5/Frameworks/Python.framework/Versions/3.14/lib/python3.14/subprocess.py", line 1221, in communicate
+    stdout, stderr = self._communicate(input, endtime, timeout)
+                     ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.5/Frameworks/Python.framework/Versions/3.14/lib/python3.14/subprocess.py", line 2154, in _communicate
+    self._check_timeout(endtime, orig_timeout, stdout, stderr)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.5/Frameworks/Python.framework/Versions/3.14/lib/python3.14/subprocess.py", line 1268, in _check_timeout
+    raise TimeoutExpired(
+    ...<2 lines>...
+            stderr=b''.join(stderr_seq) if stderr_seq else None)
+subprocess.TimeoutExpired: Command '['bash', '-c', 'set -euo pipefail\n# B1: this whole step runs under an on-node timeout (the step\'s timeout_seconds), killed with --kill-after.\nSTEP_NAME=stage-in\nSTEP_SECONDS=300\nSTEP_KILL_AFTER=5\nSTEP_FILE="$(mktemp "${TMPDIR:-/tmp}/scholarchain-step.XXXXXX")"\ntrap \'rm -f "${STEP_FILE}"\' EXIT\ncat >"${STEP_FILE}" <<\'SCHOLARCHAIN_STEP_BODY\'\nset -euo pipefail\nSTEP_NAME=stage-in\nRUN_ID=bp-test-0001\nTAG=bp-test-0001\nMNT=/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-r95xw0py/node/mnt\nRUN_ROOT="${MNT}/runs/${RUN_ID}"\nKILL_AFTER=60\nlog() { printf \'STEP-LOG %s: %s\\n\' "${STEP_NAME}" "$*"; }\ndie() { printf \'STEP-FAIL %s: %s\\n\' "${STEP_NAME}" "$*" >&2; exit 1; }\nrequire_mount() { grep -q " ${MNT} " "${SC_PROC_MOUNTS:-/proc/mounts}" || die "${MNT} is not a mount point: refusing to use a local directory"; }\nlocalize() {\n  local src="$1" dest="$2" want="$3"\n  case "${src}" in\n    s3://*|s3a://*|s3n://*|hdfs://*) hadoop fs -copyToLocal "${src}" "${dest}" ;;\n    *) if [[ -f "${src}" ]]; then cp -- "${src}" "${dest}"; else die "source is not a regular file: ${src}"; fi ;;\n  esac\n  printf \'%s  %s\\n\' "${want}" "${dest}" | sha256sum -c --status - || die "sha256 mismatch for ${src}"\n}\nrequire_mount\nDEST="${RUN_ROOT}/inputs"\n[[ ! -e "${RUN_ROOT}" ]] || die "${RUN_ROOT} already exists: a run directory is never reused"\nPREFIX=s3://fixture-bucket/inputs/\nREGION=us-east-2\nMAX_BYTES=268435456\nTOTAL="$(aws s3 ls "${PREFIX}" --recursive --summarize --region "${REGION}" | awk \'/Total Size:/{print $3}\')"\n[[ "${TOTAL}" =~ ^[0-9]+$ ]] || die "could not read the staged input size"\n[[ "${TOTAL}" -le "${MAX_BYTES}" ]] || die "input ${TOTAL} bytes exceeds the ${MAX_BYTES} byte ceiling"\nmkdir -p "${DEST}"\naws s3 cp "${PREFIX}" "${DEST}/" --recursive --region "${REGION}" --only-show-errors\nlog "staged ${TOTAL} bytes from ${PREFIX} to ${DEST}"\nSCHOLARCHAIN_STEP_BODY\nrc=0\ntimeout --kill-after="${STEP_KILL_AFTER}" "${STEP_SECONDS}" bash "${STEP_FILE}" &\nCHILD=$!\ntrap \'kill -TERM "${CHILD}" 2>/dev/null || true\' TERM INT\nwhile true; do\n  wait "${CHILD}" && rc=0 || rc=$?\n  kill -0 "${CHILD}" 2>/dev/null || break\ndone\nif [[ "${rc}" -eq 124 || "${rc}" -eq 137 ]]; then\n  printf \'STEP-FAIL %s: exceeded the %ss step timeout (exit %s)\\n\' "${STEP_NAME}" "${STEP_SECONDS}" "${rc}" >&2\nfi\nexit "${rc}"\n']' timed out after 60 seconds
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/danny/Documents/UIC/CS441/ScholarChain/scripts/tests/test_13c_pipeline.py", line 134, in test_a_term_sent_to_the_wrapper_is_forwarded_to_the_timed_body
+    rc, out, err, elapsed = self.run_real(body, {"FAKE_AWS_HANG": "cp"}, signal_after=1.5)
+                            ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/danny/Documents/UIC/CS441/ScholarChain/scripts/tests/test_13c_pipeline.py", line 89, in run_real
+    os.killpg(proc.pid, signal.SIGKILL)
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+PermissionError: [Errno 1] Operation not permitted
+
+======================================================================
+FAIL: test_a_step_that_finishes_inside_its_timeout_keeps_its_own_exit_status (test_13c_pipeline.B1HangTests.test_a_step_that_finishes_inside_its_timeout_keeps_its_own_exit_status)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/danny/Documents/UIC/CS441/ScholarChain/scripts/tests/test_13c_pipeline.py", line 130, in test_a_step_that_finishes_inside_its_timeout_keeps_its_own_exit_status
+    self.assertIn("exceeds the", err)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'exceeds the' not found in 'STEP-FAIL stage-in: /var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-_lqy69ks/node/mnt/runs/bp-test-0001 already exists: a run directory is never reused\n'
+
+----------------------------------------------------------------------
+Ran 24 tests in 112.317s
+
+FAILED (failures=1, errors=1)
+SUITE-SUMMARY ran=24 executed=24 skipped_tests=0 skipped_classes=0 failures=1 errors=1

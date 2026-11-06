@@ -106,3 +106,45 @@ Scope: Subphase 13B only. No live AWS action, no real plan or apply, no reviewer
 | `infra-engineer` | `scripts/**` | `smoke-test.sh`, `run-bounded-pipeline.sh`, `run-experiment.sh`, `archive-evidence.sh`; items 1 and 31; `scripts/tests/**`; README; adding `tests/scripts` as a required suite in `check.sh` |
 | `test-engineer` | `tests/scripts/**` | independent dry-run tests with fake binaries |
 | orchestrator | `docs/agent-runs/phase-13/**` | evidence, reports, reviewer prompt |
+
+## Subphase 13C — main EMR module port and pre-Phase-14 hardening
+
+Scope: Subphase 13C only. No live AWS action, no real plan, no apply, no reviewer launch. Subagents use model `sonnet` (Sonnet 5.5), effort `high`, at the user's request.
+
+### Preflight (observed 2026-11-06)
+
+- Branch `phase-13`. 13C base SHA: `56144457f38e29b7c6211e040dd1fb15270a50bf` (the 13B commit, committed and pushed to `origin/phase-13` at the user's request).
+- `git status --short` was empty.
+- `java -version` (JDK 17 env): `openjdk version "17.0.20.1" 2026-08-18`. `terraform version`: `Terraform v1.13.5`.
+- The 13B reviewer verdict (APPROVE, nonblocking B1–B5) is recorded in `review.md`.
+
+### Step 0 answers (user, 2026-11-06: "start it with all default choice")
+
+1. **EMR in-transit TLS:** disabled, with a disclosed limitation. Spark authentication, AES-CTR and IO encryption stay on; at-rest encryption stays on.
+2. **B1, B2, B5 folded into 13C** (infra-engineer, `scripts/**`):
+   - B1: every step body runs under an on-node timeout; the dry-run text is accurate.
+   - B2: the ledger moves to `~/.scholarchain/emr-ledger/runs.jsonl`, outside sbt's `target/`. An absent ledger refuses live runs until the human recreates it explicitly.
+   - B5: remove the stale `PENDING_UNTIL_POPULATED` exemption.
+3. **B3:** the idle tail counts in the estimate, and the maximum idle timeout drops from 3600 s to 900 s.
+4. **B4:** approvals are single-use. The ledger records the approval sha256 and refuses reuse.
+5. **EMR pricing:** `EMR_PRICING_CONFIRMED_BY_HUMAN` stays `false` until the human checks the AWS pricing page.
+6. **G2:** `spark.dynamicAllocation.shuffleTracking.enabled=true` (no yarn-shuffle JAR).
+7. **G3:** 0 task nodes and managed scaling disabled by default. Both can be enabled in tfvars, within tfvars caps that are checked against the G6 budget caps.
+8. **G5:** the bootstrap reads the runtime archive from an S3 URI set in tfvars, with the sha256 pinned and verified before install. Nothing is uploaded before Phase 14.
+9. **Spark settings in two places:** the Terraform module renders the cluster's Spark settings, and a test fails if they differ from `scripts/config/spark-12-10.conf`.
+10. **Real `plan.sh` run:** none. Only Terraform fmt, validate and test, the guard and the script gates; no AWS call.
+11. **Entity-resolution JAR packaging:** stays out of 13C (BLOCKED-ON build-engineer, disclosed).
+12. **13A open decisions** (A2, approval-format additions, live-state location): decided at the start of Phase 14.
+13. **Verification:** fast checks during the work; one full seven-gate clean-snapshot `check.sh` and a JDK 17 `sbt check` at the end.
+
+### Routing (13C)
+
+| Agent | Paths | Task |
+|---|---|---|
+| `infra-engineer` | `infra/terraform/**`, `scripts/**` | EMR module port to decision 12-10 (items 8, 28, 29; TLS off; G2; G3 caps; G5 S3 source; EFS staging for G1 option ii); item 17 and items 2, 5, 14, 16 with negative tests; next-edit wording items 15, 18, 23 (infra part), 30; B1–B5; Spark-settings cross-check; adding `tests/infra` as a required `check.sh` suite; infra README |
+| `test-engineer` | `tests/**` | carried test gaps 6, 7, 10, 12, 20, 21 under `tests/infra/`; independent tests of the ported module and the IAM items |
+| orchestrator | `docs/agent-runs/phase-13/**` | evidence, carried-findings status for this phase, reports, reviewer prompt |
+
+### Mid-subphase decision (user, 2026-11-06)
+
+- **Final verification in parallel:** the full seven-gate clean-snapshot `check.sh` and the working-tree JDK 17 `sbt check` run at the same time (option 1, "I agree with parrallel running"). Both stay full runs; only the wall-clock time changes.
