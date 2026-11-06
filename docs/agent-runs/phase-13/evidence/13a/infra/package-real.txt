@@ -1,0 +1,48 @@
+STEP: start
+[2026-11-05T17:55:23Z] [20261105T175523Z-36941] INFO script=package.sh mode=real-run run_id=20261105T175523Z-36941 repo_root=/Users/danny/Documents/UIC/CS441/ScholarChain
+STEP: preflight
+[2026-11-05T17:55:23Z] [20261105T175523Z-36941] WARN work tree is dirty: images are tagged 8bee663040ba4e66b1edc1676d5346621c3f7384-dirty; deploy.sh will refuse this release
+[2026-11-05T17:55:23Z] [20261105T175523Z-36941] INFO commit=8bee663040ba4e66b1edc1676d5346621c3f7384 dirty=true image_tag=8bee663040ba4e66b1edc1676d5346621c3f7384-dirty
+STEP: runtime-archive
+[2026-11-05T17:55:24Z] [20261105T175523Z-36941] INFO runtime archive verified: size=321876735 sha256=789a9684f91527dfd9b97d56acce9dbfe5dd4c328299542245da92968f916de5
+STEP: jdk17
+[2026-11-05T17:55:24Z] [20261105T175523Z-36941] INFO JDK 17 ready: openjdk version "17.0.20.1" 2026-08-18 JAVA_HOME=/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home
+STEP: sbt-package-release
+CMD: timeout=2400s sbt -batch packageRelease 
+STEP: collect-artifacts
+[2026-11-05T17:55:29Z] [20261105T175523Z-36941] INFO hadoop-submit-jar=modules/hadoop/target/scala-3.3.4/hadoop-submit_3-0.1.0-SNAPSHOT.jar
+[2026-11-05T17:55:29Z] [20261105T175523Z-36941] INFO hadoop-dependency-bundle=modules/hadoop/target/scala-3.3.4/hadoop-dependency-bundle_3-0.1.0-SNAPSHOT.jar
+[2026-11-05T17:55:29Z] [20261105T175523Z-36941] INFO spark-job-jar=modules/spark/target/spark-job_3-0.1.0-SNAPSHOT.jar
+[2026-11-05T17:55:29Z] [20261105T175523Z-36941] INFO service-distribution=modules/services/target/distribution
+STEP: static-dockerfile-check
+dockerfile ok: FROM pinned by digest, COPY sources exist, MAIN_CLASS allowlist matches config
+STEP: arch-gate-ecs
+[2026-11-05T17:55:30Z] [20261105T175523Z-36941] INFO architecture gate (b) ok: configured linux/amd64 == ECS task linux/amd64
+STEP: docker-images
+CMD: timeout=60s docker info 
+[2026-11-05T17:55:30Z] [20261105T175523Z-36941] INFO building scholarchain-query-api:8bee663040ba4e66b1edc1676d5346621c3f7384-dirty (MAIN_CLASS=edu.uic.cs441.scholarchain.services.QueryApiMain, platform linux/amd64)
+CMD: timeout=1500s docker buildx build --platform linux/amd64 --provenance=false --sbom=false --build-arg MAIN_CLASS=edu.uic.cs441.scholarchain.services.QueryApiMain -f Dockerfile -t scholarchain-query-api:8bee663040ba4e66b1edc1676d5346621c3f7384-dirty --load . 
+STEP: arch-gate-image-query-api
+CMD: timeout=60s docker image inspect scholarchain-query-api:8bee663040ba4e66b1edc1676d5346621c3f7384-dirty 
+[2026-11-05T17:55:32Z] [20261105T175523Z-36941] INFO architecture gate (a) ok: scholarchain-query-api:8bee663040ba4e66b1edc1676d5346621c3f7384-dirty is linux/amd64
+[2026-11-05T17:55:32Z] [20261105T175523Z-36941] INFO building scholarchain-graph-service:8bee663040ba4e66b1edc1676d5346621c3f7384-dirty (MAIN_CLASS=edu.uic.cs441.scholarchain.services.GraphServiceMain, platform linux/amd64)
+CMD: timeout=1500s docker buildx build --platform linux/amd64 --provenance=false --sbom=false --build-arg MAIN_CLASS=edu.uic.cs441.scholarchain.services.GraphServiceMain -f Dockerfile -t scholarchain-graph-service:8bee663040ba4e66b1edc1676d5346621c3f7384-dirty --load . 
+STEP: arch-gate-image-graph-service
+CMD: timeout=60s docker image inspect scholarchain-graph-service:8bee663040ba4e66b1edc1676d5346621c3f7384-dirty 
+[2026-11-05T17:55:33Z] [20261105T175523Z-36941] INFO architecture gate (a) ok: scholarchain-graph-service:8bee663040ba4e66b1edc1676d5346621c3f7384-dirty is linux/amd64
+[2026-11-05T17:55:33Z] [20261105T175523Z-36941] INFO building scholarchain-semantic-service:8bee663040ba4e66b1edc1676d5346621c3f7384-dirty (MAIN_CLASS=edu.uic.cs441.scholarchain.services.SemanticServiceMain, platform linux/amd64)
+CMD: timeout=1500s docker buildx build --platform linux/amd64 --provenance=false --sbom=false --build-arg MAIN_CLASS=edu.uic.cs441.scholarchain.services.SemanticServiceMain -f Dockerfile -t scholarchain-semantic-service:8bee663040ba4e66b1edc1676d5346621c3f7384-dirty --load . 
+STEP: arch-gate-image-semantic-service
+CMD: timeout=60s docker image inspect scholarchain-semantic-service:8bee663040ba4e66b1edc1676d5346621c3f7384-dirty 
+[2026-11-05T17:55:33Z] [20261105T175523Z-36941] INFO architecture gate (a) ok: scholarchain-semantic-service:8bee663040ba4e66b1edc1676d5346621c3f7384-dirty is linux/amd64
+[2026-11-05T17:55:33Z] [20261105T175523Z-36941] INFO building scholarchain-embedding-worker:8bee663040ba4e66b1edc1676d5346621c3f7384-dirty (MAIN_CLASS=edu.uic.cs441.scholarchain.services.EmbeddingWorkerMain, platform linux/amd64)
+CMD: timeout=1500s docker buildx build --platform linux/amd64 --provenance=false --sbom=false --build-arg MAIN_CLASS=edu.uic.cs441.scholarchain.services.EmbeddingWorkerMain -f Dockerfile -t scholarchain-embedding-worker:8bee663040ba4e66b1edc1676d5346621c3f7384-dirty --load . 
+STEP: arch-gate-image-embedding-worker
+CMD: timeout=60s docker image inspect scholarchain-embedding-worker:8bee663040ba4e66b1edc1676d5346621c3f7384-dirty 
+[2026-11-05T17:55:34Z] [20261105T175523Z-36941] INFO architecture gate (a) ok: scholarchain-embedding-worker:8bee663040ba4e66b1edc1676d5346621c3f7384-dirty is linux/amd64
+STEP: write-manifest
+wrote /Users/danny/Documents/UIC/CS441/ScholarChain/target/release/8bee663040ba4e66b1edc1676d5346621c3f7384/release-manifest.json
+[2026-11-05T17:55:34Z] [20261105T175523Z-36941] INFO manifest: /Users/danny/Documents/UIC/CS441/ScholarChain/target/release/8bee663040ba4e66b1edc1676d5346621c3f7384/release-manifest.json
+[2026-11-05T17:55:34Z] [20261105T175523Z-36941] INFO manifest sha256: 2635c565a6dbc561703c496899e1053ff93a087d61060baabdb6106853ef1cb6
+RESULT: PASS jars-built images-built arch-gate=passed manifest=/Users/danny/Documents/UIC/CS441/ScholarChain/target/release/8bee663040ba4e66b1edc1676d5346621c3f7384/release-manifest.json
+exit=0

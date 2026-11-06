@@ -1,0 +1,25 @@
+# exit code: 0
+CONFIG-FILE: using /var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-j4gkud6z/fixture-release.conf instead of the repository config (test-only SCHOLARCHAIN_CONFIG_FILE)
+STEP: start
+[2026-11-05T21:10:28Z] [20261105T211027Z-23621] INFO script=plan.sh mode=dry-run run_id=20261105T211027Z-23621 repo_root=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-j4gkud6z/repo
+STEP: inputs
+STEP: output-paths
+[2026-11-05T21:10:28Z] [20261105T211027Z-23621] INFO plan outputs stay inside target/plans (ignored, private): plan, .json, .txt, .log, receipt
+STEP: terraform-version
+[2026-11-05T21:10:28Z] [20261105T211027Z-23621] INFO terraform 1.13.5 accepted (binary: terraform)
+STEP: materialize-source
+[2026-11-05T21:10:28Z] [20261105T211027Z-23621] INFO dry run: would extract infra/terraform as committed at cb9d95cd1ad02781f61167b7bb98b9a539ae45aa into target/plans/source/cb9d95cd1ad02781f61167b7bb98b9a539ae45aa (read-only)
+[2026-11-05T21:10:28Z] [20261105T211027Z-23621] INFO env=course region=us-east-2 source_commit=cb9d95cd1ad02781f61167b7bb98b9a539ae45aa scripts_commit=385ecf654adb0073ea3f16c126954e55a732ee08 clean=true plan=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-j4gkud6z/repo/target/plans/course-cb9d95cd1ad02781f61167b7bb98b9a539ae45aa.tfplan
+STEP: account-identity
+DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 TF_DATA_DIR=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-j4gkud6z/repo/target/plans/tfdata/cb9d95cd1ad02781f61167b7bb98b9a539ae45aa aws sts get-caller-identity --region us-east-2 --query Account --output text 
+STEP: terraform-init
+DRY-RUN CMD: timeout=900s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 TF_DATA_DIR=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-j4gkud6z/repo/target/plans/tfdata/cb9d95cd1ad02781f61167b7bb98b9a539ae45aa terraform -chdir=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-j4gkud6z/repo/target/plans/source/cb9d95cd1ad02781f61167b7bb98b9a539ae45aa/infra/terraform init -input=false -lockfile=readonly 
+STEP: terraform-plan
+DRY-RUN CMD: timeout=1800s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 TF_DATA_DIR=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-j4gkud6z/repo/target/plans/tfdata/cb9d95cd1ad02781f61167b7bb98b9a539ae45aa terraform -chdir=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-j4gkud6z/repo/target/plans/source/cb9d95cd1ad02781f61167b7bb98b9a539ae45aa/infra/terraform plan -input=false -lock-timeout=60s -var-file=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-j4gkud6z/repo/target/plans/source/cb9d95cd1ad02781f61167b7bb98b9a539ae45aa/infra/terraform/environments/course.tfvars -var-file=<redacted> -var=aws_region=us-east-2 -var=aws_profile=<profile> -out=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-j4gkud6z/repo/target/plans/course-cb9d95cd1ad02781f61167b7bb98b9a539ae45aa.tfplan 
+STEP: terraform-show
+DRY-RUN CMD: timeout=900s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 TF_DATA_DIR=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-j4gkud6z/repo/target/plans/tfdata/cb9d95cd1ad02781f61167b7bb98b9a539ae45aa terraform -chdir=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-j4gkud6z/repo/target/plans/source/cb9d95cd1ad02781f61167b7bb98b9a539ae45aa/infra/terraform show -json /private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-j4gkud6z/repo/target/plans/course-cb9d95cd1ad02781f61167b7bb98b9a539ae45aa.tfplan 
+STEP: terraform-show-text
+DRY-RUN CMD: timeout=900s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 TF_DATA_DIR=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-j4gkud6z/repo/target/plans/tfdata/cb9d95cd1ad02781f61167b7bb98b9a539ae45aa terraform -chdir=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-j4gkud6z/repo/target/plans/source/cb9d95cd1ad02781f61167b7bb98b9a539ae45aa/infra/terraform show -no-color /private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-j4gkud6z/repo/target/plans/course-cb9d95cd1ad02781f61167b7bb98b9a539ae45aa.tfplan 
+STEP: plan-receipt
+[2026-11-05T21:10:28Z] [20261105T211027Z-23621] INFO dry run: would check the saved plan's region, account and image_revision, print PLAN-TEXT (path and sha256 of target/plans/course-cb9d95cd1ad02781f61167b7bb98b9a539ae45aa.tfplan.txt), print every PLAN-ACTION, and write the receipt target/plans/course-cb9d95cd1ad02781f61167b7bb98b9a539ae45aa.tfplan.receipt.json
+RESULT: DRY-RUN no aws or terraform command was run; re-run with --execute (approval point 4) to plan

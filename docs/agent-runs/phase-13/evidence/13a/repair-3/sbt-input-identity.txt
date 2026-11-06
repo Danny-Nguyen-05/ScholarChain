@@ -1,0 +1,5 @@
+# Orchestrator, 2026-11-06T03:40:32Z: sbt-input identity vs the repair-2 clean snapshot c93c3763 (sbt gate PASS 798 s there; working-tree sbt -batch check exit 0, 742 s)
+# scope: git ls-files -co --exclude-standard -- build.sbt project modules .scalafmt.conf .sbtopts Dockerfile tests
+compared=459 differing=0
+# also: any file in the snapshot scope missing from the working tree
+missing-check done

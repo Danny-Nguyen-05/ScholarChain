@@ -1,0 +1,64 @@
+# exit code: 0
+CONFIG-FILE: using /var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-j4gkud6z/fixture-release.conf instead of the repository config (test-only SCHOLARCHAIN_CONFIG_FILE)
+STEP: start
+[2026-11-05T21:10:28Z] [20261105T211028Z-23918] INFO script=deploy.sh mode=dry-run run_id=20261105T211028Z-23918 repo_root=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-j4gkud6z/repo
+STEP: inputs
+STEP: terraform-version
+[2026-11-05T21:10:28Z] [20261105T211028Z-23918] INFO terraform 1.13.5 accepted (binary: terraform)
+STEP: clean-tree
+[2026-11-05T21:10:28Z] [20261105T211028Z-23918] INFO clean tree at 385ecf654adb0073ea3f16c126954e55a732ee08
+STEP: approval-record
+[2026-11-05T21:10:28Z] [20261105T211028Z-23918] INFO approval record parsed (6 required lines, each exactly once)
+STEP: stage-match
+STEP: commit-match
+STEP: region-match
+STEP: prespend-receipt
+pre-spend receipt ok: monitoring active, snapshot 1.0 h old, headroom 150.25 USD
+STEP: plan-checksum
+[2026-11-05T21:10:28Z] [20261105T211028Z-23918] INFO plan sha256 matches the approval record (verified private copy; the copy is what is applied)
+STEP: plan-provenance
+plan provenance ok: receipt binds plan sha256, clean source commit, account, region, environment and revision
+STEP: plan-inspect
+CMD: timeout=900s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 terraform -chdir=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-j4gkud6z/repo/infra/terraform show -json /var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-j4gkud6z/sc-tmp.J9MREm/copy-push.tfplan-23918-2 
+saved plan target ok: provider region us-east-2, account hash matches, image_revision 385ecf654adb0073ea3f16c126954e55a732ee08
+STEP: release-manifest
+release manifest ok: commit=HEAD, clean, linux/amd64, all images present
+STEP: runtime-archive
+[2026-11-05T21:10:29Z] [20261105T211028Z-23918] INFO the runtime archive upload belongs to --stage base-apply only
+STEP: account-check
+DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws sts get-caller-identity --region us-east-2 --query Account --output text 
+[2026-11-05T21:10:29Z] [20261105T211028Z-23918] INFO dry run: the account comparison runs only with --execute, before any mutating command
+STEP: ecr-repositories-exist
+DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws ecr describe-repositories --region us-east-2 --repository-names scholarchain-course/query-api --query repositories\[0\].repositoryName --output text 
+DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws ecr describe-repositories --region us-east-2 --repository-names scholarchain-course/graph-service --query repositories\[0\].repositoryName --output text 
+DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws ecr describe-repositories --region us-east-2 --repository-names scholarchain-course/semantic-service --query repositories\[0\].repositoryName --output text 
+DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws ecr describe-repositories --region us-east-2 --repository-names scholarchain-course/embedding-worker --query repositories\[0\].repositoryName --output text 
+STEP: verify-local-images
+DRY-RUN CMD: timeout=60s docker image inspect scholarchain-query-api:385ecf654adb0073ea3f16c126954e55a732ee08 
+[2026-11-05T21:10:29Z] [20261105T211028Z-23918] INFO dry run: would require scholarchain-query-api:385ecf654adb0073ea3f16c126954e55a732ee08 to be linux/amd64 with image ID sha256:1b2fdf8dc3ad6a268e9e21be46f1058f49650efd8e5e03c899045c5975ff032e
+DRY-RUN CMD: timeout=60s docker image inspect scholarchain-graph-service:385ecf654adb0073ea3f16c126954e55a732ee08 
+[2026-11-05T21:10:29Z] [20261105T211028Z-23918] INFO dry run: would require scholarchain-graph-service:385ecf654adb0073ea3f16c126954e55a732ee08 to be linux/amd64 with image ID sha256:d34431adc8f37e1cd726be3d95b9ae8fb3c9f2bc0f8093984e10d452088c5401
+DRY-RUN CMD: timeout=60s docker image inspect scholarchain-semantic-service:385ecf654adb0073ea3f16c126954e55a732ee08 
+[2026-11-05T21:10:29Z] [20261105T211028Z-23918] INFO dry run: would require scholarchain-semantic-service:385ecf654adb0073ea3f16c126954e55a732ee08 to be linux/amd64 with image ID sha256:e1e876cf23f8bea6b182650441bd9ae6a566618c0cd14f59595862e1baa74460
+DRY-RUN CMD: timeout=60s docker image inspect scholarchain-embedding-worker:385ecf654adb0073ea3f16c126954e55a732ee08 
+[2026-11-05T21:10:29Z] [20261105T211028Z-23918] INFO dry run: would require scholarchain-embedding-worker:385ecf654adb0073ea3f16c126954e55a732ee08 to be linux/amd64 with image ID sha256:c159f82acb69e04770e701c59c4a5bb447ca278f9758e99d91097f1f74a70367
+STEP: ecr-login
+DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws ecr get-login-password --region us-east-2 
+DRY-RUN CMD: timeout=120s docker login --username AWS --password-stdin <acct>.dkr.ecr.us-east-2.amazonaws.com 
+STEP: push-images
+DRY-RUN CMD: timeout=120s docker tag sha256:1b2fdf8dc3ad6a268e9e21be46f1058f49650efd8e5e03c899045c5975ff032e <acct>.dkr.ecr.us-east-2.amazonaws.com/scholarchain-course/query-api:385ecf654adb0073ea3f16c126954e55a732ee08 
+DRY-RUN CMD: timeout=1800s docker push <acct>.dkr.ecr.us-east-2.amazonaws.com/scholarchain-course/query-api:385ecf654adb0073ea3f16c126954e55a732ee08 
+DRY-RUN CMD: timeout=120s docker tag sha256:d34431adc8f37e1cd726be3d95b9ae8fb3c9f2bc0f8093984e10d452088c5401 <acct>.dkr.ecr.us-east-2.amazonaws.com/scholarchain-course/graph-service:385ecf654adb0073ea3f16c126954e55a732ee08 
+DRY-RUN CMD: timeout=1800s docker push <acct>.dkr.ecr.us-east-2.amazonaws.com/scholarchain-course/graph-service:385ecf654adb0073ea3f16c126954e55a732ee08 
+DRY-RUN CMD: timeout=120s docker tag sha256:e1e876cf23f8bea6b182650441bd9ae6a566618c0cd14f59595862e1baa74460 <acct>.dkr.ecr.us-east-2.amazonaws.com/scholarchain-course/semantic-service:385ecf654adb0073ea3f16c126954e55a732ee08 
+DRY-RUN CMD: timeout=1800s docker push <acct>.dkr.ecr.us-east-2.amazonaws.com/scholarchain-course/semantic-service:385ecf654adb0073ea3f16c126954e55a732ee08 
+DRY-RUN CMD: timeout=120s docker tag sha256:c159f82acb69e04770e701c59c4a5bb447ca278f9758e99d91097f1f74a70367 <acct>.dkr.ecr.us-east-2.amazonaws.com/scholarchain-course/embedding-worker:385ecf654adb0073ea3f16c126954e55a732ee08 
+DRY-RUN CMD: timeout=1800s docker push <acct>.dkr.ecr.us-east-2.amazonaws.com/scholarchain-course/embedding-worker:385ecf654adb0073ea3f16c126954e55a732ee08 
+STEP: record-digests
+DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws ecr describe-images --region us-east-2 --repository-name scholarchain-course/query-api --image-ids imageTag=385ecf654adb0073ea3f16c126954e55a732ee08 --query imageDetails\[0\].imageDigest --output text 
+DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws ecr describe-images --region us-east-2 --repository-name scholarchain-course/graph-service --image-ids imageTag=385ecf654adb0073ea3f16c126954e55a732ee08 --query imageDetails\[0\].imageDigest --output text 
+DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws ecr describe-images --region us-east-2 --repository-name scholarchain-course/semantic-service --image-ids imageTag=385ecf654adb0073ea3f16c126954e55a732ee08 --query imageDetails\[0\].imageDigest --output text 
+DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws ecr describe-images --region us-east-2 --repository-name scholarchain-course/embedding-worker --image-ids imageTag=385ecf654adb0073ea3f16c126954e55a732ee08 --query imageDetails\[0\].imageDigest --output text 
+STEP: write-deploy-manifest
+[2026-11-05T21:10:29Z] [20261105T211028Z-23918] INFO dry run: would write target/release/385ecf654adb0073ea3f16c126954e55a732ee08/deploy-manifest-push-20261105T211028Z-23918.json (stage, digests, task-definition ARNs, plan sha256, commit, region, account sha256)
+RESULT: DRY-RUN all local checks passed (stage push: approval record, pre-spend receipt, plan, provenance); no mutating command was run

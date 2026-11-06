@@ -1,0 +1,44 @@
+##### cleanup.sh dry run (real repo)
+STEP: start
+[2026-11-05T17:56:03Z] [20261105T175603Z-38414] INFO script=cleanup.sh mode=dry-run run_id=20261105T175603Z-38414 repo_root=/Users/danny/Documents/UIC/CS441/ScholarChain
+STEP: inputs
+STEP: terraform-version
+[2026-11-05T17:56:03Z] [20261105T175603Z-38414] INFO terraform 1.13.5 accepted (binary: terraform)
+STEP: preserve-list
+PRESERVE: terraform-state
+PRESERVE: final-reports
+PRESERVE: evidence-bucket
+PRESERVE: grading-log-groups
+PRESERVE: s3-prevent-destroy
+STEP: before-inventory
+DRY-RUN CMD: timeout=900s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 terraform -chdir=/Users/danny/Documents/UIC/CS441/ScholarChain/infra/terraform/billing-bootstrap state list 
+DRY-RUN CMD: timeout=900s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 terraform -chdir=/Users/danny/Documents/UIC/CS441/ScholarChain/infra/terraform/billing-execution state list 
+DRY-RUN CMD: timeout=900s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 terraform -chdir=/Users/danny/Documents/UIC/CS441/ScholarChain/infra/terraform/deployer state list 
+DRY-RUN CMD: timeout=900s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 terraform -chdir=/Users/danny/Documents/UIC/CS441/ScholarChain/infra/terraform/spikes/emr-spark-isolated state list 
+DRY-RUN CMD: timeout=900s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 terraform -chdir=/Users/danny/Documents/UIC/CS441/ScholarChain/infra/terraform/spikes/emr-spark state list 
+DRY-RUN CMD: timeout=900s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 terraform -chdir=/Users/danny/Documents/UIC/CS441/ScholarChain/infra/terraform state list 
+DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws resourcegroupstaggingapi get-resources --region us-east-2 --tag-filters Key=project,Values=scholarchain Key=environment,Values=course --output json 
+STEP: destroy-commands
+[2026-11-05T17:56:03Z] [20261105T175603Z-38414] INFO execute would continue only with a matching --confirm token, for each destroy root (infra/terraform):
+DRY-RUN CMD: timeout=1800s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 terraform -chdir=/Users/danny/Documents/UIC/CS441/ScholarChain/infra/terraform plan -destroy -input=false -lock-timeout=60s -var-file=/Users/danny/Documents/UIC/CS441/ScholarChain/infra/terraform/environments/course.tfvars -var-file=<private-vars-file> -var=aws_region=us-east-2 -var=aws_profile=<profile> -var=cleanup_mode=true -out=/Users/danny/Documents/UIC/CS441/ScholarChain/target/plans/destroy-course.tfplan 
+[2026-11-05T17:56:03Z] [20261105T175603Z-38414] INFO dry run: would print DESTROY-PLAN-SHA256 of /Users/danny/Documents/UIC/CS441/ScholarChain/target/plans/destroy-course.tfplan
+DRY-RUN CMD: timeout=3600s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 terraform -chdir=/Users/danny/Documents/UIC/CS441/ScholarChain/infra/terraform apply -input=false -lock-timeout=60s /Users/danny/Documents/UIC/CS441/ScholarChain/target/plans/destroy-course.tfplan 
+STEP: after-inventory
+DRY-RUN CMD: timeout=900s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 terraform -chdir=/Users/danny/Documents/UIC/CS441/ScholarChain/infra/terraform/billing-bootstrap state list 
+DRY-RUN CMD: timeout=900s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 terraform -chdir=/Users/danny/Documents/UIC/CS441/ScholarChain/infra/terraform/billing-execution state list 
+DRY-RUN CMD: timeout=900s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 terraform -chdir=/Users/danny/Documents/UIC/CS441/ScholarChain/infra/terraform/deployer state list 
+DRY-RUN CMD: timeout=900s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 terraform -chdir=/Users/danny/Documents/UIC/CS441/ScholarChain/infra/terraform/spikes/emr-spark-isolated state list 
+DRY-RUN CMD: timeout=900s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 terraform -chdir=/Users/danny/Documents/UIC/CS441/ScholarChain/infra/terraform/spikes/emr-spark state list 
+DRY-RUN CMD: timeout=900s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 terraform -chdir=/Users/danny/Documents/UIC/CS441/ScholarChain/infra/terraform state list 
+DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws resourcegroupstaggingapi get-resources --region us-east-2 --tag-filters Key=project,Values=scholarchain Key=environment,Values=course --output json 
+[2026-11-05T17:56:03Z] [20261105T175603Z-38414] INFO dry run: evidence would go to target/cleanup-evidence/20261105T175603Z-38414 (before-inventory.txt, after-inventory.txt, destroy-plan.sha256)
+RESULT: DRY-RUN no aws or terraform command was run; --execute lists targets first, then needs --confirm <token>
+exit=0
+
+##### cleanup.sh --execute without profile -> expected refusal (no command run)
+STEP: start
+[2026-11-05T17:56:03Z] [20261105T175603Z-38574] INFO script=cleanup.sh mode=execute run_id=20261105T175603Z-38574 repo_root=/Users/danny/Documents/UIC/CS441/ScholarChain
+STEP: inputs
+[2026-11-05T17:56:03Z] [20261105T175603Z-38574] ERROR refused at step inputs: --execute needs the approved AWS profile (--profile or AWS_PROFILE)
+RESULT: REFUSED step=inputs reason=--execute needs the approved AWS profile (--profile or AWS_PROFILE)
+exit=3

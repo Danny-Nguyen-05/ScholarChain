@@ -1,0 +1,752 @@
+----------------------------------------------------------------------
+Ran 11 tests in 12.694s
+
+OK
+==============================================================================================================
+## deploy.sh --stage runtime-apply --source-commit <prev> --reuse-images <manifest> (S1): dry run
+## exit code: 0
+CONFIG-FILE: using /var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-6pm6531s/fixture-release.conf instead of the repository config (test-only SCHOLARCHAIN_CONFIG_FILE)
+STEP: start
+[2026-11-06T03:28:17Z] [20261106T032817Z-87450] INFO script=deploy.sh mode=dry-run run_id=20261106T032817Z-87450 repo_root=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-6pm6531s/repo
+STEP: inputs
+STEP: terraform-version
+[2026-11-06T03:28:17Z] [20261106T032817Z-87450] INFO terraform 1.13.5 accepted (binary: terraform)
+STEP: clean-tree
+[2026-11-06T03:28:17Z] [20261106T032817Z-87450] INFO clean tree at 3e58596f2513c778f5ee8caf4e9fdd0a127270fc
+STEP: approval-record
+STEP: stage-match
+STEP: approval-record
+[2026-11-06T03:28:17Z] [20261106T032817Z-87450] INFO approval record parsed (8 required lines, each exactly once)
+STEP: commit-match
+STEP: region-match
+STEP: environment-match
+STEP: prespend-receipt
+pre-spend receipt ok: monitoring active, snapshot 1.0 h old, headroom 150.25 USD
+STEP: image-revision-binding
+deploy manifest ok: image_revision=dddddddddddddddddddddddddddddddddddddddd
+[2026-11-06T03:28:17Z] [20261106T032817Z-87450] INFO infrastructure rollback that KEEPS the runtime: Terraform source 88570ae11d7009c118017e4fae4e6220b6ff8bd2 (scripts at 3e58596f2513c778f5ee8caf4e9fdd0a127270fc) carries the deployed image revision dddddddddddddddddddddddddddddddddddddddd, bound to the verified previous deploy manifest of a runtime-apply
+STEP: plan-checksum
+[2026-11-06T03:28:17Z] [20261106T032817Z-87450] INFO plan sha256 matches the approval record (verified private copy; the copy is what is applied)
+STEP: plan-provenance
+plan provenance ok: receipt binds plan sha256, clean source commit, account, region, environment and revision
+STEP: state-binding
+[2026-11-06T03:28:17Z] [20261106T032817Z-87450] INFO state binding ok: lineage aaaabbbb-cccc-dddd-eeee-ffff00001111 serial 7 sha256 70dfa486495fa31bb4273830c8b01cdc7edb63a1bb78050d8f14cca2d5d92086
+STEP: plan-inspect
+[2026-11-06T03:28:17Z] [20261106T032817Z-87450] INFO dry run: the inspection of the verified plan is DEFERRED to --execute (nothing beyond the version probe runs now); it will materialize 88570ae11d7009c118017e4fae4e6220b6ff8bd2, compare its tree hash with the receipt, then run:
+DRY-RUN CMD: timeout=900s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 TF_DATA_DIR=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-6pm6531s/repo/target/plans/20261106T032817Z-87450/tfdata terraform -chdir=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-6pm6531s/repo/target/plans/20261106T032817Z-87450/source/88570ae11d7009c118017e4fae4e6220b6ff8bd2/infra/terraform init -input=false -lockfile=readonly 
+DRY-RUN CMD: timeout=900s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 TF_DATA_DIR=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-6pm6531s/repo/target/plans/20261106T032817Z-87450/tfdata terraform -chdir=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-6pm6531s/repo/target/plans/20261106T032817Z-87450/source/88570ae11d7009c118017e4fae4e6220b6ff8bd2/infra/terraform show -json <verified-private-copy-of-plan.tfplan> 
+[2026-11-06T03:28:17Z] [20261106T032817Z-87450] INFO dry run: its planned region, account hash, environment, project and image_revision must then match the approval record
+STEP: runtime-preservation
+RUNTIME-LIVE: yes (8 runtime-class resource instance(s) of module.runtime in the live state)
+runtime preservation ok: the plan deletes or replaces no runtime-class resource of the live runtime
+[2026-11-06T03:28:18Z] [20261106T032817Z-87450] INFO dry run: the verified plan's own terraform show -json is checked the same way at --execute (deferred with the other inspection)
+STEP: release-manifest
+[2026-11-06T03:28:18Z] [20261106T032817Z-87450] INFO rollback mode: reusing images already in the registry for revision dddddddddddddddddddddddddddddddddddddddd; nothing will be pushed
+STEP: runtime-archive
+[2026-11-06T03:28:18Z] [20261106T032817Z-87450] INFO the runtime archive upload belongs to --stage base-apply only
+STEP: account-check
+DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws sts get-caller-identity --region us-east-2 --query Account --output text 
+[2026-11-06T03:28:18Z] [20261106T032817Z-87450] INFO dry run: the account comparison runs only with --execute, before any mutating command
+STEP: ecr-repositories-exist
+DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws ecr describe-repositories --region us-east-2 --repository-names scholarchain-course/query-api --query repositories\[0\].repositoryName --output text 
+DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws ecr describe-repositories --region us-east-2 --repository-names scholarchain-course/graph-service --query repositories\[0\].repositoryName --output text 
+DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws ecr describe-repositories --region us-east-2 --repository-names scholarchain-course/semantic-service --query repositories\[0\].repositoryName --output text 
+DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws ecr describe-repositories --region us-east-2 --repository-names scholarchain-course/embedding-worker --query repositories\[0\].repositoryName --output text 
+STEP: verify-registry-images
+DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws ecr describe-images --region us-east-2 --repository-name scholarchain-course/query-api --image-ids imageTag=dddddddddddddddddddddddddddddddddddddddd --query imageDetails\[0\].imageDigest --output text 
+[2026-11-06T03:28:18Z] [20261106T032817Z-87450] INFO dry run: would require scholarchain-course/query-api:dddddddddddddddddddddddddddddddddddddddd to resolve to recorded digest sha256:e543858863ded180cd6e3943a198c0625cb28dc033035a383dca139debf7ebb4
+DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws ecr describe-images --region us-east-2 --repository-name scholarchain-course/graph-service --image-ids imageTag=dddddddddddddddddddddddddddddddddddddddd --query imageDetails\[0\].imageDigest --output text 
+[2026-11-06T03:28:18Z] [20261106T032817Z-87450] INFO dry run: would require scholarchain-course/graph-service:dddddddddddddddddddddddddddddddddddddddd to resolve to recorded digest sha256:88044ebc710ec8bebc37395ef8197e20d467983e7865de9f83b77ea43f7bd9e1
+DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws ecr describe-images --region us-east-2 --repository-name scholarchain-course/semantic-service --image-ids imageTag=dddddddddddddddddddddddddddddddddddddddd --query imageDetails\[0\].imageDigest --output text 
+[2026-11-06T03:28:18Z] [20261106T032817Z-87450] INFO dry run: would require scholarchain-course/semantic-service:dddddddddddddddddddddddddddddddddddddddd to resolve to recorded digest sha256:c593838f2059a33b23032ee10c66a1aadf19530dde9077f522d3f16392043001
+DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws ecr describe-images --region us-east-2 --repository-name scholarchain-course/embedding-worker --image-ids imageTag=dddddddddddddddddddddddddddddddddddddddd --query imageDetails\[0\].imageDigest --output text 
+[2026-11-06T03:28:18Z] [20261106T032817Z-87450] INFO dry run: would require scholarchain-course/embedding-worker:dddddddddddddddddddddddddddddddddddddddd to resolve to recorded digest sha256:fe3b338d60ef8b1fc7b13455586b923795181df90c6ce5046943bb68da79eff3
+STEP: terraform-apply
+[2026-11-06T03:28:18Z] [20261106T032817Z-87450] INFO dry run: the pre-spend receipt would be re-verified immediately before terraform-apply
+[2026-11-06T03:28:18Z] [20261106T032817Z-87450] INFO dry run: the plan copy's hash and the state binding would be re-verified immediately before apply
+DRY-RUN CMD: timeout=3600s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 TF_DATA_DIR=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-6pm6531s/repo/target/plans/20261106T032817Z-87450/tfdata terraform -chdir=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-6pm6531s/repo/target/plans/20261106T032817Z-87450/source/88570ae11d7009c118017e4fae4e6220b6ff8bd2/infra/terraform apply -input=false -lock-timeout=60s /var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-6pm6531s/sc-tmp.dE1n0p/copy-plan.tfplan-87450-2-0-25098 
+STEP: record-ecs
+DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws ecs describe-services --region us-east-2 --cluster scholarchain-course --services query-api graph-service semantic-service embedding-worker --query services\[\].\[serviceName\,taskDefinition\] --output text 
+DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws ecs describe-task-definition --region us-east-2 --task-definition <query-api-task-definition-arn> --query taskDefinition.containerDefinitions\[\].image --output text 
+DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws ecs describe-task-definition --region us-east-2 --task-definition <graph-service-task-definition-arn> --query taskDefinition.containerDefinitions\[\].image --output text 
+DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws ecs describe-task-definition --region us-east-2 --task-definition <semantic-service-task-definition-arn> --query taskDefinition.containerDefinitions\[\].image --output text 
+DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws ecs describe-task-definition --region us-east-2 --task-definition <embedding-worker-task-definition-arn> --query taskDefinition.containerDefinitions\[\].image --output text 
+[2026-11-06T03:28:18Z] [20261106T032817Z-87450] INFO dry run: each task definition image must equal <acct>.dkr.ecr.us-east-2.amazonaws.com/scholarchain-course/<service>:dddddddddddddddddddddddddddddddddddddddd (or the verified digest)
+STEP: write-deploy-manifest
+[2026-11-06T03:28:18Z] [20261106T032817Z-87450] INFO dry run: would write target/release/3e58596f2513c778f5ee8caf4e9fdd0a127270fc/deploy-manifest-runtime-apply-20261106T032817Z-87450.json (stage, digests, task-definition ARNs, plan sha256, commit, region, account sha256)
+RESULT: DRY-RUN all local checks passed (stage runtime-apply: approval record, pre-spend receipt, plan, receipt, state binding); no mutating command was run
+## fake tool log (1 call(s); version probe = the only allowed one):
+##   terraform version -json [profile=unset]
+## calls other than the Terraform version probe: 0
+==============================================================================================================
+## deploy.sh --stage runtime-apply --source-commit <prev> --image-revision dddddd.. --push-record <record> (S1): dry run
+## exit code: 0
+CONFIG-FILE: using /var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-rxn8i9v3/fixture-release.conf instead of the repository config (test-only SCHOLARCHAIN_CONFIG_FILE)
+STEP: start
+[2026-11-06T03:28:18Z] [20261106T032818Z-88105] INFO script=deploy.sh mode=dry-run run_id=20261106T032818Z-88105 repo_root=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-rxn8i9v3/repo
+STEP: inputs
+STEP: terraform-version
+[2026-11-06T03:28:18Z] [20261106T032818Z-88105] INFO terraform 1.13.5 accepted (binary: terraform)
+STEP: clean-tree
+[2026-11-06T03:28:18Z] [20261106T032818Z-88105] INFO clean tree at 274449ea668b2138365e2b735145f954aeddd4b5
+STEP: approval-record
+STEP: stage-match
+STEP: approval-record
+[2026-11-06T03:28:18Z] [20261106T032818Z-88105] INFO approval record parsed (8 required lines, each exactly once)
+STEP: commit-match
+STEP: region-match
+STEP: environment-match
+STEP: prespend-receipt
+pre-spend receipt ok: monitoring active, snapshot 1.0 h old, headroom 150.25 USD
+STEP: image-revision-binding
+[2026-11-06T03:28:18Z] [20261106T032818Z-88105] INFO infrastructure rollback that KEEPS the runtime: Terraform source e2f70173c414107da9e3750361f428cfce4ad8e7 (scripts at 274449ea668b2138365e2b735145f954aeddd4b5) carries the deployed image revision dddddddddddddddddddddddddddddddddddddddd, bound to the push record of that revision (checked at push-record)
+STEP: plan-checksum
+[2026-11-06T03:28:18Z] [20261106T032818Z-88105] INFO plan sha256 matches the approval record (verified private copy; the copy is what is applied)
+STEP: plan-provenance
+plan provenance ok: receipt binds plan sha256, clean source commit, account, region, environment and revision
+STEP: state-binding
+[2026-11-06T03:28:19Z] [20261106T032818Z-88105] INFO state binding ok: lineage aaaabbbb-cccc-dddd-eeee-ffff00001111 serial 7 sha256 70dfa486495fa31bb4273830c8b01cdc7edb63a1bb78050d8f14cca2d5d92086
+STEP: plan-inspect
+[2026-11-06T03:28:19Z] [20261106T032818Z-88105] INFO dry run: the inspection of the verified plan is DEFERRED to --execute (nothing beyond the version probe runs now); it will materialize e2f70173c414107da9e3750361f428cfce4ad8e7, compare its tree hash with the receipt, then run:
+DRY-RUN CMD: timeout=900s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 TF_DATA_DIR=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-rxn8i9v3/repo/target/plans/20261106T032818Z-88105/tfdata terraform -chdir=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-rxn8i9v3/repo/target/plans/20261106T032818Z-88105/source/e2f70173c414107da9e3750361f428cfce4ad8e7/infra/terraform init -input=false -lockfile=readonly 
+DRY-RUN CMD: timeout=900s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 TF_DATA_DIR=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-rxn8i9v3/repo/target/plans/20261106T032818Z-88105/tfdata terraform -chdir=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-rxn8i9v3/repo/target/plans/20261106T032818Z-88105/source/e2f70173c414107da9e3750361f428cfce4ad8e7/infra/terraform show -json <verified-private-copy-of-plan.tfplan> 
+[2026-11-06T03:28:19Z] [20261106T032818Z-88105] INFO dry run: its planned region, account hash, environment, project and image_revision must then match the approval record
+STEP: runtime-preservation
+RUNTIME-LIVE: yes (8 runtime-class resource instance(s) of module.runtime in the live state)
+runtime preservation ok: the plan deletes or replaces no runtime-class resource of the live runtime
+[2026-11-06T03:28:19Z] [20261106T032818Z-88105] INFO dry run: the verified plan's own terraform show -json is checked the same way at --execute (deferred with the other inspection)
+STEP: release-manifest
+[2026-11-06T03:28:19Z] [20261106T032818Z-88105] INFO carrying the already pushed revision dddddddddddddddddddddddddddddddddddddddd (not HEAD): nothing is built or pushed, so the release manifest is not used; the push record binds the revision
+STEP: runtime-archive
+[2026-11-06T03:28:19Z] [20261106T032818Z-88105] INFO the runtime archive upload belongs to --stage base-apply only
+STEP: push-record
+[2026-11-06T03:28:19Z] [20261106T032818Z-88105] INFO push record names revision dddddddddddddddddddddddddddddddddddddddd, this account, region, environment and the four repositories
+STEP: account-check
+DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws sts get-caller-identity --region us-east-2 --query Account --output text 
+[2026-11-06T03:28:19Z] [20261106T032818Z-88105] INFO dry run: the account comparison runs only with --execute, before any mutating command
+STEP: ecr-repositories-exist
+DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws ecr describe-repositories --region us-east-2 --repository-names scholarchain-course/query-api --query repositories\[0\].repositoryName --output text 
+DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws ecr describe-repositories --region us-east-2 --repository-names scholarchain-course/graph-service --query repositories\[0\].repositoryName --output text 
+DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws ecr describe-repositories --region us-east-2 --repository-names scholarchain-course/semantic-service --query repositories\[0\].repositoryName --output text 
+DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws ecr describe-repositories --region us-east-2 --repository-names scholarchain-course/embedding-worker --query repositories\[0\].repositoryName --output text 
+STEP: verify-registry-images
+DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws ecr describe-images --region us-east-2 --repository-name scholarchain-course/query-api --image-ids imageTag=dddddddddddddddddddddddddddddddddddddddd --query imageDetails\[0\].imageDigest --output text 
+[2026-11-06T03:28:19Z] [20261106T032818Z-88105] INFO dry run: would require scholarchain-course/query-api:dddddddddddddddddddddddddddddddddddddddd to resolve to the digest sha256:e543858863ded180cd6e3943a198c0625cb28dc033035a383dca139debf7ebb4 recorded by the verified push
+DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws ecr describe-images --region us-east-2 --repository-name scholarchain-course/graph-service --image-ids imageTag=dddddddddddddddddddddddddddddddddddddddd --query imageDetails\[0\].imageDigest --output text 
+[2026-11-06T03:28:19Z] [20261106T032818Z-88105] INFO dry run: would require scholarchain-course/graph-service:dddddddddddddddddddddddddddddddddddddddd to resolve to the digest sha256:88044ebc710ec8bebc37395ef8197e20d467983e7865de9f83b77ea43f7bd9e1 recorded by the verified push
+DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws ecr describe-images --region us-east-2 --repository-name scholarchain-course/semantic-service --image-ids imageTag=dddddddddddddddddddddddddddddddddddddddd --query imageDetails\[0\].imageDigest --output text 
+[2026-11-06T03:28:19Z] [20261106T032818Z-88105] INFO dry run: would require scholarchain-course/semantic-service:dddddddddddddddddddddddddddddddddddddddd to resolve to the digest sha256:c593838f2059a33b23032ee10c66a1aadf19530dde9077f522d3f16392043001 recorded by the verified push
+DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws ecr describe-images --region us-east-2 --repository-name scholarchain-course/embedding-worker --image-ids imageTag=dddddddddddddddddddddddddddddddddddddddd --query imageDetails\[0\].imageDigest --output text 
+[2026-11-06T03:28:19Z] [20261106T032818Z-88105] INFO dry run: would require scholarchain-course/embedding-worker:dddddddddddddddddddddddddddddddddddddddd to resolve to the digest sha256:fe3b338d60ef8b1fc7b13455586b923795181df90c6ce5046943bb68da79eff3 recorded by the verified push
+STEP: terraform-apply
+[2026-11-06T03:28:19Z] [20261106T032818Z-88105] INFO dry run: the pre-spend receipt would be re-verified immediately before terraform-apply
+[2026-11-06T03:28:19Z] [20261106T032818Z-88105] INFO dry run: the plan copy's hash and the state binding would be re-verified immediately before apply
+DRY-RUN CMD: timeout=3600s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 TF_DATA_DIR=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-rxn8i9v3/repo/target/plans/20261106T032818Z-88105/tfdata terraform -chdir=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-rxn8i9v3/repo/target/plans/20261106T032818Z-88105/source/e2f70173c414107da9e3750361f428cfce4ad8e7/infra/terraform apply -input=false -lock-timeout=60s /var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-rxn8i9v3/sc-tmp.YcpRtI/copy-plan.tfplan-88105-2-0-8886 
+STEP: record-ecs
+DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws ecs describe-services --region us-east-2 --cluster scholarchain-course --services query-api graph-service semantic-service embedding-worker --query services\[\].\[serviceName\,taskDefinition\] --output text 
+DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws ecs describe-task-definition --region us-east-2 --task-definition <query-api-task-definition-arn> --query taskDefinition.containerDefinitions\[\].image --output text 
+DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws ecs describe-task-definition --region us-east-2 --task-definition <graph-service-task-definition-arn> --query taskDefinition.containerDefinitions\[\].image --output text 
+DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws ecs describe-task-definition --region us-east-2 --task-definition <semantic-service-task-definition-arn> --query taskDefinition.containerDefinitions\[\].image --output text 
+DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws ecs describe-task-definition --region us-east-2 --task-definition <embedding-worker-task-definition-arn> --query taskDefinition.containerDefinitions\[\].image --output text 
+[2026-11-06T03:28:19Z] [20261106T032818Z-88105] INFO dry run: each task definition image must equal <acct>.dkr.ecr.us-east-2.amazonaws.com/scholarchain-course/<service>:dddddddddddddddddddddddddddddddddddddddd (or the verified digest)
+STEP: write-deploy-manifest
+[2026-11-06T03:28:19Z] [20261106T032818Z-88105] INFO dry run: would write target/release/274449ea668b2138365e2b735145f954aeddd4b5/deploy-manifest-runtime-apply-20261106T032818Z-88105.json (stage, digests, task-definition ARNs, plan sha256, commit, region, account sha256)
+RESULT: DRY-RUN all local checks passed (stage runtime-apply: approval record, pre-spend receipt, plan, receipt, state binding); no mutating command was run
+## fake tool log (1 call(s); version probe = the only allowed one):
+##   terraform version -json [profile=unset]
+## calls other than the Terraform version probe: 0
+==============================================================================================================
+## deploy.sh --stage base-apply: dry run
+## exit code: 0
+CONFIG-FILE: using /var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-hg_uk3dq/fixture-release.conf instead of the repository config (test-only SCHOLARCHAIN_CONFIG_FILE)
+STEP: start
+[2026-11-06T03:28:19Z] [20261106T032819Z-88712] INFO script=deploy.sh mode=dry-run run_id=20261106T032819Z-88712 repo_root=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-hg_uk3dq/repo
+STEP: inputs
+STEP: terraform-version
+[2026-11-06T03:28:19Z] [20261106T032819Z-88712] INFO terraform 1.13.5 accepted (binary: terraform)
+STEP: clean-tree
+[2026-11-06T03:28:19Z] [20261106T032819Z-88712] INFO clean tree at a9d03aaa54a37e0840d91697f5caba447615b754
+STEP: approval-record
+STEP: stage-match
+STEP: approval-record
+[2026-11-06T03:28:19Z] [20261106T032819Z-88712] INFO approval record parsed (8 required lines, each exactly once)
+STEP: commit-match
+STEP: region-match
+STEP: environment-match
+STEP: prespend-receipt
+pre-spend receipt ok: monitoring active, snapshot 1.0 h old, headroom 150.25 USD
+STEP: plan-checksum
+[2026-11-06T03:28:20Z] [20261106T032819Z-88712] INFO plan sha256 matches the approval record (verified private copy; the copy is what is applied)
+STEP: plan-provenance
+plan provenance ok: receipt binds plan sha256, clean source commit, account, region, environment and revision
+STEP: state-binding
+[2026-11-06T03:28:20Z] [20261106T032819Z-88712] INFO state binding ok: lineage aaaabbbb-cccc-dddd-eeee-ffff00001111 serial 7 sha256 7208245169f7ff54f64e0fe1206adf956dc476348238aad9a73b7384cade0bdd
+STEP: plan-inspect
+[2026-11-06T03:28:20Z] [20261106T032819Z-88712] INFO dry run: the inspection of the verified plan is DEFERRED to --execute (nothing beyond the version probe runs now); it will materialize a9d03aaa54a37e0840d91697f5caba447615b754, compare its tree hash with the receipt, then run:
+DRY-RUN CMD: timeout=900s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 TF_DATA_DIR=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-hg_uk3dq/repo/target/plans/20261106T032819Z-88712/tfdata terraform -chdir=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-hg_uk3dq/repo/target/plans/20261106T032819Z-88712/source/a9d03aaa54a37e0840d91697f5caba447615b754/infra/terraform init -input=false -lockfile=readonly 
+DRY-RUN CMD: timeout=900s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 TF_DATA_DIR=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-hg_uk3dq/repo/target/plans/20261106T032819Z-88712/tfdata terraform -chdir=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-hg_uk3dq/repo/target/plans/20261106T032819Z-88712/source/a9d03aaa54a37e0840d91697f5caba447615b754/infra/terraform show -json <verified-private-copy-of-plan.tfplan> 
+[2026-11-06T03:28:20Z] [20261106T032819Z-88712] INFO dry run: its planned region, account hash, environment, project and image_revision must then match the approval record
+STEP: runtime-preservation
+RUNTIME-LIVE: no (0 runtime-class resource instance(s) of module.runtime in the live state)
+runtime preservation ok: the bound state shows no live runtime; nothing to preserve
+[2026-11-06T03:28:20Z] [20261106T032819Z-88712] INFO dry run: the verified plan's own terraform show -json is checked the same way at --execute (deferred with the other inspection)
+STEP: release-manifest
+[2026-11-06T03:28:20Z] [20261106T032819Z-88712] INFO base-apply pushes no image: the release manifest is not used
+STEP: runtime-archive
+[2026-11-06T03:28:20Z] [20261106T032819Z-88712] INFO runtime archive verified in place (dry run: no copy is made): size=20 sha256=db7d099da57f11bb06775f583eabca5b1a3f4f47c4bcfc9b97ed48a789d21e00
+STEP: account-check
+DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws sts get-caller-identity --region us-east-2 --query Account --output text 
+[2026-11-06T03:28:20Z] [20261106T032819Z-88712] INFO dry run: the account comparison runs only with --execute, before any mutating command
+STEP: terraform-apply
+[2026-11-06T03:28:20Z] [20261106T032819Z-88712] INFO dry run: the pre-spend receipt would be re-verified immediately before terraform-apply
+[2026-11-06T03:28:20Z] [20261106T032819Z-88712] INFO dry run: the plan copy's hash and the state binding would be re-verified immediately before apply
+DRY-RUN CMD: timeout=3600s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 TF_DATA_DIR=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-hg_uk3dq/repo/target/plans/20261106T032819Z-88712/tfdata terraform -chdir=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-hg_uk3dq/repo/target/plans/20261106T032819Z-88712/source/a9d03aaa54a37e0840d91697f5caba447615b754/infra/terraform apply -input=false -lock-timeout=60s /var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-hg_uk3dq/sc-tmp.kLBJQ1/copy-plan.tfplan-88712-2-1-25829 
+STEP: runtime-archive-upload
+[2026-11-06T03:28:20Z] [20261106T032819Z-88712] INFO dry run: the pre-spend receipt would be re-verified immediately before archive-upload
+DRY-RUN CMD: timeout=3600s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws s3 cp <private-copy-of-the-runtime-archive> s3://bucket-test/key/runtime.tgz --region us-east-2 --only-show-errors --checksum-algorithm SHA256 --metadata sha256=db7d099da57f11bb06775f583eabca5b1a3f4f47c4bcfc9b97ed48a789d21e00 
+DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws s3api head-object --region us-east-2 --bucket bucket-test --key key/runtime.tgz --checksum-mode ENABLED --query \[ContentLength\,Metadata.sha256\,ChecksumSHA256\] --output text 
+[2026-11-06T03:28:20Z] [20261106T032819Z-88712] INFO dry run: after the upload the object's S3-computed ChecksumSHA256 is compared with the private copy (a multipart object also reads its part list: aws s3api get-object-attributes --object-attributes ObjectParts)
+STEP: write-deploy-manifest
+[2026-11-06T03:28:20Z] [20261106T032819Z-88712] INFO dry run: would write target/release/a9d03aaa54a37e0840d91697f5caba447615b754/deploy-manifest-base-apply-20261106T032819Z-88712.json (stage, digests, task-definition ARNs, plan sha256, commit, region, account sha256)
+RESULT: DRY-RUN all local checks passed (stage base-apply: approval record, pre-spend receipt, plan, receipt, state binding); no mutating command was run
+## fake tool log (1 call(s); version probe = the only allowed one):
+##   terraform version -json [profile=unset]
+## calls other than the Terraform version probe: 0
+==============================================================================================================
+## deploy.sh --stage push: dry run
+## exit code: 0
+CONFIG-FILE: using /var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-07pes_p3/fixture-release.conf instead of the repository config (test-only SCHOLARCHAIN_CONFIG_FILE)
+STEP: start
+[2026-11-06T03:28:20Z] [20261106T032820Z-89252] INFO script=deploy.sh mode=dry-run run_id=20261106T032820Z-89252 repo_root=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-07pes_p3/repo
+STEP: inputs
+STEP: terraform-version
+[2026-11-06T03:28:20Z] [20261106T032820Z-89252] INFO terraform 1.13.5 accepted (binary: terraform)
+STEP: clean-tree
+[2026-11-06T03:28:20Z] [20261106T032820Z-89252] INFO clean tree at dbf927277154a3f962bea2f2bca7bc758268badb
+STEP: approval-record
+STEP: stage-match
+STEP: approval-record
+[2026-11-06T03:28:20Z] [20261106T032820Z-89252] INFO approval record parsed (6 required lines, each exactly once; no plan lines, as required for a push)
+STEP: commit-match
+STEP: region-match
+STEP: environment-match
+STEP: prespend-receipt
+pre-spend receipt ok: monitoring active, snapshot 1.0 h old, headroom 150.25 USD
+STEP: release-manifest
+release manifest ok: commit=HEAD, clean, linux/amd64, all images present
+STEP: runtime-archive
+[2026-11-06T03:28:21Z] [20261106T032820Z-89252] INFO the runtime archive upload belongs to --stage base-apply only
+STEP: push-record-path
+[2026-11-06T03:28:21Z] [20261106T032820Z-89252] INFO the push record target/release/dbf927277154a3f962bea2f2bca7bc758268badb/push-record.json does not exist yet and will be created exclusively after every digest is verified
+STEP: account-check
+DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws sts get-caller-identity --region us-east-2 --query Account --output text 
+[2026-11-06T03:28:21Z] [20261106T032820Z-89252] INFO dry run: the account comparison runs only with --execute, before any mutating command
+STEP: ecr-repositories-exist
+DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws ecr describe-repositories --region us-east-2 --repository-names scholarchain-course/query-api --query repositories\[0\].repositoryName --output text 
+DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws ecr describe-repositories --region us-east-2 --repository-names scholarchain-course/graph-service --query repositories\[0\].repositoryName --output text 
+DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws ecr describe-repositories --region us-east-2 --repository-names scholarchain-course/semantic-service --query repositories\[0\].repositoryName --output text 
+DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws ecr describe-repositories --region us-east-2 --repository-names scholarchain-course/embedding-worker --query repositories\[0\].repositoryName --output text 
+STEP: verify-local-images
+DRY-RUN CMD: timeout=60s docker image inspect scholarchain-query-api:dbf927277154a3f962bea2f2bca7bc758268badb 
+[2026-11-06T03:28:21Z] [20261106T032820Z-89252] INFO dry run: would require scholarchain-query-api:dbf927277154a3f962bea2f2bca7bc758268badb to be linux/amd64 with image ID sha256:d87d6fe29fdd662dc19621f76ed04538a63997c7f591c29cc48ee10c505210ed
+DRY-RUN CMD: timeout=60s docker image inspect scholarchain-graph-service:dbf927277154a3f962bea2f2bca7bc758268badb 
+[2026-11-06T03:28:21Z] [20261106T032820Z-89252] INFO dry run: would require scholarchain-graph-service:dbf927277154a3f962bea2f2bca7bc758268badb to be linux/amd64 with image ID sha256:3aef4c82d8e3b63f37b552bbecfdf61ca6030a115d9ac0b8c047d7d517875ca4
+DRY-RUN CMD: timeout=60s docker image inspect scholarchain-semantic-service:dbf927277154a3f962bea2f2bca7bc758268badb 
+[2026-11-06T03:28:21Z] [20261106T032820Z-89252] INFO dry run: would require scholarchain-semantic-service:dbf927277154a3f962bea2f2bca7bc758268badb to be linux/amd64 with image ID sha256:a22745e5777263dd998c83bb935033435e5cd5be1071241f2770f905a207c782
+DRY-RUN CMD: timeout=60s docker image inspect scholarchain-embedding-worker:dbf927277154a3f962bea2f2bca7bc758268badb 
+[2026-11-06T03:28:21Z] [20261106T032820Z-89252] INFO dry run: would require scholarchain-embedding-worker:dbf927277154a3f962bea2f2bca7bc758268badb to be linux/amd64 with image ID sha256:db5e113e4bfbb1658167d1cd0195cff9a4db75beebceb3aec80d8bc4a154ad08
+STEP: ecr-login
+[2026-11-06T03:28:21Z] [20261106T032820Z-89252] INFO dry run: the pre-spend receipt would be re-verified immediately before ecr-login
+DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws ecr get-login-password --region us-east-2 
+DRY-RUN CMD: timeout=120s docker login --username AWS --password-stdin <acct>.dkr.ecr.us-east-2.amazonaws.com 
+STEP: push-images
+[2026-11-06T03:28:21Z] [20261106T032820Z-89252] INFO dry run: the pre-spend receipt would be re-verified immediately before push-query-api
+DRY-RUN CMD: timeout=120s docker tag sha256:d87d6fe29fdd662dc19621f76ed04538a63997c7f591c29cc48ee10c505210ed <acct>.dkr.ecr.us-east-2.amazonaws.com/scholarchain-course/query-api:dbf927277154a3f962bea2f2bca7bc758268badb 
+DRY-RUN CMD: timeout=1800s docker push <acct>.dkr.ecr.us-east-2.amazonaws.com/scholarchain-course/query-api:dbf927277154a3f962bea2f2bca7bc758268badb 
+[2026-11-06T03:28:21Z] [20261106T032820Z-89252] INFO dry run: the pre-spend receipt would be re-verified immediately before push-graph-service
+DRY-RUN CMD: timeout=120s docker tag sha256:3aef4c82d8e3b63f37b552bbecfdf61ca6030a115d9ac0b8c047d7d517875ca4 <acct>.dkr.ecr.us-east-2.amazonaws.com/scholarchain-course/graph-service:dbf927277154a3f962bea2f2bca7bc758268badb 
+DRY-RUN CMD: timeout=1800s docker push <acct>.dkr.ecr.us-east-2.amazonaws.com/scholarchain-course/graph-service:dbf927277154a3f962bea2f2bca7bc758268badb 
+[2026-11-06T03:28:21Z] [20261106T032820Z-89252] INFO dry run: the pre-spend receipt would be re-verified immediately before push-semantic-service
+DRY-RUN CMD: timeout=120s docker tag sha256:a22745e5777263dd998c83bb935033435e5cd5be1071241f2770f905a207c782 <acct>.dkr.ecr.us-east-2.amazonaws.com/scholarchain-course/semantic-service:dbf927277154a3f962bea2f2bca7bc758268badb 
+DRY-RUN CMD: timeout=1800s docker push <acct>.dkr.ecr.us-east-2.amazonaws.com/scholarchain-course/semantic-service:dbf927277154a3f962bea2f2bca7bc758268badb 
+[2026-11-06T03:28:21Z] [20261106T032820Z-89252] INFO dry run: the pre-spend receipt would be re-verified immediately before push-embedding-worker
+DRY-RUN CMD: timeout=120s docker tag sha256:db5e113e4bfbb1658167d1cd0195cff9a4db75beebceb3aec80d8bc4a154ad08 <acct>.dkr.ecr.us-east-2.amazonaws.com/scholarchain-course/embedding-worker:dbf927277154a3f962bea2f2bca7bc758268badb 
+DRY-RUN CMD: timeout=1800s docker push <acct>.dkr.ecr.us-east-2.amazonaws.com/scholarchain-course/embedding-worker:dbf927277154a3f962bea2f2bca7bc758268badb 
+STEP: record-digests
+DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws ecr describe-images --region us-east-2 --repository-name scholarchain-course/query-api --image-ids imageTag=dbf927277154a3f962bea2f2bca7bc758268badb --query imageDetails\[0\].imageDigest --output text 
+DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws ecr describe-images --region us-east-2 --repository-name scholarchain-course/graph-service --image-ids imageTag=dbf927277154a3f962bea2f2bca7bc758268badb --query imageDetails\[0\].imageDigest --output text 
+DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws ecr describe-images --region us-east-2 --repository-name scholarchain-course/semantic-service --image-ids imageTag=dbf927277154a3f962bea2f2bca7bc758268badb --query imageDetails\[0\].imageDigest --output text 
+DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws ecr describe-images --region us-east-2 --repository-name scholarchain-course/embedding-worker --image-ids imageTag=dbf927277154a3f962bea2f2bca7bc758268badb --query imageDetails\[0\].imageDigest --output text 
+STEP: write-push-record
+[2026-11-06T03:28:21Z] [20261106T032820Z-89252] INFO dry run: would create target/release/dbf927277154a3f962bea2f2bca7bc758268badb/push-record.json exclusively (commit, account hash, region, environment, repositories, pushed digests)
+STEP: write-deploy-manifest
+[2026-11-06T03:28:21Z] [20261106T032820Z-89252] INFO dry run: would write target/release/dbf927277154a3f962bea2f2bca7bc758268badb/deploy-manifest-push-20261106T032820Z-89252.json (stage, digests, task-definition ARNs, plan sha256, commit, region, account sha256)
+RESULT: DRY-RUN all local checks passed (stage push: approval record, pre-spend receipt); no mutating command was run
+## fake tool log (1 call(s); version probe = the only allowed one):
+##   terraform version -json [profile=unset]
+## calls other than the Terraform version probe: 0
+==============================================================================================================
+## deploy.sh --stage runtime-apply (plain, HEAD): dry run
+## exit code: 0
+CONFIG-FILE: using /var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-w4_c5wt5/fixture-release.conf instead of the repository config (test-only SCHOLARCHAIN_CONFIG_FILE)
+STEP: start
+[2026-11-06T03:28:21Z] [20261106T032821Z-89857] INFO script=deploy.sh mode=dry-run run_id=20261106T032821Z-89857 repo_root=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-w4_c5wt5/repo
+STEP: inputs
+STEP: terraform-version
+[2026-11-06T03:28:22Z] [20261106T032821Z-89857] INFO terraform 1.13.5 accepted (binary: terraform)
+STEP: clean-tree
+[2026-11-06T03:28:22Z] [20261106T032821Z-89857] INFO clean tree at cb911c6f4c8bd65dfc5f61102556d7f3b8a7aa5f
+STEP: approval-record
+STEP: stage-match
+STEP: approval-record
+[2026-11-06T03:28:22Z] [20261106T032821Z-89857] INFO approval record parsed (8 required lines, each exactly once)
+STEP: commit-match
+STEP: region-match
+STEP: environment-match
+STEP: prespend-receipt
+pre-spend receipt ok: monitoring active, snapshot 1.0 h old, headroom 150.25 USD
+STEP: plan-checksum
+[2026-11-06T03:28:22Z] [20261106T032821Z-89857] INFO plan sha256 matches the approval record (verified private copy; the copy is what is applied)
+STEP: plan-provenance
+plan provenance ok: receipt binds plan sha256, clean source commit, account, region, environment and revision
+STEP: state-binding
+[2026-11-06T03:28:22Z] [20261106T032821Z-89857] INFO state binding ok: lineage aaaabbbb-cccc-dddd-eeee-ffff00001111 serial 7 sha256 7208245169f7ff54f64e0fe1206adf956dc476348238aad9a73b7384cade0bdd
+STEP: plan-inspect
+[2026-11-06T03:28:22Z] [20261106T032821Z-89857] INFO dry run: the inspection of the verified plan is DEFERRED to --execute (nothing beyond the version probe runs now); it will materialize cb911c6f4c8bd65dfc5f61102556d7f3b8a7aa5f, compare its tree hash with the receipt, then run:
+DRY-RUN CMD: timeout=900s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 TF_DATA_DIR=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-w4_c5wt5/repo/target/plans/20261106T032821Z-89857/tfdata terraform -chdir=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-w4_c5wt5/repo/target/plans/20261106T032821Z-89857/source/cb911c6f4c8bd65dfc5f61102556d7f3b8a7aa5f/infra/terraform init -input=false -lockfile=readonly 
+DRY-RUN CMD: timeout=900s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 TF_DATA_DIR=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-w4_c5wt5/repo/target/plans/20261106T032821Z-89857/tfdata terraform -chdir=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-w4_c5wt5/repo/target/plans/20261106T032821Z-89857/source/cb911c6f4c8bd65dfc5f61102556d7f3b8a7aa5f/infra/terraform show -json <verified-private-copy-of-plan.tfplan> 
+[2026-11-06T03:28:22Z] [20261106T032821Z-89857] INFO dry run: its planned region, account hash, environment, project and image_revision must then match the approval record
+STEP: release-manifest
+release manifest ok: commit=HEAD, clean, linux/amd64, all images present
+STEP: runtime-archive
+[2026-11-06T03:28:22Z] [20261106T032821Z-89857] INFO the runtime archive upload belongs to --stage base-apply only
+STEP: push-record
+[2026-11-06T03:28:22Z] [20261106T032821Z-89857] INFO push record names revision cb911c6f4c8bd65dfc5f61102556d7f3b8a7aa5f, this account, region, environment and the four repositories
+STEP: account-check
+DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws sts get-caller-identity --region us-east-2 --query Account --output text 
+[2026-11-06T03:28:22Z] [20261106T032821Z-89857] INFO dry run: the account comparison runs only with --execute, before any mutating command
+STEP: ecr-repositories-exist
+DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws ecr describe-repositories --region us-east-2 --repository-names scholarchain-course/query-api --query repositories\[0\].repositoryName --output text 
+DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws ecr describe-repositories --region us-east-2 --repository-names scholarchain-course/graph-service --query repositories\[0\].repositoryName --output text 
+DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws ecr describe-repositories --region us-east-2 --repository-names scholarchain-course/semantic-service --query repositories\[0\].repositoryName --output text 
+DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws ecr describe-repositories --region us-east-2 --repository-names scholarchain-course/embedding-worker --query repositories\[0\].repositoryName --output text 
+STEP: verify-registry-images
+DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws ecr describe-images --region us-east-2 --repository-name scholarchain-course/query-api --image-ids imageTag=cb911c6f4c8bd65dfc5f61102556d7f3b8a7aa5f --query imageDetails\[0\].imageDigest --output text 
+[2026-11-06T03:28:22Z] [20261106T032821Z-89857] INFO dry run: would require scholarchain-course/query-api:cb911c6f4c8bd65dfc5f61102556d7f3b8a7aa5f to resolve to the digest sha256:36c39d1aae1f190759bb421fcfe96b9d1890de88d6e54f0663290456d81a5d6f recorded by the verified push
+DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws ecr describe-images --region us-east-2 --repository-name scholarchain-course/graph-service --image-ids imageTag=cb911c6f4c8bd65dfc5f61102556d7f3b8a7aa5f --query imageDetails\[0\].imageDigest --output text 
+[2026-11-06T03:28:22Z] [20261106T032821Z-89857] INFO dry run: would require scholarchain-course/graph-service:cb911c6f4c8bd65dfc5f61102556d7f3b8a7aa5f to resolve to the digest sha256:409016023a6d2914f0884fe4c17bcdfa2d9705ef20b790cae4200368c8468e4d recorded by the verified push
+DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws ecr describe-images --region us-east-2 --repository-name scholarchain-course/semantic-service --image-ids imageTag=cb911c6f4c8bd65dfc5f61102556d7f3b8a7aa5f --query imageDetails\[0\].imageDigest --output text 
+[2026-11-06T03:28:22Z] [20261106T032821Z-89857] INFO dry run: would require scholarchain-course/semantic-service:cb911c6f4c8bd65dfc5f61102556d7f3b8a7aa5f to resolve to the digest sha256:d0e6fa3a0d16f6ff7949391ba19452341f637bd47e4c11b574788af32738cbab recorded by the verified push
+DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws ecr describe-images --region us-east-2 --repository-name scholarchain-course/embedding-worker --image-ids imageTag=cb911c6f4c8bd65dfc5f61102556d7f3b8a7aa5f --query imageDetails\[0\].imageDigest --output text 
+[2026-11-06T03:28:22Z] [20261106T032821Z-89857] INFO dry run: would require scholarchain-course/embedding-worker:cb911c6f4c8bd65dfc5f61102556d7f3b8a7aa5f to resolve to the digest sha256:5daa4fd0c526e9a2956f82b898f767683e9f71f67d5187c47faf7b512b88527c recorded by the verified push
+STEP: terraform-apply
+[2026-11-06T03:28:22Z] [20261106T032821Z-89857] INFO dry run: the pre-spend receipt would be re-verified immediately before terraform-apply
+[2026-11-06T03:28:22Z] [20261106T032821Z-89857] INFO dry run: the plan copy's hash and the state binding would be re-verified immediately before apply
+DRY-RUN CMD: timeout=3600s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 TF_DATA_DIR=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-w4_c5wt5/repo/target/plans/20261106T032821Z-89857/tfdata terraform -chdir=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-w4_c5wt5/repo/target/plans/20261106T032821Z-89857/source/cb911c6f4c8bd65dfc5f61102556d7f3b8a7aa5f/infra/terraform apply -input=false -lock-timeout=60s /var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-w4_c5wt5/sc-tmp.8MCRtn/copy-plan.tfplan-89857-2-1-29550 
+STEP: record-ecs
+DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws ecs describe-services --region us-east-2 --cluster scholarchain-course --services query-api graph-service semantic-service embedding-worker --query services\[\].\[serviceName\,taskDefinition\] --output text 
+DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws ecs describe-task-definition --region us-east-2 --task-definition <query-api-task-definition-arn> --query taskDefinition.containerDefinitions\[\].image --output text 
+DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws ecs describe-task-definition --region us-east-2 --task-definition <graph-service-task-definition-arn> --query taskDefinition.containerDefinitions\[\].image --output text 
+DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws ecs describe-task-definition --region us-east-2 --task-definition <semantic-service-task-definition-arn> --query taskDefinition.containerDefinitions\[\].image --output text 
+DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws ecs describe-task-definition --region us-east-2 --task-definition <embedding-worker-task-definition-arn> --query taskDefinition.containerDefinitions\[\].image --output text 
+[2026-11-06T03:28:22Z] [20261106T032821Z-89857] INFO dry run: each task definition image must equal <acct>.dkr.ecr.us-east-2.amazonaws.com/scholarchain-course/<service>:cb911c6f4c8bd65dfc5f61102556d7f3b8a7aa5f (or the verified digest)
+STEP: write-deploy-manifest
+[2026-11-06T03:28:22Z] [20261106T032821Z-89857] INFO dry run: would write target/release/cb911c6f4c8bd65dfc5f61102556d7f3b8a7aa5f/deploy-manifest-runtime-apply-20261106T032821Z-89857.json (stage, digests, task-definition ARNs, plan sha256, commit, region, account sha256)
+RESULT: DRY-RUN all local checks passed (stage runtime-apply: approval record, pre-spend receipt, plan, receipt, state binding); no mutating command was run
+## fake tool log (1 call(s); version probe = the only allowed one):
+##   terraform version -json [profile=unset]
+## calls other than the Terraform version probe: 0
+==============================================================================================================
+## rollback.sh --mode infra (runtime ENABLED in the state) --deployed-manifest: dry run
+## exit code: 0
+CONFIG-FILE: using /var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-78ocl607/fixture-release.conf instead of the repository config (test-only SCHOLARCHAIN_CONFIG_FILE)
+STEP: start
+[2026-11-06T03:28:22Z] [20261106T032822Z-90455] INFO script=rollback.sh mode=dry-run run_id=20261106T032822Z-90455 repo_root=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-78ocl607/repo
+STEP: inputs
+STEP: terraform-version
+[2026-11-06T03:28:22Z] [20261106T032822Z-90455] INFO terraform 1.13.5 accepted (binary: terraform)
+STEP: previous-commit
+[2026-11-06T03:28:22Z] [20261106T032822Z-90455] INFO infrastructure rollback: the CURRENT scripts (HEAD f6f75b9c44cd883900c1dd9ed5207f65aaaf7c38) run against infra/terraform as committed at 229ec917db5f45b8124ed6bf9b45045d1d08f8ae, materialized read-only; no checkout is needed and the previous tree need not contain scripts/
+STEP: runtime-state
+[2026-11-06T03:28:23Z] [20261106T032822Z-90455] INFO RUNTIME-LIVE: yes (8 runtime-class resource instance(s) of module.runtime in the live state)
+STEP: deployed-revision
+deploy manifest ok: image_revision=dddddddddddddddddddddddddddddddddddddddd
+[2026-11-06T03:28:23Z] [20261106T032822Z-90455] INFO keeping the running runtime at image revision dddddddddddddddddddddddddddddddddddddddd (the deployed manifest or push record binds it; deploy.sh also compares the account)
+[2026-11-06T03:28:23Z] [20261106T032822Z-90455] INFO recorded: query-api scholarchain-course/query-api:dddddddddddddddddddddddddddddddddddddddd sha256:e543858863ded180cd6e3943a198c0625cb28dc033035a383dca139debf7ebb4
+[2026-11-06T03:28:23Z] [20261106T032822Z-90455] INFO recorded: graph-service scholarchain-course/graph-service:dddddddddddddddddddddddddddddddddddddddd sha256:88044ebc710ec8bebc37395ef8197e20d467983e7865de9f83b77ea43f7bd9e1
+[2026-11-06T03:28:23Z] [20261106T032822Z-90455] INFO recorded: semantic-service scholarchain-course/semantic-service:dddddddddddddddddddddddddddddddddddddddd sha256:c593838f2059a33b23032ee10c66a1aadf19530dde9077f522d3f16392043001
+[2026-11-06T03:28:23Z] [20261106T032822Z-90455] INFO recorded: embedding-worker scholarchain-course/embedding-worker:dddddddddddddddddddddddddddddddddddddddd sha256:fe3b338d60ef8b1fc7b13455586b923795181df90c6ce5046943bb68da79eff3
+STEP: verify-registry-digests
+DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws ecr describe-images --region us-east-2 --repository-name scholarchain-course/query-api --image-ids imageTag=dddddddddddddddddddddddddddddddddddddddd --query imageDetails\[0\].imageDigest --output text 
+[2026-11-06T03:28:23Z] [20261106T032822Z-90455] INFO dry run: would require scholarchain-course/query-api:dddddddddddddddddddddddddddddddddddddddd to resolve to sha256:e543858863ded180cd6e3943a198c0625cb28dc033035a383dca139debf7ebb4
+DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws ecr describe-images --region us-east-2 --repository-name scholarchain-course/graph-service --image-ids imageTag=dddddddddddddddddddddddddddddddddddddddd --query imageDetails\[0\].imageDigest --output text 
+[2026-11-06T03:28:23Z] [20261106T032822Z-90455] INFO dry run: would require scholarchain-course/graph-service:dddddddddddddddddddddddddddddddddddddddd to resolve to sha256:88044ebc710ec8bebc37395ef8197e20d467983e7865de9f83b77ea43f7bd9e1
+DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws ecr describe-images --region us-east-2 --repository-name scholarchain-course/semantic-service --image-ids imageTag=dddddddddddddddddddddddddddddddddddddddd --query imageDetails\[0\].imageDigest --output text 
+[2026-11-06T03:28:23Z] [20261106T032822Z-90455] INFO dry run: would require scholarchain-course/semantic-service:dddddddddddddddddddddddddddddddddddddddd to resolve to sha256:c593838f2059a33b23032ee10c66a1aadf19530dde9077f522d3f16392043001
+DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws ecr describe-images --region us-east-2 --repository-name scholarchain-course/embedding-worker --image-ids imageTag=dddddddddddddddddddddddddddddddddddddddd --query imageDetails\[0\].imageDigest --output text 
+[2026-11-06T03:28:23Z] [20261106T032822Z-90455] INFO dry run: would require scholarchain-course/embedding-worker:dddddddddddddddddddddddddddddddddddddddd to resolve to sha256:fe3b338d60ef8b1fc7b13455586b923795181df90c6ce5046943bb68da79eff3
+STEP: delegate-plan
+[2026-11-06T03:28:23Z] [20261106T032822Z-90455] INFO re-plan through plan.sh (dry run shown below; it performs no aws or terraform command)
+[2026-11-06T03:28:23Z] [20261106T032822Z-90455] INFO after the real re-plan the receipt's action list is checked (STEP runtime-preservation): a plan that deletes or replaces a live runtime-class resource is refused
+CMD: bash /Users/danny/Documents/UIC/CS441/ScholarChain/scripts/plan.sh --env course --region us-east-2 --profile <profile> --source-commit 229ec917db5f45b8124ed6bf9b45045d1d08f8ae --image-revision dddddddddddddddddddddddddddddddddddddddd 
+  | CONFIG-FILE: using /var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-78ocl607/fixture-release.conf instead of the repository config (test-only SCHOLARCHAIN_CONFIG_FILE)
+  | STEP: start
+  | [2026-11-06T03:28:23Z] [20261106T032823Z-90754] INFO script=plan.sh mode=dry-run run_id=20261106T032823Z-90754 repo_root=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-78ocl607/repo
+  | STEP: inputs
+  | STEP: output-paths
+  | [2026-11-06T03:28:23Z] [20261106T032823Z-90754] INFO outputs stay inside target/plans (ignored, absent beforehand, distinct, private): plan, .json, .txt, .log, receipt; run directory target/plans/20261106T032823Z-90754
+  | STEP: terraform-version
+  | [2026-11-06T03:28:23Z] [20261106T032823Z-90754] INFO terraform 1.13.5 accepted (binary: terraform)
+  | STEP: materialize-source
+  | [2026-11-06T03:28:23Z] [20261106T032823Z-90754] INFO dry run: would extract infra/terraform as committed at 229ec917db5f45b8124ed6bf9b45045d1d08f8ae into target/plans/20261106T032823Z-90754/source/229ec917db5f45b8124ed6bf9b45045d1d08f8ae (read-only), bind it to the live state infra/terraform/terraform.tfstate and record the state's lineage, serial and sha256; nothing is read or written in a dry run
+  | [2026-11-06T03:28:23Z] [20261106T032823Z-90754] INFO env=course region=us-east-2 source_commit=229ec917db5f45b8124ed6bf9b45045d1d08f8ae scripts_commit=f6f75b9c44cd883900c1dd9ed5207f65aaaf7c38 clean=true plan=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-78ocl607/repo/target/plans/20261106T032823Z-90754/course-229ec917db5f45b8124ed6bf9b45045d1d08f8ae.tfplan
+  | STEP: account-identity
+  | DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 TF_DATA_DIR=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-78ocl607/repo/target/plans/20261106T032823Z-90754/tfdata aws sts get-caller-identity --region us-east-2 --query Account --output text 
+  | STEP: terraform-init
+  | DRY-RUN CMD: timeout=900s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 TF_DATA_DIR=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-78ocl607/repo/target/plans/20261106T032823Z-90754/tfdata terraform -chdir=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-78ocl607/repo/target/plans/20261106T032823Z-90754/source/229ec917db5f45b8124ed6bf9b45045d1d08f8ae/infra/terraform init -input=false -lockfile=readonly 
+  | STEP: terraform-plan
+  | DRY-RUN CMD: timeout=1800s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 TF_DATA_DIR=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-78ocl607/repo/target/plans/20261106T032823Z-90754/tfdata terraform -chdir=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-78ocl607/repo/target/plans/20261106T032823Z-90754/source/229ec917db5f45b8124ed6bf9b45045d1d08f8ae/infra/terraform plan -input=false -lock-timeout=60s -var-file=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-78ocl607/repo/target/plans/20261106T032823Z-90754/source/229ec917db5f45b8124ed6bf9b45045d1d08f8ae/infra/terraform/environments/course.tfvars -var-file=<redacted> -var=aws_region=us-east-2 -var=aws_profile=<profile> -var=image_revision=dddddddddddddddddddddddddddddddddddddddd -out=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-78ocl607/repo/target/plans/20261106T032823Z-90754/course-229ec917db5f45b8124ed6bf9b45045d1d08f8ae.tfplan 
+  | STEP: terraform-show
+  | DRY-RUN CMD: timeout=900s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 TF_DATA_DIR=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-78ocl607/repo/target/plans/20261106T032823Z-90754/tfdata terraform -chdir=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-78ocl607/repo/target/plans/20261106T032823Z-90754/source/229ec917db5f45b8124ed6bf9b45045d1d08f8ae/infra/terraform show -json /private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-78ocl607/repo/target/plans/20261106T032823Z-90754/course-229ec917db5f45b8124ed6bf9b45045d1d08f8ae.tfplan 
+  | STEP: terraform-show-text
+  | DRY-RUN CMD: timeout=900s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 TF_DATA_DIR=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-78ocl607/repo/target/plans/20261106T032823Z-90754/tfdata terraform -chdir=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-78ocl607/repo/target/plans/20261106T032823Z-90754/source/229ec917db5f45b8124ed6bf9b45045d1d08f8ae/infra/terraform show -no-color /private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-78ocl607/repo/target/plans/20261106T032823Z-90754/course-229ec917db5f45b8124ed6bf9b45045d1d08f8ae.tfplan 
+  | STEP: plan-receipt
+  | [2026-11-06T03:28:23Z] [20261106T032823Z-90754] INFO dry run: would check the saved plan's region, account, environment, project and image_revision, print PLAN-TEXT (path and sha256 of target/plans/20261106T032823Z-90754/course-229ec917db5f45b8124ed6bf9b45045d1d08f8ae.tfplan.txt), print every PLAN-ACTION, and write the receipt target/plans/20261106T032823Z-90754/course-229ec917db5f45b8124ed6bf9b45045d1d08f8ae.tfplan.receipt.json
+  | RESULT: DRY-RUN no aws or terraform command was run and no file was written; re-run with --execute (approval point 4) to plan
+STEP: delegate-deploy
+[2026-11-06T03:28:23Z] [20261106T032822Z-90455] INFO then, after the human writes a NEW approval record (and a fresh pre-spend receipt) for the rollback plan:
+DRY-RUN CMD: scripts/deploy.sh --region us-east-2 --plan <rollback-plan-file-printed-by-plan.sh-as-PLAN-FILE> --profile <profile> --stage runtime-apply --source-commit 229ec917db5f45b8124ed6bf9b45045d1d08f8ae --reuse-images /var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-78ocl607/deployed-manifest.json --execute 
+RESULT: DRY-RUN rollback verified locally; nothing was run; approval point 1 (a new Phase 14 record and pre-spend receipt) is required before deploy
+## fake tool log (2 call(s); version probe = the only allowed one):
+##   terraform version -json [profile=unset]
+##   terraform version -json [profile=unset]
+## calls other than the Terraform version probe: 0
+==============================================================================================================
+## rollback.sh --mode infra (runtime ENABLED) --deployed-push-record: dry run
+## exit code: 0
+CONFIG-FILE: using /var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-37lurvbw/fixture-release.conf instead of the repository config (test-only SCHOLARCHAIN_CONFIG_FILE)
+STEP: start
+[2026-11-06T03:28:23Z] [20261106T032823Z-91051] INFO script=rollback.sh mode=dry-run run_id=20261106T032823Z-91051 repo_root=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-37lurvbw/repo
+STEP: inputs
+STEP: terraform-version
+[2026-11-06T03:28:23Z] [20261106T032823Z-91051] INFO terraform 1.13.5 accepted (binary: terraform)
+STEP: previous-commit
+[2026-11-06T03:28:23Z] [20261106T032823Z-91051] INFO infrastructure rollback: the CURRENT scripts (HEAD 8c5a728b05471e1f86bada20319bab94c132b18b) run against infra/terraform as committed at 9fc4ba52043df0f2f0d2ef62ada159839e2cfd47, materialized read-only; no checkout is needed and the previous tree need not contain scripts/
+STEP: runtime-state
+[2026-11-06T03:28:23Z] [20261106T032823Z-91051] INFO RUNTIME-LIVE: yes (8 runtime-class resource instance(s) of module.runtime in the live state)
+STEP: deployed-revision
+[2026-11-06T03:28:23Z] [20261106T032823Z-91051] INFO keeping the running runtime at image revision dddddddddddddddddddddddddddddddddddddddd (the deployed manifest or push record binds it; deploy.sh also compares the account)
+[2026-11-06T03:28:23Z] [20261106T032823Z-91051] INFO recorded: query-api scholarchain-course/query-api:dddddddddddddddddddddddddddddddddddddddd sha256:e543858863ded180cd6e3943a198c0625cb28dc033035a383dca139debf7ebb4
+[2026-11-06T03:28:24Z] [20261106T032823Z-91051] INFO recorded: graph-service scholarchain-course/graph-service:dddddddddddddddddddddddddddddddddddddddd sha256:88044ebc710ec8bebc37395ef8197e20d467983e7865de9f83b77ea43f7bd9e1
+[2026-11-06T03:28:24Z] [20261106T032823Z-91051] INFO recorded: semantic-service scholarchain-course/semantic-service:dddddddddddddddddddddddddddddddddddddddd sha256:c593838f2059a33b23032ee10c66a1aadf19530dde9077f522d3f16392043001
+[2026-11-06T03:28:24Z] [20261106T032823Z-91051] INFO recorded: embedding-worker scholarchain-course/embedding-worker:dddddddddddddddddddddddddddddddddddddddd sha256:fe3b338d60ef8b1fc7b13455586b923795181df90c6ce5046943bb68da79eff3
+[2026-11-06T03:28:24Z] [20261106T032823Z-91051] INFO recorded:  : 
+STEP: verify-registry-digests
+DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws ecr describe-images --region us-east-2 --repository-name scholarchain-course/query-api --image-ids imageTag=dddddddddddddddddddddddddddddddddddddddd --query imageDetails\[0\].imageDigest --output text 
+[2026-11-06T03:28:24Z] [20261106T032823Z-91051] INFO dry run: would require scholarchain-course/query-api:dddddddddddddddddddddddddddddddddddddddd to resolve to sha256:e543858863ded180cd6e3943a198c0625cb28dc033035a383dca139debf7ebb4
+DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws ecr describe-images --region us-east-2 --repository-name scholarchain-course/graph-service --image-ids imageTag=dddddddddddddddddddddddddddddddddddddddd --query imageDetails\[0\].imageDigest --output text 
+[2026-11-06T03:28:24Z] [20261106T032823Z-91051] INFO dry run: would require scholarchain-course/graph-service:dddddddddddddddddddddddddddddddddddddddd to resolve to sha256:88044ebc710ec8bebc37395ef8197e20d467983e7865de9f83b77ea43f7bd9e1
+DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws ecr describe-images --region us-east-2 --repository-name scholarchain-course/semantic-service --image-ids imageTag=dddddddddddddddddddddddddddddddddddddddd --query imageDetails\[0\].imageDigest --output text 
+[2026-11-06T03:28:24Z] [20261106T032823Z-91051] INFO dry run: would require scholarchain-course/semantic-service:dddddddddddddddddddddddddddddddddddddddd to resolve to sha256:c593838f2059a33b23032ee10c66a1aadf19530dde9077f522d3f16392043001
+DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws ecr describe-images --region us-east-2 --repository-name scholarchain-course/embedding-worker --image-ids imageTag=dddddddddddddddddddddddddddddddddddddddd --query imageDetails\[0\].imageDigest --output text 
+[2026-11-06T03:28:24Z] [20261106T032823Z-91051] INFO dry run: would require scholarchain-course/embedding-worker:dddddddddddddddddddddddddddddddddddddddd to resolve to sha256:fe3b338d60ef8b1fc7b13455586b923795181df90c6ce5046943bb68da79eff3
+STEP: delegate-plan
+[2026-11-06T03:28:24Z] [20261106T032823Z-91051] INFO re-plan through plan.sh (dry run shown below; it performs no aws or terraform command)
+[2026-11-06T03:28:24Z] [20261106T032823Z-91051] INFO after the real re-plan the receipt's action list is checked (STEP runtime-preservation): a plan that deletes or replaces a live runtime-class resource is refused
+CMD: bash /Users/danny/Documents/UIC/CS441/ScholarChain/scripts/plan.sh --env course --region us-east-2 --profile <profile> --source-commit 9fc4ba52043df0f2f0d2ef62ada159839e2cfd47 --image-revision dddddddddddddddddddddddddddddddddddddddd 
+  | CONFIG-FILE: using /var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-37lurvbw/fixture-release.conf instead of the repository config (test-only SCHOLARCHAIN_CONFIG_FILE)
+  | STEP: start
+  | [2026-11-06T03:28:24Z] [20261106T032824Z-91383] INFO script=plan.sh mode=dry-run run_id=20261106T032824Z-91383 repo_root=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-37lurvbw/repo
+  | STEP: inputs
+  | STEP: output-paths
+  | [2026-11-06T03:28:24Z] [20261106T032824Z-91383] INFO outputs stay inside target/plans (ignored, absent beforehand, distinct, private): plan, .json, .txt, .log, receipt; run directory target/plans/20261106T032824Z-91383
+  | STEP: terraform-version
+  | [2026-11-06T03:28:24Z] [20261106T032824Z-91383] INFO terraform 1.13.5 accepted (binary: terraform)
+  | STEP: materialize-source
+  | [2026-11-06T03:28:24Z] [20261106T032824Z-91383] INFO dry run: would extract infra/terraform as committed at 9fc4ba52043df0f2f0d2ef62ada159839e2cfd47 into target/plans/20261106T032824Z-91383/source/9fc4ba52043df0f2f0d2ef62ada159839e2cfd47 (read-only), bind it to the live state infra/terraform/terraform.tfstate and record the state's lineage, serial and sha256; nothing is read or written in a dry run
+  | [2026-11-06T03:28:24Z] [20261106T032824Z-91383] INFO env=course region=us-east-2 source_commit=9fc4ba52043df0f2f0d2ef62ada159839e2cfd47 scripts_commit=8c5a728b05471e1f86bada20319bab94c132b18b clean=true plan=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-37lurvbw/repo/target/plans/20261106T032824Z-91383/course-9fc4ba52043df0f2f0d2ef62ada159839e2cfd47.tfplan
+  | STEP: account-identity
+  | DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 TF_DATA_DIR=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-37lurvbw/repo/target/plans/20261106T032824Z-91383/tfdata aws sts get-caller-identity --region us-east-2 --query Account --output text 
+  | STEP: terraform-init
+  | DRY-RUN CMD: timeout=900s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 TF_DATA_DIR=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-37lurvbw/repo/target/plans/20261106T032824Z-91383/tfdata terraform -chdir=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-37lurvbw/repo/target/plans/20261106T032824Z-91383/source/9fc4ba52043df0f2f0d2ef62ada159839e2cfd47/infra/terraform init -input=false -lockfile=readonly 
+  | STEP: terraform-plan
+  | DRY-RUN CMD: timeout=1800s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 TF_DATA_DIR=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-37lurvbw/repo/target/plans/20261106T032824Z-91383/tfdata terraform -chdir=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-37lurvbw/repo/target/plans/20261106T032824Z-91383/source/9fc4ba52043df0f2f0d2ef62ada159839e2cfd47/infra/terraform plan -input=false -lock-timeout=60s -var-file=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-37lurvbw/repo/target/plans/20261106T032824Z-91383/source/9fc4ba52043df0f2f0d2ef62ada159839e2cfd47/infra/terraform/environments/course.tfvars -var-file=<redacted> -var=aws_region=us-east-2 -var=aws_profile=<profile> -var=image_revision=dddddddddddddddddddddddddddddddddddddddd -out=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-37lurvbw/repo/target/plans/20261106T032824Z-91383/course-9fc4ba52043df0f2f0d2ef62ada159839e2cfd47.tfplan 
+  | STEP: terraform-show
+  | DRY-RUN CMD: timeout=900s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 TF_DATA_DIR=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-37lurvbw/repo/target/plans/20261106T032824Z-91383/tfdata terraform -chdir=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-37lurvbw/repo/target/plans/20261106T032824Z-91383/source/9fc4ba52043df0f2f0d2ef62ada159839e2cfd47/infra/terraform show -json /private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-37lurvbw/repo/target/plans/20261106T032824Z-91383/course-9fc4ba52043df0f2f0d2ef62ada159839e2cfd47.tfplan 
+  | STEP: terraform-show-text
+  | DRY-RUN CMD: timeout=900s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 TF_DATA_DIR=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-37lurvbw/repo/target/plans/20261106T032824Z-91383/tfdata terraform -chdir=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-37lurvbw/repo/target/plans/20261106T032824Z-91383/source/9fc4ba52043df0f2f0d2ef62ada159839e2cfd47/infra/terraform show -no-color /private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-37lurvbw/repo/target/plans/20261106T032824Z-91383/course-9fc4ba52043df0f2f0d2ef62ada159839e2cfd47.tfplan 
+  | STEP: plan-receipt
+  | [2026-11-06T03:28:24Z] [20261106T032824Z-91383] INFO dry run: would check the saved plan's region, account, environment, project and image_revision, print PLAN-TEXT (path and sha256 of target/plans/20261106T032824Z-91383/course-9fc4ba52043df0f2f0d2ef62ada159839e2cfd47.tfplan.txt), print every PLAN-ACTION, and write the receipt target/plans/20261106T032824Z-91383/course-9fc4ba52043df0f2f0d2ef62ada159839e2cfd47.tfplan.receipt.json
+  | RESULT: DRY-RUN no aws or terraform command was run and no file was written; re-run with --execute (approval point 4) to plan
+STEP: delegate-deploy
+[2026-11-06T03:28:24Z] [20261106T032823Z-91051] INFO then, after the human writes a NEW approval record (and a fresh pre-spend receipt) for the rollback plan:
+DRY-RUN CMD: scripts/deploy.sh --region us-east-2 --plan <rollback-plan-file-printed-by-plan.sh-as-PLAN-FILE> --profile <profile> --stage runtime-apply --source-commit 9fc4ba52043df0f2f0d2ef62ada159839e2cfd47 --image-revision dddddddddddddddddddddddddddddddddddddddd --push-record /var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-37lurvbw/repo/target/release/8c5a728b05471e1f86bada20319bab94c132b18b/push-record.json --execute 
+RESULT: DRY-RUN rollback verified locally; nothing was run; approval point 1 (a new Phase 14 record and pre-spend receipt) is required before deploy
+## fake tool log (2 call(s); version probe = the only allowed one):
+##   terraform version -json [profile=unset]
+##   terraform version -json [profile=unset]
+## calls other than the Terraform version probe: 0
+==============================================================================================================
+## rollback.sh --mode infra (runtime DISABLED in the state, no revision): dry run, as before
+## exit code: 0
+CONFIG-FILE: using /var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-jyl7vgmt/fixture-release.conf instead of the repository config (test-only SCHOLARCHAIN_CONFIG_FILE)
+STEP: start
+[2026-11-06T03:28:24Z] [20261106T032824Z-91635] INFO script=rollback.sh mode=dry-run run_id=20261106T032824Z-91635 repo_root=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-jyl7vgmt/repo
+STEP: inputs
+STEP: terraform-version
+[2026-11-06T03:28:24Z] [20261106T032824Z-91635] INFO terraform 1.13.5 accepted (binary: terraform)
+STEP: previous-commit
+[2026-11-06T03:28:24Z] [20261106T032824Z-91635] INFO infrastructure rollback: the CURRENT scripts (HEAD b343962d9b6a876aea3cdbb8f53e04aec00d3a50) run against infra/terraform as committed at 1069fa56ea02a543fffcad2ba88cf227bad1220f, materialized read-only; no checkout is needed and the previous tree need not contain scripts/
+STEP: runtime-state
+[2026-11-06T03:28:24Z] [20261106T032824Z-91635] INFO RUNTIME-LIVE: no (0 runtime-class resource instance(s) of module.runtime in the live state)
+STEP: delegate-plan
+[2026-11-06T03:28:24Z] [20261106T032824Z-91635] INFO re-plan through plan.sh (dry run shown below; it performs no aws or terraform command)
+[2026-11-06T03:28:24Z] [20261106T032824Z-91635] INFO after the real re-plan the receipt's action list is checked (STEP runtime-preservation): a plan that deletes or replaces a live runtime-class resource is refused
+CMD: bash /Users/danny/Documents/UIC/CS441/ScholarChain/scripts/plan.sh --env course --region us-east-2 --profile <profile> --source-commit 1069fa56ea02a543fffcad2ba88cf227bad1220f 
+  | CONFIG-FILE: using /var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-jyl7vgmt/fixture-release.conf instead of the repository config (test-only SCHOLARCHAIN_CONFIG_FILE)
+  | STEP: start
+  | [2026-11-06T03:28:24Z] [20261106T032824Z-91798] INFO script=plan.sh mode=dry-run run_id=20261106T032824Z-91798 repo_root=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-jyl7vgmt/repo
+  | STEP: inputs
+  | STEP: output-paths
+  | [2026-11-06T03:28:25Z] [20261106T032824Z-91798] INFO outputs stay inside target/plans (ignored, absent beforehand, distinct, private): plan, .json, .txt, .log, receipt; run directory target/plans/20261106T032824Z-91798
+  | STEP: terraform-version
+  | [2026-11-06T03:28:25Z] [20261106T032824Z-91798] INFO terraform 1.13.5 accepted (binary: terraform)
+  | STEP: materialize-source
+  | [2026-11-06T03:28:25Z] [20261106T032824Z-91798] INFO dry run: would extract infra/terraform as committed at 1069fa56ea02a543fffcad2ba88cf227bad1220f into target/plans/20261106T032824Z-91798/source/1069fa56ea02a543fffcad2ba88cf227bad1220f (read-only), bind it to the live state infra/terraform/terraform.tfstate and record the state's lineage, serial and sha256; nothing is read or written in a dry run
+  | [2026-11-06T03:28:25Z] [20261106T032824Z-91798] INFO env=course region=us-east-2 source_commit=1069fa56ea02a543fffcad2ba88cf227bad1220f scripts_commit=b343962d9b6a876aea3cdbb8f53e04aec00d3a50 clean=true plan=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-jyl7vgmt/repo/target/plans/20261106T032824Z-91798/course-1069fa56ea02a543fffcad2ba88cf227bad1220f.tfplan
+  | STEP: account-identity
+  | DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 TF_DATA_DIR=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-jyl7vgmt/repo/target/plans/20261106T032824Z-91798/tfdata aws sts get-caller-identity --region us-east-2 --query Account --output text 
+  | STEP: terraform-init
+  | DRY-RUN CMD: timeout=900s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 TF_DATA_DIR=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-jyl7vgmt/repo/target/plans/20261106T032824Z-91798/tfdata terraform -chdir=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-jyl7vgmt/repo/target/plans/20261106T032824Z-91798/source/1069fa56ea02a543fffcad2ba88cf227bad1220f/infra/terraform init -input=false -lockfile=readonly 
+  | STEP: terraform-plan
+  | DRY-RUN CMD: timeout=1800s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 TF_DATA_DIR=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-jyl7vgmt/repo/target/plans/20261106T032824Z-91798/tfdata terraform -chdir=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-jyl7vgmt/repo/target/plans/20261106T032824Z-91798/source/1069fa56ea02a543fffcad2ba88cf227bad1220f/infra/terraform plan -input=false -lock-timeout=60s -var-file=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-jyl7vgmt/repo/target/plans/20261106T032824Z-91798/source/1069fa56ea02a543fffcad2ba88cf227bad1220f/infra/terraform/environments/course.tfvars -var-file=<redacted> -var=aws_region=us-east-2 -var=aws_profile=<profile> -out=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-jyl7vgmt/repo/target/plans/20261106T032824Z-91798/course-1069fa56ea02a543fffcad2ba88cf227bad1220f.tfplan 
+  | STEP: terraform-show
+  | DRY-RUN CMD: timeout=900s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 TF_DATA_DIR=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-jyl7vgmt/repo/target/plans/20261106T032824Z-91798/tfdata terraform -chdir=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-jyl7vgmt/repo/target/plans/20261106T032824Z-91798/source/1069fa56ea02a543fffcad2ba88cf227bad1220f/infra/terraform show -json /private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-jyl7vgmt/repo/target/plans/20261106T032824Z-91798/course-1069fa56ea02a543fffcad2ba88cf227bad1220f.tfplan 
+  | STEP: terraform-show-text
+  | DRY-RUN CMD: timeout=900s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 TF_DATA_DIR=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-jyl7vgmt/repo/target/plans/20261106T032824Z-91798/tfdata terraform -chdir=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-jyl7vgmt/repo/target/plans/20261106T032824Z-91798/source/1069fa56ea02a543fffcad2ba88cf227bad1220f/infra/terraform show -no-color /private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-jyl7vgmt/repo/target/plans/20261106T032824Z-91798/course-1069fa56ea02a543fffcad2ba88cf227bad1220f.tfplan 
+  | STEP: plan-receipt
+  | [2026-11-06T03:28:25Z] [20261106T032824Z-91798] INFO dry run: would check the saved plan's region, account, environment, project and image_revision, print PLAN-TEXT (path and sha256 of target/plans/20261106T032824Z-91798/course-1069fa56ea02a543fffcad2ba88cf227bad1220f.tfplan.txt), print every PLAN-ACTION, and write the receipt target/plans/20261106T032824Z-91798/course-1069fa56ea02a543fffcad2ba88cf227bad1220f.tfplan.receipt.json
+  | RESULT: DRY-RUN no aws or terraform command was run and no file was written; re-run with --execute (approval point 4) to plan
+STEP: delegate-deploy
+[2026-11-06T03:28:25Z] [20261106T032824Z-91635] INFO then, after the human writes a NEW approval record (and a fresh pre-spend receipt) for the rollback plan:
+DRY-RUN CMD: scripts/deploy.sh --region us-east-2 --plan <rollback-plan-file-printed-by-plan.sh-as-PLAN-FILE> --profile <profile> --stage base-apply --source-commit 1069fa56ea02a543fffcad2ba88cf227bad1220f --skip-runtime-archive --execute 
+RESULT: DRY-RUN rollback verified locally; nothing was run; approval point 1 (a new Phase 14 record and pre-spend receipt) is required before deploy
+## fake tool log (2 call(s); version probe = the only allowed one):
+##   terraform version -json [profile=unset]
+##   terraform version -json [profile=unset]
+## calls other than the Terraform version probe: 0
+==============================================================================================================
+## rollback.sh --mode infra, runtime live, NO --deployed-*: refused (STEP runtime-state)
+## exit code: 3
+CONFIG-FILE: using /var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-c7gkptdj/fixture-release.conf instead of the repository config (test-only SCHOLARCHAIN_CONFIG_FILE)
+STEP: start
+[2026-11-06T03:28:25Z] [20261106T032825Z-92086] INFO script=rollback.sh mode=dry-run run_id=20261106T032825Z-92086 repo_root=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-c7gkptdj/repo
+STEP: inputs
+STEP: terraform-version
+[2026-11-06T03:28:25Z] [20261106T032825Z-92086] INFO terraform 1.13.5 accepted (binary: terraform)
+STEP: previous-commit
+[2026-11-06T03:28:25Z] [20261106T032825Z-92086] INFO infrastructure rollback: the CURRENT scripts (HEAD 814c7e0357446eac12d0d3c653949932dc2d4906) run against infra/terraform as committed at 7bbcc05c283716f01ff709c848bea0a10478128c, materialized read-only; no checkout is needed and the previous tree need not contain scripts/
+STEP: runtime-state
+[2026-11-06T03:28:25Z] [20261106T032825Z-92086] INFO RUNTIME-LIVE: yes (8 runtime-class resource instance(s) of module.runtime in the live state)
+RESULT: REFUSED step=runtime-state reason=the live state shows a RUNNING runtime: an infrastructure rollback must carry the deployed image revision (--deployed-manifest FILE or --deployed-push-record FILE); a plan without one would delete the runtime
+## fake tool log (1 call(s); version probe = the only allowed one):
+##   terraform version -json [profile=unset]
+## calls other than the Terraform version probe: 0
+==============================================================================================================
+## rollback.sh (application rollback, --previous-manifest): dry run
+## exit code: 0
+CONFIG-FILE: using /var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-peubxm5i/fixture-release.conf instead of the repository config (test-only SCHOLARCHAIN_CONFIG_FILE)
+STEP: start
+[2026-11-06T03:28:25Z] [20261106T032825Z-92388] INFO script=rollback.sh mode=dry-run run_id=20261106T032825Z-92388 repo_root=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-peubxm5i/repo
+STEP: inputs
+STEP: terraform-version
+[2026-11-06T03:28:25Z] [20261106T032825Z-92388] INFO terraform 1.13.5 accepted (binary: terraform)
+STEP: previous-manifest
+deploy manifest ok: image_revision=cccccccccccccccccccccccccccccccccccccccc
+[2026-11-06T03:28:26Z] [20261106T032825Z-92388] INFO rolling back to image revision cccccccccccccccccccccccccccccccccccccccc
+[2026-11-06T03:28:26Z] [20261106T032825Z-92388] INFO recorded: query-api scholarchain-course/query-api:cccccccccccccccccccccccccccccccccccccccc sha256:c6902fe0597eb49bf3584d9fb2a7757feb7bc61326707adb1c0af085b0e06ec8
+[2026-11-06T03:28:26Z] [20261106T032825Z-92388] INFO recorded: graph-service scholarchain-course/graph-service:cccccccccccccccccccccccccccccccccccccccc sha256:d04afe981d1e25ca5d97f4570a8c5c80867063bd049d4d7297fa10353ee9c468
+[2026-11-06T03:28:26Z] [20261106T032825Z-92388] INFO recorded: semantic-service scholarchain-course/semantic-service:cccccccccccccccccccccccccccccccccccccccc sha256:652f592d785d0d1fc10316f7f34b605d1d06f8d248662b9f6eda7176eb03d05c
+[2026-11-06T03:28:26Z] [20261106T032825Z-92388] INFO recorded: embedding-worker scholarchain-course/embedding-worker:cccccccccccccccccccccccccccccccccccccccc sha256:701d02c7ff448966ab0edfbbda19458e8b1bf8d977ff4110a96372cc56e55185
+STEP: verify-registry-digests
+DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws ecr describe-images --region us-east-2 --repository-name scholarchain-course/query-api --image-ids imageTag=cccccccccccccccccccccccccccccccccccccccc --query imageDetails\[0\].imageDigest --output text 
+[2026-11-06T03:28:26Z] [20261106T032825Z-92388] INFO dry run: would require scholarchain-course/query-api:cccccccccccccccccccccccccccccccccccccccc to resolve to sha256:c6902fe0597eb49bf3584d9fb2a7757feb7bc61326707adb1c0af085b0e06ec8
+DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws ecr describe-images --region us-east-2 --repository-name scholarchain-course/graph-service --image-ids imageTag=cccccccccccccccccccccccccccccccccccccccc --query imageDetails\[0\].imageDigest --output text 
+[2026-11-06T03:28:26Z] [20261106T032825Z-92388] INFO dry run: would require scholarchain-course/graph-service:cccccccccccccccccccccccccccccccccccccccc to resolve to sha256:d04afe981d1e25ca5d97f4570a8c5c80867063bd049d4d7297fa10353ee9c468
+DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws ecr describe-images --region us-east-2 --repository-name scholarchain-course/semantic-service --image-ids imageTag=cccccccccccccccccccccccccccccccccccccccc --query imageDetails\[0\].imageDigest --output text 
+[2026-11-06T03:28:26Z] [20261106T032825Z-92388] INFO dry run: would require scholarchain-course/semantic-service:cccccccccccccccccccccccccccccccccccccccc to resolve to sha256:652f592d785d0d1fc10316f7f34b605d1d06f8d248662b9f6eda7176eb03d05c
+DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws ecr describe-images --region us-east-2 --repository-name scholarchain-course/embedding-worker --image-ids imageTag=cccccccccccccccccccccccccccccccccccccccc --query imageDetails\[0\].imageDigest --output text 
+[2026-11-06T03:28:26Z] [20261106T032825Z-92388] INFO dry run: would require scholarchain-course/embedding-worker:cccccccccccccccccccccccccccccccccccccccc to resolve to sha256:701d02c7ff448966ab0edfbbda19458e8b1bf8d977ff4110a96372cc56e55185
+STEP: delegate-plan
+[2026-11-06T03:28:26Z] [20261106T032825Z-92388] INFO re-plan through plan.sh (dry run shown below; it performs no aws or terraform command)
+CMD: bash /Users/danny/Documents/UIC/CS441/ScholarChain/scripts/plan.sh --env course --region us-east-2 --profile <profile> --image-revision cccccccccccccccccccccccccccccccccccccccc 
+  | CONFIG-FILE: using /var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-peubxm5i/fixture-release.conf instead of the repository config (test-only SCHOLARCHAIN_CONFIG_FILE)
+  | STEP: start
+  | [2026-11-06T03:28:26Z] [20261106T032826Z-92606] INFO script=plan.sh mode=dry-run run_id=20261106T032826Z-92606 repo_root=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-peubxm5i/repo
+  | STEP: inputs
+  | STEP: output-paths
+  | [2026-11-06T03:28:26Z] [20261106T032826Z-92606] INFO outputs stay inside target/plans (ignored, absent beforehand, distinct, private): plan, .json, .txt, .log, receipt; run directory target/plans/20261106T032826Z-92606
+  | STEP: terraform-version
+  | [2026-11-06T03:28:26Z] [20261106T032826Z-92606] INFO terraform 1.13.5 accepted (binary: terraform)
+  | STEP: materialize-source
+  | [2026-11-06T03:28:26Z] [20261106T032826Z-92606] INFO dry run: would extract infra/terraform as committed at 814c7e0357446eac12d0d3c653949932dc2d4906 into target/plans/20261106T032826Z-92606/source/814c7e0357446eac12d0d3c653949932dc2d4906 (read-only), bind it to the live state infra/terraform/terraform.tfstate and record the state's lineage, serial and sha256; nothing is read or written in a dry run
+  | [2026-11-06T03:28:26Z] [20261106T032826Z-92606] INFO env=course region=us-east-2 source_commit=814c7e0357446eac12d0d3c653949932dc2d4906 scripts_commit=814c7e0357446eac12d0d3c653949932dc2d4906 clean=true plan=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-peubxm5i/repo/target/plans/20261106T032826Z-92606/course-814c7e0357446eac12d0d3c653949932dc2d4906.tfplan
+  | STEP: account-identity
+  | DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 TF_DATA_DIR=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-peubxm5i/repo/target/plans/20261106T032826Z-92606/tfdata aws sts get-caller-identity --region us-east-2 --query Account --output text 
+  | STEP: terraform-init
+  | DRY-RUN CMD: timeout=900s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 TF_DATA_DIR=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-peubxm5i/repo/target/plans/20261106T032826Z-92606/tfdata terraform -chdir=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-peubxm5i/repo/target/plans/20261106T032826Z-92606/source/814c7e0357446eac12d0d3c653949932dc2d4906/infra/terraform init -input=false -lockfile=readonly 
+  | STEP: terraform-plan
+  | DRY-RUN CMD: timeout=1800s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 TF_DATA_DIR=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-peubxm5i/repo/target/plans/20261106T032826Z-92606/tfdata terraform -chdir=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-peubxm5i/repo/target/plans/20261106T032826Z-92606/source/814c7e0357446eac12d0d3c653949932dc2d4906/infra/terraform plan -input=false -lock-timeout=60s -var-file=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-peubxm5i/repo/target/plans/20261106T032826Z-92606/source/814c7e0357446eac12d0d3c653949932dc2d4906/infra/terraform/environments/course.tfvars -var-file=<redacted> -var=aws_region=us-east-2 -var=aws_profile=<profile> -var=image_revision=cccccccccccccccccccccccccccccccccccccccc -out=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-peubxm5i/repo/target/plans/20261106T032826Z-92606/course-814c7e0357446eac12d0d3c653949932dc2d4906.tfplan 
+  | STEP: terraform-show
+  | DRY-RUN CMD: timeout=900s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 TF_DATA_DIR=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-peubxm5i/repo/target/plans/20261106T032826Z-92606/tfdata terraform -chdir=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-peubxm5i/repo/target/plans/20261106T032826Z-92606/source/814c7e0357446eac12d0d3c653949932dc2d4906/infra/terraform show -json /private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-peubxm5i/repo/target/plans/20261106T032826Z-92606/course-814c7e0357446eac12d0d3c653949932dc2d4906.tfplan 
+  | STEP: terraform-show-text
+  | DRY-RUN CMD: timeout=900s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 TF_DATA_DIR=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-peubxm5i/repo/target/plans/20261106T032826Z-92606/tfdata terraform -chdir=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-peubxm5i/repo/target/plans/20261106T032826Z-92606/source/814c7e0357446eac12d0d3c653949932dc2d4906/infra/terraform show -no-color /private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-peubxm5i/repo/target/plans/20261106T032826Z-92606/course-814c7e0357446eac12d0d3c653949932dc2d4906.tfplan 
+  | STEP: plan-receipt
+  | [2026-11-06T03:28:26Z] [20261106T032826Z-92606] INFO dry run: would check the saved plan's region, account, environment, project and image_revision, print PLAN-TEXT (path and sha256 of target/plans/20261106T032826Z-92606/course-814c7e0357446eac12d0d3c653949932dc2d4906.tfplan.txt), print every PLAN-ACTION, and write the receipt target/plans/20261106T032826Z-92606/course-814c7e0357446eac12d0d3c653949932dc2d4906.tfplan.receipt.json
+  | RESULT: DRY-RUN no aws or terraform command was run and no file was written; re-run with --execute (approval point 4) to plan
+STEP: delegate-deploy
+[2026-11-06T03:28:26Z] [20261106T032825Z-92388] INFO then, after the human writes a NEW approval record (and a fresh pre-spend receipt) for the rollback plan:
+DRY-RUN CMD: scripts/deploy.sh --region us-east-2 --plan <rollback-plan-file-printed-by-plan.sh-as-PLAN-FILE> --profile <profile> --stage runtime-apply --reuse-images /var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-peubxm5i/previous-deploy-manifest.json --execute 
+RESULT: DRY-RUN rollback verified locally; nothing was run; approval point 1 (a new Phase 14 record and pre-spend receipt) is required before deploy
+## fake tool log (2 call(s); version probe = the only allowed one):
+##   terraform version -json [profile=unset]
+##   terraform version -json [profile=unset]
+## calls other than the Terraform version probe: 0
+==============================================================================================================
+## rollback.sh --mode infra --plan <rollback plan> (delegated deploy.sh dry run): dry run
+## exit code: 0
+CONFIG-FILE: using /var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-2krjqp5j/fixture-release.conf instead of the repository config (test-only SCHOLARCHAIN_CONFIG_FILE)
+STEP: start
+[2026-11-06T03:28:28Z] [20261106T032828Z-93612] INFO script=rollback.sh mode=dry-run run_id=20261106T032828Z-93612 repo_root=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-2krjqp5j/repo
+STEP: inputs
+STEP: terraform-version
+[2026-11-06T03:28:28Z] [20261106T032828Z-93612] INFO terraform 1.13.5 accepted (binary: terraform)
+STEP: previous-commit
+[2026-11-06T03:28:28Z] [20261106T032828Z-93612] INFO infrastructure rollback: the CURRENT scripts (HEAD 2feeb0500adc1493e4a2ce607ec24c385640a18d) run against infra/terraform as committed at 257a5961f0794fd3940d5ad41dae0f0ca45f85a7, materialized read-only; no checkout is needed and the previous tree need not contain scripts/
+STEP: runtime-state
+[2026-11-06T03:28:28Z] [20261106T032828Z-93612] INFO RUNTIME-LIVE: yes (8 runtime-class resource instance(s) of module.runtime in the live state)
+STEP: deployed-revision
+deploy manifest ok: image_revision=dddddddddddddddddddddddddddddddddddddddd
+[2026-11-06T03:28:28Z] [20261106T032828Z-93612] INFO keeping the running runtime at image revision dddddddddddddddddddddddddddddddddddddddd (the deployed manifest or push record binds it; deploy.sh also compares the account)
+[2026-11-06T03:28:28Z] [20261106T032828Z-93612] INFO recorded: query-api scholarchain-course/query-api:dddddddddddddddddddddddddddddddddddddddd sha256:e543858863ded180cd6e3943a198c0625cb28dc033035a383dca139debf7ebb4
+[2026-11-06T03:28:28Z] [20261106T032828Z-93612] INFO recorded: graph-service scholarchain-course/graph-service:dddddddddddddddddddddddddddddddddddddddd sha256:88044ebc710ec8bebc37395ef8197e20d467983e7865de9f83b77ea43f7bd9e1
+[2026-11-06T03:28:28Z] [20261106T032828Z-93612] INFO recorded: semantic-service scholarchain-course/semantic-service:dddddddddddddddddddddddddddddddddddddddd sha256:c593838f2059a33b23032ee10c66a1aadf19530dde9077f522d3f16392043001
+[2026-11-06T03:28:28Z] [20261106T032828Z-93612] INFO recorded: embedding-worker scholarchain-course/embedding-worker:dddddddddddddddddddddddddddddddddddddddd sha256:fe3b338d60ef8b1fc7b13455586b923795181df90c6ce5046943bb68da79eff3
+STEP: verify-registry-digests
+DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws ecr describe-images --region us-east-2 --repository-name scholarchain-course/query-api --image-ids imageTag=dddddddddddddddddddddddddddddddddddddddd --query imageDetails\[0\].imageDigest --output text 
+[2026-11-06T03:28:28Z] [20261106T032828Z-93612] INFO dry run: would require scholarchain-course/query-api:dddddddddddddddddddddddddddddddddddddddd to resolve to sha256:e543858863ded180cd6e3943a198c0625cb28dc033035a383dca139debf7ebb4
+DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws ecr describe-images --region us-east-2 --repository-name scholarchain-course/graph-service --image-ids imageTag=dddddddddddddddddddddddddddddddddddddddd --query imageDetails\[0\].imageDigest --output text 
+[2026-11-06T03:28:28Z] [20261106T032828Z-93612] INFO dry run: would require scholarchain-course/graph-service:dddddddddddddddddddddddddddddddddddddddd to resolve to sha256:88044ebc710ec8bebc37395ef8197e20d467983e7865de9f83b77ea43f7bd9e1
+DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws ecr describe-images --region us-east-2 --repository-name scholarchain-course/semantic-service --image-ids imageTag=dddddddddddddddddddddddddddddddddddddddd --query imageDetails\[0\].imageDigest --output text 
+[2026-11-06T03:28:28Z] [20261106T032828Z-93612] INFO dry run: would require scholarchain-course/semantic-service:dddddddddddddddddddddddddddddddddddddddd to resolve to sha256:c593838f2059a33b23032ee10c66a1aadf19530dde9077f522d3f16392043001
+DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws ecr describe-images --region us-east-2 --repository-name scholarchain-course/embedding-worker --image-ids imageTag=dddddddddddddddddddddddddddddddddddddddd --query imageDetails\[0\].imageDigest --output text 
+[2026-11-06T03:28:28Z] [20261106T032828Z-93612] INFO dry run: would require scholarchain-course/embedding-worker:dddddddddddddddddddddddddddddddddddddddd to resolve to sha256:fe3b338d60ef8b1fc7b13455586b923795181df90c6ce5046943bb68da79eff3
+STEP: delegate-plan
+[2026-11-06T03:28:28Z] [20261106T032828Z-93612] INFO re-plan through plan.sh (dry run shown below; it performs no aws or terraform command)
+[2026-11-06T03:28:28Z] [20261106T032828Z-93612] INFO after the real re-plan the receipt's action list is checked (STEP runtime-preservation): a plan that deletes or replaces a live runtime-class resource is refused
+CMD: bash /Users/danny/Documents/UIC/CS441/ScholarChain/scripts/plan.sh --env course --region us-east-2 --profile <profile> --source-commit 257a5961f0794fd3940d5ad41dae0f0ca45f85a7 --image-revision dddddddddddddddddddddddddddddddddddddddd 
+  | CONFIG-FILE: using /var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-2krjqp5j/fixture-release.conf instead of the repository config (test-only SCHOLARCHAIN_CONFIG_FILE)
+  | STEP: start
+  | [2026-11-06T03:28:28Z] [20261106T032828Z-93826] INFO script=plan.sh mode=dry-run run_id=20261106T032828Z-93826 repo_root=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-2krjqp5j/repo
+  | STEP: inputs
+  | STEP: output-paths
+  | [2026-11-06T03:28:28Z] [20261106T032828Z-93826] INFO outputs stay inside target/plans (ignored, absent beforehand, distinct, private): plan, .json, .txt, .log, receipt; run directory target/plans/20261106T032828Z-93826
+  | STEP: terraform-version
+  | [2026-11-06T03:28:29Z] [20261106T032828Z-93826] INFO terraform 1.13.5 accepted (binary: terraform)
+  | STEP: materialize-source
+  | [2026-11-06T03:28:29Z] [20261106T032828Z-93826] INFO dry run: would extract infra/terraform as committed at 257a5961f0794fd3940d5ad41dae0f0ca45f85a7 into target/plans/20261106T032828Z-93826/source/257a5961f0794fd3940d5ad41dae0f0ca45f85a7 (read-only), bind it to the live state infra/terraform/terraform.tfstate and record the state's lineage, serial and sha256; nothing is read or written in a dry run
+  | [2026-11-06T03:28:29Z] [20261106T032828Z-93826] INFO env=course region=us-east-2 source_commit=257a5961f0794fd3940d5ad41dae0f0ca45f85a7 scripts_commit=2feeb0500adc1493e4a2ce607ec24c385640a18d clean=true plan=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-2krjqp5j/repo/target/plans/20261106T032828Z-93826/course-257a5961f0794fd3940d5ad41dae0f0ca45f85a7.tfplan
+  | STEP: account-identity
+  | DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 TF_DATA_DIR=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-2krjqp5j/repo/target/plans/20261106T032828Z-93826/tfdata aws sts get-caller-identity --region us-east-2 --query Account --output text 
+  | STEP: terraform-init
+  | DRY-RUN CMD: timeout=900s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 TF_DATA_DIR=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-2krjqp5j/repo/target/plans/20261106T032828Z-93826/tfdata terraform -chdir=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-2krjqp5j/repo/target/plans/20261106T032828Z-93826/source/257a5961f0794fd3940d5ad41dae0f0ca45f85a7/infra/terraform init -input=false -lockfile=readonly 
+  | STEP: terraform-plan
+  | DRY-RUN CMD: timeout=1800s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 TF_DATA_DIR=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-2krjqp5j/repo/target/plans/20261106T032828Z-93826/tfdata terraform -chdir=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-2krjqp5j/repo/target/plans/20261106T032828Z-93826/source/257a5961f0794fd3940d5ad41dae0f0ca45f85a7/infra/terraform plan -input=false -lock-timeout=60s -var-file=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-2krjqp5j/repo/target/plans/20261106T032828Z-93826/source/257a5961f0794fd3940d5ad41dae0f0ca45f85a7/infra/terraform/environments/course.tfvars -var-file=<redacted> -var=aws_region=us-east-2 -var=aws_profile=<profile> -var=image_revision=dddddddddddddddddddddddddddddddddddddddd -out=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-2krjqp5j/repo/target/plans/20261106T032828Z-93826/course-257a5961f0794fd3940d5ad41dae0f0ca45f85a7.tfplan 
+  | STEP: terraform-show
+  | DRY-RUN CMD: timeout=900s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 TF_DATA_DIR=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-2krjqp5j/repo/target/plans/20261106T032828Z-93826/tfdata terraform -chdir=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-2krjqp5j/repo/target/plans/20261106T032828Z-93826/source/257a5961f0794fd3940d5ad41dae0f0ca45f85a7/infra/terraform show -json /private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-2krjqp5j/repo/target/plans/20261106T032828Z-93826/course-257a5961f0794fd3940d5ad41dae0f0ca45f85a7.tfplan 
+  | STEP: terraform-show-text
+  | DRY-RUN CMD: timeout=900s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 TF_DATA_DIR=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-2krjqp5j/repo/target/plans/20261106T032828Z-93826/tfdata terraform -chdir=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-2krjqp5j/repo/target/plans/20261106T032828Z-93826/source/257a5961f0794fd3940d5ad41dae0f0ca45f85a7/infra/terraform show -no-color /private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-2krjqp5j/repo/target/plans/20261106T032828Z-93826/course-257a5961f0794fd3940d5ad41dae0f0ca45f85a7.tfplan 
+  | STEP: plan-receipt
+  | [2026-11-06T03:28:29Z] [20261106T032828Z-93826] INFO dry run: would check the saved plan's region, account, environment, project and image_revision, print PLAN-TEXT (path and sha256 of target/plans/20261106T032828Z-93826/course-257a5961f0794fd3940d5ad41dae0f0ca45f85a7.tfplan.txt), print every PLAN-ACTION, and write the receipt target/plans/20261106T032828Z-93826/course-257a5961f0794fd3940d5ad41dae0f0ca45f85a7.tfplan.receipt.json
+  | RESULT: DRY-RUN no aws or terraform command was run and no file was written; re-run with --execute (approval point 4) to plan
+STEP: delegate-deploy
+[2026-11-06T03:28:29Z] [20261106T032828Z-93612] INFO then, after the human writes a NEW approval record (and a fresh pre-spend receipt) for the rollback plan:
+DRY-RUN CMD: scripts/deploy.sh --region us-east-2 --plan /private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-2krjqp5j/repo/target/plans/20261106T032827Z-93103/course-257a5961f0794fd3940d5ad41dae0f0ca45f85a7.tfplan --profile <profile> --stage runtime-apply --source-commit 257a5961f0794fd3940d5ad41dae0f0ca45f85a7 --reuse-images /var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-2krjqp5j/deployed-manifest.json --approval /var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-2krjqp5j/human-gate.md --prespend /var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-2krjqp5j/prespend.json --execute 
+[2026-11-06T03:28:29Z] [20261106T032828Z-93612] INFO --plan was given: delegated deploy.sh dry run (local checks only)
+CMD: bash /Users/danny/Documents/UIC/CS441/ScholarChain/scripts/deploy.sh --region us-east-2 --plan /private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-2krjqp5j/repo/target/plans/20261106T032827Z-93103/course-257a5961f0794fd3940d5ad41dae0f0ca45f85a7.tfplan --profile <profile> --stage runtime-apply --source-commit 257a5961f0794fd3940d5ad41dae0f0ca45f85a7 --reuse-images /var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-2krjqp5j/deployed-manifest.json --approval /var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-2krjqp5j/human-gate.md --prespend /var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-2krjqp5j/prespend.json 
+  | CONFIG-FILE: using /var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-2krjqp5j/fixture-release.conf instead of the repository config (test-only SCHOLARCHAIN_CONFIG_FILE)
+  | STEP: start
+  | [2026-11-06T03:28:29Z] [20261106T032829Z-94012] INFO script=deploy.sh mode=dry-run run_id=20261106T032829Z-94012 repo_root=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-2krjqp5j/repo
+  | STEP: inputs
+  | STEP: terraform-version
+  | [2026-11-06T03:28:29Z] [20261106T032829Z-94012] INFO terraform 1.13.5 accepted (binary: terraform)
+  | STEP: clean-tree
+  | [2026-11-06T03:28:29Z] [20261106T032829Z-94012] INFO clean tree at 2feeb0500adc1493e4a2ce607ec24c385640a18d
+  | STEP: approval-record
+  | STEP: stage-match
+  | STEP: approval-record
+  | [2026-11-06T03:28:29Z] [20261106T032829Z-94012] INFO approval record parsed (8 required lines, each exactly once)
+  | STEP: commit-match
+  | STEP: region-match
+  | STEP: environment-match
+  | STEP: prespend-receipt
+  | pre-spend receipt ok: monitoring active, snapshot 1.0 h old, headroom 150.25 USD
+  | STEP: image-revision-binding
+  | deploy manifest ok: image_revision=dddddddddddddddddddddddddddddddddddddddd
+  | [2026-11-06T03:28:29Z] [20261106T032829Z-94012] INFO infrastructure rollback that KEEPS the runtime: Terraform source 257a5961f0794fd3940d5ad41dae0f0ca45f85a7 (scripts at 2feeb0500adc1493e4a2ce607ec24c385640a18d) carries the deployed image revision dddddddddddddddddddddddddddddddddddddddd, bound to the verified previous deploy manifest of a runtime-apply
+  | STEP: plan-checksum
+  | [2026-11-06T03:28:29Z] [20261106T032829Z-94012] INFO plan sha256 matches the approval record (verified private copy; the copy is what is applied)
+  | STEP: plan-provenance
+  | plan provenance ok: receipt binds plan sha256, clean source commit, account, region, environment and revision
+  | STEP: state-binding
+  | [2026-11-06T03:28:29Z] [20261106T032829Z-94012] INFO state binding ok: lineage aaaabbbb-cccc-dddd-eeee-ffff00001111 serial 7 sha256 70dfa486495fa31bb4273830c8b01cdc7edb63a1bb78050d8f14cca2d5d92086
+  | STEP: plan-inspect
+  | [2026-11-06T03:28:29Z] [20261106T032829Z-94012] INFO dry run: the inspection of the verified plan is DEFERRED to --execute (nothing beyond the version probe runs now); it will materialize 257a5961f0794fd3940d5ad41dae0f0ca45f85a7, compare its tree hash with the receipt, then run:
+  | DRY-RUN CMD: timeout=900s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 TF_DATA_DIR=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-2krjqp5j/repo/target/plans/20261106T032829Z-94012/tfdata terraform -chdir=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-2krjqp5j/repo/target/plans/20261106T032829Z-94012/source/257a5961f0794fd3940d5ad41dae0f0ca45f85a7/infra/terraform init -input=false -lockfile=readonly 
+  | DRY-RUN CMD: timeout=900s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 TF_DATA_DIR=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-2krjqp5j/repo/target/plans/20261106T032829Z-94012/tfdata terraform -chdir=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-2krjqp5j/repo/target/plans/20261106T032829Z-94012/source/257a5961f0794fd3940d5ad41dae0f0ca45f85a7/infra/terraform show -json <verified-private-copy-of-course-257a5961f0794fd3940d5ad41dae0f0ca45f85a7.tfplan> 
+  | [2026-11-06T03:28:29Z] [20261106T032829Z-94012] INFO dry run: its planned region, account hash, environment, project and image_revision must then match the approval record
+  | STEP: runtime-preservation
+  | RUNTIME-LIVE: yes (8 runtime-class resource instance(s) of module.runtime in the live state)
+  | runtime preservation ok: the plan deletes or replaces no runtime-class resource of the live runtime
+  | [2026-11-06T03:28:29Z] [20261106T032829Z-94012] INFO dry run: the verified plan's own terraform show -json is checked the same way at --execute (deferred with the other inspection)
+  | STEP: release-manifest
+  | [2026-11-06T03:28:29Z] [20261106T032829Z-94012] INFO rollback mode: reusing images already in the registry for revision dddddddddddddddddddddddddddddddddddddddd; nothing will be pushed
+  | STEP: runtime-archive
+  | [2026-11-06T03:28:29Z] [20261106T032829Z-94012] INFO the runtime archive upload belongs to --stage base-apply only
+  | STEP: account-check
+  | DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws sts get-caller-identity --region us-east-2 --query Account --output text 
+  | [2026-11-06T03:28:29Z] [20261106T032829Z-94012] INFO dry run: the account comparison runs only with --execute, before any mutating command
+  | STEP: ecr-repositories-exist
+  | DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws ecr describe-repositories --region us-east-2 --repository-names scholarchain-course/query-api --query repositories\[0\].repositoryName --output text 
+  | DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws ecr describe-repositories --region us-east-2 --repository-names scholarchain-course/graph-service --query repositories\[0\].repositoryName --output text 
+  | DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws ecr describe-repositories --region us-east-2 --repository-names scholarchain-course/semantic-service --query repositories\[0\].repositoryName --output text 
+  | DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws ecr describe-repositories --region us-east-2 --repository-names scholarchain-course/embedding-worker --query repositories\[0\].repositoryName --output text 
+  | STEP: verify-registry-images
+  | DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws ecr describe-images --region us-east-2 --repository-name scholarchain-course/query-api --image-ids imageTag=dddddddddddddddddddddddddddddddddddddddd --query imageDetails\[0\].imageDigest --output text 
+  | [2026-11-06T03:28:29Z] [20261106T032829Z-94012] INFO dry run: would require scholarchain-course/query-api:dddddddddddddddddddddddddddddddddddddddd to resolve to recorded digest sha256:e543858863ded180cd6e3943a198c0625cb28dc033035a383dca139debf7ebb4
+  | DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws ecr describe-images --region us-east-2 --repository-name scholarchain-course/graph-service --image-ids imageTag=dddddddddddddddddddddddddddddddddddddddd --query imageDetails\[0\].imageDigest --output text 
+  | [2026-11-06T03:28:29Z] [20261106T032829Z-94012] INFO dry run: would require scholarchain-course/graph-service:dddddddddddddddddddddddddddddddddddddddd to resolve to recorded digest sha256:88044ebc710ec8bebc37395ef8197e20d467983e7865de9f83b77ea43f7bd9e1
+  | DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws ecr describe-images --region us-east-2 --repository-name scholarchain-course/semantic-service --image-ids imageTag=dddddddddddddddddddddddddddddddddddddddd --query imageDetails\[0\].imageDigest --output text 
+  | [2026-11-06T03:28:29Z] [20261106T032829Z-94012] INFO dry run: would require scholarchain-course/semantic-service:dddddddddddddddddddddddddddddddddddddddd to resolve to recorded digest sha256:c593838f2059a33b23032ee10c66a1aadf19530dde9077f522d3f16392043001
+  | DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws ecr describe-images --region us-east-2 --repository-name scholarchain-course/embedding-worker --image-ids imageTag=dddddddddddddddddddddddddddddddddddddddd --query imageDetails\[0\].imageDigest --output text 
+  | [2026-11-06T03:28:29Z] [20261106T032829Z-94012] INFO dry run: would require scholarchain-course/embedding-worker:dddddddddddddddddddddddddddddddddddddddd to resolve to recorded digest sha256:fe3b338d60ef8b1fc7b13455586b923795181df90c6ce5046943bb68da79eff3
+  | STEP: terraform-apply
+  | [2026-11-06T03:28:29Z] [20261106T032829Z-94012] INFO dry run: the pre-spend receipt would be re-verified immediately before terraform-apply
+  | [2026-11-06T03:28:29Z] [20261106T032829Z-94012] INFO dry run: the plan copy's hash and the state binding would be re-verified immediately before apply
+  | DRY-RUN CMD: timeout=3600s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 TF_DATA_DIR=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-2krjqp5j/repo/target/plans/20261106T032829Z-94012/tfdata terraform -chdir=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-2krjqp5j/repo/target/plans/20261106T032829Z-94012/source/257a5961f0794fd3940d5ad41dae0f0ca45f85a7/infra/terraform apply -input=false -lock-timeout=60s /var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-2krjqp5j/sc-tmp.sniYNW/copy-course-257a5961f0794fd3940d5ad41dae0f0ca45f85a7.tfplan-94012-2-0-3491 
+  | STEP: record-ecs
+  | DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws ecs describe-services --region us-east-2 --cluster scholarchain-course --services query-api graph-service semantic-service embedding-worker --query services\[\].\[serviceName\,taskDefinition\] --output text 
+  | DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws ecs describe-task-definition --region us-east-2 --task-definition <query-api-task-definition-arn> --query taskDefinition.containerDefinitions\[\].image --output text 
+  | DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws ecs describe-task-definition --region us-east-2 --task-definition <graph-service-task-definition-arn> --query taskDefinition.containerDefinitions\[\].image --output text 
+  | DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws ecs describe-task-definition --region us-east-2 --task-definition <semantic-service-task-definition-arn> --query taskDefinition.containerDefinitions\[\].image --output text 
+  | DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws ecs describe-task-definition --region us-east-2 --task-definition <embedding-worker-task-definition-arn> --query taskDefinition.containerDefinitions\[\].image --output text 
+  | [2026-11-06T03:28:29Z] [20261106T032829Z-94012] INFO dry run: each task definition image must equal <acct>.dkr.ecr.us-east-2.amazonaws.com/scholarchain-course/<service>:dddddddddddddddddddddddddddddddddddddddd (or the verified digest)
+  | STEP: write-deploy-manifest
+  | [2026-11-06T03:28:29Z] [20261106T032829Z-94012] INFO dry run: would write target/release/2feeb0500adc1493e4a2ce607ec24c385640a18d/deploy-manifest-runtime-apply-20261106T032829Z-94012.json (stage, digests, task-definition ARNs, plan sha256, commit, region, account sha256)
+  | RESULT: DRY-RUN all local checks passed (stage runtime-apply: approval record, pre-spend receipt, plan, receipt, state binding); no mutating command was run
+RESULT: DRY-RUN rollback verified locally; nothing was run; approval point 1 (a new Phase 14 record and pre-spend receipt) is required before deploy
+## fake tool log (3 call(s); version probe = the only allowed one):
+##   terraform version -json [profile=unset]
+##   terraform version -json [profile=unset]
+##   terraform version -json [profile=unset]
+## calls other than the Terraform version probe: 0

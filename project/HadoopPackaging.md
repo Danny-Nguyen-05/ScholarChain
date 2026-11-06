@@ -53,6 +53,14 @@ Or via the aggregate alias (also packages Spark; this alias does not build the s
 sbt -batch packageJobs
 ```
 
+### Java 17 guard and release alias
+
+Every packaging task (module `package`/`packageBin`, `assembly`, `hadoopDependencyBundle`, `hadoopSubmitJar`, `sparkJobJar`, `serviceDistribution`, `dockerLocalImage`) and the `packageJobs` and `packageRelease` aliases run `checkJava17` first, so a non-Java-17 sbt JVM fails with the `Java17Guard` message before any artifact is written. `packageRelease` builds the hadoop submit JAR, the hadoop dependency bundle, the Spark job JAR and the service distribution (no Docker images):
+
+```bash
+sbt -batch packageRelease
+```
+
 ### Thin Hadoop module JAR
 
 Path pattern (`scalaBinaryVersion` and `version` follow `ThisBuild / scalaVersion` and `ThisBuild / version`):

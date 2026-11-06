@@ -1,0 +1,37 @@
+Clean snapshot for F9 (orchestrator, 2026-11-05)
+
+Built from `git ls-files -co --exclude-standard` (tracked plus non-ignored untracked files). That is base 8bee663040ba4e66b1edc1676d5346621c3f7384 plus the uncommitted 13A and repair-1 changes.
+
+Ignored files were excluded: target/, .terraform/, *.local.tfvars, the generated test marker, and saved plans.
+
+Copied with `rsync --from0 --files-from` into a fresh scratch directory. Then `git init` and one local snapshot commit, 1076eef903053656fc8c71c6c23a27d0228b1261. That commit exists only in the temporary scratch repo, not in the project repository.
+
+File count: 5394, including docs/agent-runs/phase-13 as it was at copy time.
+
+Command (in the snapshot root): scripts/check.sh
+Result: RESULT: PASS gates=7, exit=0. Start 2026-11-05T21:13:51Z, end 2026-11-05T21:36:05Z.
+
+| Gate | Result |
+|---|---|
+| constitution | PASS |
+| hooks | PASS |
+| shell | PASS |
+| python | PASS |
+| script-tests | PASS, 440 s |
+| sbt | PASS, 787 s |
+| terraform | PASS, 102 s |
+
+script-tests suites (counted after skips; 0 skipped in each):
+- scripts/tests: 281 executed
+- phase12d-spike: 70 executed
+- billing test_budget_execution: 69 executed
+- billing test_budget_verification: 47 executed
+- billing test_publication_evidence: 39 executed
+
+sbt test summaries: 40/0, 667/0, 18 with 1 canceled (the optional live JDK probe)/0.
+
+terraform roots: 7, 19, 29, 38, 6 and 40 (root) passed, 0 failed each.
+
+The snapshot had no `.terraform` directory beforehand. The terraform gate ran `init -backend=false -lockfile=readonly`, which downloaded providers.
+
+Post-run identity check: `cmp` of every working-tree source file outside docs/agent-runs/phase-13 against the snapshot gave compared=5361, differing=0.

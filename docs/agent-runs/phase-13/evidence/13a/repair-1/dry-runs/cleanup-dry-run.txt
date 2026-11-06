@@ -1,0 +1,34 @@
+# exit code: 0
+CONFIG-FILE: using /var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-j4gkud6z/fixture-release.conf instead of the repository config (test-only SCHOLARCHAIN_CONFIG_FILE)
+STEP: start
+[2026-11-05T21:10:30Z] [20261105T211030Z-24926] INFO script=cleanup.sh mode=dry-run run_id=20261105T211030Z-24926 repo_root=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-j4gkud6z/repo
+STEP: inputs
+STEP: terraform-version
+[2026-11-05T21:10:30Z] [20261105T211030Z-24926] INFO terraform 1.13.5 accepted (binary: terraform)
+STEP: preserve-list
+PRESERVE: terraform-state
+PRESERVE: s3-buckets-and-objects
+PRESERVE: s3-vectors
+PRESERVE: kms-keys-and-policies
+PRESERVE: grading-log-groups
+PRESERVE-RULES types: aws_s3_bucket,aws_s3_object,aws_s3vectors_,aws_kms_,aws_cloudwatch_log_group
+PRESERVE-RULES addresses: module.foundation.,module.datalake.,module.s3vectors.
+TEARDOWN-RULES addresses: module.runtime.,module.emr.,module.neptune.,module.dynamodb.,module.messaging.,module.workflow.,module.network.,module.identity.aws_iam_role.task,module.identity.aws_iam_role.execution,module.identity.aws_iam_role.emr_ec2,module.identity.aws_iam_role.emr_service,module.identity.aws_iam_role.neptune_loader,module.identity.aws_iam_role_policy.,module.identity.aws_iam_instance_profile.emr,module.observability.aws_cloudwatch_metric_alarm.,module.observability.aws_cloudwatch_dashboard.
+STEP: before-inventory
+DRY-RUN CMD: timeout=900s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 terraform -chdir=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-j4gkud6z/repo/infra/terraform/deployer state list 
+DRY-RUN CMD: timeout=900s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 terraform -chdir=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-j4gkud6z/repo/infra/terraform state list 
+DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws resourcegroupstaggingapi get-resources --region us-east-2 --tag-filters Key=project,Values=scholarchain Key=environment,Values=course --output json 
+STEP: destroy-commands
+[2026-11-05T21:10:30Z] [20261105T211030Z-24926] INFO execute (1: listing, no --confirm) would classify the destroy root's state, then for each destroy root (infra/terraform):
+DRY-RUN CMD: timeout=1800s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 terraform -chdir=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-j4gkud6z/repo/infra/terraform plan -destroy -input=false -lock-timeout=60s -var-file=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-j4gkud6z/repo/infra/terraform/environments/course.tfvars -var-file=<redacted> -var=aws_region=us-east-2 -var=aws_profile=<profile> -var=cleanup_mode=true -target=<each-teardown-address-from-the-classified-state-list> -out=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-j4gkud6z/repo/target/plans/destroy-course.tfplan 
+DRY-RUN CMD: timeout=900s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 terraform -chdir=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-j4gkud6z/repo/infra/terraform show -json /private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-j4gkud6z/repo/target/plans/destroy-course.tfplan 
+DRY-RUN CMD: timeout=900s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 terraform -chdir=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-j4gkud6z/repo/infra/terraform show -no-color /private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-j4gkud6z/repo/target/plans/destroy-course.tfplan 
+[2026-11-05T21:10:30Z] [20261105T211030Z-24926] INFO dry run: would check the saved plan against the preservation policy, print every DESTROY-ACTION and DESTROY-PLAN-SHA256, then CONFIRM-TOKEN (binds plan sha256, account sha256, region, environment, sorted actions)
+[2026-11-05T21:10:30Z] [20261105T211030Z-24926] INFO execute (2: --confirm TOKEN) would NOT re-plan: it verifies a private copy of that saved plan against the token and the live account, then applies the verified copy:
+DRY-RUN CMD: timeout=3600s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 terraform -chdir=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-j4gkud6z/repo/infra/terraform apply -input=false -lock-timeout=60s <verified-private-copy-of-destroy-course.tfplan> 
+STEP: after-inventory
+DRY-RUN CMD: timeout=900s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 terraform -chdir=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-j4gkud6z/repo/infra/terraform/deployer state list 
+DRY-RUN CMD: timeout=900s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 terraform -chdir=/private/var/folders/qc/g7ywb7q101x0zzdwf6wrl_k40000gn/T/sc-p13-test-j4gkud6z/repo/infra/terraform state list 
+DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 AWS_PAGER= aws resourcegroupstaggingapi get-resources --region us-east-2 --tag-filters Key=project,Values=scholarchain Key=environment,Values=course --output json 
+[2026-11-05T21:10:31Z] [20261105T211030Z-24926] INFO dry run: evidence would go to target/cleanup-evidence/20261105T211030Z-24926 (before-inventory.txt, after-inventory.txt, destroy-plan.sha256, destroy-actions.txt)
+RESULT: DRY-RUN no aws or terraform command was run; --execute lists the destructive actions first, then needs --confirm <token>

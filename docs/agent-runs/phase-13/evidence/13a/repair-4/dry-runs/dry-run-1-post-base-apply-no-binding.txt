@@ -1,0 +1,44 @@
+# rollback.sh --env course --region us-east-2 --mode infra --previous-commit <prev> (dry run; fixture state: 1-post-base-apply-no-binding)
+# exit=0 last_step=delegate-deploy non-version tool calls=0
+CONFIG-FILE: using <fixture-tmp>/fixture-release.conf instead of the repository config (test-only SCHOLARCHAIN_CONFIG_FILE)
+STEP: start
+[2026-11-06T05:09:21Z] [20261106T050921Z-15838] INFO script=rollback.sh mode=dry-run run_id=20261106T050921Z-15838 repo_root=/private<fixture-tmp>/repo
+STEP: inputs
+STEP: terraform-version
+[2026-11-06T05:09:21Z] [20261106T050921Z-15838] INFO terraform 1.13.5 accepted (binary: terraform)
+STEP: previous-commit
+[2026-11-06T05:09:21Z] [20261106T050921Z-15838] INFO infrastructure rollback: the CURRENT scripts (HEAD 9957ca37cc8bf5107a80b038424fd95e4d8022a9) run against infra/terraform as committed at e2c391c9f8cd5009e379034cca1c6a45166f4f76, materialized read-only; no checkout is needed and the previous tree need not contain scripts/
+STEP: runtime-state
+[2026-11-06T05:09:21Z] [20261106T050921Z-15838] INFO RUNTIME-LIVE: no (0 deployed-runtime indicator instance(s) of module.runtime in the live state: aws_ecs_service=0 aws_lb=0 aws_lb_target_group=0 aws_lb_listener=0; a complete runtime has aws_ecs_service=4 aws_lb=1 aws_lb_target_group=1 aws_lb_listener=0-1; the ECS cluster and ECR repositories of a runtime-disabled base apply are not indicators)
+STEP: delegate-plan
+[2026-11-06T05:09:21Z] [20261106T050921Z-15838] INFO re-plan through plan.sh (dry run shown below; it performs no aws or terraform command)
+[2026-11-06T05:09:21Z] [20261106T050921Z-15838] INFO after the real re-plan the receipt's action list is checked (STEP runtime-preservation): a plan that deletes or replaces a live runtime-class resource is refused
+CMD: bash /Users/danny/Documents/UIC/CS441/ScholarChain/scripts/plan.sh --env course --region us-east-2 --profile <profile> --source-commit e2c391c9f8cd5009e379034cca1c6a45166f4f76 
+  | CONFIG-FILE: using <fixture-tmp>/fixture-release.conf instead of the repository config (test-only SCHOLARCHAIN_CONFIG_FILE)
+  | STEP: start
+  | [2026-11-06T05:09:21Z] [20261106T050921Z-15917] INFO script=plan.sh mode=dry-run run_id=20261106T050921Z-15917 repo_root=/private<fixture-tmp>/repo
+  | STEP: inputs
+  | STEP: output-paths
+  | [2026-11-06T05:09:21Z] [20261106T050921Z-15917] INFO outputs stay inside target/plans (ignored, absent beforehand, distinct, private): plan, .json, .txt, .log, receipt; run directory target/plans/20261106T050921Z-15917
+  | STEP: terraform-version
+  | [2026-11-06T05:09:21Z] [20261106T050921Z-15917] INFO terraform 1.13.5 accepted (binary: terraform)
+  | STEP: materialize-source
+  | [2026-11-06T05:09:21Z] [20261106T050921Z-15917] INFO dry run: would extract infra/terraform as committed at e2c391c9f8cd5009e379034cca1c6a45166f4f76 into target/plans/20261106T050921Z-15917/source/e2c391c9f8cd5009e379034cca1c6a45166f4f76 (read-only), bind it to the live state infra/terraform/terraform.tfstate and record the state's lineage, serial and sha256; nothing is read or written in a dry run
+  | [2026-11-06T05:09:21Z] [20261106T050921Z-15917] INFO env=course region=us-east-2 source_commit=e2c391c9f8cd5009e379034cca1c6a45166f4f76 scripts_commit=9957ca37cc8bf5107a80b038424fd95e4d8022a9 clean=true plan=/private<fixture-tmp>/repo/target/plans/20261106T050921Z-15917/course-e2c391c9f8cd5009e379034cca1c6a45166f4f76.tfplan
+  | STEP: account-identity
+  | DRY-RUN CMD: timeout=120s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 TF_DATA_DIR=/private<fixture-tmp>/repo/target/plans/20261106T050921Z-15917/tfdata aws sts get-caller-identity --region us-east-2 --query Account --output text 
+  | STEP: terraform-init
+  | DRY-RUN CMD: timeout=900s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 TF_DATA_DIR=/private<fixture-tmp>/repo/target/plans/20261106T050921Z-15917/tfdata terraform -chdir=/private<fixture-tmp>/repo/target/plans/20261106T050921Z-15917/source/e2c391c9f8cd5009e379034cca1c6a45166f4f76/infra/terraform init -input=false -lockfile=readonly 
+  | STEP: terraform-plan
+  | DRY-RUN CMD: timeout=1800s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 TF_DATA_DIR=/private<fixture-tmp>/repo/target/plans/20261106T050921Z-15917/tfdata terraform -chdir=/private<fixture-tmp>/repo/target/plans/20261106T050921Z-15917/source/e2c391c9f8cd5009e379034cca1c6a45166f4f76/infra/terraform plan -input=false -lock-timeout=60s -var-file=/private<fixture-tmp>/repo/target/plans/20261106T050921Z-15917/source/e2c391c9f8cd5009e379034cca1c6a45166f4f76/infra/terraform/environments/course.tfvars -var-file=<private-vars-file> -var=aws_region=us-east-2 -var=aws_profile=<profile> -out=/private<fixture-tmp>/repo/target/plans/20261106T050921Z-15917/course-e2c391c9f8cd5009e379034cca1c6a45166f4f76.tfplan 
+  | STEP: terraform-show
+  | DRY-RUN CMD: timeout=900s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 TF_DATA_DIR=/private<fixture-tmp>/repo/target/plans/20261106T050921Z-15917/tfdata terraform -chdir=/private<fixture-tmp>/repo/target/plans/20261106T050921Z-15917/source/e2c391c9f8cd5009e379034cca1c6a45166f4f76/infra/terraform show -json /private<fixture-tmp>/repo/target/plans/20261106T050921Z-15917/course-e2c391c9f8cd5009e379034cca1c6a45166f4f76.tfplan 
+  | STEP: terraform-show-text
+  | DRY-RUN CMD: timeout=900s env AWS_PROFILE=<profile> AWS_REGION=us-east-2 TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 TF_DATA_DIR=/private<fixture-tmp>/repo/target/plans/20261106T050921Z-15917/tfdata terraform -chdir=/private<fixture-tmp>/repo/target/plans/20261106T050921Z-15917/source/e2c391c9f8cd5009e379034cca1c6a45166f4f76/infra/terraform show -no-color /private<fixture-tmp>/repo/target/plans/20261106T050921Z-15917/course-e2c391c9f8cd5009e379034cca1c6a45166f4f76.tfplan 
+  | STEP: plan-receipt
+  | [2026-11-06T05:09:22Z] [20261106T050921Z-15917] INFO dry run: would check the saved plan's region, account, environment, project and image_revision, print PLAN-TEXT (path and sha256 of target/plans/20261106T050921Z-15917/course-e2c391c9f8cd5009e379034cca1c6a45166f4f76.tfplan.txt), print every PLAN-ACTION, and write the receipt target/plans/20261106T050921Z-15917/course-e2c391c9f8cd5009e379034cca1c6a45166f4f76.tfplan.receipt.json
+  | RESULT: DRY-RUN no aws or terraform command was run and no file was written; re-run with --execute (approval point 4) to plan
+STEP: delegate-deploy
+[2026-11-06T05:09:22Z] [20261106T050921Z-15838] INFO then, after the human writes a NEW approval record (and a fresh pre-spend receipt) for the rollback plan:
+DRY-RUN CMD: scripts/deploy.sh --region us-east-2 --plan <rollback-plan-file-printed-by-plan.sh-as-PLAN-FILE> --profile <profile> --stage base-apply --source-commit e2c391c9f8cd5009e379034cca1c6a45166f4f76 --skip-runtime-archive --execute 
+RESULT: DRY-RUN rollback verified locally; nothing was run; approval point 1 (a new Phase 14 record and pre-spend receipt) is required before deploy

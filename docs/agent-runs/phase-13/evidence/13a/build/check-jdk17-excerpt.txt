@@ -1,0 +1,36 @@
+# Excerpt of build-engineer sbt -batch check (JDK 17), second run; full log retained outside Git (1.7 MB)
+268:[info] Tests: succeeded 207, failed 0, canceled 0, ignored 0, pending 0
+1010:[info] Tests: succeeded 64, failed 0, canceled 0, ignored 0, pending 0
+1060:[info] Tests: succeeded 39, failed 0, canceled 0, ignored 0, pending 0
+2191:[info] Tests: succeeded 50, failed 0, canceled 0, ignored 0, pending 0
+2288:[info] Tests: succeeded 80, failed 0, canceled 0, ignored 0, pending 0
+2411:[info] Tests: succeeded 107, failed 0, canceled 0, ignored 0, pending 0
+2466:[info] Tests: succeeded 40, failed 0, canceled 0, ignored 0, pending 0
+8224:[info] Tests: succeeded 667, failed 0, canceled 0, ignored 0, pending 0
+8251:[error] java.lang.RuntimeException: scholarchain check probe: injected format-stage failure
+8252:[error] 	at scala.sys.package$.error(package.scala:30)
+8253:[error] 	at $5b5e930a60091f643b19$.$anonfun$root$8(build.sbt:166)
+8254:[error] 	at scala.runtime.java8.JFunction0$mcV$sp.apply(JFunction0$mcV$sp.java:23)
+8255:[error] 	at sbt.std.Transform$$anon$3.$anonfun$apply$2(Transform.scala:47)
+8256:[error] 	at sbt.std.Transform$$anon$4.work(Transform.scala:69)
+8257:[error] 	at sbt.Execute.$anonfun$submit$2(Execute.scala:283)
+8258:[error] 	at sbt.internal.util.ErrorHandling$.wideConvert(ErrorHandling.scala:24)
+8259:[error] 	at sbt.Execute.work(Execute.scala:292)
+8260:[error] 	at sbt.Execute.$anonfun$submit$1(Execute.scala:283)
+8261:[error] 	at sbt.ConcurrentRestrictions$$anon$4.$anonfun$submitValid$1(ConcurrentRestrictions.scala:265)
+8262:[error] 	at sbt.CompletionService$$anon$2.call(CompletionService.scala:65)
+8263:[error] 	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+8264:[error] 	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:539)
+8265:[error] 	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+8266:[error] 	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+8267:[error] 	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+8268:[error] 	at java.base/java.lang.Thread.run(Thread.java:840)
+8269:[error] (checkProbeInjectFailure) scholarchain check probe: injected format-stage failure
+8270:[error] Total time: 0 s, completed Nov 5, 2026, 11:20:32 AM
+8283:[info] Tests: succeeded 18, failed 0, canceled 1, ignored 0, pending 0
+8286:[success] Total time: 759 s (12:39), completed Nov 5, 2026, 11:20:32 AM
+exit=0
+
+# First run (failed before formatting fix)
+19:[warn] scalafmt: /Users/danny/Documents/UIC/CS441/ScholarChain/project/ScholarChainBuild.scala isn't formatted properly!
+22:[error] Total time: 6 s, completed Nov 5, 2026, 11:06:04 AM

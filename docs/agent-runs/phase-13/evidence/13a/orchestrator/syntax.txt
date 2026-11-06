@@ -1,0 +1,9 @@
+bash -n OK scripts/check.sh
+bash -n OK scripts/cleanup.sh
+bash -n OK scripts/deploy.sh
+bash -n OK scripts/package.sh
+bash -n OK scripts/phase4-emr-smoke.sh
+bash -n OK scripts/plan.sh
+bash -n OK scripts/rollback.sh
+bash -n OK scripts/lib/common.sh
+shellcheck rc=0

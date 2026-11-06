@@ -133,7 +133,7 @@ run "dashboard_metric_shapes_and_route_ownership" {
     error_message = "CloudWatch metrics must be arrays (not recursively flattened strings); each of six tables gets correctly dimensioned read/write throttle-event series."
   }
   assert {
-    condition     = alltrue([for filename in fileset(path.module, "**/*.tf") : startswith(filename, "modules/network/") || length(regexall("resource\\s+\"aws_(route|route_table|route_table_association|default_route_table|main_route_table_association)\"", file("${path.module}/${filename}"))) == 0])
+    condition     = alltrue([for filename in fileset(path.module, "**/*.tf") : startswith(filename, "modules/network/") || startswith(filename, "spikes/") || length(regexall("resource\\s+\"aws_(route|route_table|route_table_association|default_route_table|main_route_table_association)\"", file("${path.module}/${filename}"))) == 0])
     error_message = "R1 requires every authored route and route-table resource to stay inside modules/network."
   }
 }

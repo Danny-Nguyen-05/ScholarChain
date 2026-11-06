@@ -1,0 +1,8 @@
+bash -n scripts/check.sh rc=0
+bash -n scripts/package.sh rc=0
+bash -n scripts/plan.sh rc=0
+bash -n scripts/deploy.sh rc=0
+bash -n scripts/rollback.sh rc=0
+bash -n scripts/cleanup.sh rc=0
+bash -n scripts/lib/common.sh rc=0
+shellcheck_rc=0

@@ -1,0 +1,107 @@
+# Evidence excerpt (renamed from buildx-amd64.log because *.log is git-ignored; N2). Command (build-engineer, 2026-11-05):
+# docker buildx build --platform linux/amd64 --load --build-arg MAIN_CLASS=edu.uic.cs441.scholarchain.services.QueryApiMain -t scholarchain-build13a-probe:amd64 -f Dockerfile .   # observed exit 0
+
+#0 building with "desktop-linux" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 1.61kB done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/eclipse-temurin@sha256:8993f1aed8b25fcea7a7047a7949c1866fa558fc6830d938c22c4f13b26be9d7
+#2 DONE 0.9s
+
+#3 [1/7] FROM docker.io/library/eclipse-temurin@sha256:8993f1aed8b25fcea7a7047a7949c1866fa558fc6830d938c22c4f13b26be9d7
+#3 resolve docker.io/library/eclipse-temurin@sha256:8993f1aed8b25fcea7a7047a7949c1866fa558fc6830d938c22c4f13b26be9d7 done
+#3 sha256:0a7d72162cd618905a141975f1f651af7fe3e996363588b9ba837c3664fb4360 2.46kB / 2.46kB 0.1s done
+#3 sha256:73b1cfb2d9602be3325a0710a023e138a9b89fb5d0924cdf6d656c668f5785dd 158B / 158B 0.1s done
+#3 sha256:67ea9076d8f27f24192869d10fc4d7f00e4d34ab38843ff57dcc0f25db194d0b 0B / 47.52MB 0.2s
+#3 sha256:ffd29860ca713d718d516979425e8e71a07ffe790755fdc7abeffaebe713675a 0B / 16.11MB 0.2s
+#3 sha256:98c4455a98982b35380ec62f90d5cf0edff02eeb4b3bb18595d871fdeb0c0c67 0B / 29.75MB 0.2s
+#3 ...
+
+#4 [internal] load build context
+#4 transferring context: 115.29MB 0.6s done
+#4 DONE 0.6s
+
+#3 [1/7] FROM docker.io/library/eclipse-temurin@sha256:8993f1aed8b25fcea7a7047a7949c1866fa558fc6830d938c22c4f13b26be9d7
+#3 sha256:67ea9076d8f27f24192869d10fc4d7f00e4d34ab38843ff57dcc0f25db194d0b 4.19MB / 47.52MB 0.8s
+#3 sha256:ffd29860ca713d718d516979425e8e71a07ffe790755fdc7abeffaebe713675a 2.10MB / 16.11MB 0.8s
+#3 sha256:ffd29860ca713d718d516979425e8e71a07ffe790755fdc7abeffaebe713675a 3.15MB / 16.11MB 0.9s
+#3 sha256:67ea9076d8f27f24192869d10fc4d7f00e4d34ab38843ff57dcc0f25db194d0b 8.39MB / 47.52MB 1.2s
+#3 sha256:ffd29860ca713d718d516979425e8e71a07ffe790755fdc7abeffaebe713675a 5.24MB / 16.11MB 1.1s
+#3 sha256:98c4455a98982b35380ec62f90d5cf0edff02eeb4b3bb18595d871fdeb0c0c67 2.10MB / 29.75MB 1.1s
+#3 sha256:ffd29860ca713d718d516979425e8e71a07ffe790755fdc7abeffaebe713675a 8.39MB / 16.11MB 1.4s
+#3 sha256:67ea9076d8f27f24192869d10fc4d7f00e4d34ab38843ff57dcc0f25db194d0b 12.58MB / 47.52MB 1.7s
+#3 sha256:ffd29860ca713d718d516979425e8e71a07ffe790755fdc7abeffaebe713675a 10.49MB / 16.11MB 1.5s
+#3 sha256:98c4455a98982b35380ec62f90d5cf0edff02eeb4b3bb18595d871fdeb0c0c67 4.19MB / 29.75MB 1.5s
+#3 sha256:ffd29860ca713d718d516979425e8e71a07ffe790755fdc7abeffaebe713675a 12.58MB / 16.11MB 1.7s
+#3 sha256:67ea9076d8f27f24192869d10fc4d7f00e4d34ab38843ff57dcc0f25db194d0b 15.73MB / 47.52MB 2.0s
+#3 sha256:ffd29860ca713d718d516979425e8e71a07ffe790755fdc7abeffaebe713675a 16.11MB / 16.11MB 1.9s done
+#3 sha256:98c4455a98982b35380ec62f90d5cf0edff02eeb4b3bb18595d871fdeb0c0c67 6.29MB / 29.75MB 2.0s
+#3 sha256:67ea9076d8f27f24192869d10fc4d7f00e4d34ab38843ff57dcc0f25db194d0b 22.02MB / 47.52MB 2.3s
+#3 sha256:98c4455a98982b35380ec62f90d5cf0edff02eeb4b3bb18595d871fdeb0c0c67 8.39MB / 29.75MB 2.3s
+#3 sha256:67ea9076d8f27f24192869d10fc4d7f00e4d34ab38843ff57dcc0f25db194d0b 25.17MB / 47.52MB 2.6s
+#3 sha256:67ea9076d8f27f24192869d10fc4d7f00e4d34ab38843ff57dcc0f25db194d0b 30.41MB / 47.52MB 2.9s
+#3 sha256:98c4455a98982b35380ec62f90d5cf0edff02eeb4b3bb18595d871fdeb0c0c67 11.53MB / 29.75MB 2.7s
+#3 sha256:67ea9076d8f27f24192869d10fc4d7f00e4d34ab38843ff57dcc0f25db194d0b 34.60MB / 47.52MB 3.2s
+#3 sha256:67ea9076d8f27f24192869d10fc4d7f00e4d34ab38843ff57dcc0f25db194d0b 37.75MB / 47.52MB 3.3s
+#3 sha256:98c4455a98982b35380ec62f90d5cf0edff02eeb4b3bb18595d871fdeb0c0c67 13.63MB / 29.75MB 3.2s
+#3 sha256:67ea9076d8f27f24192869d10fc4d7f00e4d34ab38843ff57dcc0f25db194d0b 41.94MB / 47.52MB 3.6s
+#3 sha256:98c4455a98982b35380ec62f90d5cf0edff02eeb4b3bb18595d871fdeb0c0c67 15.73MB / 29.75MB 3.5s
+#3 sha256:67ea9076d8f27f24192869d10fc4d7f00e4d34ab38843ff57dcc0f25db194d0b 46.14MB / 47.52MB 3.8s
+#3 sha256:98c4455a98982b35380ec62f90d5cf0edff02eeb4b3bb18595d871fdeb0c0c67 17.83MB / 29.75MB 3.6s
+#3 sha256:67ea9076d8f27f24192869d10fc4d7f00e4d34ab38843ff57dcc0f25db194d0b 47.52MB / 47.52MB 3.8s done
+#3 sha256:98c4455a98982b35380ec62f90d5cf0edff02eeb4b3bb18595d871fdeb0c0c67 19.92MB / 29.75MB 3.9s
+#3 sha256:98c4455a98982b35380ec62f90d5cf0edff02eeb4b3bb18595d871fdeb0c0c67 22.02MB / 29.75MB 4.1s
+#3 sha256:98c4455a98982b35380ec62f90d5cf0edff02eeb4b3bb18595d871fdeb0c0c67 24.12MB / 29.75MB 4.2s
+#3 sha256:98c4455a98982b35380ec62f90d5cf0edff02eeb4b3bb18595d871fdeb0c0c67 26.21MB / 29.75MB 4.4s
+#3 sha256:98c4455a98982b35380ec62f90d5cf0edff02eeb4b3bb18595d871fdeb0c0c67 29.36MB / 29.75MB 4.5s
+#3 sha256:98c4455a98982b35380ec62f90d5cf0edff02eeb4b3bb18595d871fdeb0c0c67 29.75MB / 29.75MB 4.5s done
+#3 extracting sha256:98c4455a98982b35380ec62f90d5cf0edff02eeb4b3bb18595d871fdeb0c0c67
+#3 extracting sha256:98c4455a98982b35380ec62f90d5cf0edff02eeb4b3bb18595d871fdeb0c0c67 0.3s done
+#3 DONE 4.9s
+
+#3 [1/7] FROM docker.io/library/eclipse-temurin@sha256:8993f1aed8b25fcea7a7047a7949c1866fa558fc6830d938c22c4f13b26be9d7
+#3 extracting sha256:ffd29860ca713d718d516979425e8e71a07ffe790755fdc7abeffaebe713675a
+#3 extracting sha256:ffd29860ca713d718d516979425e8e71a07ffe790755fdc7abeffaebe713675a 0.2s done
+#3 DONE 5.1s
+
+#3 [1/7] FROM docker.io/library/eclipse-temurin@sha256:8993f1aed8b25fcea7a7047a7949c1866fa558fc6830d938c22c4f13b26be9d7
+#3 extracting sha256:67ea9076d8f27f24192869d10fc4d7f00e4d34ab38843ff57dcc0f25db194d0b
+#3 extracting sha256:67ea9076d8f27f24192869d10fc4d7f00e4d34ab38843ff57dcc0f25db194d0b 0.4s done
+#3 DONE 5.5s
+
+#3 [1/7] FROM docker.io/library/eclipse-temurin@sha256:8993f1aed8b25fcea7a7047a7949c1866fa558fc6830d938c22c4f13b26be9d7
+#3 extracting sha256:73b1cfb2d9602be3325a0710a023e138a9b89fb5d0924cdf6d656c668f5785dd done
+#3 extracting sha256:0a7d72162cd618905a141975f1f651af7fe3e996363588b9ba837c3664fb4360 done
+#3 DONE 5.5s
+
+#5 [2/7] RUN groupadd --system scholarchain && useradd --system --gid scholarchain --home-dir /app scholarchain
+#5 DONE 0.2s
+
+#6 [3/7] WORKDIR /app
+#6 DONE 0.0s
+
+#7 [4/7] COPY modules/services/target/distribution/services.jar /app/services.jar
+#7 DONE 0.0s
+
+#8 [5/7] COPY modules/services/target/distribution/lib/ /app/lib/
+#8 DONE 0.1s
+
+#9 [6/7] COPY modules/services/target/distribution/prompts/ /app/prompts/
+#9 DONE 0.0s
+
+#10 [7/7] RUN case "edu.uic.cs441.scholarchain.services.QueryApiMain" in     edu.uic.cs441.scholarchain.services.QueryApiMain|    edu.uic.cs441.scholarchain.services.GraphServiceMain|    edu.uic.cs441.scholarchain.services.SemanticServiceMain|    edu.uic.cs441.scholarchain.services.EmbeddingWorkerMain) ;;     *) echo "Unsupported service main class" >&2; exit 1 ;;     esac
+#10 DONE 0.1s
+
+#11 exporting to image
+#11 exporting layers
+#11 exporting layers 1.4s done
+#11 exporting manifest sha256:20b2dbf8f43a55e1ce0b8134d82ee460674dff2c226a31b73907fd6f69e5100f done
+#11 exporting config sha256:b8848277955ead4b81ebdf58a6ed1bf9db412be6e1bda87b22f10542ae50f581 done
+#11 exporting attestation manifest sha256:fd1a22610d6d6b1141793f0426b9adef98a918018aab9f85f7e7f73b0b8465fb 0.0s done
+#11 exporting manifest list sha256:89510928738dc81abbe6e0f401476ed621561dbc59aadb2b8e92408d85b0e126 done
+#11 naming to docker.io/library/scholarchain-build13a-probe:amd64 done
+#11 DONE 1.5s
+
+View build details: docker-desktop://dashboard/build/desktop-linux/desktop-linux/ixpvmo3mq38d5qecoph0smknp

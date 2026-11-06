@@ -1,0 +1,100 @@
+{
+  "arch_gate": {
+    "detail": "images linux/amd64 == ECS linux/amd64",
+    "passed": true
+  },
+  "artifacts": [
+    {
+      "kind": "file",
+      "name": "hadoop-submit-jar",
+      "path": "/Users/danny/Documents/UIC/CS441/ScholarChain/modules/hadoop/target/scala-3.3.4/hadoop-submit_3-0.1.0-SNAPSHOT.jar",
+      "sha256": "df44deea57bfb217c388adc56420310f71c7e0351783d7f1aa3ef6fc90ca471a",
+      "size": 12162464,
+      "status": "present"
+    },
+    {
+      "kind": "file",
+      "name": "hadoop-dependency-bundle",
+      "path": "/Users/danny/Documents/UIC/CS441/ScholarChain/modules/hadoop/target/scala-3.3.4/hadoop-dependency-bundle_3-0.1.0-SNAPSHOT.jar",
+      "sha256": "76a1b455ce22d38cc3325592a7d10bc52d2d89b208655eb7b8e6ca484154838a",
+      "size": 12144487,
+      "status": "present"
+    },
+    {
+      "kind": "file",
+      "name": "spark-job-jar",
+      "path": "/Users/danny/Documents/UIC/CS441/ScholarChain/modules/spark/target/spark-job_3-0.1.0-SNAPSHOT.jar",
+      "sha256": "3146343fd3bef03b4db7935e0d5ddb0990d71ab61ee1562635c414b2882bb460",
+      "size": 11732222,
+      "status": "present"
+    },
+    {
+      "files": 204,
+      "kind": "dir",
+      "name": "service-distribution",
+      "path": "/Users/danny/Documents/UIC/CS441/ScholarChain/modules/services/target/distribution",
+      "services_jar_sha256": "5332734cb9d4b500289000d02747fdd1a971d17ffeacad5c2ca3047db34acb4f",
+      "sha256": "c42a42ab585fba96e7e84e01adbb36fb93b0d08fbcba1161a8a9a7ab4e225b20",
+      "sha256_kind": "tree-digest",
+      "size": 115245074,
+      "status": "present"
+    }
+  ],
+  "commit": "8bee663040ba4e66b1edc1676d5346621c3f7384",
+  "created_utc": "2026-11-05T17:55:34Z",
+  "dirty": true,
+  "ecs_architecture": "linux/amd64",
+  "image_platform": "linux/amd64",
+  "image_tag": "8bee663040ba4e66b1edc1676d5346621c3f7384-dirty",
+  "images": [
+    {
+      "image": "scholarchain-query-api:8bee663040ba4e66b1edc1676d5346621c3f7384-dirty",
+      "local_image_id": "sha256:a29bae84cf2b7725d273da67d41ce9d4ee24b799b8bac93eba758742fbd44ecf",
+      "os_arch": "linux/amd64",
+      "service": "query-api",
+      "status": "built"
+    },
+    {
+      "image": "scholarchain-graph-service:8bee663040ba4e66b1edc1676d5346621c3f7384-dirty",
+      "local_image_id": "sha256:1296890c8abe641479cf58cebeeb6cfd0b17124b06469387f51c625477e4e585",
+      "os_arch": "linux/amd64",
+      "service": "graph-service",
+      "status": "built"
+    },
+    {
+      "image": "scholarchain-semantic-service:8bee663040ba4e66b1edc1676d5346621c3f7384-dirty",
+      "local_image_id": "sha256:9f39e035825bb45bfbd333724079a7b741f2aff4d8141e63abe1750c764ac05a",
+      "os_arch": "linux/amd64",
+      "service": "semantic-service",
+      "status": "built"
+    },
+    {
+      "image": "scholarchain-embedding-worker:8bee663040ba4e66b1edc1676d5346621c3f7384-dirty",
+      "local_image_id": "sha256:705c5779aa1922e48b3ec95a1407414a21a155edaa37fc1945e29297cfd22f34",
+      "os_arch": "linux/amd64",
+      "service": "embedding-worker",
+      "status": "built"
+    }
+  ],
+  "notes": "Registry digests are assigned at push time by deploy.sh; only local image IDs are recorded here. The Hadoop submit JAR embeds timestamps and is not byte-reproducible: its sha256 is of this build.",
+  "run_id": "20261105T175523Z-36941",
+  "runtime_archive": {
+    "expected_sha256": "789a9684f91527dfd9b97d56acce9dbfe5dd4c328299542245da92968f916de5",
+    "expected_size": 321876735,
+    "path": "/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase12d-runtime-repair-20261103/artifacts/scholarchain-spark3.5.4-scala2.13.14-java17-runtime.tgz",
+    "sha256": "789a9684f91527dfd9b97d56acce9dbfe5dd4c328299542245da92968f916de5",
+    "size": 321876735,
+    "status": "verified"
+  },
+  "schema": "scholarchain.release-manifest.v1",
+  "status": "complete",
+  "toolchain": {
+    "docker_buildx": "github.com/docker/buildx v0.34.1-desktop.1 c79576280a671664e17eb68da98ec3136b614aed",
+    "docker_server": "29.5.3",
+    "git": "git version 2.54.0",
+    "java": "openjdk version \"17.0.20.1\" 2026-08-18",
+    "python": "Python 3.14.5",
+    "sbt": "1.10.7"
+  },
+  "warnings": []
+}

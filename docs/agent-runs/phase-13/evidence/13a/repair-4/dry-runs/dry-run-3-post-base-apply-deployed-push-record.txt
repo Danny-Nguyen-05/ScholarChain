@@ -1,0 +1,16 @@
+# rollback.sh --env course --region us-east-2 --mode infra --previous-commit <prev> --deployed-push-record <push-record.json> (dry run; fixture state: 3-post-base-apply-deployed-push-record)
+# exit=3 last_step=runtime-state non-version tool calls=0
+CONFIG-FILE: using <fixture-tmp>/fixture-release.conf instead of the repository config (test-only SCHOLARCHAIN_CONFIG_FILE)
+STEP: start
+[2026-11-06T05:09:22Z] [20261106T050922Z-16107] INFO script=rollback.sh mode=dry-run run_id=20261106T050922Z-16107 repo_root=/private<fixture-tmp>/repo
+STEP: inputs
+STEP: terraform-version
+[2026-11-06T05:09:22Z] [20261106T050922Z-16107] INFO terraform 1.13.5 accepted (binary: terraform)
+STEP: previous-commit
+[2026-11-06T05:09:22Z] [20261106T050922Z-16107] INFO infrastructure rollback: the CURRENT scripts (HEAD 9957ca37cc8bf5107a80b038424fd95e4d8022a9) run against infra/terraform as committed at e2c391c9f8cd5009e379034cca1c6a45166f4f76, materialized read-only; no checkout is needed and the previous tree need not contain scripts/
+STEP: runtime-state
+[2026-11-06T05:09:22Z] [20261106T050922Z-16107] INFO RUNTIME-LIVE: no (0 deployed-runtime indicator instance(s) of module.runtime in the live state: aws_ecs_service=0 aws_lb=0 aws_lb_target_group=0 aws_lb_listener=0; a complete runtime has aws_ecs_service=4 aws_lb=1 aws_lb_target_group=1 aws_lb_listener=0-1; the ECS cluster and ECR repositories of a runtime-disabled base apply are not indicators)
+RESULT: REFUSED step=runtime-state reason=--deployed-manifest/--deployed-push-record was given but the live state shows no deployed runtime (no ECS service, load balancer or target group; the ECS cluster and ECR repositories of a runtime-disabled base apply do not count): this rollback would CREATE the runtime; use the runtime-disabled infrastructure rollback (no image revision)
+
+# stderr
+[2026-11-06T05:09:22Z] [20261106T050922Z-16107] ERROR refused at step runtime-state: --deployed-manifest/--deployed-push-record was given but the live state shows no deployed runtime (no ECS service, load balancer or target group; the ECS cluster and ECR repositories of a runtime-disabled base apply do not count): this rollback would CREATE the runtime; use the runtime-disabled infrastructure rollback (no image revision)
