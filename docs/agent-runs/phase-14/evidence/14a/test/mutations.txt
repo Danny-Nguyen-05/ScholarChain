@@ -1,0 +1,97 @@
+Phase 14A test-engineer mutation record (all mutations applied to SCRATCH COPIES outside the repository)
+Source of the infra rows: JSON lines written by tests/infra/test_phase14_main.py via SC_INFRA_EVIDENCE_FILE
+  (target/phase14/evidence/14a-test/mutations.jsonl). Source of the guard rows: guard_mutations.json (scratch copy of
+  tests/infra with one edit to terraform_source_guard.py, then test_guard_phase14.py and the guard --self-test).
+A mutation is CAUGHT when every expected check fired (infra rows) or at least one test failed (guard rows).
+
+== Infra mutations (deployer root planned with its default set; main root planned offline) ==
+#    root      mutation                                                       caught  expected -> fired
+1    deployer14 attach_role_policy_allowed                                     YES     iam_scope -> iam_scope
+2    deployer14 billing_deployer_role_added_to_read_update_delete              YES     iam_scope -> iam_scope
+3    deployer14 boundary_removal_deny_turned_into_allow                        YES     deny_statements,iam_scope -> deny_statements,iam_scope
+4    deployer14 create_role_boundary_condition_dropped                         YES     create_role_covers_main_roles,create_role_requires_boundary -> create_role_covers_main_roles,create_role_requires_boundary
+5    deployer14 deny_boundary_policy_covers_only_the_runtime_boundary          YES     deny_statements -> deny_statements
+6    deployer14 deny_create_policy_version_removed                             YES     deny_statements -> deny_statements
+7    deployer14 deny_delete_policy_removed                                     YES     deny_statements -> deny_statements
+8    deployer14 deny_delete_role_permissions_boundary_removed                  YES     deny_statements -> deny_statements
+9    deployer14 deny_get_secret_value_removed                                  YES     deny_statements -> deny_statements
+10   deployer14 deny_put_role_permissions_boundary_removed                     YES     deny_statements -> deny_statements
+11   deployer14 deny_secret_reads_gets_a_condition                             YES     deny_statements -> deny_statements
+12   deployer14 deny_secret_reads_narrowed_to_one_prefix                       YES     deny_statements -> deny_statements
+13   deployer14 deny_set_default_policy_version_removed                        YES     deny_statements -> deny_statements
+14   deployer14 document_over_6144_characters                                  YES     document_sizes -> document_sizes
+15   deployer14 eleven_managed_attachments                                     YES     attachment_count -> attachment_count,document_sizes,no_wildcard_actions,spike_absent
+16   deployer14 embedding_producer_dropped_from_create_role                    YES     create_role_covers_main_roles -> create_role_covers_main_roles
+17   deployer14 emr_service_role_created_with_the_runtime_boundary             YES     create_role_covers_main_roles,create_role_requires_boundary -> create_role_covers_main_roles,create_role_requires_boundary
+18   deployer14 instance_profile_resource_becomes_star                         YES     iam_scope -> iam_scope
+19   deployer14 not_action_allow_added                                         YES     no_wildcard_actions -> no_wildcard_actions
+20   deployer14 pass_role_to_emr_on_any_resource                               YES     iam_scope,pass_role_names_the_service -> iam_scope,pass_role_names_the_service
+21   deployer14 pass_role_to_neptune_loses_the_service_condition               YES     pass_role_names_the_service -> pass_role_names_the_service
+22   deployer14 put_role_policy_no_longer_requires_a_boundary                  YES     create_role_requires_boundary -> create_role_requires_boundary
+23   deployer14 region_condition_names_us_east_1                               YES     region_condition -> region_condition,region_exemption_only_iam_route53
+24   deployer14 region_condition_removed_from_sqs                              YES     region_condition -> region_condition,region_exemption_only_iam_route53
+25   deployer14 role_arns_widened_to_scholarchain_star                         YES     iam_scope -> iam_scope
+26   deployer14 runtime_boundary_over_6144_characters                          YES     document_sizes -> document_sizes
+27   deployer14 runtime_roles_may_use_either_boundary                          YES     create_role_requires_boundary -> create_role_covers_main_roles,create_role_requires_boundary
+28   deployer14 s3_service_wildcard_added                                      YES     no_wildcard_actions -> no_wildcard_actions
+29   deployer14 service_wildcard_in_the_runtime_boundary                       YES     no_wildcard_actions -> no_wildcard_actions
+30   deployer14 session_duration_twelve_hours                                  YES     trust_and_session -> trust_and_session
+31   deployer14 spike_policies_attached_beside_phase14_main                    YES     spike_absent -> attachment_count,create_role_requires_boundary,document_sizes,iam_scope,no_wildcard_actions,pass_role_names_the_service,spike_absent
+32   deployer14 star_action_added                                              YES     no_wildcard_actions -> create_role_covers_main_roles,create_role_requires_boundary,iam_scope,no_wildcard_actions,pass_role_names_the_service
+33   deployer14 star_colon_star_action_added                                   YES     no_wildcard_actions -> create_role_covers_main_roles,create_role_requires_boundary,iam_scope,no_wildcard_actions,pass_role_names_the_service
+34   deployer14 tag_service_statement_loses_the_region_condition               YES     region_condition,region_exemption_only_iam_route53 -> region_condition,region_exemption_only_iam_route53
+35   deployer14 trust_loses_the_mfa_condition                                  YES     trust_and_session -> trust_and_session
+36   deployer14 trust_mfa_value_false                                          YES     trust_and_session -> trust_and_session
+37   deployer14 trust_principal_is_any_aws_principal                           YES     trust_and_session -> trust_and_session
+38   main14    a_new_role_without_a_boundary_is_added                         YES     main_roles_boundaries -> create_role_covers_main_roles,main_roles_boundaries
+39   main14    application_subnets_lose_the_emr_tag                           YES     emr_managed_policy_tag -> emr_managed_policy_tag
+40   main14    application_subnets_tag_value_false                            YES     emr_managed_policy_tag -> emr_managed_policy_tag
+41   main14    data_subnets_gain_the_emr_tag                                  YES     emr_managed_policy_tag -> emr_managed_policy_tag
+42   main14    default_security_group_gains_the_emr_tag                       YES     emr_managed_policy_tag -> emr_managed_policy_tag
+43   main14    deployment_role_gets_the_emr_service_boundary                  YES     main_roles_boundaries -> create_role_covers_main_roles,main_roles_boundaries
+44   main14    emr_node_group_loses_the_emr_tag                               YES     emr_managed_policy_tag -> emr_managed_policy_tag
+45   main14    emr_service_access_group_loses_the_emr_tag                     YES     emr_managed_policy_tag -> emr_managed_policy_tag
+46   main14    emr_service_role_gets_the_runtime_boundary                     YES     main_roles_boundaries -> create_role_covers_main_roles,main_roles_boundaries
+47   main14    every_role_security_group_gains_the_emr_tag                    YES     emr_managed_policy_tag -> emr_managed_policy_tag
+48   main14    producer_role_boundary_removed                                 YES     main_roles_boundaries -> create_role_covers_main_roles,main_roles_boundaries
+49   main14    public_subnets_gain_the_emr_tag                                YES     emr_managed_policy_tag -> emr_managed_policy_tag
+50   main14    runtime_boundary_renamed_in_the_identity_module                YES     create_role_covers_main_roles,main_roles_boundaries -> create_role_covers_main_roles,main_roles_boundaries
+51   main14    task_roles_boundary_removed                                    YES     main_roles_boundaries -> create_role_covers_main_roles,main_roles_boundaries
+52   deployer14 combination_refusal_removed                                    YES     combination_refused -> combination_refused
+
+infra mutations: 52, caught: 52, not caught: 0
+
+== Guard mutations (tests/infra/terraform_source_guard.py edited in a scratch copy) ==
+#    mutation                                                       caught  test_guard_phase14 result; self-test rc
+1    allowlist_matches_by_file_only_ignoring_the_action_set         YES     FAILED (failures=14); self-test rc=1 (3 failing self-tests)
+       failing test_guard_phase14 tests: test_a_json_example_outside_environments_is_not_scanned, test_a_new_global_allow_in_the_allowlisted_file_fails, test_a_service_wide_wildcard_action_added_to_the_real_template_fails, test_a_template_with_an_unjustified_global_grant_fails, test_a_wildcard_account_or_region_in_a_template_arn_fails, test_an_action_removed_from_an_allowlisted_statement_fails ...
+       failing self-tests: test_a_new_unjustified_global_grant_still_fails_beside_an_allowlisted_one, test_allowlisted_statement_keeps_its_condition_unless_the_service_is_global, test_global_resource_allowlist_is_per_statement
+2    allowlist_matches_by_actions_only_ignoring_the_file            YES     FAILED (failures=1); self-test rc=1 (1 failing self-tests)
+       failing test_guard_phase14 tests: test_the_same_statements_in_another_file_are_not_exempt
+       failing self-tests: test_global_resource_allowlist_is_per_statement
+3    allowlist_matches_any_subset_of_the_reviewed_actions           YES     FAILED (failures=1); self-test rc=1 (1 failing self-tests)
+       failing test_guard_phase14 tests: test_an_action_removed_from_an_allowlisted_statement_fails
+       failing self-tests: test_global_resource_allowlist_is_per_statement
+4    whole_allowlisted_file_is_exempt                               YES     FAILED (failures=14); self-test rc=1 (3 failing self-tests)
+       failing test_guard_phase14 tests: test_a_json_example_outside_environments_is_not_scanned, test_a_new_global_allow_in_the_allowlisted_file_fails, test_a_service_wide_wildcard_action_added_to_the_real_template_fails, test_a_template_with_an_unjustified_global_grant_fails, test_a_wildcard_account_or_region_in_a_template_arn_fails, test_an_action_removed_from_an_allowlisted_statement_fails ...
+       failing self-tests: test_a_new_unjustified_global_grant_still_fails_beside_an_allowlisted_one, test_allowlisted_statement_keeps_its_condition_unless_the_service_is_global, test_global_resource_allowlist_is_per_statement
+5    condition_requirement_disabled                                 YES     FAILED (failures=1); self-test rc=1 (1 failing self-tests)
+       failing test_guard_phase14 tests: test_an_allowlisted_regional_statement_that_loses_its_condition_fails
+       failing self-tests: test_allowlisted_statement_keeps_its_condition_unless_the_service_is_global
+6    condition_requirement_applied_to_route53_too                   YES     FAILED (failures=13); self-test rc=0 (0 failing self-tests)
+       failing test_guard_phase14 tests: test_a_json_example_outside_environments_is_not_scanned, test_a_new_global_allow_in_the_allowlisted_file_fails, test_a_service_wide_wildcard_action_added_to_the_real_template_fails, test_a_template_with_an_unjustified_global_grant_fails, test_a_wildcard_account_or_region_in_a_template_arn_fails, test_an_allowlisted_regional_statement_that_loses_its_condition_fails ...
+7    stale_entries_not_reported                                     YES     FAILED (failures=2); self-test rc=0 (0 failing self-tests)
+       failing test_guard_phase14 tests: test_an_extra_action_added_to_an_allowlisted_statement_fails, test_an_unused_allowlist_entry_is_reported_as_stale
+8    policy_json_templates_not_scanned                              YES     FAILED (failures=6, errors=1); self-test rc=1 (1 failing self-tests)
+       failing test_guard_phase14 tests: test_a_service_wide_wildcard_action_added_to_the_real_template_fails, test_a_template_with_an_unjustified_global_grant_fails, test_a_wildcard_account_or_region_in_a_template_arn_fails, test_copies_of_the_real_files_alone_are_clean_and_no_entry_is_stale, test_findings_in_a_template_do_not_echo_policy_content, test_the_policy_templates_and_the_environment_example_are_in_the_scanned_set ...
+       failing self-tests: test_scanned_file_set_includes_templates_and_environment_json_examples_only
+9    environment_json_examples_not_scanned                          YES     FAILED (failures=3); self-test rc=1 (1 failing self-tests)
+       failing test_guard_phase14 tests: test_an_environment_json_example_is_scanned_too, test_copies_of_the_real_files_alone_are_clean_and_no_entry_is_stale, test_the_policy_templates_and_the_environment_example_are_in_the_scanned_set
+       failing self-tests: test_scanned_file_set_includes_templates_and_environment_json_examples_only
+10   template_interpolations_not_blanked                            YES     OK; self-test rc=1 (1 failing self-tests)
+       failing self-tests: test_policy_json_templates_reject_unjustified_wildcards_with_the_original_line
+11   blank_interpolations_replaces_with_a_wildcard                  YES     FAILED (failures=13); self-test rc=1 (1 failing self-tests)
+       failing test_guard_phase14 tests: test_a_json_example_outside_environments_is_not_scanned, test_a_new_global_allow_in_the_allowlisted_file_fails, test_a_service_wide_wildcard_action_added_to_the_real_template_fails, test_a_template_with_an_unjustified_global_grant_fails, test_a_wildcard_account_or_region_in_a_template_arn_fails, test_an_allowlisted_regional_statement_that_loses_its_condition_fails ...
+       failing self-tests: test_policy_json_templates_reject_unjustified_wildcards_with_the_original_line
+
+guard mutations: 11, caught: 11, not caught: 0

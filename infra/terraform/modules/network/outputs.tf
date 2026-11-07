@@ -24,6 +24,14 @@ output "controls" {
     public_ingress_ports   = [for r in aws_vpc_security_group_ingress_rule.alb : r.from_port]
     https_egress_ports     = [for r in aws_vpc_security_group_egress_rule.https : r.from_port]
     neptune_s3_egress_port = aws_vpc_security_group_egress_rule.neptune_s3.from_port
-    data_route_count       = length([for route in aws_route.default : route if route.route_table_id == aws_route_table.data.id])
+    tags = {
+      vpc                 = aws_vpc.course.tags
+      public_subnets      = [for s in aws_subnet.public : s.tags]
+      application_subnets = [for s in aws_subnet.application : s.tags]
+      data_subnets        = [for s in aws_subnet.data : s.tags]
+      role_groups         = { for k, g in aws_security_group.role : k => g.tags }
+      emr_service_access  = aws_security_group.emr_service_access.tags
+    }
+    data_route_count = length([for route in aws_route.default : route if route.route_table_id == aws_route_table.data.id])
   }
 }

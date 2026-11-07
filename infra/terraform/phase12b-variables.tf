@@ -294,3 +294,106 @@ variable "vector_non_filterable_metadata_keys" {
     error_message = "All indexes must mark exactly textS3Uri as non-filterable, matching live ingest/query preflight."
   }
 }
+
+# Decision 14-3: Bedrock models that have no in-region on-demand endpoint (for example the current Anthropic models) are
+# invoked through a system-defined cross-region inference profile. IAM then needs the profile ARN in the home region AND the
+# foundation-model ARN in every region the profile routes to (modules/identity/phase12b.tf). Leave both variables unset for a
+# model that is invoked in-region (Titan Text Embeddings V2 has no geographic or global profile). Find the routed regions with
+# `aws bedrock get-inference-profile --region <aws_region> --inference-profile-identifier <profile id> --query 'models[].modelArn'`
+# (read-only) and the model card's "Regional availability" tables.
+variable "synthesis_inference_profile_id" {
+  type        = string
+  default     = null
+  nullable    = true
+  description = "System-defined inference profile ID for synthesis_model_id, for example us.anthropic.<model id>. Null: invoke the foundation model in-region (no profile grant)."
+  validation {
+    condition     = var.synthesis_inference_profile_id == null ? true : can(regex("^(us|eu|apac|au|jp|ca|us-gov|global)\\.[a-zA-Z0-9][a-zA-Z0-9._:-]*$", var.synthesis_inference_profile_id)) && try(endswith(var.synthesis_inference_profile_id, ".${var.synthesis_model_id}"), false)
+    error_message = "synthesis_inference_profile_id must be a geographic prefix (us, eu, apac, au, jp, ca, us-gov or global), a dot and exactly synthesis_model_id (system-defined profile IDs are <prefix>.<model id>); it needs synthesis_model_id."
+  }
+}
+variable "synthesis_inference_profile_regions" {
+  type        = list(string)
+  default     = []
+  description = "Regions the synthesis profile routes to from aws_region (all destination regions, including aws_region itself). Required for a geographic profile, ignored for global.*."
+  validation {
+    condition     = alltrue([for r in var.synthesis_inference_profile_regions : can(regex("^[a-z]{2}(-[a-z]+)+-[0-9]+$", r))]) && length(var.synthesis_inference_profile_regions) == length(distinct(var.synthesis_inference_profile_regions))
+    error_message = "Profile regions must be distinct AWS region names such as us-east-1."
+  }
+  validation {
+    condition     = var.synthesis_inference_profile_id == null ? length(var.synthesis_inference_profile_regions) == 0 : (startswith(var.synthesis_inference_profile_id, "global.") || (length(var.synthesis_inference_profile_regions) > 0 && contains(var.synthesis_inference_profile_regions, var.aws_region)))
+    error_message = "A geographic synthesis profile needs its routed regions, and they must include aws_region (a profile always routes to its source region); regions without a profile are rejected."
+  }
+}
+variable "embedding_inference_profile_id" {
+  type        = string
+  default     = null
+  nullable    = true
+  description = "System-defined inference profile ID for embedding_model_id. Null for Titan Text Embeddings V2, which has no geographic or global profile."
+  validation {
+    condition     = var.embedding_inference_profile_id == null ? true : can(regex("^(us|eu|apac|au|jp|ca|us-gov|global)\\.[a-zA-Z0-9][a-zA-Z0-9._:-]*$", var.embedding_inference_profile_id)) && try(endswith(var.embedding_inference_profile_id, ".${var.embedding_model_id}"), false)
+    error_message = "embedding_inference_profile_id must be a geographic prefix, a dot and exactly embedding_model_id."
+  }
+}
+variable "embedding_inference_profile_regions" {
+  type        = list(string)
+  default     = []
+  description = "Regions the embedding profile routes to from aws_region (including aws_region)."
+  validation {
+    condition     = alltrue([for r in var.embedding_inference_profile_regions : can(regex("^[a-z]{2}(-[a-z]+)+-[0-9]+$", r))]) && length(var.embedding_inference_profile_regions) == length(distinct(var.embedding_inference_profile_regions))
+    error_message = "Profile regions must be distinct AWS region names such as us-east-1."
+  }
+  validation {
+    condition     = var.embedding_inference_profile_id == null ? length(var.embedding_inference_profile_regions) == 0 : (startswith(var.embedding_inference_profile_id, "global.") || (length(var.embedding_inference_profile_regions) > 0 && contains(var.embedding_inference_profile_regions, var.aws_region)))
+    error_message = "A geographic embedding profile needs its routed regions, and they must include aws_region; regions without a profile are rejected."
+  }
+}
+
+# Aws service mode inputs (modules/services/README.md, "Environment contract"). They have no Terraform resource behind them, so
+# each is a variable. The two prefixes with defaults are also the s3:ListBucket prefix scope of the query-api and embedding-worker
+# task roles (modules/identity), so IAM and the task environment come from the same value.
+variable "embedding_model_version" {
+  type        = string
+  default     = null
+  nullable    = true
+  description = "The embedding model VERSION tag the 14C ingest stamps on every stored vector (the `model.version` of the live ingest config, REPLACE_WITH_PINNED_MODEL_VERSION in the 8b template; no value exists in code). The services refuse vectors whose model tag differs, so it must equal that value exactly. No default: required once the aws service mode is active (runtime_enabled and runtime_composition_verified)."
+  validation {
+    condition     = var.embedding_model_version == null ? true : can(regex("^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$", var.embedding_model_version))
+    error_message = "embedding_model_version must be 1-128 characters of letters, digits and . _ : - (the services' own rule)."
+  }
+}
+variable "semantic_index_name" {
+  type        = string
+  default     = "researcher-profile-v1"
+  description = "The one S3 Vectors index the semantic-service queries (and the embedding-worker probes); one of the five VectorIndexes names. Human decision for the retrieval use case; default is the researcher-profile index."
+  validation {
+    condition     = contains(["researcher-profile-v1", "collaboration-community-v1", "paper-abstract-v1", "collaboration-path-v1", "topic-institution-summary-v1"], var.semantic_index_name)
+    error_message = "semantic_index_name must be one of the five index names the vector module creates."
+  }
+}
+variable "embedding_text_prefix" {
+  type        = string
+  default     = "embedding-text"
+  description = "Prefix in the rag bucket under which the 14C ingest stores embedding text (items lie under <prefix>/.../versions/). Must equal the `textPrefix` of the live ingest config (the 8b template shows `graph/rag`: a human decision before 14C)."
+  validation {
+    condition     = can(regex("^[A-Za-z0-9][A-Za-z0-9._-]*(/[A-Za-z0-9][A-Za-z0-9._-]*)*$", var.embedding_text_prefix))
+    error_message = "A literal key prefix without wildcard, leading or trailing slash."
+  }
+}
+variable "evidence_index_prefix" {
+  type        = string
+  default     = "evidence-index"
+  description = "Rag-bucket prefix of the evidence index (query-api default in AwsConfig.scala)."
+  validation {
+    condition     = can(regex("^[A-Za-z0-9][A-Za-z0-9._-]*(/[A-Za-z0-9][A-Za-z0-9._-]*)*$", var.evidence_index_prefix))
+    error_message = "A literal key prefix without wildcard, leading or trailing slash."
+  }
+}
+variable "runtime_audit_prefix" {
+  type        = string
+  default     = "runtime-audit"
+  description = "Rag-bucket prefix of the runtime audit store (query-api default in AwsConfig.scala)."
+  validation {
+    condition     = can(regex("^[A-Za-z0-9][A-Za-z0-9._-]*(/[A-Za-z0-9][A-Za-z0-9._-]*)*$", var.runtime_audit_prefix))
+    error_message = "A literal key prefix without wildcard, leading or trailing slash."
+  }
+}

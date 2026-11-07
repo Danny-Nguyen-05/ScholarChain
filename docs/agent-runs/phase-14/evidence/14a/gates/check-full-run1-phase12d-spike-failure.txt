@@ -1,0 +1,15 @@
+........................................................................F
+======================================================================
+FAIL: test_every_ec2_create_tags_has_a_create_action_condition (test_terraform_static.DefaultSecurityGroupTests.test_every_ec2_create_tags_has_a_create_action_condition)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<snapshot>/scripts/phase12d-spike/tests/test_terraform_static.py", line 38, in test_every_ec2_create_tags_has_a_create_action_condition
+    self.assertIn("ec2:CreateAction", window)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'ec2:CreateAction' not found in 'Action   = ["ec2:CreateTags"]\n        Resource = ["${local.arn_ec2}:security-group/*"]\n        Condition = {\n          StringEquals                = merge(local.c_region, local.c_req_main)\n          "ForAllValues:StringEquals" = { "aws:TagKeys" = var.main_tag_keys }\n        }\n      },\n    ]\n  }\n\n  m14_data = {\n    Version = "2012-10-17"\n    Statement = [\n      {\n        Sid    = "S3BucketsOfTheMainStack"\n        Effect = "Allow"\n        Action = [\n          "s3:CreateBucket", "s3:DeleteBucket", "s3:ListBucket", "s3:ListBucketVersions", "s3:ListBucketMultipartUploads",\n          "s3:GetBucketLocation", "s3:GetBucketAcl", "s3:GetBucketCORS", "s3:GetBucketLogging",\n          "s3:GetBucketObject'
+
+----------------------------------------------------------------------
+Ran 73 tests in 47.423s
+
+FAILED (failures=1)
+SUITE-SUMMARY ran=73 executed=73 skipped_tests=0 skipped_classes=0 failures=1 errors=0

@@ -24,3 +24,11 @@ output "operator_caller_policy_json" {
 output "policy_names" {
   value = sort([for p in aws_iam_policy.permission_set : p.name])
 }
+
+output "main_permissions_boundary_arns" {
+  description = "phase14-main: the runtime boundary and the EMR service-role boundary the main root's roles must carry (null when phase14-main is not enabled)."
+  value = contains(var.enabled_permission_sets, "phase14-main") ? {
+    runtime     = local.m_boundary_runtime_arn
+    emr_service = local.m_boundary_emr_arn
+  } : null
+}

@@ -19,3 +19,28 @@ variable "neptune_data_arn" { type = string }
 variable "vector_index_arns" { type = map(string) }
 variable "embedding_model_id" { type = string }
 variable "synthesis_model_id" { type = string }
+
+# Bedrock cross-region inference profiles (decision 14-3). All four are optional; with no profile the grant is the single
+# in-region foundation-model ARN. Shapes are validated again in the root.
+variable "embedding_inference_profile_id" {
+  type    = string
+  default = null
+}
+variable "embedding_inference_profile_regions" {
+  type    = list(string)
+  default = []
+}
+variable "synthesis_inference_profile_id" {
+  type    = string
+  default = null
+}
+variable "synthesis_inference_profile_regions" {
+  type    = list(string)
+  default = []
+}
+
+# Rag-bucket key prefixes the query-api and embedding-worker read (evidence index, runtime audit, embedding text): the s3:prefix scope
+# of their s3:ListBucket grants.
+variable "rag_prefixes" {
+  type = list(string)
+}

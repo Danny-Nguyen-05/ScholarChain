@@ -457,3 +457,43 @@ Module tests exercise real adapter composition, replay, application-session isol
 invalid/oversize refusal, object/session failures and retry, lost replies, corruption,
 TTL refusal, concurrent publication, and retention of malformed rejected proposals.
 These are offline correctness checks; no live AWS or provider call is made.
+
+## Phase 14A repair: storage-owned reader factory and directed edge read
+
+`NeptuneGraphReader.connect(endpoint: java.net.URI, region: String, credentials:
+software.amazon.awssdk.auth.credentials.AwsCredentialsProvider, config: GraphReaderConfig):
+Either[String, NeptuneGraphReader]` builds the read-only Neptune data client inside storage so
+runtime modules never name the SDK client type. The returned reader is `AutoCloseable`; `close()`
+closes the client it owns (idempotent). A reader built with `new NeptuneGraphReader(client, config)`
+never closes an injected client. The endpoint must be `https` with a host and an explicit port
+(1-65535), no user info, query or fragment, and an empty or `/` path; the region must look like
+`us-east-2`. Refusals are closed codes (`invalid-neptune-endpoint`, `invalid-neptune-region`,
+`missing-credentials`). Construction makes no network call and requests no credentials (they are
+resolved lazily by the SDK on the first query). SDK retries are disabled because the reader owns the
+bounded `config.retry` policy; SDK call and attempt timeouts are `config.requestTimeoutMillis`
+plus the one-second margin the per-request override already used. Query templates, the
+`USING QUERY:TIMEOUTMILLISECONDS` hint, limits, allowed edge types and read-only behavior are those
+of the existing reader.
+
+`DirectedGraphReader extends GraphReader` adds
+`directedEdges(id, window, direction: EdgeDirection, edgeTypes: Set[String], limit: Int, cursor:
+Option[String]): StorageResult[DirectedEdgePage]`. `NeptuneGraphReader` and `InMemoryGraphReader`
+implement it; `GraphReader` and `GraphNeighbor` are unchanged. `EdgeDirection` is `Out` (stored start
+is the node), `In` (stored end is the node) or `Both` (union, a self-loop once). Rows are
+`DirectedGraphEdge(fromId, toId, edgeId, edgeType, properties)`: stored start and end plus every
+stored edge property, text-rendered. Graph edges carry `provenanceJson`, `sourceEvidenceJson`,
+`policyVersion`; coauthor edges carry `evidenceTable`/`evidenceEdgeId` pointers and no
+`provenanceJson`, so `DirectedGraphEdge.provenance` returns `Left("edge-provenance-absent")` for
+them rather than inventing one. The stored start/end of an undirected type (COAUTHORED_WITH) is a
+canonical order only; callers apply `GraphEdgeType.isUndirected`. Core `GraphEdge` is not returned
+because the loaded coauthor rows do not contain the provenance and source evidence it requires.
+Empty `edgeTypes` means the allowed set, a type outside it is `invalid-bound`, and `window`
+constrains COAUTHORED_WITH only (as in `neighbors`). Order is edge ID within outgoing, then
+incoming for `Both`. Cursors are opaque (`N` for one direction, `o:N`/`i:N` for `Both`), bound by
+`maxCursorOffset`, and valid only for the same node, window, direction and types. Three fixed
+parameterized templates (outgoing, incoming, incoming without self-loops) take `$id`, `$types`,
+`$window`, `$offset`, `$limit`; no user value is interpolated, a page fetches at most `limit + 1`
+rows, and a response row whose stored endpoint does not touch the requested node on the requested
+side is rejected as `malformed-graph-response`. The in-memory reader pages with the same code and
+applies the same window rule. Offline tests only; live Neptune engine behavior of the templates is
+unverified until the Phase 14C gate.

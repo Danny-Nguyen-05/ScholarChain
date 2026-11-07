@@ -1,9 +1,12 @@
 #!/usr/bin/env python3
 """Small literal-source checks; not an HCL evaluator, IAM simulator or secret scanner.
 
-Only Git-visible .tf/.tfvars below infra/terraform are opened. Dynamic policies,
-interpolated resource scope and service effectiveness need the native plan tests
-and manual review. Findings deliberately omit the offending source/value.
+Only Git-visible .tf/.tfvars, policy JSON templates (*.json.tftpl) and
+environments/*.json.example below infra/terraform are opened. Template interpolations
+(${...}, %{...}) are blanked before scanning, so they are never read as wildcards and
+their rendered value is not evaluated. Dynamic policies, interpolated resource scope and
+service effectiveness need the native plan tests and manual review. Findings
+deliberately omit the offending source/value.
 """
 
 import argparse
@@ -112,7 +115,141 @@ REQUEST_TAG_SCOPED_ACTIONS = frozenset({
 })
 
 
-def scan(path, source):
+@dataclass(frozen=True)
+class GlobalGrant:
+    """One reviewed Allow statement that may name Resource "*" because its actions have no usable resource-level scope.
+
+    The exemption is per statement: the file path AND the exact action set must both match (no wildcard, no subset or
+    superset, and the same actions in another file are still flagged). `requires_condition` additionally demands that the
+    statement keep a non-empty Condition (the region condition) so that deleting it is reported. Each entry is a reviewed
+    claim by the infra owner, derived from the statement comment in the source and deployer/README.md "Honest list"; this
+    guard does not fetch or re-verify the cited page.
+    """
+
+    path: str
+    actions: frozenset
+    justification: str
+    url: str
+    requires_condition: bool = True
+
+
+SAR = "https://docs.aws.amazon.com/service-authorization/latest/reference/"
+PHASE14_MAIN = "infra/terraform/deployer/phase14_main.tf"
+GLOBAL_RESOURCE_ALLOWLIST = (
+    GlobalGrant(
+        PHASE14_MAIN,
+        frozenset({
+            "rds:DescribeDBClusters", "rds:DescribeDBInstances", "rds:DescribeDBSubnetGroups",
+            "rds:DescribeDBClusterParameterGroups", "rds:DescribeDBClusterParameters", "rds:DescribeDBParameterGroups",
+            "rds:DescribeDBParameters", "rds:DescribeDBClusterSnapshots", "rds:DescribeDBEngineVersions",
+            "rds:DescribeGlobalClusters",
+        }),
+        "Neptune is managed through the rds API namespace. The provider refreshes a cluster, instance or parameter group "
+        "with list-style Describe calls (a filter, not a resource ARN), and DescribeDBEngineVersions and "
+        "DescribeGlobalClusters name no resource, so a resource ARN cannot scope them. Read-only; region-locked by "
+        "aws:RequestedRegion. Every create, modify and delete action stays on the scholarchain-<env>-* ARNs.",
+        SAR + "list_amazonrds.html",
+    ),
+    GlobalGrant(
+        PHASE14_MAIN,
+        frozenset({"cloudwatch:DescribeAlarms", "cloudwatch:ListDashboards"}),
+        "DescribeAlarms (the target-tracking alarms ECS autoscaling creates are read by a name filter) and ListDashboards are "
+        "list-style reads that take no resource ARN. Read-only; region-locked. PutMetricAlarm, DeleteAlarms and the dashboard "
+        "writes stay on the scholarchain-<env>-* alarm and dashboard ARNs.",
+        SAR + "list_amazoncloudwatch.html",
+    ),
+    GlobalGrant(
+        PHASE14_MAIN,
+        frozenset({"ecs:RegisterTaskDefinition"}),
+        "RegisterTaskDefinition creates a new task-definition revision and has no resource type that exists before the call. "
+        "It is scoped by the request tags (project, environment) and by aws:RequestedRegion, and the family is limited by "
+        "iam:PassRole, which only allows the scholarchain-<env> task and execution roles.",
+        SAR + "list_amazonelasticcontainerservice.html",
+    ),
+    GlobalGrant(
+        PHASE14_MAIN,
+        frozenset({"ecs:DeregisterTaskDefinition", "ecs:DescribeTaskDefinition", "ecs:DeleteTaskDefinitions"}),
+        "The task-definition family name is not carried in the request ARN for every one of these calls (Describe takes a "
+        "family or revision, Delete takes a list), so the scholarchain-<env> family cannot be matched by an ARN pattern. "
+        "Region-locked by aws:RequestedRegion; the role cannot create or run a task definition without the request tags.",
+        SAR + "list_amazonelasticcontainerservice.html",
+    ),
+    GlobalGrant(
+        PHASE14_MAIN,
+        frozenset({
+            "elasticloadbalancing:DescribeLoadBalancers", "elasticloadbalancing:DescribeLoadBalancerAttributes",
+            "elasticloadbalancing:DescribeTargetGroups", "elasticloadbalancing:DescribeTargetGroupAttributes",
+            "elasticloadbalancing:DescribeListeners", "elasticloadbalancing:DescribeListenerAttributes",
+            "elasticloadbalancing:DescribeTags", "elasticloadbalancing:DescribeTargetHealth",
+            "elasticloadbalancing:DescribeCapacityReservation", "acm:DescribeCertificate",
+        }),
+        "Elastic Load Balancing v2 Describe* calls are list-style reads that take names or ARNs in the request body and no "
+        "resource-level permission, and the provider also reads the listener certificate with acm:DescribeCertificate. "
+        "Read-only; region-locked. Create, modify and delete stay on the scholarchain-<env>-* load balancer, target group and "
+        "listener ARNs.",
+        SAR + "list_elasticloadbalancingv2.html",
+    ),
+    GlobalGrant(
+        PHASE14_MAIN,
+        frozenset({
+            "servicediscovery:GetOperation", "application-autoscaling:DescribeScalableTargets",
+            "application-autoscaling:DescribeScalingPolicies", "application-autoscaling:DescribeScalingActivities",
+        }),
+        "servicediscovery:GetOperation polls an asynchronous Cloud Map operation by an ID that exists only after the call, and "
+        "the application-autoscaling Describe* calls are list-style reads; none takes a resource ARN. Read-only; region-locked. "
+        "Register, deregister, put and delete stay on scalable-target and the scholarchain-<env> namespace and service ARNs.",
+        SAR + "list_awscloudmap.html and " + SAR + "list_applicationautoscaling.html",
+    ),
+    GlobalGrant(
+        PHASE14_MAIN,
+        frozenset({
+            "route53:CreateHostedZone", "route53:GetHostedZone", "route53:ListHostedZonesByName",
+            "route53:DeleteHostedZone", "route53:ChangeResourceRecordSets", "route53:ListResourceRecordSets",
+            "route53:GetChange", "route53:ListTagsForResource", "route53:ChangeTagsForResource",
+        }),
+        "Cloud Map creates and deletes the private hosted zone for the service-discovery namespace with the caller's own "
+        "permissions. The hosted-zone ID does not exist before CreateHostedZone, and Route 53 is a global service, so there "
+        "is neither a pre-known ARN nor a regional condition (no aws:RequestedRegion). Recorded as the largest "
+        "service-level residual of this set in deployer/README.md.",
+        SAR + "list_amazonroute53.html",
+        requires_condition=False,
+    ),
+)
+_GRANTS = {(g.path, g.actions): g for g in GLOBAL_RESOURCE_ALLOWLIST}
+assert len(_GRANTS) == len(GLOBAL_RESOURCE_ALLOWLIST), "duplicate allowlist key"
+
+
+def blank_interpolations(source):
+    """Replace every Terraform template interpolation (`${...}` or `%{...}`) with `x` of equal length (newlines kept) so that
+    a template is scanned as plain JSON: a placeholder is never read as a wildcard and positions are unchanged."""
+    out, i = [], 0
+    while i < len(source):
+        if source.startswith(("${", "%{"), i) and not source.startswith(("$${", "%%{"), i - 1 if i else 0):
+            depth, j, quoted = 1, i + 2, False
+            while j < len(source) and depth:
+                ch = source[j]
+                if ch == "\\":
+                    j += 2
+                    continue
+                if ch == '"':
+                    quoted = not quoted
+                elif not quoted and ch == "{":
+                    depth += 1
+                elif not quoted and ch == "}":
+                    depth -= 1
+                j += 1
+            out.append("".join("\n" if c == "\n" else "x" for c in source[i:j]))
+            i = j
+        else:
+            out.append(source[i])
+            i += 1
+    return "".join(out)
+
+
+def scan(path, source, used=None):
+    """Findings for one file. `used`, when given, collects the GlobalGrant entries that exempted a statement."""
+    if path.endswith(".tftpl"):
+        source = blank_interpolations(source)
     ts = tokens(source)
     objects = [Object(0, len(ts))]
     stack = [0]
@@ -168,6 +305,15 @@ def scan(path, source):
         literal = [t.value for t in span if t.quoted]
         return bool(literal) and not any(v.lower().startswith("aws:requesttag/") for v in literal)
 
+    def condition_missing(obj_id):
+        """True when a statement has no Condition, an empty one, or null."""
+        obj = objects[obj_id]
+        if "condition" not in obj.fields:
+            return True
+        start = obj.fields["condition"]
+        end = min([v for v in obj.fields.values() if v > start] + [obj.end])
+        return not [t for t in ts[start + 2 : end] if t.quoted or t.value not in ("{", "}", "[", "]", ",", "null")]
+
     findings = set()
 
     def report(category, position):
@@ -204,7 +350,13 @@ def scan(path, source):
                     broad = len(parts) != 6 or any(
                         c in part for part in parts[1:5] for c in "*?"
                     ) or parts[5] in ("*", "?")
-                if broad and not (resource == "*" and exception):
+                grant = _GRANTS.get((path, frozenset(actions))) if actions and resource == "*" else None
+                if broad and grant is not None and not exception:
+                    if used is not None:
+                        used.add(grant)
+                    if grant.requires_condition and condition_missing(obj_id):
+                        report("unconditioned-allowlisted-global-grant", ts[obj.fields[resource_key]].start)
+                elif broad and not (resource == "*" and exception):
                     report("global-iam-resource", ts[obj.fields[resource_key]].start)
             principal_key = "principal" if "principal" in obj.fields else "principals"
             if any(v in ("*", "?") for v in values(obj_id, principal_key)):
@@ -337,6 +489,104 @@ class GuardExamples(unittest.TestCase):
         self.assertEqual(found, [{"path": "synthetic.tf", "line": 1, "category": "unconditioned-request-scoped-action"}])
 
 
+    def test_global_resource_allowlist_entries_are_justified_and_narrow(self):
+        self.assertEqual(len(GLOBAL_RESOURCE_ALLOWLIST), 7)
+        for grant in GLOBAL_RESOURCE_ALLOWLIST:
+            with self.subTest(actions=sorted(grant.actions)):
+                self.assertTrue(grant.path.endswith("phase14_main.tf"))
+                self.assertGreaterEqual(len(grant.justification), 80)
+                self.assertIn("https://docs.aws.amazon.com/service-authorization/latest/reference/list_", grant.url)
+                self.assertTrue(grant.actions)
+                for action in grant.actions:
+                    self.assertRegex(action, r"^[a-z0-9-]+:[A-Za-z]+$")  # exact actions, never a wildcard
+                    self.assertFalse(action.endswith(("Create*", "*")))
+
+    def test_global_resource_allowlist_is_per_statement(self):
+        for grant in GLOBAL_RESOURCE_ALLOWLIST:
+            actions = sorted(grant.actions)
+            listed = ", ".join('"%s"' % a for a in actions)
+            statement = '{Effect="Allow", Action=[%s], Resource=["*"], Condition={StringEquals=local.c_region}}'
+            with self.subTest(actions=actions):
+                self.assertEqual(scan(grant.path, statement % listed), [])
+                # The same actions in another file are not exempt.
+                self.assertEqual([f["category"] for f in scan("infra/terraform/other.tf", statement % listed)], ["global-iam-resource"])
+                # A superset is not exempt (an extra action rides along).
+                self.assertIn("global-iam-resource", [f["category"] for f in scan(grant.path, statement % (listed + ', "iam:CreateRole"'))])
+                # A subset is not exempt either (the entry is the reviewed action set, exactly).
+                if len(actions) > 1:
+                    subset = ", ".join('"%s"' % a for a in actions[1:])
+                    self.assertIn("global-iam-resource", [f["category"] for f in scan(grant.path, statement % subset)])
+
+    def test_allowlisted_statement_keeps_its_condition_unless_the_service_is_global(self):
+        for grant in GLOBAL_RESOURCE_ALLOWLIST:
+            listed = ", ".join('"%s"' % a for a in sorted(grant.actions))
+            for condition in ("", ", Condition={}", ", Condition=null"):
+                source = '{Effect="Allow", Action=[%s], Resource=["*"]%s}' % (listed, condition)
+                with self.subTest(actions=sorted(grant.actions), condition=condition):
+                    expected = ["unconditioned-allowlisted-global-grant"] if grant.requires_condition else []
+                    self.assertEqual([f["category"] for f in scan(grant.path, source)], expected)
+
+    def test_a_new_unjustified_global_grant_still_fails_beside_an_allowlisted_one(self):
+        grant = GLOBAL_RESOURCE_ALLOWLIST[0]
+        listed = ", ".join('"%s"' % a for a in sorted(grant.actions))
+        source = (
+            '{Effect="Allow", Action=[%s], Resource=["*"], Condition={StringEquals=local.c_region}},\n'
+            '{Effect="Allow", Action=["ec2:TerminateInstances"], Resource=["*"], Condition={StringEquals=local.c_region}}' % listed
+        )
+        self.assertEqual([(f["line"], f["category"]) for f in scan(grant.path, source)], [(2, "global-iam-resource")])
+
+    def test_policy_json_templates_are_scanned_without_reading_interpolations_as_wildcards(self):
+        clean = """{"Version": "2012-10-17", "Statement": [
+          {"Effect": "Allow", "Action": ["s3:GetObject"], "Resource": ["arn:aws:s3:::${mp}-${acct}-*/*"]},
+          {"Effect": "Allow", "Action": ["bedrock:InvokeModel"], "Resource": [${fm_arns}, "arn:aws:bedrock:::foundation-model/*"]},
+          {"Effect": "Allow", "Action": ["ecr:GetAuthorizationToken"], "Resource": ["*"]},
+          {"Effect": "Allow", "Action": ["dynamodb:GetItem"], "Resource": ["${table_arn}"]},
+          {"Effect": "Allow", "Action": ["sqs:SendMessage"], "Resource": "${join(\",\", queues)}"}]}"""
+        self.assertEqual(scan("infra/terraform/deployer/boundaries/x.json.tftpl", clean), [])
+
+    def test_policy_json_templates_reject_unjustified_wildcards_with_the_original_line(self):
+        examples = (
+            ('{"Effect": "Allow", "Action": ["iam:PassRole"], "Resource": ["*"]}', "global-iam-resource"),
+            ('{"Effect": "Allow", "Action": ["s3:*"], "Resource": ["arn:aws:s3:::${mp}-x"]}', "wildcard-iam-action"),
+            ('{"Effect": "Allow", "Action": "*", "Resource": ["arn:aws:s3:::${mp}-x"]}', "wildcard-iam-action"),
+            ('{"Effect": "Allow", "Action": ["ec2:TerminateInstances"], "Resource": ["arn:aws:ec2:*:${acct}:instance/*"]}', "global-iam-resource"),
+            ('{"Effect": "Allow", "Action": ["s3:GetObject"], "Principal": "*", "Resource": ["arn:aws:s3:::${mp}-x"]}', "public-allow-principal"),
+            ('{"Effect": "Allow", "Action": ["${svc}:*"], "Resource": ["arn:aws:s3:::${mp}-x"]}', "wildcard-iam-action"),
+        )
+        for statement, category in examples:
+            with self.subTest(category=category, statement=statement):
+                source = '{"Version": "2012-10-17",\n "Statement": [\n ' + statement + ']}'
+                names = ("x.json.tftpl",) if "${" in statement else ("x.json.tftpl", "infra/terraform/environments/y.json.example")
+                for suffix in names:
+                    found = scan(suffix, source)
+                    self.assertIn((3, category), [(f["line"], f["category"]) for f in found])
+
+    def test_scanned_file_set_includes_templates_and_environment_json_examples_only(self):
+        self.assertTrue(is_scanned("infra/terraform/deployer/boundaries/runtime.json.tftpl"))
+        self.assertTrue(is_scanned("infra/terraform/environments/emr-service-policy.json.example"))
+        self.assertTrue(is_scanned("infra/terraform/main.tf"))
+        self.assertFalse(is_scanned("infra/terraform/environments/nested/y.json.example"))
+        self.assertFalse(is_scanned("infra/terraform/tests/x.tftest.hcl"))
+        self.assertFalse(is_scanned("infra/terraform/deployer/README.md"))
+
+
+def is_scanned(path):
+    """Which Git-visible files below infra/terraform are opened: Terraform sources, variable files, policy JSON templates
+    (*.json.tftpl anywhere) and the JSON examples that sit directly in environments/."""
+    if path.endswith((".tf", ".tfvars", ".json.tftpl")):
+        return True
+    parent, _, name = path.rpartition("/")
+    return parent == "infra/terraform/environments" and name.endswith(".json.example")
+
+
+def stale_allowlist_findings(used):
+    return [
+        {"path": g.path, "line": 0, "category": "stale-global-allowlist-entry"}
+        for g in GLOBAL_RESOURCE_ALLOWLIST
+        if g not in used
+    ]
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--repo-root", type=Path, default=Path.cwd())
@@ -349,16 +599,21 @@ def main():
     listed = subprocess.check_output(
         ["git", "ls-files", "-z", "--cached", "--others", "--exclude-standard", "--", "infra/terraform"], cwd=root
     ).decode().split("\0")
-    paths = sorted({p for p in listed if p.endswith((".tf", ".tfvars"))})
-    if not paths:
+    paths = sorted({p for p in listed if is_scanned(p)})
+    if not [p for p in paths if p.endswith((".tf", ".tfvars"))]:
         parser.error("no Git-visible Terraform source files found")
     findings = []
+    used = set()
     for path in paths:
         file = root / path
         if file.is_symlink():
             findings.append({"path": path, "line": 0, "category": "source-symlink-not-inspected"})
         else:
-            findings.extend(scan(path, file.read_text()))
+            findings.extend(scan(path, file.read_text(), used))
+    # An allowlist entry that exempts nothing is stale (the statement moved, changed or was removed): drop or re-justify it.
+    # Only judged against a tree that contains the entry's file, so a partial checkout does not raise it.
+    present = set(paths)
+    findings.extend(f for f in stale_allowlist_findings(used) if f["path"] in present)
     print(json.dumps({"scope": "literal-source-only", "files": len(paths), "findings": findings}, indent=2))
     return 1 if findings else 0
 

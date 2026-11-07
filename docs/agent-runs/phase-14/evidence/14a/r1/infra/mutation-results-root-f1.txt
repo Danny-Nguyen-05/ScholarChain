@@ -1,0 +1,19 @@
+F-E1 mode hard-coded to aws -> 39 passed, 1 failed; failing: the_runtime_module_keeps_mode_unconfigured_and_adds_no_aws_variable_without_the_acknowledgment
+F-E2 aws mode ignores the acknowledgment -> 39 passed, 1 failed; failing: the_runtime_module_keeps_mode_unconfigured_and_adds_no_aws_variable_without_the_acknowledgment
+F-E3 synthesis model ignores the inference profile -> 39 passed, 1 failed; failing: aws_mode_environment_per_role_is_exactly_the_service_contract
+F-E4 embedding version invented in the module -> 39 passed, 1 failed; failing: aws_mode_environment_per_role_is_exactly_the_service_contract
+F-E5 a secret variable name placed in environment -> 39 passed, 1 failed; failing: aws_mode_environment_per_role_is_exactly_the_service_contract
+F-E6 every table name taken from RunLedger -> 39 passed, 1 failed; failing: aws_mode_environment_per_role_is_exactly_the_service_contract
+F-E7 worker visibility timeout takes the wait seconds -> 39 passed, 1 failed; failing: aws_mode_environment_per_role_is_exactly_the_service_contract
+F-E9 the text prefix is not in the ListBucket scope -> 39 passed, 1 failed; failing: query_api_and_the_embedding_worker_may_list_only_their_rag_prefixes_and_head_absent_keys
+F-E10 aws-mode precondition weakened (version no longer required) -> 33 passed, 1 failed, 6 skipped; failing: the_aws_service_mode_is_refused_without_the_embedding_model_version_and_the_runtime_needs_the_acknowledgment
+F-I1 reservation statement loses dynamodb:Query -> 39 passed, 1 failed; failing: the_embedding_worker_may_use_the_query_session_table_and_index_exactly
+F-I2 reservation statement widened to the EvidenceBundle table -> 39 passed, 1 failed; failing: the_embedding_worker_may_use_the_query_session_table_and_index_exactly
+F-I3 graph-service also gets ListBucket on the rag bucket -> 39 passed, 1 failed; failing: query_api_and_the_embedding_worker_may_list_only_their_rag_prefixes_and_head_absent_keys
+F-I4 ListBucket without the s3:prefix condition -> 39 passed, 1 failed; failing: query_api_and_the_embedding_worker_may_list_only_their_rag_prefixes_and_head_absent_keys
+F-I5 HEAD statement Null condition inverted -> 39 passed, 1 failed; failing: query_api_and_the_embedding_worker_may_list_only_their_rag_prefixes_and_head_absent_keys
+F-I6 ListBucket on the object ARN instead of the bucket -> 39 passed, 1 failed; failing: query_api_and_the_embedding_worker_may_list_only_their_rag_prefixes_and_head_absent_keys
+F-I7 ListBucket statement gains s3:ListBucketVersions (outside the boundary) -> 38 passed, 2 failed; failing: every_action_of_every_role_policy_is_allowed_by_that_roles_boundary, query_api_and_the_embedding_worker_may_list_only_their_rag_prefixes_and_head_absent_keys
+F-I8 runtime boundary loses s3:ListBucket -> 39 passed, 1 failed; failing: every_action_of_every_role_policy_is_allowed_by_that_roles_boundary
+F-I9 prefixes without their sub-paths -> 39 passed, 1 failed; failing: query_api_and_the_embedding_worker_may_list_only_their_rag_prefixes_and_head_absent_keys
+F-E8 Neptune endpoint hard-coded and downgraded to http -> 39 passed, 1 failed; failing: aws_mode_environment_per_role_is_exactly_the_service_contract

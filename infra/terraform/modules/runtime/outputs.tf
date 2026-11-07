@@ -16,7 +16,7 @@ output "deployment_contract" { value = {
   queue_url                   = var.queue_url
   dead_letter_queue_url       = var.dlq_url
   service_discovery_namespace = local.namespace
-  live_composition_supported  = false
+  live_composition_supported  = local.aws_mode
 } }
 output "compute_controls" { value = {
   enabled          = var.enabled

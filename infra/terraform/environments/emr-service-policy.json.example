@@ -1,0 +1,133 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "CreateInTaggedNetwork",
+      "Effect": "Allow",
+      "Action": ["ec2:CreateNetworkInterface", "ec2:RunInstances", "ec2:CreateFleet"],
+      "Resource": [
+        "arn:aws:ec2:<region>:<12-digit-account-id>:subnet/*",
+        "arn:aws:ec2:<region>:<12-digit-account-id>:security-group/*"
+      ],
+      "Condition": { "StringEquals": { "aws:ResourceTag/for-use-with-amazon-emr-managed-policies": "true" } }
+    },
+    {
+      "Sid": "CreateEMRTaggedInstancesAndVolumes",
+      "Effect": "Allow",
+      "Action": ["ec2:RunInstances", "ec2:CreateFleet"],
+      "Resource": [
+        "arn:aws:ec2:<region>:<12-digit-account-id>:instance/*",
+        "arn:aws:ec2:<region>:<12-digit-account-id>:volume/*"
+      ],
+      "Condition": { "StringEquals": { "aws:RequestTag/for-use-with-amazon-emr-managed-policies": "true" } }
+    },
+    {
+      "Sid": "ResourcesToLaunchEC2",
+      "Effect": "Allow",
+      "Action": ["ec2:RunInstances", "ec2:CreateFleet"],
+      "Resource": [
+        "arn:aws:ec2:<region>:<12-digit-account-id>:network-interface/*",
+        "arn:aws:ec2:<region>::image/ami-*",
+        "arn:aws:ec2:<region>:<12-digit-account-id>:key-pair/*",
+        "arn:aws:ec2:<region>:<12-digit-account-id>:capacity-reservation/*",
+        "arn:aws:ec2:<region>:<12-digit-account-id>:placement-group/EMR_*",
+        "arn:aws:ec2:<region>:<12-digit-account-id>:fleet/*",
+        "arn:aws:ec2:<region>:<12-digit-account-id>:dedicated-host/*"
+      ]
+    },
+    {
+      "Sid": "ManageEMRTaggedResources",
+      "Effect": "Allow",
+      "Action": ["ec2:DeleteNetworkInterface", "ec2:ModifyInstanceAttribute", "ec2:TerminateInstances"],
+      "Resource": [
+        "arn:aws:ec2:<region>:<12-digit-account-id>:instance/*",
+        "arn:aws:ec2:<region>:<12-digit-account-id>:network-interface/*"
+      ],
+      "Condition": { "StringEquals": { "aws:ResourceTag/for-use-with-amazon-emr-managed-policies": "true" } }
+    },
+    {
+      "Sid": "ManageTagsOnEMRTaggedResources",
+      "Effect": "Allow",
+      "Action": ["ec2:CreateTags", "ec2:DeleteTags"],
+      "Resource": [
+        "arn:aws:ec2:<region>:<12-digit-account-id>:instance/*",
+        "arn:aws:ec2:<region>:<12-digit-account-id>:volume/*",
+        "arn:aws:ec2:<region>:<12-digit-account-id>:network-interface/*"
+      ],
+      "Condition": { "StringEquals": { "aws:ResourceTag/for-use-with-amazon-emr-managed-policies": "true" } }
+    },
+    {
+      "Sid": "CreateNetworkInterfaceNeededForPrivateSubnet",
+      "Effect": "Allow",
+      "Action": ["ec2:CreateNetworkInterface"],
+      "Resource": ["arn:aws:ec2:<region>:<12-digit-account-id>:network-interface/*"],
+      "Condition": { "StringEquals": { "aws:RequestTag/for-use-with-amazon-emr-managed-policies": "true" } }
+    },
+    {
+      "Sid": "TagOnCreateTaggedEMRResources",
+      "Effect": "Allow",
+      "Action": ["ec2:CreateTags"],
+      "Resource": [
+        "arn:aws:ec2:<region>:<12-digit-account-id>:network-interface/*",
+        "arn:aws:ec2:<region>:<12-digit-account-id>:instance/*",
+        "arn:aws:ec2:<region>:<12-digit-account-id>:volume/*"
+      ],
+      "Condition": { "StringEquals": { "ec2:CreateAction": ["RunInstances", "CreateFleet", "CreateNetworkInterface"] } }
+    },
+    {
+      "Sid": "ListActionsForEC2Resources",
+      "Effect": "Allow",
+      "Action": [
+        "ec2:DescribeAccountAttributes", "ec2:DescribeCapacityReservations", "ec2:DescribeDhcpOptions", "ec2:DescribeImages",
+        "ec2:DescribeInstances", "ec2:DescribeInstanceTypeOfferings", "ec2:DescribeLaunchTemplates", "ec2:DescribeNetworkAcls",
+        "ec2:DescribeNetworkInterfaces", "ec2:DescribePlacementGroups", "ec2:DescribeRouteTables", "ec2:DescribeSecurityGroups",
+        "ec2:DescribeSubnets", "ec2:DescribeVolumes", "ec2:DescribeVolumeStatus", "ec2:DescribeVpcAttribute",
+        "ec2:DescribeVpcEndpoints", "ec2:DescribeVpcs"
+      ],
+      "Resource": ["*"]
+    },
+    {
+      "Sid": "CreateDefaultSecurityGroupWithEMRTags",
+      "Effect": "Allow",
+      "Action": ["ec2:CreateSecurityGroup"],
+      "Resource": ["arn:aws:ec2:<region>:<12-digit-account-id>:security-group/*"],
+      "Condition": { "StringEquals": { "aws:RequestTag/for-use-with-amazon-emr-managed-policies": "true" } }
+    },
+    {
+      "Sid": "CreateDefaultSecurityGroupInVPCWithEMRTags",
+      "Effect": "Allow",
+      "Action": ["ec2:CreateSecurityGroup"],
+      "Resource": ["arn:aws:ec2:<region>:<12-digit-account-id>:vpc/*"],
+      "Condition": { "StringEquals": { "aws:ResourceTag/for-use-with-amazon-emr-managed-policies": "true" } }
+    },
+    {
+      "Sid": "TagOnCreateDefaultSecurityGroupWithEMRTags",
+      "Effect": "Allow",
+      "Action": ["ec2:CreateTags"],
+      "Resource": ["arn:aws:ec2:<region>:<12-digit-account-id>:security-group/*"],
+      "Condition": {
+        "StringEquals": {
+          "aws:RequestTag/for-use-with-amazon-emr-managed-policies": "true",
+          "ec2:CreateAction": "CreateSecurityGroup"
+        }
+      }
+    },
+    {
+      "Sid": "ManageSecurityGroups",
+      "Effect": "Allow",
+      "Action": [
+        "ec2:AuthorizeSecurityGroupEgress", "ec2:AuthorizeSecurityGroupIngress",
+        "ec2:RevokeSecurityGroupEgress", "ec2:RevokeSecurityGroupIngress"
+      ],
+      "Resource": ["arn:aws:ec2:<region>:<12-digit-account-id>:security-group/*"],
+      "Condition": { "StringEquals": { "aws:ResourceTag/for-use-with-amazon-emr-managed-policies": "true" } }
+    },
+    {
+      "Sid": "PassTheProjectInstanceRoleToEC2",
+      "Effect": "Allow",
+      "Action": ["iam:PassRole"],
+      "Resource": ["arn:aws:iam::<12-digit-account-id>:role/scholarchain-<environment>-emr-ec2"],
+      "Condition": { "StringEquals": { "iam:PassedToService": "ec2.amazonaws.com" } }
+    }
+  ]
+}

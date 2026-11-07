@@ -19,11 +19,21 @@ output "controls" {
     emr_control_policy  = try(aws_iam_role_policy.emr_control[0].policy, null)
     emr_disk_encryption = try({ role = aws_iam_role_policy.emr_disk_encryption[0].role, policy = aws_iam_role_policy.emr_disk_encryption[0].policy, service_role_id = aws_iam_role.emr_service.id }, null)
     kms_policy          = aws_kms_key.data.policy
-    kms_rotation        = aws_kms_key.data.enable_key_rotation
-    deployment_trust    = aws_iam_role.deployment.assume_role_policy
-    emr_service_trust   = aws_iam_role.emr_service.assume_role_policy
-    emr_ec2_trust       = aws_iam_role.emr_ec2.assume_role_policy
-    task_trust          = { for k, r in aws_iam_role.task : k => r.assume_role_policy }
+    role_boundaries = merge(
+      { for k, r in aws_iam_role.task : "task-${k}" => r.permissions_boundary },
+      { for k, r in aws_iam_role.execution : "execution-${k}" => r.permissions_boundary },
+      {
+        neptune_loader = aws_iam_role.neptune_loader.permissions_boundary
+        emr_ec2        = aws_iam_role.emr_ec2.permissions_boundary
+        emr_service    = aws_iam_role.emr_service.permissions_boundary
+        deployment     = aws_iam_role.deployment.permissions_boundary
+      }
+    )
+    kms_rotation      = aws_kms_key.data.enable_key_rotation
+    deployment_trust  = aws_iam_role.deployment.assume_role_policy
+    emr_service_trust = aws_iam_role.emr_service.assume_role_policy
+    emr_ec2_trust     = aws_iam_role.emr_ec2.assume_role_policy
+    task_trust        = { for k, r in aws_iam_role.task : k => r.assume_role_policy }
   }
 }
 

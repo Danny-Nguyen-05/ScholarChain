@@ -111,9 +111,42 @@ final class InMemoryGraphReader(
     edges: Vector[FakeGraphEdge] = Vector.empty,
     communities: Map[(String, String), Vector[String]] = Map.empty,
     maxDepth: Int = 6,
-    maxLimit: Int = 100
-) extends GraphReader {
+    maxLimit: Int = 100,
+    allowedEdgeTypes: Set[String] = GraphReaderConfig().allowedEdgeTypes,
+    maxCursorOffset: Int = GraphReaderConfig().maxCursorOffset
+) extends DirectedGraphReader {
   private def limitValid(limit: Int) = limit > 0 && limit <= maxLimit
+
+  /** Mirrors the Neptune template: the window constrains COAUTHORED_WITH only; stored endpoints are
+    * returned as written; ordering is edge ID within the outgoing then incoming phase.
+    */
+  def directedEdges(
+      id: String,
+      window: String,
+      direction: EdgeDirection,
+      edgeTypes: Set[String],
+      limit: Int,
+      cursor: Option[String]
+  ): StorageResult[DirectedEdgePage] =
+    if (!limitValid(limit) || !edgeTypes.subsetOf(allowedEdgeTypes)) Rejected("invalid-bound")
+    else {
+      val types = if (edgeTypes.isEmpty) allowedEdgeTypes else edgeTypes
+      def selected(f: FakeGraphEdge => Boolean): Vector[DirectedGraphEdge] = edges
+        .filter(e =>
+          f(e) && types(e.edgeType) && (e.edgeType != "COAUTHORED_WITH" || e.window == window)
+        )
+        .sortBy(_.edgeId)
+        .map(e => DirectedGraphEdge(e.from, e.to, e.edgeId, e.edgeType, e.properties))
+      DirectedEdgePaging.page(direction, limit, cursor, maxCursorOffset) { (phase, offset, n) =>
+        val rows = phase match {
+          case DirectedEdgePaging.Phase.Out => selected(_.from == id)
+          case DirectedEdgePaging.Phase.In  => selected(_.to == id)
+          case DirectedEdgePaging.Phase.InWithoutSelfLoops =>
+            selected(e => e.to == id && e.from != id)
+        }
+        Found(rows.slice(offset, offset + n))
+      }
+    }
   def node(id: String): StorageResult[GraphNode] =
     nodes.find(_.nodeId == id).map(Found(_)).getOrElse(Missing)
   private def adjacent(id: String, window: String, types: Set[String]): Vector[GraphNeighbor] =

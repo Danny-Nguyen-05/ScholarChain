@@ -81,6 +81,14 @@ resource "aws_iam_role" "deployer" {
       condition     = length(local.unknown_sets) == 0
       error_message = "Unknown permission set(s) requested: ${join(", ", local.unknown_sets)}. Known: ${join(", ", local.known_sets)}."
     }
+    precondition {
+      condition     = !(contains(var.enabled_permission_sets, "spike-emr") && contains(var.enabled_permission_sets, "phase14-main"))
+      error_message = "spike-emr and phase14-main must not be enabled together: the spike is destroyed (decision 14-6) and the two sets would also exceed the managed-policy attachment quota."
+    }
+    precondition {
+      condition     = length(local.selected_policies) <= 10
+      error_message = "A role can have at most 10 managed policies attached by default; the selected permission sets would attach ${length(local.selected_policies)}. The login policy is inline and does not count."
+    }
   }
 }
 
@@ -91,6 +99,22 @@ resource "aws_iam_policy" "spike_boundary" {
   name        = local.spike_boundary_name
   description = "Permissions boundary for scholarchain-spike-emr-* roles."
   policy      = jsonencode(local.spike_boundary_policy)
+}
+
+# Ceilings for the roles the main root creates (phase14-main). Carried by every scholarchain-<environment>-* role through
+# iam:PermissionsBoundary; the deployer role can neither edit them nor remove them from a role.
+resource "aws_iam_policy" "main_boundary_runtime" {
+  count       = contains(var.enabled_permission_sets, "phase14-main") ? 1 : 0
+  name        = local.m_boundary_runtime_name
+  description = "Permissions boundary for the runtime roles of the main root (tasks, executions, Neptune loader, EMR instance, producer, deployment)."
+  policy      = jsonencode(local.m14_boundary_runtime)
+}
+
+resource "aws_iam_policy" "main_boundary_emr" {
+  count       = contains(var.enabled_permission_sets, "phase14-main") ? 1 : 0
+  name        = local.m_boundary_emr_name
+  description = "Permissions boundary for the EMR service role of the main root."
+  policy      = jsonencode(local.m14_boundary_emr)
 }
 
 resource "aws_iam_policy" "permission_set" {

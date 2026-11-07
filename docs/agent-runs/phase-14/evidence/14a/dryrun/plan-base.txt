@@ -1,0 +1,25 @@
+$ scripts/plan.sh --env course --region us-east-2 --profile scholarchain-deployer-tf --expect-new-state
+STEP: start
+[2026-11-07T03:18:34Z] [20261107T031834Z-17546] INFO script=plan.sh mode=dry-run run_id=20261107T031834Z-17546 repo_root=/Users/danny/Documents/UIC/CS441/ScholarChain
+STEP: inputs
+STEP: output-paths
+[2026-11-07T03:18:34Z] [20261107T031834Z-17546] INFO outputs stay inside target/plans (ignored, absent beforehand, distinct, private): plan, .json, .txt, .log, receipt; run directory target/plans/20261107T031834Z-17546
+STEP: terraform-version
+[2026-11-07T03:18:34Z] [20261107T031834Z-17546] INFO terraform 1.13.5 accepted (binary: terraform)
+STEP: materialize-source
+[2026-11-07T03:18:34Z] [20261107T031834Z-17546] INFO dry run: would extract infra/terraform as committed at b2cd7ee99dcc136b5c8ec0667ca181cc5b3a87fd into target/plans/20261107T031834Z-17546/source/b2cd7ee99dcc136b5c8ec0667ca181cc5b3a87fd (read-only), bind it to the live state infra/terraform/terraform.tfstate and record the state's lineage, serial and sha256; nothing is read or written in a dry run
+[2026-11-07T03:18:34Z] [20261107T031834Z-17546] INFO env=course region=us-east-2 source_commit=b2cd7ee99dcc136b5c8ec0667ca181cc5b3a87fd scripts_commit=b2cd7ee99dcc136b5c8ec0667ca181cc5b3a87fd clean=true plan=/Users/danny/Documents/UIC/CS441/ScholarChain/target/plans/20261107T031834Z-17546/course-b2cd7ee99dcc136b5c8ec0667ca181cc5b3a87fd.tfplan
+STEP: account-identity
+DRY-RUN CMD: timeout=120s env AWS_PROFILE=scholarchain-deployer-tf AWS_REGION=us-east-2 TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 TF_DATA_DIR=/Users/danny/Documents/UIC/CS441/ScholarChain/target/plans/20261107T031834Z-17546/tfdata aws sts get-caller-identity --region us-east-2 --query Account --output text 
+STEP: terraform-init
+DRY-RUN CMD: timeout=900s env AWS_PROFILE=scholarchain-deployer-tf AWS_REGION=us-east-2 TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 TF_DATA_DIR=/Users/danny/Documents/UIC/CS441/ScholarChain/target/plans/20261107T031834Z-17546/tfdata terraform -chdir=/Users/danny/Documents/UIC/CS441/ScholarChain/target/plans/20261107T031834Z-17546/source/b2cd7ee99dcc136b5c8ec0667ca181cc5b3a87fd/infra/terraform init -input=false -lockfile=readonly 
+STEP: terraform-plan
+DRY-RUN CMD: timeout=1800s env AWS_PROFILE=scholarchain-deployer-tf AWS_REGION=us-east-2 TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 TF_DATA_DIR=/Users/danny/Documents/UIC/CS441/ScholarChain/target/plans/20261107T031834Z-17546/tfdata terraform -chdir=/Users/danny/Documents/UIC/CS441/ScholarChain/target/plans/20261107T031834Z-17546/source/b2cd7ee99dcc136b5c8ec0667ca181cc5b3a87fd/infra/terraform plan -input=false -lock-timeout=60s -var-file=/Users/danny/Documents/UIC/CS441/ScholarChain/target/plans/20261107T031834Z-17546/source/b2cd7ee99dcc136b5c8ec0667ca181cc5b3a87fd/infra/terraform/environments/course.tfvars -var-file=<private-vars-file> -var=aws_region=us-east-2 -var=aws_profile=scholarchain-deployer-tf -out=/Users/danny/Documents/UIC/CS441/ScholarChain/target/plans/20261107T031834Z-17546/course-b2cd7ee99dcc136b5c8ec0667ca181cc5b3a87fd.tfplan 
+STEP: terraform-show
+DRY-RUN CMD: timeout=900s env AWS_PROFILE=scholarchain-deployer-tf AWS_REGION=us-east-2 TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 TF_DATA_DIR=/Users/danny/Documents/UIC/CS441/ScholarChain/target/plans/20261107T031834Z-17546/tfdata terraform -chdir=/Users/danny/Documents/UIC/CS441/ScholarChain/target/plans/20261107T031834Z-17546/source/b2cd7ee99dcc136b5c8ec0667ca181cc5b3a87fd/infra/terraform show -json /Users/danny/Documents/UIC/CS441/ScholarChain/target/plans/20261107T031834Z-17546/course-b2cd7ee99dcc136b5c8ec0667ca181cc5b3a87fd.tfplan 
+STEP: terraform-show-text
+DRY-RUN CMD: timeout=900s env AWS_PROFILE=scholarchain-deployer-tf AWS_REGION=us-east-2 TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 TF_DATA_DIR=/Users/danny/Documents/UIC/CS441/ScholarChain/target/plans/20261107T031834Z-17546/tfdata terraform -chdir=/Users/danny/Documents/UIC/CS441/ScholarChain/target/plans/20261107T031834Z-17546/source/b2cd7ee99dcc136b5c8ec0667ca181cc5b3a87fd/infra/terraform show -no-color /Users/danny/Documents/UIC/CS441/ScholarChain/target/plans/20261107T031834Z-17546/course-b2cd7ee99dcc136b5c8ec0667ca181cc5b3a87fd.tfplan 
+STEP: plan-receipt
+[2026-11-07T03:18:34Z] [20261107T031834Z-17546] INFO dry run: would check the saved plan's region, account, environment, project and image_revision, print PLAN-TEXT (path and sha256 of target/plans/20261107T031834Z-17546/course-b2cd7ee99dcc136b5c8ec0667ca181cc5b3a87fd.tfplan.txt), print every PLAN-ACTION, and write the receipt target/plans/20261107T031834Z-17546/course-b2cd7ee99dcc136b5c8ec0667ca181cc5b3a87fd.tfplan.receipt.json
+RESULT: DRY-RUN no aws or terraform command was run and no file was written; re-run with --execute (approval point 4) to plan
+EXIT: 0

@@ -78,8 +78,8 @@
     },
     {
       "path": "infra/terraform/README.md",
-      "bytes": 37941,
-      "sha256": "c6860ef0b245ab841fc6aab02cee1739eabdfbd4bce0381284176450ae992044"
+      "bytes": 73365,
+      "sha256": "25df2fa825dcec8d92c4376a4c0d54cf0de7e9494fed985e6c376b068dc143cb"
     },
     {
       "path": "infra/terraform/billing-bootstrap/.terraform.lock.hcl",
@@ -148,13 +148,13 @@
     },
     {
       "path": "infra/terraform/environments/course.tfvars",
-      "bytes": 1466,
-      "sha256": "074db42250c2f7e61ff3c6b3bdaee62a14d91eafd0d5f3419d419f01afa7306b"
+      "bytes": 1915,
+      "sha256": "2aa39d9fbda1a4be7d89ab7187dd65896cf80eb1f01d9b07aaa33ee401c3c8c6"
     },
     {
       "path": "infra/terraform/main.tf",
-      "bytes": 6467,
-      "sha256": "d5e5b3c2f3e0075f2562609ad2ce5f5573f116bd39f1c0235b3b84153b27341c"
+      "bytes": 8093,
+      "sha256": "c64ed9fa2da172f5d9eeb5c7eb677e183813d33d1688b62838e5ece59225f8e8"
     },
     {
       "path": "infra/terraform/modules/datalake/main.tf",
@@ -198,18 +198,18 @@
     },
     {
       "path": "infra/terraform/modules/emr/main.tf",
-      "bytes": 3462,
-      "sha256": "b945543bcb85469e6a0d5b03ab7856b926c23f0447dfeab95505d298d3f7280b"
+      "bytes": 7794,
+      "sha256": "6dc120a669a252dfe1f508d0a7ed4e49aafd1f63e8814170bc809913885e0b45"
     },
     {
       "path": "infra/terraform/modules/emr/outputs.tf",
-      "bytes": 334,
-      "sha256": "4fd3461366fed94fcbf0d5823e07fdddf8fcf460a1692d2d75e30d9b9e884db5"
+      "bytes": 1195,
+      "sha256": "1f181511149dcbefbb91f0a9cc1c370ddfee82f6d85887e2dbdbb7873c69eada"
     },
     {
       "path": "infra/terraform/modules/emr/variables.tf",
-      "bytes": 663,
-      "sha256": "97fbff11089034711095904b83a950da2af5faa1d02416a6ff48e66dea76fc16"
+      "bytes": 14130,
+      "sha256": "855845f78d482186cf13686f098f27f7301d0176ceb07bba7bdd7dd756bd8f1a"
     },
     {
       "path": "infra/terraform/modules/emr/versions.tf",
@@ -258,23 +258,23 @@
     },
     {
       "path": "infra/terraform/modules/identity/main.tf",
-      "bytes": 11807,
-      "sha256": "c1563654848f6a74364f07a71b96f89643d44636486c4087c0e17e72c4461bd9"
+      "bytes": 17828,
+      "sha256": "fdb80f5948f7d1098fe1af5cafb8f736c2fe25480a3ed7cb78653986fd0d7cde"
     },
     {
       "path": "infra/terraform/modules/identity/outputs.tf",
-      "bytes": 2010,
-      "sha256": "217bc41d2b4875dfe4632b5dc6836a852a2a49864e94f96365f93baf5154779f"
+      "bytes": 2707,
+      "sha256": "df00775ca882fa109fe6dc399c857964a6b3241aabd5df33c5e9fd1c0e55b40d"
     },
     {
       "path": "infra/terraform/modules/identity/phase12b.tf",
-      "bytes": 3169,
-      "sha256": "8bdcded40d94bfd8f14680ff47dc27ceaba3272b7667a5eab595dfb99ceab5c5"
+      "bytes": 5857,
+      "sha256": "b61d88046997843e7320e3e125e46db69720966e352039597d48c4b8607546ad"
     },
     {
       "path": "infra/terraform/modules/identity/variables.tf",
-      "bytes": 968,
-      "sha256": "2ac1550de1cff2e1d66322cae32022f5c6e12ed9f043ed5463d5aa52f3e5c6a9"
+      "bytes": 1730,
+      "sha256": "3798d3d4b13ef844917dbe31dfbba876201cee4b48121fe067d46c5878db777b"
     },
     {
       "path": "infra/terraform/modules/identity/versions.tf",
@@ -323,13 +323,13 @@
     },
     {
       "path": "infra/terraform/modules/network/main.tf",
-      "bytes": 10968,
-      "sha256": "6cad9d6dbbc48de09917987f92eb45154381f2d3e62d1122ab50c72c4a132b9f"
+      "bytes": 11909,
+      "sha256": "43debbb9e309853a3eb7b15f84609bba512cb5a9cbdd0c9aced19ae8bfd7185e"
     },
     {
       "path": "infra/terraform/modules/network/outputs.tf",
-      "bytes": 1785,
-      "sha256": "a95f6380671e574c175b83149a86f4b9ad8f00b53c8aaac0f62b9ea291aea96e"
+      "bytes": 2200,
+      "sha256": "bc7bfa63dee43abf4b5c76711795be238e8ca6ecd955cc16819c7ded2a43ff09"
     },
     {
       "path": "infra/terraform/modules/network/variables.tf",
@@ -363,8 +363,8 @@
     },
     {
       "path": "infra/terraform/modules/runtime/compute.tf",
-      "bytes": 8706,
-      "sha256": "6864e3fc7336b16110a28ed24853bbe6c830bdc86baaae9d1dc341cfd575f978"
+      "bytes": 12227,
+      "sha256": "a70464006c509b638ba38b7abec3aa9c3f68a73ac1940b068a2692f8cf400240"
     },
     {
       "path": "infra/terraform/modules/runtime/main.tf",
@@ -373,13 +373,13 @@
     },
     {
       "path": "infra/terraform/modules/runtime/outputs.tf",
-      "bytes": 1410,
-      "sha256": "7035f6ad7a97ef66b17a2b8b36321538407666d65893838718d128b02f498849"
+      "bytes": 1419,
+      "sha256": "fd7ee3eac47b30ac46b5de4ee11cdb6b56c26a90ab48afa16266f40297be049a"
     },
     {
       "path": "infra/terraform/modules/runtime/variables.tf",
-      "bytes": 1250,
-      "sha256": "4cbae506c1b1371ef255fce80c96397708b3930e1f23fc0ca90ca56451835458"
+      "bytes": 2275,
+      "sha256": "43d5b7105e4f4f40520384c6001815a61900f654c8e48115506947cda442f38d"
     },
     {
       "path": "infra/terraform/modules/runtime/versions.tf",
@@ -408,13 +408,13 @@
     },
     {
       "path": "infra/terraform/modules/workflow/main.tf",
-      "bytes": 3546,
-      "sha256": "ef7859b8c8f62ce1be701bf5f66de45cb7b89a4a2a31378b3a7fa902cdd4f08a"
+      "bytes": 3787,
+      "sha256": "9ec3bfc04d30094c609085232f203306d3ea6c8262c7d7d88dca40db759c40e0"
     },
     {
       "path": "infra/terraform/modules/workflow/outputs.tf",
-      "bytes": 419,
-      "sha256": "ad976377003ccb94e5be9e2c8e28849178795d47fbc89ece2cc1b1fedd65133a"
+      "bytes": 474,
+      "sha256": "91aff9332b44f15fea43ce4320148d717df9fbc7ad0ecefd296dd659d7356165"
     },
     {
       "path": "infra/terraform/modules/workflow/variables.tf",
@@ -433,13 +433,13 @@
     },
     {
       "path": "infra/terraform/phase12b-variables.tf",
-      "bytes": 8785,
-      "sha256": "ec120c11bb0ec5195015153ce49eab285f9954d7280007b908056acc77abe9d3"
+      "bytes": 22143,
+      "sha256": "42fabbedb9a6f1fc684d3109c66da9ab2b08b15b36de5511e444fa509aa9bcdb"
     },
     {
       "path": "infra/terraform/phase12b.tf",
-      "bytes": 6960,
-      "sha256": "9ee3bff8c367d4748e9e558dc59557a7c6f6ba0e4a46fa27ba85b8a3f080925e"
+      "bytes": 9740,
+      "sha256": "10a8b7418969540784b22ab291939096825d766226ee74f6a869d9a70bd96cc2"
     },
     {
       "path": "infra/terraform/providers.tf",
@@ -483,13 +483,13 @@
     },
     {
       "path": "infra/terraform/tests/phase12b.tftest.hcl",
-      "bytes": 28856,
-      "sha256": "01d787a8ce04796fab91713422ae58fdecfb8aab683f549098cf46719175d0f7"
+      "bytes": 29699,
+      "sha256": "b179ab5d954161d0c94b95fab4b7893a60e677beaf8ecd8f5a4d9e2dbae3c41f"
     },
     {
       "path": "infra/terraform/tests/phase12c.tftest.hcl",
-      "bytes": 14339,
-      "sha256": "4450bcbe1aa3673ae953e227b0f488e9c2a64c9d3e7f8d91e441d8299f80c08b"
+      "bytes": 14847,
+      "sha256": "335d8249143a09e9e2c85e4db7b4340a9dbef382c281d25e51fe2152d9ebd766"
     },
     {
       "path": "infra/terraform/variables.tf",
@@ -528,13 +528,13 @@
     },
     {
       "path": "tests/infra/README.md",
-      "bytes": 1718,
-      "sha256": "9cd8f380d78d2ccdb3566018360651254635bd34dc9b799d841105b37dc6b256"
+      "bytes": 10965,
+      "sha256": "4d17fcfbafa186355dc0763704b90b2ea061f082d7538ce7474dfdf3ea91b3dc"
     },
     {
       "path": "tests/infra/terraform_source_guard.py",
-      "bytes": 11700,
-      "sha256": "17cf7941d48c71f571088669b1da3ec435c16951f1e4a6865274c14186de70ca"
+      "bytes": 34554,
+      "sha256": "56c8535a582942fb9ce736b21f0e49e12dc9a1b1843d35ccec6852f45a730cc5"
     },
     {
       "path": "tests/src/test/resources/phase6/empty.jsonl",

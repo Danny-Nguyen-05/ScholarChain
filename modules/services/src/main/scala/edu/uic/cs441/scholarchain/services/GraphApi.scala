@@ -12,10 +12,46 @@ import scala.util.control.NonFatal
 /** Directed immutable snapshot supplied by composition. The older GraphReader neighbor port has
   * neither direction nor snapshot identity and cannot satisfy this stronger public contract.
   */
+/** One stored edge as the graph API reports it. `undirected` marks a type whose stored endpoint
+  * order is only canonical, so every direction filter treats it as incident. `evidence` carries
+  * stored evidence pointers for edges whose row has no provenance record; it is never inferred.
+  */
+final case class SnapshotEdge(
+    edgeId: String,
+    edgeType: String,
+    fromId: String,
+    toId: String,
+    undirected: Boolean,
+    provenance: ujson.Value,
+    evidence: Option[ujson.Value] = None
+)
 trait GraphSnapshot {
   def snapshotId: String
   def node(id: String): StorageResult[GraphNode]
   def edges(id: String, window: String): StorageResult[Vector[GraphEdge]]
+
+  /** Edges incident to a node. The default projects the fully typed core edges unchanged. */
+  def incidentEdges(id: String, window: String): StorageResult[Vector[SnapshotEdge]] =
+    edges(id, window) match {
+      case StorageResult.Missing => StorageResult.Missing
+      case result =>
+        StorageResult.value(result) match {
+          case Some(found) =>
+            StorageResult.Found(
+              found.map(e =>
+                SnapshotEdge(
+                  e.edgeId,
+                  e.edgeType.wire,
+                  e.fromId,
+                  e.toId,
+                  false,
+                  upickle.default.writeJs(e.provenance)
+                )
+              )
+            )
+          case None => StorageResult.Rejected("edge-read-failed")
+        }
+    }
   def metrics(id: String, window: String): StorageResult[ResearcherMetricRecord]
 }
 final class InMemoryGraphSnapshot(
@@ -188,43 +224,49 @@ final class GraphApi(snapshot: GraphSnapshot, val config: GraphApiConfig = Graph
             level += 1; var next = Vector.empty[String]
             frontier.sorted.foreach { current =>
               if (System.nanoTime() >= expires) error = Some(ApiError.timeout)
-              else if (error.isEmpty) PortResult.read(snapshot.edges(current, window)) match {
-                case Left(e) => error = Some(e)
-                case Right(edges) =>
-                  scanned += edges.size
-                  if (scanned > config.maxScannedEdges)
-                    error = Some(
-                      ApiError(
-                        422,
-                        "GRAPH_SCAN_CAP",
-                        "Graph exploration exceeds the configured scan cap."
+              else if (error.isEmpty)
+                PortResult.read(snapshot.incidentEdges(current, window)) match {
+                  case Left(e) => error = Some(e)
+                  case Right(edges) =>
+                    scanned += edges.size
+                    if (scanned > config.maxScannedEdges)
+                      error = Some(
+                        ApiError(
+                          422,
+                          "GRAPH_SCAN_CAP",
+                          "Graph exploration exceeds the configured scan cap."
+                        )
                       )
-                    )
-                  else
-                    edges.sortBy(_.edgeId).filter(e => types(e.edgeType.wire)).foreach { edge =>
-                      val follow =
-                        if (direction == "out" && edge.fromId == current) Some(edge.toId)
-                        else if (direction == "in" && edge.toId == current) Some(edge.fromId)
-                        else if (direction == "both")
-                          Some(if (edge.fromId == current) edge.toId else edge.fromId)
-                        else None
-                      follow.foreach { target =>
-                        if (!seenEdges(edge.edgeId)) {
-                          items :+= ujson.Obj(
-                            "nodeId" -> target,
-                            "edgeId" -> edge.edgeId,
-                            "edgeType" -> edge.edgeType.wire,
-                            "depth" -> level,
-                            "fromId" -> edge.fromId,
-                            "toId" -> edge.toId,
-                            "provenance" -> upickle.default.writeJs(edge.provenance)
-                          )
-                          seenEdges += edge.edgeId
+                    else
+                      edges.sortBy(_.edgeId).filter(e => types(e.edgeType)).foreach { edge =>
+                        val touches = edge.fromId == current || edge.toId == current
+                        val follow =
+                          if (edge.undirected && touches)
+                            Some(if (edge.fromId == current) edge.toId else edge.fromId)
+                          else if (direction == "out" && edge.fromId == current) Some(edge.toId)
+                          else if (direction == "in" && edge.toId == current) Some(edge.fromId)
+                          else if (direction == "both")
+                            Some(if (edge.fromId == current) edge.toId else edge.fromId)
+                          else None
+                        follow.foreach { target =>
+                          if (!seenEdges(edge.edgeId)) {
+                            val item = ujson.Obj(
+                              "nodeId" -> target,
+                              "edgeId" -> edge.edgeId,
+                              "edgeType" -> edge.edgeType,
+                              "depth" -> level,
+                              "fromId" -> edge.fromId,
+                              "toId" -> edge.toId,
+                              "provenance" -> edge.provenance
+                            )
+                            edge.evidence.foreach(e => item("evidence") = e)
+                            items :+= item
+                            seenEdges += edge.edgeId
+                          }
+                          if (!visited(target)) { visited += target; next :+= target }
                         }
-                        if (!visited(target)) { visited += target; next :+= target }
                       }
-                    }
-              }
+                }
               if (visited.size > config.maxVisitedNodes)
                 error = Some(
                   ApiError(

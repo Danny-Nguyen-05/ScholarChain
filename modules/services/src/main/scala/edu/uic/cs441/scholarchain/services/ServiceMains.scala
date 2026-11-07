@@ -30,103 +30,175 @@ object BootstrapConfig {
     env.get("SCHOLARCHAIN_WORKER_POLL_MS").map(_.toLong).getOrElse(1000L)
   )
 }
+
+/** A started role. close() stops the worker thread, the HTTP server and then owned resources. */
+final class RunningService private[services] (
+    server: ApiServer.RunningServer,
+    worker: Option[(EmbeddingWorker, Thread)],
+    timeoutMs: Long,
+    owned: Vector[AutoCloseable]
+) extends AutoCloseable {
+  def port: Int = server.port
+  def close(): Unit = {
+    worker.foreach((w, t) => {
+      w.close(); t.interrupt(); t.join(timeoutMs)
+    })
+    server.close()
+    owned.foreach(c =>
+      try c.close()
+      catch { case NonFatal(_) => () }
+    )
+  }
+}
 object ServiceBootstrap {
+  val modes: Set[String] = Set("unconfigured", "offline-synthetic", "aws")
 
   /** Return an exit code for invalid configuration so packaging tests can check refusal without
     * terminating their test JVM. Production mains apply that exit code via System.exit.
     */
-  def start(role: String): Int = try {
-    ServiceConfig.fromEnvironment(sys.env) match {
-      case Left(code) => System.err.println(code); 2
+  def start(role: String): Int = launch(role, sys.env, new AwsSdkPortFactory()) match {
+    case Left(code) => code
+    case Right(running) =>
+      Runtime.getRuntime.addShutdownHook(new Thread(() => running.close()))
+      0
+  }
+
+  /** Starts a role from an explicit environment and, in aws mode, an injected port factory. Exit
+    * code 2 is the single refusal path; messages name at most an environment variable, never a
+    * value, a provider message or a stack trace.
+    */
+  def launch(
+      role: String,
+      env: Map[String, String],
+      factory: AwsPortFactory
+  ): Either[Int, RunningService] = try {
+    ServiceConfig.fromEnvironment(env) match {
+      case Left(code) => System.err.println(code); Left(2)
       case Right(config) =>
-        val mode = sys.env.getOrElse("SCHOLARCHAIN_SERVICE_MODE", "unconfigured")
-        if (!Set("unconfigured", "offline-synthetic")(mode)) {
-          System.err.println("unsupported-service-mode"); return 2
+        val mode = env.getOrElse("SCHOLARCHAIN_SERVICE_MODE", "unconfigured")
+        if (!modes(mode)) {
+          System.err.println("unsupported-service-mode"); return Left(2)
         }
-        val validMode = mode == "offline-synthetic"
-        val workerConfig = BootstrapConfig.worker(sys.env)
-        val composition = new OfflineComposition(config)
-        // In explicit offline mode query-api can call independently running graph/semantic
-        // artifacts through real HTTP clients. Raw runtime token is required only for those calls.
-        val graphUri = sys.env.get("SCHOLARCHAIN_GRAPH_BASE_URI")
-        val semanticUri = sys.env.get("SCHOLARCHAIN_SEMANTIC_BASE_URI")
-        val configuredRemote = role == "query-api" && (graphUri.nonEmpty || semanticUri.nonEmpty)
-        val bundle = if (configuredRemote) {
-          if (graphUri.isEmpty || semanticUri.isEmpty) {
-            composition.queries.close(); composition.extended.close(); return 2
-          }
-          val token =
-            sys.env.getOrElse("SCHOLARCHAIN_INTERNAL_TOKEN", throw new IllegalArgumentException)
-          if (Auth.sha256(token) != config.internalTokenSha256) throw new IllegalArgumentException
-          val graph = new RemoteGraphApi(
-            new RemoteService(URI.create(graphUri.get), token, config, composition.metrics, "graph")
-          )
-          val semantic = new RemoteSemanticApi(
-            new RemoteService(
-              URI.create(semanticUri.get),
-              token,
-              config,
-              composition.metrics,
-              "semantic"
-            )
-          )
-          val remoteComposition =
-            new OfflineComposition(config, Some(graph), Some(semantic), Some(composition.metrics))
-          composition.queries.close(); composition.extended.close()
-          remoteComposition
-        } else composition
-        val workflow =
-          if (validMode) bundle.workflow
-          else
-            new QueryWorkflow {
-              def run(
-                  r: QueryRequest,
-                  c: RequestContext,
-                  s: String => Unit
-              ): Either[ApiError, WorkflowOutput] = Left(ApiError.unavailable)
-            }
-        val queries =
-          if (validMode) bundle.queries
-          else new QueryService(bundle.sessions, workflow, config, bundle.metrics)
-        val app = new ApiApplication(
-          queries,
-          config,
-          readiness = () => validMode && bundle.ready,
-          serviceRole = role,
-          extended = if (validMode) Some(bundle.extended) else None
-        )
-        val server = ApiServer.start(app, config.host, config.port, config.maxRequestBytes)
-        val worker = if (role == "embedding-worker" && validMode) {
-          val embedder = new DeterministicHashedEmbeddingClient(
-            EmbeddingModel("synthetic-offline-services", "v1", 8)
-          )
-          val vectors = new InMemoryVectorStore
-          val runner = new EmbeddingManifestRunner(
-            EmbeddingIngestConfig("synthetic-offline", "text", 8),
-            new InMemoryObjectStore,
-            vectors,
-            new InMemoryArtifactRegistry,
-            new InMemoryRunLedger,
-            embedder
-          )
-          val w = new EmbeddingWorker(
-            new InMemoryEmbeddingWorkQueue,
-            new InMemoryEmbeddingWorkQueue,
-            new InMemoryQuerySessionStore,
-            new ManifestEmbeddingProcessor(runner),
-            workerConfig
-          )
-          val thread = ServiceThreads.daemon("embedding-worker").newThread(() => w.run());
-          thread.start(); Some((w, thread))
-        } else None
-        Runtime.getRuntime.addShutdownHook(new Thread(() => {
-          worker.foreach((w, t) => {
-            w.close(); t.interrupt(); t.join(config.downstreamTimeoutMs)
-          }); server.close()
-        }))
-        0
+        if (mode == "aws") launchAws(role, env, config, factory)
+        else launchLocal(role, env, config, mode == "offline-synthetic")
     }
-  } catch { case NonFatal(_) => System.err.println("invalid-service-configuration"); 2 }
+  } catch { case NonFatal(_) => System.err.println("invalid-service-configuration"); Left(2) }
+
+  private def launchAws(
+      role: String,
+      env: Map[String, String],
+      config: ServiceConfig,
+      factory: AwsPortFactory
+  ): Either[Int, RunningService] = {
+    val refusal = (code: String) => { System.err.println(code); Left(2) }
+    AwsServiceConfig.fromEnvironment(role, env, config) match {
+      case Left(code) => refusal(code)
+      case Right(aws) =>
+        AwsComposition.build(config, aws, env, factory) match {
+          case Left(code) => refusal(code)
+          case Right(composition) =>
+            val app = new ApiApplication(
+              composition.queries,
+              config,
+              readiness = () => composition.ready,
+              serviceRole = role,
+              extended = composition.extended
+            )
+            val server = ApiServer.start(app, config.host, config.port, config.maxRequestBytes)
+            val worker = composition.worker.map { w =>
+              val thread = ServiceThreads.daemon("embedding-worker").newThread(() => w.run());
+              thread.start(); (w, thread)
+            }
+            Right(
+              new RunningService(server, worker, config.downstreamTimeoutMs, Vector(composition))
+            )
+        }
+    }
+  }
+
+  private def launchLocal(
+      role: String,
+      env: Map[String, String],
+      config: ServiceConfig,
+      validMode: Boolean
+  ): Either[Int, RunningService] = {
+    val workerConfig = BootstrapConfig.worker(env)
+    val composition = new OfflineComposition(config)
+    // In explicit offline mode query-api can call independently running graph/semantic
+    // artifacts through real HTTP clients. Raw runtime token is required only for those calls.
+    val graphUri = env.get("SCHOLARCHAIN_GRAPH_BASE_URI")
+    val semanticUri = env.get("SCHOLARCHAIN_SEMANTIC_BASE_URI")
+    val configuredRemote = role == "query-api" && (graphUri.nonEmpty || semanticUri.nonEmpty)
+    val bundle = if (configuredRemote) {
+      if (graphUri.isEmpty || semanticUri.isEmpty) {
+        composition.queries.close(); composition.extended.close(); return Left(2)
+      }
+      val token =
+        env.getOrElse("SCHOLARCHAIN_INTERNAL_TOKEN", throw new IllegalArgumentException)
+      if (Auth.sha256(token) != config.internalTokenSha256) throw new IllegalArgumentException
+      val graph = new RemoteGraphApi(
+        new RemoteService(URI.create(graphUri.get), token, config, composition.metrics, "graph")
+      )
+      val semantic = new RemoteSemanticApi(
+        new RemoteService(
+          URI.create(semanticUri.get),
+          token,
+          config,
+          composition.metrics,
+          "semantic"
+        )
+      )
+      val remoteComposition =
+        new OfflineComposition(config, Some(graph), Some(semantic), Some(composition.metrics))
+      composition.queries.close(); composition.extended.close()
+      remoteComposition
+    } else composition
+    val workflow =
+      if (validMode) bundle.workflow
+      else
+        new QueryWorkflow {
+          def run(
+              r: QueryRequest,
+              c: RequestContext,
+              s: String => Unit
+          ): Either[ApiError, WorkflowOutput] = Left(ApiError.unavailable)
+        }
+    val queries =
+      if (validMode) bundle.queries
+      else new QueryService(bundle.sessions, workflow, config, bundle.metrics)
+    val app = new ApiApplication(
+      queries,
+      config,
+      readiness = () => validMode && bundle.ready,
+      serviceRole = role,
+      extended = if (validMode) Some(bundle.extended) else None
+    )
+    val server = ApiServer.start(app, config.host, config.port, config.maxRequestBytes)
+    val worker = if (role == "embedding-worker" && validMode) {
+      val embedder = new DeterministicHashedEmbeddingClient(
+        EmbeddingModel("synthetic-offline-services", "v1", 8)
+      )
+      val vectors = new InMemoryVectorStore
+      val runner = new EmbeddingManifestRunner(
+        EmbeddingIngestConfig("synthetic-offline", "text", 8),
+        new InMemoryObjectStore,
+        vectors,
+        new InMemoryArtifactRegistry,
+        new InMemoryRunLedger,
+        embedder
+      )
+      val w = new EmbeddingWorker(
+        new InMemoryEmbeddingWorkQueue,
+        new InMemoryEmbeddingWorkQueue,
+        new InMemoryQuerySessionStore,
+        new ManifestEmbeddingProcessor(runner),
+        workerConfig
+      )
+      val thread = ServiceThreads.daemon("embedding-worker").newThread(() => w.run());
+      thread.start(); Some((w, thread))
+    } else None
+    Right(new RunningService(server, worker, config.downstreamTimeoutMs, Vector.empty))
+  }
   def main(role: String): Unit = { val exit = start(role); if (exit != 0) System.exit(exit) }
 }
 object QueryApiMain { def main(args: Array[String]): Unit = ServiceBootstrap.main("query-api") }

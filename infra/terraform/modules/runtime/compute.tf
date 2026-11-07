@@ -2,6 +2,56 @@ locals {
   active_services = var.enabled && var.image_revision != null ? local.services : toset([])
   http_services   = var.enabled && var.image_revision != null ? setsubtract(local.services, toset(["embedding-worker"])) : toset([])
   namespace       = "${var.name_prefix}.internal"
+
+  # The aws service mode needs the human acknowledgment (runtime_composition_verified, a precondition of runtime_enabled in the root)
+  # AND an enabled runtime. Otherwise the tasks keep SCHOLARCHAIN_SERVICE_MODE=unconfigured and receive none of the aws variables.
+  aws_mode = var.enabled && var.composition_verified
+
+  # Synthesis: the inference-profile ID is the Converse modelId when one is configured; the foundation-model ID is its version tag.
+  synthesis_model = var.synthesis_inference_profile_id != null ? var.synthesis_inference_profile_id : var.synthesis_model_id
+
+  # Variables every aws role needs: the six tables and the QuerySession index (names from the root's table contract).
+  aws_common_env = merge(
+    { for t, suffix in {
+      RunLedger      = "RUN_LEDGER", EntityLinkCache = "ENTITY_LINK_CACHE", QuerySession = "QUERY_SESSION",
+      EvidenceBundle = "EVIDENCE_BUNDLE", ArtifactRegistry = "ARTIFACT_REGISTRY", ResearcherMetricCache = "RESEARCHER_METRIC_CACHE"
+    } : "SCHOLARCHAIN_DYNAMODB_TABLE_${suffix}" => var.table_names[t] },
+    { SCHOLARCHAIN_DYNAMODB_QUERY_SESSION_INDEX = var.query_session_index }
+  )
+  aws_embedding_env = {
+    SCHOLARCHAIN_MODELS_EMBEDDING_MODEL  = var.embedding_model_id
+    SCHOLARCHAIN_EMBEDDING_MODEL_VERSION = var.embedding_model_version
+    SCHOLARCHAIN_EMBEDDING_DIMENSION     = tostring(var.vector_dimension)
+  }
+  aws_vector_env = {
+    SCHOLARCHAIN_S3_VECTORS_VECTOR_BUCKET = var.vector_bucket
+    SCHOLARCHAIN_SEMANTIC_INDEX           = var.semantic_index
+    SCHOLARCHAIN_S3_VECTORS_METRIC        = var.vector_metric
+  }
+  # Per role, exactly the contract of modules/services/README.md "Environment contract". Secrets are NOT here: they are `secrets`
+  # (ARN bindings). Optional variables with no Terraform source are left unset.
+  aws_role_env = {
+    "graph-service" = {
+      SCHOLARCHAIN_NEPTUNE_ENDPOINT     = var.neptune_endpoint # module.neptune.endpoint is already "https://<reader endpoint>:<port>"
+      SCHOLARCHAIN_STORAGE_GRAPH_BUCKET = var.graph_bucket
+    }
+    "semantic-service" = merge(local.aws_vector_env, local.aws_embedding_env, { SCHOLARCHAIN_STORAGE_RAG_BUCKET = var.rag_bucket })
+    "query-api" = merge(local.aws_embedding_env, {
+      SCHOLARCHAIN_STORAGE_RAG_BUCKET      = var.rag_bucket
+      SCHOLARCHAIN_MODELS_SYNTHESIS_MODEL  = local.synthesis_model
+      SCHOLARCHAIN_SYNTHESIS_MODEL_VERSION = var.synthesis_model_id
+      SCHOLARCHAIN_EVIDENCE_INDEX_PREFIX   = var.evidence_index_prefix
+      SCHOLARCHAIN_AUDIT_PREFIX            = var.audit_prefix
+    })
+    "embedding-worker" = merge(local.aws_vector_env, local.aws_embedding_env, {
+      SCHOLARCHAIN_SQS_QUEUE_URL                     = var.queue_url
+      SCHOLARCHAIN_SQS_DLQ_URL                       = var.dlq_url
+      SCHOLARCHAIN_STORAGE_RAG_BUCKET                = var.rag_bucket
+      SCHOLARCHAIN_EMBEDDING_TEXT_PREFIX             = var.embedding_text_prefix
+      SCHOLARCHAIN_WORKER_VISIBILITY_TIMEOUT_SECONDS = tostring(var.queue_visibility_seconds)
+      SCHOLARCHAIN_WORKER_WAIT_SECONDS               = tostring(var.queue_wait_seconds)
+    })
+  }
 }
 resource "aws_ecs_cluster" "course" {
   name = var.name_prefix
@@ -50,19 +100,22 @@ resource "aws_ecs_task_definition" "service" {
     essential              = true
     readonlyRootFilesystem = true
     mountPoints            = [{ sourceVolume = "temporary", containerPath = "/tmp", readOnly = false }]
-    # Current entrypoints support unconfigured/offline-synthetic only. Even an
-    # activation acknowledgment does not silently opt into fake or invented live mode.
+    # SCHOLARCHAIN_SERVICE_MODE is "aws" only when the runtime is enabled AND the human acknowledged the composition
+    # (runtime_composition_verified); otherwise "unconfigured" with none of the aws variables. The aws mode is implemented in
+    # modules/services (AwsComposition); graph-service's Neptune reader wiring was still pending when this was written, and
+    # nothing here is live-verified.
     environment = concat([
       { name = "SCHOLARCHAIN_HTTP_HOST", value = "0.0.0.0" },
       { name = "SCHOLARCHAIN_HTTP_PORT", value = tostring(var.service_port) },
-      { name = "SCHOLARCHAIN_SERVICE_MODE", value = "unconfigured" },
+      { name = "SCHOLARCHAIN_SERVICE_MODE", value = local.aws_mode ? "aws" : "unconfigured" },
       { name = "AWS_REGION", value = var.aws_region }
       ], each.key == "query-api" ? [
       { name = "SCHOLARCHAIN_GRAPH_BASE_URI", value = "http://graph-service.${local.namespace}:${var.service_port}" },
       { name = "SCHOLARCHAIN_SEMANTIC_BASE_URI", value = "http://semantic-service.${local.namespace}:${var.service_port}" }
-    ] : [])
-    # Infrastructure endpoints/names below are deployment outputs, not invented
-    # application environment names; Phase13/14 owns the live SDK composition contract.
+      ] : [],
+      [for name in sort(keys(merge(local.aws_common_env, local.aws_role_env[each.key]))) : { name = name, value = merge(local.aws_common_env, local.aws_role_env[each.key])[name] } if local.aws_mode]
+    )
+    # Secrets stay ARN bindings (never in `environment`); the names are those the services read.
     secrets      = [for name, arn in lookup(var.service_secret_bindings, each.key, {}) : { name = name, valueFrom = arn }]
     portMappings = [{ containerPort = var.service_port, hostPort = var.service_port, protocol = "tcp" }]
     logConfiguration = { logDriver = "awslogs", options = {

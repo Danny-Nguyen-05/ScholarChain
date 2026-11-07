@@ -75,19 +75,205 @@ secret injection for outgoing calls and ensure its hash matches the internal-tok
 The raw token is never logged, returned or committed. In that composition query execution
 reads actual remote graph metric records and actual remote semantic hits, and graph exploration
 is proxied to the graph artifact. Both dependency readiness checks must succeed for readiness
-200. No request is sent to an AWS or paid model endpoint by these entrypoints.
+200. In `unconfigured` and `offline-synthetic` modes no request is sent to an AWS or paid model
+endpoint by these entrypoints; only `aws` mode (below) constructs AWS clients.
 
 Graph-service and semantic-service in offline mode use immutable fake graph/vector ports.
 The semantic index starts empty and returns truthful empty hits; it never invents context.
 Embedding-worker starts a bounded loop over an empty fake queue with a real
 `ManifestEmbeddingProcessor`/`EmbeddingManifestRunner`; injection tests enqueue actual bounded
-synthetic work. Live stores, SQS URLs, model clients and deployment lifecycle remain later
-approved composition inputs. Offline mode is not a live production adapter configuration.
+synthetic work. Offline mode is not a live production adapter configuration; the live
+composition is the separate `aws` mode below.
 
 The distribution contains `services.jar`, `lib/`, and required `prompts/runtime` and
 `prompts/schemas` assets. Build with `sbt packageServices` on JDK 17; Docker's `MAIN_CLASS`
 build argument selects one of the four allowed mains. Container listeners require
 `SCHOLARCHAIN_HTTP_HOST=0.0.0.0` explicitly. Images are built locally without a registry push.
+
+## Live AWS mode (`SCHOLARCHAIN_SERVICE_MODE=aws`)
+
+`aws` is an explicit third mode. Mode names are exact; anything else exits 2. It is composed only
+from the existing `modules/storage` and `modules/rag` adapters, per role. No in-memory store, hashed
+embedder, scripted model or fixture is selected, and `OfflineComposition` is never constructed;
+`AwsBootstrapSpec` scans the aws sources and the aws launch path for those names. Code:
+`AwsConfig` (environment contract), `AwsPorts` (SDK client factory), `AwsComposition` (roles),
+`ReadinessGate`, `LiveAdapters`.
+
+| Role | Composition |
+| --- | --- |
+| graph-service | `GraphApi` over `LiveGraphSnapshot`: node and edge reads from the storage-owned `NeptuneGraphReader` (`NeptuneGraphReader.connect`, which owns its SDK client) through the `DirectedGraphReader` port, metric reads from `DynamoResearcherMetricStore` (byte for byte) |
+| semantic-service | `SemanticApi.fromPorts` over `BedrockEmbeddingClient` (Titan V2, on demand) and `S3VectorStore` |
+| query-api | `RuntimeAnswerWorkflow` with `BedrockConverseLlmClient` for the planner and synthesis, `DynamoQuerySessionStore`, `IndexedEvidenceBundleStore` over `DynamoEvidenceBundleStore`, `ObjectStoreRuntimeAuditStore`, `DynamoEntityLinkCache`, `DynamoResearcherMetricStore`, and the existing `RemoteGraphApi` / `RemoteSemanticApi` HTTP clients |
+| embedding-worker | `EmbeddingWorker` over `SqsEmbeddingWorkQueue` (queue and DLQ), `ManifestEmbeddingProcessor` with `S3ObjectStore`, `S3VectorStore`, `DynamoArtifactRegistry`, `DynamoRunLedger` and `BedrockEmbeddingClient`; durable reservation in `DynamoQuerySessionStore` |
+
+Credentials come from the default AWS provider chain (the ECS task role). SDK retries are disabled
+because each adapter owns a bounded retry policy. Every refusal exits 2 through the existing path
+and prints only a closed code that names at most an environment variable, never a value or a stack
+trace; no client is created before configuration validates.
+
+### Environment contract
+
+All values are environment variables. Nothing is compiled in: no bucket, endpoint, account, table,
+queue or model identifier. "Terraform source" names the value Terraform can supply; entries marked
+*none* have no Terraform output today and need a new variable or a human-provided value.
+
+Every aws role (all required unless marked optional):
+
+| Name | Example | Terraform source |
+| --- | --- | --- |
+| `SCHOLARCHAIN_SERVICE_MODE` | `aws` | literal in `modules/runtime/compute.tf` |
+| `SCHOLARCHAIN_API_KEY_SHA256`, `SCHOLARCHAIN_INTERNAL_TOKEN_SHA256` | 64 hex | `service_secret_bindings` (existing) |
+| `SCHOLARCHAIN_HTTP_HOST`, `SCHOLARCHAIN_HTTP_PORT` | `0.0.0.0`, `8080` | already in compute.tf |
+| `AWS_REGION` | `us-east-2` | `var.aws_region` (already in compute.tf). `SCHOLARCHAIN_APPLICATION_REGION` is optional and must equal it |
+| `SCHOLARCHAIN_DYNAMODB_TABLE_RUN_LEDGER` | `scholarchain-course-RunLedger` | `deployment_contract.table_names["RunLedger"]` |
+| `SCHOLARCHAIN_DYNAMODB_TABLE_ENTITY_LINK_CACHE` | | `table_names["EntityLinkCache"]` |
+| `SCHOLARCHAIN_DYNAMODB_TABLE_QUERY_SESSION` | | `table_names["QuerySession"]` |
+| `SCHOLARCHAIN_DYNAMODB_TABLE_EVIDENCE_BUNDLE` | | `table_names["EvidenceBundle"]` |
+| `SCHOLARCHAIN_DYNAMODB_TABLE_ARTIFACT_REGISTRY` | | `table_names["ArtifactRegistry"]` |
+| `SCHOLARCHAIN_DYNAMODB_TABLE_RESEARCHER_METRIC_CACHE` | | `table_names["ResearcherMetricCache"]` |
+| `SCHOLARCHAIN_DYNAMODB_QUERY_SESSION_INDEX` | `by-idempotency-key` | `var.query_session_gsi_name` |
+| `SCHOLARCHAIN_READINESS_CACHE_MS` (optional) | default `5000`, 1..300000 | none |
+| `SCHOLARCHAIN_READINESS_TIMEOUT_MS` (optional) | default `2000`, 100..30000 | none |
+
+The six table names must be distinct. The storage adapter requires all six in every role even when
+the role reads only some of them.
+
+graph-service:
+
+| Name | Example | Terraform source |
+| --- | --- | --- |
+| `SCHOLARCHAIN_NEPTUNE_ENDPOINT` | `https://<reader-endpoint>:8182` (https and explicit port) | `deployment_contract.neptune_endpoint` (`module.neptune.endpoint`) |
+| `SCHOLARCHAIN_STORAGE_GRAPH_BUCKET` | | `module.datalake.bucket_names["graph"]` (not in compute.tf inputs yet) |
+| `SCHOLARCHAIN_GRAPH_CURSOR_KEY` | at least 16 chars | `service_secret_bindings["graph-service"]` (existing secret) |
+| `SCHOLARCHAIN_NEPTUNE_QUERY_TIMEOUT_MS` (optional) | default `5000`, 100..60000 | none |
+| `SCHOLARCHAIN_GRAPH_SNAPSHOT_ID` (optional) | | none. Unset reports `neptune-live-unpinned`, which asserts no immutable snapshot |
+
+semantic-service:
+
+| Name | Example | Terraform source |
+| --- | --- | --- |
+| `SCHOLARCHAIN_S3_VECTORS_VECTOR_BUCKET` | | `deployment_contract.vector_bucket` |
+| `SCHOLARCHAIN_SEMANTIC_INDEX` | `researcher-profile-v1` (one of the five `VectorIndexes` names) | a key of `module.s3vectors.index_arns` |
+| `SCHOLARCHAIN_STORAGE_RAG_BUCKET` | | `module.datalake.bucket_names["rag"]` |
+| `SCHOLARCHAIN_MODELS_EMBEDDING_MODEL` | `amazon.titan-embed-text-v2:0` | `var.embedding_model_id` |
+| `SCHOLARCHAIN_EMBEDDING_MODEL_VERSION` | must equal the version stamped on the stored vectors | none |
+| `SCHOLARCHAIN_EMBEDDING_DIMENSION` | `256` (256, 512 or 1024) | `var.vector_dimension` |
+| `SCHOLARCHAIN_S3_VECTORS_METRIC` (optional) | default `cosine` | `var.vector_metric` |
+
+query-api:
+
+| Name | Example | Terraform source |
+| --- | --- | --- |
+| `SCHOLARCHAIN_GRAPH_BASE_URI`, `SCHOLARCHAIN_SEMANTIC_BASE_URI` | `http://graph-service.<ns>:8080` | already in compute.tf |
+| `SCHOLARCHAIN_INTERNAL_TOKEN` | raw token, must hash to the internal hash | `service_secret_bindings["query-api"]` (existing secret) |
+| `SCHOLARCHAIN_STORAGE_RAG_BUCKET` | | `module.datalake.bucket_names["rag"]` |
+| `SCHOLARCHAIN_MODELS_SYNTHESIS_MODEL` | `us.anthropic.claude-haiku-4-5-20251001-v1:0` | `coalesce(var.synthesis_inference_profile_id, var.synthesis_model_id)` |
+| `SCHOLARCHAIN_SYNTHESIS_MODEL_VERSION` | recorded in the audit | none; suggest `var.synthesis_model_id` |
+| `SCHOLARCHAIN_MODELS_EMBEDDING_MODEL`, `_EMBEDDING_MODEL_VERSION`, `_EMBEDDING_DIMENSION` | as semantic-service | as semantic-service. query-api makes no embedding call; the triple is the identity the stored vectors must carry |
+| `SCHOLARCHAIN_PROMPTS_DIR` (optional) | default: nearest `prompts` directory upward from the working directory | none |
+| `SCHOLARCHAIN_RUNTIME_ARTIFACT_KEY`, `_SHA256`, `_SOURCE_RUN_ID` (optional, all or none) | `.../versions/...`, 64 hex, run id | none (published by the 14C load). Unset: every artifact read is refused |
+| `SCHOLARCHAIN_RUNTIME_ARTIFACT_BUCKET` (optional) | default: the rag bucket | `module.datalake.bucket_names["artifacts"]` if used |
+| `SCHOLARCHAIN_RUNTIME_DATASET_SNAPSHOT` (optional) | default `runtime-live-unpinned` | none |
+| `SCHOLARCHAIN_QUERY_SESSION_TTL_SECONDS` (optional) | positive | `var.enable_query_session_ttl` |
+| `SCHOLARCHAIN_EVIDENCE_INDEX_PREFIX`, `SCHOLARCHAIN_AUDIT_PREFIX` (optional) | `evidence-index`, `runtime-audit` | none |
+| `SCHOLARCHAIN_RUNTIME_PLANNER_DEADLINE_MS`, `_SYNTHESIS_DEADLINE_MS`, `_SYNCHRONOUS_DEADLINE_MS` (optional) | override the packaged stage deadlines | none. The result must pass `RuntimeConfigValidation` |
+
+embedding-worker:
+
+| Name | Example | Terraform source |
+| --- | --- | --- |
+| `SCHOLARCHAIN_SQS_QUEUE_URL`, `SCHOLARCHAIN_SQS_DLQ_URL` | https queue URLs | `deployment_contract.queue_url`, `.dead_letter_queue_url` |
+| `SCHOLARCHAIN_STORAGE_RAG_BUCKET` | text bucket | `module.datalake.bucket_names["rag"]` |
+| `SCHOLARCHAIN_EMBEDDING_TEXT_PREFIX` | `embedding-text` (items must lie under `<prefix>/.../versions/`) | none (14C data layout) |
+| `SCHOLARCHAIN_S3_VECTORS_VECTOR_BUCKET`, `SCHOLARCHAIN_SEMANTIC_INDEX`, `SCHOLARCHAIN_MODELS_EMBEDDING_MODEL`, `_EMBEDDING_MODEL_VERSION`, `_EMBEDDING_DIMENSION`, `SCHOLARCHAIN_S3_VECTORS_METRIC` | as semantic-service. The index is the readiness probe index only | as semantic-service |
+| `SCHOLARCHAIN_WORKER_VISIBILITY_TIMEOUT_SECONDS` (optional) | default `30` | `var.sqs_visibility_timeout_seconds` |
+| `SCHOLARCHAIN_WORKER_WAIT_SECONDS` (optional) | default `0`, 0..20 | `var.sqs_long_poll_seconds` |
+| `SCHOLARCHAIN_WORKER_MAX_ATTEMPTS`, `_BATCH_SIZE`, `_POLL_MS` (optional) | existing | none |
+
+The synthesis value is passed unchanged as the Converse `modelId`, so an inference-profile ID is
+accepted. The temperature, forced tool choice and prompt versions stay as packaged in core
+(`scholarchain.runtime-config.v1.json`); only the model identity, region and the three optional
+deadlines are replaced.
+
+### Readiness semantics
+
+Liveness (`/healthz`) is process-only in every mode and never touches a dependency. In aws mode
+`/readyz` is 200 only when every check for the role passes. Checks run through the adapters' ports,
+concurrently, bounded as a whole by `SCHOLARCHAIN_READINESS_TIMEOUT_MS` (a hung check is cancelled
+and counts as failed), and the verdict is cached for `SCHOLARCHAIN_READINESS_CACHE_MS`, pass or
+fail, with concurrent callers sharing one evaluation. Only check names are logged.
+
+Ready means reachable and authorized, never that data is loaded: each probe reads a key no loader
+writes (`readiness-probe`) and a clean "absent" answer counts as ready. An empty graph, empty
+vector index and empty tables are ready, so 14B can be healthy before the 14C load.
+
+| Role | Check | Port call | AWS action | Granted by |
+| --- | --- | --- | --- | --- |
+| graph-service | neptune | graph reader `node` | `neptune-db:ReadDataViaQuery` (OpenCypher) | `modules/identity/phase12b.tf:39-41` |
+| graph-service | dynamodb-metrics | metric store `get` | `dynamodb:GetItem` | `modules/identity/main.tf:74-78`, tables at `:55` |
+| semantic-service | s3-vectors | vector store `get` | `s3vectors:GetVectors` | `modules/identity/phase12b.tf:47` |
+| query-api | dynamodb-query-session | session store `get` | `dynamodb:GetItem` | `main.tf:74-78`, tables at `:54` |
+| query-api | dynamodb-evidence-bundle | evidence store `get` | `dynamodb:GetItem` | same |
+| query-api | dynamodb-metrics | metric store `get` | `dynamodb:GetItem` | same |
+| query-api | dynamodb-entity-links | link cache lookup | `dynamodb:Query` | same |
+| query-api | graph-service, semantic-service | peer `GET /readyz` | none (HTTP, internal) | not IAM |
+| embedding-worker | sqs-queue | queue `backlog` | `sqs:GetQueueAttributes` | `main.tf:119-122` |
+| embedding-worker | s3-vectors | vector store `get` | `s3vectors:GetVectors` | `phase12b.tf:47` |
+| embedding-worker | dynamodb-run-ledger, dynamodb-artifact-registry | ledger `getRun`, registry `get` | `dynamodb:GetItem` | `main.tf:74-78`, tables at `:57` |
+| embedding-worker | dynamodb-query-session | session store `get` | `dynamodb:GetItem` | **not granted** (see Limits) |
+
+query-api readiness includes both peers' `/readyz`. Those calls pass through the peer circuit
+breaker, so after a peer outage query-api stays not-ready until the breaker closes, up to
+`SCHOLARCHAIN_BREAKER_RESET_MS` (default 30 s).
+
+### Limits and what is not verified live
+
+- Nothing here has run against AWS. All tests use injected ports; the SDK factory is only built
+  offline with static dummy credentials and no call. IAM, endpoints, model access, Titan V2 and
+  Haiku 4.5 behavior, Neptune reachability and S3 Vectors responses are unverified.
+- **Graph reader and edges (storage delivered, unverified live).** `AwsSdkPortFactory` opens the
+  reader through `StorageGraphReaderProvider`, which calls `NeptuneGraphReader.connect`; this module
+  never names the SDK client (the independent runtime fence still passes). Construction makes no
+  network call. A storage refusal exits 2 with a closed message: `invalid-aws-configuration:
+  SCHOLARCHAIN_NEPTUNE_ENDPOINT`, `invalid-aws-configuration:AWS_REGION`,
+  `aws-credentials-unavailable`, or `graph-reader-connect-failed`.
+- **Edge semantics.** `LiveGraphSnapshot.incidentEdges` reads `directedEdges(..., Both, <the five
+  served types>, ...)` page by page, passing the store's opaque cursor back unchanged, and stops one
+  row past the API scan cap so the API reports `GRAPH_SCAN_CAP` rather than a silently truncated
+  list. Stored start and end are reported as stored. An undirected type
+  (`GraphEdgeType.isUndirected`, today COAUTHORED_WITH) has only a canonical stored order, so every
+  direction filter treats it as incident. `window` constrains COAUTHORED_WITH only. A row with a
+  stored `provenanceJson` reports it (plus `sourceEvidenceJson` as `evidence`). Coauthor rows carry
+  no provenance record: they report `provenance: null` and an `evidence` object of their stored
+  pointers (`evidenceTable`, `evidenceEdgeId`, `windowId`, `representativeWorkIds`), never an
+  invented provenance. A row with neither, or with malformed stored provenance or evidence, refuses
+  the whole read (`edge-provenance-absent`, `malformed-edge-provenance`, `malformed-edge-evidence`;
+  the API answers 502). A bound refusal from the store (`invalid-bound`) is propagated the same
+  way. The fully typed core `GraphEdge` projection stays refused
+  (`core-edge-projection-unavailable`) because loaded coauthor rows cannot supply it. The
+  `provenance` of a coauthor neighbor item is therefore not a `Provenance` object; clients must read
+  `evidence`.
+- The Cypher templates behind `directedEdges`, Neptune reachability, IAM for `ReadDataViaQuery` and
+  the edge row shapes in a real loaded graph are unverified until the Phase 14C gate.
+- **Embedding-worker session table (blocked on infra).** The worker's durable reservation uses the
+  QuerySession table, which the worker task role cannot read or write. Its readiness reports
+  not-ready (`dynamodb-query-session`) and processing would fail until the grant exists.
+- **S3 existence checks (blocked on infra).** The task roles hold only object-level `s3:GetObject`
+  (`modules/identity/main.tf:79-84`).
+  Without `s3:ListBucket` on the bucket, S3 answers 403 instead of 404 for an absent key, so the
+  adapter reports a rejection. query-api needs this to index new evidence items. S3 is therefore
+  not a readiness check, and the DLQ (send-only) and Bedrock (no free action) are not probed.
+- query-api retrieval over the remote graph supports node, neighbor and path reads. Community and
+  cross-community reads are refused (`remote-graph-operation-unsupported`). Without a published
+  artifact pointer, ranking, bridge, temporal and edge-support reads are refused.
+- The semantic retrieval agent asks for a query vector before calling its vector port.
+  `RemoteQueryEmbeddingCarrier` satisfies that signature with a placeholder shape that
+  `RemoteVectorStore` discards; semantic-service embeds the question. A retrieval port that takes
+  the question directly would remove this (rag-owned).
+- The planner's model usage is not recorded in the audit `modelUsage`: the plan is produced before
+  `RuntimeAnswerWorkflow.runPlan`, so that the supplied constraints are checked before retrieval.
+- Stage deadlines come from the packaged runtime config (planner and synthesis 5 s) and may need
+  the optional overrides for real model latency.
 
 ## Requests, jobs and errors
 
@@ -294,6 +480,15 @@ passed **eight boot smoke cases** plus the **three-service remote HTTP compositi
 500 ms graph/transport caps and the stop-graph outage check. Exact commands, image/JAR hashes
 and retained logs are recorded by the coordinator in the round-2 evidence. Earlier counts above
 are historical checkpoints for their stated rounds.
+
+Phase 14A repair round 1 (F1, live `aws` mode) added 50 offline feature tests in five suites
+(`AwsConfigSpec`, `ReadinessGateSpec`, `AwsCompositionSpec`, `AwsBootstrapSpec`,
+`LiveGraphSnapshotSpec`). The final JDK 17.0.20.1 `sbt check` run, with AWS environment
+neutralized, exited 0 in 728 s (12:08 reported by sbt, 12:10 wall). Its services block ran **90
+tests in 12 suites, zero failures**; the nine test summaries in that run sum to 1342 passed, 0
+failed, 1 canceled (the final 18-test summary, not a services suite). The injected
+`checkProbeInjectFailure` line is the expected self-test. No AWS call was made; nothing in `aws`
+mode has run against AWS.
 
 No OpenSearch, optional index/service, CI workflow, cloud apply, live deployment or paid provider
 call was added. Completed query results replay with the same injected persistent store, but the

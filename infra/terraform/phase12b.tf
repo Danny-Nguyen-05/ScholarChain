@@ -43,6 +43,10 @@ resource "terraform_data" "phase12b_guard" {
       error_message = "Runtime activation needs a verified future live composition, immutable revision, Neptune and named auth secret references for all services (plus query outgoing token and shared graph cursor key). Current artifacts remain unconfigured."
     }
     precondition {
+      condition     = !(var.runtime_enabled && var.runtime_composition_verified) || (var.embedding_model_version != null && var.synthesis_model_id != null && var.embedding_model_id != null)
+      error_message = "The aws service mode (runtime_enabled with runtime_composition_verified) needs embedding_model_version (the version the 14C ingest stamps on the vectors), synthesis_model_id and embedding_model_id."
+    }
+    precondition {
       condition     = var.https_certificate_arn == null || (var.runtime_enabled && length(var.public_ingress_cidrs) > 0 && startswith(var.https_certificate_arn, "arn:aws:acm:${var.aws_region}:${var.aws_account_id}:certificate/"))
       error_message = "HTTPS needs enabled runtime, approved ingress CIDRs and a certificate in the selected account/region. No HTTP fallback."
     }

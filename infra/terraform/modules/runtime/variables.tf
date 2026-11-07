@@ -25,3 +25,30 @@ variable "table_names" { type = map(string) }
 variable "neptune_endpoint" { type = string }
 variable "vector_bucket" { type = string }
 variable "log_groups" { type = map(string) }
+
+# Task environment of the aws service mode (SCHOLARCHAIN_SERVICE_MODE=aws; contract: modules/services/README.md and AwsConfig.scala).
+# Every value is supplied by the root from a resource output or a variable; nothing is compiled in here.
+variable "rag_bucket" { type = string }
+variable "graph_bucket" { type = string }
+variable "embedding_model_id" { type = string }
+variable "embedding_model_version" {
+  type    = string
+  default = null
+}
+variable "vector_dimension" { type = number }
+variable "vector_metric" { type = string }
+variable "query_session_index" { type = string }
+variable "queue_visibility_seconds" { type = number }
+variable "queue_wait_seconds" { type = number }
+variable "semantic_index" { type = string }
+variable "embedding_text_prefix" { type = string }
+variable "evidence_index_prefix" { type = string }
+variable "audit_prefix" { type = string }
+variable "synthesis_model_id" {
+  type    = string
+  default = null
+}
+variable "synthesis_inference_profile_id" {
+  type    = string
+  default = null
+}
