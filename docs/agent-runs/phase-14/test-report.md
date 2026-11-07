@@ -281,4 +281,4 @@ Evidence: `evidence/14a/gates/check-full-final.txt`, sanitized (snapshot and tem
 
 ### F3. Commit
 
-`APPROVED_COMMIT`: pending; the user commits this tree and supplies the SHA.
+`APPROVED_COMMIT ed9d2414de66083364bb5f6303d738049ae3d67e` (committed and pushed to `origin/phase-14` on 2026-11-07 at the user's request). It differs from snapshot 4 only in docs: this report, `evidence/14a/gates/check-full-final.txt`, and the plan path in `prompt.md` (email removed).
