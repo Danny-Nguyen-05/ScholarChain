@@ -214,6 +214,35 @@ neither operation can reuse an approval for the other. Every content, identity, 
 check completes before credential/client construction. A disabled approval refuses before reading
 the referenced gate. Disabled templates and synthetic guard tests are not operator approvals.
 
+### Phase 14 gap fixes (N15, embedding token bound, N11 disclosure)
+
+- **N15 (query-smoke caps).** A `query-smoke` approval authorizes only `queryRequestCap`,
+  `queryEmbeddingCallCap`, `queryObjectReadCap` and its `dollarCapUsd`. The smoke preflight no
+  longer re-runs the ingest cap checks: the nested `live` block is used for model, pointer,
+  group and manifest validation (`LiveEmbeddingIngestMain.validateManifest`) only. The approval's
+  `vectorCap`, `concurrencyCap` and `embeddingCallCap` are not authorizations for a smoke (leave
+  them 0; negative values are refused), and `live.maxEmbeddingCalls`/`live.dollarCapUsd` are not
+  compared with the approval. `live.maxVectors` must still cover the manifest size. Identity
+  (run ID, environment, expiry, gate hash), the smoke dollar cap and the three query caps remain
+  mandatory. The smoke makes no synthesis (LLM) call; there is no synthesis cap to approve.
+- **Token-derived embedding bound.** Ingest and smoke preflight also bound embedding spend by the
+  content: tokens = sum over texts of ceil(UTF-8 bytes / `minBytesPerEmbeddingToken`) times
+  `maxEmbeddingAttempts`, priced at `assumedUsdPerMillionEmbeddingTokens` (default 0.02). The
+  dollar estimate takes the larger of that and the per-attempt bound, then adds storage and fixed
+  overhead. Exceeding either the configured or the approved dollar cap refuses with
+  `live-assumed-cost-or-request-bound` before any factory, credential or Titan call. At 0.02 per
+  million tokens, 15,000,000 token-attempts cost exactly USD 0.30. `minBytesPerEmbeddingToken`
+  defaults to 1 (a strict upper bound; raise it up to 4 only as a human-validated assumption).
+  It remains an assumed bound, not a billing guarantee. Reports carry `embeddingTokenBound`.
+- **N11 (disclosure only).** The four mixed-export summary types (researcher-profile, community,
+  paper, collaboration-path) deliberately carry no `sourceDataset` identity field and no
+  `sourceDataset` filter, because one summary can reference several source datasets and a
+  dataset is not guessed from a mixed export (`Phase6EmbeddingSource`, owned by storage). Only
+  `topic-institution-summary` node documents carry `sourceDataset`. The compact metadata that lists a
+  source dataset is therefore unavailable as a filter for the other four types; their provenance
+  is carried by `sourceReferences` and the ordinary-S3 text object.
+
+
 Pure planning computes query calls as query count times samples per query, embeddings as query
 count times configured maximum attempts, and object reads as the sum of top K times sample count.
 The assumed dollar bound combines those embedding/query/object-read bounds with configured unit

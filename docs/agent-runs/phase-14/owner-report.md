@@ -341,3 +341,168 @@ TEST RESULTS (agent-reported):
   An earlier run gave 5 transient failures while infra was mid-edit; the 5 tests passed when re-run alone, and the
     whole suite passed when re-run.
 ```
+
+## Subphase 14B — Step 0 and the Q6 repair
+
+### infra-engineer (Sonnet 5.5, high effort)
+
+STATUS: COMPLETE. OWNER: infra-engineer. WORK ORDER: 14B Step 0 Q6 / review 2 N3, plus the N4 stale comment in the touched file.
+FILES CREATED: `infra/terraform/tests/phase14b.tftest.hcl` (8 runs).
+FILES MODIFIED: `infra/terraform/modules/runtime/compute.tf` (local `load_balanced_service` shared by the `load_balancer` block and `health_check_grace_period_seconds`; N4 comment), `infra/terraform/modules/runtime/variables.tf` (`health_check_grace_period_seconds`, number, default 120, whole seconds 0..3600), `infra/terraform/README.md` (stale sentence and a grace-period paragraph).
+COMMANDS RUN / TEST RESULTS: see `test-report.md` B1.
+ASSUMPTIONS: no root variable; the module default is the single source. Upper bound 3600 s.
+RISKS: 120 s is a mitigation, not proof; if peers take longer the circuit breaker is still reachable. Reviewer note (no change): `/healthz` on the ALB target group would decouple query-api's public health from its peers; keeping `/readyz` makes the grace period load-bearing on every redeploy. Two shell edits were refused by the PreToolUse hook and redone with Edit.
+MANUAL ACTION REQUIRED: review; the user's commit. BLOCKED-ON OWNER: none. BLOCKED-ON EVIDENCE: none. NEXT GATE: review, then the user's commit.
+
+### test-engineer (Sonnet 5.5, high effort)
+
+STATUS: COMPLETE. OWNER: test-engineer. WORK ORDER: independent static test of the Q6 requirement, written from the requirement.
+FILES CREATED: `tests/infra/phase14b_checks.py`, `tests/infra/test_phase14b_grace.py` (13 tests).
+FILES MODIFIED: `tests/infra/README.md`.
+COMMANDS RUN / TEST RESULTS: see `test-report.md` B1.
+ASSUMPTIONS: the variable name is derived from the expression; a shared local is allowed; the "same condition" check is behavioural (truth table over the four services, with and without a certificate); the 3600 bound is not asserted.
+RISKS: text-only; a refactor outside the evaluator grammar fails closed. Two shell edits were refused by the PreToolUse hook and redone.
+BLOCKED-ON OWNER: none. NEXT GATE: review.
+
+### Coordinator
+
+Recorded the Step 0 answers, the tentative Nov 11 date and the open HTTPS-certificate item in `prompt.md`; ran B2 and B3; assembled evidence under `evidence/14b/` (`gates/check-full-q6.txt`, `gates/sbt-check-live-q6-summary.txt`, `q6/pin-drift.txt`, `q6/test-engineer-mutations.jsonl`). No live command, no commit.
+
+## Subphase 14B — repair round 1 (14B review 1, B1)
+
+### infra-engineer (Sonnet 5.5, high effort)
+
+STATUS: COMPLETE. OWNER: infra-engineer. WORK ORDER: B1 option (a).
+FILES CREATED: `infra/terraform/tests/phase14b_root.tftest.hcl` (6 runs); `infra/terraform/tests/phase14b.tftest.hcl` rewritten (30 runs); `target/phase14/evidence/14b/r1/infra-mutations.txt`.
+FILES MODIFIED: `modules/runtime/compute.tf` (explicit target-group `interval`, `timeout`, `healthy_threshold`, `unhealthy_threshold` from variables; precondition timeout < interval; service precondition grace ≥ healthy_threshold × interval when load-balanced), `modules/runtime/variables.tf` (grace default 300; `health_check_interval_seconds` 30 [5–300], `health_check_timeout_seconds` 5 [2–120], `health_check_healthy_threshold` 3 [2–10], `health_check_unhealthy_threshold` 3 [2–10], all whole), `modules/runtime/outputs.tf` (`compute_controls.target_groups`, for tests), `main.tf` (one line), `phase12b-variables.tf` (root `query_health_check_grace_period_seconds`, default 300, whole 0–3600), `environments/course.local.tfvars.example` (commented line), `README.md` (variable table and arithmetic: unhealthy after 3 × 30 = 90 s, recovery 3 × 30 = 90 s, 300 s covers peers ready within about 200 s).
+ASSUMPTIONS: the timing variables stay module-level (tuning them needs a commit); timeout 5 matches the ELBv2 HTTP default.
+RISKS: the guard's refusal is tested only at module level (`terraform test` cannot expect failures on a module resource from a root run); nothing live-verified.
+BLOCKED-ON OWNER: none. NEXT GATE: recheck review.
+
+### test-engineer (Sonnet 5.5, high effort)
+
+STATUS: COMPLETE. OWNER: test-engineer. WORK ORDER: update the independent check for B1 option (a).
+FILES MODIFIED: `tests/infra/phase14b_checks.py`, `tests/infra/test_phase14b_grace.py` (21 tests), `tests/infra/README.md`. Evidence: `target/phase14/evidence/14b/r1/test-engineer-mutations.jsonl`.
+ASSUMPTIONS: the guard is a lifecycle precondition on the service; validation must reject -1, a fraction and 2147483648 (exact bounds not asserted); the root variable name is discovered from the pass-through.
+RISKS: static text checks; a rewrite outside the evaluator grammar fails closed.
+BLOCKED-ON OWNER: none. NEXT GATE: recheck review.
+
+### Coordinator
+
+Appended 14B review 1 verbatim to `review.md`; logged B1 and N1–N5 in `repairs.md`; recorded the repair decision and the N1 arithmetic (USD 3.82 headroom for Nov 11) in `prompt.md`; corrected the deployer-apply dates (N3); added the dated 14B addendum to `approval-request-14a.md` (N2); retained snapshot identity counts and both mutation records as evidence files (N4); ran R2 and R3. No live command, no commit.
+
+## Subphase 14B — replan under the USD 25 cap
+
+The coordinator assembled this from the agent reports. Every agent ran Sonnet 5.5 at high effort. None ran live commands, made AWS calls, or read secrets, private tfvars or state.
+
+| Owner | Delivered | Open items |
+|---|---|---|
+| infra-engineer | Shape flags and Fargate 256 CPU; ACM in base-apply with validation in runtime-apply; Neptune tunnel task; Neptune outputs; delete-everything cleanup; deployer ACM and ECS Exec grants; four MFA operator roles (4 h, `aws login`) plus the pipeline role in the same deployer apply; billing modify mode at USD 25 with alerts at 10/15/20; `upload-slice.sh`, `upload-emr-artifacts.sh`, experiment tokens, `smoke-test.sh --checks`, release.conf pins | Pre-session items 4–7, 9 and 10; two trailing blank lines (P4) |
+| build-engineer | Reproducible entity-resolution job JAR and EMR artifact manifest, built locally only | none |
+| spark-engineer | Neptune CSV part cap of 16 MiB; real slice re-exported (run `f6e63b4b`, 78,104 nodes, 328,967 edges; `evidence/14b/replan/real-slice-export.md`) | none |
+| storage-engineer | Bounded runtime artifact (≤ 10,000 rows, 16 MiB) with a selection rule; loader timeouts; credential check; Phase 8 R3 fixed | Pre-session item 2 (shared); one trailing blank line (P4) |
+| rag-engineer | Phase 8 N15 fixed; embedding token-cost bound before any Titan call; 14C templates (`evidence/14b/replan/14c-templates.md`); fallback note; offline Anthropic client in a separate, unmerged worktree | Pre-session item 8 |
+| experiment-engineer | Load generator with non-LLM endpoints by default and the shared Haiku cap; 15A manifests for three sizes; 15B and 16B manifests; Haiku bucket ledger (10/60/40/5) | Pre-session items 1–3 |
+| deploy-engineer | Read-only drafting run (Sonnet 5.5, high effort; task "draft exact session runbook"), launched by the coordinator on 2026-11-08. No file edited, no live command, no AWS call, no `--execute`; it was limited to reading files and to `--help` or dry-run modes that make no AWS call. Its draft came back to the coordinator as report text. Documentation-engineer turned it into the runbook, and the gaps it found became the gap routing in `prompt.md` ("Gap routing … after the deploy-engineer runbook draft"). This corrects the earlier omission (review N6). The 14A statement that deploy-engineer was not used (`owner-report.md:14`) is still true for 14A | none |
+| documentation-engineer | `docs/runbooks/phase-14-live-session.md` (sections A–E, glossary, go/no-go checks), from the deploy-engineer draft | none |
+| test-engineer | Independent suites for every item, including direct assertions for A3 and U1; account-scan merge-base fix; timeout-test retry; source-guard allowlist entries; 53 of 53 final mutants caught | AWS example-account exception awaiting confirmation; one trailing blank line (P4) |
+
+### Coordinator
+
+- Recorded the user decisions in `prompt.md`.
+- Wrote `approval-request-14b-replan.md`.
+- Built clean snapshots 7 and 8 and ran the seven-gate check on both (snapshot 7 failed and was repaired; snapshot 8 passed).
+- Ran the live `sbt check`.
+- Sanitized the evidence logs.
+- Recomputed the pin drift.
+
+No live command and no commit.
+
+## Subphase 14B — repair round 2 (14B review 2, B2; N1–N8)
+
+Every agent ran Sonnet 5.5 at high effort. None ran live commands, made AWS calls, committed, or touched any whitespace.
+
+### infra-engineer
+
+STATUS: COMPLETE. WORK ORDER: B2.
+FILES MODIFIED:
+- `scripts/lib/verify.py`: `prespend` takes exactly one of `--min-headroom D` or `--no-headroom-floor`. A required mutually exclusive group means both or neither exits 2. In no-floor mode the headroom comparison is skipped, but the field must still be a finite number. It prints `PRESPEND: cleanup-prepare has no headroom floor (remaining_headroom_usd=<2 decimals>)`.
+- `scripts/deploy.sh`: `HEADROOM_ARGS` comes from STAGE alone. cleanup-prepare gets `--no-headroom-floor`; every other stage gets `--min-headroom ${PRESPEND_MIN_HEADROOM_USD}` (3).
+- `scripts/config/release.conf`: `PRESPEND_MIN_HEADROOM_CLEANUP_USD` removed, and its comment explains there is no cleanup floor and no config key.
+- `scripts/lib/common.sh`: the stale key removed from `SC_PINNED_KEYS`.
+- `scripts/README.md`: lines 53, 156 and 265.
+- `scripts/tests/test_deploy.py`, `test_verify_redact.py`, `test_syntax.py`, `test_pipeline.py`: updated and new cases.
+DESIGN NOTE: no environment variable or config value can select the no-floor path.
+RISKS: a caller of `verify.py --no-headroom-floor` gets no floor. Only deploy.sh calls it, and test-engineer's static guard (f) enforces this.
+BLOCKED-ON: closed. The test files went to test-engineer, and the approval request §4 and §7 were updated by the coordinator.
+
+### test-engineer
+
+STATUS: COMPLETE. WORK ORDERS: the named account-scan exception, and the B2 tests.
+FILES MODIFIED:
+- `tests/infra/account_scan.py`: `ScopedSynthetic(name, value, path, pattern)` entries. `aws-documentation-example-account` has the exact value, the exact path compared by string equality, and pattern None.
+- `tests/infra/test_billing_replan_14b.py`: class `AwsDocumentationExampleAccountEntry`, tests (i)–(v).
+- `tests/scripts/test_prespend_floors_14b.py`: rewritten, 26 tests covering (a)–(f) and extras.
+- `tests/scripts/test_pipeline_refusals.py`: stale key references removed.
+- `tests/infra/README.md`: content only. The trailing blank line was left as it was.
+ASSUMPTIONS: a non-numeric `PRESPEND_MIN_HEADROOM_USD` refuses every stage, cleanup-prepare included, as deploy.sh validates the config before the stage branch.
+RISKS: mutation (a1), a path turned into an equivalent pattern, is caught only by the structure test (iv).
+
+### documentation-engineer
+
+STATUS: COMPLETE. WORK ORDER: B2, runbook part.
+FILES MODIFIED: `docs/runbooks/phase-14-live-session.md`, in place with no added lines:
+- glossary line 96;
+- R.1 lines 616 and 617;
+- C2 lines 1293, 1298 and 1303;
+- E5 line 1416.
+They now say cleanup-prepare has no headroom floor, a negative headroom is accepted, and the receipt is still fully checked. Lines 432, 437 and 845 were left untouched (whitespace deferred).
+NOTE: C2 describes the printed line in general terms. The exact text is `PRESPEND: cleanup-prepare has no headroom floor (remaining_headroom_usd=…)`.
+
+### Coordinator
+
+- Appended the review 2 verdict and the reviewer's follow-up verbatim to `review.md`:
+  - replaced the email-bearing plan path at line 378 with `<plan path>` (N2);
+  - replaced the AWS example ID in the quoted follow-up with a placeholder;
+  - noted each substitution.
+- Logged B2 and N1–N8 in `repairs.md`.
+- Recorded in `prompt.md`:
+  - the user's decisions (whitespace deferred; the test exception);
+  - the answers to B2 and N1;
+  - the full-check timing decision.
+- Wrote approval request §3.2 (tax at 11%: totals, the 2.5 NCU effect, the failed 42 h floor and the options), §3.4 (N4), §4 and §7 (B2) and §5 (N5). Wrote the deploy-engineer provenance (N6).
+- Ran Q2.
+
+No live command and no commit.
+
+## Subphase 14B — post-approval (review 3 APPROVE; F1–F3, whitespace, caps = planned use)
+
+Every agent ran Sonnet 5.5 at high effort. None ran live commands, made AWS calls or committed.
+
+| Owner | Files | Result |
+|---|---|---|
+| infra-engineer | Whitespace: `infra/terraform/billing-execution/README.md`, `scripts/billing/PUBLICATION.md`, `infra/terraform/tests/phase14b_root.tftest.hcl`. Cap: `scripts/config/release.conf` (`EMR_CUMULATIVE_CAP_USD=2.52`, with the reason in the comment), `scripts/run-bounded-pipeline.sh` (help text), `scripts/README.md` (5 statements), `scripts/tests/test_pipeline.py` (re-derived boundaries), `scripts/tests/test_budget.py` (2 new tests) | done |
+| storage-engineer | `modules/storage/README.md`, final newline only | done |
+| test-engineer | `tests/infra/README.md` (final newline); `tests/scripts/test_cap_pins_14b.py` (new); `test_prespend_floors_14b.py`, `test_llm_budget_14b.py`, `test_pipeline_refusals.py` (cap expectations) | done; mutations m1, m2 and m2b caught |
+| experiment-engineer | `experiments/manifests/llm-allocation.json`, `load-tests/config/load-profile.v1.json` (`shared_cap_usd` 1.33); READMEs, manifest notes and docstrings; `load-tests/tests/*` and `experiments/tests/*` (re-derived) | done. Risk: the shared-cap reserve is USD 0.00175 |
+| documentation-engineer | `docs/runbooks/phase-14-live-session.md`: trailing whitespace at lines 432, 437 and 845; hard stop H37 and cleanup by H35 (13 lines, including the approval-expiry H0 + 37 h); R.1 with tax and the new caps; the R.2 JSON example (0.56 / 21.01 / 3.09); the B9, GO/NO-GO 6, E8 and E9 caps; the idle rates with tax | done |
+| coordinator | Recorded review 3 verbatim. Logged F1–F3. Redacted the plan path at `review.md:136` and `:263` (F3). Recorded the user decisions (F1 37 h, F3, N4, caps = planned use, review order). Updated approval request §1, §3.2 (37 h projection, the H0-receipt finding and the current projection), §3.3, §4, §5 header, §8 status and §11. Ran S2 | done |
+
+## Subphase 14B — post-approval delta repair (review 4: D1; N1–N5)
+
+Every agent ran Sonnet 5.5 at high effort. None ran live commands, made AWS calls or committed.
+
+| Owner | Files | Result |
+|---|---|---|
+| experiment-engineer | `experiments/README.md:23`, `experiments/scripts/render_manifests.py:23` | D1 done: cap 2.52; scale-out 2.94 > 2.52 needs a human cap decision |
+| infra-engineer | `scripts/tests/test_pipeline.py:580` (comment only) | N1 done |
+| documentation-engineer | `docs/runbooks/phase-14-live-session.md:614-615` | N2 done (0.3096, about 0.31); N3 margin sentence added |
+| coordinator | `review.md` (review 4, verbatim), `repairs.md`, `prompt.md` (N4 and N5 answers; ruling pending), `test-report.md`, `owner-report.md` | done |
+
+## Subphase 14B — final full check (snapshots 9 and 10)
+
+| Owner | Work | Result |
+|---|---|---|
+| coordinator | Built snapshots 9 and 10; ran the seven-gate check on both; ran the live `sbt check`, the whitespace check and the pin-drift check; masked the placeholder at `review.md:909` (verbatim-text redaction with a note, user decision); sanitized logs; replaced approval request §8 | snapshot 9 failed (account scan, U1); snapshot 10 `RESULT: PASS gates=7` |
+
+No agent was launched. No live command and no commit.

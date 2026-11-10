@@ -20,15 +20,16 @@ Purpose
   used in Phase 13.
 
 Preservation policy (pinned in scripts/config/release.conf; not overridable from the environment)
-  PRESERVED (never removed): Terraform state/backend (module.foundation: state bucket, lock table,
-    budget); all S3 buckets and objects and their bucket-level configuration (datalake, evidence,
-    artifacts); S3 Vectors; the KMS keys, aliases and key policies that keep preserved data readable;
-    CloudWatch log groups needed for grading.
-  TEARDOWN: ECS/ECR runtime, EMR, Neptune, DynamoDB, SQS, Step Functions and the network (NAT/EIP,
-    endpoints, VPC and children), plus the runtime IAM roles/policies and alarms/dashboard that a
-    targeted run pulls in as dependents.
-  Anything else is UNLISTED. The saved plan is REFUSED when any delete or replace touches a preserved
-  class, or when any delete is not in the teardown set.
+  PRESERVED (never removed): the Terraform state/backend (module.foundation: budget and state-backend settings; the
+    unreferenced bootstrap module). Nothing else: the USD 25 replan (W4, user decision 5) ends the session with a full purge,
+    after the evidence is archived and the report downloads are taken (see "Ordered teardown" in scripts/README.md).
+  TEARDOWN: ECS/ECR runtime, EMR, Neptune, DynamoDB, SQS, Step Functions and the network (NAT/EIP, endpoints, VPC and
+    children); the S3 data lake buckets (every object version), S3 Vectors (bucket and indexes), the KMS key and alias
+    (scheduled for deletion with the configured 7-day window, free while pending), the CloudWatch log groups, the
+    Terraform-managed API certificate, the permission-less deployment role and the Neptune tunnel task role, plus the runtime IAM roles/policies and alarms/dashboard
+    that a targeted run pulls in as dependents.
+  Anything else is UNLISTED (never targeted). The saved plan is REFUSED when any delete or
+  replace touches a preserved class, or when any delete is not in the teardown set.
 
 Source and state
   Every Terraform command for the destroy root runs in a read-only copy of the committed HEAD source (git
@@ -45,8 +46,9 @@ Human approval point (plan Section 7.3): 3. --execute is an explicit human invoc
 
 Deletion protection and the preparation step (R5)
   Neptune (deletion_protection), the query load balancer (enable_deletion_protection), the DynamoDB tables
-  (deletion_protection_enabled) and the ECR repositories (force_delete=false) block a teardown while
-  protected. Before the destroy listing and before the confirmed run cleanup.sh reads the current state
+  (deletion_protection_enabled), the ECR repositories (force_delete=false), the S3 buckets and the S3 Vectors bucket
+  (force_destroy=false: a bucket holding object versions or a vector bucket holding indexes cannot be deleted) block a
+  teardown while protected. Before the destroy listing and before the confirmed run cleanup.sh reads the current state
   (terraform show -json, values never printed) and REFUSES the destructive sequence with a PREPARE-REQUIRED
   message while any teardown resource still has such a protection active (rules: CLEANUP_PROTECTION_RULES).
   The separately approved preparation step is:
@@ -59,8 +61,9 @@ Deletion protection and the preparation step (R5)
     2. the human writes a NEW approval record (APPROVED_STAGE=cleanup-prepare) and a pre-spend receipt;
        scripts/deploy.sh --stage cleanup-prepare applies exactly that plan (re-checking the policy), then
     3. the listing below runs and now proceeds to the confirmation token.
-  Dry run of --prepare prints these commands. cleanup_mode also switches S3 / S3 Vectors force_destroy, but
-  those preserved resources are never targeted and the S3 prevent_destroy guards stay.
+  Dry run of --prepare prints these commands. cleanup_mode switches the S3 and S3 Vectors force_destroy flags in the same
+  plan; the buckets carry no prevent_destroy any more (W4), so the saved destroy plan can delete them and the provider
+  empties every object version first.
 
 --execute (two invocations)
   1. LISTING (no --confirm): live STS account hash; inventories (before-inventory.txt); classify the
@@ -87,9 +90,9 @@ Private outputs (R2)
 
 Two passes: on the current stack the first destroy pass is expected to fail at aws_eip.nat
   DisassociateAddress (HTTP 403, carried item 24). Run the procedure again (a fresh listing and a
-  new token) for the second pass. Do NOT widen IAM to make pass 1 succeed. S3 buckets and the S3
-  Vectors resources carry literal prevent_destroy and are preserved by policy; bucket destruction
-  needs a human-reviewed source change plus the phase gate and is never done by this script.
+  new token) for the second pass. Do NOT widen IAM to make pass 1 succeed. The S3 buckets and the S3
+  Vectors resources are destroyed by the same plans (W4); the operator and deployer roles must be able to
+  delete object versions (see "Ordered teardown" in scripts/README.md for the order and the deployer actions it needs).
 
 Options
   --env NAME           environment tfvars (infra/terraform/environments/NAME.tfvars at HEAD); required

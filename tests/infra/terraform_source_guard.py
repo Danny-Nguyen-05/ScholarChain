@@ -131,10 +131,34 @@ class GlobalGrant:
     justification: str
     url: str
     requires_condition: bool = True
+    # Replan W5a: each element is a group of alternatives; the statement Condition must contain, for every group, at least one
+    # token (an identifier such as `c_region` or a quoted literal such as "acm:ValidationMethod"). A trailing "/" in an
+    # alternative matches by prefix ("aws:RequestTag/"). Empty = only the non-empty-Condition rule applies.
+    condition_requires: tuple = ()
 
 
 SAR = "https://docs.aws.amazon.com/service-authorization/latest/reference/"
 PHASE14_MAIN = "infra/terraform/deployer/phase14_main.tf"
+RUNTIME_BOUNDARY = "infra/terraform/deployer/boundaries/runtime.json.tftpl"
+NEPTUNE_TUNNEL = "infra/terraform/modules/identity/neptune_tunnel.tf"
+ECS_EXEC_ACTIONS = frozenset({
+    "ssmmessages:CreateControlChannel", "ssmmessages:CreateDataChannel",
+    "ssmmessages:OpenControlChannel", "ssmmessages:OpenDataChannel",
+})
+ECS_EXEC_JUSTIFICATION = (
+    "The four ssmmessages channel actions ECS Exec needs. Per the Service Authorization Reference "
+    "(list_ssmmessages.html) CreateControlChannel, CreateDataChannel and OpenControlChannel list NO resource type; "
+    "OpenDataChannel lists the `session` resource type (arn:<partition>:ssm:<region>:<account>:session/<SessionId>), but "
+    "the session ID is generated when the ECS Exec session opens, so no ARN exists at authoring time, and the AWS ECS "
+    "developer guide (task-iam-roles.html, ECS Exec permissions) grants all four on Resource \"*\". Exactly these four "
+    "actions, in this one file; no data access."
+)
+ACM_REQUEST_CONDITION = (
+    ("c_region", "aws:RequestedRegion"),  # region lock
+    ("acm:ValidationMethod",),  # DNS validation (the literal "DNS" is checked by the statement test)
+    ("DNS",),
+    ("c_req_main", "aws:RequestTag/"),  # request tags (project, environment)
+)
 GLOBAL_RESOURCE_ALLOWLIST = (
     GlobalGrant(
         PHASE14_MAIN,
@@ -212,6 +236,24 @@ GLOBAL_RESOURCE_ALLOWLIST = (
         "is neither a pre-known ARN nor a regional condition (no aws:RequestedRegion). Recorded as the largest "
         "service-level residual of this set in deployer/README.md.",
         SAR + "list_amazonroute53.html",
+        requires_condition=False,
+    ),
+    GlobalGrant(
+        PHASE14_MAIN,
+        frozenset({"acm:RequestCertificate"}),
+        "acm:RequestCertificate lists no resource type in the Service Authorization Reference (list_acm.html; only condition "
+        "keys): the certificate ARN is created by the call. It is scoped by aws:RequestedRegion, acm:ValidationMethod = DNS "
+        "and the project request tags, and the statement must keep all three. The certificate is then managed only under "
+        "the tag-scoped statements.",
+        SAR + "list_acm.html",
+        condition_requires=ACM_REQUEST_CONDITION,
+    ),
+    GlobalGrant(
+        RUNTIME_BOUNDARY, ECS_EXEC_ACTIONS, ECS_EXEC_JUSTIFICATION, SAR + "list_ssmmessages.html",
+        requires_condition=False,
+    ),
+    GlobalGrant(
+        NEPTUNE_TUNNEL, ECS_EXEC_ACTIONS, ECS_EXEC_JUSTIFICATION, SAR + "list_ssmmessages.html",
         requires_condition=False,
     ),
 )
@@ -314,6 +356,31 @@ def scan(path, source, used=None):
         end = min([v for v in obj.fields.values() if v > start] + [obj.end])
         return not [t for t in ts[start + 2 : end] if t.quoted or t.value not in ("{", "}", "[", "]", ",", "null")]
 
+    def condition_has(obj_id, alternatives):
+        """True when the statement Condition contains one of the alternative tokens (see GlobalGrant.condition_requires)."""
+        obj = objects[obj_id]
+        if "condition" not in obj.fields:
+            return False
+        start = obj.fields["condition"]
+        end = min([v for v in obj.fields.values() if v > start] + [obj.end])
+        span = [t.value for t in ts[start + 2 : end]]
+        return any(v == a or (a.endswith("/") and v.startswith(a)) for v in span for a in alternatives)
+
+    def resolved_actions(obj_id):
+        """Literal action strings of a statement; `Action = local.name` is resolved from the one literal `name = [...]` in the
+        same file (so a shared locals list is checked as if inlined; anything else stays unresolved and is not exempt)."""
+        obj = objects[obj_id]
+        found = values(obj_id, "action") + values(obj_id, "actions")
+        key = "action" if "action" in obj.fields else "actions" if "actions" in obj.fields else None
+        if found or key is None:
+            return found
+        head = [t.value for t in ts[obj.fields[key] + 2 : obj.fields[key] + 5]]
+        if head[:2] == ["local", "."] and len(head) == 3:
+            owners = [i for i, o in enumerate(objects) if head[2].lower() in o.fields and i != obj_id]
+            if len(owners) == 1:
+                return values(owners[0], head[2].lower())
+        return found
+
     findings = set()
 
     def report(category, position):
@@ -329,7 +396,7 @@ def scan(path, source, used=None):
     for obj_id, obj in enumerate(objects):
         effects = values(obj_id, "effect")
         if effects and effects[0].lower() == "allow":
-            actions = values(obj_id, "action") + values(obj_id, "actions")
+            actions = resolved_actions(obj_id)
             if any(a in ("*", "?") for a in actions):
                 key = "action" if "action" in obj.fields else "actions"
                 report("wildcard-iam-action", ts[obj.fields[key]].start)
@@ -356,6 +423,8 @@ def scan(path, source, used=None):
                         used.add(grant)
                     if grant.requires_condition and condition_missing(obj_id):
                         report("unconditioned-allowlisted-global-grant", ts[obj.fields[resource_key]].start)
+                    elif any(not condition_has(obj_id, group) for group in grant.condition_requires):
+                        report("weakened-allowlisted-global-grant", ts[obj.fields[resource_key]].start)
                 elif broad and not (resource == "*" and exception):
                     report("global-iam-resource", ts[obj.fields[resource_key]].start)
             principal_key = "principal" if "principal" in obj.fields else "principals"
@@ -490,10 +559,13 @@ class GuardExamples(unittest.TestCase):
 
 
     def test_global_resource_allowlist_entries_are_justified_and_narrow(self):
-        self.assertEqual(len(GLOBAL_RESOURCE_ALLOWLIST), 7)
+        self.assertEqual(len(GLOBAL_RESOURCE_ALLOWLIST), 10)
+        self.assertEqual(
+            sorted({g.path for g in GLOBAL_RESOURCE_ALLOWLIST}),
+            sorted([NEPTUNE_TUNNEL, PHASE14_MAIN, RUNTIME_BOUNDARY]),
+        )
         for grant in GLOBAL_RESOURCE_ALLOWLIST:
             with self.subTest(actions=sorted(grant.actions)):
-                self.assertTrue(grant.path.endswith("phase14_main.tf"))
                 self.assertGreaterEqual(len(grant.justification), 80)
                 self.assertIn("https://docs.aws.amazon.com/service-authorization/latest/reference/list_", grant.url)
                 self.assertTrue(grant.actions)
@@ -505,7 +577,7 @@ class GuardExamples(unittest.TestCase):
         for grant in GLOBAL_RESOURCE_ALLOWLIST:
             actions = sorted(grant.actions)
             listed = ", ".join('"%s"' % a for a in actions)
-            statement = '{Effect="Allow", Action=[%s], Resource=["*"], Condition={StringEquals=local.c_region}}'
+            statement = '{Effect="Allow", Action=[%s], Resource=["*"], ' + good_condition(grant) + '}'
             with self.subTest(actions=actions):
                 self.assertEqual(scan(grant.path, statement % listed), [])
                 # The same actions in another file are not exempt.
@@ -525,6 +597,87 @@ class GuardExamples(unittest.TestCase):
                 with self.subTest(actions=sorted(grant.actions), condition=condition):
                     expected = ["unconditioned-allowlisted-global-grant"] if grant.requires_condition else []
                     self.assertEqual([f["category"] for f in scan(grant.path, source)], expected)
+
+    def test_ecs_exec_channels_pass_only_as_the_exact_four_in_their_two_files(self):
+        """Replan W5a/W5b: the four ssmmessages ECS Exec actions on Resource "*" (boundary template and the tunnel task role)."""
+        listed = ", ".join('"%s"' % a for a in sorted(ECS_EXEC_ACTIONS))
+        template = '{"Version": "2012-10-17", "Statement": [{"Effect": "Allow", "Action": [%s], "Resource": ["*"]}]}' % (
+            listed.replace(", ", ", ")
+        )
+        self.assertEqual(scan(RUNTIME_BOUNDARY, template), [])
+        self.assertEqual(scan(NEPTUNE_TUNNEL, '{Effect="Allow", Action=[%s], Resource="*"}' % listed), [])
+        # The same four in any other file are flagged (a different policy needs its own reviewed entry).
+        for other in ("infra/terraform/other.tf", "infra/terraform/deployer/boundaries/other.json.tftpl",
+                      "infra/terraform/modules/runtime/neptune_tunnel.tf"):
+            with self.subTest(other=other):
+                found = scan(other, template if other.endswith(".tftpl") else '{Effect="Allow", Action=[%s], Resource="*"}' % listed)
+                self.assertEqual([f["category"] for f in found], ["global-iam-resource"])
+        # Any other action, an added action, a missing action, or a wildcard still fails in the allowed files.
+        three = ", ".join('"%s"' % a for a in sorted(ECS_EXEC_ACTIONS)[1:])
+        for path in (RUNTIME_BOUNDARY, NEPTUNE_TUNNEL):
+            for extra in ('"ssm:StartSession"', '"ssmmessages:Anything"', '"s3:GetObject"', '"iam:PassRole"'):
+                with self.subTest(path=path, extra=extra):
+                    found = scan(path, '{Effect="Allow", Action=[%s, %s], Resource="*"}' % (listed, extra))
+                    self.assertIn("global-iam-resource", [f["category"] for f in found])
+            with self.subTest(path=path, case="missing one"):
+                self.assertIn("global-iam-resource", [f["category"] for f in scan(path, '{Effect="Allow", Action=[%s], Resource="*"}' % three)])
+            with self.subTest(path=path, case="wildcard"):
+                found = scan(path, '{Effect="Allow", Action=["ssmmessages:*"], Resource="*"}')
+                self.assertEqual({f["category"] for f in found}, {"wildcard-iam-action", "global-iam-resource"})
+        # A different action on "*" in the same file is still flagged.
+        self.assertEqual([f["category"] for f in scan(NEPTUNE_TUNNEL, '{Effect="Allow", Action=["sts:AssumeRole"], Resource="*"}')], ["global-iam-resource"])
+
+    def test_action_resolved_from_a_same_file_local_is_judged_exactly(self):
+        """neptune_tunnel.tf writes `Action = local.neptune_tunnel_actions`; the guard resolves one same-file literal list."""
+        def source(actions, ref="local.neptune_tunnel_actions"):
+            return ('locals { neptune_tunnel_actions = [%s] }\n'
+                    'resource "aws_iam_role_policy" "p" { policy = jsonencode({Statement = [{Effect = "Allow", Action = %s, Resource = "*"}]}) }'
+                    % (actions, ref))
+        four = ", ".join('"%s"' % a for a in sorted(ECS_EXEC_ACTIONS))
+        self.assertEqual(scan(NEPTUNE_TUNNEL, source(four)), [])
+        self.assertEqual([f["category"] for f in scan(NEPTUNE_TUNNEL, source(four + ', "iam:CreateRole"'))], ["global-iam-resource"])
+        self.assertIn("wildcard-iam-action", [f["category"] for f in scan(NEPTUNE_TUNNEL, source('"ssmmessages:*"'))])
+        # An unresolvable or ambiguous reference never exempts.
+        self.assertEqual([f["category"] for f in scan(NEPTUNE_TUNNEL, source(four, ref="local.other_name"))], ["global-iam-resource"])
+        self.assertEqual([f["category"] for f in scan(NEPTUNE_TUNNEL, source(four, ref="var.actions"))], ["global-iam-resource"])
+        twice = 'locals { neptune_tunnel_actions = ["s3:GetObject"] }\n' + source(four)
+        self.assertEqual([f["category"] for f in scan(NEPTUNE_TUNNEL, twice)], ["global-iam-resource"])
+
+    def test_acm_request_certificate_needs_region_dns_validation_and_request_tags(self):
+        def statement(condition, action='"acm:RequestCertificate"'):
+            return '{Effect="Allow", Action=[%s], Resource=["*"]%s}' % (action, condition)
+        good = ', Condition={StringEquals=merge(local.c_region, local.c_req_main, {"acm:ValidationMethod" = "DNS"})}'
+        self.assertEqual(scan(PHASE14_MAIN, statement(good)), [])
+        literal = (', Condition={StringEquals={"aws:RequestedRegion"="us-east-2", "acm:ValidationMethod"="DNS", '
+                   '"aws:RequestTag/project"="x"}}')
+        self.assertEqual(scan(PHASE14_MAIN, statement(literal)), [])
+        weakened = {
+            "no condition": "",
+            "empty condition": ", Condition={}",
+            "region only": ", Condition={StringEquals=local.c_region}",
+            "no validation method": ", Condition={StringEquals=merge(local.c_region, local.c_req_main)}",
+            "email validation": ', Condition={StringEquals=merge(local.c_region, local.c_req_main, {"acm:ValidationMethod"="EMAIL"})}',
+            "no request tags": ', Condition={StringEquals=merge(local.c_region, {"acm:ValidationMethod"="DNS"})}',
+            "no region": ', Condition={StringEquals=merge(local.c_req_main, {"acm:ValidationMethod"="DNS"})}',
+        }
+        for name, condition in weakened.items():
+            with self.subTest(name):
+                categories = [f["category"] for f in scan(PHASE14_MAIN, statement(condition))]
+                self.assertEqual(len(categories), 1)
+                self.assertIn(categories[0], ("unconditioned-allowlisted-global-grant", "weakened-allowlisted-global-grant"))
+        # Neighbouring ACM actions and any other action on "*" are not covered by this entry.
+        for other in ('"acm:RequestCertificate", "acm:DeleteCertificate"', '"acm:DeleteCertificate"', '"acm:ListCertificates"',
+                      '"acm:ImportCertificate"', '"acm:*"', '"acm:AddTagsToCertificate"'):
+            with self.subTest(other=other):
+                self.assertIn("global-iam-resource", [f["category"] for f in scan(PHASE14_MAIN, statement(good, other))])
+        self.assertEqual([f["category"] for f in scan("infra/terraform/other.tf", statement(good))], ["global-iam-resource"])
+
+    def test_an_unlisted_action_on_a_global_resource_still_fails_in_every_allowlisted_file(self):
+        for path in (PHASE14_MAIN, RUNTIME_BOUNDARY, NEPTUNE_TUNNEL):
+            for action in ("iam:PassRole", "sts:AssumeRole", "ssm:StartSession", "acm:ExportCertificate", "s3:GetObject"):
+                with self.subTest(path=path, action=action):
+                    found = scan(path, '{Effect="Allow", Action=["%s"], Resource="*", Condition={StringEquals=local.c_region}}' % action)
+                    self.assertEqual([f["category"] for f in found], ["global-iam-resource"])
 
     def test_a_new_unjustified_global_grant_still_fails_beside_an_allowlisted_one(self):
         grant = GLOBAL_RESOURCE_ALLOWLIST[0]
@@ -568,6 +721,13 @@ class GuardExamples(unittest.TestCase):
         self.assertFalse(is_scanned("infra/terraform/environments/nested/y.json.example"))
         self.assertFalse(is_scanned("infra/terraform/tests/x.tftest.hcl"))
         self.assertFalse(is_scanned("infra/terraform/deployer/README.md"))
+
+
+def good_condition(grant):
+    """A Condition that satisfies `grant` (used by the self-tests)."""
+    if grant.condition_requires:
+        return 'Condition={StringEquals=merge(local.c_region, local.c_req_main, {"acm:ValidationMethod"="DNS"})}'
+    return "Condition={StringEquals=local.c_region}"
 
 
 def is_scanned(path):

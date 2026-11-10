@@ -1,0 +1,5 @@
+# Pinned files drifted by the 14B Q6 fix (observed 2026-11-07; 209 pinned files, 4 drifted)
+infra/terraform/README.md
+infra/terraform/modules/runtime/compute.tf
+infra/terraform/modules/runtime/variables.tf
+tests/infra/README.md

@@ -14,8 +14,9 @@ Purpose
   Build the release artifacts from the current commit and record them in
   target/release/<commit>/release-manifest.json (git-ignored target/):
     - runs "sbt -batch packageRelease" under JDK 17 (the script applies the JDK 17 environment)
-    - collects the Hadoop submit JAR, Hadoop dependency bundle, Spark job JAR and the service
-      distribution (what the Dockerfile COPYs), each with size and sha256
+    - collects the Hadoop submit JAR, Hadoop dependency bundle, Spark job JAR, entity-resolution
+      job JAR (er-job-jar) and the service distribution (what the Dockerfile COPYs), each with size
+      and sha256
     - builds one image per service (query-api, graph-service, semantic-service, embedding-worker):
         docker buildx build --platform <IMAGE_PLATFORM> --provenance=false --sbom=false
           --build-arg MAIN_CLASS=<main> -t scholarchain-<service>:<tag> --load .
@@ -30,7 +31,9 @@ Purpose
     - G5 runtime archive: if SCHOLARCHAIN_RUNTIME_ARCHIVE (local path) is set, or the default
       ignored path in config exists, its size and sha256 are verified against the config pins;
       a mismatch is fatal; absence is recorded.
-  The Hadoop submit JAR embeds timestamps and is not byte-reproducible (hash is of this build).
+  The four EMR job JARs (Hadoop submit JAR and dependency bundle, entity-resolution and Spark job JARs) are
+  built byte-reproducibly (the build's target/emr-artifacts/emr-artifact-manifest.json records
+  byteReproducible=true for each); the sha256 recorded here is still the hash of this build.
   Registry digests do not exist yet: deploy.sh records them at push time. Nothing is uploaded.
 
 Options
@@ -195,6 +198,8 @@ _pick_newest hadoop-dependency-bundle "${ARTIFACT_HADOOP_BUNDLE_GLOB}"
 BUNDLE_JAR="${PICKED}"
 _pick_newest spark-job-jar "${ARTIFACT_SPARK_JOB_GLOB}"
 SPARK_JAR="${PICKED}"
+_pick_newest er-job-jar "${ARTIFACT_ER_JOB_GLOB}"
+ER_JAR="${PICKED}"
 DIST_DIR="${ARTIFACT_SERVICE_DIST_DIR}"
 for need in "${DIST_DIR}/services.jar" "${DIST_DIR}/prompts/runtime" "${DIST_DIR}/prompts/schemas"; do
   if [[ ! -e "${need}" ]]; then
@@ -207,6 +212,7 @@ fi
 sc_info "hadoop-submit-jar=${SUBMIT_JAR}"
 sc_info "hadoop-dependency-bundle=${BUNDLE_JAR}"
 sc_info "spark-job-jar=${SPARK_JAR}"
+sc_info "er-job-jar=${ER_JAR}"
 sc_info "service-distribution=${DIST_DIR}"
 
 # ---- static checks (always) -------------------------------------------------------------------
@@ -311,6 +317,7 @@ SBT_VERSION="$(sed -n 's/^sbt.version=//p' "${REPO_ROOT}/project/build.propertie
   printf 'artifact\thadoop-submit-jar\tfile\t%s\n' "${REPO_ROOT}/${SUBMIT_JAR}"
   printf 'artifact\thadoop-dependency-bundle\tfile\t%s\n' "${REPO_ROOT}/${BUNDLE_JAR}"
   printf 'artifact\tspark-job-jar\tfile\t%s\n' "${REPO_ROOT}/${SPARK_JAR}"
+  printf 'artifact\ter-job-jar\tfile\t%s\n' "${REPO_ROOT}/${ER_JAR}"
   printf 'artifact\tservice-distribution\tdir\t%s\n' "${REPO_ROOT}/${DIST_DIR}"
   printf '%s' "${IMAGE_FACTS}"
   printf 'archive\t%s\t%s\t%s\t%s\t%s\t%s\n' "${ARCHIVE_STATUS}" "${ARCHIVE_PATH}" "${ARCHIVE_SIZE}" "${ARCHIVE_SHA}" \

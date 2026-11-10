@@ -18,7 +18,13 @@ final case class EmbeddingIngestConfig(
     maxManifestItems: Int = 10000,
     maxManifestBytes: Int = 16 * 1024 * 1024,
     maxTextBytes: Int = 1024 * 1024,
-    batchSize: Int = 100
+    batchSize: Int = 100,
+    // S3 Vectors per-vector metadata limits, mirrored from VectorAdapterConfig defaults so the
+    // budget is enforced before any embedding call (Phase 8 finding R3).
+    maxMetadataKeys: Int = 50,
+    maxMetadataBytes: Int = 40 * 1024,
+    maxFilterableBytes: Int = 2 * 1024,
+    nonFilterableKeys: Set[String] = Set("textS3Uri")
 ) {
   require(textBucket.nonEmpty && !textBucket.contains('/') && !textBucket.exists(_.isWhitespace))
   require(
@@ -28,6 +34,10 @@ final case class EmbeddingIngestConfig(
   require(dimension >= 1 && dimension <= 4096 && Set("cosine", "euclidean")(metric))
   require(
     maxManifestItems > 0 && maxManifestBytes > 0 && maxTextBytes > 0 && batchSize > 0 && batchSize <= 500
+  )
+  require(
+    maxMetadataKeys > 0 && maxMetadataKeys <= 50 && maxMetadataBytes > 0 && maxMetadataBytes <= 40 * 1024 &&
+      maxFilterableBytes > 0 && maxFilterableBytes <= 2 * 1024 && nonFilterableKeys.size <= 10
   )
 }
 final case class EmbeddingIngestReport(
@@ -305,7 +315,18 @@ final class EmbeddingManifestRunner(
               Option.when(i.document.text.getBytes(UTF_8).length > config.maxTextBytes)(
                 "text-byte-limit"
               ) ++
-              Option.when(objectKey(i.textS3Uri).isEmpty)("text-pointer-outside-config")
+              Option.when(objectKey(i.textS3Uri).isEmpty)("text-pointer-outside-config") ++
+              // Pre-embedding budget check: the metadata is fully determined by the work item, so
+              // an item the vector adapter would refuse never reaches the embedder.
+              Option.when(
+                VectorMetadataBudget.exceeds(
+                  metadata(i),
+                  config.maxMetadataKeys,
+                  config.maxMetadataBytes,
+                  config.maxFilterableBytes,
+                  config.nonFilterableKeys
+                )
+              )("metadata-limit")
           }
           .take(1)
           .toVector

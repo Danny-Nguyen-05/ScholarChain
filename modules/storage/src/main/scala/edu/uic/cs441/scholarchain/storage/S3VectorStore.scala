@@ -43,15 +43,6 @@ final class S3VectorStore(
     .getBytes(UTF_8)
     .length + ujson.Str(d.key).render().getBytes(UTF_8).length + d.values.size * 32 + 256
   private def reason(d: VectorDocument): Option[String] = {
-    val metaBytes =
-      ujson.Obj.from(d.metadata.map((k, v) => k -> ujson.Str(v))).render().getBytes(UTF_8).length
-    val filterBytes = ujson.Obj
-      .from(
-        d.metadata.filterNot((k, _) => config.nonFilterableKeys(k)).map((k, v) => k -> ujson.Str(v))
-      )
-      .render()
-      .getBytes(UTF_8)
-      .length
     if (d.key.isEmpty || d.key.getBytes(UTF_8).length > 1024) Some("invalid-vector-key")
     else if (
       d.values.size != config.dimension || d.values
@@ -68,7 +59,13 @@ final class S3VectorStore(
     else if (d.metadata.keys.exists(_.isEmpty) || d.metadata.values.exists(_.isEmpty))
       Some("invalid-vector-metadata")
     else if (
-      d.metadata.size > config.maxMetadataKeys || metaBytes > config.maxMetadataBytes || filterBytes > config.maxFilterableBytes
+      VectorMetadataBudget.exceeds(
+        d.metadata,
+        config.maxMetadataKeys,
+        config.maxMetadataBytes,
+        config.maxFilterableBytes,
+        config.nonFilterableKeys
+      )
     ) Some("metadata-limit")
     else if (d.metadata.keys.exists(k => Set("text", "abstract", "content", "fullText")(k)))
       Some("long-text-in-metadata")

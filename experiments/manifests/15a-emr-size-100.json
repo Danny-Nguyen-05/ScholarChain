@@ -1,0 +1,44 @@
+{
+  "budget": {
+    "max_capacity": 2,
+    "max_runtime_minutes": 90,
+    "max_usd": 0.84,
+    "region": "us-east-2"
+  },
+  "description": "Experiment 15A, run 3 of 3: Hadoop prep, entity resolution and Spark on EMR over 100 percent of the Phase 6 DBLP slice (first ceil(n_venue*P/100) records per venue of dblp-2026-10-03, nested sets; see experiments/README.md). One primary and one core m5.xlarge, 90 minutes at most, auto-termination. The other three sources are the committed Phase 4 samples, unscaled.",
+  "id": "15a-emr-size-100",
+  "metrics": {
+    "locations": [
+      "s3://${SCHOLARCHAIN_ARTIFACTS_BUCKET}/pipeline/${SCHOLARCHAIN_RUN_PREFIX}/15a/size-100/metrics/"
+    ]
+  },
+  "pipeline": {
+    "artifact_sha256": {
+      "er-config": "0000000000000000000000000000000000000000000000000000000000000000",
+      "er-jar": "0000000000000000000000000000000000000000000000000000000000000000",
+      "er-policy": "0000000000000000000000000000000000000000000000000000000000000000",
+      "hadoop-libjars": "0000000000000000000000000000000000000000000000000000000000000000",
+      "hadoop-submit-jar": "0000000000000000000000000000000000000000000000000000000000000000",
+      "job-jar": "0000000000000000000000000000000000000000000000000000000000000000",
+      "spark-config-template": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "core_count": 1,
+    "datasets_manifest": "experiments/inputs/15a/datasets.json",
+    "er_config": "s3://${SCHOLARCHAIN_ARTIFACTS_BUCKET}/emr/${SCHOLARCHAIN_RUN_PREFIX}/config/er-config.json",
+    "er_jar": "s3://${SCHOLARCHAIN_ARTIFACTS_BUCKET}/emr/${SCHOLARCHAIN_RUN_PREFIX}/jars/entity-resolution.jar",
+    "er_policy": "s3://${SCHOLARCHAIN_ARTIFACTS_BUCKET}/emr/${SCHOLARCHAIN_RUN_PREFIX}/config/er-policy.json",
+    "hadoop_config": "experiments/inputs/15a/prep-config.json",
+    "hadoop_libjars": "s3://${SCHOLARCHAIN_ARTIFACTS_BUCKET}/emr/${SCHOLARCHAIN_RUN_PREFIX}/jars/hadoop-bundle.jar",
+    "hadoop_submit_jar": "s3://${SCHOLARCHAIN_ARTIFACTS_BUCKET}/emr/${SCHOLARCHAIN_RUN_PREFIX}/jars/hadoop-submit.jar",
+    "input_prefix": "s3://${SCHOLARCHAIN_ARTIFACTS_BUCKET}/emr/${SCHOLARCHAIN_RUN_PREFIX}/input/size-100",
+    "instance_type": "m5.xlarge",
+    "max_task_count": 0,
+    "output_prefix": "s3://${SCHOLARCHAIN_ARTIFACTS_BUCKET}/pipeline/${SCHOLARCHAIN_RUN_PREFIX}/15a/size-100",
+    "spark_config_template": "s3://${SCHOLARCHAIN_ARTIFACTS_BUCKET}/emr/${SCHOLARCHAIN_RUN_PREFIX}/config/spark-config-template.json"
+  },
+  "schema": "scholarchain.experiment-manifest.v1",
+  "teardown": {
+    "max_idle_timeout_seconds": 900,
+    "mode": "auto-termination"
+  }
+}

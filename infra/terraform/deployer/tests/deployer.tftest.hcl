@@ -1024,7 +1024,7 @@ run "p14_no_wildcard_action_and_resource_star_only_for_reads_or_the_honest_list"
         st.Effect == "Deny" || !contains(st.Resource, "*") || alltrue([
           for a in st.Action :
           can(regex("^(Describe|List|Get)", split(":", a)[1])) || contains(
-            ["kms:CreateKey", "ecs:RegisterTaskDefinition", "ecs:DeregisterTaskDefinition", "ecs:DeleteTaskDefinitions", "elasticmapreduce:RunJobFlow", "elasticmapreduce:CreateSecurityConfiguration", "elasticmapreduce:DeleteSecurityConfiguration", "route53:CreateHostedZone", "route53:DeleteHostedZone", "route53:ChangeResourceRecordSets", "route53:ChangeTagsForResource"],
+            ["kms:CreateKey", "ecs:RegisterTaskDefinition", "ecs:DeregisterTaskDefinition", "ecs:DeleteTaskDefinitions", "elasticmapreduce:RunJobFlow", "elasticmapreduce:CreateSecurityConfiguration", "elasticmapreduce:DeleteSecurityConfiguration", "route53:CreateHostedZone", "route53:DeleteHostedZone", "route53:ChangeResourceRecordSets", "route53:ChangeTagsForResource", "acm:RequestCertificate"],
             a
           )
         ])
@@ -1393,7 +1393,7 @@ run "p14_the_documents_cover_every_resource_type_the_main_root_creates" {
   }
   assert {
     condition = alltrue([
-      for a in ["secretsmanager:GetSecretValue", "s3:GetObject", "s3:DeleteObject", "sts:AssumeRole", "budgets:ModifyBudget", "ce:GetCostAndUsage", "organizations:ListAccounts", "iam:CreateUser", "iam:CreateAccessKey", "ec2:RunInstances", "ec2:TerminateInstances", "neptune-db:ReadDataViaQuery", "bedrock:InvokeModel"] :
+      for a in ["secretsmanager:GetSecretValue", "s3:GetObject", "sts:AssumeRole", "budgets:ModifyBudget", "ce:GetCostAndUsage", "organizations:ListAccounts", "iam:CreateUser", "iam:CreateAccessKey", "ec2:RunInstances", "ec2:TerminateInstances", "neptune-db:ReadDataViaQuery", "bedrock:InvokeModel"] :
       !contains(flatten([for k, p in aws_iam_policy.permission_set : [for st in jsondecode(p.policy).Statement : st.Effect == "Allow" && !strcontains(join(",", [for r in st.Resource : r]), "artifacts") ? st.Action : []]]), a)
     ])
     error_message = "Nothing outside the stack: no secret value, foreign object, budget, cost, organization, user, instance launch (EMR launches through its service role), data-plane or model action."
@@ -1449,10 +1449,10 @@ run "p14_unscoped_tagging_statement_is_limited_to_the_declared_tag_keys" {
       ]) > 0 && alltrue(flatten([
         for k, p in aws_iam_policy.permission_set : [
           for st in jsondecode(p.policy).Statement :
-          !can(st.Condition["ForAllValues:StringEquals"]) || (st.Sid == "KmsTagWithProjectTags" && length(st.Condition["ForAllValues:StringEquals"]["aws:TagKeys"]) == 12 && contains(st.Condition["ForAllValues:StringEquals"]["aws:TagKeys"], "project") && !contains(st.Condition["ForAllValues:StringEquals"]["aws:TagKeys"], "*"))
+          !can(st.Condition["ForAllValues:StringEquals"]) || (contains(["KmsTagWithProjectTags", "AcmTagOnCreateWithProjectTags"], st.Sid) && length(st.Condition["ForAllValues:StringEquals"]["aws:TagKeys"]) == 12 && contains(st.Condition["ForAllValues:StringEquals"]["aws:TagKeys"], "project") && !contains(st.Condition["ForAllValues:StringEquals"]["aws:TagKeys"], "*"))
         ]
     ]))
-    error_message = "The only statement with an aws:TagKeys restriction is KmsTagWithProjectTags, limited to the twelve declared keys."
+    error_message = "The only statements with an aws:TagKeys restriction are KmsTagWithProjectTags and AcmTagOnCreateWithProjectTags (replan W5a), each limited to the twelve declared keys."
   }
 }
 
@@ -1472,9 +1472,9 @@ run "p14_boundary_policies_are_bounded_and_the_emr_boundary_mirrors_the_tag_cond
   assert {
     condition = alltrue([
       for st in jsondecode(aws_iam_policy.main_boundary_runtime[0].policy).Statement :
-      !contains(st.Resource, "*") || alltrue([for a in st.Action : contains(["ecr:GetAuthorizationToken"], a)])
+      !contains(st.Resource, "*") || alltrue([for a in st.Action : contains(["ecr:GetAuthorizationToken", "ssmmessages:CreateControlChannel", "ssmmessages:CreateDataChannel", "ssmmessages:OpenControlChannel", "ssmmessages:OpenDataChannel"], a)])
     ])
-    error_message = "The runtime boundary has Resource '*' only for ecr:GetAuthorizationToken."
+    error_message = "The runtime boundary has Resource '*' only for ecr:GetAuthorizationToken and the four ssmmessages ECS Exec channel actions (replan W5a)."
   }
   assert {
     condition = alltrue([

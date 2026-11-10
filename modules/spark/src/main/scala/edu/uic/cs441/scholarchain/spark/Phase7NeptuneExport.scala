@@ -18,6 +18,12 @@ object Phase7NeptuneExport {
   val loaderPrefix = "neptune-opencypher-csv/data"
   val sidecarPath = "load-manifests/neptune-opencypher-csv.json"
   val supportPath = "edges/type=coauthored_with_support"
+
+  /** Storage's `NeptuneLoaderConfig.maxUploadBytes` default; each uploaded edge part must fit. */
+  val defaultMaxPartBytes: Long = 16L * 1024 * 1024
+
+  /** Half the cap leaves headroom for hash-partition skew. */
+  val defaultTargetPartBytes: Long = 8L * 1024 * 1024
   private val jsonOptions = Map("ignoreNullFields" -> "false")
 
   private def csvCell(value: String): String =
@@ -130,15 +136,30 @@ object Phase7NeptuneExport {
       coauthors: DataFrame,
       support: DataFrame,
       published: Vector[Phase6PublishedTable],
-      runId: String
+      runId: String,
+      targetPartBytes: Long = defaultTargetPartBytes,
+      maxPartBytes: Long = defaultMaxPartBytes
   ): Unit = {
+    require(
+      targetPartBytes > 0 && targetPartBytes <= maxPartBytes,
+      "positive target part size not above the maximum required"
+    )
     val outputs = frames(nodes, graphEdges, coauthors, support)
     val datasets = outputs.map { case (kind, data) =>
       val path = s"$loaderPrefix/$kind"
+      // The storage loader uploads each edge part as one object bounded at 16 MiB, so the part
+      // count is derived from the encoded size (including the CRLF row separator) and not from
+      // the shuffle width or AQE coalescing. An explicit repartition count is never coalesced.
+      val encodedBytes = BoundedActions.scalarLong(
+        csvRows(data).agg(coalesce(sum(octet_length(col("value")) + 2L), lit(0L)).as("bytes")),
+        "bytes"
+      )
+      val partCount = math.max(1L, (encodedBytes + targetPartBytes - 1) / targetPartBytes)
+      require(partCount <= Int.MaxValue, "CSV part count overflow")
       // Encoding is executor-side and preserves embedded CR/LF verbatim. Spark's CSV writer
       // normalizes an embedded LF to CRLF while retaining a preceding CR (yielding CRCRLF).
       // Text output plus a per-partition header avoids that transformation.
-      csvRows(data.repartition(col(":ID")).sortWithinPartitions(col(":ID"))).write
+      csvRows(data.repartition(partCount.toInt, col(":ID")).sortWithinPartitions(col(":ID"))).write
         .mode("errorifexists")
         .format(classOf[Phase7CsvFileFormat].getName)
         .option("csvheader", data.columns.map(csvCell).mkString(","))
@@ -157,6 +178,16 @@ object Phase7NeptuneExport {
           )
           .foreach(Files.delete)
       finally files.close()
+      val parts = Files.list(root.resolve(path))
+      try
+        parts.iterator().asScala.foreach { p =>
+          val size = Files.size(p)
+          require(
+            size <= maxPartBytes,
+            s"Neptune CSV part ${p.getFileName} has $size bytes > $maxPartBytes"
+          )
+        }
+      finally parts.close()
       ujson.Obj(
         "path" -> path,
         "rowCount" -> BoundedActions.count(data),

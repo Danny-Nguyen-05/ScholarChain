@@ -1036,10 +1036,10 @@ run "query_api_and_the_embedding_worker_may_list_only_their_rag_prefixes_and_hea
         sid = st.Sid, action = st.Action, condition = st.Condition, arns = length(st.Resource), bucketlevel = !strcontains(st.Resource[0], "/")
         } if st.Sid == "ListRagBucketPrefixes"] == [{
         sid       = "ListRagBucketPrefixes", action = ["s3:ListBucket"], arns = 1, bucketlevel = true,
-        condition = { StringLike = { "s3:prefix" = ["evidence-index", "evidence-index/*", "runtime-audit", "runtime-audit/*", "embedding-text", "embedding-text/*"] } }
+        condition = { StringLike = { "s3:prefix" = ["evidence-index", "evidence-index/*", "runtime-audit", "runtime-audit/*", "embedding-text", "embedding-text/*", "runtime-artifacts", "runtime-artifacts/*"] } }
       }]
     ])
-    error_message = "ListBucket on the rag bucket ARN (no object suffix) with s3:prefix limited to evidence-index, runtime-audit and embedding-text (and their sub-paths)."
+    error_message = "ListBucket on the rag bucket ARN (no object suffix) with s3:prefix limited to evidence-index, runtime-audit, embedding-text and runtime-artifacts (and their sub-paths)."
   }
   assert {
     condition = alltrue([

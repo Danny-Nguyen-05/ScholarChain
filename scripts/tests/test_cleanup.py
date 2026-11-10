@@ -12,29 +12,42 @@ import re
 import stat
 import unittest
 
-from helpers import FAKE_ACCOUNT, FAKE_SECRET, FAKE_TOKEN, REGION, STATE_LINEAGE, Fixture, account_hash, sha256_bytes
+from helpers import FAKE_ACCOUNT, FAKE_SECRET, FAKE_TOKEN, REGION, SCRIPTS_DIR, STATE_LINEAGE, Fixture, account_hash, sha256_bytes
 
 OTHER_ACCOUNT = "999988887777"
 PRIVATE_CANARY = "CANARY-CLEANUP-PRIVATE-VALUE-4412"
 ARN_TABLE = "arn:aws:dynamodb:us-east-2:%s:table/scholarchain-course-RunLedger" % FAKE_ACCOUNT
 TAG_JSON = json.dumps({"ResourceTagMappingList": [{"ResourceARN": ARN_TABLE}]})
 
-# state addresses of the destroy root and their expected classes under the pinned policy
+# state addresses of the destroy root and their expected classes under the pinned policy. W4 (USD 25 replan, user decision 5):
+# the S3 buckets, the KMS key and the log groups are TEARDOWN now; only module.foundation (state backend settings) and S3 objects
+# remain preserved, and they come first so STATE[:3] is exactly the preserved part.
 STATE = [
-    'module.datalake.aws_s3_bucket.zone["curated"]',  # preserved: S3 bucket (type and address rule)
-    'module.identity.aws_kms_key.data',  # preserved: KMS key
-    'module.observability.aws_cloudwatch_log_group.service["query-api"]',  # preserved: grading log group
+    "module.foundation.aws_dynamodb_table.lock",  # preserved: state lock table (address rule)
+    "module.foundation.aws_budgets_budget.course[0]",  # preserved: the budget (address rule)
+    "module.workflow.aws_s3_object.definition",  # preserved: S3 objects anywhere (type rule)
+    'module.datalake.aws_s3_bucket.zone["curated"]',  # teardown: S3 bucket (W4)
+    'module.identity.aws_kms_key.data',  # teardown: KMS key (W4)
+    'module.observability.aws_cloudwatch_log_group.service["query-api"]',  # teardown: log group (W4)
     'module.runtime.aws_ecs_service.service["query-api"]',  # teardown: ECS runtime
     'module.dynamodb.aws_dynamodb_table.table["RunLedger"]',  # teardown: DynamoDB
     "module.network.aws_nat_gateway.course",  # teardown: network
-    "module.identity.aws_iam_role.deployment",  # NOT targeted: unlisted
+    "module.identity.aws_iam_role.deployment",  # teardown: the permission-less deployment role (delete everything)
 ]
 TEARDOWN_ADDRESSES = [
     'module.runtime.aws_ecs_service.service["query-api"]',
     'module.dynamodb.aws_dynamodb_table.table["RunLedger"]',
     "module.network.aws_nat_gateway.course",
 ]
-EXPECTED_TARGETS = ["module.dynamodb.aws_dynamodb_table.table", "module.network.aws_nat_gateway.course", "module.runtime.aws_ecs_service.service"]
+EXPECTED_TARGETS = sorted([
+    "module.datalake.aws_s3_bucket.zone",
+    "module.dynamodb.aws_dynamodb_table.table",
+    "module.identity.aws_iam_role.deployment",
+    "module.identity.aws_kms_key.data",
+    "module.network.aws_nat_gateway.course",
+    "module.observability.aws_cloudwatch_log_group.service",
+    "module.runtime.aws_ecs_service.service",
+])
 TEARDOWN_CHANGES = [
     ('module.runtime.aws_ecs_service.service["query-api"]', "aws_ecs_service", ["delete"]),
     ('module.dynamodb.aws_dynamodb_table.table["RunLedger"]', "aws_dynamodb_table", ["delete"]),
@@ -58,17 +71,23 @@ ALB = 'module.runtime.aws_lb.query'
 TABLE = 'module.dynamodb.aws_dynamodb_table.table["RunLedger"]'
 ECR = 'module.runtime.aws_ecr_repository.service["query-api"]'
 LOCK_TABLE = "module.foundation.aws_dynamodb_table.lock"  # preserved: never a preparation target
+S3_BUCKET = 'module.datalake.aws_s3_bucket.zone["curated"]'
+VECTOR_BUCKET = "module.s3vectors.aws_s3vectors_vector_bucket.embeddings"
 PROTECTED = {
     "neptune": (NEPTUNE, "aws_neptune_cluster", {"deletion_protection": True}, "deletion_protection=true"),
     "alb": (ALB, "aws_lb", {"enable_deletion_protection": True}, "enable_deletion_protection=true"),
     "dynamodb": (TABLE, "aws_dynamodb_table", {"deletion_protection_enabled": True}, "deletion_protection_enabled=true"),
     "ecr": (ECR, "aws_ecr_repository", {"force_delete": False}, "force_delete=false"),
+    "s3": (S3_BUCKET, "aws_s3_bucket", {"force_destroy": False}, "force_destroy=false"),
+    "vectors": (VECTOR_BUCKET, "aws_s3vectors_vector_bucket", {"force_destroy": False}, "force_destroy=false"),
 }
 RELEASED = {
     "neptune": (NEPTUNE, "aws_neptune_cluster", {"deletion_protection": False}),
     "alb": (ALB, "aws_lb", {"enable_deletion_protection": False}),
     "dynamodb": (TABLE, "aws_dynamodb_table", {"deletion_protection_enabled": False}),
     "ecr": (ECR, "aws_ecr_repository", {"force_delete": True}),
+    "s3": (S3_BUCKET, "aws_s3_bucket", {"force_destroy": True}),
+    "vectors": (VECTOR_BUCKET, "aws_s3vectors_vector_bucket", {"force_destroy": True}),
 }
 
 
@@ -184,9 +203,12 @@ class CleanupDryRunTests(CleanupBase):
         self.assertIn(" show -json ", out)
         self.assertIn(" show -no-color ", out)
         self.assertRegex(out, r"apply -input=false -lock-timeout=60s <verified-private-copy-of-destroy-course\.tfplan>")
-        for item in ("terraform-state", "s3-buckets-and-objects", "s3-vectors", "kms-keys-and-policies", "grading-log-groups"):
-            self.assertIn("PRESERVE: %s" % item, out)
-        self.assertIn("PRESERVE-RULES types: aws_s3_bucket,aws_s3_object,aws_s3vectors_,aws_kms_,aws_cloudwatch_log_group", out)
+        self.assertIn("PRESERVE: terraform-state", out)
+        for gone in ("s3-buckets-and-objects", "s3-vectors", "kms-keys-and-policies", "grading-log-groups"):
+            self.assertNotIn("PRESERVE: %s" % gone, out, "W4: the purge removed this class from the preserve list")
+        self.assertEqual(len(re.findall(r"^PRESERVE: ", out, re.M)), 1)
+        self.assertIn("PRESERVE-RULES types: aws_s3_object\n", out)
+        self.assertIn("PRESERVE-RULES addresses: module.foundation.\n", out)
         self.assertIn("TEARDOWN-RULES addresses: module.runtime.,module.emr.,module.neptune.,module.dynamodb.,module.messaging.,module.workflow.,module.network.", out)
         self.assertIn("protection-check", result.steps())
         self.assertIn("PROTECTION-RULES: aws_neptune_cluster:deletion_protection=true", out)
@@ -217,7 +239,8 @@ class CleanupPolicyConfigTests(CleanupBase):
         )
         self.assertEqual(result.rc, 0, result.out)
         self.assertIn("CONFIG-IGNORED", result.stdout)
-        self.assertIn("PRESERVE-RULES types: aws_s3_bucket,", result.stdout)
+        self.assertIn("PRESERVE-RULES types: aws_s3_object", result.stdout)
+        self.assertNotIn("PRESERVE-RULES types: x", result.stdout)
         self.assertNotIn("TEARDOWN-RULES addresses: module.datalake.", result.stdout)
         self.assertIn("PROTECTION-RULES: aws_neptune_cluster:deletion_protection=true", result.stdout)
 
@@ -235,8 +258,9 @@ class CleanupListingTests(CleanupBase):
         plans = [a for n, a in self.calls("terraform") if " plan " in " " + a + " " and "-destroy" in a]
         self.assertEqual(len(plans), 1)
         self.assertEqual(sorted(w[len("-target="):] for w in plans[0].split() if w.startswith("-target=")), EXPECTED_TARGETS)
-        self.assertNotIn("datalake", plans[0].replace("var-file", "").replace("/source/", ""))
-        self.assertNotIn("aws_kms_key", plans[0])
+        self.assertIn("-target=module.datalake.aws_s3_bucket.zone", plans[0], "W4: the data lake buckets are targeted")
+        self.assertIn("-target=module.identity.aws_kms_key.data", plans[0], "W4: the KMS key is targeted")
+        self.assertNotIn("-target=module.foundation", plans[0], "the state backend settings are never targeted")
         self.assertIn("-var=cleanup_mode=true", plans[0])
         self.assertIn("-out=%s" % os.path.realpath(plan_path), plans[0])
         # The destroy root runs from the materialized, state-bound copy of the committed source.
@@ -280,17 +304,12 @@ class CleanupListingTests(CleanupBase):
 
     def test_every_preserved_class_in_the_plan_is_refused_and_no_token_is_offered(self):
         protected = {
-            "s3 bucket": ('module.datalake.aws_s3_bucket.zone["evidence"]', "aws_s3_bucket", ["delete"]),
-            "s3 bucket policy": ('module.datalake.aws_s3_bucket_policy.tls["curated"]', "aws_s3_bucket_policy", ["delete"]),
             "s3 object anywhere": ("module.workflow.aws_s3_object.definition", "aws_s3_object", ["delete"]),
-            "s3 vectors index": ('module.s3vectors.aws_s3vectors_index.document', "aws_s3vectors_index", ["delete"]),
-            "kms key": ("module.identity.aws_kms_key.data", "aws_kms_key", ["delete"]),
-            "kms alias": ("module.identity.aws_kms_alias.data", "aws_kms_alias", ["delete"]),
-            "log group in a teardown module": ("module.runtime.aws_cloudwatch_log_group.extra", "aws_cloudwatch_log_group", ["delete"]),
-            "grading log group": ('module.observability.aws_cloudwatch_log_group.service["query-api"]', "aws_cloudwatch_log_group", ["delete"]),
             "state lock table": ("module.foundation.aws_dynamodb_table.lock", "aws_dynamodb_table", ["delete"]),
             "state bucket": ("module.foundation.aws_s3_bucket.state", "aws_s3_bucket", ["delete"]),
-            "replaced bucket": ('module.datalake.aws_s3_bucket.zone["curated"]', "aws_s3_bucket", ["delete", "create"]),
+            "state bucket policy": ("module.foundation.aws_s3_bucket_policy.state", "aws_s3_bucket_policy", ["delete"]),
+            "budget": ("module.foundation.aws_budgets_budget.course[0]", "aws_budgets_budget", ["delete"]),
+            "replaced state bucket": ("module.foundation.aws_s3_bucket.state", "aws_s3_bucket", ["delete", "create"]),
         }
         for label, change in protected.items():
             with self.subTest(label):
@@ -304,10 +323,51 @@ class CleanupListingTests(CleanupBase):
                 self.assertIsNone(self.token_of(result.stdout), "no confirmation token for a violating plan")
                 self.assertEqual(self.applied(), [])
 
+    def test_the_purge_classes_are_teardown_and_a_destroy_plan_that_deletes_them_gets_a_token(self):
+        """W4 (user decision 5): the S3 buckets and their configuration, S3 Vectors, the KMS key and alias, the log groups, the API
+        certificate and the tunnel role are TEARDOWN resources; the listing prints their deletions and offers the token."""
+        purge = [
+            ('module.datalake.aws_s3_bucket.zone["curated"]', "aws_s3_bucket", ["delete"]),
+            ('module.datalake.aws_s3_bucket_policy.tls["curated"]', "aws_s3_bucket_policy", ["delete"]),
+            ('module.datalake.aws_s3_bucket_versioning.zone["curated"]', "aws_s3_bucket_versioning", ["delete"]),
+            ("module.s3vectors.aws_s3vectors_vector_bucket.embeddings", "aws_s3vectors_vector_bucket", ["delete"]),
+            ('module.s3vectors.aws_s3vectors_index.document["paper-abstract-v1"]', "aws_s3vectors_index", ["delete"]),
+            ("module.s3vectors.aws_s3vectors_vector_bucket_policy.tls", "aws_s3vectors_vector_bucket_policy", ["delete"]),
+            ("module.identity.aws_kms_key.data", "aws_kms_key", ["delete"]),
+            ("module.identity.aws_kms_alias.data", "aws_kms_alias", ["delete"]),
+            ('module.observability.aws_cloudwatch_log_group.service["query-api"]', "aws_cloudwatch_log_group", ["delete"]),
+            ("module.observability.aws_cloudwatch_log_group.neptune_audit", "aws_cloudwatch_log_group", ["delete"]),
+            ("aws_acm_certificate.api[0]", "aws_acm_certificate", ["delete"]),
+            ("aws_acm_certificate_validation.api[0]", "aws_acm_certificate_validation", ["delete"]),
+            ("module.identity.aws_iam_role.neptune_tunnel_task[0]", "aws_iam_role", ["delete"]),
+            ("module.identity.aws_iam_role.deployment", "aws_iam_role", ["delete"]),
+            ("module.identity.aws_iam_role_policy.neptune_tunnel_task[0]", "aws_iam_role_policy", ["delete"]),
+            ("module.runtime.aws_ecs_task_definition.neptune_tunnel[0]", "aws_ecs_task_definition", ["delete"]),
+        ]
+        show = self.show_with(TEARDOWN_CHANGES + purge, "purge.json")
+        result = self.listing(FAKE_SHOW_JSON=show)
+        self.assertEqual(result.rc, 3, result.out)
+        self.assertEqual(result.steps()[-1], "confirm", "the policy accepted the plan and the listing went on to the token step")
+        self.assertNotIn("POLICY-VIOLATION", result.stdout)
+        printed = [l[len("DESTROY-ACTION: "):] for l in result.stdout.splitlines() if l.startswith("DESTROY-ACTION: ")]
+        self.assertEqual(printed, sorted(SORTED_ACTIONS + ["delete " + address for address, _t, _a in purge]))
+        self.assertIsNotNone(self.token_of(result.stdout))
+
+    def test_the_deployment_role_is_a_teardown_resource_since_the_delete_everything_decision(self):
+        conf = {}
+        with open(os.path.join(SCRIPTS_DIR, "config", "release.conf"), encoding="utf-8") as handle:
+            for line in handle:
+                match = re.match(r"^([A-Z][A-Z0-9_]*)=(.*)$", line.rstrip("\n"))
+                if match:
+                    conf[match.group(1)] = match.group(2)
+        self.assertIn("module.identity.aws_iam_role.deployment", conf["CLEANUP_TEARDOWN_ADDRESS_RULES"].split(","))
+        self.assertNotIn("module.identity.aws_iam_role.deployment_other", conf["CLEANUP_TEARDOWN_ADDRESS_RULES"].split(","), "the rule is an exact address, not a prefix")
+        self.assertEqual(conf["CLEANUP_PRESERVE"], "terraform-state")
+        self.assertEqual(conf["CLEANUP_PRESERVE_ADDRESS_RULES"], "module.foundation.")
+
     def test_an_unlisted_delete_is_refused(self):
         for label, change in {
             "rogue resource": ("aws_instance.rogue", "aws_instance", ["delete"]),
-            "deployment role": ("module.identity.aws_iam_role.deployment", "aws_iam_role", ["delete"]),
             "root guard": ("terraform_data.configuration_guard", "terraform_data", ["delete"]),
         }.items():
             with self.subTest(label):
@@ -471,7 +531,7 @@ class CleanupConfirmTests(CleanupBase):
 
     def test_a_saved_plan_that_now_touches_a_protected_resource_is_refused_even_with_a_token(self):
         token = self.listed()
-        protected = self.show_with(TEARDOWN_CHANGES + [("module.datalake.aws_s3_bucket.zone", "aws_s3_bucket", ["delete"])], "now-protected.json")
+        protected = self.show_with(TEARDOWN_CHANGES + [("module.foundation.aws_dynamodb_table.lock", "aws_dynamodb_table", ["delete"])], "now-protected.json")
         result = self.confirm(token, self.plan_path, FAKE_SHOW_JSON=protected)
         self.assertEqual(result.rc, 3, result.out)
         self.assertIn("POLICY-VIOLATION", result.stdout)
@@ -527,7 +587,7 @@ class CleanupProtectionTests(CleanupBase):
 
     def protected_state(self, *kinds, name="state-protected.json"):
         resources = []
-        for kind in ("neptune", "alb", "dynamodb", "ecr"):
+        for kind in PROTECTED:
             resources.append(PROTECTED[kind][:3] if kind in kinds else RELEASED[kind])
         return self.write_state_json(resources, name)
 
@@ -545,11 +605,13 @@ class CleanupProtectionTests(CleanupBase):
                 self.assertEqual([a for n, a in self.calls("terraform") if " plan " in " " + a + " "], [], "no destroy plan is even built")
                 self.assertEqual(self.applied(), [])
 
-    def test_all_four_protections_are_listed_together(self):
-        result = self.listing(FAKE_STATE_JSON=self.protected_state("neptune", "alb", "dynamodb", "ecr"))
+    def test_all_six_protections_are_listed_together(self):
+        result = self.listing(FAKE_STATE_JSON=self.protected_state("neptune", "alb", "dynamodb", "ecr", "s3", "vectors"))
         self.assertEqual(result.rc, 3, result.out)
         lines = [l for l in result.stdout.splitlines() if l.startswith("PROTECTION-ACTIVE: ")]
-        self.assertEqual(len(lines), 4)
+        self.assertEqual(len(lines), 6)
+        self.assertIn("PROTECTION-ACTIVE: %s force_destroy=false" % S3_BUCKET, result.stdout)
+        self.assertIn("PROTECTION-ACTIVE: %s force_destroy=false" % VECTOR_BUCKET, result.stdout)
 
     def test_a_protected_preserved_resource_is_not_a_blocker(self):
         """The state lock table is preserved and protected on purpose: only teardown resources gate the sequence."""
@@ -570,7 +632,7 @@ class CleanupProtectionTests(CleanupBase):
         self.assertEqual(self.applied(), [])
 
     def test_after_preparation_the_sequence_proceeds_to_the_token_step_and_the_confirmed_run_destroys(self):
-        blocked = self.listing(FAKE_STATE_JSON=self.protected_state("neptune", "alb", "dynamodb", "ecr"))
+        blocked = self.listing(FAKE_STATE_JSON=self.protected_state("neptune", "alb", "dynamodb", "ecr", "s3", "vectors"))
         self.assertEqual(blocked.steps()[-1], "protection-check")
         # The preparation was applied (state fixture with every protection released).
         proceeded = self.listing(FAKE_STATE_JSON=self.released_state)
@@ -619,7 +681,7 @@ class CleanupPrepareTests(CleanupBase):
 
     def protected_state(self, *kinds):
         resources = []
-        for kind in ("neptune", "alb", "dynamodb", "ecr"):
+        for kind in PROTECTED:
             resources.append(PROTECTED[kind][:3] if kind in kinds else RELEASED[kind])
         return self.write_state_json(resources, "state-protected.json")
 
@@ -657,6 +719,21 @@ class CleanupPrepareTests(CleanupBase):
         self.assertNotIn("datalake", plans[0].replace("var-file", "").replace("/source/", ""), "preserved resources are never targeted")
         self.assertEqual(self.applied(), [])
         self.assertEqual(self.mutating_calls(), [])
+
+    def test_the_s3_buckets_and_the_vector_bucket_are_prepared_by_force_destroy_only(self):
+        """W4: the preparation lifts force_destroy on the buckets (in-place update of a teardown resource) and nothing else."""
+        result = self.prepare(kinds=("s3", "vectors"), show=self.prepare_show("s3", "vectors"))
+        self.assertEqual(result.rc, 0, result.out)
+        plans = [a for n, a in self.calls("terraform") if " plan " in " " + a + " "]
+        self.assertEqual(len(plans), 1)
+        words = plans[0].split()
+        self.assertEqual(sorted(w[len("-target="):] for w in words if w.startswith("-target=")), sorted([S3_BUCKET, VECTOR_BUCKET]))
+        self.assertIn("-var=cleanup_mode=true", words)
+        self.assertNotIn("-destroy", words)
+        with open(self.plan_file_from(result.stdout, "PLAN-FILE") + ".receipt.json") as handle:
+            receipt = json.load(handle)
+        self.assertEqual((receipt["summary"]["change"], receipt["summary"]["destroy"], receipt["summary"]["add"]), (2, 0, 0))
+        self.assertEqual(self.applied(), [])
 
     def test_the_preparation_receipt_and_the_candidate_approval_lines(self):
         result = self.prepare()
@@ -711,7 +788,10 @@ class CleanupPrepareTests(CleanupBase):
             "deletes a resource": {"address": "module.network.aws_nat_gateway.course", "type": "aws_nat_gateway", "change": {"actions": ["delete"], "before": {}, "after": None, "after_unknown": {}}},
             "replaces a resource": {"address": TABLE, "type": "aws_dynamodb_table", "change": {"actions": ["delete", "create"], "before": {}, "after": {}, "after_unknown": {}}},
             "changes another attribute": update_change(TABLE, "aws_dynamodb_table", {"deletion_protection_enabled": True, "billing_mode": "PAY_PER_REQUEST"}, {"deletion_protection_enabled": False, "billing_mode": "PROVISIONED"}),
-            "updates a preserved bucket": update_change('module.datalake.aws_s3_bucket.zone["curated"]', "aws_s3_bucket", {"force_destroy": False}, {"force_destroy": True}),
+            "updates the preserved state bucket": update_change("module.foundation.aws_s3_bucket.state", "aws_s3_bucket", {"force_destroy": False}, {"force_destroy": True}),
+            "changes a bucket attribute other than force_destroy": update_change(S3_BUCKET, "aws_s3_bucket", {"force_destroy": False, "tags": {"a": "1"}}, {"force_destroy": True, "tags": {"a": "2"}}),
+            "changes a flag of a vector bucket other than force_destroy": update_change(VECTOR_BUCKET, "aws_s3vectors_vector_bucket", {"force_destroy": False, "tags": {}}, {"force_destroy": True, "tags": {"x": "y"}}),
+            "deletes an S3 bucket in the preparation": {"address": S3_BUCKET, "type": "aws_s3_bucket", "change": {"actions": ["delete"], "before": {}, "after": None, "after_unknown": {}}},
             "updates an unlisted resource": update_change("aws_instance.rogue", "aws_instance", {"deletion_protection_enabled": True}, {"deletion_protection_enabled": False}),
             "updates the deployment role": update_change("module.identity.aws_iam_role.deployment", "aws_iam_role", {"x": 1}, {"x": 2}),
             "changes a flag of the wrong type": update_change(TABLE, "aws_dynamodb_table", {"force_delete": False}, {"force_delete": True}),

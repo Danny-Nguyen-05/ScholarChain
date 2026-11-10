@@ -39,8 +39,17 @@ variable "synthesis_inference_profile_regions" {
   default = []
 }
 
-# Rag-bucket key prefixes the query-api and embedding-worker read (evidence index, runtime audit, embedding text): the s3:prefix scope
+# Rag-bucket key prefixes the query-api and embedding-worker read (evidence index, runtime audit, embedding text, runtime artifacts): the s3:prefix scope
 # of their s3:ListBucket grants.
 variable "rag_prefixes" {
   type = list(string)
+}
+
+# Replan W5b: the Neptune tunnel task role (modules/identity/neptune_tunnel.tf). The root sets it only when neptune_tunnel_enabled and
+# the runtime is deployed with an image revision.
+variable "neptune_tunnel_role_enabled" {
+  type        = bool
+  default     = false
+  nullable    = false
+  description = "Create the tunnel task role and its inline policy (four ssmmessages channel actions, no data access)."
 }

@@ -4,13 +4,28 @@
   validate --manifest FILE --max-run-usd C --max-runtime-cap M --max-capacity-cap N --max-idle-cap S
         Validates the manifest against the schema below. Prints "EXPERIMENT-REFUSED: <reason>" lines and exits 1 for
         any violation; otherwise prints nothing and exits 0.
+  render --manifest FILE --out FILE
+        Resolves the run-time tokens of a committed manifest (below) into FILE (private, mode 0600) and prints, for the shell:
+        "ACCOUNT <12 digits>" (capture only, never display), "SUBST <token> <value with the account as <acct>>" per token used,
+        "TOKENIZED yes|no" and "RENDERED-SHA256 <hex>". Exit 1 with "EXPERIMENT-REFUSED: <reason>" lines on any problem; exit 4 when the file is not valid JSON (the schema check then reports it).
   args --manifest FILE
         Prints the run-bounded-pipeline.sh arguments the manifest implies, one per line (flag, then value on its own
         line), so the shell can build an argument array without word splitting.
   show --manifest FILE --what W      id | region | metrics (one URI per line) | limits
   write-record --root R --out FILE --manifest FILE --manifest-sha256 H --kind planned|result --commit C --at T
                [--started T] [--pipeline-run-id ID] [--exit-code N] [--status S]
+               [--rendered-sha256 H] [--substitutions-json J]
         Create the private experiment run record (or result), exclusively (safeio).
+
+Run-time tokens (the bucket names embed the AWS account id, so a committed manifest holds only tokens, never an account id):
+  ${SCHOLARCHAIN_ARTIFACTS_BUCKET}  ${SCHOLARCHAIN_LOGS_BUCKET}  ${SCHOLARCHAIN_RAW_BUCKET}  ${SCHOLARCHAIN_REPORTS_BUCKET}
+        the value comes from the environment variable of the same name and must match scholarchain-<env>-<12 digits>-<suffix> with the
+        suffix artifacts, logs, raw or reports respectively; every bucket used must share one environment and one account;
+  ${SCHOLARCHAIN_RUN_PREFIX}        ^run-[a-z0-9][a-z0-9-]{1,27}$ (the deployer's operator_run_prefix).
+  Any other ${...}, an empty or unset value, or a value of another shape is refused; a raw 12-digit account id inside a committed string is
+  refused too. Tokens are replaced in every string VALUE (not in keys) BEFORE the schema check, so the S3 URI rules apply to the real
+  names. The committed file (and its sha256) is what git and the approval record bind; the rendered sha256 and the substituted values
+  (account shown as <acct>) are recorded in experiment-record.json.
 
 Manifest schema (JSON, "scholarchain.experiment-manifest.v1"). Unknown keys are rejected at every level.
   schema        "scholarchain.experiment-manifest.v1"                                                   required
@@ -33,6 +48,7 @@ Manifest schema (JSON, "scholarchain.experiment-manifest.v1"). Unknown keys are 
 """
 import argparse
 import decimal
+import hashlib
 import importlib.util
 import json
 import os
@@ -54,6 +70,116 @@ REGION = re.compile(r"^[a-z]{2}(-[a-z0-9]+)+-[0-9]+$")
 HEX64 = re.compile(r"^[0-9a-f]{64}$")
 S3_URI = re.compile(r"^s3://[a-z0-9][a-z0-9.-]{1,61}[a-z0-9]/.+")
 SAFE_VALUE = re.compile(r"^[^\x00-\x1f\x7f]{1,1024}$")
+
+
+BUCKET_TOKENS = {
+    "SCHOLARCHAIN_ARTIFACTS_BUCKET": "artifacts",
+    "SCHOLARCHAIN_LOGS_BUCKET": "logs",
+    "SCHOLARCHAIN_RAW_BUCKET": "raw",
+    "SCHOLARCHAIN_REPORTS_BUCKET": "reports",
+}
+RUN_PREFIX_TOKEN = "SCHOLARCHAIN_RUN_PREFIX"
+RUN_PREFIX_RE = re.compile(r"^run-[a-z0-9][a-z0-9-]{1,27}$")
+PROJECT_BUCKET_RE = re.compile(r"^scholarchain-([a-z0-9-]+)-([0-9]{12})-([a-z]+)$")
+TOKEN_RE = re.compile(r"\$\{([^}]*)\}")
+ACCOUNT_LITERAL_RE = re.compile(r"(?<![0-9A-Za-z])[0-9]{12}(?![0-9A-Za-z])")
+
+
+def _strings(value, out):
+    if isinstance(value, str):
+        out.append(value)
+    elif isinstance(value, list):
+        for item in value:
+            _strings(item, out)
+    elif isinstance(value, dict):
+        for item in value.values():
+            _strings(item, out)
+    return out
+
+
+def _substitute(value, values):
+    if isinstance(value, str):
+        return TOKEN_RE.sub(lambda m: values[m.group(1)], value)
+    if isinstance(value, list):
+        return [_substitute(item, values) for item in value]
+    if isinstance(value, dict):
+        return {key: _substitute(item, values) for key, item in value.items()}
+    return value
+
+
+def resolve_tokens(document, environ):
+    """Returns (resolved document, {token: value}, problems). The committed document is not modified."""
+    problems, used = [], {}
+    strings = _strings(document, [])
+    for text in strings:
+        if ACCOUNT_LITERAL_RE.search(text):
+            problems.append("a committed string holds a raw 12-digit account id; use the ${SCHOLARCHAIN_*_BUCKET} tokens (the bucket names embed the account id)")
+        if re.search(r"\$[A-Za-z_]", text):
+            problems.append("a string holds a $NAME without braces; write ${NAME} (only the documented tokens are resolved)")
+        if text.count("${") != len(TOKEN_RE.findall(text)):
+            problems.append("a string holds a malformed token (an unclosed ${...})")
+        for name in TOKEN_RE.findall(text):
+            if name not in BUCKET_TOKENS and name != RUN_PREFIX_TOKEN:
+                problems.append("unknown token ${%s} (allowed: %s)" % (name, ", ".join(sorted(list(BUCKET_TOKENS) + [RUN_PREFIX_TOKEN]))))
+            else:
+                used[name] = None
+    envs, accounts = set(), set()
+    for name in sorted(used):
+        value = environ.get(name, "")
+        if not value:
+            problems.append("${%s} is used but the environment variable %s is empty or unset" % (name, name))
+            continue
+        if name == RUN_PREFIX_TOKEN:
+            if not RUN_PREFIX_RE.match(value):
+                problems.append("%s must match %s" % (name, RUN_PREFIX_RE.pattern))
+                continue
+        else:
+            match = PROJECT_BUCKET_RE.match(value)
+            if not match or match.group(3) != BUCKET_TOKENS[name]:
+                problems.append("%s must be a project bucket name scholarchain-<env>-<12 digits>-%s" % (name, BUCKET_TOKENS[name]))
+                continue
+            envs.add(match.group(1))
+            accounts.add(match.group(2))
+        used[name] = value
+    if len(envs) > 1 or len(accounts) > 1:
+        problems.append("the bucket tokens name different environments or accounts; they must all belong to one stack")
+    if problems:
+        return None, used, problems
+    return _substitute(document, used), used, []
+
+
+def redact_value(value):
+    match = PROJECT_BUCKET_RE.match(value)
+    return "scholarchain-%s-<acct>-%s" % (match.group(1), match.group(3)) if match else value
+
+
+def cmd_render(args):
+    try:
+        document = load(args.manifest)
+    except (OSError, ValueError) as error:
+        print("EXPERIMENT-REFUSED: the manifest is missing or not valid JSON (%s)" % type(error).__name__)
+        return 4  # the shell lets the schema check report this one (same step and wording as before tokens existed)
+    resolved, used, problems = resolve_tokens(document, os.environ)
+    if problems:
+        for problem in sorted(set(problems)):
+            print("EXPERIMENT-REFUSED: %s" % problem)
+        return 1
+    if used:
+        data = (json.dumps(resolved, indent=2, sort_keys=True) + "\n").encode("utf-8")
+    else:
+        with open(args.manifest, "rb") as handle:
+            data = handle.read()
+    fd = os.open(args.out, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600)
+    with os.fdopen(fd, "wb") as handle:
+        handle.write(data)
+    accounts = sorted({PROJECT_BUCKET_RE.match(v).group(2) for n, v in used.items() if n in BUCKET_TOKENS})
+    for account in accounts:
+        print("ACCOUNT %s" % account)
+    for name in sorted(used):
+        print("SUBST %s %s" % (name, redact_value(used[name])))
+    print("TOKENIZED %s" % ("yes" if used else "no"))
+    print("RENDERED-SHA256 %s" % hashlib.sha256(data).hexdigest())
+    return 0
 
 
 def _safeio():
@@ -254,6 +380,9 @@ def cmd_write_record(args):
         },
         "metric_locations": document["metrics"]["locations"],
     }
+    if args.rendered_sha256:
+        base["rendered_manifest_sha256"] = args.rendered_sha256
+        base["token_substitutions"] = json.loads(args.substitutions_json or "{}")
     if args.kind == "planned":
         base.update({"schema": "scholarchain.experiment-run-record.v1", "start_time_utc": args.at, "pipeline_run_id": args.pipeline_run_id})
     else:
@@ -288,6 +417,10 @@ def build_parser():
     p.add_argument("--max-capacity-cap", type=int, required=True)
     p.add_argument("--max-idle-cap", type=int, required=True)
     p.set_defaults(fn=cmd_validate)
+    p = sub.add_parser("render")
+    p.add_argument("--manifest", required=True)
+    p.add_argument("--out", required=True)
+    p.set_defaults(fn=cmd_render)
     p = sub.add_parser("args")
     p.add_argument("--manifest", required=True)
     p.set_defaults(fn=cmd_args)
@@ -303,6 +436,8 @@ def build_parser():
     p.add_argument("--pipeline-run-id", default="")
     p.add_argument("--exit-code", type=int, default=0)
     p.add_argument("--status", default="")
+    p.add_argument("--rendered-sha256", default="")
+    p.add_argument("--substitutions-json", default="")
     p.set_defaults(fn=cmd_write_record)
     return parser
 

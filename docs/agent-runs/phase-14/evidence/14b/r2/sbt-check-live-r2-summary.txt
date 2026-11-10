@@ -1,0 +1,13 @@
+# Live-tree sbt -batch check, JDK 17, AWS neutralized (14B repair round 2), observed 2026-11-09
+Tests: succeeded 207, failed 0, canceled 0
+Tests: succeeded 64, failed 0, canceled 0
+Tests: succeeded 39, failed 0, canceled 0
+Tests: succeeded 53, failed 0, canceled 0
+Tests: succeeded 141, failed 0, canceled 0
+Tests: succeeded 118, failed 0, canceled 0
+Tests: succeeded 90, failed 0, canceled 0
+Tests: succeeded 675, failed 0, canceled 0
+Tests: succeeded 28, failed 0, canceled 1
+[success] Total time: 778 s (12:58), completed Nov 9, 2026, 2:57:06 PM
+EXIT 0
+test marker updated by markTestRun after the successful run

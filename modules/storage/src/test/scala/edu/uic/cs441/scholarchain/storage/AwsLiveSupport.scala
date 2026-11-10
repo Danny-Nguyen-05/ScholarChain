@@ -30,6 +30,7 @@ private[storage] final case class AwsLiveSettings(
     budgetUsd: Double
 )
 private[storage] object AwsLiveSettings {
+  val allowedDimensions: Set[Int] = Set(256, 512, 1024)
   def enabled(environment: Map[String, String]): Boolean = environment
     .get("SCHOLARCHAIN_AWS_ITEST")
     .contains("1") && environment.get("AWS_PROFILE").exists(_.trim.nonEmpty)
@@ -88,8 +89,10 @@ private[storage] object AwsLiveSettings {
       "explicit distinct provisioned tables required"
     )
     val dimension = json("dimension").num.toInt
+    // Titan V2 produces only these widths and the provisioned indexes are 256. A different value
+    // can never match the live index, so reject it before any credential is resolved.
     require(
-      json("dimension").num == dimension && dimension >= 1 && dimension <= 4096,
+      json("dimension").num == dimension && AwsLiveSettings.allowedDimensions(dimension),
       "invalid vector dimension"
     )
     val metric = json("metric").str;

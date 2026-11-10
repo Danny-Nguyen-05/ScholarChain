@@ -1,7 +1,7 @@
 """Independent refusal-path tests for scripts/run-bounded-pipeline.sh (Subphase 13B, test-engineer).
 
 Expectations come from scripts/README.md ("Subphase 13B"), the script's --help, plan sections 7.1-7.3a and 9 and the
-user's Step 0 answers (G6 caps USD 3 / 3 runs / USD 9.50, ceilings, approval record keys). Every refusal asserts the exit
+user's Step 0 answers (G6 caps USD 3 per run / 3 runs / USD 2.52 cumulative since the 2026-11-09 caps = planned use decision, headroom floors, ceilings, approval record keys). Every refusal asserts the exit
 code and the STEP marker / RESULT line, and that no cloud call happened before the refusal.
 """
 import datetime
@@ -124,10 +124,34 @@ class PipelineCeilingRefusals(Base):
         fx = self.fx()
         run = fx.dry()
         line = run.grep(r"^PLAN: ceilings:")[0]
-        for expected in ("maxLocalSampleRecords<=1000", "reducerCount<=8", "maxCandidateBlockSize<=256",
+        for expected in ("maxLocalSampleRecords<=12000", "reducerCount<=8", "maxCandidateBlockSize<=256",
                          "maxCandidatePairsPerBlock<=4096", "maxAuthorTeamSize<=64", "maxRecordBytes<=8388608",
                          "maxXmlEntityExpansion<=8388608"):
             self.assertIn(expected, line)
+
+    def test_only_the_sample_record_ceiling_differs_from_phase4_and_the_smoke_script_keeps_1000(self):
+        """USD 25 replan: the pipeline's maxLocalSampleRecords ceiling is 12,000 (pipeline-specific); phase4-emr-smoke.sh keeps 1000 and
+        the other six ceilings are equal in the smoke script, the committed config and the fixture constants."""
+        smoke = dict(re.findall(r"^readonly (SMOKE_MAX_[A-Z_]+)=(\d+)$", (S.REPO / "scripts/phase4-emr-smoke.sh").read_text(), re.M))
+        conf = dict(re.findall(r"^(PIPELINE_CEILING_[A-Z_]+)=(\d+)$", (S.REPO / "scripts/config/release.conf").read_text(), re.M))
+        pairs = {  # fixture field: (smoke constant, pipeline pin)
+            "maxLocalSampleRecords": ("SMOKE_MAX_LOCAL_SAMPLE_RECORDS", "PIPELINE_CEILING_MAX_LOCAL_SAMPLE_RECORDS"),
+            "reducerCount": ("SMOKE_MAX_REDUCER_COUNT", "PIPELINE_CEILING_REDUCER_COUNT"),
+            "maxCandidateBlockSize": ("SMOKE_MAX_CANDIDATE_BLOCK_SIZE", "PIPELINE_CEILING_MAX_CANDIDATE_BLOCK_SIZE"),
+            "maxCandidatePairsPerBlock": ("SMOKE_MAX_CANDIDATE_PAIRS_PER_BLOCK", "PIPELINE_CEILING_MAX_CANDIDATE_PAIRS_PER_BLOCK"),
+            "maxAuthorTeamSize": ("SMOKE_MAX_AUTHOR_TEAM_SIZE", "PIPELINE_CEILING_MAX_AUTHOR_TEAM_SIZE"),
+            "maxRecordBytes": ("SMOKE_MAX_RECORD_BYTES", "PIPELINE_CEILING_MAX_RECORD_BYTES"),
+            "maxXmlEntityExpansion": ("SMOKE_MAX_XML_ENTITY_EXPANSION", "PIPELINE_CEILING_MAX_XML_ENTITY_EXPANSION"),
+        }
+        self.assertEqual(int(smoke["SMOKE_MAX_LOCAL_SAMPLE_RECORDS"]), 1000)
+        self.assertEqual(int(conf["PIPELINE_CEILING_MAX_LOCAL_SAMPLE_RECORDS"]), 12000)
+        self.assertEqual(S.CEILINGS["maxLocalSampleRecords"], 12000)
+        for field, (smoke_key, pin) in pairs.items():
+            if field == "maxLocalSampleRecords":
+                continue
+            with self.subTest(field=field):
+                self.assertEqual(int(conf[pin]), int(smoke[smoke_key]), "the six other ceilings stay equal to Phase 4")
+                self.assertEqual(S.CEILINGS[field], int(smoke[smoke_key]))
 
     def test_environment_cannot_raise_a_pinned_cap(self):
         fx = self.fx()
@@ -141,7 +165,7 @@ class PipelineCeilingRefusals(Base):
 
 
 class PipelineG6Refusals(Base):
-    """Step 0 answer 4: USD 3 per run, 3 live runs, USD 9.50 cumulative, estimate printed, unconfirmed pricing refuses."""
+    """Step 0 answer 4: USD 3 per run, 3 live runs, USD 2.52 cumulative (planned use 3 x 0.84; it was 3.00, and 9.50 before the USD 25 replan), estimate printed, unconfirmed pricing refuses."""
 
     def test_estimate_formula_is_instances_times_hourly_rate_times_runtime_plus_idle_tail_rounded_up(self):
         """13C finding B3, derived by hand from scripts/config/emr-pricing.conf (m5.xlarge EC2 0.192 + EMR 0.048 =
@@ -220,22 +244,56 @@ class PipelineG6Refusals(Base):
         run = fx.execute()
         self.assertEqual(run.rc, 0, run.describe())
 
-    def test_cumulative_total_above_nine_fifty_is_refused_and_exactly_nine_fifty_is_allowed(self):
-        # this run: 4 instances x 0.480 x (4500 + 900) / 3600 = 2.88
-        big = dict(instance_type="m5.2xlarge", core_count=3, max_runtime_minutes=75)
-        over = self.fx()
-        over.write_ledger(["3.40", "3.40"])  # 6.80 + 2.88 = 9.68 > 9.50
-        run = over.execute(pipeline_over=big, capacity="4", runtime="75")
-        self.assert_refused(run, step="g6-gate")
-        self.assertIn("cumulative", run.text)
+    def test_cumulative_total_above_the_cap_is_refused_and_exactly_the_cap_is_allowed(self):
+        """Phase 14B caps = planned use (user, 2026-11-09): EMR_CUMULATIVE_CAP_USD is 2.52 = 3 runs x 0.84 (it was 3.00, and 9.50
+        before the USD 25 replan). The sum of the recorded estimates plus this run's estimate is refused only when ABOVE 2.52
+        (inclusive boundary). Hand-derived:
+        default run: 2 instances x 0.240 x (3600 + 900) / 3600 = 0.60;
+        mid run: 3 instances x 0.240 x (5400 + 900) / 3600 = 1.26;
+        big run: 4 x m5.2xlarge 0.480 x (4500 + 900) / 3600 = 2.88, which alone is above 2.52."""
+        # default run (0.60): 0.96 + 0.96 + 0.60 = 2.52 exactly -> allowed; 0.96 + 0.97 + 0.60 = 2.53 -> refused
         exact = self.fx()
-        exact.update_scenario(groups={"InstanceGroups": [
-            {"InstanceGroupType": "MASTER", "InstanceType": "m5.2xlarge", "RequestedInstanceCount": 1, "RunningInstanceCount": 1},
-            {"InstanceGroupType": "CORE", "InstanceType": "m5.2xlarge", "RequestedInstanceCount": 3, "RunningInstanceCount": 3}]})
-        exact.write_ledger(["3.00", "3.62"])  # 6.62 + 2.88 = 9.50, which is not above the cap
-        run = exact.execute(pipeline_over=big, capacity="4", runtime="75")
+        exact.write_ledger(["0.96", "0.96"])
+        run = exact.execute()
         self.assertEqual(run.rc, 0, run.describe())
         self.assertIn("LEDGER-RESERVED", run.out)
+        over = self.fx()
+        over.write_ledger(["0.96", "0.97"])
+        run = over.execute()
+        self.assert_refused(run, step="g6-gate")
+        self.assertIn("cumulative", run.text)
+        # a ledger that the 3.00 cap accepted (1.20 + 1.20 + 0.60 = 3.00) is refused under 2.52
+        old_world = self.fx()
+        old_world.write_ledger(["1.20", "1.20"])
+        self.assert_refused(old_world.execute(), step="g6-gate")
+        # mid run (1.26): 1.26 + 1.26 = 2.52 exactly -> allowed; 1.26 + 1.27 = 2.53 -> refused; an empty ledger is allowed (1.26 < 2.52)
+        mid = dict(core_count=2, max_runtime_minutes=90)
+        mid_groups = {"InstanceGroups": [
+            {"InstanceGroupType": "MASTER", "InstanceType": "m5.xlarge", "RequestedInstanceCount": 1, "RunningInstanceCount": 1},
+            {"InstanceGroupType": "CORE", "InstanceType": "m5.xlarge", "RequestedInstanceCount": 2, "RunningInstanceCount": 2}]}
+        for ledger, allowed in (([], True), (["1.26"], True), (["1.27"], False)):
+            with self.subTest(ledger=ledger, allowed=allowed):
+                fx = self.fx()
+                fx.update_scenario(groups=mid_groups)
+                if ledger:
+                    fx.write_ledger(ledger)
+                run = fx.execute(pipeline_over=mid, capacity="3", runtime="90")
+                if allowed:
+                    self.assertEqual(run.rc, 0, run.describe())
+                    self.assertIn("LEDGER-RESERVED", run.out)
+                else:
+                    self.assert_refused(run, step="g6-gate")
+                    self.assertIn("cumulative", run.text)
+        # big run (2.88) is within the per-run cap of 3.00 but above the cumulative 2.52, so even an empty ledger refuses it
+        big = dict(instance_type="m5.2xlarge", core_count=3, max_runtime_minutes=75)
+        big_groups = {"InstanceGroups": [
+            {"InstanceGroupType": "MASTER", "InstanceType": "m5.2xlarge", "RequestedInstanceCount": 1, "RunningInstanceCount": 1},
+            {"InstanceGroupType": "CORE", "InstanceType": "m5.2xlarge", "RequestedInstanceCount": 3, "RunningInstanceCount": 3}]}
+        fx = self.fx()
+        fx.update_scenario(groups=big_groups)
+        run = fx.execute(pipeline_over=big, capacity="4", runtime="75")
+        self.assert_refused(run, step="g6-gate")
+        self.assertIn("cumulative", run.text)
 
     def test_unreadable_ledger_is_never_read_as_empty(self):
         fx = self.fx()
@@ -538,7 +596,9 @@ class PipelinePrespendRefusals(Base):
             "future": dict(snapshot_dt=now + datetime.timedelta(hours=2)),
             "monitoring false": dict(monitoring_confirmed_active=False),
             "monitoring string": dict(monitoring_confirmed_active="true"),
-            "headroom 19.99": dict(remaining_headroom_usd=19.99),
+            "headroom 2.99": dict(remaining_headroom_usd=2.99),
+            "headroom 0": dict(remaining_headroom_usd=0),
+            "headroom negative": dict(remaining_headroom_usd=-0.01),
             "headroom string": dict(remaining_headroom_usd="150"),
             "headroom null": dict(remaining_headroom_usd=None),
             "reserves missing": dict(reserves_usd=...),
@@ -552,10 +612,24 @@ class PipelinePrespendRefusals(Base):
                 self.assertEqual((run.rc, S.last_step(run), run.status), (3, "prespend-receipt", "REFUSED"), run.describe())
                 self.assertEqual(run.calls, [], "no aws call may precede a failed pre-spend check")
 
-    def test_headroom_exactly_twenty_and_snapshot_within_a_day_pass(self):
+    def test_headroom_exactly_three_and_snapshot_within_a_day_pass(self):
+        """USD 25 replan: the pinned floor is 3 (it was 20); 3 is inclusive, 2.99 is refused (case above)."""
         fx = self.fx()
-        run = fx.execute(prespend_mods=dict(remaining_headroom_usd=20, snapshot_dt=S.now_utc() - datetime.timedelta(hours=23)))
+        run = fx.execute(prespend_mods=dict(remaining_headroom_usd=3, snapshot_dt=S.now_utc() - datetime.timedelta(hours=23)))
         self.assertEqual(run.rc, 0, run.describe())
+
+    def test_a_headroom_the_old_floor_refused_now_passes_and_the_environment_cannot_move_the_floor(self):
+        """headroom 3.01 and 19.99 (refused under the old 20 floor) pass; PRESPEND_MIN_HEADROOM_USD in the
+        environment is a pinned key and cannot lower or raise the floor."""
+        for headroom in (3.01, 19.99):
+            with self.subTest(headroom=headroom):
+                run = self.fx().execute(prespend_mods=dict(remaining_headroom_usd=headroom))
+                self.assertEqual(run.rc, 0, run.describe())
+        fx = self.fx()
+        run = fx.execute(prespend_mods=dict(remaining_headroom_usd=2.99),
+                         env_over={"PRESPEND_MIN_HEADROOM_USD": "0"})
+        self.assertEqual((run.rc, S.last_step(run), run.status), (3, "prespend-receipt", "REFUSED"), run.describe())
+        self.assertEqual(run.calls, [])
 
     def test_receipt_expiring_mid_run_stops_before_the_next_submission(self):
         fx = self.fx()

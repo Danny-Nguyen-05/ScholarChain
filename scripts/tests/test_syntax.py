@@ -12,14 +12,15 @@ from helpers import REAL_REPO, SCRIPTS_DIR
 
 SCRIPTS_13A = ["check.sh", "package.sh", "plan.sh", "deploy.sh", "rollback.sh", "cleanup.sh"]
 SCRIPTS_13B = ["smoke-test.sh", "smoke-local.sh", "run-bounded-pipeline.sh", "run-experiment.sh", "archive-evidence.sh"]
-SCRIPTS = SCRIPTS_13A + SCRIPTS_13B
+SCRIPTS_14C = ["upload-slice.sh", "upload-emr-artifacts.sh"]
+SCRIPTS = SCRIPTS_13A + SCRIPTS_13B + SCRIPTS_14C
 SHELL_FILES = SCRIPTS + ["lib/common.sh", "emr/bootstrap.sh", "emr/sc-step.sh"]
 PY_FILES = [
     "lib/timeout.py", "lib/tools.py", "lib/plan_summary.py", "lib/redact.py", "lib/verify.py", "lib/safeio.py", "lib/state_bind.py", "lib/records.py",
-    "lib/budget.py", "lib/pipeline.py", "lib/run_approval.py", "lib/experiment.py", "lib/smoke_client.py", "lib/archive.py",
+    "lib/budget.py", "lib/upload_slice.py", "lib/upload_emr_artifacts.py", "lib/pipeline.py", "lib/run_approval.py", "lib/experiment.py", "lib/smoke_client.py", "lib/archive.py",
     "emr/sc-ceiling-check.py", "emr/sc-class-origin-verify.py", "emr/sc-render-spark-config.py",
 ]
-CLOUD_SCRIPTS = ["plan.sh", "deploy.sh", "rollback.sh", "cleanup.sh", "run-bounded-pipeline.sh"]
+CLOUD_SCRIPTS = ["plan.sh", "deploy.sh", "rollback.sh", "cleanup.sh", "run-bounded-pipeline.sh", "upload-slice.sh", "upload-emr-artifacts.sh"]
 
 
 def read(rel):
@@ -165,7 +166,8 @@ class ConfigurationTests(unittest.TestCase):
     def test_new_policy_and_prespend_settings_are_pinned_with_the_decided_values(self):
         conf = parse_conf()
         self.assertEqual(conf["PRESPEND_MAX_AGE_HOURS"], "24")
-        self.assertEqual(conf["PRESPEND_MIN_HEADROOM_USD"], "20")
+        self.assertEqual(conf["PRESPEND_MIN_HEADROOM_USD"], "3")
+        self.assertNotIn("PRESPEND_MIN_HEADROOM_CLEANUP_USD", conf, "cleanup-prepare has no headroom floor, so there is no key for it")
         self.assertEqual(conf["PLAN_DIR"], "target/plans")
         common = read("lib/common.sh")
         pinned = re.search(r'SC_PINNED_KEYS="([^"]*)"', common).group(1).split()
@@ -179,18 +181,31 @@ class ConfigurationTests(unittest.TestCase):
         self.assertIn('REQUIRED_SUITES="discover:scripts/tests discover:scripts/phase12d-spike/tests files:scripts/billing/tests discover:tests/scripts discover:tests/infra"', check)
         self.assertNotIn("${SCRIPT_TEST_SUITES", check)
 
-    def test_the_preservation_policy_covers_every_preserved_class_the_user_decided(self):
+    def test_the_preservation_policy_keeps_only_the_state_backend_and_purges_the_rest(self):
+        """W4 (USD 25 replan, user decision 5): S3, S3 Vectors, KMS and the log groups moved from PRESERVE to TEARDOWN."""
         conf = parse_conf()
+        self.assertEqual(conf["CLEANUP_PRESERVE"], "terraform-state")
         types = conf["CLEANUP_PRESERVE_TYPE_RULES"].split(",")
-        for prefix in ("aws_s3_bucket", "aws_s3_object", "aws_s3vectors_", "aws_kms_", "aws_cloudwatch_log_group"):
-            self.assertIn(prefix, types)
-        for address in ("module.foundation.", "module.datalake.", "module.s3vectors."):
-            self.assertIn(address, conf["CLEANUP_PRESERVE_ADDRESS_RULES"].split(","))
+        self.assertEqual(types, ["aws_s3_object"])
+        for prefix in ("aws_s3_bucket", "aws_s3vectors_", "aws_kms_", "aws_cloudwatch_log_group"):
+            self.assertNotIn(prefix, types)
+        self.assertEqual(conf["CLEANUP_PRESERVE_ADDRESS_RULES"].split(","), ["module.foundation."])
         teardown = conf["CLEANUP_TEARDOWN_ADDRESS_RULES"].split(",")
-        for module in ("runtime", "emr", "neptune", "dynamodb", "messaging", "workflow", "network"):
+        for module in ("runtime", "emr", "neptune", "dynamodb", "messaging", "workflow", "network", "datalake", "s3vectors"):
             self.assertIn("module.%s." % module, teardown)
-        self.assertNotIn("module.identity.aws_iam_role.deployment", teardown)
-        self.assertFalse([t for t in teardown if t.startswith(("module.foundation", "module.datalake", "module.s3vectors"))])
+        for address in (
+            "module.identity.aws_kms_key.data", "module.identity.aws_kms_alias.data", "module.observability.aws_cloudwatch_log_group.",
+            "module.identity.aws_iam_role.neptune_tunnel_task", "aws_acm_certificate.api", "aws_acm_certificate_validation.api",
+        ):
+            self.assertIn(address, teardown)
+        self.assertIn("module.identity.aws_iam_role.deployment", teardown, "user decision: delete everything, including the permission-less deployment role")
+        self.assertFalse([t for t in teardown if t.startswith("module.foundation")])
+        protection = conf["CLEANUP_PROTECTION_RULES"].split(",")
+        for rule in ("aws_s3_bucket:force_destroy=false", "aws_s3vectors_vector_bucket:force_destroy=false"):
+            self.assertIn(rule, protection)
+        allowed = conf["CLEANUP_PREPARE_ALLOWED_ATTRS"].split(",")
+        for rule in ("aws_s3_bucket:force_destroy", "aws_s3vectors_vector_bucket:force_destroy"):
+            self.assertIn(rule, allowed)
 
     def test_every_setting_block_has_a_rationale_comment(self):
         """Each KEY=value line belongs to a blank-line-separated block that starts with a comment."""

@@ -1,0 +1,5 @@
+Snapshot 10 (Phase 14B, after the review.md:909 placeholder mask)
+Base: e2f0b01; snapshot commit: 07e1a83f36fb38889f6a6d48911333a16354c436
+Procedure: git clone . ; checkout e2f0b01 ; rsync of `git ls-files -m -o --exclude-standard -z` ; deleted files removed ; commit as "snapshot".
+Identity before the run (git ls-files -c -o --exclude-standard, cmp per file): files=5791 differing=0 missing=0
+Identity after the run (non-docs files): files=1640 differing=0 missing=0; snapshot worktree clean (git status --porcelain empty)

@@ -1,0 +1,11 @@
+# Example include list for RuntimeArtifactMain --include-ids (format documentation only).
+#
+# One stable entity ID per line. Blank lines and lines that start with '#' are ignored.
+# researcher:<source>:<64 hex>   the researcher and everything the artifact needs to answer about them
+# work:<source>:<key>            a work; it stands for all of its authors (authored edges)
+#
+# These IDs are synthetic placeholders. The real list (the entities used by the smoke test and
+# the Phase 15 evaluation queries) is authored later by the experiment owner or the human.
+researcher:dblp:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+researcher:dblp:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+work:dblp:synthetic/ab

@@ -41,9 +41,15 @@ final case class LiveEmbeddingConfig(
     requestTimeoutMillis: Long = 30000,
     maxManifestBytes: Int = 16 * 1024 * 1024,
     batchSize: Int = 100,
-    nonFilterableKeys: Vector[String] = Vector("textS3Uri")
+    nonFilterableKeys: Vector[String] = Vector("textS3Uri"),
+    assumedUsdPerMillionEmbeddingTokens: Double = 0.02,
+    minBytesPerEmbeddingToken: Int = 1
 ) derives ReadWriter {
   require(schemaVersion == "scholarchain.embedding-live.v1")
+  require(
+    assumedUsdPerMillionEmbeddingTokens.isFinite && assumedUsdPerMillionEmbeddingTokens > 0 &&
+      minBytesPerEmbeddingToken >= 1 && minBytesPerEmbeddingToken <= 4
+  )
   require(
     Vector(environment, region, profile, textBucket, textPrefix, vectorBucket).forall(
       _.trim.nonEmpty
@@ -106,7 +112,8 @@ final case class LiveEmbeddingPlan(
     manifest: EmbeddingManifest,
     approval: LiveEmbeddingApproval,
     maxEmbeddingRequests: Long,
-    assumedUpperBoundUsd: BigDecimal
+    assumedUpperBoundUsd: BigDecimal,
+    plannedEmbeddingTokens: BigInt = BigInt(0)
 )
 trait LiveEmbeddingPorts extends AutoCloseable {
   def objects: ObjectStore
@@ -126,6 +133,52 @@ object LiveEmbeddingIngestMain {
     case StorageResult.Rejected(code) => Left(code)
     case other                        => StorageResult.value(other).toRight("live-port-unavailable")
   }
+
+  /** Conservative token bound for one embedding pass: every token is at least
+    * `minBytesPerEmbeddingToken` UTF-8 bytes (1 by default, a strict upper bound on tokens).
+    */
+  private[rag] def tokenBound(texts: Iterable[String], minBytes: Int): BigInt =
+    texts.foldLeft(BigInt(0))((sum, text) =>
+      sum + BigInt((text.getBytes(UTF_8).length + minBytes - 1) / minBytes)
+    )
+
+  /** Exact decimal dollars for a token count at the configured price per million tokens. */
+  private[rag] def tokenUsd(tokens: BigInt, config: LiveEmbeddingConfig): BigDecimal =
+    BigDecimal(tokens.toString) * BigDecimal(config.assumedUsdPerMillionEmbeddingTokens.toString) /
+      BigDecimal(1000000)
+
+  /** Shared manifest/resource validation (identity, model, pointers, complete chunk groups). It
+    * applies no approval caps, so the query smoke can reuse it without ingest-sized caps.
+    */
+  private[rag] def validateManifest(
+      config: LiveEmbeddingConfig,
+      manifestText: String
+  ): Either[String, EmbeddingManifest] =
+    value(EmbeddingManifests.parse(manifestText, config.ingest)).flatMap { manifest =>
+      val items = manifest.items
+      val validItems = items.nonEmpty && items.size <= config.maxVectors && items.forall { item =>
+        EmbeddingValidation.workItem(item).isEmpty && item.embeddingModel == config.model &&
+        config.indexNames.get(item.document.documentType).contains(item.indexName) &&
+        item.textS3Uri.startsWith(s"s3://${config.textBucket}/${config.textPrefix}/versions/")
+      } && items.map(i => (i.indexName, i.vectorKey)).distinct.size == items.size
+      val validGroups = items
+        .groupBy(i => EmbeddingContracts.groupKey(i.document, i.embeddingModel))
+        .values
+        .forall { group =>
+          val document = group.head.document
+          group.map(_.document.chunkCount).distinct == Vector(document.chunkCount) &&
+          group.map(i => EmbeddingContracts.wholeTextHash(i.document)).distinct.size == 1 &&
+          group.size == document.chunkCount &&
+          group
+            .map(_.document.chunkOrdinal)
+            .sorted
+            .zipWithIndex
+            .forall((ordinal, index) => ordinal == index)
+        }
+      if (!validItems || !validGroups) Left("live-manifest-invalid-or-partial-group")
+      else Right(manifest)
+    }
+
   def preflight(
       configText: String,
       manifestText: String,
@@ -153,7 +206,6 @@ object LiveEmbeddingIngestMain {
       Left("live-approval-content-mismatch")
     else {
       val config = read[LiveEmbeddingConfig](configText)
-      val ingest = config.ingest
       val embedding = config.embedding
       if (
         config.environment != approval.environment || approval.vectorCap < 1 || approval.concurrencyCap < 1 ||
@@ -163,45 +215,29 @@ object LiveEmbeddingIngestMain {
       )
         Left("live-approval-cap-mismatch")
       else
-        value(EmbeddingManifests.parse(manifestText, ingest)).flatMap { manifest =>
+        validateManifest(config, manifestText).flatMap { manifest =>
           val items = manifest.items
           val calls = BigInt(items.size) * BigInt(embedding.maxAttempts)
-          val estimate = BigDecimal(items.size) *
-            (BigDecimal(
-              config.assumedMaxDollarsPerEmbeddingAttempt.toString
-            ) * embedding.maxAttempts +
-              BigDecimal(config.assumedMaxStorageDollarsPerVector.toString)) + BigDecimal(
-              config.fixedOverheadUsd.toString
-            )
-          val validItems = items.nonEmpty && items.size <= config.maxVectors && items.forall {
-            item =>
-              EmbeddingValidation.workItem(item).isEmpty && item.embeddingModel == config.model &&
-              config.indexNames.get(item.document.documentType).contains(item.indexName) &&
-              item.textS3Uri.startsWith(s"s3://${config.textBucket}/${config.textPrefix}/versions/")
-          } && items.map(i => (i.indexName, i.vectorKey)).distinct.size == items.size
-          val validGroups = items
-            .groupBy(i => EmbeddingContracts.groupKey(i.document, i.embeddingModel))
-            .values
-            .forall { group =>
-              val document = group.head.document
-              group.map(_.document.chunkCount).distinct == Vector(document.chunkCount) &&
-              group.map(i => EmbeddingContracts.wholeTextHash(i.document)).distinct.size == 1 &&
-              group.size == document.chunkCount &&
-              group
-                .map(_.document.chunkOrdinal)
-                .sorted
-                .zipWithIndex
-                .forall((ordinal, index) => ordinal == index)
-            }
-          if (!validItems || !validGroups) Left("live-manifest-invalid-or-partial-group")
-          else if (
+          // Content-derived bound: tokens x attempts x configured USD per million tokens. The
+          // dollar estimate takes the larger of it and the configured per-attempt bound.
+          val tokens = tokenBound(items.map(_.document.text), config.minBytesPerEmbeddingToken) *
+            BigInt(embedding.maxAttempts)
+          val perAttempt = BigDecimal(items.size) * BigDecimal(
+            config.assumedMaxDollarsPerEmbeddingAttempt.toString
+          ) * embedding.maxAttempts
+          val embeddingUsd = perAttempt.max(tokenUsd(tokens, config))
+          val estimate = embeddingUsd +
+            BigDecimal(items.size) * BigDecimal(config.assumedMaxStorageDollarsPerVector.toString) +
+            BigDecimal(config.fixedOverheadUsd.toString)
+          if (
             calls > config.maxEmbeddingCalls || calls > approval.embeddingCallCap ||
             estimate > BigDecimal(config.dollarCapUsd.toString) || estimate > BigDecimal(
               approval.dollarCapUsd.toString
             )
           )
             Left("live-assumed-cost-or-request-bound")
-          else Right(LiveEmbeddingPlan(config, manifest, approval, calls.toLong, estimate))
+          else
+            Right(LiveEmbeddingPlan(config, manifest, approval, calls.toLong, estimate, tokens))
         }
     }
   } catch { case NonFatal(_) => Left("invalid-live-config-manifest-or-approval") }
@@ -228,6 +264,7 @@ object LiveEmbeddingIngestMain {
     "dimension" -> plan.config.model.dimension,
     "selectedVectors" -> plan.manifest.items.size,
     "maxEmbeddingRequests" -> plan.maxEmbeddingRequests.toString,
+    "embeddingTokenBound" -> plan.plannedEmbeddingTokens.toString,
     "assumedUpperBoundUsd" -> plan.assumedUpperBoundUsd.toString,
     "billingGuarantee" -> false,
     "written" -> result.written,

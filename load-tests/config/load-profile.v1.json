@@ -1,0 +1,45 @@
+{
+  "schema": "scholarchain.load-profile.v1",
+  "_comment": "Pinned settings for load-tests/loadgen.py. Prices, the shared cap and the token assumptions are pinned here; a command-line flag can only LOWER what is spent, never raise the cap. Rates: Claude Haiku 4.5, us. cross-region (geo) route, US East (Ohio), confirmed by the user on the Bedrock pricing page on 2026-11-08 (docs/agent-runs/phase-14/prompt.md, 'Haiku 4.5 price confirmed'); the global route is 1.00 / 5.00 and is NOT used. Token counts are the planning estimate from the Phase 14 replan (planner about 1,500 in + 200 out, synthesis about 4,000 in + 800 out). The cost per answer is derived, ESTIMATED and not metered: the final cost comes from the AWS bill.",
+  "levels": [1, 5, 25, 50],
+  "per_level": {
+    "1": {"duration_seconds": 60, "max_requests": 600, "llm_answers": 10},
+    "5": {"duration_seconds": 60, "max_requests": 3000, "llm_answers": 15},
+    "25": {"duration_seconds": 90, "max_requests": 15000, "llm_answers": 20},
+    "50": {"duration_seconds": 120, "max_requests": 30000, "llm_answers": 15}
+  },
+  "limits": {
+    "max_phase_duration_seconds": 1800,
+    "max_total_seconds": 7200,
+    "max_total_requests": 300000,
+    "max_level": 50,
+    "request_timeout_seconds": 10,
+    "llm_request_timeout_seconds": 30,
+    "llm_job_poll_seconds": 20,
+    "llm_max_inflight": 2,
+    "abort_failure_window_requests": 40,
+    "abort_failure_threshold": 20,
+    "abort_consecutive_auth_failures": 5
+  },
+  "routes": {
+    "healthz": {"method": "GET", "path": "/healthz", "auth": false, "weight": 2, "needs": null, "llm": false},
+    "readyz": {"method": "GET", "path": "/readyz", "auth": false, "weight": 1, "needs": null, "llm": false},
+    "metrics": {"method": "GET", "path": "/metrics", "auth": true, "weight": 1, "needs": null, "llm": false},
+    "graph_node": {"method": "GET", "path": "/v1/graph/nodes/{node_id}", "auth": true, "weight": 4, "needs": "node_ids", "llm": false},
+    "graph_neighbors": {"method": "GET", "path": "/v1/graph/nodes/{node_id}/neighbors?direction=both&depth=1&limit=50", "auth": true, "weight": 4, "needs": "node_ids", "llm": false},
+    "evidence": {"method": "GET", "path": "/v1/evidence/{evidence_id}", "auth": true, "weight": 2, "needs": "evidence_ids", "llm": false},
+    "query": {"method": "POST", "path": "/v1/query", "auth": true, "weight": 0, "needs": "questions", "llm": true}
+  },
+  "llm": {
+    "shared_cap_usd": "1.33",
+    "shared_cap_scope": "Phase 14C smoke + 15B + 16B + 17 (one cap for the whole session; split into answer buckets in experiments/manifests/llm-allocation.json)",
+    "pricing": {
+      "model_route": "us.anthropic.claude-haiku-4-5-20251001-v1:0 (geo cross-region)",
+      "input_usd_per_million_tokens": "1.10",
+      "output_usd_per_million_tokens": "5.50"
+    },
+    "tokens_per_answer": {"planner_input": 1500, "planner_output": 200, "synthesis_input": 4000, "synthesis_output": 800},
+    "cost_multiplier": "1.0",
+    "ledger_default_path": "~/.scholarchain/llm-ledger/haiku-ledger.jsonl"
+  }
+}

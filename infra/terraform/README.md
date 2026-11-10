@@ -209,15 +209,19 @@ component can be omitted if native S3 locking is approved. No silent design chan
 or state migration is performed in 12A.
 
 `cleanup_mode=true` releases native DynamoDB deletion protection and allows ECR
-force deletion/S3 force-empty settings in a future reviewed cleanup plan. **It is
+force deletion and S3 / S3 Vectors force-empty settings in a reviewed cleanup plan. **It is
 configuration, not authorization**, and is false by default in the course tfvars.
-S3's `prevent_destroy=true` is a literal Terraform lifecycle guard and remains on
-in every mode. Terraform cannot make that setting conditional. Bucket destruction
-therefore additionally requires a human-reviewed source change removing the guard,
-an inventory/backups decision and the phase's human gate; normal cleanup mode alone
-will not destroy the buckets. Resource addresses never switch between protected
-and unprotected variants, avoiding accidental replacements on a mode toggle.
-Cleanup/migration/deployment scripts belong to Phase 13 and are not authored here.
+**USD 25 replan (W4, user decision 5):** the data lake buckets (`modules/datalake`) and the
+S3 Vectors bucket and indexes (`modules/s3vectors`) no longer carry `prevent_destroy`; the
+session ends with a full purge. Their deletion is possible only through the reviewed cleanup
+path: `force_destroy = cleanup_mode` (false by default, so a destroy plan stops at a non-empty
+bucket), switched on by `scripts/cleanup.sh --prepare` and applied through `deploy.sh --stage
+cleanup-prepare`, then removed by the token-bound destroy plan. The optional state-backend
+bootstrap module (`modules/foundation/bootstrap`, unreferenced) keeps its `prevent_destroy`
+guards: the Terraform state backend is the one thing the purge preserves. The KMS key is
+scheduled for deletion with `kms_deletion_window_days` (7, free while pending). Resource
+addresses never switch between protected and unprotected variants, avoiding accidental
+replacements on a mode toggle. The ordered teardown is in `scripts/README.md`.
 
 ## Test coverage and manual security checklist
 
@@ -257,10 +261,10 @@ Activation flags do not authorize any cloud action; the human gates still apply.
 | Area | Authored behavior and required later input |
 | --- | --- |
 | Neptune | One private serverless writer, IAM authentication, project CMK, audit export, subnet/cluster/instance parameter groups,7-day backups,1–2.5NCU, deletion protection and final snapshot outside cleanup. `neptune_enabled=false` until the user selects `neptune_engine_version` and matching `neptune_parameter_family`; no implicit latest engine or regional support claim. |
-| Vectors | Native vector bucket and exactly five float32 indexes,256 dimensions,cosine,project CMK,TLS Deny. Names match `VectorIndexes` in `modules/storage/.../Phase7Configs.scala:86-93`; planned dimension/metric match `modules/rag/README.md:57-61`. Every index marks exactly `textS3Uri` non-filterable, matching `VectorAdapterConfig` (`Phase7Configs.scala:67`) and live ingest/query GetIndex preflight. Changing dimension/metric/metadata requires an explicitly reviewed index migration. Literal `prevent_destroy=true` remains on bucket AND indexes even in cleanup. |
+| Vectors | Native vector bucket and exactly five float32 indexes,256 dimensions,cosine,project CMK,TLS Deny. Names match `VectorIndexes` in `modules/storage/.../Phase7Configs.scala:86-93`; planned dimension/metric match `modules/rag/README.md:57-61`. Every index marks exactly `textS3Uri` non-filterable, matching `VectorAdapterConfig` (`Phase7Configs.scala:67`) and live ingest/query GetIndex preflight. Changing dimension/metric/metadata requires an explicitly reviewed index migration. Since the USD 25 replan (W4) there is **no `prevent_destroy`** on the vector bucket or the indexes; `force_destroy` on the bucket follows `cleanup_mode`, so they can be deleted only after the cleanup preparation. |
 | EMR | Disabled by default. 13C: one primary plus one core on `emr-7.8.0` with applications `["Hadoop"]` only and the portable Spark runtime installed by `scripts/emr/bootstrap.sh`; **no task nodes and no managed scaling unless tfvars enable them**, at most one task node, `m5.xlarge` only (G3/G6 caps below); on-demand only; idle termination at most 900 s; encrypted S3, local disks and EBS; **in-transit TLS disabled** (disclosed limitation below); an encrypted EFS staging file system (G1 option ii). See "Phase 13C" below. |
-| ECS | One cluster with Container Insights and private DNS. Four Fargate service/task definitions are declared behind `runtime_enabled=false`. Default active task shape is512CPU/1024MiB. HTTP services min1/max2 and worker min1/max4. Each HTTP service has CPU target60%; worker uses visible SQS messages divided by RunningTaskCount, target10/task. No service OR scaling target exists while disabled. |
-| Ingress | No HTTP listener. HTTPS443 requires an existing same-account/region ACM ARN and approved CIDRs. Certificate remains unset and CIDRs empty. ALB access logging is intentionally OFF because the existing logs bucket uses SSE-KMS; ALB/S3 server access logs require an SSE-S3 destination. Ordinary application/EMR logs can still use that bucket. |
+| ECS | One cluster with private DNS and Container Insights (`container_insights_enabled`, default true; the USD 25 cap tfvars sets false, which also removes the worker backlog policy because RunningTaskCount exists only with Container Insights). Four Fargate service/task definitions are declared behind `runtime_enabled=false`. Default active task shape is512CPU/1024MiB; `service_capacity` also accepts cpu 256 with memory 1024 or 2048 (0.25 vCPU / 1 GiB for the cap plan). HTTP services min1/max2 and worker min1/max4. Each HTTP service has CPU target60%; worker uses visible SQS messages divided by RunningTaskCount, target10/task. No service OR scaling target exists while disabled. |
+| Ingress | No HTTP listener. HTTPS443 requires an ACM certificate (an existing same-account/region ARN in `https_certificate_arn`, or one Terraform requests for `api_domain_name`; exactly one of the two, see "Phase 14B replan W5b") and approved CIDRs. Certificate remains unset and CIDRs empty. ALB access logging is intentionally OFF because the existing logs bucket uses SSE-KMS; ALB/S3 server access logs require an SSE-S3 destination. Ordinary application/EMR logs can still use that bucket. |
 | Workflow | Standard Step Functions dispatches one serialized EmbeddingWorkItem to the fixed embedding queue, with120s overall timeout,20s tasks, two retries and fixed DLQ failure routing. The separate `embedding-producer` execution identity trusts only this exact state machine/account and has queue-only SendMessage plus CMK rights. The Phase13 pipeline invokes it; no caller identity/StartExecution grant or production enqueue caller is invented here. |
 | Bedrock | Embedding participants only may InvokeModel on configured TitanV2 foundation-model ARN. `synthesis_model_id=null` means no query-api invocation grant. Model IDs are configurable, never wildcard; actual regional availability/model access is unverified. |
 | Logs/alarms | Service and Neptune audit groups retain7 days using CloudWatch's default service encryption. Queue age>300s, API/graph p95>5s, API errors>5%; missing data remains missing. SNS targets default empty; alarm resources alone do not notify a person. |
@@ -299,21 +303,51 @@ EvidenceBundle. Real output commit behavior must still be checked in12C/12D.
 
 **State of the service composition (updated in repair round 1, F1).** `modules/services` now has an explicit `SCHOLARCHAIN_SERVICE_MODE=aws`
 (`AwsComposition`, `AwsConfig`; contract in `modules/services/README.md`, "Live AWS mode"), composed only from the existing storage and rag
-adapters. When this was written, graph-service's Neptune reader wiring was still pending (storage-engineer and service-engineer), and
-**nothing is live-verified**. `modules/runtime/compute.tf` sets the mode to `aws` only when the runtime is enabled **and**
+adapters. graph-service's Neptune reader wiring is implemented in `modules/services` and `modules/storage`, and **nothing is live-verified**. `modules/runtime/compute.tf` sets the mode to `aws` only when the runtime is enabled **and**
 `runtime_composition_verified` is true (the human acknowledgment, never set in a committed tfvars); otherwise the tasks keep
 `SCHOLARCHAIN_SERVICE_MODE=unconfigured` and receive none of the aws variables. In aws mode each role gets exactly the variables of that
 contract that have a Terraform source: the six table names and the QuerySession index (all roles); Neptune reader endpoint and graph bucket
 (graph-service); vector bucket, index, metric, rag bucket and the embedding model, version and dimension (semantic-service); additionally the
 profile-or-model synthesis ID, its version, the evidence and audit prefixes (query-api); queue and DLQ URLs, text prefix and the SQS visibility
 and long-poll seconds (embedding-worker). Secrets stay ARN bindings in `secrets`. Optional variables with no Terraform source (timeouts,
-`SCHOLARCHAIN_RUNTIME_ARTIFACT_*`, `SCHOLARCHAIN_QUERY_SESSION_TTL_SECONDS`, `SCHOLARCHAIN_GRAPH_SNAPSHOT_ID`, deadlines) are left unset, so
-the packaged defaults apply and the runtime artifact pointer must be published by the 14C load. `runtime_enabled` additionally requires
+`SCHOLARCHAIN_QUERY_SESSION_TTL_SECONDS`, `SCHOLARCHAIN_GRAPH_SNAPSHOT_ID`, deadlines) are left unset, so
+the packaged defaults apply. The `SCHOLARCHAIN_RUNTIME_ARTIFACT_*` pointer has a source since replan G-MAIN (G3): four optional root variables the
+human fills in after the 14C upload, wired to query-api only (see "Phase 14B replan G-MAIN" at the end of this file). `runtime_enabled` additionally requires
 `runtime_composition_verified`, an immutable40-character image revision, Neptune,
 auth-secret references for all four services, query's outgoing token reference,
 and graph-service's shared `SCHOLARCHAIN_GRAPH_CURSOR_KEY` by ARN, and, for the aws mode, `embedding_model_version`, `synthesis_model_id` and
 `embedding_model_id`. The shared cursor key prevents autoscaled replicas from rejecting each other's cursors.
 These are configuration guardrails, **not evidence of a live working artifact**.
+
+**query-api readiness grace period and health-check timing (Phase 14B Step 0, review N3 and repair round 1 B1).** The ALB target group
+health-checks query-api at `/readyz` (matcher `200`, unchanged), which waits for graph-service and semantic-service; all start in the same
+apply. The query-api ECS service therefore sets `health_check_grace_period_seconds`. It is set only where the `load_balancer` block exists
+(query-api with `https_certificate_arn`; both read `local.load_balanced_service`); it is null on graph-service, semantic-service,
+embedding-worker and on query-api without a certificate, because ECS rejects it on a service with no load balancer.
+
+The target-group timing is now explicit, because the defaults differ: the ELBv2 API documents interval 30 s, unhealthy threshold 2 and
+healthy threshold 5, while the aws provider documents 30 s, 3 and 3. The `modules/runtime` variables, with ELBv2 limits as validation:
+
+| Variable (module) | Default | Validation |
+|---|---|---|
+| `health_check_interval_seconds` | 30 | whole, 5 to 300 |
+| `health_check_healthy_threshold` | 3 | whole, 2 to 10 |
+| `health_check_unhealthy_threshold` | 3 | whole, 2 to 10 |
+| `health_check_timeout_seconds` | 5 | whole, 2 to 120; a target-group precondition requires timeout < interval |
+| `health_check_grace_period_seconds` | 300 | whole, 0 to 3600 |
+
+The grace is the one tunable wired from the root: `query_health_check_grace_period_seconds` (`phase12b-variables.tf`, next to
+`https_certificate_arn`; default 300, whole seconds 0 to 3600), passed to `module "runtime"`, so it can be set in the private
+`course.local.tfvars` (see the commented example in `environments/course.local.tfvars.example`) without a commit. The interval,
+thresholds and timeout stay module defaults (lean scope); changing them needs a commit.
+
+Arithmetic (defaults, 3 x 30): a target is marked unhealthy after `unhealthy_threshold x interval` of failures (90 s); once unhealthy it
+needs `healthy_threshold x interval` of consecutive passes (90 s) after the peers become ready. The grace must cover the peers' readiness
+time plus that recovery time plus margin, so 300 s covers peers that are ready within about 200 s (300 - 90 = 210 s, minus margin). A
+120 s grace, the earlier value, would have protected almost no case. A precondition on the query-api service
+(`aws_ecs_service.service`) refuses a plan where the grace is below `healthy_threshold x interval` (90 s by default), because a
+once-unhealthy target could then never recover inside the grace. Grace 0 is accepted by the variable but refused by that precondition
+whenever a certificate makes query-api load-balanced. Covered by `tests/phase14b.tftest.hcl`; not live-verified.
 Phase13/14 must route actual live composition to the service owner and update the
 mode contract under review before deployment. Auth hashes must be distinct and the
 outgoing internal token must match its configured hash; Terraform never reads these
@@ -326,8 +360,9 @@ match task X86_64; Phase13 packaging owns that validation.
 
 The dashboard separates task counts, utilization, queue depth/age, EMR nodes,
 Neptune, DynamoDB, API percentiles, graph/vector/LLM latency, usage/errors and
-workflow failures/timeouts. Native EMR charts use300s intervals; Container Insights
-provides RunningTaskCount for worker metric math. The worker never scales to zero
+workflow failures/timeouts. `dashboard_enabled` (default true; the USD 25 cap tfvars sets false) gates the
+dashboard resource; the alarms and log groups do not depend on it. Native EMR charts use300s intervals; Container Insights
+provides RunningTaskCount for worker metric math (policy absent when `container_insights_enabled=false`). The worker never scales to zero
 when activated, so a missing divisor does not deadlock scale-out; the metric math
 also floors a zero divisor to one.
 
@@ -655,3 +690,84 @@ All seven `aws_iam_role` blocks now carry `permissions_boundary` (`modules/ident
 * **Embedding model version: a human decision, no default.** The version the 14C ingest stamps on vectors comes from the `model.version` of the live-ingest config file (`LiveEmbeddingIngestMain.scala:227` reports `plan.config.model.version`; `docs/agent-runs/phase-08/evidence/8b-r1/live-config.template.json` holds `REPLACE_WITH_PINNED_MODEL_VERSION`), so no single value exists in code. New root variable `embedding_model_version` (null default, listed in `environments/course.local.tfvars.example`) must equal it; the aws mode is refused without it. **BLOCKED-ON human decision: choose the pinned version once and use it in both places.**
 * **New root variables** (defaults in `phase12b-variables.tf`): `semantic_index_name` (default `researcher-profile-v1`, a human choice for the retrieval use case), `embedding_text_prefix` (default `embedding-text`; must equal the ingest `textPrefix`, which the 8b template shows as `graph/rag`: also a human decision), `evidence_index_prefix`, `runtime_audit_prefix` (the `AwsConfig` defaults). The prefixes feed both the task environment and the IAM scope below.
 * **Grants (modules/identity).** `embedding-worker`: `ReservationInQuerySessionTableAndIndex` (`dynamodb:GetItem`, `PutItem`, `UpdateItem`, `Query` on the QuerySession table and its index; the reservation record lives there). `query-api` and `embedding-worker`: `s3:ListBucket` on the rag bucket ARN in two statements, because S3 answers 403 instead of 404 for an absent key without it (https://docs.aws.amazon.com/AmazonS3/latest/API/API_HeadObject.html) and `S3ObjectStore.head` maps only 404 to missing: `ListRagBucketPrefixes` (real listings, `s3:prefix` limited to the three prefixes and their sub-paths) and `HeadAbsentRagKeyAs404NotListing` (`Null s3:prefix = true`). The second exists because **AWS does not document that `s3:prefix` is populated for HeadObject**; if it is not, a prefix-only grant would never match and the 403 would persist. A list request always carries `s3:prefix` (empty when unspecified), so the `Null` statement cannot list, and these roles can already `GetObject` every key in the bucket. This is unverified against live S3 and is a risk to check in 14B. Both grants are inside the runtime permissions boundary (the coverage test passes unchanged).
+
+## Phase 14B replan W5b: API certificate, Neptune tunnel, outputs and purge-ready stores (authored offline, nothing applied)
+
+USD 25 course-cap replan; sources: `docs/agent-runs/phase-14/prompt.md` (replan decisions 4 and 5, 14C decisions 1 and 5) and the naming contract in
+`deployer/README.md`, "Replan W5a". Tests: `tests/phase14b_replan.tftest.hcl` (34 runs, plan-only with the mock provider).
+
+**New root variables** (`phase14b-variables.tf`; all optional, defaults keep the earlier behavior):
+
+| Variable | Default | Meaning |
+|---|---|---|
+| `api_domain_name` | `null` | FQDN of the API hostname (lowercase, at least three labels, no wildcard or trailing dot) of a domain the human owns, DNS at Cloudflare. **Private tfvars only; never committed** (tests and examples use `api.example.invalid`). Set: base-apply creates ONE DNS-validated `aws_acm_certificate`. |
+| `acm_validation_timeout` | `"15m"` | Bound of the runtime-stage validation wait: whole minutes `1m` to `60m`. |
+| `neptune_tunnel_enabled` | `false` | Register the one-off tunnel task definition and role; effective only with `runtime_enabled` and an `image_revision`. |
+
+**Certificate staging.** `https_certificate_arn` (an externally provided ARN) is unchanged. Exactly one of it and `api_domain_name` may be set (guard in `phase12b.tf`); with the runtime enabled both paths need approved `public_ingress_cidrs` (no HTTP fallback).
+
+| Stage | Resources | What happens |
+|---|---|---|
+| base-apply (`api_domain_name` set, runtime off) | `aws_acm_certificate.api` (DNS validation, default key algorithm, tags = the root's required tags) | Returns at once in "pending validation". **No `aws_acm_certificate_validation`, so the apply never waits.** Output `acm_validation_records` lists the CNAME name, type and value. |
+| human, before runtime-apply | Cloudflare, by hand | Add the validation CNAME, **DNS only (not proxied)**. Check: `aws acm describe-certificate --certificate-arn <acm_certificate_arn> --query Certificate.Status` is `ISSUED` (read the output from the pinned state with the exact form in "G10" at the end of this file: a bare `terraform output` in the live checkout fails unless the root is initialised, and `-state=` is relative to `-chdir`) (a few minutes). |
+| runtime-apply (runtime enabled with an image revision) | `aws_acm_certificate_validation.api` (create timeout = `acm_validation_timeout`), the HTTPS listener | The validation waits (bounded) until ACM has seen the record; the listener's `certificate_arn` is the validation's, so the listener never uses an unvalidated certificate. query-api is load-balanced from the plan on (the decision uses plan-time booleans, because the certificate ARN of a same-apply certificate is unknown at plan). |
+| human, after the ALB exists | Cloudflare, by hand | CNAME `api.<domain>` -> output `alb_dns_name`, **DNS only**, so TLS ends at the ALB. |
+
+The deployer's ACM statements are tag-conditioned (`acm:ValidationMethod = DNS`, `aws:RequestTag/project` and `/environment`, resource tags on delete/tag calls, `aws:TagKeys` within `main_tag_keys`); the certificate carries `module.foundation.tags` (course, project, environment, owner, expiration_date), which satisfy them (test `the_certificate_carries_the_required_project_tags_the_deployer_conditions_on`). Before the session, check the domain for CAA records and, if any exist, add one that allows `amazon.com`.
+
+**Neptune tunnel** (`neptune_tunnel_enabled = true`, runtime deployed). `modules/identity/neptune_tunnel.tf`: role `scholarchain-<env>-neptune-tunnel-task` (ECS-tasks trust with the same source account and ECS source ARN conditions as the other task roles, the runtime permissions boundary, an inline policy `ecs-exec-channels` with exactly the four `ssmmessages:` channel actions on `*`, no data access). `modules/runtime/compute.tf`: task definition family `scholarchain-<env>-neptune-tunnel` (Fargate, awsvpc, 256 CPU / 512 MiB, linux/amd64, the graph-service image at the image revision, execution role `scholarchain-<env>-graph-service-execution`, entry point `sleep 14400`, `initProcessEnabled`, awslogs to the graph-service log group only, no environment, secrets or ports). `readonlyRootFilesystem` is **false** on purpose: AWS documents that ECS Exec cannot work with a read-only root file system. **No ECS service**: the human runs it as a one-off task and stops it afterwards, so nothing bills between loads. Output `neptune_tunnel` = `{cluster_name, family, task_definition_arn, container_name, subnet_ids, security_group_id}`; the run-task command, with the loader session:
+
+```
+aws ecs run-task --cluster <cluster_name> --task-definition <family> --launch-type FARGATE --enable-execute-command \
+  --network-configuration "awsvpcConfiguration={subnets=[<subnet_ids>],securityGroups=[<security_group_id>],assignPublicIp=DISABLED}"
+```
+
+Do not pass `--tags`, `--propagate-tags` or `--enable-ecs-managed-tags` (the loader role holds no `ecs:TagResource`). The security group is graph-service's, the only one Neptune admits. Unverified against a live account: ECS Exec with the image's non-root default user, and the port-forward to the Neptune writer endpoint (the 14B tunnel test).
+
+**New outputs:** `acm_validation_records` (list of `{domain_name, name, type, value}`), `acm_certificate_arn`, `alb_dns_name`, `neptune_writer_endpoint` (hostname; the reader endpoint stays in the runtime environment), `neptune_port`, `neptune_cluster_resource_id` (for the deployer's `operator_neptune_cluster_resource_id`), `neptune_tunnel` and `phase14b_controls` (offline assertions only).
+
+**Purge-ready data stores (W4).** See "State and cleanup design". Tests: `the_data_buckets_and_vector_stores_have_no_prevent_destroy`, `force_destroy_is_off_by_default_...` and `force_destroy_is_on_only_in_cleanup_mode_...`.
+
+## Phase 14B replan G-MAIN: runtime-artifact pointer, tunnel timing, reading outputs, EMR in the session (authored offline, nothing applied)
+
+Tests: `tests/phase14b_gmain.tftest.hcl` (43 runs, plan-only with the mock provider, every expectation derived by hand from `modules/services/README.md` and `AwsConfig.scala`).
+
+### G3: the runtime-artifact pointer reaches the services that read it
+
+Only the **query-api** role reads the pointer (`AwsConfig.scala`, the `case _ =>` branch that builds `QueryRoleConfig`; graph-service, semantic-service and embedding-worker never do). Four optional root variables (`phase14b-variables.tf`, default `null`, never secret, set in the PRIVATE tfvars so no commit is needed) map one to one to what `RuntimeArtifactMain` (`modules/storage`) prints:
+
+| Printed by RuntimeArtifactMain | Root variable | Validation | Reaches |
+|---|---|---|---|
+| `SCHOLARCHAIN_RUNTIME_ARTIFACT_BUCKET` | `runtime_artifact_bucket` | S3 bucket-name shape; when set it must equal the **rag bucket** (`module.datalake.bucket_names["rag"]`, root guard) and the pointer must be set | query-api only |
+| `SCHOLARCHAIN_RUNTIME_ARTIFACT_KEY` | `runtime_artifact_key` | `runtime-artifacts/<run_prefix>/versions/<segments>`, `<run_prefix>` = `^run-[a-z0-9][a-z0-9-]{1,27}$` (the deployer's `operator_run_prefix`), segments `A-Za-z0-9._=-` only, no `.` or `..` or empty segment, at most 900 characters | query-api only |
+| `SCHOLARCHAIN_RUNTIME_ARTIFACT_SHA256` | `runtime_artifact_sha256` | 64 lowercase hex | query-api only |
+| `SCHOLARCHAIN_RUNTIME_ARTIFACT_SOURCE_RUN_ID` | `runtime_artifact_source_run_id` | starts with a letter or digit, then `A-Za-z0-9._:-`, at most 128 characters (a run id has the form `run:<uuid>`) | query-api only |
+
+Rules (root guard `terraform_data.phase12b_guard`): key, sha256 and source run id are **all or none** (the services refuse a partial pointer), and any of them needs `runtime_enabled` and `runtime_composition_verified` (the pointer exists only in the aws service mode). With none set, no task receives any `SCHOLARCHAIN_RUNTIME_ARTIFACT_*` variable and the services refuse artifact reads, as before. The bucket variable is optional because the services default for `SCHOLARCHAIN_RUNTIME_ARTIFACT_BUCKET` **is the rag bucket**, so leaving it unset means the same bucket; when set it must equal that name.
+
+**Final location contract (the deployer grant being written in parallel must match):** bucket `scholarchain-<env>-<account>-rag`, key `runtime-artifacts/<run_prefix>/versions/<run id with ':' replaced by '-'>/runtime-subset-<sha256>.json`. Produce it with `RuntimeArtifactMain ... --bucket <rag bucket> --key-prefix runtime-artifacts/<run_prefix>` (its default key prefix `runtime-artifacts` lacks the `<run_prefix>` level, so the flag is required). The operator that uploads needs `s3:PutObject` (create-only) on `<rag bucket>/runtime-artifacts/<run_prefix>/*` (BLOCKED-ON the deployer owner if the loader role does not hold it: its `rag` prefixes today are the embedding text prefix and `vector-rejects`).
+
+**Read grant (modules/identity): already sufficient, so no statement was added.** The query-api task role has `ReadConfiguredObjects` (`s3:GetObject`, `s3:GetObjectVersion`) on `/*` of the rag, artifacts and graph buckets, which covers `runtime-artifacts/*` in the rag bucket, plus `kms:Decrypt` on the project key and, for the 403-instead-of-404 case, the `HeadAbsentRagKeyAs404NotListing` list statement. `runtime-artifacts` is also one of the four `rag_prefixes` (root `main.tf`), so the `ListRagBucketPrefixes` statement of query-api and embedding-worker allows listing `runtime-artifacts` and `runtime-artifacts/*` (pinned by `the_rag_list_scope_of_the_runtime_roles_includes_the_runtime_artifacts_prefix`; the list scope is eight patterns, and the existing `phase14a` test expects them). Test `query_api_can_already_read_every_key_of_the_rag_bucket_so_no_new_iam_statement_is_needed` pins that. A prefix-scoped statement would only be narrower than a grant the role already has; narrowing the existing bucket-wide read is a separate, reviewed change.
+
+**How it is applied.** The values do not exist at the first runtime plan (the 14C load produces them). After the upload, put the four values in the private tfvars and run **one more runtime-apply** at the same clean HEAD: `plan.sh --image-revision <HEAD>`, a new approval record (`APPROVED_STAGE=runtime-apply`), a fresh pre-spend receipt, `deploy.sh --stage runtime-apply`. The only change is a new query-api task definition revision (a rolling replacement of that one service); no image push and no commit. Not live-verified.
+
+### G12: `neptune_tunnel_enabled = true` belongs in the FIRST runtime plan
+
+The tunnel task definition exists only in a plan that has the runtime **and** an image revision (`local.neptune_tunnel = neptune_tunnel_enabled && runtime_enabled && image_revision != null`), which is the runtime-apply itself. If the first runtime plan leaves it out, the 14B tunnel test (right after the first runtime-apply) needs a second runtime-apply with its own approval record and pre-spend receipt. Set it in the private tfvars before that first plan (commented example in `environments/course.local.tfvars.example`); the task definition costs nothing while no task runs.
+
+### G10: reading the outputs from the pinned local state
+
+`plan.sh` and `deploy.sh` run from a materialized copy bound to the pinned state file `infra/terraform/terraform.tfstate`, so the live checkout is usually not initialised and `terraform output` there fails with "Required plugins are not installed" (observed on a scratch copy of the root without `.terraform`). `terraform output -help` (Terraform 1.13.5) lists `-state=path`, `-raw`, `-json`, `-no-color`. Two forms that were run against a synthetic state file:
+
+```
+# no init needed: an empty working directory, absolute state path (the shell expands $PWD before -chdir applies)
+terraform -chdir="$(mktemp -d)" output -no-color -state="$PWD/infra/terraform/terraform.tfstate" -raw alb_dns_name
+# if the root is initialised: the state path is relative to -chdir, NOT to the repository
+terraform -chdir=infra/terraform output -no-color -state=terraform.tfstate -raw alb_dns_name
+```
+
+**Pitfall:** `terraform -chdir=infra/terraform output -state=infra/terraform/terraform.tfstate ...` resolves the path against the new directory (`infra/terraform/infra/terraform/...`), finds no file and prints "No outputs found" with exit code 0, which looks like an empty stack. Use `-json` (no `-raw`) with no name to list every output; `acm_validation_records` and `neptune_tunnel` are lists or objects, so read them with `-json`.
+
+### G18 (infra part): EMR in the session
+
+No Terraform change is needed to enable EMR in the middle of the session: `emr_config` is a private tfvars object, applied by a runtime-apply plan. The exact sequence, the idle-timeout arithmetic and the approval records for three runs on one cluster are in `scripts/README.md`, "Phase 15A: three runs, one cluster". The bucket and prefix layout for the EMR artifacts and input datasets is `s3://<artifacts bucket>/emr/<run_prefix>/{bin,jars,steps,config,input/<label>}` (jars `hadoop-submit.jar`, `hadoop-bundle.jar`, `entity-resolution.jar`, `spark-job.jar`; config `er-policy.json`, `er-config.json`, `spark-config-template.json`; the pipeline output goes to `s3://<artifacts bucket>/pipeline/<run_prefix>/15a/size-N`), uploaded with the `scholarchain-pipeline` profile of the `operator-pipeline` role; every `emr_config` URI must lie in the artifacts bucket (root guard), and `scripts/upload-emr-artifacts.sh` uploads exactly those keys and prints the values to paste.

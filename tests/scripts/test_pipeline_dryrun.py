@@ -187,7 +187,7 @@ class PipelineDryRun(unittest.TestCase):
         for source, info in S.DATASETS.items():
             self.assertEqual(hadoop[source.upper() + "_SNAPSHOT"], [info["snapshot"]])
             self.assertEqual(hadoop[source.upper() + "_RETRIEVAL"], [info["retrieval"]])
-        self.assertEqual(hadoop["CEILINGS"], ["1000 8 256 4096 64 8388608 8388608"])
+        self.assertEqual(hadoop["CEILINGS"], ["12000 8 256 4096 64 8388608 8388608"])
         program = S.installed_program(self.fx, "sc-step.sh")
         for token in ("HadoopPrepMain", "--once", "--execution-mode cluster", '--run-id "${RUN_ID}"', "file://"):
             self.assertIn(token, program)

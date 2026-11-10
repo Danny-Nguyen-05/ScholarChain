@@ -119,6 +119,57 @@ service_secret_bindings = {
 # public_ingress_cidrs  = ["<approved-client-cidr>"]
 # https_certificate_arn = "arn:aws:acm:<region>:<12-digit-account-id>:certificate/<certificate-id>"
 
+# BOTH, optional (USD 25 replan W5b), instead of https_certificate_arn (exactly one of the two): the API hostname of a domain you own, DNS at
+# Cloudflare. Base-apply requests ONE DNS-validated ACM certificate for it and does not wait; the output acm_validation_records lists the
+# CNAME to add in Cloudflare ("DNS only", not proxied) BEFORE the runtime apply, which waits up to acm_validation_timeout for it. After the
+# ALB exists, add the CNAME api -> output alb_dns_name (DNS only). The real name belongs only in the ignored copy of this file.
+# api_domain_name        = "api.example.invalid"
+# acm_validation_timeout = "15m" # whole minutes, 1m to 60m
+
+# RUNTIME, optional (USD 25 replan W5b, 14C decision 1): register the temporary Neptune tunnel (task role and task definition; no ECS service,
+# the human runs it as a one-off ECS Exec task for the load window and stops it afterwards). Needs runtime_enabled and an image revision.
+# SET IT TO true IN THE FIRST RUNTIME PLAN (replan gap G12): the tunnel task definition exists only in a plan that has the runtime AND the
+# image revision, i.e. in the runtime-apply itself. Leaving it out of that first runtime plan means a second runtime-apply (a new approval
+# record and pre-spend receipt) before the 14B tunnel test can start. It costs nothing while no task runs.
+# neptune_tunnel_enabled = true
+
+# RUNTIME, set AFTER the 14C load (replan gap G3): the pointer to the bounded runtime artifact. RuntimeArtifactMain prints the three values
+# (SCHOLARCHAIN_RUNTIME_ARTIFACT_KEY / _SHA256 / _SOURCE_RUN_ID); copy them here and run ONE more runtime-apply (a new query-api task
+# definition revision; the same image revision, no commit). All three or none: leave them unset until the artifact is uploaded, and the
+# services refuse every artifact read. Only query-api receives them. Not secret. The artifact lives in the RAG bucket
+# (scholarchain-<environment>-<account>-rag; the services default for SCHOLARCHAIN_RUNTIME_ARTIFACT_BUCKET)
+# under runtime-artifacts/<run_prefix>/, so upload it with RuntimeArtifactMain --key-prefix runtime-artifacts/<run_prefix> and
+# --bucket <the rag bucket>. The key must be runtime-artifacts/<run_prefix>/versions/<...>/<file>; <run_prefix> is the deployer's
+# operator_run_prefix (for example run-20261115).
+# Mapping (RuntimeArtifactMain prints four lines, each is exactly one variable): SCHOLARCHAIN_RUNTIME_ARTIFACT_BUCKET -> runtime_artifact_bucket
+# (optional; if set it must be the rag bucket), _KEY -> runtime_artifact_key, _SHA256 -> runtime_artifact_sha256, _SOURCE_RUN_ID ->
+# runtime_artifact_source_run_id.
+# runtime_artifact_bucket        = "scholarchain-<environment>-<account>-rag"
+# runtime_artifact_key           = "runtime-artifacts/<run_prefix>/versions/<run-id>/runtime-subset-<sha256>.json"
+# runtime_artifact_sha256        = "<64 lowercase hex: shasum -a 256 runtime-artifact.json>"
+# runtime_artifact_source_run_id = "<source run id printed by RuntimeArtifactMain, for example run:...>"
+
+# RUNTIME, optional: seconds ECS ignores failing ALB health checks after a query-api task starts (default 300, whole seconds
+# 0-3600; only used with https_certificate_arn). Must be >= healthy_threshold x interval of the target group (3 x 30 = 90). Raise it
+# here if the first runtime apply shows query-api tasks replaced before graph-service/semantic-service are ready; no commit needed.
+# query_health_check_grace_period_seconds = 300
+
+# ---- USD 25 course-cap cost shape (BOTH; Phase 14B replan). The committed defaults keep the earlier behavior; these are the cheap values
+# for the private copy. Container Insights and the dashboard bill custom metrics / a monthly dashboard fee; alarms are kept.
+container_insights_enabled = false # also drops the embedding-worker backlog policy (needs ECS/ContainerInsights RunningTaskCount); worker stays at min
+dashboard_enabled          = false # no CloudWatch dashboard; the alarms stay
+
+# RUNTIME: smallest Fargate shape, 0.25 vCPU / 1 GiB, one task per service, small Phase 15 autoscaling ceiling (HTTP max <= 2, worker max <= 4).
+# Valid pairs: cpu 256 with memory 1024 or 2048, cpu 512 with 1024 or 2048, cpu 1024 with 2048 (memory at least twice the cpu).
+# Raise cpu/memory only for a service that fails to start. Cost scales with max_capacity during the Phase 15 scaling runs.
+service_capacity = {
+  query-api        = { cpu = 256, memory = 1024, min = 1, max = 2 }
+  graph-service    = { cpu = 256, memory = 1024, min = 1, max = 2 }
+  semantic-service = { cpu = 256, memory = 1024, min = 1, max = 2 }
+  embedding-worker = { cpu = 256, memory = 1024, min = 1, max = 2 }
+}
+# Neptune serverless is already pinned at 1-2.5 NCU by the module (minimum 1 NCU); NAT stays one gateway. No variable to set.
+
 # BOTH, optional: existing SNS topic ARNs for the CloudWatch alarms (empty = alarms without notification). No e-mail address.
 # alarm_notification_arns = ["arn:aws:sns:<region>:<12-digit-account-id>:<topic-name>"]
 
@@ -126,23 +177,25 @@ service_secret_bindings = {
 # emr_config.enabled stays false until Phase 15 (the Terraform guard keeps every EMR resource at zero instances while it is
 # false). With it true, the guard refuses the plan unless the bootstrap, the runtime archive, the job JAR and ALL FOUR step
 # programs are supplied, every URI lies in the project artifacts bucket (s3://scholarchain-<environment>-<account>-artifacts/)
-# and each step program's sha256 equals infra/terraform/emr-step-programs.json. Values below come from
+# and each step program's sha256 equals infra/terraform/emr-step-programs.json. scripts/upload-emr-artifacts.sh (profile scholarchain-pipeline,
+# role operator-pipeline) uploads everything below emr/<run_prefix>/ and prints these values (EMR-CONFIG: lines); <run_prefix> is the deployer's
+# operator_run_prefix, for example run-20261115. Values below come from
 # `python3 -I scripts/lib/pipeline.py step-manifest` (run on the commit that is planned), read 2026-11-06 at the 14A base commit:
 #
 # emr_config = {
 #   enabled                = true
 #   runtime_verified       = true
 #   runtime_reference      = "<evidence reference of the proven runtime>"
-#   bootstrap_uri          = "s3://<artifacts-bucket>/<bootstrap-key>"
+#   bootstrap_uri          = "s3://<artifacts-bucket>/emr/<run_prefix>/bin/bootstrap.sh"
 #   bootstrap_sha256       = "<64-hex sha256 of scripts/emr/bootstrap.sh>"
 #   runtime_archive_uri    = "s3://<artifacts-bucket>/<runtime-archive-key>"   # uploaded by the base-apply stage
-#   job_jar_uri            = "s3://<artifacts-bucket>/<job-jar-key>"
+#   job_jar_uri            = "s3://<artifacts-bucket>/emr/<run_prefix>/jars/spark-job.jar"
 #   job_jar_sha256         = "<64-hex sha256 of the job JAR>"
 #   extra_artifacts = [
-#     { uri = "s3://<artifacts-bucket>/<steps-prefix>/sc-ceiling-check.py",        sha256 = "57e9543cd94d5924bfb4bb8cec150ad755ba251ee5b6822275d9bc7a56d10b5c", dest = "/opt/scholarchain-spike/bin/sc-ceiling-check.py" },
-#     { uri = "s3://<artifacts-bucket>/<steps-prefix>/sc-class-origin-verify.py",  sha256 = "5df9197a60fe41530859377518609b67c70eec60c93c8256e6742ad5ffd17a79", dest = "/opt/scholarchain-spike/bin/sc-class-origin-verify.py" },
-#     { uri = "s3://<artifacts-bucket>/<steps-prefix>/sc-render-spark-config.py",  sha256 = "5d606d4883a0d4e4d869ff7f69ab56317743a4912940ac34e5c80337a8fa056c", dest = "/opt/scholarchain-spike/bin/sc-render-spark-config.py" },
-#     { uri = "s3://<artifacts-bucket>/<steps-prefix>/sc-step.sh",                 sha256 = "ad7258d1221344de2b065bff18dc5d21356a1fb71b52e21dc52b47e499b99ed3", dest = "/opt/scholarchain-spike/bin/sc-step.sh" },
+#     { uri = "s3://<artifacts-bucket>/emr/<run_prefix>/steps/sc-ceiling-check.py",        sha256 = "57e9543cd94d5924bfb4bb8cec150ad755ba251ee5b6822275d9bc7a56d10b5c", dest = "/opt/scholarchain-spike/bin/sc-ceiling-check.py" },
+#     { uri = "s3://<artifacts-bucket>/emr/<run_prefix>/steps/sc-class-origin-verify.py",  sha256 = "5df9197a60fe41530859377518609b67c70eec60c93c8256e6742ad5ffd17a79", dest = "/opt/scholarchain-spike/bin/sc-class-origin-verify.py" },
+#     { uri = "s3://<artifacts-bucket>/emr/<run_prefix>/steps/sc-render-spark-config.py",  sha256 = "5d606d4883a0d4e4d869ff7f69ab56317743a4912940ac34e5c80337a8fa056c", dest = "/opt/scholarchain-spike/bin/sc-render-spark-config.py" },
+#     { uri = "s3://<artifacts-bucket>/emr/<run_prefix>/steps/sc-step.sh",                 sha256 = "ad7258d1221344de2b065bff18dc5d21356a1fb71b52e21dc52b47e499b99ed3", dest = "/opt/scholarchain-spike/bin/sc-step.sh" },
 #   ]
 #   # Task nodes and managed scaling stay off (G3) unless the caps in infra/terraform/README.md are changed deliberately.
 # }

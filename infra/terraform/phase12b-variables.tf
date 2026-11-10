@@ -195,9 +195,9 @@ variable "service_capacity" {
     }
   }
   validation {
-    condition = toset(keys(var.service_capacity)) == toset(["query-api", "graph-service", "semantic-service", "embedding-worker"]) && alltrue([for s, c in var.service_capacity : c.min >= 1 && floor(c.min) == c.min && c.max >= c.min && floor(c.max) == c.max && c.max <= (s == "embedding-worker" ? 4 : 2) && contains([512, 1024], c.cpu) && contains([1024, 2048], c.memory) && c.memory >= c.cpu * 2])
+    condition = toset(keys(var.service_capacity)) == toset(["query-api", "graph-service", "semantic-service", "embedding-worker"]) && alltrue([for s, c in var.service_capacity : c.min >= 1 && floor(c.min) == c.min && c.max >= c.min && floor(c.max) == c.max && c.max <= (s == "embedding-worker" ? 4 : 2) && contains([256, 512, 1024], c.cpu) && contains([1024, 2048], c.memory) && c.memory >= c.cpu * 2])
 
-    error_message = "Exactly four bounded Fargate services: HTTP max2, worker max4, positive integer minimum and approved CPU/memory pairs."
+    error_message = "Exactly four bounded Fargate services: HTTP max2, worker max4, positive integer minimum and approved CPU/memory pairs (cpu 256, 512 or 1024 with memory 1024 or 2048 and memory at least twice the cpu)."
   }
 }
 variable "cpu_target_percent" {
@@ -206,6 +206,26 @@ variable "cpu_target_percent" {
   validation {
     condition     = var.cpu_target_percent >= 10 && var.cpu_target_percent <= 80
     error_message = "CPU target must be 10-80 percent."
+  }
+}
+variable "container_insights_enabled" {
+  type        = bool
+  default     = true
+  nullable    = false
+  description = "ECS Container Insights on the course cluster. Default true keeps the Phase 12-14A behavior; the USD 25 course-cap tfvars sets false (Container Insights bills custom metrics). When false, the embedding-worker backlog autoscaling policy (ECS/ContainerInsights RunningTaskCount) is not created and the worker stays at its minimum; the HTTP CPU policies use free AWS/ECS metrics and remain."
+  validation {
+    condition     = var.container_insights_enabled == true || var.container_insights_enabled == false
+    error_message = "container_insights_enabled must be true or false."
+  }
+}
+variable "dashboard_enabled" {
+  type        = bool
+  default     = true
+  nullable    = false
+  description = "Create the CloudWatch elasticity dashboard. Default true keeps the Phase 12-14A behavior; the USD 25 course-cap tfvars sets false (a custom dashboard bills monthly beyond the free allowance). The alarms are unaffected."
+  validation {
+    condition     = var.dashboard_enabled == true || var.dashboard_enabled == false
+    error_message = "dashboard_enabled must be true or false."
   }
 }
 variable "worker_backlog_target" {
@@ -223,6 +243,15 @@ variable "https_certificate_arn" {
   validation {
     condition     = var.https_certificate_arn == null ? true : can(regex("^arn:aws:acm:[a-z0-9-]+:[0-9]{12}:certificate/[a-z0-9-]+$", var.https_certificate_arn))
     error_message = "Certificate must be an existing ACM ARN; never private key material."
+  }
+}
+variable "query_health_check_grace_period_seconds" {
+  type        = number
+  default     = 300
+  description = "Seconds ECS ignores failing ALB health checks after a query-api task starts (runtime plan only; applied to the load-balanced query-api service, so it has no effect without https_certificate_arn). Tune in the private tfvars, no commit needed. Must be at least healthy_threshold x interval of the target group (3 x 30 = 90 s); see infra/terraform/README.md."
+  validation {
+    condition     = var.query_health_check_grace_period_seconds >= 0 && var.query_health_check_grace_period_seconds <= 3600 && var.query_health_check_grace_period_seconds == floor(var.query_health_check_grace_period_seconds)
+    error_message = "query_health_check_grace_period_seconds must be a whole number of seconds from 0 to 3600."
   }
 }
 variable "log_retention_days" {

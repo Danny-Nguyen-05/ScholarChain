@@ -2,13 +2,14 @@ locals {
   purposes = toset(["raw", "curated", "graph", "rag", "artifacts", "logs", "reports"])
 }
 resource "aws_s3_bucket" "zone" {
-  for_each      = local.purposes
-  bucket        = "${var.name_prefix}-${var.aws_account_id}-${each.key}"
+  for_each = local.purposes
+  bucket   = "${var.name_prefix}-${var.aws_account_id}-${each.key}"
+  # USD 25 course-cap replan (W4, user decision 5): the session ends with a full purge, so there is NO prevent_destroy on the data
+  # buckets any more. Deletion is possible only through the reviewed cleanup path: force_destroy is true only when cleanup_mode is
+  # true (scripts/cleanup.sh --prepare lifts it first, a saved destroy plan then removes the buckets and every object version).
+  # With cleanup_mode = false (the default) a destroy plan stops at the non-empty bucket (BucketNotEmpty).
   force_destroy = var.cleanup_mode
   tags          = merge(var.tags, { purpose = each.key })
-  # Terraform requires this to be literal. Cleanup also needs a human-reviewed
-  # source change to remove this guard; cleanup_mode alone cannot delete buckets.
-  lifecycle { prevent_destroy = true }
 }
 resource "aws_s3_bucket_public_access_block" "zone" {
   for_each                = aws_s3_bucket.zone

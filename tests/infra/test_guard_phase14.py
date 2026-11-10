@@ -26,7 +26,9 @@ PHASE14 = "infra/terraform/deployer/phase14_main.tf"
 RUNTIME_TPL = "infra/terraform/deployer/boundaries/runtime.json.tftpl"
 EMR_TPL = "infra/terraform/deployer/boundaries/emr-service.json.tftpl"
 EXAMPLE = "infra/terraform/environments/emr-service-policy.json.example"
+TUNNEL = "infra/terraform/modules/identity/neptune_tunnel.tf"
 REAL = (PHASE14, RUNTIME_TPL, EMR_TPL, EXAMPLE)
+REAL_W5 = REAL + (TUNNEL,)
 
 
 def run_guard(files):
@@ -43,8 +45,8 @@ def run_guard(files):
         return done.returncode, report, done.stderr
 
 
-def real_files():
-    return {p: (REPO / p).read_text() for p in REAL}
+def real_files(paths=REAL):
+    return {p: (REPO / p).read_text() for p in paths}
 
 
 def categories(report):
@@ -83,14 +85,18 @@ class RealTreeIsClean(unittest.TestCase):
             p for p in listed if re.fullmatch(r"infra/terraform/environments/[^/]+\.json\.example", p)}
         self.assertTrue(every <= scanned)
 
-    def test_the_allowlist_has_exactly_the_seven_reviewed_statements(self):
+    def test_the_allowlist_has_exactly_the_ten_reviewed_statements(self):
+        """Seven from 14A, plus (replan W5a/W5b) acm:RequestCertificate and the four ssmmessages ECS Exec actions in two files."""
         by_service = sorted(sorted({a.split(":")[0] for a in g.actions}) for g in guard.GLOBAL_RESOURCE_ALLOWLIST)
         self.assertEqual(by_service, [
-            ["acm", "elasticloadbalancing"], ["application-autoscaling", "servicediscovery"], ["cloudwatch"],
-            ["ecs"], ["ecs"], ["rds"], ["route53"]])
-        self.assertEqual({g.path for g in guard.GLOBAL_RESOURCE_ALLOWLIST}, {PHASE14})
+            ["acm"], ["acm", "elasticloadbalancing"], ["application-autoscaling", "servicediscovery"], ["cloudwatch"],
+            ["ecs"], ["ecs"], ["rds"], ["route53"], ["ssmmessages"], ["ssmmessages"]])
+        self.assertEqual({g.path for g in guard.GLOBAL_RESOURCE_ALLOWLIST}, {PHASE14, RUNTIME_TPL, TUNNEL})
         sizes = sorted(len(g.actions) for g in guard.GLOBAL_RESOURCE_ALLOWLIST)
-        self.assertEqual(sizes, [1, 2, 3, 4, 9, 10, 10])
+        self.assertEqual(sizes, [1, 1, 2, 3, 4, 4, 4, 9, 10, 10])
+        for g in guard.GLOBAL_RESOURCE_ALLOWLIST:
+            if g.path != PHASE14:
+                self.assertFalse(g.requires_condition)  # the ssmmessages entries: no condition key applies to ECS tasks
 
 
 class UnjustifiedGlobalGrantsStillFail(unittest.TestCase):
@@ -126,7 +132,7 @@ class UnjustifiedGlobalGrantsStillFail(unittest.TestCase):
         code, report, _ = run_guard(files)
         self.assertEqual(code, 1)
         found = categories(report)
-        self.assertEqual([c for _, _, c in found], ["global-iam-resource"] * 7)
+        self.assertEqual([c for _, _, c in found], ["global-iam-resource"] * 8)  # seven 14A statements + acm:RequestCertificate
         self.assertEqual({p for p, _, _ in found}, {"infra/terraform/deployer/renamed.tf"})
 
     def test_an_allowlisted_regional_statement_that_loses_its_condition_fails(self):
@@ -141,10 +147,11 @@ class UnjustifiedGlobalGrantsStillFail(unittest.TestCase):
         self.assertEqual([c for _, _, c in categories(report)], ["unconditioned-allowlisted-global-grant"])
 
     def test_only_the_global_route_53_entry_is_exempt_from_the_condition_requirement(self):
-        """Route 53 is a global service (no aws:RequestedRegion); every regional entry must keep a Condition."""
+        """Route 53 is a global service (no aws:RequestedRegion) and the ssmmessages ECS Exec channels carry no usable condition
+        key for a Fargate task (replan W5); every other entry must keep a Condition."""
         for g in guard.GLOBAL_RESOURCE_ALLOWLIST:
-            is_route53 = all(a.startswith("route53:") for a in g.actions)
-            self.assertEqual(g.requires_condition, not is_route53, sorted(g.actions))
+            exempt = all(a.startswith(("route53:", "ssmmessages:")) for a in g.actions)
+            self.assertEqual(g.requires_condition, not exempt, sorted(g.actions))
 
     def test_an_unused_allowlist_entry_is_reported_as_stale(self):
         files = real_files()
@@ -156,6 +163,94 @@ class UnjustifiedGlobalGrantsStillFail(unittest.TestCase):
         code, report, _ = run_guard(files)
         self.assertEqual(code, 1)
         self.assertEqual(sorted(c for _, _, c in categories(report)), ["global-iam-resource", "stale-global-allowlist-entry"])
+
+
+class ReplanW5Grants(unittest.TestCase):
+    """Replan W5a/W5b: acm:RequestCertificate (deployer) and the four ssmmessages ECS Exec actions (boundary and tunnel role)."""
+
+    def test_real_copies_including_the_tunnel_role_are_clean_and_no_entry_is_stale(self):
+        code, report, _ = run_guard(real_files(REAL_W5))
+        self.assertEqual((code, report["findings"]), (0, []))
+        self.assertEqual(report["files"], 5)
+
+    def test_the_real_acm_statement_keeps_region_dns_validation_and_request_tags(self):
+        text = real_files()[PHASE14]
+        start = text.index('Sid       = "AcmRequestCertificateDnsValidationWithProjectTags"')
+        old = 'Condition = { StringEquals = merge(local.c_region, local.c_req_main, { "acm:ValidationMethod" = "DNS" }) }'
+        at = text.index(old, start)
+        for name, new_condition in {
+            "dns to email": old.replace('"DNS"', '"EMAIL"'),
+            "validation method removed": old.replace(', { "acm:ValidationMethod" = "DNS" }', ""),
+            "region removed": old.replace("local.c_region, ", ""),
+            "request tags removed": old.replace("local.c_req_main, ", ""),
+            "condition removed": "",
+        }.items():
+            with self.subTest(name):
+                files = real_files()
+                files[PHASE14] = text[:at] + new_condition + text[at + len(old):]
+                code, report, _ = run_guard(files)
+                self.assertEqual(code, 1)
+                self.assertEqual(len(report["findings"]), 1, report)
+                self.assertIn(categories(report)[0][2], ("weakened-allowlisted-global-grant", "unconditioned-allowlisted-global-grant"))
+
+    def test_an_extra_acm_action_in_the_request_statement_fails(self):
+        files = real_files()
+        files[PHASE14] = files[PHASE14].replace('Action    = ["acm:RequestCertificate"]', 'Action    = ["acm:RequestCertificate", "acm:ExportCertificate"]', 1)
+        self.assertNotEqual(files[PHASE14], real_files()[PHASE14])
+        code, report, _ = run_guard(files)
+        self.assertEqual(code, 1)
+        self.assertIn("global-iam-resource", [c for _, _, c in categories(report)])
+
+    def test_the_boundary_ecs_exec_statement_is_exact(self):
+        text = real_files()[RUNTIME_TPL]
+        old = '"ssmmessages:OpenDataChannel"'
+        self.assertEqual(text.count(old), 1)
+        cases = {
+            "extra action": (old, old + ',\n        "ssm:StartSession"', "global-iam-resource"),
+            "wildcard": (old, '"ssmmessages:*"', "wildcard-iam-action"),
+            "action removed": (',\n        ' + old, "", "global-iam-resource"),
+        }
+        for name, (before, after, category) in cases.items():
+            with self.subTest(name):
+                files = real_files()
+                self.assertEqual(files[RUNTIME_TPL].count(before), 1)
+                files[RUNTIME_TPL] = text.replace(before, after, 1)
+                code, report, _ = run_guard(files)
+                self.assertEqual(code, 1)
+                self.assertIn(category, [c for _, _, c in categories(report)])
+                self.assertIn("stale-global-allowlist-entry", [c for _, _, c in categories(report)])
+
+    def test_the_same_four_actions_in_a_new_policy_template_fail(self):
+        files = real_files()
+        files["infra/terraform/deployer/boundaries/other.json.tftpl"] = (
+            '{"Version": "2012-10-17",\n "Statement": [\n'
+            '  {"Effect": "Allow", "Action": ["ssmmessages:CreateControlChannel", "ssmmessages:CreateDataChannel", '
+            '"ssmmessages:OpenControlChannel", "ssmmessages:OpenDataChannel"], "Resource": ["*"]}\n ]}\n')
+        code, report, _ = run_guard(files)
+        self.assertEqual(code, 1)
+        self.assertEqual(categories(report), [("infra/terraform/deployer/boundaries/other.json.tftpl", 3, "global-iam-resource")])
+
+    def test_the_tunnel_role_policy_is_exact_through_its_local(self):
+        text = real_files(REAL_W5)[TUNNEL]
+        old = '"ssmmessages:OpenDataChannel"]'
+        self.assertEqual(text.count(old), 1)
+        for name, new_text in {
+            "extra action": '"ssmmessages:OpenDataChannel", "s3:GetObject"]',
+            "wildcard": '"ssmmessages:*"]',
+        }.items():
+            with self.subTest(name):
+                files = real_files(REAL_W5)
+                files[TUNNEL] = text.replace(old, new_text, 1)
+                code, report, _ = run_guard(files)
+                self.assertEqual(code, 1)
+                self.assertIn("global-iam-resource", [c for _, _, c in categories(report)])
+
+    def test_the_tunnel_policy_moved_to_another_file_fails(self):
+        files = real_files(REAL_W5)
+        files["infra/terraform/modules/identity/renamed_tunnel.tf"] = files.pop(TUNNEL)
+        code, report, _ = run_guard(files)
+        self.assertEqual(code, 1)
+        self.assertEqual([c for _, _, c in categories(report)], ["global-iam-resource"])
 
 
 class PolicyJsonTemplatesAreScanned(unittest.TestCase):

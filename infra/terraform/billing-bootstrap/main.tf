@@ -13,7 +13,10 @@ locals {
 }
 
 # A fixed CUSTOM period prevents an October/November monthly reset from
-# presenting two separate USD 200 allowances. No region/service/tag filters.
+# presenting two separate allowances. No region/service/tag filters.
+# Phase 14B replan: the ceiling is the professor's USD 25 course cap (the
+# budget was created at USD 200 in Phase 12D and is moved here by an in-place
+# update; see README "Phase 14B: modify the live budget to USD 25").
 resource "aws_budgets_budget" "project" {
   count             = var.enable_budget ? 1 : 0
   account_id        = var.aws_account_id
@@ -38,14 +41,16 @@ resource "aws_budgets_budget" "project" {
     use_amortized              = false
     use_blended                = false
   }
-  # User-selected actual-spend alerts: 50/80/100% of the same USD 200
-  # ceiling (USD 100/160/200); monitoring only, not a spending stop.
+  # User-selected actual-spend alerts at fixed dollar amounts under the USD 25
+  # cap (USD 10/15/20, ABSOLUTE_VALUE, not percentages); monitoring only, not a
+  # spending stop. Notifications are inline blocks, so changing them is an
+  # in-place update of this one resource, never a replacement.
   dynamic "notification" {
-    for_each = toset([50, 80, 100])
+    for_each = toset([10, 15, 20])
     content {
       comparison_operator        = "GREATER_THAN"
       threshold                  = notification.value
-      threshold_type             = "PERCENTAGE"
+      threshold_type             = "ABSOLUTE_VALUE"
       notification_type          = "ACTUAL"
       subscriber_email_addresses = var.budget_notification_emails
     }

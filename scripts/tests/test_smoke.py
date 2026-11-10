@@ -284,9 +284,57 @@ class SmokeStubTests(SmokeBase):
         self.assertEqual(result.rc, 0, result.out)
         self.assertNotIn(KEY, result.out)
 
+    # ---- --checks (replan G9): run only a subset, always in canonical order ---------------------------------------------------
+    def test_checks_healthz_readyz_runs_only_those_two_without_a_key_and_says_it_is_partial(self):
+        stub = self.start()
+        result = self.smoke(stub, "--checks", "healthz,readyz", key=None)
+        self.assertEqual(result.rc, 0, result.out)
+        self.assertEqual([s for s in result.steps() if s.startswith("smoke-")], ["smoke-healthz", "smoke-readyz", "smoke-complete"])
+        self.assertEqual(stub.paths(), [("GET", "/healthz"), ("GET", "/readyz")], "exactly two requests, no POST, no authenticated call")
+        self.assertEqual(result.result_line(), "RESULT: PASS only 2 of 6 checks ran (healthz readyz) and passed against %s; this is not the full smoke test" % stub.url)
+        self.assertNotIn("all 6 checks", result.out)
+
+    def test_checks_with_the_error_path_sends_exactly_the_two_unauthorised_posts_and_needs_a_key(self):
+        stub = self.start()
+        result = self.smoke(stub, "--checks", "error-path,readyz,healthz")  # typed in reverse; the order is canonical
+        self.assertEqual(result.rc, 0, result.out)
+        self.assertEqual([s for s in result.steps() if s.startswith("smoke-")], ["smoke-healthz", "smoke-readyz", "smoke-error-path", "smoke-complete"])
+        posts = [(p, h) for m, p, h in stub.requests if m == "POST"]
+        self.assertEqual(len(posts), 2, "no key, invalid key: no query was created")
+        self.assertEqual(stub.bound, {}, "a 401 binds no idempotency key, so nothing was created")
+        self.assertIn("only 3 of 6 checks ran (healthz readyz error-path)", result.result_line())
+        refused = self.smoke(self.start(), "--checks", "error-path", key=None)
+        self.assertEqual(refused.rc, 3, refused.out)
+        self.assertIn("holds no API key", refused.out)
+
+    def test_checks_query_evidence_idempotency_run_together_and_skip_the_health_checks(self):
+        stub = self.start()
+        result = self.smoke(stub, "--checks", "query,evidence,idempotency")
+        self.assertEqual(result.rc, 0, result.out)
+        self.assertEqual([s for s in result.steps() if s.startswith("smoke-")], ["smoke-query", "smoke-evidence", "smoke-idempotency", "smoke-complete"])
+        self.assertNotIn(("GET", "/healthz"), stub.paths())
+
+    def test_a_failing_selected_check_still_fails_with_its_marker(self):
+        self.failed(self.smoke(self.start(ready_fail=True), "--checks", "healthz,readyz"), "smoke-readyz")
+
+    def test_checks_that_depend_on_the_query_without_it_are_a_usage_error(self):
+        for value in ("evidence", "idempotency", "healthz,evidence", "readyz,idempotency,error-path"):
+            with self.subTest(value):
+                result = self.run_script("smoke-test.sh", "--url", "http://127.0.0.1:1", "--checks", value, SCHOLARCHAIN_SMOKE_API_KEY=KEY)
+                self.assertEqual(result.rc, 2, result.out)
+                self.assertIn("need the query check", result.out)
+
+    def test_unknown_duplicate_or_malformed_checks_are_usage_errors(self):
+        for value in ("bogus", "healthz,healthz", "Healthz", "healthz;readyz", "healthz,", ",healthz", "healthz,,readyz", "healthz readyz"):
+            with self.subTest(value):
+                result = self.run_script("smoke-test.sh", "--url", "http://127.0.0.1:1", "--checks", value, SCHOLARCHAIN_SMOKE_API_KEY=KEY)
+                self.assertEqual(result.rc, 2, result.out)
+                self.assertIn("RESULT: REFUSED step=usage", result.stdout)
+        self.assertEqual(self.run_script("smoke-test.sh", "--checks").rc, 2)
+
     def test_help_documents_the_checks_and_exit_codes(self):
         text = subprocess.run(["bash", os.path.join(SCRIPTS_DIR, "smoke-test.sh"), "--help"], capture_output=True, text=True, env={"PATH": "/usr/bin:/bin"}).stdout
-        for needle in ("smoke-healthz", "smoke-readyz", "smoke-query", "smoke-evidence", "smoke-idempotency", "smoke-error-path", "SCHOLARCHAIN_SMOKE_API_KEY", "Idempotency-Key", "Exit codes", "Human approval points", "loopback"):
+        for needle in ("smoke-healthz", "smoke-readyz", "smoke-query", "smoke-evidence", "smoke-idempotency", "smoke-error-path", "SCHOLARCHAIN_SMOKE_API_KEY", "Idempotency-Key", "Exit codes", "Human approval points", "loopback", "--checks LIST", "healthz,readyz,error-path"):
             self.assertIn(needle, text)
 
 

@@ -1,0 +1,6 @@
+# Clean snapshot 8 identity (14B replan under the USD 25 cap), observed 2026-11-09 by the coordinator
+snapshot_commit: 12f06310657553a32eacd17d6916e9a937c5ffd7
+before_run: compared 5774 files (git ls-files -c -o --exclude-standard, cmp against the snapshot), differing 0, missing 0
+after_run_non_docs: compared 1639 files outside docs/, differing 0, missing 0; no snapshot-only files outside docs/
+method: git clone of HEAD e2f0b01, rsync of git ls-files -m -o --exclude-standard -z, commit as user snapshot; cmp -s per file
+note: after the run only docs/ changed (evidence and report files written by the coordinator)

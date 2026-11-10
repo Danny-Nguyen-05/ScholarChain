@@ -1,0 +1,63 @@
+Phase 14B repair round 1 (B1) - infra-engineer temporary mutation checks (N4 evidence)
+Each mutation was applied to one file under infra/terraform, the two Phase 14B test files were run, then the file was restored from a byte copy.
+Command per file: cd infra/terraform && terraform test -filter=tests/<file>.tftest.hcl   (mock provider, plan only, no AWS)
+Mutations M5 and M8 replace a precondition condition by the non-constant always-true length(var.name_prefix) > 0; a first attempt with the literal true was rejected by Terraform itself (Invalid precondition expression), which is not a test result.
+Driver: scratchpad script mutate.py (not part of the repository). A mutation is CAUGHT when at least one run fails.
+
+BASELINE (unmutated):
+  tests/phase14b.tftest.hcl: Success! 30 passed, 0 failed (exit 0)
+  tests/phase14b_root.tftest.hcl: Success! 6 passed, 0 failed (exit 0)
+
+M1 grace period set on every service (conditional removed)  [file: infra/terraform/modules/runtime/compute.tf]
+  tests/phase14b.tftest.hcl: Failure! 26 passed, 4 failed (exit 1)
+  tests/phase14b_root.tftest.hcl: Failure! 4 passed, 2 failed (exit 1)
+  RESULT: CAUGHT
+
+M2 module default grace back to 120  [file: infra/terraform/modules/runtime/variables.tf]
+  tests/phase14b.tftest.hcl: Failure! 29 passed, 1 failed (exit 1)
+  tests/phase14b_root.tftest.hcl: Success! 6 passed, 0 failed (exit 0)
+  RESULT: CAUGHT
+
+M3 root variable not passed through to module runtime  [file: infra/terraform/main.tf]
+  tests/phase14b.tftest.hcl: Success! 30 passed, 0 failed (exit 0)
+  tests/phase14b_root.tftest.hcl: Failure! 4 passed, 2 failed (exit 1)
+  RESULT: CAUGHT
+
+M4 healthy_threshold removed from the target-group health_check  [file: infra/terraform/modules/runtime/compute.tf]
+  tests/phase14b.tftest.hcl: Failure! 26 passed, 4 failed (exit 1)
+  tests/phase14b_root.tftest.hcl: Failure! 5 passed, 1 failed (exit 1)
+  RESULT: CAUGHT
+
+M5 cross-variable guard removed (precondition condition forced true)  [file: infra/terraform/modules/runtime/compute.tf]
+  tests/phase14b.tftest.hcl: Failure! 8 passed, 1 failed (exit 1)
+  tests/phase14b_root.tftest.hcl: Success! 6 passed, 0 failed (exit 0)
+  RESULT: CAUGHT
+
+M6 unhealthy_threshold removed from the target-group health_check  [file: infra/terraform/modules/runtime/compute.tf]
+  tests/phase14b.tftest.hcl: Failure! 27 passed, 3 failed (exit 1)
+  tests/phase14b_root.tftest.hcl: Failure! 5 passed, 1 failed (exit 1)
+  RESULT: CAUGHT
+
+M7 interval removed from the target-group health_check  [file: infra/terraform/modules/runtime/compute.tf]
+  tests/phase14b.tftest.hcl: Failure! 25 passed, 5 failed (exit 1)
+  tests/phase14b_root.tftest.hcl: Failure! 5 passed, 1 failed (exit 1)
+  RESULT: CAUGHT
+
+M8 timeout<interval precondition on the target group forced true  [file: infra/terraform/modules/runtime/compute.tf]
+  tests/phase14b.tftest.hcl: Failure! 18 passed, 1 failed (exit 1)
+  tests/phase14b_root.tftest.hcl: Success! 6 passed, 0 failed (exit 0)
+  RESULT: CAUGHT
+
+M9 root default grace back to 120  [file: infra/terraform/phase12b-variables.tf]
+  tests/phase14b.tftest.hcl: Success! 30 passed, 0 failed (exit 0)
+  tests/phase14b_root.tftest.hcl: Failure! 5 passed, 1 failed (exit 1)
+  RESULT: CAUGHT
+
+M10 guard uses grace >= 1 x interval instead of healthy_threshold x interval  [file: infra/terraform/modules/runtime/compute.tf]
+  tests/phase14b.tftest.hcl: Failure! 8 passed, 1 failed (exit 1)
+  tests/phase14b_root.tftest.hcl: Success! 6 passed, 0 failed (exit 0)
+  RESULT: CAUGHT
+
+AFTER RESTORE (all mutations reverted):
+  tests/phase14b.tftest.hcl: Success! 30 passed, 0 failed (exit 0)
+  tests/phase14b_root.tftest.hcl: Success! 6 passed, 0 failed (exit 0)

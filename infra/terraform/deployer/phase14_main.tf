@@ -31,6 +31,7 @@ locals {
   # ARN builders (account and region come from the variables; nothing is hardcoded).
   m_arn_rds    = "arn:aws:rds:${local.region}:${local.acct}"
   m_arn_ecs    = "arn:aws:ecs:${local.region}:${local.acct}"
+  arn_acm      = "arn:aws:acm:${local.region}:${local.acct}"
   m_arn_elb    = "arn:aws:elasticloadbalancing:${local.region}:${local.acct}"
   m_arn_logs   = "arn:aws:logs:${local.region}:${local.acct}"
   m_arn_cw     = "arn:aws:cloudwatch:${local.region}:${local.acct}"
@@ -171,7 +172,7 @@ locals {
       },
       {
         # scripts/deploy.sh: runtime-archive upload (multipart, SHA-256 checksum), head-object and get-object-attributes
-        # verification. Only the artifacts bucket; no delete, no other bucket (the 14C data loads need their own grant).
+        # verification. Only the artifacts bucket; no other bucket (the 14C data loads need their own grant). Deletes are the separate statement below.
         Sid    = "S3ArtifactsObjectsUploadAndVerify"
         Effect = "Allow"
         Action = [
@@ -182,6 +183,20 @@ locals {
         Condition = { StringEquals = local.c_region }
       },
       {
+        # W5a-3: cleanup (force_destroy = cleanup_mode on the project buckets). The AWS provider (6.44.0, s3/delete.go emptyBucket)
+        # lists object versions (s3:ListBucketVersions, granted above) and deletes every version and delete marker with DeleteObjects
+        # (or DeleteObject for keys outside the XML range); an unversioned key needs s3:DeleteObject, a versioned entry
+        # s3:DeleteObjectVersion. It does not abort multipart uploads and the buckets have no Object Lock, so neither
+        # s3:AbortMultipartUpload on these buckets nor s3:BypassGovernanceRetention is granted. Objects of the project buckets only.
+        Sid       = "S3ObjectsDeleteForForceDestroy"
+        Effect    = "Allow"
+        Action    = ["s3:DeleteObject", "s3:DeleteObjectVersion"]
+        Resource  = ["${local.m_arn_s3}/*"]
+        Condition = { StringEquals = local.c_region }
+      },
+      {
+        # The provider's vector-bucket force_destroy (s3vectors/vector_bucket.go) lists the indexes and deletes each index; it calls
+        # neither ListVectors nor DeleteVectors, so no vector-level action is granted (ListIndexes and DeleteIndex are below).
         Sid    = "S3VectorsBucketAndIndexes"
         Effect = "Allow"
         Action = [
@@ -262,7 +277,7 @@ locals {
     ]
   }
 
-  # ---- document 3: KMS, Secrets Manager metadata, CloudWatch (logs, alarms, dashboards), tag inventory ---------------
+  # ---- document 3: KMS, ACM certificate lifecycle, Secrets Manager metadata, CloudWatch (logs, alarms, dashboards), tag inventory ----
   m14_keys_obs = {
     Version = "2012-10-17"
     Statement = [
@@ -313,6 +328,44 @@ locals {
         Action    = ["secretsmanager:DescribeSecret", "secretsmanager:GetResourcePolicy"]
         Resource  = ["${local.m_arn_secret}:secret:*"]
         Condition = { StringEquals = local.c_region }
+      },
+      {
+        # Replan W5a: the HTTPS certificate of the main root (one aws_acm_certificate, DNS validation, base-apply). RequestCertificate has
+        # no resource type, so region, DNS validation (the Cloudflare CNAME is added by hand) and the request tags scope it; the
+        # acm:DomainNames key is left open because the domain is a private tfvars value the deployer must not know. The Service
+        # Authorization Reference lists these ACM condition keys: acm:CertificateAuthority, CertificateKeyPairOrigin,
+        # CertificateTransparencyLogging, DomainNames, Export, KeyAlgorithm, ValidationMethod, aws:RequestTag, aws:ResourceTag, aws:TagKeys.
+        # https://docs.aws.amazon.com/service-authorization/latest/reference/list_acm.html
+        Sid       = "AcmRequestCertificateDnsValidationWithProjectTags"
+        Effect    = "Allow"
+        Action    = ["acm:RequestCertificate"]
+        Resource  = ["*"]
+        Condition = { StringEquals = merge(local.c_region, local.c_req_main, { "acm:ValidationMethod" = "DNS" }) }
+      },
+      {
+        # RequestCertificate with tags is authorized as acm:AddTagsToCertificate against a certificate that does not exist yet, so
+        # only the request tags and the tag-key list can scope it (the same shape as KmsTagWithProjectTags). Residual: a foreign
+        # certificate in this account can be given these tag keys and then falls under the tag-scoped statement below.
+        Sid      = "AcmTagOnCreateWithProjectTags"
+        Effect   = "Allow"
+        Action   = ["acm:AddTagsToCertificate"]
+        Resource = ["${local.arn_acm}:certificate/*"]
+        Condition = {
+          StringEquals                = merge(local.c_region, local.c_req_main)
+          "ForAllValues:StringEquals" = { "aws:TagKeys" = var.main_tag_keys }
+        }
+      },
+      {
+        # Read tags, retag, remove tags and delete only certificates that already carry the project tags. DescribeCertificate is
+        # already allowed read-only on all certificates by ElbDescribeNoResourceScoping. ListCertificates is not needed by the
+        # aws_acm_certificate resource (the data source uses it) and is not granted.
+        Sid    = "AcmManageProjectTaggedCertificates"
+        Effect = "Allow"
+        Action = [
+          "acm:DeleteCertificate", "acm:ListTagsForCertificate", "acm:AddTagsToCertificate", "acm:RemoveTagsFromCertificate",
+        ]
+        Resource  = ["${local.arn_acm}:certificate/*"]
+        Condition = { StringEquals = merge(local.c_region, local.c_res_main) }
       },
       {
         Sid    = "LogGroupsOfTheMainStack"

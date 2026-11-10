@@ -45,7 +45,8 @@ final case class LiveEmbeddingSmokePlan(
     queryRequests: Long,
     queryEmbeddingRequests: Long,
     objectReadBound: Long,
-    assumedUpperBoundUsd: BigDecimal
+    assumedUpperBoundUsd: BigDecimal,
+    queryEmbeddingTokenBound: BigInt = BigInt(0)
 )
 final case class LiveSmokeSample(
     queryId: String,
@@ -88,79 +89,93 @@ object LiveEmbeddingSmokeMain {
       approval.manifestSha256 != StableIds.sha256Hex(manifestText) ||
       approval.phase14GateSha256 != StableIds.sha256Hex(gateText)
     ) Left("smoke-approval-content-mismatch")
+    else if (
+      approval.runId != runId || runId.trim.isEmpty || approval.environment.trim.isEmpty ||
+      approval.phase14GateReference.trim.isEmpty || gateText.trim.isEmpty ||
+      approval.expiresAtEpochSeconds <= nowEpochSeconds
+    ) Left("smoke-approval-identity-or-expiry")
     else {
       val config = read[LiveEmbeddingSmokeConfig](configText)
-      val liveText = write(config.live)
-      // The original approval's complete smoke-config hash was checked above. This derived copy
-      // reuses common manifest/resource validation and never changes the actual execution grant.
-      val derived =
-        approval.copy(operation = "ingest", configSha256 = StableIds.sha256Hex(liveText))
-      LiveEmbeddingIngestMain
-        .preflight(liveText, manifestText, write(derived), gateText, runId, nowEpochSeconds)
-        .flatMap { common =>
-          val queries = config.queries
-          val capsValid = config.schemaVersion == "scholarchain.embedding-live-smoke.v1" &&
-            !config.live.nonFilterableKeys.contains("embeddingModel") &&
-            config.samplesPerQuery > 0 && config.maxQueryRequests > 0 && config.maxQueryEmbeddingCalls > 0 &&
-            config.maxObjectReads > 0 && config.maxTopK > 0 && config.maxTopK <= 100 &&
-            config.maxObjectBytes > 0 && config.maxObjectBytes <= 16 * 1024 * 1024 &&
-            Vector(
-              config.assumedMaxDollarsPerQuery,
-              config.assumedMaxDollarsPerObjectRead,
-              config.dollarCapUsd
+      // N15: a query-smoke approval authorizes only the query* caps and the smoke dollar cap. The
+      // shared `live` block is used for model/resource/manifest validation only; the ingest-sized
+      // vector/concurrency/embedding-call/dollar caps are neither required of nor compared with
+      // the approval, so a person approving a smoke never signs ingest-sized limits.
+      val common =
+        if (
+          config.live.environment != approval.environment || approval.vectorCap < 0 ||
+          approval.concurrencyCap < 0 || approval.embeddingCallCap < 0
+        ) Left("invalid-smoke-config-or-approval-caps")
+        else LiveEmbeddingIngestMain.validateManifest(config.live, manifestText)
+      common.flatMap { manifest =>
+        val queries = config.queries
+        val capsValid = config.schemaVersion == "scholarchain.embedding-live-smoke.v1" &&
+          !config.live.nonFilterableKeys.contains("embeddingModel") &&
+          config.samplesPerQuery > 0 && config.maxQueryRequests > 0 && config.maxQueryEmbeddingCalls > 0 &&
+          config.maxObjectReads > 0 && config.maxTopK > 0 && config.maxTopK <= 100 &&
+          config.maxObjectBytes > 0 && config.maxObjectBytes <= 16 * 1024 * 1024 &&
+          Vector(
+            config.assumedMaxDollarsPerQuery,
+            config.assumedMaxDollarsPerObjectRead,
+            config.dollarCapUsd
+          )
+            .forall(v => v.isFinite && v > 0) &&
+          approval.dollarCapUsd.isFinite && config.dollarCapUsd <= approval.dollarCapUsd &&
+          config.maxQueryRequests <= approval.queryRequestCap &&
+          config.maxQueryEmbeddingCalls <= approval.queryEmbeddingCallCap &&
+          config.maxObjectReads <= approval.queryObjectReadCap
+        val keys = manifest.items.map(i => i.vectorKey -> i.indexName).toMap
+        val queriesValid =
+          queries.size >= 5 && queries.map(_.queryId).distinct.size == queries.size &&
+            queries
+              .map(_.indexName)
+              .toSet == config.live.indexNames.values.toSet && queries.forall(q =>
+              q.queryId.trim.nonEmpty && q.text.trim.nonEmpty &&
+                q.text.getBytes(UTF_8).length <= config.live.embedding.maxInputTokens &&
+                q.topK > 0 && q.topK <= config.maxTopK && q.expectedVectorKeys.nonEmpty &&
+                q.expectedVectorKeys.distinct.size == q.expectedVectorKeys.size && q.expectedVectorKeys.size <= q.topK &&
+                q.expectedVectorKeys.forall(key => keys.get(key).contains(q.indexName))
             )
-              .forall(v =>
-                v.isFinite && v > 0
-              ) && config.dollarCapUsd <= config.live.dollarCapUsd &&
-            config.dollarCapUsd <= approval.dollarCapUsd &&
-            config.maxQueryRequests <= approval.queryRequestCap &&
-            config.maxQueryEmbeddingCalls <= approval.queryEmbeddingCallCap &&
-            config.maxObjectReads <= approval.queryObjectReadCap
-          val keys = common.manifest.items.map(i => i.vectorKey -> i.indexName).toMap
-          val queriesValid =
-            queries.size >= 5 && queries.map(_.queryId).distinct.size == queries.size &&
-              queries
-                .map(_.indexName)
-                .toSet == config.live.indexNames.values.toSet && queries.forall(q =>
-                q.queryId.trim.nonEmpty && q.text.trim.nonEmpty &&
-                  q.text.getBytes(UTF_8).length <= config.live.embedding.maxInputTokens &&
-                  q.topK > 0 && q.topK <= config.maxTopK && q.expectedVectorKeys.nonEmpty &&
-                  q.expectedVectorKeys.distinct.size == q.expectedVectorKeys.size && q.expectedVectorKeys.size <= q.topK &&
-                  q.expectedVectorKeys.forall(key => keys.get(key).contains(q.indexName))
-              )
-          val queryRequests = BigInt(queries.size) * config.samplesPerQuery
-          val embeddings = BigInt(queries.size) * config.live.maxEmbeddingAttempts
-          val reads =
-            queries.foldLeft(BigInt(0))((sum, q) => sum + BigInt(q.topK) * config.samplesPerQuery)
-          val dollars = BigDecimal(embeddings.toString) * BigDecimal(
-            config.live.assumedMaxDollarsPerEmbeddingAttempt.toString
+        val queryRequests = BigInt(queries.size) * config.samplesPerQuery
+        val embeddings = BigInt(queries.size) * config.live.maxEmbeddingAttempts
+        val reads =
+          queries.foldLeft(BigInt(0))((sum, q) => sum + BigInt(q.topK) * config.samplesPerQuery)
+        // Token-derived bound over the query texts only (no ingest items): tokens x attempts at
+        // the configured USD per million tokens; the larger of it and the per-attempt bound.
+        val tokens = LiveEmbeddingIngestMain.tokenBound(
+          queries.map(_.text),
+          config.live.minBytesPerEmbeddingToken
+        ) * BigInt(config.live.maxEmbeddingAttempts)
+        val embeddingUsd = (BigDecimal(embeddings.toString) * BigDecimal(
+          config.live.assumedMaxDollarsPerEmbeddingAttempt.toString
+        )).max(LiveEmbeddingIngestMain.tokenUsd(tokens, config.live))
+        val dollars = embeddingUsd +
+          BigDecimal(queryRequests.toString) * BigDecimal(
+            config.assumedMaxDollarsPerQuery.toString
           ) +
-            BigDecimal(queryRequests.toString) * BigDecimal(
-              config.assumedMaxDollarsPerQuery.toString
-            ) +
-            BigDecimal(reads.toString) * BigDecimal(
-              config.assumedMaxDollarsPerObjectRead.toString
-            ) +
-            BigDecimal(config.live.fixedOverheadUsd.toString)
-          if (!capsValid || !queriesValid) Left("invalid-smoke-config-or-approval-caps")
-          else if (
-            queryRequests > config.maxQueryRequests || embeddings > config.maxQueryEmbeddingCalls ||
-            embeddings > config.live.maxEmbeddingCalls || reads > config.maxObjectReads ||
-            dollars > BigDecimal(config.dollarCapUsd.toString)
-          ) Left("smoke-request-or-assumed-cost-bound")
-          else
-            Right(
-              LiveEmbeddingSmokePlan(
-                config,
-                common.manifest,
-                approval,
-                queryRequests.toLong,
-                embeddings.toLong,
-                reads.toLong,
-                dollars
-              )
+          BigDecimal(reads.toString) * BigDecimal(
+            config.assumedMaxDollarsPerObjectRead.toString
+          ) +
+          BigDecimal(config.live.fixedOverheadUsd.toString)
+        if (!capsValid || !queriesValid) Left("invalid-smoke-config-or-approval-caps")
+        else if (
+          queryRequests > config.maxQueryRequests || embeddings > config.maxQueryEmbeddingCalls ||
+          reads > config.maxObjectReads ||
+          dollars > BigDecimal(config.dollarCapUsd.toString)
+        ) Left("smoke-request-or-assumed-cost-bound")
+        else
+          Right(
+            LiveEmbeddingSmokePlan(
+              config,
+              manifest,
+              approval,
+              queryRequests.toLong,
+              embeddings.toLong,
+              reads.toLong,
+              dollars,
+              tokens
             )
-        }
+          )
+      }
     }
   } catch { case NonFatal(_) => Left("invalid-smoke-input") }
 
@@ -198,6 +213,7 @@ object LiveEmbeddingSmokeMain {
       "approvalSha256" -> approvalSha256,
       "queryRequestBound" -> plan.queryRequests.toString,
       "embeddingRequestBound" -> plan.queryEmbeddingRequests.toString,
+      "embeddingTokenBound" -> plan.queryEmbeddingTokenBound.toString,
       "objectReadBound" -> plan.objectReadBound.toString,
       "assumedUpperBoundUsd" -> plan.assumedUpperBoundUsd.toString,
       "billingGuarantee" -> false,

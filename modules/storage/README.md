@@ -143,6 +143,10 @@ Run qualifications now live once in an ordinary-S3 immutable object keyed by sou
 
 `StorageLoadMain` accepts `--manifest <completed-root-or-s3-manifest>` and `--config <json>`. Default dry-run validates graph and cache sources and prints proposed counts using ephemeral ports. `--execute-fake` traverses object/cache/ledger/registry/Neptune composition locally, including the real validation/upload/loader adapter with a main-source SDK fake. Neither mode constructs live AWS clients. `--execute-aws` additionally requires an explicit `--profile` and `--environment` matching both config `environment` and nonempty `approvedEnvironment`; otherwise it refuses before constructing credential providers. Authored live execution remains subject to the later human deployment/budget gate and has not been run.
 
+Loader poll budget (Phase 14C): the Neptune bulk-load poll budget defaults to 300 s / 300 polls at a 1 s interval and is unchanged unless overridden. `--load-timeout-seconds N` (1..14400) and `--load-max-polls N` (1..20000) apply only with `--execute-aws` or `--execute-fake` (the default dry-run refuses them). Giving only one derives the other at the 1 s interval and never goes below the defaults (`--load-timeout-seconds 1800` gives 1800 s / 1800 polls; `--load-max-polls 900` gives 900 s / 900 polls). When an override is applied the command prints `loader: timeoutMillis=... maxPolls=... (override)`. The effective limit is whichever of the two is reached first.
+
+`--check-credentials --profile P` (no other option) resolves the named profile through the Java SDK and prints `CREDENTIALS-RESOLVED: profile=P sessionToken=true expiresAt=...` (or `CREDENTIALS-FAILED: profile=P reason=<ExceptionClass>`, exit 1). It makes no AWS API call, prints no key material and does not identify the caller; see "Operator credentials" below.
+
 Minimal local/fake configuration shape (values are placeholders, not deployed resources):
 
 ```json
@@ -235,7 +239,7 @@ The following is an intentionally disabled placeholder configuration, not an app
   },
   "vectorBucket": "replace-provisioned-vector-bucket",
   "vectorIndex": "researcher-profile-v1",
-  "dimension": 2,
+  "dimension": 256,
   "metric": "cosine",
   "neptuneEndpoint": "https://replace-approved-neptune-endpoint:8182",
   "neptuneRoleArn": "replace-cluster-attached-loader-role-arn",
@@ -244,7 +248,7 @@ The following is an intentionally disabled placeholder configuration, not an app
 }
 ```
 
-Only a course-named, already provisioned vector index is accepted; its float32 type, dimension and metric must match the config. No `ensureIndex`/CreateIndex, bucket/table/cluster creation, schema mutation or infrastructure deletion is performed. All resources must already exist through approved Terraform. Credentials are obtained through the explicitly named profile providers only after the guards; credentials are never copied into the configuration or journal. The suite suppresses raw configuration/provider exception payloads in its failure message.
+Only a course-named, already provisioned vector index is accepted; its float32 type, dimension and metric must match the config. `dimension` must be one of the Titan V2 widths 256, 512 or 1024 (the template previously said 2, which can never match a provisioned index); the provisioned course indexes are **256**, so keep 256 unless Terraform `vector_dimension` was changed. `AwsLiveSettings.parse` rejects any other value before a credential is resolved, and the live body still compares the value with `GetIndex` before any write. No `ensureIndex`/CreateIndex, bucket/table/cluster creation, schema mutation or infrastructure deletion is performed. All resources must already exist through approved Terraform. Credentials are obtained through the explicitly named profile providers only after the guards; credentials are never copied into the configuration or journal. The suite suppresses raw configuration/provider exception payloads in its failure message.
 
 Safe compile-only command, used in this phase, with the exact JDK environment:
 
@@ -419,8 +423,12 @@ Module cases cover group shrink/grow, invalid/incomplete membership, legacy bind
 separate-state reopen/replay and corruption, source completion and work-manifest binding. The
 independent owner verifies real renderer shrink/grow, the actual G1 completed export and retrieval.
 Deferred N3 (serial embedding invocation), N6 (whole SQS receive batch rejection), R2 (first filter
-metadata retained on unchanged text) and R3 (filterable metadata checked only by the vector adapter)
-remain outside this repair. Live compatibility, provider quality, counts and costs are not inferred
+metadata retained on unchanged text) remain outside this repair. R3 was closed later (Phase 14 replan):
+`EmbeddingManifestRunner` now checks the S3 Vectors metadata budget (50 keys, 40 KiB total, 2 KiB
+filterable, `textS3Uri` non-filterable; `EmbeddingIngestConfig` mirrors the `VectorAdapterConfig` defaults
+and cannot exceed the service caps) per embedding group before any text write, registry binding or
+embedding call, rejecting with `metadata-limit`. The adapter keeps its own identical check through the
+shared `VectorMetadataBudget`. Live compatibility, provider quality, counts and costs are not inferred
 from local replay.
 
 ## Phase 9C terminal audit persistence
@@ -497,3 +505,87 @@ rows, and a response row whose stored endpoint does not touch the requested node
 side is rejected as `malformed-graph-response`. The in-memory reader pages with the same code and
 applies the same window rule. Offline tests only; live Neptune engine behavior of the templates is
 unverified until the Phase 14C gate.
+
+## Phase 14C operator tools
+
+### Operator credentials (`aws login`)
+
+`StorageLoadMain` and `RuntimeArtifactMain` build their clients with `ProfileCredentialsProvider` for the profile given by `--profile`. The Java SDK v2 does **not** prompt for an MFA code, and a `login_session` profile (what `aws login` writes) is only readable by the SDK when the `software.amazon.awssdk:signin` module is on the classpath, which this module does not include. So pass the `credential_process` profile described below, never the `aws login` profile itself. The full, reviewed procedure is in `infra/terraform/deployer/README.md`, "Signing in with `aws login`"; this section only shows what these tools need from it. Placeholders: `<acct>` is the 12-digit account, `<iam-user>` is the IAM user that switches roles. No account ID, ARN or secret value belongs in a tracked file.
+
+1. Browser: sign in to the console as `<iam-user>` (password and MFA code). Menu > **Switch role** > account `<acct>`, role `scholarchain-<env>-operator-loader` > **Switch Role**. Switch from the IAM-user session (use **Switch back** first if a role is shown); switching from another role is role chaining and is limited to 1 hour. The operator session ends 4 hours after the switch.
+2. Terminal, then choose the active session that shows the loader role (not the IAM user):
+
+```bash
+aws login --profile scholarchain-loader --region us-east-2
+```
+
+3. `~/.aws/config` (human-edited; `aws login` writes the `login_session` line itself). The Java tools use a second profile whose name differs from the login profile and which asks the AWS CLI for the cached session:
+
+```ini
+[profile scholarchain-loader]
+region = us-east-2
+# after aws login: login_session = arn:aws:sts::<acct>:assumed-role/scholarchain-<env>-operator-loader/<iam-user>
+
+# Java tools only (StorageLoadMain, RuntimeArtifactMain). Use the absolute path of aws (command -v aws).
+[profile scholarchain-loader-java]
+credential_process = /opt/homebrew/bin/aws configure export-credentials --profile scholarchain-loader --format process
+region = us-east-2
+```
+
+Pass `--profile scholarchain-loader-java` to the Java tools. `export-credentials` needs AWS CLI v2.9 or newer and `aws login` needs 2.32.0 or newer. The credential process cannot ask for anything from inside the JVM, so sign in first; the CLI refreshes the cached session silently until the role session ends. A load that outlives it fails when the SDK asks for new credentials, so start long runs with the full session remaining. Never open or paste `~/.aws/login/cache`.
+
+One-minute pre-check (no repository state is touched):
+
+```bash
+# 1. Terminal: prints the assumed-role ARN of the login session (needs no permission).
+aws sts get-caller-identity --profile scholarchain-loader
+# expect Arn: arn:aws:sts::<acct>:assumed-role/scholarchain-<env>-operator-loader/<iam-user>
+
+# 2. The Java SDK resolves the credential_process profile (no API call; prints the expiry).
+sbt -batch 'storage / Compile / runMain edu.uic.cs441.scholarchain.storage.StorageLoadMain --check-credentials --profile scholarchain-loader-java'
+# expect: CREDENTIALS-RESOLVED: profile=scholarchain-loader-java sessionToken=true expiresAt=<about 15 minutes ahead: the access credential, not the end of the session>
+```
+
+Step 1 proves who you are; step 2 proves the SDK path these tools use. Neither the `aws login` flow nor the `credential_process` form has been exercised against a live account in this repository (no AWS call was made when this was written); if step 2 fails, fix the profile before any load, and report only the printed class name.
+
+### Bounded runtime artifact producer
+
+`RuntimeArtifactMain` is the missing producer for `SCHOLARCHAIN_RUNTIME_ARTIFACT_KEY` / `_SHA256` / `_SOURCE_RUN_ID` (see `modules/services/README.md`). The real Phase 6 slice (about 800 thousand rows) cannot fit the artifact caps, which this tool never raises: **10,000 rows and 16 MiB** (`RuntimeArtifactConfig`, 1 MiB per row). It verifies the whole completed local export against its manifest hashes, selects a bounded subset, writes the artifact locally and, only with `--execute-aws`, uploads the identical bytes.
+
+```bash
+export JAVA_HOME=/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home
+export PATH="$JAVA_HOME/bin:$PATH"
+# Local only (default): reads the export, writes OUT/runtime-artifact.json, selection-report.json and
+# runtime-artifact-pointer.json. A full-size source needs roughly 3-4 GiB of heap (about 23 s and
+# a 3 GiB heap for 800 thousand synthetic rows).
+SBT_OPTS="-Xmx4g" sbt -batch 'storage / Compile / runMain edu.uic.cs441.scholarchain.storage.RuntimeArtifactMain \
+  --source /abs/path/to/completed-phase6-export --include-ids /abs/path/include-ids.txt --out-dir /abs/path/out'
+# Upload (explicit AWS execution; a human gate applies): same command plus
+#   --run-prefix <run_prefix> --execute-aws --profile scholarchain-loader-java --bucket <artifact bucket> --region us-east-2
+```
+
+Options: `--degree-window ID` (default `all-years`), `--run-prefix RUN`, `--key-prefix P` (default `runtime-artifacts`) or `--key K` (must contain `/versions/`), `--max-source-rows N` (reader bound, default 3,000,000, 1..20,000,000). `--run-prefix`, `--key-prefix` and `--key` are mutually exclusive.
+
+**Upload key contract.** The operator-loader role holds a create-only `PutObject` grant on exactly `runtime-artifacts/<run_prefix>/` in the bucket the services read, where `<run_prefix>` is the human-chosen run folder (`operator_run_prefix` in `infra/terraform/deployer`). `--run-prefix RUN` makes the key follow it: `runtime-artifacts/<RUN>/versions/<run id with ':' replaced by '-'>/runtime-subset-<sha256>.json`. `RUN` must match `^run-[a-z0-9][a-z0-9-]{1,27}$` (for example `run-20261115`; 6 to 32 characters); anything else exits 2 before the source is read. `--execute-aws` refuses (exit 2) unless one of `--run-prefix`, `--key-prefix` or `--key` is given, and only `--run-prefix` produces a key inside the loader's grant. Without any of the three, a local-only run keeps the legacy key `runtime-artifacts/versions/<run>/runtime-subset-<sha256>.json`, which the loader role cannot write. The `/versions/` segment is required by the object store's immutable-key rule. A different selection never collides with an earlier object (the bucket write is create-only: identical bytes are `unchanged`, different bytes under the same key are refused). Exit codes: 0 success, 1 selection or upload refused (the report is still written), 2 invalid arguments.
+
+The command prints the values to put in the private tfvars or task environment (the bucket line appears only with `--bucket`, i.e. with `--execute-aws`):
+
+```text
+SCHOLARCHAIN_RUNTIME_ARTIFACT_BUCKET=<bucket the upload targets>
+SCHOLARCHAIN_RUNTIME_ARTIFACT_KEY=runtime-artifacts/<run_prefix>/versions/<run id>/runtime-subset-<sha256>.json
+SCHOLARCHAIN_RUNTIME_ARTIFACT_SHA256=<sha256 of the artifact file>
+SCHOLARCHAIN_RUNTIME_ARTIFACT_SOURCE_RUN_ID=<source run id>
+```
+
+The services read `SCHOLARCHAIN_RUNTIME_ARTIFACT_BUCKET` (default: the RAG bucket), so upload to the bucket the service is configured to read; when that is the RAG bucket the bucket value is optional. The SHA-256 equals `shasum -a 256 runtime-artifact.json`. The variable names in the private tfvars are defined by the infrastructure owner; the values above are what the human copies.
+
+**Selection rule** (the same text is stored in `selection-report.json` as `ruleText`):
+
+1. *Include list (required, `--include-ids FILE`).* Every listed researcher, and every author of each listed work, is included with its complete closure. A listed ID that is unknown in the source, whose closure alone exceeds a cap (rows, estimated bytes, or one row over 1 MiB), or that cannot fit together with the other listed IDs refuses the whole run; nothing is written except the report.
+2. *Fill.* Remaining researchers are ordered by `distinctCoauthorCount` in the degree window (default `all-years`) descending, ties by stable researcher ID ascending, and are added one at a time with their whole closure. The fill stops at the first researcher whose additional rows would exceed the row cap, the byte cap (including framing) or the per-row cap, so the included set is a prefix of that order after the listed IDs, and the cap-limited stop point is reported.
+3. *Closure of a researcher.* Its node; its rows in `researcher_collaboration`, `communities`, `bridges` and `temporal_changes` for all windows; the summaries of its communities; every `coauthored_with` edge incident to it with all its support rows and both endpoint nodes; its `authored` edges and, for each authored work, the `has_topic` and `published_in` edges; its `affiliated_with` edges; and the topic, venue and institution nodes those edges reference. A closure is added whole or not at all, and rows shared with another closure are counted once.
+4. The output is deterministic: rows are sorted by their key, each table manifest is recomputed (`rowCount`, `sortedRowsSha256`) and records `subset.rule`, `subset.sourceRowCount`, `subset.sourceSortedRowsSha256` and `subset.includeListSha256`, and the same inputs give the same bytes. The tool validates the artifact with the same checks the reader runs and loads it through `ObjectStoreRuntimeArtifactStore` before writing anything.
+
+Consequences the reader and the evaluation must respect: the artifact is a subset, not the corpus. `rank` reports `populationCount` as the number of included researchers, the rankings are exact only within that population (a ranking by `distinctCoauthorCount` is exact for the top entries while they lie inside the fill prefix; other metrics are not), a researcher that appears only as an endpoint node answers `Missing`, and community summaries describe the source community although only some members are present. The report (`selection-report.json`) lists the included researchers with reason (`include-list`, `work-author:<id>`, `degree-fill`), their closure sizes, per-table counts, the total rows and bytes, the first researcher dropped by the caps with the rows it needed, and the count of candidates not reached.
+
+**Include list format** (`--include-ids FILE`, at most 2000 IDs, 1 MiB): one stable ID per line, `researcher:...` or `work:...`; blank lines and lines starting with `#` are ignored; duplicates are removed. A sample with synthetic placeholder IDs is `modules/storage/src/test/resources/runtime-subset-include.example.txt`. As of 2026-11-08 no list of real smoke or evaluation entities exists in the repository: `scripts/smoke-test.sh` sends only the offline-synthetic default question (`Synthetic fixture: publication count for A`, no entity ID), and `experiments/` and `load-tests/` are empty. The include file is therefore authored later by the experiment owner or the human, from the real Phase 6 export IDs, before 14C.

@@ -42,7 +42,7 @@ SECRET_ENV = {
 CANARIES = [CANARY_SECRET, CANARY_TOKEN, CANARY_SMOKE_KEY, ACCOUNT]
 
 CEILINGS = {
-    "maxLocalSampleRecords": 1000,
+    "maxLocalSampleRecords": 12000,  # pipeline-specific exception (USD 25 replan); the Phase 4 smoke keeps 1000
     "reducerCount": 8,
     "maxCandidateBlockSize": 256,
     "maxCandidatePairsPerBlock": 4096,

@@ -435,6 +435,24 @@ class StepBodyOnNodeTimeout(unittest.TestCase):
     def pids(pidfile):
         return [int(x) for x in pidfile.read_text().split()]
 
+    # The fake `timeout` enforces a SHORT real deadline (the recorded argv still carries the true one). Under heavy machine load the
+    # body can need longer than that deadline just to reach `aws s3 cp`, and the deadline then fires before the hung copy exists (the
+    # test would "prove nothing"). So the hung copy is given a bounded series of growing deadlines until it has started; the
+    # assertions about the kill, the exit status and the recorded wrapper are unchanged and always made on the attempt where it did.
+    START_DEADLINES = (4, 12, 30)
+
+    def until_started(self, make_harness, run):
+        """make_harness() -> Harness; run(h, env, seconds) -> result. Returns (harness, pidfile, result) of the first attempt in which
+        the hung copy started (the last attempt otherwise, so assert_dead then fails with its explicit message)."""
+        for seconds in self.START_DEADLINES:
+            h = make_harness()
+            pidfile, env = self.hang_env(h, SC_FAKE_TIMEOUT_REAL_SECONDS=str(seconds))
+            self.addCleanup(self.reap, pidfile)
+            result = run(h, env, seconds)
+            if self.pids(pidfile):
+                break
+        return h, pidfile, result
+
     def assert_dead(self, pids):
         self.assertTrue(pids, "the hung copy never started, so the test proves nothing")
         for pid in pids:
@@ -472,15 +490,19 @@ class StepBodyOnNodeTimeout(unittest.TestCase):
 
     def scenario_hung_copy_is_killed(self, step, seconds, patch=None):
         """Run `step` with a hanging `aws s3 cp` under the (fake, GNU-semantics) on-node timeout; assert it was killed."""
-        h = Harness(self, patch=patch)
-        if step == "copy-out":
-            self.stage_copy_out_inputs(h)
-        pidfile, env = self.hang_env(h)
-        self.addCleanup(self.reap, pidfile)
-        try:
-            done, calls = h.run_body(step, timeout=20, **env)
-        except subprocess.TimeoutExpired:
-            self.fail("the %s body did not return: the hung copy was NOT killed by an on-node timeout" % step)
+        def make():
+            h = Harness(self, patch=patch)
+            if step == "copy-out":
+                self.stage_copy_out_inputs(h)
+            return h
+
+        def run(h, env, real_seconds):
+            try:
+                return h.run_body(step, timeout=real_seconds + 20, **env)
+            except subprocess.TimeoutExpired:
+                self.fail("the %s body did not return: the hung copy was NOT killed by an on-node timeout" % step)
+
+        h, pidfile, (done, calls) = self.until_started(make, run)
         self.assertEqual(done.returncode, 124, done.stdout + done.stderr)
         self.assertIn("STEP-FAIL %s: exceeded the %ds step timeout (exit 124)" % (step, seconds), done.stderr)
         self.assertEqual([a[:3] for a in step_wrappers(calls)], [["--kill-after=60", str(seconds), "bash"]])
@@ -531,13 +553,14 @@ class StepBodyOnNodeTimeout(unittest.TestCase):
         """After a step timeout a grandchild that ignores SIGTERM must not outlive the step: the step wrapper kills the whole
         process group (TERM, then KILL after the grace) and says so with STEP-WARN. The `timeout` fake follows coreutils
         semantics (it exits once its direct child is gone), so only the wrapper's group kill can reap the grandchild."""
-        h = Harness(self, patch=patch)
-        pidfile, env = self.hang_env(h, SC_FAKE_HANG_IGNORE_TERM="1")
-        self.addCleanup(self.reap, pidfile)
-        try:
-            done, calls = self.run_with_short_grace(h, "stage-in", env)
-        except subprocess.TimeoutExpired:
-            self.fail("the step body did not return")
+        def run(h, env, real_seconds):
+            env = dict(env, SC_FAKE_HANG_IGNORE_TERM="1")
+            try:
+                return self.run_with_short_grace(h, "stage-in", env)
+            except subprocess.TimeoutExpired:
+                self.fail("the step body did not return")
+
+        h, pidfile, (done, calls) = self.until_started(lambda: Harness(self, patch=patch), run)
         self.assertIn("STEP-FAIL stage-in: exceeded the 180s step timeout", done.stderr)
         self.assertIn(done.returncode, (124, 137), done.stdout + done.stderr)
         self.assertEqual([a[:3] for a in step_wrappers(calls)], [["--kill-after=2", "180", "bash"]])
@@ -549,10 +572,7 @@ class StepBodyOnNodeTimeout(unittest.TestCase):
         self.assertIn("STEP-WARN stage-in", done.stderr)
 
     def test_a_grandchild_that_obeys_term_leaves_no_warning(self):
-        h = Harness(self)
-        pidfile, env = self.hang_env(h)
-        self.addCleanup(self.reap, pidfile)
-        done, _ = self.run_with_short_grace(h, "stage-in", env)
+        h, pidfile, (done, _) = self.until_started(lambda: Harness(self), lambda h, env, seconds: self.run_with_short_grace(h, "stage-in", env))
         self.assertEqual(done.returncode, 124, done.stdout + done.stderr)
         self.assertNotIn("STEP-WARN", done.stderr)
         self.assert_dead(self.pids(pidfile))

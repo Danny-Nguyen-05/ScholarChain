@@ -55,11 +55,28 @@ sbt -batch packageJobs
 
 ### Java 17 guard and release alias
 
-Every packaging task (module `package`/`packageBin`, `assembly`, `hadoopDependencyBundle`, `hadoopSubmitJar`, `sparkJobJar`, `serviceDistribution`, `dockerLocalImage`) and the `packageJobs` and `packageRelease` aliases run `checkJava17` first, so a non-Java-17 sbt JVM fails with the `Java17Guard` message before any artifact is written. `packageRelease` builds the hadoop submit JAR, the hadoop dependency bundle, the Spark job JAR and the service distribution (no Docker images):
+Every packaging task (module `package`/`packageBin`, `assembly`, `hadoopDependencyBundle`, `hadoopSubmitJar`, `sparkJobJar`, `serviceDistribution`, `dockerLocalImage`) and the `packageJobs` and `packageRelease` aliases run `checkJava17` first, so a non-Java-17 sbt JVM fails with the `Java17Guard` message before any artifact is written. `packageRelease` builds the hadoop submit JAR, the hadoop dependency bundle, the Spark job JAR, the entity-resolution job JAR, the service distribution and the EMR artifact manifest (no Docker images):
 
 ```bash
 sbt -batch packageRelease
 ```
+
+### EMR job artifacts: entity-resolution JAR and manifest (offline, Phase 15)
+
+`sbt -batch packageEmr` (also part of `packageRelease`) builds, locally and without any upload or AWS call, the four artifacts the EMR pipeline uses and writes `target/emr-artifacts/emr-artifact-manifest.json` (git-ignored `target/`): role, repository-relative path, bytes, sha256 and main class for each, plus the target versions from the ledger (`emr-7.8.0`, Scala 3.3.4, Spark 3.5.4 / Scala 2.13, hadoop-client 3.3.6). The manifest contains no clock, host or absolute path, so identical artifact bytes give an identical manifest.
+
+| Manifest role | Path | Launched as |
+|---|---|---|
+| `hadoop-submit-jar` | `modules/hadoop/target/scala-3.3.4/hadoop-submit_3-<version>.jar` | `hadoop jar` with `HadoopPrepMain` |
+| `hadoop-dependency-bundle` | `modules/hadoop/target/scala-3.3.4/hadoop-dependency-bundle_3-<version>.jar` | `-libjars` |
+| `entity-resolution-job-jar` | `modules/entity-resolution/target/er-job_3-<version>.jar` | `java -cp er-job.jar ...entityresolution.Phase5Main resolve ...` |
+| `spark-job-jar` | `modules/spark/target/spark-job_3-<version>.jar` | `spark-submit` with `Phase6Main` |
+
+Task `entityResolution/erJobJar` writes the ER job JAR. The EMR `entity-resolution` step puts this one JAR alone on the classpath of a single JVM on the primary node (`scripts/emr/sc-step.sh`), so it carries the entity-resolution and core classes and resources plus every runtime library (scala3-library_3, scala-library 2.13, upickle, slf4j-api) and the manifest `Main-Class`. It carries no `org.apache.hadoop`, `org.apache.spark`, logback class or SLF4J provider service. Metadata that cannot be merged (`META-INF/*` other than `services/`, `module-info.class`, signatures, multi-release entries) is dropped; service files are concatenated; a conflicting duplicate entry fails the build.
+
+`entityResolution/erJobJarCheck` runs inside `sbt check`: it builds the JAR a second time and fails unless the sha256 matches, and it runs `java -cp er-job.jar ...Phase5Main --help` on a bare classpath, which is exactly the EMR launch shape.
+
+**Reproducibility.** The ER JAR, the Hadoop dependency bundle, the Hadoop submit JAR and the Spark job JAR were rebuilt from scratch (JARs deleted, assembly caches rebuilt) and produced the same sha256 on the same JDK 17. The submit JAR was previously not byte-reproducible because `JarOutputStream` stamped its manifest entry with the current time; entries now use the fixed local time 2010-01-01 00:00:00. Reproducibility holds for the same sources, ledger versions and JDK build; a different JDK or zlib build may deflate differently, so compare hashes only between builds from one toolchain.
 
 ### Thin Hadoop module JAR
 

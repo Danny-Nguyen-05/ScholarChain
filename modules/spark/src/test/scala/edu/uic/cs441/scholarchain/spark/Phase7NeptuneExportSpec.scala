@@ -228,6 +228,86 @@ class Phase7NeptuneExportSpec extends AnyFunSuite with BeforeAndAfterAll {
     }
   }
 
+  private def csvFiles(directory: Path): Vector[Path] = {
+    val files = Files.list(directory)
+    try files.iterator().asScala.toVector.sortBy(_.getFileName.toString)
+    finally files.close()
+  }
+
+  test("part count follows encoded size, keeps one header per part and every ID exactly once") {
+    val out = root.resolve("split-export")
+    val tiny = 300L
+    Phase7NeptuneExport.publish(
+      out,
+      nodes,
+      graphEdges,
+      coauthors,
+      support,
+      Vector.empty,
+      runId,
+      targetPartBytes = tiny,
+      maxPartBytes = 4096L
+    )
+    val nodeFiles = csvFiles(out.resolve(s"${Phase7NeptuneExport.loaderPrefix}/nodes"))
+    assert(nodeFiles.size > 1, s"expected several node parts, saw ${nodeFiles.size}")
+    nodeFiles.foreach { file =>
+      assert(Files.size(file) <= 4096L)
+      val text = Files.readString(file, UTF_8)
+      assert(text.startsWith(":ID,") && text.indexOf(":ID,", 1) < 0)
+    }
+    val ids = nodeFiles.flatMap { file =>
+      val settings = new CsvParserSettings()
+      settings.getFormat.setLineSeparator("\r\n")
+      settings.setHeaderExtractionEnabled(true)
+      settings.setNormalizeLineEndingsWithinQuotes(false)
+      val reader = Files.newBufferedReader(file, UTF_8)
+      try new CsvParser(settings).parseAllRecords(reader).asScala.toVector.map(_.getString(":ID"))
+      finally reader.close()
+    }
+    assert(ids.sorted == Vector(a, b, w1, w2).sorted)
+    assert(csvFiles(out.resolve(s"${Phase7NeptuneExport.loaderPrefix}/graph-edges")).nonEmpty)
+    assert(csvFiles(out.resolve(s"${Phase7NeptuneExport.loaderPrefix}/coauthor-edges")).nonEmpty)
+  }
+
+  test("default targets put the small fixture into one part per dataset") {
+    val out = root.resolve("default-parts-export")
+    Phase7NeptuneExport.publish(out, nodes, graphEdges, coauthors, support, Vector.empty, runId)
+    Vector("nodes", "graph-edges", "coauthor-edges").foreach { kind =>
+      assert(csvFiles(out.resolve(s"${Phase7NeptuneExport.loaderPrefix}/$kind")).size == 1)
+    }
+  }
+
+  test("a part above the maximum aborts publication and an inconsistent target is rejected") {
+    val tooLarge = intercept[IllegalArgumentException] {
+      Phase7NeptuneExport.publish(
+        root.resolve("oversize-export"),
+        nodes,
+        graphEdges,
+        coauthors,
+        support,
+        Vector.empty,
+        runId,
+        targetPartBytes = 100L,
+        maxPartBytes = 200L
+      )
+    }
+    assert(tooLarge.getMessage.contains("Neptune CSV part"))
+    val inverted = intercept[IllegalArgumentException] {
+      Phase7NeptuneExport.publish(
+        root.resolve("inverted-export"),
+        nodes,
+        graphEdges,
+        coauthors,
+        support,
+        Vector.empty,
+        runId,
+        targetPartBytes = 10L,
+        maxPartBytes = 5L
+      )
+    }
+    assert(inverted.getMessage.contains("target part size"))
+  }
+
   test("missing endpoints or support works fail before publication") {
     val missingEndpoint = intercept[IllegalArgumentException] {
       Phase7NeptuneExport.frames(nodes.filter(col("nodeId") =!= b), graphEdges, coauthors, support)

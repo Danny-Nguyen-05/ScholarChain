@@ -133,7 +133,7 @@ You are the coordinator for ScholarChain Phase 14, Subphase 14A, REPAIR ROUND 1,
 ```
 
 `/Users/danny/Documents/UIC/CS441/ScholarChain (branch phase-14, base b2cd7ee99dcc136b5c8ec0667ca181cc5b3a87fd,`
-`14A uncommitted). Plan: /Users/danny/Library/CloudStorage/GoogleDrive-cpnguyen0630@gmail.com/My Drive/plan/phase14.md.`
+`14A uncommitted). Plan: <plan path>.`
 `(a) Append the external reviewer's 14A verdict below, verbatim, to docs/agent-runs/phase-14/review.md under`
 `"Subphase 14A" marked "user-supplied external review", and log F1–F6 in docs/agent-runs/phase-14/repairs.md`
 `(F1 and F2 blocking; F3–F6 nonblocking).`
@@ -260,7 +260,7 @@ NEXT GATE: the user's 14A commit, then the Subphase 14B start conditions (deploy
 4. NEXT PROMPT
 You are the coordinator for ScholarChain Phase 14 in /Users/danny/Documents/UIC/CS441/ScholarChain (branch phase-14,
 base b2cd7ee99dcc136b5c8ec0667ca181cc5b3a87fd). Plan:
-/Users/danny/Library/CloudStorage/GoogleDrive-cpnguyen0630@gmail.com/My Drive/plan/phase14.md
+<plan path>
 
 (a) Append the external reviewer's verdict for Subphase 14A repair round 1 (APPROVE; nonblocking N1–N4), verbatim, to
     docs/agent-runs/phase-14/review.md under "Subphase 14A" as "Review 2 — user-supplied external review". You may fix
@@ -295,3 +295,666 @@ base b2cd7ee99dcc136b5c8ec0667ca181cc5b3a87fd). Plan:
     trigger any reviewer.
 
 (e) Do ONLY Subphase 14B. Then stop and end the turn; do not start Subphase 14C.
+
+## Subphase 14B
+
+### Review 1 — user-supplied external review (Step 0 and the Q6 repair; pasted by the user on 2026-11-07; reproduced verbatim)
+
+1. VERDICT: REQUEST-CHANGES for Subphase 14B (Step 0 and the Q6 repair)
+The code does what Q6 asked for. The grace period shares `local.load_balanced_service` with the `load_balancer` block, so it is set only on query-api and only when a certificate is set. It is `null` on the other three services. The value comes from a validated variable. Both test suites catch the obvious mutations, and the retained logs match the claimed counts. Nothing live ran: there is no `human-gate.md`, no `terraform.tfstate` and no `target/phase14/approvals/`.
+The one blocker is the value itself. With the default target-group thresholds, 120 s is very unlikely to protect the case N3 is about. Because of the commit freeze, this is the last point at which it can change without a new commit.
+2. Findings
+B1. Medium, blocking, PLAUSIBLE (reasoned from documented defaults, not observed live). A 120 s grace does not cover a query-api target that has been marked unhealthy.
+
+* Where: infra/terraform/modules/runtime/variables.tf:21-29 (default 120), `compute.tf:185`, and `compute.tf:152-155`. The target group’s `health_check` sets only `path` and `matcher`, so the interval and thresholds are defaults:
+   * AWS API defaults: 30 s interval, 2 failures to mark unhealthy, 5 passes to mark healthy.
+   * aws provider documentation: 30 s interval, 3 and 3.
+* Reasoning:
+   * A target is marked unhealthy after about 30–90 s of failing `/readyz`.
+   * To recover it then needs 3–5 passes in a row, which is 90–150 s more. The earliest recovery is about 150–210 s after the task starts.
+   * When the grace ends at 120 s, ECS replaces any target that is still unhealthy. That counts toward the circuit breaker, and on a first deployment there is nothing to roll back to.
+   * A target whose peers are ready early is never marked unhealthy, so it never needed the grace.
+   * So 120 s helps almost no real case. The grace needs to be at least the peers’ readiness time plus the healthy threshold × the interval, plus a margin. That is roughly 240–300 s.
+* Made worse by: the variable is not wired from the root (`README.md` says “the module default is the single source”). Tuning it after the base plan therefore needs a source commit, which the freeze forbids.
+* Owner: you decide first. Then infra-engineer changes `infra/terraform/**` and test-engineer updates `tests/infra/**`.
+* Acceptance check: one of these:
+   * (a), recommended: raise the default to 300, or derive it from target-group interval and threshold values set explicitly from configuration. Wire a validated root variable so you can tune it in the private tfvars without a commit. Update `phase14b.tftest.hcl` and `test_phase14b_grace.py` to the new decision, with the threshold arithmetic documented in the README.
+   * (b): you record that you keep 120 after reading this.
+In both cases: rerun `terraform test` and `tests/infra`, then the full `check.sh` on JDK 17.
+
+N1. Medium, nonblocking now, but must be settled before the base-apply record. Nov 11 is allowed by date but does not fit the cost model.
+
+* Where: `prompt.md:98-99`, and `approval-request-14a.md:153` and `:182-187`.
+* Nov 11 is the earliest date decisions 14-1 and 14-10 allow.
+* Under the 14A model, headroom is 40.96 − 36.80 (the extra 96 h) − 0.34 (cost-to-date) ≈ USD 3.82. That is below the USD 20 floor.
+* `reserves_usd` must then cover Nov 11–24, not the Nov 15–24 that the template states.
+* `verify.py` checks only the headroom number you type in, never the arithmetic, so the gate cannot catch this.
+* Owner: the coordinator records the arithmetic now. You decide: either name which reserve to reduce in the record prose, or use Nov 15.
+* Acceptance check: `prompt.md` states the computed headroom for Nov 11 and the option you chose.
+
+N2. Medium, nonblocking now, but a start condition. The HTTPS certificate gap is correctly identified and needs a dated 14B addendum to the approval request. The coordinator should not rewrite the reviewed 14A text. Four things to add:
+
+1. The two lines conflict on the deadline. `prompt.md:99` says the certificate must be settled before Nov 11; `:122` says before the runtime plan. It must be settled before base-apply and before the commit. Without it, spending on base-apply buys nothing that can pass Q5.
+2. Per AGENTS.md, an ACM certificate requested or imported by console or CLI is a direct cloud mutation. Either infra-engineer authors it in Terraform before the commit, or you record a disclosed exception.
+3. `aws_lb.query` (`compute.tf:133`) is created without a certificate. A runtime-apply with no certificate therefore pays for an ALB that has no listener.
+4. A self-signed certificate has a hostname problem: the ALB DNS name is unknown until runtime-apply. The smoke client has no option to trust a custom CA.
+
+The addendum should list `https_certificate_arn` and `public_ingress_cidrs` among the runtime-plan inputs, next to the Q8 values.
+N3. Low, nonblocking. `prompt.md:88` and `:95` still say the deployer apply is Nov 12–14 (before Nov 15). The amendment moved it to Nov 8–10. Owner: coordinator.
+N4. Low, observation. Two claims are only in prose, not in retained evidence:
+
+* the snapshot-5 identity counts (5686/0 and 1569/0);
+* infra-engineer’s temporary mutation result (5 passed / 3 failed).
+
+N5. Observation. The leftover N4 stale text at `phase12b.tf:43` and `phase12b-variables.tf:161` will be frozen into the approved commit. It is recorded as deferred.
+/healthz vs /readyz. I recommend no change for 14B. With `/readyz`, a healthy target means the peers are reachable, which is the Q5 pass signal. Keep the known risk on record: when a peer fails, query-api tasks are replaced even though restarting them cannot fix the peer. Revisit only if 14B shows churn.
+Future scope (not required now): the deployer apply, base-apply, push, runtime-apply, smoke, P14-5, P14-7, ECS acceptance and timing of the grace, and 14C.
+3. Report fields
+
+```
+STATUS: COMPLETE (review)
+```
+
+`OWNER: code-reviewer`
+`WORK ORDER: Phase 14 Subphase 14B Step 0 and the Q6 repair (review 2 N3)`
+`FILES CREATED: none`
+`FILES MODIFIED: none`
+`COMMANDS RUN: read-only only: git status/diff/rev-parse/check-ignore, grep, sed, cat, ls, wc, python3 -I to print the JSONL record`
+`TEST RESULTS: not run by the reviewer. The retained logs match the claims: check-full-q6 RESULT PASS gates=7, terraform 7/19/62/40/6/125, script suites 856/78/69/47/39/276/259, sbt on JDK 17.0.20.1 90/667/18 (1 canceled); live sbt EXIT 0 207/64/39/50/100/107/90/667/18; mutations 36/36; pin drift 4 of 209`
+`VALIDATION RESULTS: grace set only where load_balancer is; null elsewhere; validated variable; ownership OK; no secrets and no 12-digit IDs apart from the synthetic 111122223333; no live action`
+`ASSUMPTIONS: default ALB health-check thresholds as documented (AWS API 2/5, provider 3/3, 30 s); not observed live`
+`RISKS: B1 first-start rollback; N1 headroom below 20 for Nov 11; N2 no public endpoint without a certificate`
+`MANUAL ACTION REQUIRED: user decisions on B1, N1 and N2 before the commit`
+`BLOCKED-ON OWNER: user (B1 decision), then infra-engineer and test-engineer`
+`BLOCKED-ON EVIDENCE: variables.tf:23, compute.tf:152-155 and :185`
+`NEXT GATE: repair, then a recheck review, then the user's pin refresh and commit`
+4. NEXT PROMPT
+
+```
+You are the ScholarChain Phase 14 coordinator, continuing Subphase 14B (Step 0 and the Q6 repair, repair round 1) in
+```
+
+`/Users/danny/Documents/UIC/CS441/ScholarChain, on branch phase-14 (base e2f0b01ce9670c11ef9c4b3706bb52569f960a1d; all 14B`
+`work is uncommitted). Follow <plan path>.`
+`(a) Append the external reviewer's verdict for "Subphase 14B — Step 0 and the Q6 repair" (REQUEST-CHANGES; blocking B1;`
+`    nonblocking N1–N5), verbatim and marked "user-supplied external review", to docs/agent-runs/phase-14/review.md. Log B1`
+`    and N1–N5 in docs/agent-runs/phase-14/repairs.md.`
+`(b) Before routing anything, ask the user, each question with its recommended default:`
+`    - B1: the default target-group thresholds (AWS API 30 s / 2 / 5, provider 30 s / 3 / 3) mean a 120 s grace cannot`
+`      cover a query-api target once it is marked unhealthy. Recommended: grace default 300 s, wired as a validated root`
+`      variable so it can be tuned in the private tfvars without a commit (option (a)); or keep 120 and record that (option (b)).`
+`    - N2: how the HTTPS certificate is provided (recommended: an ACM certificate authored in Terraform, for a domain the`
+`      user controls, if they have one; otherwise a disclosed exception, recorded by the user), and the public_ingress_cidrs`
+`      source. It must be settled before the commit and before base-apply.`
+`    - N1: for Nov 11, the 14A model gives about USD 3.82 headroom (below 20). Which reserve to reduce, by how much, or use`
+`      Nov 15. Recommended: Nov 15, unless the user explicitly lowers a named reserve.`
+`    Wait for the answers.`
+`(c) Route by docs/agents.md:`
+`    - B1 option (a): infra-engineer: infra/terraform/modules/runtime/**, the root variable and wiring, infra/terraform/tests/`
+`      phase14b.tftest.hcl, infra/terraform/README.md (document the threshold arithmetic). Then test-engineer:`
+`      tests/infra/phase14b_checks.py, test_phase14b_grace.py and README.md, hand-derived from the new decision, with the`
+`      mutations repeated. For option (b), record the user's decision only.`
+`    - N2: if the user chooses a Terraform-authored certificate, route it to infra-engineer with tests. This is a new`
+`      routed repair, in scope only on the user's explicit instruction.`
+`    - Coordinator (nonblocking, cheap): a dated 14B addendum to approval-request-14a.md listing https_certificate_arn,`
+`      public_ingress_cidrs and the Q8 values as runtime-plan inputs, and that an ALB is billed even without a certificate;`
+`      the N1 arithmetic and the user's choice in prompt.md; fix the stale Nov 12–14 at prompt.md:88 and :95 (N3).`
+`      Do not rewrite reviewed 14A text or any human-owned file.`
+`(d) Rerun the affected tests (terraform fmt, validate and test; tests/infra), then the full`
+`    env -u AWS_PROFILE AWS_EC2_METADATA_DISABLED=true AWS_CONFIG_FILE=/dev/null AWS_SHARED_CREDENTIALS_FILE=/dev/null scripts/check.sh`
+`    in a fresh clean snapshot, and the full sbt check on JDK 17. Retain lean evidence under`
+`    docs/agent-runs/phase-14/evidence/14b/, including the snapshot identity counts (N4). List the drifted pins again.`
+`(e) Run no live command, write no approval record, make no commit. Do not start the deployer apply, base-apply, push,`
+`    runtime-apply or Subphase 14C.`
+`(f) Return a recheck reviewer prompt per Section 10 with every placeholder filled, without triggering any reviewer, then`
+`    end with "Subphase 14B is ready for review. I have stopped and will not start the next subphase until I receive the`
+`    next prompt." and stop.`
+
+### Review 2 — user-supplied external review (repair round 1 recheck and replan; reviewer follow-up to the user's answers; pasted by the user on 2026-11-09; reproduced verbatim)
+
+The reviewer's original verdict text ("Subphase 14B — repair round 1 recheck and replan": REQUEST-CHANGES; blocking B2; nonblocking N1–N8) was pasted after this follow-up and is reproduced verbatim in the next entry. The follow-up message below was pasted on 2026-11-09. It contains no plan path. Its only change is that the AWS documentation example account ID in the next-prompt step (a) is written as `<AWS documentation example account ID>`, because the account scan allows that ID only in `AwsTestSupport.scala` (user decision 2026-11-09).
+
+````text
+The verdict is still REQUEST-CHANGES on B2: cleanup is refused when spending has gone over USD 25. Your two answers don’t change that, but each changes the next prompt a little. I changed no files.
+1. Blank-line fixes after the review. That works, with one caveat. The B2 repair changes the tree, so the recheck reviewer will see a new snapshot, not snapshot 8. The whitespace fixes therefore go after that recheck approves and before the pin refresh. Untracked files need fixing too: infra/terraform/tests/phase14b_root.tftest.hcl and three lines in the runbook.
+2. The account-ID test exception. The scanner already meets your conditions:
+
+* Named, exact, one file: the entry in tests/infra/account_scan.py is a single exact value tied to the full path of `AwsTestSupport.scala`. It is not a pattern.
+* Other IDs in that file: any other 12-digit ID there is still flagged, because only that exact value is excused.
+* Example ID elsewhere: it is still flagged in other files, and `test_scoped_synthetic_values_are_scoped_to_their_files` (`test_billing_replan_14b.py`) already tests this.
+
+Two gaps remain:
+
+* No test checks that a different 12-digit ID inside `AwsTestSupport.scala` is still flagged.
+* The entry is named only by a code comment, not a label.
+
+Updated NEXT PROMPT (it replaces the one in my verdict):
+
+```
+You are the ScholarChain Phase 14 coordinator, continuing Subphase 14B (repair round 2) in
+/Users/danny/Documents/UIC/CS441/ScholarChain, branch phase-14 (base e2f0b01ce9670c11ef9c4b3706bb52569f960a1d; all 14B work
+uncommitted). Follow the "Replan 2026-11-08" block of the phase14.md plan.
+
+(a) Append the external reviewer's verdict "Subphase 14B — repair round 1 recheck and replan" (REQUEST-CHANGES; blocking B2;
+    nonblocking N1–N8), verbatim and marked "user-supplied external review", to docs/agent-runs/phase-14/review.md, with the
+    Google Drive plan path written as <plan path> (state that this is the only change). Log B2 and N1–N8 in repairs.md.
+    Record the user's decisions: (1) the blank-line fixes are deferred until after the recheck review and done before the pin
+    refresh; (2) the test exception is accepted only for AWS's documentation example account <AWS documentation example account ID>, only in
+    modules/services/src/test/scala/edu/uic/cs441/scholarchain/services/AwsTestSupport.scala, as a named, file-scoped
+    allowlist entry, not a pattern.
+(b) Ask the user, each with its recommended default, and wait for the answers:
+    - B2: cleanup-prepare has no headroom floor (a negative headroom is accepted; the receipt must still exist, match its hash,
+      be fresh, confirm monitoring and carry every numeric field). Recommended: yes.
+    - N1: does sales tax count toward the USD 25 cap? Recommended: yes; add a tax line to approval request §3.2 at the user's
+      rate, and say how Neptune scaling to 2.5 NCU would change the total.
+(c) Route by docs/agents.md:
+    - B2: infra-engineer (scripts/config/release.conf, scripts/deploy.sh, scripts/lib/verify.py, scripts/README.md);
+      test-engineer (the cleanup-prepare tests: -5.00 accepted for cleanup-prepare, below 3 refused for every spending stage);
+      documentation-engineer (runbook C2, line 1298); coordinator (approval request §4 and §7).
+    - Test exception: test-engineer (tests/infra/account_scan.py and tests/infra/test_billing_replan_14b.py): give the
+      SCOPED_SYNTHETIC entry an explicit name or label (exact value, exact path, no pattern), and add tests that (i) the
+      example ID in AwsTestSupport.scala is allowed, (ii) another 12-digit ID in that same file is a finding, and (iii) the
+      example ID in any other file is a finding (already covered; keep it).
+    - Coordinator: N1 if the user says yes; N4 Titan wording (approval request §3.4); N5 wording (§5); N6 agent provenance in
+      owner-report.md.
+    - Do NOT route the blank-line or whitespace fixes in this round (user decision 1).
+(d) Rerun the affected tests, then the full
+    env -u AWS_PROFILE AWS_EC2_METADATA_DISABLED=true AWS_CONFIG_FILE=/dev/null AWS_SHARED_CREDENTIALS_FILE=/dev/null scripts/check.sh
+    in a fresh clean snapshot with its identity file, and the full sbt check on JDK 17. Report git diff --check (expected to
+    still fail on the deferred whitespace: the four tracked files, plus, once staged, infra/terraform/tests/phase14b_root.tftest.hcl
+    and runbook lines 432, 437, 845). Recompute the pin drift.
+(e) Run nothing live, make no commit, do not start the live session, and do not close the 10 pre-session items yet.
+(f) Return a recheck reviewer prompt per Section 10 without triggering any reviewer. List the deferred whitespace fixes as a
+    known item to be done after approval and before the pin refresh. Then end with "Subphase 14B is ready for review. I have
+    stopped and will not start the next subphase until I receive the next prompt." and stop.
+```
+````
+
+### Review 2 — user-supplied external review: the original verdict (repair round 1 recheck and replan; pasted by the user on 2026-11-09; reproduced verbatim)
+
+This verdict contains no plan path, so it is reproduced unchanged. Separately, review N2 led the coordinator to replace the Google Drive plan path, which contains the user's email, with `<plan path>` in the 14B review 1 next-prompt above (line 378). That is the only change to any verbatim text. Lines 136 and 263 sit in the committed 14A reviews and still hold the path; they were left unchanged pending the user's decision.
+
+````text
+1. VERDICT: REQUEST-CHANGES for Subphase 14B (repair round 1 recheck and replan)
+B1 is closed. The caps match across every source and the cost arithmetic adds up. One blocker remains: scripted cleanup is refused exactly when spending has gone over USD 25. Because of the commit freeze, this is the last point at which it can be fixed.
+Confirmations you asked for:
+
+* B1: closed.
+   * The grace period defaults to 300 s and can be set from your private tfvars through the root variable `query_health_check_grace_period_seconds` (`phase12b-variables.tf:248`).
+   * The target-group timing is now set explicitly to 30 s / 5 s / 3 / 3 (runtime/variables.tf).
+   * A precondition on the service requires the grace to be at least healthy_threshold × interval (`compute.tf:282-286`). Tests cover 89 s refused, 90 s accepted, and timing overrides such as 5 × 60 = 300 s.
+* Caps and pins match in every source:
+   * `release.conf`: headroom 3, cleanup floor 0, EMR cumulative cap 3.00, pipeline sample ceiling 12000.
+   * billing-bootstrap: USD 25, ACTUAL alerts at absolute 10/15/20, `include_credit = false`.
+   * `llm-allocation.json`: cap 1.50, buckets 10/60/40/5.
+   * `load-profile.v1.json`: Haiku 1.10 / 5.50 per 1M tokens, about 0.01155 per answer.
+   * 14C templates: Titan 0.25 / 0.05.
+* Marketplace: no `aws-marketplace` action appears anywhere in the Terraform.
+* Account IDs, emails, domains: no new raw account ID or domain. There is one email, in `review.md` (N2 below).
+* Cost arithmetic is correct:
+   * Run rate: 0.1608 + 0.05 + 0.0405 + 0.0583 = 0.3096 USD/h.
+   * Totals: 19.44 at 36 h and 21.32 at 42 h, leaving 5.56 and 3.68 of headroom.
+   * EMR: 0.84 per run = 2 nodes × 0.24 USD/h × 1.75 h (90 min plus the 15 min idle tail).
+   * Haiku buckets: 1.33 of 1.50.
+   * It fits under USD 25 with at least USD 3 at 42 h before sales tax (N1).
+* Evidence matches the claims:
+   * Terraform tests: 12+19+103+40+6+246 = 426.
+   * Script tests: 1000+78+112+61+39+407+421 = 2,118.
+   * Live sbt: 1,415 tests, 0 failed.
+   * Pin drift: I recomputed it independently and got the same 24 of 209.
+   * No non-docs file changed after snapshot 8 was taken.
+   * Real-slice counts add up: 78,104 nodes; 100,252 + 228,715 = 328,967 edges.
+* Nothing live ran: there is no `human-gate.md`, no state file and no approvals directory.
+
+Your two questions:
+
+* Blank-line fixes: route them now, in this repair round. There are two more than the four reported (N3).
+* Test exception for AWS’s documentation example account: accept it. It is AWS’s published example ID, it applies to one file only, and it was already committed in 14A.
+
+2. Findings
+B2. Medium, blocking. Cleanup is refused when spending has gone over the cap.
+
+* Where: scripts/config/release.conf:61-66, scripts/lib/verify.py:191-192, the `HEADROOM_FLOOR` lines in scripts/deploy.sh, and runbook line 1298 (“a negative headroom is still refused”).
+* Why it matters:
+   * Cleanup-prepare’s floor is 0, so an honest receipt showing more than USD 25 spent is refused.
+   * That is exactly the moment teardown is most urgent, and the stack keeps billing about USD 0.31/h while it is blocked.
+   * `release.conf`’s own comment says cleanup “must never be blocked by a low or exhausted headroom”.
+   * The only ways round it would be a false receipt or an unreviewed manual destroy.
+* Owner: your decision first. The replan says “0 for the cleanup step only”, and the recommendation is no headroom floor at all for cleanup-prepare. Then:
+   * infra-engineer: `release.conf`, `deploy.sh`, `verify.py`;
+   * test-engineer: tests;
+   * documentation-engineer: runbook C2;
+   * coordinator: approval request §4 and §7.
+* Acceptance check:
+   * cleanup-prepare accepts a fresh, hash-matched receipt with headroom −5.00;
+   * every spending stage still refuses below 3;
+   * a missing or non-numeric field is still refused;
+   * tests updated, then the full check.
+
+N1. Medium, nonblocking, but decide before your approval record. The cost model leaves out sales tax.
+
+* The budget counts tax (billing-bootstrap/main.tf:39, `include_tax = true`).
+* The runbook’s Cost Explorer steps (line 601) also leave tax included.
+* At 6–10% tax, the 42 h total becomes about 22.6–23.5, so headroom falls to about 1.5–2.4, below the USD 3 floor.
+* The model also keeps Neptune flat at 1 NCU, although it can scale up to 2.5.
+* Owner: you decide whether tax counts toward the cap. The coordinator then adds a tax line to approval request §3.2, plus a note on Neptune scaling.
+
+N2. Low. Your personal email is in a changed file. docs/agent-runs/phase-14/review.md:378 adds the Google Drive plan path, which contains your email. It came from my earlier next-prompt, pasted verbatim. The coordinator should replace it with `<plan path>` and note that this is the only change to the verbatim text.
+N3. Low. `git diff --check` misses untracked files.
+
+* infra/terraform/tests/phase14b_root.tftest.hcl ends with an extra blank line (infra-engineer).
+* `docs/runbooks/phase-14-live-session.md:432, 437, 845` have trailing whitespace (documentation-engineer).
+* Fix these together with the four already listed. Acceptance: after `git add -N`, `git diff --check` exits 0, ignoring the raw logs in `evidence/**`.
+
+N4. Low. The Titan split leaves nothing for later. 0.25 + 0.05 = 0.30, so nothing remains for the 15B and 16B query-time embeddings that approval request §3.4 (line 114) says come out of “the rest”. There is also no cap on Titan calls made by the deployed services. The cost is negligible; correct the wording, or record that you accept it.
+N5. Low. The approval request overstates the billing change.
+
+* §5 (line 144) says “account ID only as a hash or private render”.
+* The billing executor still uses the pre-existing literal at scripts/billing/budget_execution.py:26, and the new modify path relies on it (`:1033`, `:1059`).
+* This is allowed by your decision 3 (existing Phase 12 mentions stay), but the sentence should be reworded.
+
+N6. Low. Agent provenance is inconsistent.
+
+* `prompt.md:240` mentions a “deploy-engineer runbook draft”.
+* The replan owner table does not list deploy-engineer, and `owner-report.md:14` says deploy-engineer was not used.
+* Record whether it ran (role, model, read-only output) as plan Section 5 requires.
+
+N7. Observation, future 14C scope. `scripts/upload-slice.sh --execute` checks no approval record by machine, unlike `upload-emr-artifacts.sh`. It is protected only by the MFA operator role and the prose 14C gate.
+N8. Observation.
+
+* The real-slice export ran from a dirty tree; this is disclosed. After the commit, confirm the committed Spark exporter matches `codeVersion b6d030eb`.
+* Your plan file’s “≈170 answers” and “≈19.60” differ from the repository’s figures (about 130 answers at 0.01155 per answer, and 19.44). The repository figures are internally consistent.
+
+Unverified until live (as listed in approval request §9): IAM completeness, `if-none-match` enforcement, the ECS Exec tunnel, `aws login` session length and its MFA flag, JVM start-up at 0.25 vCPU, the 300 s grace in practice, EMR behaviour and Bedrock quotas.
+Future scope: the 10 open pre-session items (approval request §10), the pin refresh and the commit, then the live session.
+3. Report fields
+
+```
+STATUS: COMPLETE (review)
+```
+
+`OWNER: code-reviewer`
+`WORK ORDER: Phase 14 Subphase 14B repair round 1 recheck (B1) and the USD 25 replan`
+`FILES CREATED: none`
+`FILES MODIFIED: none`
+`COMMANDS RUN: read-only only: git diff/status/ls-files/rev-parse, git diff --check (exit 2), grep, sed, cat, stat, python3 -I to recompute pin drift against reviewed-pins.json (24/209)`
+`TEST RESULTS: not run by the reviewer; retained logs confirm 426 / 2,118 / sbt 0 failed; live sbt 1,415 tests, 0 failed; snapshot 7 FAIL disclosed`
+`VALIDATION RESULTS: B1 closed; caps consistent; arithmetic correct before tax; no Marketplace grant; no new account ID or domain; one email (N2)`
+`ASSUMPTIONS: sales tax may apply and is counted by the budget (include_tax = true)`
+`RISKS: B2 cleanup blocked when over the cap; N1 headroom below 3 if tax counts`
+`MANUAL ACTION REQUIRED: user decisions on B2 and N1; accept the test exception`
+`BLOCKED-ON OWNER: user (B2 decision), then infra-engineer, test-engineer and documentation-engineer`
+`BLOCKED-ON EVIDENCE: release.conf:61-66, verify.py:191-192, runbook line 1298`
+`NEXT GATE: repair, then a recheck review, then the pre-session items, pin refresh and commit`
+4. NEXT PROMPT
+
+```
+You are the ScholarChain Phase 14 coordinator, continuing Subphase 14B (repair round 2) in
+```
+
+`/Users/danny/Documents/UIC/CS441/ScholarChain, branch phase-14 (base e2f0b01ce9670c11ef9c4b3706bb52569f960a1d; all 14B work`
+`uncommitted). Follow the "Replan 2026-11-08" block of the phase14.md plan.`
+`(a) Append the external reviewer's verdict "Subphase 14B — repair round 1 recheck and replan" (REQUEST-CHANGES; blocking B2;`
+`    nonblocking N1–N8), verbatim and marked "user-supplied external review", to docs/agent-runs/phase-14/review.md, with the`
+`    Google Drive plan path written as <plan path> (state that this is the only change). Log B2 and N1–N8 in repairs.md.`
+`(b) Ask the user, each with its recommended default, and wait for the answers:`
+`    - B2: cleanup-prepare has no headroom floor (a negative headroom is accepted; the receipt must still exist, match its hash,`
+`      be fresh, confirm monitoring and carry every numeric field). Recommended: yes.`
+`    - N1: does sales tax count toward the USD 25 cap? Recommended: yes; add a tax line to approval request §3.2 at the user's`
+`      rate, and say how Neptune scaling to 2.5 NCU would change the total.`
+`    - Accept the file-scoped test exception for the AWS documentation example account in AwsTestSupport.scala? Recommended: yes.`
+`(c) Route by docs/agents.md:`
+`    - B2: infra-engineer (scripts/config/release.conf, scripts/deploy.sh, scripts/lib/verify.py, scripts/README.md);`
+`      test-engineer (the cleanup-prepare tests: -5.00 accepted for cleanup-prepare, below 3 refused for every spending stage);`
+`      documentation-engineer (runbook C2, line 1298); coordinator (approval request §4 and §7).`
+`    - Whitespace: infra-engineer (infra/terraform/billing-execution/README.md, scripts/billing/PUBLICATION.md,`
+`      infra/terraform/tests/phase14b_root.tftest.hcl); storage-engineer (modules/storage/README.md); test-engineer`
+`      (tests/infra/README.md); documentation-engineer (runbook lines 432, 437, 845).`
+`    - Coordinator: N1 if the user says yes; N4 Titan wording (approval request §3.4); N5 wording (§5); N6 agent provenance in`
+`      owner-report.md; record the exception decision.`
+`(d) Rerun the affected tests, then the full`
+`    env -u AWS_PROFILE AWS_EC2_METADATA_DISABLED=true AWS_CONFIG_FILE=/dev/null AWS_SHARED_CREDENTIALS_FILE=/dev/null scripts/check.sh`
+`    in a fresh clean snapshot with its identity file, the full sbt check on JDK 17, and git diff --check after git add -N on the`
+`    untracked files (excluding evidence/** logs). Recompute the pin drift.`
+`(e) Run nothing live, make no commit, do not start the live session, and do not close the 10 pre-session items yet.`
+`(f) Return a recheck reviewer prompt per Section 10 without triggering any reviewer, then end with "Subphase 14B is ready`
+`    for review. I have stopped and will not start the next subphase until I receive the next prompt." and stop.`
+````
+
+### Review 3 — user-supplied external review (repair round 2 recheck; pasted by the user on 2026-11-09; reproduced verbatim)
+
+The verdict contains no plan path (its next prompt already writes `<plan path>`), so it is reproduced unchanged.
+
+````text
+1. VERDICT: APPROVE for Subphase 14B (repair round 2 recheck)
+B2 is closed.
+
+The flag is mandatory: verify.py prespend now needs exactly one of --min-headroom or --no-headroom-floor (scripts/lib/verify.py:918-922). Giving both or neither is a usage error.
+The no-floor mode still checks the number: it skips only the comparison (verify.py:192-197). The headroom must still be a finite number, so missing, null, true/false, NaN, infinite and text values are all refused (_number, verify.py:134-142). Every other receipt check still runs.
+Only the stage chooses it: deploy.sh:296-300 selects the no-floor mode from STAGE alone. That stage also requires a plan receipt whose purpose is cleanup-prepare and the prepare policy (deploy.sh:556-615), so a spending plan cannot borrow the no-floor path.
+Every other path keeps the floor of 3: the spending stages in deploy.sh, and run-bounded-pipeline.sh:437-438.
+No config or environment path: the old key is gone from release.conf and SC_PINNED_KEYS.
+Tests: tests/scripts/test_prespend_floors_14b.py covers each requirement:
+−5.00 is accepted for cleanup-prepare and refused for every spending stage;
+2.99 is refused and 3.00 accepted;
+non-finite fields, a missing receipt, a hash mismatch, a stale snapshot and unconfirmed monitoring are refused;
+setting the old key in the environment or the config has no effect;
+static guards check that the flag appears only in deploy.sh and verify.py.
+The exception meets decision 2. ScopedSynthetic("aws-documentation-example-account", …, path=<exact path>, pattern=None) matches the path by string equality (tests/infra/account_scan.py:34-55). Tests (i)–(v) cover:
+
+the example ID is allowed in that exact file;
+any other 12-digit ID in that file is flagged, including the other scoped values;
+the example ID is flagged in 11 near-miss paths;
+the entry carries no pattern;
+the value is held by no other entry and is not in the global set.
+The tax arithmetic in §3.2 is correct:
+
+Case	Calculation	Total	Headroom
+36 h	19.10 + 2.10 tax + 0.34	21.54	3.46
+42 h	20.98 + 2.31 + 0.34	23.63	1.37
+42 h, EMR at full cap	21.46 + 2.36 + 0.34	24.16	0.84
+The supporting figures also check out:
+
+hourly cost with tax: (0.3096 + 0.005) × 1.11 ≈ 0.35;
+2.5 NCU: +0.2677/h with tax, giving 31.18 / 34.88 for a full session and about 5.1 h of absorption at 42 h;
+about 37 h is the longest session that keeps USD 3;
+cuts needed: 1.63, or 2.16 with EMR at its full cap;
+per-cut savings: 0.93 for one EMR run and 0.19 for the Haiku change.
+Account IDs, emails, domains: no added line holds a raw account ID, email or domain. The only 12-digit runs are the synthetic values, the scoped test value and UUID tails.
+
+Evidence matches the claims:
+
+live sbt EXIT 0 with 1,415 tests at 14:57;
+tests/infra 426 OK at 14:58, after the last non-docs edit at 14:17;
+pin drift 24 of 209, the same list;
+the whitespace list matches the six deferred items.
+Nothing live ran.
+
+2. Findings (none blocking)
+F1. Medium, nonblocking, but decide before the commit. With tax, the USD 3 floor fails at 42 h.
+
+Where: approval-request-14b-replan.md §3.2 (floor check), §1 (hard stop 42 h), §11.
+Why it matters: if the base-apply receipt’s reserves honestly cover the rest of the session plus tax, its headroom is 1.37. deploy.sh then refuses base-apply at the floor of 3.
+The choice is yours:
+option 1, a ~37 h hard stop: the runbook’s H40/H42 times and §1 change;
+option 2, a lower floor: release.conf and tests change;
+option 3, cost cuts. Capping Neptune at 1 NCU would need infra-engineer.
+Any committed change must land before the base plan. §11 does not list this decision explicitly.
+
+Owner: you decide. Then the coordinator updates §1, §3.2 and §11; documentation-engineer updates the runbook times; infra-engineer and test-engineer act only if a pin or Neptune changes.
+Acceptance check: §11 records the option you chose, and a projected headroom of at least 3 at the chosen hard stop, with tax.
+F2. Low, nonblocking. Approval request §5 and §8 are stale.
+
+§5’s header “(all reviewed tests pass, section 8)” and §8 still show snapshot 8 and do not mention round 2 or the deferred full check.
+§3.2’s line “Every hour … USD 0.31” is the pre-tax figure and should say so.
+Owner: coordinator.
+Acceptance check: §8 shows the final snapshot’s results after the post-approval check.
+F3. Observation. review.md:136 and :263 still hold the plan path that contains your email, in text committed in 14A; your decision on this is pending. I recommend replacing it with <plan path> and noting that this is the only change. Owner: coordinator, on your yes.
+
+Unverified gates (by your recorded decision, or agent-reported only):
+
+the full seven-gate check on a fresh snapshot after round 2;
+a full scripts/tests run after the round-2 edits to scripts/tests/test_deploy.py and test_pipeline.py and the reverted common.sh line;
+tests/scripts 421 OK, which is agent-reported with no retained timestamp.
+test_terraform_r1.py fails 7 of 10 in the live tree because its fixture reads only tracked files. It must pass in the fresh snapshot.
+
+Future scope:
+
+the six whitespace items;
+the 10 pre-session items;
+N4: accept the uncapped query-time Titan embeddings or set a reserve (§11.2);
+N7 and N8;
+the pin refresh, the commit, and everything live.
+3. Report fields
+STATUS: COMPLETE (review)
+OWNER: code-reviewer
+WORK ORDER: Phase 14 Subphase 14B repair round 2 recheck (B2; N1–N8)
+FILES CREATED: none
+FILES MODIFIED: none
+COMMANDS RUN: read-only only: git diff/ls-files/rev-parse, grep, sed, cat, stat, ls; 12-digit and email scans over added lines and untracked files
+TEST RESULTS: not run by the reviewer; retained: live sbt EXIT 0 (1,415 tests, 0 failed, 1 canceled), tests/infra 426 OK, pin drift 24/209, whitespace = the six deferred items
+VALIDATION RESULTS: B2 closed; exception meets decision 2; tax arithmetic correct; no new account ID, email or domain
+ASSUMPTIONS: about 11% tax until confirmed from the bill (user decision)
+RISKS: F1 floor at 42 h; Neptune scaling uncapped by scripts (max 2.5 NCU)
+MANUAL ACTION REQUIRED: choose the F1 option; decide F3; accept or set the Titan reserve (N4); whitespace, pre-session items, pin refresh, commit
+BLOCKED-ON OWNER: none
+BLOCKED-ON EVIDENCE: none
+NEXT GATE: whitespace fixes, fresh snapshot full check, F1 decision, pre-session items, pin refresh, user commit
+4. NEXT PROMPT
+You are the ScholarChain Phase 14 coordinator, continuing Subphase 14B (post-approval, pre-session) in
+/Users/danny/Documents/UIC/CS441/ScholarChain, branch phase-14 (base e2f0b01ce9670c11ef9c4b3706bb52569f960a1d; all 14B work
+uncommitted). Follow the "Replan 2026-11-08" block of <plan path>.
+
+(a) Append the external reviewer's verdict "Subphase 14B — repair round 2 recheck" (APPROVE; nonblocking F1–F3), verbatim and
+    marked "user-supplied external review", to docs/agent-runs/phase-14/review.md under "Subphase 14B", with any plan path
+    written as <plan path> (state that this is the only change). Log F1–F3 in repairs.md as nonblocking.
+(b) Route the six deferred whitespace fixes, whitespace only:
+    - infra-engineer: infra/terraform/billing-execution/README.md, scripts/billing/PUBLICATION.md,
+      infra/terraform/tests/phase14b_root.tftest.hcl;
+    - storage-engineer: modules/storage/README.md;
+    - test-engineer: tests/infra/README.md;
+    - documentation-engineer: runbook lines 432, 437, 845.
+(c) Ask the user, each with its recommended default, and wait for the answers:
+    - F1 (USD 3 floor at 42 h with tax): recommended option 1, a hard stop of about 37 h with cleanup starting by H35, plus
+      lowering the Haiku cap to the 1.33 the buckets need only if the user wants extra margin. Route the choice: coordinator
+      (approval request §1, §3.2, §11), documentation-engineer (runbook session times); infra-engineer and test-engineer only
+      if a pin or the Neptune maximum changes.
+    - F3: redact the email-bearing plan path at review.md:136 and :263 to <plan path>, noted as the only change? Recommended: yes.
+    - N4: accept the uncapped query-time Titan embeddings (about USD 0.001), or set ingest 0.24 / smoke 0.05 / query 0.01.
+(d) Build a fresh clean snapshot with its identity file and run the full
+    env -u AWS_PROFILE AWS_EC2_METADATA_DISABLED=true AWS_CONFIG_FILE=/dev/null AWS_SHARED_CREDENTIALS_FILE=/dev/null scripts/check.sh
+    (test_terraform_r1.py must pass there), plus the live sbt check on JDK 17, git diff --check after git add -N (evidence/**
+    excluded; it must exit 0) and the pin drift. Refresh approval request §8 (and the §5 header) with these results and label
+    the USD 0.31/h line as pre-tax (F2). Retain lean evidence under docs/agent-runs/phase-14/evidence/14b/.
+(e) Report the results, then help the user close the 10 pre-session items (approval request §10), refresh the pins and commit.
+    Ask the user before any commit; never commit yourself.
+(f) Start NO live step: the live session begins only after the user writes the approval record per
+    approval-request-14b-replan.md and docs/runbooks/phase-14-live-session.md.
+(g) End with a new reviewer prompt per Section 10 (plan path as <plan path>), without triggering any reviewer, then stop.
+````
+
+**Redaction note (review F3, user decision 2026-11-09).** In the committed 14A reviews above, at lines 136 and 263, the Google Drive plan path, which contains the user's email, is replaced with `<plan path>`. This is the only change to that verbatim text. Together with the line 378 change (review N2), no plan path remains in this file.
+
+### Review 4 — user-supplied external review (post-approval delta review; pasted by the user on 2026-11-09; reproduced verbatim)
+
+This verdict contains no plan path (its next prompt writes `<plan path>`), so it is reproduced unchanged.
+
+````text
+1. VERDICT: REQUEST-CHANGES (Subphase 14B post-approval delta)
+There is one blocker, and it’s a small doc fix. The arithmetic, ledgers, runbook, F3 redaction, privacy and no-live checks all pass.
+2. Findings
+D1 — Low, BLOCKING. The EMR cumulative cap is still USD 3.00 in two experiment files.
+
+* Where:
+   * experiments/README.md:23 (a delta file) says “three runs USD 2.52 against the USD 3.00 cumulative cap”. It also says a scale-out of “3 nodes = USD 1.26, total 2.94 … still under 3.00”.
+   * experiments/scripts/render_manifests.py:23 (docstring) says “2.52 USD against the 3.00 USD cumulative cap”.
+* Why it matters: the pinned cap is now `EMR_CUMULATIVE_CAP_USD=2.52`. A 0.84 + 0.84 + 1.26 = 2.94 scale-out would be refused by `budget.py:215`. During the session the runbook links to this README for 15B, so a human might approve a scale-out the guard then refuses. That wastes paid session time but cannot overspend. It also fails this review’s “caps agree everywhere” check.
+* How it was missed: the coordinator’s stale-cap grep covered `README.md`, `docs/**` and `modules/**`, not `experiments/**`.
+* Owner: experiment-engineer.
+* Acceptance:
+   * Both lines say 2.52.
+   * The scale-out sentence says 2.94 > 2.52, so a scale-out needs a recorded human cap decision first.
+   * `grep -rnE '\b3\.00\b' experiments/` returns no cap statements.
+   * `experiments/tests` and `check_manifests.py` still exit 0.
+
+N1 — Nit, not blocking. The comment at scripts/tests/test_pipeline.py:580 reads backwards. It says “three runs of 1.26 (3.78) would pass the 2.52 USD cumulative cap”; it should say they would exceed it, which is why the test raises the cap to 9.50.
+
+* Owner: infra-engineer.
+* Acceptance: the comment says “exceed”; `test_pipeline.py` stays at 69 OK.
+
+N2 — Nit, not blocking. In runbook R.1 (docs/runbooks/phase-14-live-session.md:615), the formula and its worked example disagree.
+
+* The formula says “hours to H36 × USD 0.31”, which gives 11.16. The example at line 617 uses 11.15, which is 36 × 0.3096.
+* Applied literally, the formula gives reserves of 21.02 and headroom of 3.08. That still clears the floor of 3, but the user’s check won’t match the coordinator’s numbers.
+* Owner: documentation-engineer.
+* Acceptance: the runbook either writes “0.3096 (about 0.31)” or shows 11.16 / 21.02 / 3.08.
+
+N3 — Observation, not blocking. R.1 reserves only up to H36, but the hard stop is H37.
+
+* At H0 the 0.50 allowance covers that last hour (about USD 0.34 with tax). The figures agree: 3.30 − 3.09 = 0.56 − 0.35.
+* Later receipts are protected only if the “margin” term is at least about 0.35.
+* This is not a change request. The coordinator should state that margin when giving values.
+
+N4 — Observation, not blocking. The plan’s “Update 2026-11-09” block still says the synthesis cap is USD 1.50. The recorded decision in `prompt.md:285–288` sets 1.33. Repair round 3 (Anthropic Haiku 5.5 pricing) changes the per-answer unit, so 1.33 and the bucket arithmetic must be re-derived then.
+
+* Owner: user (plan text) and coordinator (round 3).
+
+N5 — Observation, outside the delta, not blocking. scripts/billing/budget_execution.py:26 holds a real-looking 12-digit account constant.
+
+* It dates from Phase 12D (commit `8903ce0`) and this delta did not change it, but the file is in the 14B changed set.
+* Owner: user, to confirm it is intentional.
+
+Verified correct:
+
+* Caps agree across `release.conf`, both Haiku files, the runbook, approval request §3.2/§3.3/§4/§11, and tests/scripts/test_cap_pins_14b.py.
+* EMR ledger:
+   * Each run’s estimate is exactly 0.84: 2 × (0.192 + 0.048) × 6,300 s / 3,600, rounded up to the cent. The 15A manifests set 90 min, core 1, task 0 and idle 900 s.
+   * Both ledgers refuse only when the total goes above the cap, so exactly 2.52 is allowed.
+* Haiku: 115 × 0.01155 = 1.32825 ≤ 1.33, leaving a 0.00175 reserve; a 116th answer is refused.
+* Projections with ×1.11 tax:
+   * 37 h: 19.24 → 21.70 total, headroom 3.30.
+   * H0 receipt: 18.93 + 0.50 → 21.91 total, headroom 3.09.
+   * Old caps: H0 headroom 2.37; 37 h headroom 3.11.
+   * The R.2 example (0.56 / 21.01 / 3.09) matches.
+* F3: only `review.md` lines 136 and 263 changed in the committed text. No email or Drive path remains in any changed or untracked file.
+* Whitespace:
+   * `git diff --check e2f0b01` exits 0.
+   * The five whitespace files have no trailing whitespace and one final newline.
+   * No untracked file has trailing whitespace or an extra blank line at the end.
+* Nothing live ran: no `terraform.tfstate`, no `~/.scholarchain` ledger directory, no receipts.
+
+Unverified gates:
+
+* Whether the whitespace edits were whitespace-only within the delta: there’s no stored pre-delta tree, because snapshot 8 isn’t a git object here.
+* All agent-reported test counts (I ran no tests).
+* The full seven-gate check, including `test_terraform_r1.py` (pending by your decision).
+* The 11% tax rate, and everything live.
+
+3. Report fields
+
+```
+STATUS: COMPLETE (verdict REQUEST-CHANGES)
+```
+
+`OWNER: code-reviewer`
+`WORK ORDER: Phase 14 Subphase 14B post-approval delta review (prompt.md "Subphase 14B — post-approval")`
+`FILES CREATED: none`
+`FILES MODIFIED: none`
+`COMMANDS RUN: git rev-parse HEAD; git diff/--name-only/-U0/--check against e2f0b01; git ls-files --others; git log -S; grep/sed/awk/tail reads of the delta files, approval request, runbook, reports, evidence and the plan's replan block; ls of tfstate, ~/.scholarchain and target/phase14`
+`TEST RESULTS: none run (read-only); agent- and coordinator-reported counts accepted as reported, not reproduced`
+`VALIDATION RESULTS: D1 blocking; N1–N5 nonblocking; cap arithmetic, ledger inclusivity, tax projections, F3 redaction, privacy and no-live all confirmed`
+`ASSUMPTIONS: 14B is uncommitted against e2f0b01, so the delta was identified from the named files and reports, not from a stored pre-delta tree`
+`RISKS: zero slack under the new caps; R.1 leaves the H36–H37 hour unreserved after H0 (N3); tax rate unconfirmed`
+`MANUAL ACTION REQUIRED: none for D1 (routed to an agent); the user may want to update the plan text (N4) and confirm N5`
+`BLOCKED-ON OWNER: experiment-engineer (D1)`
+`BLOCKED-ON EVIDENCE: experiments/README.md:23, experiments/scripts/render_manifests.py:23`
+`NEXT GATE: D1 recheck, then the full seven-gate check on a fresh snapshot`
+4. NEXT PROMPT
+
+```
+You are the coordinator for ScholarChain Phase 14, Subphase 14B, post-approval delta REPAIR, in
+```
+
+`/Users/danny/Documents/UIC/CS441/ScholarChain (branch phase-14, base e2f0b01, all 14B work uncommitted).`
+`Follow the "Replan 2026-11-08" block of <plan path>. Start nothing live, make no AWS or provider call, and do not commit.`
+`(a) Append the reviewer verdict "Subphase 14B — post-approval delta review" (REQUEST-CHANGES; blocking D1;`
+`    nonblocking N1–N5) verbatim to docs/agent-runs/phase-14/review.md under "Subphase 14B", with any plan path`
+`    written as <plan path>. Log D1 and N1–N5 in repairs.md.`
+`(b) Route:`
+`    - D1 (blocking) to experiment-engineer: experiments/README.md:23 and experiments/scripts/render_manifests.py:23`
+`      must say the cumulative cap is 2.52. The scale-out sentence must say 0.84 + 0.84 + 1.26 = 2.94 > 2.52, so a`
+`      node-level scale-out needs a recorded human cap decision first. Then grep experiments/ for remaining 3.00 cap`
+`      statements, and rerun experiments/tests and check_manifests.py.`
+`    - N1 to infra-engineer: fix the test_pipeline.py:580 comment ("would exceed"). Rerun test_pipeline.py.`
+`    - N2 (optional, same round) to documentation-engineer: make R.1 use 0.3096 (about 0.31), or show`
+`      11.16 / 21.02 / 3.08. Keep line count and whitespace clean.`
+`    - N3, N4, N5: record only. Ask the user about N4 (the plan text says 1.50) and N5 (the account constant from`
+`      12D) without changing anything.`
+`(c) Rerun git diff --check, the untracked whitespace check (evidence/** excluded) and the stale-cap grep, now`
+`    including experiments/** and load-tests/**. Run the live sbt check (JDK 17, AWS neutralized) only if a Scala`
+`    or build input changed; otherwise record that it was skipped and why.`
+`(d) Update test-report.md and owner-report.md with the exact observed results. Do not run the full seven-gate check`
+`    yet; it runs once after the recheck approves.`
+`(e) End with a recheck prompt for the independent reviewer (Section 10; plan path as <plan path>) scoped to D1, N1`
+`    and N2. Trigger no reviewer, then stop.`
+````
+
+### Review 5 — user-supplied external review (post-approval delta repair recheck; pasted by the user on 2026-11-09; reproduced verbatim)
+
+The verdict contains no plan path (its next prompt writes `<plan path>`). Its only change is that the 12-digit synthetic placeholder it quotes from `scripts/tests/test_pipeline.py:438` is written as `<placeholder from test_pipeline.py:438>`, because the account scan allows that number only where it already was at base (snapshot 9 full check, 2026-11-09).
+
+````text
+1. VERDICT: APPROVE (Subphase 14B post-approval delta repair: D1, N1, N2, plus the N3 sentence)
+There are no blocking findings.
+2. Findings
+D1: closed (was blocking).
+experiments/README.md:23 now says the 15A runs total "USD 2.52 against the USD 2.52 cumulative cap (EMR_CUMULATIVE_CAP_USD=2.52 …)". It also says "0.84 + 0.84 + 1.26 = 2.94 > 2.52, so budget.py would refuse a node-level scale-out, which needs a recorded human cap decision first".
+experiments/scripts/render_manifests.py:23 says "2.52 USD against the 2.52 USD cumulative cap".
+Searching experiments/ and load-tests/ finds no 3.00 and no 9.50.
+1.50 appears only in history notes ("lowered from 1.50") and in the fixture in load-tests/tests/test_llm_budget.py, which sets its own cap. Neither is a statement of the current cap.
+N1: closed. scripts/tests/test_pipeline.py:580 now reads "would exceed the 2.52 USD cumulative cap". Only the comment changed; the code is unchanged.
+N2: closed. Runbook R.1 (docs/runbooks/phase-14-live-session.md:614–615) uses "USD 0.3096 (about 0.31)".
+36 × 0.3096 = 11.1456, which rounds to 11.15.
+11.15 + 1.17 + 2.41 + 0.05 + 0.30 + 2.52 + 1.33 = 18.93.
+18.93 × 1.11 = 21.0123, which rounds to 21.01.
+0.50 × 1.11 = 0.555, which rounds to 0.56.
+25 − 0.34 − 0.56 − 21.01 = 3.09.
+The formula and the example now agree, and the R.2 JSON example matches.
+O1: observation, not blocking, no change required. The N3 sentence at runbook line 614 is accurate and conservative.
+The margin sits inside the "(…) times 1.11" bracket, so it is a before-tax amount.
+Covering the unreserved H36–H37 hour needs a margin of only about 0.31 before tax (about 0.34 with tax). The stated "at least about USD 0.35" therefore reserves about 0.39 with tax, roughly 0.04 more than needed.
+This errs on the safe side.
+Owner: documentation-engineer, only if you want the wording exact.
+Privacy, whitespace, scope and ownership:
+No email address, Drive path or new account ID appears in any touched file. The only 12-digit number in test_pipeline.py:438 is the placeholder <placeholder from test_pipeline.py:438>, and it was already at base.
+git diff --check e2f0b01 exits 0. The touched files have no trailing whitespace and end with a single newline. The runbook is still 1,462 lines.
+Each file was edited by its owner: experiments by experiment-engineer, scripts/tests by infra-engineer, the runbook by documentation-engineer, and the phase records by the coordinator.
+HEAD is still e2f0b01, with 89 tracked changes and 103 untracked files.
+Unverified gates:
+The test results for experiments/tests (24), check_manifests.py and test_pipeline.py (69) are agent-reported; I did not rerun them.
+The live sbt run (1,415 tests, 0 failed, 756 s) is coordinator-reported. No Scala or build input changed.
+Still pending by your decision:
+the full seven-gate check on a fresh snapshot, including test_terraform_r1.py;
+the pin refresh and the commit;
+round 3: the Anthropic/Voyage switch, the synthesis cap re-derived per N4, the instructor ruling text and its screenshot;
+the 10 pre-session items;
+confirmation of the 11% tax rate;
+everything live.
+3. Report fields
+STATUS: COMPLETE (verdict APPROVE)
+OWNER: code-reviewer
+WORK ORDER: Phase 14 Subphase 14B post-approval delta repair recheck (review 4: D1, N1, N2, N3 sentence)
+FILES CREATED: none
+FILES MODIFIED: none
+COMMANDS RUN: git rev-parse HEAD; git diff --name-only/--check against e2f0b01; git ls-files --others; git show e2f0b01:scripts/tests/test_pipeline.py; sed/awk/grep/tail/wc reads of the repaired lines, review.md, repairs.md, prompt.md, test-report.md; stale-cap grep over experiments/ and load-tests/; email and account-ID scan of the touched files
+TEST RESULTS: none run (read-only); agent- and coordinator-reported results accepted as reported
+VALIDATION RESULTS: D1 closed; N1 closed; N2 closed, arithmetic re-derived exactly; N3 sentence accurate and conservative (O1); privacy and whitespace clean
+ASSUMPTIONS: the delta was identified from the named files and records, because all 14B work is uncommitted against e2f0b01
+RISKS: zero slack under the caps; tax rate unconfirmed; round 3 changes the synthesis provider and cap
+MANUAL ACTION REQUIRED: after round 3, update the plan's "Update 2026-11-09" cap text (N4); supply the instructor ruling text and screenshot
+BLOCKED-ON OWNER: none
+BLOCKED-ON EVIDENCE: none
+NEXT GATE: full seven-gate check on a fresh clean snapshot, then pin refresh and commit
+4. NEXT PROMPT
+You are the coordinator for ScholarChain Phase 14, Subphase 14B, after the post-approval delta repair recheck
+(APPROVE), in /Users/danny/Documents/UIC/CS441/ScholarChain (branch phase-14, base e2f0b01, all 14B work
+uncommitted). Follow the "Replan 2026-11-08" and "Update 2026-11-09" blocks of <plan path>. Start NO live step,
+make no AWS or provider call, and never commit without the user's explicit yes.
+
+(a) Append the reviewer verdict "Subphase 14B — post-approval delta repair recheck" (APPROVE; D1, N1 and N2
+    closed; O1 nonblocking, no change required) verbatim to docs/agent-runs/phase-14/review.md under
+    "Subphase 14B", with any plan path written as <plan path>. Log the closure and O1 in repairs.md.
+(b) Build a fresh clean snapshot with its identity file, then run on it:
+      env -u AWS_PROFILE AWS_EC2_METADATA_DISABLED=true AWS_CONFIG_FILE=/dev/null AWS_SHARED_CREDENTIALS_FILE=/dev/null scripts/check.sh
+    It must end RESULT: PASS gates=7, and test_terraform_r1.py must pass. Also run the live sbt check on JDK 17
+    (AWS neutralized), git diff --check after git add -N (evidence/** excluded; restore the index afterwards), and
+    the pin drift. Save the evidence under docs/agent-runs/phase-14/evidence/14b/, and replace approval request §8
+    with the observed results.
+(c) On any failure, report it with the exact output before changing anything, and stop.
+(d) If everything passes, help the user refresh the pinned files (approval request §6) and prepare the commit.
+    Show the user the file list and the message, and ask before committing. Never commit on your own.
+(e) After the user's commit, start repair round 3 per the plan's "Update 2026-11-09" block (Anthropic/Voyage
+    switch, synthesis cap re-derived near planned use per N4, instructor ruling text and screenshot from the user),
+    beginning with its Step 0 questions.
+(f) Start NO live step. Then stop.
+````

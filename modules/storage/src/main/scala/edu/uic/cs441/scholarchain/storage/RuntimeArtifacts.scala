@@ -104,10 +104,11 @@ object Phase6RuntimeArtifacts {
     case n: ujson.Num if doubles(field) => java.lang.Double.toString(n.num)
     case other                          => other.render()
   }
-  private[storage] def tableHash(rows: Vector[ujson.Value]): String = {
-    val strings = rows.map { row =>
-      render(ujson.Obj.from(row.obj.toVector.filterNot(_._1 == "run_id").sortBy(_._1)))
-    }
+  private[storage] def canonicalRow(row: ujson.Value): String =
+    render(ujson.Obj.from(row.obj.toVector.filterNot(_._1 == "run_id").sortBy(_._1)))
+  private[storage] def tableHash(rows: Vector[ujson.Value]): String =
+    hashCanonical(rows.map(canonicalRow))
+  private[storage] def hashCanonical(strings: Seq[String]): String = {
     val shards = strings.groupBy(s => StableIds.sha256Hex(s).take(2)).toVector.sortBy(_._1)
     def utf8Before(a: String, b: String): Boolean = {
       val x = a.getBytes(UTF_8); val y = b.getBytes(UTF_8)
@@ -123,6 +124,25 @@ object Phase6RuntimeArtifacts {
         }
         .mkString("\n")
     )
+  }
+
+  /** Shared manifest preconditions for the complete and the bounded-subset producers. */
+  private[storage] def selectSourceManifests(
+      manifests: Vector[LoadManifest]
+  ): Vector[LoadManifest] = {
+    if (
+      manifests.isEmpty || manifests.map(_.logicalDataset).distinct.size != manifests.size ||
+      manifests.map(_.context).distinct.size != 1 ||
+      !required.subsetOf(manifests.map(_.logicalDataset).toSet)
+    ) reject("invalid-runtime-source-manifests")
+    val selected =
+      manifests.filter(m => (required ++ optional)(m.logicalDataset)).sortBy(_.logicalDataset)
+    if (
+      selected.exists(m =>
+        SparkAnalyticsValidation.check(m).isLeft || m.targetStore != "s3" || m.format != "parquet"
+      )
+    ) reject("invalid-runtime-source-manifests")
+    selected
   }
 
   def materialize(
@@ -159,18 +179,7 @@ object Phase6RuntimeArtifacts {
   ): StorageResult[RuntimeArtifactPointer] = try {
     if (!key.contains("/versions/") || key.split('/').contains(".."))
       reject("unversioned-runtime-artifact-key")
-    if (
-      manifests.isEmpty || manifests.map(_.logicalDataset).distinct.size != manifests.size ||
-      manifests.map(_.context).distinct.size != 1 ||
-      !required.subsetOf(manifests.map(_.logicalDataset).toSet)
-    ) reject("invalid-runtime-source-manifests")
-    val selected =
-      manifests.filter(m => (required ++ optional)(m.logicalDataset)).sortBy(_.logicalDataset)
-    if (
-      selected.exists(m =>
-        SparkAnalyticsValidation.check(m).isLeft || m.targetStore != "s3" || m.format != "parquet"
-      )
-    ) reject("invalid-runtime-source-manifests")
+    val selected = selectSourceManifests(manifests)
     if (selected.map(m => BigInt(m.rowCount)).sum > config.maxRows)
       reject("runtime-artifact-row-bound")
     val context = selected.head.context

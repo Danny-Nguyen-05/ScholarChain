@@ -209,3 +209,27 @@ Billing data lags by a day or more, so enforce the caps instead of waiting for a
   - `embedding_model_id = "amazon.titan-embed-text-v2:0"`, with no profile.
 
   Optional read-only check: `aws bedrock get-inference-profile --region us-east-2 --inference-profile-identifier us.anthropic.claude-haiku-4-5-20251001-v1:0 --query 'models[].modelArn'`.
+
+## Addendum — Subphase 14B (dated 2026-11-07; after 14B review 1, N2)
+
+This addendum adds to the reviewed 14A text above; it does not change it.
+
+**Runtime-plan inputs the user sets in the private `course.local.tfvars`** (never committed; the coordinator never reads it):
+
+| Input | Purpose | Status |
+|---|---|---|
+| `https_certificate_arn` | The ALB HTTPS listener, the query-api load-balancer attachment and its readiness grace period exist only when it is set. `phase12b.tf` requires `runtime_enabled` and non-empty `public_ingress_cidrs` with it. | **open: the user decides the source** |
+| `public_ingress_cidrs` | the CIDRs allowed to reach the ALB | **open: the user decides** |
+| `embedding_model_version` | `amazon.titan-embed-text-v2:0` (14B Q8) | decided |
+| `embedding_text_prefix` | `embedding-text` (14B Q8; the 14C ingest `textPrefix` must match) | decided |
+| `semantic_index_name` | `researcher-profile-v1` (14B Q8) | decided |
+| query-api health-check grace (root variable added in 14B repair round 1) | default 300 s; tunable here without a commit | see `test-report.md`, 14B repair round 1 |
+
+**Certificate and endpoint facts:**
+
+1. **Deadline.** Settle the certificate and the ingress CIDRs before the 14B commit and before base-apply. Without them, nothing deployed can meet the 14B pass definition (Q5), so base-apply spending would buy nothing that passes.
+2. **No console shortcut.** Requesting or importing an ACM certificate by console or CLI is a direct cloud mutation, which the project instructions forbid as an implementation path. Either `infra-engineer` authors it in Terraform (on the user's explicit instruction, with tests and review), or the user records a disclosed exception before acting.
+3. **An ALB is billed without a certificate.** `aws_lb.query` (`modules/runtime/compute.tf`) is created whenever the runtime is enabled with an image revision, with or without a certificate. A runtime-apply with no certificate pays for an ALB with no listener (about USD 0.97/day in §5).
+4. **Self-signed is awkward.** The ALB DNS name is unknown until runtime-apply, so a self-signed certificate cannot name it in advance, and `scripts/smoke-test.sh` has no option to trust a custom CA. An ACM certificate for a domain the user controls (DNS validation) avoids both problems.
+
+**Cost note for a Nov 11 start (14B review 1, N1).** Under §5: 40.96 − 36.80 (the extra 96 h) − 0.34 (last recorded cost-to-date) = USD 3.82 headroom, below the USD 20 receipt floor, and `reserves_usd` would have to cover Nov 11–24. A Nov 11 start therefore needs a named reserve reduced by at least about USD 16.18, stated in the record prose; otherwise base-apply is Nov 15. The choice is the user's (see `prompt.md`).

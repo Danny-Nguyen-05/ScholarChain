@@ -21,6 +21,7 @@ resource "aws_cloudwatch_log_group" "neptune_audit" {
   tags              = var.tags
 }
 resource "aws_cloudwatch_dashboard" "elasticity" {
+  count          = var.dashboard_enabled ? 1 : 0
   dashboard_name = "${var.name_prefix}-elasticity"
   dashboard_body = jsonencode({ widgets = concat([
     { type = "text", x = 0, y = 0, width = 24, height = 3, properties = { markdown = "# ScholarChain elasticity\nNative metrics appear after activation. Custom panels and alarms require a verified Phase13/14 publisher; missing data is not zero errors. EMR native metrics have300-second cadence. No LLM dollar cost is inferred from tokens. The custom publisher contract is documented in README.md." } },

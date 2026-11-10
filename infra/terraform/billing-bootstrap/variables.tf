@@ -21,10 +21,10 @@ variable "enable_budget" {
 }
 variable "budget_limit_usd" {
   type    = number
-  default = 200
+  default = 25
   validation {
-    condition     = var.budget_limit_usd == 200
-    error_message = "This work order has one shared USD 200 project ceiling before credits."
+    condition     = var.budget_limit_usd == 25
+    error_message = "Phase 14B replan: one shared USD 25 course-cap ceiling (the earlier USD 200 value is superseded)."
   }
 }
 variable "project_period_start_utc" {

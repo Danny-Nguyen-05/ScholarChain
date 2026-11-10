@@ -118,6 +118,19 @@
       ]
     },
     {
+      "Sid": "EcsExecChannelsForTheNeptuneTunnel",
+      "Effect": "Allow",
+      "Action": [
+        "ssmmessages:CreateControlChannel",
+        "ssmmessages:CreateDataChannel",
+        "ssmmessages:OpenControlChannel",
+        "ssmmessages:OpenDataChannel"
+      ],
+      "Resource": [
+        "*"
+      ]
+    },
+    {
       "Sid": "EcrPullOwnImages",
       "Effect": "Allow",
       "Action": [

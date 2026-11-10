@@ -37,7 +37,7 @@ class AwsLivePolicySpec extends AnyFunSuite {
     ),
     "vectorBucket" -> "synthetic-vectors",
     "vectorIndex" -> "researcher-profile-v1",
-    "dimension" -> 2,
+    "dimension" -> 256,
     "metric" -> "cosine",
     "neptuneEndpoint" -> "https://synthetic.invalid:8182",
     "neptuneRoleArn" -> "synthetic-loader-role",
@@ -75,6 +75,19 @@ class AwsLivePolicySpec extends AnyFunSuite {
     val badEnvironment = ujson.read(valid.render());
     badEnvironment("approvedEnvironment") = "different"
     intercept[IllegalArgumentException](AwsLiveSettings.parse(badEnvironment, "synthetic-profile"))
+  }
+  test("live configuration accepts only Titan V2 widths and rejects the former template value 2") {
+    val valid = config("/synthetic/manifest-directory")
+    Vector(256, 512, 1024).foreach { width =>
+      val ok = ujson.read(valid.render()); ok("dimension") = width
+      assert(AwsLiveSettings.parse(ok, "synthetic-profile").dimension == width)
+    }
+    Vector(2.0, 255.0, 4096.0, 256.5, 0.0).foreach { width =>
+      val bad = ujson.read(valid.render()); bad("dimension") = width
+      val error =
+        intercept[IllegalArgumentException](AwsLiveSettings.parse(bad, "synthetic-profile"))
+      assert(error.getMessage.contains("invalid vector dimension"))
+    }
   }
   test("synthetic live graph fixture has exact stable IDs support and unknown-year cells") {
     val run = "run:00112233-4455-4677-8899-aabbccddeeff"

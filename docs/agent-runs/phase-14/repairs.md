@@ -54,3 +54,64 @@ These are nonblocking findings from `review.md`, review 2.
 | N2 | Low | coordinator + deploy-engineer | carried to 14B Step 0: before runtime-apply, the 14B record states the expected 14B smoke result. A no-data `smoke-query` stop is not a rollback trigger. |
 | N3 | Low | infra-engineer (only through a routed repair and a recheck) | carried as a 14B watch item: no `health_check_grace_period_seconds`, and query-api readiness waits for both peer services |
 | N4 | Observation | infra-engineer | carried: stale wording at compute.tf:105, phase12b.tf:43 and phase12b-variables.tf:161, to fix the next time these files are touched |
+
+## Subphase 14B — review 1 (Step 0 and the Q6 repair): REQUEST-CHANGES
+
+From `review.md`, "Subphase 14B", review 1. The user said: "fix all blocking bugs" (2026-11-07).
+
+| ID | Severity | Blocking | Owner | Status |
+|---|---|---|---|---|
+| B1 | Medium | yes | infra-engineer, then test-engineer | routed in repair round 1, option (a): grace default 300 s, a validated root variable, explicit target-group thresholds from configuration, threshold arithmetic in the README; tests updated and mutations repeated |
+| N1 | Medium | no (before the base-apply record) | coordinator records; user decides | arithmetic recorded in `prompt.md`; the date choice (Nov 11 with a named reserve cut, or Nov 15) is the user's, still open |
+| N2 | Medium | no (start condition; before the commit and base-apply) | user decides; infra-engineer only on explicit instruction | dated 14B addendum to `approval-request-14a.md`; the certificate source is the user's decision, still open |
+| N3 | Low | no | coordinator | fixed: the deployer-apply dates in `prompt.md` |
+| N4 | Low | no | coordinator | fixed: snapshot identity counts and infra-engineer mutation results retained as evidence files |
+| N5 | Observation | no | infra-engineer | carried: stale text at `phase12b.tf:43` and `phase12b-variables.tf:161` |
+| /healthz vs /readyz | note | no | — | no change, per the reviewer; risk on record: a peer failure replaces query-api tasks that a restart cannot fix |
+
+## Subphase 14B — review 2 (repair round 1 recheck and replan): REQUEST-CHANGES
+
+Source: the reviewer's verdict and follow-up, both appended verbatim to `review.md`. The user's decisions and answers are in `prompt.md`, "Subphase 14B — repair round 2".
+
+| ID | Severity | Blocking | Owner | Status |
+|---|---|---|---|---|
+| B2 | Medium | yes | infra-engineer (`scripts/config/release.conf`, `scripts/deploy.sh`, `scripts/lib/verify.py`, `scripts/README.md`); test-engineer (cleanup-prepare tests); documentation-engineer (runbook C2); coordinator (approval request §4, §7) | routed in repair round 2: cleanup-prepare has no headroom floor (user answer: yes); runbook done |
+| N1 | Medium | no (decide before the approval record) | user decides; coordinator writes | user: tax counts, assume 11% (Chicago); done in approval request §3.2. The USD 3 floor fails at 42 h (1.37); options listed for the user; no cap changed |
+| N2 | Low | no | coordinator | done: `review.md:378` plan path replaced by `<plan path>`, noted as the only change to verbatim text. Lines 136 and 263, in the committed 14A reviews, still hold the path; this is the user's decision |
+| N3 | Low | no | owners | deferred by user decision 1: fixed after the recheck approves and before the pin refresh, together with the four tracked files |
+| N4 | Low | no | coordinator | done: approval request §3.4 reworded. The 0.30 is fully allocated, there is no reserve and no service-side Titan cap; the user must accept this or set a reserve |
+| N5 | Low | no | coordinator | done: approval request §5 billing row reworded (new and changed files hold no raw account ID; the pre-existing executor literal at `budget_execution.py:26` stays under decision 3 and is used by the modify path) |
+| N6 | Low | no | coordinator | done: deploy-engineer provenance recorded in `owner-report.md` |
+| N7 | Observation | no | infra-engineer (future 14C scope) | carried: `upload-slice.sh --execute` has no machine-checked approval record |
+| N8 | Observation | no | coordinator after the commit | carried: confirm the committed Spark exporter matches `codeVersion b6d030eb`. Note: the plan figures "≈170 answers" and "≈19.60" differ from the repository's (about 130 at 0.01155; 19.44); the plan file is the user's |
+| Exception gaps (follow-up) | — | no | test-engineer | done: named entry `aws-documentation-example-account` (exact value, exact path, no pattern); tests (i)–(v); mutations caught |
+| Whitespace (reviewer: route now) | — | no | owners | deferred by user decision 1, which overrides the reviewer's "route now" |
+
+## Subphase 14B — review 3 (repair round 2 recheck): APPROVE
+
+B2 is closed. All findings are nonblocking.
+
+| ID | Severity | Blocking | Owner | Status |
+|---|---|---|---|---|
+| F1 | Medium | no (decide before the commit) | user decides; coordinator (§1, §3.2, §11); documentation-engineer (runbook times); infra-engineer and test-engineer only if a pin or the Neptune maximum changes | decided 2026-11-09: option 1, 37 h hard stop, cleanup by H35; approval request §1, §3.2 and §11 updated; runbook times routed to documentation-engineer |
+| F2 | Low | no | coordinator | partly done: the 0.31/h line is labelled pre-tax, the §5 header is fixed, and §8 states that the full check is pending; §8 is refreshed after the post-approval full check. Original: the §5 header and §8 get refreshed after the post-approval full check; the USD 0.31/h line gets labelled pre-tax |
+| F3 | Observation | no | coordinator, on the user's yes | done: user said yes; lines 136 and 263 redacted to `<plan path>`, with a note |
+| Whitespace (six items) | — | no | infra-engineer, storage-engineer, test-engineer, documentation-engineer | done: all six fixed, whitespace only |
+
+## Subphase 14B — review 4 (post-approval delta): REQUEST-CHANGES
+
+| ID | Severity | Blocking | Owner | Status |
+|---|---|---|---|---|
+| D1 | Low | yes | experiment-engineer | done (cap 2.52; scale-out 2.94 > 2.52; experiments 24 OK; check_manifests exit 0). Routed as: `experiments/README.md:23` and `experiments/scripts/render_manifests.py:23` to say 2.52, and the scale-out sentence to say 2.94 > 2.52 (needs a recorded human cap decision) |
+| N1 | Nit | no | infra-engineer | done (test_pipeline 69 OK). Routed as: the `scripts/tests/test_pipeline.py:580` comment to read "would exceed" |
+| N2 | Nit | no | documentation-engineer | done (N3 margin sentence added too). Routed as: R.1 to use 0.3096 (about 0.31), matching the 11.15 example |
+| N3 | Observation | no | coordinator | recorded: later receipts need a margin of at least about USD 0.35 to cover H36–H37; the coordinator states it when giving values |
+| N4 | Observation | no | user (plan text); coordinator (round 3) | user: "Re-derive in round 3". The plan's "Update 2026-11-09" block says 1.50 and the decision is 1.33 |
+| N5 | Observation | no | user | user: "Yes, keep it" (decision 3). `scripts/billing/budget_execution.py:26` constant from Phase 12D; user decision 3 (2026-11-08) left existing Phase 12 mentions in place |
+
+## Subphase 14B — review 5 (post-approval delta repair recheck): APPROVE
+
+| ID | Severity | Blocking | Owner | Status |
+|---|---|---|---|---|
+| D1, N1, N2 | — | — | — | closed by review 5 |
+| O1 | Observation | no | documentation-engineer, only if the user wants exact wording | no change required. The N3 margin of "at least about USD 0.35" sits before tax and is about 0.04 more than needed, which is the safe side |

@@ -91,7 +91,7 @@ Ceilings and refusals (all before any cloud call)
   `timeout --kill-after=PIPELINE_KILL_AFTER_SECONDS <its timeout_seconds>`, in its own process group: on timeout, failure or
   cancel the wrapper sends TERM to the whole group and KILL after the grace, so a grandchild that ignores TERM cannot outlive
   the step; YARN-submitting bodies also kill the YARN application by run tag when that timeout fires or on TERM.
-  Phase 4 ceilings on the prep config (maxLocalSampleRecords<=1000 reducerCount<=8 maxCandidateBlockSize<=256
+  Phase 4 ceilings on the prep config (maxLocalSampleRecords<=12000 [pipeline-specific, PIPELINE_CEILING_MAX_LOCAL_SAMPLE_RECORDS; the Phase 4 smoke keeps 1000] reducerCount<=8 maxCandidateBlockSize<=256
   maxCandidatePairsPerBlock<=4096 maxAuthorTeamSize<=64 maxRecordBytes<=8388608 maxXmlEntityExpansion<=8388608),
   input and copy-out byte ceilings, capacity <= PIPELINE_MAX_CAPACITY, runtime <= PIPELINE_MAX_RUNTIME_MINUTES.
 
@@ -100,7 +100,7 @@ G6 cost guard
   PIPELINE_MAX_IDLE_TIMEOUT_SECONDS, 900 s) hours: the idle tail before the cluster stops is billed too. It is printed in
   the dry run and before --execute. --execute is REFUSED when the estimate exceeds EMR_MAX_RUN_USD (3) or the declared
   budget, when the run ledger already holds EMR_MAX_LIVE_RUNS (3) live runs, when the cumulative estimate would exceed
-  EMR_CUMULATIVE_CAP_USD (9.50), when a reviewed rate is missing (never read as zero), when the ledger does not exist, when
+  EMR_CUMULATIVE_CAP_USD (2.52), when a reviewed rate is missing (never read as zero), when the ledger does not exist, when
   the approval record already started a run, or while EMR_PRICING_CONFIRMED_BY_HUMAN is not true (a human flips it after
   checking the sources).
 

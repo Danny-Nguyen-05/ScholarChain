@@ -7,7 +7,7 @@ Every subcommand prints findings on stdout and exits 0 (ok), 1 (a finding: the c
   git-tree --repo R --exempt PATH
         porcelain v1 -z parse of `git status`; exit 0 clean, 1 dirty, 2 git failed or unparsable.
         Only the LITERAL path PATH is exempt (exact string comparison, never a git pathspec).
-  prespend --file F --max-age-hours H --min-headroom D [--clock-file C --label L]
+  prespend --file F --max-age-hours H (--min-headroom D | --no-headroom-floor) [--clock-file C --label L]
         human-written pre-spend receipt: monitoring true, fresh snapshot, numeric cost fields,
         remaining headroom >= D. A missing, null or non-numeric field is never treated as zero.
         --clock-file is the TEST-ONLY controllable clock: a JSON object {"<label>": "<UTC time>", "default": ...};
@@ -189,7 +189,12 @@ def cmd_prespend(args):
     _number(document, "unreported_usage_allowance_usd", problems)
     _number(document, "reserves_usd", problems)
     headroom = _number(document, "remaining_headroom_usd", problems, minimum=-1e18)
-    if headroom is not None and headroom < args.min_headroom:
+    if args.no_headroom_floor:
+        # Teardown-only stage (deploy.sh passes this flag only for --stage cleanup-prepare): the headroom value must
+        # still be a finite number (checked above) but is NOT compared with any floor, so overspend never blocks cleanup.
+        if headroom is not None:
+            print("PRESPEND: cleanup-prepare has no headroom floor (remaining_headroom_usd=%.2f)" % headroom)
+    elif headroom is not None and headroom < args.min_headroom:
         problems.append("remaining headroom %.2f USD is below the required %s USD" % (headroom, args.min_headroom))
     for problem in problems:
         print("PRESPEND-CHECK-FAILED: %s" % problem)
@@ -910,7 +915,11 @@ def build_parser():
     p = sub.add_parser("prespend")
     p.add_argument("--file", required=True)
     p.add_argument("--max-age-hours", type=float, required=True)
-    p.add_argument("--min-headroom", type=float, required=True)
+    # Exactly one of the two is required: a spending stage gives --min-headroom, the teardown-only stage gives
+    # --no-headroom-floor. Giving both or neither is a usage error (exit 2), so a floor can never silently vanish.
+    floor = p.add_mutually_exclusive_group(required=True)
+    floor.add_argument("--min-headroom", type=float)
+    floor.add_argument("--no-headroom-floor", action="store_true")
     p.add_argument("--clock-file")
     p.add_argument("--label")
     p.set_defaults(fn=cmd_prespend)

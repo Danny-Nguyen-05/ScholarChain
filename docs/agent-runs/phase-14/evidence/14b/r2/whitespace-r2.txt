@@ -1,0 +1,12 @@
+# Whitespace report after 14B repair round 2 (observed 2026-11-09). Deferred by user decision 1: fixed after the recheck approves, before the pin refresh.
+# Tracked files: git diff --check exit 2
+infra/terraform/billing-execution/README.md:70: new blank line at EOF.
+modules/storage/README.md:592: new blank line at EOF.
+scripts/billing/PUBLICATION.md:60: new blank line at EOF.
+tests/infra/README.md:266: new blank line at EOF.
+# Untracked files (equivalent of git add -N then git diff --check; evidence/** excluded; index left untouched)
+docs/runbooks/phase-14-live-session.md:432: trailing whitespace
+docs/runbooks/phase-14-live-session.md:437: trailing whitespace
+docs/runbooks/phase-14-live-session.md:845: trailing whitespace
+infra/terraform/tests/phase14b_root.tftest.hcl: new blank line at EOF
+# No other whitespace finding. These are exactly the six items the reviewer listed (N3); tests/infra/README.md moved from line 260 to 266 after the content edit.

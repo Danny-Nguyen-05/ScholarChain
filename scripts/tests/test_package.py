@@ -4,7 +4,7 @@ import json
 import os
 import unittest
 
-from helpers import SERVICES, Fixture, sha256_bytes
+from helpers import SCRIPTS_DIR, SERVICES, Fixture, sha256_bytes
 
 MAINS = {
     "query-api": "edu.uic.cs441.scholarchain.services.QueryApiMain",
@@ -74,6 +74,8 @@ class PackageSuccessTests(PackageBase):
         self.assertEqual(by_name["hadoop-submit-jar"]["size"], 6)
         self.assertEqual(by_name["hadoop-dependency-bundle"]["sha256"], sha256_bytes(b"bundle"))
         self.assertEqual(by_name["spark-job-jar"]["sha256"], sha256_bytes(b"spark"))
+        self.assertEqual(by_name["er-job-jar"]["sha256"], sha256_bytes(b"erjob"))
+        self.assertEqual(by_name["er-job-jar"]["size"], 5)
         dist = by_name["service-distribution"]
         self.assertEqual(dist["files"], 4)
         self.assertEqual(dist["size"], len(b"services") + len(b"dep") + len(b"p") + len(b"{}"))
@@ -169,7 +171,7 @@ class PackageDockerFallbackTests(PackageBase):
         self.assertFalse(manifest["arch_gate"]["passed"])
         self.assertTrue(any("docker unreachable" in w for w in manifest["warnings"]))
         self.assertEqual([a for n, a in self.calls("docker") if a.startswith("buildx build")], [])
-        self.assertEqual({a["name"] for a in manifest["artifacts"]}, {"hadoop-submit-jar", "hadoop-dependency-bundle", "spark-job-jar", "service-distribution"})
+        self.assertEqual({a["name"] for a in manifest["artifacts"]}, {"hadoop-submit-jar", "hadoop-dependency-bundle", "spark-job-jar", "er-job-jar", "service-distribution"})
 
     def test_require_images_makes_unreachable_docker_fatal(self):
         result = self.package("--require-images", FAKE_DOCKER_INFO_RC="1")
@@ -311,6 +313,24 @@ class PackagePreconditionTests(PackageBase):
         result = self.package(FAKE_SBT_PACKAGE_RC="0", ARTIFACT_SPARK_JOB_GLOB="modules/spark/target/does-not-exist-*.jar")
         self.assertEqual(result.rc, 4, result.out)
         self.assertEqual(result.steps()[-1], "collect-artifacts")
+
+    def test_missing_entity_resolution_jar_fails_the_gate_naming_it(self):
+        result = self.package(FAKE_SBT_PACKAGE_RC="0", ARTIFACT_ER_JOB_GLOB="modules/entity-resolution/target/does-not-exist-*.jar")
+        self.assertEqual(result.rc, 4, result.out)
+        self.assertEqual(result.steps()[-1], "collect-artifacts")
+        self.assertIn("er-job-jar: no artifact matches", result.out)
+
+    def test_the_release_conf_glob_matches_the_er_job_jar_the_build_writes(self):
+        """The ER job JAR is written as modules/entity-resolution/target/er-job_3-<version>.jar (observed: er-job_3-0.1.0-SNAPSHOT.jar there)."""
+        with open(os.path.join(SCRIPTS_DIR, "config", "release.conf"), encoding="utf-8") as handle:
+            text = handle.read()
+        self.assertIn("ARTIFACT_ER_JOB_GLOB=modules/entity-resolution/target/er-job_3-*.jar", text.splitlines())
+
+    def test_help_no_longer_claims_the_hadoop_submit_jar_is_not_byte_reproducible(self):
+        text = self.run_script("package.sh", "--help").stdout
+        self.assertNotIn("not byte-reproducible", text)
+        self.assertIn("er-job-jar", text)
+        self.assertIn("byteReproducible=true", text)
 
     def test_unknown_argument_exit_2(self):
         self.assertEqual(self.package("--nope").rc, 2)

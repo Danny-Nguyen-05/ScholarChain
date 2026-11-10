@@ -548,9 +548,16 @@ class DeployPrespendTests(DeployBase):
 
     def test_insufficient_headroom_refused(self):
         def mutate():
-            self.set_prespend(remaining_headroom_usd=19.99)
+            self.set_prespend(remaining_headroom_usd=2.99)
 
-        self.refuse_in_every_stage("headroom 19.99", mutate, "below the required 20.0 USD")
+        self.refuse_in_every_stage("headroom 2.99", mutate, "below the required 3.0 USD")
+
+    def test_headroom_of_1_usd_is_refused_by_every_spending_stage(self):
+        """Hand-derived: cleanup-prepare has no floor, but base-apply, push and runtime-apply keep the floor of 3; 1 < 3 is refused in each."""
+        def mutate():
+            self.set_prespend(remaining_headroom_usd=1)
+
+        self.refuse_in_every_stage("headroom 1", mutate, "below the required 3.0 USD")
 
     def test_negative_headroom_refused(self):
         def mutate():
@@ -591,8 +598,8 @@ class DeployPrespendTests(DeployBase):
         self.refuse_in_every_stage("invalid json", mutate, "not valid JSON")
 
     def test_boundaries_pass(self):
-        """Exactly 20 USD of headroom and a 23 hour old snapshot are accepted (dry run)."""
-        self.set_prespend(remaining_headroom_usd=20, cost_snapshot_utc=utc_hours_ago(23))
+        """Exactly 3 USD of headroom (the pinned floor) and a 23 hour old snapshot are accepted (dry run)."""
+        self.set_prespend(remaining_headroom_usd=3, cost_snapshot_utc=utc_hours_ago(23))
         result = self.deploy()
         self.assertEqual(result.rc, 0, result.out)
 
@@ -601,10 +608,11 @@ class DeployPrespendTests(DeployBase):
         self.assert_refused(self.deploy(), "prespend-receipt")
 
     def test_pins_cannot_be_weakened_from_the_environment(self):
-        self.set_prespend(remaining_headroom_usd=5)
+        self.set_prespend(remaining_headroom_usd=2)
         result = self.deploy(PRESPEND_MIN_HEADROOM_USD="1", PRESPEND_MAX_AGE_HOURS="9999")
         self.assert_refused(result, "prespend-receipt")
         self.assertIn("CONFIG-IGNORED", result.stdout)
+        self.assertIn("below the required 3.0 USD", result.out)
 
 
 class DeployPrespendFreshnessTests(DeployBase):
@@ -1630,6 +1638,93 @@ class DeployCleanupPrepareStageTests(DeployBase):
         self.set_prespend()
         self.base_env = {"FAKE_SHOW_JSON": self.show}
 
+    # ---- 14B repair round 2 (B2): the teardown-only stage has NO headroom floor (deploy.sh passes --no-headroom-floor) ----
+    def test_cleanup_prepare_has_no_headroom_floor_so_low_zero_and_negative_headroom_all_pass(self):
+        """Hand-derived: no floor means 1, 0 and -5.00 are all accepted for cleanup-prepare; the same 1 USD receipt is refused
+        at 1 < 3 by base-apply, push and runtime-apply (test_headroom_of_1_usd_is_refused_by_every_spending_stage)."""
+        for headroom in (1, 0, -0.01, -5.00):
+            with self.subTest(headroom=headroom):
+                self.arrange_prepare()
+                self.set_prespend(remaining_headroom_usd=headroom)
+                open(self.log, "w").close()
+                result = self.execute()
+                self.assertEqual(result.rc, 0, result.out)
+                self.assertIn("PRESPEND: cleanup-prepare has no headroom floor (remaining_headroom_usd=%.2f)" % headroom, result.out)
+                self.assertIn("pre-spend receipt re-verified before terraform-apply", result.out)
+                self.assertNotIn("below the required", result.out)
+
+    def test_cleanup_prepare_still_verifies_the_rest_of_the_receipt(self):
+        """Dropping the headroom floor relaxes only that comparison: a stale, unmonitored or incomplete receipt is refused,
+        and remaining_headroom_usd must still be a finite number."""
+        cases = {
+            "stale snapshot": ({"cost_snapshot_utc": utc_hours_ago(25)}, "at most 24.0 h is accepted"),
+            "future snapshot": ({"cost_snapshot_utc": utc_in_hours(2)}, "cost snapshot is in the future"),
+            "monitoring not confirmed": ({"monitoring_confirmed_active": False}, "monitoring_confirmed_active is not true"),
+            "headroom missing": ({"remaining_headroom_usd": MISSING}, "remaining_headroom_usd is missing or not a number"),
+            "headroom null": ({"remaining_headroom_usd": None}, "remaining_headroom_usd is missing or not a number"),
+            "headroom string": ({"remaining_headroom_usd": "-5.00"}, "remaining_headroom_usd is missing or not a number"),
+            "headroom NaN": ({"remaining_headroom_usd": float("nan")}, "PRESPEND-CHECK-FAILED"),
+            "headroom Infinity": ({"remaining_headroom_usd": float("inf")}, "PRESPEND-CHECK-FAILED"),
+            "reported spend missing": ({"reported_spend_usd": MISSING}, "reported_spend_usd is missing or not a number"),
+        }
+        for label, (overrides, needle) in cases.items():
+            with self.subTest(label):
+                self.arrange_prepare()
+                self.set_prespend(**overrides)
+                open(self.log, "w").close()
+                result = self.execute()
+                self.assert_refused(result, "prespend-receipt")
+                self.assertIn(needle, result.out)
+                self.assertEqual(self.applied(), [])
+
+    def test_cleanup_prepare_refuses_a_missing_receipt_and_a_receipt_that_does_not_match_its_hash(self):
+        self.arrange_prepare()
+        self.set_prespend(remaining_headroom_usd=-5.00)
+        with open(self.prespend, "a", encoding="utf-8") as handle:
+            handle.write(" \n")  # same JSON, different bytes: no longer the approved sha256
+        self.assert_refused(self.execute(), "prespend-receipt")
+        self.assertEqual(self.applied(), [])
+        self.arrange_prepare()
+        os.remove(self.prespend)
+        self.assert_refused(self.execute(), "prespend-receipt")
+        self.assertEqual(self.applied(), [])
+
+    def test_the_removed_cleanup_floor_key_has_no_effect_in_the_environment_or_the_config(self):
+        """There is no cleanup floor setting any more: neither an environment variable nor a stray config line changes the
+        behaviour (negative headroom still passes cleanup-prepare), and the spending floor is untouched."""
+        self.arrange_prepare()
+        self.set_prespend(remaining_headroom_usd=-5.00)
+        result = self.execute(PRESPEND_MIN_HEADROOM_CLEANUP_USD="100", PRESPEND_MIN_HEADROOM_USD="50")
+        self.assertEqual(result.rc, 0, result.out)
+        self.assertIn("has no headroom floor", result.out)
+        open(self.log, "w").close()  # forget the first run's calls: only the second run is judged below
+        self.arrange("runtime-apply")
+        self.set_prespend(remaining_headroom_usd=1)
+        result = self.execute(PRESPEND_MIN_HEADROOM_CLEANUP_USD="0", PRESPEND_MIN_HEADROOM_USD="0")
+        self.assert_refused(result, "prespend-receipt")
+        self.assertIn("below the required 3.0 USD", result.out)
+
+    def test_the_spending_floor_is_2_99_refused_and_3_00_accepted_for_a_spending_stage(self):
+        self.arrange("runtime-apply")
+        self.set_prespend(remaining_headroom_usd=2.99)
+        result = self.execute()
+        self.assert_refused(result, "prespend-receipt")
+        self.assertIn("below the required 3.0 USD", result.out)
+        self.assertNotIn("has no headroom floor", result.out)
+        self.arrange("runtime-apply")
+        self.set_prespend(remaining_headroom_usd=3.00)
+        result = self.execute()
+        self.assertNotIn("below the required", result.out)
+        self.assertNotIn("has no headroom floor", result.out)
+
+    def test_a_non_numeric_spending_floor_in_the_config_refuses_every_stage(self):
+        self.arrange_prepare()
+        self.use_config(PRESPEND_MIN_HEADROOM_USD="abc")
+        result = self.execute()
+        self.assertEqual(result.rc, 3, result.out)
+        self.assertIn("PRESPEND_MAX_AGE_HOURS and PRESPEND_MIN_HEADROOM_USD must be numeric in the config", result.out)
+        self.assertEqual(self.applied(), [])
+
     def test_a_policy_compliant_preparation_plan_is_applied_after_the_full_approval_path(self):
         self.arrange_prepare()
         result = self.execute()
@@ -1661,7 +1756,7 @@ class DeployCleanupPrepareStageTests(DeployBase):
             "deletes a resource": {"address": "module.dynamodb.aws_dynamodb_table.table[\"RunLedger\"]", "type": "aws_dynamodb_table", "change": {"actions": ["delete"], "before": {}, "after": None, "after_unknown": {}}},
             "replaces a resource": {"address": "module.dynamodb.aws_dynamodb_table.table[\"RunLedger\"]", "type": "aws_dynamodb_table", "change": {"actions": ["delete", "create"], "before": {}, "after": {}, "after_unknown": {}}},
             "changes another attribute": {"address": "module.dynamodb.aws_dynamodb_table.table[\"RunLedger\"]", "type": "aws_dynamodb_table", "change": {"actions": ["update"], "before": {"deletion_protection_enabled": True, "billing_mode": "PAY_PER_REQUEST"}, "after": {"deletion_protection_enabled": False, "billing_mode": "PROVISIONED"}, "after_unknown": {}}},
-            "updates a preserved bucket": {"address": "module.datalake.aws_s3_bucket.zone[\"curated\"]", "type": "aws_s3_bucket", "change": {"actions": ["update"], "before": {"force_destroy": False}, "after": {"force_destroy": True}, "after_unknown": {}}},
+            "updates the preserved state bucket": {"address": "module.foundation.aws_s3_bucket.state", "type": "aws_s3_bucket", "change": {"actions": ["update"], "before": {"force_destroy": False}, "after": {"force_destroy": True}, "after_unknown": {}}},
             "updates an unlisted resource": {"address": "aws_instance.rogue", "type": "aws_instance", "change": {"actions": ["update"], "before": {"deletion_protection_enabled": True}, "after": {"deletion_protection_enabled": False}, "after_unknown": {}}},
             "makes a flag unknown": {"address": "module.dynamodb.aws_dynamodb_table.table[\"RunLedger\"]", "type": "aws_dynamodb_table", "change": {"actions": ["update"], "before": {"deletion_protection_enabled": True, "arn": "x"}, "after": {"deletion_protection_enabled": False}, "after_unknown": {"arn": True}}},
         }

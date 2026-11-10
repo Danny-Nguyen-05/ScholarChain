@@ -80,7 +80,11 @@ Checks, in order (each prints "STEP: <name>"; the first failure refuses with a d
                     prespend-receipt.json): sha256 == APPROVED_PRESPEND_SHA256; monitoring confirmed
                     active; cost snapshot at most PRESPEND_MAX_AGE_HOURS (24) old; reported spend,
                     unreported-usage allowance, reserves and remaining headroom all present and
-                    numeric (missing is never zero); headroom at least PRESPEND_MIN_HEADROOM_USD (20).
+                    numeric (missing is never zero); headroom at least PRESPEND_MIN_HEADROOM_USD (3,
+                    pinned; no environment variable changes it) for every stage that can spend. The
+                    teardown-only --stage cleanup-prepare has NO headroom floor: negative headroom is
+                    accepted so overspend never blocks cleanup (the value must still be a number, and
+                    every other receipt check applies; the output states "no headroom floor").
                     Runs before ANY push, apply or upload and is RE-VERIFIED (hash, freshness, headroom,
                     monitoring) immediately before EACH paid operation: ECR login, every image push, every
                     terraform apply and the archive upload. A receipt that expired meanwhile stops the
@@ -286,6 +290,14 @@ fi
 if [[ ! "${PRESPEND_MAX_AGE_HOURS}" =~ ^[0-9]+(\.[0-9]+)?$ || ! "${PRESPEND_MIN_HEADROOM_USD}" =~ ^[0-9]+(\.[0-9]+)?$ ]]; then
   sc_refuse "${EX_REFUSED}" "PRESPEND_MAX_AGE_HOURS and PRESPEND_MIN_HEADROOM_USD must be numeric in the config"
 fi
+# Every stage that can spend uses the pinned floor (--min-headroom). The teardown-only stage (cleanup-prepare) has NO
+# headroom floor (--no-headroom-floor), so overspend never blocks cleanup. The choice is made here from STAGE alone;
+# it does not come from the environment or the config, so nothing can weaken the spending floor.
+if [[ "${STAGE}" == "cleanup-prepare" ]]; then
+  HEADROOM_ARGS=(--no-headroom-floor)
+else
+  HEADROOM_ARGS=(--min-headroom "${PRESPEND_MIN_HEADROOM_USD}")
+fi
 APPROVAL="${APPROVAL:-${REPO_ROOT}/${APPROVAL_RECORD_PATH}}"
 PRESPEND="${PRESPEND:-${REPO_ROOT}/${PRESPEND_RECEIPT_DEFAULT_PATH}}"
 RELEASE_PREFIX="${REPO_ROOT}/${RELEASE_DIR}"
@@ -443,7 +455,7 @@ _prespend_check() {
     clock=(--clock-file "${SC_CLOCK_FILE}" --label "${label}")
   fi
   python3 -I "${SC_LIB_DIR}/verify.py" prespend --file "${VERIFIED_PRESPEND}" \
-    --max-age-hours "${PRESPEND_MAX_AGE_HOURS}" --min-headroom "${PRESPEND_MIN_HEADROOM_USD}" ${clock[@]+"${clock[@]}"} || rc=$?
+    --max-age-hours "${PRESPEND_MAX_AGE_HOURS}" "${HEADROOM_ARGS[@]}" ${clock[@]+"${clock[@]}"} || rc=$?
   [[ "${rc}" -eq 0 ]] || sc_refuse "${EX_REFUSED}" "pre-spend receipt rejected before ${label}: that paid operation and every later one is not run"
 }
 # _prespend_gate LABEL: the immediate pre-operation re-verification (execute only; a dry run prints it).

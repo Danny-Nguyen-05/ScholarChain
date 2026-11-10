@@ -28,4 +28,21 @@ output "compute_controls" { value = {
   worker_policy    = one(aws_appautoscaling_policy.worker_backlog)
   listeners        = aws_lb_listener.https
   load_balancers   = aws_lb.query
+  target_groups    = aws_lb_target_group.query
 } }
+# Replan W5b: the ALB DNS name the human points the Cloudflare CNAME `api.<domain>` at (DNS only). Null until the runtime is deployed.
+output "alb_dns_name" { value = one(aws_lb.query[*].dns_name) }
+# Replan W5b: everything `aws ecs run-task --enable-execute-command` needs for the one-off Neptune tunnel task; null when it is not
+# registered. The security group is the graph-service group (the only one Neptune admits), the subnets are the application subnets.
+output "neptune_tunnel" {
+  value = length(aws_ecs_task_definition.neptune_tunnel) == 1 ? {
+    cluster_name        = aws_ecs_cluster.course.name
+    family              = aws_ecs_task_definition.neptune_tunnel[0].family
+    task_definition_arn = aws_ecs_task_definition.neptune_tunnel[0].arn
+    container_name      = "neptune-tunnel"
+    subnet_ids          = var.application_subnets
+    security_group_id   = var.security_groups["graph-service"]
+  } : null
+}
+# Offline assertions only (the full resource, like compute_controls). There is deliberately no aws_ecs_service for the tunnel.
+output "neptune_tunnel_controls" { value = aws_ecs_task_definition.neptune_tunnel }

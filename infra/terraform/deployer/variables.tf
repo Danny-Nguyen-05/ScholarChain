@@ -118,3 +118,48 @@ variable "main_bedrock_regions" {
     error_message = "main_bedrock_regions must be distinct AWS region names and include the home region."
   }
 }
+
+# ---- Phase 14B/14C operator roles (replan W5a) ---------------------------------------------------------------------------
+# Three short-lived, MFA-only roles for the human's 14C data loading, reading and data cleanup. They live in THIS root (IAM only, free)
+# so that one deployer apply creates them and a later apply with operator_roles_enabled = false removes them.
+
+variable "operator_roles_enabled" {
+  description = "Create the three operator roles (scholarchain-<main_environment>-operator-loader, -reader, -cleanup) and their inline policies. Default false: nothing is created. Set it to false and apply again to remove them at cleanup."
+  type        = bool
+  default     = false
+  nullable    = false
+}
+
+variable "operator_run_prefix" {
+  description = "Run folder the operator roles may touch in the graph and curated buckets: the object keys <operator_run_prefix>/* only (the 14C tools are configured with graphPrefix = <operator_run_prefix>/graph and a curated upload folder under it). Chosen by the human before the session. The mandatory 'run-' start keeps it apart from every fixed prefix (pipeline/, embedding-text, evidence-index, runtime-audit, source-qualifications, vector-rejects). Required when operator_roles_enabled is true."
+  type        = string
+  default     = null
+  validation {
+    condition     = var.operator_run_prefix == null || can(regex("^run-[a-z0-9][a-z0-9-]{1,27}$", var.operator_run_prefix))
+    error_message = "operator_run_prefix must match ^run-[a-z0-9][a-z0-9-]{1,27}$ (for example run-20261115)."
+  }
+  validation {
+    condition     = !var.operator_roles_enabled || var.operator_run_prefix != null
+    error_message = "operator_run_prefix is required when operator_roles_enabled is true."
+  }
+}
+
+variable "operator_embedding_text_prefix" {
+  description = "Rag-bucket prefix of the 14C embedding text. Must equal the main root's embedding_text_prefix (the runtime roles can read only that prefix, so the loader cannot use a run-specific one there). The operator roles get <prefix>/* in the rag bucket and nothing else."
+  type        = string
+  default     = "embedding-text"
+  validation {
+    condition     = can(regex("^[A-Za-z0-9][A-Za-z0-9._-]*(/[A-Za-z0-9][A-Za-z0-9._-]*)*$", var.operator_embedding_text_prefix))
+    error_message = "A literal key prefix without wildcard, leading or trailing slash (the main root's own rule)."
+  }
+}
+
+variable "operator_neptune_cluster_resource_id" {
+  description = "Neptune cluster resource id (cluster-XXXX..., `aws neptune describe-db-clusters --query DBClusters[].DbClusterResourceId`) for the neptune-db statements. It exists only after the main root's base-apply, so the deployer apply that precedes it cannot know it. null (the default) falls back to cluster-*/* in this account and region (every Neptune cluster here; the course account holds only the project's). After base-apply the human may set it and apply the deployer root again (an in-place IAM policy update) to tighten the scope to the one cluster."
+  type        = string
+  default     = null
+  validation {
+    condition     = var.operator_neptune_cluster_resource_id == null || can(regex("^cluster-[A-Z0-9]{10,40}$", var.operator_neptune_cluster_resource_id))
+    error_message = "operator_neptune_cluster_resource_id must look like cluster-ABCDEFGHIJKLMNOPQRSTUVWXYZ."
+  }
+}

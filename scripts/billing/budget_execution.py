@@ -9,6 +9,7 @@ from __future__ import annotations
 import argparse
 from contextlib import contextmanager
 from dataclasses import dataclass
+from collections import namedtuple
 from datetime import datetime, timezone
 from decimal import Decimal, InvalidOperation
 import hashlib
@@ -41,6 +42,27 @@ COST_TYPES = {"IncludeCredit": False, "IncludeRefund": False,
               "UseAmortized": False, "UseBlended": False}
 TAGS = {"course": "CS441", "project": "scholarchain", "environment": "course",
         "owner": "danny", "expiration_date": "2027-01-01"}
+# Phase 14B replan (USD 25 course cap): an in-place budget update, mode "modify".
+# The state hash is the Phase 12D post-create state (also pinned in
+# budget_verification.STATE_SHA; a test keeps the two equal).
+INITIAL_STATE_SHA256 = "271fe888595b6d71eedb649b7cdb87686ded0b3cbb1e2b9a19f76d7575be3f67"
+INITIAL_STATE_BYTES = 40818
+INITIAL_BACKUP_RELATIVE = "initial-ab9f141e83058209/billing.execution.tfstate"
+MODIFY_ACTIONS = {"modify-check", "plan-inspect", "state-backup", "modify-apply", "modify-readback"}
+MODIFY_ADDRESS = "aws_budgets_budget.project[0]"
+MODIFY_TERRAFORM_VERSION = "1.13.5"
+MODIFY_PLAN_NAME = "billing.modify.tfplan"
+MODIFY_INPUTS_NAME = "approved-public-inputs.modify.tfvars.json"
+MODIFY_TEMPLATE = "scripts/billing/modify-public-inputs.template.json"
+MODIFY_ACCOUNT_PLACEHOLDER = "<acct>"
+MODIFY_RECORD_PREFIX = "docs/agent-runs/phase-14/"
+MODIFY_PACKET_PREFIX = "docs/agent-runs/phase-14/evidence/14b/"
+# A budget shape is (name, USD limit, threshold type, alert thresholds). "initial"
+# is the Phase 12D create shape; "usd25" is the Phase 14B target. The ONE switch
+# between the two expectations is this value; there is no other flag.
+Shape = namedtuple("Shape", "name amount threshold_type thresholds")
+INITIAL_SHAPE = Shape("initial", Decimal(200), "PERCENTAGE", (50, 80, 100))
+USD25_SHAPE = Shape("usd25", Decimal(25), "ABSOLUTE_VALUE", (10, 15, 20))
 MAX_BYTES = 8 * 1024 * 1024
 READ_TIMEOUT_SECONDS = 60
 APPLY_TIMEOUT_SECONDS = 300
@@ -245,9 +267,25 @@ class Policy:
                 "AWS_PROFILE": PROFILE, "AWS_REGION": REGION, "AWS_DEFAULT_REGION": REGION,
                 "AWS_SDK_LOAD_CONFIG": "1", "AWS_MAX_ATTEMPTS": "1"}
 
+    @property
+    def modify_plan(self):
+        return self.primary / MODIFY_PLAN_NAME
+
+    @property
+    def modify_inputs(self):
+        return self.primary / MODIFY_INPUTS_NAME
+
     def apply_argv(self):
         return [str(self.terraform), "apply", "-input=false", "-no-color", "-lock-timeout=30s",
                 f"-state={self.state}", str(self.plan)]
+
+    def modify_apply_argv(self):
+        return [str(self.terraform), "apply", "-input=false", "-no-color", "-lock-timeout=30s",
+                f"-state={self.state}", str(self.modify_plan)]
+
+    def show_argv(self):
+        # Read-only plan rendering; no provider/AWS call. Output stays in a private file.
+        return [str(self.terraform), "show", "-json", "-no-color", str(self.modify_plan)]
 
     def aws_argv(self, operation, extra=()):
         return [str(self.aws), "budgets", operation, *extra,
@@ -338,8 +376,11 @@ class PrivateRunner:
         sync_dir(logs)
         if failure is not None:
             raise Blocked(failure)
-        # Only bounded, private AWS responses are parsed. Terraform output stays opaque.
-        if Path(argv[0]).name.startswith("terraform"):
+        # Only bounded, private AWS responses are parsed. Terraform output stays opaque,
+        # except `terraform show -json`, which the modify mode must parse in memory
+        # (whitelisted fields only; the private file keeps 0600 and is never published).
+        is_show = len(argv) > 1 and argv[1] == "show"
+        if Path(argv[0]).name.startswith("terraform") and not is_show:
             return code, b"", b""
         return code, read_nofollow(outpath), read_nofollow(errpath)
 
@@ -360,9 +401,9 @@ def absence(code, stdout, stderr):
             "P3_MIXED_ERROR")
 
 
-def expected_notification(threshold):
+def expected_notification(threshold, threshold_type="PERCENTAGE"):
     return {"NotificationType": "ACTUAL", "ComparisonOperator": "GREATER_THAN",
-            "Threshold": threshold, "ThresholdType": "PERCENTAGE"}
+            "Threshold": threshold, "ThresholdType": threshold_type}
 
 
 def utc_value(value):
@@ -410,8 +451,12 @@ def validate_cost_scope(budget):
             and set(values) == {"Credit", "Refund"}, "FILTER_PRESENT")
 
 
-def sanitize_readback(budget, tags, notifications, subscriber_responses, recipient):
-    """Return booleans/counts only, or a fixed error code; never echo input fields."""
+def sanitize_readback(budget, tags, notifications, subscriber_responses, recipient, shape=INITIAL_SHAPE):
+    """Return booleans/counts only, or a fixed error code; never echo input fields.
+
+    `shape` selects the expected amount, alert thresholds and threshold type. The
+    default stays the Phase 12D create shape so historical checks keep their meaning.
+    """
     require(type(budget) is dict and set(budget) == {"Budget"}, "BUDGET_RESPONSE_SHAPE")
     b = budget["Budget"]
     require(type(b) is dict, "BUDGET_RESPONSE_SHAPE")
@@ -424,7 +469,7 @@ def sanitize_readback(budget, tags, notifications, subscriber_responses, recipie
     require(b.get("BudgetName") == BUDGET and b.get("BudgetType") == "COST"
             and b.get("TimeUnit") == "CUSTOM", "BUDGET_IDENTITY_TYPE")
     try:
-        require(Decimal(b["BudgetLimit"]["Amount"]) == Decimal(200)
+        require(Decimal(b["BudgetLimit"]["Amount"]) == shape.amount
                 and b["BudgetLimit"]["Unit"] == "USD", "BUDGET_AMOUNT")
     except (KeyError, InvalidOperation, TypeError):
         raise Blocked("BUDGET_AMOUNT") from None
@@ -450,12 +495,16 @@ def sanitize_readback(budget, tags, notifications, subscriber_responses, recipie
         require(set(n) <= {"NotificationType", "ComparisonOperator", "Threshold", "ThresholdType", "NotificationState"},
                 "NOTIFICATION_SHAPE")
         t = n.get("Threshold")
-        require(type(t) in (int, float) and t in (50, 80, 100) and t not in seen,
+        require(type(t) in (int, float) and t in shape.thresholds and t not in seen,
                 "NOTIFICATION_THRESHOLD")
         # The pinned provider documents omitted PERCENTAGE on read. Only absence
-        # receives that meaning; an explicitly present invalid value still fails.
-        require(all(n.get(k, "PERCENTAGE" if k == "ThresholdType" else None) == v
-                    for k, v in expected_notification(t).items()), "NOTIFICATION_DRIFT")
+        # receives that meaning, and only for a PERCENTAGE shape; an explicitly
+        # present invalid value still fails, and an ABSOLUTE_VALUE shape never
+        # accepts an omitted type (omission would mean PERCENTAGE).
+        absent = "PERCENTAGE" if shape.threshold_type == "PERCENTAGE" else None
+        require(all(n.get(k, absent if k == "ThresholdType" else None) == v
+                    for k, v in expected_notification(t, shape.threshold_type).items()),
+                "NOTIFICATION_DRIFT")
         seen.add(t)
         r = subscriber_responses[t]
         require(not r.get("NextToken") and set(r) <= {"Subscribers", "NextToken"}, "SUBSCRIBER_PAGINATION_SHAPE")
@@ -469,6 +518,101 @@ def sanitize_readback(budget, tags, notifications, subscriber_responses, recipie
             "private_recipients_match": True, "health_reported": health is not None,
             "health_healthy_if_reported": health is not None,
             "delivery_verified": False, "phase12d_complete": False}
+
+
+def detect_shape(budget, notifications, expected=None):
+    """Classify a live budget as the initial or the USD 25 shape, or refuse.
+
+    Looks only at the amount and the alert list so a half-modified budget (new
+    amount with old alerts, or the reverse) is reported before any further
+    query. `expected` additionally pins the required shape. Detail checks stay in
+    sanitize_readback.
+    """
+    try:
+        amount = Decimal(budget["Budget"]["BudgetLimit"]["Amount"])
+        values = notifications["Notifications"]
+        require(type(values) is list, "LIVE_STATE_UNEXPECTED")
+    except (KeyError, InvalidOperation, TypeError):
+        raise Blocked("LIVE_STATE_UNEXPECTED") from None
+    for shape in (INITIAL_SHAPE, USD25_SHAPE):
+        if amount != shape.amount:
+            continue
+        absent = "PERCENTAGE" if shape.threshold_type == "PERCENTAGE" else None
+        found = {(n.get("ThresholdType", absent), n.get("Threshold")) for n in values
+                 if type(n) is dict and type(n.get("Threshold")) in (int, float)}
+        wanted = {(shape.threshold_type, t) for t in shape.thresholds}
+        require(len(values) == len(shape.thresholds) and found == wanted, "LIVE_STATE_UNEXPECTED")
+        require(expected is None or expected is shape, "LIVE_STATE_UNEXPECTED")
+        return shape
+    raise Blocked("LIVE_STATE_UNEXPECTED")
+
+
+def plan_time(value):
+    """Accept the AWS plan format YYYY-MM-DD_HH:MM or an ISO timestamp."""
+    if isinstance(value, str) and re.fullmatch(r"\d{4}-\d{2}-\d{2}_\d{2}:\d{2}", value):
+        return date(value.replace("_", "T") + ":00Z")
+    return date(value)
+
+
+def check_modify_plan(plan):
+    """Accept only an in-place update of the one budget; fixed codes on refusal.
+
+    Reads resource_changes only. It never touches `variables` or `prior_state`
+    (they can hold the private recipient). Replacement is also impossible to plan
+    because the resource has prevent_destroy; this check does not rely on that.
+    """
+    require(type(plan) is dict and plan.get("terraform_version") == MODIFY_TERRAFORM_VERSION,
+            "PLAN_TERRAFORM_VERSION")
+    require(plan.get("errored", False) is False and not plan.get("deferred_changes"), "PLAN_ERRORED")
+    changes = plan.get("resource_changes")
+    require(type(changes) is list and len(changes) == 1 and type(changes[0]) is dict,
+            "PLAN_NOT_SINGLE_RESOURCE")
+    entry = changes[0]
+    require(entry.get("address") == MODIFY_ADDRESS and entry.get("mode") == "managed"
+            and entry.get("type") == "aws_budgets_budget"
+            and entry.get("provider_name") == "registry.terraform.io/hashicorp/aws",
+            "PLAN_NOT_BILLING_RESOURCE")
+    change = entry.get("change")
+    require(type(change) is dict, "PLAN_SHAPE")
+    actions = change.get("actions")
+    require(type(actions) is list and all(type(x) is str for x in actions), "PLAN_SHAPE")
+    require(not ({"create", "delete"} <= set(actions)) and not change.get("replace_paths")
+            and "action_reason" not in entry, "PLAN_REPLACE")
+    require("create" not in actions, "PLAN_CREATE")
+    require("delete" not in actions, "PLAN_DELETE")
+    require(actions == ["update"], "PLAN_NOT_IN_PLACE_UPDATE")
+    before, after = change.get("before"), change.get("after")
+    require(type(before) is dict and type(after) is dict, "PLAN_SHAPE")
+    try:
+        require(Decimal(before["limit_amount"]) == INITIAL_SHAPE.amount
+                and Decimal(after["limit_amount"]) == USD25_SHAPE.amount, "PLAN_AMOUNT")
+    except (KeyError, InvalidOperation, TypeError):
+        raise Blocked("PLAN_AMOUNT") from None
+    # Only the amount and the alert blocks may differ; every identity, period,
+    # cost-basis and tag attribute must be identical before and after.
+    differing = {k for k in set(before) | set(after) if before.get(k) != after.get(k)}
+    require(differing <= {"limit_amount", "notification"}, "PLAN_UNEXPECTED_ATTRIBUTE_CHANGE")
+    require(after.get("account_id") == ACCOUNT and after.get("name") == BUDGET
+            and after.get("budget_type") == "COST" and after.get("limit_unit") == "USD"
+            and after.get("time_unit") == "CUSTOM", "PLAN_BUDGET_IDENTITY")
+    require(plan_time(after.get("time_period_start")) == date("2026-10-01T00:00:00Z")
+            and plan_time(after.get("time_period_end")) == date("2027-01-01T00:00:00Z"), "PLAN_BUDGET_DATE")
+    require(after.get("tags") == TAGS, "PLAN_TAGS")
+    alerts = after.get("notification")
+    sensitive = (change.get("after_sensitive") or {}).get("notification")
+    if type(alerts) is list and alerts:
+        # Thresholds are visible; recipients are not read here.
+        require(len(alerts) == 3 and all(type(n) is dict for n in alerts)
+                and {n.get("threshold") for n in alerts} == set(USD25_SHAPE.thresholds)
+                and all(n.get("threshold_type") == "ABSOLUTE_VALUE" and n.get("notification_type") == "ACTUAL"
+                        and n.get("comparison_operator") == "GREATER_THAN" for n in alerts), "PLAN_NOTIFICATIONS")
+        visible = True
+    else:
+        # A sensitive-marked (masked) alert set is checked live after apply instead.
+        require(alerts in (None, ) and bool(sensitive), "PLAN_NOTIFICATIONS")
+        visible = False
+    return {"address": MODIFY_ADDRESS, "actions": ["update"], "notifications_visible": visible,
+            "amount_before": 200, "amount_after": 25}
 
 
 class Execution:
@@ -518,6 +662,68 @@ class Execution:
         self.op = self.p.primary / "operations" / operation
         return self
 
+    def load_modify_gate(self, gate_path, gate_sha, operation):
+        """Gate for the Phase 14B in-place update. A new human-written record, never reused
+        from the Phase 12D create gate; the create gate cannot authorize a modify."""
+        require(type(operation) is str and re.fullmatch(r"modify-[a-zA-Z0-9_-]{1,56}", operation) is not None,
+                "OPERATION_ID")
+        raw = read_nofollow(gate_path)
+        require(digest(raw) == gate_sha, "GATE_HASH")
+        g = parse_json(raw)
+        required = {"operation", "option", "plan_sha256", "proposal_sha256", "wrapper_files", "source_commit",
+                    "human_record_sha256", "g1_affirmation", "actor_arn", "account", "profile", "region",
+                    "window_start", "window_end", "timezone", "login_at", "human_sts_observed_at",
+                    "human_sts", "permissions", "retention_accepted", "modify_review_approved",
+                    "state_backup_confirmed", "aws_cli_sha256", "public_packet_root", "modify_record_path",
+                    "modify_record_sha256", "prior_state_sha256", "prior_state_bytes"}
+        require(type(g) is dict and set(g) == required, "GATE_SCHEMA")
+        m = self.modify_pins()
+        require(g["option"] == "M" and g["operation"] == operation, "MODIFY_GATE_OPTION")
+        require(g["plan_sha256"] == m["plan_sha256"] and g["proposal_sha256"] == self.p.pins["proposal_sha256"],
+                "GATE_PLAN_BINDING")
+        require(g["human_record_sha256"] == self.p.pins["human_record_sha256"]
+                and type(g["g1_affirmation"]) is str and len(g["g1_affirmation"].strip()) >= 10, "G1_REQUIRED")
+        require(g["actor_arn"] == CALLER and g["account"] == ACCOUNT and g["profile"] == PROFILE
+                and g["region"] == REGION and g["human_sts"] == {"Account": ACCOUNT, "Arn": CALLER},
+                "HUMAN_IDENTITY")
+        require(type(g["permissions"]) is list and len(g["permissions"]) == len(MODIFY_ACTIONS)
+                and set(g["permissions"]) == MODIFY_ACTIONS and g["retention_accepted"] is True
+                and g["modify_review_approved"] is True and g["state_backup_confirmed"] is True,
+                "HUMAN_GATE_REQUIRED")
+        require(g["prior_state_sha256"] == INITIAL_STATE_SHA256 and g["prior_state_bytes"] == INITIAL_STATE_BYTES
+                and type(g["prior_state_bytes"]) is int, "PRIOR_STATE_BINDING")
+        require(g["timezone"] == "America/Chicago", "WINDOW_TIMEZONE")
+        start, end, login, observed = map(date, (g["window_start"], g["window_end"], g["login_at"], g["human_sts_observed_at"]))
+        now = self.now()
+        require(start <= login <= observed <= now < end and (end-start).total_seconds() <= 3600
+                and (now-login).total_seconds() < 3600, "SESSION_WINDOW")
+        require(re.fullmatch(r"[0-9a-f]{40}", g["source_commit"]) is not None
+                and re.fullmatch(r"[0-9a-f]{64}", g["aws_cli_sha256"]) is not None
+                and re.fullmatch(r"[0-9a-f]{64}", g["modify_record_sha256"]) is not None, "GATE_HASH_SCHEMA")
+        record, packet_root = Path(g["modify_record_path"]), Path(g["public_packet_root"])
+        require(not record.is_absolute() and ".." not in record.parts
+                and str(record).startswith(MODIFY_RECORD_PREFIX) and not str(record).startswith(MODIFY_PACKET_PREFIX),
+                "MODIFY_RECORD_SCOPE")
+        require(not packet_root.is_absolute() and ".." not in packet_root.parts
+                and str(packet_root).startswith(MODIFY_PACKET_PREFIX), "GATE_PACKET_SCOPE")
+        self.gate = g
+        self.binding = {"gate_sha256": gate_sha, "operation": operation,
+                        "plan_sha256": m["plan_sha256"], "actor_arn": CALLER}
+        self.op = self.p.primary / "operations" / operation
+        return self
+
+    def modify_pins(self):
+        """Human-refreshed pins for the modify plan. Absent pins fail closed."""
+        m = self.p.pins.get("modify")
+        require(type(m) is dict and {"plan_sha256", "plan_bytes", "public_input_sha256", "config"} <= set(m),
+                "MODIFY_PINS_MISSING")
+        require(all(type(m[k]) is str and re.fullmatch(r"[0-9a-f]{64}", m[k]) is not None
+                    for k in ("plan_sha256", "public_input_sha256"))
+                and type(m["plan_bytes"]) is int and m["plan_bytes"] > 0
+                and type(m["config"]) is list and m["config"], "MODIFY_PINS_MISSING")
+        require(m["plan_sha256"] != self.p.pins.get("plan_sha256"), "MODIFY_PLAN_IS_CREATE_PLAN")
+        return m
+
     def check_window(self):
         require(self.gate is not None and self.now() < date(self.gate["window_end"])
                 and self.now() >= date(self.gate["human_sts_observed_at"]), "WINDOW_EXPIRED")
@@ -565,7 +771,7 @@ class Execution:
             f = self.p.repo / row["path"]
             require(f.lstat().st_size == row["bytes"] and hash_file(f) == row["sha256"], "SOURCE_DRIFT")
 
-    def check_files(self):
+    def check_tree(self):
         p = self.p
         secure_dir(p.primary, p.uid); secure_dir(p.backups, p.uid)
         # Check every durable directory and data path. Only provider install links may point into mirror.
@@ -581,6 +787,11 @@ class Execution:
                 else:
                     require(stat.S_ISREG(st.st_mode) and st.st_uid == p.uid
                             and stat.S_IMODE(st.st_mode) in (0o600, 0o700), "DURABLE_MODE_OWNER")
+
+    def check_files(self):
+        p = self.p
+        self.check_tree()
+        mirror = p.primary / "toolchain/provider-mirror"
         checks = [(p.plan, p.pins["plan_sha256"], 0o600),
                   (p.terraform, p.pins["terraform_sha256"], 0o700),
                   (p.primary / "toolchain/terraform.tfrc", p.pins["cli_config_sha256"], 0o600),
@@ -626,7 +837,7 @@ class Execution:
     def command(self, argv, label):
         self.check_window()
         remaining = (date(self.gate["window_end"])-self.now()).total_seconds()
-        if argv == self.p.apply_argv():
+        if argv in (self.p.apply_argv(), self.p.modify_apply_argv()):
             # Separate mutation allowance; reserve graceful-stop/reap and local-copy
             # headroom inside the approved window before starting any apply process.
             reserve = APPLY_GRACE_SECONDS + FORCED_REAP_SECONDS + LOCAL_PRESERVATION_HEADROOM_SECONDS
@@ -768,6 +979,152 @@ class Execution:
             safe = sanitize_readback(b, t, n, subs, self.private_recipient())
             return self.receipt("readback", safe)
 
+    def check_modify_record(self):
+        # The new human gate record must be a committed file whose bytes the gate names.
+        rel = Path(self.gate["modify_record_path"])
+        file_ok = (self.p.repo / rel).is_file() and not (self.p.repo / rel).is_symlink()
+        require(file_ok, "MODIFY_RECORD_MISSING")
+        result = subprocess.run(["/usr/bin/git", "-C", str(self.p.repo), "ls-files", "--error-unmatch", "--", str(rel)],
+                                env={"PATH": "/usr/bin:/bin", "HOME": "/Users/danny"}, capture_output=True,
+                                stdin=subprocess.DEVNULL, timeout=10)
+        require(result.returncode == 0, "MODIFY_RECORD_UNTRACKED")
+        require(hash_file(self.p.repo / rel) == self.gate["modify_record_sha256"], "MODIFY_RECORD_HASH")
+
+    def check_modify_files(self):
+        p, m = self.p, self.modify_pins()
+        self.check_tree()
+        mirror = p.primary / "toolchain/provider-mirror"
+        checks = [(p.modify_plan, m["plan_sha256"], 0o600),
+                  (p.terraform, p.pins["terraform_sha256"], 0o700),
+                  (p.primary / "toolchain/terraform.tfrc", p.pins["cli_config_sha256"], 0o600),
+                  (p.modify_inputs, m["public_input_sha256"], 0o600),
+                  (mirror / "registry.terraform.io/hashicorp/aws/6.44.0/darwin_arm64/terraform-provider-aws_v6.44.0_x5",
+                   p.pins["provider_sha256"], 0o700)]
+        for f, sha, mode in checks:
+            file_meta(f, p.uid, mode)
+            require(hash_file(f) == sha, "ARTIFACT_HASH")
+        require(p.modify_plan.lstat().st_size == m["plan_bytes"], "PLAN_SIZE")
+        self.check_modify_inputs()
+        listed = set()
+        for row in m["config"]:
+            f = p.primary / row["copy_relative"]
+            require(file_meta(f, p.uid).st_size == row["bytes"] and hash_file(f) == row["sha256"], "CONFIG_DRIFT")
+            listed.add(f)
+        # No stray .tf/.tfvars/override file may ride along with the reviewed copy.
+        extra = [f for f in p.config.rglob("*") if f.is_file() and f not in listed]
+        require(not extra, "CONFIG_EXTRA_FILE")
+        require(p.aws.resolve().is_file() and hash_file(p.aws.resolve()) == self.gate["aws_cli_sha256"],
+                "AWS_CLI_HASH")
+
+    def check_modify_inputs(self):
+        """The human-rendered private inputs must equal the committed template in every field except the account ID.
+
+        The raw account ID is never committed; the template holds a placeholder. The rendered file's hash is
+        the human-refreshed `modify.public_input_sha256` pin (already checked by the caller).
+        """
+        template = parse_json(read_nofollow(self.p.repo / MODIFY_TEMPLATE))
+        rendered = parse_json(read_nofollow(self.p.modify_inputs))
+        require(type(template) is dict and type(rendered) is dict and set(template) == set(rendered)
+                and template.get("aws_account_id") == MODIFY_ACCOUNT_PLACEHOLDER
+                and type(template.get("budget_limit_usd")) is int and template["budget_limit_usd"] == 25,
+                "MODIFY_INPUTS_SHAPE")
+        account = rendered["aws_account_id"]
+        require(type(account) is str and re.fullmatch(r"[0-9]{12}", account) is not None
+                and account == ACCOUNT == self.gate["human_sts"]["Account"], "MODIFY_INPUTS_ACCOUNT")
+        same = {k for k in template if k != "aws_account_id"}
+        require(all(rendered[k] == template[k] and type(rendered[k]) is type(template[k]) for k in same),
+                "MODIFY_INPUTS_DRIFT")
+
+    def check_modify_state(self):
+        """The state must still be exactly the Phase 12D post-create state (and its backup)."""
+        p = self.p
+        st = file_meta(p.state, p.uid)
+        require(st.st_size == INITIAL_STATE_BYTES and hash_file(p.state) == INITIAL_STATE_SHA256,
+                "STATE_NOT_INITIAL")
+        initial = p.backups / INITIAL_BACKUP_RELATIVE
+        file_meta(initial, p.uid)
+        require(hash_file(initial) == INITIAL_STATE_SHA256, "INITIAL_BACKUP_DRIFT")
+        found = [x for x in p.primary.rglob("*")
+                 if x.name.endswith(".tfstate") or ".tfstate." in x.name or x.name.endswith(".lock.info")
+                 or x.name == "terraform.tfstate.d"]
+        require(found == [p.state], "UNEXPECTED_STATE_OR_LOCK")
+
+    def inspect_plan(self):
+        code, out, _ = self.command(self.p.show_argv(), "modify-show")
+        require(code == 0, "PLAN_SHOW_FAILED")
+        return check_modify_plan(parse_json(out))
+
+    def read_live(self, prefix, expected=None):
+        """Six bounded read-only requests; returns (shape, sanitized booleans/counts)."""
+        common = ["--account-id", ACCOUNT, "--budget-name", BUDGET]
+        b = self.query("describe-budget", common + ["--show-filter-expression"], f"{prefix}-budget")
+        t = self.query("list-tags-for-resource", ["--resource-arn", ARN], f"{prefix}-tags")
+        n = self.query("describe-notifications-for-budget", common + ["--max-results", "100", "--no-paginate"],
+                       f"{prefix}-notifications")
+        shape = detect_shape(b, n, expected)
+        subs = {}
+        for threshold in shape.thresholds:
+            note = json.dumps(expected_notification(threshold, shape.threshold_type), separators=(",", ":"))
+            subs[threshold] = self.query("describe-subscribers-for-notification",
+                common + ["--notification", note, "--max-results", "100", "--no-paginate"],
+                f"{prefix}-subscribers-{threshold}")
+        return shape, sanitize_readback(b, t, n, subs, self.private_recipient(), shape)
+
+    def modify(self):
+        """Reviewed in-place update of the live budget: USD 200 / 50-80-100 percent -> USD 25 / 10-15-20 dollars."""
+        require(self.gate is not None and self.gate.get("option") == "M", "MODIFY_GATE_REQUIRED")
+        self.check_checkout(); self.check_modify_record(); self.check_modify_files()
+        self.check_modify_state(); self.check_window()
+        parent = self.p.primary / "operations"
+        secure_dir(parent, self.p.uid)
+        self.op.mkdir(mode=0o700)  # Existing operation is not retried/reused.
+        backup = self.p.backups / self.gate["operation"]
+        with self.lease("modify"):
+            plan = self.inspect_plan()
+            shape, before = self.read_live("modify-pre")
+            if shape is USD25_SHAPE:
+                # Nothing to apply; no backup, no Terraform process, state untouched.
+                return self.receipt("modify", {"applied": False, "already_at_target": True, "plan": plan,
+                                               "verify": before})
+            require(shape is INITIAL_SHAPE, "LIVE_STATE_UNEXPECTED")
+            self.check_modify_state(); self.check_window()  # Nothing changed while we were reading.
+            backup.mkdir(mode=0o700)  # Versioned per operation; never overwritten or reused.
+            pre = opaque_copy(self.p.state, backup / "pre-apply.billing.execution.tfstate", self.p.uid)
+            require(pre["sha256"] == INITIAL_STATE_SHA256 and pre["bytes"] == INITIAL_STATE_BYTES,
+                    "PRE_BACKUP_NOT_INITIAL")
+            save_json(backup / "pre-apply.backup.receipt.json", {**self.binding, **pre})
+            try:
+                code, _, _ = self.command(self.p.modify_apply_argv(), "modify-apply")
+                require(code == 0, "APPLY_FAILED_PARTIAL_POSSIBLE")
+                found = sorted(x for x in self.p.primary.rglob("*")
+                               if x.name.endswith(".tfstate") or ".tfstate." in x.name or x.name.endswith(".lock.info"))
+                tf_backup = self.p.state.with_name(self.p.state.name + ".backup")
+                require(found in ([self.p.state], sorted([self.p.state, tf_backup])), "UNEXPECTED_POST_APPLY_STATE")
+                if tf_backup.exists():
+                    # Terraform's own previous-state copy must be the pre-apply state, byte for byte.
+                    file_meta(tf_backup, self.p.uid)
+                    require(hash_file(tf_backup) == INITIAL_STATE_SHA256, "TERRAFORM_BACKUP_NOT_INITIAL")
+                post = opaque_copy(self.p.state, backup / "post-apply.billing.execution.tfstate", self.p.uid)
+                require(post["sha256"] != INITIAL_STATE_SHA256, "STATE_UNCHANGED_AFTER_APPLY")
+                save_json(backup / "post-apply.backup.receipt.json", {**self.binding, **post})
+            except BaseException:
+                # After a failed or interrupted apply no further AWS calls are permitted.
+                try:
+                    self.preserve(backup)
+                except BaseException:
+                    pass  # Originals are never deleted; the fixed code below is the public message.
+                raise Blocked("MODIFY_APPLY_OR_BACKUP_FAILED_INCIDENT_REQUIRED") from None
+            window_open = self.now() < date(self.gate["window_end"])
+            self.receipt("modify-apply", {"exit": 0, "pre_backup": pre, "post_backup": post,
+                                          "backup_verified": True, "window_open_for_further_live": window_open})
+            require(window_open, "WINDOW_EXPIRED_AFTER_BACKUP_NO_FURTHER_LIVE")
+            try:
+                _, verified = self.read_live("modify-post", USD25_SHAPE)
+            except Blocked as error:
+                raise Blocked(f"APPLIED_BUT_POST_VERIFY_FAILED:{error}") from None
+            return self.receipt("modify", {"applied": True, "already_at_target": False, "plan": plan,
+                                           "pre_backup": pre, "post_backup": post, "verify": verified})
+
     def post_freeze_scan(self, manifest_path, manifest_sha):
         self.check_checkout(allow_packet=True, external_freeze=manifest_path); self.check_files(); self.check_window()
         self.prior("readback")
@@ -810,7 +1167,7 @@ class Execution:
 
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("mode", choices=("p3-check", "apply", "readback", "post-freeze-scan"))
+    parser.add_argument("mode", choices=("p3-check", "apply", "readback", "post-freeze-scan", "modify"))
     parser.add_argument("--gate", type=Path, required=True)
     parser.add_argument("--gate-sha256", required=True)
     parser.add_argument("--operation", required=True)
@@ -819,6 +1176,11 @@ def main(argv=None):
     args = parser.parse_args(argv)
     os.umask(0o077)
     try:
+        if args.mode == "modify":
+            require(args.public_manifest is None and args.public_manifest_sha256 is None, "UNEXPECTED_SCAN_OPTIONS")
+            ex = Execution(production_policy()).load_modify_gate(args.gate, args.gate_sha256, args.operation)
+            print(json.dumps(ex.modify(), sort_keys=True))
+            return 0
         ex = Execution(production_policy()).load_gate(args.gate, args.gate_sha256, args.operation)
         if args.mode == "post-freeze-scan":
             require(args.public_manifest is not None and args.public_manifest_sha256, "PUBLIC_FREEZE_REQUIRED")
