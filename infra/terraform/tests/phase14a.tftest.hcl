@@ -57,6 +57,9 @@ override_resource {
   values          = { id = "rtb-synthetic-data" }
 }
 variables {
+  # Repair round 3: this file asserts the Bedrock path (the primary providers are anthropic and voyage; see phase14b_providers.tftest.hcl).
+  synthesis_provider               = "bedrock"
+  embedding_provider               = "bedrock"
   aws_account_id                   = "111122223333"
   aws_region                       = "us-east-2"
   aws_profile                      = "synthetic-not-a-real-profile"
@@ -399,7 +402,7 @@ run "an_invalid_embedding_profile_is_rejected" {
   variables {
     embedding_inference_profile_id      = "us.amazon.titan-embed-text-v2:0"
     embedding_inference_profile_regions = ["us-east-2"]
-    embedding_model_id                  = null
+    embedding_model_id                  = "amazon.synthetic-embed-v9:0" # the profile id must end in exactly the model id
   }
   expect_failures = [var.embedding_inference_profile_id]
 }
@@ -427,8 +430,8 @@ run "the_tfvars_example_holds_placeholders_only" {
     error_message = "The example must mention every variable the human supplies for the base and runtime plans."
   }
   assert {
-    condition     = var.project == "scholarchain" && alltrue([for line in split("\n", file("environments/course.local.tfvars.example")) : !startswith(trimspace(line), "#") && trimspace(line) != "" ? can(regex("<[^>]+>", line)) || !can(regex("^[a-z_]+ *= *\"", line)) || can(regex("^(synthesis_model_id|synthesis_inference_profile_id|embedding_model_id|semantic_index_name|embedding_text_prefix) *= *\"[a-z0-9.:-]+\"$", trimspace(line))) : true])
-    error_message = "Every uncommented string assignment in the example is a <placeholder>, except the documented model and inference-profile IDs (accounts, e-mail addresses and keys stay forbidden by the assertions above)."
+    condition     = var.project == "scholarchain" && alltrue([for line in split("\n", file("environments/course.local.tfvars.example")) : !startswith(trimspace(line), "#") && trimspace(line) != "" ? can(regex("<[^>]+>", line)) || !can(regex("^[a-z_]+ *= *\"", line)) || can(regex("^(synthesis_provider|embedding_provider|synthesis_model_id|synthesis_inference_profile_id|embedding_model_id|semantic_index_name|embedding_text_prefix) *= *\"[a-z0-9.:-]+\"$", trimspace(line))) : true])
+    error_message = "Every uncommented string assignment in the example is a <placeholder>, except the documented provider names, model and inference-profile IDs (accounts, e-mail addresses and keys stay forbidden by the assertions above)."
   }
 }
 
@@ -563,7 +566,7 @@ run "every_action_of_every_role_policy_is_allowed_by_that_roles_boundary" {
       alltrue([
         for a in flatten([for st in jsondecode(doc).Statement : st.Effect == "Allow" ? flatten([st.Action]) : []]) :
         anytrue([
-          for b in flatten([for bs in jsondecode(templatefile("deployer/boundaries/runtime.json.tftpl", { acct = var.aws_account_id, region = var.aws_region, mp = "${var.project}-${var.environment}", env = var.environment, bedrock_fm_arns = join(", ", [for r in ["us-east-1", "us-east-2", "us-west-2"] : jsonencode("arn:aws:bedrock:${r}::foundation-model/*")]) })).Statement : bs.Effect == "Allow" ? flatten([bs.Action]) : []]) :
+          for b in flatten([for bs in jsondecode(templatefile("deployer/boundaries/runtime.json.tftpl", { acct = var.aws_account_id, region = var.aws_region, mp = "${var.project}-${var.environment}", env = var.environment, bedrock_enabled = true, bedrock_fm_arns = join(", ", [for r in ["us-east-1", "us-east-2", "us-west-2"] : jsonencode("arn:aws:bedrock:${r}::foundation-model/*")]) })).Statement : bs.Effect == "Allow" ? flatten([bs.Action]) : []]) :
           b == a || (endswith(b, "*") && startswith(a, trimsuffix(b, "*")))
         ])
       ])
@@ -577,7 +580,7 @@ run "every_action_of_every_role_policy_is_allowed_by_that_roles_boundary" {
       alltrue([
         for a in flatten([for st in jsondecode(doc).Statement : st.Effect == "Allow" ? flatten([st.Action]) : []]) :
         anytrue([
-          for b in flatten([for bs in jsondecode(templatefile("deployer/boundaries/emr-service.json.tftpl", { acct = var.aws_account_id, region = var.aws_region, mp = "${var.project}-${var.environment}", env = var.environment, bedrock_fm_arns = "" })).Statement : bs.Effect == "Allow" ? flatten([bs.Action]) : []]) :
+          for b in flatten([for bs in jsondecode(templatefile("deployer/boundaries/emr-service.json.tftpl", { acct = var.aws_account_id, region = var.aws_region, mp = "${var.project}-${var.environment}", env = var.environment, bedrock_enabled = false, bedrock_fm_arns = "" })).Statement : bs.Effect == "Allow" ? flatten([bs.Action]) : []]) :
           b == a || (endswith(b, "*") && startswith(a, trimsuffix(b, "*")))
         ])
       ])
@@ -785,8 +788,10 @@ run "aws_mode_environment_per_role_is_exactly_the_service_contract" {
       SCHOLARCHAIN_DYNAMODB_TABLE_RESEARCHER_METRIC_CACHE = "scholarchain-course-ResearcherMetricCache"
       SCHOLARCHAIN_DYNAMODB_QUERY_SESSION_INDEX           = "by-idempotency-key"
       SCHOLARCHAIN_STORAGE_RAG_BUCKET                     = "scholarchain-course-111122223333-rag"
+      SCHOLARCHAIN_SYNTHESIS_PROVIDER                     = "bedrock"
       SCHOLARCHAIN_MODELS_SYNTHESIS_MODEL                 = "us.anthropic.claude-haiku-4-5-20251001-v1:0"
       SCHOLARCHAIN_SYNTHESIS_MODEL_VERSION                = "anthropic.claude-haiku-4-5-20251001-v1:0"
+      SCHOLARCHAIN_EMBEDDING_PROVIDER                     = "bedrock"
       SCHOLARCHAIN_MODELS_EMBEDDING_MODEL                 = "amazon.titan-embed-text-v2:0"
       SCHOLARCHAIN_EMBEDDING_MODEL_VERSION                = "synthetic-pinned-version"
       SCHOLARCHAIN_EMBEDDING_DIMENSION                    = "256"
@@ -830,6 +835,7 @@ run "aws_mode_environment_per_role_is_exactly_the_service_contract" {
       SCHOLARCHAIN_SEMANTIC_INDEX                         = "researcher-profile-v1"
       SCHOLARCHAIN_S3_VECTORS_METRIC                      = "cosine"
       SCHOLARCHAIN_STORAGE_RAG_BUCKET                     = "scholarchain-course-111122223333-rag"
+      SCHOLARCHAIN_EMBEDDING_PROVIDER                     = "bedrock"
       SCHOLARCHAIN_MODELS_EMBEDDING_MODEL                 = "amazon.titan-embed-text-v2:0"
       SCHOLARCHAIN_EMBEDDING_MODEL_VERSION                = "synthetic-pinned-version"
       SCHOLARCHAIN_EMBEDDING_DIMENSION                    = "256"
@@ -852,6 +858,7 @@ run "aws_mode_environment_per_role_is_exactly_the_service_contract" {
       SCHOLARCHAIN_S3_VECTORS_VECTOR_BUCKET               = "scholarchain-course-111122223333-vectors"
       SCHOLARCHAIN_SEMANTIC_INDEX                         = "researcher-profile-v1"
       SCHOLARCHAIN_S3_VECTORS_METRIC                      = "cosine"
+      SCHOLARCHAIN_EMBEDDING_PROVIDER                     = "bedrock"
       SCHOLARCHAIN_MODELS_EMBEDDING_MODEL                 = "amazon.titan-embed-text-v2:0"
       SCHOLARCHAIN_EMBEDDING_MODEL_VERSION                = "synthetic-pinned-version"
       SCHOLARCHAIN_EMBEDDING_DIMENSION                    = "256"

@@ -1,11 +1,19 @@
 package edu.uic.cs441.scholarchain.services
 
-import edu.uic.cs441.scholarchain.core.{EmbeddingClient, RuntimeConfig}
+import edu.uic.cs441.scholarchain.core.{EmbeddingClient, EmbeddingModel, RuntimeConfig}
 import edu.uic.cs441.scholarchain.rag.{
   BedrockConverseLlmClient,
   BedrockEmbeddingClient,
   BedrockEmbeddingConfig,
-  LlmClient
+  EmbeddingClientFactory,
+  EmbeddingInputType,
+  EmbeddingPricing,
+  EmbeddingProvider,
+  EmbeddingSpendCounter,
+  LlmClient,
+  SynthesisClients,
+  SynthesisProvider,
+  VoyageEmbeddingConfig
 }
 import edu.uic.cs441.scholarchain.storage.{
   ArtifactRegistry,
@@ -144,13 +152,134 @@ object StorageGraphReaderProvider extends GraphReaderProvider {
     }
 }
 
+/** Seam for the external, non-AWS provider clients. The services module names only the narrow
+  * ports; the rag-owned HTTP clients are adapted behind this trait. A refusal is a closed code,
+  * never a provider message, and an implementation must never include the key in an exception
+  * message, toString or log line.
+  */
+trait ProviderClients {
+  def anthropic(apiKey: Secret, runtime: RuntimeConfig): Either[String, LlmClient]
+  def voyage(
+      apiKey: Secret,
+      model: EmbeddingModel,
+      purpose: EmbeddingPurpose
+  ): Either[String, EmbeddingClient]
+}
+
+/** Voyage distinguishes the text being stored from the text being searched with. */
+enum EmbeddingPurpose {
+  case Document, Query
+}
+
+/** Builds the rag-owned Anthropic and Voyage clients. Construction makes no network call. One
+  * instance serves one process, so every Voyage client it builds shares one spend counter and the
+  * USD 0.30 cap is applied once. The key reaches the rag factory as an argument and is never kept,
+  * logged or put in a result here. The Bedrock thunk is never used on these paths.
+  */
+final class RagProviderClients(
+    val counter: EmbeddingSpendCounter = EmbeddingPricing.newCounter(EmbeddingProvider.Voyage)
+) extends ProviderClients {
+  private def noBedrock: BedrockRuntimeClient =
+    throw new IllegalStateException("bedrock-not-selected")
+  // The configured synthesis model id is the one the client and every agent use.
+  def anthropic(apiKey: Secret, runtime: RuntimeConfig): Either[String, LlmClient] =
+    SynthesisClients.create(
+      SynthesisProvider.Anthropic,
+      SynthesisClients.runtimeConfigFor(
+        SynthesisProvider.Anthropic,
+        runtime,
+        runtime.model.modelId
+      ),
+      Some(apiKey.value),
+      () => noBedrock
+    )
+  def voyage(
+      apiKey: Secret,
+      model: EmbeddingModel,
+      purpose: EmbeddingPurpose
+  ): Either[String, EmbeddingClient] = {
+    val input = purpose match {
+      case EmbeddingPurpose.Document => EmbeddingInputType.Document
+      case EmbeddingPurpose.Query    => EmbeddingInputType.Query
+    }
+    // An unsupported model or dimension is a closed code; the rag message is never forwarded.
+    val voyageConfig =
+      try Right(VoyageEmbeddingConfig(input, model = model))
+      catch { case _: IllegalArgumentException => Left("invalid-voyage-embedding-config") }
+    voyageConfig
+      .flatMap(config =>
+        EmbeddingClientFactory.create(
+          EmbeddingProvider.Voyage,
+          input,
+          Some(apiKey.value),
+          () => noBedrock,
+          None,
+          counter,
+          Some(config)
+        )
+      )
+      .flatMap(client =>
+        if (client.model == model) Right(client) else Left("embedding-provider-model-mismatch")
+      )
+  }
+}
+
+/** Refuses by closed code without any call. Kept for tests that need an unwired provider. */
+object UnwiredProviderClients extends ProviderClients {
+  val unavailable = "provider-client-unavailable"
+  def anthropic(apiKey: Secret, runtime: RuntimeConfig): Either[String, LlmClient] =
+    Left(unavailable)
+  def voyage(
+      apiKey: Secret,
+      model: EmbeddingModel,
+      purpose: EmbeddingPurpose
+  ): Either[String, EmbeddingClient] = Left(unavailable)
+}
+
 /** Real SDK composition. Credentials come from the default provider chain, which on ECS is the task
   * role. SDK-level retries are disabled because the adapters own their bounded retry policy.
   */
 final class AwsSdkPortFactory(
     credentials: () => AwsCredentialsProvider = () => DefaultCredentialsProvider.builder().build(),
-    graphReaders: GraphReaderProvider = StorageGraphReaderProvider
+    graphReaders: GraphReaderProvider = StorageGraphReaderProvider,
+    providers: ProviderClients = new RagProviderClients(),
+    bedrockClients: (
+        Region,
+        AwsCredentialsProvider,
+        ClientOverrideConfiguration
+    ) => BedrockRuntimeClient = AwsSdkPortFactory.defaultBedrock
 ) extends AwsPortFactory {
+  private val providerFailed = "provider-client-failed"
+
+  /** Runs a provider constructor and converts any failure to a closed code. */
+  private def external[A](make: => Either[String, A]): Either[String, A] =
+    try make
+    catch { case NonFatal(_) => Left(providerFailed) }
+  private def missingKey(name: String): String = "missing-aws-configuration:" + name
+
+  /** The only place a Bedrock runtime client is created, and only for a selected Bedrock provider.
+    */
+  private def bedrockClient(region: Region, creds: AwsCredentialsProvider): BedrockRuntimeClient =
+    bedrockClients(region, creds, overrides(callTimeoutMs))
+  private def embeddingClient(
+      provider: EmbeddingProvider,
+      key: Option[Secret],
+      model: EmbeddingModel,
+      purpose: EmbeddingPurpose,
+      region: String,
+      bedrock: => BedrockRuntimeClient
+  ): Either[String, (EmbeddingClient, Seq[AnyRef])] = provider match {
+    case EmbeddingProvider.Voyage =>
+      key
+        .toRight(missingKey("SCHOLARCHAIN_VOYAGE_API_KEY"))
+        .flatMap(k => external(providers.voyage(k, model, purpose)))
+        .map(c => (c, Seq[AnyRef](c)))
+    case EmbeddingProvider.Bedrock =>
+      val client = bedrock
+      Right(
+        (new BedrockEmbeddingClient(client, BedrockEmbeddingConfig(model, region)), Seq(client))
+      )
+  }
   private def quietly(items: Seq[AnyRef]): Unit = items.foreach {
     case c: AutoCloseable =>
       try c.close()
@@ -202,57 +331,87 @@ final class AwsSdkPortFactory(
   def semantic(config: SemanticRoleConfig): Either[String, SemanticPorts] = {
     val creds = credentials()
     val region = Region.of(config.region)
-    val s3 = S3Client
-      .builder()
-      .region(region)
-      .credentialsProvider(creds)
-      .overrideConfiguration(overrides(callTimeoutMs))
-      .build()
-    val dynamo = DynamoDbClient
-      .builder()
-      .region(region)
-      .credentialsProvider(creds)
-      .overrideConfiguration(overrides(callTimeoutMs))
-      .build()
-    val vectorClient = S3VectorsClient
-      .builder()
-      .region(region)
-      .credentialsProvider(creds)
-      .overrideConfiguration(overrides(callTimeoutMs))
-      .build()
-    val bedrock = BedrockRuntimeClient
-      .builder()
-      .region(region)
-      .credentialsProvider(creds)
-      .overrideConfiguration(overrides(callTimeoutMs))
-      .build()
-    val storage = storeConfig(config.ragBucket, config.common)
-    val vectors = new S3VectorStore(
-      vectorClient,
-      new DynamoArtifactRegistry(dynamo, storage),
-      VectorAdapterConfig(
-        config.vectorBucket,
-        config.embedding.dimension,
-        config.metric,
-        maxTopK = 50,
-        retry = RetryConfig(maxAttempts = 2)
-      ),
-      new S3ObjectStore(s3, storage)
-    )
-    val embedder =
-      new BedrockEmbeddingClient(bedrock, BedrockEmbeddingConfig(config.embedding, config.region))
-    Right(
-      new SemanticPorts(
-        embedder,
-        vectors,
-        () => quietly(Seq(bedrock, vectorClient, dynamo, s3, creds))
-      )
-    )
+    // Resolved before any other client so a refusal leaves nothing to release. A Bedrock client
+    // exists only when Bedrock is the selected embedding provider.
+    embeddingClient(
+      config.embeddingProvider,
+      config.voyageApiKey,
+      config.embedding,
+      EmbeddingPurpose.Query,
+      config.region,
+      bedrockClient(region, creds)
+    ) match {
+      case Left(code) => quietly(Seq(creds)); Left(code)
+      case Right((embedder, owned)) =>
+        val s3 = S3Client
+          .builder()
+          .region(region)
+          .credentialsProvider(creds)
+          .overrideConfiguration(overrides(callTimeoutMs))
+          .build()
+        val dynamo = DynamoDbClient
+          .builder()
+          .region(region)
+          .credentialsProvider(creds)
+          .overrideConfiguration(overrides(callTimeoutMs))
+          .build()
+        val vectorClient = S3VectorsClient
+          .builder()
+          .region(region)
+          .credentialsProvider(creds)
+          .overrideConfiguration(overrides(callTimeoutMs))
+          .build()
+        val storage = storeConfig(config.ragBucket, config.common)
+        val vectors = new S3VectorStore(
+          vectorClient,
+          new DynamoArtifactRegistry(dynamo, storage),
+          VectorAdapterConfig(
+            config.vectorBucket,
+            config.embedding.dimension,
+            config.metric,
+            maxTopK = 50,
+            retry = RetryConfig(maxAttempts = 2)
+          ),
+          new S3ObjectStore(s3, storage)
+        )
+        Right(
+          new SemanticPorts(
+            embedder,
+            vectors,
+            () => quietly(owned ++ Seq(vectorClient, dynamo, s3, creds))
+          )
+        )
+    }
   }
 
   def query(config: QueryRoleConfig, runtime: RuntimeConfig): Either[String, QueryPorts] = {
     val creds = credentials()
     val region = Region.of(config.region)
+    // The model client is resolved before the storage clients so a refusal leaves nothing open.
+    // A Bedrock client exists only when Bedrock is the selected synthesis provider.
+    val model: Either[String, (LlmClient, Seq[AnyRef])] = config.synthesisProvider match {
+      case SynthesisProvider.Anthropic =>
+        config.anthropicApiKey
+          .toRight(missingKey("SCHOLARCHAIN_ANTHROPIC_API_KEY"))
+          .flatMap(k => external(providers.anthropic(k, runtime)))
+          .map(c => (c, Seq[AnyRef](c)))
+      case SynthesisProvider.Bedrock =>
+        val client = bedrockClient(region, creds)
+        Right((new BedrockConverseLlmClient(client, runtime), Seq[AnyRef](client)))
+    }
+    model match {
+      case Left(code)          => quietly(Seq(creds)); Left(code)
+      case Right((llm, owned)) => queryPorts(config, creds, region, llm, owned)
+    }
+  }
+
+  private def queryPorts(
+      config: QueryRoleConfig,
+      creds: AwsCredentialsProvider,
+      region: Region,
+      llm: LlmClient,
+      owned: Seq[AnyRef]
+  ): Either[String, QueryPorts] = {
     val s3 = S3Client
       .builder()
       .region(region)
@@ -260,12 +419,6 @@ final class AwsSdkPortFactory(
       .overrideConfiguration(overrides(callTimeoutMs))
       .build()
     val dynamo = DynamoDbClient
-      .builder()
-      .region(region)
-      .credentialsProvider(creds)
-      .overrideConfiguration(overrides(callTimeoutMs))
-      .build()
-    val bedrock = BedrockRuntimeClient
       .builder()
       .region(region)
       .credentialsProvider(creds)
@@ -306,8 +459,8 @@ final class AwsSdkPortFactory(
         new DynamoResearcherMetricStore(dynamo, storage),
         objects,
         artifacts,
-        new BedrockConverseLlmClient(bedrock, runtime),
-        () => quietly(Seq(bedrock, dynamo, s3, creds))
+        llm,
+        () => quietly(owned ++ Seq(dynamo, s3, creds))
       )
     )
   }
@@ -315,6 +468,26 @@ final class AwsSdkPortFactory(
   def worker(config: WorkerRoleConfig): Either[String, WorkerPorts] = {
     val creds = credentials()
     val region = Region.of(config.region)
+    embeddingClient(
+      config.embeddingProvider,
+      config.voyageApiKey,
+      config.embedding,
+      EmbeddingPurpose.Document,
+      config.region,
+      bedrockClient(region, creds)
+    ) match {
+      case Left(code)               => quietly(Seq(creds)); Left(code)
+      case Right((embedder, owned)) => workerPorts(config, creds, region, embedder, owned)
+    }
+  }
+
+  private def workerPorts(
+      config: WorkerRoleConfig,
+      creds: AwsCredentialsProvider,
+      region: Region,
+      embedder: EmbeddingClient,
+      owned: Seq[AnyRef]
+  ): Either[String, WorkerPorts] = {
     val s3 = S3Client
       .builder()
       .region(region)
@@ -328,12 +501,6 @@ final class AwsSdkPortFactory(
       .overrideConfiguration(overrides(callTimeoutMs))
       .build()
     val vectorClient = S3VectorsClient
-      .builder()
-      .region(region)
-      .credentialsProvider(creds)
-      .overrideConfiguration(overrides(callTimeoutMs))
-      .build()
-    val bedrock = BedrockRuntimeClient
       .builder()
       .region(region)
       .credentialsProvider(creds)
@@ -374,12 +541,21 @@ final class AwsSdkPortFactory(
         ),
         registry,
         new DynamoRunLedger(dynamo, storage),
-        new BedrockEmbeddingClient(
-          bedrock,
-          BedrockEmbeddingConfig(config.embedding, config.region)
-        ),
-        () => quietly(Seq(sqs, bedrock, vectorClient, dynamo, s3, creds))
+        embedder,
+        () => quietly(owned ++ Seq(sqs, vectorClient, dynamo, s3, creds))
       )
     )
   }
+}
+
+object AwsSdkPortFactory {
+  val defaultBedrock
+      : (Region, AwsCredentialsProvider, ClientOverrideConfiguration) => BedrockRuntimeClient =
+    (region, creds, overrideConfig) =>
+      BedrockRuntimeClient
+        .builder()
+        .region(region)
+        .credentialsProvider(creds)
+        .overrideConfiguration(overrideConfig)
+        .build()
 }

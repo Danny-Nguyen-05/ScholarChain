@@ -1,10 +1,12 @@
 """load-tests/llm_budget.py and experiments/manifests/llm-allocation.json, written independently by the test-engineer from the user's
-decisions (docs/agent-runs/phase-14/prompt.md, replan answer 6 "Caps: Haiku 4.5 USD 1.50", the 2026-11-08 bucket split and the 2026-11-09 decision "Caps = planned use", cap 1.33):
+decisions (docs/agent-runs/phase-14/prompt.md, replan answer 6 "Caps: Haiku 4.5 USD 1.50", the 2026-11-08 bucket split, the 2026-11-09 decision "Caps = planned use", cap 1.33,
+and repair round 3 Step 0 answer 3: keep cap 1.33 and the 115 answers, move only the per-answer estimate to Haiku 5.5 prices):
 
-  * the single Haiku 4.5 cap of USD 1.33 (planned use, was 1.50) is split into answer buckets 14c = 10, 15b = 60, 16b = 40, 17 = 5 (115 answers);
-  * the cost per answer comes from the confirmed rates (USD 1.10 input / 5.50 output per 1M tokens, geo route) and the token plan
-    (planner 1,500 in + 200 out, synthesis 4,000 in + 800 out): 5,500 x 1.10/1e6 + 1,000 x 5.50/1e6 = 0.01155, hand-derived here;
-    115 answers cost 1.32825, which is at most the 1.33 cap;
+  * the single shared cap of USD 1.33 is split into answer buckets 14c = 10, 15b = 60, 16b = 40, 17 = 5 (115 answers);
+  * the cost per answer comes from the Anthropic rates for claude-haiku-5-5 (USD 0.10 input / 0.50 output per 1M tokens, prompts under
+    100,000 tokens) and the token plan raised 30 percent (planner 1,950 in + 260 out, synthesis 5,200 in + 1,040 out):
+    7,150 x 0.10/1e6 + 1,300 x 0.50/1e6 = 0.001365, hand-derived here; 115 answers cost 0.156975, which is at most the 1.33 cap
+    (the bucket counts, not the cap, are now the binding limit);
   * EACH bucket is a hard stop: a reservation beyond a bucket is refused (exit 3) and writes nothing; the shared cap is the backstop;
   * nothing rolls over automatically; a transfer needs the user's approval file.
 
@@ -27,7 +29,7 @@ TOOL = S.REPO / "load-tests/llm_budget.py"
 ALLOCATION = S.REPO / "experiments/manifests/llm-allocation.json"
 PROFILE = S.REPO / "load-tests/config/load-profile.v1.json"
 SIZES = {"14c": 10, "15b": 60, "16b": 40, "17": 5}
-UNIT = (D(5500) * D("1.10") + D(1000) * D("5.50")) / D(1000000)  # hand-derived: 0.01155
+UNIT = (D(7150) * D("0.10") + D(1300) * D("0.50")) / D(1000000)  # hand-derived: 0.001365
 CAP = D("1.33")
 
 
@@ -68,19 +70,21 @@ class Pins(unittest.TestCase):
         self.assertEqual(D(json.loads(ALLOCATION.read_text())["shared_cap_usd"]), CAP)
         self.assertEqual(D(json.loads(PROFILE.read_text())["llm"]["shared_cap_usd"]), CAP)
 
-    def test_the_unit_cost_is_the_hand_derived_0_01155_from_the_confirmed_rates(self):
+    def test_the_unit_cost_is_the_hand_derived_0_001365_from_the_confirmed_rates(self):
         llm = json.loads(PROFILE.read_text())["llm"]
-        self.assertEqual((llm["pricing"]["input_usd_per_million_tokens"], llm["pricing"]["output_usd_per_million_tokens"]), ("1.10", "5.50"))
+        self.assertEqual((llm["pricing"]["input_usd_per_million_tokens"], llm["pricing"]["output_usd_per_million_tokens"]), ("0.10", "0.50"))
         tokens = llm["tokens_per_answer"]
-        derived = (D(tokens["planner_input"] + tokens["synthesis_input"]) * D("1.10") + D(tokens["planner_output"] + tokens["synthesis_output"]) * D("5.50")) / D(1000000)
-        self.assertEqual(derived, D("0.01155"))
-        self.assertEqual(UNIT, D("0.01155"))
+        self.assertEqual((tokens["planner_input"], tokens["planner_output"], tokens["synthesis_input"], tokens["synthesis_output"]), (1950, 260, 5200, 1040))
+        derived = (D(tokens["planner_input"] + tokens["synthesis_input"]) * D("0.10") + D(tokens["planner_output"] + tokens["synthesis_output"]) * D("0.50")) / D(1000000)
+        self.assertEqual(derived, D("0.001365"))
+        self.assertEqual(UNIT, D("0.001365"))
         self.assertEqual(D(llm["cost_multiplier"]), D(1))
 
     def test_all_buckets_together_cost_at_most_the_cap(self):
         total = UNIT * sum(SIZES.values())
-        self.assertEqual(total, D("1.32825"))
+        self.assertEqual(total, D("0.156975"))
         self.assertLessEqual(total, CAP)
+        self.assertLess(total, CAP / 8, "the cap is a conservative upper bound: the bucket counts bind first")
 
     def test_every_other_bucket_cannot_hide_inside_the_file(self):
         doc = json.loads(ALLOCATION.read_text())
@@ -133,7 +137,7 @@ class BucketsAreHardStops(Base):
                 self.assertEqual(self.ledger.read_text(), before, "a refusal writes nothing")
         buckets, total = self.status()
         self.assertEqual(buckets, {k: (v, v, 0) for k, v in SIZES.items()})
-        self.assertEqual((int(total[0]), D(total[1])), (115, D("1.32825")))
+        self.assertEqual((int(total[0]), D(total[1])), (115, D("0.156975")))
 
     def test_a_reservation_larger_than_the_bucket_is_refused_at_once(self):
         self.init()
@@ -178,14 +182,14 @@ class BucketsAreHardStops(Base):
 class SharedCapBackstop(Base):
     def test_the_cap_refuses_even_when_the_bucket_has_room(self):
         self.init()
-        done = self.run_tool("adjust", "--usd", "1.28", "--source", "aws-bill-test")
+        done = self.run_tool("adjust", "--usd", "1.32", "--source", "aws-bill-test")
         self.assertEqual(done.returncode, 0, done.stdout + done.stderr)
-        # 1.28 + 10 x 0.01155 = 1.3955 > 1.33, although bucket 14c is empty
+        # 1.32 + 10 x 0.001365 = 1.33365 > 1.33, although bucket 14c is empty
         refused = self.run_tool("reserve", "--bucket", "14c", "--answers", "10")
         self.assertEqual(refused.returncode, 3, refused.stdout + refused.stderr)
-        # 1.28 + 4 x 0.01155 = 1.3262 <= 1.33 fits, 5 x = 1.33775 does not
-        self.assertEqual(self.run_tool("reserve", "--bucket", "14c", "--answers", "5").returncode, 3)
-        self.assertEqual(self.run_tool("reserve", "--bucket", "14c", "--answers", "4").returncode, 0)
+        # 1.32 + 7 x 0.001365 = 1.329555 <= 1.33 fits; 8 x = 1.33092 does not
+        self.assertEqual(self.run_tool("reserve", "--bucket", "14c", "--answers", "8").returncode, 3)
+        self.assertEqual(self.run_tool("reserve", "--bucket", "14c", "--answers", "7").returncode, 0)
 
     def test_adjust_counts_only_against_the_total(self):
         self.init()

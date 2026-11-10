@@ -141,20 +141,23 @@ locals {
         Condition = { StringEquals = local.c_region }
       },
       {
-        Sid       = "InvokeTitanTextEmbeddingsV2Only"
-        Effect    = "Allow"
-        Action    = ["bedrock:InvokeModel"]
-        Resource  = [local.op_titan_arn]
-        Condition = { StringEquals = local.c_region }
-      },
-      {
         Sid       = "NeptuneBulkLoader"
         Effect    = "Allow"
         Action    = ["neptune-db:StartLoaderJob", "neptune-db:GetLoaderJobStatus", "neptune-db:ListLoaderJobs", "neptune-db:CancelLoaderJob", "neptune-db:GetEngineStatus"]
         Resource  = [local.op_neptune_arn]
         Condition = { StringEquals = local.c_region }
       },
-    ])
+      ], var.main_embedding_provider == "bedrock" ? [
+      {
+        # Repair round 3: only while the embeddings are served by Bedrock. With Voyage AI (the default) the loader embeds through the
+        # Voyage API from the operator's machine with a key the human supplies locally, and holds no Bedrock permission at all.
+        Sid       = "InvokeTitanTextEmbeddingsV2Only"
+        Effect    = "Allow"
+        Action    = ["bedrock:InvokeModel"]
+        Resource  = [local.op_titan_arn]
+        Condition = { StringEquals = local.c_region }
+      },
+    ] : [])
   }
 
   # The Neptune tunnel: start and stop the one-off task, find its runtime id, port-forward through ECS Exec.

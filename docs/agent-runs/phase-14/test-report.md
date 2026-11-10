@@ -589,3 +589,63 @@ env -u AWS_PROFILE AWS_EC2_METADATA_DISABLED=true AWS_CONFIG_FILE=/dev/null AWS_
 - Coordinator check after the refresh: 209 pinned, 0 drifted; JSON valid; `git diff --check` exit 0.
 - Billing suites (the only readers of the pins): `test_budget_execution.py` 112 OK; `test_budget_verification.py` 61 OK; `test_publication_evidence.py` 39 OK.
 - The pin file changed after snapshot 10, so the snapshot 10 run does not cover it; the three billing suites above do. Evidence: `evidence/14b/final/pin-refresh.txt`.
+
+## Subphase 14B — repair round 3 (Anthropic API and Voyage AI switch)
+
+Base SHA `f5490d3`, branch `phase-14`; all round-3 work is uncommitted. No live command; no AWS, Anthropic or Voyage call; no key value anywhere.
+
+### V1. Agent-run gates (agent-reported)
+
+See `owner-report.md`, "Subphase 14B — repair round 3". Highlights: rag 186, services 113, independentTests 693; terraform root 268, deployer 111; tests/infra 460, tests/scripts 462; load-tests 54, experiments 28.
+
+### V2. Coordinator-run gates (observed)
+
+Evidence: `evidence/14b/r3/gates-summary.txt`, `sbt-check-live-summary.txt`, `whitespace-and-r1.txt`, `pin-drift.txt`.
+
+| Gate | Result |
+|---|---|
+| `sbt -batch check` (JDK 17) | first attempt EXIT 1 at `independentTests / Test / scalafmtCheck` (new spec unformatted; routed to test-engineer, formatting only); final EXIT 0, 1,524 succeeded, 0 failed, 1 canceled |
+| `terraform test` root / deployer | 268 / 111 passed, 0 failed |
+| `terraform fmt -check -recursive` | exit 0 |
+| `scripts/tests` | 1,032 ran; 7 failures, all `test_terraform_r1.RouteOwnershipTest` (untracked new `.tf` files); 10/10 with them intent-added |
+| `scripts/phase12d-spike/tests` | 78 OK |
+| billing suites | 3 × OK |
+| `tests/infra` | first run 8 failures + 1 error in `test_billing_replan_14b` (local provider cache in `/private/tmp` lost `LICENSE.txt`; restored; no repository change); rerun 460 OK |
+| `tests/scripts` | 462 OK |
+| `load-tests/tests`, `experiments/tests` | 54 OK, 28 OK |
+| `check_manifests.py` | RESULT: OK |
+| `git diff --check` (untracked intent-added, index restored) | exit 0 |
+| Pin drift | 209 pinned, 10 drifted (all infra-engineer files this round); refresh after approval |
+
+The full seven-gate check on a clean snapshot is deferred until the reviewer approves (user decision 2026-11-09), as in the previous rounds.
+
+### V3. Not verified
+
+Everything live: Anthropic and Voyage response shapes and model-id echo, tool-use acceptance by `claude-haiku-5-5`, refusal behavior, latency, real token counts and spend, Secrets Manager injection into ECS, egress to `api.anthropic.com` and `api.voyageai.com` through the NAT, the provider console steps in the runbook, and the key-entry method.
+
+### V4. Review 6 repairs (B1, B2, N5)
+
+- B1 (rag-engineer): `EmbeddingClientFactory.create` takes the Bedrock and Voyage configs by name; both live mains build the embedding client through a shared `embeddingClientFor`, so only the selected provider's config is evaluated. 3 new tests in `LiveEmbeddingProviderSpec` (Titan with no Voyage key builds a Bedrock client for document and query input; Voyage at 256 and 2048 never calls the Bedrock builder; missing Voyage key and invalid provider return closed codes). Agent-reported: rag 189, services 113, 0 failed.
+- B2 and N5 (documentation-engineer): README, report §4 and runbook A0/A4 name `main_synthesis_provider` / `main_embedding_provider` in `infra/terraform/deployer/deployer.local.tfvars` and the deployer re-apply before the base plan; B3b.2 uses the Edit control and never retrieves an existing value; A4 counts marked "from before repair round 3, reference only".
+- Coordinator: `sbt -batch check` (JDK 17) EXIT 0, 1,524 → 1,527 succeeded, 0 failed, 1 canceled; `git diff --check` exit 0. Evidence: `evidence/14b/r3/recheck-review6.txt`.
+- Not routed (listed by the reviewer as nonblocking): N1–N4. Noted by the rag-engineer, outside B1: the smoke preflight reads the query-text limit from the Bedrock-shaped embedding config, which accepts 256/512/1024 only, so a Voyage run at 2048 dimensions would be refused there; the default 256 is unaffected.
+
+### V5. Full seven-gate check on clean snapshot 11 (after review 7 APPROVE)
+
+- Snapshot 11 (`3703e125e1e26603b9606037d12ddf00aef98852` on base `f5490d3`): 5,819 files identical to the working tree before the run; 1,658 non-docs files identical after it; snapshot tree clean (`evidence/14b/r3/snapshot11-identity.txt`).
+
+```text
+env -u AWS_PROFILE AWS_EC2_METADATA_DISABLED=true AWS_CONFIG_FILE=/dev/null AWS_SHARED_CREDENTIALS_FILE=/dev/null scripts/check.sh
+```
+
+| Gate | State | Time | Counts |
+|---|---|---|---|
+| constitution | PASS | 1s | |
+| hooks | PASS | 0s | |
+| shell | PASS | 8s | |
+| python | PASS | 0s | |
+| terraform | PASS | 182s | 12, 19, 111, 40, 6, 268 passed; 0 failed |
+| script-tests | PASS | 3659s | scripts/tests 1032 OK (RealStateBindingTests 7, RouteOwnershipTest 6, status ok); phase12d-spike 78 OK; billing 112, 61, 39 OK; tests/scripts 462 OK; tests/infra 460 OK; 0 skipped |
+| sbt | PASS | 802s | JDK 17; last three suites succeeded 113, 693, 28 (1 canceled); 0 failed; `[success] Total time: 795 s` |
+
+`RESULT: PASS gates=7`; `check.sh exit 0`. `test_terraform_r1` passes here because the snapshot commits the new `.tf` files. Evidence: `evidence/14b/r3/check-full-final.txt` (sanitized: snapshot, temp and home paths replaced, ANSI codes and trailing spaces stripped; no 12-digit number, no email). Raw log: `target/phase14/evidence/14b/r3/check-full-snapshot11.txt`.

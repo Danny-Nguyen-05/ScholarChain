@@ -52,6 +52,9 @@ override_resource {
   values          = { id = "rtb-synthetic-data" }
 }
 variables {
+  # Repair round 3: this file asserts the Bedrock path (the primary providers are anthropic and voyage; see phase14b_providers.tftest.hcl).
+  synthesis_provider               = "bedrock"
+  embedding_provider               = "bedrock"
   aws_account_id                   = "111122223333"
   aws_region                       = "us-east-1"
   aws_profile                      = "synthetic-not-a-real-profile"

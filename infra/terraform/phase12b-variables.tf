@@ -36,14 +36,15 @@ variable "vector_metric" {
 }
 variable "embedding_model_id" {
   type        = string
-  default     = "amazon.titan-embed-text-v2:0"
-  description = "Phase8 planned TitanV2; regional availability/access remains unverified."
+  default     = null
+  nullable    = true
+  description = "Bedrock embedding model id; used only when embedding_provider is bedrock (null then means amazon.titan-embed-text-v2:0). With embedding_provider voyage it must stay null (the model is voyage-4-lite)."
 }
 variable "synthesis_model_id" {
   type        = string
   default     = null
   nullable    = true
-  description = "No synthesis model chosen and no invocation grant when unset."
+  description = "Bedrock synthesis model id; used only when synthesis_provider is bedrock (null then means no model and no invocation grant). With synthesis_provider anthropic it must stay null (the model is claude-haiku-5-5)."
 }
 variable "emr_output_prefixes" {
   type = map(set(string))
@@ -357,9 +358,9 @@ variable "embedding_inference_profile_id" {
   type        = string
   default     = null
   nullable    = true
-  description = "System-defined inference profile ID for embedding_model_id. Null for Titan Text Embeddings V2, which has no geographic or global profile."
+  description = "System-defined inference profile ID for the Bedrock embedding model (embedding_model_id, default Titan Text Embeddings V2). Null for Titan Text Embeddings V2, which has no geographic or global profile. Only with embedding_provider bedrock."
   validation {
-    condition     = var.embedding_inference_profile_id == null ? true : can(regex("^(us|eu|apac|au|jp|ca|us-gov|global)\\.[a-zA-Z0-9][a-zA-Z0-9._:-]*$", var.embedding_inference_profile_id)) && try(endswith(var.embedding_inference_profile_id, ".${var.embedding_model_id}"), false)
+    condition     = var.embedding_inference_profile_id == null ? true : can(regex("^(us|eu|apac|au|jp|ca|us-gov|global)\\.[a-zA-Z0-9][a-zA-Z0-9._:-]*$", var.embedding_inference_profile_id)) && try(endswith(var.embedding_inference_profile_id, ".${coalesce(var.embedding_model_id, "amazon.titan-embed-text-v2:0")}"), false)
     error_message = "embedding_inference_profile_id must be a geographic prefix, a dot and exactly embedding_model_id."
   }
 }
@@ -384,7 +385,7 @@ variable "embedding_model_version" {
   type        = string
   default     = null
   nullable    = true
-  description = "The embedding model VERSION tag the 14C ingest stamps on every stored vector (the `model.version` of the live ingest config, REPLACE_WITH_PINNED_MODEL_VERSION in the 8b template; no value exists in code). The services refuse vectors whose model tag differs, so it must equal that value exactly. No default: required once the aws service mode is active (runtime_enabled and runtime_composition_verified)."
+  description = "The embedding model VERSION tag the 14C ingest stamps on every stored vector (the `model.version` of the live ingest config, REPLACE_WITH_PINNED_MODEL_VERSION in the 8b template; no value exists in code). The services refuse vectors whose model tag differs, so it must equal that value exactly. With embedding_provider voyage it is voyage-4-lite (null means that value; any other value is refused). With bedrock there is no default: required once the aws service mode is active (runtime_enabled and runtime_composition_verified)."
   validation {
     condition     = var.embedding_model_version == null ? true : can(regex("^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$", var.embedding_model_version))
     error_message = "embedding_model_version must be 1-128 characters of letters, digits and . _ : - (the services' own rule)."

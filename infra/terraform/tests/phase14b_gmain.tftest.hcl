@@ -133,6 +133,9 @@ override_resource {
   values          = { arn = "arn:aws:iam::111122223333:role/synthetic-neptune-tunnel-task" }
 }
 variables {
+  # Repair round 3: this file asserts the Bedrock path (the primary providers are anthropic and voyage; see phase14b_providers.tftest.hcl).
+  synthesis_provider               = "bedrock"
+  embedding_provider               = "bedrock"
   aws_account_id                   = "111122223333"
   aws_region                       = "us-east-1"
   aws_profile                      = "synthetic-not-a-real-profile"
@@ -276,8 +279,8 @@ run "the_rest_of_the_query_api_environment_is_unchanged_by_the_pointer" {
     runtime_artifact_source_run_id = "run:3aa10c2d-0000-4000-8000-000000000001"
   }
   assert {
-    condition     = length({ for e in jsondecode(output.phase12b_controls.runtime.task_definitions["query-api"].container_definitions)[0].environment : e.name => e.value }) == 24 && { for e in jsondecode(output.phase12b_controls.runtime.task_definitions["query-api"].container_definitions)[0].environment : e.name => e.value }["SCHOLARCHAIN_SERVICE_MODE"] == "aws"
-    error_message = "query-api has 21 variables without the pointer (4 base + 2 service URIs + 6 table names + the session index + the rag bucket + 2 synthesis + 3 embedding + 2 prefixes = 21, the same 21 as the exact map in phase14a.tftest.hcl) plus the 3 of the pointer = 24."
+    condition     = length({ for e in jsondecode(output.phase12b_controls.runtime.task_definitions["query-api"].container_definitions)[0].environment : e.name => e.value }) == 26 && { for e in jsondecode(output.phase12b_controls.runtime.task_definitions["query-api"].container_definitions)[0].environment : e.name => e.value }["SCHOLARCHAIN_SERVICE_MODE"] == "aws"
+    error_message = "query-api has 21 variables without the pointer (4 base + 2 service URIs + 6 table names + the session index + the rag bucket + 2 synthesis + 3 embedding + 2 prefixes = 21, the same 21 as the exact map in phase14a.tftest.hcl) plus the 3 of the pointer = 24; repair round 3 adds the two provider switches (SCHOLARCHAIN_SYNTHESIS_PROVIDER, SCHOLARCHAIN_EMBEDDING_PROVIDER) = 26."
   }
 }
 

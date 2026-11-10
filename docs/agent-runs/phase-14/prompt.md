@@ -296,3 +296,70 @@ This decision overrides step (d) of the reviewer's next prompt for this round.
   - N4: "Re-derive in round 3 (Recommended)". Nothing changes now. In repair round 3 (the Anthropic/Voyage switch, per the plan's "Update 2026-11-09" block), the coordinator proposes a synthesis cap near planned use at Haiku 5.5 prices, not 1.50, because the receipt reserves the full cap. The user updates the plan text after that decision.
   - N5: "Yes, keep it (Recommended)". The account constant at `scripts/billing/budget_execution.py:26` (Phase 12D) is intentional and stays under decision 3.
 - **Pending for round 3:** the plan's "Update 2026-11-09" block says the instructor ruling is recorded verbatim in this file, with a screenshot at `evidence/14b/fallback/instructor-approval.png`. Neither is in the repository yet. The user supplies the ruling text and the screenshot.
+
+## Subphase 14B — repair round 3 (Anthropic API and Voyage AI switch)
+
+Started after the 14B commit `f5490d3` (pushed to `origin/phase-14`, user request 2026-11-09). Nothing live.
+
+### Instructor ruling (2026-11-09; pasted by the user; recorded verbatim)
+
+Screenshot: `evidence/14b/fallback/instructor-approval.png` (2000 × 1127 PNG converted from the user's image; sha256 `8b3822b1c098e61aa705471eb4f2ffe82a7c205b9d75e9d07cfced4fcb2c0c79`). It shows the instructor's reply at 12:38 PM under the student's fallback request.
+
+```text
+Yes, I approve using the Anthropic API for synthesis and Voyage AI for embeddings given the Bedrock quota restriction you described. Keep the remaining infrastructure and processing on AWS, and satisfy the project's existing functionality, evaluation, and reproducibility requirements. You may proceed without waiting for AWS to approve the quota increase.
+
+Document the restriction and your fallback configuration in the report and README. Include the providers, exact model identifiers, embedding dimensions, and instructions for selecting and running each configuration. Retain the Bedrock switch as planned. If you change embedding models, regenerate the stored embeddings and rebuild the affected vector index so that stored vectors and query vectors use the same model and configuration.
+
+Count external API charges toward the $25 overall project spending limit. Report AWS, Anthropic, and Voyage charges as separate items, followed by the combined total. Your estimated $1.50 therefore belongs in that total; any service that incurs no charge should be recorded as $0, with its usage documented.
+
+The $25 limit is a ceiling, not a spending target. Monitor actual charges across providers and stop paid resources when your experiments are complete. Moving a bill outside AWS does not make it disappear.
+```
+
+The student's request shown in the screenshot proposed Claude Haiku 4.5 on the Anthropic API; the plan's "Update 2026-11-09" block selects `claude-haiku-5-5`. The ruling approves the provider (Anthropic API), not a specific Haiku version.
+
+### Step 0 answers (user, 2026-11-09)
+
+1. Ruling text and screenshot: supplied (above).
+2. Price check: "yes please check it". Coordinator result (public documentation only, no account or API call):
+   - `claude-haiku-5-5`: USD 0.10 input / 0.50 output per 1M tokens for prompts up to 100,000 tokens; USD 0.50 / 2.50 above that (Anthropic pricing page, fetched 2026-11-09). Anthropic meters before tax.
+   - `voyage-4-lite`: USD 0.02 per 1M tokens; 200M free tokens per account; `output_dimension` 256 supported (also 512, 1024 default, 2048); 32,000-token context; up to 1,000 texts and 1M tokens per request (Voyage docs, fetched 2026-11-09).
+   - Haiku 5.5 API rules (Claude API reference): `temperature`, `top_p` and `top_k` return 400 at non-default values; assistant prefill returns 400; a forced `tool_choice` is accepted and the response then has no thinking block; `stop_reason: "refusal"` with no server-side fallback; the tokenizer produces about 30% more tokens than Haiku 4.5.
+3. Synthesis cap: "remember 25 is just suggestion not a strictly real cap. so choose which way is easiest to implement cheap is second priority".
+   - Coordinator choice (easiest): keep the shared cap at USD 1.33 and the 115-answer buckets unchanged. Only the per-answer estimate in the load profile moves to Haiku 5.5 prices with token sizes raised by 30%. At those prices 115 answers estimate well under USD 1.33, so 1.33 becomes a conservative upper bound, the receipt reservation and every cap pin stay as they are, and the bucket counts remain the binding limit.
+   - Recorded conflict, not resolved by the coordinator: the instructor ruling above calls USD 25 "the $25 overall project spending limit" and "a ceiling", and the plan calls it a hard ceiling. The existing ceiling checks stay in place; the easiest option needs no change to them.
+4. Anthropic client from worktree `phase14-anthropic-fallback`: "A, with conditions" (verbatim):
+
+   ```text
+   A, with conditions:
+   1. The rag-engineer reviews the worktree diff before merging and records what it took and what it changed.
+   2. Update it to the claude-haiku-5-5 rules: no temperature, top_p or top_k, even if the runtime config has temperature 0.0; forced tool_choice kept; no prefill; content blocks read by type; stop_reason "refusal" is a typed, non-retried error; max_tokens sized for ~30% more tokens; $schema, $id and title stripped from the tool schema; strict not set.
+   3. Add tests for each rule above (fake HTTP only). Then rerun the full RAG suite here on phase-14. The worktree's 120 passing tests don't count as evidence for this branch.
+   4. Leave the worktree and its branch in place. Don't delete them.
+   ```
+
+5. API keys: "Yes make sure agents guide me how to put the api key in". Terraform creates empty Secrets Manager containers only; the user enters each key value during the live session following written steps; agents never see, print or write a key value.
+
+### Repair round 3 work order (coordinator, 2026-11-09)
+
+Scope comes from the plan's "Update 2026-11-09" block, the instructor ruling and the Step 0 answers above. Offline only: no live command, no AWS, Anthropic or Voyage call, no key value anywhere, no commit. Every agent runs Sonnet 5.5 at high effort and edits only the paths it owns.
+
+Shared contract (all owners build to these names):
+
+| Item | Value |
+|---|---|
+| Synthesis switch | env `SCHOLARCHAIN_SYNTHESIS_PROVIDER` = `anthropic` (default) or `bedrock`; Terraform `synthesis_provider` |
+| Embedding switch | env `SCHOLARCHAIN_EMBEDDING_PROVIDER` = `voyage` (default) or `bedrock`; Terraform `embedding_provider` |
+| Anthropic primary | model `claude-haiku-5-5`; Messages API `https://api.anthropic.com/v1/messages`; no `temperature`, `top_p` or `top_k` (even when config says 0.0); forced `tool_choice` kept; no prefill; content read by block type; `stop_reason` `refusal` is a typed, non-retried error; `max_tokens` sized for about 30% more tokens than Haiku 4.5; tool schema without `$schema`, `$id`, `title`; `strict` not set; prompt must stay under 100,000 tokens (higher price tier above it) |
+| Voyage primary | model `voyage-4-lite`; `output_dimension` 256; `input_type` `document` for ingest and `query` for queries; at most 1,000 texts and 1M tokens per request; embedding model version tag `voyage-4-lite` (aws mode; 14C ingest and query smoke use the same values) |
+| Vector consistency | stored and query vectors must share provider, model, dimension; a mismatch is refused, and changing the embedding model requires a full re-embed and an index rebuild |
+| API keys | ECS injects `SCHOLARCHAIN_ANTHROPIC_API_KEY` and `SCHOLARCHAIN_VOYAGE_API_KEY` from two Secrets Manager secrets, each created only when its provider is selected, with no secret version in Terraform (the user enters the value); the execution role may read only those two ARNs; key values are never logged, printed or written |
+| Bedrock fallback | Haiku 4.5 and Titan V2 stay selectable; Bedrock invoke grants exist only when a Bedrock provider is selected; no Marketplace permission on any app role |
+| Egress | the existing single NAT, TCP 443 |
+| Caps | synthesis shared cap stays USD 1.33 with buckets 10/60/40/5 = 115 answers (Step 0 answer 3; the plan's 1.50 is superseded); per-answer estimate moves to Haiku 5.5 prices (0.10 / 0.50 per 1M) with token sizes raised 30%; embeddings cap USD 0.30 with a token counter (Voyage 0.02 per 1M; first 200M tokens free) |
+| Receipts | pre-spend receipts add Anthropic and Voyage spend to date (USD, entered by the user from the provider consoles) |
+| Cleanup | deletes both secrets; the runbook tells the user to revoke both keys in the provider consoles afterwards |
+| Cost reporting | AWS, Anthropic and Voyage as separate items, then the combined total; a provider with no charge is listed as USD 0 with its usage documented |
+
+Superseded: the "user makes the first Haiku 4.5 playground call" step; the Bedrock quota precondition; open question 14-3 unless a Bedrock run is chosen.
+
+Routing: wave 1 rag-engineer (`modules/rag/**`), service-engineer (`modules/services/**`), infra-engineer (`infra/terraform/**`, `scripts/**`), experiment-engineer (`experiments/**`, `load-tests/**`); wave 2 documentation-engineer (`README.md`, `docs/**` outside the reserved subtrees) and test-engineer (`tests/**`). Anything outside an owner's paths returns as `BLOCKED-ON`.

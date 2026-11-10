@@ -606,8 +606,11 @@ class Fixture:
         snapshot = mods.pop("snapshot_dt", now_utc() - datetime.timedelta(hours=1))
         body = {
             "schema": "scholarchain.prespend-receipt.v1", "monitoring_confirmed_active": True,
-            "cost_snapshot_utc": utc(snapshot), "reported_spend_usd": 12.5, "unreported_usage_allowance_usd": 5.0,
-            "reserves_usd": 40.0, "remaining_headroom_usd": 150.25,
+            "cost_snapshot_utc": utc(snapshot), "reported_spend_usd": 1.5,
+            "anthropic_spend_to_date_usd": 0.25, "voyage_spend_to_date_usd": 0.0,
+            "unreported_usage_allowance_usd": 1.0, "reserves_usd": 2.0,
+            # Repair round 3 ceiling arithmetic, hand-derived: 25 - (1.5 + 0.25 + 0.0) - 1.0 - 2.0 = 20.25 (the most a receipt may state).
+            "remaining_headroom_usd": 20.25,
         }
         for k, v in mods.items():
             if v is Ellipsis:

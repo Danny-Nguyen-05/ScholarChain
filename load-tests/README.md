@@ -8,28 +8,32 @@ Run everything from the repository root with `python3 -I` (isolated mode).
 
 - Drives `query-api` over HTTPS (plain `http` is accepted only for a loopback host) at concurrency 1, 5, 25 and 50: that many worker threads, each closed-loop (next request after the previous response), for a bounded duration and request cap per level.
 - Writes one JSON line per request (run id, experiment id, sequence, phase, level, worker, route, method, status, outcome, latency in ms, bytes, UTC start time, `X-Request-Id` sent and echoed) plus an event log with UTC phase boundaries, then seals the files.
-- **Default: non-LLM endpoints only** (`/healthz`, `/readyz`, `/metrics`, `/v1/graph/nodes/{id}`, `/v1/graph/nodes/{id}/neighbors`, `/v1/evidence/{id}`). Routes that need IDs you did not supply are dropped and reported (`ROUTE-DROPPED`, `routes_dropped` in the run record), never silently. `POST /v1/query` (planner + synthesis on Claude Haiku 4.5) is **opt-in** with `--llm`.
+- **Default: non-LLM endpoints only** (`/healthz`, `/readyz`, `/metrics`, `/v1/graph/nodes/{id}`, `/v1/graph/nodes/{id}/neighbors`, `/v1/evidence/{id}`). Routes that need IDs you did not supply are dropped and reported (`ROUTE-DROPPED`, `routes_dropped` in the run record), never silently. `POST /v1/query` (planner + synthesis on claude-haiku-5-5 through the Anthropic API; the Bedrock route is the selectable fallback) is **opt-in** with `--llm`.
 - Aborts (exit 4, run kept and marked `aborted`) on repeated 5xx or transport failures (20 of the last 40 requests) or 5 consecutive 401/403. Timeouts: 10 s per request, 30 s for an answer, whole run at most 7,200 s, at most 300,000 requests. All limits are in `config/load-profile.v1.json`.
 
 ## LLM budget: answer buckets (opt-in)
 
-Haiku 4.5 is billed outside the credits, so the USD 1.33 session cap (lowered from USD 1.50 on 2026-11-09, user decision "Caps = planned use") is split into **answer buckets**, pinned in `experiments/manifests/llm-allocation.json` (user decision 2026-11-08): **14c 10 / 15b 60 / 16b 40 / 17 5 = 115 answers**, 115 x 0.01155 = USD 1.32825 at the estimate below, USD 0.00175 unallocated. **Each bucket is a hard stop**: once used up, that step makes no more Haiku calls; the USD 1.33 total is the backstop; nothing rolls over automatically.
+claude-haiku-5-5 on the Anthropic API is billed by Anthropic, outside the AWS credits (primary route since repair round 3, 2026-11-09, after the instructor approved the Anthropic API and Voyage AI given the Bedrock quota restriction). The USD 1.33 session cap (lowered from USD 1.50 on 2026-11-09, user decision "Caps = planned use"; kept at 1.33 in round 3, user decision "easiest option") is split into **answer buckets**, pinned in `experiments/manifests/llm-allocation.json` (user decision 2026-11-08): **14c 10 / 15b 60 / 16b 40 / 17 5 = 115 answers**, 115 x 0.001365 = USD 0.156975 at the estimate below. At these prices USD 1.33 is a **conservative upper bound** and the bucket counts are the binding limit (the cap would allow 974 answers). **Each bucket is a hard stop**: once used up, that step makes no more LLM calls; the USD 1.33 total is the backstop; nothing rolls over automatically.
 
-Pinned in `config/load-profile.v1.json`: Haiku 4.5 `us.` route USD 1.10 input / 5.50 output per 1M tokens; per answer planner 1,500 in + 200 out and synthesis 4,000 in + 800 out, so (5,500 x 1.10 + 1,000 x 5.50) / 1M = **USD 0.01155 per answer** (an estimate, not metered; the AWS bill is the cost of record).
+Pinned in `config/load-profile.v1.json`: claude-haiku-5-5 USD 0.10 input / 0.50 output per 1M tokens for prompts under 100,000 tokens (USD 0.50 / 2.50 above that; our prompts stay far below), confirmed from the Anthropic pricing page on 2026-11-09. Tokens per answer are the earlier plan raised 30% because the claude-haiku-5-5 tokenizer produces about 30% more tokens: planner 1,950 in + 260 out and synthesis 5,200 in + 1,040 out (was 1,500 / 200 and 4,000 / 800). So (7,150 x 0.10 + 1,300 x 0.50) / 1M = **USD 0.001365 per answer** (was USD 0.01155 on Bedrock Haiku 4.5 at 1.10 / 5.50; an estimate, not metered; the Anthropic console is the record). The **Bedrock fallback** is `us.anthropic.claude-haiku-4-5-20251001-v1:0` (geo cross-region, USD 1.10 / 5.50), selected with `SCHOLARCHAIN_SYNTHESIS_PROVIDER=bedrock`; switching back means changing the pricing and token blocks in the profile together (a new unit needs the manifests and tests updated, `check_manifests.py` fails if the estimate text no longer matches).
+
+**Embeddings** (14C ingest and query smoke, 16B evaluation; not part of the answer buckets): Voyage `voyage-4-lite`, 256 dimensions, USD 0.02 per 1M tokens, the first 200M account tokens free. Embeddings cap USD 0.30, enforced with a token counter by the step that embeds; `llm_budget.embedding_cost()` computes the charge (USD 0 inside the free allowance). The load generator sends no embedding requests itself.
+
+**Cost reporting** for every experiment output: AWS, Anthropic and Voyage as separate items, then the combined total; a provider with no charge is USD 0 with its usage noted. `loadgen.py run` writes `cost_report` in `raw/run-record.json` and prints a `COST-REPORT:` line; AWS is never estimated by the generator (take it from the AWS bill, `llm_budget.cost_report(..., aws_usd=...)`), so the combined total says it excludes AWS until you add it.
 
 15B answer budget per level (bucket 15b, configurable with `--llm-answers 1=10,5=15,...` or `llm_answers` per manifest phase; with a manifest the keys are phase names such as `level-50=15`):
 
 | Level | Answers | Estimated cost (USD) |
 |---|---|---|
-| 1 | 10 | 0.1155 |
-| 5 | 15 | 0.17325 |
-| 25 | 20 | 0.231 |
-| 50 | 15 | 0.17325 |
-| Total | **60** | **0.693** |
+| 1 | 10 | 0.01365 |
+| 5 | 15 | 0.020475 |
+| 25 | 20 | 0.0273 |
+| 50 | 15 | 0.020475 |
+| Total | **60** | **0.0819** |
 
 ### `llm_budget.py`: the command every LLM-calling step uses
 
-The ledger is an append-only JSONL file outside the repository and outside `target/` (so `sbt clean` cannot erase it): default `~/.scholarchain/llm-ledger/haiku-ledger.jsonl`. Every read and write holds a file lock, so concurrent reservations never pass a bucket. The runbook requires `reserve` **before** every LLM-calling command (14C smoke query, 16B evaluation, 17 demo and final smoke).
+The ledger is an append-only JSONL file outside the repository and outside `target/` (so `sbt clean` cannot erase it): default `~/.scholarchain/llm-ledger/haiku-ledger.jsonl` (the file name is unchanged on purpose: the path is pinned in the profile and the runbook, and the ledger counts Haiku answers on either route). Every read and write holds a file lock, so concurrent reservations never pass a bucket. The runbook requires `reserve` **before** every LLM-calling command (14C smoke query, 16B evaluation, 17 demo and final smoke).
 
 ```bash
 python3 -I load-tests/llm_budget.py init                                        # once; records the sha256 of the allocation; refuses if it exists
@@ -40,7 +44,7 @@ python3 -I load-tests/llm_budget.py transfer --from 14c --to 15b --answers 2 --a
 python3 -I load-tests/llm_budget.py adjust --usd 0.05 --source aws-bill         # spend seen outside the buckets; counts against the total only
 ```
 
-`reserve` refuses when bucket used + N > bucket size, or when the ledger total + N answers x USD 0.01155 would exceed USD 1.33 (the total counts all buckets plus `adjust`). `transfer` moves unused allowance only and refuses unless the approval file exists and holds the exact line `APPROVED_LLM_TRANSFER=<from>-><to>:<N>` (for example `APPROVED_LLM_TRANSFER=14c->15b:2`); the line, the file sha256 and the new sizes are recorded, and the same approval file cannot be applied twice. `status` warns `ALLOCATION-CHANGED` if the allocation file differs from the one the ledger was created with. Reservations are bookkeeping: the tool cannot see calls made by other programs.
+`reserve` refuses when bucket used + N > bucket size, or when the ledger total + N answers x USD 0.001365 would exceed USD 1.33 (the total counts all buckets plus `adjust`). `transfer` moves unused allowance only and refuses unless the approval file exists and holds the exact line `APPROVED_LLM_TRANSFER=<from>-><to>:<N>` (for example `APPROVED_LLM_TRANSFER=14c->15b:2`); the line, the file sha256 and the new sizes are recorded, and the same approval file cannot be applied twice. `status` warns `ALLOCATION-CHANGED` if the allocation file differs from the one the ledger was created with. Reservations are bookkeeping: the tool cannot see calls made by other programs.
 
 ### The load generator and the 15b bucket
 
@@ -97,7 +101,7 @@ Failed and aborted runs keep their directory and record; reruns get a new run id
 ## Tests
 
 ```bash
-python3 -I -m unittest discover -s load-tests/tests -v     # 49 tests, about 40 s, loopback only
+python3 -I -m unittest discover -s load-tests/tests -v     # 54 tests, about 40 s, loopback only
 ```
 
 ## Limits

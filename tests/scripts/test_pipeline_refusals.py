@@ -582,7 +582,7 @@ class PipelinePrespendRefusals(Base):
         args, env = fx.exec_ready()
         receipt = fx.aux / "prespend.json"
         body = json.loads(receipt.read_text())
-        body["reserves_usd"] = 41.0
+        body["reserves_usd"] = 2.5
         receipt.write_text(json.dumps(body))
         fx.log.write_text("")
         run = fx.run("run-bounded-pipeline.sh", args, env)
@@ -604,6 +604,11 @@ class PipelinePrespendRefusals(Base):
             "reserves missing": dict(reserves_usd=...),
             "allowance missing": dict(unreported_usage_allowance_usd=...),
             "spend missing": dict(reported_spend_usd=...),
+            "anthropic spend missing": dict(anthropic_spend_to_date_usd=...),
+            "voyage spend missing": dict(voyage_spend_to_date_usd=...),
+            "anthropic spend negative": dict(anthropic_spend_to_date_usd=-0.01),
+            "voyage spend negative": dict(voyage_spend_to_date_usd=-0.01),
+            "headroom above the ceiling arithmetic": dict(remaining_headroom_usd=20.27),
         }
         for label, mods in cases.items():
             with self.subTest(case=label):

@@ -85,6 +85,30 @@ variable "log_groups" { type = map(string) }
 # Every value is supplied by the root from a resource output or a variable; nothing is compiled in here.
 variable "rag_bucket" { type = string }
 variable "graph_bucket" { type = string }
+# Repair round 3: the provider choice (exported as SCHOLARCHAIN_SYNTHESIS_PROVIDER to query-api and SCHOLARCHAIN_EMBEDDING_PROVIDER to
+# every role that carries the embedding identity) and the provider API key bindings (environment variable name -> secret ARN per
+# service). The bindings reach `secrets` only in the aws service mode: a task cannot start while its secret holds no value, and the
+# human enters the values before the runtime stage that turns the aws mode on.
+variable "synthesis_provider" {
+  type    = string
+  default = "anthropic"
+  validation {
+    condition     = contains(["anthropic", "bedrock"], var.synthesis_provider)
+    error_message = "synthesis_provider must be anthropic or bedrock."
+  }
+}
+variable "embedding_provider" {
+  type    = string
+  default = "voyage"
+  validation {
+    condition     = contains(["voyage", "bedrock"], var.embedding_provider)
+    error_message = "embedding_provider must be voyage or bedrock."
+  }
+}
+variable "provider_secret_bindings" {
+  type    = map(map(string))
+  default = {}
+}
 variable "embedding_model_id" { type = string }
 variable "embedding_model_version" {
   type    = string

@@ -33,6 +33,8 @@ STATE = [
     'module.dynamodb.aws_dynamodb_table.table["RunLedger"]',  # teardown: DynamoDB
     "module.network.aws_nat_gateway.course",  # teardown: network
     "module.identity.aws_iam_role.deployment",  # teardown: the permission-less deployment role (delete everything)
+    "aws_secretsmanager_secret.anthropic[0]",  # teardown (repair round 3): the Anthropic API key container
+    "aws_secretsmanager_secret.voyage[0]",  # teardown (repair round 3): the Voyage AI API key container
 ]
 TEARDOWN_ADDRESSES = [
     'module.runtime.aws_ecs_service.service["query-api"]',
@@ -40,6 +42,8 @@ TEARDOWN_ADDRESSES = [
     "module.network.aws_nat_gateway.course",
 ]
 EXPECTED_TARGETS = sorted([
+    "aws_secretsmanager_secret.anthropic",
+    "aws_secretsmanager_secret.voyage",
     "module.datalake.aws_s3_bucket.zone",
     "module.dynamodb.aws_dynamodb_table.table",
     "module.identity.aws_iam_role.deployment",
@@ -212,6 +216,9 @@ class CleanupDryRunTests(CleanupBase):
         self.assertIn("TEARDOWN-RULES addresses: module.runtime.,module.emr.,module.neptune.,module.dynamodb.,module.messaging.,module.workflow.,module.network.", out)
         self.assertIn("protection-check", result.steps())
         self.assertIn("PROTECTION-RULES: aws_neptune_cluster:deletion_protection=true", out)
+        self.assertIn(",aws_secretsmanager_secret.anthropic,aws_secretsmanager_secret.voyage", out, "repair round 3: both key containers are teardown addresses")
+        self.assertRegex(out, r"KEY-REVOCATION-REMINDER: .*scholarchain-course/anthropic-api-key and scholarchain-course/voyage-api-key.*does NOT revoke the keys")
+        self.assertRegex(out, r"KEY-REVOCATION-REMINDER: .*REVOKE BOTH keys in the provider consoles.*Anthropic Console.*Voyage AI dashboard")
         # The inventory commands are printed before the destroy commands.
         self.assertLess(out.index("state list"), out.index("plan -destroy"))
         self.assertFalse(os.path.exists(self.plans_root()), "a dry run creates no run directory")
@@ -260,6 +267,10 @@ class CleanupListingTests(CleanupBase):
         self.assertEqual(sorted(w[len("-target="):] for w in plans[0].split() if w.startswith("-target=")), EXPECTED_TARGETS)
         self.assertIn("-target=module.datalake.aws_s3_bucket.zone", plans[0], "W4: the data lake buckets are targeted")
         self.assertIn("-target=module.identity.aws_kms_key.data", plans[0], "W4: the KMS key is targeted")
+        self.assertIn("-target=aws_secretsmanager_secret.anthropic", plans[0], "repair round 3: the Anthropic key container is targeted")
+        self.assertIn("-target=aws_secretsmanager_secret.voyage", plans[0], "repair round 3: the Voyage key container is targeted")
+        self.assertIn("KEY-REVOCATION-REMINDER: ", result.stdout, "the reminder is printed with the confirmation token")
+        self.assertLess(result.stdout.index("CONFIRM-TOKEN: "), result.stdout.index("KEY-REVOCATION-REMINDER: "))
         self.assertNotIn("-target=module.foundation", plans[0], "the state backend settings are never targeted")
         self.assertIn("-var=cleanup_mode=true", plans[0])
         self.assertIn("-out=%s" % os.path.realpath(plan_path), plans[0])
@@ -468,6 +479,8 @@ class CleanupConfirmTests(CleanupBase):
         self.assertLess(order.index("account-identity"), order.index("verify-saved-plan"))
         self.assertLess(order.index("verify-saved-plan"), order.index("destroy-apply"))
         self.assertLess(order.index("destroy-apply"), order.index("after-inventory"))
+        self.assertGreater(result.stdout.index("KEY-REVOCATION-REMINDER: "), result.stdout.index("STEP: after-inventory"), "the reminder follows the destroy, after the inventory")
+        self.assertEqual(len(re.findall(r"^KEY-REVOCATION-REMINDER: ", result.stdout, re.M)), 2)
         evidence = self.latest_evidence()
         self.assertNotEqual(evidence, self.listing_evidence, "each run has its own fresh evidence directory")
         with open(os.path.join(evidence, "destroy-plan.sha256")) as handle:

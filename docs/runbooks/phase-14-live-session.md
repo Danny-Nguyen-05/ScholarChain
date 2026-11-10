@@ -3,6 +3,7 @@
 **Who this is for:** you, the human, new to AWS, who types every live command. Nothing here is run by an agent.
 **What it covers:** the one live session of about 36 hours (hard stop at 37 hours), in this order: 14B apply, deploy and smoke, then 14C data load and vectors (8C), 15A EMR runs, 15B experiments, 16B live evaluation, demo video and final smoke, evidence archive, and full cleanup.
 **Status:** authored 2026-11-08 from the repository READMEs and the `--help` text of every script. **No command in this file has been run against AWS.** Anything marked **(unverified until live)** was derived from documentation and may need a correction when it first runs; stop and report it instead of improvising.
+**Update 2026-11-09 (repair round 3):** the primary model providers are now the **Anthropic API** (answers, model `claude-haiku-5-5`) and **Voyage AI** (embeddings, model `voyage-4-lite`, 256 dimensions), approved by the instructor because AWS Bedrock quotas are 0 (see the [report section](../report/provider-fallback.md) and the root [README](../../README.md)). This runbook was updated for that change, offline only; nothing in it has been run. Wherever the text below says "Haiku" without a version it now means `claude-haiku-5-5` on the Anthropic API, unless you choose a Bedrock run (A0 and A6). The Bedrock steps are kept, but only for a Bedrock run. The earlier text that says Titan, Marketplace or the Bedrock quota applies only to a Bedrock run.
 
 Related documents: [approval request](../agent-runs/phase-14/approval-request-14b-replan.md) (the costs and caps you approve), [replan decisions](../agent-runs/phase-14/prompt.md) (your recorded answers), [scripts README](../../scripts/README.md), [deployer README](../../infra/terraform/deployer/README.md), [Terraform README](../../infra/terraform/README.md), [billing README](../../scripts/billing/README.md), [billing verification](../../scripts/billing/VERIFICATION.md), [storage README](../../modules/storage/README.md), [rag README](../../modules/rag/README.md), [load-tests README](../../load-tests/README.md), [experiments README](../../experiments/README.md), [14C templates](../agent-runs/phase-14/evidence/14b/replan/14c-templates.md), [fallback note](../agent-runs/phase-14/evidence/14b/replan/fallback-note.md).
 
@@ -80,8 +81,10 @@ What this does: `JAVA_HOME` selects Java 17 (sbt breaks on newer Java); `tfout` 
 | **Neptune** | AWS's graph database (the researcher collaboration graph). It runs **serverless**. |
 | **NCU** | Neptune Capacity Unit: the size meter of Neptune Serverless; ours idles at the minimum of 1 NCU (about USD 0.16/hour). |
 | **S3** | AWS file storage ("buckets"). **S3 Vectors** is a vector store for embeddings (the semantic search index). |
-| **Bedrock** | AWS's service for AI models. **Titan** (Titan Text Embeddings V2) turns text into 256 numbers (an embedding). **Haiku** (Claude Haiku 4.5) writes the final answers. |
-| **Marketplace** | Haiku 4.5 is billed through AWS Marketplace to your card, **not** covered by the USD 140 credits, but it still counts toward the USD 25 cap. |
+| **Anthropic API** | Anthropic's own web service for the Claude models. The primary way answers are written: model `claude-haiku-5-5`. You pay Anthropic directly (not AWS). The question text and the evidence snippets are sent to Anthropic. It needs an **API key** (a long secret password that proves the request comes from you). |
+| **Voyage AI** | A company that turns text into numbers (an *embedding*, here 256 numbers per text) so similar texts can be found. The primary embedder: model `voyage-4-lite`. It needs its own API key. The text of documents and questions is sent to Voyage. The first 200 million tokens (word pieces) per account are free. |
+| **Bedrock** | AWS's service for AI models. Kept only as an alternative (a "Bedrock run"): **Titan** (Titan Text Embeddings V2) turns text into 256 numbers, **Haiku** (Claude Haiku 4.5) writes answers. AWS gave this account a quota of 0 for them, which is why the primary path changed. |
+| **Marketplace** | Only for a Bedrock run: Haiku 4.5 is billed through AWS Marketplace to your card, **not** covered by the USD 140 credits, but it still counts toward the USD 25 cap. The Anthropic API route has no Marketplace subscription. |
 | **EMR** | Elastic MapReduce: a short-lived Hadoop/Spark cluster for the three Phase 15A runs (2 machines, at most 90 minutes each). |
 | **IAM role** | A set of permissions you temporarily "become". We use a deployer role and four operator roles (loader, reader, cleanup, pipeline) so no single login can do everything. |
 | **MFA** | Multi-factor authentication: the 6-digit code from your authenticator app. The roles require it. |
@@ -89,16 +92,17 @@ What this does: `JAVA_HOME` selects Java 17 (sbt breaks on newer Java); `tfout` 
 | **aws login** | `aws login --profile <p> --region us-east-2` opens the browser and lets the terminal use the role session you just switched to. It replaces access keys. |
 | **profile** | A named block in `~/.aws/config` telling the CLI which login to use. |
 | **KMS key** | The encryption key for the data buckets; Terraform schedules it for deletion at cleanup (7 days, free while pending). |
-| **Secrets Manager** | AWS's safe for passwords/keys. You create four secrets there by hand; their values never enter Terraform or git. |
+| **Secrets Manager** | AWS's safe for passwords/keys. You create four secrets there by hand; their values never enter Terraform or git. Terraform also creates two **empty** containers for the Anthropic and Voyage API keys; you put each key value in by hand (section B3b). |
+| **revoke a key** | Tell the provider (in its web console) to stop accepting that key. Deleting the copy in AWS does **not** do this. You revoke both keys after cleanup. |
 | **SigV4** | Amazon's request-signing scheme. Neptune checks the signature **and** the host name, which is why the tunnel needs the real host name (below). |
 | **tunnel** | A temporary small container inside the private network plus an SSM port-forward, so your laptop can talk to the private Neptune database. |
 | **approval record** | A text file you write (`docs/agent-runs/phase-14/human-gate.md`) naming the exact stage, commit, account hash and plan hash that you approve. The scripts refuse to run without it. |
-| **pre-spend receipt** | A small JSON file you write before each paid stage stating money spent so far, reserves, and headroom (must be at least USD 3 for every spending stage; the `cleanup-prepare` stage has no headroom floor). |
+| **pre-spend receipt** | A small JSON file you write before each paid stage stating money spent so far (AWS, Anthropic and Voyage), reserves, and headroom (must be at least USD 3 for every spending stage; the `cleanup-prepare` stage has no headroom floor). |
 | **commit freeze** | The rule that git HEAD must not change during the session, because every record names the exact commit. |
-| **Haiku ledger** | A local file (`~/.scholarchain/llm-ledger/...`) that counts Haiku answers per bucket (14c 10, 15b 60, 16b 40, 17 5). |
+| **Haiku ledger** | A local file (`~/.scholarchain/llm-ledger/...`) that counts answers per bucket (14c 10, 15b 60, 16b 40, 17 5). The file keeps its old "haiku" name on purpose; it counts `claude-haiku-5-5` answers. |
 | **H0, H35, H37** | H0 is the minute you start B1.2. Hours after H0 are written H1:30 and so on. H35 is the latest moment cleanup may start; H37 is the hard stop. |
 
-**Money rule (read twice):** the whole project may spend at most **USD 25**, cumulative, including the USD 0.34 already spent. While the stack is up it costs about **USD 0.31 per hour before tax (about USD 0.35 per hour including about 11% sales tax)** even when idle. Sales tax counts toward the USD 25 cap. The budget alerts at USD 10, 15 and 20 are **only e-mails: they stop nothing, and billing data arrives 8 to 24 hours late.** Our own caps do the protecting. **Start cleanup (Section C) no later than H35, and never let the session pass H37.** If anything is going badly, going to cleanup early is always allowed.
+**Money rule (read twice):** the whole project may spend at most **USD 25**, cumulative, including the USD 0.34 already spent. The USD 25 covers **three bills together: AWS, Anthropic and Voyage AI** (the instructor counts external API charges toward it). The Anthropic and Voyage charges are not on the AWS bill and the AWS budget e-mails do not see them. **At every GO / NO-GO box, and before every receipt, read the actual charges in all three places** (AWS Cost Explorer, the Anthropic Console usage and billing page, the Voyage AI dashboard usage page) and write each number in the session clock log; the USD 25 is a ceiling, not a target, so stop paid resources as soon as the experiments finish. While the stack is up it costs about **USD 0.31 per hour before tax (about USD 0.35 per hour including about 11% sales tax)** even when idle. Sales tax counts toward the USD 25 cap. The budget alerts at USD 10, 15 and 20 are **only e-mails: they stop nothing, and billing data arrives 8 to 24 hours late.** Our own caps do the protecting. **Start cleanup (Section C) no later than H35, and never let the session pass H37.** If anything is going badly, going to cleanup early is always allowed.
 
 ---
 
@@ -126,22 +130,18 @@ At each checkpoint decide with the coordinator whether to continue or move to cl
 
 # A. Before the session (free or nearly free)
 
-Work through A0 to A12 in order, ticking the checklist at the end of the section. A6 (Bedrock) is a hard precondition and decides whether the final commit can exist, so start it early even though it is numbered late.
+Work through A0 to A12 in order, ticking the checklist at the end of the section. A6 (Bedrock) is **only for a Bedrock run**; with the default Anthropic and Voyage providers skip A6 and do the key steps in B3b instead.
 
-## A0. Decision point 2026-11-12: Bedrock quotas versus the fallback
+## A0. Provider choice (superseded decision point of 2026-11-12)
 
-Plain words: AWS currently gives this account zero quota for the AI models (Haiku 4.5, Titan V2, Nova). Without non-zero quotas the live answers and vector ingest cannot run.
+Plain words: AWS gave this account zero quota for the Bedrock AI models (Haiku 4.5, Titan V2, Nova) and declined the increase. On 2026-11-09 the instructor approved the Anthropic API for answers and Voyage AI for embeddings. So the old decision "wait for Bedrock quotas on 2026-11-12" is **superseded**: the primary configuration (Anthropic `claude-haiku-5-5`, Voyage `voyage-4-lite`, 256 dimensions) is the default and no longer needs a quota. Open question 14-3 (confirm Bedrock model access and give the model id) is superseded **unless a Bedrock run is chosen**. Record: [prompt.md, repair round 3](../agent-runs/phase-14/prompt.md).
 
-1. **Where:** Console, Service Quotas and your open AWS Support case; plus chat with the coordinator.
-2. **Do:**
-   - Run A6 (steps below) as early as possible.
-   - On 2026-11-10, if the Support case has no reply, escalate by chat.
-   - On **2026-11-12** decide: **GO Bedrock** if all four quotas are non-zero and both playground calls succeed; otherwise **FALLBACK** (direct Anthropic API for answers and a third-party 256-dimension embedding API, described in the [fallback note](../agent-runs/phase-14/evidence/14b/replan/fallback-note.md)).
-   - Write one paragraph in your own words with the decision and date.
-3. **Success looks like:** your paragraph says "A0 = GO Bedrock" or "A0 = FALLBACK" with a date.
-4. **If it fails (FALLBACK):** the coordinator routes the prepared fallback code for review and merge. That is a **new commit**, so everything done in A1 to A3 and A12 (commit, pins, images, JAR hashes) must be redone afterwards. Do not choose the session date before this decision.
+1. **Where:** your own notes and chat with the coordinator.
+2. **Do:** write one paragraph in your own words: "A0 = ANTHROPIC+VOYAGE (default)", or "A0 = BEDROCK" if you deliberately choose a Bedrock run (then do A6, which needs non-zero Bedrock quotas, set `synthesis_provider` / `embedding_provider` to `bedrock` in A8, **and also set the matching deployer variable(s) `main_synthesis_provider` / `main_embedding_provider` to `bedrock` in `infra/terraform/deployer/deployer.local.tfvars` and re-apply the deployer (A4) before the base plan**). Plain words: the deployer stack writes the AWS permission limit (the "permissions boundary") for the app and loader roles; by default it contains no Bedrock access, so without these deployer variables every Bedrock call fails with AccessDenied even when the main tfvars say `bedrock`. Mixed choices are allowed (for example answers on Anthropic and embeddings on Bedrock): each capability is chosen by its own variable.
+3. **Success looks like:** your paragraph names the choice and the date.
+4. **If it fails:** if you are unsure, keep the default and ask the coordinator.
 5. **Save to:** `target/phase14/evidence/14b/a0-decision.md`.
-6. **Tell the coordinator:** "A0 = GO Bedrock" or "A0 = FALLBACK".
+6. **Tell the coordinator:** "A0 = ANTHROPIC+VOYAGE" or "A0 = BEDROCK".
 
 ## A1. Review, prepare the pre-session commit, and commit
 
@@ -200,8 +200,9 @@ Plain words: every record you write during the session names one exact git commi
 **A1.5 Write `approval-14c.md` (the caps record for 14C).**
 - **Where:** editor, new file `docs/agent-runs/phase-14/approval-14c.md` (you write it, in your own words; it is your record, not an agent's).
 - **Do:** it must state, as wording only (no run-specific hashes, at most 64 KiB, never edited after you hash it):
-  - Haiku 4.5: USD 1.33 total, in answer buckets 14c 10 / 15b 60 / 16b 40 / 17 5, each bucket a hard stop;
-  - Titan: USD 0.30 (0.25 for the ingest, 0.05 for the query smoke);
+  - `claude-haiku-5-5` on the Anthropic API: USD 1.33 cap (a conservative upper bound; the estimate is USD 0.001365 per answer, 115 answers = USD 0.156975), in answer buckets 14c 10 / 15b 60 / 16b 40 / 17 5, each bucket a hard stop;
+  - Voyage `voyage-4-lite` embeddings: USD 0.30 (0.25 for the ingest, 0.05 for the query smoke), enforced with a token counter;
+  - that the question text, evidence snippets and document text leave AWS, and that the USD 25 covers AWS, Anthropic and Voyage together;
   - EMR: USD 2.52 cumulative (3 runs of at most 90 minutes, about USD 0.84 each);
   - the project cap USD 25 and the hard stop H37;
   - the **N11 disclosure**, using the text under "Disclosure for `approval-14c.md`" in the [14C templates](../agent-runs/phase-14/evidence/14b/replan/14c-templates.md);
@@ -322,6 +323,7 @@ Plain words: the *deployer role* is the limited identity that will run Terraform
      operator_run_prefix    = "<run-prefix>"
      ```
      `operator_principal_arn` must be an IAM **user**, otherwise sessions are capped at 1 hour. Leave `operator_neptune_cluster_resource_id` unset.
+     **Providers (repair round 3).** The defaults `main_synthesis_provider = "anthropic"` and `main_embedding_provider = "voyage"` need no line. **Only for a Bedrock run**, add `main_synthesis_provider = "bedrock"` (answers on Bedrock) and/or `main_embedding_provider = "bedrock"` (embeddings on Bedrock), equal to `synthesis_provider` / `embedding_provider` in the main `course.local.tfvars` (A8). Why: this stack writes the permissions boundary, the AWS limit on what the app and loader roles may do; without the Bedrock statement in it those roles get AccessDenied on every Bedrock call. If the deployer was already applied without them, add the lines and run this whole step (A4) again **before the base plan (B1)**; the plan counts below then differ again (re-derive from the real plan).
   2. Back up the state and make the plan:
      ```
      STATE="$HOME/Library/Application Support/ScholarChain/terraform/spike-emr/deployer.tfstate"
@@ -339,6 +341,7 @@ Plain words: the *deployer role* is the limited identity that will run Terraform
   3. Read the **whole** file `target/phase14/private/deployer-replan.plan.txt`.
 - **Success looks like (no apply yet):**
   - `Terraform v1.13.5`.
+  - **The two cases below are counts from before repair round 3 (the provider change touched the deployer: new `phase14-main` key-container statements, a conditional Bedrock statement and a conditional loader grant). They were not re-derived. Re-derive them from the real plan:** the `Plan: N to add, N to change, N to destroy.` line printed by the `terraform plan` command above and the list printed by the `jq ... | wc -l` command (also in `target/phase14/private/deployer-replan.plan.txt` and the log `target/phase14/evidence/14b/deployer-apply.log`); read every address and decide with the coordinator whether the real plan is explainable. Old counts, for reference only:
   - **Case A (expected: the state still holds the old test-cluster permission set):** `Plan: 29 to add, 0 to change, 9 to destroy.` (a `1 to change` for `tags_all`/`description` drift on `aws_iam_role.deployer` is acceptable) and the `jq` list has exactly **38** lines (29 create, 9 delete). Creates: 2 boundaries, 7 `permission_set["phase14-main--*"]` policies, 7 attachments, 4 operator roles, 5 operator data policies, 4 operator login policies. Destroys (9): the 4 `spike-emr--*` policies, their 4 attachments, `aws_iam_policy.spike_boundary[0]`.
   - **Case B (the 14A deployer apply was already done):** `Plan: 13 to add, 3 to change, 0 to destroy.` and **16** lines (changes: `keys-obs`, `main_boundary_runtime`, `data`).
 - **STOP and do not apply if:** any replacement of `aws_iam_role.deployer` (`delete,create`, `-/+`, "must be replaced"); any address outside the lists above; `aws_iam_role_policy.login` changes; an operator role without `max_session_duration = 14400`; a wildcard `Principal`; an operator policy containing `aws-marketplace`, `"Resource": "*"`, or `iam:` other than `iam:PassRole`; the `data` policy's `s3:DeleteObject`/`DeleteObjectVersion` resource being anything other than `arn:aws:s3:::scholarchain-course-<acct>-*/*`; `s3:AbortMultipartUpload` outside the artifacts statement; the pipeline policy containing `RunJobFlow`, `TerminateJobFlows`, `ListClusters`, `AddTags`, any `s3:Delete*` or `iam:`. Full list: [proposal v2 STOP rules](../../infra/terraform/deployer/README.md#replan-w5a-14b-usd-25-course-cap-acm-ecs-exec-channels-and-the-operator-roles).
@@ -420,7 +423,9 @@ Plain words: a *profile* is a named login. We use one profile per role. The `-ja
 - **Tell the coordinator:** one line per role: "Arn OK, CREDENTIALS-RESOLVED OK" or the failure class.
 - **Risk to know now:** whether Terraform reads the `-tf` credential-process profile for a 1-hour deployer session is **unverified until live**.
 
-## A6. Bedrock preconditions (hard precondition: no session if any fails)
+## A6. Bedrock preconditions (only if a Bedrock run is chosen)
+
+**Superseded for the default run.** With the Anthropic API and Voyage AI as providers there is no Bedrock quota precondition and no "first Haiku 4.5 playground call" step: skip this section and go to A7, then do B3b. Keep A6 only when you choose Bedrock for answers or embeddings in A0; then it is a hard precondition for that Bedrock capability (no session if it fails).
 
 Plain words: before spending anything, prove that AWS will actually answer model calls.
 
@@ -446,7 +451,7 @@ Plain words: before spending anything, prove that AWS will actually answer model
 
 ## A7. Secrets Manager secrets (you create them; the values are never shown)
 
-Plain words: the services need four secret strings. You create them in Secrets Manager by hand so the values never enter git or Terraform; Terraform only learns each secret's address (ARN). They bill about USD 0.40 per secret per month (prorated).
+Plain words: the services need four secret strings. You create them in Secrets Manager by hand so the values never enter git or Terraform; Terraform only learns each secret's address (ARN). They bill about USD 0.40 per secret per month (prorated). These four are separate from the **two API-key containers** for Anthropic and Voyage, which Terraform creates empty and you fill in B3b.
 
 - **Where:** T1 with `$ADMIN` (or Console > Secrets Manager > Store a new secret > Other type > Plaintext, **default encryption key**; do not use the project KMS key, it is destroyed at cleanup).
 - **The four secrets:**
@@ -493,10 +498,10 @@ Plain words: this git-ignored file holds your real values. You copy `course.loca
 |---|---|---|---|---|
 | `aws_account_id`, `availability_zones` (exactly two), `deployment_trusted_principal_arn`, `budget_limit_usd = 25` | set | set | set | set |
 | `neptune_enabled = true`, `neptune_engine_version`, `neptune_parameter_family` | set | set | set | set |
-| `embedding_model_id = "amazon.titan-embed-text-v2:0"`, `synthesis_model_id = "anthropic.claude-haiku-4-5-20251001-v1:0"`, `synthesis_inference_profile_id = "us.anthropic.claude-haiku-4-5-20251001-v1:0"`, `synthesis_inference_profile_regions = ["us-east-1","us-east-2","us-west-2"]` | set | set | set | set |
+| `synthesis_provider` and `embedding_provider`: leave unset for the default (`anthropic` and `voyage`) or set each explicitly. With the defaults leave **unset** `embedding_model_id`, `synthesis_model_id`, `synthesis_inference_profile_id`, `synthesis_inference_profile_regions` and `embedding_model_version` (a leftover Bedrock value is refused by a Terraform guard). **Only for a Bedrock run** set the matching provider to `bedrock` and: `embedding_model_id = "amazon.titan-embed-text-v2:0"`, `synthesis_model_id = "anthropic.claude-haiku-4-5-20251001-v1:0"`, `synthesis_inference_profile_id = "us.anthropic.claude-haiku-4-5-20251001-v1:0"`, `synthesis_inference_profile_regions = ["us-east-1","us-east-2","us-west-2"]` | set | set | set | set |
 | `container_insights_enabled = false`, `dashboard_enabled = false`, `service_capacity` (four services: `cpu = 256, memory = 1024, min = 1, max = 2`) | set | set | set | set |
 | `api_domain_name = "api.<domain>"`, `acm_validation_timeout = "15m"` (do **not** set `https_certificate_arn`; exactly one of the two is allowed) | set | set | set | set |
-| the three Q8 values: `embedding_model_version = "amazon.titan-embed-text-v2:0"`, `embedding_text_prefix = "embedding-text"`, `semantic_index_name = "researcher-profile-v1"` | may be set | set | set | set |
+| the three Q8 values: `embedding_model_version` (with Voyage leave unset, or exactly `voyage-4-lite`; with Bedrock embeddings `"amazon.titan-embed-text-v2:0"`), `embedding_text_prefix = "embedding-text"`, `semantic_index_name = "researcher-profile-v1"`; `vector_dimension` stays 256 | may be set | set | set | set |
 | `runtime_enabled`, `runtime_composition_verified` | `false`, `false` | `true`, `true` | `true`, `true` | `true`, `true` |
 | `service_secret_bindings` (four services, ARNs only) | `{}` | set | set | set |
 | `public_ingress_cidrs` (your public IP, see below) | `[]` | `["<ip>/32"]` | same | same |
@@ -525,7 +530,7 @@ Plain words: a CAA record can forbid AWS from issuing your certificate. We check
 
 ## A10. Initialize the Haiku answer ledger
 
-Plain words: the ledger is a local counter that makes the Haiku buckets (14c 10 / 15b 60 / 16b 40 / 17 5) hard stops. Every step that can call Haiku reserves answers first.
+Plain words: the ledger is a local counter that makes the answer buckets (14c 10 / 15b 60 / 16b 40 / 17 5) hard stops. Every step that can call the model reserves answers first. The estimate per answer is USD 0.001365 (115 answers = USD 0.156975; the USD 1.33 cap stays as a conservative upper bound).
 
 - **Where:** T1.
 - **Do:**
@@ -573,14 +578,14 @@ Plain words: the ledger is a local counter that makes the Haiku buckets (14c 10 
 
 ### A checklist (tick everything before H0)
 
-- [ ] A0 decision recorded (GO Bedrock, or FALLBACK merged and A1 redone)
+- [ ] A0 provider choice recorded (default Anthropic+Voyage, or a deliberate Bedrock run)
 - [ ] A1 reviewer APPROVE seen; EMR flag true; manifests rendered; `approval-14c.md` committed; `check.sh` PASS gates=7; committed; HEAD noted
 - [ ] A2 pins: `209 pinned; 0 drifted` (and `modify` object added in A3)
 - [ ] A3 budget is USD 25 with alerts at 10/15/20 (apply log and verify log both OK); packet and gate record committed
 - [ ] A4 deployer applied; verification outputs as expected; state backups copied to Drive
 - [ ] A5 all five roles rehearsed (Arn shapes OK; three CREDENTIALS-RESOLVED lines)
-- [ ] A6 four quotas non-zero; both playground/Titan calls OK; Marketplace subscription listed
-- [ ] A7 four secrets created; ARN list saved privately
+- [ ] A6 (only for a Bedrock run) quotas non-zero; playground/Titan calls OK; Marketplace subscription listed. Default run: A6 skipped.
+- [ ] A7 four secrets created; ARN list saved privately (the two API-key containers are filled later, in B3b)
 - [ ] A8 `course.local.tfvars` complete for the base plan; ignored by git
 - [ ] A9 CAA none or allows `amazon.com`
 - [ ] A10 Haiku ledger initialised
@@ -591,14 +596,14 @@ Plain words: the ledger is a local counter that makes the Haiku buckets (14c 10 
 
 # B. The session (H0 is the start of B1.2)
 
-Money is spent from the first apply until the last cleanup pass. Keep the clock: write the UTC time at every GO/NO-GO box in `target/phase14/evidence/14b/session-clock.log` (`date -u | tee -a ...`).
+Money is spent from the first apply until the last cleanup pass. Keep the clock: write the UTC time at every GO/NO-GO box in `target/phase14/evidence/14b/session-clock.log` (`date -u | tee -a ...`). At every GO / NO-GO box also write the three actual charges (AWS Cost Explorer, Anthropic Console, Voyage AI dashboard) next to the time, and treat the sum, not the AWS figure alone, as the spend against the USD 25.
 
 ## B0. Session start (about 15 minutes before H0)
 
 - **Where:** Console and T1.
 - **Do:**
   1. Console: sign in as your IAM user with MFA (fresh). In T1: `date -u | tee -a target/phase14/evidence/14b/session-clock.log` and `date -u +%s > target/phase14/private/h0.epoch` (used later to set approval expiry to H0 + 37 hours).
-  2. Console > **Billing and Cost Management** > **Cost Explorer**: group by Service, date range from the project start, and untick **Credits** and **Refunds** under Charge type (the USD 25 cap counts usage regardless of credits; confirm this setting with the coordinator). Note the total and the "data through" date. Then Billing > **Budgets**: one budget, USD 25, alerts at 10/15/20.
+  2. Console > **Billing and Cost Management** > **Cost Explorer**: group by Service, date range from the project start, and untick **Credits** and **Refunds** under Charge type (the USD 25 cap counts usage regardless of credits; confirm this setting with the coordinator). Note the total and the "data through" date. Then Billing > **Budgets**: one budget, USD 25, alerts at 10/15/20. Then read the **Anthropic Console** usage and billing page and the **Voyage AI dashboard** usage page and note both totals in US dollars (they feed the two new receipt fields; `0` if nothing yet).
   3. T1: `git status --short` (must print nothing), `git rev-parse HEAD` (must equal the A12 HEAD), `curl -s https://checkip.amazonaws.com` (must equal the IP in your tfvars), `python3 -I load-tests/llm_budget.py status` (nothing used).
 - **Success looks like:** the three checks above agree; the budget page shows USD 25 with three alerts.
 - **If it fails:** a dirty tree, a different HEAD or a different IP means stop; tell the coordinator (HEAD change = redo A12; IP change = update `public_ingress_cidrs` before B4).
@@ -609,12 +614,14 @@ Money is spent from the first apply until the last cleanup pass. Keep the clock:
 
 Plain words: before every paid stage you write two small files. The *receipt* says how much money is spent and reserved. The *record* says "I approve exactly this stage, commit, account and plan". The script refuses to run unless both are valid and match.
 
-**R.1 Work out the four numbers** (the coordinator gives you the final values; you check the arithmetic):
-- `reported_spend_usd`: the Cost Explorer total from B0.2 (gross usage since the project started; USD 0.34 at the start). It is the Cost Explorer total as shown, which already includes sales tax, so do not add tax again.
-- `unreported_usage_allowance_usd`: spend that has happened since the last data day Cost Explorer shows (billing lags 8 to 24 h). Use (hours since that data day times USD 0.3096 (about 0.31), plus Haiku answers used so far times USD 0.01155, plus a margin) times 1.11 (the factor 1.11 adds the about 11% sales tax, because tax counts toward the USD 25 cap). Reserves count only up to H36 but the hard stop is H37, so the margin must be at least about USD 0.35 (one hour with tax) on every receipt after H0; the coordinator states the margin when giving the values.
-- `reserves_usd`: money still to be spent until the end of cleanup, including sales tax: (remaining hours to H36 times USD 0.3096 (about 0.31), plus USD 3.58 (fixed charges 1.17 and usage 2.41, counted in full to be safe), plus USD 0.05 tunnel if not yet run, plus the unspent caps (Titan 0.30, EMR 2.52, Haiku 1.33)) times 1.11.
-- `remaining_headroom_usd` = 25 - reported - unreported - reserves. It must be **at least 3** for every spending stage. The `cleanup-prepare` stage has **no headroom floor**: a negative headroom is accepted there, so overspend never blocks cleanup. Its receipt must still exist, match its approved sha256, be fresh (within 24 h), show monitoring confirmed and carry all four numeric cost fields.
-- *Example at H0 (modeled from the [approval request](../agent-runs/phase-14/approval-request-14b-replan.md), section 3.2, with EMR at its USD 2.52 cap):* reserves before tax = 11.15 + 1.17 + 2.41 + 0.05 + 0.30 + 2.52 + 1.33 = 18.93; with tax, 18.93 x 1.11 = 21.01 (rounded to cents). The allowance is 0.50 x 1.11 = 0.56. With reported 0.34 the headroom is 25 - 0.34 - 0.56 - 21.01 = 3.09, which is at least 3. This is tight, so if any stage's receipt comes out below 3, stop new paid work and go to cleanup (E12). For a spending stage the scripts check only that the number you write is at least 3, not the arithmetic, so the coordinator checks it.
+**R.1 Work out the six numbers** (the coordinator gives you the final values; you check the arithmetic):
+- `reported_spend_usd`: the Cost Explorer total from B0.2 (gross usage since the project started; USD 0.34 at the start). It is the Cost Explorer total as shown, which already includes sales tax, so do not add tax again. This is the **AWS** figure only.
+- `anthropic_spend_to_date_usd` (new): the total you have been charged so far by Anthropic, in US dollars, read by you from the Anthropic Console (usage and billing page) at the time you read Cost Explorer. In plain words: "how much has Anthropic billed this project's key so far". Write `0` if it shows nothing yet; the field may not be left out.
+- `voyage_spend_to_date_usd` (new): the same for Voyage AI, read from the Voyage dashboard usage page. In plain words: "how much has Voyage billed so far". Inside the 200 million free tokens the charge is `0` (the usage still shows on the dashboard); write `0`, not an empty value.
+- `unreported_usage_allowance_usd`: spend that has happened since the last data day Cost Explorer shows (billing lags 8 to 24 h). Use (hours since that data day times USD 0.3096 (about 0.31), plus answers used so far times USD 0.001365 (a provider console can lag too, so count answers you reserved but do not see yet), plus a margin) times 1.11 (the factor 1.11 adds the about 11% sales tax, because tax counts toward the USD 25 cap). Reserves count only up to H36 but the hard stop is H37, so the margin must be at least about USD 0.35 (one hour with tax) on every receipt after H0; the coordinator states the margin when giving the values.
+- `reserves_usd`: money still to be spent until the end of cleanup, including sales tax: (remaining hours to H36 times USD 0.3096 (about 0.31), plus USD 3.58 (fixed charges 1.17 and usage 2.41, counted in full to be safe), plus USD 0.05 tunnel if not yet run, plus the unspent caps (embeddings 0.30, EMR 2.52, synthesis 1.33; the receipt reserves the full cap even though 115 answers are estimated at only USD 0.156975)) times 1.11.
+- `remaining_headroom_usd` = 25 - (AWS reported + Anthropic to date + Voyage to date) - unreported - reserves. The script refuses a headroom that is larger than this arithmetic allows (one cent of tolerance), so a headroom computed without the Anthropic and Voyage numbers is refused. It must be **at least 3** for every spending stage. The `cleanup-prepare` stage has **no headroom floor**: a negative headroom is accepted there, so overspend never blocks cleanup. Its receipt must still exist, match its approved sha256, be fresh (within 24 h), show monitoring confirmed and carry all six numeric cost fields.
+- *Example at H0 (modeled from the [approval request](../agent-runs/phase-14/approval-request-14b-replan.md), section 3.2, with EMR at its USD 2.52 cap):* reserves before tax = 11.15 + 1.17 + 2.41 + 0.05 + 0.30 + 2.52 + 1.33 = 18.93; with tax, 18.93 x 1.11 = 21.01 (rounded to cents). The allowance is 0.50 x 1.11 = 0.56. With reported 0.34 and Anthropic and Voyage both 0 the headroom is 25 - (0.34 + 0 + 0) - 0.56 - 21.01 = 3.09, which is at least 3. This is tight, so if any stage's receipt comes out below 3, stop new paid work and go to cleanup (E12). For a spending stage the scripts check only that the number you write is at least 3, not the arithmetic, so the coordinator checks it.
 
 **R.2 Write the receipt** (numbers are JSON numbers, no quotes; `cost_snapshot_utc` is the time you read Cost Explorer, at most 24 h old at every paid operation):
 ```
@@ -624,6 +631,8 @@ cat > target/phase14/prespend-receipt.json <<'EOF'
   "monitoring_confirmed_active": true,
   "cost_snapshot_utc": "YYYY-MM-DDTHH:MM:SSZ",
   "reported_spend_usd": 0.34,
+  "anthropic_spend_to_date_usd": 0,
+  "voyage_spend_to_date_usd": 0,
   "unreported_usage_allowance_usd": 0.56,
   "reserves_usd": 21.01,
   "remaining_headroom_usd": 3.09
@@ -631,7 +640,7 @@ cat > target/phase14/prespend-receipt.json <<'EOF'
 EOF
 shasum -a 256 target/phase14/prespend-receipt.json
 ```
-(Replace the example numbers and the time.) The printed hash goes into the record as `APPROVED_PRESPEND_SHA256`.
+(Replace the example numbers and the time. `reported_spend_usd` is AWS; the two new fields are the totals you type in from the Anthropic Console and the Voyage dashboard, in US dollars, as plain numbers with no quotes; both are required and a missing, negative or non-numeric value is refused.) The printed hash goes into the record as `APPROVED_PRESPEND_SHA256`.
 
 **R.3 Write the approval record** in your own words as `docs/agent-runs/phase-14/human-gate.md` (overwritten for every stage; it is the only file exempt from the clean-tree check, and you never `git add` it):
 ```
@@ -712,7 +721,7 @@ Plain words: the *base plan* lists everything the network, database, storage, ke
 > **The commit freeze starts now** (Section D). Do not commit or edit tracked files until Section C is finished.
 
 **B1.4 Receipt and record for `base-apply`** (Procedure R). `APPROVED_STAGE=base-apply`; the plan and receipt hashes come from B1.3.
-- **Tell the coordinator:** the four receipt numbers and the headroom (never the account ID).
+- **Tell the coordinator:** the six receipt numbers and the headroom (never the account ID).
 
 **B1.5 Fresh deployer session, then dry run, then base-apply.**
 - **Where:** Console, then T1.
@@ -784,7 +793,49 @@ Plain words: `push` copies the four container images built in A12 to the AWS ima
 - **Save to:** `target/phase14/evidence/14b/push.log`; archive per R.5 as `push`.
 - **Tell the coordinator:** the `RESULT:` line and the push-record path.
 
-> **GO / NO-GO 2 (after push):** [ ] `RESULT: PASS stage push` [ ] certificate `ISSUED` [ ] your IP unchanged (`curl -s https://checkip.amazonaws.com`) [ ] elapsed about H2:15. GO = B4.
+> **GO / NO-GO 2 (after push):** [ ] `RESULT: PASS stage push` [ ] certificate `ISSUED` [ ] your IP unchanged (`curl -s https://checkip.amazonaws.com`) [ ] elapsed about H2:15 [ ] actual charges read in all three places (AWS, Anthropic, Voyage) and written in the clock log [ ] B3b done: both provider keys entered and `describe-secret` shows `AWSCURRENT` for each. GO = B4.
+
+## B3b. Entering the Anthropic and Voyage API keys (after base-apply, before runtime-apply)
+
+Plain words: the base-apply made two **empty** containers in Secrets Manager, one for each provider's API key. A key is a long secret password that lets our services call Anthropic (answers) or Voyage (embeddings) and bills your account there. The containers must hold a real key **before** B4: ECS cannot start a service whose secret is empty, so the runtime-apply would fail. You create each key in the provider's own web console, then put it into its container with **your own** AWS identity (no Terraform role is allowed to write secret values, by design). These steps were authored offline and have not been run: the first run is their test.
+
+**Status of the entry method: pending user confirmation.** The primary method (AWS console) and the alternative (terminal) below are proposals. Tell the coordinator which one you choose before B3b; do not start until you have.
+
+**Rules for the key (read first):**
+- Never paste a key into chat, a file, a commit, the evidence folder, a screenshot or a command argument (anything you type after the command name is recorded in your shell history and visible in process lists). Never send it to the coordinator.
+- Never run `aws secretsmanager get-secret-value`. You confirm with `describe-secret`, which shows that a value exists without showing it.
+- The provider consoles show a key's value **once**, when you create it. Copy it straight into the AWS console (or the terminal prompt below). If you keep a copy for the later Voyage ingest (B8.6), keep it in your password manager only; this is your decision (pending user confirmation).
+
+**B3b.1 Create the two keys in the provider consoles** (browser; do both):
+1. Anthropic: sign in to the Anthropic Console, open **API keys**, create a key, name it for this project (for example `scholarchain-course-session`). Look for a **spend limit** or usage limit setting (in the console's billing or limits pages; menu names may differ, unverified) and set a small monthly limit, for example USD 5. Keep the page open; the value is shown once.
+2. Voyage AI: sign in to the Voyage dashboard, open **API keys**, create a key, name it the same way. If the dashboard offers a spend or usage limit, set a small one. Keep the page open.
+- **Success looks like:** two named keys appear in the two key lists; limits are set where the console offers them.
+- **If it fails:** a console that needs a card or credit first: add the minimum the console asks for and tell the coordinator the amount (it counts toward the USD 25). A missing limit option: continue, and tell the coordinator.
+
+**B3b.2 Put each value into its container** (use your own administrator identity, not a deployer or operator role). The two containers are named `scholarchain-course/anthropic-api-key` and `scholarchain-course/voyage-api-key` (`scholarchain-<env>/...` with `<env>` = `course`).
+
+*Primary method: AWS console.*
+1. AWS Console (region **us-east-2**), signed in as your IAM user, open **Secrets Manager** > **Secrets** and click `scholarchain-course/anthropic-api-key`.
+2. In the **Secret value** area use the **Edit** control (some console versions label it **Set secret value**; the [Terraform README](../../infra/terraform/README.md) says Secret value, Edit, Plaintext, paste, Save). The secret is still empty, so there is nothing to reveal. If this console version shows only **Retrieve secret value**, that is acceptable **only while the secret is still empty** (nothing is revealed, because no value exists); once a value exists, never click **Retrieve secret value** again, for example when you re-enter a wrong value use **Edit** only.
+3. Choose the **Plaintext** tab, delete anything in the box, paste the key (no spaces or new lines before or after it), click **Save**.
+4. Repeat for `scholarchain-course/voyage-api-key` with the Voyage key.
+
+*Alternative method: terminal (keeps the key out of shell history and process lists, matches the [Terraform README](../../infra/terraform/README.md)).* In T1, one key at a time. `read -rs` hides what you paste and keeps it only in a shell variable; `printf` is a shell built-in, so the key is never an argument of a program:
+```
+read -rs KEY
+printf '%s' "$KEY" | aws secretsmanager put-secret-value --secret-id scholarchain-course/anthropic-api-key --secret-string file:///dev/stdin --region us-east-2 --profile "$ADMIN" --query 'Name' --output text
+unset KEY
+```
+Paste the key after the first line and press Enter (nothing is shown). The second line prints only the secret name. Repeat the three lines with `scholarchain-course/voyage-api-key` and the Voyage key. (Also equivalent if you prefer: run the `aws secretsmanager put-secret-value ... --secret-string file:///dev/stdin` command alone, paste the key, press Enter and then Ctrl-D.)
+
+**B3b.3 Confirm without revealing** (prints names and version labels, never the value):
+```
+for n in anthropic-api-key voyage-api-key; do aws secretsmanager describe-secret --secret-id scholarchain-course/$n --query '{Name:Name,Versions:VersionIdsToStages}' --region us-east-2 --profile "$ADMIN"; done 2>&1 | tee -a target/phase14/evidence/14b/b3b-provider-keys.log
+```
+- **Success looks like:** each block shows the name and one version id with `AWSCURRENT` (an empty container shows `null` for `Versions`).
+- **If it fails:** `ResourceNotFoundException`: the container is missing (base-apply did not create it, or `synthesis_provider` / `embedding_provider` selected Bedrock, which has no container for that provider): stop and tell the coordinator. `AccessDenied`: you used a Terraform role instead of your own identity: switch back and retry. If you pasted a wrong value, put the value again with the same steps (a new version replaces it). If a key ever appears somewhere it should not (chat, file, screenshot), revoke it in the provider console now (see C5b) and create a new one.
+- **Save to:** `target/phase14/evidence/14b/b3b-provider-keys.log` (names and version labels only).
+- **Tell the coordinator:** "both provider keys entered, describe-secret shows AWSCURRENT for each" (never the key, never its first characters).
 
 ## B4. Runtime plan and runtime-apply (H2:15)
 
@@ -792,7 +843,7 @@ Plain words: the *runtime* is the four services, the load balancer (ALB), the HT
 
 **B4.1 Switch the tfvars to the runtime state.**
 - **Where:** editor on `course.local.tfvars` (A8 table, second column).
-- **Do:** `runtime_enabled = true`, `runtime_composition_verified = true`, the four `service_secret_bindings` (ARNs from `target/phase14/private/secret-arns.txt`), `public_ingress_cidrs = ["<ip>/32"]`, **`neptune_tunnel_enabled = true`**, the three Q8 values, `query_health_check_grace_period_seconds = 300`. `runtime_composition_verified = true` is allowed only because the reviewed live composition is in the committed HEAD.
+- **Do:** `runtime_enabled = true`, `runtime_composition_verified = true`, the four `service_secret_bindings` (ARNs from `target/phase14/private/secret-arns.txt`), `public_ingress_cidrs = ["<ip>/32"]`, **`neptune_tunnel_enabled = true`**, the three Q8 values, `query_health_check_grace_period_seconds = 300`. `runtime_composition_verified = true` is allowed only because the reviewed live composition is in the committed HEAD. The provider variables (`synthesis_provider`, `embedding_provider`) must be the same as in the base plan, and **both provider keys must already be entered (B3b)**: ECS tasks cannot start while their key container is empty.
 - **Success looks like:** `curl -s https://checkip.amazonaws.com` equals the address in `public_ingress_cidrs`; `git status --short` is still empty (the file is ignored).
 - **If it fails:** the tunnel flag left out means a second runtime-apply later (extra record and receipt); fix it now.
 - **Save to:** nothing (never copy the file).
@@ -1044,25 +1095,26 @@ sbt -batch "storage / Compile / runMain edu.uic.cs441.scholarchain.storage.Stora
 - **Save to:** `awsintegration.log` and the journal (14c).
 - **Tell the coordinator:** the test result and the journal file name.
 
-**B8.6 8C ingest: embed and store the vectors (Titan, credit-covered, cap USD 0.25).**
+**B8.6 8C ingest: embed and store the vectors (Voyage `voyage-4-lite`, cap USD 0.25; Titan only for a Bedrock run).**
 - **Where:** T1 (loader session fresh enough; this can run a long time).
-- **Do:** use the templates in the [14C templates](../agent-runs/phase-14/evidence/14b/replan/14c-templates.md) and the [render-config template](../agent-runs/phase-08/evidence/8b-r1/render-config.template.json). The three values must be the same ones in tfvars: `model.version` = `amazon.titan-embed-text-v2:0`, `textPrefix` = `embedding-text`, index `researcher-profile-v1`; `dimension` 256; `profile` = `scholarchain-loader-java`; buckets and tables from Terraform outputs (your account ID shown as `<acct>` only in notes).
+- **Do:** use the templates in the [14C templates](../agent-runs/phase-14/evidence/14b/replan/14c-templates.md) and the [render-config template](../agent-runs/phase-08/evidence/8b-r1/render-config.template.json). The three values must be the same ones in tfvars: `model.version` = `voyage-4-lite` (model id `voyage-4-lite`; for a Bedrock run `amazon.titan-embed-text-v2:0`), `textPrefix` = `embedding-text`, index `researcher-profile-v1`; `dimension` 256 (Voyage `output_dimension` 256); the stored vectors and the query vectors must use the same provider, model and dimension (changing the model means a full re-embed and an index rebuild). **Note:** the [14C templates](../agent-runs/phase-14/evidence/14b/replan/14c-templates.md) were written for Titan; use the Voyage values above and tell the coordinator if a field does not fit; `profile` = `scholarchain-loader-java`; buckets and tables from Terraform outputs (your account ID shown as `<acct>` only in notes).
   1. Render the real-model manifest locally (no cloud call):
      ```
      sbt -batch "rag / Compile / runMain edu.uic.cs441.scholarchain.rag.EmbeddingManifestMain --export $EXPORT --work-manifest $EXPORT/load-manifests/s3vectors.json --config $REPO/target/phase14/14c-work/render-config.json --manifest-output $REPO/target/phase14/14c-work/real-model-manifest.json --report $REPO/target/phase14/14c-work/render-report.json" 2>&1 | tee target/phase14/evidence/14c/render-manifest.log; echo "exit=$?"
      ```
      Success: `exit=0`; the report says `mode=render-only`, `embeddingCalls=0`, `stateWritten=false`. The reviewed `templateVersion` value is a decision for you and the coordinator (the repository does not fix one).
   2. Write `live-config.json` (template in 14c-templates.md) and `ingest-approval.json` (same file): `configSha256` = `shasum -a 256 live-config.json`, `manifestSha256` = `shasum -a 256 real-model-manifest.json`, `phase14GateReference` = the absolute path of `approval-14c.md`, `phase14GateSha256` = `shasum -a 256 docs/agent-runs/phase-14/approval-14c.md`, `runId` = `<run-prefix>-ingest`, `operation` `ingest`, caps 10000 / 2 / 20000 / USD 0.25, `executionApproved`, `pricingValidated`, `budgetValidated` true (your decision), `expiresAtEpochSeconds` = `python3 -I -c 'print(int(open("target/phase14/private/h0.epoch").read())+37*3600)'`.
+  2b. **Voyage key in your shell (pending user confirmation).** The ingest runs on your Mac with the loader profile, which cannot read Secrets Manager, so the live main reads the Voyage key from the environment (`SCHOLARCHAIN_VOYAGE_API_KEY`), and only when `voyage` is the embedding provider. In the terminal that runs the ingest: `read -rs SCHOLARCHAIN_VOYAGE_API_KEY; export SCHOLARCHAIN_VOYAGE_API_KEY` (paste the key from your password manager, Enter; nothing is shown), and `unset SCHOLARCHAIN_VOYAGE_API_KEY` as soon as step 3 and B8.7 are done. Never put it in a file or on the command line. This local-key assumption comes from the Terraform README and is unverified until live.
   3. Run:
      ```
      sbt -batch "rag / Compile / runMain edu.uic.cs441.scholarchain.rag.LiveEmbeddingIngestMain --config $REPO/target/phase14/14c-work/live-config.json --manifest $REPO/target/phase14/14c-work/real-model-manifest.json --approval $REPO/target/phase14/14c-work/ingest-approval.json --report $REPO/target/phase14/evidence/14c/ingest-report.json --run-id ${RUN_PREFIX}-ingest" 2>&1 | tee target/phase14/evidence/14c/ingest.log; echo "exit=$?"
      ```
 - **Success looks like:** `exit=0`; `ingest-report.json` shows `"mode":"approved-live"`, `"rejected":0`, `"billingGuarantee":false`, `written` equal to the manifest item count, and `embeddingCalls` within the approved cap of 20000.
-- **If it fails:** a `live-approval-*` refusal comes from the offline pre-check (nothing was contacted): fix the JSON (hash, expiry, run id). A throttling error means the Titan quota is not applied: stop (E6). Other failures: send the log and the report.
+- **If it fails:** a `live-approval-*` refusal comes from the offline pre-check (nothing was contacted): fix the JSON (hash, expiry, run id). An HTTP 429 from Voyage is retried by the client with backoff (3 attempts); if it still fails, or the key is refused, stop (E6b). A throttling error from Bedrock (Bedrock run only) means the Titan quota is not applied: stop (E6). Other failures: send the log and the report.
 - **Save to:** `render-manifest.log`, `ingest.log`, `ingest-report.json` (14c).
 - **Tell the coordinator:** the exit code, `written`, `rejected`, `embeddingCalls`.
 
-**B8.7 The five retrieval smokes (8C query and latency; no Haiku call).**
+**B8.7 The five retrieval smokes (8C query and latency; no answer call, but each query is embedded with Voyage and needs `SCHOLARCHAIN_VOYAGE_API_KEY` from B8.6 step 2b).**
 - **Do:** write `smoke-config.json` and `smoke-approval.json` from 14c-templates.md (operation `query-smoke`; `vectorCap`, `concurrencyCap`, `embeddingCallCap` 0; `queryRequestCap` 5, `queryEmbeddingCallCap` 10, `queryObjectReadCap` 5; `dollarCapUsd` 0.05; `runId` `<run-prefix>-query-smoke`; the five queries use real `expectedVectorKeys` from the manifest), then:
   ```
   sbt -batch "rag / Compile / runMain edu.uic.cs441.scholarchain.rag.LiveEmbeddingSmokeMain --config $REPO/target/phase14/14c-work/smoke-config.json --manifest $REPO/target/phase14/14c-work/real-model-manifest.json --approval $REPO/target/phase14/14c-work/smoke-approval.json --report $REPO/target/phase14/evidence/14c/query-report.json --run-id ${RUN_PREFIX}-query-smoke" 2>&1 | tee target/phase14/evidence/14c/query-smoke.log; echo "exit=$?"
@@ -1072,7 +1124,7 @@ sbt -batch "storage / Compile / runMain edu.uic.cs441.scholarchain.storage.Stora
 - **Save to:** `query-smoke.log`, `query-report.json` (14c).
 - **Tell the coordinator:** the exit code and the report summary.
 
-**B8.8 Reserve Haiku answers, then the real-data smoke.**
+**B8.8 Reserve answers (`claude-haiku-5-5`), then the real-data smoke.**
 - **Do:**
   ```
   python3 -I load-tests/llm_budget.py reserve --bucket 14c --answers 2 2>&1 | tee -a target/phase14/evidence/14c/llm-reserve.log; echo "exit=$?"
@@ -1295,7 +1347,7 @@ Every step here uses a **fresh deployer session** (the destroy passes can take c
   ```
   scripts/cleanup.sh --env course --region us-east-2 --profile scholarchain-deployer-tf --prepare --image-revision "$(git rev-parse HEAD)" --execute 2>&1 | tee target/phase14/evidence/14b/cleanup-prepare-plan.log; echo "exit=$?"
   ```
-  Then Procedure R with `APPROVED_STAGE=cleanup-prepare` (plan and receipt hashes from this output; a fresh receipt; there is no headroom floor, so a negative headroom is accepted and overspend never blocks cleanup; the receipt must still exist, match its approved sha256, be fresh (within 24 h), show monitoring confirmed and carry all four numeric cost fields), and:
+  Then Procedure R with `APPROVED_STAGE=cleanup-prepare` (plan and receipt hashes from this output; a fresh receipt; there is no headroom floor, so a negative headroom is accepted and overspend never blocks cleanup; the receipt must still exist, match its approved sha256, be fresh (within 24 h), show monitoring confirmed and carry all six numeric cost fields, both provider fields included), and:
   ```
   scripts/deploy.sh --stage cleanup-prepare --plan "<PLAN-FILE>" --region us-east-2 --profile scholarchain-deployer-tf 2>&1 | tee target/phase14/evidence/14b/cleanup-prepare-dry.log
   scripts/deploy.sh --stage cleanup-prepare --plan "<PLAN-FILE>" --region us-east-2 --profile scholarchain-deployer-tf --execute 2>&1 | tee target/phase14/evidence/14b/cleanup-prepare.log; echo "exit=$?"
@@ -1304,7 +1356,7 @@ Every step here uses a **fresh deployer session** (the destroy passes can take c
 - **If it fails:** `RESULT: REFUSED step=prepare-policy` with `POLICY-VIOLATION:` lines means the plan creates, deletes or changes something other than the protection flags: STOP and send the log. Otherwise as B1.5.
 - **Save to:** the logs above; archive the record as `cleanup-prepare` (R.5). **Tell:** both `RESULT:` lines.
 
-**C3. Two-pass destroy.**
+**C3. Two-pass destroy.** (This destroy also force-deletes the two Terraform-created API-key containers `scholarchain-course/anthropic-api-key` and `scholarchain-course/voyage-api-key` with no recovery window; the listing and the end of the run print `KEY-REVOCATION-REMINDER:` lines. **Deleting a container does not revoke the key**: do C5b.)
 - **Do (pass 1, listing):**
   ```
   scripts/cleanup.sh --env course --region us-east-2 --profile scholarchain-deployer-tf --execute 2>&1 | tee target/phase14/evidence/14b/cleanup-list-1.log; echo "exit=$?"
@@ -1336,6 +1388,16 @@ aws secretsmanager list-secrets --region us-east-2 --profile "$ADMIN" --query "S
 ```
 - **Success looks like:** four names printed by the loop; the final `list-secrets` prints nothing. **Tell:** "4 secrets deleted".
 
+**C5b. Revoke both provider keys in the provider consoles (after the destroy of C3 and before you sign out).** Plain words: "revoke" tells Anthropic and Voyage to stop accepting the key, so a leaked or forgotten copy can no longer spend money. The deleted AWS containers do not do this.
+1. Anthropic Console (browser) > **API keys** > find the project key you named in B3b.1 > the row's menu (or delete/disable action) > delete or revoke it > confirm.
+2. Voyage AI dashboard (browser) > **API keys** > the project key > delete or revoke it > confirm.
+3. Reload each key list: the project key must be gone (or show as disabled/revoked). Menu wording may differ per console (unverified until live).
+4. Also remove the copies you kept: delete the two keys from your password manager and run `unset SCHOLARCHAIN_VOYAGE_API_KEY` in any terminal where you set it.
+- **Success looks like:** both key lists no longer show the key; both consoles' usage pages are still readable (needed for C11).
+- **If it fails:** if you cannot find the key or the console refuses, take a screenshot of the key list **without** any key value and tell the coordinator; do not leave a key active.
+- **Save to:** `target/phase14/evidence/14b/c5b-key-revocation.log` (type the UTC time of each revocation and the words "revoked"; **never the key**).
+- **Tell the coordinator:** "Anthropic key revoked at <UTC>, Voyage key revoked at <UTC>".
+
 **C6. Cloudflare.** CF > DNS > Records: delete the two DNS-only records (the ACM validation CNAME and the `api` CNAME). Success: both rows gone. **Tell:** "Cloudflare records removed". (The certificate itself was a Terraform resource and went in C3.)
 
 **C7. KMS pending-deletion check** (admin profile; the key is scheduled for deletion with a 7-day window and costs nothing while pending):
@@ -1352,14 +1414,16 @@ aws s3api list-buckets --query "Buckets[?starts_with(Name,'scholarchain-course')
 - **Success looks like:** the first prints nothing or only the KMS key; the second prints nothing. In the Console also look for stray **Elastic IPs**, **NAT gateways**, **Load balancers**, **EMR clusters**, **Neptune clusters**, **EFS file systems** and **ECR repositories** in us-east-2: none should remain.
 - **If it fails:** a remaining billable item means tell the coordinator at once (a manual console deletion is not allowed; it needs a routed repair and a decision). **Tell:** the inventory result.
 
-**C9. Haiku ledger final status.** `python3 -I load-tests/llm_budget.py status | tee target/phase14/evidence/17/llm-status-cleanup.log`. Keep `~/.scholarchain/llm-ledger/haiku-ledger.jsonl` and `~/.scholarchain/emr-ledger/runs.jsonl`. When the AWS bill later shows the Marketplace Haiku charge, any spend outside the buckets is recorded with `python3 -I load-tests/llm_budget.py adjust --usd <amount> --source aws-bill`. **Tell:** the totals.
+**C9. Haiku ledger final status.** `python3 -I load-tests/llm_budget.py status | tee target/phase14/evidence/17/llm-status-cleanup.log`. Keep `~/.scholarchain/llm-ledger/haiku-ledger.jsonl` and `~/.scholarchain/emr-ledger/runs.jsonl`. When the Anthropic Console later shows more than the ledger estimate (or, for a Bedrock run, when the AWS bill shows the Marketplace Haiku charge), any spend outside the buckets is recorded with `python3 -I load-tests/llm_budget.py adjust --usd <amount> --source aws-bill`. **Tell:** the totals.
 
-**C10. Sign out.** `aws logout --all`; Console: sign out; stop T4 (`caffeinate`); `unset SCHOLARCHAIN_SMOKE_API_KEY SCHOLARCHAIN_LOAD_API_KEY`; `grep -c "$WRITER" /etc/hosts` is `0`. Removing the Marketplace subscription is optional (it has no fixed fee).
+**C10. Sign out.** `aws logout --all`; Console: sign out; stop T4 (`caffeinate`); `unset SCHOLARCHAIN_SMOKE_API_KEY SCHOLARCHAIN_LOAD_API_KEY SCHOLARCHAIN_VOYAGE_API_KEY`; `grep -c "$WRITER" /etc/hosts` is `0`. Removing the Marketplace subscription is optional (it has no fixed fee).
 
 **C11. Next-day billing check.** The day after (billing lags), Console > Billing and Cost Management > **Cost Explorer**, daily, grouped by Service, with Credits unticked, and **Budgets**. Save screenshots to `target/phase14/evidence/14b/c11-billing-*.png`.
-- **Success looks like:** no NAT gateway, Elastic IP, load balancer, Neptune, Fargate or EMR line still accrues; the project total (including the Haiku Marketplace charge on your card) is under USD 25; only small residuals remain (Cloud Map hosted zone month, late-posting usage). Run the `scripts/billing/` verification per [VERIFICATION.md](../../scripts/billing/VERIFICATION.md) only if the coordinator says a new gate exists.
+- **Success looks like:** no NAT gateway, Elastic IP, load balancer, Neptune, Fargate or EMR line still accrues; the combined project total (AWS plus Anthropic plus Voyage; for a Bedrock run also the Marketplace Haiku charge on your card) is under USD 25; only small residuals remain (Cloud Map hosted zone month, late-posting usage). Run the `scripts/billing/` verification per [VERIFICATION.md](../../scripts/billing/VERIFICATION.md) only if the coordinator says a new gate exists.
 - **If it fails:** a line that still accrues means find it in Cost Explorer (grouped by Usage type) and tell the coordinator the same day.
 - **Tell the coordinator:** "cleanup complete; billing next-day check: <total>, residuals <...>".
+
+**C11b. Final cost report (three bills, then the total).** Read the final totals from Cost Explorer (AWS), the Anthropic Console and the Voyage AI dashboard, with the usage text (for Voyage: tokens, and whether they stayed inside the 200M free tokens, then the charge is `0`). Write a small JSON file under `target/phase14/` (no key, no account ID in it; format in [scripts README, "Model providers and the cost report"](../../scripts/README.md)) and run `python3 -I scripts/lib/cost_report.py render --input target/phase14/cost-report-input.json | tee target/phase14/evidence/17/cost-report.log`. **Success looks like:** three items in the order AWS, Anthropic, Voyage AI, each with an amount and usage, then the combined total and the remaining amount under the USD 25 ceiling. **If it fails:** `COST-REPORT-REFUSED:` names the problem (a missing item or missing usage text, even at `0`). **Tell:** the combined total.
 
 **C12. End of the freeze.** The coordinator copies the lean evidence from `target/phase14/archive/` into `docs/agent-runs/phase-14/evidence/` and writes the closeout record last; only then is a commit made (Section D, rule 6).
 
@@ -1415,11 +1479,18 @@ General rules: stop first. Send the log path and the last `STEP:`/`RESULT:` line
 - USD 15: recompute headroom (25 - reported - unreported - reserves). If it is below 3, tell the coordinator and drop optional work (B11, B12); never drop cleanup.
 - USD 20: stop all paid work and go to Section C now. Cleanup spends nothing new and the `cleanup-prepare` stage has no headroom floor, so overspend never blocks it.
 
-**E6. Bedrock throttling (`ThrottlingException`, `Too many tokens per day`, `TooManyRequestsException`).**
+**E6. Bedrock throttling (Bedrock run only; `ThrottlingException`, `Too many tokens per day`, `TooManyRequestsException`).**
 - Stop the step that called Bedrock. Do not retry in a loop.
-- "Per minute" limits: wait a minute and retry once. "Per day" or "quota is 0": the quota is not applied; stop and tell the coordinator. The Bedrock fallback (A0) needs a new commit, so it cannot be switched on mid-session.
+- "Per minute" limits: wait a minute and retry once. "Per day" or "quota is 0": the quota is not applied; stop and tell the coordinator. Choosing Bedrock instead of the default providers changes Terraform variables and means a new plan and a new embedding index, so it cannot be switched on mid-session.
 - Carry on with the steps that need no model (graph load, EMR, the non-LLM load test) and skip the model steps; tell the coordinator which answers were reserved but not used (`llm_budget.py release` only for answers that were never sent).
 - Ingest: ask before re-running; the approval is bound to its run ID.
+
+**E6b. Anthropic or Voyage errors (default run).**
+- Stop the step that made the call. Do not retry in a loop. Never print the key.
+- `401`/authentication: the key in the container is wrong or revoked. Re-enter it (B3b.2), then ask the coordinator how to restart the affected service (a new task reads the container at start).
+- `429` (rate limit): the clients retry a few times; if it persists, wait a minute and retry once. A refused answer (`llm-refusal`), a prompt that is too large (`llm-prompt-too-large`, over about 100,000 tokens) or a model mismatch (`llm-model-mismatch`) is a typed failure, not retried: send the log line to the coordinator.
+- A vector or model mismatch error means stored and query vectors use a different provider, model or dimension: stop; the fix is a full re-embed and index rebuild (coordinator decision).
+- A provider spend limit you set in B3b.1 can also stop calls: read both consoles before changing anything.
 
 **E7. An EMR run goes over 90 minutes, hangs, or the script died.**
 - Normally `run-experiment.sh` enforces the cap itself: at 90 minutes it cancels the step, kills the YARN application by its tag and exits 124. Each step also runs under a time limit on the node.

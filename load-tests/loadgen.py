@@ -5,7 +5,7 @@ It drives the deployed query-api over HTTPS (plain http only for a loopback host
 bounded durations and writes immutable raw results. Nothing here calls AWS directly; the only network peer is the base URL you give.
 
 DEFAULT: non-LLM endpoints only (GET /healthz /readyz /metrics, /v1/graph/nodes/{id}, /v1/graph/nodes/{id}/neighbors,
-/v1/evidence/{id}). POST /v1/query runs the planner and the synthesis model (Claude Haiku 4.5, billed outside the credits), so
+/v1/evidence/{id}). POST /v1/query runs the planner and the synthesis model (claude-haiku-5-5 on the Anthropic API, billed outside the AWS credits), so
 it is OPT-IN (--llm) and charged to the 15b answer BUCKET of the shared ledger (load-tests/llm_budget.py; bucket sizes are pinned in
 experiments/manifests/llm-allocation.json, overall cap USD 1.33):
   * planned answers must fit in the bucket's remaining answers, and (used + planned) x cost must stay within the shared cap;
@@ -13,7 +13,7 @@ experiments/manifests/llm-allocation.json, overall cap USD 1.33):
   * --remaining-cap-usd (optional) lowers the run's own spend limit further;
   * the bucket and the cap are re-checked, under a file lock, BEFORE EVERY LLM request and the charge is appended before sending;
     the moment the 15b bucket (or the total, or the run limit) is exhausted all LLM calls stop for the rest of the run.
-The cost per answer is an ESTIMATE derived from config/load-profile.v1.json (tokens x pinned Haiku rates); it is not metered.
+The cost per answer is an ESTIMATE derived from config/load-profile.v1.json (tokens x pinned claude-haiku-5-5 rates); it is not metered.
 
 Subcommands
   plan            print the effective plan, the answer budget table and every refusal; sends nothing
@@ -822,6 +822,7 @@ def run_command(args, out):
     if runner.llm_enabled:
         end_state = runner.budget.state()
         ledger_end, bucket_end = money(end_state["usd"]), end_state["used"][runner.bucket]
+    cost_report = llm_budget.cost_report(runner.profile, runner.llm_sent)
     record = {
         "schema": "scholarchain.load-run-record.v1", "run_id": cfg["run_id"], "experiment_id": cfg["experiment_id"], "outcome": outcome, "outcome_reason": reason,
         "started_utc": stamp(started), "ended_utc": stamp(time.time()), "commit": commit, "tree_dirty": dirty,
@@ -835,13 +836,16 @@ def run_command(args, out):
                 "bucket": runner.bucket if runner.llm_enabled else None, "bucket_size": cfg["llm_plan"].get("bucket_size"), "bucket_used_at_start": cfg["llm_plan"].get("bucket_used"),
                 "bucket_used_at_end": bucket_end, "allocation_sha256": cfg["llm_plan"].get("allocation_sha256"),
                 "ledger_path": cfg["llm_plan"].get("ledger_path"), "ledger_total_at_start_usd": cfg["llm_plan"].get("ledger_total_usd"), "ledger_total_at_end_usd": ledger_end,
-                "note": "estimated from pinned tokens and rates, not metered; the AWS bill is the cost of record"},
+                "note": "estimated from pinned tokens and rates, not metered; the Anthropic console, the Voyage console and the AWS bill are the costs of record"},
+        "cost_report": cost_report,
         "python": sys.version.split()[0],
     }
     with open_new_text(os.path.join(raw_dir, "run-record.json")) as handle:
         handle.write(json.dumps(record, indent=2, sort_keys=True) + "\n")
     seal(raw_dir)
     summarize(run_dir)
+    out.write("COST-REPORT: aws=%s anthropic=%s voyage=%s combined=%s (%s)\n" % (
+        cost_report["aws"]["usd"] or "not-metered", cost_report["anthropic"]["usd"], cost_report["voyage"]["usd"], cost_report["combined_usd"], cost_report["combined_scope"]))
     out.write("RESULT: %s run=%s requests=%d llm_answers=%d reason=%s\n" % (outcome.upper(), cfg["run_id"], runner.total_requests, runner.llm_sent, reason or "-"))
     return 0 if outcome == "completed" else 4
 
@@ -963,7 +967,7 @@ def build_parser():
         p.add_argument("--pause-seconds", type=float, default=5.0, help="idle gap between levels (default 5)")
         p.add_argument("--experiment-id", help="default adhoc-load, or the manifest id")
         p.add_argument("--run-id")
-        p.add_argument("--llm", action="store_true", help="OPT IN: also send POST /v1/query (calls Haiku 4.5; capped by the answer budget and the ledger)")
+        p.add_argument("--llm", action="store_true", help="OPT IN: also send POST /v1/query (calls claude-haiku-5-5 on the Anthropic API; capped by the answer budget and the ledger)")
         p.add_argument("--llm-answers", help="answer budget per level, for example 1=10,5=15,25=20,50=20 (default: the profile)")
         p.add_argument("--remaining-cap-usd", help="optional extra spend limit for this run in USD (the bucket and the shared cap always apply)")
         p.add_argument("--bucket", default="15b", help="answer bucket charged by --llm (default 15b)")

@@ -253,16 +253,16 @@ class LoadgenCase(unittest.TestCase):
     # --- 2. pinned cost and the budget table (hand-derived)
     def test_cost_per_answer_and_default_budget_table(self):
         profile = loadgen.load_profile(loadgen.DEFAULT_PROFILE)
-        # (1500 + 4000) in x 1.10 + (200 + 800) out x 5.50 per million = 6050 + 5500 micro-USD = 0.01155
-        self.assertEqual(loadgen.money(loadgen.cost_per_answer(profile)), "0.011550")
+        # (1950 + 5200) = 7150 in x 0.10 + (260 + 1040) = 1300 out x 0.50 per million = 715 + 650 micro-USD = 0.001365
+        self.assertEqual(loadgen.money(loadgen.cost_per_answer(profile)), "0.001365")
         rc, out, err = self.go(["plan", "--llm", "--ledger", self.make_ledger(), "--questions-file", self.questions])
         self.assertEqual(rc, 0, err)
-        # 10 + 15 + 20 + 15 = 60 answers x 0.01155 = 0.693 (the 15b bucket holds exactly 60)
-        self.assertIn("LLM-BUDGET level=1 phase=level-1 answers=10 est_cost_usd=0.115500", out)
-        self.assertIn("LLM-BUDGET level=5 phase=level-5 answers=15 est_cost_usd=0.173250", out)
-        self.assertIn("LLM-BUDGET level=25 phase=level-25 answers=20 est_cost_usd=0.231000", out)
-        self.assertIn("LLM-BUDGET level=50 phase=level-50 answers=15 est_cost_usd=0.173250", out)
-        self.assertIn("LLM-TOTAL answers=60 planned_cost_usd=0.693000 bucket=15b bucket_size=60 bucket_used=0 bucket_remaining=60", out)
+        # 10 + 15 + 20 + 15 = 60 answers x 0.001365 = 0.0819 (the 15b bucket holds exactly 60)
+        self.assertIn("LLM-BUDGET level=1 phase=level-1 answers=10 est_cost_usd=0.013650", out)
+        self.assertIn("LLM-BUDGET level=5 phase=level-5 answers=15 est_cost_usd=0.020475", out)
+        self.assertIn("LLM-BUDGET level=25 phase=level-25 answers=20 est_cost_usd=0.027300", out)
+        self.assertIn("LLM-BUDGET level=50 phase=level-50 answers=15 est_cost_usd=0.020475", out)
+        self.assertIn("LLM-TOTAL answers=60 planned_cost_usd=0.081900 bucket=15b bucket_size=60 bucket_used=0 bucket_remaining=60", out)
 
     def make_ledger(self):
         self.init_ledger()
@@ -271,7 +271,7 @@ class LoadgenCase(unittest.TestCase):
     # --- 3. refusals before anything is sent
     def test_refuses_when_planned_cost_exceeds_remaining_cap(self):
         self.init_ledger()
-        rc, out, err = self.run_load("--levels", "1,5,25,50", "--duration-seconds", "1", *self.llm_args(remaining="0.65"))
+        rc, out, err = self.run_load("--levels", "1,5,25,50", "--duration-seconds", "1", *self.llm_args(remaining="0.08"))
         self.assertEqual(rc, 3)
         self.assertIn("60 planned answers", err)
         self.assertIn("exceeds the remaining cap", err)
@@ -280,22 +280,22 @@ class LoadgenCase(unittest.TestCase):
 
     def test_accepts_planned_cost_equal_to_remaining_cap(self):
         self.init_ledger()
-        rc, out, err = self.go(["plan", "--llm", "--remaining-cap-usd", "0.693000", "--ledger", self.ledger, "--questions-file", self.questions])
+        rc, out, err = self.go(["plan", "--llm", "--remaining-cap-usd", "0.081900", "--ledger", self.ledger, "--questions-file", self.questions])
         self.assertEqual(rc, 0, err)
 
     def test_refuses_when_ledger_plus_planned_exceeds_shared_cap(self):
         self.init_ledger()
-        self.assertEqual(self.budget_cli("adjust", "--usd", "0.90", "--source", "aws-bill")[0], 0)
-        # the 15b bucket is untouched (60 free) but 0.90 + 0.693 = 1.593 > 1.33
+        self.assertEqual(self.budget_cli("adjust", "--usd", "1.27", "--source", "aws-bill")[0], 0)
+        # the 15b bucket is untouched (60 free) but 1.27 + 0.0819 = 1.3519 > 1.33
         rc, out, err = self.run_load("--levels", "1,5,25,50", "--duration-seconds", "1", *self.llm_args())
         self.assertEqual(rc, 3)
-        self.assertIn("ledger total 0.900000", err)
+        self.assertIn("ledger total 1.270000", err)
         self.assertIn("exceeds the shared cap 1.330000", err)
         self.assertEqual(sum(self.state.counts.values()), 0)
-        # 0.60 + 0.693 = 1.293 <= 1.33 passes (60 answers x 0.01155 = 0.693)
+        # 1.20 + 0.0819 = 1.2819 <= 1.33 passes (60 answers x 0.001365 = 0.0819)
         other = os.path.join(self.tmp, "ledger2.jsonl")
         self.init_ledger(other)
-        self.budget_cli("adjust", "--usd", "0.60", "--source", "aws-bill", ledger=other)
+        self.budget_cli("adjust", "--usd", "1.20", "--source", "aws-bill", ledger=other)
         rc, out, err = self.go(["plan", "--llm", "--ledger", other, "--questions-file", self.questions])
         self.assertEqual(rc, 0, err)
 
@@ -354,11 +354,19 @@ class LoadgenCase(unittest.TestCase):
         self.assertEqual(self.state.counts[("POST", "/v1/query")], 4)
         entries = [e for e in self.ledger_lines() if e["event"] == "answer"]
         self.assertEqual(len(entries), 4)
-        self.assertTrue(all(e["unit_usd"] == "0.011550" and e["bucket"] == "15b" and e["answers"] == 1 for e in entries))
+        self.assertTrue(all(e["unit_usd"] == "0.001365" and e["bucket"] == "15b" and e["answers"] == 1 for e in entries))
         record = self.record(self.run_dir())
         self.assertEqual(record["llm"]["answers_sent"], 4)
-        self.assertEqual(record["llm"]["estimated_cost_usd"], "0.046200")  # 4 x 0.01155
-        self.assertEqual(record["llm"]["ledger_total_at_end_usd"], "0.046200")
+        self.assertEqual(record["llm"]["estimated_cost_usd"], "0.005460")  # 4 x 0.001365
+        self.assertEqual(record["llm"]["ledger_total_at_end_usd"], "0.005460")
+        # cost report: AWS, Anthropic and Voyage separately, then the combined total (AWS is never estimated by the generator)
+        report = record["cost_report"]
+        self.assertTrue({"aws", "anthropic", "voyage", "combined_usd"} <= set(report))  # the file is key-sorted; the COST-REPORT line below keeps the order
+        self.assertIsNone(report["aws"]["usd"])
+        self.assertEqual((report["anthropic"]["usd"], report["anthropic"]["answers"], report["anthropic"]["model"]), ("0.005460", 4, "claude-haiku-5-5"))
+        self.assertEqual((report["voyage"]["usd"], report["voyage"]["model"]), ("0.000000", "voyage-4-lite"))
+        self.assertEqual(report["combined_usd"], "0.005460")
+        self.assertIn("COST-REPORT: aws=not-metered anthropic=0.005460 voyage=0.000000 combined=0.005460", out)
         self.assertEqual((record["llm"]["bucket"], record["llm"]["bucket_used_at_start"], record["llm"]["bucket_used_at_end"]), ("15b", 0, 4))
         keys = self.state.idempotency_keys
         self.assertEqual(len(set(keys)), 4)  # a fresh Idempotency-Key per answer
@@ -384,14 +392,14 @@ class LoadgenCase(unittest.TestCase):
         self.init_ledger()
 
         def other_consumer(n):
-            # after the 3rd answer another consumer posts USD 1.30 of observed spend against the shared cap
+            # after the 3rd answer another consumer posts USD 1.325 of observed spend against the shared cap
             if n == 3:
-                self.budget_cli("adjust", "--usd", "1.30", "--source", "aws-bill")
+                self.budget_cli("adjust", "--usd", "1.325", "--source", "aws-bill")
 
         self.state.after_query = other_consumer
         rc, out, err = self.run_load("--levels", "1", "--duration-seconds", "3", "--max-requests", "100000", *self.llm_args(extra=["--llm-answers", "1=10"]))
         self.assertEqual(rc, 0, err + out)
-        # 3 x 0.01155 + 1.30 = 1.33465 > 1.33, so the 4th answer is refused and every later one too
+        # 3 x 0.001365 + 1.325 = 1.329095 <= 1.33, but a 4th answer makes 1.33046 > 1.33, so it is refused and every later one too
         self.assertEqual(self.state.counts[("POST", "/v1/query")], 3)
         record = self.record(self.run_dir())
         self.assertEqual(record["llm"]["answers_sent"], 3)
@@ -430,9 +438,9 @@ class LoadgenCase(unittest.TestCase):
 
     def test_remaining_cap_usd_still_refuses_at_the_start(self):
         self.init_ledger()
-        # 2 answers x 0.01155 = 0.0231 fits in 0.025, a 3rd (0.03465) does not
-        rc, out, err = self.run_load("--levels", "1", "--duration-seconds", "3", "--max-requests", "100000", *self.llm_args(remaining="0.025", extra=["--llm-answers", "1=3"]))
-        self.assertEqual(rc, 3)  # planned 3 x 0.01155 = 0.03465 > 0.025 is refused at the start
+        # 18 answers x 0.001365 = 0.02457 fits in 0.025, a 19th (0.025935) does not
+        rc, out, err = self.run_load("--levels", "1", "--duration-seconds", "3", "--max-requests", "100000", *self.llm_args(remaining="0.025", extra=["--llm-answers", "1=19"]))
+        self.assertEqual(rc, 3)  # planned 19 x 0.001365 = 0.025935 > 0.025 is refused at the start
         self.assertIn("exceeds the remaining cap", err)
 
     def test_llm_inflight_is_capped_by_the_profile(self):

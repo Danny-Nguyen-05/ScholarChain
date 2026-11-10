@@ -52,25 +52,34 @@ neptune_enabled = <true-or-false>
 neptune_engine_version   = "<neptune-engine-version>"
 neptune_parameter_family = "<neptune-major.minor-family>"
 
-# ---- Bedrock (decision 14-3; BASE, because the grants are IAM policy text) ------------------------------------------------
-# BOTH: Titan Text Embeddings V2 is invoked in-region (no inference profile exists for it). This is the default; it is shown so
-# the file lists the embedding model, and no embedding_inference_profile_* variable is set.
-embedding_model_id = "amazon.titan-embed-text-v2:0"
-# BOTH: the synthesis model. DOCUMENTED EXAMPLE VALUES (Phase 14 decision: Claude Haiku 4.5, model access enabled in the three
+# ---- model providers (repair round 3; BASE, because they decide the IAM text and which key containers exist) -----------------
+# BOTH: the primary providers are the Anthropic API (synthesis, model claude-haiku-5-5) and Voyage AI (embeddings, model voyage-4-lite,
+# output dimension 256). They are the defaults; they are shown so the file states the choice on purpose. Each selected provider gets ONE
+# EMPTY Secrets Manager container (scholarchain-<environment>/anthropic-api-key and /voyage-api-key); the human enters the key values
+# after the base apply and before the runtime apply (infra/terraform/README.md, "Provider API keys"). No key value belongs in this file.
+# With these two providers leave synthesis_model_id, synthesis_inference_profile_*, embedding_model_id, embedding_inference_profile_*
+# and embedding_model_version UNSET: the models and the version tag (voyage-4-lite) are fixed by the provider, and a leftover Bedrock id
+# is refused by the provider guard. Changing the embedding provider later needs a full re-embed and an index rebuild.
+synthesis_provider = "anthropic"
+embedding_provider = "voyage"
+
+# ---- Amazon Bedrock alternative (decision 14-3; only with a provider set to "bedrock") ------------------------------------------
+# To use Bedrock for synthesis, set synthesis_provider = "bedrock" and the synthesis lines below; to use it for embeddings, set
+# embedding_provider = "bedrock" and the embedding lines. Bedrock invoke grants exist only for a purpose whose provider is bedrock.
+# Titan Text Embeddings V2 is invoked in-region (no inference profile exists for it) and is the default when embedding_provider is
+# bedrock; embedding_model_version is then required in the aws service mode (the version the 14C ingest stamps on every vector).
+# embedding_model_id = "amazon.titan-embed-text-v2:0"
+# embedding_model_version = "<pinned-embedding-model-version>"
+# The synthesis model. DOCUMENTED EXAMPLE VALUES (the earlier Phase 14 decision: Claude Haiku 4.5, model access enabled in the three
 # regions below). Its card shows "In-Region endpoint URL: N/A", so it is invoked through the system-defined profile
 # "<geo-prefix>.<model id>", and IAM needs the foundation-model ARN in every region the profile routes to from the home region
 # (home region included). The real values go in the ignored copy; check the routing with
 # `aws bedrock get-inference-profile --region <home> --inference-profile-identifier <profile id> --query 'models[].modelArn'`.
 # For a model that is invoked in-region, set only synthesis_model_id and leave both profile variables out.
-synthesis_model_id                  = "anthropic.claude-haiku-4-5-20251001-v1:0"
-synthesis_inference_profile_id      = "us.anthropic.claude-haiku-4-5-20251001-v1:0"
-synthesis_inference_profile_regions = ["us-east-1", "us-east-2", "us-west-2"]
+# synthesis_model_id                  = "anthropic.claude-haiku-4-5-20251001-v1:0"
+# synthesis_inference_profile_id      = "us.anthropic.claude-haiku-4-5-20251001-v1:0"
+# synthesis_inference_profile_regions = ["us-east-1", "us-east-2", "us-west-2"]
 
-# RUNTIME, required once runtime_composition_verified = true (the aws service mode): the embedding model VERSION tag that the 14C live ingest
-# stamps on every stored vector (`model.version` of its --config file). It exists nowhere in code (the 8b template shows
-# REPLACE_WITH_PINNED_MODEL_VERSION), so there is no default: the human decides it once and uses the same value in both places. The services
-# refuse vectors whose model tag differs.
-embedding_model_version = "<pinned-embedding-model-version>"
 # RUNTIME: the one S3 Vectors index the semantic-service queries (one of the five names) and the rag-bucket prefix of the embedding text.
 # The text prefix must equal `textPrefix` of the 14C ingest config (the 8b template shows `graph/rag`); it is also the s3:ListBucket prefix scope
 # of two task roles. Documented defaults, shown so they are decided on purpose.

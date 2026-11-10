@@ -34,6 +34,7 @@ locals {
     { SCHOLARCHAIN_DYNAMODB_QUERY_SESSION_INDEX = var.query_session_index }
   )
   aws_embedding_env = {
+    SCHOLARCHAIN_EMBEDDING_PROVIDER      = var.embedding_provider
     SCHOLARCHAIN_MODELS_EMBEDDING_MODEL  = var.embedding_model_id
     SCHOLARCHAIN_EMBEDDING_MODEL_VERSION = var.embedding_model_version
     SCHOLARCHAIN_EMBEDDING_DIMENSION     = tostring(var.vector_dimension)
@@ -53,6 +54,7 @@ locals {
     "semantic-service" = merge(local.aws_vector_env, local.aws_embedding_env, { SCHOLARCHAIN_STORAGE_RAG_BUCKET = var.rag_bucket })
     "query-api" = merge(local.aws_embedding_env, {
       SCHOLARCHAIN_STORAGE_RAG_BUCKET      = var.rag_bucket
+      SCHOLARCHAIN_SYNTHESIS_PROVIDER      = var.synthesis_provider
       SCHOLARCHAIN_MODELS_SYNTHESIS_MODEL  = local.synthesis_model
       SCHOLARCHAIN_SYNTHESIS_MODEL_VERSION = var.synthesis_model_id
       SCHOLARCHAIN_EVIDENCE_INDEX_PREFIX   = var.evidence_index_prefix
@@ -139,7 +141,10 @@ resource "aws_ecs_task_definition" "service" {
       [for name in sort(keys(merge(local.aws_common_env, local.aws_role_env[each.key]))) : { name = name, value = merge(local.aws_common_env, local.aws_role_env[each.key])[name] } if local.aws_mode]
     )
     # Secrets stay ARN bindings (never in `environment`); the names are those the services read.
-    secrets      = [for name, arn in lookup(var.service_secret_bindings, each.key, {}) : { name = name, valueFrom = arn }]
+    # Repair round 3: the provider API key containers join `secrets` in the aws service mode only (ECS refuses to start a task whose
+    # secret has no value yet). The names are SCHOLARCHAIN_ANTHROPIC_API_KEY (query-api) and SCHOLARCHAIN_VOYAGE_API_KEY
+    # (semantic-service, embedding-worker); a key value is never in `environment`.
+    secrets      = [for name, arn in merge(lookup(var.service_secret_bindings, each.key, {}), local.aws_mode ? lookup(var.provider_secret_bindings, each.key, {}) : {}) : { name = name, valueFrom = arn }]
     portMappings = [{ containerPort = var.service_port, hostPort = var.service_port, protocol = "tcp" }]
     logConfiguration = { logDriver = "awslogs", options = {
       awslogs-group = var.log_groups[each.key], awslogs-region = var.aws_region, awslogs-stream-prefix = "service"

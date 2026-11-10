@@ -76,7 +76,13 @@ object AwsComposition {
                 o.synchronousMs.map(_.toInt).getOrElse(base.operations.synchronousDeadlineMs)
             )
           )
-          if (RuntimeConfigValidation.check(updated).isEmpty) Right(updated)
+          // The provider decides the model id the client and every agent must agree on.
+          val forProvider = SynthesisClients.runtimeConfigFor(
+            config.synthesisProvider,
+            updated,
+            config.synthesisModelId
+          )
+          if (RuntimeConfigValidation.check(forProvider).isEmpty) Right(forProvider)
           else Left("runtime-config-invalid")
       }
     }
@@ -175,6 +181,20 @@ object AwsComposition {
     }
   }
 
+  /** The configured stored-vector identity must match the client that will embed queries or
+    * documents: provider, model, version tag and dimension. A mismatch refuses startup with a
+    * closed code (no value) and releases the ports already opened.
+    */
+  private def consistent[P <: PortBundle](
+      provider: EmbeddingProvider,
+      stored: EmbeddingModel,
+      client: EmbeddingClient,
+      ports: P
+  ): Either[String, P] = VectorConsistency.checkClient(provider, stored, client) match {
+    case Right(_)    => Right(ports)
+    case Left(error) => ports.close(); Left(error.code)
+  }
+
   private def gate(common: AwsCommon, checks: Vector[ReadinessCheck]): ReadinessGate =
     new ReadinessGate(checks, common.readiness.cacheMs, common.readiness.timeoutMs)
 
@@ -223,75 +243,86 @@ object AwsComposition {
       service: ServiceConfig,
       config: SemanticRoleConfig,
       factory: AwsPortFactory
-  ): Either[String, AwsComposition] = factory.semantic(config).map { ports =>
-    val api = SemanticApi.fromPorts(ports.embedding, config.embedding, ports.vectors, config.index)
-    val metrics = new ServiceMetrics
-    new AwsComposition(
-      refusing(service, metrics),
-      Some(
-        ExtendedApi(
-          new EvidenceApi(UnservedEvidenceStore, UnservedAuditStore),
-          UnservedGraphEndpoints,
-          api
-        )
-      ),
-      gate(
-        config.common,
-        Vector(
-          ReadinessProbes.check("s3-vectors")(
-            ports.vectors.get(config.index, Vector(ReadinessProbes.probeKey))
+  ): Either[String, AwsComposition] = factory
+    .semantic(config)
+    .flatMap { ports =>
+      consistent(config.embeddingProvider, config.embedding, ports.embedding, ports)
+    }
+    .map { ports =>
+      val api =
+        SemanticApi.fromPorts(ports.embedding, config.embedding, ports.vectors, config.index)
+      val metrics = new ServiceMetrics
+      new AwsComposition(
+        refusing(service, metrics),
+        Some(
+          ExtendedApi(
+            new EvidenceApi(UnservedEvidenceStore, UnservedAuditStore),
+            UnservedGraphEndpoints,
+            api
           )
-        )
-      ),
-      None,
-      ports
-    )
-  }
+        ),
+        gate(
+          config.common,
+          Vector(
+            ReadinessProbes.check("s3-vectors")(
+              ports.vectors.get(config.index, Vector(ReadinessProbes.probeKey))
+            )
+          )
+        ),
+        None,
+        ports
+      )
+    }
 
   private def workerRole(
       service: ServiceConfig,
       config: WorkerRoleConfig,
       workerConfig: WorkerConfig,
       factory: AwsPortFactory
-  ): Either[String, AwsComposition] = factory.worker(config).map { ports =>
-    val runner = new EmbeddingManifestRunner(
-      EmbeddingIngestConfig(
-        config.ragBucket,
-        config.textPrefix,
-        config.embedding.dimension,
-        config.metric
-      ),
-      ports.objects,
-      ports.vectors,
-      ports.registry,
-      ports.ledger,
-      ports.embedder
-    )
-    val worker = new EmbeddingWorker(
-      ports.queue,
-      ports.dlq,
-      ports.sessions,
-      new ManifestEmbeddingProcessor(runner),
-      workerConfig
-    )
-    val key = ReadinessProbes.probeKey
-    new AwsComposition(
-      refusing(service, new ServiceMetrics),
-      None,
-      gate(
-        config.common,
-        Vector(
-          ReadinessProbes.check("sqs-queue")(ports.queue.backlog),
-          ReadinessProbes.check("s3-vectors")(ports.vectors.get(config.index, Vector(key))),
-          ReadinessProbes.check("dynamodb-run-ledger")(ports.ledger.getRun(key)),
-          ReadinessProbes.check("dynamodb-artifact-registry")(ports.registry.get(key, key)),
-          ReadinessProbes.check("dynamodb-query-session")(ports.sessions.get(key))
-        )
-      ),
-      Some(worker),
-      ports
-    )
-  }
+  ): Either[String, AwsComposition] = factory
+    .worker(config)
+    .flatMap { ports =>
+      consistent(config.embeddingProvider, config.embedding, ports.embedder, ports)
+    }
+    .map { ports =>
+      val runner = new EmbeddingManifestRunner(
+        EmbeddingIngestConfig(
+          config.ragBucket,
+          config.textPrefix,
+          config.embedding.dimension,
+          config.metric
+        ),
+        ports.objects,
+        ports.vectors,
+        ports.registry,
+        ports.ledger,
+        ports.embedder
+      )
+      val worker = new EmbeddingWorker(
+        ports.queue,
+        ports.dlq,
+        ports.sessions,
+        new ManifestEmbeddingProcessor(runner),
+        workerConfig
+      )
+      val key = ReadinessProbes.probeKey
+      new AwsComposition(
+        refusing(service, new ServiceMetrics),
+        None,
+        gate(
+          config.common,
+          Vector(
+            ReadinessProbes.check("sqs-queue")(ports.queue.backlog),
+            ReadinessProbes.check("s3-vectors")(ports.vectors.get(config.index, Vector(key))),
+            ReadinessProbes.check("dynamodb-run-ledger")(ports.ledger.getRun(key)),
+            ReadinessProbes.check("dynamodb-artifact-registry")(ports.registry.get(key, key)),
+            ReadinessProbes.check("dynamodb-query-session")(ports.sessions.get(key))
+          )
+        ),
+        Some(worker),
+        ports
+      )
+    }
 
   private def queryRole(
       service: ServiceConfig,

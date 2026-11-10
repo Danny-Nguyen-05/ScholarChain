@@ -14,7 +14,7 @@ Checks
        * the prep config satisfies the pinned Phase 4 ceilings (a violation is CHECK-BLOCKED, exit 3: the pin is infra-engineer's);
        * the datasets manifest names exactly dblp, openalex, crossref, orcid with snapshot and retrieval.
   15B  experiments/manifests/15b-ecs-scaling.json against load-tests/loadgen.py (strict schema, phase limits, answer budget).
-  16B  16b-live-evaluation.json and llm-allocation.json (v2, buckets 14c/15b/16b/17): allocated answers x the pinned cost per answer must fit in the shared Haiku cap,
+  16B  16b-live-evaluation.json and llm-allocation.json (v2, buckets 14c/15b/16b/17): allocated answers x the pinned claude-haiku-5-5 (Anthropic API) cost per answer must fit in the shared cap (USD 1.33 stays; the bucket counts bind first),
        and the 15B and 16B figures must equal the allocation.
   --final  also refuses the all-zero sha256 placeholders: the state required before the commit freeze (tokens plus real hashes pass).
 
@@ -242,6 +242,28 @@ def check_15b_16b(root, final, lines):
     else:
         lines.append("CHECK-OK: buckets %s = %d answers x %s = %s USD <= shared cap %s USD (reserve %s USD)" % (
             "/".join("%s %d" % (k, v) for k, v in by_owner.items()), sum(by_owner.values()), cost, planned, cap, cap - planned))
+    unit_text = loadgen.money(cost).rstrip("0")
+    for name, text in (("llm-allocation.json", allocation.get("note", "")), ("15b-ecs-scaling.json", json.dumps(m15b.get("llm", {})))):
+        if unit_text not in text:
+            failed = True
+            lines.append("CHECK-FAILED: %s does not state the pinned cost per answer %s USD (update the estimate text when the profile changes)" % (name, unit_text))
+    lines.append("CHECK-OK: per-bucket estimates (USD) %s, total %s of the shared cap %s" % (
+        ", ".join("%s %s" % (k, loadgen.money(cost * v)) for k, v in by_owner.items()), loadgen.money(planned), cap))
+    pricing = profile["llm"]["pricing"]
+    if profile["llm"].get("provider") != "anthropic" or not pricing["model_route"].startswith("claude-haiku-5-5") or "bedrock" not in pricing.get("fallback_model_route", "").lower():
+        failed = True
+        lines.append("CHECK-FAILED: the profile must price claude-haiku-5-5 on the Anthropic API and name the Bedrock fallback route")
+    emb = profile.get("embeddings", {})
+    expected = (emb.get("provider"), emb.get("model"), emb.get("output_dimension"), emb.get("usd_per_million_tokens"), emb.get("free_tokens"), emb.get("cap_usd"))
+    if expected != ("voyage", "voyage-4-lite", 256, "0.02", 200000000, "0.30"):
+        failed = True
+        lines.append("CHECK-FAILED: the profile embeddings block must be voyage / voyage-4-lite / 256 / 0.02 USD per 1M / 200000000 free tokens / cap 0.30 (found %s)" % (expected,))
+    else:
+        lines.append("CHECK-OK: embeddings voyage-4-lite 256 dims USD 0.02 per 1M tokens, first 200M tokens free, cap USD 0.30 with a token counter")
+    m16b_emb = m16b.get("llm", {}).get("embeddings", {})
+    if (m16b_emb.get("model"), m16b_emb.get("cap_usd")) != (emb.get("model"), emb.get("cap_usd")):
+        failed = True
+        lines.append("CHECK-FAILED: 16b-live-evaluation.json embeddings model and cap must match the profile")
     if not problems and by_owner.get("15b") != answers_15b:
         failed = True
         lines.append("CHECK-FAILED: 15b manifest answers (%s) differ from the 15b bucket (%s)" % (answers_15b, by_owner.get("15b")))

@@ -1,6 +1,13 @@
 package edu.uic.cs441.scholarchain.services
 
 import edu.uic.cs441.scholarchain.core.EmbeddingModel
+import edu.uic.cs441.scholarchain.rag.{
+  AnthropicDefaults,
+  EmbeddingProvider,
+  EmbeddingProviders,
+  SynthesisProvider,
+  VoyageDefaults
+}
 import edu.uic.cs441.scholarchain.storage.{DynamoTables, VectorIndexes}
 import java.net.URI
 import scala.util.control.NonFatal
@@ -47,7 +54,9 @@ final case class SemanticRoleConfig(
     vectorBucket: String,
     index: String,
     metric: String,
-    embedding: EmbeddingModel
+    embedding: EmbeddingModel,
+    embeddingProvider: EmbeddingProvider,
+    voyageApiKey: Option[Secret]
 ) extends AwsRoleConfig
 final case class QueryRoleConfig(
     common: AwsCommon,
@@ -56,6 +65,9 @@ final case class QueryRoleConfig(
     semanticBaseUri: URI,
     internalToken: Secret,
     embedding: EmbeddingModel,
+    embeddingProvider: EmbeddingProvider,
+    synthesisProvider: SynthesisProvider,
+    anthropicApiKey: Option[Secret],
     synthesisModelId: String,
     synthesisModelVersion: String,
     datasetSnapshot: String,
@@ -74,6 +86,8 @@ final case class WorkerRoleConfig(
     index: String,
     metric: String,
     embedding: EmbeddingModel,
+    embeddingProvider: EmbeddingProvider,
+    voyageApiKey: Option[Secret],
     queue: QueueSettings,
     textPrefix: String
 ) extends AwsRoleConfig
@@ -111,6 +125,14 @@ object AwsServiceConfig {
     }
     def optionalMatching(name: String, pattern: scala.util.matching.Regex): Option[String] =
       optionalText(name).map(v => if (pattern.matches(v)) v else refuse(name))
+
+    /** A provider key is one printable ASCII token. Any violation names only the variable. */
+    def apiKey(name: String): Secret = {
+      val value = text(name)
+      if (value.length >= 8 && value.length <= 512 && value.forall(c => c > ' ' && c < '\u007f'))
+        new Secret(value)
+      else refuse(name)
+    }
     def long(name: String, default: Long, min: Long, max: Long): Long = optionalText(name) match {
       case None => default
       case Some(v) =>
@@ -174,16 +196,53 @@ object AwsServiceConfig {
         r.long("SCHOLARCHAIN_READINESS_TIMEOUT_MS", 2000, 100, 30000)
       )
     )
-    def embedding: EmbeddingModel = {
-      val dimension = r.requiredLong("SCHOLARCHAIN_EMBEDDING_DIMENSION", 1, 4096).toInt
-      // Titan Text Embeddings V2 supports exactly these output sizes.
-      if (!Set(256, 512, 1024)(dimension)) r.refuse("SCHOLARCHAIN_EMBEDDING_DIMENSION")
-      EmbeddingModel(
-        r.matching("SCHOLARCHAIN_MODELS_EMBEDDING_MODEL", modelId),
-        r.matching("SCHOLARCHAIN_EMBEDDING_MODEL_VERSION", tag),
-        dimension
-      )
+    // The rag-owned parsers define the defaults and the accepted names. A refusal here names only
+    // the variable, never the value.
+    def embeddingProvider: EmbeddingProvider =
+      EmbeddingProvider
+        .parse(r.optionalText(EmbeddingProvider.EnvName))
+        .fold(_ => r.refuse(EmbeddingProvider.EnvName), identity)
+    def synthesisProvider: SynthesisProvider =
+      SynthesisProvider
+        .parse(r.optionalText(SynthesisProvider.EnvName))
+        .fold(_ => r.refuse(SynthesisProvider.EnvName), identity)
+
+    def embedding(provider: EmbeddingProvider): EmbeddingModel = provider match {
+      case EmbeddingProvider.Bedrock =>
+        val dimension = r.requiredLong("SCHOLARCHAIN_EMBEDDING_DIMENSION", 1, 4096).toInt
+        // Titan Text Embeddings V2 supports exactly these output sizes.
+        if (!Set(256, 512, 1024)(dimension)) r.refuse("SCHOLARCHAIN_EMBEDDING_DIMENSION")
+        val model = EmbeddingModel(
+          r.matching("SCHOLARCHAIN_MODELS_EMBEDDING_MODEL", modelId),
+          r.matching("SCHOLARCHAIN_EMBEDDING_MODEL_VERSION", tag),
+          dimension
+        )
+        // Stored and query vectors must share one provider: a Voyage model id is not a Bedrock one.
+        if (!EmbeddingProviders.modelMatchesProvider(EmbeddingProvider.Bedrock, model))
+          r.refuse("SCHOLARCHAIN_MODELS_EMBEDDING_MODEL")
+        model
+      case EmbeddingProvider.Voyage =>
+        // Plan rule 6.7: the model id, version tag and dimension are configuration. Each default and
+        // its rationale live in the rag-owned VoyageDefaults; nothing is pinned here.
+        val dimension =
+          r.long("SCHOLARCHAIN_EMBEDDING_DIMENSION", VoyageDefaults.Dimension, 1, 4096).toInt
+        if (!VoyageDefaults.SupportedDimensions(dimension))
+          r.refuse("SCHOLARCHAIN_EMBEDDING_DIMENSION")
+        val model = EmbeddingModel(
+          r.optionalMatching("SCHOLARCHAIN_MODELS_EMBEDDING_MODEL", modelId)
+            .getOrElse(VoyageDefaults.ModelId),
+          r.optionalMatching("SCHOLARCHAIN_EMBEDDING_MODEL_VERSION", tag)
+            .getOrElse(VoyageDefaults.ModelId),
+          dimension
+        )
+        // The naming family decides the provider: a Voyage client needs a voyage-* model.
+        if (!EmbeddingProviders.modelMatchesProvider(EmbeddingProvider.Voyage, model))
+          r.refuse("SCHOLARCHAIN_MODELS_EMBEDDING_MODEL")
+        model
     }
+    def voyageKey(provider: EmbeddingProvider): Option[Secret] =
+      if (provider == EmbeddingProvider.Voyage) Some(r.apiKey("SCHOLARCHAIN_VOYAGE_API_KEY"))
+      else None
     def metric: String = {
       val m = r.optionalText("SCHOLARCHAIN_S3_VECTORS_METRIC").getOrElse("cosine")
       if (Set("cosine", "euclidean")(m)) m else r.refuse("SCHOLARCHAIN_S3_VECTORS_METRIC")
@@ -205,23 +264,29 @@ object AwsServiceConfig {
             .getOrElse(LiveGraphSnapshot.unpinnedId)
         )
       case "semantic-service" =>
+        val provider = embeddingProvider
         SemanticRoleConfig(
           common,
           r.matching("SCHOLARCHAIN_STORAGE_RAG_BUCKET", bucket),
           r.matching("SCHOLARCHAIN_S3_VECTORS_VECTOR_BUCKET", bucket),
           index,
           metric,
-          embedding
+          embedding(provider),
+          provider,
+          voyageKey(provider)
         )
       case "embedding-worker" =>
         val wait = r.long("SCHOLARCHAIN_WORKER_WAIT_SECONDS", 0, 0, 20).toInt
+        val provider = embeddingProvider
         WorkerRoleConfig(
           common,
           r.matching("SCHOLARCHAIN_STORAGE_RAG_BUCKET", bucket),
           r.matching("SCHOLARCHAIN_S3_VECTORS_VECTOR_BUCKET", bucket),
           index,
           metric,
-          embedding,
+          embedding(provider),
+          provider,
+          voyageKey(provider),
           QueueSettings(
             r.uri("SCHOLARCHAIN_SQS_QUEUE_URL", Set("https")).toString,
             r.uri("SCHOLARCHAIN_SQS_DLQ_URL", Set("https")).toString,
@@ -248,15 +313,41 @@ object AwsServiceConfig {
             Some(RuntimeArtifactSettings(key, sha, run))
           case _ => r.refuse("SCHOLARCHAIN_RUNTIME_ARTIFACT_*")
         }
+        val embeddingChoice = embeddingProvider
+        val synthesisChoice = synthesisProvider
+        // The query role only carries the embedding description; it never calls the embedder, so
+        // it neither needs nor reads the Voyage key.
+        val queryEmbedding = embedding(embeddingChoice)
+        val anthropicKey = synthesisChoice match {
+          case SynthesisProvider.Anthropic => Some(r.apiKey("SCHOLARCHAIN_ANTHROPIC_API_KEY"))
+          case SynthesisProvider.Bedrock   => None
+        }
+        val (synthesisModel, synthesisVersion) = synthesisChoice match {
+          case SynthesisProvider.Anthropic =>
+            (
+              r.optionalMatching("SCHOLARCHAIN_MODELS_SYNTHESIS_MODEL", modelId)
+                .getOrElse(AnthropicDefaults.ModelId),
+              r.optionalMatching("SCHOLARCHAIN_SYNTHESIS_MODEL_VERSION", tag)
+                .getOrElse(AnthropicDefaults.ModelId)
+            )
+          case SynthesisProvider.Bedrock =>
+            (
+              r.matching("SCHOLARCHAIN_MODELS_SYNTHESIS_MODEL", modelId),
+              r.matching("SCHOLARCHAIN_SYNTHESIS_MODEL_VERSION", tag)
+            )
+        }
         QueryRoleConfig(
           common,
           r.matching("SCHOLARCHAIN_STORAGE_RAG_BUCKET", bucket),
           r.uri("SCHOLARCHAIN_GRAPH_BASE_URI", Set("http", "https")),
           r.uri("SCHOLARCHAIN_SEMANTIC_BASE_URI", Set("http", "https")),
           new Secret(token),
-          embedding,
-          r.matching("SCHOLARCHAIN_MODELS_SYNTHESIS_MODEL", modelId),
-          r.matching("SCHOLARCHAIN_SYNTHESIS_MODEL_VERSION", tag),
+          queryEmbedding,
+          embeddingChoice,
+          synthesisChoice,
+          anthropicKey,
+          synthesisModel,
+          synthesisVersion,
           r.optionalMatching("SCHOLARCHAIN_RUNTIME_DATASET_SNAPSHOT", tag)
             .getOrElse("runtime-live-unpinned"),
           r.optionalMatching("SCHOLARCHAIN_RUNTIME_ARTIFACT_BUCKET", bucket),

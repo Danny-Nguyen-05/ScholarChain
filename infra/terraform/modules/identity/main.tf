@@ -264,7 +264,15 @@ resource "aws_iam_role_policy" "execution" {
         Action   = ["logs:CreateLogStream", "logs:PutLogEvents"]
         Resource = ["arn:aws:logs:${var.aws_region}:${var.aws_account_id}:log-group:/${var.name_prefix}/${each.key}:log-stream:*"]
       }
-      ], length(lookup(var.service_secret_arns, each.key, [])) > 0 ? [{
+      ], length(lookup(var.provider_secret_arns, each.key, [])) > 0 ? [{
+        # Repair round 3: the provider API key container(s) this role's service needs (query-api: Anthropic; semantic-service and
+        # embedding-worker: Voyage; graph-service: none). Exactly the name-plus-suffix patterns the root passes, never a wildcard. The containers use the
+        # AWS-managed key aws/secretsmanager, so no kms:Decrypt statement belongs here (one would be needed only for a CMK).
+        Sid      = "InjectProviderApiKey"
+        Effect   = "Allow"
+        Action   = ["secretsmanager:GetSecretValue"]
+        Resource = tolist(var.provider_secret_arns[each.key])
+        }] : [], length(lookup(var.service_secret_arns, each.key, [])) > 0 ? [{
         Sid      = "InjectOnlyConfiguredSecrets"
         Effect   = "Allow"
         Action   = ["secretsmanager:GetSecretValue"]

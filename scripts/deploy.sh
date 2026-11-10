@@ -78,10 +78,13 @@ Checks, in order (each prints "STEP: <name>"; the first failure refuses with a d
   environment-match APPROVED_ENVIRONMENT == the environment the scripts operate on (NAME_PREFIX_ENVIRONMENT)
   prespend-receipt  the human-written pre-spend receipt (--prespend, default target/phase14/
                     prespend-receipt.json): sha256 == APPROVED_PRESPEND_SHA256; monitoring confirmed
-                    active; cost snapshot at most PRESPEND_MAX_AGE_HOURS (24) old; reported spend,
-                    unreported-usage allowance, reserves and remaining headroom all present and
-                    numeric (missing is never zero); headroom at least PRESPEND_MIN_HEADROOM_USD (3,
-                    pinned; no environment variable changes it) for every stage that can spend. The
+                    active; cost snapshot at most PRESPEND_MAX_AGE_HOURS (24) old; reported (AWS) spend,
+                    Anthropic and Voyage spend to date (entered from the provider consoles; 0 when a
+                    provider charged nothing), unreported-usage allowance, reserves and remaining
+                    headroom all present and numeric (missing is never zero); headroom at least
+                    PRESPEND_MIN_HEADROOM_USD (3, pinned; no environment variable changes it) and at
+                    most PRESPEND_PROJECT_CEILING_USD (25) minus every provider's spend, the allowance
+                    and the reserves, for every stage that can spend. The
                     teardown-only --stage cleanup-prepare has NO headroom floor: negative headroom is
                     accepted so overspend never blocks cleanup (the value must still be a number, and
                     every other receipt check applies; the output states "no headroom floor").
@@ -298,6 +301,13 @@ if [[ "${STAGE}" == "cleanup-prepare" ]]; then
 else
   HEADROOM_ARGS=(--min-headroom "${PRESPEND_MIN_HEADROOM_USD}")
 fi
+# Repair round 3: a spending stage also checks the headroom arithmetic against the pinned project ceiling (every provider's spend
+# counts). cleanup-prepare passes nothing: it compares no number, so cleanup is never blocked.
+CEILING_ARGS=()
+if [[ "${STAGE}" != "cleanup-prepare" && -n "${PRESPEND_PROJECT_CEILING_USD:-}" ]]; then
+  [[ "${PRESPEND_PROJECT_CEILING_USD}" =~ ^[0-9]+(\.[0-9]+)?$ ]] || sc_refuse "${EX_REFUSED}" "PRESPEND_PROJECT_CEILING_USD must be numeric in the config"
+  CEILING_ARGS=(--ceiling-usd "${PRESPEND_PROJECT_CEILING_USD}")
+fi
 APPROVAL="${APPROVAL:-${REPO_ROOT}/${APPROVAL_RECORD_PATH}}"
 PRESPEND="${PRESPEND:-${REPO_ROOT}/${PRESPEND_RECEIPT_DEFAULT_PATH}}"
 RELEASE_PREFIX="${REPO_ROOT}/${RELEASE_DIR}"
@@ -455,7 +465,7 @@ _prespend_check() {
     clock=(--clock-file "${SC_CLOCK_FILE}" --label "${label}")
   fi
   python3 -I "${SC_LIB_DIR}/verify.py" prespend --file "${VERIFIED_PRESPEND}" \
-    --max-age-hours "${PRESPEND_MAX_AGE_HOURS}" "${HEADROOM_ARGS[@]}" ${clock[@]+"${clock[@]}"} || rc=$?
+    --max-age-hours "${PRESPEND_MAX_AGE_HOURS}" "${HEADROOM_ARGS[@]}" ${CEILING_ARGS[@]+"${CEILING_ARGS[@]}"} ${clock[@]+"${clock[@]}"} || rc=$?
   [[ "${rc}" -eq 0 ]] || sc_refuse "${EX_REFUSED}" "pre-spend receipt rejected before ${label}: that paid operation and every later one is not run"
 }
 # _prespend_gate LABEL: the immediate pre-operation re-verification (execute only; a dry run prints it).

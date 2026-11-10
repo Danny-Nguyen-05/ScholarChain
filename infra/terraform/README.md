@@ -89,7 +89,8 @@ scope; GovCloud/China would require a separately reviewed configuration.
 | `sqs_long_poll_seconds` | `20`; reduce idle polling costs |
 | `kms_deletion_window_days` | `7`; recoverable scheduled-deletion window, not immediate key removal |
 | `service_secret_arns` | Empty; only explicit existing Secrets Manager ARN references per service |
-| `synthesis_inference_profile_id` / `_regions`, `embedding_inference_profile_id` / `_regions` | Unset; only for a model Bedrock serves through a cross-region inference profile (see "Bedrock inference profiles"); without them the Bedrock grant is the single in-region foundation-model ARN |
+| `synthesis_provider`, `embedding_provider` | `anthropic`, `voyage` (repair round 3: the Anthropic API and Voyage AI are the primary providers; `bedrock` selects Amazon Bedrock for that purpose; see "Repair round 3: Anthropic API and Voyage AI providers") |
+| `synthesis_inference_profile_id` / `_regions`, `embedding_inference_profile_id` / `_regions` | Unset, and only with the matching provider `bedrock`; only for a model Bedrock serves through a cross-region inference profile (see "Bedrock inference profiles"); without them the Bedrock grant is the single in-region foundation-model ARN |
 | `enable_budget_resource` | `false` until account capability and notification recipients are known |
 | `budget_notification_emails`, `budget_notification_threshold_percent` | No invented recipients; warning at 80% by default when explicitly enabled |
 
@@ -618,7 +619,8 @@ Copy `environments/course.local.tfvars.example` to `environments/course.local.tf
 | `aws_account_id`, `availability_zones`, `deployment_trusted_principal_arn`, `budget_limit_usd` | BOTH (no defaults) |
 | `aws_region`, `aws_profile` | BOTH, supplied by `plan.sh` on the command line (optional in the file; must equal it if present) |
 | `neptune_enabled`, `neptune_engine_version`, `neptune_parameter_family` | BASE optional; RUNTIME requires `neptune_enabled = true` (guard in `phase12b.tf:41-44`); an engine version needs the matching `neptune<major>.<minor>` family |
-| `synthesis_model_id` and, only for a model without an in-region endpoint, `synthesis_inference_profile_id` and `_regions` | BOTH (IAM text) |
+| `synthesis_provider`, `embedding_provider` | BOTH (they decide the IAM text and which key containers exist); defaults `anthropic` and `voyage` |
+| `synthesis_model_id` and, only for a model without an in-region endpoint, `synthesis_inference_profile_id` and `_regions` (only with `synthesis_provider = "bedrock"`; with `anthropic` they must stay unset) | BOTH (IAM text) |
 | `runtime_enabled`, `runtime_composition_verified`, `service_secret_bindings` (ARNs of secrets the human creates in Secrets Manager outside Terraform, so values never enter state), optional `service_secret_arns`, `public_ingress_cidrs`, `https_certificate_arn` | RUNTIME (`false` and empty in the base plan) |
 | `image_revision` | RUNTIME, passed as `-var` by `plan.sh --image-revision <40-hex>`; not in the file |
 | `alarm_notification_arns` | BOTH, optional SNS topic ARNs (no e-mail address) |
@@ -771,3 +773,73 @@ terraform -chdir=infra/terraform output -no-color -state=terraform.tfstate -raw 
 ### G18 (infra part): EMR in the session
 
 No Terraform change is needed to enable EMR in the middle of the session: `emr_config` is a private tfvars object, applied by a runtime-apply plan. The exact sequence, the idle-timeout arithmetic and the approval records for three runs on one cluster are in `scripts/README.md`, "Phase 15A: three runs, one cluster". The bucket and prefix layout for the EMR artifacts and input datasets is `s3://<artifacts bucket>/emr/<run_prefix>/{bin,jars,steps,config,input/<label>}` (jars `hadoop-submit.jar`, `hadoop-bundle.jar`, `entity-resolution.jar`, `spark-job.jar`; config `er-policy.json`, `er-config.json`, `spark-config-template.json`; the pipeline output goes to `s3://<artifacts bucket>/pipeline/<run_prefix>/15a/size-N`), uploaded with the `scholarchain-pipeline` profile of the `operator-pipeline` role; every `emr_config` URI must lie in the artifacts bucket (root guard), and `scripts/upload-emr-artifacts.sh` uploads exactly those keys and prints the values to paste.
+
+## Repair round 3 (Phase 14B): Anthropic API and Voyage AI providers (authored offline, nothing applied)
+
+**Why.** Amazon Bedrock model access was restricted for the course account (quota). The instructor approved the Anthropic API for synthesis and Voyage AI for embeddings, with the rest of the infrastructure on AWS (ruling recorded verbatim in `docs/agent-runs/phase-14/prompt.md`, "Repair round 3"). External API charges count toward the USD 25 project limit and are reported as separate items (AWS, Anthropic, Voyage AI) followed by the combined total (`scripts/lib/cost_report.py`). The Bedrock switch is retained.
+
+### The two switches
+
+| Configuration | `synthesis_provider` | `embedding_provider` | Models (runtime environment) | Vector dimension | API key containers |
+|---|---|---|---|---|---|
+| **Primary (default)** | `anthropic` | `voyage` | synthesis `claude-haiku-5-5` (Messages API `https://api.anthropic.com/v1/messages`), embeddings `voyage-4-lite` (`https://api.voyageai.com`, `output_dimension` 256), embedding model version tag `voyage-4-lite` | 256 | both |
+| Bedrock synthesis only | `bedrock` | `voyage` | synthesis `synthesis_model_id` (for example Claude Haiku 4.5, `anthropic.claude-haiku-4-5-20251001-v1:0`, with `synthesis_inference_profile_id`/`_regions` as in "Bedrock inference profiles"), embeddings as above | 256 | Voyage only |
+| Bedrock embeddings only | `anthropic` | `bedrock` | synthesis as above, embeddings `embedding_model_id` (default Titan Text Embeddings V2, `amazon.titan-embed-text-v2:0`; `embedding_model_version` is required in the aws mode) | 256 | Anthropic only |
+| Bedrock for both | `bedrock` | `bedrock` | the earlier plan | 256 | none |
+
+Select a configuration by setting the two variables in the private tfvars (`environments/course.local.tfvars`); nothing else changes. Both models for a provider are fixed by the provider: with `anthropic` leave `synthesis_model_id` and `synthesis_inference_profile_*` unset, with `voyage` leave `embedding_model_id`, `embedding_inference_profile_*` and `embedding_model_version` unset (or exactly `voyage-4-lite`); a Bedrock id left over from the earlier plan is refused by `terraform_data.provider_guard` (`phase14b-providers.tf`) instead of being sent to the Anthropic API as a model name. `vector_dimension` stays 256 and the metric cosine (`phase12b_guard`).
+
+**Vector consistency.** Stored and query vectors must share provider, model and dimension. Changing `embedding_provider` (or the embedding model) is not a configuration toggle: it needs a full re-embed of every stored vector and a rebuild of the affected vector indexes (the services refuse a vector whose model tag differs). Do it with the 14C ingest, not with Terraform.
+
+### Runtime environment
+
+| Variable | Roles | Value |
+|---|---|---|
+| `SCHOLARCHAIN_SYNTHESIS_PROVIDER` | `query-api` | `anthropic` or `bedrock` |
+| `SCHOLARCHAIN_EMBEDDING_PROVIDER` | every role that carries the embedding identity (`query-api`, `semantic-service`, `embedding-worker`) | `voyage` or `bedrock` |
+| `SCHOLARCHAIN_MODELS_SYNTHESIS_MODEL`, `SCHOLARCHAIN_SYNTHESIS_MODEL_VERSION` | `query-api` | `claude-haiku-5-5` with the Anthropic provider (otherwise as before: the inference-profile id or the model id, and the model id) |
+| `SCHOLARCHAIN_MODELS_EMBEDDING_MODEL`, `SCHOLARCHAIN_EMBEDDING_MODEL_VERSION`, `SCHOLARCHAIN_EMBEDDING_DIMENSION` | `query-api`, `semantic-service`, `embedding-worker` | `voyage-4-lite`, `voyage-4-lite`, `256` with Voyage |
+
+All of them are `environment` entries of the aws service mode only (`modules/runtime/compute.tf:37` and `:57`). The two keys are `secrets` (below), never `environment`.
+
+### Provider API keys: empty containers, values entered by hand
+
+`phase14b-providers.tf` declares two `aws_secretsmanager_secret` resources, each created **only when its provider is selected**, with no secret version, no `secret_string`, no data source and no output that could carry a value (`tests/phase14b_providers.tftest.hcl` scans every `.tf` file for that). Both use the AWS-managed key `aws/secretsmanager` (no `kms_key_id`), so no `kms:Decrypt` grant is needed (one would be needed only for a customer key), and `recovery_window_in_days = 0`, so the destroy that `scripts/cleanup.sh` runs is a force delete without a recovery window.
+
+| Secret name | IAM Resource pattern (the six `?` are the random suffix Secrets Manager appends) | Injected as | Read by (execution role) |
+|---|---|---|---|
+| `scholarchain-<environment>/anthropic-api-key` | `arn:aws:secretsmanager:<region>:<account>:secret:scholarchain-<environment>/anthropic-api-key-??????` | `SCHOLARCHAIN_ANTHROPIC_API_KEY` | `scholarchain-<environment>-query-api-execution` |
+| `scholarchain-<environment>/voyage-api-key` | `arn:aws:secretsmanager:<region>:<account>:secret:scholarchain-<environment>/voyage-api-key-??????` | `SCHOLARCHAIN_VOYAGE_API_KEY` | `-semantic-service-execution`, `-embedding-worker-execution` |
+
+The execution role statement is `InjectProviderApiKey` (`modules/identity/main.tf:271`): `secretsmanager:GetSecretValue` on exactly that role's pattern, and nothing else (the patterns are built from the name, so the policy is fully known in a reviewed plan). `graph-service` uses neither provider and gets neither key. No task role touches Secrets Manager (the key is injected at task start by the execution role, so application code never calls the SDK for it). ECS `secrets` entries take the real ARN of the container (`modules/runtime/compute.tf:147`) and only in the aws service mode: a task cannot start while its secret holds no value, so the values must be entered **before** the runtime apply that turns the aws mode on.
+
+**Entering a key (human steps; no agent ever sees, prints or writes a value).**
+
+1. After the base apply the two empty containers exist (`terraform output -json provider_controls` shows the names, never a value). `aws secretsmanager describe-secret --secret-id scholarchain-<environment>/anthropic-api-key` shows no `VersionIdsToStages` while the container is empty.
+2. Create the key in the provider console (Anthropic Console, Voyage AI dashboard). Name it for this project so you can find and revoke it later.
+3. Put the value into the container with an identity that holds `secretsmanager:PutSecretValue` on that one secret. **No Terraform-created role holds it** (not the deployer, not the operator roles): either use your own IAM identity in the AWS console (Secrets Manager, open the secret, Secret value, Edit, Plaintext, paste, Save) or, from a terminal that does not record the value, `read -rs KEY` then `printf '%s' "$KEY" | aws secretsmanager put-secret-value --secret-id <name> --secret-string file:///dev/stdin` and `unset KEY`. These commands were not run here (offline authoring): the first human run is their verification.
+4. `describe-secret` now shows an `AWSCURRENT` version. Never run `get-secret-value`: the deployer role denies it by design.
+5. After the session, `scripts/cleanup.sh` deletes both containers and prints a reminder: **deleting the container does not revoke the key.** Revoke both keys in the provider consoles yourself.
+
+### IAM and boundaries
+
+* **Deployer** (`infra/terraform/deployer`, set `phase14-main`, document `keys-obs`): `SecretsManagerProviderKeyContainersCreateAndTag` (`CreateSecret`, `TagResource`; resource `secret:scholarchain-<environment>/*`; region and the project/environment **request** tags) and `SecretsManagerProviderKeyContainersUpdateUntagDelete` (`UpdateSecret`, `UntagResource`, `DeleteSecret`; same prefix and region; project/environment **resource** tags). Not granted: `PutSecretValue`, `GetSecretValue` (explicit Deny kept), `PutResourcePolicy`, rotation, replication, `ListSecrets`, any other prefix. Document size 5339 of 6144 characters.
+* **Runtime permissions boundary** (`deployer/boundaries/runtime.json.tftpl`): the Bedrock statement is rendered only when `main_synthesis_provider` or `main_embedding_provider` is `bedrock` (deployer variables, defaults `anthropic` and `voyage`; keep them equal to the main root's). `InjectConfiguredSecrets` stays `secretsmanager:GetSecretValue` on Secrets Manager secrets of the account: it is a ceiling over the inline grants that name the two provider patterns and the human-created auth secrets (arbitrary names), so it cannot be narrowed to a prefix without breaking those.
+* **Operator-loader role**: the Titan grant (`InvokeTitanTextEmbeddingsV2Only`) exists only with `main_embedding_provider = "bedrock"`. With Voyage the loader holds no Bedrock permission; the 14C ingest embeds through the Voyage API with a key the human provides locally (assumption, outside Terraform).
+* **Bedrock invoke grants** (task roles, `modules/identity/phase12b.tf`) exist per purpose only when that purpose's provider is `bedrock` (the Bedrock model id reaching the module is null otherwise). **No role of any root holds a Marketplace permission** in any configuration (asserted for every task, execution, loader, EMR and operator policy and both boundaries).
+
+### Egress to `api.anthropic.com` and `api.voyageai.com`
+
+Unchanged: the single NAT gateway on TCP 443; no interface endpoint, no new rule, no new port. The path, from the source:
+
+1. The four services run in the application subnets with `assign_public_ip = false` (`modules/runtime/compute.tf:268`).
+2. Their role security groups carry the egress rule TCP 443 to `0.0.0.0/0` (`modules/network/main.tf:165-174`, for `local.https_clients` at `:11`: `query-api`, `graph-service`, `semantic-service`, `embedding-worker`, `emr`). `query-api` (Anthropic) and `semantic-service`/`embedding-worker` (Voyage) are in that set.
+3. The application route table's default route is the NAT gateway (`modules/network/main.tf:91` inside `aws_route.default`, `:95`); the NAT sits in a public subnet behind the internet gateway.
+4. DNS resolves through the VPC resolver (`enable_dns_support`, `modules/network/main.tf:15`).
+5. The execution role fetches the key from Secrets Manager over the same NAT path before the container starts.
+
+Asserted by `tests/phase14b_providers.tftest.hcl` (`egress_to_the_provider_apis_is_the_single_nat_on_tcp_443_and_nothing_new`). Not live-verified: a first call from a running task is the proof, and no security group can restrict by hostname (the rule is by port).
+
+### Tests
+
+`cd infra/terraform && terraform init -backend=false && terraform test` (new test runs that use a `module` block need `terraform init` once so the test modules are registered). New: `tests/phase14b_providers.tftest.hcl` (defaults and identifiers, empty containers, no version/secret value, execution-role patterns, no Bedrock/Marketplace, environment and `secrets`, the Bedrock selections, guards, boundary closure, egress), three module runs in `tests/phase14b_cost_runtime.tftest.hcl`, and `deployer/tests/providers.tftest.hcl`. The earlier test files that assert the Bedrock path now select `synthesis_provider = "bedrock"` and `embedding_provider = "bedrock"` explicitly.

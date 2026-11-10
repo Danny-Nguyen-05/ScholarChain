@@ -115,3 +115,43 @@ B2 is closed. All findings are nonblocking.
 |---|---|---|---|---|
 | D1, N1, N2 | — | — | — | closed by review 5 |
 | O1 | Observation | no | documentation-engineer, only if the user wants exact wording | no change required. The N3 margin of "at least about USD 0.35" sits before tax and is about 0.04 more than needed, which is the safe side |
+
+## Subphase 14B — repair round 3 (planned provider switch, not a review finding)
+
+Plan "Update 2026-11-09": implement the Anthropic API and Voyage AI switch after the 14B commit. Routed per `prompt.md` "Repair round 3 work order".
+
+| Item | Owner | Status |
+|---|---|---|
+| Anthropic and Voyage clients, switches, vector consistency, embedding cost bound | rag-engineer | done |
+| Service wiring, key handling, startup consistency check | service-engineer | done |
+| Model ids and limits as configuration with rationale (plan rule 6.7; coordinator re-read of the plan) | rag-engineer, service-engineer | done |
+| Terraform switches, two secrets, scoped grants, receipts, cleanup, cost report | infra-engineer | done |
+| Per-answer unit at Haiku 5.5 prices; embeddings cap; cost reporting | experiment-engineer | done |
+| README, report section, runbook (key entry, receipts, revocation, monitoring) | documentation-engineer | done |
+| Fixture repairs and independent tests | test-engineer | done |
+| Close the 10 pre-session items | coordinator | after round 3 is approved (plan) |
+
+## Subphase 14B — review 6 (repair round 3): REQUEST-CHANGES
+
+| ID | Severity | Blocking | Owner | Status |
+|---|---|---|---|---|
+| B1 | Medium | yes | rag-engineer | routed: build the Voyage config only on the Voyage branch and the Bedrock config only on the Bedrock branch in `LiveEmbeddingIngestMain.scala:384` and `LiveEmbeddingSmokeMain.scala:284`; tests through the `awsPorts` path for a Titan config (no Voyage key, Bedrock client) and a Voyage config (fake key, no Bedrock client) |
+| B2 | Medium | yes | documentation-engineer | routed: README, `docs/report/provider-fallback.md` §4 and runbook A0/A4 state that a Bedrock run also sets `main_synthesis_provider` / `main_embedding_provider` = "bedrock" in `infra/terraform/deployer/deployer.local.tfvars` and re-applies the deployer before the base plan |
+| N1 | Nonblocking | no | rag-engineer | listed, not routed (counter may under-count on ambiguous outcomes; inside the 200M free tokens) |
+| N2 | Nonblocking | no | service-engineer | listed, not routed (startup consistency check is self-referential; README wording) |
+| N3 | Nonblocking | no | infra-engineer | listed, not routed (model ids as non-overridable locals in `phase14b-providers.tf`) |
+| N4 | Nonblocking | no | experiment-engineer | listed, not routed (hardcoded model literal in `llm_budget.cost_report`) |
+| N5 | Nonblocking | no | documentation-engineer | routed with B2 because it touches the same runbook: B3b.2 must not tell the user to click "Retrieve secret value"; A4 Case B counts re-derived or marked stale |
+| N6 | Decision | no | user | asked (reviewer recommends keeping `PRESPEND_PROJECT_CEILING_USD=25`) |
+
+## Subphase 14B — review 7 (repair round 3 recheck): APPROVE
+
+| ID | Severity | Blocking | Owner | Status |
+|---|---|---|---|---|
+| B1 | Medium | was yes | rag-engineer | closed (review 7) |
+| B2 | Medium | was yes | documentation-engineer | closed (review 7) |
+| N5 | Nonblocking | no | documentation-engineer | closed (review 7) |
+| O1 | Observation | no | rag-engineer | recorded, not routed: Voyage at 2048 dimensions is refused in both live preflights (`LiveEmbeddingIngestMain.scala:282`, `LiveEmbeddingSmokeMain.scala:133`); no impact while 256 is pinned |
+| O2 | Observation | no | documentation-engineer | recorded, not routed: runbook A4 STOP rule (`:345`) still refers to the reference-only lists |
+| N1–N4 | Nonblocking | no | various | listed in review 6, not routed |
+| N6 | Decision | no | user | asked again with the commit (reviewer recommends keeping it) |

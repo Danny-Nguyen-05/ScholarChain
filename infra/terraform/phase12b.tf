@@ -10,7 +10,7 @@ locals {
 resource "terraform_data" "phase12b_guard" {
   lifecycle {
     precondition {
-      condition     = alltrue([for id in [var.embedding_model_id, var.synthesis_model_id] : id == null ? true : can(regex("^[a-zA-Z0-9._:-]+$", id))])
+      condition     = alltrue([for id in [local.embedding_model_effective, local.synthesis_model_effective] : id == null ? true : can(regex("^[a-zA-Z0-9._:-]+$", id))])
       error_message = "Model IDs must be explicit foundation-model identifiers without wildcard actions/resources."
     }
 
@@ -43,8 +43,8 @@ resource "terraform_data" "phase12b_guard" {
       error_message = "Runtime activation needs a verified future live composition, immutable revision, Neptune and named auth secret references for all services (plus query outgoing token and shared graph cursor key). Current artifacts remain unconfigured."
     }
     precondition {
-      condition     = !(var.runtime_enabled && var.runtime_composition_verified) || (var.embedding_model_version != null && var.synthesis_model_id != null && var.embedding_model_id != null)
-      error_message = "The aws service mode (runtime_enabled with runtime_composition_verified) needs embedding_model_version (the version the 14C ingest stamps on the vectors), synthesis_model_id and embedding_model_id."
+      condition     = !(var.runtime_enabled && var.runtime_composition_verified) || (local.embedding_model_version_effective != null && local.synthesis_model_effective != null && local.embedding_model_effective != null)
+      error_message = "The aws service mode (runtime_enabled with runtime_composition_verified) needs the embedding model version (the version the 14C ingest stamps on the vectors: voyage-4-lite for embedding_provider voyage, otherwise embedding_model_version), the synthesis model (claude-haiku-5-5 for synthesis_provider anthropic, otherwise synthesis_model_id) and the embedding model."
     }
     precondition {
       condition     = var.https_certificate_arn == null || (var.runtime_enabled && length(var.public_ingress_cidrs) > 0 && startswith(var.https_certificate_arn, "arn:aws:acm:${var.aws_region}:${var.aws_account_id}:certificate/"))

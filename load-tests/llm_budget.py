@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
-"""Per-bucket Claude Haiku 4.5 answer budget, shared by EVERY step that calls the LLM (python3 -I; stdlib only).
+"""Per-bucket claude-haiku-5-5 (Anthropic API) answer budget, shared by EVERY step that calls the LLM (python3 -I; stdlib only).
 
 The USD 1.33 cap of the course session is split into answer BUCKETS (pinned in experiments/manifests/llm-allocation.json):
 14c (Phase 14C smoke query), 15b (load test), 16b (live evaluation) and 17 (demo and final smoke). Each bucket is a HARD STOP:
-once it is used up that step makes no more Haiku calls. The overall cap is the backstop. Nothing rolls over automatically; moving
+once it is used up that step makes no more LLM calls. The overall cap is the backstop (at the claude-haiku-5-5 estimate the
+115 answers cost about USD 0.157, so the bucket counts bind first and USD 1.33 is a conservative upper bound). Nothing rolls over automatically; moving
 spare answers from one bucket to another needs the user's approval file (transfer).
 
   init                                       create the append-only ledger once (refuses if it exists)
@@ -17,8 +18,9 @@ spare answers from one bucket to another needs the user's approval file (transfe
   adjust   --usd U --source S [--note T]     add spend that was observed outside the buckets (for example from the AWS bill); counts only
                                              against the total cap
 
-Cost per answer is an ESTIMATE derived from load-tests/config/load-profile.v1.json (pinned Haiku rates x token plan); it is not
-metered and the AWS bill is the cost of record. The ledger is a local JSONL file OUTSIDE the repository (default
+Cost per answer is an ESTIMATE derived from load-tests/config/load-profile.v1.json (pinned claude-haiku-5-5 rates x token plan); it
+is not metered; the Anthropic console, the Voyage console and the AWS bill are the costs of record, reported as separate items and
+then combined (cost_report below). Embeddings (Voyage voyage-4-lite) have their own USD 0.30 cap and token counter in the profile. The ledger is a local JSONL file OUTSIDE the repository (default
 ~/.scholarchain/llm-ledger/haiku-ledger.jsonl) so `sbt clean` cannot erase it; every read and write holds an flock.
 A bucket reservation is trusted bookkeeping: the tool cannot see calls made by other programs.
 
@@ -102,6 +104,43 @@ def cost_per_answer(profile):
     cost = (tin * parse_decimal(llm["pricing"]["input_usd_per_million_tokens"], "input rate")
             + tout * parse_decimal(llm["pricing"]["output_usd_per_million_tokens"], "output rate")) / D(1000000)
     return (cost * parse_decimal(llm.get("cost_multiplier", "1"), "cost_multiplier", allow_zero=False)).quantize(MICRO, rounding=decimal.ROUND_UP)
+
+
+def embedding_cost(profile, tokens, prior_tokens=0):
+    """USD for `tokens` new Voyage tokens after `prior_tokens` already used on the account: the first free_tokens are free, the rest cost
+    usd_per_million_tokens per 1M (rounded up to a micro-dollar). Raises Refused for a negative or non-integer count."""
+    emb = profile["embeddings"]
+    if any(isinstance(n, bool) or not isinstance(n, int) or n < 0 for n in (tokens, prior_tokens)):
+        raise Refused("embedding token counts must be non-negative integers")
+    free = emb["free_tokens"]
+    billable = max(0, prior_tokens + tokens - free) - max(0, prior_tokens - free)
+    return (D(billable) * parse_decimal(emb["usd_per_million_tokens"], "embedding rate") / D(1000000)).quantize(MICRO, rounding=decimal.ROUND_UP)
+
+
+def cost_report(profile, answers, embedding_tokens=None, prior_embedding_tokens=0, aws_usd=None):
+    """The experiment cost report: AWS, Anthropic and Voyage as separate items, then the combined total.
+
+    Anthropic is the estimate answers x cost_per_answer (not metered). Voyage is embedding_cost() when the tokens are known; with no
+    token count it is reported as USD 0 with the usage marked 'not metered' (the first 200M tokens are free). AWS is never estimated
+    here: pass aws_usd (from the AWS bill) or leave None, and the combined total then says it excludes AWS."""
+    unit = cost_per_answer(profile)
+    tokens = profile["llm"]["tokens_per_answer"]
+    anthropic_usd = (unit * answers).quantize(MICRO, rounding=decimal.ROUND_UP)
+    voyage_usd = D(0) if embedding_tokens is None else embedding_cost(profile, embedding_tokens, prior_embedding_tokens)
+    aws = None if aws_usd is None else parse_decimal(aws_usd, "aws_usd")
+    combined = anthropic_usd + voyage_usd + (aws or D(0))
+    return {
+        "aws": {"usd": None if aws is None else money(aws), "usage": "taken from the AWS bill and the pre-spend receipts; not metered here"},
+        "anthropic": {"model": "claude-haiku-5-5", "usd": money(anthropic_usd), "answers": answers,
+                      "input_tokens_estimate": answers * (tokens["planner_input"] + tokens["synthesis_input"]),
+                      "output_tokens_estimate": answers * (tokens["planner_output"] + tokens["synthesis_output"]),
+                      "usage": "estimated from pinned tokens and rates; the Anthropic console is the record" if answers else "no answers sent: USD 0"},
+        "voyage": {"model": profile["embeddings"]["model"], "usd": money(voyage_usd), "tokens": embedding_tokens,
+                   "usage": ("%d tokens counted; the first %d account tokens are free" % (embedding_tokens, profile["embeddings"]["free_tokens"]))
+                   if embedding_tokens is not None else "tokens not metered here; the first %d account tokens are free so the charge is USD 0 while the account stays under that" % profile["embeddings"]["free_tokens"]},
+        "combined_usd": money(combined),
+        "combined_scope": "aws + anthropic + voyage" if aws is not None else "anthropic + voyage only (AWS not included: take it from the bill)",
+    }
 
 
 def load_allocation(path=DEFAULT_ALLOCATION):

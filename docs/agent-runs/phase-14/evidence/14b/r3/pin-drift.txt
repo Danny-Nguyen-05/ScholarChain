@@ -1,0 +1,12 @@
+Phase 14B repair round 3 — pin drift (scripts/billing/reviewed-pins.json source_freeze), coordinator, 2026-11-10
+pinned=209 drifted=10 (all infra-engineer files changed in round 3; refresh only after the round is approved, as before):
+  infra/terraform/README.md
+  infra/terraform/main.tf
+  infra/terraform/modules/identity/main.tf
+  infra/terraform/modules/identity/variables.tf
+  infra/terraform/modules/runtime/compute.tf
+  infra/terraform/modules/runtime/variables.tf
+  infra/terraform/phase12b-variables.tf
+  infra/terraform/phase12b.tf
+  infra/terraform/tests/phase12a.tftest.hcl
+  infra/terraform/tests/phase12b.tftest.hcl

@@ -386,8 +386,9 @@ run "operator_caller_policy_output_names_exactly_the_four_roles_with_mfa" {
 run "loader_actions_are_exactly_the_approved_set" {
   command = plan
   variables {
-    operator_roles_enabled = true
-    operator_run_prefix    = "run-20261115"
+    operator_roles_enabled  = true
+    operator_run_prefix     = "run-20261115"
+    main_embedding_provider = "bedrock" # repair round 3: the Titan grant exists only with Bedrock embeddings (providers.tftest.hcl covers the default)
   }
 
   assert {

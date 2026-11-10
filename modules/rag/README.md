@@ -471,3 +471,126 @@ the original G1 graph and uses explicitly synthetic community, metadata and homo
 The temporal comparison uses declared stored fixture rows. These tests establish offline
 correctness, not real metadata coverage, model quality or live injection behavior. Broader fault/
 injection suites remain Phase 11B. Phase 8C remains deferred to Phase 14C.
+
+## Phase 14 provider configurations (Anthropic and Voyage, Bedrock retained)
+
+Bedrock quota restrictions blocked the planned Bedrock models. The instructor approved the
+Anthropic API for synthesis and Voyage AI for embeddings; infrastructure and processing stay on
+AWS. Both Bedrock paths remain selectable. Exactly one provider per capability is active at a time.
+
+| Capability | Switch (env, read by `modules/services`) | Default | Alternative |
+|---|---|---|---|
+| Synthesis and planner LLM | `SCHOLARCHAIN_SYNTHESIS_PROVIDER` | `anthropic` | `bedrock` |
+| Embeddings | `SCHOLARCHAIN_EMBEDDING_PROVIDER` | `voyage` | `bedrock` |
+
+The model ids below are DEFAULTS, not pins (plan rule 6.7, configuration not constants). The
+synthesis model id is `RuntimeConfig.model.modelId`; the embedding model id, version tag and
+dimension are the configured `EmbeddingModel` (for ingest and smoke, `LiveEmbeddingConfig.model`).
+Endpoints, limits, price and cap are constructor or config parameters. The defaults live in
+exactly one object per provider, `AnthropicDefaults`, `VoyageDefaults` and `BedrockDefaults`
+(`ProviderDefaults.scala`), each with a one-line rationale and source.
+
+| Configuration | Default provider and model id | Default dimension | Key env (read by services) |
+|---|---|---|---|
+| Synthesis `anthropic` | Anthropic Messages API, `claude-haiku-5-5` | not applicable | `SCHOLARCHAIN_ANTHROPIC_API_KEY` |
+| Synthesis `bedrock` | Bedrock Converse, the configured model id (Haiku 4.5 per the Bedrock plan) | not applicable | none (IAM) |
+| Embeddings `voyage` | Voyage AI, `voyage-4-lite`, version tag `voyage-4-lite` | 256 | `SCHOLARCHAIN_VOYAGE_API_KEY` |
+| Embeddings `bedrock` | Titan Text Embeddings V2, `amazon.titan-embed-text-v2:0` | 256, 512 or 1024 as configured | none (IAM) |
+
+### Selecting a configuration (service wiring)
+
+`SynthesisProvider.parse(Option[String])` and `EmbeddingProvider.parse(Option[String])` turn the env
+values into a provider (unset or blank selects the default; an unknown value is a closed code that
+does not echo it). Then:
+
+- `SynthesisClients.runtimeConfigFor(provider, runtimeConfig, modelId)` returns the config to use
+  for the client and every agent with the configured model id set; nothing is forced. The
+  two-argument form returns the config as given.
+- `SynthesisClients.create(provider, config, anthropicApiKey: Option[String], bedrock: () =>
+  BedrockRuntimeClient, anthropic: AnthropicSettings = AnthropicSettings())` returns
+  `Either[String, LlmClient]`. The Bedrock client is a thunk, so the Anthropic path never builds an
+  AWS SDK client. `AnthropicSettings` holds the endpoint, API version, prompt-token limit,
+  max_tokens factor and bytes-per-token estimate.
+- `EmbeddingClientFactory.create(provider, inputType, voyageApiKey, bedrock, bedrockConfig,
+  counter, voyageConfig: Option[VoyageEmbeddingConfig] = None)` returns
+  `Either[String, ProviderEmbeddingClient]`. `VoyageEmbeddingConfig` holds the configured model,
+  endpoint and per-request limits. Use `EmbeddingInputType.Document`
+  for ingest and `EmbeddingInputType.Query` for queries, and share one `EmbeddingSpendCounter`
+  (`EmbeddingPricing.newCounter(provider)`) between them.
+
+API keys are constructor arguments. The services read the two env values; no key is read from a
+file here. A key never appears in a log, `toString`, exception message, result or evidence:
+`AnthropicApiKey` and `VoyageApiKey` print as `REDACTED`, reject unsafe values with a closed code and
+are never echoed from provider responses.
+
+### Anthropic path: `AnthropicMessagesLlmClient`
+
+Posts to `https://api.anthropic.com/v1/messages` with the JDK `HttpClient` and ujson only (no
+retries, no redirects, plain http only for loopback tests). The Haiku 5.5 request rules below are
+implemented for whichever Anthropic model is configured; they are properties of the API calls, not
+of one model id.
+
+- The model id is `RuntimeConfig.model.modelId` (default `claude-haiku-5-5`) and the response
+  `model` must equal it.
+- It never sends `temperature`, `top_p` or `top_k`, even though the runtime config carries
+  `temperature` 0.0. **The Anthropic path cannot use temperature 0**, so identical inputs can give
+  different outputs; Bedrock keeps the configured temperature. Nothing here claims determinism.
+- It forces the single named tool with `tool_choice`, sends no assistant prefill and never sets
+  `strict`. Top-level `$schema`, `$id` and `title` are stripped from the tool schema.
+- `max_tokens` is the configured output budget times `maxTokensFactor` (default 1.3: the tokenizer
+  produces about 30% more tokens than Haiku 4.5).
+- Content blocks are read by `type`. `thinking`, `redacted_thinking` and `text` blocks are ignored,
+  any other type is refused, and exactly one `tool_use` block with the requested name is accepted.
+- `stop_reason` `refusal` is the typed `llm-refusal` failure. It is not retried: the client never
+  retries, the planner falls back and synthesis abstains.
+- A prompt estimated at `promptTokenLimit` tokens or more (default 100,000, the price tier
+  boundary; the estimate is one token per `bytesPerEstimatedToken` UTF-8 bytes, default 3, of
+  system prompt, data and schema) is refused with `llm-prompt-too-large` before any call.
+- A response `model` that differs from the configured id is refused (`llm-model-mismatch`).
+
+**Data leaves AWS on this path.** The question text and the evidence snippets inside the prompt are
+sent to Anthropic. Billing is outside AWS; AWS budgets do not cover it. Live tool-use acceptance,
+model id spelling and latency are unverified until a human-gated live check.
+
+### Voyage path: `VoyageEmbeddingClient`
+
+Posts to `{baseUri}/v1/embeddings` (default `https://api.voyageai.com`) with the configured `model`
+id and `output_dimension` (defaults `voyage-4-lite`, 256), `input_type` `document` (ingest) or `query` (queries) and `truncation`
+false, so an over-long text is a typed failure and never a shortened vector. A request holds at
+most `maxTextsPerRequest` texts and `maxTokensPerRequest` estimated tokens (defaults 1,000 and
+1,000,000; one token per UTF-8 byte, a strict upper bound); larger inputs are split in order. One
+text may be at most `maxInputTokens` estimated tokens (default 32,000). The model must be in the
+`voyage-*` family and its dimension in `supportedDimensions`. HTTP 429, 5xx and
+transport errors retry with backoff; other statuses are permanent. **Document text and query text
+leave AWS on this path.**
+
+### Vector consistency and re-embedding
+
+Stored and query vectors must share provider, model, version tag and dimension.
+`VectorConsistency` refuses any difference with a typed code (`vector-consistency-provider-mismatch`,
+`-model-`, `-version-`, `-dimension-`), and `LiveEmbeddingIngestMain` and `LiveEmbeddingSmokeMain`
+check the embedder against the configured model before any port is used. Changing the embedding
+model requires a full re-embed and an index rebuild; Titan and Voyage vectors must never share an
+index. 14C ingest and query smoke use the same configured values (defaults: model id
+`voyage-4-lite`, version tag `voyage-4-lite`, dimension 256, from `LiveEmbeddingConfig.model`). `LiveEmbeddingConfig.embeddingProvider`
+is optional: empty infers the provider from the model, and a provider whose naming family does not
+own the model (`voyage-*` is Voyage) is refused with `embedding-provider-model-mismatch`. The live mains read `SCHOLARCHAIN_VOYAGE_API_KEY`
+from the environment only when `voyage` is selected, and build the Bedrock SDK client only when
+`bedrock` is selected.
+
+### Embedding cost bound
+
+The bound is provider-aware and configured. `LiveEmbeddingConfig.assumedUsdPerMillionEmbeddingTokens`
+(default USD 0.02 from `VoyageDefaults`) prices the token bound, and `embeddingCapUsd` (default USD
+0.30) is the cap: tokens times attempts at that price above the cap refuses with
+`live-assumed-cost-or-request-bound`. At runtime `EmbeddingSpendCounter` (price and cap from the
+config, or the provider defaults through `EmbeddingPricing.newCounter`) refuses a request that
+would pass the cap, 15,000,000 tokens at the defaults, before it is sent. The first 200M Voyage
+tokens per account are free, but the counter and every bound still price all tokens. The counter
+is a local control and not the provider invoice.
+
+### Tests
+
+`AnthropicLlmSpec`, `VoyageEmbeddingSpec`, `ProviderSelectionSpec` and `LiveEmbeddingProviderSpec`
+use fake HTTP (an in-process loopback server) and synthetic placeholder keys only. No AWS, Anthropic
+or Voyage call is made.

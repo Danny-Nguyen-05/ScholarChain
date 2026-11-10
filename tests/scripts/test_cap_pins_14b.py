@@ -5,8 +5,9 @@ planned use, every value below is derived by hand here and not read back from th
 
   * EMR: 3 live runs x 0.84 USD per run (2 x m5.xlarge at 0.24 USD per hour, 90 minutes cluster time = 2 x 0.24 x 1.5 = 0.72 plus the
     idle tail, planned at 0.84) = 2.52. scripts/config/release.conf pins EMR_CUMULATIVE_CAP_USD=2.52 and EMR_MAX_LIVE_RUNS=3.
-  * Haiku 4.5: 115 answers (buckets 10 + 60 + 40 + 5) x 0.01155 USD per answer = 1.32825, so the shared cap is 1.33, which is the smallest
-    cap in whole cents that holds the 115 answers and refuses a 116th (116 x 0.01155 = 1.3398 > 1.33). The cap is pinned in BOTH
+  * Synthesis (repair round 3, Step 0 answer 3, "easiest"): 115 answers (buckets 10 + 60 + 40 + 5) x 0.001365 USD per answer (claude-haiku-5-5,
+    (7150 x 0.10 + 1300 x 0.50) / 1e6) = 0.156975. The shared cap deliberately stays 1.33 (the receipt reserves the full cap), so it is
+    now a conservative upper bound and the bucket counts bind first (1.33 / 0.001365 = 974 answers > 115). The cap is pinned in BOTH
     experiments/manifests/llm-allocation.json and load-tests/config/load-profile.v1.json, and the two must agree.
   * The H0 receipt arithmetic (derived from docs/agent-runs/phase-14/approval-request-14b-replan.md section 3.2): with every cap reserved
     at once, (11.15 + 1.17 + 2.41 + 0.05 + 0.30 + 2.52 + 1.33 + 0.50) x 1.11 + 0.34 must stay at or below 22.00, which keeps the headroom
@@ -26,7 +27,7 @@ PROFILE = S.REPO / "load-tests/config/load-profile.v1.json"
 EMR_RUNS = 3
 EMR_PER_RUN = D("0.84")
 EMR_CAP = D("2.52")
-HAIKU_UNIT = D("0.01155")  # (5500 x 1.10 + 1000 x 5.50) / 1,000,000
+HAIKU_UNIT = D("0.001365")  # (7150 x 0.10 + 1300 x 0.50) / 1,000,000
 HAIKU_ANSWERS = 10 + 60 + 40 + 5
 HAIKU_CAP = D("1.33")
 
@@ -55,9 +56,10 @@ class EmrCumulativeCap(unittest.TestCase):
 class HaikuSharedCap(unittest.TestCase):
     def test_the_hand_derivation_brackets_the_cap(self):
         self.assertEqual(HAIKU_ANSWERS, 115)
-        self.assertEqual(HAIKU_ANSWERS * HAIKU_UNIT, D("1.32825"))
+        self.assertEqual(HAIKU_UNIT, (D(7150) * D("0.10") + D(1300) * D("0.50")) / D(1000000))
+        self.assertEqual(HAIKU_ANSWERS * HAIKU_UNIT, D("0.156975"))
         self.assertLessEqual(HAIKU_ANSWERS * HAIKU_UNIT, HAIKU_CAP)
-        self.assertLess(HAIKU_CAP, (HAIKU_ANSWERS + 1) * HAIKU_UNIT)
+        self.assertGreater(HAIKU_CAP / HAIKU_UNIT, 115, "the bucket counts, not the cap, bind first")
 
     def test_both_pinned_files_say_one_dollar_thirty_three(self):
         allocation = json.loads(ALLOCATION.read_text())["shared_cap_usd"]
@@ -70,10 +72,11 @@ class HaikuSharedCap(unittest.TestCase):
         profile = D(json.loads(PROFILE.read_text())["llm"]["shared_cap_usd"])
         self.assertEqual(allocation, profile)
 
-    def test_the_pinned_cap_holds_115_answers_and_refuses_a_116th(self):
+    def test_the_pinned_cap_holds_115_answers_and_the_unit_is_pinned_at_haiku_5_5_prices(self):
         cap = D(json.loads(ALLOCATION.read_text())["shared_cap_usd"])
         self.assertLessEqual(HAIKU_ANSWERS * HAIKU_UNIT, cap)
-        self.assertLess(cap, (HAIKU_ANSWERS + 1) * HAIKU_UNIT)
+        pricing = json.loads(PROFILE.read_text())["llm"]["pricing"]
+        self.assertEqual((pricing["input_usd_per_million_tokens"], pricing["output_usd_per_million_tokens"]), ("0.10", "0.50"))
 
 
 class H0ReceiptArithmetic(unittest.TestCase):
@@ -84,7 +87,7 @@ class H0ReceiptArithmetic(unittest.TestCase):
         "fixed lines": D("1.17"),
         "usage lines": D("2.41"),
         "tunnel task": D("0.05"),
-        "Titan V2 embeddings cap": D("0.30"),
+        "Voyage embeddings cap": D("0.30"),
         "EMR cumulative cap": EMR_CAP,
         "Haiku shared cap": HAIKU_CAP,
         "reserve term": D("0.50"),

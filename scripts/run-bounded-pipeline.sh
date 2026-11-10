@@ -426,7 +426,7 @@ VERIFIED_PRESPEND=""
 APPROVED_PRESPEND_SHA256=""
 APPROVAL_SHA=""
 _prespend_check() {
-  local label="$1" now rc=0 clock=()
+  local label="$1" now rc=0 clock=() ceiling=()
   now="$(sc_sha256 "${VERIFIED_PRESPEND}")"
   if [[ "${now}" != "${APPROVED_PRESPEND_SHA256}" ]]; then
     sc_refuse "${EX_REFUSED}" "pre-spend receipt copy changed (sha256 ${now}) before ${label}; no further paid operation will run"
@@ -434,8 +434,13 @@ _prespend_check() {
   if [[ -n "${SC_CLOCK_FILE}" ]]; then
     clock=(--clock-file "${SC_CLOCK_FILE}" --label "${label}")
   fi
+  # Repair round 3: the headroom arithmetic must include every provider's spend (pinned project ceiling).
+  if [[ -n "${PRESPEND_PROJECT_CEILING_USD:-}" ]]; then
+    [[ "${PRESPEND_PROJECT_CEILING_USD}" =~ ^[0-9]+(\.[0-9]+)?$ ]] || sc_refuse "${EX_REFUSED}" "PRESPEND_PROJECT_CEILING_USD must be numeric in the config"
+    ceiling=(--ceiling-usd "${PRESPEND_PROJECT_CEILING_USD}")
+  fi
   python3 -I "${SC_LIB_DIR}/verify.py" prespend --file "${VERIFIED_PRESPEND}" \
-    --max-age-hours "${PRESPEND_MAX_AGE_HOURS}" --min-headroom "${PRESPEND_MIN_HEADROOM_USD}" ${clock[@]+"${clock[@]}"} || rc=$?
+    --max-age-hours "${PRESPEND_MAX_AGE_HOURS}" --min-headroom "${PRESPEND_MIN_HEADROOM_USD}" ${ceiling[@]+"${ceiling[@]}"} ${clock[@]+"${clock[@]}"} || rc=$?
   [[ "${rc}" -eq 0 ]] || sc_refuse "${EX_REFUSED}" "pre-spend receipt rejected before ${label}: that paid operation and every later one is not run"
 }
 

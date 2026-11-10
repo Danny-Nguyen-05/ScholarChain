@@ -958,3 +958,253 @@ make no AWS or provider call, and never commit without the user's explicit yes.
     beginning with its Step 0 questions.
 (f) Start NO live step. Then stop.
 ````
+
+### Review 6 — user-supplied external review (repair round 3; pasted by the user on 2026-11-10; reproduced verbatim)
+
+Subphase 14B — review 6 (repair round 3): REQUEST-CHANGES. The verdict contains no plan path (its next prompt writes `<plan path>`), so it is reproduced unchanged.
+
+````text
+1. VERDICT: REQUEST-CHANGES (Subphase 14B repair round 3)
+Two blocking findings, both on the retained Bedrock fallback. The primary Anthropic and Voyage path passed every check I could make offline.
+2. Findings
+Blocking
+B1 (medium): the Bedrock embedding fallback crashes in the live ingest and query-smoke mains.
+
+* Where: modules/rag/src/main/scala/edu/uic/cs441/scholarchain/rag/LiveEmbeddingIngestMain.scala:384 and `LiveEmbeddingSmokeMain.scala:284`.
+* Evidence: both factories pass `Some(config.voyage(...))` as an eager argument for every provider. `VoyageEmbeddingConfig` requires `model.modelId.startsWith("voyage-")` (`VoyageEmbedding.scala:87`), so a Titan model throws before `EmbeddingClientFactory.create` runs. `run` then returns `live-input-or-execution-failed` / `smoke-input-or-execution-failed`.
+* Why tests miss it: `LiveEmbeddingProviderSpec` checks Titan only at preflight (lines 128–130), never through `awsPorts`.
+* Impact: a Bedrock embedding run cannot ingest or smoke-test in 14C. This contradicts “Retain the Bedrock switch as planned”, modules/rag/README.md (“build the Bedrock SDK client only when `bedrock` is selected”) and runbook B8.6.
+* Owner: rag-engineer.
+* Acceptance check: the Voyage config is built only on the Voyage branch (and the Bedrock config only on the Bedrock branch). A new test builds the embedding client through the same code path as `awsPorts` for a Titan config with no Voyage key and gets a Bedrock client; the mirror test covers Voyage. The rag suite passes.
+
+B2 (medium): the Bedrock run instructions omit the deployer setting, so following them ends in AccessDenied.
+
+* Where: `README.md:34–42`, docs/report/provider-fallback.md §4, docs/runbooks/phase-14-live-session.md:140 (A0) and `:317` (A4 tfvars).
+* Evidence: the runtime boundary carries the Bedrock statement only when the deployer variables `main_synthesis_provider` / `main_embedding_provider` are `bedrock` (infra/terraform/deployer/phase14_main.tf:870, boundaries/runtime.json.tftpl:107). The loader’s Titan grant has the same condition (`operator_roles.tf:151`). Only the two Terraform READMEs say so; the root README and the report never mention the deployer, and the runbook never names the two variables.
+* Impact: the instructor required “instructions for selecting and running each configuration” in the README and report. As written, a Bedrock run sets only the main-root variables and is denied at the boundary.
+* Owner: documentation-engineer.
+* Acceptance check: the README, the report section and runbook A0/A4 state that a Bedrock run also sets the matching deployer variable(s) in `deployer.local.tfvars` and re-applies the deployer before the base plan.
+
+Nonblocking
+
+* N1 (rag-engineer): `VoyageEmbedding.scala:214–238` releases the token reservation when a 200 response fails validation or a call times out. Those tokens may have been billed, so the local counter can under-count. Real money risk is nil inside the 200M free tokens.
+* N2 (service-engineer): the startup check in `AwsComposition.scala` (`consistent`) compares the configuration with a client built from that same configuration, so it cannot detect an index filled by another model. The real protection is the `embeddingModel` tag filter (`SemanticContextAgent.scala:41`) and the ingest manifest check. The README wording “services refuse any difference” overstates the startup check.
+* N3 (infra-engineer): `phase14b-providers.tf:26–28` fixes the model ids as locals that no variable can override, while the services take them from configuration. They are named, have a rationale and are mirrored in `release.conf`, so rule 6.7 is met; a variable with a default would be more consistent. Lines 70 and 78 repeat the ids as literals.
+* N4 (experiment-engineer): load-tests/llm_budget.py `cost_report` hardcodes `"claude-haiku-5-5"` instead of reading the profile. With Bedrock synthesis the pinned unit (0.001365) under-states Haiku 4.5 (0.01155); spend stays bounded because 115 answers × 0.01155 = 1.328 ≤ 1.33.
+* N5 (documentation-engineer): runbook B3b.2 step 2 says to click “Retrieve secret value”, which conflicts with the rule above it never to reveal a value. The A4 “Case B” plan counts were not re-derived after this round’s deployer changes.
+* N6 (user decision): I recommend keeping `PRESPEND_PROJECT_CEILING_USD=25`. It matches the instructor’s “ceiling” wording, only checks receipt arithmetic, and never blocks cleanup.
+
+Checks that passed
+
+* Haiku 5.5 rules:
+   * no `temperature`, `top_p` or `top_k`;
+   * forced `tool_choice`;
+   * a single user message, no prefill;
+   * blocks read by type;
+   * `llm-refusal` is not retried (the planner falls back, synthesis abstains);
+   * `max_tokens` × 1.3;
+   * top-level `$schema`, `$id` and `title` stripped;
+   * no `strict`.
+* Voyage: `output_dimension` 256, `document` for ingest and `query` for queries, 1,000 texts and 1M tokens per request.
+* Secrets: two containers, created only when the provider is selected, no secret version, force delete. Each execution role reads only its own pattern. No secret value, key-shaped token, email, Drive path or new account ID in the delta.
+* Grants and egress: Bedrock grants only for a Bedrock provider, no Marketplace action anywhere, existing NAT egress on 443 unchanged.
+* Receipts and cleanup: receipts require Anthropic and Voyage spend; both secrets are teardown addresses; the revocation reminder prints on every final path.
+* Arithmetic: (7,150 × 0.10 + 1,300 × 0.50) / 1e6 = 0.001365; × 115 = 0.156975.
+* Docs: README and report cover the restriction, model ids, dimensions, temperature-0 limit, data leaving AWS and per-provider cost reporting. Superseded Bedrock-only steps are marked.
+* Evidence and state:
+   * the PNG sha256 matches and the image matches the recorded ruling;
+   * `git diff --check` exits 0 and untracked files are clean;
+   * the worktree is untouched (HEAD `e2f0b01`, files dated Nov 8) and no stash is left;
+   * ownership is correct per docs/agents.md.
+
+Unverified gates
+
+* All test counts are coordinator- or agent-reported; I reran nothing.
+* The full seven-gate check on a clean snapshot and the pin refresh (10 of 209) are deferred by your decision.
+* Everything live, including whether the Anthropic API echoes `claude-haiku-5-5` exactly. `AnthropicLlm.scala:290` fails every answer with `llm-model-mismatch` if it returns a different id, so make that the first thing the 14C smoke checks.
+* Future scope: the 10 pre-session items, the key-entry method, and the plan text still saying 1.50.
+
+3. Report fields
+
+```
+STATUS: COMPLETE (verdict REQUEST-CHANGES)
+```
+
+`OWNER: code-reviewer`
+`WORK ORDER: Phase 14 Subphase 14B repair round 3 review (Anthropic API and Voyage AI switch)`
+`FILES CREATED: none in the repository (one scratch file outside it for the privacy scan)`
+`FILES MODIFIED: none`
+`COMMANDS RUN: git rev-parse/status/diff/diff --check/ls-files/worktree list against f5490d3; read-only git status in the fallback worktree; cat/sed/grep/awk/wc reads of the changed and untracked files, the plan, prompt.md, owner-report.md, test-report.md, repairs.md and evidence/14b/r3; shasum and file on the PNG; secret, email, account-ID and whitespace scans`
+`TEST RESULTS: none run (read-only); reported results accepted as reported`
+`VALIDATION RESULTS: B1 and B2 blocking; N1-N6 nonblocking; primary path, secrets, grants, receipts, cleanup, arithmetic, evidence hash, privacy, whitespace, ownership and worktree checks passed`
+`ASSUMPTIONS: the delta is git diff f5490d3 plus the 24 untracked files; course specification not re-fetched (the plan and the instructor ruling were used)`
+`RISKS: model-id echo and all provider behaviour unverified live; embedding counter can under-count (N1); zero slack under the caps`
+`MANUAL ACTION REQUIRED: user decides the key-entry method and N6; user updates the plan's 1.50 cap text`
+`BLOCKED-ON OWNER: rag-engineer (B1); documentation-engineer (B2)`
+`BLOCKED-ON EVIDENCE: test showing a Titan config builds a Bedrock client through the live factory path; updated README, report and runbook text`
+`NEXT GATE: repair B1 and B2, rerun the affected tests and the full sbt check on JDK 17, then a recheck review`
+4. NEXT PROMPT
+
+```
+You are the coordinator for ScholarChain Phase 14, Subphase 14B repair round 3, after the round 3 review
+```
+
+`(REQUEST-CHANGES), in /Users/danny/Documents/UIC/CS441/ScholarChain (branch phase-14, base and HEAD f5490d3,`
+`round 3 uncommitted). Follow the "Update 2026-11-09" block of <plan path> and docs/agents.md. Offline only: no`
+`live step, no AWS, Anthropic or Voyage call, no key value anywhere, no git stash, no commit.`
+`(a) Append the reviewer verdict "Subphase 14B — review 6 (repair round 3): REQUEST-CHANGES" verbatim to`
+`    docs/agent-runs/phase-14/review.md under "Subphase 14B" (any plan path written as <plan path>), and add`
+`    findings B1, B2 and N1-N6 to repairs.md.`
+`(b) Route each blocking finding to its owner:`
+`    B1 -> rag-engineer (modules/rag/** only). LiveEmbeddingIngestMain.scala:384 and LiveEmbeddingSmokeMain.scala:284`
+`       evaluate config.voyage(...) for every provider; VoyageEmbeddingConfig requires a voyage-* model`
+`       (VoyageEmbedding.scala:87), so a Titan config throws and run returns live-input-or-execution-failed /`
+`       smoke-input-or-execution-failed. Build the Voyage config only on the Voyage branch and the Bedrock config`
+`       only on the Bedrock branch. Add tests that build the embedding client through the same code path as awsPorts`
+`       for a Titan config with no Voyage key (Bedrock client returned) and for a Voyage config (fake key, no Bedrock`
+`       client), with no network call.`
+`    B2 -> documentation-engineer (README.md, docs/report/provider-fallback.md, docs/runbooks/phase-14-live-session.md`
+`       A0 and A4). State that a Bedrock run also sets main_synthesis_provider and/or main_embedding_provider to`
+`       "bedrock" in infra/terraform/deployer/deployer.local.tfvars and re-applies the deployer before the base plan;`
+`       otherwise the runtime boundary and the loader role carry no Bedrock grant.`
+`    Nonblocking, listed but not required: N1 rag-engineer (spend counter releases tokens on ambiguous outcomes);`
+`    N2 service-engineer (startup consistency check is self-referential; fix the README wording); N3 infra-engineer`
+`    (model ids as non-overridable locals in phase14b-providers.tf); N4 experiment-engineer (hardcoded model literal`
+`    in llm_budget.cost_report; Bedrock unit note); N5 documentation-engineer (B3b.2 "Retrieve secret value" step;`
+`    A4 Case B counts); N6 user decision on PRESPEND_PROJECT_CEILING_USD=25 (reviewer recommends keeping it).`
+`(c) Rerun the affected tests (rag suite, plus any suite an optional fix touches) and the full sbt -batch check on`
+`    JDK 17 with AWS neutralized. Record exact commands, exit codes and counts in test-report.md and under`
+`    docs/agent-runs/phase-14/evidence/14b/r3/. On any failure, report it with the exact output before changing`
+`    anything else.`
+`(d) Do not start the next subphase, the full seven-gate snapshot check, the pin refresh, the commit or the 10`
+`    pre-session items.`
+`(e) Return a recheck reviewer prompt per Section 10 of the plan, limited to B1, B2 and any optional fixes made,`
+`    without triggering any reviewer.`
+`(f) Stop and end the turn after the repair.`
+
+*
+````
+
+### Review 7 — user-supplied external review (repair round 3 recheck; pasted by the user on 2026-11-10; reproduced verbatim)
+
+Subphase 14B — review 7 (repair round 3 recheck): APPROVE. The verdict contains no plan path (its next prompt writes `<plan path>`). Its only change is that the AWS documentation example account ID it quotes is written as `<AWS documentation example account ID>`, because the account scan allows a 12-digit number only where it already was at base (same rule as review 2, user decision 2026-11-09).
+
+````text
+1. VERDICT: APPROVE (Subphase 14B repair round 3, recheck after review 6)
+There are no blocking findings. B1, B2 and N5 are closed. Two nonblocking observations follow.
+2. Findings
+B1: closed (was blocking)
+Code
+
+* `ProviderSelection.scala` (`EmbeddingClientFactory.create`) now takes `bedrockConfig` and `voyageConfig` by name (`=> Option[...]`).
+   * The Bedrock branch evaluates only `bedrockConfig`.
+   * The Voyage branch evaluates `voyageConfig` only inside its `try`, so an invalid Voyage config becomes a closed code.
+* Both live mains now build their embedder through one shared method, `LiveEmbeddingIngestMain.embeddingClientFor` (`LiveEmbeddingIngestMain.scala:185`):
+   * ingest calls it at `:398` with `Document`;
+   * query smoke calls it at `LiveEmbeddingSmokeMain.scala:274` with `Query`.
+* The Bedrock client is still a `lazy val` and is built only through the thunk.
+
+Tests (`LiveEmbeddingProviderSpec.scala:299–370`)
+
+* Titan config with no Voyage key: the result is a `BedrockEmbeddingClient` for both document and query input. The thunk is called exactly once, and the injected Bedrock client is a stub that fails if any method is called.
+* The mirror test uses a Voyage config at 256 and at 2048 dimensions with a thunk that throws: the result is a `VoyageEmbeddingClient`. The 2048 case proves the Bedrock-shaped config is never evaluated, because the Bedrock config rejects 2048.
+* A Voyage config with no key returns `voyage-api-key-missing`; an unknown provider returns `invalid-embedding-provider`.
+* No network call is made.
+
+Counts: 1,524 + 3 = 1,527 matches the coordinator’s run.
+B2: closed (was blocking)
+`README.md:37`, docs/report/provider-fallback.md:26 and runbook A0 (`:140`) and A4 (`:326`) now all say that a Bedrock run must:
+
+* set `main_synthesis_provider` and/or `main_embedding_provider` to `"bedrock"` in infra/terraform/deployer/deployer.local.tfvars;
+* re-apply the deployer before the base plan.
+
+They also explain the AccessDenied failure that happens otherwise. The variable names match deployer/variables.tf.
+N5: closed (optional)
+
+* B3b.2 step 2 (`:819`) uses the Edit control. It allows Retrieve secret value only while the secret is still empty, and says never to use it once a value exists.
+* The A4 counts (`:343`) are marked as from before repair round 3, not re-derived and for reference only. No new numbers were invented.
+
+O1 (nonblocking): Voyage at 2048 dimensions is refused in both preflights
+
+* Owner: rag-engineer.
+* Where: `LiveEmbeddingIngestMain.scala:282` (`val embedding = config.embedding`) and `LiveEmbeddingSmokeMain.scala:133` (`config.live.embedding.maxInputTokens`).
+* Why: both read the Bedrock-shaped config, which only accepts 256, 512 and 1024. A Voyage run at 2048 dimensions is therefore refused at preflight.
+* Impact: none today. The default and the Terraform guard (`phase14b-providers.tf:101`) both pin 256. The coordinator already records this limit.
+* Acceptance check, if pursued: the preflights read attempts and input limits from the provider-selected config, and a test preflights a Voyage 2048 config.
+
+O2 (nonblocking): the A4 STOP rule still points at the stale lists
+
+* Owner: documentation-engineer.
+* Where: runbook `:345` still says “any address outside the lists above”, but those lists are now reference-only.
+* Mitigation: the new text at `:343` says to read every address and decide with the coordinator.
+* Acceptance check, if pursued: the STOP rule says “outside the re-derived list agreed with the coordinator”.
+
+Scope, privacy and records
+
+* Scope matches the claim. Files modified since review 6 are exactly the 3 rag sources, the spec, `README.md`, the report, the runbook, and the coordinator’s `review.md`, `repairs.md`, `test-report.md` and `recheck-review6.txt`.
+* Ownership is correct. The rag-engineer edited `modules/rag/**`; the documentation-engineer edited `README.md` and `docs/**`; the coordinator edited `docs/agent-runs/**`.
+* Whitespace is clean. `git diff --check f5490d3` exits 0, and every touched file has no trailing whitespace and ends with a newline.
+* No private data in the touched files: no email address, Drive path or key-shaped token. The only 12-digit values are the earlier AWS documentation placeholder `<AWS documentation example account ID>` in `review.md` and a substring of a hash in the runbook.
+* Review 6 is recorded verbatim in `review.md:962`, and its findings are in `repairs.md:134`.
+* Live state: no live step was taken and nothing was spent live.
+
+Unverified gates
+
+* The rag 189 and services 113 counts are agent-reported.
+* The coordinator’s `sbt check` (1,527 succeeded, 0 failed, 1 canceled) is observed by the coordinator; its raw log is git-ignored and I did not rerun it.
+* Still deferred until after this approval:
+   * the full seven-gate snapshot check, including `test_terraform_r1`;
+   * the pin refresh (10 of 209 files drifted);
+   * the commit.
+* Still open with you: N6 (whether to keep `PRESPEND_PROJECT_CEILING_USD=25`) and the key-entry method.
+* N1–N4 are listed but not routed.
+* Everything live is unverified, especially whether the Anthropic API echoes the model id exactly as `claude-haiku-5-5`.
+
+Future scope: the 10 pre-session items, and the plan text that still says the synthesis cap is 1.50.
+3. Report fields
+
+```
+STATUS: COMPLETE (verdict APPROVE)
+```
+
+`OWNER: code-reviewer`
+`WORK ORDER: Phase 14 Subphase 14B repair round 3 recheck after review 6 (B1, B2, N5)`
+`FILES CREATED: none`
+`FILES MODIFIED: none`
+`COMMANDS RUN: git rev-parse/status/diff --stat/diff --check against f5490d3; stat over changed and untracked files; sed/grep/awk reads of ProviderSelection.scala, LiveEmbeddingIngestMain.scala, LiveEmbeddingSmokeMain.scala, LiveEmbeddingProviderSpec.scala, README.md, provider-fallback.md, the runbook (A0, A4, B3b.2), review.md, repairs.md, test-report.md V4, recheck-review6.txt; whitespace and privacy scans`
+`TEST RESULTS: none run (read-only); agent- and coordinator-reported results accepted as reported`
+`VALIDATION RESULTS: B1 closed (only the selected provider's config is evaluated; the shared path has Titan, Voyage and refusal tests); B2 closed; N5 closed; O1 and O2 nonblocking; scope, ownership, whitespace and privacy clean`
+`ASSUMPTIONS: "no other file changed since review 6" verified by modification time; course specification not re-fetched`
+`RISKS: provider behaviour and model-id echo unverified live; O1 (2048 dimensions) latent`
+`MANUAL ACTION REQUIRED: user decides N6 and the key-entry method; user updates the plan's 1.50 cap text`
+`BLOCKED-ON OWNER: none`
+`BLOCKED-ON EVIDENCE: none`
+`NEXT GATE: full seven-gate check on a fresh clean snapshot, pin refresh, then the user's commit`
+4. NEXT PROMPT
+
+```
+You are the coordinator for ScholarChain Phase 14, Subphase 14B, after the repair round 3 recheck (review 7:
+```
+
+`APPROVE), in /Users/danny/Documents/UIC/CS441/ScholarChain (branch phase-14, base and HEAD f5490d3, round 3`
+`uncommitted). Follow the "Update 2026-11-09" block of <plan path> and docs/agents.md. Start NO live step: no AWS,`
+`Anthropic or Voyage call, no key value anywhere, no git stash, and never commit without the user's explicit yes.`
+`(a) Append the reviewer verdict "Subphase 14B — review 7 (repair round 3 recheck): APPROVE" verbatim to`
+`    docs/agent-runs/phase-14/review.md under "Subphase 14B" (any plan path written as <plan path>). Log B1, B2 and`
+`    N5 as closed and O1 and O2 as nonblocking in repairs.md.`
+`(b) Build a fresh clean snapshot with its identity file and run on it:`
+`      env -u AWS_PROFILE AWS_EC2_METADATA_DISABLED=true AWS_CONFIG_FILE=/dev/null AWS_SHARED_CREDENTIALS_FILE=/dev/null scripts/check.sh`
+`    It must end RESULT: PASS gates=7, with test_terraform_r1.py passing (the snapshot commits the new .tf files).`
+`    Save the evidence under docs/agent-runs/phase-14/evidence/14b/r3/ and update test-report.md. On any failure,`
+`    report the exact output before changing anything, and stop.`
+`    If it passes, refresh the 10 drifted pins (scripts/billing/reviewed-pins.json) with the user, re-check the pin`
+`    drift (0), run git diff --check with untracked files intent-added (restore the index), then prepare the commit:`
+`    show the user the file list and the proposed message and ask. Never commit without the user's yes.`
+`    Also ask the user for the two open decisions: N6 (keep PRESPEND_PROJECT_CEILING_USD=25; reviewer recommends`
+`    keeping it) and the key-entry method for runbook B3b.`
+`(c) After the user's commit, close the 10 pre-session items in the replan approval request`
+`    (docs/agent-runs/phase-14/approval-request-14b-replan.md), beginning with their Step 0 questions, each with a`
+`    recommended default; wait for the answers.`
+`(d) End with a new reviewer prompt per Section 10 of the plan, without triggering any reviewer.`
+`(e) Start NO live step. Then stop and end the turn.`
+````

@@ -1,7 +1,7 @@
 {
   "schema": "scholarchain.load-experiment-manifest.v1",
   "id": "15b-ecs-scaling",
-  "description": "Experiment 15B (plan experiment D): query-api ECS scale-out and scale-in under CPU target tracking, driven by load-tests/loadgen.py at concurrency 1, 5, 25 and 50, then a sustained hold at 50 and a no-load observation window. Non-LLM endpoints by default; a small fixed sample of synthesized answers (POST /v1/query) only when the operator passes --llm, inside the 15b answer bucket of the shared Haiku cap of USD 1.33.",
+  "description": "Experiment 15B (plan experiment D): query-api ECS scale-out and scale-in under CPU target tracking, driven by load-tests/loadgen.py at concurrency 1, 5, 25 and 50, then a sustained hold at 50 and a no-load observation window. Non-LLM endpoints by default; a small fixed sample of synthesized answers (POST /v1/query) only when the operator passes --llm, inside the 15b answer bucket of the shared claude-haiku-5-5 (Anthropic API) cap of USD 1.33.",
   "region": "us-east-2",
   "target": {
     "service": "query-api",
@@ -27,7 +27,7 @@
   ],
   "llm": {
     "default_enabled": false,
-    "note": "Opt-in only with --llm --remaining-cap-usd X --questions-file F and an existing ledger. Answer budget per level 10/15/20/15 = 60 answers (about USD 0.69 at the pinned estimate of USD 0.01155 per answer), charged to the 15b bucket, which is a hard stop; the hold phase sends none. Buckets 14c 10 / 15b 60 / 16b 40 / 17 5: experiments/manifests/llm-allocation.json."
+    "note": "Opt-in only with --llm --remaining-cap-usd X --questions-file F and an existing ledger. Answer budget per level 10/15/20/15 = 60 answers (USD 0.0819 at the pinned estimate of USD 0.001365 per answer: 10 / 15 / 20 / 15 answers = USD 0.01365 / 0.020475 / 0.0273 / 0.020475), charged to the 15b bucket, which is a hard stop; the hold phase sends none. Buckets 14c 10 / 15b 60 / 16b 40 / 17 5: experiments/manifests/llm-allocation.json. Cost reporting for the run: AWS, Anthropic and Voyage as separate items, then the combined total (the run record has cost_report)."
   },
   "metrics_to_collect": [
     {"source": "AWS/ECS", "metric": "CPUUtilization", "dimensions": ["ClusterName", "ServiceName=query-api"], "statistics": ["Average", "Maximum"], "period_seconds": 60},

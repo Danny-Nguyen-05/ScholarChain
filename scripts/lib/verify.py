@@ -7,9 +7,15 @@ Every subcommand prints findings on stdout and exits 0 (ok), 1 (a finding: the c
   git-tree --repo R --exempt PATH
         porcelain v1 -z parse of `git status`; exit 0 clean, 1 dirty, 2 git failed or unparsable.
         Only the LITERAL path PATH is exempt (exact string comparison, never a git pathspec).
-  prespend --file F --max-age-hours H (--min-headroom D | --no-headroom-floor) [--clock-file C --label L]
+  prespend --file F --max-age-hours H (--min-headroom D | --no-headroom-floor) [--ceiling-usd C] [--clock-file C --label L]
         human-written pre-spend receipt: monitoring true, fresh snapshot, numeric cost fields,
         remaining headroom >= D. A missing, null or non-numeric field is never treated as zero.
+        Repair round 3: the receipt carries the spend to date of EVERY provider, each entered by the human from that provider's
+        console: reported_spend_usd (AWS Cost Explorer), anthropic_spend_to_date_usd and voyage_spend_to_date_usd (a provider that
+        has charged nothing is 0, written explicitly: a missing field is still refused). With --ceiling-usd C (a spending stage;
+        deploy.sh and run-bounded-pipeline.sh pass the pinned PRESPEND_PROJECT_CEILING_USD) the headroom the human wrote may not exceed
+        C - (AWS + Anthropic + Voyage + unreported + reserves) + 0.01, so a headroom that leaves a provider out is refused. The
+        cleanup-prepare stage (--no-headroom-floor) still requires every numeric field but compares nothing: cleanup is never blocked.
         --clock-file is the TEST-ONLY controllable clock: a JSON object {"<label>": "<UTC time>", "default": ...};
         the caller passes it only when the announced SCHOLARCHAIN_CONFIG_FILE mechanism is active.
   plan-target --show-json F --region R --account-sha256 H --environment E --project P
@@ -154,6 +160,9 @@ def _clock_now(args):
 
 def cmd_prespend(args):
     problems = []
+    if args.ceiling_usd is not None and (not math.isfinite(args.ceiling_usd) or args.ceiling_usd <= 0):
+        print("PRESPEND-CHECK-FAILED: --ceiling-usd must be a finite number above zero")
+        return 2
     try:
         now = _clock_now(args)
     except (OSError, ValueError, TypeError, AttributeError):
@@ -185,10 +194,15 @@ def cmd_prespend(args):
             problems.append("cost snapshot is %.1f h old; at most %s h is accepted" % (age_hours, args.max_age_hours))
         if age_hours < -0.1:
             problems.append("cost snapshot is in the future")
-    _number(document, "reported_spend_usd", problems)
-    _number(document, "unreported_usage_allowance_usd", problems)
-    _number(document, "reserves_usd", problems)
+    aws_spend = _number(document, "reported_spend_usd", problems)
+    anthropic_spend = _number(document, "anthropic_spend_to_date_usd", problems)
+    voyage_spend = _number(document, "voyage_spend_to_date_usd", problems)
+    allowance = _number(document, "unreported_usage_allowance_usd", problems)
+    reserves = _number(document, "reserves_usd", problems)
     headroom = _number(document, "remaining_headroom_usd", problems, minimum=-1e18)
+    combined = None
+    if None not in (aws_spend, anthropic_spend, voyage_spend):
+        combined = aws_spend + anthropic_spend + voyage_spend
     if args.no_headroom_floor:
         # Teardown-only stage (deploy.sh passes this flag only for --stage cleanup-prepare): the headroom value must
         # still be a finite number (checked above) but is NOT compared with any floor, so overspend never blocks cleanup.
@@ -196,10 +210,22 @@ def cmd_prespend(args):
             print("PRESPEND: cleanup-prepare has no headroom floor (remaining_headroom_usd=%.2f)" % headroom)
     elif headroom is not None and headroom < args.min_headroom:
         problems.append("remaining headroom %.2f USD is below the required %s USD" % (headroom, args.min_headroom))
+    if args.ceiling_usd is not None and not args.no_headroom_floor and headroom is not None and combined is not None and None not in (allowance, reserves):
+        # The headroom arithmetic includes every provider: ceiling - (AWS + Anthropic + Voyage) - unreported allowance - reserves.
+        # The human may write LESS headroom (a safety margin) but never more than the arithmetic allows (cent tolerance).
+        allowed = args.ceiling_usd - combined - allowance - reserves
+        if headroom > allowed + 0.01:
+            problems.append(
+                "remaining_headroom_usd %.2f exceeds the ceiling arithmetic %.2f = %s - (AWS %.2f + Anthropic %.2f + Voyage %.2f) - unreported %.2f - reserves %.2f"
+                % (headroom, allowed, args.ceiling_usd, aws_spend, anthropic_spend, voyage_spend, allowance, reserves)
+            )
     for problem in problems:
         print("PRESPEND-CHECK-FAILED: %s" % problem)
     if not problems:
-        print("pre-spend receipt ok: monitoring active, snapshot %.1f h old, headroom %.2f USD" % (age_hours, headroom))
+        print(
+            "pre-spend receipt ok: monitoring active, snapshot %.1f h old, headroom %.2f USD; spend to date AWS %.2f + Anthropic %.2f + Voyage %.2f = %.2f USD"
+            % (age_hours, headroom, aws_spend, anthropic_spend, voyage_spend, combined)
+        )
     return 1 if problems else 0
 
 
@@ -920,6 +946,7 @@ def build_parser():
     floor = p.add_mutually_exclusive_group(required=True)
     floor.add_argument("--min-headroom", type=float)
     floor.add_argument("--no-headroom-floor", action="store_true")
+    p.add_argument("--ceiling-usd", type=float)
     p.add_argument("--clock-file")
     p.add_argument("--label")
     p.set_defaults(fn=cmd_prespend)

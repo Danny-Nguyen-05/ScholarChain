@@ -118,9 +118,32 @@ class SpendingStagesKeepTheThreeDollarFloor(FloorBase):
 
     def test_headroom_of_exactly_three_and_above_passes_the_prespend_step(self):
         for stage in SPENDING:
-            for headroom in (3, 3.0, 3.00, 3.01, 19.99, 150.25):
+            for headroom in (3, 3.0, 3.00, 3.01, 19.99, 20.25):
                 with self.subTest(stage=stage, headroom=headroom):
                     self.assert_past_prespend(self.deploy(stage, self.receipt(remaining_headroom_usd=headroom)))
+
+    def test_headroom_above_the_ceiling_arithmetic_is_refused_by_every_spending_stage(self):
+        """Repair round 3, hand-derived: the default receipt states AWS 1.5, Anthropic 0.25, Voyage 0.0, allowance 1.0, reserves 2.0, so the
+        most it may state is 25 - 1.75 - 1.0 - 2.0 = 20.25 (a cent of tolerance: 20.26 passes, 20.27 and 150.25 do not)."""
+        for stage in SPENDING:
+            with self.subTest(stage=stage, headroom=20.26):
+                self.assert_past_prespend(self.deploy(stage, self.receipt(remaining_headroom_usd=20.26)))
+            for headroom in (20.27, 21, 150.25):
+                with self.subTest(stage=stage, headroom=headroom):
+                    run = self.deploy(stage, self.receipt(remaining_headroom_usd=headroom))
+                    self.assert_refused_at_prespend(run)
+                    self.assertIn("exceeds the ceiling arithmetic", run.text, run.describe())
+
+    def test_a_provider_left_out_of_the_headroom_is_refused(self):
+        """A receipt that reports Anthropic spend 5 but keeps the old headroom (20.25) leaves a provider out: 25 - (1.5 + 5) - 3 = 15.5."""
+        for stage in SPENDING:
+            with self.subTest(stage=stage):
+                run = self.deploy(stage, self.receipt(anthropic_spend_to_date_usd=5.0, remaining_headroom_usd=20.25))
+                self.assert_refused_at_prespend(run)
+                run = self.deploy(stage, self.receipt(anthropic_spend_to_date_usd=5.0, remaining_headroom_usd=15.5))
+                self.assert_past_prespend(run)
+                run = self.deploy(stage, self.receipt(voyage_spend_to_date_usd=5.0, remaining_headroom_usd=20.25))
+                self.assert_refused_at_prespend(run)
 
     def test_a_spending_stage_never_prints_the_no_floor_line(self):
         for stage in SPENDING:
@@ -158,7 +181,7 @@ class CleanupPrepareHasNoHeadroomFloor(FloorBase):
                 self.assertNotIn("has no headroom floor", run.text, "the no-floor line is printed only for a usable headroom value")
 
     def test_every_other_numeric_field_must_still_be_a_finite_number(self):
-        for key in ("reported_spend_usd", "unreported_usage_allowance_usd", "reserves_usd"):
+        for key in ("reported_spend_usd", "anthropic_spend_to_date_usd", "voyage_spend_to_date_usd", "unreported_usage_allowance_usd", "reserves_usd"):
             for label, value in (("missing", ...), ("null", None), ("string", "1"), ("NaN", float("nan")), ("Infinity", float("inf"))):
                 with self.subTest(field=key, value=label):
                     run = self.deploy("cleanup-prepare", self.receipt(remaining_headroom_usd=-5, **{key: value}))
@@ -258,8 +281,17 @@ class TheRemovedCleanupFloorSettingIsGone(FloorBase):
         self.assertEqual(int(values["EMR_MAX_LIVE_RUNS"]), 3)
         common = (S.REPO / "scripts/lib/common.sh").read_text()
         pinned = re.search(r'^SC_PINNED_KEYS="([^"]*)"', common, re.M).group(1).split()
-        for key in ("PRESPEND_MIN_HEADROOM_USD", "PRESPEND_MAX_AGE_HOURS", "EMR_CUMULATIVE_CAP_USD"):
+        for key in ("PRESPEND_MIN_HEADROOM_USD", "PRESPEND_MAX_AGE_HOURS", "EMR_CUMULATIVE_CAP_USD", "PRESPEND_PROJECT_CEILING_USD"):
             self.assertIn(key, pinned)
+        self.assertEqual(float(values["PRESPEND_PROJECT_CEILING_USD"]), 25.0)
+
+    def test_the_environment_cannot_raise_the_pinned_project_ceiling(self):
+        for value in ("1000", "0", "abc", ""):
+            for stage in SPENDING:
+                with self.subTest(stage=stage, value=value):
+                    run = self.deploy(stage, self.receipt(remaining_headroom_usd=150.25), {"PRESPEND_PROJECT_CEILING_USD": value})
+                    self.assert_refused_at_prespend(run)
+                    self.assertIn("exceeds the ceiling arithmetic", run.text, run.describe())
 
     def test_setting_the_old_key_in_the_environment_changes_nothing_for_any_stage(self):
         for value in ("0", "-100", "1000", "abc", ""):

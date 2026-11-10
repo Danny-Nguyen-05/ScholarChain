@@ -10,8 +10,8 @@ Run all commands from the repository root with `python3 -I`.
 |---|---|
 | `manifests/15a-emr-size-{25,50,100}.json` | the three EMR runs; schema `scholarchain.experiment-manifest.v1`, accepted by `scripts/run-experiment.sh` |
 | `manifests/15b-ecs-scaling.json` | query-api scale-out / scale-in driven by `load-tests/loadgen.py`; schema `scholarchain.load-experiment-manifest.v1` (run-experiment.sh is EMR-only and cannot take it) |
-| `manifests/16b-live-evaluation.json` | 16B placeholder: only the LLM answer budget and its tie to the shared Haiku cap |
-| `manifests/llm-allocation.json` | proposed split of the USD 1.33 Haiku cap across 14C, 15B and 16B |
+| `manifests/16b-live-evaluation.json` | 16B placeholder: only the LLM answer budget, the Voyage embeddings allowance and their tie to the shared claude-haiku-5-5 cap |
+| `manifests/llm-allocation.json` | proposed split of the USD 1.33 claude-haiku-5-5 (Anthropic API) cap across 14C, 15B and 16B |
 | `inputs/15a/prep-config.json`, `datasets.json` | the Hadoop prep config and the dataset snapshot manifest the 15A manifests name |
 | `scripts/make_dblp_subsets.py` | builds the three input trees locally from the real Phase 6 slice |
 | `scripts/render_manifests.py` | renders the 15A manifests (tokens for buckets and run prefix; real artifact hashes) |
@@ -115,15 +115,23 @@ Risks stated up front: scale-out happens only if CPU exceeds the target; if non-
 
 ### LLM answer buckets (opt-in; shared cap USD 1.33)
 
-User decision 2026-11-08: **14c 10 / 15b 60 / 16b 40 / 17 (demo and final smoke) 5 = 115 answers**, pinned in `manifests/llm-allocation.json` (schema v2). Each bucket is a hard stop; the USD 1.33 ledger cap is the backstop (lowered from USD 1.50 by the user decision 2026-11-09, "Caps = planned use": with about 11% sales tax counted toward the USD 25 cap, reserving full caps in the H0 pre-spend receipt would leave USD 2.37 headroom, below the floor of 3; 115 x 0.01155 = 1.32825 <= 1.33); spare allowance moves between buckets only with the user's approval file (`llm_budget.py transfer`). Estimate USD 0.01155 per answer (pinned tokens x USD 1.10 / 5.50 per 1M; the earlier 0.0105 figure used the global 1.00 / 5.00 rates, not the geo rates in use).
+User decision 2026-11-08: **14c 10 / 15b 60 / 16b 40 / 17 (demo and final smoke) 5 = 115 answers**, pinned in `manifests/llm-allocation.json` (schema v2). Each bucket is a hard stop. Synthesis runs on **claude-haiku-5-5 through the Anthropic API** (repair round 3, 2026-11-09; the instructor approved the Anthropic API and Voyage AI given the Bedrock quota restriction; the Bedrock route `us.anthropic.claude-haiku-4-5-20251001-v1:0` stays the selectable fallback). Price USD 0.10 input / 0.50 output per 1M tokens for prompts under 100,000 tokens (Anthropic pricing page, 2026-11-09); tokens per answer raised 30% (planner 1,950 in + 260 out, synthesis 5,200 in + 1,040 out), so **USD 0.001365 per answer** (was USD 0.01155 at the Bedrock 1.10 / 5.50 rates). The shared cap **stays USD 1.33** (user decision, easiest option; it was lowered from USD 1.50 on 2026-11-09 for the H0 pre-spend receipt, which reserves the full caps): 115 x 0.001365 = 0.156975, so USD 1.33 is now a conservative upper bound and the bucket counts are the binding limit. Spare allowance moves between buckets only with the user's approval file (`llm_budget.py transfer`). These are estimates, not metered.
 
 | Bucket | Answers | Estimated USD | Step |
 |---|---|---|---|
-| 14c | 10 | 0.1155 | Phase 14C smoke query |
-| 15b | 60 (10 / 15 / 20 / 15 at concurrency 1 / 5 / 25 / 50; none in the hold) | 0.693 | load generator, charged per call |
-| 16b | 40 | 0.462 | 16B live evaluation (placeholder) |
-| 17 | 5 | 0.05775 | demo video and final smoke |
-| Total allocated | 115 | 1.32825 | |
-| Unallocated | about 14 answers | 0.17175 | |
+| 14c | 10 | 0.01365 | Phase 14C smoke query |
+| 15b | 60 (10 / 15 / 20 / 15 at concurrency 1 / 5 / 25 / 50; none in the hold) | 0.0819 | load generator, charged per call |
+| 16b | 40 | 0.0546 | 16B live evaluation (placeholder) |
+| 17 | 5 | 0.006825 | demo video and final smoke |
+| Total allocated | 115 | 0.156975 | |
+| Unused cap headroom | | 1.173025 | cap 1.33 minus allocated |
+
+### Embeddings (Voyage voyage-4-lite; 14C and 16B)
+
+14C ingest and query smoke and the 16B evaluation embed with Voyage `voyage-4-lite` at 256 dimensions (`input_type` document for ingest, query for queries; stored and query vectors must share provider, model and dimension, and changing the model needs a full re-embed and an index rebuild). Price USD 0.02 per 1M tokens, the first 200M account tokens free (Voyage docs, 2026-11-09). **Embeddings cap USD 0.30, enforced with a token counter** by the embedding step (this repository's experiments only pin the numbers in `load-tests/config/load-profile.v1.json` and check them in `check_manifests.py`; `llm_budget.embedding_cost()` derives the charge). Inside the free allowance the charge is USD 0 and the token usage is still recorded. The Bedrock fallback is Titan Text Embeddings V2 (`SCHOLARCHAIN_EMBEDDING_PROVIDER=bedrock`).
+
+### Cost reporting for experiment outputs
+
+Every experiment result reports **AWS, Anthropic and Voyage as separate items, then the combined total** (this is what the instructor ruling requires; external charges count toward the USD 25 project limit). A provider with no charge is listed as USD 0 with its usage noted. `loadgen.py` writes `cost_report` into the 15B run record; the AWS item comes from the AWS bill and the pre-spend receipts, never from the generator.
 
 `python3 -I load-tests/llm_budget.py reserve --bucket <b> --answers N` must run before every LLM-calling command (commands and rules in `load-tests/README.md`). 16B is a placeholder: `manifests/16b-live-evaluation.json` fixes only its answer budget; the benchmark, modes and metrics come from the Phase 16 work order.

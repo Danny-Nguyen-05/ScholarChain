@@ -225,6 +225,8 @@ object AwsTestEnv {
   val internalToken = "synthetic-aws-internal-token"
   val profile = "us.anthropic.claude-haiku-4-5-20251001-v1:0"
   val foundation = "anthropic.claude-haiku-4-5-20251001-v1:0"
+  val anthropicKeyValue = "synthetic-anthropic-key-VALUE-0001"
+  val voyageKeyValue = "synthetic-voyage-key-VALUE-0002"
   val common: Map[String, String] = Map(
     "SCHOLARCHAIN_SERVICE_MODE" -> "aws",
     "SCHOLARCHAIN_API_KEY_SHA256" -> Auth.sha256(apiKey),
@@ -240,7 +242,10 @@ object AwsTestEnv {
     "SCHOLARCHAIN_DYNAMODB_TABLE_RESEARCHER_METRIC_CACHE" -> "sc-ResearcherMetricCache",
     "SCHOLARCHAIN_DYNAMODB_QUERY_SESSION_INDEX" -> "by-idempotency-key"
   )
+  // The existing fixtures describe the Bedrock configuration. The provider variables are explicit so
+  // these tests keep covering the Bedrock path now that Anthropic and Voyage are the defaults.
   private val embedding = Map(
+    "SCHOLARCHAIN_EMBEDDING_PROVIDER" -> "bedrock",
     "SCHOLARCHAIN_MODELS_EMBEDDING_MODEL" -> "amazon.titan-embed-text-v2:0",
     "SCHOLARCHAIN_EMBEDDING_MODEL_VERSION" -> "configured-version-v1",
     "SCHOLARCHAIN_EMBEDDING_DIMENSION" -> "256"
@@ -266,6 +271,7 @@ object AwsTestEnv {
       "SCHOLARCHAIN_GRAPH_BASE_URI" -> graphBase,
       "SCHOLARCHAIN_SEMANTIC_BASE_URI" -> semanticBase,
       "SCHOLARCHAIN_INTERNAL_TOKEN" -> internalToken,
+      "SCHOLARCHAIN_SYNTHESIS_PROVIDER" -> "bedrock",
       "SCHOLARCHAIN_MODELS_SYNTHESIS_MODEL" -> profile,
       "SCHOLARCHAIN_SYNTHESIS_MODEL_VERSION" -> foundation,
       "SCHOLARCHAIN_PROMPTS_DIR" -> promptsDirectory.toString

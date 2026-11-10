@@ -2,18 +2,28 @@
   "schema": "scholarchain.llm-evaluation-placeholder.v1",
   "id": "16b-live-evaluation",
   "status": "placeholder",
-  "description": "Placeholder for the Phase 16B live evaluation on the deployed stack. Only the LLM answer budget and its link to the shared Haiku cap are fixed here. The benchmark questions, retrieval modes, metrics and groundedness checks are defined by the Phase 16 work order and the rag/test owners; this file must be replaced by a full manifest before 16B runs.",
+  "description": "Placeholder for the Phase 16B live evaluation on the deployed stack. Only the LLM answer budget and its link to the shared claude-haiku-5-5 (Anthropic API) cap are fixed here. The benchmark questions, retrieval modes, metrics and groundedness checks are defined by the Phase 16 work order and the rag/test owners; this file must be replaced by a full manifest before 16B runs.",
   "region": "us-east-2",
   "llm": {
     "answers": 40,
-    "draws_from": "bucket 16b of the shared Haiku cap USD 1.33 (experiments/manifests/llm-allocation.json); a hard stop, no automatic carry-over",
+    "draws_from": "bucket 16b of the shared claude-haiku-5-5 cap USD 1.33 (experiments/manifests/llm-allocation.json); a hard stop, no automatic carry-over; 40 answers x USD 0.001365 = USD 0.0546 estimated",
     "cost_per_answer_source": "load-tests/config/load-profile.v1.json (estimate, not metered)",
+    "embeddings": {
+      "provider": "voyage",
+      "model": "voyage-4-lite",
+      "output_dimension": 256,
+      "price": "USD 0.02 per 1M tokens, first 200M account tokens free",
+      "cap_usd": "0.30",
+      "enforcement": "the evaluation's embedding calls add their tokens to a token counter and stop before the USD 0.30 cap; stored and query vectors must share provider, model and dimension"
+    },
+    "cost_reporting": "AWS, Anthropic and Voyage reported as separate items, then the combined total; a provider with no charge is USD 0 with its usage noted",
     "enforcement": "run `python3 -I load-tests/llm_budget.py reserve --bucket 16b --answers N` before every LLM-calling command; it refuses when the bucket or the USD 1.33 total would be exceeded; `release` returns unused answers"
   },
   "open_items": [
     "benchmark question file and expected evidence (Phase 16A/16B work order)",
     "retrieval modes to compare (graph-only, vector-only, fused) and the measurements the report needs",
     "who runs it and the approval record path",
+    "the Voyage embedding token counter and the retrieval modes that embed (vector-only, fused) for the evaluation",
     "whether the 40-answer figure is enough; a change is a user-approved transfer between buckets (llm_budget.py transfer), never automatic"
   ]
 }

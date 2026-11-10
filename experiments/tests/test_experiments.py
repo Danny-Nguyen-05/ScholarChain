@@ -134,13 +134,15 @@ class CommittedManifests(unittest.TestCase):
         buckets = {name: entry["answers"] for name, entry in allocation["buckets"].items()}
         self.assertEqual(buckets, {"14c": 10, "15b": 60, "16b": 40, "17": 5})  # user decision 2026-11-08
         self.assertEqual(sum(buckets.values()), 115)
-        # 115 x 0.01155 = 1.32825 <= 1.33
-        self.assertEqual(round(115 * 0.01155, 5), 1.32825)
+        # 115 x 0.001365 = 0.156975 <= 1.33 (claude-haiku-5-5: 7,150 in x 0.10 + 1,300 out x 0.50 per 1M tokens)
+        self.assertEqual(round(115 * 0.001365, 6), 0.156975)
         self.assertEqual(allocation["shared_cap_usd"], "1.33")  # user decision 2026-11-09, lowered from 1.50
-        self.assertLessEqual(115 * 0.01155, float(allocation["shared_cap_usd"]))
-        # one more answer: 116 x 0.01155 = 1.3398 > 1.33, so the shared cap refuses it
-        self.assertEqual(round(116 * 0.01155, 5), 1.3398)
-        self.assertGreater(116 * 0.01155, float(allocation["shared_cap_usd"]))
+        self.assertLessEqual(115 * 0.001365, float(allocation["shared_cap_usd"]))
+        # 1.33 is a conservative upper bound now: the cap would hold 974 answers (974 x 0.001365 = 1.32951) and not 975 (1.330875)
+        self.assertLessEqual(974 * 0.001365, float(allocation["shared_cap_usd"]))
+        self.assertGreater(975 * 0.001365, float(allocation["shared_cap_usd"]))
+        # the per-bucket estimates in USD
+        self.assertEqual([round(n * 0.001365, 6) for n in (10, 60, 40, 5)], [0.01365, 0.0819, 0.0546, 0.006825])
         profile = read_json(os.path.join(REPO, "load-tests", "config", "load-profile.v1.json"))
         self.assertEqual(profile["llm"]["shared_cap_usd"], allocation["shared_cap_usd"])
         manifest = read_json(os.path.join(EXPERIMENTS, "manifests", "15b-ecs-scaling.json"))
@@ -150,6 +152,29 @@ class CommittedManifests(unittest.TestCase):
         profile = read_json(os.path.join(REPO, "load-tests", "config", "load-profile.v1.json"))
         self.assertEqual([profile["per_level"][k]["llm_answers"] for k in ("1", "5", "25", "50")], [10, 15, 20, 15])
         self.assertEqual(read_json(os.path.join(EXPERIMENTS, "manifests", "16b-live-evaluation.json"))["llm"]["answers"], buckets["16b"])
+
+    def test_allocation_and_15b_notes_state_the_current_unit_and_route(self):
+        allocation = read_json(os.path.join(EXPERIMENTS, "manifests", "llm-allocation.json"))
+        m15b = read_json(os.path.join(EXPERIMENTS, "manifests", "15b-ecs-scaling.json"))
+        m16b = read_json(os.path.join(EXPERIMENTS, "manifests", "16b-live-evaluation.json"))
+        for text in (allocation["note"], m15b["llm"]["note"]):
+            self.assertIn("0.001365", text)
+            self.assertNotIn("0.01155", text)
+        self.assertIn("USD 0.0819", m15b["llm"]["note"])
+        self.assertIn("claude-haiku-5-5", allocation["note"])
+        self.assertIn("us.anthropic.claude-haiku-4-5-20251001-v1:0", allocation["note"])  # the Bedrock fallback is named
+        self.assertIn("USD 0.0546", m16b["llm"]["draws_from"])
+        emb = m16b["llm"]["embeddings"]
+        self.assertEqual((emb["provider"], emb["model"], emb["output_dimension"], emb["cap_usd"]), ("voyage", "voyage-4-lite", 256, "0.30"))
+        self.assertIn("USD 0.02 per 1M tokens", emb["price"])
+        self.assertIn("AWS, Anthropic and Voyage", m16b["llm"]["cost_reporting"])
+
+    def test_check_script_checks_unit_text_and_embeddings_block(self):
+        lines = []
+        check.check_15b_16b(REPO, False, lines)
+        text = "\n".join(lines)
+        self.assertIn("per-bucket estimates (USD) 14c 0.013650, 15b 0.081900, 16b 0.054600, 17 0.006825, total 0.156975", text)
+        self.assertIn("embeddings voyage-4-lite 256 dims USD 0.02 per 1M tokens, first 200M tokens free, cap USD 0.30", text)
 
     def test_15b_manifest_covers_all_levels_and_a_scale_in_window(self):
         manifest = read_json(os.path.join(EXPERIMENTS, "manifests", "15b-ecs-scaling.json"))
@@ -259,11 +284,36 @@ class RenderAndCheck(Fixture):
     def test_allocation_over_the_shared_cap_fails(self):
         path = self.manifest_path("llm-allocation.json")
         allocation = read_json(path)
-        allocation["buckets"]["16b"]["answers"] = 100  # 10 + 60 + 100 + 5 = 175 x 0.01155 = 2.02125 > 1.33
+        allocation["buckets"]["16b"]["answers"] = 1000  # 10 + 60 + 1000 + 5 = 1075 x 0.001365 = 1.467375 > 1.33
         write_text(path, json.dumps(allocation))
         failed, _, lines = self.run_check()
         self.assertTrue(failed)
         self.assertTrue(any("exceeds the shared cap" in line for line in lines))
+
+    def test_a_stale_unit_in_the_allocation_note_fails(self):
+        path = self.manifest_path("llm-allocation.json")
+        allocation = read_json(path)
+        allocation["note"] = allocation["note"].replace("0.001365", "0.01155")
+        write_text(path, json.dumps(allocation))
+        failed, _, lines = self.run_check()
+        self.assertTrue(failed)
+        self.assertTrue(any("llm-allocation.json does not state the pinned cost per answer 0.001365" in line for line in lines))
+
+    def test_a_changed_embeddings_block_or_route_fails(self):
+        path = os.path.join(self.root, "load-tests", "config", "load-profile.v1.json")
+        original = read_json(path)
+        mutated = json.loads(json.dumps(original))
+        mutated["embeddings"]["cap_usd"] = "0.50"
+        write_text(path, json.dumps(mutated))
+        failed, _, lines = self.run_check()
+        self.assertTrue(failed)
+        self.assertTrue(any("embeddings block must be voyage / voyage-4-lite / 256" in line for line in lines))
+        mutated = json.loads(json.dumps(original))
+        mutated["llm"]["pricing"]["model_route"] = "us.anthropic.claude-haiku-4-5-20251001-v1:0"
+        write_text(path, json.dumps(mutated))
+        failed, _, lines = self.run_check()
+        self.assertTrue(failed)
+        self.assertTrue(any("must price claude-haiku-5-5 on the Anthropic API" in line for line in lines))
 
     def test_renderer_refuses_overwrite_and_bad_sha(self):
         out = io.StringIO()

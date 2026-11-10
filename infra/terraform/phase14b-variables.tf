@@ -85,3 +85,33 @@ variable "runtime_artifact_bucket" {
     error_message = "runtime_artifact_bucket must be an S3 bucket name (3 to 63 lowercase letters, digits, dots and hyphens)."
   }
 }
+
+# Repair round 3 (Phase 14B): Anthropic API for synthesis and Voyage AI for embeddings (instructor ruling 2026-11-09; the Bedrock quota
+# restriction). The two providers are chosen independently. The primary providers are the defaults; the Bedrock path (Claude Haiku 4.5
+# and Titan Text Embeddings V2, the earlier plan) stays selectable. Model identifiers and the key containers follow from the choice:
+#   synthesis_provider = "anthropic"  model claude-haiku-5-5 (Messages API); one empty Secrets Manager secret for the API key.
+#   embedding_provider = "voyage"     model voyage-4-lite, output_dimension 256 (vector_dimension), model version tag voyage-4-lite;
+#                                     one empty Secrets Manager secret for the API key.
+#   "bedrock" for either one           the existing Bedrock inputs (synthesis_model_id, synthesis_inference_profile_*, embedding_model_id,
+#                                     embedding_inference_profile_*, embedding_model_version) apply and the Bedrock invoke grants exist.
+# Terraform never holds a key value: the secrets have no secret version resource; the human enters each value (README, "Provider API keys").
+variable "synthesis_provider" {
+  type        = string
+  default     = "anthropic"
+  nullable    = false
+  description = "Provider of the query-time synthesis model: anthropic (Anthropic API, model claude-haiku-5-5, key from Secrets Manager) or bedrock (Amazon Bedrock; synthesis_model_id and optionally synthesis_inference_profile_id name the model). Exported to the query-api task as SCHOLARCHAIN_SYNTHESIS_PROVIDER."
+  validation {
+    condition     = contains(["anthropic", "bedrock"], var.synthesis_provider)
+    error_message = "synthesis_provider must be anthropic or bedrock."
+  }
+}
+variable "embedding_provider" {
+  type        = string
+  default     = "voyage"
+  nullable    = false
+  description = "Provider of the embedding model: voyage (Voyage AI, model voyage-4-lite, output dimension 256, key from Secrets Manager) or bedrock (Amazon Bedrock Titan Text Embeddings V2 unless embedding_model_id says otherwise). Exported as SCHOLARCHAIN_EMBEDDING_PROVIDER. Stored and query vectors must share provider, model and dimension: changing it needs a full re-embed and a rebuild of the vector indexes."
+  validation {
+    condition     = contains(["voyage", "bedrock"], var.embedding_provider)
+    error_message = "embedding_provider must be voyage or bedrock."
+  }
+}

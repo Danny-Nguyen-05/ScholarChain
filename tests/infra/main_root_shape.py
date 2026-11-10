@@ -32,6 +32,10 @@ def bindings():
 RUNTIME_VARS = {
     "runtime_enabled": True,
     "runtime_composition_verified": True,
+    # Repair round 3: the Bedrock model ids below are valid only with the Bedrock providers selected (the defaults are anthropic and voyage,
+    # which fix the models and refuse a Bedrock id), so this fixture selects them. The Anthropic/Voyage plans use PROVIDER_VARS in the new tests.
+    "synthesis_provider": "bedrock",
+    "embedding_provider": "bedrock",
     "embedding_model_version": "synthetic-pinned-version",
     "synthesis_model_id": "anthropic.claude-synthetic-test-v1:0",
     "image_revision": IMAGE,

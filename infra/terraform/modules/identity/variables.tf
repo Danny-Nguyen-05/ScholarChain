@@ -10,6 +10,14 @@ variable "queue_arn" { type = string }
 variable "dead_letter_queue_arn" { type = string }
 variable "repository_arns" { type = map(string) }
 variable "service_secret_arns" { type = map(set(string)) }
+
+# Repair round 3: IAM Resource patterns of the provider API key containers per service (query-api: Anthropic; semantic-service and
+# embedding-worker: Voyage), built by the root from the secret NAME plus the six-character suffix pattern, so they are known at plan time.
+# Each lands in its own execution-role statement (InjectProviderApiKey).
+variable "provider_secret_arns" {
+  type    = map(list(string))
+  default = {}
+}
 variable "tags" { type = map(string) }
 
 variable "emr_output_prefixes" { type = map(set(string)) }

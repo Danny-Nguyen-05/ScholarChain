@@ -56,12 +56,13 @@ object ServiceBootstrap {
   /** Return an exit code for invalid configuration so packaging tests can check refusal without
     * terminating their test JVM. Production mains apply that exit code via System.exit.
     */
-  def start(role: String): Int = launch(role, sys.env, new AwsSdkPortFactory()) match {
-    case Left(code) => code
-    case Right(running) =>
-      Runtime.getRuntime.addShutdownHook(new Thread(() => running.close()))
-      0
-  }
+  def start(role: String): Int =
+    launch(role, sys.env, new AwsSdkPortFactory(providers = new RagProviderClients())) match {
+      case Left(code) => code
+      case Right(running) =>
+        Runtime.getRuntime.addShutdownHook(new Thread(() => running.close()))
+        0
+    }
 
   /** Starts a role from an explicit environment and, in aws mode, an injected port factory. Exit
     * code 2 is the single refusal path; messages name at most an environment variable, never a

@@ -1,0 +1,25 @@
+Phase 14B repair round 3 — coordinator gate run on the live tree (base f5490d3 + uncommitted round-3 changes), 2026-11-09/10
+All commands run with AWS neutralized: env -u AWS_PROFILE AWS_EC2_METADATA_DISABLED=true AWS_CONFIG_FILE=/dev/null AWS_SHARED_CREDENTIALS_FILE=/dev/null
+JDK 17.0.20.1 for sbt.
+
+sbt -batch check ............................................. EXIT 0; 1,524 succeeded (207/64/39/53/141/186/113/693/28), 0 failed, 1 canceled (see sbt-check-live-summary.txt)
+terraform test (infra/terraform) ............................. EXIT 0; "Success! 268 passed, 0 failed."
+terraform test (infra/terraform/deployer) .................... EXIT 0; "Success! 111 passed, 0 failed."
+terraform fmt -check -recursive (infra/terraform) ............ EXIT 0
+suite_run scripts/tests ...................................... ran=1032 failures=7 errors=0 — all 7 in test_terraform_r1.RouteOwnershipTest (untracked new .tf files; 10/10 with them intent-added, see whitespace-and-r1.txt)
+suite_run scripts/phase12d-spike/tests ....................... ran=78 failures=0 errors=0
+scripts/billing/tests: test_budget_execution, test_budget_verification, test_publication_evidence ... OK, OK, OK
+suite_run tests/infra ........................................ ran=460 failures=0 errors=0 (second run; see below)
+suite_run tests/scripts ...................................... ran=462 failures=0 errors=0
+suite_run load-tests/tests ................................... ran=54 failures=0 errors=0
+suite_run experiments/tests .................................. ran=28 failures=0 errors=0
+python3 -I experiments/scripts/check_manifests.py ............ "RESULT: OK (placeholders allowed; run with --final before the commit freeze)"
+git diff --check (untracked intent-added, index restored) .... exit 0
+
+tests/infra first run: ran=454 failures=8 errors=1, all in test_billing_replan_14b (BudgetPlan setUpClass, BudgetVariables).
+Cause (local toolchain, not repository content): infra/terraform/billing-bootstrap/.terraform/providers/.../darwin_arm64 is a symlink into
+/private/tmp/scholarchain-phase12b-repair1-infra/mirror (Phase 12B), and LICENSE.txt had been removed from that temporary folder at 00:00, so the
+offline `terraform init -lockfile=readonly` checksum no longer matched ("the local package ... doesn't match any of the checksums previously
+recorded in the dependency lock file"). The provider binary there is byte-identical (cmp) to infra/terraform's own 6.44.0 copy. The coordinator
+copied LICENSE.txt back from infra/terraform/.terraform (same version), the offline init then succeeded, and the rerun passed. No repository file changed.
+Raw logs: target/phase14/evidence/14b/r3/ (git-ignored).

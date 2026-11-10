@@ -330,6 +330,26 @@ locals {
         Condition = { StringEquals = local.c_region }
       },
       {
+        # Repair round 3: the two provider API key containers (infra/terraform/phase14b-providers.tf): aws_secretsmanager_secret
+        # scholarchain-<env>/anthropic-api-key and scholarchain-<env>/voyage-api-key, created empty (no secret version: the human enters
+        # the values). The name prefix scopes every action; create and tag also need the project request tags, the others the resource
+        # tags. Delete is the force delete without recovery window the secrets are declared for (cleanup's destroy). Not granted anywhere:
+        # PutSecretValue (the human enters the key with their own identity), GetSecretValue (explicitly denied in the iam document),
+        # PutResourcePolicy, RotateSecret, Replicate, any secret outside the prefix, ListSecrets.
+        Sid       = "SecretsManagerProviderKeyContainersCreateAndTag"
+        Effect    = "Allow"
+        Action    = ["secretsmanager:CreateSecret", "secretsmanager:TagResource"]
+        Resource  = ["${local.m_arn_secret}:secret:${local.mp}/*"]
+        Condition = { StringEquals = merge(local.c_region, local.c_req_main) }
+      },
+      {
+        Sid       = "SecretsManagerProviderKeyContainersUpdateUntagDelete"
+        Effect    = "Allow"
+        Action    = ["secretsmanager:UpdateSecret", "secretsmanager:UntagResource", "secretsmanager:DeleteSecret"]
+        Resource  = ["${local.m_arn_secret}:secret:${local.mp}/*"]
+        Condition = { StringEquals = merge(local.c_region, local.c_res_main) }
+      },
+      {
         # Replan W5a: the HTTPS certificate of the main root (one aws_acm_certificate, DNS validation, base-apply). RequestCertificate has
         # no resource type, so region, DNS validation (the Cloudflare CNAME is added by hand) and the request tags scope it; the
         # acm:DomainNames key is left open because the domain is a private tfvars value the deployer must not know. The Service
@@ -845,6 +865,9 @@ locals {
     mp              = local.mp
     env             = var.main_environment
     bedrock_fm_arns = join(", ", [for r in var.main_bedrock_regions : jsonencode("arn:aws:bedrock:${r}::foundation-model/*")])
+    # Repair round 3: the Bedrock statement exists only while a Bedrock provider is selected (the primary providers are the Anthropic
+    # API and Voyage AI, both reached over the NAT with a key from Secrets Manager).
+    bedrock_enabled = var.main_synthesis_provider == "bedrock" || var.main_embedding_provider == "bedrock"
   }
   m14_boundary_runtime = jsondecode(templatefile("${path.module}/boundaries/runtime.json.tftpl", local.m_boundary_vars))
   m14_boundary_emr     = jsondecode(templatefile("${path.module}/boundaries/emr-service.json.tftpl", local.m_boundary_vars))

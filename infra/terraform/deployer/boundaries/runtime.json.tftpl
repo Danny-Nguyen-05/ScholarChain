@@ -104,6 +104,7 @@
         "arn:aws:neptune-db:${region}:${acct}:*/*"
       ]
     },
+%{ if bedrock_enabled ~}
     {
       "Sid": "BedrockInvokeRegionalFoundationModelsAndProfiles",
       "Effect": "Allow",
@@ -117,6 +118,7 @@
         "arn:aws:bedrock:${region}:${acct}:inference-profile/*"
       ]
     },
+%{ endif ~}
     {
       "Sid": "EcsExecChannelsForTheNeptuneTunnel",
       "Effect": "Allow",

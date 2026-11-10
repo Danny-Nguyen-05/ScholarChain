@@ -506,3 +506,26 @@ Every agent ran Sonnet 5.5 at high effort. None ran live commands, made AWS call
 | coordinator | Built snapshots 9 and 10; ran the seven-gate check on both; ran the live `sbt check`, the whitespace check and the pin-drift check; masked the placeholder at `review.md:909` (verbatim-text redaction with a note, user decision); sanitized logs; replaced approval request §8 | snapshot 9 failed (account scan, U1); snapshot 10 `RESULT: PASS gates=7` |
 
 No agent was launched. No live command and no commit.
+
+## Subphase 14B — repair round 3 (Anthropic API and Voyage AI switch)
+
+Base SHA `f5490d3` (branch `phase-14`). Work order and shared contract: `prompt.md`, "Repair round 3 work order". Every agent ran Sonnet 5.5 at high effort; none ran live commands, made AWS, Anthropic or Voyage calls, read secrets, or committed. Counts below are agent-reported; the coordinator's own runs are in `test-report.md`.
+
+| Owner | Delivered | Agent-reported gate |
+|---|---|---|
+| experiment-engineer | load profile on `claude-haiku-5-5` (0.10 / 0.50 per 1M; tokens +30%: 1,950/260 and 5,200/1,040); unit USD 0.001365, 115 answers USD 0.156975; shared cap still 1.33; embeddings block (voyage-4-lite, 256, 0.02 per 1M, 200M free, cap 0.30); `cost_report` in loadgen; manifests and check_manifests | load-tests 54 OK; experiments 28 OK; check_manifests OK |
+| rag-engineer | Anthropic client taken byte-identical from worktree `phase14-anthropic-fallback` (sha256 checked; its README diff not taken) and updated to the Haiku 5.5 rules; Voyage client; provider selection; vector-consistency check; provider-aware embedding cost bound with token counter; follow-up: model ids, endpoints, limits, price and cap moved into `ProviderDefaults.scala` with one-line rationales (plan rule 6.7); worktree untouched | rag 179, then 186 OK |
+| service-engineer | provider switches and key env parsing via rag's types; keys held redacted; Bedrock clients only when selected; `RagProviderClients` with one embedding counter per process; startup vector-consistency check; follow-up: model ids, versions and dimension from configuration with rag defaults | services 105, 112, then 113 OK; rag 186 OK |
+| infra-engineer | `phase14b-providers.tf`; secrets `scholarchain-<env>/anthropic-api-key` and `/voyage-api-key` only when selected, no version, recovery window 0; ECS secret injection per service; `InjectProviderApiKey` scoped per role; provider guard; deployer `keys-obs` (no PutSecretValue); Bedrock grants only for a bedrock provider, no Marketplace; receipts require Anthropic and Voyage spend; `PRESPEND_PROJECT_CEILING_USD=25` arithmetic check; cleanup deletes both secrets and prints the key-revocation reminder; `scripts/lib/cost_report.py` | terraform root 268, deployer 111 passed; scripts/tests 1,030 ran with 7 `test_terraform_r1` failures caused by untracked new files (10/10 with the file intent-added) |
+| documentation-engineer | root `README.md` (new; none existed), `docs/report/provider-fallback.md` (new report section), runbook: superseded Bedrock-only steps, new unit, B3b key-entry guide (method pending user confirmation), receipt fields, key revocation, three-provider monitoring | docs only; 16 cited paths exist |
+| test-engineer | repaired fixtures broken by the switch; new `tests/infra/test_providers_14b.py` (34), `tests/scripts/test_providers_14b.py` (26), `IndependentProviderRound3Spec.scala` (18) | tests/infra 460, tests/scripts 462, independentTests 693, all OK |
+
+### Incident (infra-engineer)
+
+The infra-engineer ran `git stash` and `git stash pop` once while other agents were editing. Tracked edits were briefly reverted and then restored. The coordinator compared `modules/services/.../ServiceMains.scala` with the copy the agent saved (identical), confirmed the service-engineer's later edits were on top of it, and that the live `sbt check` passed after all edits. Later work orders forbid `git stash` and any command that rewrites other agents' files.
+
+### Open for the user
+
+- Key-entry method (runbook B3b): AWS console with the user's own identity (coordinator default) or `file:///dev/stdin`.
+- The infra-engineer's USD 25 receipt arithmetic check (added beyond the work order; it refuses a receipt whose headroom exceeds 25 minus recorded spend and reserves; it does not block spending).
+- The synthesis cap stays 1.33 against the plan's 1.50 (Step 0 answer 3).

@@ -559,6 +559,13 @@ class DeployPrespendTests(DeployBase):
 
         self.refuse_in_every_stage("headroom 1", mutate, "below the required 3.0 USD")
 
+    def test_a_headroom_that_leaves_a_provider_out_is_refused_by_every_spending_stage(self):
+        """Repair round 3: the default receipt is 25 - (5 + 0.5 + 0) - 1 - 6 = 12.5; a headroom above that ignores some spend."""
+        def mutate():
+            self.set_prespend(remaining_headroom_usd=14.0)  # as if the 1.5 of Anthropic spend were forgotten
+
+        self.refuse_in_every_stage("headroom without Anthropic spend", mutate, "exceeds the ceiling arithmetic 12.50 = 25.0 - (AWS 5.00 + Anthropic 0.50 + Voyage 0.00)")
+
     def test_negative_headroom_refused(self):
         def mutate():
             self.set_prespend(remaining_headroom_usd=-5)
@@ -566,7 +573,7 @@ class DeployPrespendTests(DeployBase):
         self.refuse_in_every_stage("negative headroom", mutate, "below the required")
 
     def test_every_cost_field_missing_null_or_non_numeric_is_refused_never_zero(self):
-        fields = ("reported_spend_usd", "unreported_usage_allowance_usd", "reserves_usd", "remaining_headroom_usd")
+        fields = ("reported_spend_usd", "anthropic_spend_to_date_usd", "voyage_spend_to_date_usd", "unreported_usage_allowance_usd", "reserves_usd", "remaining_headroom_usd")
         for field in fields:
             for label, value in (("missing", MISSING), ("null", None), ("string", "12.5"), ("boolean", True), ("list", [1])):
                 def mutate(field=field, value=value):
@@ -579,7 +586,7 @@ class DeployPrespendTests(DeployBase):
             def mutate(literal=literal):
                 self.set_prespend()
                 with open(self.prespend) as handle:
-                    text = handle.read().replace('"reserves_usd": 40', '"reserves_usd": %s' % literal)
+                    text = handle.read().replace('"reserves_usd": 6', '"reserves_usd": %s' % literal)
                 with open(self.prespend, "w") as handle:
                     handle.write(text)
                 with open(self.prespend, "rb") as handle:
@@ -1652,6 +1659,18 @@ class DeployCleanupPrepareStageTests(DeployBase):
                 self.assertIn("PRESPEND: cleanup-prepare has no headroom floor (remaining_headroom_usd=%.2f)" % headroom, result.out)
                 self.assertIn("pre-spend receipt re-verified before terraform-apply", result.out)
                 self.assertNotIn("below the required", result.out)
+
+    def test_cleanup_prepare_accepts_a_headroom_no_arithmetic_supports_and_never_checks_the_ceiling(self):
+        """Repair round 3: the headroom-versus-ceiling arithmetic is a spending-stage check only. An overspent receipt whose headroom
+        no arithmetic supports (here 40 spent, headroom 14) is accepted for cleanup-prepare, which never compares a number."""
+        self.arrange_prepare()
+        self.set_prespend(remaining_headroom_usd=14.0, reported_spend_usd=40)
+        open(self.log, "w").close()
+        result = self.execute()
+        self.assertEqual(result.rc, 0, result.out)
+        self.assertNotIn("PRESPEND-CHECK-FAILED", result.out)
+        self.assertIn("PRESPEND: cleanup-prepare has no headroom floor (remaining_headroom_usd=14.00)", result.out)
+        self.assertNotIn("ceiling arithmetic", result.out)
 
     def test_cleanup_prepare_still_verifies_the_rest_of_the_receipt(self):
         """Dropping the headroom floor relaxes only that comparison: a stale, unmonitored or incomplete receipt is refused,

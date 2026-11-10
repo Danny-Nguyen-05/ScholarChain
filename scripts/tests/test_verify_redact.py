@@ -161,7 +161,7 @@ class PrespendBoundaryTests(unittest.TestCase):
         import datetime
 
         stamp = (datetime.datetime.now(datetime.timezone.utc) - datetime.timedelta(hours=2)).strftime("%Y-%m-%dT%H:%M:%SZ")
-        doc = {"monitoring_confirmed_active": True, "cost_snapshot_utc": stamp, "reported_spend_usd": 0, "unreported_usage_allowance_usd": 0, "reserves_usd": 0, "remaining_headroom_usd": 20}
+        doc = {"monitoring_confirmed_active": True, "cost_snapshot_utc": stamp, "reported_spend_usd": 0, "anthropic_spend_to_date_usd": 0, "voyage_spend_to_date_usd": 0, "unreported_usage_allowance_usd": 0, "reserves_usd": 0, "remaining_headroom_usd": 20}
         doc.update(overrides)
         return doc
 

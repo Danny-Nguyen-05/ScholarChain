@@ -109,6 +109,31 @@ variable "main_tag_keys" {
   }
 }
 
+# Repair round 3 (Phase 14B): the provider choice of the main root (infra/terraform variables synthesis_provider and embedding_provider;
+# keep the values equal). Amazon Bedrock grants exist only while a Bedrock provider is selected: with the primary providers (Anthropic API
+# for synthesis, Voyage AI for embeddings) the runtime boundary carries no Bedrock statement and the operator-loader role no Titan grant.
+variable "main_synthesis_provider" {
+  description = "Synthesis provider of the main root: anthropic (default) or bedrock. bedrock adds the Bedrock invoke statement to the runtime boundary."
+  type        = string
+  default     = "anthropic"
+  nullable    = false
+  validation {
+    condition     = contains(["anthropic", "bedrock"], var.main_synthesis_provider)
+    error_message = "main_synthesis_provider must be anthropic or bedrock."
+  }
+}
+
+variable "main_embedding_provider" {
+  description = "Embedding provider of the main root: voyage (default) or bedrock. bedrock adds the Bedrock invoke statement to the runtime boundary and the Titan Text Embeddings V2 grant to the operator-loader role."
+  type        = string
+  default     = "voyage"
+  nullable    = false
+  validation {
+    condition     = contains(["voyage", "bedrock"], var.main_embedding_provider)
+    error_message = "main_embedding_provider must be voyage or bedrock."
+  }
+}
+
 variable "main_bedrock_regions" {
   description = "Regions in which the runtime boundary lets the task roles invoke foundation models (the destinations of the cross-region inference profile the synthesis model uses). Default: the destinations of the us.* profiles when called from us-east-2 (us-east-1, us-east-2, us-west-2; model cards for Sonnet 4.6, Opus 4.1 and Haiku 5.5, 2026-11-06). The boundary also carries the region-less foundation-model ARN that global.* profiles need. It is only a ceiling: the main root's own inline policy names the exact regions."
   type        = list(string)

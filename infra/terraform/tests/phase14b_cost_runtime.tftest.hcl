@@ -131,3 +131,69 @@ run "module_null_container_insights_falls_back_to_the_true_default" {
     error_message = "nullable = false: null becomes the default true."
   }
 }
+
+# ---- repair round 3: provider API key bindings reach `secrets` only in the aws service mode -------------------------------------------
+run "module_provider_key_bindings_are_not_injected_while_the_composition_is_unverified" {
+  command = plan
+  module {
+    source = "./modules/runtime"
+  }
+  variables {
+    composition_verified = false
+    provider_secret_bindings = {
+      "query-api"        = { SCHOLARCHAIN_ANTHROPIC_API_KEY = "arn:aws:secretsmanager:us-east-2:aws:secret:synthetic-anthropic-AbCdEf" }
+      "semantic-service" = { SCHOLARCHAIN_VOYAGE_API_KEY = "arn:aws:secretsmanager:us-east-2:aws:secret:synthetic-voyage-AbCdEf" }
+    }
+  }
+
+  assert {
+    condition     = alltrue([for s in ["query-api", "graph-service", "semantic-service", "embedding-worker"] : length(jsondecode(output.compute_controls.task_definitions[s].container_definitions)[0].secrets) == 0])
+    error_message = "A task that starts in unconfigured mode must not depend on a provider key container that may still be empty."
+  }
+}
+
+run "module_provider_key_bindings_join_the_service_secrets_in_the_aws_mode_and_stay_out_of_the_environment" {
+  command = plan
+  module {
+    source = "./modules/runtime"
+  }
+  variables {
+    composition_verified    = true
+    embedding_model_version = "voyage-4-lite"
+    embedding_model_id      = "voyage-4-lite"
+    synthesis_model_id      = "claude-haiku-5-5"
+    service_secret_bindings = { "query-api" = { SCHOLARCHAIN_API_KEY_SHA256 = "arn:aws:secretsmanager:us-east-2:aws:secret:synthetic-hash-AbCdEf" } }
+    provider_secret_bindings = {
+      "query-api"        = { SCHOLARCHAIN_ANTHROPIC_API_KEY = "arn:aws:secretsmanager:us-east-2:aws:secret:synthetic-anthropic-AbCdEf" }
+      "semantic-service" = { SCHOLARCHAIN_VOYAGE_API_KEY = "arn:aws:secretsmanager:us-east-2:aws:secret:synthetic-voyage-AbCdEf" }
+    }
+  }
+
+  assert {
+    condition     = [for x in jsondecode(output.compute_controls.task_definitions["query-api"].container_definitions)[0].secrets : x.name] == ["SCHOLARCHAIN_ANTHROPIC_API_KEY", "SCHOLARCHAIN_API_KEY_SHA256"]
+    error_message = "query-api: the Anthropic key joins its service secrets (sorted by name), each an ARN valueFrom."
+  }
+  assert {
+    condition     = [for x in jsondecode(output.compute_controls.task_definitions["semantic-service"].container_definitions)[0].secrets : x.name] == ["SCHOLARCHAIN_VOYAGE_API_KEY"] && length(jsondecode(output.compute_controls.task_definitions["graph-service"].container_definitions)[0].secrets) == 0
+    error_message = "semantic-service gets the Voyage key; graph-service gets no provider key."
+  }
+  assert {
+    condition     = alltrue([for s in ["query-api", "semantic-service"] : !anytrue([for e in jsondecode(output.compute_controls.task_definitions[s].container_definitions)[0].environment : strcontains(e.value, "secretsmanager") || strcontains(e.name, "API_KEY")])])
+    error_message = "No key name or ARN appears in `environment`."
+  }
+  assert {
+    condition     = { for e in jsondecode(output.compute_controls.task_definitions["query-api"].container_definitions)[0].environment : e.name => e.value }["SCHOLARCHAIN_SYNTHESIS_PROVIDER"] == "anthropic" && { for e in jsondecode(output.compute_controls.task_definitions["query-api"].container_definitions)[0].environment : e.name => e.value }["SCHOLARCHAIN_EMBEDDING_PROVIDER"] == "voyage"
+    error_message = "Module defaults are the primary providers."
+  }
+}
+
+run "module_rejects_an_unknown_provider" {
+  command = plan
+  module {
+    source = "./modules/runtime"
+  }
+  variables {
+    synthesis_provider = "other"
+  }
+  expect_failures = [var.synthesis_provider]
+}
