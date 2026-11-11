@@ -1208,3 +1208,243 @@ You are the coordinator for ScholarChain Phase 14, Subphase 14B, after the repai
 `(d) End with a new reviewer prompt per Section 10 of the plan, without triggering any reviewer.`
 `(e) Start NO live step. Then stop and end the turn.`
 ````
+
+## Subphase 14B — pre-session items
+
+### Review 8 — user-supplied external review (pre-session items; pasted by the user on 2026-11-10; reproduced verbatim)
+
+Subphase 14B pre-session items — review 8: REQUEST-CHANGES. Its only changes are that the plan file locations it names (the plan copy it used, the older local copy, and the full plan path in its next prompt, which contained a personal account address) are written as `<plan path>` and `<older plan copy>`, because no plan path or email address may appear in a repository file (user rule; same treatment as reviews 2 and 7).
+
+````text
+1. VERDICT: REQUEST-CHANGES (Subphase 14B, pre-session items)
+Nine of the ten items are closed the way their accepted defaults say, and ownership is clean. Two problems block approval:
+
+* B1: one of the 40 committed questions fails the planner's coverage check, so the "planner grammar" acceptance check fails.
+* B2: the passing billing test results claimed after the changes have no retained raw output. The only retained log for the changed `test_budget_execution.py` shows failures.
+
+Both are small fixes.
+Plan source: `<plan path>`. That copy has the "Update 2026-11-09" block. The `<older plan copy>` is the older 2026-10-25 version.
+2. Findings
+B1. Medium, blocking: question 28 is refused by the planner
+
+* Where:
+   * experiments/inputs/14c/questions.txt:28
+   * experiments/scripts/derive_14c_inputs.py:65
+   * the test's grammar list at experiments/tests/test_derive_14c_inputs.py:251
+   * the README claim at experiments/README.md:121 ("all in the planner fallback grammar")
+* Evidence: the question is "Which researchers are the strongest bridges in window since-2015?". `QueryPlannerAgent.coveredQuestion` (`QueryPlannerAgent.scala:547-549`) looks for unquoted filters after `in`, and its lookahead stops at the next keyword. Here it stops at `since`, because the window ID itself starts with "since". So the matched filter text is just `window`. That is not a window ID, and no topic filter equals `window`, so `decode` returns `unrepresented-question-constraint` at line 354.
+   * This happens on both the model path and the fallback path, so the question ends as `Unsupported`.
+   * I replicated that regex over all 40 committed questions. Only this one fails; the `2020-2026` and `through-2009` variants pass.
+   * The experiments test missed it because it only copies the fallback's first-stage regex. It never runs `decode` or the coverage check.
+* Impact:
+   * 16B spends 1 of its 40 answers, plus the planner's retry calls, on a question that is guaranteed to be unsupported.
+   * 15B cycles through the same file, so it wastes calls the same way.
+   * The 16B results would contradict the "40 supported questions" claim.
+* Owners:
+   * experiment-engineer: change the question. Example: "Which researchers are the strongest bridges since 2015?" passes both the intent and coverage checks.
+   * rag-engineer: add a real-planner test (see the acceptance check).
+* Acceptance check:
+   * Regenerate all five files with the script. `include-ids.txt` must stay byte-identical (sha256 `5d4d99a0…`), which keeps the `RuntimeArtifactMain` check valid.
+   * Update `provenance.json`, the test grammar and the README.
+   * A new rag spec loads the committed `questions.txt` and asserts that all 40 come back `Planned` through the fallback (always-failing `LlmClient`, default runtime config).
+
+B2. Medium, blocking: the billing pass claims are not in the retained evidence
+
+* Where: evidence/14b/presession/gates-summary.txt §2 and `test-report.md` W2. The raw log target/phase14/evidence/14b/presession/gates.txt was checked against them.
+* Evidence:
+   * `gates.txt` holds only the `suite_run` run of `test_budget_execution.py`: `failures=17 errors=11`, EXIT=1.
+   * The claimed per-file passes (113, 62 and 39 OK), the "identical on a clean clone of 13b886a" comparison, `terraform validate`, and the `git diff --check` and privacy-scan outputs appear in no presession raw log.
+   * The only per-file billing logs are from r3 (112 and 61 tests), taken before this round added one test to each file.
+   * The stated cause doesn't fit the observation. `check.sh:280` describes billing suites interfering when several are loaded together, but this failing run loaded one file only.
+* Impact: the claimed pass for the modified test files is not backed by retained evidence (the rule is "claimed results match retained logs").
+* Owner: the coordinator (evidence). Rerunning gates needs no other agent.
+* Acceptance check:
+   * Rerun the three billing files one process each, exactly as `check.sh` does, plus `terraform validate`, with `tee` into the presession raw-log folder.
+   * Either retain the clean-clone comparison output or drop that claim.
+   * Restate the cause as an observed harness difference whose cause has not been diagnosed.
+
+Nonblocking observations
+
+* N1. Low. load-tests/README.md:116 says "(16 tests, about 10 s)". The observed run was 70 tests in 49.7 s; 16 is only `test_eval16b`. Owner: experiment-engineer.
+* N2. Low. `test_eval16b.py` never exercises `plan_state`'s shared-cap refusal (`eval16b.py`: `state["usd"] + total > cap`). Mid-run enforcement goes through `try_charge`, whose `ledger-cap` path is tested in `test_llm_budget.py:113`, and current bucket sizes can't reach USD 1.33. Owner: experiment-engineer.
+* N3. Low. The pre-session owner and test reports never state cost-to-date. The round was offline, so they should say "no spend this round; cost-to-date unchanged at <last recorded figure>". Owner: coordinator.
+* N4. Future scope. The planner coverage check fails any "in window since-…" phrasing, which is a real planner defect for user queries too. Changing the question (B1) avoids it for these inputs; the regex fix is a separate rag-engineer change.
+* N5. Agreed, already recorded. The `archive.py` name filter doesn't catch `*.plan.txt`, and no runbook include reaches `target/phase14/private`. Future scope for infra-engineer.
+* N6. Accepted deviation. Item 5 says "to be confirmed live in the session" instead of the default's "verified live". That is more honest, since nothing has been run.
+
+Verified as correct
+
+* Items 1–2: the hashes for the three committed config files match `config-sources.json` and the runbook.
+   * The `include-ids.txt` sha equals the `fileSha256` in the retained selection report, which shows `rows=9643 bytes=9633173`.
+   * The 14C files hold only IDs and question text, are sorted, fit the 2000-ID and row/byte caps, and are deterministic by design and by test.
+* Item 3: `eval16b.py plan` reads only local files; its test blocks all sockets.
+   * `run` charges bucket 16b under the ledger lock before every request and refuses up front when the bucket or the cap would be passed.
+   * The run ID `16b-1` matches `RUN_ID`.
+* Item 4: `emr_service_policy.py` really does print twelve `OK:` lines for a valid file, and masks the account ID.
+* Items 5–8:
+   * The 28 and 29 field counts are pinned by tests.
+   * The new `vector_bucket_name` output is only an output, with a tftest.
+   * The GSI name matches `variables.tf:156-160`, and there is a guard plus a 3-test spec.
+* Item 9: the expected plan lists are clearly labelled "DERIVED OFFLINE … NOT a live plan … a match is not an approval". `normalize_actions` handles both replace orders.
+* Item 10: the test proves that a directory with plan files is refused as a whole and that receipts are accepted one file at a time.
+* Runbook: no "Gap" notes remain, and the paths and flags it cites exist (`--include-ids`, `--query-body`, `--node-ids-file`, and the A8 helper).
+* Superseding notes: both are add-only at the top of the old records (10 and 2 lines, 0 deleted).
+* Pin drift: I recomputed it: 2 of 209 rows (infra/terraform/README.md, infra/terraform/outputs.tf).
+* sbt check: `sbt-check-4.txt` shows the claimed counts, Java 17.0.20.1 and `EXIT=0`.
+* Privacy and gates: the privacy re-scan of added and untracked lines is clean. No approval record was touched and no live action was taken.
+
+3. Report fields
+
+```
+STATUS: COMPLETE (review); verdict REQUEST-CHANGES
+OWNER: code-reviewer (read-only)
+WORK ORDER: Phase 14 Subphase 14B pre-session items (approval-request-14b-replan.md §10), base/HEAD 13b886a, uncommitted work
+FILES CREATED: none
+FILES MODIFIED: none
+COMMANDS RUN: read-only git diff/status, sed/grep/cat, shasum of committed inputs and config files; python3 -I one-liners in memory to (a) replicate the QueryPlannerAgent unquoted-filter regex over questions.txt and (b) recompute source_freeze pin drift; no build, test, AWS or provider call
+TEST RESULTS: not run (reviewer). Retained logs confirm: sbt check EXIT=0, 1,530 succeeded/0 failed/1 canceled; experiments 50, load-tests 70, scripts/tests 27/9/15/20/54/54, tests/infra 460, terraform test 272. Not retained: billing per-file 113/62/39, terraform validate, clean-clone comparison
+VALIDATION RESULTS: include-ids sha matches selection report; config-source hashes match; pin drift 2/209 confirmed; privacy scan clean; 1 of 40 questions fails planner coverage (B1)
+ASSUMPTIONS: Java and Python regex semantics agree for the replicated pattern; Google Drive plan copy is authoritative
+RISKS: B1 wastes paid planner calls in 15B/16B; B2 leaves the modified billing tests without retained passing evidence
+MANUAL ACTION REQUIRED: user reviews regenerated questions.txt; pin refresh before commit; plan file cap text 1.50 -> 1.33 (extra D)
+BLOCKED-ON OWNER: experiment-engineer + rag-engineer (B1); coordinator (B2)
+BLOCKED-ON EVIDENCE: questions.txt:28 vs QueryPlannerAgent.scala:547-549,354; gates.txt billing section
+NEXT GATE: recheck review of the repair, then the seven-gate check on a clean snapshot, pin refresh and the user's commit
+```
+
+4. NEXT PROMPT
+
+```
+You are the ScholarChain Phase 14 coordinator, Subphase 14B pre-session items, REPAIR ROUND (pre-session R1), in
+/Users/danny/Documents/UIC/CS441/ScholarChain, branch phase-14, base 13b886ad3eddf684a43e9c92ba030f823a8c2cfd, pre-session work uncommitted.
+Offline only: no AWS, Anthropic or Voyage call, no key value anywhere, no reading of *.local.tfvars, state, ~/.aws, .env or secret dirs, no git stash, no commit.
+
+(a) Append the external reviewer's verdict verbatim to docs/agent-runs/phase-14/review.md under "Subphase 14B — pre-session items", marked "user-supplied external review". Log B1 and B2 (and N1–N6 as nonblocking) in docs/agent-runs/phase-14/repairs.md.
+
+(b) Route the blocking findings:
+ B1 (experiment-engineer, then rag-engineer):
+   - experiment-engineer: in experiments/scripts/derive_14c_inputs.py GLOBAL_QUESTIONS replace
+     "Which researchers are the strongest bridges in window since-2015?" with a phrase the planner coverage guard accepts
+     (recommended: "Which researchers are the strongest bridges since 2015?"). Regenerate all five files in experiments/inputs/14c
+     with the script from target/phase6-runs/14c-spark-export-capped/run:f6e63b4b-d542-4a32-930c-f21f002cba76 (--overwrite).
+     include-ids.txt must remain byte-identical (sha256 5d4d99a0326292221a4414b8f5533c532287f8cbbd37a9bee94e7cf86b645552). Run twice; outputs byte-identical.
+     Update experiments/tests/test_derive_14c_inputs.py (lines ~129 and GRAMMAR ~251), experiments/README.md:121, and fix N1 (load-tests/README.md:116 test count).
+     Optional N2: a test for eval16b plan_state's shared-cap refusal.
+   - rag-engineer: add a module-local spec under modules/rag/src/test that reads the committed experiments/inputs/14c/questions.txt
+     and asserts that every one of the 40 lines is PlannerResult.Planned by QueryPlannerAgent with an always-failing LlmClient and the
+     default runtime config (fallback path through decode/coveredQuestion), with expected operation and window for the 8 ranking lines
+     (hand-derived). Do not change QueryPlannerAgent (N4 is future scope).
+   - documentation-engineer: only if the runbook or the 16B manifest quotes the changed question, update that text.
+ B2 (coordinator): rerun, with AWS neutralized as before and output tee'd under target/phase14/evidence/14b/presession/:
+   the three billing files one process each exactly as scripts/check.sh runs them, terraform validate, git diff --check (intent-added, index restored)
+   and the privacy scan. Either retain the clean-clone suite_run comparison output or remove that claim. Correct gates-summary.txt and test-report.md:
+   the single-file suite_run failure is an observed harness difference, cause not diagnosed (check.sh:280 describes cross-file interference, which does
+   not apply to a one-file run). Also state cost-to-date in owner-report.md (N3: no spend this round; last recorded figure).
+
+(c) Rerun the affected tests and record exact output: experiments/tests, load-tests/tests, check_manifests.py, the derive script twice (diff -r clean),
+   shasum of include-ids.txt, rag tests, and the full `sbt -batch check` on JDK 17 (environment block in Section 2 of the plan; report java -version).
+   Update gates-summary.txt, owner-report.md and test-report.md with a "pre-session R1" section; do not rewrite earlier sections.
+
+(d) Do not start the next subphase, do not run the seven-gate clean-snapshot check yet, do not refresh pins, do not commit.
+
+(e) Return the handoff packet and a recheck reviewer prompt per Section 10 of
+   <plan path> (Subphase 14B pre-session items, repair round R1,
+   prior findings B1, B2, N1–N6 with repair evidence), all placeholders filled. Do not trigger any reviewer.
+
+(f) Stop and end the turn after the repair: "Subphase 14B pre-session repair R1 is ready for review. I have stopped and will not start the next subphase until I receive the next prompt."
+```
+````
+
+### Review 9 — user-supplied external review (pre-session repair R1 recheck; pasted by the user on 2026-11-10; reproduced verbatim)
+
+Subphase 14B pre-session repair R1 — review 9: APPROVE. Its only change is that the full plan path in its next prompt, which contained a personal account address, is written as `<plan path>`, because no plan path or email address may appear in a repository file (user rule; same treatment as reviews 2, 7 and 8).
+
+````text
+1. VERDICT: APPROVE (Subphase 14B, pre-session repair R1)
+Both blocking findings from review 8 are fixed, and the retained logs back every claim I checked. What’s left is one stale README line and one note about a test, neither blocking.
+2. Findings
+Review 8 findings, rechecked
+
+* B1 (closed):
+   * Question changed: question 28 now reads “Which researchers are the strongest bridges since 2015?” (`derive_14c_inputs.py:65`, `questions.txt:28`).
+   * Inputs regenerated deterministically: `experiment-gates.txt` shows the script run twice with identical output. The committed files equal run 1.
+   * Include list unchanged: `include-ids.txt` still has sha256 `5d4d99a0…`, so the earlier `RuntimeArtifactMain` check (9,643 rows) still holds. The questions sha in `provenance.json` matches the file (`e4b6d48b…`).
+   * Test, provenance and docs updated: the test’s grammar list (`test_derive_14c_inputs.py:246-273`) and the provenance are updated, and the test now forbids “in window since-”.
+   * Real planner test added: `Phase14QuestionSetPlannerSpec` loads the committed `questions.txt` with the default runtime config and an always-failing model client. It asserts that all 40 come back `Planned` through the fallback (attempts 1), and pins hand-derived operation, metric, measure and window for the 8 ranking lines. The raw sbt log lists its 4 tests passing.
+   * My own recheck: my copy of the planner’s coverage regex now finds 0 failing lines out of 40.
+* B2 (closed):
+   * Billing per-file runs retained: r1/billing-per-file.txt shows 113, 62 and 39 OK, each EXIT 0, run as `check.sh` runs them.
+   * Terraform retained: r1/terraform-validate.txt shows fmt exit 0 and validate valid.
+   * Clean-clone comparison retained: r1/suite-run-comparison.txt shows the working tree (113 tests) and the clean clone (112) each failing 28 cases. I compared the two lists; they are the same 28 cases.
+   * Cause restated: `gates-summary.txt` now calls the cause an undiagnosed harness difference and explicitly corrects its earlier text.
+* N1 (fixed): load-tests/README.md:116 now says 71 tests, about 50 s.
+* N2 (fixed): `test_eval16b.py:213` now covers the plan/run refusal when the shared USD 1.33 cap would be passed.
+* N3 (fixed): `owner-report.md:565` states cost-to-date: USD 0.34 AWS, Anthropic 0, Voyage 0, combined 0.34 of the USD 25 ceiling.
+
+New findings
+
+* R1. Low, nonblocking: stale README line. experiments/README.md:121 says `questions.txt` is “not yet run through the real planner: the rag spec is to check all 40 against it once it exists”. The spec now exists and passes, per the R1 sbt log. Owner: experiment-engineer. Fix: reword it to cite `Phase14QuestionSetPlannerSpec`. It can be done before the commit freeze.
+* O1. Info: one test pins the known planner defect.
+   * `Phase14QuestionSetPlannerSpec` “regression (N4)” asserts that “in window since-2015” is refused. That records a known defect as expected behaviour, so it will fail on purpose when N4 is fixed.
+   * It is labelled, so this is acceptable. Whoever fixes N4 (rag-engineer, future scope) should flip it.
+
+Also verified
+
+* Ownership: experiments and load-tests were edited by the experiment-engineer, the rag test by the rag-engineer, `docs/agent-runs` and evidence by the coordinator. `QueryPlannerAgent` is unchanged.
+* Records are append-only: every `docs/agent-runs/phase-14` diff is additions only, and review 8 is reproduced verbatim.
+* sbt check: the raw log target/.../r1/sbt-check-r1.txt ends `[success] … 12:09` with `EXIT=0`. The R1 summary counts add up to 1,534.
+* Privacy: the R1 logs, the new spec and the questions file are clean (no home paths, emails, 12-digit numbers or key-shaped tokens).
+* No live action and no approval record touched. Pin drift is still 2 of 209 and refreshes after approval.
+
+Not verified yet
+
+* The full seven-gate check on a clean snapshot.
+* Everything live.
+* Future scope: N4 (planner “in window since-” regex) and N5 (`*.plan.txt` archive filter).
+
+3. Report fields
+
+```
+STATUS: COMPLETE (review); verdict APPROVE
+OWNER: code-reviewer (read-only)
+WORK ORDER: Phase 14 Subphase 14B pre-session items, repair round R1 (recheck of review 8), base/HEAD 13b886a, uncommitted
+FILES CREATED: none
+FILES MODIFIED: none
+COMMANDS RUN: read-only git status/diff, cat/grep/sed of evidence and sources; python3 -I in-memory checks: (a) the planner unquoted-filter regex over questions.txt (0 failures), (b) set comparison of the 28 suite_run failure lines in both trees (equal); no build, test, AWS or provider call
+TEST RESULTS: not run (reviewer). Retained logs show: billing per-file 113/62/39 OK; terraform fmt 0, validate valid; experiments 51 OK; load-tests 71 OK; check_manifests OK; sbt check EXIT 0, 1,534 succeeded, 0 failed, 1 canceled (JDK 17.0.20.1), including Phase14QuestionSetPlannerSpec 4/4
+VALIDATION RESULTS: include-ids sha unchanged (5d4d99a0…); questions sha matches provenance; git diff --check EXIT 0; privacy clean; records append-only
+ASSUMPTIONS: Google Drive copy of phase14.md is the authoritative plan
+RISKS: R1 stale README sentence; O1 test intentionally pins the N4 defect
+MANUAL ACTION REQUIRED: user reviews questions.txt and real-query.json; pin refresh (2 of 209) before commit; plan file cap text 1.50 -> 1.33 (extra D); commit is the user's
+BLOCKED-ON OWNER: none
+BLOCKED-ON EVIDENCE: none
+NEXT GATE: seven-gate check on a fresh clean snapshot (RESULT: PASS gates=7), pin refresh, user's commit; then commit freeze and the live session per the runbook
+```
+
+4. NEXT PROMPT
+
+```
+You are the ScholarChain Phase 14 coordinator, Subphase 14B — pre-session items, after the R1 recheck (review 9: APPROVE), in
+/Users/danny/Documents/UIC/CS441/ScholarChain, branch phase-14, base and HEAD 13b886ad3eddf684a43e9c92ba030f823a8c2cfd, pre-session work and R1 uncommitted.
+Offline only: no AWS, Anthropic or Voyage call, no key value anywhere, no reading of *.local.tfvars, state, ~/.aws, .env or secret dirs, no git stash.
+
+(a) Append the external reviewer's verdict (review 9) verbatim to docs/agent-runs/phase-14/review.md under "Subphase 14B — pre-session items",
+    marked "user-supplied external review". Record R1 (nonblocking) and O1 (info) in repairs.md. Optionally route R1 to the experiment-engineer
+    (experiments/README.md:121: say the 40 questions are checked by Phase14QuestionSetPlannerSpec); if it is fixed, rerun experiments/tests only.
+
+(b) Run the full seven-gate scripts/check.sh on a fresh clean snapshot of the working tree (as in earlier rounds; AWS neutralized). Require
+    RESULT: PASS gates=7 with test_terraform_r1 (RouteOwnershipTest) and RealStateBindingTests executing and passing; retain the log under
+    target/phase14/evidence/14b/post-approval/ and summarize it in test-report.md. Then show the user the 2 drifted pins (infra/terraform/README.md,
+    infra/terraform/outputs.tf in scripts/billing/reviewed-pins.json source_freeze) and refresh them only with the user's explicit yes; re-run the
+    pin-drift check (0 of 209). Prepare the commit (file list, proposed message) and ASK the user; never commit without the user's yes.
+
+(c) After the user's commit, state what remains before the commit freeze and the live session per docs/runbooks/phase-14-live-session.md
+    (including check_manifests.py --final, the user's review of experiments/inputs/14c/questions.txt and real-query.json, the plan-file cap text 1.33,
+    the approval records the user writes, and the A-steps), without doing any of them.
+
+(d) If any work remains that needs review, end with a new reviewer prompt per Section 10 of
+    <plan path>, all placeholders filled. Do not trigger any reviewer.
+
+(e) Start NO live step (no billing modify, deployer apply, plan, base-apply, push or anything in the runbook's B section). Then stop and end the turn.
+```
+````

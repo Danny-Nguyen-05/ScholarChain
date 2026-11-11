@@ -58,6 +58,20 @@ final case class LiveEmbeddingConfig(
       _.trim.nonEmpty
     )
   )
+  // `tables.idempotencyIndex` is the QuerySession global secondary index NAME (Terraform
+  // `query_session_gsi_name`, default `by-idempotency-key`), never a table name. A blank, malformed
+  // or table-equal value is refused before any request.
+  require(
+    LiveEmbeddingConfig.IndexNamePattern.matches(tables.idempotencyIndex) &&
+      !Set(
+        tables.runLedger,
+        tables.entityLinks,
+        tables.querySessions,
+        tables.evidence,
+        tables.artifacts,
+        tables.metrics
+      ).contains(tables.idempotencyIndex)
+  )
   require(indexNames == EmbeddingContracts.indexes && Set("cosine", "euclidean")(metric))
   require(
     maxVectors > 0 && maxConcurrentCalls > 0 && maxEmbeddingAttempts > 0 && maxEmbeddingCalls > 0
@@ -104,6 +118,12 @@ final case class LiveEmbeddingConfig(
     maxManifestBytes = maxManifestBytes,
     batchSize = batchSize
   )
+}
+object LiveEmbeddingConfig {
+
+  /** DynamoDB index-name rule: 3 to 255 characters from letters, digits, underscore, dot, hyphen.
+    */
+  val IndexNamePattern: scala.util.matching.Regex = "[A-Za-z0-9_.-]{3,255}".r
 }
 final case class LiveEmbeddingApproval(
     executionApproved: Boolean,

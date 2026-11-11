@@ -1,6 +1,6 @@
 # load-tests
 
-`loadgen.py` is the Phase 15 query-load generator (experiment D / 15B). Python 3 standard library only, no install step. Owner: experiment-engineer. It has **not** been run against the deployed stack; its tests use a fake query-api on `127.0.0.1`.
+`loadgen.py` is the Phase 15 query-load generator (experiment D / 15B); `eval16b.py` is the Phase 16B live-evaluation runner (bucket 16b). Python 3 standard library only, no install step. Owner: experiment-engineer. It has **not** been run against the deployed stack; its tests use a fake query-api on `127.0.0.1`.
 
 Run everything from the repository root with `python3 -I` (isolated mode).
 
@@ -33,7 +33,7 @@ Pinned in `config/load-profile.v1.json`: claude-haiku-5-5 USD 0.10 input / 0.50 
 
 ### `llm_budget.py`: the command every LLM-calling step uses
 
-The ledger is an append-only JSONL file outside the repository and outside `target/` (so `sbt clean` cannot erase it): default `~/.scholarchain/llm-ledger/haiku-ledger.jsonl` (the file name is unchanged on purpose: the path is pinned in the profile and the runbook, and the ledger counts Haiku answers on either route). Every read and write holds a file lock, so concurrent reservations never pass a bucket. The runbook requires `reserve` **before** every LLM-calling command (14C smoke query, 16B evaluation, 17 demo and final smoke).
+The ledger is an append-only JSONL file outside the repository and outside `target/` (so `sbt clean` cannot erase it): default `~/.scholarchain/llm-ledger/haiku-ledger.jsonl` (the file name is unchanged on purpose: the path is pinned in the profile and the runbook, and the ledger counts Haiku answers on either route). Every read and write holds a file lock, so concurrent reservations never pass a bucket. The runbook requires `reserve` **before** every LLM-calling command that does not charge the ledger itself (14C smoke query, 17 demo and final smoke). The two commands in this directory charge it themselves: `loadgen.py --llm` (bucket 15b) and `eval16b.py run` (bucket 16b); do not `reserve` for them as well, or each answer is counted twice.
 
 ```bash
 python3 -I load-tests/llm_budget.py init                                        # once; records the sha256 of the allocation; refuses if it exists
@@ -51,6 +51,18 @@ python3 -I load-tests/llm_budget.py adjust --usd 0.05 --source aws-bill         
 `--llm` charges the **15b** bucket (`--bucket` can name another) and refuses to start (exit 3, nothing sent) when planned answers exceed the bucket's remaining answers, when (ledger total + planned) would pass USD 1.33, when the ledger does not exist or is corrupt, or when `--questions-file` or the API key is missing. `--remaining-cap-usd` is optional and only lowers this run's own spend limit.
 
 During the run, **before every LLM request**, the generator takes the ledger lock, re-reads the state, and appends one `answer` line (bucket `15b`) only if the bucket and the total still allow it. The moment the 15b bucket (or the total, or the run limit) is exhausted, it stops all LLM calls for the rest of the run (event `llm-cap-reached` with the reason `bucket-cap`, `ledger-cap` or `run-cap`), keeps the non-LLM load going, and records the bucket usage in the run record. At most 2 answers are in flight (`llm_max_inflight`, matching the runtime `maxConcurrentLlmCalls`). Answers are spread over the phase (slot i is due when the phase is (i + 0.5) / N done, by time or by share of the request cap).
+
+### `eval16b.py`: the 16B live-evaluation command (bucket 16b)
+
+Asks the fixed questions of `experiments/inputs/14c/questions.txt` (40, the same file 15B cycles through) once each, in file order, one at a time, through `POST /v1/query` (a 202 answer is polled at `/v1/jobs/{id}` and its result read at `/v1/jobs/{id}/result`).
+
+```bash
+python3 -I load-tests/eval16b.py plan                                      # no network, no key, no ledger write: question count, bucket state, estimate
+python3 -I load-tests/eval16b.py run --run-id <run-id>                     # needs SCHOLARCHAIN_LOAD_BASE_URL and the key (name via --api-key-env) in the shell
+python3 -I load-tests/eval16b.py run --run-id <run-id> --max-answers 10    # only the first 10 questions (can only lower the plan)
+```
+
+Refuses (exit 3, nothing sent, nothing charged) when the number of questions exceeds the bucket's remaining answers (a file of 41 against a bucket of 40 is refused, never truncated), when ledger total + planned cost would pass USD 1.33, when the ledger is absent or corrupt, or when the key, the base URL or the questions file is missing. During the run, one `answer` line for bucket 16b is appended under the ledger lock before every request; if the bucket or cap no longer allows it, the run stops (`llm-cap-reached`). It also stops on the first 401/403 and after 3 failed answers in a row (`--max-consecutive-failures`). A charge is not refunded after a failed request. Raw output (git-ignored, mode 0444, sealed): `target/experiment-runs/16b-live-evaluation-<run-id>/raw/answers.jsonl` (the question, ids, status, latency and the answer JSON of each 2xx answer; error bodies are never stored), `events.jsonl`, `run-record.json` (cost report: AWS, Anthropic, Voyage, combined) and `raw.sha256`. Grading is a separate step on `answers.jsonl`. Not run against the deployed stack.
 
 ## Secrets and privacy
 
@@ -101,7 +113,7 @@ Failed and aborted runs keep their directory and record; reruns get a new run id
 ## Tests
 
 ```bash
-python3 -I -m unittest discover -s load-tests/tests -v     # 54 tests, about 40 s, loopback only
+python3 -I -m unittest discover -s load-tests/tests -v     # loopback only; 71 tests, about 50 s in total (test_eval16b.py alone: 17 tests, about 10 s)
 ```
 
 ## Limits

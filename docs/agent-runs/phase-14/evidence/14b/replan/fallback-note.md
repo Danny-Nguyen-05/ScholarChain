@@ -1,5 +1,7 @@
 # Fallback note: synthesis and embeddings without Bedrock (Phase 14B replan)
 
+> **Superseded (coordinator note, 2026-11-10; user decision "accepts all by default", recorded in `prompt.md`, pre-session items, extra A).** This note is kept unchanged as the 2026-11-08 record. The fallback was approved by the instructor on 2026-11-09 and is implemented by repair round 3 (commit `13b886a`): synthesis on the Anthropic API with `claude-haiku-5-5` (not Haiku 4.5; no `temperature`, `top_p` or `top_k`), embeddings on Voyage AI with `voyage-4-lite` at 256 dimensions. Bedrock (Haiku 4.5, Titan V2) stays selectable behind `SCHOLARCHAIN_SYNTHESIS_PROVIDER` and `SCHOLARCHAIN_EMBEDDING_PROVIDER`. The current configuration is in the root `README.md`, `docs/report/provider-fallback.md` and the round 3 work order in `prompt.md`.
+
 Assembled by the coordinator on 2026-11-08 from the read-only `rag-engineer` reports. Nothing here was run live. Activation needs the user's decision on 2026-11-12; until then the Bedrock path (Haiku 4.5, Titan V2) stays configured.
 
 ## Why

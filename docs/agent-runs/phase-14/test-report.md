@@ -649,3 +649,106 @@ env -u AWS_PROFILE AWS_EC2_METADATA_DISABLED=true AWS_CONFIG_FILE=/dev/null AWS_
 | sbt | PASS | 802s | JDK 17; last three suites succeeded 113, 693, 28 (1 canceled); 0 failed; `[success] Total time: 795 s` |
 
 `RESULT: PASS gates=7`; `check.sh exit 0`. `test_terraform_r1` passes here because the snapshot commits the new `.tf` files. Evidence: `evidence/14b/r3/check-full-final.txt` (sanitized: snapshot, temp and home paths replaced, ANSI codes and trailing spaces stripped; no 12-digit number, no email). Raw log: `target/phase14/evidence/14b/r3/check-full-snapshot11.txt`.
+
+## Subphase 14B — pre-session items (after review 7 APPROVE; base `13b886a`)
+
+Nothing live. Decisions in `prompt.md` ("Subphase 14B — pre-session items"); owners in `owner-report.md`.
+
+### W1. Agent-run gates (agent-reported)
+
+| Owner | Gate | Result |
+|---|---|---|
+| rag-engineer | `sbt -batch "rag/scalafmtAll" "rag/test"` (JDK 17) | 192 succeeded, 0 failed |
+| experiment-engineer | experiments/tests; load-tests/tests; `check_manifests.py`; derive script twice (byte-identical); local `RuntimeArtifactMain` on the regenerated include list | 50 OK; 70 OK; OK; `diff -r` clean; exit 0, `SELECTION: rows=9643 bytes=9633173 researchers=41 (include-list=40 fill=1)`, `selection-report.json` status `written` |
+| storage-engineer | local `RuntimeArtifactMain` on the first include list | exit 1 `include-list-exceeds-cap` (row cap 10,000); routed back; every node ID and named researcher resolves |
+| infra-engineer | terraform fmt/validate/test; scripts/tests (archive, emr_service_policy, plan_deltas, syntax, plan, check, terraform_r1); billing; tests/infra | 272 passed; 27/9/15/20/54/54/10 OK; 113/62/39 OK; 460 OK |
+| documentation-engineer | `git diff --check`; link and anchor check; privacy scan; "Gap" count | clean; 19 targets and 8 anchors resolve; clean; 0 |
+
+### W2. Coordinator-run gates (observed)
+
+Summary: `evidence/14b/presession/gates-summary.txt`.
+
+- `sbt -batch check` on JDK 17.0.20.1, final run after the last source change: EXIT 0, 207/64/39/53/141/192/113/693/28 = 1,530 succeeded, 0 failed, 1 canceled, 13:08.
+- experiments/tests 50 OK; load-tests/tests 70 OK; `check_manifests.py` OK (total 0.156975 of 1.33).
+- scripts/tests: archive 27, emr_service_policy 9, plan_deltas 15, syntax 20, plan 54, check 54, all OK.
+- Billing, one process per file as `scripts/check.sh` runs them: 113, 62, 39 OK. Loading `test_budget_execution.py` through `suite_run.py` discover instead gives failures=17 errors=11, identically on a clean clone of `13b886a`; `scripts/check.sh:280` documents that interference, so it is not a regression.
+- tests/infra 460 OK, 0 skipped.
+- Terraform: fmt exit 0, validate valid, test 272 passed.
+- `git diff --check` with untracked files intent-added (index restored): exit 0. Added-line privacy scan: clean.
+- Pin drift: 2 of 209 (`infra/terraform/README.md`, `infra/terraform/outputs.tf`).
+
+### W3. Not verified
+
+- The full seven-gate check on a clean snapshot (after review approval).
+- Everything live: planner resolution of the 40 questions, the billing login command, the plan-delta lists against a real plan, the GSI name in the deployed table, `eval16b.py run`.
+
+## Subphase 14B — pre-session R1 (review 8: REQUEST-CHANGES B1, B2)
+
+Nothing live. Raw logs retained in `evidence/14b/presession/r1/`; summary appended to `evidence/14b/presession/gates-summary.txt` ("Pre-session R1").
+
+**Correction to W2 (review 8 B2).** The W2 billing per-file passes, the clean-clone comparison and `terraform validate` had no retained raw output; they are rerun below with logs. The W2 explanation of the `suite_run` failure was wrong: it is an observed harness difference whose cause has not been diagnosed (`scripts/check.sh:280` describes cross-file interference, which does not apply to a one-file run).
+
+### X1. Agent-run gates (agent-reported)
+
+| Owner | Change | Gate |
+|---|---|---|
+| experiment-engineer | B1: question 28 now "Which researchers are the strongest bridges since 2015?"; five files regenerated (`include-ids.txt` byte-identical); shape test and `test_no_question_has_the_window_id_that_starts_with_a_planner_keyword`; README claim corrected; N1 test count; N2 `test_plan_and_run_refuse_when_the_shared_cap_would_be_passed` | experiments 51 OK; load-tests 71 OK; `check_manifests.py` OK |
+| rag-engineer | B1: `Phase14QuestionSetPlannerSpec` (4 tests) reads the committed `questions.txt`; all 40 `Planned` through the fallback; 8 ranking lines hand-derived; old phrasing `Unsupported` | rag 196 succeeded, 0 failed |
+
+### X2. Coordinator-run gates (observed, retained)
+
+| Gate | Result | Log |
+|---|---|---|
+| Billing per file, as `check.sh` | 113, 62, 39 OK, each EXIT 0 | `r1/billing-per-file.txt` |
+| `suite_run` on `test_budget_execution.py` | failures=17 errors=11 on the working tree (113) and on a clean clone of `13b886a` (112), same 28 cases | `r1/suite-run-comparison.txt` |
+| Terraform fmt and validate | exit 0; valid | `r1/terraform-validate.txt` |
+| experiments/tests, load-tests/tests, `check_manifests.py`, derive twice | 51 OK, 71 OK, OK, `diff -r` clean, include-ids sha256 `5d4d99a0…` unchanged | `r1/experiment-gates.txt` |
+| `sbt -batch check`, openjdk 17.0.20.1 | EXIT 0; 1,534 succeeded, 0 failed, 1 canceled; 12:09 | `r1/sbt-check-r1-summary.txt` |
+| `git diff --check` with untracked intent-added | EXIT 0; index restored | `r1/diffcheck-privacy.txt` |
+| Privacy scan of added lines | clean (one hit: repository directory in review 8's verbatim prompt) | `r1/diffcheck-privacy.txt` |
+
+### X3. Not verified
+
+- The full seven-gate check on a clean snapshot, the pin refresh (2 of 209) and the commit (not in this round, per review 8).
+- Everything live, including how the deployed planner and model answer the 40 questions.
+
+## Subphase 14B — pre-session items, after review 9 APPROVE
+
+Nothing live; no AWS, Anthropic or Voyage call.
+
+### Y1. R1 (review 9) fix
+
+experiment-engineer reworded `experiments/README.md:121` (the 40 questions are checked by the shape test and by `Phase14QuestionSetPlannerSpec`). Coordinator rerun: `python3 -I -m unittest discover -s experiments/tests` → `Ran 51 tests`, `OK`, EXIT 0 (raw log `target/phase14/evidence/14b/post-approval/experiments-tests-r1fix.txt`).
+
+### Y2. Full seven-gate check on clean snapshot 12
+
+- Snapshot 12 (`14fa884091191b3e0ce0df5dbf1c0605a79cf4cd` on base `13b886a`): 5,846 files identical to the working tree before the run; 1,676 non-docs files identical after it; snapshot tree clean (`evidence/14b/presession/snapshot12-identity.txt`).
+
+```text
+env -u AWS_PROFILE AWS_EC2_METADATA_DISABLED=true AWS_CONFIG_FILE=/dev/null AWS_SHARED_CREDENTIALS_FILE=/dev/null scripts/check.sh
+```
+
+| Gate | State | Time | Counts |
+|---|---|---|---|
+| constitution | PASS | 1s | |
+| hooks | PASS | 0s | |
+| shell | PASS | 8s | |
+| python | PASS | 1s | |
+| terraform | PASS | 141s | 12, 19, 111, 40, 6, 272 passed; 0 failed |
+| script-tests | PASS | 3909s | scripts/tests 1058 OK (`RealStateBindingTests` executed=7 status=ok, `test_terraform_r1.RouteOwnershipTest` executed=6 status=ok); phase12d-spike 78 OK; billing 113, 62, 39 OK; tests/scripts 462 OK; tests/infra 460 OK; 0 skipped |
+| sbt | PASS | 814s | JDK 17.0.20.1; last three suites succeeded 113, 693, 28 (1 canceled); 0 failed; `[success] Total time: 806 s (13:26)` |
+
+`RESULT: PASS gates=7`; `check.sh exit 0`. Evidence: `evidence/14b/presession/check-full-final.txt` (sanitized: snapshot, temp and home paths replaced, ANSI codes and trailing spaces stripped; no 12-digit number, no email). Raw log: `target/phase14/evidence/14b/post-approval/check-full-snapshot12.txt`.
+
+### Y3. Still open
+
+- Pin refresh (2 of 209: `infra/terraform/README.md`, `infra/terraform/outputs.tf`), awaiting the user's yes; then the pin-drift check must show 0 of 209.
+- The commit (user's yes required).
+- Everything live.
+
+### Y4. Pin refresh (after snapshot 12)
+
+- User yes ("Yes, refresh pins"); the infra-engineer ran `refresh_pins.py --apply`: 2 rows refreshed in `scripts/billing/reviewed-pins.json` (bytes and sha256 values only; `git diff --numstat` 4 4).
+- Coordinator check after the refresh: 209 pinned, 0 drifted; JSON valid; `git diff --check` exit 0.
+- Billing suites (the only readers of the pins): `test_budget_execution.py` 113 OK; `test_budget_verification.py` 62 OK; `test_publication_evidence.py` 39 OK.
+- The pin file changed after snapshot 12, so the snapshot 12 run does not cover it; the three billing suites above do. Evidence: `evidence/14b/presession/pin-refresh.txt`.

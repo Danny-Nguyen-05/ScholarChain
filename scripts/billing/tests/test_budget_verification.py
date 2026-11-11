@@ -689,6 +689,21 @@ class ModifiedFeatures(Fixture):
             v.Verification(self.policy, self.runner, lambda: self.clock).load_gate(self.gatepath, b.hash_file(self.gatepath), 'verify-usd25-fixture')
         self.assertEqual(self.calls, [])
 
+    def test_modified_verification_gate_has_exactly_29_fields_and_each_one_is_required(self):
+        # Pins the count VERIFICATION.md states ("Gate (29 fields"): the constant, the full fixture gate, and every field required.
+        self.assertEqual(len(v.MODIFIED_GATE_FIELDS), 29)
+        self.assertEqual(set(self.mgate), v.MODIFIED_GATE_FIELDS)
+        for field in sorted(self.mgate):
+            with self.subTest(missing=field):
+                gate = dict(self.mgate); del gate[field]
+                self.write(self.gatepath, (json.dumps(gate) + '\n').encode())
+                with self.assertRaisesRegex(b.Blocked, 'VERIFICATION_GATE_SCHEMA'):
+                    v.ModifiedVerification(self.policy, self.runner, lambda: self.clock).load_gate(self.gatepath, b.hash_file(self.gatepath), self.mgate['operation'])
+        text = (ROOT / 'VERIFICATION.md').read_text(encoding='utf-8')
+        self.assertIn('Gate (29 fields, `MODIFIED_GATE_FIELDS`', text)
+        self.assertIn('28 fields', text)
+        self.assertEqual(self.calls, [])
+
     def test_gate_refuses_unbound_operation_option_scope_and_state_fields(self):
         cases = [('operation', 'verify-fixture'), ('operation', 'verify-usd25-'), ('option', 'B'), ('plan_sha256', '0'*64),
                  ('proposal_sha256', '0'*64), ('human_record_sha256', '0'*64), ('g1_affirmation', ''),

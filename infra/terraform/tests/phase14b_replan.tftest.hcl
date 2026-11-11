@@ -210,6 +210,23 @@ run "the_certificate_carries_the_required_project_tags_the_deployer_conditions_o
   }
 }
 
+run "the_vector_bucket_name_is_a_root_output_equal_to_the_vector_bucket_name_expression" {
+  command = plan
+
+  assert {
+    condition     = output.vector_bucket_name == "scholarchain-course-${var.aws_account_id}-vectors"
+    error_message = "vector_bucket_name is the S3 Vectors bucket name scholarchain-<environment>-<account>-vectors (modules/s3vectors/main.tf, vector_bucket_name)."
+  }
+  assert {
+    condition     = output.vector_bucket_name == output.phase12b_controls.vectors.bucket.vector_bucket_name
+    error_message = "The output equals the name of the planned aws_s3vectors_vector_bucket resource, not a separately derived string."
+  }
+  assert {
+    condition     = output.vector_bucket_name == module.s3vectors.bucket_name
+    error_message = "The root output is the existing s3vectors module output (no resource change)."
+  }
+}
+
 run "the_dns_validation_record_is_a_root_output" {
   command = plan
 

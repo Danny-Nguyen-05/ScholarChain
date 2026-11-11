@@ -255,6 +255,72 @@ class PrivateMaterialTests(ArchiveBase):
         result = self.archive(includes=["plan-receipts=" + directory])
         self.assertEqual(result.rc, 0, result.out)
 
+    def test_a_directory_holding_a_plan_run_is_refused_whole_and_receipts_go_in_file_by_file(self):
+        # Phase 14B pre-session item 10. plan.sh writes <env>-<sha>.tfplan, .tfplan.json, .tfplan.txt, .tfplan.log and
+        # .tfplan.receipt.json into one run directory. Including that DIRECTORY is refused as a whole (exit 3, nothing written,
+        # every private file named, the receipt not archived either); the receipt and the checksum sidecar are accepted only when
+        # they are included individually, which is what the live-session runbook does.
+        run_dir = os.path.join(self.tmp, "plans", "run-20261115-000000")
+        os.makedirs(run_dir)
+        names = ("course-0123abc.tfplan", "course-0123abc.tfplan.json", "course-0123abc.tfplan.txt", "course-0123abc.tfplan.log")
+        for name in names + ("course-0123abc.tfplan.receipt.json", "course-0123abc.tfplan.sha256"):
+            with open(os.path.join(run_dir, name), "w") as handle:
+                handle.write('{"schema": "scholarchain.plan-receipt.v2"}\n' if name.endswith("receipt.json") else "x\n")
+        result = self.archive(label="plan-dir", includes=["plan-receipts=" + run_dir])
+        self.refused(result, "private material")
+        for name in names:
+            self.assertIn("ARCHIVE-REFUSED: %s looks like private material" % name, result.out)
+        self.assertNotIn("receipt.json looks like private", result.out)
+        self.assertNotIn("tfplan.sha256 looks like private", result.out)
+        self.assertEqual(os.listdir(self.dest_root), [], "nothing was written for a refused run")
+        # the same directory together with a clean one is refused too (one refused source stops the whole run)
+        self.put("ok.txt", "fine\n")
+        mixed = self.archive(label="plan-mixed", includes=["test-reports=" + os.path.join(self.src, "reports"), "plan-receipts=" + run_dir])
+        self.refused(mixed, "private material")
+        self.assertEqual(os.listdir(self.dest_root), [])
+        # file by file: the receipt and the sha256 sidecar are archived, the plan binary is never reachable
+        result = self.archive(label="plan-files", includes=["plan-receipts=" + os.path.join(run_dir, "course-0123abc.tfplan.receipt.json"), "plan-receipts=" + os.path.join(run_dir, "course-0123abc.tfplan.sha256")])
+        self.assertEqual(result.rc, 0, result.out)
+        paths = sorted(e["path"] for e in self.index("plan-files")["entries"])
+        self.assertEqual(paths, ["plan-receipts/course-0123abc.tfplan.receipt.json", "plan-receipts/course-0123abc.tfplan.sha256"])
+        direct = self.archive(label="plan-binary", includes=["plan-receipts=" + os.path.join(run_dir, "course-0123abc.tfplan")])
+        self.refused(direct, "private material")
+
+    def test_same_named_receipts_from_different_plan_runs_collide_and_numbered_byte_copies_keep_provenance(self):
+        # plan.sh names every receipt <env>-<commit>.tfplan.receipt.json, so receipts of several stages at one commit share a
+        # basename. Included file by file under one category they collide (the whole run is refused, nothing written); byte-exact
+        # copies under distinct names are accepted and INDEX.json keeps the sha256 of the original bytes (the archive does not
+        # record the source path, so the sha256 is the provenance link).
+        name = "course-0123abc.tfplan.receipt.json"
+        originals = []
+        for run in ("run-a", "run-b"):
+            run_dir = os.path.join(self.tmp, "plans", run)
+            os.makedirs(run_dir)
+            path = os.path.join(run_dir, name)
+            with open(path, "w") as handle:
+                handle.write('{"schema": "scholarchain.plan-receipt.v2", "run_id": "%s"}\n' % run)
+            originals.append(path)
+        collide = self.archive(label="same-name", includes=["plan-receipts=" + originals[0], "plan-receipts=" + originals[1]])
+        self.refused(collide, "two sources map to plan-receipts/" + name)
+        self.assertEqual(os.listdir(self.dest_root), [], "nothing was written for a refused run")
+        copies = os.path.join(self.tmp, "receipt-copies")
+        os.makedirs(copies)
+        wanted = {}
+        for number, original in enumerate(originals, start=1):
+            target = os.path.join(copies, "%02d-%s" % (number, name))
+            with open(original, "rb") as src, open(target, "wb") as dst:
+                data = src.read()
+                dst.write(data)
+            wanted["plan-receipts/%02d-%s" % (number, name)] = hashlib.sha256(data).hexdigest()
+        result = self.archive(label="numbered", includes=["plan-receipts=" + os.path.join(copies, f) for f in sorted(os.listdir(copies))])
+        self.assertEqual(result.rc, 0, result.out)
+        entries = {e["path"]: e for e in self.index("numbered")["entries"]}
+        self.assertEqual(sorted(entries), sorted(wanted))
+        for path, digest in wanted.items():
+            self.assertEqual(entries[path]["sha256"], digest, "the index sha256 is the hash of the original receipt bytes")
+        self.assertEqual(len(set(wanted.values())), 2)
+        self.assertFalse(any("source" in e for e in entries.values()), "the index does not record the source path")
+
     def test_a_symlink_in_a_source_is_refused(self):
         self.put("real.txt", "x\n")
         os.symlink(os.path.join(self.src, "reports", "real.txt"), os.path.join(self.src, "reports", "link.txt"))

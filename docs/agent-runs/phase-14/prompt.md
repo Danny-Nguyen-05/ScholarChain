@@ -363,3 +363,46 @@ Shared contract (all owners build to these names):
 Superseded: the "user makes the first Haiku 4.5 playground call" step; the Bedrock quota precondition; open question 14-3 unless a Bedrock run is chosen.
 
 Routing: wave 1 rag-engineer (`modules/rag/**`), service-engineer (`modules/services/**`), infra-engineer (`infra/terraform/**`, `scripts/**`), experiment-engineer (`experiments/**`, `load-tests/**`); wave 2 documentation-engineer (`README.md`, `docs/**` outside the reserved subtrees) and test-engineer (`tests/**`). Anything outside an owner's paths returns as `BLOCKED-ON`.
+
+## Subphase 14B — pre-session items (after review 7: APPROVE; round 3 committed as `13b886a`)
+
+Started after commit `13b886a` (pushed to `origin/phase-14` at the user's request, 2026-11-10). Scope: the 10 open pre-session items in `approval-request-14b-replan.md` §10. Offline only: no live command, no AWS, Anthropic or Voyage call, no key value anywhere, no git stash, no commit without the user's yes.
+
+### Step 0 answers (user, 2026-11-10)
+
+The user's answer, verbatim: "accepts all by default". Every recommended default below is therefore the decision.
+
+| # | Item | Owner | Decision (recommended default, accepted) |
+|---|---|---|---|
+| 1 | Source of the `--er-policy`, `--er-config` and `--spark-config-template` files | experiment-engineer | Use the files already in the repository from the Phase 5/6 local runs; the agent lists each path and sha256. No new settings. |
+| 2 | Real `include-ids.txt`, `real-query.json`, `questions.txt`, `node-ids.txt` | experiment-engineer, storage-engineer | Derive them with a committed, deterministic script from the local export `f6e63b4b`; commit the small ID files (IDs only). |
+| 3 | 16B live-evaluation command and question set | experiment-engineer, coordinator | 40 fixed questions drawn from the real-data slice (researchers and pairs present in the export), and one command that runs them through the 16B answer bucket. |
+| 4 | Render config `templateVersion`, `runtime_reference`, assembly of `emr_service_policy_json` | coordinator with infra-engineer | Values from `release.conf` and the committed template; the infra-engineer documents and tests the assembly. |
+| 5 | `scripts/billing/README.md:129` calls the billing login command unverified | infra-engineer | Match the deployer README's command, marked "verified live in the session". |
+| 6 | 28 vs 29 fields | infra-engineer | Count the fields in the code and correct whichever document is wrong. |
+| 7 | Vector bucket name is not a Terraform output | infra-engineer | Add it as an output (no AWS change); the runbook stops deriving it from the IAM policy. |
+| 8 | 14C template `idempotencyIndex` | rag-engineer | Confirm `by-idempotency-key` from the Terraform and the code; the template is corrected. |
+| 9 | Expected plan addresses for the pointer and EMR runtime-applies | infra-engineer | Derive them from the offline Terraform tests and list them; the real plan is compared against them in the session. |
+| 10 | Whether `archive-evidence.sh` refuses directories containing plan files | infra-engineer | Read the code and add a test; keep the runbook's file-by-file approach if it refuses. |
+
+Extras (same answer, defaults accepted):
+
+- A. `evidence/14b/replan/14c-templates.md` and `evidence/14b/replan/fallback-note.md` stay unchanged as history; a short superseding note is added on top pointing to the Voyage and Anthropic configuration (coordinator, `docs/agent-runs/**`).
+- B. N6: `PRESPEND_PROJECT_CEILING_USD=25` is kept.
+- C. Key-entry method: AWS console, the secret's **Edit** control, under the user's own sign-in.
+- D. The plan file's synthesis cap text (USD 1.50) is updated to USD 1.33 by the user; agents cannot edit the plan.
+
+### Pre-session work order (coordinator, 2026-11-10)
+
+Every agent runs Sonnet 5.5 at high effort, edits only its own paths, and returns anything else as `BLOCKED-ON`. No AWS, Anthropic or Voyage call; no reading of `*.local.tfvars`, Terraform state, `~/.aws`, `.env` or secret directories; no raw account ID, email address or key value in any file; no git stash.
+
+Wave 1: experiment-engineer (items 1, 2, 3), infra-engineer (items 4 assembly, 5, 6, 7, 9, 10), rag-engineer (item 8). Wave 2: storage-engineer (offline check of the item 2 ID files against `RuntimeArtifactMain` and the include-list format), documentation-engineer (runbook gaps replaced by the delivered paths and values). Coordinator: item 4 values, extra A notes, records.
+
+### Coordinator decisions from the wave 1 reports (2026-11-10)
+
+- Item 4, `emr_config.runtime_reference`: `docs/agent-runs/phase-12/evidence/12d-spike-closeout/decision-12-10.md` (the accepted record of the proven EMR runtime, `docs/agent-runs/phase-12/human-gate.md:28`; its archive sha256 equals `scripts/config/release.conf:106`). Free text, stamped as the cluster tag `runtime_evidence` (`infra/terraform/modules/emr/main.tf:111`); the value contains no `#`.
+- Item 4, render-config and live-config `templateVersion`: `phase14c-v1`. Nothing in the repository fixes one (`docs/agent-runs/phase-08/evidence/8b-r1/render-config.template.json:10` is a placeholder); it meets `EmbeddingContracts.scala:196-198` (non-blank, no whitespace, at most 256 bytes). It is part of the stable vector slot key, so it must not change after the 14C ingest (a change re-embeds everything).
+- Item 8 / extra A: superseding notes added on top of `evidence/14b/replan/14c-templates.md` and `evidence/14b/replan/fallback-note.md`; the old text is unchanged.
+- Item 2 rework: the storage-engineer's offline `RuntimeArtifactMain` run refused the first include list (39 hub researchers, about 27,000 rows against the 10,000-row cap; exit 1, no artifact written). Routed back to the experiment-engineer: degree band and a total-degree budget of at most 900, all five files regenerated together, verified by a local `RuntimeArtifactMain` run (exit 0).
+- 16B ledger: `load-tests/eval16b.py` charges bucket 16b itself (as `loadgen.py` does for 15B), so the runbook's "reserve first" step is removed for 16B to avoid double counting.
+- Item 10 observation, not routed: `scripts/lib/archive.py` refuses plan files by name; a file named `*.plan.txt` (the runbook's private `deployer-replan.plan.txt`) does not match. No runbook include points at `target/phase14/private`, so it is unreachable today; recorded for the reviewer.

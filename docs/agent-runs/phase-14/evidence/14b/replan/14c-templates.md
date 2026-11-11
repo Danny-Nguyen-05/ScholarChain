@@ -1,5 +1,15 @@
 # 14C templates and disclosures (from rag-engineer, 2026-11-08)
 
+> **Superseded in part (coordinator note, 2026-11-10; user decision "accepts all by default", `prompt.md` pre-session items, extra A and item 8).** The text below is kept unchanged as the 2026-11-08 record; it was written for Titan. Use these replacements, taken from the rag-engineer's pre-session item 8 report (2026-11-10, read-only checks of the code and Terraform; nothing live):
+>
+> - `tables.idempotencyIndex` is the GSI **name**, not a table name: `"idempotencyIndex": "by-idempotency-key"` (default of `query_session_gsi_name`, `infra/terraform/variables.tf:156-160`; use the overridden value if that variable is ever set). The rag config now refuses a blank, malformed or table-equal value (`LiveEmbeddingIngestMain.scala`, `LiveEmbeddingIdempotencyIndexSpec`).
+> - `tables`: `{"runLedger": "<table_names.RunLedger>", "entityLinks": "<table_names.EntityLinkCache>", "querySessions": "<table_names.QuerySession>", "evidence": "<table_names.EvidenceBundle>", "artifacts": "<table_names.ArtifactRegistry>", "metrics": "<table_names.ResearcherMetricCache>", "idempotencyIndex": "by-idempotency-key"}` (the `<prefix>-...` placeholders below do not match the Terraform names).
+> - `model`: `{"modelId": "voyage-4-lite", "version": "voyage-4-lite", "dimension": 256}`; for a Bedrock run only, `amazon.titan-embed-text-v2:0` for both `modelId` and `version`, dimension 256.
+> - Add `"embeddingProvider": "voyage"` (or `"bedrock"` for a Bedrock run) and `"embeddingCapUsd": 0.30` to `live-config.json`, also in the smoke config; a provider/model mismatch is refused (`embedding-provider-model-mismatch`).
+> - `textBucket` = the `bucket_names.rag` output (prefix `embedding-text`; derived from Terraform, unverified live).
+> - The "Titan split" bullet is replaced by: Voyage `voyage-4-lite` at USD 0.02 per 1M tokens; one embedding cap of USD 0.30 shared by ingest (0.25) and query smoke (0.05) through the token counter; the free 200M tokens are still counted; query vectors use the `query` input type with the same model, version tag and dimension 256, and a mismatch is refused.
+> - The Voyage key is read only from env `SCHOLARCHAIN_VOYAGE_API_KEY` when the provider is `voyage`; it is never a config field. Approval JSON fields are unchanged.
+
 The coordinator assembled this from the rag-engineer report. The templates hold placeholders only, and every `true` approval flag is set by the human; shipped templates carry `false`.
 
 ## Ingest live config (`live-config.json`)

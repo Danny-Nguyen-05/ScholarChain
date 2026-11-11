@@ -155,3 +155,34 @@ Plan "Update 2026-11-09": implement the Anthropic API and Voyage AI switch after
 | O2 | Observation | no | documentation-engineer | recorded, not routed: runbook A4 STOP rule (`:345`) still refers to the reference-only lists |
 | N1–N4 | Nonblocking | no | various | listed in review 6, not routed |
 | N6 | Decision | no | user | asked again with the commit (reviewer recommends keeping it) |
+
+## Subphase 14B — pre-session items, review 8: REQUEST-CHANGES (repair round pre-session R1)
+
+| ID | Severity | Blocking | Owner | Status |
+|---|---|---|---|---|
+| B1 | Medium | yes | experiment-engineer, then rag-engineer | routed: replace question 28 ("… strongest bridges in window since-2015?", refused by `QueryPlannerAgent.coveredQuestion`, `QueryPlannerAgent.scala:547-549,354`) with "… strongest bridges since 2015?"; regenerate all five 14C files with `include-ids.txt` byte-identical (sha256 `5d4d99a0…`); update the derive test grammar and `experiments/README.md:121`; rag spec asserting all 40 committed questions are `Planned` through the fallback |
+| B2 | Medium | yes | coordinator | routed: rerun the three billing files one process each as `scripts/check.sh` runs them, `terraform validate`, `git diff --check` and the privacy scan with retained raw logs; retain or drop the clean-clone comparison; restate the `suite_run` failure as an undiagnosed harness difference |
+| N1 | Low | no | experiment-engineer | routed with B1: `load-tests/README.md:116` test count |
+| N2 | Low | no | experiment-engineer | routed as optional: test for `eval16b` `plan_state` shared-cap refusal |
+| N3 | Low | no | coordinator | routed: cost-to-date in owner-report |
+| N4 | Future scope | no | rag-engineer | recorded, not routed: planner coverage regex fails any "in window since-…" phrasing |
+| N5 | Future scope | no | infra-engineer | recorded (already noted): `archive.py` name filter misses `*.plan.txt` |
+| N6 | Accepted deviation | no | — | item 5 wording "to be confirmed live in the session" accepted |
+
+Repair evidence (pre-session R1, awaiting recheck):
+
+| ID | Status | Evidence |
+|---|---|---|
+| B1 | repaired, awaiting recheck | `questions.txt:28` = "Which researchers are the strongest bridges since 2015?"; `include-ids.txt` sha256 `5d4d99a0…` unchanged; `Phase14QuestionSetPlannerSpec` (all 40 `Planned`; rag 196); `evidence/14b/presession/r1/experiment-gates.txt`, `sbt-check-r1-summary.txt` |
+| B2 | repaired, awaiting recheck | retained logs `evidence/14b/presession/r1/{billing-per-file,suite-run-comparison,terraform-validate,diffcheck-privacy}.txt`; cause restated as undiagnosed in `gates-summary.txt` and `test-report.md` X |
+| N1 | repaired | `load-tests/README.md` counts (71 / 17) |
+| N2 | repaired | `test_plan_and_run_refuse_when_the_shared_cap_would_be_passed` |
+| N3 | repaired | `owner-report.md` pre-session R1: cost-to-date USD 0.34 (AWS), Anthropic 0, Voyage 0 |
+
+## Subphase 14B — pre-session R1 recheck, review 9: APPROVE
+
+| ID | Severity | Blocking | Owner | Status |
+|---|---|---|---|---|
+| B1, B2, N1–N3 (review 8) | — | — | — | closed by review 9 |
+| R1 | Low | no | experiment-engineer | repaired: `experiments/README.md:121` now says the 40 questions are checked by the shape test in `experiments/tests/test_derive_14c_inputs.py` and by `Phase14QuestionSetPlannerSpec` (all 40 `Planned` through the fallback); experiments/tests rerun: Ran 51 tests, OK |
+| O1 | Info | no | rag-engineer (future scope, with N4) | recorded: `Phase14QuestionSetPlannerSpec` "regression (N4)" asserts the "in window since-2015" phrasing is refused; it will fail on purpose when N4 is fixed and must then be flipped |

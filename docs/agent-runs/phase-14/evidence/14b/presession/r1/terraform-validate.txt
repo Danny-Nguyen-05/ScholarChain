@@ -1,0 +1,5 @@
+=== CMD: (cd infra/terraform && terraform fmt -check -recursive . ; terraform validate -no-color)
+FMT-EXIT=0
+Success! The configuration is valid.
+
+VALIDATE-EXIT=0

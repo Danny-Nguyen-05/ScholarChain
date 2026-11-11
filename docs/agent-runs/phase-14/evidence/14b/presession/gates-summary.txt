@@ -1,0 +1,61 @@
+Phase 14B pre-session items — coordinator-run gates, 2026-11-10 (branch phase-14, HEAD 13b886ad3eddf684a43e9c92ba030f823a8c2cfd, pre-session work uncommitted)
+AWS neutralized for every command: env -u AWS_PROFILE AWS_EC2_METADATA_DISABLED=true AWS_CONFIG_FILE=/dev/null AWS_SHARED_CREDENTIALS_FILE=/dev/null. Nothing live; no AWS, Anthropic or Voyage call.
+Raw logs (git-ignored): target/phase14/evidence/14b/presession/{sbt-check-1..4.txt,gates.txt}
+
+1. sbt -batch check, JDK 17.0.20.1 (final run 4, after the last source change):
+   EXIT=0; succeeded 207/64/39/53/141/192/113/693/28 = 1,530; failed 0; canceled 1 (the known canceled probe test)
+   "[success] Total time: 788 s (13:08), completed Nov 10, 2026, 5:33:57 PM"
+   Runs 1-3 (taken while agents were still editing) gave the same counts, each EXIT=0.
+
+2. Python suites
+   python3 -I -m unittest discover -s experiments/tests                  Ran 50 tests  OK
+   python3 -I -m unittest discover -s load-tests/tests                   Ran 70 tests  OK
+   python3 -I experiments/scripts/check_manifests.py                     RESULT: OK (placeholders allowed; run with --final before the commit freeze)
+     per-bucket estimates (USD) 14c 0.013650, 15b 0.081900, 16b 0.054600, 17 0.006825, total 0.156975 of the shared cap 1.33
+   python3 -I scripts/lib/suite_run.py --start-dir scripts/tests --pattern <file>:
+     test_archive.py 27 OK; test_emr_service_policy.py 9 OK; test_plan_deltas.py 15 OK; test_syntax.py 20 OK; test_plan.py 54 OK; test_check.py 54 OK
+   Billing, one process per file as scripts/check.sh runs them (python3 -I -X pycache_prefix=<tmp> scripts/billing/tests/<file>):
+     test_budget_execution.py Ran 113 OK; test_budget_verification.py Ran 62 OK; test_publication_evidence.py Ran 39 OK
+     Note: loading test_budget_execution.py through suite_run.py discover gave failures=17 errors=11, identically on a clean clone of 13b886a;
+     scripts/check.sh:280 documents that the billing suites interfere when loaded by one discover, so only the per-file run is the gate.
+   python3 -I scripts/lib/suite_run.py --start-dir tests/infra --pattern 'test_*.py'   ran=460 failures=0 errors=0 skipped=0
+
+3. Terraform 1.13.5 (infra/terraform, mock provider)
+   terraform fmt -check -recursive .   exit 0
+   terraform validate -no-color        Success! The configuration is valid.
+   terraform test -no-color            Success! 272 passed, 0 failed.
+
+4. Whitespace and privacy
+   git diff --check with untracked files intent-added (index restored afterwards; git diff --cached empty): exit 0; 34 files, 3,280 insertions, 63 deletions
+   Added-line scan: 0 twelve-digit numbers (64-hex removed), 0 email addresses, 0 key-shaped tokens or home paths
+   (one hit is a test's own key-detection regex in load-tests).
+
+5. Pin drift (scripts/billing/reviewed-pins.json source_freeze, dry run): 2 rows drift
+   infra/terraform/README.md, infra/terraform/outputs.tf  (refresh by the user after review, before the commit)
+
+Not run here: the full seven-gate scripts/check.sh on a clean snapshot (after review approval, as before); all live behaviour.
+
+==== Pre-session R1 (after review 8: REQUEST-CHANGES B1, B2), 2026-11-10/11 UTC ====
+Retained raw logs: docs/agent-runs/phase-14/evidence/14b/presession/r1/ (copies of target/phase14/evidence/14b/presession/r1/).
+Correction to section 2 above (review 8 B2): the billing per-file passes, the clean-clone comparison and terraform validate stated above
+had no retained raw output. They are rerun below with retained logs. The cause given above was wrong: the failure is an observed harness
+difference whose cause has NOT been diagnosed; scripts/check.sh:280 describes cross-file interference, which does not apply to a one-file run.
+
+R1-1 Billing, one process per file exactly as scripts/check.sh runs them (r1/billing-per-file.txt):
+     test_budget_execution.py Ran 113 OK EXIT=0; test_budget_verification.py Ran 62 OK EXIT=0; test_publication_evidence.py Ran 39 OK EXIT=0
+R1-2 suite_run on test_budget_execution.py alone (r1/suite-run-comparison.txt):
+     working tree: ran=113 failures=17 errors=11; clean clone of 13b886a (0 changed paths): ran=112 failures=17 errors=11;
+     the same 28 failing/erroring test cases in both trees. Not a regression of this round; cause not diagnosed; check.sh does not use this invocation.
+R1-3 terraform fmt -check exit 0; terraform validate "Success! The configuration is valid." exit 0 (r1/terraform-validate.txt)
+R1-4 Experiments (r1/experiment-gates.txt): experiments/tests Ran 51 OK; load-tests/tests Ran 71 OK; check_manifests.py RESULT: OK;
+     derive script twice into scratch dirs: RESULT: OK questions=40 include_ids=40 node_ids=100 both times; diff -r of the two runs clean;
+     diff -r committed experiments/inputs/14c vs run 1 clean; include-ids.txt sha256 5d4d99a0326292221a4414b8f5533c532287f8cbbd37a9bee94e7cf86b645552 (unchanged);
+     questions.txt e4b6d48b060cfb58a2594ca7607bd1185a07b1abf303891c440be574bdb8f67d; provenance.json 6c2dd43f9cdcb1f7cb97277cda13f998877a968ad59334229e40407b80ae6763;
+     line 28 "Which researchers are the strongest bridges since 2015?"; 0 lines contain "in window since-".
+R1-5 sbt -batch check, openjdk 17.0.20.1 (r1/sbt-check-r1-summary.txt): EXIT=0; 207/64/39/53/141/196/113/693/28 = 1,534 succeeded, 0 failed, 1 canceled;
+     "[success] Total time: 729 s (12:09)". Includes Phase14QuestionSetPlannerSpec (4 tests: 40 lines; all 40 Planned through the fallback;
+     the 8 ranking lines with hand-derived operation and window; the old phrasing is Unsupported).
+R1-6 git diff --check with 24 untracked files intent-added, index restored (0 cached before and after): EXIT=0; 45 files, 3,880 insertions, 63 deletions.
+     Privacy scan of added lines: 0 twelve-digit numbers, 0 email addresses, 0 key-shaped tokens; 1 path hit = the repository directory in
+     review 8's verbatim next prompt (r1/diffcheck-privacy.txt).
+Pin drift unchanged: 2 of 209 (infra/terraform/README.md, infra/terraform/outputs.tf); not refreshed (review 8 next prompt (d)).

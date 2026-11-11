@@ -2,7 +2,7 @@
   "schema": "scholarchain.llm-evaluation-placeholder.v1",
   "id": "16b-live-evaluation",
   "status": "placeholder",
-  "description": "Placeholder for the Phase 16B live evaluation on the deployed stack. Only the LLM answer budget and its link to the shared claude-haiku-5-5 (Anthropic API) cap are fixed here. The benchmark questions, retrieval modes, metrics and groundedness checks are defined by the Phase 16 work order and the rag/test owners; this file must be replaced by a full manifest before 16B runs.",
+  "description": "Placeholder for the Phase 16B live evaluation on the deployed stack. Only the LLM answer budget and its link to the shared claude-haiku-5-5 (Anthropic API) cap are fixed here. The benchmark questions, retrieval modes, metrics and groundedness checks are defined by the Phase 16 work order and the rag/test owners; the command that asks the 40 fixed questions is load-tests/eval16b.py (see the command block); this file must be replaced by a full manifest before 16B grading is defined.",
   "region": "us-east-2",
   "llm": {
     "answers": 40,
@@ -17,13 +17,22 @@
       "enforcement": "the evaluation's embedding calls add their tokens to a token counter and stop before the USD 0.30 cap; stored and query vectors must share provider, model and dimension"
     },
     "cost_reporting": "AWS, Anthropic and Voyage reported as separate items, then the combined total; a provider with no charge is USD 0 with its usage noted",
-    "enforcement": "run `python3 -I load-tests/llm_budget.py reserve --bucket 16b --answers N` before every LLM-calling command; it refuses when the bucket or the USD 1.33 total would be exceeded; `release` returns unused answers"
+    "enforcement": "python3 -I load-tests/eval16b.py run charges bucket 16b itself (one ledger answer line before every request, under the ledger lock) and refuses to start when its questions exceed the bucket's remaining answers or the USD 1.33 total; do NOT also run `llm_budget.py reserve --bucket 16b` for it (that would count each answer twice); any other program that calls the model for 16B must first run `python3 -I load-tests/llm_budget.py reserve --bucket 16b --answers N`; `release` returns unused answers"
   },
   "open_items": [
-    "benchmark question file and expected evidence (Phase 16A/16B work order)",
-    "retrieval modes to compare (graph-only, vector-only, fused) and the measurements the report needs",
     "who runs it and the approval record path",
+    "retrieval modes to compare (graph-only, vector-only, fused) and the measurements the report needs",
     "the Voyage embedding token counter and the retrieval modes that embed (vector-only, fused) for the evaluation",
-    "whether the 40-answer figure is enough; a change is a user-approved transfer between buckets (llm_budget.py transfer), never automatic"
-  ]
+    "whether the 40-answer figure is enough; a change is a user-approved transfer between buckets (llm_budget.py transfer), never automatic",
+    "grading of the raw answers (groundedness, correctness): Phase 16 work order and the rag/test owners; eval16b.py only collects answers"
+  ],
+  "command": {
+    "plan": "python3 -I load-tests/eval16b.py plan",
+    "run": "python3 -I load-tests/eval16b.py run --run-id <run-id>",
+    "questions_file": "experiments/inputs/14c/questions.txt",
+    "questions_note": "the same 40 fixed questions the 15B load generator cycles through (one file, one include list); the 16B run asks each once, in file order, so the 40 answers of bucket 16b are used exactly",
+    "raw_results": "target/experiment-runs/16b-live-evaluation-<run-id>/raw/ (answers.jsonl, events.jsonl, run-record.json, raw.sha256)",
+    "needs": "SCHOLARCHAIN_LOAD_BASE_URL and SCHOLARCHAIN_LOAD_API_KEY in the shell; the ledger created once with llm_budget.py init; the questions' researchers loaded in the runtime artifact (experiments/inputs/14c/include-ids.txt)",
+    "method_note": "the runtime artifact is a bounded subset (the 40 listed researchers plus degree-fill up to the row cap), so ranking questions rank only the researchers included in it and differ from corpus-wide ranks; report them as rankings within the artifact"
+  }
 }

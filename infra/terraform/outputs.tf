@@ -29,6 +29,9 @@ output "phase12b_controls" { value = {
   deployment_contract = module.runtime.deployment_contract
 } }
 output "embedding_dispatch_arn" { value = module.workflow.arn }
+# The S3 Vectors bucket name (scholarchain-<environment>-<account>-vectors) for the 8C ingest and the awsIntegration configuration, so the
+# runbook reads it from here instead of deriving it from an IAM policy. No resource change: it is the existing module output.
+output "vector_bucket_name" { value = module.s3vectors.bucket_name }
 
 # ---- Replan W5b: what the human needs after base-apply and runtime-apply (no secret values) ----
 # The DNS validation record(s) of the API certificate: add each as a Cloudflare CNAME, "DNS only" (not proxied), BEFORE runtime-apply.

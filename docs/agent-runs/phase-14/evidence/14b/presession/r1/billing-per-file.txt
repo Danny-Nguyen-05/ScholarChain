@@ -1,0 +1,19 @@
+date: 2026-11-11T01:41:39Z  HEAD: 13b886ad3eddf684a43e9c92ba030f823a8c2cfd  python: Python 3.14.5
+=== CMD (as scripts/check.sh): python3 -I -X pycache_prefix=<tmp> scripts/billing/tests/test_budget_execution.py
+----------------------------------------------------------------------
+Ran 113 tests in 26.767s
+
+OK
+EXIT=0
+=== CMD (as scripts/check.sh): python3 -I -X pycache_prefix=<tmp> scripts/billing/tests/test_budget_verification.py
+----------------------------------------------------------------------
+Ran 62 tests in 34.474s
+
+OK
+EXIT=0
+=== CMD (as scripts/check.sh): python3 -I -X pycache_prefix=<tmp> scripts/billing/tests/test_publication_evidence.py
+----------------------------------------------------------------------
+Ran 39 tests in 0.315s
+
+OK
+EXIT=0

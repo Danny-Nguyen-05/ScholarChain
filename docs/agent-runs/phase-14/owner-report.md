@@ -529,3 +529,39 @@ The infra-engineer ran `git stash` and `git stash pop` once while other agents w
 - Key-entry method (runbook B3b): AWS console with the user's own identity (coordinator default) or `file:///dev/stdin`.
 - The infra-engineer's USD 25 receipt arithmetic check (added beyond the work order; it refuses a receipt whose headroom exceeds 25 minus recorded spend and reserves; it does not block spending).
 - The synthesis cap stays 1.33 against the plan's 1.50 (Step 0 answer 3).
+
+## Subphase 14B — pre-session items (after review 7 APPROVE; round 3 committed as `13b886a`)
+
+Base SHA `13b886a` (branch `phase-14`). Decisions: `prompt.md`, "Subphase 14B — pre-session items" (user: "accepts all by default") and "Coordinator decisions from the wave 1 reports". Every agent ran Sonnet 5.5 at high effort; none ran live commands, made AWS, Anthropic or Voyage calls, read secrets, used git stash, changed the index or committed.
+
+| Owner | Items | Delivered | Agent-reported gate |
+|---|---|---|---|
+| experiment-engineer | 1, 2, 3 | `experiments/inputs/15a/config-sources.json` (the three committed EMR config files with sha256); `experiments/scripts/derive_14c_inputs.py` and the committed `experiments/inputs/14c/` (40 include IDs, `real-query.json`, 40 questions, 100 node IDs, provenance); `load-tests/eval16b.py` (16B command, charges bucket 16b itself; `plan` makes no network call); README and 16B manifest updates. Item 2 was reworked once (degree band 10..22, total-degree budget 900; include total 813) after the storage check refused the first list | experiments/tests 50 OK, load-tests/tests 70 OK, `check_manifests.py` OK; local `RuntimeArtifactMain` exit 0, `SELECTION: rows=9643 bytes=9633173 researchers=41 (include-list=40 fill=1)` |
+| storage-engineer | 2 (check) | Offline check: include-list format conforms (`RuntimeArtifactSubset.scala:19-37`); first list refused on the 10,000-row cap (`include-list-exceeds-cap`, exit 1); every node ID and named researcher resolves; verified the degree-band fix. No storage code changed | local `RuntimeArtifactMain` runs only (target/) |
+| rag-engineer | 8 | `idempotencyIndex` confirmed as the GSI name `by-idempotency-key` (`infra/terraform/variables.tf:156-160`, consumed in `modules/storage`); guard in `LiveEmbeddingConfig` refusing a blank, malformed or table-equal value; `LiveEmbeddingIdempotencyIndexSpec` (3); replacement text for the stale 14C template fields | rag 192 passed, 0 failed |
+| infra-engineer | 4, 5, 6, 7, 9, 10 | `scripts/lib/emr_service_policy.py` (render and check of `emr_service_policy_json`) and tests; billing login wording "to be confirmed live in the session"; 28 (modify gate) and 29 (post-modify verification gate) both correct, cross-referenced and pinned by tests; output `vector_bucket_name`; offline expected plan deltas (`phase14b_plan_deltas.tftest.hcl`, `scripts/config/expected-plan-deltas.json`, `scripts/lib/plan_deltas.py` checker); archive refuses plan files and same-named receipts (two tests) | terraform test 272 passed; scripts/tests archive 27, emr_service_policy 9, plan_deltas 15; billing 113/62/39; tests/infra 460 |
+| documentation-engineer | runbook for 1–10, O2 | Every "Gap" note for the 10 items replaced (count 0); A1, A3, A8, A10, A12, B8.3–B8.6, B9.1–B9.3, B11, B13.3 updated; `templateVersion` `phase14c-v1` in render-config only; B13.3 numbered receipt copies; A4 STOP rule (review 7 O2) | `git diff --check` clean; link and privacy checks clean |
+
+Coordinator: recorded the user's answers and the item 4 values (`runtime_reference`, `templateVersion`), added superseding notes on top of `evidence/14b/replan/14c-templates.md` and `fallback-note.md` (old text unchanged), routed the item 2 rework, answered the `templateVersion` question, and ran the gates in `test-report.md` ("Pre-session items").
+
+### Open for the user
+
+- Review the 40 questions in `experiments/inputs/14c/questions.txt` and the smoke question (`real-query.json`, "Songwu Lu") before the commit freeze.
+- Pin refresh before the commit: 2 rows drift (`infra/terraform/README.md`, `infra/terraform/outputs.tf`).
+- Your plan file still says the synthesis cap is USD 1.50; the decided cap is 1.33 (extra D).
+- Not routed (recorded): the archive name filter does not match `*.plan.txt` (no runbook include reaches `target/phase14/private`); review 7 O1 (Voyage 2048 dimensions refused at preflight); N1–N4.
+
+## Subphase 14B — pre-session R1 (review 8: REQUEST-CHANGES B1, B2)
+
+Base `13b886a`. Every agent ran Sonnet 5.5 at high effort; no live command, no AWS, Anthropic or Voyage call, no secrets read, no git stash, no index change, no commit.
+
+| Owner | Finding | Delivered | Agent-reported gate |
+|---|---|---|---|
+| experiment-engineer | B1, N1, N2 | Question 28 replaced in `derive_14c_inputs.py`; `questions.txt` and `provenance.json` regenerated (other three files byte-identical); shape test plus a test that no question has an `in window since-` id; `experiments/README.md` no longer claims the 40 are in the planner grammar without the real-planner check; `load-tests/README.md` counts; shared-cap refusal test for `eval16b` | experiments 51 OK, load-tests 71 OK |
+| rag-engineer | B1 | `Phase14QuestionSetPlannerSpec`: all 40 committed questions `Planned` through the fallback; 8 ranking lines with hand-derived operation, metric, measure and window; old phrasing `Unsupported` (documents N4); `QueryPlannerAgent` unchanged | rag 196 |
+| documentation-engineer | — | Not needed: the runbook and the 16B manifest do not quote the changed question or its hash | — |
+| coordinator | B2, N3 | Reran the billing files per file, the `suite_run` comparison on a clean clone, Terraform fmt/validate, the experiment gates, `sbt check`, `git diff --check` and the privacy scan with retained logs (`evidence/14b/presession/r1/`); corrected the W2 cause statement in an appended section | see `test-report.md` X2 |
+
+**Cost-to-date (N3).** No spend this round: every step was offline. Cost-to-date is unchanged at the last recorded figure, USD 0.34 (AWS, `approval-request-14b-replan.md` §1 and §3.2), with Anthropic USD 0 and Voyage USD 0 (no key exists yet); combined USD 0.34 of the USD 25 ceiling.
+
+Not routed: N4 (planner coverage regex and "in window since-…" phrasing, rag-engineer, future scope); N5 (`*.plan.txt` archive name filter, infra-engineer, future scope). N6 accepted.

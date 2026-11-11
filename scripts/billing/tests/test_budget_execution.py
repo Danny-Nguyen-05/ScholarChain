@@ -1508,6 +1508,23 @@ class ModifyFeatures(Harness):
             b.Execution(self.policy, now=lambda: NOW).load_modify_gate(self.gate_path, '0'*64, 'modify-fixture')
         self.assertEqual(self.calls(), [])
 
+    def test_modify_gate_has_exactly_28_fields_and_each_one_is_required(self):
+        # Pins the count the README states ("28 fields"): the fixture gate is the full schema, it loads, removing any one
+        # field is refused as GATE_SCHEMA, and so is adding one. The verification gate (29 fields) is a different schema.
+        self.assertEqual(len(self.mgate), 28)
+        self.write(self.gate_path, json.dumps(self.mgate))
+        b.Execution(self.policy, now=lambda: NOW).load_modify_gate(self.gate_path, b.hash_file(self.gate_path), 'modify-fixture')
+        for field in sorted(self.mgate):
+            with self.subTest(missing=field):
+                gate = dict(self.mgate); del gate[field]
+                self.write(self.gate_path, json.dumps(gate))
+                with self.assertRaisesRegex(b.Blocked, 'GATE_SCHEMA'):
+                    b.Execution(self.policy, now=lambda: NOW).load_modify_gate(self.gate_path, b.hash_file(self.gate_path), 'modify-fixture')
+        readme = (ROOT / 'README.md').read_text(encoding='utf-8')
+        self.assertIn('own gate schema (28 fields,', readme)
+        self.assertIn('29 fields', readme)
+        self.assertEqual(self.calls(), [])
+
     def test_create_gate_cannot_authorize_modify_and_modify_gate_cannot_authorize_create(self):
         self.write(self.gate_path, json.dumps(self.gate))
         with self.assertRaises(b.Blocked):

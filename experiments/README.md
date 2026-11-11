@@ -10,13 +10,16 @@ Run all commands from the repository root with `python3 -I`.
 |---|---|
 | `manifests/15a-emr-size-{25,50,100}.json` | the three EMR runs; schema `scholarchain.experiment-manifest.v1`, accepted by `scripts/run-experiment.sh` |
 | `manifests/15b-ecs-scaling.json` | query-api scale-out / scale-in driven by `load-tests/loadgen.py`; schema `scholarchain.load-experiment-manifest.v1` (run-experiment.sh is EMR-only and cannot take it) |
-| `manifests/16b-live-evaluation.json` | 16B placeholder: only the LLM answer budget, the Voyage embeddings allowance and their tie to the shared claude-haiku-5-5 cap |
+| `manifests/16b-live-evaluation.json` | 16B placeholder: the LLM answer budget, the Voyage embeddings allowance, their tie to the shared claude-haiku-5-5 cap and the command (`load-tests/eval16b.py`) that asks the 40 questions |
 | `manifests/llm-allocation.json` | proposed split of the USD 1.33 claude-haiku-5-5 (Anthropic API) cap across 14C, 15B and 16B |
 | `inputs/15a/prep-config.json`, `datasets.json` | the Hadoop prep config and the dataset snapshot manifest the 15A manifests name |
+| `inputs/15a/config-sources.json` | the repository files used for `--er-policy`, `--er-config`, `--spark-config-template` (paths and sha256; item 1 of the 14B pre-session list) |
+| `inputs/14c/` | the real include list, smoke body, 40 questions and node IDs derived from export `f6e63b4b`, with a provenance file |
+| `scripts/derive_14c_inputs.py` | derives `inputs/14c/` from the local Phase 6 export (deterministic) |
 | `scripts/make_dblp_subsets.py` | builds the three input trees locally from the real Phase 6 slice |
 | `scripts/render_manifests.py` | renders the 15A manifests (tokens for buckets and run prefix; real artifact hashes) |
 | `scripts/check_manifests.py` | offline validation of every manifest and the cost arithmetic |
-| `tests/test_experiments.py` | 24 tests |
+| `tests/test_experiments.py`, `tests/test_derive_14c_inputs.py` | 28 + 23 tests |
 
 ## 15A: three EMR runs at three dataset sizes
 
@@ -78,7 +81,7 @@ python3 -I experiments/scripts/check_manifests.py --final      # must print RESU
 
 ```bash
 python3 -I experiments/scripts/check_manifests.py               # offline; exit 0 ok, 1 failed, 3 blocked by a pinned ceiling
-python3 -I -m unittest discover -s experiments/tests -v         # 24 tests
+python3 -I -m unittest discover -s experiments/tests -v         # 51 tests
 # after the manifests are final and committed (dry run: no aws call, prints every EMR step; needs the cluster id of the Terraform cluster):
 scripts/run-experiment.sh --manifest experiments/manifests/15a-emr-size-25.json --cluster-id <j-id>
 # execute only with the approval record and pre-spend receipt, one run at a time, in order 25, 50, 100:
@@ -88,6 +91,53 @@ scripts/run-experiment.sh --manifest experiments/manifests/15a-emr-size-25.json 
 Raw results of a run: `target/experiment-runs/<experiment-id>-<run>/experiment-record.json`, `experiment-result.json` and the pipeline outputs listed in the pipeline run manifest. Archive with `scripts/archive-evidence.sh`. A failed run keeps its record; rerun is a new run with a new approval record (approvals are single use), and counts against the 3-run ledger.
 
 Known blocker (owner infra-engineer): `scripts/config/release.conf` pins `PIPELINE_CEILING_MAX_LOCAL_SAMPLE_RECORDS=1000`, and `maxLocalSampleRecords` is a whole-step record bound in `HadoopPrepMain`, so the 2,648 to 10,577 publication inputs cannot run under it. The prep config sets 12,000 (no truncation at 100 percent: 10,577 plus the small samples). `check_manifests.py` reports it as `CHECK-BLOCKED` (exit 3). With a copy of the config pinned to 12,000 the real `run-bounded-pipeline.sh` dry run for the 100 percent manifest succeeds (`ESTIMATE-USD: 0.84`, no aws call).
+
+## Local configuration files for the EMR upload (`--er-policy`, `--er-config`, `--spark-config-template`)
+
+Decision (user, 2026-11-10): use the files that already exist in the repository from the Phase 5/6 local runs; no new settings. `inputs/15a/config-sources.json` lists them and `tests/test_derive_14c_inputs.py` fails if one changes.
+
+| Flag | Repository file | sha256 |
+|---|---|---|
+| `--er-policy` | `modules/entity-resolution/src/main/resources/phase5-policy.v1.json` (policy `er-offline-uncalibrated-v2`, the version in the lineage of export `f6e63b4b`) | `2d3d12e7489b18437f96b09754709100cbc3529ffd4fcfd0ff6807db87f2a93f` |
+| `--er-config` | `docs/agent-runs/phase-06/evidence/6fg/local-er-config.json` (byte-identical to the ignored `target/phase6-inputs/6fg-runtime/er-config.json` of the Phase 6 run; LLM adjudication disabled) | `a07abd84cbe0e5d30b06726a73535df4c7aa51a0020d059954d9b7f9ab79832c` |
+| `--spark-config-template` | `docs/agent-runs/phase-06/evidence/6fg/local-spark-first-config.json` (byte-identical to the ignored `target/phase6-inputs/6fg-runtime/spark-first.json`; `sc-render-spark-config.py` replaces its four path keys per run) | `753adaeccd524d4fdfa6028bb0a7af6394e461021dfb013587a87c24eafcf458` |
+
+The same three values are the `--sha er-policy=`, `--sha er-config=` and `--sha spark-config-template=` arguments of `render_manifests.py`. `scripts/upload-emr-artifacts.sh` hashes the files itself, so its `EMR-RENDER` lines print these values when the three paths above are passed. Neither script takes a default path, so the paths are passed explicitly. Limitations: the template is the Phase 6 first-run config (4 shuffle partitions, local paths in the four replaced keys, which are uploaded to the artifacts bucket as text); the 14C export used a derived config with 64 shuffle partitions that is git-ignored and not part of this decision.
+
+## Real 14C / 15B / 16B inputs (`inputs/14c/`)
+
+Derived once from the local, git-ignored export `target/phase6-runs/14c-spark-export-capped/run:f6e63b4b-d542-4a32-930c-f21f002cba76` by a committed, deterministic script (stdlib; no Parquet reader needed because it reads the plain-CSV Neptune sidecar; the sha256 of every file it read equals the committed `real-slice-export.sha256`):
+
+```bash
+python3 -I experiments/scripts/derive_14c_inputs.py \
+    --export-dir "target/phase6-runs/14c-spark-export-capped/run:f6e63b4b-d542-4a32-930c-f21f002cba76" \
+    --out-dir experiments/inputs/14c            # refuses to overwrite; --overwrite replaces; same input gives identical bytes
+```
+
+| File | Content | Used by |
+|---|---|---|
+| `include-ids.txt` | 40 `researcher:dblp:<hash>` IDs, sorted: every researcher named in the questions plus the smoke subject; total all-years degree 813 (budget 900) | `RuntimeArtifactMain --include-ids` (14C artifact) |
+| `real-query.json` | `{"question":"Who are the direct coauthors of \"Songwu Lu\"?","output":{"includeScores":false}}` | `scripts/smoke-test.sh --query-body` |
+| `questions.txt` | 40 fixed questions (14 direct coauthors, 8 component, 10 shortest path, 8 ranking), shaped after the planner's request grammar (checked by the shape test in `experiments/tests/test_derive_14c_inputs.py` and by `Phase14QuestionSetPlannerSpec` in the rag module, which loads the committed file and asserts all 40 are `Planned` through the planner's fallback, using an always-failing model client and the default runtime config) | 15B (`--questions-file`, cycled) and 16B (`eval16b.py`, each once) |
+| `node-ids.txt` | 100 IDs (60 researchers, 40 works), chosen inside the include-list closure: the 40 named researchers, then their coauthors by (-degree, id), and works authored by the named researchers | `loadgen.py --node-ids-file` |
+| `provenance.json` | export run id, sha256 of the 58 files read, the selection rule including the degree band 10..22 and budget 900, counts (including `include_total_degree`), sha256 and line count of every output | review |
+
+Selection rule (full text in the script docstring): degree is the number of distinct all-years coauthors. A researcher is eligible when the display name is unique among all researcher nodes (the runtime name resolver would otherwise answer "ambiguous"), is plain ASCII letters, **and the degree is in the band 10 to 22**. The pool is the 80 highest-degree eligible researchers (ties by ID); the 22 subjects are spread over the pool; path pairs are 5 strongest direct coauthor pairs and 5 two-hop pairs. IDs, DBLP author names (CC0) and question text only.
+
+Degree budget (why): the runtime artifact is capped at 10,000 rows and 16 MiB, and the first version of this list (hubs such as a degree-247 researcher, about 2,200 rows alone) was refused by `RuntimeArtifactMain` (`include-list-exceeds-cap`, row cap). The artifact needs about 9 to 12 rows per unit of all-years degree of each included researcher, so the script refuses to write anything when the include list's total degree passes `--degree-budget` (default 900). The committed list has total degree 813.
+
+Offline check (experiments engineer, 2026-11-10, no AWS; output only under `target/`): `RuntimeArtifactMain --source <export> --include-ids experiments/inputs/14c/include-ids.txt --out-dir target/phase14/14c-work-check/<fresh dir>` exited 0, report status `written`, `SELECTION: rows=9643 bytes=9633173 researchers=41 (include-list=40 fill=1) includeListSha256=5d4d99a0326292221a4414b8f5533c532287f8cbbd37a9bee94e7cf86b645552`. The 40 listed researchers' closures need about 7.3 thousand rows; the degree fill then added one hub researcher (degree 247) up to the cap.
+
+## 16B live evaluation (`load-tests/eval16b.py`)
+
+One command asks the 40 questions of `inputs/14c/questions.txt` once each, in file order, through `POST /v1/query`, and charges bucket 16b itself (do not also run `llm_budget.py reserve --bucket 16b`; see `load-tests/README.md`). The 15B load generator uses the same file (and cycles it for its 60 answers), because one file means one include list and one artifact covers both steps; a separate 16B file would only help if the 16B set had to differ from 15B.
+
+**Method note for the 16B report:** the runtime artifact is a bounded subset (40 listed researchers, one fill researcher, 9,643 rows), not the corpus. The ranking questions (most distinct coauthors, largest team size, strongest bridges, repeated collaborations, with their window variants) rank only the researchers included in the artifact, so their answers differ from corpus-wide ranks; the storage README states that rankings are exact only within the included population. Report them as rankings within the artifact, and compare against the artifact's own contents, not the full Phase 6 export. Direct-coauthor, component and path questions about the 40 listed researchers are answered from their complete closures.
+
+```bash
+python3 -I load-tests/eval16b.py plan                                  # no network, no key; prints the bucket state and the cost estimate
+python3 -I load-tests/eval16b.py run --run-id <run-id>                 # needs SCHOLARCHAIN_LOAD_BASE_URL and SCHOLARCHAIN_LOAD_API_KEY in the shell
+```
 
 ## 15B: ECS scale-out and scale-in on query-api
 

@@ -1,0 +1,22 @@
+{
+  "decision": "Phase 14B pre-session item 1 (user, 2026-11-10): use the files already in the repository from the Phase 5/6 local runs; no new settings",
+  "files": {
+    "er-config": {
+      "origin": "committed copy of target/phase6-inputs/6fg-runtime/er-config.json (byte-identical, same sha256), the --config of the Phase 6 local ER run; llm adjudication disabled (deterministic-fake provider, maxSpendUsd 0.0)",
+      "path": "docs/agent-runs/phase-06/evidence/6fg/local-er-config.json",
+      "sha256": "a07abd84cbe0e5d30b06726a73535df4c7aa51a0020d059954d9b7f9ab79832c"
+    },
+    "er-policy": {
+      "origin": "Phase 5 policy er-offline-uncalibrated-v2; passed as --policy to Phase5Main in the Phase 6 local run (docs/agent-runs/phase-06/evidence/6fg/er-run.txt) and named in the run lineage of export f6e63b4b",
+      "path": "modules/entity-resolution/src/main/resources/phase5-policy.v1.json",
+      "sha256": "2d3d12e7489b18437f96b09754709100cbc3529ffd4fcfd0ff6807db87f2a93f"
+    },
+    "spark-config-template": {
+      "origin": "committed copy of target/phase6-inputs/6fg-runtime/spark-first.json (byte-identical), the Phase 6 first Spark run config; scripts/emr/sc-render-spark-config.py replaces its four path keys hadoopRunRoot, entityResolutionRunRoot, outputRoot, checkpointDirectory at run time",
+      "path": "docs/agent-runs/phase-06/evidence/6fg/local-spark-first-config.json",
+      "sha256": "753adaeccd524d4fdfa6028bb0a7af6394e461021dfb013587a87c24eafcf458"
+    }
+  },
+  "schema": "scholarchain.experiment-config-sources.v1",
+  "usage": "scripts/upload-emr-artifacts.sh --er-policy <er-policy path> --er-config <er-config path> --spark-config-template <spark-config-template path>; the sha256 values are the --sha er-policy / er-config / spark-config-template values for experiments/scripts/render_manifests.py; experiments/tests/test_derive_14c_inputs.py fails if a file drifts"
+}
