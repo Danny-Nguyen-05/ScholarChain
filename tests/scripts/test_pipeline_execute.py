@@ -205,7 +205,8 @@ class PipelineExecute(unittest.TestCase):
 
     def test_test_deadline_is_ignored_without_the_test_config(self):
         fx = self.fx()
-        # the repository config is in force: the run is refused at the G6 gate (pricing unconfirmed), never run
+        # the repository config is in force: the run is refused (at the G6 gate while the committed pricing flag is false, at a later
+        # gate once the human has set it true), never run; the test deadline is ignored either way
         args, _ = fx.exec_ready()
         fx.log.write_text("")
         r = fx.run("run-bounded-pipeline.sh", args, {"AWS_PROFILE": "p", "SCHOLARCHAIN_TEST_DEADLINE_SECONDS": "1"})

@@ -41,6 +41,15 @@ def read_json(path):
         return json.load(handle)
 
 
+def zero_artifact_hashes(manifest):
+    """The renderer writes exactly one set of sha256 values: pipeline.artifact_sha256 (one per artifact name). Returns a copy with each set to 64 zeros,
+    which makes a committed manifest comparable whether it carries the all-zero placeholders or real hashes."""
+    zeroed = json.loads(json.dumps(manifest))
+    for name in zeroed["pipeline"]["artifact_sha256"]:
+        zeroed["pipeline"]["artifact_sha256"][name] = "0" * 64
+    return zeroed
+
+
 def write_text(path, text):
     os.makedirs(os.path.dirname(path), exist_ok=True)
     with open(path, "w", encoding="utf-8") as handle:
@@ -235,6 +244,8 @@ class RenderAndCheck(Fixture):
 
     def test_zero_hashes_pass_the_normal_check_but_fail_final(self):
         self.set_pin("PIPELINE_CEILING_MAX_LOCAL_SAMPLE_RECORDS", "12000")
+        with contextlib.redirect_stdout(io.StringIO()):  # the committed manifests may carry real hashes: start from the default all-zero render
+            self.assertEqual(render.main(["--out-dir", os.path.join(self.root, "experiments", "manifests"), "--overwrite"]), 0)
         failed, blocked, lines = self.run_check(final=False)
         self.assertFalse(failed or blocked, "\n".join(lines))
         failed, blocked, lines = self.run_check(final=True)
@@ -323,7 +334,8 @@ class RenderAndCheck(Fixture):
             self.assertEqual(render.main(["--out-dir", target]), 1)  # exists
             self.assertEqual(render.main(["--out-dir", target + "2", "--sha", "job-jar=xyz"]), 1)
             self.assertEqual(render.main(["--out-dir", target + "3", "--sha", "unknown=" + HEX_A]), 1)
-        self.assertEqual(read_json(os.path.join(target, "15a-emr-size-25.json")), read_json(os.path.join(EXPERIMENTS, "manifests", "15a-emr-size-25.json")))
+        committed = read_json(os.path.join(EXPERIMENTS, "manifests", "15a-emr-size-25.json"))
+        self.assertEqual(read_json(os.path.join(target, "15a-emr-size-25.json")), zero_artifact_hashes(committed))  # equal in structure whether the committed hashes are zero or real
 
 
 class SubsetBuilder(unittest.TestCase):

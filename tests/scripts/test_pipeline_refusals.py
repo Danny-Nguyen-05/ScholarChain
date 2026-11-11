@@ -310,22 +310,51 @@ class PipelineG6Refusals(Base):
         self.assert_refused(run, step="g6-gate")
         self.assertIn("pricing", run.result.lower())
 
-    def test_committed_pricing_file_is_unconfirmed_so_execute_refuses_with_the_repository_config(self):
+    def test_repository_pricing_file_is_read_as_is_and_cannot_be_replaced_without_the_test_config(self):
+        """The committed scripts/config/emr-pricing.conf is the file the pipeline reads under the repository config. Its flag line
+        is exactly true or false (the human sets it; the value is not asserted here, so the test holds in both states), a
+        SCHOLARCHAIN_PRICING_FILE without the test-only SCHOLARCHAIN_CONFIG_FILE is ignored (announced), and a copy of the committed
+        file with the flag rewritten to false refuses --execute at the g6-gate with a pricing reason."""
         fx = self.fx()
+        committed = (S.REPO / "scripts/config/emr-pricing.conf").read_text()
+        flags = re.findall(r"^EMR_PRICING_CONFIRMED_BY_HUMAN=(.*)$", committed, re.M)
+        self.assertEqual(len(flags), 1, "exactly one EMR_PRICING_CONFIRMED_BY_HUMAN line expected")
+        self.assertIn(flags[0], ("true", "false"))
         args, _ = fx.exec_ready()
+        # (a) a false copy offered under the repository config is not honoured: announced and ignored, so the committed value decides
         fx.log.write_text("")
-        run = fx.run("run-bounded-pipeline.sh", args, {"AWS_PROFILE": "test-profile"})
+        false_copy = fx.pricing_file(confirmed=False)
+        self.assertEqual(len(re.findall(r"^EMR_PRICING_CONFIRMED_BY_HUMAN=false$", false_copy.read_text(), re.M)), 1)
+        ignored = fx.run("run-bounded-pipeline.sh", args, {"AWS_PROFILE": "test-profile", "SCHOLARCHAIN_PRICING_FILE": str(false_copy)})
+        self.assertIn("PRICING-FILE-IGNORED", ignored.out, ignored.describe())
+        self.assertNotIn("PRICING-FILE: using", ignored.out, ignored.describe())
+        self.assertEqual(ignored.rc, 3, ignored.describe())
+        self.assertEqual(ignored.calls, [], "a fake binary was called before the refusal: %s" % ignored.calls)
+        if flags[0] == "false":
+            self.assertIn("step=g6-gate", ignored.result, ignored.describe())
+            self.assertIn("pricing", ignored.result.lower())
+        else:
+            self.assertNotIn("pricing", ignored.result.lower(), "the ignored false copy must not make the committed true file refuse as unconfirmed\n" + ignored.describe())
+        # (b) a copy of the committed file with the flag false, through the documented test config, refuses at the g6-gate
+        fx.log.write_text("")
+        run = fx.run("run-bounded-pipeline.sh", args, fx.exec_env(confirmed=False))
         self.assert_refused(run, step="g6-gate")
         self.assertIn("pricing", run.result.lower())
 
     def test_environment_cannot_confirm_pricing_or_inject_rates(self):
+        """Run against a copy of the committed pricing file with the flag rewritten to false (test config), so the outcome does not
+        depend on the flag value the human has committed: the environment's true flag and a 0.0001 rate are ignored."""
         fx = self.fx()
         args, _ = fx.exec_ready()
         fx.log.write_text("")
-        run = fx.run("run-bounded-pipeline.sh", args, {"AWS_PROFILE": "p", "EMR_PRICING_CONFIRMED_BY_HUMAN": "true",
-                                                      "EMR_RATE_EC2_M5_XLARGE": "0.0001"})
+        env = fx.exec_env(confirmed=False)
+        env.update({"AWS_PROFILE": "p", "EMR_PRICING_CONFIRMED_BY_HUMAN": "true", "EMR_RATE_EC2_M5_XLARGE": "0.0001"})
+        run = fx.run("run-bounded-pipeline.sh", args, env)
         self.assert_refused(run, step="g6-gate")
+        self.assertIn("pricing", run.result.lower())
         self.assertIn("CONFIG-IGNORED", run.out)
+        self.assertIn("EMR_PRICING_CONFIRMED_BY_HUMAN", run.out)
+        self.assertIn("EMR_RATE_EC2_M5_XLARGE", run.out)
         self.assertIn("ESTIMATE-USD: 0.60", run.out)
 
     def test_missing_rate_is_never_zero(self):

@@ -752,3 +752,56 @@ env -u AWS_PROFILE AWS_EC2_METADATA_DISABLED=true AWS_CONFIG_FILE=/dev/null AWS_
 - Coordinator check after the refresh: 209 pinned, 0 drifted; JSON valid; `git diff --check` exit 0.
 - Billing suites (the only readers of the pins): `test_budget_execution.py` 113 OK; `test_budget_verification.py` 62 OK; `test_publication_evidence.py` 39 OK.
 - The pin file changed after snapshot 12, so the snapshot 12 run does not cover it; the three billing suites above do. Evidence: `evidence/14b/presession/pin-refresh.txt`.
+
+## Subphase 14B — runbook A1 preparation (after commit 2eb30ef)
+
+Nothing live; no AWS, Anthropic or Voyage call. The human set the pricing flag (A1.3) and confirmed `approval-14c.md` (A1.5); agents changed tests only.
+
+### Z1. A1.4 render: experiment test fix
+
+After the real JAR hashes were rendered into `experiments/manifests/15a-emr-size-{25,50,100}.json`, 2 experiment tests that assumed placeholder hashes failed. experiment-engineer changed only `experiments/tests/test_experiments.py` (helper `zero_artifact_hashes`; the zero-hash test renders its own all-zero manifests first). Coordinator rerun: `python3 -I -m unittest discover -s experiments/tests` → `Ran 51 tests`, `OK`, EXIT 0 (raw log `target/phase14/evidence/14b/a1-experiments-tests.txt`).
+
+### Z2. Snapshot 13 check: FAIL (3 tests pinned the old pricing flag)
+
+Snapshot 13 (`5c05a2a97fa120eaa57f7b7efe402e29a9b8a49c` on base `2eb30ef`) ran the full check: `RESULT: FAIL failed: script-tests`, `check.sh exit 4`; the other six gates passed. The 3 failures asserted that the committed `scripts/config/emr-pricing.conf` still holds `EMR_PRICING_CONFIRMED_BY_HUMAN=false`, which the human changed to `true` in A1.3 as the runbook requires:
+
+- `scripts/tests/test_pipeline.py` `Phase4ParityTests.test_the_committed_pricing_file_is_unconfirmed_and_cites_sources_and_a_retrieval_date`
+- `tests/scripts/test_pipeline_refusals.py` `PipelineG6Refusals.test_committed_pricing_file_is_unconfirmed_so_execute_refuses_with_the_repository_config`
+- `tests/scripts/test_pipeline_refusals.py` `PipelineG6Refusals.test_environment_cannot_confirm_pricing_or_inject_rates`
+
+Raw log: `target/phase14/evidence/14b/a1-check-full.log`.
+
+### Z3. Fix: tests independent of the human's flag value
+
+- infra-engineer, `scripts/tests/test_pipeline.py`: the committed file must hold exactly one flag line whose value is exactly `false` or `true`; the other assertions (retrieval date, sources, rates) are kept. The refusal while unconfirmed stays covered by the fixture tests `test_g6_unconfirmed_pricing_refuses_execute_until_the_human_confirms` and `test_g6_environment_variables_cannot_confirm_pricing_or_set_rates`. `test_pipeline.py`: 69 tests OK.
+- test-engineer, `tests/scripts/test_pipeline_refusals.py`: the first test is renamed `test_repository_pricing_file_is_read_as_is_and_cannot_be_replaced_without_the_test_config` (one flag line, `true` or `false`; a false copy without the test config is ignored with `PRICING-FILE-IGNORED`, rc 3, no calls; a false copy through the test config refuses at `g6-gate`). The environment test now runs against a false copy through the test config and still asserts `g6-gate`, `CONFIG-IGNORED` naming both variables, and `ESTIMATE-USD: 0.60`. `tests/scripts/test_pipeline_execute.py`: comment only.
+- State independence: `test_pipeline_refusals.py` 57 OK with the flag `true` (repo) and 57 OK on a scratch copy with the flag `false`; `test_pipeline_execute.py` 14 OK in both states.
+- `scripts/config/emr-pricing.conf` was not touched by any agent; its only change is the human's line 23.
+
+### Z4. Full seven-gate check on clean snapshot 14
+
+- Snapshot 14 (`87a7090bf91d7deaa38403b73c6f92e6b8b77109` on base `2eb30ef`): 5,850 files identical to the working tree before and after the run; snapshot tree clean (`evidence/14b/presession/snapshot14-identity.txt`).
+
+```text
+env -u AWS_PROFILE AWS_EC2_METADATA_DISABLED=true AWS_CONFIG_FILE=/dev/null AWS_SHARED_CREDENTIALS_FILE=/dev/null scripts/check.sh
+```
+
+| Gate | State | Time | Counts |
+|---|---|---|---|
+| constitution | PASS | 0s | |
+| hooks | PASS | 1s | |
+| shell | PASS | 8s | |
+| python | PASS | 0s | |
+| terraform | PASS | 162s | 12, 19, 111, 40, 6, 272 passed; 0 failed |
+| script-tests | PASS | 3682s | scripts/tests 1058 OK (`RealStateBindingTests` executed=7 status=ok, `test_terraform_r1.RouteOwnershipTest` executed=6 status=ok); phase12d-spike 78 OK; billing 113, 62, 39 OK; tests/scripts 462 OK; tests/infra 460 OK; 0 skipped |
+| sbt | PASS | 859s | JDK 17.0.20.1; last three suites succeeded 113, 693, 28 (1 canceled); 0 failed; `[success] Total time: 851 s (14:11)` |
+
+`RESULT: PASS gates=7`; `check.sh exit 0`. Evidence: `evidence/14b/presession/a1-check-full-final.txt` (sanitized as before; no 12-digit number, no email, no local path). Raw log: `target/phase14/evidence/14b/a1-check-full-s14.log`.
+
+- Working-tree `sbt check` (to refresh the local test marker): `[success] Total time: 745 s (12:25)`, exit 0 (raw log `target/phase14/evidence/14b/a1-sbt-check-worktree.log`).
+- `check.sh` does not run `experiments/tests`; see Z1 (51 OK).
+- Pin drift after all changes: 0 rows would be refreshed (209 pinned).
+
+### Z5. Not reviewed
+
+The test changes in Z1 and Z3 and the rendered manifests have not had an independent review. Nothing is committed; everything live is still open.

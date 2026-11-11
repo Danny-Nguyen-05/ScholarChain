@@ -406,3 +406,14 @@ Wave 1: experiment-engineer (items 1, 2, 3), infra-engineer (items 4 assembly, 5
 - Item 2 rework: the storage-engineer's offline `RuntimeArtifactMain` run refused the first include list (39 hub researchers, about 27,000 rows against the 10,000-row cap; exit 1, no artifact written). Routed back to the experiment-engineer: degree band and a total-degree budget of at most 900, all five files regenerated together, verified by a local `RuntimeArtifactMain` run (exit 0).
 - 16B ledger: `load-tests/eval16b.py` charges bucket 16b itself (as `loadgen.py` does for 15B), so the runbook's "reserve first" step is removed for 16B to avoid double counting.
 - Item 10 observation, not routed: `scripts/lib/archive.py` refuses plan files by name; a file named `*.plan.txt` (the runbook's private `deployer-replan.plan.txt`) does not match. No runbook include points at `target/phase14/private`, so it is unreachable today; recorded for the reviewer.
+
+## Subphase 14B — runbook A1 preparation (after commit 2eb30ef)
+
+User answers in chat, verbatim, 2026-11-10/11:
+- "Yes start" (coordinator runs A1.2 and A1.4 offline).
+- A1.2 expiry: "Yes, keep it" (`expiration_date = "2026-11-25"`).
+- "A0 = Anthropic + Voyage"; "questions OK" (`experiments/inputs/14c/questions.txt`, `real-query.json`); "plan cap fxied" (plan file cap text 1.33).
+- A1.3: "confirmed that is correct prices"; the user set `EMR_PRICING_CONFIRMED_BY_HUMAN=true` in `scripts/config/emr-pricing.conf` themself.
+- A1.5: "For the approval note, I want you to write it for me, then I will read and confirm or ask for any changes", then "I confirm it". The coordinator drafted `approval-14c.md` from the runbook A1.5 checklist; its opening lines say so, and the user adopted it unchanged.
+
+Coordinator decision: the A1.4 render made two experiment tests fail because they assumed the committed 15a manifests hold all-zero placeholder hashes; the experiment-engineer changed only those two tests so they hold in both states (option a), instead of leaving the gate red.

@@ -565,3 +565,13 @@ Base `13b886a`. Every agent ran Sonnet 5.5 at high effort; no live command, no A
 **Cost-to-date (N3).** No spend this round: every step was offline. Cost-to-date is unchanged at the last recorded figure, USD 0.34 (AWS, `approval-request-14b-replan.md` §1 and §3.2), with Anthropic USD 0 and Voyage USD 0 (no key exists yet); combined USD 0.34 of the USD 25 ceiling.
 
 Not routed: N4 (planner coverage regex and "in window since-…" phrasing, rag-engineer, future scope); N5 (`*.plan.txt` archive name filter, infra-engineer, future scope). N6 accepted.
+
+## Subphase 14B — runbook A1 preparation (after commit 2eb30ef)
+
+| Owner | Delivered | Gate |
+|---|---|---|
+| coordinator | A1.2 expiry read (user kept 2026-11-25); A1.4 `sbt -batch packageEmr` (exit 0, JDK 17.0.20.1; JAR manifest sha256 `1d977b23b5371cf6f49cc9b3d538779a4e9511181a29e613ede926a7808465d4`); `upload-emr-artifacts.sh` dry run with a placeholder account (no AWS call; `RESULT: PASS`, 7 `EMR-RENDER` lines; the 3 fixed values equal the runbook); `approval-14c.md` drafted at the user's request and saved after the user's confirmation | logs in ignored `target/phase14/evidence/14b/` (`a1-expiration.log`, `a1-packageEmr.log`, `a0-decision.md`, `a1-emr-pricing.log`); dry-run output in `target/phase14/private/` |
+| experiment-engineer | `render_manifests.py --overwrite` with the 7 values: 3 `15a-*` manifests (hashes only); `test_experiments.py`: helper `zero_artifact_hashes` and the two `RenderAndCheck` tests made independent of placeholder or real hashes | `check_manifests.py --final` `RESULT: OK (final: no placeholders)`; experiments/tests 51 OK (also OK, 1 unrelated skip, in a copy with the placeholder manifests) |
+| user | A1.3 flag `EMR_PRICING_CONFIRMED_BY_HUMAN=true`; A0 decision; questions and plan cap confirmed; `approval-14c.md` confirmed | — |
+
+No spend: cost-to-date unchanged at USD 0.34 (AWS), Anthropic 0, Voyage 0.

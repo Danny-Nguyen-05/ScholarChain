@@ -1070,9 +1070,15 @@ class Phase4ParityTests(unittest.TestCase):
         self.assertEqual(re.search(r"^EMR_MAX_LIVE_RUNS=(.*)$", conf, re.M).group(1), "3")
         self.assertEqual(re.search(r"^EMR_CUMULATIVE_CAP_USD=(.*)$", conf, re.M).group(1), "2.52")
 
-    def test_the_committed_pricing_file_is_unconfirmed_and_cites_sources_and_a_retrieval_date(self):
+    def test_the_committed_pricing_file_has_one_human_controlled_flag_and_cites_sources_and_a_retrieval_date(self):
         pricing = read(os.path.join(SCRIPTS_DIR, "config", "emr-pricing.conf"))
-        self.assertIn("EMR_PRICING_CONFIRMED_BY_HUMAN=false", pricing)
+        # The flag is human-controlled (runbook step A1.3): the committed file may hold false (before the human checks the
+        # prices) or true (after). Exactly one flag line is accepted and its value must be exactly false or true; an agent
+        # never sets it. The refusal while it is false is covered by test_g6_unconfirmed_pricing_refuses_execute_until_the_human_confirms.
+        flags = re.findall(r"^EMR_PRICING_CONFIRMED_BY_HUMAN=(.*)$", pricing, re.M)
+        self.assertEqual(len(flags), 1, "exactly one EMR_PRICING_CONFIRMED_BY_HUMAN line")
+        self.assertIn(flags[0], ("false", "true"))
+        self.assertIn("An agent never sets it.", pricing)
         self.assertRegex(pricing, r"EMR_PRICING_RETRIEVED=\d{4}-\d{2}-\d{2}")
         self.assertIn("https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonEC2/current/us-east-2/index.csv", pricing)
         self.assertIn("https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/ElasticMapReduce/current/us-east-2/index.json", pricing)
