@@ -469,3 +469,24 @@ User decision in chat, verbatim, 2026-11-12: "let's do A".
 - Created (user's terminal, as `scholarchain-billing-operator`, default `aws/secretsmanager` key): `scholarchain/course/api-key-sha256`, `scholarchain/course/internal-token-sha256`, `scholarchain/course/internal-token`, `scholarchain/course/graph-cursor-key`. Names only in the ignored log `target/phase14/evidence/14b/a7-secrets.log`; ARNs in the private `target/phase14/private/secret-arns.txt` (4 entries, each ARN matching its name; mode set to 600 by the coordinator). No value was printed or read back; temporary files removed.
 - User in chat, verbatim, 2026-11-12: "key saved, window colosed at 3:23pm" — the raw smoke API key is in the user's password manager; `scholarchain-operator-a7-secrets` and `scholarchain-operator-cli-login` removed.
 - Cleanup C5 must delete these four secrets (about USD 0.40 per secret per month, prorated).
+
+## Subphase 14B — A8 private tfvars (base stage)
+
+User answers in chat, verbatim, 2026-11-12: "yes domain, 1.4.8.1 ok".
+
+- Neptune: `neptune_engine_version = "1.4.8.1"`, `neptune_parameter_family = "neptune1.4"` (coordinator proposal: the newest 1.4 release in the Phase 12C serverless option list for us-east-2, `docs/agent-runs/phase-12/evidence/12c/neptune-serverless-options.log.txt`; the loader and queries use openCypher; availability is confirmed only by the base plan).
+- The user owns a domain with DNS at Cloudflare; `api_domain_name = "api.<domain>"` is entered only into the ignored `course.local.tfvars`.
+- Coordinator choices from earlier decisions: `budget_limit_usd = 25`; zones `us-east-2a`, `us-east-2b`; `deployment_trusted_principal_arn` = the IAM user `scholarchain-billing-operator` (the human; the deployment role it may assume has no permissions); providers `anthropic` / `voyage`; `semantic_index_name = "researcher-profile-v1"`, `embedding_text_prefix = "embedding-text"`; `container_insights_enabled = false`, `dashboard_enabled = false`; four services `cpu 256, memory 1024, min 1, max 2`; `acm_validation_timeout = "15m"`; base stage `runtime_enabled = false`, `runtime_composition_verified = false`, `service_secret_bindings = {}`, `public_ingress_cidrs = []`, `neptune_tunnel_enabled = false`. Runtime values are added before B4.
+
+### A8 result
+
+- `infra/terraform/environments/course.local.tfvars` written by the user with the base-stage values above (21 top-level settings; one account ID; the API domain; no unexpanded variable); `git check-ignore -v` names `.gitignore:52:*.tfvars`; mode `-rw-------`. The domain is not recorded in the repository.
+- `emr_service_policy_json`: rendered offline with `scripts/lib/emr_service_policy.py render` (`statements=13`, `RESULT: PASS rendered and checked`); `check` gave 12 `OK:` lines and `RESULT: PASS` (ignored log `target/phase14/evidence/14b/a8-emr-policy-check.log`, no account ID); reviewed by the coordinator; appended to the private tfvars (1 `emr_service_policy_json` line) and the temporary file deleted. `emr_config.enabled` stays false until B9.
+
+### A8 correction, A9 and A10
+
+- User in chat, 2026-11-12, domain name replaced by `<domain>`: "oh my bad the domain should be <domain>" — the user corrected `api_domain_name` in the private tfvars (check: new name 1 line, old name 0). The domain stays out of the repository.
+- A9: `dig +short CAA` for the domain and its `api.` name returned nothing (no CAA record; nothing to add). Ignored log `target/phase14/evidence/14b/a9-caa.log`.
+- A10: `llm_budget.py init` → `RESULT: LEDGER-CREATED` (local ledger outside the repository); `status`: buckets 14c 10, 15b 60, 16b 40, 17 5, all unused; `shared_cap_usd=1.330000`, `unit_usd=0.001365`. Ignored log `target/phase14/evidence/14b/a10-llm-ledger.log`.
+- A11 is done at B0 (charger, no sleep, `caffeinate -dims`).
+- A12 pre-checks (coordinator, offline): runtime archive sha256 `789a9684…6de5`, 321876735 bytes (equal to the runbook); JAR manifest sha256 `1d977b23…65d4` (equal to A1.4); the Phase 6 export directory exists. Images, EMR ledger and 14C input copies are built by the user after the last pre-session commit.

@@ -613,3 +613,12 @@ No spend.
 | coordinator | Policy text and commands; shape check of the private ARN file without printing it; records | no `get-secret-value`, no value in any log or file |
 
 Spend: four secrets at about USD 0.40 per secret per month, prorated (cents until cleanup C5). AWS cost-to-date otherwise unchanged at USD 0.34; Anthropic 0, Voyage 0.
+
+## Subphase 14B — A8 private tfvars (base stage) and EMR service policy
+
+| Owner | Delivered | Gate |
+|---|---|---|
+| user | Private `course.local.tfvars` (base stage) and the rendered EMR service policy appended; Neptune 1.4.8.1 / `neptune1.4` and the domain decided | ignored and mode 600; 21 settings; EMR policy check 12 OK, `RESULT: PASS` |
+| coordinator | Base values from recorded decisions; review of the EMR policy check output (the file itself not read) | — |
+
+No spend.
