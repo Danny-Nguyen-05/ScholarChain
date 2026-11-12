@@ -32,7 +32,9 @@ Refusals (exit 3, nothing is uploaded; the checks run before the first PutObject
   * a caller that is not the operator-loader role (assumed-role/scholarchain-<env>-operator-loader/...);
   * a non-completed export: missing run manifest, run metadata, counters, load manifests or completion marker, a marker that
     does not equal sha256(run-manifest + LF + run-metadata) + LF, no Parquet file, or manifests that name different runs;
-  * a key outside <run-prefix>/ (an empty or dot segment, or characters outside A-Za-z0-9._=:+@/-), a symbolic link anywhere;
+  * a key outside <run-prefix>/ (an empty or dot segment, or characters outside A-Za-z0-9._=:+@/-; the one exception is the exact
+    escape %3A that Spark writes for ':' in run_id=run%3A<uuid>, kept as that literal text; any other '%' such as %20, %2F, %3a
+    or a bare '%' is refused), a symbolic link anywhere;
   * a file over 5 GiB, more than 5000 files, or more than 20 GiB in total (this tool uses single PutObject calls);
   * an object that ALREADY exists under a planned key with different content (size or SHA-256), or with no SHA-256 checksum:
     nothing is overwritten, ever. An existing object with the same SHA-256 and size is UNCHANGED and skipped, so a re-run after

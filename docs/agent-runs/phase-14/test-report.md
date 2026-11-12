@@ -805,3 +805,18 @@ env -u AWS_PROFILE AWS_EC2_METADATA_DISABLED=true AWS_CONFIG_FILE=/dev/null AWS_
 ### Z5. Not reviewed
 
 The test changes in Z1 and Z3 and the rendered manifests have not had an independent review. Nothing is committed; everything live is still open.
+
+## Subphase 14B — A12 pre-flight defect: `%3A` partition keys refused by upload-slice
+
+Found by the user's A12 step 6 dry run (offline): `scripts/upload-slice.sh` refused the real export at `export-scan` (`UPLOAD-REFUSED: key run-20261115/nodes/type=author_mention/run_id=run%3Af6e63b4b-.../part-00000-....snappy.parquet has characters or a length outside the accepted set`). Spark escapes ':' in partition values as `%3A`; `scripts/lib/upload_slice.py` `KEY_CHARS_RE` had no '%', and the tests only used `run_id=r1`. Nothing was uploaded; no AWS call.
+
+Fix (infra-engineer): `KEY_CHARS_RE = ^(?:[A-Za-z0-9._=:+@/-]|%3A)+$` — only the exact uppercase `%3A` escape is accepted; `%20`, `%2F`, `%2E%2E`, `%3a`, a bare `%` and `%zz` stay refused. The key stays byte-identical to the on-disk path (S3 stores the literal `%3A`). A first, broader `%XX` rule broke the independent test `tests/scripts/test_upload_slice_14b.py` (`percent%20` refused) and was narrowed. `--help` text in `scripts/upload-slice.sh` updated; tests added in `scripts/tests/test_upload_slice.py`.
+
+Coordinator reruns (AWS neutralized):
+- `scripts/tests` `test_upload_slice.py`: 45 OK; `tests/scripts` `test_upload_slice_14b.py`: 29 OK; `scripts/tests` `test_syntax.py`: 20 OK.
+- `check.sh --only constitution,hooks,shell,python`: 4 PASS.
+- Real-export dry run (placeholder bucket): `EXPORT-RUN: id=run:f6e63b4b-d542-4a32-930c-f21f002cba76 tables=26 files=143 bytes=136464280`, `RESULT: PASS dry run: 143 file(s) planned under run-20261115/; nothing was uploaded`.
+
+Downstream (infra-engineer, read-only): B8.2, B8.3 and B8.6 read the local export; the Neptune bulk-load source is the `%`-free `neptune-opencypher-csv/data/` tree; the storage loader writes the support Parquet with literal `%3A` keys through the SDK. Unverified live: the `put-object`/`head-object` path with a literal `%3A` key (fake S3 only).
+
+Open, not routed: the runbook (`docs/runbooks/phase-14-live-session.md`, B8.1 and A12 step 6) expects `RESULT: DRY-RUN`; the script prints `RESULT: PASS dry run: ...` (documentation-engineer). Not independently reviewed.

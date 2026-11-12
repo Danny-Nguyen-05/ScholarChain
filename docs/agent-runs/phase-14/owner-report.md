@@ -622,3 +622,13 @@ Spend: four secrets at about USD 0.40 per secret per month, prorated (cents unti
 | coordinator | Base values from recorded decisions; review of the EMR policy check output (the file itself not read) | — |
 
 No spend.
+
+## Subphase 14B — A12 pre-flight
+
+| Owner | Delivered | Gate |
+|---|---|---|
+| user | Images built on 58ad92c (`RESULT: PASS ... arch-gate=passed`, release manifest sha256 `7920feef…cf7f`); EMR ledger initialised; 14C inputs copied (include-ids `5d4d99a0…`, real-query `05240e88…`, questions `e4b6d48b…`, node-ids `a665e937…`) | logs in ignored `target/phase14/evidence/14b/a12-*` |
+| infra-engineer | `upload_slice.py` accepts the exact `%3A` escape (test-report, "A12 pre-flight defect") | upload tests 45 + 29 OK; real-export dry run PASS (143 files) |
+| coordinator | Diagnosis, narrowing request, reruns | not independently reviewed |
+
+The fix commit moves HEAD: the images must be rebuilt on it and the A12 dry run and final check repeated.

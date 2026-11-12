@@ -25,7 +25,10 @@ import sys
 
 SCHEMA = "scholarchain.upload-manifest.v1"
 RUN_PREFIX_RE = re.compile(r"^run-[a-z0-9][a-z0-9-]{1,27}$")  # the same rule as the deployer's operator_run_prefix
-KEY_CHARS_RE = re.compile(r"^[A-Za-z0-9._=:+@/-]+$")
+# '%' is accepted only as the exact escape %3A (uppercase): Spark writes a ':' in a partition value as %3A, so the real
+# export directories are named run_id=run%3A<uuid>. Every other '%' sequence (%20, %2F, %2E, %3a, a bare '%') is refused.
+# The key stays byte-identical to the on-disk path (S3 stores the literal '%3A').
+KEY_CHARS_RE = re.compile(r"^(?:[A-Za-z0-9._=:+@/-]|%3A)+$")
 TABLE_ROOTS = ("nodes", "edges", "metrics", "path-evidence", "semantic-summaries")
 TYPED_ROOTS = ("nodes", "edges", "metrics")  # one table per type=<name> directory
 ROOT_FILES = ("run-manifest.json", "run-metadata.json", "counters.json", "_SCHOLARCHAIN_SPARK_COMPLETE")

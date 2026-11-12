@@ -144,6 +144,17 @@ class DryRunTests(UploadBase):
         self.assertEqual(len(re.findall(r"^UPLOAD-FILE: ", result.stdout, re.M)), 13)
         self.assertTrue(result.result_line().startswith("RESULT: PASS dry run: 13 file(s) planned under %s/; nothing was uploaded" % PREFIX), result.result_line())
 
+    def test_a_spark_percent_escaped_partition_directory_is_planned_with_the_literal_percent_key(self):
+        """Spark writes ':' in a partition value as %3A: the real export has run_id=run%3A<uuid> directories."""
+        rel = "nodes/type=author_mention/run_id=run%3Af6e63b4b-d542-4a32-930c-f21f002cba76/part-00000-x.snappy.parquet"
+        self.put_file(self.export, rel, b"PAR1 percent escaped")
+        result = self.run_upload()
+        self.assertEqual(result.rc, 0, result.out)
+        self.assertIn("path=%s key=%s/%s bytes=%d sha256=%s" % (rel, PREFIX, rel, 20, sha256_bytes(b"PAR1 percent escaped")), result.stdout)
+        self.assertEqual(len(re.findall(r"^UPLOAD-FILE: ", result.stdout, re.M)), 14)
+        self.assertNotIn("run_id=run:f6e63b4b", result.stdout, "the key must not be decoded")
+        self.assertEqual(self.calls("aws"), [])
+
     def test_every_planned_key_is_inside_the_run_prefix(self):
         result = self.run_upload()
         keys = re.findall(r" key=(\S+) ", result.stdout)
@@ -300,6 +311,17 @@ class RefusalTests(UploadBase):
         result = self.refused()
         self.assertIn("characters or a length outside the accepted set", result.stdout)
 
+    def test_any_percent_sequence_other_than_the_exact_3A_escape_is_refused(self):
+        for name in ("bad%20", "bad%2F", "bad%2E%2E", "bad%3a", "bad%", "bad%zz", "bad%41"):
+            with self.subTest(name=name):
+                part = "nodes/type=researcher/run_id=%s/part-00000.parquet" % name
+                self.put_file(self.export, part, b"PAR1")
+                result = self.refused()
+                self.assertIn("characters or a length outside the accepted set", result.stdout)
+                self.assertEqual(self.calls("aws"), [])
+                os.remove(os.path.join(self.export, part))
+                os.rmdir(os.path.join(self.export, "nodes", "type=researcher", "run_id=%s" % name))
+
     def test_a_missing_export_directory_is_refused(self):
         result = self.run_upload(export=os.path.join(self.tmp, "no-such-export"))
         self.assertEqual(result.rc, 3, result.out)
@@ -326,7 +348,8 @@ class RefusalTests(UploadBase):
 class UnitTests(unittest.TestCase):
     def test_check_key_keeps_every_key_inside_the_run_prefix(self):
         self.assertEqual(upload_slice.check_key("run-1a/nodes/x.parquet", "run-1a"), "run-1a/nodes/x.parquet")
-        for key in ("run-1a", "run-1a/", "other/nodes/x.parquet", "run-1a/../x", "run-1a//x", "run-1a/./x", "run-1ab/x", "run-1a/a b", "run-1a/" + "a" * 1100):
+        self.assertEqual(upload_slice.check_key("run-1a/run_id=run%3Aab-1/p.parquet", "run-1a"), "run-1a/run_id=run%3Aab-1/p.parquet")
+        for key in ("run-1a", "run-1a/", "other/nodes/x.parquet", "run-1a/../x", "run-1a//x", "run-1a/./x", "run-1ab/x", "run-1a/a b", "run-1a/a%", "run-1a/a%zz", "run-1a/a%20", "run-1a/a%2F", "run-1a/a%3a", "run-1a/" + "a" * 1100):
             with self.subTest(key=key[:30]):
                 with self.assertRaises(upload_slice.Refused):
                     upload_slice.check_key(key, "run-1a")
@@ -364,6 +387,14 @@ class UnitTests(unittest.TestCase):
 
 
 class ExecuteTests(UploadBase):
+    def test_a_percent_escaped_partition_key_is_stored_literally_not_decoded(self):
+        rel = "nodes/type=author_mention/run_id=run%3Af6e63b4b/part-00000-x.snappy.parquet"
+        self.put_file(self.export, rel, b"PAR1 percent escaped")
+        result = self.run_upload(execute=True)
+        self.assertEqual(result.rc, 0, result.out)
+        self.assertEqual(self.stored("%s/%s" % (PREFIX, rel)), b"PAR1 percent escaped")
+        self.assertNotIn("%s/nodes/type=author_mention/run_id=run:f6e63b4b/part-00000-x.snappy.parquet" % PREFIX, self.stored_keys())
+
     def test_every_file_is_uploaded_with_its_sha256_and_a_conditional_write_then_verified(self):
         result = self.run_upload(execute=True)
         self.assertEqual(result.rc, 0, result.out)
