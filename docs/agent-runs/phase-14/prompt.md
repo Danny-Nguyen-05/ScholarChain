@@ -428,3 +428,28 @@ User decision in chat, verbatim, 2026-11-11: "yeh just skip them for me, since t
 - `monitoring_confirmed_active` (`scripts/lib/verify.py:180`) needs only an active budget alert; the USD 200 budget satisfies it, and plan item 9 ("budget with 50/80/100% alerts active before any paid step") is met by it.
 - Repository versus live: `infra/terraform/billing-bootstrap/` describes the USD 25 budget with alerts at 10/15/20, while the live budget stays at USD 200. That Terraform root is not applied in this phase; the difference is a disclosed, user-accepted drift.
 - The runbook checklist line "A3 budget is USD 25 with alerts at 10/15/20" and the A3 commits (C2, modify gate record, budget packet) do not apply; the `modify` object is not added to `scripts/billing/reviewed-pins.json`. Next step: A4 (deployer apply).
+
+## Subphase 14B — A4 apply identity: manual IAM window (after commit bfb7311)
+
+Finding: the runbook (A4, C4–C7) and the 14A proposal assume an `<architect-admin-profile>`. None exists: the user's AWS CLI profiles are `scholarchain-planner`, `scholarchain-billing-deployer`, `scholarchain-operator`, `scholarchain-deployer` and `scholarchain-deployer-tf`, none with IAM write permission.
+
+User decision in chat, verbatim, 2026-11-11: "choose a". Option (a), as offered by the coordinator: repeat the Phase 12D manual IAM window (`docs/agent-runs/phase-12/evidence/12d-spike-live/human-approval.md`, "Manual IAM exception (outside Terraform, documented)"):
+
+- Root, console only, no root access keys: attach the AWS-managed `IAMFullAccess` to the IAM user `scholarchain-billing-operator`, and add the inline policy `scholarchain-operator-cli-login` (same-device `aws login` only: `signin:AuthorizeOAuth2Access`, `signin:CreateOAuth2Token` on `arn:aws:signin:us-east-2:<acct>:oauth2/public-client/localhost`, condition `signin:OAuthClientId = arn:aws:signin:::devtools/same-device`).
+- As that user (`aws login --profile scholarchain-operator`): the A4 deployer plan; the apply only after the plan is checked with the coordinator and the user's apply decision is recorded here.
+- Close the window right after A4: remove `IAMFullAccess` and `scholarchain-operator-cli-login`; the user reports the removal time in chat; confirm later in CloudTrail.
+- A second window of the same form is expected at cleanup (C4 operator roles, C5 secrets, C7 KMS check), recorded when it happens.
+- Option (b), a standing administrator IAM user, was declined.
+
+### A4 deployer apply decision
+
+- Preview (as `scholarchain-billing-operator` through the manual IAM window; window opened by the user, root signed out at about 19:33 local on 2026-11-11): `Plan: 29 to add, 0 to change, 9 to destroy.`, 38 non-no-op addresses (29 create, 9 delete), equal to the runbook's Case A list (2 boundaries, 7 `phase14-main` permission sets and 7 attachments, 4 operator roles, 5 operator data policies, 4 operator login policies; destroy the 4 `spike-emr` sets, their 4 attachments and `spike_boundary[0]`). Saved plan sha256 `7594d21201ab72c9f6048db72bceb30b473dfd391e426b107db36018a843e33f` (private, `target/phase14/private/deployer-replan.tfplan`).
+- Coordinator check of the saved plan against the v2 STOP rules: `aws_iam_role.deployer` and `aws_iam_role_policy.login` untouched; each operator role `max_session_duration = 14400`, trust principal the IAM user `scholarchain-billing-operator`, `aws:MultiFactorAuthPresent` condition; no wildcard principal, no `aws-marketplace`, no `Resource "*"` and no `iam:` action in the operator policies; `phase14-main--data` delete scope `scholarchain-course-<acct>-*/*` and `s3:AbortMultipartUpload` only in the artifacts statement; pipeline data: only the `-artifacts` and `-logs` buckets, none of RunJobFlow/TerminateJobFlows/ListClusters/AddTags/`s3:Delete*`/`iam:`, `S3EmrArtifactsCreateOnlyWithIfNoneMatch` with `Null s3:if-none-match = false` on `.../emr/run-20261115/*`; `S3RuntimeArtifactCreateOnly` likewise on `.../rag/runtime-artifacts/run-20261115/*`; no Bedrock statement (providers Anthropic and Voyage). An earlier preview failed variable validation (a coordinator command error garbled `operator_principal_arn`) and saved no plan.
+- Run prefix chosen: `run-20261115`. Owner tag `danny`.
+- User decision in chat, verbatim, 2026-11-11: "Yes, apply" — apply exactly this saved plan.
+
+### A4 result and IAM window closed
+
+- Apply (user's terminal, as `scholarchain-billing-operator`): `Apply complete! Resources: 29 added, 0 changed, 9 destroyed.`, `exit=0`. State sha256 before (backup) `0131b3aca322ab609482dc388caac4936c1cdb190f96956f1b6f406e6e06caa8`, after `19a106a8fa55b7cf9d1c7851641db0dc21f18ff8dcb73d565b81964fc8290d2f`; post-apply backup copied next to the state.
+- Read-only verification: deployer attached policies `7`; deployer `MaxSessionDuration` `3600`; operator roles loader, reader, cleanup, pipeline `14400` each; loader inline policies `scholarchain-course-operator-loader-data`, `-loader-same-device-login`, `-loader-tunnel`; pipeline inline policies `-pipeline-data`, `-pipeline-same-device-login`.
+- User in chat, verbatim, 2026-11-11: "done, windows closed at 7:45pm" — `IAMFullAccess` and `scholarchain-operator-cli-login` removed from `scholarchain-billing-operator` (window about 19:33–19:45 local by the user's report; to be confirmed in CloudTrail).

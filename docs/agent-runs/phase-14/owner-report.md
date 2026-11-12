@@ -584,3 +584,14 @@ No spend: cost-to-date unchanged at USD 0.34 (AWS), Anthropic 0, Voyage 0.
 | coordinator | Decision and its consequences recorded (late first alert at about USD 100; disclosed repository-versus-live drift in `billing-bootstrap`); no AWS call | — |
 
 No spend: cost-to-date unchanged at USD 0.34 (AWS), Anthropic 0, Voyage 0.
+
+## Subphase 14B — A4 deployer apply (after commit bfb7311)
+
+| Owner | Delivered | Gate |
+|---|---|---|
+| user | Manual IAM window (decision "choose a"); deployer plan and apply in their own terminal; window closed at about 19:45 local | apply decision recorded in `prompt.md` before the apply |
+| coordinator | Identified the missing admin profile; checked the saved plan (sha256 `7594d212…e33f`) against the v2 STOP rules; recorded the decision and results; no AWS call | Plan `29 to add, 0 to change, 9 to destroy` (Case A); apply `29 added, 0 changed, 9 destroyed`; verification `7` / `3600` / `14400` x4 / policy names as expected |
+
+Coordinator error, corrected: the first tfvars command used `$ACCT:user`, which zsh expanded as a `:u` modifier; the plan failed variable validation and saved nothing. Fixed with `${ACCT}`.
+
+No spend: IAM only. Cost-to-date unchanged at USD 0.34 (AWS), Anthropic 0, Voyage 0.
