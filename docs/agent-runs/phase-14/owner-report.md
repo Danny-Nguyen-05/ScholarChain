@@ -595,3 +595,21 @@ No spend: cost-to-date unchanged at USD 0.34 (AWS), Anthropic 0, Voyage 0.
 Coordinator error, corrected: the first tfvars command used `$ACCT:user`, which zsh expanded as a `:u` modifier; the plan failed variable validation and saved nothing. Fixed with `${ACCT}`.
 
 No spend: IAM only. Cost-to-date unchanged at USD 0.34 (AWS), Anthropic 0, Voyage 0.
+
+## Subphase 14B — A5 profiles and sign-in rehearsal
+
+| Owner | Delivered | Gate |
+|---|---|---|
+| user | 7 profiles added to their AWS config (loader, reader, cleanup, pipeline, and three `-java` credential-process profiles); each role signed in once; session-manager-plugin installed | loader, reader, cleanup, pipeline and deployer (`scholarchain-deployer` and `-tf`) ARNs each name their own role with session `scholarchain-billing-operator`; `CREDENTIALS-RESOLVED ... sessionToken=true` for loader-, reader- and cleanup-java; aws-cli 2.35.4; session-manager-plugin 1.2.896.0 |
+| coordinator | Commands and checks; caught a first pass in which three profiles took the loader browser session (redone) | ignored log `target/phase14/evidence/14b/a5-login-rehearsal.log` (account masked) |
+
+No spend.
+
+## Subphase 14B — A7 Secrets Manager secrets
+
+| Owner | Delivered | Gate |
+|---|---|---|
+| user | Narrow IAM window (decision "let's do A"); four secrets created; raw API key in the password manager; window closed at about 15:23 local | four names printed twice as the runbook expects |
+| coordinator | Policy text and commands; shape check of the private ARN file without printing it; records | no `get-secret-value`, no value in any log or file |
+
+Spend: four secrets at about USD 0.40 per secret per month, prorated (cents until cleanup C5). AWS cost-to-date otherwise unchanged at USD 0.34; Anthropic 0, Voyage 0.

@@ -453,3 +453,19 @@ User decision in chat, verbatim, 2026-11-11: "choose a". Option (a), as offered 
 - Apply (user's terminal, as `scholarchain-billing-operator`): `Apply complete! Resources: 29 added, 0 changed, 9 destroyed.`, `exit=0`. State sha256 before (backup) `0131b3aca322ab609482dc388caac4936c1cdb190f96956f1b6f406e6e06caa8`, after `19a106a8fa55b7cf9d1c7851641db0dc21f18ff8dcb73d565b81964fc8290d2f`; post-apply backup copied next to the state.
 - Read-only verification: deployer attached policies `7`; deployer `MaxSessionDuration` `3600`; operator roles loader, reader, cleanup, pipeline `14400` each; loader inline policies `scholarchain-course-operator-loader-data`, `-loader-same-device-login`, `-loader-tunnel`; pipeline inline policies `-pipeline-data`, `-pipeline-same-device-login`.
 - User in chat, verbatim, 2026-11-11: "done, windows closed at 7:45pm" — `IAMFullAccess` and `scholarchain-operator-cli-login` removed from `scholarchain-billing-operator` (window about 19:33–19:45 local by the user's report; to be confirmed in CloudTrail).
+
+## Subphase 14B — A7 secrets: narrow manual IAM window
+
+The runbook's A7 uses `$ADMIN`; none exists (see A4). Options offered: (a) a narrow inline policy on `scholarchain-billing-operator` for the window, (b) the broad managed `SecretsManagerReadWrite`, (c) root console by hand.
+
+User decision in chat, verbatim, 2026-11-12: "let's do A".
+
+- Root, console only: add to `scholarchain-billing-operator` the inline policies `scholarchain-operator-a7-secrets` (`secretsmanager:CreateSecret`, `secretsmanager:DescribeSecret` on `arn:aws:secretsmanager:us-east-2:<acct>:secret:scholarchain/course/*` only) and `scholarchain-operator-cli-login` (same-device `aws login`, as in A4).
+- As that user (`aws login --profile scholarchain-operator`): the runbook A7 commands, which create `scholarchain/course/{api-key-sha256,internal-token-sha256,internal-token,graph-cursor-key}` with the default `aws/secretsmanager` key; no `get-secret-value`; the raw smoke API key goes only to the user's password manager.
+- Close right after: remove both inline policies; the user reports the time in chat.
+
+### A7 result and window closed
+
+- Created (user's terminal, as `scholarchain-billing-operator`, default `aws/secretsmanager` key): `scholarchain/course/api-key-sha256`, `scholarchain/course/internal-token-sha256`, `scholarchain/course/internal-token`, `scholarchain/course/graph-cursor-key`. Names only in the ignored log `target/phase14/evidence/14b/a7-secrets.log`; ARNs in the private `target/phase14/private/secret-arns.txt` (4 entries, each ARN matching its name; mode set to 600 by the coordinator). No value was printed or read back; temporary files removed.
+- User in chat, verbatim, 2026-11-12: "key saved, window colosed at 3:23pm" — the raw smoke API key is in the user's password manager; `scholarchain-operator-a7-secrets` and `scholarchain-operator-cli-login` removed.
+- Cleanup C5 must delete these four secrets (about USD 0.40 per secret per month, prorated).
