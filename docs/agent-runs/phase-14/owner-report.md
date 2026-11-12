@@ -575,3 +575,12 @@ Not routed: N4 (planner coverage regex and "in window since-…" phrasing, rag-e
 | user | A1.3 flag `EMR_PRICING_CONFIRMED_BY_HUMAN=true`; A0 decision; questions and plan cap confirmed; `approval-14c.md` confirmed | — |
 
 No spend: cost-to-date unchanged at USD 0.34 (AWS), Anthropic 0, Voyage 0.
+
+## Subphase 14B — A3 skipped by the user (after commit a87885e)
+
+| Owner | Delivered | Gate |
+|---|---|---|
+| user | Decision to skip runbook A3 (budget stays USD 200, alerts 50/80/100%) | recorded verbatim in `prompt.md` |
+| coordinator | Decision and its consequences recorded (late first alert at about USD 100; disclosed repository-versus-live drift in `billing-bootstrap`); no AWS call | — |
+
+No spend: cost-to-date unchanged at USD 0.34 (AWS), Anthropic 0, Voyage 0.

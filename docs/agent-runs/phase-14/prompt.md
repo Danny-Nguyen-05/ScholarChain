@@ -417,3 +417,14 @@ User answers in chat, verbatim, 2026-11-10/11:
 - A1.5: "For the approval note, I want you to write it for me, then I will read and confirm or ask for any changes", then "I confirm it". The coordinator drafted `approval-14c.md` from the runbook A1.5 checklist; its opening lines say so, and the user adopted it unchanged.
 
 Coordinator decision: the A1.4 render made two experiment tests fail because they assumed the committed 15a manifests hold all-zero placeholder hashes; the experiment-engineer changed only those two tests so they hold in both states (option a), instead of leaving the gate red.
+
+## Subphase 14B — A3 budget modify skipped (after commit a87885e)
+
+User decision in chat, verbatim, 2026-11-11: "yeh just skip them for me, since those are just alert right, they wont block the billing".
+
+- Runbook A3 (budget modify from USD 200 with 50/80/100% alerts to USD 25 with alerts at USD 10/15/20) is skipped by the user's decision. No billing login, plan, gate or apply is made for it.
+- The live budget stays as created in Phase 12D: USD 200, actual-spend alerts at 50/80/100%. It is monitoring only (no budget action), so it neither blocks nor limits spend, as the user said.
+- Consequence recorded: the first alert email would arrive at about USD 100, after the USD 25 project limit. During the session the limit is held by the per-provider caps (EMR USD 2.52, Anthropic USD 1.33, Voyage USD 0.30), the H37 hard stop and the user's own cost checks.
+- `monitoring_confirmed_active` (`scripts/lib/verify.py:180`) needs only an active budget alert; the USD 200 budget satisfies it, and plan item 9 ("budget with 50/80/100% alerts active before any paid step") is met by it.
+- Repository versus live: `infra/terraform/billing-bootstrap/` describes the USD 25 budget with alerts at 10/15/20, while the live budget stays at USD 200. That Terraform root is not applied in this phase; the difference is a disclosed, user-accepted drift.
+- The runbook checklist line "A3 budget is USD 25 with alerts at 10/15/20" and the A3 commits (C2, modify gate record, budget packet) do not apply; the `modify` object is not added to `scripts/billing/reviewed-pins.json`. Next step: A4 (deployer apply).
