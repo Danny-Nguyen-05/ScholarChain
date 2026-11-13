@@ -22,6 +22,11 @@ RUN case "$MAIN_CLASS" in \
     esac
 ENV SCHOLARCHAIN_MAIN_CLASS=${MAIN_CLASS}
 
+# Image contents must not depend on the builder's umask or the build-context file modes (Docker COPY
+# preserves them; a 077 umask once produced 0600 JARs the non-root user could not read). Everything
+# under /app stays root-owned and not writable by the application user.
+RUN chmod -R go-w,a+rX /app
+
 USER scholarchain
 
 ENTRYPOINT ["sh", "-c", "exec java -cp '/app/services.jar:/app/lib/*' \"$SCHOLARCHAIN_MAIN_CLASS\" \"$@\"", "scholarchain"]
