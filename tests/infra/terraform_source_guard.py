@@ -249,6 +249,14 @@ GLOBAL_RESOURCE_ALLOWLIST = (
         condition_requires=ACM_REQUEST_CONDITION,
     ),
     GlobalGrant(
+        PHASE14_MAIN,
+        frozenset({"ec2:GetSecurityGroupsForVpc", "ec2:ValidateSecurityGroupQuotasForInterface"}),
+        "Elastic Load Balancing calls these two EC2 reads with the caller's credentials when an Application Load Balancer is "
+        "created or its security groups change (both listed in the AWS managed policy ElasticLoadBalancingFullAccess); neither "
+        "takes a resource type. Read-only; region-locked by aws:RequestedRegion.",
+        SAR + "list_amazonec2.html",
+    ),
+    GlobalGrant(
         RUNTIME_BOUNDARY, ECS_EXEC_ACTIONS, ECS_EXEC_JUSTIFICATION, SAR + "list_ssmmessages.html",
         requires_condition=False,
     ),
@@ -559,7 +567,7 @@ class GuardExamples(unittest.TestCase):
 
 
     def test_global_resource_allowlist_entries_are_justified_and_narrow(self):
-        self.assertEqual(len(GLOBAL_RESOURCE_ALLOWLIST), 10)
+        self.assertEqual(len(GLOBAL_RESOURCE_ALLOWLIST), 11)
         self.assertEqual(
             sorted({g.path for g in GLOBAL_RESOURCE_ALLOWLIST}),
             sorted([NEPTUNE_TUNNEL, PHASE14_MAIN, RUNTIME_BOUNDARY]),

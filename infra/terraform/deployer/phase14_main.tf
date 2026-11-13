@@ -74,6 +74,17 @@ locals {
         Condition = { StringEquals = local.c_region }
       },
       {
+        # Phase 14B live E1: elbv2 CreateLoadBalancer (security groups + subnets) was refused ec2:GetSecurityGroupsForVpc. Elastic
+        # Load Balancing makes these two EC2 calls with the caller's credentials (both listed in the AWS managed policy
+        # ElasticLoadBalancingFullAccess); neither takes a resource type, so the region condition is the only scope. Kept in its
+        # own statement so the literal-source guard allowlist names exactly these two actions.
+        Sid       = "Ec2ElbCompanionReadsNoResourceScoping"
+        Effect    = "Allow"
+        Action    = ["ec2:GetSecurityGroupsForVpc", "ec2:ValidateSecurityGroupQuotasForInterface"]
+        Resource  = ["*"]
+        Condition = { StringEquals = local.c_region }
+      },
+      {
         Sid    = "Ec2CreateOnlyWithProjectTags"
         Effect = "Allow"
         Action = [

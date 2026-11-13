@@ -263,10 +263,10 @@ run "resource_star_only_for_actions_without_a_resource_type_or_ec2_describe" {
           "tag:GetResources", "elasticmapreduce:ListClusters", "elasticmapreduce:ListSecurityConfigurations",
           "elasticmapreduce:DescribeSecurityConfiguration", "elasticmapreduce:CreateSecurityConfiguration",
           "elasticmapreduce:DeleteSecurityConfiguration", "elasticmapreduce:RunJobFlow", "kms:CreateKey", "kms:ListAliases",
-        ], st.Action[0])) || alltrue([for a in st.Action : startswith(a, "ec2:Describe")])
+        ], st.Action[0])) || alltrue([for a in st.Action : startswith(a, "ec2:Describe") || contains(["ec2:GetSecurityGroupsForVpc", "ec2:ValidateSecurityGroupQuotasForInterface"], a)])
       ])
     ])
-    error_message = "Resource * is allowed only for the nine single-action statements without a resource type, and for ec2:Describe*."
+    error_message = "Resource * is allowed only for the nine single-action statements without a resource type, for ec2:Describe*, and for the two ELB companion EC2 reads."
   }
   assert {
     condition = alltrue([
@@ -983,6 +983,31 @@ run "p14_documents_still_fit_with_the_longest_allowed_environment_name" {
   }
 }
 
+run "p14_elb_create_companion_ec2_reads_are_region_scoped_in_the_network_document" {
+  command = plan
+  variables {
+    enabled_permission_sets = ["phase14-main"]
+  }
+
+  assert {
+    condition = alltrue([
+      for a in ["ec2:GetSecurityGroupsForVpc", "ec2:ValidateSecurityGroupQuotasForInterface"] :
+      length([
+        for st in jsondecode(aws_iam_policy.permission_set["phase14-main--network"].policy).Statement :
+        st if st.Sid == "Ec2ElbCompanionReadsNoResourceScoping" && st.Effect == "Allow" && contains(st.Action, a) && st.Resource == ["*"] && st.Condition.StringEquals["aws:RequestedRegion"] == "us-east-2"
+      ]) == 1
+    ])
+    error_message = "ec2:GetSecurityGroupsForVpc and ec2:ValidateSecurityGroupQuotasForInterface (elbv2 CreateLoadBalancer companions) must be allowed in the network document, region-conditioned, in their own statement."
+  }
+  assert {
+    condition = length([
+      for k, p in aws_iam_policy.permission_set : k
+      if anytrue([for st in jsondecode(p.policy).Statement : contains(st.Action, "ec2:GetSecurityGroupsForVpc") || contains(st.Action, "ec2:ValidateSecurityGroupQuotasForInterface")])
+    ]) == 1
+    error_message = "The two companion reads must live in exactly one document."
+  }
+}
+
 run "p14_trust_requires_mfa_and_the_session_is_one_hour" {
   command = plan
   variables {
@@ -1024,7 +1049,7 @@ run "p14_no_wildcard_action_and_resource_star_only_for_reads_or_the_honest_list"
         st.Effect == "Deny" || !contains(st.Resource, "*") || alltrue([
           for a in st.Action :
           can(regex("^(Describe|List|Get)", split(":", a)[1])) || contains(
-            ["kms:CreateKey", "ecs:RegisterTaskDefinition", "ecs:DeregisterTaskDefinition", "ecs:DeleteTaskDefinitions", "elasticmapreduce:RunJobFlow", "elasticmapreduce:CreateSecurityConfiguration", "elasticmapreduce:DeleteSecurityConfiguration", "route53:CreateHostedZone", "route53:DeleteHostedZone", "route53:ChangeResourceRecordSets", "route53:ChangeTagsForResource", "acm:RequestCertificate"],
+            ["ec2:ValidateSecurityGroupQuotasForInterface", "kms:CreateKey", "ecs:RegisterTaskDefinition", "ecs:DeregisterTaskDefinition", "ecs:DeleteTaskDefinitions", "elasticmapreduce:RunJobFlow", "elasticmapreduce:CreateSecurityConfiguration", "elasticmapreduce:DeleteSecurityConfiguration", "route53:CreateHostedZone", "route53:DeleteHostedZone", "route53:ChangeResourceRecordSets", "route53:ChangeTagsForResource", "acm:RequestCertificate"],
             a
           )
         ])

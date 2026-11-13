@@ -51,6 +51,8 @@ resource "aws_sfn_state_machine" "embedding_dispatch" {
   encryption_configuration {
     type       = "CUSTOMER_MANAGED_KMS_KEY"
     kms_key_id = var.kms_key_arn
+    # AWS always reports 300 (its default); leaving this null made every plan show an update the provider's waiter never sees.
+    kms_data_key_reuse_period_seconds = 300
   }
   tags       = var.tags
   depends_on = [aws_iam_role_policy.producer]

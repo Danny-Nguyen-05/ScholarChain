@@ -85,15 +85,16 @@ class RealTreeIsClean(unittest.TestCase):
             p for p in listed if re.fullmatch(r"infra/terraform/environments/[^/]+\.json\.example", p)}
         self.assertTrue(every <= scanned)
 
-    def test_the_allowlist_has_exactly_the_ten_reviewed_statements(self):
-        """Seven from 14A, plus (replan W5a/W5b) acm:RequestCertificate and the four ssmmessages ECS Exec actions in two files."""
+    def test_the_allowlist_has_exactly_the_eleven_reviewed_statements(self):
+        """Seven from 14A, plus (replan W5a/W5b) acm:RequestCertificate and the four ssmmessages ECS Exec actions in two files,
+        plus (live runtime-apply repair) the two ec2 reads Elastic Load Balancing makes for the caller."""
         by_service = sorted(sorted({a.split(":")[0] for a in g.actions}) for g in guard.GLOBAL_RESOURCE_ALLOWLIST)
         self.assertEqual(by_service, [
             ["acm"], ["acm", "elasticloadbalancing"], ["application-autoscaling", "servicediscovery"], ["cloudwatch"],
-            ["ecs"], ["ecs"], ["rds"], ["route53"], ["ssmmessages"], ["ssmmessages"]])
+            ["ec2"], ["ecs"], ["ecs"], ["rds"], ["route53"], ["ssmmessages"], ["ssmmessages"]])
         self.assertEqual({g.path for g in guard.GLOBAL_RESOURCE_ALLOWLIST}, {PHASE14, RUNTIME_TPL, TUNNEL})
         sizes = sorted(len(g.actions) for g in guard.GLOBAL_RESOURCE_ALLOWLIST)
-        self.assertEqual(sizes, [1, 1, 2, 3, 4, 4, 4, 9, 10, 10])
+        self.assertEqual(sizes, [1, 1, 2, 2, 3, 4, 4, 4, 9, 10, 10])
         for g in guard.GLOBAL_RESOURCE_ALLOWLIST:
             if g.path != PHASE14:
                 self.assertFalse(g.requires_condition)  # the ssmmessages entries: no condition key applies to ECS tasks
@@ -132,7 +133,7 @@ class UnjustifiedGlobalGrantsStillFail(unittest.TestCase):
         code, report, _ = run_guard(files)
         self.assertEqual(code, 1)
         found = categories(report)
-        self.assertEqual([c for _, _, c in found], ["global-iam-resource"] * 8)  # seven 14A statements + acm:RequestCertificate
+        self.assertEqual([c for _, _, c in found], ["global-iam-resource"] * 9)  # seven 14A statements + acm:RequestCertificate + the two ec2 ELB reads
         self.assertEqual({p for p, _, _ in found}, {"infra/terraform/deployer/renamed.tf"})
 
     def test_an_allowlisted_regional_statement_that_loses_its_condition_fails(self):
