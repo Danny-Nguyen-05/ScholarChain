@@ -1549,3 +1549,72 @@ run "p14_the_emr_managed_policies_tag_may_be_applied_to_subnets_and_security_gro
     error_message = "Tag-on-create for CreateSubnet and CreateSecurityGroup carries no tag-key restriction, so the extra tag is allowed."
   }
 }
+
+# Phase 14B live E1 (first base-apply, role scholarchain-deployer): two AccessDenied errors, both on create-time ARNs that carry no name or id.
+#  1. servicediscovery:CreatePrivateDnsNamespace on arn:aws:servicediscovery:us-east-2:<account>:*/* (the namespace/* and service/* ARNs of
+#     CloudMapNamespaceAndServices never match a create);
+#  2. states:ValidateStateMachineDefinition on arn:aws:states:us-east-2:<account>:stateMachine:* (the provider validates before it creates).
+run "p14_e1_cloud_map_create_and_state_machine_validation_are_granted_narrowly" {
+  command = plan
+  variables {
+    enabled_permission_sets = ["phase14-main"]
+  }
+
+  assert {
+    condition = [for st in jsondecode(aws_iam_policy.permission_set["phase14-main--network"].policy).Statement : st if st.Sid == "CloudMapCreateWithProjectTags"] == [{
+      Sid      = "CloudMapCreateWithProjectTags"
+      Effect   = "Allow"
+      Action   = ["servicediscovery:CreatePrivateDnsNamespace", "servicediscovery:CreateService", "servicediscovery:TagResource"]
+      Resource = ["arn:aws:servicediscovery:us-east-2:111122223333:*/*"]
+      Condition = { StringEquals = {
+        "aws:RequestedRegion"        = "us-east-2"
+        "aws:RequestTag/project"     = "scholarchain"
+        "aws:RequestTag/environment" = "course"
+      } }
+    }]
+    error_message = "CreatePrivateDnsNamespace (with the CreateService and TagResource hedge) is allowed on the account/region wildcard-id ARN only, under the region and both request tags."
+  }
+  assert {
+    condition = [for st in jsondecode(aws_iam_policy.permission_set["phase14-main--data"].policy).Statement : st if st.Sid == "StepFunctionsValidateDefinition"] == [{
+      Sid       = "StepFunctionsValidateDefinition"
+      Effect    = "Allow"
+      Action    = ["states:ValidateStateMachineDefinition"]
+      Resource  = ["arn:aws:states:us-east-2:111122223333:stateMachine:*"]
+      Condition = { StringEquals = { "aws:RequestedRegion" = "us-east-2" } }
+    }]
+    error_message = "ValidateStateMachineDefinition is allowed on the account/region stateMachine:* ARN only, under the region; nothing else gained a wildcard state-machine resource."
+  }
+  assert {
+    condition = alltrue([
+      for st in jsondecode(aws_iam_policy.permission_set["phase14-main--data"].policy).Statement :
+      st.Sid == "StepFunctionsValidateDefinition" || !anytrue([for r in st.Resource : r == "arn:aws:states:us-east-2:111122223333:stateMachine:*"])
+    ])
+    error_message = "Only the validate statement may name stateMachine:* (create, update and delete stay on the scholarchain-<environment>-* name prefix)."
+  }
+  assert {
+    condition = alltrue([
+      for k, p in aws_iam_policy.permission_set :
+      alltrue([for st in jsondecode(p.policy).Statement : st.Sid == "CloudMapCreateWithProjectTags" || !anytrue([for r in st.Resource : r == "arn:aws:servicediscovery:us-east-2:111122223333:*/*"])])
+    ])
+    error_message = "Only the Cloud Map create statement may name the wildcard-id ARN."
+  }
+  assert {
+    condition     = !contains(flatten([for st in jsondecode(aws_iam_policy.permission_set["phase14-main--compute"].policy).Statement : st.Effect == "Allow" ? st.Action : []]), "servicediscovery:CreatePrivateDnsNamespace")
+    error_message = "The namespace create action lives in one statement (the old namespace/* ARN could never match it)."
+  }
+  assert {
+    condition = alltrue([
+      for st in jsondecode(aws_iam_policy.permission_set["phase14-main--compute"].policy).Statement :
+      st.Sid != "CloudMapNamespaceAndServices" || (!contains(st.Action, "servicediscovery:CreatePrivateDnsNamespace") && contains(st.Action, "servicediscovery:GetNamespace") && contains(st.Action, "servicediscovery:DeleteNamespace") && contains(st.Action, "servicediscovery:ListTagsForResource"))
+    ])
+    error_message = "CloudMapNamespaceAndServices keeps the read, update, tag and delete actions on namespace/* and service/* ARNs."
+  }
+  assert {
+    condition     = contains(flatten([for st in jsondecode(aws_iam_policy.permission_set["phase14-main--compute"].policy).Statement : st.Sid == "Route53PrivateZoneForCloudMapNoScoping" ? st.Action : []]), "route53:CreateHostedZone") && contains(flatten([for st in jsondecode(aws_iam_policy.permission_set["phase14-main--network"].policy).Statement : st.Sid == "Ec2DescribeNoResourceScoping" ? st.Action : []]), "ec2:DescribeVpcs") && contains(flatten([for st in jsondecode(aws_iam_policy.permission_set["phase14-main--network"].policy).Statement : st.Sid == "Ec2DescribeNoResourceScoping" ? st.Action : []]), "ec2:DescribeRegions")
+    error_message = "The Cloud Map private-zone companions (route53 create, ec2:DescribeVpcs and DescribeRegions) stay granted."
+  }
+  assert {
+    condition     = alltrue([for k, p in aws_iam_policy.permission_set : length(p.policy) < 6144]) && length(aws_iam_policy.permission_set) == 7
+    error_message = "All seven documents stay under 6144 characters."
+  }
+}

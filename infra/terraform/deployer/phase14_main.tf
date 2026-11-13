@@ -115,6 +115,24 @@ locals {
         Resource  = concat(local.ec2_resources, [local.ec2_rule_arn])
         Condition = { StringEquals = merge(local.c_region, local.c_res_main) }
       },
+      {
+        # Phase 14B live E1: the first base-apply was refused "servicediscovery:CreatePrivateDnsNamespace on
+        # arn:aws:servicediscovery:<region>:<account>:*/*". Cloud Map authorizes the namespace (and service) create calls against that
+        # wildcard-id ARN, never namespace/<id> or service/<id> (the ids do not exist yet), so the namespace/* and service/* ARNs of
+        # CloudMapNamespaceAndServices (compute document) can never match a create. Cloud Map supports aws:RequestTag (ABAC "Yes" in
+        # https://docs.aws.amazon.com/cloud-map/latest/dg/security_iam_service-with-iam.html) and the main root's provider default_tags
+        # tag the namespace and the services with project and environment, so the request tags and the region still scope the create.
+        # CreateService and TagResource (tag-on-create) are given the same shape as a hedge: the same ARN form is expected for them but is
+        # observed only for the namespace. The Route 53 private-zone and ec2:DescribeVpcs/DescribeRegions companions are already granted
+        # (Route53PrivateZoneForCloudMapNoScoping, Ec2DescribeNoResourceScoping).
+        Sid    = "CloudMapCreateWithProjectTags"
+        Effect = "Allow"
+        Action = [
+          "servicediscovery:CreatePrivateDnsNamespace", "servicediscovery:CreateService", "servicediscovery:TagResource",
+        ]
+        Resource  = ["${local.m_arn_sd}:*/*"]
+        Condition = { StringEquals = merge(local.c_region, local.c_req_main) }
+      },
     ]
   }
 
@@ -240,6 +258,17 @@ locals {
           "states:TagResource", "states:UntagResource",
         ]
         Resource  = ["${local.m_arn_sfn}:stateMachine:${local.mp}-*"]
+        Condition = { StringEquals = local.c_region }
+      },
+      {
+        # Phase 14B live E1: the AWS provider (6.44.0) calls ValidateStateMachineDefinition before CreateStateMachine and the call was
+        # refused on arn:aws:states:<region>:<account>:stateMachine:*. The action validates a definition and creates nothing, and the
+        # evaluated resource is the wildcard ARN (no name exists), so the name-prefixed ARN above can never match it. Account and region
+        # scoped; the create itself stays on the name prefix.
+        Sid       = "StepFunctionsValidateDefinition"
+        Effect    = "Allow"
+        Action    = ["states:ValidateStateMachineDefinition"]
+        Resource  = ["${local.m_arn_sfn}:stateMachine:*"]
         Condition = { StringEquals = local.c_region }
       },
       {
@@ -563,7 +592,7 @@ locals {
         Sid    = "CloudMapNamespaceAndServices"
         Effect = "Allow"
         Action = [
-          "servicediscovery:CreatePrivateDnsNamespace", "servicediscovery:DeleteNamespace",
+          "servicediscovery:DeleteNamespace",
           "servicediscovery:GetNamespace", "servicediscovery:CreateService",
           "servicediscovery:UpdateService", "servicediscovery:DeleteService", "servicediscovery:GetService",
           "servicediscovery:TagResource", "servicediscovery:UntagResource", "servicediscovery:ListTagsForResource",
