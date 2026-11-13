@@ -102,7 +102,6 @@ resource "aws_service_discovery_service" "http" {
     }
     routing_policy = "MULTIVALUE"
   }
-  health_check_custom_config {}
   tags = var.tags
 }
 resource "aws_ecs_task_definition" "service" {
