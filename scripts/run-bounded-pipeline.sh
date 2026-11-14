@@ -123,7 +123,7 @@ Human approval record (--execute): KEY=value lines, each exactly once, no quotes
   (schema as for deploy.sh) is re-verified immediately before EACH step submission. Before the first paid
   operation --execute also checks the live account hash, describes the cluster (WAITING or RUNNING), requires
   an auto-termination idle timeout (aws emr get-auto-termination-policy) and only the approved instance
-  type and counts (aws emr list-instance-groups), then reserves one ledger slot (a reservation counts for good).
+  type and counts (Cluster.InstanceGroups from aws emr describe-cluster), then reserves one ledger slot (a reservation counts for good).
 
 Human approval points (plan Section 7.3)
   2. --execute: an approval record naming the run configuration, budget, region, capacity, maximum runtime and
@@ -554,9 +554,10 @@ else
 fi
 
 sc_step "cluster-check"
+# AWS CLI v2 has no `aws emr list-instance-groups`: describe-cluster itself calls ListInstanceGroups (or ListInstanceFleets)
+# and embeds the groups as Cluster.InstanceGroups, which check-cluster reads (missing or empty refuses).
 sc_mktemp DESCRIBE_FILE
 sc_mktemp POLICY_FILE
-sc_mktemp GROUPS_FILE
 RC=0
 sc_exec --cloud --timeout "${TIMEOUT_AWS_SECONDS}" --capture "${DESCRIBE_FILE}" -- \
   "${AWS_ENV[@]}" aws emr describe-cluster --region "${REGION}" --cluster-id "${CLUSTER_ID}" --output json || RC=$?
@@ -565,13 +566,9 @@ RC=0
 sc_exec --cloud --timeout "${TIMEOUT_AWS_SECONDS}" --capture "${POLICY_FILE}" -- \
   "${AWS_ENV[@]}" aws emr get-auto-termination-policy --region "${REGION}" --cluster-id "${CLUSTER_ID}" --output json || RC=$?
 [[ "${EXECUTE}" -eq 0 || "${RC}" -eq 0 ]] || sc_refuse "${EX_REFUSED}" "aws emr get-auto-termination-policy failed (exit ${RC}): forced auto-termination cannot be verified"
-RC=0
-sc_exec --cloud --timeout "${TIMEOUT_AWS_SECONDS}" --capture "${GROUPS_FILE}" -- \
-  "${AWS_ENV[@]}" aws emr list-instance-groups --region "${REGION}" --cluster-id "${CLUSTER_ID}" --output json || RC=$?
-[[ "${EXECUTE}" -eq 0 || "${RC}" -eq 0 ]] || sc_fail "$(sc_rc_to_exit "${RC}")" "aws emr list-instance-groups failed (exit ${RC})"
 if [[ "${EXECUTE}" -eq 1 ]]; then
   CHECK_RC=0
-  CHECK_OUT="$(python3 -I "${SC_LIB_DIR}/pipeline.py" check-cluster --describe "${DESCRIBE_FILE}" --policy "${POLICY_FILE}" --groups "${GROUPS_FILE}" \
+  CHECK_OUT="$(python3 -I "${SC_LIB_DIR}/pipeline.py" check-cluster --describe "${DESCRIBE_FILE}" --policy "${POLICY_FILE}" \
     --cluster-id "${CLUSTER_ID}" --instance-type "${INSTANCE_TYPE}" --core-count "${CORE_COUNT}" --max-task-count "${TASK_COUNT}" \
     --max-capacity "${MAX_CAPACITY}" --max-idle-seconds "${IDLE_MAX}")" || CHECK_RC=$?
   if [[ "${CHECK_RC}" -ne 0 ]]; then

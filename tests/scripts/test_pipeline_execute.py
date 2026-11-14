@@ -46,8 +46,9 @@ class PipelineExecute(unittest.TestCase):
         fx = self.fx()
         r = fx.execute()
         verbs = r.aws_verbs()
-        self.assertEqual(verbs[:4], ["sts get-caller-identity", "emr describe-cluster", "emr get-auto-termination-policy", "emr list-instance-groups"])
-        self.assertEqual(verbs.index("emr add-steps"), 4)
+        self.assertEqual(verbs[:3], ["sts get-caller-identity", "emr describe-cluster", "emr get-auto-termination-policy"])
+        self.assertEqual(verbs.index("emr add-steps"), 3)
+        self.assertNotIn("emr list-instance-groups", verbs, "AWS CLI v2 has no list-instance-groups command")
         for verb in verbs:
             service, _, action = verb.partition(" ")
             if verb == "emr add-steps" or verb == "emr cancel-steps":
@@ -56,7 +57,7 @@ class PipelineExecute(unittest.TestCase):
         self.assertEqual(r.tool_calls("terraform"), [])
         self.assertEqual(r.tool_calls("docker"), [])
         self.assertTrue(set(verbs) <= {"sts get-caller-identity", "emr describe-cluster", "emr get-auto-termination-policy",
-                                       "emr list-instance-groups", "emr add-steps", "emr describe-step", "emr cancel-steps"}, verbs)
+                                       "emr add-steps", "emr describe-step", "emr cancel-steps"}, verbs)
 
     def test_every_aws_call_is_bounded_by_a_timeout_in_the_printed_command(self):
         fx = self.fx()

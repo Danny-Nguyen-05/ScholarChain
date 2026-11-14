@@ -360,21 +360,24 @@ def emr(op, args):
     JSON in $FAKE_LOG.steps and returns s-FAKE<n>; describe-step state comes from FAKE_EMR_STEP_STATE_<n> (or
     FAKE_EMR_STEP_STATE, default COMPLETED)."""
     cluster = flag_value(args, "--cluster-id")
+    if op == "list-instance-groups":  # AWS CLI v2 has no such command; the pipeline must never call it
+        print("aws: error: argument operation: Found invalid choice 'list-instance-groups'", file=sys.stderr)
+        return 252
     if op == "describe-cluster":
-        print(json.dumps({"Cluster": {"Id": os.environ.get("FAKE_EMR_CLUSTER_ID", cluster), "Status": {"State": os.environ.get("FAKE_EMR_STATE", "WAITING")}}}))
-        return 0
-    if op == "get-auto-termination-policy":
-        idle = os.environ.get("FAKE_EMR_IDLE", "900")
-        print(json.dumps({} if idle == "none" else {"AutoTerminationPolicy": {"IdleTimeout": int(idle)}}))
-        return 0
-    if op == "list-instance-groups":
+        # Like the CLI v2 customization, embed the ListInstanceGroups result as Cluster.InstanceGroups.
         default = [
             {"InstanceGroupType": "MASTER", "InstanceType": "m5.xlarge", "RequestedInstanceCount": 1, "RunningInstanceCount": 1},
             {"InstanceGroupType": "CORE", "InstanceType": "m5.xlarge", "RequestedInstanceCount": 1, "RunningInstanceCount": 1},
             {"InstanceGroupType": "TASK", "InstanceType": "m5.xlarge", "RequestedInstanceCount": 0, "RunningInstanceCount": 0},
         ]
-        groups = json.loads(os.environ["FAKE_EMR_GROUPS"]) if os.environ.get("FAKE_EMR_GROUPS") else default
-        print(json.dumps({"InstanceGroups": groups}))
+        cluster_doc = {"Id": os.environ.get("FAKE_EMR_CLUSTER_ID", cluster), "Status": {"State": os.environ.get("FAKE_EMR_STATE", "WAITING")}}
+        if os.environ.get("FAKE_EMR_GROUPS") != "absent":
+            cluster_doc["InstanceGroups"] = json.loads(os.environ["FAKE_EMR_GROUPS"]) if os.environ.get("FAKE_EMR_GROUPS") else default
+        print(json.dumps({"Cluster": cluster_doc}))
+        return 0
+    if op == "get-auto-termination-policy":
+        idle = os.environ.get("FAKE_EMR_IDLE", "900")
+        print(json.dumps({} if idle == "none" else {"AutoTerminationPolicy": {"IdleTimeout": int(idle)}}))
         return 0
     if op == "add-steps":
         path = os.environ.get("FAKE_LOG", "") + ".steps"

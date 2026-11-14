@@ -135,13 +135,23 @@ def aws():
     if key == "sts get-caller-identity":
         print(SCEN.get("account", "__ACCOUNT__"))
     elif key == "emr describe-cluster":
-        print(json.dumps(SCEN.get("describe_cluster", {"Cluster": {"Id": SCEN.get("cluster_id", "j-TESTCLUSTER"), "Status": {"State": "WAITING"}}})))
+        # AWS CLI v2 describe-cluster embeds the ListInstanceGroups result as Cluster.InstanceGroups. The scenario's
+        # "groups" ({"InstanceGroups": [...]}) is injected unless the describe_cluster override already carries the key;
+        # groups="absent" omits Cluster.InstanceGroups entirely (fail-closed tests).
+        described = json.loads(json.dumps(SCEN.get("describe_cluster", {"Cluster": {"Id": SCEN.get("cluster_id", "j-TESTCLUSTER"), "Status": {"State": "WAITING"}}})))
+        groups = SCEN.get("groups", {"InstanceGroups": [
+            {"InstanceGroupType": "MASTER", "InstanceType": "m5.xlarge", "RequestedInstanceCount": 1, "RunningInstanceCount": 1},
+            {"InstanceGroupType": "CORE", "InstanceType": "m5.xlarge", "RequestedInstanceCount": 1, "RunningInstanceCount": 1}]})
+        cluster = described.get("Cluster") if isinstance(described, dict) else None
+        if groups != "absent" and isinstance(cluster, dict) and "InstanceGroups" not in cluster:
+            cluster["InstanceGroups"] = groups.get("InstanceGroups")
+        print(json.dumps(described))
     elif key == "emr get-auto-termination-policy":
         print(json.dumps(SCEN.get("policy", {"AutoTerminationPolicy": {"IdleTimeout": 900}})))
     elif key == "emr list-instance-groups":
-        print(json.dumps(SCEN.get("groups", {"InstanceGroups": [
-            {"InstanceGroupType": "MASTER", "InstanceType": "m5.xlarge", "RequestedInstanceCount": 1, "RunningInstanceCount": 1},
-            {"InstanceGroupType": "CORE", "InstanceType": "m5.xlarge", "RequestedInstanceCount": 1, "RunningInstanceCount": 1}]})))
+        # AWS CLI v2 (2.35.4) has no such command; the pipeline must never call it.
+        sys.stderr.write("aws: error: argument operation: Found invalid choice 'list-instance-groups'\n")
+        sys.exit(252)
     elif key == "emr add-steps":
         steps = json.loads(ARGV[ARGV.index("--steps") + 1])
         state = load_state()

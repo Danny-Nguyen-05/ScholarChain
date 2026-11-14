@@ -14,8 +14,8 @@
   write-manifest --root R --out FILE --plan FILE --kind planned|result [...]
                                 create the private run manifest (planned) or the result record, exclusively (safeio)
   check-hadoop-config FILE      the Phase 4 ceiling check on a local prep config (argv ceilings via --ceiling K=V)
-  check-cluster ...             --execute only: describe-cluster, get-auto-termination-policy and list-instance-groups
-                                outputs must show a WAITING or RUNNING cluster WITH an auto-termination idle timeout
+  check-cluster ...             --execute only: the describe-cluster output (whose Cluster.InstanceGroups the AWS CLI v2
+                                customization fills from ListInstanceGroups) and the get-auto-termination-policy output must show a WAITING or RUNNING cluster WITH an auto-termination idle timeout
                                 (60..max) and only the approved instance type and counts
 
 Design notes
@@ -681,10 +681,13 @@ def cmd_check_cluster(args):
 
     described = load(args.describe, "describe-cluster")
     policy = load(args.policy, "get-auto-termination-policy")
-    groups = load(args.groups, "list-instance-groups")
     state = idle = None
+    groups = None
     if isinstance(described, dict):
         cluster = described.get("Cluster") or {}
+        # AWS CLI v2 has no `aws emr list-instance-groups`; its describe-cluster embeds the ListInstanceGroups result as
+        # Cluster.InstanceGroups (awscli/customizations/emr/describecluster.py). Missing or empty fails closed below.
+        groups = {"InstanceGroups": cluster.get("InstanceGroups")}
         if cluster.get("Id") != args.cluster_id:
             problems.append("describe-cluster returned another cluster id")
         state = (cluster.get("Status") or {}).get("State")
@@ -704,6 +707,9 @@ def cmd_check_cluster(args):
             problems.append("the cluster reports no instance groups")
             found = []
         for group in found:
+            if not isinstance(group, dict):
+                problems.append("an instance group entry is not an object")
+                continue
             kind = group.get("InstanceGroupType")
             if kind not in limits:
                 problems.append("unknown instance group type %s" % kind)
@@ -840,7 +846,7 @@ def build_parser():
     p.add_argument("--ceiling", action="append", required=True)
     p.set_defaults(fn=cmd_check_hadoop_config)
     p = sub.add_parser("check-cluster")
-    for name in ("describe", "policy", "groups", "cluster-id", "instance-type"):
+    for name in ("describe", "policy", "cluster-id", "instance-type"):
         p.add_argument("--" + name, required=True)
     for name in ("core-count", "max-task-count", "max-capacity", "max-idle-seconds"):
         p.add_argument("--" + name, type=int, required=True)

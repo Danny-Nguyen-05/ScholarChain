@@ -45,13 +45,13 @@ class PipelineDryRun(unittest.TestCase):
 
     def test_every_cloud_command_is_printed_not_run_and_carries_a_timeout(self):
         cmds = self.run_.grep(r"^DRY-RUN CMD: ")
-        self.assertEqual(len(cmds), 10, "1 sts + 3 cluster verifications + 6 add-steps expected\n" + "\n".join(c[:120] for c in cmds))
+        self.assertEqual(len(cmds), 9, "1 sts + 2 cluster verifications + 6 add-steps expected\n" + "\n".join(c[:120] for c in cmds))
         for c in cmds:
             self.assertRegex(c, r"^DRY-RUN CMD: timeout=\d+s ")
             self.assertIn(" aws ", c)
         verbs = [re.search(r" aws (\S+ \S+)", c).group(1) for c in cmds]
-        self.assertEqual(verbs, ["sts get-caller-identity", "emr describe-cluster", "emr get-auto-termination-policy",
-                                 "emr list-instance-groups"] + ["emr add-steps"] * 6)
+        self.assertEqual(verbs, ["sts get-caller-identity", "emr describe-cluster", "emr get-auto-termination-policy"]
+                         + ["emr add-steps"] * 6)
         self.assertFalse(self.run_.grep(r"^CMD: "), "an executed (non-DRY-RUN) command line was printed")
 
     # ----- markers -----

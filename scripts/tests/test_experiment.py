@@ -214,7 +214,7 @@ class ExperimentExecuteTests(ExperimentFixture):
         self.assertEqual(result.rc, 0, result.out)
         self.assertTrue(result.result_line().startswith("RESULT: PASS"), result.result_line())
         self.assertEqual(len(self.submitted_steps()), 6)
-        self.assertEqual(self.emr_ops()[:3], ["describe-cluster", "get-auto-termination-policy", "list-instance-groups"])
+        self.assertEqual(self.emr_ops()[:2], ["describe-cluster", "get-auto-termination-policy"])
         runs = os.path.join(self.repo, "target", "experiment-runs")
         directory = [d for d in os.listdir(runs) if d.startswith("fixture-exp-a-")]
         self.assertEqual(len(directory), 1)

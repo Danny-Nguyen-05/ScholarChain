@@ -31,7 +31,7 @@ CEILINGS = {
     "maxXmlEntityExpansion": 8388608,
 }
 EXPECTED_SECONDS = {"stage-in": 270, "hadoop-prep": 1080, "entity-resolution": 1080, "spark-class-origin": 270, "spark-job": 2160, "copy-out": 540}
-READ_ONLY_EMR = {"describe-cluster", "get-auto-termination-policy", "list-instance-groups", "describe-step"}
+READ_ONLY_EMR = {"describe-cluster", "get-auto-termination-policy", "describe-step"}
 FORBIDDEN_INFRA_WORDS = ("create-cluster", "run-job-flow", "modify-instance-groups", "terminate-clusters", "put-managed-scaling-policy", "set-termination-protection")
 
 
@@ -51,7 +51,7 @@ class DryRunTests(PipelineFixture):
             m = re.search(r"aws (sts get-caller-identity|emr [a-z-]+)", line)
             self.assertIsNotNone(m, line)
             verbs.append(m.group(1))
-        self.assertEqual(verbs, ["sts get-caller-identity", "emr describe-cluster", "emr get-auto-termination-policy", "emr list-instance-groups"] + ["emr add-steps"] * 6)
+        self.assertEqual(verbs, ["sts get-caller-identity", "emr describe-cluster", "emr get-auto-termination-policy"] + ["emr add-steps"] * 6)
         self.assertTrue(self.tree_clean(), "a dry run writes nothing into the repository")
         with open(self.ledger_path(), encoding="utf-8") as handle:
             self.assertEqual(len(handle.readlines()), 1, "a dry run reserves nothing: the ledger still holds only its init record")
@@ -321,9 +321,9 @@ class ExecuteGateTests(PipelineFixture):
         self.assertEqual(result.rc, 0, result.out)
         self.assertTrue(last_result(result).startswith("RESULT: PASS"), last_result(result))
         ops = self.emr_ops()
-        self.assertEqual(ops[:3], ["describe-cluster", "get-auto-termination-policy", "list-instance-groups"])
+        self.assertEqual(ops[:2], ["describe-cluster", "get-auto-termination-policy"])
         self.assertEqual([o for o in ops if o == "add-steps"], ["add-steps"] * 6)
-        self.assertEqual(ops[3:], ["add-steps", "describe-step"] * 6)
+        self.assertEqual(ops[2:], ["add-steps", "describe-step"] * 6)
         self.assertEqual(self.aws_calls()[0].split()[:2], ["sts", "get-caller-identity"], "the account check comes before any other call")
         steps = self.submitted_steps()
         self.assertEqual([s["Name"] for s in steps], ["ScholarChain-%s-%s" % (RUN, n) for n in STEPS])
@@ -595,7 +595,7 @@ class ExecuteGateTests(PipelineFixture):
         result = self.execute(args, FAKE_EMR_IDLE="none")
         self.assertEqual(result.rc, 4, result.out)
         self.assertIn("NO auto-termination policy", result.out)
-        self.assertEqual(self.emr_ops(), ["describe-cluster", "get-auto-termination-policy", "list-instance-groups"])
+        self.assertEqual(self.emr_ops(), ["describe-cluster", "get-auto-termination-policy"])
         self.assertEqual(self.submitted_steps(), [])
         with open(self.ledger_path(), encoding="utf-8") as handle:
             self.assertEqual(len(handle.readlines()), 1, "no ledger slot is reserved for a refused run")
@@ -619,6 +619,8 @@ class ExecuteGateTests(PipelineFixture):
             "other instance type": ({"FAKE_EMR_GROUPS": groups(kind="m5.2xlarge")}, "uses m5.2xlarge, not the approved m5.xlarge"),
             "more core nodes than approved": ({"FAKE_EMR_GROUPS": groups(core=2)}, "CORE group has 2 instances, above the approved 1"),
             "more task nodes than approved": ({"FAKE_EMR_GROUPS": groups(task=2)}, "TASK group has 2 instances, above the approved 1"),
+            "no InstanceGroups in describe-cluster (fail closed)": ({"FAKE_EMR_GROUPS": "absent"}, "the cluster reports no instance groups"),
+            "empty InstanceGroups in describe-cluster (fail closed)": ({"FAKE_EMR_GROUPS": "[]"}, "the cluster reports no instance groups"),
             "other cluster": ({"FAKE_EMR_CLUSTER_ID": "j-OTHER123456"}, "another cluster id"),
         }
         for label, (env, needle) in cases.items():

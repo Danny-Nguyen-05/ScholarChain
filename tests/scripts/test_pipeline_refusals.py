@@ -739,6 +739,18 @@ class PipelineClusterRefusals(Base):
         self.expect_cluster_refusal({"groups": self.groups(core_count=3)})
         self.expect_cluster_refusal({"groups": self.groups(task=1)})  # no task nodes approved
 
+    def test_describe_cluster_without_instance_groups_refuses(self):
+        # The groups come only from describe-cluster's Cluster.InstanceGroups (AWS CLI v2 has no list-instance-groups).
+        cases = (("absent", "the cluster reports no instance groups"),
+                 ({"InstanceGroups": []}, "the cluster reports no instance groups"),
+                 ({"InstanceGroups": None}, "the cluster reports no instance groups"),
+                 ({"InstanceGroups": ["MASTER"]}, "an instance group entry is not an object"))
+        for groups, reason in cases:
+            with self.subTest(groups=groups):
+                run = self.expect_cluster_refusal({"groups": groups})
+                self.assertIn(reason, run.text)
+                self.assertNotIn("emr list-instance-groups", run.aws_verbs())
+
     def test_describe_cluster_returning_another_cluster_id(self):
         self.expect_cluster_refusal({"describe_cluster": {"Cluster": {"Id": "j-SOMEONEELSE", "Status": {"State": "WAITING"}}}})
 
