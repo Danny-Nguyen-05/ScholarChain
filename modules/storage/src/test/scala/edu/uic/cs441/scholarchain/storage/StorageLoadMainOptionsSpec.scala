@@ -1,7 +1,8 @@
 package edu.uic.cs441.scholarchain.storage
 
+import edu.uic.cs441.scholarchain.core.*
 import java.nio.charset.StandardCharsets.UTF_8
-import java.nio.file.Files
+import java.nio.file.{Files, Path}
 import java.time.Instant
 import org.scalatest.funsuite.AnyFunSuite
 import scala.collection.mutable
@@ -149,5 +150,222 @@ class StorageLoadMainOptionsSpec extends AnyFunSuite {
       AwsBasicCredentials.create(key, secret)
     )
     assert(duplicate._1 == 2 && duplicate._3.isEmpty)
+  }
+
+  // Smallest export the real validator accepts: a completed run with empty node, edge and support
+  // tables. With `rejectingCache` an extra, undeclared kcore manifest makes the cache loader (and
+  // only the cache loader) reject, so a graph-only success proves that the cache step never ran.
+  private def exportFixture(root: Path, rejectingCache: Boolean): Path = {
+    val run = "run:00000000-0000-4000-8000-0000000000aa"
+    val lineage =
+      SparkLineage(run, "fixture-snapshot", run, "fixture-er", "a" * 64, Vector.empty, Vector.empty)
+    val context = SparkRecordContext(SchemaVersions.sparkAnalytics, run, None, lineage)
+    val emptyHash = StableIds.sha256Hex("sha256-fixed-256-shard-sorted-row-json-merkle-v1\n")
+    val support = "edges/type=coauthored_with_support"
+    def manifest(name: String, keys: Vector[String]) = LoadManifest(
+      context,
+      "s3",
+      name,
+      Vector(name),
+      "parquet",
+      0,
+      keys,
+      Vector.empty,
+      emptyHash,
+      Vector("all-years"),
+      "storage-engineer",
+      Vector.empty
+    )
+    val manifests = Vector(manifest(support, Vector("edgeId", "workId"))) ++
+      (if (rejectingCache) Vector(manifest("metrics/type=kcore", Vector("researcherId")))
+       else Vector.empty)
+    Files.createDirectories(root.resolve("load-manifests"))
+    Files.createDirectories(root.resolve(support))
+    Vector("nodes", "graph-edges", "coauthor-edges").foreach(d =>
+      Files.createDirectories(root.resolve("neptune-opencypher-csv/data/" + d))
+    )
+    Files.writeString(
+      root.resolve("load-manifests/s3.json"),
+      upickle.default.write(manifests),
+      UTF_8
+    )
+    val csv = Vector(":ID", ":LABEL")
+    val sidecar = ujson.Obj(
+      "schemaVersion" -> "scholarchain.neptune-opencypher-export.v1",
+      "runId" -> run,
+      "format" -> "opencypher",
+      "userProvidedEdgeIds" -> true,
+      "loaderPrefix" -> "neptune-opencypher-csv/data",
+      "contentHashMethod" -> "sha256-fixed-256-shard-sorted-row-json-merkle-v1",
+      "supportTable" -> ujson.Obj("path" -> support, "keyColumns" -> ujson.Arr("edgeId", "workId")),
+      "sourceTables" -> ujson.Arr(
+        ujson.Obj(
+          "path" -> support,
+          "rowCount" -> 0L,
+          "contentHash" -> emptyHash,
+          "keyColumns" -> ujson.Arr("edgeId", "workId")
+        )
+      ),
+      "datasets" -> ujson.Arr.from(
+        Vector("nodes", "graph-edges", "coauthor-edges").map(d =>
+          ujson.Obj(
+            "path" -> ("neptune-opencypher-csv/data/" + d),
+            "columns" -> ujson.Arr.from(csv),
+            "rowCount" -> 0L,
+            "contentHash" -> emptyHash
+          )
+        )
+      )
+    )
+    Files.writeString(
+      root.resolve("load-manifests/neptune-opencypher-csv.json"),
+      sidecar.render(),
+      UTF_8
+    )
+    val runJson = ujson.Obj("runId" -> run).render() + "\n"
+    val meta = ujson
+      .Obj(
+        "runId" -> run,
+        "hadoopRunId" -> run,
+        "entityResolutionRunId" -> run,
+        "entityResolutionPolicyVersion" -> lineage.entityResolutionPolicyVersion,
+        "entityResolutionPolicyHash" -> lineage.entityResolutionPolicyHash,
+        "tables" -> ujson.Arr(
+          ujson.Obj(
+            "dataset" -> support,
+            "path" -> support,
+            "rowCount" -> 0L,
+            "contentHash" -> emptyHash
+          )
+        )
+      )
+      .render() + "\n"
+    Files.writeString(root.resolve("run-manifest.json"), runJson, UTF_8)
+    Files.writeString(root.resolve("run-metadata.json"), meta, UTF_8)
+    Files.writeString(root.resolve("counters.json"), "[]", UTF_8)
+    Files.writeString(
+      root.resolve("_SCHOLARCHAIN_SPARK_COMPLETE"),
+      StableIds.sha256Hex(runJson + "\n" + meta) + "\n",
+      UTF_8
+    )
+    val config = root.resolve("storage-load-config.json")
+    Files.writeString(
+      config,
+      ujson
+        .Obj(
+          "schemaVersion" -> "scholarchain.storage-load.v1",
+          "environment" -> "local",
+          "region" -> "us-east-1",
+          "bucket" -> "fixture-bucket",
+          "graphPrefix" -> "graph",
+          "tables" -> ujson.read(
+            upickle.default.write(
+              DynamoTables(
+                "runs",
+                "links",
+                "sessions",
+                "evidence",
+                "artifacts",
+                "metrics",
+                "idempotency"
+              )
+            )
+          ),
+          "neptune" -> ujson
+            .Obj("iamRoleArn" -> "fixture-role", "endpoint" -> "https://fixture.invalid:8182")
+        )
+        .render(),
+      UTF_8
+    )
+    config
+  }
+
+  private def withFixture(rejectingCache: Boolean)(f: (Vector[String], Path) => Unit): Unit = {
+    val root = Files.createTempDirectory("storage-load-graph-only-")
+    try {
+      val config = exportFixture(root, rejectingCache)
+      f(Vector("--manifest", root.toString, "--config", config.toString), root)
+    } finally ExportFiles.deleteTree(root)
+  }
+
+  test("normal fake execution still runs the cache step and prints the unchanged COMPLETE line") {
+    withFixture(rejectingCache = false) { (base, _) =>
+      val (code, lines) = run(base :+ "--execute-fake")
+      assert(code == 0, lines.mkString("\n"))
+      assert(lines.exists(_.contains("mode=fake nodes=0 edges=0 support=0")))
+      assert(lines.last == "COMPLETE: cacheWritten=0 cacheUnchanged=0 graphState=LOAD_COMPLETED")
+    }
+  }
+
+  test("normal paths still reject through the cache loader, which graph-only must not invoke") {
+    withFixture(rejectingCache = true) { (base, _) =>
+      val fake = run(base :+ "--execute-fake")
+      assert(fake._1 == 1 && fake._2.last.startsWith("FAILED: cache loading rejected; reason="))
+      val dry = run(base)
+      assert(dry._1 == 1 && dry._2.last.startsWith("FAILED: cache source validation rejected"))
+    }
+  }
+
+  test("--graph-only with --execute-fake skips the cache loader and submits the graph load") {
+    withFixture(rejectingCache = true) { (base, _) =>
+      val (code, lines) = run(base ++ Vector("--execute-fake", "--graph-only"))
+      assert(code == 0, lines.mkString("\n"))
+      assert(lines.exists(_.contains("mode=fake nodes=0 edges=0 support=0")))
+      assert(lines.last == "COMPLETE: cacheSkipped=true graphState=LOAD_COMPLETED")
+      assert(!lines.exists(l => l.contains("cacheWritten=") || l.startsWith("FAILED:")))
+      val withBudget =
+        run(base ++ Vector("--graph-only", "--execute-fake", "--load-timeout-seconds", "900"))
+      assert(withBudget._1 == 0)
+      assert(withBudget._2.contains("loader: timeoutMillis=900000 maxPolls=900 (override)"))
+      assert(withBudget._2.last == "COMPLETE: cacheSkipped=true graphState=LOAD_COMPLETED")
+    }
+  }
+
+  test("--graph-only dry run prints the graph-only plan, no cache plan and performs no calls") {
+    withFixture(rejectingCache = true) { (base, _) =>
+      Vector(base :+ "--graph-only", base ++ Vector("--dry-run", "--graph-only")).foreach { args =>
+        val (code, lines) = run(args)
+        assert(code == 0, lines.mkString("\n"))
+        assert(
+          lines.head.startsWith("runId=run:00000000-0000-4000-8000-0000000000aa mode=dry-run ")
+        )
+        assert(
+          lines.contains(
+            "PLAN: graph-only; cache step skipped (caches must already be loaded for this run)"
+          )
+        )
+        assert(lines.exists(l => l.startsWith("PLAN:") && l.contains("submit and poll Neptune")))
+        assert(!lines.exists(l => l.contains("cacheWrites=") || l.contains("cacheUnchanged=")))
+        assert(!lines.exists(_.startsWith("COMPLETE:")))
+      }
+    }
+  }
+
+  test(
+    "--graph-only is refused with --check-credentials, when duplicated and where AWS rules apply"
+  ) {
+    withFixture(rejectingCache = false) { (base, _) =>
+      val refused = Vector(
+        Vector("--check-credentials", "--profile", "p", "--graph-only"),
+        Vector("--graph-only", "--check-credentials", "--profile", "p"),
+        base ++ Vector("--execute-fake", "--graph-only", "--graph-only"),
+        base ++ Vector("--execute-fake", "--execute-aws", "--graph-only"),
+        base ++ Vector("--graph-only", "--profile", "p"),
+        base ++ Vector("--graph-only", "--load-timeout-seconds", "900"),
+        base ++ Vector("--execute-aws", "--graph-only", "--environment", "local")
+      )
+      refused.foreach { args =>
+        val requested = mutable.Buffer.empty[String]
+        val lines = mutable.Buffer.empty[String]
+        val code = StorageLoadMain.run(
+          args,
+          lines += _,
+          p => { requested += p; provider(AwsBasicCredentials.create(key, secret)) }
+        )
+        assert(code == 2, args.toString)
+        assert(lines.nonEmpty && lines.forall(_.startsWith("REFUSED:")), args.toString)
+        assert(requested.isEmpty && !lines.exists(_.contains("mode=aws")), args.toString)
+      }
+    }
   }
 }

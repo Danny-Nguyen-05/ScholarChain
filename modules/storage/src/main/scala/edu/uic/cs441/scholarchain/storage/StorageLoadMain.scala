@@ -137,11 +137,15 @@ object StorageLoadMain {
       val values = scala.collection.mutable.Map.empty[String, String];
       val enabled = scala.collection.mutable.Set.empty[String]
       var checkOnly = false
+      var graphOnly = false
       var i = 0
       while (i < args.size) {
         val arg = args(i);
         if (arg == "--check-credentials") {
           if (checkOnly) throw new IllegalArgumentException("duplicate flag"); checkOnly = true;
+          i += 1
+        } else if (arg == "--graph-only") {
+          if (graphOnly) throw new IllegalArgumentException("duplicate flag"); graphOnly = true;
           i += 1
         } else if (flags(arg)) {
           if (!enabled.add(arg)) throw new IllegalArgumentException("duplicate flag"); i += 1
@@ -162,7 +166,11 @@ object StorageLoadMain {
         }
       }
       if (checkOnly) {
-        if (enabled.nonEmpty || values.keySet != Set("--profile") || values("--profile").isEmpty) {
+        if (
+          graphOnly || enabled.nonEmpty || values.keySet != Set("--profile") || values(
+            "--profile"
+          ).isEmpty
+        ) {
           out("REFUSED: --check-credentials accepts only --profile."); return 2
         }
         return checkCredentials(values("--profile"), out, credentialsFor)
@@ -227,6 +235,12 @@ object StorageLoadMain {
         case None => out("FAILED: graph export validation rejected."); return 1
       }
       out(s"runId=$runId mode=${if (real) "aws" else if (fake) "fake" else "dry-run"} $counts")
+      if (!real && !fake && graphOnly) {
+        out("PLAN: graph-only; cache step skipped (caches must already be loaded for this run)")
+        out(
+          "PLAN: upload validated graph/support and submit and poll Neptune through ports. No AWS calls or external store writes performed."
+        ); return 0
+      }
       if (!real && !fake) {
         val plan = new Phase6CacheLoader(
           new InMemoryEntityLinkCache,
@@ -316,16 +330,21 @@ object StorageLoadMain {
           graph
         )
       }
-      val cache = new Phase6CacheLoader(
-        links,
-        metrics,
-        new LocalParquetManifestReader(root),
-        sourceObjects = objects,
-        sourceRegistry = registry
-      ).load(manifests)
-      if (!StorageResult.successful(cache)) {
-        out("FAILED: cache loading rejected; reason=" + failureCode(cache)); return 1
-      }
+      val cache =
+        if (graphOnly) None
+        else {
+          val loadedCache = new Phase6CacheLoader(
+            links,
+            metrics,
+            new LocalParquetManifestReader(root),
+            sourceObjects = objects,
+            sourceRegistry = registry
+          ).load(manifests)
+          if (!StorageResult.successful(loadedCache)) {
+            out("FAILED: cache loading rejected; reason=" + failureCode(loadedCache)); return 1
+          }
+          Some(loadedCache)
+        }
       val graph = new NeptuneGraphLoader(
         neptune,
         objects,
@@ -339,10 +358,15 @@ object StorageLoadMain {
       if (!StorageResult.successful(loaded)) {
         out("FAILED: graph loading rejected; reason=" + failureCode(loaded)); return 1
       }
-      val result = StorageResult.value(cache).get
-      out(
-        s"COMPLETE: cacheWritten=${result.written} cacheUnchanged=${result.unchanged} graphState=${StorageResult.value(loaded).get.state}"
-      )
+      val graphState = StorageResult.value(loaded).get.state
+      cache match {
+        case None => out(s"COMPLETE: cacheSkipped=true graphState=$graphState")
+        case Some(c) =>
+          val result = StorageResult.value(c).get
+          out(
+            s"COMPLETE: cacheWritten=${result.written} cacheUnchanged=${result.unchanged} graphState=$graphState"
+          )
+      }
       0
     } catch {
       case _: Exception => out("REFUSED: invalid arguments, configuration or source data."); 2
