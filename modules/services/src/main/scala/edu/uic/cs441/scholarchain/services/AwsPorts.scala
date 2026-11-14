@@ -247,7 +247,10 @@ final class AwsSdkPortFactory(
         Region,
         AwsCredentialsProvider,
         ClientOverrideConfiguration
-    ) => BedrockRuntimeClient = AwsSdkPortFactory.defaultBedrock
+    ) => BedrockRuntimeClient = AwsSdkPortFactory.defaultBedrock,
+    artifactWarmup: RuntimeArtifactStore => Unit = store => {
+      RuntimeArtifactWarmup.start(store); ()
+    }
 ) extends AwsPortFactory {
   private val providerFailed = "provider-client-failed"
 
@@ -445,10 +448,14 @@ final class AwsSdkPortFactory(
           .filter(_ != config.ragBucket)
           .map(b => new S3ObjectStore(s3, storeConfig(b, config.common)))
           .getOrElse(objects)
-        new ObjectStoreRuntimeArtifactStore(
+        val store = new ObjectStoreRuntimeArtifactStore(
           artifactObjects,
           RuntimeArtifactPointer(p.key, p.sha256, p.sourceRunId)
         )
+        // Background load so the first query does not pay for the cold download inside its budget.
+        try artifactWarmup(store)
+        catch { case NonFatal(_) => () }
+        store
     }
     Right(
       new QueryPorts(
