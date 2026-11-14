@@ -254,7 +254,7 @@ repository files only read (every mutation edits a scratch copy).
   (`tests/scripts/fake_s3.py`) behaves like S3 and no longer refuses a missing `--if-none-match` itself: the tests assert on the recorded
   `put-object` argv and on a race (a key created just before the put is never overwritten).
 - `operator_checks.py` / `test_operator_roles_14b.py`: FOUR operator roles (loader, reader, cleanup, pipeline). Pipeline invariants P1..P7
-  (MFA trust, 14,400 s, no boundary, same-device login; exactly the six EMR actions on `cluster/*` with region plus project, environment and
+  (MFA trust, 14,400 s, no boundary, same-device login; exactly the seven EMR actions on `cluster/*` with region plus project, environment and
   stack tag conditions; nothing that starts or ends a cluster, deletes objects or touches IAM/STS/EC2/ECS; PutObject create-only under artifacts
   `emr/<run>/` only, read-only on `pipeline/<run>/` and the `emr/` logs; KMS through S3 only; services limited to elasticmapreduce, s3, kms) and
   the loader runtime-artifact invariant L1 (create-only PutObject on rag `runtime-artifacts/<run>/*`, read-back, no delete, no other writer).

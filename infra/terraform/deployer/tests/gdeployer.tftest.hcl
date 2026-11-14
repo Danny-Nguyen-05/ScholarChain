@@ -185,12 +185,12 @@ run "pipeline_actions_are_exactly_the_approved_set" {
 
   assert {
     condition = toset(flatten([for st in jsondecode(aws_iam_role_policy.operator_pipeline[0].policy).Statement : st.Action])) == toset([
-      "elasticmapreduce:DescribeCluster", "elasticmapreduce:ListInstanceGroups", "elasticmapreduce:GetAutoTerminationPolicy", "elasticmapreduce:DescribeStep",
+      "elasticmapreduce:DescribeCluster", "elasticmapreduce:ListInstanceGroups", "elasticmapreduce:ListBootstrapActions", "elasticmapreduce:GetAutoTerminationPolicy", "elasticmapreduce:DescribeStep",
       "elasticmapreduce:AddJobFlowSteps", "elasticmapreduce:CancelSteps",
       "s3:PutObject", "s3:GetObject", "s3:GetObjectVersion", "s3:GetObjectAttributes", "s3:AbortMultipartUpload", "s3:ListMultipartUploadParts", "s3:ListBucket",
       "kms:GenerateDataKey", "kms:Decrypt",
     ])
-    error_message = "The pipeline role's actions are exactly the six EMR actions the pipeline script calls, the S3 upload/read-back/list actions and the two KMS data-key actions."
+    error_message = "The pipeline role's actions are exactly the seven EMR actions the pipeline script's CLI calls make (describe-cluster also calls ListInstanceGroups and ListBootstrapActions), the S3 upload/read-back/list actions and the two KMS data-key actions."
   }
   assert {
     condition = !anytrue(flatten([
@@ -224,7 +224,7 @@ run "pipeline_emr_actions_are_scoped_to_clusters_carrying_the_three_project_tags
     condition = anytrue([
       for st in jsondecode(aws_iam_role_policy.operator_pipeline[0].policy).Statement :
       st.Sid == "EmrReadTheProjectClusterAndItsSteps" && st.Effect == "Allow" &&
-      toset(st.Action) == toset(["elasticmapreduce:DescribeCluster", "elasticmapreduce:ListInstanceGroups", "elasticmapreduce:GetAutoTerminationPolicy", "elasticmapreduce:DescribeStep"]) &&
+      toset(st.Action) == toset(["elasticmapreduce:DescribeCluster", "elasticmapreduce:ListInstanceGroups", "elasticmapreduce:ListBootstrapActions", "elasticmapreduce:GetAutoTerminationPolicy", "elasticmapreduce:DescribeStep"]) &&
       st.Resource == ["arn:aws:elasticmapreduce:us-east-2:111122223333:cluster/*"] &&
       st.Condition == { StringEquals = {
         "aws:RequestedRegion"                = "us-east-2"

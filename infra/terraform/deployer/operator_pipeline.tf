@@ -10,9 +10,10 @@
 #
 # What the pipeline calls from the laptop (read from scripts/run-bounded-pipeline.sh; sts:GetCallerIdentity needs no permission):
 #   aws emr describe-cluster, get-auto-termination-policy, list-instance-groups   (cluster check, before any paid step)
+#   (the AWS CLI v2 describe-cluster customization also calls ListInstanceGroups and ListBootstrapActions; add-steps calls DescribeCluster first)
 #   aws emr add-steps, describe-step, cancel-steps                                (submit, poll, cancel)
 # The steps themselves (S3 stage-in, copy-out, the bootstrap downloads) run on the nodes with the EMR instance role, not with this role.
-# Local files are hashed locally. So this role needs: those six EMR actions on the project cluster, an upload path for the EMR
+# Local files are hashed locally. So this role needs: those seven EMR actions on the project cluster, an upload path for the EMR
 # artifacts and datasets, and read access to the outputs and the cluster logs. Nothing else.
 #
 # Key contract (artifacts bucket scholarchain-<env>-<account>-artifacts), the run folder is operator_run_prefix:
@@ -57,7 +58,7 @@ locals {
       {
         Sid       = "EmrReadTheProjectClusterAndItsSteps"
         Effect    = "Allow"
-        Action    = ["elasticmapreduce:DescribeCluster", "elasticmapreduce:ListInstanceGroups", "elasticmapreduce:GetAutoTerminationPolicy", "elasticmapreduce:DescribeStep"]
+        Action    = ["elasticmapreduce:DescribeCluster", "elasticmapreduce:ListInstanceGroups", "elasticmapreduce:ListBootstrapActions", "elasticmapreduce:GetAutoTerminationPolicy", "elasticmapreduce:DescribeStep"]
         Resource  = local.op_emr_cluster_arns
         Condition = { StringEquals = merge(local.c_region, local.c_op_cluster_tags) }
       },

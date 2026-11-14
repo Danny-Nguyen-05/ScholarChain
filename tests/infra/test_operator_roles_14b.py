@@ -60,7 +60,7 @@ class RealTree(unittest.TestCase):
     def test_the_pipeline_role_trust_session_and_no_boundary(self):
         self.assertEqual(oc.check_pipeline_role_basics(self.on), [])
 
-    def test_the_pipeline_role_has_exactly_the_six_emr_actions_on_the_tagged_project_cluster(self):
+    def test_the_pipeline_role_has_exactly_the_seven_emr_actions_on_the_tagged_project_cluster(self):
         self.assertEqual(oc.check_pipeline_emr(self.on), [])
 
     def test_the_pipeline_role_cannot_start_or_end_a_cluster_delete_objects_or_touch_iam(self):

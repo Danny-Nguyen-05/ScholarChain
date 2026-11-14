@@ -229,7 +229,7 @@ def check_runtime_boundary(plan):
 
 # ---------------------------------------------------------------------------------------------------------------
 # Pipeline role (G5/G6): hand-derived from the work order: the role that runs scripts/run-bounded-pipeline.sh --execute and the EMR
-# artifact upload. Six EMR actions on the project cluster only (tag conditions), create-only uploads under emr/<run>/, read-only on
+# artifact upload. Seven EMR actions on the project cluster only (tag conditions), create-only uploads under emr/<run>/, read-only on
 # pipeline/<run>/ and the EMR logs, KMS through S3 only, and nothing that could start, end or administer anything else.
 # ---------------------------------------------------------------------------------------------------------------
 RUN = "run-20261115"
@@ -237,7 +237,7 @@ ARTIFACTS = "arn:aws:s3:::scholarchain-%s-%s-artifacts" % (ENV, ACCOUNT)
 LOGS = "arn:aws:s3:::scholarchain-%s-%s-logs" % (ENV, ACCOUNT)
 RAG = "arn:aws:s3:::scholarchain-%s-%s-rag" % (ENV, ACCOUNT)
 EMR_ACTIONS = {"elasticmapreduce:DescribeCluster", "elasticmapreduce:GetAutoTerminationPolicy", "elasticmapreduce:ListInstanceGroups",
-               "elasticmapreduce:AddJobFlowSteps", "elasticmapreduce:DescribeStep", "elasticmapreduce:CancelSteps"}
+               "elasticmapreduce:ListBootstrapActions", "elasticmapreduce:AddJobFlowSteps", "elasticmapreduce:DescribeStep", "elasticmapreduce:CancelSteps"}
 EMR_CLUSTERS = "arn:aws:elasticmapreduce:%s:%s:cluster/*" % (REGION, ACCOUNT)
 EMR_TAGS = {"aws:ResourceTag/project": "scholarchain", "aws:ResourceTag/environment": ENV, "aws:ResourceTag/scholarchain:stack": "main-emr"}
 REGION_CONDITION = {"aws:RequestedRegion": REGION}
@@ -273,7 +273,7 @@ def check_pipeline_role_basics(plan):
 
 
 def check_pipeline_emr(plan):
-    """P2: EMR actions exactly the six, on cluster/* only, each statement with the region and the three cluster-tag conditions."""
+    """P2: EMR actions exactly the seven, on cluster/* only, each statement with the region and the three cluster-tag conditions."""
     problems = []
     seen = set()
     for st in pipeline_statements(plan):
