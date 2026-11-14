@@ -25,6 +25,7 @@ final class AnswerSynthesisAgent(
     clockNanos: () => Long = () => System.nanoTime()
 ) {
   require(RuntimeConfigValidation.check(config).isEmpty)
+  private val ScaffoldKeyOverheadBytes = 64
   def synthesize(plan: QueryPlan, bundle: EvidenceBundle): SynthesisResult = {
     if (DomainValidation.check(plan).isLeft) return SynthesisResult.Failed("invalid-runtime-plan")
     if (plan.question.getBytes(UTF_8).length > config.effectiveByteLimits.questionBytes)
@@ -42,13 +43,25 @@ final class AnswerSynthesisAgent(
     val context = EvidenceContext.render(bundle)
     if (context.getBytes(UTF_8).length > config.retrieval.contextTokenBudget)
       return SynthesisResult.Abstained("synthesis-context-bound", Vector.empty)
-    val data = ujson
-      .Obj(
-        "question" -> plan.question,
-        "plan" -> upickle.default.writeJs(plan),
-        "evidenceData" -> context
-      )
-      .render()
+    val base = ujson.Obj(
+      "question" -> plan.question,
+      "plan" -> upickle.default.writeJs(plan),
+      "evidenceData" -> context
+    )
+    val fixedBytes = base.render().getBytes(UTF_8).length + assets.synthesisPrompt
+      .getBytes(UTF_8)
+      .length + assets.synthesisSchema.render().getBytes(UTF_8).length
+    if (fixedBytes > config.effectiveByteLimits.requestBytes)
+      return SynthesisResult.Abstained("synthesis-request-bound", Vector.empty)
+    // The scaffold is bounded separately from the evidence context (same size as that budget) and
+    // never by more than the room left in the request, so it cannot push a request over its limit.
+    val scaffoldBudget = math.min(
+      config.retrieval.contextTokenBudget,
+      config.effectiveByteLimits.requestBytes - fixedBytes - ScaffoldKeyOverheadBytes
+    )
+    val scaffold = ClaimScaffold.build(plan, bundle, scaffoldBudget)
+    base("claimScaffold") = ClaimScaffold.toJson(scaffold)
+    val data = base.render()
     if (
       data.getBytes(UTF_8).length + assets.synthesisPrompt.getBytes(UTF_8).length +
         assets.synthesisSchema

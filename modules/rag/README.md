@@ -414,6 +414,15 @@ The audit retains proposed and rejected claims, per-claim verdicts/reasons, plan
 source run/version/evidence IDs, prompt/model versions, usage when supplied, latency and the hash
 of the complete final answer. Pre-plan outcomes use an optional record rather than a fabricated plan.
 
+Each synthesis request carries a `claimScaffold`: the exact verifiable claims (claimType, templateId,
+subjectIds, windowIds, evidenceIds and typed values) for every deterministic evidence item,
+computed from `ClaimContract`, the same field rules `ClaimVerificationAgent` applies, so the
+two cannot drift. It is empty in vector mode, skips unrequested windows and descriptive evidence,
+and is bounded separately from the evidence context: at most `retrieval.contextTokenBudget` bytes
+and never more than the room left under `requestBytes`; whole claims are dropped, never cut. The
+prompt tells the model to copy relevant scaffold claims verbatim and to leave `interpretation`
+empty. `synthesis-v1` was edited in place (the version is configured in core, not in this module).
+
 Synthesis uses the versioned `synthesis-v1` prompt and `scholarchain.runtime.synthesis.v1` schema,
 with forced `submit_answer` tool use through the same configured Bedrock Converse port. The stage
 allows at most one malformed-output retry inside its total configured deadline. Tests and the CLI
