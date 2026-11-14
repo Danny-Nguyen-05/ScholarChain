@@ -380,6 +380,23 @@ def emr(op, args):
         print(json.dumps({} if idle == "none" else {"AutoTerminationPolicy": {"IdleTimeout": int(idle)}}))
         return 0
     if op == "add-steps":
+        # Like AWS CLI v2 (2.35.4) client-side validation of --steps against the add-steps customization's STEPS_SCHEMA
+        # (awscli/customizations/emr/argumentschema.py): a value starting with "[" is parsed as JSON (awscli/argprocess.py),
+        # and any key outside the CLI shape (e.g. the API's HadoopJarStep wrapper) is rejected with exit 252.
+        allowed = ["Type", "Name", "ActionOnFailure", "Jar", "Args", "MainClass", "Properties", "LogUri", "EncryptionKeyArn"]
+        try:
+            steps = json.loads(flag_value(args, "--steps"))
+        except (TypeError, ValueError):
+            sys.stderr.write("\nError parsing parameter '--steps': Invalid JSON\n")
+            return 252
+        for index, step in enumerate(steps if isinstance(steps, list) else []):
+            for key in step:
+                if key not in allowed:
+                    sys.stderr.write('\nParameter validation failed:\nUnknown parameter in [%d]: "%s", must be one of: %s\n' % (index, key, ", ".join(allowed)))
+                    return 252
+            if step.get("Type") not in (None, "CUSTOM_JAR") or "Jar" not in step or not isinstance(step.get("Args", []), list):
+                sys.stderr.write("fake aws: add-steps step %d is not a CUSTOM_JAR step with a Jar and an Args list\n" % index)
+                return 252
         path = os.environ.get("FAKE_LOG", "") + ".steps"
         count = 0
         if os.path.exists(path):
@@ -389,6 +406,13 @@ def emr(op, args):
             handle.write(flag_value(args, "--steps") + "\n")
         print("s-FAKE%d" % (count + 1))
         return int(os.environ.get("FAKE_EMR_ADD_RC", "0"))
+    if op == "cancel-steps":
+        # CancelStepsInput: ClusterId, StepIds (list), StepCancellationOption SEND_INTERRUPT | TERMINATE_PROCESS.
+        if not cluster or not flag_value(args, "--step-ids") or flag_value(args, "--step-cancellation-option") not in ("SEND_INTERRUPT", "TERMINATE_PROCESS"):
+            sys.stderr.write("fake aws: cancel-steps needs --cluster-id, --step-ids and a valid --step-cancellation-option\n")
+            return 252
+        print(json.dumps({"CancelStepsInfoList": [{"StepId": flag_value(args, "--step-ids"), "Status": "SUBMITTED", "Reason": ""}]}))
+        return 0
     if op == "describe-step":
         number = flag_value(args, "--step-id").replace("s-FAKE", "")
         print(os.environ.get("FAKE_EMR_STEP_STATE_" + number) or os.environ.get("FAKE_EMR_STEP_STATE", "COMPLETED"))

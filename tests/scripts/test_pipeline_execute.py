@@ -32,9 +32,13 @@ class PipelineExecute(unittest.TestCase):
         for c in added:
             steps = json.loads(c["argv"][c["argv"].index("--steps") + 1])
             self.assertEqual(len(steps), 1)
-            jar = steps[0]["HadoopJarStep"]
-            self.assertEqual(jar["Jar"], "command-runner.jar")
-            self.assertEqual(jar["Args"][:2], ["bash", "-c"])
+            self.assertNotIn("HadoopJarStep", steps[0], "AWS CLI v2 add-steps rejects the API-shaped HadoopJarStep wrapper")
+            self.assertEqual(steps[0]["Type"], "CUSTOM_JAR")
+            self.assertEqual(steps[0]["ActionOnFailure"], "CONTINUE")
+            self.assertEqual(steps[0]["Jar"], "command-runner.jar")
+            self.assertEqual(steps[0]["Args"][:2], ["bash", "-c"])
+            for arg in steps[0]["Args"]:
+                self.assertLessEqual(len(arg), 10280, "an EMR step Args string is over the 10,280 character limit")
             names.append(steps[0]["Name"])
             self.assertIn("--cluster-id", c["argv"])
             self.assertEqual(c["argv"][c["argv"].index("--cluster-id") + 1], "j-TESTCLUSTER")

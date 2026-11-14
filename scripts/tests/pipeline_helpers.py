@@ -334,7 +334,8 @@ class PipelineFixture(Fixture):
         return result.stdout.split(begin, 1)[1].split(end, 1)[0]
 
     def step_argv(self, name, **over):
-        """The EMR step's HadoopJarStepConfig.Args list for one step, parsed from the printed command (shell words)."""
+        """The EMR step's Args list (the CLI CUSTOM_JAR step's Args; HadoopJarStepConfig.Args in the API) for one step,
+        parsed from the printed command (shell words)."""
         return shlex.split(self.step_body(name, **over).replace("\\\n", " "))
 
     def step_text(self, name, **over):

@@ -329,11 +329,16 @@ class ExecuteGateTests(PipelineFixture):
         self.assertEqual([s["Name"] for s in steps], ["ScholarChain-%s-%s" % (RUN, n) for n in STEPS])
         dry = self.dry()
         for index, name in enumerate(STEPS):
-            args = steps[index]["HadoopJarStep"]["Args"]
+            # AWS CLI add-steps shape (awscli/customizations/emr/argumentschema.py STEPS_SCHEMA), not the API StepConfig.
+            self.assertNotIn("HadoopJarStep", steps[index], "the CLI rejects the API-shaped HadoopJarStep wrapper")
+            self.assertEqual(sorted(steps[index]), ["ActionOnFailure", "Args", "Jar", "Name", "Type"])
+            self.assertEqual(steps[index]["Type"], "CUSTOM_JAR")
+            self.assertEqual(steps[index]["ActionOnFailure"], "CONTINUE")
+            args = steps[index]["Args"]
             self.assertEqual(args, self.step_argv(name), "the submitted arguments are exactly the command the dry run printed")
             self.assertEqual(args[:2], ["bash", "-c"])
             self.assertTrue(all(len(a) <= 10280 for a in args), "every submitted argument is within the EMR limit")
-            self.assertEqual(steps[index]["HadoopJarStep"]["Jar"], "command-runner.jar")
+            self.assertEqual(steps[index]["Jar"], "command-runner.jar")
         with open(self.ledger_path(), encoding="utf-8") as handle:
             ledger = [json.loads(l) for l in handle]
         self.assertEqual([entry["event"] for entry in ledger], ["init", "reserve"])

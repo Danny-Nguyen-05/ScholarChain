@@ -153,7 +153,18 @@ def aws():
         sys.stderr.write("aws: error: argument operation: Found invalid choice 'list-instance-groups'\n")
         sys.exit(252)
     elif key == "emr add-steps":
+        # AWS CLI v2 (2.35.4) add-steps --steps takes the CLI shorthand shape (Type/Name/ActionOnFailure/Jar/Args at the top
+        # level), not the API's HadoopJarStep wrapper; client-side parameter validation rejects unknown keys with exit 252.
         steps = json.loads(ARGV[ARGV.index("--steps") + 1])
+        allowed = ["Type", "Name", "ActionOnFailure", "Jar", "Args", "MainClass", "Properties", "LogUri", "EncryptionKeyArn"]
+        for index, step in enumerate(steps):
+            for unknown in [k for k in step if k not in allowed]:
+                sys.stderr.write('\nParameter validation failed:\nUnknown parameter in [%d]: "%s", must be one of: %s\n\n'
+                                 % (index, unknown, ", ".join(allowed)))
+                sys.exit(252)
+            if step.get("Type") != "CUSTOM_JAR" or step.get("Jar") != "command-runner.jar" or not isinstance(step.get("Args"), list):
+                sys.stderr.write("fake aws: add-steps step %d is not a CUSTOM_JAR command-runner.jar step with an Args list\n" % index)
+                sys.exit(252)
         state = load_state()
         state["counter"] += 1
         step_id = "s-FAKE%04d" % state["counter"]
@@ -760,7 +771,7 @@ def extract_body(run, name):
 
 
 def step_args(run, name):
-    """The EMR step's HadoopJarStepConfig.Args reconstructed from the dry run's printed command (one word per line, joined with
+    """The EMR step's Args (CLI CUSTOM_JAR shape; HadoopJarStepConfig.Args in the API) reconstructed from the dry run's printed command (one word per line, joined with
     backslash-newline): the exact argument list EMR would receive."""
     import shlex
     return shlex.split(extract_body(run, name).replace("\\\n", " "))

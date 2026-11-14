@@ -467,13 +467,14 @@ expected_invoke = 'python3 - "${local_config}" ' + " ".join(ceiling_numbers)
 if expected_invoke not in bash_body:
     raise SystemExit("smoke ceiling invocation was not embedded")
 
+# AWS CLI add-steps takes its CUSTOM_JAR shape (Type/Name/ActionOnFailure/Jar/Args) and builds HadoopJarStep itself;
+# an API-shaped "HadoopJarStep" key is rejected client-side (awscli/customizations/emr/argumentschema.py STEPS_SCHEMA).
 step = {
+    "Type": "CUSTOM_JAR",
     "Name": step_name,
     "ActionOnFailure": "CONTINUE",
-    "HadoopJarStep": {
-        "Jar": "command-runner.jar",
-        "Args": ["bash", "-c", bash_body],
-    },
+    "Jar": "command-runner.jar",
+    "Args": ["bash", "-c", bash_body],
 }
 print(json.dumps([step], separators=(",", ":")))
 PY

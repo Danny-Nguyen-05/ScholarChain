@@ -374,10 +374,18 @@ def length_line(name, args, limit):
 
 
 def step_json(name, run_id, args):
+    """The `aws emr add-steps --steps` value: the CLI's CUSTOM_JAR step shape, NOT the API's StepConfig. The AWS CLI v2
+    add-steps customization (awscli/customizations/emr/argumentschema.py STEPS_SCHEMA; steputils.build_custom_jar_step;
+    emrutils.build_step) validates Type/Name/ActionOnFailure/Jar/Args/MainClass/Properties/LogUri/EncryptionKeyArn and
+    builds HadoopJarStep itself; an API-shaped "HadoopJarStep" key is rejected client-side ("Unknown parameter in [0]").
+    A single argument starting with "[" is parsed as JSON (awscli/argprocess.py), so Args stays an exact list (no
+    shorthand comma splitting). MainClass and Properties are omitted: absent keys are skipped by emrutils.apply_dict."""
     step = {
+        "Type": "CUSTOM_JAR",
         "Name": ("ScholarChain-%s-%s" % (run_id, name))[:256],
         "ActionOnFailure": "CONTINUE",
-        "HadoopJarStep": {"Jar": "command-runner.jar", "Args": args},
+        "Jar": "command-runner.jar",
+        "Args": args,
     }
     return json.dumps([step], separators=(",", ":"))
 
