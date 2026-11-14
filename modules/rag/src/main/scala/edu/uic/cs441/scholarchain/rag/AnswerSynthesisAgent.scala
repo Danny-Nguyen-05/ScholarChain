@@ -9,7 +9,9 @@ final case class SynthesisProposal(
     narrativeClaimIds: Vector[String],
     interpretation: String,
     uncertainty: String,
-    usage: Vector[RuntimeModelUsage] = Vector.empty
+    usage: Vector[RuntimeModelUsage] = Vector.empty,
+    /** Count of selectedClaimIds that named no claim of the request's scaffold; never a claim. */
+    ignoredSelectedIds: Int = 0
 )
 enum SynthesisResult {
   case Proposed(proposal: SynthesisProposal)
@@ -108,7 +110,7 @@ final class AnswerSynthesisAgent(
           if (model != config.model.modelId || version != config.model.modelVersion)
             return SynthesisResult.Abstained("synthesis-model-mismatch", usage)
           if (json.getBytes(UTF_8).length <= config.effectiveByteLimits.outputBytes) {
-            decode(json, plan, usage) match {
+            decode(json, plan, scaffold, usage) match {
               case Some(proposal) =>
                 if ((clockNanos() - started) / 1000000L >= config.deadlines.synthesisMs)
                   return SynthesisResult.Abstained("synthesis-deadline", usage)
@@ -120,38 +122,58 @@ final class AnswerSynthesisAgent(
     }
     SynthesisResult.Abstained("synthesis-invalid-output", usage)
   }
+  private def proposalClaim(
+      plan: QueryPlan,
+      claimId: String,
+      evidenceIds: Vector[String],
+      typed: TypedAnswerClaim
+  ): AnswerClaim = AnswerClaim(
+    claimId,
+    SchemaVersions.domain,
+    "Structured claim proposal.",
+    evidenceIds,
+    VerificationStatus.Unverified,
+    Some("Unverified structured proposal."),
+    plan.provenance,
+    Some(typed)
+  )
+
+  /** Effective claims are the model's own claims plus the scaffold claims it selected by id. The
+    * scaffold is the exact one sent in this request, and its version wins when a claim is both
+    * copied and selected (an unselected copy is left for the verifier, so a tampered copy is
+    * rejected). The verifier then checks the expanded claims unchanged.
+    */
   private def decode(
       json: String,
       plan: QueryPlan,
+      scaffold: Vector[ScaffoldClaim],
       usage: Vector[RuntimeModelUsage]
   ): Option[SynthesisProposal] = try {
     val tree = ujson.read(json)
     if (RuntimeJsonSchema.validate(assets.synthesisSchema, tree).isLeft) return None
-    val claims = tree("claims").arr.toVector.map { c =>
-      val typed = TypedAnswerClaim(
-        upickle.default.read[RuntimeClaimType](c("claimType")),
-        c("subjectIds").arr.toVector.map(_.str),
-        upickle.default.read[Vector[RuntimeClaimValue]](c("values")),
-        c("windowIds").arr.toVector.map(_.str),
-        c("templateId").str
-      )
-      if (RuntimeContractValidation.claim(typed).nonEmpty) return None
-      AnswerClaim(
-        c("claimId").str,
-        SchemaVersions.domain,
-        "Structured claim proposal.",
-        c("evidenceIds").arr.toVector.map(_.str),
-        VerificationStatus.Unverified,
-        Some("Unverified structured proposal."),
-        plan.provenance,
-        Some(typed)
-      )
-    }
-    val narrative = tree("narrativeClaimIds").arr.toVector.map(_.str)
-    if (
-      claims.map(_.claimId).distinct.size != claims.size ||
-      !narrative.forall(id => claims.exists(_.claimId == id))
-    ) None
+    val byId = scaffold.map(c => c.claimId -> c).toMap
+    val selected =
+      tree.obj.get("selectedClaimIds").map(_.arr.toVector.map(_.str)).getOrElse(Vector.empty)
+    val known = selected.filter(byId.contains)
+    val unknown = selected.filterNot(byId.contains).toSet
+    val own =
+      tree("claims").arr.toVector.filterNot(c => known.contains(c("claimId").str)).map { c =>
+        val typed = TypedAnswerClaim(
+          upickle.default.read[RuntimeClaimType](c("claimType")),
+          c("subjectIds").arr.toVector.map(_.str),
+          upickle.default.read[Vector[RuntimeClaimValue]](c("values")),
+          c("windowIds").arr.toVector.map(_.str),
+          c("templateId").str
+        )
+        if (RuntimeContractValidation.claim(typed).nonEmpty) return None
+        proposalClaim(plan, c("claimId").str, c("evidenceIds").arr.toVector.map(_.str), typed)
+      }
+    if (own.map(_.claimId).distinct.size != own.size) return None
+    def expand(c: ScaffoldClaim) = proposalClaim(plan, c.claimId, c.evidenceIds, c.claim)
+    val claims = own ++ known.distinct.map(id => expand(byId(id)))
+    val narrativeGiven = tree("narrativeClaimIds").arr.toVector.map(_.str).filterNot(unknown)
+    val narrative = if (narrativeGiven.isEmpty) known else narrativeGiven
+    if (!narrative.forall(id => claims.exists(_.claimId == id))) None
     else
       Some(
         SynthesisProposal(
@@ -159,7 +181,8 @@ final class AnswerSynthesisAgent(
           narrative,
           tree("interpretation").str,
           tree("uncertainty").str,
-          usage
+          usage,
+          unknown.size
         )
       )
   } catch { case NonFatal(_) => None }

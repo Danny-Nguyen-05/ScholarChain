@@ -6,6 +6,7 @@ import edu.uic.cs441.scholarchain.storage.fakes.InMemoryIndexedEvidenceBundleSto
 import java.nio.charset.StandardCharsets.UTF_8
 import java.nio.file.{Files, Path}
 import org.scalatest.funsuite.AnyFunSuite
+import scala.util.chaining.*
 
 /** The scaffold is derived from ClaimContract, the verifier's own field contract. These tests run a
   * fake model that copies every scaffold claim verbatim through the real synthesis agent and the
@@ -52,27 +53,40 @@ class ClaimScaffoldSpec extends AnyFunSuite {
       case other                            => fail(other.toString)
     }
 
-  /** Fake model: returns the scaffold from its own input as the whole answer. */
-  private final class EchoModel(interpretation: String = "") extends LlmClient {
+  private def output(body: ujson.Obj): LlmResult = LlmResult.Output(
+    body.render(),
+    LlmUsage(None, None),
+    cfg.model.modelId,
+    cfg.model.modelVersion
+  )
+
+  /** Fake model over its own input scaffold. `select` (default) mirrors the prompt: ids only, empty
+    * claims. Otherwise it copies every scaffold claim verbatim (the backward-compatible shape).
+    */
+  private final class EchoModel(interpretation: String = "", select: Boolean = true)
+      extends LlmClient {
     var requests = Vector.empty[StructuredLlmRequest]
     def complete(request: StructuredLlmRequest): LlmResult = {
       requests :+= request
       val scaffold = ujson.read(request.userData)("claimScaffold")
-      LlmResult.Output(
-        ujson
-          .Obj(
-            "schemaVersion" -> cfg.synthesisSchemaVersion,
-            "claims" -> scaffold,
-            "narrativeClaimIds" -> ujson.Arr.from(scaffold.arr.map(_("claimId"))),
-            "interpretation" -> interpretation,
-            "uncertainty" -> "Echo model."
-          )
-          .render(),
-        LlmUsage(None, None),
-        cfg.model.modelId,
-        cfg.model.modelVersion
+      val idsOf = ujson.Arr.from(scaffold.arr.map(_("claimId")))
+      output(
+        ujson.Obj(
+          "schemaVersion" -> cfg.synthesisSchemaVersion,
+          "claims" -> (if (select) ujson.Arr() else scaffold),
+          "selectedClaimIds" -> (if (select) idsOf else ujson.Arr()),
+          "narrativeClaimIds" -> idsOf,
+          "interpretation" -> interpretation,
+          "uncertainty" -> "Echo model."
+        )
       )
     }
+  }
+
+  /** Fake model whose answer is built from the request scaffold by `f`. */
+  private final class ScriptedModel(f: ujson.Arr => ujson.Obj) extends LlmClient {
+    def complete(request: StructuredLlmRequest): LlmResult =
+      output(f(ujson.read(request.userData)("claimScaffold").arr.pipe(ujson.Arr.from(_))))
   }
   private def scaffoldOf(plan: QueryPlan, bundle: EvidenceBundle) =
     ClaimScaffold.build(plan, bundle, cfg.retrieval.contextTokenBudget)
@@ -87,16 +101,30 @@ class ClaimScaffoldSpec extends AnyFunSuite {
     val expectedScaffold = scaffoldOf(plan, bundle)
     assert(expectedScaffold.nonEmpty, "scaffold must not be empty")
     if (expectedClaims >= 0) assert(expectedScaffold.size == expectedClaims)
-    val model = new EchoModel(interpretation)
+    val verifiedBySelection = verifyWith(plan, bundle, new EchoModel(interpretation, true))
+    // The verbatim-copy shape stays accepted and yields the same verified claims.
+    val verifiedByCopy = verifyWith(plan, bundle, new EchoModel(interpretation, false))
+    assert(
+      verifiedByCopy.answer.claims.map(_.claimId) ==
+        verifiedBySelection.answer.claims.map(_.claimId)
+    )
+    assert(verifiedBySelection.answer.claims.map(_.claimId) == expectedScaffold.map(_.claimId))
+    verifiedBySelection
+  }
+
+  private def verifyWith(plan: QueryPlan, bundle: EvidenceBundle, model: LlmClient) = {
+    val expected = scaffoldOf(plan, bundle)
     val proposal = new AnswerSynthesisAgent(model, cfg, assets).synthesize(plan, bundle) match {
       case SynthesisResult.Proposed(p) => p
       case other                       => fail(other.toString)
     }
-    assert(proposal.claims.map(_.claimId) == expectedScaffold.map(_.claimId))
+    assert(proposal.claims.map(_.claimId) == expected.map(_.claimId))
+    assert(proposal.narrativeClaimIds == expected.map(_.claimId))
+    assert(proposal.ignoredSelectedIds == 0)
     val verified = new ClaimVerificationAgent(cfg).verify(plan, bundle, proposal)
     val bad = verified.verification.claims.filter(_.verdict != ClaimVerdict.Verified)
     assert(bad.isEmpty, bad.toString)
-    assert(verified.answer.claims.size == expectedScaffold.size)
+    assert(verified.answer.claims.size == expected.size)
     assert(verified.verification.overallStatus == VerificationStatus.Verified)
     verified
   }
@@ -337,5 +365,104 @@ class ClaimScaffoldSpec extends AnyFunSuite {
     val result = new ClaimVerificationAgent(cfg)
       .verify(i.plan, bundle, SynthesisProposal(Vector(wrong), Vector("claim:wrong"), "", "u"))
     assert(result.verification.claims.head.verdict != ClaimVerdict.Verified)
+  }
+
+  private def coauthorCase = {
+    val i = input(QueryOperation.DirectCoauthors, "A")
+    (i, build(i, ready(pathAgent.run(i))))
+  }
+  private def answer(claims: ujson.Value, selected: Seq[String], narrative: Seq[String]) =
+    ujson.Obj(
+      "schemaVersion" -> cfg.synthesisSchemaVersion,
+      "claims" -> claims,
+      "selectedClaimIds" -> ujson.Arr.from(selected),
+      "narrativeClaimIds" -> ujson.Arr.from(narrative),
+      "interpretation" -> "",
+      "uncertainty" -> "u"
+    )
+  private def propose(plan: QueryPlan, bundle: EvidenceBundle, model: LlmClient) =
+    new AnswerSynthesisAgent(model, cfg, assets).synthesize(plan, bundle) match {
+      case SynthesisResult.Proposed(p) => p
+      case other                       => fail(other.toString)
+    }
+
+  test("the model input lists the three scaffold ids it is asked to select") {
+    val (i, bundle) = coauthorCase
+    val model = new EchoModel
+    val p = propose(i.plan, bundle, model)
+    assert(p.claims.size == 3 && p.narrativeClaimIds.size == 3)
+    val sent = ujson.read(model.requests.head.userData)("claimScaffold").arr.map(_("claimId").str)
+    assert(sent.toVector == p.claims.map(_.claimId))
+    assert(model.requests.head.systemPrompt.contains("selectedClaimIds"))
+  }
+
+  test("unknown selected ids are ignored and counted; nothing is verified for them") {
+    val (i, bundle) = coauthorCase
+    val model = new ScriptedModel(s => {
+      val first = s.arr.head("claimId").str
+      answer(
+        ujson.Arr(),
+        Seq(first, "claim:invented:9", "claim:path:99"),
+        Seq(first, "claim:invented:9")
+      )
+    })
+    val p = propose(i.plan, bundle, model)
+    assert(p.claims.size == 1 && p.ignoredSelectedIds == 2)
+    assert(p.narrativeClaimIds == p.claims.map(_.claimId))
+    val verified = new ClaimVerificationAgent(cfg).verify(i.plan, bundle, p)
+    assert(verified.verification.claims.map(_.verdict) == Vector(ClaimVerdict.Verified))
+    assert(!verified.verification.claims.exists(_.claimId.contains("invented")))
+    val none = new ScriptedModel(_ => answer(ujson.Arr(), Seq("claim:invented:9"), Seq.empty))
+    val q = propose(i.plan, bundle, none)
+    assert(q.claims.isEmpty && q.narrativeClaimIds.isEmpty && q.ignoredSelectedIds == 1)
+  }
+
+  test("a claim both copied and selected is de-duplicated and the scaffold version wins") {
+    val (i, bundle) = coauthorCase
+    val expected = scaffoldOf(i.plan, bundle)
+    val model = new ScriptedModel(s => {
+      val head = s.arr.head
+      // The copied claim is tampered; the scaffold claim of the same id must replace it.
+      val copy = ujson.read(head.render())
+      copy("values").arr.head("number") = "999"
+      val ids = s.arr.map(_("claimId").str).toSeq
+      answer(ujson.Arr(copy), ids.take(2), Seq.empty)
+    })
+    val p = propose(i.plan, bundle, model)
+    assert(p.claims.map(_.claimId) == expected.take(2).map(_.claimId))
+    assert(p.claims.map(_.runtime.get) == expected.take(2).map(_.claim))
+    assert(p.narrativeClaimIds == p.claims.map(_.claimId))
+    val verified = new ClaimVerificationAgent(cfg).verify(i.plan, bundle, p)
+    assert(verified.verification.claims.forall(_.verdict == ClaimVerdict.Verified))
+  }
+
+  test("a tampered copy that is not selected still reaches the verifier and is rejected") {
+    val (i, bundle) = coauthorCase
+    val model = new ScriptedModel(s => {
+      val copy = ujson.read(s.arr.head.render())
+      copy("values").arr.foreach { v =>
+        if (v("field").str == "returnedCount") v("number") = "999"
+      }
+      answer(ujson.Arr(copy), Seq.empty, Seq(copy("claimId").str))
+    })
+    val p = propose(i.plan, bundle, model)
+    val verified = new ClaimVerificationAgent(cfg).verify(i.plan, bundle, p)
+    assert(verified.verification.claims.head.verdict != ClaimVerdict.Verified)
+  }
+
+  test("synthesis schema accepts selectedClaimIds and still rejects unknown properties") {
+    val schema = assets.synthesisSchema
+    val ok = answer(ujson.Arr(), Seq("claim:path:1"), Seq("claim:path:1"))
+    assert(RuntimeJsonSchema.validate(schema, ok).isRight)
+    val legacy = ujson.read(ok.render()); legacy.obj.remove("selectedClaimIds")
+    assert(RuntimeJsonSchema.validate(schema, legacy).isRight)
+    val extra = ujson.read(ok.render()); extra("verdict") = "VERIFIED"
+    assert(RuntimeJsonSchema.validate(schema, extra).isLeft)
+    val badType = ujson.read(ok.render()); badType("selectedClaimIds") = ujson.Arr(1)
+    assert(RuntimeJsonSchema.validate(schema, badType).isLeft)
+    val dup = answer(ujson.Arr(), Seq("a", "a"), Seq.empty)
+    assert(RuntimeJsonSchema.validate(schema, dup).isLeft)
+    val long = answer(ujson.Arr(), Seq("x" * 129), Seq.empty)
+    assert(RuntimeJsonSchema.validate(schema, long).isLeft)
   }
 }

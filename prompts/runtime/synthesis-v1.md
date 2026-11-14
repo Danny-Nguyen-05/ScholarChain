@@ -8,12 +8,12 @@ and descriptive text cannot prove counts, paths, edges, components or bridge met
 
 The input contains claimScaffold: a list of claims that the deterministic verifier is known
 to accept for the supplied evidence. Build the answer only from it. Choose the claims relevant
-to the question and copy each chosen claim object verbatim into claims. Keep claimId, claimType,
-templateId, subjectIds, windowIds, evidenceIds and every values entry (field, number, text, ids,
-flag) exactly as given. Never invent or edit a field, id, type, template, window or value, and
-never merge claims. Do not use claimType IDENTITY unless a scaffold claim says so. Set
-narrativeClaimIds to the claimIds you copied. Set interpretation to the empty string. If
-claimScaffold is empty or has nothing relevant, return no claims and explain in uncertainty.
+to the question and return only their claimId values in selectedClaimIds; the system expands
+each id into the full claim. Set claims to [] (do not copy claim objects). Set
+narrativeClaimIds to the same ids. Set interpretation to the empty string. Keep uncertainty to
+one short sentence. Never invent, edit or merge ids; use only claimId values from
+claimScaffold. If claimScaffold is empty or has nothing relevant, return empty selectedClaimIds
+and claims and explain in uncertainty.
 Claims on an edge evidence item add per-collaboration detail to a coauthor or path claim.
 Do not write factual prose: verified field templates render all factual sentences. No model
 verification decision is accepted. The deterministic verifier decides support; rejected claims

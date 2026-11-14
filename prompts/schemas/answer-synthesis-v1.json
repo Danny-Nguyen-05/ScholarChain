@@ -163,6 +163,16 @@
       "maxItems": 100,
       "uniqueItems": true
     },
+    "selectedClaimIds": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 128
+      },
+      "maxItems": 100,
+      "uniqueItems": true
+    },
     "interpretation": {
       "type": "string",
       "maxLength": 2048

@@ -420,8 +420,13 @@ computed from `ClaimContract`, the same field rules `ClaimVerificationAgent` app
 two cannot drift. It is empty in vector mode, skips unrequested windows and descriptive evidence,
 and is bounded separately from the evidence context: at most `retrieval.contextTokenBudget` bytes
 and never more than the room left under `requestBytes`; whole claims are dropped, never cut. The
-prompt tells the model to copy relevant scaffold claims verbatim and to leave `interpretation`
-empty. `synthesis-v1` was edited in place (the version is configured in core, not in this module).
+prompt tells the model to return only the relevant scaffold `claimId` values in the optional
+`selectedClaimIds` (leaving `claims` empty, `narrativeClaimIds` the same ids, `interpretation`
+empty); `AnswerSynthesisAgent` expands each id from that request's exact scaffold into the full
+claim before the unchanged verifier runs. Own claims plus selected scaffold claims are
+de-duplicated by `claimId` (the scaffold version wins when both appear), unknown ids are ignored
+and counted in `SynthesisProposal.ignoredSelectedIds`, and an empty `narrativeClaimIds` defaults to
+the selected ids. Verbatim copies in `claims` remain accepted. `synthesis-v1` was edited in place (the version is configured in core, not in this module).
 
 Synthesis uses the versioned `synthesis-v1` prompt and `scholarchain.runtime.synthesis.v1` schema,
 with forced `submit_answer` tool use through the same configured Bedrock Converse port. The stage
