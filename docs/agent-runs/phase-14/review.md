@@ -1448,3 +1448,132 @@ Offline only: no AWS, Anthropic or Voyage call, no key value anywhere, no readin
 (e) Start NO live step (no billing modify, deployer apply, plan, base-apply, push or anything in the runbook's B section). Then stop and end the turn.
 ```
 ````
+
+## Subphase 14B — Session 1 closeout
+
+User-supplied external review (pasted by the user on 2026-11-15; appended verbatim, sections 1-3; section 4 NEXT PROMPT is the routing instruction followed below).
+
+1. VERDICT: REQUEST-CHANGES (Subphase 14B, Session 1 closeout)
+The code repairs hold up. The two blockers are in the records you are about to commit:
+
+The owner report still says the cost is USD 4.45 and the billing check (C11) is “pending”, but the evidence holds a finished C11 report showing USD 15.83.
+The gates other than sbt (Terraform tests and the Python script tests) have no retained log at HEAD.
+Both fixes are offline and quick.
+
+What I checked and found correct:
+
+Evidence hashes: all 55 sha256 values in INDEX.md match their files. The unlisted c11-cost-report.md matches the hash quoted in the Gaps section.
+Closeout sbt check: I read the git-ignored log directly. Its sha256 is 1fc21fea…882f1e, it ran on JDK 17.0.20.1, the run took 736 s, and the 9 summary lines add up to 1567 passed, 0 failed, 1 canceled. “693” is one of those 9 lines, so it does not contradict the per-repair counts in the decision log.
+Counts: before-cleanup inventory 309, then 213 destroy actions, then 62, then 60. 16B: 40 asked, 39 HTTP 200, 14 answered with claims. The cost adds up: 9.05 + … = 15.75, and the four daily totals sum to 15.75.
+No secrets in the evidence or report diffs: no account IDs, tokens, emails or endpoints. The only 12-digit number is an elapsedNanos value.
+Repair 7/8 did not weaken the claim verifier. ClaimContract.scala is a line-for-line move of the verifier’s field sets, allowed, expected, same and pathComplete. No existing verifier test was changed. The new ClaimScaffoldSpec covers:
+an invented claim type;
+unknown selected ids;
+a tampered copy that is selected (the scaffold version wins);
+a tampered copy that is not selected (the verifier rejects it).
+Repairs 10/11 fakes match the live AWS CLI v2 errors. Both fakes return “invalid choice ‘list-instance-groups’” and “Unknown parameter … HadoopJarStep” with exit 252, and both also refuse missing or empty Cluster.InstanceGroups.
+Approval-record binding: for the two records that were never archived, serial 7 and serial 16, the retained local logs still show the gate passed: “approval record parsed” and “plan sha256 matches” at lines 11 and 18.
+Runbook step A3 (budget): skipping it was a recorded human decision (prompt.md:421).
+2. Findings
+ID	Severity	Path:line	Evidence and impact	Owner	Acceptance check	Blocking
+B1	Medium	owner-report.md:683, 714, 723, 731-732; test-report.md:907; INVENTORIES.md:109-114; c11-cost-report.md:61; 00-timeline/decision-log.md	The records say C11 is “pending” and spend is USD 4.45. c11-cost-report.md shows C11 done (provisional): AWS 15.75 before credits, combined 15.83 of the USD 25 cap. They also say the ECS and EMR consoles were not checked, but C11 recorded 0 ECS clusters and 0 EMR clusters. The C11 report names the decision log as its “source of record”, yet the tracked copy of the log has no C11 entries. So cost-to-date is misstated in exactly the records about to be committed.	orchestrator (assembles docs/agent-runs/phase-14/**)	The owner and test reports state 15.83 combined, marked provisional, with read time and bill status. The C11 row is marked done-provisional and links the report. ECS/EMR console status is corrected; EC2 Instances stays listed as unchecked. Either recopy the decision log with its C11 entries or correct the source line in the C11 report. Add c11-cost-report.md to the INDEX table and re-verify every sha256.	yes
+B2	Medium (gate not verified)	test-report.md L4 (“No full seven-gate scripts/check.sh run…”)	The Terraform tests (113/113), tests/infra 33/33, scripts/tests and tests/scripts counts for repairs 9-11 exist only as decision-log lines. 7ecc572 was recorded at 68/69 and only a 5-test subset was rerun. These IAM and script changes were applied live.	coordinator runs it; failures go to infra-engineer and test-engineer	scripts/check.sh --skip sbt on a clean snapshot of b6dc94d returns RESULT: PARTIAL (exit 5, sbt skipped) with every other gate PASS. The log sha256 and exact per-gate counts go in test-report.md, with the closeout sbt run cited for the sbt gate.	yes
+N1	Medium	prompts/runtime/synthesis-v1.md:9; prompts/schemas/answer-synthesis-v1.json:166; modules/core/src/main/resources/scholarchain.runtime-config.v1.json:11	“synthesis-v1” and schema …synthesis.v1 now name two different prompts: the model now picks claim ids instead of writing claims, and interpretation is forced empty. Explain records (r8a, the 16B answers) carry only the label, so they cannot say which prompt was used. The course requires versioned prompts. This is acceptable as a disclosed emergency repair for Session 1, but not as the permanent state.	rag-engineer (prompts, rag) and domain-engineer (core config)	Bump to synthesis-v2, answer-synthesis-v2 and a …synthesis.v2 schema version, with tests, before any Session 2 paid answer, or the human records that they accept it.	no (gate before Session 2 answers)
+N2	Medium	INDEX.md Gaps; approvals-digest.txt	The approval records for serial 7 (runtime apply at bc81afd) and serial 16 (combined EMR apply, which created EFS and security groups and rolled out the ae14593 images) were never archived. The tracked excerpts keep only the RESULT lines.	orchestrator	Add the approval-record, plan-sha and account-match lines from runtime-apply-3.log and 15/emr-apply.log (with each source sha256) to the excerpts.	no (recommended this round)
+N3	Medium	repairs.md row 9; commits 155562d and 2b2d263	No agent roster (native ID, role, model, paths) for E1 through repair 11, which plan Section 5 requires. Commits 155562d and 2b2d263 changed tests/infra/**, which belongs to test-engineer, and row 9 suggests infra-engineer made those edits.	orchestrator	Add the roster from the session logs, or state “not recorded”. Record any cross-owner edit as a deviation for the human to accept.	no
+N4	Low (gate not verified)	14b-deploy/b6-checklist.log	The course “done” criterion “deployed image digests match the commit” (step B6.5) was never compared. The argument that tags are immutable is reasonable but was not observed. The stack is gone, so it cannot be redone now.	deploy-engineer (Session 2); infra-engineer for read access	In Session 2, compare running task image digests with the push record.	no (future)
+N5	Low	modules/services/src/main/resources/logback.xml	This security fix (stop SDK wire logs and session tokens reaching CloudWatch) has no test. The storage and rag command-line tools and the AwsIntegration test still log at DEBUG. The local git-ignored target/phase14/evidence/14c/awsintegration*.log hold expired temporary tokens.	service-engineer; storage-engineer and rag-engineer	Add a test that asserts the services root level is INFO and the four wire loggers are WARN. Set logging for the storage and rag tools before Session 2. Delete those local logs or move them to private storage.	no
+N6	Low	scripts/phase4-emr-smoke.sh:470-478	The step-shape change to the CUSTOM_JAR format has no test.	infra-engineer / test-engineer	A test asserts the smoke --steps value has no HadoopJarStep key and has Type=CUSTOM_JAR.	no
+N7	Low	infra/terraform/deployer/README.md:382; operator_pipeline.tf:12; tests/gdeployer.tftest.hcl:236	These still list list-instance-groups as a call the pipeline makes. Repair 10 removed it.	infra-engineer	Text corrected.	no
+N8	Info	RuntimeArtifactWarmup.scala:17-18; AnswerSynthesisAgent.scala:30	Values fixed in code (3 attempts, 5000 ms, 64 bytes) with no config entry or stated rationale (plan rule 7).	service-engineer / rag-engineer	Add a config entry or a one-line rationale.	no
+N9	Info	section-c/deployer-cleanup-apply.log	C4 destroyed only the 4 operator roles and 9 inline policies. The deployer role and its phase14-main policies remain, which is intended for Session 2.	orchestrator / human	Record this in the inventory as a final-cleanup item.	no
+Future scope (not required now):
+
+S1-F1 to S1-F8.
+16B: path questions 0/10 undiagnosed; direct-coauthor questions 0/14 because of the context budget.
+Phase 15 EMR results, and 15B.
+Applying the billing-bootstrap budget.
+The missing demo items.
+C10 logout, and checking the IAM windows in CloudTrail.
+archive-evidence.sh (B13.3).
+On the prompt question: editing synthesis-v1 in place is acceptable only as a disclosed, temporary emergency repair. It must be bumped (N1) before more live answers are recorded.
+
+3. Report fields
+STATUS: COMPLETE (review); verdict REQUEST-CHANGES
+OWNER: code-reviewer (independent, read-only)
+WORK ORDER: Phase 14 Subphase 14B Session 1 closeout review (user-pasted prompt, 2026-11-15)
+FILES CREATED: none
+FILES MODIFIED: none
+COMMANDS RUN: git status/log/diff 684aeaf..b6dc94d; git show --name-only per commit; git grep; shasum -a 256 over the 55 INDEX entries and the closeout sbt log; grep scans of evidence for secrets/IDs; read-only greps of target/phase14/evidence/14b/runtime-apply-3.log, 15/emr-apply.log and the sbt-check log; WebFetch of the course README Phase 14
+TEST RESULTS: none run by the reviewer; closeout sbt log verified: exit success, 736 s, 1567 succeeded / 0 failed / 1 canceled, JDK 17.0.20.1, sha256 1fc21fea…882f1e
+VALIDATION RESULTS: 55/55 INDEX hashes OK; c11 hash OK; counts 309/213/62/60 and 16B 40/39/14 confirmed; no secret or account ID in evidence; ClaimContract is an exact extraction; findings B1-B2 blocking, N1-N9 nonblocking
+ASSUMPTIONS: the AWS CLI v2 command and shape facts rely on the live errors and the decision log's 2.35.4 source audit; I did not inspect the CLI source
+RISKS: unversioned prompt provenance (N1); temporary tokens left in local logs (N5); deployer role still standing (N9)
+MANUAL ACTION REQUIRED: paste the NEXT PROMPT; after the recheck, write human-gate.md and commit the Session 1 records
+BLOCKED-ON OWNER: orchestrator (B1, B2)
+BLOCKED-ON EVIDENCE: owner-report.md:683/714/731; test-report.md:907; INVENTORIES.md:109-114; no retained non-sbt gate log at b6dc94d
+NEXT GATE: recheck review of the records-only repair round
+
+## Subphase 14B — Session 1 closeout (recheck)
+
+User-supplied external review (pasted by the user on 2026-11-15; appended verbatim, sections 1-3, with the findings table restored to Markdown; section 4 NEXT PROMPT is the routing instruction followed).
+
+1. VERDICT: APPROVE (Subphase 14B, Session 1 closeout, repair round 1 recheck)
+Both blockers are fixed. The work you asked me to check holds up:
+
+B1 (cost and C11 records) is fixed. The owner report and the test report now say C11 is done but provisional. They give the combined spend as USD 15.83 of the USD 25 cap:
+AWS 15.75 before credits;
+tax 0.00;
+Anthropic about 0.08 (ledger estimate);
+Voyage 0.00.
+The ECS and EMR console checks show 0 clusters each, and the EC2 Instances page is still listed as not checked. INVENTORIES.md agrees with this.
+
+The tracked decision log is a byte-for-byte copy of its git-ignored source (sha256 bc7254e8…2c5b, which I recomputed). It now contains the C11 entries, and line 61 of the C11 report names that copy as its source.
+
+Every evidence file is now in INDEX.md: I recomputed all 57 hashes, got 0 mismatches, and found 0 files missing from the index.
+
+B2 (gates other than sbt) is fixed. I read the retained log, whose sha256 70682465…b798 matches what the records state. Both git-ignored copies of the log are identical.
+The log ends with RESULT: PARTIAL passed=6 skipped: sbt and exit=5. Each count in test-report.md matches the log:
+
+Terraform tests: 12/19/113/40/6/272 passed, 0 failed.
+scripts/tests: 1061 passed, including the required classes (7 and 6 tests).
+phase12d-spike: 78 passed.
+billing tests: 113/62/39 passed.
+tests/scripts: 463 passed.
+tests/infra: 460 passed.
+Every suite skipped 0 tests. The run unset the AWS credential variables and used /dev/null as the AWS config file. Only the public Terraform registry was contacted.
+
+N2 (two missing approval records) is fixed. The new file approval-checks-unarchived-serials.txt covers serials 7 and 16. Its quoted source hashes and line counts (147 and 135) match the local logs, and all 7 quoted check lines exist in each log.
+N3 (agent roster) is fixed. The commit times (converted to UTC) and the file lists in the roster match git show for every commit. The edits to tests/infra/** in 155562d and 2b2d263 are flagged as deviations for you to accept or reject.
+N9 (deployer role left standing) is recorded under “Final-cleanup items” in INVENTORIES.md.
+No secrets. The only 12-digit number is the elapsedNanos value I had already checked. “X-Amz-Security-Token” appears only as a description, never with a value.
+2. Findings from this recheck
+
+| ID | Severity | Path:line | Evidence and impact | Owner | Acceptance check | Blocking |
+|---|---|---|---|---|---|---|
+| R1 | Low | test-report.md:924 | The sbt log hash is written as 1fc21fea021c6132…882f1e, which is 61 characters with “1fe” missing. The actual log hashes to 1fc21fea1fe021c6…882f1e, which line 918 has correctly. The manager’s checkpoint text carries the same typo. Anyone who checks the hash at line 924 will get a mismatch. | orchestrator | Line 924 shows the 64-character value from line 918. grep -rn "1fc21fea021c" docs/agent-runs/ returns nothing. | no, but fix before the commit |
+| R2 | Low | owner-report.md “Open follow-ups” (billing row); docs/agent-runs/phase-14/owner-report.md:100 context | The follow-up still says “alerts 10/15/20”. Your decision of 2026-11-15T18:42Z (Q11, line 108 of the tracked decision log) set the alerts at USD 18/20/22. | orchestrator | The follow-up row says 18/20/22 and cites that decision. The 10/15/20 sentence may stay as a description of what the Terraform code currently defines. | no |
+| R3 | Low | owner-report.md Known gaps and follow-ups (the “no independent review” rows); repairs.md S1-F7; test-report.md L4 and L7 | These still say there is no review of the in-session commits, no sbt result for repair 11, and no seven-gate run. All three now exist: the closeout review with this recheck, the closeout sbt run, and the B2 run. | orchestrator | Each line points to the closeout sbt entry, the B2 entry and the review. S1-F7 is marked closed. | no |
+| R4 | Info | owner-report.md roster row for 9ee5bbe | repairs.md calls the build-engineer paths in this commit a deviation, but the roster row only says “build-engineer territory”. | orchestrator | Label the row as a deviation for the human, like the other two. | no |
+| R5 | Info | review.md (tail section) | The pasted earlier verdict lost its Markdown formatting: the findings table became tab-separated text. The words are all there, but the table is hard to read. | orchestrator | Optional: re-paste it with its formatting. | no |
+| R6 | Info (not verified) | B2 run | “git status empty” in the worktree is not shown in the log, and the worktree has since been removed. The log path (wt-b6dc94d) and the HEAD being unchanged support the claim. | — | none | no |
+
+Still open from before (owners already assigned): N1 (synthesis-v2 bump, which must happen before any Session 2 paid answer), N4, N5, N6, N7 and N8. human-gate-DRAFT.md does not yet have lines for the N3 deviations or N1, so you need to add them.
+
+Future scope: the Session 2 prerequisites (P0 to P38); finalizing C11 after the November bill closes; checking the IAM windows in CloudTrail; looking at EC2 Instances; the C10 logout record.
+
+3. Report fields
+STATUS: COMPLETE (recheck); verdict APPROVE
+OWNER: code-reviewer (independent, read-only)
+WORK ORDER: Phase 14 Subphase 14B Session 1 closeout, repair round 1 recheck (user-pasted prompt, 2026-11-15)
+FILES CREATED: none
+FILES MODIFIED: none
+COMMANDS RUN: git status/diff/show/worktree list; shasum -a 256 of the sbt log, both B2 log copies, the decision-log source, runtime-apply-3.log and 15/emr-apply.log; Python re-verification of INDEX.md (57 rows); grep of the B2 log, evidence and reports; secret/ID regex scan of the evidence
+TEST RESULTS: none run by the reviewer. B2 log verified: RESULT PARTIAL passed=6, exit 5, sbt skipped, all counts as reported. sbt log sha256 1fc21fea1fe021c6132cffc57ad2de466faba33e91319b189d6395496c882f1e
+VALIDATION RESULTS: INDEX 57/57 OK, 0 unindexed; decision-log copy equals its source; N2 source hashes and lines verified; roster paths and times match git; R1 hash typo at test-report.md:924
+ASSUMPTIONS: the clean-worktree state of the B2 run is taken from the record (the worktree no longer exists)
+RISKS: wrong hash committed if R1 is not fixed; N1 prompt provenance until synthesis-v2
+MANUAL ACTION REQUIRED: accept or reject the N3 deviations and record N1 in human-gate.md; say "Yes, commit" after R1 is fixed
+BLOCKED-ON OWNER: none
+BLOCKED-ON EVIDENCE: none
+NEXT GATE: human gate and commit of the Session 1 records; then Session 2 P0 (billing-bootstrap budget)

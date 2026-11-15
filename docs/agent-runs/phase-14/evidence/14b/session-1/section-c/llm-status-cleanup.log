@@ -1,0 +1,5 @@
+BUCKET 14c size=10 used=10 remaining=0 est_usd_used=0.013650
+BUCKET 15b size=60 used=0 remaining=60 est_usd_used=0.000000
+BUCKET 16b size=40 used=40 remaining=0 est_usd_used=0.054600
+BUCKET 17 size=5 used=5 remaining=0 est_usd_used=0.006825
+TOTAL answers_used=55 usd_used=0.075075 (incl. adjust 0.000000) shared_cap_usd=1.330000 remaining_usd=1.254925 unit_usd=0.001365

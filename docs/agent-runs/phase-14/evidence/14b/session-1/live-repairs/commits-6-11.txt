@@ -1,0 +1,73 @@
+# Live repairs 6-11: commit ids, dates and changed files (from `git show --stat --format=... <6 commits>`, run offline 2026-11-15)
+
+commit bfa393ac8cea136950fde7b43b95e20bab9bc1cc
+Date:   2026-11-14T10:19:46-06:00
+Subject: Phase 14B live repair 6: query-api warms the runtime artifact in the background at startup; service logs at INFO with SDK and HTTP wire logging at WARN
+
+ modules/services/src/main/resources/logback.xml    |  16 ++
+ .../uic/cs441/scholarchain/services/AwsPorts.scala |  11 +-
+ .../services/RuntimeArtifactWarmup.scala           |  95 ++++++++
+ .../services/RuntimeArtifactWarmupSpec.scala       | 242 +++++++++++++++++++++
+ 4 files changed, 362 insertions(+), 2 deletions(-)
+commit 0656dc4849b08c243d985fd94646f4fab69948ed
+Date:   2026-11-14T11:47:02-06:00
+Subject: Phase 14B live repair 7: synthesis input carries a claim scaffold built from the verifier's shared contract; prompt asks the model to copy scaffold claims verbatim
+
+ modules/rag/README.md                              |   9 +
+ .../scholarchain/rag/AnswerSynthesisAgent.scala    |  27 +-
+ .../uic/cs441/scholarchain/rag/ClaimContract.scala | 183 +++++++++++
+ .../uic/cs441/scholarchain/rag/ClaimScaffold.scala | 117 +++++++
+ .../scholarchain/rag/ClaimVerificationAgent.scala  | 176 +----------
+ .../cs441/scholarchain/rag/ClaimScaffoldSpec.scala | 341 +++++++++++++++++++++
+ prompts/runtime/synthesis-v1.md                    |  25 +-
+ 7 files changed, 689 insertions(+), 189 deletions(-)
+commit ae1459327a88bd8f55c2dd2a01993d26adb87cad
+Date:   2026-11-14T12:18:37-06:00
+Subject: Phase 14B live repair 8: the model selects scaffold claims by id (selectedClaimIds); code expands them before the unchanged verifier
+
+ modules/rag/README.md                              |   9 +-
+ .../scholarchain/rag/AnswerSynthesisAgent.scala    |  79 ++++++----
+ .../cs441/scholarchain/rag/ClaimScaffoldSpec.scala | 163 ++++++++++++++++++---
+ prompts/runtime/synthesis-v1.md                    |  12 +-
+ prompts/schemas/answer-synthesis-v1.json           |  10 ++
+ 5 files changed, 219 insertions(+), 54 deletions(-)
+commit 2b2d2639a46721d8167c09b87cb603a0dc98df0d
+Date:   2026-11-14T13:00:30-06:00
+Subject: Phase 14B live repair 9: operator-pipeline role may ListBootstrapActions on the project cluster (aws emr describe-cluster calls it)
+
+ infra/terraform/deployer/README.md                  | 6 +++---
+ infra/terraform/deployer/operator_pipeline.tf       | 5 +++--
+ infra/terraform/deployer/tests/gdeployer.tftest.hcl | 6 +++---
+ tests/infra/README.md                               | 2 +-
+ tests/infra/operator_checks.py                      | 6 +++---
+ tests/infra/test_operator_roles_14b.py              | 2 +-
+ 6 files changed, 14 insertions(+), 13 deletions(-)
+commit 7ecc5723acf0f5a334e3bd9d526ba2869465b3e3
+Date:   2026-11-14T14:20:35-06:00
+Subject: Phase 14B live repair 10: EMR cluster-check reads Cluster.InstanceGroups from describe-cluster (AWS CLI v2 has no list-instance-groups)
+
+ scripts/README.md                       |  2 +-
+ scripts/lib/pipeline.py                 | 14 ++++++++++----
+ scripts/run-bounded-pipeline.sh         | 11 ++++-------
+ scripts/tests/fake_tool.py              | 21 ++++++++++++---------
+ scripts/tests/test_experiment.py        |  2 +-
+ scripts/tests/test_pipeline.py          | 12 +++++++-----
+ tests/scripts/sc_support.py             | 18 ++++++++++++++----
+ tests/scripts/test_pipeline_dryrun.py   |  6 +++---
+ tests/scripts/test_pipeline_execute.py  |  7 ++++---
+ tests/scripts/test_pipeline_refusals.py | 12 ++++++++++++
+ 10 files changed, 68 insertions(+), 37 deletions(-)
+commit b6dc94df6d9b443a9fd778eb09be6ec2c8c29f64
+Date:   2026-11-14T14:58:10-06:00
+Subject: Phase 14B live repair 11: EMR add-steps sends the AWS CLI CUSTOM_JAR step shape (Type/Jar/Args), fakes reject HadoopJarStep
+
+ scripts/lib/pipeline.py                  | 10 +++++++++-
+ scripts/phase4-emr-smoke.sh              |  9 +++++----
+ scripts/tests/fake_tool.py               | 24 ++++++++++++++++++++++++
+ scripts/tests/pipeline_helpers.py        |  3 ++-
+ scripts/tests/test_c1_step_args.py       |  2 +-
+ scripts/tests/test_pipeline.py           |  9 +++++++--
+ tests/scripts/sc_support.py              | 13 ++++++++++++-
+ tests/scripts/test_pipeline_execute.py   | 10 +++++++---
+ tests/scripts/test_step_arg_limit_13c.py |  3 ++-
+ 9 files changed, 69 insertions(+), 14 deletions(-)

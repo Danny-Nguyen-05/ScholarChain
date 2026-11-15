@@ -1,0 +1,99 @@
+# 14B base/runtime plan, apply and image push results (chronological)
+# Excerpt: only the lines matching each pattern are kept (ANSI codes stripped; account ID, custom domain and
+# local paths masked). Each block names its source file and that file's sha256.
+
+## target/phase14/evidence/14b/base-plan.log (sha256 c18ae39cb862a884a95bd183a5ff3dd65cdaa94bae31da696b835b24cfecdac7, 263 lines)
+[2026-11-13T17:44:21Z] [20261113T174421Z-30340] INFO materialized infra/terraform at 684aeaf83fb069439d01ee32a6eb176488617232 (read-only, bound to the live state infra/terraform/terraform.tfstate): source_tree_sha256=40a2371376a249c0453af6e2b3e2fe1c040c623003bf03280d919e50a5492fd5
+[2026-11-13T17:44:21Z] [20261113T174421Z-30340] INFO live state infra/terraform/terraform.tfstate: {"present": false}
+[2026-11-13T17:44:39Z] [20261113T174421Z-30340] INFO live state infra/terraform/terraform.tfstate: {"present": false}
+RESULT: PASS plan recorded, not applied; receipt=<repo>/target/plans/20261113T174421Z-30340/course-684aeaf83fb069439d01ee32a6eb176488617232.tfplan.receipt.json plan_sha256=5f171f60585a3e6bf5b6ee2e629ca666de7e85d2519ca0aba3aff8783b1209e4
+
+## target/phase14/evidence/14b/base-apply.log (sha256 a50fa470308232efa920003e7c3c08ccc60b15480fd340f1448ee9575572a9e4, 128 lines)
+[2026-11-13T17:48:55Z] [20261113T174855Z-31737] INFO materialized infra/terraform at 684aeaf83fb069439d01ee32a6eb176488617232 (read-only, bound to the live state infra/terraform/terraform.tfstate): source_tree_sha256=40a2371376a249c0453af6e2b3e2fe1c040c623003bf03280d919e50a5492fd5
+  | │ Error: creating Service Discovery Private DNS Namespace (scholarchain-course.internal): operation error ServiceDiscovery: CreatePrivateDnsNamespace, https response error StatusCode: 400, RequestID: d0537b73-eeea-47d4-9667-fc6a781bee43, api error AccessDeniedException: User: arn:aws:sts::<acct>:assumed-role/scholarchain-deployer/scholarchain-billing-operator is not authorized to perform: serv [...]
+  | │ Error: validating Step Functions State Machine definition: operation error SFN: ValidateStateMachineDefinition, https response error StatusCode: 400, RequestID: 5236059a-dc09-4be8-b674-b1ba28ad002c, api error AccessDeniedException: User: arn:aws:sts::<acct>:assumed-role/scholarchain-deployer/scholarchain-billing-operator is not authorized to perform: states:ValidateStateMachineDefinition on  [...]
+RESULT: FAIL step=terraform-apply reason=command failed (exit 1) during the mutating sequence
+
+## target/phase14/evidence/14b/deployer-e1-apply.log (sha256 37b4ddbe689061138dca0744f0676229341cb28842e31698bcd859096c25a6b5, 352 lines)
+19a106a8fa55b7cf9d1c7851641db0dc21f18ff8dcb73d565b81964fc8290d2f  <home>/Library/Application Support/ScholarChain/terraform/spike-emr/deployer.tfstate
+Plan: 0 to add, 3 to change, 0 to destroy.
+Apply complete! Resources: 0 added, 3 changed, 0 destroyed.
+aab7994d793a4bebbc87716a8a3a8d7d09f136ce4230ee19e24f8a3e0ef6daf8  <home>/Library/Application Support/ScholarChain/terraform/spike-emr/deployer.tfstate
+
+## target/phase14/evidence/14b/base-plan-2.log (sha256 f26e948a7c14654e6db1fbee213df1ad898ed7080e69a4c352ef1830cf73eca5, 87 lines)
+[2026-11-13T18:31:41Z] [20261113T183141Z-41554] INFO materialized infra/terraform at 24bf49d9fcec3180426a51db62caabf92c86d076 (read-only, bound to the live state infra/terraform/terraform.tfstate): source_tree_sha256=e2bd75acd3ff816fa019b5b17ea941ae3f43bc7c2da15cd5aad6975760440df6
+[2026-11-13T18:31:41Z] [20261113T183141Z-41554] INFO live state infra/terraform/terraform.tfstate: {"lineage": "fd2e2d33-a06e-1a87-ddf1-4c75db336a80", "present": true, "serial": 178, "sha256": "c211f6684d1a5e02d26524f19b24692f86db7fafde0f24165e06697283507543"}
+[2026-11-13T18:31:51Z] [20261113T183141Z-41554] INFO live state infra/terraform/terraform.tfstate: {"lineage": "fd2e2d33-a06e-1a87-ddf1-4c75db336a80", "present": true, "serial": 178, "sha256": "c211f6684d1a5e02d26524f19b24692f86db7fafde0f24165e06697283507543"}
+RESULT: PASS plan recorded, not applied; receipt=<repo>/target/plans/20261113T183141Z-41554/course-24bf49d9fcec3180426a51db62caabf92c86d076.tfplan.receipt.json plan_sha256=dc3bb6d2653b82b257b9583e59eedb766355149d2a02782c10f87210a87d4185
+
+## target/phase14/evidence/14b/base-apply-2.log (sha256 e364ca6e2ae945c8f86759c80a5ad6bb6f978835d1f081d6e1821fdea7103f01, 136 lines)
+[2026-11-13T18:33:12Z] [20261113T183311Z-42632] INFO materialized infra/terraform at 24bf49d9fcec3180426a51db62caabf92c86d076 (read-only, bound to the live state infra/terraform/terraform.tfstate): source_tree_sha256=e2bd75acd3ff816fa019b5b17ea941ae3f43bc7c2da15cd5aad6975760440df6
+RESULT: PASS stage base-apply complete; manifest=<repo>/target/release/24bf49d9fcec3180426a51db62caabf92c86d076/deploy-manifest-base-apply-20261113T183311Z-42632.json
+
+## target/phase14/evidence/14b/push.log (sha256 b3181ff6cfef23e892eb912365957f3c4850a10bd0e6c68e7582ad2b49ea29df, 35 lines)
+RESULT: REFUSED step=verify-local-images reason=cannot inspect the local image scholarchain-query-api:24bf49d9fcec3180426a51db62caabf92c86d076; no image was pushed
+
+## target/phase14/evidence/14b/push-2.log (sha256 1b1f9ec50210558b0c3409be9b991ae3ac8cdefe1aa3e529716610da75441ec6, 76 lines)
+RESULT: PASS stage push complete for 24bf49d9fcec3180426a51db62caabf92c86d076; manifest=<repo>/target/release/24bf49d9fcec3180426a51db62caabf92c86d076/deploy-manifest-push-20261113T184304Z-45522.json
+
+## target/phase14/evidence/14b/runtime-plan.log (sha256 0641c286a42cbcfe333087f40f1ef1c398a20891afa246b7e1a341a6269ddc71, 116 lines)
+[2026-11-13T18:59:09Z] [20261113T185909Z-48794] INFO materialized infra/terraform at 24bf49d9fcec3180426a51db62caabf92c86d076 (read-only, bound to the live state infra/terraform/terraform.tfstate): source_tree_sha256=e2bd75acd3ff816fa019b5b17ea941ae3f43bc7c2da15cd5aad6975760440df6
+[2026-11-13T18:59:09Z] [20261113T185909Z-48794] INFO live state infra/terraform/terraform.tfstate: {"lineage": "fd2e2d33-a06e-1a87-ddf1-4c75db336a80", "present": true, "serial": 181, "sha256": "c30edbc016e41e4d0b44e35008431277cc4e63e82b91a738d0cc342e4658f112"}
+[2026-11-13T18:59:19Z] [20261113T185909Z-48794] INFO live state infra/terraform/terraform.tfstate: {"lineage": "fd2e2d33-a06e-1a87-ddf1-4c75db336a80", "present": true, "serial": 181, "sha256": "c30edbc016e41e4d0b44e35008431277cc4e63e82b91a738d0cc342e4658f112"}
+RESULT: PASS plan recorded, not applied; receipt=<repo>/target/plans/20261113T185909Z-48794/course-24bf49d9fcec3180426a51db62caabf92c86d076.tfplan.receipt.json plan_sha256=3c966060c9e86cc2715d28ea8ceb62d2644e05b31e34c4dbbf5cfe1113c75d78
+
+## target/phase14/evidence/14b/runtime-apply.log (sha256 c08060a46b29c4e166a7b9b3419f2d1d38fca9e297722d541489c1a2812dc42f, 135 lines)
+[2026-11-13T19:01:08Z] [20261113T190108Z-50049] INFO materialized infra/terraform at 24bf49d9fcec3180426a51db62caabf92c86d076 (read-only, bound to the live state infra/terraform/terraform.tfstate): source_tree_sha256=e2bd75acd3ff816fa019b5b17ea941ae3f43bc7c2da15cd5aad6975760440df6
+  | │ Error: creating ELBv2 application Load Balancer (scholarchain-course-query): operation error Elastic Load Balancing v2: CreateLoadBalancer, https response error StatusCode: 403, RequestID: 650b6e0f-641e-4aae-aa8d-9291949575e3, api error AccessDenied: User: arn:aws:sts::<acct>:assumed-role/scholarchain-deployer/scholarchain-billing-operator is not authorized to perform: ec2:GetSecurityGroupsF [...]
+  | │ Error: waiting for Step Functions State Machine (arn:aws:states:us-east-2:<acct>:stateMachine:scholarchain-course-embedding-dispatch) update: Step Functions State Machine (arn:aws:states:us-east-2:<acct>:stateMachine:scholarchain-course-embedding-dispatch) eventual consistency
+RESULT: FAIL step=terraform-apply reason=command failed (exit 1) during the mutating sequence
+
+## target/phase14/evidence/14b/deployer-e1r2-apply.log (sha256 603b9681ecee81e84027b5f73801c81b11d5ec9ccfc9b65d7d94d4314b186780, 227 lines)
+aab7994d793a4bebbc87716a8a3a8d7d09f136ce4230ee19e24f8a3e0ef6daf8  <home>/Library/Application Support/ScholarChain/terraform/spike-emr/deployer.tfstate
+Plan: 0 to add, 1 to change, 0 to destroy.
+Apply complete! Resources: 0 added, 1 changed, 0 destroyed.
+fc5eb08145b352d137a2a79425cc1a9e3423d28e98e48e4c4814fac3dc528093  <home>/Library/Application Support/ScholarChain/terraform/spike-emr/deployer.tfstate
+
+## target/phase14/evidence/14b/push-155562d.log (sha256 634a6eeb07d01fdc45dd3404186cc414c736522927f54ba7a3b1e7060ea85b50, 76 lines)
+RESULT: PASS stage push complete for 155562d3eea3bca5fe1df2153d1da9c3a8bb5dee; manifest=<repo>/target/release/155562d3eea3bca5fe1df2153d1da9c3a8bb5dee/deploy-manifest-push-20261113T194713Z-7388.json
+
+## target/phase14/evidence/14b/runtime-plan-2.log (sha256 cf08922ef8cd7cbd5b48b842c07cfed2144c19df1c7b607ae3e5dfeb824cdf7d, 106 lines)
+[2026-11-13T19:49:04Z] [20261113T194903Z-8180] INFO materialized infra/terraform at 155562d3eea3bca5fe1df2153d1da9c3a8bb5dee (read-only, bound to the live state infra/terraform/terraform.tfstate): source_tree_sha256=3d2238824ace9ffa3e04d7dd7e6086ab58da00cdcc55b13b5ead1f951766d706
+[2026-11-13T19:49:04Z] [20261113T194903Z-8180] INFO live state infra/terraform/terraform.tfstate: {"lineage": "fd2e2d33-a06e-1a87-ddf1-4c75db336a80", "present": true, "serial": 201, "sha256": "18eb7a8bf8d64cf2a59aacaba49907f6d437d601eef06725a29d86c63921df7b"}
+[2026-11-13T19:49:17Z] [20261113T194903Z-8180] INFO live state infra/terraform/terraform.tfstate: {"lineage": "fd2e2d33-a06e-1a87-ddf1-4c75db336a80", "present": true, "serial": 201, "sha256": "18eb7a8bf8d64cf2a59aacaba49907f6d437d601eef06725a29d86c63921df7b"}
+RESULT: PASS plan recorded, not applied; receipt=<repo>/target/plans/20261113T194903Z-8180/course-155562d3eea3bca5fe1df2153d1da9c3a8bb5dee.tfplan.receipt.json plan_sha256=0512c986e48494b1d510c0989d7c5adee1c3c963351b2c7b63ffcfeb49ed9608
+
+## target/phase14/evidence/14b/runtime-plan-3.log (sha256 ccb8c7dbf4a341b3983d3f4b69d07575a9f3ae52c039afa117227367da3ee6f8, 103 lines)
+[2026-11-13T20:19:58Z] [20261113T201958Z-10554] INFO materialized infra/terraform at bc81afd046d8b7f90ce2d55828e7e4ea1f6f72d6 (read-only, bound to the live state infra/terraform/terraform.tfstate): source_tree_sha256=8245dd4cd688fe37dc16f1cd53fb88ba6fa5125d36d89acc94474a4dbc7e436d
+[2026-11-13T20:19:58Z] [20261113T201958Z-10554] INFO live state infra/terraform/terraform.tfstate: {"lineage": "fd2e2d33-a06e-1a87-ddf1-4c75db336a80", "present": true, "serial": 201, "sha256": "18eb7a8bf8d64cf2a59aacaba49907f6d437d601eef06725a29d86c63921df7b"}
+[2026-11-13T20:20:18Z] [20261113T201958Z-10554] INFO live state infra/terraform/terraform.tfstate: {"lineage": "fd2e2d33-a06e-1a87-ddf1-4c75db336a80", "present": true, "serial": 201, "sha256": "18eb7a8bf8d64cf2a59aacaba49907f6d437d601eef06725a29d86c63921df7b"}
+RESULT: PASS plan recorded, not applied; receipt=<repo>/target/plans/20261113T201958Z-10554/course-bc81afd046d8b7f90ce2d55828e7e4ea1f6f72d6.tfplan.receipt.json plan_sha256=bac007e3dbbfd3d5578394ce672ac0cf756bce57e5f6e78b0c6fa61389f174ba
+
+## target/phase14/evidence/14b/push-bc81afd.log (sha256 e407dca6864b7ebee2355d20cac7cbe97c2d31c72f1590be798813ded9a64542, 76 lines)
+RESULT: PASS stage push complete for bc81afd046d8b7f90ce2d55828e7e4ea1f6f72d6; manifest=<repo>/target/release/bc81afd046d8b7f90ce2d55828e7e4ea1f6f72d6/deploy-manifest-push-20261113T202322Z-11818.json
+
+## target/phase14/evidence/14b/runtime-apply-3.log (sha256 d5ed74c2c9ef127007423b6b481445e85f04261c71988062b3a175967e7db95d, 147 lines)
+[2026-11-13T20:24:06Z] [20261113T202405Z-13525] INFO materialized infra/terraform at bc81afd046d8b7f90ce2d55828e7e4ea1f6f72d6 (read-only, bound to the live state infra/terraform/terraform.tfstate): source_tree_sha256=8245dd4cd688fe37dc16f1cd53fb88ba6fa5125d36d89acc94474a4dbc7e436d
+RESULT: PASS stage runtime-apply complete for bc81afd046d8b7f90ce2d55828e7e4ea1f6f72d6; manifest=<repo>/target/release/bc81afd046d8b7f90ce2d55828e7e4ea1f6f72d6/deploy-manifest-runtime-apply-20261113T202405Z-13525.json
+
+## target/phase14/evidence/14b/push-9ee5bbe.log (sha256 06821ec6472117c41a28400b84d520d75a5afb6587d0d5f2bff01a9db9b48d58, 76 lines)
+RESULT: PASS stage push complete for 9ee5bbe6f485284031da0cc546f544df9b471a8c; manifest=<repo>/target/release/9ee5bbe6f485284031da0cc546f544df9b471a8c/deploy-manifest-push-20261113T204654Z-36197.json
+
+## target/phase14/evidence/14b/runtime-plan-4.log (sha256 664b33a04ac6c6fec8cb75c728a90538625a2e0b1e9f402b2107f0d8b396c390, 94 lines)
+[2026-11-13T20:50:47Z] [20261113T205046Z-44457] INFO materialized infra/terraform at 9ee5bbe6f485284031da0cc546f544df9b471a8c (read-only, bound to the live state infra/terraform/terraform.tfstate): source_tree_sha256=8245dd4cd688fe37dc16f1cd53fb88ba6fa5125d36d89acc94474a4dbc7e436d
+[2026-11-13T20:50:47Z] [20261113T205046Z-44457] INFO live state infra/terraform/terraform.tfstate: {"lineage": "fd2e2d33-a06e-1a87-ddf1-4c75db336a80", "present": true, "serial": 225, "sha256": "e39ac394b9430a23c7703944d05c4291bdb978b7c8fe13cef95af70f6502e5f0"}
+[2026-11-13T20:50:58Z] [20261113T205046Z-44457] INFO live state infra/terraform/terraform.tfstate: {"lineage": "fd2e2d33-a06e-1a87-ddf1-4c75db336a80", "present": true, "serial": 225, "sha256": "e39ac394b9430a23c7703944d05c4291bdb978b7c8fe13cef95af70f6502e5f0"}
+RESULT: PASS plan recorded, not applied; receipt=<repo>/target/plans/20261113T205046Z-44457/course-9ee5bbe6f485284031da0cc546f544df9b471a8c.tfplan.receipt.json plan_sha256=81cb58f7079406ed4f66cdff9c15884d88739a618117212beba63fc7301c7e38
+
+## target/phase14/evidence/14b/runtime-apply-4.log (sha256 d4a22cd1ab6f2e65e13157140f31aa2e3f2344ebba2e63ec9493db7c4c181106, 147 lines)
+[2026-11-13T20:53:10Z] [20261113T205309Z-49407] INFO materialized infra/terraform at 9ee5bbe6f485284031da0cc546f544df9b471a8c (read-only, bound to the live state infra/terraform/terraform.tfstate): source_tree_sha256=8245dd4cd688fe37dc16f1cd53fb88ba6fa5125d36d89acc94474a4dbc7e436d
+RESULT: PASS stage runtime-apply complete for 9ee5bbe6f485284031da0cc546f544df9b471a8c; manifest=<repo>/target/release/9ee5bbe6f485284031da0cc546f544df9b471a8c/deploy-manifest-runtime-apply-20261113T205309Z-49407.json
+
+## target/phase14/evidence/14b/acm-issued.log (sha256 48e51a485e32f122a8cfbd0c9382073f983bbccf31ec116a82a78af111f13af7, 1 lines)
+ISSUED	SUCCESS
+
+## target/phase14/evidence/14b/state-sha-after-base-apply.log (sha256 5458f8e5da35a4aeb40fe3c292856b7e5eaa888283a0099a51bd19873286ffda, 1 lines)
+c30edbc016e41e4d0b44e35008431277cc4e63e82b91a738d0cc342e4658f112  infra/terraform/terraform.tfstate
+
+## target/phase14/evidence/14b/state-sha-after-runtime-apply.log (sha256 4e391ae6145e457dedc8dd0d76e33dc98bf8d90c1c6c60a8d088c1b91b03932e, 1 lines)
+41d253d86201819a1a9c843cd085d864b56d484fe96daa1765c61f821447ddd5  infra/terraform/terraform.tfstate

@@ -1,0 +1,12 @@
+EXPERIMENT: 16b-live-evaluation (LLM bucket 16b)
+QUESTIONS: 40 from the questions file (sha256 e4b6d48b060cfb58a2594ca7607bd1185a07b1abf303891c440be574bdb8f67d)
+BUCKET 16b size=40 used=0 remaining=40
+PLANNED: answers=40 estimated_usd=0.054600 (0.001365 USD per answer, estimate not metered) ledger_total_usd=0.015015 shared_cap_usd=1.330000
+LEDGER: <home>/.scholarchain/llm-ledger/haiku-ledger.jsonl (this command charges bucket 16b itself; do not also run llm_budget.py reserve for it)
+NETWORK: none (plan mode reads local files only)
+RESULT: PLAN-OK (nothing sent)
+BUCKET 14c size=10 used=10 remaining=0 est_usd_used=0.013650
+BUCKET 15b size=60 used=0 remaining=60 est_usd_used=0.000000
+BUCKET 16b size=40 used=0 remaining=40 est_usd_used=0.000000
+BUCKET 17 size=5 used=1 remaining=4 est_usd_used=0.001365
+TOTAL answers_used=11 usd_used=0.015015 (incl. adjust 0.000000) shared_cap_usd=1.330000 remaining_usd=1.314985 unit_usd=0.001365

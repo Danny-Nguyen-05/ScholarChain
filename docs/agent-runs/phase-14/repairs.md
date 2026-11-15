@@ -186,3 +186,71 @@ Repair evidence (pre-session R1, awaiting recheck):
 | B1, B2, N1–N3 (review 8) | — | — | — | closed by review 9 |
 | R1 | Low | no | experiment-engineer | repaired: `experiments/README.md:121` now says the 40 questions are checked by the shape test in `experiments/tests/test_derive_14c_inputs.py` and by `Phase14QuestionSetPlannerSpec` (all 40 `Planned` through the fallback); experiments/tests rerun: Ran 51 tests, OK |
 | O1 | Info | no | rag-engineer (future scope, with N4) | recorded: `Phase14QuestionSetPlannerSpec` "regression (N4)" asserts the "in window since-2015" phrasing is refused; it will fail on purpose when N4 is fixed and must then be flipped |
+
+## Phase 14 live session 1 — live repairs 6-11 (2026-11-14)
+
+Found in the live session and fixed in place; each commit was made on the user's explicit yes. Source: the decision log (`evidence/14b/session-1/00-timeline/decision-log.md`); commit metadata: `evidence/14b/session-1/live-repairs/commits-6-11.txt`. Test counts are as the decision log records them (coordinator- or agent-run); the raw test logs for these runs were not retained. No independent review is recorded for any of these commits.
+
+Earlier in the session (2026-11-13): E1 repair `24bf49d` (deployer Cloud Map and Step Functions grants), E1 repair 2 `155562d` (ELB companion EC2 reads; state machine KMS data key reuse 300), repair 3 `bc81afd` (empty Cloud Map `health_check_custom_config`), repair 4 `9ee5bbe` (image files readable by the runtime user) and repair 5 `83a4168` (`StorageLoadMain --graph-only`). They are recorded in `14b-deploy/deployer-e1*-decision.md`, the 14B results excerpt and the decision log, and are not expanded here.
+
+| Repair | Cause (observed) | Fix | Owner | Tests observed (decision log) | Commit (UTC) | Live result |
+|---|---|---|---|---|---|---|
+| 6 | B8.8 queries abstained with 0 claims: `stageFailures path=stage-deadline`. query-api loads the 9.6 MB runtime artifact on first use; the load takes about 28 s against the 4 s path budget (`pathMs 4000`), and a cancelled load is not cached, so every request starts again (Logs Insights: artifact fetched again at 04:42:39Z and 04:46:16Z). Also found: containers logged at DEBUG, so SDK wire logs in CloudWatch carried SigV4 headers and the task role's temporary session token | background warm-up of the runtime artifact at query-api startup; `logback.xml` at INFO with SDK and HTTP wire logging at WARN | service-engineer | `sbt check` exit 0 (services 124/124, 693 total); new `RuntimeArtifactWarmupSpec` | `bfa393a` 16:19:46 | push PASS, runtime apply 5 PASS; warm-up `attempt=1/3 outcome=loaded elapsedMs=28107` at 16:31:02Z; r6a path stage OK (1002 ms) |
+| 7 | r6c: Haiku called once; the one claim was rejected (`unsupported-claim-template`, `subject-window-or-trust-mismatch`, `unsupported-claim-field`, `identity-not-resolved`). The synthesis-v1 prompt and schema never stated the verifier's contract | `ClaimContract` (the verifier's shared rules), `ClaimScaffold` (a `claimScaffold` key in the synthesis input), synthesis-v1 prompt edited in place (no version bump) | rag-engineer | `sbt check` exit 0 (rag 206 incl. 10 new; 693 total) | `0656dc4` 17:47:02 | push PASS, runtime apply 6 PASS; r7b failed at the synthesis deadline (`synthesisMs 5000`): copying scaffold claims with long ids was too slow; smoke-real-9 query 504 |
+| 8 | synthesis stage deadline after repair 7 | the model returns `selectedClaimIds`; code expands them into scaffold claims before the unchanged verifier; `selectedClaimIds` optional in the schema | rag-engineer | `sbt check` exit 0 (rag 211; 693 total) | `ae14593` 18:18:37 | images rolled out within the combined EMR apply (serial 16); r8a ANSWERED 3 attempted / 3 verified / 0 rejected (4102 ms); smoke-real-11 `RESULT: PASS all 6 checks` |
+| 9 | EMR run 1 attempt B: `aws emr describe-cluster` also calls `elasticmapreduce:ListBootstrapActions`, which the operator-pipeline role lacked (AccessDenied, exit 254) | deployer `operator_pipeline` policy adds `ListBootstrapActions` on the project cluster | infra-engineer (Terraform); the commit also changes `tests/infra` files | tftest 113/113; tests/infra operator roles 33/33; `sbt check` exit 0 | `2b2d263` 19:00:30 | user "Yes, apply" 19:00:30Z; deployer plan `0 to add, 1 to change, 0 to destroy`; apply `0 added, 1 changed, 0 destroyed` |
+| 10 | EMR run 2: `aws emr list-instance-groups` does not exist in AWS CLI 2.35.4 (ParamValidation invalid choice, exit 252) | cluster-check reads `Cluster.InstanceGroups` from `describe-cluster` | infra-engineer (scripts), test-engineer (`tests/scripts` fakes) | `sbt check` exit 0; tests/scripts execute 14/14, dryrun 16/16, refusals 58/58; scripts/tests `test_pipeline` 68/69, then fixed (a 5-test subset OK; full 69/69 recorded with repair 11), `test_experiment` 39/39 | `7ecc572` 20:20:35 | EMR run 3: `CLUSTER-CHECK: ok state=WAITING` |
+| 11 | EMR run 3: `aws emr add-steps` refused `HadoopJarStep` (the CLI takes `Type`, `Name`, `ActionOnFailure`, `Jar`, `Args`, ...); the ledger slot was reserved and counts | `pipeline.py` `step_json` sends `{Type: CUSTOM_JAR, Jar: command-runner.jar, Args}` (also `phase4-emr-smoke.sh`); fakes reject `HadoopJarStep` with the real CLI message; the other EMR calls were checked against the CLI 2.35.4 source | infra-engineer (scripts), test-engineer (`tests/scripts`) | scripts/tests c1 25/25, experiment 39/39, pipeline 69/69; tests/scripts execute 14, arg-limit 20, dryrun 16, refusals 58, all OK; `sbt check` started 20:45Z, result not recorded before the commit | `b6dc94d` 20:58:10 | EMR run 4: stage-in `COMPLETED`; hadoop-prep `FAILED` (not a repair-11 defect: unuploaded prep-config reference) |
+
+### Open after the session (not routed yet)
+
+| ID | Item | Owner |
+|---|---|---|
+| S1-F1 | 15A manifests set `hadoop_config` to a repo-relative local path (`experiments/inputs/15a/prep-config.json`); every other reference is an s3 URI, so the node cannot localize it | experiment-engineer (manifest), infra-engineer (`upload-emr-artifacts.sh --hadoop-config` option and test) |
+| S1-F2 | EMR bootstrap race: the cluster was created in parallel with the EFS mount target (serial 16 `BOOTSTRAP_FAILURE`, "EFS mount failed") | infra-engineer (`depends_on` the mount target) |
+| S1-F3 | Destroy policy refused `terraform_data.phase12b_guard` (not in `CLEANUP_TEARDOWN_ADDRESS_RULES`); removed from state by human decision | infra-engineer (rule plus tests) |
+| S1-F4 | `LiveGraphFixture.handle()` roots at a non-real temp path; `NeptuneExportValidator` compares real paths and rejects it on macOS (test-only; workaround `-Djava.io.tmpdir`) | storage-engineer |
+| S1-F5 | A new query-api task serves cold until the warm-up finishes (28 s; 45 s on the next task); the first query after idle can 504 at the graph stage | service-engineer (readiness gate or faster load); storage-engineer for the graph-stage diagnosis |
+| S1-F6 | Context budget 4096 makes every 22-coauthor direct-coauthor question abstain (16B 0/14); path questions 0/10 undiagnosed; `synthesis-v2` label for provenance; coauthor names instead of ids | rag-engineer |
+| S1-F7 | Repair 11 `sbt check` result not recorded; no independent review of the in-session commits. **Closed** by the closeout `sbt check` on b6dc94d and the B2 `scripts/check.sh --skip sbt` run (test-report.md, "Session 1 closeout" entries) and the external closeout review and its recheck (review.md, "Subphase 14B — Session 1 closeout") | coordinator (rerun `sbt check`), code-reviewer |
+| S1-F8 | Runbook note: never run `aws login` while the browser is signed in as root | documentation-engineer |
+
+## Session 1 closeout review (2026-11-15): findings routed
+
+External review verdict REQUEST-CHANGES (appended verbatim to `review.md`, "Subphase 14B — Session 1 closeout"). Repair round 1 is records-only.
+
+| ID | Severity | Blocking | Owner | Acceptance check | Status |
+|---|---|---|---|---|---|
+| B1 | Medium | yes | orchestrator | Owner and test reports state C11 done-provisional, combined USD 15.83 of 25 (AWS 15.75 before credits, tax 0.00, Anthropic about 0.08 ledger estimate, Voyage 0.00), read time and bill status; ECS 0 / EMR 0 console checks recorded, EC2 Instances still unchecked; INVENTORIES.md matches; tracked decision log recopied with its C11 entries or the C11 source line corrected; c11-cost-report.md added as an INDEX row; every INDEX sha256 re-verified | in repair round 1 |
+| B2 | Medium (gate not verified) | yes | coordinator runs; failures to infra-engineer / test-engineer | `scripts/check.sh --skip sbt` on a clean b6dc94d snapshot: RESULT PARTIAL, exit 5, every other gate PASS; per-gate counts, exit code and log sha256 in test-report.md; closeout sbt run cited for the sbt gate | in repair round 1 |
+| N1 | Medium | no (gate before any Session 2 paid answer) | rag-engineer, domain-engineer | bump to synthesis-v2 / answer-synthesis-v2 / synthesis.v2 schema with tests, or the human accepts in writing | open |
+| N2 | Medium | no (recommended this round) | orchestrator | approval-record, plan-sha and account-match lines from runtime-apply-3.log and 15/emr-apply.log, with source sha256, added to the excerpts | in repair round 1 |
+| N3 | Medium | no | orchestrator | agent roster for E1 through repair 11 or "not recorded"; cross-owner edits to tests/infra/** flagged as deviations for the human | in repair round 1 |
+| N4 | Low (gate not verified) | no (future) | deploy-engineer; infra-engineer for read access | Session 2 compares running task image digests with the push record | open (Session 2) |
+| N5 | Low | no | service-engineer; storage-engineer, rag-engineer | logback level test; storage/rag tool logging set before Session 2; local awsintegration logs with expired tokens deleted or moved to private storage | open |
+| N6 | Low | no | infra-engineer / test-engineer | test asserts phase4-emr-smoke --steps has Type=CUSTOM_JAR and no HadoopJarStep | open |
+| N7 | Low | no | infra-engineer | deployer README, operator_pipeline.tf comment and gdeployer tftest no longer list list-instance-groups | open |
+| N8 | Info | no | service-engineer / rag-engineer | config entry or one-line rationale for the warm-up and synthesis constants | open |
+| N9 | Info | no | orchestrator / human | inventory records the remaining deployer role and phase14-main policies as a final-cleanup item | in repair round 1 (record only) |
+
+### Repair round 1 outcome (2026-11-15, records only)
+
+| ID | Outcome |
+|---|---|
+| B1 | repaired: owner-report and test-report state C11 done-provisional, combined USD 15.83 of 25 (AWS 15.75 before credits, tax 0.00, Anthropic about 0.08, Voyage 0.00), ECS 0 and EMR 0 console checks, EC2 Instances still unchecked; INVENTORIES.md corrected; decision-log copy recopied with the C11 entries (byte-identical to the frozen source, sha256 bc7254e8…2c5b; later entries go to a separate Session 2 log); c11-cost-report.md source line names the tracked copy; INDEX rows added and all hashes re-verified |
+| B2 | repaired: `scripts/check.sh --skip sbt` on a clean b6dc94d worktree, exit 5 RESULT PARTIAL passed=6 skipped sbt, every other gate PASS (counts in test-report.md); closeout sbt run cited for the sbt gate; terraform init used the public registry (no AWS call) |
+| N2 | repaired: `evidence/14b/session-1/approval-checks-unarchived-serials.txt` (approval-record, plan-sha, account-match lines for serials 7 and 16, with source sha256) |
+| N3 | repaired: "Agent roster" in owner-report.md; native agent IDs and the roles for E1 to repair 4 not recorded; deviations for the human to accept: tests/infra/** edits in 155562d (author not recorded) and 2b2d263 (infra-engineer), and build-engineer paths in 9ee5bbe |
+| N9 | recorded: INVENTORIES.md "Final-cleanup items" (deployer role, its phase14-main and boundary policies, two terraform_data guards); removal planned at the end of Session 2 by human decision |
+| N1, N4-N8 | open: N1, N4 and N5 are carried into docs/runbooks/session-2-plan.md as P36, P37 and P38; N6, N7 and N8 are not yet routed and stay open for their owners |
+
+### Recheck findings (APPROVE, 2026-11-15) and outcomes
+
+| ID | Severity | Blocking | Owner | Outcome |
+|---|---|---|---|---|
+| R1 | Low | no (fix before commit) | orchestrator | fixed: test-report.md now cites the 64-character sbt log sha256 1fc21fea1fe021c6132cffc57ad2de466faba33e91319b189d6395496c882f1e; `grep -rn "1fc21fea021c" docs/agent-runs/` returns nothing |
+| R2 | Low | no | orchestrator | fixed: owner-report "Open follow-ups" billing row says USD 25 with alerts at USD 18 / 20 / 22, citing the human decision of 2026-11-15T18:42Z (Q11, decision-log line 108); notes the code still defines 10/15/20 |
+| R3 | Low | no | orchestrator | fixed: owner-report known gaps and follow-ups, test-report L4/L7 and S1-F7 point to the closeout sbt entry, the B2 entry and the closeout review and recheck; S1-F7 closed |
+| R4 | Info | no | orchestrator | fixed: the 9ee5bbe roster row is labelled "Deviation for the human to accept" (build-engineer paths) |
+| R5 | Info | no | orchestrator | not done (optional): the first closeout verdict stays as pasted; the recheck verdict was appended with its findings table in Markdown |
+| R6 | Info (not verified) | no | none | noted: the clean-worktree claim rests on the record; no action |

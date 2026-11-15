@@ -1,0 +1,22 @@
+# Approval-record checks performed by scripts/deploy.sh before two applies (review N2)
+# Excerpt: only the approval, plan, provenance, pre-spend and account check lines are kept (ANSI stripped; paths masked).
+# runtime-apply-3.log is the bc81afd runtime apply whose approval record (serial 7) was not archived;
+# emr-apply.log is the combined EMR apply (serial 16) whose record was not archived (it failed later at terraform-apply).
+
+## target/phase14/evidence/14b/runtime-apply-3.log (sha256 d5ed74c2c9ef127007423b6b481445e85f04261c71988062b3a175967e7db95d, 147 lines)
+[2026-11-13T20:24:06Z] [20261113T202405Z-13525] INFO approval record parsed (8 required lines, each exactly once)
+pre-spend receipt ok: monitoring active, snapshot 2.9 h old, headroom 3.09 USD; spend to date AWS 0.38 + Anthropic 0.00 + Voyage 0.00 = 0.38 USD
+[2026-11-13T20:24:06Z] [20261113T202405Z-13525] INFO plan sha256 matches the approval record (verified private copy; the copy is what is applied)
+plan provenance ok: receipt binds plan sha256, clean source commit, account, region, environment and revision
+saved plan target ok: provider region us-east-2, account hash matches, environment course, project scholarchain, image_revision bc81afd046d8b7f90ce2d55828e7e4ea1f6f72d6
+[2026-11-13T20:24:13Z] [20261113T202405Z-13525] INFO account sha256 matches the approval record
+pre-spend receipt ok: monitoring active, snapshot 2.9 h old, headroom 3.09 USD; spend to date AWS 0.38 + Anthropic 0.00 + Voyage 0.00 = 0.38 USD
+
+## target/phase14/evidence/15/emr-apply.log (sha256 56f23f8eaa50de9f464027868580e451235ab445248b7ee706679a0c032a00ee, 135 lines)
+[2026-11-14T18:25:23Z] [20261114T182523Z-57496] INFO approval record parsed (8 required lines, each exactly once)
+pre-spend receipt ok: monitoring active, snapshot 2.4 h old, headroom 3.22 USD; spend to date AWS 4.45 + Anthropic 0.00 + Voyage 0.00 = 4.45 USD
+[2026-11-14T18:25:23Z] [20261114T182523Z-57496] INFO plan sha256 matches the approval record (verified private copy; the copy is what is applied)
+plan provenance ok: receipt binds plan sha256, clean source commit, account, region, environment and revision
+saved plan target ok: provider region us-east-2, account hash matches, environment course, project scholarchain, image_revision ae1459327a88bd8f55c2dd2a01993d26adb87cad
+[2026-11-14T18:25:27Z] [20261114T182523Z-57496] INFO account sha256 matches the approval record
+pre-spend receipt ok: monitoring active, snapshot 2.4 h old, headroom 3.22 USD; spend to date AWS 4.45 + Anthropic 0.00 + Voyage 0.00 = 4.45 USD

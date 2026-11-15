@@ -820,3 +820,106 @@ Coordinator reruns (AWS neutralized):
 Downstream (infra-engineer, read-only): B8.2, B8.3 and B8.6 read the local export; the Neptune bulk-load source is the `%`-free `neptune-opencypher-csv/data/` tree; the storage loader writes the support Parquet with literal `%3A` keys through the SDK. Unverified live: the `put-object`/`head-object` path with a literal `%3A` key (fake S3 only).
 
 Open, not routed: the runbook (`docs/runbooks/phase-14-live-session.md`, B8.1 and A12 step 6) expects `RESULT: DRY-RUN`; the script prints `RESULT: PASS dry run: ...` (documentation-engineer). Not independently reviewed.
+
+## Phase 14 live session 1 (2026-11-13 to 2026-11-15)
+
+Live results from the session's own logs, assembled offline on 2026-11-15. Paths are under `evidence/14b/session-1/` (index with sha256 values: `INDEX.md`). Times are UTC.
+
+### L1. Live smoke and query checks (observed in the logs)
+
+| Check | When | Result | Evidence |
+|---|---|---|---|
+| 14B smoke (before data load) | 2026-11-13 20:59:55 | `RESULT: PASS only 2 of 6 checks ran (healthz readyz)`; manual 401 check: both requests `401 UNAUTHORIZED`, `retryable:false` | `14b-deploy/smoke-14b.log`, `manual-401.log` |
+| GO/NO-GO 3 | 2026-11-13 | 4 services 1/1 COMPLETED; target healthy; evidence 404 (authenticated); digest comparison (B6.5) not run | `14b-deploy/b6-checklist.log` |
+| Neptune tunnel | 2026-11-13 | `http=403` without auth; cluster `healthy writer 1.4.8.1.R1`; loader list empty | `14b-deploy/tunnel-test.log` |
+| Pointer smoke (B8.4) | 2026-11-14 03:30:39 | 2 of 6 (healthz, readyz) PASS | `14c-load/pointer-smoke.log` |
+| AWS integration test (B8.5) | 2026-11-14 03:32-03:41 | attempts 1-3 `Tests: succeeded 0, failed 1`; attempt 4 `Tests: succeeded 1, failed 0`, `All tests passed.` (with `-Djava.io.tmpdir=<repo>/target/phase14/itest-tmp`, a test-fixture workaround) | `14c-load/14c-results.txt` |
+| Embedding ingest (B8.6) | 2026-11-14 | ingest 1 exit 1 `live-ingestion-rejected-items` (9 written, 95 rejected); ingest 2 written 95, unchanged 9, conflicts 0, rejected 0, embeddingCalls 95 | `14c-load/ingest-2.log`, decision log |
+| Query smoke (B8.7) | 2026-11-14 04:37 | sampleCount 5 of 5, allNeighborsMatched true, verifiedPointers 7, failure null | `14c-load/query-smoke.log` |
+| Real smoke attempt 1 (B8.8) | 2026-11-14 04:41:50 | `CHECK-FAILED: query: POST /v1/query timed out after 10.0s` | `b8-8-smoke/smoke-real.log` |
+| Smoke after repair 6 | 16:32:42 | 2 of 6 PASS | `b8-8-smoke/repair6-smoke.log` |
+| Smoke after repair 7 (smoke-real-9) | 18:00:13 | query 504 | `b8-8-smoke/smoke-real-9.log` |
+| r8a after repair 8 | 2026-11-14 | ANSWERED; 3 claims attempted, 3 verified, 0 rejected; 4102 ms; Haiku 6038 in / 319 out tokens (decision log) | `b8-8-smoke/query-explain-r8a.json`, `query-response-r8a.json` |
+| smoke-real-10 | 18:40:04 | query 504 (first query after idle) | `b8-8-smoke/smoke-real-10.log` |
+| smoke-real-11 (B8.8) | 18:42:09 | `RESULT: PASS all 6 checks` (claims=3 evidence_ids=3; evidence provenance; idempotency; 401 path) | `b8-8-smoke/smoke-real-11.log` |
+| Final smoke (B12.3) | 21:22:50 | `RESULT: PASS all 6 checks` (claims=3 evidence_ids=3) | `b12-final/final-smoke.log` |
+
+### L2. 16B evaluation (B11)
+
+Run `16b-1` at commit `b6dc94d`, tree clean, 2026-11-14 21:18:35-21:21:35: `RESULT: COMPLETED run=16b-1 asked=40 charged=40`; run record outcomes ok 39, client_error 1. Per question type, counted offline on 2026-11-15 from `answers.jsonl` (sha256 `80fc2d77…c8e2`; method and table in `b11-16b/outcomes-by-type.txt`):
+
+| Type | Asked | HTTP 200 | Answered with claims | Median latency |
+|---|---|---|---|---|
+| component | 8 | 8 | 7 | 4.30 s |
+| ranking | 8 | 7 (1 HTTP 422) | 7 | 6.39 s |
+| direct-coauthors | 14 | 14 | 0 | 2.44 s |
+| path | 10 | 10 | 0 | 2.08 s |
+| total | 40 | 39 | 14 | |
+
+The decision log gives the same counts (it states the direct-coauthors median as 2.5 s). `raw.sha256` sha256: `13736cfacf3e83beafed900d01ed904a442c2a93e2db87b4752e8aba19e0d0d4`. Cost report: anthropic 0.054600 USD (ledger estimate from pinned tokens and rates, not metered).
+
+### L3. EMR (B9)
+
+| Run (record) | Cluster | Result |
+|---|---|---|
+| emr-run-1 attempt A | `j-0426641ATQVS0H3PIYY` | REFUSED clean-tree (decision log; no separate log) |
+| emr-run-1 attempt B | `j-0426641ATQVS0H3PIYY` | FAIL cluster-check: AccessDenied on `ListBootstrapActions`; ledger live_runs=0 |
+| emr-run-2 | `j-03354448AO318DJHXVR` | FAIL cluster-check: `list-instance-groups` invalid choice; live_runs=0 |
+| emr-run-3 | `j-03354572RN3ACLOGKG91` | cluster-check ok; LEDGER-RESERVED live_runs=1; FAIL stage-in: `Unknown parameter ... "HadoopJarStep"` |
+| emr-run-4 | `j-05198553ABDUQT7HM2DM` | cluster-check ok; live_runs=2 (USD 1.68); stage-in `COMPLETED`; hadoop-prep `FAILED` |
+
+The first cluster (`j-01471773SLN9SIKVTEUJ`, serial 16) failed at bootstrap (EFS mount target race). Evidence: `b9-emr/b9-results.txt`, `b9-emr/emr-run-4.log`.
+
+### L4. Repair test runs (from the decision log; raw logs not retained)
+
+| Repair | Recorded result |
+|---|---|
+| 6 `bfa393a` | `sbt check` exit 0, services 124/124, 693 total |
+| 7 `0656dc4` | `sbt check` exit 0, rag 206 (10 new), 693 total |
+| 8 `ae14593` | `sbt check` exit 0, rag 211, 693 total |
+| 9 `2b2d263` | tftest 113/113; tests/infra operator roles 33/33; `sbt check` exit 0 |
+| 10 `7ecc572` | `sbt check` exit 0; tests/scripts execute 14/14, dryrun 16/16, refusals 58/58; scripts/tests test_pipeline 68/69 then fixed (5-test subset OK), test_experiment 39/39 |
+| 11 `b6dc94d` | scripts/tests c1 25/25, experiment 39/39, pipeline 69/69; tests/scripts execute 14, arg-limit 20, dryrun 16, refusals 58, all OK; `sbt check` started 20:45Z, result not recorded (closed by the closeout `sbt check` on b6dc94d below) |
+
+No full seven-gate `scripts/check.sh` run on a clean snapshot was recorded during the session. Closed after the session by the closeout `sbt check` on b6dc94d and the B2 `scripts/check.sh --skip sbt` run (test-report.md, "Session 1 closeout" entries) and the external closeout review and its recheck (review.md, "Subphase 14B — Session 1 closeout").
+
+### L5. Cleanup checks
+
+| Check | Result | Evidence |
+|---|---|---|
+| C3 destroy pass 1 | `RESULT: PARTIAL ... before=309 after=62`; only error `aws_eip.nat` DisassociateAddress 403 (carried item 24) | `section-c/cleanup-results.txt` |
+| C3 destroy pass 2 | `RESULT: PASS destroy pass complete; before=62 after=60` | same |
+| C4 deployer | `Apply complete! Resources: 0 added, 0 changed, 13 destroyed.` | `section-c/deployer-cleanup-apply.log` |
+| C5 | 4 secrets force-deleted; list-secrets empty (decision log) | `section-c/c5-secrets-delete.log` |
+| C7 console (root, read-only) | KMS key `cb0a6f60…` Pending deletion | decision log only (`c7-kms.log` empty) |
+| C8 console (root, read-only, us-east-2) | S3 buckets 0 (all regions); no Elastic IPs; no load balancers; NAT gateway Deleted; no VPC endpoints; Neptune clusters 0 | decision log only (`c8-inventory.log` empty) |
+| C9 LLM ledger | 55 answers, USD 0.075075 of 1.33 (estimate) | `section-c/llm-status-cleanup.log` |
+| After inventory | 60 entries, all tagging-index leftovers or the 2 free `terraform_data` guards; see `inventories/INVENTORIES.md` | `inventories/` |
+| C11 billing (2026-11-15, provisional: November bill Pending, Nov 15 may still fill in) | AWS USD 15.75 before credits (Nov 1-15), tax 0.00; Anthropic about 0.08 (ledger estimate 0.075075; console not separable); Voyage 0.00; combined USD 15.83 of the USD 25 cap | `section-c/c11-cost-report.md` (from user screenshots); decision log |
+| C11 console (user screenshots, us-east-2, 2026-11-15T18:04Z) | ECS Clusters (0); EMR on EC2 Clusters (0) | decision log; `section-c/c11-cost-report.md` §4 |
+| C11 budget reading | live budget USD 200 with alerts at 50/80/100%; the billing-bootstrap USD 25 budget with alerts at 10/15/20 was never applied (finding) | `section-c/c11-cost-report.md` §3 |
+
+### L6. Offline checks run for this record (2026-11-15)
+
+- `shasum -a 256 -c SHA256SUMS` in `~/Documents/scholarchain-session-downloads`: 16 OK, exit 0; the demo copy's sha256 equals the recorded video sha256 (`b13-downloads/verify-2026-11-15.txt`).
+- Outcome counts in L2 recomputed from `answers.jsonl`.
+- Inventory counts and the pass 1 / pass 2 diff recomputed from the cleanup evidence.
+
+### L7. Not verified
+
+- C10 logout (no record). C11 is done but provisional until the November bill closes (re-read Cost Explorer after 2026-11-16).
+- The two EC2 instances in the after inventory: not checked in the EC2 Instances console. (ECS and EMR clusters: 0 in the C11 console checks.)
+- B6.5 image digest comparison.
+- Closed: the gates for the in-session commits are now covered by the closeout `sbt check` on b6dc94d and the B2 `scripts/check.sh --skip sbt` run (test-report.md, "Session 1 closeout" entries) and the external closeout review and its recheck (review.md, "Subphase 14B — Session 1 closeout").
+- 16B path 0/10 cause.
+
+## Session 1 closeout: sbt check on HEAD (2026-11-15)
+
+- Commit b6dc94d (repair 11, HEAD), JDK 17 environment from the phase plan, `sbt -batch check`: exit 0, `[success] Total time: 736 s (12:16), completed Nov 15, 2026, 12:15:13 PM`; ScalaTest totals across 9 summary lines: succeeded 1567, failed 0, canceled 1. The only `[error]` lines are the expected `checkProbeInjectFailure` self-test. TestRunMarker ran. Log sha256 1fc21fea1fe021c6132cffc57ad2de466faba33e91319b189d6395496c882f1e (git-ignored copy `target/phase14/evidence/14b/sbt-check-head-b6dc94d.log`). This closes the missing repair 11 result (its 20:45Z run was never recorded).
+
+## Session 1 closeout review, repair round 1: B2 gate run (2026-11-15)
+
+- Clean detached worktree of b6dc94d (git status empty), JDK 17 on PATH, AWS credential variables unset, `TF_PLUGIN_CACHE_DIR` set to the local provider cache; `scripts/check.sh --skip sbt`: **exit 5, `RESULT: PARTIAL passed=6 skipped: sbt`** (run id 20261115T183940Z-47567, 18:39:40Z to 19:42:45Z). Log sha256 70682465025cc83343878b53b30b18df2b5dae86934c3dac1388d581f105b798 (git-ignored copy `target/phase14/evidence/14b/check-skip-sbt-b6dc94d.log`).
+- Per gate: constitution PASS (0 s); hooks PASS (1 s); shell PASS (7 s); python PASS (76 files compile, 1 s); terraform PASS (59 s; 1.13.5; six roots; `terraform test` 12, 19, 113, 40, 6 and 272 passed, 0 failed); script-tests PASS (3717 s): scripts/tests 1061 executed OK (0 skipped; required classes RealStateBindingTests 7 and RouteOwnershipTest 6 executed), scripts/phase12d-spike/tests 78 OK, scripts/billing/tests test_budget_execution 113, test_budget_verification 62, test_publication_evidence 39 OK, tests/scripts 463 OK, tests/infra 460 OK (0 skipped each).
+- sbt gate: the closeout `sbt -batch check` on b6dc94d above (exit 0; 1567 succeeded, 0 failed, 1 canceled; log sha256 1fc21fea1fe021c6132cffc57ad2de466faba33e91319b189d6395496c882f1e) stands; no Scala or build input changed in this repair round.
+- Network: the terraform gate logged "terraform init downloaded providers over the network (no AWS API call)": it contacted the public Terraform registry. No AWS, Anthropic or Voyage call was made.

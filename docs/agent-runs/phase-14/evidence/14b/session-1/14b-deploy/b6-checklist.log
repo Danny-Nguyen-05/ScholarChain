@@ -1,0 +1,6 @@
+query-api	1	1	COMPLETED
+graph-service	1	1	COMPLETED
+semantic-service	1	1	COMPLETED
+embedding-worker	1	1	COMPLETED
+healthy
+GO/NO-GO 3 (14B smoke): healthz 200 alive, readyz 200 ready; 401 x2 UNAUTHORIZED retryable false; evidence 404 (authenticated); 4 services 1/1 COMPLETED; target healthy. Digest comparison (B6.5) not run: the deployer role cannot ecs:DescribeTasks; ECR tags are IMMUTABLE and the task definitions name tag 9ee5bbe, so the running image is the pushed one by construction (limitation recorded).

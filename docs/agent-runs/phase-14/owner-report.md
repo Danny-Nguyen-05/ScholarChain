@@ -632,3 +632,145 @@ No spend.
 | coordinator | Diagnosis, narrowing request, reruns | not independently reviewed |
 
 The fix commit moves HEAD: the images must be rebuilt on it and the A12 dry run and final check repeated.
+
+## Phase 14 live session 1 (2026-11-13T17:44:01Z to the end of Section C, 2026-11-15)
+
+Assembled offline on 2026-11-15 by the orchestrator from the session's local logs; no AWS, Anthropic or Voyage call was made to write it. Timeline of record: the decision log, tracked as `evidence/14b/session-1/00-timeline/decision-log.md`. The other evidence is listed with sha256 values in `evidence/14b/session-1/INDEX.md`, and the resource inventories are explained in `evidence/14b/session-1/inventories/INVENTORIES.md`. Tracked records were frozen during the session (`deployer-e1-decision.md`: "tracked docs frozen until after Section C"); this section is the after-the-fact record. Branch `phase-14`, session start HEAD `684aeaf`, final HEAD `b6dc94d`. Toolchain recorded in the logs: JDK 17.0.20.1, sbt 1.10.7, AWS CLI 2.35.4, session-manager-plugin 1.2.896.0, Python 3.14.5 (16B run record). Models: `claude-haiku-5-5` (answers), `voyage-4-lite` at 256 dimensions (embeddings).
+
+### Timeline (UTC; CST times in the log converted)
+
+| Time | Stage | Result | Evidence |
+|---|---|---|---|
+| 2026-11-13 17:38:07 | B0 start | AWS USD 0.38 (credits excluded), Anthropic 0, Voyage 0; clean tree at `684aeaf`; LLM ledger 0 | `00-timeline/b0-start.log` |
+| 17:44:01 | H0 | session clock started | `00-timeline/session-clock.log` |
+| 17:48 | base apply 1 (serial 1) | FAIL: deployer lacked `servicediscovery:CreatePrivateDnsNamespace` and `states:ValidateStateMachineDefinition` | `14b-deploy/14b-apply-push-results.txt` |
+| 18:27:25 | E1 deployer repair `24bf49d` | user "Yes, apply"; `0 added, 3 changed, 0 destroyed` | `14b-deploy/deployer-e1-decision.md` |
+| 18:33 | base apply 2 (serial 2, `24bf49d`) | PASS | same excerpt |
+| 18:43 | image push (serial 3) | first attempt REFUSED (local image missing), rerun PASS | same excerpt |
+| 18:49:17 | B3b provider keys | user "terminal"; both secrets have one AWSCURRENT version, no value read | `14b-deploy/b3b-decision.md` |
+| 19:01 | runtime apply 1 (serial 4) | FAIL: `ec2:GetSecurityGroupsForVpc` and state machine `kms_data_key_reuse_period_seconds` | same excerpt |
+| 19:45:16 | E1 repair 2 `155562d` | user "Yes, apply"; `0/1/0`; push PASS | `14b-deploy/deployer-e1r2-decision.md` |
+| 20:24 | runtime apply at `bc81afd` (repair 3) | PASS | same excerpt |
+| 20:53 | runtime apply at `9ee5bbe` (repair 4) | PASS | same excerpt |
+| 20:59:55 | 14B smoke | `RESULT: PASS only 2 of 6 checks ran (healthz readyz)`; 401 path checked by hand; GO/NO-GO 3 | `14b-deploy/smoke-14b.log`, `manual-401.log`, `b6-checklist.log` |
+| 21:07 | B8.1 upload slice | PASS 143 files | `14c-load/14c-results.txt` |
+| 21:37 to 23:57 | B8.3 storage load | FAIL `neptune-submit-failed` after 8429 s (tunnel dropped) | same |
+| 2026-11-14 00:5x | B8.3 option B | human decision (see Budget and scope decisions) | decision log |
+| 01:10:38 | repair 5 `83a4168` (`--graph-only`) | committed on explicit yes | decision log |
+| 01:45 / 02:58 | graph-only attempts 1 and 2 | 1 FAIL (tunnel broken pipe); 2 `COMPLETE: cacheSkipped=true graphState=LOAD_COMPLETED`, exit 0 | `14c-load/14c-results.txt` |
+| 03:31:08 | B8.4 pointer apply (serial 10) | plan IDENTICAL; apply PASS; healthz/readyz 200 | `14c-load/pointer-plan-deltas.log`, `pointer-smoke.log` |
+| 03:42:38 | B8.5 AWS integration test | attempts 1-3 FAIL (profiles; fixture symlink); attempt 4 `Tests: succeeded 1, failed 0` with the `java.io.tmpdir` workaround | `14c-load/14c-results.txt` |
+| 04:36:11 | B8.6 ingest | ingest 1 rejected 95 (Voyage free-tier rate); ingest 2 written 95, unchanged 9, rejected 0 | `14c-load/ingest-2.log` |
+| 04:38:01 | B8.7 query smoke | PASS: 5/5 samples, allNeighborsMatched, verifiedPointers 7 | `14c-load/query-smoke.log` |
+| 04:41 to 04:50 | B8.8 attempts 1-4 | timeout, then 0 claims (path stage deadline) | `b8-8-smoke/smoke-real.log`, decision log |
+| 05:04:33 | PAUSE | stack left up | decision log |
+| 16:00 | resume; cost read | AWS USD 4.45 (Nov 1-14, credits excluded; the figure the in-session receipts used, superseded by C11), Anthropic 0.00, Voyage 0.00 | decision log |
+| 16:19 to 21:13 | live repairs 6-11 and B9 | see `repairs.md`, "Phase 14 live session 1" | `live-repairs/`, `b9-emr/` |
+| about 18:50 | B8.8 | `RESULT: PASS all 6 checks` (claims=3 evidence_ids=3; smoke-real-11 at 18:42:09) | `b8-8-smoke/smoke-real-11.log` |
+| 21:17:50 | B9 stopped | human "Stop EMR, record it"; B9 PARTIAL | `b9-emr/b9-results.txt` |
+| 21:18 to 21:21 | B11 16B | COMPLETED asked=40 charged=40 | `b11-16b/` |
+| 21:22:50 | B12.3 final smoke | `RESULT: PASS all 6 checks` | `b12-final/final-smoke.log` |
+| about 21:28 to 21:49 | B13.1/B13.2 downloads; B12.2 demo video | 16 files with SHA256SUMS; video sha256 `55884100…` | `b13-downloads/`, `b12-final/demo-video.sha256.txt` |
+| 2026-11-15 01:04 to 01:10 | C2 cleanup-prepare (serial 21) | plan 20 in-place protection-flag updates; apply PASS | `section-c/cleanup-results.txt` |
+| 01:27 to 01:35 | C3 listing 1, guard state rm, listing 1b | listing 1 REFUSED (guard); user "Remove it from state" 01:34:05; listing 1b 213 actions | same |
+| 01:42 to 02:00 | C3 destroy pass 1 | `RESULT: PARTIAL`; before=309 after=62; only error the expected EIP DisassociateAddress 403 (carried item 24) | same; `inventories/` |
+| 02:01 to 02:07 | C3 listing 2 and destroy pass 2 | 1 action (`aws_eip.nat`); `RESULT: PASS`; before=62 after=60 | same |
+| 02:15:30 | C4 deployer teardown | user "Yes, apply"; `0 added, 0 changed, 13 destroyed` | `section-c/deployer-cleanup-apply.log` |
+| about 02:16 | C5 secrets | 4 secrets force-deleted; list-secrets empty | `section-c/c5-secrets-delete.log` |
+| 02:19 | C5b key revocation | user: both keys revoked | `section-c/c5b-key-revocation.log` |
+| after 02:19 (no time) | C6, C7, C8, C9 | DNS records "deleted" (user); KMS Pending deletion; S3 0, no EIPs, no load balancers, NAT Deleted, no VPC endpoints, Neptune 0; LLM ledger 55 answers USD 0.075075 | decision log; `section-c/llm-status-cleanup.log` |
+| not recorded | C10 logout | no log or decision-log line | — |
+| 2026-11-15 17:41 to 18:04 | C11 billing check (provisional) | AWS USD 15.75 before credits (Nov 1-15), tax 0.00, Anthropic about 0.08 (ledger estimate), Voyage 0.00; combined USD 15.83 of the USD 25 cap; final console checks ECS Clusters (0) and EMR on EC2 Clusters (0) | `section-c/c11-cost-report.md`; decision log |
+
+Cleanup started at 01:04Z, before the H35 limit (2026-11-15T04:44:01Z).
+
+### Stage results
+
+| Stage | Owner | Result | Evidence |
+|---|---|---|---|
+| 14B apply, deploy, smoke | coordinator (approved scripts); user (IAM windows, keys) | PASS after E1 repairs 1-2 and repairs 3-4; smoke 2 of 6 by design before data load; B6.5 digest comparison not run (deployer cannot `ecs:DescribeTasks`; ECR tags immutable) | `14b-deploy/` |
+| 14C load and smoke (B8.1-B8.7) | coordinator with loader/reader profiles | PASS after repair 5 and the graph-only rerun; integration test PASS with a test-only tmpdir workaround | `14c-load/` |
+| B8.8 real-model smoke | coordinator | PASS (6/6) after repairs 6-8 | `b8-8-smoke/` |
+| B9 EMR (Phase 15A, one run) | coordinator, pipeline role | PARTIAL. Proven live: cluster creation (after the EFS race), pipeline-role permissions, cluster-check, step submission and the stage-in step (`s-07468811I2Z6VR2ZKYUN COMPLETED`). Failed: hadoop-prep (`s-085177117HNP35FOPZSY FAILED` after 10 s), because the 15A manifests give `hadoop_config` as a repo-relative local path that is never uploaded. Ledger: 2 of 3 live runs reserved, USD 1.68 estimated; 1 slot unused | `b9-emr/` |
+| B10 (Phase 15B) | — | dropped by human decision; LLM bucket 15b 0 of 60 used | `section-c/llm-status-cleanup.log` |
+| B11 16B evaluation | experiment-engineer harness, run by the coordinator | COMPLETED asked=40 charged=40; component 7/8 and ranking 7/8 answered with verified claims (1 HTTP 422); direct-coauthors 0/14; path 0/10. Raw sha256 file `13736cfacf3e83beafed900d01ed904a442c2a93e2db87b4752e8aba19e0d0d4`. COST-REPORT anthropic 0.054600 (ledger estimate, not metered) | `b11-16b/` |
+| B12 final smoke and demo | coordinator; user recorded the video | final smoke PASS 6/6; video 63 s, sha256 `55884100fa640b9185cd3a1b4caa415d818a1b5638424a55100858e153b39303`, kept outside the repository | `b12-final/` |
+| B13 downloads | coordinator | 16 files plus SHA256SUMS; re-verified offline 2026-11-15: 16 OK | `b13-downloads/` |
+| Section C cleanup | coordinator; user for IAM windows, key revocation, DNS and console checks | C2 PASS; C3 pass 1 PARTIAL (expected), pass 2 PASS; guard state rm; C4 13 destroyed; C5 4 secrets deleted; C5b keys revoked; C7/C8 console checks clean; C9 ledger closed | `section-c/`, `inventories/` |
+
+### Budget and scope decisions (human decisions, from the decision log)
+
+- B8.3, about 00:5xZ on 2026-11-14 (log: "18:5x CST" on 2026-11-13): the user chose option B, a tested `--graph-only` flag (repair 5), over a full 4 h rerun (option A) and a manual loader job (option C).
+- 2026-11-14, after the 16:00Z cost read (no exact time recorded): "cut B9 to 1 EMR run". Receipt helper v2: EMR reserve 0.84 (one run).
+- 2026-11-14, during B8.8 (no exact time recorded): fix the claim contract in parallel with B9 preparation (repair 7); then the id-selection fix (repair 8).
+- 2026-11-14T19:00:30Z: "Yes, apply" (deployer E9 plan, repair 9) and "Yes, commit".
+- 2026-11-14, between EMR run 3 (20:28Z) and the repair 11 check (20:45Z) (no exact time recorded): "Fix EMR, drop B10". Receipt helper v3: B10 dropped, synthesis reserve scaled to 44 of 115 answers (0.51), idle EMR clusters 0.36 pre-tax added to the unreported estimate.
+- 2026-11-14T21:17:50Z: "Stop EMR, record it". B9 recorded as PARTIAL; the remaining ledger slot unused.
+- 2026-11-14 (no time): keep the demo video as is (account ID visible in two ARN lines; the explain shown is the ABSTAINED warm-up record).
+- 2026-11-15T01:34:05Z: "Remove it from state" (`terraform_data.phase12b_guard`, no AWS object).
+- 2026-11-15T02:15:30Z: "Yes, apply" (C4 deployer plan, 13 to destroy).
+- IAM windows (user statements, local CST): E9 opened 12:45 pm, removed 1:09 pm; C4/C5 opened 8:11 pm, closed 8:18 pm. To be confirmed in CloudTrail.
+
+Spend (C11, done 2026-11-15, **provisional**: the November AWS bill is Pending and Nov 15 may still fill in; re-read Cost Explorer after 2026-11-16). Source: `evidence/14b/session-1/section-c/c11-cost-report.md`, typed by the coordinator from the user's console screenshots (the screenshots stay with the user).
+
+| Source | USD | Read from |
+|---|---:|---|
+| AWS usage before credits, Nov 1-15 | 15.75 | Cost Explorer, credits and refunds excluded; Budgets page shows the same 15.75 |
+| AWS tax | 0.00 | Bills > Taxes by service |
+| Anthropic | about 0.08 | LLM ledger estimate 0.075075 (55 answers × 0.001365); the console total is not separable (workspace shared with another project) |
+| Voyage AI | 0.00 | Voyage dashboard, November 2026 |
+| **Combined** | **15.83** | of the USD 25 project cap (9.17 left; 6.17 after the USD 3 safety floor) |
+
+The AWS amount invoiced after credits is USD 0.00; the cap is counted before credits. Neptune is 9.05 of the 15.75. The USD 4.45 figure read at 2026-11-14T16:00Z (and used by the in-session pre-spend receipts) is superseded. EMR ledger reservations were USD 1.68 (estimate); the bill shows EMR service 0.14 plus about 0.63 of EC2 instance time.
+
+Budget finding (C11): the live AWS Budget `scholarchain-project-budget` is USD 200.00 with alerts at actual cost above 50%, 80% and 100% (USD 100 / 160 / 200); no alert fired. The billing-bootstrap Terraform defines USD 25 with absolute alerts at USD 10 / 15 / 20, but that change was never applied. Session 1 was held to the cap by the pre-spend receipts and the ledgers, not by the budget. Applying billing-bootstrap is a Session 2 prerequisite under the human gate.
+
+### Agent roster (E1 through repair 11)
+
+In the live session the coordinator launched the subagents. Their native agent IDs were not recorded in the repository. Model: Sonnet before about 2026-11-14T19:18Z (exact version and effort not recorded in the session evidence); Opus 5.5 at effort high from then on. Model is assigned below by commit time, so a commit made before 19:18Z is listed as Sonnet. Roles come from the decision log and the coordinator's account; "not recorded" means neither names one. Paths come from `git show --stat` (`evidence/14b/session-1/live-repairs/commits-6-11.txt` for repairs 6-11).
+
+| Commit (UTC) | Repair | Role(s) that edited | Model | Paths | Ownership note |
+|---|---|---|---|---|---|
+| `24bf49d` 2026-11-13 18:23 | E1 | not recorded | Sonnet | `infra/terraform/deployer/phase14_main.tf`, `infra/terraform/deployer/tests/deployer.tftest.hcl` | infra-engineer territory |
+| `155562d` 19:39 | E1 repair 2 | not recorded | Sonnet | `infra/terraform/deployer/phase14_main.tf`, `infra/terraform/deployer/tests/deployer.tftest.hcl`, `infra/terraform/modules/workflow/main.tf`, `tests/infra/terraform_source_guard.py`, `tests/infra/test_guard_phase14.py` | **Deviation for the human to accept:** `tests/infra/**` belongs to test-engineer, and the commit mixes it with infra-engineer paths; no record shows that test-engineer made those two edits |
+| `bc81afd` 20:18 | 3 | not recorded | Sonnet | `infra/terraform/modules/runtime/compute.tf` | infra-engineer territory |
+| `9ee5bbe` 20:44 | 4 | not recorded | Sonnet | `Dockerfile`, `project/ServiceDistribution.scala`, `project/verification/src/test/scala/scholarchain/build/ServiceDistributionSpec.scala` | Deviation for the human to accept: build-engineer paths (`project/**`, packaging) |
+| `83a4168` 2026-11-14 01:10 | 5 | storage-engineer (decision log, B8.3 option B) | Sonnet | `modules/storage/.../StorageLoadMain.scala`, `modules/storage/.../StorageLoadMainOptionsSpec.scala` | within owner |
+| `bfa393a` 16:19 | 6 | service-engineer | Sonnet | `modules/services/src/main/resources/logback.xml`, `.../services/AwsPorts.scala`, `.../services/RuntimeArtifactWarmup.scala`, `.../services/RuntimeArtifactWarmupSpec.scala` | within owner |
+| `0656dc4` 17:47 | 7 | rag-engineer | Sonnet | `modules/rag/README.md`, `.../rag/AnswerSynthesisAgent.scala`, `ClaimContract.scala`, `ClaimScaffold.scala`, `ClaimVerificationAgent.scala`, `ClaimScaffoldSpec.scala`, `prompts/runtime/synthesis-v1.md` | within owner |
+| `ae14593` 18:18 | 8 | rag-engineer | Sonnet | `modules/rag/README.md`, `.../rag/AnswerSynthesisAgent.scala`, `ClaimScaffoldSpec.scala`, `prompts/runtime/synthesis-v1.md`, `prompts/schemas/answer-synthesis-v1.json` | within owner |
+| `2b2d263` 19:00 | 9 | infra-engineer | Sonnet | `infra/terraform/deployer/README.md`, `infra/terraform/deployer/operator_pipeline.tf`, `infra/terraform/deployer/tests/gdeployer.tftest.hcl`, `tests/infra/README.md`, `tests/infra/operator_checks.py`, `tests/infra/test_operator_roles_14b.py` | **Deviation for the human to accept:** three `tests/infra/**` files (test-engineer territory) in a commit attributed to infra-engineer |
+| `7ecc572` 20:20 | 10 | infra-engineer (`scripts/**`), test-engineer (`tests/scripts/**`) | Opus 5.5, high | `scripts/README.md`, `scripts/lib/pipeline.py`, `scripts/run-bounded-pipeline.sh`, `scripts/tests/fake_tool.py`, `scripts/tests/test_experiment.py`, `scripts/tests/test_pipeline.py`, `tests/scripts/sc_support.py`, `tests/scripts/test_pipeline_dryrun.py`, `tests/scripts/test_pipeline_execute.py`, `tests/scripts/test_pipeline_refusals.py` | within owners |
+| `b6dc94d` 20:58 | 11 | infra-engineer (`scripts/**`), test-engineer (`tests/scripts/**`) | Opus 5.5, high | `scripts/lib/pipeline.py`, `scripts/phase4-emr-smoke.sh`, `scripts/tests/fake_tool.py`, `scripts/tests/pipeline_helpers.py`, `scripts/tests/test_c1_step_args.py`, `scripts/tests/test_pipeline.py`, `tests/scripts/sc_support.py`, `tests/scripts/test_pipeline_execute.py`, `tests/scripts/test_step_arg_limit_13c.py` | within owners |
+
+### Known gaps
+
+- Phase 15 has no EMR results: no run got past hadoop-prep, so no Hadoop, entity-resolution or Spark step ran on EMR.
+- Phase 15B (B10) was dropped; bucket 15b unused.
+- 16B direct-coauthor questions 0/14: all 14 name researchers with 22 coauthors, whose atomic path evidence does not fit `retrieval.contextTokenBudget = 4096` (observed on r6a).
+- 16B path questions 0/10: no claims; the cause was not diagnosed in the session.
+- Demo items missing: the explain shown on camera is the ABSTAINED warm-up record; the verified record (r8a) was to be shown in an offline second clip, which has no record; the video shows the account ID and stays outside the repository.
+- C10 logout has no record. C7/C8 survive only as decision-log lines (`c7-kms.log` and `c8-inventory.log` are empty). The C11 console checks found ECS Clusters (0) and EMR on EC2 Clusters (0) in us-east-2 on 2026-11-15; EC2 Instances (2 entries in the after inventory) were still not separately checked.
+- C11 is provisional until the November bill closes.
+- Test logs for repairs 6-11 were not retained; their counts survive only in the decision log. The repair 11 `sbt check` started at 20:45Z; its result was not recorded before the commit (closed by the closeout `sbt check` on b6dc94d and the B2 `scripts/check.sh --skip sbt` run (test-report.md, "Session 1 closeout" entries) and the external closeout review and its recheck (review.md, "Subphase 14B — Session 1 closeout")).
+- No independent code review of the in-session commits (E1 `24bf49d` through repair 11 `b6dc94d`) was recorded during the session. Closed by the external closeout review (REQUEST-CHANGES, repaired) and its recheck (APPROVE), review.md "Subphase 14B — Session 1 closeout".
+
+### Open follow-ups
+
+| Item | Owner |
+|---|---|
+| Re-read Cost Explorer after 2026-11-16 to finalize C11; confirm the IAM windows in CloudTrail | human |
+| Optional read-only console look at EC2 Instances in us-east-2 | human |
+| Apply billing-bootstrap before Session 2: USD 25 budget with alerts at USD 18 / 20 / 22 (human decision 2026-11-15T18:42Z, Q11, decision-log line 108; the Terraform code currently defines 10/15/20) | infra-engineer (plan), human (gate and apply) |
+| Final cleanup after the last session: deployer role `scholarchain-deployer`, its `phase14-main` policies and the two permissions-boundary policies (kept on purpose by C4), the two `terraform_data` guards | human gate; infra-engineer (plan) |
+| 15A manifests: `hadoop_config` as an s3 URI | experiment-engineer |
+| `upload-emr-artifacts.sh --hadoop-config` option with a test | infra-engineer |
+| `aws_emr_cluster` depends on the EFS mount target (bootstrap race) | infra-engineer |
+| Add `terraform_data.phase12b_guard` to `CLEANUP_TEARDOWN_ADDRESS_RULES` with tests | infra-engineer |
+| `LiveGraphFixture` root through `toRealPath()` (macOS `/var` symlink) | storage-engineer |
+| Readiness gate on the runtime-artifact warm-up, or a faster load (28 s; 45 s on the next task) | service-engineer |
+| First query after idle can 504 at the graph stage; warm before demos | service-engineer / storage-engineer (diagnosis) |
+| Context budget 4096 vs 22-coauthor researchers; path 0/10 diagnosis; `synthesis-v2` label (prompt edited in place); render coauthor names instead of ids | rag-engineer |
+| Runbook: never run `aws login` while the browser is signed in as root (C4 attempt 1 bound the profile to the root session) | documentation-engineer |
+| Independent review of the in-session commits `24bf49d` through `b6dc94d`: done (closeout review and recheck APPROVE, review.md) | code-reviewer (closed) |
+| The remaining Phase 15 EMR run (one ledger slot) | human decision |

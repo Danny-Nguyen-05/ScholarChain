@@ -1,0 +1,58 @@
+╷
+│ Warning: Deprecated flag: -state
+│
+│ Use the "path" attribute within the "local" backend to specify a file for
+│ state storage
+╵
+aws_iam_role_policy.operator_login["loader"]: Destroying... [id=scholarchain-course-operator-loader:scholarchain-course-operator-loader-same-device-login]
+aws_iam_role_policy.operator["loader--tunnel"]: Destroying... [id=scholarchain-course-operator-loader:scholarchain-course-operator-loader-tunnel]
+aws_iam_role_policy.operator_pipeline[0]: Destroying... [id=scholarchain-course-operator-pipeline:scholarchain-course-operator-pipeline-data]
+aws_iam_role_policy.operator["cleanup--data"]: Destroying... [id=scholarchain-course-operator-cleanup:scholarchain-course-operator-cleanup-data]
+aws_iam_role_policy.operator["reader--data"]: Destroying... [id=scholarchain-course-operator-reader:scholarchain-course-operator-reader-data]
+aws_iam_role_policy.operator_login["cleanup"]: Destroying... [id=scholarchain-course-operator-cleanup:scholarchain-course-operator-cleanup-same-device-login]
+aws_iam_role_policy.operator_login["reader"]: Destroying... [id=scholarchain-course-operator-reader:scholarchain-course-operator-reader-same-device-login]
+aws_iam_role_policy.operator_pipeline_login[0]: Destroying... [id=scholarchain-course-operator-pipeline:scholarchain-course-operator-pipeline-same-device-login]
+aws_iam_role_policy.operator["loader--data"]: Destroying... [id=scholarchain-course-operator-loader:scholarchain-course-operator-loader-data]
+aws_iam_role_policy.operator_login["reader"]: Destruction complete after 1s
+aws_iam_role_policy.operator_login["cleanup"]: Destruction complete after 1s
+aws_iam_role_policy.operator["reader--data"]: Destruction complete after 1s
+aws_iam_role_policy.operator_pipeline[0]: Destruction complete after 1s
+aws_iam_role_policy.operator["loader--data"]: Destruction complete after 1s
+aws_iam_role_policy.operator["loader--tunnel"]: Destruction complete after 1s
+aws_iam_role_policy.operator_login["loader"]: Destruction complete after 1s
+aws_iam_role_policy.operator["cleanup--data"]: Destruction complete after 1s
+aws_iam_role_policy.operator_pipeline_login[0]: Destruction complete after 1s
+aws_iam_role.operator_pipeline[0]: Destroying... [id=scholarchain-course-operator-pipeline]
+aws_iam_role.operator["cleanup"]: Destroying... [id=scholarchain-course-operator-cleanup]
+aws_iam_role.operator["reader"]: Destroying... [id=scholarchain-course-operator-reader]
+aws_iam_role.operator["loader"]: Destroying... [id=scholarchain-course-operator-loader]
+aws_iam_role.operator["cleanup"]: Destruction complete after 0s
+aws_iam_role.operator["loader"]: Destruction complete after 0s
+aws_iam_role.operator["reader"]: Destruction complete after 0s
+aws_iam_role.operator_pipeline[0]: Destruction complete after 0s
+
+Apply complete! Resources: 0 added, 0 changed, 13 destroyed.
+
+Outputs:
+
+available_permission_sets = tolist([
+  "phase14-main",
+  "spike-emr",
+])
+main_permissions_boundary_arns = {
+  "emr_service" = "arn:aws:iam::<acct>:policy/scholarchain-course-emr-service-boundary"
+  "runtime" = "arn:aws:iam::<acct>:policy/scholarchain-course-permissions-boundary"
+}
+operator_caller_policy_json = "{\"Statement\":[{\"Action\":[\"sts:AssumeRole\"],\"Condition\":{\"Bool\":{\"aws:MultiFactorAuthPresent\":\"true\"}},\"Effect\":\"Allow\",\"Resource\":[\"arn:aws:iam::<acct>:role/scholarchain-deployer\"],\"Sid\":\"AssumeOnlyDeployerRoleWithMfa\"}],\"Version\":\"2012-10-17\"}"
+policy_names = tolist([
+  "scholarchain-deployer-phase14-main--compute",
+  "scholarchain-deployer-phase14-main--data",
+  "scholarchain-deployer-phase14-main--emr-efs",
+  "scholarchain-deployer-phase14-main--iam",
+  "scholarchain-deployer-phase14-main--keys-obs",
+  "scholarchain-deployer-phase14-main--network",
+  "scholarchain-deployer-phase14-main--network-mod",
+])
+role_arn = "arn:aws:iam::<acct>:role/scholarchain-deployer"
+role_name = "scholarchain-deployer"
+24864772984bfced596c748ab4172732f873c2b98a2cd7d59b459206fbf3b101  <home>/Library/Application Support/ScholarChain/terraform/spike-emr/deployer.tfstate

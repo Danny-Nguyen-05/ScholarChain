@@ -1,0 +1,9 @@
+EXPERIMENT: 16b-live-evaluation (LLM bucket 16b)
+QUESTIONS: 40 from the questions file (sha256 e4b6d48b060cfb58a2594ca7607bd1185a07b1abf303891c440be574bdb8f67d)
+BUCKET 16b size=40 used=0 remaining=40
+PLANNED: answers=40 estimated_usd=0.054600 (0.001365 USD per answer, estimate not metered) ledger_total_usd=0.015015 shared_cap_usd=1.330000
+LEDGER: <home>/.scholarchain/llm-ledger/haiku-ledger.jsonl (this command charges bucket 16b itself; do not also run llm_budget.py reserve for it)
+RUN-ID: 16b-1
+RUN-DIR: <repo>/target/experiment-runs/16b-live-evaluation-16b-1
+COST-REPORT: aws=not-metered anthropic=0.054600 voyage=0.000000 combined=0.054600 (anthropic + voyage only (AWS not included: take it from the bill))
+RESULT: COMPLETED run=16b-1 asked=40 charged=40 reason=-

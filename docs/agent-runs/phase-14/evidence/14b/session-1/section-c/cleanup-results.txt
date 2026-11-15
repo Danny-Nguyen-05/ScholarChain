@@ -1,0 +1,63 @@
+# Section C cleanup: prepare, listings, destroy passes and the deployer teardown
+# Excerpt: only the lines matching each pattern are kept (ANSI codes stripped; account ID, custom domain and
+# local paths masked). Each block names its source file and that file's sha256.
+# CONFIRM-TOKEN lines and the confirm-step RESULT lines (which repeat the token) are left out on purpose.
+# cleanup-list-1b.log: 213 'DESTROY-ACTION: ' lines (the same 213 actions as destroy-actions-pass-1.txt); they are not repeated here.
+
+## target/phase14/evidence/14b/cleanup-prepare-plan.log (sha256 42257f2d9d0937d13cb110acf1760ec9fce8ecf9a5e51b012dbf39ec26fe9be9, 168 lines)
+RESULT: PASS preparation plan recorded, NOT applied; apply it with scripts/deploy.sh --stage cleanup-prepare after the approval record, then re-run the cleanup listing
+
+## target/phase14/evidence/14b/cleanup-prepare-dry.log (sha256 b9aa78e217072030f794a9988a4babcd5e3f8df0a14588ae32c9e4393bb5252e, 43 lines)
+RESULT: DRY-RUN all local checks passed (stage cleanup-prepare: approval record, pre-spend receipt, plan, receipt, state binding); no mutating command was run
+
+## target/phase14/evidence/14b/cleanup-prepare.log (sha256 e8618d41732595ec7b4583d46c82d928a5886b70e2ce72823f15f4b5b173318d, 147 lines)
+RESULT: PASS stage cleanup-prepare complete for ae1459327a88bd8f55c2dd2a01993d26adb87cad; manifest=<repo>/target/release/b6dc94df6d9b443a9fd778eb09be6ec2c8c29f64/deploy-manifest-cleanup-prepare-20261115T011036Z-68335.json
+
+## target/phase14/evidence/14b/cleanup-list-1.log (sha256 c6ea76e09da6d759622fa3c620edce75e5cc7a345a81bd691e58a2a9ff13cd49, 647 lines)
+POLICY-VIOLATION: delete is not in the teardown set: terraform_data.phase12b_guard
+[2026-11-15T01:33:05Z] [20261115T012727Z-69466] ERROR refused at step destroy-policy: the saved destroy plan violates the preservation policy (see POLICY-VIOLATION lines); nothing was destroyed and no confirmation token is offered
+RESULT: REFUSED step=destroy-policy reason=the saved destroy plan violates the preservation policy (see POLICY-VIOLATION lines); nothing was destroyed and no confirmation token is offered
+
+## target/phase14/evidence/14b/state-sha-before-guard-rm.log (sha256 2b9a919ea35bdf44c0c4784840297f78c94d111b3d9b96c6c3c4298488cfd57f, 1 lines)
+b41fcba6ba44f60734368af8e7a5cacad7b0f87ab0307367c6b1279120522140  infra/terraform/terraform.tfstate
+
+## target/phase14/evidence/14b/guard-state-rm.log (sha256 368fff663b754c9984adf06bcdeb601dd40790cc232111fef9860a7fad0f6b78, 2 lines)
+Removed terraform_data.phase12b_guard
+Successfully removed 1 resource instance(s).
+
+## target/phase14/evidence/14b/cleanup-list-1b.log (sha256 759a8bcdcea7e66e644f42712c3cc20085f50ea4ac9cb1c2ba73cb60fc7169d9, 649 lines)
+no teardown resource has active deletion protection
+DESTROY-PLAN-SHA256: 61829fd8167cd3f87aac19a40dec4598df0da8caccc9b6796645a84f3ee2dcc7
+
+## target/phase14/evidence/14b/cleanup-pass-1.log (sha256 f32c7a70f036f319e806ceb09f11f490474b4f584924c6d028ccb7c36ec1a0be, 406 lines)
+  | │ Error: disassociating EC2 EIP (eipassoc-0ef72018628d3cc95): operation error EC2: DisassociateAddress, https response error StatusCode: 403, RequestID: 88e3f616-b3bc-4375-abe0-663fa4619302, api error UnauthorizedOperation: You are not authorized to perform this operation. User: arn:aws:sts::<ac [...]
+[2026-11-15T02:00:34Z] [20261115T014213Z-74524] WARN destroy apply failed for infra/terraform (exit 1); on pass 1 aws_eip.nat DisassociateAddress 403 is the expected carried item 24; do not widen IAM
+[2026-11-15T02:00:40Z] [20261115T014213Z-74524] INFO before=309 entries, after=62 entries; files in <repo>/target/cleanup-evidence/20261115T014213Z-74524
+RESULT: PARTIAL destroy pass incomplete (apply exit 1); run the listing again for the second pass; before=309 after=62
+
+## target/phase14/evidence/14b/cleanup-list-2.log (sha256 a8371a8ab11efea5ef61b75d1c93bbc7669ddcecaf1453aa7925fd6243f865c4, 124 lines)
+DESTROY-PLAN-SHA256: 901d9050fe4f787b361f70af33b56adb406d00e84c9b51b968c052c014ab7dcf
+DESTROY-ACTION: delete module.network.aws_eip.nat
+
+## target/phase14/evidence/14b/cleanup-pass-2.log (sha256 34c3a53a41cd5704f311fbf19945a3b11be302b682cfda9eb5e80b11d04329be, 193 lines)
+[2026-11-15T02:07:45Z] [20261115T020725Z-78532] INFO before=62 entries, after=60 entries; files in <repo>/target/cleanup-evidence/20261115T020725Z-78532
+RESULT: PASS destroy pass complete; before=62 after=60; evidence=<repo>/target/cleanup-evidence/20261115T020725Z-78532
+
+## target/phase14/evidence/14b/deployer-cleanup-plan.log (sha256 b852067848a09e0348edc12f72db66ccb10a8ce682a7c6046fbc358a08f91096, 2337 lines)
+Plan: 0 to add, 0 to change, 13 to destroy.
+
+## target/phase14/evidence/14b/deployer-cleanup-apply.log (sha256 73e95f4a84d6077640d45f2f04eb12cc55be660a40bf422aef896dc94f8bda38, 58 lines)
+aws_iam_role_policy.operator_login["reader"]: Destruction complete after 1s
+aws_iam_role_policy.operator_login["cleanup"]: Destruction complete after 1s
+aws_iam_role_policy.operator["reader--data"]: Destruction complete after 1s
+aws_iam_role_policy.operator_pipeline[0]: Destruction complete after 1s
+aws_iam_role_policy.operator["loader--data"]: Destruction complete after 1s
+aws_iam_role_policy.operator["loader--tunnel"]: Destruction complete after 1s
+aws_iam_role_policy.operator_login["loader"]: Destruction complete after 1s
+aws_iam_role_policy.operator["cleanup--data"]: Destruction complete after 1s
+aws_iam_role_policy.operator_pipeline_login[0]: Destruction complete after 1s
+aws_iam_role.operator["cleanup"]: Destruction complete after 0s
+aws_iam_role.operator["loader"]: Destruction complete after 0s
+aws_iam_role.operator["reader"]: Destruction complete after 0s
+aws_iam_role.operator_pipeline[0]: Destruction complete after 0s
+Apply complete! Resources: 0 added, 0 changed, 13 destroyed.

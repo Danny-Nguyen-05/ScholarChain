@@ -1,0 +1,12 @@
+STEP: start
+[2026-11-14T18:40:04Z] [20261114T184004Z-65580] INFO script=smoke-test.sh mode=smoke run_id=20261114T184004Z-65580 repo_root=<repo>
+STEP: inputs
+[2026-11-14T18:40:04Z] [20261114T184004Z-65580] INFO target https://<redacted>; the API key is read from SCHOLARCHAIN_SMOKE_API_KEY and is never printed
+STEP: smoke-healthz
+CHECK-OK: healthz: GET /healthz 200 status=alive
+STEP: smoke-readyz
+CHECK-OK: readyz: GET /readyz 200 status=ready
+STEP: smoke-query
+CHECK-FAILED: query: POST /v1/query returned 504, not a 200 answer or a 202 job reference
+[2026-11-14T18:40:16Z] [20261114T184004Z-65580] ERROR failed at step smoke-query: query check failed
+RESULT: FAIL step=smoke-query reason=query check failed
