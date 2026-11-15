@@ -1,0 +1,36 @@
+BASELINE ['61 passed, 0 failed']
+M01 inflate the compute document past 6144 characters -> 59 passed, 2 failed; failing: p14_every_document_is_under_6144_characters_and_attachments_fit_the_quota, p14_documents_still_fit_with_the_longest_allowed_environment_name
+M02 default enabled set re-adds spike-emr -> 60 passed, 1 failed; failing: p14_default_enabled_set_is_phase14_main_only
+M03 drop the region condition from the SQS statement -> 60 passed, 1 failed; failing: p14_every_regional_allow_statement_is_pinned_to_us_east_2
+M04 widen the IAM role pattern to scholarchain-* -> 59 passed, 2 failed; failing: p14_iam_statements_only_touch_scholarchain_course_roles_profiles_and_boundaries, p14_boundary_tamper_denies_exist_and_no_allow_undoes_them
+M05 CreateRole (runtime roles) without the boundary condition -> 46 passed, 1 failed; failing: p14_create_role_requires_the_project_boundary_and_the_project_tags
+M06 drop Put/DeleteRolePermissionsBoundary from the Deny -> 60 passed, 1 failed; failing: p14_boundary_tamper_denies_exist_and_no_allow_undoes_them
+M07 PassRole to EC2 without iam:PassedToService -> 48 passed, 1 failed; failing: p14_pass_role_is_limited_by_passed_to_service
+M08 add a service-wide s3:* action -> 60 passed, 1 failed; failing: p14_no_wildcard_action_and_resource_star_only_for_reads_or_the_honest_list
+M09 SQS statement on Resource * -> 60 passed, 1 failed; failing: p14_no_wildcard_action_and_resource_star_only_for_reads_or_the_honest_list
+M10 four extra documents (11 managed attachments) -> 37 passed, 2 failed; failing: p14_default_enabled_set_is_phase14_main_only, p14_default_permission_set_is_phase14_main_and_not_the_spike
+M10b four extra documents AND the quota precondition removed -> 58 passed, 3 failed; failing: p14_default_enabled_set_is_phase14_main_only, p14_default_permission_set_is_phase14_main_and_not_the_spike, p14_every_document_is_under_6144_characters_and_attachments_fit_the_quota
+M11 trust without the MFA condition -> 59 passed, 2 failed; failing: trust_requires_mfa_and_exact_principal, p14_trust_requires_mfa_and_the_session_is_one_hour
+M12 MaxSessionDuration 7200 -> 59 passed, 2 failed; failing: trust_requires_mfa_and_exact_principal, p14_trust_requires_mfa_and_the_session_is_one_hour
+M13 remove the spike/phase14 exclusivity and relax the quota check -> 39 passed, 1 failed; failing: p14_spike_and_phase14_main_together_are_rejected
+M14 rename ec2:CreateNatGateway in every document (action missing) -> 60 passed, 1 failed; failing: p14_the_documents_cover_every_resource_type_the_main_root_creates
+M15 project tag condition value changed to another project -> 60 passed, 1 failed; failing: p14_tag_conditions_carry_the_exact_project_and_environment_values
+M16 data-key actions without kms:ViaService -> 51 passed, 1 failed; failing: p14_kms_data_key_actions_only_via_the_named_services_and_grants_only_for_aws_resources
+M17 secret-value Deny turned into an Allow -> 57 passed, 4 failed; failing: p14_no_wildcard_action_and_resource_star_only_for_reads_or_the_honest_list, p14_every_regional_allow_statement_is_pinned_to_us_east_2, p14_boundary_tamper_denies_exist_and_no_allow_undoes_them, p14_the_documents_cover_every_
+M18 main_environment validation removed -> 54 passed, 1 failed; failing: p14_main_environment_must_be_a_valid_main_root_value
+M19 EMR boundary template: PassRole loses PassedToService -> 57 passed, 1 failed; failing: p14_boundary_policies_are_bounded_and_the_emr_boundary_mirrors_the_tag_conditions
+M20 drop one default tag key (11 instead of 12) -> 59 passed, 2 failed; failing: p14_unscoped_tagging_statements_are_limited_to_the_declared_tag_keys, p14_the_emr_managed_policies_tag_may_be_applied_to_subnets_and_security_groups
+M21 RunJobFlow without the EMR managed-policies request tag -> 50 passed, 1 failed; failing: p14_actions_without_a_resource_type_keep_their_request_tags
+M22 EMR boundary template: TerminateInstances statement ignores the project tag -> 57 passed, 1 failed; failing: p14_boundary_policies_are_bounded_and_the_emr_boundary_mirrors_the_tag_conditions
+M23 allow iam:CreatePolicyVersion -> 59 passed, 2 failed; failing: p14_iam_statements_only_touch_scholarchain_course_roles_profiles_and_boundaries, p14_boundary_tamper_denies_exist_and_no_allow_undoes_them
+M24 add a budgets action -> 59 passed, 2 failed; failing: p14_no_wildcard_action_and_resource_star_only_for_reads_or_the_honest_list, p14_nothing_for_budgets_billing_or_the_billing_deployer
+M25 iam statement grants role/* (every role) -> 60 passed, 1 failed; failing: p14_iam_statements_only_touch_scholarchain_course_roles_profiles_and_boundaries
+M26 EMR boundary template loses ec2:DeleteTags (example policy no longer covered) -> 60 passed, 1 failed; failing: p14_the_emr_service_boundary_covers_every_action_of_the_example_service_policy
+M27 secret metadata statement also allows GetSecretValue -> 59 passed, 2 failed; failing: p14_boundary_tamper_denies_exist_and_no_allow_undoes_them, p14_the_documents_cover_every_resource_type_the_main_root_creates
+M28 PassRole to rds drops its service condition value (ecs-tasks instead) -> 60 passed, 1 failed; failing: p14_pass_role_is_limited_by_passed_to_service
+M29 role pattern drops the environment (role/scholarchain-*-*) -> 59 passed, 2 failed; failing: p14_iam_statements_only_touch_scholarchain_course_roles_profiles_and_boundaries, p14_boundary_tamper_denies_exist_and_no_allow_undoes_them
+M30 DenyAssumingMainRoles removed (action list emptied to a harmless one) -> 60 passed, 1 failed; failing: p14_boundary_tamper_denies_exist_and_no_allow_undoes_them
+M31 EMR managed-policies key removed from the default main_tag_keys -> 59 passed, 2 failed; failing: p14_unscoped_tagging_statements_are_limited_to_the_declared_tag_keys, p14_the_emr_managed_policies_tag_may_be_applied_to_subnets_and_security_groups
+M32 boundary template: runtime boundary loses bedrock:InvokeModel (deployer boundary tests) -> 61 passed, 0 failed; failing: NONE
+M33 EMR boundary template hard-codes the environment value -> 60 passed, 1 failed; failing: p14_documents_still_fit_with_the_longest_allowed_environment_name
+done

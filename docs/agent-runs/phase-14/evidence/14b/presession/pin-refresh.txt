@@ -1,0 +1,6 @@
+Pin refresh after review 9 APPROVE and snapshot 12 PASS, 2026-11-10 (user: "Yes, refresh pins"; applied by the infra-engineer, owner of scripts/**).
+Dry run before: infra/terraform/README.md: 102475 1c35109f5660 -> 111242 a0298590393d; infra/terraform/outputs.tf: 4005 c73eef0bf2b1 -> 4339 55d8db87e48a; 2 rows, nothing else.
+Apply: "APPLIED: 2 rows refreshed in scripts/billing/reviewed-pins.json".
+After (coordinator rerun): "DRY RUN: 0 rows would be refreshed"; 209 pinned, 0 drifted; JSON valid; git diff --numstat 4 4 (bytes and sha256 of the 2 rows only); git diff --check exit 0.
+Billing suites after the refresh, one process each as scripts/check.sh runs them: test_budget_execution 113 OK exit 0; test_budget_verification 62 OK exit 0; test_publication_evidence 39 OK exit 0.
+Raw log: target/phase14/evidence/14b/post-approval/pin-refresh-billing.txt

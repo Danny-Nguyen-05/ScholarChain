@@ -1,0 +1,9 @@
+Phase 14B repair round 3 — review 6 repairs (B1, B2, N5), coordinator, 2026-11-10
+Agent-reported:
+- rag-engineer (B1): sbt -batch "rag/scalafmtAll" "rag/test" "services/test" (JDK 17) -> rag 189 succeeded (186 + 3 new), services 113 succeeded, 0 failed.
+- documentation-engineer (B2, N5): docs only; git diff --check exit 0; cited names verified (deployer/variables.tf:115,126; phase14_main.tf:870; operator_roles.tf:150).
+Coordinator-observed:
+- sbt -batch check (JDK 17.0.20.1, AWS neutralized): EXIT 0; succeeded 207/64/39/53/141/189/113/693/28 = 1,527; failed 0; canceled 1;
+  "[success] Total time: 751 s (12:31), completed Nov 10, 2026, 1:28:20 PM". Test marker updated by markTestRun.
+- git diff --check: exit 0.
+Raw log: target/phase14/evidence/14b/r3/sbt-check-recheck.txt (git-ignored).

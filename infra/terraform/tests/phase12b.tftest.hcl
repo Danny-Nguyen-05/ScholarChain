@@ -52,6 +52,9 @@ override_resource {
   values          = { id = "rtb-synthetic-data" }
 }
 variables {
+  # Repair round 3: this file asserts the Bedrock path (the primary providers are anthropic and voyage; see phase14b_providers.tftest.hcl).
+  synthesis_provider               = "bedrock"
+  embedding_provider               = "bedrock"
   aws_account_id                   = "111122223333"
   aws_region                       = "us-east-1"
   aws_profile                      = "synthetic-not-a-real-profile"
@@ -102,7 +105,7 @@ run "inactive_defaults_and_vector_contract" {
       StringEquals               = { "aws:SourceAccount" = "111122223333" }
       ArnLike                    = { "aws:SourceArn" = ["arn:aws:s3vectors:us-east-1:111122223333:bucket/scholarchain-course-111122223333-vectors", "arn:aws:s3vectors:us-east-1:111122223333:bucket/scholarchain-course-111122223333-vectors/index/*"] }
       "ForAnyValue:StringEquals" = { "kms:EncryptionContextKeys" = ["aws:s3vectors:arn", "aws:s3vectors:resource-id"] }
-    }]) == 1 && length(jsondecode(output.iam_controls.kms_policy).Statement) == 2
+    }]) == 1 && length(jsondecode(output.iam_controls.kms_policy).Statement) == 5
     error_message = "B3: The project CMK must allow exactly one S3 Vectors indexing service decrypt grant, restricted to the expected account, project vector bucket and index ARNs and S3 Vectors encryption context keys."
   }
   assert {
@@ -181,6 +184,8 @@ run "bounded_runtime_scaling_and_secret_wiring" {
   variables {
     runtime_enabled              = true
     runtime_composition_verified = true
+    embedding_model_version      = "synthetic-pinned-version"
+    synthesis_model_id           = "anthropic.claude-synthetic-test-v1:0"
     image_revision               = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
     neptune_enabled              = true
     neptune_engine_version       = "1.4.6.3"
@@ -211,8 +216,8 @@ run "bounded_runtime_scaling_and_secret_wiring" {
     error_message = "Each private Fargate service must have its own bounded scaling target; worker max4 and HTTP max2."
   }
   assert {
-    condition     = alltrue([for t in output.phase12b_controls.runtime.task_definitions : t.cpu == "512" && t.memory == "1024" && jsondecode(t.container_definitions)[0].readonlyRootFilesystem && alltrue([for ref in jsondecode(t.container_definitions)[0].secrets : startswith(ref.valueFrom, "arn:aws:secretsmanager:")]) && length([for e in jsondecode(t.container_definitions)[0].environment : e if e.name == "SCHOLARCHAIN_SERVICE_MODE" && e.value == "unconfigured"]) == 1])
-    error_message = "Task sizes and secret references must match the accepted contract without silently selecting synthetic/live composition."
+    condition     = alltrue([for t in output.phase12b_controls.runtime.task_definitions : t.cpu == "512" && t.memory == "1024" && jsondecode(t.container_definitions)[0].readonlyRootFilesystem && alltrue([for ref in jsondecode(t.container_definitions)[0].secrets : startswith(ref.valueFrom, "arn:aws:secretsmanager:")]) && length([for e in jsondecode(t.container_definitions)[0].environment : e if e.name == "SCHOLARCHAIN_SERVICE_MODE" && e.value == "aws"]) == 1])
+    error_message = "Task sizes and secret references must match the accepted contract; with the acknowledgment the mode is aws (the aws environment itself is asserted in phase14a.tftest.hcl)."
   }
   assert {
     condition     = toset(keys(output.phase12b_controls.runtime.cpu_policies)) == toset(["query-api", "graph-service", "semantic-service"]) && alltrue([for p in output.phase12b_controls.runtime.cpu_policies : one(p.target_tracking_scaling_policy_configuration).target_value == 60]) && one(output.phase12b_controls.runtime.worker_policy.target_tracking_scaling_policy_configuration).target_value == 10 && length([for setting in output.phase12b_controls.runtime.cluster_settings : setting if setting.name == "containerInsights" && setting.value == "enabled"]) == 1
@@ -228,6 +233,8 @@ run "https_has_no_http_fallback" {
   variables {
     runtime_enabled              = true
     runtime_composition_verified = true
+    embedding_model_version      = "synthetic-pinned-version"
+    synthesis_model_id           = "anthropic.claude-synthetic-test-v1:0"
     image_revision               = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
     neptune_enabled              = true
     neptune_engine_version       = "1.4.6.3"
@@ -343,6 +350,8 @@ run "graph_replicas_require_shared_cursor_key" {
   variables {
     runtime_enabled              = true
     runtime_composition_verified = true
+    embedding_model_version      = "synthetic-pinned-version"
+    synthesis_model_id           = "anthropic.claude-synthetic-test-v1:0"
     image_revision               = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
     neptune_enabled              = true
     neptune_engine_version       = "1.4.6.3"

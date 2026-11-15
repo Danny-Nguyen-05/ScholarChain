@@ -1,0 +1,6 @@
+Phase 14B repair round 3 — coordinator checks with untracked files intent-added (index restored after each; 0 left intent-added)
+1. git diff --check over 67 changed tracked + 20 untracked files: exit 0.
+2. test_terraform_r1 (scripts/tests): in the live tree it fails 7 tests because its fixture copies only git-tracked files and three new
+   Terraform files are untracked (phase14b-providers.tf, tests/phase14b_providers.tftest.hcl, deployer/tests/providers.tftest.hcl).
+   With those three intent-added: python3 -I scripts/lib/suite_run.py --start-dir scripts/tests --pattern test_terraform_r1.py ->
+   SUITE-SUMMARY ran=10 executed=10 skipped_tests=0 skipped_classes=0 failures=0 errors=0 (rc 0).

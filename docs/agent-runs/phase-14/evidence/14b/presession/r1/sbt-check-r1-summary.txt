@@ -1,0 +1,19 @@
+openjdk version "17.0.20.1" 2026-08-18
+OpenJDK Runtime Environment Homebrew (build 17.0.20.1+0)
+[info] Tests: succeeded 207, failed 0, canceled 0, ignored 0, pending 0
+[info] Tests: succeeded 64, failed 0, canceled 0, ignored 0, pending 0
+[info] Tests: succeeded 39, failed 0, canceled 0, ignored 0, pending 0
+[info] Tests: succeeded 53, failed 0, canceled 0, ignored 0, pending 0
+[info] Tests: succeeded 141, failed 0, canceled 0, ignored 0, pending 0
+[info] Tests: succeeded 196, failed 0, canceled 0, ignored 0, pending 0
+[info] Tests: succeeded 113, failed 0, canceled 0, ignored 0, pending 0
+[info] Tests: succeeded 693, failed 0, canceled 0, ignored 0, pending 0
+[info] Tests: succeeded 28, failed 0, canceled 1, ignored 0, pending 0
+[success] Total time: 729 s (12:09), completed Nov 10, 2026, 7:58:46 PM
+EXIT=0
+[info] Phase14QuestionSetPlannerSpec:
+[info] - the committed 14C question set has exactly 40 non-blank lines
+[info] - every one of the 40 lines is Planned through the fallback path
+[info] - the 8 global ranking lines sit at their line numbers with the expected plans
+[info] - regression (N4): the old phrasing 'in window since-2015' is not planned
+[info] EmbeddingRetrievalSpec:

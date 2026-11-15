@@ -287,6 +287,34 @@ class LedgerTests(LedgerBase):
         with open(self.ledger, encoding="utf-8") as handle:
             self.assertEqual(len(handle.readlines()), 4)  # the init record and three reservations
 
+    def test_three_runs_of_0_84_exactly_fill_the_2_52_cap_and_more_is_refused(self):
+        """Decision 2026-11-09 (caps = planned use): 0.84 + 0.84 + 0.84 = 2.52 passes (inclusive, exact Decimal), a fourth run or 2.53 does not."""
+        for index in (1, 2, 3):
+            rc, out, _ = self.check(estimate="0.84", cap="2.52")
+            self.assertEqual(rc, 0, out)
+            rc, out, _ = self.reserve("r-%d" % index, "0.84", cap="2.52")
+            self.assertEqual(rc, 0, out)
+        self.assertIn("cumulative_usd=2.52", out)
+        rc, out, _ = self.check(estimate="0.01", cap="2.52")
+        self.assertEqual(rc, 1)
+        self.assertIn("3 live EMR runs", out)
+        rc, out, _ = self.reserve("r-4", "0.84", cap="2.52")
+        self.assertEqual(rc, 1)
+        with open(self.ledger, encoding="utf-8") as handle:
+            self.assertEqual(len(handle.readlines()), 4)  # the init record and three reservations only
+
+    def test_a_cumulative_total_of_2_53_is_refused_against_the_2_52_cap(self):
+        self.assertEqual(self.reserve("r-1", "0.84", cap="2.52")[0], 0)
+        self.assertEqual(self.reserve("r-2", "0.84", cap="2.52")[0], 0)
+        rc, out, _ = self.check(estimate="0.85", cap="2.52")
+        self.assertEqual(rc, 1)
+        self.assertIn("cumulative estimate 2.53 USD (recorded 1.68 + this run 0.85) would exceed the cap 2.52 USD", out)
+        rc, out, _ = self.reserve("r-3", "0.85", cap="2.52")
+        self.assertEqual(rc, 1)
+        self.assertIn("would exceed the cap 2.52 USD", out)
+        rc, out, _ = self.check(estimate="0.84", cap="2.52")
+        self.assertEqual(rc, 0, out)
+
     def test_concurrent_reservations_cannot_exceed_the_live_run_limit(self):
         with ThreadPoolExecutor(max_workers=8) as pool:
             results = list(pool.map(lambda n: self.reserve("c-%d" % n, "0.50")[0], range(8)))

@@ -1,0 +1,6 @@
+# tests/infra full suite (14B repair round 2), observed 2026-11-09, AWS neutralized
+python3 -I scripts/lib/suite_run.py --start-dir tests/infra --pattern 'test_*.py'
+Ran 426 tests in 867.267s
+OK
+SUITE-SUMMARY ran=426 executed=426 skipped_tests=0 skipped_classes=0 failures=0 errors=0
+EXIT 0

@@ -1,7 +1,8 @@
 package scholarchain.build
 
 import java.io.File
-import java.nio.file.{Files, StandardCopyOption}
+import java.nio.file.attribute.PosixFilePermissions
+import java.nio.file.{Files, Path, StandardCopyOption}
 import java.util.jar.JarFile
 import scala.jdk.CollectionConverters._
 
@@ -13,6 +14,23 @@ object ServiceDistribution {
     "semantic-service" -> "edu.uic.cs441.scholarchain.services.SemanticServiceMain",
     "embedding-worker" -> "edu.uic.cs441.scholarchain.services.EmbeddingWorkerMain"
   )
+
+  /** Distribution modes must not depend on the builder's umask or on source file modes: the image
+    * runs as a non-root user that has to read every JAR and prompt. Directories become 755 and
+    * files 644 (never group/other writable). A no-op on file systems without POSIX permissions.
+    */
+  def normalizePermissions(root: Path): Unit =
+    if (Files.exists(root) && root.getFileSystem.supportedFileAttributeViews().contains("posix")) {
+      val dirMode = PosixFilePermissions.fromString("rwxr-xr-x")
+      val fileMode = PosixFilePermissions.fromString("rw-r--r--")
+      val walk = Files.walk(root)
+      try
+        walk.iterator().asScala.toVector.foreach { path =>
+          if (Files.isDirectory(path)) Files.setPosixFilePermissions(path, dirMode)
+          else if (Files.isRegularFile(path)) Files.setPosixFilePermissions(path, fileMode)
+        }
+      finally walk.close()
+    }
 
   /** Versioned runtime prompts and schemas remain ordinary files, preserving their paths. */
   def writePromptAssets(source: File, output: File): Unit = {
@@ -39,6 +57,7 @@ object ServiceDistribution {
       Files.createDirectories(target.getParent)
       Files.copy(asset, target, StandardCopyOption.REPLACE_EXISTING)
     }
+    normalizePermissions(destination)
   }
 
   def write(appJar: File, dependencies: Seq[File], output: File): Unit = {
@@ -79,5 +98,7 @@ object ServiceDistribution {
         StandardCopyOption.REPLACE_EXISTING
       )
     }
+    normalizePermissions(lib.toPath)
+    normalizePermissions(new File(output, "services.jar").toPath)
   }
 }

@@ -1,0 +1,8 @@
+# Pinned files drifted after 14B repair round 1 (observed 2026-11-08; 209 pinned, 7 drifted)
+infra/terraform/README.md
+infra/terraform/main.tf
+infra/terraform/modules/runtime/compute.tf
+infra/terraform/modules/runtime/outputs.tf
+infra/terraform/modules/runtime/variables.tf
+infra/terraform/phase12b-variables.tf
+tests/infra/README.md

@@ -1,0 +1,16 @@
+http=403 ssl_verify=0
+healthy	writer	1.4.8.1.R1
+{
+    "status": "200 OK",
+    "payload": {
+        "loadIds": []
+    }
+}
+http=403 ssl_verify=0
+healthy	writer	1.4.8.1.R1
+{
+    "status": "200 OK",
+    "payload": {
+        "loadIds": []
+    }
+}

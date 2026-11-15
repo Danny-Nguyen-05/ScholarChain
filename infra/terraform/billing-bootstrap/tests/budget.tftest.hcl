@@ -32,8 +32,8 @@ run "one_cumulative_before_credit_account_budget" {
     budget_notification_emails = ["synthetic@example.invalid"]
   }
   assert {
-    condition     = output.controls.budget.account_id == "111122223333" && tonumber(output.controls.budget.amount) == 200 && output.controls.budget.currency == "USD" && output.controls.budget.period == "CUSTOM" && output.controls.budget.start == "2026-10-01_00:00" && output.controls.budget.end == "2027-01-01_00:00" && length(output.controls.budget.filters) == 0 && length(output.controls.budget.expression) == 0
-    error_message = "One account-wide USD 200 CUSTOM period must cover October and November without a reset or tag filter."
+    condition     = output.controls.budget.account_id == "111122223333" && tonumber(output.controls.budget.amount) == 25 && output.controls.budget.currency == "USD" && output.controls.budget.period == "CUSTOM" && output.controls.budget.start == "2026-10-01_00:00" && output.controls.budget.end == "2027-01-01_00:00" && length(output.controls.budget.filters) == 0 && length(output.controls.budget.expression) == 0
+    error_message = "One account-wide USD 25 CUSTOM period must cover October and November without a reset or tag filter."
   }
   assert {
     condition = output.controls.budget.tags == tomap({
@@ -50,8 +50,16 @@ run "one_cumulative_before_credit_account_budget" {
     error_message = "Credits/refunds must not hide pre-credit project usage; include taxes and support."
   }
   assert {
-    condition     = length(output.controls.budget.notifications) == 3 && toset([for n in output.controls.budget.notifications : n.threshold]) == toset([50, 80, 100]) && alltrue([for n in output.controls.budget.notifications : n.comparison == "GREATER_THAN" && n.type == "PERCENTAGE" && n.basis == "ACTUAL"])
-    error_message = "Require exactly the three actual-spend percentage alerts: USD 100, 160 and 200."
+    condition     = length(output.controls.budget.notifications) == 3 && toset([for n in output.controls.budget.notifications : n.threshold]) == toset([10, 15, 20]) && alltrue([for n in output.controls.budget.notifications : n.comparison == "GREATER_THAN" && n.type == "ABSOLUTE_VALUE" && n.basis == "ACTUAL"])
+    error_message = "Require exactly the three actual-spend absolute-value alerts: USD 10, 15 and 20."
+  }
+  assert {
+    condition     = !anytrue([for n in output.controls.budget.notifications : n.type == "PERCENTAGE"]) && !anytrue([for n in output.controls.budget.notifications : n.basis == "FORECASTED"]) && !anytrue([for n in output.controls.budget.notifications : contains([50, 80, 100], n.threshold)])
+    error_message = "No percentage, forecasted or legacy 50/80/100 alert may remain after the USD 25 replan."
+  }
+  assert {
+    condition     = alltrue([for n in output.controls.budget.notifications : n.threshold < tonumber(output.controls.budget.amount)])
+    error_message = "Every dollar alert must sit strictly below the USD 25 ceiling."
   }
 }
 run "cannot_enable_without_private_subscriber" {
@@ -63,6 +71,37 @@ run "cannot_raise_shared_budget" {
   command = plan
   variables { budget_limit_usd = 400 }
   expect_failures = [var.budget_limit_usd]
+}
+run "superseded_usd_200_ceiling_is_rejected" {
+  command = plan
+  variables { budget_limit_usd = 200 }
+  expect_failures = [var.budget_limit_usd]
+}
+run "amount_just_above_cap_is_rejected" {
+  command = plan
+  variables { budget_limit_usd = 26 }
+  expect_failures = [var.budget_limit_usd]
+}
+run "amount_just_below_cap_is_rejected" {
+  command = plan
+  variables { budget_limit_usd = 24 }
+  expect_failures = [var.budget_limit_usd]
+}
+run "zero_amount_is_rejected" {
+  command = plan
+  variables { budget_limit_usd = 0 }
+  expect_failures = [var.budget_limit_usd]
+}
+run "default_amount_is_the_course_cap" {
+  command = plan
+  variables {
+    enable_budget              = true
+    budget_notification_emails = ["synthetic@example.invalid"]
+  }
+  assert {
+    condition     = tonumber(output.controls.budget.amount) == 25 && var.budget_limit_usd == 25
+    error_message = "Omitting budget_limit_usd must yield the USD 25 cap, not the superseded USD 200."
+  }
 }
 run "end_must_follow_start" {
   command = plan

@@ -161,7 +161,7 @@ class PrespendBoundaryTests(unittest.TestCase):
         import datetime
 
         stamp = (datetime.datetime.now(datetime.timezone.utc) - datetime.timedelta(hours=2)).strftime("%Y-%m-%dT%H:%M:%SZ")
-        doc = {"monitoring_confirmed_active": True, "cost_snapshot_utc": stamp, "reported_spend_usd": 0, "unreported_usage_allowance_usd": 0, "reserves_usd": 0, "remaining_headroom_usd": 20}
+        doc = {"monitoring_confirmed_active": True, "cost_snapshot_utc": stamp, "reported_spend_usd": 0, "anthropic_spend_to_date_usd": 0, "voyage_spend_to_date_usd": 0, "unreported_usage_allowance_usd": 0, "reserves_usd": 0, "remaining_headroom_usd": 20}
         doc.update(overrides)
         return doc
 
@@ -180,6 +180,56 @@ class PrespendBoundaryTests(unittest.TestCase):
     def test_nan_literal_is_refused(self):
         text = json.dumps(self.base()).replace('"reserves_usd": 0', '"reserves_usd": NaN')
         self.assertEqual(self.check(None, text=text)[0], 1)
+
+    # ---- 14B repair round 2 (B2): the floor is either --min-headroom D or --no-headroom-floor, never both or neither ----
+    def run_flags(self, document, flags, text=None):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = os.path.join(tmp, "r.json")
+            with open(path, "w") as handle:
+                handle.write(text if text is not None else json.dumps(document))
+            result = run(VERIFY, ["prespend", "--file", path, "--max-age-hours", "24"] + flags)
+            return result.returncode, result.stdout + result.stderr
+
+    def test_spending_floor_2_99_is_refused_and_3_00_is_accepted(self):
+        self.assertEqual(self.run_flags(self.base(remaining_headroom_usd=2.99), ["--min-headroom", "3"])[0], 1)
+        self.assertEqual(self.run_flags(self.base(remaining_headroom_usd=3.00), ["--min-headroom", "3"])[0], 0)
+
+    def test_no_headroom_floor_accepts_negative_headroom_and_says_so(self):
+        for headroom in (-5.00, -0.01, 0, 1, 150.25):
+            with self.subTest(headroom=headroom):
+                code, text = self.run_flags(self.base(remaining_headroom_usd=headroom), ["--no-headroom-floor"])
+                self.assertEqual(code, 0, text)
+                self.assertIn("PRESPEND: cleanup-prepare has no headroom floor (remaining_headroom_usd=%.2f)" % headroom, text)
+
+    def test_no_headroom_floor_still_requires_a_finite_numeric_headroom_and_every_other_check(self):
+        for label, overrides in {
+            "string": {"remaining_headroom_usd": "-5.00"},
+            "null": {"remaining_headroom_usd": None},
+            "boolean": {"remaining_headroom_usd": True},
+            "stale": {"cost_snapshot_utc": "2000-01-01T00:00:00Z"},
+            "future": {"cost_snapshot_utc": "2999-01-01T00:00:00Z"},
+            "monitoring false": {"monitoring_confirmed_active": False},
+            "reserves string": {"reserves_usd": "0"},
+        }.items():
+            with self.subTest(label):
+                self.assertEqual(self.run_flags(self.base(**overrides), ["--no-headroom-floor"])[0], 1)
+        for label, key in (("missing", "remaining_headroom_usd"), ("missing spend", "reported_spend_usd")):
+            with self.subTest(label):
+                doc = self.base()
+                del doc[key]
+                self.assertEqual(self.run_flags(doc, ["--no-headroom-floor"])[0], 1)
+        for literal in ("NaN", "Infinity", "-Infinity"):
+            with self.subTest(literal):
+                text = json.dumps(self.base()).replace('"remaining_headroom_usd": 20', '"remaining_headroom_usd": ' + literal)
+                self.assertEqual(self.run_flags(None, ["--no-headroom-floor"], text=text)[0], 1)
+
+    def test_giving_both_or_neither_headroom_flag_is_a_usage_error(self):
+        document = self.base(remaining_headroom_usd=100)
+        for flags in (["--min-headroom", "3", "--no-headroom-floor"], []):
+            with self.subTest(flags=flags):
+                code, text = self.run_flags(document, flags)
+                self.assertEqual(code, 2, text)
+                self.assertNotIn("pre-spend receipt ok", text)
 
 
 if __name__ == "__main__":

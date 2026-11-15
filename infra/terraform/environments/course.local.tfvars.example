@@ -1,0 +1,216 @@
+# Template for the PRIVATE variable file of the main root (infra/terraform). NON-SECRET PLACEHOLDERS ONLY.
+#
+#   cp infra/terraform/environments/course.local.tfvars.example infra/terraform/environments/course.local.tfvars
+#   export SCHOLARCHAIN_TF_PRIVATE_VARS="$PWD/infra/terraform/environments/course.local.tfvars"
+#
+# The copy is git-ignored (`*.tfvars` in .gitignore; `git check-ignore -v` shows the rule), so real values never enter the
+# repository. This `.example` file is tracked: its suffix is not matched by that rule, and neither Terraform nor plan.sh loads
+# it (plan.sh passes exactly two var files, environments/<env>.tfvars at the source commit and the file named by
+# SCHOLARCHAIN_TF_PRIVATE_VARS, then -var=aws_region, -var=aws_profile and, for a runtime plan, -var=image_revision).
+# Because the private file comes second, a variable set here replaces the same variable in course.tfvars as a whole value.
+#
+# Replace every <placeholder>. Never put an access key, a token, a secret VALUE, a password, a private key, an e-mail address or
+# credentials in this file. Secrets are created by the human in AWS Secrets Manager OUTSIDE Terraform (decision 14-4) so the
+# values never enter Terraform state; only their ARNs appear below.
+#
+# Legend (first word of each comment):
+#   BASE     needed for the base plan (runtime disabled: network, data stores, KMS, ECR, IAM, observability, optional Neptune)
+#   RUNTIME  needed only for the runtime plan (runtime_enabled = true, after the images are pushed)
+#   BOTH     needed for both plans
+#   EMR      needed only when emr_config.enabled = true; not part of Phase 14's base or runtime plan (see README, "EMR")
+#
+# scripts/plan.sh --env course --region us-east-2 --profile <profile> [--image-revision <40-hex commit>] --execute
+
+# ---- identity of the target (BOTH) -------------------------------------------------------------------------------------
+# BOTH: the approved 12-digit account. Also the provider's allowed_account_ids, so a wrong profile fails closed.
+aws_account_id = "<12-digit-account-id>"
+
+# BOTH, optional here: plan.sh always passes -var=aws_region and -var=aws_profile from --region and --profile, and a command
+# line -var overrides a var file. If you set them here they must equal the command-line values.
+# aws_region  = "<region, us-east-2>"
+# aws_profile = "<local profile name, never credentials>"
+
+# BOTH: exactly two distinct availability zones of the region, each starting with the region name.
+availability_zones = ["<az-name-1>", "<az-name-2>"]
+
+# BOTH: existing approved IAM role or user that may assume the (permission-less) <prefix>-deployment role. No wildcard, no root.
+deployment_trusted_principal_arn = "arn:aws:iam::<12-digit-account-id>:role/<role-or-user-name>"
+
+# BOTH: the human-approved budget ceiling in USD (a number). It is an input to the optional budget resource and a guard value,
+# not a spending stop; the account-level budget alert is created outside this root.
+budget_limit_usd = <usd-ceiling-as-a-number>
+
+# BOTH: leave the in-root budget disabled (the account-level budget exists outside Terraform). Enabling it needs real
+# subscriber addresses, which never go into a file.
+# enable_budget_resource = false
+
+# ---- data plane that Phase 14 loads (BOTH, runtime requires true) -------------------------------------------------------
+# BASE optional, RUNTIME required true: the runtime precondition refuses runtime_enabled = true while Neptune is off.
+neptune_enabled = <true-or-false>
+# BOTH when neptune_enabled: an explicit engine version and the matching parameter family neptune<major>.<minor>, checked by
+# the human for availability in the region before the plan (the guard refuses a mismatch; it invents nothing).
+neptune_engine_version   = "<neptune-engine-version>"
+neptune_parameter_family = "<neptune-major.minor-family>"
+
+# ---- model providers (repair round 3; BASE, because they decide the IAM text and which key containers exist) -----------------
+# BOTH: the primary providers are the Anthropic API (synthesis, model claude-haiku-5-5) and Voyage AI (embeddings, model voyage-4-lite,
+# output dimension 256). They are the defaults; they are shown so the file states the choice on purpose. Each selected provider gets ONE
+# EMPTY Secrets Manager container (scholarchain-<environment>/anthropic-api-key and /voyage-api-key); the human enters the key values
+# after the base apply and before the runtime apply (infra/terraform/README.md, "Provider API keys"). No key value belongs in this file.
+# With these two providers leave synthesis_model_id, synthesis_inference_profile_*, embedding_model_id, embedding_inference_profile_*
+# and embedding_model_version UNSET: the models and the version tag (voyage-4-lite) are fixed by the provider, and a leftover Bedrock id
+# is refused by the provider guard. Changing the embedding provider later needs a full re-embed and an index rebuild.
+synthesis_provider = "anthropic"
+embedding_provider = "voyage"
+
+# ---- Amazon Bedrock alternative (decision 14-3; only with a provider set to "bedrock") ------------------------------------------
+# To use Bedrock for synthesis, set synthesis_provider = "bedrock" and the synthesis lines below; to use it for embeddings, set
+# embedding_provider = "bedrock" and the embedding lines. Bedrock invoke grants exist only for a purpose whose provider is bedrock.
+# Titan Text Embeddings V2 is invoked in-region (no inference profile exists for it) and is the default when embedding_provider is
+# bedrock; embedding_model_version is then required in the aws service mode (the version the 14C ingest stamps on every vector).
+# embedding_model_id = "amazon.titan-embed-text-v2:0"
+# embedding_model_version = "<pinned-embedding-model-version>"
+# The synthesis model. DOCUMENTED EXAMPLE VALUES (the earlier Phase 14 decision: Claude Haiku 4.5, model access enabled in the three
+# regions below). Its card shows "In-Region endpoint URL: N/A", so it is invoked through the system-defined profile
+# "<geo-prefix>.<model id>", and IAM needs the foundation-model ARN in every region the profile routes to from the home region
+# (home region included). The real values go in the ignored copy; check the routing with
+# `aws bedrock get-inference-profile --region <home> --inference-profile-identifier <profile id> --query 'models[].modelArn'`.
+# For a model that is invoked in-region, set only synthesis_model_id and leave both profile variables out.
+# synthesis_model_id                  = "anthropic.claude-haiku-4-5-20251001-v1:0"
+# synthesis_inference_profile_id      = "us.anthropic.claude-haiku-4-5-20251001-v1:0"
+# synthesis_inference_profile_regions = ["us-east-1", "us-east-2", "us-west-2"]
+
+# RUNTIME: the one S3 Vectors index the semantic-service queries (one of the five names) and the rag-bucket prefix of the embedding text.
+# The text prefix must equal `textPrefix` of the 14C ingest config (the 8b template shows `graph/rag`); it is also the s3:ListBucket prefix scope
+# of two task roles. Documented defaults, shown so they are decided on purpose.
+semantic_index_name   = "researcher-profile-v1"
+embedding_text_prefix = "embedding-text"
+
+# ---- runtime (RUNTIME) --------------------------------------------------------------------------------------------------
+# RUNTIME: false in the base plan, true in the runtime plan.
+runtime_enabled = <true-or-false>
+# RUNTIME: acknowledgment that the live AWS composition of the services was verified; keep false until it was.
+runtime_composition_verified = <true-or-false>
+# RUNTIME: do NOT set image_revision here. `plan.sh --image-revision <40-hex commit sha>` passes it as -var (the immutable
+# image tag pushed by the `push` stage), and the plan receipt is checked against it.
+# image_revision = "<40-hex-commit-sha>"
+
+# RUNTIME: environment variable name -> ARN of a Secrets Manager secret the human created. All four names below are required
+# by the runtime precondition for the services shown. ARNs only: no secret value, no data source reads a secret.
+service_secret_bindings = {
+  "query-api" = {
+    SCHOLARCHAIN_API_KEY_SHA256        = "arn:aws:secretsmanager:<region>:<12-digit-account-id>:secret:<secret-name-and-suffix>"
+    SCHOLARCHAIN_INTERNAL_TOKEN_SHA256 = "arn:aws:secretsmanager:<region>:<12-digit-account-id>:secret:<secret-name-and-suffix>"
+    SCHOLARCHAIN_INTERNAL_TOKEN        = "arn:aws:secretsmanager:<region>:<12-digit-account-id>:secret:<secret-name-and-suffix>"
+  }
+  "graph-service" = {
+    SCHOLARCHAIN_API_KEY_SHA256        = "arn:aws:secretsmanager:<region>:<12-digit-account-id>:secret:<secret-name-and-suffix>"
+    SCHOLARCHAIN_INTERNAL_TOKEN_SHA256 = "arn:aws:secretsmanager:<region>:<12-digit-account-id>:secret:<secret-name-and-suffix>"
+    SCHOLARCHAIN_GRAPH_CURSOR_KEY      = "arn:aws:secretsmanager:<region>:<12-digit-account-id>:secret:<secret-name-and-suffix>"
+  }
+  "semantic-service" = {
+    SCHOLARCHAIN_API_KEY_SHA256        = "arn:aws:secretsmanager:<region>:<12-digit-account-id>:secret:<secret-name-and-suffix>"
+    SCHOLARCHAIN_INTERNAL_TOKEN_SHA256 = "arn:aws:secretsmanager:<region>:<12-digit-account-id>:secret:<secret-name-and-suffix>"
+  }
+  "embedding-worker" = {
+    SCHOLARCHAIN_API_KEY_SHA256        = "arn:aws:secretsmanager:<region>:<12-digit-account-id>:secret:<secret-name-and-suffix>"
+    SCHOLARCHAIN_INTERNAL_TOKEN_SHA256 = "arn:aws:secretsmanager:<region>:<12-digit-account-id>:secret:<secret-name-and-suffix>"
+  }
+}
+# RUNTIME, optional: further secrets a service may read at run time (for example a provider key) that are not injected as an
+# environment variable. Each ARN becomes an exact GetSecretValue grant on that service's execution role. ARNs only.
+# service_secret_arns = {
+#   "query-api" = ["arn:aws:secretsmanager:<region>:<12-digit-account-id>:secret:<secret-name-and-suffix>"]
+# }
+
+# RUNTIME, optional: approved client CIDRs for the HTTPS listener (empty = no public ingress, the default) and the ACM
+# certificate in the same account and region (needs a non-empty list above, and runtime_enabled). No HTTP fallback exists.
+# public_ingress_cidrs  = ["<approved-client-cidr>"]
+# https_certificate_arn = "arn:aws:acm:<region>:<12-digit-account-id>:certificate/<certificate-id>"
+
+# BOTH, optional (USD 25 replan W5b), instead of https_certificate_arn (exactly one of the two): the API hostname of a domain you own, DNS at
+# Cloudflare. Base-apply requests ONE DNS-validated ACM certificate for it and does not wait; the output acm_validation_records lists the
+# CNAME to add in Cloudflare ("DNS only", not proxied) BEFORE the runtime apply, which waits up to acm_validation_timeout for it. After the
+# ALB exists, add the CNAME api -> output alb_dns_name (DNS only). The real name belongs only in the ignored copy of this file.
+# api_domain_name        = "api.example.invalid"
+# acm_validation_timeout = "15m" # whole minutes, 1m to 60m
+
+# RUNTIME, optional (USD 25 replan W5b, 14C decision 1): register the temporary Neptune tunnel (task role and task definition; no ECS service,
+# the human runs it as a one-off ECS Exec task for the load window and stops it afterwards). Needs runtime_enabled and an image revision.
+# SET IT TO true IN THE FIRST RUNTIME PLAN (replan gap G12): the tunnel task definition exists only in a plan that has the runtime AND the
+# image revision, i.e. in the runtime-apply itself. Leaving it out of that first runtime plan means a second runtime-apply (a new approval
+# record and pre-spend receipt) before the 14B tunnel test can start. It costs nothing while no task runs.
+# neptune_tunnel_enabled = true
+
+# RUNTIME, set AFTER the 14C load (replan gap G3): the pointer to the bounded runtime artifact. RuntimeArtifactMain prints the three values
+# (SCHOLARCHAIN_RUNTIME_ARTIFACT_KEY / _SHA256 / _SOURCE_RUN_ID); copy them here and run ONE more runtime-apply (a new query-api task
+# definition revision; the same image revision, no commit). All three or none: leave them unset until the artifact is uploaded, and the
+# services refuse every artifact read. Only query-api receives them. Not secret. The artifact lives in the RAG bucket
+# (scholarchain-<environment>-<account>-rag; the services default for SCHOLARCHAIN_RUNTIME_ARTIFACT_BUCKET)
+# under runtime-artifacts/<run_prefix>/, so upload it with RuntimeArtifactMain --key-prefix runtime-artifacts/<run_prefix> and
+# --bucket <the rag bucket>. The key must be runtime-artifacts/<run_prefix>/versions/<...>/<file>; <run_prefix> is the deployer's
+# operator_run_prefix (for example run-20261115).
+# Mapping (RuntimeArtifactMain prints four lines, each is exactly one variable): SCHOLARCHAIN_RUNTIME_ARTIFACT_BUCKET -> runtime_artifact_bucket
+# (optional; if set it must be the rag bucket), _KEY -> runtime_artifact_key, _SHA256 -> runtime_artifact_sha256, _SOURCE_RUN_ID ->
+# runtime_artifact_source_run_id.
+# runtime_artifact_bucket        = "scholarchain-<environment>-<account>-rag"
+# runtime_artifact_key           = "runtime-artifacts/<run_prefix>/versions/<run-id>/runtime-subset-<sha256>.json"
+# runtime_artifact_sha256        = "<64 lowercase hex: shasum -a 256 runtime-artifact.json>"
+# runtime_artifact_source_run_id = "<source run id printed by RuntimeArtifactMain, for example run:...>"
+
+# RUNTIME, optional: seconds ECS ignores failing ALB health checks after a query-api task starts (default 300, whole seconds
+# 0-3600; only used with https_certificate_arn). Must be >= healthy_threshold x interval of the target group (3 x 30 = 90). Raise it
+# here if the first runtime apply shows query-api tasks replaced before graph-service/semantic-service are ready; no commit needed.
+# query_health_check_grace_period_seconds = 300
+
+# ---- USD 25 course-cap cost shape (BOTH; Phase 14B replan). The committed defaults keep the earlier behavior; these are the cheap values
+# for the private copy. Container Insights and the dashboard bill custom metrics / a monthly dashboard fee; alarms are kept.
+container_insights_enabled = false # also drops the embedding-worker backlog policy (needs ECS/ContainerInsights RunningTaskCount); worker stays at min
+dashboard_enabled          = false # no CloudWatch dashboard; the alarms stay
+
+# RUNTIME: smallest Fargate shape, 0.25 vCPU / 1 GiB, one task per service, small Phase 15 autoscaling ceiling (HTTP max <= 2, worker max <= 4).
+# Valid pairs: cpu 256 with memory 1024 or 2048, cpu 512 with 1024 or 2048, cpu 1024 with 2048 (memory at least twice the cpu).
+# Raise cpu/memory only for a service that fails to start. Cost scales with max_capacity during the Phase 15 scaling runs.
+service_capacity = {
+  query-api        = { cpu = 256, memory = 1024, min = 1, max = 2 }
+  graph-service    = { cpu = 256, memory = 1024, min = 1, max = 2 }
+  semantic-service = { cpu = 256, memory = 1024, min = 1, max = 2 }
+  embedding-worker = { cpu = 256, memory = 1024, min = 1, max = 2 }
+}
+# Neptune serverless is already pinned at 1-2.5 NCU by the module (minimum 1 NCU); NAT stays one gateway. No variable to set.
+
+# BOTH, optional: existing SNS topic ARNs for the CloudWatch alarms (empty = alarms without notification). No e-mail address.
+# alarm_notification_arns = ["arn:aws:sns:<region>:<12-digit-account-id>:<topic-name>"]
+
+# ---- EMR (EMR; not part of the Phase 14 base or runtime plan) ------------------------------------------------------------
+# emr_config.enabled stays false until Phase 15 (the Terraform guard keeps every EMR resource at zero instances while it is
+# false). With it true, the guard refuses the plan unless the bootstrap, the runtime archive, the job JAR and ALL FOUR step
+# programs are supplied, every URI lies in the project artifacts bucket (s3://scholarchain-<environment>-<account>-artifacts/)
+# and each step program's sha256 equals infra/terraform/emr-step-programs.json. scripts/upload-emr-artifacts.sh (profile scholarchain-pipeline,
+# role operator-pipeline) uploads everything below emr/<run_prefix>/ and prints these values (EMR-CONFIG: lines); <run_prefix> is the deployer's
+# operator_run_prefix, for example run-20261115. Values below come from
+# `python3 -I scripts/lib/pipeline.py step-manifest` (run on the commit that is planned), read 2026-11-06 at the 14A base commit:
+#
+# emr_config = {
+#   enabled                = true
+#   runtime_verified       = true
+#   runtime_reference      = "<evidence reference of the proven runtime>"
+#   bootstrap_uri          = "s3://<artifacts-bucket>/emr/<run_prefix>/bin/bootstrap.sh"
+#   bootstrap_sha256       = "<64-hex sha256 of scripts/emr/bootstrap.sh>"
+#   runtime_archive_uri    = "s3://<artifacts-bucket>/<runtime-archive-key>"   # uploaded by the base-apply stage
+#   job_jar_uri            = "s3://<artifacts-bucket>/emr/<run_prefix>/jars/spark-job.jar"
+#   job_jar_sha256         = "<64-hex sha256 of the job JAR>"
+#   extra_artifacts = [
+#     { uri = "s3://<artifacts-bucket>/emr/<run_prefix>/steps/sc-ceiling-check.py",        sha256 = "57e9543cd94d5924bfb4bb8cec150ad755ba251ee5b6822275d9bc7a56d10b5c", dest = "/opt/scholarchain-spike/bin/sc-ceiling-check.py" },
+#     { uri = "s3://<artifacts-bucket>/emr/<run_prefix>/steps/sc-class-origin-verify.py",  sha256 = "5df9197a60fe41530859377518609b67c70eec60c93c8256e6742ad5ffd17a79", dest = "/opt/scholarchain-spike/bin/sc-class-origin-verify.py" },
+#     { uri = "s3://<artifacts-bucket>/emr/<run_prefix>/steps/sc-render-spark-config.py",  sha256 = "5d606d4883a0d4e4d869ff7f69ab56317743a4912940ac34e5c80337a8fa056c", dest = "/opt/scholarchain-spike/bin/sc-render-spark-config.py" },
+#     { uri = "s3://<artifacts-bucket>/emr/<run_prefix>/steps/sc-step.sh",                 sha256 = "ad7258d1221344de2b065bff18dc5d21356a1fb71b52e21dc52b47e499b99ed3", dest = "/opt/scholarchain-spike/bin/sc-step.sh" },
+#   ]
+#   # Task nodes and managed scaling stay off (G3) unless the caps in infra/terraform/README.md are changed deliberately.
+# }
+#
+# EMR: the reviewed control-plane policy of the EMR service role as ONE JSON string (see README, "EMR service policy"). No
+# wildcard action; ARNs concretized to the region and account; "*" only for ec2:Describe*. Required whenever emr_config.enabled.
+# emr_service_policy_json = <<-EOT
+# { "Version": "2012-10-17", "Statement": [ <reviewed statements, see environments/emr-service-policy.json.example> ] }
+# EOT

@@ -1,0 +1,77 @@
+# B9 EMR upload, plans, applies and pipeline runs
+# Excerpt: only the lines matching each pattern are kept (ANSI codes stripped; account ID, custom domain and
+# local paths masked). Each block names its source file and that file's sha256.
+# The run logs map to records: emr-run-1.log = record emr-run-1 attempt B; emr-run-2..4 = records emr-run-2..4.
+# cluster-final-state.log holds the last state the coordinator read (WAITING) after run 4; no later state read is recorded.
+
+## target/phase14/evidence/15/emr-upload.log (sha256 40d94649748ed5560ae94ca10f950a4b00f10ae3db15599ff097a3779760c2ac, 168 lines)
+RESULT: PASS 24 file(s) verified under emr/run-20261115/ (24 uploaded, 0 unchanged); manifest target/phase14/evidence/15/emr-upload-manifest.json
+
+## target/phase14/evidence/15/emr-plan.log (sha256 1e5f7af8dbe1b8d76909017dddf8d6b7e7c0d4e31490a08d756eec225e0f1bc4, 107 lines)
+RESULT: PASS plan recorded, not applied; receipt=<repo>/target/plans/20261114T182322Z-56200/course-ae1459327a88bd8f55c2dd2a01993d26adb87cad.tfplan.receipt.json plan_sha256=9defdd30a51f2b913462d4edcef79c8267f8546b9e24a143221e46f54c92f7b6
+
+## target/phase14/evidence/15/emr-apply.log (sha256 56f23f8eaa50de9f464027868580e451235ab445248b7ee706679a0c032a00ee, 135 lines)
+  | │ Error: waiting for EMR Cluster (j-01471773SLN9SIKVTEUJ) create: unexpected state 'TERMINATING', wanted target 'RUNNING, WAITING'. last error: BOOTSTRAP_FAILURE: On the master instance (i-03dc4917899adda10), bootstrap action 1 returned a non-zero return code
+RESULT: FAIL step=terraform-apply reason=command failed (exit 1) during the mutating sequence
+
+## target/phase14/evidence/15/emr-plan-2.log (sha256 d9b3cc7a1d30f78c32e7d97528fc2645e41fad197121fc992a3458fee7f93795, 86 lines)
+RESULT: PASS plan recorded, not applied; receipt=<repo>/target/plans/20261114T183200Z-59824/course-ae1459327a88bd8f55c2dd2a01993d26adb87cad.tfplan.receipt.json plan_sha256=ff052d9cd500ccca5652f8f312bf2318f1d3f27dee2017e466ceb402f8dc1474
+
+## target/phase14/evidence/15/emr-apply-2.log (sha256 d4282017ff10cabbbd2ae4ed3218bc67fa53b2081b25ae197bb7c31c3e70b915, 147 lines)
+RESULT: PASS stage runtime-apply complete for ae1459327a88bd8f55c2dd2a01993d26adb87cad; manifest=<repo>/target/release/ae1459327a88bd8f55c2dd2a01993d26adb87cad/deploy-manifest-runtime-apply-20261114T183257Z-60807.json
+
+## target/phase14/evidence/15/emr-plan-3.log (sha256 1bb9b2caee2cfa1541f681113086afb19dfdc65e724dad32bfa3b9d9aecfe8d6, 86 lines)
+RESULT: PASS plan recorded, not applied; receipt=<repo>/target/plans/20261114T190152Z-1001/course-2b2d2639a46721d8167c09b87cb603a0dc98df0d.tfplan.receipt.json plan_sha256=7b34170126bbda6d1f11a15172c4f1e3cfc9d3f5929f4a6676d95b2a90d82af7
+
+## target/phase14/evidence/15/emr-apply-3.log (sha256 3b6848e4d7dc5da9828531ba90781273f0b99691543fa1debd5f612c100e2ac5, 148 lines)
+RESULT: PASS stage runtime-apply complete for ae1459327a88bd8f55c2dd2a01993d26adb87cad; manifest=<repo>/target/release/2b2d2639a46721d8167c09b87cb603a0dc98df0d/deploy-manifest-runtime-apply-20261114T190324Z-2109.json
+
+## target/phase14/evidence/15/emr-plan-4.log (sha256 d3630e12c5efbc8810bbc052ba2655bb16f874ccfc4d790a836d1cb6d0acbdd4, 86 lines)
+RESULT: PASS plan recorded, not applied; receipt=<repo>/target/plans/20261114T202132Z-17001/course-7ecc5723acf0f5a334e3bd9d526ba2869465b3e3.tfplan.receipt.json plan_sha256=fb5f58c8a66331bd37be374f29bb1dd2fb5b5862844fb3e1309cbe5e44022316
+
+## target/phase14/evidence/15/emr-apply-4.log (sha256 b6facd211dabe6ff616ed63629b92c67fa2e3e68de70647e5b00529fc5339856, 148 lines)
+RESULT: PASS stage runtime-apply complete for ae1459327a88bd8f55c2dd2a01993d26adb87cad; manifest=<repo>/target/release/7ecc5723acf0f5a334e3bd9d526ba2869465b3e3/deploy-manifest-runtime-apply-20261114T202234Z-31069.json
+
+## target/phase14/evidence/15/emr-plan-5.log (sha256 8a5c1b6dd5d87e005c01f812b35b07e02afd2b88b7cc4ab72952394783ac3baa, 86 lines)
+RESULT: PASS plan recorded, not applied; receipt=<repo>/target/plans/20261114T205849Z-51684/course-b6dc94df6d9b443a9fd778eb09be6ec2c8c29f64.tfplan.receipt.json plan_sha256=b3534b4fca57f547b00e0820a4eadce0ebb4a535ba6343312ec23997cd778477
+
+## target/phase14/evidence/15/emr-apply-5.log (sha256 fe5b5009ce00dd31e982bc2b0e7a80d610122a2dfabadc479ad5b27484eab60c, 148 lines)
+RESULT: PASS stage runtime-apply complete for ae1459327a88bd8f55c2dd2a01993d26adb87cad; manifest=<repo>/target/release/b6dc94df6d9b443a9fd778eb09be6ec2c8c29f64/deploy-manifest-runtime-apply-20261114T205947Z-52630.json
+
+## target/phase14/evidence/15/emr-run-1.log (sha256 dda76464c250f41f0225a46217a6a20913657418c44585d2bb929cbca5f164a4, 103 lines)
+pipeline| LEDGER: live_runs=0 of 3 cumulative_usd=0.00 this_run_usd=0.84 cap_usd=2.52
+pipeline|   | aws: [ERROR]: An error occurred (AccessDeniedException) when calling the ListBootstrap<redacted>s operation: User: arn:aws:sts::<acct>:assumed-role/scholarchain-course-operator-pipeline/scholarchain-billing-operator is not authorized to perform: elasticmapreduce:ListBootstrap<redacted>s on resource: arn:aws:elasticmapreduce:us-east-2:<acct>:cluster/j-0426641ATQVS0H3PIYY because no id [...]
+pipeline| RESULT: FAIL step=cluster-check reason=aws emr describe-cluster failed (exit 254)
+RESULT: FAIL step=delegate-pipeline reason=run-bounded-pipeline.sh exited 5 (see the pipeline| lines)
+
+## target/phase14/evidence/15/emr-run-2.log (sha256 7017f67b7b35a7f75a4876cab594e455134511958dd8f9849b163dc78dd8ce6b, 118 lines)
+pipeline| LEDGER: live_runs=0 of 3 cumulative_usd=0.00 this_run_usd=0.84 cap_usd=2.52
+pipeline|   | aws: [ERROR]: An error occurred (ParamValidation): argument operation: Found invalid choice 'list-instance-groups'
+pipeline| RESULT: FAIL step=cluster-check reason=aws emr list-instance-groups failed (exit 252)
+RESULT: FAIL step=delegate-pipeline reason=run-bounded-pipeline.sh exited 5 (see the pipeline| lines)
+
+## target/phase14/evidence/15/emr-run-3.log (sha256 ba5760d0f27da8ab32f84a8816eac3e034846cdafe08d91bd267596c19d35eff, 114 lines)
+pipeline| LEDGER: live_runs=0 of 3 cumulative_usd=0.00 this_run_usd=0.84 cap_usd=2.52
+pipeline| [2026-11-14T20:28:20Z] [20261114T202817Z-18558] INFO CLUSTER-CHECK: ok state=WAITING auto_termination_idle_timeout_seconds=900 instances=2 type=m5.xlarge
+pipeline| [2026-11-14T20:28:20Z] [20261114T202817Z-18558] INFO LEDGER-RESERVED: run=15a-emr-size-25-20261114T202816Z-18361 live_runs=1 of 3 cumulative_usd=0.84
+pipeline|   | aws: [ERROR]: An error occurred (ParamValidation): Parameter validation failed:
+pipeline|   | Unknown parameter in [0]: "HadoopJarStep", must be one of: Type, Name, <redacted>OnFailure, Jar, Args, MainClass, Properties, LogUri, EncryptionKeyArn
+pipeline| RESULT: FAIL step=step-stage-in reason=run=15a-emr-size-25-20261114T202816Z-18361 FAILED at step stage-in: aws emr add-steps failed (exit 252)
+RESULT: FAIL step=delegate-pipeline reason=run-bounded-pipeline.sh exited 5 (see the pipeline| lines)
+
+## target/phase14/evidence/15/emr-run-4.log (sha256 7136d4dc3f8ba59782b8f8f3affd68ef8ce7f430b837b703560a1c11f37832fc, 124 lines)
+pipeline| LEDGER: live_runs=1 of 3 cumulative_usd=0.84 this_run_usd=0.84 cap_usd=2.52
+pipeline| [2026-11-14T21:11:33Z] [20261114T211130Z-56004] INFO CLUSTER-CHECK: ok state=WAITING auto_termination_idle_timeout_seconds=900 instances=2 type=m5.xlarge
+pipeline| [2026-11-14T21:11:33Z] [20261114T211130Z-56004] INFO LEDGER-RESERVED: run=15a-emr-size-25-20261114T211129Z-55900 live_runs=2 of 3 cumulative_usd=1.68
+pipeline| STEP-SUBMITTED: stage-in s-07468811I2Z6VR2ZKYUN
+pipeline| STEP-RESULT: stage-in s-07468811I2Z6VR2ZKYUN COMPLETED
+pipeline| STEP-SUBMITTED: hadoop-prep s-085177117HNP35FOPZSY
+pipeline| STEP-RESULT: hadoop-prep s-085177117HNP35FOPZSY FAILED
+pipeline| RESULT: FAIL step=step-hadoop-prep reason=run=15a-emr-size-25-20261114T211129Z-55900 FAILED at step hadoop-prep: state FAILED
+RESULT: FAIL step=delegate-pipeline reason=run-bounded-pipeline.sh exited 4 (see the pipeline| lines)
+
+## target/phase14/evidence/15/cluster-id.log (sha256 c78a731b7e59951c335375574dd5b910c0689c09f4a302895fc8a1069c8c24c9, 1 lines)
+j-05198553ABDUQT7HM2DM
+
+## target/phase14/evidence/15/cluster-final-state.log (sha256 c7384d68da530c7fece634656f66c1abea0c9c199d7f23df3b9376136e1e7255, 1 lines)
+WAITING

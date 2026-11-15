@@ -1,0 +1,66 @@
+{
+  "schema": "scholarchain.load-profile.v1",
+  "_comment": "Pinned settings for load-tests/loadgen.py. Prices, the shared cap and the token assumptions are pinned here; a command-line flag can only LOWER what is spent, never raise the cap. Rates: claude-haiku-5-5 on the Anthropic API (primary since repair round 3, user decision 2026-11-09 after the instructor ruling), USD 0.10 input / 0.50 output per 1M tokens for prompts under 100,000 tokens (the price is higher above that size; our prompts stay far below it), confirmed from the Anthropic pricing page on 2026-11-09 (docs/agent-runs/phase-14/prompt.md, 'Subphase 14B repair round 3', Step 0 answer 2). The selectable fallback is the Bedrock route us.anthropic.claude-haiku-4-5-20251001-v1:0 at USD 1.10 / 5.50 (geo cross-region, US East (Ohio)); it is NOT priced by this file unless the pricing block is switched back. Token counts are the Phase 14 replan estimate (planner 1,500 in + 200 out, synthesis 4,000 in + 800 out) raised 30 percent because the claude-haiku-5-5 tokenizer produces about 30 percent more tokens than Haiku 4.5: planner 1,950 in + 260 out, synthesis 5,200 in + 1,040 out. The shared cap stays USD 1.33 (user decision 2026-11-09, easiest option): at these rates 115 answers cost about USD 0.157, so the cap is a conservative upper bound and the bucket counts are the binding limit. The cost per answer is derived, ESTIMATED and not metered: the final cost comes from the provider consoles (Anthropic, Voyage) and the AWS bill, reported as separate items and then combined.",
+  "levels": [1, 5, 25, 50],
+  "per_level": {
+    "1": {"duration_seconds": 60, "max_requests": 600, "llm_answers": 10},
+    "5": {"duration_seconds": 60, "max_requests": 3000, "llm_answers": 15},
+    "25": {"duration_seconds": 90, "max_requests": 15000, "llm_answers": 20},
+    "50": {"duration_seconds": 120, "max_requests": 30000, "llm_answers": 15}
+  },
+  "limits": {
+    "max_phase_duration_seconds": 1800,
+    "max_total_seconds": 7200,
+    "max_total_requests": 300000,
+    "max_level": 50,
+    "request_timeout_seconds": 10,
+    "llm_request_timeout_seconds": 30,
+    "llm_job_poll_seconds": 20,
+    "llm_max_inflight": 2,
+    "abort_failure_window_requests": 40,
+    "abort_failure_threshold": 20,
+    "abort_consecutive_auth_failures": 5
+  },
+  "routes": {
+    "healthz": {"method": "GET", "path": "/healthz", "auth": false, "weight": 2, "needs": null, "llm": false},
+    "readyz": {"method": "GET", "path": "/readyz", "auth": false, "weight": 1, "needs": null, "llm": false},
+    "metrics": {"method": "GET", "path": "/metrics", "auth": true, "weight": 1, "needs": null, "llm": false},
+    "graph_node": {"method": "GET", "path": "/v1/graph/nodes/{node_id}", "auth": true, "weight": 4, "needs": "node_ids", "llm": false},
+    "graph_neighbors": {"method": "GET", "path": "/v1/graph/nodes/{node_id}/neighbors?direction=both&depth=1&limit=50", "auth": true, "weight": 4, "needs": "node_ids", "llm": false},
+    "evidence": {"method": "GET", "path": "/v1/evidence/{evidence_id}", "auth": true, "weight": 2, "needs": "evidence_ids", "llm": false},
+    "query": {"method": "POST", "path": "/v1/query", "auth": true, "weight": 0, "needs": "questions", "llm": true}
+  },
+  "llm": {
+    "shared_cap_usd": "1.33",
+    "shared_cap_scope": "Phase 14C smoke + 15B + 16B + 17 (one cap for the whole session; split into answer buckets in experiments/manifests/llm-allocation.json; 115 answers cost about USD 0.157 at the pinned estimate, so the bucket counts bind first)",
+    "provider": "anthropic",
+    "pricing": {
+      "model_route": "claude-haiku-5-5 (Anthropic API, https://api.anthropic.com/v1/messages)",
+      "fallback_model_route": "us.anthropic.claude-haiku-4-5-20251001-v1:0 (Amazon Bedrock geo cross-region; selectable with SCHOLARCHAIN_SYNTHESIS_PROVIDER=bedrock, priced at 1.10 / 5.50 per 1M tokens)",
+      "input_usd_per_million_tokens": "0.10",
+      "output_usd_per_million_tokens": "0.50",
+      "price_tier": "prompts under 100,000 tokens (0.50 / 2.50 per 1M above that size; not used)",
+      "price_confirmed": "Anthropic pricing page, 2026-11-09"
+    },
+    "tokens_per_answer": {"planner_input": 1950, "planner_output": 260, "synthesis_input": 5200, "synthesis_output": 1040},
+    "tokens_per_answer_basis": "Haiku 4.5 plan 1,500 / 200 / 4,000 / 800 raised 30 percent (tokenizer), rounded up to whole tokens",
+    "cost_multiplier": "1.0",
+    "ledger_default_path": "~/.scholarchain/llm-ledger/haiku-ledger.jsonl"
+  },
+  "embeddings": {
+    "provider": "voyage",
+    "model": "voyage-4-lite",
+    "output_dimension": 256,
+    "usd_per_million_tokens": "0.02",
+    "free_tokens": 200000000,
+    "free_tokens_scope": "per Voyage account; the first 200M tokens are free (Voyage docs, fetched 2026-11-09)",
+    "cap_usd": "0.30",
+    "token_counter": "required: every embedding step (14C ingest and query smoke, 16B evaluation) adds the tokens it sent to a counter and stops when the cap would be passed; a provider with no charge is reported as USD 0 with its token usage",
+    "fallback": "Amazon Titan Text Embeddings V2 on Bedrock (SCHOLARCHAIN_EMBEDDING_PROVIDER=bedrock); switching the embedding model needs a full re-embed and an index rebuild"
+  },
+  "cost_reporting": {
+    "items": ["aws", "anthropic", "voyage"],
+    "combined": "sum of the items; a provider with no charge is USD 0 with its usage noted",
+    "aws_source": "AWS bill and the pre-spend receipts; not metered by the load generator"
+  }
+}

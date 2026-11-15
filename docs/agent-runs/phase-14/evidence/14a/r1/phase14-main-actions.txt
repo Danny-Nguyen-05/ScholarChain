@@ -1,0 +1,470 @@
+phase14-main permission set: every document, statement, action, resource pattern and condition
+
+GENERATED, not hand-written. Command (read-only, no provider call, synthetic variable values; the synthetic account
+111122223333 is replaced by <account> in this text):
+  terraform -chdir=infra/terraform/deployer console -var account_id=111122223333 \
+    -var operator_principal_arn=arn:aws:iam::111122223333:user/example-operator -var owner=example < dump1.tfconsole
+where dump1.tfconsole is one line: jsonencode({documents = { for k, v in local.permission_sets["phase14-main"] : k => {...statements...} }, boundaries = {...}})
+Rendered by a small formatter from that JSON. Region condition aws:RequestedRegion = us-east-2 appears as written in each statement.
+
+======================================================================================================================
+DOCUMENT compute   (managed policy scholarchain-deployer-phase14-main--compute)   5696 characters (limit 6144)   12 statements, 90 distinct Allow actions
+======================================================================================================================
+  Sid: EcsClusterAndServicesOfTheMainStack   [Allow]
+    actions   : ecs:CreateCluster, ecs:DeleteCluster, ecs:DescribeClusters, ecs:UpdateCluster, ecs:UpdateClusterSettings, ecs:CreateService, ecs:UpdateService, ecs:DeleteService, ecs:DescribeServices, ecs:TagResource, ecs:UntagResource, ecs:ListTagsForResource
+    resources : arn:aws:ecs:us-east-2:<account>:cluster/scholarchain-course, arn:aws:ecs:us-east-2:<account>:service/scholarchain-course/*, arn:aws:ecs:us-east-2:<account>:task-definition/scholarchain-course-*:*
+    conditions: StringEquals aws:RequestedRegion = us-east-2
+
+  Sid: EcsRegisterTaskDefinitionWithProjectTags   [Allow]
+    actions   : ecs:RegisterTaskDefinition
+    resources : *
+    conditions: StringEquals aws:RequestTag/environment = course; StringEquals aws:RequestTag/project = scholarchain; StringEquals aws:RequestedRegion = us-east-2
+
+  Sid: EcsTaskDefinitionLifecycleNoResourceType   [Allow]
+    actions   : ecs:DeregisterTaskDefinition, ecs:DescribeTaskDefinition, ecs:DeleteTaskDefinitions
+    resources : *
+    conditions: StringEquals aws:RequestedRegion = us-east-2
+
+  Sid: EcrRepositoriesOfTheMainStack   [Allow]
+    actions   : ecr:CreateRepository, ecr:DeleteRepository, ecr:DescribeRepositories, ecr:ListTagsForResource, ecr:TagResource, ecr:UntagResource, ecr:PutImageTagMutability, ecr:PutImageScanningConfiguration, ecr:GetRepositoryPolicy, ecr:GetLifecyclePolicy
+    resources : arn:aws:ecr:us-east-2:<account>:repository/scholarchain-course/*
+    conditions: StringEquals aws:RequestedRegion = us-east-2
+
+  Sid: EcrPushAndVerifyImages   [Allow]
+    actions   : ecr:BatchCheckLayerAvailability, ecr:InitiateLayerUpload, ecr:UploadLayerPart, ecr:CompleteLayerUpload, ecr:PutImage, ecr:BatchGetImage, ecr:DescribeImages, ecr:ListImages
+    resources : arn:aws:ecr:us-east-2:<account>:repository/scholarchain-course/*
+    conditions: StringEquals aws:RequestedRegion = us-east-2
+
+  Sid: EcrAuthorizationTokenNoResourceType   [Allow]
+    actions   : ecr:GetAuthorizationToken
+    resources : *
+    conditions: StringEquals aws:RequestedRegion = us-east-2
+
+  Sid: ElbLoadBalancerListenerTargetGroup   [Allow]
+    actions   : elasticloadbalancing:CreateLoadBalancer, elasticloadbalancing:DeleteLoadBalancer, elasticloadbalancing:ModifyLoadBalancerAttributes, elasticloadbalancing:SetSecurityGroups, elasticloadbalancing:SetSubnets, elasticloadbalancing:CreateTargetGroup, elasticloadbalancing:DeleteTargetGroup, elasticloadbalancing:ModifyTargetGroup, elasticloadbalancing:ModifyTargetGroupAttributes, elasticloadbalancing:CreateListener, elasticloadbalancing:DeleteListener, elasticloadbalancing:ModifyListener, elasticloadbalancing:ModifyListenerAttributes, elasticloadbalancing:AddTags, elasticloadbalancing:RemoveTags
+    resources : arn:aws:elasticloadbalancing:us-east-2:<account>:loadbalancer/app/scholarchain-course-*/*, arn:aws:elasticloadbalancing:us-east-2:<account>:targetgroup/scholarchain-course-*/*, arn:aws:elasticloadbalancing:us-east-2:<account>:listener/app/scholarchain-course-*/*/*
+    conditions: StringEquals aws:RequestedRegion = us-east-2
+
+  Sid: ElbDescribeNoResourceScoping   [Allow]
+    actions   : elasticloadbalancing:DescribeLoadBalancers, elasticloadbalancing:DescribeLoadBalancerAttributes, elasticloadbalancing:DescribeTargetGroups, elasticloadbalancing:DescribeTargetGroupAttributes, elasticloadbalancing:DescribeListeners, elasticloadbalancing:DescribeListenerAttributes, elasticloadbalancing:DescribeTags, elasticloadbalancing:DescribeTargetHealth, elasticloadbalancing:DescribeCapacityReservation, acm:DescribeCertificate
+    resources : *
+    conditions: StringEquals aws:RequestedRegion = us-east-2
+
+  Sid: AppAutoScalingEcsServices   [Allow]
+    actions   : application-autoscaling:RegisterScalableTarget, application-autoscaling:DeregisterScalableTarget, application-autoscaling:PutScalingPolicy, application-autoscaling:DeleteScalingPolicy, application-autoscaling:TagResource, application-autoscaling:UntagResource, application-autoscaling:ListTagsForResource
+    resources : arn:aws:application-autoscaling:us-east-2:<account>:scalable-target/*
+    conditions: StringEquals aws:RequestedRegion = us-east-2
+
+  Sid: AppAutoScalingAndCloudMapReadNoResourceScoping   [Allow]
+    actions   : servicediscovery:GetOperation, application-autoscaling:DescribeScalableTargets, application-autoscaling:DescribeScalingPolicies, application-autoscaling:DescribeScalingActivities
+    resources : *
+    conditions: StringEquals aws:RequestedRegion = us-east-2
+
+  Sid: CloudMapNamespaceAndServices   [Allow]
+    actions   : servicediscovery:CreatePrivateDnsNamespace, servicediscovery:DeleteNamespace, servicediscovery:GetNamespace, servicediscovery:CreateService, servicediscovery:UpdateService, servicediscovery:DeleteService, servicediscovery:GetService, servicediscovery:TagResource, servicediscovery:UntagResource, servicediscovery:ListTagsForResource
+    resources : arn:aws:servicediscovery:us-east-2:<account>:namespace/*, arn:aws:servicediscovery:us-east-2:<account>:service/*
+    conditions: StringEquals aws:RequestedRegion = us-east-2
+
+  Sid: Route53PrivateZoneForCloudMapNoScoping   [Allow]
+    actions   : route53:CreateHostedZone, route53:GetHostedZone, route53:ListHostedZonesByName, route53:DeleteHostedZone, route53:ChangeResourceRecordSets, route53:ListResourceRecordSets, route53:GetChange, route53:ListTagsForResource, route53:ChangeTagsForResource
+    resources : *
+    conditions: (none)
+
+======================================================================================================================
+DOCUMENT data   (managed policy scholarchain-deployer-phase14-main--data)   5164 characters (limit 6144)   8 statements, 111 distinct Allow actions
+======================================================================================================================
+  Sid: S3BucketsOfTheMainStack   [Allow]
+    actions   : s3:CreateBucket, s3:DeleteBucket, s3:ListBucket, s3:ListBucketVersions, s3:ListBucketMultipartUploads, s3:GetBucketLocation, s3:GetBucketAcl, s3:GetBucketCORS, s3:GetBucketLogging, s3:GetBucketObjectLockConfiguration, s3:GetBucketRequestPayment, s3:GetBucketVersioning, s3:PutBucketVersioning, s3:GetBucketWebsite, s3:GetAccelerateConfiguration, s3:GetLifecycleConfiguration, s3:PutLifecycleConfiguration, s3:GetReplicationConfiguration, s3:GetEncryptionConfiguration, s3:PutEncryptionConfiguration, s3:GetBucketPolicy, s3:PutBucketPolicy, s3:DeleteBucketPolicy, s3:GetBucketPublicAccessBlock, s3:PutBucketPublicAccessBlock, s3:GetBucketOwnershipControls, s3:PutBucketOwnershipControls, s3:GetBucketTagging, s3:PutBucketTagging
+    resources : arn:aws:s3:::scholarchain-course-<account>-*
+    conditions: StringEquals aws:RequestedRegion = us-east-2
+
+  Sid: S3ArtifactsObjectsUploadAndVerify   [Allow]
+    actions   : s3:PutObject, s3:GetObject, s3:GetObjectVersion, s3:GetObjectAttributes, s3:GetObjectVersionAttributes, s3:AbortMultipartUpload, s3:ListMultipartUploadParts
+    resources : arn:aws:s3:::scholarchain-course-<account>-artifacts/*
+    conditions: StringEquals aws:RequestedRegion = us-east-2
+
+  Sid: S3VectorsBucketAndIndexes   [Allow]
+    actions   : s3vectors:CreateVectorBucket, s3vectors:GetVectorBucket, s3vectors:DeleteVectorBucket, s3vectors:PutVectorBucketPolicy, s3vectors:GetVectorBucketPolicy, s3vectors:DeleteVectorBucketPolicy, s3vectors:CreateIndex, s3vectors:GetIndex, s3vectors:DeleteIndex, s3vectors:ListIndexes, s3vectors:TagResource, s3vectors:UntagResource, s3vectors:ListTagsForResource
+    resources : arn:aws:s3vectors:us-east-2:<account>:bucket/scholarchain-course-<account>-vectors, arn:aws:s3vectors:us-east-2:<account>:bucket/scholarchain-course-<account>-vectors/index/*
+    conditions: StringEquals aws:RequestedRegion = us-east-2
+
+  Sid: DynamoDbTables   [Allow]
+    actions   : dynamodb:CreateTable, dynamodb:DeleteTable, dynamodb:DescribeTable, dynamodb:UpdateTable, dynamodb:DescribeTimeToLive, dynamodb:UpdateTimeToLive, dynamodb:DescribeContinuousBackups, dynamodb:UpdateContinuousBackups, dynamodb:DescribeKinesisStreamingDestination, dynamodb:DescribeTableReplicaAutoScaling, dynamodb:ListTagsOfResource, dynamodb:TagResource, dynamodb:UntagResource
+    resources : arn:aws:dynamodb:us-east-2:<account>:table/scholarchain-course-*, arn:aws:dynamodb:us-east-2:<account>:table/scholarchain-course-*/index/*
+    conditions: StringEquals aws:RequestedRegion = us-east-2
+
+  Sid: SqsQueues   [Allow]
+    actions   : sqs:CreateQueue, sqs:DeleteQueue, sqs:GetQueueAttributes, sqs:SetQueueAttributes, sqs:GetQueueUrl, sqs:ListQueueTags, sqs:TagQueue, sqs:UntagQueue
+    resources : arn:aws:sqs:us-east-2:<account>:scholarchain-course-*
+    conditions: StringEquals aws:RequestedRegion = us-east-2
+
+  Sid: StepFunctionsStateMachine   [Allow]
+    actions   : states:CreateStateMachine, states:DeleteStateMachine, states:DescribeStateMachine, states:UpdateStateMachine, states:ListStateMachineVersions, states:ListTagsForResource, states:TagResource, states:UntagResource
+    resources : arn:aws:states:us-east-2:<account>:stateMachine:scholarchain-course-*
+    conditions: StringEquals aws:RequestedRegion = us-east-2
+
+  Sid: NeptuneClusterInstanceGroupsOfTheMainStack   [Allow]
+    actions   : rds:CreateDBCluster, rds:ModifyDBCluster, rds:DeleteDBCluster, rds:AddRoleToDBCluster, rds:RemoveRoleFromDBCluster, rds:CreateDBClusterSnapshot, rds:CreateDBInstance, rds:ModifyDBInstance, rds:DeleteDBInstance, rds:CreateDBSubnetGroup, rds:ModifyDBSubnetGroup, rds:DeleteDBSubnetGroup, rds:CreateDBClusterParameterGroup, rds:ModifyDBClusterParameterGroup, rds:ResetDBClusterParameterGroup, rds:DeleteDBClusterParameterGroup, rds:CreateDBParameterGroup, rds:ModifyDBParameterGroup, rds:ResetDBParameterGroup, rds:DeleteDBParameterGroup, rds:AddTagsToResource, rds:RemoveTagsFromResource, rds:ListTagsForResource
+    resources : arn:aws:rds:us-east-2:<account>:cluster:scholarchain-course-*, arn:aws:rds:us-east-2:<account>:db:scholarchain-course-*, arn:aws:rds:us-east-2:<account>:subgrp:scholarchain-course-*, arn:aws:rds:us-east-2:<account>:cluster-pg:scholarchain-course-*, arn:aws:rds:us-east-2:<account>:pg:scholarchain-course-*, arn:aws:rds:us-east-2:<account>:cluster-snapshot:scholarchain-course-*
+    conditions: StringEquals aws:RequestedRegion = us-east-2
+
+  Sid: RdsDescribeNoResourceScoping   [Allow]
+    actions   : rds:DescribeDBClusters, rds:DescribeDBInstances, rds:DescribeDBSubnetGroups, rds:DescribeDBClusterParameterGroups, rds:DescribeDBClusterParameters, rds:DescribeDBParameterGroups, rds:DescribeDBParameters, rds:DescribeDBClusterSnapshots, rds:DescribeDBEngineVersions, rds:DescribeGlobalClusters
+    resources : *
+    conditions: StringEquals aws:RequestedRegion = us-east-2
+
+======================================================================================================================
+DOCUMENT emr-efs   (managed policy scholarchain-deployer-phase14-main--emr-efs)   5113 characters (limit 6144)   10 statements, 52 distinct Allow actions
+======================================================================================================================
+  Sid: EmrSecurityConfigurationsNoResourceType   [Allow]
+    actions   : elasticmapreduce:CreateSecurityConfiguration, elasticmapreduce:DeleteSecurityConfiguration, elasticmapreduce:DescribeSecurityConfiguration, elasticmapreduce:ListSecurityConfigurations, elasticmapreduce:ListClusters
+    resources : *
+    conditions: StringEquals aws:RequestedRegion = us-east-2
+
+  Sid: EmrRunJobFlowRequireProjectTags   [Allow]
+    actions   : elasticmapreduce:RunJobFlow
+    resources : *
+    conditions: StringEquals aws:RequestTag/environment = course; StringEquals aws:RequestTag/for-use-with-amazon-emr-managed-policies = true; StringEquals aws:RequestTag/project = scholarchain; StringEquals aws:RequestTag/scholarchain:stack = main-emr; StringEquals aws:RequestedRegion = us-east-2
+
+  Sid: EmrManageProjectClusters   [Allow]
+    actions   : elasticmapreduce:AddTags, elasticmapreduce:RemoveTags, elasticmapreduce:DescribeCluster, elasticmapreduce:ListInstanceGroups, elasticmapreduce:ListInstanceFleets, elasticmapreduce:ListInstances, elasticmapreduce:ListBootstrapActions, elasticmapreduce:ListSteps, elasticmapreduce:DescribeStep, elasticmapreduce:GetAutoTerminationPolicy, elasticmapreduce:PutAutoTerminationPolicy, elasticmapreduce:RemoveAutoTerminationPolicy, elasticmapreduce:GetManagedScalingPolicy, elasticmapreduce:PutManagedScalingPolicy, elasticmapreduce:RemoveManagedScalingPolicy, elasticmapreduce:AddInstanceGroups, elasticmapreduce:ModifyInstanceGroups, elasticmapreduce:ModifyCluster, elasticmapreduce:SetTerminationProtection, elasticmapreduce:SetUnhealthyNodeReplacement, elasticmapreduce:SetVisibleToAllUsers, elasticmapreduce:TerminateJobFlows
+    resources : arn:aws:elasticmapreduce:us-east-2:<account>:cluster/*
+    conditions: StringEquals aws:RequestedRegion = us-east-2; StringEquals aws:ResourceTag/environment = course; StringEquals aws:ResourceTag/project = scholarchain
+
+  Sid: EfsDescribeInRegion   [Allow]
+    actions   : elasticfilesystem:DescribeFileSystems, elasticfilesystem:DescribeMountTargets, elasticfilesystem:DescribeAccessPoints
+    resources : arn:aws:elasticfilesystem:us-east-2:<account>:file-system/*, arn:aws:elasticfilesystem:us-east-2:<account>:access-point/*
+    conditions: StringEquals aws:RequestedRegion = us-east-2
+
+  Sid: EfsCreateFileSystemAndAccessPointWithProjectTags   [Allow]
+    actions   : elasticfilesystem:CreateFileSystem, elasticfilesystem:CreateAccessPoint
+    resources : arn:aws:elasticfilesystem:us-east-2:<account>:file-system/*
+    conditions: StringEquals aws:RequestTag/environment = course; StringEquals aws:RequestTag/project = scholarchain; StringEquals aws:RequestedRegion = us-east-2
+
+  Sid: EfsAccessPointOnProjectFileSystem   [Allow]
+    actions   : elasticfilesystem:CreateAccessPoint
+    resources : arn:aws:elasticfilesystem:us-east-2:<account>:file-system/*
+    conditions: StringEquals aws:RequestedRegion = us-east-2; StringEquals aws:ResourceTag/environment = course; StringEquals aws:ResourceTag/project = scholarchain
+
+  Sid: EfsTagOnCreateOnly   [Allow]
+    actions   : elasticfilesystem:TagResource
+    resources : arn:aws:elasticfilesystem:us-east-2:<account>:file-system/*, arn:aws:elasticfilesystem:us-east-2:<account>:access-point/*
+    conditions: StringEquals aws:RequestTag/environment = course; StringEquals aws:RequestTag/project = scholarchain; StringEquals aws:RequestedRegion = us-east-2; StringEquals elasticfilesystem:CreateAction = ["CreateFileSystem", "CreateAccessPoint"]
+
+  Sid: EfsManageProjectResources   [Allow]
+    actions   : elasticfilesystem:DeleteFileSystem, elasticfilesystem:DeleteAccessPoint, elasticfilesystem:CreateMountTarget, elasticfilesystem:DeleteMountTarget, elasticfilesystem:DescribeMountTargetSecurityGroups, elasticfilesystem:ModifyMountTargetSecurityGroups, elasticfilesystem:DescribeLifecycleConfiguration, elasticfilesystem:DescribeBackupPolicy, elasticfilesystem:PutBackupPolicy, elasticfilesystem:DescribeFileSystemPolicy, elasticfilesystem:PutFileSystemPolicy, elasticfilesystem:DeleteFileSystemPolicy, elasticfilesystem:UpdateFileSystem, elasticfilesystem:ListTagsForResource, elasticfilesystem:UntagResource
+    resources : arn:aws:elasticfilesystem:us-east-2:<account>:file-system/*, arn:aws:elasticfilesystem:us-east-2:<account>:access-point/*
+    conditions: StringEquals aws:RequestedRegion = us-east-2; StringEquals aws:ResourceTag/environment = course; StringEquals aws:ResourceTag/project = scholarchain
+
+  Sid: EfsMountTargetSubnetAndGroup   [Allow]
+    actions   : ec2:CreateNetworkInterface
+    resources : arn:aws:ec2:us-east-2:<account>:subnet/*, arn:aws:ec2:us-east-2:<account>:security-group/*
+    conditions: StringEquals aws:RequestedRegion = us-east-2; StringEquals aws:ResourceTag/environment = course; StringEquals aws:ResourceTag/project = scholarchain
+
+  Sid: EfsMountTargetNetworkInterfaceUntagged   [Allow]
+    actions   : ec2:CreateNetworkInterface, ec2:DeleteNetworkInterface, ec2:ModifyNetworkInterfaceAttribute
+    resources : arn:aws:ec2:us-east-2:<account>:network-interface/*
+    conditions: StringEquals aws:RequestedRegion = us-east-2
+
+======================================================================================================================
+DOCUMENT iam   (managed policy scholarchain-deployer-phase14-main--iam)   5637 characters (limit 6144)   16 statements, 24 distinct Allow actions
+======================================================================================================================
+  Sid: CreateRuntimeRolesOnlyWithRuntimeBoundary   [Allow]
+    actions   : iam:CreateRole
+    resources : arn:aws:iam::<account>:role/scholarchain-course-*-task, arn:aws:iam::<account>:role/scholarchain-course-*-execution, arn:aws:iam::<account>:role/scholarchain-course-neptune-loader, arn:aws:iam::<account>:role/scholarchain-course-emr-ec2, arn:aws:iam::<account>:role/scholarchain-course-embedding-producer, arn:aws:iam::<account>:role/scholarchain-course-deployment
+    conditions: StringEquals aws:RequestTag/environment = course; StringEquals aws:RequestTag/project = scholarchain; StringEquals iam:PermissionsBoundary = arn:aws:iam::<account>:policy/scholarchain-course-permissions-boundary
+
+  Sid: CreateEmrServiceRoleOnlyWithEmrBoundary   [Allow]
+    actions   : iam:CreateRole
+    resources : arn:aws:iam::<account>:role/scholarchain-course-emr-service
+    conditions: StringEquals aws:RequestTag/environment = course; StringEquals aws:RequestTag/project = scholarchain; StringEquals iam:PermissionsBoundary = arn:aws:iam::<account>:policy/scholarchain-course-emr-service-boundary
+
+  Sid: TagMainRolesWithProjectTags   [Allow]
+    actions   : iam:TagRole
+    resources : arn:aws:iam::<account>:role/scholarchain-course-*
+    conditions: StringEquals aws:RequestTag/environment = course; StringEquals aws:RequestTag/project = scholarchain
+
+  Sid: RolePoliciesOnBoundedMainRolesOnly   [Allow]
+    actions   : iam:PutRolePolicy, iam:DeleteRolePolicy
+    resources : arn:aws:iam::<account>:role/scholarchain-course-*
+    conditions: StringEquals iam:PermissionsBoundary = ["arn:aws:iam::<account>:policy/scholarchain-course-permissions-boundary", "arn:aws:iam::<account>:policy/scholarchain-course-emr-service-boundary"]
+
+  Sid: ReadUpdateDeleteMainRoles   [Allow]
+    actions   : iam:GetRole, iam:DeleteRole, iam:UpdateRole, iam:UpdateRoleDescription, iam:UntagRole, iam:GetRolePolicy, iam:ListRolePolicies, iam:ListAttachedRolePolicies, iam:ListInstanceProfilesForRole, iam:ListRoleTags
+    resources : arn:aws:iam::<account>:role/scholarchain-course-*
+    conditions: (none)
+
+  Sid: ManageMainInstanceProfile   [Allow]
+    actions   : iam:CreateInstanceProfile, iam:DeleteInstanceProfile, iam:GetInstanceProfile, iam:AddRoleToInstanceProfile, iam:RemoveRoleFromInstanceProfile, iam:TagInstanceProfile, iam:UntagInstanceProfile, iam:ListInstanceProfileTags
+    resources : arn:aws:iam::<account>:instance-profile/scholarchain-course-*
+    conditions: (none)
+
+  Sid: PassRoleToEcsTasks   [Allow]
+    actions   : iam:PassRole
+    resources : arn:aws:iam::<account>:role/scholarchain-course-*-task, arn:aws:iam::<account>:role/scholarchain-course-*-execution
+    conditions: StringEquals iam:PassedToService = ["ecs-tasks.amazonaws.com"]
+
+  Sid: PassRoleToEmr   [Allow]
+    actions   : iam:PassRole
+    resources : arn:aws:iam::<account>:role/scholarchain-course-emr-service
+    conditions: StringEquals iam:PassedToService = ["elasticmapreduce.amazonaws.com"]
+
+  Sid: PassRoleToEc2InstanceProfile   [Allow]
+    actions   : iam:PassRole
+    resources : arn:aws:iam::<account>:role/scholarchain-course-emr-ec2
+    conditions: StringEquals iam:PassedToService = ["ec2.amazonaws.com"]
+
+  Sid: PassRoleToNeptune   [Allow]
+    actions   : iam:PassRole
+    resources : arn:aws:iam::<account>:role/scholarchain-course-neptune-loader
+    conditions: StringEquals iam:PassedToService = ["rds.amazonaws.com"]
+
+  Sid: PassRoleToStepFunctions   [Allow]
+    actions   : iam:PassRole
+    resources : arn:aws:iam::<account>:role/scholarchain-course-embedding-producer
+    conditions: StringEquals iam:PassedToService = ["states.amazonaws.com"]
+
+  Sid: DenyBoundaryPolicyMutation   [Deny]
+    actions   : iam:CreatePolicyVersion, iam:SetDefaultPolicyVersion, iam:DeletePolicy, iam:DeletePolicyVersion
+    resources : arn:aws:iam::<account>:policy/scholarchain-course-permissions-boundary, arn:aws:iam::<account>:policy/scholarchain-course-emr-service-boundary
+    conditions: (none)
+
+  Sid: DenyBoundaryRemovalAndTrustChangeOnMainRoles   [Deny]
+    actions   : iam:PutRolePermissionsBoundary, iam:DeleteRolePermissionsBoundary, iam:UpdateAssumeRolePolicy
+    resources : arn:aws:iam::<account>:role/scholarchain-course-*
+    conditions: (none)
+
+  Sid: DenyAssumingMainRoles   [Deny]
+    actions   : sts:AssumeRole
+    resources : arn:aws:iam::<account>:role/scholarchain-course-*
+    conditions: (none)
+
+  Sid: DenyReadingSecretValues   [Deny]
+    actions   : secretsmanager:GetSecretValue, secretsmanager:BatchGetSecretValue
+    resources : *
+    conditions: (none)
+
+  Sid: CreateRequiredServiceLinkedRolesOnly   [Allow]
+    actions   : iam:CreateServiceLinkedRole
+    resources : arn:aws:iam::<account>:role/aws-service-role/ecs.amazonaws.com/AWSServiceRoleForECS, arn:aws:iam::<account>:role/aws-service-role/ecs.application-autoscaling.amazonaws.com/AWSServiceRoleForApplicationAutoScaling_ECSService, arn:aws:iam::<account>:role/aws-service-role/elasticloadbalancing.amazonaws.com/AWSServiceRoleForElasticLoadBalancing, arn:aws:iam::<account>:role/aws-service-role/rds.amazonaws.com/AWSServiceRoleForRDS, arn:aws:iam::<account>:role/aws-service-role/elasticmapreduce.amazonaws.com/AWSServiceRoleForEMRCleanup, arn:aws:iam::<account>:role/aws-service-role/elasticfilesystem.amazonaws.com/AWSServiceRoleForAmazonElasticFileSystem
+    conditions: StringEquals iam:AWSServiceName = ["ecs.amazonaws.com", "ecs.application-autoscaling.amazonaws.com", "elasticloadbalancing.amazonaws.com", "rds.amazonaws.com", "elasticmapreduce.amazonaws.com", "elasticfilesystem.amazonaws.com"]
+
+======================================================================================================================
+DOCUMENT keys-obs   (managed policy scholarchain-deployer-phase14-main--keys-obs)   3327 characters (limit 6144)   10 statements, 30 distinct Allow actions
+======================================================================================================================
+  Sid: KmsCreateKeyWithProjectTags   [Allow]
+    actions   : kms:CreateKey
+    resources : *
+    conditions: StringEquals aws:RequestTag/environment = course; StringEquals aws:RequestTag/project = scholarchain; StringEquals aws:RequestedRegion = us-east-2
+
+  Sid: KmsTagWithProjectTags   [Allow]
+    actions   : kms:TagResource
+    resources : arn:aws:kms:us-east-2:<account>:key/*
+    conditions: ForAllValues:StringEquals aws:TagKeys = ["course", "project", "environment", "owner", "expiration_date", "Name", "tier", "role", "purpose", "runtime_evidence", "scholarchain:stack", "for-use-with-amazon-emr-managed-policies"]; StringEquals aws:RequestTag/environment = course; StringEquals aws:RequestTag/project = scholarchain; StringEquals aws:RequestedRegion = us-east-2
+
+  Sid: KmsAliasesOfTheMainStack   [Allow]
+    actions   : kms:CreateAlias, kms:UpdateAlias, kms:DeleteAlias
+    resources : arn:aws:kms:us-east-2:<account>:alias/scholarchain-course-*
+    conditions: StringEquals aws:RequestedRegion = us-east-2
+
+  Sid: KmsListAliasesNoResourceType   [Allow]
+    actions   : kms:ListAliases
+    resources : *
+    conditions: StringEquals aws:RequestedRegion = us-east-2
+
+  Sid: SecretsManagerMetadataOnly   [Allow]
+    actions   : secretsmanager:DescribeSecret, secretsmanager:GetResourcePolicy
+    resources : arn:aws:secretsmanager:us-east-2:<account>:secret:*
+    conditions: StringEquals aws:RequestedRegion = us-east-2
+
+  Sid: LogGroupsOfTheMainStack   [Allow]
+    actions   : logs:CreateLogGroup, logs:DeleteLogGroup, logs:PutRetentionPolicy, logs:DeleteRetentionPolicy, logs:ListTagsForResource, logs:ListTagsLogGroup, logs:TagResource, logs:UntagResource, logs:TagLogGroup, logs:UntagLogGroup
+    resources : arn:aws:logs:us-east-2:<account>:log-group:/scholarchain-course/*, arn:aws:logs:us-east-2:<account>:log-group:/scholarchain-course/*:*, arn:aws:logs:us-east-2:<account>:log-group:/aws/neptune/scholarchain-course-*, arn:aws:logs:us-east-2:<account>:log-group:/aws/neptune/scholarchain-course-*:*
+    conditions: StringEquals aws:RequestedRegion = us-east-2
+
+  Sid: LogsDescribeNoNameScoping   [Allow]
+    actions   : logs:DescribeLogGroups
+    resources : arn:aws:logs:us-east-2:<account>:log-group:*
+    conditions: StringEquals aws:RequestedRegion = us-east-2
+
+  Sid: CloudWatchAlarmsDashboardsOfTheMainStack   [Allow]
+    actions   : cloudwatch:PutMetricAlarm, cloudwatch:DeleteAlarms, cloudwatch:ListTagsForResource, cloudwatch:TagResource, cloudwatch:UntagResource, cloudwatch:PutDashboard, cloudwatch:GetDashboard, cloudwatch:DeleteDashboards
+    resources : arn:aws:cloudwatch:us-east-2:<account>:alarm:scholarchain-course-*, arn:aws:cloudwatch:us-east-2:<account>:alarm:TargetTracking-*, arn:aws:cloudwatch::<account>:dashboard/scholarchain-course-*
+    conditions: StringEquals aws:RequestedRegion = us-east-2
+
+  Sid: CloudWatchReadNoResourceScoping   [Allow]
+    actions   : cloudwatch:DescribeAlarms, cloudwatch:ListDashboards
+    resources : *
+    conditions: StringEquals aws:RequestedRegion = us-east-2
+
+  Sid: TagInventoryNoResourceType   [Allow]
+    actions   : tag:GetResources
+    resources : *
+    conditions: StringEquals aws:RequestedRegion = us-east-2
+
+======================================================================================================================
+DOCUMENT network   (managed policy scholarchain-deployer-phase14-main--network)   3824 characters (limit 6144)   5 statements, 32 distinct Allow actions
+======================================================================================================================
+  Sid: Ec2DescribeNoResourceScoping   [Allow]
+    actions   : ec2:DescribeAccountAttributes, ec2:DescribeAddresses, ec2:DescribeAddressesAttribute, ec2:DescribeAvailabilityZones, ec2:DescribeInstances, ec2:DescribeInstanceTypeOfferings, ec2:DescribeInternetGateways, ec2:DescribeNatGateways, ec2:DescribeNetworkAcls, ec2:DescribeNetworkInterfaces, ec2:DescribePrefixLists, ec2:DescribeRegions, ec2:DescribeRouteTables, ec2:DescribeSecurityGroupRules, ec2:DescribeSecurityGroups, ec2:DescribeSubnets, ec2:DescribeTags, ec2:DescribeVolumes, ec2:DescribeVpcAttribute, ec2:DescribeVpcEndpoints, ec2:DescribeVpcEndpointServices, ec2:DescribeVpcs
+    resources : *
+    conditions: StringEquals aws:RequestedRegion = us-east-2
+
+  Sid: Ec2CreateOnlyWithProjectTags   [Allow]
+    actions   : ec2:CreateVpc, ec2:CreateSubnet, ec2:CreateInternetGateway, ec2:CreateRouteTable, ec2:CreateSecurityGroup, ec2:CreateNatGateway, ec2:CreateVpcEndpoint, ec2:AllocateAddress
+    resources : arn:aws:ec2:us-east-2:<account>:vpc/*, arn:aws:ec2:us-east-2:<account>:subnet/*, arn:aws:ec2:us-east-2:<account>:internet-gateway/*, arn:aws:ec2:us-east-2:<account>:route-table/*, arn:aws:ec2:us-east-2:<account>:security-group/*, arn:aws:ec2:us-east-2:<account>:natgateway/*, arn:aws:ec2:us-east-2:<account>:vpc-endpoint/*, arn:aws:ec2:us-east-2:<account>:elastic-ip/*
+    conditions: StringEquals aws:RequestTag/environment = course; StringEquals aws:RequestTag/project = scholarchain; StringEquals aws:RequestedRegion = us-east-2
+
+  Sid: Ec2CreateOnExistingProjectParents   [Allow]
+    actions   : ec2:CreateSubnet, ec2:CreateRouteTable, ec2:CreateSecurityGroup, ec2:CreateNatGateway, ec2:CreateVpcEndpoint
+    resources : arn:aws:ec2:us-east-2:<account>:vpc/*, arn:aws:ec2:us-east-2:<account>:subnet/*, arn:aws:ec2:us-east-2:<account>:route-table/*, arn:aws:ec2:us-east-2:<account>:elastic-ip/*, arn:aws:ec2:us-east-2:<account>:security-group/*
+    conditions: StringEquals aws:RequestedRegion = us-east-2; StringEquals aws:ResourceTag/environment = course; StringEquals aws:ResourceTag/project = scholarchain
+
+  Sid: Ec2TagOnCreateOnly   [Allow]
+    actions   : ec2:CreateTags
+    resources : arn:aws:ec2:us-east-2:<account>:vpc/*, arn:aws:ec2:us-east-2:<account>:subnet/*, arn:aws:ec2:us-east-2:<account>:internet-gateway/*, arn:aws:ec2:us-east-2:<account>:route-table/*, arn:aws:ec2:us-east-2:<account>:security-group/*, arn:aws:ec2:us-east-2:<account>:natgateway/*, arn:aws:ec2:us-east-2:<account>:vpc-endpoint/*, arn:aws:ec2:us-east-2:<account>:elastic-ip/*, arn:aws:ec2:us-east-2:<account>:security-group-rule/*
+    conditions: StringEquals aws:RequestTag/environment = course; StringEquals aws:RequestTag/project = scholarchain; StringEquals aws:RequestedRegion = us-east-2; StringEquals ec2:CreateAction = ["CreateVpc", "CreateSubnet", "CreateInternetGateway", "CreateRouteTable", "CreateSecurityGroup", "CreateNatGateway", "CreateVpcEndpoint", "AllocateAddress", "AuthorizeSecurityGroupIngress", "AuthorizeSecurityGroupEgress"]
+
+  Sid: Ec2RetagProjectResources   [Allow]
+    actions   : ec2:CreateTags, ec2:DeleteTags
+    resources : arn:aws:ec2:us-east-2:<account>:vpc/*, arn:aws:ec2:us-east-2:<account>:subnet/*, arn:aws:ec2:us-east-2:<account>:internet-gateway/*, arn:aws:ec2:us-east-2:<account>:route-table/*, arn:aws:ec2:us-east-2:<account>:security-group/*, arn:aws:ec2:us-east-2:<account>:natgateway/*, arn:aws:ec2:us-east-2:<account>:vpc-endpoint/*, arn:aws:ec2:us-east-2:<account>:elastic-ip/*, arn:aws:ec2:us-east-2:<account>:security-group-rule/*
+    conditions: StringEquals aws:RequestedRegion = us-east-2; StringEquals aws:ResourceTag/environment = course; StringEquals aws:ResourceTag/project = scholarchain
+
+======================================================================================================================
+DOCUMENT network-mod   (managed policy scholarchain-deployer-phase14-main--network-mod)   1702 characters (limit 6144)   2 statements, 24 distinct Allow actions
+======================================================================================================================
+  Sid: Ec2ModifyDeleteProjectTaggedOnly   [Allow]
+    actions   : ec2:DeleteVpc, ec2:ModifyVpcAttribute, ec2:DeleteSubnet, ec2:ModifySubnetAttribute, ec2:DeleteInternetGateway, ec2:AttachInternetGateway, ec2:DetachInternetGateway, ec2:DeleteRouteTable, ec2:CreateRoute, ec2:ReplaceRoute, ec2:DeleteRoute, ec2:AssociateRouteTable, ec2:DisassociateRouteTable, ec2:DeleteSecurityGroup, ec2:AuthorizeSecurityGroupIngress, ec2:AuthorizeSecurityGroupEgress, ec2:RevokeSecurityGroupIngress, ec2:RevokeSecurityGroupEgress, ec2:ModifySecurityGroupRules, ec2:DeleteNatGateway, ec2:DeleteVpcEndpoints, ec2:ModifyVpcEndpoint, ec2:ReleaseAddress, ec2:DisassociateAddress
+    resources : arn:aws:ec2:us-east-2:<account>:vpc/*, arn:aws:ec2:us-east-2:<account>:subnet/*, arn:aws:ec2:us-east-2:<account>:internet-gateway/*, arn:aws:ec2:us-east-2:<account>:route-table/*, arn:aws:ec2:us-east-2:<account>:security-group/*, arn:aws:ec2:us-east-2:<account>:natgateway/*, arn:aws:ec2:us-east-2:<account>:vpc-endpoint/*, arn:aws:ec2:us-east-2:<account>:elastic-ip/*, arn:aws:ec2:us-east-2:<account>:security-group-rule/*
+    conditions: StringEquals aws:RequestedRegion = us-east-2; StringEquals aws:ResourceTag/environment = course; StringEquals aws:ResourceTag/project = scholarchain
+
+  Sid: Ec2AuthorizeRulesWithProjectTags   [Allow]
+    actions   : ec2:AuthorizeSecurityGroupIngress, ec2:AuthorizeSecurityGroupEgress
+    resources : arn:aws:ec2:us-east-2:<account>:security-group-rule/*
+    conditions: StringEquals aws:RequestTag/environment = course; StringEquals aws:RequestTag/project = scholarchain; StringEquals aws:RequestedRegion = us-east-2
+
+======================================================================================================================
+BOUNDARY runtime   (managed policy scholarchain-course-permissions-boundary, permissions boundary; not attached to the deployer role)   3372 characters
+======================================================================================================================
+  Sid: DynamoDbItemsOfTheMainStack   [Allow]
+    actions   : dynamodb:GetItem, dynamodb:BatchGetItem, dynamodb:Query, dynamodb:PutItem, dynamodb:UpdateItem
+    resources : arn:aws:dynamodb:us-east-2:<account>:table/scholarchain-course-*, arn:aws:dynamodb:us-east-2:<account>:table/scholarchain-course-*/index/*
+    conditions: (none)
+
+  Sid: S3ObjectsOfTheMainStack   [Allow]
+    actions   : s3:GetObject, s3:GetObjectVersion, s3:PutObject, s3:DeleteObject, s3:AbortMultipartUpload, s3:ListMultipartUploadParts
+    resources : arn:aws:s3:::scholarchain-course-<account>-*/*
+    conditions: (none)
+
+  Sid: S3ListMainBuckets   [Allow]
+    actions   : s3:ListBucket, s3:GetBucketLocation
+    resources : arn:aws:s3:::scholarchain-course-<account>-*
+    conditions: (none)
+
+  Sid: ProjectKeyUse   [Allow]
+    actions   : kms:Decrypt, kms:Encrypt, kms:DescribeKey, kms:GenerateDataKey, kms:GenerateDataKeyWithoutPlaintext, kms:ReEncryptFrom, kms:ReEncryptTo
+    resources : arn:aws:kms:us-east-2:<account>:key/*
+    conditions: ForAnyValue:StringEquals kms:ResourceAliases = alias/scholarchain-course-data
+
+  Sid: SqsWorkAndFailureQueues   [Allow]
+    actions   : sqs:ReceiveMessage, sqs:DeleteMessage, sqs:ChangeMessageVisibility, sqs:GetQueueAttributes, sqs:GetQueueUrl, sqs:SendMessage
+    resources : arn:aws:sqs:us-east-2:<account>:scholarchain-course-*
+    conditions: (none)
+
+  Sid: S3VectorsIndexes   [Allow]
+    actions   : s3vectors:GetIndex, s3vectors:GetVectors, s3vectors:QueryVectors, s3vectors:PutVectors
+    resources : arn:aws:s3vectors:us-east-2:<account>:bucket/scholarchain-course-<account>-vectors/index/*
+    conditions: (none)
+
+  Sid: NeptuneGraphRead   [Allow]
+    actions   : neptune-db:ReadDataViaQuery, neptune-db:GetQueryStatus, neptune-db:CancelQuery, neptune-db:GetEngineStatus
+    resources : arn:aws:neptune-db:us-east-2:<account>:*/*
+    conditions: (none)
+
+  Sid: BedrockInvokeRegionalFoundationModelsAndProfiles   [Allow]
+    actions   : bedrock:InvokeModel, bedrock:InvokeModelWithResponseStream
+    resources : arn:aws:bedrock:us-east-1::foundation-model/*, arn:aws:bedrock:us-east-2::foundation-model/*, arn:aws:bedrock:us-west-2::foundation-model/*, arn:aws:bedrock:::foundation-model/*, arn:aws:bedrock:us-east-2:<account>:inference-profile/*
+    conditions: (none)
+
+  Sid: EcrPullOwnImages   [Allow]
+    actions   : ecr:BatchCheckLayerAvailability, ecr:GetDownloadUrlForLayer, ecr:BatchGetImage
+    resources : arn:aws:ecr:us-east-2:<account>:repository/scholarchain-course/*
+    conditions: (none)
+
+  Sid: EcrAuthorizationToken   [Allow]
+    actions   : ecr:GetAuthorizationToken
+    resources : *
+    conditions: (none)
+
+  Sid: OwnLogStreams   [Allow]
+    actions   : logs:CreateLogStream, logs:PutLogEvents
+    resources : arn:aws:logs:us-east-2:<account>:log-group:/scholarchain-course/*:log-stream:*
+    conditions: (none)
+
+  Sid: InjectConfiguredSecrets   [Allow]
+    actions   : secretsmanager:GetSecretValue
+    resources : arn:aws:secretsmanager:us-east-2:<account>:secret:*
+    conditions: (none)
+
+  Sid: EmrNodeEfsAndAutoTermination   [Allow]
+    actions   : elasticfilesystem:ClientMount, elasticfilesystem:ClientWrite, elasticmapreduce:GetAutoTerminationPolicy, elasticmapreduce:PutAutoTerminationPolicy, elasticmapreduce:RemoveAutoTerminationPolicy
+    resources : arn:aws:elasticfilesystem:us-east-2:<account>:file-system/*, arn:aws:elasticmapreduce:us-east-2:<account>:cluster/*
+    conditions: (none)
+
+======================================================================================================================
+BOUNDARY emr_service   (managed policy scholarchain-course-emr-service-boundary, permissions boundary; not attached to the deployer role)   4607 characters
+======================================================================================================================
+  Sid: V2UseTaggedNetwork   [Allow]
+    actions   : ec2:CreateNetworkInterface, ec2:RunInstances, ec2:CreateFleet, ec2:CreateSecurityGroup
+    resources : arn:aws:ec2:us-east-2:<account>:subnet/*, arn:aws:ec2:us-east-2:<account>:security-group/*, arn:aws:ec2:us-east-2:<account>:vpc/*
+    conditions: StringEquals aws:RequestedRegion = us-east-2; StringEquals aws:ResourceTag/environment = course; StringEquals aws:ResourceTag/for-use-with-amazon-emr-managed-policies = true; StringEquals aws:ResourceTag/project = scholarchain
+
+  Sid: V2CreateNewWithEmrRequestTag   [Allow]
+    actions   : ec2:RunInstances, ec2:CreateNetworkInterface, ec2:CreateSecurityGroup
+    resources : arn:aws:ec2:us-east-2:<account>:instance/*, arn:aws:ec2:us-east-2:<account>:volume/*, arn:aws:ec2:us-east-2:<account>:network-interface/*, arn:aws:ec2:us-east-2:<account>:security-group/*
+    conditions: StringEquals aws:RequestTag/for-use-with-amazon-emr-managed-policies = true; StringEquals aws:RequestedRegion = us-east-2
+
+  Sid: V2ExistingLaunchDependencies   [Allow]
+    actions   : ec2:RunInstances, ec2:CreateFleet
+    resources : arn:aws:ec2:us-east-2::image/ami-*, arn:aws:ec2:us-east-2:<account>:key-pair/*, arn:aws:ec2:us-east-2:<account>:capacity-reservation/*, arn:aws:ec2:us-east-2:<account>:dedicated-host/*, arn:aws:ec2:us-east-2:<account>:fleet/*, arn:aws:ec2:us-east-2:<account>:placement-group/EMR_*
+    conditions: StringEquals aws:RequestedRegion = us-east-2
+
+  Sid: V2ManageTaggedInstancesAndEnis   [Allow]
+    actions   : ec2:DeleteNetworkInterface, ec2:ModifyInstanceAttribute, ec2:TerminateInstances
+    resources : arn:aws:ec2:us-east-2:<account>:network-interface/*, arn:aws:ec2:us-east-2:<account>:instance/*
+    conditions: StringEquals aws:RequestedRegion = us-east-2; StringEquals aws:ResourceTag/environment = course; StringEquals aws:ResourceTag/for-use-with-amazon-emr-managed-policies = true; StringEquals aws:ResourceTag/project = scholarchain
+
+  Sid: V2ManageSecurityGroups   [Allow]
+    actions   : ec2:AuthorizeSecurityGroupEgress, ec2:AuthorizeSecurityGroupIngress, ec2:RevokeSecurityGroupEgress, ec2:RevokeSecurityGroupIngress
+    resources : arn:aws:ec2:us-east-2:<account>:security-group/*
+    conditions: StringEquals aws:RequestedRegion = us-east-2; StringEquals aws:ResourceTag/environment = course; StringEquals aws:ResourceTag/for-use-with-amazon-emr-managed-policies = true; StringEquals aws:ResourceTag/project = scholarchain
+
+  Sid: V2TagOnCreateOnly   [Allow]
+    actions   : ec2:CreateTags
+    resources : arn:aws:ec2:us-east-2:<account>:instance/*, arn:aws:ec2:us-east-2:<account>:volume/*, arn:aws:ec2:us-east-2:<account>:network-interface/*, arn:aws:ec2:us-east-2:<account>:security-group/*
+    conditions: StringEquals aws:RequestedRegion = us-east-2; StringEquals ec2:CreateAction = ["RunInstances", "CreateNetworkInterface", "CreateSecurityGroup"]
+
+  Sid: V2DeleteTagsOnEmrTaggedResources   [Allow]
+    actions   : ec2:DeleteTags
+    resources : arn:aws:ec2:us-east-2:<account>:instance/*, arn:aws:ec2:us-east-2:<account>:volume/*, arn:aws:ec2:us-east-2:<account>:network-interface/*
+    conditions: StringEquals aws:RequestedRegion = us-east-2; StringEquals aws:ResourceTag/environment = course; StringEquals aws:ResourceTag/for-use-with-amazon-emr-managed-policies = true; StringEquals aws:ResourceTag/project = scholarchain
+
+  Sid: EmrServiceRoleEc2DescribeCeiling   [Allow]
+    actions   : ec2:DescribeAccountAttributes, ec2:DescribeCapacityReservations, ec2:DescribeDhcpOptions, ec2:DescribeImages, ec2:DescribeInstances, ec2:DescribeInstanceTypeOfferings, ec2:DescribeLaunchTemplates, ec2:DescribeNetworkAcls, ec2:DescribeNetworkInterfaces, ec2:DescribePlacementGroups, ec2:DescribeRouteTables, ec2:DescribeSecurityGroups, ec2:DescribeSubnets, ec2:DescribeVolumes, ec2:DescribeVolumeStatus, ec2:DescribeVpcAttribute, ec2:DescribeVpcEndpoints, ec2:DescribeVpcs
+    resources : *
+    conditions: StringEquals aws:RequestedRegion = us-east-2
+
+  Sid: PassInstanceProfileRoleToEc2   [Allow]
+    actions   : iam:PassRole
+    resources : arn:aws:iam::<account>:role/scholarchain-course-emr-ec2
+    conditions: StringEquals iam:PassedToService = ["ec2.amazonaws.com"]
+
+  Sid: ProjectKeyForEbsEncryption   [Allow]
+    actions   : kms:Decrypt, kms:DescribeKey, kms:GenerateDataKeyWithoutPlaintext, kms:ReEncryptFrom, kms:ReEncryptTo, kms:CreateGrant
+    resources : arn:aws:kms:us-east-2:<account>:key/*
+    conditions: ForAnyValue:StringEquals kms:ResourceAliases = alias/scholarchain-course-data
+
+SUMMARY
+  documents: 7; sizes (characters): compute=5696, data=5164, emr-efs=5113, iam=5637, keys-obs=3327, network=3824, network-mod=1702
+  boundaries: runtime=3372, emr_service=4607
+  distinct Allow actions per document summed: 363

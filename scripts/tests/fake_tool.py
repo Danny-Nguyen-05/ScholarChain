@@ -176,6 +176,92 @@ def flag_value(args, flag):
     return ""
 
 
+def b64_sha256(data):
+    import base64
+
+    return base64.b64encode(hashlib.sha256(data).digest()).decode("ascii")
+
+
+def s3_store(op, args):
+    """Fake `aws s3api list-objects-v2|get-object-attributes|put-object|head-object` over a directory (FAKE_S3_DIR).
+
+    Objects live at $FAKE_S3_DIR/<bucket>/<key>; their S3 metadata at $FAKE_S3_DIR/.meta/<bucket>/<key>.json
+    ({"ChecksumSHA256": <base64 or null>, "VersionId": ...}). Knobs: FAKE_S3_PUT_FAIL_KEY (put-object exits 255 for that key),
+    FAKE_S3_CORRUPT_KEY (the stored checksum of that key is wrong after put), FAKE_S3_NO_IF_NONE_MATCH (an old CLI that
+    does not know --if-none-match), FAKE_S3_LIST_RC (list-objects-v2 exit code). No network, no credentials."""
+    root = os.environ["FAKE_S3_DIR"]
+    bucket = flag_value(args, "--bucket")
+    key = flag_value(args, "--key")
+    obj = os.path.join(root, bucket, key)
+    meta = os.path.join(root, ".meta", bucket, key + ".json")
+    if op == "list-objects-v2":
+        if os.environ.get("FAKE_S3_LIST_RC"):
+            sys.stderr.write("fake list failure\n")
+            return int(os.environ["FAKE_S3_LIST_RC"])
+        prefix = flag_value(args, "--prefix")
+        base = os.path.join(root, bucket)
+        contents = []
+        for current, _dirs, files in os.walk(base):
+            for name in files:
+                full = os.path.join(current, name)
+                rel = os.path.relpath(full, base).replace(os.sep, "/")
+                if rel.startswith(prefix):
+                    contents.append({"Key": rel, "Size": os.path.getsize(full)})
+        if contents:  # the real CLI prints nothing for an empty listing
+            print(json.dumps({"Contents": sorted(contents, key=lambda c: c["Key"])}))
+        return 0
+    if op == "put-object":
+        if os.environ.get("FAKE_S3_NO_IF_NONE_MATCH") and "--if-none-match" in args:
+            sys.stderr.write("\nUnknown options: --if-none-match, *\n")
+            return 252
+        if os.environ.get("FAKE_S3_PUT_FAIL_KEY") == key:
+            sys.stderr.write("fake connection reset\n")
+            return 255
+        if flag_value(args, "--checksum-algorithm") != "SHA256":
+            sys.stderr.write("fake: put-object without --checksum-algorithm SHA256\n")
+            return 252
+        if os.path.exists(obj):
+            sys.stderr.write("\nAn error occurred (PreconditionFailed) when calling the PutObject operation: At least one of the pre-conditions you specified did not hold\n")
+            return 254
+        with open(flag_value(args, "--body"), "rb") as handle:
+            data = handle.read()
+        real = b64_sha256(data)
+        if flag_value(args, "--checksum-sha256") != real:
+            sys.stderr.write("\nAn error occurred (BadDigest) when calling the PutObject operation: The SHA256 you specified did not match the calculated checksum.\n")
+            return 254
+        os.makedirs(os.path.dirname(obj), exist_ok=True)
+        os.makedirs(os.path.dirname(meta), exist_ok=True)
+        with open(obj, "wb") as handle:
+            handle.write(data)
+        stored = b64_sha256(b"tampered") if os.environ.get("FAKE_S3_CORRUPT_KEY") == key else real
+        version = "ver-" + hashlib.sha256(key.encode()).hexdigest()[:10]
+        with open(meta, "w", encoding="utf-8") as handle:
+            json.dump({"ChecksumSHA256": stored, "VersionId": version}, handle)
+        print(json.dumps({"ETag": '"%s"' % hashlib.md5(data).hexdigest(), "ChecksumSHA256": real, "VersionId": version}))
+        return 0
+    if op in ("get-object-attributes", "head-object"):
+        if not os.path.isfile(obj):
+            sys.stderr.write("\nAn error occurred (404) when calling the %s operation: Not Found\n" % ("HeadObject" if op == "head-object" else "GetObjectAttributes"))
+            return 254
+        info = {}
+        if os.path.isfile(meta):
+            with open(meta, encoding="utf-8") as handle:
+                info = json.load(handle)
+        size = os.path.getsize(obj)
+        checksum = info.get("ChecksumSHA256")
+        if op == "get-object-attributes":
+            body = {"ObjectSize": size}
+            if checksum:
+                body["Checksum"] = {"ChecksumSHA256": checksum}
+        else:
+            body = {"ContentLength": size, "VersionId": info.get("VersionId")}
+            if checksum and flag_value(args, "--checksum-mode") == "ENABLED":
+                body["ChecksumSHA256"] = checksum
+        print(json.dumps(body))
+        return 0
+    return 0
+
+
 SERVICE_NAMES = ("query-api", "graph-service", "semantic-service", "embedding-worker")
 
 
@@ -207,8 +293,13 @@ def aws(args):
         if os.environ.get("FAKE_STS_RC"):
             sys.stderr.write("fake sts failure\n")
             return int(os.environ["FAKE_STS_RC"])
+        if flag_value(args, "--query") == "Arn":  # upload-slice.sh checks that the caller is an operator-loader session
+            print(os.environ.get("FAKE_STS_ARN", "arn:aws:sts::%s:assumed-role/scholarchain-course-operator-loader/fake-session" % account))
+            return 0
         print(account)
         return 0
+    if svc == "s3api" and os.environ.get("FAKE_S3_DIR"):  # a stateful bucket on disk (upload-slice.sh tests)
+        return s3_store(op, args)
     if svc == "emr":
         return emr(op, args)
     if (svc, op) == ("s3", "ls"):  # `aws s3 ls --recursive --summarize` as the stage-in body reads it
@@ -269,23 +360,43 @@ def emr(op, args):
     JSON in $FAKE_LOG.steps and returns s-FAKE<n>; describe-step state comes from FAKE_EMR_STEP_STATE_<n> (or
     FAKE_EMR_STEP_STATE, default COMPLETED)."""
     cluster = flag_value(args, "--cluster-id")
+    if op == "list-instance-groups":  # AWS CLI v2 has no such command; the pipeline must never call it
+        print("aws: error: argument operation: Found invalid choice 'list-instance-groups'", file=sys.stderr)
+        return 252
     if op == "describe-cluster":
-        print(json.dumps({"Cluster": {"Id": os.environ.get("FAKE_EMR_CLUSTER_ID", cluster), "Status": {"State": os.environ.get("FAKE_EMR_STATE", "WAITING")}}}))
-        return 0
-    if op == "get-auto-termination-policy":
-        idle = os.environ.get("FAKE_EMR_IDLE", "900")
-        print(json.dumps({} if idle == "none" else {"AutoTerminationPolicy": {"IdleTimeout": int(idle)}}))
-        return 0
-    if op == "list-instance-groups":
+        # Like the CLI v2 customization, embed the ListInstanceGroups result as Cluster.InstanceGroups.
         default = [
             {"InstanceGroupType": "MASTER", "InstanceType": "m5.xlarge", "RequestedInstanceCount": 1, "RunningInstanceCount": 1},
             {"InstanceGroupType": "CORE", "InstanceType": "m5.xlarge", "RequestedInstanceCount": 1, "RunningInstanceCount": 1},
             {"InstanceGroupType": "TASK", "InstanceType": "m5.xlarge", "RequestedInstanceCount": 0, "RunningInstanceCount": 0},
         ]
-        groups = json.loads(os.environ["FAKE_EMR_GROUPS"]) if os.environ.get("FAKE_EMR_GROUPS") else default
-        print(json.dumps({"InstanceGroups": groups}))
+        cluster_doc = {"Id": os.environ.get("FAKE_EMR_CLUSTER_ID", cluster), "Status": {"State": os.environ.get("FAKE_EMR_STATE", "WAITING")}}
+        if os.environ.get("FAKE_EMR_GROUPS") != "absent":
+            cluster_doc["InstanceGroups"] = json.loads(os.environ["FAKE_EMR_GROUPS"]) if os.environ.get("FAKE_EMR_GROUPS") else default
+        print(json.dumps({"Cluster": cluster_doc}))
+        return 0
+    if op == "get-auto-termination-policy":
+        idle = os.environ.get("FAKE_EMR_IDLE", "900")
+        print(json.dumps({} if idle == "none" else {"AutoTerminationPolicy": {"IdleTimeout": int(idle)}}))
         return 0
     if op == "add-steps":
+        # Like AWS CLI v2 (2.35.4) client-side validation of --steps against the add-steps customization's STEPS_SCHEMA
+        # (awscli/customizations/emr/argumentschema.py): a value starting with "[" is parsed as JSON (awscli/argprocess.py),
+        # and any key outside the CLI shape (e.g. the API's HadoopJarStep wrapper) is rejected with exit 252.
+        allowed = ["Type", "Name", "ActionOnFailure", "Jar", "Args", "MainClass", "Properties", "LogUri", "EncryptionKeyArn"]
+        try:
+            steps = json.loads(flag_value(args, "--steps"))
+        except (TypeError, ValueError):
+            sys.stderr.write("\nError parsing parameter '--steps': Invalid JSON\n")
+            return 252
+        for index, step in enumerate(steps if isinstance(steps, list) else []):
+            for key in step:
+                if key not in allowed:
+                    sys.stderr.write('\nParameter validation failed:\nUnknown parameter in [%d]: "%s", must be one of: %s\n' % (index, key, ", ".join(allowed)))
+                    return 252
+            if step.get("Type") not in (None, "CUSTOM_JAR") or "Jar" not in step or not isinstance(step.get("Args", []), list):
+                sys.stderr.write("fake aws: add-steps step %d is not a CUSTOM_JAR step with a Jar and an Args list\n" % index)
+                return 252
         path = os.environ.get("FAKE_LOG", "") + ".steps"
         count = 0
         if os.path.exists(path):
@@ -295,6 +406,13 @@ def emr(op, args):
             handle.write(flag_value(args, "--steps") + "\n")
         print("s-FAKE%d" % (count + 1))
         return int(os.environ.get("FAKE_EMR_ADD_RC", "0"))
+    if op == "cancel-steps":
+        # CancelStepsInput: ClusterId, StepIds (list), StepCancellationOption SEND_INTERRUPT | TERMINATE_PROCESS.
+        if not cluster or not flag_value(args, "--step-ids") or flag_value(args, "--step-cancellation-option") not in ("SEND_INTERRUPT", "TERMINATE_PROCESS"):
+            sys.stderr.write("fake aws: cancel-steps needs --cluster-id, --step-ids and a valid --step-cancellation-option\n")
+            return 252
+        print(json.dumps({"CancelStepsInfoList": [{"StepId": flag_value(args, "--step-ids"), "Status": "SUBMITTED", "Reason": ""}]}))
+        return 0
     if op == "describe-step":
         number = flag_value(args, "--step-id").replace("s-FAKE", "")
         print(os.environ.get("FAKE_EMR_STEP_STATE_" + number) or os.environ.get("FAKE_EMR_STEP_STATE", "COMPLETED"))
@@ -352,6 +470,7 @@ def sbt(args):
             ("modules/hadoop/target/scala-3.3.4/hadoop-submit_3-0.1.0-SNAPSHOT.jar", b"submit"),
             ("modules/hadoop/target/scala-3.3.4/hadoop-dependency-bundle_3-0.1.0-SNAPSHOT.jar", b"bundle"),
             ("modules/spark/target/spark-job_3-0.1.0-SNAPSHOT.jar", b"spark"),
+            ("modules/entity-resolution/target/er-job_3-0.1.0-SNAPSHOT.jar", b"erjob"),
             ("modules/services/target/distribution/services.jar", b"services"),
             ("modules/services/target/distribution/lib/dep.jar", b"dep"),
             ("modules/services/target/distribution/prompts/runtime/p.txt", b"p"),

@@ -45,13 +45,13 @@ class PipelineDryRun(unittest.TestCase):
 
     def test_every_cloud_command_is_printed_not_run_and_carries_a_timeout(self):
         cmds = self.run_.grep(r"^DRY-RUN CMD: ")
-        self.assertEqual(len(cmds), 10, "1 sts + 3 cluster verifications + 6 add-steps expected\n" + "\n".join(c[:120] for c in cmds))
+        self.assertEqual(len(cmds), 9, "1 sts + 2 cluster verifications + 6 add-steps expected\n" + "\n".join(c[:120] for c in cmds))
         for c in cmds:
             self.assertRegex(c, r"^DRY-RUN CMD: timeout=\d+s ")
             self.assertIn(" aws ", c)
         verbs = [re.search(r" aws (\S+ \S+)", c).group(1) for c in cmds]
-        self.assertEqual(verbs, ["sts get-caller-identity", "emr describe-cluster", "emr get-auto-termination-policy",
-                                 "emr list-instance-groups"] + ["emr add-steps"] * 6)
+        self.assertEqual(verbs, ["sts get-caller-identity", "emr describe-cluster", "emr get-auto-termination-policy"]
+                         + ["emr add-steps"] * 6)
         self.assertFalse(self.run_.grep(r"^CMD: "), "an executed (non-DRY-RUN) command line was printed")
 
     # ----- markers -----
@@ -187,7 +187,7 @@ class PipelineDryRun(unittest.TestCase):
         for source, info in S.DATASETS.items():
             self.assertEqual(hadoop[source.upper() + "_SNAPSHOT"], [info["snapshot"]])
             self.assertEqual(hadoop[source.upper() + "_RETRIEVAL"], [info["retrieval"]])
-        self.assertEqual(hadoop["CEILINGS"], ["1000 8 256 4096 64 8388608 8388608"])
+        self.assertEqual(hadoop["CEILINGS"], ["12000 8 256 4096 64 8388608 8388608"])
         program = S.installed_program(self.fx, "sc-step.sh")
         for token in ("HadoopPrepMain", "--once", "--execution-mode cluster", '--run-id "${RUN_ID}"', "file://"):
             self.assertIn(token, program)

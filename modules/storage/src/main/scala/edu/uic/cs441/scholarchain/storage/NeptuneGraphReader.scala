@@ -4,7 +4,13 @@ import edu.uic.cs441.scholarchain.core.*
 import software.amazon.awssdk.services.neptunedata.NeptunedataClient
 import software.amazon.awssdk.services.neptunedata.model.ExecuteOpenCypherQueryRequest
 import software.amazon.awssdk.awscore.AwsRequestOverrideConfiguration
+import software.amazon.awssdk.auth.credentials.AwsCredentialsProvider
+import software.amazon.awssdk.core.client.config.ClientOverrideConfiguration
+import software.amazon.awssdk.awscore.retry.AwsRetryStrategy
+import software.amazon.awssdk.regions.Region
+import java.net.URI
 import java.time.Duration
+import java.util.concurrent.atomic.AtomicBoolean
 import StorageResult.*
 
 object CommunityLookup {
@@ -13,12 +19,28 @@ object CommunityLookup {
   def window(window: String): String = "|" + StableIds.sha256Hex(window) + "|"
 }
 
-/** Runtime-facing constructor accepts no loader, mutation callback or arbitrary query text. */
-final class NeptuneGraphReader(client: NeptunedataClient, config: GraphReaderConfig)
-    extends GraphReader {
+/** Runtime-facing constructor accepts no loader, mutation callback or arbitrary query text. The
+  * `connect` factory builds and owns a read-only SDK client; `close` releases it. A reader built
+  * from an injected client never closes that client.
+  */
+final class NeptuneGraphReader private (
+    client: NeptunedataClient,
+    config: GraphReaderConfig,
+    ownsClient: Boolean
+) extends DirectedGraphReader
+    with AutoCloseable {
+  def this(client: NeptunedataClient, config: GraphReaderConfig) = this(client, config, false)
+  private val closed = new AtomicBoolean(false)
+  def close(): Unit = if (ownsClient && closed.compareAndSet(false, true)) client.close()
   private val retry = new StorageRetry(config.retry)
   private val neighborQuery =
     "MATCH (a)-[r]-(b) WHERE id(a) = $id AND type(r) IN $types AND (type(r) <> 'COAUTHORED_WITH' OR r.windowId = $window) RETURN id(b) AS nodeId, id(r) AS edgeId, type(r) AS edgeType, properties(r) AS properties, b.communityQualificationsJson AS communityQualificationsJson ORDER BY nodeId, edgeId SKIP $offset LIMIT $limit"
+  private val outQuery =
+    "MATCH (a)-[r]->(b) WHERE id(a) = $id AND type(r) IN $types AND (type(r) <> 'COAUTHORED_WITH' OR r.windowId = $window) RETURN id(a) AS fromId, id(b) AS toId, id(r) AS edgeId, type(r) AS edgeType, properties(r) AS properties ORDER BY edgeId SKIP $offset LIMIT $limit"
+  private val inQuery =
+    "MATCH (b)-[r]->(a) WHERE id(a) = $id AND type(r) IN $types AND (type(r) <> 'COAUTHORED_WITH' OR r.windowId = $window) RETURN id(b) AS fromId, id(a) AS toId, id(r) AS edgeId, type(r) AS edgeType, properties(r) AS properties ORDER BY edgeId SKIP $offset LIMIT $limit"
+  private val inWithoutSelfLoopsQuery =
+    "MATCH (b)-[r]->(a) WHERE id(a) = $id AND id(b) <> id(a) AND type(r) IN $types AND (type(r) <> 'COAUTHORED_WITH' OR r.windowId = $window) RETURN id(b) AS fromId, id(a) AS toId, id(r) AS edgeId, type(r) AS edgeType, properties(r) AS properties ORDER BY edgeId SKIP $offset LIMIT $limit"
   private def execute(query: String, params: ujson.Obj): StorageResult[Vector[AwsJson]] =
     retry {
       try {
@@ -122,6 +144,59 @@ final class NeptuneGraphReader(client: NeptunedataClient, config: GraphReaderCon
       }
     }
   }
+  def directedEdges(
+      id: String,
+      window: String,
+      direction: EdgeDirection,
+      edgeTypes: Set[String],
+      limit: Int,
+      cursor: Option[String]
+  ): StorageResult[DirectedEdgePage] = decoded {
+    if (!validLimit(limit) || !edgeTypes.subsetOf(config.allowedEdgeTypes))
+      Rejected("invalid-bound")
+    else {
+      val types = if (edgeTypes.isEmpty) config.allowedEdgeTypes else edgeTypes
+      DirectedEdgePaging.page(direction, limit, cursor, config.maxCursorOffset) {
+        (phase, offset, fetchLimit) =>
+          val query = phase match {
+            case DirectedEdgePaging.Phase.Out                => outQuery
+            case DirectedEdgePaging.Phase.In                 => inQuery
+            case DirectedEdgePaging.Phase.InWithoutSelfLoops => inWithoutSelfLoopsQuery
+          }
+          RowCodec.map(
+            execute(
+              query,
+              ujson.Obj(
+                "id" -> id,
+                "window" -> window,
+                "types" -> ujson.Arr.from(types.toVector.sorted),
+                "offset" -> offset,
+                "limit" -> fetchLimit
+              )
+            )
+          ) { rows =>
+            val edges = rows.map(decodeDirected)
+            // A row whose stored endpoints do not touch the requested node on the requested
+            // side is a malformed response, never an edge to attribute.
+            val consistent = edges.forall(e =>
+              if (phase == DirectedEdgePaging.Phase.Out) e.fromId == id else e.toId == id
+            )
+            if (consistent) Found(edges) else Rejected("malformed-graph-response")
+          }
+      }
+    }
+  }
+  private def decodeDirected(r: AwsJson): DirectedGraphEdge = DirectedGraphEdge(
+    r("fromId").str,
+    r("toId").str,
+    r("edgeId").str,
+    r("edgeType").str,
+    r.obj
+      .get("properties")
+      .filter(_ != AwsJson.NullValue)
+      .map(textProperties)
+      .getOrElse(Map.empty)
+  )
   def directCoauthors(id: String, window: String, limit: Int): StorageResult[GraphPage] =
     neighbors(id, window, Set("COAUTHORED_WITH"), limit, None)
   def shortestPaths(
@@ -190,4 +265,57 @@ final class NeptuneGraphReader(client: NeptunedataClient, config: GraphReaderCon
         )
       )(rows => Found(GraphPage(rows.map(decodeNeighbor), None)))
   }
+}
+
+object NeptuneGraphReader {
+
+  /** Closed refusal codes of `connect`. */
+  val invalidEndpoint = "invalid-neptune-endpoint"
+  val invalidRegion = "invalid-neptune-region"
+  private val regionPattern = "[a-z]{2}(-[a-z]+)+-[0-9]+".r
+
+  /** Test seam: a reader that owns (and therefore closes) an already built client. */
+  private[storage] def owning(client: NeptunedataClient, config: GraphReaderConfig) =
+    new NeptuneGraphReader(client, config, true)
+
+  /** An https URI with a host and an explicit port, nothing else. */
+  def validEndpoint(endpoint: URI): Boolean =
+    endpoint != null && "https".equals(endpoint.getScheme) && endpoint.getHost != null &&
+      endpoint.getHost.nonEmpty && endpoint.getPort >= 1 && endpoint.getPort <= 65535 &&
+      endpoint.getUserInfo == null && endpoint.getRawQuery == null &&
+      endpoint.getRawFragment == null &&
+      Option(endpoint.getRawPath).forall(p => p.isEmpty || p == "/")
+
+  /** Builds the read-only reader and its owned client. No network call is made: credentials are
+    * resolved lazily by the SDK on the first query. SDK retries are disabled because the reader
+    * owns the bounded `config.retry` policy; the SDK call timeouts follow the configured query
+    * timeout plus the one-second margin already used per request. Refusals are closed codes.
+    */
+  def connect(
+      endpoint: URI,
+      region: String,
+      credentials: AwsCredentialsProvider,
+      config: GraphReaderConfig
+  ): Either[String, NeptuneGraphReader] =
+    if (!validEndpoint(endpoint)) Left(invalidEndpoint)
+    else if (region == null || !regionPattern.matches(region)) Left(invalidRegion)
+    else if (credentials == null) Left("missing-credentials")
+    else {
+      val timeout = Duration.ofMillis(config.requestTimeoutMillis + 1000)
+      val client = NeptunedataClient
+        .builder()
+        .region(Region.of(region))
+        .credentialsProvider(credentials)
+        .endpointOverride(endpoint)
+        .overrideConfiguration(
+          ClientOverrideConfiguration
+            .builder()
+            .retryStrategy(AwsRetryStrategy.doNotRetry())
+            .apiCallTimeout(timeout)
+            .apiCallAttemptTimeout(timeout)
+            .build()
+        )
+        .build()
+      Right(new NeptuneGraphReader(client, config, true))
+    }
 }

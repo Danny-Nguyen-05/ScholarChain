@@ -1,0 +1,8 @@
+Phase 14 accepted commit
+branch: phase-14 (not merged to main)
+commit: 0dd8833e9d0da096f9a9e5339d23c96a2575cbdb
+subject: Phase 14 Session 1 closeout: live-session evidence, C11 cost report, external review and recheck, human gate
+accepted: 2026-11-15 (America/Chicago), per human-gate.md (ACCEPTED WITH DEFERRALS)
+earlier: session start 684aeaf; live repairs 24bf49d through b6dc94d
+deferred: image digest check (N4) and the item 17 ENI tag check move to Session 2
+written by the orchestrator at the human's request; approval: "I approve it so can you save that into commit.txt for me" (Danny Nguyen, chat, 2026-11-15)

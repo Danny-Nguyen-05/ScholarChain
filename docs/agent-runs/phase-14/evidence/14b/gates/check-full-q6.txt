@@ -1,0 +1,128 @@
+STEP: start
+[2026-11-08T04:04:39Z] [20261108T040439Z-64589] INFO script=check.sh mode=real-run run_id=20261108T040439Z-64589 repo_root=<snapshot>
+[2026-11-08T04:04:39Z] [20261108T040439Z-64589] INFO logs: <snapshot>/target/check-logs/20261108T040439Z-64589
+STEP: gate-constitution
+[2026-11-08T04:04:39Z] [20261108T040439Z-64589] INFO present: AGENTS.md
+[2026-11-08T04:04:39Z] [20261108T040439Z-64589] INFO present: CLAUDE.md
+[2026-11-08T04:04:39Z] [20261108T040439Z-64589] INFO present: docs/agents.md
+[2026-11-08T04:04:39Z] [20261108T040439Z-64589] INFO present: docs/agent-runs/README.md
+[2026-11-08T04:04:39Z] [20261108T040439Z-64589] INFO present: .claude/settings.json
+[2026-11-08T04:04:39Z] [20261108T040439Z-64589] INFO present: .claude/ownership-audit.json
+[2026-11-08T04:04:39Z] [20261108T040439Z-64589] INFO present: .mcp.json
+[2026-11-08T04:04:39Z] [20261108T040439Z-64589] INFO present: .claude/agents/*.md
+[2026-11-08T04:04:39Z] [20261108T040439Z-64589] INFO 2015 JSON files parse
+GATE: constitution PASS (0s)
+STEP: gate-hooks
+CMD: timeout=120s bash -n .claude/hooks/format-scala.sh 
+CMD: timeout=120s bash -n .claude/hooks/guard-dangerous.sh 
+CMD: timeout=120s bash -n .claude/hooks/validate-agent-files.sh 
+CMD: timeout=120s bash -n .claude/hooks/verify-tests-ran.sh 
+CMD: timeout=300s shellcheck -x -P SCRIPTDIR .claude/hooks/format-scala.sh .claude/hooks/guard-dangerous.sh .claude/hooks/validate-agent-files.sh .claude/hooks/verify-tests-ran.sh 
+[2026-11-08T04:04:40Z] [20261108T040439Z-64589] INFO hooks: 4 scripts checked (bash -n + shellcheck)
+GATE: hooks PASS (1s)
+STEP: gate-shell
+CMD: timeout=120s bash -n .claude/hooks/format-scala.sh 
+CMD: timeout=120s bash -n .claude/hooks/guard-dangerous.sh 
+CMD: timeout=120s bash -n .claude/hooks/validate-agent-files.sh 
+CMD: timeout=120s bash -n .claude/hooks/verify-tests-ran.sh 
+CMD: timeout=120s bash -n scripts/archive-evidence.sh 
+CMD: timeout=120s bash -n scripts/check.sh 
+CMD: timeout=120s bash -n scripts/cleanup.sh 
+CMD: timeout=120s bash -n scripts/deploy.sh 
+CMD: timeout=120s bash -n scripts/emr/bootstrap.sh 
+CMD: timeout=120s bash -n scripts/emr/sc-step.sh 
+CMD: timeout=120s bash -n scripts/lib/common.sh 
+CMD: timeout=120s bash -n scripts/package.sh 
+CMD: timeout=120s bash -n scripts/phase12d-spike/collect-evidence.sh 
+CMD: timeout=120s bash -n scripts/phase12d-spike/emr/bootstrap.sh 
+CMD: timeout=120s bash -n scripts/phase12d-spike/emr/collect-results.sh 
+CMD: timeout=120s bash -n scripts/phase12d-spike/emr/run-step.sh 
+CMD: timeout=120s bash -n scripts/phase12d-spike/inventory.sh 
+CMD: timeout=120s bash -n scripts/phase12d-spike/preflight.sh 
+CMD: timeout=120s bash -n scripts/phase4-emr-smoke.sh 
+CMD: timeout=120s bash -n scripts/plan.sh 
+CMD: timeout=120s bash -n scripts/rollback.sh 
+CMD: timeout=120s bash -n scripts/run-bounded-pipeline.sh 
+CMD: timeout=120s bash -n scripts/run-experiment.sh 
+CMD: timeout=120s bash -n scripts/smoke-local.sh 
+CMD: timeout=120s bash -n scripts/smoke-test.sh 
+CMD: timeout=300s shellcheck -x -P SCRIPTDIR .claude/hooks/format-scala.sh .claude/hooks/guard-dangerous.sh .claude/hooks/validate-agent-files.sh .claude/hooks/verify-tests-ran.sh scripts/archive-evidence.sh scripts/check.sh scripts/cleanup.sh scripts/deploy.sh scripts/emr/bootstrap.sh scripts/emr/sc-step.sh scripts/lib/common.sh scripts/package.sh scripts/phase12d-spike/collect-evidence.sh scripts/phase12d-spike/emr/bootstrap.sh scripts/phase12d-spike/emr/collect-results.sh scripts/phase12d-spike/emr/run-step.sh scripts/phase12d-spike/inventory.sh scripts/phase12d-spike/preflight.sh scripts/phase4-emr-smoke.sh scripts/plan.sh scripts/rollback.sh scripts/run-bounded-pipeline.sh scripts/run-experiment.sh scripts/smoke-local.sh scripts/smoke-test.sh 
+[2026-11-08T04:04:47Z] [20261108T040439Z-64589] INFO shell: 25 scripts checked (bash -n + shellcheck)
+GATE: shell PASS (7s)
+STEP: gate-python
+CMD: timeout=120s python3 -I -X pycache_prefix=<tmp> -m py_compile scripts/billing/budget_execution.py scripts/billing/budget_verification.py scripts/billing/publication_evidence.py scripts/billing/tests/terraform_state_binding.py scripts/billing/tests/test_budget_execution.py scripts/billing/tests/test_budget_verification.py scripts/billing/tests/test_publication_evidence.py scripts/emr/sc-ceiling-check.py scripts/emr/sc-class-origin-verify.py scripts/emr/sc-render-spark-config.py scripts/lib/archive.py scripts/lib/budget.py scripts/lib/experiment.py scripts/lib/pipeline.py scripts/lib/plan_summary.py scripts/lib/records.py scripts/lib/redact.py scripts/lib/run_approval.py scripts/lib/safeio.py scripts/lib/smoke_client.py scripts/lib/state_bind.py scripts/lib/suite_run.py scripts/lib/timeout.py scripts/lib/tools.py scripts/lib/verify.py scripts/phase12d-spike/inventory_eval.py scripts/phase12d-spike/request_bound.py scripts/phase12d-spike/tests/fake_aws.py scripts/phase12d-spike/tests/helpers.py scripts/phase12d-spike/tests/test_bootstrap.py scripts/phase12d-spike/tests/test_collect_evidence.py scripts/phase12d-spike/tests/test_inventory.py scripts/phase12d-spike/tests/test_preflight.py scripts/phase12d-spike/tests/test_request_bound.py scripts/phase12d-spike/tests/test_step_scripts.py scripts/phase12d-spike/tests/test_terraform_static.py scripts/tests/fake_tool.py scripts/tests/helpers.py scripts/tests/pipeline_helpers.py scripts/tests/test_13b_repairs.py scripts/tests/test_13c_pipeline.py scripts/tests/test_archive.py scripts/tests/test_budget.py scripts/tests/test_c1_step_args.py scripts/tests/test_check.py scripts/tests/test_cleanup.py scripts/tests/test_deploy.py scripts/tests/test_emr_bootstrap.py scripts/tests/test_experiment.py scripts/tests/test_package.py scripts/tests/test_pipeline.py scripts/tests/test_plan.py scripts/tests/test_rollback.py scripts/tests/test_runtime_base_apply.py scripts/tests/test_runtime_guard.py scripts/tests/test_runtime_rollback.py scripts/tests/test_safeio.py scripts/tests/test_safety.py scripts/tests/test_smoke.py scripts/tests/test_state_records.py scripts/tests/test_syntax.py scripts/tests/test_terraform_r1.py scripts/tests/test_terraform_state_binding.py scripts/tests/test_timeout.py scripts/tests/test_upload_checksum.py scripts/tests/test_verify_redact.py 
+[2026-11-08T04:04:48Z] [20261108T040439Z-64589] INFO python: 66 files compile
+GATE: python PASS (1s)
+STEP: gate-terraform
+[2026-11-08T04:04:48Z] [20261108T040439Z-64589] INFO terraform 1.13.5 accepted (binary: terraform)
+CMD: timeout=900s env -u AWS_PROFILE -u AWS_DEFAULT_PROFILE -u AWS_ACCESS_KEY_ID -u AWS_SECRET_ACCESS_KEY -u AWS_SESSION_TOKEN AWS_EC2_METADATA_DISABLED=true AWS_CONFIG_FILE=<redacted> AWS_SHARED_CREDENTIALS_FILE=<redacted> TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 terraform -chdir=infra/terraform fmt -check -recursive 
+[2026-11-08T04:04:48Z] [20261108T040439Z-64589] INFO terraform root: infra/terraform/billing-bootstrap
+CMD: timeout=900s env -u AWS_PROFILE -u AWS_DEFAULT_PROFILE -u AWS_ACCESS_KEY_ID -u AWS_SECRET_ACCESS_KEY -u AWS_SESSION_TOKEN AWS_EC2_METADATA_DISABLED=true AWS_CONFIG_FILE=<redacted> AWS_SHARED_CREDENTIALS_FILE=<redacted> TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 terraform -chdir=infra/terraform/billing-bootstrap init -backend=false -input=false -lockfile=readonly 
+CMD: timeout=900s env -u AWS_PROFILE -u AWS_DEFAULT_PROFILE -u AWS_ACCESS_KEY_ID -u AWS_SECRET_ACCESS_KEY -u AWS_SESSION_TOKEN AWS_EC2_METADATA_DISABLED=true AWS_CONFIG_FILE=<redacted> AWS_SHARED_CREDENTIALS_FILE=<redacted> TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 terraform -chdir=infra/terraform/billing-bootstrap validate 
+CMD: timeout=900s env -u AWS_PROFILE -u AWS_DEFAULT_PROFILE -u AWS_ACCESS_KEY_ID -u AWS_SECRET_ACCESS_KEY -u AWS_SESSION_TOKEN AWS_EC2_METADATA_DISABLED=true AWS_CONFIG_FILE=<redacted> AWS_SHARED_CREDENTIALS_FILE=<redacted> TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 terraform -chdir=infra/terraform/billing-bootstrap test 
+[2026-11-08T04:05:12Z] [20261108T040439Z-64589] INFO terraform root: infra/terraform/billing-execution
+CMD: timeout=900s env -u AWS_PROFILE -u AWS_DEFAULT_PROFILE -u AWS_ACCESS_KEY_ID -u AWS_SECRET_ACCESS_KEY -u AWS_SESSION_TOKEN AWS_EC2_METADATA_DISABLED=true AWS_CONFIG_FILE=<redacted> AWS_SHARED_CREDENTIALS_FILE=<redacted> TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 terraform -chdir=infra/terraform/billing-execution init -backend=false -input=false -lockfile=readonly 
+CMD: timeout=900s env -u AWS_PROFILE -u AWS_DEFAULT_PROFILE -u AWS_ACCESS_KEY_ID -u AWS_SECRET_ACCESS_KEY -u AWS_SESSION_TOKEN AWS_EC2_METADATA_DISABLED=true AWS_CONFIG_FILE=<redacted> AWS_SHARED_CREDENTIALS_FILE=<redacted> TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 terraform -chdir=infra/terraform/billing-execution validate 
+CMD: timeout=900s env -u AWS_PROFILE -u AWS_DEFAULT_PROFILE -u AWS_ACCESS_KEY_ID -u AWS_SECRET_ACCESS_KEY -u AWS_SESSION_TOKEN AWS_EC2_METADATA_DISABLED=true AWS_CONFIG_FILE=<redacted> AWS_SHARED_CREDENTIALS_FILE=<redacted> TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 terraform -chdir=infra/terraform/billing-execution test 
+[2026-11-08T04:05:33Z] [20261108T040439Z-64589] INFO terraform root: infra/terraform/deployer
+CMD: timeout=900s env -u AWS_PROFILE -u AWS_DEFAULT_PROFILE -u AWS_ACCESS_KEY_ID -u AWS_SECRET_ACCESS_KEY -u AWS_SESSION_TOKEN AWS_EC2_METADATA_DISABLED=true AWS_CONFIG_FILE=<redacted> AWS_SHARED_CREDENTIALS_FILE=<redacted> TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 terraform -chdir=infra/terraform/deployer init -backend=false -input=false -lockfile=readonly 
+CMD: timeout=900s env -u AWS_PROFILE -u AWS_DEFAULT_PROFILE -u AWS_ACCESS_KEY_ID -u AWS_SECRET_ACCESS_KEY -u AWS_SESSION_TOKEN AWS_EC2_METADATA_DISABLED=true AWS_CONFIG_FILE=<redacted> AWS_SHARED_CREDENTIALS_FILE=<redacted> TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 terraform -chdir=infra/terraform/deployer validate 
+CMD: timeout=900s env -u AWS_PROFILE -u AWS_DEFAULT_PROFILE -u AWS_ACCESS_KEY_ID -u AWS_SECRET_ACCESS_KEY -u AWS_SESSION_TOKEN AWS_EC2_METADATA_DISABLED=true AWS_CONFIG_FILE=<redacted> AWS_SHARED_CREDENTIALS_FILE=<redacted> TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 terraform -chdir=infra/terraform/deployer test 
+[2026-11-08T04:06:03Z] [20261108T040439Z-64589] INFO terraform root: infra/terraform/spikes/emr-spark-isolated
+CMD: timeout=900s env -u AWS_PROFILE -u AWS_DEFAULT_PROFILE -u AWS_ACCESS_KEY_ID -u AWS_SECRET_ACCESS_KEY -u AWS_SESSION_TOKEN AWS_EC2_METADATA_DISABLED=true AWS_CONFIG_FILE=<redacted> AWS_SHARED_CREDENTIALS_FILE=<redacted> TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 terraform -chdir=infra/terraform/spikes/emr-spark-isolated init -backend=false -input=false -lockfile=readonly 
+CMD: timeout=900s env -u AWS_PROFILE -u AWS_DEFAULT_PROFILE -u AWS_ACCESS_KEY_ID -u AWS_SECRET_ACCESS_KEY -u AWS_SESSION_TOKEN AWS_EC2_METADATA_DISABLED=true AWS_CONFIG_FILE=<redacted> AWS_SHARED_CREDENTIALS_FILE=<redacted> TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 terraform -chdir=infra/terraform/spikes/emr-spark-isolated validate 
+CMD: timeout=900s env -u AWS_PROFILE -u AWS_DEFAULT_PROFILE -u AWS_ACCESS_KEY_ID -u AWS_SECRET_ACCESS_KEY -u AWS_SESSION_TOKEN AWS_EC2_METADATA_DISABLED=true AWS_CONFIG_FILE=<redacted> AWS_SHARED_CREDENTIALS_FILE=<redacted> TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 terraform -chdir=infra/terraform/spikes/emr-spark-isolated test 
+[2026-11-08T04:06:29Z] [20261108T040439Z-64589] INFO terraform root: infra/terraform/spikes/emr-spark
+CMD: timeout=900s env -u AWS_PROFILE -u AWS_DEFAULT_PROFILE -u AWS_ACCESS_KEY_ID -u AWS_SECRET_ACCESS_KEY -u AWS_SESSION_TOKEN AWS_EC2_METADATA_DISABLED=true AWS_CONFIG_FILE=<redacted> AWS_SHARED_CREDENTIALS_FILE=<redacted> TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 terraform -chdir=infra/terraform/spikes/emr-spark init -backend=false -input=false -lockfile=readonly 
+CMD: timeout=900s env -u AWS_PROFILE -u AWS_DEFAULT_PROFILE -u AWS_ACCESS_KEY_ID -u AWS_SECRET_ACCESS_KEY -u AWS_SESSION_TOKEN AWS_EC2_METADATA_DISABLED=true AWS_CONFIG_FILE=<redacted> AWS_SHARED_CREDENTIALS_FILE=<redacted> TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 terraform -chdir=infra/terraform/spikes/emr-spark validate 
+CMD: timeout=900s env -u AWS_PROFILE -u AWS_DEFAULT_PROFILE -u AWS_ACCESS_KEY_ID -u AWS_SECRET_ACCESS_KEY -u AWS_SESSION_TOKEN AWS_EC2_METADATA_DISABLED=true AWS_CONFIG_FILE=<redacted> AWS_SHARED_CREDENTIALS_FILE=<redacted> TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 terraform -chdir=infra/terraform/spikes/emr-spark test 
+[2026-11-08T04:06:50Z] [20261108T040439Z-64589] INFO terraform root: infra/terraform
+CMD: timeout=900s env -u AWS_PROFILE -u AWS_DEFAULT_PROFILE -u AWS_ACCESS_KEY_ID -u AWS_SECRET_ACCESS_KEY -u AWS_SESSION_TOKEN AWS_EC2_METADATA_DISABLED=true AWS_CONFIG_FILE=<redacted> AWS_SHARED_CREDENTIALS_FILE=<redacted> TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 terraform -chdir=infra/terraform init -backend=false -input=false -lockfile=readonly 
+CMD: timeout=900s env -u AWS_PROFILE -u AWS_DEFAULT_PROFILE -u AWS_ACCESS_KEY_ID -u AWS_SECRET_ACCESS_KEY -u AWS_SESSION_TOKEN AWS_EC2_METADATA_DISABLED=true AWS_CONFIG_FILE=<redacted> AWS_SHARED_CREDENTIALS_FILE=<redacted> TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 terraform -chdir=infra/terraform validate 
+CMD: timeout=900s env -u AWS_PROFILE -u AWS_DEFAULT_PROFILE -u AWS_ACCESS_KEY_ID -u AWS_SECRET_ACCESS_KEY -u AWS_SESSION_TOKEN AWS_EC2_METADATA_DISABLED=true AWS_CONFIG_FILE=<redacted> AWS_SHARED_CREDENTIALS_FILE=<redacted> TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 terraform -chdir=infra/terraform test 
+[2026-11-08T04:07:25Z] [20261108T040439Z-64589] INFO terraform: [32mSuccess![0m[0m 7 passed, 0 failed.
+[2026-11-08T04:07:25Z] [20261108T040439Z-64589] INFO terraform: [32mSuccess![0m[0m 19 passed, 0 failed.
+[2026-11-08T04:07:25Z] [20261108T040439Z-64589] INFO terraform: [32mSuccess![0m[0m 62 passed, 0 failed.
+[2026-11-08T04:07:25Z] [20261108T040439Z-64589] INFO terraform: [32mSuccess![0m[0m 40 passed, 0 failed.
+[2026-11-08T04:07:25Z] [20261108T040439Z-64589] INFO terraform: [32mSuccess![0m[0m 6 passed, 0 failed.
+[2026-11-08T04:07:25Z] [20261108T040439Z-64589] INFO terraform: [32mSuccess![0m[0m 125 passed, 0 failed.
+[2026-11-08T04:07:25Z] [20261108T040439Z-64589] INFO note: terraform init downloaded providers over the network (no AWS API call)
+GATE: terraform PASS (157s)
+STEP: gate-script-tests
+CMD: timeout=3600s python3 -I -X pycache_prefix=<tmp> <snapshot>/scripts/lib/suite_run.py --start-dir scripts/tests --pattern test_\*.py --require-class test_terraform_state_binding.RealStateBindingTests,test_terraform_r1.RouteOwnershipTest --enforce-required 
+[2026-11-08T04:32:57Z] [20261108T040439Z-64589] INFO suite scripts/tests: Ran 856 tests in 1532.153s (856 executed, 0 skipped tests, 0 skipped classes) OK
+[2026-11-08T04:32:57Z] [20261108T040439Z-64589] INFO SUITE-REQUIRED test_terraform_state_binding.RealStateBindingTests executed=7 skipped=0 status=ok
+[2026-11-08T04:32:57Z] [20261108T040439Z-64589] INFO SUITE-REQUIRED test_terraform_r1.RouteOwnershipTest executed=6 skipped=0 status=ok
+CMD: timeout=3600s python3 -I -X pycache_prefix=<tmp> <snapshot>/scripts/lib/suite_run.py --start-dir scripts/phase12d-spike/tests --pattern test_\*.py 
+[2026-11-08T04:33:53Z] [20261108T040439Z-64589] INFO suite scripts/phase12d-spike/tests: Ran 78 tests in 55.836s (78 executed, 0 skipped tests, 0 skipped classes) OK
+CMD: timeout=3600s python3 -I -X pycache_prefix=<tmp> <snapshot>/scripts/billing/tests/test_budget_execution.py 
+[2026-11-08T04:34:11Z] [20261108T040439Z-64589] INFO suite file scripts/billing/tests/test_budget_execution.py: 69 executed OK
+CMD: timeout=3600s python3 -I -X pycache_prefix=<tmp> <snapshot>/scripts/billing/tests/test_budget_verification.py 
+[2026-11-08T04:34:29Z] [20261108T040439Z-64589] INFO suite file scripts/billing/tests/test_budget_verification.py: 47 executed OK
+CMD: timeout=3600s python3 -I -X pycache_prefix=<tmp> <snapshot>/scripts/billing/tests/test_publication_evidence.py 
+[2026-11-08T04:34:30Z] [20261108T040439Z-64589] INFO suite file scripts/billing/tests/test_publication_evidence.py: 39 executed OK
+CMD: timeout=3600s python3 -I -X pycache_prefix=<tmp> <snapshot>/scripts/lib/suite_run.py --start-dir tests/scripts --pattern test_\*.py 
+[2026-11-08T04:49:11Z] [20261108T040439Z-64589] INFO suite tests/scripts: Ran 276 tests in 881.638s (276 executed, 0 skipped tests, 0 skipped classes) OK
+CMD: timeout=3600s python3 -I -X pycache_prefix=<tmp> <snapshot>/scripts/lib/suite_run.py --start-dir tests/infra --pattern test_\*.py 
+[2026-11-08T04:58:48Z] [20261108T040439Z-64589] INFO suite tests/infra: Ran 259 tests in 575.459s (259 executed, 0 skipped tests, 0 skipped classes) OK
+GATE: script-tests PASS (3083s)
+STEP: gate-sbt
+[2026-11-08T04:58:48Z] [20261108T040439Z-64589] INFO JDK 17 ready: openjdk version "17.0.20.1" 2026-08-18 JAVA_HOME=/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home
+CMD: timeout=3600s sbt -batch check 
+[2026-11-08T05:12:05Z] [20261108T040439Z-64589] INFO sbt: [info] Tests: succeeded 90, failed 0, canceled 0, ignored 0, pending 0
+[2026-11-08T05:12:05Z] [20261108T040439Z-64589] INFO sbt: [info] Tests: succeeded 667, failed 0, canceled 0, ignored 0, pending 0
+[2026-11-08T05:12:05Z] [20261108T040439Z-64589] INFO sbt: [info] Tests: succeeded 18, failed 0, canceled 1, ignored 0, pending 0
+[2026-11-08T05:12:05Z] [20261108T040439Z-64589] INFO sbt: [success] Total time: 791 s (13:11), completed Nov 7, 2026, 11:12:04 PM
+GATE: sbt PASS (797s)
+STEP: summary
+GATE SUMMARY
+  gate           state time
+  constitution   PASS  0s
+  hooks          PASS  1s
+  shell          PASS  7s
+  python         PASS  1s
+  terraform      PASS  157s
+  script-tests   PASS  3083s
+  sbt            PASS  797s
+RESULT: PASS gates=7
+check.sh exit 0

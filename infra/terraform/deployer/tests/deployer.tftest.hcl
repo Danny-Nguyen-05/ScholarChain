@@ -3,10 +3,13 @@ mock_provider "aws" {
   override_during = plan
 }
 
+# The default permission set is now phase14-main (decision 14-6). The spike-emr tests below keep planning the spike
+# definition, which stays in code, so they select it explicitly; the phase14-main runs select their own set per run.
 variables {
-  account_id             = "111122223333"
-  operator_principal_arn = "arn:aws:iam::111122223333:user/example-operator"
-  owner                  = "example-owner"
+  account_id              = "111122223333"
+  operator_principal_arn  = "arn:aws:iam::111122223333:user/example-operator"
+  owner                   = "example-owner"
+  enabled_permission_sets = ["spike-emr"]
 }
 
 run "trust_requires_mfa_and_exact_principal" {
@@ -179,8 +182,8 @@ run "boundary_policy_name_and_output" {
     error_message = "The boundary name and ARN output must match what the IAM statements require."
   }
   assert {
-    condition     = toset(output.available_permission_sets) == toset(["spike-emr"]) && output.role_name == "scholarchain-deployer"
-    error_message = "Only spike-emr is implemented."
+    condition     = toset(output.available_permission_sets) == toset(["spike-emr", "phase14-main"]) && output.role_name == "scholarchain-deployer"
+    error_message = "The registry holds exactly spike-emr (kept in code, not enabled by default) and phase14-main."
   }
 }
 
@@ -260,10 +263,10 @@ run "resource_star_only_for_actions_without_a_resource_type_or_ec2_describe" {
           "tag:GetResources", "elasticmapreduce:ListClusters", "elasticmapreduce:ListSecurityConfigurations",
           "elasticmapreduce:DescribeSecurityConfiguration", "elasticmapreduce:CreateSecurityConfiguration",
           "elasticmapreduce:DeleteSecurityConfiguration", "elasticmapreduce:RunJobFlow", "kms:CreateKey", "kms:ListAliases",
-        ], st.Action[0])) || alltrue([for a in st.Action : startswith(a, "ec2:Describe")])
+        ], st.Action[0])) || alltrue([for a in st.Action : startswith(a, "ec2:Describe") || contains(["ec2:GetSecurityGroupsForVpc", "ec2:ValidateSecurityGroupQuotasForInterface"], a)])
       ])
     ])
-    error_message = "Resource * is allowed only for the nine single-action statements without a resource type, and for ec2:Describe*."
+    error_message = "Resource * is allowed only for the nine single-action statements without a resource type, for ec2:Describe*, and for the two ELB companion EC2 reads."
   }
   assert {
     condition = alltrue([
@@ -903,4 +906,740 @@ run "item_16_only_two_role_names_are_accepted" {
     spike_role_names = ["scholarchain-spike-emr-service", "scholarchain-spike-emr-instance", "scholarchain-spike-emr-extra"]
   }
   expect_failures = [var.spike_role_names]
+}
+
+# ======================================================================================================================
+# Phase 14 (decision 14-6): the phase14-main permission set. Every expectation below is hand-derived from the resource types
+# of the main root and from the AWS documentation named in deployer/README.md, not read back from the policy text.
+# Mock-only; each run selects the set explicitly (the file-level default above still plans the spike for the old tests).
+# ======================================================================================================================
+
+run "p14_default_permission_set_is_phase14_main_and_not_the_spike" {
+  command = plan
+  variables {
+    enabled_permission_sets = ["phase14-main"]
+  }
+
+  assert {
+    condition     = toset(keys(aws_iam_policy.permission_set)) == toset(["phase14-main--network", "phase14-main--network-mod", "phase14-main--data", "phase14-main--keys-obs", "phase14-main--compute", "phase14-main--emr-efs", "phase14-main--iam"])
+    error_message = "phase14-main is exactly seven named documents."
+  }
+  assert {
+    condition     = length(aws_iam_policy.spike_boundary) == 0 && alltrue([for k, p in aws_iam_policy.permission_set : !startswith(k, "spike-emr--")])
+    error_message = "spike-emr (and its boundary) must not be attached when phase14-main is enabled."
+  }
+  assert {
+    condition     = output.spike_permissions_boundary_arn == null
+    error_message = "No spike boundary output while the spike is not enabled."
+  }
+}
+
+run "p14_spike_and_phase14_main_together_are_rejected" {
+  command = plan
+  variables {
+    enabled_permission_sets = ["spike-emr", "phase14-main"]
+  }
+  expect_failures = [aws_iam_role.deployer]
+}
+
+run "p14_every_document_is_under_6144_characters_and_attachments_fit_the_quota" {
+  command = plan
+  variables {
+    enabled_permission_sets = ["phase14-main"]
+  }
+
+  assert {
+    condition     = alltrue([for k, p in aws_iam_policy.permission_set : length(p.policy) < 6144])
+    error_message = "Every phase14-main document must stay below 6144 characters (the size AWS counts)."
+  }
+  assert {
+    condition     = length(aws_iam_policy.main_boundary_runtime[0].policy) < 6144 && length(aws_iam_policy.main_boundary_emr[0].policy) < 6144
+    error_message = "Both boundaries must stay below 6144 characters."
+  }
+  assert {
+    condition     = length(aws_iam_role_policy_attachment.permission_set) == 7 && length(aws_iam_role_policy_attachment.permission_set) <= 10
+    error_message = "Seven managed attachments (quota 10); the login policy is inline and does not count."
+  }
+  assert {
+    condition     = aws_iam_role_policy.login.name == "scholarchain-deployer-same-device-login"
+    error_message = "The always-attached login policy is the only inline policy (it does not count toward the managed-policy quota)."
+  }
+}
+
+run "p14_documents_still_fit_with_the_longest_allowed_environment_name" {
+  command = plan
+  variables {
+    enabled_permission_sets = ["phase14-main"]
+    main_environment        = "abcdefghij"
+  }
+
+  assert {
+    condition     = alltrue([for k, p in aws_iam_policy.permission_set : length(p.policy) < 6144])
+    error_message = "A 10-character environment name (the main root's maximum) must not push a document over the limit."
+  }
+  assert {
+    condition     = !strcontains(aws_iam_policy.main_boundary_emr[0].policy, "course") && !strcontains(aws_iam_policy.main_boundary_runtime[0].policy, "course") && strcontains(aws_iam_policy.main_boundary_emr[0].policy, "\"aws:ResourceTag/environment\":\"abcdefghij\"") && strcontains(aws_iam_policy.main_boundary_runtime[0].policy, "scholarchain-abcdefghij-data")
+    error_message = "Both boundaries must follow main_environment everywhere (no hard-coded environment value)."
+  }
+}
+
+run "p14_elb_create_companion_ec2_reads_are_region_scoped_in_the_network_document" {
+  command = plan
+  variables {
+    enabled_permission_sets = ["phase14-main"]
+  }
+
+  assert {
+    condition = alltrue([
+      for a in ["ec2:GetSecurityGroupsForVpc", "ec2:ValidateSecurityGroupQuotasForInterface"] :
+      length([
+        for st in jsondecode(aws_iam_policy.permission_set["phase14-main--network"].policy).Statement :
+        st if st.Sid == "Ec2ElbCompanionReadsNoResourceScoping" && st.Effect == "Allow" && contains(st.Action, a) && st.Resource == ["*"] && st.Condition.StringEquals["aws:RequestedRegion"] == "us-east-2"
+      ]) == 1
+    ])
+    error_message = "ec2:GetSecurityGroupsForVpc and ec2:ValidateSecurityGroupQuotasForInterface (elbv2 CreateLoadBalancer companions) must be allowed in the network document, region-conditioned, in their own statement."
+  }
+  assert {
+    condition = length([
+      for k, p in aws_iam_policy.permission_set : k
+      if anytrue([for st in jsondecode(p.policy).Statement : contains(st.Action, "ec2:GetSecurityGroupsForVpc") || contains(st.Action, "ec2:ValidateSecurityGroupQuotasForInterface")])
+    ]) == 1
+    error_message = "The two companion reads must live in exactly one document."
+  }
+}
+
+run "p14_trust_requires_mfa_and_the_session_is_one_hour" {
+  command = plan
+  variables {
+    enabled_permission_sets = ["phase14-main"]
+  }
+
+  assert {
+    condition     = jsondecode(aws_iam_role.deployer.assume_role_policy).Statement[0].Condition.Bool["aws:MultiFactorAuthPresent"] == "true" && length(jsondecode(aws_iam_role.deployer.assume_role_policy).Statement) == 1
+    error_message = "Trust must have exactly one statement that requires MFA."
+  }
+  assert {
+    condition     = aws_iam_role.deployer.max_session_duration == 3600
+    error_message = "MaxSessionDuration must be 3600 seconds."
+  }
+  assert {
+    condition     = jsondecode(aws_iam_role.deployer.assume_role_policy).Statement[0].Principal.AWS == "arn:aws:iam::111122223333:user/example-operator"
+    error_message = "Trust must name exactly the operator."
+  }
+}
+
+run "p14_no_wildcard_action_and_resource_star_only_for_reads_or_the_honest_list" {
+  command = plan
+  variables {
+    enabled_permission_sets = ["phase14-main"]
+  }
+
+  assert {
+    condition = alltrue([
+      for k, p in aws_iam_policy.permission_set :
+      alltrue([for st in jsondecode(p.policy).Statement : alltrue([for a in st.Action : a != "*" && a != "*:*" && !endswith(a, ":*") && !endswith(a, "*")])])
+    ])
+    error_message = "No Action '*', '*:*', '<svc>:*' or prefix wildcard in any phase14-main document."
+  }
+  assert {
+    condition = alltrue([
+      for k, p in aws_iam_policy.permission_set :
+      alltrue([
+        for st in jsondecode(p.policy).Statement :
+        st.Effect == "Deny" || !contains(st.Resource, "*") || alltrue([
+          for a in st.Action :
+          can(regex("^(Describe|List|Get)", split(":", a)[1])) || contains(
+            ["ec2:ValidateSecurityGroupQuotasForInterface", "kms:CreateKey", "ecs:RegisterTaskDefinition", "ecs:DeregisterTaskDefinition", "ecs:DeleteTaskDefinitions", "elasticmapreduce:RunJobFlow", "elasticmapreduce:CreateSecurityConfiguration", "elasticmapreduce:DeleteSecurityConfiguration", "route53:CreateHostedZone", "route53:DeleteHostedZone", "route53:ChangeResourceRecordSets", "route53:ChangeTagsForResource", "acm:RequestCertificate"],
+            a
+          )
+        ])
+      ])
+    ])
+    error_message = "Resource '*' is allowed only for Describe/List/Get reads or the documented honest-list write actions."
+  }
+  assert {
+    condition = alltrue([
+      for st in jsondecode(aws_iam_policy.main_boundary_runtime[0].policy).Statement : alltrue([for a in st.Action : !endswith(a, "*")])
+    ]) && alltrue([for st in jsondecode(aws_iam_policy.main_boundary_emr[0].policy).Statement : alltrue([for a in st.Action : !endswith(a, "*")])])
+    error_message = "Both boundaries enumerate their actions."
+  }
+}
+
+run "p14_every_regional_allow_statement_is_pinned_to_us_east_2" {
+  command = plan
+  variables {
+    enabled_permission_sets = ["phase14-main"]
+  }
+
+  assert {
+    condition = alltrue([
+      for k, p in aws_iam_policy.permission_set :
+      alltrue([
+        for st in jsondecode(p.policy).Statement :
+        st.Effect == "Deny" || startswith(st.Action[0], "iam:") || startswith(st.Action[0], "route53:") || try(st.Condition.StringEquals["aws:RequestedRegion"], "") == "us-east-2"
+      ])
+    ])
+    error_message = "Every Allow statement outside the global services (iam, route53) must carry aws:RequestedRegion = us-east-2."
+  }
+  assert {
+    condition = alltrue([
+      for k, p in aws_iam_policy.permission_set :
+      alltrue([for st in jsondecode(p.policy).Statement : !(startswith(st.Action[0], "iam:") || startswith(st.Action[0], "route53:")) || !contains(keys(try(st.Condition.StringEquals, {})), "aws:RequestedRegion")])
+    ])
+    error_message = "Global services must not carry a RequestedRegion condition: IAM and Route 53 are served from one endpoint, so the condition would block them."
+  }
+}
+
+run "p14_iam_statements_only_touch_scholarchain_course_roles_profiles_and_boundaries" {
+  command = plan
+  variables {
+    enabled_permission_sets = ["phase14-main"]
+  }
+
+  assert {
+    condition = alltrue([
+      for st in jsondecode(aws_iam_policy.permission_set["phase14-main--iam"].policy).Statement :
+      alltrue([
+        for r in st.Resource :
+        startswith(r, "arn:aws:iam::111122223333:role/scholarchain-course-") || startswith(r, "arn:aws:iam::111122223333:instance-profile/scholarchain-course-") || startswith(r, "arn:aws:iam::111122223333:policy/scholarchain-course-") || startswith(r, "arn:aws:iam::111122223333:role/aws-service-role/") || r == "*"
+      ])
+    ])
+    error_message = "Every IAM resource must be a scholarchain-course-* role, instance profile or boundary policy, or a named service-linked role (the one '*' is the secret-value Deny)."
+  }
+  assert {
+    condition = alltrue([
+      for st in jsondecode(aws_iam_policy.permission_set["phase14-main--iam"].policy).Statement :
+      !startswith(st.Action[0], "iam:") || alltrue([for r in st.Resource : !strcontains(r, "scholarchain-deployer") && !strcontains(r, "scholarchain-billing") && !endswith(r, ":role/*") && !endswith(r, ":role/scholarchain-*")])
+    ])
+    error_message = "The prefix must not reach scholarchain-deployer or scholarchain-billing-deployer."
+  }
+  assert {
+    condition = alltrue([
+      for k, p in aws_iam_policy.permission_set :
+      k == "phase14-main--iam" || alltrue([for st in jsondecode(p.policy).Statement : !anytrue([for a in st.Action : startswith(a, "iam:")])])
+    ])
+    error_message = "IAM actions live only in the iam document."
+  }
+  assert {
+    condition = alltrue([
+      for st in jsondecode(aws_iam_policy.permission_set["phase14-main--iam"].policy).Statement :
+      st.Effect == "Deny" || !anytrue([for a in st.Action : contains(["iam:CreatePolicy", "iam:CreatePolicyVersion", "iam:AttachRolePolicy", "iam:DetachRolePolicy", "iam:CreateUser", "iam:CreateAccessKey", "iam:PutRolePermissionsBoundary", "iam:DeleteRolePermissionsBoundary", "iam:UpdateAssumeRolePolicy"], a)])
+    ])
+    error_message = "The main root creates no customer-managed policy, user or managed-policy attachment: none of those actions may be allowed."
+  }
+}
+
+run "p14_create_role_requires_the_project_boundary_and_the_project_tags" {
+  command = plan
+  variables {
+    enabled_permission_sets = ["phase14-main"]
+  }
+
+  assert {
+    condition = length([
+      for st in jsondecode(aws_iam_policy.permission_set["phase14-main--iam"].policy).Statement : st
+      if st.Effect == "Allow" && contains(st.Action, "iam:CreateRole")
+    ]) == 2
+    error_message = "Exactly two CreateRole statements: the runtime roles and the EMR service role."
+  }
+  assert {
+    condition = alltrue([
+      for st in jsondecode(aws_iam_policy.permission_set["phase14-main--iam"].policy).Statement :
+      !(st.Effect == "Allow" && contains(st.Action, "iam:CreateRole")) || (contains(
+        ["arn:aws:iam::111122223333:policy/scholarchain-course-permissions-boundary", "arn:aws:iam::111122223333:policy/scholarchain-course-emr-service-boundary"],
+        st.Condition.StringEquals["iam:PermissionsBoundary"]
+      ) && st.Condition.StringEquals["aws:RequestTag/project"] == "scholarchain" && st.Condition.StringEquals["aws:RequestTag/environment"] == "course")
+    ])
+    error_message = "CreateRole must require exactly the runtime or the EMR boundary ARN and the project and environment request tags."
+  }
+  assert {
+    condition = anytrue([
+      for st in jsondecode(aws_iam_policy.permission_set["phase14-main--iam"].policy).Statement :
+      contains(st.Action, "iam:CreateRole") && st.Resource == ["arn:aws:iam::111122223333:role/scholarchain-course-emr-service"] && st.Condition.StringEquals["iam:PermissionsBoundary"] == "arn:aws:iam::111122223333:policy/scholarchain-course-emr-service-boundary"
+    ])
+    error_message = "The EMR service role must be created only with the EMR service boundary."
+  }
+  assert {
+    condition = alltrue([
+      for st in jsondecode(aws_iam_policy.permission_set["phase14-main--iam"].policy).Statement :
+      !(st.Effect == "Allow" && (contains(st.Action, "iam:PutRolePolicy") || contains(st.Action, "iam:DeleteRolePolicy"))) || toset(st.Condition.StringEquals["iam:PermissionsBoundary"]) == toset(["arn:aws:iam::111122223333:policy/scholarchain-course-permissions-boundary", "arn:aws:iam::111122223333:policy/scholarchain-course-emr-service-boundary"])
+    ])
+    error_message = "Putting or deleting a role policy needs the role to carry one of the two boundaries."
+  }
+}
+
+run "p14_boundary_tamper_denies_exist_and_no_allow_undoes_them" {
+  command = plan
+  variables {
+    enabled_permission_sets = ["phase14-main"]
+  }
+
+  assert {
+    condition = anytrue([
+      for st in jsondecode(aws_iam_policy.permission_set["phase14-main--iam"].policy).Statement :
+      st.Effect == "Deny" && toset(st.Action) == toset(["iam:CreatePolicyVersion", "iam:SetDefaultPolicyVersion", "iam:DeletePolicy", "iam:DeletePolicyVersion"]) && toset(st.Resource) == toset(["arn:aws:iam::111122223333:policy/scholarchain-course-permissions-boundary", "arn:aws:iam::111122223333:policy/scholarchain-course-emr-service-boundary"])
+    ])
+    error_message = "Both boundary policies must be protected from new versions, default switches and deletion."
+  }
+  assert {
+    condition = anytrue([
+      for st in jsondecode(aws_iam_policy.permission_set["phase14-main--iam"].policy).Statement :
+      st.Effect == "Deny" && contains(st.Action, "iam:PutRolePermissionsBoundary") && contains(st.Action, "iam:DeleteRolePermissionsBoundary") && st.Resource == ["arn:aws:iam::111122223333:role/scholarchain-course-*"]
+    ])
+    error_message = "Replacing or removing a role's boundary must be denied on every main role."
+  }
+  assert {
+    condition = anytrue([
+      for st in jsondecode(aws_iam_policy.permission_set["phase14-main--iam"].policy).Statement :
+      st.Effect == "Deny" && st.Action == ["sts:AssumeRole"] && st.Resource == ["arn:aws:iam::111122223333:role/scholarchain-course-*"]
+    ])
+    error_message = "The deployer must never be able to assume a main role, whatever its trust policy says."
+  }
+  assert {
+    condition = anytrue([
+      for st in jsondecode(aws_iam_policy.permission_set["phase14-main--iam"].policy).Statement :
+      st.Effect == "Deny" && st.Action == ["secretsmanager:GetSecretValue", "secretsmanager:BatchGetSecretValue"] && st.Resource == ["*"] && !can(st.Condition)
+    ])
+    error_message = "Reading secret values must be denied unconditionally."
+  }
+  assert {
+    condition = alltrue([
+      for k, p in aws_iam_policy.permission_set :
+      alltrue([for st in jsondecode(p.policy).Statement : st.Effect == "Deny" || !anytrue([for a in st.Action : contains(["secretsmanager:GetSecretValue", "secretsmanager:BatchGetSecretValue", "iam:CreatePolicyVersion", "iam:SetDefaultPolicyVersion", "iam:DeletePolicy", "iam:DeletePolicyVersion", "iam:PutRolePermissionsBoundary", "iam:DeleteRolePermissionsBoundary", "sts:AssumeRole"], a)])])
+    ])
+    error_message = "No Allow statement may grant the denied actions."
+  }
+}
+
+run "p14_pass_role_is_limited_by_passed_to_service" {
+  command = plan
+  variables {
+    enabled_permission_sets = ["phase14-main"]
+  }
+
+  assert {
+    condition = alltrue([
+      for st in jsondecode(aws_iam_policy.permission_set["phase14-main--iam"].policy).Statement :
+      !contains(st.Action, "iam:PassRole") || (length(st.Condition.StringEquals["iam:PassedToService"]) == 1 && !contains(st.Resource, "*") && alltrue([for r in st.Resource : startswith(r, "arn:aws:iam::111122223333:role/scholarchain-course-")]))
+    ])
+    error_message = "Every PassRole statement must name exactly one service via iam:PassedToService and only scholarchain-course-* roles."
+  }
+  assert {
+    condition = toset(flatten([
+      for st in jsondecode(aws_iam_policy.permission_set["phase14-main--iam"].policy).Statement :
+      contains(st.Action, "iam:PassRole") ? st.Condition.StringEquals["iam:PassedToService"] : []
+    ])) == toset(["ecs-tasks.amazonaws.com", "elasticmapreduce.amazonaws.com", "ec2.amazonaws.com", "rds.amazonaws.com", "states.amazonaws.com"])
+    error_message = "PassRole may reach exactly ecs-tasks, elasticmapreduce, ec2, rds (Neptune) and states."
+  }
+}
+
+run "p14_tag_conditions_carry_the_exact_project_and_environment_values" {
+  command = plan
+  variables {
+    enabled_permission_sets = ["phase14-main"]
+  }
+
+  assert {
+    condition = alltrue(flatten([
+      for k, p in aws_iam_policy.permission_set : [
+        for st in jsondecode(p.policy).Statement : [
+          for ck, cv in try(st.Condition.StringEquals, {}) :
+          ck == "aws:RequestTag/project" || ck == "aws:ResourceTag/project" ? cv == "scholarchain" : (ck == "aws:RequestTag/environment" || ck == "aws:ResourceTag/environment" ? cv == "course" : true)
+        ]
+      ]
+    ]))
+    error_message = "Tag conditions must carry the exact values scholarchain and course, not merely the keys."
+  }
+  assert {
+    condition = length(flatten([
+      for k, p in aws_iam_policy.permission_set : [
+        for st in jsondecode(p.policy).Statement : [for ck, cv in try(st.Condition.StringEquals, {}) : ck if startswith(ck, "aws:RequestTag/") || startswith(ck, "aws:ResourceTag/")]
+      ]
+    ])) >= 40
+    error_message = "Tag-condition coverage is too low to be meaningful (hand-counted: at least 40 across the set)."
+  }
+}
+
+run "p14_actions_without_a_resource_type_keep_their_request_tags" {
+  command = plan
+  variables {
+    enabled_permission_sets = ["phase14-main"]
+  }
+
+  assert {
+    condition = anytrue([
+      for st in jsondecode(aws_iam_policy.permission_set["phase14-main--keys-obs"].policy).Statement :
+      st.Effect == "Allow" && st.Action == ["kms:CreateKey"] && st.Resource == ["*"] && st.Condition.StringEquals["aws:RequestTag/project"] == "scholarchain" && st.Condition.StringEquals["aws:RequestedRegion"] == "us-east-2"
+    ])
+    error_message = "kms:CreateKey (no resource type) is allowed only under the request tags and the region."
+  }
+  assert {
+    condition = anytrue([
+      for st in jsondecode(aws_iam_policy.permission_set["phase14-main--emr-efs"].policy).Statement :
+      st.Effect == "Allow" && st.Action == ["elasticmapreduce:RunJobFlow"] && st.Condition.StringEquals["aws:RequestTag/project"] == "scholarchain" && st.Condition.StringEquals["aws:RequestTag/scholarchain:stack"] == "main-emr" && st.Condition.StringEquals["aws:RequestTag/for-use-with-amazon-emr-managed-policies"] == "true"
+    ])
+    error_message = "RunJobFlow requires the project tags, the main-emr stack tag and the EMR managed-policies tag."
+  }
+  assert {
+    condition = anytrue([
+      for st in jsondecode(aws_iam_policy.permission_set["phase14-main--compute"].policy).Statement :
+      st.Effect == "Allow" && st.Action == ["ecs:RegisterTaskDefinition"] && st.Condition.StringEquals["aws:RequestTag/project"] == "scholarchain"
+    ])
+    error_message = "Registering a task definition requires the request tags."
+  }
+}
+
+# Repair round 1 (F2). The deployer's IAM set grants NOTHING on a customer-managed key by resource tag, and nothing on a security group
+# that can be tagged into scope without ec2:CreateAction. A foreign key or group that carries the project tags therefore gains no rights.
+run "p14_negative_a_foreign_key_with_the_project_tags_gains_no_administration_use_or_grant_rights_from_iam" {
+  command = plan
+  variables {
+    enabled_permission_sets = ["phase14-main"]
+  }
+
+  assert {
+    condition = alltrue([
+      for k, p in aws_iam_policy.permission_set :
+      alltrue([
+        for st in jsondecode(p.policy).Statement :
+        !anytrue([for a in st.Action : startswith(a, "kms:")]) || (st.Effect == "Deny" || alltrue([for a in st.Action : contains(["kms:CreateKey", "kms:TagResource", "kms:CreateAlias", "kms:UpdateAlias", "kms:DeleteAlias", "kms:ListAliases"], a)]))
+      ])
+    ])
+    error_message = "IAM may hold only kms:CreateKey, kms:TagResource (tag-at-create), alias actions on alias ARNs and kms:ListAliases; every other key action lives in the key policy."
+  }
+  assert {
+    condition = !anytrue([
+      for k, p in aws_iam_policy.permission_set :
+      anytrue([
+        for st in jsondecode(p.policy).Statement :
+        st.Effect == "Allow" && anytrue([for a in st.Action : contains(["kms:PutKeyPolicy", "kms:ScheduleKeyDeletion", "kms:CancelKeyDeletion", "kms:DisableKeyRotation", "kms:EnableKeyRotation", "kms:UntagResource", "kms:CreateGrant", "kms:ListGrants", "kms:RevokeGrant", "kms:RetireGrant", "kms:Decrypt", "kms:Encrypt", "kms:GenerateDataKey", "kms:GenerateDataKeyWithoutPlaintext", "kms:ReEncryptFrom", "kms:ReEncryptTo", "kms:DescribeKey", "kms:GetKeyPolicy", "kms:GetKeyRotationStatus", "kms:ListResourceTags", "kms:UpdateKeyDescription", "kms:EnableKey", "kms:DisableKey"], a)])
+      ])
+    ])
+    error_message = "No document may allow PutKeyPolicy, ScheduleKeyDeletion, DisableKeyRotation, UntagResource, CreateGrant, Decrypt or any other key administration or use action."
+  }
+  assert {
+    condition = alltrue([
+      for k, p in aws_iam_policy.permission_set :
+      alltrue([
+        for st in jsondecode(p.policy).Statement :
+        !anytrue([for a in st.Action : startswith(a, "kms:")]) || !anytrue([for ck in flatten([for op, kv in try(st.Condition, {}) : keys(kv)]) : startswith(ck, "aws:ResourceTag/")])
+      ])
+    ])
+    error_message = "No kms statement may be scoped by a resource tag: tagging a foreign key must not bring it into any IAM scope."
+  }
+  assert {
+    condition = alltrue([
+      for k, p in aws_iam_policy.permission_set :
+      alltrue([
+        for st in jsondecode(p.policy).Statement :
+        !(st.Effect == "Allow" && anytrue([for r in st.Resource : strcontains(r, ":key/")])) || (st.Action == ["kms:TagResource"] && contains(keys(st.Condition["ForAllValues:StringEquals"]), "aws:TagKeys") && st.Condition.StringEquals["aws:RequestTag/project"] == "scholarchain")
+      ])
+    ])
+    error_message = "The only statement that may name key/* is kms:TagResource, limited by request tags and aws:TagKeys (AWS requires it to cover all keys of the account and region: https://docs.aws.amazon.com/kms/latest/developerguide/add-tags.html)."
+  }
+}
+
+run "p14_negative_a_security_group_with_the_project_tags_gains_no_mutation_rights_from_iam" {
+  command = plan
+  variables {
+    enabled_permission_sets = ["phase14-main"]
+  }
+
+  # No statement may tag a security group into scope without ec2:CreateAction, so a foreign group cannot acquire the resource tags
+  # that the Authorize, Revoke, Delete and ModifySecurityGroupRules statements require.
+  assert {
+    condition = alltrue([
+      for k, p in aws_iam_policy.permission_set :
+      alltrue([
+        for st in jsondecode(p.policy).Statement :
+        !(st.Effect == "Allow" && contains(st.Action, "ec2:CreateTags") && anytrue([for r in st.Resource : strcontains(r, "security-group")])) || contains(keys(st.Condition.StringEquals), "ec2:CreateAction") || contains(keys(st.Condition.StringEquals), "aws:ResourceTag/project")
+      ])
+    ])
+    error_message = "ec2:CreateTags on security groups needs ec2:CreateAction (tag-on-create) or an existing project resource tag; request tags alone would let a foreign group be tagged into scope."
+  }
+  assert {
+    condition = alltrue([
+      for k, p in aws_iam_policy.permission_set :
+      alltrue([
+        for st in jsondecode(p.policy).Statement :
+        !(st.Effect == "Allow" && anytrue([for a in st.Action : contains(["ec2:AuthorizeSecurityGroupIngress", "ec2:AuthorizeSecurityGroupEgress", "ec2:RevokeSecurityGroupIngress", "ec2:RevokeSecurityGroupEgress", "ec2:DeleteSecurityGroup", "ec2:ModifySecurityGroupRules"], a)]) && anytrue([for r in st.Resource : strcontains(r, ":security-group/")])) || contains(keys(st.Condition.StringEquals), "aws:ResourceTag/project")
+      ])
+    ])
+    error_message = "Every Authorize, Revoke, Delete and ModifySecurityGroupRules statement that names a security group must require the project resource tag."
+  }
+  assert {
+    condition     = !anytrue([for k, p in aws_iam_policy.permission_set : strcontains(p.policy, "Ec2AdoptedDefaultSg")])
+    error_message = "The VPC default security group is not adopted: no adoption statements (the root test asserts the network module has no aws_default_security_group)."
+  }
+}
+
+run "p14_the_documents_cover_every_resource_type_the_main_root_creates" {
+  command = plan
+  variables {
+    enabled_permission_sets = ["phase14-main"]
+  }
+
+  # Hand-derived: create, update, delete and the refresh reads of each resource type enumerated in
+  # target/phase14/evidence/14a-infra/resource-types.txt. A removed action fails this run.
+  assert {
+    condition = alltrue([
+      for a in [
+        "ec2:CreateVpc", "ec2:DeleteVpc", "ec2:DescribeVpcs", "ec2:DescribeVpcAttribute", "ec2:ModifyVpcAttribute",
+        "ec2:CreateSubnet", "ec2:DeleteSubnet", "ec2:DescribeSubnets", "ec2:ModifySubnetAttribute",
+        "ec2:CreateInternetGateway", "ec2:AttachInternetGateway", "ec2:DetachInternetGateway", "ec2:DeleteInternetGateway", "ec2:DescribeInternetGateways",
+        "ec2:AllocateAddress", "ec2:ReleaseAddress", "ec2:DescribeAddresses",
+        "ec2:CreateNatGateway", "ec2:DeleteNatGateway", "ec2:DescribeNatGateways",
+        "ec2:CreateRouteTable", "ec2:DeleteRouteTable", "ec2:CreateRoute", "ec2:DeleteRoute", "ec2:AssociateRouteTable", "ec2:DisassociateRouteTable", "ec2:DescribeRouteTables",
+        "ec2:CreateVpcEndpoint", "ec2:DeleteVpcEndpoints", "ec2:DescribeVpcEndpoints", "ec2:ModifyVpcEndpoint",
+        "ec2:CreateSecurityGroup", "ec2:DeleteSecurityGroup", "ec2:AuthorizeSecurityGroupIngress", "ec2:AuthorizeSecurityGroupEgress", "ec2:RevokeSecurityGroupIngress", "ec2:RevokeSecurityGroupEgress", "ec2:ModifySecurityGroupRules", "ec2:DescribeSecurityGroups", "ec2:DescribeSecurityGroupRules",
+        "s3:CreateBucket", "s3:DeleteBucket", "s3:PutBucketPolicy", "s3:PutLifecycleConfiguration", "s3:PutBucketVersioning", "s3:PutEncryptionConfiguration", "s3:PutBucketPublicAccessBlock", "s3:PutBucketOwnershipControls", "s3:GetBucketTagging", "s3:PutObject",
+        "s3vectors:CreateVectorBucket", "s3vectors:CreateIndex", "s3vectors:PutVectorBucketPolicy", "s3vectors:DeleteIndex", "s3vectors:DeleteVectorBucket",
+        "dynamodb:CreateTable", "dynamodb:DeleteTable", "dynamodb:DescribeTable", "dynamodb:UpdateTable", "dynamodb:UpdateContinuousBackups", "dynamodb:DescribeContinuousBackups", "dynamodb:DescribeTimeToLive", "dynamodb:UpdateTimeToLive", "dynamodb:ListTagsOfResource",
+        "sqs:CreateQueue", "sqs:DeleteQueue", "sqs:SetQueueAttributes", "sqs:GetQueueAttributes", "sqs:ListQueueTags",
+        "states:CreateStateMachine", "states:DeleteStateMachine", "states:DescribeStateMachine",
+        "kms:CreateKey", "kms:TagResource", "kms:CreateAlias", "kms:ListAliases",
+        "logs:CreateLogGroup", "logs:DescribeLogGroups", "logs:PutRetentionPolicy", "logs:DeleteLogGroup", "logs:ListTagsForResource",
+        "cloudwatch:PutMetricAlarm", "cloudwatch:DescribeAlarms", "cloudwatch:DeleteAlarms", "cloudwatch:PutDashboard", "cloudwatch:GetDashboard", "cloudwatch:DeleteDashboards",
+        "ecs:CreateCluster", "ecs:DescribeClusters", "ecs:DeleteCluster", "ecs:RegisterTaskDefinition", "ecs:DescribeTaskDefinition", "ecs:CreateService", "ecs:UpdateService", "ecs:DescribeServices", "ecs:DeleteService",
+        "ecr:CreateRepository", "ecr:DescribeRepositories", "ecr:DeleteRepository", "ecr:ListTagsForResource", "ecr:PutImage", "ecr:GetAuthorizationToken",
+        "elasticloadbalancing:CreateLoadBalancer", "elasticloadbalancing:DescribeLoadBalancers", "elasticloadbalancing:CreateTargetGroup", "elasticloadbalancing:CreateListener", "elasticloadbalancing:DeleteListener", "elasticloadbalancing:DescribeListeners", "elasticloadbalancing:DescribeTargetGroups",
+        "application-autoscaling:RegisterScalableTarget", "application-autoscaling:PutScalingPolicy", "application-autoscaling:DescribeScalableTargets", "application-autoscaling:DescribeScalingPolicies",
+        "servicediscovery:CreatePrivateDnsNamespace", "servicediscovery:GetNamespace", "servicediscovery:CreateService", "servicediscovery:GetService", "servicediscovery:DeleteService", "servicediscovery:DeleteNamespace",
+        "route53:CreateHostedZone", "route53:GetHostedZone", "route53:ListHostedZonesByName",
+        "rds:CreateDBCluster", "rds:DescribeDBClusters", "rds:CreateDBInstance", "rds:CreateDBSubnetGroup", "rds:CreateDBClusterParameterGroup", "rds:CreateDBParameterGroup", "rds:DeleteDBCluster", "rds:DeleteDBInstance", "rds:AddRoleToDBCluster",
+        "elasticmapreduce:RunJobFlow", "elasticmapreduce:DescribeCluster", "elasticmapreduce:ListInstanceGroups", "elasticmapreduce:TerminateJobFlows", "elasticmapreduce:CreateSecurityConfiguration", "elasticmapreduce:PutManagedScalingPolicy", "elasticmapreduce:AddInstanceGroups",
+        "elasticfilesystem:CreateFileSystem", "elasticfilesystem:DescribeFileSystems", "elasticfilesystem:CreateMountTarget", "elasticfilesystem:CreateAccessPoint", "elasticfilesystem:PutFileSystemPolicy", "elasticfilesystem:PutBackupPolicy", "elasticfilesystem:DeleteFileSystem",
+        "iam:CreateRole", "iam:PutRolePolicy", "iam:GetRole", "iam:DeleteRole", "iam:CreateInstanceProfile", "iam:AddRoleToInstanceProfile", "iam:PassRole", "iam:CreateServiceLinkedRole",
+        "tag:GetResources",
+      ] :
+      contains(flatten([for k, p in aws_iam_policy.permission_set : [for st in jsondecode(p.policy).Statement : st.Effect == "Allow" ? st.Action : []]]), a)
+    ])
+    error_message = "A hand-derived action for a resource type of the main root is missing from every document."
+  }
+  assert {
+    condition = alltrue([
+      for a in ["secretsmanager:GetSecretValue", "s3:GetObject", "sts:AssumeRole", "budgets:ModifyBudget", "ce:GetCostAndUsage", "organizations:ListAccounts", "iam:CreateUser", "iam:CreateAccessKey", "ec2:RunInstances", "ec2:TerminateInstances", "neptune-db:ReadDataViaQuery", "bedrock:InvokeModel"] :
+      !contains(flatten([for k, p in aws_iam_policy.permission_set : [for st in jsondecode(p.policy).Statement : st.Effect == "Allow" && !strcontains(join(",", [for r in st.Resource : r]), "artifacts") ? st.Action : []]]), a)
+    ])
+    error_message = "Nothing outside the stack: no secret value, foreign object, budget, cost, organization, user, instance launch (EMR launches through its service role), data-plane or model action."
+  }
+}
+
+run "p14_nothing_for_budgets_billing_or_the_billing_deployer" {
+  command = plan
+  variables {
+    enabled_permission_sets = ["phase14-main"]
+  }
+
+  assert {
+    condition = !anytrue([
+      for k, p in aws_iam_policy.permission_set :
+      anytrue([for st in jsondecode(p.policy).Statement : anytrue([for a in st.Action : startswith(a, "budgets:") || startswith(a, "ce:") || startswith(a, "organizations:") || startswith(a, "billing:") || startswith(a, "account:")])])
+    ])
+    error_message = "No budget, cost, billing, organization or account action (the optional budget stays disabled in the main root)."
+  }
+}
+
+run "p14_main_environment_must_be_a_valid_main_root_value" {
+  command = plan
+  variables {
+    enabled_permission_sets = ["phase14-main"]
+    main_environment        = "Course"
+  }
+  expect_failures = [var.main_environment]
+}
+
+run "p14_main_tag_keys_must_be_literal_and_keep_project_and_environment" {
+  command = plan
+  variables {
+    enabled_permission_sets = ["phase14-main"]
+    main_tag_keys           = ["project", "environment", "*"]
+  }
+  expect_failures = [var.main_tag_keys]
+}
+
+run "p14_unscoped_tagging_statement_is_limited_to_the_declared_tag_keys" {
+  command = plan
+  variables {
+    enabled_permission_sets = ["phase14-main"]
+  }
+
+  # After repair round 1 the only statement that cannot key off an existing tag is kms:TagResource (tag-at-create).
+  assert {
+    condition = length([
+      for k, p in aws_iam_policy.permission_set : [
+        for st in jsondecode(p.policy).Statement : st
+        if st.Effect == "Allow" && !can(st.Condition.StringEquals["ec2:CreateAction"]) && !anytrue([for ck in flatten([for op, kv in try(st.Condition, {}) : keys(kv)]) : startswith(ck, "aws:ResourceTag/")]) && anytrue([for a in st.Action : endswith(a, ":TagResource") || endswith(a, ":CreateTags")]) && can(st.Condition["ForAllValues:StringEquals"])
+      ]
+      ]) > 0 && alltrue(flatten([
+        for k, p in aws_iam_policy.permission_set : [
+          for st in jsondecode(p.policy).Statement :
+          !can(st.Condition["ForAllValues:StringEquals"]) || (contains(["KmsTagWithProjectTags", "AcmTagOnCreateWithProjectTags"], st.Sid) && length(st.Condition["ForAllValues:StringEquals"]["aws:TagKeys"]) == 12 && contains(st.Condition["ForAllValues:StringEquals"]["aws:TagKeys"], "project") && !contains(st.Condition["ForAllValues:StringEquals"]["aws:TagKeys"], "*"))
+        ]
+    ]))
+    error_message = "The only statements with an aws:TagKeys restriction are KmsTagWithProjectTags and AcmTagOnCreateWithProjectTags (replan W5a), each limited to the twelve declared keys."
+  }
+}
+
+run "p14_boundary_policies_are_bounded_and_the_emr_boundary_mirrors_the_tag_conditions" {
+  command = plan
+  variables {
+    enabled_permission_sets = ["phase14-main"]
+  }
+
+  assert {
+    condition = alltrue([
+      for st in jsondecode(aws_iam_policy.main_boundary_emr[0].policy).Statement :
+      !contains(st.Action, "ec2:TerminateInstances") || (st.Condition.StringEquals["aws:ResourceTag/for-use-with-amazon-emr-managed-policies"] == "true" && st.Condition.StringEquals["aws:ResourceTag/project"] == "scholarchain")
+    ])
+    error_message = "The EMR boundary may terminate only EMR-tagged project instances."
+  }
+  assert {
+    condition = alltrue([
+      for st in jsondecode(aws_iam_policy.main_boundary_runtime[0].policy).Statement :
+      !contains(st.Resource, "*") || alltrue([for a in st.Action : contains(["ecr:GetAuthorizationToken", "ssmmessages:CreateControlChannel", "ssmmessages:CreateDataChannel", "ssmmessages:OpenControlChannel", "ssmmessages:OpenDataChannel"], a)])
+    ])
+    error_message = "The runtime boundary has Resource '*' only for ecr:GetAuthorizationToken and the four ssmmessages ECS Exec channel actions (replan W5a)."
+  }
+  assert {
+    condition = alltrue([
+      for st in concat(jsondecode(aws_iam_policy.main_boundary_runtime[0].policy).Statement, jsondecode(aws_iam_policy.main_boundary_emr[0].policy).Statement) :
+      !anytrue([for a in st.Action : startswith(a, "iam:") && a != "iam:PassRole"])
+    ])
+    error_message = "A boundary never allows IAM actions except the EMR service role's PassRole of the instance role."
+  }
+  assert {
+    condition = anytrue([
+      for st in jsondecode(aws_iam_policy.main_boundary_emr[0].policy).Statement :
+      st.Action == ["iam:PassRole"] && st.Resource == ["arn:aws:iam::111122223333:role/scholarchain-course-emr-ec2"] && st.Condition.StringEquals["iam:PassedToService"] == ["ec2.amazonaws.com"]
+    ])
+    error_message = "The EMR boundary lets the service role pass only the instance role, only to EC2."
+  }
+}
+
+run "p14_outputs_name_both_boundaries" {
+  command = plan
+  variables {
+    enabled_permission_sets = ["phase14-main"]
+  }
+
+  assert {
+    condition     = output.main_permissions_boundary_arns.runtime == "arn:aws:iam::111122223333:policy/scholarchain-course-permissions-boundary" && output.main_permissions_boundary_arns.emr_service == "arn:aws:iam::111122223333:policy/scholarchain-course-emr-service-boundary"
+    error_message = "The outputs must name the two boundary ARNs the main root's roles must carry."
+  }
+}
+
+run "p14_the_emr_service_boundary_covers_every_action_of_the_example_service_policy" {
+  command = plan
+  variables {
+    enabled_permission_sets = ["phase14-main"]
+  }
+
+  # environments/emr-service-policy.json.example is what the human reviews for emr_service_policy_json. Whatever the human
+  # finally supplies must stay inside the ceiling the EMR service role carries, or the role could not launch a cluster. The
+  # list below is the example's distinct action set (this root must not read files outside itself: tests/infra copies the
+  # root); infra/terraform/tests/phase14a.tftest.hcl asserts that the example still has exactly this set.
+  assert {
+    condition = alltrue([
+      for a in ["ec2:CreateNetworkInterface", "ec2:RunInstances", "ec2:CreateFleet", "ec2:DeleteNetworkInterface", "ec2:ModifyInstanceAttribute", "ec2:TerminateInstances", "ec2:CreateTags", "ec2:DeleteTags", "ec2:DescribeAccountAttributes", "ec2:DescribeCapacityReservations", "ec2:DescribeDhcpOptions", "ec2:DescribeImages", "ec2:DescribeInstances", "ec2:DescribeInstanceTypeOfferings", "ec2:DescribeLaunchTemplates", "ec2:DescribeNetworkAcls", "ec2:DescribeNetworkInterfaces", "ec2:DescribePlacementGroups", "ec2:DescribeRouteTables", "ec2:DescribeSecurityGroups", "ec2:DescribeSubnets", "ec2:DescribeVolumes", "ec2:DescribeVolumeStatus", "ec2:DescribeVpcAttribute", "ec2:DescribeVpcEndpoints", "ec2:DescribeVpcs", "ec2:CreateSecurityGroup", "ec2:AuthorizeSecurityGroupEgress", "ec2:AuthorizeSecurityGroupIngress", "ec2:RevokeSecurityGroupEgress", "ec2:RevokeSecurityGroupIngress", "iam:PassRole"] :
+      contains(flatten([for st in jsondecode(aws_iam_policy.main_boundary_emr[0].policy).Statement : st.Action]), a)
+    ])
+    error_message = "Every action of the example EMR service policy must be inside the EMR service-role boundary."
+  }
+}
+
+run "p14_the_emr_managed_policies_tag_may_be_applied_to_subnets_and_security_groups" {
+  command = plan
+  variables {
+    enabled_permission_sets = ["phase14-main"]
+  }
+
+  # D2: the main root now tags the application subnets and the EMR security groups with this key at creation (and may retag them).
+  assert {
+    condition     = contains(var.main_tag_keys, "for-use-with-amazon-emr-managed-policies")
+    error_message = "main_tag_keys must contain the EMR managed-policies key."
+  }
+  assert {
+    condition = alltrue([
+      for st in jsondecode(aws_iam_policy.permission_set["phase14-main--network"].policy).Statement :
+      !(st.Effect == "Allow" && contains(st.Action, "ec2:CreateTags")) || !can(st.Condition["ForAllValues:StringEquals"]["aws:TagKeys"]) || contains(st.Condition["ForAllValues:StringEquals"]["aws:TagKeys"], "for-use-with-amazon-emr-managed-policies")
+    ])
+    error_message = "Every ec2:CreateTags statement that restricts aws:TagKeys must allow the EMR managed-policies key."
+  }
+  assert {
+    condition = anytrue([
+      for st in jsondecode(aws_iam_policy.permission_set["phase14-main--network"].policy).Statement :
+      st.Effect == "Allow" && contains(st.Action, "ec2:CreateTags") && contains(st.Resource, "arn:aws:ec2:us-east-2:111122223333:subnet/*") && contains(st.Resource, "arn:aws:ec2:us-east-2:111122223333:security-group/*") && !can(st.Condition["ForAllValues:StringEquals"]) && contains(try(st.Condition.StringEquals["ec2:CreateAction"], []), "CreateSubnet") && contains(try(st.Condition.StringEquals["ec2:CreateAction"], []), "CreateSecurityGroup")
+    ])
+    error_message = "Tag-on-create for CreateSubnet and CreateSecurityGroup carries no tag-key restriction, so the extra tag is allowed."
+  }
+}
+
+# Phase 14B live E1 (first base-apply, role scholarchain-deployer): two AccessDenied errors, both on create-time ARNs that carry no name or id.
+#  1. servicediscovery:CreatePrivateDnsNamespace on arn:aws:servicediscovery:us-east-2:<account>:*/* (the namespace/* and service/* ARNs of
+#     CloudMapNamespaceAndServices never match a create);
+#  2. states:ValidateStateMachineDefinition on arn:aws:states:us-east-2:<account>:stateMachine:* (the provider validates before it creates).
+run "p14_e1_cloud_map_create_and_state_machine_validation_are_granted_narrowly" {
+  command = plan
+  variables {
+    enabled_permission_sets = ["phase14-main"]
+  }
+
+  assert {
+    condition = [for st in jsondecode(aws_iam_policy.permission_set["phase14-main--network"].policy).Statement : st if st.Sid == "CloudMapCreateWithProjectTags"] == [{
+      Sid      = "CloudMapCreateWithProjectTags"
+      Effect   = "Allow"
+      Action   = ["servicediscovery:CreatePrivateDnsNamespace", "servicediscovery:CreateService", "servicediscovery:TagResource"]
+      Resource = ["arn:aws:servicediscovery:us-east-2:111122223333:*/*"]
+      Condition = { StringEquals = {
+        "aws:RequestedRegion"        = "us-east-2"
+        "aws:RequestTag/project"     = "scholarchain"
+        "aws:RequestTag/environment" = "course"
+      } }
+    }]
+    error_message = "CreatePrivateDnsNamespace (with the CreateService and TagResource hedge) is allowed on the account/region wildcard-id ARN only, under the region and both request tags."
+  }
+  assert {
+    condition = [for st in jsondecode(aws_iam_policy.permission_set["phase14-main--data"].policy).Statement : st if st.Sid == "StepFunctionsValidateDefinition"] == [{
+      Sid       = "StepFunctionsValidateDefinition"
+      Effect    = "Allow"
+      Action    = ["states:ValidateStateMachineDefinition"]
+      Resource  = ["arn:aws:states:us-east-2:111122223333:stateMachine:*"]
+      Condition = { StringEquals = { "aws:RequestedRegion" = "us-east-2" } }
+    }]
+    error_message = "ValidateStateMachineDefinition is allowed on the account/region stateMachine:* ARN only, under the region; nothing else gained a wildcard state-machine resource."
+  }
+  assert {
+    condition = alltrue([
+      for st in jsondecode(aws_iam_policy.permission_set["phase14-main--data"].policy).Statement :
+      st.Sid == "StepFunctionsValidateDefinition" || !anytrue([for r in st.Resource : r == "arn:aws:states:us-east-2:111122223333:stateMachine:*"])
+    ])
+    error_message = "Only the validate statement may name stateMachine:* (create, update and delete stay on the scholarchain-<environment>-* name prefix)."
+  }
+  assert {
+    condition = alltrue([
+      for k, p in aws_iam_policy.permission_set :
+      alltrue([for st in jsondecode(p.policy).Statement : st.Sid == "CloudMapCreateWithProjectTags" || !anytrue([for r in st.Resource : r == "arn:aws:servicediscovery:us-east-2:111122223333:*/*"])])
+    ])
+    error_message = "Only the Cloud Map create statement may name the wildcard-id ARN."
+  }
+  assert {
+    condition     = !contains(flatten([for st in jsondecode(aws_iam_policy.permission_set["phase14-main--compute"].policy).Statement : st.Effect == "Allow" ? st.Action : []]), "servicediscovery:CreatePrivateDnsNamespace")
+    error_message = "The namespace create action lives in one statement (the old namespace/* ARN could never match it)."
+  }
+  assert {
+    condition = alltrue([
+      for st in jsondecode(aws_iam_policy.permission_set["phase14-main--compute"].policy).Statement :
+      st.Sid != "CloudMapNamespaceAndServices" || (!contains(st.Action, "servicediscovery:CreatePrivateDnsNamespace") && contains(st.Action, "servicediscovery:GetNamespace") && contains(st.Action, "servicediscovery:DeleteNamespace") && contains(st.Action, "servicediscovery:ListTagsForResource"))
+    ])
+    error_message = "CloudMapNamespaceAndServices keeps the read, update, tag and delete actions on namespace/* and service/* ARNs."
+  }
+  assert {
+    condition     = contains(flatten([for st in jsondecode(aws_iam_policy.permission_set["phase14-main--compute"].policy).Statement : st.Sid == "Route53PrivateZoneForCloudMapNoScoping" ? st.Action : []]), "route53:CreateHostedZone") && contains(flatten([for st in jsondecode(aws_iam_policy.permission_set["phase14-main--network"].policy).Statement : st.Sid == "Ec2DescribeNoResourceScoping" ? st.Action : []]), "ec2:DescribeVpcs") && contains(flatten([for st in jsondecode(aws_iam_policy.permission_set["phase14-main--network"].policy).Statement : st.Sid == "Ec2DescribeNoResourceScoping" ? st.Action : []]), "ec2:DescribeRegions")
+    error_message = "The Cloud Map private-zone companions (route53 create, ec2:DescribeVpcs and DescribeRegions) stay granted."
+  }
+  assert {
+    condition     = alltrue([for k, p in aws_iam_policy.permission_set : length(p.policy) < 6144]) && length(aws_iam_policy.permission_set) == 7
+    error_message = "All seven documents stay under 6144 characters."
+  }
 }

@@ -1,0 +1,5 @@
+# Clean snapshot 6 identity (14B repair round 1), observed 2026-11-08 by the coordinator
+snapshot_commit: 2203d5e9d4f568cf2d45cbd53c4a3333f1fab01b
+before_run: compared 5692 files (git ls-files -c -o --exclude-standard, cmp against the snapshot), differing 0, missing 0
+after_run_non_docs: compared 1570 files outside docs/, differing 0
+method: git clone of HEAD e2f0b01, rsync of git ls-files -m -o --exclude-standard -z, commit as user snapshot; cmp -s per file

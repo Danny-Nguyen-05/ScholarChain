@@ -1,0 +1,6 @@
+# Clean snapshot 5 identity (14B Q6 check), observed 2026-11-07 by the coordinator.
+# Recorded after 14B review 1 N4: these counts were earlier stated only in prose.
+snapshot_commit: 5189c3c27843ba916f9bf498c55ffd8299caa082
+before_run: compared 5686 files (git ls-files -c -o --exclude-standard, cmp against the snapshot), differing 0, missing 0
+after_run_non_docs: compared 1569 files outside docs/, differing 0
+method: git clone of HEAD e2f0b01, rsync of `git ls-files -m -o --exclude-standard -z`, commit as user "snapshot"; cmp -s per file

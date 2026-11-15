@@ -1,0 +1,8 @@
+Phase 14B repair round 3 — live sbt check (coordinator, working tree at base f5490d3 plus round-3 changes)
+Command: JAVA_HOME=<openjdk@17> SBT_OPTS=-Dlogback.configurationFile=<repo>/docs/agent-runs/phase-04/xml-repair-logback.xml env -u AWS_PROFILE AWS_EC2_METADATA_DISABLED=true AWS_CONFIG_FILE=/dev/null AWS_SHARED_CREDENTIALS_FILE=/dev/null sbt -batch check
+JDK: openjdk version "17.0.20.1" 2026-08-18
+First attempt (2026-11-09 23:18): EXIT 1 at the format stage — "(independentTests / Test / scalafmtCheck) scalafmt: 1 files must be formatted" (tests/src/.../IndependentProviderRound3Spec.scala). Routed to test-engineer; formatting only; spec 18/18 after.
+Final run: EXIT 0. Suites succeeded 207/64/39/53/141/186/113/693/28 = 1,524; failed 0; canceled 1.
+"[success] Total time: 740 s (12:20), completed Nov 10, 2026, 12:00:50 AM". Test marker updated by markTestRun.
+The "checkProbeInjectFailure ... injected format-stage failure" line in the log is the expected self-test.
+Raw log: target/phase14/evidence/14b/r3/sbt-check-final.txt (git-ignored).

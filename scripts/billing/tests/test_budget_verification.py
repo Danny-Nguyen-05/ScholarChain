@@ -36,7 +36,8 @@ def responses():
             *[{'Subscribers':[{'SubscriptionType':'EMAIL','Address':ADDRESS}]} for _ in range(3)]]
 
 
-class Features(unittest.TestCase):
+class Fixture(unittest.TestCase):
+    """Shared synthetic fixture for the original and the modified verifier."""
     def setUp(self):
         self.temp=tempfile.TemporaryDirectory(prefix='read only verifier ')
         self.root=Path(self.temp.name).resolve();self.root.chmod(0o700)
@@ -130,6 +131,8 @@ class Features(unittest.TestCase):
         freeze=self.repo/Path(str(root)+'.freeze.json');self.public(freeze,json.dumps({'root':str(root),'files':rows}).encode())
         return freeze,b.hash_file(freeze)
 
+
+class Features(Fixture):
     def test_exact_six_requests_safe_receipt_and_original_preservation(self):
         result=self.ex.verify();self.assertEqual(len(self.calls),6)
         self.assertEqual([x['argv'][2] for x in self.calls],['describe-budget','list-tags-for-resource','describe-notifications-for-budget',*['describe-subscribers-for-notification']*3])
@@ -538,6 +541,280 @@ class Features(unittest.TestCase):
         with self.assertRaisesRegex(b.Blocked,'SYMLINK_DIRECTORY'):self.ex.verify()
         self.assertEqual(self.calls,[])
 
+
+
+def usd25_values():
+    """Hand-derived USD 25 readback: amount 25, ACTUAL ABSOLUTE_VALUE alerts at 10, 15 and 20."""
+    values = responses()
+    values[0]['Budget']['BudgetLimit']['Amount'] = '25.0'
+    values[2]['Notifications'] = [b.expected_notification(x, 'ABSOLUTE_VALUE') for x in (10, 15, 20)]
+    return values
+
+
+class ModifiedFeatures(Fixture):
+    """Post-modify verifier: new shape passes, old shape fails, linkage is the modify receipt and state."""
+    def setUp(self):
+        super().setUp()
+        self.post_state = b'post-modify opaque synthetic state, not Terraform data'
+        for name, value in (('INITIAL_STATE_SHA256', b.digest(self.opaque)), ('INITIAL_STATE_BYTES', len(self.opaque))):
+            patch = mock.patch.object(b, name, value); patch.start(); self.addCleanup(patch.stop)
+        self.modify_plan = 'c'*64
+        self.policy.pins['modify'] = {'plan_sha256': self.modify_plan, 'plan_bytes': 10, 'public_input_sha256': 'd'*64,
+                                      'config': [{'copy_relative': 'config/main.tf', 'sha256': 'e'*64, 'bytes': 1}]}
+        self.mop = self.primary/'operations'/'modify-fixture'; self.mop.mkdir(mode=0o700)
+        self.write(self.mop/'modify.started', b'')
+        (self.backups/'modify-fixture').mkdir(mode=0o700)
+        self.write(self.backups/'modify-fixture/pre-apply.billing.execution.tfstate', self.opaque)
+        self.write(self.backups/'modify-fixture/post-apply.billing.execution.tfstate', self.post_state)
+        self.write(self.primary/'billing.execution.tfstate', self.post_state)
+        self.modify_gate = {'operation': 'modify-fixture', 'option': 'M', 'plan_sha256': self.modify_plan,
+                            'actor_arn': b.CALLER, 'account': b.ACCOUNT, 'profile': b.PROFILE, 'region': b.REGION,
+                            'window_start': '2026-11-03T16:00:00Z', 'window_end': '2026-11-03T16:55:00Z'}
+        self.modify_gate_name = 'approval-20261103-modify.json'
+        self.install_modify_receipt()
+        self.values = usd25_values()
+        self.mgate = {'operation': 'verify-usd25-fixture', 'option': 'M', 'plan_sha256': self.modify_plan,
+            'proposal_sha256': self.policy.pins['proposal_sha256'], 'source_commit': self.gate['source_commit'],
+            'wrapper_files': self.gate['wrapper_files'], 'human_record_sha256': self.policy.pins['human_record_sha256'],
+            'g1_affirmation': 'Synthetic affirmation, no actual approval.', 'actor_arn': b.CALLER, 'account': b.ACCOUNT,
+            'profile': b.PROFILE, 'region': b.REGION, 'window_start': self.gate['window_start'], 'window_end': self.gate['window_end'],
+            'timezone': 'America/Chicago', 'login_at': self.gate['login_at'], 'human_sts_observed_at': self.gate['human_sts_observed_at'],
+            'human_sts': {'Account': b.ACCOUNT, 'Arn': b.CALLER}, 'permissions': sorted(v.MODIFIED_PERMISSIONS),
+            'retention_accepted': True, 'verification_review_approved': True, 'aws_cli_sha256': b.hash_file(self.aws),
+            'public_packet_root': 'docs/agent-runs/phase-14/evidence/14b/budget-modify-verify-fixture',
+            'modify_operation': 'modify-fixture', 'modify_gate_filename': self.modify_gate_name,
+            'modify_gate_sha256': self.modify_gate_sha, 'modify_receipt_sha256': self.modify_receipt_sha,
+            'state_backup_sha256': b.digest(self.post_state), 'state_backup_bytes': len(self.post_state)}
+        self.mex = self.modified()
+
+    def install_modify_receipt(self, mutate=None, receipt_name='modify.receipt.json'):
+        raw_gate = (json.dumps(self.modify_gate) + '\n').encode()
+        path = self.primary/self.modify_gate_name
+        if path.exists(): path.unlink()
+        self.write(path, raw_gate)
+        self.modify_gate_sha = b.digest(raw_gate)
+        backup = lambda blob: {'bytes': len(blob), 'equal': True, 'fsync_completed': True, 'sha256': b.digest(blob)}
+        receipt = {'gate_sha256': self.modify_gate_sha, 'operation': 'modify-fixture', 'plan_sha256': self.modify_plan,
+                   'actor_arn': b.CALLER, 'stage': 'modify', 'observed_at': '2026-11-03T16:30:00+00:00',
+                   'result': {'applied': True, 'already_at_target': False, 'pre_backup': backup(self.opaque),
+                              'post_backup': backup(self.post_state), 'plan': {'actions': ['update']}, 'verify': {}}}
+        if mutate: mutate(receipt)
+        target = self.mop/receipt_name
+        if target.exists(): target.unlink()
+        self.write(target, (json.dumps(receipt, sort_keys=True, indent=2) + '\n').encode())
+        self.modify_receipt_sha = b.hash_file(target)
+
+    def modified(self, gate=None):
+        gate = gate or self.mgate
+        self.write(self.gatepath, (json.dumps(gate) + '\n').encode())
+        return v.ModifiedVerification(self.policy, self.runner, lambda: self.clock).load_gate(
+            self.gatepath, b.hash_file(self.gatepath), gate['operation'])
+
+    def reload(self, **gate_changes):
+        self.mgate.update(modify_gate_sha256=self.modify_gate_sha, modify_receipt_sha256=self.modify_receipt_sha, **gate_changes)
+        self.mex = self.modified()
+
+    def selectors(self):
+        return [json.loads(c['argv'][c['argv'].index('--notification')+1]) for c in self.calls if '--notification' in c['argv']]
+
+    def mpacket(self, files=None):
+        root = Path(self.mgate['public_packet_root']); files = files or {'file.txt': b'safe public suffixes'}
+        for name, data in files.items(): self.public(self.repo/root/name, data)
+        rows = [{'path': str(root/name), 'bytes': len(data), 'sha256': b.digest(data)} for name, data in files.items()]
+        freeze = self.repo/Path(str(root) + '.freeze.json'); self.public(freeze, json.dumps({'root': str(root), 'files': rows}).encode())
+        return freeze, b.hash_file(freeze)
+
+    def test_switch_constants_select_the_expected_shapes(self):
+        self.assertIs(v.Verification.SHAPE, b.INITIAL_SHAPE); self.assertEqual(v.Verification.OPTION, 'B')
+        self.assertIs(v.ModifiedVerification.SHAPE, b.USD25_SHAPE); self.assertEqual(v.ModifiedVerification.OPTION, 'M')
+        self.assertEqual(v.ModifiedVerification.SHAPE.amount, 25)
+        self.assertEqual(v.ModifiedVerification.SHAPE.thresholds, (10, 15, 20))
+        self.assertEqual(v.ModifiedVerification.SHAPE.threshold_type, 'ABSOLUTE_VALUE')
+
+    def test_new_shape_verifies_with_six_explicit_absolute_value_selectors(self):
+        result = self.mex.verify()
+        self.assertEqual(len(self.calls), 6)
+        self.assertEqual([x['argv'][2] for x in self.calls], ['describe-budget', 'list-tags-for-resource', 'describe-notifications-for-budget', *['describe-subscribers-for-notification']*3])
+        self.assertEqual(self.selectors(), [b.expected_notification(t, 'ABSOLUTE_VALUE') for t in (10, 15, 20)])
+        self.assertEqual((result['stage'], result['option']), ('verify', 'M'))
+        self.assertEqual(result['result']['notification_count'], 3); self.assertTrue(result['result']['private_recipients_match'])
+        self.assertEqual(result['plan_sha256'], self.modify_plan)
+        self.assertEqual(result['linkage']['modify_operation'], 'modify-fixture'); self.assertTrue(result['linkage']['state_backup_verified'])
+        for private in (ADDRESS, b.digest(ADDRESS.encode())):
+            self.assertNotIn(private, json.dumps(result))
+        self.assertEqual(self.mex.verified(), b.hash_file(self.mex.op/'verify.receipt.json'))
+        with self.assertRaises(FileExistsError): self.mex.verify()
+        self.assertEqual(len(self.calls), 6)
+
+    def test_old_shape_after_modify_fails_after_six_reads_with_no_receipt(self):
+        self.values = responses()  # the pre-modify shape: 200 and PERCENTAGE 50/80/100
+        with self.assertRaises(b.Blocked): self.mex.verify()
+        self.assertEqual(len(self.calls), 6)  # budget, tags, notifications and the three new-shape selectors
+        self.assertFalse((self.mex.op/'verify.receipt.json').exists())
+
+    def test_each_new_shape_defect_fails_closed(self):
+        def alert(i, **kw): return lambda vals: vals[2]['Notifications'][i].update(kw)
+        cases = {'amount_200': (lambda vals: vals[0]['Budget']['BudgetLimit'].update(Amount='200'), 'BUDGET_AMOUNT'),
+                 'amount_26': (lambda vals: vals[0]['Budget']['BudgetLimit'].update(Amount='26'), 'BUDGET_AMOUNT'),
+                 'top_alert_25': (alert(2, Threshold=25), 'NOTIFICATION_THRESHOLD'),
+                 'percentage_left': (alert(0, ThresholdType='PERCENTAGE'), 'NOTIFICATION_DRIFT'),
+                 'omitted_type': (lambda vals: vals[2]['Notifications'][1].pop('ThresholdType'), 'NOTIFICATION_DRIFT'),
+                 'forecasted': (alert(1, NotificationType='FORECASTED'), 'NOTIFICATION_DRIFT'),
+                 'two_alerts': (lambda vals: vals[2]['Notifications'].pop(), 'NOTIFICATION_COUNT'),
+                 'wrong_recipient': (lambda vals: vals[4]['Subscribers'][0].update(Address='other@example.invalid'), 'SUBSCRIBER_DRIFT'),
+                 'unhealthy': (lambda vals: vals[0]['Budget']['HealthStatus'].update(Status='UNHEALTHY'), 'BUDGET_HEALTH_UNVERIFIED')}
+        for index, (name, (mutate, code)) in enumerate(cases.items()):
+            with self.subTest(name=name):
+                self.values = usd25_values(); mutate(self.values); self.calls = []
+                self.mgate['operation'] = f'verify-usd25-defect-{index}'; self.mex = self.modified()
+                with self.assertRaisesRegex(b.Blocked, code) as error: self.mex.verify()
+                self.assertEqual(len(self.calls), 6)
+                self.assertNotIn(ADDRESS, str(error.exception))
+                self.assertFalse((self.mex.op/'verify.receipt.json').exists())
+
+    def test_original_verifier_expectations_reject_the_new_shape(self):
+        new = usd25_values()
+        with self.assertRaisesRegex(b.Blocked, 'BUDGET_AMOUNT'):
+            b.sanitize_readback(new[0], new[1], new[2], {t: new[3+i] for i, t in enumerate((10, 15, 20))}, ADDRESS, v.Verification.SHAPE)
+        with self.assertRaisesRegex(b.Blocked, 'BUDGET_AMOUNT'):
+            old = responses()
+            b.sanitize_readback(old[0], old[1], old[2], {t: old[3+i] for i, t in enumerate((50, 80, 100))}, ADDRESS, v.ModifiedVerification.SHAPE)
+
+    def test_original_verify_gate_cannot_drive_the_modified_verifier_and_the_reverse(self):
+        self.write(self.gatepath, (json.dumps(self.gate) + '\n').encode())
+        with self.assertRaises(b.Blocked):
+            v.ModifiedVerification(self.policy, self.runner, lambda: self.clock).load_gate(self.gatepath, b.hash_file(self.gatepath), 'verify-usd25-fixture')
+        self.write(self.gatepath, (json.dumps(self.mgate) + '\n').encode())
+        with self.assertRaises(b.Blocked):
+            v.Verification(self.policy, self.runner, lambda: self.clock).load_gate(self.gatepath, b.hash_file(self.gatepath), 'verify-usd25-fixture')
+        self.assertEqual(self.calls, [])
+
+    def test_modified_verification_gate_has_exactly_29_fields_and_each_one_is_required(self):
+        # Pins the count VERIFICATION.md states ("Gate (29 fields"): the constant, the full fixture gate, and every field required.
+        self.assertEqual(len(v.MODIFIED_GATE_FIELDS), 29)
+        self.assertEqual(set(self.mgate), v.MODIFIED_GATE_FIELDS)
+        for field in sorted(self.mgate):
+            with self.subTest(missing=field):
+                gate = dict(self.mgate); del gate[field]
+                self.write(self.gatepath, (json.dumps(gate) + '\n').encode())
+                with self.assertRaisesRegex(b.Blocked, 'VERIFICATION_GATE_SCHEMA'):
+                    v.ModifiedVerification(self.policy, self.runner, lambda: self.clock).load_gate(self.gatepath, b.hash_file(self.gatepath), self.mgate['operation'])
+        text = (ROOT / 'VERIFICATION.md').read_text(encoding='utf-8')
+        self.assertIn('Gate (29 fields, `MODIFIED_GATE_FIELDS`', text)
+        self.assertIn('28 fields', text)
+        self.assertEqual(self.calls, [])
+
+    def test_gate_refuses_unbound_operation_option_scope_and_state_fields(self):
+        cases = [('operation', 'verify-fixture'), ('operation', 'verify-usd25-'), ('option', 'B'), ('plan_sha256', '0'*64),
+                 ('proposal_sha256', '0'*64), ('human_record_sha256', '0'*64), ('g1_affirmation', ''),
+                 ('permissions', sorted(v.PERMISSIONS)), ('permissions', sorted(v.MODIFIED_PERMISSIONS)[:-1]),
+                 ('public_packet_root', 'docs/agent-runs/phase-12/evidence/12d-publication-output-verify-fixture'),
+                 ('public_packet_root', 'docs/agent-runs/phase-14/evidence/14b/other'),
+                 ('modify_operation', 'verify-fixture'), ('modify_operation', '../modify-fixture'),
+                 ('modify_gate_filename', '../approval-x.json'), ('modify_gate_filename', 'approval-x.txt'),
+                 ('modify_gate_sha256', 'nothex'), ('modify_receipt_sha256', 'nothex'),
+                 ('state_backup_sha256', b.INITIAL_STATE_SHA256), ('state_backup_sha256', 'nothex'),
+                 ('state_backup_bytes', 0), ('state_backup_bytes', True), ('retention_accepted', False),
+                 ('verification_review_approved', False), ('timezone', 'UTC'), ('actor_arn', 'wrong')]
+        for field, value in cases:
+            with self.subTest(field=field, value=value):
+                gate = {**self.mgate, field: value}
+                operation = value if field == 'operation' else gate['operation']
+                self.write(self.gatepath, (json.dumps(gate) + '\n').encode())
+                with self.assertRaises(b.Blocked):
+                    v.ModifiedVerification(self.policy, self.runner, lambda: self.clock).load_gate(self.gatepath, b.hash_file(self.gatepath), operation)
+        gate = {**self.mgate, 'surprise': 1}
+        self.write(self.gatepath, (json.dumps(gate) + '\n').encode())
+        with self.assertRaisesRegex(b.Blocked, 'VERIFICATION_GATE_SCHEMA'):
+            v.ModifiedVerification(self.policy, self.runner, lambda: self.clock).load_gate(self.gatepath, b.hash_file(self.gatepath), gate['operation'])
+        self.assertEqual(self.calls, [])
+
+    def test_missing_modify_pins_block_the_gate(self):
+        del self.policy.pins['modify']
+        with self.assertRaisesRegex(b.Blocked, 'MODIFY_PINS_MISSING'): self.modified()
+
+    def test_linkage_refuses_a_modify_that_did_not_apply_cleanly(self):
+        def result(**kw): return lambda r: r['result'].update(kw)
+        bad = lambda blob, **kw: {'bytes': len(blob), 'equal': True, 'fsync_completed': True, 'sha256': b.digest(blob), **kw}
+        cases = {'not_applied': (result(applied=False), 'MODIFY_RECEIPT_RESULT'),
+                 'already_at_target': (result(already_at_target=True), 'MODIFY_RECEIPT_RESULT'),
+                 'string_true': (result(applied='true'), 'MODIFY_RECEIPT_RESULT'),
+                 'pre_backup_not_initial': (result(pre_backup=bad(b'unrelated')), 'MODIFY_RECEIPT_RESULT'),
+                 'post_backup_other_state': (result(post_backup=bad(b'unrelated')), 'MODIFY_RECEIPT_RESULT'),
+                 'post_not_fsynced': (result(post_backup=bad(self.post_state, fsync_completed=False)), 'MODIFY_RECEIPT_RESULT'),
+                 'wrong_stage': (lambda r: r.update(stage='modify-apply'), 'MODIFY_RECEIPT_CONTEXT'),
+                 'wrong_plan': (lambda r: r.update(plan_sha256='0'*64), 'MODIFY_RECEIPT_CONTEXT'),
+                 'wrong_gate': (lambda r: r.update(gate_sha256='0'*64), 'MODIFY_RECEIPT_CONTEXT'),
+                 'wrong_operation': (lambda r: r.update(operation='modify-other'), 'MODIFY_RECEIPT_CONTEXT'),
+                 'wrong_actor': (lambda r: r.update(actor_arn='wrong'), 'MODIFY_RECEIPT_CONTEXT'),
+                 'extra_field': (lambda r: r.update(extra=1), 'MODIFY_RECEIPT_SCHEMA'),
+                 'after_verification_window': (lambda r: r.update(observed_at='2026-11-03T18:30:00+00:00'), 'MODIFY_RECEIPT_TIME'),
+                 'before_modify_window': (lambda r: r.update(observed_at='2026-11-03T15:00:00+00:00'), 'MODIFY_RECEIPT_TIME')}
+        for index, (name, (mutate, code)) in enumerate(cases.items()):
+            with self.subTest(name=name):
+                self.install_modify_receipt(mutate)
+                self.mgate['operation'] = f'verify-usd25-link-{index}'; self.reload()
+                with self.assertRaisesRegex(b.Blocked, code): self.mex.verify()
+                self.assertEqual(self.calls, []); self.assertFalse(self.mex.op.exists())
+
+    def test_linkage_hash_state_backup_lock_and_journal_drift_blocks(self):
+        cases = {'receipt_bytes': lambda: self.write(self.mop/'modify.receipt.json', b'tampered'),
+                 'modify_gate_bytes': lambda: self.write(self.primary/self.modify_gate_name, b'tampered'),
+                 'state_changed_after_modify': lambda: self.write(self.primary/'billing.execution.tfstate', b'tampered'),
+                 'post_backup_changed': lambda: self.write(self.backups/'modify-fixture/post-apply.billing.execution.tfstate', b'tampered'),
+                 'pre_backup_changed': lambda: self.write(self.backups/'modify-fixture/pre-apply.billing.execution.tfstate', b'tampered'),
+                 'journal_not_empty': lambda: self.write(self.mop/'modify.started', b'x'),
+                 'lock_info_present': lambda: self.write(self.primary/'.billing.execution.tfstate.lock.info', b''),
+                 'config_lock_present': lambda: self.write(self.policy.config/'.terraform.tfstate.lock.info', b''),
+                 'receipt_missing': lambda: (self.mop/'modify.receipt.json').unlink(),
+                 'state_missing': lambda: self.policy.state.unlink()}
+        for index, (name, damage) in enumerate(cases.items()):
+            with self.subTest(name=name):
+                self.fresh()
+                self.mgate['operation'] = f'verify-usd25-drift-{index}'; self.reload()
+                damage()
+                with self.assertRaises((b.Blocked, OSError)): self.mex.verify()
+                self.assertEqual(self.calls, []); self.assertFalse(self.mex.op.exists())
+
+    def fresh(self):
+        self.tearDown(); self.setUp()
+
+    def test_state_change_between_reads_and_receipt_blocks_without_success_receipt(self):
+        self.after = lambda index: self.write(self.primary/'billing.execution.tfstate', b'changed during verification') if index == 5 else None
+        with self.assertRaises(b.Blocked): self.mex.verify()
+        self.assertEqual(len(self.calls), 6)
+        self.assertFalse((self.mex.op/'verify.receipt.json').exists())
+
+    def test_scan_after_modified_verification_matches_the_scan_receipt_contract(self):
+        self.mex.verify(); freeze, sha = self.mpacket()
+        receipt = self.mex.scan(freeze, sha, b.hash_file(self.mex.op/'verify.receipt.json'))
+        self.assertEqual((receipt['matches'], receipt['files_scanned'], len(receipt)), (0, 1, 10))
+        self.assertEqual(receipt['plan_sha256'], self.modify_plan)
+        private = json.loads((self.mex.op/'post-freeze-scan.receipt.json').read_bytes())
+        self.assertEqual(private['verification_receipt_sha256'], b.hash_file(self.mex.op/'verify.receipt.json'))
+        with self.assertRaises(FileExistsError): self.mex.scan(freeze, sha, b.hash_file(self.mex.op/'verify.receipt.json'))
+        self.assertEqual(len(self.calls), 6)
+
+    def test_scan_blocks_recipient_leak_wrong_receipt_hash_and_missing_verification(self):
+        self.mex.verify()
+        freeze, sha = self.mpacket({'leak.txt': ADDRESS.encode()})
+        with self.assertRaisesRegex(b.Blocked, 'PUBLIC_RECIPIENT_FOUND'):
+            self.mex.scan(freeze, sha, b.hash_file(self.mex.op/'verify.receipt.json'))
+        self.mgate['operation'] = 'verify-usd25-scan-b'; self.mex = self.modified(); self.mex.op.mkdir(mode=0o700)
+        freeze, sha = self.mpacket()
+        with self.assertRaises(FileNotFoundError): self.mex.scan(freeze, sha, '0'*64)
+
+    def test_cli_modes_and_option_validation_do_not_echo_payloads(self):
+        for argv in (['verify-modified'], ['post-freeze-scan-modified'], ['apply'], ['modify'], ['destroy']):
+            with self.subTest(argv=argv), mock.patch('builtins.print') as output:
+                self.assertEqual(v.main(argv), 2); self.assertNotIn(ADDRESS, str(output.call_args_list))
+        base = ['--gate', str(self.gatepath), '--gate-sha256', '0'*64, '--operation', 'verify-usd25-x']
+        with mock.patch('builtins.print') as output:
+            self.assertEqual(v.main(['verify-modified', *base, '--public-manifest', 'x']), 2)
+        self.assertIn('UNEXPECTED_SCAN_OPTIONS', str(output.call_args_list))
+        with mock.patch('builtins.print') as output:
+            self.assertEqual(v.main(['post-freeze-scan-modified', *base]), 2)
+        self.assertIn('SCAN_ARGUMENTS', str(output.call_args_list))
 
 
 if __name__=='__main__':unittest.main(verbosity=2)

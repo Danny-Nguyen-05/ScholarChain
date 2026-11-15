@@ -42,7 +42,7 @@ SECRET_ENV = {
 CANARIES = [CANARY_SECRET, CANARY_TOKEN, CANARY_SMOKE_KEY, ACCOUNT]
 
 CEILINGS = {
-    "maxLocalSampleRecords": 1000,
+    "maxLocalSampleRecords": 12000,  # pipeline-specific exception (USD 25 replan); the Phase 4 smoke keeps 1000
     "reducerCount": 8,
     "maxCandidateBlockSize": 256,
     "maxCandidatePairsPerBlock": 4096,
@@ -135,15 +135,36 @@ def aws():
     if key == "sts get-caller-identity":
         print(SCEN.get("account", "__ACCOUNT__"))
     elif key == "emr describe-cluster":
-        print(json.dumps(SCEN.get("describe_cluster", {"Cluster": {"Id": SCEN.get("cluster_id", "j-TESTCLUSTER"), "Status": {"State": "WAITING"}}})))
+        # AWS CLI v2 describe-cluster embeds the ListInstanceGroups result as Cluster.InstanceGroups. The scenario's
+        # "groups" ({"InstanceGroups": [...]}) is injected unless the describe_cluster override already carries the key;
+        # groups="absent" omits Cluster.InstanceGroups entirely (fail-closed tests).
+        described = json.loads(json.dumps(SCEN.get("describe_cluster", {"Cluster": {"Id": SCEN.get("cluster_id", "j-TESTCLUSTER"), "Status": {"State": "WAITING"}}})))
+        groups = SCEN.get("groups", {"InstanceGroups": [
+            {"InstanceGroupType": "MASTER", "InstanceType": "m5.xlarge", "RequestedInstanceCount": 1, "RunningInstanceCount": 1},
+            {"InstanceGroupType": "CORE", "InstanceType": "m5.xlarge", "RequestedInstanceCount": 1, "RunningInstanceCount": 1}]})
+        cluster = described.get("Cluster") if isinstance(described, dict) else None
+        if groups != "absent" and isinstance(cluster, dict) and "InstanceGroups" not in cluster:
+            cluster["InstanceGroups"] = groups.get("InstanceGroups")
+        print(json.dumps(described))
     elif key == "emr get-auto-termination-policy":
         print(json.dumps(SCEN.get("policy", {"AutoTerminationPolicy": {"IdleTimeout": 900}})))
     elif key == "emr list-instance-groups":
-        print(json.dumps(SCEN.get("groups", {"InstanceGroups": [
-            {"InstanceGroupType": "MASTER", "InstanceType": "m5.xlarge", "RequestedInstanceCount": 1, "RunningInstanceCount": 1},
-            {"InstanceGroupType": "CORE", "InstanceType": "m5.xlarge", "RequestedInstanceCount": 1, "RunningInstanceCount": 1}]})))
+        # AWS CLI v2 (2.35.4) has no such command; the pipeline must never call it.
+        sys.stderr.write("aws: error: argument operation: Found invalid choice 'list-instance-groups'\n")
+        sys.exit(252)
     elif key == "emr add-steps":
+        # AWS CLI v2 (2.35.4) add-steps --steps takes the CLI shorthand shape (Type/Name/ActionOnFailure/Jar/Args at the top
+        # level), not the API's HadoopJarStep wrapper; client-side parameter validation rejects unknown keys with exit 252.
         steps = json.loads(ARGV[ARGV.index("--steps") + 1])
+        allowed = ["Type", "Name", "ActionOnFailure", "Jar", "Args", "MainClass", "Properties", "LogUri", "EncryptionKeyArn"]
+        for index, step in enumerate(steps):
+            for unknown in [k for k in step if k not in allowed]:
+                sys.stderr.write('\nParameter validation failed:\nUnknown parameter in [%d]: "%s", must be one of: %s\n\n'
+                                 % (index, unknown, ", ".join(allowed)))
+                sys.exit(252)
+            if step.get("Type") != "CUSTOM_JAR" or step.get("Jar") != "command-runner.jar" or not isinstance(step.get("Args"), list):
+                sys.stderr.write("fake aws: add-steps step %d is not a CUSTOM_JAR command-runner.jar step with an Args list\n" % index)
+                sys.exit(252)
         state = load_state()
         state["counter"] += 1
         step_id = "s-FAKE%04d" % state["counter"]
@@ -606,8 +627,11 @@ class Fixture:
         snapshot = mods.pop("snapshot_dt", now_utc() - datetime.timedelta(hours=1))
         body = {
             "schema": "scholarchain.prespend-receipt.v1", "monitoring_confirmed_active": True,
-            "cost_snapshot_utc": utc(snapshot), "reported_spend_usd": 12.5, "unreported_usage_allowance_usd": 5.0,
-            "reserves_usd": 40.0, "remaining_headroom_usd": 150.25,
+            "cost_snapshot_utc": utc(snapshot), "reported_spend_usd": 1.5,
+            "anthropic_spend_to_date_usd": 0.25, "voyage_spend_to_date_usd": 0.0,
+            "unreported_usage_allowance_usd": 1.0, "reserves_usd": 2.0,
+            # Repair round 3 ceiling arithmetic, hand-derived: 25 - (1.5 + 0.25 + 0.0) - 1.0 - 2.0 = 20.25 (the most a receipt may state).
+            "remaining_headroom_usd": 20.25,
         }
         for k, v in mods.items():
             if v is Ellipsis:
@@ -747,7 +771,7 @@ def extract_body(run, name):
 
 
 def step_args(run, name):
-    """The EMR step's HadoopJarStepConfig.Args reconstructed from the dry run's printed command (one word per line, joined with
+    """The EMR step's Args (CLI CUSTOM_JAR shape; HadoopJarStepConfig.Args in the API) reconstructed from the dry run's printed command (one word per line, joined with
     backslash-newline): the exact argument list EMR would receive."""
     import shlex
     return shlex.split(extract_body(run, name).replace("\\\n", " "))

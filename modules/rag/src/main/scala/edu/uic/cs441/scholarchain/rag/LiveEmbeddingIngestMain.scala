@@ -41,13 +41,36 @@ final case class LiveEmbeddingConfig(
     requestTimeoutMillis: Long = 30000,
     maxManifestBytes: Int = 16 * 1024 * 1024,
     batchSize: Int = 100,
-    nonFilterableKeys: Vector[String] = Vector("textS3Uri")
+    nonFilterableKeys: Vector[String] = Vector("textS3Uri"),
+    assumedUsdPerMillionEmbeddingTokens: Double = VoyageDefaults.UsdPerMillionTokens.toDouble,
+    minBytesPerEmbeddingToken: Int = 1,
+    embeddingProvider: String = "",
+    embeddingCapUsd: Double = VoyageDefaults.CapUsd.toDouble
 ) derives ReadWriter {
   require(schemaVersion == "scholarchain.embedding-live.v1")
+  require(embeddingCapUsd.isFinite && embeddingCapUsd > 0)
+  require(
+    assumedUsdPerMillionEmbeddingTokens.isFinite && assumedUsdPerMillionEmbeddingTokens > 0 &&
+      minBytesPerEmbeddingToken >= 1 && minBytesPerEmbeddingToken <= 4
+  )
   require(
     Vector(environment, region, profile, textBucket, textPrefix, vectorBucket).forall(
       _.trim.nonEmpty
     )
+  )
+  // `tables.idempotencyIndex` is the QuerySession global secondary index NAME (Terraform
+  // `query_session_gsi_name`, default `by-idempotency-key`), never a table name. A blank, malformed
+  // or table-equal value is refused before any request.
+  require(
+    LiveEmbeddingConfig.IndexNamePattern.matches(tables.idempotencyIndex) &&
+      !Set(
+        tables.runLedger,
+        tables.entityLinks,
+        tables.querySessions,
+        tables.evidence,
+        tables.artifacts,
+        tables.metrics
+      ).contains(tables.idempotencyIndex)
   )
   require(indexNames == EmbeddingContracts.indexes && Set("cosine", "euclidean")(metric))
   require(
@@ -62,6 +85,22 @@ final case class LiveEmbeddingConfig(
   require(
     nonFilterableKeys.distinct.size == nonFilterableKeys.size && nonFilterableKeys.size <= 10 &&
       !nonFilterableKeys.contains("runId") && !nonFilterableKeys.contains("textHash")
+  )
+
+  /** Provider of the stored vectors: the explicit `embeddingProvider` (`voyage` or `bedrock`), or,
+    * when it is empty, the provider that owns `model`. An unknown name is a closed code.
+    */
+  def provider: Either[String, EmbeddingProvider] =
+    if (embeddingProvider.trim.isEmpty) Right(EmbeddingProviders.infer(model))
+    else
+      EmbeddingProvider.parse(Some(embeddingProvider)).left.map(_ => "invalid-embedding-provider")
+
+  /** Retry, timeout and attempt parameters shared by both providers' clients. */
+  def voyage(inputType: EmbeddingInputType): VoyageEmbeddingConfig = VoyageEmbeddingConfig(
+    inputType,
+    model = model,
+    maxAttempts = maxEmbeddingAttempts,
+    requestTimeoutMillis = requestTimeoutMillis
   )
   def embedding: BedrockEmbeddingConfig = BedrockEmbeddingConfig(
     model,
@@ -79,6 +118,12 @@ final case class LiveEmbeddingConfig(
     maxManifestBytes = maxManifestBytes,
     batchSize = batchSize
   )
+}
+object LiveEmbeddingConfig {
+
+  /** DynamoDB index-name rule: 3 to 255 characters from letters, digits, underscore, dot, hyphen.
+    */
+  val IndexNamePattern: scala.util.matching.Regex = "[A-Za-z0-9_.-]{3,255}".r
 }
 final case class LiveEmbeddingApproval(
     executionApproved: Boolean,
@@ -106,7 +151,8 @@ final case class LiveEmbeddingPlan(
     manifest: EmbeddingManifest,
     approval: LiveEmbeddingApproval,
     maxEmbeddingRequests: Long,
-    assumedUpperBoundUsd: BigDecimal
+    assumedUpperBoundUsd: BigDecimal,
+    plannedEmbeddingTokens: BigInt = BigInt(0)
 )
 trait LiveEmbeddingPorts extends AutoCloseable {
   def objects: ObjectStore
@@ -126,6 +172,106 @@ object LiveEmbeddingIngestMain {
     case StorageResult.Rejected(code) => Left(code)
     case other                        => StorageResult.value(other).toRight("live-port-unavailable")
   }
+
+  /** Conservative token bound for one embedding pass: every token is at least
+    * `minBytesPerEmbeddingToken` UTF-8 bytes (1 by default, a strict upper bound on tokens).
+    */
+  private[rag] def tokenBound(texts: Iterable[String], minBytes: Int): BigInt =
+    texts.foldLeft(BigInt(0))((sum, text) =>
+      sum + BigInt((text.getBytes(UTF_8).length + minBytes - 1) / minBytes)
+    )
+
+  /** Exact decimal dollars for a token count at the configured price per million tokens. */
+  private[rag] def tokenUsd(tokens: BigInt, config: LiveEmbeddingConfig): BigDecimal =
+    BigDecimal(tokens.toString) * BigDecimal(config.assumedUsdPerMillionEmbeddingTokens.toString) /
+      BigDecimal(1000000)
+
+  /** Provider-aware identity check: the configured model must belong to the provider by naming
+    * family (`voyage-*` is Voyage). The model id, version tag, dimension and the assumed price per
+    * million tokens all come from the config, which the human approval hash binds.
+    */
+  private[rag] def providerCheck(config: LiveEmbeddingConfig): Either[String, EmbeddingProvider] =
+    config.provider.flatMap { provider =>
+      if (!EmbeddingProviders.modelMatchesProvider(provider, config.model))
+        Left("embedding-provider-model-mismatch")
+      else Right(provider)
+    }
+
+  /** The single code path both live mains use to build their embedder. Only the selected provider's
+    * config is built (Voyage config on the Voyage branch, Bedrock config on the Bedrock branch) and
+    * the `bedrock` thunk is called only on the Bedrock branch. The Voyage key is an argument; no
+    * key is read here. Ingest passes `Document`, the query smoke passes `Query`.
+    */
+  private[rag] def embeddingClientFor(
+      config: LiveEmbeddingConfig,
+      inputType: EmbeddingInputType,
+      voyageKey: Option[String],
+      bedrock: () => BedrockRuntimeClient
+  ): Either[String, ProviderEmbeddingClient] = config.provider.flatMap { provider =>
+    EmbeddingClientFactory.create(
+      provider,
+      inputType,
+      voyageKey,
+      bedrock,
+      Some(config.embedding),
+      new EmbeddingSpendCounter(
+        BigDecimal(config.embeddingCapUsd.toString),
+        BigDecimal(config.assumedUsdPerMillionEmbeddingTokens.toString)
+      ),
+      Some(config.voyage(inputType))
+    )
+  }
+
+  /** Stored (configured) and query/ingest embedder identity must agree: provider, model, version
+    * tag and dimension. Returns the typed closed code on a mismatch.
+    */
+  private[rag] def consistency(
+      config: LiveEmbeddingConfig,
+      embedder: EmbeddingClient
+  ): Either[String, Unit] =
+    config.provider.flatMap(provider =>
+      VectorConsistency.checkClient(provider, config.model, embedder).left.map(_.code)
+    )
+
+  /** Refuses when the token-derived embedding spend exceeds the embedding cap (USD 0.30 default).
+    */
+  private[rag] def embeddingCapExceeded(tokens: BigInt, config: LiveEmbeddingConfig): Boolean =
+    tokenUsd(tokens, config) > BigDecimal(config.embeddingCapUsd.toString)
+
+  /** Shared manifest/resource validation (identity, model, pointers, complete chunk groups). It
+    * applies no approval caps, so the query smoke can reuse it without ingest-sized caps.
+    */
+  private[rag] def validateManifest(
+      config: LiveEmbeddingConfig,
+      manifestText: String
+  ): Either[String, EmbeddingManifest] =
+    providerCheck(config)
+      .flatMap(_ => value(EmbeddingManifests.parse(manifestText, config.ingest)))
+      .flatMap { manifest =>
+        val items = manifest.items
+        val validItems = items.nonEmpty && items.size <= config.maxVectors && items.forall { item =>
+          EmbeddingValidation.workItem(item).isEmpty && item.embeddingModel == config.model &&
+          config.indexNames.get(item.document.documentType).contains(item.indexName) &&
+          item.textS3Uri.startsWith(s"s3://${config.textBucket}/${config.textPrefix}/versions/")
+        } && items.map(i => (i.indexName, i.vectorKey)).distinct.size == items.size
+        val validGroups = items
+          .groupBy(i => EmbeddingContracts.groupKey(i.document, i.embeddingModel))
+          .values
+          .forall { group =>
+            val document = group.head.document
+            group.map(_.document.chunkCount).distinct == Vector(document.chunkCount) &&
+            group.map(i => EmbeddingContracts.wholeTextHash(i.document)).distinct.size == 1 &&
+            group.size == document.chunkCount &&
+            group
+              .map(_.document.chunkOrdinal)
+              .sorted
+              .zipWithIndex
+              .forall((ordinal, index) => ordinal == index)
+          }
+        if (!validItems || !validGroups) Left("live-manifest-invalid-or-partial-group")
+        else Right(manifest)
+      }
+
   def preflight(
       configText: String,
       manifestText: String,
@@ -153,7 +299,6 @@ object LiveEmbeddingIngestMain {
       Left("live-approval-content-mismatch")
     else {
       val config = read[LiveEmbeddingConfig](configText)
-      val ingest = config.ingest
       val embedding = config.embedding
       if (
         config.environment != approval.environment || approval.vectorCap < 1 || approval.concurrencyCap < 1 ||
@@ -163,45 +308,30 @@ object LiveEmbeddingIngestMain {
       )
         Left("live-approval-cap-mismatch")
       else
-        value(EmbeddingManifests.parse(manifestText, ingest)).flatMap { manifest =>
+        validateManifest(config, manifestText).flatMap { manifest =>
           val items = manifest.items
           val calls = BigInt(items.size) * BigInt(embedding.maxAttempts)
-          val estimate = BigDecimal(items.size) *
-            (BigDecimal(
-              config.assumedMaxDollarsPerEmbeddingAttempt.toString
-            ) * embedding.maxAttempts +
-              BigDecimal(config.assumedMaxStorageDollarsPerVector.toString)) + BigDecimal(
-              config.fixedOverheadUsd.toString
-            )
-          val validItems = items.nonEmpty && items.size <= config.maxVectors && items.forall {
-            item =>
-              EmbeddingValidation.workItem(item).isEmpty && item.embeddingModel == config.model &&
-              config.indexNames.get(item.document.documentType).contains(item.indexName) &&
-              item.textS3Uri.startsWith(s"s3://${config.textBucket}/${config.textPrefix}/versions/")
-          } && items.map(i => (i.indexName, i.vectorKey)).distinct.size == items.size
-          val validGroups = items
-            .groupBy(i => EmbeddingContracts.groupKey(i.document, i.embeddingModel))
-            .values
-            .forall { group =>
-              val document = group.head.document
-              group.map(_.document.chunkCount).distinct == Vector(document.chunkCount) &&
-              group.map(i => EmbeddingContracts.wholeTextHash(i.document)).distinct.size == 1 &&
-              group.size == document.chunkCount &&
-              group
-                .map(_.document.chunkOrdinal)
-                .sorted
-                .zipWithIndex
-                .forall((ordinal, index) => ordinal == index)
-            }
-          if (!validItems || !validGroups) Left("live-manifest-invalid-or-partial-group")
-          else if (
-            calls > config.maxEmbeddingCalls || calls > approval.embeddingCallCap ||
+          // Content-derived bound: tokens x attempts x configured USD per million tokens. The
+          // dollar estimate takes the larger of it and the configured per-attempt bound.
+          val tokens = tokenBound(items.map(_.document.text), config.minBytesPerEmbeddingToken) *
+            BigInt(embedding.maxAttempts)
+          val perAttempt = BigDecimal(items.size) * BigDecimal(
+            config.assumedMaxDollarsPerEmbeddingAttempt.toString
+          ) * embedding.maxAttempts
+          val embeddingUsd = perAttempt.max(tokenUsd(tokens, config))
+          val capExceeded = embeddingCapExceeded(tokens, config)
+          val estimate = embeddingUsd +
+            BigDecimal(items.size) * BigDecimal(config.assumedMaxStorageDollarsPerVector.toString) +
+            BigDecimal(config.fixedOverheadUsd.toString)
+          if (
+            capExceeded || calls > config.maxEmbeddingCalls || calls > approval.embeddingCallCap ||
             estimate > BigDecimal(config.dollarCapUsd.toString) || estimate > BigDecimal(
               approval.dollarCapUsd.toString
             )
           )
             Left("live-assumed-cost-or-request-bound")
-          else Right(LiveEmbeddingPlan(config, manifest, approval, calls.toLong, estimate))
+          else
+            Right(LiveEmbeddingPlan(config, manifest, approval, calls.toLong, estimate, tokens))
         }
     }
   } catch { case NonFatal(_) => Left("invalid-live-config-manifest-or-approval") }
@@ -223,11 +353,13 @@ object LiveEmbeddingIngestMain {
     "configSha256" -> configSha256,
     "manifestSha256" -> manifestSha256,
     "model" -> upickle.default.writeJs(plan.config.model),
+    "embeddingProvider" -> plan.config.provider.toOption.map(_.wire).getOrElse("invalid"),
     "embeddingModelId" -> plan.config.model.modelId,
     "embeddingModelVersion" -> plan.config.model.version,
     "dimension" -> plan.config.model.dimension,
     "selectedVectors" -> plan.manifest.items.size,
     "maxEmbeddingRequests" -> plan.maxEmbeddingRequests.toString,
+    "embeddingTokenBound" -> plan.plannedEmbeddingTokens.toString,
     "assumedUpperBoundUsd" -> plan.assumedUpperBoundUsd.toString,
     "billingGuarantee" -> false,
     "written" -> result.written,
@@ -273,12 +405,22 @@ object LiveEmbeddingIngestMain {
       .credentialsProvider(credentials)
       .overrideConfiguration(overrideConfig)
       .build()
-    val bedrock = BedrockRuntimeClient
+    val provider =
+      config.provider.fold(code => throw new ProviderConfigurationError(code), identity)
+    // The Bedrock SDK client exists only when Bedrock embeddings are selected. Voyage reads the key
+    // from the environment, never from a file, and the key is never printed or stored.
+    lazy val bedrock = BedrockRuntimeClient
       .builder()
       .region(region)
       .credentialsProvider(credentials)
       .overrideConfiguration(overrideConfig)
       .build()
+    val embeddingClient = embeddingClientFor(
+      config,
+      EmbeddingInputType.Document,
+      sys.env.get(EmbeddingClientFactory.VoyageKeyEnvName),
+      () => bedrock
+    ).fold(code => throw new ProviderConfigurationError(code), identity)
     val storageConfig =
       edu.uic.cs441.scholarchain.storage
         .StorageConfig(config.textBucket, config.tables, retry = RetryConfig(maxAttempts = 1))
@@ -299,7 +441,7 @@ object LiveEmbeddingIngestMain {
       val ledger: RunLedger = new DynamoRunLedger(dynamo, storageConfig)
       val vectors: VectorStore =
         new S3VectorStore(vectorClient, artifacts, vectorConfig, objectStore)
-      val embedder: EmbeddingClient = new BedrockEmbeddingClient(bedrock, config.embedding)
+      val embedder: EmbeddingClient = embeddingClient
       def indexesReady(): StorageResult[Unit] = try {
         val matches = config.indexNames.values.toVector.distinct.sorted.forall { name =>
           val existing = vectorClient
@@ -324,7 +466,8 @@ object LiveEmbeddingIngestMain {
         else StorageResult.Rejected("live-index-configuration-mismatch")
       } catch { case NonFatal(_) => StorageResult.Rejected("live-index-unavailable") }
       def close(): Unit = {
-        bedrock.close(); vectorClient.close(); dynamo.close(); s3.close(); credentials.close()
+        if (provider == EmbeddingProvider.Bedrock) bedrock.close()
+        vectorClient.close(); dynamo.close(); s3.close(); credentials.close()
       }
     }
   }
@@ -362,38 +505,43 @@ object LiveEmbeddingIngestMain {
         ).flatMap { plan =>
           val ports = factory(plan.config)
           try {
-            value(ports.indexesReady()).flatMap { _ =>
-              value(
-                new EmbeddingManifestRunner(
-                  plan.config.ingest,
-                  ports.objects,
-                  ports.vectors,
-                  ports.registry,
-                  ports.ledger,
-                  ports.embedder
-                ).run(plan.manifest, input("--run-id"))
-              ).flatMap { result =>
-                val report = this.report(
-                  plan,
-                  result,
-                  input("--run-id"),
-                  StableIds.sha256Hex(configText),
-                  StableIds.sha256Hex(manifestText),
-                  StableIds.sha256Hex(approvalText)
-                )
-                val path = Path.of(input("--report"));
-                Option(path.toAbsolutePath.getParent).foreach(Files.createDirectories(_))
-                Files.writeString(path, report.render(), UTF_8)
-                if (result.rejected > 0 || result.vectorKeyTextConflict > 0)
-                  Left("live-ingestion-rejected-items")
-                else Right(report)
+            consistency(plan.config, ports.embedder)
+              .flatMap(_ => value(ports.indexesReady()))
+              .flatMap { _ =>
+                value(
+                  new EmbeddingManifestRunner(
+                    plan.config.ingest,
+                    ports.objects,
+                    ports.vectors,
+                    ports.registry,
+                    ports.ledger,
+                    ports.embedder
+                  ).run(plan.manifest, input("--run-id"))
+                ).flatMap { result =>
+                  val report = this.report(
+                    plan,
+                    result,
+                    input("--run-id"),
+                    StableIds.sha256Hex(configText),
+                    StableIds.sha256Hex(manifestText),
+                    StableIds.sha256Hex(approvalText)
+                  )
+                  val path = Path.of(input("--report"));
+                  Option(path.toAbsolutePath.getParent).foreach(Files.createDirectories(_))
+                  Files.writeString(path, report.render(), UTF_8)
+                  if (result.rejected > 0 || result.vectorKeyTextConflict > 0)
+                    Left("live-ingestion-rejected-items")
+                  else Right(report)
+                }
               }
-            }
           } finally ports.close()
         }
       }
     }
-  } catch { case NonFatal(_) => Left("live-input-or-execution-failed") }
+  } catch {
+    case e: ProviderConfigurationError => Left(e.code)
+    case NonFatal(_)                   => Left("live-input-or-execution-failed")
+  }
   def main(args: Array[String]): Unit = run(args.toSeq) match {
     case Right(report) => println(report.render())
     case Left(code)    => throw new IllegalArgumentException(code)

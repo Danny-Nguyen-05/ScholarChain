@@ -1,0 +1,3 @@
+# Whitespace after the post-approval fixes (observed 2026-11-09)
+git diff --check (tracked): exit 0, no output
+untracked files (git add -N equivalent, index untouched, evidence/** excluded): 0 findings

@@ -1,0 +1,38 @@
+B01 drop the bedrock:InferenceProfileArn condition from the routed-region model statement -> 27 passed, 2 failed; failing: a_synthesis_profile_adds_the_profile_arn_and_one_conditioned_model_arn_per_routed_region, the_documented_haiku_4_5_example_values_produce_the_expected_arns
+B02 model ARN only in the home region (routed regions ignored) -> 26 passed, 3 failed; failing: a_synthesis_profile_adds_the_profile_arn_and_one_conditioned_model_arn_per_routed_region, an_embedding_profile_reaches_only_the_embedding_services, the_documented_haiku_4_5_example_values_produce_the_expected_arns
+B03 every service receives the synthesis grant -> 27 passed, 2 failed; failing: query_api_gets_only_the_synthesis_grant_and_the_embedding_services_only_the_embedding_grant, the_documented_haiku_4_5_example_values_produce_the_expected_arns
+B04 every service receives the embedding grant -> 27 passed, 2 failed; failing: query_api_gets_only_the_synthesis_grant_and_the_embedding_services_only_the_embedding_grant, an_embedding_profile_reaches_only_the_embedding_services
+B05 add InvokeModelWithResponseStream to the profile statement -> 27 passed, 2 failed; failing: a_synthesis_profile_adds_the_profile_arn_and_one_conditioned_model_arn_per_routed_region, the_documented_haiku_4_5_example_values_produce_the_expected_arns
+B06 no-profile behavior changed (adds a profile ARN) -> 26 passed, 3 failed; failing: without_a_profile_the_grant_is_the_home_region_foundation_model_only, query_api_gets_only_the_synthesis_grant_and_the_embedding_services_only_the_embedding_grant, the_documented_haiku_4_5_example_values_produce_the_expected_arns
+B07 global profile statement loses the unspecified-region condition -> 28 passed, 1 failed; failing: a_global_profile_adds_the_region_less_model_arn_with_an_unspecified_region_condition
+B08 profile-id validation weakened to accept anything (synthesis) -> 6 passed, 1 failed, 22 skipped; failing: a_profile_without_a_model_is_rejected
+B09 region-name validation removed (synthesis) -> 10 passed, 1 failed, 18 skipped; failing: an_invalid_region_name_is_rejected
+B10 home-region-must-be-routed rule removed (synthesis) -> 13 passed, 1 failed, 15 skipped; failing: routed_regions_that_omit_the_home_region_are_rejected
+B11 regions-without-a-profile rule removed (synthesis) -> 14 passed, 1 failed, 14 skipped; failing: routed_regions_without_a_profile_are_rejected
+B12 profile grant uses the wrong account in the profile ARN -> 25 passed, 4 failed; failing: a_synthesis_profile_adds_the_profile_arn_and_one_conditioned_model_arn_per_routed_region, an_embedding_profile_reaches_only_the_embedding_services, a_global_profile_adds_the_region_less_model_arn_with_an_unspecified_region_condition, the
+T01 one step-program hash in the tfvars example altered -> 28 passed, 1 failed; failing: the_tfvars_example_carries_exactly_the_manifest_hashes_for_the_four_step_programs
+T02 an e-mail address added to the tfvars example -> 28 passed, 1 failed; failing: the_tfvars_example_holds_placeholders_only
+T03 a real-looking 12-digit account in the tfvars example -> 28 passed, 1 failed; failing: the_tfvars_example_holds_placeholders_only
+T04 the extra_artifacts guard condition removed (scratch copy of phase12b.tf) -> 19 passed, 1 failed, 9 skipped; failing: emr_enabled_without_the_step_programs_is_refused_by_the_guard
+T05 the example EMR policy gets a wildcard action -> 22 passed, 1 failed, 6 skipped; failing: the_example_emr_service_policy_passes_the_variable_validation_once_placeholders_are_filled
+T06 a required variable name removed from the tfvars example (service_secret_arns) -> 28 passed, 1 failed; failing: the_tfvars_example_holds_placeholders_only
+T07 an uncommented real-looking string value in the tfvars example -> 28 passed, 1 failed; failing: the_tfvars_example_holds_placeholders_only
+T08 the example EMR service policy gains an action (action set drifts from the tested list) -> 27 passed, 2 failed; failing: the_example_emr_service_policy_actions_are_exactly_the_set_the_deployer_boundary_is_tested_against, every_action_of_every_role_policy_is_allowed_by_that_roles_boundary
+C01 runtime boundary loses sqs:SendMessage -> 28 passed, 1 failed; failing: every_action_of_every_role_policy_is_allowed_by_that_roles_boundary
+C02 a role policy gains an action the boundary lacks (dynamodb:DeleteItem on task roles) -> 28 passed, 1 failed; failing: every_action_of_every_role_policy_is_allowed_by_that_roles_boundary
+C03 EMR service boundary loses iam:PassRole -> 28 passed, 1 failed; failing: every_action_of_every_role_policy_is_allowed_by_that_roles_boundary
+C04 EMR service role gets the runtime boundary -> 28 passed, 1 failed; failing: every_role_carries_the_boundary_the_deployer_root_creates_for_it
+C05 the Step Functions producer role loses its boundary -> 28 passed, 1 failed; failing: every_role_carries_the_boundary_the_deployer_root_creates_for_it
+C06 deployer renames the runtime boundary (naming drift) -> 28 passed, 1 failed; failing: every_role_carries_the_boundary_the_deployer_root_creates_for_it
+C07 EMR disk-encryption policy gains kms:DeleteAlias -> 28 passed, 1 failed; failing: every_action_of_every_role_policy_is_allowed_by_that_roles_boundary
+C08 EMR node policy gains elasticfilesystem:DeleteFileSystem -> 28 passed, 1 failed; failing: every_action_of_every_role_policy_is_allowed_by_that_roles_boundary
+C09 the deployment role created without the boundary -> 28 passed, 1 failed; failing: every_role_carries_the_boundary_the_deployer_root_creates_for_it
+C10 identity builds the runtime boundary ARN for another account -> 28 passed, 1 failed; failing: every_role_carries_the_boundary_the_deployer_root_creates_for_it
+N01 application subnets lose the EMR tag -> 27 passed, 1 failed, 1 skipped; failing: emr_tag_is_on_the_application_subnets_the_emr_node_group_and_the_service_access_group_only
+N02 EMR node security group loses the tag -> 27 passed, 1 failed, 1 skipped; failing: emr_tag_is_on_the_application_subnets_the_emr_node_group_and_the_service_access_group_only
+N03 every role security group gets the tag -> 28 passed, 1 failed; failing: emr_tag_is_on_the_application_subnets_the_emr_node_group_and_the_service_access_group_only
+N04 tag value True instead of true on the subnets -> 28 passed, 1 failed; failing: emr_tag_is_on_the_application_subnets_the_emr_node_group_and_the_service_access_group_only
+N05 data subnets also get the tag -> 28 passed, 1 failed; failing: emr_tag_is_on_the_application_subnets_the_emr_node_group_and_the_service_access_group_only
+N06 emr_service_access loses the tag -> 27 passed, 1 failed, 1 skipped; failing: emr_tag_is_on_the_application_subnets_the_emr_node_group_and_the_service_access_group_only
+H01 Haiku profile statement uses the wrong region in the profile ARN -> 25 passed, 4 failed; failing: a_synthesis_profile_adds_the_profile_arn_and_one_conditioned_model_arn_per_routed_region, an_embedding_profile_reaches_only_the_embedding_services, a_global_profile_adds_the_region_less_model_arn_with_an_unspecified_region_condi
+done

@@ -1,0 +1,66 @@
+{
+  "api_key_env": "SCHOLARCHAIN_LOAD_API_KEY",
+  "commit": "b6dc94df6d9b443a9fd778eb09be6ec2c8c29f64",
+  "cost_report": {
+    "anthropic": {
+      "answers": 40,
+      "input_tokens_estimate": 286000,
+      "model": "claude-haiku-5-5",
+      "output_tokens_estimate": 52000,
+      "usage": "estimated from pinned tokens and rates; the Anthropic console is the record",
+      "usd": "0.054600"
+    },
+    "aws": {
+      "usage": "taken from the AWS bill and the pre-spend receipts; not metered here",
+      "usd": null
+    },
+    "combined_scope": "anthropic + voyage only (AWS not included: take it from the bill)",
+    "combined_usd": "0.054600",
+    "voyage": {
+      "model": "voyage-4-lite",
+      "tokens": null,
+      "usage": "tokens not metered here; the first 200000000 account tokens are free so the charge is USD 0 while the account stays under that",
+      "usd": "0.000000"
+    }
+  },
+  "ended_utc": "2026-11-14T21:21:35.716Z",
+  "experiment_id": "16b-live-evaluation",
+  "llm": {
+    "allocation_sha256": "3bdd1e5f6e181e2a87dca3b327d55cfd15f63d47e4f3a6764af2547deb8e2a17",
+    "answers_charged": 40,
+    "bucket": "16b",
+    "bucket_size": 40,
+    "bucket_used_at_end": 40,
+    "bucket_used_at_start": 0,
+    "estimated_cost_usd": "0.054600",
+    "ledger_path": "<home>/.scholarchain/llm-ledger/haiku-ledger.jsonl",
+    "ledger_total_at_end_usd": "0.069615",
+    "ledger_total_at_start_usd": "0.015015",
+    "note": "estimated from pinned tokens and rates, not metered; the Anthropic console, the Voyage console and the AWS bill are the costs of record",
+    "stopped_reason": null
+  },
+  "manifest_sha256": "4daa2587503474d483befa62e3e45850c7afbbc0bc118d4f010cbf3d5d5c7051",
+  "outcome": "completed",
+  "outcome_reason": "",
+  "outcomes": {
+    "client_error": 1,
+    "ok": 39
+  },
+  "profile_sha256": "4d2b22e7240db2b55e8c85d6fcfec7c5beb3aa1aee118955bbbab7bd9d28efe8",
+  "python": "3.14.5",
+  "questions": {
+    "asked": 40,
+    "file_sha256": "e4b6d48b060cfb58a2594ca7607bd1185a07b1abf303891c440be574bdb8f67d",
+    "planned": 40
+  },
+  "run_id": "16b-1",
+  "schema": "scholarchain.eval16b-run-record.v1",
+  "started_utc": "2026-11-14T21:18:35.459Z",
+  "target": {
+    "base_url_sha256": "bc4ae3872e2725ea8c49c7e4a9adcdb5fb52b6fec7f99b1a8244acd0ab41a134",
+    "host": "withheld",
+    "loopback": false,
+    "scheme": "https"
+  },
+  "tree_dirty": false
+}

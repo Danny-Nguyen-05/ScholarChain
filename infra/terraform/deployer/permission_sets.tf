@@ -700,7 +700,15 @@ locals {
       storage = local.spike_emr_part_storage
       iam     = local.spike_emr_part_iam
     }
-    # Phase 14 example (do not implement now):
-    # "phase14-..." = { part = local.some_policy_document }
+    # Phase 14 (decision 14-6): the MAIN root with the runtime, Neptune and EMR enabled. Documents are in phase14_main.tf.
+    "phase14-main" = {
+      network     = local.m14_network
+      network-mod = local.m14_network_mod
+      data        = local.m14_data
+      keys-obs    = local.m14_keys_obs
+      compute     = local.m14_compute
+      emr-efs     = local.m14_emr_efs
+      iam         = local.m14_iam
+    }
   }
 }

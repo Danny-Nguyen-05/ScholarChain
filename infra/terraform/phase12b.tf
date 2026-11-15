@@ -10,7 +10,7 @@ locals {
 resource "terraform_data" "phase12b_guard" {
   lifecycle {
     precondition {
-      condition     = alltrue([for id in [var.embedding_model_id, var.synthesis_model_id] : id == null ? true : can(regex("^[a-zA-Z0-9._:-]+$", id))])
+      condition     = alltrue([for id in [local.embedding_model_effective, local.synthesis_model_effective] : id == null ? true : can(regex("^[a-zA-Z0-9._:-]+$", id))])
       error_message = "Model IDs must be explicit foundation-model identifiers without wildcard actions/resources."
     }
 
@@ -43,8 +43,37 @@ resource "terraform_data" "phase12b_guard" {
       error_message = "Runtime activation needs a verified future live composition, immutable revision, Neptune and named auth secret references for all services (plus query outgoing token and shared graph cursor key). Current artifacts remain unconfigured."
     }
     precondition {
+      condition     = !(var.runtime_enabled && var.runtime_composition_verified) || (local.embedding_model_version_effective != null && local.synthesis_model_effective != null && local.embedding_model_effective != null)
+      error_message = "The aws service mode (runtime_enabled with runtime_composition_verified) needs the embedding model version (the version the 14C ingest stamps on the vectors: voyage-4-lite for embedding_provider voyage, otherwise embedding_model_version), the synthesis model (claude-haiku-5-5 for synthesis_provider anthropic, otherwise synthesis_model_id) and the embedding model."
+    }
+    precondition {
       condition     = var.https_certificate_arn == null || (var.runtime_enabled && length(var.public_ingress_cidrs) > 0 && startswith(var.https_certificate_arn, "arn:aws:acm:${var.aws_region}:${var.aws_account_id}:certificate/"))
       error_message = "HTTPS needs enabled runtime, approved ingress CIDRs and a certificate in the selected account/region. No HTTP fallback."
+    }
+    # Replan W5b: Terraform-requested certificate (api_domain_name). Exactly one certificate source; the same no-HTTP-fallback rule:
+    # with the runtime deployed the listener is HTTPS-only, so approved ingress CIDRs are required (the certificate itself needs none
+    # and is created in base-apply, before the runtime).
+    precondition {
+      condition     = var.https_certificate_arn == null || var.api_domain_name == null
+      error_message = "Set exactly one HTTPS certificate source: https_certificate_arn (an existing ACM certificate) or api_domain_name (Terraform requests the certificate). Both are set."
+    }
+    precondition {
+      condition     = var.api_domain_name == null || !var.runtime_enabled || length(var.public_ingress_cidrs) > 0
+      error_message = "HTTPS with api_domain_name needs approved ingress CIDRs (public_ingress_cidrs) once the runtime is enabled. No HTTP fallback."
+    }
+    # Replan G-MAIN (G3): the runtime-artifact pointer is all or none (AwsConfig refuses a partial set), and it only means something in
+    # the aws service mode of a deployed runtime, so setting it for a runtime that is not the verified aws composition is a mistake.
+    precondition {
+      condition     = (var.runtime_artifact_key == null) == (var.runtime_artifact_sha256 == null) && (var.runtime_artifact_key == null) == (var.runtime_artifact_source_run_id == null)
+      error_message = "runtime_artifact_key, runtime_artifact_sha256 and runtime_artifact_source_run_id are set all together or not at all (the services refuse a partial pointer)."
+    }
+    precondition {
+      condition     = var.runtime_artifact_key == null || (var.runtime_enabled && var.runtime_composition_verified)
+      error_message = "The runtime-artifact pointer reaches only the aws service mode of an enabled runtime (runtime_enabled and runtime_composition_verified); it is meaningless otherwise."
+    }
+    precondition {
+      condition     = var.runtime_artifact_bucket == null || (var.runtime_artifact_key != null && var.runtime_artifact_bucket == module.datalake.bucket_names["rag"])
+      error_message = "runtime_artifact_bucket, when set, must be the rag bucket (the bucket the runtime roles read and the operator uploads to) and needs the pointer (runtime_artifact_key, _sha256, _source_run_id)."
     }
     precondition {
       condition     = var.api_error_rate_percent > 0 && var.api_error_rate_percent <= 100 && var.latency_alarm_seconds > 0 && var.queue_age_alarm_seconds > 0
@@ -118,6 +147,7 @@ module "emr" {
 
 module "observability" {
   workflow_arn          = module.workflow.arn
+  dashboard_enabled     = var.dashboard_enabled
   source                = "./modules/observability"
   name_prefix           = local.name_prefix
   aws_region            = var.aws_region

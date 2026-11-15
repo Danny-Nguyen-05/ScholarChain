@@ -69,6 +69,10 @@ ROOTS = {
             "account_id": "111122223333",
             "operator_principal_arn": "arn:aws:iam::111122223333:user/example-operator",
             "owner": "example-owner",
+            # Decision 14-6 changed the deployer default to ["phase14-main"]. The Phase 13 suites (test_deployer_hardening,
+            # test_iam_items_13c) are the retained spike-era evidence and assert spike-emr names, tags and bounds, so they
+            # pin the set explicitly. The phase14-main checks (test_phase14_main.py) use the "deployer14" root below.
+            "enabled_permission_sets": '["spike-emr"]',
         },
         "snapshot": "deployer_snapshot.tftest.hcl",
     },
@@ -76,6 +80,68 @@ ROOTS = {
 
 # The main root is only used for its installed providers and lock file (the EMR module wrapper plans against them).
 ROOTS["main"] = {"rel": "infra/terraform", "extras": [], "vars": {}, "snapshot": None}
+
+# Phase 14A (decision 14-6): the deployer root with its DEFAULT permission set (phase14-main), no enabled_permission_sets override.
+ROOTS["deployer14"] = {
+    "rel": "infra/terraform/deployer",
+    "extras": [],
+    "vars": {
+        "account_id": "111122223333",
+        "operator_principal_arn": "arn:aws:iam::111122223333:user/example-operator",
+        "owner": "example-owner",
+    },
+    "snapshot": None,  # plan view only: the snapshot file pins spike-emr for the Phase 13 suites
+}
+
+# Phase 14A: the MAIN root planned offline with the real provider (the root declares no data source, so a plan needs no AWS
+# call). The provider block reads a named profile, which the offline override must null; all values are synthetic.
+ROOTS["main14"] = {
+    "rel": "infra/terraform",
+    "extras": [],
+    "vars": {
+        "aws_account_id": "111122223333",
+        "aws_region": "us-east-2",
+        "aws_profile": "offline-placeholder-profile",
+        "availability_zones": '["us-east-2a", "us-east-2b"]',
+        "deployment_trusted_principal_arn": "arn:aws:iam::111122223333:role/example-architect",
+        "budget_limit_usd": "50",
+    },
+    "snapshot": None,
+    "override_profile_null": True,
+}
+
+# Phase 14B replan (W5a): the deployer root with its default set and the three operator roles ENABLED (synthetic run prefix).
+ROOTS["deployer14ops"] = {
+    "rel": "infra/terraform/deployer",
+    "extras": [],
+    "vars": {
+        "account_id": "111122223333",
+        "operator_principal_arn": "arn:aws:iam::111122223333:user/example-operator",
+        "owner": "example-owner",
+        "operator_roles_enabled": "true",
+        "operator_run_prefix": "run-20261115",
+    },
+    "snapshot": None,
+}
+
+# Phase 14B replan (W3): the billing-bootstrap root (the account-level AWS Budget), planned offline with the real provider. Synthetic
+# account ID and profile; the provider block's profile and allowed_account_ids are nulled in the scratch override.
+ROOTS["billing"] = {
+    "rel": "infra/terraform/billing-bootstrap",
+    "extras": [],
+    "vars": {
+        "aws_account_id": "111122223333",
+        "aws_profile": "offline-placeholder-profile",
+        "aws_region": "us-east-2",
+        "budget_name": "synthetic-project-budget",
+        "enable_budget": "true",
+        "budget_notification_emails": '["synthetic@example.invalid"]',
+        "project_period_start_utc": "2026-10-01_00:00",
+        "project_period_end_utc": "2027-01-01_00:00",
+    },
+    "snapshot": None,
+    "override_profile_null": True,
+}
 
 OFFLINE_PROVIDER_OVERRIDE = """\
 # Written by tests/infra/infra_support.py into a SCRATCH copy only. Terraform merges *_override.tf files into the
@@ -179,7 +245,10 @@ class TfTree:
                 shutil.copytree(src, dst, ignore=COPY_IGNORE)
             else:
                 shutil.copyfile(src, dst)
-        (self.root / "zz_offline_override.tf").write_text(OFFLINE_PROVIDER_OVERRIDE)
+        override = OFFLINE_PROVIDER_OVERRIDE
+        if self.spec.get("override_profile_null"):
+            override = override.replace("  allowed_account_ids         = null\n", "  allowed_account_ids         = null\n  profile                     = null\n")
+        (self.root / "zz_offline_override.tf").write_text(override)
         self._plan = None
         self._state = None
         self._initialised = False

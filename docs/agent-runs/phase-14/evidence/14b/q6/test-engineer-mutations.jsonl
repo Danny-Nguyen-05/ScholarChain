@@ -1,0 +1,36 @@
+{"expected": ["grace-expression-not-conditional"], "found": ["grace-expression-not-conditional"], "mutation": "phase14b-grace/fixture/grace applied to every service (no condition)"}
+{"expected": ["grace-literal-in-resource", "grace-value-not-a-variable"], "found": ["grace-literal-in-resource", "grace-value-not-a-variable"], "mutation": "phase14b-grace/fixture/bare literal 120 instead of the variable"}
+{"expected": ["grace-literal-in-resource", "grace-value-not-a-variable"], "found": ["grace-literal-in-resource", "grace-value-not-a-variable"], "mutation": "phase14b-grace/fixture/bare literal 90 instead of the variable"}
+{"expected": ["grace-condition-differs-from-load-balancer"], "found": ["grace-condition-differs-from-load-balancer"], "mutation": "phase14b-grace/fixture/condition drops the certificate test"}
+{"expected": ["grace-condition-differs-from-load-balancer"], "found": ["grace-condition-differs-from-load-balancer"], "mutation": "phase14b-grace/fixture/condition names the wrong service"}
+{"expected": ["grace-condition-differs-from-load-balancer"], "found": ["grace-condition-differs-from-load-balancer"], "mutation": "phase14b-grace/fixture/condition also covers semantic-service and graph-service"}
+{"expected": ["grace-false-branch-not-null"], "found": ["grace-false-branch-not-null", "grace-literal-in-resource"], "mutation": "phase14b-grace/fixture/false branch is 0 instead of null"}
+{"expected": ["grace-attribute-absent"], "found": ["grace-attribute-absent"], "mutation": "phase14b-grace/fixture/attribute removed"}
+{"expected": ["grace-attribute-absent", "grace-attribute-not-top-level"], "found": ["grace-attribute-not-top-level"], "mutation": "phase14b-grace/fixture/attribute moved into a nested block"}
+{"expected": ["load-balancer-condition-not-query-api-with-certificate"], "found": ["grace-condition-differs-from-load-balancer", "load-balancer-condition-not-query-api-with-certificate"], "mutation": "phase14b-grace/fixture/load-balancer condition widened (grace follows it)"}
+{"expected": ["grace-variable-default-not-120"], "found": ["grace-variable-default-not-120"], "mutation": "phase14b-grace/fixture/variable default changed to 300"}
+{"expected": ["grace-variable-default-not-120"], "found": ["grace-variable-default-not-120"], "mutation": "phase14b-grace/fixture/variable default removed"}
+{"expected": ["grace-variable-without-validation"], "found": ["grace-variable-without-validation"], "mutation": "phase14b-grace/fixture/variable validation removed"}
+{"expected": ["grace-variable-undeclared"], "found": ["grace-variable-undeclared"], "mutation": "phase14b-grace/fixture/variable declaration removed"}
+{"expected": ["target-group-health-path-not-readyz"], "found": ["target-group-health-path-not-readyz"], "mutation": "phase14b-grace/fixture/target-group path changed to /healthz"}
+{"expected": ["circuit-breaker-not-enabled-with-rollback"], "found": ["circuit-breaker-not-enabled-with-rollback"], "mutation": "phase14b-grace/fixture/circuit-breaker rollback turned off"}
+{"expected": ["circuit-breaker-not-enabled-with-rollback"], "found": ["circuit-breaker-not-enabled-with-rollback"], "mutation": "phase14b-grace/fixture/circuit breaker disabled"}
+{"expected": ["root-passes-different-default"], "found": ["root-passes-different-default"], "mutation": "phase14b-grace/fixture/root wiring passes a different value"}
+{"expected": ["grace-expression-not-conditional"], "found": ["grace-expression-not-conditional"], "mutation": "phase14b-grace/real/grace applied to every service (no condition)"}
+{"expected": ["grace-literal-in-resource", "grace-value-not-a-variable"], "found": ["grace-literal-in-resource", "grace-value-not-a-variable"], "mutation": "phase14b-grace/real/bare literal 120 instead of the variable"}
+{"expected": ["grace-literal-in-resource", "grace-value-not-a-variable"], "found": ["grace-literal-in-resource", "grace-value-not-a-variable"], "mutation": "phase14b-grace/real/bare literal 90 instead of the variable"}
+{"expected": ["grace-condition-differs-from-load-balancer"], "found": ["grace-condition-differs-from-load-balancer"], "mutation": "phase14b-grace/real/condition drops the certificate test"}
+{"expected": ["grace-condition-differs-from-load-balancer"], "found": ["grace-condition-differs-from-load-balancer"], "mutation": "phase14b-grace/real/condition names the wrong service"}
+{"expected": ["grace-condition-differs-from-load-balancer"], "found": ["grace-condition-differs-from-load-balancer"], "mutation": "phase14b-grace/real/condition also covers semantic-service and graph-service"}
+{"expected": ["grace-false-branch-not-null"], "found": ["grace-false-branch-not-null", "grace-literal-in-resource"], "mutation": "phase14b-grace/real/false branch is 0 instead of null"}
+{"expected": ["grace-attribute-absent"], "found": ["grace-attribute-absent"], "mutation": "phase14b-grace/real/attribute removed"}
+{"expected": ["grace-attribute-absent", "grace-attribute-not-top-level"], "found": ["grace-attribute-not-top-level"], "mutation": "phase14b-grace/real/attribute moved into a nested block"}
+{"expected": ["load-balancer-condition-not-query-api-with-certificate"], "found": ["load-balancer-condition-not-query-api-with-certificate"], "mutation": "phase14b-grace/real/load-balancer condition widened (grace follows it)"}
+{"expected": ["grace-variable-default-not-120"], "found": ["grace-variable-default-not-120"], "mutation": "phase14b-grace/real/variable default changed to 300"}
+{"expected": ["grace-variable-default-not-120"], "found": ["grace-variable-default-not-120"], "mutation": "phase14b-grace/real/variable default removed"}
+{"expected": ["grace-variable-without-validation"], "found": ["grace-variable-without-validation"], "mutation": "phase14b-grace/real/variable validation removed"}
+{"expected": ["grace-variable-undeclared"], "found": ["grace-variable-undeclared"], "mutation": "phase14b-grace/real/variable declaration removed"}
+{"expected": ["target-group-health-path-not-readyz"], "found": ["target-group-health-path-not-readyz"], "mutation": "phase14b-grace/real/target-group path changed to /healthz"}
+{"expected": ["circuit-breaker-not-enabled-with-rollback"], "found": ["circuit-breaker-not-enabled-with-rollback"], "mutation": "phase14b-grace/real/circuit-breaker rollback turned off"}
+{"expected": ["circuit-breaker-not-enabled-with-rollback"], "found": ["circuit-breaker-not-enabled-with-rollback"], "mutation": "phase14b-grace/real/circuit breaker disabled"}
+{"expected": ["root-passes-different-default"], "found": ["root-passes-different-default"], "mutation": "phase14b-grace/real/root wiring passes a different value"}

@@ -137,7 +137,7 @@ class MaximumLengthTests(MaximumValues):
         args = self.ready(record_override={"APPROVED_CLUSTER_ID": CLUSTER_MAX}, **self.max_overrides())
         self.assertEqual(self.execute(args).rc, 0)
         for index, step in enumerate(self.submitted_steps()):
-            self.assertTrue(all(len(a) < LIMIT // 5 for a in step["HadoopJarStep"]["Args"]), STEPS[index])
+            self.assertTrue(all(len(a) < LIMIT // 5 for a in step["Args"]), STEPS[index])
 
     def test_the_launcher_and_the_dry_run_state_the_limit(self):
         out = self.dry().stdout

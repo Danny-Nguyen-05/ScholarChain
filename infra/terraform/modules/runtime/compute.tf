@@ -2,12 +2,87 @@ locals {
   active_services = var.enabled && var.image_revision != null ? local.services : toset([])
   http_services   = var.enabled && var.image_revision != null ? setsubtract(local.services, toset(["embedding-worker"])) : toset([])
   namespace       = "${var.name_prefix}.internal"
+
+  # The aws service mode needs the human acknowledgment (runtime_composition_verified, a precondition of runtime_enabled in the root)
+  # AND an enabled runtime. Otherwise the tasks keep SCHOLARCHAIN_SERVICE_MODE=unconfigured and receive none of the aws variables.
+  aws_mode = var.enabled && var.composition_verified
+
+  # The runtime-artifact pointer exists only when all three values are set (a partial pointer is refused by the root guard and by the services).
+  runtime_artifact_pointer = var.runtime_artifact_key != null && var.runtime_artifact_sha256 != null && var.runtime_artifact_source_run_id != null
+
+  # HTTPS (listener, query-api load balancing): the caller's plan-time boolean when given (an ACM certificate created in the same
+  # apply has an ARN that is unknown at plan time), otherwise "a certificate ARN was supplied" (the earlier rule).
+  https = var.https_enabled != null ? var.https_enabled : var.certificate_arn != null
+
+  # The Neptune tunnel task definition exists only with a deployed runtime (image revision) and an explicit request.
+  tunnel_seconds = 14400 # the task sleeps at most 4 h (the operator session maximum), then exits on its own
+
+  # The one condition that attaches the query-api service to the ALB target group. The dynamic load_balancer block and
+  # health_check_grace_period_seconds both read it, so they cannot diverge: ECS rejects a grace period on a service that has no
+  # load balancer.
+  load_balanced_service = local.https ? "query-api" : null
+
+  # Synthesis: the inference-profile ID is the Converse modelId when one is configured; the foundation-model ID is its version tag.
+  synthesis_model = var.synthesis_inference_profile_id != null ? var.synthesis_inference_profile_id : var.synthesis_model_id
+
+  # Variables every aws role needs: the six tables and the QuerySession index (names from the root's table contract).
+  aws_common_env = merge(
+    { for t, suffix in {
+      RunLedger      = "RUN_LEDGER", EntityLinkCache = "ENTITY_LINK_CACHE", QuerySession = "QUERY_SESSION",
+      EvidenceBundle = "EVIDENCE_BUNDLE", ArtifactRegistry = "ARTIFACT_REGISTRY", ResearcherMetricCache = "RESEARCHER_METRIC_CACHE"
+    } : "SCHOLARCHAIN_DYNAMODB_TABLE_${suffix}" => var.table_names[t] },
+    { SCHOLARCHAIN_DYNAMODB_QUERY_SESSION_INDEX = var.query_session_index }
+  )
+  aws_embedding_env = {
+    SCHOLARCHAIN_EMBEDDING_PROVIDER      = var.embedding_provider
+    SCHOLARCHAIN_MODELS_EMBEDDING_MODEL  = var.embedding_model_id
+    SCHOLARCHAIN_EMBEDDING_MODEL_VERSION = var.embedding_model_version
+    SCHOLARCHAIN_EMBEDDING_DIMENSION     = tostring(var.vector_dimension)
+  }
+  aws_vector_env = {
+    SCHOLARCHAIN_S3_VECTORS_VECTOR_BUCKET = var.vector_bucket
+    SCHOLARCHAIN_SEMANTIC_INDEX           = var.semantic_index
+    SCHOLARCHAIN_S3_VECTORS_METRIC        = var.vector_metric
+  }
+  # Per role, exactly the contract of modules/services/README.md "Environment contract". Secrets are NOT here: they are `secrets`
+  # (ARN bindings). Optional variables with no Terraform source are left unset.
+  aws_role_env = {
+    "graph-service" = {
+      SCHOLARCHAIN_NEPTUNE_ENDPOINT     = var.neptune_endpoint # module.neptune.endpoint is already "https://<reader endpoint>:<port>"
+      SCHOLARCHAIN_STORAGE_GRAPH_BUCKET = var.graph_bucket
+    }
+    "semantic-service" = merge(local.aws_vector_env, local.aws_embedding_env, { SCHOLARCHAIN_STORAGE_RAG_BUCKET = var.rag_bucket })
+    "query-api" = merge(local.aws_embedding_env, {
+      SCHOLARCHAIN_STORAGE_RAG_BUCKET      = var.rag_bucket
+      SCHOLARCHAIN_SYNTHESIS_PROVIDER      = var.synthesis_provider
+      SCHOLARCHAIN_MODELS_SYNTHESIS_MODEL  = local.synthesis_model
+      SCHOLARCHAIN_SYNTHESIS_MODEL_VERSION = var.synthesis_model_id
+      SCHOLARCHAIN_EVIDENCE_INDEX_PREFIX   = var.evidence_index_prefix
+      SCHOLARCHAIN_AUDIT_PREFIX            = var.audit_prefix
+      }, local.runtime_artifact_pointer ? {
+      # G3: all three or none (AwsConfig refuses a partial set). The optional bucket is set only when given (the root guard allows the rag bucket
+      # only); null leaves the services default, which is the rag bucket.
+      SCHOLARCHAIN_RUNTIME_ARTIFACT_KEY           = var.runtime_artifact_key
+      SCHOLARCHAIN_RUNTIME_ARTIFACT_SHA256        = var.runtime_artifact_sha256
+      SCHOLARCHAIN_RUNTIME_ARTIFACT_SOURCE_RUN_ID = var.runtime_artifact_source_run_id
+      } : {}, local.runtime_artifact_pointer && var.runtime_artifact_bucket != null ? {
+      SCHOLARCHAIN_RUNTIME_ARTIFACT_BUCKET = var.runtime_artifact_bucket
+    } : {})
+    "embedding-worker" = merge(local.aws_vector_env, local.aws_embedding_env, {
+      SCHOLARCHAIN_SQS_QUEUE_URL                     = var.queue_url
+      SCHOLARCHAIN_SQS_DLQ_URL                       = var.dlq_url
+      SCHOLARCHAIN_STORAGE_RAG_BUCKET                = var.rag_bucket
+      SCHOLARCHAIN_EMBEDDING_TEXT_PREFIX             = var.embedding_text_prefix
+      SCHOLARCHAIN_WORKER_VISIBILITY_TIMEOUT_SECONDS = tostring(var.queue_visibility_seconds)
+      SCHOLARCHAIN_WORKER_WAIT_SECONDS               = tostring(var.queue_wait_seconds)
+    })
+  }
 }
 resource "aws_ecs_cluster" "course" {
   name = var.name_prefix
   setting {
     name  = "containerInsights"
-    value = "enabled"
+    value = var.container_insights_enabled ? "enabled" : "disabled"
   }
   tags = var.tags
 }
@@ -27,7 +102,6 @@ resource "aws_service_discovery_service" "http" {
     }
     routing_policy = "MULTIVALUE"
   }
-  health_check_custom_config {}
   tags = var.tags
 }
 resource "aws_ecs_task_definition" "service" {
@@ -50,26 +124,75 @@ resource "aws_ecs_task_definition" "service" {
     essential              = true
     readonlyRootFilesystem = true
     mountPoints            = [{ sourceVolume = "temporary", containerPath = "/tmp", readOnly = false }]
-    # Current entrypoints support unconfigured/offline-synthetic only. Even an
-    # activation acknowledgment does not silently opt into fake or invented live mode.
+    # SCHOLARCHAIN_SERVICE_MODE is "aws" only when the runtime is enabled AND the human acknowledged the composition
+    # (runtime_composition_verified); otherwise "unconfigured" with none of the aws variables. The aws mode is implemented in
+    # modules/services (AwsComposition); graph-service's Neptune reader wiring is implemented in modules/services and
+    # modules/storage. Nothing here is live-verified.
     environment = concat([
       { name = "SCHOLARCHAIN_HTTP_HOST", value = "0.0.0.0" },
       { name = "SCHOLARCHAIN_HTTP_PORT", value = tostring(var.service_port) },
-      { name = "SCHOLARCHAIN_SERVICE_MODE", value = "unconfigured" },
+      { name = "SCHOLARCHAIN_SERVICE_MODE", value = local.aws_mode ? "aws" : "unconfigured" },
       { name = "AWS_REGION", value = var.aws_region }
       ], each.key == "query-api" ? [
       { name = "SCHOLARCHAIN_GRAPH_BASE_URI", value = "http://graph-service.${local.namespace}:${var.service_port}" },
       { name = "SCHOLARCHAIN_SEMANTIC_BASE_URI", value = "http://semantic-service.${local.namespace}:${var.service_port}" }
-    ] : [])
-    # Infrastructure endpoints/names below are deployment outputs, not invented
-    # application environment names; Phase13/14 owns the live SDK composition contract.
-    secrets      = [for name, arn in lookup(var.service_secret_bindings, each.key, {}) : { name = name, valueFrom = arn }]
+      ] : [],
+      [for name in sort(keys(merge(local.aws_common_env, local.aws_role_env[each.key]))) : { name = name, value = merge(local.aws_common_env, local.aws_role_env[each.key])[name] } if local.aws_mode]
+    )
+    # Secrets stay ARN bindings (never in `environment`); the names are those the services read.
+    # Repair round 3: the provider API key containers join `secrets` in the aws service mode only (ECS refuses to start a task whose
+    # secret has no value yet). The names are SCHOLARCHAIN_ANTHROPIC_API_KEY (query-api) and SCHOLARCHAIN_VOYAGE_API_KEY
+    # (semantic-service, embedding-worker); a key value is never in `environment`.
+    secrets      = [for name, arn in merge(lookup(var.service_secret_bindings, each.key, {}), local.aws_mode ? lookup(var.provider_secret_bindings, each.key, {}) : {}) : { name = name, valueFrom = arn }]
     portMappings = [{ containerPort = var.service_port, hostPort = var.service_port, protocol = "tcp" }]
     logConfiguration = { logDriver = "awslogs", options = {
       awslogs-group = var.log_groups[each.key], awslogs-region = var.aws_region, awslogs-stream-prefix = "service"
     } }
   }])
   tags = var.tags
+}
+# Replan W5b (user decision 1, naming contract: infra/terraform/deployer/README.md "Replan W5a"): family <prefix>-neptune-tunnel. A task
+# DEFINITION only: no ECS service exists for it. The operator runs it as a one-off task (ecs:RunTask --enable-execute-command) in the
+# application subnets with the graph-service security group (the only one Neptune admits), opens an ECS Exec port-forwarding session to
+# the Neptune WRITER endpoint, and stops the task when the load is done. The container does nothing but sleep for a bounded time.
+#  - image: the graph-service image at the immutable revision (already pushed; JRE image with `sleep`, nothing new to build or scan);
+#  - execution role: the graph-service execution role (pulls that image, writes to the graph-service log group only);
+#  - task role: modules/identity neptune-tunnel-task (the four ssmmessages channel actions, nothing else);
+#  - readonlyRootFilesystem is FALSE on purpose: the SSM agent that ECS Exec injects must write its own directories, and AWS documents
+#    that ECS Exec cannot work with a read-only root file system (https://repost.aws/knowledge-center/ecs-error-execute-command);
+#  - initProcessEnabled = true: ECS Exec leaves child processes (the SSM agent sessions) that need an init process to be reaped.
+resource "aws_ecs_task_definition" "neptune_tunnel" {
+  count                    = var.enabled && var.image_revision != null && var.neptune_tunnel_enabled ? 1 : 0
+  family                   = "${var.name_prefix}-neptune-tunnel"
+  network_mode             = "awsvpc"
+  requires_compatibilities = ["FARGATE"]
+  cpu                      = "256"
+  memory                   = "512"
+  task_role_arn            = var.neptune_tunnel_task_role_arn
+  execution_role_arn       = var.execution_roles["graph-service"]
+  runtime_platform {
+    operating_system_family = "LINUX"
+    cpu_architecture        = "X86_64"
+  }
+  container_definitions = jsonencode([{
+    name                   = "neptune-tunnel"
+    image                  = "${aws_ecr_repository.service["graph-service"].repository_url}:${var.image_revision}"
+    essential              = true
+    readonlyRootFilesystem = false
+    entryPoint             = ["sleep"]
+    command                = [tostring(local.tunnel_seconds)]
+    linuxParameters        = { initProcessEnabled = true }
+    logConfiguration = { logDriver = "awslogs", options = {
+      awslogs-group = var.log_groups["graph-service"], awslogs-region = var.aws_region, awslogs-stream-prefix = "neptune-tunnel"
+    } }
+  }])
+  tags = var.tags
+  lifecycle {
+    precondition {
+      condition     = var.neptune_tunnel_task_role_arn != null
+      error_message = "The Neptune tunnel task definition needs the tunnel task role (modules/identity, neptune_tunnel_role_enabled)."
+    }
+  }
 }
 resource "aws_lb" "query" {
   count                      = var.enabled && var.image_revision != null ? 1 : 0
@@ -92,13 +215,23 @@ resource "aws_lb_target_group" "query" {
   target_type = "ip"
   vpc_id      = var.vpc_id
   health_check {
-    path    = "/readyz"
-    matcher = "200"
+    path                = "/readyz"
+    matcher             = "200"
+    interval            = var.health_check_interval_seconds
+    timeout             = var.health_check_timeout_seconds
+    healthy_threshold   = var.health_check_healthy_threshold
+    unhealthy_threshold = var.health_check_unhealthy_threshold
   }
   tags = var.tags
+  lifecycle {
+    precondition {
+      condition     = var.health_check_timeout_seconds < var.health_check_interval_seconds
+      error_message = "The ALB requires the health-check timeout to be smaller than the interval."
+    }
+  }
 }
 resource "aws_lb_listener" "https" {
-  count             = var.enabled && var.image_revision != null && var.certificate_arn != null ? 1 : 0
+  count             = var.enabled && var.image_revision != null && local.https ? 1 : 0
   load_balancer_arn = aws_lb.query[0].arn
   port              = 443
   protocol          = "HTTPS"
@@ -121,6 +254,11 @@ resource "aws_ecs_service" "service" {
   enable_execute_command  = false
   enable_ecs_managed_tags = true
   propagate_tags          = "SERVICE"
+  # query-api's /readyz waits for graph-service and semantic-service, which start in the same apply. The grace period keeps ECS
+  # and the ALB from counting those first failed checks against the task (and tripping the circuit breaker). A target marked
+  # unhealthy needs healthy_threshold x interval more of passing checks, so the grace must cover that too (precondition below).
+  # Set only on the load-balanced service; null (absent) elsewhere.
+  health_check_grace_period_seconds = each.key == local.load_balanced_service ? var.health_check_grace_period_seconds : null
   deployment_circuit_breaker {
     enable   = true
     rollback = true
@@ -135,7 +273,7 @@ resource "aws_ecs_service" "service" {
     content { registry_arn = aws_service_discovery_service.http[each.key].arn }
   }
   dynamic "load_balancer" {
-    for_each = each.key == "query-api" && var.certificate_arn != null ? [each.key] : []
+    for_each = each.key == local.load_balanced_service ? [each.key] : []
     content {
       target_group_arn = aws_lb_target_group.query[0].arn
       container_name   = each.key
@@ -143,7 +281,14 @@ resource "aws_ecs_service" "service" {
     }
   }
   tags = var.tags
-  lifecycle { ignore_changes = [desired_count] }
+  lifecycle {
+    ignore_changes = [desired_count]
+    # A once-unhealthy target needs healthy_threshold x interval of passes to recover; a shorter grace can never cover that.
+    precondition {
+      condition     = each.key != local.load_balanced_service || var.health_check_grace_period_seconds >= var.health_check_healthy_threshold * var.health_check_interval_seconds
+      error_message = "health_check_grace_period_seconds must be at least health_check_healthy_threshold x health_check_interval_seconds (the time a once-unhealthy query-api target needs to become healthy again)."
+    }
+  }
   depends_on = [aws_lb_listener.https]
 }
 resource "aws_appautoscaling_target" "service" {
@@ -170,7 +315,8 @@ resource "aws_appautoscaling_policy" "http_cpu" {
   }
 }
 resource "aws_appautoscaling_policy" "worker_backlog" {
-  count              = var.enabled && var.image_revision != null ? 1 : 0
+  # The backlog metric divides by ECS/ContainerInsights RunningTaskCount, which exists only with Container Insights.
+  count              = var.enabled && var.image_revision != null && var.container_insights_enabled ? 1 : 0
   name               = "${var.name_prefix}-embedding-backlog"
   policy_type        = "TargetTrackingScaling"
   resource_id        = aws_appautoscaling_target.service["embedding-worker"].resource_id

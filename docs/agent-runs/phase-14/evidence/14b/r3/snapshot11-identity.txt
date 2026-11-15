@@ -1,0 +1,5 @@
+Snapshot 11 (Phase 14B repair round 3, after review 7 APPROVE)
+Base: f5490d3; snapshot commit: 3703e125e1e26603b9606037d12ddf00aef98852
+Procedure: git clone . ; checkout f5490d3 ; rsync of `git ls-files -m -o --exclude-standard -z` ; deleted files removed ; commit as "snapshot".
+Identity before the run (git ls-files -c -o --exclude-standard, cmp per file): files=5819 differing=0 missing=0
+Identity after the run (non-docs files): files=1658 differing=0 missing=0

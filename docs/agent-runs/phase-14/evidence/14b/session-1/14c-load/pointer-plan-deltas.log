@@ -1,0 +1,3 @@
+MATCH: update module.runtime.aws_ecs_service.service["query-api"]
+MATCH: replace module.runtime.aws_ecs_task_definition.service["query-api"]
+RESULT: IDENTICAL stage=pointer-apply compared against the reviewed offline derivation (not an approval to apply)

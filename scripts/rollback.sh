@@ -42,7 +42,7 @@ Purpose
   backend "local" override, so the rollback plans AND applies against the existing state of the live stack,
   never a fresh one: the plan receipt records the state's lineage, serial and sha256, and deploy.sh refuses
   to apply when the state file is missing, has a different lineage or changed after the plan.
-  No data repair of any kind is performed; S3 prevent_destroy and DynamoDB protections stay.
+  No data repair of any kind is performed; S3 versioning and the DynamoDB, Neptune and load balancer protections stay.
 
   Two kinds, chosen by what the LIVE state shows (step runtime-state reads the state file locally: module path,
   type and instance count only). "Runtime live" means the runtime is DEPLOYED, and is decided only from the pinned

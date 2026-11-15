@@ -214,7 +214,7 @@ class ExperimentExecuteTests(ExperimentFixture):
         self.assertEqual(result.rc, 0, result.out)
         self.assertTrue(result.result_line().startswith("RESULT: PASS"), result.result_line())
         self.assertEqual(len(self.submitted_steps()), 6)
-        self.assertEqual(self.emr_ops()[:3], ["describe-cluster", "get-auto-termination-policy", "list-instance-groups"])
+        self.assertEqual(self.emr_ops()[:2], ["describe-cluster", "get-auto-termination-policy"])
         runs = os.path.join(self.repo, "target", "experiment-runs")
         directory = [d for d in os.listdir(runs) if d.startswith("fixture-exp-a-")]
         self.assertEqual(len(directory), 1)
@@ -288,6 +288,249 @@ class ExperimentExecuteTests(ExperimentFixture):
             handle.write("\n")
         self.refused(self.experiment(*args), "differs from HEAD")
         self.assertEqual(self.calls(), [])
+
+
+RUN = "run-20261115"
+OTHER_ACCOUNT = "9" * 12  # another account than FAKE_ACCOUNT, built without a 12-digit literal
+
+
+def bucket(zone, account=FAKE_ACCOUNT, env="course"):
+    return "scholarchain-%s-%s-%s" % (env, account, zone)
+
+
+class TokenFixture(ExperimentFixture):
+    """A committed manifest that holds only tokens (replan G-MAIN, Option B): the bucket names embed the account id, so they are
+    resolved from the environment at run time and the account never enters a committed file."""
+
+    TOKEN_ENV = None
+
+    def setUp(self):
+        super().setUp()
+        self.token_env = {"SCHOLARCHAIN_ARTIFACTS_BUCKET": bucket("artifacts"), "SCHOLARCHAIN_RUN_PREFIX": RUN}
+        document = self.manifest()
+        pipeline = document["pipeline"]
+        base = "s3://${SCHOLARCHAIN_ARTIFACTS_BUCKET}/emr/${SCHOLARCHAIN_RUN_PREFIX}"
+        pipeline["input_prefix"] = base + "/input/size-25"
+        pipeline["output_prefix"] = "s3://${SCHOLARCHAIN_ARTIFACTS_BUCKET}/pipeline/${SCHOLARCHAIN_RUN_PREFIX}/15a/size-25"
+        pipeline["hadoop_submit_jar"] = base + "/jars/hadoop-submit.jar"
+        pipeline["hadoop_libjars"] = base + "/jars/hadoop-bundle.jar"
+        pipeline["er_jar"] = base + "/jars/entity-resolution.jar"
+        pipeline["er_policy"] = base + "/config/er-policy.json"
+        pipeline["er_config"] = base + "/config/er-config.json"
+        pipeline["spark_config_template"] = base + "/config/spark-config-template.json"
+        document["metrics"]["locations"] = ["s3://${SCHOLARCHAIN_ARTIFACTS_BUCKET}/pipeline/${SCHOLARCHAIN_RUN_PREFIX}/15a/size-25/metrics/"]
+        self.tokenized = document
+        self.path = self.commit_manifest(document)
+
+    def experiment(self, *extra, manifest=None, cluster=CLUSTER, **env):
+        merged = dict(self.token_env)
+        merged.update(env)
+        return super().experiment(*extra, manifest=manifest or self.path, cluster=cluster, **merged)
+
+    def resolved_sha(self, values=None):
+        """Independent of the script: replace the tokens in every string value, dump the way the renderer documents, hash the bytes."""
+        values = values or {"SCHOLARCHAIN_ARTIFACTS_BUCKET": bucket("artifacts"), "SCHOLARCHAIN_RUN_PREFIX": RUN}
+
+        def walk(item):
+            if isinstance(item, str):
+                for name, value in values.items():
+                    item = item.replace("${%s}" % name, value)
+                return item
+            if isinstance(item, list):
+                return [walk(x) for x in item]
+            if isinstance(item, dict):
+                return {k: walk(v) for k, v in item.items()}
+            return item
+
+        return sha256_bytes((json.dumps(walk(self.tokenized), indent=2, sort_keys=True) + "\n").encode())
+
+    def refused_tokens(self, result, needle):
+        self.assertEqual(result.rc, 3, result.out)
+        self.assertIn("step=manifest-tokens", result.result_line())
+        self.assertIn(needle, result.out)
+        self.assertEqual(self.calls(), [], "a refusal makes no cloud call")
+        self.assertNotIn("pipeline|", result.stdout, "the pipeline is not even started")
+
+    def committed_sha(self):
+        with open(self.path, "rb") as handle:
+            return sha256_bytes(handle.read())
+
+
+class TokenResolutionTests(TokenFixture):
+    def test_the_committed_manifest_holds_no_account_id_and_the_dry_run_resolves_the_tokens(self):
+        with open(self.path, encoding="utf-8") as handle:
+            self.assertNotIn(FAKE_ACCOUNT, handle.read())
+        result = self.experiment()
+        self.assertEqual(result.rc, 0, result.out)
+        self.assertIn("pipeline| PLAN: input-prefix: s3://%s/emr/%s/input/size-25" % ("scholarchain-course-<acct>-artifacts", RUN), result.stdout)
+        self.assertIn("pipeline| PLAN: output-prefix: s3://scholarchain-course-<acct>-artifacts/pipeline/%s/15a/size-25" % RUN, result.stdout)
+        self.assertIn("EXPERIMENT-METRIC-LOCATION: s3://scholarchain-course-<acct>-artifacts/pipeline/%s/15a/size-25/metrics/" % RUN, result.stdout)
+        self.assertIn("EXPERIMENT-TOKEN: SCHOLARCHAIN_ARTIFACTS_BUCKET scholarchain-course-<acct>-artifacts", result.stdout)
+        self.assertIn("EXPERIMENT-TOKEN: SCHOLARCHAIN_RUN_PREFIX %s" % RUN, result.stdout)
+        self.assertNotIn(FAKE_ACCOUNT, result.out, "no raw account id on screen")
+        for line in result.stdout.splitlines():
+            if line.startswith("pipeline|"):
+                self.assertNotIn("${SCHOLARCHAIN", line, "no unresolved token reaches the pipeline")
+
+    def test_the_committed_and_the_resolved_sha256_are_both_reported_and_the_resolved_one_is_the_documented_dump(self):
+        result = self.experiment()
+        self.assertIn("EXPERIMENT-MANIFEST-SHA256: committed=%s rendered=%s" % (self.committed_sha(), self.resolved_sha()), result.stdout)
+        self.assertNotEqual(self.committed_sha(), self.resolved_sha())
+        self.assertIn("EXPERIMENT-APPROVAL-LINE: APPROVED_MANIFEST_SHA256=%s" % self.committed_sha(), result.stdout)
+        self.assertIn("EXPERIMENT-APPROVAL-NOTE: Rendered manifest sha256: %s" % self.resolved_sha(), result.stdout)
+
+    def test_a_manifest_without_tokens_is_unchanged_and_unused_token_variables_are_ignored(self):
+        document = self.manifest()  # the earlier fixture content is replaced by the tokenised one; rebuild a plain one
+        plain = json.loads(read(os.path.join(FIXTURES, "experiment", "valid-manifest.json")))
+        path = self.commit_manifest(plain, rel="experiments/fixture/plain.json")
+        result = super(TokenFixture, self).experiment(manifest=path, SCHOLARCHAIN_ARTIFACTS_BUCKET="not-a-project-bucket", SCHOLARCHAIN_RUN_PREFIX="bad")
+        self.assertEqual(result.rc, 0, result.out)
+        with open(path, "rb") as handle:
+            sha = sha256_bytes(handle.read())
+        self.assertIn("EXPERIMENT-MANIFEST-SHA256: committed=%s rendered=%s" % (sha, sha), result.stdout)
+        self.assertNotIn("EXPERIMENT-TOKEN:", result.stdout)
+        self.assertEqual(document["id"], plain["id"])
+
+    def test_an_unknown_token_is_refused(self):
+        for token in ("${SCHOLARCHAIN_SECRET_BUCKET}", "${HOME}", "${}", "${SCHOLARCHAIN_ARTIFACTS_BUCKET2}"):
+            with self.subTest(token):
+                document = json.loads(json.dumps(self.tokenized))
+                document["pipeline"]["er_jar"] = "s3://" + token + "/x.jar"
+                self.path = self.commit_manifest(document)
+                self.refused_tokens(self.experiment(), "unknown token")
+
+    def test_a_malformed_unclosed_token_is_refused(self):
+        document = json.loads(json.dumps(self.tokenized))
+        document["pipeline"]["er_jar"] = "s3://${SCHOLARCHAIN_ARTIFACTS_BUCKET/x.jar"
+        self.path = self.commit_manifest(document)
+        self.refused_tokens(self.experiment(), "malformed token")
+
+    def test_a_token_without_braces_is_refused_not_passed_on_literally(self):
+        for field in ("er_jar", "input_prefix"):
+            with self.subTest(field):
+                document = json.loads(json.dumps(self.tokenized))
+                document["pipeline"][field] = "s3://$SCHOLARCHAIN_ARTIFACTS_BUCKET/x"
+                self.path = self.commit_manifest(document)
+                self.refused_tokens(self.experiment(), "without braces")
+
+    def test_an_empty_or_unset_variable_for_a_token_in_use_is_refused(self):
+        for name in ("SCHOLARCHAIN_ARTIFACTS_BUCKET", "SCHOLARCHAIN_RUN_PREFIX"):
+            for value in ("", None):
+                with self.subTest(name=name, value=value):
+                    self.refused_tokens(self.experiment(**{name: value}), "environment variable %s is empty or unset" % name)
+
+    def test_a_bucket_value_of_another_shape_is_refused(self):
+        bad = {
+            "not a project bucket": "fixture-bucket",
+            "no account digits": "scholarchain-course-artifacts",
+            "eleven digits": "scholarchain-course-%s-artifacts" % FAKE_ACCOUNT[:11],
+            "thirteen digits": "scholarchain-course-%s3-artifacts" % FAKE_ACCOUNT,
+            "uppercase environment": "scholarchain-Course-%s-artifacts" % FAKE_ACCOUNT,
+            "the wrong zone suffix": bucket("raw"),
+            "the logs bucket": bucket("logs"),
+            "a trailing slash": bucket("artifacts") + "/",
+            "an s3 uri": "s3://" + bucket("artifacts"),
+        }
+        for label, value in bad.items():
+            with self.subTest(label):
+                self.refused_tokens(self.experiment(SCHOLARCHAIN_ARTIFACTS_BUCKET=value), "must be a project bucket name scholarchain-<env>-<12 digits>-artifacts")
+
+    def test_a_run_prefix_of_another_shape_is_refused(self):
+        for value in ("Run-20261115", "run-a", "run--x", "run-" + "a" * 29, "20261115", "run-../x", "run-20261115/", "run 1"):
+            with self.subTest(value):
+                self.refused_tokens(self.experiment(SCHOLARCHAIN_RUN_PREFIX=value), "SCHOLARCHAIN_RUN_PREFIX must match")
+
+    def test_the_longest_valid_run_prefix_is_accepted(self):
+        self.assertEqual(self.experiment(SCHOLARCHAIN_RUN_PREFIX="run-" + "a" * 28).rc, 0)
+
+    def test_buckets_of_different_accounts_or_environments_are_refused(self):
+        document = json.loads(json.dumps(self.tokenized))
+        document["metrics"]["locations"] = ["s3://${SCHOLARCHAIN_LOGS_BUCKET}/emr/m/"]
+        self.path = self.commit_manifest(document)
+        for other in (bucket("logs", account=OTHER_ACCOUNT), bucket("logs", env="other")):
+            with self.subTest(other):
+                self.refused_tokens(self.experiment(SCHOLARCHAIN_LOGS_BUCKET=other), "different environments or accounts")
+        ok = self.experiment(SCHOLARCHAIN_LOGS_BUCKET=bucket("logs"))
+        self.assertEqual(ok.rc, 0, ok.out)
+        self.assertIn("EXPERIMENT-TOKEN: SCHOLARCHAIN_LOGS_BUCKET scholarchain-course-<acct>-logs", ok.stdout)
+
+    def test_the_raw_and_reports_tokens_resolve_with_their_own_suffixes(self):
+        document = json.loads(json.dumps(self.tokenized))
+        document["metrics"]["locations"] = ["s3://${SCHOLARCHAIN_REPORTS_BUCKET}/pipeline/m/", "s3://${SCHOLARCHAIN_RAW_BUCKET}/x/"]
+        self.path = self.commit_manifest(document)
+        env = {"SCHOLARCHAIN_REPORTS_BUCKET": bucket("reports"), "SCHOLARCHAIN_RAW_BUCKET": bucket("raw")}
+        self.assertEqual(self.experiment(**env).rc, 0)
+        self.refused_tokens(self.experiment(**dict(env, SCHOLARCHAIN_RAW_BUCKET=bucket("reports"))), "-raw")
+
+    def test_a_raw_account_id_in_a_committed_string_is_refused(self):
+        for text in ("s3://%s/x.jar" % bucket("artifacts"), "account %s" % FAKE_ACCOUNT):
+            with self.subTest(text):
+                document = json.loads(json.dumps(self.tokenized))
+                document["pipeline"]["er_jar"] = text if text.startswith("s3://") else "s3://${SCHOLARCHAIN_ARTIFACTS_BUCKET}/x.jar"
+                document["description"] = text if not text.startswith("s3://") else document["description"]
+                self.path = self.commit_manifest(document)
+                self.refused_tokens(self.experiment(), "raw 12-digit account id")
+
+    def test_a_64_hex_sha256_is_not_mistaken_for_an_account_id(self):
+        document = json.loads(json.dumps(self.tokenized))
+        document["pipeline"]["artifact_sha256"]["er-jar"] = "0" * 12 + "a" * 52
+        document["pipeline"]["artifact_sha256"]["job-jar"] = "1" * 64
+        self.path = self.commit_manifest(document)
+        self.assertEqual(self.experiment().rc, 0)
+
+    def test_tokens_are_replaced_in_values_only_never_in_keys(self):
+        document = json.loads(json.dumps(self.tokenized))
+        document["pipeline"]["${SCHOLARCHAIN_RUN_PREFIX}"] = "x"
+        self.path = self.commit_manifest(document)
+        result = self.experiment()
+        self.assertEqual(result.rc, 3, result.out)
+        self.assertIn("unknown pipeline key", result.out)
+
+
+class TokenExecuteTests(TokenFixture):
+    def ready(self, **record_override):
+        self.set_pricing(confirmed=True)
+        dry = self.experiment()
+        self.assertEqual(dry.rc, 0, dry.out)
+        run_sha = self.value_of(dry, "pipeline| RUN-CONFIG-SHA256: ")
+        prespend_path, prespend_sha = self.write_prespend()
+        values = self.approval_lines(run_sha, prespend_sha, APPROVED_ACTION="run-experiment", APPROVED_BUDGET_USD="2.5")
+        values["APPROVED_MANIFEST_SHA256"] = self.committed_sha()
+        values.update(record_override)
+        return ["--approval", self.write_record(values), "--prespend", prespend_path, "--profile", "approved-profile", "--execute"]
+
+    def test_execute_records_both_hashes_and_the_substituted_values_without_the_account_id(self):
+        result = self.experiment(*self.ready())
+        self.assertEqual(result.rc, 0, result.out)
+        self.assertNotIn(FAKE_ACCOUNT, result.out)
+        runs = os.path.join(self.repo, "target", "experiment-runs")
+        base = os.path.join(runs, [d for d in os.listdir(runs) if d.startswith("fixture-exp-a-")][0])
+        with open(os.path.join(base, "experiment-record.json"), encoding="utf-8") as handle:
+            text = handle.read()
+        record = json.loads(text)
+        self.assertNotIn(FAKE_ACCOUNT, text, "the record holds no account id")
+        self.assertEqual(record["manifest_sha256"], self.committed_sha())
+        self.assertEqual(record["rendered_manifest_sha256"], self.resolved_sha())
+        self.assertEqual(record["token_substitutions"], {"SCHOLARCHAIN_ARTIFACTS_BUCKET": "scholarchain-course-<acct>-artifacts", "SCHOLARCHAIN_RUN_PREFIX": RUN})
+        self.assertEqual(record["metric_locations"], ["s3://${SCHOLARCHAIN_ARTIFACTS_BUCKET}/pipeline/${SCHOLARCHAIN_RUN_PREFIX}/15a/size-25/metrics/"])
+        with open(os.path.join(base, "experiment-result.json"), encoding="utf-8") as handle:
+            outcome_text = handle.read()
+        outcome = json.loads(outcome_text)
+        self.assertNotIn(FAKE_ACCOUNT, outcome_text)
+        self.assertEqual((outcome["rendered_manifest_sha256"], outcome["status"]), (self.resolved_sha(), "PASS"))
+        self.assertTrue(self.tree_clean(), "the resolved manifest is a private temp file, never written into the repository")
+
+    def test_the_pipeline_receives_the_resolved_names_so_the_run_configuration_binds_them(self):
+        dry = self.experiment()
+        resolved = self.value_of(dry, "pipeline| RUN-CONFIG-SHA256: ")
+        other = self.experiment(SCHOLARCHAIN_RUN_PREFIX="run-20261116")
+        self.assertNotEqual(resolved, self.value_of(other, "pipeline| RUN-CONFIG-SHA256: "), "a different run prefix changes what the human approves")
+
+    def test_the_approval_record_binds_the_committed_file_not_the_resolved_one(self):
+        result = self.experiment(*self.ready(APPROVED_MANIFEST_SHA256=self.resolved_sha()))
+        self.assertEqual(result.rc, 3, result.out)
+        self.assertIn("APPROVED_MANIFEST_SHA256", result.out)
+        self.assertEqual(self.submitted_steps(), [])
 
 
 class NoDuplicatedStepLogicTests(unittest.TestCase):

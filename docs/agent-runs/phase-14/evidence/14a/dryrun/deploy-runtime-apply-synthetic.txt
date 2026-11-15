@@ -1,0 +1,21 @@
+$ scripts/deploy.sh --stage runtime-apply --region us-east-2 --profile scholarchain-deployer-tf --approval target/phase14/dryrun-synthetic/runtime-apply.md --prespend target/phase14/dryrun-synthetic/prespend.json --plan target/phase14/dryrun-synthetic/missing-runtime-apply.tfplan
+STEP: start
+[2026-11-07T03:18:58Z] [20261107T031858Z-18376] INFO script=deploy.sh mode=dry-run run_id=20261107T031858Z-18376 repo_root=/Users/danny/Documents/UIC/CS441/ScholarChain
+STEP: inputs
+STEP: terraform-version
+[2026-11-07T03:18:59Z] [20261107T031858Z-18376] INFO terraform 1.13.5 accepted (binary: terraform)
+STEP: clean-tree
+[2026-11-07T03:18:59Z] [20261107T031858Z-18376] INFO clean tree at b2cd7ee99dcc136b5c8ec0667ca181cc5b3a87fd
+STEP: approval-record
+STEP: stage-match
+STEP: approval-record
+[2026-11-07T03:18:59Z] [20261107T031858Z-18376] INFO approval record parsed (8 required lines, each exactly once)
+STEP: commit-match
+STEP: region-match
+STEP: environment-match
+STEP: prespend-receipt
+pre-spend receipt ok: monitoring active, snapshot 0.0 h old, headroom 100.00 USD
+STEP: plan-checksum
+[2026-11-07T03:18:59Z] [20261107T031858Z-18376] ERROR refused at step plan-checksum: plan file not found: target/phase14/dryrun-synthetic/missing-runtime-apply.tfplan
+RESULT: REFUSED step=plan-checksum reason=plan file not found: target/phase14/dryrun-synthetic/missing-runtime-apply.tfplan
+EXIT: 3

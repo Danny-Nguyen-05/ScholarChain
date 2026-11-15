@@ -1,8 +1,9 @@
 """Static (text-only, no Terraform needed) source checks and the scanner they rely on.
 
 Item 12: `aws_default_security_group` is absent from the spike root (a re-added one is detected). The main root's
-network module manages its default security group on purpose ("closed": Terraform revokes every rule); that is the
-reviewed policy there, so for the main root the check is that the one default security group has no rules.
+network module used to manage its default security group ("closed"); 14A repair round 1 (review F2, user-ordered
+narrowing) removed it, so the main root now leaves the VPC default group unmanaged exactly like the spike, and the check
+for the main root is that NO aws_default_security_group exists anywhere in the root or its modules.
 """
 import re
 import unittest
@@ -13,6 +14,7 @@ from infra_support import REPO
 
 SPIKE_ROOT = REPO / "infra/terraform/spikes/emr-spark-isolated"
 NETWORK_MODULE = REPO / "infra/terraform/modules/network"
+MAIN_ROOT = REPO / "infra/terraform"
 
 
 def tf_texts(directory):
@@ -33,21 +35,18 @@ def spike_default_sg_problems(texts):
     return ["%s declares %s.%s" % (f, t, n) for f, t, n, _ in default_sg_blocks(texts)]
 
 
+def main_root_texts():
+    """{relative path: text} of every .tf file of the main root and of its modules (the spikes are separate roots)."""
+    texts = {p.relative_to(MAIN_ROOT).as_posix(): p.read_text() for p in sorted(MAIN_ROOT.glob("*.tf"))}
+    for p in sorted((MAIN_ROOT / "modules").glob("*/*.tf")):
+        texts[p.relative_to(MAIN_ROOT).as_posix()] = p.read_text()
+    return texts
+
+
 def main_default_sg_problems(texts):
-    """The main root manages exactly one default security group and it declares no ingress or egress rule."""
-    blocks = [b for b in default_sg_blocks(texts) if b[1] == "aws_default_security_group"]
-    problems = []
-    if len(blocks) != 1:
-        problems.append("expected exactly one aws_default_security_group, found %d" % len(blocks))
-    for f, t, n, body in blocks:
-        # Nested rule blocks or attributes would re-open the group; an empty body of rules keeps it closed.
-        if declares_rule(body):
-            problems.append("%s.%s in %s declares ingress/egress rules (the default group must stay closed)" % (t, n, f))
-    return problems
-
-
-def declares_rule(body):
-    return re.search(r"^[ \t]*(ingress|egress)[ \t]*(\{|=)", body, re.M) is not None
+    """Review F2 narrowing: the main root must not manage the VPC default security group at all. Adopting it needed
+    tag-on-adoption statements in the deployer role that reached every security group in the region."""
+    return ["%s declares %s.%s" % (f, t, n) for f, t, n, _ in default_sg_blocks(texts) if t == "aws_default_security_group"]
 
 
 class ScannerSelfCheck(unittest.TestCase):
@@ -97,24 +96,36 @@ class Item12SpikeDefaultSecurityGroup(unittest.TestCase):
 
 
 class Item12MainRootDefaultSecurityGroup(unittest.TestCase):
-    def test_the_main_root_manages_one_default_group_and_keeps_it_closed(self):
-        self.assertEqual(main_default_sg_problems(tf_texts(NETWORK_MODULE)), [])
+    def test_the_main_root_and_its_modules_declare_no_default_security_group(self):
+        texts = main_root_texts()
+        self.assertIn("modules/network/main.tf", texts)
+        self.assertGreaterEqual(len(texts), 20)
+        self.assertEqual(main_default_sg_problems(texts), [])
 
-    def test_adding_an_ingress_rule_to_the_main_default_group_is_detected(self):
-        texts = tf_texts(NETWORK_MODULE)
-        texts["main.tf"] = texts["main.tf"].replace(
-            'resource "aws_default_security_group" "closed" {',
-            'resource "aws_default_security_group" "closed" {\n  ingress {\n    protocol  = "-1"\n    self      = true\n    from_port = 0\n    to_port   = 0\n  }', 1)
-        problems = main_default_sg_problems(texts)
-        self.assertEqual(len(problems), 1)
-        self.assertIn("must stay closed", problems[0])
+    def test_the_explanation_of_why_it_is_unmanaged_is_still_in_the_network_module(self):
+        self.assertIn("default security group", (NETWORK_MODULE / "main.tf").read_text().lower())
 
-    def test_removing_the_main_default_group_or_duplicating_it_is_detected(self):
-        texts = tf_texts(NETWORK_MODULE)
-        removed = dict(texts, **{"main.tf": texts["main.tf"].replace('resource "aws_default_security_group" "closed"', 'resource "aws_security_group" "closed"', 1)})
-        self.assertEqual(len(main_default_sg_problems(removed)), 1)
-        duplicated = dict(texts, **{"zz.tf": 'resource "aws_default_security_group" "second" {\n  vpc_id = aws_vpc.course.id\n}\n'})
-        self.assertEqual(len(main_default_sg_problems(duplicated)), 1)
+    def test_re_adding_the_main_default_group_in_the_network_module_is_detected(self):
+        texts = main_root_texts()
+        texts["modules/network/main.tf"] += '\nresource "aws_default_security_group" "closed" {\n  vpc_id = aws_vpc.course.id\n}\n'
+        self.assertEqual(main_default_sg_problems(texts), ["modules/network/main.tf declares aws_default_security_group.closed"])
+
+    def test_re_adding_it_with_an_ingress_rule_is_detected(self):
+        texts = main_root_texts()
+        texts["modules/network/main.tf"] += (
+            '\nresource "aws_default_security_group" "closed" {\n  vpc_id = aws_vpc.course.id\n'
+            '  ingress {\n    protocol  = "-1"\n    self      = true\n    from_port = 0\n    to_port   = 0\n  }\n}\n')
+        self.assertEqual(len(main_default_sg_problems(texts)), 1)
+
+    def test_re_adding_it_in_another_module_or_the_root_is_detected(self):
+        for where in ("modules/emr/zz_mutation.tf", "zz_mutation.tf"):
+            with self.subTest(where=where):
+                texts = dict(main_root_texts(), **{where: 'resource "aws_default_security_group" "second" {\n  vpc_id = "vpc-1"\n}\n'})
+                self.assertEqual(main_default_sg_problems(texts), ["%s declares aws_default_security_group.second" % where])
+
+    def test_an_ordinary_security_group_is_not_mistaken_for_the_default_group(self):
+        texts = dict(main_root_texts(), **{"zz.tf": 'resource "aws_security_group" "closed" {\n  vpc_id = "vpc-1"\n}\n'})
+        self.assertEqual(main_default_sg_problems(texts), [])
 
 
 if __name__ == "__main__":

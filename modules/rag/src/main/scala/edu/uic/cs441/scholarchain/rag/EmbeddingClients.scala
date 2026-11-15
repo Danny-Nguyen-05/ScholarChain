@@ -67,8 +67,9 @@ final class BedrockEmbeddingClient(
     client: BedrockRuntimeClient,
     config: BedrockEmbeddingConfig,
     sleep: Long => Unit = millis => Thread.sleep(millis)
-) extends EmbeddingClient {
+) extends ProviderEmbeddingClient {
   val model: EmbeddingModel = config.model
+  val provider: EmbeddingProvider = EmbeddingProvider.Bedrock
   private val permits = new Semaphore(config.maxConcurrentCalls)
   def embed(texts: Seq[String]): Seq[EmbeddingResult] = {
     val input = texts.toVector

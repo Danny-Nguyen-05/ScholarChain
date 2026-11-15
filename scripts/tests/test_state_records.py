@@ -220,8 +220,8 @@ class PushRecordTests(Tmp):
 class PrespendClockTests(Tmp):
     def receipt(self, snapshot):
         return self.write("pre.json", json.dumps({
-            "monitoring_confirmed_active": True, "cost_snapshot_utc": snapshot, "reported_spend_usd": 1, "unreported_usage_allowance_usd": 1,
-            "reserves_usd": 1, "remaining_headroom_usd": 100,
+            "monitoring_confirmed_active": True, "cost_snapshot_utc": snapshot, "reported_spend_usd": 1, "anthropic_spend_to_date_usd": 0, "voyage_spend_to_date_usd": 0,
+            "unreported_usage_allowance_usd": 1, "reserves_usd": 1, "remaining_headroom_usd": 100,
         }))
 
     def check(self, receipt, clock=None, label=None):

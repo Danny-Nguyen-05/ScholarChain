@@ -1,5 +1,6 @@
 package edu.uic.cs441.scholarchain.storage
 
+import java.nio.charset.StandardCharsets.UTF_8
 import java.nio.file.Path
 import upickle.default.ReadWriter
 
@@ -82,6 +83,28 @@ final case class VectorAdapterConfig(
   require(
     nonFilterableKeys.size <= 10 && maxRequestBytes > 0 && maxRequestBytes <= 20 * 1024 * 1024 && requestTimeoutMillis > 0
   )
+}
+
+/** S3 Vectors per-vector metadata budget, shared by the adapter write path and the ingestion
+  * planner so a document that the adapter would reject is refused before any embedding call. Sizes
+  * are UTF-8 bytes of the rendered JSON object. Non-filterable keys count toward the total metadata
+  * budget only, never toward the filterable budget.
+  */
+object VectorMetadataBudget {
+  private def jsonBytes(m: Map[String, String]): Int =
+    ujson.Obj.from(m.map((k, v) => k -> ujson.Str(v))).render().getBytes(UTF_8).length
+  def totalBytes(metadata: Map[String, String]): Int = jsonBytes(metadata)
+  def filterableBytes(metadata: Map[String, String], nonFilterableKeys: Set[String]): Int =
+    jsonBytes(metadata.filterNot((k, _) => nonFilterableKeys(k)))
+  def exceeds(
+      metadata: Map[String, String],
+      maxKeys: Int,
+      maxTotalBytes: Int,
+      maxFilterableBytes: Int,
+      nonFilterableKeys: Set[String]
+  ): Boolean =
+    metadata.size > maxKeys || totalBytes(metadata) > maxTotalBytes ||
+      filterableBytes(metadata, nonFilterableKeys) > maxFilterableBytes
 }
 object VectorIndexes {
   val names: Set[String] = Set(

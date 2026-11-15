@@ -1,0 +1,3 @@
+Snapshot 12: commit 14fa884091191b3e0ce0df5dbf1c0605a79cf4cd on base 13b886ad3eddf684a43e9c92ba030f823a8c2cfd (git clone of the repo, base checked out, modified and untracked files copied with rsync, deleted files removed, committed as 'snapshot 12').
+Identity before the run: files=5846 differing=0 missing=0 (every tracked and untracked non-ignored working-tree file byte-identical in the snapshot); snapshot git status --porcelain: 0 lines.
+Identity after the run (non-docs files): files=1676 differing=0 missing=0; snapshot git status --porcelain: 0 lines.

@@ -1,4 +1,5 @@
-"""Independent tests of the Phase 13C repair-1 step form (finding C1): every EMR step's HadoopJarStepConfig.Args string must stay
+"""Independent tests of the Phase 13C repair-1 step form (finding C1): every EMR step's Args string (CLI
+CUSTOM_JAR step; HadoopJarStepConfig.Args in the API) must stay
 within EMR's 10,280 character limit, and the installed step programs are sha256-pinned on the node.
 
 Expectations come from the AWS API reference limit (10,280 characters per Args string), the plan and the review finding C1, not from

@@ -1,0 +1,63 @@
+# 14C upload, storage load, pointer apply, integration test, ingest and query smoke
+# Excerpt: only the lines matching each pattern are kept (ANSI codes stripped; account ID, custom domain and
+# local paths masked). Each block names its source file and that file's sha256.
+# The awsintegration logs carry DEBUG wire logs with temporary SigV4 session tokens; only the ScalaTest summary lines are kept.
+
+## target/phase14/evidence/14c/upload-slice-dry.log (sha256 480e0acc1619ed5478baeef2ed06904cc1f9ac39b570af9997b312edc88e1f36, 163 lines)
+EXPORT-RUN: id=run:f6e63b4b-d542-4a32-930c-f21f002cba76 tables=26 files=143 bytes=136464280
+RESULT: PASS dry run: 143 file(s) planned under run-20261115/; nothing was uploaded
+
+## target/phase14/evidence/14c/upload-slice.log (sha256 3185454a94312c91b8bc36894ed5faa572a48c97253a50b2f166393a2fc21b23, 739 lines)
+EXPORT-RUN: id=run:f6e63b4b-d542-4a32-930c-f21f002cba76 tables=26 files=143 bytes=136464280
+RESULT: PASS 143 file(s) verified under run-20261115/ (143 uploaded, 0 unchanged); manifest target/phase14/evidence/14c/upload-manifest.json
+
+## target/phase14/evidence/14c/storageload-dry.log (sha256 b167dc3b85e2106f6e206e313c171b74508ad75f9b1e123758fd3367e4c717a0, 77 lines)
+[success] Total time: 1159 s (19:19), completed Nov 13, 2026, 3:35:51 PM
+
+## target/phase14/evidence/14c/storageload.log (sha256 829061374606111da9533fec4ef95b9f0384c0455f70fb90bba5c36811ab423c, 86 lines)
+FAILED: graph loading rejected; reason=neptune-submit-failed
+[error] Total time: 8429 s (02:20:29), completed Nov 13, 2026, 5:57:24 PM
+
+## target/phase14/evidence/14c/storageload-graph-only-1.log (sha256 af48fae9471f2ecdd9cd2a153fd22e01a5a7c217e74594f3913a9ccd154e0006, 86 lines)
+FAILED: graph loading rejected; reason=neptune-submit-failed
+[error] Total time: 2241 s (37:21), completed Nov 13, 2026, 7:58:30 PM
+
+## target/phase14/evidence/14c/storageload-graph-only-2.log (sha256 7958f2642bb6c9fca66c5f2cf9a37afb02cb83fbfa012cb48f760e49503d11e4, 77 lines)
+COMPLETE: cacheSkipped=true graphState=LOAD_COMPLETED
+[success] Total time: 3540 s (59:00), completed Nov 13, 2026, 8:58:27 PM
+
+## target/phase14/evidence/14c/pointer-plan.log (sha256 2baef89efa7d973cad7880a90b396e4c29957c9d919ff562ada98073f2dfbbc7, 87 lines)
+RESULT: PASS plan recorded, not applied; receipt=<repo>/target/plans/20261114T032819Z-46936/course-83a41684ba91f500feb75743fcf353c4d46545f6.tfplan.receipt.json plan_sha256=7002889dffc9d4572351ee12bd2265dec70766f7760d0816703ca7d473294464
+
+## target/phase14/evidence/14c/pointer-apply.log (sha256 6d9f456b898cec88ff83dc6ebd18981350e04621b96e2dfdc57c32c882d7839f, 148 lines)
+RESULT: PASS stage runtime-apply complete for 9ee5bbe6f485284031da0cc546f544df9b471a8c; manifest=<repo>/target/release/83a41684ba91f500feb75743fcf353c4d46545f6/deploy-manifest-runtime-apply-20261114T033000Z-48163.json
+
+## target/phase14/evidence/14c/awsintegration.log (sha256 163f8bf5cd231876227b57b5b0c0dd3e209240b6a6c397a6278d1f7e89f7d0bc, 2515 lines)
+[info] Tests: succeeded 0, failed 1, canceled 0, ignored 0, pending 0
+[info] *** 1 TEST FAILED ***
+[error] Total time: 10 s, completed Nov 13, 2026, 9:32:16 PM
+
+## target/phase14/evidence/14c/awsintegration-2.log (sha256 a2f7dda6db2816ec4dd7a9a1a0c022f38e7a3897acb49376cd3f00a751eb10b3, 2503 lines)
+[info] Tests: succeeded 0, failed 1, canceled 0, ignored 0, pending 0
+[info] *** 1 TEST FAILED ***
+[error] Total time: 4 s, completed Nov 13, 2026, 9:33:24 PM
+
+## target/phase14/evidence/14c/awsintegration-3.log (sha256 b604ea7887ad02bd5279fe5d2db6e50c5fcb790157358a688feb4d5cf6675460, 3796 lines)
+[info] Tests: succeeded 0, failed 1, canceled 0, ignored 0, pending 0
+[info] *** 1 TEST FAILED ***
+[error] Total time: 6 s, completed Nov 13, 2026, 9:37:13 PM
+
+## target/phase14/evidence/14c/awsintegration-4.log (sha256 f679eda60bea207032bd664f81e1f7d7945e2611c0f635c2cd5d4b3e663f2413, 7100 lines)
+[info] Tests: succeeded 1, failed 0, canceled 0, ignored 0, pending 0
+[info] All tests passed.
+[success] Total time: 27 s, completed Nov 13, 2026, 9:41:15 PM
+
+## target/phase14/evidence/14c/ingest.log (sha256 cc95adbb785c0fab7d1e268dc3d702f7a7ad804875d0cd0d91768b8c783bf9bd, 12 lines)
+[error] Exception in thread "main" java.lang.IllegalArgumentException: live-ingestion-rejected-items
+[error] Total time: 156 s (02:36), completed Nov 13, 2026, 9:54:09 PM
+
+## target/phase14/evidence/14c/ingest-2.log (sha256 f91478f4d14e33c60dd50c658186ccce7b68ba6692ab83831a7a1b09e54f9d82, 8 lines)
+[success] Total time: 158 s (02:38), completed Nov 13, 2026, 10:35:40 PM
+
+## target/phase14/evidence/14c/query-smoke.log (sha256 d7cd772e5762a780e0609a8476a8dbdde8753f338b0cb20d12baa31f6dde1229, 8 lines)
+[success] Total time: 7 s, completed Nov 13, 2026, 10:37:48 PM

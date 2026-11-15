@@ -1,0 +1,52 @@
+{
+  "schema": "scholarchain.expected-plan-deltas.v1",
+  "status": "DERIVED OFFLINE with the mock provider; NOT a live plan. The real plan is compared against this list in the session; a difference is for the human and the coordinator to explain, a match is not an approval to apply.",
+  "provenance": {
+    "source_test": "infra/terraform/tests/phase14b_plan_deltas.tftest.hcl",
+    "derivation": "terraform test -verbose -filter=tests/phase14b_plan_deltas.tftest.hcl run from infra/terraform (three plan-only runs, mock provider), then python3 -I scripts/lib/plan_deltas.py derive --verbose-output <that output>",
+    "terraform_version": "1.13.5",
+    "aws_provider_version": "6.44.0",
+    "base_commit": "13b886a (working tree with the pre-session items)",
+    "assumed_tfvars_shape": "anthropic and voyage providers (defaults), neptune_tunnel_enabled true, container_insights_enabled false, dashboard_enabled false, query_health_check_grace_period_seconds 300, four services 256 cpu / 1024 memory; the state before each stage is the state after the previous one",
+    "not_modelled": "drift on existing resources (tags_all, description), anything the mock provider hides because it fills computed values with constants or random strings"
+  },
+  "stages": {
+    "pointer-apply": {
+      "label": "runtime-apply, label pointer-apply (runbook B8.4): runtime_artifact_key, runtime_artifact_sha256, runtime_artifact_source_run_id set, same image revision",
+      "plan_line": "Plan: 1 to add, 1 to change, 1 to destroy.",
+      "summary_line": "summary: add=0 change=1 destroy=0 replace=1",
+      "actions": [
+        {
+          "address": "module.runtime.aws_ecs_task_definition.service[\"query-api\"]",
+          "actions": "delete+create",
+          "basis": "mock-derived for the address (only this resource differs: three SCHOLARCHAIN_RUNTIME_ARTIFACT_* variables join the container definition); the action delete+create is the known provider behavior for a changed container_definitions (a new revision) and cannot be shown by the mock, so it is unverified until the live plan; task definitions are deliberately not in RUNTIME_LIVE_PROTECTED_TYPES (scripts/config/release.conf:208-211)"
+        },
+        {
+          "address": "module.runtime.aws_ecs_service.service[\"query-api\"]",
+          "actions": "update",
+          "basis": "hand-derived: aws_ecs_service.service.task_definition references the replaced task definition ARN (unknown until apply), so the service is updated in place; the mock gives the ARN a constant and cannot show this"
+        }
+      ]
+    },
+    "emr-apply": {
+      "label": "runtime-apply, label emr-apply (runbook B9.3): emr_config enabled and emr_service_policy_json set, pointer values kept",
+      "plan_line": "Plan: 13 to add, 0 to change, 0 to destroy.",
+      "summary_line": "summary: add=13 change=0 destroy=0 replace=0",
+      "actions": [
+        {"address": "module.emr.aws_efs_access_point.staging[0]", "actions": "create", "basis": "mock-derived"},
+        {"address": "module.emr.aws_efs_backup_policy.staging[0]", "actions": "create", "basis": "mock-derived"},
+        {"address": "module.emr.aws_efs_file_system.staging[0]", "actions": "create", "basis": "mock-derived"},
+        {"address": "module.emr.aws_efs_file_system_policy.staging[0]", "actions": "create", "basis": "mock-derived"},
+        {"address": "module.emr.aws_efs_mount_target.staging[0]", "actions": "create", "basis": "mock-derived"},
+        {"address": "module.emr.aws_emr_cluster.pipeline[0]", "actions": "create", "basis": "mock-derived"},
+        {"address": "module.emr.aws_emr_security_configuration.encrypted[0]", "actions": "create", "basis": "mock-derived"},
+        {"address": "module.emr.aws_iam_role_policy.node[0]", "actions": "create", "basis": "mock-derived"},
+        {"address": "module.emr.aws_security_group.efs[0]", "actions": "create", "basis": "mock-derived"},
+        {"address": "module.emr.aws_vpc_security_group_egress_rule.emr_to_efs[0]", "actions": "create", "basis": "mock-derived"},
+        {"address": "module.emr.aws_vpc_security_group_ingress_rule.efs_from_emr[0]", "actions": "create", "basis": "mock-derived"},
+        {"address": "module.identity.aws_iam_role_policy.emr_control[0]", "actions": "create", "basis": "mock-derived"},
+        {"address": "module.identity.aws_iam_role_policy.emr_disk_encryption[0]", "actions": "create", "basis": "mock-derived"}
+      ]
+    }
+  }
+}

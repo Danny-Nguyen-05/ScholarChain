@@ -26,13 +26,22 @@ Manifest rules (refused before anything else, exit 3)
     sections, a "pipeline" section and "metrics.locations". A missing, empty or invalid section is rejected;
     unknown keys are rejected. The schema is documented in scripts/lib/experiment.py and scripts/README.md.
   * budget.max_usd may not exceed EMR_MAX_RUN_USD (3), runtime and capacity may not exceed the pinned pipeline caps.
+  * Bucket names embed the AWS account id, so a COMMITTED manifest holds only run-time tokens, never an account id:
+      ${SCHOLARCHAIN_ARTIFACTS_BUCKET}  ${SCHOLARCHAIN_LOGS_BUCKET}  ${SCHOLARCHAIN_RAW_BUCKET}  ${SCHOLARCHAIN_REPORTS_BUCKET}
+      (environment variables of the same names, each scholarchain-<env>-<12 digits>-<artifacts|logs|raw|reports>, all of one stack)
+      ${SCHOLARCHAIN_RUN_PREFIX}  (environment variable of that name, ^run-[a-z0-9][a-z0-9-]{1,27}$)
+    The script replaces the tokens in the string values BEFORE the schema check and hands the resolved values to the pipeline. An
+    unknown token, an empty or unset variable for a token in use, a value of another shape, buckets of different stacks, or a raw
+    12-digit account id in a committed string is refused (exit 3). The approval record still binds the COMMITTED file
+    (APPROVED_MANIFEST_SHA256, the git-tracked bytes); the resolved values are bound by APPROVED_RUN_CONFIG_SHA256 of the pipeline.
+    The sha256 of the resolved manifest and the substituted values (account shown as <acct>) go to experiment-record.json.
 
 Inputs
   --manifest FILE     the committed manifest (real manifests live under experiments/, written in Phase 15)
   --cluster-id J-ID or SCHOLARCHAIN_EMR_CLUSTER_ID   the existing cluster (it is NOT in the manifest)
   --approval FILE     approval record (default RUN_APPROVAL_RECORD_PATH); --prespend FILE pre-spend receipt
   --profile P or AWS_PROFILE   for --execute
-  Environment variable names: SCHOLARCHAIN_EMR_CLUSTER_ID, AWS_PROFILE, SCHOLARCHAIN_REPO_ROOT, and the test-only
+  Environment variable names: SCHOLARCHAIN_EMR_CLUSTER_ID, AWS_PROFILE, SCHOLARCHAIN_REPO_ROOT, the token variables above, and the test-only
   SCHOLARCHAIN_CONFIG_FILE / SCHOLARCHAIN_PRICING_FILE. Pinned settings come from scripts/config/*.conf.
 
 Modes
@@ -133,31 +142,64 @@ MANIFEST_SHA="$(sc_sha256 "${MANIFEST_ABS}")"
 COMMIT="$(sc_git_head)" || sc_refuse "${EX_REFUSED}" "not a git work tree with a commit"
 sc_info "manifest ${MANIFEST_REL} is tracked and identical to HEAD ${COMMIT} (sha256 ${MANIFEST_SHA})"
 
-# ---- schema, budget and teardown sections --------------------------------------------------------------------------
+# ---- run-time tokens: bucket names and the run prefix are resolved from the environment, never committed ----------
+sc_step "manifest-tokens"
+sc_mktemp RENDERED_FILE
+RENDER_RC=0
+RENDER_OUT="$(python3 -I "${SC_LIB_DIR}/experiment.py" render --manifest "${MANIFEST_ABS}" --out "${RENDERED_FILE}")" || RENDER_RC=$?
+if [[ "${RENDER_RC}" -eq 4 ]]; then
+  cp "${MANIFEST_ABS}" "${RENDERED_FILE}" # not valid JSON: the schema check below refuses it with its usual message
+  RENDER_OUT="RENDERED-SHA256 ${MANIFEST_SHA}"
+  RENDER_RC=0
+fi
+if [[ "${RENDER_RC}" -ne 0 ]]; then
+  while IFS= read -r line; do sc_err "${line}"; done <<<"${RENDER_OUT}"
+  sc_refuse "${EX_REFUSED}" "the manifest tokens cannot be resolved: $(printf '%s' "${RENDER_OUT}" | head -n 1)"
+fi
+RENDERED_SHA=""
+SUBST_JSON="{}"
+SUBST_ARGS=()
+while IFS= read -r line; do
+  case "${line}" in
+    "ACCOUNT "*) sc_register_account "${line#ACCOUNT }" ;; # capture only: from here on the account is redacted everywhere
+    "SUBST "*) SUBST_ARGS+=("${line#SUBST }") ;;
+    "RENDERED-SHA256 "*) RENDERED_SHA="${line#RENDERED-SHA256 }" ;;
+  esac
+done <<<"${RENDER_OUT}"
+if [[ "${#SUBST_ARGS[@]}" -gt 0 ]]; then
+  SUBST_JSON="$(printf '%s\n' "${SUBST_ARGS[@]}" | python3 -I -c 'import json,sys; print(json.dumps(dict(l.rstrip("\n").split(" ", 1) for l in sys.stdin if l.strip()), sort_keys=True))')"
+fi
+for entry in "${SUBST_ARGS[@]+"${SUBST_ARGS[@]}"}"; do
+  printf 'EXPERIMENT-TOKEN: %s\n' "$(sc_redact "${entry}")"
+done
+printf 'EXPERIMENT-MANIFEST-SHA256: committed=%s rendered=%s\n' "${MANIFEST_SHA}" "${RENDERED_SHA}"
+
+# ---- schema, budget and teardown sections (of the RESOLVED manifest) -------------------------------------------------
 sc_step "manifest-schema"
 VALID_RC=0
-VALID_OUT="$(python3 -I "${SC_LIB_DIR}/experiment.py" validate --manifest "${MANIFEST_ABS}" --max-run-usd "${EMR_MAX_RUN_USD}" \
+VALID_OUT="$(python3 -I "${SC_LIB_DIR}/experiment.py" validate --manifest "${RENDERED_FILE}" --max-run-usd "${EMR_MAX_RUN_USD}" \
   --max-runtime-cap "${PIPELINE_MAX_RUNTIME_MINUTES}" --max-capacity-cap "${PIPELINE_MAX_CAPACITY}" \
   --max-idle-cap "${PIPELINE_MAX_IDLE_TIMEOUT_SECONDS}")" || VALID_RC=$?
 if [[ "${VALID_RC}" -ne 0 ]]; then
   while IFS= read -r line; do sc_err "${line}"; done <<<"${VALID_OUT}"
   sc_refuse "${EX_REFUSED}" "the manifest is invalid or lacks a required budget or teardown section: $(printf '%s' "${VALID_OUT}" | head -n 1)"
 fi
-EXP_ID="$(python3 -I "${SC_LIB_DIR}/experiment.py" show --manifest "${MANIFEST_ABS}" --what id)"
-EXP_REGION="$(python3 -I "${SC_LIB_DIR}/experiment.py" show --manifest "${MANIFEST_ABS}" --what region)"
-sc_info "manifest ${EXP_ID} is valid: $(python3 -I "${SC_LIB_DIR}/experiment.py" show --manifest "${MANIFEST_ABS}" --what limits)"
+EXP_ID="$(python3 -I "${SC_LIB_DIR}/experiment.py" show --manifest "${RENDERED_FILE}" --what id)"
+EXP_REGION="$(python3 -I "${SC_LIB_DIR}/experiment.py" show --manifest "${RENDERED_FILE}" --what region)"
+sc_info "manifest ${EXP_ID} is valid: $(python3 -I "${SC_LIB_DIR}/experiment.py" show --manifest "${RENDERED_FILE}" --what limits)"
 PIPE_RUN="${EXP_ID}-${RUN_ID}"
 START_UTC="$(sc_now)"
 
 sc_step "run-record"
 printf 'EXPERIMENT-RECORD: experiment=%s commit=%s manifest=%s manifest_sha256=%s region=%s start_utc=%s\n' \
   "${EXP_ID}" "${COMMIT}" "${MANIFEST_REL}" "${MANIFEST_SHA}" "${EXP_REGION}" "${START_UTC}"
-printf 'EXPERIMENT-LIMITS: %s\n' "$(python3 -I "${SC_LIB_DIR}/experiment.py" show --manifest "${MANIFEST_ABS}" --what limits)"
+printf 'EXPERIMENT-LIMITS: %s\n' "$(python3 -I "${SC_LIB_DIR}/experiment.py" show --manifest "${RENDERED_FILE}" --what limits)"
 while IFS= read -r loc; do
-  printf 'EXPERIMENT-METRIC-LOCATION: %s\n' "${loc}"
-done < <(python3 -I "${SC_LIB_DIR}/experiment.py" show --manifest "${MANIFEST_ABS}" --what metrics)
+  printf 'EXPERIMENT-METRIC-LOCATION: %s\n' "$(sc_redact "${loc}")"
+done < <(python3 -I "${SC_LIB_DIR}/experiment.py" show --manifest "${RENDERED_FILE}" --what metrics)
 printf 'EXPERIMENT-APPROVAL-LINE: APPROVED_ACTION=run-experiment\n'
 printf 'EXPERIMENT-APPROVAL-LINE: APPROVED_MANIFEST_SHA256=%s\n' "${MANIFEST_SHA}"
+printf 'EXPERIMENT-APPROVAL-NOTE: Rendered manifest sha256: %s (a comment line, ignored by the parser; the resolved values are bound by APPROVED_RUN_CONFIG_SHA256)\n' "${RENDERED_SHA}"
 
 REC_DIR="" REC_FILE=""
 if [[ "${EXECUTE}" -eq 1 ]]; then
@@ -169,7 +211,8 @@ if [[ "${EXECUTE}" -eq 1 ]]; then
   REC_DIR="${SC_SAFEIO_OUT}"
   REC_FILE="${REC_DIR}/experiment-record.json"
   REC_OUT="$(python3 -I "${SC_LIB_DIR}/experiment.py" write-record --root "${REPO_ROOT}" --out "${REC_FILE}" --manifest "${MANIFEST_ABS}" \
-    --manifest-sha256 "${MANIFEST_SHA}" --kind planned --commit "${COMMIT}" --at "${START_UTC}" --pipeline-run-id "${PIPE_RUN}")" ||
+    --manifest-sha256 "${MANIFEST_SHA}" --kind planned --commit "${COMMIT}" --at "${START_UTC}" --pipeline-run-id "${PIPE_RUN}" \
+    --rendered-sha256 "${RENDERED_SHA}" --substitutions-json "${SUBST_JSON}")" ||
     sc_refuse "${EX_REFUSED}" "${REC_OUT}"
   sc_info "experiment record: ${REC_FILE#"${REPO_ROOT}"/}"
 fi
@@ -179,7 +222,7 @@ sc_step "delegate-pipeline"
 PIPE_ARGS=()
 while IFS= read -r flag && IFS= read -r value; do
   PIPE_ARGS+=("${flag}" "${value}")
-done < <(python3 -I "${SC_LIB_DIR}/experiment.py" args --manifest "${MANIFEST_ABS}")
+done < <(python3 -I "${SC_LIB_DIR}/experiment.py" args --manifest "${RENDERED_FILE}")
 PIPE_ARGS+=(--cluster-id "${CLUSTER_ID}" --run-id "${PIPE_RUN}" --delegated-from-experiment "${MANIFEST_SHA}")
 [[ -z "${APPROVAL}" ]] || PIPE_ARGS+=(--approval "${APPROVAL}")
 [[ -z "${PRESPEND}" ]] || PIPE_ARGS+=(--prespend "${PRESPEND}")
@@ -192,7 +235,7 @@ PIPE_RC=0
 # The child gets its own redaction values file (it registers its own secrets and removes the file at exit).
 env -u SC_REDACT_FILE bash "${SC_SCRIPTS_DIR}/run-bounded-pipeline.sh" "${PIPE_ARGS[@]}" >"${PIPE_OUT}" 2>&1 || PIPE_RC=$?
 while IFS= read -r line; do
-  printf 'pipeline| %s\n' "${line}"
+  printf 'pipeline| %s\n' "$(sc_redact "${line}")"
 done <"${PIPE_OUT}"
 
 if [[ "${EXECUTE}" -eq 1 ]]; then
@@ -200,7 +243,7 @@ if [[ "${EXECUTE}" -eq 1 ]]; then
   [[ "${PIPE_RC}" -eq 0 ]] || STATUS="FAIL"
   python3 -I "${SC_LIB_DIR}/experiment.py" write-record --root "${REPO_ROOT}" --out "${REC_DIR}/experiment-result.json" --manifest "${MANIFEST_ABS}" \
     --manifest-sha256 "${MANIFEST_SHA}" --kind result --commit "${COMMIT}" --at "$(sc_now)" --started "${START_UTC}" --pipeline-run-id "${PIPE_RUN}" \
-    --exit-code "${PIPE_RC}" --status "${STATUS}" >/dev/null || sc_warn "the experiment result record could not be written"
+    --exit-code "${PIPE_RC}" --status "${STATUS}" --rendered-sha256 "${RENDERED_SHA}" --substitutions-json "${SUBST_JSON}" >/dev/null || sc_warn "the experiment result record could not be written"
 fi
 if [[ "${PIPE_RC}" -ne 0 ]]; then
   sc_step "pipeline-failed"

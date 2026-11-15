@@ -215,6 +215,119 @@ trait GraphReader {
   ): StorageResult[Vector[String]]
   def crossCommunityEdges(communityId: String, window: String, limit: Int): StorageResult[GraphPage]
 }
+
+/** Direction relative to the requested node: `Out` returns edges whose stored start is the node,
+  * `In` edges whose stored end is the node, `Both` the union (a self-loop appears once).
+  */
+enum EdgeDirection(val wire: String) {
+  case Out extends EdgeDirection("out")
+  case In extends EdgeDirection("in")
+  case Both extends EdgeDirection("both")
+}
+object EdgeDirection {
+  def fromWire(value: String): Option[EdgeDirection] = values.find(_.wire == value)
+}
+
+/** One stored edge with its stored start/end. `properties` are exactly the edge properties the
+  * loader wrote (text-rendered, exact decimals retained), including provenance and evidence
+  * pointers (`provenanceJson`, `sourceEvidenceJson`, `policyVersion` for graph edges;
+  * `evidenceTable`/`evidenceEdgeId` for coauthor edges, whose rows carry no `provenanceJson`).
+  * Stored start/end of an undirected type (COAUTHORED_WITH) is a canonical order, not a claim of
+  * direction; the caller applies `GraphEdgeType.isUndirected`.
+  */
+final case class DirectedGraphEdge(
+    fromId: String,
+    toId: String,
+    edgeId: String,
+    edgeType: String,
+    properties: Map[String, String]
+) {
+
+  /** The stored provenance, never inferred: Left when the row carries none or it is malformed. */
+  def provenance: Either[String, Provenance] =
+    properties.get("provenanceJson") match {
+      case None => Left("edge-provenance-absent")
+      case Some(json) =>
+        CoreJson.parse[Provenance](json).left.map(_ => "malformed-edge-provenance")
+    }
+}
+final case class DirectedEdgePage(items: Vector[DirectedGraphEdge], cursor: Option[String])
+
+/** Additive capability: stored edge endpoints with provenance. Existing `GraphReader` callers are
+  * unaffected. Order is stable: for `Both`, outgoing edges by edge ID, then incoming by edge ID.
+  * Empty `edgeTypes` means the reader's allowed set; `window` constrains COAUTHORED_WITH only. The
+  * cursor is opaque and valid only for the same node, window, direction and edge types.
+  */
+trait DirectedGraphReader extends GraphReader {
+  def directedEdges(
+      id: String,
+      window: String,
+      direction: EdgeDirection,
+      edgeTypes: Set[String],
+      limit: Int,
+      cursor: Option[String]
+  ): StorageResult[DirectedEdgePage]
+}
+
+/** Paging shared by the Neptune reader and the fakes; only the bounded fetch differs. */
+private[storage] object DirectedEdgePaging {
+  enum Phase { case Out, In, InWithoutSelfLoops }
+  import StorageResult.*
+  private def offset(text: String, max: Int): Option[Int] =
+    text.toIntOption.filter(n => n >= 0 && n <= max)
+  def page(direction: EdgeDirection, limit: Int, cursor: Option[String], maxOffset: Int)(
+      fetch: (Phase, Int, Int) => StorageResult[Vector[DirectedGraphEdge]]
+  ): StorageResult[DirectedEdgePage] = {
+    def single(phase: Phase, off: Int, prefix: String) =
+      RowCodec.map(fetch(phase, off, limit + 1)) { rows =>
+        Found(
+          DirectedEdgePage(
+            rows.take(limit),
+            Option.when(rows.size > limit)(prefix + (off + limit).toString)
+          )
+        )
+      }
+    direction match {
+      case EdgeDirection.Out =>
+        cursor.map(offset(_, maxOffset)).getOrElse(Some(0)) match {
+          case Some(off) => single(Phase.Out, off, "")
+          case None      => Rejected("invalid-bound")
+        }
+      case EdgeDirection.In =>
+        cursor.map(offset(_, maxOffset)).getOrElse(Some(0)) match {
+          case Some(off) => single(Phase.In, off, "")
+          case None      => Rejected("invalid-bound")
+        }
+      case EdgeDirection.Both =>
+        val parsed: Option[(Boolean, Int)] = cursor match {
+          case None                          => Some((true, 0))
+          case Some(c) if c.startsWith("o:") => offset(c.drop(2), maxOffset).map(true -> _)
+          case Some(c) if c.startsWith("i:") => offset(c.drop(2), maxOffset).map(false -> _)
+          case _                             => None
+        }
+        parsed match {
+          case None               => Rejected("invalid-bound")
+          case Some((false, off)) => single(Phase.InWithoutSelfLoops, off, "i:")
+          case Some((true, off)) =>
+            RowCodec.map(fetch(Phase.Out, off, limit + 1)) { outRows =>
+              if (outRows.size > limit)
+                Found(DirectedEdgePage(outRows.take(limit), Some("o:" + (off + limit))))
+              else {
+                val remaining = limit - outRows.size
+                RowCodec.map(fetch(Phase.InWithoutSelfLoops, 0, remaining + 1)) { inRows =>
+                  Found(
+                    DirectedEdgePage(
+                      outRows ++ inRows.take(remaining),
+                      Option.when(inRows.size > remaining)("i:" + remaining)
+                    )
+                  )
+                }
+              }
+            }
+        }
+    }
+  }
+}
 final case class VectorDocument(
     key: String,
     values: Vector[Float],

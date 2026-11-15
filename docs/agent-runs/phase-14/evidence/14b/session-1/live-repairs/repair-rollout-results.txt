@@ -1,0 +1,30 @@
+# Image pushes, runtime plans/applies and the E9 deployer apply that rolled repairs 6-9 out
+# Excerpt: only the lines matching each pattern are kept (ANSI codes stripped; account ID, custom domain and
+# local paths masked). Each block names its source file and that file's sha256.
+
+## target/phase14/evidence/14b/push-bfa393a.log (sha256 957b1a160ddd488cb3ad5cd3b559d1cda028942162fd60096afe5144ec48ac57, 76 lines)
+RESULT: PASS stage push complete for bfa393ac8cea136950fde7b43b95e20bab9bc1cc; manifest=<repo>/target/release/bfa393ac8cea136950fde7b43b95e20bab9bc1cc/deploy-manifest-push-20261114T162307Z-63023.json
+
+## target/phase14/evidence/14b/runtime-plan-5.log (sha256 c7d39abcb77a778b980323cc3c33a769be78c2474fc872500acc6c2c5fe50f57, 94 lines)
+RESULT: PASS plan recorded, not applied; receipt=<repo>/target/plans/20261114T162738Z-64380/course-bfa393ac8cea136950fde7b43b95e20bab9bc1cc.tfplan.receipt.json plan_sha256=7e64432830ed3d4ac08259e10663521b72145f70761c1f4ef6d0ec7deb40caf9
+
+## target/phase14/evidence/14b/runtime-apply-5.log (sha256 57233a54b55fbef5273aa3eff5abafc6fa39246232ed700de2680808bc267fdd, 147 lines)
+RESULT: PASS stage runtime-apply complete for bfa393ac8cea136950fde7b43b95e20bab9bc1cc; manifest=<repo>/target/release/bfa393ac8cea136950fde7b43b95e20bab9bc1cc/deploy-manifest-runtime-apply-20261114T162942Z-65895.json
+
+## target/phase14/evidence/14b/push-0656dc4.log (sha256 0e2ab7c11b7cd0a32350e5a39da84f598534fc64b9fdaf3395e198c7600c7d1f, 76 lines)
+RESULT: PASS stage push complete for 0656dc4849b08c243d985fd94646f4fab69948ed; manifest=<repo>/target/release/0656dc4849b08c243d985fd94646f4fab69948ed/deploy-manifest-push-20261114T174946Z-11011.json
+
+## target/phase14/evidence/14b/runtime-plan-6.log (sha256 1b437240a0ca178f11e58cf8ca33d40bcf06571bea09887822750dbcd93ac71c, 94 lines)
+RESULT: PASS plan recorded, not applied; receipt=<repo>/target/plans/20261114T175306Z-12349/course-0656dc4849b08c243d985fd94646f4fab69948ed.tfplan.receipt.json plan_sha256=ab0208971f53bcf2f6062b536209fc755691f3e3385e83fd4c0d0b6a4b623b87
+
+## target/phase14/evidence/14b/runtime-apply-6.log (sha256 aeb093c8e4b5ad0048ee7e701c715bd9781d5ec23368b1bb90c031a6458eec9e, 147 lines)
+RESULT: PASS stage runtime-apply complete for 0656dc4849b08c243d985fd94646f4fab69948ed; manifest=<repo>/target/release/0656dc4849b08c243d985fd94646f4fab69948ed/deploy-manifest-runtime-apply-20261114T175457Z-13643.json
+
+## target/phase14/evidence/14b/push-ae14593.log (sha256 459041f402414620ebfa2109af4f75e5b5072899af8ead6c8058bb3d96dc865c, 76 lines)
+RESULT: PASS stage push complete for ae1459327a88bd8f55c2dd2a01993d26adb87cad; manifest=<repo>/target/release/ae1459327a88bd8f55c2dd2a01993d26adb87cad/deploy-manifest-push-20261114T181953Z-54918.json
+
+## target/phase14/evidence/15/deployer-e9-plan.log (sha256 c53ec276c6a16df0383542c70368704c37568e466724871fddeb21f36c5ad313, 97 lines)
+Plan: 0 to add, 1 to change, 0 to destroy.
+
+## target/phase14/evidence/15/deployer-e9-apply.log (sha256 0f3400e10f480411a71f013f3e7bb525485ddff53d205731706777729e98cb69, 73 lines)
+Apply complete! Resources: 0 added, 1 changed, 0 destroyed.

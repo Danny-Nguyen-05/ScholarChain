@@ -9,7 +9,14 @@ import java.security.MessageDigest
 import java.util.jar.{JarEntry, JarFile, JarOutputStream, Manifest}
 import scala.jdk.CollectionConverters._
 import sbt.io.IO
-import scholarchain.build.{HadoopBundleMerge, ServiceDistribution, SparkJobJar}
+import scholarchain.build.{
+  EmrArtifactManifest,
+  ErJobJar,
+  HadoopBundleMerge,
+  ReproducibleJar,
+  ServiceDistribution,
+  SparkJobJar
+}
 
 object ScholarChainBuild {
   val markTestRun = taskKey[Unit]("Write .claude/.last-test-run after required checks succeed")
@@ -37,6 +44,18 @@ object ScholarChainBuild {
     )
   val sparkJobJar =
     taskKey[File]("EMR Spark job JAR with Spark classes, core and non-Spark runtime libraries")
+  val erJobJar =
+    taskKey[File](
+      "EMR entity-resolution job JAR: ER and core classes plus Scala 3 runtime libraries, no Hadoop, Spark or logging provider"
+    )
+  val erJobJarCheck =
+    taskKey[Unit](
+      "Build the ER job JAR twice (same sha256), reject Hadoop/Spark/logging classes, run Phase5Main --help from the JAR alone"
+    )
+  val emrArtifactManifest =
+    taskKey[File](
+      "Build every EMR job JAR locally and write target/emr-artifacts/emr-artifact-manifest.json (path, bytes, sha256)"
+    )
   val AwsIntegration = config("awsIntegration").extend(Test)
   val requireAwsIntegration = taskKey[Unit]("Require explicit AWS live-test opt-in and profile")
 
@@ -167,6 +186,66 @@ object ScholarChainBuild {
       output
     }
   ) ++ assemblyJava17GuardSettings
+
+  /** The EMR entity-resolution step runs `java -cp er.jar Phase5Main` alone, so the JAR carries
+    * every runtime library except what EMR/the portable runtime provides (see [[ErJobJar]]).
+    */
+  def erJobJarSettings(coreProject: ProjectReference): Seq[Setting[_]] = Seq(
+    erJobJar := {
+      checkJava17.value
+      val coreJar = (coreProject / Compile / packageBin).value
+      val erJar = (Compile / packageBin).value
+      val dependencies = (Runtime / externalDependencyClasspath).value
+        .filterNot { entry =>
+          entry.get(moduleID.key).exists(isRuntimeProvided) ||
+          isRuntimeProvidedJar(entry.data.getName)
+        }
+        .map(_.data)
+      val output =
+        (Compile / target).value / s"er-job_${scalaBinaryVersion.value}-${version.value}.jar"
+      ErJobJar.write(Seq(erJar, coreJar), dependencies, output)
+      streams.value.log.info(s"Verified entity-resolution job JAR: ${output.getAbsolutePath}")
+      output
+    },
+    erJobJarCheck := {
+      val first = erJobJar.value
+      val log = streams.value.log
+      // Rebuild from the same inputs into a second file: reproducibility is observed, not assumed.
+      val coreJar = (coreProject / Compile / packageBin).value
+      val erJar = (Compile / packageBin).value
+      val dependencies = (Runtime / externalDependencyClasspath).value
+        .filterNot { entry =>
+          entry.get(moduleID.key).exists(isRuntimeProvided) ||
+          isRuntimeProvidedJar(entry.data.getName)
+        }
+        .map(_.data)
+      val second = (Compile / target).value / "er-job-rebuild-check.jar"
+      try {
+        ErJobJar.write(Seq(erJar, coreJar), dependencies, second)
+        val a = EmrArtifactManifest.sha256Hex(first)
+        val b = EmrArtifactManifest.sha256Hex(second)
+        if (a != b) sys.error(s"ER job JAR is not reproducible: sha256 $a != $b")
+      } finally IO.delete(second)
+      // The EMR step puts this JAR alone on the classpath of a bare JVM; do exactly that.
+      val java = new File(new File(System.getProperty("java.home"), "bin"), "java")
+      val out = new StringBuilder
+      val exit = scala.sys.process
+        .Process(
+          Seq(java.getAbsolutePath, "-cp", first.getAbsolutePath, ErJobJar.MainClass, "--help")
+        )
+        .!(
+          scala.sys.process.ProcessLogger(
+            line => out.append(line).append('\n'),
+            line => out.append(line).append('\n')
+          )
+        )
+      if (exit != 0 || !out.toString.contains("ScholarChain Phase 5B"))
+        sys.error(
+          s"java -cp ${first.getName} ${ErJobJar.MainClass} --help failed (exit $exit): $out"
+        )
+      log.info(s"ER job JAR check passed (sha256 ${EmrArtifactManifest.sha256Hex(first)})")
+    }
+  )
 
   private val hadoopMavenOrg = "org.apache.hadoop"
   private val submitJarForbiddenLibMarkers = Vector(
@@ -332,9 +411,13 @@ object ScholarChainBuild {
     val thin = new JarFile(thinJar)
     try {
       val manifest = Option(thin.getManifest).getOrElse(new Manifest())
-      val jarOut =
-        new JarOutputStream(new BufferedOutputStream(new FileOutputStream(dest)), manifest)
+      // JarOutputStream(out, manifest) stamps the manifest entry with the current time, which made
+      // the submit JAR differ on every build; write the manifest entry with the fixed time instead.
+      val jarOut = new JarOutputStream(new BufferedOutputStream(new FileOutputStream(dest)))
       try {
+        jarOut.putNextEntry(new JarEntry(ReproducibleJar.entry(JarFile.MANIFEST_NAME)))
+        manifest.write(jarOut)
+        jarOut.closeEntry()
         val written = scala.collection.mutable.Set.empty[String]
         written += JarFile.MANIFEST_NAME
         thin.entries().asScala.foreach { entry =>
@@ -343,7 +426,7 @@ object ScholarChainBuild {
             if (name == JarFile.MANIFEST_NAME || written.contains(name)) ()
             else {
               written += name
-              jarOut.putNextEntry(new JarEntry(name))
+              jarOut.putNextEntry(new JarEntry(ReproducibleJar.entry(name)))
               val input = thin.getInputStream(entry)
               try IO.transfer(input, jarOut)
               finally {
@@ -355,7 +438,7 @@ object ScholarChainBuild {
         }
         if (written.contains(libEntryName))
           sys.error(s"thin JAR already contains $libEntryName")
-        jarOut.putNextEntry(new JarEntry(libEntryName))
+        jarOut.putNextEntry(new JarEntry(ReproducibleJar.entry(libEntryName)))
         try IO.transfer(bundle, jarOut)
         finally jarOut.closeEntry()
       } finally jarOut.close()

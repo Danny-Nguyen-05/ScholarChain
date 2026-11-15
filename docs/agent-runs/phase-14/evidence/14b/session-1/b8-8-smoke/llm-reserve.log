@@ -1,0 +1,35 @@
+RESULT: RESERVED bucket=14c answers=2 est_usd=0.002730
+BUCKET 14c size=10 used=2 remaining=8 est_usd_used=0.002730
+TOTAL answers_used=2 usd_used=0.002730 (incl. adjust 0.000000) shared_cap_usd=1.330000 remaining_usd=1.327270 unit_usd=0.001365
+BUCKET 14c size=10 used=2 remaining=8 est_usd_used=0.002730
+BUCKET 15b size=60 used=0 remaining=60 est_usd_used=0.000000
+BUCKET 16b size=40 used=0 remaining=40 est_usd_used=0.000000
+BUCKET 17 size=5 used=0 remaining=5 est_usd_used=0.000000
+TOTAL answers_used=2 usd_used=0.002730 (incl. adjust 0.000000) shared_cap_usd=1.330000 remaining_usd=1.327270 unit_usd=0.001365
+RESULT: RESERVED bucket=14c answers=1 est_usd=0.001365
+BUCKET 14c size=10 used=3 remaining=7 est_usd_used=0.004095
+TOTAL answers_used=3 usd_used=0.004095 (incl. adjust 0.000000) shared_cap_usd=1.330000 remaining_usd=1.325905 unit_usd=0.001365
+RESULT: RESERVED bucket=14c answers=1 est_usd=0.001365
+BUCKET 14c size=10 used=4 remaining=6 est_usd_used=0.005460
+TOTAL answers_used=4 usd_used=0.005460 (incl. adjust 0.000000) shared_cap_usd=1.330000 remaining_usd=1.324540 unit_usd=0.001365
+RESULT: RESERVED bucket=14c answers=1 est_usd=0.001365
+BUCKET 14c size=10 used=5 remaining=5 est_usd_used=0.006825
+TOTAL answers_used=5 usd_used=0.006825 (incl. adjust 0.000000) shared_cap_usd=1.330000 remaining_usd=1.323175 unit_usd=0.001365
+RESULT: RESERVED bucket=14c answers=1 est_usd=0.001365
+BUCKET 14c size=10 used=6 remaining=4 est_usd_used=0.008190
+TOTAL answers_used=6 usd_used=0.008190 (incl. adjust 0.000000) shared_cap_usd=1.330000 remaining_usd=1.321810 unit_usd=0.001365
+RESULT: RESERVED bucket=14c answers=1 est_usd=0.001365
+BUCKET 14c size=10 used=7 remaining=3 est_usd_used=0.009555
+TOTAL answers_used=7 usd_used=0.009555 (incl. adjust 0.000000) shared_cap_usd=1.330000 remaining_usd=1.320445 unit_usd=0.001365
+RESULT: RESERVED bucket=14c answers=1 est_usd=0.001365
+BUCKET 14c size=10 used=8 remaining=2 est_usd_used=0.010920
+TOTAL answers_used=8 usd_used=0.010920 (incl. adjust 0.000000) shared_cap_usd=1.330000 remaining_usd=1.319080 unit_usd=0.001365
+RESULT: RESERVED bucket=14c answers=1 est_usd=0.001365
+BUCKET 14c size=10 used=9 remaining=1 est_usd_used=0.012285
+TOTAL answers_used=9 usd_used=0.012285 (incl. adjust 0.000000) shared_cap_usd=1.330000 remaining_usd=1.317715 unit_usd=0.001365
+RESULT: RESERVED bucket=14c answers=1 est_usd=0.001365
+BUCKET 14c size=10 used=10 remaining=0 est_usd_used=0.013650
+TOTAL answers_used=10 usd_used=0.013650 (incl. adjust 0.000000) shared_cap_usd=1.330000 remaining_usd=1.316350 unit_usd=0.001365
+RESULT: RESERVED bucket=17 answers=1 est_usd=0.001365
+BUCKET 17 size=5 used=1 remaining=4 est_usd_used=0.001365
+TOTAL answers_used=11 usd_used=0.015015 (incl. adjust 0.000000) shared_cap_usd=1.330000 remaining_usd=1.314985 unit_usd=0.001365

@@ -1,0 +1,194 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "DynamoDbItemsOfTheMainStack",
+      "Effect": "Allow",
+      "Action": [
+        "dynamodb:GetItem",
+        "dynamodb:BatchGetItem",
+        "dynamodb:Query",
+        "dynamodb:PutItem",
+        "dynamodb:UpdateItem"
+      ],
+      "Resource": [
+        "arn:aws:dynamodb:${region}:${acct}:table/${mp}-*",
+        "arn:aws:dynamodb:${region}:${acct}:table/${mp}-*/index/*"
+      ]
+    },
+    {
+      "Sid": "S3ObjectsOfTheMainStack",
+      "Effect": "Allow",
+      "Action": [
+        "s3:GetObject",
+        "s3:GetObjectVersion",
+        "s3:PutObject",
+        "s3:DeleteObject",
+        "s3:AbortMultipartUpload",
+        "s3:ListMultipartUploadParts"
+      ],
+      "Resource": [
+        "arn:aws:s3:::${mp}-${acct}-*/*"
+      ]
+    },
+    {
+      "Sid": "S3ListMainBuckets",
+      "Effect": "Allow",
+      "Action": [
+        "s3:ListBucket",
+        "s3:GetBucketLocation"
+      ],
+      "Resource": [
+        "arn:aws:s3:::${mp}-${acct}-*"
+      ]
+    },
+    {
+      "Sid": "ProjectKeyUse",
+      "Effect": "Allow",
+      "Action": [
+        "kms:Decrypt",
+        "kms:Encrypt",
+        "kms:DescribeKey",
+        "kms:GenerateDataKey",
+        "kms:GenerateDataKeyWithoutPlaintext",
+        "kms:ReEncryptFrom",
+        "kms:ReEncryptTo"
+      ],
+      "Resource": [
+        "arn:aws:kms:${region}:${acct}:key/*"
+      ],
+      "Condition": {
+        "ForAnyValue:StringEquals": {
+          "kms:ResourceAliases": "alias/${mp}-data"
+        }
+      }
+    },
+    {
+      "Sid": "SqsWorkAndFailureQueues",
+      "Effect": "Allow",
+      "Action": [
+        "sqs:ReceiveMessage",
+        "sqs:DeleteMessage",
+        "sqs:ChangeMessageVisibility",
+        "sqs:GetQueueAttributes",
+        "sqs:GetQueueUrl",
+        "sqs:SendMessage"
+      ],
+      "Resource": [
+        "arn:aws:sqs:${region}:${acct}:${mp}-*"
+      ]
+    },
+    {
+      "Sid": "S3VectorsIndexes",
+      "Effect": "Allow",
+      "Action": [
+        "s3vectors:GetIndex",
+        "s3vectors:GetVectors",
+        "s3vectors:QueryVectors",
+        "s3vectors:PutVectors"
+      ],
+      "Resource": [
+        "arn:aws:s3vectors:${region}:${acct}:bucket/${mp}-${acct}-vectors/index/*"
+      ]
+    },
+    {
+      "Sid": "NeptuneGraphRead",
+      "Effect": "Allow",
+      "Action": [
+        "neptune-db:ReadDataViaQuery",
+        "neptune-db:GetQueryStatus",
+        "neptune-db:CancelQuery",
+        "neptune-db:GetEngineStatus"
+      ],
+      "Resource": [
+        "arn:aws:neptune-db:${region}:${acct}:*/*"
+      ]
+    },
+%{ if bedrock_enabled ~}
+    {
+      "Sid": "BedrockInvokeRegionalFoundationModelsAndProfiles",
+      "Effect": "Allow",
+      "Action": [
+        "bedrock:InvokeModel",
+        "bedrock:InvokeModelWithResponseStream"
+      ],
+      "Resource": [
+        ${bedrock_fm_arns},
+        "arn:aws:bedrock:::foundation-model/*",
+        "arn:aws:bedrock:${region}:${acct}:inference-profile/*"
+      ]
+    },
+%{ endif ~}
+    {
+      "Sid": "EcsExecChannelsForTheNeptuneTunnel",
+      "Effect": "Allow",
+      "Action": [
+        "ssmmessages:CreateControlChannel",
+        "ssmmessages:CreateDataChannel",
+        "ssmmessages:OpenControlChannel",
+        "ssmmessages:OpenDataChannel"
+      ],
+      "Resource": [
+        "*"
+      ]
+    },
+    {
+      "Sid": "EcrPullOwnImages",
+      "Effect": "Allow",
+      "Action": [
+        "ecr:BatchCheckLayerAvailability",
+        "ecr:GetDownloadUrlForLayer",
+        "ecr:BatchGetImage"
+      ],
+      "Resource": [
+        "arn:aws:ecr:${region}:${acct}:repository/${mp}/*"
+      ]
+    },
+    {
+      "Sid": "EcrAuthorizationToken",
+      "Effect": "Allow",
+      "Action": [
+        "ecr:GetAuthorizationToken"
+      ],
+      "Resource": [
+        "*"
+      ]
+    },
+    {
+      "Sid": "OwnLogStreams",
+      "Effect": "Allow",
+      "Action": [
+        "logs:CreateLogStream",
+        "logs:PutLogEvents"
+      ],
+      "Resource": [
+        "arn:aws:logs:${region}:${acct}:log-group:/${mp}/*:log-stream:*"
+      ]
+    },
+    {
+      "Sid": "InjectConfiguredSecrets",
+      "Effect": "Allow",
+      "Action": [
+        "secretsmanager:GetSecretValue"
+      ],
+      "Resource": [
+        "arn:aws:secretsmanager:${region}:${acct}:secret:*"
+      ]
+    },
+    {
+      "Sid": "EmrNodeEfsAndAutoTermination",
+      "Effect": "Allow",
+      "Action": [
+        "elasticfilesystem:ClientMount",
+        "elasticfilesystem:ClientWrite",
+        "elasticmapreduce:GetAutoTerminationPolicy",
+        "elasticmapreduce:PutAutoTerminationPolicy",
+        "elasticmapreduce:RemoveAutoTerminationPolicy"
+      ],
+      "Resource": [
+        "arn:aws:elasticfilesystem:${region}:${acct}:file-system/*",
+        "arn:aws:elasticmapreduce:${region}:${acct}:cluster/*"
+      ]
+    }
+  ]
+}

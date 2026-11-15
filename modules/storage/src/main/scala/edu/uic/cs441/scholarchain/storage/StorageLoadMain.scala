@@ -6,7 +6,11 @@ import java.nio.charset.StandardCharsets.UTF_8
 import java.net.URI
 import java.time.Duration
 import java.lang.reflect.{InvocationHandler, Method, Proxy}
-import software.amazon.awssdk.auth.credentials.ProfileCredentialsProvider
+import software.amazon.awssdk.auth.credentials.{
+  AwsCredentialsProvider,
+  AwsSessionCredentials,
+  ProfileCredentialsProvider
+}
 import software.amazon.awssdk.regions.Region
 import software.amazon.awssdk.core.client.config.ClientOverrideConfiguration
 import software.amazon.awssdk.core.document.Document
@@ -61,27 +65,122 @@ object StorageLoadMain {
     case Retried(_, nested)                                      => failureCode(nested)
     case _                                                       => "operation-rejected"
   }
-  def run(args: Vector[String], out: String => Unit = println): Int = {
+  private val defaultLoader = NeptuneLoaderConfig("b", "g", "r", "a")
+
+  /** Optional loader poll budget. A lone timeout derives the poll count at the default interval,
+    * and a lone poll count derives the timeout, never going below the unchanged defaults. Bounds:
+    * timeout 1..14400 seconds, polls 1..20000.
+    */
+  private[storage] def loaderBudget(
+      timeoutSeconds: Option[String],
+      maxPolls: Option[String]
+  ): Either[String, Option[(Long, Int)]] = {
+    val interval = math.max(1L, defaultLoader.pollIntervalMillis)
+    val timeout = timeoutSeconds.map(_.toLongOption.filter(n => n >= 1 && n <= 14400L))
+    val polls = maxPolls.map(_.toIntOption.filter(n => n >= 1 && n <= 20000))
+    if (timeout.contains(None)) Left("--load-timeout-seconds must be an integer from 1 to 14400.")
+    else if (polls.contains(None)) Left("--load-max-polls must be an integer from 1 to 20000.")
+    else
+      (timeout.flatten, polls.flatten) match {
+        case (None, None)       => Right(None)
+        case (Some(t), Some(p)) => Right(Some((t * 1000L, p)))
+        case (Some(t), None) =>
+          val ms = t * 1000L
+          Right(
+            Some(
+              (ms, math.max(defaultLoader.maxPolls.toLong, (ms + interval - 1) / interval).toInt)
+            )
+          )
+        case (None, Some(p)) =>
+          Right(Some((math.max(defaultLoader.timeoutMillis, p.toLong * interval), p)))
+      }
+  }
+
+  /** Resolves the named profile through the Java SDK only. It makes no AWS API call and prints
+    * neither the access key nor any secret. For caller identity use `aws sts get-caller-identity`.
+    */
+  private def checkCredentials(
+      profile: String,
+      out: String => Unit,
+      credentialsFor: String => AwsCredentialsProvider
+  ): Int = {
+    val provider = credentialsFor(profile)
+    try {
+      val credentials = provider.resolveCredentials()
+      val session = credentials.isInstanceOf[AwsSessionCredentials]
+      val expires = Option(credentials.expirationTime().orElse(null)).map(_.toString)
+      out(
+        s"CREDENTIALS-RESOLVED: profile=$profile sessionToken=$session expiresAt=${expires.getOrElse("unknown")}"
+      )
+      0
+    } catch {
+      case e: Exception =>
+        out(s"CREDENTIALS-FAILED: profile=$profile reason=${e.getClass.getSimpleName}"); 1
+    } finally
+      provider match {
+        case c: AutoCloseable =>
+          try c.close()
+          catch { case _: Exception => () }
+        case _ => ()
+      }
+  }
+
+  def run(
+      args: Vector[String],
+      out: String => Unit = println,
+      credentialsFor: String => AwsCredentialsProvider = p =>
+        ProfileCredentialsProvider.builder().profileName(p).build()
+  ): Int = {
     var clients = Vector.empty[AutoCloseable]
     try {
       val flags = Set("--execute-fake", "--execute-aws", "--dry-run")
       val values = scala.collection.mutable.Map.empty[String, String];
       val enabled = scala.collection.mutable.Set.empty[String]
+      var checkOnly = false
+      var graphOnly = false
       var i = 0
       while (i < args.size) {
         val arg = args(i);
-        if (flags(arg)) {
+        if (arg == "--check-credentials") {
+          if (checkOnly) throw new IllegalArgumentException("duplicate flag"); checkOnly = true;
+          i += 1
+        } else if (arg == "--graph-only") {
+          if (graphOnly) throw new IllegalArgumentException("duplicate flag"); graphOnly = true;
+          i += 1
+        } else if (flags(arg)) {
           if (!enabled.add(arg)) throw new IllegalArgumentException("duplicate flag"); i += 1
         } else {
           if (
-            !Set("--manifest", "--config", "--environment", "--profile")(
+            !Set(
+              "--manifest",
+              "--config",
+              "--environment",
+              "--profile",
+              "--load-timeout-seconds",
+              "--load-max-polls"
+            )(
               arg
             ) || i + 1 >= args.size || values.contains(arg)
           ) throw new IllegalArgumentException("invalid arguments"); values(arg) = args(i + 1);
           i += 2
         }
       }
+      if (checkOnly) {
+        if (
+          graphOnly || enabled.nonEmpty || values.keySet != Set("--profile") || values(
+            "--profile"
+          ).isEmpty
+        ) {
+          out("REFUSED: --check-credentials accepts only --profile."); return 2
+        }
+        return checkCredentials(values("--profile"), out, credentialsFor)
+      }
       if (enabled.size > 1) throw new IllegalArgumentException("execution flags conflict")
+      val budget =
+        loaderBudget(values.get("--load-timeout-seconds"), values.get("--load-max-polls")) match {
+          case Right(b)      => b
+          case Left(message) => out("REFUSED: " + message); return 2
+        }
       val manifestPath = Path
         .of(values.getOrElse("--manifest", throw new IllegalArgumentException("manifest required")))
         .toRealPath()
@@ -112,6 +211,9 @@ object StorageLoadMain {
       } else if (values.contains("--environment") || values.contains("--profile")) {
         out("REFUSED: environment/profile options require explicit AWS execution."); return 2
       }
+      if (!real && !fake && budget.nonEmpty) {
+        out("REFUSED: loader timeout options require --execute-aws or --execute-fake."); return 2
+      }
       val rawManifest = root.resolve("load-manifests/s3.json")
       if (Files.size(rawManifest) > 4 * 1024 * 1024)
         throw new IllegalArgumentException("source manifest too large")
@@ -133,6 +235,12 @@ object StorageLoadMain {
         case None => out("FAILED: graph export validation rejected."); return 1
       }
       out(s"runId=$runId mode=${if (real) "aws" else if (fake) "fake" else "dry-run"} $counts")
+      if (!real && !fake && graphOnly) {
+        out("PLAN: graph-only; cache step skipped (caches must already be loaded for this run)")
+        out(
+          "PLAN: upload validated graph/support and submit and poll Neptune through ports. No AWS calls or external store writes performed."
+        ); return 0
+      }
       if (!real && !fake) {
         val plan = new Phase6CacheLoader(
           new InMemoryEntityLinkCache,
@@ -153,11 +261,17 @@ object StorageLoadMain {
       }
       val tables = upickle.default.read[DynamoTables](cfg("tables"))
       val storage = edu.uic.cs441.scholarchain.storage.StorageConfig(cfg("bucket").str, tables)
-      val loaderConfig = NeptuneLoaderConfig(
+      val baseLoaderConfig = NeptuneLoaderConfig(
         storage.bucket,
         cfg("graphPrefix").str,
         cfg("region").str,
         cfg("neptune")("iamRoleArn").str
+      )
+      val loaderConfig = budget
+        .map((timeout, polls) => baseLoaderConfig.copy(timeoutMillis = timeout, maxPolls = polls))
+        .getOrElse(baseLoaderConfig)
+      budget.foreach((timeout, polls) =>
+        out(s"loader: timeoutMillis=$timeout maxPolls=$polls (override)")
       )
       val (objects, links, metrics, ledger, registry, neptune): (
           ObjectStore,
@@ -176,8 +290,7 @@ object StorageLoadMain {
           fakeNeptune
         )
       } else {
-        val credentials =
-          ProfileCredentialsProvider.builder().profileName(values("--profile")).build()
+        val credentials = credentialsFor(values("--profile"))
         val overrideConfig = ClientOverrideConfiguration
           .builder()
           .apiCallTimeout(Duration.ofMillis(loaderConfig.requestTimeoutMillis))
@@ -203,7 +316,10 @@ object StorageLoadMain {
           .endpointOverride(URI.create(cfg("neptune")("endpoint").str))
           .overrideConfiguration(overrideConfig)
           .build()
-        clients = Vector(s3, dynamo, graph, credentials)
+        clients = Vector(s3, dynamo, graph) ++ (credentials match {
+          case c: AutoCloseable => Vector(c)
+          case _                => Vector.empty
+        })
         val objects = new S3ObjectStore(s3, storage)
         (
           objects,
@@ -214,16 +330,21 @@ object StorageLoadMain {
           graph
         )
       }
-      val cache = new Phase6CacheLoader(
-        links,
-        metrics,
-        new LocalParquetManifestReader(root),
-        sourceObjects = objects,
-        sourceRegistry = registry
-      ).load(manifests)
-      if (!StorageResult.successful(cache)) {
-        out("FAILED: cache loading rejected; reason=" + failureCode(cache)); return 1
-      }
+      val cache =
+        if (graphOnly) None
+        else {
+          val loadedCache = new Phase6CacheLoader(
+            links,
+            metrics,
+            new LocalParquetManifestReader(root),
+            sourceObjects = objects,
+            sourceRegistry = registry
+          ).load(manifests)
+          if (!StorageResult.successful(loadedCache)) {
+            out("FAILED: cache loading rejected; reason=" + failureCode(loadedCache)); return 1
+          }
+          Some(loadedCache)
+        }
       val graph = new NeptuneGraphLoader(
         neptune,
         objects,
@@ -237,10 +358,15 @@ object StorageLoadMain {
       if (!StorageResult.successful(loaded)) {
         out("FAILED: graph loading rejected; reason=" + failureCode(loaded)); return 1
       }
-      val result = StorageResult.value(cache).get
-      out(
-        s"COMPLETE: cacheWritten=${result.written} cacheUnchanged=${result.unchanged} graphState=${StorageResult.value(loaded).get.state}"
-      )
+      val graphState = StorageResult.value(loaded).get.state
+      cache match {
+        case None => out(s"COMPLETE: cacheSkipped=true graphState=$graphState")
+        case Some(c) =>
+          val result = StorageResult.value(c).get
+          out(
+            s"COMPLETE: cacheWritten=${result.written} cacheUnchanged=${result.unchanged} graphState=$graphState"
+          )
+      }
       0
     } catch {
       case _: Exception => out("REFUSED: invalid arguments, configuration or source data."); 2

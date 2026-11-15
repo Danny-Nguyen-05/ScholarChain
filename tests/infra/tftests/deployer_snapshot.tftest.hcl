@@ -18,6 +18,8 @@ variables {
   account_id             = "111122223333"
   operator_principal_arn = "arn:aws:iam::111122223333:user/example-operator"
   owner                  = "example-owner"
+  # Decision 14-6 made phase14-main the default; this snapshot serves the Phase 13 spike-era suites, so it pins spike-emr.
+  enabled_permission_sets = ["spike-emr"]
 }
 
 run "snapshot" {

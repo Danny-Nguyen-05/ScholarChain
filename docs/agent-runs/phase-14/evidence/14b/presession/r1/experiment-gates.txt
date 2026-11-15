@@ -1,0 +1,46 @@
+date: 2026-11-11T01:44:19Z  HEAD: 13b886ad3eddf684a43e9c92ba030f823a8c2cfd  python: Python 3.14.5
+=== CMD: python3 -I -m unittest discover -s experiments/tests
+Ran 51 tests in 2.345s
+
+OK
+EXIT=0
+=== CMD: python3 -I -m unittest discover -s load-tests/tests
+Ran 71 tests in 50.658s
+
+OK
+EXIT=0
+=== CMD: python3 -I experiments/scripts/check_manifests.py
+CHECK-OK: buckets 14c 10/15b 60/16b 40/17 5 = 115 answers x 0.001365 = 0.156975 USD <= shared cap 1.33 USD (reserve 1.173025 USD)
+CHECK-OK: per-bucket estimates (USD) 14c 0.013650, 15b 0.081900, 16b 0.054600, 17 0.006825, total 0.156975 of the shared cap 1.33
+CHECK-OK: embeddings voyage-4-lite 256 dims USD 0.02 per 1M tokens, first 200M tokens free, cap USD 0.30 with a token counter
+CHECK-OK: 16b-live-evaluation.json placeholder matches the 16b bucket (40 answers)
+RESULT: OK (placeholders allowed; run with --final before the commit freeze)
+EXIT=0
+=== CMD: python3 -I experiments/scripts/derive_14c_inputs.py --export-dir "<export run:f6e63b4b>" --out-dir <scratch derive-r1-1>
+WROTE real-query.json lines=1 sha256=05240e889e4d6620ed3c3be3b93f53cfa96332ca95b727d7d819f0835a9c715e
+RESULT: OK run=run:f6e63b4b-d542-4a32-930c-f21f002cba76 questions=40 include_ids=40 node_ids=100
+EXIT=0
+=== CMD: python3 -I experiments/scripts/derive_14c_inputs.py --export-dir "<export run:f6e63b4b>" --out-dir <scratch derive-r1-2>
+WROTE real-query.json lines=1 sha256=05240e889e4d6620ed3c3be3b93f53cfa96332ca95b727d7d819f0835a9c715e
+RESULT: OK run=run:f6e63b4b-d542-4a32-930c-f21f002cba76 questions=40 include_ids=40 node_ids=100
+EXIT=0
+=== CMD: diff -r derive-r1-1 derive-r1-2
+EXIT=0
+=== CMD: diff -r experiments/inputs/14c derive-r1-1
+EXIT=0
+=== CMD: shasum -a 256 experiments/inputs/14c/*
+5d4d99a0326292221a4414b8f5533c532287f8cbbd37a9bee94e7cf86b645552  experiments/inputs/14c/include-ids.txt
+a665e9374a74f0e317ebbcbdc9491c551d1c0bf9fc07fe034e739a44a2dbde58  experiments/inputs/14c/node-ids.txt
+6c2dd43f9cdcb1f7cb97277cda13f998877a968ad59334229e40407b80ae6763  experiments/inputs/14c/provenance.json
+e4b6d48b060cfb58a2594ca7607bd1185a07b1abf303891c440be574bdb8f67d  experiments/inputs/14c/questions.txt
+05240e889e4d6620ed3c3be3b93f53cfa96332ca95b727d7d819f0835a9c715e  experiments/inputs/14c/real-query.json
+40 experiments/inputs/14c/include-ids.txt
+100 experiments/inputs/14c/node-ids.txt
+114 experiments/inputs/14c/provenance.json
+40 experiments/inputs/14c/questions.txt
+1 experiments/inputs/14c/real-query.json
+295 total
+=== questions.txt line 28
+Which researchers are the strongest bridges since 2015?
+=== grep -c 'in window since-' experiments/inputs/14c/questions.txt
+0

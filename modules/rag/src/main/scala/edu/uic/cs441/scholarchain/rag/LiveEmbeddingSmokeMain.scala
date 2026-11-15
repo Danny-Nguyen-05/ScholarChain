@@ -45,7 +45,8 @@ final case class LiveEmbeddingSmokePlan(
     queryRequests: Long,
     queryEmbeddingRequests: Long,
     objectReadBound: Long,
-    assumedUpperBoundUsd: BigDecimal
+    assumedUpperBoundUsd: BigDecimal,
+    queryEmbeddingTokenBound: BigInt = BigInt(0)
 )
 final case class LiveSmokeSample(
     queryId: String,
@@ -88,79 +89,95 @@ object LiveEmbeddingSmokeMain {
       approval.manifestSha256 != StableIds.sha256Hex(manifestText) ||
       approval.phase14GateSha256 != StableIds.sha256Hex(gateText)
     ) Left("smoke-approval-content-mismatch")
+    else if (
+      approval.runId != runId || runId.trim.isEmpty || approval.environment.trim.isEmpty ||
+      approval.phase14GateReference.trim.isEmpty || gateText.trim.isEmpty ||
+      approval.expiresAtEpochSeconds <= nowEpochSeconds
+    ) Left("smoke-approval-identity-or-expiry")
     else {
       val config = read[LiveEmbeddingSmokeConfig](configText)
-      val liveText = write(config.live)
-      // The original approval's complete smoke-config hash was checked above. This derived copy
-      // reuses common manifest/resource validation and never changes the actual execution grant.
-      val derived =
-        approval.copy(operation = "ingest", configSha256 = StableIds.sha256Hex(liveText))
-      LiveEmbeddingIngestMain
-        .preflight(liveText, manifestText, write(derived), gateText, runId, nowEpochSeconds)
-        .flatMap { common =>
-          val queries = config.queries
-          val capsValid = config.schemaVersion == "scholarchain.embedding-live-smoke.v1" &&
-            !config.live.nonFilterableKeys.contains("embeddingModel") &&
-            config.samplesPerQuery > 0 && config.maxQueryRequests > 0 && config.maxQueryEmbeddingCalls > 0 &&
-            config.maxObjectReads > 0 && config.maxTopK > 0 && config.maxTopK <= 100 &&
-            config.maxObjectBytes > 0 && config.maxObjectBytes <= 16 * 1024 * 1024 &&
-            Vector(
-              config.assumedMaxDollarsPerQuery,
-              config.assumedMaxDollarsPerObjectRead,
-              config.dollarCapUsd
+      // N15: a query-smoke approval authorizes only the query* caps and the smoke dollar cap. The
+      // shared `live` block is used for model/resource/manifest validation only; the ingest-sized
+      // vector/concurrency/embedding-call/dollar caps are neither required of nor compared with
+      // the approval, so a person approving a smoke never signs ingest-sized limits.
+      val common =
+        if (
+          config.live.environment != approval.environment || approval.vectorCap < 0 ||
+          approval.concurrencyCap < 0 || approval.embeddingCallCap < 0
+        ) Left("invalid-smoke-config-or-approval-caps")
+        else LiveEmbeddingIngestMain.validateManifest(config.live, manifestText)
+      common.flatMap { manifest =>
+        val queries = config.queries
+        val capsValid = config.schemaVersion == "scholarchain.embedding-live-smoke.v1" &&
+          !config.live.nonFilterableKeys.contains("embeddingModel") &&
+          config.samplesPerQuery > 0 && config.maxQueryRequests > 0 && config.maxQueryEmbeddingCalls > 0 &&
+          config.maxObjectReads > 0 && config.maxTopK > 0 && config.maxTopK <= 100 &&
+          config.maxObjectBytes > 0 && config.maxObjectBytes <= 16 * 1024 * 1024 &&
+          Vector(
+            config.assumedMaxDollarsPerQuery,
+            config.assumedMaxDollarsPerObjectRead,
+            config.dollarCapUsd
+          )
+            .forall(v => v.isFinite && v > 0) &&
+          approval.dollarCapUsd.isFinite && config.dollarCapUsd <= approval.dollarCapUsd &&
+          config.maxQueryRequests <= approval.queryRequestCap &&
+          config.maxQueryEmbeddingCalls <= approval.queryEmbeddingCallCap &&
+          config.maxObjectReads <= approval.queryObjectReadCap
+        val keys = manifest.items.map(i => i.vectorKey -> i.indexName).toMap
+        val queriesValid =
+          queries.size >= 5 && queries.map(_.queryId).distinct.size == queries.size &&
+            queries
+              .map(_.indexName)
+              .toSet == config.live.indexNames.values.toSet && queries.forall(q =>
+              q.queryId.trim.nonEmpty && q.text.trim.nonEmpty &&
+                q.text.getBytes(UTF_8).length <= config.live.embedding.maxInputTokens &&
+                q.topK > 0 && q.topK <= config.maxTopK && q.expectedVectorKeys.nonEmpty &&
+                q.expectedVectorKeys.distinct.size == q.expectedVectorKeys.size && q.expectedVectorKeys.size <= q.topK &&
+                q.expectedVectorKeys.forall(key => keys.get(key).contains(q.indexName))
             )
-              .forall(v =>
-                v.isFinite && v > 0
-              ) && config.dollarCapUsd <= config.live.dollarCapUsd &&
-            config.dollarCapUsd <= approval.dollarCapUsd &&
-            config.maxQueryRequests <= approval.queryRequestCap &&
-            config.maxQueryEmbeddingCalls <= approval.queryEmbeddingCallCap &&
-            config.maxObjectReads <= approval.queryObjectReadCap
-          val keys = common.manifest.items.map(i => i.vectorKey -> i.indexName).toMap
-          val queriesValid =
-            queries.size >= 5 && queries.map(_.queryId).distinct.size == queries.size &&
-              queries
-                .map(_.indexName)
-                .toSet == config.live.indexNames.values.toSet && queries.forall(q =>
-                q.queryId.trim.nonEmpty && q.text.trim.nonEmpty &&
-                  q.text.getBytes(UTF_8).length <= config.live.embedding.maxInputTokens &&
-                  q.topK > 0 && q.topK <= config.maxTopK && q.expectedVectorKeys.nonEmpty &&
-                  q.expectedVectorKeys.distinct.size == q.expectedVectorKeys.size && q.expectedVectorKeys.size <= q.topK &&
-                  q.expectedVectorKeys.forall(key => keys.get(key).contains(q.indexName))
-              )
-          val queryRequests = BigInt(queries.size) * config.samplesPerQuery
-          val embeddings = BigInt(queries.size) * config.live.maxEmbeddingAttempts
-          val reads =
-            queries.foldLeft(BigInt(0))((sum, q) => sum + BigInt(q.topK) * config.samplesPerQuery)
-          val dollars = BigDecimal(embeddings.toString) * BigDecimal(
-            config.live.assumedMaxDollarsPerEmbeddingAttempt.toString
+        val queryRequests = BigInt(queries.size) * config.samplesPerQuery
+        val embeddings = BigInt(queries.size) * config.live.maxEmbeddingAttempts
+        val reads =
+          queries.foldLeft(BigInt(0))((sum, q) => sum + BigInt(q.topK) * config.samplesPerQuery)
+        // Token-derived bound over the query texts only (no ingest items): tokens x attempts at
+        // the configured USD per million tokens; the larger of it and the per-attempt bound.
+        val tokens = LiveEmbeddingIngestMain.tokenBound(
+          queries.map(_.text),
+          config.live.minBytesPerEmbeddingToken
+        ) * BigInt(config.live.maxEmbeddingAttempts)
+        val embeddingUsd = (BigDecimal(embeddings.toString) * BigDecimal(
+          config.live.assumedMaxDollarsPerEmbeddingAttempt.toString
+        )).max(LiveEmbeddingIngestMain.tokenUsd(tokens, config.live))
+        val dollars = embeddingUsd +
+          BigDecimal(queryRequests.toString) * BigDecimal(
+            config.assumedMaxDollarsPerQuery.toString
           ) +
-            BigDecimal(queryRequests.toString) * BigDecimal(
-              config.assumedMaxDollarsPerQuery.toString
-            ) +
-            BigDecimal(reads.toString) * BigDecimal(
-              config.assumedMaxDollarsPerObjectRead.toString
-            ) +
-            BigDecimal(config.live.fixedOverheadUsd.toString)
-          if (!capsValid || !queriesValid) Left("invalid-smoke-config-or-approval-caps")
-          else if (
-            queryRequests > config.maxQueryRequests || embeddings > config.maxQueryEmbeddingCalls ||
-            embeddings > config.live.maxEmbeddingCalls || reads > config.maxObjectReads ||
-            dollars > BigDecimal(config.dollarCapUsd.toString)
-          ) Left("smoke-request-or-assumed-cost-bound")
-          else
-            Right(
-              LiveEmbeddingSmokePlan(
-                config,
-                common.manifest,
-                approval,
-                queryRequests.toLong,
-                embeddings.toLong,
-                reads.toLong,
-                dollars
-              )
+          BigDecimal(reads.toString) * BigDecimal(
+            config.assumedMaxDollarsPerObjectRead.toString
+          ) +
+          BigDecimal(config.live.fixedOverheadUsd.toString)
+        if (!capsValid || !queriesValid) Left("invalid-smoke-config-or-approval-caps")
+        else if (LiveEmbeddingIngestMain.embeddingCapExceeded(tokens, config.live))
+          Left("smoke-request-or-assumed-cost-bound")
+        else if (
+          queryRequests > config.maxQueryRequests || embeddings > config.maxQueryEmbeddingCalls ||
+          reads > config.maxObjectReads ||
+          dollars > BigDecimal(config.dollarCapUsd.toString)
+        ) Left("smoke-request-or-assumed-cost-bound")
+        else
+          Right(
+            LiveEmbeddingSmokePlan(
+              config,
+              manifest,
+              approval,
+              queryRequests.toLong,
+              embeddings.toLong,
+              reads.toLong,
+              dollars,
+              tokens
             )
-        }
+          )
+      }
     }
   } catch { case NonFatal(_) => Left("invalid-smoke-input") }
 
@@ -192,12 +209,14 @@ object LiveEmbeddingSmokeMain {
       "mode" -> "approved-query-smoke",
       "runId" -> runId,
       "region" -> plan.config.live.region,
+      "embeddingProvider" -> plan.config.live.provider.toOption.map(_.wire).getOrElse("invalid"),
       "model" -> upickle.default.writeJs(plan.config.live.model),
       "configSha256" -> configSha256,
       "manifestSha256" -> manifestSha256,
       "approvalSha256" -> approvalSha256,
       "queryRequestBound" -> plan.queryRequests.toString,
       "embeddingRequestBound" -> plan.queryEmbeddingRequests.toString,
+      "embeddingTokenBound" -> plan.queryEmbeddingTokenBound.toString,
       "objectReadBound" -> plan.objectReadBound.toString,
       "assumedUpperBoundUsd" -> plan.assumedUpperBoundUsd.toString,
       "billingGuarantee" -> false,
@@ -242,12 +261,23 @@ object LiveEmbeddingSmokeMain {
       .credentialsProvider(credentials)
       .overrideConfiguration(overrides)
       .build()
-    val bedrock = BedrockRuntimeClient
+    val provider = live.provider.fold(code => throw new ProviderConfigurationError(code), identity)
+    lazy val bedrock = BedrockRuntimeClient
       .builder()
       .region(region)
       .credentialsProvider(credentials)
       .overrideConfiguration(overrides)
       .build()
+    // Queries use the Voyage `query` input type with the same model, version tag and dimension as
+    // the stored `document` vectors; the consistency check in `run` refuses any difference.
+    val embeddingClient = LiveEmbeddingIngestMain
+      .embeddingClientFor(
+        live,
+        EmbeddingInputType.Query,
+        sys.env.get(EmbeddingClientFactory.VoyageKeyEnvName),
+        () => bedrock
+      )
+      .fold(code => throw new ProviderConfigurationError(code), identity)
     val storageConfig = edu.uic.cs441.scholarchain.storage.StorageConfig(
       live.textBucket,
       live.tables,
@@ -270,7 +300,7 @@ object LiveEmbeddingSmokeMain {
       // Registry is never used on query; this composition exposes no ingestion or registry writes.
       val vectors: VectorStore =
         new S3VectorStore(vectorClient, new InMemoryArtifactRegistry, vectorConfig, objectsPort)
-      val embedder: EmbeddingClient = new BedrockEmbeddingClient(bedrock, live.embedding)
+      val embedder: EmbeddingClient = embeddingClient
       def indexesReady(): StorageResult[Unit] = try {
         val valid = live.indexNames.values.toVector.distinct.sorted.forall { name =>
           val index = vectorClient
@@ -289,7 +319,10 @@ object LiveEmbeddingSmokeMain {
         }
         if (valid) StorageResult.Found(()) else StorageResult.Rejected("smoke-index-mismatch")
       } catch { case NonFatal(_) => StorageResult.Rejected("smoke-index-unavailable") }
-      def close(): Unit = { bedrock.close(); vectorClient.close(); s3.close(); credentials.close() }
+      def close(): Unit = {
+        if (provider == EmbeddingProvider.Bedrock) bedrock.close()
+        vectorClient.close(); s3.close(); credentials.close()
+      }
     }
   }
   private[rag] def pointerKey(uri: String, config: LiveEmbeddingConfig): Either[String, String] =
@@ -337,82 +370,90 @@ object LiveEmbeddingSmokeMain {
         ).flatMap { plan =>
           val ports = factory(plan.config)
           try
-            value(ports.indexesReady()).flatMap { _ =>
-              val samples = Vector.newBuilder[LiveSmokeSample]
-              var failure: Option[String] = None
-              plan.config.queries.foreach { query =>
-                if (failure.isEmpty) {
-                  val embedded = ports.embedder.embed(Seq(query.text))
-                  embedded.headOption match {
-                    case Some(EmbeddingSuccess(vector, actualModel, _))
-                        if embedded.size == 1 && actualModel == plan.config.live.model &&
-                          vector.size == actualModel.dimension && vector.forall(_.isFinite) =>
-                      var sample = 0
-                      while (sample < plan.config.samplesPerQuery && failure.isEmpty) {
-                        val started = System.nanoTime()
-                        val hitsResult = ports.vectors.query(
-                          query.indexName,
-                          vector,
-                          query.topK,
-                          Map("embeddingModel" -> plan.config.live.model.tag)
-                        )
-                        val nanos = System.nanoTime() - started
-                        value(hitsResult) match {
-                          case Left(code) => failure = Some(code)
-                          case Right(hits) =>
-                            if (hits.size > query.topK) failure = Some("smoke-hit-bound")
-                            var verified = 0
-                            hits.foreach { hit =>
+            LiveEmbeddingIngestMain
+              .consistency(plan.config.live, ports.embedder)
+              .flatMap(_ => value(ports.indexesReady()))
+              .flatMap { _ =>
+                val samples = Vector.newBuilder[LiveSmokeSample]
+                var failure: Option[String] = None
+                plan.config.queries.foreach { query =>
+                  if (failure.isEmpty) {
+                    val embedded = ports.embedder.embed(Seq(query.text))
+                    embedded.headOption match {
+                      case Some(EmbeddingSuccess(vector, actualModel, _))
+                          if embedded.size == 1 && actualModel == plan.config.live.model &&
+                            vector.size == actualModel.dimension && vector.forall(_.isFinite) =>
+                        var sample = 0
+                        while (sample < plan.config.samplesPerQuery && failure.isEmpty) {
+                          val started = System.nanoTime()
+                          val hitsResult = ports.vectors.query(
+                            query.indexName,
+                            vector,
+                            query.topK,
+                            Map("embeddingModel" -> plan.config.live.model.tag)
+                          )
+                          val nanos = System.nanoTime() - started
+                          value(hitsResult) match {
+                            case Left(code) => failure = Some(code)
+                            case Right(hits) =>
+                              if (hits.size > query.topK) failure = Some("smoke-hit-bound")
+                              var verified = 0
+                              hits.foreach { hit =>
+                                if (failure.isEmpty)
+                                  pointerKey(
+                                    hit.metadata.getOrElse("textS3Uri", ""),
+                                    plan.config.live
+                                  )
+                                    .flatMap(key => value(ports.objects.get(key)))
+                                    .flatMap { stored =>
+                                      if (stored.bytes.size > plan.config.maxObjectBytes)
+                                        Left("smoke-object-byte-bound")
+                                      else
+                                        SemanticContexts.fromStoredObject(hit, stored).map(_ => ())
+                                    } match {
+                                    case Left(code) => failure = Some(code)
+                                    case Right(_)   => verified += 1
+                                  }
+                              }
                               if (failure.isEmpty)
-                                pointerKey(
-                                  hit.metadata.getOrElse("textS3Uri", ""),
-                                  plan.config.live
+                                samples += LiveSmokeSample(
+                                  query.queryId,
+                                  query.indexName,
+                                  nanos,
+                                  query.expectedVectorKeys.forall(key => hits.exists(_.key == key)),
+                                  verified
                                 )
-                                  .flatMap(key => value(ports.objects.get(key)))
-                                  .flatMap { stored =>
-                                    if (stored.bytes.size > plan.config.maxObjectBytes)
-                                      Left("smoke-object-byte-bound")
-                                    else SemanticContexts.fromStoredObject(hit, stored).map(_ => ())
-                                  } match {
-                                  case Left(code) => failure = Some(code)
-                                  case Right(_)   => verified += 1
-                                }
-                            }
-                            if (failure.isEmpty)
-                              samples += LiveSmokeSample(
-                                query.queryId,
-                                query.indexName,
-                                nanos,
-                                query.expectedVectorKeys.forall(key => hits.exists(_.key == key)),
-                                verified
-                              )
+                          }
+                          sample += 1
                         }
-                        sample += 1
-                      }
-                    case _ => failure = Some("smoke-query-embedding-failed")
+                      case _ => failure = Some("smoke-query-embedding-failed")
+                    }
                   }
                 }
+                val result = report(
+                  plan,
+                  samples.result(),
+                  input("--run-id"),
+                  StableIds.sha256Hex(configText),
+                  StableIds.sha256Hex(manifestText),
+                  StableIds.sha256Hex(approvalText)
+                )
+                result.obj("failure") = failure.map(ujson.Str(_)).getOrElse(ujson.Null)
+                val rp = Path.of(input("--report"));
+                Option(rp.toAbsolutePath.getParent).foreach(Files.createDirectories(_))
+                Files.writeString(rp, result.render(), UTF_8)
+                if (failure.nonEmpty) Left(failure.get)
+                else if (!result("allNeighborsMatched").bool)
+                  Left("smoke-expected-neighbor-missing")
+                else Right(result)
               }
-              val result = report(
-                plan,
-                samples.result(),
-                input("--run-id"),
-                StableIds.sha256Hex(configText),
-                StableIds.sha256Hex(manifestText),
-                StableIds.sha256Hex(approvalText)
-              )
-              result.obj("failure") = failure.map(ujson.Str(_)).getOrElse(ujson.Null)
-              val rp = Path.of(input("--report"));
-              Option(rp.toAbsolutePath.getParent).foreach(Files.createDirectories(_))
-              Files.writeString(rp, result.render(), UTF_8)
-              if (failure.nonEmpty) Left(failure.get)
-              else if (!result("allNeighborsMatched").bool) Left("smoke-expected-neighbor-missing")
-              else Right(result)
-            }
           finally ports.close()
         }
     }
-  } catch { case NonFatal(_) => Left("smoke-input-or-execution-failed") }
+  } catch {
+    case e: ProviderConfigurationError => Left(e.code)
+    case NonFatal(_)                   => Left("smoke-input-or-execution-failed")
+  }
   def main(args: Array[String]): Unit = run(args.toSeq) match {
     case Right(report) => println(report.render())
     case Left(code)    => throw new IllegalArgumentException(code)

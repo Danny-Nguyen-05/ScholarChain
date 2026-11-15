@@ -52,6 +52,9 @@ override_resource {
   values          = { id = "rtb-synthetic-data" }
 }
 variables {
+  # Repair round 3: this file asserts the Bedrock path (the primary providers are anthropic and voyage; see phase14b_providers.tftest.hcl).
+  synthesis_provider               = "bedrock"
+  embedding_provider               = "bedrock"
   aws_account_id                   = "111122223333"
   aws_region                       = "us-east-1"
   aws_profile                      = "synthetic-not-a-real-profile"
@@ -190,7 +193,7 @@ run "cleanup_is_explicit_and_ttl_is_narrow" {
   }
   assert {
     condition     = alltrue([for t in output.data_controls.tables : !t.deletion_protection]) && alltrue([for b in output.data_controls.buckets : b.force_destroy]) && alltrue([for r in output.data_controls.ecr : r.force_delete])
-    error_message = "Only explicit cleanup mode may release native deletion settings; static bucket prevent_destroy remains a separate human code gate."
+    error_message = "Only explicit cleanup mode may release native deletion settings and switch force_destroy on (W4: the buckets no longer carry prevent_destroy)."
   }
   assert {
     condition     = one(output.data_controls.tables.QuerySession.ttl).enabled && one(output.data_controls.tables.QuerySession.ttl).attribute_name == "expiresAt" && alltrue([for k, t in output.data_controls.tables : length(t.ttl) == 0 if k != "QuerySession"])

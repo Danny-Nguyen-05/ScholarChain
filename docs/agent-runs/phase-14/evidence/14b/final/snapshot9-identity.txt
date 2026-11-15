@@ -1,0 +1,4 @@
+# Clean snapshot 9 identity (14B final, before the commit), observed 2026-11-09 by the coordinator
+snapshot_commit: 20734a36b5ae4ab832056e4c964031b86054013f
+before_run: compared 5786 files (git ls-files -c -o --exclude-standard, cmp against the snapshot), differing 0, missing 0
+method: git clone of HEAD e2f0b01, rsync of git ls-files -m -o --exclude-standard -z, commit as user snapshot; cmp -s per file

@@ -1,0 +1,53 @@
+{
+  "schema": "scholarchain.load-experiment-manifest.v1",
+  "id": "15b-ecs-scaling",
+  "description": "Experiment 15B (plan experiment D): query-api ECS scale-out and scale-in under CPU target tracking, driven by load-tests/loadgen.py at concurrency 1, 5, 25 and 50, then a sustained hold at 50 and a no-load observation window. Non-LLM endpoints by default; a small fixed sample of synthesized answers (POST /v1/query) only when the operator passes --llm, inside the 15b answer bucket of the shared claude-haiku-5-5 (Anthropic API) cap of USD 1.33.",
+  "region": "us-east-2",
+  "target": {
+    "service": "query-api",
+    "scaling_policy": {
+      "type": "ECS service target tracking on ECSServiceAverageCPUUtilization (standard AWS/ECS metric; Container Insights is off)",
+      "target_percent_reference": "cpu_target_percent in infra/terraform/phase12b-variables.tf (default 60); read the applied value before the run, it is not in this file",
+      "scale_out_cooldown_seconds": 60,
+      "scale_in_cooldown_seconds": 300,
+      "scale_in_alarm": "AWS-managed low alarm needs 15 consecutive one-minute datapoints under 90 percent of the target, so scale-in cannot start before about 15 minutes of low CPU",
+      "min_tasks": 1,
+      "max_tasks": 2,
+      "capacity_source": "service_capacity.query-api in the private tfvars (the example file has min 1, max 2); confirm with aws application-autoscaling describe-scalable-targets before the run",
+      "fargate_shape": "0.25 vCPU / 1 GiB, raised only in private tfvars"
+    }
+  },
+  "phases": [
+    {"name": "baseline-1", "type": "load", "level": 1, "duration_seconds": 120, "llm_answers": 10, "max_requests": 600, "purpose": "baseline CPU, latency and task count at concurrency 1"},
+    {"name": "level-5", "type": "load", "level": 5, "duration_seconds": 120, "llm_answers": 15, "max_requests": 3000, "purpose": "concurrency 5"},
+    {"name": "level-25", "type": "load", "level": 25, "duration_seconds": 150, "llm_answers": 20, "max_requests": 15000, "purpose": "concurrency 25"},
+    {"name": "level-50", "type": "load", "level": 50, "duration_seconds": 180, "llm_answers": 15, "max_requests": 30000, "purpose": "concurrency 50"},
+    {"name": "hold-50", "type": "load", "level": 50, "duration_seconds": 600, "llm_answers": 0, "max_requests": 150000, "purpose": "sustain concurrency 50 for 10 minutes so CPU stays above target for the three one-minute datapoints a scale-out needs and the new task has time to start (health-check grace 300 s); no LLM calls"},
+    {"name": "cooldown-observe", "type": "observe", "duration_seconds": 1800, "purpose": "no load for 30 minutes: scale-in needs 15 low minutes plus the 300 s cooldown; evidence is the metric rows before, during and after, collected outside this process"}
+  ],
+  "llm": {
+    "default_enabled": false,
+    "note": "Opt-in only with --llm --remaining-cap-usd X --questions-file F and an existing ledger. Answer budget per level 10/15/20/15 = 60 answers (USD 0.0819 at the pinned estimate of USD 0.001365 per answer: 10 / 15 / 20 / 15 answers = USD 0.01365 / 0.020475 / 0.0273 / 0.020475), charged to the 15b bucket, which is a hard stop; the hold phase sends none. Buckets 14c 10 / 15b 60 / 16b 40 / 17 5: experiments/manifests/llm-allocation.json. Cost reporting for the run: AWS, Anthropic and Voyage as separate items, then the combined total (the run record has cost_report)."
+  },
+  "metrics_to_collect": [
+    {"source": "AWS/ECS", "metric": "CPUUtilization", "dimensions": ["ClusterName", "ServiceName=query-api"], "statistics": ["Average", "Maximum"], "period_seconds": 60},
+    {"source": "AWS/ECS", "metric": "MemoryUtilization", "dimensions": ["ClusterName", "ServiceName=query-api"], "statistics": ["Average", "Maximum"], "period_seconds": 60},
+    {"source": "AWS/ApplicationELB", "metric": "RequestCount", "dimensions": ["LoadBalancer", "TargetGroup"], "statistics": ["Sum"], "period_seconds": 60},
+    {"source": "AWS/ApplicationELB", "metric": "TargetResponseTime", "dimensions": ["LoadBalancer", "TargetGroup"], "statistics": ["p50", "p95", "p99"], "period_seconds": 60},
+    {"source": "AWS/ApplicationELB", "metric": "HTTPCode_Target_5XX_Count", "dimensions": ["LoadBalancer", "TargetGroup"], "statistics": ["Sum"], "period_seconds": 60},
+    {"source": "AWS/ApplicationELB", "metric": "HealthyHostCount", "dimensions": ["LoadBalancer", "TargetGroup"], "statistics": ["Average", "Minimum", "Maximum"], "period_seconds": 60, "note": "the task count over time as a standard metric: 1 to 2 is the scale-out, 2 back to 1 the scale-in"},
+    {"source": "ecs:DescribeServices", "metric": "desiredCount, runningCount, pendingCount", "poll_seconds": 60, "note": "Container Insights is off, so AWS/ECS RunningTaskCount does not exist; poll the service every minute with UTC timestamps"},
+    {"source": "application-autoscaling:DescribeScalingActivities", "metric": "scaling activity history for service/<cluster>/query-api", "note": "start and end time and cause of each scale-out and scale-in"},
+    {"source": "cloudwatch:DescribeAlarmHistory", "metric": "target tracking alarm state changes for query-api", "note": "AlarmHigh and AlarmLow transition times"},
+    {"source": "AWS/DynamoDB", "metric": "ThrottledRequests, ConsumedReadCapacityUnits", "statistics": ["Sum"], "period_seconds": 60},
+    {"source": "AWS/Neptune", "metric": "ServerlessDatabaseCapacity, CPUUtilization", "statistics": ["Average", "Maximum"], "period_seconds": 60},
+    {"source": "loadgen raw results", "metric": "per-request latency, status and route with run IDs", "note": "target/experiment-runs/15b-ecs-scaling-<run-id>/raw/ (sha256 sealed); derived/timeline.csv has one row per UTC minute"}
+  ],
+  "approval_record_path": "docs/agent-runs/phase-15/human-gate.md",
+  "provenance": {
+    "requirements": "docs/agent-runs/phase-14/prompt.md (Replan decisions; Answers item 4; Gap routing item 5), plan phase15.md experiment D",
+    "profile": "load-tests/config/load-profile.v1.json",
+    "run": "python3 -I load-tests/loadgen.py run --manifest experiments/manifests/15b-ecs-scaling.json (commands in experiments/README.md)"
+  },
+  "limits_note": "Known limitation to report: query-api max is 2 tasks, so scale-out is 1 to 2 only. If CPU never exceeds the target at concurrency 50 on non-LLM routes, no scale-out happens; report that and the CPU values rather than tuning the service or the target inside the run."
+}

@@ -1,0 +1,25 @@
+# Pinned files drifted after the 14B replan (observed 2026-11-09; 209 pinned, 24 drifted)
+infra/terraform/README.md
+infra/terraform/billing-bootstrap/README.md
+infra/terraform/billing-bootstrap/main.tf
+infra/terraform/billing-bootstrap/tests/budget.tftest.hcl
+infra/terraform/billing-bootstrap/variables.tf
+infra/terraform/billing-execution/README.md
+infra/terraform/main.tf
+infra/terraform/modules/datalake/main.tf
+infra/terraform/modules/identity/variables.tf
+infra/terraform/modules/neptune/outputs.tf
+infra/terraform/modules/observability/main.tf
+infra/terraform/modules/observability/outputs.tf
+infra/terraform/modules/observability/variables.tf
+infra/terraform/modules/runtime/compute.tf
+infra/terraform/modules/runtime/outputs.tf
+infra/terraform/modules/runtime/variables.tf
+infra/terraform/modules/s3vectors/main.tf
+infra/terraform/outputs.tf
+infra/terraform/phase12b-variables.tf
+infra/terraform/phase12b.tf
+infra/terraform/tests/phase12a.tftest.hcl
+infra/terraform/variables.tf
+tests/infra/README.md
+tests/infra/terraform_source_guard.py

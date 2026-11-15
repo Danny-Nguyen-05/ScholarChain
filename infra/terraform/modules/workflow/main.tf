@@ -1,7 +1,9 @@
 locals { state_machine_arn = "arn:aws:states:${var.aws_region}:${var.aws_account_id}:stateMachine:${var.name_prefix}-embedding-dispatch" }
 # This is the named pipeline producer identity. Phase 13 supplies the authorized caller.
 resource "aws_iam_role" "producer" {
-  name = "${var.name_prefix}-embedding-producer"
+  # D1: runtime boundary created by the deployer root (name and ARN scheme documented in modules/identity/main.tf).
+  permissions_boundary = "arn:aws:iam::${var.aws_account_id}:policy/${var.name_prefix}-permissions-boundary"
+  name                 = "${var.name_prefix}-embedding-producer"
   assume_role_policy = jsonencode({ Version = "2012-10-17", Statement = [{
     Effect    = "Allow", Principal = { Service = "states.amazonaws.com" }, Action = "sts:AssumeRole",
     Condition = { StringEquals = { "aws:SourceAccount" = var.aws_account_id }, ArnEquals = { "aws:SourceArn" = local.state_machine_arn } }
@@ -49,6 +51,8 @@ resource "aws_sfn_state_machine" "embedding_dispatch" {
   encryption_configuration {
     type       = "CUSTOMER_MANAGED_KMS_KEY"
     kms_key_id = var.kms_key_arn
+    # AWS always reports 300 (its default); leaving this null made every plan show an update the provider's waiter never sees.
+    kms_data_key_reuse_period_seconds = 300
   }
   tags       = var.tags
   depends_on = [aws_iam_role_policy.producer]

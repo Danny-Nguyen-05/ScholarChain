@@ -2,6 +2,8 @@ package scholarchain.build
 
 import java.io.File
 import java.nio.file.Files
+import java.nio.file.attribute.PosixFilePermissions
+import scala.jdk.CollectionConverters._
 import java.util.jar.{JarEntry, JarOutputStream}
 import org.scalatest.funsuite.AnyFunSuite
 
@@ -126,5 +128,53 @@ class ServiceDistributionSpec extends AnyFunSuite {
     )
     assert(linked.getMessage.contains("symlink"))
     assert(!Files.exists(output))
+  }
+
+  test("distribution modes are independent of the builder's umask and source file modes") {
+    val owner = PosixFilePermissions.fromString("rw-------")
+    val root = Files.createTempDirectory("service-distribution-modes").toFile
+    val app = application(root)
+    val dependency = jar(new File(root, "runtime.jar"), Seq("META-INF/services/example"))
+    Files.setPosixFilePermissions(app.toPath, owner)
+    Files.setPosixFilePermissions(dependency.toPath, owner)
+    val output = new File(root, "out")
+    ServiceDistribution.write(app, Seq(dependency), output)
+    val prompts = new File(root, "prompts-src")
+    Seq("runtime/a.md", "schemas/b.json").foreach { name =>
+      val file = new File(prompts, name)
+      Files.createDirectories(file.toPath.getParent)
+      Files.writeString(file.toPath, "x")
+      Files.setPosixFilePermissions(file.toPath, owner)
+    }
+    ServiceDistribution.writePromptAssets(prompts, output)
+    def mode(path: String): String =
+      PosixFilePermissions.toString(Files.getPosixFilePermissions(new File(output, path).toPath))
+    assert(mode("services.jar") == "rw-r--r--")
+    assert(mode("lib/runtime.jar") == "rw-r--r--")
+    assert(mode("lib") == "rwxr-xr-x")
+    assert(mode("prompts") == "rwxr-xr-x")
+    assert(mode("prompts/runtime") == "rwxr-xr-x")
+    assert(mode("prompts/runtime/a.md") == "rw-r--r--")
+    assert(mode("prompts/schemas/b.json") == "rw-r--r--")
+  }
+
+  test("Dockerfile makes /app readable by the non-root runtime user before dropping privileges") {
+    def findDockerfile(dir: File): Option[File] =
+      Option(dir).flatMap { d =>
+        val candidate = new File(d, "Dockerfile")
+        if (candidate.isFile && new File(d, "build.sbt").isFile) Some(candidate)
+        else findDockerfile(d.getParentFile)
+      }
+    val dockerfile = findDockerfile(new File(System.getProperty("user.dir")).getCanonicalFile)
+    assert(dockerfile.isDefined, "Dockerfile not found above the working directory")
+    val lines = Files.readAllLines(dockerfile.get.toPath).asScala.toVector.map(_.trim)
+    val copies = lines.indices.filter(i => lines(i).startsWith("COPY "))
+    val chmod = lines.indexWhere(l => l.startsWith("RUN chmod") && l.contains("/app"))
+    val user = lines.indexWhere(_.startsWith("USER scholarchain"))
+    assert(copies.size == 3)
+    assert(chmod > copies.max, "chmod must follow every COPY into /app")
+    assert(user > chmod, "chmod must run before USER scholarchain")
+    assert(lines(chmod).contains("a+rX"), "everything under /app must be readable by all")
+    assert(lines(chmod).contains("go-w"), "the app user must not gain write access")
   }
 }

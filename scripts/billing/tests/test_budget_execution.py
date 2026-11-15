@@ -7,7 +7,10 @@ import io
 import json
 import os
 from pathlib import Path
+import re
+import shutil
 import stat
+import subprocess
 import sys
 import tempfile
 import unittest
@@ -29,6 +32,8 @@ scenario=json.loads((root/'scenario.json').read_text())
 with open(root/'calls.jsonl','a') as journal:
  journal.write(json.dumps({'argv':sys.argv,'env':dict(os.environ),'cwd':str(pathlib.Path.cwd())})+'\n')
 if pathlib.Path(sys.argv[0]).name.startswith('terraform'):
+ if sys.argv[1]=='show':
+  print(json.dumps(scenario.get('plan_json',{})));sys.exit(scenario.get('show_exit',0))
  state=pathlib.Path(next(x.split('=',1)[1] for x in sys.argv if x.startswith('-state=')))
  if scenario.get('terraform_fail'):
   state.write_bytes(b'opaque partial state')
@@ -36,7 +41,11 @@ if pathlib.Path(sys.argv[0]).name.startswith('terraform'):
   for path in [state.with_name(state.name+'.backup'),root/'config/errored.tfstate',root/'.billing.execution.tfstate.lock.info']:
    path.write_bytes(b'opaque recovery fixture');path.chmod(0o600)
   sys.exit(1)
- state.write_bytes(b'opaque completed fixture state');state.chmod(0o600)
+ if scenario.get('write_tf_backup') and state.exists():
+  backup=state.with_name(state.name+'.backup');backup.write_bytes(b'unrelated bytes' if scenario.get('bad_tf_backup') else state.read_bytes());backup.chmod(0o600)
+ if not scenario.get('apply_keeps_state'):
+  state.write_bytes(b'opaque completed fixture state');state.chmod(0o600)
+ (root/'applied').write_text('1')
  print('no private output should be published')
  sys.exit(0)
 if '--generate-cli-skeleton' in sys.argv:
@@ -58,7 +67,7 @@ if operation=='describe-budget' and not (root/'billing.execution.tfstate').exist
  if scenario.get('p3_leading_lf'):print('',file=sys.stderr)
  print(prefix+'An error occurred ('+error+') when calling the '+op+' operation'+annotation+': '+message,file=sys.stderr)
  sys.exit(254)
-responses=scenario['responses']
+responses=scenario['responses_after'] if ((root/'applied').exists() and 'responses_after' in scenario) else scenario['responses']
 if operation=='describe-subscribers-for-notification':
  threshold=json.loads(sys.argv[sys.argv.index('--notification')+1])['Threshold']
  print(json.dumps(responses['subscribers'][str(threshold)]));sys.exit(0)
@@ -314,7 +323,8 @@ class NotificationReadCompatibility(unittest.TestCase):
         with self.assertRaisesRegex(b.Blocked,'SUBSCRIBER_DRIFT'):self.validate(responses)
 
 
-class Features(unittest.TestCase):
+class Harness(unittest.TestCase):
+    """Shared fixture: stub terraform/aws, private temp tree, create-flow gate."""
     def setUp(self):
         self.temp=tempfile.TemporaryDirectory(prefix='billing wrapper test ')
         self.root=Path(self.temp.name).resolve();self.root.chmod(0o700)
@@ -374,6 +384,16 @@ class Features(unittest.TestCase):
 
     def p3_apply(self):self.ex.p3_check();return self.ex.apply()
 
+    def execution(self):
+        self.write(self.gate_path,json.dumps(self.gate))
+        # Reserved local synthetic input only; real durable/private input is never accessed.
+        self.write(self.primary/'notification.private.tfvars.json',json.dumps({'budget_notification_emails':[FIXTURE_ADDRESS]}))
+        ex=b.Execution(self.policy,now=lambda:NOW).load_gate(self.gate_path,b.hash_file(self.gate_path),'initial')
+        ex.check_checkout=lambda *args,**kwargs:None
+        return ex
+
+
+class Features(Harness):
     def test_apply_exact_argv_env_and_space_paths(self):
         self.p3_apply();calls=self.calls();last=calls[-1]
         self.assertEqual(last['argv'],self.policy.apply_argv())
@@ -931,13 +951,709 @@ class Features(unittest.TestCase):
         self.write(self.primary/'notification.private.tfvars.json',json.dumps({'budget_notification_emails':[FIXTURE_ADDRESS]}))
         self.assertEqual(self.ex.private_recipient(),FIXTURE_ADDRESS)
 
-    def execution(self):
-        self.write(self.gate_path,json.dumps(self.gate))
-        # Reserved local synthetic input only; real durable/private input is never accessed.
-        self.write(self.primary/'notification.private.tfvars.json',json.dumps({'budget_notification_emails':[FIXTURE_ADDRESS]}))
-        ex=b.Execution(self.policy,now=lambda:NOW).load_gate(self.gate_path,b.hash_file(self.gate_path),'initial')
-        ex.check_checkout=lambda *args,**kwargs:None
+
+OTHER = 'other@example.invalid'  # synthetic reserved-domain fixture, never a real recipient
+
+
+def usd25_responses():
+    """Hand-derived USD 25 shape: amount 25, three ACTUAL ABSOLUTE_VALUE alerts at 10, 15, 20."""
+    responses = fixture_responses()
+    responses['describe-budget']['Budget']['BudgetLimit']['Amount'] = '25.0'
+    responses['describe-notifications-for-budget']['Notifications'] = [
+        b.expected_notification(x, 'ABSOLUTE_VALUE') for x in (10, 15, 20)]
+    responses['subscribers'] = {str(x): {'Subscribers': [{'SubscriptionType': 'EMAIL', 'Address': FIXTURE_ADDRESS}]}
+                                for x in (10, 15, 20)}
+    return responses
+
+
+def read_args(responses):
+    return (responses['describe-budget'], responses['list-tags-for-resource'],
+            responses['describe-notifications-for-budget'],
+            {int(k): v for k, v in responses['subscribers'].items()}, FIXTURE_ADDRESS)
+
+
+def plan_json(actions=('update',), after_over=None, before_over=None, notification='masked', extra=None):
+    """Synthetic `show -json` plan; `variables` holds the private fixture recipient on purpose."""
+    before = {'account_id': b.ACCOUNT, 'name': b.BUDGET, 'budget_type': 'COST', 'limit_amount': '200.0',
+              'limit_unit': 'USD', 'time_unit': 'CUSTOM', 'time_period_start': '2026-10-01_00:00',
+              'time_period_end': '2027-01-01_00:00', 'tags': dict(b.TAGS), 'tags_all': dict(b.TAGS),
+              'cost_types': [{'include_credit': False, 'include_refund': False}], 'cost_filter': [],
+              'filter_expression': []}
+    after = {**before, 'limit_amount': '25', **(after_over or {})}
+    before.update(before_over or {})
+    change = {'actions': list(actions), 'before': before, 'after': after}
+    if notification == 'masked':
+        change['after_sensitive'] = {'notification': True}
+    elif notification == 'visible':
+        after['notification'] = [{'comparison_operator': 'GREATER_THAN', 'threshold': t,
+                                  'threshold_type': 'ABSOLUTE_VALUE', 'notification_type': 'ACTUAL'}
+                                 for t in (10, 15, 20)]
+    elif notification != 'absent':
+        after['notification'] = notification
+    entry = {'address': b.MODIFY_ADDRESS, 'mode': 'managed', 'type': 'aws_budgets_budget', 'name': 'project',
+             'index': 0, 'provider_name': 'registry.terraform.io/hashicorp/aws', 'change': change}
+    plan = {'format_version': '1.2', 'terraform_version': '1.13.5', 'errored': False,
+            'variables': {'budget_notification_emails': {'value': [FIXTURE_ADDRESS]}},
+            'resource_changes': [entry]}
+    plan.update(extra or {})
+    return plan
+
+
+def other_resource_entry():
+    return {'address': 'aws_iam_role.other', 'mode': 'managed', 'type': 'aws_iam_role',
+            'provider_name': 'registry.terraform.io/hashicorp/aws',
+            'change': {'actions': ['create'], 'before': None, 'after': {}}}
+
+
+class ModifyShapeFeatures(unittest.TestCase):
+    """The single shape switch: initial (200, PERCENTAGE 50/80/100) versus usd25 (25, ABSOLUTE_VALUE 10/15/20)."""
+    def test_usd25_shape_constants_are_hand_derived(self):
+        self.assertEqual((b.USD25_SHAPE.amount, b.USD25_SHAPE.threshold_type, b.USD25_SHAPE.thresholds),
+                         (25, 'ABSOLUTE_VALUE', (10, 15, 20)))
+        self.assertEqual((b.INITIAL_SHAPE.amount, b.INITIAL_SHAPE.threshold_type, b.INITIAL_SHAPE.thresholds),
+                         (200, 'PERCENTAGE', (50, 80, 100)))
+        self.assertLess(max(b.USD25_SHAPE.thresholds), b.USD25_SHAPE.amount)
+
+    def test_new_shape_passes_usd25_and_fails_the_default_initial_shape(self):
+        result = b.sanitize_readback(*read_args(usd25_responses()), shape=b.USD25_SHAPE)
+        self.assertEqual(result['notification_count'], 3)
+        self.assertTrue(result['private_recipients_match'])
+        self.assertNotIn(FIXTURE_ADDRESS, json.dumps(result))
+        with self.assertRaisesRegex(b.Blocked, 'BUDGET_AMOUNT'):
+            b.sanitize_readback(*read_args(usd25_responses()))
+
+    def test_old_shape_fails_usd25_and_passes_initial(self):
+        self.assertTrue(b.sanitize_readback(*read_args(fixture_responses()))['tags_match'])
+        with self.assertRaisesRegex(b.Blocked, 'BUDGET_AMOUNT'):
+            b.sanitize_readback(*read_args(fixture_responses()), shape=b.USD25_SHAPE)
+
+    def test_usd25_amount_alone_with_old_alerts_fails(self):
+        responses = fixture_responses(); responses['describe-budget']['Budget']['BudgetLimit']['Amount'] = '25'
+        with self.assertRaisesRegex(b.Blocked, 'NOTIFICATION_THRESHOLD'):
+            b.sanitize_readback(*read_args(responses), shape=b.USD25_SHAPE)
+
+    def test_usd25_alert_mutations_each_fail_closed(self):
+        def alert(index, **fields): return lambda r: r['describe-notifications-for-budget']['Notifications'][index].update(fields)
+        cases = {
+            'threshold_25': (alert(2, Threshold=25), 'NOTIFICATION_THRESHOLD'),
+            'threshold_50_legacy': (alert(0, Threshold=50), 'NOTIFICATION_THRESHOLD'),
+            'duplicate_threshold': (alert(1, Threshold=10), 'NOTIFICATION_THRESHOLD'),
+            'percentage_type_left': (alert(0, ThresholdType='PERCENTAGE'), 'NOTIFICATION_DRIFT'),
+            'type_omitted': (lambda r: r['describe-notifications-for-budget']['Notifications'][0].pop('ThresholdType'), 'NOTIFICATION_DRIFT'),
+            'forecasted': (alert(1, NotificationType='FORECASTED'), 'NOTIFICATION_DRIFT'),
+            'less_than': (alert(2, ComparisonOperator='LESS_THAN'), 'NOTIFICATION_DRIFT'),
+            'only_two_alerts': (lambda r: r['describe-notifications-for-budget']['Notifications'].pop(), 'NOTIFICATION_COUNT'),
+            'four_alerts': (lambda r: r['describe-notifications-for-budget']['Notifications'].append(b.expected_notification(5, 'ABSOLUTE_VALUE')), 'NOTIFICATION_COUNT'),
+            'amount_200': (lambda r: r['describe-budget']['Budget']['BudgetLimit'].update(Amount='200'), 'BUDGET_AMOUNT'),
+            'amount_26': (lambda r: r['describe-budget']['Budget']['BudgetLimit'].update(Amount='26'), 'BUDGET_AMOUNT'),
+            'wrong_recipient': (lambda r: r['subscribers']['15']['Subscribers'][0].update(Address=OTHER), 'SUBSCRIBER_DRIFT'),
+            'sns_subscriber': (lambda r: r['subscribers']['20']['Subscribers'][0].update(SubscriptionType='SNS'), 'SUBSCRIBER_DRIFT'),
+            'tag_drift': (lambda r: r['list-tags-for-resource']['ResourceTags'][0].update(Value='wrong'), 'TAGS_DRIFT'),
+            'date_drift': (lambda r: r['describe-budget']['Budget']['TimePeriod'].update(End='2027-01-02T00:00:00Z'), 'BUDGET_DATE'),
+        }
+        for name, (mutate, code) in cases.items():
+            with self.subTest(name=name):
+                responses = usd25_responses(); mutate(responses)
+                with self.assertRaisesRegex(b.Blocked, code) as error:
+                    b.sanitize_readback(*read_args(responses), shape=b.USD25_SHAPE)
+                self.assertNotIn(FIXTURE_ADDRESS, str(error.exception))
+
+    def test_initial_shape_still_rejects_absolute_value_alerts(self):
+        responses = fixture_responses()
+        responses['describe-notifications-for-budget']['Notifications'][0]['ThresholdType'] = 'ABSOLUTE_VALUE'
+        with self.assertRaisesRegex(b.Blocked, 'NOTIFICATION_DRIFT'):
+            b.sanitize_readback(*read_args(responses))
+
+    def test_detect_shape_classifies_or_refuses_partial_states(self):
+        old, new = fixture_responses(), usd25_responses()
+        self.assertIs(b.detect_shape(old['describe-budget'], old['describe-notifications-for-budget']), b.INITIAL_SHAPE)
+        self.assertIs(b.detect_shape(new['describe-budget'], new['describe-notifications-for-budget']), b.USD25_SHAPE)
+        # An omitted ThresholdType means PERCENTAGE for the old shape only.
+        omitted = fixture_responses()
+        for n in omitted['describe-notifications-for-budget']['Notifications']: del n['ThresholdType']
+        self.assertIs(b.detect_shape(omitted['describe-budget'], omitted['describe-notifications-for-budget']), b.INITIAL_SHAPE)
+        omitted = usd25_responses()
+        for n in omitted['describe-notifications-for-budget']['Notifications']: del n['ThresholdType']
+        with self.assertRaisesRegex(b.Blocked, 'LIVE_STATE_UNEXPECTED'):
+            b.detect_shape(omitted['describe-budget'], omitted['describe-notifications-for-budget'])
+        with self.assertRaisesRegex(b.Blocked, 'LIVE_STATE_UNEXPECTED'):
+            b.detect_shape(new['describe-budget'], new['describe-notifications-for-budget'], b.INITIAL_SHAPE)
+        mixed = [(new['describe-budget'], old['describe-notifications-for-budget']),
+                 (old['describe-budget'], new['describe-notifications-for-budget']),
+                 ({'Budget': {'BudgetLimit': {'Amount': '100'}}}, old['describe-notifications-for-budget']),
+                 ({'Budget': {}}, old['describe-notifications-for-budget']),
+                 (old['describe-budget'], {'Notifications': old['describe-notifications-for-budget']['Notifications'][:2]}),
+                 (old['describe-budget'], {'Notifications': 'x'}), ({}, {})]
+        for budget, notifications in mixed:
+            with self.subTest(budget=budget, notifications=notifications):
+                with self.assertRaisesRegex(b.Blocked, 'LIVE_STATE_UNEXPECTED'):
+                    b.detect_shape(budget, notifications)
+
+    def test_committed_template_holds_a_placeholder_and_no_account_id_or_address(self):
+        text = (ROOT/'modify-public-inputs.template.json').read_text()
+        inputs = json.loads(text)
+        self.assertEqual(inputs.pop('aws_account_id'), '<acct>')
+        self.assertEqual(inputs.pop('budget_limit_usd'), 25)
+        self.assertEqual(inputs, {'aws_profile': b.PROFILE, 'aws_region': b.REGION, 'budget_name': b.BUDGET,
+            'project_period_start_utc': '2026-10-01_00:00', 'project_period_end_utc': '2027-01-01_00:00',
+            'enable_budget': True, 'resource_tags': {k: b.TAGS[k] for k in ('course', 'project', 'environment', 'owner')}})
+        self.assertNotRegex(text, r'[0-9]{12}'); self.assertNotIn('@', text)
+        self.assertFalse((ROOT/'modify-public-inputs.json').exists())
+
+    def test_documented_render_command_substitutes_only_the_account_and_prints_the_hash(self):
+        readme = (ROOT/'README.md').read_text()
+        match = re.search(r"python3 -I -c '(.*?)' scripts/billing/modify-public-inputs\.template\.json", readme, re.S)
+        self.assertIsNotNone(match)
+        with tempfile.TemporaryDirectory() as scratch:
+            out = Path(scratch)/'rendered.json'
+            run = lambda acct: subprocess.run([sys.executable, '-I', '-c', match.group(1), str(ROOT/'modify-public-inputs.template.json'), str(out)],
+                                              capture_output=True, text=True, env={'ACCT': acct, 'PATH': '/usr/bin:/bin'})
+            for bad in ('', '12345', '11112222333x', '1111222233334', '<acct>'):
+                with self.subTest(bad=bad):
+                    self.assertNotEqual(run(bad).returncode, 0); self.assertFalse(out.exists())
+            result = run('111122223333')
+            self.assertEqual(result.returncode, 0)
+            self.assertEqual(result.stdout.strip(), b.hash_file(out))
+            self.assertEqual(stat.S_IMODE(out.stat().st_mode), 0o600)
+            rendered = json.loads(out.read_text()); template = json.loads((ROOT/'modify-public-inputs.template.json').read_text())
+            self.assertEqual(rendered.pop('aws_account_id'), '111122223333'); template.pop('aws_account_id')
+            self.assertEqual(rendered, template)
+            self.assertNotEqual(run('111122223333').returncode, 0)  # exclusive create: never overwrites
+
+    def test_initial_state_constants_match_the_verifier_pins(self):
+        spec = importlib.util.spec_from_file_location('verification_pins', ROOT / 'budget_verification.py')
+        v = importlib.util.module_from_spec(spec); sys.modules[spec.name] = v; spec.loader.exec_module(v)
+        self.assertEqual((b.INITIAL_STATE_SHA256, b.INITIAL_STATE_BYTES), (v.STATE_SHA, v.STATE_BYTES))
+        self.assertEqual(b.INITIAL_STATE_SHA256, '271fe888595b6d71eedb649b7cdb87686ded0b3cbb1e2b9a19f76d7575be3f67')
+
+
+class ModifyPlanFeatures(unittest.TestCase):
+    """Only an in-place update of aws_budgets_budget.project[0] from 200 to 25 is acceptable."""
+    def check(self, plan): return b.check_modify_plan(plan)
+
+    def test_in_place_update_is_accepted_masked_or_visible(self):
+        for notification, visible in (('masked', False), ('visible', True)):
+            with self.subTest(notification=notification):
+                result = self.check(plan_json(notification=notification))
+                self.assertEqual(result, {'address': 'aws_budgets_budget.project[0]', 'actions': ['update'],
+                                          'notifications_visible': visible, 'amount_before': 200, 'amount_after': 25})
+                self.assertNotIn(FIXTURE_ADDRESS, json.dumps(result))
+
+    def test_decimal_amount_spellings_and_plan_time_formats_are_tolerated(self):
+        plan = plan_json(after_over={'limit_amount': '25.00'}, before_over={'limit_amount': '200'})
+        self.assertEqual(self.check(plan)['amount_after'], 25)
+        times = {'time_period_start': '2026-10-01T00:00:00Z', 'time_period_end': '2027-01-01T00:00:00Z'}
+        self.assertTrue(self.check(plan_json(after_over=times, before_over=times)))
+
+    def test_create_delete_replace_and_noop_are_refused(self):
+        cases = (('create',), ('delete',), ('delete', 'create'), ('create', 'delete'), ('no-op',), ('read',),
+                 ('update', 'delete'), (), ('update', 'update'))
+        expected = {('create',): 'PLAN_CREATE', ('delete',): 'PLAN_DELETE', ('delete', 'create'): 'PLAN_REPLACE',
+                    ('create', 'delete'): 'PLAN_REPLACE', ('update', 'delete'): 'PLAN_DELETE'}
+        for actions in cases:
+            with self.subTest(actions=actions):
+                with self.assertRaisesRegex(b.Blocked, expected.get(actions, 'PLAN_NOT_IN_PLACE_UPDATE')):
+                    self.check(plan_json(actions))
+
+    def test_replacement_markers_refuse_even_with_an_update_action(self):
+        plan = plan_json(); plan['resource_changes'][0]['change']['replace_paths'] = [['name']]
+        with self.assertRaisesRegex(b.Blocked, 'PLAN_REPLACE'): self.check(plan)
+        plan = plan_json(); plan['resource_changes'][0]['action_reason'] = 'replace_because_cannot_update'
+        with self.assertRaisesRegex(b.Blocked, 'PLAN_REPLACE'): self.check(plan)
+
+    def test_any_other_resource_or_address_is_refused(self):
+        extra = plan_json(); extra['resource_changes'].append(other_resource_entry())
+        noop = plan_json()
+        noop['resource_changes'].append({'address': 'aws_s3_bucket.x', 'mode': 'managed', 'type': 'aws_s3_bucket',
+                                         'provider_name': 'registry.terraform.io/hashicorp/aws',
+                                         'change': {'actions': ['no-op'], 'before': {}, 'after': {}}})
+        for name, plan in (('extra_create', extra), ('extra_noop', noop),
+                           ('no_changes', plan_json(extra={'resource_changes': []})),
+                           ('missing', {'terraform_version': '1.13.5'})):
+            with self.subTest(name=name):
+                with self.assertRaisesRegex(b.Blocked, 'PLAN_NOT_SINGLE_RESOURCE'): self.check(plan)
+        for key, value in (('address', 'aws_budgets_budget.project'), ('address', 'aws_budgets_budget.other[0]'),
+                           ('type', 'aws_iam_role'), ('mode', 'data'), ('provider_name', 'registry.terraform.io/other/aws')):
+            with self.subTest(key=key, value=value):
+                plan = plan_json(); plan['resource_changes'][0][key] = value
+                with self.assertRaisesRegex(b.Blocked, 'PLAN_NOT_BILLING_RESOURCE'): self.check(plan)
+
+    def test_wrong_amounts_and_extra_attribute_changes_are_refused(self):
+        for after, before in (({'limit_amount': '26'}, None), ({'limit_amount': '200'}, None), ({'limit_amount': '24'}, None),
+                              (None, {'limit_amount': '100'}), ({'limit_amount': 'abc'}, None), ({'limit_amount': None}, None)):
+            with self.subTest(after=after, before=before):
+                with self.assertRaisesRegex(b.Blocked, 'PLAN_AMOUNT'): self.check(plan_json(after_over=after, before_over=before))
+        changed = {'tags': dict(b.TAGS, owner='other'), 'time_period_end': '2027-02-01_00:00', 'name': 'other',
+                   'cost_types': [{'include_credit': True}], 'budget_type': 'USAGE', 'limit_unit': 'GB',
+                   'time_unit': 'MONTHLY', 'cost_filter': [{'name': 'Service'}], 'account_id': '111122223333'}
+        for key, value in changed.items():
+            with self.subTest(changed=key):
+                with self.assertRaisesRegex(b.Blocked, 'PLAN_UNEXPECTED_ATTRIBUTE_CHANGE'):
+                    self.check(plan_json(after_over={key: value}))
+
+    def test_identity_date_and_tag_constants_are_enforced_when_unchanged(self):
+        for key, value in (('name', 'other'), ('account_id', '111122223333'), ('budget_type', 'USAGE'),
+                           ('limit_unit', 'GB'), ('time_unit', 'MONTHLY')):
+            with self.subTest(key=key):
+                with self.assertRaisesRegex(b.Blocked, 'PLAN_BUDGET_IDENTITY'):
+                    self.check(plan_json(after_over={key: value}, before_over={key: value}))
+        end = '2027-02-01_00:00'
+        with self.assertRaisesRegex(b.Blocked, 'PLAN_BUDGET_DATE'):
+            self.check(plan_json(after_over={'time_period_end': end}, before_over={'time_period_end': end}))
+        tags = dict(b.TAGS, owner='other')
+        with self.assertRaisesRegex(b.Blocked, 'PLAN_TAGS'):
+            self.check(plan_json(after_over={'tags': tags}, before_over={'tags': tags}))
+
+    def test_alert_blocks_must_be_masked_or_exactly_the_usd25_set(self):
+        def visible(**kw):
+            return [dict({'comparison_operator': 'GREATER_THAN', 'threshold': t, 'threshold_type': 'ABSOLUTE_VALUE',
+                          'notification_type': 'ACTUAL'}, **kw) for t in (10, 15, 20)]
+        bad = {'percentage_type': visible(threshold_type='PERCENTAGE'), 'forecasted': visible(notification_type='FORECASTED'),
+               'less_than': visible(comparison_operator='LESS_THAN'),
+               'old_thresholds': [dict(n, threshold=t) for n, t in zip(visible(), (50, 80, 100))],
+               'top_threshold_25': [dict(n, threshold=t) for n, t in zip(visible(), (10, 15, 25))],
+               'two_alerts': visible()[:2], 'empty': [], 'not_dicts': ['x', 'y', 'z']}
+        for name, alerts in bad.items():
+            with self.subTest(name=name):
+                with self.assertRaisesRegex(b.Blocked, 'PLAN_NOTIFICATIONS'):
+                    self.check(plan_json(notification=alerts))
+        with self.assertRaisesRegex(b.Blocked, 'PLAN_NOTIFICATIONS'):  # absent and not marked sensitive
+            self.check(plan_json(notification='absent'))
+
+    def test_toolchain_and_error_flags_are_enforced_and_variables_never_echoed(self):
+        for extra in ({'terraform_version': '1.14.0'}, {'terraform_version': None}):
+            with self.assertRaisesRegex(b.Blocked, 'PLAN_TERRAFORM_VERSION'): self.check(plan_json(extra=extra))
+        for extra in ({'errored': True}, {'deferred_changes': [{'reason': 'x'}]}):
+            with self.assertRaisesRegex(b.Blocked, 'PLAN_ERRORED'): self.check(plan_json(extra=extra))
+        for plan in (None, [], 'x'):
+            with self.assertRaises(b.Blocked): self.check(plan)
+        with self.assertRaises(b.Blocked) as error: self.check(plan_json(('delete', 'create')))
+        self.assertNotIn(FIXTURE_ADDRESS, str(error.exception))
+
+
+class ModifyFeatures(Harness):
+    def setUp(self):
+        super().setUp()
+        self.initial = b'initial fixture state, opaque'
+        for name, value in (('INITIAL_STATE_SHA256', b.digest(self.initial)), ('INITIAL_STATE_BYTES', len(self.initial))):
+            patch = mock.patch.object(b, name, value); patch.start(); self.addCleanup(patch.stop)
+        (self.primary/'operations').mkdir(mode=0o700)  # exists since Phase 12D
+        self.write(self.primary/'billing.execution.tfstate', self.initial.decode())
+        (self.backups/'initial-ab9f141e83058209').mkdir(mode=0o700)
+        self.write(self.backups/b.INITIAL_BACKUP_RELATIVE, self.initial.decode())
+        self.write(self.primary/'billing.modify.tfplan', 'public fake modify plan')
+        (self.repo/'scripts/billing').mkdir(parents=True)
+        shutil.copy(ROOT/'modify-public-inputs.template.json', self.repo/'scripts/billing/modify-public-inputs.template.json')
+        self.render_inputs()
+        self.pins['modify'] = {'plan_sha256': b.hash_file(self.primary/'billing.modify.tfplan'),
+            'plan_bytes': (self.primary/'billing.modify.tfplan').stat().st_size,
+            'public_input_sha256': b.hash_file(self.primary/'approved-public-inputs.modify.tfvars.json'),
+            'config': [dict(self.pins['config'][0])]}
+        self.scenario.update(plan_json=plan_json(), responses=fixture_responses(), responses_after=usd25_responses(),
+                             write_tf_backup=True)
+        self.save_scenario()
+        self.record = 'docs/agent-runs/phase-14/budget-modify-human-gate.md'
+        self.mgate = {'operation': 'modify-fixture', 'option': 'M', 'plan_sha256': self.pins['modify']['plan_sha256'],
+            'proposal_sha256': self.pins['proposal_sha256'], 'wrapper_files': {'scripts/billing/budget_execution.py': '3'*64},
+            'source_commit': 'a'*40, 'human_record_sha256': self.pins['human_record_sha256'],
+            'g1_affirmation': 'A human statement fixture, no real approval.', 'actor_arn': b.CALLER,
+            'account': b.ACCOUNT, 'profile': b.PROFILE, 'region': b.REGION,
+            'window_start': b.iso(NOW-timedelta(minutes=5)), 'window_end': b.iso(NOW+timedelta(minutes=30)),
+            'timezone': 'America/Chicago', 'login_at': b.iso(NOW-timedelta(minutes=4)),
+            'human_sts_observed_at': b.iso(NOW-timedelta(minutes=3)), 'human_sts': {'Account': b.ACCOUNT, 'Arn': b.CALLER},
+            'permissions': sorted(b.MODIFY_ACTIONS), 'retention_accepted': True, 'modify_review_approved': True,
+            'state_backup_confirmed': True, 'aws_cli_sha256': b.hash_file(self.aws),
+            'public_packet_root': 'docs/agent-runs/phase-14/evidence/14b/budget-modify-fixture',
+            'modify_record_path': self.record, 'modify_record_sha256': '4'*64,
+            'prior_state_sha256': b.INITIAL_STATE_SHA256, 'prior_state_bytes': b.INITIAL_STATE_BYTES}
+        self.mex = self.modify_execution()
+
+    def modify_execution(self, gate=None):
+        gate = gate or self.mgate
+        self.write(self.gate_path, json.dumps(gate))
+        ex = b.Execution(self.policy, now=lambda: NOW)
+        ex.load_modify_gate(self.gate_path, b.hash_file(self.gate_path), gate['operation'])
+        ex.check_checkout = lambda *args, **kwargs: None
+        ex.check_modify_record = lambda: None
         return ex
+
+    def fresh(self):
+        self.tearDown(); self.setUp()
+
+    def render_inputs(self, **changes):
+        """Render the private inputs from the committed template, as the documented human command does."""
+        rendered = json.loads((self.repo/'scripts/billing/modify-public-inputs.template.json').read_text())
+        rendered['aws_account_id'] = b.ACCOUNT  # the ID comes from the code constant, never from a literal here
+        rendered.update(changes)
+        path = self.primary/'approved-public-inputs.modify.tfvars.json'
+        if path.exists(): path.unlink()
+        self.write(path, json.dumps(rendered, indent=2) + '\n')
+        if 'modify' in self.pins: self.pins['modify']['public_input_sha256'] = b.hash_file(path)
+
+    def terraform_calls(self): return [c['argv'][1] for c in self.calls() if Path(c['argv'][0]).name.startswith('terraform')]
+    def aws_ops(self): return [c['argv'][2] for c in self.calls() if not Path(c['argv'][0]).name.startswith('terraform')]
+    def backup_dir(self): return self.backups/'modify-fixture'
+
+    def test_in_place_update_succeeds_and_verifies_the_new_shape(self):
+        receipt = self.mex.modify(); result = receipt['result']
+        self.assertTrue(result['applied']); self.assertFalse(result['already_at_target'])
+        self.assertEqual(result['plan']['actions'], ['update'])
+        self.assertEqual(result['verify']['notification_count'], 3)
+        self.assertTrue(result['verify']['private_recipients_match'])
+        calls = self.calls()
+        self.assertEqual(len(calls), 14)  # show + six pre reads + apply + six post reads
+        self.assertEqual(calls[0]['argv'], self.policy.show_argv())
+        self.assertEqual(calls[7]['argv'], self.policy.modify_apply_argv())
+        self.assertEqual(self.terraform_calls(), ['show', 'apply'])
+        self.assertEqual(self.aws_ops()[:6], ['describe-budget', 'list-tags-for-resource', 'describe-notifications-for-budget']+['describe-subscribers-for-notification']*3)
+        def selectors(rows): return [(x['Threshold'], x['ThresholdType']) for x in
+                                     (json.loads(c['argv'][c['argv'].index('--notification')+1]) for c in rows if '--notification' in c['argv'])]
+        self.assertEqual(selectors(calls[:7]), [(50, 'PERCENTAGE'), (80, 'PERCENTAGE'), (100, 'PERCENTAGE')])
+        self.assertEqual(selectors(calls[8:]), [(10, 'ABSOLUTE_VALUE'), (15, 'ABSOLUTE_VALUE'), (20, 'ABSOLUTE_VALUE')])
+        self.assertEqual({k: v for k, v in calls[7]['env'].items() if k not in ('LC_CTYPE', '__CF_USER_TEXT_ENCODING')}, self.policy.env())
+        self.assertEqual(calls[7]['cwd'], str(self.policy.config))
+        self.assertNotIn('AWS_ACCESS_KEY_ID', calls[7]['env'])
+        self.assertFalse((self.primary/'.billing-wrapper-active.lock').exists())
+        for stage in ('modify-apply', 'modify'):
+            self.assertTrue((self.mex.op/f'{stage}.receipt.json').exists())
+        text = json.dumps(receipt)
+        self.assertNotIn(FIXTURE_ADDRESS, text); self.assertNotIn(b.digest(FIXTURE_ADDRESS.encode()), text)
+
+    def test_versioned_pre_and_post_state_backups_are_opaque_private_and_exact(self):
+        receipt = self.mex.modify()['result']
+        pre, post = self.backup_dir()/'pre-apply.billing.execution.tfstate', self.backup_dir()/'post-apply.billing.execution.tfstate'
+        self.assertEqual(b.hash_file(pre), b.INITIAL_STATE_SHA256)
+        self.assertEqual(b.hash_file(post), b.hash_file(self.policy.state))
+        self.assertNotEqual(b.hash_file(post), b.INITIAL_STATE_SHA256)
+        self.assertEqual((receipt['pre_backup']['sha256'], receipt['post_backup']['sha256']), (b.hash_file(pre), b.hash_file(post)))
+        self.assertTrue(receipt['pre_backup']['equal'] and receipt['post_backup']['fsync_completed'])
+        for path in (pre, post):
+            self.assertEqual(stat.S_IMODE(path.stat().st_mode), 0o600)
+        self.assertEqual(stat.S_IMODE(self.backup_dir().stat().st_mode), 0o700)
+        # The Phase 12D initial backup is untouched.
+        self.assertEqual(b.hash_file(self.backups/b.INITIAL_BACKUP_RELATIVE), b.INITIAL_STATE_SHA256)
+
+    def test_pre_apply_backup_precedes_apply(self):
+        order = []
+        original_copy, original_command = b.opaque_copy, b.Execution.command
+        with mock.patch.object(b, 'opaque_copy', side_effect=lambda *a, **k: (order.append('copy'), original_copy(*a, **k))[1]), \
+             mock.patch.object(b.Execution, 'command', autospec=True, side_effect=lambda ex, argv, label: (order.append(label), original_command(ex, argv, label))[1]):
+            self.mex.modify()
+        self.assertLess(order.index('copy'), order.index('modify-apply'))
+        self.assertEqual(order.count('copy'), 2)
+
+    def test_already_at_target_applies_nothing(self):
+        self.scenario['responses'] = usd25_responses(); self.save_scenario()
+        result = self.mex.modify()['result']
+        self.assertEqual((result['applied'], result['already_at_target']), (False, True))
+        self.assertEqual(self.terraform_calls(), ['show'])
+        self.assertEqual(len(self.calls()), 7)
+        self.assertFalse(self.backup_dir().exists())
+        self.assertEqual(b.hash_file(self.policy.state), b.INITIAL_STATE_SHA256)
+
+    def test_unexpected_live_state_refuses_before_any_backup_or_apply(self):
+        def amount(value): return lambda r: r['describe-budget']['Budget']['BudgetLimit'].update(Amount=value)
+        cases = {
+            'amount_100': (amount('100'), 'LIVE_STATE_UNEXPECTED'),
+            'amount_25_old_alerts': (amount('25'), 'LIVE_STATE_UNEXPECTED'),
+            'amount_200_new_alerts': (lambda r: r['describe-notifications-for-budget'].update(
+                Notifications=usd25_responses()['describe-notifications-for-budget']['Notifications']), 'LIVE_STATE_UNEXPECTED'),
+            'two_old_alerts': (lambda r: r['describe-notifications-for-budget']['Notifications'].pop(), 'LIVE_STATE_UNEXPECTED'),
+            'old_alert_threshold_changed': (lambda r: r['describe-notifications-for-budget']['Notifications'][0].update(Threshold=60), 'LIVE_STATE_UNEXPECTED'),
+            'credits_included': (lambda r: r['describe-budget']['Budget']['CostTypes'].update(IncludeCredit=True), 'COST_TYPES'),
+            'wrong_recipient': (lambda r: r['subscribers']['50']['Subscribers'][0].update(Address=OTHER), 'SUBSCRIBER_DRIFT'),
+            'tag_drift': (lambda r: r['list-tags-for-resource']['ResourceTags'][0].update(Value='wrong'), 'TAGS_DRIFT'),
+            'unhealthy': (lambda r: r['describe-budget']['Budget']['HealthStatus'].update(Status='UNHEALTHY'), 'BUDGET_HEALTH_UNVERIFIED'),
+        }
+        for name, (mutate, code) in cases.items():
+            with self.subTest(name=name):
+                ex = self.modify_execution({**self.mgate, 'operation': f'modify-live-{name}'})
+                responses = fixture_responses(); mutate(responses)
+                self.scenario['responses'] = responses; self.save_scenario()
+                with self.assertRaisesRegex(b.Blocked, code) as error: ex.modify()
+                self.assertNotIn(FIXTURE_ADDRESS, str(error.exception))
+                self.assertNotIn('apply', self.terraform_calls())
+                self.assertFalse((self.backups/f'modify-live-{name}').exists())
+                self.assertEqual(b.hash_file(self.policy.state), b.INITIAL_STATE_SHA256)
+
+    def test_non_update_plans_and_other_resources_refuse_after_exactly_one_show(self):
+        extra = plan_json(); extra['resource_changes'].append(other_resource_entry())
+        cases = {'create': (plan_json(('create',)), 'PLAN_CREATE'), 'delete': (plan_json(('delete',)), 'PLAN_DELETE'),
+                 'replace': (plan_json(('delete', 'create')), 'PLAN_REPLACE'), 'create_before_destroy': (plan_json(('create', 'delete')), 'PLAN_REPLACE'),
+                 'noop': (plan_json(('no-op',)), 'PLAN_NOT_IN_PLACE_UPDATE'), 'non_billing': (extra, 'PLAN_NOT_SINGLE_RESOURCE'),
+                 'amount_26': (plan_json(after_over={'limit_amount': '26'}), 'PLAN_AMOUNT'), 'show_fails': (None, 'PLAN_SHOW_FAILED')}
+        for name, (plan, code) in cases.items():
+            with self.subTest(name=name):
+                ex = self.modify_execution({**self.mgate, 'operation': f'modify-plan-{name}'})
+                if plan is None: self.scenario['show_exit'] = 1
+                else: self.scenario.pop('show_exit', None); self.scenario['plan_json'] = plan
+                self.save_scenario(); before = len(self.calls())
+                with self.assertRaisesRegex(b.Blocked, code): ex.modify()
+                self.assertEqual(len(self.calls())-before, 1)  # only the offline show ran: no AWS call, no apply
+                self.assertNotIn('apply', self.terraform_calls())
+                self.assertFalse((self.backups/f'modify-plan-{name}').exists())
+
+    def test_unapproved_plan_inputs_config_or_toolchain_refuse_before_any_process(self):
+        cases = {'plan_bytes_changed': lambda: self.write(self.primary/'billing.modify.tfplan', 'changed'),
+                 'inputs_changed': lambda: self.write(self.primary/'approved-public-inputs.modify.tfvars.json', '{"budget_limit_usd": 200}'),
+                 'plan_mode': lambda: (self.primary/'billing.modify.tfplan').chmod(0o644),
+                 'plan_missing': lambda: (self.primary/'billing.modify.tfplan').unlink(),
+                 'config_drift': lambda: self.write(self.primary/'config/main.tf', 'edited config copy'),
+                 'config_extra_file': lambda: self.write(self.primary/'config/override.tf', 'resource "x" "y" {}'),
+                 'terraform_binary_changed': lambda: self.write(self.primary/'toolchain/terraform-1.13.5', STUB+'\n#', 0o700)}
+        for name, damage in cases.items():
+            with self.subTest(name=name):
+                damage()
+                with self.assertRaises((b.Blocked, OSError)): self.mex.modify()
+                self.assertEqual(self.calls(), [])
+                self.assertFalse(self.mex.op.exists())
+                self.fresh()
+
+    def test_same_size_plan_with_other_bytes_fails_the_hash_not_only_the_size(self):
+        original = (self.primary/'billing.modify.tfplan').read_bytes()
+        other = original[:-1] + (b'4' if original[-1:] != b'4' else b'5')
+        self.assertEqual(len(other), len(original))
+        self.write(self.primary/'billing.modify.tfplan', other.decode())
+        with self.assertRaisesRegex(b.Blocked, 'ARTIFACT_HASH'): self.mex.modify()
+        self.assertEqual(self.calls(), [])
+        self.fresh()
+        self.write(self.primary/'approved-public-inputs.modify.tfvars.json', '{"budget_limit_usd": 2500}')  # inputs file: other bytes, no size pin
+        with self.assertRaisesRegex(b.Blocked, 'ARTIFACT_HASH'): self.mex.modify()
+        self.assertEqual(self.calls(), [])
+
+    def test_rendered_inputs_must_match_the_template_and_the_live_account(self):
+        template = json.loads((self.repo/'scripts/billing/modify-public-inputs.template.json').read_text())
+        cases = {'account_other': ({'aws_account_id': '111122223333'}, 'MODIFY_INPUTS_ACCOUNT'),
+                 'account_short': ({'aws_account_id': '12345'}, 'MODIFY_INPUTS_ACCOUNT'),
+                 'account_placeholder': ({'aws_account_id': '<acct>'}, 'MODIFY_INPUTS_ACCOUNT'),
+                 'account_not_string': ({'aws_account_id': int(b.ACCOUNT)}, 'MODIFY_INPUTS_ACCOUNT'),
+                 'amount_200': ({'budget_limit_usd': 200}, 'MODIFY_INPUTS_DRIFT'),
+                 'amount_float': ({'budget_limit_usd': 25.0}, 'MODIFY_INPUTS_DRIFT'),
+                 'budget_disabled': ({'enable_budget': False}, 'MODIFY_INPUTS_DRIFT'),
+                 'other_name': ({'budget_name': 'other'}, 'MODIFY_INPUTS_DRIFT'),
+                 'other_end': ({'project_period_end_utc': '2027-02-01_00:00'}, 'MODIFY_INPUTS_DRIFT'),
+                 'other_tag': ({'resource_tags': dict(template['resource_tags'], owner='other')}, 'MODIFY_INPUTS_DRIFT'),
+                 'extra_key': ({'extra': 1}, 'MODIFY_INPUTS_SHAPE')}
+        for name, (changes, code) in cases.items():
+            with self.subTest(name=name):
+                self.render_inputs(**changes)  # the pin follows the file, so only the content checks can refuse
+                with self.assertRaisesRegex(b.Blocked, code): self.mex.modify()
+                self.assertEqual(self.calls(), [])
+        self.render_inputs()
+        rendered = json.loads((self.primary/'approved-public-inputs.modify.tfvars.json').read_text()); del rendered['aws_profile']
+        self.write(self.primary/'approved-public-inputs.modify.tfvars.json', json.dumps(rendered)); self.pins['modify']['public_input_sha256'] = b.hash_file(self.primary/'approved-public-inputs.modify.tfvars.json')
+        with self.assertRaisesRegex(b.Blocked, 'MODIFY_INPUTS_SHAPE'): self.mex.modify()
+        self.render_inputs()
+        (self.repo/'scripts/billing/modify-public-inputs.template.json').write_text('{"aws_account_id": "<acct>"}')
+        with self.assertRaisesRegex(b.Blocked, 'MODIFY_INPUTS_SHAPE'): self.mex.modify()
+        self.assertEqual(self.calls(), [])
+
+    def test_plan_size_and_pins_are_enforced(self):
+        self.pins['modify']['plan_bytes'] += 1
+        with self.assertRaisesRegex(b.Blocked, 'PLAN_SIZE'): self.mex.modify()
+        self.assertEqual(self.calls(), [])
+        for mutate, code in ((lambda p: p.pop('modify'), 'MODIFY_PINS_MISSING'),
+                             (lambda p: p['modify'].pop('plan_sha256'), 'MODIFY_PINS_MISSING'),
+                             (lambda p: p['modify'].update(plan_sha256='nothex'), 'MODIFY_PINS_MISSING'),
+                             (lambda p: p['modify'].update(config=[]), 'MODIFY_PINS_MISSING'),
+                             (lambda p: p['modify'].update(plan_sha256=p['plan_sha256']), 'MODIFY_PLAN_IS_CREATE_PLAN')):
+            with self.subTest(code=code):
+                saved = copy.deepcopy(self.pins)
+                mutate(self.pins)
+                with self.assertRaisesRegex(b.Blocked, code):
+                    b.Execution(self.policy, now=lambda: NOW).load_modify_gate(self.gate_path, b.hash_file(self.gate_path), 'modify-fixture')
+                self.pins.clear(); self.pins.update(saved)
+
+    def test_state_must_still_be_the_phase_12d_state(self):
+        cases = {'state_changed': lambda: self.write(self.policy.state, 'edited state'),
+                 'backup_changed': lambda: self.write(self.backups/b.INITIAL_BACKUP_RELATIVE, 'edited backup'),
+                 'state_missing': lambda: self.policy.state.unlink(),
+                 'terraform_backup_present': lambda: self.write(self.primary/'billing.execution.tfstate.backup', 'x'),
+                 'lock_file_present': lambda: self.write(self.primary/'.billing.execution.tfstate.lock.info', 'x'),
+                 'errored_state_present': lambda: self.write(self.primary/'config/errored.tfstate', 'x')}
+        for name, damage in cases.items():
+            with self.subTest(name=name):
+                damage()
+                with self.assertRaises((b.Blocked, OSError)): self.mex.modify()
+                self.assertEqual(self.calls(), [])
+                self.fresh()
+
+    def test_gate_refuses_wrong_operation_option_identity_window_permissions_and_state(self):
+        cases = [('operation', 'initial'), ('operation', 'modify-'), ('option', 'B'), ('plan_sha256', '0'*64),
+                 ('actor_arn', 'wrong'), ('account', '000000000000'), ('permissions', sorted(b.ACTIONS)),
+                 ('permissions', sorted(b.MODIFY_ACTIONS)[:-1]), ('window_end', b.iso(NOW-timedelta(seconds=1))),
+                 ('g1_affirmation', ''), ('modify_review_approved', False), ('state_backup_confirmed', False),
+                 ('retention_accepted', False), ('prior_state_sha256', '0'*64), ('prior_state_bytes', 1),
+                 ('public_packet_root', 'docs/agent-runs/phase-12/evidence/fixture'),
+                 ('modify_record_path', 'docs/agent-runs/phase-12/billing-bootstrap-exception.md'),
+                 ('modify_record_path', 'docs/agent-runs/phase-14/evidence/14b/self.md'),
+                 ('modify_record_path', '../escape.md'), ('modify_record_sha256', 'nothex'), ('source_commit', 'nothex'),
+                 ('proposal_sha256', '0'*64), ('human_record_sha256', '0'*64), ('timezone', 'UTC')]
+        for field, value in cases:
+            with self.subTest(field=field, value=value):
+                gate = {**self.mgate, field: value}
+                self.write(self.gate_path, json.dumps(gate))
+                operation = value if field == 'operation' else 'modify-fixture'
+                with self.assertRaises(b.Blocked):
+                    b.Execution(self.policy, now=lambda: NOW).load_modify_gate(self.gate_path, b.hash_file(self.gate_path), operation)
+        gate = {**self.mgate, 'surprise': 1}
+        self.write(self.gate_path, json.dumps(gate))
+        with self.assertRaisesRegex(b.Blocked, 'GATE_SCHEMA'):
+            b.Execution(self.policy, now=lambda: NOW).load_modify_gate(self.gate_path, b.hash_file(self.gate_path), 'modify-fixture')
+        gate = dict(self.mgate); del gate['option']
+        self.write(self.gate_path, json.dumps(gate))
+        with self.assertRaisesRegex(b.Blocked, 'GATE_SCHEMA'):
+            b.Execution(self.policy, now=lambda: NOW).load_modify_gate(self.gate_path, b.hash_file(self.gate_path), 'modify-fixture')
+        with self.assertRaisesRegex(b.Blocked, 'GATE_HASH'):
+            b.Execution(self.policy, now=lambda: NOW).load_modify_gate(self.gate_path, '0'*64, 'modify-fixture')
+        self.assertEqual(self.calls(), [])
+
+    def test_modify_gate_has_exactly_28_fields_and_each_one_is_required(self):
+        # Pins the count the README states ("28 fields"): the fixture gate is the full schema, it loads, removing any one
+        # field is refused as GATE_SCHEMA, and so is adding one. The verification gate (29 fields) is a different schema.
+        self.assertEqual(len(self.mgate), 28)
+        self.write(self.gate_path, json.dumps(self.mgate))
+        b.Execution(self.policy, now=lambda: NOW).load_modify_gate(self.gate_path, b.hash_file(self.gate_path), 'modify-fixture')
+        for field in sorted(self.mgate):
+            with self.subTest(missing=field):
+                gate = dict(self.mgate); del gate[field]
+                self.write(self.gate_path, json.dumps(gate))
+                with self.assertRaisesRegex(b.Blocked, 'GATE_SCHEMA'):
+                    b.Execution(self.policy, now=lambda: NOW).load_modify_gate(self.gate_path, b.hash_file(self.gate_path), 'modify-fixture')
+        readme = (ROOT / 'README.md').read_text(encoding='utf-8')
+        self.assertIn('own gate schema (28 fields,', readme)
+        self.assertIn('29 fields', readme)
+        self.assertEqual(self.calls(), [])
+
+    def test_create_gate_cannot_authorize_modify_and_modify_gate_cannot_authorize_create(self):
+        self.write(self.gate_path, json.dumps(self.gate))
+        with self.assertRaises(b.Blocked):
+            b.Execution(self.policy, now=lambda: NOW).load_modify_gate(self.gate_path, b.hash_file(self.gate_path), 'initial')
+        with self.assertRaisesRegex(b.Blocked, 'GATE_SCHEMA'):
+            b.Execution(self.policy, now=lambda: NOW).load_modify_gate(self.gate_path, b.hash_file(self.gate_path), 'modify-fixture')
+        self.write(self.gate_path, json.dumps(self.mgate))
+        with self.assertRaisesRegex(b.Blocked, 'GATE_SCHEMA'):
+            b.Execution(self.policy, now=lambda: NOW).load_gate(self.gate_path, b.hash_file(self.gate_path), 'modify-fixture')
+        # A create-flow Execution cannot call modify without a modify gate.
+        with self.assertRaisesRegex(b.Blocked, 'MODIFY_GATE_REQUIRED'): self.ex.modify()
+        self.assertEqual(self.calls(), [])
+
+    def test_modify_is_single_use(self):
+        self.mex.modify(); before = len(self.calls())
+        with self.assertRaisesRegex(b.Blocked, 'STATE_NOT_INITIAL'): self.modify_execution().modify()
+        self.assertEqual(len(self.calls()), before)
+        with self.assertRaises(FileExistsError): self.mex.op.mkdir(mode=0o700)
+
+    def test_window_expiry_after_backup_stops_further_live_requests(self):
+        clock = [NOW]
+        self.mex.now = lambda: clock[0]
+        original = b.Execution.command
+        def command(ex, argv, label):
+            result = original(ex, argv, label)
+            if label == 'modify-apply': clock[0] = NOW + timedelta(minutes=31)
+            return result
+        with mock.patch.object(b.Execution, 'command', autospec=True, side_effect=command):
+            with self.assertRaisesRegex(b.Blocked, 'WINDOW_EXPIRED_AFTER_BACKUP_NO_FURTHER_LIVE'): self.mex.modify()
+        self.assertTrue((self.backup_dir()/'post-apply.billing.execution.tfstate').exists())
+        self.assertTrue((self.mex.op/'modify-apply.receipt.json').exists())
+        self.assertFalse((self.mex.op/'modify.receipt.json').exists())
+        self.assertEqual(self.terraform_calls(), ['show', 'apply'])
+        self.assertEqual(len(self.calls()), 8)
+
+    def test_apply_failure_preserves_recovery_artifacts_and_stops_without_retry(self):
+        self.scenario['terraform_fail'] = True; self.save_scenario()
+        with self.assertRaisesRegex(b.Blocked, 'MODIFY_APPLY_OR_BACKUP_FAILED_INCIDENT_REQUIRED'): self.mex.modify()
+        self.assertEqual(len(self.calls()), 8)  # show, six pre reads, failed apply; no post read, no retry
+        receipt = json.loads((self.backup_dir()/'preservation.receipt.json').read_text())
+        names = {x['source'] for x in receipt['artifacts']}
+        self.assertIn('billing.execution.tfstate', names); self.assertIn('config/errored.tfstate', names)
+        self.assertTrue(receipt['incident_required'])
+        self.assertTrue((self.backup_dir()/'pre-apply.billing.execution.tfstate').exists())
+        self.assertFalse((self.mex.op/'modify.receipt.json').exists())
+        # A retry is refused by the leftover recovery files (and, past them, by the consumed operation).
+        with self.assertRaises(b.Blocked): self.mex.modify()
+        self.assertEqual(len(self.calls()), 8)
+        with self.assertRaises(FileExistsError): self.mex.op.mkdir(mode=0o700)
+
+    def test_unchanged_state_or_foreign_terraform_backup_after_apply_is_an_incident(self):
+        for flag, operation in (('apply_keeps_state', 'modify-same-state'), ('bad_tf_backup', 'modify-bad-backup')):
+            with self.subTest(flag=flag):
+                ex = self.modify_execution({**self.mgate, 'operation': operation})
+                self.scenario[flag] = True; self.save_scenario()
+                with self.assertRaisesRegex(b.Blocked, 'INCIDENT_REQUIRED'): ex.modify()
+                self.assertFalse((ex.op/'modify.receipt.json').exists())
+                self.assertTrue((self.backups/operation/'preservation.receipt.json').exists())
+                self.fresh()
+
+    def test_applied_but_old_shape_still_live_fails_the_post_verify_and_keeps_backups(self):
+        self.scenario['responses_after'] = fixture_responses(); self.save_scenario()
+        with self.assertRaisesRegex(b.Blocked, 'APPLIED_BUT_POST_VERIFY_FAILED:LIVE_STATE_UNEXPECTED'): self.mex.modify()
+        self.assertTrue((self.mex.op/'modify-apply.receipt.json').exists())
+        self.assertFalse((self.mex.op/'modify.receipt.json').exists())
+        self.assertTrue((self.backup_dir()/'post-apply.billing.execution.tfstate').exists())
+
+    def test_post_verify_requires_the_exact_usd25_shape(self):
+        broken = usd25_responses(); broken['describe-notifications-for-budget']['Notifications'][2]['Threshold'] = 25
+        self.scenario['responses_after'] = broken; self.save_scenario()
+        with self.assertRaisesRegex(b.Blocked, 'APPLIED_BUT_POST_VERIFY_FAILED:LIVE_STATE_UNEXPECTED'): self.mex.modify()
+        self.assertFalse((self.mex.op/'modify.receipt.json').exists())
+
+    def test_terraform_is_only_ever_show_or_apply_of_the_modify_plan(self):
+        self.mex.modify()
+        for call in self.calls():
+            if Path(call['argv'][0]).name.startswith('terraform'):
+                self.assertIn(call['argv'][1], ('show', 'apply'))
+                self.assertEqual(call['argv'][-1], str(self.policy.modify_plan))
+                for banned in ('destroy', 'import', '-auto-approve', '-replace', '-target', 'plan', 'state', '-refresh=false'):
+                    self.assertNotIn(banned, call['argv'])
+            else:
+                self.assertIn(call['argv'][2], ('describe-budget', 'list-tags-for-resource', 'describe-notifications-for-budget', 'describe-subscribers-for-notification'))
+
+    def test_human_record_must_be_a_committed_file_with_the_gated_hash(self):
+        def git(*args):
+            return subprocess.run(['/usr/bin/git', '-C', str(self.repo), *args], check=True, capture_output=True,
+                                  env={'PATH': '/usr/bin:/bin', 'HOME': str(self.root), 'GIT_CONFIG_GLOBAL': '/dev/null'})
+        git('init', '-q')
+        ex = b.Execution(self.policy, now=lambda: NOW)
+        record = self.repo/self.record; record.parent.mkdir(parents=True); record.write_text('human gate record fixture')
+        self.write(self.gate_path, json.dumps({**self.mgate, 'modify_record_sha256': b.hash_file(record)}))
+        ex.load_modify_gate(self.gate_path, b.hash_file(self.gate_path), 'modify-fixture')
+        with self.assertRaisesRegex(b.Blocked, 'MODIFY_RECORD_UNTRACKED'): ex.check_modify_record()
+        git('add', '.'); git('-c', 'user.name=Fixture', '-c', 'user.email=fixture-no-address', 'commit', '-qm', 'fixture')
+        ex.check_modify_record()
+        record.write_text('edited after the gate was written')
+        with self.assertRaisesRegex(b.Blocked, 'MODIFY_RECORD_HASH'): ex.check_modify_record()
+        record.unlink()
+        with self.assertRaisesRegex(b.Blocked, 'MODIFY_RECORD_MISSING'): ex.check_modify_record()
+
+    def test_cli_modify_prints_only_fixed_public_fields_and_refuses_scan_options(self):
+        argv = ['modify', '--gate', str(self.gate_path), '--gate-sha256', b.hash_file(self.gate_path), '--operation', 'modify-fixture']
+        out = io.StringIO()
+        with mock.patch.object(b, 'production_policy', return_value=self.policy), \
+             mock.patch.object(b.Execution.__init__, '__defaults__', (None, lambda: NOW)), \
+             mock.patch.object(b.Execution, 'check_checkout', return_value=None), \
+             mock.patch.object(b.Execution, 'check_modify_record', return_value=None), mock.patch('sys.stdout', new=out):
+            self.assertEqual(b.main(argv), 0)
+        payload = json.loads(out.getvalue())
+        self.assertEqual(payload['stage'], 'modify'); self.assertTrue(payload['result']['applied'])
+        self.assertNotIn(FIXTURE_ADDRESS, out.getvalue()); self.assertNotIn('Traceback', out.getvalue())
+        out = io.StringIO()
+        with mock.patch.object(b, 'production_policy', return_value=self.policy), mock.patch('sys.stdout', new=out):
+            self.assertEqual(b.main(argv + ['--public-manifest', 'x', '--public-manifest-sha256', '0'*64]), 2)
+        self.assertIn('UNEXPECTED_SCAN_OPTIONS', out.getvalue())
+
+    def test_show_output_is_the_only_terraform_stdout_ever_returned(self):
+        logs = self.primary/'runner logs'; logs.mkdir(mode=0o700)
+        code, out, _ = b.PrivateRunner()(self.policy.show_argv(), self.policy.config, self.policy.env(), logs, 'show', 30)
+        self.assertEqual(code, 0); self.assertIn(b'resource_changes', out)
+        code, out, _ = b.PrivateRunner()(self.policy.modify_apply_argv(), self.policy.config, self.policy.env(), logs, 'apply', 30)
+        self.assertEqual((code, out), (0, b''))
+
+    def test_cli_exposes_modify_as_the_only_new_mode(self):
+        with mock.patch('sys.stderr', new=io.StringIO()), self.assertRaises(SystemExit):
+            b.main(['plan', '--gate', 'x', '--gate-sha256', 'x', '--operation', 'x'])
+        with mock.patch('sys.stderr', new=io.StringIO()), self.assertRaises(SystemExit):
+            b.main(['destroy', '--gate', 'x', '--gate-sha256', 'x', '--operation', 'x'])
 
 
 if __name__=='__main__':

@@ -1,0 +1,13 @@
+# 16B run 16b-1: outcomes by question type
+# Computed offline on 2026-11-15 from target/experiment-runs/16b-live-evaluation-16b-1/raw/answers.jsonl
+# (sha256 80fc2d7748f2462b9b092b8e87a201d502946fd57253a533ffa9aee51676c8e2; listed in raw.sha256). Type is taken from the question text:
+# 'direct coauthors' -> direct-coauthors, 'path' -> path, 'component' -> component, otherwise ranking.
+# answered-with-claims = HTTP 200 and a non-empty claims list in the answer body.
+
+type              asked  http200  answered-with-claims  median-latency-ms
+component             8        8                     7               4299
+ranking               8        7                     7               6392
+direct-coauthors     14       14                     0               2441
+path                 10       10                     0               2084
+total                40       39                    14
+non-200: index 32 status 422 outcome client_error (ranking question)

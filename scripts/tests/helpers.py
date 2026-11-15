@@ -454,10 +454,13 @@ class Fixture(unittest.TestCase):
             "schema": "scholarchain.prespend-receipt.v1",
             "monitoring_confirmed_active": True,
             "cost_snapshot_utc": utc_hours_ago(1),
-            "reported_spend_usd": 12.5,
-            "unreported_usage_allowance_usd": 5,
-            "reserves_usd": 40,
-            "remaining_headroom_usd": 150.25,
+            "reported_spend_usd": 5,
+            "anthropic_spend_to_date_usd": 0.5,
+            "voyage_spend_to_date_usd": 0,
+            "unreported_usage_allowance_usd": 1,
+            "reserves_usd": 6,
+            # 25 - (5 + 0.5 + 0) - 1 - 6 = 12.5: the most the ceiling arithmetic allows (PRESPEND_PROJECT_CEILING_USD = 25)
+            "remaining_headroom_usd": 12.5,
         }
         for key, value in overrides.items():
             if value is MISSING:

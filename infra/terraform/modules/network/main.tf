@@ -16,11 +16,11 @@ resource "aws_vpc" "course" {
   enable_dns_hostnames = true
   tags                 = merge(var.tags, { Name = var.name_prefix })
 }
-resource "aws_default_security_group" "closed" {
-  vpc_id = aws_vpc.course.id
-  # Revoke AWS's permissive default group rules; no workload uses this group.
-  tags = merge(var.tags, { Name = "${var.name_prefix}-default-unused" })
-}
+# Repair round 1 (F2): the VPC's default security group is deliberately NOT managed here (the Phase 12D spike made the same choice).
+# Adopting it (aws_default_security_group) needs deployer permissions on a group that AWS creates untagged, which could not be
+# scoped without letting the deployer tag any security group in the region into scope. No workload uses the default group:
+# every service has its own role group (aws_security_group.role) with explicit rules only. Residual: the default group keeps
+# AWS's default rules (members may talk to each other, all egress); nothing is a member.
 resource "aws_internet_gateway" "course" {
   vpc_id = aws_vpc.course.id
   tags   = var.tags
@@ -39,7 +39,10 @@ resource "aws_subnet" "application" {
   availability_zone       = each.value
   cidr_block              = cidrsubnet(var.vpc_cidr, 8, 10 + tonumber(each.key))
   map_public_ip_on_launch = false
-  tags                    = merge(var.tags, { Name = "${var.name_prefix}-app-${each.key}", tier = "application" })
+  # D2 (Phase 14A): EMR service policies in the AmazonEMRServicePolicy_v2 style launch only into subnets and security groups that
+  # carry for-use-with-amazon-emr-managed-policies = "true" (CreateInTaggedNetwork). The EMR cluster uses the first application
+  # subnet; ECS shares these subnets harmlessly. Public and data subnets must not carry the tag.
+  tags = merge(var.tags, { Name = "${var.name_prefix}-app-${each.key}", tier = "application", "for-use-with-amazon-emr-managed-policies" = "true" })
 }
 resource "aws_subnet" "data" {
   for_each                = local.azs
@@ -126,7 +129,8 @@ resource "aws_security_group" "role" {
   name        = "${var.name_prefix}-${each.key}"
   description = "ScholarChain ${each.key}; explicit role-to-role rules only"
   vpc_id      = aws_vpc.course.id
-  tags        = merge(var.tags, { role = each.key })
+  # Only the EMR node group carries the EMR managed-policies tag (same reason as the application subnets, D2).
+  tags = merge(var.tags, { role = each.key }, each.key == "emr" ? { "for-use-with-amazon-emr-managed-policies" = "true" } : {})
 }
 resource "aws_vpc_security_group_ingress_rule" "dependency" {
   for_each                     = local.connections

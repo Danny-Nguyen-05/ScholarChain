@@ -1,0 +1,41 @@
+{
+  "scope": "literal-source-only",
+  "files": 90,
+  "findings": [
+    {
+      "path": "infra/terraform/deployer/phase14_main.tf",
+      "line": 278,
+      "category": "global-iam-resource"
+    },
+    {
+      "path": "infra/terraform/deployer/phase14_main.tf",
+      "line": 412,
+      "category": "global-iam-resource"
+    },
+    {
+      "path": "infra/terraform/deployer/phase14_main.tf",
+      "line": 448,
+      "category": "global-iam-resource"
+    },
+    {
+      "path": "infra/terraform/deployer/phase14_main.tf",
+      "line": 455,
+      "category": "global-iam-resource"
+    },
+    {
+      "path": "infra/terraform/deployer/phase14_main.tf",
+      "line": 518,
+      "category": "global-iam-resource"
+    },
+    {
+      "path": "infra/terraform/deployer/phase14_main.tf",
+      "line": 540,
+      "category": "global-iam-resource"
+    },
+    {
+      "path": "infra/terraform/deployer/phase14_main.tf",
+      "line": 565,
+      "category": "global-iam-resource"
+    }
+  ]
+}

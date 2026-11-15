@@ -36,14 +36,15 @@ variable "vector_metric" {
 }
 variable "embedding_model_id" {
   type        = string
-  default     = "amazon.titan-embed-text-v2:0"
-  description = "Phase8 planned TitanV2; regional availability/access remains unverified."
+  default     = null
+  nullable    = true
+  description = "Bedrock embedding model id; used only when embedding_provider is bedrock (null then means amazon.titan-embed-text-v2:0). With embedding_provider voyage it must stay null (the model is voyage-4-lite)."
 }
 variable "synthesis_model_id" {
   type        = string
   default     = null
   nullable    = true
-  description = "No synthesis model chosen and no invocation grant when unset."
+  description = "Bedrock synthesis model id; used only when synthesis_provider is bedrock (null then means no model and no invocation grant). With synthesis_provider anthropic it must stay null (the model is claude-haiku-5-5)."
 }
 variable "emr_output_prefixes" {
   type = map(set(string))
@@ -195,9 +196,9 @@ variable "service_capacity" {
     }
   }
   validation {
-    condition = toset(keys(var.service_capacity)) == toset(["query-api", "graph-service", "semantic-service", "embedding-worker"]) && alltrue([for s, c in var.service_capacity : c.min >= 1 && floor(c.min) == c.min && c.max >= c.min && floor(c.max) == c.max && c.max <= (s == "embedding-worker" ? 4 : 2) && contains([512, 1024], c.cpu) && contains([1024, 2048], c.memory) && c.memory >= c.cpu * 2])
+    condition = toset(keys(var.service_capacity)) == toset(["query-api", "graph-service", "semantic-service", "embedding-worker"]) && alltrue([for s, c in var.service_capacity : c.min >= 1 && floor(c.min) == c.min && c.max >= c.min && floor(c.max) == c.max && c.max <= (s == "embedding-worker" ? 4 : 2) && contains([256, 512, 1024], c.cpu) && contains([1024, 2048], c.memory) && c.memory >= c.cpu * 2])
 
-    error_message = "Exactly four bounded Fargate services: HTTP max2, worker max4, positive integer minimum and approved CPU/memory pairs."
+    error_message = "Exactly four bounded Fargate services: HTTP max2, worker max4, positive integer minimum and approved CPU/memory pairs (cpu 256, 512 or 1024 with memory 1024 or 2048 and memory at least twice the cpu)."
   }
 }
 variable "cpu_target_percent" {
@@ -206,6 +207,26 @@ variable "cpu_target_percent" {
   validation {
     condition     = var.cpu_target_percent >= 10 && var.cpu_target_percent <= 80
     error_message = "CPU target must be 10-80 percent."
+  }
+}
+variable "container_insights_enabled" {
+  type        = bool
+  default     = true
+  nullable    = false
+  description = "ECS Container Insights on the course cluster. Default true keeps the Phase 12-14A behavior; the USD 25 course-cap tfvars sets false (Container Insights bills custom metrics). When false, the embedding-worker backlog autoscaling policy (ECS/ContainerInsights RunningTaskCount) is not created and the worker stays at its minimum; the HTTP CPU policies use free AWS/ECS metrics and remain."
+  validation {
+    condition     = var.container_insights_enabled == true || var.container_insights_enabled == false
+    error_message = "container_insights_enabled must be true or false."
+  }
+}
+variable "dashboard_enabled" {
+  type        = bool
+  default     = true
+  nullable    = false
+  description = "Create the CloudWatch elasticity dashboard. Default true keeps the Phase 12-14A behavior; the USD 25 course-cap tfvars sets false (a custom dashboard bills monthly beyond the free allowance). The alarms are unaffected."
+  validation {
+    condition     = var.dashboard_enabled == true || var.dashboard_enabled == false
+    error_message = "dashboard_enabled must be true or false."
   }
 }
 variable "worker_backlog_target" {
@@ -223,6 +244,15 @@ variable "https_certificate_arn" {
   validation {
     condition     = var.https_certificate_arn == null ? true : can(regex("^arn:aws:acm:[a-z0-9-]+:[0-9]{12}:certificate/[a-z0-9-]+$", var.https_certificate_arn))
     error_message = "Certificate must be an existing ACM ARN; never private key material."
+  }
+}
+variable "query_health_check_grace_period_seconds" {
+  type        = number
+  default     = 300
+  description = "Seconds ECS ignores failing ALB health checks after a query-api task starts (runtime plan only; applied to the load-balanced query-api service, so it has no effect without https_certificate_arn). Tune in the private tfvars, no commit needed. Must be at least healthy_threshold x interval of the target group (3 x 30 = 90 s); see infra/terraform/README.md."
+  validation {
+    condition     = var.query_health_check_grace_period_seconds >= 0 && var.query_health_check_grace_period_seconds <= 3600 && var.query_health_check_grace_period_seconds == floor(var.query_health_check_grace_period_seconds)
+    error_message = "query_health_check_grace_period_seconds must be a whole number of seconds from 0 to 3600."
   }
 }
 variable "log_retention_days" {
@@ -292,5 +322,108 @@ variable "vector_non_filterable_metadata_keys" {
   validation {
     condition     = var.vector_non_filterable_metadata_keys == toset(["textS3Uri"])
     error_message = "All indexes must mark exactly textS3Uri as non-filterable, matching live ingest/query preflight."
+  }
+}
+
+# Decision 14-3: Bedrock models that have no in-region on-demand endpoint (for example the current Anthropic models) are
+# invoked through a system-defined cross-region inference profile. IAM then needs the profile ARN in the home region AND the
+# foundation-model ARN in every region the profile routes to (modules/identity/phase12b.tf). Leave both variables unset for a
+# model that is invoked in-region (Titan Text Embeddings V2 has no geographic or global profile). Find the routed regions with
+# `aws bedrock get-inference-profile --region <aws_region> --inference-profile-identifier <profile id> --query 'models[].modelArn'`
+# (read-only) and the model card's "Regional availability" tables.
+variable "synthesis_inference_profile_id" {
+  type        = string
+  default     = null
+  nullable    = true
+  description = "System-defined inference profile ID for synthesis_model_id, for example us.anthropic.<model id>. Null: invoke the foundation model in-region (no profile grant)."
+  validation {
+    condition     = var.synthesis_inference_profile_id == null ? true : can(regex("^(us|eu|apac|au|jp|ca|us-gov|global)\\.[a-zA-Z0-9][a-zA-Z0-9._:-]*$", var.synthesis_inference_profile_id)) && try(endswith(var.synthesis_inference_profile_id, ".${var.synthesis_model_id}"), false)
+    error_message = "synthesis_inference_profile_id must be a geographic prefix (us, eu, apac, au, jp, ca, us-gov or global), a dot and exactly synthesis_model_id (system-defined profile IDs are <prefix>.<model id>); it needs synthesis_model_id."
+  }
+}
+variable "synthesis_inference_profile_regions" {
+  type        = list(string)
+  default     = []
+  description = "Regions the synthesis profile routes to from aws_region (all destination regions, including aws_region itself). Required for a geographic profile, ignored for global.*."
+  validation {
+    condition     = alltrue([for r in var.synthesis_inference_profile_regions : can(regex("^[a-z]{2}(-[a-z]+)+-[0-9]+$", r))]) && length(var.synthesis_inference_profile_regions) == length(distinct(var.synthesis_inference_profile_regions))
+    error_message = "Profile regions must be distinct AWS region names such as us-east-1."
+  }
+  validation {
+    condition     = var.synthesis_inference_profile_id == null ? length(var.synthesis_inference_profile_regions) == 0 : (startswith(var.synthesis_inference_profile_id, "global.") || (length(var.synthesis_inference_profile_regions) > 0 && contains(var.synthesis_inference_profile_regions, var.aws_region)))
+    error_message = "A geographic synthesis profile needs its routed regions, and they must include aws_region (a profile always routes to its source region); regions without a profile are rejected."
+  }
+}
+variable "embedding_inference_profile_id" {
+  type        = string
+  default     = null
+  nullable    = true
+  description = "System-defined inference profile ID for the Bedrock embedding model (embedding_model_id, default Titan Text Embeddings V2). Null for Titan Text Embeddings V2, which has no geographic or global profile. Only with embedding_provider bedrock."
+  validation {
+    condition     = var.embedding_inference_profile_id == null ? true : can(regex("^(us|eu|apac|au|jp|ca|us-gov|global)\\.[a-zA-Z0-9][a-zA-Z0-9._:-]*$", var.embedding_inference_profile_id)) && try(endswith(var.embedding_inference_profile_id, ".${coalesce(var.embedding_model_id, "amazon.titan-embed-text-v2:0")}"), false)
+    error_message = "embedding_inference_profile_id must be a geographic prefix, a dot and exactly embedding_model_id."
+  }
+}
+variable "embedding_inference_profile_regions" {
+  type        = list(string)
+  default     = []
+  description = "Regions the embedding profile routes to from aws_region (including aws_region)."
+  validation {
+    condition     = alltrue([for r in var.embedding_inference_profile_regions : can(regex("^[a-z]{2}(-[a-z]+)+-[0-9]+$", r))]) && length(var.embedding_inference_profile_regions) == length(distinct(var.embedding_inference_profile_regions))
+    error_message = "Profile regions must be distinct AWS region names such as us-east-1."
+  }
+  validation {
+    condition     = var.embedding_inference_profile_id == null ? length(var.embedding_inference_profile_regions) == 0 : (startswith(var.embedding_inference_profile_id, "global.") || (length(var.embedding_inference_profile_regions) > 0 && contains(var.embedding_inference_profile_regions, var.aws_region)))
+    error_message = "A geographic embedding profile needs its routed regions, and they must include aws_region; regions without a profile are rejected."
+  }
+}
+
+# Aws service mode inputs (modules/services/README.md, "Environment contract"). They have no Terraform resource behind them, so
+# each is a variable. The two prefixes with defaults are also the s3:ListBucket prefix scope of the query-api and embedding-worker
+# task roles (modules/identity), so IAM and the task environment come from the same value.
+variable "embedding_model_version" {
+  type        = string
+  default     = null
+  nullable    = true
+  description = "The embedding model VERSION tag the 14C ingest stamps on every stored vector (the `model.version` of the live ingest config, REPLACE_WITH_PINNED_MODEL_VERSION in the 8b template; no value exists in code). The services refuse vectors whose model tag differs, so it must equal that value exactly. With embedding_provider voyage it is voyage-4-lite (null means that value; any other value is refused). With bedrock there is no default: required once the aws service mode is active (runtime_enabled and runtime_composition_verified)."
+  validation {
+    condition     = var.embedding_model_version == null ? true : can(regex("^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$", var.embedding_model_version))
+    error_message = "embedding_model_version must be 1-128 characters of letters, digits and . _ : - (the services' own rule)."
+  }
+}
+variable "semantic_index_name" {
+  type        = string
+  default     = "researcher-profile-v1"
+  description = "The one S3 Vectors index the semantic-service queries (and the embedding-worker probes); one of the five VectorIndexes names. Human decision for the retrieval use case; default is the researcher-profile index."
+  validation {
+    condition     = contains(["researcher-profile-v1", "collaboration-community-v1", "paper-abstract-v1", "collaboration-path-v1", "topic-institution-summary-v1"], var.semantic_index_name)
+    error_message = "semantic_index_name must be one of the five index names the vector module creates."
+  }
+}
+variable "embedding_text_prefix" {
+  type        = string
+  default     = "embedding-text"
+  description = "Prefix in the rag bucket under which the 14C ingest stores embedding text (items lie under <prefix>/.../versions/). Must equal the `textPrefix` of the live ingest config (the 8b template shows `graph/rag`: a human decision before 14C)."
+  validation {
+    condition     = can(regex("^[A-Za-z0-9][A-Za-z0-9._-]*(/[A-Za-z0-9][A-Za-z0-9._-]*)*$", var.embedding_text_prefix))
+    error_message = "A literal key prefix without wildcard, leading or trailing slash."
+  }
+}
+variable "evidence_index_prefix" {
+  type        = string
+  default     = "evidence-index"
+  description = "Rag-bucket prefix of the evidence index (query-api default in AwsConfig.scala)."
+  validation {
+    condition     = can(regex("^[A-Za-z0-9][A-Za-z0-9._-]*(/[A-Za-z0-9][A-Za-z0-9._-]*)*$", var.evidence_index_prefix))
+    error_message = "A literal key prefix without wildcard, leading or trailing slash."
+  }
+}
+variable "runtime_audit_prefix" {
+  type        = string
+  default     = "runtime-audit"
+  description = "Rag-bucket prefix of the runtime audit store (query-api default in AwsConfig.scala)."
+  validation {
+    condition     = can(regex("^[A-Za-z0-9][A-Za-z0-9._-]*(/[A-Za-z0-9][A-Za-z0-9._-]*)*$", var.runtime_audit_prefix))
+    error_message = "A literal key prefix without wildcard, leading or trailing slash."
   }
 }

@@ -32,9 +32,13 @@ class PipelineExecute(unittest.TestCase):
         for c in added:
             steps = json.loads(c["argv"][c["argv"].index("--steps") + 1])
             self.assertEqual(len(steps), 1)
-            jar = steps[0]["HadoopJarStep"]
-            self.assertEqual(jar["Jar"], "command-runner.jar")
-            self.assertEqual(jar["Args"][:2], ["bash", "-c"])
+            self.assertNotIn("HadoopJarStep", steps[0], "AWS CLI v2 add-steps rejects the API-shaped HadoopJarStep wrapper")
+            self.assertEqual(steps[0]["Type"], "CUSTOM_JAR")
+            self.assertEqual(steps[0]["ActionOnFailure"], "CONTINUE")
+            self.assertEqual(steps[0]["Jar"], "command-runner.jar")
+            self.assertEqual(steps[0]["Args"][:2], ["bash", "-c"])
+            for arg in steps[0]["Args"]:
+                self.assertLessEqual(len(arg), 10280, "an EMR step Args string is over the 10,280 character limit")
             names.append(steps[0]["Name"])
             self.assertIn("--cluster-id", c["argv"])
             self.assertEqual(c["argv"][c["argv"].index("--cluster-id") + 1], "j-TESTCLUSTER")
@@ -46,8 +50,9 @@ class PipelineExecute(unittest.TestCase):
         fx = self.fx()
         r = fx.execute()
         verbs = r.aws_verbs()
-        self.assertEqual(verbs[:4], ["sts get-caller-identity", "emr describe-cluster", "emr get-auto-termination-policy", "emr list-instance-groups"])
-        self.assertEqual(verbs.index("emr add-steps"), 4)
+        self.assertEqual(verbs[:3], ["sts get-caller-identity", "emr describe-cluster", "emr get-auto-termination-policy"])
+        self.assertEqual(verbs.index("emr add-steps"), 3)
+        self.assertNotIn("emr list-instance-groups", verbs, "AWS CLI v2 has no list-instance-groups command")
         for verb in verbs:
             service, _, action = verb.partition(" ")
             if verb == "emr add-steps" or verb == "emr cancel-steps":
@@ -56,7 +61,7 @@ class PipelineExecute(unittest.TestCase):
         self.assertEqual(r.tool_calls("terraform"), [])
         self.assertEqual(r.tool_calls("docker"), [])
         self.assertTrue(set(verbs) <= {"sts get-caller-identity", "emr describe-cluster", "emr get-auto-termination-policy",
-                                       "emr list-instance-groups", "emr add-steps", "emr describe-step", "emr cancel-steps"}, verbs)
+                                       "emr add-steps", "emr describe-step", "emr cancel-steps"}, verbs)
 
     def test_every_aws_call_is_bounded_by_a_timeout_in_the_printed_command(self):
         fx = self.fx()
@@ -205,7 +210,8 @@ class PipelineExecute(unittest.TestCase):
 
     def test_test_deadline_is_ignored_without_the_test_config(self):
         fx = self.fx()
-        # the repository config is in force: the run is refused at the G6 gate (pricing unconfirmed), never run
+        # the repository config is in force: the run is refused (at the G6 gate while the committed pricing flag is false, at a later
+        # gate once the human has set it true), never run; the test deadline is ignored either way
         args, _ = fx.exec_ready()
         fx.log.write_text("")
         r = fx.run("run-bounded-pipeline.sh", args, {"AWS_PROFILE": "p", "SCHOLARCHAIN_TEST_DEADLINE_SECONDS": "1"})

@@ -1,0 +1,4 @@
+# Whitespace before the 14B commit (observed 2026-11-09)
+staged before: 0
+git add -N on every untracked non-evidence file, then git diff --check: exit 0
+index restored with git reset on the same paths: staged after 0, untracked 103

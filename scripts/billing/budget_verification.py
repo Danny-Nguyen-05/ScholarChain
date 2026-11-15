@@ -27,6 +27,15 @@ ORIGINAL_PLAN = 'ab9f141e83058209263cf561eef1d102496ec7f534b88ce421620d8e0045f85
 STATE_SHA = '271fe888595b6d71eedb649b7cdb87686ded0b3cbb1e2b9a19f76d7575be3f67'
 STATE_BYTES = 40818
 PERMISSIONS = {'verify', 'post-freeze-scan', 'original-linkage-read', 'opaque-state-backup-check', 'private-recipient-compare'}
+# Phase 14B: post-modify verification of the USD 25 shape (see ModifiedVerification).
+MODIFIED_PERMISSIONS = {'verify-modified', 'post-freeze-scan', 'modify-linkage-read',
+                        'opaque-state-backup-check', 'private-recipient-compare'}
+MODIFIED_GATE_FIELDS = {'operation', 'option', 'plan_sha256', 'proposal_sha256', 'wrapper_files', 'source_commit',
+                        'human_record_sha256', 'g1_affirmation', 'actor_arn', 'account', 'profile', 'region',
+                        'window_start', 'window_end', 'timezone', 'login_at', 'human_sts_observed_at', 'human_sts',
+                        'permissions', 'retention_accepted', 'verification_review_approved', 'aws_cli_sha256',
+                        'public_packet_root', 'modify_operation', 'modify_gate_filename', 'modify_gate_sha256',
+                        'modify_receipt_sha256', 'state_backup_sha256', 'state_backup_bytes'}
 MAX_FILES = 256
 MAX_TOTAL = 32 * 1024 * 1024
 EXCLUDED = ('Only this external fixed-schema receipt and the external freeze-input manifest; every existing packet file was scanned. '
@@ -110,7 +119,15 @@ def inventory(repo, root):
 
 
 class Verification:
-    """Independent read-only dispatcher; no initial-create Execution inheritance."""
+    """Independent read-only dispatcher; no initial-create Execution inheritance.
+
+    OPTION and SHAPE are the one switch between the Phase 12D expectations
+    (USD 200, PERCENTAGE 50/80/100, option B) and the Phase 14B ones
+    (USD 25, ABSOLUTE_VALUE 10/15/20, option M, ModifiedVerification).
+    """
+    OPTION = 'B'
+    SHAPE = b.INITIAL_SHAPE
+
     def __init__(self, policy, runner=None, now=b.stamp):
         self.p = policy
         self.runner = runner or b.PrivateRunner()
@@ -265,16 +282,16 @@ class Verification:
             tags = self.query('list-tags-for-resource', ['--resource-arn', b.ARN], 'verify-tags')
             notifications = self.query('describe-notifications-for-budget', common+['--max-results', '100', '--no-paginate'], 'verify-notifications')
             subscribers = {}
-            for threshold in (50, 80, 100):
+            for threshold in self.SHAPE.thresholds:
                 subscribers[threshold] = self.query('describe-subscribers-for-notification', common+['--notification',
-                    json.dumps(b.expected_notification(threshold), separators=(',', ':')), '--max-results', '100', '--no-paginate'],
+                    json.dumps(b.expected_notification(threshold, self.SHAPE.threshold_type), separators=(',', ':')), '--max-results', '100', '--no-paginate'],
                     'verify-subscribers-'+str(threshold))
             input_identity = self.recipient_identity()
-            safe = b.sanitize_readback(budget, tags, notifications, subscribers, self.private_recipient())
+            safe = b.sanitize_readback(budget, tags, notifications, subscribers, self.private_recipient(), self.SHAPE)
             b.require(self.recipient_identity() == input_identity, 'PRIVATE_INPUT_CHANGED')
             self.check_checkout(); self.check_window(); b.require(self.linkage() == link, 'LINKAGE_CHANGED')
             self.check_window()
-            receipt = {**self.binding, 'stage': 'verify', 'option': 'B', 'observed_at': b.iso(self.now()),
+            receipt = {**self.binding, 'stage': 'verify', 'option': self.OPTION, 'observed_at': b.iso(self.now()),
                        'linkage': link, 'result': safe}
             # Identity metadata remains private; no recipient/hash/size enters public receipt.
             receipt_sha = b.digest(canonical_receipt_bytes(receipt))
@@ -290,7 +307,7 @@ class Verification:
         receipt = b.parse_json(raw)
         b.require(type(receipt) is dict and set(receipt) == {*self.binding, 'stage', 'option', 'observed_at', 'linkage', 'result'}, 'VERIFY_RECEIPT_SCHEMA')
         b.require(all(receipt[k] == v for k,v in self.binding.items()) and receipt['stage'] == 'verify'
-                  and receipt['option'] == 'B' and self.linkage() == receipt['linkage'], 'VERIFY_RECEIPT_BINDING')
+                  and receipt['option'] == self.OPTION and self.linkage() == receipt['linkage'], 'VERIFY_RECEIPT_BINDING')
         b.require(b.date(self.gate['window_start']) <= b.date(receipt['observed_at']) <= self.now()
                   < b.date(self.gate['window_end']), 'VERIFY_RECEIPT_TIME')
         checkpoint = b.parse_json(read_private(self.op/'verify.input-identity.json', self.p.uid))
@@ -367,6 +384,108 @@ class Verification:
             return receipt
 
 
+class ModifiedVerification(Verification):
+    """Read-only verification of the Phase 14B USD 25 shape after the reviewed modify.
+
+    The original linkage (Phase 12D create gate, create receipt, create-state hash)
+    cannot hold after the state legitimately changed, so it is replaced by linkage to
+    the modify gate, the modify receipt and the post-apply state backup. The same six
+    read requests run, with the usd25 expectations. Unlike the original verifier this
+    class fails on the old shape and the original verifier fails on the new shape.
+    """
+    OPTION = 'M'
+    SHAPE = b.USD25_SHAPE
+
+    def load_gate(self, gate_path, gate_sha, operation):
+        b.require(type(operation) is str and re.fullmatch(r'verify-usd25-[A-Za-z0-9_-]{1,48}', operation) is not None,
+                  'VERIFICATION_OPERATION')
+        raw = read_private(gate_path, self.p.uid)
+        b.require(sha(gate_sha) and b.digest(raw) == gate_sha, 'GATE_HASH')
+        g = b.parse_json(raw)
+        b.require(type(g) is dict and set(g) == MODIFIED_GATE_FIELDS, 'VERIFICATION_GATE_SCHEMA')
+        m = b.Execution.modify_pins(self)
+        b.require(g['option'] == 'M' and g['operation'] == operation, 'VERIFICATION_OPTION')
+        b.require(g['plan_sha256'] == m['plan_sha256'] and g['proposal_sha256'] == self.p.pins['proposal_sha256'],
+                  'GATE_PLAN_BINDING')
+        b.require(g['human_record_sha256'] == self.p.pins['human_record_sha256']
+                  and type(g['g1_affirmation']) is str and len(g['g1_affirmation'].strip()) >= 10, 'G1_REQUIRED')
+        b.require(type(g['modify_operation']) is str
+                  and re.fullmatch(r'modify-[A-Za-z0-9_-]{1,56}', g['modify_operation']) is not None
+                  and type(g['modify_gate_filename']) is str
+                  and re.fullmatch(r'approval-[A-Za-z0-9_-]{1,96}\.json', g['modify_gate_filename']) is not None
+                  and sha(g['modify_gate_sha256']) and sha(g['modify_receipt_sha256'])
+                  and sha(g['state_backup_sha256']) and g['state_backup_sha256'] != b.INITIAL_STATE_SHA256
+                  and type(g['state_backup_bytes']) is int and g['state_backup_bytes'] > 0, 'MODIFY_GATE_BINDING')
+        b.require(g['actor_arn'] == b.CALLER and g['account'] == b.ACCOUNT and g['profile'] == b.PROFILE
+                  and g['region'] == b.REGION and g['human_sts'] == {'Account': b.ACCOUNT, 'Arn': b.CALLER}, 'HUMAN_IDENTITY')
+        b.require(type(g['permissions']) is list and len(g['permissions']) == len(MODIFIED_PERMISSIONS)
+                  and all(type(x) is str for x in g['permissions']) and set(g['permissions']) == MODIFIED_PERMISSIONS
+                  and g['retention_accepted'] is True and g['verification_review_approved'] is True, 'HUMAN_GATE_REQUIRED')
+        b.require(g['timezone'] == 'America/Chicago', 'WINDOW_TIMEZONE')
+        start, end, login, observed = map(b.date, (g['window_start'], g['window_end'], g['login_at'], g['human_sts_observed_at']))
+        b.require(start <= login <= observed <= self.now() < end and 0 < (end-start).total_seconds() <= 3600,
+                  'SESSION_WINDOW')
+        b.require(type(g['source_commit']) is str and re.fullmatch(r'[0-9a-f]{40}', g['source_commit']) is not None
+                  and sha(g['aws_cli_sha256']), 'GATE_HASH_SCHEMA')
+        root = g['public_packet_root']
+        b.require(type(root) is str and re.fullmatch(r'docs/agent-runs/phase-14/evidence/14b/budget-modify-verify-[A-Za-z0-9_-]{1,56}', root)
+                  is not None, 'GATE_PACKET_SCOPE')
+        self.gate = g
+        self.op = self.p.primary / 'operations' / operation
+        self.binding = {'gate_sha256': gate_sha, 'operation': operation, 'plan_sha256': m['plan_sha256'], 'actor_arn': b.CALLER}
+        self.check_window()
+        return self
+
+    def linkage(self):
+        """Fixed metadata reads plus opaque state hashes; the modify must have applied cleanly."""
+        p, g = self.p, self.gate
+        old_op = p.primary/'operations'/g['modify_operation']
+        for directory in (p.primary, p.backups, p.primary/'operations', old_op, p.config):
+            b.secure_dir(directory, p.uid)
+        raw_gate = read_private(p.primary/g['modify_gate_filename'], p.uid)
+        b.require(b.digest(raw_gate) == g['modify_gate_sha256'], 'MODIFY_GATE_HASH')
+        old_gate = b.parse_json(raw_gate)
+        b.require(type(old_gate) is dict and old_gate.get('operation') == g['modify_operation']
+                  and old_gate.get('option') == 'M' and old_gate.get('plan_sha256') == g['plan_sha256']
+                  and old_gate.get('actor_arn') == b.CALLER and old_gate.get('account') == b.ACCOUNT
+                  and old_gate.get('profile') == b.PROFILE and old_gate.get('region') == b.REGION,
+                  'MODIFY_GATE_CONTEXT')
+        raw = read_private(old_op/'modify.receipt.json', p.uid)
+        b.require(b.digest(raw) == g['modify_receipt_sha256'], 'MODIFY_RECEIPT_HASH')
+        receipt = b.parse_json(raw)
+        b.require(type(receipt) is dict and set(receipt) == {'gate_sha256', 'operation', 'plan_sha256', 'actor_arn', 'stage', 'observed_at', 'result'},
+                  'MODIFY_RECEIPT_SCHEMA')
+        expected = {'gate_sha256': g['modify_gate_sha256'], 'operation': g['modify_operation'],
+                    'plan_sha256': g['plan_sha256'], 'actor_arn': b.CALLER, 'stage': 'modify'}
+        b.require(all(receipt[k] == value for k, value in expected.items()), 'MODIFY_RECEIPT_CONTEXT')
+        when = b.date(receipt['observed_at'])
+        b.require(b.date(old_gate['window_start']) <= when < b.date(old_gate['window_end'])
+                  and when < b.date(g['window_start']), 'MODIFY_RECEIPT_TIME')
+        result = receipt['result']
+        b.require(type(result) is dict and result.get('applied') is True and result.get('already_at_target') is False
+                  and type(result.get('pre_backup')) is dict and type(result.get('post_backup')) is dict
+                  and result['pre_backup'].get('sha256') == b.INITIAL_STATE_SHA256
+                  and result['post_backup'].get('sha256') == g['state_backup_sha256']
+                  and result['post_backup'].get('bytes') == g['state_backup_bytes']
+                  and type(result['post_backup'].get('bytes')) is int
+                  and result['post_backup'].get('equal') is True and result['post_backup'].get('fsync_completed') is True,
+                  'MODIFY_RECEIPT_RESULT')
+        b.require(regular(old_op/'modify.started', p.uid).st_size == 0, 'MODIFY_JOURNAL_SHAPE')
+        for root in (p.primary, p.config):
+            for name in ('.billing.execution.tfstate.lock.info', 'billing.execution.tfstate.lock.info', '.terraform.tfstate.lock.info'):
+                b.require(not os.path.lexists(root/name), 'TERRAFORM_LOCK_PRESENT')
+        post_backup = p.backups/g['modify_operation']/'post-apply.billing.execution.tfstate'
+        pre_backup = p.backups/g['modify_operation']/'pre-apply.billing.execution.tfstate'
+        for state, wanted, size in ((p.state, g['state_backup_sha256'], g['state_backup_bytes']),
+                                    (post_backup, g['state_backup_sha256'], g['state_backup_bytes']),
+                                    (pre_backup, b.INITIAL_STATE_SHA256, b.INITIAL_STATE_BYTES)):
+            st = regular(state, p.uid)
+            b.require(st.st_size == size and b.hash_file(state) == wanted, 'STATE_BACKUP_DRIFT')
+        b.require(p.aws.resolve().is_file() and b.hash_file(p.aws.resolve()) == g['aws_cli_sha256'], 'AWS_CLI_HASH')
+        return {'modify_operation': g['modify_operation'], 'modify_gate_sha256': g['modify_gate_sha256'],
+                'modify_receipt_sha256': g['modify_receipt_sha256'], 'state_backup_verified': True}
+
+
 def production_policy():
     b.require(Path(__file__).resolve() == b.REPO/'scripts/billing/budget_verification.py', 'VERIFIER_LOCATION')
     return b.production_policy()
@@ -379,7 +498,7 @@ class PublicParser(argparse.ArgumentParser):
 
 def main(argv=None):
     parser = PublicParser(description=__doc__)
-    parser.add_argument('mode', choices=('verify','post-freeze-scan'))
+    parser.add_argument('mode', choices=('verify', 'post-freeze-scan', 'verify-modified', 'post-freeze-scan-modified'))
     parser.add_argument('--gate', type=Path, required=True)
     parser.add_argument('--gate-sha256', required=True)
     parser.add_argument('--operation', required=True)
@@ -390,19 +509,19 @@ def main(argv=None):
     try:
         args = parser.parse_args(argv)
         b.require(sha(args.gate_sha256), 'GATE_HASH_SCHEMA')
-        if args.mode == 'post-freeze-scan':
+        scan = args.mode in ('post-freeze-scan', 'post-freeze-scan-modified')
+        if scan:
             b.require(args.public_manifest is not None and sha(args.public_manifest_sha256)
                       and sha(args.verification_receipt_sha256), 'SCAN_ARGUMENTS')
         else:
             b.require(args.public_manifest is None and args.public_manifest_sha256 is None
                       and args.verification_receipt_sha256 is None, 'UNEXPECTED_SCAN_OPTIONS')
-        ex = Verification(production_policy()).load_gate(args.gate, args.gate_sha256, args.operation)
-        if args.mode == 'post-freeze-scan':
+        cls = ModifiedVerification if args.mode.endswith('-modified') else Verification
+        ex = cls(production_policy()).load_gate(args.gate, args.gate_sha256, args.operation)
+        if scan:
             b.require(args.public_manifest is not None and args.public_manifest_sha256 is not None, 'PUBLIC_FREEZE_REQUIRED')
             result = ex.scan(args.public_manifest, args.public_manifest_sha256, args.verification_receipt_sha256)
         else:
-            b.require(args.public_manifest is None and args.public_manifest_sha256 is None
-                      and args.verification_receipt_sha256 is None, 'UNEXPECTED_SCAN_OPTIONS')
             result = ex.verify()
         print(json.dumps(result, sort_keys=True)); return 0
     except b.Blocked as error:

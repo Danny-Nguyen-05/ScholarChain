@@ -1,0 +1,12 @@
+$ scripts/deploy.sh --stage push --region us-east-2 --profile scholarchain-deployer-tf
+STEP: start
+[2026-11-07T03:18:35Z] [20261107T031835Z-17857] INFO script=deploy.sh mode=dry-run run_id=20261107T031835Z-17857 repo_root=/Users/danny/Documents/UIC/CS441/ScholarChain
+STEP: inputs
+STEP: terraform-version
+[2026-11-07T03:18:35Z] [20261107T031835Z-17857] INFO terraform 1.13.5 accepted (binary: terraform)
+STEP: clean-tree
+[2026-11-07T03:18:35Z] [20261107T031835Z-17857] INFO clean tree at b2cd7ee99dcc136b5c8ec0667ca181cc5b3a87fd
+STEP: approval-record
+[2026-11-07T03:18:35Z] [20261107T031835Z-17857] ERROR refused at step approval-record: approval record not found: docs/agent-runs/phase-14/human-gate.md
+RESULT: REFUSED step=approval-record reason=approval record not found: docs/agent-runs/phase-14/human-gate.md
+EXIT: 3

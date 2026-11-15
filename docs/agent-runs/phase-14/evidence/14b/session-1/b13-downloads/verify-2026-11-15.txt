@@ -1,0 +1,20 @@
+# Offline re-verification on 2026-11-15 in ~/Documents/scholarchain-session-downloads
+$ shasum -a 256 -c SHA256SUMS   (exit 0)
+./ledgers/runs.jsonl: OK
+./ledgers/haiku-ledger.jsonl: OK
+./experiment-runs/15a-emr-size-25-20261114T183830Z-64263/experiment-record.json: OK
+./experiment-runs/15a-emr-size-25-20261114T183830Z-64263/experiment-result.json: OK
+./experiment-runs/15a-emr-size-25-20261114T183800Z-63568/experiment-record.json: OK
+./experiment-runs/15a-emr-size-25-20261114T183800Z-63568/experiment-result.json: OK
+./experiment-runs/15a-emr-size-25-20261114T191004Z-5119/experiment-record.json: OK
+./experiment-runs/15a-emr-size-25-20261114T191004Z-5119/experiment-result.json: OK
+./experiment-runs/15a-emr-size-25-20261114T202816Z-18361/experiment-record.json: OK
+./experiment-runs/15a-emr-size-25-20261114T202816Z-18361/experiment-result.json: OK
+./experiment-runs/16b-live-evaluation-16b-1/raw/raw.sha256: OK
+./experiment-runs/16b-live-evaluation-16b-1/raw/answers.jsonl: OK
+./experiment-runs/16b-live-evaluation-16b-1/raw/events.jsonl: OK
+./experiment-runs/16b-live-evaluation-16b-1/raw/run-record.json: OK
+./experiment-runs/15a-emr-size-25-20261114T211129Z-55900/experiment-record.json: OK
+./experiment-runs/15a-emr-size-25-20261114T211129Z-55900/experiment-result.json: OK
+$ shasum -a 256 scholarchain-demo.mov   (not listed in SHA256SUMS; added to the folder after it)
+55884100fa640b9185cd3a1b4caa415d818a1b5638424a55100858e153b39303  scholarchain-demo.mov

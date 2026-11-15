@@ -39,6 +39,8 @@ class PackagingJava17GuardSpec extends AnyFunSuite {
     Seq(
       (buildScala, "serviceDistribution :="),
       (buildScala, "sparkJobJar :="),
+      (buildScala, "erJobJar :="),
+      (buildSbt, "emrArtifactManifest :="),
       (buildScala, "hadoopDependencyBundle :="),
       (buildScala, "hadoopSubmitJar :="),
       (buildSbt, "dockerLocalImage :=")
@@ -67,7 +69,7 @@ class PackagingJava17GuardSpec extends AnyFunSuite {
   }
 
   test(
-    "packaging aliases start with the guard and packageRelease builds the four release artifacts"
+    "packaging aliases start with the guard and packageRelease builds the release and EMR artifacts"
   ) {
     val jobs = alias("packageJobs")
     val release = alias("packageRelease")
@@ -79,7 +81,21 @@ class PackagingJava17GuardSpec extends AnyFunSuite {
         "hadoop/hadoopSubmitJar",
         "hadoop/hadoopDependencyBundle",
         "sparkAnalytics/sparkJobJar",
-        "services/serviceDistribution"
+        "entityResolution/erJobJar",
+        "services/serviceDistribution",
+        "emrArtifactManifest"
+      )
+    )
+    val emr = alias("packageEmr")
+    assert(emr.startsWith(";checkJava17;"), emr)
+    assert(
+      emr.split(';').map(_.trim).filter(_.nonEmpty).toVector == Vector(
+        "checkJava17",
+        "hadoop/hadoopSubmitJar",
+        "hadoop/hadoopDependencyBundle",
+        "sparkAnalytics/sparkJobJar",
+        "entityResolution/erJobJar",
+        "emrArtifactManifest"
       )
     )
     assert(!release.toLowerCase.contains("docker"))

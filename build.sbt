@@ -1,7 +1,7 @@
 import ScholarChainBuild._
 import sbt.Keys._
 import sbtassembly.AssemblyPlugin
-import scholarchain.build.ServiceDistribution
+import scholarchain.build.{EmrArtifactManifest, ErJobJar, ServiceDistribution}
 
 ThisBuild / organization := "edu.uic.cs441.scholarchain"
 ThisBuild / version := "0.1.0-SNAPSHOT"
@@ -24,6 +24,10 @@ lazy val buildVerification =
         (ThisBuild / baseDirectory).value / "project/HadoopBundleMerge.scala",
       Compile / unmanagedSources +=
         (ThisBuild / baseDirectory).value / "project/SparkJobJar.scala",
+      Compile / unmanagedSources +=
+        (ThisBuild / baseDirectory).value / "project/ErJobJar.scala",
+      Compile / unmanagedSources +=
+        (ThisBuild / baseDirectory).value / "project/EmrArtifactManifest.scala",
       Compile / unmanagedSources +=
         (ThisBuild / baseDirectory).value / "project/Java17Guard.scala",
       Compile / unmanagedSources +=
@@ -75,7 +79,11 @@ lazy val entityResolution =
   project
     .in(file("modules/entity-resolution"))
     .dependsOn(core)
-    .settings(ScholarChainBuild.moduleSettings(), name := "entityResolution")
+    .settings(
+      ScholarChainBuild.moduleSettings(),
+      ScholarChainBuild.erJobJarSettings(core),
+      name := "entityResolution"
+    )
 
 lazy val sparkAnalytics =
   project
@@ -156,6 +164,52 @@ lazy val root =
     .aggregate(applicationModules.map(_.project): _*)
     .settings(
       publish / skip := true,
+      emrArtifactManifest := {
+        checkJava17.value
+        val submit = (hadoop / hadoopSubmitJar).value
+        val bundle = (hadoop / hadoopDependencyBundle).value
+        val er = (entityResolution / erJobJar).value
+        val spark = (sparkAnalytics / sparkJobJar).value
+        val repoRoot = (ThisBuild / baseDirectory).value
+        EmrArtifactManifest.write(
+          repoRoot,
+          (ThisBuild / version).value,
+          EmrArtifactManifest.Targets(
+            emrRelease = "emr-7.8.0",
+            scala = Versions.scala3,
+            sparkRuntime = Versions.spark,
+            sparkScalaBinary = Versions.sparkScalaBinary,
+            hadoopClient = Versions.hadoopClient
+          ),
+          Seq(
+            EmrArtifactManifest.Artifact(
+              "hadoop-dependency-bundle",
+              bundle,
+              None,
+              byteReproducible = true
+            ),
+            EmrArtifactManifest.Artifact(
+              "hadoop-submit-jar",
+              submit,
+              Some("edu.uic.cs441.scholarchain.hadoop.HadoopPrepMain"),
+              byteReproducible = true
+            ),
+            EmrArtifactManifest.Artifact(
+              "entity-resolution-job-jar",
+              er,
+              Some(ErJobJar.MainClass),
+              byteReproducible = true
+            ),
+            EmrArtifactManifest.Artifact(
+              "spark-job-jar",
+              spark,
+              Some("edu.uic.cs441.scholarchain.spark.Phase6Main"),
+              byteReproducible = true
+            )
+          ),
+          repoRoot / "target" / "emr-artifacts" / "emr-artifact-manifest.json"
+        )
+      },
       markTestRun := Def.taskDyn {
         val repoRoot = (ThisBuild / baseDirectory).value.getAbsolutePath
         (buildVerification / Compile / runMain)
@@ -218,6 +272,7 @@ lazy val root =
             independentTests / Test / test
           ),
           contractTest,
+          entityResolution / erJobJarCheck,
           markTestRun
         )
         .value,
@@ -256,9 +311,18 @@ addCommandAlias(
 addCommandAlias(
   "packageRelease",
   ";checkJava17; hadoop/hadoopSubmitJar; hadoop/hadoopDependencyBundle; " +
-    "sparkAnalytics/sparkJobJar; services/serviceDistribution"
+    "sparkAnalytics/sparkJobJar; entityResolution/erJobJar; services/serviceDistribution; " +
+    "emrArtifactManifest"
+)
+// Offline EMR artifacts only (no service distribution): the four job JARs plus their manifest at
+// target/emr-artifacts/emr-artifact-manifest.json. Builds locally; uploads nothing.
+addCommandAlias(
+  "packageEmr",
+  ";checkJava17; hadoop/hadoopSubmitJar; hadoop/hadoopDependencyBundle; " +
+    "sparkAnalytics/sparkJobJar; entityResolution/erJobJar; emrArtifactManifest"
 )
 addCommandAlias("sparkJobJar", "sparkAnalytics/sparkJobJar")
+addCommandAlias("erJobJar", "entityResolution/erJobJar")
 addCommandAlias("dockerLocal", "dockerLocalImage")
 addCommandAlias("packageServices", "services/serviceDistribution")
 addCommandAlias("hadoopLocalClasspath", "hadoop/hadoopLocalClasspath")

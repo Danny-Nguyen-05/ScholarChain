@@ -1,0 +1,40 @@
+Who are the direct coauthors of "Songwu Lu"?
+What is the component of "Atul Adya"?
+What is the shortest coauthor path between "Hugues Fauconnier" and "Carole Delporte-Gallet"?
+Which researchers have the most distinct coauthors?
+Who are the direct coauthors of "Kaihuan Peng"?
+What is the component of "Krishna Chintalapudi"?
+What is the shortest coauthor path between "Paola Flocchini" and "Nicola Santoro"?
+Which researchers have the most distinct coauthors since 2015?
+Who are the direct coauthors of "Lingyun Yang"?
+What is the component of "Sanjay Ghemawat"?
+What is the shortest coauthor path between "Sam Toueg" and "Vassos Hadzilacos"?
+Which researchers have the most distinct coauthors in window 2020-2026?
+Who are the direct coauthors of "Ivan Rapaport"?
+What is the component of "Li Zhuang"?
+What is the shortest coauthor path between "Janna Burman" and "Joffroy Beauquier"?
+Which researchers have the most distinct coauthors in window through-2009?
+Who are the direct coauthors of "Yanping Huang"?
+What is the component of "Bruno Schulze"?
+What is the shortest coauthor path between "Valerie King" and "Jared Saia"?
+Which researchers have the largest team size?
+Who are the direct coauthors of "Nikos Vasilakis"?
+What is the component of "Maria Apostolaki"?
+What is the shortest coauthor path between "Songwu Lu" and "Xin Yan"?
+Which researchers are the strongest bridges?
+Who are the direct coauthors of "Longfei Shangguan"?
+What is the component of "Wenhui Zhang"?
+What is the shortest coauthor path between "Thomas Knauth" and "Florian Kelbert"?
+Which researchers are the strongest bridges since 2015?
+Who are the direct coauthors of "Zhuozhao Li"?
+What is the component of "Mona Vij"?
+What is the shortest coauthor path between "Myeongjae Jeon" and "Youngseok Yang"?
+Show the strongest repeated collaborations
+Who are the direct coauthors of "Chunming Hu"?
+What is the shortest coauthor path between "Kaihuan Peng" and "Banghao Ying"?
+Who are the direct coauthors of "Stijn Volckaert"?
+What is the shortest coauthor path between "Weiyang Wang" and "Zhuoqing Morley Mao"?
+Who are the direct coauthors of "Fei Liu"?
+Who are the direct coauthors of "Dongyoon Lee"?
+Who are the direct coauthors of "Hayley LeBlanc"?
+Who are the direct coauthors of "Shengdong Dai"?

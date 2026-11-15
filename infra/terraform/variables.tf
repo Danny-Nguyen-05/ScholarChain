@@ -98,7 +98,7 @@ variable "additional_tags" {
 }
 variable "cleanup_mode" {
   type        = bool
-  description = "Explicit reviewed cleanup configuration; no authorization to destroy. S3 still has a static prevent_destroy gate."
+  description = "Explicit reviewed cleanup configuration; no authorization to destroy. It switches force_destroy on the S3 buckets and the S3 Vectors bucket (no prevent_destroy since the USD 25 replan, W4), force_delete on ECR and the deletion protections of Neptune, the ALB and DynamoDB."
   default     = false
 }
 variable "persistent_environment" {

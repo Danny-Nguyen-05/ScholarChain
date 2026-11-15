@@ -91,7 +91,7 @@ Ceilings and refusals (all before any cloud call)
   `timeout --kill-after=PIPELINE_KILL_AFTER_SECONDS <its timeout_seconds>`, in its own process group: on timeout, failure or
   cancel the wrapper sends TERM to the whole group and KILL after the grace, so a grandchild that ignores TERM cannot outlive
   the step; YARN-submitting bodies also kill the YARN application by run tag when that timeout fires or on TERM.
-  Phase 4 ceilings on the prep config (maxLocalSampleRecords<=1000 reducerCount<=8 maxCandidateBlockSize<=256
+  Phase 4 ceilings on the prep config (maxLocalSampleRecords<=12000 [pipeline-specific, PIPELINE_CEILING_MAX_LOCAL_SAMPLE_RECORDS; the Phase 4 smoke keeps 1000] reducerCount<=8 maxCandidateBlockSize<=256
   maxCandidatePairsPerBlock<=4096 maxAuthorTeamSize<=64 maxRecordBytes<=8388608 maxXmlEntityExpansion<=8388608),
   input and copy-out byte ceilings, capacity <= PIPELINE_MAX_CAPACITY, runtime <= PIPELINE_MAX_RUNTIME_MINUTES.
 
@@ -100,7 +100,7 @@ G6 cost guard
   PIPELINE_MAX_IDLE_TIMEOUT_SECONDS, 900 s) hours: the idle tail before the cluster stops is billed too. It is printed in
   the dry run and before --execute. --execute is REFUSED when the estimate exceeds EMR_MAX_RUN_USD (3) or the declared
   budget, when the run ledger already holds EMR_MAX_LIVE_RUNS (3) live runs, when the cumulative estimate would exceed
-  EMR_CUMULATIVE_CAP_USD (9.50), when a reviewed rate is missing (never read as zero), when the ledger does not exist, when
+  EMR_CUMULATIVE_CAP_USD (2.52), when a reviewed rate is missing (never read as zero), when the ledger does not exist, when
   the approval record already started a run, or while EMR_PRICING_CONFIRMED_BY_HUMAN is not true (a human flips it after
   checking the sources).
 
@@ -123,7 +123,7 @@ Human approval record (--execute): KEY=value lines, each exactly once, no quotes
   (schema as for deploy.sh) is re-verified immediately before EACH step submission. Before the first paid
   operation --execute also checks the live account hash, describes the cluster (WAITING or RUNNING), requires
   an auto-termination idle timeout (aws emr get-auto-termination-policy) and only the approved instance
-  type and counts (aws emr list-instance-groups), then reserves one ledger slot (a reservation counts for good).
+  type and counts (Cluster.InstanceGroups from aws emr describe-cluster), then reserves one ledger slot (a reservation counts for good).
 
 Human approval points (plan Section 7.3)
   2. --execute: an approval record naming the run configuration, budget, region, capacity, maximum runtime and
@@ -426,7 +426,7 @@ VERIFIED_PRESPEND=""
 APPROVED_PRESPEND_SHA256=""
 APPROVAL_SHA=""
 _prespend_check() {
-  local label="$1" now rc=0 clock=()
+  local label="$1" now rc=0 clock=() ceiling=()
   now="$(sc_sha256 "${VERIFIED_PRESPEND}")"
   if [[ "${now}" != "${APPROVED_PRESPEND_SHA256}" ]]; then
     sc_refuse "${EX_REFUSED}" "pre-spend receipt copy changed (sha256 ${now}) before ${label}; no further paid operation will run"
@@ -434,8 +434,13 @@ _prespend_check() {
   if [[ -n "${SC_CLOCK_FILE}" ]]; then
     clock=(--clock-file "${SC_CLOCK_FILE}" --label "${label}")
   fi
+  # Repair round 3: the headroom arithmetic must include every provider's spend (pinned project ceiling).
+  if [[ -n "${PRESPEND_PROJECT_CEILING_USD:-}" ]]; then
+    [[ "${PRESPEND_PROJECT_CEILING_USD}" =~ ^[0-9]+(\.[0-9]+)?$ ]] || sc_refuse "${EX_REFUSED}" "PRESPEND_PROJECT_CEILING_USD must be numeric in the config"
+    ceiling=(--ceiling-usd "${PRESPEND_PROJECT_CEILING_USD}")
+  fi
   python3 -I "${SC_LIB_DIR}/verify.py" prespend --file "${VERIFIED_PRESPEND}" \
-    --max-age-hours "${PRESPEND_MAX_AGE_HOURS}" --min-headroom "${PRESPEND_MIN_HEADROOM_USD}" ${clock[@]+"${clock[@]}"} || rc=$?
+    --max-age-hours "${PRESPEND_MAX_AGE_HOURS}" --min-headroom "${PRESPEND_MIN_HEADROOM_USD}" ${ceiling[@]+"${ceiling[@]}"} ${clock[@]+"${clock[@]}"} || rc=$?
   [[ "${rc}" -eq 0 ]] || sc_refuse "${EX_REFUSED}" "pre-spend receipt rejected before ${label}: that paid operation and every later one is not run"
 }
 
@@ -549,9 +554,10 @@ else
 fi
 
 sc_step "cluster-check"
+# AWS CLI v2 has no `aws emr list-instance-groups`: describe-cluster itself calls ListInstanceGroups (or ListInstanceFleets)
+# and embeds the groups as Cluster.InstanceGroups, which check-cluster reads (missing or empty refuses).
 sc_mktemp DESCRIBE_FILE
 sc_mktemp POLICY_FILE
-sc_mktemp GROUPS_FILE
 RC=0
 sc_exec --cloud --timeout "${TIMEOUT_AWS_SECONDS}" --capture "${DESCRIBE_FILE}" -- \
   "${AWS_ENV[@]}" aws emr describe-cluster --region "${REGION}" --cluster-id "${CLUSTER_ID}" --output json || RC=$?
@@ -560,13 +566,9 @@ RC=0
 sc_exec --cloud --timeout "${TIMEOUT_AWS_SECONDS}" --capture "${POLICY_FILE}" -- \
   "${AWS_ENV[@]}" aws emr get-auto-termination-policy --region "${REGION}" --cluster-id "${CLUSTER_ID}" --output json || RC=$?
 [[ "${EXECUTE}" -eq 0 || "${RC}" -eq 0 ]] || sc_refuse "${EX_REFUSED}" "aws emr get-auto-termination-policy failed (exit ${RC}): forced auto-termination cannot be verified"
-RC=0
-sc_exec --cloud --timeout "${TIMEOUT_AWS_SECONDS}" --capture "${GROUPS_FILE}" -- \
-  "${AWS_ENV[@]}" aws emr list-instance-groups --region "${REGION}" --cluster-id "${CLUSTER_ID}" --output json || RC=$?
-[[ "${EXECUTE}" -eq 0 || "${RC}" -eq 0 ]] || sc_fail "$(sc_rc_to_exit "${RC}")" "aws emr list-instance-groups failed (exit ${RC})"
 if [[ "${EXECUTE}" -eq 1 ]]; then
   CHECK_RC=0
-  CHECK_OUT="$(python3 -I "${SC_LIB_DIR}/pipeline.py" check-cluster --describe "${DESCRIBE_FILE}" --policy "${POLICY_FILE}" --groups "${GROUPS_FILE}" \
+  CHECK_OUT="$(python3 -I "${SC_LIB_DIR}/pipeline.py" check-cluster --describe "${DESCRIBE_FILE}" --policy "${POLICY_FILE}" \
     --cluster-id "${CLUSTER_ID}" --instance-type "${INSTANCE_TYPE}" --core-count "${CORE_COUNT}" --max-task-count "${TASK_COUNT}" \
     --max-capacity "${MAX_CAPACITY}" --max-idle-seconds "${IDLE_MAX}")" || CHECK_RC=$?
   if [[ "${CHECK_RC}" -ne 0 ]]; then

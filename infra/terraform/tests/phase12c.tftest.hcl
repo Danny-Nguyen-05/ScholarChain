@@ -104,7 +104,7 @@ run "s3vectors_key_covers_project_bucket_and_indexes" {
       StringEquals               = { "aws:SourceAccount" = "111122223333" }
       ArnLike                    = { "aws:SourceArn" = ["arn:aws:s3vectors:us-east-1:111122223333:bucket/scholarchain-course-111122223333-vectors", "arn:aws:s3vectors:us-east-1:111122223333:bucket/scholarchain-course-111122223333-vectors/index/*"] }
       "ForAnyValue:StringEquals" = { "kms:EncryptionContextKeys" = ["aws:s3vectors:arn", "aws:s3vectors:resource-id"] }
-    }]) == 1 && length(jsondecode(output.iam_controls.kms_policy).Statement) == 2
+    }]) == 1 && length(jsondecode(output.iam_controls.kms_policy).Statement) == 5
     error_message = "N17: Indexing decrypt requires exactly this project's bucket and index ARN paths, account and documented context; no wider key grant."
   }
 }

@@ -1,0 +1,144 @@
+# Session 1 approval records (target/phase14/approvals/): sha256 and binding lines
+# Each record's free-text lines are left out; only APPROVED_STAGE/ACTION, COMMIT, PLAN_SHA256 and CLUSTER_ID are listed.
+# APPROVED_ACCOUNT_SHA256 is a hash of the account ID, not the ID; it is left out here anyway.
+
+## base-apply-1-failed.md sha256 c4a23b847b3d33c9ea69d9a7870f325bb6b7c100f7e51faccac9d268270a8cc0
+# Phase 14 human gate - stage base-apply - serial 1
+APPROVED_STAGE=base-apply
+APPROVED_COMMIT=684aeaf83fb069439d01ee32a6eb176488617232
+APPROVED_PLAN_SHA256=5f171f60585a3e6bf5b6ee2e629ca666de7e85d2519ca0aba3aff8783b1209e4
+
+## base-apply.md sha256 b1c8f7e43a8c86080943c87e320ad3e7208f3eda8bd0516ef0c0f25373a21284
+# Phase 14 human gate - stage base-apply - serial 2
+APPROVED_STAGE=base-apply
+APPROVED_COMMIT=24bf49d9fcec3180426a51db62caabf92c86d076
+APPROVED_PLAN_SHA256=dc3bb6d2653b82b257b9583e59eedb766355149d2a02782c10f87210a87d4185
+
+## cleanup-prepare.final.md sha256 5ca04a9ee79464edf41f6915193b3519732426e4317f92c33ae05b0ac0648591
+# Phase 14 human gate - stage cleanup-prepare - serial 21
+APPROVED_STAGE=cleanup-prepare
+APPROVED_COMMIT=b6dc94df6d9b443a9fd778eb09be6ec2c8c29f64
+APPROVED_PLAN_SHA256=78585d4794dd9f337afbda700109681dc88ef5f24f491c06085dd2ef1773fa35
+
+## cleanup-prepare.md sha256 5ca04a9ee79464edf41f6915193b3519732426e4317f92c33ae05b0ac0648591
+# Phase 14 human gate - stage cleanup-prepare - serial 21
+APPROVED_STAGE=cleanup-prepare
+APPROVED_COMMIT=b6dc94df6d9b443a9fd778eb09be6ec2c8c29f64
+APPROVED_PLAN_SHA256=78585d4794dd9f337afbda700109681dc88ef5f24f491c06085dd2ef1773fa35
+
+## emr-apply-3.md sha256 f0531dca3b9334b2cbeaaa3840f4bb05140ee56b4febc4ed572be78b924615f0
+# Phase 14 human gate - stage runtime-apply - serial 18
+APPROVED_STAGE=runtime-apply
+APPROVED_COMMIT=2b2d2639a46721d8167c09b87cb603a0dc98df0d
+APPROVED_PLAN_SHA256=7b34170126bbda6d1f11a15172c4f1e3cfc9d3f5929f4a6676d95b2a90d82af7
+
+## emr-apply-4.md sha256 660936f68a9f9982e4d9e90b1ec5391a4f2d0dcb7efd422dd499106649e69c4e
+# Phase 14 human gate - stage runtime-apply - serial 19
+APPROVED_STAGE=runtime-apply
+APPROVED_COMMIT=7ecc5723acf0f5a334e3bd9d526ba2869465b3e3
+APPROVED_PLAN_SHA256=fb5f58c8a66331bd37be374f29bb1dd2fb5b5862844fb3e1309cbe5e44022316
+
+## emr-apply-5.md sha256 95f0e9e19c147608a0613b6c0470d46ff189e40fdc0765030fa2167fc7ff86c4
+# Phase 14 human gate - stage runtime-apply - serial 20
+APPROVED_STAGE=runtime-apply
+APPROVED_COMMIT=b6dc94df6d9b443a9fd778eb09be6ec2c8c29f64
+APPROVED_PLAN_SHA256=b3534b4fca57f547b00e0820a4eadce0ebb4a535ba6343312ec23997cd778477
+
+## emr-apply.md sha256 1292850825ab945216487f7420c9d7970df0e23a63e842706b429dcd257d1815
+# Phase 14 human gate - stage runtime-apply - serial 17
+APPROVED_STAGE=runtime-apply
+APPROVED_COMMIT=ae1459327a88bd8f55c2dd2a01993d26adb87cad
+APPROVED_PLAN_SHA256=ff052d9cd500ccca5652f8f312bf2318f1d3f27dee2017e466ceb402f8dc1474
+
+## emr-run-1.attemptB.md sha256 79513754706a14e1845c6cccf6da0aae02a371fae1c107734142b961fab8ebaf
+Approval serial: 1
+APPROVED_ACTION=run-experiment
+APPROVED_COMMIT=ae1459327a88bd8f55c2dd2a01993d26adb87cad
+APPROVED_CLUSTER_ID=j-0426641ATQVS0H3PIYY
+
+## emr-run-2.md sha256 deb50f5d02fbde39f0e878b10a4a4991b67f5f4c8ca5683a22db77795abf7311
+Approval serial: 2
+APPROVED_ACTION=run-experiment
+APPROVED_COMMIT=2b2d2639a46721d8167c09b87cb603a0dc98df0d
+APPROVED_CLUSTER_ID=j-03354448AO318DJHXVR
+
+## emr-run-3.md sha256 038b4821903520189c378eeb93f3cb23126b256de1b42c4b554b9c3e63bbf14c
+Approval serial: 3
+APPROVED_ACTION=run-experiment
+APPROVED_COMMIT=7ecc5723acf0f5a334e3bd9d526ba2869465b3e3
+APPROVED_CLUSTER_ID=j-03354572RN3ACLOGKG91
+
+## emr-run-4.md sha256 634fb1985ca2c00bad06826e25a5dfc835dfafb352c7fa4e549bb9cee6a1a33b
+Approval serial: 4
+APPROVED_ACTION=run-experiment
+APPROVED_COMMIT=b6dc94df6d9b443a9fd778eb09be6ec2c8c29f64
+APPROVED_CLUSTER_ID=j-05198553ABDUQT7HM2DM
+
+## emr-upload.md sha256 e53b1fa6916d382983da7de8b51509c9c478157b37f60f9cc8628f896e0cb0a5
+APPROVED_ACTION=upload-emr-artifacts
+APPROVED_PLAN_SHA256=be426699b132f20dd0b82878942d95834b0baae53fdb66c800a5c9b0f5f8ea73
+
+## pointer-apply.md sha256 30ef88fafcd32ff94261f37d2b17741266209e66e34a30660cd898e545623d7e
+# Phase 14 human gate - stage runtime-apply - serial 10
+APPROVED_STAGE=runtime-apply
+APPROVED_COMMIT=83a41684ba91f500feb75743fcf353c4d46545f6
+APPROVED_PLAN_SHA256=7002889dffc9d4572351ee12bd2265dec70766f7760d0816703ca7d473294464
+
+## push-0656dc4.md sha256 374898fb40434fc33ae8a7085242141a30dd34a17d5443d1c48c3c87c26f50b3
+# Phase 14 human gate - stage push - serial 13
+APPROVED_STAGE=push
+APPROVED_COMMIT=0656dc4849b08c243d985fd94646f4fab69948ed
+
+## push-155562d.md sha256 8057ccb91c9b20fdb4f930f1881318839aea0a4d74e7bf8d356894258faaea26
+# Phase 14 human gate - stage push - serial 5
+APPROVED_STAGE=push
+APPROVED_COMMIT=155562d3eea3bca5fe1df2153d1da9c3a8bb5dee
+
+## push-9ee5bbe.md sha256 86af0e03cef50f4f47a59be97fe40dea6484cf8e674a19e1591413d66f5cf156
+# Phase 14 human gate - stage push - serial 8
+APPROVED_STAGE=push
+APPROVED_COMMIT=9ee5bbe6f485284031da0cc546f544df9b471a8c
+
+## push-ae14593.md sha256 7a6645a2c8b3be90d3a5027f73613effb97601e47a4b04b275d165394e4324b5
+# Phase 14 human gate - stage push - serial 15
+APPROVED_STAGE=push
+APPROVED_COMMIT=ae1459327a88bd8f55c2dd2a01993d26adb87cad
+
+## push-bc81afd.md sha256 b64e55461ec170a09e40e8679e276e6369ff9f4c4a8fffc3730370aeb7ed7b48
+# Phase 14 human gate - stage push - serial 6
+APPROVED_STAGE=push
+APPROVED_COMMIT=bc81afd046d8b7f90ce2d55828e7e4ea1f6f72d6
+
+## push-bfa393a.md sha256 1d01f4fa06b136fc97f87db71c5c81538c6b0878a723f32115248505c29822f3
+# Phase 14 human gate - stage push - serial 11
+APPROVED_STAGE=push
+APPROVED_COMMIT=bfa393ac8cea136950fde7b43b95e20bab9bc1cc
+
+## push.md sha256 316801aec8b866f89e8d3e521f99370282898192ff9f7cb6c8940d58809859f6
+# Phase 14 human gate - stage push - serial 3
+APPROVED_STAGE=push
+APPROVED_COMMIT=24bf49d9fcec3180426a51db62caabf92c86d076
+
+## runtime-apply-0656dc4.md sha256 b104c7a282915716644b9da0772f3bd7ae9f519a621c8e4088ea2f36b245b47f
+# Phase 14 human gate - stage runtime-apply - serial 14
+APPROVED_STAGE=runtime-apply
+APPROVED_COMMIT=0656dc4849b08c243d985fd94646f4fab69948ed
+APPROVED_PLAN_SHA256=ab0208971f53bcf2f6062b536209fc755691f3e3385e83fd4c0d0b6a4b623b87
+
+## runtime-apply-1-failed.md sha256 01180cdb5b469b95740fd5fcb21586dcd8c112802f151e9da3799f59b6655f4f
+# Phase 14 human gate - stage runtime-apply - serial 4
+APPROVED_STAGE=runtime-apply
+APPROVED_COMMIT=24bf49d9fcec3180426a51db62caabf92c86d076
+APPROVED_PLAN_SHA256=3c966060c9e86cc2715d28ea8ceb62d2644e05b31e34c4dbbf5cfe1113c75d78
+
+## runtime-apply-bfa393a.md sha256 1c417673df4879754816c3058e51657958312d01264c16a048f611569ff54b58
+# Phase 14 human gate - stage runtime-apply - serial 12
+APPROVED_STAGE=runtime-apply
+APPROVED_COMMIT=bfa393ac8cea136950fde7b43b95e20bab9bc1cc
+APPROVED_PLAN_SHA256=7e64432830ed3d4ac08259e10663521b72145f70761c1f4ef6d0ec7deb40caf9
+
+## runtime-apply.md sha256 4f0505c0da7014df7d11c6fb85cf4c9ab894fcc4882a436d4390dba5b9a83964
+# Phase 14 human gate - stage runtime-apply - serial 9
+APPROVED_STAGE=runtime-apply
+APPROVED_COMMIT=9ee5bbe6f485284031da0cc546f544df9b471a8c
+APPROVED_PLAN_SHA256=81cb58f7079406ed4f66cdff9c15884d88739a618117212beba63fc7301c7e38
