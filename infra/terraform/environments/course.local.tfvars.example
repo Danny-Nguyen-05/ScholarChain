@@ -163,6 +163,21 @@ service_secret_bindings = {
 # here if the first runtime apply shows query-api tasks replaced before graph-service/semantic-service are ready; no commit needed.
 # query_health_check_grace_period_seconds = 300
 
+# RUNTIME, optional, Phase 15 P41 (Session 2 elasticity run R-b; docs/runbooks/session-2-plan.md section 5.3 step 2). All three default to
+# null, which keeps the earlier plan: no request-count policy and the service rate-limit defaults. The values come from the P35 rehearsal
+# record; do not guess them. Not secret. Changing one is a new runtime plan (the policy or the query-api task definition changes).
+#  - query_requests_per_target_target: target of the query-api target-tracking policy on ALBRequestCountPerTarget, in requests per
+#    query-api task per MINUTE, a whole number 1-100000. It is added beside the CPU policy (cpu_target_percent stays 60) and exists only
+#    when the runtime is deployed with HTTPS; null means no request-count policy.
+#  - query_semantic_rate_limit_per_second: r_S2, requests per SECOND per API key per query-api task for POST /v1/semantic/retrieve,
+#    a whole number 1-100000 (SCHOLARCHAIN_SEMANTIC_RATE_LIMIT_PER_SECOND; null leaves the service default 50).
+#  - query_semantic_rate_limit_burst: 2 x r_S2, the token-bucket burst in requests, a whole number 1-1000000
+#    (SCHOLARCHAIN_SEMANTIC_RATE_LIMIT_BURST; null leaves the service default 100). Set it together with the rate: each is independent.
+# Both rate values reach query-api only, and only in the aws service mode (runtime_composition_verified).
+# query_requests_per_target_target     = <P35 value, requests per target per minute>
+# query_semantic_rate_limit_per_second = <r_S2 from P35>
+# query_semantic_rate_limit_burst      = <2 x r_S2>
+
 # ---- USD 25 course-cap cost shape (BOTH; Phase 14B replan). The committed defaults keep the earlier behavior; these are the cheap values
 # for the private copy. Container Insights and the dashboard bill custom metrics / a monthly dashboard fee; alarms are kept.
 container_insights_enabled = false # also drops the embedding-worker backlog policy (needs ECS/ContainerInsights RunningTaskCount); worker stays at min

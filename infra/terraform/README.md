@@ -264,7 +264,7 @@ Activation flags do not authorize any cloud action; the human gates still apply.
 | Neptune | One private serverless writer, IAM authentication, project CMK, audit export, subnet/cluster/instance parameter groups,7-day backups,1–2.5NCU, deletion protection and final snapshot outside cleanup. `neptune_enabled=false` until the user selects `neptune_engine_version` and matching `neptune_parameter_family`; no implicit latest engine or regional support claim. |
 | Vectors | Native vector bucket and exactly five float32 indexes,256 dimensions,cosine,project CMK,TLS Deny. Names match `VectorIndexes` in `modules/storage/.../Phase7Configs.scala:86-93`; planned dimension/metric match `modules/rag/README.md:57-61`. Every index marks exactly `textS3Uri` non-filterable, matching `VectorAdapterConfig` (`Phase7Configs.scala:67`) and live ingest/query GetIndex preflight. Changing dimension/metric/metadata requires an explicitly reviewed index migration. Since the USD 25 replan (W4) there is **no `prevent_destroy`** on the vector bucket or the indexes; `force_destroy` on the bucket follows `cleanup_mode`, so they can be deleted only after the cleanup preparation. |
 | EMR | Disabled by default. 13C: one primary plus one core on `emr-7.8.0` with applications `["Hadoop"]` only and the portable Spark runtime installed by `scripts/emr/bootstrap.sh`; **no task nodes and no managed scaling unless tfvars enable them**, at most one task node, `m5.xlarge` only (G3/G6 caps below); on-demand only; idle termination at most 900 s; encrypted S3, local disks and EBS; **in-transit TLS disabled** (disclosed limitation below); an encrypted EFS staging file system (G1 option ii). See "Phase 13C" below. |
-| ECS | One cluster with private DNS and Container Insights (`container_insights_enabled`, default true; the USD 25 cap tfvars sets false, which also removes the worker backlog policy because RunningTaskCount exists only with Container Insights). Four Fargate service/task definitions are declared behind `runtime_enabled=false`. Default active task shape is512CPU/1024MiB; `service_capacity` also accepts cpu 256 with memory 1024 or 2048 (0.25 vCPU / 1 GiB for the cap plan). HTTP services min1/max2 and worker min1/max4. Each HTTP service has CPU target60%; worker uses visible SQS messages divided by RunningTaskCount, target10/task. No service OR scaling target exists while disabled. |
+| ECS | One cluster with private DNS and Container Insights (`container_insights_enabled`, default true; the USD 25 cap tfvars sets false, which also removes the worker backlog policy because RunningTaskCount exists only with Container Insights). Four Fargate service/task definitions are declared behind `runtime_enabled=false`. Default active task shape is512CPU/1024MiB; `service_capacity` also accepts cpu 256 with memory 1024 or 2048 (0.25 vCPU / 1 GiB for the cap plan). HTTP services min1/max2 and worker min1/max4. Each HTTP service has CPU target60%; query-api can also track ALB requests per target when `query_requests_per_target_target` is set (Phase 15 P41, below); worker uses visible SQS messages divided by RunningTaskCount, target10/task. No service OR scaling target exists while disabled. |
 | Ingress | No HTTP listener. HTTPS443 requires an ACM certificate (an existing same-account/region ARN in `https_certificate_arn`, or one Terraform requests for `api_domain_name`; exactly one of the two, see "Phase 14B replan W5b") and approved CIDRs. Certificate remains unset and CIDRs empty. ALB access logging is intentionally OFF because the existing logs bucket uses SSE-KMS; ALB/S3 server access logs require an SSE-S3 destination. Ordinary application/EMR logs can still use that bucket. |
 | Workflow | Standard Step Functions dispatches one serialized EmbeddingWorkItem to the fixed embedding queue, with120s overall timeout,20s tasks, two retries and fixed DLQ failure routing. The separate `embedding-producer` execution identity trusts only this exact state machine/account and has queue-only SendMessage plus CMK rights. The Phase13 pipeline invokes it; no caller identity/StartExecution grant or production enqueue caller is invented here. |
 | Bedrock | Embedding participants only may InvokeModel on configured TitanV2 foundation-model ARN. `synthesis_model_id=null` means no query-api invocation grant. Model IDs are configurable, never wildcard; actual regional availability/model access is unverified. |
@@ -876,3 +876,44 @@ Asserted by `tests/phase14b_providers.tftest.hcl` (`egress_to_the_provider_apis_
 ### Tests
 
 `cd infra/terraform && terraform init -backend=false && terraform test` (new test runs that use a `module` block need `terraform init` once so the test modules are registered). New: `tests/phase14b_providers.tftest.hcl` (defaults and identifiers, empty containers, no version/secret value, execution-role patterns, no Bedrock/Marketplace, environment and `secrets`, the Bedrock selections, guards, boundary closure, egress), three module runs in `tests/phase14b_cost_runtime.tftest.hcl`, and `deployer/tests/providers.tftest.hcl`. The earlier test files that assert the Bedrock path now select `synthesis_provider = "bedrock"` and `embedding_provider = "bedrock"` explicitly.
+
+## Phase 15 P41: ALB request-count scaling and the semantic rate-limit override (authored offline, nothing applied)
+
+Source: `docs/runbooks/session-2-plan.md` rows F26 and P41 and section 5.3 step 2; Work order 3 in `docs/agent-runs/phase-15/prompt.md`
+(defaults accepted 2026-11-16). Three optional root variables in `phase12b-variables.tf` (end of file), all default `null`. With all three `null` the plan
+is the same as before (no new resource, no new environment variable). Their Session 2 values come from the P35 rehearsal record and go in
+the private `course.local.tfvars` (commented template in `environments/course.local.tfvars.example`).
+
+| Root variable | Unit and range | Where it goes | `null` |
+| --- | --- | --- | --- |
+| `query_requests_per_target_target` | requests per target (query-api task) per **minute**, whole number 1-100000 | `module.runtime.aws_appautoscaling_policy.query_requests[0]`, target value | no request-count policy |
+| `query_semantic_rate_limit_per_second` | requests per **second** per API key per query-api task, whole number 1-100000 (r_S2) | `SCHOLARCHAIN_SEMANTIC_RATE_LIMIT_PER_SECOND` on query-api | unset; service default 50 |
+| `query_semantic_rate_limit_burst` | token-bucket burst in requests, whole number 1-1000000 (2 x r_S2) | `SCHOLARCHAIN_SEMANTIC_RATE_LIMIT_BURST` on query-api | unset; service default 100 |
+
+**Request-count policy.** A second target-tracking policy on the query-api scalable target, named `<prefix>-query-api-requests`, with the
+predefined metric `ALBRequestCountPerTarget`, `resource_label = "<ALB arn_suffix>/<target group arn_suffix>"`
+(`app/<name>/<id>/targetgroup/<name>/<id>`), scale-in cooldown 300 s, scale-out cooldown 60 s and scale-in enabled. Its count is
+`enabled && image_revision != null && query_requests_per_target_target != null`: the first two terms are the count of `aws_lb.query` and
+`aws_lb_target_group.query`, so the `[0]` references exist whenever the policy does, and with count 0 they are never evaluated. AWS accepts
+the label only when the target group is attached to the ECS service; here that needs HTTPS (a listener certificate), so a precondition
+refuses a plan that sets the target without HTTPS rather than failing at apply. The three CPU policies (`http_cpu`, target
+`cpu_target_percent`, 60 by default) are unchanged. With both policies on query-api, Application Auto Scaling scales out when either asks and
+scales in only when both allow it ([target tracking, "Multiple scaling policies"](https://docs.aws.amazon.com/autoscaling/application/userguide/target-tracking-scaling-policy-overview.html), read 2026-11-16).
+The deployer's existing `AppAutoScalingEcsServices` (`PutScalingPolicy`, `DeleteScalingPolicy` on `scalable-target/*`) and
+`CloudWatchAlarmsDashboardsOfTheMainStack` (`alarm:TargetTracking-*`) statements already cover it; no IAM change. Not live-verified.
+
+**Rate-limit override.** Each value reaches the query-api task environment as a decimal string, only in the aws service mode
+(`runtime_composition_verified`), and only when its own variable is set; no other role receives it. Neither is a secret. The module input
+names are `semantic_rate_limit_per_second` and `semantic_rate_limit_burst`.
+
+**Dashboard panel.** When the ALB exists (`module.runtime.alb_metric_dimensions` is non-null) and `dashboard_enabled = true`, the elasticity
+dashboard gains one panel "ALB requests per target and target 4XX (query-api)", period 60, statistic Sum, with two metrics:
+`AWS/ApplicationELB RequestCountPerTarget` by `TargetGroup`, and `HTTPCode_Target_4XX_Count` by `LoadBalancer` + `TargetGroup` (that
+metric has no TargetGroup-only dimension set; [ALB CloudWatch metrics](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-cloudwatch-metrics.html), read 2026-11-16).
+Both counts include 429 replies of the P40 rate limiter. The dimension values are ARN suffixes, so the dashboard body is "known after
+apply" in the plan that creates the ALB. **Metric count:** the dashboard has 109 metrics without Neptune, EMR and the ALB; 114 with Neptune
+(the test fixture), 116 with Neptune and the ALB panel, 122 with all optional sources. It is therefore already above P9's 50-metric
+free-tier target before this change; P41 adds 2 and P9 still owns the reduction.
+
+**Tests.** `tests/phase15_p41.tftest.hcl` (root, 18 runs) and `tests/phase15_p41_runtime.tftest.hcl` (module, 11 runs); run
+`terraform init -backend=false` once so the module runs are registered, then `terraform test`.

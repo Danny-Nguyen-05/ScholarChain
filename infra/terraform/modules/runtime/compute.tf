@@ -67,6 +67,12 @@ locals {
       SCHOLARCHAIN_RUNTIME_ARTIFACT_SOURCE_RUN_ID = var.runtime_artifact_source_run_id
       } : {}, local.runtime_artifact_pointer && var.runtime_artifact_bucket != null ? {
       SCHOLARCHAIN_RUNTIME_ARTIFACT_BUCKET = var.runtime_artifact_bucket
+      } : {}, var.semantic_rate_limit_per_second != null ? {
+      # Phase 15 P41: the P40 public-route rate-limit override (PublicSemanticRoute.scala RateLimitSettings). Each is set only when its
+      # variable is non-null, independently; null leaves it unset so the service defaults (50 per second, burst 100) apply.
+      SCHOLARCHAIN_SEMANTIC_RATE_LIMIT_PER_SECOND = tostring(var.semantic_rate_limit_per_second)
+      } : {}, var.semantic_rate_limit_burst != null ? {
+      SCHOLARCHAIN_SEMANTIC_RATE_LIMIT_BURST = tostring(var.semantic_rate_limit_burst)
     } : {})
     "embedding-worker" = merge(local.aws_vector_env, local.aws_embedding_env, {
       SCHOLARCHAIN_SQS_QUEUE_URL                     = var.queue_url
@@ -312,6 +318,40 @@ resource "aws_appautoscaling_policy" "http_cpu" {
     scale_in_cooldown  = 300
     scale_out_cooldown = 60
     predefined_metric_specification { predefined_metric_type = "ECSServiceAverageCPUUtilization" }
+  }
+}
+# Phase 15 P41 (session-2-plan.md F26/P41): a second target-tracking policy for query-api only, on the free predefined ALB metric
+# RequestCountPerTarget (requests per healthy target per minute). It sits beside the CPU policy above, which is unchanged: with two
+# target-tracking policies on one scalable target, Application Auto Scaling scales out when either asks and scales in only when both
+# allow it (https://docs.aws.amazon.com/autoscaling/application/userguide/target-tracking-scaling-policy-overview.html, "Multiple
+# scaling policies", read 2026-11-16). Scale-in is not disabled.
+# Count: the same deployed-runtime condition as aws_lb.query and aws_lb_target_group.query (so the [0] indexes below always exist
+# when this resource does) AND a non-null target. Index errors are impossible: with count 0 the [0] references are never evaluated.
+# resource_label is "<alb arn_suffix>/<target group arn_suffix>", i.e. app/<name>/<id>/targetgroup/<name>/<id> (Application Auto Scaling
+# PredefinedMetricSpecification.ResourceLabel). AWS accepts the label only when the target group is attached to the ECS service, which
+# here happens only with HTTPS (local.load_balanced_service); the precondition refuses the plan instead of failing at apply.
+resource "aws_appautoscaling_policy" "query_requests" {
+  count              = var.enabled && var.image_revision != null && var.query_requests_per_target_target != null ? 1 : 0
+  name               = "${var.name_prefix}-query-api-requests"
+  policy_type        = "TargetTrackingScaling"
+  resource_id        = aws_appautoscaling_target.service["query-api"].resource_id
+  scalable_dimension = aws_appautoscaling_target.service["query-api"].scalable_dimension
+  service_namespace  = "ecs"
+  target_tracking_scaling_policy_configuration {
+    target_value       = var.query_requests_per_target_target
+    scale_in_cooldown  = 300
+    scale_out_cooldown = 60
+    disable_scale_in   = false
+    predefined_metric_specification {
+      predefined_metric_type = "ALBRequestCountPerTarget"
+      resource_label         = "${aws_lb.query[0].arn_suffix}/${aws_lb_target_group.query[0].arn_suffix}"
+    }
+  }
+  lifecycle {
+    precondition {
+      condition     = local.load_balanced_service == "query-api"
+      error_message = "query_requests_per_target_target needs the query-api service attached to the ALB target group, which happens only with HTTPS (a listener certificate). Without it the ALBRequestCountPerTarget label is refused by AWS; set query_requests_per_target_target = null."
+    }
   }
 }
 resource "aws_appautoscaling_policy" "worker_backlog" {

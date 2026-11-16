@@ -82,3 +82,54 @@ All runs offline; no AWS, Anthropic or Voyage call. Lines marked "agent-reported
   - the route on the deployed query-api, the Terraform env wiring (P41) and the rebuilt images (P15);
   - the rate limiter under the real load profile (P35 must show zero 429s at the heaviest level, with r_S2 ≥ 2× the measured peak served rate per task);
   - the real Voyage embedding through the cache.
+
+## Work order 3: P41 request-count scaling and rate-limit env wiring (2026-11-16)
+
+All runs offline; no AWS, Anthropic or Voyage call. Lines marked "agent-reported; log not retained" come from the infra-engineer's reports (`owner-report.md`, "Work order 3"). Lines with a sha256 have a retained git-ignored log under `target/phase15/p41/`.
+
+### Agent-reported (logs not retained)
+
+- infra-engineer, first build:
+  - `terraform test` **301 passed, 0 failed** (272 existing + 29 new);
+  - fmt-check and validate pass;
+  - default planned address sets unchanged (0 differing lines over 42,633);
+  - plan-delta derivation byte-identical;
+  - 8 of 8 mutations killed;
+  - `tests/infra` **465 OK**; `scripts/tests` `test_runtime_base_apply` + `test_plan_deltas` **46 OK**.
+- infra-engineer, repair 1 (moved the three variables into `phase12b-variables.tf` and deleted `phase15-variables.tf`):
+  - `terraform test` **304 passed, 0 failed**. That count includes 3 runs from lane B's untracked `phase15_stagea.tftest.hcl`, which is not part of P41.
+  - `scripts/tests` `test_terraform_*` **17 OK**, `test_terraform_r1` 10 OK, `test_runtime_base_apply` 31 OK;
+  - `tests/infra` `test_runtime_shape_14b` **19 OK**.
+
+### Coordinator runs
+
+- **Run 1: FAIL (recorded).**
+  - Snapshot of HEAD `cceb1f5` + tracked diff sha256 `df7d542a956088acaa5ebb1601ab3dcc0ae53d0c53cb90e31412690f9491aa95` + untracked tar sha256 `e7f9e93e470cc7e3ab5d8309d3aeeae982149d2ac09152c412973e56ad7a5d9f`, clean worktree, AWS variables unset, `scripts/check.sh --skip sbt`.
+  - Result: **exit 4, `RESULT: FAIL failed: script-tests skipped: sbt`**.
+    - constitution, hooks, shell, python: PASS;
+    - terraform: PASS (12, 19, 113, 40, 6 and 301 passed);
+    - `phase12d-spike` 78, billing 115/62/39, `tests/scripts` 463 and `tests/infra` 465: OK;
+    - **`scripts/tests`: 1078 run, 7 failures.**
+  - Log sha256 `ee2b4a03a327ff9ec9e2e363d5e507648530c5b4c97d8b71b5c49739d183d99b` (`check-skip-sbt-p41.log`).
+  - The per-suite log was lost when the coordinator removed the worktree too early.
+  - Reproduced on the same snapshot: `test_terraform_r1` had 10 run, **7 FAIL**. Its fixture copies only `git ls-files infra/terraform`, so the untracked new root file `phase15-variables.tf` was missing, and `main.tf` lines 140-142 referred to undeclared variables. Routed to the infra-engineer (repair 1, `repairs.md`).
+  - The other candidate files passed on that snapshot: `test_runtime_guard` 24, `test_runtime_rollback` 51, `test_check` 54, `test_package` 28.
+- **Run 2 (after repair 1): PASS (gate).**
+  - Result: **exit 5, `RESULT: PARTIAL passed=6 skipped: sbt`**.
+    - constitution, hooks, shell, python: PASS;
+    - terraform: PASS (12, 19, 113, 40, 6 and 301 passed, 0 failed);
+    - script-tests: PASS, 0 skipped in every suite:
+
+      | Suite | Tests run |
+      |---|---|
+      | `scripts/tests` | **1078 OK**, including the required classes RealStateBindingTests 7 and RouteOwnershipTest 6 |
+      | `phase12d-spike` | 78 |
+      | billing | 115, 62 and 39 |
+      | `tests/scripts` | 463 |
+      | `tests/infra` | 465 |
+
+  - Log sha256 `22abe7b0bf5f461318b38bd612b0123f81e1cd8e7071dd55cb1315d7e8aa35e2` (`target/phase15/p41/r1/check-skip-sbt-p41-r1.log`).
+  - P41-only snapshot: `git diff HEAD -- infra/terraform docs/agent-runs/phase-15` sha256 `100e31634ea8b05d3834b6b86b6d28fbbd3bc758e05fb057fc189cbe43f82705`, plus the two P41 test files, tar sha256 `58573b0dbe213fd00eeac4c52e6dccbe490cb261435ccd6cb1082304746ab0c1`.
+  - The pipeline lanes' in-progress files are excluded from it.
+  - Log: `target/phase15/p41/r1/check-skip-sbt-p41-r1.log`; per-suite logs copied to `target/phase15/p41/r1/check-logs/`.
+- `sbt check`: not run for P41 (no Scala, build or test-source change under `modules/**`).

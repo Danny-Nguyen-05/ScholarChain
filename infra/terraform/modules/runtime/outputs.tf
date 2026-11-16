@@ -26,10 +26,16 @@ output "compute_controls" { value = {
   scaling_targets  = aws_appautoscaling_target.service
   cpu_policies     = aws_appautoscaling_policy.http_cpu
   worker_policy    = one(aws_appautoscaling_policy.worker_backlog)
+  request_policy   = one(aws_appautoscaling_policy.query_requests)
   listeners        = aws_lb_listener.https
   load_balancers   = aws_lb.query
   target_groups    = aws_lb_target_group.query
 } }
+# Phase 15 P41: the ALB and target-group CloudWatch dimension values (the ARN suffixes) for the dashboard request panel. The object is null
+# while no ALB exists; its null-ness depends only on the count (known at plan time), its values become known when the ALB is created.
+output "alb_metric_dimensions" {
+  value = length(aws_lb.query) == 1 ? { load_balancer = aws_lb.query[0].arn_suffix, target_group = aws_lb_target_group.query[0].arn_suffix } : null
+}
 # Replan W5b: the ALB DNS name the human points the Cloudflare CNAME `api.<domain>` at (DNS only). Null until the runtime is deployed.
 output "alb_dns_name" { value = one(aws_lb.query[*].dns_name) }
 # Replan W5b: everything `aws ecs run-task --enable-execute-command` needs for the one-off Neptune tunnel task; null when it is not

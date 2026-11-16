@@ -58,6 +58,14 @@ resource "aws_cloudwatch_dashboard" "elasticity" {
     var.neptune_identifier == null ? [] : [{ type = "metric", x = 12, y = 15, width = 12, height = 6, properties = { title = "Neptune capacity and utilization", region = var.aws_region, period = 60, stat = "Average", metrics = local.neptune_metrics } },
       { type = "metric", x = 0, y = 57, width = 24, height = 6, properties = { title = "Neptune client/server errors per second", region = var.aws_region, period = 60, stat = "Average", metrics = local.neptune_error_metrics } }
     ],
+    # Phase 15 P41: one ALB panel (2 metrics) for the request-count scaling signal, only while the ALB exists (the runtime is deployed).
+    # RequestCountPerTarget takes the TargetGroup dimension (its only valid statistic is Sum, which AWS documents as the per-target
+    # average); HTTPCode_Target_4XX_Count has no TargetGroup-only dimension set, so it uses LoadBalancer + TargetGroup. Both include the
+    # P40 rate limiter's 429 replies. Source: Elastic Load Balancing User Guide, "CloudWatch metrics for your Application Load Balancer".
+    var.alb_metric_dimensions == null ? [] : [{ type = "metric", x = 0, y = 63, width = 24, height = 6, properties = { title = "ALB requests per target and target 4XX (query-api)", region = var.aws_region, period = 60, stat = "Sum", metrics = [
+      ["AWS/ApplicationELB", "RequestCountPerTarget", "TargetGroup", var.alb_metric_dimensions.target_group],
+      ["AWS/ApplicationELB", "HTTPCode_Target_4XX_Count", "LoadBalancer", var.alb_metric_dimensions.load_balancer, "TargetGroup", var.alb_metric_dimensions.target_group]
+    ] } }],
     [
       { type = "metric", x = 0, y = 45, width = 24, height = 6, properties = { title = "DynamoDB conditional write failures", region = var.aws_region, period = 60, stat = "Sum", metrics = local.conditional_metrics } },
       { type = "metric", x = 0, y = 51, width = 24, height = 6, properties = { title = "DynamoDB successful request latency (milliseconds)", region = var.aws_region, period = 60, stat = "Average", metrics = local.latency_metrics } }

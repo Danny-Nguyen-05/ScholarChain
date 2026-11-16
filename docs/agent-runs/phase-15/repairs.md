@@ -68,3 +68,24 @@ Source: the user-supplied external review in `review.md` ("Work order 2 — P40 
 | R3 | Low / no | documentation-engineer | `docs/runbooks/session-2-plan.md:581` | The plan says `SemanticApi.scala` line 98 makes the QueryVectors call. Line 98 is the embed call; `vectors.query` is at line 100. | open: fix in the plan draft before the Session 2 plan approval |
 | R4 | Info / no | — | `smoke-local-p40-r2.log` (hits=0) | The offline store is empty, so the smoke checks only the reply shape. Projection of non-empty hits is covered by tests. | recorded |
 | R5 | Low / no (same as S1) | infra-engineer | `scripts/smoke-local.sh --build` | Stale jar risk. | open as S1; before P35, run `sbt -batch packageServices` explicitly |
+
+## Work order 3: P41 internal repair round 1 (coordinator gate, 2026-11-16)
+
+Source: the coordinator's clean-snapshot `check.sh` run 1 (`test-report.md`, "Work order 3"). This was before any review.
+
+| ID | Severity / blocking | Owner | Path | Defect | Repair status |
+|---|---|---|---|---|---|
+| G1 | High / yes (gate FAIL) | infra-engineer | `infra/terraform/phase15-variables.tf` (new root file); `scripts/tests/test_terraform_r1.py:57-67` | The r1 fixture copies only tracked `infra/terraform` files, so the new untracked root variables file was missing and `main.tf:140-142` referred to undeclared variables. `scripts/tests` failed 7 of 1078. | fixed by the infra-engineer: the three variables moved unchanged into `phase12b-variables.tf` (lines 430-464) and `phase15-variables.tf` was deleted, with references updated. This also closes the gap in `tests/infra/runtime_shape_checks.py:31`. Agent-reported: `test_terraform_r1` 10 OK, terraform test 304 passed. Coordinator rerun pending (run 2). |
+| G1-proc | Info / no | coordinator | — | The coordinator removed the run-1 worktree before reading the per-suite log. | process fix: per-suite logs are now copied to `target/phase15/p41/r1/check-logs/` before the worktree is removed |
+
+### P41 review 1 (code-reviewer, APPROVE, 2026-11-16): nonblocking findings
+
+| ID | Severity | Owner | Path | Status |
+|---|---|---|---|---|
+| F1 | Low | coordinator | `owner-report.md` | fixed before the commit: the repair-1 report is reproduced verbatim, and the follow-up about `ROOT_VARIABLE_FILES` is marked closed by G1 |
+| F2 | Low | infra-engineer | `infra/terraform/README.md:883-884`, `phase12b-variables.tf:432-433`, `modules/runtime/variables.tf:178-179`, `course.local.tfvars.example:166-167` | open, routed to the elasticity bundle. Reword "With all three null the plan is the same as before": with the ALB present and the dashboard on, the panel is added regardless of these variables. |
+| F3 | Low | infra-engineer | `infra/terraform/tests/phase15_p41*.tftest.hcl` | open, routed to the elasticity bundle: add a fractional-burst refusal run and a module run on the ACM path (`https_enabled = true`, `certificate_arn = null`, target 600) asserting one policy |
+| F4 | Info | infra-engineer (P9) | observability dashboard | P9 scope: reduce the dashboard to ≤ 50 metrics |
+| F5 | Info | human (Session 2) | live | not verifiable offline: the RequestCountPerTarget dimension, the ResourceLabel being accepted, and deployer coverage of the TargetTracking-* alarms |
+| F6 | Info | coordinator | `test-report.md` | the run 2 RESULT line is recorded before the commit |
+| F7 | Info | test-engineer (optional, deferred) | `tests/infra/test_runtime_shape_14b.py:64-71` | deferred by the user's time priority |

@@ -242,3 +242,118 @@ NEXT GATE: commit of P40 by Tue 2026-11-17 (cutoff Wed 2026-11-18 12:00 CST); th
 ```
 
 The reviewer's NEXT PROMPT (section 5) is being followed by the coordinator: this verdict is recorded, R1–R5 are in `repairs.md`, and commit consent has been requested. P41 Step 0 starts only after the commit.
+
+## Work order 3 — P41 request-count scaling and rate-limit env wiring
+
+### Review 1 — code-reviewer agent `a3487e61b688909b5` (Opus 5.5, high), launched by the coordinator under the user's 2026-11-16 routing rule; verbatim
+
+````text
+## 1. VERDICT: APPROVE for P41 (offline), review 1
+
+I found no blocking defects in the P41 code or tests. There are three non-blocking findings and four informational notes.
+
+**Do not commit yet.** Coordinator run 2 has not finished. The standing consent ("commit right after APPROVE") should apply only after `target/phase15/p41/r1/check-skip-sbt-p41-r1.log` shows a passing `RESULT` line. If run 2 fails, this approval does not cover the failure.
+
+What run 2 showed when I finished (partial log):
+- constitution, hooks, shell and python: PASS (lines 14, 22, 53, 57).
+- terraform: PASS, with 12/19/113/40/6/301 passed (lines 85-92). 301 = 272 existing + 29 P41 runs. The 3 stage-a runs are not in it, as expected for the P41-only snapshot.
+- script-tests had started (line 94) with no output yet. No `RESULT` line. **Gate pending.**
+
+What I checked: I read the frozen diff `target/phase15/p41/r1/p41-tracked.diff` (620 lines; its sha256 `100e3163…2705` matches `target/phase15/p41/r1/p41-snapshot.sha256` line 1), the two untracked test files, and the current tracked files. The current lines match the frozen diff at compute.tf 70-76 and 323-356, observability/main.tf 61-68, README 880-919, phase12b-variables.tf 431-464, main.tf 140-142 and phase12b.tf 164. `phase15-variables.tf` is gone (Glob finds only the two P41 tftest files and the out-of-scope stage-a file).
+
+## 2. Acceptance table
+
+| Item / accepted default | Status | Evidence |
+|---|---|---|
+| A second target-tracking policy, query-api only | met | `infra/terraform/modules/runtime/compute.tf:333-339`: `resource_id`/`scalable_dimension` from `aws_appautoscaling_target.service["query-api"]`; name `<prefix>-query-api-requests` |
+| Metric `ALBRequestCountPerTarget` | met | compute.tf:345-346 |
+| `resource_label` = "<alb arn_suffix>/<tg arn_suffix>" | met | compute.tf:347. Tested with the exact string at `tests/phase15_p41.tftest.hcl:182` and `tests/phase15_p41_runtime.tftest.hcl:99`. The owner's mutation M1 (order swapped) was reported killed |
+| Exists only with the runtime deployed and the target set; no index error | met | compute.tf:334 uses `var.enabled && var.image_revision != null && target != null`, the same first two terms as `aws_lb.query` (204) and `aws_lb_target_group.query` (217). The `query-api` key in `active_services` (line 2) uses the same condition. Tests: root 203-216; module 116-130 (no image), 132-146 (disabled), 65-87 (target null) |
+| Cooldowns 300/60; scale-in on | met | compute.tf:342-344 (`disable_scale_in = false`). Tests: root 190, module 103 |
+| CPU policy and target 60 unchanged | met | `http_cpu` (compute.tf:309-322) is untouched in the diff. Tests check keys, target 60, metric type and cooldowns at root 159-162 and 197-200, module 75-78 and 110-113 |
+| Root variables (null, or a whole number in range) | met | `phase12b-variables.tf:435-464`. Each is `number`, `nullable`, default `null`. Validation is `x == null ? true : (x >= 1 && x <= max && x == floor(x))`. Bounds: 100000 / 100000 / 1000000. The module copies are at `modules/runtime/variables.tf:182-211` |
+| Root-to-module plumbing | met | `main.tf:140-142` maps the root names to `query_requests_per_target_target`, `semantic_rate_limit_per_second` and `semantic_rate_limit_burst` (deviation 3, disclosed in README:906-907 and variables.tf:178-181) |
+| Env wiring: query-api, aws mode, independent, strings, not in secrets | met | compute.tf:70-76 has two separate conditional merges inside `aws_role_env["query-api"]`, using `tostring()`. Line 146 emits the role env only `if local.aws_mode`. `secrets` (line 152) is unchanged. The names and bounds match `PublicSemanticRoute.scala:42-48`, and `ServiceMains.scala:83` reads them in both modes. Tests: root 220-276 (rate only, burst only, upper bounds rendered as "100000"/"1000000", query-api only, not in `secrets` at 272-275), root 278-290 (lower bounds), module 175-193 and 195-210 (absent outside aws mode) |
+| No cache-size variable | met | No `EMBEDDING_CACHE` reference in the P41 diff |
+| One ALB dashboard panel: dimensions and condition | met | `modules/observability/main.tf:65-68`: RequestCountPerTarget by `TargetGroup`; HTTPCode_Target_4XX_Count by `LoadBalancer`+`TargetGroup`; period 60; Sum; y=63, which follows Neptune at y57+6 without overlap. The panel depends only on `alb_metric_dimensions != null` (`modules/runtime/outputs.tf:36-38`, plumbed at `phase12b.tf:164`). Tests: root 294-305, 307-323, 325-336 |
+| Panel "within P9's 50-metric limit" | not met; pre-existing, deferred to P9 | My own count of observability/main.tf:3-72 gives 109 base metrics, 114 with Neptune, 120 with Neptune and EMR. P41 adds 2. The dashboard was over 50 before P41 (F5/P9). Disclosed at README:914-916 and in owner-report:1293. Not counted against P41 |
+| Precondition (deviation 1) | met; accepted as correct | compute.tf:350-355 checks `local.load_balanced_service == "query-api"` (line 23), which is true exactly when the query-api service is attached to the target group (281-288). It does not block the Session 2 HTTPS path: the plan's 5.2 step 1 and 5.3 step 2 use `api_domain_name`, so `local.acm_validated` and `local.https_enabled` are plan-time true (`phase14b.tf:14-16`), passed in at `main.tf:147`, and give `local.https = true` (compute.tf:15). Tests: module 148-158 (refused) and 160-173 (no target, no HTTPS still plans). Not tested on the ACM path; see F3 |
+| Default plan unchanged | met for the default (runtime off) | With all three null and no ALB: count 0, the merges add `{}`, and the panel list is `[]`. The owner reported 0 differing planned addresses (agent-reported). See F2 for the deployed runtime with the dashboard on |
+| Tests use hand-derived values, boundaries and the precondition | met, with small gaps | Header derivations at root 5-18 and module 4-11. Boundaries 0/1/max/max+1 for all three; fractional target and rate. Missing: fractional burst, and the ACM path (F3) |
+| README and tfvars.example match the code | met, with one wording nit (F2) | README:880-919 and the README:267 ECS row; `course.local.tfvars.example:166-180` are comments only, with no values |
+| No hardcoded account IDs, ARNs or endpoints | met | The production code adds none. Every 12-digit match in the two test files is `111122223333` or a `…000000000001` UUID tail (mock values) |
+| Ownership | met, from the records | `infra/terraform/**` was written by the infra-engineer (owner-report:1283 and 1288). The coordinator wrote only `docs/agent-runs/phase-15/**`. `check-snapshot-status.txt` lists exactly the P41 files. Authorship is not verifiable from git before the commit |
+| Records honest | met, with stale lines (F1) | test-report.md:88-102 labels agent-reported counts. Run 1's FAIL is recorded at test-report.md:106-116 (exit 4, `scripts/tests` 7 failures, log sha256, and the lost per-suite log). The repair is in repairs.md:72-79 |
+
+## 3. Findings
+
+**F1: Low, not blocking. Owner: coordinator (`docs/agent-runs/phase-15/owner-report.md`).**
+- Evidence: owner-report.md:1283 still lists `phase15-variables.tf` among the infra-engineer's assigned paths. Line 1296 still lists "`ROOT_VARIABLE_FILES` does not read `phase15-variables.tf`" as an open follow-up, but repairs.md:78 says repair 1 closed it (`tests/infra/runtime_shape_checks.py:31` reads `phase12b-variables.tf`). The infra-engineer's repair-1 final report is not reproduced; it is only summarised in test-report.md:99-102 and repairs.md:78. `docs/agent-runs/README.md:3` asks for the owning agent's final reports in owner-report.
+- Impact: a reader of owner-report alone sees the pre-repair layout and an open gap that no longer exists.
+- Acceptance check: add a dated "repair 1" subsection to Work order 3 with the infra-engineer's repair report verbatim, and mark line 1296 as closed by G1. Keep the original verbatim report unchanged.
+
+**F2: Low, not blocking. Owner: infra-engineer.**
+- Evidence: README.md:883-884 says "With all three `null` the plan is the same as before". Similar wording is at `phase12b-variables.tf:432-433`, `modules/runtime/variables.tf:178-179` and `course.local.tfvars.example:166-167`. But the ALB panel depends only on the ALB existing (observability/main.tf:65, phase12b.tf:164), not on these variables. So any deployed-runtime plan with `dashboard_enabled = true` now changes `aws_cloudwatch_dashboard.elasticity`'s `dashboard_body` (+2 metrics, "known after apply") even with all three null. The owner's "0 differing lines" check compared addresses, not attribute values. This matches accepted default 5, and README:909 states the panel's condition.
+- Impact: the claim is accurate only for the runtime-off default. A Session 2 runtime-plan reviewer could be surprised by the dashboard update.
+- Acceptance check: reword, for example: "no new resource and no new environment variable; when the ALB exists and the dashboard is on, the dashboard gains the ALB panel regardless of these variables."
+
+**F3: Low, not blocking. Owner: infra-engineer (`infra/terraform/tests/**`).**
+- Evidence: there is no refusal test for a fractional burst (for example `query_semantic_rate_limit_burst = 2.5`) at root or module. The `floor` check exists at phase12b-variables.tf:461 and modules/runtime/variables.tf:208 but is never exercised. There is also no run with the target set on the Session 2 HTTPS source (`api_domain_name` at root, or module `https_enabled = true` with `certificate_arn = null`). The existing positive runs all use a literal certificate ARN (root 110, module 43). I traced the logic by reading (compute.tf:15, 23, 352; phase14b.tf:14-16), and it passes the precondition.
+- Impact: the configuration actually used in Session 2 is checked only by reading, not by a test.
+- Acceptance check: add two runs: a fractional-burst refusal, and a module run with `https_enabled = true, certificate_arn = null, query_requests_per_target_target = 600` asserting one policy. This can follow P41 (for example in the elasticity bundle).
+
+**F4: Info. Owner: P9 (infra-engineer).** The dashboard is above 50 metrics before and after P41 (109+). The reduction is P9 scope.
+
+**F5: Info. Owner: human, Session 2.** Not live-verified:
+- the TargetGroup-only `RequestCountPerTarget` dimension;
+- AWS accepting the ResourceLabel;
+- the deployer's coverage of the new `TargetTracking-*` alarms (`deployer/phase14_main.tf`, as cited by the owner).
+
+**F6: Info. Owner: coordinator.** Run 2 has no `RESULT` line yet, so the gate is pending. Record its result in test-report.md before the commit.
+
+**F7: Info. Owner: test-engineer, optional and deferred by the user (prompt.md:126).** `tests/infra/test_runtime_shape_14b.py:64-71` does not cover `query_requests[0]` or the rate-limit env names.
+
+Future scope, not demanded here: P9 (metric reduction), P35 (values), P42, P15 (images), the pins refresh (human), and the live Session 2 checks.
+
+## 4. Report fields
+
+STATUS: COMPLETE
+
+OWNER: code-reviewer (read-only)
+
+WORK ORDER: Phase 15, Work order 3 (P41), review 1. Branch phase-15, HEAD and base cceb1f5, P41 uncommitted. Bundle: `target/phase15/p41/r1/p41-tracked.diff` (sha256 100e31634ea8b05d3834b6b86b6d28fbbd3bc758e05fb057fc189cbe43f82705) plus `infra/terraform/tests/phase15_p41.tftest.hcl` and `infra/terraform/tests/phase15_p41_runtime.tftest.hcl`.
+
+FILES CREATED: none
+
+FILES MODIFIED: none
+
+COMMANDS RUN: no shell, build, test, terraform, AWS or git commands. Read/Grep/Glob only, on:
+- AGENTS.md, CLAUDE.md, docs/agents.md, docs/agent-runs/README.md;
+- target/phase15/p41/r1/{p41-tracked.diff, p41-snapshot.sha256, check-snapshot-status.txt, p41-untracked.txt, check-skip-sbt-p41-r1.log};
+- infra/terraform/{modules/runtime/compute.tf, modules/observability/main.tf, README.md:878-920, phase14b.tf:1-43};
+- both P41 tftest files;
+- docs/agent-runs/phase-15/{owner-report.md:1270-1473, test-report.md:84-122, repairs.md:68-80};
+- docs/runbooks/session-2-plan.md (lines 171, 243-250, 286-355);
+- modules/services/.../PublicSemanticRoute.scala:38-97 and ServiceMains.scala:60-99;
+- tests/infra/runtime_shape_checks.py:31 and scripts/tests/test_terraform_r1.py (grep).
+
+No `*.local.tfvars`, state, `.env` or secret file was read.
+
+TEST RESULTS: none run by me. Observed in the run-2 log: terraform gate PASS (301 passed for the main stack); script-tests still running. Everything else is agent-reported (labelled as such in test-report.md).
+
+VALIDATION RESULTS: the code matches the accepted defaults except the pre-existing 50-metric item (P9). The precondition is correct and does not bind on the Session 2 ACM path. I confirmed the metric counts 109/114/116/120/122 by my own count. Only synthetic identifiers.
+
+ASSUMPTIONS: the AWS requirements the owner cites from documentation (the target group must be attached for the ResourceLabel; the 4XX dimension sets) are taken as stated and not re-read live. Authorship comes from the records.
+
+RISKS: run 2 could still fail in script-tests (F6). The F3 test gaps remain. The dashboard body changes on deployed-runtime plans (F2).
+
+MANUAL ACTION REQUIRED: coordinator: confirm run 2 shows a passing `RESULT` before committing, and record it. Human: refresh the pins at the commit (expected, not a P41 defect).
+
+BLOCKED-ON OWNER: none
+
+BLOCKED-ON EVIDENCE: run 2 `RESULT` line pending at `/Users/danny/Documents/UIC/CS441/ScholarChain/target/phase15/p41/r1/check-skip-sbt-p41-r1.log`.
+
+NEXT GATE: run 2 passes, then the coordinator records it and this verdict in `review.md`, then commits under the standing consent. F1 is a coordinator records fix; F2 and F3 can ride with the elasticity bundle.
+````
+
+Coordinator: F1 fixed in `owner-report.md` before the commit. F2 and F3 are routed to the elasticity bundle (`repairs.md`). The commit waits for run 2's RESULT line, as the reviewer requires.

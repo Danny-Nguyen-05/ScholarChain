@@ -1271,3 +1271,249 @@ BLOCKED-ON EVIDENCE: None.
 
 NEXT GATE: Coordinator runs the full `sbt check` (JDK 17). Then independent review by the code-reviewer of the six services files above plus README and OpenAPI, and the test-engineer reruns AdversarialPublicSemanticHttpSpec on a cold server. Human acceptance of P40-S follows. No git add/commit/push/stash was done.
 ````
+
+## Work order 3: P41 request-count scaling and rate-limit env wiring (2026-11-16)
+
+Human decisions: Step 0 "Accept defaults", the P41-D follow-up answers and the second follow-up (all 2026-11-16, chat, quoted in `prompt.md`, "Work order 3" and the sections after it). P40 was committed as `cceb1f5` and pushed on the user's "Yes please commit and push it". This section is assembled by the coordinator from the agents' final reports, which are reproduced verbatim below. Counts inside the reports are agent-reported; the coordinator's own runs are in [test-report.md](test-report.md), "Work order 3".
+
+### Agents launched
+
+| Agent | Native ID (Claude Code) | Model / effort | Assigned paths | Handoffs |
+|---|---|---|---|---|
+| `infra-engineer` | `a24c41e9a3e35a927` | Opus 5.5 (`opus`), high | `infra/terraform/**`: runtime and observability modules, root plumbing, `phase15-variables.tf`, two new `terraform test` files, README, `environments/course.local.tfvars.example` (example only) | P41-I. Returned COMPLETE with no BLOCKED-ON. Two optional test-engineer follow-ups and the stale pins for the human are listed below. |
+| `documentation-engineer` | `a90efc19aef14efcf` | Opus 5.5 (`opus`), high | `docs/runbooks/session-2-plan.md` only (untracked draft) | P41-D, then two follow-ups resumed by SendMessage after the user's answers. The second follow-up was told to raise no new questions. |
+
+The `test-engineer` was not launched. `tests/infra` passes unchanged (agent-reported: 465 OK), and its two coverage gaps are optional; the user put the time into the pipeline bundle. No reviewer was launched. No agent made an AWS, Anthropic or Voyage call or committed. No sbt was run, because there was no Scala, build or test-source change in `modules/**`.
+
+Ownership: `infra/terraform/**` was edited by the infra-engineer and `docs/runbooks/session-2-plan.md` by the documentation-engineer, per `docs/agents.md`. The coordinator wrote only `docs/agent-runs/phase-15/**` and git-ignored files under `target/phase15/`.
+
+Coordinator notes:
+- **Rule slip (coordinator, disclosed in `prompt.md`):** a read-only grep matched one line of the private `course.local.tfvars` (the line number and `service_capacity = {`, no value). Nothing from it was used. Later greps and all briefs exclude `*.local.tfvars`.
+- **Deviation for the reviewer:** the infra-engineer added a precondition that the policy requires the HTTPS-attached target group (`local.load_balanced_service == "query-api"`), beyond the work-order text. Its reason is in the report.
+- **Dashboard:** P9's 50-metric limit is not enforced at HEAD, and the dashboard already has 109–120 metrics. P41 adds 2. The reduction to at most 50 belongs to P9, in the elasticity bundle.
+- **Optional test-engineer follow-ups (not done):**
+  - `tests/infra/test_runtime_shape_14b.py:64-71` does not cover `aws_appautoscaling_policy.query_requests[0]` or the rate-limit env names.
+  - `tests/infra/runtime_shape_checks.py:31` `ROOT_VARIABLE_FILES` does not read `phase15-variables.tf`. **Closed by repair 1 (G1)**: the variables now live in `phase12b-variables.tf`, which that tuple reads, and `phase15-variables.tf` is deleted. The table's "Assigned paths" entry `phase15-variables.tf` describes the first build only.
+- **Human action at the commit:** refresh `scripts/billing/reviewed-pins.json` `source_freeze`. It is stale for 14 files (7 before P41). Recompute; never copy a hash from a report.
+
+### infra-engineer final report (verbatim)
+
+````text
+STATUS: COMPLETE. Nothing is blocked. Two follow-ups for the test-engineer are optional and listed under RISKS. The human must refresh the stale pins.
+
+OWNER: infra-engineer
+
+WORK ORDER: Phase 15 P41-I, Work order 3 (docs/agent-runs/phase-15/prompt.md lines 80-106, "Accept defaults" 2026-11-16). Source: session-2-plan.md rows F26 and P41, and section 5.3 step 2. Branch phase-15, HEAD cceb1f5. Terraform authoring only, all offline: no AWS call, no aws CLI, and no plan or apply against real providers.
+
+FILES CREATED:
+- /Users/danny/Documents/UIC/CS441/ScholarChain/infra/terraform/phase15-variables.tf (lines 1-34). Three root variables:
+  - `query_requests_per_target_target`, `query_semantic_rate_limit_per_second`, `query_semantic_rate_limit_burst`.
+  - All are number, default null, nullable.
+  - Validation uses the form `x == null ? true : (range && x == floor(x))`.
+  - Ranges: target 1..100000, rate 1..100000, burst 1..1000000.
+- /Users/danny/Documents/UIC/CS441/ScholarChain/infra/terraform/tests/phase15_p41.tftest.hcl (402 lines). Root level, 18 runs. It reuses the phase14b_cost mock fixture and adds mocked `arn_suffix` values for aws_lb and aws_lb_target_group.
+- /Users/danny/Documents/UIC/CS441/ScholarChain/infra/terraform/tests/phase15_p41_runtime.tftest.hcl (243 lines). Module level (./modules/runtime), 11 runs, `composition_verified = true`.
+
+FILES MODIFIED:
+- infra/terraform/modules/runtime/compute.tf
+  - Lines 70-75: the env wiring. It is inside `local.aws_role_env["query-api"]`, so it applies in aws mode and to query-api only. Two separate conditional maps add `SCHOLARCHAIN_SEMANTIC_RATE_LIMIT_PER_SECOND = tostring(...)` and `SCHOLARCHAIN_SEMANTIC_RATE_LIMIT_BURST = tostring(...)`, each only when its own variable is non-null.
+  - Lines 323-356: the new `aws_appautoscaling_policy.query_requests`. `http_cpu` is unchanged.
+- infra/terraform/modules/runtime/variables.tf, lines 177-211: three module variables. The rate variables are named `semantic_rate_limit_per_second` and `semantic_rate_limit_burst` so that `terraform fmt` does not re-align the whole `module "runtime"` block.
+- infra/terraform/modules/runtime/outputs.tf
+  - Line 29: `compute_controls.request_policy = one(...)`.
+  - Lines 34-38: new output `alb_metric_dimensions`. It is null while there is no ALB, otherwise `{load_balancer, target_group}` (the arn_suffix values).
+- infra/terraform/modules/observability/main.tf, lines 61-68: one ALB panel, present only when `var.alb_metric_dimensions != null`.
+- infra/terraform/modules/observability/variables.tf, lines 21-28: `alb_metric_dimensions`, an object, nullable, default null.
+- infra/terraform/main.tf, lines 140-142: root to runtime plumbing.
+- infra/terraform/phase12b.tf, line 164: `alb_metric_dimensions = module.runtime.alb_metric_dimensions`.
+- infra/terraform/environments/course.local.tfvars.example, lines 166-180: commented template lines with units, ranges and "values come from P35". Only the example file was edited.
+- infra/terraform/README.md
+  - Line 267: the ECS row mentions the optional policy.
+  - Lines 879-919: new section "Phase 15 P41". It covers the variables table, the policy, the env vars, the dashboard and the metric count.
+
+DESIGN NOTES:
+- **Policy count:** `count = var.enabled && var.image_revision != null && var.query_requests_per_target_target != null ? 1 : 0`.
+  - The first two terms are exactly the count of `aws_lb.query` and `aws_lb_target_group.query`. So whenever the policy exists, `aws_lb.query[0]` and `aws_lb_target_group.query[0]` exist too.
+  - With count 0 those references are never evaluated, so there is no index error. The tests cover image_revision=null, enabled=false and runtime_enabled=false.
+  - The count expression is kept on one line containing "image_revision != null", because scripts/tests/test_runtime_base_apply.py derives the gating from the source text. That test passes.
+- **Policy settings:**
+  - Metric `ALBRequestCountPerTarget`.
+  - `resource_label = "${aws_lb.query[0].arn_suffix}/${aws_lb_target_group.query[0].arn_suffix}"`.
+  - Cooldowns: scale-in 300, scale-out 60. `disable_scale_in = false`.
+  - The policy is on the query-api scalable target and is named `<prefix>-query-api-requests`.
+- **Deviation, for the reviewer:** I added one precondition, `local.load_balanced_service == "query-api"`, which in practice means HTTPS is on. The work order's count rule is unchanged.
+  - AWS documents that a ResourceLabel is accepted only when the target group is attached to the ECS service (PredefinedMetricSpecification.ResourceLabel; aws-knowledge search, 2026-11-16).
+  - In this module the service is attached only with HTTPS. Without the precondition, a plan with the target set and no certificate would fail at apply instead of at plan.
+  - A deployed runtime without a target and without HTTPS still plans as before (tested).
+- **Two policies together:** AWS docs (target-tracking-scaling-policy-overview, "Multiple scaling policies", read 2026-11-16) confirm that it scales out when any policy asks and scales in only when all allow it. This is cited in a comment and in the README.
+- **Dashboard panel:**
+  - Title "ALB requests per target and target 4XX (query-api)", period 60, statistic Sum, position x0 y63, 24x6.
+  - `RequestCountPerTarget` uses the TargetGroup dimension only.
+  - `HTTPCode_Target_4XX_Count` uses LoadBalancer + TargetGroup. The ALB metrics doc lists no TargetGroup-only dimension set for it.
+  - The null-ness of the dimensions depends only on the count, so it is known at plan time. The values themselves are known after apply, so the dashboard body is "known after apply" in the plan that creates the ALB.
+- **Dashboard metric count before/after:** P9's 50-metric limit is not implemented or enforced anywhere at HEAD. F5 already notes the dashboard is "well over 50"; P9 is still pending. Counts by hand, confirmed by test assertions:
+  - Before: 109 base metrics (12 task, 8 utilization, 2+1 SQS, 24 table, 3+3+3+3 publisher, 2 Step Functions, 6 conditional, 42 latency). 114 with Neptune; 120 with Neptune and EMR.
+  - After: +2 when the ALB exists, so 116 with Neptune and 122 with everything.
+  - I could not keep the dashboard "within 50" because it was already above 50. P41 adds only 2. The reduction belongs to P9.
+- **Dropped:** a "runtime_enabled with image_revision=null" root run, because the root guard refuses that combination. The same case is covered at module level.
+
+COMMANDS RUN:
+All terraform calls went through a wrapper with the check.sh environment: `env -u AWS_PROFILE -u AWS_DEFAULT_PROFILE -u AWS_ACCESS_KEY_ID -u AWS_SECRET_ACCESS_KEY -u AWS_SESSION_TOKEN AWS_EC2_METADATA_DISABLED=true AWS_CONFIG_FILE=/dev/null AWS_SHARED_CREDENTIALS_FILE=/dev/null TF_IN_AUTOMATION=1 TF_INPUT=0 CHECKPOINT_DISABLE=1 terraform ...`. Terraform v1.13.5, provider hashicorp/aws 6.44.0 (already installed). Commands ran in infra/terraform unless stated.
+
+1. Baseline at HEAD, before any edit:
+   - `terraform init -backend=false -input=false -lockfile=readonly`: rc 0.
+   - `terraform test -no-color`: rc 0, "Success! 272 passed, 0 failed."
+   - `terraform test -no-color -verbose`: rc 0. I extracted 42,633 (file, run, address) "will be created/read" lines.
+2. After the changes:
+   - `terraform fmt -check -recursive modules/runtime modules/observability tests`: rc 0.
+   - `terraform fmt -check .` (root, non-recursive): rc 0.
+   - `terraform init -backend=false -input=false -lockfile=readonly`: rc 0. It is needed so the new module test runs are registered.
+   - `terraform validate`: rc 0, "Success! The configuration is valid."
+   - `terraform test -no-color` (final, after all edits): rc 0, "Success! 301 passed, 0 failed." That is 272 existing plus 29 new.
+3. `terraform test -no-color -verbose` after the change: rc 0, 301 passed. Comparing planned addresses of every pre-existing run with the baseline (`comm -3`) gives **0 differing lines**, so the default plan resource sets are unchanged.
+4. `terraform test -no-color -verbose -filter=tests/phase14b_plan_deltas.tftest.hcl`, then `python3 -I scripts/lib/plan_deltas.py derive` on the baseline and changed logs: both rc 0, and the derivations are byte-identical (`cmp`). So scripts/config/expected-plan-deltas.json is unaffected.
+5. Mutation check on a scratch copy outside the repo (state and *.local.tfvars excluded): 8 mutations, each killed by at least one P41 run.
+   - M1: label order swapped.
+   - M2: count ignores the target.
+   - M3: scale-in disabled.
+   - M4: precondition neutralised.
+   - M5: burst gated on the rate.
+   - M6: rate env added to every role.
+   - M7: 4XX metric by TargetGroup only.
+   - M8: scale-out cooldown 120.
+6. Read-only Python checks:
+   - `cd tests/infra && python3 -m unittest -v test_runtime_shape_14b` (offline env): "Ran 19 tests ... OK", rc 0. Run before and after the example and README edits.
+   - `cd tests/infra && python3 -m unittest discover -p 'test_*.py'`: "Ran 465 tests in 869.693s OK", rc 0. This run started before the README and tfvars.example edits.
+   - After those edits: `python3 -m unittest test_phase14b_grace test_w5b_w4_14b test_static_sources`: "Ran 88 tests OK", rc 0. Then `test_runtime_shape_14b` again: 19 OK.
+   - `cd scripts/tests && python3 -m unittest test_runtime_base_apply test_plan_deltas`: "Ran 46 tests OK", rc 0.
+7. The read-only pin recompute from scripts/billing/README.md: baseline stale=7, after stale=14.
+8. aws-knowledge doc searches/reads only. No AWS API.
+
+TEST RESULTS:
+- terraform test (root): 301 passed, 0 failed. New P41 runs: 29 passed (18 root, 11 module).
+- What the P41 runs assert:
+  - The policy is absent by default.
+  - It is absent with the target set but the runtime not deployed (root), with no image_revision (module) and with enabled=false (module).
+  - It is present with the runtime deployed and the target set.
+  - Label equals "app/synthetic/1234567890123456/targetgroup/synthetic/6543210987654321".
+  - Metric ALBRequestCountPerTarget, no custom metric; cooldowns 300/60; disable_scale_in false; target value; query-api scalable target; policy name.
+  - The CPU policies are 3 keys at target 60, ECSServiceAverageCPUUtilization, 300/60, in the default and the target-set runs.
+  - Env is absent by default. Rate-only sets only PER_SECOND="250"; burst-only sets only BURST="500". Upper bounds render as "100000" and "1000000". Lower bound 1 is accepted. The values are on query-api only, never in `secrets`, and absent outside aws mode.
+  - The precondition refuses a set target without HTTPS.
+  - Refusals: target 0, 100001 and 1.5; rate 0, 100001 and 2.5; burst 0 and 1000001. The module also refuses a target of 1.5, rate 100001 and burst 1000001.
+  - Dashboard: the panel is present with the ALB (exact metric arrays), absent without it, and there is no dashboard when dashboard_enabled=false. Total metrics are 116 with the ALB and 114 without.
+- tests/infra full suite: 465 OK. test_runtime_shape_14b: 19 OK.
+- scripts/tests (runtime_base_apply, plan_deltas): 46 OK.
+
+VALIDATION RESULTS:
+- fmt -check on the changed directories and root files: pass. validate: pass. Default planned address sets unchanged: 0 diff lines over 42,633. Plan deltas: identical.
+- I did not run `scripts/check.sh`, as instructed. The coordinator runs it on a clean worktree.
+- Deployer IAM was checked read-only, with no change needed:
+  - deployer/phase14_main.tf lines 452-464 (`CloudWatchAlarmsDashboardsOfTheMainStack`: PutMetricAlarm/DeleteAlarms on `alarm:TargetTracking-*`, plus PutDashboard).
+  - Lines 579-589 (`AppAutoScalingEcsServices`: PutScalingPolicy/DeleteScalingPolicy on `scalable-target/*`).
+  - Lines 592-597 (DescribeScalingPolicies on `*`).
+  - These are the same actions the live CPU policy used in Session 1. That they also cover the ALB-metric policy is not live-verified.
+- Secret and account scan of the added lines: only the synthetic 111122223333, UUID tails and 16-digit mock suffixes. No secret, real account ID or e-mail. The tests/infra account scan passed inside the 465-test run.
+
+ASSUMPTIONS:
+- Units: the target is requests per target per minute (the ALB RequestCountPerTarget Sum over 60 s). The rate is per second, per API key, per query-api task. The burst is in requests.
+- tostring() of whole numbers gives plain decimals (asserted for 1, 250, 500, 100000 and 1000000), which the service's `toLong` accepts.
+- HTTPS is on in the Session 2 runtime plan (api_domain_name path), so the precondition does not bind there.
+
+RISKS:
+1. The plan that creates the ALB with dashboard_enabled=true shows the dashboard body as "known after apply", because it holds the ARN suffixes.
+2. ALB RequestCountPerTarget and HTTPCode_Target_4XX_Count include 429 replies. This is noted in a code comment and the README; the plan's measurement rule already covers it.
+3. The precondition is a small addition beyond the work-order text and needs reviewer acceptance.
+4. The dashboard stays above 50 metrics until P9.
+5. Test-engineer follow-ups, optional and not blocking because tests/infra passes unchanged:
+   - tests/infra/test_runtime_shape_14b.py lines 64-71 pin the exact policy list only for module plans with the target unset. That list stays correct. It does not cover the new `aws_appautoscaling_policy.query_requests[0]` or the rate-limit env names.
+   - tests/infra/runtime_shape_checks.py line 31 `ROOT_VARIABLE_FILES = ("phase12b-variables.tf", "variables.tf")` does not read the new phase15-variables.tf.
+   - Owner: test-engineer (tests/infra/**), if independent coverage is wanted.
+
+MANUAL ACTION REQUIRED:
+- The human refreshes the pins after review, at the commit, recomputing them rather than copying from here. In scripts/billing/reviewed-pins.json `source_freeze`, P41 newly made these stale:
+  - infra/terraform/README.md
+  - infra/terraform/main.tf
+  - infra/terraform/phase12b.tf
+  - infra/terraform/modules/observability/main.tf
+  - infra/terraform/modules/observability/variables.tf
+  - infra/terraform/modules/runtime/outputs.tf
+  - infra/terraform/modules/runtime/variables.tf
+  - infra/terraform/modules/runtime/compute.tf (already stale at HEAD, changed again)
+- Already stale at HEAD and not touched by P41: billing-bootstrap/README.md, main.tf, tests/budget.tftest.hcl; modules/workflow/main.tf; tests/infra/README.md; tests/infra/terraform_source_guard.py.
+- Totals: 14 stale now, 7 at baseline. New files phase15-variables.tf and the two tftest files are not in the pin list.
+- The P15 pins refresh and the P35 values follow per the plan. The new test runs need `terraform init -backend=false` once to register their modules.
+
+BLOCKED-ON OWNER: none.
+
+BLOCKED-ON EVIDENCE: none.
+
+NEXT GATE: An independent code-reviewer review of the P41 diff, including the precondition deviation and the dashboard count note. Then the coordinator runs `scripts/check.sh` on a clean worktree. Then the user's "Yes, commit" (no commit, stash or review was done here). After that, the human pin refresh. Apply happens only in Session 2 under the recorded human gate.
+````
+
+### documentation-engineer reports (P41-D and two follow-ups)
+
+The documentation-engineer's three final reports are summarised here; their full text is in this session's transcript. The plan draft is untracked and not part of the P41 commit.
+- **P41-D:**
+  - Recorded the P41 defaults in row P41.
+  - Reworded section 5.3 step 2 to use the root variables.
+  - Fixed R3: `SemanticApi.scala` embed call at line 98, `vectors.query` at line 100, both re-read at `cceb1f5`.
+  - Added the R2 open item to rows P35 and P42 and to section 5.3 step 4, and removed the cache counters from the step 4 collection list.
+  - Added a dated amendment-log entry and a section 10 provenance entry.
+  - Checks: link check 20 links, 0 broken; ID and e-mail scan 0 matches.
+- **Follow-up 1:**
+  - R2 decided by the user's answer (a): the Voyage usage page, read by the human after the session with the read time.
+  - Row P35 item (5) now names the root variables.
+  - The section 10 entry is kept and extended.
+  - Checks: 20 links, 0 broken; 0 ID or e-mail matches.
+- **Follow-up 2:**
+  - R2 uses the R-b load window only, with the section 6.3a caveats (up to about 4 × distinct questions from task starts, plus a few duplicate calls from a cold task); otherwise the figure is "unverified".
+  - Changed lines 28, 243, 250, 362-365 and 864.
+  - Checks: 20 links, 0 broken; 0 ID or e-mail matches. No new questions raised.
+
+### infra-engineer repair 1 report (2026-11-16, verbatim; coordinator gate G1, see `repairs.md`)
+
+````text
+STATUS: COMPLETE. P41 repair 1 is fixed: the 7 `test_terraform_r1.RouteOwnershipTest` failures no longer occur. I took your preferred option and moved the three variable blocks into an existing root file. I did not touch scripts/** or any file the pipeline lanes are editing.
+
+**Cause, confirmed.** `scripts/tests/test_terraform_r1.py` `build_fixture()` (lines 57-67) copies only the files `git ls-files infra/terraform` lists. The new root file was untracked, so it was left out of the fixture, and `main.tf` lines 140-142 then referred to variables that did not exist there.
+
+**Files changed:**
+- `/Users/danny/Documents/UIC/CS441/ScholarChain/infra/terraform/phase12b-variables.tf`, lines 430-464 (new): the three variable blocks and their header comment, appended unchanged from `phase15-variables.tf`.
+- `/Users/danny/Documents/UIC/CS441/ScholarChain/infra/terraform/phase15-variables.tf`: deleted.
+- Reference updates, one line each, same line counts:
+  - `infra/terraform/README.md` line 883 now points to `phase12b-variables.tf` (end of file).
+  - `infra/terraform/tests/phase15_p41.tftest.hcl` line 4.
+  - `infra/terraform/modules/runtime/variables.tf` line 180.
+- No other file changed. The P41 file list is otherwise as in my first report.
+
+**Commands** (all with the offline AWS env through a wrapper):
+
+| Command | Exit | Result |
+|---|---|---|
+| `terraform fmt -check -recursive modules/runtime modules/observability tests` | 0 | pass |
+| `terraform fmt -check .` (root) | 0 | pass |
+| `terraform init -backend=false -input=false -lockfile=readonly` | 0 | — |
+| `terraform validate` | 0 | "Success! The configuration is valid." |
+| `terraform test -no-color` | 0 | "Success! 304 passed, 0 failed." |
+| `cd scripts/tests && python3 -I -m unittest discover -s . -p 'test_terraform_*.py'` | 0 | 17 tests OK |
+| same, `-p test_terraform_r1.py -v` | 0 | 10 tests OK, all 4 RouteOwnershipTest cases ok, none skipped |
+| `python3 -I -m unittest discover -s . -p 'test_runtime_base_apply.py'` | 0 | 31 tests OK |
+| `cd tests/infra && python3 -I -m unittest test_runtime_shape_14b` | 1 | import error, see below |
+| `cd tests/infra && python3 -I -m unittest discover -s . -p 'test_runtime_shape_14b.py'` | 0 | 19 tests OK |
+
+- **304 instead of the expected 301:** 272 existing + 18 + 11 P41 runs + 3 runs from `tests/phase15_stagea.tftest.hcl`. That file belongs to another lane and is untracked; I did not touch it.
+- **Shape test import error:** `-I` removes the current directory from `sys.path`, so the module cannot be imported. That comes from the command form, not the code; the `discover` form above is the working equivalent.
+
+**Other fixed root-file lists in scripts/tests and tests/\*\*:**
+- `tests/infra/runtime_shape_checks.py:31` `ROOT_VARIABLE_FILES = ("phase12b-variables.tf", "variables.tf")`. A new root variables file would be invisible to it. The move fixes this for P41 and closes my earlier RISKS item.
+- `scripts/tests/test_providers.py:150-151,163` read `phase14b-variables.tf`, `phase14b-providers.tf` and `phase12b-variables.tf` by name. These are content checks, not fixtures; a new file does not break them.
+- `scripts/tests/test_terraform_r1.py:57-67` (tracked files only). Any new untracked root `.tf` that `main.tf` references breaks it until the file is committed. My untracked `tests/phase15_p41*.tftest.hcl` are harmless there, because r1 runs only `-filter=tests/phase12b.tftest.hcl`.
+- `tests/infra/test_guard_phase14.py:78` uses ls-files including untracked files, so new files are safe.
+- `tests/scripts/sc_support.py:458-463` copies only `environments/course.tfvars`, `modules/runtime/compute.tf` and a stub `versions.tf`. It does not depend on root variables.
+- The rest are synthetic wrappers or other roots that do not read the main root's files, so they are unaffected: `tests/infra/infra_support.py:547-553`, `runtime_shape_checks.py:149-159`, `test_phase14b_grace.py` (fixtures it writes itself), and `test_billing_replan_14b.py:121` (billing-bootstrap root only).
+
+**Pins:** `infra/terraform/phase12b-variables.tf` (reviewed-pins.json `source_freeze`, about line 435) is now also stale. It is added to the list of pins the human refreshes after review.
+
+**Next gate:** the coordinator reruns `scripts/check.sh --skip sbt` on a clean snapshot, then code review. Nothing was committed, stashed or run with check.sh.
+````

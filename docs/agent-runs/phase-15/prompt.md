@@ -76,3 +76,98 @@ Step 0 questions asked 2026-11-15, each with the coordinator's default (all acce
 3. Cache: in-memory LRU per semantic-service task, 1,024 entries by default (environment override), keyed by (model, input type, exact question text), no TTL; only successful embeddings are cached; the key and logs never contain question text in clear (hash only).
 4. No Terraform change in P40: the code defaults apply, and any environment override rides with P41's infra change.
 5. Schedule: rag-engineer and service-engineer in parallel now; then the test-engineer's independent test; full `sbt check`; one review of the whole P40 bundle targeted for Mon 2026-11-16; commit after your "Yes, commit" by Tue 2026-11-17, which leaves Wed morning as buffer.
+
+## Work order 3: P41 request-count scaling and rate-limit env wiring (Step 0)
+
+Scope (`session-2-plan.md` rows F26 and P41, section 5.3 step 2): a second target-tracking policy for query-api on `ALBRequestCountPerTarget`, with the CPU policy kept, plus the Terraform env wiring of the P40 rate-limit override. Terraform authoring only, offline; nothing is run against AWS. P40 was committed as `cceb1f5`.
+
+Coordinator read-only facts (2026-11-16):
+- `aws_appautoscaling_policy.http_cpu` (`modules/runtime/compute.tf` about line 303) covers the three HTTP services, with `cpu_target` 60 and cooldowns 300 / 60 s.
+- `aws_lb.query` and `aws_lb_target_group.query` have `count = var.enabled && var.image_revision != null ? 1 : 0`.
+- The query-api environment comes from the aws-mode map `aws_role_env["query-api"]`.
+- The deployer already allows `PutScalingPolicy`, `DeleteScalingPolicy` and `DescribeScalingPolicies` (`deployer/phase14_main.tf` 585, 596), and F26 records the `TargetTracking-*` alarms.
+- `tests/infra/test_runtime_shape_14b.py:64-71` pins the exact list of planned scaling policies.
+
+Proposed defaults (coordinator, 2026-11-16):
+1. A second policy for query-api only, `ALBRequestCountPerTarget`, with `resource_label` "<alb arn_suffix>/<target group arn_suffix>". It exists only when the runtime is deployed and the target is set. Cooldowns 300 / 60 s, and scale-in stays on. The CPU policy and target 60 are unchanged for all three services.
+2. `query_requests_per_target_target`: number, default null (no policy), a whole number from 1 to 100,000 requests per target per minute. The value comes from P35.
+3. `query_semantic_rate_limit_per_second` (1-100,000) and `query_semantic_rate_limit_burst` (1-1,000,000), both nullable with default null, which leaves them unset so the code defaults 50 / 100 apply. They are set on query-api only, in aws mode.
+4. No cache-size variable (the code default 1,024 is well above 100-200 questions).
+5. One dashboard panel for ALB `RequestCountPerTarget` and `HTTPCode_Target_4XX_Count`. It appears only when the ALB exists and stays within P9's 50-metric limit.
+6. Owners:
+   - infra-engineer: `infra/terraform/**` and its `terraform test` files;
+   - test-engineer: `tests/infra/**`, only where the shape checks list policies or env names;
+   - documentation-engineer: the plan draft line, which also fixes review finding R3 at `session-2-plan.md:581`.
+7. Schedule: build Mon 2026-11-16, one review Tue 2026-11-17, commit by Wed 2026-11-18 12:00 CST after the user's "Yes, commit" (before the P15 pins refresh and the P35 values that day).
+
+Step 0 answer (user, chat, 2026-11-16): "Accept defaults"
+
+Coordinator rule slip (2026-11-16, disclosed): a read-only `grep -rn 'service_capacity\b' infra/terraform/environments` matched one line of the private `course.local.tfvars` (line 18, the text `service_capacity = {`, with no value shown). Nothing from it was used. Later greps exclude `*.local.tfvars`.
+
+## P41-D follow-up answers (user, chat, 2026-11-16)
+
+Verbatim: "1: (a). I'll read the Voyage usage page after the session and note the read time. Report it as the total for the session window, not per task, and compare it with the size of the fixed question set (misses ≤ distinct questions). If the page doesn't separate the window, mark it "unverified". 2: Yes, reword the P35 row. 3: Yes, keep the history entry."
+
+Second follow-up (user, chat, 2026-11-16), verbatim: "1(a) and 2(a): accept. … From here, please don't open new questions on the Voyage-calls figure. It's a footnote. Put the time into the pipeline bundle." Meaning:
+- 1(a): add the section 6.3a caveats. A total up to 4 × distinct questions is explained by task starts, and the uncoalesced duplicate misses on a cold task are noted.
+- 2(a): "session window" means the R-b load window only. If the usage page cannot isolate that window, the figure is "unverified".
+
+## Priority decision after P41 Step 0 (user, chat, 2026-11-16)
+
+Verbatim: "Agreed on finishing P41 first. For the rest, change the priority: the R0 pipeline comes first, because Hadoop/Spark on EMR carries far more grade weight than elasticity and we have only one EMR retry. Before choosing the order, classify every open prerequisite as: (1) must exist before Session 2 (the live run can't work without it), (2) can be done offline after Session 2 (e.g. ER confidence intervals, P30/P31, docs), (3) can be dropped and stated as a limitation. Show the list with owner and estimated time for each. Then build group 1 in this order: the pipeline/EMR fixes with a local dry run of the full step chain (both sizes), then P42, P35, P15, P20, and my approval record. Review in bundles (one pipeline bundle, one elasticity bundle), not per item. Go/no-go Wednesday 18:00 CST: if the pipeline bundle isn't reviewed, committed and dry-run locally, Session 2 moves to the Sat/Sun fallback."
+
+Working rule (user, chat, 2026-11-16), verbatim: "Time is the main risk. From now on: 1. Classify the open prerequisites (must-before-Session-2 / after / drop) and show me the must list with owners and time estimates today. 2. Run independent owners in parallel where files don't overlap (pipeline owners can start now while P41 finishes). 3. Only ask me questions that affect money, security, or the pipeline's correctness. For everything else, apply your recommended default and list it in the next status. 4. Reviews in bundles: pipeline, then elasticity. Go/no-go Wednesday 18:00 CST; fallback Sat Nov 21."
+
+Coordinator defaults applied under rule 3 (2026-11-16):
+- P18: the infra-engineer proves the base plan against the leftover state offline; the human decides at the pipeline review.
+- If the pipeline is ready at go/no-go but the elasticity bundle is not, the whole session moves to Sat 2026-11-21 (one base-apply).
+- R-c is dropped (Q17).
+- P34 is deferred until P41 is committed (both edit `infra/terraform/phase12b.tf`).
+- The optional P41 test-engineer coverage is not done.
+- `storage-engineer` works in an isolated git worktree so that no two sbt runs share this tree.
+
+Questions kept for the user because they affect money or the pipeline: the P25 EMR caps, and the P21 network download.
+
+P25 and P21 decisions (user, chat, 2026-11-16), verbatim: "P25: approved. Cap 4 runs and USD 3.36 cumulative, including Session 1's EMR spend. Confirm the project worst case stays ≤ USD 22. Rule: S first; if S succeeds the next run is L; if S fails, retry S once and drop L as a stated limitation. If L fails, no retry: report it with logs. P21: approved. Download the pinned DBLP archive once from the public mirror and verify the sha256. Keep the archive out of git; commit only the manifest, checksum and slice script."
+
+Coordinator check of the P25 cost condition, from `session-2-plan.md` §6.3, §6.3a and §6.4:
+- The ledger holds 2 Session 1 runs at an estimate of USD 1.68. With a cap of 4 runs and USD 3.36 cumulative, it allows exactly 2 more runs at the USD 0.84 ledger estimate each.
+- R0's EMR cost block is already capped for S + L: 3.83 cluster-hours at USD 0.50, which is USD 1.92.
+- Under the rule, Session 2 has at most 2 EMR runs: S then L, or S then an S retry. An S retry is no longer than L, so the EMR cap does not grow.
+- R0 + R-b cap stays at 5.93, and the project at caps stays at 15.83 + 5.93 = **USD 21.76 ≤ 22.00**.
+- Condition: L must fit the 90-minute run. If the P6 local L time shows it does not, the cap must be recomputed (P25 note), and that is a new money decision for the user.
+
+Rubric priority (user, chat, 2026-11-16), verbatim: "Prioritize by rubric points. Order: (1) R0 pipeline (Hadoop+Spark on EMR, real data); (2) the coauthor/path fixes stay on the after-list but are mandatory, as core collaboration queries; (3) elasticity after R0; (4) in Phase 17: README commands verified on a clean checkout, agent replay instructions, and all agents submitted. Low-value polish (wording, history entries, footnote figures): apply defaults, don't ask me."
+
+What changes:
+- P3 (direct-coauthor context budget) and P4 (path abstentions) move from "drop" to "after Session 2, mandatory". They are fixed and tested offline after the session, and do not depend on R-c.
+- The rest of the R-c set (P10, P12, P14, P16, P36) stays dropped.
+- Phase 17 must include: README commands replayed on a clean checkout, agent replay instructions, and all agent definitions submitted.
+
+Q12 decision (user, chat, 2026-11-16), verbatim: "Q12 can't be dropped: the course README requires at least 30 benchmark questions covering coauthor breadth, max team size, direct collaboration, shortest paths, components, communities, bridge researchers, temporal change, topics, institutions and evidence, and the instructor didn't approve reducing it. Move it to the after-Session-2 list. Show which of these types Session 1's 40 questions already cover, and propose how to cover the rest offline against the local stack (no paid calls unless within the ledger)."
+
+Consequence: Q12, the 30+ question benchmark covering all 11 types, moves from "drop" to "after Session 2, mandatory". Coverage of `experiments/inputs/14c/questions.txt` (40 questions, read 2026-11-16) is shown to the user in chat. The proposal is pending the user's choice of evaluation mode.
+
+Q12 evaluation mode (user, chat, 2026-11-16), verbatim: "(b), but run all 33 questions with real answers, not 11. At about USD 0.0014 per answer (Session 1: 55 answers ≈ USD 0.075) that's about USD 0.05. Run it after P3/P4 are fixed, and score retrieval, claims and the answer text against the computed answer key. Key handling: propose how the run gets an Anthropic key consistent with our rules (key only in Secrets Manager, never in files, logs or shell history, deleted and revoked afterwards). If there's no safe way, fall back to (a) and state it in the report. Confirm the exact cost from the ledger before running."
+
+The coordinator's key-handling proposal is in chat, pending the user's security approval. The exact ledger cost is confirmed before the run.
+
+Key-handling approval (user, chat, 2026-11-16), verbatim: "Approved, with three additions: 1. The run command passes the key only as an environment variable of that one process, never as a CLI argument (visible in ps). 2. The runbook step says to run with shell tracing off (set +x). 3. USD 1 spend limit on the new key. Scope it to its own workspace if the console allows. Size the "local graph + real Anthropic writer" mode before committing to (b), as you said. Fallback (a) if it's too big."
+
+Approved procedure:
+- The user creates the key, with a USD 1 limit and its own workspace if the console allows.
+- It is stored with `read -rs` and `put-secret-value` from stdin, then `unset KEY`.
+- The run starts with shell tracing off (`set +x`). The key is passed only as an environment variable of the one run process, never as a CLI argument.
+- The user closes the shell afterwards.
+- The secret is deleted with no recovery window, and the key is revoked.
+- An agent checks before the run that nothing logs the environment or the key.
+
+Sizing of the mixed mode (local graph + real Anthropic writer) comes before committing to (b). If it is too large, the fallback is (a).
+
+Review routing (user, chat, 2026-11-16), verbatim: "When the sbt check is done. From now on trigger the review agent using opus 5.5 high on your own. Clear. No more separate reviewer"
+
+Consequence: from now on, after the bundle's gates pass (`sbt check` and the clean-copy `check.sh`), the coordinator launches the independent read-only `code-reviewer` agent itself (Opus 5.5, high) with the reviewer prompt. The user no longer runs a separate external reviewer. The reviewer's verdict is recorded verbatim in `review.md`. Every commit still needs the user's explicit "Yes, commit".
+
+Standing commit consent (user, chat, 2026-11-16), verbatim: "Alright after the reviewer approved i give you permission to commit it and continue for me. Clear?" From now on, a bundle is committed by the coordinator right after the code-reviewer agent's APPROVE, and work continues to the next item. Limits: no commit on REQUEST-CHANGES; push to `origin/phase-15` after every approved commit (user, chat, 2026-11-16: "Yes a"), no force-push; human-owned records (approval and gate records, pin refreshes) stay the user's.
+
+Recorded consequences: P41 is finished first. The pipeline bundle comes next, then the elasticity bundle (P42, P35), then P15, P20 and the human's approval record. There is one review per bundle. Go/no-go is Wed 2026-11-18 18:00 CST; if it fails, Session 2 moves to Sat 2026-11-21 / Sun 2026-11-22.
